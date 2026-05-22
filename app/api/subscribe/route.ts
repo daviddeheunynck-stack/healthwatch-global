@@ -2,12 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { Resend } from "resend";
 import { createClient } from "@supabase/supabase-js";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
+export const dynamic = "force-dynamic";
 
 const REGION_LABELS: Record<string, string> = {
   allRegions: "Toutes les régions",
@@ -25,6 +20,13 @@ export async function POST(req: NextRequest) {
     if (!email || !region) {
       return NextResponse.json({ error: "Missing fields" }, { status: 400 });
     }
+
+    // Init clients inside handler to avoid build-time evaluation
+    const resend = new Resend(process.env.RESEND_API_KEY!.trim());
+    const supabase = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    );
 
     // Save to Supabase
     const { error: dbError } = await supabase
