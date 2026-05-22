@@ -40,7 +40,7 @@ export default function WorldMap({ outbreaks }: WorldMapProps) {
       ).addTo(map);
 
       outbreaks.forEach((outbreak) => {
-        const color = riskColors[outbreak.riskLevel] || "#6b7280";
+        const color = riskColors[outbreak.risk_level] || "#6b7280";
         const radius = Math.max(8, Math.min(30, Math.log10(outbreak.cases + 1) * 6));
 
         const circle = L.circleMarker([outbreak.lat, outbreak.lng], {
