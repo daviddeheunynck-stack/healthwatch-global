@@ -1,11 +1,14 @@
 import { useTranslations } from "next-intl";
 import { FileText, Download } from "lucide-react";
-import { LIVE_OUTBREAKS } from "@/lib/outbreaks";
+import { getOutbreaks } from "@/lib/outbreaks";
+
+export const revalidate = 3600;
 
 const REGIONS = ["africa", "asia", "americas", "europe", "oceania"] as const;
 
-export default function ReportsPage() {
+export default async function ReportsPage() {
   const t = useTranslations("reports");
+  const outbreaks = await getOutbreaks();
 
   return (
     <div className="space-y-8">
@@ -19,9 +22,9 @@ export default function ReportsPage() {
 
       <div className="grid md:grid-cols-2 gap-4">
         {REGIONS.map((region) => {
-          const regionOutbreaks = LIVE_OUTBREAKS.filter((o) => o.region === region);
+          const regionOutbreaks = outbreaks.filter((o) => o.region === region);
           const totalCases = regionOutbreaks.reduce((sum, o) => sum + o.cases, 0);
-          const highRisk = regionOutbreaks.filter((o) => o.riskLevel === "high").length;
+          const highRisk = regionOutbreaks.filter((o) => o.risk_level === "high").length;
 
           return (
             <div
@@ -61,7 +64,7 @@ export default function ReportsPage() {
                   {regionOutbreaks.map((o) => (
                     <div key={o.id} className="text-xs text-gray-400 flex justify-between">
                       <span>{o.disease}</span>
-                      <span className={o.riskLevel === "high" ? "text-red-400" : "text-yellow-400"}>
+                      <span className={o.risk_level === "high" ? "text-red-400" : "text-yellow-400"}>
                         {o.country}
                       </span>
                     </div>

@@ -1,13 +1,16 @@
 import { useTranslations } from "next-intl";
 import { Activity, Globe, Bell, AlertTriangle } from "lucide-react";
-import { LIVE_OUTBREAKS, getStats } from "@/lib/outbreaks";
+import { getOutbreaks, getStats } from "@/lib/outbreaks";
 import StatsCard from "@/components/StatsCard";
 import RiskBadge from "@/components/RiskBadge";
 import WorldMap from "@/components/WorldMap";
 
-export default function DashboardPage() {
+export const revalidate = 3600; // Rafraîchit les données toutes les heures
+
+export default async function DashboardPage() {
   const t = useTranslations("dashboard");
-  const stats = getStats();
+  const outbreaks = await getOutbreaks();
+  const stats = getStats(outbreaks);
 
   return (
     <div className="space-y-8">
@@ -45,9 +48,9 @@ export default function DashboardPage() {
       </div>
 
       {/* Map */}
-      <WorldMap outbreaks={LIVE_OUTBREAKS} />
+      <WorldMap outbreaks={outbreaks} />
 
-      {/* Recent alerts table */}
+      {/* Table */}
       <div>
         <h2 className="text-xl font-semibold text-white mb-4">{t("recentAlerts")}</h2>
         <div className="rounded-xl border border-gray-800 overflow-hidden">
@@ -63,29 +66,32 @@ export default function DashboardPage() {
               </tr>
             </thead>
             <tbody>
-              {LIVE_OUTBREAKS.sort((a, b) => {
-                const order = { high: 0, medium: 1, low: 2 };
-                return order[a.riskLevel] - order[b.riskLevel];
-              }).map((outbreak, i) => (
-                <tr
-                  key={outbreak.id}
-                  className={`border-t border-gray-800 hover:bg-gray-800/50 transition-colors ${
-                    i % 2 === 0 ? "bg-gray-900/30" : ""
-                  }`}
-                >
-                  <td className="px-4 py-3 font-medium text-white">{outbreak.disease}</td>
-                  <td className="px-4 py-3 text-gray-300">{outbreak.country}</td>
-                  <td className="px-4 py-3 text-gray-300">{outbreak.cases.toLocaleString()}</td>
-                  <td className="px-4 py-3 text-red-400">{outbreak.deaths.toLocaleString()}</td>
-                  <td className="px-4 py-3">
-                    <RiskBadge level={outbreak.riskLevel} />
-                  </td>
-                  <td className="px-4 py-3 text-gray-400">{outbreak.date}</td>
-                </tr>
-              ))}
+              {outbreaks
+                .sort((a, b) => {
+                  const order = { high: 0, medium: 1, low: 2 };
+                  return order[a.risk_level] - order[b.risk_level];
+                })
+                .map((outbreak, i) => (
+                  <tr
+                    key={outbreak.id}
+                    className={`border-t border-gray-800 hover:bg-gray-800/50 transition-colors ${
+                      i % 2 === 0 ? "bg-gray-900/30" : ""
+                    }`}
+                  >
+                    <td className="px-4 py-3 font-medium text-white">{outbreak.disease}</td>
+                    <td className="px-4 py-3 text-gray-300">{outbreak.country}</td>
+                    <td className="px-4 py-3 text-gray-300">{outbreak.cases.toLocaleString()}</td>
+                    <td className="px-4 py-3 text-red-400">{outbreak.deaths.toLocaleString()}</td>
+                    <td className="px-4 py-3">
+                      <RiskBadge level={outbreak.risk_level} />
+                    </td>
+                    <td className="px-4 py-3 text-gray-400">{outbreak.date}</td>
+                  </tr>
+                ))}
             </tbody>
           </table>
         </div>
+        <p className="text-xs text-gray-600 mt-2 text-right">{t("lastUpdated")} : Supabase · {t("activeOutbreaks").toLowerCase()} actives</p>
       </div>
     </div>
   );
