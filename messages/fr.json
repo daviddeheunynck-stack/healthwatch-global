@@ -1,0 +1,46 @@
+{
+  "nav": {
+    "dashboard": "Tableau de bord",
+    "alerts": "Alertes",
+    "reports": "Rapports",
+    "title": "HealthWatch Global"
+  },
+  "dashboard": {
+    "title": "Surveillance Sanitaire Mondiale",
+    "subtitle": "Suivi en temps réel des épidémies dans le monde",
+    "activeOutbreaks": "Épidémies Actives",
+    "countriesAffected": "Pays Touchés",
+    "alertsToday": "Alertes Aujourd'hui",
+    "highRisk": "Zones à Risque Élevé",
+    "recentAlerts": "Alertes Récentes",
+    "riskLevel": "Niveau de Risque",
+    "loading": "Chargement des données...",
+    "lastUpdated": "Dernière mise à jour"
+  },
+  "risk": {
+    "high": "Élevé",
+    "medium": "Moyen",
+    "low": "Faible",
+    "unknown": "Inconnu"
+  },
+  "alerts": {
+    "title": "Centre d'Alertes",
+    "subtitle": "Abonnez-vous pour recevoir des notifications par région",
+    "email": "Adresse email",
+    "region": "Sélectionner une région",
+    "subscribe": "S'abonner",
+    "success": "Abonnement confirmé !",
+    "allRegions": "Toutes les régions",
+    "africa": "Afrique",
+    "asia": "Asie",
+    "europe": "Europe",
+    "americas": "Amériques",
+    "oceania": "Océanie"
+  },
+  "reports": {
+    "title": "Rapports Épidémiologiques",
+    "subtitle": "Synthèses hebdomadaires par région",
+    "download": "Télécharger PDF",
+    "generated": "Généré le"
+  }
+}

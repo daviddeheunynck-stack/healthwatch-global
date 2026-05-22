@@ -1,0 +1,46 @@
+{
+  "nav": {
+    "dashboard": "Dashboard",
+    "alerts": "Alerts",
+    "reports": "Reports",
+    "title": "HealthWatch Global"
+  },
+  "dashboard": {
+    "title": "Global Health Surveillance",
+    "subtitle": "Real-time monitoring of disease outbreaks worldwide",
+    "activeOutbreaks": "Active Outbreaks",
+    "countriesAffected": "Countries Affected",
+    "alertsToday": "Alerts Today",
+    "highRisk": "High Risk Zones",
+    "recentAlerts": "Recent Alerts",
+    "riskLevel": "Risk Level",
+    "loading": "Loading data...",
+    "lastUpdated": "Last updated"
+  },
+  "risk": {
+    "high": "High",
+    "medium": "Medium",
+    "low": "Low",
+    "unknown": "Unknown"
+  },
+  "alerts": {
+    "title": "Alert Center",
+    "subtitle": "Subscribe to receive notifications by region",
+    "email": "Email address",
+    "region": "Select a region",
+    "subscribe": "Subscribe",
+    "success": "Subscription confirmed!",
+    "allRegions": "All regions",
+    "africa": "Africa",
+    "asia": "Asia",
+    "europe": "Europe",
+    "americas": "Americas",
+    "oceania": "Oceania"
+  },
+  "reports": {
+    "title": "Epidemiological Reports",
+    "subtitle": "Weekly summaries by region",
+    "download": "Download PDF",
+    "generated": "Generated on"
+  }
+}

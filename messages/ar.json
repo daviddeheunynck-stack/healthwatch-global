@@ -1,0 +1,46 @@
+{
+  "nav": {
+    "dashboard": "لوحة القيادة",
+    "alerts": "التنبيهات",
+    "reports": "التقارير",
+    "title": "HealthWatch Global"
+  },
+  "dashboard": {
+    "title": "المراقبة الصحية العالمية",
+    "subtitle": "مراقبة تفشي الأمراض في الوقت الفعلي حول العالم",
+    "activeOutbreaks": "تفشيات نشطة",
+    "countriesAffected": "الدول المتضررة",
+    "alertsToday": "تنبيهات اليوم",
+    "highRisk": "مناطق الخطر العالي",
+    "recentAlerts": "التنبيهات الأخيرة",
+    "riskLevel": "مستوى الخطر",
+    "loading": "جاري تحميل البيانات...",
+    "lastUpdated": "آخر تحديث"
+  },
+  "risk": {
+    "high": "عالي",
+    "medium": "متوسط",
+    "low": "منخفض",
+    "unknown": "غير معروف"
+  },
+  "alerts": {
+    "title": "مركز التنبيهات",
+    "subtitle": "اشترك لتلقي إشعارات حسب المنطقة",
+    "email": "البريد الإلكتروني",
+    "region": "اختر منطقة",
+    "subscribe": "اشتراك",
+    "success": "تم تأكيد الاشتراك!",
+    "allRegions": "جميع المناطق",
+    "africa": "أفريقيا",
+    "asia": "آسيا",
+    "europe": "أوروبا",
+    "americas": "الأمريكتان",
+    "oceania": "أوقيانوسيا"
+  },
+  "reports": {
+    "title": "التقارير الوبائية",
+    "subtitle": "ملخصات أسبوعية حسب المنطقة",
+    "download": "تحميل PDF",
+    "generated": "تم إنشاؤه في"
+  }
+}
