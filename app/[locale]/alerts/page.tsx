@@ -3,7 +3,6 @@
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { Bell, CheckCircle, Loader2 } from "lucide-react";
-import { supabase } from "@/lib/supabase";
 
 const REGIONS = ["allRegions", "africa", "asia", "europe", "americas", "oceania"] as const;
 
@@ -21,24 +20,27 @@ export default function AlertsPage() {
     setLoading(true);
     setError("");
 
-    const { error: sbError } = await supabase
-      .from("subscriptions")
-      .insert({ email, region });
+    try {
+      const res = await fetch("/api/subscribe", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, region }),
+      });
 
-    setLoading(false);
+      const data = await res.json();
 
-    if (sbError) {
-      if (sbError.code === "23505") {
-        // Already subscribed — treat as success
-        setSubmitted(true);
-      } else {
-        setError(sbError.message);
+      if (!res.ok) {
+        setError(data.error || "Une erreur est survenue.");
+        return;
       }
-      return;
-    }
 
-    setSubmitted(true);
-    setEmail("");
+      setSubmitted(true);
+      setEmail("");
+    } catch {
+      setError("Impossible de contacter le serveur.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -56,6 +58,7 @@ export default function AlertsPage() {
           <div className="flex flex-col items-center py-8 gap-3 text-green-400">
             <CheckCircle className="w-12 h-12" />
             <p className="text-lg font-medium">{t("success")}</p>
+            <p className="text-sm text-gray-400">Vérifiez votre boîte email.</p>
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -87,9 +90,7 @@ export default function AlertsPage() {
               </select>
             </div>
 
-            {error && (
-              <p className="text-red-400 text-sm">{error}</p>
-            )}
+            {error && <p className="text-red-400 text-sm">{error}</p>}
 
             <button
               type="submit"
