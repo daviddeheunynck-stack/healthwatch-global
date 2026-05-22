@@ -3,7 +3,7 @@
 import { useTranslations, useLocale } from "next-intl";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { Activity, Bell, FileText, Globe } from "lucide-react";
+import { Activity, Bell, FileText, Globe, CreditCard } from "lucide-react";
 
 const LOCALES = [
   { code: "fr", label: "FR" },
@@ -28,6 +28,7 @@ export default function Navbar() {
     { href: `/${locale}`, label: t("dashboard"), icon: Activity },
     { href: `/${locale}/alerts`, label: t("alerts"), icon: Bell },
     { href: `/${locale}/reports`, label: t("reports"), icon: FileText },
+    { href: `/${locale}/pricing`, label: t("pricing"), icon: CreditCard },
   ];
 
   return (
