@@ -39,7 +39,7 @@ export async function POST(req: NextRequest) {
 
     // Send confirmation email
     await resend.emails.send({
-      from: "HealthWatch Global <alerts@healthwatch-global.com>",
+      from: "HealthWatch Global <onboarding@resend.dev>",
       to: email,
       subject: "Votre abonnement aux alertes sanitaires est confirmé",
       html: `
