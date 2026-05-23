@@ -30,14 +30,14 @@ export default function AlertsPage() {
       const data = await res.json();
 
       if (!res.ok) {
-        setError(data.error || "Une erreur est survenue.");
+        setError(data.error || t("errorGeneric"));
         return;
       }
 
       setSubmitted(true);
       setEmail("");
     } catch {
-      setError("Impossible de contacter le serveur.");
+      setError(t("errorServer"));
     } finally {
       setLoading(false);
     }
@@ -58,7 +58,7 @@ export default function AlertsPage() {
           <div className="flex flex-col items-center py-8 gap-3 text-green-400">
             <CheckCircle className="w-12 h-12" />
             <p className="text-lg font-medium">{t("success")}</p>
-            <p className="text-sm text-gray-400">Vérifiez votre boîte email.</p>
+            <p className="text-sm text-gray-400">{t("checkEmail")}</p>
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-4">

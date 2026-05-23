@@ -1,4 +1,4 @@
-import { useTranslations } from "next-intl";
+import { getTranslations } from "next-intl/server";
 import { Check, Zap, Shield, Building2, Mail } from "lucide-react";
 
 const STARTER_FEATURES = [
@@ -27,8 +27,8 @@ const ENTERPRISE_FEATURES = [
   "pricing.f3_6",
 ];
 
-export default function PricingPage() {
-  const t = useTranslations();
+export default async function PricingPage() {
+  const t = await getTranslations();
 
   return (
     <div className="space-y-12">
@@ -69,7 +69,7 @@ export default function PricingPage() {
           </ul>
 
           <a
-            href="mailto:contact@healthwatch-global.com?subject=Offre Starter - HealthWatch Global"
+            href="mailto:contact@healthwatch-global.com?subject=Starter Plan - HealthWatch Global"
             className="block w-full text-center bg-blue-600 hover:bg-blue-500 text-white font-semibold py-2.5 rounded-lg transition-colors"
           >
             {t("pricing.getStarted")}
@@ -106,7 +106,7 @@ export default function PricingPage() {
           </ul>
 
           <a
-            href="mailto:contact@healthwatch-global.com?subject=Offre Pro - HealthWatch Global"
+            href="mailto:contact@healthwatch-global.com?subject=Pro Plan - HealthWatch Global"
             className="block w-full text-center bg-red-600 hover:bg-red-500 text-white font-semibold py-2.5 rounded-lg transition-colors"
           >
             {t("pricing.getStarted")}
@@ -136,7 +136,7 @@ export default function PricingPage() {
           </ul>
 
           <a
-            href="mailto:contact@healthwatch-global.com?subject=Offre Enterprise - HealthWatch Global"
+            href="mailto:contact@healthwatch-global.com?subject=Enterprise Plan - HealthWatch Global"
             className="block w-full text-center bg-purple-700 hover:bg-purple-600 text-white font-semibold py-2.5 rounded-lg transition-colors flex items-center justify-center gap-2"
           >
             <Mail className="w-4 h-4" />
