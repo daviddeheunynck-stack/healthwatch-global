@@ -27,8 +27,11 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Plan ou devise invalide." }, { status: 400 });
     }
 
-    const secretKey = (process.env.STRIPE_SECRET_KEY || "").replace(/^﻿/, "").trim();
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://healthwatch-global.com";
+    const clean = (val: string | undefined, fallback = "") =>
+      (val || fallback).replace(/^﻿/, "").trim();
+
+    const secretKey = clean(process.env.STRIPE_SECRET_KEY);
+    const baseUrl = clean(process.env.NEXT_PUBLIC_BASE_URL, "https://healthwatch-global.com");
 
     const params = new URLSearchParams({
       mode: "subscription",
