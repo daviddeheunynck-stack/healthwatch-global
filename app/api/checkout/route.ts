@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import { stripe } from "@/lib/stripe";
 
 export const dynamic = "force-dynamic";
 
@@ -28,27 +27,45 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Plan ou devise invalide." }, { status: 400 });
     }
 
+    const secretKey = (process.env.STRIPE_SECRET_KEY || "").replace(/^﻿/, "").trim();
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://healthwatch-global.com";
 
-    const session = await stripe.checkout.sessions.create({
+    const params = new URLSearchParams({
       mode: "subscription",
-      line_items: [{ price: priceId, quantity: 1 }],
+      "line_items[0][price]": priceId,
+      "line_items[0][quantity]": "1",
       success_url: `${baseUrl}/${locale}/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${baseUrl}/${locale}/pricing`,
-      allow_promotion_codes: true,
+      allow_promotion_codes: "true",
     });
 
-    return NextResponse.json({ url: session.url });
+    const response = await fetch("https://api.stripe.com/v1/checkout/sessions", {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${secretKey}`,
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Stripe-Version": "2026-04-22.dahlia",
+      },
+      body: params.toString(),
+      cache: "no-store",
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      console.error("Stripe API error:", JSON.stringify(data));
+      return NextResponse.json(
+        { error: data.error?.message || "Erreur Stripe." },
+        { status: response.status }
+      );
+    }
+
+    return NextResponse.json({ url: data.url });
   } catch (err: any) {
-    console.error("Stripe checkout error:", JSON.stringify({
-      message: err?.message,
-      type: err?.type,
-      code: err?.code,
-      param: err?.param,
-      statusCode: err?.statusCode,
-    }));
-    return NextResponse.json({
-      error: err?.message || "Erreur lors de la création du paiement."
-    }, { status: 500 });
+    console.error("Checkout fetch error:", err?.message);
+    return NextResponse.json(
+      { error: err?.message || "Erreur serveur." },
+      { status: 500 }
+    );
   }
 }
