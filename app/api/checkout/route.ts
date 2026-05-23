@@ -39,8 +39,16 @@ export async function POST(req: NextRequest) {
     });
 
     return NextResponse.json({ url: session.url });
-  } catch (err) {
-    console.error("Stripe checkout error:", err);
-    return NextResponse.json({ error: "Erreur lors de la création du paiement." }, { status: 500 });
+  } catch (err: any) {
+    console.error("Stripe checkout error:", JSON.stringify({
+      message: err?.message,
+      type: err?.type,
+      code: err?.code,
+      param: err?.param,
+      statusCode: err?.statusCode,
+    }));
+    return NextResponse.json({
+      error: err?.message || "Erreur lors de la création du paiement."
+    }, { status: 500 });
   }
 }
