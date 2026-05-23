@@ -42,13 +42,13 @@ export async function getOutbreaks(): Promise<Outbreak[]> {
 
 export function getLocalizedDisease(outbreak: Outbreak, locale: string): string {
   if (locale === "ar") return outbreak.disease_ar || outbreak.disease;
-  if (locale === "en" || locale === "es") return outbreak.disease_en || outbreak.disease;
+  if (locale === "en" || locale === "es" || locale === "id") return outbreak.disease_en || outbreak.disease;
   return outbreak.disease; // fr = default
 }
 
 export function getLocalizedCountry(outbreak: Outbreak, locale: string): string {
   if (locale === "ar") return outbreak.country_ar || outbreak.country;
-  if (locale === "en" || locale === "es") return outbreak.country_en || outbreak.country;
+  if (locale === "en" || locale === "es" || locale === "id") return outbreak.country_en || outbreak.country;
   return outbreak.country; // fr = default
 }
 

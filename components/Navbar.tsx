@@ -10,9 +10,10 @@ const LOCALES = [
   { code: "en", label: "EN" },
   { code: "es", label: "ES" },
   { code: "ar", label: "AR" },
+  { code: "id", label: "ID" },
 ];
 
-const VALID_LOCALES = ["fr", "en", "es", "ar"];
+const VALID_LOCALES = ["fr", "en", "es", "ar", "id"];
 
 export default function Navbar() {
   const t = useTranslations("nav");
