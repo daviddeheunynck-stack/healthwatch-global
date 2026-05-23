@@ -18,7 +18,7 @@ async function sendConfirmationEmail(email: string, region: string) {
   const response = await fetch("https://api.brevo.com/v3/smtp/email", {
     method: "POST",
     headers: {
-      "api-key": process.env.BREVO_API_KEY!,
+      "api-key": process.env.BREVO_API_KEY!.replace(/^﻿/, "").trim(),
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
