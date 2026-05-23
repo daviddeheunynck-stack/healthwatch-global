@@ -3,7 +3,11 @@ import { createClient } from "@supabase/supabase-js";
 export interface Outbreak {
   id: string;
   disease: string;
+  disease_en: string | null;
+  disease_ar: string | null;
   country: string;
+  country_en: string | null;
+  country_ar: string | null;
   region: string;
   lat: number;
   lng: number;
@@ -34,6 +38,18 @@ export async function getOutbreaks(): Promise<Outbreak[]> {
   }
 
   return data || [];
+}
+
+export function getLocalizedDisease(outbreak: Outbreak, locale: string): string {
+  if (locale === "ar") return outbreak.disease_ar || outbreak.disease;
+  if (locale === "en" || locale === "es") return outbreak.disease_en || outbreak.disease;
+  return outbreak.disease; // fr = default
+}
+
+export function getLocalizedCountry(outbreak: Outbreak, locale: string): string {
+  if (locale === "ar") return outbreak.country_ar || outbreak.country;
+  if (locale === "en" || locale === "es") return outbreak.country_en || outbreak.country;
+  return outbreak.country; // fr = default
 }
 
 export function getStats(outbreaks: Outbreak[]) {

@@ -1,6 +1,6 @@
-import { getTranslations } from "next-intl/server";
+import { getTranslations, getLocale } from "next-intl/server";
 import { Activity, Globe, Bell, AlertTriangle } from "lucide-react";
-import { getOutbreaks, getStats } from "@/lib/outbreaks";
+import { getOutbreaks, getStats, getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 import StatsCard from "@/components/StatsCard";
 import RiskBadge from "@/components/RiskBadge";
 import WorldMap from "@/components/WorldMap";
@@ -9,9 +9,24 @@ import { Suspense } from "react";
 export const dynamic = "force-dynamic";
 
 async function DashboardContent() {
+  const locale = await getLocale();
   const t = await getTranslations("dashboard");
+  const tRisk = await getTranslations("risk");
   const outbreaks = await getOutbreaks();
   const stats = getStats(outbreaks);
+
+  const popupLabels = {
+    cases: t("cases"),
+    deaths: t("deaths"),
+    source: "Source",
+    date: t("date"),
+  };
+
+  const riskLabels = {
+    high: tRisk("high"),
+    medium: tRisk("medium"),
+    low: tRisk("low"),
+  };
 
   return (
     <>
@@ -22,7 +37,7 @@ async function DashboardContent() {
         <StatsCard label={t("highRisk")} value={stats.highRisk} icon={<AlertTriangle className="w-5 h-5" />} color="yellow" />
       </div>
 
-      <WorldMap outbreaks={outbreaks} />
+      <WorldMap outbreaks={outbreaks} locale={locale} popupLabels={popupLabels} riskLabels={riskLabels} />
 
       <div>
         <h2 className="text-xl font-semibold text-white mb-4">{t("recentAlerts")}</h2>
@@ -43,8 +58,8 @@ async function DashboardContent() {
                 .sort((a, b) => ({ high: 0, medium: 1, low: 2 }[a.risk_level] - { high: 0, medium: 1, low: 2 }[b.risk_level]))
                 .map((outbreak, i) => (
                   <tr key={outbreak.id} className={`border-t border-gray-800 hover:bg-gray-800/50 transition-colors ${i % 2 === 0 ? "bg-gray-900/30" : ""}`}>
-                    <td className="px-4 py-3 font-medium text-white">{outbreak.disease}</td>
-                    <td className="px-4 py-3 text-gray-300">{outbreak.country}</td>
+                    <td className="px-4 py-3 font-medium text-white">{getLocalizedDisease(outbreak, locale)}</td>
+                    <td className="px-4 py-3 text-gray-300">{getLocalizedCountry(outbreak, locale)}</td>
                     <td className="px-4 py-3 text-gray-300">{outbreak.cases.toLocaleString()}</td>
                     <td className="px-4 py-3 text-red-400">{outbreak.deaths.toLocaleString()}</td>
                     <td className="px-4 py-3"><RiskBadge level={outbreak.risk_level} /></td>
