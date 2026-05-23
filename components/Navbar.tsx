@@ -1,8 +1,8 @@
 "use client";
 
 import { useTranslations, useLocale } from "next-intl";
+import { usePathname, useRouter } from "@/i18n.navigation";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
 import { Activity, Bell, FileText, Globe, CreditCard } from "lucide-react";
 
 const LOCALES = [
@@ -19,9 +19,7 @@ export default function Navbar() {
   const router = useRouter();
 
   const switchLocale = (newLocale: string) => {
-    const segments = pathname.split("/");
-    segments[1] = newLocale;
-    router.push(segments.join("/"));
+    router.replace(pathname, { locale: newLocale });
   };
 
   const navLinks = [
@@ -45,7 +43,7 @@ export default function Navbar() {
               key={href}
               href={href}
               className={`flex items-center gap-1.5 text-sm font-medium transition-colors ${
-                pathname === href
+                pathname === href.replace(`/${locale}`, "") || (pathname === "/" && href === `/${locale}`)
                   ? "text-red-400"
                   : "text-gray-400 hover:text-white"
               }`}
