@@ -1,8 +1,8 @@
 "use client";
 
 import { useTranslations, useLocale } from "next-intl";
-import { usePathname, useRouter } from "@/i18n.navigation";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Activity, Bell, FileText, Globe, CreditCard } from "lucide-react";
 
 const LOCALES = [
@@ -12,14 +12,22 @@ const LOCALES = [
   { code: "ar", label: "AR" },
 ];
 
+const VALID_LOCALES = ["fr", "en", "es", "ar"];
+
 export default function Navbar() {
   const t = useTranslations("nav");
   const locale = useLocale();
-  const pathname = usePathname();
-  const router = useRouter();
+  const pathname = usePathname(); // e.g. /fr/alerts
 
   const switchLocale = (newLocale: string) => {
-    router.replace(pathname, { locale: newLocale });
+    const segments = pathname.split("/");
+    // segments[0] = "", segments[1] = locale, segments[2+] = rest
+    if (VALID_LOCALES.includes(segments[1])) {
+      segments[1] = newLocale;
+    } else {
+      segments.splice(1, 0, newLocale);
+    }
+    window.location.href = segments.join("/") || "/";
   };
 
   const navLinks = [
