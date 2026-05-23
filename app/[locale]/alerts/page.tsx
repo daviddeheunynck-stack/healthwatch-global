@@ -2,7 +2,7 @@
 
 import { useTranslations } from "next-intl";
 import { useState } from "react";
-import { Bell, CheckCircle, Loader2 } from "lucide-react";
+import { Bell, CheckCircle, Loader2, Info } from "lucide-react";
 
 const REGIONS = ["allRegions", "africa", "asia", "europe", "americas", "oceania"] as const;
 
@@ -102,6 +102,11 @@ export default function AlertsPage() {
             </button>
           </form>
         )}
+      </div>
+
+      <div className="bg-gray-900/50 border border-gray-800 rounded-xl p-4 flex gap-3 text-sm text-gray-400">
+        <Info className="w-4 h-4 text-blue-400 shrink-0 mt-0.5" />
+        <p>{t("freeNote")}</p>
       </div>
 
       <div className="text-center text-xs text-gray-600">

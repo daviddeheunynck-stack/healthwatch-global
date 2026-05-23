@@ -1,6 +1,7 @@
 import { getTranslations, getLocale } from "next-intl/server";
-import { Check, Zap, Shield, Building2, Mail } from "lucide-react";
+import { Check, Zap, Shield, Building2, Mail, Gift } from "lucide-react";
 import CheckoutButton from "@/components/CheckoutButton";
+import Link from "next/link";
 
 const STARTER_FEATURES = [
   "pricing.f1_1",
@@ -42,6 +43,34 @@ export default async function PricingPage() {
           <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
           {t("pricing.badge")}
         </div>
+      </div>
+
+      {/* Free tier banner */}
+      <div className="border border-gray-700 rounded-2xl p-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 bg-gray-900/40">
+        <div className="flex items-start gap-4">
+          <Gift className="w-8 h-8 text-green-400 shrink-0 mt-0.5" />
+          <div>
+            <div className="flex items-center gap-2 mb-1">
+              <span className="text-green-400 font-bold text-lg">{t("pricing.free_title")}</span>
+              <span className="bg-green-500/10 text-green-400 text-xs font-medium px-2 py-0.5 rounded-full border border-green-500/20">0 €</span>
+            </div>
+            <p className="text-gray-400 text-sm">{t("pricing.free_desc")}</p>
+            <ul className="mt-3 flex flex-wrap gap-x-6 gap-y-1">
+              {(["f0_1","f0_2","f0_3","f0_4"] as const).map((k) => (
+                <li key={k} className="flex items-center gap-1.5 text-xs text-gray-400">
+                  <Check className="w-3.5 h-3.5 text-green-400 shrink-0" />
+                  {t(`pricing.${k}` as any)}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+        <Link
+          href={`/${locale}/alerts`}
+          className="shrink-0 border border-green-500/40 hover:border-green-400 text-green-400 hover:text-green-300 font-semibold px-5 py-2.5 rounded-lg transition-colors text-sm whitespace-nowrap"
+        >
+          {t("pricing.free_cta")}
+        </Link>
       </div>
 
       {/* Plans */}
