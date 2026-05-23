@@ -53,7 +53,7 @@ export default async function PricingPage() {
               <span className="text-blue-400 font-semibold text-sm uppercase tracking-wide">Starter</span>
             </div>
             <div className="flex items-end gap-1">
-              <span className="text-4xl font-bold text-white">199 €</span>
+              <span className="text-4xl font-bold text-white">{t("pricing.starter_price")}</span>
               <span className="text-gray-400 mb-1">{t("pricing.perMonth")}</span>
             </div>
             <p className="text-gray-400 text-sm mt-2">{t("pricing.starter_desc")}</p>
@@ -90,7 +90,7 @@ export default async function PricingPage() {
               <span className="text-red-400 font-semibold text-sm uppercase tracking-wide">Pro</span>
             </div>
             <div className="flex items-end gap-1">
-              <span className="text-4xl font-bold text-white">990 €</span>
+              <span className="text-4xl font-bold text-white">{t("pricing.pro_price")}</span>
               <span className="text-gray-400 mb-1">{t("pricing.perMonth")}</span>
             </div>
             <p className="text-gray-400 text-sm mt-2">{t("pricing.pro_desc")}</p>
@@ -156,7 +156,7 @@ export default async function PricingPage() {
           <p className="text-gray-400 text-sm mt-1">{t("pricing.trust2")}</p>
         </div>
         <div>
-          <p className="text-3xl font-bold text-white">RGPD</p>
+          <p className="text-3xl font-bold text-white">{t("pricing.compliance")}</p>
           <p className="text-gray-400 text-sm mt-1">{t("pricing.trust3")}</p>
         </div>
       </div>
