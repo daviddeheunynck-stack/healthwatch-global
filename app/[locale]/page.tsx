@@ -1,4 +1,4 @@
-import { useTranslations } from "next-intl";
+import { getTranslations } from "next-intl/server";
 import { Activity, Globe, Bell, AlertTriangle } from "lucide-react";
 import { getOutbreaks, getStats } from "@/lib/outbreaks";
 import StatsCard from "@/components/StatsCard";
@@ -9,32 +9,33 @@ import { Suspense } from "react";
 export const dynamic = "force-dynamic";
 
 async function DashboardContent() {
+  const t = await getTranslations("dashboard");
   const outbreaks = await getOutbreaks();
   const stats = getStats(outbreaks);
 
   return (
     <>
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <StatsCard label="Épidémies Actives" value={stats.activeOutbreaks} icon={<Activity className="w-5 h-5" />} color="red" />
-        <StatsCard label="Pays Touchés" value={stats.countriesAffected} icon={<Globe className="w-5 h-5" />} color="blue" />
-        <StatsCard label="Alertes (7j)" value={stats.alertsToday} icon={<Bell className="w-5 h-5" />} color="orange" />
-        <StatsCard label="Risque Élevé" value={stats.highRisk} icon={<AlertTriangle className="w-5 h-5" />} color="yellow" />
+        <StatsCard label={t("activeOutbreaks")} value={stats.activeOutbreaks} icon={<Activity className="w-5 h-5" />} color="red" />
+        <StatsCard label={t("countriesAffected")} value={stats.countriesAffected} icon={<Globe className="w-5 h-5" />} color="blue" />
+        <StatsCard label={t("alertsToday")} value={stats.alertsToday} icon={<Bell className="w-5 h-5" />} color="orange" />
+        <StatsCard label={t("highRisk")} value={stats.highRisk} icon={<AlertTriangle className="w-5 h-5" />} color="yellow" />
       </div>
 
       <WorldMap outbreaks={outbreaks} />
 
       <div>
-        <h2 className="text-xl font-semibold text-white mb-4">Alertes récentes</h2>
+        <h2 className="text-xl font-semibold text-white mb-4">{t("recentAlerts")}</h2>
         <div className="rounded-xl border border-gray-800 overflow-hidden">
           <table className="w-full text-sm">
             <thead className="bg-gray-900 text-gray-400">
               <tr>
-                <th className="text-left px-4 py-3">Maladie</th>
-                <th className="text-left px-4 py-3">Pays</th>
-                <th className="text-left px-4 py-3">Cas</th>
-                <th className="text-left px-4 py-3">Décès</th>
-                <th className="text-left px-4 py-3">Risque</th>
-                <th className="text-left px-4 py-3">Date</th>
+                <th className="text-left px-4 py-3">{t("disease")}</th>
+                <th className="text-left px-4 py-3">{t("country")}</th>
+                <th className="text-left px-4 py-3">{t("cases")}</th>
+                <th className="text-left px-4 py-3">{t("deaths")}</th>
+                <th className="text-left px-4 py-3">{t("riskLevel")}</th>
+                <th className="text-left px-4 py-3">{t("date")}</th>
               </tr>
             </thead>
             <tbody>
@@ -58,17 +59,19 @@ async function DashboardContent() {
   );
 }
 
-export default function DashboardPage() {
+export default async function DashboardPage() {
+  const t = await getTranslations("dashboard");
+
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-3xl font-bold text-white">Surveillance Sanitaire Mondiale</h1>
-        <p className="text-gray-400 mt-1">Suivi en temps réel des épidémies dans le monde</p>
+        <h1 className="text-3xl font-bold text-white">{t("title")}</h1>
+        <p className="text-gray-400 mt-1">{t("subtitle")}</p>
       </div>
       <Suspense fallback={
         <div className="flex items-center justify-center py-20 text-gray-400">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-red-500 mr-3" />
-          Chargement des données...
+          {t("loading")}
         </div>
       }>
         <DashboardContent />

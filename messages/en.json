@@ -3,6 +3,7 @@
     "dashboard": "Dashboard",
     "alerts": "Alerts",
     "reports": "Reports",
+    "pricing": "Pricing",
     "title": "HealthWatch Global"
   },
   "dashboard": {
@@ -10,10 +11,15 @@
     "subtitle": "Real-time monitoring of disease outbreaks worldwide",
     "activeOutbreaks": "Active Outbreaks",
     "countriesAffected": "Countries Affected",
-    "alertsToday": "Alerts Today",
-    "highRisk": "High Risk Zones",
+    "alertsToday": "Alerts (7d)",
+    "highRisk": "High Risk",
     "recentAlerts": "Recent Alerts",
     "riskLevel": "Risk Level",
+    "disease": "Disease",
+    "country": "Country",
+    "cases": "Cases",
+    "deaths": "Deaths",
+    "date": "Date",
     "loading": "Loading data...",
     "lastUpdated": "Last updated"
   },
@@ -41,14 +47,10 @@
     "title": "Epidemiological Reports",
     "subtitle": "Weekly summaries by region",
     "download": "Download PDF",
-    "generated": "Generated on"
-  },
-  "nav": {
-    "dashboard": "Dashboard",
-    "alerts": "Alerts",
-    "reports": "Reports",
-    "pricing": "Pricing",
-    "title": "HealthWatch Global"
+    "generated": "Generated on",
+    "activeCases": "Active outbreaks",
+    "totalCases": "Total reported cases",
+    "highRiskAlerts": "High risk alerts"
   },
   "pricing": {
     "title": "Simple, transparent pricing",
