@@ -20,6 +20,14 @@ function getCurrency(locale: string): "eur" | "usd" {
   return locale === "fr" ? "eur" : "usd";
 }
 
+const STRIPE_LOCALES: Record<string, string> = {
+  fr: "fr",
+  en: "en",
+  es: "es",
+  ar: "ar",
+  id: "id",
+};
+
 export async function POST(req: NextRequest) {
   try {
     const { plan, locale } = await req.json();
@@ -36,6 +44,8 @@ export async function POST(req: NextRequest) {
     const secretKey = clean(process.env.STRIPE_SECRET_KEY);
     const baseUrl = clean(process.env.NEXT_PUBLIC_BASE_URL, "https://healthwatch-global.com");
 
+    const stripeLocale = STRIPE_LOCALES[locale] || "en";
+
     const params = new URLSearchParams({
       mode: "subscription",
       "line_items[0][price]": priceId,
@@ -43,6 +53,7 @@ export async function POST(req: NextRequest) {
       success_url: `${baseUrl}/${locale}/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${baseUrl}/${locale}/pricing`,
       allow_promotion_codes: "true",
+      locale: stripeLocale,
     });
 
     const response = await fetch("https://api.stripe.com/v1/checkout/sessions", {
