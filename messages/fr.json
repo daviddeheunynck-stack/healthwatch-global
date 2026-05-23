@@ -55,6 +55,12 @@
     "totalCases": "Total cas rapportés",
     "highRiskAlerts": "Alertes risque élevé"
   },
+  "success": {
+    "title": "Paiement confirmé !",
+    "subtitle": "Bienvenue sur HealthWatch Global.",
+    "email": "Un email de confirmation a été envoyé à votre adresse.",
+    "cta": "Accéder au tableau de bord"
+  },
   "pricing": {
     "title": "Tarifs simples et transparents",
     "subtitle": "Des solutions adaptées aux gouvernements, ONG et acteurs privés du secteur santé.",

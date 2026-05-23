@@ -1,5 +1,6 @@
-import { getTranslations } from "next-intl/server";
+import { getTranslations, getLocale } from "next-intl/server";
 import { Check, Zap, Shield, Building2, Mail } from "lucide-react";
+import CheckoutButton from "@/components/CheckoutButton";
 
 const STARTER_FEATURES = [
   "pricing.f1_1",
@@ -29,6 +30,7 @@ const ENTERPRISE_FEATURES = [
 
 export default async function PricingPage() {
   const t = await getTranslations();
+  const locale = await getLocale();
 
   return (
     <div className="space-y-12">
@@ -68,12 +70,12 @@ export default async function PricingPage() {
             ))}
           </ul>
 
-          <a
-            href="mailto:contact@healthwatch-global.com?subject=Starter Plan - HealthWatch Global"
-            className="block w-full text-center bg-blue-600 hover:bg-blue-500 text-white font-semibold py-2.5 rounded-lg transition-colors"
-          >
-            {t("pricing.getStarted")}
-          </a>
+          <CheckoutButton
+            plan="starter"
+            locale={locale}
+            label={t("pricing.getStarted")}
+            className="w-full bg-blue-600 hover:bg-blue-500 text-white font-semibold py-2.5 rounded-lg transition-colors"
+          />
         </div>
 
         {/* Pro — highlighted */}
@@ -105,12 +107,12 @@ export default async function PricingPage() {
             ))}
           </ul>
 
-          <a
-            href="mailto:contact@healthwatch-global.com?subject=Pro Plan - HealthWatch Global"
-            className="block w-full text-center bg-red-600 hover:bg-red-500 text-white font-semibold py-2.5 rounded-lg transition-colors"
-          >
-            {t("pricing.getStarted")}
-          </a>
+          <CheckoutButton
+            plan="pro"
+            locale={locale}
+            label={t("pricing.getStarted")}
+            className="w-full bg-red-600 hover:bg-red-500 text-white font-semibold py-2.5 rounded-lg transition-colors"
+          />
         </div>
 
         {/* Enterprise */}

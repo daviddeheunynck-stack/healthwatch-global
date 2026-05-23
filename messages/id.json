@@ -55,6 +55,12 @@
     "totalCases": "Total kasus dilaporkan",
     "highRiskAlerts": "Peringatan risiko tinggi"
   },
+  "success": {
+    "title": "Pembayaran dikonfirmasi!",
+    "subtitle": "Selamat datang di HealthWatch Global.",
+    "email": "Email konfirmasi telah dikirim ke alamat Anda.",
+    "cta": "Ke dasbor"
+  },
   "pricing": {
     "title": "Harga sederhana dan transparan",
     "subtitle": "Solusi yang disesuaikan untuk pemerintah, LSM, dan pelaku sektor kesehatan swasta.",
