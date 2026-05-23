@@ -2,14 +2,17 @@ import { NextRequest, NextResponse } from "next/server";
 
 export const dynamic = "force-dynamic";
 
+const stripBOM = (val: string | undefined) =>
+  (val || "").replace(/^﻿/, "").trim();
+
 const PRICES: Record<string, Record<string, string>> = {
   starter: {
-    eur: process.env.STRIPE_STARTER_EUR_PRICE_ID!,
-    usd: process.env.STRIPE_STARTER_USD_PRICE_ID!,
+    eur: stripBOM(process.env.STRIPE_STARTER_EUR_PRICE_ID),
+    usd: stripBOM(process.env.STRIPE_STARTER_USD_PRICE_ID),
   },
   pro: {
-    eur: process.env.STRIPE_PRO_EUR_PRICE_ID!,
-    usd: process.env.STRIPE_PRO_USD_PRICE_ID!,
+    eur: stripBOM(process.env.STRIPE_PRO_EUR_PRICE_ID),
+    usd: stripBOM(process.env.STRIPE_PRO_USD_PRICE_ID),
   },
 };
 
