@@ -3,6 +3,7 @@
     "dashboard": "Panel",
     "alerts": "Alertas",
     "reports": "Informes",
+    "pricing": "Precios",
     "title": "HealthWatch Global"
   },
   "dashboard": {
@@ -10,10 +11,15 @@
     "subtitle": "Monitoreo en tiempo real de brotes de enfermedades",
     "activeOutbreaks": "Brotes Activos",
     "countriesAffected": "Países Afectados",
-    "alertsToday": "Alertas Hoy",
-    "highRisk": "Zonas de Alto Riesgo",
+    "alertsToday": "Alertas (7d)",
+    "highRisk": "Alto Riesgo",
     "recentAlerts": "Alertas Recientes",
     "riskLevel": "Nivel de Riesgo",
+    "disease": "Enfermedad",
+    "country": "País",
+    "cases": "Casos",
+    "deaths": "Muertes",
+    "date": "Fecha",
     "loading": "Cargando datos...",
     "lastUpdated": "Última actualización"
   },
@@ -41,14 +47,10 @@
     "title": "Informes Epidemiológicos",
     "subtitle": "Resúmenes semanales por región",
     "download": "Descargar PDF",
-    "generated": "Generado el"
-  },
-  "nav": {
-    "dashboard": "Panel",
-    "alerts": "Alertas",
-    "reports": "Informes",
-    "pricing": "Precios",
-    "title": "HealthWatch Global"
+    "generated": "Generado el",
+    "activeCases": "Brotes activos",
+    "totalCases": "Total casos reportados",
+    "highRiskAlerts": "Alertas de alto riesgo"
   },
   "pricing": {
     "title": "Precios simples y transparentes",

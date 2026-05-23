@@ -3,6 +3,7 @@
     "dashboard": "لوحة القيادة",
     "alerts": "التنبيهات",
     "reports": "التقارير",
+    "pricing": "الأسعار",
     "title": "HealthWatch Global"
   },
   "dashboard": {
@@ -10,10 +11,15 @@
     "subtitle": "مراقبة تفشي الأمراض في الوقت الفعلي حول العالم",
     "activeOutbreaks": "تفشيات نشطة",
     "countriesAffected": "الدول المتضررة",
-    "alertsToday": "تنبيهات اليوم",
-    "highRisk": "مناطق الخطر العالي",
+    "alertsToday": "تنبيهات (7أيام)",
+    "highRisk": "خطر عالي",
     "recentAlerts": "التنبيهات الأخيرة",
     "riskLevel": "مستوى الخطر",
+    "disease": "المرض",
+    "country": "الدولة",
+    "cases": "الحالات",
+    "deaths": "الوفيات",
+    "date": "التاريخ",
     "loading": "جاري تحميل البيانات...",
     "lastUpdated": "آخر تحديث"
   },
@@ -41,14 +47,10 @@
     "title": "التقارير الوبائية",
     "subtitle": "ملخصات أسبوعية حسب المنطقة",
     "download": "تحميل PDF",
-    "generated": "تم إنشاؤه في"
-  },
-  "nav": {
-    "dashboard": "لوحة القيادة",
-    "alerts": "التنبيهات",
-    "reports": "التقارير",
-    "pricing": "الأسعار",
-    "title": "HealthWatch Global"
+    "generated": "تم إنشاؤه في",
+    "activeCases": "التفشيات النشطة",
+    "totalCases": "إجمالي الحالات المبلغ عنها",
+    "highRiskAlerts": "تنبيهات الخطر العالي"
   },
   "pricing": {
     "title": "أسعار بسيطة وشفافة",
