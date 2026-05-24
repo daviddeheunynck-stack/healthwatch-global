@@ -44,8 +44,7 @@ export async function GET(req: NextRequest) {
   // Fetch all subscribers
   const { data: subscribers, error: subError } = await supabase
     .from("subscriptions")
-    .select("email, region, locale")
-    .eq("active", true);
+    .select("email, region, locale");
 
   if (subError) {
     console.error("Failed to fetch subscribers:", subError);

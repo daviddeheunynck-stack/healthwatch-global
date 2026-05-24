@@ -88,7 +88,7 @@ export async function POST(req: NextRequest) {
 
     const { error: dbError } = await supabase
       .from("subscriptions")
-      .insert({ email, region, locale: locale || "fr", active: true });
+      .insert({ email, region, locale: locale || "fr" });
 
     if (dbError && dbError.code !== "23505") {
       return NextResponse.json({ error: dbError.message }, { status: 500 });
