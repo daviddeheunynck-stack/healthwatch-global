@@ -5,7 +5,15 @@ import type { Outbreak } from "@/lib/outbreaks";
 
 export const dynamic = "force-dynamic";
 
-const BREVO_API_KEY = (process.env.BREVO_API_KEY || "").replace(/^﻿/, "").trim();
+// Strip BOM (U+FEFF = char code 65279) and whitespace from env vars.
+// Uses String.fromCharCode so no literal BOM byte appears in this source file.
+const BOM = String.fromCharCode(65279);
+const clean = (val: string | undefined) =>
+  (val || "").replace(new RegExp("^" + BOM), "").trim();
+
+const BREVO_API_KEY = clean(process.env.BREVO_API_KEY);
+const SUPABASE_URL = clean(process.env.NEXT_PUBLIC_SUPABASE_URL);
+const SUPABASE_SERVICE_KEY = clean(process.env.SUPABASE_SERVICE_ROLE_KEY);
 
 async function sendEmail(to: string, subject: string, html: string) {
   const res = await fetch("https://api.brevo.com/v3/smtp/email", {
@@ -28,21 +36,15 @@ async function sendEmail(to: string, subject: string, html: string) {
 }
 
 export async function GET(req: NextRequest) {
-  // Verify cron secret (Vercel sends Authorization: Bearer CRON_SECRET)
   const authHeader = req.headers.get("authorization");
-  const cronSecret = (process.env.CRON_SECRET || "").replace(/^﻿/, "").trim();
+  const cronSecret = clean(process.env.CRON_SECRET);
 
   if (cronSecret && authHeader !== `Bearer ${cronSecret}`) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  // Service role key bypasses RLS to read all subscribers
-  const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!
-  );
+  const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
 
-  // Fetch all subscribers
   const { data: subscribers, error: subError } = await supabase
     .from("subscriptions")
     .select("email, region, locale");
@@ -56,11 +58,9 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ message: "No subscribers found.", sent: 0 });
   }
 
-  // Fetch all active outbreaks
   const { data: outbreaks, error: outbreakError } = await supabase
     .from("outbreaks")
     .select("*")
-    .eq("active", true)
     .order("date", { ascending: false });
 
   if (outbreakError) {
@@ -77,7 +77,6 @@ export async function GET(req: NextRequest) {
       const locale = sub.locale || "fr";
       const region = sub.region || "allRegions";
 
-      // Filter outbreaks by region
       const regionOutbreaks = region === "allRegions"
         ? allOutbreaks
         : allOutbreaks.filter((o) => o.region === region);
@@ -86,7 +85,6 @@ export async function GET(req: NextRequest) {
       await sendEmail(sub.email, subject, html);
       sent++;
 
-      // Small delay to respect Brevo rate limits
       await new Promise((r) => setTimeout(r, 200));
     } catch (err) {
       console.error(`Failed to send to ${sub.email}:`, err);
