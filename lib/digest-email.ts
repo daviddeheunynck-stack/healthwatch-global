@@ -10,6 +10,8 @@ const LABELS: Record<string, Record<string, string>> = {
     region: "Région surveillée",
     noOutbreaks: "Aucun foyer actif signalé dans votre région cette semaine. Bonne nouvelle !",
     cases: "Cas", deaths: "Décès", risk: "Risque",
+    disease: "Maladie", country: "Pays",
+    active: "actif(s)",
     high: "Élevé", medium: "Moyen", low: "Faible",
     cta: "Voir le tableau de bord complet →",
     unsubscribe: "Pour vous désabonner, répondez à cet email avec « désabonnement ».",
@@ -22,6 +24,8 @@ const LABELS: Record<string, Record<string, string>> = {
     region: "Monitored region",
     noOutbreaks: "No active outbreaks reported in your region this week. Good news!",
     cases: "Cases", deaths: "Deaths", risk: "Risk",
+    disease: "Disease", country: "Country",
+    active: "active",
     high: "High", medium: "Medium", low: "Low",
     cta: "View full dashboard →",
     unsubscribe: "To unsubscribe, reply to this email with \"unsubscribe\".",
@@ -34,6 +38,8 @@ const LABELS: Record<string, Record<string, string>> = {
     region: "Región monitoreada",
     noOutbreaks: "No se han reportado brotes activos en su región esta semana. ¡Buenas noticias!",
     cases: "Casos", deaths: "Muertes", risk: "Riesgo",
+    disease: "Enfermedad", country: "País",
+    active: "activo(s)",
     high: "Alto", medium: "Medio", low: "Bajo",
     cta: "Ver el panel completo →",
     unsubscribe: "Para cancelar su suscripción, responda con \"baja\".",
@@ -46,6 +52,8 @@ const LABELS: Record<string, Record<string, string>> = {
     region: "المنطقة المراقبة",
     noOutbreaks: "لم يتم الإبلاغ عن أي تفشيات نشطة في منطقتك هذا الأسبوع. أخبار جيدة!",
     cases: "الحالات", deaths: "الوفيات", risk: "الخطر",
+    disease: "المرض", country: "البلد",
+    active: "نشط",
     high: "عالي", medium: "متوسط", low: "منخفض",
     cta: "← عرض لوحة التحكم الكاملة",
     unsubscribe: "لإلغاء الاشتراك، رد على هذا البريد بكلمة «إلغاء».",
@@ -58,6 +66,8 @@ const LABELS: Record<string, Record<string, string>> = {
     region: "Wilayah dipantau",
     noOutbreaks: "Tidak ada wabah aktif dilaporkan di wilayah Anda minggu ini. Kabar baik!",
     cases: "Kasus", deaths: "Kematian", risk: "Risiko",
+    disease: "Penyakit", country: "Negara",
+    active: "aktif",
     high: "Tinggi", medium: "Sedang", low: "Rendah",
     cta: "Lihat dasbor lengkap →",
     unsubscribe: "Untuk berhenti berlangganan, balas email ini dengan \"berhenti\".",
@@ -136,7 +146,7 @@ export function buildDigestEmail(
       <h2 style="margin:0 0 4px;font-size:22px;color:#f1f5f9;">${l.title}</h2>
       <p style="margin:0 0 24px;color:#64748b;font-size:14px;">
         ${l.region} : <strong style="color:#e2e8f0;">${regionLabel}</strong>
-        &nbsp;·&nbsp; ${outbreaks.length} foyer${outbreaks.length > 1 ? "s" : ""} actif${outbreaks.length > 1 ? "s" : ""}
+        &nbsp;·&nbsp; ${outbreaks.length} ${l.active}
       </p>
 
       ${outbreaks.length > 0 ? `
@@ -145,8 +155,8 @@ export function buildDigestEmail(
         <table style="width:100%;border-collapse:collapse;font-size:13px;background:#0f172a;">
           <thead>
             <tr style="background:#1e293b;">
-              <th style="padding:10px 8px;text-align:${dir === "rtl" ? "right" : "left"};color:#64748b;font-weight:600;font-size:11px;text-transform:uppercase;">Disease</th>
-              <th style="padding:10px 8px;text-align:${dir === "rtl" ? "right" : "left"};color:#64748b;font-weight:600;font-size:11px;text-transform:uppercase;">${l.cases === "Cases" ? "Country" : "Pays"}</th>
+              <th style="padding:10px 8px;text-align:${dir === "rtl" ? "right" : "left"};color:#64748b;font-weight:600;font-size:11px;text-transform:uppercase;">${l.disease}</th>
+              <th style="padding:10px 8px;text-align:${dir === "rtl" ? "right" : "left"};color:#64748b;font-weight:600;font-size:11px;text-transform:uppercase;">${l.country}</th>
               <th style="padding:10px 8px;text-align:${dir === "rtl" ? "right" : "left"};color:#64748b;font-weight:600;font-size:11px;text-transform:uppercase;">${l.cases}</th>
               <th style="padding:10px 8px;text-align:${dir === "rtl" ? "right" : "left"};color:#64748b;font-weight:600;font-size:11px;text-transform:uppercase;">${l.deaths}</th>
               <th style="padding:10px 8px;text-align:${dir === "rtl" ? "right" : "left"};color:#64748b;font-weight:600;font-size:11px;text-transform:uppercase;">${l.risk}</th>
