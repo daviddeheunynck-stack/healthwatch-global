@@ -75,7 +75,7 @@ async function sendConfirmationEmail(email: string, region: string) {
 
 export async function POST(req: NextRequest) {
   try {
-    const { email, region } = await req.json();
+    const { email, region, locale } = await req.json();
 
     if (!email || !region) {
       return NextResponse.json({ error: "Missing fields" }, { status: 400 });
@@ -88,7 +88,7 @@ export async function POST(req: NextRequest) {
 
     const { error: dbError } = await supabase
       .from("subscriptions")
-      .insert({ email, region });
+      .insert({ email, region, locale: locale || "fr", active: true });
 
     if (dbError && dbError.code !== "23505") {
       return NextResponse.json({ error: dbError.message }, { status: 500 });

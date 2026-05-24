@@ -1,6 +1,6 @@
 "use client";
 
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import { useState } from "react";
 import { Bell, CheckCircle, Loader2, Info } from "lucide-react";
 
@@ -8,6 +8,7 @@ const REGIONS = ["allRegions", "africa", "asia", "europe", "americas", "oceania"
 
 export default function AlertsPage() {
   const t = useTranslations("alerts");
+  const locale = useLocale();
   const [email, setEmail] = useState("");
   const [region, setRegion] = useState("allRegions");
   const [submitted, setSubmitted] = useState(false);
@@ -24,7 +25,7 @@ export default function AlertsPage() {
       const res = await fetch("/api/subscribe", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, region }),
+        body: JSON.stringify({ email, region, locale }),
       });
 
       const data = await res.json();
