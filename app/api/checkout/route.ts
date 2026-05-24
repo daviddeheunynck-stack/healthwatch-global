@@ -30,7 +30,7 @@ const STRIPE_LOCALES: Record<string, string> = {
 
 export async function POST(req: NextRequest) {
   try {
-    const { plan, locale } = await req.json();
+    const { plan, locale, userId, userEmail } = await req.json();
     const currency = getCurrency(locale);
     const priceId = PRICES[plan]?.[currency];
 
@@ -54,7 +54,14 @@ export async function POST(req: NextRequest) {
       cancel_url: `${baseUrl}/${locale}/pricing`,
       allow_promotion_codes: "true",
       locale: stripeLocale,
+      "metadata[plan]": plan,
+      "metadata[user_id]": userId || "",
     });
+
+    // Pre-fill Stripe form with user email if available
+    if (userEmail) {
+      params.set("customer_email", userEmail);
+    }
 
     const response = await fetch("https://api.stripe.com/v1/checkout/sessions", {
       method: "POST",

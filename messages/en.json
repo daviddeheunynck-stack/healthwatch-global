@@ -21,7 +21,9 @@
     "deaths": "Deaths",
     "date": "Date",
     "loading": "Loading data...",
-    "lastUpdated": "Last updated"
+    "lastUpdated": "Last updated",
+    "lockedDesc": "Exact figures reserved for Starter and Pro subscribers.",
+    "lockedCta": "See plans →"
   },
   "risk": {
     "high": "High",
@@ -111,5 +113,26 @@
     "faq2_a": "Yes. We continuously aggregate feeds from WHO, CDC, ECDC and ProMED, 24/7.",
     "faq3_q": "Do you offer a free trial?",
     "faq3_a": "Yes, 14-day free trial on Starter and Pro plans. No credit card required."
+  },
+  "auth": {
+    "loginTitle": "Sign in",
+    "signupTitle": "Create account",
+    "email": "Email",
+    "password": "Password",
+    "login": "Sign in",
+    "signup": "Create account",
+    "logout": "Logout",
+    "alreadyHaveAccount": "Already have an account?",
+    "dontHaveAccount": "Don't have an account?",
+    "loginLink": "Sign in",
+    "signupLink": "Sign up",
+    "errorInvalid": "Invalid email or password.",
+    "successSignup": "Account created! Check your email.",
+    "checkEmailSignup": "Click the confirmation link sent to your address to activate your account.",
+    "plan": {
+      "free": "Free",
+      "starter": "Starter",
+      "pro": "Pro"
+    }
   }
 }

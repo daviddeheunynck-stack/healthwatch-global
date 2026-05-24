@@ -21,7 +21,9 @@
     "deaths": "Kematian",
     "date": "Tanggal",
     "loading": "Memuat data...",
-    "lastUpdated": "Terakhir diperbarui"
+    "lastUpdated": "Terakhir diperbarui",
+    "lockedDesc": "Angka pasti hanya untuk pelanggan Starter dan Pro.",
+    "lockedCta": "Lihat paket →"
   },
   "risk": {
     "high": "Tinggi",
@@ -111,5 +113,26 @@
     "faq2_a": "Ya. Kami terus mengumpulkan data dari WHO, CDC, ECDC dan ProMED, 24/7.",
     "faq3_q": "Apakah Anda menawarkan uji coba gratis?",
     "faq3_a": "Ya, uji coba gratis 14 hari untuk paket Starter dan Pro. Tidak diperlukan kartu kredit."
+  },
+  "auth": {
+    "loginTitle": "Masuk",
+    "signupTitle": "Buat akun",
+    "email": "Email",
+    "password": "Kata sandi",
+    "login": "Masuk",
+    "signup": "Buat akun",
+    "logout": "Keluar",
+    "alreadyHaveAccount": "Sudah punya akun?",
+    "dontHaveAccount": "Belum punya akun?",
+    "loginLink": "Masuk",
+    "signupLink": "Daftar",
+    "errorInvalid": "Email atau kata sandi salah.",
+    "successSignup": "Akun dibuat! Periksa email Anda.",
+    "checkEmailSignup": "Klik tautan konfirmasi yang dikirim ke alamat Anda untuk mengaktifkan akun.",
+    "plan": {
+      "free": "Gratis",
+      "starter": "Starter",
+      "pro": "Pro"
+    }
   }
 }

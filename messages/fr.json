@@ -21,7 +21,9 @@
     "deaths": "Décès",
     "date": "Date",
     "loading": "Chargement des données...",
-    "lastUpdated": "Dernière mise à jour"
+    "lastUpdated": "Dernière mise à jour",
+    "lockedDesc": "Chiffres exacts réservés aux abonnés Starter et Pro.",
+    "lockedCta": "Voir les offres →"
   },
   "risk": {
     "high": "Élevé",
@@ -111,5 +113,26 @@
     "faq2_a": "Oui. Nous agrégeons les flux de l'OMS, du CDC, de l'ECDC et de ProMED en continu, 24h/24.",
     "faq3_q": "Proposez-vous une période d'essai ?",
     "faq3_a": "Oui, 14 jours d'essai gratuit sur les offres Starter et Pro. Aucune carte bancaire requise."
+  },
+  "auth": {
+    "loginTitle": "Connexion",
+    "signupTitle": "Créer un compte",
+    "email": "Email",
+    "password": "Mot de passe",
+    "login": "Se connecter",
+    "signup": "Créer un compte",
+    "logout": "Déconnexion",
+    "alreadyHaveAccount": "Déjà un compte ?",
+    "dontHaveAccount": "Pas encore de compte ?",
+    "loginLink": "Se connecter",
+    "signupLink": "S'inscrire",
+    "errorInvalid": "Email ou mot de passe incorrect.",
+    "successSignup": "Compte créé ! Vérifiez votre email.",
+    "checkEmailSignup": "Cliquez sur le lien de confirmation envoyé à votre adresse pour activer votre compte.",
+    "plan": {
+      "free": "Gratuit",
+      "starter": "Starter",
+      "pro": "Pro"
+    }
   }
 }

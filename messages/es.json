@@ -21,7 +21,9 @@
     "deaths": "Muertes",
     "date": "Fecha",
     "loading": "Cargando datos...",
-    "lastUpdated": "Última actualización"
+    "lastUpdated": "Última actualización",
+    "lockedDesc": "Cifras exactas reservadas para suscriptores Starter y Pro.",
+    "lockedCta": "Ver planes →"
   },
   "risk": {
     "high": "Alto",
@@ -111,5 +113,26 @@
     "faq2_a": "Sí. Agregamos continuamente los flujos de OMS, CDC, ECDC y ProMED las 24 horas.",
     "faq3_q": "¿Ofrecen un período de prueba?",
     "faq3_a": "Sí, 14 días de prueba gratuita en los planes Starter y Pro. No se requiere tarjeta de crédito."
+  },
+  "auth": {
+    "loginTitle": "Iniciar sesión",
+    "signupTitle": "Crear cuenta",
+    "email": "Email",
+    "password": "Contraseña",
+    "login": "Iniciar sesión",
+    "signup": "Crear cuenta",
+    "logout": "Cerrar sesión",
+    "alreadyHaveAccount": "¿Ya tienes cuenta?",
+    "dontHaveAccount": "¿No tienes cuenta?",
+    "loginLink": "Iniciar sesión",
+    "signupLink": "Registrarse",
+    "errorInvalid": "Email o contraseña incorrectos.",
+    "successSignup": "¡Cuenta creada! Revisa tu email.",
+    "checkEmailSignup": "Haz clic en el enlace de confirmación enviado a tu dirección para activar tu cuenta.",
+    "plan": {
+      "free": "Gratuito",
+      "starter": "Starter",
+      "pro": "Pro"
+    }
   }
 }

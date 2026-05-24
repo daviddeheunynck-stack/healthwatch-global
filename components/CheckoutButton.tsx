@@ -1,7 +1,9 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
+import { createClient } from "@/lib/supabase-browser";
 
 interface CheckoutButtonProps {
   plan: "starter" | "pro";
@@ -14,16 +16,33 @@ interface CheckoutButtonProps {
 export default function CheckoutButton({ plan, locale, label, className, icon }: CheckoutButtonProps) {
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
+  const router = useRouter();
 
   const handleClick = async () => {
     setLoading(true);
     setErrorMsg("");
+
     try {
+      // Require login before checkout
+      const supabase = createClient();
+      const { data: { user } } = await supabase.auth.getUser();
+
+      if (!user) {
+        router.push(`/${locale}/login`);
+        return;
+      }
+
       const res = await fetch("/api/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ plan, locale }),
+        body: JSON.stringify({
+          plan,
+          locale,
+          userId: user.id,
+          userEmail: user.email,
+        }),
       });
+
       const data = await res.json();
       if (!res.ok || data.error) throw new Error(data.error || `HTTP ${res.status}`);
       window.location.href = data.url;
