@@ -4,7 +4,8 @@
     "alerts": "Alertes",
     "reports": "Rapports",
     "pricing": "Tarifs",
-    "title": "HealthWatch Global"
+    "title": "HealthWatch Global",
+    "contact": "Contact"
   },
   "dashboard": {
     "title": "Surveillance Sanitaire Mondiale",
@@ -134,5 +135,27 @@
       "starter": "Starter",
       "pro": "Pro"
     }
+  },
+  "contact": {
+    "title": "Nous contacter",
+    "subtitle": "Echangez avec notre equipe pour voir comment HealthWatch Global peut soutenir votre organisation.",
+    "whyTitle": "Comment nous pouvons vous aider",
+    "reason1": "Demander une demo live de la plateforme pour votre equipe",
+    "reason2": "Discuter d un plan adapte a votre region ou usage",
+    "reason3": "Questions sur les sources de donnees, conformite ou integrations",
+    "name": "Nom complet",
+    "namePlaceholder": "Jean Dupont",
+    "organization": "Organisation",
+    "organizationPlaceholder": "MSF, OMS, Ministere de la Sante...",
+    "email": "Email",
+    "message": "Message",
+    "messagePlaceholder": "Parlez-nous de votre organisation et de ce que vous recherchez...",
+    "send": "Envoyer le message",
+    "responseTime": "Nous repondons sous 24h les jours ouvres.",
+    "successTitle": "Message envoye !",
+    "successText": "Merci. Nous vous repondrons dans les 24 heures.",
+    "errorGeneric": "Une erreur est survenue. Reessayez.",
+    "aboutText": "HealthWatch Global a ete cree pour donner aux organisations de sante une intelligence epidemique en temps reel dans leur langue. Nous agregeon les flux OMS, CDC, ECDC et ProMED en une seule plateforme multilingue.",
+    "navLink": "Contact"
   }
 }

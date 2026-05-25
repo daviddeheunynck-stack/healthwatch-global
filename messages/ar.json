@@ -4,7 +4,8 @@
     "alerts": "التنبيهات",
     "reports": "التقارير",
     "pricing": "الأسعار",
-    "title": "HealthWatch Global"
+    "title": "HealthWatch Global",
+    "contact": "اتصل بنا"
   },
   "dashboard": {
     "title": "المراقبة الصحية العالمية",
@@ -134,5 +135,27 @@
       "starter": "Starter",
       "pro": "Pro"
     }
+  },
+  "contact": {
+    "title": "اتصل بنا",
+    "subtitle": "تحدث مع فريقنا لترى كيف يمكن لـ HealthWatch Global دعم منظمتك.",
+    "whyTitle": "كيف يمكننا المساعدة",
+    "reason1": "طلب عرض توضيحي مباشر للمنصة لفريقك",
+    "reason2": "مناقشة خطة مخصصة لمنطقتك او حالة استخدامك",
+    "reason3": "اسئلة حول مصادر البيانات او الامتثال او التكاملات",
+    "name": "الاسم الكامل",
+    "namePlaceholder": "محمد احمد",
+    "organization": "المنظمة",
+    "organizationPlaceholder": "MSF، OMS، وزارة الصحة...",
+    "email": "البريد الالكتروني",
+    "message": "الرسالة",
+    "messagePlaceholder": "اخبرنا عن منظمتك وما تبحث عنه...",
+    "send": "ارسال الرسالة",
+    "responseTime": "نرد خلال 24 ساعة في ايام العمل.",
+    "successTitle": "تم ارسال الرسالة!",
+    "successText": "شكرا. سنرد عليك خلال 24 ساعة.",
+    "errorGeneric": "حدث خطا ما. يرجى المحاولة مرة اخرى.",
+    "aboutText": "تم انشاء HealthWatch Global لمنح المنظمات الصحية معلومات وبائية في الوقت الفعلي بلغتها.",
+    "navLink": "اتصل بنا"
   }
 }

@@ -4,7 +4,8 @@
     "alerts": "Peringatan",
     "reports": "Laporan",
     "pricing": "Harga",
-    "title": "HealthWatch Global"
+    "title": "HealthWatch Global",
+    "contact": "Kontak"
   },
   "dashboard": {
     "title": "Pengawasan Kesehatan Global",
@@ -134,5 +135,27 @@
       "starter": "Starter",
       "pro": "Pro"
     }
+  },
+  "contact": {
+    "title": "Hubungi Kami",
+    "subtitle": "Bicara dengan tim kami untuk melihat bagaimana HealthWatch Global dapat mendukung organisasi Anda.",
+    "whyTitle": "Bagaimana kami bisa membantu",
+    "reason1": "Minta demo langsung platform untuk tim Anda",
+    "reason2": "Diskusikan paket khusus untuk wilayah atau kasus penggunaan Anda",
+    "reason3": "Pertanyaan tentang sumber data, kepatuhan, atau integrasi",
+    "name": "Nama lengkap",
+    "namePlaceholder": "Budi Santoso",
+    "organization": "Organisasi",
+    "organizationPlaceholder": "MSF, WHO, Kementerian Kesehatan...",
+    "email": "Email",
+    "message": "Pesan",
+    "messagePlaceholder": "Ceritakan tentang organisasi Anda dan apa yang Anda cari...",
+    "send": "Kirim pesan",
+    "responseTime": "Kami merespons dalam 24 jam pada hari kerja.",
+    "successTitle": "Pesan terkirim!",
+    "successText": "Terima kasih. Kami akan menghubungi Anda dalam 24 jam.",
+    "errorGeneric": "Terjadi kesalahan. Silakan coba lagi.",
+    "aboutText": "HealthWatch Global dibuat untuk memberi organisasi kesehatan intelijen epidemi real-time dalam bahasa mereka.",
+    "navLink": "Kontak"
   }
 }

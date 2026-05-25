@@ -4,7 +4,8 @@
     "alerts": "Alerts",
     "reports": "Reports",
     "pricing": "Pricing",
-    "title": "HealthWatch Global"
+    "title": "HealthWatch Global",
+    "contact": "Contact"
   },
   "dashboard": {
     "title": "Global Health Surveillance",
@@ -134,5 +135,27 @@
       "starter": "Starter",
       "pro": "Pro"
     }
+  },
+  "contact": {
+    "title": "Get in Touch",
+    "subtitle": "Talk to our team to see how HealthWatch Global can support your organization.",
+    "whyTitle": "How we can help",
+    "reason1": "Request a live demo of the platform for your team",
+    "reason2": "Discuss a custom plan for your region or use case",
+    "reason3": "Ask about data sources, compliance, or integrations",
+    "name": "Full name",
+    "namePlaceholder": "Jane Smith",
+    "organization": "Organization",
+    "organizationPlaceholder": "MSF, WHO, Ministry of Health...",
+    "email": "Email",
+    "message": "Message",
+    "messagePlaceholder": "Tell us about your organization and what you are looking for...",
+    "send": "Send message",
+    "responseTime": "We respond within 24 hours on business days.",
+    "successTitle": "Message sent!",
+    "successText": "Thank you. We will get back to you within 24 hours.",
+    "errorGeneric": "Something went wrong. Please try again.",
+    "aboutText": "HealthWatch Global was built to give health organizations real-time epidemic intelligence in their language. We aggregate WHO, CDC, ECDC and ProMED feeds into a single multilingual platform so your teams can act faster.",
+    "navLink": "Contact"
   }
 }

@@ -4,7 +4,8 @@
     "alerts": "Alertas",
     "reports": "Informes",
     "pricing": "Precios",
-    "title": "HealthWatch Global"
+    "title": "HealthWatch Global",
+    "contact": "Contacto"
   },
   "dashboard": {
     "title": "Vigilancia Sanitaria Mundial",
@@ -134,5 +135,27 @@
       "starter": "Starter",
       "pro": "Pro"
     }
+  },
+  "contact": {
+    "title": "Contactenos",
+    "subtitle": "Hable con nuestro equipo para ver como HealthWatch Global puede apoyar a su organizacion.",
+    "whyTitle": "Como podemos ayudar",
+    "reason1": "Solicitar una demo en vivo de la plataforma para su equipo",
+    "reason2": "Discutir un plan personalizado para su region o caso de uso",
+    "reason3": "Preguntas sobre fuentes de datos, cumplimiento o integraciones",
+    "name": "Nombre completo",
+    "namePlaceholder": "Juan Garcia",
+    "organization": "Organizacion",
+    "organizationPlaceholder": "MSF, OMS, Ministerio de Salud...",
+    "email": "Email",
+    "message": "Mensaje",
+    "messagePlaceholder": "Cuentenos sobre su organizacion y lo que esta buscando...",
+    "send": "Enviar mensaje",
+    "responseTime": "Respondemos en 24 horas en dias habiles.",
+    "successTitle": "Mensaje enviado!",
+    "successText": "Gracias. Le responderemos en 24 horas.",
+    "errorGeneric": "Algo salio mal. Por favor intentelo de nuevo.",
+    "aboutText": "HealthWatch Global fue creado para dar a las organizaciones de salud inteligencia epidemica en tiempo real en su idioma.",
+    "navLink": "Contacto"
   }
 }
