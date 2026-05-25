@@ -24,13 +24,14 @@ export interface WHONewsItem {
 // ── 1. Fetch DON listing from WHO OData API ───────────────────
 
 export async function fetchWHODONList(top = 25): Promise<WHONewsItem[]> {
+  // Fetch a larger batch and filter client-side — $filter and $select cause 400
+  // on this Sitefinity endpoint; only sf_culture, $format, $top are safe params.
+  const fetchTop = top * 3; // over-fetch since we'll filter down to DON only
   const params = new URLSearchParams({
     "sf_culture": "en",
     "$format": "json",
-    "$filter": "NewsType eq 'DiseaseOutbreakNews'",
     "$orderby": "PublicationDateAndTime desc",
-    "$top": String(top),
-    "$select": "Id,Title,UrlName,ItemDefaultUrl,PublicationDateAndTime,NewsType,Summary",
+    "$top": String(fetchTop),
   });
 
   const res = await fetch(`${WHO_API}?${params}`, {
@@ -40,7 +41,12 @@ export async function fetchWHODONList(top = 25): Promise<WHONewsItem[]> {
 
   if (!res.ok) throw new Error(`WHO OData API → HTTP ${res.status}`);
   const json = await res.json();
-  return json.value || [];
+  const all: WHONewsItem[] = json.value || [];
+
+  // Keep only Disease Outbreak News items
+  return all
+    .filter((item) => item.NewsType === "DiseaseOutbreakNews")
+    .slice(0, top);
 }
 
 // ── 2. Fetch individual article body for case/death numbers ───
