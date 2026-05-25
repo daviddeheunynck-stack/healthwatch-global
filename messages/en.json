@@ -134,7 +134,23 @@
       "free": "Free",
       "starter": "Starter",
       "pro": "Pro"
-    }
+    },
+    "forgotPassword": "Forgot your password?",
+    "forgotPasswordTitle": "Reset your password",
+    "forgotPasswordSubtitle": "Enter your email and we will send you a reset link.",
+    "sendResetLink": "Send reset link",
+    "resetLinkSent": "Check your inbox",
+    "resetLinkSentText": "If an account exists for this email, you will receive a reset link within a few minutes.",
+    "resetPasswordTitle": "Set a new password",
+    "newPassword": "New password",
+    "confirmPassword": "Confirm password",
+    "savePassword": "Save new password",
+    "passwordMismatch": "Passwords do not match.",
+    "passwordTooShort": "Password must be at least 8 characters.",
+    "passwordUpdated": "Password updated!",
+    "passwordUpdatedText": "You can now sign in with your new password.",
+    "tokenInvalid": "This link has expired or is invalid. Please request a new one.",
+    "backToLogin": "Back to sign in"
   },
   "contact": {
     "title": "Get in Touch",

@@ -134,7 +134,23 @@
       "free": "Gratuito",
       "starter": "Starter",
       "pro": "Pro"
-    }
+    },
+    "forgotPassword": "Olvide mi contrasena",
+    "forgotPasswordTitle": "Restablecer contrasena",
+    "forgotPasswordSubtitle": "Introduce tu email y te enviaremos un enlace de restablecimiento.",
+    "sendResetLink": "Enviar enlace",
+    "resetLinkSent": "Revisa tu bandeja de entrada",
+    "resetLinkSentText": "Si existe una cuenta con este email, recibiras un enlace en unos minutos.",
+    "resetPasswordTitle": "Nueva contrasena",
+    "newPassword": "Nueva contrasena",
+    "confirmPassword": "Confirmar contrasena",
+    "savePassword": "Guardar contrasena",
+    "passwordMismatch": "Las contrasenas no coinciden.",
+    "passwordTooShort": "La contrasena debe tener al menos 8 caracteres.",
+    "passwordUpdated": "Contrasena actualizada!",
+    "passwordUpdatedText": "Ya puedes iniciar sesion con tu nueva contrasena.",
+    "tokenInvalid": "Este enlace ha expirado o no es valido. Solicita uno nuevo.",
+    "backToLogin": "Volver a iniciar sesion"
   },
   "contact": {
     "title": "Contactenos",

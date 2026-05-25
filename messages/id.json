@@ -134,7 +134,23 @@
       "free": "Gratis",
       "starter": "Starter",
       "pro": "Pro"
-    }
+    },
+    "forgotPassword": "Lupa kata sandi?",
+    "forgotPasswordTitle": "Reset kata sandi",
+    "forgotPasswordSubtitle": "Masukkan email Anda dan kami akan mengirimkan tautan reset.",
+    "sendResetLink": "Kirim tautan reset",
+    "resetLinkSent": "Periksa kotak masuk Anda",
+    "resetLinkSentText": "Jika akun dengan email ini ada, Anda akan menerima tautan reset dalam beberapa menit.",
+    "resetPasswordTitle": "Buat kata sandi baru",
+    "newPassword": "Kata sandi baru",
+    "confirmPassword": "Konfirmasi kata sandi",
+    "savePassword": "Simpan kata sandi",
+    "passwordMismatch": "Kata sandi tidak cocok.",
+    "passwordTooShort": "Kata sandi minimal 8 karakter.",
+    "passwordUpdated": "Kata sandi diperbarui!",
+    "passwordUpdatedText": "Anda sekarang dapat masuk dengan kata sandi baru.",
+    "tokenInvalid": "Tautan ini telah kedaluwarsa atau tidak valid. Minta yang baru.",
+    "backToLogin": "Kembali ke halaman masuk"
   },
   "contact": {
     "title": "Hubungi Kami",

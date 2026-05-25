@@ -134,7 +134,23 @@
       "free": "مجاني",
       "starter": "Starter",
       "pro": "Pro"
-    }
+    },
+    "forgotPassword": "نسيت كلمة المرور؟",
+    "forgotPasswordTitle": "إعادة تعيين كلمة المرور",
+    "forgotPasswordSubtitle": "أدخل بريدك الإلكتروني وسنرسل لك رابط إعادة التعيين.",
+    "sendResetLink": "إرسال الرابط",
+    "resetLinkSent": "تحقق من بريدك الإلكتروني",
+    "resetLinkSentText": "إذا كان هناك حساب بهذا البريد الإلكتروني، ستتلقى رابطاً خلال دقائق.",
+    "resetPasswordTitle": "تعيين كلمة مرور جديدة",
+    "newPassword": "كلمة المرور الجديدة",
+    "confirmPassword": "تأكيد كلمة المرور",
+    "savePassword": "حفظ كلمة المرور",
+    "passwordMismatch": "كلمتا المرور غير متطابقتين.",
+    "passwordTooShort": "يجب أن تحتوي كلمة المرور على 8 أحرف على الأقل.",
+    "passwordUpdated": "تم تحديث كلمة المرور!",
+    "passwordUpdatedText": "يمكنك الآن تسجيل الدخول بكلمة المرور الجديدة.",
+    "tokenInvalid": "انتهت صلاحية هذا الرابط أو أنه غير صالح. يرجى طلب رابط جديد.",
+    "backToLogin": "العودة إلى تسجيل الدخول"
   },
   "contact": {
     "title": "اتصل بنا",

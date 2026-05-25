@@ -134,7 +134,23 @@
       "free": "Gratuit",
       "starter": "Starter",
       "pro": "Pro"
-    }
+    },
+    "forgotPassword": "Mot de passe oublie ?",
+    "forgotPasswordTitle": "Reinitialiser votre mot de passe",
+    "forgotPasswordSubtitle": "Entrez votre email et nous vous enverrons un lien de reinitialisation.",
+    "sendResetLink": "Envoyer le lien",
+    "resetLinkSent": "Verifiez votre boite mail",
+    "resetLinkSentText": "Si un compte existe pour cet email, vous recevrez un lien de reinitialisation dans quelques minutes.",
+    "resetPasswordTitle": "Definir un nouveau mot de passe",
+    "newPassword": "Nouveau mot de passe",
+    "confirmPassword": "Confirmer le mot de passe",
+    "savePassword": "Enregistrer le mot de passe",
+    "passwordMismatch": "Les mots de passe ne correspondent pas.",
+    "passwordTooShort": "Le mot de passe doit contenir au moins 8 caracteres.",
+    "passwordUpdated": "Mot de passe mis a jour !",
+    "passwordUpdatedText": "Vous pouvez maintenant vous connecter avec votre nouveau mot de passe.",
+    "tokenInvalid": "Ce lien a expire ou est invalide. Veuillez en demander un nouveau.",
+    "backToLogin": "Retour a la connexion"
   },
   "contact": {
     "title": "Nous contacter",
