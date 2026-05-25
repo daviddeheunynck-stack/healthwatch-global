@@ -3,7 +3,7 @@ import { normalizeDisease } from "./disease-data";
 import type { ParsedOutbreak } from "./outbreak-parser";
 import { extractNumbers, assessRisk } from "./outbreak-parser";
 
-const RELIEFWEB_API = "https://api.reliefweb.int/v1/reports";
+const RELIEFWEB_API = "https://api.reliefweb.int/v2/reports";
 
 export interface ReliefWebItem {
   id: string;

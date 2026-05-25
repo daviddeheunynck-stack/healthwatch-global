@@ -3,9 +3,11 @@ import { NextResponse } from "next/server";
 export const dynamic = "force-dynamic";
 
 const URLS = [
-  "https://api.reliefweb.int/v1/reports?appname=healthwatch-global&limit=1&fields[include][]=title&filter[field]=theme.name&filter[value]=Health",
-  "https://promedmail.org/feed/",
-  "https://www.who.int/feeds/entity/csr/don/en/rss.xml",
+  "https://api.reliefweb.int/v2/reports?appname=healthwatch-global&limit=1&fields[include][]=title&filter[field]=theme.name&filter[value]=Health",
+  "https://www.ecdc.europa.eu/en/rss-feeds/rss.xml",
+  "https://www.ecdc.europa.eu/feeds/en/news/rss",
+  "https://www.healthmap.org/en/rss.php",
+  "https://www.who.int/emergencies/disease-outbreak-news",
   "https://httpbin.org/get",
 ];
 
