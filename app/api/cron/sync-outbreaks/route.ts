@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
-import { parseRSSFeed, buildOutbreakFromRSSItem, parseTitle } from "@/lib/outbreak-parser";
-import { fetchReliefWebOutbreaks, parseReliefWebItem } from "@/lib/reliefweb";
+import { parseRSSFeed, buildOutbreakFromRSSItem } from "@/lib/outbreak-parser";
+import { fetchWHODONList, parseWHODONItem } from "@/lib/who-api";
 import type { ParsedOutbreak } from "@/lib/outbreak-parser";
 
 export const dynamic = "force-dynamic";
@@ -15,7 +15,7 @@ const CRON_SECRET = clean(process.env.CRON_SECRET);
 
 const STALE_DAYS = 90;
 
-// RSS fallback sources (tried only if ReliefWeb fails)
+// RSS fallback sources (tried only if WHO OData fails)
 const RSS_FALLBACKS = [
   "https://www.who.int/feeds/entity/csr/don/en/rss.xml",
   "https://www.who.int/feeds/entity/emergencies/disease-outbreak-news/en/rss.xml",
@@ -65,35 +65,35 @@ export async function GET(req: NextRequest) {
   let outbreaks: ParsedOutbreak[] = [];
   let usedSource = "";
 
-  // Primary: ReliefWeb JSON API (UN OCHA — no auth, very reliable)
+  // Primary: WHO OData API (Sitefinity CMS — public, no auth required)
   try {
-    const rwItems = await fetchReliefWebOutbreaks();
-    if (debug) debugLog.push(`ReliefWeb: ${rwItems.length} raw items`);
+    const whoItems = await fetchWHODONList(40);
+    if (debug) debugLog.push(`WHO OData: ${whoItems.length} raw items`);
 
-    for (const item of rwItems) {
-      const parsed = parseReliefWebItem(item);
+    for (const item of whoItems) {
+      const parsed = await parseWHODONItem(item, false);
       if (debug) {
         debugLog.push(
           parsed
-            ? `✓ "${item.fields.title}" → ${parsed.disease_en} / ${parsed.country_en}`
-            : `✗ "${item.fields.title}" → skipped`
+            ? `✓ "${item.Title}" → ${parsed.disease_en} / ${parsed.country_en}`
+            : `✗ "${item.Title}" → skipped`
         );
       }
       if (parsed) outbreaks.push(parsed);
     }
 
     if (outbreaks.length > 0) {
-      usedSource = "ReliefWeb API";
-      console.log(`[sync] ReliefWeb: ${rwItems.length} raw → ${outbreaks.length} parsed`);
+      usedSource = "WHO OData API";
+      console.log(`[sync] WHO OData: ${whoItems.length} raw → ${outbreaks.length} parsed`);
     }
   } catch (e: any) {
-    console.warn("[sync] ReliefWeb failed:", e.message);
-    if (debug) debugLog.push(`ReliefWeb error: ${e.message}`);
+    console.warn("[sync] WHO OData failed:", e.message);
+    if (debug) debugLog.push(`WHO OData error: ${e.message}`);
   }
 
   // Fallback: RSS sources
   if (outbreaks.length === 0) {
-    console.warn("[sync] ReliefWeb yielded 0 results, trying RSS fallbacks");
+    console.warn("[sync] WHO OData yielded 0 results, trying RSS fallbacks");
     const rss = await fetchRSSFallback();
     if (rss) {
       outbreaks = rss.items;
@@ -104,7 +104,7 @@ export async function GET(req: NextRequest) {
 
   if (outbreaks.length === 0) {
     return NextResponse.json({
-      error: "All sources failed — ReliefWeb + all RSS fallbacks returned 0 usable items",
+      error: "All sources failed — WHO OData + all RSS fallbacks returned 0 usable items",
       debug: debug ? debugLog : undefined,
     }, { status: 502 });
   }
