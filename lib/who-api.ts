@@ -3,7 +3,7 @@ import { normalizeDisease } from "./disease-data";
 import { parseWHOTitle, extractNumbers, assessRisk } from "./outbreak-parser";
 import type { ParsedOutbreak } from "./outbreak-parser";
 
-const WHO_API = "https://www.who.int/api/news/newsitems";
+const WHO_DON_API = "https://www.who.int/api/news/diseaseoutbreaknews";
 
 const FETCH_HEADERS = {
   "User-Agent": "HealthWatch-Global/1.0 (health surveillance; contact@healthwatch-global.com)",
@@ -17,36 +17,28 @@ export interface WHONewsItem {
   UrlName: string;
   ItemDefaultUrl: string;
   PublicationDateAndTime: string;
-  NewsType: string;
+  DonId?: string;
   Summary?: string;
 }
 
 // ── 1. Fetch DON listing from WHO OData API ───────────────────
 
 export async function fetchWHODONList(top = 25): Promise<WHONewsItem[]> {
-  // Fetch a larger batch and filter client-side — $filter and $select cause 400
-  // on this Sitefinity endpoint; only sf_culture, $format, $top are safe params.
-  const fetchTop = top * 3; // over-fetch since we'll filter down to DON only
   const params = new URLSearchParams({
     "sf_culture": "en",
     "$format": "json",
     "$orderby": "PublicationDateAndTime desc",
-    "$top": String(fetchTop),
+    "$top": String(top),
   });
 
-  const res = await fetch(`${WHO_API}?${params}`, {
+  const res = await fetch(`${WHO_DON_API}?${params}`, {
     headers: FETCH_HEADERS,
     signal: AbortSignal.timeout(10000),
   });
 
   if (!res.ok) throw new Error(`WHO OData API → HTTP ${res.status}`);
   const json = await res.json();
-  const all: WHONewsItem[] = json.value || [];
-
-  // Keep only Disease Outbreak News items
-  return all
-    .filter((item) => item.NewsType === "DiseaseOutbreakNews")
-    .slice(0, top);
+  return json.value || [];
 }
 
 // ── 2. Fetch individual article body for case/death numbers ───
@@ -87,10 +79,12 @@ export async function parseWHODONItem(
   item: WHONewsItem,
   fetchBody = false
 ): Promise<ParsedOutbreak | null> {
-  const { Title, ItemDefaultUrl, PublicationDateAndTime, Summary } = item;
+  const { Title, ItemDefaultUrl, PublicationDateAndTime, Summary, DonId } = item;
   if (!Title) return null;
 
-  // Title formats: "Mpox – DR Congo", "Disease Outbreak News: Cholera – Haiti"
+  // Title formats: "Ebola disease – Democratic Republic of the Congo"
+  //                "Mpox – DR Congo"
+  //                "Cholera – Haiti"
   const parsed = parseWHOTitle(Title);
   if (!parsed) return null;
 
@@ -105,8 +99,10 @@ export async function parseWHODONItem(
     ? new Date(PublicationDateAndTime).toISOString().split("T")[0]
     : new Date().toISOString().split("T")[0];
 
-  const articleUrl = ItemDefaultUrl?.startsWith("http")
-    ? ItemDefaultUrl
+  // Canonical DON URL: /emergencies/disease-outbreak-news/item/2026-DON603
+  const donSlug = DonId || ItemDefaultUrl?.replace(/^\//, "") || "";
+  const articleUrl = donSlug
+    ? `https://www.who.int/emergencies/disease-outbreak-news/item/${donSlug}`
     : `https://www.who.int${ItemDefaultUrl || ""}`;
 
   // Try to get numbers from Summary field first (API field, fast)
