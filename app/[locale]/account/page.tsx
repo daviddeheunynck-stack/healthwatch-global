@@ -1,9 +1,31 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase-server";
-import { User, Shield, Zap, Building2, Gift, ExternalLink } from "lucide-react";
+import { User, Shield, Zap, Building2, Gift, ExternalLink, Download } from "lucide-react";
 import Link from "next/link";
 import BillingPortalButton from "@/components/BillingPortalButton";
 import SignOutButton from "@/components/SignOutButton";
+import type { Metadata } from "next";
+
+const ACCOUNT_META: Record<string, { title: string }> = {
+  en: { title: "My Account" },
+  fr: { title: "Mon compte" },
+  es: { title: "Mi cuenta" },
+  ar: { title: "حسابي" },
+  id: { title: "Akun Saya" },
+};
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const m = ACCOUNT_META[locale] ?? ACCOUNT_META.en;
+  return {
+    title: m.title,
+    robots: { index: false, follow: false },
+  };
+}
 
 const PLAN_META: Record<string, { label: string; color: string; iconName: string }> = {
   free:       { label: "Free",       color: "text-green-400 bg-green-500/10 border-green-500/20",    iconName: "gift"       },
@@ -33,6 +55,9 @@ const LABELS: Record<string, Record<string, string>> = {
     memberSince: "Membre depuis",
     logout: "Se déconnecter",
     backHome: "← Retour au tableau de bord",
+    dataExport: "Export des données",
+    dataExportDesc: "Téléchargez l'ensemble des données d'épidémies actives au format CSV.",
+    downloadCsv: "Télécharger CSV",
   },
   en: {
     title: "My account",
@@ -47,6 +72,9 @@ const LABELS: Record<string, Record<string, string>> = {
     memberSince: "Member since",
     logout: "Sign out",
     backHome: "← Back to dashboard",
+    dataExport: "Data export",
+    dataExportDesc: "Download all active outbreak data in CSV format for use in Excel or your own tools.",
+    downloadCsv: "Download CSV",
   },
   es: {
     title: "Mi cuenta",
@@ -61,6 +89,9 @@ const LABELS: Record<string, Record<string, string>> = {
     memberSince: "Miembro desde",
     logout: "Cerrar sesión",
     backHome: "← Volver al panel",
+    dataExport: "Exportación de datos",
+    dataExportDesc: "Descargue todos los datos de brotes activos en formato CSV para Excel u otras herramientas.",
+    downloadCsv: "Descargar CSV",
   },
   ar: {
     title: "حسابي",
@@ -75,6 +106,9 @@ const LABELS: Record<string, Record<string, string>> = {
     memberSince: "عضو منذ",
     logout: "تسجيل الخروج",
     backHome: "→ العودة إلى لوحة التحكم",
+    dataExport: "تصدير البيانات",
+    dataExportDesc: "تنزيل جميع بيانات التفشيات النشطة بتنسيق CSV للاستخدام في Excel أو أدواتك الخاصة.",
+    downloadCsv: "تنزيل CSV",
   },
   id: {
     title: "Akun saya",
@@ -89,6 +123,9 @@ const LABELS: Record<string, Record<string, string>> = {
     memberSince: "Anggota sejak",
     logout: "Keluar",
     backHome: "← Kembali ke dasbor",
+    dataExport: "Ekspor data",
+    dataExportDesc: "Unduh semua data wabah aktif dalam format CSV untuk Excel atau alat Anda sendiri.",
+    downloadCsv: "Unduh CSV",
   },
 };
 
@@ -161,6 +198,22 @@ export default async function AccountPage({
           </div>
         ) : null}
       </div>
+
+      {/* CSV export — paid users only */}
+      {isPaid && (
+        <div className="bg-gray-900 border border-gray-800 rounded-2xl p-6 space-y-3">
+          <h2 className="text-sm font-semibold text-gray-400 uppercase tracking-wide">{l.dataExport}</h2>
+          <p className="text-sm text-gray-400">{l.dataExportDesc}</p>
+          <a
+            href="/api/export"
+            download
+            className="inline-flex items-center gap-2 bg-gray-800 hover:bg-gray-700 text-gray-300 font-semibold px-4 py-2 rounded-lg transition-colors text-sm"
+          >
+            <Download className="w-4 h-4" />
+            {l.downloadCsv}
+          </a>
+        </div>
+      )}
 
       {/* Account info */}
       <div className="bg-gray-900 border border-gray-800 rounded-2xl p-6 space-y-4">

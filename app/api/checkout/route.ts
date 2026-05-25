@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { rateLimit, getClientIp } from "@/lib/rate-limit";
 
 export const dynamic = "force-dynamic";
 
@@ -29,6 +30,23 @@ const STRIPE_LOCALES: Record<string, string> = {
 };
 
 export async function POST(req: NextRequest) {
+  // ── Rate limiting: 10 checkout attempts per IP per hour ─────────────────────
+  const ip = getClientIp(req);
+  const rl = rateLimit(`checkout:${ip}`, { limit: 10, windowMs: 60 * 60 * 1000 });
+  if (!rl.allowed) {
+    return NextResponse.json(
+      { error: "Too many requests — please try again later." },
+      {
+        status: 429,
+        headers: {
+          "Retry-After": String(Math.ceil((rl.resetAt - Date.now()) / 1000)),
+          "X-RateLimit-Limit": "10",
+          "X-RateLimit-Remaining": "0",
+        },
+      }
+    );
+  }
+
   try {
     const { plan, locale, userId, userEmail } = await req.json();
     const currency = getCurrency(locale);

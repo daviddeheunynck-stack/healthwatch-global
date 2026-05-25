@@ -95,7 +95,7 @@
     "f2_1": "Semua wilayah global",
     "f2_2": "Peringatan real-time",
     "f2_3": "Laporan PDF otomatis",
-    "f2_4": "Akses API",
+    "f2_4": "Ekspor data CSV",
     "f2_5": "Integrasi khusus",
     "f2_6": "Dukungan prioritas",
     "f3_1": "Semua di paket Pro",
@@ -150,7 +150,8 @@
     "passwordUpdated": "Kata sandi diperbarui!",
     "passwordUpdatedText": "Anda sekarang dapat masuk dengan kata sandi baru.",
     "tokenInvalid": "Tautan ini telah kedaluwarsa atau tidak valid. Minta yang baru.",
-    "backToLogin": "Kembali ke halaman masuk"
+    "backToLogin": "Kembali ke halaman masuk",
+    "passwordHint": "Minimal 8 karakter"
   },
   "contact": {
     "title": "Hubungi Kami",

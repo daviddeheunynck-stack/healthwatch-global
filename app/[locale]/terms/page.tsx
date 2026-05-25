@@ -1,6 +1,13 @@
 import { getLocale } from "next-intl/server";
 import Link from "next/link";
 import { FileText, ArrowLeft } from "lucide-react";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Terms of Service",
+  description: "HealthWatch Global terms of service — acceptable use, subscriptions, billing, health data disclaimer, and governing law.",
+  robots: { index: true, follow: true },
+};
 
 export default async function TermsPage() {
   const locale = await getLocale();
@@ -23,7 +30,7 @@ export default async function TermsPage() {
           </div>
           <h1 className="text-3xl font-bold text-white">Terms of Service</h1>
         </div>
-        <p className="text-gray-500 text-sm">Last updated: May 25, 2025</p>
+        <p className="text-gray-500 text-sm">Last updated: May 25, 2026</p>
       </div>
 
       <div className="space-y-8">
@@ -61,7 +68,7 @@ export default async function TermsPage() {
           <ul className="space-y-2 text-gray-400 text-sm">
             <li className="flex items-start gap-2"><span className="text-red-400 shrink-0 mt-0.5">•</span>Paid plans (Starter, Pro) are billed monthly via Stripe. Prices are displayed in USD and exclude applicable taxes.</li>
             <li className="flex items-start gap-2"><span className="text-red-400 shrink-0 mt-0.5">•</span>Subscriptions renew automatically until cancelled. You may cancel at any time; access continues until the end of the current billing period.</li>
-            <li className="flex items-start gap-2"><span className="text-red-400 shrink-0 mt-0.5">•</span>Refunds are not provided for partial months. If you believe a charge is in error, contact us within 14 days.</li>
+            <li className="flex items-start gap-2"><span className="text-red-400 shrink-0 mt-0.5">•</span>We offer a 14-day money-back guarantee on your first payment — no questions asked. Beyond this period, refunds are not provided for partial months.</li>
             <li className="flex items-start gap-2"><span className="text-red-400 shrink-0 mt-0.5">•</span>We reserve the right to change pricing with 30 days notice to active subscribers.</li>
           </ul>
         </section>
@@ -95,7 +102,7 @@ export default async function TermsPage() {
           <p className="text-gray-400 text-sm leading-relaxed">
             The platform design, code, branding, and compiled datasets are the intellectual property of
             HealthWatch Global. Underlying public health data originates from WHO, CDC, ECDC, and ProMED and
-            is subject to their respective terms of use. API access grants do not transfer ownership of any data.
+            is subject to their respective terms of use. CSV data export rights granted under paid plans do not transfer ownership of any data.
           </p>
         </section>
 

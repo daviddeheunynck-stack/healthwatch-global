@@ -10,19 +10,28 @@ const SUPABASE_URL = clean(process.env.NEXT_PUBLIC_SUPABASE_URL);
 const SUPABASE_SERVICE_KEY = clean(process.env.SUPABASE_SERVICE_ROLE_KEY);
 
 // Localized confirmation pages
-const MESSAGES: Record<string, { title: string; body: string }> = {
-  fr: { title: "Désabonnement confirmé", body: "Vous avez été désabonné(e) avec succès. Vous ne recevrez plus de briefings hebdomadaires." },
-  en: { title: "Unsubscribed", body: "You have been successfully unsubscribed. You will no longer receive weekly briefings." },
-  es: { title: "Suscripción cancelada", body: "Se ha cancelado su suscripción correctamente. Ya no recibirá informes semanales." },
-  ar: { title: "تم إلغاء الاشتراك", body: "تم إلغاء اشتراكك بنجاح. لن تتلقى بعد الآن الملخصات الأسبوعية." },
-  id: { title: "Berhasil berhenti berlangganan", body: "Anda telah berhasil berhenti berlangganan. Anda tidak akan lagi menerima briefing mingguan." },
+const MESSAGES: Record<string, { title: string; body: string; back: string }> = {
+  fr: { title: "Désabonnement confirmé", body: "Vous avez été désabonné(e) avec succès. Vous ne recevrez plus de briefings hebdomadaires.", back: "← Retour au site" },
+  en: { title: "Unsubscribed", body: "You have been successfully unsubscribed. You will no longer receive weekly briefings.", back: "← Back to website" },
+  es: { title: "Suscripción cancelada", body: "Se ha cancelado su suscripción correctamente. Ya no recibirá informes semanales.", back: "← Volver al sitio" },
+  ar: { title: "تم إلغاء الاشتراك", body: "تم إلغاء اشتراكك بنجاح. لن تتلقى بعد الآن الملخصات الأسبوعية.", back: "→ العودة إلى الموقع" },
+  id: { title: "Berhasil berhenti berlangganan", body: "Anda telah berhasil berhenti berlangganan. Anda tidak akan lagi menerima briefing mingguan.", back: "← Kembali ke situs" },
+};
+
+const INVALID_MESSAGES: Record<string, { title: string; body: string }> = {
+  fr: { title: "Lien invalide", body: "Ce lien de désabonnement est invalide ou a déjà été utilisé." },
+  en: { title: "Invalid link", body: "This unsubscribe link is invalid or has already been used." },
+  es: { title: "Enlace no válido", body: "Este enlace de cancelación no es válido o ya se ha utilizado." },
+  ar: { title: "رابط غير صالح", body: "رابط إلغاء الاشتراك هذا غير صالح أو تم استخدامه بالفعل." },
+  id: { title: "Tautan tidak valid", body: "Tautan berhenti berlangganan ini tidak valid atau sudah digunakan." },
 };
 
 function htmlPage(locale: string, success: boolean) {
   const m = MESSAGES[locale] || MESSAGES.fr;
+  const inv = INVALID_MESSAGES[locale] || INVALID_MESSAGES.fr;
   const dir = locale === "ar" ? "rtl" : "ltr";
-  const title = success ? m.title : "Lien invalide";
-  const body = success ? m.body : "Ce lien de désabonnement est invalide ou a déjà été utilisé.";
+  const title = success ? m.title : inv.title;
+  const body = success ? m.body : inv.body;
 
   return `<!DOCTYPE html>
 <html lang="${locale}" dir="${dir}">
@@ -49,7 +58,7 @@ function htmlPage(locale: string, success: boolean) {
     <div class="icon">${success ? "✅" : "⚠️"}</div>
     <h1>${title}</h1>
     <p>${body}</p>
-    <a href="https://healthwatch-global.com">← Retour au site</a>
+    <a href="https://healthwatch-global.com/${locale}">${m.back}</a>
   </div>
 </body>
 </html>`;

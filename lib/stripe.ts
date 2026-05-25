@@ -1,6 +1,9 @@
 import Stripe from "stripe";
 
-export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+const BOM = String.fromCharCode(65279);
+const clean = (v: string | undefined) => (v || "").replace(new RegExp("^" + BOM), "").trim();
+
+export const stripe = new Stripe(clean(process.env.STRIPE_SECRET_KEY), {
   apiVersion: "2026-04-22.dahlia",
   httpClient: Stripe.createFetchHttpClient(),
 });

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { rateLimit, getClientIp } from "@/lib/rate-limit";
 
 export const dynamic = "force-dynamic";
 
@@ -7,6 +8,23 @@ const clean = (val: string | undefined) =>
   (val || "").replace(new RegExp("^" + BOM), "").trim();
 
 export async function POST(req: NextRequest) {
+  // ── Rate limiting: 3 messages per IP per 10 minutes ─────────────────────────
+  const ip = getClientIp(req);
+  const rl = rateLimit(`contact:${ip}`, { limit: 3, windowMs: 10 * 60 * 1000 });
+  if (!rl.allowed) {
+    return NextResponse.json(
+      { error: "Too many requests — please wait a few minutes before trying again." },
+      {
+        status: 429,
+        headers: {
+          "Retry-After": String(Math.ceil((rl.resetAt - Date.now()) / 1000)),
+          "X-RateLimit-Limit": "3",
+          "X-RateLimit-Remaining": "0",
+        },
+      }
+    );
+  }
+
   try {
     const { name, organization, email, message } = await req.json();
 

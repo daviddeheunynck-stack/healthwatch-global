@@ -1,52 +1,232 @@
 import { getTranslations, getLocale } from "next-intl/server";
-import { Check, Zap, Shield, Building2, Mail, Gift } from "lucide-react";
+import { Check, Zap, Shield, Building2, Mail, Gift, ArrowRight, Star, Clock, RefreshCw, Users, Globe } from "lucide-react";
 import CheckoutButton from "@/components/CheckoutButton";
 import Link from "next/link";
+import type { Metadata } from "next";
 
-const STARTER_FEATURES = [
-  "pricing.f1_1",
-  "pricing.f1_2",
-  "pricing.f1_3",
-  "pricing.f1_4",
-  "pricing.f1_5",
-];
+// ─── Metadata ─────────────────────────────────────────────────────────────────
 
-const PRO_FEATURES = [
-  "pricing.f2_1",
-  "pricing.f2_2",
-  "pricing.f2_3",
-  "pricing.f2_4",
-  "pricing.f2_5",
-  "pricing.f2_6",
-];
+const PRICING_META: Record<string, { title: string; description: string }> = {
+  en: { title: "Pricing Plans", description: "Flexible plans for NGOs, health ministries and international organizations. Start free — upgrade when you need real-time alerts and PDF exports." },
+  fr: { title: "Tarifs", description: "Formules flexibles pour les ONG, ministères de la santé et organisations internationales. Démarrez gratuitement." },
+  es: { title: "Precios", description: "Planes flexibles para ONG, ministerios de salud y organizaciones internacionales." },
+  ar: { title: "الأسعار", description: "خطط مرنة للمنظمات غير الحكومية ووزارات الصحة والمنظمات الدولية." },
+  id: { title: "Harga", description: "Paket fleksibel untuk LSM, kementerian kesehatan dan organisasi internasional." },
+};
 
-const ENTERPRISE_FEATURES = [
-  "pricing.f3_1",
-  "pricing.f3_2",
-  "pricing.f3_3",
-  "pricing.f3_4",
-  "pricing.f3_5",
-  "pricing.f3_6",
-];
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+  const { locale } = await params;
+  const m = PRICING_META[locale] ?? PRICING_META.en;
+  return { title: m.title, description: m.description };
+}
 
-export default async function PricingPage() {
+// ─── Hardcoded multilingual copy for new sections ─────────────────────────────
+
+const COPY: Record<string, {
+  heroTag: string; heroTitle: string; heroSub: string;
+  orgTypes: string[]; orgLabel: string;
+  guarantee: string; guaranteeDesc: string;
+  compareTitle: string;
+  features: { label: string; free: boolean | string; starter: boolean | string; pro: boolean | string; enterprise: boolean | string }[];
+  ctaTitle: string; ctaDesc: string;
+  roiTitle: string; roiText: string;
+}> = {
+  en: {
+    heroTag: "Designed for health organizations and their teams worldwide",
+    heroTitle: "Anticipate. Don't just react.",
+    heroSub: "A single undetected outbreak can cost your organization months of crisis response. HealthWatch Global gives your teams real-time intelligence sourced directly from WHO.",
+    orgTypes: ["Ministries of Health", "International NGOs", "Humanitarian Organizations", "Research Institutes", "Private Health Sector"],
+    orgLabel: "Built for",
+    guarantee: "Cancel anytime. 14-day refund.",
+    guaranteeDesc: "No commitment. If you're not satisfied within 14 days of your first payment, we refund you — no questions asked.",
+    compareTitle: "Full feature comparison",
+    features: [
+      { label: "Live outbreak map", free: true, starter: true, pro: true, enterprise: true },
+      { label: "WHO DON data feed", free: true, starter: true, pro: true, enterprise: true },
+      { label: "Monitored regions", free: "1", starter: "1", pro: "All", enterprise: "All" },
+      { label: "Exact case & death figures", free: false, starter: true, pro: true, enterprise: true },
+      { label: "Weekly email digest", free: true, starter: true, pro: true, enterprise: true },
+      { label: "Real-time alerts", free: false, starter: false, pro: true, enterprise: true },
+      { label: "PDF regional reports", free: false, starter: false, pro: true, enterprise: true },
+      { label: "CSV data export", free: false, starter: false, pro: true, enterprise: true },
+      { label: "Custom integrations", free: false, starter: false, pro: false, enterprise: true },
+      { label: "On-premise deployment", free: false, starter: false, pro: false, enterprise: true },
+      { label: "99.9% SLA", free: false, starter: false, pro: false, enterprise: true },
+      { label: "Dedicated account manager", free: false, starter: false, pro: false, enterprise: true },
+      { label: "Support", free: "Email", starter: "Email", pro: "Priority", enterprise: "Dedicated" },
+    ],
+    ctaTitle: "Not sure which plan fits?",
+    ctaDesc: "Book a 20-minute call. We'll map your surveillance needs and recommend the right plan — no sales pressure.",
+    roiTitle: "The cost of not knowing",
+    roiText: "WHO declares 15–25 new disease outbreaks every month. A single crisis that reaches your region before your teams are informed can mean weeks of reactive operations, supply chain disruption, and reputational exposure. At $199/month, Starter costs less than one hour of crisis management.",
+  },
+  fr: {
+    heroTag: "Conçu pour les organisations de santé et leurs équipes partout dans le monde",
+    heroTitle: "Anticipez. Ne réagissez plus.",
+    heroSub: "Un foyer épidémique non détecté à temps peut coûter à votre organisation des mois de gestion de crise. HealthWatch Global fournit à vos équipes des données en temps réel, directement issues de l'OMS.",
+    orgTypes: ["Ministères de la Santé", "ONG internationales", "Organisations humanitaires", "Instituts de recherche", "Secteur privé de la santé"],
+    orgLabel: "Conçu pour",
+    guarantee: "Sans engagement. Remboursement sous 14 jours.",
+    guaranteeDesc: "Pas d'engagement. Si vous n'êtes pas satisfait dans les 14 jours suivant votre premier paiement, nous vous remboursons — sans question.",
+    compareTitle: "Comparatif complet des fonctionnalités",
+    features: [
+      { label: "Carte des épidémies en direct", free: true, starter: true, pro: true, enterprise: true },
+      { label: "Flux données OMS DON", free: true, starter: true, pro: true, enterprise: true },
+      { label: "Régions surveillées", free: "1", starter: "1", pro: "Toutes", enterprise: "Toutes" },
+      { label: "Chiffres exacts (cas & décès)", free: false, starter: true, pro: true, enterprise: true },
+      { label: "Digest email hebdomadaire", free: true, starter: true, pro: true, enterprise: true },
+      { label: "Alertes en temps réel", free: false, starter: false, pro: true, enterprise: true },
+      { label: "Rapports PDF régionaux", free: false, starter: false, pro: true, enterprise: true },
+      { label: "Export CSV des données", free: false, starter: false, pro: true, enterprise: true },
+      { label: "Intégrations sur mesure", free: false, starter: false, pro: false, enterprise: true },
+      { label: "Déploiement on-premise", free: false, starter: false, pro: false, enterprise: true },
+      { label: "SLA 99,9 %", free: false, starter: false, pro: false, enterprise: true },
+      { label: "Account manager dédié", free: false, starter: false, pro: false, enterprise: true },
+      { label: "Support", free: "Email", starter: "Email", pro: "Prioritaire", enterprise: "Dédié" },
+    ],
+    ctaTitle: "Vous ne savez pas quelle formule choisir ?",
+    ctaDesc: "Réservez un appel de 20 minutes. Nous analyserons vos besoins de surveillance et recommanderons la formule adaptée — sans pression commerciale.",
+    roiTitle: "Le coût de l'ignorance",
+    roiText: "L'OMS déclare 15 à 25 nouveaux foyers épidémiques chaque mois. Un seul foyer qui atteint votre région avant que vos équipes soient informées peut signifier des semaines d'opérations réactives, une rupture de la chaîne d'approvisionnement et une exposition médiatique. À 199 €/mois, la formule Starter coûte moins d'une heure de gestion de crise.",
+  },
+  es: {
+    heroTag: "Diseñado para organizaciones de salud y sus equipos en todo el mundo",
+    heroTitle: "Anticipe. No solo reaccione.",
+    heroSub: "Un brote no detectado a tiempo puede costarle a su organización meses de gestión de crisis. HealthWatch Global ofrece a sus equipos inteligencia en tiempo real, directamente de la OMS.",
+    orgTypes: ["Ministerios de Salud", "ONG internacionales", "Organizaciones humanitarias", "Institutos de investigación", "Sector sanitario privado"],
+    orgLabel: "Diseñado para",
+    guarantee: "Sin compromiso. Reembolso en 14 días.",
+    guaranteeDesc: "Sin compromiso. Si no está satisfecho en los 14 días posteriores a su primer pago, le reembolsamos sin preguntas.",
+    compareTitle: "Comparación completa de funciones",
+    features: [
+      { label: "Mapa de brotes en vivo", free: true, starter: true, pro: true, enterprise: true },
+      { label: "Datos OMS DON", free: true, starter: true, pro: true, enterprise: true },
+      { label: "Regiones supervisadas", free: "1", starter: "1", pro: "Todas", enterprise: "Todas" },
+      { label: "Cifras exactas (casos y fallec.)", free: false, starter: true, pro: true, enterprise: true },
+      { label: "Digest semanal por email", free: true, starter: true, pro: true, enterprise: true },
+      { label: "Alertas en tiempo real", free: false, starter: false, pro: true, enterprise: true },
+      { label: "Informes PDF regionales", free: false, starter: false, pro: true, enterprise: true },
+      { label: "Exportación de datos CSV", free: false, starter: false, pro: true, enterprise: true },
+      { label: "Integraciones personalizadas", free: false, starter: false, pro: false, enterprise: true },
+      { label: "Implementación on-premise", free: false, starter: false, pro: false, enterprise: true },
+      { label: "SLA del 99,9%", free: false, starter: false, pro: false, enterprise: true },
+      { label: "Gestor de cuenta dedicado", free: false, starter: false, pro: false, enterprise: true },
+      { label: "Soporte", free: "Email", starter: "Email", pro: "Prioritario", enterprise: "Dedicado" },
+    ],
+    ctaTitle: "¿No sabe qué plan elegir?",
+    ctaDesc: "Reserve una llamada de 20 minutos. Analizaremos sus necesidades de vigilancia y le recomendaremos el plan adecuado, sin presión comercial.",
+    roiTitle: "El coste de no saber",
+    roiText: "La OMS declara entre 15 y 25 nuevos brotes de enfermedades cada mes. Un solo brote que llegue a su región antes de que sus equipos estén informados puede significar semanas de operaciones reactivas y exposición reputacional. A $199/mes, el plan Starter cuesta menos de una hora de gestión de crisis.",
+  },
+  ar: {
+    heroTag: "مصمم للمنظمات الصحية وفرقها حول العالم",
+    heroTitle: "استبق الأزمات. لا تكتفِ بالاستجابة.",
+    heroSub: "قد يُكلِّف تفشٍّ واحد غير مكتشف في الوقت المناسب منظمتك أشهراً من إدارة الأزمات. توفر HealthWatch Global لفرقك بيانات استخباراتية فورية مباشرةً من منظمة الصحة العالمية.",
+    orgTypes: ["وزارات الصحة", "المنظمات غير الحكومية الدولية", "المنظمات الإنسانية", "معاهد البحوث", "القطاع الصحي الخاص"],
+    orgLabel: "مصمم لـ",
+    guarantee: "بدون التزام. استرداد خلال 14 يوماً.",
+    guaranteeDesc: "بدون التزام. إذا لم تكن راضياً خلال 14 يوماً من دفعتك الأولى، نعيد إليك المبلغ كاملاً دون أسئلة.",
+    compareTitle: "مقارنة شاملة للميزات",
+    features: [
+      { label: "خريطة التفشيات المباشرة", free: true, starter: true, pro: true, enterprise: true },
+      { label: "بيانات منظمة الصحة العالمية DON", free: true, starter: true, pro: true, enterprise: true },
+      { label: "المناطق المراقبة", free: "1", starter: "1", pro: "جميعها", enterprise: "جميعها" },
+      { label: "أرقام دقيقة (حالات ووفيات)", free: false, starter: true, pro: true, enterprise: true },
+      { label: "ملخص بريدي أسبوعي", free: true, starter: true, pro: true, enterprise: true },
+      { label: "تنبيهات فورية", free: false, starter: false, pro: true, enterprise: true },
+      { label: "تقارير PDF إقليمية", free: false, starter: false, pro: true, enterprise: true },
+      { label: "تصدير البيانات CSV", free: false, starter: false, pro: true, enterprise: true },
+      { label: "تكاملات مخصصة", free: false, starter: false, pro: false, enterprise: true },
+      { label: "نشر محلي", free: false, starter: false, pro: false, enterprise: true },
+      { label: "ضمان SLA 99.9%", free: false, starter: false, pro: false, enterprise: true },
+      { label: "مدير حساب مخصص", free: false, starter: false, pro: false, enterprise: true },
+      { label: "الدعم", free: "بريد إلكتروني", starter: "بريد إلكتروني", pro: "أولوية", enterprise: "مخصص" },
+    ],
+    ctaTitle: "لست متأكداً من الخطة المناسبة؟",
+    ctaDesc: "احجز مكالمة مدتها 20 دقيقة. سنحلل احتياجاتك في المراقبة ونوصي بالخطة المناسبة — دون ضغوط تجارية.",
+    roiTitle: "تكلفة عدم المعرفة",
+    roiText: "تُعلن منظمة الصحة العالمية عن 15 إلى 25 تفشياً جديداً للأمراض كل شهر. تفشٍّ واحد يصل إلى منطقتك قبل إحاطة فريقك قد يعني أسابيع من العمليات التفاعلية والأضرار المؤسسية. بـ 199 دولار/شهر، تكلفة خطة Starter أقل من ساعة واحدة لإدارة الأزمات.",
+  },
+  id: {
+    heroTag: "Dirancang untuk organisasi kesehatan dan tim mereka di seluruh dunia",
+    heroTitle: "Antisipasi. Jangan hanya bereaksi.",
+    heroSub: "Satu wabah yang tidak terdeteksi tepat waktu bisa menelan biaya berbulan-bulan manajemen krisis. HealthWatch Global memberikan intelijen real-time kepada tim Anda, langsung dari WHO.",
+    orgTypes: ["Kementerian Kesehatan", "LSM Internasional", "Organisasi Kemanusiaan", "Lembaga Penelitian", "Sektor Kesehatan Swasta"],
+    orgLabel: "Dirancang untuk",
+    guarantee: "Tanpa komitmen. Pengembalian dana 14 hari.",
+    guaranteeDesc: "Tanpa komitmen. Jika tidak puas dalam 14 hari setelah pembayaran pertama, kami kembalikan uang Anda tanpa pertanyaan.",
+    compareTitle: "Perbandingan fitur lengkap",
+    features: [
+      { label: "Peta wabah langsung", free: true, starter: true, pro: true, enterprise: true },
+      { label: "Data WHO DON", free: true, starter: true, pro: true, enterprise: true },
+      { label: "Wilayah yang dipantau", free: "1", starter: "1", pro: "Semua", enterprise: "Semua" },
+      { label: "Angka tepat (kasus & kematian)", free: false, starter: true, pro: true, enterprise: true },
+      { label: "Digest email mingguan", free: true, starter: true, pro: true, enterprise: true },
+      { label: "Peringatan real-time", free: false, starter: false, pro: true, enterprise: true },
+      { label: "Laporan PDF regional", free: false, starter: false, pro: true, enterprise: true },
+      { label: "Ekspor data CSV", free: false, starter: false, pro: true, enterprise: true },
+      { label: "Integrasi kustom", free: false, starter: false, pro: false, enterprise: true },
+      { label: "Penerapan on-premise", free: false, starter: false, pro: false, enterprise: true },
+      { label: "SLA 99,9%", free: false, starter: false, pro: false, enterprise: true },
+      { label: "Manajer akun khusus", free: false, starter: false, pro: false, enterprise: true },
+      { label: "Dukungan", free: "Email", starter: "Email", pro: "Prioritas", enterprise: "Khusus" },
+    ],
+    ctaTitle: "Tidak yakin paket mana yang cocok?",
+    ctaDesc: "Jadwalkan panggilan 20 menit. Kami akan memetakan kebutuhan pemantauan Anda dan merekomendasikan paket yang tepat — tanpa tekanan penjualan.",
+    roiTitle: "Biaya ketidaktahuan",
+    roiText: "WHO mendeklarasikan 15–25 wabah penyakit baru setiap bulan. Satu wabah yang mencapai wilayah Anda sebelum tim Anda mendapat informasi bisa berarti berminggu-minggu operasi reaktif dan kerusakan reputasi. Dengan $199/bulan, Starter lebih murah dari satu jam manajemen krisis.",
+  },
+};
+
+// ─── Helper ───────────────────────────────────────────────────────────────────
+
+function CellValue({ val }: { val: boolean | string }) {
+  if (val === true) return <Check className="w-4 h-4 text-green-400 mx-auto" />;
+  if (val === false) return <span className="text-gray-700 mx-auto block text-center">—</span>;
+  return <span className="text-xs font-medium text-gray-300 block text-center">{val}</span>;
+}
+
+const STARTER_FEATURES = ["pricing.f1_1","pricing.f1_2","pricing.f1_3","pricing.f1_4","pricing.f1_5"];
+const PRO_FEATURES = ["pricing.f2_1","pricing.f2_2","pricing.f2_3","pricing.f2_4","pricing.f2_5","pricing.f2_6"];
+const ENTERPRISE_FEATURES = ["pricing.f3_1","pricing.f3_2","pricing.f3_3","pricing.f3_4","pricing.f3_5","pricing.f3_6"];
+
+// ─── Page ─────────────────────────────────────────────────────────────────────
+
+export default async function PricingPage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
   const t = await getTranslations();
-  const locale = await getLocale();
+  const c = COPY[locale] ?? COPY.en;
+  const isRtl = locale === "ar";
 
   return (
-    <div className="space-y-12">
-      {/* Header */}
-      <div className="text-center space-y-4">
-        <h1 className="text-4xl font-bold text-white">{t("pricing.title")}</h1>
-        <p className="text-gray-400 text-lg max-w-2xl mx-auto">{t("pricing.subtitle")}</p>
-        <div className="inline-flex items-center gap-2 bg-green-500/10 border border-green-500/20 rounded-full px-4 py-1.5 text-green-400 text-sm">
-          <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
-          {t("pricing.badge")}
+    <div className="space-y-20" dir={isRtl ? "rtl" : undefined}>
+
+      {/* ── Hero ─────────────────────────────────────────────────────────── */}
+      <div className="text-center space-y-6 max-w-3xl mx-auto pt-4">
+        <div className="inline-flex items-center gap-2 bg-green-500/10 border border-green-500/20 rounded-full px-4 py-1.5 text-green-400 text-xs font-medium">
+          <Globe className="w-3.5 h-3.5" />
+          {c.heroTag}
+        </div>
+        <h1 className="text-4xl md:text-5xl font-extrabold text-white leading-tight tracking-tight">
+          {c.heroTitle}
+        </h1>
+        <p className="text-gray-400 text-lg leading-relaxed max-w-2xl mx-auto">{c.heroSub}</p>
+
+        {/* Org types */}
+        <div className="space-y-2">
+          <p className="text-xs text-gray-600 uppercase tracking-widest font-semibold">{c.orgLabel}</p>
+          <div className="flex flex-wrap justify-center gap-2">
+            {c.orgTypes.map((org) => (
+              <span key={org} className="text-xs bg-gray-800 border border-gray-700 rounded-full px-3 py-1 text-gray-400">
+                {org}
+              </span>
+            ))}
+          </div>
         </div>
       </div>
 
-      {/* Free tier banner */}
-      <div className="border border-gray-700 rounded-2xl p-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 bg-gray-900/40">
+      {/* ── Free tier ────────────────────────────────────────────────────── */}
+      <div className="border border-gray-700 rounded-2xl p-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 bg-gray-900/40 max-w-4xl mx-auto w-full">
         <div className="flex items-start gap-4">
           <Gift className="w-8 h-8 text-green-400 shrink-0 mt-0.5" />
           <div>
@@ -66,14 +246,14 @@ export default async function PricingPage() {
           </div>
         </div>
         <Link
-          href={`/${locale}/alerts`}
+          href={`/${locale}/signup`}
           className="shrink-0 border border-green-500/40 hover:border-green-400 text-green-400 hover:text-green-300 font-semibold px-5 py-2.5 rounded-lg transition-colors text-sm whitespace-nowrap"
         >
           {t("pricing.free_cta")}
         </Link>
       </div>
 
-      {/* Plans */}
+      {/* ── Plans ────────────────────────────────────────────────────────── */}
       <div className="grid md:grid-cols-3 gap-6 items-start">
 
         {/* Starter */}
@@ -89,7 +269,6 @@ export default async function PricingPage() {
             </div>
             <p className="text-gray-400 text-sm mt-2">{t("pricing.starter_desc")}</p>
           </div>
-
           <ul className="space-y-3">
             {STARTER_FEATURES.map((key) => (
               <li key={key} className="flex items-start gap-2.5 text-sm text-gray-300">
@@ -98,13 +277,8 @@ export default async function PricingPage() {
               </li>
             ))}
           </ul>
-
-          <CheckoutButton
-            plan="starter"
-            locale={locale}
-            label={t("pricing.getStarted")}
-            className="w-full bg-blue-600 hover:bg-blue-500 text-white font-semibold py-2.5 rounded-lg transition-colors"
-          />
+          <CheckoutButton plan="starter" locale={locale} label={t("pricing.getStarted")}
+            className="w-full bg-blue-600 hover:bg-blue-500 text-white font-semibold py-2.5 rounded-lg transition-colors" />
         </div>
 
         {/* Pro — highlighted */}
@@ -114,7 +288,6 @@ export default async function PricingPage() {
               {t("pricing.popular")}
             </span>
           </div>
-
           <div>
             <div className="flex items-center gap-2 mb-3">
               <Shield className="w-5 h-5 text-red-400" />
@@ -126,7 +299,6 @@ export default async function PricingPage() {
             </div>
             <p className="text-gray-400 text-sm mt-2">{t("pricing.pro_desc")}</p>
           </div>
-
           <ul className="space-y-3">
             {PRO_FEATURES.map((key) => (
               <li key={key} className="flex items-start gap-2.5 text-sm text-gray-300">
@@ -135,13 +307,14 @@ export default async function PricingPage() {
               </li>
             ))}
           </ul>
+          <CheckoutButton plan="pro" locale={locale} label={t("pricing.getStarted")}
+            className="w-full bg-red-600 hover:bg-red-500 text-white font-semibold py-2.5 rounded-lg transition-colors" />
 
-          <CheckoutButton
-            plan="pro"
-            locale={locale}
-            label={t("pricing.getStarted")}
-            className="w-full bg-red-600 hover:bg-red-500 text-white font-semibold py-2.5 rounded-lg transition-colors"
-          />
+          {/* Guarantee badge */}
+          <div className="flex items-center gap-2 bg-gray-800/60 rounded-xl p-3 text-xs text-gray-400 border border-gray-700/50">
+            <RefreshCw className="w-3.5 h-3.5 text-green-400 shrink-0" />
+            {c.guarantee}
+          </div>
         </div>
 
         {/* Enterprise */}
@@ -156,7 +329,6 @@ export default async function PricingPage() {
             </div>
             <p className="text-gray-400 text-sm mt-2">{t("pricing.enterprise_desc")}</p>
           </div>
-
           <ul className="space-y-3">
             {ENTERPRISE_FEATURES.map((key) => (
               <li key={key} className="flex items-start gap-2.5 text-sm text-gray-300">
@@ -165,35 +337,102 @@ export default async function PricingPage() {
               </li>
             ))}
           </ul>
-
-          <a
-            href="mailto:contact@healthwatch-global.com?subject=Enterprise Plan - HealthWatch Global"
-            className="block w-full text-center bg-purple-700 hover:bg-purple-600 text-white font-semibold py-2.5 rounded-lg transition-colors flex items-center justify-center gap-2"
-          >
+          <a href={`mailto:contact@healthwatch-global.com?subject=Enterprise Plan - HealthWatch Global`}
+            className="flex items-center justify-center gap-2 w-full bg-purple-700 hover:bg-purple-600 text-white font-semibold py-2.5 rounded-lg transition-colors">
             <Mail className="w-4 h-4" />
             {t("pricing.contactUs")}
           </a>
         </div>
       </div>
 
-      {/* Trust signals */}
-      <div className="border border-gray-800 rounded-2xl p-8 grid md:grid-cols-3 gap-6 text-center">
-        <div>
-          <p className="text-3xl font-bold text-white">195</p>
-          <p className="text-gray-400 text-sm mt-1">{t("pricing.trust1")}</p>
+      {/* ── Guarantee strip ───────────────────────────────────────────────── */}
+      <div className="bg-green-500/5 border border-green-500/15 rounded-2xl p-6 flex flex-col md:flex-row items-center gap-5 max-w-3xl mx-auto w-full">
+        <div className="w-12 h-12 rounded-full bg-green-500/10 border border-green-500/20 flex items-center justify-center shrink-0">
+          <RefreshCw className="w-6 h-6 text-green-400" />
         </div>
         <div>
-          <p className="text-3xl font-bold text-white">99.9%</p>
-          <p className="text-gray-400 text-sm mt-1">{t("pricing.trust2")}</p>
-        </div>
-        <div>
-          <p className="text-3xl font-bold text-white">{t("pricing.compliance")}</p>
-          <p className="text-gray-400 text-sm mt-1">{t("pricing.trust3")}</p>
+          <p className="font-semibold text-white text-sm">{c.guarantee}</p>
+          <p className="text-gray-400 text-sm mt-1">{c.guaranteeDesc}</p>
         </div>
       </div>
 
-      {/* FAQ */}
-      <div className="max-w-2xl mx-auto space-y-4">
+      {/* ── ROI framing ───────────────────────────────────────────────────── */}
+      <div className="bg-gray-900/60 border border-gray-800 rounded-2xl p-8 max-w-3xl mx-auto w-full space-y-3">
+        <div className="flex items-center gap-2 text-amber-400">
+          <Clock className="w-5 h-5 shrink-0" />
+          <h2 className="font-bold text-white text-lg">{c.roiTitle}</h2>
+        </div>
+        <p className="text-gray-400 text-sm leading-relaxed">{c.roiText}</p>
+      </div>
+
+      {/* ── Feature comparison table ──────────────────────────────────────── */}
+      <div className="space-y-4">
+        <h2 className="text-xl font-bold text-white text-center">{c.compareTitle}</h2>
+        <div className="overflow-x-auto rounded-2xl border border-gray-800">
+          <table className="w-full text-sm min-w-[600px]">
+            <thead>
+              <tr className="border-b border-gray-800 bg-gray-900">
+                <th className="text-left px-5 py-4 text-gray-500 font-medium w-2/5"></th>
+                {[
+                  { label: "Free",       color: "text-gray-400"   },
+                  { label: "Starter",    color: "text-blue-400"   },
+                  { label: "Pro",        color: "text-red-400"    },
+                  { label: "Enterprise", color: "text-purple-400" },
+                ].map(({ label, color }) => (
+                  <th key={label} className={`px-4 py-4 font-bold text-center ${color}`}>{label}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-800/60">
+              {c.features.map((row, i) => (
+                <tr key={i} className={i % 2 === 0 ? "bg-gray-900/20" : ""}>
+                  <td className="px-5 py-3 text-gray-300">{row.label}</td>
+                  <td className="px-4 py-3"><CellValue val={row.free} /></td>
+                  <td className="px-4 py-3"><CellValue val={row.starter} /></td>
+                  <td className="px-4 py-3 bg-red-500/3"><CellValue val={row.pro} /></td>
+                  <td className="px-4 py-3"><CellValue val={row.enterprise} /></td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      {/* ── Trust stats ───────────────────────────────────────────────────── */}
+      <div className="border border-gray-800 rounded-2xl p-8 grid md:grid-cols-4 gap-6 text-center">
+        {[
+          { value: "195",         label: t("pricing.trust1"), icon: Globe  },
+          { value: "99.9%",       label: t("pricing.trust2"), icon: Star   },
+          { value: t("pricing.compliance"), label: t("pricing.trust3"), icon: Shield },
+          { value: "5",           label: locale === "fr" ? "Langues supportées" : locale === "es" ? "Idiomas" : locale === "ar" ? "لغات مدعومة" : locale === "id" ? "Bahasa" : "Languages", icon: Users },
+        ].map(({ value, label, icon: Icon }) => (
+          <div key={label}>
+            <div className="flex justify-center mb-2">
+              <Icon className="w-5 h-5 text-red-400" />
+            </div>
+            <p className="text-3xl font-bold text-white">{value}</p>
+            <p className="text-gray-400 text-sm mt-1">{label}</p>
+          </div>
+        ))}
+      </div>
+
+      {/* ── CTA contact ───────────────────────────────────────────────────── */}
+      <div className="bg-gray-900 border border-gray-800 rounded-2xl p-8 text-center space-y-4 max-w-2xl mx-auto w-full">
+        <Users className="w-8 h-8 text-red-400 mx-auto" />
+        <h2 className="text-xl font-bold text-white">{c.ctaTitle}</h2>
+        <p className="text-gray-400 text-sm">{c.ctaDesc}</p>
+        <Link
+          href={`/${locale}/contact`}
+          className="inline-flex items-center gap-2 bg-red-600 hover:bg-red-500 text-white font-semibold px-6 py-3 rounded-xl transition-colors text-sm"
+        >
+          <Mail className="w-4 h-4" />
+          {t("pricing.contactUs")}
+          <ArrowRight className="w-4 h-4" />
+        </Link>
+      </div>
+
+      {/* ── FAQ ──────────────────────────────────────────────────────────── */}
+      <div className="max-w-2xl mx-auto space-y-4 w-full">
         <h2 className="text-xl font-semibold text-white text-center mb-6">{t("pricing.faq_title")}</h2>
         {[1, 2, 3].map((i) => (
           <div key={i} className="bg-gray-900 border border-gray-800 rounded-xl p-5">
@@ -202,6 +441,7 @@ export default async function PricingPage() {
           </div>
         ))}
       </div>
+
     </div>
   );
 }

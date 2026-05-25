@@ -94,7 +94,9 @@ export default function ResetPasswordPage() {
           {pageState === "loading" && (
             <div className="flex flex-col items-center gap-3 py-8 text-gray-400">
               <Loader2 className="w-8 h-8 animate-spin text-red-400" />
-              <p className="text-sm">Verifying your link…</p>
+              <p className="text-sm">
+                {locale === "fr" ? "Vérification en cours…" : locale === "es" ? "Verificando…" : locale === "ar" ? "جارٍ التحقق…" : locale === "id" ? "Memverifikasi…" : "Verifying your link…"}
+              </p>
             </div>
           )}
 
@@ -160,7 +162,9 @@ export default function ResetPasswordPage() {
               <CheckCircle className="w-12 h-12 text-green-400" />
               <h2 className="text-lg font-semibold text-white">{t("passwordUpdated")}</h2>
               <p className="text-gray-400 text-sm">{t("passwordUpdatedText")}</p>
-              <p className="text-xs text-gray-600">Redirecting to sign in…</p>
+              <p className="text-xs text-gray-600">
+                {locale === "fr" ? "Redirection vers la connexion…" : locale === "es" ? "Redirigiendo…" : locale === "ar" ? "جارٍ التحويل…" : locale === "id" ? "Mengalihkan…" : "Redirecting to sign in…"}
+              </p>
             </div>
           )}
 

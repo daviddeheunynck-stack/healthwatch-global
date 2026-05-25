@@ -156,13 +156,20 @@ export default function Navbar() {
                 </button>
               </div>
             ) : (
-              <Link
-                href={`/${locale}/login`}
-                className="flex items-center gap-1.5 text-sm text-gray-400 hover:text-white transition-colors"
-              >
-                <User className="w-4 h-4" />
-                {tAuth("login")}
-              </Link>
+              <div className="flex items-center gap-2">
+                <Link
+                  href={`/${locale}/login`}
+                  className="text-sm text-gray-400 hover:text-white transition-colors px-2 py-1"
+                >
+                  {tAuth("login")}
+                </Link>
+                <Link
+                  href={`/${locale}/signup`}
+                  className="text-sm bg-red-600 hover:bg-red-500 text-white font-semibold px-3 py-1.5 rounded-lg transition-colors whitespace-nowrap"
+                >
+                  {tAuth("signup")}
+                </Link>
+              </div>
             )}
           </div>
         </div>

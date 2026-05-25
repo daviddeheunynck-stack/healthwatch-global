@@ -61,6 +61,7 @@ export async function GET(req: NextRequest) {
   const { data: outbreaks, error: outbreakError } = await supabase
     .from("outbreaks")
     .select("*")
+    .eq("active", true)
     .order("date", { ascending: false });
 
   if (outbreakError) {

@@ -5,10 +5,30 @@ import { createClient } from "@/lib/supabase-server";
 import StatsCard from "@/components/StatsCard";
 import RiskBadge from "@/components/RiskBadge";
 import WorldMap from "@/components/WorldMap";
+import HeroBanner from "@/components/HeroBanner";
 import { Suspense } from "react";
 import Link from "next/link";
+import type { Metadata } from "next";
 
 export const dynamic = "force-dynamic";
+
+const DASHBOARD_META: Record<string, { title: string; description: string }> = {
+  en: { title: "Global Disease Outbreak Dashboard", description: "Real-time map and table of active disease outbreaks worldwide. Data sourced from the WHO Disease Outbreak News API." },
+  fr: { title: "Tableau de bord — Foyers épidémiques mondiaux", description: "Carte et tableau en temps réel des foyers épidémiques actifs dans le monde. Données issues de l'API WHO Disease Outbreak News." },
+  es: { title: "Panel de vigilancia epidémica mundial", description: "Mapa y tabla en tiempo real de brotes de enfermedades activos en todo el mundo. Datos de la API WHO Disease Outbreak News." },
+  ar: { title: "لوحة تحكم تفشي الأمراض العالمية", description: "خريطة وجدول في الوقت الفعلي لتفشي الأمراض النشطة حول العالم. بيانات من واجهة أخبار تفشي أمراض منظمة الصحة العالمية." },
+  id: { title: "Dasbor Wabah Penyakit Global", description: "Peta dan tabel real-time wabah penyakit aktif di seluruh dunia. Data dari API WHO Disease Outbreak News." },
+};
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const m = DASHBOARD_META[locale] ?? DASHBOARD_META.en;
+  return { title: m.title, description: m.description };
+}
 
 async function DashboardContent() {
   const locale = await getLocale();
@@ -29,7 +49,7 @@ async function DashboardContent() {
     plan = profile?.plan || "free";
   }
 
-  const isPaid = plan === "starter" || plan === "pro";
+  const isPaid = plan === "starter" || plan === "pro" || plan === "enterprise";
 
   const outbreaks = await getOutbreaks();
   const stats = getStats(outbreaks);
@@ -53,6 +73,9 @@ async function DashboardContent() {
 
   return (
     <>
+      {/* Hero — shown only to unauthenticated visitors */}
+      {!user && <HeroBanner />}
+
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <StatsCard label={t("activeOutbreaks")} value={stats.activeOutbreaks} icon={<Activity className="w-5 h-5" />} color="red" />
         <StatsCard label={t("countriesAffected")} value={stats.countriesAffected} icon={<Globe className="w-5 h-5" />} color="blue" />
@@ -67,17 +90,30 @@ async function DashboardContent() {
 
         {/* Upgrade banner for free users */}
         {!isPaid && (
-          <div className="bg-amber-950/40 border border-amber-800/60 rounded-lg p-3 flex items-center justify-between mb-4 gap-4">
-            <div className="flex items-center gap-2 text-amber-400 text-sm">
-              <Lock className="w-4 h-4 shrink-0" />
-              <span>{t("lockedDesc")}</span>
+          <div className="rounded-xl border border-amber-700/40 bg-gradient-to-r from-amber-950/50 via-amber-900/20 to-transparent p-4 mb-4">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div className="flex items-start gap-3">
+                <div className="w-8 h-8 rounded-lg bg-amber-500/10 border border-amber-500/20 flex items-center justify-center shrink-0 mt-0.5">
+                  <Lock className="w-4 h-4 text-amber-400" />
+                </div>
+                <div>
+                  <p className="text-sm font-semibold text-amber-300">{t("lockedDesc")}</p>
+                  <p className="text-xs text-amber-600 mt-0.5">
+                    {locale === "fr" ? "Cas confirmés · Décès · Rapports PDF · Alertes temps réel"
+                    : locale === "es" ? "Casos confirmados · Fallecidos · Informes PDF · Alertas en tiempo real"
+                    : locale === "ar" ? "الحالات المؤكدة · الوفيات · تقارير PDF · تنبيهات فورية"
+                    : locale === "id" ? "Kasus terkonfirmasi · Kematian · Laporan PDF · Peringatan real-time"
+                    : "Confirmed cases · Deaths · PDF reports · Real-time alerts"}
+                  </p>
+                </div>
+              </div>
+              <Link
+                href={`/${locale}/pricing`}
+                className="shrink-0 text-xs bg-red-600 hover:bg-red-500 text-white px-4 py-2 rounded-lg font-semibold transition-colors whitespace-nowrap"
+              >
+                {t("lockedCta")}
+              </Link>
             </div>
-            <Link
-              href={`/${locale}/pricing`}
-              className="shrink-0 text-xs bg-red-600 hover:bg-red-500 text-white px-3 py-1.5 rounded-lg font-medium transition-colors"
-            >
-              {t("lockedCta")}
-            </Link>
           </div>
         )}
 

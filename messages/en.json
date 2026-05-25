@@ -95,7 +95,7 @@
     "f2_1": "All global regions",
     "f2_2": "Real-time alerts",
     "f2_3": "Automatic PDF reports",
-    "f2_4": "API access",
+    "f2_4": "CSV data export",
     "f2_5": "Custom integration",
     "f2_6": "Priority support",
     "f3_1": "Everything in Pro",
@@ -150,7 +150,8 @@
     "passwordUpdated": "Password updated!",
     "passwordUpdatedText": "You can now sign in with your new password.",
     "tokenInvalid": "This link has expired or is invalid. Please request a new one.",
-    "backToLogin": "Back to sign in"
+    "backToLogin": "Back to sign in",
+    "passwordHint": "8 characters minimum"
   },
   "contact": {
     "title": "Get in Touch",

@@ -164,13 +164,14 @@ export async function GET(req: NextRequest) {
     }
   }
 
-  // ── 4. Deactivate stale entries ───────────────────────────────
+  // ── 4. Deactivate stale entries (never touch seed rows) ──────
   const cutoff = new Date();
   cutoff.setDate(cutoff.getDate() - STALE_DAYS);
   const { count } = await supabase
     .from("outbreaks")
     .update({ active: false })
     .eq("active", true)
+    .neq("is_seed", true)
     .lt("date", cutoff.toISOString().split("T")[0]);
 
   results.staleDeactivated = count ?? 0;

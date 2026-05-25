@@ -6,6 +6,7 @@ import { routing } from "@/i18n.routing";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import CookieBanner from "@/components/CookieBanner";
+import { Analytics } from "@vercel/analytics/next";
 import "../globals.css";
 
 const META: Record<string, { title: string; description: string }> = {
@@ -103,6 +104,7 @@ export default async function LocaleLayout({
           <Footer locale={locale} />
           <CookieBanner locale={locale} />
         </NextIntlClientProvider>
+        <Analytics />
       </body>
     </html>
   );

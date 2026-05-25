@@ -1,9 +1,25 @@
 import { getLocale } from "next-intl/server";
 import Link from "next/link";
 import { Shield, ArrowLeft } from "lucide-react";
+import type { Metadata } from "next";
+
+const BACK_LABELS: Record<string, string> = {
+  en: "Back to dashboard",
+  fr: "Retour au tableau de bord",
+  es: "Volver al panel",
+  ar: "العودة إلى لوحة التحكم",
+  id: "Kembali ke dasbor",
+};
+
+export const metadata: Metadata = {
+  title: "Privacy Policy",
+  description: "HealthWatch Global privacy policy — GDPR compliance, data we collect, third-party processors, your rights, and cookie usage.",
+  robots: { index: true, follow: true },
+};
 
 export default async function PrivacyPage() {
   const locale = await getLocale();
+  const backLabel = BACK_LABELS[locale] ?? BACK_LABELS.en;
 
   return (
     <div className="max-w-3xl mx-auto space-y-10">
@@ -14,7 +30,7 @@ export default async function PrivacyPage() {
           className="inline-flex items-center gap-2 text-sm text-gray-400 hover:text-white transition-colors mb-6"
         >
           <ArrowLeft className="w-4 h-4" />
-          Back to dashboard
+          {backLabel}
         </Link>
 
         <div className="flex items-center gap-3 mb-2">
@@ -23,7 +39,7 @@ export default async function PrivacyPage() {
           </div>
           <h1 className="text-3xl font-bold text-white">Privacy Policy</h1>
         </div>
-        <p className="text-gray-500 text-sm">Last updated: May 25, 2025</p>
+        <p className="text-gray-500 text-sm">Last updated: May 25, 2026</p>
       </div>
 
       <div className="prose prose-invert prose-sm max-w-none space-y-8">
@@ -122,10 +138,12 @@ export default async function PrivacyPage() {
         </section>
 
         <section className="space-y-3">
-          <h2 className="text-lg font-semibold text-white">7. Cookies</h2>
+          <h2 className="text-lg font-semibold text-white">7. Analytics &amp; Cookies</h2>
           <p className="text-gray-400 text-sm leading-relaxed">
             We use a single session cookie set by Supabase for authentication purposes. No tracking or advertising
-            cookies are used. No third-party analytics scripts are loaded.
+            cookies are used. We use <strong className="text-gray-300">Vercel Analytics</strong> to measure aggregate
+            audience metrics (page views, country of origin). This tool collects no personal data, sets no cookies,
+            and is fully GDPR-compliant. Your individual visits are never tracked or profiled.
           </p>
         </section>
 

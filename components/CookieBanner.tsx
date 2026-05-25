@@ -12,31 +12,31 @@ const LABELS: Record<string, {
   policy: string;
 }> = {
   fr: {
-    text: "Nous utilisons des cookies pour analyser l'audience et améliorer votre expérience.",
+    text: "Nous utilisons le stockage local pour mémoriser vos préférences et mesurer l'audience de façon anonyme (Vercel Analytics — aucune donnée personnelle collectée).",
     accept: "Accepter",
     decline: "Refuser",
     policy: "Politique de confidentialité",
   },
   en: {
-    text: "We use cookies to analyse traffic and improve your experience.",
+    text: "We use local storage to remember your preferences and measure audience anonymously (Vercel Analytics — no personal data collected).",
     accept: "Accept",
     decline: "Decline",
     policy: "Privacy Policy",
   },
   es: {
-    text: "Usamos cookies para analizar el tráfico y mejorar su experiencia.",
+    text: "Usamos almacenamiento local para recordar sus preferencias y medir la audiencia de forma anónima (Vercel Analytics — sin datos personales).",
     accept: "Aceptar",
     decline: "Rechazar",
     policy: "Política de privacidad",
   },
   ar: {
-    text: "نستخدم ملفات تعريف الارتباط لتحليل الزيارات وتحسين تجربتك.",
+    text: "نستخدم التخزين المحلي لحفظ تفضيلاتك وقياس الجمهور بشكل مجهول (Vercel Analytics — لا تُجمع بيانات شخصية).",
     accept: "قبول",
     decline: "رفض",
     policy: "سياسة الخصوصية",
   },
   id: {
-    text: "Kami menggunakan cookie untuk menganalisis traffic dan meningkatkan pengalaman Anda.",
+    text: "Kami menggunakan penyimpanan lokal untuk mengingat preferensi Anda dan mengukur audiens secara anonim (Vercel Analytics — tidak ada data pribadi yang dikumpulkan).",
     accept: "Terima",
     decline: "Tolak",
     policy: "Kebijakan Privasi",
