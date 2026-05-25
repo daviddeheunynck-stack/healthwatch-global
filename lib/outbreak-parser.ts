@@ -129,17 +129,32 @@ export function parseTitle(title: string): { disease: string; country: string } 
 export function extractNumbers(text: string): { cases: number; deaths: number } {
   const clean = text.replace(/\n/g, " ");
 
+  // Qualifier words that can appear between a number and "cases"
+  // e.g. "746 suspected cases", "83 confirmed cases", "12 probable cases"
+  const QUALIFIERS = "(?:(?:suspected|probable|confirmed|laboratory[- ]confirmed|human|new|reported|additional)\\s+)*";
+
   const casePatterns = [
-    /total\s+of\s+([\d,]+)\s+(?:confirmed\s+)?cases?/i,
-    /([\d,]+)\s+(?:confirmed\s+)?(?:laboratory[- ]confirmed\s+)?(?:human\s+)?cases?/i,
-    /([\d,]+)\s+(?:new\s+)?cases?\s+(?:have been|were|are)\s+reported/i,
+    // "a total of 746 suspected cases"
+    new RegExp(`total\\s+of\\s+([\\d,]+)\\s+${QUALIFIERS}cases?`, "i"),
+    // "746 suspected/confirmed/probable/etc cases [have been reported]"
+    new RegExp(`([\\d,]+)\\s+${QUALIFIERS}cases?(?:\\s+(?:have\\s+been|were|are)\\s+reported)?`, "i"),
+    // "cases: 746" / "cases reported: 746"
+    /cases?(?:\s+reported)?[:\s]+([,\d]+)/i,
   ];
 
   const deathPatterns = [
-    /([\d,]+)\s+deaths?/i,
+    // "176 deaths [among ...]"
+    /([\d,]+)\s+deaths?\b/i,
+    // "X people have died" / "X died"
     /([\d,]+)\s+(?:people\s+)?(?:have\s+)?died/i,
+    // "X fatalities"
     /([\d,]+)\s+fatalities/i,
-    /killing\s+([\d,]+)/i,
+    // "killing X" / "killed X"
+    /kill(?:ed|ing)\s+([\d,]+)/i,
+    // "of which X were fatal" / "X fatal cases"
+    /(?:of\s+which\s+)?([\d,]+)\s+(?:were\s+)?fatal/i,
+    // "deaths: 42"
+    /deaths?(?:\s+reported)?[:\s]+([,\d]+)/i,
     /([\d,]+)\s+(?:fatal\s+)?(?:casualties|casulties)/i,
   ];
 
