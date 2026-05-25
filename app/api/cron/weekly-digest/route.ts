@@ -47,7 +47,7 @@ export async function GET(req: NextRequest) {
 
   const { data: subscribers, error: subError } = await supabase
     .from("subscriptions")
-    .select("email, region, locale");
+    .select("id, email, region, locale");
 
   if (subError) {
     console.error("Failed to fetch subscribers:", subError);
@@ -81,7 +81,7 @@ export async function GET(req: NextRequest) {
         ? allOutbreaks
         : allOutbreaks.filter((o) => o.region === region);
 
-      const { subject, html } = buildDigestEmail(regionOutbreaks, region, locale);
+      const { subject, html } = buildDigestEmail(regionOutbreaks, region, locale, sub.id);
       await sendEmail(sub.email, subject, html);
       sent++;
 

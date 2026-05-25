@@ -14,7 +14,7 @@ const LABELS: Record<string, Record<string, string>> = {
     active: "actif(s)",
     high: "Élevé", medium: "Moyen", low: "Faible",
     cta: "Voir le tableau de bord complet →",
-    unsubscribe: "Pour vous désabonner, répondez à cet email avec « désabonnement ».",
+    unsubscribe: "Se désabonner",
     sources: "Sources : OMS · CDC · ECDC · ProMED",
   },
   en: {
@@ -28,7 +28,7 @@ const LABELS: Record<string, Record<string, string>> = {
     active: "active",
     high: "High", medium: "Medium", low: "Low",
     cta: "View full dashboard →",
-    unsubscribe: "To unsubscribe, reply to this email with \"unsubscribe\".",
+    unsubscribe: "Unsubscribe",
     sources: "Sources: WHO · CDC · ECDC · ProMED",
   },
   es: {
@@ -42,7 +42,7 @@ const LABELS: Record<string, Record<string, string>> = {
     active: "activo(s)",
     high: "Alto", medium: "Medio", low: "Bajo",
     cta: "Ver el panel completo →",
-    unsubscribe: "Para cancelar su suscripción, responda con \"baja\".",
+    unsubscribe: "Cancelar suscripción",
     sources: "Fuentes: OMS · CDC · ECDC · ProMED",
   },
   ar: {
@@ -56,7 +56,7 @@ const LABELS: Record<string, Record<string, string>> = {
     active: "نشط",
     high: "عالي", medium: "متوسط", low: "منخفض",
     cta: "← عرض لوحة التحكم الكاملة",
-    unsubscribe: "لإلغاء الاشتراك، رد على هذا البريد بكلمة «إلغاء».",
+    unsubscribe: "إلغاء الاشتراك",
     sources: "المصادر: OMS · CDC · ECDC · ProMED",
   },
   id: {
@@ -70,7 +70,7 @@ const LABELS: Record<string, Record<string, string>> = {
     active: "aktif",
     high: "Tinggi", medium: "Sedang", low: "Rendah",
     cta: "Lihat dasbor lengkap →",
-    unsubscribe: "Untuk berhenti berlangganan, balas email ini dengan \"berhenti\".",
+    unsubscribe: "Berhenti berlangganan",
     sources: "Sumber: WHO · CDC · ECDC · ProMED",
   },
 };
@@ -97,12 +97,16 @@ function getLocalizedName(outbreak: Outbreak, locale: string, field: "disease" |
 export function buildDigestEmail(
   outbreaks: Outbreak[],
   region: string,
-  locale: string
+  locale: string,
+  subscriptionId?: string
 ): { subject: string; html: string } {
   const l = LABELS[locale] || LABELS.fr;
   const regionLabel = REGION_LABELS[locale]?.[region] || region;
   const dir = locale === "ar" ? "rtl" : "ltr";
   const weekStr = new Date().toLocaleDateString(locale, { day: "numeric", month: "long", year: "numeric" });
+  const unsubUrl = subscriptionId
+    ? `https://healthwatch-global.com/api/unsubscribe?id=${encodeURIComponent(subscriptionId)}&locale=${locale}`
+    : null;
 
   const outbreakRows = outbreaks.length === 0
     ? `<p style="color:#94a3b8;padding:20px 0;text-align:center;">${l.noOutbreaks}</p>`
@@ -179,7 +183,12 @@ export function buildDigestEmail(
     <!-- Footer -->
     <div style="padding:20px 32px;border-top:1px solid #334155;">
       <p style="margin:0 0 4px;font-size:11px;color:#475569;">${l.sources}</p>
-      <p style="margin:0;font-size:11px;color:#475569;">${l.unsubscribe}</p>
+      <p style="margin:0;font-size:11px;color:#475569;">
+        ${unsubUrl
+          ? `<a href="${unsubUrl}" style="color:#64748b;text-decoration:underline;">${l.unsubscribe}</a>`
+          : l.unsubscribe
+        }
+      </p>
     </div>
 
   </div>
