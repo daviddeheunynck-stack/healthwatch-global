@@ -3,6 +3,14 @@ import Link from "next/link";
 import { FileText, ArrowLeft } from "lucide-react";
 import type { Metadata } from "next";
 
+const BACK_LABELS: Record<string, string> = {
+  en: "Back to dashboard",
+  fr: "Retour au tableau de bord",
+  es: "Volver al panel",
+  ar: "العودة إلى لوحة التحكم",
+  id: "Kembali ke dasbor",
+};
+
 export const metadata: Metadata = {
   title: "Terms of Service",
   description: "HealthWatch Global terms of service — acceptable use, subscriptions, billing, health data disclaimer, and governing law.",
@@ -11,6 +19,7 @@ export const metadata: Metadata = {
 
 export default async function TermsPage() {
   const locale = await getLocale();
+  const backLabel = BACK_LABELS[locale] ?? BACK_LABELS.en;
 
   return (
     <div className="max-w-3xl mx-auto space-y-10">
@@ -21,7 +30,7 @@ export default async function TermsPage() {
           className="inline-flex items-center gap-2 text-sm text-gray-400 hover:text-white transition-colors mb-6"
         >
           <ArrowLeft className="w-4 h-4" />
-          Back to dashboard
+          {backLabel}
         </Link>
 
         <div className="flex items-center gap-3 mb-2">
