@@ -112,8 +112,8 @@
     "faq1_a": "Oui, sans engagement. Vous pouvez annuler votre abonnement à tout moment depuis votre espace client.",
     "faq2_q": "Les données sont-elles mises à jour en temps réel ?",
     "faq2_a": "Oui. Nous agrégeons les flux de l'OMS, du CDC, de l'ECDC et de ProMED en continu, 24h/24.",
-    "faq3_q": "Proposez-vous une période d'essai ?",
-    "faq3_a": "Oui, 14 jours d'essai gratuit sur les offres Starter et Pro. Aucune carte bancaire requise."
+    "faq3_q": "Y a-t-il un plan gratuit ?",
+    "faq3_a": "Oui. Le plan Gratuit donne acces au tableau de bord public, une region surveillee et la synthese hebdomadaire — sans carte bancaire, sans limite de duree."
   },
   "auth": {
     "loginTitle": "Connexion",

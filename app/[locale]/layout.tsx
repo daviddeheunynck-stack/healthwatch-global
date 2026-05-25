@@ -4,6 +4,7 @@ import { getMessages } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { routing } from "@/i18n.routing";
 import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 import "../globals.css";
 
 export const metadata: Metadata = {
@@ -29,10 +30,11 @@ export default async function LocaleLayout({
 
   return (
     <html lang={locale} dir={isRTL ? "rtl" : "ltr"}>
-      <body className="bg-gray-950 text-gray-100 min-h-screen">
+      <body className="bg-gray-950 text-gray-100 min-h-screen flex flex-col">
         <NextIntlClientProvider messages={messages}>
           <Navbar />
-          <main className="max-w-7xl mx-auto px-4 py-8">{children}</main>
+          <main className="max-w-7xl mx-auto px-4 py-8 flex-1 w-full">{children}</main>
+          <Footer locale={locale} />
         </NextIntlClientProvider>
       </body>
     </html>

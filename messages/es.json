@@ -112,8 +112,8 @@
     "faq1_a": "Sí, sin compromiso. Puede cancelar su suscripción en cualquier momento desde su cuenta.",
     "faq2_q": "¿Los datos se actualizan en tiempo real?",
     "faq2_a": "Sí. Agregamos continuamente los flujos de OMS, CDC, ECDC y ProMED las 24 horas.",
-    "faq3_q": "¿Ofrecen un período de prueba?",
-    "faq3_a": "Sí, 14 días de prueba gratuita en los planes Starter y Pro. No se requiere tarjeta de crédito."
+    "faq3_q": "Hay un plan gratuito?",
+    "faq3_a": "Si. El plan Gratuito da acceso al panel publico, una region supervisada y el resumen semanal, sin tarjeta de credito ni limite de tiempo."
   },
   "auth": {
     "loginTitle": "Iniciar sesión",

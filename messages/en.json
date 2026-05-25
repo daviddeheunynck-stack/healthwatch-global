@@ -112,8 +112,8 @@
     "faq1_a": "Yes, no commitment. You can cancel your subscription at any time from your account.",
     "faq2_q": "Is data updated in real time?",
     "faq2_a": "Yes. We continuously aggregate feeds from WHO, CDC, ECDC and ProMED, 24/7.",
-    "faq3_q": "Do you offer a free trial?",
-    "faq3_a": "Yes, 14-day free trial on Starter and Pro plans. No credit card required."
+    "faq3_q": "Is there a free plan?",
+    "faq3_a": "Yes. The Free plan gives you access to the public dashboard, one monitored region and the weekly digest — no credit card required, no time limit."
   },
   "auth": {
     "loginTitle": "Sign in",
