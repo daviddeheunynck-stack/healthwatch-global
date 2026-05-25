@@ -1,9 +1,15 @@
 import { getTranslations, getLocale } from "next-intl/server";
-import { FileText, Download } from "lucide-react";
+import { FileText } from "lucide-react";
 import { getOutbreaks, getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 import { Suspense } from "react";
+import ReportDownloadButton from "@/components/ReportDownloadButton";
+import type { Metadata } from "next";
 
 export const dynamic = "force-dynamic";
+
+export async function generateMetadata(): Promise<Metadata> {
+  return { title: "Epidemiological Reports" };
+}
 
 const REGIONS = ["africa", "asia", "americas", "europe", "oceania"] as const;
 
@@ -12,6 +18,7 @@ async function ReportsContent() {
   const t = await getTranslations("reports");
   const tAlerts = await getTranslations("alerts");
   const outbreaks = await getOutbreaks();
+  const dateStr = new Date().toLocaleDateString(locale, { year: "numeric", month: "long", day: "numeric" });
 
   return (
     <div className="grid md:grid-cols-2 gap-4">
@@ -19,20 +26,34 @@ async function ReportsContent() {
         const regionOutbreaks = outbreaks.filter((o) => o.region === region);
         const totalCases = regionOutbreaks.reduce((sum, o) => sum + o.cases, 0);
         const highRisk = regionOutbreaks.filter((o) => o.risk_level === "high").length;
+        const regionLabel = tAlerts(region);
+
+        const reportData = {
+          region,
+          regionLabel,
+          date: dateStr,
+          activeOutbreaks: regionOutbreaks.length,
+          totalCases,
+          highRisk,
+          diseases: regionOutbreaks.map((o) => ({
+            name: getLocalizedDisease(o, locale),
+            country: getLocalizedCountry(o, locale),
+            cases: o.cases,
+            deaths: o.deaths,
+            risk: o.risk_level,
+          })),
+        };
 
         return (
           <div key={region} className="bg-gray-900 border border-gray-800 rounded-xl p-5 hover:border-gray-600 transition-colors">
             <div className="flex justify-between items-start mb-4">
               <div>
-                <h2 className="text-lg font-semibold text-white">{tAlerts(region)}</h2>
+                <h2 className="text-lg font-semibold text-white">{regionLabel}</h2>
                 <p className="text-xs text-gray-500 mt-0.5">
-                  {t("generated")} {new Date().toLocaleDateString(locale)}
+                  {t("generated")} {dateStr}
                 </p>
               </div>
-              <button className="flex items-center gap-1.5 text-xs bg-gray-800 hover:bg-gray-700 text-gray-300 px-3 py-1.5 rounded-lg transition-colors">
-                <Download className="w-3.5 h-3.5" />
-                {t("download")}
-              </button>
+              <ReportDownloadButton data={reportData} label={t("download")} />
             </div>
             <div className="space-y-2 text-sm">
               <div className="flex justify-between text-gray-400">
