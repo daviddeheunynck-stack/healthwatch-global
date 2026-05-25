@@ -3,6 +3,14 @@
 import { useState } from "react";
 import { CreditCard, Loader2 } from "lucide-react";
 
+const ERROR_LABELS: Record<string, { generic: string; network: string }> = {
+  en: { generic: "An error occurred", network: "Network error" },
+  fr: { generic: "Une erreur s'est produite", network: "Erreur réseau" },
+  es: { generic: "Se produjo un error", network: "Error de red" },
+  ar: { generic: "حدث خطأ ما", network: "خطأ في الشبكة" },
+  id: { generic: "Terjadi kesalahan", network: "Kesalahan jaringan" },
+};
+
 export default function BillingPortalButton({
   locale,
   label,
@@ -12,6 +20,8 @@ export default function BillingPortalButton({
 }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
+  const err = ERROR_LABELS[locale] ?? ERROR_LABELS.en;
 
   async function handleClick() {
     setLoading(true);
@@ -26,11 +36,11 @@ export default function BillingPortalButton({
       if (data.url) {
         window.location.href = data.url;
       } else {
-        setError(data.error || "Erreur");
+        setError(data.error || err.generic);
         setLoading(false);
       }
     } catch {
-      setError("Erreur réseau");
+      setError(err.network);
       setLoading(false);
     }
   }

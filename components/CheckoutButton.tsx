@@ -5,6 +5,14 @@ import { useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
 import { createClient } from "@/lib/supabase-browser";
 
+const ERROR_LABELS: Record<string, string> = {
+  en: "An unexpected error occurred.",
+  fr: "Une erreur inattendue s'est produite.",
+  es: "Se produjo un error inesperado.",
+  ar: "حدث خطأ غير متوقع.",
+  id: "Terjadi kesalahan yang tidak terduga.",
+};
+
 interface CheckoutButtonProps {
   plan: "starter" | "pro";
   locale: string;
@@ -48,7 +56,7 @@ export default function CheckoutButton({ plan, locale, label, className, icon }:
       window.location.href = data.url;
     } catch (err: any) {
       console.error("Checkout error:", err);
-      setErrorMsg(err.message || "Erreur inattendue.");
+      setErrorMsg(err.message || ERROR_LABELS[locale] || ERROR_LABELS.en);
       setLoading(false);
     }
   };
