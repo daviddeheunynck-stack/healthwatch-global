@@ -76,8 +76,8 @@ export function parseWHOTitle(title: string): { disease: string; country: string
     .replace(/^DON\s*[–—]\s*/i, "")
     .trim();
 
-  // Split on em dash, en dash, or " - "
-  const parts = clean.split(/\s*[–—]\s*|\s+-\s+/);
+  // Split on em dash, en dash, or hyphen (with space after; handles "disease- Country" too)
+  const parts = clean.split(/\s*[–—]\s*|\s*-\s+/);
   if (parts.length >= 2) {
     return {
       disease: parts[0].trim(),

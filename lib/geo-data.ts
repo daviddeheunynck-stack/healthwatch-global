@@ -193,10 +193,28 @@ export const COUNTRIES: Record<string, CountryGeo> = {
   "Botswana": { lat: -22.3, lng: 24.7, region: "africa", name_en: "Botswana", name_fr: "Botswana", name_ar: "بوتسوانا" },
   "Namibia": { lat: -22.9, lng: 18.5, region: "africa", name_en: "Namibia", name_fr: "Namibie", name_ar: "ناميبيا" },
 
+  // ── ADDITIONAL ASIA ───────────────────────────────────────────
+  "Timor-Leste": { lat: -8.9, lng: 125.7, region: "asia", name_en: "Timor-Leste", name_fr: "Timor oriental", name_ar: "تيمور الشرقية" },
+  "Democratic Timor-Leste": { lat: -8.9, lng: 125.7, region: "asia", name_en: "Timor-Leste", name_fr: "Timor oriental", name_ar: "تيمور الشرقية" },
+  "Kingdom of Saudi Arabia": { lat: 23.9, lng: 45.1, region: "asia", name_en: "Saudi Arabia", name_fr: "Arabie Saoudite", name_ar: "المملكة العربية السعودية" },
+
+  // ── FRENCH TERRITORIES ────────────────────────────────────────
+  "La Réunion": { lat: -21.1, lng: 55.5, region: "africa", name_en: "Réunion", name_fr: "La Réunion", name_ar: "لا ريونيون" },
+  "Reunion": { lat: -21.1, lng: 55.5, region: "africa", name_en: "Réunion", name_fr: "La Réunion", name_ar: "لا ريونيون" },
+  "Mayotte": { lat: -12.8, lng: 45.2, region: "africa", name_en: "Mayotte", name_fr: "Mayotte", name_ar: "مايوت" },
+  "French Polynesia": { lat: -17.7, lng: -149.4, region: "oceania", name_en: "French Polynesia", name_fr: "Polynésie française", name_ar: "بولينيزيا الفرنسية" },
+  "New Caledonia": { lat: -20.9, lng: 165.6, region: "oceania", name_en: "New Caledonia", name_fr: "Nouvelle-Calédonie", name_ar: "كاليدونيا الجديدة" },
+
   // ── MULTI-COUNTRY / GLOBAL ────────────────────────────────────
   "Multi-country": { lat: 20.0, lng: 0.0, region: "africa", name_en: "Multiple countries", name_fr: "Plusieurs pays", name_ar: "دول متعددة" },
   "Global": { lat: 20.0, lng: 0.0, region: "africa", name_en: "Global", name_fr: "Mondial", name_ar: "عالمي" },
   "Global situation": { lat: 20.0, lng: 0.0, region: "africa", name_en: "Global", name_fr: "Mondial", name_ar: "عالمي" },
+  "Global Situation": { lat: 20.0, lng: 0.0, region: "africa", name_en: "Global", name_fr: "Mondial", name_ar: "عالمي" },
+  "Global update": { lat: 20.0, lng: 0.0, region: "africa", name_en: "Global", name_fr: "Mondial", name_ar: "عالمي" },
+  "Global Update": { lat: 20.0, lng: 0.0, region: "africa", name_en: "Global", name_fr: "Mondial", name_ar: "عالمي" },
+  "African Region": { lat: 0.0, lng: 20.0, region: "africa", name_en: "Africa (regional)", name_fr: "Région africaine", name_ar: "المنطقة الأفريقية" },
+  "African Region (AFRO)": { lat: 0.0, lng: 20.0, region: "africa", name_en: "Africa (regional)", name_fr: "Région africaine", name_ar: "المنطقة الأفريقية" },
+  "Region of the Americas": { lat: 0.0, lng: -60.0, region: "americas", name_en: "Americas (regional)", name_fr: "Région des Amériques", name_ar: "منطقة الأمريكتين" },
 };
 
 // Fuzzy lookup: try exact match, then partial match

@@ -24,8 +24,13 @@ const DISEASE_MAP: Array<{ patterns: string[]; info: DiseaseInfo }> = [
     info: { name_en: "Cholera", name_fr: "Choléra", name_ar: "الكوليرا" },
   },
   {
-    patterns: ["avian influenza", "h5n1", "h5n2", "h7n9", "h9n2", "h3n8"],
+    patterns: ["avian influenza", "h5n1", "h5n2", "h5n5", "h5n6", "h7n9", "h9n2", "h3n8", "h10n3"],
     info: { name_en: "Avian Influenza", name_fr: "Grippe aviaire", name_ar: "إنفلونزا الطيور" },
+  },
+  {
+    // MERS must be before generic "coronavirus" to avoid misclassification
+    patterns: ["mers", "middle east respiratory"],
+    info: { name_en: "MERS-CoV", name_fr: "MERS-CoV", name_ar: "فيروس كورونا (متلازمة الشرق الأوسط)" },
   },
   {
     patterns: ["influenza"],
@@ -108,8 +113,8 @@ const DISEASE_MAP: Array<{ patterns: string[]; info: DiseaseInfo }> = [
     info: { name_en: "Hantavirus", name_fr: "Hantavirus", name_ar: "فيروس هانتا" },
   },
   {
-    patterns: ["mers"],
-    info: { name_en: "MERS-CoV", name_fr: "MERS-CoV", name_ar: "فيروس كورونا (متلازمة الشرق الأوسط)" },
+    patterns: ["sudan virus", "bundibugyo"],
+    info: { name_en: "Ebola virus disease", name_fr: "Maladie à virus Ebola", name_ar: "مرض فيروس إيبولا" },
   },
   {
     patterns: ["diphtheria"],
