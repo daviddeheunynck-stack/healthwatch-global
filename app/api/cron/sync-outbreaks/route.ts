@@ -11,8 +11,15 @@ const SUPABASE_URL = clean(process.env.NEXT_PUBLIC_SUPABASE_URL);
 const SUPABASE_SERVICE_KEY = clean(process.env.SUPABASE_SERVICE_ROLE_KEY);
 const CRON_SECRET = clean(process.env.CRON_SECRET);
 
-// WHO Disease Outbreak News RSS
-const WHO_DON_RSS = "https://www.who.int/feeds/entity/csr/don/en/rss.xml";
+// RSS sources tried in order — first successful one wins
+const RSS_SOURCES = [
+  // WHO Disease Outbreak News (try several URL variants — WHO restructures periodically)
+  "https://www.who.int/feeds/entity/csr/don/en/rss.xml",
+  "https://www.who.int/feeds/entity/emergencies/disease-outbreak-news/en/rss.xml",
+  "https://www.who.int/rss-feeds/news-english.xml",
+  // ProMED — reliable fallback, covers same outbreaks
+  "https://promedmail.org/feed/",
+];
 
 // How many days before an outbreak is considered stale and set to inactive
 const STALE_DAYS = 90;
@@ -27,21 +34,37 @@ export async function GET(req: NextRequest) {
   const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
   const results = { inserted: 0, updated: 0, skipped: 0, errors: 0, staleDeactivated: 0 };
 
-  // ── 1. Fetch WHO DON RSS ───────────────────────────────────────
-  let xml: string;
-  try {
-    const res = await fetch(WHO_DON_RSS, {
-      headers: {
-        "User-Agent": "HealthWatch-Global/1.0 (health surveillance; contact@healthwatch-global.com)",
-        "Accept": "application/rss+xml, application/xml, text/xml",
-      },
-      next: { revalidate: 0 },
-    });
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    xml = await res.text();
-  } catch (err: any) {
-    console.error("[sync-outbreaks] Failed to fetch WHO RSS:", err.message);
-    return NextResponse.json({ error: "Failed to fetch WHO RSS", detail: err.message }, { status: 502 });
+  // ── 1. Fetch RSS — try each source until one works ────────────
+  let xml = "";
+  let usedSource = "";
+
+  for (const url of RSS_SOURCES) {
+    try {
+      const res = await fetch(url, {
+        headers: {
+          "User-Agent": "HealthWatch-Global/1.0 (health surveillance; contact@healthwatch-global.com)",
+          "Accept": "application/rss+xml, application/xml, text/xml, */*",
+        },
+        next: { revalidate: 0 },
+      });
+      if (!res.ok) {
+        console.warn(`[sync-outbreaks] ${url} → HTTP ${res.status}, trying next`);
+        continue;
+      }
+      xml = await res.text();
+      if (xml.includes("<item>")) {
+        usedSource = url;
+        console.log(`[sync-outbreaks] Using source: ${url}`);
+        break;
+      }
+      console.warn(`[sync-outbreaks] ${url} → no <item> tags, trying next`);
+    } catch (err: any) {
+      console.warn(`[sync-outbreaks] ${url} → ${err.message}, trying next`);
+    }
+  }
+
+  if (!xml || !usedSource) {
+    return NextResponse.json({ error: "All RSS sources failed" }, { status: 502 });
   }
 
   // ── 2. Parse RSS items ─────────────────────────────────────────
@@ -149,6 +172,7 @@ export async function GET(req: NextRequest) {
   return NextResponse.json({
     success: true,
     timestamp: new Date().toISOString(),
+    source: usedSource,
     rssItemsFound: rssItems.length,
     ...results,
   });
