@@ -3,7 +3,7 @@
 import { useTranslations, useLocale } from "next-intl";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { Activity, Bell, FileText, Globe, CreditCard, LogOut, User } from "lucide-react";
+import { Activity, Bell, FileText, Globe, CreditCard, LogOut, User, Menu, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase-browser";
 import type { User as SupabaseUser } from "@supabase/supabase-js";
@@ -32,6 +32,7 @@ export default function Navbar() {
   const router = useRouter();
   const [user, setUser] = useState<SupabaseUser | null>(null);
   const [plan, setPlan] = useState<string>("free");
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   useEffect(() => {
     const supabase = createClient();
@@ -50,6 +51,9 @@ export default function Navbar() {
     return () => subscription.unsubscribe();
   }, []);
 
+  // Close mobile menu on route change
+  useEffect(() => { setMobileOpen(false); }, [pathname]);
+
   async function fetchPlan(userId: string, supabase: ReturnType<typeof createClient>) {
     const { data } = await supabase
       .from("profiles")
@@ -62,6 +66,7 @@ export default function Navbar() {
   const handleLogout = async () => {
     const supabase = createClient();
     await supabase.auth.signOut();
+    setMobileOpen(false);
     router.push(`/${locale}`);
     router.refresh();
   };
@@ -85,6 +90,7 @@ export default function Navbar() {
 
   return (
     <nav className="bg-gray-900 border-b border-gray-800 sticky top-0 z-50">
+      {/* Main row */}
       <div className="max-w-7xl mx-auto px-4 flex items-center justify-between h-16">
 
         {/* Logo */}
@@ -93,8 +99,8 @@ export default function Navbar() {
           <span className="font-bold text-lg text-white">{t("title")}</span>
         </div>
 
-        {/* Nav links */}
-        <div className="flex items-center gap-5">
+        {/* Desktop: nav links */}
+        <div className="hidden md:flex items-center gap-5">
           {navLinks.map(({ href, label, icon: Icon }) => (
             <Link
               key={href}
@@ -109,9 +115,8 @@ export default function Navbar() {
           ))}
         </div>
 
-        {/* Right side */}
-        <div className="flex items-center gap-3">
-          {/* Locale switcher */}
+        {/* Desktop: locale + auth */}
+        <div className="hidden md:flex items-center gap-3">
           <div className="flex items-center gap-1">
             <Globe className="w-4 h-4 text-gray-400" />
             {LOCALES.map((loc) => (
@@ -129,7 +134,6 @@ export default function Navbar() {
             ))}
           </div>
 
-          {/* Auth */}
           <div className="border-l border-gray-700 pl-3">
             {user ? (
               <div className="flex items-center gap-2">
@@ -158,7 +162,101 @@ export default function Navbar() {
             )}
           </div>
         </div>
+
+        {/* Mobile: auth badge + hamburger */}
+        <div className="flex md:hidden items-center gap-3">
+          {user && (
+            <span className={`text-xs px-2 py-0.5 rounded font-semibold ${PLAN_BADGE[plan] || PLAN_BADGE.free}`}>
+              {tAuth(`plan.${plan}`)}
+            </span>
+          )}
+          <button
+            onClick={() => setMobileOpen(!mobileOpen)}
+            className="text-gray-400 hover:text-white transition-colors p-1"
+            aria-label="Menu"
+          >
+            {mobileOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+          </button>
+        </div>
       </div>
+
+      {/* Mobile dropdown menu */}
+      {mobileOpen && (
+        <div className="md:hidden border-t border-gray-800 bg-gray-900 px-4 py-4 space-y-4">
+
+          {/* Nav links */}
+          <div className="space-y-1">
+            {navLinks.map(({ href, label, icon: Icon }) => (
+              <Link
+                key={href}
+                href={href}
+                className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
+                  pathname === href
+                    ? "bg-gray-800 text-red-400"
+                    : "text-gray-400 hover:text-white hover:bg-gray-800"
+                }`}
+              >
+                <Icon className="w-4 h-4" />
+                {label}
+              </Link>
+            ))}
+          </div>
+
+          {/* Locale switcher */}
+          <div className="border-t border-gray-800 pt-3">
+            <div className="flex items-center gap-2 flex-wrap">
+              <Globe className="w-4 h-4 text-gray-500" />
+              {LOCALES.map((loc) => (
+                <button
+                  key={loc.code}
+                  onClick={() => switchLocale(loc.code)}
+                  className={`text-xs px-3 py-1.5 rounded font-medium transition-colors ${
+                    locale === loc.code
+                      ? "bg-red-600 text-white"
+                      : "text-gray-400 hover:text-white bg-gray-800"
+                  }`}
+                >
+                  {loc.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Auth */}
+          <div className="border-t border-gray-800 pt-3">
+            {user ? (
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-xs text-gray-500">{user.email}</p>
+                </div>
+                <button
+                  onClick={handleLogout}
+                  className="flex items-center gap-2 text-sm text-gray-400 hover:text-red-400 transition-colors"
+                >
+                  <LogOut className="w-4 h-4" />
+                  {tAuth("logout")}
+                </button>
+              </div>
+            ) : (
+              <div className="flex gap-3">
+                <Link
+                  href={`/${locale}/login`}
+                  className="flex-1 text-center py-2 text-sm text-gray-400 hover:text-white bg-gray-800 rounded-lg transition-colors"
+                >
+                  {tAuth("login")}
+                </Link>
+                <Link
+                  href={`/${locale}/signup`}
+                  className="flex-1 text-center py-2 text-sm text-white bg-red-600 hover:bg-red-500 rounded-lg transition-colors"
+                >
+                  {tAuth("signup")}
+                </Link>
+              </div>
+            )}
+          </div>
+
+        </div>
+      )}
     </nav>
   );
 }

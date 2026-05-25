@@ -81,16 +81,16 @@ async function DashboardContent() {
           </div>
         )}
 
-        <div className="rounded-xl border border-gray-800 overflow-hidden">
-          <table className="w-full text-sm">
+        <div className="rounded-xl border border-gray-800 overflow-hidden overflow-x-auto">
+          <table className="w-full text-sm min-w-[500px]">
             <thead className="bg-gray-900 text-gray-400">
               <tr>
                 <th className="text-left px-4 py-3">{t("disease")}</th>
                 <th className="text-left px-4 py-3">{t("country")}</th>
                 <th className="text-left px-4 py-3">{t("cases")}</th>
-                <th className="text-left px-4 py-3">{t("deaths")}</th>
+                <th className="text-left px-4 py-3 hidden sm:table-cell">{t("deaths")}</th>
                 <th className="text-left px-4 py-3">{t("riskLevel")}</th>
-                <th className="text-left px-4 py-3">{t("date")}</th>
+                <th className="text-left px-4 py-3 hidden md:table-cell">{t("date")}</th>
               </tr>
             </thead>
             <tbody>
@@ -114,7 +114,7 @@ async function DashboardContent() {
                       </span>
                     )}
                   </td>
-                  <td className="px-4 py-3 text-red-400">
+                  <td className="px-4 py-3 text-red-400 hidden sm:table-cell">
                     {isPaid ? (
                       outbreak.deaths.toLocaleString()
                     ) : (
@@ -126,7 +126,7 @@ async function DashboardContent() {
                   <td className="px-4 py-3">
                     <RiskBadge level={outbreak.risk_level} />
                   </td>
-                  <td className="px-4 py-3 text-gray-400">{outbreak.date}</td>
+                  <td className="px-4 py-3 text-gray-400 hidden md:table-cell">{outbreak.date}</td>
                 </tr>
               ))}
             </tbody>

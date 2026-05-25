@@ -95,7 +95,7 @@ export default function WorldMap({ outbreaks, locale, popupLabels, riskLabels }:
 
   return (
     <div className="relative rounded-xl overflow-hidden border border-gray-800">
-      <div ref={containerRef} style={{ height: "420px", width: "100%" }} />
+      <div ref={containerRef} className="h-[260px] sm:h-[340px] md:h-[420px] w-full" />
       <div className="absolute bottom-4 left-4 flex gap-3 bg-gray-900/90 rounded-lg px-3 py-2 text-xs">
         {(["high", "medium", "low"] as const).map((level) => (
           <span key={level} className="flex items-center gap-1.5">
