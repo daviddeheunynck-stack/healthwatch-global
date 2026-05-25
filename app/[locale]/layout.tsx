@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import { routing } from "@/i18n.routing";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import CookieBanner from "@/components/CookieBanner";
 import "../globals.css";
 
 const META: Record<string, { title: string; description: string }> = {
@@ -100,6 +101,7 @@ export default async function LocaleLayout({
           <Navbar />
           <main className="max-w-7xl mx-auto px-4 py-8 flex-1 w-full">{children}</main>
           <Footer locale={locale} />
+          <CookieBanner locale={locale} />
         </NextIntlClientProvider>
       </body>
     </html>
