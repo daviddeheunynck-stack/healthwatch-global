@@ -84,6 +84,15 @@ export function parseWHOTitle(title: string): { disease: string; country: string
       country: parts.slice(1).join(" – ").trim(),
     };
   }
+
+  // Fallback: trailing ", Country" pattern (e.g. "Hantavirus cluster, Multi-country")
+  const commaIdx = clean.lastIndexOf(",");
+  if (commaIdx !== -1) {
+    const country = clean.slice(commaIdx + 1).trim();
+    const disease = clean.slice(0, commaIdx).trim();
+    if (disease && country) return { disease, country };
+  }
+
   return null;
 }
 
