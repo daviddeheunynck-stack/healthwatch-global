@@ -35,6 +35,13 @@ export default function SignupPage() {
       return;
     }
 
+    // Fire welcome email — non-blocking, don't await
+    fetch("/api/send-welcome", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, locale }),
+    }).catch(() => {}); // silent fail — signup already succeeded
+
     setSuccess(true);
     setLoading(false);
   };
