@@ -3,12 +3,14 @@ import { NextResponse } from "next/server";
 export const dynamic = "force-dynamic";
 
 const URLS = [
-  "https://api.reliefweb.int/v2/reports?appname=healthwatch-global&limit=1&fields[include][]=title&filter[field]=theme.name&filter[value]=Health",
-  "https://www.ecdc.europa.eu/en/rss-feeds/rss.xml",
-  "https://www.ecdc.europa.eu/feeds/en/news/rss",
-  "https://www.healthmap.org/en/rss.php",
+  // ReliefWeb v2 with the official doc appname
+  "https://api.reliefweb.int/v2/reports?appname=apidoc&limit=1&fields[include][]=title&filter[field]=theme.name&filter[value]=Health",
+  // WHO DON page — show 1200 chars so we can see the article list HTML structure
   "https://www.who.int/emergencies/disease-outbreak-news",
-  "https://httpbin.org/get",
+  // Alternate WHO RSS paths post-redesign
+  "https://www.who.int/emergencies/disease-outbreak-news/rss",
+  "https://www.who.int/emergencies/disease-outbreak-news.rss",
+  "https://www.who.int/csr/don/en/rss.xml",
 ];
 
 export async function GET() {
@@ -21,12 +23,14 @@ export async function GET() {
           signal: AbortSignal.timeout(8000),
         });
         const body = await res.text();
+        // Show more for WHO page so we can see article list structure
+        const previewLen = url.includes("who.int/emergencies") ? 2000 : 200;
         return {
           url,
           status: res.status,
           ok: res.ok,
           ms: Date.now() - start,
-          preview: body.slice(0, 120),
+          preview: body.slice(0, previewLen),
         };
       } catch (e: any) {
         return { url, status: 0, ok: false, ms: Date.now() - start, error: e.message };
