@@ -138,9 +138,12 @@ export default function Navbar() {
           <div className="border-l border-gray-700 pl-3">
             {user ? (
               <div className="flex items-center gap-2">
-                <span className={`text-xs px-2 py-1 rounded font-semibold ${PLAN_BADGE[plan] || PLAN_BADGE.free}`}>
+                <Link
+                  href={`/${locale}/account`}
+                  className={`text-xs px-2 py-1 rounded font-semibold ${PLAN_BADGE[plan] || PLAN_BADGE.free}`}
+                >
                   {tAuth(`plan.${plan}`)}
-                </span>
+                </Link>
                 <span className="text-xs text-gray-400 hidden lg:block max-w-32 truncate">
                   {user.email}
                 </span>
