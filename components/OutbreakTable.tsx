@@ -6,6 +6,7 @@ import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 import type { Outbreak } from "@/lib/outbreaks";
 import RiskBadge from "@/components/RiskBadge";
 import LockedUpgradeButton from "@/components/LockedUpgradeButton";
+import ShareOutbreakButton from "@/components/ShareOutbreakButton";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -212,6 +213,7 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l }: 
                 <th className="text-left px-4 py-3 hidden sm:table-cell">{l.deaths}</th>
                 <th className="text-left px-4 py-3">{l.riskLevel}</th>
                 <th className="text-left px-4 py-3 hidden md:table-cell">{l.date}</th>
+                <th className="px-2 py-3 w-8" />
               </tr>
             </thead>
             <tbody>
@@ -251,6 +253,15 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l }: 
                   </td>
                   <td className="px-4 py-3 text-gray-400 hidden md:table-cell">
                     {outbreak.date}
+                  </td>
+                  <td className="px-2 py-3">
+                    <ShareOutbreakButton
+                      disease={getLocalizedDisease(outbreak, locale)}
+                      country={getLocalizedCountry(outbreak, locale)}
+                      cases={outbreak.cases}
+                      riskLevel={outbreak.risk_level}
+                      locale={locale}
+                    />
                   </td>
                 </tr>
               ))}
