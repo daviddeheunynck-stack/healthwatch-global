@@ -3,6 +3,7 @@
 import { useTranslations, useLocale } from "next-intl";
 import { useState } from "react";
 import { Bell, CheckCircle, Loader2, Info } from "lucide-react";
+import RealtimeAlertFeed from "@/components/RealtimeAlertFeed";
 
 const REGIONS = ["allRegions", "africa", "asia", "europe", "americas", "oceania"] as const;
 
@@ -109,6 +110,8 @@ export default function AlertsPage() {
         <Info className="w-4 h-4 text-blue-400 shrink-0 mt-0.5" />
         <p>{t("freeNote")}</p>
       </div>
+
+      <RealtimeAlertFeed />
 
       <div className="text-center text-xs text-gray-600">
         Sources : WHO Disease Outbreak News · ProMED · CDC · ECDC

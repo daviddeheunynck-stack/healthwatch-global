@@ -3,7 +3,7 @@
 import { useTranslations, useLocale } from "next-intl";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { Activity, Bell, FileText, Globe, CreditCard, LogOut, User, Menu, X, Mail } from "lucide-react";
+import { Activity, Bell, FileText, Globe, CreditCard, LogOut, User, Menu, X, Mail, BookOpen } from "lucide-react";
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase-browser";
 import type { User as SupabaseUser } from "@supabase/supabase-js";
@@ -82,11 +82,14 @@ export default function Navbar() {
   };
 
   const navLinks = [
-    { href: `/${locale}`, label: t("dashboard"), icon: Activity },
-    { href: `/${locale}/alerts`, label: t("alerts"), icon: Bell },
-    { href: `/${locale}/reports`, label: t("reports"), icon: FileText },
-    { href: `/${locale}/pricing`, label: t("pricing"), icon: CreditCard },
-    { href: `/${locale}/contact`, label: t("contact"), icon: Mail },
+    { href: `/${locale}`,         label: t("dashboard"), icon: Activity  },
+    { href: `/${locale}/alerts`,  label: t("alerts"),    icon: Bell      },
+    { href: `/${locale}/reports`, label: t("reports"),   icon: FileText  },
+    { href: `/${locale}/pricing`, label: t("pricing"),   icon: CreditCard },
+    { href: `/${locale}/contact`, label: t("contact"),   icon: Mail      },
+    ...(plan === "enterprise"
+      ? [{ href: `/${locale}/docs`, label: "API Docs", icon: BookOpen }]
+      : []),
   ];
 
   return (

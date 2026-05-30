@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
 import { createClient } from "@/lib/supabase-browser";
+import { track } from "@vercel/analytics/react";
 
 const ERROR_LABELS: Record<string, string> = {
   en: "An unexpected error occurred.",
@@ -18,10 +19,11 @@ interface CheckoutButtonProps {
   locale: string;
   label: string;
   className: string;
+  billing?: "monthly" | "annual";
   icon?: React.ReactNode;
 }
 
-export default function CheckoutButton({ plan, locale, label, className, icon }: CheckoutButtonProps) {
+export default function CheckoutButton({ plan, locale, label, className, billing = "monthly", icon }: CheckoutButtonProps) {
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
   const router = useRouter();
@@ -46,6 +48,7 @@ export default function CheckoutButton({ plan, locale, label, className, icon }:
         body: JSON.stringify({
           plan,
           locale,
+          billing,
           userId: user.id,
           userEmail: user.email,
         }),
@@ -53,6 +56,7 @@ export default function CheckoutButton({ plan, locale, label, className, icon }:
 
       const data = await res.json();
       if (!res.ok || data.error) throw new Error(data.error || `HTTP ${res.status}`);
+      track("checkout_start", { plan, billing, locale });
       window.location.href = data.url;
     } catch (err: any) {
       console.error("Checkout error:", err);

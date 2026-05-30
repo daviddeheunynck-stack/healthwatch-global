@@ -149,8 +149,16 @@ export async function POST(req: NextRequest) {
     );
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let body: any;
   try {
-    const { email, region, locale } = await req.json();
+    body = await req.json();
+  } catch {
+    return NextResponse.json({ error: "Invalid or missing request body" }, { status: 400 });
+  }
+
+  try {
+    const { email, region, locale } = body;
 
     if (!email || !region) {
       return NextResponse.json({ error: "Missing fields" }, { status: 400 });

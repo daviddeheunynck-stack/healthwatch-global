@@ -6,6 +6,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { createClient } from "@/lib/supabase-browser";
 import { Activity, Loader2 } from "lucide-react";
 import Link from "next/link";
+import OAuthButtons from "@/components/OAuthButtons";
 
 export default function LoginPage() {
   const t = useTranslations("auth");
@@ -42,7 +43,13 @@ export default function LoginPage() {
           <h1 className="text-2xl font-bold text-white">{t("loginTitle")}</h1>
         </div>
 
-        <div className="bg-gray-900 border border-gray-800 rounded-xl p-8">
+        <div className="bg-gray-900 border border-gray-800 rounded-xl p-8 space-y-5">
+          <OAuthButtons locale={locale} />
+          <div className="flex items-center gap-3">
+            <div className="flex-1 h-px bg-gray-800" />
+            <span className="text-xs text-gray-600">ou</span>
+            <div className="flex-1 h-px bg-gray-800" />
+          </div>
           <form onSubmit={handleLogin} className="space-y-4">
             <div>
               <label className="block text-sm text-gray-400 mb-1">{t("email")}</label>

@@ -3,8 +3,9 @@ import { FileText, Lock } from "lucide-react";
 import { getOutbreaks, getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 import { createClient } from "@/lib/supabase-server";
 import { Suspense } from "react";
-import Link from "next/link";
 import ReportDownloadButton from "@/components/ReportDownloadButton";
+import LockedUpgradeButton from "@/components/LockedUpgradeButton";
+import CsvExportButton from "@/components/CsvExportButton";
 import type { Metadata } from "next";
 
 export const dynamic = "force-dynamic";
@@ -107,15 +108,15 @@ async function ReportsContent() {
               </div>
               <p className="text-sm font-semibold text-amber-300">{pc.desc}</p>
             </div>
-            <Link
-              href={`/${locale}/pricing`}
-              className="shrink-0 text-xs bg-red-600 hover:bg-red-500 text-white px-4 py-2 rounded-lg font-semibold transition-colors whitespace-nowrap"
-            >
-              {pc.cta}
-            </Link>
+            <LockedUpgradeButton feature="pdf" label={pc.cta} variant="banner" />
           </div>
         </div>
       )}
+
+      {/* Toolbar — CSV export */}
+      <div className="flex justify-end">
+        <CsvExportButton isPaid={isPaid} locale={locale} />
+      </div>
 
       {/* Report cards grid */}
       <div className="grid md:grid-cols-2 gap-4">
@@ -204,12 +205,7 @@ async function ReportsContent() {
                       ))}
                     </div>
                   ) : (
-                    <div className="flex items-center gap-2 text-xs text-amber-600/80">
-                      <Lock className="w-3 h-3 shrink-0" />
-                      <Link href={`/${locale}/pricing`} className="hover:text-amber-400 transition-colors">
-                        {pc.lockedList}
-                      </Link>
-                    </div>
+                    <LockedUpgradeButton feature="list" label={pc.lockedList} />
                   )}
                 </div>
               )}

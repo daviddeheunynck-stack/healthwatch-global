@@ -1,13 +1,16 @@
 import { getTranslations, getLocale } from "next-intl/server";
-import { Activity, Globe, Bell, AlertTriangle, Lock } from "lucide-react";
-import { getOutbreaks, getStats, getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
+import { Activity, Globe, Bell, AlertTriangle } from "lucide-react";
+import { getOutbreaks, getStats, getLastSync } from "@/lib/outbreaks";
 import { createClient } from "@/lib/supabase-server";
 import StatsCard from "@/components/StatsCard";
-import RiskBadge from "@/components/RiskBadge";
 import WorldMap from "@/components/WorldMap";
-import HeroBanner from "@/components/HeroBanner";
+import LandingPage from "@/components/LandingPage";
+import OutbreakTable from "@/components/OutbreakTable";
+import FreshnessBadge from "@/components/FreshnessBadge";
+import TrialBanner from "@/components/TrialBanner";
+import CsvExportButton from "@/components/CsvExportButton";
+import OnboardingTour from "@/components/OnboardingTour";
 import { Suspense } from "react";
-import Link from "next/link";
 import type { Metadata } from "next";
 
 export const dynamic = "force-dynamic";
@@ -20,13 +23,40 @@ const DASHBOARD_META: Record<string, { title: string; description: string }> = {
   id: { title: "Dasbor Wabah Penyakit Global", description: "Peta dan tabel real-time wabah penyakit aktif di seluruh dunia. Data dari API WHO Disease Outbreak News." },
 };
 
+// ─── Filter strings (avoids touching 5 message files) ────────────────────────
+
+const FILTER_COPY: Record<string, {
+  searchPlaceholder: string;
+  allRegions: string;
+  allRisks: string;
+  noResults: string;
+}> = {
+  en: { searchPlaceholder: "Search disease or country…", allRegions: "All regions", allRisks: "All risks",    noResults: "No outbreaks match your filters."              },
+  fr: { searchPlaceholder: "Rechercher maladie ou pays…", allRegions: "Toutes régions", allRisks: "Tous niveaux", noResults: "Aucun foyer ne correspond aux filtres."    },
+  es: { searchPlaceholder: "Buscar enfermedad o país…",   allRegions: "Todas las regiones", allRisks: "Todos los niveles", noResults: "Ningún brote coincide con los filtros." },
+  ar: { searchPlaceholder: "ابحث عن مرض أو دولة…",      allRegions: "كل المناطق",    allRisks: "كل المستويات", noResults: "لا توجد تفشيات تطابق المرشحات."          },
+  id: { searchPlaceholder: "Cari penyakit atau negara…",  allRegions: "Semua wilayah", allRisks: "Semua tingkat", noResults: "Tidak ada wabah yang cocok dengan filter." },
+};
+
+const LANDING_META: Record<string, { title: string; description: string }> = {
+  en: { title: "Real-time epidemic surveillance for health organizations | HealthWatch Global", description: "Anticipate outbreaks before they reach your region. Live WHO data, real-time alerts, regional PDF reports — built for NGOs, health ministries and international organizations." },
+  fr: { title: "Surveillance épidémique en temps réel pour les organisations de santé | HealthWatch Global", description: "Anticipez les épidémies avant qu'elles n'atteignent votre région. Données OMS en direct, alertes temps réel, rapports PDF régionaux — conçu pour les ONG, ministères de la santé et organisations internationales." },
+  es: { title: "Vigilancia epidémica en tiempo real para organizaciones de salud | HealthWatch Global", description: "Anticipe los brotes antes de que lleguen a su región. Datos OMS en vivo, alertas en tiempo real, informes PDF regionales." },
+  ar: { title: "مراقبة وبائية في الوقت الفعلي للمنظمات الصحية | HealthWatch Global", description: "استبق التفشيات قبل أن تصل إلى منطقتك. بيانات منظمة الصحة العالمية مباشرة، تنبيهات فورية، تقارير PDF إقليمية." },
+  id: { title: "Pemantauan epidemi real-time untuk organisasi kesehatan | HealthWatch Global", description: "Antisipasi wabah sebelum mencapai wilayah Anda. Data WHO langsung, peringatan real-time, laporan PDF regional." },
+};
+
 export async function generateMetadata({
   params,
 }: {
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
   const { locale } = await params;
-  const m = DASHBOARD_META[locale] ?? DASHBOARD_META.en;
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  const m = user
+    ? (DASHBOARD_META[locale] ?? DASHBOARD_META.en)
+    : (LANDING_META[locale] ?? LANDING_META.en);
   return { title: m.title, description: m.description };
 }
 
@@ -34,24 +64,27 @@ async function DashboardContent() {
   const locale = await getLocale();
   const t = await getTranslations("dashboard");
   const tRisk = await getTranslations("risk");
+  const tAlerts = await getTranslations("alerts");
 
   // Check user plan
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 
   let plan = "free";
+  let trialEndsAt: string | null = null;
   if (user) {
     const { data: profile } = await supabase
       .from("profiles")
-      .select("plan")
+      .select("plan, trial_ends_at")
       .eq("id", user.id)
       .single();
     plan = profile?.plan || "free";
+    trialEndsAt = (profile as any)?.trial_ends_at ?? null;
   }
 
   const isPaid = plan === "starter" || plan === "pro" || plan === "enterprise";
 
-  const outbreaks = await getOutbreaks();
+  const [outbreaks, lastSync] = await Promise.all([getOutbreaks(), getLastSync()]);
   const stats = getStats(outbreaks);
 
   const popupLabels = {
@@ -67,14 +100,40 @@ async function DashboardContent() {
     low: tRisk("low"),
   };
 
-  const sortedOutbreaks = [...outbreaks].sort(
-    (a, b) => ({ high: 0, medium: 1, low: 2 }[a.risk_level] - { high: 0, medium: 1, low: 2 }[b.risk_level])
-  );
+  const fc = FILTER_COPY[locale] ?? FILTER_COPY.en;
+  const tableLabels = {
+    disease:           t("disease"),
+    country:           t("country"),
+    cases:             t("cases"),
+    deaths:            t("deaths"),
+    riskLevel:         t("riskLevel"),
+    date:              t("date"),
+    searchPlaceholder: fc.searchPlaceholder,
+    allRegions:        fc.allRegions,
+    allRisks:          fc.allRisks,
+    noResults:         fc.noResults,
+    africa:            tAlerts("africa"),
+    asia:              tAlerts("asia"),
+    europe:            tAlerts("europe"),
+    americas:          tAlerts("americas"),
+    oceania:           tAlerts("oceania"),
+    high:              tRisk("high"),
+    medium:            tRisk("medium"),
+    low:               tRisk("low"),
+    lockedCta:         t("lockedCta"),
+  };
+
+  // Show trial banner only for Pro users with a future trial_ends_at
+  const showTrialBanner =
+    plan === "pro" &&
+    trialEndsAt !== null &&
+    new Date(trialEndsAt).getTime() > Date.now();
 
   return (
     <>
-      {/* Hero — shown only to unauthenticated visitors */}
-      {!user && <HeroBanner />}
+      {showTrialBanner && (
+        <TrialBanner trialEndsAt={trialEndsAt!} locale={locale} />
+      )}
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <StatsCard label={t("activeOutbreaks")} value={stats.activeOutbreaks} icon={<Activity className="w-5 h-5" />} color="red" />
@@ -86,98 +145,46 @@ async function DashboardContent() {
       <WorldMap outbreaks={outbreaks} locale={locale} popupLabels={popupLabels} riskLabels={riskLabels} />
 
       <div>
-        <h2 className="text-xl font-semibold text-white mb-4">{t("recentAlerts")}</h2>
-
-        {/* Upgrade banner for free users */}
-        {!isPaid && (
-          <div className="rounded-xl border border-amber-700/40 bg-gradient-to-r from-amber-950/50 via-amber-900/20 to-transparent p-4 mb-4">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-              <div className="flex items-start gap-3">
-                <div className="w-8 h-8 rounded-lg bg-amber-500/10 border border-amber-500/20 flex items-center justify-center shrink-0 mt-0.5">
-                  <Lock className="w-4 h-4 text-amber-400" />
-                </div>
-                <div>
-                  <p className="text-sm font-semibold text-amber-300">{t("lockedDesc")}</p>
-                  <p className="text-xs text-amber-600 mt-0.5">
-                    {locale === "fr" ? "Cas confirmés · Décès · Rapports PDF · Alertes temps réel"
-                    : locale === "es" ? "Casos confirmados · Fallecidos · Informes PDF · Alertas en tiempo real"
-                    : locale === "ar" ? "الحالات المؤكدة · الوفيات · تقارير PDF · تنبيهات فورية"
-                    : locale === "id" ? "Kasus terkonfirmasi · Kematian · Laporan PDF · Peringatan real-time"
-                    : "Confirmed cases · Deaths · PDF reports · Real-time alerts"}
-                  </p>
-                </div>
-              </div>
-              <Link
-                href={`/${locale}/pricing`}
-                className="shrink-0 text-xs bg-red-600 hover:bg-red-500 text-white px-4 py-2 rounded-lg font-semibold transition-colors whitespace-nowrap"
-              >
-                {t("lockedCta")}
-              </Link>
-            </div>
+        <div className="flex items-center justify-between mb-4 gap-3 flex-wrap">
+          <div className="flex items-center gap-3">
+            <h2 className="text-xl font-semibold text-white">{t("recentAlerts")}</h2>
+            <FreshnessBadge lastSync={lastSync} locale={locale} />
           </div>
-        )}
-
-        <div className="rounded-xl border border-gray-800 overflow-hidden overflow-x-auto">
-          <table className="w-full text-sm min-w-[500px]">
-            <thead className="bg-gray-900 text-gray-400">
-              <tr>
-                <th className="text-left px-4 py-3">{t("disease")}</th>
-                <th className="text-left px-4 py-3">{t("country")}</th>
-                <th className="text-left px-4 py-3">{t("cases")}</th>
-                <th className="text-left px-4 py-3 hidden sm:table-cell">{t("deaths")}</th>
-                <th className="text-left px-4 py-3">{t("riskLevel")}</th>
-                <th className="text-left px-4 py-3 hidden md:table-cell">{t("date")}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {sortedOutbreaks.map((outbreak, i) => (
-                <tr
-                  key={outbreak.id}
-                  className={`border-t border-gray-800 hover:bg-gray-800/50 transition-colors ${i % 2 === 0 ? "bg-gray-900/30" : ""}`}
-                >
-                  <td className="px-4 py-3 font-medium text-white">
-                    {getLocalizedDisease(outbreak, locale)}
-                  </td>
-                  <td className="px-4 py-3 text-gray-300">
-                    {getLocalizedCountry(outbreak, locale)}
-                  </td>
-                  <td className="px-4 py-3 text-gray-300">
-                    {isPaid ? (
-                      outbreak.cases.toLocaleString()
-                    ) : (
-                      <span className="blur-sm select-none text-gray-500">
-                        {outbreak.cases.toLocaleString()}
-                      </span>
-                    )}
-                  </td>
-                  <td className="px-4 py-3 text-red-400 hidden sm:table-cell">
-                    {isPaid ? (
-                      outbreak.deaths.toLocaleString()
-                    ) : (
-                      <span className="blur-sm select-none text-gray-500">
-                        {outbreak.deaths.toLocaleString()}
-                      </span>
-                    )}
-                  </td>
-                  <td className="px-4 py-3">
-                    <RiskBadge level={outbreak.risk_level} />
-                  </td>
-                  <td className="px-4 py-3 text-gray-400 hidden md:table-cell">{outbreak.date}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <CsvExportButton isPaid={isPaid} locale={locale} />
         </div>
+
+        <OutbreakTable
+          outbreaks={outbreaks}
+          locale={locale}
+          isPaid={isPaid}
+          labels={tableLabels}
+        />
       </div>
     </>
   );
 }
 
-export default async function DashboardPage() {
+export default async function DashboardPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  if (!user) {
+    return <LandingPage locale={locale} />;
+  }
+
   const t = await getTranslations("dashboard");
 
   return (
     <div className="space-y-8">
+      {/* Onboarding tour — shown once to new users, client-side only */}
+      <OnboardingTour />
+
       <div>
         <h1 className="text-3xl font-bold text-white">{t("title")}</h1>
         <p className="text-gray-400 mt-1">{t("subtitle")}</p>

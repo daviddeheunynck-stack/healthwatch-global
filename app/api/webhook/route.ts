@@ -1,14 +1,75 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import Stripe from "stripe";
+import { buildUpgradeEmail }        from "@/lib/upgrade-email";
+import { buildChurnEmail }          from "@/lib/churn-email";
+import { buildPaymentFailedEmail }  from "@/lib/payment-failed-email";
+import { buildTrialEndingEmail }    from "@/lib/trial-ending-email";
 
 export const dynamic = "force-dynamic";
 
 // Raw body is required for Stripe signature verification — do NOT parse as JSON
 export const runtime = "nodejs";
 
-const BOM = String.fromCharCode(65279);
-const clean = (v: string | undefined) => (v || "").replace(new RegExp("^" + BOM), "").trim();
+const BOM        = String.fromCharCode(65279);
+const clean      = (v: string | undefined) => (v || "").replace(new RegExp("^" + BOM), "").trim();
+const BREVO_KEY  = clean(process.env.BREVO_API_KEY);
+
+async function sendTransactionalEmail(
+  to: string,
+  subject: string,
+  html: string,
+  tag: string
+) {
+  if (!BREVO_KEY) return;
+  try {
+    await fetch("https://api.brevo.com/v3/smtp/email", {
+      method: "POST",
+      headers: { "api-key": BREVO_KEY, "Content-Type": "application/json" },
+      body: JSON.stringify({
+        sender:      { name: "HealthWatch Global", email: "alerts@healthwatch-global.com" },
+        to:          [{ email: to }],
+        subject,
+        htmlContent: html,
+      }),
+    });
+  } catch (err) {
+    console.error(`[webhook] ${tag} email failed:`, err);
+  }
+}
+
+async function sendUpgradeEmail(
+  to: string,
+  plan: "starter" | "pro" | "enterprise",
+  locale: string
+) {
+  const { subject, html } = buildUpgradeEmail(plan, locale);
+  await sendTransactionalEmail(to, subject, html, "upgrade");
+}
+
+async function sendChurnEmail(
+  to: string,
+  plan: "starter" | "pro" | "enterprise",
+  locale: string
+) {
+  const { subject, html } = buildChurnEmail(plan, locale);
+  await sendTransactionalEmail(to, subject, html, "churn");
+}
+
+async function sendPaymentFailedEmail(to: string, locale: string) {
+  const { subject, html } = buildPaymentFailedEmail(locale);
+  await sendTransactionalEmail(to, subject, html, "payment_failed");
+}
+
+async function sendTrialEndingEmail(
+  to: string,
+  plan: "starter" | "pro",
+  locale: string,
+  trialEndsAt: string
+) {
+  const { subject, html } = buildTrialEndingEmail(plan, locale, trialEndsAt);
+  await sendTransactionalEmail(to, subject, html, "trial_ending");
+}
 
 const stripe = new Stripe(clean(process.env.STRIPE_SECRET_KEY), {
   apiVersion: "2026-04-22.dahlia",
@@ -37,9 +98,26 @@ async function getUserIdFromCustomer(customerId: string): Promise<string | null>
 function planFromPriceId(priceId: string | null | undefined): string {
   const BOM2 = String.fromCharCode(65279);
   const c = (v: string | undefined) => (v || "").replace(new RegExp("^" + BOM2), "").trim();
-  if (priceId === c(process.env.STRIPE_STARTER_EUR_PRICE_ID) || priceId === c(process.env.STRIPE_STARTER_USD_PRICE_ID)) return "starter";
-  if (priceId === c(process.env.STRIPE_PRO_EUR_PRICE_ID) || priceId === c(process.env.STRIPE_PRO_USD_PRICE_ID)) return "pro";
-  return "starter"; // safe fallback for unknown paid price
+
+  const STARTER_IDS = new Set([
+    c(process.env.STRIPE_STARTER_EUR_PRICE_ID),
+    c(process.env.STRIPE_STARTER_USD_PRICE_ID),
+    c(process.env.STRIPE_STARTER_EUR_ANNUAL_PRICE_ID),
+    c(process.env.STRIPE_STARTER_USD_ANNUAL_PRICE_ID),
+  ].filter(Boolean));
+
+  const PRO_IDS = new Set([
+    c(process.env.STRIPE_PRO_EUR_PRICE_ID),
+    c(process.env.STRIPE_PRO_USD_PRICE_ID),
+    c(process.env.STRIPE_PRO_EUR_ANNUAL_PRICE_ID),
+    c(process.env.STRIPE_PRO_USD_ANNUAL_PRICE_ID),
+  ].filter(Boolean));
+
+  if (priceId && STARTER_IDS.has(priceId)) return "starter";
+  if (priceId && PRO_IDS.has(priceId))    return "pro";
+
+  console.warn(`[webhook] Unknown price ID: ${priceId} — defaulting to starter`);
+  return "starter";
 }
 
 export async function POST(req: NextRequest) {
@@ -76,27 +154,53 @@ export async function POST(req: NextRequest) {
         const plan = session.metadata?.plan || "starter";
 
         if (userId) {
+          // Fetch subscription to read trial_end
+          let trialEndsAt: string | null = null;
+          if (session.subscription) {
+            try {
+              const sub = await stripe.subscriptions.retrieve(session.subscription as string);
+              if (sub.trial_end) {
+                trialEndsAt = new Date(sub.trial_end * 1000).toISOString();
+              }
+            } catch (e) {
+              console.warn("[webhook] Could not retrieve subscription for trial_end:", e);
+            }
+          }
+
           const { error } = await supabase
             .from("profiles")
             .update({
               plan,
               stripe_customer_id: session.customer as string,
               stripe_subscription_id: session.subscription as string,
+              trial_ends_at: trialEndsAt,
             })
             .eq("id", userId);
           if (error) console.error("[webhook] checkout.session.completed profile update:", error);
-          else console.log(`[webhook] Plan set to ${plan} for user ${userId}`);
+          else console.log(`[webhook] Plan set to ${plan} for user ${userId} (trial_ends_at: ${trialEndsAt})`);
         }
 
-        // Auto-subscribe to weekly digest
+        // Auto-subscribe to weekly digest + send upgrade welcome email
         const email = session.customer_details?.email;
         if (email) {
           await supabase
             .from("subscriptions")
             .upsert(
               { email, region: "allRegions", locale: "en", active: true },
-              { onConflict: "email", ignoreDuplicates: true }
+              { onConflict: "email" }
             );
+
+          // Fetch user locale for personalized upgrade email
+          const { data: subRow } = await supabase
+            .from("subscriptions")
+            .select("locale")
+            .eq("email", email)
+            .maybeSingle();
+          const locale = (subRow as any)?.locale ?? "en";
+
+          if (["starter", "pro", "enterprise"].includes(plan)) {
+            await sendUpgradeEmail(email, plan as "starter" | "pro" | "enterprise", locale);
+          }
         }
         break;
       }
@@ -113,18 +217,21 @@ export async function POST(req: NextRequest) {
 
         if (status === "active" || status === "trialing") {
           const plan = planFromPriceId(priceId);
+          const trialEndsAt = sub.trial_end
+            ? new Date(sub.trial_end * 1000).toISOString()
+            : null;
           const { error } = await supabase
             .from("profiles")
-            .update({ plan, stripe_subscription_id: sub.id })
+            .update({ plan, stripe_subscription_id: sub.id, trial_ends_at: trialEndsAt })
             .eq("id", userId);
           if (error) console.error("[webhook] subscription.updated:", error);
-          else console.log(`[webhook] Subscription updated → plan ${plan} for user ${userId}`);
+          else console.log(`[webhook] Subscription updated → plan ${plan} for user ${userId} (trial_ends_at: ${trialEndsAt})`);
         } else if (status === "canceled" || status === "unpaid" || status === "past_due") {
           // Don't immediately downgrade on past_due — let invoice.payment_failed handle it
           if (status === "canceled") {
             const { error } = await supabase
               .from("profiles")
-              .update({ plan: "free", stripe_subscription_id: null })
+              .update({ plan: "free", stripe_subscription_id: null, trial_ends_at: null })
               .eq("id", userId);
             if (error) console.error("[webhook] subscription.updated cancel:", error);
             else console.log(`[webhook] Subscription cancelled → plan free for user ${userId}`);
@@ -140,23 +247,73 @@ export async function POST(req: NextRequest) {
         const userId = await getUserIdFromCustomer(customerId);
         if (!userId) break;
 
+        // Fetch current plan + email + locale before downgrading
+        const { data: profile } = await supabase
+          .from("profiles")
+          .select("plan, email")
+          .eq("id", userId)
+          .single();
+
+        const cancelledPlan = (profile?.plan ?? "starter") as "starter" | "pro" | "enterprise";
+        const userEmail     = (profile as any)?.email as string | null;
+
         const { error } = await supabase
           .from("profiles")
-          .update({ plan: "free", stripe_subscription_id: null })
+          .update({ plan: "free", stripe_subscription_id: null, trial_ends_at: null })
           .eq("id", userId);
-        if (error) console.error("[webhook] subscription.deleted:", error);
-        else console.log(`[webhook] Subscription deleted → plan free for user ${userId}`);
+
+        if (error) {
+          console.error("[webhook] subscription.deleted:", error);
+        } else {
+          console.log(`[webhook] Subscription deleted → plan free for user ${userId}`);
+
+          // Send churn email (fire-and-forget)
+          if (userEmail && ["starter", "pro", "enterprise"].includes(cancelledPlan)) {
+            const { data: subRow } = await supabase
+              .from("subscriptions")
+              .select("locale")
+              .eq("email", userEmail)
+              .maybeSingle();
+            const locale = (subRow as any)?.locale ?? "en";
+            sendChurnEmail(userEmail, cancelledPlan, locale).catch((e) =>
+              console.error("[webhook] churn email:", e)
+            );
+          }
+        }
         break;
       }
 
-      // ─── Payment failed → optional: notify or flag account ───────────────
+      // ─── Payment failed → notify user (Stripe retries automatically) ────
       case "invoice.payment_failed": {
         const invoice = event.data.object as Stripe.Invoice;
         const customerId = invoice.customer as string;
         const userId = await getUserIdFromCustomer(customerId);
         if (!userId) break;
-        // Log for now — don't immediately downgrade (Stripe retries 3× by default)
+
         console.warn(`[webhook] Payment failed for customer ${customerId} (user ${userId})`);
+
+        // Fetch user email from profiles
+        const { data: profile } = await supabase
+          .from("profiles")
+          .select("email")
+          .eq("id", userId)
+          .single();
+
+        const userEmail = (profile as any)?.email as string | null;
+
+        if (userEmail) {
+          // Fetch locale from subscriptions table
+          const { data: subRow } = await supabase
+            .from("subscriptions")
+            .select("locale")
+            .eq("email", userEmail)
+            .maybeSingle();
+          const locale = (subRow as any)?.locale ?? "en";
+
+          sendPaymentFailedEmail(userEmail, locale).catch((e) =>
+            console.error("[webhook] payment_failed email:", e)
+          );
+        }
         break;
       }
 
@@ -179,6 +336,49 @@ export async function POST(req: NextRequest) {
           .eq("id", userId);
         if (error) console.error("[webhook] invoice.payment_succeeded renewal:", error);
         else console.log(`[webhook] Subscription renewed → plan ${plan} for user ${userId}`);
+        break;
+      }
+
+      // ─── Trial ending in 3 days (Stripe native event) ────────────────────
+      // Complements the daily cron — more reliable as Stripe retries on failure.
+      // Requires "customer.subscription.trial_will_end" enabled in Stripe Dashboard
+      // webhook settings (fired 3 days before trial_end by default).
+      case "customer.subscription.trial_will_end": {
+        const sub = event.data.object as Stripe.Subscription;
+        const customerId = sub.customer as string;
+        const userId = await getUserIdFromCustomer(customerId);
+        if (!userId) break;
+
+        const priceId = sub.items.data[0]?.price?.id;
+        const plan = planFromPriceId(priceId) as "starter" | "pro";
+        if (plan !== "starter" && plan !== "pro") break;
+
+        const trialEnd = sub.trial_end
+          ? new Date(sub.trial_end * 1000).toISOString()
+          : null;
+        if (!trialEnd) break;
+
+        const { data: profile } = await supabase
+          .from("profiles")
+          .select("email")
+          .eq("id", userId)
+          .single();
+
+        const userEmail = (profile as any)?.email as string | null;
+        if (!userEmail) break;
+
+        const { data: subRow } = await supabase
+          .from("subscriptions")
+          .select("locale")
+          .eq("email", userEmail)
+          .maybeSingle();
+        const locale = (subRow as any)?.locale ?? "en";
+
+        sendTrialEndingEmail(userEmail, plan, locale, trialEnd).catch((e) =>
+          console.error("[webhook] trial_ending email:", e)
+        );
+
+        console.log(`[webhook] trial_will_end → email sent to ${userEmail} (plan ${plan}, ends ${trialEnd})`);
         break;
       }
 

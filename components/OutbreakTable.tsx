@@ -1,0 +1,270 @@
+"use client";
+
+import { useState, useMemo } from "react";
+import { Search, X } from "lucide-react";
+import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
+import type { Outbreak } from "@/lib/outbreaks";
+import RiskBadge from "@/components/RiskBadge";
+import LockedUpgradeButton from "@/components/LockedUpgradeButton";
+
+// ─── Types ────────────────────────────────────────────────────────────────────
+
+export interface OutbreakTableLabels {
+  // Column headers
+  disease: string;
+  country: string;
+  cases: string;
+  deaths: string;
+  riskLevel: string;
+  date: string;
+  // Filters
+  searchPlaceholder: string;
+  allRegions: string;
+  allRisks: string;
+  noResults: string;
+  // Region names
+  africa: string;
+  asia: string;
+  europe: string;
+  americas: string;
+  oceania: string;
+  // Risk levels
+  high: string;
+  medium: string;
+  low: string;
+  // Locked CTA
+  lockedCta: string;
+}
+
+type Region = "all" | "africa" | "asia" | "europe" | "americas" | "oceania";
+type Risk   = "all" | "high" | "medium" | "low";
+
+const RISK_COLORS: Record<string, string> = {
+  high:   "bg-red-500/15 border-red-500/30 text-red-400 hover:bg-red-500/25",
+  medium: "bg-yellow-500/15 border-yellow-500/30 text-yellow-400 hover:bg-yellow-500/25",
+  low:    "bg-green-500/15 border-green-500/30 text-green-400 hover:bg-green-500/25",
+};
+
+// ─── Component ────────────────────────────────────────────────────────────────
+
+interface Props {
+  outbreaks: Outbreak[];
+  locale: string;
+  isPaid: boolean;
+  labels: OutbreakTableLabels;
+}
+
+export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l }: Props) {
+  const [search,  setSearch]  = useState("");
+  const [region,  setRegion]  = useState<Region>("all");
+  const [risk,    setRisk]    = useState<Risk>("all");
+
+  // ── Filter logic ──────────────────────────────────────────────────────────
+  const filtered = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    return outbreaks.filter((o) => {
+      if (region !== "all" && o.region !== region) return false;
+      if (risk   !== "all" && o.risk_level !== risk) return false;
+      if (q && !getLocalizedDisease(o, locale).toLowerCase().includes(q) &&
+               !getLocalizedCountry(o, locale).toLowerCase().includes(q)) return false;
+      return true;
+    });
+  }, [outbreaks, region, risk, search, locale]);
+
+  const sorted = useMemo(
+    () => [...filtered].sort(
+      (a, b) =>
+        ({ high: 0, medium: 1, low: 2 }[a.risk_level] ?? 3) -
+        ({ high: 0, medium: 1, low: 2 }[b.risk_level] ?? 3)
+    ),
+    [filtered]
+  );
+
+  const hasFilters = search !== "" || region !== "all" || risk !== "all";
+
+  const clearFilters = () => {
+    setSearch("");
+    setRegion("all");
+    setRisk("all");
+  };
+
+  // ── Region pills ──────────────────────────────────────────────────────────
+  const regions: { key: Region; label: string }[] = [
+    { key: "all",      label: l.allRegions },
+    { key: "africa",   label: l.africa     },
+    { key: "asia",     label: l.asia       },
+    { key: "americas", label: l.americas   },
+    { key: "europe",   label: l.europe     },
+    { key: "oceania",  label: l.oceania    },
+  ];
+
+  const risks: { key: Risk; label: string }[] = [
+    { key: "all",    label: l.allRisks },
+    { key: "high",   label: l.high     },
+    { key: "medium", label: l.medium   },
+    { key: "low",    label: l.low      },
+  ];
+
+  return (
+    <div className="space-y-3">
+
+      {/* ── Filter bar ─────────────────────────────────────────────────── */}
+      <div className="space-y-2">
+        {/* Search */}
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 pointer-events-none" />
+          <input
+            type="text"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder={l.searchPlaceholder}
+            className="w-full bg-gray-900 border border-gray-800 rounded-lg pl-9 pr-9 py-2 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-gray-600 transition-colors"
+          />
+          {search && (
+            <button
+              onClick={() => setSearch("")}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-300"
+            >
+              <X className="w-3.5 h-3.5" />
+            </button>
+          )}
+        </div>
+
+        {/* Region + Risk pills in two rows */}
+        <div className="flex flex-wrap gap-1.5">
+          {regions.map(({ key, label }) => (
+            <button
+              key={key}
+              onClick={() => setRegion(key)}
+              className={`text-xs px-3 py-1 rounded-full border transition-colors ${
+                region === key
+                  ? "bg-gray-700 border-gray-500 text-white"
+                  : "bg-transparent border-gray-800 text-gray-500 hover:border-gray-600 hover:text-gray-300"
+              }`}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+
+        <div className="flex flex-wrap gap-1.5 items-center">
+          {risks.map(({ key, label }) => (
+            <button
+              key={key}
+              onClick={() => setRisk(key)}
+              className={`text-xs px-3 py-1 rounded-full border transition-colors ${
+                risk === key && key !== "all"
+                  ? RISK_COLORS[key]
+                  : risk === key && key === "all"
+                  ? "bg-gray-700 border-gray-500 text-white"
+                  : "bg-transparent border-gray-800 text-gray-500 hover:border-gray-600 hover:text-gray-300"
+              }`}
+            >
+              {label}
+            </button>
+          ))}
+
+          {hasFilters && (
+            <button
+              onClick={clearFilters}
+              className="text-xs text-gray-600 hover:text-gray-400 transition-colors flex items-center gap-1 ml-1"
+            >
+              <X className="w-3 h-3" />
+            </button>
+          )}
+        </div>
+      </div>
+
+      {/* ── Upgrade banner ─────────────────────────────────────────────── */}
+      {!isPaid && (
+        <div className="rounded-xl border border-amber-700/40 bg-gradient-to-r from-amber-950/50 via-amber-900/20 to-transparent p-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div className="flex items-start gap-3">
+              <div className="w-8 h-8 rounded-lg bg-amber-500/10 border border-amber-500/20 flex items-center justify-center shrink-0 mt-0.5">
+                <Search className="w-4 h-4 text-amber-400" />
+              </div>
+              <p className="text-sm font-semibold text-amber-300">
+                {locale === "fr" ? "Cas confirmés · Décès · Rapports PDF · Alertes temps réel"
+                : locale === "es" ? "Casos confirmados · Fallecidos · Informes PDF · Alertas en tiempo real"
+                : locale === "ar" ? "الحالات المؤكدة · الوفيات · تقارير PDF · تنبيهات فورية"
+                : locale === "id" ? "Kasus terkonfirmasi · Kematian · Laporan PDF · Peringatan real-time"
+                : "Confirmed cases · Deaths · PDF reports · Real-time alerts"}
+              </p>
+            </div>
+            <LockedUpgradeButton feature="cases" label={l.lockedCta} variant="banner" />
+          </div>
+        </div>
+      )}
+
+      {/* ── Table ──────────────────────────────────────────────────────── */}
+      <div className="rounded-xl border border-gray-800 overflow-hidden overflow-x-auto">
+        {sorted.length === 0 ? (
+          <div className="py-16 text-center text-gray-500 text-sm">
+            {l.noResults}
+          </div>
+        ) : (
+          <table className="w-full text-sm min-w-[500px]">
+            <thead className="bg-gray-900 text-gray-400">
+              <tr>
+                <th className="text-left px-4 py-3">{l.disease}</th>
+                <th className="text-left px-4 py-3">{l.country}</th>
+                <th className="text-left px-4 py-3">{l.cases}</th>
+                <th className="text-left px-4 py-3 hidden sm:table-cell">{l.deaths}</th>
+                <th className="text-left px-4 py-3">{l.riskLevel}</th>
+                <th className="text-left px-4 py-3 hidden md:table-cell">{l.date}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {sorted.map((outbreak, i) => (
+                <tr
+                  key={outbreak.id}
+                  className={`border-t border-gray-800 hover:bg-gray-800/50 transition-colors ${
+                    i % 2 === 0 ? "bg-gray-900/30" : ""
+                  }`}
+                >
+                  <td className="px-4 py-3 font-medium text-white">
+                    {getLocalizedDisease(outbreak, locale)}
+                  </td>
+                  <td className="px-4 py-3 text-gray-300">
+                    {getLocalizedCountry(outbreak, locale)}
+                  </td>
+                  <td className="px-4 py-3 text-gray-300">
+                    {isPaid ? (
+                      outbreak.cases.toLocaleString()
+                    ) : (
+                      <span className="blur-sm select-none text-gray-500">
+                        {outbreak.cases.toLocaleString()}
+                      </span>
+                    )}
+                  </td>
+                  <td className="px-4 py-3 text-red-400 hidden sm:table-cell">
+                    {isPaid ? (
+                      outbreak.deaths.toLocaleString()
+                    ) : (
+                      <span className="blur-sm select-none text-gray-500">
+                        {outbreak.deaths.toLocaleString()}
+                      </span>
+                    )}
+                  </td>
+                  <td className="px-4 py-3">
+                    <RiskBadge level={outbreak.risk_level} />
+                  </td>
+                  <td className="px-4 py-3 text-gray-400 hidden md:table-cell">
+                    {outbreak.date}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+      </div>
+
+      {/* Result count */}
+      {hasFilters && sorted.length > 0 && (
+        <p className="text-xs text-gray-600 text-right">
+          {sorted.length} / {outbreaks.length}
+        </p>
+      )}
+    </div>
+  );
+}

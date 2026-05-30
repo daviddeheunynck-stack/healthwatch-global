@@ -32,9 +32,20 @@ export default function WorldMap({ outbreaks, locale, popupLabels, riskLabels }:
 
   useEffect(() => {
     if (typeof window === "undefined" || !containerRef.current) return;
-    if (mapRef.current) return; // already initialized
+
+    // Synchronous flag — set before the async import so the cleanup
+    // can cancel a pending (not-yet-resolved) initialisation.
+    let cancelled = false;
 
     import("leaflet").then((L) => {
+      if (cancelled || !containerRef.current) return;
+
+      // Guard against double-init (e.g. HMR keeping the container alive)
+      const container = containerRef.current as any;
+      if (container._leaflet_id) {
+        container._leaflet_id = undefined;
+      }
+
       import("leaflet/dist/leaflet.css");
 
       const map = L.map(containerRef.current!, {
@@ -86,6 +97,7 @@ export default function WorldMap({ outbreaks, locale, popupLabels, riskLabels }:
     });
 
     return () => {
+      cancelled = true;
       if (mapRef.current) {
         mapRef.current.remove();
         mapRef.current = null;

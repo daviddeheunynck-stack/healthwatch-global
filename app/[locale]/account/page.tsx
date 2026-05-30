@@ -4,6 +4,9 @@ import { User, Shield, Zap, Building2, Gift, ExternalLink, Download } from "luci
 import Link from "next/link";
 import BillingPortalButton from "@/components/BillingPortalButton";
 import SignOutButton from "@/components/SignOutButton";
+import AlertRegionToggles from "@/components/AlertRegionToggles";
+import SlackWebhookForm from "@/components/SlackWebhookForm";
+import ApiKeyManager from "@/components/ApiKeyManager";
 import type { Metadata } from "next";
 
 const ACCOUNT_META: Record<string, { title: string }> = {
@@ -41,6 +44,246 @@ const PLAN_ICONS: Record<string, React.ReactNode> = {
   building2: <Building2 className="w-4 h-4" />,
 };
 
+// ─── Alert region labels ──────────────────────────────────────────────────────
+
+const ALERT_LABELS: Record<string, {
+  title: string; desc: string; locked: string; upgrade: string; error: string;
+  regionLabels: Record<string, string>;
+}> = {
+  fr: {
+    title: "Alertes par région",
+    desc: "Recevez un email dès qu'un nouveau foyer est détecté dans vos régions surveillées.",
+    locked: "Les alertes régionales sont disponibles avec un plan Starter ou Pro.",
+    upgrade: "Voir les formules",
+    error: "Erreur lors de la sauvegarde. Réessayez.",
+    regionLabels: { africa: "Afrique", asia: "Asie", americas: "Amériques", europe: "Europe", oceania: "Océanie" },
+  },
+  en: {
+    title: "Regional alerts",
+    desc: "Get an email whenever a new outbreak is detected in your watched regions.",
+    locked: "Regional alerts are available on Starter and Pro plans.",
+    upgrade: "See plans",
+    error: "Failed to save. Please try again.",
+    regionLabels: { africa: "Africa", asia: "Asia", americas: "Americas", europe: "Europe", oceania: "Oceania" },
+  },
+  es: {
+    title: "Alertas regionales",
+    desc: "Reciba un email cuando se detecte un nuevo brote en sus regiones monitoreadas.",
+    locked: "Las alertas regionales están disponibles en los planes Starter y Pro.",
+    upgrade: "Ver planes",
+    error: "Error al guardar. Inténtelo de nuevo.",
+    regionLabels: { africa: "África", asia: "Asia", americas: "Américas", europe: "Europa", oceania: "Oceanía" },
+  },
+  ar: {
+    title: "التنبيهات الإقليمية",
+    desc: "استقبل بريداً إلكترونياً فور رصد تفشٍّ جديد في المناطق التي تتابعها.",
+    locked: "التنبيهات الإقليمية متاحة في خطتَي Starter وPro.",
+    upgrade: "عرض الخطط",
+    error: "فشل الحفظ. يرجى المحاولة مجدداً.",
+    regionLabels: { africa: "أفريقيا", asia: "آسيا", americas: "الأمريكتان", europe: "أوروبا", oceania: "أوقيانوسيا" },
+  },
+  id: {
+    title: "Peringatan regional",
+    desc: "Terima email saat wabah baru terdeteksi di wilayah yang Anda pantau.",
+    locked: "Peringatan regional tersedia di paket Starter dan Pro.",
+    upgrade: "Lihat paket",
+    error: "Gagal menyimpan. Silakan coba lagi.",
+    regionLabels: { africa: "Afrika", asia: "Asia", americas: "Amerika", europe: "Eropa", oceania: "Oseania" },
+  },
+};
+
+const SLACK_LABELS: Record<string, {
+  title: string; desc: string; placeholder: string;
+  save: string; remove: string; connected: string; connectedDesc: string;
+  locked: string; upgrade: string; errorInvalid: string; errorGeneric: string;
+  howTo: string; howToHref: string;
+}> = {
+  fr: {
+    title: "Intégration Slack / Teams",
+    desc: "Recevez les alertes de foyers directement dans votre channel Slack ou Teams.",
+    placeholder: "https://hooks.slack.com/services/…",
+    save: "Connecter",
+    remove: "Déconnecter",
+    connected: "Webhook connecté",
+    connectedDesc: "Les nouvelles alertes régionales seront aussi postées dans votre channel.",
+    locked: "L'intégration Slack est disponible avec un plan Starter ou Pro.",
+    upgrade: "Voir les formules",
+    errorInvalid: "URL invalide. Utilisez un webhook Slack ou Teams.",
+    errorGeneric: "Erreur lors de la connexion. Vérifiez l'URL et réessayez.",
+    howTo: "Comment créer un webhook Slack entrant →",
+    howToHref: "https://api.slack.com/messaging/webhooks",
+  },
+  en: {
+    title: "Slack / Teams integration",
+    desc: "Receive outbreak alerts directly in your Slack or Teams channel.",
+    placeholder: "https://hooks.slack.com/services/…",
+    save: "Connect",
+    remove: "Disconnect",
+    connected: "Webhook connected",
+    connectedDesc: "New regional alerts will also be posted to your channel.",
+    locked: "Slack integration is available on Starter and Pro plans.",
+    upgrade: "See plans",
+    errorInvalid: "Invalid URL. Use a Slack or Teams incoming webhook URL.",
+    errorGeneric: "Connection failed. Check the URL and try again.",
+    howTo: "How to create a Slack incoming webhook →",
+    howToHref: "https://api.slack.com/messaging/webhooks",
+  },
+  es: {
+    title: "Integración Slack / Teams",
+    desc: "Reciba alertas de brotes directamente en su canal de Slack o Teams.",
+    placeholder: "https://hooks.slack.com/services/…",
+    save: "Conectar",
+    remove: "Desconectar",
+    connected: "Webhook conectado",
+    connectedDesc: "Las nuevas alertas regionales también se publicarán en su canal.",
+    locked: "La integración con Slack está disponible en los planes Starter y Pro.",
+    upgrade: "Ver planes",
+    errorInvalid: "URL inválida. Use un webhook de entrada de Slack o Teams.",
+    errorGeneric: "Error de conexión. Verifique la URL e inténtelo de nuevo.",
+    howTo: "Cómo crear un webhook de entrada de Slack →",
+    howToHref: "https://api.slack.com/messaging/webhooks",
+  },
+  ar: {
+    title: "تكامل Slack / Teams",
+    desc: "استقبل تنبيهات التفشيات مباشرةً في قناة Slack أو Teams الخاصة بك.",
+    placeholder: "https://hooks.slack.com/services/…",
+    save: "توصيل",
+    remove: "قطع الاتصال",
+    connected: "تم توصيل الـ Webhook",
+    connectedDesc: "ستُنشر التنبيهات الإقليمية الجديدة أيضاً في قناتك.",
+    locked: "تكامل Slack متاح في خطتَي Starter وPro.",
+    upgrade: "عرض الخطط",
+    errorInvalid: "رابط غير صالح. استخدم رابط Slack أو Teams الوارد.",
+    errorGeneric: "فشل الاتصال. تحقق من الرابط وحاول مجدداً.",
+    howTo: "كيفية إنشاء webhook وارد في Slack →",
+    howToHref: "https://api.slack.com/messaging/webhooks",
+  },
+  id: {
+    title: "Integrasi Slack / Teams",
+    desc: "Terima peringatan wabah langsung di channel Slack atau Teams Anda.",
+    placeholder: "https://hooks.slack.com/services/…",
+    save: "Hubungkan",
+    remove: "Putuskan",
+    connected: "Webhook terhubung",
+    connectedDesc: "Peringatan regional baru juga akan diposting ke channel Anda.",
+    locked: "Integrasi Slack tersedia di paket Starter dan Pro.",
+    upgrade: "Lihat paket",
+    errorInvalid: "URL tidak valid. Gunakan URL webhook masuk Slack atau Teams.",
+    errorGeneric: "Koneksi gagal. Periksa URL dan coba lagi.",
+    howTo: "Cara membuat webhook masuk Slack →",
+    howToHref: "https://api.slack.com/messaging/webhooks",
+  },
+};
+
+const API_KEY_LABELS: Record<string, {
+  title: string; desc: string; newKeyPlaceholder: string;
+  create: string; revoke: string; revokeConfirm: string;
+  copyKey: string; copied: string; oneTimeWarning: string; neverSeen: string;
+  noKeys: string; lastUsed: string; never: string; created: string;
+  errorName: string; errorLimit: string; errorGeneric: string; docsHint: string;
+}> = {
+  fr: {
+    title: "Clés API",
+    desc: "Accédez aux données de foyers via notre API REST. Authentifiez vos requêtes avec l'en-tête X-API-Key.",
+    newKeyPlaceholder: "Nom de la clé (ex: production, staging…)",
+    create: "Créer",
+    revoke: "Révoquer",
+    revokeConfirm: "Révoquer cette clé ? Elle sera immédiatement inutilisable.",
+    copyKey: "Copier",
+    copied: "Copié !",
+    oneTimeWarning: "Copiez cette clé maintenant — elle ne sera plus affichée.",
+    neverSeen: "Pour des raisons de sécurité, la clé complète ne peut pas être récupérée.",
+    noKeys: "Aucune clé API. Créez-en une ci-dessus.",
+    lastUsed: "Dernière utilisation",
+    never: "Jamais utilisée",
+    created: "Créée le",
+    errorName: "Le nom est requis.",
+    errorLimit: "Maximum de 5 clés atteint. Révoquez-en une d'abord.",
+    errorGeneric: "Erreur. Réessayez.",
+    docsHint: "Endpoint : GET https://healthwatch-global.com/api/v1/outbreaks · Params : region, risk, limit, offset",
+  },
+  en: {
+    title: "API keys",
+    desc: "Access outbreak data via our REST API. Authenticate requests with the X-API-Key header.",
+    newKeyPlaceholder: "Key name (e.g. production, staging…)",
+    create: "Create",
+    revoke: "Revoke",
+    revokeConfirm: "Revoke this key? It will stop working immediately.",
+    copyKey: "Copy",
+    copied: "Copied!",
+    oneTimeWarning: "Copy this key now — it won't be shown again.",
+    neverSeen: "For security, the full key cannot be retrieved after this.",
+    noKeys: "No API keys. Create one above.",
+    lastUsed: "Last used",
+    never: "Never used",
+    created: "Created",
+    errorName: "Name is required.",
+    errorLimit: "Maximum of 5 keys reached. Revoke one first.",
+    errorGeneric: "Error. Please try again.",
+    docsHint: "Endpoint: GET https://healthwatch-global.com/api/v1/outbreaks · Params: region, risk, limit, offset",
+  },
+  es: {
+    title: "Claves API",
+    desc: "Acceda a los datos de brotes a través de nuestra API REST. Autentique solicitudes con el encabezado X-API-Key.",
+    newKeyPlaceholder: "Nombre de la clave (p.ej. producción, staging…)",
+    create: "Crear",
+    revoke: "Revocar",
+    revokeConfirm: "¿Revocar esta clave? Dejará de funcionar inmediatamente.",
+    copyKey: "Copiar",
+    copied: "¡Copiado!",
+    oneTimeWarning: "Copie esta clave ahora — no se mostrará de nuevo.",
+    neverSeen: "Por seguridad, la clave completa no puede recuperarse después.",
+    noKeys: "Sin claves API. Cree una arriba.",
+    lastUsed: "Último uso",
+    never: "Nunca usada",
+    created: "Creada",
+    errorName: "El nombre es obligatorio.",
+    errorLimit: "Máximo de 5 claves alcanzado. Revoque una primero.",
+    errorGeneric: "Error. Inténtelo de nuevo.",
+    docsHint: "Endpoint: GET https://healthwatch-global.com/api/v1/outbreaks · Params: region, risk, limit, offset",
+  },
+  ar: {
+    title: "مفاتيح API",
+    desc: "الوصول إلى بيانات التفشيات عبر API REST. مصادقة الطلبات بالترويسة X-API-Key.",
+    newKeyPlaceholder: "اسم المفتاح (مثلاً: الإنتاج، التجريبي…)",
+    create: "إنشاء",
+    revoke: "إلغاء",
+    revokeConfirm: "إلغاء هذا المفتاح؟ سيتوقف عن العمل فوراً.",
+    copyKey: "نسخ",
+    copied: "تم النسخ!",
+    oneTimeWarning: "انسخ هذا المفتاح الآن — لن يُعرض مجدداً.",
+    neverSeen: "لأسباب أمنية، لا يمكن استرداد المفتاح الكامل بعد هذا.",
+    noKeys: "لا توجد مفاتيح API. أنشئ مفتاحاً أعلاه.",
+    lastUsed: "آخر استخدام",
+    never: "لم يُستخدم",
+    created: "تاريخ الإنشاء",
+    errorName: "الاسم مطلوب.",
+    errorLimit: "الحد الأقصى هو 5 مفاتيح. ألغِ أحدها أولاً.",
+    errorGeneric: "خطأ. يرجى المحاولة مجدداً.",
+    docsHint: "النقطة: GET https://healthwatch-global.com/api/v1/outbreaks · المعاملات: region, risk, limit, offset",
+  },
+  id: {
+    title: "Kunci API",
+    desc: "Akses data wabah melalui REST API kami. Autentikasi permintaan dengan header X-API-Key.",
+    newKeyPlaceholder: "Nama kunci (mis. produksi, staging…)",
+    create: "Buat",
+    revoke: "Cabut",
+    revokeConfirm: "Cabut kunci ini? Kunci akan berhenti berfungsi segera.",
+    copyKey: "Salin",
+    copied: "Disalin!",
+    oneTimeWarning: "Salin kunci ini sekarang — tidak akan ditampilkan lagi.",
+    neverSeen: "Demi keamanan, kunci lengkap tidak dapat diambil kembali.",
+    noKeys: "Belum ada kunci API. Buat satu di atas.",
+    lastUsed: "Terakhir digunakan",
+    never: "Belum pernah",
+    created: "Dibuat",
+    errorName: "Nama diperlukan.",
+    errorLimit: "Maksimum 5 kunci tercapai. Cabut satu terlebih dahulu.",
+    errorGeneric: "Terjadi kesalahan. Coba lagi.",
+    docsHint: "Endpoint: GET https://healthwatch-global.com/api/v1/outbreaks · Params: region, risk, limit, offset",
+  },
+};
+
 const LABELS: Record<string, Record<string, string>> = {
   fr: {
     title: "Mon compte",
@@ -58,6 +301,8 @@ const LABELS: Record<string, Record<string, string>> = {
     dataExport: "Export des données",
     dataExportDesc: "Téléchargez l'ensemble des données d'épidémies actives au format CSV.",
     downloadCsv: "Télécharger CSV",
+    trialEndsOn: "Essai gratuit jusqu'au",
+    trialEnded: "Essai terminé",
   },
   en: {
     title: "My account",
@@ -75,6 +320,8 @@ const LABELS: Record<string, Record<string, string>> = {
     dataExport: "Data export",
     dataExportDesc: "Download all active outbreak data in CSV format for use in Excel or your own tools.",
     downloadCsv: "Download CSV",
+    trialEndsOn: "Free trial until",
+    trialEnded: "Trial ended",
   },
   es: {
     title: "Mi cuenta",
@@ -92,6 +339,8 @@ const LABELS: Record<string, Record<string, string>> = {
     dataExport: "Exportación de datos",
     dataExportDesc: "Descargue todos los datos de brotes activos en formato CSV para Excel u otras herramientas.",
     downloadCsv: "Descargar CSV",
+    trialEndsOn: "Prueba gratuita hasta el",
+    trialEnded: "Prueba finalizada",
   },
   ar: {
     title: "حسابي",
@@ -109,6 +358,8 @@ const LABELS: Record<string, Record<string, string>> = {
     dataExport: "تصدير البيانات",
     dataExportDesc: "تنزيل جميع بيانات التفشيات النشطة بتنسيق CSV للاستخدام في Excel أو أدواتك الخاصة.",
     downloadCsv: "تنزيل CSV",
+    trialEndsOn: "تجربة مجانية حتى",
+    trialEnded: "انتهت التجربة",
   },
   id: {
     title: "Akun saya",
@@ -126,6 +377,8 @@ const LABELS: Record<string, Record<string, string>> = {
     dataExport: "Ekspor data",
     dataExportDesc: "Unduh semua data wabah aktif dalam format CSV untuk Excel atau alat Anda sendiri.",
     downloadCsv: "Unduh CSV",
+    trialEndsOn: "Uji coba gratis hingga",
+    trialEnded: "Uji coba berakhir",
   },
 };
 
@@ -144,7 +397,7 @@ export default async function AccountPage({
 
   const { data: profile } = await supabase
     .from("profiles")
-    .select("plan, stripe_customer_id, created_at")
+    .select("plan, stripe_customer_id, created_at, slack_webhook_url, trial_ends_at")
     .eq("id", user.id)
     .single();
 
@@ -154,9 +407,45 @@ export default async function AccountPage({
   const hasBilling = !!profile?.stripe_customer_id;
   const isPaid = plan !== "free";
 
+  // Fetch subscribed alert regions
+  const { data: alertRegionsData } = await supabase
+    .from("user_alert_regions")
+    .select("region")
+    .eq("user_id", user.id);
+  const initialAlertRegions = (alertRegionsData ?? []).map((r: { region: string }) => r.region);
+
+  const al = ALERT_LABELS[locale] ?? ALERT_LABELS.en;
+  const sl  = SLACK_LABELS[locale]   ?? SLACK_LABELS.en;
+  const akl = API_KEY_LABELS[locale] ?? API_KEY_LABELS.en;
+
+  const slackUrl: string | null = (profile as any)?.slack_webhook_url ?? null;
+  // Fetch API keys (enterprise only)
+  const { data: apiKeysData } = plan === "enterprise"
+    ? await supabase
+        .from("api_keys")
+        .select("id, name, key_prefix, last_used_at, created_at")
+        .eq("user_id", user.id)
+        .order("created_at", { ascending: false })
+    : { data: [] };
+
+  const slackConfigured = !!slackUrl;
+  const slackMasked = slackUrl && slackUrl.length > 36
+    ? `${slackUrl.slice(0, 30)}…${slackUrl.slice(-6)}`
+    : slackUrl;
+
   const memberSince = profile?.created_at
     ? new Date(profile.created_at).toLocaleDateString(locale, { year: "numeric", month: "long" })
     : "—";
+
+  const rawTrialEnd = (profile as any)?.trial_ends_at as string | null ?? null;
+  const trialEndsAt = rawTrialEnd ? new Date(rawTrialEnd) : null;
+  const trialActive = trialEndsAt !== null && trialEndsAt > new Date();
+  const trialExpired = trialEndsAt !== null && trialEndsAt <= new Date();
+  const trialDateStr = trialEndsAt
+    ? trialEndsAt.toLocaleDateString(locale === "ar" ? "ar-SA" : locale, {
+        day: "numeric", month: "long", year: "numeric",
+      })
+    : null;
 
   return (
     <div className="max-w-2xl mx-auto space-y-6 py-4">
@@ -171,11 +460,22 @@ export default async function AccountPage({
       {/* Plan card */}
       <div className="bg-gray-900 border border-gray-800 rounded-2xl p-6 space-y-4">
         <h2 className="text-sm font-semibold text-gray-400 uppercase tracking-wide">{l.plan}</h2>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center flex-wrap gap-3">
           <span className={`inline-flex items-center gap-2 px-4 py-2 rounded-full border text-sm font-bold ${meta.color}`}>
             {planIcon}
             {meta.label}
           </span>
+          {trialActive && trialDateStr && (
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs font-semibold">
+              <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
+              {l.trialEndsOn} {trialDateStr}
+            </span>
+          )}
+          {trialExpired && trialDateStr && (
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-gray-700 border border-gray-600 text-gray-400 text-xs font-medium">
+              {l.trialEnded}
+            </span>
+          )}
         </div>
 
         {/* Billing management */}
@@ -212,6 +512,47 @@ export default async function AccountPage({
             <Download className="w-4 h-4" />
             {l.downloadCsv}
           </a>
+        </div>
+      )}
+
+      {/* Regional alerts */}
+      <div className="bg-gray-900 border border-gray-800 rounded-2xl p-6 space-y-4">
+        <div>
+          <h2 className="text-sm font-semibold text-gray-400 uppercase tracking-wide">{al.title}</h2>
+          <p className="text-sm text-gray-500 mt-1">{al.desc}</p>
+        </div>
+        <AlertRegionToggles
+          isPaid={isPaid}
+          initialRegions={initialAlertRegions}
+          labels={{ ...al, upgradeHref: `/${locale}/pricing` }}
+        />
+      </div>
+
+      {/* Slack / Teams integration */}
+      <div className="bg-gray-900 border border-gray-800 rounded-2xl p-6 space-y-4">
+        <div>
+          <h2 className="text-sm font-semibold text-gray-400 uppercase tracking-wide">{sl.title}</h2>
+          <p className="text-sm text-gray-500 mt-1">{sl.desc}</p>
+        </div>
+        <SlackWebhookForm
+          isPaid={isPaid}
+          initialConfigured={slackConfigured}
+          initialMasked={slackMasked}
+          labels={{ ...sl, upgradeHref: `/${locale}/pricing` }}
+        />
+      </div>
+
+      {/* API keys — enterprise only */}
+      {plan === "enterprise" && (
+        <div className="bg-gray-900 border border-gray-800 rounded-2xl p-6 space-y-4">
+          <div>
+            <h2 className="text-sm font-semibold text-gray-400 uppercase tracking-wide">{akl.title}</h2>
+            <p className="text-sm text-gray-500 mt-1">{akl.desc}</p>
+          </div>
+          <ApiKeyManager
+            initialKeys={apiKeysData ?? []}
+            labels={akl}
+          />
         </div>
       )}
 

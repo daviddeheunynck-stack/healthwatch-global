@@ -6,7 +6,8 @@ import { routing } from "@/i18n.routing";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import CookieBanner from "@/components/CookieBanner";
-import { Analytics } from "@vercel/analytics/next";
+import { UpgradeModalProvider } from "@/lib/upgrade-modal-context";
+import ConsentAwareAnalytics from "@/components/ConsentAwareAnalytics";
 import "../globals.css";
 
 const META: Record<string, { title: string; description: string }> = {
@@ -99,12 +100,14 @@ export default async function LocaleLayout({
     <html lang={locale} dir={isRTL ? "rtl" : "ltr"}>
       <body className="bg-gray-950 text-gray-100 min-h-screen flex flex-col">
         <NextIntlClientProvider messages={messages}>
-          <Navbar />
-          <main className="max-w-7xl mx-auto px-4 py-8 flex-1 w-full">{children}</main>
-          <Footer locale={locale} />
-          <CookieBanner locale={locale} />
+          <UpgradeModalProvider>
+            <Navbar />
+            <main className="max-w-7xl mx-auto px-4 py-8 flex-1 w-full">{children}</main>
+            <Footer locale={locale} />
+            <CookieBanner locale={locale} />
+          </UpgradeModalProvider>
         </NextIntlClientProvider>
-        <Analytics />
+        <ConsentAwareAnalytics />
       </body>
     </html>
   );

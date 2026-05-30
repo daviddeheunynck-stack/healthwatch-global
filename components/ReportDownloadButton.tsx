@@ -2,7 +2,8 @@
 
 import { Download, Loader2, Lock } from "lucide-react";
 import { useState } from "react";
-import Link from "next/link";
+import { useUpgradeModal } from "@/lib/upgrade-modal-context";
+import { track } from "@vercel/analytics/react";
 
 interface ReportData {
   region: string;
@@ -37,17 +38,18 @@ export default function ReportDownloadButton({
 }: Props) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const { openModal } = useUpgradeModal();
 
   // ── Locked state — free users ───────────────────────────────────────────────
   if (!isPaid) {
     return (
-      <Link
-        href={`/${locale}/pricing`}
+      <button
+        onClick={() => openModal("pdf")}
         className="flex items-center gap-1.5 text-xs bg-amber-900/30 hover:bg-amber-900/50 border border-amber-700/40 text-amber-400 px-3 py-1.5 rounded-lg transition-colors"
       >
         <Lock className="w-3.5 h-3.5" />
         {lockedLabel}
-      </Link>
+      </button>
     );
   }
 
@@ -76,6 +78,7 @@ export default function ReportDownloadButton({
       a.click();
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
+      track("pdf_download", { region: data.region, locale });
     } catch {
       setError("Download failed");
     } finally {

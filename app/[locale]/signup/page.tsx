@@ -5,6 +5,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { createClient } from "@/lib/supabase-browser";
 import { Activity, Loader2, CheckCircle, ShieldCheck, Globe, Bell, Lock } from "lucide-react";
 import Link from "next/link";
+import OAuthButtons from "@/components/OAuthButtons";
 
 const VALUE_PROPS: Record<string, { items: string[]; noCard: string; gdpr: string }> = {
   en: {
@@ -164,6 +165,14 @@ export default function SignupPage() {
               </div>
             ) : (
               <>
+                <div className="space-y-4 mb-5">
+                  <OAuthButtons locale={locale} />
+                  <div className="flex items-center gap-3">
+                    <div className="flex-1 h-px bg-gray-800" />
+                    <span className="text-xs text-gray-600">ou</span>
+                    <div className="flex-1 h-px bg-gray-800" />
+                  </div>
+                </div>
                 <form onSubmit={handleSignup} className="space-y-4">
                   <div>
                     <label className="block text-sm text-gray-400 mb-1.5">{t("email")}</label>

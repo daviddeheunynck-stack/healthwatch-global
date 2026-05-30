@@ -6,14 +6,26 @@ export const dynamic = "force-dynamic";
 const stripBOM = (val: string | undefined) =>
   (val || "").replace(/^﻿/, "").trim();
 
-const PRICES: Record<string, Record<string, string>> = {
+const PRICES: Record<string, Record<string, Record<string, string>>> = {
   starter: {
-    eur: stripBOM(process.env.STRIPE_STARTER_EUR_PRICE_ID),
-    usd: stripBOM(process.env.STRIPE_STARTER_USD_PRICE_ID),
+    monthly: {
+      eur: stripBOM(process.env.STRIPE_STARTER_EUR_PRICE_ID),
+      usd: stripBOM(process.env.STRIPE_STARTER_USD_PRICE_ID),
+    },
+    annual: {
+      eur: stripBOM(process.env.STRIPE_STARTER_EUR_ANNUAL_PRICE_ID),
+      usd: stripBOM(process.env.STRIPE_STARTER_USD_ANNUAL_PRICE_ID),
+    },
   },
   pro: {
-    eur: stripBOM(process.env.STRIPE_PRO_EUR_PRICE_ID),
-    usd: stripBOM(process.env.STRIPE_PRO_USD_PRICE_ID),
+    monthly: {
+      eur: stripBOM(process.env.STRIPE_PRO_EUR_PRICE_ID),
+      usd: stripBOM(process.env.STRIPE_PRO_USD_PRICE_ID),
+    },
+    annual: {
+      eur: stripBOM(process.env.STRIPE_PRO_EUR_ANNUAL_PRICE_ID),
+      usd: stripBOM(process.env.STRIPE_PRO_USD_ANNUAL_PRICE_ID),
+    },
   },
 };
 
@@ -48,9 +60,10 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const { plan, locale, userId, userEmail } = await req.json();
+    const { plan, locale, userId, userEmail, billing } = await req.json();
     const currency = getCurrency(locale);
-    const priceId = PRICES[plan]?.[currency];
+    const billingPeriod = billing === "annual" ? "annual" : "monthly";
+    const priceId = PRICES[plan]?.[billingPeriod]?.[currency];
 
     if (!priceId) {
       return NextResponse.json({ error: "Plan ou devise invalide." }, { status: 400 });
@@ -74,7 +87,15 @@ export async function POST(req: NextRequest) {
       locale: stripeLocale,
       "metadata[plan]": plan,
       "metadata[user_id]": userId || "",
+      "metadata[billing]": billingPeriod,
     });
+
+    // 14-day free trial for Pro plan (no credit card required during trial)
+    if (plan === "pro") {
+      params.set("subscription_data[trial_period_days]", "14");
+      params.set("subscription_data[trial_settings][end_behavior][missing_payment_method]", "cancel");
+      params.set("payment_method_collection", "if_required");
+    }
 
     // Pre-fill Stripe form with user email if available
     if (userEmail) {

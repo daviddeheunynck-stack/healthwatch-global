@@ -1,6 +1,6 @@
 import { getTranslations, getLocale } from "next-intl/server";
-import { Check, Zap, Shield, Building2, Mail, Gift, ArrowRight, Star, Clock, RefreshCw, Users, Globe } from "lucide-react";
-import CheckoutButton from "@/components/CheckoutButton";
+import { Check, Gift, ArrowRight, Star, Clock, Shield, Mail, Users, Globe, Building2, HeartHandshake, Microscope, Stethoscope, Landmark, RefreshCw } from "lucide-react";
+import PricingCards from "@/components/PricingCards";
 import Link from "next/link";
 import type { Metadata } from "next";
 
@@ -43,13 +43,15 @@ const COPY: Record<string, {
     features: [
       { label: "Live outbreak map", free: true, starter: true, pro: true, enterprise: true },
       { label: "WHO DON data feed", free: true, starter: true, pro: true, enterprise: true },
-      { label: "Monitored regions", free: "1", starter: "1", pro: "All", enterprise: "All" },
+      { label: "Monitored regions", free: "1", starter: "3", pro: "All", enterprise: "All" },
       { label: "Exact case & death figures", free: false, starter: true, pro: true, enterprise: true },
       { label: "Weekly email digest", free: true, starter: true, pro: true, enterprise: true },
-      { label: "Real-time alerts", free: false, starter: false, pro: true, enterprise: true },
-      { label: "PDF regional reports", free: false, starter: false, pro: true, enterprise: true },
-      { label: "CSV data export", free: false, starter: false, pro: true, enterprise: true },
-      { label: "Custom integrations", free: false, starter: false, pro: false, enterprise: true },
+      { label: "Regional email alerts", free: false, starter: "3 regions", pro: "All regions", enterprise: "All regions" },
+      { label: "Real-time alerts (all regions)", free: false, starter: false, pro: true, enterprise: true },
+      { label: "PDF regional reports", free: false, starter: "Weekly", pro: "All regions", enterprise: "All regions" },
+      { label: "CSV data export", free: false, starter: true, pro: true, enterprise: true },
+      { label: "Slack / Teams integration", free: false, starter: false, pro: true, enterprise: true },
+      { label: "REST API access", free: false, starter: false, pro: false, enterprise: true },
       { label: "On-premise deployment", free: false, starter: false, pro: false, enterprise: true },
       { label: "99.9% SLA", free: false, starter: false, pro: false, enterprise: true },
       { label: "Dedicated account manager", free: false, starter: false, pro: false, enterprise: true },
@@ -72,13 +74,15 @@ const COPY: Record<string, {
     features: [
       { label: "Carte des épidémies en direct", free: true, starter: true, pro: true, enterprise: true },
       { label: "Flux données OMS DON", free: true, starter: true, pro: true, enterprise: true },
-      { label: "Régions surveillées", free: "1", starter: "1", pro: "Toutes", enterprise: "Toutes" },
+      { label: "Régions surveillées", free: "1", starter: "3", pro: "Toutes", enterprise: "Toutes" },
       { label: "Chiffres exacts (cas & décès)", free: false, starter: true, pro: true, enterprise: true },
       { label: "Digest email hebdomadaire", free: true, starter: true, pro: true, enterprise: true },
-      { label: "Alertes en temps réel", free: false, starter: false, pro: true, enterprise: true },
-      { label: "Rapports PDF régionaux", free: false, starter: false, pro: true, enterprise: true },
-      { label: "Export CSV des données", free: false, starter: false, pro: true, enterprise: true },
-      { label: "Intégrations sur mesure", free: false, starter: false, pro: false, enterprise: true },
+      { label: "Alertes email régionales", free: false, starter: "3 régions", pro: "Toutes les régions", enterprise: "Toutes les régions" },
+      { label: "Alertes en temps réel (toutes régions)", free: false, starter: false, pro: true, enterprise: true },
+      { label: "Rapports PDF régionaux", free: false, starter: "Hebdomadaire", pro: "Toutes les régions", enterprise: "Toutes les régions" },
+      { label: "Export CSV des données", free: false, starter: true, pro: true, enterprise: true },
+      { label: "Intégration Slack / Teams", free: false, starter: false, pro: true, enterprise: true },
+      { label: "Accès API REST", free: false, starter: false, pro: false, enterprise: true },
       { label: "Déploiement on-premise", free: false, starter: false, pro: false, enterprise: true },
       { label: "SLA 99,9 %", free: false, starter: false, pro: false, enterprise: true },
       { label: "Account manager dédié", free: false, starter: false, pro: false, enterprise: true },
@@ -101,13 +105,15 @@ const COPY: Record<string, {
     features: [
       { label: "Mapa de brotes en vivo", free: true, starter: true, pro: true, enterprise: true },
       { label: "Datos OMS DON", free: true, starter: true, pro: true, enterprise: true },
-      { label: "Regiones supervisadas", free: "1", starter: "1", pro: "Todas", enterprise: "Todas" },
+      { label: "Regiones supervisadas", free: "1", starter: "3", pro: "Todas", enterprise: "Todas" },
       { label: "Cifras exactas (casos y fallec.)", free: false, starter: true, pro: true, enterprise: true },
       { label: "Digest semanal por email", free: true, starter: true, pro: true, enterprise: true },
-      { label: "Alertas en tiempo real", free: false, starter: false, pro: true, enterprise: true },
-      { label: "Informes PDF regionales", free: false, starter: false, pro: true, enterprise: true },
-      { label: "Exportación de datos CSV", free: false, starter: false, pro: true, enterprise: true },
-      { label: "Integraciones personalizadas", free: false, starter: false, pro: false, enterprise: true },
+      { label: "Alertas email regionales", free: false, starter: "3 regiones", pro: "Todas las regiones", enterprise: "Todas las regiones" },
+      { label: "Alertas en tiempo real (todas las regiones)", free: false, starter: false, pro: true, enterprise: true },
+      { label: "Informes PDF regionales", free: false, starter: "Semanal", pro: "Todas las regiones", enterprise: "Todas las regiones" },
+      { label: "Exportación de datos CSV", free: false, starter: true, pro: true, enterprise: true },
+      { label: "Integración Slack / Teams", free: false, starter: false, pro: true, enterprise: true },
+      { label: "Acceso API REST", free: false, starter: false, pro: false, enterprise: true },
       { label: "Implementación on-premise", free: false, starter: false, pro: false, enterprise: true },
       { label: "SLA del 99,9%", free: false, starter: false, pro: false, enterprise: true },
       { label: "Gestor de cuenta dedicado", free: false, starter: false, pro: false, enterprise: true },
@@ -130,13 +136,15 @@ const COPY: Record<string, {
     features: [
       { label: "خريطة التفشيات المباشرة", free: true, starter: true, pro: true, enterprise: true },
       { label: "بيانات منظمة الصحة العالمية DON", free: true, starter: true, pro: true, enterprise: true },
-      { label: "المناطق المراقبة", free: "1", starter: "1", pro: "جميعها", enterprise: "جميعها" },
+      { label: "المناطق المراقبة", free: "1", starter: "3", pro: "جميعها", enterprise: "جميعها" },
       { label: "أرقام دقيقة (حالات ووفيات)", free: false, starter: true, pro: true, enterprise: true },
       { label: "ملخص بريدي أسبوعي", free: true, starter: true, pro: true, enterprise: true },
-      { label: "تنبيهات فورية", free: false, starter: false, pro: true, enterprise: true },
-      { label: "تقارير PDF إقليمية", free: false, starter: false, pro: true, enterprise: true },
-      { label: "تصدير البيانات CSV", free: false, starter: false, pro: true, enterprise: true },
-      { label: "تكاملات مخصصة", free: false, starter: false, pro: false, enterprise: true },
+      { label: "تنبيهات بريدية إقليمية", free: false, starter: "3 مناطق", pro: "جميع المناطق", enterprise: "جميع المناطق" },
+      { label: "تنبيهات فورية (جميع المناطق)", free: false, starter: false, pro: true, enterprise: true },
+      { label: "تقارير PDF إقليمية", free: false, starter: "أسبوعي", pro: "جميع المناطق", enterprise: "جميع المناطق" },
+      { label: "تصدير البيانات CSV", free: false, starter: true, pro: true, enterprise: true },
+      { label: "تكامل Slack / Teams", free: false, starter: false, pro: true, enterprise: true },
+      { label: "الوصول لـ REST API", free: false, starter: false, pro: false, enterprise: true },
       { label: "نشر محلي", free: false, starter: false, pro: false, enterprise: true },
       { label: "ضمان SLA 99.9%", free: false, starter: false, pro: false, enterprise: true },
       { label: "مدير حساب مخصص", free: false, starter: false, pro: false, enterprise: true },
@@ -159,13 +167,15 @@ const COPY: Record<string, {
     features: [
       { label: "Peta wabah langsung", free: true, starter: true, pro: true, enterprise: true },
       { label: "Data WHO DON", free: true, starter: true, pro: true, enterprise: true },
-      { label: "Wilayah yang dipantau", free: "1", starter: "1", pro: "Semua", enterprise: "Semua" },
+      { label: "Wilayah yang dipantau", free: "1", starter: "3", pro: "Semua", enterprise: "Semua" },
       { label: "Angka tepat (kasus & kematian)", free: false, starter: true, pro: true, enterprise: true },
       { label: "Digest email mingguan", free: true, starter: true, pro: true, enterprise: true },
-      { label: "Peringatan real-time", free: false, starter: false, pro: true, enterprise: true },
-      { label: "Laporan PDF regional", free: false, starter: false, pro: true, enterprise: true },
-      { label: "Ekspor data CSV", free: false, starter: false, pro: true, enterprise: true },
-      { label: "Integrasi kustom", free: false, starter: false, pro: false, enterprise: true },
+      { label: "Peringatan email regional", free: false, starter: "3 wilayah", pro: "Semua wilayah", enterprise: "Semua wilayah" },
+      { label: "Peringatan real-time (semua wilayah)", free: false, starter: false, pro: true, enterprise: true },
+      { label: "Laporan PDF regional", free: false, starter: "Mingguan", pro: "Semua wilayah", enterprise: "Semua wilayah" },
+      { label: "Ekspor data CSV", free: false, starter: true, pro: true, enterprise: true },
+      { label: "Integrasi Slack / Teams", free: false, starter: false, pro: true, enterprise: true },
+      { label: "Akses REST API", free: false, starter: false, pro: false, enterprise: true },
       { label: "Penerapan on-premise", free: false, starter: false, pro: false, enterprise: true },
       { label: "SLA 99,9%", free: false, starter: false, pro: false, enterprise: true },
       { label: "Manajer akun khusus", free: false, starter: false, pro: false, enterprise: true },
@@ -185,10 +195,6 @@ function CellValue({ val }: { val: boolean | string }) {
   if (val === false) return <span className="text-gray-700 mx-auto block text-center">—</span>;
   return <span className="text-xs font-medium text-gray-300 block text-center">{val}</span>;
 }
-
-const STARTER_FEATURES = ["pricing.f1_1","pricing.f1_2","pricing.f1_3","pricing.f1_4","pricing.f1_5"];
-const PRO_FEATURES = ["pricing.f2_1","pricing.f2_2","pricing.f2_3","pricing.f2_4","pricing.f2_5","pricing.f2_6"];
-const ENTERPRISE_FEATURES = ["pricing.f3_1","pricing.f3_2","pricing.f3_3","pricing.f3_4","pricing.f3_5","pricing.f3_6"];
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
@@ -253,97 +259,8 @@ export default async function PricingPage({ params }: { params: Promise<{ locale
         </Link>
       </div>
 
-      {/* ── Plans ────────────────────────────────────────────────────────── */}
-      <div className="grid md:grid-cols-3 gap-6 items-start">
-
-        {/* Starter */}
-        <div className="bg-gray-900 border border-gray-800 rounded-2xl p-6 space-y-6">
-          <div>
-            <div className="flex items-center gap-2 mb-3">
-              <Zap className="w-5 h-5 text-blue-400" />
-              <span className="text-blue-400 font-semibold text-sm uppercase tracking-wide">Starter</span>
-            </div>
-            <div className="flex items-end gap-1">
-              <span className="text-4xl font-bold text-white">{t("pricing.starter_price")}</span>
-              <span className="text-gray-400 mb-1">{t("pricing.perMonth")}</span>
-            </div>
-            <p className="text-gray-400 text-sm mt-2">{t("pricing.starter_desc")}</p>
-          </div>
-          <ul className="space-y-3">
-            {STARTER_FEATURES.map((key) => (
-              <li key={key} className="flex items-start gap-2.5 text-sm text-gray-300">
-                <Check className="w-4 h-4 text-blue-400 mt-0.5 shrink-0" />
-                {t(key as any)}
-              </li>
-            ))}
-          </ul>
-          <CheckoutButton plan="starter" locale={locale} label={t("pricing.getStarted")}
-            className="w-full bg-blue-600 hover:bg-blue-500 text-white font-semibold py-2.5 rounded-lg transition-colors" />
-        </div>
-
-        {/* Pro — highlighted */}
-        <div className="bg-gray-900 border-2 border-red-500 rounded-2xl p-6 space-y-6 relative">
-          <div className="absolute -top-3.5 left-1/2 -translate-x-1/2">
-            <span className="bg-red-600 text-white text-xs font-bold px-4 py-1 rounded-full uppercase tracking-wide">
-              {t("pricing.popular")}
-            </span>
-          </div>
-          <div>
-            <div className="flex items-center gap-2 mb-3">
-              <Shield className="w-5 h-5 text-red-400" />
-              <span className="text-red-400 font-semibold text-sm uppercase tracking-wide">Pro</span>
-            </div>
-            <div className="flex items-end gap-1">
-              <span className="text-4xl font-bold text-white">{t("pricing.pro_price")}</span>
-              <span className="text-gray-400 mb-1">{t("pricing.perMonth")}</span>
-            </div>
-            <p className="text-gray-400 text-sm mt-2">{t("pricing.pro_desc")}</p>
-          </div>
-          <ul className="space-y-3">
-            {PRO_FEATURES.map((key) => (
-              <li key={key} className="flex items-start gap-2.5 text-sm text-gray-300">
-                <Check className="w-4 h-4 text-red-400 mt-0.5 shrink-0" />
-                {t(key as any)}
-              </li>
-            ))}
-          </ul>
-          <CheckoutButton plan="pro" locale={locale} label={t("pricing.getStarted")}
-            className="w-full bg-red-600 hover:bg-red-500 text-white font-semibold py-2.5 rounded-lg transition-colors" />
-
-          {/* Guarantee badge */}
-          <div className="flex items-center gap-2 bg-gray-800/60 rounded-xl p-3 text-xs text-gray-400 border border-gray-700/50">
-            <RefreshCw className="w-3.5 h-3.5 text-green-400 shrink-0" />
-            {c.guarantee}
-          </div>
-        </div>
-
-        {/* Enterprise */}
-        <div className="bg-gray-900 border border-gray-800 rounded-2xl p-6 space-y-6">
-          <div>
-            <div className="flex items-center gap-2 mb-3">
-              <Building2 className="w-5 h-5 text-purple-400" />
-              <span className="text-purple-400 font-semibold text-sm uppercase tracking-wide">Enterprise</span>
-            </div>
-            <div className="flex items-end gap-1">
-              <span className="text-4xl font-bold text-white">{t("pricing.custom")}</span>
-            </div>
-            <p className="text-gray-400 text-sm mt-2">{t("pricing.enterprise_desc")}</p>
-          </div>
-          <ul className="space-y-3">
-            {ENTERPRISE_FEATURES.map((key) => (
-              <li key={key} className="flex items-start gap-2.5 text-sm text-gray-300">
-                <Check className="w-4 h-4 text-purple-400 mt-0.5 shrink-0" />
-                {t(key as any)}
-              </li>
-            ))}
-          </ul>
-          <a href={`mailto:contact@healthwatch-global.com?subject=Enterprise Plan - HealthWatch Global`}
-            className="flex items-center justify-center gap-2 w-full bg-purple-700 hover:bg-purple-600 text-white font-semibold py-2.5 rounded-lg transition-colors">
-            <Mail className="w-4 h-4" />
-            {t("pricing.contactUs")}
-          </a>
-        </div>
-      </div>
+      {/* ── Plans (client component — billing toggle) ────────────────────── */}
+      <PricingCards locale={locale} />
 
       {/* ── Guarantee strip ───────────────────────────────────────────────── */}
       <div className="bg-green-500/5 border border-green-500/15 rounded-2xl p-6 flex flex-col md:flex-row items-center gap-5 max-w-3xl mx-auto w-full">
@@ -398,22 +315,63 @@ export default async function PricingPage({ params }: { params: Promise<{ locale
         </div>
       </div>
 
-      {/* ── Trust stats ───────────────────────────────────────────────────── */}
-      <div className="border border-gray-800 rounded-2xl p-8 grid md:grid-cols-4 gap-6 text-center">
-        {[
-          { value: "195",         label: t("pricing.trust1"), icon: Globe  },
-          { value: "99.9%",       label: t("pricing.trust2"), icon: Star   },
-          { value: t("pricing.compliance"), label: t("pricing.trust3"), icon: Shield },
-          { value: "5",           label: locale === "fr" ? "Langues supportées" : locale === "es" ? "Idiomas" : locale === "ar" ? "لغات مدعومة" : locale === "id" ? "Bahasa" : "Languages", icon: Users },
-        ].map(({ value, label, icon: Icon }) => (
-          <div key={label}>
-            <div className="flex justify-center mb-2">
-              <Icon className="w-5 h-5 text-red-400" />
+      {/* ── Designed for — organisation types ────────────────────────────── */}
+      <div className="space-y-5">
+        <p className="text-center text-xs text-gray-500 uppercase tracking-widest font-semibold">
+          {locale === "fr" ? "Conçu pour" : locale === "es" ? "Diseñado para" : locale === "ar" ? "مصمم لـ" : locale === "id" ? "Dirancang untuk" : "Designed for"}
+        </p>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {[
+            { icon: Landmark,      label: locale === "fr" ? "Ministères de la Santé" : locale === "es" ? "Ministerios de Salud" : locale === "ar" ? "وزارات الصحة" : locale === "id" ? "Kementerian Kesehatan" : "Health Ministries" },
+            { icon: HeartHandshake,label: locale === "fr" ? "ONG Internationales" : locale === "es" ? "ONG Internacionales" : locale === "ar" ? "المنظمات غير الحكومية" : locale === "id" ? "LSM Internasional" : "International NGOs" },
+            { icon: Microscope,    label: locale === "fr" ? "Instituts de Recherche" : locale === "es" ? "Institutos de Investigación" : locale === "ar" ? "معاهد البحوث" : locale === "id" ? "Lembaga Penelitian" : "Research Institutes" },
+            { icon: Stethoscope,   label: locale === "fr" ? "Hôpitaux & Cliniques" : locale === "es" ? "Hospitales & Clínicas" : locale === "ar" ? "المستشفيات والعيادات" : locale === "id" ? "Rumah Sakit & Klinik" : "Hospitals & Clinics" },
+          ].map(({ icon: Icon, label }) => (
+            <div key={label} className="flex flex-col items-center gap-3 bg-gray-900 border border-gray-800 rounded-xl p-5 hover:border-gray-600 transition-colors">
+              <div className="w-10 h-10 rounded-lg bg-red-500/10 border border-red-500/20 flex items-center justify-center">
+                <Icon className="w-5 h-5 text-red-400" />
+              </div>
+              <p className="text-sm text-gray-300 font-medium text-center">{label}</p>
             </div>
-            <p className="text-3xl font-bold text-white">{value}</p>
-            <p className="text-gray-400 text-sm mt-1">{label}</p>
+          ))}
+        </div>
+        <div className="flex flex-wrap justify-center gap-6 pt-2">
+          {[
+            { value: "195", label: locale === "fr" ? "pays couverts" : locale === "es" ? "países cubiertos" : locale === "ar" ? "دولة مغطاة" : locale === "id" ? "negara tercakup" : "countries covered", icon: Globe },
+            { value: "99.9%", label: locale === "fr" ? "disponibilité" : locale === "es" ? "disponibilidad" : locale === "ar" ? "وقت التشغيل" : locale === "id" ? "uptime" : "uptime", icon: Star },
+            { value: "5", label: locale === "fr" ? "langues" : locale === "es" ? "idiomas" : locale === "ar" ? "لغات" : locale === "id" ? "bahasa" : "languages", icon: Users },
+            { value: "GDPR", label: locale === "fr" ? "conformité" : locale === "es" ? "cumplimiento" : locale === "ar" ? "الامتثال" : locale === "id" ? "kepatuhan" : "compliant", icon: Shield },
+          ].map(({ value, label, icon: Icon }) => (
+            <div key={label} className="flex items-center gap-2 text-gray-400 text-sm">
+              <Icon className="w-4 h-4 text-red-400" />
+              <span className="font-bold text-white">{value}</span>
+              <span>{label}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* ── NGO discount banner ───────────────────────────────────────────── */}
+      <div className="bg-gradient-to-r from-emerald-950/60 via-emerald-900/20 to-transparent border border-emerald-700/30 rounded-2xl p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 max-w-4xl mx-auto w-full">
+        <div className="flex items-start gap-4">
+          <div className="w-10 h-10 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center shrink-0">
+            <HeartHandshake className="w-5 h-5 text-emerald-400" />
           </div>
-        ))}
+          <div>
+            <p className="text-emerald-300 font-semibold text-sm">
+              {locale === "fr" ? "Tarif ONG — jusqu'à −30%" : locale === "es" ? "Precio ONG — hasta −30%" : locale === "ar" ? "سعر المنظمات غير الحكومية — حتى −30%" : locale === "id" ? "Harga LSM — hingga −30%" : "NGO rate — up to −30%"}
+            </p>
+            <p className="text-gray-400 text-xs mt-0.5">
+              {locale === "fr" ? "Vous êtes une ONG, un organisme humanitaire ou un institut de recherche à but non lucratif ? Contactez-nous pour un tarif adapté." : locale === "es" ? "¿Es una ONG, organización humanitaria o instituto de investigación sin ánimo de lucro? Contáctenos para una tarifa adaptada." : locale === "ar" ? "هل أنتم منظمة غير حكومية أو هيئة إنسانية أو معهد بحثي غير ربحي؟ تواصلوا معنا للحصول على سعر مخصص." : locale === "id" ? "Apakah Anda LSM, organisasi kemanusiaan, atau lembaga riset nirlaba? Hubungi kami untuk tarif khusus." : "Are you an NGO, humanitarian organization, or non-profit research institute? Contact us for a dedicated rate."}
+            </p>
+          </div>
+        </div>
+        <Link
+          href={`/${locale}/contact`}
+          className="shrink-0 text-xs bg-emerald-700 hover:bg-emerald-600 text-white font-semibold px-4 py-2 rounded-lg transition-colors whitespace-nowrap"
+        >
+          {locale === "fr" ? "Demander un tarif →" : locale === "es" ? "Solicitar tarifa →" : locale === "ar" ? "طلب سعر ←" : locale === "id" ? "Minta tarif →" : "Request a quote →"}
+        </Link>
       </div>
 
       {/* ── CTA contact ───────────────────────────────────────────────────── */}

@@ -20,6 +20,23 @@ export interface Outbreak {
   active: boolean;
 }
 
+export async function getLastSync(): Promise<string | null> {
+  const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  );
+
+  const { data } = await supabase
+    .from("outbreaks")
+    .select("updated_at")
+    .eq("active", true)
+    .order("updated_at", { ascending: false })
+    .limit(1)
+    .single();
+
+  return (data as any)?.updated_at ?? null;
+}
+
 export async function getOutbreaks(): Promise<Outbreak[]> {
   const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
