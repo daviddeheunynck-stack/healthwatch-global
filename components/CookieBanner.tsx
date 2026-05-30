@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 
-const STORAGE_KEY = "hwg_cookie_consent";
+export const STORAGE_KEY = "hwg_cookie_consent";
 
 const LABELS: Record<string, {
   text: string;

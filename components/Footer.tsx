@@ -1,5 +1,8 @@
+"use client";
+
 import Link from "next/link";
 import { Activity } from "lucide-react";
+import { STORAGE_KEY } from "@/components/CookieBanner";
 
 interface FooterProps {
   locale: string;
@@ -10,16 +13,23 @@ const LABELS: Record<string, {
   privacy: string;
   terms: string;
   contact: string;
+  cookies: string;
 }> = {
-  en: { about: "About", privacy: "Privacy Policy", terms: "Terms of Service", contact: "Contact" },
-  fr: { about: "À propos", privacy: "Politique de confidentialité", terms: "Conditions d'utilisation", contact: "Contact" },
-  es: { about: "Acerca de", privacy: "Política de privacidad", terms: "Términos de uso", contact: "Contacto" },
-  ar: { about: "حول المنصة", privacy: "سياسة الخصوصية", terms: "شروط الاستخدام", contact: "تواصل معنا" },
-  id: { about: "Tentang", privacy: "Kebijakan Privasi", terms: "Syarat Penggunaan", contact: "Kontak" },
+  en: { about: "About", privacy: "Privacy Policy", terms: "Terms of Service", contact: "Contact", cookies: "Cookie settings" },
+  fr: { about: "À propos", privacy: "Politique de confidentialité", terms: "Conditions d'utilisation", contact: "Contact", cookies: "Paramètres cookies" },
+  es: { about: "Acerca de", privacy: "Política de privacidad", terms: "Términos de uso", contact: "Contacto", cookies: "Configuración de cookies" },
+  ar: { about: "حول المنصة", privacy: "سياسة الخصوصية", terms: "شروط الاستخدام", contact: "تواصل معنا", cookies: "إعدادات ملفات الارتباط" },
+  id: { about: "Tentang", privacy: "Kebijakan Privasi", terms: "Syarat Penggunaan", contact: "Kontak", cookies: "Pengaturan cookie" },
 };
 
 export default function Footer({ locale }: FooterProps) {
   const l = LABELS[locale] ?? LABELS.en;
+
+  function resetCookieConsent() {
+    localStorage.removeItem(STORAGE_KEY);
+    // Reload so CookieBanner re-appears
+    window.location.reload();
+  }
 
   return (
     <footer className="border-t border-gray-800 bg-gray-900/50 mt-16">
@@ -35,7 +45,7 @@ export default function Footer({ locale }: FooterProps) {
           </div>
 
           {/* Links */}
-          <nav className="flex items-center gap-5 text-xs text-gray-500" dir={locale === "ar" ? "rtl" : undefined}>
+          <nav className="flex items-center gap-5 text-xs text-gray-500 flex-wrap justify-center" dir={locale === "ar" ? "rtl" : undefined}>
             <Link href={`/${locale}/about`} className="hover:text-gray-300 transition-colors">
               {l.about}
             </Link>
@@ -54,6 +64,13 @@ export default function Footer({ locale }: FooterProps) {
             >
               contact@healthwatch-global.com
             </a>
+            {/* Cookie settings — allows users to withdraw GDPR consent */}
+            <button
+              onClick={resetCookieConsent}
+              className="hover:text-gray-300 transition-colors text-left"
+            >
+              {l.cookies}
+            </button>
           </nav>
 
         </div>
