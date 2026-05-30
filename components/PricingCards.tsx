@@ -131,11 +131,12 @@ const COPY: Record<string, {
 
 // Prices per locale
 const PRICES: Record<string, { starterMonthly: string; starterAnnual: string; starterAnnualTotal: string; proMonthly: string; proAnnual: string; proAnnualTotal: string }> = {
-  fr: { starterMonthly: "199 €", starterAnnual: "159 €", starterAnnualTotal: "1 908 €/an", proMonthly: "590 €", proAnnual: "472 €", proAnnualTotal: "5 664 €/an" },
-  en: { starterMonthly: "$199", starterAnnual: "$159", starterAnnualTotal: "$1,908/yr", proMonthly: "$590", proAnnual: "$472", proAnnualTotal: "$5,664/yr" },
-  es: { starterMonthly: "$199", starterAnnual: "$159", starterAnnualTotal: "$1,908/año", proMonthly: "$590", proAnnual: "$472", proAnnualTotal: "$5,664/año" },
-  ar: { starterMonthly: "$199", starterAnnual: "$159", starterAnnualTotal: "$1,908/سنة", proMonthly: "$590", proAnnual: "$472", proAnnualTotal: "$5,664/سنة" },
-  id: { starterMonthly: "Rp 3.200.000", starterAnnual: "Rp 2.560.000", starterAnnualTotal: "Rp 30.720.000/thn", proMonthly: "Rp 9.500.000", proAnnual: "Rp 7.600.000", proAnnualTotal: "Rp 91.200.000/thn" },
+  // Monthly: Starter €29 / Pro €79 | Annual (−20%): Starter €23 / Pro €63
+  fr: { starterMonthly: "29 €",  starterAnnual: "23 €",  starterAnnualTotal: "276 €/an",   proMonthly: "79 €",  proAnnual: "63 €",  proAnnualTotal: "756 €/an"   },
+  en: { starterMonthly: "$29",   starterAnnual: "$23",   starterAnnualTotal: "$276/yr",     proMonthly: "$79",   proAnnual: "$63",   proAnnualTotal: "$756/yr"    },
+  es: { starterMonthly: "$29",   starterAnnual: "$23",   starterAnnualTotal: "$276/año",    proMonthly: "$79",   proAnnual: "$63",   proAnnualTotal: "$756/año"   },
+  ar: { starterMonthly: "29$",   starterAnnual: "23$",   starterAnnualTotal: "276$/سنة",    proMonthly: "79$",   proAnnual: "63$",   proAnnualTotal: "756$/سنة"   },
+  id: { starterMonthly: "$29",   starterAnnual: "$23",   starterAnnualTotal: "$276/thn",    proMonthly: "$79",   proAnnual: "$63",   proAnnualTotal: "$756/thn"   },
 };
 
 export default function PricingCards({ locale }: { locale: string }) {

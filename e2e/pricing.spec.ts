@@ -11,7 +11,9 @@ test.describe("Page Tarifs", () => {
 
   test("affiche les prix", async ({ page }) => {
     await page.goto("/fr/pricing");
-    await expect(page.getByText("199 €", { exact: true })).toBeVisible();
+    // Starter: 29 €/mois | Pro: 79 €/mois
+    await expect(page.getByText("29 €", { exact: true })).toBeVisible();
+    await expect(page.getByText("79 €", { exact: true })).toBeVisible();
   });
 
   test("bouton checkout redirige vers login si non connecté", async ({ page }) => {
