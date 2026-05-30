@@ -14,6 +14,7 @@ const PUBLIC_ROUTES = [
   { path: "/contact",changeFreq: "yearly",  priority: 0.5 },
   { path: "/privacy",changeFreq: "yearly",  priority: 0.3 },
   { path: "/terms",  changeFreq: "yearly",  priority: 0.3 },
+  { path: "/legal",  changeFreq: "yearly",  priority: 0.3 },
 ] as const;
 
 export default function sitemap(): MetadataRoute.Sitemap {

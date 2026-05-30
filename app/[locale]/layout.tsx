@@ -103,7 +103,8 @@ export default async function LocaleLayout({
         <NextIntlClientProvider messages={messages}>
           <UpgradeModalProvider>
             <Navbar />
-            <FoundingMemberBanner locale={locale} pricingHref={`/${locale}/pricing`} />
+            {/* FoundingMemberBanner désactivée — offre fondateur réservée à l'outreach direct (coupon Stripe FOUNDER29) */}
+            {/* <FoundingMemberBanner locale={locale} pricingHref={`/${locale}/pricing`} /> */}
             <main className="max-w-7xl mx-auto px-4 py-8 flex-1 w-full">{children}</main>
             <Footer locale={locale} />
             <CookieBanner locale={locale} />

@@ -12,14 +12,15 @@ const LABELS: Record<string, {
   about: string;
   privacy: string;
   terms: string;
+  legal: string;
   contact: string;
   cookies: string;
 }> = {
-  en: { about: "About", privacy: "Privacy Policy", terms: "Terms of Service", contact: "Contact", cookies: "Cookie settings" },
-  fr: { about: "À propos", privacy: "Politique de confidentialité", terms: "Conditions d'utilisation", contact: "Contact", cookies: "Paramètres cookies" },
-  es: { about: "Acerca de", privacy: "Política de privacidad", terms: "Términos de uso", contact: "Contacto", cookies: "Configuración de cookies" },
-  ar: { about: "حول المنصة", privacy: "سياسة الخصوصية", terms: "شروط الاستخدام", contact: "تواصل معنا", cookies: "إعدادات ملفات الارتباط" },
-  id: { about: "Tentang", privacy: "Kebijakan Privasi", terms: "Syarat Penggunaan", contact: "Kontak", cookies: "Pengaturan cookie" },
+  en: { about: "About", privacy: "Privacy Policy", terms: "Terms of Service", legal: "Legal notice", contact: "Contact", cookies: "Cookie settings" },
+  fr: { about: "À propos", privacy: "Politique de confidentialité", terms: "CGU", legal: "Mentions légales", contact: "Contact", cookies: "Paramètres cookies" },
+  es: { about: "Acerca de", privacy: "Política de privacidad", terms: "Términos de uso", legal: "Aviso legal", contact: "Contacto", cookies: "Configuración de cookies" },
+  ar: { about: "حول المنصة", privacy: "سياسة الخصوصية", terms: "شروط الاستخدام", legal: "الإشعار القانوني", contact: "تواصل معنا", cookies: "إعدادات ملفات الارتباط" },
+  id: { about: "Tentang", privacy: "Kebijakan Privasi", terms: "Syarat Penggunaan", legal: "Pemberitahuan hukum", contact: "Kontak", cookies: "Pengaturan cookie" },
 };
 
 export default function Footer({ locale }: FooterProps) {
@@ -54,6 +55,9 @@ export default function Footer({ locale }: FooterProps) {
             </Link>
             <Link href={`/${locale}/terms`} className="hover:text-gray-300 transition-colors">
               {l.terms}
+            </Link>
+            <Link href={`/${locale}/legal`} className="hover:text-gray-300 transition-colors">
+              {l.legal}
             </Link>
             <Link href={`/${locale}/contact`} className="hover:text-gray-300 transition-colors">
               {l.contact}
