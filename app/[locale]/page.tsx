@@ -175,7 +175,29 @@ export default async function DashboardPage({
   const { data: { user } } = await supabase.auth.getUser();
 
   if (!user) {
-    return <LandingPage locale={locale} />;
+    const organizationSchema = {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "HealthWatch Global",
+      "url": "https://healthwatch-global.com",
+      "logo": "https://healthwatch-global.com/icon-512.png",
+      "description": "Real-time global epidemic surveillance platform. WHO, CDC & ECDC data in 5 languages for health organizations worldwide.",
+      "sameAs": [],
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "email": "contact@healthwatch-global.com",
+        "contactType": "customer support",
+      },
+    };
+    return (
+      <>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
+        />
+        <LandingPage locale={locale} />
+      </>
+    );
   }
 
   const t = await getTranslations("dashboard");

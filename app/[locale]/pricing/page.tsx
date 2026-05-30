@@ -204,7 +204,47 @@ export default async function PricingPage({ params }: { params: Promise<{ locale
   const c = COPY[locale] ?? COPY.en;
   const isRtl = locale === "ar";
 
+  const pricingSchema = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "HealthWatch Global",
+    "applicationCategory": "HealthApplication",
+    "operatingSystem": "Web",
+    "url": "https://healthwatch-global.com",
+    "offers": [
+      {
+        "@type": "Offer",
+        "name": "Starter",
+        "price": "29",
+        "priceCurrency": "EUR",
+        "priceSpecification": { "@type": "RecurringChargeSpecification", "billingDuration": "P1M" },
+        "description": "3 monitored regions, regional email alerts, CSV export, PDF reports",
+      },
+      {
+        "@type": "Offer",
+        "name": "Pro",
+        "price": "79",
+        "priceCurrency": "EUR",
+        "priceSpecification": { "@type": "RecurringChargeSpecification", "billingDuration": "P1M" },
+        "description": "All regions, real-time alerts, Slack/Teams integration, unlimited CSV",
+      },
+      {
+        "@type": "Offer",
+        "name": "Enterprise",
+        "price": "299",
+        "priceCurrency": "EUR",
+        "priceSpecification": { "@type": "RecurringChargeSpecification", "billingDuration": "P1M" },
+        "description": "Everything in Pro + REST API access, on-premise deployment, 99.9% SLA",
+      },
+    ],
+  };
+
   return (
+    <>
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(pricingSchema) }}
+    />
     <div className="space-y-20" dir={isRtl ? "rtl" : undefined}>
 
       {/* ── Hero ─────────────────────────────────────────────────────────── */}
@@ -401,5 +441,6 @@ export default async function PricingPage({ params }: { params: Promise<{ locale
       </div>
 
     </div>
+    </>
   );
 }
