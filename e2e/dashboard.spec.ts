@@ -1,21 +1,24 @@
 import { test, expect } from "@playwright/test";
 
-test.describe("Dashboard", () => {
-  test("charge et affiche les stats", async ({ page }) => {
+test.describe("Dashboard — Landing page (unauthenticated)", () => {
+  test("affiche le hero de la landing page en français", async ({ page }) => {
     await page.goto("/fr");
-    await expect(page.getByText("Épidémies Actives")).toBeVisible();
-    await expect(page.getByText("Pays Touchés")).toBeVisible();
-    await expect(page.getByText("Risque Élevé")).toBeVisible();
+    await expect(page.getByText("Anticipez les épidémies.")).toBeVisible();
+    await expect(page.getByText("Ne réagissez plus.")).toBeVisible();
   });
 
-  test("affiche la carte interactive", async ({ page }) => {
+  test("affiche la barre de stats", async ({ page }) => {
     await page.goto("/fr");
-    await expect(page.locator(".leaflet-container")).toBeVisible({ timeout: 10000 });
+    // Stats bar: the label is a <p class="text-xs text-gray-500"> inside the stats grid
+    // Use exact match to avoid matching newsletterSub which also contains "foyers actifs"
+    const statLabel = page.locator("p.text-xs.text-gray-500", { hasText: "foyers actifs" }).first();
+    await expect(statLabel).toBeVisible({ timeout: 10000 });
   });
 
-  test("affiche le tableau des alertes récentes", async ({ page }) => {
+  test("affiche la section preview des données", async ({ page }) => {
     await page.goto("/fr");
-    await expect(page.getByText("Alertes Récentes")).toBeVisible();
+    // previewTitle is always rendered (static copy, no data dependency)
+    await expect(page.getByText("Ce que vos équipes verront en temps réel")).toBeVisible({ timeout: 10000 });
   });
 
   test("redirige vers une locale depuis /", async ({ page }) => {
@@ -25,6 +28,8 @@ test.describe("Dashboard", () => {
 
   test("fonctionne en anglais", async ({ page }) => {
     await page.goto("/en");
-    await expect(page.getByText("Active Outbreaks")).toBeVisible();
+    await expect(page.getByText("Anticipate outbreaks.")).toBeVisible();
+    // previewTitle (static, no data dependency)
+    await expect(page.getByText("What your teams will see in real time")).toBeVisible({ timeout: 10000 });
   });
 });
