@@ -4,9 +4,43 @@ import { withSentryConfig } from "@sentry/nextjs";
 
 const withNextIntl = createNextIntlPlugin("./i18n.ts");
 
+// ─── Content-Security-Policy ──────────────────────────────────────────────────
+// Next.js App Router uses inline scripts for hydration → 'unsafe-inline' required.
+// The real protection here is connect-src (restricts XHR/fetch targets) and
+// frame-src / object-src (prevents clickjacking & plugin abuse).
+const csp = [
+  "default-src 'self'",
+  // Scripts: Next.js hydration + Vercel Analytics + Sentry replay
+  "script-src 'self' 'unsafe-inline' 'unsafe-eval' va.vercel-scripts.com",
+  // Styles: Tailwind inline styles require unsafe-inline
+  "style-src 'self' 'unsafe-inline'",
+  // Images: OpenStreetMap tiles for Leaflet, Supabase storage, data URIs
+  "img-src 'self' data: blob: *.openstreetmap.org *.tile.openstreetmap.org *.supabase.co",
+  // Fonts: self only
+  "font-src 'self'",
+  // Connections: Supabase (DB + Realtime), Stripe, Sentry EU, Vercel Analytics, Brevo
+  [
+    "connect-src 'self'",
+    "*.supabase.co",
+    "wss://*.supabase.co",          // Realtime websocket
+    "api.stripe.com",
+    "o4511456134496256.ingest.de.sentry.io",
+    "va.vercel-scripts.com",
+    "api.brevo.com",
+  ].join(" "),
+  // Frames: Stripe Checkout opens in a redirect, not iframe — block all
+  "frame-src 'none'",
+  // No plugins ever
+  "object-src 'none'",
+  // Upgrade insecure requests on all assets
+  "upgrade-insecure-requests",
+].join("; ");
+
 const securityHeaders = [
-  // Prevent clickjacking
-  { key: "X-Frame-Options", value: "SAMEORIGIN" },
+  // Content Security Policy
+  { key: "Content-Security-Policy", value: csp },
+  // Prevent clickjacking (belt-and-braces alongside CSP frame-src)
+  { key: "X-Frame-Options", value: "DENY" },
   // Prevent MIME-type sniffing
   { key: "X-Content-Type-Options", value: "nosniff" },
   // Referrer policy
@@ -16,8 +50,6 @@ const securityHeaders = [
     key: "Permissions-Policy",
     value: "camera=(), microphone=(), geolocation=(), payment=(self)",
   },
-  // XSS protection (legacy but still useful for older browsers)
-  { key: "X-XSS-Protection", value: "1; mode=block" },
   // DNS prefetch control
   { key: "X-DNS-Prefetch-Control", value: "on" },
   // HSTS — only if served over HTTPS (Vercel handles this, but belt-and-braces)
