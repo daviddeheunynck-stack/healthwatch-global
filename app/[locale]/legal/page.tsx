@@ -59,7 +59,13 @@ export default async function LegalPage() {
               <span className={SIRET.startsWith("À") ? "text-amber-400 italic" : ""}>{SIRET}</span>
             </p>
             <p>
-              <span className="text-gray-300 font-medium">Contact :</span>{" "}
+              <span className="text-gray-300 font-medium">Téléphone :</span>{" "}
+              <a href="tel:+33681314231" className="text-red-400 hover:text-red-300">
+                +33 6 81 31 42 31
+              </a>
+            </p>
+            <p>
+              <span className="text-gray-300 font-medium">Email :</span>{" "}
               <a href="mailto:contact@healthwatch-global.com" className="text-red-400 hover:text-red-300">
                 contact@healthwatch-global.com
               </a>
