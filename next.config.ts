@@ -15,7 +15,7 @@ const csp = [
   // Styles: Tailwind inline styles require unsafe-inline
   "style-src 'self' 'unsafe-inline'",
   // Images: OpenStreetMap tiles for Leaflet, Supabase storage, data URIs
-  "img-src 'self' data: blob: *.openstreetmap.org *.tile.openstreetmap.org *.supabase.co",
+  "img-src 'self' data: blob: *.openstreetmap.org *.tile.openstreetmap.org *.basemaps.cartocdn.com *.supabase.co",
   // Fonts: self only
   "font-src 'self'",
   // Connections: Supabase (DB + Realtime), Stripe, Sentry EU, Vercel Analytics, Brevo
