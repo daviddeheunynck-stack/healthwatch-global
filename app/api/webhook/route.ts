@@ -99,6 +99,7 @@ function planFromPriceId(priceId: string | null | undefined): string {
   const BOM2 = String.fromCharCode(65279);
   const c = (v: string | undefined) => (v || "").replace(new RegExp("^" + BOM2), "").trim();
 
+  // Starter IDs kept for backward compatibility with any existing subscriptions
   const STARTER_IDS = new Set([
     c(process.env.STRIPE_STARTER_EUR_PRICE_ID),
     c(process.env.STRIPE_STARTER_USD_PRICE_ID),

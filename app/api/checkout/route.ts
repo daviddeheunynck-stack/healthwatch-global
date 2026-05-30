@@ -6,17 +6,8 @@ export const dynamic = "force-dynamic";
 const stripBOM = (val: string | undefined) =>
   (val || "").replace(/^﻿/, "").trim();
 
+// Single paid plan: Pro — €49/month | annual: €39/month (€468/year)
 const PRICES: Record<string, Record<string, Record<string, string>>> = {
-  starter: {
-    monthly: {
-      eur: stripBOM(process.env.STRIPE_STARTER_EUR_PRICE_ID),
-      usd: stripBOM(process.env.STRIPE_STARTER_USD_PRICE_ID),
-    },
-    annual: {
-      eur: stripBOM(process.env.STRIPE_STARTER_EUR_ANNUAL_PRICE_ID),
-      usd: stripBOM(process.env.STRIPE_STARTER_USD_ANNUAL_PRICE_ID),
-    },
-  },
   pro: {
     monthly: {
       eur: stripBOM(process.env.STRIPE_PRO_EUR_PRICE_ID),
@@ -90,12 +81,10 @@ export async function POST(req: NextRequest) {
       "metadata[billing]": billingPeriod,
     });
 
-    // 14-day free trial for Pro plan (no credit card required during trial)
-    if (plan === "pro") {
-      params.set("subscription_data[trial_period_days]", "14");
-      params.set("subscription_data[trial_settings][end_behavior][missing_payment_method]", "cancel");
-      params.set("payment_method_collection", "if_required");
-    }
+    // 14-day free trial — no credit card required
+    params.set("subscription_data[trial_period_days]", "14");
+    params.set("subscription_data[trial_settings][end_behavior][missing_payment_method]", "cancel");
+    params.set("payment_method_collection", "if_required");
 
     // Pre-fill Stripe form with user email if available
     if (userEmail) {

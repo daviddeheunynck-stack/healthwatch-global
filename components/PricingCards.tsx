@@ -36,14 +36,14 @@ const COPY: Record<string, {
     billedAnnually: "facturé annuellement",
     trial: "14 jours gratuits · sans CB",
     guarantee: "Sans engagement · Remboursement 14 jours",
-    starterDesc: "Pour les ONG locales et hôpitaux régionaux.",
+    starterDesc: "Pour découvrir la plateforme sans engagement.",
     proDesc: "Pour les ministères de la santé et ONG internationales.",
     enterpriseDesc: "Pour les gouvernements et grands groupes pharmaceutiques.",
     contactUs: "Nous contacter",
     getStarted: "Commencer →",
     popular: "Le plus populaire",
     custom: "Sur devis",
-    starterFeatures: ["3 régions surveillées", "Alertes email régionales", "Export CSV des données", "Tableau de bord multilingue", "Données OMS + CDC"],
+    starterFeatures: ["Carte mondiale interactive", "1 région surveillée", "Données OMS en direct", "Digest hebdomadaire gratuit", "Tableau de bord multilingue"],
     proFeatures: ["Toutes les régions mondiales", "Alertes en temps réel", "Rapports PDF automatiques", "Intégration Slack / Teams", "Export CSV illimité", "Support prioritaire"],
     enterpriseFeatures: ["Tout le plan Pro", "Accès API REST + docs", "Déploiement on-premise", "SLA 99,9 % garanti", "Account manager dédié", "Support dédié 24/7"],
   },
@@ -56,14 +56,14 @@ const COPY: Record<string, {
     billedAnnually: "billed annually",
     trial: "14-day free trial · no CC required",
     guarantee: "No commitment · 14-day refund",
-    starterDesc: "For local NGOs and regional hospitals.",
+    starterDesc: "Explore the platform with no commitment.",
     proDesc: "For health ministries and international NGOs.",
     enterpriseDesc: "For governments and large pharmaceutical groups.",
     contactUs: "Contact us",
     getStarted: "Get started →",
     popular: "Most popular",
     custom: "Custom",
-    starterFeatures: ["3 monitored regions", "Regional email alerts", "CSV data export", "Multilingual dashboard", "WHO + CDC data"],
+    starterFeatures: ["Interactive world map", "1 monitored region", "Live WHO data", "Free weekly digest", "Multilingual dashboard"],
     proFeatures: ["All global regions", "Real-time alerts", "Automatic PDF reports", "Slack / Teams integration", "Unlimited CSV export", "Priority support"],
     enterpriseFeatures: ["Everything in Pro", "REST API access + docs", "On-premise deployment", "99.9% SLA guarantee", "Dedicated account manager", "24/7 dedicated support"],
   },
@@ -76,14 +76,14 @@ const COPY: Record<string, {
     billedAnnually: "facturado anualmente",
     trial: "14 días gratis · sin tarjeta",
     guarantee: "Sin compromiso · Reembolso 14 días",
-    starterDesc: "Para ONG locales y hospitales regionales.",
+    starterDesc: "Explore la plataforma sin compromiso.",
     proDesc: "Para ministerios de salud y ONG internacionales.",
     enterpriseDesc: "Para gobiernos y grandes grupos farmacéuticos.",
     contactUs: "Contáctenos",
     getStarted: "Empezar →",
     popular: "Más popular",
     custom: "A medida",
-    starterFeatures: ["3 regiones monitoreadas", "Alertas email regionales", "Exportación CSV", "Panel multilingüe", "Datos OMS + CDC"],
+    starterFeatures: ["Mapa mundial interactivo", "1 región monitoreada", "Datos OMS en vivo", "Digest semanal gratuito", "Panel multilingüe"],
     proFeatures: ["Todas las regiones", "Alertas en tiempo real", "Informes PDF automáticos", "Integración Slack / Teams", "Exportación CSV ilimitada", "Soporte prioritario"],
     enterpriseFeatures: ["Todo lo de Pro", "Acceso API REST + docs", "Implementación on-premise", "SLA 99,9% garantizado", "Gestor de cuenta dedicado", "Soporte 24/7 dedicado"],
   },
@@ -96,14 +96,14 @@ const COPY: Record<string, {
     billedAnnually: "يُفوتر سنوياً",
     trial: "14 يوماً مجاناً · بدون بطاقة",
     guarantee: "بدون التزام · استرداد 14 يوماً",
-    starterDesc: "للمنظمات غير الحكومية المحلية والمستشفيات الإقليمية.",
+    starterDesc: "استكشف المنصة دون أي التزام.",
     proDesc: "لوزارات الصحة والمنظمات غير الحكومية الدولية.",
     enterpriseDesc: "للحكومات وكبرى مجموعات الأدوية.",
     contactUs: "اتصل بنا",
     getStarted: "ابدأ الآن ←",
     popular: "الأكثر شعبية",
     custom: "حسب الطلب",
-    starterFeatures: ["3 مناطق مراقبة", "تنبيهات بريدية إقليمية", "تصدير CSV", "لوحة تحكم متعددة اللغات", "بيانات WHO + CDC"],
+    starterFeatures: ["خريطة العالم التفاعلية", "منطقة مراقبة واحدة", "بيانات WHO المباشرة", "ملخص أسبوعي مجاني", "لوحة تحكم متعددة اللغات"],
     proFeatures: ["جميع المناطق العالمية", "تنبيهات فورية", "تقارير PDF تلقائية", "تكامل Slack / Teams", "تصدير CSV غير محدود", "دعم ذو أولوية"],
     enterpriseFeatures: ["كل ما في Pro", "الوصول لـ REST API + التوثيق", "نشر محلي", "ضمان SLA 99.9%", "مدير حساب مخصص", "دعم مخصص 24/7"],
   },
@@ -116,27 +116,26 @@ const COPY: Record<string, {
     billedAnnually: "ditagih tahunan",
     trial: "14 hari gratis · tanpa kartu",
     guarantee: "Tanpa komitmen · Pengembalian 14 hari",
-    starterDesc: "Untuk LSM lokal dan rumah sakit regional.",
+    starterDesc: "Jelajahi platform tanpa komitmen.",
     proDesc: "Untuk kementerian kesehatan dan LSM internasional.",
     enterpriseDesc: "Untuk pemerintah dan kelompok farmasi besar.",
     contactUs: "Hubungi kami",
     getStarted: "Mulai →",
     popular: "Paling populer",
     custom: "Kustom",
-    starterFeatures: ["3 wilayah dipantau", "Peringatan email regional", "Ekspor data CSV", "Dasbor multibahasa", "Data WHO + CDC"],
+    starterFeatures: ["Peta dunia interaktif", "1 wilayah dipantau", "Data WHO langsung", "Digest mingguan gratis", "Dasbor multibahasa"],
     proFeatures: ["Semua wilayah global", "Peringatan real-time", "Laporan PDF otomatis", "Integrasi Slack / Teams", "Ekspor CSV tak terbatas", "Dukungan prioritas"],
     enterpriseFeatures: ["Semua fitur Pro", "Akses REST API + dokumentasi", "Penerapan on-premise", "Jaminan SLA 99,9%", "Manajer akun khusus", "Dukungan 24/7 khusus"],
   },
 };
 
-// Prices per locale
-const PRICES: Record<string, { starterMonthly: string; starterAnnual: string; starterAnnualTotal: string; proMonthly: string; proAnnual: string; proAnnualTotal: string }> = {
-  // Monthly: Starter €29 / Pro €79 | Annual (−20%): Starter €23 / Pro €63
-  fr: { starterMonthly: "29 €",  starterAnnual: "23 €",  starterAnnualTotal: "276 €/an",   proMonthly: "79 €",  proAnnual: "63 €",  proAnnualTotal: "756 €/an"   },
-  en: { starterMonthly: "$29",   starterAnnual: "$23",   starterAnnualTotal: "$276/yr",     proMonthly: "$79",   proAnnual: "$63",   proAnnualTotal: "$756/yr"    },
-  es: { starterMonthly: "$29",   starterAnnual: "$23",   starterAnnualTotal: "$276/año",    proMonthly: "$79",   proAnnual: "$63",   proAnnualTotal: "$756/año"   },
-  ar: { starterMonthly: "29$",   starterAnnual: "23$",   starterAnnualTotal: "276$/سنة",    proMonthly: "79$",   proAnnual: "63$",   proAnnualTotal: "756$/سنة"   },
-  id: { starterMonthly: "$29",   starterAnnual: "$23",   starterAnnualTotal: "$276/thn",    proMonthly: "$79",   proAnnual: "$63",   proAnnualTotal: "$756/thn"   },
+// Pro: €49/month | Annual (−20%): €39/month = €468/year
+const PRICES: Record<string, { proMonthly: string; proAnnual: string; proAnnualTotal: string }> = {
+  fr: { proMonthly: "49 €",  proAnnual: "39 €",  proAnnualTotal: "468 €/an"  },
+  en: { proMonthly: "$49",   proAnnual: "$39",   proAnnualTotal: "$468/yr"   },
+  es: { proMonthly: "$49",   proAnnual: "$39",   proAnnualTotal: "$468/año"  },
+  ar: { proMonthly: "49$",   proAnnual: "39$",   proAnnualTotal: "468$/سنة"  },
+  id: { proMonthly: "$49",   proAnnual: "$39",   proAnnualTotal: "$468/thn"  },
 };
 
 export default function PricingCards({ locale }: { locale: string }) {
@@ -178,39 +177,32 @@ export default function PricingCards({ locale }: { locale: string }) {
       {/* ── Cards ───────────────────────────────────────────────────────── */}
       <div className="grid md:grid-cols-3 gap-6 items-start">
 
-        {/* Starter */}
+        {/* Free */}
         <div className="bg-gray-900 border border-gray-800 rounded-2xl p-6 space-y-6">
           <div>
             <div className="flex items-center gap-2 mb-3">
-              <Zap className="w-5 h-5 text-blue-400" />
-              <span className="text-blue-400 font-semibold text-sm uppercase tracking-wide">Starter</span>
+              <Zap className="w-5 h-5 text-green-400" />
+              <span className="text-green-400 font-semibold text-sm uppercase tracking-wide">Free</span>
             </div>
             <div className="flex items-end gap-1">
-              <span className="text-4xl font-bold text-white">
-                {isAnnual ? p.starterAnnual : p.starterMonthly}
-              </span>
-              <span className="text-gray-400 mb-1">{c.perMonth}</span>
+              <span className="text-4xl font-bold text-white">0 €</span>
             </div>
-            {isAnnual && (
-              <p className="text-xs text-green-400 mt-1">{p.starterAnnualTotal} · {c.billedAnnually}</p>
-            )}
             <p className="text-gray-400 text-sm mt-2">{c.starterDesc}</p>
           </div>
           <ul className="space-y-3">
             {c.starterFeatures.map((feat) => (
               <li key={feat} className="flex items-start gap-2.5 text-sm text-gray-300">
-                <Check className="w-4 h-4 text-blue-400 mt-0.5 shrink-0" />
+                <Check className="w-4 h-4 text-green-400 mt-0.5 shrink-0" />
                 {feat}
               </li>
             ))}
           </ul>
-          <CheckoutButton
-            plan="starter"
-            locale={locale}
-            label={c.getStarted}
-            billing={billing}
-            className="w-full bg-blue-600 hover:bg-blue-500 text-white font-semibold py-2.5 rounded-lg transition-colors"
-          />
+          <a
+            href={`/${locale}/signup`}
+            className="block w-full text-center bg-gray-800 hover:bg-gray-700 text-gray-300 font-semibold py-2.5 rounded-lg transition-colors text-sm"
+          >
+            {c.getStarted}
+          </a>
         </div>
 
         {/* Pro — highlighted */}
