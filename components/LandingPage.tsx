@@ -44,11 +44,11 @@ const COPY: Record<string, {
   // Pricing
   pricingTitle: string;
   pricingFree: string;
-  pricingStarter: string;
   pricingPro: string;
+  pricingEnterprise: string;
   pricingFreeSub: string;
-  pricingStarterSub: string;
   pricingProSub: string;
+  pricingEnterpriseSub: string;
   pricingCta: string;
   // Newsletter
   newsletterTitle:   string;
@@ -108,11 +108,11 @@ const COPY: Record<string, {
     orgs: ["Ministères de la Santé", "ONG Internationales", "Instituts de Recherche", "Hôpitaux & Cliniques"],
     pricingTitle: "Commencez gratuitement. Évoluez quand vous en avez besoin.",
     pricingFree: "Gratuit",
-    pricingStarter: "29 € /mois",
-    pricingPro: "79 € /mois",
+    pricingPro: "49 € /mois",
+    pricingEnterprise: "Sur devis",
     pricingFreeSub: "Carte mondiale · 1 région · Digest hebdo",
-    pricingStarterSub: "3 régions · Chiffres exacts · Support email",
-    pricingProSub: "Alertes temps réel · PDF · CSV · Toutes régions",
+    pricingProSub: "Toutes régions · Alertes · PDF · CSV · Slack",
+    pricingEnterpriseSub: "API · On-premise · SLA 99,9 %",
     pricingCta: "Voir tous les tarifs →",
     newsletterTitle: "Restez informé — gratuitement",
     newsletterSub: "Le digest hebdomadaire des foyers actifs, filtré par région, directement dans votre boîte mail.",
@@ -170,11 +170,11 @@ const COPY: Record<string, {
     orgs: ["Health Ministries", "International NGOs", "Research Institutes", "Hospitals & Clinics"],
     pricingTitle: "Start free. Scale when you need to.",
     pricingFree: "Free",
-    pricingStarter: "$29 /month",
-    pricingPro: "$79 /month",
+    pricingPro: "$49 /month",
+    pricingEnterprise: "Custom",
     pricingFreeSub: "World map · 1 region · Weekly digest",
-    pricingStarterSub: "3 regions · Exact figures · Email support",
-    pricingProSub: "Real-time alerts · PDF · CSV · All regions",
+    pricingProSub: "All regions · Alerts · PDF · CSV · Slack",
+    pricingEnterpriseSub: "API · On-premise · 99.9% SLA",
     pricingCta: "See all plans →",
     newsletterTitle: "Stay informed — for free",
     newsletterSub: "A weekly digest of active outbreaks, filtered by region, delivered straight to your inbox.",
@@ -232,11 +232,11 @@ const COPY: Record<string, {
     orgs: ["Ministerios de Salud", "ONG Internacionales", "Institutos de Investigación", "Hospitales & Clínicas"],
     pricingTitle: "Empiece gratis. Escale cuando lo necesite.",
     pricingFree: "Gratis",
-    pricingStarter: "$29 /mes",
-    pricingPro: "$79 /mes",
+    pricingPro: "$49 /mes",
+    pricingEnterprise: "A medida",
     pricingFreeSub: "Mapa mundial · 1 región · Digest semanal",
-    pricingStarterSub: "3 regiones · Cifras exactas · Soporte email",
-    pricingProSub: "Alertas en tiempo real · PDF · CSV · Todas las regiones",
+    pricingProSub: "Todas las regiones · Alertas · PDF · CSV · Slack",
+    pricingEnterpriseSub: "API · On-premise · SLA 99,9%",
     pricingCta: "Ver todos los planes →",
     newsletterTitle: "Manténgase informado — gratis",
     newsletterSub: "Un resumen semanal de brotes activos, filtrado por región, directo a su bandeja de entrada.",
@@ -294,11 +294,11 @@ const COPY: Record<string, {
     orgs: ["وزارات الصحة", "المنظمات غير الحكومية الدولية", "معاهد البحوث", "المستشفيات والعيادات"],
     pricingTitle: "ابدأ مجاناً. طوِّر عندما تحتاج.",
     pricingFree: "مجاني",
-    pricingStarter: "29$ / شهر",
-    pricingPro: "79$ / شهر",
+    pricingPro: "49$ / شهر",
+    pricingEnterprise: "حسب الطلب",
     pricingFreeSub: "خريطة عالمية · منطقة واحدة · ملخص أسبوعي",
-    pricingStarterSub: "3 مناطق · أرقام دقيقة · دعم بالبريد",
-    pricingProSub: "تنبيهات فورية · PDF · CSV · جميع المناطق",
+    pricingProSub: "جميع المناطق · تنبيهات · PDF · CSV · Slack",
+    pricingEnterpriseSub: "API · نشر محلي · SLA 99.9%",
     pricingCta: "عرض جميع الخطط ←",
     newsletterTitle: "ابقَ على اطلاع — مجاناً",
     newsletterSub: "ملخص أسبوعي بالتفشيات النشطة، مصفى حسب المنطقة، يصل مباشرة إلى بريدك الإلكتروني.",
@@ -356,11 +356,11 @@ const COPY: Record<string, {
     orgs: ["Kementerian Kesehatan", "LSM Internasional", "Lembaga Penelitian", "Rumah Sakit & Klinik"],
     pricingTitle: "Mulai gratis. Kembangkan saat dibutuhkan.",
     pricingFree: "Gratis",
-    pricingStarter: "$29 /bulan",
-    pricingPro: "$79 /bulan",
+    pricingPro: "$49 /bulan",
+    pricingEnterprise: "Kustom",
     pricingFreeSub: "Peta dunia · 1 wilayah · Digest mingguan",
-    pricingStarterSub: "3 wilayah · Angka tepat · Dukungan email",
-    pricingProSub: "Peringatan real-time · PDF · CSV · Semua wilayah",
+    pricingProSub: "Semua wilayah · Peringatan · PDF · CSV · Slack",
+    pricingEnterpriseSub: "API · On-premise · SLA 99,9%",
     pricingCta: "Lihat semua paket →",
     newsletterTitle: "Tetap terinformasi — gratis",
     newsletterSub: "Ringkasan mingguan wabah aktif, difilter berdasarkan wilayah, langsung ke kotak masuk Anda.",
@@ -582,8 +582,8 @@ export default async function LandingPage({ locale }: { locale: string }) {
         <div className="grid md:grid-cols-3 gap-4 max-w-3xl mx-auto">
           {[
             { name: c.pricingFree, price: "", sub: c.pricingFreeSub, icon: CheckCircle, color: "text-green-400", border: "border-gray-800" },
-            { name: "Starter", price: c.pricingStarter, sub: c.pricingStarterSub, icon: Zap, color: "text-blue-400", border: "border-gray-800" },
             { name: "Pro", price: c.pricingPro, sub: c.pricingProSub, icon: Shield, color: "text-red-400", border: "border-2 border-red-500" },
+            { name: "Enterprise", price: c.pricingEnterprise, sub: c.pricingEnterpriseSub, icon: Zap, color: "text-purple-400", border: "border-gray-800" },
           ].map(({ name, price, sub, icon: Icon, color, border }) => (
             <div key={name} className={`bg-gray-900 ${border} rounded-xl p-5 space-y-3`}>
               <div className="flex items-center gap-2">

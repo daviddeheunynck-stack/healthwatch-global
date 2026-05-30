@@ -202,8 +202,10 @@ export function buildTrialEndingEmail(
   trialEndsAt: string
 ): { subject: string; html: string } {
   const safeLocale = COPY[locale] ? locale : "en";
-  const c     = COPY[safeLocale][plan];
-  const ps    = PLAN_STYLE[plan];
+  // "starter" no longer exists — redirect to pro template
+  const effectivePlan = plan === "starter" ? "pro" : plan;
+  const c     = COPY[safeLocale][effectivePlan];
+  const ps    = PLAN_STYLE[effectivePlan];
   const isRtl = safeLocale === "ar";
   const ctaUrl = `${APP_URL}/${safeLocale}/account`;
   const dateStr = formatTrialEnd(trialEndsAt, safeLocale);

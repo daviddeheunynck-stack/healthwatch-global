@@ -301,10 +301,12 @@ export function buildUpgradeEmail(
   plan: "starter" | "pro" | "enterprise",
   locale: string
 ): { subject: string; html: string } {
-  const planCopy  = COPY[plan] ?? COPY.starter;
+  // "starter" no longer exists as a user-facing plan — redirect to pro template
+  const effectivePlan = plan === "starter" ? "pro" : plan;
+  const planCopy  = COPY[effectivePlan] ?? COPY.pro;
   const c         = planCopy[locale] ?? planCopy.en;
-  const colors    = PLAN_COLORS[plan] ?? PLAN_COLORS.starter;
-  const planLabel = plan.charAt(0).toUpperCase() + plan.slice(1);
+  const colors    = PLAN_COLORS[effectivePlan] ?? PLAN_COLORS.pro;
+  const planLabel = effectivePlan.charAt(0).toUpperCase() + effectivePlan.slice(1);
   const isRtl     = locale === "ar";
 
   const featureRows = c.features

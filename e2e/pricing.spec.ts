@@ -1,10 +1,9 @@
 import { test, expect } from "@playwright/test";
 
 test.describe("Page Tarifs", () => {
-  test("s'affiche avec les 4 plans", async ({ page }) => {
+  test("s'affiche avec les 3 plans Free/Pro/Enterprise", async ({ page }) => {
     await page.goto("/fr/pricing");
-    await expect(page.getByText("Gratuit", { exact: true })).toBeVisible();
-    await expect(page.getByText("Starter", { exact: true }).first()).toBeVisible();
+    await expect(page.getByText("Free", { exact: true }).first()).toBeVisible();
     await expect(page.getByText("Pro", { exact: true }).first()).toBeVisible();
     await expect(page.getByText("Enterprise", { exact: true }).first()).toBeVisible();
   });

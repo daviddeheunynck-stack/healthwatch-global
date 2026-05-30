@@ -312,7 +312,8 @@ export function buildChurnEmail(
   plan: "starter" | "pro" | "enterprise",
   locale: string
 ): { subject: string; html: string } {
-  const planCopy = COPY[plan] ?? COPY.starter;
+  const effectivePlan = plan === "starter" ? "pro" : plan;
+  const planCopy = COPY[effectivePlan] ?? COPY.pro;
   const c        = planCopy[locale] ?? planCopy.en;
   const isRtl    = locale === "ar";
 
