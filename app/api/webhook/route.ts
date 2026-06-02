@@ -194,22 +194,18 @@ export async function POST(req: NextRequest) {
         }
 
         // Auto-subscribe to weekly digest + send upgrade welcome email
-        const email = session.customer_details?.email;
+        const userProfile = userId ? await getUserProfile(userId) : null;
+        const email       = userProfile?.email ?? session.customer_details?.email ?? null;
+        const locale      = userProfile?.locale ?? "fr";
+
         if (email) {
+          // Upsert digest subscription using the profile's actual locale
           await supabase
             .from("subscriptions")
             .upsert(
-              { email, region: "allRegions", locale: "en", active: true },
+              { email, region: "allRegions", locale, active: true },
               { onConflict: "email" }
             );
-
-          // Fetch user locale for personalized upgrade email
-          const { data: subRow } = await supabase
-            .from("subscriptions")
-            .select("locale")
-            .eq("email", email)
-            .maybeSingle();
-          const locale = (subRow as any)?.locale ?? "en";
 
           if (["starter", "pro", "enterprise"].includes(plan)) {
             await sendUpgradeEmail(email, plan as "starter" | "pro" | "enterprise", locale);
@@ -282,12 +278,8 @@ export async function POST(req: NextRequest) {
 
           // Send churn email (fire-and-forget)
           if (userEmail && ["starter", "pro", "enterprise"].includes(cancelledPlan)) {
-            const { data: subRow } = await supabase
-              .from("subscriptions")
-              .select("locale")
-              .eq("email", userEmail)
-              .maybeSingle();
-            const locale = (subRow as any)?.locale ?? "en";
+            const churnProfile = await getUserProfile(userId);
+            const locale = churnProfile?.locale ?? "fr";
             sendChurnEmail(userEmail, cancelledPlan, locale).catch((e) =>
               console.error("[webhook] churn email:", e)
             );
@@ -305,25 +297,9 @@ export async function POST(req: NextRequest) {
 
         console.warn(`[webhook] Payment failed for customer ${customerId} (user ${userId})`);
 
-        // Fetch user email from profiles
-        const { data: profile } = await supabase
-          .from("profiles")
-          .select("email")
-          .eq("id", userId)
-          .single();
-
-        const userEmail = (profile as any)?.email as string | null;
-
-        if (userEmail) {
-          // Fetch locale from subscriptions table
-          const { data: subRow } = await supabase
-            .from("subscriptions")
-            .select("locale")
-            .eq("email", userEmail)
-            .maybeSingle();
-          const locale = (subRow as any)?.locale ?? "en";
-
-          sendPaymentFailedEmail(userEmail, locale).catch((e) =>
+        const failedProfile = await getUserProfile(userId);
+        if (failedProfile) {
+          sendPaymentFailedEmail(failedProfile.email, failedProfile.locale).catch((e) =>
             console.error("[webhook] payment_failed email:", e)
           );
         }
@@ -371,27 +347,14 @@ export async function POST(req: NextRequest) {
           : null;
         if (!trialEnd) break;
 
-        const { data: profile } = await supabase
-          .from("profiles")
-          .select("email")
-          .eq("id", userId)
-          .single();
+        const trialProfile = await getUserProfile(userId);
+        if (!trialProfile) break;
 
-        const userEmail = (profile as any)?.email as string | null;
-        if (!userEmail) break;
-
-        const { data: subRow } = await supabase
-          .from("subscriptions")
-          .select("locale")
-          .eq("email", userEmail)
-          .maybeSingle();
-        const locale = (subRow as any)?.locale ?? "en";
-
-        sendTrialEndingEmail(userEmail, plan, locale, trialEnd).catch((e) =>
+        sendTrialEndingEmail(trialProfile.email, plan, trialProfile.locale, trialEnd).catch((e) =>
           console.error("[webhook] trial_ending email:", e)
         );
 
-        console.log(`[webhook] trial_will_end → email sent to ${userEmail} (plan ${plan}, ends ${trialEnd})`);
+        console.log(`[webhook] trial_will_end → email sent to ${trialProfile.email} (plan ${plan}, ends ${trialEnd})`);
         break;
       }
 
