@@ -68,14 +68,14 @@ export default async function TermsPage() {
             <li className="flex items-start gap-2"><span className="text-red-400 shrink-0 mt-0.5">•</span>You must provide a valid email address to create an account.</li>
             <li className="flex items-start gap-2"><span className="text-red-400 shrink-0 mt-0.5">•</span>You are responsible for maintaining the confidentiality of your credentials.</li>
             <li className="flex items-start gap-2"><span className="text-red-400 shrink-0 mt-0.5">•</span>You must be at least 18 years old, or the legal age of majority in your jurisdiction.</li>
-            <li className="flex items-start gap-2"><span className="text-red-400 shrink-0 mt-0.5">•</span>One account per person or organization. Sharing credentials with multiple users is not permitted on Starter; contact us for multi-user Enterprise pricing.</li>
+            <li className="flex items-start gap-2"><span className="text-red-400 shrink-0 mt-0.5">•</span>One account per person or organization. Contact us for multi-user Enterprise pricing.</li>
           </ul>
         </section>
 
         <section className="space-y-3">
           <h2 className="text-lg font-semibold text-white">4. Subscriptions and Billing</h2>
           <ul className="space-y-2 text-gray-400 text-sm">
-            <li className="flex items-start gap-2"><span className="text-red-400 shrink-0 mt-0.5">•</span>Paid plans (Starter, Pro) are billed monthly via Stripe. Prices are displayed in USD and exclude applicable taxes.</li>
+            <li className="flex items-start gap-2"><span className="text-red-400 shrink-0 mt-0.5">•</span>The Pro plan (€49/month) is billed monthly or annually via Stripe. A 14-day free trial is available with no credit card required. Prices exclude applicable taxes.</li>
             <li className="flex items-start gap-2"><span className="text-red-400 shrink-0 mt-0.5">•</span>Subscriptions renew automatically until cancelled. You may cancel at any time; access continues until the end of the current billing period.</li>
             <li className="flex items-start gap-2"><span className="text-red-400 shrink-0 mt-0.5">•</span>We offer a 14-day money-back guarantee on your first payment — no questions asked. Beyond this period, refunds are not provided for partial months.</li>
             <li className="flex items-start gap-2"><span className="text-red-400 shrink-0 mt-0.5">•</span>We reserve the right to change pricing with 30 days notice to active subscribers.</li>

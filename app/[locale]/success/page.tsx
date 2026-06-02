@@ -12,8 +12,10 @@ export const metadata: Metadata = {
 };
 
 const PLAN_META: Record<string, { label: string; icon: React.ReactNode; color: string }> = {
-  starter: { label: "Starter", icon: <Zap className="w-5 h-5" />, color: "text-blue-400 bg-blue-500/10 border-blue-500/30" },
+  // "starter" kept for backward compat (legacy subscriptions)
+  starter: { label: "Pro",     icon: <Shield className="w-5 h-5" />, color: "text-red-400 bg-red-500/10 border-red-500/30" },
   pro:     { label: "Pro",     icon: <Shield className="w-5 h-5" />, color: "text-red-400 bg-red-500/10 border-red-500/30" },
+  enterprise: { label: "Enterprise", icon: <Zap className="w-5 h-5" />, color: "text-purple-400 bg-purple-500/10 border-purple-500/30" },
 };
 
 const LABELS: Record<string, {
@@ -80,7 +82,7 @@ export default async function SuccessPage({
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 
-  let plan = "starter"; // default optimistic assumption post-checkout
+  let plan = "pro"; // default optimistic assumption post-checkout (only Pro exists now)
   if (user) {
     const { data: profile } = await supabase
       .from("profiles")
@@ -92,7 +94,7 @@ export default async function SuccessPage({
     }
   }
 
-  const meta = PLAN_META[plan] ?? PLAN_META.starter;
+  const meta = PLAN_META[plan] ?? PLAN_META.pro;
   const isRtl = locale === "ar";
 
   return (

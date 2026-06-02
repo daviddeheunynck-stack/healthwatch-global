@@ -46,7 +46,7 @@ export async function GET(req: NextRequest) {
   // DATE(created_at AT TIME ZONE 'UTC') = CURRENT_DATE - 3
   const { data: j3Users, error: j3Err } = await supabase
     .from("profiles")
-    .select("id, email, plan")
+    .select("id, email, plan, locale")
     .eq("plan", "free")
     .filter("created_at", "gte", new Date(Date.now() - 3.5 * 86400_000).toISOString())
     .filter("created_at", "lt",  new Date(Date.now() - 2.5 * 86400_000).toISOString());
@@ -59,7 +59,7 @@ export async function GET(req: NextRequest) {
   // ── Find free users whose account is exactly 12 days old today ───────────
   const { data: j12Users, error: j12Err } = await supabase
     .from("profiles")
-    .select("id, email, plan")
+    .select("id, email, plan, locale")
     .eq("plan", "free")
     .filter("created_at", "gte", new Date(Date.now() - 12.5 * 86400_000).toISOString())
     .filter("created_at", "lt",  new Date(Date.now() - 11.5 * 86400_000).toISOString());
@@ -76,13 +76,8 @@ export async function GET(req: NextRequest) {
   for (const user of j3Users ?? []) {
     if (!user.email) continue;
     try {
-      // Best-effort locale from subscriptions table; fall back to "en"
-      const { data: sub } = await supabase
-        .from("subscriptions")
-        .select("locale")
-        .eq("email", user.email)
-        .maybeSingle();
-      const locale = sub?.locale || "en";
+      // Use profiles.locale (set at signup) — more reliable than subscriptions
+      const locale = (user as any).locale || "fr";
       const { subject, html } = buildJ3Email(locale);
       await sendEmail(user.email, subject, html);
       j3Sent++;
@@ -97,12 +92,7 @@ export async function GET(req: NextRequest) {
   for (const user of j12Users ?? []) {
     if (!user.email) continue;
     try {
-      const { data: sub } = await supabase
-        .from("subscriptions")
-        .select("locale")
-        .eq("email", user.email)
-        .maybeSingle();
-      const locale = sub?.locale || "en";
+      const locale = (user as any).locale || "fr";
       const { subject, html } = buildJ12Email(locale);
       await sendEmail(user.email, subject, html);
       j12Sent++;

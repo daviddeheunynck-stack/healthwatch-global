@@ -50,7 +50,7 @@ export async function GET(req: NextRequest) {
 
   const { data: profiles, error } = await supabase
     .from("profiles")
-    .select("id, email, plan, trial_ends_at")
+    .select("id, email, plan, trial_ends_at, locale")
     .in("plan", ["starter", "pro"])
     .not("trial_ends_at", "is", null)
     .gte("trial_ends_at", windowStart)
@@ -75,13 +75,7 @@ export async function GET(req: NextRequest) {
     if (!profile.email) continue;
 
     try {
-      // Fetch locale from subscriptions table; fall back to "en"
-      const { data: sub } = await supabase
-        .from("subscriptions")
-        .select("locale")
-        .eq("email", profile.email)
-        .maybeSingle();
-      const locale = (sub as any)?.locale ?? "en";
+      const locale = profile.locale ?? "fr";
 
       const plan = profile.plan as "starter" | "pro";
       const { subject, html } = buildTrialEndingEmail(plan, locale, profile.trial_ends_at);
