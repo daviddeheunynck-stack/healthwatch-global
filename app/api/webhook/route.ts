@@ -94,6 +94,18 @@ async function getUserIdFromCustomer(customerId: string): Promise<string | null>
   return data?.id ?? null;
 }
 
+/** Get user email + locale from profiles (locale preferred over subscriptions fallback) */
+async function getUserProfile(userId: string): Promise<{ email: string; locale: string } | null> {
+  const supabase = getSupabase();
+  const { data } = await supabase
+    .from("profiles")
+    .select("email, locale")
+    .eq("id", userId)
+    .single();
+  if (!data?.email) return null;
+  return { email: data.email, locale: data.locale ?? "fr" };
+}
+
 /** Map Stripe price id → plan name */
 function planFromPriceId(priceId: string | null | undefined): string {
   const BOM2 = String.fromCharCode(65279);

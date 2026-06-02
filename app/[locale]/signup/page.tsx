@@ -75,7 +75,7 @@ export default function SignupPage() {
     setError("");
 
     const supabase = createClient();
-    const { error } = await supabase.auth.signUp({
+    const { data: signUpData, error } = await supabase.auth.signUp({
       email,
       password,
       options: { emailRedirectTo: `${window.location.origin}/${locale}` },
@@ -85,6 +85,15 @@ export default function SignupPage() {
       setError(error.message);
       setLoading(false);
       return;
+    }
+
+    // Save locale to profile so all transactional emails use the right language
+    if (signUpData.user?.id) {
+      supabase
+        .from("profiles")
+        .update({ locale })
+        .eq("id", signUpData.user.id)
+        .then(() => {});
     }
 
     // Fire welcome email — non-blocking
