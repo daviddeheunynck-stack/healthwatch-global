@@ -53,7 +53,7 @@ export default async function LegalPage() {
           <div className="bg-gray-900 border border-gray-800 rounded-xl p-5 space-y-2">
             <p><span className="text-gray-300 font-medium">Nom :</span> David Deheunynck</p>
             <p><span className="text-gray-300 font-medium">Statut :</span> Micro-entrepreneur</p>
-            <p><span className="text-gray-300 font-medium">Adresse :</span> 6 rue de la lainière, 59100 Roubaix, France</p>
+            <p><span className="text-gray-300 font-medium">Adresse :</span> 90b avenue Becquart, 59130 Lambersart, France</p>
             <p>
               <span className="text-gray-300 font-medium">SIRET :</span>{" "}
               <span className={SIRET.startsWith("À") ? "text-amber-400 italic" : ""}>{SIRET}</span>
