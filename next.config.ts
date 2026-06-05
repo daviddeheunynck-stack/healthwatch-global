@@ -102,5 +102,8 @@ export default sentryConfigured
       // EU region — driven by SENTRY_URL env var (https://de.sentry.io/)
       silent:        true,
       disableLogger: true,
+      // Disable source map upload on build failure to unblock CI
+      sourcemaps:    { disable: false },
+      telemetry:     false,
     })
   : withNextIntl(nextConfig);
