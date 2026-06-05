@@ -42,6 +42,11 @@ export default function CheckoutButton({ plan, locale, label, className, billing
         return;
       }
 
+      // Pick up coupon from URL if present (e.g., /pricing?coupon=FOUNDER29)
+      const urlCoupon = typeof window !== "undefined"
+        ? new URLSearchParams(window.location.search).get("coupon")
+        : null;
+
       const res = await fetch("/api/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -51,6 +56,7 @@ export default function CheckoutButton({ plan, locale, label, className, billing
           billing,
           userId: user.id,
           userEmail: user.email,
+          coupon: urlCoupon ?? undefined,
         }),
       });
 

@@ -51,7 +51,7 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const { plan, locale, userId, userEmail, billing } = await req.json();
+    const { plan, locale, userId, userEmail, billing, coupon } = await req.json();
     const currency = getCurrency(locale);
     const billingPeriod = billing === "annual" ? "annual" : "monthly";
     const priceId = PRICES[plan]?.[billingPeriod]?.[currency];
@@ -80,6 +80,12 @@ export async function POST(req: NextRequest) {
       "metadata[user_id]": userId || "",
       "metadata[billing]": billingPeriod,
     });
+
+    // Pre-apply coupon if provided (e.g., FOUNDER29)
+    const ALLOWED_COUPONS = new Set(["FOUNDER29"]);
+    if (coupon && ALLOWED_COUPONS.has(String(coupon).toUpperCase())) {
+      params.set("discounts[0][coupon]", String(coupon).toUpperCase());
+    }
 
     // 14-day free trial — no credit card required
     params.set("subscription_data[trial_period_days]", "14");
