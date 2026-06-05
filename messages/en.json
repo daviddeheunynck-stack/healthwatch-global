@@ -121,8 +121,8 @@
     "faq_title": "Frequently asked questions",
     "faq1_q": "Can I cancel at any time?",
     "faq1_a": "Yes, no commitment. You can cancel your subscription at any time from your account.",
-    "faq2_q": "Is data updated in real time?",
-    "faq2_a": "Yes. We continuously aggregate feeds from WHO, CDC, ECDC and ProMED, 24/7.",
+    "faq2_q": "How often is data updated?",
+    "faq2_a": "WHO data syncs every morning at 6h UTC. ProMED runs in parallel for corroboration. Disease-specific alerts fire within 24h of a new detection.",
     "faq3_q": "Is there a free plan?",
     "faq3_a": "Yes. The Free plan gives you access to the public dashboard, one monitored region and the weekly digest — no credit card required, no time limit."
   },

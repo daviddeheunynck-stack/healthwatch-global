@@ -56,11 +56,29 @@ export default function ComparePage() {
 
   useEffect(() => {
     const sp = new URLSearchParams(window.location.search);
-    if (sp.get("a")) setIdA(sp.get("a")!);
-    if (sp.get("b")) setIdB(sp.get("b")!);
     setReady(true);
     createClient().from("outbreaks").select("*").eq("active", true).order("risk_level").limit(100)
-      .then(({ data }) => setOutbreaks((data as unknown as Outbreak[]) ?? []));
+      .then(({ data }) => {
+        const list = (data as unknown as Outbreak[]) ?? [];
+        setOutbreaks(list);
+        // Pre-select from URL or default to top 2 PHEIC/high-risk outbreaks
+        const urlA = sp.get("a");
+        const urlB = sp.get("b");
+        if (urlA) { setIdA(urlA); }
+        else if (list.length > 0) {
+          const pheic = list.filter(o => o.is_pheic);
+          const high  = list.filter(o => o.risk_level === "high");
+          const pool  = pheic.length >= 2 ? pheic : [...pheic, ...high.filter(o => !pheic.includes(o))];
+          if (pool[0]) setIdA(pool[0].id);
+        }
+        if (urlB) { setIdB(urlB); }
+        else if (list.length > 1) {
+          const pheic = list.filter(o => o.is_pheic);
+          const high  = list.filter(o => o.risk_level === "high");
+          const pool  = pheic.length >= 2 ? pheic : [...pheic, ...high.filter(o => !pheic.includes(o))];
+          if (pool[1]) setIdB(pool[1].id);
+        }
+      });
   }, []);
 
   useEffect(() => {

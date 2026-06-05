@@ -54,7 +54,7 @@ const LABELS: Record<string, {
       { title: "Collecte", text: "Notre pipeline interroge l'API OData de l'OMS et extrait les informations clés : maladie, pays, cas confirmés, décès." },
       { title: "Géolocalisation", text: "Chaque alerte est associée à un pays et positionnée sur une carte interactive mondiale." },
       { title: "Analyse du risque", text: "Un score de risque (faible / modéré / élevé / critique) est calculé automatiquement selon la létalité et la contagiosité connues de chaque pathogène." },
-      { title: "Diffusion", text: "Digest hebdomadaire, alertes email régionales dès détection d'un foyer, intégration Slack / Teams pour vos équipes, et API REST pour les organisations Enterprise." },
+      { title: "Diffusion", text: "Alertes email par maladie (H5N1, Ebola…) ou par région, intégration Slack / Teams, watchlist de foyers suivis avec notifications de changement, widget embarquable, rapports PDF par foyer, outil de comparaison, et API REST Enterprise." },
     ],
     usersTitle: "Pour qui ?",
     users: [
@@ -87,7 +87,7 @@ const LABELS: Record<string, {
       { title: "Collection", text: "Our pipeline queries the WHO OData API and extracts key information: disease, country, confirmed cases, deaths." },
       { title: "Geolocation", text: "Each alert is linked to a country and placed on an interactive world map." },
       { title: "Risk analysis", text: "A risk score (low / moderate / high / critical) is automatically calculated based on the known lethality and contagiousness of each pathogen." },
-      { title: "Distribution", text: "Weekly digest, real-time regional email alerts, Slack / Teams integration for your teams, and a REST API for Enterprise organisations." },
+      { title: "Distribution", text: "Disease-specific alerts (H5N1, Ebola…) or regional, Slack / Teams integration, watchlist with change notifications, embeddable widget, per-outbreak PDF reports, comparison tool, and Enterprise REST API." },
     ],
     usersTitle: "Who is it for?",
     users: [
