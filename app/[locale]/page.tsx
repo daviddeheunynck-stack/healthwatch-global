@@ -30,15 +30,17 @@ const FILTER_COPY: Record<string, {
   allRegions: string;
   allCountries: string;
   allRisks: string;
+  dateFrom: string;
+  dateTo: string;
   noResults: string;
   noData: string;
   cfr: string;
 }> = {
-  en: { searchPlaceholder: "Search disease or country…", allRegions: "All regions", allCountries: "All countries", allRisks: "All risks",       noResults: "No outbreaks match your filters.",              noData: "N/A", cfr: "CFR" },
-  fr: { searchPlaceholder: "Rechercher maladie ou pays…", allRegions: "Toutes régions", allCountries: "Tous pays",   allRisks: "Tous niveaux", noResults: "Aucun foyer ne correspond aux filtres.",        noData: "N/D", cfr: "Létalité" },
-  es: { searchPlaceholder: "Buscar enfermedad o país…",   allRegions: "Todas las regiones", allCountries: "Todos los países", allRisks: "Todos los niveles", noResults: "Ningún brote coincide con los filtros.", noData: "N/D", cfr: "Letalidad" },
-  ar: { searchPlaceholder: "ابحث عن مرض أو دولة…",      allRegions: "كل المناطق",    allCountries: "كل الدول",   allRisks: "كل المستويات", noResults: "لا توجد تفشيات تطابق المرشحات.",              noData: "غ/م",  cfr: "معدل الوفيات" },
-  id: { searchPlaceholder: "Cari penyakit atau negara…",  allRegions: "Semua wilayah", allCountries: "Semua negara", allRisks: "Semua tingkat", noResults: "Tidak ada wabah yang cocok dengan filter.",    noData: "T/S", cfr: "CFR" },
+  en: { searchPlaceholder: "Search disease or country…", allRegions: "All regions", allCountries: "All countries", allRisks: "All risks",       dateFrom: "From", dateTo: "To", noResults: "No outbreaks match your filters.",              noData: "N/A", cfr: "CFR" },
+  fr: { searchPlaceholder: "Rechercher maladie ou pays…", allRegions: "Toutes régions", allCountries: "Tous pays",   allRisks: "Tous niveaux", dateFrom: "Du",   dateTo: "Au", noResults: "Aucun foyer ne correspond aux filtres.",        noData: "N/D", cfr: "Létalité" },
+  es: { searchPlaceholder: "Buscar enfermedad o país…",   allRegions: "Todas las regiones", allCountries: "Todos los países", allRisks: "Todos los niveles", dateFrom: "Desde", dateTo: "Hasta", noResults: "Ningún brote coincide con los filtros.", noData: "N/D", cfr: "Letalidad" },
+  ar: { searchPlaceholder: "ابحث عن مرض أو دولة…",      allRegions: "كل المناطق",    allCountries: "كل الدول",   allRisks: "كل المستويات", dateFrom: "من",   dateTo: "إلى", noResults: "لا توجد تفشيات تطابق المرشحات.",              noData: "غ/م",  cfr: "معدل الوفيات" },
+  id: { searchPlaceholder: "Cari penyakit atau negara…",  allRegions: "Semua wilayah", allCountries: "Semua negara", allRisks: "Semua tingkat", dateFrom: "Dari", dateTo: "Hingga", noResults: "Tidak ada wabah yang cocok dengan filter.",    noData: "T/S", cfr: "CFR" },
 };
 
 const LANDING_META: Record<string, { title: string; description: string }> = {
@@ -115,6 +117,8 @@ async function DashboardContent() {
     allRegions:        fc.allRegions,
     allCountries:      fc.allCountries,
     allRisks:          fc.allRisks,
+    dateFrom:          fc.dateFrom,
+    dateTo:            fc.dateTo,
     noResults:         fc.noResults,
     noData:            fc.noData,
     cfr:               fc.cfr,

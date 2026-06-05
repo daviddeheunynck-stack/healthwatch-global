@@ -28,6 +28,8 @@ export interface OutbreakTableLabels {
   allRegions: string;
   allCountries: string;  // country filter
   allRisks: string;
+  dateFrom: string;      // date range "from"
+  dateTo: string;        // date range "to"
   noResults: string;
   noData: string;        // "N/D" when data unavailable
   // Region names
@@ -66,8 +68,10 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l }: 
   const [search,   setSearch]    = useState("");
   const [region,   setRegion]    = useState<Region>("all");
   const [country,  setCountry]   = useState<string>("all");
+  const [dateFrom, setDateFrom]  = useState<string>("");
+  const [dateTo,   setDateTo]    = useState<string>("");
   const [selected, setSelected]  = useState<Outbreak | null>(null);
-  const [risk,     setRisk]    = useState<Risk>("all");
+  const [risk,     setRisk]      = useState<Risk>("all");
   const [sortKey,  setSortKey] = useState<SortKey>("risk");
   const [sortDir,  setSortDir] = useState<SortDir>("asc");
 
@@ -105,14 +109,16 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l }: 
   const filtered = useMemo(() => {
     const q = search.trim().toLowerCase();
     return outbreaks.filter((o) => {
-      if (region  !== "all" && o.region    !== region)  return false;
+      if (region  !== "all" && o.region     !== region)  return false;
       if (country !== "all" && o.country_en !== country) return false;
       if (risk    !== "all" && o.risk_level !== risk)    return false;
+      if (dateFrom && o.date < dateFrom)                 return false;
+      if (dateTo   && o.date > dateTo)                   return false;
       if (q && !getLocalizedDisease(o, locale).toLowerCase().includes(q) &&
                !getLocalizedCountry(o, locale).toLowerCase().includes(q)) return false;
       return true;
     });
-  }, [outbreaks, region, country, risk, search, locale]);
+  }, [outbreaks, region, country, risk, dateFrom, dateTo, search, locale]);
 
   const sorted = useMemo(() => {
     const RISK_ORDER: Record<string, number> = { high: 0, medium: 1, low: 2 };
@@ -126,13 +132,15 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l }: 
     });
   }, [filtered, sortKey, sortDir]);
 
-  const hasFilters = search !== "" || region !== "all" || country !== "all" || risk !== "all";
+  const hasFilters = search !== "" || region !== "all" || country !== "all" || risk !== "all" || dateFrom !== "" || dateTo !== "";
 
   const clearFilters = () => {
     setSearch("");
     setRegion("all");
     setCountry("all");
     setRisk("all");
+    setDateFrom("");
+    setDateTo("");
   };
 
   // ── Region pills ──────────────────────────────────────────────────────────
@@ -222,6 +230,24 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l }: 
               <option key={key} value={key}>{label}</option>
             ))}
           </select>
+
+          {/* Date range */}
+          <div className="flex items-center gap-1.5 text-xs text-gray-500">
+            <span className="hidden sm:inline">{l.dateFrom}</span>
+            <input
+              type="date"
+              value={dateFrom}
+              onChange={(e) => setDateFrom(e.target.value)}
+              className="text-xs px-2 py-1 rounded-lg border border-gray-800 bg-gray-900 text-gray-400 focus:outline-none focus:border-gray-600 transition-colors cursor-pointer w-32"
+            />
+            <span>–</span>
+            <input
+              type="date"
+              value={dateTo}
+              onChange={(e) => setDateTo(e.target.value)}
+              className="text-xs px-2 py-1 rounded-lg border border-gray-800 bg-gray-900 text-gray-400 focus:outline-none focus:border-gray-600 transition-colors cursor-pointer w-32"
+            />
+          </div>
 
           {hasFilters && (
             <button
