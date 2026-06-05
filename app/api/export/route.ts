@@ -56,6 +56,7 @@ export async function GET(request: NextRequest) {
     "lat", "lng", "cases", "deaths",
     "cfr_%", "incidence_per_100k",
     "risk_level", "date", "source",
+    "description",
     "pheic", "corroborated", "promed_source",
   ];
 
@@ -76,6 +77,7 @@ export async function GET(request: NextRequest) {
       escape(o.risk_level),
       escape(o.date),
       escape(o.source),
+      escape(o.description ?? ""),
       o.is_pheic ? "YES" : "NO",
       o.corroborated ? "YES" : "NO",
       escape(o.promed_source ?? ""),

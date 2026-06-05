@@ -76,8 +76,15 @@ export async function GET(req: NextRequest) {
       const whoItems = await fetchWHODONList(40);
       const parsed: ParsedOutbreak[] = [];
       for (const item of whoItems) {
-        const p = await parseWHODONItem(item, false);
-        if (debug) debugLog.push(p ? `✓ "${item.Title}" → ${p.disease_en} / ${p.country_en}` : `✗ "${item.Title}" → skipped`);
+        // First pass: fast (no body fetch)
+        let p = await parseWHODONItem(item, false);
+        // Second pass: fetch full article for items with 0 cases (N/D fix)
+        if (p && p.cases === 0 && item.ItemDefaultUrl) {
+          const full = await parseWHODONItem(item, true);
+          if (full && full.cases > 0) p = full;
+          await new Promise((r) => setTimeout(r, 200)); // polite delay
+        }
+        if (debug) debugLog.push(p ? `✓ "${item.Title}" → ${p.disease_en} / ${p.country_en} (${p.cases} cases)` : `✗ "${item.Title}" → skipped`);
         if (p) parsed.push(p);
       }
       return parsed;

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { X, ExternalLink, AlertTriangle, TrendingUp, Users, Skull, Calendar, Globe, Clock, Activity, ImageDown, FileText } from "lucide-react";
+import { X, ExternalLink, AlertTriangle, TrendingUp, Users, Skull, Calendar, Globe, Clock, Activity, ImageDown, FileText, Link as LinkIcon, Check, Copy } from "lucide-react";
 import WatchlistButton from "@/components/WatchlistButton";
 import { getIncidenceRate } from "@/lib/population-data";
 import type { Outbreak } from "@/lib/outbreaks";
@@ -291,6 +291,30 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlis
               ? `⚠️ CFR ${cfr}% — taux de létalité élevé. Surveillance renforcée recommandée.`
               : `CFR ${cfr}% — taux de létalité modéré.`
             }
+          </div>
+        )}
+
+        {/* Citation for reports */}
+        {isPaid && outbreak.source && (
+          <div className="mx-5 mb-3">
+            <button
+              onClick={async (e) => {
+                const donRef = outbreak.source?.match(/item\/([\w-]+)/)?.[1] ?? "";
+                const citation = `${disease} (${country}). WHO Disease Outbreak News${donRef ? ` — ${donRef}` : ""}, ${outbreak.date}. Via HealthWatch Global — https://healthwatch-global.com/${locale}`;
+                await navigator.clipboard.writeText(citation);
+                const btn = e.currentTarget;
+                btn.classList.add("text-green-400");
+                setTimeout(() => btn.classList.remove("text-green-400"), 2000);
+              }}
+              className="flex items-center gap-2 text-xs text-gray-500 hover:text-gray-300 transition-colors"
+            >
+              <Copy className="w-3 h-3" />
+              {locale === "fr" ? "Copier la citation" :
+               locale === "es" ? "Copiar cita" :
+               locale === "ar" ? "نسخ الاستشهاد" :
+               locale === "id" ? "Salin kutipan" :
+               "Copy citation"}
+            </button>
           </div>
         )}
 

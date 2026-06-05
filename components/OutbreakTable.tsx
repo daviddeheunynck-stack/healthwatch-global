@@ -155,7 +155,7 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l }: 
       return str.includes(",") || str.includes('"') || str.includes("\n")
         ? `"${str.replace(/"/g, '""')}"` : str;
     };
-    const headers = ["disease", "country", "region", "cases", "deaths", "cfr_%", "risk_level", "date", "source"];
+    const headers = ["disease", "country", "region", "cases", "deaths", "cfr_%", "risk_level", "date", "source", "description"];
     const rows = sorted.map((o) => [
       esc(o.disease_en || o.disease),
       esc(o.country_en || o.country),
@@ -166,6 +166,7 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l }: 
       esc(o.risk_level),
       esc(o.date),
       esc(o.source),
+      esc(o.description),
     ]);
     const csv  = [headers.join(","), ...rows.map((r) => r.join(","))].join("\n");
     const blob = new Blob(["﻿" + csv], { type: "text/csv;charset=utf-8;" }); // BOM for Excel
@@ -472,8 +473,16 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l }: 
                   <td className="px-4 py-3">
                     <RiskBadge level={outbreak.risk_level} />
                   </td>
-                  <td className="px-4 py-3 text-gray-400 hidden md:table-cell">
-                    {outbreak.date}
+                  <td className="px-4 py-3 hidden md:table-cell">
+                    <div className="text-gray-400 text-sm">{outbreak.date}</div>
+                    {outbreak.updated_at && (
+                      <div className="text-gray-600 text-xs mt-0.5">
+                        {(() => {
+                          const h = Math.floor((Date.now() - new Date(outbreak.updated_at!).getTime()) / 3600000);
+                          return h < 1 ? "< 1h" : h < 24 ? `${h}h` : `${Math.floor(h/24)}j`;
+                        })()}
+                      </div>
+                    )}
                   </td>
                   <td className="px-2 py-3">
                     <div className="flex items-center gap-0.5">
