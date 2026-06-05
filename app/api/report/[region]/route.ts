@@ -71,7 +71,7 @@ export async function GET(
 
   if (!isPaid) {
     return new NextResponse(
-      "Forbidden — upgrade to Starter or Pro to download reports",
+      "Forbidden — upgrade to Pro to download reports",
       { status: 403 }
     );
   }

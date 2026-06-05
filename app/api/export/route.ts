@@ -37,7 +37,7 @@ export async function GET(request: NextRequest) {
   const isPaid = plan === "starter" || plan === "pro" || plan === "enterprise";
 
   if (!isPaid) {
-    return new NextResponse("Upgrade to Starter or Pro to export data", { status: 403 });
+    return new NextResponse("Upgrade to Pro to export data", { status: 403 });
   }
 
   // ── Build CSV ────────────────────────────────────────────────────────────────
