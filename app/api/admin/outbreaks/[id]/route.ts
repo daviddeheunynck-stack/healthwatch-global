@@ -1,6 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase-server";
 import { isAdmin } from "@/lib/admin";
+import { rateLimit, getClientIp } from "@/lib/rate-limit";
+
+function adminRateLimit(req: NextRequest) {
+  const ip = getClientIp(req);
+  return rateLimit(`admin:${ip}`, { limit: 30, windowMs: 10 * 60 * 1000 });
+}
 
 export const dynamic = "force-dynamic";
 
@@ -40,6 +46,8 @@ export async function PATCH(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const rl = adminRateLimit(req);
+  if (!rl.allowed) return NextResponse.json({ error: "Too many requests" }, { status: 429 });
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!isAdmin(user?.email)) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
@@ -70,9 +78,11 @@ export async function PATCH(
 // prevents broken FK references in outbreak_alert_log.
 
 export async function DELETE(
-  _req: NextRequest,
+  req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const rl = adminRateLimit(req);
+  if (!rl.allowed) return NextResponse.json({ error: "Too many requests" }, { status: 429 });
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!isAdmin(user?.email)) return NextResponse.json({ error: "Forbidden" }, { status: 403 });

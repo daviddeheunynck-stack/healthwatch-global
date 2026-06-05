@@ -1,6 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase-server";
 import { isAdmin } from "@/lib/admin";
+import { rateLimit, getClientIp } from "@/lib/rate-limit";
+
+// Admin write operations: max 30 per IP per 10 minutes
+function adminRateLimit(req: NextRequest) {
+  const ip = getClientIp(req);
+  return rateLimit(`admin:${ip}`, { limit: 30, windowMs: 10 * 60 * 1000 });
+}
 
 export const dynamic = "force-dynamic";
 
@@ -87,6 +94,8 @@ export async function GET() {
 // ─── POST — create outbreak ────────────────────────────────────────────────────
 
 export async function POST(req: NextRequest) {
+  const rl = adminRateLimit(req);
+  if (!rl.allowed) return NextResponse.json({ error: "Too many requests" }, { status: 429 });
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!isAdmin(user?.email)) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
