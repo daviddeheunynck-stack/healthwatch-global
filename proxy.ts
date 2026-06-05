@@ -33,5 +33,6 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!api|_next|_vercel|.*\\..*).*)"],
+  // Exclude: api/*, _next/*, _vercel/*, auth/callback (OAuth), static files
+  matcher: ["/((?!api|_next|_vercel|auth|.*\\..*).*)"],
 };
