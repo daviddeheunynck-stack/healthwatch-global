@@ -22,7 +22,7 @@
     },
     {
       "path": "/api/cron/disease-alerts",
-      "schedule": "0 6,12,18 * * *"
+      "schedule": "0 8 * * *"
     },
     {
       "path": "/api/cron/watchlist-alerts",

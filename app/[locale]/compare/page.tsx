@@ -1,4 +1,192 @@
 "use client";
+
+import { useState, useEffect } from "react";
+import { useLocale } from "next-intl";
+import { createClient } from "@/lib/supabase-browser";
+import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
+import { getIncidenceRate } from "@/lib/population-data";
+import RiskBadge from "@/components/RiskBadge";
+import type { Outbreak } from "@/lib/outbreaks";
+import { ArrowLeftRight, TrendingUp, Users, Skull, Activity, Globe, Calendar, AlertTriangle, Link as LinkIcon, Check } from "lucide-react";
+
+const LABELS: Record<string, {
+  title: string; subtitle: string; selectA: string; selectB: string;
+  all: string; cases: string; deaths: string; cfr: string; incidence: string;
+  date: string; region: string; pheic: string; corroborated: string;
+  winner: string; lower: string; selectBoth: string; share: string; copied: string;
+}> = {
+  fr: { title: "Comparer des foyers", subtitle: "Analysez deux épidémies côte à côte", selectA: "Foyer A", selectB: "Foyer B", all: "Choisir un foyer…", cases: "Cas", deaths: "Décès", cfr: "Létalité", incidence: "Incidence / 100 000", date: "Date", region: "Région", pheic: "PHEIC", corroborated: "WHO + ProMED", winner: "↓ Moins", lower: "↑ Plus", selectBoth: "Sélectionnez deux foyers pour comparer.", share: "Partager", copied: "Copié !" },
+  en: { title: "Compare outbreaks", subtitle: "Analyse two epidemics side by side", selectA: "Outbreak A", selectB: "Outbreak B", all: "Choose an outbreak…", cases: "Cases", deaths: "Deaths", cfr: "CFR", incidence: "Incidence / 100,000", date: "Date", region: "Region", pheic: "PHEIC", corroborated: "WHO + ProMED", winner: "↓ Lower", lower: "↑ Higher", selectBoth: "Select two outbreaks to compare.", share: "Share", copied: "Copied!" },
+  es: { title: "Comparar brotes", subtitle: "Analice dos epidemias lado a lado", selectA: "Brote A", selectB: "Brote B", all: "Elige un brote…", cases: "Casos", deaths: "Muertes", cfr: "Letalidad", incidence: "Incidencia / 100.000", date: "Fecha", region: "Región", pheic: "PHEIC", corroborated: "WHO + ProMED", winner: "↓ Menor", lower: "↑ Mayor", selectBoth: "Seleccione dos brotes para comparar.", share: "Compartir", copied: "¡Copiado!" },
+  ar: { title: "مقارنة التفشيات", subtitle: "تحليل وباءين جنباً إلى جنب", selectA: "التفشي A", selectB: "التفشي B", all: "اختر تفشياً…", cases: "الحالات", deaths: "الوفيات", cfr: "معدل الوفيات", incidence: "الإصابة / 100,000", date: "التاريخ", region: "المنطقة", pheic: "PHEIC", corroborated: "WHO + ProMED", winner: "↓ أقل", lower: "↑ أكثر", selectBoth: "اختر تفشيين للمقارنة.", share: "مشاركة", copied: "تم النسخ!" },
+  id: { title: "Bandingkan Wabah", subtitle: "Analisis dua epidemi secara berdampingan", selectA: "Wabah A", selectB: "Wabah B", all: "Pilih wabah…", cases: "Kasus", deaths: "Kematian", cfr: "CFR", incidence: "Insidensi / 100.000", date: "Tanggal", region: "Wilayah", pheic: "PHEIC", corroborated: "WHO + ProMED", winner: "↓ Lebih rendah", lower: "↑ Lebih tinggi", selectBoth: "Pilih dua wabah untuk dibandingkan.", share: "Bagikan", copied: "Disalin!" },
+};
+
+function StatRow({ label, valA, valB, icon, fmt = (v: number) => v.toLocaleString(), higherIsBad = true }: {
+  label: string; valA: number | null; valB: number | null; icon: React.ReactNode;
+  fmt?: (v: number) => string; higherIsBad?: boolean;
+}) {
+  const both = valA !== null && valB !== null && valA > 0 && valB > 0;
+  const aWorse = both && (higherIsBad ? valA! > valB! : valA! < valB!);
+  const bWorse = both && (higherIsBad ? valB! > valA! : valB! < valA!);
+  return (
+    <tr className="border-b border-gray-800">
+      <td className="px-4 py-3 text-gray-500 text-sm"><div className="flex items-center gap-2">{icon}{label}</div></td>
+      <td className={`px-4 py-3 text-center font-bold text-lg ${aWorse ? "text-red-400" : bWorse ? "text-green-400" : "text-white"}`}>
+        {valA && valA > 0 ? fmt(valA) : "—"}
+      </td>
+      <td className="px-4 py-3 text-center text-gray-600 text-xs">vs</td>
+      <td className={`px-4 py-3 text-center font-bold text-lg ${bWorse ? "text-red-400" : aWorse ? "text-green-400" : "text-white"}`}>
+        {valB && valB > 0 ? fmt(valB) : "—"}
+      </td>
+    </tr>
+  );
+}
+
 export default function ComparePage() {
-  return <div style={{color:"white",padding:"40px",fontSize:"24px"}}>✅ Compare page works</div>;
+  const locale = useLocale();
+  const l = LABELS[locale] ?? LABELS.en;
+  const isRtl = locale === "ar";
+
+  const [outbreaks, setOutbreaks] = useState<Outbreak[]>([]);
+  const [idA, setIdA] = useState("");
+  const [idB, setIdB] = useState("");
+  const [copied, setCopied] = useState(false);
+  const [ready, setReady] = useState(false);
+
+  useEffect(() => {
+    const sp = new URLSearchParams(window.location.search);
+    if (sp.get("a")) setIdA(sp.get("a")!);
+    if (sp.get("b")) setIdB(sp.get("b")!);
+    setReady(true);
+    createClient().from("outbreaks").select("*").eq("active", true).order("risk_level").limit(100)
+      .then(({ data }) => setOutbreaks((data as unknown as Outbreak[]) ?? []));
+  }, []);
+
+  useEffect(() => {
+    if (!ready) return;
+    const p = new URLSearchParams();
+    if (idA) p.set("a", idA);
+    if (idB) p.set("b", idB);
+    window.history.replaceState(null, "", p.toString() ? `?${p}` : window.location.pathname);
+  }, [idA, idB, ready]);
+
+  const oA = outbreaks.find(o => o.id === idA) ?? null;
+  const oB = outbreaks.find(o => o.id === idB) ?? null;
+  const cfrA = oA && oA.cases > 0 ? oA.deaths / oA.cases * 100 : null;
+  const cfrB = oB && oB.cases > 0 ? oB.deaths / oB.cases * 100 : null;
+  const incA = oA ? getIncidenceRate(oA.cases, oA.country_en) : null;
+  const incB = oB ? getIncidenceRate(oB.cases, oB.country_en) : null;
+  const options = outbreaks.map(o => ({ id: o.id, label: `${getLocalizedDisease(o, locale)} — ${getLocalizedCountry(o, locale)}` }));
+
+  return (
+    <div className="space-y-6 max-w-4xl mx-auto" dir={isRtl ? "rtl" : undefined}>
+      <div className="flex items-start justify-between gap-4 flex-wrap">
+        <div>
+          <h1 className="text-2xl font-bold text-white flex items-center gap-3">
+            <ArrowLeftRight className="w-6 h-6 text-red-400" />{l.title}
+          </h1>
+          <p className="text-gray-400 text-sm mt-1">{l.subtitle}</p>
+        </div>
+        {oA && oB && (
+          <button onClick={async () => { await navigator.clipboard.writeText(window.location.href); setCopied(true); setTimeout(() => setCopied(false), 2000); }}
+            className="flex items-center gap-2 text-sm px-4 py-2 bg-gray-800 hover:bg-gray-700 border border-gray-700 text-gray-300 rounded-xl transition-colors">
+            {copied ? <Check className="w-4 h-4 text-green-400" /> : <LinkIcon className="w-4 h-4" />}
+            {copied ? l.copied : l.share}
+          </button>
+        )}
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        {[{ label: l.selectA, value: idA, set: setIdA, other: idB }, { label: l.selectB, value: idB, set: setIdB, other: idA }].map(({ label, value, set, other }) => (
+          <div key={label} className="space-y-1.5">
+            <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide">{label}</label>
+            <select value={value} onChange={e => set(e.target.value)}
+              className="w-full bg-gray-900 border border-gray-700 text-gray-200 text-sm rounded-xl px-4 py-3 focus:outline-none focus:border-red-500 transition-colors">
+              <option value="">{l.all}</option>
+              {options.filter(o => o.id !== other).map(o => <option key={o.id} value={o.id}>{o.label}</option>)}
+            </select>
+          </div>
+        ))}
+      </div>
+
+      {(!oA || !oB) && (
+        <div className="text-center py-16 text-gray-600 text-sm">
+          <ArrowLeftRight className="w-12 h-12 mx-auto mb-4 opacity-20" />{l.selectBoth}
+        </div>
+      )}
+
+      {oA && oB && (
+        <div className="space-y-4">
+          <div className="grid grid-cols-3 gap-4">
+            <div className="bg-blue-900/20 border border-blue-700/30 rounded-2xl p-4 space-y-2">
+              <RiskBadge level={oA.risk_level as any} />
+              <h3 className="text-white font-bold text-lg leading-tight">{getLocalizedDisease(oA, locale)}</h3>
+              <p className="text-gray-400 text-sm">📍 {getLocalizedCountry(oA, locale)}</p>
+              {oA.is_pheic && <span className="text-xs text-purple-400">🚨 {l.pheic}</span>}
+            </div>
+            <div className="flex items-center justify-center">
+              <div className="w-10 h-10 rounded-full bg-gray-800 border border-gray-700 flex items-center justify-center">
+                <ArrowLeftRight className="w-4 h-4 text-gray-500" />
+              </div>
+            </div>
+            <div className="bg-amber-900/20 border border-amber-700/30 rounded-2xl p-4 space-y-2">
+              <RiskBadge level={oB.risk_level as any} />
+              <h3 className="text-white font-bold text-lg leading-tight">{getLocalizedDisease(oB, locale)}</h3>
+              <p className="text-gray-400 text-sm">📍 {getLocalizedCountry(oB, locale)}</p>
+              {oB.is_pheic && <span className="text-xs text-purple-400">🚨 {l.pheic}</span>}
+            </div>
+          </div>
+
+          <div className="bg-gray-900 border border-gray-800 rounded-2xl overflow-hidden">
+            <table className="w-full">
+              <thead><tr className="border-b border-gray-800">
+                <th className="px-4 py-3 text-left w-1/3"></th>
+                <th className="px-4 py-3 text-center text-blue-400 font-bold text-sm">A</th>
+                <th className="px-4 py-3 text-center w-12"></th>
+                <th className="px-4 py-3 text-center text-amber-400 font-bold text-sm">B</th>
+              </tr></thead>
+              <tbody>
+                <StatRow label={l.cases} valA={oA.cases} valB={oB.cases} icon={<Users className="w-3.5 h-3.5" />} />
+                <StatRow label={l.deaths} valA={oA.deaths} valB={oB.deaths} icon={<Skull className="w-3.5 h-3.5" />} />
+                <StatRow label={l.cfr} valA={cfrA} valB={cfrB} icon={<TrendingUp className="w-3.5 h-3.5" />} fmt={v => v.toFixed(1) + "%"} />
+                <StatRow label={l.incidence} valA={incA} valB={incB} icon={<Activity className="w-3.5 h-3.5" />} fmt={v => v.toFixed(2)} />
+                <tr className="border-b border-gray-800">
+                  <td className="px-4 py-3 text-gray-500 text-sm"><div className="flex items-center gap-2"><Calendar className="w-3.5 h-3.5" />{l.date}</div></td>
+                  <td className="px-4 py-3 text-center text-white text-sm">{oA.date}</td>
+                  <td className="px-4 py-3 text-center text-gray-600 text-xs">vs</td>
+                  <td className="px-4 py-3 text-center text-white text-sm">{oB.date}</td>
+                </tr>
+                <tr className="border-b border-gray-800">
+                  <td className="px-4 py-3 text-gray-500 text-sm"><div className="flex items-center gap-2"><Globe className="w-3.5 h-3.5" />{l.region}</div></td>
+                  <td className="px-4 py-3 text-center text-gray-300 text-sm capitalize">{oA.region}</td>
+                  <td className="px-4 py-3 text-center text-gray-600 text-xs">vs</td>
+                  <td className="px-4 py-3 text-center text-gray-300 text-sm capitalize">{oB.region}</td>
+                </tr>
+                <tr>
+                  <td className="px-4 py-3 text-gray-500 text-sm"><div className="flex items-center gap-2"><AlertTriangle className="w-3.5 h-3.5" />Status</div></td>
+                  <td className="px-4 py-3 text-center">
+                    <div className="flex flex-col gap-1 items-center">
+                      {oA.is_pheic && <span className="text-xs text-purple-400">🚨 PHEIC</span>}
+                      {oA.corroborated && <span className="text-xs text-blue-400">🔁 {l.corroborated}</span>}
+                      {!oA.is_pheic && !oA.corroborated && <span className="text-gray-600 text-xs">—</span>}
+                    </div>
+                  </td>
+                  <td></td>
+                  <td className="px-4 py-3 text-center">
+                    <div className="flex flex-col gap-1 items-center">
+                      {oB.is_pheic && <span className="text-xs text-purple-400">🚨 PHEIC</span>}
+                      {oB.corroborated && <span className="text-xs text-blue-400">🔁 {l.corroborated}</span>}
+                      {!oB.is_pheic && !oB.corroborated && <span className="text-gray-600 text-xs">—</span>}
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p className="text-xs text-gray-600 text-center">🟢 = {l.winner} · 🔴 = {l.lower}</p>
+        </div>
+      )}
+    </div>
+  );
 }
