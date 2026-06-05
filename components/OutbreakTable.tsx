@@ -9,7 +9,7 @@ import { track } from "@vercel/analytics/react";
 
 type SortKey = "risk" | "cases" | "deaths" | "date";
 type SortDir = "asc" | "desc";
-import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
+import { getLocalizedDisease, getLocalizedCountry, isNewOutbreak } from "@/lib/outbreaks";
 import type { Outbreak } from "@/lib/outbreaks";
 import RiskBadge from "@/components/RiskBadge";
 import LockedUpgradeButton from "@/components/LockedUpgradeButton";
@@ -420,6 +420,11 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l }: 
                   <td className="px-4 py-3 font-medium text-white">
                     <div className="flex items-center gap-1.5 flex-wrap">
                       {getLocalizedDisease(outbreak, locale)}
+                      {isNewOutbreak(outbreak) && (
+                        <span className="inline-flex items-center text-[10px] font-bold px-1.5 py-0.5 rounded bg-green-900/50 border border-green-700/50 text-green-300 shrink-0 animate-pulse">
+                          NEW
+                        </span>
+                      )}
                       {outbreak.is_pheic && (
                         <span title="PHEIC — Public Health Emergency of International Concern" className="inline-flex items-center text-[10px] font-bold px-1.5 py-0.5 rounded bg-purple-900/50 border border-purple-700/50 text-purple-300 shrink-0 cursor-help">
                           🚨 PHEIC

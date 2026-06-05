@@ -152,8 +152,13 @@ async function DashboardContent() {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <StatsCard label={t("activeOutbreaks")} value={stats.activeOutbreaks} icon={<Activity className="w-5 h-5" />} color="red" />
         <StatsCard label={t("countriesAffected")} value={stats.countriesAffected} icon={<Globe className="w-5 h-5" />} color="blue" />
-        <StatsCard label={t("alertsToday")} value={stats.alertsToday} icon={<Bell className="w-5 h-5" />} color="orange" />
         <StatsCard label={t("highRisk")} value={stats.highRisk} icon={<AlertTriangle className="w-5 h-5" />} color="yellow" />
+        <StatsCard
+          label="PHEIC"
+          value={stats.pheicCount}
+          icon={<span className="text-lg">🚨</span>}
+          color={stats.pheicCount > 0 ? "red" : "gray" as any}
+        />
       </div>
 
       <WorldMap outbreaks={outbreaks} locale={locale} isPaid={isPaid} popupLabels={popupLabels} riskLabels={riskLabels} />

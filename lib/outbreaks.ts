@@ -21,6 +21,8 @@ export interface Outbreak {
   corroborated:  boolean;       // true when both WHO + ProMED report this outbreak
   promed_source: string | null; // ProMED article URL when corroborated
   is_pheic:      boolean;       // Public Health Emergency of International Concern
+  updated_at:    string | null; // last sync timestamp
+  created_at:    string | null; // first insertion timestamp
 }
 
 export async function getLastSync(): Promise<string | null> {
@@ -73,12 +75,20 @@ export function getLocalizedCountry(outbreak: Outbreak, locale: string): string 
 }
 
 export function getStats(outbreaks: Outbreak[]) {
-  const activeOutbreaks = outbreaks.length;
+  const activeOutbreaks   = outbreaks.length;
   const countriesAffected = new Set(outbreaks.map((o) => o.country)).size;
-  const highRisk = outbreaks.filter((o) => o.risk_level === "high").length;
-  const alertsToday = outbreaks.filter(
+  const highRisk          = outbreaks.filter((o) => o.risk_level === "high").length;
+  const alertsToday       = outbreaks.filter(
     (o) => new Date(o.date) >= new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)
   ).length;
+  const pheicCount        = outbreaks.filter((o) => o.is_pheic).length;
 
-  return { activeOutbreaks, countriesAffected, highRisk, alertsToday };
+  return { activeOutbreaks, countriesAffected, highRisk, alertsToday, pheicCount };
+}
+
+/** Returns true if the outbreak was updated or created within the last 24 hours */
+export function isNewOutbreak(outbreak: Outbreak): boolean {
+  const ref = outbreak.updated_at ?? outbreak.created_at;
+  if (!ref) return false;
+  return Date.now() - new Date(ref).getTime() < 24 * 60 * 60 * 1000;
 }
