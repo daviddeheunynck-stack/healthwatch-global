@@ -1,12 +1,14 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { Outbreak } from "@/lib/outbreaks";
 import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
+import OutbreakDetailModal from "@/components/OutbreakDetailModal";
 
 interface WorldMapProps {
   outbreaks: Outbreak[];
   locale: string;
+  isPaid: boolean;
   popupLabels: {
     cases: string;
     deaths: string;
@@ -26,9 +28,10 @@ const riskColors: Record<string, string> = {
   low: "#22c55e",
 };
 
-export default function WorldMap({ outbreaks, locale, popupLabels, riskLabels }: WorldMapProps) {
-  const mapRef = useRef<any>(null);
+export default function WorldMap({ outbreaks, locale, isPaid, popupLabels, riskLabels }: WorldMapProps) {
+  const mapRef      = useRef<any>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const [selected,  setSelected] = useState<Outbreak | null>(null);
 
   useEffect(() => {
     if (typeof window === "undefined" || !containerRef.current) return;
@@ -80,17 +83,14 @@ export default function WorldMap({ outbreaks, locale, popupLabels, riskLabels }:
           fillOpacity: 0.5,
         }).addTo(map);
 
-        circle.bindPopup(`
-          <div style="min-width:200px;font-family:system-ui;direction:${dir}">
-            <strong style="color:${color}">${diseaseName}</strong><br/>
-            <span style="color:#9ca3af">${countryName}</span><br/>
-            <hr style="border-color:#374151;margin:6px 0"/>
-            <span>${popupLabels.cases} : <strong>${outbreak.cases.toLocaleString()}</strong></span><br/>
-            <span>${popupLabels.deaths} : <strong>${outbreak.deaths.toLocaleString()}</strong></span><br/>
-            <span style="color:#6b7280;font-size:11px">${outbreak.source} — ${outbreak.date}</span><br/>
-            <p style="margin-top:6px;font-size:12px;color:#d1d5db">${outbreak.description}</p>
-          </div>
-        `, { className: "dark-popup" });
+        // Lightweight tooltip on hover (desktop)
+        circle.bindTooltip(
+          `<strong style="color:${color}">${diseaseName}</strong><br/><span style="color:#9ca3af">${countryName}</span>`,
+          { className: "dark-popup", sticky: true }
+        );
+
+        // Full modal on click
+        circle.on("click", () => setSelected(outbreak));
       });
 
       mapRef.current = map;
@@ -106,19 +106,39 @@ export default function WorldMap({ outbreaks, locale, popupLabels, riskLabels }:
   }, [outbreaks]);
 
   return (
-    <div className="relative rounded-xl overflow-hidden border border-gray-800">
-      <div ref={containerRef} className="h-[260px] sm:h-[340px] md:h-[420px] w-full" />
-      <div className="absolute bottom-4 left-4 flex gap-3 bg-gray-900/90 rounded-lg px-3 py-2 text-xs">
-        {(["high", "medium", "low"] as const).map((level) => (
-          <span key={level} className="flex items-center gap-1.5">
-            <span
-              className="w-3 h-3 rounded-full inline-block"
-              style={{ backgroundColor: riskColors[level] }}
-            />
-            <span className="text-gray-300">{riskLabels[level]}</span>
-          </span>
-        ))}
+    <>
+      <div className="relative rounded-xl overflow-hidden border border-gray-800">
+        <div ref={containerRef} className="h-[260px] sm:h-[340px] md:h-[420px] w-full" />
+
+        {/* Click hint */}
+        <div className="absolute top-3 right-3 bg-gray-900/80 rounded-lg px-2 py-1 text-xs text-gray-500 pointer-events-none hidden sm:block">
+          {locale === "fr" ? "Cliquez sur un foyer" :
+           locale === "es" ? "Haga clic en un foco" :
+           locale === "ar" ? "انقر على بؤرة" :
+           locale === "id" ? "Klik pada wabah" :
+           "Click an outbreak"}
+        </div>
+
+        <div className="absolute bottom-4 left-4 flex gap-3 bg-gray-900/90 rounded-lg px-3 py-2 text-xs">
+          {(["high", "medium", "low"] as const).map((level) => (
+            <span key={level} className="flex items-center gap-1.5">
+              <span
+                className="w-3 h-3 rounded-full inline-block"
+                style={{ backgroundColor: riskColors[level] }}
+              />
+              <span className="text-gray-300">{riskLabels[level]}</span>
+            </span>
+          ))}
+        </div>
       </div>
-    </div>
+
+      {/* Detail modal — same as table row click */}
+      <OutbreakDetailModal
+        outbreak={selected}
+        locale={locale}
+        isPaid={isPaid}
+        onClose={() => setSelected(null)}
+      />
+    </>
   );
 }

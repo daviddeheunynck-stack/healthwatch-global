@@ -156,7 +156,7 @@ async function DashboardContent() {
         <StatsCard label={t("highRisk")} value={stats.highRisk} icon={<AlertTriangle className="w-5 h-5" />} color="yellow" />
       </div>
 
-      <WorldMap outbreaks={outbreaks} locale={locale} popupLabels={popupLabels} riskLabels={riskLabels} />
+      <WorldMap outbreaks={outbreaks} locale={locale} isPaid={isPaid} popupLabels={popupLabels} riskLabels={riskLabels} />
 
       <div>
         <div className="flex items-center justify-between mb-4 gap-3 flex-wrap">

@@ -41,6 +41,7 @@ export async function GET(request: NextRequest) {
   }
 
   // ── Build CSV ────────────────────────────────────────────────────────────────
+  const { getIncidenceRate } = await import("@/lib/population-data");
   const outbreaks = await getOutbreaks();
 
   const escape = (s: string | number | null | undefined) => {
@@ -53,22 +54,33 @@ export async function GET(request: NextRequest) {
   const CSV_HEADERS = [
     "id", "disease", "country", "region",
     "lat", "lng", "cases", "deaths",
+    "cfr_%", "incidence_per_100k",
     "risk_level", "date", "source",
+    "pheic", "corroborated", "promed_source",
   ];
 
-  const rows = outbreaks.map((o) => [
-    escape(o.id),
-    escape(o.disease_en || o.disease),
-    escape(o.country_en || o.country),
-    escape(o.region),
-    o.lat,
-    o.lng,
-    o.cases,
-    o.deaths,
-    escape(o.risk_level),
-    escape(o.date),
-    escape(o.source),
-  ]);
+  const rows = outbreaks.map((o) => {
+    const cfr = o.cases > 0 ? (o.deaths / o.cases * 100).toFixed(1) : "";
+    const incidence = getIncidenceRate(o.cases, o.country_en);
+    return [
+      escape(o.id),
+      escape(o.disease_en || o.disease),
+      escape(o.country_en || o.country),
+      escape(o.region),
+      o.lat,
+      o.lng,
+      o.cases,
+      o.deaths,
+      cfr,
+      incidence !== null ? incidence.toFixed(2) : "",
+      escape(o.risk_level),
+      escape(o.date),
+      escape(o.source),
+      o.is_pheic ? "YES" : "NO",
+      o.corroborated ? "YES" : "NO",
+      escape(o.promed_source ?? ""),
+    ];
+  });
 
   const csv = [CSV_HEADERS.join(","), ...rows.map((r) => r.join(","))].join("\n");
   const filename = `healthwatch-outbreaks-${new Date().toISOString().split("T")[0]}.csv`;
