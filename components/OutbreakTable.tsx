@@ -1,8 +1,9 @@
 "use client";
 
-import { useState, useMemo } from "react";
-import { Search, X, ChevronUp, ChevronDown, ChevronsUpDown } from "lucide-react";
+import { useState, useMemo, useCallback } from "react";
+import { Search, X, ChevronUp, ChevronDown, ChevronsUpDown, Download, Lock } from "lucide-react";
 import OutbreakDetailModal from "@/components/OutbreakDetailModal";
+import { track } from "@vercel/analytics/react";
 
 type SortKey = "risk" | "cases" | "deaths" | "date";
 type SortDir = "asc" | "desc";
@@ -44,6 +45,9 @@ export interface OutbreakTableLabels {
   low: string;
   // Locked CTA
   lockedCta: string;
+  // Export
+  exportCsv: string;
+  exportRows: (n: number) => string;
 }
 
 type Region = "all" | "africa" | "asia" | "europe" | "americas" | "oceania";
@@ -134,6 +138,35 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l }: 
 
   const hasFilters = search !== "" || region !== "all" || country !== "all" || risk !== "all" || dateFrom !== "" || dateTo !== "";
 
+  const downloadCsv = useCallback(() => {
+    const esc = (s: string | number | null | undefined) => {
+      const str = String(s ?? "");
+      return str.includes(",") || str.includes('"') || str.includes("\n")
+        ? `"${str.replace(/"/g, '""')}"` : str;
+    };
+    const headers = ["disease", "country", "region", "cases", "deaths", "cfr_%", "risk_level", "date", "source"];
+    const rows = sorted.map((o) => [
+      esc(o.disease_en || o.disease),
+      esc(o.country_en || o.country),
+      esc(o.region),
+      o.cases,
+      o.deaths,
+      o.cases > 0 ? (o.deaths / o.cases * 100).toFixed(1) : "",
+      esc(o.risk_level),
+      esc(o.date),
+      esc(o.source),
+    ]);
+    const csv  = [headers.join(","), ...rows.map((r) => r.join(","))].join("\n");
+    const blob = new Blob(["﻿" + csv], { type: "text/csv;charset=utf-8;" }); // BOM for Excel
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement("a");
+    a.href     = url;
+    a.download = `healthwatch-${new Date().toISOString().split("T")[0]}-${sorted.length}rows.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+    track("csv_export_filtered", { rows: sorted.length, locale });
+  }, [sorted, locale]);
+
   const clearFilters = () => {
     setSearch("");
     setRegion("all");
@@ -163,10 +196,11 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l }: 
   return (
     <div className="space-y-3">
 
-      {/* ── Filter bar ─────────────────────────────────────────────────── */}
+      {/* ── Filter bar + Export ────────────────────────────────────────── */}
       <div className="space-y-2">
-        {/* Search */}
-        <div className="relative">
+        {/* Search + Export button */}
+        <div className="flex gap-2">
+        <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 pointer-events-none" />
           <input
             type="text"
@@ -183,6 +217,28 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l }: 
               <X className="w-3.5 h-3.5" />
             </button>
           )}
+        </div>
+        {/* Export button */}
+        {isPaid ? (
+          <button
+            onClick={downloadCsv}
+            title={l.exportRows(sorted.length)}
+            className="flex items-center gap-1.5 px-3 py-2 bg-gray-800 hover:bg-gray-700 border border-gray-700 text-gray-300 hover:text-white rounded-lg text-xs font-medium transition-colors shrink-0"
+          >
+            <Download className="w-3.5 h-3.5" />
+            <span className="hidden sm:inline">{l.exportCsv}</span>
+            <span className="text-gray-500">({sorted.length})</span>
+          </button>
+        ) : (
+          <button
+            disabled
+            title={l.lockedCta}
+            className="flex items-center gap-1.5 px-3 py-2 bg-gray-900 border border-gray-800 text-gray-600 rounded-lg text-xs shrink-0 cursor-not-allowed"
+          >
+            <Lock className="w-3.5 h-3.5" />
+            <span className="hidden sm:inline">CSV</span>
+          </button>
+        )}
         </div>
 
         {/* Region + Risk pills in two rows */}

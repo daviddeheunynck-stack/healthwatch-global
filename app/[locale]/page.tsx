@@ -35,12 +35,14 @@ const FILTER_COPY: Record<string, {
   noResults: string;
   noData: string;
   cfr: string;
+  exportCsv: string;
+  exportRows: (n: number) => string;
 }> = {
-  en: { searchPlaceholder: "Search disease or country…", allRegions: "All regions", allCountries: "All countries", allRisks: "All risks",       dateFrom: "From", dateTo: "To", noResults: "No outbreaks match your filters.",              noData: "N/A", cfr: "CFR" },
-  fr: { searchPlaceholder: "Rechercher maladie ou pays…", allRegions: "Toutes régions", allCountries: "Tous pays",   allRisks: "Tous niveaux", dateFrom: "Du",   dateTo: "Au", noResults: "Aucun foyer ne correspond aux filtres.",        noData: "N/D", cfr: "Létalité" },
-  es: { searchPlaceholder: "Buscar enfermedad o país…",   allRegions: "Todas las regiones", allCountries: "Todos los países", allRisks: "Todos los niveles", dateFrom: "Desde", dateTo: "Hasta", noResults: "Ningún brote coincide con los filtros.", noData: "N/D", cfr: "Letalidad" },
-  ar: { searchPlaceholder: "ابحث عن مرض أو دولة…",      allRegions: "كل المناطق",    allCountries: "كل الدول",   allRisks: "كل المستويات", dateFrom: "من",   dateTo: "إلى", noResults: "لا توجد تفشيات تطابق المرشحات.",              noData: "غ/م",  cfr: "معدل الوفيات" },
-  id: { searchPlaceholder: "Cari penyakit atau negara…",  allRegions: "Semua wilayah", allCountries: "Semua negara", allRisks: "Semua tingkat", dateFrom: "Dari", dateTo: "Hingga", noResults: "Tidak ada wabah yang cocok dengan filter.",    noData: "T/S", cfr: "CFR" },
+  en: { searchPlaceholder: "Search disease or country…", allRegions: "All regions", allCountries: "All countries", allRisks: "All risks",       dateFrom: "From", dateTo: "To", noResults: "No outbreaks match your filters.",              noData: "N/A", cfr: "CFR",      exportCsv: "Export", exportRows: (n: number) => `Export ${n} rows` },
+  fr: { searchPlaceholder: "Rechercher maladie ou pays…", allRegions: "Toutes régions", allCountries: "Tous pays",   allRisks: "Tous niveaux", dateFrom: "Du",   dateTo: "Au", noResults: "Aucun foyer ne correspond aux filtres.",        noData: "N/D", cfr: "Létalité", exportCsv: "Exporter", exportRows: (n: number) => `Exporter ${n} lignes` },
+  es: { searchPlaceholder: "Buscar enfermedad o país…",   allRegions: "Todas las regiones", allCountries: "Todos los países", allRisks: "Todos los niveles", dateFrom: "Desde", dateTo: "Hasta", noResults: "Ningún brote coincide con los filtros.", noData: "N/D", cfr: "Letalidad", exportCsv: "Exportar", exportRows: (n: number) => `Exportar ${n} filas` },
+  ar: { searchPlaceholder: "ابحث عن مرض أو دولة…",      allRegions: "كل المناطق",    allCountries: "كل الدول",   allRisks: "كل المستويات", dateFrom: "من",   dateTo: "إلى", noResults: "لا توجد تفشيات تطابق المرشحات.",              noData: "غ/م",  cfr: "معدل الوفيات", exportCsv: "تصدير", exportRows: (n: number) => `تصدير ${n} صفوف` },
+  id: { searchPlaceholder: "Cari penyakit atau negara…",  allRegions: "Semua wilayah", allCountries: "Semua negara", allRisks: "Semua tingkat", dateFrom: "Dari", dateTo: "Hingga", noResults: "Tidak ada wabah yang cocok dengan filter.",    noData: "T/S", cfr: "CFR",      exportCsv: "Ekspor", exportRows: (n: number) => `Ekspor ${n} baris` },
 };
 
 const LANDING_META: Record<string, { title: string; description: string }> = {
@@ -122,6 +124,8 @@ async function DashboardContent() {
     noResults:         fc.noResults,
     noData:            fc.noData,
     cfr:               fc.cfr,
+    exportCsv:         fc.exportCsv,
+    exportRows:        fc.exportRows,
     africa:            tAlerts("africa"),
     asia:              tAlerts("asia"),
     europe:            tAlerts("europe"),
