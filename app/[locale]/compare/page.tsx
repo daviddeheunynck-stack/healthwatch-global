@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, Suspense } from "react";
 import { useLocale } from "next-intl";
 import { useRouter, useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase-browser";
@@ -94,7 +94,8 @@ function StatRow({ label, valA, valB, icon, higherIsBad = true }: {
   );
 }
 
-export default function ComparePage() {
+// useSearchParams requires Suspense in Next.js App Router
+function CompareContent() {
   const locale     = useLocale();
   const l          = LABELS[locale] ?? LABELS.en;
   const isRtl      = locale === "ar";
@@ -299,5 +300,17 @@ export default function ComparePage() {
         </div>
       )}
     </div>
+  );
+}
+
+export default function ComparePage() {
+  return (
+    <Suspense fallback={
+      <div className="flex items-center justify-center py-20 text-gray-500">
+        <div className="animate-pulse">Loading…</div>
+      </div>
+    }>
+      <CompareContent />
+    </Suspense>
   );
 }
