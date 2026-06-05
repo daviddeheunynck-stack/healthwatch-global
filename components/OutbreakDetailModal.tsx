@@ -79,6 +79,11 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, onClose 
           <div className="space-y-2 flex-1 min-w-0">
             <div className="flex items-center gap-2 flex-wrap">
               <RiskBadge level={outbreak.risk_level as "high" | "medium" | "low"} />
+              {outbreak.corroborated && (
+                <span className="inline-flex items-center gap-1 text-xs px-2 py-0.5 rounded-full bg-blue-900/30 border border-blue-700/40 text-blue-300 font-medium">
+                  🔁 WHO + ProMED
+                </span>
+              )}
             </div>
             <h2 className="text-xl font-bold text-white leading-tight">{disease}</h2>
             <div className="flex items-center gap-1.5 text-gray-400 text-sm">
@@ -209,20 +214,31 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, onClose 
           </div>
         )}
 
-        {/* Source link */}
-        {outbreak.source && (
-          <div className="px-5 pb-5">
+        {/* Source links */}
+        <div className="px-5 pb-5 space-y-2">
+          {outbreak.source && (
             <a
               href={outbreak.source}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 text-sm text-red-400 hover:text-red-300 transition-colors font-medium"
+              className="flex items-center gap-2 text-sm text-red-400 hover:text-red-300 transition-colors font-medium"
             >
-              <ExternalLink className="w-4 h-4" />
+              <ExternalLink className="w-4 h-4 shrink-0" />
               {c.source} →
             </a>
-          </div>
-        )}
+          )}
+          {outbreak.promed_source && (
+            <a
+              href={outbreak.promed_source}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 text-sm text-blue-400 hover:text-blue-300 transition-colors"
+            >
+              <ExternalLink className="w-4 h-4 shrink-0" />
+              ProMED →
+            </a>
+          )}
+        </div>
       </div>
     </div>
   );

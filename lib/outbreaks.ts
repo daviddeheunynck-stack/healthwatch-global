@@ -18,6 +18,8 @@ export interface Outbreak {
   source: string;
   description: string;
   active: boolean;
+  corroborated:  boolean;       // true when both WHO + ProMED report this outbreak
+  promed_source: string | null; // ProMED article URL when corroborated
 }
 
 export async function getLastSync(): Promise<string | null> {

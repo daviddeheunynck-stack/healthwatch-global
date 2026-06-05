@@ -62,45 +62,51 @@ export async function GET(req: NextRequest) {
   const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
   const results = { inserted: 0, updated: 0, skipped: 0, errors: 0, staleDeactivated: 0 };
 
-  // ── 1. Fetch outbreak data ────────────────────────────────────
+  // ── 1. Fetch outbreak data — WHO + ProMED in parallel ────────────
   let outbreaks: ParsedOutbreak[] = [];
   let usedSource = "";
 
-  // Primary: WHO OData API (Sitefinity CMS — public, no auth required)
-  try {
-    const whoItems = await fetchWHODONList(40);
-    if (debug) debugLog.push(`WHO OData: ${whoItems.length} raw items`);
+  // ProMED corroboration map: disease_en|country_en → ProMED article URL
+  const promedMap = new Map<string, string>();
 
-    for (const item of whoItems) {
-      const parsed = await parseWHODONItem(item, false);
-      if (debug) {
-        debugLog.push(
-          parsed
-            ? `✓ "${item.Title}" → ${parsed.disease_en} / ${parsed.country_en}`
-            : `✗ "${item.Title}" → skipped`
-        );
+  // Fetch WHO OData + ProMED simultaneously
+  const [whoResult, promedResult] = await Promise.allSettled([
+    // WHO OData API
+    (async () => {
+      const whoItems = await fetchWHODONList(40);
+      const parsed: ParsedOutbreak[] = [];
+      for (const item of whoItems) {
+        const p = await parseWHODONItem(item, false);
+        if (debug) debugLog.push(p ? `✓ "${item.Title}" → ${p.disease_en} / ${p.country_en}` : `✗ "${item.Title}" → skipped`);
+        if (p) parsed.push(p);
       }
-      if (parsed) outbreaks.push(parsed);
-    }
+      return parsed;
+    })(),
+    // ProMED RSS (parallel — not fallback anymore)
+    fetchRSSFallback(),
+  ]);
 
-    if (outbreaks.length > 0) {
-      usedSource = "WHO OData API";
-      console.log(`[sync] WHO OData: ${whoItems.length} raw → ${outbreaks.length} parsed`);
+  if (whoResult.status === "fulfilled" && whoResult.value.length > 0) {
+    outbreaks  = whoResult.value;
+    usedSource = "WHO OData API";
+    console.log(`[sync] WHO OData: ${outbreaks.length} parsed`);
+  } else {
+    console.warn("[sync] WHO OData failed or empty, using ProMED as primary");
+    if (promedResult.status === "fulfilled" && promedResult.value) {
+      outbreaks  = promedResult.value.items;
+      usedSource = promedResult.value.source + " (primary fallback)";
     }
-  } catch (e: any) {
-    console.warn("[sync] WHO OData failed:", e.message);
-    if (debug) debugLog.push(`WHO OData error: ${e.message}`);
   }
 
-  // Fallback: RSS sources
-  if (outbreaks.length === 0) {
-    console.warn("[sync] WHO OData yielded 0 results, trying RSS fallbacks");
-    const rss = await fetchRSSFallback();
-    if (rss) {
-      outbreaks = rss.items;
-      usedSource = rss.source + " (RSS fallback)";
-      if (debug) debugLog.push(`RSS fallback (${rss.source}): ${rss.items.length} parsed`);
+  // Build ProMED corroboration map from parallel fetch
+  if (promedResult.status === "fulfilled" && promedResult.value) {
+    const promedItems = promedResult.value.items;
+    for (const p of promedItems) {
+      const key = `${p.disease_en.toLowerCase()}|${p.country_en.toLowerCase()}`;
+      if (!promedMap.has(key)) promedMap.set(key, p.source);
     }
+    if (debug) debugLog.push(`ProMED parallel: ${promedItems.length} items, ${promedMap.size} unique disease/country pairs`);
+    console.log(`[sync] ProMED parallel: ${promedItems.length} items corroborating WHO data`);
   }
 
   if (outbreaks.length === 0) {
@@ -131,11 +137,16 @@ export async function GET(req: NextRequest) {
       const dcKey = `${outbreak.disease_en.toLowerCase()}|${outbreak.country_en.toLowerCase()}`;
       const existingRow = bySource.get(outbreak.source) || byDiseaseCountry.get(dcKey);
 
+      // Check ProMED corroboration
+      const isCorroborated = promedMap.has(dcKey);
+      const promedSrc      = promedMap.get(dcKey);
+
       if (existingRow) {
         const needsUpdate =
           existingRow.cases !== outbreak.cases ||
           existingRow.deaths !== outbreak.deaths ||
-          existingRow.date < outbreak.date;
+          existingRow.date < outbreak.date ||
+          existingRow.corroborated !== isCorroborated;
 
         if (needsUpdate) {
           const { error } = await supabase
@@ -145,6 +156,8 @@ export async function GET(req: NextRequest) {
               date: outbreak.date, description: outbreak.description,
               risk_level: outbreak.risk_level, source: outbreak.source,
               active: true,
+              corroborated:  isCorroborated,
+              promed_source: promedSrc ?? null,
             })
             .eq("id", existingRow.id);
           if (error) {
@@ -156,7 +169,11 @@ export async function GET(req: NextRequest) {
           results.skipped++;
         }
       } else {
-        const { error } = await supabase.from("outbreaks").insert(outbreak);
+        const { error } = await supabase.from("outbreaks").insert({
+          ...outbreak,
+          corroborated:  isCorroborated,
+          promed_source: promedSrc ?? null,
+        });
         if (error) {
           console.error("[sync] insert:", error, outbreak);
           errorLog.push(`INSERT ${outbreak.disease_en}/${outbreak.country_en}: ${error.message}`);
