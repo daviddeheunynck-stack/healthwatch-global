@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { X, ExternalLink, AlertTriangle, TrendingUp, Users, Skull, Calendar, Globe, Clock, Activity } from "lucide-react";
+import { X, ExternalLink, AlertTriangle, TrendingUp, Users, Skull, Calendar, Globe, Clock, Activity, ImageDown } from "lucide-react";
 import { getIncidenceRate } from "@/lib/population-data";
 import type { Outbreak } from "@/lib/outbreaks";
 import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
@@ -100,6 +100,20 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, onClose 
             </div>
           </div>
           <div className="flex items-center gap-2 shrink-0 ml-3">
+            {/* Download card image */}
+            <a
+              href={`/api/outbreak-card/${outbreak.id}?locale=${locale}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              title={locale === "fr" ? "Télécharger comme image" :
+                     locale === "es" ? "Descargar como imagen" :
+                     locale === "ar" ? "تنزيل كصورة" :
+                     locale === "id" ? "Unduh sebagai gambar" :
+                     "Download as image"}
+              className="p-1.5 rounded-lg hover:bg-white/10 text-gray-400 hover:text-white transition-colors"
+            >
+              <ImageDown className="w-4 h-4" />
+            </a>
             <ShareOutbreakButton
               disease={disease}
               country={country ?? ""}
