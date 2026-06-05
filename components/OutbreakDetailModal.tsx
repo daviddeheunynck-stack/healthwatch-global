@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import { X, ExternalLink, AlertTriangle, TrendingUp, Users, Skull, Calendar, Globe, Clock, Activity, ImageDown } from "lucide-react";
+import WatchlistButton from "@/components/WatchlistButton";
 import { getIncidenceRate } from "@/lib/population-data";
 import type { Outbreak } from "@/lib/outbreaks";
 import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
@@ -32,10 +33,11 @@ interface Props {
   outbreak: Outbreak | null;
   locale: string;
   isPaid: boolean;
+  watchlist?: Set<string>;
   onClose: () => void;
 }
 
-export default function OutbreakDetailModal({ outbreak, locale, isPaid, onClose }: Props) {
+export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlist, onClose }: Props) {
   const c = COPY[locale] ?? COPY.en;
   const isRtl = locale === "ar";
 
@@ -100,6 +102,13 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, onClose 
             </div>
           </div>
           <div className="flex items-center gap-2 shrink-0 ml-3">
+            {/* Watchlist star */}
+            <WatchlistButton
+              outbreakId={outbreak.id}
+              initialWatched={watchlist?.has(outbreak.id) ?? false}
+              isPaid={isPaid}
+              locale={locale}
+            />
             {/* Download card image */}
             <a
               href={`/api/outbreak-card/${outbreak.id}?locale=${locale}`}

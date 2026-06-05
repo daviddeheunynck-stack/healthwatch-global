@@ -1,9 +1,10 @@
 "use client";
 
-import { useState, useMemo, useCallback } from "react";
+import { useState, useMemo, useCallback, useEffect } from "react";
 import { Search, X, ChevronUp, ChevronDown, ChevronsUpDown, Download, Lock } from "lucide-react";
 import OutbreakDetailModal from "@/components/OutbreakDetailModal";
 import SavedFilters from "@/components/SavedFilters";
+import WatchlistButton from "@/components/WatchlistButton";
 import { track } from "@vercel/analytics/react";
 
 type SortKey = "risk" | "cases" | "deaths" | "date";
@@ -70,6 +71,7 @@ interface Props {
 }
 
 export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l }: Props) {
+  const [watchlist, setWatchlist] = useState<Set<string>>(new Set());
   const [search,   setSearch]    = useState("");
   const [region,   setRegion]    = useState<Region>("all");
   const [country,  setCountry]   = useState<string>("all");
@@ -79,6 +81,15 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l }: 
   const [risk,     setRisk]      = useState<Risk>("all");
   const [sortKey,  setSortKey] = useState<SortKey>("risk");
   const [sortDir,  setSortDir] = useState<SortDir>("asc");
+
+  // Load watchlist IDs on mount (Pro users only)
+  useEffect(() => {
+    if (!isPaid) return;
+    fetch("/api/watchlist")
+      .then((r) => r.json())
+      .then((d) => { if (d.watchlist) setWatchlist(new Set(d.watchlist)); })
+      .catch(() => {});
+  }, [isPaid]);
 
   // Unique sorted country list from current outbreaks
   const countryOptions = useMemo(() => {
@@ -461,13 +472,21 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l }: 
                     {outbreak.date}
                   </td>
                   <td className="px-2 py-3">
-                    <ShareOutbreakButton
-                      disease={getLocalizedDisease(outbreak, locale)}
-                      country={getLocalizedCountry(outbreak, locale)}
-                      cases={outbreak.cases}
-                      riskLevel={outbreak.risk_level}
-                      locale={locale}
-                    />
+                    <div className="flex items-center gap-0.5">
+                      <WatchlistButton
+                        outbreakId={outbreak.id}
+                        initialWatched={watchlist.has(outbreak.id)}
+                        isPaid={isPaid}
+                        locale={locale}
+                      />
+                      <ShareOutbreakButton
+                        disease={getLocalizedDisease(outbreak, locale)}
+                        country={getLocalizedCountry(outbreak, locale)}
+                        cases={outbreak.cases}
+                        riskLevel={outbreak.risk_level}
+                        locale={locale}
+                      />
+                    </div>
                   </td>
                 </tr>
               ))}
