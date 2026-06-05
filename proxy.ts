@@ -33,8 +33,8 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  // Exclude: api/*, _next/*, _vercel/*, auth/*, Next.js special routes, static files
+  // Exclude: api/*, _next/*, _vercel/*, auth/*, widget, Next.js special routes, static files
   matcher: [
-    "/((?!api|_next|_vercel|auth|apple-icon|icon|opengraph-image|manifest\\.webmanifest|robots\\.txt|sitemap\\.xml|.*\\..*).*)",
+    "/((?!api|_next|_vercel|auth|widget|apple-icon|icon|opengraph-image|manifest\\.webmanifest|robots\\.txt|sitemap\\.xml|.*\\..*).*)",
   ],
 };

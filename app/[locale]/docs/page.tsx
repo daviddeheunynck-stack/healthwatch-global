@@ -412,6 +412,61 @@ console.log(data);`}</Code>
         </p>
       </Section>
 
+      {/* ── Embeddable widget ───────────────────────────────────────────────── */}
+      <Section id="widget" title="Embeddable widget">
+        <p className="text-gray-400 text-sm mb-4">
+          Embed a live outbreak feed on any website — no API key required.
+          Copy the snippet below and paste it into your HTML.
+        </p>
+
+        <h3 className="text-base font-semibold text-gray-300 mb-2">Basic embed</h3>
+        <Code lang="html">{`<iframe
+  src="https://healthwatch-global.com/widget?locale=en"
+  width="400"
+  height="320"
+  frameborder="0"
+  style="border-radius:12px;overflow:hidden;"
+  title="HealthWatch Global — Live outbreak feed"
+></iframe>`}</Code>
+
+        <h3 className="text-base font-semibold text-gray-300 mt-6 mb-2">Parameters</h3>
+        <div className="rounded-xl border border-gray-800 overflow-hidden">
+          <table className="w-full text-sm">
+            <thead className="bg-gray-900 border-b border-gray-800">
+              <tr>
+                <th className="px-4 py-3 text-left text-xs text-gray-500 uppercase">Param</th>
+                <th className="px-4 py-3 text-left text-xs text-gray-500 uppercase">Values</th>
+                <th className="px-4 py-3 text-left text-xs text-gray-500 uppercase">Default</th>
+              </tr>
+            </thead>
+            <tbody>
+              {[
+                ["locale", "fr · en · es · ar · id", "en"],
+                ["region", "africa · asia · europe · americas · oceania · all", "all"],
+                ["theme", "dark · light", "dark"],
+                ["limit", "1 – 10", "5"],
+              ].map(([p, v, d]) => (
+                <tr key={p} className="border-b border-gray-800">
+                  <td className="px-4 py-3 font-mono text-purple-300">{p}</td>
+                  <td className="px-4 py-3 text-gray-400 font-mono text-xs">{v}</td>
+                  <td className="px-4 py-3 text-gray-500">{d}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        <h3 className="text-base font-semibold text-gray-300 mt-6 mb-2">Example — Africa, French, light theme</h3>
+        <Code lang="html">{`<iframe
+  src="https://healthwatch-global.com/widget?locale=fr&region=africa&theme=light&limit=7"
+  width="380"
+  height="400"
+  frameborder="0"
+  style="border-radius:12px;"
+  title="Foyers épidémiques en Afrique — HealthWatch Global"
+></iframe>`}</Code>
+      </Section>
+
       {/* Footer CTA */}
       <div className="rounded-2xl border border-purple-700/30 bg-gradient-to-r from-purple-950/40 to-transparent p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>

@@ -82,6 +82,15 @@ const nextConfig: NextConfig = {
         source: "/api/health",
         headers: [{ key: "Cache-Control", value: "public, max-age=30, stale-while-revalidate=10" }],
       },
+      {
+        // /widget — allow embedding in iframes (override X-Frame-Options: DENY)
+        source: "/widget",
+        headers: [
+          { key: "X-Frame-Options",       value: "ALLOWALL" },
+          { key: "Content-Security-Policy", value: "frame-ancestors *" },
+          { key: "Cache-Control",           value: "public, max-age=60, stale-while-revalidate=30" },
+        ],
+      },
     ];
   },
 };
