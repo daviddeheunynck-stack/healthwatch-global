@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { X, ExternalLink, AlertTriangle, TrendingUp, Users, Skull, Calendar, Globe } from "lucide-react";
+import { X, ExternalLink, AlertTriangle, TrendingUp, Users, Skull, Calendar, Globe, Clock } from "lucide-react";
 import type { Outbreak } from "@/lib/outbreaks";
 import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 import RiskBadge from "@/components/RiskBadge";
@@ -11,12 +11,13 @@ const COPY: Record<string, {
   cases: string; deaths: string; cfr: string; date: string;
   source: string; description: string; close: string;
   noData: string; cfrFull: string; region: string;
+  partialData: string; dataAge: (d: number) => string; fresh: string; stale: string;
 }> = {
-  fr: { cases: "Cas confirmés", deaths: "Décès", cfr: "Taux de létalité", date: "Date du rapport", source: "Bulletin OMS", description: "Résumé", close: "Fermer", noData: "Non disponible", cfrFull: "Taux de létalité (CFR)", region: "Région" },
-  en: { cases: "Confirmed cases", deaths: "Deaths", cfr: "Case fatality rate", date: "Report date", source: "WHO bulletin", description: "Summary", close: "Close", noData: "Not available", cfrFull: "Case fatality rate (CFR)", region: "Region" },
-  es: { cases: "Casos confirmados", deaths: "Fallecidos", cfr: "Tasa de letalidad", date: "Fecha del informe", source: "Boletín OMS", description: "Resumen", close: "Cerrar", noData: "No disponible", cfrFull: "Tasa de letalidad (CFR)", region: "Región" },
-  ar: { cases: "الحالات المؤكدة", deaths: "الوفيات", cfr: "معدل الوفيات", date: "تاريخ التقرير", source: "نشرة OMS", description: "ملخص", close: "إغلاق", noData: "غير متاح", cfrFull: "معدل إماتة الحالات (CFR)", region: "المنطقة" },
-  id: { cases: "Kasus terkonfirmasi", deaths: "Kematian", cfr: "Tingkat kematian", date: "Tanggal laporan", source: "Buletin WHO", description: "Ringkasan", close: "Tutup", noData: "Tidak tersedia", cfrFull: "Tingkat kematian kasus (CFR)", region: "Wilayah" },
+  fr: { cases: "Cas confirmés", deaths: "Décès", cfr: "Létalité", date: "Rapport du", source: "Bulletin OMS original", description: "Résumé", close: "Fermer", noData: "N/D", cfrFull: "Taux de létalité (CFR)", region: "Région", partialData: "Données partielles — chiffres non disponibles dans ce rapport OMS", dataAge: (d) => `Il y a ${d} jour${d > 1 ? "s" : ""}`, fresh: "Données récentes", stale: "Rapport ancien" },
+  en: { cases: "Confirmed cases", deaths: "Deaths", cfr: "CFR", date: "Report date", source: "Original WHO bulletin", description: "Summary", close: "Close", noData: "N/A", cfrFull: "Case fatality rate (CFR)", region: "Region", partialData: "Partial data — figures not available in this WHO report", dataAge: (d) => `${d} day${d > 1 ? "s" : ""} ago`, fresh: "Recent data", stale: "Old report" },
+  es: { cases: "Casos confirmados", deaths: "Fallecidos", cfr: "Letalidad", date: "Informe del", source: "Boletín OMS original", description: "Resumen", close: "Cerrar", noData: "N/D", cfrFull: "Tasa de letalidad (CFR)", region: "Región", partialData: "Datos parciales — cifras no disponibles en este informe OMS", dataAge: (d) => `Hace ${d} día${d > 1 ? "s" : ""}`, fresh: "Datos recientes", stale: "Informe antiguo" },
+  ar: { cases: "الحالات المؤكدة", deaths: "الوفيات", cfr: "معدل الوفيات", date: "تاريخ التقرير", source: "النشرة الرسمية لـ OMS", description: "ملخص", close: "إغلاق", noData: "غ/م", cfrFull: "معدل إماتة الحالات (CFR)", region: "المنطقة", partialData: "بيانات جزئية — الأرقام غير متوفرة في هذا التقرير", dataAge: (d) => `منذ ${d} يوم`, fresh: "بيانات حديثة", stale: "تقرير قديم" },
+  id: { cases: "Kasus terkonfirmasi", deaths: "Kematian", cfr: "CFR", date: "Tanggal laporan", source: "Buletin WHO asli", description: "Ringkasan", close: "Tutup", noData: "T/S", cfrFull: "Tingkat kematian kasus (CFR)", region: "Wilayah", partialData: "Data parsial — angka tidak tersedia dalam laporan WHO ini", dataAge: (d) => `${d} hari lalu`, fresh: "Data terbaru", stale: "Laporan lama" },
 };
 
 const RISK_BG: Record<string, string> = {
@@ -49,6 +50,14 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, onClose 
   const country = getLocalizedCountry(outbreak, locale) ?? outbreak.country_en;
   const hasData = outbreak.cases > 0;
   const cfr     = hasData ? (outbreak.deaths / outbreak.cases * 100).toFixed(1) : null;
+
+  // Data freshness
+  const daysSince = Math.floor((Date.now() - new Date(outbreak.date).getTime()) / 86_400_000);
+  const isFresh   = daysSince <= 7;
+  const isStale   = daysSince > 30;
+
+  // DON reference from source URL (e.g., "2026-DON603")
+  const donRef = outbreak.source?.match(/item\/([\w-]+)/)?.[1] ?? null;
 
   return (
     <div
@@ -137,13 +146,36 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, onClose 
           </div>
         </div>
 
+        {/* Partial data warning */}
+        {!hasData && (
+          <div className="mx-5 mb-3 flex items-start gap-2 bg-amber-900/20 border border-amber-800/30 rounded-xl p-3 text-xs text-amber-300">
+            <AlertTriangle className="w-3.5 h-3.5 shrink-0 mt-0.5" />
+            {c.partialData}
+          </div>
+        )}
+
         {/* Meta */}
         <div className="px-5 pb-3 space-y-2 text-sm">
-          <div className="flex items-center gap-2 text-gray-400">
-            <Calendar className="w-3.5 h-3.5 shrink-0" />
-            <span>{c.date} :</span>
-            <span className="text-gray-300">{outbreak.date}</span>
+          {/* Report date + freshness */}
+          <div className="flex items-center justify-between gap-2">
+            <div className="flex items-center gap-2 text-gray-400">
+              <Calendar className="w-3.5 h-3.5 shrink-0" />
+              <span>{c.date}</span>
+              <span className="text-gray-300 font-medium">{outbreak.date}</span>
+              {donRef && (
+                <span className="text-gray-600 text-xs">· {donRef}</span>
+              )}
+            </div>
+            <span className={`flex items-center gap-1 text-xs px-2 py-0.5 rounded-full border shrink-0 ${
+              isFresh ? "bg-green-900/20 border-green-800/30 text-green-400" :
+              isStale ? "bg-red-900/20 border-red-800/30 text-red-400" :
+                        "bg-amber-900/20 border-amber-800/30 text-amber-400"
+            }`}>
+              <Clock className="w-3 h-3" />
+              {isFresh ? c.fresh : isStale ? c.stale : c.dataAge(daysSince)}
+            </span>
           </div>
+
           <div className="flex items-center gap-2 text-gray-400">
             <AlertTriangle className="w-3.5 h-3.5 shrink-0" />
             <span>{c.region} :</span>
