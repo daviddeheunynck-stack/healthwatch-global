@@ -74,6 +74,32 @@ test.describe("API Routes", () => {
     expect(res.status()).toBe(401);
   });
 
+  test("GET /api/cron/disease-alerts — sans secret retourne 401", async ({ request }) => {
+    const res = await request.get("/api/cron/disease-alerts");
+    expect(res.status()).toBe(401);
+  });
+
+  // ── Disease alerts API ───────────────────────────────────────────────────────
+  test("GET /api/alert-diseases — non authentifié retourne 401", async ({ request }) => {
+    const res = await request.get("/api/alert-diseases");
+    expect(res.status()).toBe(401);
+  });
+
+  test("POST /api/alert-diseases — non authentifié retourne 401", async ({ request }) => {
+    const res = await request.post("/api/alert-diseases", {
+      data: { disease_en: "Ebola virus disease" },
+    });
+    expect(res.status()).toBe(401);
+  });
+
+  // ── Contact form ─────────────────────────────────────────────────────────────
+  test("POST /api/contact — champs manquants retourne 400", async ({ request }) => {
+    const res = await request.post("/api/contact", {
+      data: { name: "Test" }, // missing email + message
+    });
+    expect(res.status()).toBe(400);
+  });
+
   // ── Public API v1 ────────────────────────────────────────────────────────────
   test("GET /api/v1/outbreaks — sans API key retourne 401", async ({ request }) => {
     const res = await request.get("/api/v1/outbreaks");
