@@ -157,7 +157,7 @@ async function DashboardContent() {
           label="PHEIC"
           value={stats.pheicCount}
           icon={<span className="text-lg">🚨</span>}
-          color={stats.pheicCount > 0 ? "red" : "gray" as any}
+          color={stats.pheicCount > 0 ? "purple" : "gray"}
         />
       </div>
 
