@@ -1,8 +1,7 @@
 "use client";
 
-import { useState, useEffect, useCallback, Suspense } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useLocale } from "next-intl";
-import { useRouter, useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase-browser";
 import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 import { getIncidenceRate } from "@/lib/population-data";
@@ -94,29 +93,36 @@ function StatRow({ label, valA, valB, icon, higherIsBad = true }: {
   );
 }
 
-// useSearchParams requires Suspense in Next.js App Router
 function CompareContent() {
-  const locale     = useLocale();
-  const l          = LABELS[locale] ?? LABELS.en;
-  const isRtl      = locale === "ar";
-  const router     = useRouter();
-  const searchParams = useSearchParams();
+  const locale = useLocale();
+  const l      = LABELS[locale] ?? LABELS.en;
+  const isRtl  = locale === "ar";
 
   const [outbreaks, setOutbreaks] = useState<Outbreak[]>([]);
-  const [idA, setIdA] = useState<string>(searchParams.get("a") ?? "");
-  const [idB, setIdB] = useState<string>(searchParams.get("b") ?? "");
+  const [idA, setIdA] = useState<string>("");
+  const [idB, setIdB] = useState<string>("");
   const [copied, setCopied] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
-  // Sync URL params when selection changes
-  const updateUrl = useCallback((a: string, b: string) => {
+  // Read URL params only after mount (client-side only — no useSearchParams needed)
+  useEffect(() => {
+    setMounted(true);
+    if (typeof window !== "undefined") {
+      const sp = new URLSearchParams(window.location.search);
+      if (sp.get("a")) setIdA(sp.get("a")!);
+      if (sp.get("b")) setIdB(sp.get("b")!);
+    }
+  }, []);
+
+  // Sync URL when selections change (after mount)
+  useEffect(() => {
+    if (!mounted) return;
     const params = new URLSearchParams();
-    if (a) params.set("a", a);
-    if (b) params.set("b", b);
-    router.replace(`?${params.toString()}`, { scroll: false });
-  }, [router]);
-
-  function setA(v: string) { setIdA(v); updateUrl(v, idB); }
-  function setB(v: string) { setIdB(v); updateUrl(idA, v); }
+    if (idA) params.set("a", idA);
+    if (idB) params.set("b", idB);
+    const qs = params.toString();
+    window.history.replaceState(null, "", qs ? `?${qs}` : window.location.pathname);
+  }, [idA, idB, mounted]);
 
   async function copyShareLink() {
     await navigator.clipboard.writeText(window.location.href);
@@ -171,8 +177,8 @@ function CompareContent() {
       {/* Selectors */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {[
-          { label: l.selectA, value: idA, set: setA, other: idB },
-          { label: l.selectB, value: idB, set: setB, other: idA },
+          { label: l.selectA, value: idA, set: setIdA, other: idB },
+          { label: l.selectB, value: idB, set: setIdB, other: idA },
         ].map(({ label, value, set, other }) => (
           <div key={label} className="space-y-1.5">
             <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide">{label}</label>
@@ -304,13 +310,5 @@ function CompareContent() {
 }
 
 export default function ComparePage() {
-  return (
-    <Suspense fallback={
-      <div className="flex items-center justify-center py-20 text-gray-500">
-        <div className="animate-pulse">Loading…</div>
-      </div>
-    }>
-      <CompareContent />
-    </Suspense>
-  );
+  return <CompareContent />;
 }
