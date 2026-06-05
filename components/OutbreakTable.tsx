@@ -1,7 +1,10 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { Search, X } from "lucide-react";
+import { Search, X, ChevronUp, ChevronDown, ChevronsUpDown } from "lucide-react";
+
+type SortKey = "risk" | "cases" | "deaths" | "date";
+type SortDir = "asc" | "desc";
 import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 import type { Outbreak } from "@/lib/outbreaks";
 import RiskBadge from "@/components/RiskBadge";
@@ -56,9 +59,27 @@ interface Props {
 }
 
 export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l }: Props) {
-  const [search,  setSearch]  = useState("");
-  const [region,  setRegion]  = useState<Region>("all");
-  const [risk,    setRisk]    = useState<Risk>("all");
+  const [search,   setSearch]  = useState("");
+  const [region,   setRegion]  = useState<Region>("all");
+  const [risk,     setRisk]    = useState<Risk>("all");
+  const [sortKey,  setSortKey] = useState<SortKey>("risk");
+  const [sortDir,  setSortDir] = useState<SortDir>("asc");
+
+  function handleSort(key: SortKey) {
+    if (sortKey === key) {
+      setSortDir((d) => d === "asc" ? "desc" : "asc");
+    } else {
+      setSortKey(key);
+      setSortDir(key === "date" ? "desc" : "asc");
+    }
+  }
+
+  function SortIcon({ col }: { col: SortKey }) {
+    if (sortKey !== col) return <ChevronsUpDown className="inline w-3 h-3 ml-1 text-gray-600" />;
+    return sortDir === "asc"
+      ? <ChevronUp   className="inline w-3 h-3 ml-1 text-red-400" />
+      : <ChevronDown className="inline w-3 h-3 ml-1 text-red-400" />;
+  }
 
   // ── Filter logic ──────────────────────────────────────────────────────────
   const filtered = useMemo(() => {
@@ -72,14 +93,17 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l }: 
     });
   }, [outbreaks, region, risk, search, locale]);
 
-  const sorted = useMemo(
-    () => [...filtered].sort(
-      (a, b) =>
-        ({ high: 0, medium: 1, low: 2 }[a.risk_level] ?? 3) -
-        ({ high: 0, medium: 1, low: 2 }[b.risk_level] ?? 3)
-    ),
-    [filtered]
-  );
+  const sorted = useMemo(() => {
+    const RISK_ORDER: Record<string, number> = { high: 0, medium: 1, low: 2 };
+    return [...filtered].sort((a, b) => {
+      let cmp = 0;
+      if (sortKey === "risk")   cmp = (RISK_ORDER[a.risk_level] ?? 3) - (RISK_ORDER[b.risk_level] ?? 3);
+      if (sortKey === "cases")  cmp = a.cases  - b.cases;
+      if (sortKey === "deaths") cmp = a.deaths - b.deaths;
+      if (sortKey === "date")   cmp = new Date(a.date).getTime() - new Date(b.date).getTime();
+      return sortDir === "asc" ? cmp : -cmp;
+    });
+  }, [filtered, sortKey, sortDir]);
 
   const hasFilters = search !== "" || region !== "all" || risk !== "all";
 
@@ -209,10 +233,30 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l }: 
               <tr>
                 <th className="text-left px-4 py-3">{l.disease}</th>
                 <th className="text-left px-4 py-3">{l.country}</th>
-                <th className="text-left px-4 py-3">{l.cases}</th>
-                <th className="text-left px-4 py-3 hidden sm:table-cell">{l.deaths}</th>
-                <th className="text-left px-4 py-3">{l.riskLevel}</th>
-                <th className="text-left px-4 py-3 hidden md:table-cell">{l.date}</th>
+                <th
+                  className="text-left px-4 py-3 cursor-pointer hover:text-gray-200 select-none whitespace-nowrap"
+                  onClick={() => handleSort("cases")}
+                >
+                  {l.cases}<SortIcon col="cases" />
+                </th>
+                <th
+                  className="text-left px-4 py-3 hidden sm:table-cell cursor-pointer hover:text-gray-200 select-none whitespace-nowrap"
+                  onClick={() => handleSort("deaths")}
+                >
+                  {l.deaths}<SortIcon col="deaths" />
+                </th>
+                <th
+                  className="text-left px-4 py-3 cursor-pointer hover:text-gray-200 select-none whitespace-nowrap"
+                  onClick={() => handleSort("risk")}
+                >
+                  {l.riskLevel}<SortIcon col="risk" />
+                </th>
+                <th
+                  className="text-left px-4 py-3 hidden md:table-cell cursor-pointer hover:text-gray-200 select-none whitespace-nowrap"
+                  onClick={() => handleSort("date")}
+                >
+                  {l.date}<SortIcon col="date" />
+                </th>
                 <th className="px-2 py-3 w-8" />
               </tr>
             </thead>
