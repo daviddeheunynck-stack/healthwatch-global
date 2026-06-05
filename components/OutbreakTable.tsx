@@ -19,13 +19,16 @@ export interface OutbreakTableLabels {
   country: string;
   cases: string;
   deaths: string;
+  cfr: string;           // Case Fatality Rate
   riskLevel: string;
   date: string;
   // Filters
   searchPlaceholder: string;
   allRegions: string;
+  allCountries: string;  // country filter
   allRisks: string;
   noResults: string;
+  noData: string;        // "N/D" when data unavailable
   // Region names
   africa: string;
   asia: string;
@@ -61,9 +64,24 @@ interface Props {
 export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l }: Props) {
   const [search,   setSearch]  = useState("");
   const [region,   setRegion]  = useState<Region>("all");
+  const [country,  setCountry] = useState<string>("all");
   const [risk,     setRisk]    = useState<Risk>("all");
   const [sortKey,  setSortKey] = useState<SortKey>("risk");
   const [sortDir,  setSortDir] = useState<SortDir>("asc");
+
+  // Unique sorted country list from current outbreaks
+  const countryOptions = useMemo(() => {
+    const seen = new Set<string>();
+    const list: { key: string; label: string }[] = [];
+    for (const o of outbreaks) {
+      const name = getLocalizedCountry(o, locale);
+      if (o.country_en && !seen.has(o.country_en)) {
+        seen.add(o.country_en);
+        list.push({ key: o.country_en, label: name ?? o.country_en });
+      }
+    }
+    return list.sort((a, b) => a.label.localeCompare(b.label));
+  }, [outbreaks, locale]);
 
   function handleSort(key: SortKey) {
     if (sortKey === key) {
@@ -85,13 +103,14 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l }: 
   const filtered = useMemo(() => {
     const q = search.trim().toLowerCase();
     return outbreaks.filter((o) => {
-      if (region !== "all" && o.region !== region) return false;
-      if (risk   !== "all" && o.risk_level !== risk) return false;
+      if (region  !== "all" && o.region    !== region)  return false;
+      if (country !== "all" && o.country_en !== country) return false;
+      if (risk    !== "all" && o.risk_level !== risk)    return false;
       if (q && !getLocalizedDisease(o, locale).toLowerCase().includes(q) &&
                !getLocalizedCountry(o, locale).toLowerCase().includes(q)) return false;
       return true;
     });
-  }, [outbreaks, region, risk, search, locale]);
+  }, [outbreaks, region, country, risk, search, locale]);
 
   const sorted = useMemo(() => {
     const RISK_ORDER: Record<string, number> = { high: 0, medium: 1, low: 2 };
@@ -105,11 +124,12 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l }: 
     });
   }, [filtered, sortKey, sortDir]);
 
-  const hasFilters = search !== "" || region !== "all" || risk !== "all";
+  const hasFilters = search !== "" || region !== "all" || country !== "all" || risk !== "all";
 
   const clearFilters = () => {
     setSearch("");
     setRegion("all");
+    setCountry("all");
     setRisk("all");
   };
 
@@ -189,6 +209,18 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l }: 
             </button>
           ))}
 
+          {/* Country dropdown */}
+          <select
+            value={country}
+            onChange={(e) => setCountry(e.target.value)}
+            className="text-xs px-3 py-1 rounded-full border border-gray-800 bg-gray-900 text-gray-400 hover:border-gray-600 focus:outline-none focus:border-gray-600 transition-colors cursor-pointer"
+          >
+            <option value="all">{l.allCountries}</option>
+            {countryOptions.map(({ key, label }) => (
+              <option key={key} value={key}>{label}</option>
+            ))}
+          </select>
+
           {hasFilters && (
             <button
               onClick={clearFilters}
@@ -245,6 +277,9 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l }: 
                 >
                   {l.deaths}<SortIcon col="deaths" />
                 </th>
+                <th className="text-left px-4 py-3 hidden sm:table-cell text-amber-500/80 whitespace-nowrap">
+                  {l.cfr}
+                </th>
                 <th
                   className="text-left px-4 py-3 cursor-pointer hover:text-gray-200 select-none whitespace-nowrap"
                   onClick={() => handleSort("risk")}
@@ -276,7 +311,7 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l }: 
                   </td>
                   <td className="px-4 py-3 text-gray-300">
                     {isPaid ? (
-                      outbreak.cases.toLocaleString()
+                      outbreak.cases > 0 ? outbreak.cases.toLocaleString() : <span className="text-gray-600 italic text-xs">{l.noData}</span>
                     ) : (
                       <span className="blur-sm select-none text-gray-500">
                         {outbreak.cases.toLocaleString()}
@@ -285,11 +320,28 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l }: 
                   </td>
                   <td className="px-4 py-3 text-red-400 hidden sm:table-cell">
                     {isPaid ? (
-                      outbreak.deaths.toLocaleString()
+                      outbreak.cases > 0 ? outbreak.deaths.toLocaleString() : <span className="text-gray-600 italic text-xs">{l.noData}</span>
                     ) : (
                       <span className="blur-sm select-none text-gray-500">
                         {outbreak.deaths.toLocaleString()}
                       </span>
+                    )}
+                  </td>
+                  {/* CFR */}
+                  <td className="px-4 py-3 hidden sm:table-cell">
+                    {isPaid ? (
+                      outbreak.cases > 0 ? (
+                        <span className={`text-sm font-medium ${
+                          (outbreak.deaths / outbreak.cases) > 0.1 ? "text-red-400" :
+                          (outbreak.deaths / outbreak.cases) > 0.03 ? "text-amber-400" : "text-gray-400"
+                        }`}>
+                          {(outbreak.deaths / outbreak.cases * 100).toFixed(1)}%
+                        </span>
+                      ) : (
+                        <span className="text-gray-600 italic text-xs">{l.noData}</span>
+                      )
+                    ) : (
+                      <span className="blur-sm select-none text-gray-500">12.3%</span>
                     )}
                   </td>
                   <td className="px-4 py-3">

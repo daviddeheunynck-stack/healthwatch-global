@@ -28,14 +28,17 @@ const DASHBOARD_META: Record<string, { title: string; description: string }> = {
 const FILTER_COPY: Record<string, {
   searchPlaceholder: string;
   allRegions: string;
+  allCountries: string;
   allRisks: string;
   noResults: string;
+  noData: string;
+  cfr: string;
 }> = {
-  en: { searchPlaceholder: "Search disease or country…", allRegions: "All regions", allRisks: "All risks",    noResults: "No outbreaks match your filters."              },
-  fr: { searchPlaceholder: "Rechercher maladie ou pays…", allRegions: "Toutes régions", allRisks: "Tous niveaux", noResults: "Aucun foyer ne correspond aux filtres."    },
-  es: { searchPlaceholder: "Buscar enfermedad o país…",   allRegions: "Todas las regiones", allRisks: "Todos los niveles", noResults: "Ningún brote coincide con los filtros." },
-  ar: { searchPlaceholder: "ابحث عن مرض أو دولة…",      allRegions: "كل المناطق",    allRisks: "كل المستويات", noResults: "لا توجد تفشيات تطابق المرشحات."          },
-  id: { searchPlaceholder: "Cari penyakit atau negara…",  allRegions: "Semua wilayah", allRisks: "Semua tingkat", noResults: "Tidak ada wabah yang cocok dengan filter." },
+  en: { searchPlaceholder: "Search disease or country…", allRegions: "All regions", allCountries: "All countries", allRisks: "All risks",       noResults: "No outbreaks match your filters.",              noData: "N/A", cfr: "CFR" },
+  fr: { searchPlaceholder: "Rechercher maladie ou pays…", allRegions: "Toutes régions", allCountries: "Tous pays",   allRisks: "Tous niveaux", noResults: "Aucun foyer ne correspond aux filtres.",        noData: "N/D", cfr: "Létalité" },
+  es: { searchPlaceholder: "Buscar enfermedad o país…",   allRegions: "Todas las regiones", allCountries: "Todos los países", allRisks: "Todos los niveles", noResults: "Ningún brote coincide con los filtros.", noData: "N/D", cfr: "Letalidad" },
+  ar: { searchPlaceholder: "ابحث عن مرض أو دولة…",      allRegions: "كل المناطق",    allCountries: "كل الدول",   allRisks: "كل المستويات", noResults: "لا توجد تفشيات تطابق المرشحات.",              noData: "غ/م",  cfr: "معدل الوفيات" },
+  id: { searchPlaceholder: "Cari penyakit atau negara…",  allRegions: "Semua wilayah", allCountries: "Semua negara", allRisks: "Semua tingkat", noResults: "Tidak ada wabah yang cocok dengan filter.",    noData: "T/S", cfr: "CFR" },
 };
 
 const LANDING_META: Record<string, { title: string; description: string }> = {
@@ -110,8 +113,11 @@ async function DashboardContent() {
     date:              t("date"),
     searchPlaceholder: fc.searchPlaceholder,
     allRegions:        fc.allRegions,
+    allCountries:      fc.allCountries,
     allRisks:          fc.allRisks,
     noResults:         fc.noResults,
+    noData:            fc.noData,
+    cfr:               fc.cfr,
     africa:            tAlerts("africa"),
     asia:              tAlerts("asia"),
     europe:            tAlerts("europe"),
