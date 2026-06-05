@@ -57,6 +57,7 @@ export async function GET(req: NextRequest) {
 
   const debug = req.nextUrl.searchParams.get("debug") === "1";
   const debugLog: string[] = [];
+  const errorLog: string[] = [];
 
   const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
   const results = { inserted: 0, updated: 0, skipped: 0, errors: 0, staleDeactivated: 0 };
@@ -146,14 +147,21 @@ export async function GET(req: NextRequest) {
               active: true,
             })
             .eq("id", existingRow.id);
-          if (error) { console.error("[sync] update:", error); results.errors++; }
-          else results.updated++;
+          if (error) {
+            console.error("[sync] update:", error);
+            errorLog.push(`UPDATE ${outbreak.disease_en}/${outbreak.country_en}: ${error.message}`);
+            results.errors++;
+          } else results.updated++;
         } else {
           results.skipped++;
         }
       } else {
         const { error } = await supabase.from("outbreaks").insert(outbreak);
-        if (error) { console.error("[sync] insert:", error, outbreak); results.errors++; }
+        if (error) {
+          console.error("[sync] insert:", error, outbreak);
+          errorLog.push(`INSERT ${outbreak.disease_en}/${outbreak.country_en}: ${error.message}`);
+          results.errors++;
+        }
         else results.inserted++;
       }
 
@@ -183,6 +191,6 @@ export async function GET(req: NextRequest) {
     source: usedSource,
     outbreaksParsed: outbreaks.length,
     ...results,
-    ...(debug ? { debugLog } : {}),
+    ...(debug ? { debugLog, errorLog } : {}),
   });
 }
