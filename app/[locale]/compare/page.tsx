@@ -1,13 +1,14 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useTranslations, useLocale } from "next-intl";
+import { useState, useEffect, useCallback } from "react";
+import { useLocale } from "next-intl";
+import { useRouter, useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase-browser";
 import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 import { getIncidenceRate } from "@/lib/population-data";
 import RiskBadge from "@/components/RiskBadge";
 import type { Outbreak } from "@/lib/outbreaks";
-import { ArrowLeftRight, TrendingUp, Users, Skull, Activity, Globe, Calendar, AlertTriangle } from "lucide-react";
+import { ArrowLeftRight, TrendingUp, Users, Skull, Activity, Globe, Calendar, AlertTriangle, Link as LinkIcon, Check } from "lucide-react";
 
 const LABELS: Record<string, {
   title: string; subtitle: string; selectA: string; selectB: string;
@@ -94,13 +95,33 @@ function StatRow({ label, valA, valB, icon, higherIsBad = true }: {
 }
 
 export default function ComparePage() {
-  const locale = useLocale();
-  const l = LABELS[locale] ?? LABELS.en;
-  const isRtl = locale === "ar";
+  const locale     = useLocale();
+  const l          = LABELS[locale] ?? LABELS.en;
+  const isRtl      = locale === "ar";
+  const router     = useRouter();
+  const searchParams = useSearchParams();
 
   const [outbreaks, setOutbreaks] = useState<Outbreak[]>([]);
-  const [idA, setIdA] = useState<string>("");
-  const [idB, setIdB] = useState<string>("");
+  const [idA, setIdA] = useState<string>(searchParams.get("a") ?? "");
+  const [idB, setIdB] = useState<string>(searchParams.get("b") ?? "");
+  const [copied, setCopied] = useState(false);
+
+  // Sync URL params when selection changes
+  const updateUrl = useCallback((a: string, b: string) => {
+    const params = new URLSearchParams();
+    if (a) params.set("a", a);
+    if (b) params.set("b", b);
+    router.replace(`?${params.toString()}`, { scroll: false });
+  }, [router]);
+
+  function setA(v: string) { setIdA(v); updateUrl(v, idB); }
+  function setB(v: string) { setIdB(v); updateUrl(idA, v); }
+
+  async function copyShareLink() {
+    await navigator.clipboard.writeText(window.location.href);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  }
 
   useEffect(() => {
     const sb = createClient();
@@ -127,19 +148,30 @@ export default function ComparePage() {
 
   return (
     <div className="space-y-6 max-w-4xl mx-auto" dir={isRtl ? "rtl" : undefined}>
-      <div>
-        <h1 className="text-2xl font-bold text-white flex items-center gap-3">
-          <ArrowLeftRight className="w-6 h-6 text-red-400" />
-          {l.title}
-        </h1>
-        <p className="text-gray-400 text-sm mt-1">{l.subtitle}</p>
+      <div className="flex items-start justify-between gap-4 flex-wrap">
+        <div>
+          <h1 className="text-2xl font-bold text-white flex items-center gap-3">
+            <ArrowLeftRight className="w-6 h-6 text-red-400" />
+            {l.title}
+          </h1>
+          <p className="text-gray-400 text-sm mt-1">{l.subtitle}</p>
+        </div>
+        {oA && oB && (
+          <button
+            onClick={copyShareLink}
+            className="flex items-center gap-2 text-sm px-4 py-2 bg-gray-800 hover:bg-gray-700 border border-gray-700 text-gray-300 rounded-xl transition-colors shrink-0"
+          >
+            {copied ? <Check className="w-4 h-4 text-green-400" /> : <LinkIcon className="w-4 h-4" />}
+            {copied ? "Lien copié !" : "Partager cette comparaison"}
+          </button>
+        )}
       </div>
 
       {/* Selectors */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {[
-          { label: l.selectA, value: idA, set: setIdA, other: idB },
-          { label: l.selectB, value: idB, set: setIdB, other: idA },
+          { label: l.selectA, value: idA, set: setA, other: idB },
+          { label: l.selectB, value: idB, set: setB, other: idA },
         ].map(({ label, value, set, other }) => (
           <div key={label} className="space-y-1.5">
             <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide">{label}</label>
