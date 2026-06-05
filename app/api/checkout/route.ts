@@ -68,23 +68,28 @@ export async function POST(req: NextRequest) {
 
     const stripeLocale = STRIPE_LOCALES[locale] || "en";
 
+    // Pre-apply coupon if provided — mutually exclusive with allow_promotion_codes
+    const ALLOWED_COUPONS = new Set(["FOUNDER29"]);
+    const applyCoupon = coupon && ALLOWED_COUPONS.has(String(coupon).toUpperCase())
+      ? String(coupon).toUpperCase()
+      : null;
+
     const params = new URLSearchParams({
       mode: "subscription",
       "line_items[0][price]": priceId,
       "line_items[0][quantity]": "1",
       success_url: `${baseUrl}/${locale}/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${baseUrl}/${locale}/pricing`,
-      allow_promotion_codes: "true",
+      // allow_promotion_codes and discounts are mutually exclusive in Stripe
+      ...(applyCoupon ? {} : { allow_promotion_codes: "true" }),
       locale: stripeLocale,
       "metadata[plan]": plan,
       "metadata[user_id]": userId || "",
       "metadata[billing]": billingPeriod,
     });
 
-    // Pre-apply coupon if provided (e.g., FOUNDER29)
-    const ALLOWED_COUPONS = new Set(["FOUNDER29"]);
-    if (coupon && ALLOWED_COUPONS.has(String(coupon).toUpperCase())) {
-      params.set("discounts[0][coupon]", String(coupon).toUpperCase());
+    if (applyCoupon) {
+      params.set("discounts[0][coupon]", applyCoupon);
     }
 
     // 14-day free trial — no credit card required
