@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { X, ExternalLink, AlertTriangle, TrendingUp, Users, Skull, Calendar, Globe, Clock, Activity, ImageDown } from "lucide-react";
+import { X, ExternalLink, AlertTriangle, TrendingUp, Users, Skull, Calendar, Globe, Clock, Activity, ImageDown, FileText } from "lucide-react";
 import WatchlistButton from "@/components/WatchlistButton";
 import { getIncidenceRate } from "@/lib/population-data";
 import type { Outbreak } from "@/lib/outbreaks";
@@ -109,6 +109,20 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlis
               isPaid={isPaid}
               locale={locale}
             />
+            {/* PDF one-pager */}
+            <a
+              href={`/${locale}/outbreak/${outbreak.id}/print`}
+              target="_blank"
+              rel="noopener noreferrer"
+              title={locale === "fr" ? "Rapport PDF" :
+                     locale === "es" ? "Informe PDF" :
+                     locale === "ar" ? "تقرير PDF" :
+                     locale === "id" ? "Laporan PDF" :
+                     "PDF Report"}
+              className="p-1.5 rounded-lg hover:bg-white/10 text-gray-400 hover:text-white transition-colors"
+            >
+              <FileText className="w-4 h-4" />
+            </a>
             {/* Download card image */}
             <a
               href={`/api/outbreak-card/${outbreak.id}?locale=${locale}`}
