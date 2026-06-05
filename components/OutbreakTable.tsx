@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from "react";
 import { Search, X, ChevronUp, ChevronDown, ChevronsUpDown } from "lucide-react";
+import OutbreakDetailModal from "@/components/OutbreakDetailModal";
 
 type SortKey = "risk" | "cases" | "deaths" | "date";
 type SortDir = "asc" | "desc";
@@ -62,9 +63,10 @@ interface Props {
 }
 
 export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l }: Props) {
-  const [search,   setSearch]  = useState("");
-  const [region,   setRegion]  = useState<Region>("all");
-  const [country,  setCountry] = useState<string>("all");
+  const [search,   setSearch]    = useState("");
+  const [region,   setRegion]    = useState<Region>("all");
+  const [country,  setCountry]   = useState<string>("all");
+  const [selected, setSelected]  = useState<Outbreak | null>(null);
   const [risk,     setRisk]    = useState<Risk>("all");
   const [sortKey,  setSortKey] = useState<SortKey>("risk");
   const [sortDir,  setSortDir] = useState<SortDir>("asc");
@@ -299,7 +301,8 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l }: 
               {sorted.map((outbreak, i) => (
                 <tr
                   key={outbreak.id}
-                  className={`border-t border-gray-800 hover:bg-gray-800/50 transition-colors ${
+                  onClick={() => setSelected(outbreak)}
+                  className={`border-t border-gray-800 hover:bg-gray-800/50 transition-colors cursor-pointer ${
                     i % 2 === 0 ? "bg-gray-900/30" : ""
                   }`}
                 >
@@ -372,6 +375,14 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l }: 
           {sorted.length} / {outbreaks.length}
         </p>
       )}
+
+      {/* Detail modal */}
+      <OutbreakDetailModal
+        outbreak={selected}
+        locale={locale}
+        isPaid={isPaid}
+        onClose={() => setSelected(null)}
+      />
     </div>
   );
 }
