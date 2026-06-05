@@ -389,7 +389,14 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l }: 
                   }`}
                 >
                   <td className="px-4 py-3 font-medium text-white">
-                    {getLocalizedDisease(outbreak, locale)}
+                    <div className="flex items-center gap-1.5 flex-wrap">
+                      {getLocalizedDisease(outbreak, locale)}
+                      {outbreak.is_pheic && (
+                        <span title="PHEIC — Public Health Emergency of International Concern" className="inline-flex items-center text-[10px] font-bold px-1.5 py-0.5 rounded bg-purple-900/50 border border-purple-700/50 text-purple-300 shrink-0 cursor-help">
+                          🚨 PHEIC
+                        </span>
+                      )}
+                    </div>
                   </td>
                   <td className="px-4 py-3 text-gray-300">
                     {getLocalizedCountry(outbreak, locale)}

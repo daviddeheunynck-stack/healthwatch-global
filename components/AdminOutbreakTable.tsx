@@ -221,6 +221,21 @@ export default function AdminOutbreakTable({ initial }: { initial: Outbreak[] })
                           className="p-1.5 hover:bg-gray-700 rounded transition-colors text-gray-400 hover:text-white disabled:opacity-50">
                           {o.active ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
                         </button>
+                        {/* PHEIC toggle */}
+                        <button
+                          onClick={async () => {
+                            await fetch(`/api/admin/outbreaks/${o.id}`, {
+                              method: "PATCH",
+                              headers: { "Content-Type": "application/json" },
+                              body: JSON.stringify({ is_pheic: !o.is_pheic }),
+                            });
+                            setOutbreaks((prev) => prev.map((x) => x.id === o.id ? { ...x, is_pheic: !x.is_pheic } : x));
+                          }}
+                          title={o.is_pheic ? "Retirer PHEIC" : "Déclarer PHEIC"}
+                          className={`p-1.5 rounded transition-colors text-xs font-bold ${o.is_pheic ? "text-purple-400 hover:text-purple-300 hover:bg-purple-900/30" : "text-gray-600 hover:text-purple-400 hover:bg-gray-700"}`}
+                        >
+                          🚨
+                        </button>
                         <button onClick={() => startEdit(o)} title="Modifier"
                           className="p-1.5 hover:bg-gray-700 rounded transition-colors text-gray-400 hover:text-blue-400">
                           <Pencil className="w-3.5 h-3.5" />

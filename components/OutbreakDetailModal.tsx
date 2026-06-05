@@ -79,6 +79,11 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, onClose 
           <div className="space-y-2 flex-1 min-w-0">
             <div className="flex items-center gap-2 flex-wrap">
               <RiskBadge level={outbreak.risk_level as "high" | "medium" | "low"} />
+              {outbreak.is_pheic && (
+                <span className="inline-flex items-center gap-1 text-xs px-2 py-0.5 rounded-full bg-purple-900/40 border border-purple-700/50 text-purple-300 font-bold">
+                  🚨 PHEIC
+                </span>
+              )}
               {outbreak.corroborated && (
                 <span className="inline-flex items-center gap-1 text-xs px-2 py-0.5 rounded-full bg-blue-900/30 border border-blue-700/40 text-blue-300 font-medium">
                   🔁 WHO + ProMED
@@ -150,6 +155,20 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, onClose 
             </p>
           </div>
         </div>
+
+        {/* PHEIC banner */}
+        {outbreak.is_pheic && (
+          <div className="mx-5 mb-3 flex items-start gap-2 bg-purple-900/20 border border-purple-700/30 rounded-xl p-3 text-xs text-purple-300">
+            <span className="shrink-0 text-base">🚨</span>
+            <span>
+              {locale === "fr" ? "Urgence de Santé Publique de Portée Internationale (USPPI) — déclarée par le Directeur Général de l'OMS. Niveau d'alerte maximal." :
+               locale === "es" ? "Emergencia de Salud Pública de Importancia Internacional (ESPII) — declarada por el Director General de la OMS." :
+               locale === "ar" ? "طوارئ الصحة العمومية التي تثير قلقاً دولياً — أعلنها المدير العام لمنظمة الصحة العالمية." :
+               locale === "id" ? "Kedaruratan Kesehatan Masyarakat yang Meresahkan Dunia (KKMMD) — dinyatakan oleh Direktur Jenderal WHO." :
+               "Public Health Emergency of International Concern (PHEIC) — declared by the WHO Director-General. Highest global health alert level."}
+            </span>
+          </div>
+        )}
 
         {/* Partial data warning */}
         {!hasData && (

@@ -20,6 +20,7 @@ export interface Outbreak {
   active: boolean;
   corroborated:  boolean;       // true when both WHO + ProMED report this outbreak
   promed_source: string | null; // ProMED article URL when corroborated
+  is_pheic:      boolean;       // Public Health Emergency of International Concern
 }
 
 export async function getLastSync(): Promise<string | null> {
