@@ -3,6 +3,7 @@
 import { useState, useMemo, useCallback } from "react";
 import { Search, X, ChevronUp, ChevronDown, ChevronsUpDown, Download, Lock } from "lucide-react";
 import OutbreakDetailModal from "@/components/OutbreakDetailModal";
+import SavedFilters from "@/components/SavedFilters";
 import { track } from "@vercel/analytics/react";
 
 type SortKey = "risk" | "cases" | "deaths" | "date";
@@ -167,6 +168,15 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l }: 
     track("csv_export_filtered", { rows: sorted.length, locale });
   }, [sorted, locale]);
 
+  function loadFilter(f: { search: string; region: string; country: string; risk: string; dateFrom: string; dateTo: string }) {
+    setSearch(f.search);
+    setRegion(f.region as any);
+    setCountry(f.country);
+    setRisk(f.risk as any);
+    setDateFrom(f.dateFrom);
+    setDateTo(f.dateTo);
+  }
+
   const clearFilters = () => {
     setSearch("");
     setRegion("all");
@@ -315,6 +325,14 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l }: 
           )}
         </div>
       </div>
+
+      {/* ── Saved filters ──────────────────────────────────────────────── */}
+      <SavedFilters
+        locale={locale}
+        currentFilters={{ search, region, country, risk, dateFrom, dateTo }}
+        hasActiveFilters={hasFilters}
+        onLoad={loadFilter}
+      />
 
       {/* ── Upgrade banner ─────────────────────────────────────────────── */}
       {!isPaid && (
