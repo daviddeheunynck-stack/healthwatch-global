@@ -205,18 +205,25 @@ export default function DocsPage({ params }: { params: Promise<{ locale: string 
         <Code lang="json">{`{
   "data": [
     {
-      "id": "outbreak_001",
-      "disease": "Mpox",
-      "country": "Democratic Republic of Congo",
+      "id": "550e8400-e29b-41d4-a716-446655440000",
+      "disease": "Ebola virus disease",
+      "country": "DR Congo",
       "region": "africa",
+      "lat": -4.0,
+      "lng": 21.8,
       "risk_level": "high",
-      "cases": 4821,
-      "deaths": 312,
-      "date": "2025-01-14",
-      "source_url": "https://www.who.int/..."
+      "cases": 381,
+      "deaths": 64,
+      "date": "2026-06-03",
+      "source": "https://www.who.int/emergencies/disease-outbreak-news/item/2026-DON603",
+      "description": "As of 3 June 2026, the Ministry of Health DRC...",
+      "is_pheic": false,
+      "corroborated": true,
+      "promed_source": "https://promedmail.org/promed-post/?id=...",
+      "active": true
     }
   ],
-  "total": 47,
+  "total": 39,
   "limit": 50,
   "offset": 0
 }`}</Code>
@@ -232,15 +239,21 @@ export default function DocsPage({ params }: { params: Promise<{ locale: string 
             </thead>
             <tbody>
               {[
-                ["id",         "string",  "Unique outbreak identifier"],
-                ["disease",    "string",  "Disease name (English)"],
-                ["country",    "string",  "Affected country (English)"],
-                ["region",     "string",  "Continent: africa · asia · americas · europe · oceania"],
-                ["risk_level", "string",  "WHO risk assessment: high · medium · low"],
-                ["cases",      "integer", "Confirmed case count"],
-                ["deaths",     "integer", "Confirmed death count"],
-                ["date",       "string",  "Date reported (ISO 8601: YYYY-MM-DD)"],
-                ["source_url", "string",  "WHO Disease Outbreak News article URL"],
+                ["id",            "string",  "Unique UUID identifier"],
+                ["disease",       "string",  "Disease name (English)"],
+                ["country",       "string",  "Affected country (English)"],
+                ["region",        "string",  "Continent: africa · asia · americas · europe · oceania"],
+                ["lat / lng",     "number",  "Geographic coordinates of the country centroid"],
+                ["risk_level",    "string",  "WHO risk assessment: high · medium · low"],
+                ["cases",         "integer", "Confirmed case count (0 = not reported in this bulletin)"],
+                ["deaths",        "integer", "Confirmed death count"],
+                ["date",          "string",  "Report publication date (ISO 8601: YYYY-MM-DD)"],
+                ["source",        "string",  "WHO Disease Outbreak News article URL"],
+                ["description",   "string",  "Summary extracted from the WHO bulletin (≤ 400 chars)"],
+                ["is_pheic",      "boolean", "True when WHO has declared a Public Health Emergency of International Concern"],
+                ["corroborated",  "boolean", "True when both WHO DON and ProMED confirm this outbreak"],
+                ["promed_source", "string?", "ProMED article URL when corroborated (null otherwise)"],
+                ["active",        "boolean", "False for deactivated / resolved outbreaks"],
               ].map(([field, type, desc]) => (
                 <tr key={field} className="border-b border-gray-800">
                   <td className="px-4 py-3 font-mono text-sm text-purple-300">{field}</td>
