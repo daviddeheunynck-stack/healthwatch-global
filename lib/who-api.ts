@@ -113,16 +113,16 @@ export async function parseWHODONItem(
   if (Summary) {
     const plain = Summary.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
     const nums = extractNumbers(plain);
-    cases = nums.cases;
-    deaths = nums.deaths;
+    cases  = nums.cases  ?? 0;
+    deaths = nums.deaths ?? 0;
     description = plain.slice(0, 400);
   }
 
   // Fallback: fetch full article page for numbers (only for new entries)
   if (fetchBody && cases === 0 && ItemDefaultUrl) {
     const bodyData = await fetchArticleNumbers(ItemDefaultUrl);
-    cases = bodyData.cases;
-    deaths = bodyData.deaths;
+    cases  = bodyData.cases  ?? 0;
+    deaths = bodyData.deaths ?? 0;
     description = bodyData.description || description;
     await new Promise((r) => setTimeout(r, 150)); // polite delay
   }
