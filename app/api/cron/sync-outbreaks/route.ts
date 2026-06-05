@@ -172,7 +172,28 @@ export async function GET(req: NextRequest) {
     }
   }
 
-  // ── 4. Deactivate stale entries (never touch seed rows) ──────
+  // ── 4. Daily snapshot — upsert cases/deaths for trend tracking ─
+  const today = new Date().toISOString().split("T")[0];
+  const { data: activeOutbreaks } = await supabase
+    .from("outbreaks")
+    .select("id, cases, deaths")
+    .eq("active", true);
+
+  if (activeOutbreaks && activeOutbreaks.length > 0) {
+    const snapshots = activeOutbreaks.map((o) => ({
+      outbreak_id: o.id,
+      cases:       o.cases,
+      deaths:      o.deaths,
+      snapped_at:  today,
+    }));
+    const { error: snapErr } = await supabase
+      .from("outbreak_snapshots")
+      .upsert(snapshots, { onConflict: "outbreak_id,snapped_at" });
+    if (snapErr) console.error("[sync] snapshot upsert:", snapErr.message);
+    else console.log(`[sync] Snapshotted ${snapshots.length} outbreaks for ${today}`);
+  }
+
+  // ── 5. Deactivate stale entries (never touch seed rows) ──────
   const cutoff = new Date();
   cutoff.setDate(cutoff.getDate() - STALE_DAYS);
   const { count } = await supabase
