@@ -18,7 +18,7 @@ const BACK_LABELS: Record<string, string> = {
 };
 
 // ─── À COMPLÉTER dès réception du SIRET ──────────────────────────────────────
-const SIRET = "À compléter — en attente d'immatriculation";
+const SIRET = "879 502 912"; // SIREN actif — SIRET complet à confirmer après modification
 
 export default async function LegalPage() {
   const locale = await getLocale();
