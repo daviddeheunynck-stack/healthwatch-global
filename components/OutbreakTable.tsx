@@ -49,7 +49,6 @@ export interface OutbreakTableLabels {
   lockedCta: string;
   // Export
   exportCsv: string;
-  exportRows: (n: number) => string;
 }
 
 type Region = "all" | "africa" | "asia" | "europe" | "americas" | "oceania";
@@ -243,7 +242,7 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l }: 
         {isPaid ? (
           <button
             onClick={downloadCsv}
-            title={l.exportRows(sorted.length)}
+            title={`${l.exportCsv} (${sorted.length})`}
             className="flex items-center gap-1.5 px-3 py-2 bg-gray-800 hover:bg-gray-700 border border-gray-700 text-gray-300 hover:text-white rounded-lg text-xs font-medium transition-colors shrink-0"
           >
             <Download className="w-3.5 h-3.5" />
