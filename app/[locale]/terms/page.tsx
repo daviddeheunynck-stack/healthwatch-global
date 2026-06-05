@@ -57,9 +57,21 @@ export default async function TermsPage() {
           <h2 className="text-lg font-semibold text-white">2. Description of Service</h2>
           <p className="text-gray-400 text-sm leading-relaxed">
             HealthWatch Global is a multilingual health surveillance platform that aggregates and displays
-            publicly available epidemic alert data from sources including the WHO, CDC, ECDC, and ProMED.
-            The platform provides dashboards, alert subscriptions, and PDF reports.
+            publicly available epidemic alert data from sources including WHO Disease Outbreak News (DON),
+            CDC, ECDC, and ProMED. The platform provides interactive dashboards, disease-specific alert
+            subscriptions, regional email alerts, PDF regional reports, CSV data export, Slack/Teams
+            integration, and a REST API for Enterprise organizations. Available in 5 languages.
           </p>
+        </section>
+
+        <section className="space-y-3">
+          <h2 className="text-lg font-semibold text-white">2a. Alert Services</h2>
+          <ul className="space-y-2 text-gray-400 text-sm">
+            <li className="flex items-start gap-2"><span className="text-red-400 shrink-0 mt-0.5">•</span><strong className="text-gray-300">Weekly digest:</strong> A weekly summary of active outbreaks filtered by your preferred region.</li>
+            <li className="flex items-start gap-2"><span className="text-red-400 shrink-0 mt-0.5">•</span><strong className="text-gray-300">Regional alerts:</strong> Email notifications when a new outbreak is detected in your monitored geographic regions (Pro plan).</li>
+            <li className="flex items-start gap-2"><span className="text-red-400 shrink-0 mt-0.5">•</span><strong className="text-gray-300">Disease alerts:</strong> Email notifications when a tracked pathogen (e.g. H5N1, Ebola) is detected anywhere in the world, up to 10 diseases (Pro plan, sent up to 3× per day).</li>
+            <li className="flex items-start gap-2"><span className="text-red-400 shrink-0 mt-0.5">•</span>Alert data is sourced from official public health organizations. We do not guarantee real-time delivery or complete coverage of all outbreaks worldwide.</li>
+          </ul>
         </section>
 
         <section className="space-y-3">
