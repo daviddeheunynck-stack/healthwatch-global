@@ -5,6 +5,7 @@ import Link from "next/link";
 import BillingPortalButton from "@/components/BillingPortalButton";
 import SignOutButton from "@/components/SignOutButton";
 import AlertRegionToggles from "@/components/AlertRegionToggles";
+import DiseaseAlertPicker from "@/components/DiseaseAlertPicker";
 import SlackWebhookForm from "@/components/SlackWebhookForm";
 import ApiKeyManager from "@/components/ApiKeyManager";
 import type { Metadata } from "next";
@@ -527,6 +528,9 @@ export default async function AccountPage({
           labels={{ ...al, upgradeHref: `/${locale}/pricing` }}
         />
       </div>
+
+      {/* Disease-specific alerts */}
+      <DiseaseAlertPicker locale={locale} isPaid={isPaid} />
 
       {/* Slack / Teams integration */}
       <div className="bg-gray-900 border border-gray-800 rounded-2xl p-6 space-y-4">

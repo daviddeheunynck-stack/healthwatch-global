@@ -19,6 +19,10 @@
     {
       "path": "/api/cron/trial-reminders",
       "schedule": "30 9 * * *"
+    },
+    {
+      "path": "/api/cron/disease-alerts",
+      "schedule": "0 6,12,18 * * *"
     }
   ]
 }
