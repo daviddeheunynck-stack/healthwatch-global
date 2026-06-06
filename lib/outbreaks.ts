@@ -57,13 +57,125 @@ export async function getOutbreaks(): Promise<Outbreak[]> {
     return [];
   }
 
-  return data || [];
+  // Deduplicate: keep only the most recent entry per (disease, country) pair
+  const seen = new Set<string>();
+  return (data || []).filter((o) => {
+    const key = `${(o.disease_en || o.disease).toLowerCase()}|${o.country.toLowerCase()}`;
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
 }
 
+// ── Disease name translations ─────────────────────────────────────────────────
+// The `disease` / `disease_en` columns contain English WHO names.
+// Map them to FR / ES / ID so the UI never shows English names on those locales.
+const DISEASE_FR: Record<string, string> = {
+  "Dengue": "Dengue",
+  "Dengue fever": "Dengue",
+  "Mpox": "Mpox",
+  "Monkeypox": "Variole du singe",
+  "Ebola": "Ébola",
+  "Ebola virus disease": "Maladie à virus Ébola",
+  "Marburg virus disease": "Maladie à virus de Marburg",
+  "Cholera": "Choléra",
+  "Yellow fever": "Fièvre jaune",
+  "Lassa fever": "Fièvre de Lassa",
+  "Rift Valley fever": "Fièvre de la Vallée du Rift",
+  "Crimean-Congo haemorrhagic fever": "Fièvre hémorragique de Crimée-Congo",
+  "Meningitis": "Méningite",
+  "Meningococcal meningitis": "Méningite à méningocoques",
+  "Measles": "Rougeole",
+  "Poliomyelitis": "Poliomyélite",
+  "Polio": "Poliomyélite",
+  "Influenza": "Grippe",
+  "Influenza A(H5N1)": "Grippe A(H5N1)",
+  "Influenza A(H3N2)": "Grippe A(H3N2)",
+  "Avian influenza": "Grippe aviaire",
+  "COVID-19": "COVID-19",
+  "Plague": "Peste",
+  "Typhoid fever": "Fièvre typhoïde",
+  "Anthrax": "Charbon",
+  "Rabies": "Rage",
+  "Chikungunya": "Chikungunya",
+  "Zika": "Zika",
+  "Zika virus disease": "Maladie à virus Zika",
+  "Middle East Respiratory Syndrome": "MERS-CoV",
+  "MERS-CoV": "MERS-CoV",
+  "Nipah virus": "Virus Nipah",
+  "Leishmaniasis": "Leishmaniose",
+  "Trypanosomiasis": "Trypanosomose",
+  "Hantavirus": "Hantavirus",
+};
+
+const DISEASE_ES: Record<string, string> = {
+  "Dengue": "Dengue",
+  "Dengue fever": "Fiebre del dengue",
+  "Mpox": "Mpox",
+  "Monkeypox": "Viruela del mono",
+  "Ebola": "Ébola",
+  "Ebola virus disease": "Enfermedad por virus del Ébola",
+  "Marburg virus disease": "Enfermedad por virus de Marburg",
+  "Cholera": "Cólera",
+  "Yellow fever": "Fiebre amarilla",
+  "Lassa fever": "Fiebre de Lassa",
+  "Rift Valley fever": "Fiebre del Valle del Rift",
+  "Crimean-Congo haemorrhagic fever": "Fiebre hemorrágica de Crimea-Congo",
+  "Meningitis": "Meningitis",
+  "Meningococcal meningitis": "Meningitis meningocócica",
+  "Measles": "Sarampión",
+  "Poliomyelitis": "Poliomielitis",
+  "Polio": "Poliomielitis",
+  "Influenza": "Gripe",
+  "Influenza A(H5N1)": "Gripe A(H5N1)",
+  "Avian influenza": "Gripe aviar",
+  "COVID-19": "COVID-19",
+  "Plague": "Peste",
+  "Typhoid fever": "Fiebre tifoidea",
+  "Rabies": "Rabia",
+  "Chikungunya": "Chikungunya",
+  "Zika virus disease": "Enfermedad por virus del Zika",
+  "Middle East Respiratory Syndrome": "MERS-CoV",
+  "MERS-CoV": "MERS-CoV",
+  "Nipah virus": "Virus Nipah",
+};
+
+const DISEASE_ID: Record<string, string> = {
+  "Dengue": "Demam Berdarah",
+  "Dengue fever": "Demam Berdarah Dengue",
+  "Mpox": "Mpox",
+  "Monkeypox": "Cacar Monyet",
+  "Ebola": "Ebola",
+  "Ebola virus disease": "Penyakit Virus Ebola",
+  "Marburg virus disease": "Penyakit Virus Marburg",
+  "Cholera": "Kolera",
+  "Yellow fever": "Demam Kuning",
+  "Lassa fever": "Demam Lassa",
+  "Rift Valley fever": "Demam Lembah Rift",
+  "Meningitis": "Meningitis",
+  "Measles": "Campak",
+  "Poliomyelitis": "Poliomielitis",
+  "Polio": "Polio",
+  "Influenza": "Influenza",
+  "Avian influenza": "Flu Burung",
+  "COVID-19": "COVID-19",
+  "Plague": "Pes",
+  "Typhoid fever": "Demam Tifoid",
+  "Rabies": "Rabies",
+  "Chikungunya": "Chikungunya",
+  "Zika virus disease": "Penyakit Virus Zika",
+  "Middle East Respiratory Syndrome": "MERS-CoV",
+  "MERS-CoV": "MERS-CoV",
+  "Nipah virus": "Virus Nipah",
+};
+
 export function getLocalizedDisease(outbreak: Outbreak, locale: string): string {
-  if (locale === "ar") return outbreak.disease_ar || outbreak.disease;
-  if (locale === "en" || locale === "es" || locale === "id") return outbreak.disease_en || outbreak.disease;
-  return outbreak.disease; // fr = default
+  const en = outbreak.disease_en || outbreak.disease;
+  if (locale === "ar") return outbreak.disease_ar || en;
+  if (locale === "fr") return DISEASE_FR[en] ?? DISEASE_FR[outbreak.disease] ?? en;
+  if (locale === "es") return DISEASE_ES[en] ?? DISEASE_ES[outbreak.disease] ?? en;
+  if (locale === "id") return DISEASE_ID[en] ?? DISEASE_ID[outbreak.disease] ?? en;
+  return en; // en = default
 }
 
 export function getLocalizedCountry(outbreak: Outbreak, locale: string): string {
