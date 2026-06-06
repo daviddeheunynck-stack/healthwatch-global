@@ -6,7 +6,7 @@ import { X, ExternalLink, AlertTriangle, TrendingUp, Users, Skull, Calendar, Glo
 import WatchlistButton from "@/components/WatchlistButton";
 import { getIncidenceRate } from "@/lib/population-data";
 import type { Outbreak } from "@/lib/outbreaks";
-import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
+import { getLocalizedDisease, getLocalizedCountry, getLocalizedDescription } from "@/lib/outbreaks";
 import RiskBadge from "@/components/RiskBadge";
 import ShareOutbreakButton from "@/components/ShareOutbreakButton";
 
@@ -59,8 +59,9 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlis
 
   if (!outbreak || typeof document === "undefined") return null;
 
-  const disease = getLocalizedDisease(outbreak, locale);
-  const country = getLocalizedCountry(outbreak, locale) ?? outbreak.country_en;
+  const disease     = getLocalizedDisease(outbreak, locale);
+  const country     = getLocalizedCountry(outbreak, locale) ?? outbreak.country_en;
+  const description = getLocalizedDescription(outbreak, locale);
   const hasData    = outbreak.cases > 0;
   const cfr        = hasData ? (outbreak.deaths / outbreak.cases * 100).toFixed(1) : null;
   const incidence  = getIncidenceRate(outbreak.cases, outbreak.country_en);
@@ -94,7 +95,16 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlis
             <div className="flex items-center gap-2 flex-wrap">
               <RiskBadge level={outbreak.risk_level as "high" | "medium" | "low"} />
               {outbreak.is_pheic && (
-                <span className="inline-flex items-center gap-1 text-xs px-2 py-0.5 rounded-full bg-purple-900/40 border border-purple-700/50 text-purple-300 font-bold">
+                <span
+                  title={
+                    locale === "fr" ? "Urgence de Santé Publique de Portée Internationale (USPPI)" :
+                    locale === "es" ? "Emergencia de Salud Pública de Importancia Internacional (ESPII)" :
+                    locale === "ar" ? "طوارئ الصحة العمومية التي تثير قلقاً دولياً" :
+                    locale === "id" ? "Kedaruratan Kesehatan Masyarakat yang Meresahkan Dunia (KKMMD)" :
+                    "Public Health Emergency of International Concern"
+                  }
+                  className="inline-flex items-center gap-1 text-xs px-2 py-0.5 rounded-full bg-purple-900/40 border border-purple-700/50 text-purple-300 font-bold cursor-help"
+                >
                   🚨 PHEIC
                 </span>
               )}
@@ -274,11 +284,11 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlis
           </div>
         </div>
 
-        {/* Description */}
-        {outbreak.description && (
+        {/* Description — localized via getLocalizedDescription(), falls back to EN */}
+        {description && (
           <div className="px-5 pb-4">
             <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">{c.description}</p>
-            <p className="text-sm text-gray-400 leading-relaxed">{outbreak.description}</p>
+            <p className="text-sm text-gray-400 leading-relaxed">{description}</p>
           </div>
         )}
 

@@ -9,9 +9,55 @@ export const dynamic = "force-dynamic";
 const BOM = String.fromCharCode(65279);
 const clean = (v: string | undefined) => (v || "").replace(new RegExp("^" + BOM), "").trim();
 
-const SUPABASE_URL = clean(process.env.NEXT_PUBLIC_SUPABASE_URL);
+const SUPABASE_URL        = clean(process.env.NEXT_PUBLIC_SUPABASE_URL);
 const SUPABASE_SERVICE_KEY = clean(process.env.SUPABASE_SERVICE_ROLE_KEY);
-const CRON_SECRET = clean(process.env.CRON_SECRET);
+const CRON_SECRET          = clean(process.env.CRON_SECRET);
+const DEEPL_API_KEY        = clean(process.env.DEEPL_API_KEY); // optional — sign up free at deepl.com
+
+// ── DeepL batch translation ────────────────────────────────────────────────────
+// Translates a single text to multiple target languages in one API call.
+// Returns null for each language if translation fails or key is not set.
+// Free tier: 500 000 chars/month — ample for ~30 outbreak descriptions.
+async function translateDescription(text: string): Promise<{
+  fr: string | null; es: string | null; ar: string | null; id: string | null;
+}> {
+  const empty = { fr: null, es: null, ar: null, id: null };
+  if (!DEEPL_API_KEY || !text?.trim()) return empty;
+
+  const endpoint = "https://api-free.deepl.com/v2/translate";
+  const targets = ["FR", "ES", "AR", "ID"] as const;
+  const keys:    ["fr", "es", "ar", "id"] = ["fr", "es", "ar", "id"];
+
+  const results: { fr: string | null; es: string | null; ar: string | null; id: string | null } = { ...empty };
+
+  try {
+    // DeepL Free API: one language per call (batch in parallel)
+    const calls = targets.map((lang) =>
+      fetch(endpoint, {
+        method: "POST",
+        headers: {
+          "Authorization": `DeepL-Auth-Key ${DEEPL_API_KEY}`,
+          "Content-Type":  "application/json",
+        },
+        body: JSON.stringify({
+          text:        [text],
+          source_lang: "EN",
+          target_lang: lang,
+        }),
+      }).then((r) => r.ok ? r.json() : null)
+    );
+
+    const responses = await Promise.all(calls);
+    for (let i = 0; i < targets.length; i++) {
+      const translation = responses[i]?.translations?.[0]?.text ?? null;
+      results[keys[i]] = translation;
+    }
+  } catch (e: any) {
+    console.warn("[sync] DeepL translation error:", e.message);
+  }
+
+  return results;
+}
 
 const STALE_DAYS = 90;
 
@@ -170,7 +216,35 @@ export async function GET(req: NextRequest) {
     }
   }
 
-  // ── 4. Daily snapshot — upsert cases/deaths for trend tracking ─
+  // ── 4. Back-fill missing description translations (DeepL) ────────
+  // Translate up to 10 rows per sync run to stay within free tier limits.
+  // Only runs when DEEPL_API_KEY is set.
+  if (DEEPL_API_KEY) {
+    const { data: needsTranslation } = await supabase
+      .from("outbreaks")
+      .select("id, description")
+      .eq("active", true)
+      .is("description_fr", null)
+      .not("description", "is", null)
+      .neq("description", "")
+      .limit(10);
+
+    if (needsTranslation && needsTranslation.length > 0) {
+      console.log(`[sync] Translating ${needsTranslation.length} descriptions via DeepL…`);
+      for (const row of needsTranslation) {
+        const t = await translateDescription(row.description);
+        if (t.fr || t.es || t.ar || t.id) {
+          await supabase
+            .from("outbreaks")
+            .update({ description_fr: t.fr, description_es: t.es, description_ar: t.ar, description_id: t.id })
+            .eq("id", row.id);
+        }
+        await new Promise((r) => setTimeout(r, 300)); // polite delay between DeepL calls
+      }
+    }
+  }
+
+  // ── 5. Daily snapshot — upsert cases/deaths for trend tracking ──
   const today = new Date().toISOString().split("T")[0];
   const { data: activeOutbreaks } = await supabase
     .from("outbreaks")
@@ -191,7 +265,7 @@ export async function GET(req: NextRequest) {
     else console.log(`[sync] Snapshotted ${snapshots.length} outbreaks for ${today}`);
   }
 
-  // ── 5. Deactivate stale entries (never touch seed rows) ──────
+  // ── 6. Deactivate stale entries (never touch seed rows) ──────
   const cutoff = new Date();
   cutoff.setDate(cutoff.getDate() - STALE_DAYS);
   const { count } = await supabase

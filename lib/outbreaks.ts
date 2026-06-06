@@ -17,7 +17,11 @@ export interface Outbreak {
   risk_level: "high" | "medium" | "low";
   date: string;
   source: string;
-  description: string;
+  description:    string;
+  description_fr: string | null;
+  description_es: string | null;
+  description_ar: string | null;
+  description_id: string | null;
   active: boolean;
   is_pheic:      boolean;       // Public Health Emergency of International Concern
   updated_at:    string | null; // last sync timestamp
@@ -173,6 +177,18 @@ export function getLocalizedDisease(outbreak: Outbreak, locale: string): string 
   if (locale === "es") return DISEASE_ES[name_en] ?? name_en;
   if (locale === "id") return DISEASE_ID[name_en] ?? name_en;
   return name_en; // en = default
+}
+
+// ── Description localization ──────────────────────────────────────────────────
+// Returns the translated description if available in DB, otherwise falls back
+// to the English description (source: WHO DON article).
+// Translations are populated by the sync cron via DeepL API.
+export function getLocalizedDescription(outbreak: Outbreak, locale: string): string {
+  if (locale === "fr" && outbreak.description_fr) return outbreak.description_fr;
+  if (locale === "es" && outbreak.description_es) return outbreak.description_es;
+  if (locale === "ar" && outbreak.description_ar) return outbreak.description_ar;
+  if (locale === "id" && outbreak.description_id) return outbreak.description_id;
+  return outbreak.description; // fallback to EN
 }
 
 // ── Country name translations ─────────────────────────────────────────────────

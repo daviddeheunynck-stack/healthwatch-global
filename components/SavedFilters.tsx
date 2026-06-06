@@ -4,12 +4,13 @@ import { useState, useEffect } from "react";
 import { Bookmark, BookmarkCheck, Trash2, Plus } from "lucide-react";
 
 export interface FilterState {
-  search:   string;
-  region:   string;
-  country:  string;
-  risk:     string;
-  dateFrom: string;
-  dateTo:   string;
+  search:    string;
+  region:    string;
+  country:   string;
+  risk:      string;
+  dateFrom:  string;
+  dateTo:    string;
+  cfrFilter: string; // "all" | "critical" | "elevated" | "low" | "nodata"
 }
 
 interface SavedFilter {
