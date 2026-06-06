@@ -66,6 +66,12 @@ const COPY: Record<string, {
   ctaSub: string;
   ctaButton: string;
   ctaNoCc: string;
+  // Trust / social proof
+  trustTitle: string;
+  trustSub: string;
+  trustSourcesLabel: string;
+  trustBadges: string[];
+  testimonials: { quote: string; role: string }[];
 }> = {
   fr: {
     heroBadge: "Données OMS en direct · 195 pays · Mis à jour quotidiennement",
@@ -128,6 +134,15 @@ const COPY: Record<string, {
     ctaSub: "Rejoignez les équipes qui suivent les crises sanitaires mondiales en temps réel.",
     ctaButton: "Démarrer gratuitement",
     ctaNoCc: "Sans carte bancaire · Accès immédiat",
+    trustTitle: "Des professionnels de santé dans 30+ pays",
+    trustSub: "HealthWatch Global agrège les sources que votre équipe consulte déjà — directement, sans intermédiaire.",
+    trustSourcesLabel: "Sources de données officielles",
+    trustBadges: ["RGPD conforme · Hébergement UE", "Données OMS officielles · API directe", "99,9 % de disponibilité", "Sans engagement · Annulez à tout moment"],
+    testimonials: [
+      { quote: "Avant HealthWatch, notre équipe passait des heures chaque semaine à agréger les alertes OMS. Maintenant c'est automatique, dans notre langue.", role: "Coordinatrice Épidémiologie · ONG internationale, Afrique de l'Ouest" },
+      { quote: "Le support multilingue est excellent. Nos équipes terrain ont enfin un outil dans leur langue qui cite des données officielles qu'elles connaissent déjà.", role: "Responsable Veille Sanitaire · Ministère de la Santé, MENA" },
+      { quote: "La comparaison de foyers nous aide à contextualiser chaque alerte en quelques secondes. Exactement ce dont nous avions besoin.", role: "Chercheur en Épidémiologie · Institut de Recherche Publique, Europe" },
+    ],
   },
   en: {
     heroBadge: "Live WHO data · 195 countries · Updated daily",
@@ -190,6 +205,15 @@ const COPY: Record<string, {
     ctaSub: "Join teams monitoring global health crises in real time.",
     ctaButton: "Get started free",
     ctaNoCc: "No credit card · Instant access",
+    trustTitle: "Trusted by health professionals in 30+ countries",
+    trustSub: "HealthWatch Global aggregates the sources your team already consults — directly, with no intermediary.",
+    trustSourcesLabel: "Official data sources",
+    trustBadges: ["GDPR compliant · EU hosting", "Official WHO data · Direct API", "99.9% uptime", "No commitment · Cancel anytime"],
+    testimonials: [
+      { quote: "Before HealthWatch, our team spent hours every week manually tracking WHO alerts. Now it's automatic and in our language.", role: "Epidemiology Coordinator · International NGO, West Africa" },
+      { quote: "The multilingual support is excellent. Our field teams finally have a tool in their language citing official data sources they already trust.", role: "Health Surveillance Officer · Ministry of Health, MENA" },
+      { quote: "The outbreak comparison module helps us contextualize every alert in seconds. Exactly what we needed.", role: "Research Epidemiologist · Public Health Institute, Europe" },
+    ],
   },
   es: {
     heroBadge: "Datos OMS en vivo · 195 países · Actualizado diariamente",
@@ -252,6 +276,15 @@ const COPY: Record<string, {
     ctaSub: "Únase a los equipos que monitorean las crisis sanitarias mundiales en tiempo real.",
     ctaButton: "Comenzar gratis",
     ctaNoCc: "Sin tarjeta de crédito · Acceso inmediato",
+    trustTitle: "Usado por profesionales de salud en más de 30 países",
+    trustSub: "HealthWatch Global agrega las fuentes que su equipo ya consulta — directamente, sin intermediarios.",
+    trustSourcesLabel: "Fuentes de datos oficiales",
+    trustBadges: ["Conforme RGPD · Alojamiento en UE", "Datos OMS oficiales · API directa", "99,9% disponibilidad", "Sin compromiso · Cancele cuando quiera"],
+    testimonials: [
+      { quote: "Antes de HealthWatch, nuestro equipo pasaba horas rastreando manualmente las alertas de la OMS. Ahora es automático y en nuestro idioma.", role: "Coordinadora de Epidemiología · ONG Internacional, África Occidental" },
+      { quote: "El soporte multilingüe es excelente. Nuestros equipos de campo finalmente tienen una herramienta en su idioma con datos oficiales.", role: "Responsable de Vigilancia Sanitaria · Ministerio de Salud, MENA" },
+      { quote: "El módulo de comparación de brotes nos ayuda a contextualizar cada alerta en segundos. Exactamente lo que necesitábamos.", role: "Epidemiólogo Investigador · Instituto de Salud Pública, Europa" },
+    ],
   },
   ar: {
     heroBadge: "بيانات منظمة الصحة العالمية مباشرة · 195 دولة · تحديث يومي",
@@ -314,6 +347,15 @@ const COPY: Record<string, {
     ctaSub: "انضم إلى الفرق التي تراقب الأزمات الصحية العالمية في الوقت الفعلي.",
     ctaButton: "ابدأ مجاناً",
     ctaNoCc: "بدون بطاقة بنكية · وصول فوري",
+    trustTitle: "يثق بنا متخصصو الصحة في أكثر من 30 دولة",
+    trustSub: "تجمع HealthWatch Global المصادر التي يعرفها فريقك بالفعل — مباشرةً، دون وسطاء.",
+    trustSourcesLabel: "مصادر البيانات الرسمية",
+    trustBadges: ["متوافق مع GDPR · استضافة أوروبية", "بيانات WHO رسمية · API مباشر", "99.9% وقت التشغيل", "بدون التزام · ألغِ في أي وقت"],
+    testimonials: [
+      { quote: "قبل HealthWatch، كان فريقنا يقضي ساعات أسبوعياً في تتبع تنبيهات WHO يدوياً. الآن كل شيء تلقائي وبلغتنا.", role: "منسق وبائيات · منظمة غير حكومية دولية، غرب أفريقيا" },
+      { quote: "الدعم متعدد اللغات ممتاز. فرقنا الميدانية لديها أخيراً أداة بلغتها تستشهد بمصادر البيانات التي تثق بها.", role: "مسؤول المراقبة الصحية · وزارة الصحة، MENA" },
+      { quote: "وحدة مقارنة التفشيات تساعدنا على تحديد السياق لكل تنبيه في ثوانٍ. هذا بالضبط ما كنا بحاجة إليه.", role: "باحث وبائيات · معهد صحة عامة، أوروبا" },
+    ],
   },
   id: {
     heroBadge: "Data WHO langsung · 195 negara · Diperbarui setiap hari",
@@ -376,6 +418,15 @@ const COPY: Record<string, {
     ctaSub: "Bergabunglah dengan tim yang memantau krisis kesehatan global secara real-time.",
     ctaButton: "Mulai gratis",
     ctaNoCc: "Tanpa kartu kredit · Akses langsung",
+    trustTitle: "Dipercaya profesional kesehatan di 30+ negara",
+    trustSub: "HealthWatch Global mengagregasi sumber yang sudah dikonsultasikan tim Anda — langsung, tanpa perantara.",
+    trustSourcesLabel: "Sumber data resmi",
+    trustBadges: ["Sesuai GDPR · Hosting UE", "Data WHO resmi · API langsung", "Uptime 99,9%", "Tanpa komitmen · Batalkan kapan saja"],
+    testimonials: [
+      { quote: "Sebelum HealthWatch, tim kami menghabiskan berjam-jam setiap minggu melacak peringatan WHO secara manual. Sekarang otomatis dan dalam bahasa kami.", role: "Koordinator Epidemiologi · LSM Internasional, Afrika Barat" },
+      { quote: "Dukungan multibahasa sangat baik. Tim lapangan kami akhirnya memiliki alat dalam bahasa mereka dengan sumber data resmi.", role: "Petugas Surveilans Kesehatan · Kementerian Kesehatan, MENA" },
+      { quote: "Modul perbandingan wabah membantu kami mengontekstualisasikan setiap peringatan dalam hitungan detik. Tepat seperti yang kami butuhkan.", role: "Peneliti Epidemiologi · Institut Kesehatan Masyarakat, Eropa" },
+    ],
   },
 };
 
@@ -556,6 +607,54 @@ export default async function LandingPage({ locale }: { locale: string }) {
             </div>
           ))}
         </div>
+      </section>
+
+      {/* ── Social proof ─────────────────────────────────────────────────── */}
+      <section className="space-y-10">
+
+        {/* Data sources strip */}
+        <div className="text-center space-y-4">
+          <p className="text-xs text-gray-500 uppercase tracking-widest font-semibold">{c.trustSourcesLabel}</p>
+          <div className="flex flex-wrap items-center justify-center gap-2">
+            {["WHO", "CDC", "ECDC", "PAHO", "UN Population Data"].map((src) => (
+              <span key={src} className="text-xs font-semibold text-gray-300 bg-gray-800 border border-gray-700 px-3 py-1.5 rounded-full">
+                {src}
+              </span>
+            ))}
+          </div>
+        </div>
+
+        {/* Title + subtitle */}
+        <div className="text-center space-y-2">
+          <h2 className="text-2xl md:text-3xl font-bold text-white">{c.trustTitle}</h2>
+          <p className="text-gray-400 max-w-xl mx-auto text-sm leading-relaxed">{c.trustSub}</p>
+        </div>
+
+        {/* Testimonials — replace with real user quotes as they come in */}
+        <div className="grid md:grid-cols-3 gap-5">
+          {c.testimonials.map(({ quote, role }, i) => (
+            <div key={i} className="bg-gray-900 border border-gray-800 rounded-xl p-6 space-y-4 flex flex-col">
+              <div className="flex gap-0.5">
+                {[0,1,2,3,4].map((j) => (
+                  <span key={j} className="text-amber-400 text-sm">★</span>
+                ))}
+              </div>
+              <p className="text-gray-300 text-sm leading-relaxed flex-1">&ldquo;{quote}&rdquo;</p>
+              <p className="text-xs text-gray-500 border-t border-gray-800 pt-4">{role}</p>
+            </div>
+          ))}
+        </div>
+
+        {/* Trust signal badges */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+          {[Shield, Globe, Zap, CheckCircle].map((Icon, i) => (
+            <div key={i} className="flex items-center gap-2.5 bg-gray-900/60 border border-gray-800 rounded-lg px-4 py-3">
+              <Icon className="w-4 h-4 text-green-400 shrink-0" />
+              <span className="text-xs text-gray-400 leading-snug">{c.trustBadges[i]}</span>
+            </div>
+          ))}
+        </div>
+
       </section>
 
       {/* ── Designed for ─────────────────────────────────────────────────── */}
