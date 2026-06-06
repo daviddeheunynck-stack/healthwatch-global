@@ -30,6 +30,14 @@ const RISK_BG: Record<string, string> = {
   low:    "from-green-950/60 border-green-800/40",
 };
 
+const REGION_NAMES: Record<string, Record<string, string>> = {
+  fr: { africa: "Afrique",    asia: "Asie",   europe: "Europe",  americas: "Amériques", oceania: "Océanie"    },
+  en: { africa: "Africa",     asia: "Asia",   europe: "Europe",  americas: "Americas",  oceania: "Oceania"    },
+  es: { africa: "África",     asia: "Asia",   europe: "Europa",  americas: "Américas",  oceania: "Oceanía"    },
+  ar: { africa: "أفريقيا",   asia: "آسيا",  europe: "أوروبا", americas: "الأمريكتان", oceania: "أوقيانوسيا" },
+  id: { africa: "Afrika",     asia: "Asia",   europe: "Eropa",   americas: "Amerika",   oceania: "Oseania"    },
+};
+
 interface Props {
   outbreak: Outbreak | null;
   locale: string;
@@ -260,7 +268,9 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlis
           <div className="flex items-center gap-2 text-gray-400">
             <AlertTriangle className="w-3.5 h-3.5 shrink-0" />
             <span>{c.region} :</span>
-            <span className="text-gray-300 capitalize">{outbreak.region}</span>
+            <span className="text-gray-300">
+              {(REGION_NAMES[locale] ?? REGION_NAMES.en)[outbreak.region] ?? outbreak.region}
+            </span>
           </div>
         </div>
 

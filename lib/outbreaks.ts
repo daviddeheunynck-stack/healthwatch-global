@@ -265,6 +265,7 @@ const COUNTRY_ES: Record<string, string> = {
   "Congo": "Congo", "Côte d'Ivoire": "Costa de Marfil", "Ivory Coast": "Costa de Marfil",
   "Democratic Republic of the Congo": "República Democrática del Congo",
   "Democratic Republic of Congo": "República Democrática del Congo",
+  "DR Congo": "República Democrática del Congo",   // exact country_en from geo-data.ts
   "Ecuador": "Ecuador", "Egypt": "Egipto", "Equatorial Guinea": "Guinea Ecuatorial",
   "Ethiopia": "Etiopía", "Gabon": "Gabón", "Gambia": "Gambia", "Ghana": "Ghana",
   "Guinea": "Guinea", "Guinea-Bissau": "Guinea-Bisáu", "Haiti": "Haití",
@@ -293,6 +294,7 @@ const COUNTRY_ID: Record<string, string> = {
   "China": "Tiongkok", "Côte d'Ivoire": "Pantai Gading", "Ivory Coast": "Pantai Gading",
   "Democratic Republic of the Congo": "Republik Demokratik Kongo",
   "Democratic Republic of Congo": "Republik Demokratik Kongo",
+  "DR Congo": "Republik Demokratik Kongo",   // exact country_en from geo-data.ts
   "Egypt": "Mesir", "Ethiopia": "Etiopia", "Germany": "Jerman",
   "India": "India", "Iran": "Iran", "Iraq": "Irak", "Japan": "Jepang",
   "Jordan": "Yordania", "Lebanon": "Lebanon", "Libya": "Libya",
