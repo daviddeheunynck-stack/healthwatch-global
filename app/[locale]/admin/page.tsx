@@ -23,8 +23,8 @@ const clean = (v: string | undefined) => (v || "").replace(new RegExp("^" + BOM)
 
 // ── MRR estimate (monthly prices in EUR) ─────────────────────────────────────
 const PLAN_MRR: Record<string, number> = {
-  starter:    49, // legacy — treated as Pro
-  pro:        49,
+  starter:    29, // legacy — treated as Pro
+  pro:        29,
   enterprise: 299,
   free:       0,
 };

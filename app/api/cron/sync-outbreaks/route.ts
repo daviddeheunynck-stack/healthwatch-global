@@ -227,7 +227,7 @@ export async function GET(req: NextRequest) {
       .limit(10);
 
     if (needsTranslation && needsTranslation.length > 0) {
-      console.log(`[sync] Translating ${needsTranslation.length} descriptions via DeepL…`);
+      console.log(`[sync] Translating ${needsTranslation.length} descriptions via MyMemory…`);
       for (const row of needsTranslation) {
         const t = await translateDescription(row.description);
         if (t.fr || t.es || t.ar || t.id) {
@@ -236,7 +236,7 @@ export async function GET(req: NextRequest) {
             .update({ description_fr: t.fr, description_es: t.es, description_ar: t.ar, description_id: t.id })
             .eq("id", row.id);
         }
-        await new Promise((r) => setTimeout(r, 300)); // polite delay between DeepL calls
+        await new Promise((r) => setTimeout(r, 300)); // polite delay between MyMemory calls
       }
     }
   }

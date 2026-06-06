@@ -30,14 +30,14 @@ const COPY: Record<string, {
   fr: {
     toggleMonthly: "Mensuel",
     toggleAnnual: "Annuel",
-    saveLabel: "-20%",
+    saveLabel: "-28%",
     perMonth: "/mois",
     perYear: "/an",
     billedAnnually: "facturé annuellement",
     trial: "14 jours gratuits · sans CB",
     guarantee: "Sans engagement · Remboursement 14 jours",
     starterDesc: "Pour découvrir la plateforme sans engagement.",
-    proDesc: "Pour les ministères de la santé et ONG internationales.",
+    proDesc: "Pour les professionnels de santé qui suivent l'épidémiologie mondiale.",
     enterpriseDesc: "Pour les gouvernements et grands groupes pharmaceutiques.",
     contactUs: "Nous contacter",
     getStarted: "Commencer →",
@@ -50,14 +50,14 @@ const COPY: Record<string, {
   en: {
     toggleMonthly: "Monthly",
     toggleAnnual: "Annual",
-    saveLabel: "-20%",
+    saveLabel: "-28%",
     perMonth: "/month",
     perYear: "/year",
     billedAnnually: "billed annually",
     trial: "14-day free trial · no CC required",
     guarantee: "No commitment · 14-day refund",
     starterDesc: "Explore the platform with no commitment.",
-    proDesc: "For health ministries and international NGOs.",
+    proDesc: "For health professionals tracking global epidemiology.",
     enterpriseDesc: "For governments and large pharmaceutical groups.",
     contactUs: "Contact us",
     getStarted: "Get started →",
@@ -70,14 +70,14 @@ const COPY: Record<string, {
   es: {
     toggleMonthly: "Mensual",
     toggleAnnual: "Anual",
-    saveLabel: "-20%",
+    saveLabel: "-28%",
     perMonth: "/mes",
     perYear: "/año",
     billedAnnually: "facturado anualmente",
     trial: "14 días gratis · sin tarjeta",
     guarantee: "Sin compromiso · Reembolso 14 días",
     starterDesc: "Explore la plataforma sin compromiso.",
-    proDesc: "Para ministerios de salud y ONG internacionales.",
+    proDesc: "Para profesionales de salud que siguen la epidemiología global.",
     enterpriseDesc: "Para gobiernos y grandes grupos farmacéuticos.",
     contactUs: "Contáctenos",
     getStarted: "Empezar →",
@@ -90,14 +90,14 @@ const COPY: Record<string, {
   ar: {
     toggleMonthly: "شهري",
     toggleAnnual: "سنوي",
-    saveLabel: "‎-20%",
+    saveLabel: "‎-28%",
     perMonth: "/شهر",
     perYear: "/سنة",
     billedAnnually: "يُفوتر سنوياً",
     trial: "14 يوماً مجاناً · بدون بطاقة",
     guarantee: "بدون التزام · استرداد 14 يوماً",
     starterDesc: "استكشف المنصة دون أي التزام.",
-    proDesc: "لوزارات الصحة والمنظمات غير الحكومية الدولية.",
+    proDesc: "للمختصين الصحيين الذين يتابعون الأوبئة العالمية.",
     enterpriseDesc: "للحكومات وكبرى مجموعات الأدوية.",
     contactUs: "اتصل بنا",
     getStarted: "ابدأ الآن ←",
@@ -110,14 +110,14 @@ const COPY: Record<string, {
   id: {
     toggleMonthly: "Bulanan",
     toggleAnnual: "Tahunan",
-    saveLabel: "-20%",
+    saveLabel: "-28%",
     perMonth: "/bulan",
     perYear: "/tahun",
     billedAnnually: "ditagih tahunan",
     trial: "14 hari gratis · tanpa kartu",
     guarantee: "Tanpa komitmen · Pengembalian 14 hari",
     starterDesc: "Jelajahi platform tanpa komitmen.",
-    proDesc: "Untuk kementerian kesehatan dan LSM internasional.",
+    proDesc: "Untuk profesional kesehatan yang memantau epidemiologi global.",
     enterpriseDesc: "Untuk pemerintah dan kelompok farmasi besar.",
     contactUs: "Hubungi kami",
     getStarted: "Mulai →",
@@ -129,13 +129,13 @@ const COPY: Record<string, {
   },
 };
 
-// Pro: €49/month | Annual (−20%): €39/month = €468/year
+// Pro: €29/month | Annual (−28%): €249/year — saves €99/year vs monthly
 const PRICES: Record<string, { proMonthly: string; proAnnual: string; proAnnualTotal: string }> = {
-  fr: { proMonthly: "49 €",  proAnnual: "39 €",  proAnnualTotal: "468 €/an"  },
-  en: { proMonthly: "€49",   proAnnual: "€39",   proAnnualTotal: "€468/yr"   },
-  es: { proMonthly: "€49",   proAnnual: "€39",   proAnnualTotal: "€468/año"  },
-  ar: { proMonthly: "€49",   proAnnual: "€39",   proAnnualTotal: "€468/سنة"  },
-  id: { proMonthly: "€49",   proAnnual: "€39",   proAnnualTotal: "€468/thn"  },
+  fr: { proMonthly: "29 €",  proAnnual: "249 €", proAnnualTotal: "économisez 99 €"  },
+  en: { proMonthly: "€29",   proAnnual: "€249",  proAnnualTotal: "save €99"          },
+  es: { proMonthly: "€29",   proAnnual: "€249",  proAnnualTotal: "ahorre €99"        },
+  ar: { proMonthly: "€29",   proAnnual: "€249",  proAnnualTotal: "وفّر 99 €"         },
+  id: { proMonthly: "€29",   proAnnual: "€249",  proAnnualTotal: "hemat €99"         },
 };
 
 export default function PricingCards({ locale }: { locale: string }) {
@@ -221,7 +221,7 @@ export default function PricingCards({ locale }: { locale: string }) {
               <span className="text-4xl font-bold text-white">
                 {isAnnual ? p.proAnnual : p.proMonthly}
               </span>
-              <span className="text-gray-400 mb-1">{c.perMonth}</span>
+              <span className="text-gray-400 mb-1">{isAnnual ? c.perYear : c.perMonth}</span>
             </div>
             {isAnnual && (
               <p className="text-xs text-green-400 mt-1">{p.proAnnualTotal} · {c.billedAnnually}</p>

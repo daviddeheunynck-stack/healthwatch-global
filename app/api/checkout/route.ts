@@ -6,7 +6,7 @@ export const dynamic = "force-dynamic";
 const stripBOM = (val: string | undefined) =>
   (val || "").replace(/^﻿/, "").trim();
 
-// Single paid plan: Pro — €49/month | annual: €39/month (€468/year)
+// Single paid plan: Pro — €29/month | annual: €249/year (−28% vs monthly)
 const PRICES: Record<string, Record<string, Record<string, string>>> = {
   pro: {
     monthly: {

@@ -10,9 +10,9 @@ test.describe("Page Tarifs", () => {
 
   test("affiche les prix", async ({ page }) => {
     await page.goto("/fr/pricing");
-    // Free card heading "Free" and Pro price "49 €"
+    // Free card heading "Free" and Pro price "29 €"
     await expect(page.getByText("Free", { exact: true }).first()).toBeVisible();
-    await expect(page.getByText("49 €", { exact: true })).toBeVisible();
+    await expect(page.getByText("29 €", { exact: true })).toBeVisible();
   });
 
   test("bouton checkout redirige vers login si non connecté", async ({ page }) => {
