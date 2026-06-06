@@ -21,7 +21,10 @@ export async function GET(req: NextRequest) {
   const locale = req.nextUrl.searchParams.get("locale") ?? "en";
   const t = TAGLINES[locale] ?? TAGLINES.en;
 
-  return new ImageResponse(
+  // Materialise the image so we can attach long-lived cache headers.
+  // The image is purely static per-locale — no runtime data — so we can
+  // cache aggressively on the Vercel CDN (s-maxage) and browser (max-age).
+  const img = new ImageResponse(
     (
       <div
         style={{
@@ -249,4 +252,16 @@ export async function GET(req: NextRequest) {
     ),
     { width: 1200, height: 630 }
   );
+
+  // Buffer the PNG, then re-wrap with cache headers.
+  // Cold-start on the edge can be 4-6s; after CDN caches this, TTFB ≈ 20ms.
+  const buf = await img.arrayBuffer();
+  return new Response(buf, {
+    status: 200,
+    headers: {
+      "Content-Type":  "image/png",
+      // CDN caches for 7 days, browsers for 1 hour, stale-while-revalidate for 30 days.
+      "Cache-Control": "public, max-age=3600, s-maxage=604800, stale-while-revalidate=2592000",
+    },
+  });
 }
