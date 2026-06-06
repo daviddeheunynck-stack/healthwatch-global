@@ -1,14 +1,11 @@
--- ── Multi-source corroboration flag ──────────────────────────────────────────
--- When both WHO DON and ProMED report the same outbreak, the record is
--- marked as corroborated. Professionals can use this as a confidence signal:
---   corroborated = false → WHO only (authoritative but may lag)
---   corroborated = true  → WHO + ProMED (faster confirmation, higher confidence)
+-- ── Multi-source corroboration flag (later removed) ──────────────────────────
+-- Historical migration. The columns added here were subsequently dropped by
+-- migration 20240114000000_remove_corroboration.sql. Retained for migration
+-- replay ordering; net schema effect with the later migration is nil.
 
 ALTER TABLE public.outbreaks
-  ADD COLUMN IF NOT EXISTS corroborated  BOOLEAN NOT NULL DEFAULT false,
-  ADD COLUMN IF NOT EXISTS promed_source TEXT;              -- ProMED article URL when applicable
+  ADD COLUMN IF NOT EXISTS corroborated BOOLEAN NOT NULL DEFAULT false;
 
--- Index for filtering corroborated outbreaks
 CREATE INDEX IF NOT EXISTS outbreaks_corroborated_idx
   ON public.outbreaks (corroborated)
   WHERE corroborated = true;

@@ -1,6 +1,5 @@
--- ── Remove ProMED corroboration columns ──────────────────────────────────────
--- The multi-source corroboration feature (WHO + ProMED) has been removed.
--- These columns are dropped entirely.
+-- ── Remove corroboration column ──────────────────────────────────────────────
+-- Drops the corroboration column added by 20240110. The index on it is
+-- removed automatically with the column.
 
 ALTER TABLE public.outbreaks DROP COLUMN IF EXISTS corroborated;
-ALTER TABLE public.outbreaks DROP COLUMN IF EXISTS promed_source;
