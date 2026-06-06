@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { createPortal } from "react-dom";
 import { X, ExternalLink, AlertTriangle, TrendingUp, Users, Skull, Calendar, Globe, Clock, Activity, ImageDown, FileText, Link as LinkIcon, Check, Copy } from "lucide-react";
 import WatchlistButton from "@/components/WatchlistButton";
 import { getIncidenceRate } from "@/lib/population-data";
@@ -48,7 +49,7 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlis
     return () => document.removeEventListener("keydown", handler);
   }, [onClose]);
 
-  if (!outbreak) return null;
+  if (!outbreak || typeof document === "undefined") return null;
 
   const disease = getLocalizedDisease(outbreak, locale);
   const country = getLocalizedCountry(outbreak, locale) ?? outbreak.country_en;
@@ -64,9 +65,9 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlis
   // DON reference from source URL (e.g., "2026-DON603")
   const donRef = outbreak.source?.match(/item\/([\w-]+)/)?.[1] ?? null;
 
-  return (
+  return createPortal(
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4"
+      className="fixed inset-0 z-[9999] flex items-center justify-center p-4"
       role="dialog"
       aria-modal="true"
     >
@@ -328,6 +329,7 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlis
           )}
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

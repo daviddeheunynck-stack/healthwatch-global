@@ -105,12 +105,12 @@ export default function Navbar() {
         </div>
 
         {/* Desktop: nav links */}
-        <div className="hidden md:flex items-center gap-5">
+        <div className="hidden lg:flex items-center gap-5">
           {navLinks.map(({ href, label, icon: Icon }) => (
             <Link
               key={href}
               href={href}
-              className={`flex items-center gap-1.5 text-sm font-medium transition-colors ${
+              className={`flex items-center gap-1.5 text-sm font-medium transition-colors whitespace-nowrap ${
                 pathname === href ? "text-red-400" : "text-gray-400 hover:text-white"
               }`}
             >
@@ -121,7 +121,7 @@ export default function Navbar() {
         </div>
 
         {/* Desktop: locale + auth */}
-        <div className="hidden md:flex items-center gap-3">
+        <div className="hidden lg:flex items-center gap-3">
           <div className="flex items-center gap-1">
             <Globe className="w-4 h-4 text-gray-400" />
             {LOCALES.map((loc) => (
@@ -179,7 +179,7 @@ export default function Navbar() {
         </div>
 
         {/* Mobile: auth badge + hamburger */}
-        <div className="flex md:hidden items-center gap-3">
+        <div className="flex lg:hidden items-center gap-3">
           {user && (
             <span className={`text-xs px-2 py-0.5 rounded font-semibold ${PLAN_BADGE[plan] || PLAN_BADGE.free}`}>
               {tAuth(`plan.${plan}`)}
@@ -197,7 +197,7 @@ export default function Navbar() {
 
       {/* Mobile dropdown menu */}
       {mobileOpen && (
-        <div className="md:hidden border-t border-gray-800 bg-gray-900 px-4 py-4 space-y-4">
+        <div className="lg:hidden border-t border-gray-800 bg-gray-900 px-4 py-4 space-y-4">
 
           {/* Nav links */}
           <div className="space-y-1">
