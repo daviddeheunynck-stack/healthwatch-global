@@ -71,6 +71,9 @@ export async function getOutbreaks(): Promise<Outbreak[]> {
 // The `disease` / `disease_en` columns contain English WHO names.
 // Map them to FR / ES / ID so the UI never shows English names on those locales.
 const DISEASE_FR: Record<string, string> = {
+  // Keys = English names as stored in disease_en / legacy disease column
+  // Values = French display names
+  // Covers both the exact name_en values from disease-data.ts and common variants
   "Dengue": "Dengue",
   "Dengue fever": "Dengue",
   "Mpox": "Mpox",
@@ -92,17 +95,23 @@ const DISEASE_FR: Record<string, string> = {
   "Influenza A(H5N1)": "Grippe A(H5N1)",
   "Influenza A(H3N2)": "Grippe A(H3N2)",
   "Avian influenza": "Grippe aviaire",
+  "Avian Influenza": "Grippe aviaire",   // exact name_en from disease-data.ts
   "COVID-19": "COVID-19",
   "Plague": "Peste",
   "Typhoid fever": "Fièvre typhoïde",
-  "Anthrax": "Charbon",
+  "Anthrax": "Charbon bactéridien",
   "Rabies": "Rage",
   "Chikungunya": "Chikungunya",
   "Zika": "Zika",
+  "Zika virus": "Virus Zika",            // exact name_en from disease-data.ts
   "Zika virus disease": "Maladie à virus Zika",
   "Middle East Respiratory Syndrome": "MERS-CoV",
   "MERS-CoV": "MERS-CoV",
   "Nipah virus": "Virus Nipah",
+  "Malaria": "Paludisme",                // exact name_en from disease-data.ts
+  "Hepatitis": "Hépatite",               // exact name_en from disease-data.ts
+  "Diphtheria": "Diphtérie",             // exact name_en from disease-data.ts
+  "Pertussis": "Coqueluche",             // exact name_en from disease-data.ts
   "Leishmaniasis": "Leishmaniose",
   "Trypanosomiasis": "Trypanosomose",
   "Hantavirus": "Hantavirus",
@@ -129,15 +138,26 @@ const DISEASE_ES: Record<string, string> = {
   "Influenza": "Gripe",
   "Influenza A(H5N1)": "Gripe A(H5N1)",
   "Avian influenza": "Gripe aviar",
+  "Avian Influenza": "Gripe aviar",
   "COVID-19": "COVID-19",
   "Plague": "Peste",
   "Typhoid fever": "Fiebre tifoidea",
+  "Anthrax": "Carbunco",
   "Rabies": "Rabia",
   "Chikungunya": "Chikungunya",
+  "Zika": "Zika",
+  "Zika virus": "Virus del Zika",
   "Zika virus disease": "Enfermedad por virus del Zika",
   "Middle East Respiratory Syndrome": "MERS-CoV",
   "MERS-CoV": "MERS-CoV",
   "Nipah virus": "Virus Nipah",
+  "Malaria": "Malaria",
+  "Hepatitis": "Hepatitis",
+  "Diphtheria": "Difteria",
+  "Pertussis": "Tos ferina",
+  "Hantavirus": "Hantavirus",
+  "Leishmaniasis": "Leishmaniosis",
+  "Trypanosomiasis": "Tripanosomiasis",
 };
 
 const DISEASE_ID: Record<string, string> = {
@@ -152,29 +172,48 @@ const DISEASE_ID: Record<string, string> = {
   "Yellow fever": "Demam Kuning",
   "Lassa fever": "Demam Lassa",
   "Rift Valley fever": "Demam Lembah Rift",
+  "Crimean-Congo haemorrhagic fever": "Demam Berdarah Krimea-Kongo",
   "Meningitis": "Meningitis",
+  "Meningococcal meningitis": "Meningitis Meningokokal",
   "Measles": "Campak",
   "Poliomyelitis": "Poliomielitis",
   "Polio": "Polio",
   "Influenza": "Influenza",
   "Avian influenza": "Flu Burung",
+  "Avian Influenza": "Flu Burung",
   "COVID-19": "COVID-19",
   "Plague": "Pes",
   "Typhoid fever": "Demam Tifoid",
+  "Anthrax": "Antraks",
   "Rabies": "Rabies",
   "Chikungunya": "Chikungunya",
+  "Zika": "Zika",
+  "Zika virus": "Virus Zika",
   "Zika virus disease": "Penyakit Virus Zika",
   "Middle East Respiratory Syndrome": "MERS-CoV",
   "MERS-CoV": "MERS-CoV",
   "Nipah virus": "Virus Nipah",
+  "Malaria": "Malaria",
+  "Hepatitis": "Hepatitis",
+  "Diphtheria": "Difteri",
+  "Pertussis": "Batuk Rejan",
+  "Hantavirus": "Hantavirus",
+  "Leishmaniasis": "Leishmaniasis",
+  "Trypanosomiasis": "Tripanosomiasis",
 };
 
 export function getLocalizedDisease(outbreak: Outbreak, locale: string): string {
+  // The `disease` column stores the French name directly (from normalizeDisease().name_fr).
+  // For FR: return it as-is. For other locales: look up the EN name in the translation map.
+  if (locale === "fr") {
+    // disease is already French for all synced records.
+    // For legacy rows where disease might be an English title, try DISEASE_FR as fallback.
+    return DISEASE_FR[outbreak.disease] ?? outbreak.disease;
+  }
   const en = outbreak.disease_en || outbreak.disease;
   if (locale === "ar") return outbreak.disease_ar || en;
-  if (locale === "fr") return DISEASE_FR[en] ?? DISEASE_FR[outbreak.disease] ?? en;
-  if (locale === "es") return DISEASE_ES[en] ?? DISEASE_ES[outbreak.disease] ?? en;
-  if (locale === "id") return DISEASE_ID[en] ?? DISEASE_ID[outbreak.disease] ?? en;
+  if (locale === "es") return DISEASE_ES[en] ?? en;
+  if (locale === "id") return DISEASE_ID[en] ?? en;
   return en; // en = default
 }
 
@@ -267,11 +306,15 @@ const COUNTRY_ID: Record<string, string> = {
 };
 
 export function getLocalizedCountry(outbreak: Outbreak, locale: string): string {
+  // The `country` column stores the French name directly (from findCountry().name_fr).
+  // For FR: return it as-is. For legacy rows where country might be English, try COUNTRY_FR.
+  if (locale === "fr") {
+    return COUNTRY_FR[outbreak.country] ?? outbreak.country;
+  }
   const en = outbreak.country_en || outbreak.country;
   if (locale === "ar") return outbreak.country_ar || en;
-  if (locale === "fr") return COUNTRY_FR[en] ?? COUNTRY_FR[outbreak.country] ?? en;
-  if (locale === "es") return COUNTRY_ES[en] ?? COUNTRY_ES[outbreak.country] ?? en;
-  if (locale === "id") return COUNTRY_ID[en] ?? COUNTRY_ID[outbreak.country] ?? en;
+  if (locale === "es") return COUNTRY_ES[en] ?? en;
+  if (locale === "id") return COUNTRY_ID[en] ?? en;
   return en; // en = default
 }
 
