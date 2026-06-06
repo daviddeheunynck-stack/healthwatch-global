@@ -19,10 +19,19 @@ const GitHubIcon = () => (
   </svg>
 );
 
+const LABELS: Record<string, { google: string; github: string }> = {
+  en: { google: "Continue with Google", github: "Continue with GitHub" },
+  fr: { google: "Continuer avec Google", github: "Continuer avec GitHub" },
+  es: { google: "Continuar con Google",  github: "Continuar con GitHub"  },
+  ar: { google: "المتابعة عبر Google",   github: "المتابعة عبر GitHub"   },
+  id: { google: "Lanjutkan dengan Google", github: "Lanjutkan dengan GitHub" },
+};
+
 type Props = { locale: string; redirectTo?: string };
 
 export default function OAuthButtons({ locale, redirectTo }: Props) {
   const [loading, setLoading] = useState<"google" | "github" | null>(null);
+  const l = LABELS[locale] ?? LABELS.en;
 
   const handleOAuth = async (provider: "google" | "github") => {
     setLoading(provider);
@@ -44,7 +53,7 @@ export default function OAuthButtons({ locale, redirectTo }: Props) {
         className="w-full flex items-center justify-center gap-3 bg-white hover:bg-gray-100 disabled:opacity-60 text-gray-800 font-medium py-2.5 rounded-lg transition-colors text-sm"
       >
         {loading === "google" ? <Loader2 className="w-4 h-4 animate-spin" /> : <GoogleIcon />}
-        Continuer avec Google
+        {l.google}
       </button>
       <button
         onClick={() => handleOAuth("github")}
@@ -52,7 +61,7 @@ export default function OAuthButtons({ locale, redirectTo }: Props) {
         className="w-full flex items-center justify-center gap-3 bg-gray-800 hover:bg-gray-700 disabled:opacity-60 text-white font-medium py-2.5 rounded-lg transition-colors border border-gray-700 text-sm"
       >
         {loading === "github" ? <Loader2 className="w-4 h-4 animate-spin" /> : <GitHubIcon />}
-        Continuer avec GitHub
+        {l.github}
       </button>
     </div>
   );
