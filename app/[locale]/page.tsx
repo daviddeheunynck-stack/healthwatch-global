@@ -46,11 +46,11 @@ const FILTER_COPY: Record<string, {
 };
 
 const LANDING_META: Record<string, { title: string; description: string }> = {
-  en: { title: "Real-time epidemic surveillance for health organizations | HealthWatch Global", description: "Anticipate outbreaks before they reach your region. Live WHO data, real-time alerts, regional PDF reports — built for NGOs, health ministries and international organizations." },
-  fr: { title: "Surveillance épidémique en temps réel pour les organisations de santé | HealthWatch Global", description: "Anticipez les épidémies avant qu'elles n'atteignent votre région. Données OMS en direct, alertes temps réel, rapports PDF régionaux — conçu pour les ONG, ministères de la santé et organisations internationales." },
-  es: { title: "Vigilancia epidémica en tiempo real para organizaciones de salud | HealthWatch Global", description: "Anticipe los brotes antes de que lleguen a su región. Datos OMS en vivo, alertas en tiempo real, informes PDF regionales." },
-  ar: { title: "مراقبة وبائية في الوقت الفعلي للمنظمات الصحية | HealthWatch Global", description: "استبق التفشيات قبل أن تصل إلى منطقتك. بيانات منظمة الصحة العالمية مباشرة، تنبيهات فورية، تقارير PDF إقليمية." },
-  id: { title: "Pemantauan epidemi real-time untuk organisasi kesehatan | HealthWatch Global", description: "Antisipasi wabah sebelum mencapai wilayah Anda. Data WHO langsung, peringatan real-time, laporan PDF regional." },
+  en: { title: "WHO outbreak tracker for health professionals | HealthWatch Global", description: "All WHO Disease Outbreak News, aggregated and translated — without the manual research. Real-time alerts, PDF reports and CFR data for travel medicine doctors, health consultants and epidemiologists." },
+  fr: { title: "Surveillance épidémique OMS pour professionnels de santé | HealthWatch Global", description: "Toutes les données OMS sur les foyers épidémiques, agrégées et traduites — sans les heures de recherche. Alertes temps réel, rapports PDF et données de létalité pour médecins, consultants et épidémiologistes." },
+  es: { title: "Vigilancia de brotes OMS para profesionales de salud | HealthWatch Global", description: "Todos los datos OMS sobre brotes, agregados y traducidos — sin horas de investigación. Alertas en tiempo real, informes PDF y datos de letalidad para médicos, consultores y epidemiólogos." },
+  ar: { title: "متابعة تفشيات منظمة الصحة العالمية للمتخصصين الصحيين | HealthWatch Global", description: "جميع بيانات تفشي الأمراض من منظمة الصحة العالمية، مجمعة ومترجمة — دون ساعات البحث. تنبيهات فورية وتقارير PDF لأطباء السفر والمستشارين وعلماء الأوبئة." },
+  id: { title: "Pemantau wabah WHO untuk profesional kesehatan | HealthWatch Global", description: "Semua data wabah WHO, diagregasi dan diterjemahkan — tanpa berjam-jam penelitian. Peringatan real-time, laporan PDF untuk dokter, konsultan, dan epidemiolog." },
 };
 
 export async function generateMetadata({
