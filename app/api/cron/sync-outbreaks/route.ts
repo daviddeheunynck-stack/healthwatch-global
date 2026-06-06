@@ -12,48 +12,44 @@ const clean = (v: string | undefined) => (v || "").replace(new RegExp("^" + BOM)
 const SUPABASE_URL        = clean(process.env.NEXT_PUBLIC_SUPABASE_URL);
 const SUPABASE_SERVICE_KEY = clean(process.env.SUPABASE_SERVICE_ROLE_KEY);
 const CRON_SECRET          = clean(process.env.CRON_SECRET);
-const DEEPL_API_KEY        = clean(process.env.DEEPL_API_KEY); // optional — sign up free at deepl.com
+const MYMEMORY_EMAIL = clean(process.env.MYMEMORY_EMAIL); // optional — free registration at mymemory.translated.net gives 10k words/day
 
-// ── DeepL batch translation ────────────────────────────────────────────────────
-// Translates a single text to multiple target languages in one API call.
-// Returns null for each language if translation fails or key is not set.
-// Free tier: 500 000 chars/month — ample for ~30 outbreak descriptions.
+// ── MyMemory translation (100% gratuit, sans CB) ──────────────────────────────
+// API publique : 1 000 mots/jour sans compte, 10 000/jour avec un email gratuit.
+// Pour enregistrer : https://mymemory.translated.net/register.php
 async function translateDescription(text: string): Promise<{
   fr: string | null; es: string | null; ar: string | null; id: string | null;
 }> {
   const empty = { fr: null, es: null, ar: null, id: null };
-  if (!DEEPL_API_KEY || !text?.trim()) return empty;
+  if (!text?.trim()) return empty;
 
-  const endpoint = "https://api-free.deepl.com/v2/translate";
-  const targets = ["FR", "ES", "AR", "ID"] as const;
-  const keys:    ["fr", "es", "ar", "id"] = ["fr", "es", "ar", "id"];
+  const base = "https://api.mymemory.translated.net/get";
+  const pairs = [
+    { key: "fr" as const, langpair: "en|fr" },
+    { key: "es" as const, langpair: "en|es" },
+    { key: "ar" as const, langpair: "en|ar" },
+    { key: "id" as const, langpair: "en|id" },
+  ];
 
   const results: { fr: string | null; es: string | null; ar: string | null; id: string | null } = { ...empty };
 
   try {
-    // DeepL Free API: one language per call (batch in parallel)
-    const calls = targets.map((lang) =>
-      fetch(endpoint, {
-        method: "POST",
-        headers: {
-          "Authorization": `DeepL-Auth-Key ${DEEPL_API_KEY}`,
-          "Content-Type":  "application/json",
-        },
-        body: JSON.stringify({
-          text:        [text],
-          source_lang: "EN",
-          target_lang: lang,
-        }),
-      }).then((r) => r.ok ? r.json() : null)
-    );
+    const calls = pairs.map(({ langpair }) => {
+      const url = new URL(base);
+      url.searchParams.set("q", text);
+      url.searchParams.set("langpair", langpair);
+      if (MYMEMORY_EMAIL) url.searchParams.set("de", MYMEMORY_EMAIL);
+      return fetch(url.toString()).then((r) => r.ok ? r.json() : null);
+    });
 
     const responses = await Promise.all(calls);
-    for (let i = 0; i < targets.length; i++) {
-      const translation = responses[i]?.translations?.[0]?.text ?? null;
-      results[keys[i]] = translation;
+    for (let i = 0; i < pairs.length; i++) {
+      const t = responses[i]?.responseData?.translatedText ?? null;
+      // MyMemory returns the original text when it can't translate — discard those
+      if (t && t !== text) results[pairs[i].key] = t;
     }
   } catch (e: any) {
-    console.warn("[sync] DeepL translation error:", e.message);
+    console.warn("[sync] MyMemory translation error:", e.message);
   }
 
   return results;
@@ -216,10 +212,11 @@ export async function GET(req: NextRequest) {
     }
   }
 
-  // ── 4. Back-fill missing description translations (DeepL) ────────
+  // ── 4. Back-fill missing description translations (MyMemory) ────────
   // Translate up to 10 rows per sync run to stay within free tier limits.
-  // Only runs when DEEPL_API_KEY is set.
-  if (DEEPL_API_KEY) {
+  // Runs automatically — no API key needed (1k words/day free).
+  // Set MYMEMORY_EMAIL in env for 10k words/day free tier.
+  {
     const { data: needsTranslation } = await supabase
       .from("outbreaks")
       .select("id, description")
