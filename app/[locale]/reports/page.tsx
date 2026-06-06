@@ -31,31 +31,31 @@ export async function generateMetadata({
 // Inline copy for paywall UI — avoids touching 5 message files
 const PAYWALL_COPY: Record<string, { desc: string; cta: string; lockedDownload: string; lockedList: string }> = {
   en: {
-    desc: "Case counts, deaths and PDF downloads are available on Starter and Pro plans.",
+    desc: "Case counts, deaths and PDF downloads are available on the Pro plan.",
     cta: "See plans →",
     lockedDownload: "Upgrade to download",
     lockedList: "Upgrade to see full outbreak list",
   },
   fr: {
-    desc: "Les chiffres de cas, décès et téléchargements PDF sont disponibles avec les plans Starter et Pro.",
+    desc: "Les chiffres de cas, décès et téléchargements PDF sont disponibles avec le plan Pro.",
     cta: "Voir les plans →",
     lockedDownload: "Passer à un plan supérieur",
     lockedList: "Passer à un plan supérieur pour voir la liste complète",
   },
   es: {
-    desc: "Los recuentos de casos, fallecidos y descargas PDF están disponibles en los planes Starter y Pro.",
+    desc: "Los recuentos de casos, fallecidos y descargas PDF están disponibles en el plan Pro.",
     cta: "Ver planes →",
     lockedDownload: "Mejorar para descargar",
     lockedList: "Mejorar para ver la lista completa",
   },
   ar: {
-    desc: "أعداد الحالات والوفيات وتنزيلات PDF متاحة في خطط Starter وPro.",
+    desc: "أعداد الحالات والوفيات وتنزيلات PDF متاحة في خطة Pro.",
     cta: "عرض الخطط →",
     lockedDownload: "ترقية للتنزيل",
     lockedList: "ترقية لرؤية القائمة الكاملة",
   },
   id: {
-    desc: "Jumlah kasus, kematian, dan unduhan PDF tersedia di paket Starter dan Pro.",
+    desc: "Jumlah kasus, kematian, dan unduhan PDF tersedia di paket Pro.",
     cta: "Lihat paket →",
     lockedDownload: "Upgrade untuk mengunduh",
     lockedList: "Upgrade untuk melihat daftar lengkap",

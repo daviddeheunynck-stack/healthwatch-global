@@ -13,7 +13,7 @@ const J3_CONTENT: Record<string, {
   fr: {
     subject: "3 jours avec HealthWatch — voici ce qui est déverrouillé 🔓",
     headline: "Vous explorez HealthWatch depuis 3 jours.",
-    intro: "Vous avez accès à la carte mondiale et au tableau de bord. Voici ce que les équipes Starter et Pro voient en plus — et qui change tout pour la prise de décision terrain.",
+    intro: "Vous avez accès à la carte mondiale et au tableau de bord. Voici ce que les équipes Pro voient en plus — et qui change tout pour la prise de décision terrain.",
     lockedTitle: "Fonctionnalités réservées aux plans payants",
     lockedItems: [
       "📊 Chiffres exacts — cas confirmés et décès par foyer",
@@ -29,7 +29,7 @@ const J3_CONTENT: Record<string, {
   en: {
     subject: "3 days with HealthWatch — here's what you're missing 🔓",
     headline: "You've been exploring HealthWatch for 3 days.",
-    intro: "You have access to the world map and dashboard. Here's what Starter and Pro teams see on top — and what changes everything for field decision-making.",
+    intro: "You have access to the world map and dashboard. Here's what Pro teams see on top — and what changes everything for field decision-making.",
     lockedTitle: "Features reserved for paid plans",
     lockedItems: [
       "📊 Exact figures — confirmed cases and deaths per outbreak",
@@ -45,7 +45,7 @@ const J3_CONTENT: Record<string, {
   es: {
     subject: "3 días con HealthWatch — esto es lo que te falta 🔓",
     headline: "Lleva 3 días explorando HealthWatch.",
-    intro: "Tiene acceso al mapa mundial y al panel. Esto es lo que ven los equipos Starter y Pro además — y que cambia todo para la toma de decisiones en campo.",
+    intro: "Tiene acceso al mapa mundial y al panel. Esto es lo que ven los equipos Pro además — y que cambia todo para la toma de decisiones en campo.",
     lockedTitle: "Funcionalidades reservadas a planes de pago",
     lockedItems: [
       "📊 Cifras exactas — casos confirmados y fallecidos por brote",
@@ -61,7 +61,7 @@ const J3_CONTENT: Record<string, {
   ar: {
     subject: "3 أيام مع HealthWatch — إليك ما تفتقده 🔓",
     headline: "لقد أمضيت 3 أيام في استكشاف HealthWatch.",
-    intro: "لديك وصول إلى الخريطة العالمية ولوحة التحكم. إليك ما تراه فرق Starter وPro إضافةً — وما يُغيِّر كل شيء في اتخاذ القرار الميداني.",
+    intro: "لديك وصول إلى الخريطة العالمية ولوحة التحكم. إليك ما تراه فرق Pro إضافةً — وما يُغيِّر كل شيء في اتخاذ القرار الميداني.",
     lockedTitle: "ميزات حصرية للخطط المدفوعة",
     lockedItems: [
       "📊 الأرقام الدقيقة — الحالات المؤكدة والوفيات لكل تفشٍّ",
@@ -77,7 +77,7 @@ const J3_CONTENT: Record<string, {
   id: {
     subject: "3 hari dengan HealthWatch — inilah yang Anda lewatkan 🔓",
     headline: "Anda telah menjelajahi HealthWatch selama 3 hari.",
-    intro: "Anda memiliki akses ke peta dunia dan dasbor. Inilah yang dilihat tim Starter dan Pro di samping itu — dan yang mengubah segalanya untuk pengambilan keputusan lapangan.",
+    intro: "Anda memiliki akses ke peta dunia dan dasbor. Inilah yang dilihat tim Pro di samping itu — dan yang mengubah segalanya untuk pengambilan keputusan lapangan.",
     lockedTitle: "Fitur khusus paket berbayar",
     lockedItems: [
       "📊 Angka tepat — kasus terkonfirmasi dan kematian per wabah",
@@ -114,7 +114,7 @@ const J12_CONTENT: Record<string, {
     questionLabel: "Notre question :",
     question: "Est-ce que les données que vous voyez ont déjà orienté une décision de votre équipe ?",
     urgencyText: "Si oui, vous méritez les données complètes. Cas confirmés, décès, rapports PDF, alertes instantanées — tout ce dont votre organisation a besoin pour ne jamais réagir trop tard.",
-    ctaLabel: "Passer à Starter ou Pro →",
+    ctaLabel: "Passer à Pro →",
     altText: "Ou parlez à notre équipe si vous avez des questions sur l'offre.",
     altLink: "Nous contacter →",
     closing: "Bonne surveillance,\nL'équipe HealthWatch Global",
@@ -127,7 +127,7 @@ const J12_CONTENT: Record<string, {
     questionLabel: "Our question:",
     question: "Has the data you've seen already influenced a decision in your team?",
     urgencyText: "If so, you deserve the full data. Confirmed cases, deaths, PDF reports, instant alerts — everything your organization needs to never react too late.",
-    ctaLabel: "Upgrade to Starter or Pro →",
+    ctaLabel: "Upgrade to Pro →",
     altText: "Or talk to our team if you have questions about the plans.",
     altLink: "Contact us →",
     closing: "Stay safe,\nThe HealthWatch Global Team",
@@ -140,7 +140,7 @@ const J12_CONTENT: Record<string, {
     questionLabel: "Nuestra pregunta:",
     question: "¿Los datos que ha visto ya han orientado alguna decisión de su equipo?",
     urgencyText: "Si es así, merece los datos completos. Casos confirmados, fallecidos, informes PDF, alertas instantáneas — todo lo que su organización necesita para no reaccionar demasiado tarde.",
-    ctaLabel: "Actualizar a Starter o Pro →",
+    ctaLabel: "Actualizar a Pro →",
     altText: "O hable con nuestro equipo si tiene preguntas sobre los planes.",
     altLink: "Contactarnos →",
     closing: "Cuídese,\nEl equipo de HealthWatch Global",
@@ -153,7 +153,7 @@ const J12_CONTENT: Record<string, {
     questionLabel: "سؤالنا:",
     question: "هل أثّرت البيانات التي رأيتها بالفعل في قرار ما لفريقك؟",
     urgencyText: "إذا كان الأمر كذلك، فأنت تستحق البيانات الكاملة. الحالات المؤكدة، الوفيات، تقارير PDF، تنبيهات فورية — كل ما تحتاجه منظمتك حتى لا تتفاعل متأخراً أبداً.",
-    ctaLabel: "← الترقية إلى Starter أو Pro",
+    ctaLabel: "← الترقية إلى Pro",
     altText: "أو تحدث إلى فريقنا إذا كان لديك أسئلة حول الخطط.",
     altLink: "← اتصل بنا",
     closing: "مع السلامة،\nفريق HealthWatch Global",
@@ -166,7 +166,7 @@ const J12_CONTENT: Record<string, {
     questionLabel: "Pertanyaan kami:",
     question: "Apakah data yang Anda lihat sudah mempengaruhi keputusan tim Anda?",
     urgencyText: "Jika iya, Anda layak mendapatkan data lengkap. Kasus terkonfirmasi, kematian, laporan PDF, peringatan instan — semua yang dibutuhkan organisasi Anda untuk tidak pernah bereaksi terlambat.",
-    ctaLabel: "Upgrade ke Starter atau Pro →",
+    ctaLabel: "Upgrade ke Pro →",
     altText: "Atau bicara dengan tim kami jika ada pertanyaan tentang paket.",
     altLink: "Hubungi kami →",
     closing: "Jaga kesehatan,\nTim HealthWatch Global",
