@@ -178,7 +178,7 @@ export default function SignupPage() {
                   <OAuthButtons locale={locale} />
                   <div className="flex items-center gap-3">
                     <div className="flex-1 h-px bg-gray-800" />
-                    <span className="text-xs text-gray-600">ou</span>
+                    <span className="text-xs text-gray-600">{t("or")}</span>
                     <div className="flex-1 h-px bg-gray-800" />
                   </div>
                 </div>

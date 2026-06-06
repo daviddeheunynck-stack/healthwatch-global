@@ -64,7 +64,7 @@ export default function Footer({ locale }: FooterProps) {
             </Link>
             <a
               href="mailto:contact@healthwatch-global.com"
-              className="hover:text-gray-300 transition-colors hidden md:inline"
+              className="hover:text-gray-300 transition-colors"
             >
               contact@healthwatch-global.com
             </a>

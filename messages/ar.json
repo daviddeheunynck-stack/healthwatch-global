@@ -2,6 +2,7 @@
   "nav": {
     "dashboard": "لوحة القيادة",
     "alerts": "التنبيهات",
+    "compare": "مقارنة",
     "reports": "التقارير",
     "pricing": "الأسعار",
     "title": "HealthWatch Global",
@@ -23,7 +24,7 @@
     "date": "التاريخ",
     "loading": "جاري تحميل البيانات...",
     "lastUpdated": "آخر تحديث",
-    "lockedDesc": "الأرقام الدقيقة محجوزة لمشتركي Starter و Pro.",
+    "lockedDesc": "الأرقام الدقيقة محجوزة لمشتركي Pro و Enterprise.",
     "lockedCta": "عرض الخطط ←"
   },
   "risk": {
@@ -113,8 +114,10 @@
     "plan": {
       "free": "مجاني",
       "starter": "Starter",
-      "pro": "Pro"
+      "pro": "Pro",
+      "enterprise": "Enterprise"
     },
+    "or": "أو",
     "forgotPassword": "نسيت كلمة المرور؟",
     "forgotPasswordTitle": "إعادة تعيين كلمة المرور",
     "forgotPasswordSubtitle": "أدخل بريدك الإلكتروني وسنرسل لك رابط إعادة التعيين.",

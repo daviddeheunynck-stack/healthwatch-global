@@ -22,6 +22,7 @@ const PLAN_BADGE: Record<string, string> = {
   free: "bg-gray-700 text-gray-300",
   starter: "bg-blue-900 text-blue-300",
   pro: "bg-amber-900 text-amber-300",
+  enterprise: "bg-purple-900 text-purple-300",
 };
 
 export default function Navbar() {
@@ -84,7 +85,7 @@ export default function Navbar() {
   const navLinks = [
     { href: `/${locale}`,         label: t("dashboard"), icon: Activity  },
     { href: `/${locale}/alerts`,  label: t("alerts"),    icon: Bell           },
-    { href: `/${locale}/compare`, label: "Compare",      icon: ArrowLeftRight },
+    { href: `/${locale}/compare`, label: t("compare"),    icon: ArrowLeftRight },
     { href: `/${locale}/reports`, label: t("reports"),   icon: FileText       },
     { href: `/${locale}/pricing`, label: t("pricing"),   icon: CreditCard },
     { href: `/${locale}/contact`, label: t("contact"),   icon: Mail      },

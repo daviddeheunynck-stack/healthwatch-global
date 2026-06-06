@@ -2,6 +2,7 @@
   "nav": {
     "dashboard": "Tableau de bord",
     "alerts": "Alertes",
+    "compare": "Comparer",
     "reports": "Rapports",
     "pricing": "Tarifs",
     "title": "HealthWatch Global",
@@ -113,8 +114,10 @@
     "plan": {
       "free": "Gratuit",
       "starter": "Starter",
-      "pro": "Pro"
+      "pro": "Pro",
+      "enterprise": "Enterprise"
     },
+    "or": "ou",
     "forgotPassword": "Mot de passe oublié ?",
     "forgotPasswordTitle": "Réinitialiser votre mot de passe",
     "forgotPasswordSubtitle": "Entrez votre email et nous vous enverrons un lien de réinitialisation.",

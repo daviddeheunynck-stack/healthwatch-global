@@ -2,6 +2,7 @@
   "nav": {
     "dashboard": "Dasbor",
     "alerts": "Peringatan",
+    "compare": "Bandingkan",
     "reports": "Laporan",
     "pricing": "Harga",
     "title": "HealthWatch Global",
@@ -23,7 +24,7 @@
     "date": "Tanggal",
     "loading": "Memuat data...",
     "lastUpdated": "Terakhir diperbarui",
-    "lockedDesc": "Angka pasti hanya untuk pelanggan Starter dan Pro.",
+    "lockedDesc": "Angka pasti hanya untuk pelanggan Pro dan Enterprise.",
     "lockedCta": "Lihat paket →"
   },
   "risk": {
@@ -113,8 +114,10 @@
     "plan": {
       "free": "Gratis",
       "starter": "Starter",
-      "pro": "Pro"
+      "pro": "Pro",
+      "enterprise": "Enterprise"
     },
+    "or": "atau",
     "forgotPassword": "Lupa kata sandi?",
     "forgotPasswordTitle": "Reset kata sandi",
     "forgotPasswordSubtitle": "Masukkan email Anda dan kami akan mengirimkan tautan reset.",

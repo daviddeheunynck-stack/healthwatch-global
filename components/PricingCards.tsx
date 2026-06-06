@@ -132,10 +132,10 @@ const COPY: Record<string, {
 // Pro: €49/month | Annual (−20%): €39/month = €468/year
 const PRICES: Record<string, { proMonthly: string; proAnnual: string; proAnnualTotal: string }> = {
   fr: { proMonthly: "49 €",  proAnnual: "39 €",  proAnnualTotal: "468 €/an"  },
-  en: { proMonthly: "$49",   proAnnual: "$39",   proAnnualTotal: "$468/yr"   },
-  es: { proMonthly: "$49",   proAnnual: "$39",   proAnnualTotal: "$468/año"  },
-  ar: { proMonthly: "49$",   proAnnual: "39$",   proAnnualTotal: "468$/سنة"  },
-  id: { proMonthly: "$49",   proAnnual: "$39",   proAnnualTotal: "$468/thn"  },
+  en: { proMonthly: "€49",   proAnnual: "€39",   proAnnualTotal: "€468/yr"   },
+  es: { proMonthly: "€49",   proAnnual: "€39",   proAnnualTotal: "€468/año"  },
+  ar: { proMonthly: "€49",   proAnnual: "€39",   proAnnualTotal: "€468/سنة"  },
+  id: { proMonthly: "€49",   proAnnual: "€39",   proAnnualTotal: "€468/thn"  },
 };
 
 export default function PricingCards({ locale }: { locale: string }) {
