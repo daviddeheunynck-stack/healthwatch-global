@@ -192,25 +192,61 @@ export default async function DashboardPage({
   const { data: { user } } = await supabase.auth.getUser();
 
   if (!user) {
-    const organizationSchema = {
-      "@context": "https://schema.org",
-      "@type": "Organization",
-      "name": "HealthWatch Global",
-      "url": "https://healthwatch-global.com",
-      "logo": "https://healthwatch-global.com/icon-512.png",
-      "description": "Real-time global epidemic surveillance platform. WHO, CDC & ECDC data in 5 languages for health organizations worldwide.",
-      "sameAs": [],
-      "contactPoint": {
-        "@type": "ContactPoint",
-        "email": "contact@healthwatch-global.com",
-        "contactType": "customer support",
+    const schemas = [
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "HealthWatch Global",
+        "url": "https://healthwatch-global.com",
+        "logo": "https://healthwatch-global.com/api/og",
+        "description": "Real-time global epidemic surveillance platform. WHO data in 5 languages for health organizations worldwide.",
+        "contactPoint": {
+          "@type": "ContactPoint",
+          "email": "contact@healthwatch-global.com",
+          "contactType": "customer support",
+          "availableLanguage": ["English", "French", "Spanish", "Arabic", "Indonesian"],
+        },
       },
-    };
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "HealthWatch Global",
+        "applicationCategory": "HealthApplication",
+        "operatingSystem": "Web",
+        "url": "https://healthwatch-global.com",
+        "description": "Monitor disease outbreaks worldwide in real time. Official WHO data, 5 languages, regional alerts, PDF reports and CSV export.",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "EUR",
+          "description": "Free tier — live outbreak map and dashboard, no account required.",
+        },
+        "featureList": [
+          "Real-time WHO disease outbreak map",
+          "5 languages — English, French, Spanish, Arabic, Indonesian",
+          "Regional email alerts",
+          "PDF epidemiological reports",
+          "CSV data export",
+          "Slack and Teams integration",
+        ],
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "HealthWatch Global",
+        "url": "https://healthwatch-global.com",
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": "https://healthwatch-global.com/en?q={search_term_string}",
+          "query-input": "required name=search_term_string",
+        },
+      },
+    ];
     return (
       <>
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(schemas) }}
         />
         <LandingPage locale={locale} />
       </>

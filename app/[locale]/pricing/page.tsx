@@ -214,19 +214,22 @@ export default async function PricingPage({ params }: { params: Promise<{ locale
     "offers": [
       {
         "@type": "Offer",
-        "name": "Pro",
-        "price": "49",
+        "name": "Free",
+        "price": "0",
         "priceCurrency": "EUR",
-        "priceSpecification": { "@type": "RecurringChargeSpecification", "billingDuration": "P1M" },
-        "description": "All regions, real-time alerts, Slack/Teams integration, unlimited CSV",
+        "description": "Live outbreak map and dashboard, no account required.",
       },
       {
         "@type": "Offer",
-        "name": "Enterprise",
-        "price": "299",
+        "name": "Pro",
+        "price": "49",
         "priceCurrency": "EUR",
-        "priceSpecification": { "@type": "RecurringChargeSpecification", "billingDuration": "P1M" },
-        "description": "Everything in Pro + REST API access, on-premise deployment, 99.9% SLA",
+        "priceSpecification": {
+          "@type": "UnitPriceSpecification",
+          "billingDuration": "P1M",
+          "referenceQuantity": { "@type": "QuantitativeValue", "value": 1, "unitCode": "MON" },
+        },
+        "description": "All regions, real-time alerts, Slack/Teams integration, unlimited CSV export. 14-day free trial.",
       },
     ],
   };
