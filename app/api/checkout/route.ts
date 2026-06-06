@@ -52,7 +52,7 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const { plan, locale, userId, userEmail, billing, coupon } = await req.json();
+    const { plan, locale, userId, userEmail, billing } = await req.json();
     const currency = getCurrency(locale);
     const billingPeriod = billing === "annual" ? "annual" : "monthly";
     const priceId = PRICES[plan]?.[billingPeriod]?.[currency];
@@ -69,29 +69,18 @@ export async function POST(req: NextRequest) {
 
     const stripeLocale = STRIPE_LOCALES[locale] || "en";
 
-    // Pre-apply coupon if provided — mutually exclusive with allow_promotion_codes
-    const ALLOWED_COUPONS = new Set(["FOUNDER29"]);
-    const applyCoupon = coupon && ALLOWED_COUPONS.has(String(coupon).toUpperCase())
-      ? String(coupon).toUpperCase()
-      : null;
-
     const params = new URLSearchParams({
       mode: "subscription",
       "line_items[0][price]": priceId,
       "line_items[0][quantity]": "1",
       success_url: `${baseUrl}/${locale}/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${baseUrl}/${locale}/pricing`,
-      // allow_promotion_codes and discounts are mutually exclusive in Stripe
-      ...(applyCoupon ? {} : { allow_promotion_codes: "true" }),
+      allow_promotion_codes: "true",
       locale: stripeLocale,
       "metadata[plan]": plan,
       "metadata[user_id]": userId || "",
       "metadata[billing]": billingPeriod,
     });
-
-    if (applyCoupon) {
-      params.set("discounts[0][coupon]", applyCoupon);
-    }
 
     // 14-day free trial — no credit card required
     params.set("subscription_data[trial_period_days]", "14");
