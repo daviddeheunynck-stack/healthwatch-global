@@ -124,6 +124,14 @@ const DISEASE_MAP: Array<{ patterns: string[]; info: DiseaseInfo }> = [
     patterns: ["pertussis", "whooping cough"],
     info: { name_en: "Pertussis", name_fr: "Coqueluche", name_ar: "السعال الديكي" },
   },
+  {
+    patterns: ["leishmaniasis", "leishmaniose"],
+    info: { name_en: "Leishmaniasis", name_fr: "Leishmaniose", name_ar: "داء الليشمانيات" },
+  },
+  {
+    patterns: ["trypanosomiasis", "sleeping sickness", "chagas"],
+    info: { name_en: "Trypanosomiasis", name_fr: "Trypanosomose", name_ar: "داء النوم" },
+  },
 ];
 
 export function normalizeDisease(rawName: string): DiseaseInfo {

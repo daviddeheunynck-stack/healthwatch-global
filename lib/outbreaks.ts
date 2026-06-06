@@ -1,4 +1,5 @@
 import { createClient } from "@supabase/supabase-js";
+import { normalizeDisease } from "./disease-data";
 
 export interface Outbreak {
   id: string;
@@ -57,10 +58,14 @@ export async function getOutbreaks(): Promise<Outbreak[]> {
     return [];
   }
 
-  // Deduplicate: keep only the most recent entry per (disease, country) pair
+  // Deduplicate: keep only the most recent entry per (disease, country) pair.
+  // Use normalizeDisease so "Dengue" and "Dengue fever" hash to the same canonical
+  // name_en ("Dengue fever"), preventing the same outbreak from appearing twice.
   const seen = new Set<string>();
   return (data || []).filter((o) => {
-    const key = `${(o.disease_en || o.disease).toLowerCase()}|${o.country.toLowerCase()}`;
+    const diseaseKey = normalizeDisease(o.disease_en || o.disease).name_en.toLowerCase();
+    const countryKey = (o.country_en || o.country).toLowerCase();
+    const key = `${diseaseKey}|${countryKey}`;
     if (seen.has(key)) return false;
     seen.add(key);
     return true;
@@ -68,54 +73,9 @@ export async function getOutbreaks(): Promise<Outbreak[]> {
 }
 
 // ── Disease name translations ─────────────────────────────────────────────────
-// The `disease` / `disease_en` columns contain English WHO names.
-// Map them to FR / ES / ID so the UI never shows English names on those locales.
-const DISEASE_FR: Record<string, string> = {
-  // Keys = English names as stored in disease_en / legacy disease column
-  // Values = French display names
-  // Covers both the exact name_en values from disease-data.ts and common variants
-  "Dengue": "Dengue",
-  "Dengue fever": "Dengue",
-  "Mpox": "Mpox",
-  "Monkeypox": "Variole du singe",
-  "Ebola": "Ébola",
-  "Ebola virus disease": "Maladie à virus Ébola",
-  "Marburg virus disease": "Maladie à virus de Marburg",
-  "Cholera": "Choléra",
-  "Yellow fever": "Fièvre jaune",
-  "Lassa fever": "Fièvre de Lassa",
-  "Rift Valley fever": "Fièvre de la Vallée du Rift",
-  "Crimean-Congo haemorrhagic fever": "Fièvre hémorragique de Crimée-Congo",
-  "Meningitis": "Méningite",
-  "Meningococcal meningitis": "Méningite à méningocoques",
-  "Measles": "Rougeole",
-  "Poliomyelitis": "Poliomyélite",
-  "Polio": "Poliomyélite",
-  "Influenza": "Grippe",
-  "Influenza A(H5N1)": "Grippe A(H5N1)",
-  "Influenza A(H3N2)": "Grippe A(H3N2)",
-  "Avian influenza": "Grippe aviaire",
-  "Avian Influenza": "Grippe aviaire",   // exact name_en from disease-data.ts
-  "COVID-19": "COVID-19",
-  "Plague": "Peste",
-  "Typhoid fever": "Fièvre typhoïde",
-  "Anthrax": "Charbon bactéridien",
-  "Rabies": "Rage",
-  "Chikungunya": "Chikungunya",
-  "Zika": "Zika",
-  "Zika virus": "Virus Zika",            // exact name_en from disease-data.ts
-  "Zika virus disease": "Maladie à virus Zika",
-  "Middle East Respiratory Syndrome": "MERS-CoV",
-  "MERS-CoV": "MERS-CoV",
-  "Nipah virus": "Virus Nipah",
-  "Malaria": "Paludisme",                // exact name_en from disease-data.ts
-  "Hepatitis": "Hépatite",               // exact name_en from disease-data.ts
-  "Diphtheria": "Diphtérie",             // exact name_en from disease-data.ts
-  "Pertussis": "Coqueluche",             // exact name_en from disease-data.ts
-  "Leishmaniasis": "Leishmaniose",
-  "Trypanosomiasis": "Trypanosomose",
-  "Hantavirus": "Hantavirus",
-};
+// FR translations are now handled directly by normalizeDisease().name_fr
+// (see getLocalizedDisease below). DISEASE_ES and DISEASE_ID provide
+// additional lookup for ES and ID locales beyond what DISEASE_MAP covers.
 
 const DISEASE_ES: Record<string, string> = {
   "Dengue": "Dengue",
@@ -203,18 +163,16 @@ const DISEASE_ID: Record<string, string> = {
 };
 
 export function getLocalizedDisease(outbreak: Outbreak, locale: string): string {
-  // The `disease` column stores the French name directly (from normalizeDisease().name_fr).
-  // For FR: return it as-is. For other locales: look up the EN name in the translation map.
-  if (locale === "fr") {
-    // disease is already French for all synced records.
-    // For legacy rows where disease might be an English title, try DISEASE_FR as fallback.
-    return DISEASE_FR[outbreak.disease] ?? outbreak.disease;
-  }
-  const en = outbreak.disease_en || outbreak.disease;
-  if (locale === "ar") return outbreak.disease_ar || en;
-  if (locale === "es") return DISEASE_ES[en] ?? en;
-  if (locale === "id") return DISEASE_ID[en] ?? en;
-  return en; // en = default
+  // Normalize through the same DISEASE_MAP the parser uses.
+  // disease_en is the preferred key (English, already normalized).
+  // Fallback: disease column (French for new records, English for legacy).
+  // This ensures "Dengue" and "Dengue fever" resolve to the same canonical names.
+  const { name_en, name_fr, name_ar } = normalizeDisease(outbreak.disease_en || outbreak.disease);
+  if (locale === "fr") return name_fr;
+  if (locale === "ar") return outbreak.disease_ar || name_ar;
+  if (locale === "es") return DISEASE_ES[name_en] ?? name_en;
+  if (locale === "id") return DISEASE_ID[name_en] ?? name_en;
+  return name_en; // en = default
 }
 
 // ── Country name translations ─────────────────────────────────────────────────
