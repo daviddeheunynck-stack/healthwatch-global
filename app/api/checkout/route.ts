@@ -20,8 +20,9 @@ const PRICES: Record<string, Record<string, Record<string, string>>> = {
   },
 };
 
-function getCurrency(locale: string): "eur" | "usd" {
-  return locale === "fr" ? "eur" : "usd";
+function getCurrency(_locale: string): "eur" | "usd" {
+  // Pricing page shows EUR for all locales — always bill in EUR
+  return "eur";
 }
 
 const STRIPE_LOCALES: Record<string, string> = {
