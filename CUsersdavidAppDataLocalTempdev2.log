@@ -1,0 +1,67 @@
+
+> healthwatch-global@0.1.0 dev
+> next dev
+
+▲ Next.js 16.2.6 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://192.168.1.15:3000
+- Environments: .env.local
+✓ Ready in 649ms
+[@sentry/nextjs] DEPRECATION WARNING: disableLogger is deprecated and will be removed in a future version. Use webpack.treeshake.removeDebugLogging instead. (Not supported with Turbopack.)
+Warning: Custom Cache-Control headers detected for the following routes:
+  - /_next/static/(.*)
+
+Setting a custom Cache-Control header can break Next.js development behavior.
+- Experiments (use with caution):
+  · clientTraceMetadata
+
+`z-index` is currently not supported.
+ GET /api/og?locale=fr 200 in 2.9s
+`z-index` is currently not supported.
+ GET /api/og?locale=en 200 in 1098ms
+`z-index` is currently not supported.
+⨯ Error: failed to pipe response
+    at ignore-listed frames {
+  [cause]: Error: lookupType: 5 - substFormat: 3 is not yet supported
+      at ignore-listed frames
+}
+⨯ Error: failed to pipe response
+    at ignore-listed frames {
+  [cause]: Error: lookupType: 5 - substFormat: 3 is not yet supported
+      at ignore-listed frames
+}
+ GET /api/og?locale=ar 500 in 795ms
+`z-index` is currently not supported.
+⨯ Error: failed to pipe response
+    at ignore-listed frames {
+  [cause]: Error: lookupType: 5 - substFormat: 3 is not yet supported
+      at ignore-listed frames
+}
+⨯ Error: failed to pipe response
+    at ignore-listed frames {
+  [cause]: Error: lookupType: 5 - substFormat: 3 is not yet supported
+      at ignore-listed frames
+}
+ GET /api/og?locale=ar 500 in 461ms
+`z-index` is currently not supported.
+ GET /api/og?locale=id 200 in 1152ms
+ GET /sitemap.xml 200 in 425ms (next.js: 404ms, application-code: 20ms)
+`z-index` is currently not supported.
+⨯ Error: failed to pipe response
+    at ignore-listed frames {
+  [cause]: Error: lookupType: 5 - substFormat: 3 is not yet supported
+      at ignore-listed frames
+}
+⨯ Error: failed to pipe response
+    at ignore-listed frames {
+  [cause]: Error: lookupType: 5 - substFormat: 3 is not yet supported
+      at ignore-listed frames
+}
+ GET /api/og?locale=ar 500 in 390ms
+`z-index` is currently not supported.
+ GET /api/og?locale=ar 200 in 1324ms
+`z-index` is currently not supported.
+ GET /api/og?locale=fr 200 in 1127ms
+`z-index` is currently not supported.
+ GET /api/og?locale=es 200 in 1140ms
+ GET /robots.txt 200 in 216ms (next.js: 205ms, application-code: 12ms)

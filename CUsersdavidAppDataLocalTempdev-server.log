@@ -1,0 +1,19 @@
+
+> healthwatch-global@0.1.0 dev
+> next dev
+
+▲ Next.js 16.2.6 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://192.168.1.15:3000
+- Environments: .env.local
+✓ Ready in 623ms
+[@sentry/nextjs] DEPRECATION WARNING: disableLogger is deprecated and will be removed in a future version. Use webpack.treeshake.removeDebugLogging instead. (Not supported with Turbopack.)
+Warning: Custom Cache-Control headers detected for the following routes:
+  - /_next/static/(.*)
+
+Setting a custom Cache-Control header can break Next.js development behavior.
+- Experiments (use with caution):
+  · clientTraceMetadata
+
+ POST /api/checkout 200 in 946ms (next.js: 212ms, application-code: 734ms)
+ POST /api/checkout 200 in 491ms (next.js: 6ms, application-code: 485ms)
