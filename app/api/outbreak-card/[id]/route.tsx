@@ -34,7 +34,7 @@ export async function GET(
 
   const { data: o } = await supabase
     .from("outbreaks")
-    .select("disease, disease_en, country, country_en, cases, deaths, risk_level, date, is_pheic, corroborated")
+    .select("disease, disease_en, country, country_en, cases, deaths, risk_level, date, is_pheic")
     .eq("id", id)
     .single();
 
@@ -140,9 +140,6 @@ export async function GET(
             <span style={{ color: "#94a3b8", fontSize: 15, fontWeight: 600 }}>HealthWatch Global</span>
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-            {o.corroborated && (
-              <span style={{ color: "#60a5fa", fontSize: 13 }}>🔁 WHO + ProMED</span>
-            )}
             <span style={{ color: "#475569", fontSize: 13 }}>Source: WHO Disease Outbreak News</span>
           </div>
         </div>

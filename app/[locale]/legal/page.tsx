@@ -95,7 +95,7 @@ export default async function LegalPage() {
           <p>
             L'ensemble du contenu de ce site (textes, graphiques, logiciels, code source, marques, logos) est la propriété
             exclusive de David Deheunynck, sous réserve des données issues de sources tierces (Organisation Mondiale de la
-            Santé, CDC, ECDC, ProMED) qui demeurent la propriété de leurs auteurs respectifs.
+            Santé, CDC, ECDC) qui demeurent la propriété de leurs auteurs respectifs.
           </p>
           <p>
             Toute reproduction, représentation, modification, publication ou adaptation de tout ou partie des éléments du
@@ -109,7 +109,7 @@ export default async function LegalPage() {
           <h2 className="text-lg font-semibold text-white">4. Données épidémiologiques — avertissement</h2>
           <p>
             Les données épidémiologiques affichées sur HealthWatch Global proviennent exclusivement de sources officielles
-            et publiques (API OMS Disease Outbreak News, CDC, ECDC, ProMED). Elles sont fournies à titre informatif
+            et publiques (API OMS Disease Outbreak News, CDC, ECDC). Elles sont fournies à titre informatif
             uniquement et ne constituent pas un avis médical.
           </p>
           <p>

@@ -12,14 +12,14 @@ import { ArrowLeftRight, TrendingUp, Users, Skull, Activity, Globe, Calendar, Al
 const LABELS: Record<string, {
   title: string; subtitle: string; selectA: string; selectB: string;
   all: string; cases: string; deaths: string; cfr: string; incidence: string;
-  date: string; region: string; pheic: string; corroborated: string;
+  date: string; region: string; pheic: string;
   winner: string; lower: string; selectBoth: string; share: string; copied: string;
 }> = {
-  fr: { title: "Comparer des foyers", subtitle: "Analysez deux épidémies côte à côte", selectA: "Foyer A", selectB: "Foyer B", all: "Choisir un foyer…", cases: "Cas", deaths: "Décès", cfr: "Létalité", incidence: "Incidence / 100 000", date: "Date", region: "Région", pheic: "PHEIC", corroborated: "WHO + ProMED", winner: "↓ Moins", lower: "↑ Plus", selectBoth: "Sélectionnez deux foyers pour comparer.", share: "Partager", copied: "Copié !" },
-  en: { title: "Compare outbreaks", subtitle: "Analyse two epidemics side by side", selectA: "Outbreak A", selectB: "Outbreak B", all: "Choose an outbreak…", cases: "Cases", deaths: "Deaths", cfr: "CFR", incidence: "Incidence / 100,000", date: "Date", region: "Region", pheic: "PHEIC", corroborated: "WHO + ProMED", winner: "↓ Lower", lower: "↑ Higher", selectBoth: "Select two outbreaks to compare.", share: "Share", copied: "Copied!" },
-  es: { title: "Comparar brotes", subtitle: "Analice dos epidemias lado a lado", selectA: "Brote A", selectB: "Brote B", all: "Elige un brote…", cases: "Casos", deaths: "Muertes", cfr: "Letalidad", incidence: "Incidencia / 100.000", date: "Fecha", region: "Región", pheic: "PHEIC", corroborated: "WHO + ProMED", winner: "↓ Menor", lower: "↑ Mayor", selectBoth: "Seleccione dos brotes para comparar.", share: "Compartir", copied: "¡Copiado!" },
-  ar: { title: "مقارنة التفشيات", subtitle: "تحليل وباءين جنباً إلى جنب", selectA: "التفشي A", selectB: "التفشي B", all: "اختر تفشياً…", cases: "الحالات", deaths: "الوفيات", cfr: "معدل الوفيات", incidence: "الإصابة / 100,000", date: "التاريخ", region: "المنطقة", pheic: "PHEIC", corroborated: "WHO + ProMED", winner: "↓ أقل", lower: "↑ أكثر", selectBoth: "اختر تفشيين للمقارنة.", share: "مشاركة", copied: "تم النسخ!" },
-  id: { title: "Bandingkan Wabah", subtitle: "Analisis dua epidemi secara berdampingan", selectA: "Wabah A", selectB: "Wabah B", all: "Pilih wabah…", cases: "Kasus", deaths: "Kematian", cfr: "CFR", incidence: "Insidensi / 100.000", date: "Tanggal", region: "Wilayah", pheic: "PHEIC", corroborated: "WHO + ProMED", winner: "↓ Lebih rendah", lower: "↑ Lebih tinggi", selectBoth: "Pilih dua wabah untuk dibandingkan.", share: "Bagikan", copied: "Disalin!" },
+  fr: { title: "Comparer des foyers", subtitle: "Analysez deux épidémies côte à côte", selectA: "Foyer A", selectB: "Foyer B", all: "Choisir un foyer…", cases: "Cas", deaths: "Décès", cfr: "Létalité", incidence: "Incidence / 100 000", date: "Date", region: "Région", pheic: "PHEIC", winner: "↓ Moins", lower: "↑ Plus", selectBoth: "Sélectionnez deux foyers pour comparer.", share: "Partager", copied: "Copié !" },
+  en: { title: "Compare outbreaks", subtitle: "Analyse two epidemics side by side", selectA: "Outbreak A", selectB: "Outbreak B", all: "Choose an outbreak…", cases: "Cases", deaths: "Deaths", cfr: "CFR", incidence: "Incidence / 100,000", date: "Date", region: "Region", pheic: "PHEIC", winner: "↓ Lower", lower: "↑ Higher", selectBoth: "Select two outbreaks to compare.", share: "Share", copied: "Copied!" },
+  es: { title: "Comparar brotes", subtitle: "Analice dos epidemias lado a lado", selectA: "Brote A", selectB: "Brote B", all: "Elige un brote…", cases: "Casos", deaths: "Muertes", cfr: "Letalidad", incidence: "Incidencia / 100.000", date: "Fecha", region: "Región", pheic: "PHEIC", winner: "↓ Menor", lower: "↑ Mayor", selectBoth: "Seleccione dos brotes para comparar.", share: "Compartir", copied: "¡Copiado!" },
+  ar: { title: "مقارنة التفشيات", subtitle: "تحليل وباءين جنباً إلى جنب", selectA: "التفشي A", selectB: "التفشي B", all: "اختر تفشياً…", cases: "الحالات", deaths: "الوفيات", cfr: "معدل الوفيات", incidence: "الإصابة / 100,000", date: "التاريخ", region: "المنطقة", pheic: "PHEIC", winner: "↓ أقل", lower: "↑ أكثر", selectBoth: "اختر تفشيين للمقارنة.", share: "مشاركة", copied: "تم النسخ!" },
+  id: { title: "Bandingkan Wabah", subtitle: "Analisis dua epidemi secara berdampingan", selectA: "Wabah A", selectB: "Wabah B", all: "Pilih wabah…", cases: "Kasus", deaths: "Kematian", cfr: "CFR", incidence: "Insidensi / 100.000", date: "Tanggal", region: "Wilayah", pheic: "PHEIC", winner: "↓ Lebih rendah", lower: "↑ Lebih tinggi", selectBoth: "Pilih dua wabah untuk dibandingkan.", share: "Bagikan", copied: "Disalin!" },
 };
 
 function StatRow({ label, valA, valB, icon, fmt = (v: number) => v.toLocaleString(), higherIsBad = true }: {
@@ -185,17 +185,13 @@ export default function ComparePage() {
                   <td className="px-4 py-3 text-gray-500 text-sm"><div className="flex items-center gap-2"><AlertTriangle className="w-3.5 h-3.5" />Status</div></td>
                   <td className="px-4 py-3 text-center">
                     <div className="flex flex-col gap-1 items-center">
-                      {oA.is_pheic && <span className="text-xs text-purple-400">🚨 PHEIC</span>}
-                      {oA.corroborated && <span className="text-xs text-blue-400">🔁 {l.corroborated}</span>}
-                      {!oA.is_pheic && !oA.corroborated && <span className="text-gray-600 text-xs">—</span>}
+                      {oA.is_pheic ? <span className="text-xs text-purple-400">🚨 PHEIC</span> : <span className="text-gray-600 text-xs">—</span>}
                     </div>
                   </td>
                   <td></td>
                   <td className="px-4 py-3 text-center">
                     <div className="flex flex-col gap-1 items-center">
-                      {oB.is_pheic && <span className="text-xs text-purple-400">🚨 PHEIC</span>}
-                      {oB.corroborated && <span className="text-xs text-blue-400">🔁 {l.corroborated}</span>}
-                      {!oB.is_pheic && !oB.corroborated && <span className="text-gray-600 text-xs">—</span>}
+                      {oB.is_pheic ? <span className="text-xs text-purple-400">🚨 PHEIC</span> : <span className="text-gray-600 text-xs">—</span>}
                     </div>
                   </td>
                 </tr>

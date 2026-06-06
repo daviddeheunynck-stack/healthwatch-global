@@ -58,7 +58,7 @@ export default async function TermsPage() {
           <p className="text-gray-400 text-sm leading-relaxed">
             HealthWatch Global is a multilingual health surveillance platform that aggregates and displays
             publicly available epidemic alert data from sources including WHO Disease Outbreak News (DON),
-            CDC, ECDC, and ProMED. The platform provides interactive dashboards, disease-specific alert
+            CDC, and ECDC. The platform provides interactive dashboards, disease-specific alert
             subscriptions, regional email alerts, PDF regional reports, CSV data export, Slack/Teams
             integration, and a REST API for Enterprise organizations. Available in 5 languages.
           </p>
@@ -122,7 +122,7 @@ export default async function TermsPage() {
           <h2 className="text-lg font-semibold text-white">7. Intellectual Property</h2>
           <p className="text-gray-400 text-sm leading-relaxed">
             The platform design, code, branding, and compiled datasets are the intellectual property of
-            HealthWatch Global. Underlying public health data originates from WHO, CDC, ECDC, and ProMED and
+            HealthWatch Global. Underlying public health data originates from WHO, CDC, and ECDC and
             is subject to their respective terms of use. CSV data export rights granted under paid plans do not transfer ownership of any data.
           </p>
         </section>

@@ -196,7 +196,7 @@ export async function GET(
   }
 
   <footer>
-    <span>Source: WHO · CDC · ECDC · ProMED — healthwatch-global.com</span>
+    <span>Source: WHO · CDC · ECDC — healthwatch-global.com</span>
     <span>${rl.generated} ${dateStr} · ${plan.charAt(0).toUpperCase() + plan.slice(1)}</span>
   </footer>
 </body>

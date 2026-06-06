@@ -15,11 +15,10 @@ const CRON_SECRET = clean(process.env.CRON_SECRET);
 
 const STALE_DAYS = 90;
 
-// RSS fallback sources (tried only if WHO OData fails)
+// RSS fallback sources (tried only if WHO OData fails) — WHO official feeds only
 const RSS_FALLBACKS = [
   "https://www.who.int/feeds/entity/csr/don/en/rss.xml",
   "https://www.who.int/feeds/entity/emergencies/disease-outbreak-news/en/rss.xml",
-  "https://promedmail.org/feed/",
 ];
 
 async function fetchRSSFallback(): Promise<{ items: ParsedOutbreak[]; source: string } | null> {
@@ -62,63 +61,49 @@ export async function GET(req: NextRequest) {
   const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
   const results = { inserted: 0, updated: 0, skipped: 0, errors: 0, staleDeactivated: 0 };
 
-  // ── 1. Fetch outbreak data — WHO + ProMED in parallel ────────────
+  // ── 1. Fetch outbreak data — WHO Disease Outbreak News ────────────
   let outbreaks: ParsedOutbreak[] = [];
   let usedSource = "";
 
-  // ProMED corroboration map: disease_en|country_en → ProMED article URL
-  const promedMap = new Map<string, string>();
-
-  // Fetch WHO OData + ProMED simultaneously
-  const [whoResult, promedResult] = await Promise.allSettled([
-    // WHO OData API
-    (async () => {
-      const whoItems = await fetchWHODONList(40);
-      const parsed: ParsedOutbreak[] = [];
-      for (const item of whoItems) {
-        // First pass: fast (no body fetch)
-        let p = await parseWHODONItem(item, false);
-        // Second pass: fetch full article for items with 0 cases (N/D fix)
-        if (p && p.cases === 0 && item.ItemDefaultUrl) {
-          const full = await parseWHODONItem(item, true);
-          if (full && full.cases > 0) p = full;
-          await new Promise((r) => setTimeout(r, 200)); // polite delay
-        }
-        if (debug) debugLog.push(p ? `✓ "${item.Title}" → ${p.disease_en} / ${p.country_en} (${p.cases} cases)` : `✗ "${item.Title}" → skipped`);
-        if (p) parsed.push(p);
+  // Primary: WHO OData API
+  try {
+    const whoItems = await fetchWHODONList(40);
+    const parsed: ParsedOutbreak[] = [];
+    for (const item of whoItems) {
+      // First pass: fast (no body fetch)
+      let p = await parseWHODONItem(item, false);
+      // Second pass: fetch full article for items with 0 cases (N/D fix)
+      if (p && p.cases === 0 && item.ItemDefaultUrl) {
+        const full = await parseWHODONItem(item, true);
+        if (full && full.cases > 0) p = full;
+        await new Promise((r) => setTimeout(r, 200)); // polite delay
       }
-      return parsed;
-    })(),
-    // ProMED RSS (parallel — not fallback anymore)
-    fetchRSSFallback(),
-  ]);
-
-  if (whoResult.status === "fulfilled" && whoResult.value.length > 0) {
-    outbreaks  = whoResult.value;
-    usedSource = "WHO OData API";
-    console.log(`[sync] WHO OData: ${outbreaks.length} parsed`);
-  } else {
-    console.warn("[sync] WHO OData failed or empty, using ProMED as primary");
-    if (promedResult.status === "fulfilled" && promedResult.value) {
-      outbreaks  = promedResult.value.items;
-      usedSource = promedResult.value.source + " (primary fallback)";
+      if (debug) debugLog.push(p ? `✓ "${item.Title}" → ${p.disease_en} / ${p.country_en} (${p.cases} cases)` : `✗ "${item.Title}" → skipped`);
+      if (p) parsed.push(p);
     }
+    if (parsed.length > 0) {
+      outbreaks  = parsed;
+      usedSource = "WHO OData API";
+      console.log(`[sync] WHO OData: ${outbreaks.length} parsed`);
+    }
+  } catch (e: any) {
+    console.warn("[sync] WHO OData failed:", e.message);
+    if (debug) debugLog.push(`WHO OData error: ${e.message}`);
   }
 
-  // Build ProMED corroboration map from parallel fetch
-  if (promedResult.status === "fulfilled" && promedResult.value) {
-    const promedItems = promedResult.value.items;
-    for (const p of promedItems) {
-      const key = `${p.disease_en.toLowerCase()}|${p.country_en.toLowerCase()}`;
-      if (!promedMap.has(key)) promedMap.set(key, p.source);
+  // Fallback: WHO RSS feeds (only if OData yields nothing)
+  if (outbreaks.length === 0) {
+    const rss = await fetchRSSFallback();
+    if (rss) {
+      outbreaks  = rss.items;
+      usedSource = rss.source + " (RSS fallback)";
+      if (debug) debugLog.push(`RSS fallback (${rss.source}): ${rss.items.length} parsed`);
     }
-    if (debug) debugLog.push(`ProMED parallel: ${promedItems.length} items, ${promedMap.size} unique disease/country pairs`);
-    console.log(`[sync] ProMED parallel: ${promedItems.length} items corroborating WHO data`);
   }
 
   if (outbreaks.length === 0) {
     return NextResponse.json({
-      error: "All sources failed — WHO OData + all RSS fallbacks returned 0 usable items",
+      error: "All WHO sources failed — OData + RSS fallbacks returned 0 usable items",
       debug: debug ? debugLog : undefined,
     }, { status: 502 });
   }
@@ -144,16 +129,11 @@ export async function GET(req: NextRequest) {
       const dcKey = `${outbreak.disease_en.toLowerCase()}|${outbreak.country_en.toLowerCase()}`;
       const existingRow = bySource.get(outbreak.source) || byDiseaseCountry.get(dcKey);
 
-      // Check ProMED corroboration
-      const isCorroborated = promedMap.has(dcKey);
-      const promedSrc      = promedMap.get(dcKey);
-
       if (existingRow) {
         const needsUpdate =
           existingRow.cases !== outbreak.cases ||
           existingRow.deaths !== outbreak.deaths ||
-          existingRow.date < outbreak.date ||
-          existingRow.corroborated !== isCorroborated;
+          existingRow.date < outbreak.date;
 
         if (needsUpdate) {
           const { error } = await supabase
@@ -163,8 +143,6 @@ export async function GET(req: NextRequest) {
               date: outbreak.date, description: outbreak.description,
               risk_level: outbreak.risk_level, source: outbreak.source,
               active: true,
-              corroborated:  isCorroborated,
-              promed_source: promedSrc ?? null,
             })
             .eq("id", existingRow.id);
           if (error) {
@@ -176,11 +154,7 @@ export async function GET(req: NextRequest) {
           results.skipped++;
         }
       } else {
-        const { error } = await supabase.from("outbreaks").insert({
-          ...outbreak,
-          corroborated:  isCorroborated,
-          promed_source: promedSrc ?? null,
-        });
+        const { error } = await supabase.from("outbreaks").insert(outbreak);
         if (error) {
           console.error("[sync] insert:", error, outbreak);
           errorLog.push(`INSERT ${outbreak.disease_en}/${outbreak.country_en}: ${error.message}`);

@@ -114,7 +114,7 @@ export default function AlertsPage() {
       <RealtimeAlertFeed />
 
       <div className="text-center text-xs text-gray-600">
-        Sources : WHO Disease Outbreak News · ProMED · CDC · ECDC
+        Sources : WHO Disease Outbreak News · CDC · ECDC
       </div>
     </div>
   );

@@ -13,7 +13,6 @@ const COPY: Record<string, {
   source:     string;
   cta:        string;
   noData:     string;
-  corroborated: string;
   unsubNote:  string;
 }> = {
   fr: {
@@ -27,7 +26,6 @@ const COPY: Record<string, {
     source:       "Source OMS",
     cta:          "Voir le tableau de bord →",
     noData:       "N/D",
-    corroborated: "✓ Confirmé par WHO + ProMED",
     unsubNote:    "Vous recevez cet email car vous surveillez cette maladie sur healthwatch-global.com.",
   },
   en: {
@@ -41,7 +39,6 @@ const COPY: Record<string, {
     source:       "WHO source",
     cta:          "View dashboard →",
     noData:       "N/A",
-    corroborated: "✓ Confirmed by WHO + ProMED",
     unsubNote:    "You receive this email because you're monitoring this disease on healthwatch-global.com.",
   },
   es: {
@@ -55,7 +52,6 @@ const COPY: Record<string, {
     source:       "Fuente OMS",
     cta:          "Ver el panel →",
     noData:       "N/D",
-    corroborated: "✓ Confirmado por WHO + ProMED",
     unsubNote:    "Recibe este correo porque monitorea esta enfermedad en healthwatch-global.com.",
   },
   ar: {
@@ -69,7 +65,6 @@ const COPY: Record<string, {
     source:       "مصدر OMS",
     cta:          "← عرض لوحة التحكم",
     noData:       "غ/م",
-    corroborated: "✓ مؤكد من WHO + ProMED",
     unsubNote:    "تتلقى هذا البريد لأنك تراقب هذا المرض على healthwatch-global.com.",
   },
   id: {
@@ -83,7 +78,6 @@ const COPY: Record<string, {
     source:       "Sumber WHO",
     cta:          "Lihat dasbor →",
     noData:       "T/S",
-    corroborated: "✓ Dikonfirmasi oleh WHO + ProMED",
     unsubNote:    "Anda menerima email ini karena memantau penyakit ini di healthwatch-global.com.",
   },
 };
@@ -99,7 +93,6 @@ export interface DiseaseAlertOutbreak {
   risk_level:   string;
   date:         string;
   source:       string;
-  corroborated: boolean;
 }
 
 export function buildDiseaseAlertEmail(
@@ -156,11 +149,6 @@ export function buildDiseaseAlertEmail(
     <div style="display:inline-block;background:${riskColor}20;border:1px solid ${riskColor}50;border-radius:999px;padding:4px 12px;margin-bottom:20px;">
       <span style="color:${riskColor};font-size:12px;font-weight:700;text-transform:uppercase;">${outbreak.risk_level.toUpperCase()}</span>
     </div>
-
-    ${outbreak.corroborated ? `
-    <div style="background:#1e3a5f;border:1px solid #1d4ed8;border-radius:8px;padding:10px 14px;margin-bottom:20px;">
-      <span style="color:#93c5fd;font-size:12px;">${c.corroborated}</span>
-    </div>` : ""}
 
     <!-- Stats row -->
     <table width="100%" cellpadding="0" cellspacing="8" style="margin-bottom:20px;">

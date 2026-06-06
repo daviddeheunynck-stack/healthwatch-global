@@ -96,31 +96,9 @@ export function parseWHOTitle(title: string): { disease: string; country: string
   return null;
 }
 
-// ─── ProMED title parsing ──────────────────────────────────────
-// Format: "PRO/AH/EDR> Cholera - Haiti (03): WHO, update"
-//      or "PRO/AH> Avian Influenza - Cambodia (07): H5N1"
-
-export function parseProMEDTitle(title: string): { disease: string; country: string } | null {
-  // Strip "PRO/XX> " prefix
-  const withoutPrefix = title.replace(/^PRO\/[^>]+>\s*/i, "").trim();
-
-  // Pattern: "Disease - Country (number): detail"
-  // Split on " - " but stop before "(N):" or ":"
-  const match = withoutPrefix.match(/^(.+?)\s*-\s*([^:(]+?)(?:\s*\(\d+\))?(?:\s*:.*)?$/);
-  if (match) {
-    const disease = match[1].trim();
-    // Country may have commas (multi-country) — take first
-    const countryRaw = match[2].trim();
-    const country = countryRaw.split(/,\s*/)[0].trim();
-    if (disease && country) return { disease, country };
-  }
-  return null;
-}
-
-// ─── Generic title parser (tries WHO then ProMED) ─────────────
+// ─── Generic title parser (WHO format) ───────────────────────
 
 export function parseTitle(title: string): { disease: string; country: string } | null {
-  if (/^PRO\//i.test(title)) return parseProMEDTitle(title);
   return parseWHOTitle(title);
 }
 

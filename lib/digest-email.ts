@@ -15,7 +15,7 @@ const LABELS: Record<string, Record<string, string>> = {
     high: "Élevé", medium: "Moyen", low: "Faible",
     cta: "Voir le tableau de bord complet →",
     unsubscribe: "Se désabonner",
-    sources: "Sources : OMS · CDC · ECDC · ProMED",
+    sources: "Sources : OMS · CDC · ECDC",
   },
   en: {
     subject: "Your weekly epidemiological briefing",
@@ -29,7 +29,7 @@ const LABELS: Record<string, Record<string, string>> = {
     high: "High", medium: "Medium", low: "Low",
     cta: "View full dashboard →",
     unsubscribe: "Unsubscribe",
-    sources: "Sources: WHO · CDC · ECDC · ProMED",
+    sources: "Sources: WHO · CDC · ECDC",
   },
   es: {
     subject: "Su informe epidemiológico semanal",
@@ -43,7 +43,7 @@ const LABELS: Record<string, Record<string, string>> = {
     high: "Alto", medium: "Medio", low: "Bajo",
     cta: "Ver el panel completo →",
     unsubscribe: "Cancelar suscripción",
-    sources: "Fuentes: OMS · CDC · ECDC · ProMED",
+    sources: "Fuentes: OMS · CDC · ECDC",
   },
   ar: {
     subject: "ملخصك الوبائي الأسبوعي",
@@ -57,7 +57,7 @@ const LABELS: Record<string, Record<string, string>> = {
     high: "عالي", medium: "متوسط", low: "منخفض",
     cta: "← عرض لوحة التحكم الكاملة",
     unsubscribe: "إلغاء الاشتراك",
-    sources: "المصادر: OMS · CDC · ECDC · ProMED",
+    sources: "المصادر: OMS · CDC · ECDC",
   },
   id: {
     subject: "Briefing epidemiologi mingguan Anda",
@@ -71,7 +71,7 @@ const LABELS: Record<string, Record<string, string>> = {
     high: "Tinggi", medium: "Sedang", low: "Rendah",
     cta: "Lihat dasbor lengkap →",
     unsubscribe: "Berhenti berlangganan",
-    sources: "Sumber: WHO · CDC · ECDC · ProMED",
+    sources: "Sumber: WHO · CDC · ECDC",
   },
 };
 

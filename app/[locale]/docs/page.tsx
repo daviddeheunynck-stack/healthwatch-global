@@ -218,8 +218,6 @@ export default function DocsPage({ params }: { params: Promise<{ locale: string 
       "source": "https://www.who.int/emergencies/disease-outbreak-news/item/2026-DON603",
       "description": "As of 3 June 2026, the Ministry of Health DRC...",
       "is_pheic": false,
-      "corroborated": true,
-      "promed_source": "https://promedmail.org/promed-post/?id=...",
       "active": true
     }
   ],
@@ -251,8 +249,6 @@ export default function DocsPage({ params }: { params: Promise<{ locale: string 
                 ["source",        "string",  "WHO Disease Outbreak News article URL"],
                 ["description",   "string",  "Summary extracted from the WHO bulletin (≤ 400 chars)"],
                 ["is_pheic",      "boolean", "True when WHO has declared a Public Health Emergency of International Concern"],
-                ["corroborated",  "boolean", "True when both WHO DON and ProMED confirm this outbreak"],
-                ["promed_source", "string?", "ProMED article URL when corroborated (null otherwise)"],
                 ["active",        "boolean", "False for deactivated / resolved outbreaks"],
               ].map(([field, type, desc]) => (
                 <tr key={field} className="border-b border-gray-800">

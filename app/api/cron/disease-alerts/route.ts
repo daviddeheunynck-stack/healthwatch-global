@@ -61,7 +61,7 @@ export async function GET(req: NextRequest) {
   const diseases = Array.from(diseaseUsers.keys());
   const { data: outbreaks } = await supabase
     .from("outbreaks")
-    .select("id, disease, disease_en, country, country_en, cases, deaths, risk_level, date, source, corroborated")
+    .select("id, disease, disease_en, country, country_en, cases, deaths, risk_level, date, source")
     .eq("active", true)
     .in("disease_en", diseases);
 
@@ -121,7 +121,6 @@ export async function GET(req: NextRequest) {
           risk_level:   outbreak.risk_level,
           date:         outbreak.date,
           source:       outbreak.source,
-          corroborated: outbreak.corroborated ?? false,
         };
 
         const { subject, html } = buildDiseaseAlertEmail(alertOutbreak, locale, userId);

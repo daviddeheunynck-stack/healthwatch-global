@@ -18,8 +18,6 @@ export interface Outbreak {
   source: string;
   description: string;
   active: boolean;
-  corroborated:  boolean;       // true when both WHO + ProMED report this outbreak
-  promed_source: string | null; // ProMED article URL when corroborated
   is_pheic:      boolean;       // Public Health Emergency of International Concern
   updated_at:    string | null; // last sync timestamp
   created_at:    string | null; // first insertion timestamp

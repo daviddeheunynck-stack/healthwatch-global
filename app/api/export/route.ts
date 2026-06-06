@@ -57,7 +57,7 @@ export async function GET(request: NextRequest) {
     "cfr_%", "incidence_per_100k",
     "risk_level", "date", "source",
     "description",
-    "pheic", "corroborated", "promed_source",
+    "pheic",
   ];
 
   const rows = outbreaks.map((o) => {
@@ -79,8 +79,6 @@ export async function GET(request: NextRequest) {
       escape(o.source),
       escape(o.description ?? ""),
       o.is_pheic ? "YES" : "NO",
-      o.corroborated ? "YES" : "NO",
-      escape(o.promed_source ?? ""),
     ];
   });
 
