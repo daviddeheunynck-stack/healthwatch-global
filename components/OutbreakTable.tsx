@@ -422,7 +422,7 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l }: 
                       {getLocalizedDisease(outbreak, locale)}
                       {isNewOutbreak(outbreak) && (
                         <span className="inline-flex items-center text-[10px] font-bold px-1.5 py-0.5 rounded bg-green-900/50 border border-green-700/50 text-green-300 shrink-0 animate-pulse">
-                          NEW
+                          {{ fr: "NOUVEAU", en: "NEW", es: "NUEVO", ar: "جديد", id: "BARU" }[locale] ?? "NEW"}
                         </span>
                       )}
                       {outbreak.is_pheic && (
@@ -479,7 +479,8 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l }: 
                       <div className="text-gray-600 text-xs mt-0.5">
                         {(() => {
                           const h = Math.floor((Date.now() - new Date(outbreak.updated_at!).getTime()) / 3600000);
-                          return h < 1 ? "< 1h" : h < 24 ? `${h}h` : `${Math.floor(h/24)}j`;
+                          const dSuffix = ({ fr: "j", en: "d", es: "d", ar: "ي", id: "h" } as Record<string,string>)[locale] ?? "d";
+                          return h < 1 ? "< 1h" : h < 24 ? `${h}h` : `${Math.floor(h/24)}${dSuffix}`;
                         })()}
                       </div>
                     )}

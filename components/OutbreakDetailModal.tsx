@@ -282,10 +282,10 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlis
               : "bg-gray-800/50 border-gray-700/30 text-gray-400"
           }`}>
             {parseFloat(cfr) > 10
-              ? `⚠️ CFR ${cfr}% — taux de létalité critique. Ebola typique : 25-90%.`
+              ? `⚠️ CFR ${cfr}% — ${{ fr: "taux de létalité critique. Ebola typique : 25–90 %.", en: "critical fatality rate. Typical Ebola: 25–90%.", es: "tasa de letalidad crítica. Ébola típico: 25–90%.", ar: "معدل وفيات حرج. إيبولا النموذجي: 25–90%.", id: "tingkat kematian kritis. Ebola tipikal: 25–90%." }[locale] ?? "critical fatality rate. Typical Ebola: 25–90%."}`
               : parseFloat(cfr) > 3
-              ? `⚠️ CFR ${cfr}% — taux de létalité élevé. Surveillance renforcée recommandée.`
-              : `CFR ${cfr}% — taux de létalité modéré.`
+              ? `⚠️ CFR ${cfr}% — ${{ fr: "taux de létalité élevé. Surveillance renforcée recommandée.", en: "high fatality rate. Enhanced surveillance recommended.", es: "tasa de letalidad alta. Se recomienda vigilancia reforzada.", ar: "معدل وفيات مرتفع. يُنصح بتعزيز المراقبة.", id: "tingkat kematian tinggi. Pengawasan lebih ketat disarankan." }[locale] ?? "high fatality rate. Enhanced surveillance recommended."}`
+              : `CFR ${cfr}% — ${{ fr: "taux de létalité modéré.", en: "moderate fatality rate.", es: "tasa de letalidad moderada.", ar: "معدل وفيات معتدل.", id: "tingkat kematian sedang." }[locale] ?? "moderate fatality rate."}`
             }
           </div>
         )}
