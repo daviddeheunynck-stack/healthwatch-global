@@ -14,6 +14,7 @@ export default function robots(): MetadataRoute.Robots {
           "/*/reset-password",
           "/*/admin",
           "/*/success",
+          "/*/outbreak/*/print",
           "/api/",
         ],
       },

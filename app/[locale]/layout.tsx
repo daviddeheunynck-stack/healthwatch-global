@@ -68,11 +68,20 @@ export async function generateMetadata({
       description: m.description,
       siteName: "HealthWatch Global",
       locale: locale === "ar" ? "ar_SA" : locale === "fr" ? "fr_FR" : locale === "es" ? "es_ES" : locale === "id" ? "id_ID" : "en_US",
+      images: [
+        {
+          url: `https://healthwatch-global.com/api/og?locale=${locale}`,
+          width: 1200,
+          height: 630,
+          alt: m.title,
+        },
+      ],
     },
     twitter: {
       card: "summary_large_image",
       title: m.title,
       description: m.description,
+      images: [`https://healthwatch-global.com/api/og?locale=${locale}`],
     },
     robots: {
       index: true,
