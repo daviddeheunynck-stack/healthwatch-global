@@ -122,7 +122,7 @@
     "faq1_q": "Puis-je annuler à tout moment ?",
     "faq1_a": "Oui, sans engagement. Vous pouvez annuler votre abonnement à tout moment depuis votre espace client.",
     "faq2_q": "À quelle fréquence les données sont-elles mises à jour ?",
-    "faq2_a": "Les données OMS sont synchronisées chaque matin à 6h UTC. ProMED est interrogé en parallèle pour corroboration. Les alertes maladies sont envoyées jusqu'à 1x par jour dès qu'un nouveau foyer est détecté.",
+    "faq2_a": "Les données OMS sont synchronisées chaque matin à 6h UTC. Les alertes maladies sont envoyées jusqu'à 1x par jour dès qu'un nouveau foyer est détecté.",
     "faq3_q": "Y a-t-il un plan gratuit ?",
     "faq3_a": "Oui. Le plan Gratuit donne acces au tableau de bord public, une region surveillee et la synthese hebdomadaire — sans carte bancaire, sans limite de duree."
   },
@@ -183,7 +183,7 @@
     "successTitle": "Message envoyé !",
     "successText": "Merci. Nous vous répondrons dans les 24 heures.",
     "errorGeneric": "Une erreur est survenue. Réessayez.",
-    "aboutText": "HealthWatch Global a été créé pour donner aux organisations de santé une intelligence épidémique en temps réel dans leur langue. Nous agrégeons les flux OMS, CDC, ECDC et ProMED en une seule plateforme multilingue.",
+    "aboutText": "HealthWatch Global a été créé pour donner aux organisations de santé une intelligence épidémique en temps réel dans leur langue. Nous agrégeons les flux OMS, CDC et ECDC en une seule plateforme multilingue.",
     "navLink": "Contact"
   }
 }
