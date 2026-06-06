@@ -20,108 +20,13 @@ type ChurnCopy = {
 
 const COPY: Record<string, Record<string, ChurnCopy>> = {
 
-  // ── Starter ──────────────────────────────────────────────────────────────
-
-  starter: {
-    fr: {
-      subject:     "Votre abonnement Starter est annulé — à bientôt 👋",
-      headline:    "Votre abonnement a été annulé.",
-      intro:       "C'est confirmé — votre plan Starter est résilié. Vous repassez sur le plan gratuit à la fin de la période en cours.",
-      losingTitle: "Vous n'aurez plus accès à :",
-      losing: [
-        "Chiffres exacts de cas et de décès par foyer",
-        "Rapports PDF régionaux téléchargeables",
-        "Export CSV des données d'épidémies",
-        "Alertes régionales par email",
-      ],
-      comeback:  "Si vous changez d'avis, vous pouvez vous réabonner à tout moment — vos préférences seront restaurées.",
-      ctaLabel:  "Réactiver mon abonnement →",
-      ctaUrl:    `${APP_URL}/fr/pricing`,
-      contactLine: "Une question ou un problème qui aurait pu être évité ? Répondez directement à cet email.",
-      contactUrl:  `${APP_URL}/fr/contact`,
-      closing:   "Bonne continuation,\nDavid — HealthWatch Global",
-    },
-    en: {
-      subject:     "Your Starter subscription has been cancelled — take care 👋",
-      headline:    "Your subscription has been cancelled.",
-      intro:       "Confirmed — your Starter plan has been cancelled. You'll revert to the free plan at the end of your current billing period.",
-      losingTitle: "You'll lose access to:",
-      losing: [
-        "Exact case and death figures per outbreak",
-        "Downloadable regional PDF reports",
-        "CSV data export",
-        "Regional email alerts",
-      ],
-      comeback:  "If you change your mind, you can resubscribe at any time — your preferences will be restored.",
-      ctaLabel:  "Reactivate my subscription →",
-      ctaUrl:    `${APP_URL}/en/pricing`,
-      contactLine: "A question, or an issue that could have been avoided? Reply directly to this email.",
-      contactUrl:  `${APP_URL}/en/contact`,
-      closing:   "Take care,\nDavid — HealthWatch Global",
-    },
-    es: {
-      subject:     "Su suscripción Starter ha sido cancelada — hasta pronto 👋",
-      headline:    "Su suscripción ha sido cancelada.",
-      intro:       "Confirmado — su plan Starter ha sido cancelado. Volverá al plan gratuito al final de su período de facturación actual.",
-      losingTitle: "Perderá acceso a:",
-      losing: [
-        "Cifras exactas de casos y fallecidos por brote",
-        "Informes PDF regionales descargables",
-        "Exportación de datos CSV",
-        "Alertas regionales por email",
-      ],
-      comeback:  "Si cambia de opinión, puede volver a suscribirse en cualquier momento — sus preferencias serán restauradas.",
-      ctaLabel:  "Reactivar mi suscripción →",
-      ctaUrl:    `${APP_URL}/es/pricing`,
-      contactLine: "¿Una pregunta o un problema que pudo haberse evitado? Responda directamente a este correo.",
-      contactUrl:  `${APP_URL}/es/contact`,
-      closing:   "Hasta pronto,\nDavid — HealthWatch Global",
-    },
-    ar: {
-      subject:     "تم إلغاء اشتراكك في Starter — وداعاً 👋",
-      headline:    "تم إلغاء اشتراكك.",
-      intro:       "تأكيد — تم إلغاء خطة Starter الخاصة بك. ستعود إلى الخطة المجانية في نهاية فترة الفوترة الحالية.",
-      losingTitle: "لن تتمكن من الوصول إلى:",
-      losing: [
-        "الأرقام الدقيقة للحالات والوفيات لكل تفشٍّ",
-        "تقارير PDF الإقليمية القابلة للتنزيل",
-        "تصدير بيانات CSV",
-        "التنبيهات الإقليمية عبر البريد",
-      ],
-      comeback:  "إذا غيّرت رأيك، يمكنك إعادة الاشتراك في أي وقت — وستُستعاد تفضيلاتك.",
-      ctaLabel:  "← إعادة تفعيل اشتراكي",
-      ctaUrl:    `${APP_URL}/ar/pricing`,
-      contactLine: "سؤال أو مشكلة كان يمكن تجنبها؟ أجب مباشرةً على هذا البريد.",
-      contactUrl:  `${APP_URL}/ar/contact`,
-      closing:   "مع السلامة،\nDavid — HealthWatch Global",
-    },
-    id: {
-      subject:     "Langganan Starter Anda telah dibatalkan — sampai jumpa 👋",
-      headline:    "Langganan Anda telah dibatalkan.",
-      intro:       "Dikonfirmasi — paket Starter Anda telah dibatalkan. Anda akan kembali ke paket gratis di akhir periode penagihan saat ini.",
-      losingTitle: "Anda tidak lagi memiliki akses ke:",
-      losing: [
-        "Angka kasus dan kematian yang tepat per wabah",
-        "Laporan PDF regional yang dapat diunduh",
-        "Ekspor data CSV",
-        "Peringatan regional melalui email",
-      ],
-      comeback:  "Jika Anda berubah pikiran, Anda dapat berlangganan kembali kapan saja — preferensi Anda akan dipulihkan.",
-      ctaLabel:  "Aktifkan kembali langganan saya →",
-      ctaUrl:    `${APP_URL}/id/pricing`,
-      contactLine: "Pertanyaan, atau masalah yang bisa dihindari? Balas langsung ke email ini.",
-      contactUrl:  `${APP_URL}/id/contact`,
-      closing:   "Sampai jumpa,\nDavid — HealthWatch Global",
-    },
-  },
-
   // ── Pro ───────────────────────────────────────────────────────────────────
 
   pro: {
     fr: {
       subject:     "Votre abonnement Pro est annulé — à bientôt 👋",
       headline:    "Votre abonnement Pro a été annulé.",
-      intro:       "C'est confirmé. Vous repassez sur le plan gratuit à la fin de la période en cours. Si vous souhaitez conserver les chiffres et les rapports sans les alertes temps réel, le plan Starter reste disponible.",
+      intro:       "C'est confirmé. Vous repassez sur le plan gratuit à la fin de la période en cours.",
       losingTitle: "Vous n'aurez plus accès à :",
       losing: [
         "Alertes en temps réel — chaque nouveau foyer OMS en quelques secondes",
@@ -130,7 +35,7 @@ const COPY: Record<string, Record<string, ChurnCopy>> = {
         "Chiffres exacts de cas et de décès",
         "Export CSV",
       ],
-      comeback:  "Vous pouvez vous réabonner à tout moment. Le plan Starter (moins cher) reste aussi une option.",
+      comeback:  "Vous pouvez vous réabonner à tout moment — vos préférences seront restaurées.",
       ctaLabel:  "Voir les formules →",
       ctaUrl:    `${APP_URL}/fr/pricing`,
       contactLine: "Quelque chose n'a pas fonctionné comme prévu ? Je lis tous les emails — répondez directement.",
@@ -140,7 +45,7 @@ const COPY: Record<string, Record<string, ChurnCopy>> = {
     en: {
       subject:     "Your Pro subscription has been cancelled — take care 👋",
       headline:    "Your Pro subscription has been cancelled.",
-      intro:       "Confirmed. You'll revert to the free plan at the end of your current period. If you'd like to keep exact figures and reports without real-time alerts, the Starter plan remains an option.",
+      intro:       "Confirmed. You'll revert to the free plan at the end of your current period.",
       losingTitle: "You'll lose access to:",
       losing: [
         "Real-time alerts — every new WHO outbreak in seconds",
@@ -149,7 +54,7 @@ const COPY: Record<string, Record<string, ChurnCopy>> = {
         "Exact case and death figures",
         "CSV export",
       ],
-      comeback:  "You can resubscribe at any time. The Starter plan (lower cost) is also an option.",
+      comeback:  "You can resubscribe at any time — your preferences will be restored.",
       ctaLabel:  "See plans →",
       ctaUrl:    `${APP_URL}/en/pricing`,
       contactLine: "Something didn't work as expected? I read every email — reply directly.",
@@ -159,7 +64,7 @@ const COPY: Record<string, Record<string, ChurnCopy>> = {
     es: {
       subject:     "Su suscripción Pro ha sido cancelada — hasta pronto 👋",
       headline:    "Su suscripción Pro ha sido cancelada.",
-      intro:       "Confirmado. Volverá al plan gratuito al final de su período actual. Si desea mantener cifras exactas e informes sin alertas en tiempo real, el plan Starter sigue siendo una opción.",
+      intro:       "Confirmado. Volverá al plan gratuito al final de su período actual.",
       losingTitle: "Perderá acceso a:",
       losing: [
         "Alertas en tiempo real — cada nuevo brote OMS en segundos",
@@ -168,7 +73,7 @@ const COPY: Record<string, Record<string, ChurnCopy>> = {
         "Cifras exactas de casos y fallecidos",
         "Exportación CSV",
       ],
-      comeback:  "Puede volver a suscribirse en cualquier momento. El plan Starter (menor costo) también es una opción.",
+      comeback:  "Puede volver a suscribirse en cualquier momento — sus preferencias serán restauradas.",
       ctaLabel:  "Ver planes →",
       ctaUrl:    `${APP_URL}/es/pricing`,
       contactLine: "¿Algo no funcionó como esperaba? Leo todos los correos — responda directamente.",
@@ -178,7 +83,7 @@ const COPY: Record<string, Record<string, ChurnCopy>> = {
     ar: {
       subject:     "تم إلغاء اشتراكك في Pro — وداعاً 👋",
       headline:    "تم إلغاء اشتراكك في Pro.",
-      intro:       "تأكيد. ستعود إلى الخطة المجانية في نهاية فترتك الحالية. إذا أردت الاحتفاظ بالأرقام الدقيقة والتقارير دون التنبيهات الفورية، فخطة Starter لا تزال خياراً متاحاً.",
+      intro:       "تأكيد. ستعود إلى الخطة المجانية في نهاية فترتك الحالية.",
       losingTitle: "لن تتمكن من الوصول إلى:",
       losing: [
         "التنبيهات الفورية — كل تفشٍّ جديد من المنظمة في ثوانٍ",
@@ -187,7 +92,7 @@ const COPY: Record<string, Record<string, ChurnCopy>> = {
         "الأرقام الدقيقة للحالات والوفيات",
         "تصدير CSV",
       ],
-      comeback:  "يمكنك إعادة الاشتراك في أي وقت. خطة Starter (أقل تكلفة) لا تزال خياراً.",
+      comeback:  "يمكنك إعادة الاشتراك في أي وقت — وستُستعاد تفضيلاتك.",
       ctaLabel:  "← عرض الخطط",
       ctaUrl:    `${APP_URL}/ar/pricing`,
       contactLine: "شيء لم يسر كما هو متوقع؟ أقرأ كل رسالة — أجب مباشرةً.",
@@ -197,7 +102,7 @@ const COPY: Record<string, Record<string, ChurnCopy>> = {
     id: {
       subject:     "Langganan Pro Anda telah dibatalkan — sampai jumpa 👋",
       headline:    "Langganan Pro Anda telah dibatalkan.",
-      intro:       "Dikonfirmasi. Anda akan kembali ke paket gratis di akhir periode Anda saat ini. Jika ingin mempertahankan angka tepat dan laporan tanpa peringatan real-time, paket Starter tetap menjadi pilihan.",
+      intro:       "Dikonfirmasi. Anda akan kembali ke paket gratis di akhir periode Anda saat ini.",
       losingTitle: "Anda tidak lagi memiliki akses ke:",
       losing: [
         "Peringatan real-time — setiap wabah WHO baru dalam hitungan detik",
@@ -206,7 +111,7 @@ const COPY: Record<string, Record<string, ChurnCopy>> = {
         "Angka kasus dan kematian yang tepat",
         "Ekspor CSV",
       ],
-      comeback:  "Anda dapat berlangganan kembali kapan saja. Paket Starter (biaya lebih rendah) juga merupakan pilihan.",
+      comeback:  "Anda dapat berlangganan kembali kapan saja — preferensi Anda akan dipulihkan.",
       ctaLabel:  "Lihat paket →",
       ctaUrl:    `${APP_URL}/id/pricing`,
       contactLine: "Sesuatu tidak berjalan seperti yang diharapkan? Saya membaca setiap email — balas langsung.",
