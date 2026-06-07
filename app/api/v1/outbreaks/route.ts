@@ -111,10 +111,29 @@ export async function GET(req: NextRequest) {
 
   // ── 4. Parse query params ─────────────────────────────────────────────────
   const { searchParams } = new URL(req.url);
-  const region = searchParams.get("region") ?? "";
-  const risk   = searchParams.get("risk")   ?? "";
-  const limit  = Math.min(Math.max(parseInt(searchParams.get("limit") ?? "50", 10), 1), 100);
-  const offset = Math.max(parseInt(searchParams.get("offset") ?? "0", 10), 0);
+  const region    = searchParams.get("region") ?? "";
+  const risk      = searchParams.get("risk")   ?? "";
+  const limitRaw  = searchParams.get("limit");
+  const offsetRaw = searchParams.get("offset");
+
+  // A non-numeric limit/offset (e.g. "?limit=abc") makes parseInt return NaN,
+  // which used to flow straight through Math.max/min into `.range(NaN, NaN)`
+  // → Postgrest receives `offset=NaN&limit=NaN`, rejects it, and the catch-all
+  // below turns that into an opaque 500 "Internal server error" — for what's
+  // really a client-input mistake (same class as a bad region/risk value, which
+  // DO get a clean 400 just below). Validate up front so it does too.
+  const limitNum  = limitRaw  !== null ? parseInt(limitRaw, 10)  : 50;
+  const offsetNum = offsetRaw !== null ? parseInt(offsetRaw, 10) : 0;
+
+  if (!Number.isFinite(limitNum)) {
+    return NextResponse.json({ error: "Invalid limit. Must be an integer between 1 and 100." }, { status: 400 });
+  }
+  if (!Number.isFinite(offsetNum)) {
+    return NextResponse.json({ error: "Invalid offset. Must be a non-negative integer." }, { status: 400 });
+  }
+
+  const limit  = Math.min(Math.max(limitNum, 1), 100);
+  const offset = Math.max(offsetNum, 0);
 
   if (region && !VALID_REGIONS.has(region)) {
     return NextResponse.json(
