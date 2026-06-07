@@ -58,6 +58,18 @@ type Region    = "all" | "africa" | "asia" | "europe" | "americas" | "oceania";
 type Risk      = "all" | "high" | "medium" | "low";
 type CfrFilter = "all" | "critical" | "elevated" | "low" | "nodata";
 
+const REGIONS:     readonly Region[]    = ["all", "africa", "asia", "europe", "americas", "oceania"];
+const RISKS:       readonly Risk[]      = ["all", "high", "medium", "low"];
+const CFR_FILTERS: readonly CfrFilter[] = ["all", "critical", "elevated", "low", "nodata"];
+
+// Saved filters round-trip through localStorage as loose strings — validate
+// against the known union members so stale/corrupted entries fall back to
+// "all" instead of silently becoming an invalid filter value (replaces two
+// `as any` casts and one untyped-string `as CfrFilter` cast in loadFilter()).
+function asEnum<T extends string>(value: string | undefined, members: readonly T[], fallback: T): T {
+  return (members as readonly string[]).includes(value ?? "") ? (value as T) : fallback;
+}
+
 const RISK_COLORS: Record<string, string> = {
   high:   "bg-red-500/15 border-red-500/30 text-red-400 hover:bg-red-500/25",
   medium: "bg-yellow-500/15 border-yellow-500/30 text-yellow-400 hover:bg-yellow-500/25",
@@ -229,12 +241,12 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
 
   function loadFilter(f: { search: string; region: string; country: string; risk: string; dateFrom: string; dateTo: string; cfrFilter?: string }) {
     setSearch(f.search);
-    setRegion(f.region as any);
+    setRegion(asEnum(f.region, REGIONS, "all"));
     setCountry(f.country);
-    setRisk(f.risk as any);
+    setRisk(asEnum(f.risk, RISKS, "all"));
     setDateFrom(f.dateFrom);
     setDateTo(f.dateTo);
-    setCfrFilter((f.cfrFilter ?? "all") as CfrFilter);
+    setCfrFilter(asEnum(f.cfrFilter, CFR_FILTERS, "all"));
   }
 
   const clearFilters = () => {

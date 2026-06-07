@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useEffect, useState } from "react";
 import { Zap, AlertTriangle } from "lucide-react";
 import BillingPortalButton from "@/components/BillingPortalButton";
 
@@ -52,15 +52,26 @@ interface Props {
 }
 
 export default function TrialBanner({ trialEndsAt, locale }: Props) {
-  const { daysLeft, isUrgent, isCritical } = useMemo(() => {
-    const msLeft = new Date(trialEndsAt).getTime() - Date.now();
-    const daysLeft = Math.ceil(msLeft / 86_400_000);
-    return {
-      daysLeft,
-      isUrgent:   daysLeft <= 3,
-      isCritical: daysLeft <= 1,
-    };
-  }, [trialEndsAt]);
+  // BUG FIX: this used to be `useMemo(..., [trialEndsAt])`. Since trialEndsAt
+  // is a fixed timestamp that never changes during a trial, that memo computed
+  // Date.now() exactly ONCE on mount and then froze forever — a banner opened
+  // on day 1 could still claim "13 jours restants" on day 5 in a long-lived tab.
+  // A countdown has to track the *current* moment, so we tick once a minute to
+  // force a fresh read — the same "live clock" pattern any relative-time UI needs.
+  const [, setTick] = useState(0);
+  useEffect(() => {
+    const id = setInterval(() => setTick((t) => t + 1), 60_000);
+    return () => clearInterval(id);
+  }, []);
+
+  // A live countdown must read the current moment on every render — setTick
+  // above forces that re-render once a minute, so this impurity is intentional
+  // (the disable must sit directly above the flagged line, or ESLint reports
+  // it as unused and the rule still fires on the real line below).
+  // eslint-disable-next-line react-hooks/purity
+  const daysLeft   = Math.ceil((new Date(trialEndsAt).getTime() - Date.now()) / 86_400_000);
+  const isUrgent   = daysLeft <= 3;
+  const isCritical = daysLeft <= 1;
 
   const c = COPY[locale] ?? COPY.en;
 
