@@ -69,7 +69,7 @@ export async function POST(req: NextRequest) {
     const { plan, locale, userId, userEmail, billing } = body;
     const currency = getCurrency(locale ?? "fr");
     const billingPeriod = billing === "annual" ? "annual" : "monthly";
-    const priceId = PRICES[plan]?.[billingPeriod]?.[currency];
+    const priceId = PRICES[plan ?? ""]?.[billingPeriod]?.[currency];
 
     if (!priceId) {
       return NextResponse.json({ error: "Plan ou devise invalide." }, { status: 400 });
@@ -81,7 +81,7 @@ export async function POST(req: NextRequest) {
     const secretKey = clean(process.env.STRIPE_SECRET_KEY);
     const baseUrl = clean(process.env.NEXT_PUBLIC_BASE_URL, "https://healthwatch-global.com");
 
-    const stripeLocale = STRIPE_LOCALES[locale] || "en";
+    const stripeLocale = STRIPE_LOCALES[locale ?? ""] || "en";
 
     const params = new URLSearchParams({
       mode: "subscription",
@@ -91,7 +91,7 @@ export async function POST(req: NextRequest) {
       cancel_url: `${baseUrl}/${locale}/pricing`,
       allow_promotion_codes: "true",
       locale: stripeLocale,
-      "metadata[plan]": plan,
+      "metadata[plan]": plan ?? "",
       "metadata[user_id]": userId || "",
       "metadata[billing]": billingPeriod,
     });
