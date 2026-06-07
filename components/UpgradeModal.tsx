@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import { useLocale } from "next-intl";
 import { track } from "@vercel/analytics/react";
-import { X, FileText, Radio, List, BarChart2, TableProperties, Zap, ArrowRight, CheckCircle } from "lucide-react";
+import { X, FileText, Radio, List, BarChart2, TableProperties, ArrowLeftRight, Zap, ArrowRight, CheckCircle } from "lucide-react";
 import Link from "next/link";
 import type { UpgradeFeature } from "@/lib/upgrade-modal-context";
 
@@ -17,6 +17,7 @@ const COPY: Record<string, {
   list: FeatureCopy;
   cases: FeatureCopy;
   csv: FeatureCopy;
+  compare: FeatureCopy;
   proFeatures: string[];
   cta: string;
   trial: string;
@@ -27,6 +28,7 @@ const COPY: Record<string, {
     list:     { title: "Liste complète des foyers",   desc: "Accédez à tous les foyers actifs par région avec chiffres exacts.",                            plan: "Disponible — Pro" },
     cases:    { title: "Chiffres confirmés",          desc: "Cas confirmés, décès et détails épidémiologiques complets pour chaque foyer.",                 plan: "Disponible — Pro" },
     csv:      { title: "Export CSV des données",      desc: "Téléchargez l'ensemble des foyers actifs en CSV pour Excel, R, Python ou vos outils internes.", plan: "Disponible — Pro" },
+    compare:  { title: "Comparateur de foyers chiffré", desc: "Comparez cas, décès, létalité et incidence entre deux épidémies, foyer par foyer.",            plan: "Disponible — Pro" },
     proFeatures: [
       "Alertes temps réel — flux OMS direct",
       "Rapports PDF par région en 1 clic",
@@ -42,6 +44,7 @@ const COPY: Record<string, {
     list:     { title: "Full outbreak list",       desc: "Access all active outbreaks per region with exact case and death figures.",              plan: "Available — Pro" },
     cases:    { title: "Confirmed figures",        desc: "Confirmed cases, deaths and full epidemiological details for every outbreak.",           plan: "Available — Pro" },
     csv:      { title: "CSV data export",          desc: "Download all active outbreaks as CSV for Excel, R, Python or your internal tools.",      plan: "Available — Pro" },
+    compare:  { title: "Outbreak data comparison", desc: "Compare cases, deaths, fatality rate and incidence between two epidemics, side by side.", plan: "Available — Pro" },
     proFeatures: [
       "Real-time alerts — direct WHO feed",
       "Regional PDF reports in 1 click",
@@ -57,6 +60,7 @@ const COPY: Record<string, {
     list:     { title: "Lista completa de brotes",    desc: "Acceda a todos los brotes activos por región con cifras exactas.",                           plan: "Disponible — Pro" },
     cases:    { title: "Cifras confirmadas",          desc: "Casos confirmados, fallecidos y detalles epidemiológicos completos.",                         plan: "Disponible — Pro" },
     csv:      { title: "Exportación de datos CSV",    desc: "Descargue todos los brotes activos en CSV para Excel, R, Python o sus herramientas internas.", plan: "Disponible — Pro" },
+    compare:  { title: "Comparador de brotes con cifras", desc: "Compare casos, muertes, letalidad e incidencia entre dos epidemias, lado a lado.",            plan: "Disponible — Pro" },
     proFeatures: [
       "Alertas en tiempo real — flujo OMS directo",
       "Informes PDF regionales en 1 clic",
@@ -72,6 +76,7 @@ const COPY: Record<string, {
     list:     { title: "قائمة كاملة بالتفشيات",        desc: "اطلع على جميع التفشيات النشطة بالمنطقة مع الأرقام الدقيقة.",                   plan: "متاح — Pro" },
     cases:    { title: "الأرقام المؤكدة",              desc: "الحالات المؤكدة والوفيات والتفاصيل الوبائية الكاملة لكل تفشٍّ.",                plan: "متاح — Pro" },
     csv:      { title: "تصدير بيانات CSV",             desc: "حمّل جميع التفشيات النشطة بصيغة CSV لـ Excel أو R أو Python أو أدواتك الداخلية.", plan: "متاح — Pro" },
+    compare:  { title: "مقارنة بيانات التفشيات",         desc: "قارن الحالات والوفيات ومعدل الفتك ومعدل الإصابة بين وباءين جنباً إلى جنب.",        plan: "متاح — Pro" },
     proFeatures: [
       "تنبيهات فورية — بث مباشر من المنظمة",
       "تقارير PDF إقليمية بنقرة واحدة",
@@ -87,6 +92,7 @@ const COPY: Record<string, {
     list:     { title: "Daftar wabah lengkap",        desc: "Akses semua wabah aktif per wilayah dengan angka kasus dan kematian yang tepat.",        plan: "Tersedia — Pro" },
     cases:    { title: "Angka terkonfirmasi",         desc: "Kasus terkonfirmasi, kematian, dan detail epidemiologi lengkap setiap wabah.",           plan: "Tersedia — Pro" },
     csv:      { title: "Ekspor data CSV",             desc: "Unduh semua wabah aktif sebagai CSV untuk Excel, R, Python, atau alat internal Anda.",   plan: "Tersedia — Pro" },
+    compare:  { title: "Perbandingan data wabah",     desc: "Bandingkan kasus, kematian, tingkat fatalitas, dan insidensi antara dua epidemi secara berdampingan.", plan: "Tersedia — Pro" },
     proFeatures: [
       "Peringatan real-time — feed WHO langsung",
       "Laporan PDF regional dalam 1 klik",
@@ -111,6 +117,7 @@ const FEATURE_CONFIG: Record<UpgradeFeature, {
   list:     { Icon: List,             ring: "border-blue-500/30",   iconColor: "text-blue-400",   bg: "bg-blue-500/10"   },
   cases:    { Icon: BarChart2,        ring: "border-yellow-500/30", iconColor: "text-yellow-400", bg: "bg-yellow-500/10" },
   csv:      { Icon: TableProperties,  ring: "border-green-500/30",  iconColor: "text-green-400",  bg: "bg-green-500/10"  },
+  compare:  { Icon: ArrowLeftRight,   ring: "border-cyan-500/30",   iconColor: "text-cyan-400",   bg: "bg-cyan-500/10"   },
 };
 
 // ─── Component ────────────────────────────────────────────────────────────────

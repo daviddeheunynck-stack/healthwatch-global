@@ -6,38 +6,50 @@ import { createClient } from "@/lib/supabase-browser";
 import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 import { getIncidenceRate } from "@/lib/population-data";
 import RiskBadge from "@/components/RiskBadge";
+import LockedUpgradeButton from "@/components/LockedUpgradeButton";
 import type { Outbreak } from "@/lib/outbreaks";
-import { ArrowLeftRight, TrendingUp, Users, Skull, Activity, Globe, Calendar, AlertTriangle, Link as LinkIcon, Check } from "lucide-react";
+import { ArrowLeftRight, TrendingUp, Users, Skull, Activity, Globe, Calendar, AlertTriangle, Link as LinkIcon, Check, Lock } from "lucide-react";
 
 const LABELS: Record<string, {
   title: string; subtitle: string; selectA: string; selectB: string;
   all: string; cases: string; deaths: string; cfr: string; incidence: string;
   date: string; region: string; pheic: string;
   winner: string; lower: string; selectBoth: string; share: string; copied: string;
+  lockedCta: string; lockedBanner: string;
 }> = {
-  fr: { title: "Comparer des foyers", subtitle: "Analysez deux épidémies côte à côte", selectA: "Foyer A", selectB: "Foyer B", all: "Choisir un foyer…", cases: "Cas", deaths: "Décès", cfr: "Létalité", incidence: "Incidence / 100 000", date: "Date", region: "Région", pheic: "PHEIC", winner: "↓ Moins", lower: "↑ Plus", selectBoth: "Sélectionnez deux foyers pour comparer.", share: "Partager", copied: "Copié !" },
-  en: { title: "Compare outbreaks", subtitle: "Analyse two epidemics side by side", selectA: "Outbreak A", selectB: "Outbreak B", all: "Choose an outbreak…", cases: "Cases", deaths: "Deaths", cfr: "CFR", incidence: "Incidence / 100,000", date: "Date", region: "Region", pheic: "PHEIC", winner: "↓ Lower", lower: "↑ Higher", selectBoth: "Select two outbreaks to compare.", share: "Share", copied: "Copied!" },
-  es: { title: "Comparar brotes", subtitle: "Analice dos epidemias lado a lado", selectA: "Brote A", selectB: "Brote B", all: "Elige un brote…", cases: "Casos", deaths: "Muertes", cfr: "Letalidad", incidence: "Incidencia / 100.000", date: "Fecha", region: "Región", pheic: "PHEIC", winner: "↓ Menor", lower: "↑ Mayor", selectBoth: "Seleccione dos brotes para comparar.", share: "Compartir", copied: "¡Copiado!" },
-  ar: { title: "مقارنة التفشيات", subtitle: "تحليل وباءين جنباً إلى جنب", selectA: "التفشي A", selectB: "التفشي B", all: "اختر تفشياً…", cases: "الحالات", deaths: "الوفيات", cfr: "معدل الوفيات", incidence: "الإصابة / 100,000", date: "التاريخ", region: "المنطقة", pheic: "PHEIC", winner: "↓ أقل", lower: "↑ أكثر", selectBoth: "اختر تفشيين للمقارنة.", share: "مشاركة", copied: "تم النسخ!" },
-  id: { title: "Bandingkan Wabah", subtitle: "Analisis dua epidemi secara berdampingan", selectA: "Wabah A", selectB: "Wabah B", all: "Pilih wabah…", cases: "Kasus", deaths: "Kematian", cfr: "CFR", incidence: "Insidensi / 100.000", date: "Tanggal", region: "Wilayah", pheic: "PHEIC", winner: "↓ Lebih rendah", lower: "↑ Lebih tinggi", selectBoth: "Pilih dua wabah untuk dibandingkan.", share: "Bagikan", copied: "Disalin!" },
+  fr: { title: "Comparer des foyers", subtitle: "Analysez deux épidémies côte à côte", selectA: "Foyer A", selectB: "Foyer B", all: "Choisir un foyer…", cases: "Cas", deaths: "Décès", cfr: "Létalité", incidence: "Incidence / 100 000", date: "Date", region: "Région", pheic: "PHEIC", winner: "↓ Moins", lower: "↑ Plus", selectBoth: "Sélectionnez deux foyers pour comparer.", share: "Partager", copied: "Copié !", lockedCta: "Voir les offres →", lockedBanner: "Cas confirmés · Décès · Létalité · Incidence pour 100 000 habitants" },
+  en: { title: "Compare outbreaks", subtitle: "Analyse two epidemics side by side", selectA: "Outbreak A", selectB: "Outbreak B", all: "Choose an outbreak…", cases: "Cases", deaths: "Deaths", cfr: "CFR", incidence: "Incidence / 100,000", date: "Date", region: "Region", pheic: "PHEIC", winner: "↓ Lower", lower: "↑ Higher", selectBoth: "Select two outbreaks to compare.", share: "Share", copied: "Copied!", lockedCta: "See plans →", lockedBanner: "Confirmed cases · Deaths · Fatality rate · Incidence per 100,000" },
+  es: { title: "Comparar brotes", subtitle: "Analice dos epidemias lado a lado", selectA: "Brote A", selectB: "Brote B", all: "Elige un brote…", cases: "Casos", deaths: "Muertes", cfr: "Letalidad", incidence: "Incidencia / 100.000", date: "Fecha", region: "Región", pheic: "PHEIC", winner: "↓ Menor", lower: "↑ Mayor", selectBoth: "Seleccione dos brotes para comparar.", share: "Compartir", copied: "¡Copiado!", lockedCta: "Ver planes →", lockedBanner: "Casos confirmados · Muertes · Letalidad · Incidencia por 100.000" },
+  ar: { title: "مقارنة التفشيات", subtitle: "تحليل وباءين جنباً إلى جنب", selectA: "التفشي A", selectB: "التفشي B", all: "اختر تفشياً…", cases: "الحالات", deaths: "الوفيات", cfr: "معدل الوفيات", incidence: "الإصابة / 100,000", date: "التاريخ", region: "المنطقة", pheic: "PHEIC", winner: "↓ أقل", lower: "↑ أكثر", selectBoth: "اختر تفشيين للمقارنة.", share: "مشاركة", copied: "تم النسخ!", lockedCta: "عرض الخطط ←", lockedBanner: "الحالات المؤكدة · الوفيات · معدل الفتك · معدل الإصابة لكل 100,000" },
+  id: { title: "Bandingkan Wabah", subtitle: "Analisis dua epidemi secara berdampingan", selectA: "Wabah A", selectB: "Wabah B", all: "Pilih wabah…", cases: "Kasus", deaths: "Kematian", cfr: "CFR", incidence: "Insidensi / 100.000", date: "Tanggal", region: "Wilayah", pheic: "PHEIC", winner: "↓ Lebih rendah", lower: "↑ Lebih tinggi", selectBoth: "Pilih dua wabah untuk dibandingkan.", share: "Bagikan", copied: "Disalin!", lockedCta: "Lihat paket →", lockedBanner: "Kasus terkonfirmasi · Kematian · Tingkat fatalitas · Insidensi per 100.000" },
 };
 
-function StatRow({ label, valA, valB, icon, fmt = (v: number) => v.toLocaleString(), higherIsBad = true }: {
+function StatRow({ label, valA, valB, icon, fmt = (v: number) => v.toLocaleString(), higherIsBad = true, locked = false }: {
   label: string; valA: number | null; valB: number | null; icon: React.ReactNode;
   fmt?: (v: number) => string; higherIsBad?: boolean;
+  /** Pro-only metric: shows the real value blurred + suppresses the win/lose color hint (which would itself leak the comparison). */
+  locked?: boolean;
 }) {
-  const both = valA !== null && valB !== null && valA > 0 && valB > 0;
+  const both = !locked && valA !== null && valB !== null && valA > 0 && valB > 0;
   const aWorse = both && (higherIsBad ? valA! > valB! : valA! < valB!);
   const bWorse = both && (higherIsBad ? valB! > valA! : valB! < valA!);
+
+  const cell = (v: number | null) => {
+    if (!v || v <= 0) return "—";
+    return locked
+      ? <span className="blur-sm select-none">{fmt(v)}</span>
+      : fmt(v);
+  };
+
   return (
     <tr className="border-b border-gray-800">
       <td className="px-4 py-3 text-gray-500 text-sm"><div className="flex items-center gap-2">{icon}{label}</div></td>
-      <td className={`px-4 py-3 text-center font-bold text-lg ${aWorse ? "text-red-400" : bWorse ? "text-green-400" : "text-white"}`}>
-        {valA && valA > 0 ? fmt(valA) : "—"}
+      <td className={`px-4 py-3 text-center font-bold text-lg ${locked ? "text-gray-600" : aWorse ? "text-red-400" : bWorse ? "text-green-400" : "text-white"}`}>
+        {cell(valA)}
       </td>
       <td className="px-4 py-3 text-center text-gray-600 text-xs">vs</td>
-      <td className={`px-4 py-3 text-center font-bold text-lg ${bWorse ? "text-red-400" : aWorse ? "text-green-400" : "text-white"}`}>
-        {valB && valB > 0 ? fmt(valB) : "—"}
+      <td className={`px-4 py-3 text-center font-bold text-lg ${locked ? "text-gray-600" : bWorse ? "text-red-400" : aWorse ? "text-green-400" : "text-white"}`}>
+        {cell(valB)}
       </td>
     </tr>
   );
@@ -53,6 +65,20 @@ export default function ComparePage() {
   const [idB, setIdB] = useState("");
   const [copied, setCopied] = useState(false);
   const [ready, setReady] = useState(false);
+  const [plan, setPlan] = useState<string | null>(null);
+  const isPaid = plan === "starter" || plan === "pro" || plan === "enterprise";
+
+  // Fetch user plan — the exact figures (cases/deaths/CFR/incidence) are Pro-only,
+  // exactly like the dashboard table. Without this check, Compare would be a
+  // back door around that paywall (pick any outbreak here, read its real numbers).
+  useEffect(() => {
+    const supabase = createClient();
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      if (!user) { setPlan("guest"); return; }
+      supabase.from("profiles").select("plan").eq("id", user.id).single()
+        .then(({ data }) => setPlan(data?.plan || "free"));
+    });
+  }, []);
 
   useEffect(() => {
     const sp = new URLSearchParams(window.location.search);
@@ -165,10 +191,10 @@ export default function ComparePage() {
                 <th className="px-4 py-3 text-center text-amber-400 font-bold text-sm">B</th>
               </tr></thead>
               <tbody>
-                <StatRow label={l.cases} valA={oA.cases} valB={oB.cases} icon={<Users className="w-3.5 h-3.5" />} />
-                <StatRow label={l.deaths} valA={oA.deaths} valB={oB.deaths} icon={<Skull className="w-3.5 h-3.5" />} />
-                <StatRow label={l.cfr} valA={cfrA} valB={cfrB} icon={<TrendingUp className="w-3.5 h-3.5" />} fmt={v => v.toFixed(1) + "%"} />
-                <StatRow label={l.incidence} valA={incA} valB={incB} icon={<Activity className="w-3.5 h-3.5" />} fmt={v => v.toFixed(2)} />
+                <StatRow label={l.cases} valA={oA.cases} valB={oB.cases} icon={<Users className="w-3.5 h-3.5" />} locked={!isPaid} />
+                <StatRow label={l.deaths} valA={oA.deaths} valB={oB.deaths} icon={<Skull className="w-3.5 h-3.5" />} locked={!isPaid} />
+                <StatRow label={l.cfr} valA={cfrA} valB={cfrB} icon={<TrendingUp className="w-3.5 h-3.5" />} fmt={v => v.toFixed(1) + "%"} locked={!isPaid} />
+                <StatRow label={l.incidence} valA={incA} valB={incB} icon={<Activity className="w-3.5 h-3.5" />} fmt={v => v.toFixed(2)} locked={!isPaid} />
                 <tr className="border-b border-gray-800">
                   <td className="px-4 py-3 text-gray-500 text-sm"><div className="flex items-center gap-2"><Calendar className="w-3.5 h-3.5" />{l.date}</div></td>
                   <td className="px-4 py-3 text-center text-white text-sm">{oA.date}</td>
@@ -198,7 +224,23 @@ export default function ComparePage() {
               </tbody>
             </table>
           </div>
-          <p className="text-xs text-gray-600 text-center">🟢 = {l.winner} · 🔴 = {l.lower}</p>
+          {/* Legend only makes sense once the win/lose colours are actually visible (Pro) */}
+          {isPaid && <p className="text-xs text-gray-600 text-center">🟢 = {l.winner} · 🔴 = {l.lower}</p>}
+
+          {/* ── Upgrade banner — shown right when engagement peaks: user just picked 2 outbreaks ── */}
+          {!isPaid && (
+            <div className="rounded-xl border border-amber-700/40 bg-gradient-to-r from-amber-950/50 via-amber-900/20 to-transparent p-4">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div className="flex items-start gap-3">
+                  <div className="w-8 h-8 rounded-lg bg-amber-500/10 border border-amber-500/20 flex items-center justify-center shrink-0 mt-0.5">
+                    <Lock className="w-4 h-4 text-amber-400" />
+                  </div>
+                  <p className="text-sm font-semibold text-amber-300">{l.lockedBanner}</p>
+                </div>
+                <LockedUpgradeButton feature="compare" label={l.lockedCta} variant="banner" />
+              </div>
+            </div>
+          )}
         </div>
       )}
     </div>
