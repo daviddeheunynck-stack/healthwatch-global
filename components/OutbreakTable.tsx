@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo, useCallback, useEffect } from "react";
-import { Search, X, ChevronUp, ChevronDown, ChevronsUpDown, Download, Lock } from "lucide-react";
+import { Search, X, ChevronUp, ChevronDown, ChevronsUpDown, Download, Lock, TrendingUp, TrendingDown, Minus } from "lucide-react";
 import OutbreakDetailModal from "@/components/OutbreakDetailModal";
 import SavedFilters from "@/components/SavedFilters";
 import WatchlistButton from "@/components/WatchlistButton";
@@ -11,6 +11,7 @@ type SortKey = "risk" | "cases" | "deaths" | "date";
 type SortDir = "asc" | "desc";
 import { getLocalizedDisease, getLocalizedCountry, isNewOutbreak } from "@/lib/outbreaks";
 import type { Outbreak } from "@/lib/outbreaks";
+import type { OutbreakTrend } from "@/lib/outbreak-trend";
 import RiskBadge from "@/components/RiskBadge";
 import LockedUpgradeButton from "@/components/LockedUpgradeButton";
 import ShareOutbreakButton from "@/components/ShareOutbreakButton";
@@ -63,6 +64,28 @@ const RISK_COLORS: Record<string, string> = {
   low:    "bg-green-500/15 border-green-500/30 text-green-400 hover:bg-green-500/25",
 };
 
+// 7-day directional signal — qualitative only (no exact figures), so it's shown
+// to every visitor, free or Pro, exactly like RiskBadge. Renders nothing until
+// outbreak_snapshots has accumulated enough history (direction === "unknown"),
+// so today this is invisible everywhere and lights up on its own once the data matures.
+function TrendBadge({ trend }: { trend?: OutbreakTrend }) {
+  if (!trend || trend.direction === "unknown") return null;
+  if (trend.direction === "stable") {
+    return <Minus className="w-3 h-3 text-gray-600 shrink-0" aria-hidden />;
+  }
+  const up = trend.direction === "up";
+  const Icon = up ? TrendingUp : TrendingDown;
+  return (
+    <span
+      className={`inline-flex items-center gap-0.5 text-[11px] font-semibold whitespace-nowrap ${up ? "text-red-400" : "text-green-400"}`}
+      title={`${up ? "+" : ""}${trend.deltaPercent}% (${trend.daysBack}d)`}
+    >
+      <Icon className="w-3 h-3 shrink-0" aria-hidden />
+      {up ? "+" : ""}{trend.deltaPercent}%
+    </span>
+  );
+}
+
 // ─── Component ────────────────────────────────────────────────────────────────
 
 interface Props {
@@ -70,9 +93,10 @@ interface Props {
   locale: string;
   isPaid: boolean;
   labels: OutbreakTableLabels;
+  trends?: Record<string, OutbreakTrend>;
 }
 
-export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l }: Props) {
+export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, trends }: Props) {
   const [watchlist, setWatchlist] = useState<Set<string>>(new Set());
   const [search,   setSearch]    = useState("");
   const [region,   setRegion]    = useState<Region>("all");
@@ -466,13 +490,16 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l }: 
                     {getLocalizedCountry(outbreak, locale)}
                   </td>
                   <td className="px-4 py-3 text-gray-300">
-                    {isPaid ? (
-                      outbreak.cases > 0 ? outbreak.cases.toLocaleString() : <span className="text-gray-600 italic text-xs">{l.noData}</span>
-                    ) : (
-                      <span className="blur-sm select-none text-gray-500">
-                        {outbreak.cases.toLocaleString()}
-                      </span>
-                    )}
+                    <div className="flex items-center gap-1.5">
+                      {isPaid ? (
+                        outbreak.cases > 0 ? outbreak.cases.toLocaleString() : <span className="text-gray-600 italic text-xs">{l.noData}</span>
+                      ) : (
+                        <span className="blur-sm select-none text-gray-500">
+                          {outbreak.cases.toLocaleString()}
+                        </span>
+                      )}
+                      {outbreak.cases > 0 && <TrendBadge trend={trends?.[outbreak.id]} />}
+                    </div>
                   </td>
                   <td className="px-4 py-3 text-red-400 hidden sm:table-cell">
                     {isPaid ? (

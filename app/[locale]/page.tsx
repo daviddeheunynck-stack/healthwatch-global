@@ -1,7 +1,9 @@
 import { getTranslations, getLocale } from "next-intl/server";
 import { Activity, Globe, Bell, AlertTriangle } from "lucide-react";
 import { getOutbreaks, getStats, getLastSync } from "@/lib/outbreaks";
+import { getOutbreakTrendsBulk, type OutbreakTrend } from "@/lib/outbreak-trend";
 import { createClient } from "@/lib/supabase-server";
+import { createClient as createService } from "@supabase/supabase-js";
 import StatsCard from "@/components/StatsCard";
 import WorldMap from "@/components/WorldMap";
 import LandingPage from "@/components/LandingPage";
@@ -94,6 +96,30 @@ async function DashboardContent() {
   const [outbreaks, lastSync] = await Promise.all([getOutbreaks(), getLastSync()]);
   const stats = getStats(outbreaks);
 
+  // 7-day directional signal (▲/▼/→) — infrastructure has been live since 2026-06-05;
+  // getOutbreakTrend returns "unknown" until outbreak_snapshots holds enough history,
+  // so this stays a harmless no-op today and starts rendering on its own once the
+  // data matures (~7 days of daily snapshots, i.e. around 2026-06-12).
+  //
+  // outbreak_snapshots has RLS enabled with NO public policies — "no direct public
+  // access — only service role (cron) writes" (migration 20240109000000). The
+  // anon/cookie-based `supabase` client above would silently get [] back forever,
+  // so this needs the elevated client, same as app/api/watchlist/route.ts and
+  // app/api/alert-diseases/route.ts.
+  const trendsService = createService(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
+  );
+  // Cast: getOutbreakTrendsBulk types its param as `ReturnType<typeof createClient>`
+  // (no explicit generics) — TS resolves that against a different overload than the
+  // one a real `createClient(url, key)` call hits, so even this textbook-correct
+  // client doesn't structurally match on paper. Same friction the function already
+  // works around with `(supabase as any)` internally (lib/outbreak-trend.ts:87,95);
+  // the object underneath is a perfectly valid SupabaseClient — a paper mismatch only.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const trendsMap = await getOutbreakTrendsBulk(trendsService as any, outbreaks.map((o) => o.id));
+  const trends: Record<string, OutbreakTrend> = Object.fromEntries(trendsMap);
+
   const popupLabels = {
     cases: t("cases"),
     deaths: t("deaths"),
@@ -177,6 +203,7 @@ async function DashboardContent() {
           locale={locale}
           isPaid={isPaid}
           labels={tableLabels}
+          trends={trends}
         />
       </div>
     </>
