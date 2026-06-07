@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Activity, Globe, Database, Zap, Users, ArrowLeft, ShieldCheck, Mail } from "lucide-react";
+import { Activity, Globe, Database, Zap, Users, User, ArrowLeft, ShieldCheck, Mail } from "lucide-react";
 import type { Metadata } from "next";
 
 const ABOUT_META: Record<string, { title: string; description: string }> = {
@@ -24,6 +24,8 @@ const LABELS: Record<string, {
   back: string;
   title: string;
   subtitle: string;
+  founderTitle: string;
+  founderText: string;
   missionTitle: string;
   missionText: string;
   whoTitle: string;
@@ -43,6 +45,9 @@ const LABELS: Record<string, {
     back: "← Retour au tableau de bord",
     title: "À propos de HealthWatch Global",
     subtitle: "Surveillance épidémique en temps réel pour un monde plus sûr.",
+    founderTitle: "Pourquoi j'ai créé HealthWatch",
+    founderText:
+      "Passionné depuis plusieurs années par le suivi des grandes dynamiques sanitaires mondiales, je consultais régulièrement les bulletins de l'OMS — et je perdais un temps fou à naviguer entre des pages en anglais, sans filtres, sans alertes, sans vue d'ensemble. J'ai construit HealthWatch pour résoudre ce problème à la source : agréger ces données, les traduire et les structurer pour qu'un professionnel y accède en quelques clics plutôt qu'en heures de recherche manuelle.",
     missionTitle: "Notre mission",
     missionText:
       "HealthWatch Global agrège en temps réel les alertes officielles de l'Organisation Mondiale de la Santé afin de fournir un tableau de bord lisible aux professionnels de santé, aux voyageurs, aux journalistes et aux organisations qui ont besoin d'être informés des foyers épidémiques dès leur déclaration.",
@@ -59,10 +64,10 @@ const LABELS: Record<string, {
     usersTitle: "Pour qui ?",
     users: [
       { title: "Professionnels de santé", text: "Médecins, infirmiers, épidémiologistes : restez informés des foyers actifs à l'échelle mondiale." },
-      { title: "ONG & organisations humanitaires", text: "Surveillez les régions prioritaires et recevez des alertes ciblées pour réagir rapidement." },
-      { title: "Gouvernements & agences", text: "Intégrez les données OMS directement dans vos systèmes via notre API REST Enterprise." },
       { title: "Journalistes & chercheurs", text: "Accédez à des données structurées, sourcées et exportables (CSV, PDF) pour vos travaux." },
       { title: "Voyageurs & expatriés", text: "Consultez les alertes actives avant et pendant vos déplacements à l'étranger." },
+      { title: "ONG & organisations humanitaires", text: "Surveillez les régions prioritaires et recevez des alertes ciblées pour réagir rapidement." },
+      { title: "Gouvernements & agences", text: "Intégrez les données OMS directement dans vos systèmes via notre API REST Enterprise." },
     ],
     techTitle: "Technologies",
     openDataTitle: "Open data & transparence",
@@ -76,6 +81,9 @@ const LABELS: Record<string, {
     back: "← Back to dashboard",
     title: "About HealthWatch Global",
     subtitle: "Real-time epidemic surveillance for a safer world.",
+    founderTitle: "Why I built HealthWatch",
+    founderText:
+      "I've spent years following major global health dynamics out of genuine interest. I'd regularly check WHO bulletins — and kept losing time navigating English-only pages with no filters, no alerts, no overview. I built HealthWatch to fix that at the root: aggregate this data, translate it, and structure it so a professional can access it in a few clicks instead of hours of manual digging.",
     missionTitle: "Our mission",
     missionText:
       "HealthWatch Global aggregates real-time official alerts from the World Health Organization to provide a readable dashboard for health professionals, travellers, journalists and organisations that need to be informed of disease outbreaks as soon as they are declared.",
@@ -92,10 +100,10 @@ const LABELS: Record<string, {
     usersTitle: "Who is it for?",
     users: [
       { title: "Health professionals", text: "Doctors, nurses, epidemiologists: stay informed of active outbreaks worldwide." },
-      { title: "NGOs & humanitarian organisations", text: "Monitor priority regions and receive targeted alerts to react quickly." },
-      { title: "Governments & agencies", text: "Integrate WHO data directly into your systems via our Enterprise REST API." },
       { title: "Journalists & researchers", text: "Access structured, sourced, exportable data (CSV, PDF) for your work." },
       { title: "Travellers & expats", text: "Check active alerts before and during your trips abroad." },
+      { title: "NGOs & humanitarian organisations", text: "Monitor priority regions and receive targeted alerts to react quickly." },
+      { title: "Governments & agencies", text: "Integrate WHO data directly into your systems via our Enterprise REST API." },
     ],
     techTitle: "Technology",
     openDataTitle: "Open data & transparency",
@@ -109,6 +117,9 @@ const LABELS: Record<string, {
     back: "← Volver al panel",
     title: "Acerca de HealthWatch Global",
     subtitle: "Vigilancia epidémica en tiempo real para un mundo más seguro.",
+    founderTitle: "Por qué creé HealthWatch",
+    founderText:
+      "Llevo años siguiendo de cerca las grandes dinámicas sanitarias mundiales por puro interés. Consultaba regularmente los boletines de la OMS — y perdía mucho tiempo navegando páginas en inglés, sin filtros, sin alertas, sin visión de conjunto. Construí HealthWatch para resolver este problema de raíz: agregar estos datos, traducirlos y estructurarlos para que un profesional acceda a ellos en unos clics en lugar de horas de búsqueda manual.",
     missionTitle: "Nuestra misión",
     missionText:
       "HealthWatch Global agrega en tiempo real las alertas oficiales de la Organización Mundial de la Salud para proporcionar un panel legible a los profesionales de la salud, viajeros, periodistas y organizaciones que necesitan estar informados sobre brotes de enfermedades en cuanto se declaran.",
@@ -125,10 +136,10 @@ const LABELS: Record<string, {
     usersTitle: "¿Para quién?",
     users: [
       { title: "Profesionales de la salud", text: "Médicos, enfermeros, epidemiólogos: manténgase informado sobre los brotes activos en todo el mundo." },
-      { title: "ONG y organizaciones humanitarias", text: "Monitoree regiones prioritarias y reciba alertas específicas para reaccionar rápidamente." },
-      { title: "Gobiernos y agencias", text: "Integre datos de la OMS directamente en sus sistemas mediante nuestra API REST Enterprise." },
       { title: "Periodistas e investigadores", text: "Acceda a datos estructurados, con fuentes y exportables (CSV, PDF) para sus trabajos." },
       { title: "Viajeros y expatriados", text: "Consulte las alertas activas antes y durante sus viajes al extranjero." },
+      { title: "ONG y organizaciones humanitarias", text: "Monitoree regiones prioritarias y reciba alertas específicas para reaccionar rápidamente." },
+      { title: "Gobiernos y agencias", text: "Integre datos de la OMS directamente en sus sistemas mediante nuestra API REST Enterprise." },
     ],
     techTitle: "Tecnología",
     openDataTitle: "Datos abiertos y transparencia",
@@ -142,6 +153,9 @@ const LABELS: Record<string, {
     back: "→ العودة إلى لوحة التحكم",
     title: "حول HealthWatch Global",
     subtitle: "مراقبة الأوبئة في الوقت الفعلي لعالم أكثر أمانًا.",
+    founderTitle: "لماذا أنشأت HealthWatch",
+    founderText:
+      "منذ سنوات وأنا أتابع باهتمام كبير التطورات الصحية الكبرى حول العالم. كنت أطّلع بانتظام على نشرات منظمة الصحة العالمية، وأفقد وقتاً طويلاً في التنقل بين صفحات باللغة الإنجليزية فقط، دون مرشحات أو تنبيهات أو رؤية شاملة. أنشأتُ HealthWatch لحل هذه المشكلة من جذورها: تجميع هذه البيانات وترجمتها وتنظيمها، ليتمكن أي مختص من الوصول إليها خلال نقرات معدودة بدلاً من ساعات من البحث اليدوي.",
     missionTitle: "مهمتنا",
     missionText:
       "تجمع HealthWatch Global التنبيهات الرسمية لمنظمة الصحة العالمية في الوقت الفعلي لتوفير لوحة تحكم واضحة للمهنيين الصحيين والمسافرين والصحفيين والمنظمات التي تحتاج إلى إخطار بتفشي الأمراض فور الإعلان عنها.",
@@ -158,10 +172,10 @@ const LABELS: Record<string, {
     usersTitle: "لمن هو؟",
     users: [
       { title: "المهنيون الصحيون", text: "الأطباء والممرضون وعلماء الأوبئة: ابقَ على اطلاع بالتفشيات النشطة حول العالم." },
-      { title: "المنظمات غير الحكومية والإنسانية", text: "راقب المناطق ذات الأولوية واستقبل تنبيهات مستهدفة للاستجابة السريعة." },
-      { title: "الحكومات والوكالات", text: "ادمج بيانات منظمة الصحة العالمية في أنظمتك مباشرةً عبر REST API لخطة Enterprise." },
       { title: "الصحفيون والباحثون", text: "الوصول إلى بيانات منظمة ومُسنَدة وقابلة للتصدير (CSV، PDF) لأعمالك." },
       { title: "المسافرون والمغتربون", text: "تحقق من التنبيهات النشطة قبل رحلاتك إلى الخارج وخلالها." },
+      { title: "المنظمات غير الحكومية والإنسانية", text: "راقب المناطق ذات الأولوية واستقبل تنبيهات مستهدفة للاستجابة السريعة." },
+      { title: "الحكومات والوكالات", text: "ادمج بيانات منظمة الصحة العالمية في أنظمتك مباشرةً عبر REST API لخطة Enterprise." },
     ],
     techTitle: "التقنيات",
     openDataTitle: "البيانات المفتوحة والشفافية",
@@ -175,6 +189,9 @@ const LABELS: Record<string, {
     back: "← Kembali ke dasbor",
     title: "Tentang HealthWatch Global",
     subtitle: "Pemantauan epidemi real-time untuk dunia yang lebih aman.",
+    founderTitle: "Mengapa saya membuat HealthWatch",
+    founderText:
+      "Selama bertahun-tahun saya tertarik mengikuti dinamika kesehatan global yang besar. Saya rutin memeriksa buletin WHO — dan terus kehilangan waktu menavigasi halaman berbahasa Inggris tanpa filter, tanpa peringatan, tanpa gambaran menyeluruh. Saya membangun HealthWatch untuk menyelesaikan masalah ini dari akarnya: mengumpulkan data ini, menerjemahkannya, dan menyusunnya agar seorang profesional bisa mengaksesnya hanya dengan beberapa klik — bukan berjam-jam pencarian manual.",
     missionTitle: "Misi kami",
     missionText:
       "HealthWatch Global mengumpulkan peringatan resmi Organisasi Kesehatan Dunia secara real-time untuk menyediakan dasbor yang mudah dibaca bagi tenaga kesehatan, wisatawan, jurnalis, dan organisasi yang perlu mendapatkan informasi tentang wabah penyakit segera setelah dideklarasikan.",
@@ -191,10 +208,10 @@ const LABELS: Record<string, {
     usersTitle: "Untuk siapa?",
     users: [
       { title: "Tenaga kesehatan", text: "Dokter, perawat, ahli epidemiologi: tetap terinformasi tentang wabah aktif di seluruh dunia." },
-      { title: "LSM & organisasi kemanusiaan", text: "Pantau wilayah prioritas dan terima peringatan yang ditargetkan untuk bereaksi dengan cepat." },
-      { title: "Pemerintah & lembaga", text: "Integrasikan data WHO langsung ke sistem Anda melalui REST API Enterprise kami." },
       { title: "Jurnalis & peneliti", text: "Akses data terstruktur, bersumber, dan dapat diekspor (CSV, PDF) untuk pekerjaan Anda." },
       { title: "Wisatawan & ekspatriat", text: "Periksa peringatan aktif sebelum dan selama perjalanan Anda ke luar negeri." },
+      { title: "LSM & organisasi kemanusiaan", text: "Pantau wilayah prioritas dan terima peringatan yang ditargetkan untuk bereaksi dengan cepat." },
+      { title: "Pemerintah & lembaga", text: "Integrasikan data WHO langsung ke sistem Anda melalui REST API Enterprise kami." },
     ],
     techTitle: "Teknologi",
     openDataTitle: "Data terbuka & transparansi",
@@ -246,6 +263,17 @@ export default async function AboutPage({
         </div>
         <p className="text-lg text-gray-400 leading-relaxed">{l.subtitle}</p>
       </div>
+
+      {/* Founder note — the human behind the product */}
+      <section className="space-y-3">
+        <h2 className="text-xl font-semibold text-white flex items-center gap-2">
+          <User className="w-5 h-5 text-red-400 shrink-0" />
+          {l.founderTitle}
+        </h2>
+        <div className="bg-gray-900 border border-gray-800 rounded-2xl p-5 border-l-2 border-l-red-500/40">
+          <p className="text-gray-300 leading-relaxed italic">{l.founderText}</p>
+        </div>
+      </section>
 
       {/* Mission */}
       <section className="space-y-3">
