@@ -48,7 +48,7 @@ export async function fetchReliefWebOutbreaks(): Promise<ReliefWebItem[]> {
 
 // Extract disease name from a ReliefWeb report title
 function extractDisease(title: string): string {
-  let t = title
+  const t = title
     .replace(/^Disease Outbreak News:\s*/i, "")
     .replace(/^WHO\s+/i, "")
     .trim();
