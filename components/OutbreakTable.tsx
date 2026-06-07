@@ -7,7 +7,7 @@ import SavedFilters from "@/components/SavedFilters";
 import WatchlistButton from "@/components/WatchlistButton";
 import { track } from "@vercel/analytics/react";
 
-type SortKey = "risk" | "cases" | "deaths" | "date";
+type SortKey = "risk" | "cases" | "deaths" | "cfr" | "date";
 type SortDir = "asc" | "desc";
 import { getLocalizedDisease, getLocalizedCountry, isNewOutbreak } from "@/lib/outbreaks";
 import type { Outbreak } from "@/lib/outbreaks";
@@ -137,7 +137,7 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
       setSortDir((d) => d === "asc" ? "desc" : "asc");
     } else {
       setSortKey(key);
-      setSortDir(key === "date" ? "desc" : "asc");
+      setSortDir(key === "date" || key === "cfr" ? "desc" : "asc");
     }
   }
 
@@ -177,6 +177,14 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
       if (sortKey === "risk")   cmp = (RISK_ORDER[a.risk_level] ?? 3) - (RISK_ORDER[b.risk_level] ?? 3);
       if (sortKey === "cases")  cmp = a.cases  - b.cases;
       if (sortKey === "deaths") cmp = a.deaths - b.deaths;
+      if (sortKey === "cfr") {
+        const cfrA = a.cases > 0 ? a.deaths / a.cases : null;
+        const cfrB = b.cases > 0 ? b.deaths / b.cases : null;
+        if (cfrA === null && cfrB === null) cmp = 0;
+        else if (cfrA === null) return 1;   // outbreaks without case data always sink to the bottom…
+        else if (cfrB === null) return -1;  // …regardless of sort direction
+        else cmp = cfrA - cfrB;
+      }
       if (sortKey === "date")   cmp = new Date(a.date).getTime() - new Date(b.date).getTime();
       return sortDir === "asc" ? cmp : -cmp;
     });
@@ -444,8 +452,11 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
                 >
                   {l.deaths}<SortIcon col="deaths" />
                 </th>
-                <th className="text-left px-4 py-3 hidden sm:table-cell text-amber-500/80 whitespace-nowrap">
-                  {l.cfr}
+                <th
+                  className="text-left px-4 py-3 hidden sm:table-cell text-amber-500/80 cursor-pointer hover:text-amber-400 select-none whitespace-nowrap"
+                  onClick={() => handleSort("cfr")}
+                >
+                  {l.cfr}<SortIcon col="cfr" />
                 </th>
                 <th
                   className="text-left px-4 py-3 cursor-pointer hover:text-gray-200 select-none whitespace-nowrap"
