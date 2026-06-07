@@ -25,11 +25,18 @@ function getCurrency(_locale: string): "eur" | "usd" {
   return "eur";
 }
 
+// Stripe Checkout's `locale` is a closed enum (auto, bg, cs, … fr, … id, … zh-TW)
+// — "ar" is NOT in it. Sending it makes the Checkout Sessions API reject the
+// request outright ("Invalid locale: must be one of …"), so Arabic-locale users
+// got a hard error instead of a payment link (verified live: fr → valid session
+// URL, ar → 400 from Stripe). "auto" lets Stripe pick from the browser's
+// Accept-Language — the documented escape hatch for unsupported locales — so the
+// page renders in whatever Stripe *does* support rather than failing closed.
 const STRIPE_LOCALES: Record<string, string> = {
   fr: "fr",
   en: "en",
   es: "es",
-  ar: "ar",
+  ar: "auto",
   id: "id",
 };
 
