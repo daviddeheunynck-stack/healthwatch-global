@@ -100,7 +100,6 @@ export async function GET(req: NextRequest) {
             flexDirection:  "column",
             alignItems:     "center",
             gap:            32,
-            zIndex:         1,
             padding:        "0 80px",
           }}
         >
