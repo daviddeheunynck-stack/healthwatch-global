@@ -96,6 +96,18 @@ interface Props {
   trends?: Record<string, OutbreakTrend>;
 }
 
+// Module-level (not redefined every render): React was remounting this on each
+// keystroke/sort-change because a function declared inside the component body
+// is a "new" component type each render — losing its identity, forcing a
+// fresh mount, and tripping the react-hooks/static-components lint rule.
+// Takes the active sort state as explicit props instead of closing over it.
+function SortIcon({ col, activeKey, dir }: { col: SortKey; activeKey: SortKey; dir: SortDir }) {
+  if (activeKey !== col) return <ChevronsUpDown className="inline w-3 h-3 ml-1 text-gray-600" />;
+  return dir === "asc"
+    ? <ChevronUp   className="inline w-3 h-3 ml-1 text-red-400" />
+    : <ChevronDown className="inline w-3 h-3 ml-1 text-red-400" />;
+}
+
 export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, trends }: Props) {
   const [watchlist, setWatchlist] = useState<Set<string>>(new Set());
   const [search,   setSearch]    = useState("");
@@ -139,13 +151,6 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
       setSortKey(key);
       setSortDir(key === "date" || key === "cfr" ? "desc" : "asc");
     }
-  }
-
-  function SortIcon({ col }: { col: SortKey }) {
-    if (sortKey !== col) return <ChevronsUpDown className="inline w-3 h-3 ml-1 text-gray-600" />;
-    return sortDir === "asc"
-      ? <ChevronUp   className="inline w-3 h-3 ml-1 text-red-400" />
-      : <ChevronDown className="inline w-3 h-3 ml-1 text-red-400" />;
   }
 
   // ── Filter logic ──────────────────────────────────────────────────────────
@@ -444,31 +449,31 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
                   className="text-left px-4 py-3 cursor-pointer hover:text-gray-200 select-none whitespace-nowrap"
                   onClick={() => handleSort("cases")}
                 >
-                  {l.cases}<SortIcon col="cases" />
+                  {l.cases}<SortIcon col="cases" activeKey={sortKey} dir={sortDir} />
                 </th>
                 <th
                   className="text-left px-4 py-3 hidden sm:table-cell cursor-pointer hover:text-gray-200 select-none whitespace-nowrap"
                   onClick={() => handleSort("deaths")}
                 >
-                  {l.deaths}<SortIcon col="deaths" />
+                  {l.deaths}<SortIcon col="deaths" activeKey={sortKey} dir={sortDir} />
                 </th>
                 <th
                   className="text-left px-4 py-3 hidden sm:table-cell text-amber-500/80 cursor-pointer hover:text-amber-400 select-none whitespace-nowrap"
                   onClick={() => handleSort("cfr")}
                 >
-                  {l.cfr}<SortIcon col="cfr" />
+                  {l.cfr}<SortIcon col="cfr" activeKey={sortKey} dir={sortDir} />
                 </th>
                 <th
                   className="text-left px-4 py-3 cursor-pointer hover:text-gray-200 select-none whitespace-nowrap"
                   onClick={() => handleSort("risk")}
                 >
-                  {l.riskLevel}<SortIcon col="risk" />
+                  {l.riskLevel}<SortIcon col="risk" activeKey={sortKey} dir={sortDir} />
                 </th>
                 <th
                   className="text-left px-4 py-3 hidden md:table-cell cursor-pointer hover:text-gray-200 select-none whitespace-nowrap"
                   onClick={() => handleSort("date")}
                 >
-                  {l.date}<SortIcon col="date" />
+                  {l.date}<SortIcon col="date" activeKey={sortKey} dir={sortDir} />
                 </th>
                 <th className="px-2 py-3 w-8" />
               </tr>
