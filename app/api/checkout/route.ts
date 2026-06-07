@@ -58,9 +58,16 @@ export async function POST(req: NextRequest) {
     );
   }
 
+  let body: { plan?: string; locale?: string; userId?: string; userEmail?: string; billing?: string };
   try {
-    const { plan, locale, userId, userEmail, billing } = await req.json();
-    const currency = getCurrency(locale);
+    body = await req.json();
+  } catch {
+    return NextResponse.json({ error: "Corps de requête invalide (JSON malformé)." }, { status: 400 });
+  }
+
+  try {
+    const { plan, locale, userId, userEmail, billing } = body;
+    const currency = getCurrency(locale ?? "fr");
     const billingPeriod = billing === "annual" ? "annual" : "monthly";
     const priceId = PRICES[plan]?.[billingPeriod]?.[currency];
 
@@ -124,7 +131,7 @@ export async function POST(req: NextRequest) {
   } catch (err: any) {
     console.error("Checkout fetch error:", err?.message);
     return NextResponse.json(
-      { error: err?.message || "Erreur serveur." },
+      { error: "Erreur serveur. Réessayez dans quelques instants." },
       { status: 500 }
     );
   }
