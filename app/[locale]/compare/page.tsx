@@ -164,7 +164,7 @@ export default function ComparePage() {
         <div className="space-y-4">
           <div className="grid grid-cols-3 gap-4">
             <div className="bg-blue-900/20 border border-blue-700/30 rounded-2xl p-4 space-y-2">
-              <RiskBadge level={oA.risk_level as any} />
+              <RiskBadge level={oA.risk_level} />
               <h3 className="text-white font-bold text-lg leading-tight">{getLocalizedDisease(oA, locale)}</h3>
               <p className="text-gray-400 text-sm">📍 {getLocalizedCountry(oA, locale)}</p>
               {oA.is_pheic && <span className="text-xs text-purple-400">🚨 {l.pheic}</span>}
@@ -175,7 +175,7 @@ export default function ComparePage() {
               </div>
             </div>
             <div className="bg-amber-900/20 border border-amber-700/30 rounded-2xl p-4 space-y-2">
-              <RiskBadge level={oB.risk_level as any} />
+              <RiskBadge level={oB.risk_level} />
               <h3 className="text-white font-bold text-lg leading-tight">{getLocalizedDisease(oB, locale)}</h3>
               <p className="text-gray-400 text-sm">📍 {getLocalizedCountry(oB, locale)}</p>
               {oB.is_pheic && <span className="text-xs text-purple-400">🚨 {l.pheic}</span>}

@@ -1,6 +1,9 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+// Type-only — Leaflet itself is dynamically imported below (it touches `window`
+// and can't survive SSR), but its types are pure compile-time and erase cleanly.
+import type { Map as LeafletMap } from "leaflet";
 import type { Outbreak } from "@/lib/outbreaks";
 import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 import OutbreakDetailModal from "@/components/OutbreakDetailModal";
@@ -29,7 +32,7 @@ const riskColors: Record<string, string> = {
 };
 
 export default function WorldMap({ outbreaks, locale, isPaid, popupLabels, riskLabels }: WorldMapProps) {
-  const mapRef      = useRef<any>(null);
+  const mapRef      = useRef<LeafletMap | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [selected,  setSelected] = useState<Outbreak | null>(null);
 
@@ -43,8 +46,10 @@ export default function WorldMap({ outbreaks, locale, isPaid, popupLabels, riskL
     import("leaflet").then((L) => {
       if (cancelled || !containerRef.current) return;
 
-      // Guard against double-init (e.g. HMR keeping the container alive)
-      const container = containerRef.current as any;
+      // Guard against double-init (e.g. HMR keeping the container alive).
+      // `_leaflet_id` is Leaflet's own internal marker for "already a map
+      // container" — real at runtime, just absent from the DOM lib types.
+      const container = containerRef.current as HTMLDivElement & { _leaflet_id?: number };
       if (container._leaflet_id) {
         container._leaflet_id = undefined;
       }

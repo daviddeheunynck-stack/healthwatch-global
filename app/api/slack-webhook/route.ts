@@ -28,7 +28,7 @@ export async function GET() {
     .eq("id", user.id)
     .single();
 
-  const url: string | null = (data as any)?.slack_webhook_url ?? null;
+  const url: string | null = data?.slack_webhook_url ?? null;
 
   // Mask the URL — only expose the first and last 6 chars
   const masked = url

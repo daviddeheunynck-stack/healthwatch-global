@@ -280,7 +280,7 @@ export default async function PricingPage({ params }: { params: Promise<{ locale
               {(["f0_1","f0_2","f0_3","f0_4"] as const).map((k) => (
                 <li key={k} className="flex items-center gap-1.5 text-xs text-gray-400">
                   <Check className="w-3.5 h-3.5 text-green-400 shrink-0" />
-                  {t(`pricing.${k}` as any)}
+                  {t(`pricing.${k}`)}
                 </li>
               ))}
             </ul>
@@ -429,8 +429,8 @@ export default async function PricingPage({ params }: { params: Promise<{ locale
         <h2 className="text-xl font-semibold text-white text-center mb-6">{t("pricing.faq_title")}</h2>
         {[1, 2, 3].map((i) => (
           <div key={i} className="bg-gray-900 border border-gray-800 rounded-xl p-5">
-            <p className="font-medium text-white mb-2">{t(`pricing.faq${i}_q` as any)}</p>
-            <p className="text-gray-400 text-sm">{t(`pricing.faq${i}_a` as any)}</p>
+            <p className="font-medium text-white mb-2">{t(`pricing.faq${i}_q`)}</p>
+            <p className="text-gray-400 text-sm">{t(`pricing.faq${i}_a`)}</p>
           </div>
         ))}
       </div>

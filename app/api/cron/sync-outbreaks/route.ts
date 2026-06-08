@@ -158,8 +158,11 @@ export async function GET(req: NextRequest) {
 
   if (fetchErr) return NextResponse.json({ error: fetchErr.message }, { status: 500 });
 
-  const bySource = new Map<string, any>();
-  const byDiseaseCountry = new Map<string, any>();
+  // Row shape mirrors whatever the `.select(...)` above actually returns —
+  // derived rather than hand-typed so it can't drift from the query.
+  type ExistingOutbreakRow = NonNullable<typeof existing>[number];
+  const bySource = new Map<string, ExistingOutbreakRow>();
+  const byDiseaseCountry = new Map<string, ExistingOutbreakRow>();
   for (const row of existing || []) {
     if (row.source) bySource.set(row.source, row);
     const k = `${(row.disease_en || "").toLowerCase()}|${(row.country_en || "").toLowerCase()}`;

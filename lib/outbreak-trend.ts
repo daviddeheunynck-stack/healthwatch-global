@@ -2,7 +2,7 @@
 // Compares current case count against N days ago to produce a directional signal.
 // Requires outbreak_snapshots table to have at least DAYS_BACK + 1 entries.
 
-import { createClient } from "@supabase/supabase-js";
+import type { SupabaseClient } from "@supabase/supabase-js";
 
 export type TrendDirection = "up" | "stable" | "down" | "unknown";
 
@@ -21,7 +21,7 @@ const DAYS_BACK     = 7;  // compare against last week
  * Returns "unknown" if not enough snapshot data yet.
  */
 export async function getOutbreakTrend(
-  supabase: ReturnType<typeof createClient>,
+  supabase: SupabaseClient,
   outbreakId: string
 ): Promise<OutbreakTrend> {
   const targetDate = new Date();
@@ -40,19 +40,20 @@ export async function getOutbreakTrend(
   if (!data) return { direction: "unknown", deltaCases: 0, deltaPercent: 0, daysBack: 0 };
 
   // Also get today's snapshot
-  const { data: todaySnap } = await (supabase
+  const { data: todaySnap } = await supabase
     .from("outbreak_snapshots")
     .select("cases, snapped_at")
     .eq("outbreak_id", outbreakId)
     .order("snapped_at", { ascending: false })
-    .limit(1) as any).single();
+    .limit(1)
+    .single();
 
   if (!todaySnap) return { direction: "unknown", deltaCases: 0, deltaPercent: 0, daysBack: 0 };
 
-  const nowCases    = (todaySnap as any).cases as number;
-  const thenCases   = (data as any).cases as number;
-  const thenDate    = (data as any).snapped_at as string;
-  const todayDate   = (todaySnap as any).snapped_at as string;
+  const nowCases    = todaySnap.cases as number;
+  const thenCases   = data.cases as number;
+  const thenDate    = data.snapped_at as string;
+  const todayDate   = todaySnap.snapped_at as string;
 
   const deltaCases   = nowCases - thenCases;
   const deltaPercent = thenCases > 0 ? Math.round((deltaCases / thenCases) * 100) : 0;
@@ -72,7 +73,7 @@ export async function getOutbreakTrend(
  * Bulk fetch trends for multiple outbreaks (efficient — 2 queries total).
  */
 export async function getOutbreakTrendsBulk(
-  supabase: ReturnType<typeof createClient>,
+  supabase: SupabaseClient,
   outbreakIds: string[]
 ): Promise<Map<string, OutbreakTrend>> {
   if (outbreakIds.length === 0) return new Map();
@@ -84,7 +85,7 @@ export async function getOutbreakTrendsBulk(
   type SnapRow = { outbreak_id: string; cases: number; snapped_at: string };
 
   // Latest snapshot per outbreak
-  const { data: latestRaw } = await (supabase as any)
+  const { data: latestRaw } = await supabase
     .from("outbreak_snapshots")
     .select("outbreak_id, cases, snapped_at")
     .in("outbreak_id", outbreakIds)
@@ -92,7 +93,7 @@ export async function getOutbreakTrendsBulk(
   const latest = (latestRaw ?? []) as SnapRow[];
 
   // Oldest snapshot within DAYS_BACK window per outbreak
-  const { data: oldestRaw } = await (supabase as any)
+  const { data: oldestRaw } = await supabase
     .from("outbreak_snapshots")
     .select("outbreak_id, cases, snapped_at")
     .in("outbreak_id", outbreakIds)

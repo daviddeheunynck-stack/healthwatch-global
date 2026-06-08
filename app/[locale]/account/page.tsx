@@ -420,7 +420,7 @@ export default async function AccountPage({
   const sl  = SLACK_LABELS[locale]   ?? SLACK_LABELS.en;
   const akl = API_KEY_LABELS[locale] ?? API_KEY_LABELS.en;
 
-  const slackUrl: string | null = (profile as any)?.slack_webhook_url ?? null;
+  const slackUrl: string | null = profile?.slack_webhook_url ?? null;
   // Fetch API keys (enterprise only)
   const { data: apiKeysData } = plan === "enterprise"
     ? await supabase
@@ -439,7 +439,7 @@ export default async function AccountPage({
     ? new Date(profile.created_at).toLocaleDateString(locale, { year: "numeric", month: "long" })
     : "—";
 
-  const rawTrialEnd = (profile as any)?.trial_ends_at as string | null ?? null;
+  const rawTrialEnd = (profile?.trial_ends_at as string | null) ?? null;
   const trialEndsAt = rawTrialEnd ? new Date(rawTrialEnd) : null;
   const trialActive = trialEndsAt !== null && trialEndsAt > new Date();
   const trialExpired = trialEndsAt !== null && trialEndsAt <= new Date();

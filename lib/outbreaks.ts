@@ -42,7 +42,7 @@ export async function getLastSync(): Promise<string | null> {
     .limit(1)
     .single();
 
-  return (data as any)?.updated_at ?? null;
+  return data?.updated_at ?? null;
 }
 
 export async function getOutbreaks(): Promise<Outbreak[]> {
@@ -166,7 +166,17 @@ const DISEASE_ID: Record<string, string> = {
   "Trypanosomiasis": "Tripanosomiasis",
 };
 
-export function getLocalizedDisease(outbreak: Outbreak, locale: string): string {
+// Structural field-sets for the localization helpers below — they each touch
+// only a handful of Outbreak columns. Accepting the narrow shape (rather than
+// the full Outbreak) lets cron jobs that SELECT a lean column subset (for
+// efficiency — see app/api/cron/disease-alerts and watchlist-alerts) pass
+// their rows straight through with real structural type-safety and no `any`;
+// every existing caller already passes a full Outbreak, which trivially
+// satisfies these narrower Picks too.
+type LocalizedDiseaseFields = Pick<Outbreak, "disease" | "disease_en" | "disease_ar">;
+type LocalizedCountryFields = Pick<Outbreak, "country" | "country_en" | "country_ar">;
+
+export function getLocalizedDisease(outbreak: LocalizedDiseaseFields, locale: string): string {
   // Normalize through the same DISEASE_MAP the parser uses.
   // disease_en is the preferred key (English, already normalized).
   // Fallback: disease column (French for new records, English for legacy).
@@ -281,7 +291,7 @@ const COUNTRY_ID: Record<string, string> = {
   "Viet Nam": "Vietnam", "Vietnam": "Vietnam", "Yemen": "Yaman",
 };
 
-export function getLocalizedCountry(outbreak: Outbreak, locale: string): string {
+export function getLocalizedCountry(outbreak: LocalizedCountryFields, locale: string): string {
   // The `country` column stores the French name directly (from findCountry().name_fr).
   // For FR: return it as-is. For legacy rows where country might be English, try COUNTRY_FR.
   if (locale === "fr") {

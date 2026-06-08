@@ -265,7 +265,7 @@ export async function POST(req: NextRequest) {
           .single();
 
         const cancelledPlan = (profile?.plan ?? "starter") as "starter" | "pro" | "enterprise";
-        const userEmail     = (profile as any)?.email as string | null;
+        const userEmail     = profile?.email as string | null;
 
         const { error } = await supabase
           .from("profiles")
@@ -317,8 +317,14 @@ export async function POST(req: NextRequest) {
         const userId = await getUserIdFromCustomer(customerId);
         if (!userId) break;
 
-        const lineItem = invoice.lines?.data[0] as any;
-        const priceId = lineItem?.price?.id ?? lineItem?.pricing?.price_details?.price;
+        const lineItem = invoice.lines?.data[0];
+        // `price_details.price` is typed as `string | Stripe.Price` — webhooks
+        // send unexpanded references (a bare price-ID string) in practice, but
+        // we handle the expanded-object shape too rather than assume either way.
+        // (No `.price` directly on InvoiceLineItem at this API version — that's
+        // the Subscription-item shape used in the cases above, not the invoice one.)
+        const priceRef = lineItem?.pricing?.price_details?.price;
+        const priceId = typeof priceRef === "string" ? priceRef : priceRef?.id;
         const plan = planFromPriceId(priceId);
         const { error } = await supabase
           .from("profiles")

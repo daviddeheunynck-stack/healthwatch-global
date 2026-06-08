@@ -64,8 +64,18 @@ export default async function WidgetPage({
   const border   = isDark ? "#334155" : "#e2e8f0";
   const headerBg = isDark ? "#1e293b" : "#f1f5f9";
 
-  const disease = (o: any) => (locale === "fr" ? o.disease : null) ?? o.disease_en ?? o.disease ?? "—";
-  const country = (o: any) => o.country_en ?? o.country ?? "—";
+  // Row shape mirrors the `.select(...)` above — derived rather than
+  // hand-typed so it can't drift from the query.
+  type WidgetOutbreakRow = NonNullable<typeof outbreaks>[number];
+  const disease = (o: WidgetOutbreakRow) => (locale === "fr" ? o.disease : null) ?? o.disease_en ?? o.disease ?? "—";
+  const country = (o: WidgetOutbreakRow) => o.country_en ?? o.country ?? "—";
+
+  // `l` is a fixed-shape label record (no index signature — title/active/...
+  // are meaningfully distinct from high/medium/low). risk_level comes back
+  // as a plain `string` from the row, so an equality chain is what narrows
+  // it to the literal union that's actually safe to index `l` with.
+  const riskLabel = (level: string) =>
+    level === "high" || level === "medium" || level === "low" ? l[level] : null;
 
   return (
     <html lang={locale} dir={isRtl ? "rtl" : "ltr"}>
@@ -129,7 +139,7 @@ export default async function WidgetPage({
                 <div className="item-right">
                   {o.cases > 0 && <div className="cases">{o.cases.toLocaleString()}</div>}
                   <div style={{ color: RISK_COLOR[o.risk_level], fontSize: 10, fontWeight: 600 }}>
-                    {(l as any)[o.risk_level] ?? o.risk_level}
+                    {riskLabel(o.risk_level) ?? o.risk_level}
                   </div>
                 </div>
               </div>

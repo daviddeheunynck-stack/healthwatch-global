@@ -77,7 +77,7 @@ export async function GET(req: NextRequest) {
     if (!user.email) continue;
     try {
       // Use profiles.locale (set at signup) — more reliable than subscriptions
-      const locale = (user as any).locale || "fr";
+      const locale = user.locale || "fr";
       const { subject, html } = buildJ3Email(locale);
       await sendEmail(user.email, subject, html);
       j3Sent++;
@@ -92,7 +92,7 @@ export async function GET(req: NextRequest) {
   for (const user of j12Users ?? []) {
     if (!user.email) continue;
     try {
-      const locale = (user as any).locale || "fr";
+      const locale = user.locale || "fr";
       const { subject, html } = buildJ12Email(locale);
       await sendEmail(user.email, subject, html);
       j12Sent++;

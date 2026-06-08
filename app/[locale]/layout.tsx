@@ -98,7 +98,11 @@ export default async function LocaleLayout({
 }) {
   const { locale } = await params;
 
-  if (!routing.locales.includes(locale as any)) {
+  // `routing.locales` is a literal-tuple type narrower than the route's
+  // `locale: string` — widen the array (not the value) to check membership
+  // of an arbitrary string against it. Standard pattern; see i18n.ts for the
+  // sibling check on the request-config side.
+  if (!(routing.locales as readonly string[]).includes(locale)) {
     notFound();
   }
 

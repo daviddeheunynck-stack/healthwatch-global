@@ -178,7 +178,7 @@ export async function GET(req: NextRequest) {
           await sendEmail(profile.email, subject, html);
 
           // ── Slack / Teams (fire-and-forget, non-blocking) ───────────────
-          const slackUrl: string | null = (profile as any).slack_webhook_url ?? null;
+          const slackUrl: string | null = profile.slack_webhook_url ?? null;
           if (slackUrl) {
             const slackBody = {
               blocks: [

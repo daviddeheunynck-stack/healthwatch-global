@@ -89,7 +89,7 @@ async function DashboardContent() {
       .eq("id", user.id)
       .single();
     plan = profile?.plan || "free";
-    trialEndsAt = (profile as any)?.trial_ends_at ?? null;
+    trialEndsAt = profile?.trial_ends_at ?? null;
   }
 
   const isPaid = plan === "starter" || plan === "pro" || plan === "enterprise";
@@ -111,14 +111,7 @@ async function DashboardContent() {
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.SUPABASE_SERVICE_ROLE_KEY!
   );
-  // Cast: getOutbreakTrendsBulk types its param as `ReturnType<typeof createClient>`
-  // (no explicit generics) — TS resolves that against a different overload than the
-  // one a real `createClient(url, key)` call hits, so even this textbook-correct
-  // client doesn't structurally match on paper. Same friction the function already
-  // works around with `(supabase as any)` internally (lib/outbreak-trend.ts:87,95);
-  // the object underneath is a perfectly valid SupabaseClient — a paper mismatch only.
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const trendsMap = await getOutbreakTrendsBulk(trendsService as any, outbreaks.map((o) => o.id));
+  const trendsMap = await getOutbreakTrendsBulk(trendsService, outbreaks.map((o) => o.id));
   const trends: Record<string, OutbreakTrend> = Object.fromEntries(trendsMap);
 
   const popupLabels = {

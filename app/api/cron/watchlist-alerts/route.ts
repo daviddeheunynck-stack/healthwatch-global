@@ -55,7 +55,7 @@ export async function GET(req: NextRequest) {
   const outbreakIds = [...new Set(entries.map((e) => e.outbreak_id))];
   const { data: outbreaks } = await supabase
     .from("outbreaks")
-    .select("id, disease, disease_en, country, country_en, cases, deaths, risk_level, date, source, is_pheic")
+    .select("id, disease, disease_en, disease_ar, country, country_en, country_ar, cases, deaths, risk_level, date, source, is_pheic")
     .in("id", outbreakIds)
     .eq("active", true);
 
@@ -116,9 +116,9 @@ export async function GET(req: NextRequest) {
       const alertOutbreak = {
         id:           outbreak.id,
         disease_en:   outbreak.disease_en ?? outbreak.disease,
-        disease:      getLocalizedDisease(outbreak as any, locale) ?? outbreak.disease,
+        disease:      getLocalizedDisease(outbreak, locale) ?? outbreak.disease,
         country_en:   outbreak.country_en ?? outbreak.country,
-        country:      getLocalizedCountry(outbreak as any, locale) ?? outbreak.country,
+        country:      getLocalizedCountry(outbreak, locale) ?? outbreak.country,
         cases:        outbreak.cases,
         deaths:       outbreak.deaths,
         risk_level:   outbreak.risk_level,
