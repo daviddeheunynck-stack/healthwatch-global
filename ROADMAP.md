@@ -45,9 +45,14 @@ Keep a record of each source's terms-of-use check before it goes live.
 - **Team accounts** — 1 org / N users. Needs Stripe subscription model rework.
   Build when first institutional prospect requests it.
 - **Outgoing webhooks (Enterprise)** — push to Notion/Airtable/Zapier on change.
-- **Stale message-file cleanup** — `messages/*.json` still contains old "Starter"
-  plan keys and outdated `$199` / `$590` prices (pricing.starter_price etc.).
-  These are likely unused (PricingCards has its own COPY) but should be audited.
+- ~~**Stale message-file cleanup**~~ — audited 8 June: the `$199`/`$590` /
+  `starter_price` keys this note originally flagged are already gone (cleared
+  by the Starter-purge commits on 6 June). The one survivor, `plan.starter`
+  ("Starter"/"Legacy"), is *not* dead — `Navbar.tsx` reads it live via
+  `tAuth(\`plan.${plan}\`)` for any remaining grandfathered subscriber
+  (see the `{ key: "starter", label: "Legacy" }` row in admin/page.tsx).
+  Removing it would blank their plan badge. Nothing to clean up here;
+  it stays until the last legacy "starter" profile is gone.
 
 ---
 
