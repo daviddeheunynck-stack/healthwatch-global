@@ -10,6 +10,7 @@ import LandingPage from "@/components/LandingPage";
 import OutbreakTable from "@/components/OutbreakTable";
 import FreshnessBadge from "@/components/FreshnessBadge";
 import TrialBanner from "@/components/TrialBanner";
+import PushNotificationBanner from "@/components/PushNotificationBanner";
 import CsvExportButton from "@/components/CsvExportButton";
 import OnboardingTour from "@/components/OnboardingTour";
 import { Suspense } from "react";
@@ -174,6 +175,12 @@ async function DashboardContent() {
       {showTrialBanner && (
         <TrialBanner trialEndsAt={trialEndsAt!} locale={locale} />
       )}
+
+      {/* Push opt-in nudge — self-hides (unsupported / already subscribed /
+          dismissed / denied), so it only ever reaches someone for whom one
+          click becomes a live "it actually pinged me" demo. See
+          PushNotificationBanner for the full marketing rationale. */}
+      <PushNotificationBanner locale={locale} />
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <StatsCard label={t("activeOutbreaks")} value={stats.activeOutbreaks} icon={<Activity className="w-5 h-5" />} color="red" />
