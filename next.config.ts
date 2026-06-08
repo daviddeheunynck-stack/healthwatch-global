@@ -83,6 +83,17 @@ const nextConfig: NextConfig = {
         headers: [{ key: "Cache-Control", value: "public, max-age=30, stale-while-revalidate=10" }],
       },
       {
+        // Service worker — must always be revalidated, never cached. A stale
+        // sw.js means clients silently keep running old push/notification logic
+        // (browsers already special-case SW update checks, but Vercel's edge
+        // could still serve a cached copy without this — better explicit).
+        source: "/sw.js",
+        headers: [
+          { key: "Cache-Control", value: "no-cache, must-revalidate" },
+          { key: "Content-Type",  value: "application/javascript; charset=utf-8" },
+        ],
+      },
+      {
         // /widget — allow embedding in iframes (override X-Frame-Options: DENY)
         source: "/widget",
         headers: [

@@ -5,6 +5,7 @@ import Link from "next/link";
 import BillingPortalButton from "@/components/BillingPortalButton";
 import SignOutButton from "@/components/SignOutButton";
 import AlertRegionToggles from "@/components/AlertRegionToggles";
+import PushNotificationToggle from "@/components/PushNotificationToggle";
 import DiseaseAlertPicker from "@/components/DiseaseAlertPicker";
 import SlackWebhookForm from "@/components/SlackWebhookForm";
 import ApiKeyManager from "@/components/ApiKeyManager";
@@ -515,6 +516,11 @@ export default async function AccountPage({
           </a>
         </div>
       )}
+
+      {/* Push notifications — device-level, free for everyone (unlike the
+          email-based alert cards below, which are Pro+). Self-contained:
+          owns its own copy and card chrome, like DiseaseAlertPicker. */}
+      <PushNotificationToggle locale={locale} />
 
       {/* Regional alerts */}
       <div className="bg-gray-900 border border-gray-800 rounded-2xl p-6 space-y-4">
