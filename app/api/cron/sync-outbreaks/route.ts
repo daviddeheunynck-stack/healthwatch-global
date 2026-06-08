@@ -218,6 +218,14 @@ export async function GET(req: NextRequest) {
   // Runs automatically — no API key needed (1k words/day free).
   // Set MYMEMORY_EMAIL in env for 10k words/day free tier.
   {
+    // Newest first: (a) translate what readers are actually looking at right
+    // now before older entries, and (b) without an explicit order, Postgres
+    // returns these in unspecified order — which in practice let a handful of
+    // older rows with non-English seed text (translateDescription() always
+    // sends "en|xx": MyMemory echoes the input back, t === text, so the
+    // result is discarded and description_fr stays null forever) re-occupy
+    // the whole 10-row daily budget run after run, starving every legitimate
+    // English row queued behind them. Oldest-first would only make that worse.
     const { data: needsTranslation } = await supabase
       .from("outbreaks")
       .select("id, description")
@@ -225,6 +233,7 @@ export async function GET(req: NextRequest) {
       .is("description_fr", null)
       .not("description", "is", null)
       .neq("description", "")
+      .order("created_at", { ascending: false })
       .limit(10);
 
     if (needsTranslation && needsTranslation.length > 0) {
