@@ -7,6 +7,7 @@ import { createClient as createService } from "@supabase/supabase-js";
 import StatsCard from "@/components/StatsCard";
 import WorldMap from "@/components/WorldMap";
 import LandingPage from "@/components/LandingPage";
+import CampaignRefTracker from "@/components/CampaignRefTracker";
 import OutbreakTable from "@/components/OutbreakTable";
 import FreshnessBadge from "@/components/FreshnessBadge";
 import TrialBanner from "@/components/TrialBanner";
@@ -283,6 +284,7 @@ export default async function DashboardPage({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(schemas) }}
         />
         <LandingPage locale={locale} />
+        <CampaignRefTracker />
       </>
     );
   }
