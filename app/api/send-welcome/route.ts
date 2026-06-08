@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { buildWelcomeEmail } from "@/lib/welcome-email";
+import { errorMessage } from "@/lib/error";
 
 export const dynamic = "force-dynamic";
 
@@ -44,8 +45,8 @@ export async function POST(req: NextRequest) {
     }
 
     return NextResponse.json({ sent: true });
-  } catch (e: any) {
-    console.error("[send-welcome] unexpected error:", e.message);
-    return NextResponse.json({ error: e.message }, { status: 500 });
+  } catch (e: unknown) {
+    console.error("[send-welcome] unexpected error:", errorMessage(e));
+    return NextResponse.json({ error: errorMessage(e) }, { status: 500 });
   }
 }

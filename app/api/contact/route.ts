@@ -68,7 +68,8 @@ export async function POST(req: NextRequest) {
     }
 
     return NextResponse.json({ success: true });
-  } catch (err: any) {
+  } catch (err: unknown) {
+    // Logging `err` itself (not just .message) preserves the stack trace for Error objects
     console.error("Contact route error:", err);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }

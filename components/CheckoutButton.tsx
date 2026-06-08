@@ -58,9 +58,14 @@ export default function CheckoutButton({ plan, locale, label, className, billing
       if (!res.ok || data.error) throw new Error(data.error || `HTTP ${res.status}`);
       track("checkout_start", { plan, billing, locale });
       window.location.href = data.url;
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("Checkout error:", err);
-      setErrorMsg(err.message || ERROR_LABELS[locale] || ERROR_LABELS.en);
+      // User-facing string: only trust .message from real Error instances —
+      // anything else (a thrown string/object from somewhere unexpected)
+      // falls through to the localized generic label rather than leaking
+      // a raw, possibly-ugly value into the UI.
+      const message = err instanceof Error ? err.message : undefined;
+      setErrorMsg(message || ERROR_LABELS[locale] || ERROR_LABELS.en);
       setLoading(false);
     }
   };

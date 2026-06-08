@@ -3,6 +3,7 @@ import { createClient } from "@supabase/supabase-js";
 import { parseRSSFeed, buildOutbreakFromRSSItem } from "@/lib/outbreak-parser";
 import { fetchWHODONList, parseWHODONItem } from "@/lib/who-api";
 import type { ParsedOutbreak } from "@/lib/outbreak-parser";
+import { errorMessage } from "@/lib/error";
 
 export const dynamic = "force-dynamic";
 
@@ -48,8 +49,8 @@ async function translateDescription(text: string): Promise<{
       // MyMemory returns the original text when it can't translate — discard those
       if (t && t !== text) results[pairs[i].key] = t;
     }
-  } catch (e: any) {
-    console.warn("[sync] MyMemory translation error:", e.message);
+  } catch (e: unknown) {
+    console.warn("[sync] MyMemory translation error:", errorMessage(e));
   }
 
   return results;
@@ -83,8 +84,8 @@ async function fetchRSSFallback(): Promise<{ items: ParsedOutbreak[]; source: st
         .filter((x): x is ParsedOutbreak => x !== null);
 
       if (items.length > 0) return { items, source: url };
-    } catch (e: any) {
-      console.warn(`[sync] ${url} → ${e.message}`);
+    } catch (e: unknown) {
+      console.warn(`[sync] ${url} → ${errorMessage(e)}`);
     }
   }
   return null;
@@ -128,9 +129,9 @@ export async function GET(req: NextRequest) {
       usedSource = "WHO OData API";
       console.log(`[sync] WHO OData: ${outbreaks.length} parsed`);
     }
-  } catch (e: any) {
-    console.warn("[sync] WHO OData failed:", e.message);
-    if (debug) debugLog.push(`WHO OData error: ${e.message}`);
+  } catch (e: unknown) {
+    console.warn("[sync] WHO OData failed:", errorMessage(e));
+    if (debug) debugLog.push(`WHO OData error: ${errorMessage(e)}`);
   }
 
   // Fallback: WHO RSS feeds (only if OData yields nothing)
@@ -206,8 +207,8 @@ export async function GET(req: NextRequest) {
       }
 
       await new Promise((r) => setTimeout(r, 50));
-    } catch (e: any) {
-      console.error("[sync] item error:", e.message);
+    } catch (e: unknown) {
+      console.error("[sync] item error:", errorMessage(e));
       results.errors++;
     }
   }

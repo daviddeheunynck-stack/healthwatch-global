@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { rateLimit, getClientIp } from "@/lib/rate-limit";
+import { errorMessage } from "@/lib/error";
 
 export const dynamic = "force-dynamic";
 
@@ -128,8 +129,8 @@ export async function POST(req: NextRequest) {
     }
 
     return NextResponse.json({ url: data.url });
-  } catch (err: any) {
-    console.error("Checkout fetch error:", err?.message);
+  } catch (err: unknown) {
+    console.error("Checkout fetch error:", errorMessage(err));
     return NextResponse.json(
       { error: "Erreur serveur. Réessayez dans quelques instants." },
       { status: 500 }

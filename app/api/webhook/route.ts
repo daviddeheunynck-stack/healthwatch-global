@@ -5,6 +5,7 @@ import { buildUpgradeEmail }        from "@/lib/upgrade-email";
 import { buildChurnEmail }          from "@/lib/churn-email";
 import { buildPaymentFailedEmail }  from "@/lib/payment-failed-email";
 import { buildTrialEndingEmail }    from "@/lib/trial-ending-email";
+import { errorMessage } from "@/lib/error";
 
 export const dynamic = "force-dynamic";
 
@@ -150,8 +151,8 @@ export async function POST(req: NextRequest) {
   let event: Stripe.Event;
   try {
     event = stripe.webhooks.constructEvent(body, sig, webhookSecret);
-  } catch (err: any) {
-    console.error("[webhook] Signature verification failed:", err.message);
+  } catch (err: unknown) {
+    console.error("[webhook] Signature verification failed:", errorMessage(err));
     return NextResponse.json({ error: "Invalid signature" }, { status: 400 });
   }
 
@@ -362,10 +363,10 @@ export async function POST(req: NextRequest) {
         // Ignore unhandled event types
         break;
     }
-  } catch (err: any) {
-    console.error("[webhook] Handler error:", err.message);
+  } catch (err: unknown) {
+    console.error("[webhook] Handler error:", errorMessage(err));
     // Return 200 so Stripe doesn't retry — log the error for investigation
-    return NextResponse.json({ received: true, warning: err.message });
+    return NextResponse.json({ received: true, warning: errorMessage(err) });
   }
 
   return NextResponse.json({ received: true });

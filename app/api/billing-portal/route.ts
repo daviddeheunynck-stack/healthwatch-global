@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase-server";
+import { errorMessage } from "@/lib/error";
 
 export const dynamic = "force-dynamic";
 
@@ -55,8 +56,8 @@ export async function POST(req: NextRequest) {
     }
 
     return NextResponse.json({ url: data.url });
-  } catch (e: any) {
-    console.error("[billing-portal] error:", e.message);
-    return NextResponse.json({ error: e.message }, { status: 500 });
+  } catch (e: unknown) {
+    console.error("[billing-portal] error:", errorMessage(e));
+    return NextResponse.json({ error: errorMessage(e) }, { status: 500 });
   }
 }

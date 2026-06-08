@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { rateLimit, getClientIp } from "@/lib/rate-limit";
+import { errorMessage } from "@/lib/error";
 
 export const dynamic = "force-dynamic";
 
@@ -211,8 +212,8 @@ export async function POST(req: NextRequest) {
     }
 
     return NextResponse.json({ success: true });
-  } catch (err: any) {
-    console.error("[subscribe] Error:", err.message);
+  } catch (err: unknown) {
+    console.error("[subscribe] Error:", errorMessage(err));
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

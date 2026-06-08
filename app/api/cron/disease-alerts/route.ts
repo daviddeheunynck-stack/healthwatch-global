@@ -6,6 +6,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { buildDiseaseAlertEmail } from "@/lib/disease-alert-email";
 import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
+import { errorMessage } from "@/lib/error";
 
 export const dynamic = "force-dynamic";
 
@@ -129,8 +130,8 @@ export async function GET(req: NextRequest) {
         sent++;
 
         await new Promise((r) => setTimeout(r, 150)); // rate-limit friendly
-      } catch (err: any) {
-        console.error(`[disease-alerts] Failed for ${profile.email}:`, err.message);
+      } catch (err: unknown) {
+        console.error(`[disease-alerts] Failed for ${profile.email}:`, errorMessage(err));
       }
     }
   }

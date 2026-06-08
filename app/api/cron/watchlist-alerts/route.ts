@@ -6,6 +6,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { buildWatchlistAlertEmail } from "@/lib/watchlist-alert-email";
 import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
+import { errorMessage } from "@/lib/error";
 
 export const dynamic = "force-dynamic";
 
@@ -139,8 +140,8 @@ export async function GET(req: NextRequest) {
       sent++;
 
       await new Promise((r) => setTimeout(r, 150));
-    } catch (err: any) {
-      console.error(`[watchlist-alerts] Failed for ${profile.email}:`, err.message);
+    } catch (err: unknown) {
+      console.error(`[watchlist-alerts] Failed for ${profile.email}:`, errorMessage(err));
     }
   }
 
