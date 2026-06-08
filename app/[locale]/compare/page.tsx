@@ -82,7 +82,6 @@ export default function ComparePage() {
 
   useEffect(() => {
     const sp = new URLSearchParams(window.location.search);
-    setReady(true);
     createClient().from("outbreaks").select("*").eq("active", true).order("risk_level").limit(100)
       .then(({ data }) => {
         const list = (data as unknown as Outbreak[]) ?? [];
@@ -104,6 +103,15 @@ export default function ComparePage() {
           const pool  = pheic.length >= 2 ? pheic : [...pheic, ...high.filter(o => !pheic.includes(o))];
           if (pool[1]) setIdB(pool[1].id);
         }
+        // Only flip `ready` once idA/idB hold their *real* selection. Setting
+        // it synchronously above (the old code) raced this fetch: the URL-sync
+        // effect below would fire first with idA=idB="" and momentarily strip
+        // a shared link's `?a=...&b=...` from the address bar before this
+        // resolved and corrected it. Also moves the setState out of the effect
+        // body and into an async callback, which react-hooks/set-state-in-effect
+        // doesn't (and shouldn't) flag — it's reacting to the fetch settling,
+        // not deriving state synchronously on every effect run.
+        setReady(true);
       });
   }, []);
 

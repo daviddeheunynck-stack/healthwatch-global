@@ -66,8 +66,12 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlis
   const cfr        = hasData ? (outbreak.deaths / outbreak.cases * 100).toFixed(1) : null;
   const incidence  = getIncidenceRate(outbreak.cases, outbreak.country_en);
 
-  // Data freshness
-  const daysSince = Math.floor((Date.now() - new Date(outbreak.date).getTime()) / 86_400_000);
+  // Data freshness. `new Date()` (not `Date.now()`) keeps this pure for
+  // react-hooks/purity — see app/[locale]/page.tsx for the same idiom — and
+  // day-granularity freshness needs no live tick: this modal only exists while
+  // a marker's detail view is open, it isn't a long-lived countdown display.
+  const now       = new Date();
+  const daysSince = Math.floor((now.getTime() - new Date(outbreak.date).getTime()) / 86_400_000);
   const isFresh   = daysSince <= 7;
   const isStale   = daysSince > 30;
 

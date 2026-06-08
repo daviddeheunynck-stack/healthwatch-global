@@ -45,8 +45,24 @@ export default function SavedFilters({ locale, currentFilters, hasActiveFilters,
   const [newName,   setNewName]   = useState("");
 
   useEffect(() => {
+    // One-time hydration-safe load from localStorage. `saved` must start as
+    // `[]` on both server and client — the server has no `localStorage`, so
+    // the first paint can only show "no saved filters" — and this effect then
+    // loads the persisted list right after mount. That's exactly the
+    // "synchronize with an external system on mount" use React documents
+    // useEffect for (https://react.dev/learn/you-might-not-need-an-effect):
+    // a lazy `useState(() => ...)` initializer would run during the
+    // *hydration* render too and could return a populated list where the
+    // server rendered an empty one — a real hydration mismatch, not just a
+    // lint nitpick — so the value has to land post-mount, in an effect, like
+    // this. (Same constraint, same resolution, as CookieBanner/
+    // ConsentAwareAnalytics — see CookieBanner.tsx for why *those* went with
+    // useSyncExternalStore instead: they react to an ongoing external event
+    // this component has no equivalent of, so an effect remains the right
+    // tool here.)
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       if (raw) setSaved(JSON.parse(raw));
     } catch { /* ignore */ }
   }, []);

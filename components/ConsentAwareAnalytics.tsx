@@ -1,33 +1,23 @@
 "use client";
 
 // Renders Vercel Analytics only after the user has explicitly accepted cookies.
-// Listens to the "cookie-consent" custom event dispatched by CookieBanner,
-// and also checks localStorage on mount for returning visitors who already consented.
+//
+// Reads the localStorage-backed consent value via useSyncExternalStore — the
+// same store CookieBanner derives its own visibility from (see
+// subscribeToConsent/getConsent/getConsentServerSnapshot there for the full
+// rationale, including why this isn't just `useState` + `useEffect`). One
+// reactive read covers both cases that used to need separate handling:
+// returning visitors (consent already in localStorage on mount) and consent
+// granted live during this session (the "cookie-consent" event CookieBanner
+// dispatches when the user responds) — React re-renders this component either
+// way, no manual event-listener bookkeeping required.
 
-import { useEffect, useState } from "react";
+import { useSyncExternalStore } from "react";
 import { Analytics } from "@vercel/analytics/react";
-import { getConsent } from "@/components/CookieBanner";
+import { getConsent, subscribeToConsent, getConsentServerSnapshot } from "@/components/CookieBanner";
 
 export default function ConsentAwareAnalytics() {
-  const [allowed, setAllowed] = useState(false);
-
-  useEffect(() => {
-    // Already consented in a previous session
-    if (getConsent() === "accepted") {
-      setAllowed(true);
-      return;
-    }
-
-    // Listen for consent granted in this session
-    function onConsent(e: Event) {
-      const value = (e as CustomEvent<string>).detail;
-      if (value === "accepted") setAllowed(true);
-    }
-
-    window.addEventListener("cookie-consent", onConsent);
-    return () => window.removeEventListener("cookie-consent", onConsent);
-  }, []);
-
-  if (!allowed) return null;
+  const consent = useSyncExternalStore(subscribeToConsent, getConsent, getConsentServerSnapshot);
+  if (consent !== "accepted") return null;
   return <Analytics />;
 }

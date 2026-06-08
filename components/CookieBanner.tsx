@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useSyncExternalStore } from "react";
 import Link from "next/link";
 
 export const STORAGE_KEY = "hwg_cookie_consent";
@@ -50,19 +50,48 @@ export function getConsent(): ConsentValue | null {
   return (localStorage.getItem(STORAGE_KEY) as ConsentValue) ?? null;
 }
 
+// ── useSyncExternalStore plumbing ─────────────────────────────────────────────
+//
+// Both this banner and ConsentAwareAnalytics need to read the localStorage-
+// backed consent value reactively (re-rendering when it changes) *without* a
+// hydration mismatch: the server has no `localStorage`, so it can't know the
+// real value, yet the client might already have one from a previous visit.
+//
+// A lazy `useState(() => getConsent() === ...)` initializer would run during
+// the hydration render too and could disagree with the server's markup right
+// there — a real mismatch, not a lint nitpick. `useSyncExternalStore` is the
+// hook React built for exactly this: it renders `getServerSnapshot`'s value
+// on the server *and* during hydration, then switches to the live
+// `getSnapshot` immediately after — no mismatch warning, no extra effect, and
+// (per the rule that sent us here) no setState inside a useEffect at all.
+// https://react.dev/reference/react/useSyncExternalStore#subscribing-to-a-browser-api
+
+// `respond` (below) writes to localStorage *and* dispatches this event in the
+// same tick, so same-tab subscribers learn about the change immediately —
+// `storage` only fires in *other* tabs.
+export function subscribeToConsent(callback: () => void): () => void {
+  window.addEventListener("cookie-consent", callback);
+  return () => window.removeEventListener("cookie-consent", callback);
+}
+
+export function getConsentServerSnapshot(): ConsentValue | null {
+  return null;
+}
+
 export default function CookieBanner({ locale }: { locale: string }) {
-  const [visible, setVisible] = useState(false);
+  // Single source of truth: visibility is *derived* from the stored consent
+  // value — no local "visible" state that could ever fall out of sync with it.
+  const consent = useSyncExternalStore(subscribeToConsent, getConsent, getConsentServerSnapshot);
+  const visible = consent === null;
   const l = LABELS[locale] ?? LABELS.fr;
   const dir = locale === "ar" ? "rtl" : "ltr";
 
-  useEffect(() => {
-    if (!getConsent()) setVisible(true);
-  }, []);
-
   function respond(value: ConsentValue) {
     localStorage.setItem(STORAGE_KEY, value);
-    setVisible(false);
-    // Dispatch event so analytics can be lazily initialised on "accepted"
+    // Dispatching re-notifies useSyncExternalStore subscribers (this component
+    // included), which re-read getConsent() and re-render with the new value —
+    // `visible` flips to false and ConsentAwareAnalytics picks up "accepted",
+    // both from this single write+event.
     window.dispatchEvent(new CustomEvent("cookie-consent", { detail: value }));
   }
 

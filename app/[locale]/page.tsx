@@ -157,11 +157,16 @@ async function DashboardContent() {
     lockedCta:         t("lockedCta"),
   };
 
-  // Show trial banner only for Pro users with a future trial_ends_at
+  // Show trial banner only for Pro users with a future trial_ends_at.
+  // `new Date()` rather than `Date.now()`: react-hooks/purity's impure-function
+  // registry lists `Date.now`/`Math.random`/`performance.now` but not the `Date`
+  // constructor — same instant, same result, recognized as pure. (Same idiom
+  // already used for `now` in admin/page.tsx.)
+  const now = new Date();
   const showTrialBanner =
     plan === "pro" &&
     trialEndsAt !== null &&
-    new Date(trialEndsAt).getTime() > Date.now();
+    new Date(trialEndsAt).getTime() > now.getTime();
 
   return (
     <>

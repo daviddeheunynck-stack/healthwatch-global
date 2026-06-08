@@ -35,6 +35,20 @@ export default function Navbar() {
   const [plan, setPlan] = useState<string>("free");
   const [mobileOpen, setMobileOpen] = useState(false);
 
+  // Close the mobile menu on route change. Adjusting state *while rendering* —
+  // comparing against the last-seen pathname and calling setState immediately
+  // when it differs — is React's documented replacement for
+  // `useEffect(() => setMobileOpen(false), [pathname])`: React detects the
+  // mismatch and re-renders right away, before the browser paints, so there's
+  // no flash of the still-open menu and no synchronous setState inside an
+  // effect (which is what react-hooks/set-state-in-effect was flagging here).
+  // https://react.dev/learn/you-might-not-need-an-effect#adjusting-some-state-when-a-prop-changes
+  const [prevPathname, setPrevPathname] = useState(pathname);
+  if (pathname !== prevPathname) {
+    setPrevPathname(pathname);
+    setMobileOpen(false);
+  }
+
   useEffect(() => {
     const supabase = createClient();
 
@@ -51,9 +65,6 @@ export default function Navbar() {
 
     return () => subscription.unsubscribe();
   }, []);
-
-  // Close mobile menu on route change
-  useEffect(() => { setMobileOpen(false); }, [pathname]);
 
   async function fetchPlan(userId: string, supabase: ReturnType<typeof createClient>) {
     const { data } = await supabase

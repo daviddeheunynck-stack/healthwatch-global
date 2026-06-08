@@ -288,7 +288,7 @@ export default async function AdminPage({
             <tbody className="divide-y divide-gray-800">
               {profiles?.map((p) => {
                 const daysAgo = p.created_at
-                  ? Math.floor((Date.now() - new Date(p.created_at).getTime()) / 86400_000)
+                  ? Math.floor((now.getTime() - new Date(p.created_at).getTime()) / 86400_000)
                   : null;
                 return (
                   <tr key={p.id} className="hover:bg-gray-800/50 transition-colors">
