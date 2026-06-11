@@ -151,10 +151,28 @@ export async function GET(req: NextRequest) {
     }, { status: 502 });
   }
 
+  // WHO publishes multiple DON articles over time for the same evolving
+  // outbreak (e.g. "Update 1", "Update 2"...). The feed is fetched newest
+  // first, so for a given disease+country keep only the first (most recent)
+  // article — older updates are superseded and must not overwrite it.
+  {
+    const seenDC = new Set<string>();
+    const beforeDedup = outbreaks.length;
+    outbreaks = outbreaks.filter((o) => {
+      const k = `${o.disease_en.toLowerCase()}|${o.country_en.toLowerCase()}`;
+      if (seenDC.has(k)) return false;
+      seenDC.add(k);
+      return true;
+    });
+    if (debug && outbreaks.length < beforeDedup) {
+      debugLog.push(`Deduped ${beforeDedup - outbreaks.length} older WHO article(s) superseded by a newer update for the same disease/country`);
+    }
+  }
+
   // ── 2. Load existing outbreaks ────────────────────────────────
   const { data: existing, error: fetchErr } = await supabase
     .from("outbreaks")
-    .select("id, disease_en, country_en, source, date, cases, deaths");
+    .select("id, disease_en, country_en, source, date, cases, deaths, active");
 
   if (fetchErr) return NextResponse.json({ error: fetchErr.message }, { status: 500 });
 
@@ -166,7 +184,13 @@ export async function GET(req: NextRequest) {
   for (const row of existing || []) {
     if (row.source) bySource.set(row.source, row);
     const k = `${(row.disease_en || "").toLowerCase()}|${(row.country_en || "").toLowerCase()}`;
-    byDiseaseCountry.set(k, row);
+    // A disease+country can have several historical rows (past episodes).
+    // Keep the one a fresh WHO article should actually update: prefer the
+    // active row, then the most recently dated one.
+    const prev = byDiseaseCountry.get(k);
+    if (!prev || (row.active && !prev.active) || (row.active === prev.active && row.date > prev.date)) {
+      byDiseaseCountry.set(k, row);
+    }
   }
 
   // ── 3. Upsert ─────────────────────────────────────────────────
@@ -176,10 +200,15 @@ export async function GET(req: NextRequest) {
       const existingRow = bySource.get(outbreak.source) || byDiseaseCountry.get(dcKey);
 
       if (existingRow) {
+        // Never let an older-dated WHO article overwrite a row that already
+        // reflects a more recent one (e.g. byDiseaseCountry matched the
+        // current row, but this article predates it).
+        const isOlderArticle = outbreak.date < existingRow.date;
         const needsUpdate =
-          existingRow.cases !== outbreak.cases ||
-          existingRow.deaths !== outbreak.deaths ||
-          existingRow.date < outbreak.date;
+          !isOlderArticle &&
+          (existingRow.cases !== outbreak.cases ||
+            existingRow.deaths !== outbreak.deaths ||
+            existingRow.date !== outbreak.date);
 
         if (needsUpdate) {
           const { error } = await supabase
