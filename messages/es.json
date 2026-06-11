@@ -10,7 +10,7 @@
   },
   "dashboard": {
     "title": "Vigilancia Sanitaria Mundial",
-    "subtitle": "Monitoreo en tiempo real de brotes de enfermedades",
+    "subtitle": "Monitoreo diario de brotes de enfermedades",
     "activeOutbreaks": "Brotes Activos",
     "countriesAffected": "Países Afectados",
     "alertsToday": "Alertas (7d)",
@@ -40,7 +40,7 @@
     "region": "Seleccionar una región",
     "subscribe": "Suscribirse",
     "success": "¡Suscripción confirmada!",
-    "freeNote": "Nivel gratuito: 1 región, digest semanal. Para alertas en tiempo real en todas las regiones, consulte nuestros planes de pago.",
+    "freeNote": "Nivel gratuito: 1 región, digest semanal. Para alertas instantáneas en todas las regiones, consulte nuestros planes de pago.",
     "checkEmail": "Compruebe su bandeja de entrada.",
     "errorServer": "No se puede contactar el servidor.",
     "errorGeneric": "Se ha producido un error.",
@@ -56,10 +56,10 @@
     "realtimeWaiting": "Esperando nuevas alertas…",
     "realtimeCases": "casos",
     "realtimeDeaths": "muertes",
-    "realtimeLoginRequired": "Inicie sesión para acceder a las alertas en tiempo real.",
+    "realtimeLoginRequired": "Inicie sesión para acceder a las alertas instantáneas.",
     "realtimeLogin": "Iniciar sesión",
-    "realtimeProOnly": "Alertas en tiempo real — Plan Pro",
-    "realtimeProDesc": "Reciba cada nuevo brote al instante, en cuanto lo detecte la OMS.",
+    "realtimeProOnly": "Alertas instantáneas — Plan Pro",
+    "realtimeProDesc": "Reciba cada nuevo brote al instante, en cuanto nuestra sincronización diaria lo detecte.",
     "realtimeUpgrade": "Actualizar al plan Pro →"
   },
   "reports": {
@@ -91,8 +91,8 @@
     "faq_title": "Preguntas frecuentes",
     "faq1_q": "¿Puedo cancelar en cualquier momento?",
     "faq1_a": "Sí, sin compromiso. Puede cancelar su suscripción en cualquier momento desde su cuenta.",
-    "faq2_q": "¿Los datos se actualizan en tiempo real?",
-    "faq2_a": "Sí. Agregamos continuamente los flujos de OMS, CDC y ECDC las 24 horas.",
+    "faq2_q": "¿Con qué frecuencia se actualizan los datos?",
+    "faq2_a": "Los datos de la OMS se sincronizan cada hora. Las alertas específicas por enfermedad se envían dentro de las 24h posteriores a una nueva detección.",
     "faq3_q": "¿Hay un plan gratuito?",
     "faq3_a": "Sí. El plan Gratuito da acceso al panel público, una región supervisada y el resumen semanal, sin tarjeta de crédito ni límite de tiempo."
   },
@@ -155,7 +155,7 @@
     "successTitle": "¡Mensaje enviado!",
     "successText": "Gracias. Le responderemos en 24 horas.",
     "errorGeneric": "Algo salió mal. Por favor, inténtelo de nuevo.",
-    "aboutText": "HealthWatch Global fue creado para dar a las organizaciones de salud inteligencia epidémica en tiempo real en su idioma.",
+    "aboutText": "HealthWatch Global fue creado para dar a las organizaciones de salud inteligencia epidémica diaria en su idioma.",
     "navLink": "Contacto"
   }
 }

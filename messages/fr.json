@@ -10,7 +10,7 @@
   },
   "dashboard": {
     "title": "Surveillance Sanitaire Mondiale",
-    "subtitle": "Suivi en temps réel des épidémies dans le monde",
+    "subtitle": "Suivi quotidien des épidémies dans le monde",
     "activeOutbreaks": "Épidémies Actives",
     "countriesAffected": "Pays Touchés",
     "alertsToday": "Alertes (7j)",
@@ -40,7 +40,7 @@
     "region": "Sélectionner une région",
     "subscribe": "S'abonner",
     "success": "Abonnement confirmé !",
-    "freeNote": "Offre gratuite : 1 région, digest hebdomadaire. Pour des alertes en temps réel sur toutes les régions, consultez nos plans payants.",
+    "freeNote": "Offre gratuite : 1 région, digest hebdomadaire. Pour des alertes instantanées sur toutes les régions, consultez nos plans payants.",
     "checkEmail": "Vérifiez votre boîte email.",
     "errorServer": "Impossible de contacter le serveur.",
     "errorGeneric": "Une erreur est survenue.",
@@ -56,10 +56,10 @@
     "realtimeWaiting": "En attente de nouvelles alertes…",
     "realtimeCases": "cas",
     "realtimeDeaths": "décès",
-    "realtimeLoginRequired": "Connectez-vous pour accéder aux alertes en temps réel.",
+    "realtimeLoginRequired": "Connectez-vous pour accéder aux alertes instantanées.",
     "realtimeLogin": "Se connecter",
-    "realtimeProOnly": "Alertes en temps réel — Plan Pro",
-    "realtimeProDesc": "Recevez chaque nouvelle épidémie instantanément, dès sa détection par l'OMS.",
+    "realtimeProOnly": "Alertes instantanées — Plan Pro",
+    "realtimeProDesc": "Recevez chaque nouvelle épidémie instantanément, dès que notre synchronisation quotidienne la détecte.",
     "realtimeUpgrade": "Passer au plan Pro →"
   },
   "reports": {
@@ -92,7 +92,7 @@
     "faq1_q": "Puis-je annuler à tout moment ?",
     "faq1_a": "Oui, sans engagement. Vous pouvez annuler votre abonnement à tout moment depuis votre espace client.",
     "faq2_q": "À quelle fréquence les données sont-elles mises à jour ?",
-    "faq2_a": "Les données OMS sont synchronisées chaque matin à 6h UTC. Les alertes maladies sont envoyées jusqu'à 1x par jour dès qu'un nouveau foyer est détecté.",
+    "faq2_a": "Les données OMS sont synchronisées toutes les heures. Les alertes maladies sont envoyées jusqu'à 1x par jour dès qu'un nouveau foyer est détecté.",
     "faq3_q": "Y a-t-il un plan gratuit ?",
     "faq3_a": "Oui. Le plan Gratuit donne acces au tableau de bord public, une region surveillee et la synthese hebdomadaire — sans carte bancaire, sans limite de duree."
   },
@@ -155,7 +155,7 @@
     "successTitle": "Message envoyé !",
     "successText": "Merci. Nous vous répondrons dans les 24 heures.",
     "errorGeneric": "Une erreur est survenue. Réessayez.",
-    "aboutText": "HealthWatch Global a été créé pour donner aux organisations de santé une intelligence épidémique en temps réel dans leur langue. Nous agrégeons les flux OMS, CDC et ECDC en une seule plateforme multilingue.",
+    "aboutText": "HealthWatch Global a été créé pour donner aux organisations de santé une intelligence épidémique quotidienne dans leur langue. Nous agrégeons chaque jour les flux OMS, CDC et ECDC en une seule plateforme multilingue.",
     "navLink": "Contact"
   }
 }

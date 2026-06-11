@@ -10,7 +10,7 @@
   },
   "dashboard": {
     "title": "Pengawasan Kesehatan Global",
-    "subtitle": "Pemantauan wabah penyakit secara real-time di seluruh dunia",
+    "subtitle": "Pemantauan harian wabah penyakit di seluruh dunia",
     "activeOutbreaks": "Wabah Aktif",
     "countriesAffected": "Negara Terdampak",
     "alertsToday": "Peringatan (7h)",
@@ -40,7 +40,7 @@
     "region": "Pilih wilayah",
     "subscribe": "Berlangganan",
     "success": "Langganan dikonfirmasi!",
-    "freeNote": "Tier gratis: 1 wilayah, digest mingguan. Untuk peringatan real-time di semua wilayah, lihat paket berbayar kami.",
+    "freeNote": "Tier gratis: 1 wilayah, digest mingguan. Untuk peringatan instan di semua wilayah, lihat paket berbayar kami.",
     "checkEmail": "Periksa kotak masuk Anda.",
     "errorServer": "Tidak dapat menghubungi server.",
     "errorGeneric": "Terjadi kesalahan.",
@@ -56,10 +56,10 @@
     "realtimeWaiting": "Menunggu peringatan baru…",
     "realtimeCases": "kasus",
     "realtimeDeaths": "kematian",
-    "realtimeLoginRequired": "Masuk untuk mengakses peringatan real-time.",
+    "realtimeLoginRequired": "Masuk untuk mengakses peringatan instan.",
     "realtimeLogin": "Masuk",
-    "realtimeProOnly": "Peringatan real-time — Paket Pro",
-    "realtimeProDesc": "Terima setiap wabah baru seketika, saat terdeteksi oleh WHO.",
+    "realtimeProOnly": "Peringatan instan — Paket Pro",
+    "realtimeProDesc": "Terima setiap wabah baru seketika, saat terdeteksi oleh sinkronisasi harian kami.",
     "realtimeUpgrade": "Tingkatkan ke Paket Pro →"
   },
   "reports": {
@@ -91,8 +91,8 @@
     "faq_title": "Pertanyaan yang sering diajukan",
     "faq1_q": "Bisakah saya membatalkan kapan saja?",
     "faq1_a": "Ya, tanpa komitmen. Anda dapat membatalkan langganan kapan saja dari akun Anda.",
-    "faq2_q": "Apakah data diperbarui secara real-time?",
-    "faq2_a": "Ya. Kami terus mengumpulkan data dari WHO, CDC dan ECDC, 24/7.",
+    "faq2_q": "Seberapa sering data diperbarui?",
+    "faq2_a": "Data WHO disinkronkan setiap jam. Peringatan khusus penyakit dikirim dalam 24 jam setelah deteksi baru.",
     "faq3_q": "Apakah ada paket gratis?",
     "faq3_a": "Ya. Paket Gratis memberikan akses ke dasbor publik, satu wilayah yang dipantau, dan ringkasan mingguan — tanpa kartu kredit, tanpa batas waktu."
   },
@@ -155,7 +155,7 @@
     "successTitle": "Pesan terkirim!",
     "successText": "Terima kasih. Kami akan menghubungi Anda dalam 24 jam.",
     "errorGeneric": "Terjadi kesalahan. Silakan coba lagi.",
-    "aboutText": "HealthWatch Global dibuat untuk memberi organisasi kesehatan intelijen epidemi real-time dalam bahasa mereka.",
+    "aboutText": "HealthWatch Global dibuat untuk memberi organisasi kesehatan intelijen epidemi harian dalam bahasa mereka.",
     "navLink": "Kontak"
   }
 }

@@ -1,0 +1,20 @@
+name: Hourly outbreak data sync
+
+# Vercel's daily cron (vercel.json, 06:00 UTC) stays as a guaranteed
+# baseline — this workflow adds faster polling on top of it. The sync
+# endpoint is idempotent (upsert + skip-if-unchanged), so overlapping
+# runs are harmless.
+
+on:
+  schedule:
+    - cron: "0 * * * *"
+  workflow_dispatch: {}
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger /api/cron/sync-outbreaks
+        run: |
+          curl -sf -X GET "https://healthwatch-global.com/api/cron/sync-outbreaks" \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}"

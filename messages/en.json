@@ -10,7 +10,7 @@
   },
   "dashboard": {
     "title": "Global Health Surveillance",
-    "subtitle": "Real-time monitoring of disease outbreaks worldwide",
+    "subtitle": "Daily monitoring of disease outbreaks worldwide",
     "activeOutbreaks": "Active Outbreaks",
     "countriesAffected": "Countries Affected",
     "alertsToday": "Alerts (7d)",
@@ -40,7 +40,7 @@
     "region": "Select a region",
     "subscribe": "Subscribe",
     "success": "Subscription confirmed!",
-    "freeNote": "Free tier: 1 region, weekly digest. For real-time alerts across all regions, see our paid plans.",
+    "freeNote": "Free tier: 1 region, weekly digest. For instant alerts across all regions, see our paid plans.",
     "checkEmail": "Check your inbox.",
     "errorServer": "Unable to reach the server.",
     "errorGeneric": "An error occurred.",
@@ -56,10 +56,10 @@
     "realtimeWaiting": "Waiting for new alerts…",
     "realtimeCases": "cases",
     "realtimeDeaths": "deaths",
-    "realtimeLoginRequired": "Sign in to access real-time alerts.",
+    "realtimeLoginRequired": "Sign in to access instant alerts.",
     "realtimeLogin": "Sign in",
-    "realtimeProOnly": "Real-time alerts — Pro Plan",
-    "realtimeProDesc": "Get every new outbreak instantly, as soon as it is detected by the WHO.",
+    "realtimeProOnly": "Instant alerts — Pro Plan",
+    "realtimeProDesc": "Get every new outbreak instantly, the moment our daily WHO sync detects it.",
     "realtimeUpgrade": "Upgrade to Pro →"
   },
   "reports": {
@@ -92,7 +92,7 @@
     "faq1_q": "Can I cancel at any time?",
     "faq1_a": "Yes, no commitment. You can cancel your subscription at any time from your account.",
     "faq2_q": "How often is data updated?",
-    "faq2_a": "WHO data syncs every morning at 6h UTC. Disease-specific alerts fire within 24h of a new detection.",
+    "faq2_a": "WHO data syncs every hour. Disease-specific alerts fire within 24h of a new detection.",
     "faq3_q": "Is there a free plan?",
     "faq3_a": "Yes. The Free plan gives you access to the public dashboard, one monitored region and the weekly digest — no credit card required, no time limit."
   },
@@ -155,7 +155,7 @@
     "successTitle": "Message sent!",
     "successText": "Thank you. We will get back to you within 24 hours.",
     "errorGeneric": "Something went wrong. Please try again.",
-    "aboutText": "HealthWatch Global was built to give health organizations real-time epidemic intelligence in their language. We aggregate WHO, CDC and ECDC feeds into a single multilingual platform so your teams can act faster.",
+    "aboutText": "HealthWatch Global was built to give health organizations daily epidemic intelligence in their language. We aggregate WHO, CDC and ECDC feeds into a single multilingual platform, updated every morning, so your teams can act faster.",
     "navLink": "Contact"
   }
 }
