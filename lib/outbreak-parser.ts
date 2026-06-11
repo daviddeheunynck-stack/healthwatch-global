@@ -151,6 +151,94 @@ export function extractNumbers(text: string): { cases: number; deaths: number } 
   return { cases, deaths };
 }
 
+function escapeRegExp(s: string): string {
+  return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+// ─── Country-anchored number extraction (multi-country articles) ──
+//
+// A single WHO DON article can cover several countries (e.g. "...the
+// Democratic Republic of the Congo and Uganda"), each with its own case
+// and death counts plus a combined total. extractNumbers() just grabs the
+// first "N cases" it finds, which may belong to the wrong country or be
+// the combined total. This anchors extraction to text near a mention of
+// the target country, returning null (so the caller falls back to
+// extractNumbers()) when no such anchored figure can be found.
+export function extractNumbersForCountry(
+  text: string,
+  countryAliases: string[]
+): { cases: number; deaths: number } | null {
+  const clean = text.replace(/\n/g, " ");
+  const QUALIFIERS = "(?:(?:suspected|probable|confirmed|laboratory[- ]confirmed|human|new|reported|additional)\\s+)*";
+  const aliasPattern = new RegExp(countryAliases.map(escapeRegExp).join("|"), "i");
+  const WINDOW = 200;
+
+  const nearCountry = (index: number, length: number): boolean => {
+    const start = Math.max(0, index - WINDOW);
+    const end = Math.min(clean.length, index + length + WINDOW);
+    return aliasPattern.test(clean.slice(start, end));
+  };
+
+  // Tier 1: "a total of N ... cases, with/including M deaths" — the most
+  // common WHO phrasing for a single country's headline figure.
+  const pairPattern = new RegExp(
+    `total\\s+of\\s+(\\d[\\d,]*)\\s+${QUALIFIERS}cases?,?\\s+(?:with|including)\\s+(\\d[\\d,]*)\\s+deaths?`,
+    "gi"
+  );
+  for (const m of clean.matchAll(pairPattern)) {
+    if (nearCountry(m.index ?? 0, m[0].length)) {
+      return {
+        cases: parseInt(m[1].replace(/,/g, ""), 10),
+        deaths: parseInt(m[2].replace(/,/g, ""), 10),
+      };
+    }
+  }
+
+  // Tier 2: cases and deaths mentioned in separate sentences, each
+  // individually anchored near the country name.
+  const casePattern = new RegExp(`(\\d[\\d,]*)\\s+${QUALIFIERS}cases?`, "gi");
+  const deathPattern = /(\d[\d,]*)\s+deaths?\b/gi;
+
+  let cases: number | null = null;
+  for (const m of clean.matchAll(casePattern)) {
+    if (nearCountry(m.index ?? 0, m[0].length)) {
+      cases = parseInt(m[1].replace(/,/g, ""), 10);
+      break;
+    }
+  }
+
+  let deaths: number | null = null;
+  for (const m of clean.matchAll(deathPattern)) {
+    if (nearCountry(m.index ?? 0, m[0].length)) {
+      deaths = parseInt(m[1].replace(/,/g, ""), 10);
+      break;
+    }
+  }
+
+  if (cases === null && deaths === null) return null;
+  return { cases: cases ?? 0, deaths: deaths ?? 0 };
+}
+
+// Splits a WHO DON country fragment like "Democratic Republic of the Congo
+// and Uganda" into per-country aliases for the segment matching `geo`, for
+// use with extractNumbersForCountry(). Returns null for single-country
+// articles, where extractNumbers()'s existing behaviour is unaffected.
+export function countryAliasesForMultiCountry(countryFragment: string, geo: CountryGeo): string[] | null {
+  const segments = countryFragment.split(/\s+(?:&|and)\s+/i).map((s) => s.trim()).filter(Boolean);
+  if (segments.length < 2) return null;
+
+  const aliases: string[] = [geo.name_en];
+  for (const seg of segments) {
+    const segGeo = findCountry(seg);
+    if (segGeo && segGeo.name_en === geo.name_en) {
+      aliases.unshift(seg);
+      break;
+    }
+  }
+  if (geo.name_en === "DR Congo") aliases.push("DRC");
+  return aliases;
+}
+
 // ─── Risk level heuristic ─────────────────────────────────────
 
 export function assessRisk(
@@ -214,7 +302,8 @@ export function buildOutbreakFromRSSItem(item: RSSItem): ParsedOutbreak | null {
   }
 
   const disease = normalizeDisease(parsed.disease);
-  const { cases, deaths } = extractNumbers(item.description);
+  const countryAliases = countryAliasesForMultiCountry(parsed.country, geo);
+  const { cases, deaths } = (countryAliases && extractNumbersForCountry(item.description, countryAliases)) || extractNumbers(item.description);
   const risk_level = assessRisk(parsed.disease, item.description, cases, deaths);
   const date = parsePubDate(item.pubDate);
 

@@ -1,6 +1,6 @@
 import { findCountry } from "./geo-data";
 import { normalizeDisease } from "./disease-data";
-import { parseWHOTitle, extractNumbers, assessRisk } from "./outbreak-parser";
+import { parseWHOTitle, extractNumbers, extractNumbersForCountry, countryAliasesForMultiCountry, assessRisk } from "./outbreak-parser";
 import type { ParsedOutbreak } from "./outbreak-parser";
 
 const WHO_DON_API = "https://www.who.int/api/news/diseaseoutbreaknews";
@@ -44,7 +44,8 @@ export async function fetchWHODONList(top = 25): Promise<WHONewsItem[]> {
 // ── 2. Fetch individual article body for case/death numbers ───
 
 async function fetchArticleNumbers(
-  path: string
+  path: string,
+  countryAliases: string[] | null
 ): Promise<{ cases: number; deaths: number; description: string }> {
   try {
     const url = path.startsWith("http") ? path : `https://www.who.int${path}`;
@@ -65,9 +66,9 @@ async function fetchArticleNumbers(
       .replace(/\s+/g, " ")
       .trim();
 
-    const { cases, deaths } = extractNumbers(rawText);
+    const nums = (countryAliases && extractNumbersForCountry(rawText, countryAliases)) || extractNumbers(rawText);
     const description = rawText.slice(0, 400);
-    return { cases, deaths, description };
+    return { cases: nums.cases, deaths: nums.deaths, description };
   } catch {
     return { cases: 0, deaths: 0, description: "" };
   }
@@ -99,6 +100,11 @@ export async function parseWHODONItem(
     ? new Date(PublicationDateAndTime).toISOString().split("T")[0]
     : new Date().toISOString().split("T")[0];
 
+  // Articles covering several countries (e.g. "...the Democratic Republic
+  // of the Congo and Uganda") report per-country AND combined totals —
+  // anchor extraction to the country this row is for.
+  const countryAliases = countryAliasesForMultiCountry(parsed.country, geo);
+
   // Canonical DON URL: /emergencies/disease-outbreak-news/item/2026-DON603
   const donSlug = DonId || ItemDefaultUrl?.replace(/^\//, "") || "";
   const articleUrl = donSlug
@@ -112,7 +118,7 @@ export async function parseWHODONItem(
 
   if (Summary) {
     const plain = Summary.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
-    const nums = extractNumbers(plain);
+    const nums = (countryAliases && extractNumbersForCountry(plain, countryAliases)) || extractNumbers(plain);
     cases  = nums.cases  ?? 0;
     deaths = nums.deaths ?? 0;
     description = plain.slice(0, 400);
@@ -120,7 +126,7 @@ export async function parseWHODONItem(
 
   // Fallback: fetch full article page for numbers (only for new entries)
   if (fetchBody && cases === 0 && ItemDefaultUrl) {
-    const bodyData = await fetchArticleNumbers(ItemDefaultUrl);
+    const bodyData = await fetchArticleNumbers(ItemDefaultUrl, countryAliases);
     cases  = bodyData.cases  ?? 0;
     deaths = bodyData.deaths ?? 0;
     description = bodyData.description || description;
