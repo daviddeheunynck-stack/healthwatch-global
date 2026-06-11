@@ -155,7 +155,7 @@
     "successTitle": "Message envoyé !",
     "successText": "Merci. Nous vous répondrons dans les 24 heures.",
     "errorGeneric": "Une erreur est survenue. Réessayez.",
-    "aboutText": "HealthWatch Global a été créé pour donner aux organisations de santé une intelligence épidémique quotidienne dans leur langue. Nous agrégeons chaque jour les flux OMS, CDC et ECDC en une seule plateforme multilingue.",
+    "aboutText": "HealthWatch Global a été créé pour donner aux organisations de santé une intelligence épidémique quotidienne dans leur langue.",
     "navLink": "Contact"
   }
 }

@@ -113,27 +113,27 @@ export function extractNumbers(text: string): { cases: number; deaths: number } 
 
   const casePatterns = [
     // "a total of 746 suspected cases"
-    new RegExp(`total\\s+of\\s+([\\d,]+)\\s+${QUALIFIERS}cases?`, "i"),
+    new RegExp(`total\\s+of\\s+(\\d[\\d,]*)\\s+${QUALIFIERS}cases?`, "i"),
     // "746 suspected/confirmed/probable/etc cases [have been reported]"
-    new RegExp(`([\\d,]+)\\s+${QUALIFIERS}cases?(?:\\s+(?:have\\s+been|were|are)\\s+reported)?`, "i"),
+    new RegExp(`(\\d[\\d,]*)\\s+${QUALIFIERS}cases?(?:\\s+(?:have\\s+been|were|are)\\s+reported)?`, "i"),
     // "cases: 746" / "cases reported: 746"
-    /cases?(?:\s+reported)?[:\s]+([,\d]+)/i,
+    /cases?(?:\s+reported)?[:\s]+(\d[\d,]*)/i,
   ];
 
   const deathPatterns = [
     // "176 deaths [among ...]"
-    /([\d,]+)\s+deaths?\b/i,
+    /(\d[\d,]*)\s+deaths?\b/i,
     // "X people have died" / "X died"
-    /([\d,]+)\s+(?:people\s+)?(?:have\s+)?died/i,
+    /(\d[\d,]*)\s+(?:people\s+)?(?:have\s+)?died/i,
     // "X fatalities"
-    /([\d,]+)\s+fatalities/i,
+    /(\d[\d,]*)\s+fatalities/i,
     // "killing X" / "killed X"
-    /kill(?:ed|ing)\s+([\d,]+)/i,
+    /kill(?:ed|ing)\s+(\d[\d,]*)/i,
     // "of which X were fatal" / "X fatal cases"
-    /(?:of\s+which\s+)?([\d,]+)\s+(?:were\s+)?fatal/i,
+    /(?:of\s+which\s+)?(\d[\d,]*)\s+(?:were\s+)?fatal/i,
     // "deaths: 42"
-    /deaths?(?:\s+reported)?[:\s]+([,\d]+)/i,
-    /([\d,]+)\s+(?:fatal\s+)?(?:casualties|casulties)/i,
+    /deaths?(?:\s+reported)?[:\s]+(\d[\d,]*)/i,
+    /(\d[\d,]*)\s+(?:fatal\s+)?(?:casualties|casulties)/i,
   ];
 
   let cases = 0;

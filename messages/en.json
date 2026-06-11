@@ -155,7 +155,7 @@
     "successTitle": "Message sent!",
     "successText": "Thank you. We will get back to you within 24 hours.",
     "errorGeneric": "Something went wrong. Please try again.",
-    "aboutText": "HealthWatch Global was built to give health organizations daily epidemic intelligence in their language. We aggregate WHO, CDC and ECDC feeds into a single multilingual platform, updated every morning, so your teams can act faster.",
+    "aboutText": "HealthWatch Global was built to give health organizations daily epidemic intelligence in their language.",
     "navLink": "Contact"
   }
 }
