@@ -606,6 +606,7 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
         outbreak={selected}
         locale={locale}
         isPaid={isPaid}
+        trend={selected ? trends?.[selected.id] : undefined}
         onClose={() => setSelected(null)}
       />
     </div>

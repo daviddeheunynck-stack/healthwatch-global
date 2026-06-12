@@ -7,6 +7,7 @@ import WatchlistButton from "@/components/WatchlistButton";
 import { getIncidenceRate } from "@/lib/population-data";
 import type { Outbreak } from "@/lib/outbreaks";
 import { getLocalizedDisease, getLocalizedCountry, getLocalizedDescription } from "@/lib/outbreaks";
+import type { OutbreakTrend } from "@/lib/outbreak-trend";
 import RiskBadge from "@/components/RiskBadge";
 import ShareOutbreakButton from "@/components/ShareOutbreakButton";
 
@@ -15,13 +16,13 @@ const COPY: Record<string, {
   source: string; description: string; close: string;
   noData: string; cfrFull: string; region: string;
   partialData: string; dataAge: (d: number) => string; fresh: string; stale: string;
-  incidencePer100k: string;
+  incidencePer100k: string; trendDelta: (delta: number, days: number) => string;
 }> = {
-  fr: { cases: "Cas confirmés", deaths: "Décès", cfr: "Létalité", incidence: "Incidence", date: "Rapport du", source: "Bulletin OMS original", description: "Résumé", close: "Fermer", noData: "N/D", cfrFull: "Taux de létalité (CFR)", region: "Région", partialData: "Données partielles — chiffres non disponibles dans ce rapport OMS", dataAge: (d) => `Il y a ${d} jour${d > 1 ? "s" : ""}`, fresh: "Données récentes", stale: "Rapport ancien", incidencePer100k: "pour 100 000 hab." },
-  en: { cases: "Confirmed cases", deaths: "Deaths", cfr: "CFR", incidence: "Incidence", date: "Report date", source: "Original WHO bulletin", description: "Summary", close: "Close", noData: "N/A", cfrFull: "Case fatality rate (CFR)", region: "Region", partialData: "Partial data — figures not available in this WHO report", dataAge: (d) => `${d} day${d > 1 ? "s" : ""} ago`, fresh: "Recent data", stale: "Old report", incidencePer100k: "per 100,000 pop." },
-  es: { cases: "Casos confirmados", deaths: "Fallecidos", cfr: "Letalidad", incidence: "Incidencia", date: "Informe del", source: "Boletín OMS original", description: "Resumen", close: "Cerrar", noData: "N/D", cfrFull: "Tasa de letalidad (CFR)", region: "Región", partialData: "Datos parciales — cifras no disponibles en este informe OMS", dataAge: (d) => `Hace ${d} día${d > 1 ? "s" : ""}`, fresh: "Datos recientes", stale: "Informe antiguo", incidencePer100k: "por 100.000 hab." },
-  ar: { cases: "الحالات المؤكدة", deaths: "الوفيات", cfr: "معدل الوفيات", incidence: "معدل الإصابة", date: "تاريخ التقرير", source: "النشرة الرسمية لـ OMS", description: "ملخص", close: "إغلاق", noData: "غ/م", cfrFull: "معدل إماتة الحالات (CFR)", region: "المنطقة", partialData: "بيانات جزئية — الأرقام غير متوفرة في هذا التقرير", dataAge: (d) => `منذ ${d} يوم`, fresh: "بيانات حديثة", stale: "تقرير قديم", incidencePer100k: "لكل 100,000 ساكن" },
-  id: { cases: "Kasus terkonfirmasi", deaths: "Kematian", cfr: "CFR", incidence: "Insidensi", date: "Tanggal laporan", source: "Buletin WHO asli", description: "Ringkasan", close: "Tutup", noData: "T/S", cfrFull: "Tingkat kematian kasus (CFR)", region: "Wilayah", partialData: "Data parsial — angka tidak tersedia dalam laporan WHO ini", dataAge: (d) => `${d} hari lalu`, fresh: "Data terbaru", stale: "Laporan lama", incidencePer100k: "per 100.000 penduduk" },
+  fr: { cases: "Cas confirmés", deaths: "Décès", cfr: "Létalité", incidence: "Incidence", date: "Rapport du", source: "Bulletin OMS original", description: "Résumé", close: "Fermer", noData: "N/D", cfrFull: "Taux de létalité (CFR)", region: "Région", partialData: "Données partielles — chiffres non disponibles dans ce rapport OMS", dataAge: (d) => `Il y a ${d} jour${d > 1 ? "s" : ""}`, fresh: "Données récentes", stale: "Rapport ancien", incidencePer100k: "pour 100 000 hab.", trendDelta: (delta, days) => `${delta > 0 ? "+" : ""}${delta} cas / ${days}j` },
+  en: { cases: "Confirmed cases", deaths: "Deaths", cfr: "CFR", incidence: "Incidence", date: "Report date", source: "Original WHO bulletin", description: "Summary", close: "Close", noData: "N/A", cfrFull: "Case fatality rate (CFR)", region: "Region", partialData: "Partial data — figures not available in this WHO report", dataAge: (d) => `${d} day${d > 1 ? "s" : ""} ago`, fresh: "Recent data", stale: "Old report", incidencePer100k: "per 100,000 pop.", trendDelta: (delta, days) => `${delta > 0 ? "+" : ""}${delta} cases / ${days}d` },
+  es: { cases: "Casos confirmados", deaths: "Fallecidos", cfr: "Letalidad", incidence: "Incidencia", date: "Informe del", source: "Boletín OMS original", description: "Resumen", close: "Cerrar", noData: "N/D", cfrFull: "Tasa de letalidad (CFR)", region: "Región", partialData: "Datos parciales — cifras no disponibles en este informe OMS", dataAge: (d) => `Hace ${d} día${d > 1 ? "s" : ""}`, fresh: "Datos recientes", stale: "Informe antiguo", incidencePer100k: "por 100.000 hab.", trendDelta: (delta, days) => `${delta > 0 ? "+" : ""}${delta} casos / ${days}d` },
+  ar: { cases: "الحالات المؤكدة", deaths: "الوفيات", cfr: "معدل الوفيات", incidence: "معدل الإصابة", date: "تاريخ التقرير", source: "النشرة الرسمية لـ OMS", description: "ملخص", close: "إغلاق", noData: "غ/م", cfrFull: "معدل إماتة الحالات (CFR)", region: "المنطقة", partialData: "بيانات جزئية — الأرقام غير متوفرة في هذا التقرير", dataAge: (d) => `منذ ${d} يوم`, fresh: "بيانات حديثة", stale: "تقرير قديم", incidencePer100k: "لكل 100,000 ساكن", trendDelta: (delta, days) => `${delta > 0 ? "+" : ""}${delta} حالة / ${days} يوم` },
+  id: { cases: "Kasus terkonfirmasi", deaths: "Kematian", cfr: "CFR", incidence: "Insidensi", date: "Tanggal laporan", source: "Buletin WHO asli", description: "Ringkasan", close: "Tutup", noData: "T/S", cfrFull: "Tingkat kematian kasus (CFR)", region: "Wilayah", partialData: "Data parsial — angka tidak tersedia dalam laporan WHO ini", dataAge: (d) => `${d} hari lalu`, fresh: "Data terbaru", stale: "Laporan lama", incidencePer100k: "per 100.000 penduduk", trendDelta: (delta, days) => `${delta > 0 ? "+" : ""}${delta} kasus / ${days}h` },
 };
 
 const RISK_BG: Record<string, string> = {
@@ -43,10 +44,11 @@ interface Props {
   locale: string;
   isPaid: boolean;
   watchlist?: Set<string>;
+  trend?: OutbreakTrend;
   onClose: () => void;
 }
 
-export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlist, onClose }: Props) {
+export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlist, trend, onClose }: Props) {
   const c = COPY[locale] ?? COPY.en;
   const isRtl = locale === "ar";
 
@@ -184,6 +186,14 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlis
                 : <span className="blur-sm select-none">12345</span>
               }
             </p>
+            {isPaid && trend && trend.direction !== "unknown" && (
+              <p className={`text-[11px] font-medium ${
+                trend.direction === "up" ? "text-red-400" :
+                trend.direction === "down" ? "text-green-400" : "text-gray-500"
+              }`}>
+                {c.trendDelta(trend.deltaCases, trend.daysBack)}
+              </p>
+            )}
           </div>
 
           {/* Deaths */}
