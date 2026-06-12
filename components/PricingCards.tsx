@@ -23,6 +23,7 @@ const COPY: Record<string, {
   getStarted: string;
   popular: string;
   custom: string;
+  freeBadge: string;
   starterFeatures: string[];
   proFeatures: string[];
   enterpriseFeatures: string[];
@@ -43,8 +44,9 @@ const COPY: Record<string, {
     getStarted: "Commencer →",
     popular: "Le plus populaire",
     custom: "Sur devis",
-    starterFeatures: ["Carte mondiale interactive", "1 région surveillée", "Données OMS en direct", "Digest hebdomadaire gratuit", "Tableau de bord multilingue"],
-    proFeatures: ["Toutes les régions mondiales", "Alertes en temps réel", "Rapports PDF automatiques", "Intégration Slack / Teams", "Export CSV illimité", "Support prioritaire"],
+    freeBadge: "Gratuit",
+    starterFeatures: ["Carte mondiale interactive", "1 région surveillée", "Données OMS quotidiennes", "Digest hebdomadaire gratuit", "Tableau de bord multilingue"],
+    proFeatures: ["Toutes les régions mondiales", "Alertes instantanées", "Rapports PDF automatiques", "Intégration Slack / Teams", "Export CSV illimité", "Support prioritaire"],
     enterpriseFeatures: ["Tout le plan Pro", "Accès API REST + docs", "Déploiement on-premise", "SLA 99,9 % garanti", "Account manager dédié", "Support dédié 24/7"],
   },
   en: {
@@ -63,8 +65,9 @@ const COPY: Record<string, {
     getStarted: "Get started →",
     popular: "Most popular",
     custom: "Custom",
-    starterFeatures: ["Interactive world map", "1 monitored region", "Live WHO data", "Free weekly digest", "Multilingual dashboard"],
-    proFeatures: ["All global regions", "Real-time alerts", "Automatic PDF reports", "Slack / Teams integration", "Unlimited CSV export", "Priority support"],
+    freeBadge: "Free",
+    starterFeatures: ["Interactive world map", "1 monitored region", "Daily WHO data", "Free weekly digest", "Multilingual dashboard"],
+    proFeatures: ["All global regions", "Instant alerts", "Automatic PDF reports", "Slack / Teams integration", "Unlimited CSV export", "Priority support"],
     enterpriseFeatures: ["Everything in Pro", "REST API access + docs", "On-premise deployment", "99.9% SLA guarantee", "Dedicated account manager", "24/7 dedicated support"],
   },
   es: {
@@ -83,8 +86,9 @@ const COPY: Record<string, {
     getStarted: "Empezar →",
     popular: "Más popular",
     custom: "A medida",
-    starterFeatures: ["Mapa mundial interactivo", "1 región monitoreada", "Datos OMS en vivo", "Digest semanal gratuito", "Panel multilingüe"],
-    proFeatures: ["Todas las regiones", "Alertas en tiempo real", "Informes PDF automáticos", "Integración Slack / Teams", "Exportación CSV ilimitada", "Soporte prioritario"],
+    freeBadge: "Gratis",
+    starterFeatures: ["Mapa mundial interactivo", "1 región monitoreada", "Datos OMS diarios", "Digest semanal gratuito", "Panel multilingüe"],
+    proFeatures: ["Todas las regiones", "Alertas instantáneas", "Informes PDF automáticos", "Integración Slack / Teams", "Exportación CSV ilimitada", "Soporte prioritario"],
     enterpriseFeatures: ["Todo lo de Pro", "Acceso API REST + docs", "Implementación on-premise", "SLA 99,9% garantizado", "Gestor de cuenta dedicado", "Soporte 24/7 dedicado"],
   },
   ar: {
@@ -103,7 +107,8 @@ const COPY: Record<string, {
     getStarted: "ابدأ الآن ←",
     popular: "الأكثر شعبية",
     custom: "حسب الطلب",
-    starterFeatures: ["خريطة العالم التفاعلية", "منطقة مراقبة واحدة", "بيانات WHO المباشرة", "ملخص أسبوعي مجاني", "لوحة تحكم متعددة اللغات"],
+    freeBadge: "مجاني",
+    starterFeatures: ["خريطة العالم التفاعلية", "منطقة مراقبة واحدة", "بيانات WHO اليومية", "ملخص أسبوعي مجاني", "لوحة تحكم متعددة اللغات"],
     proFeatures: ["جميع المناطق العالمية", "تنبيهات فورية", "تقارير PDF تلقائية", "تكامل Slack / Teams", "تصدير CSV غير محدود", "دعم ذو أولوية"],
     enterpriseFeatures: ["كل ما في Pro", "الوصول لـ REST API + التوثيق", "نشر محلي", "ضمان SLA 99.9%", "مدير حساب مخصص", "دعم مخصص 24/7"],
   },
@@ -123,8 +128,9 @@ const COPY: Record<string, {
     getStarted: "Mulai →",
     popular: "Paling populer",
     custom: "Kustom",
-    starterFeatures: ["Peta dunia interaktif", "1 wilayah dipantau", "Data WHO langsung", "Digest mingguan gratis", "Dasbor multibahasa"],
-    proFeatures: ["Semua wilayah global", "Peringatan real-time", "Laporan PDF otomatis", "Integrasi Slack / Teams", "Ekspor CSV tak terbatas", "Dukungan prioritas"],
+    freeBadge: "Gratis",
+    starterFeatures: ["Peta dunia interaktif", "1 wilayah dipantau", "Data WHO harian", "Digest mingguan gratis", "Dasbor multibahasa"],
+    proFeatures: ["Semua wilayah global", "Peringatan instan", "Laporan PDF otomatis", "Integrasi Slack / Teams", "Ekspor CSV tak terbatas", "Dukungan prioritas"],
     enterpriseFeatures: ["Semua fitur Pro", "Akses REST API + dokumentasi", "Penerapan on-premise", "Jaminan SLA 99,9%", "Manajer akun khusus", "Dukungan 24/7 khusus"],
   },
 };
@@ -182,7 +188,7 @@ export default function PricingCards({ locale }: { locale: string }) {
           <div>
             <div className="flex items-center gap-2 mb-3">
               <Zap className="w-5 h-5 text-green-400" />
-              <span className="text-green-400 font-semibold text-sm uppercase tracking-wide">Free</span>
+              <span className="text-green-400 font-semibold text-sm uppercase tracking-wide">{c.freeBadge}</span>
             </div>
             <div className="flex items-end gap-1">
               <span className="text-4xl font-bold text-white">0 €</span>

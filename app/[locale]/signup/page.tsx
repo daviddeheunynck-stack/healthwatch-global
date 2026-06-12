@@ -10,7 +10,7 @@ import OAuthButtons from "@/components/OAuthButtons";
 const VALUE_PROPS: Record<string, { items: string[]; noCard: string; gdpr: string }> = {
   en: {
     items: [
-      "Live WHO disease outbreak map",
+      "Daily WHO disease outbreak map",
       "Risk scoring per pathogen",
       "Weekly digest by region",
     ],
@@ -19,7 +19,7 @@ const VALUE_PROPS: Record<string, { items: string[]; noCard: string; gdpr: strin
   },
   fr: {
     items: [
-      "Carte OMS des épidémies en direct",
+      "Carte quotidienne des épidémies de l'OMS",
       "Score de risque par pathogène",
       "Digest hebdomadaire par région",
     ],
@@ -28,7 +28,7 @@ const VALUE_PROPS: Record<string, { items: string[]; noCard: string; gdpr: strin
   },
   es: {
     items: [
-      "Mapa OMS de brotes en vivo",
+      "Mapa diario de brotes de la OMS",
       "Puntuación de riesgo por patógeno",
       "Resumen semanal por región",
     ],
@@ -37,7 +37,7 @@ const VALUE_PROPS: Record<string, { items: string[]; noCard: string; gdpr: strin
   },
   ar: {
     items: [
-      "خريطة تفشي أمراض منظمة الصحة العالمية مباشرة",
+      "خريطة يومية لتفشي أمراض منظمة الصحة العالمية",
       "تقييم المخاطر لكل مسبب مرض",
       "ملخص أسبوعي حسب المنطقة",
     ],
@@ -46,7 +46,7 @@ const VALUE_PROPS: Record<string, { items: string[]; noCard: string; gdpr: strin
   },
   id: {
     items: [
-      "Peta wabah WHO secara langsung",
+      "Peta wabah WHO harian",
       "Penilaian risiko per patogen",
       "Digest mingguan per wilayah",
     ],

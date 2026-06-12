@@ -10,11 +10,11 @@ export const runtime = "edge";
 // Note: Satori (used by ImageResponse) only supports Latin-based scripts without
 // a custom font. Arabic is not rendered — fall back to English for ar locale.
 const TAGLINES: Record<string, { line1: string; line2: string }> = {
-  en: { line1: "Real-time epidemic surveillance",   line2: "WHO data · 5 languages · Free to start" },
-  fr: { line1: "Surveillance épidémique en temps réel", line2: "Données OMS · 5 langues · Gratuit" },
-  es: { line1: "Vigilancia epidémica en tiempo real",   line2: "Datos OMS · 5 idiomas · Gratis" },
-  ar: { line1: "Real-time epidemic surveillance",   line2: "WHO data · 5 languages · Free to start" },
-  id: { line1: "Pemantauan wabah secara real-time", line2: "Data WHO · 5 bahasa · Gratis" },
+  en: { line1: "Daily epidemic surveillance",   line2: "WHO data · 5 languages · Free to start" },
+  fr: { line1: "Surveillance épidémique quotidienne", line2: "Données OMS · 5 langues · Gratuit" },
+  es: { line1: "Vigilancia epidémica diaria",   line2: "Datos OMS · 5 idiomas · Gratis" },
+  ar: { line1: "Daily epidemic surveillance",   line2: "WHO data · 5 languages · Free to start" },
+  id: { line1: "Pemantauan wabah harian", line2: "Data WHO · 5 bahasa · Gratis" },
 };
 
 export async function GET(req: NextRequest) {

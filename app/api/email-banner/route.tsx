@@ -55,7 +55,7 @@ export async function GET() {
               HealthWatch Global
             </span>
             <span style={{ fontSize: 14, color: "#94a3b8", fontFamily: "sans-serif" }}>
-              Real-time epidemic surveillance · WHO official data
+              Daily epidemic surveillance · WHO official data
             </span>
           </div>
         </div>

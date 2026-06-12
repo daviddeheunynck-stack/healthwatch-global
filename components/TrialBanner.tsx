@@ -14,19 +14,19 @@ const COPY: Record<string, {
 }> = {
   fr: {
     title: (d) => d <= 0 ? "Votre essai Pro se termine aujourd'hui" : d === 1 ? "Il reste 1 jour sur votre essai Pro" : `Il reste ${d} jours sur votre essai Pro`,
-    desc: "Ajoutez un moyen de paiement pour conserver l'accès aux alertes temps réel, rapports PDF et export CSV.",
+    desc: "Ajoutez un moyen de paiement pour conserver l'accès aux alertes instantanées, rapports PDF et export CSV.",
     cta: "Activer mon abonnement",
     today: "Ajoutez un moyen de paiement maintenant pour ne pas perdre l'accès.",
   },
   en: {
     title: (d) => d <= 0 ? "Your Pro trial ends today" : d === 1 ? "1 day left on your Pro trial" : `${d} days left on your Pro trial`,
-    desc: "Add a payment method to keep access to real-time alerts, PDF reports and CSV export.",
+    desc: "Add a payment method to keep access to instant alerts, PDF reports and CSV export.",
     cta: "Activate my subscription",
     today: "Add a payment method now to avoid losing access.",
   },
   es: {
     title: (d) => d <= 0 ? "Su prueba Pro termina hoy" : d === 1 ? "Queda 1 día en su prueba Pro" : `Quedan ${d} días en su prueba Pro`,
-    desc: "Añada un método de pago para conservar el acceso a alertas en tiempo real, informes PDF y exportación CSV.",
+    desc: "Añada un método de pago para conservar el acceso a alertas instantáneas, informes PDF y exportación CSV.",
     cta: "Activar mi suscripción",
     today: "Añada un método de pago ahora para no perder el acceso.",
   },
@@ -38,7 +38,7 @@ const COPY: Record<string, {
   },
   id: {
     title: (d) => d <= 0 ? "Uji coba Pro Anda berakhir hari ini" : d === 1 ? "Sisa 1 hari uji coba Pro Anda" : `Sisa ${d} hari uji coba Pro Anda`,
-    desc: "Tambahkan metode pembayaran untuk mempertahankan akses ke peringatan real-time, laporan PDF, dan ekspor CSV.",
+    desc: "Tambahkan metode pembayaran untuk mempertahankan akses ke peringatan instan, laporan PDF, dan ekspor CSV.",
     cta: "Aktifkan langganan saya",
     today: "Tambahkan metode pembayaran sekarang agar tidak kehilangan akses.",
   },

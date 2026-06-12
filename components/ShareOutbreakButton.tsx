@@ -38,19 +38,19 @@ const SHARE_COPY: Record<string, {
 }> = {
   fr: {
     tweet: (d, c, n, r) =>
-      `${RISK_EMOJI[r] ?? "⚠️"} Foyer OMS : ${d} en ${c} — ${n.toLocaleString()} cas confirmés. Suivi en temps réel sur HealthWatch Global.`,
+      `${RISK_EMOJI[r] ?? "⚠️"} Foyer OMS : ${d} en ${c} — ${n.toLocaleString()} cas confirmés. Suivi quotidien sur HealthWatch Global.`,
     copied:   "Lien copié !",
     copyLink: "Copier le lien",
   },
   en: {
     tweet: (d, c, n, r) =>
-      `${RISK_EMOJI[r] ?? "⚠️"} WHO outbreak: ${d} in ${c} — ${n.toLocaleString()} confirmed cases. Tracked in real time on HealthWatch Global.`,
+      `${RISK_EMOJI[r] ?? "⚠️"} WHO outbreak: ${d} in ${c} — ${n.toLocaleString()} confirmed cases. Tracked daily on HealthWatch Global.`,
     copied:   "Link copied!",
     copyLink: "Copy link",
   },
   es: {
     tweet: (d, c, n, r) =>
-      `${RISK_EMOJI[r] ?? "⚠️"} Brote OMS: ${d} en ${c} — ${n.toLocaleString()} casos confirmados. Seguimiento en tiempo real en HealthWatch Global.`,
+      `${RISK_EMOJI[r] ?? "⚠️"} Brote OMS: ${d} en ${c} — ${n.toLocaleString()} casos confirmados. Seguimiento diario en HealthWatch Global.`,
     copied:   "¡Enlace copiado!",
     copyLink: "Copiar enlace",
   },
@@ -62,7 +62,7 @@ const SHARE_COPY: Record<string, {
   },
   id: {
     tweet: (d, c, n, r) =>
-      `${RISK_EMOJI[r] ?? "⚠️"} Wabah WHO: ${d} di ${c} — ${n.toLocaleString()} kasus terkonfirmasi. Dipantau real-time di HealthWatch Global.`,
+      `${RISK_EMOJI[r] ?? "⚠️"} Wabah WHO: ${d} di ${c} — ${n.toLocaleString()} kasus terkonfirmasi. Dipantau harian di HealthWatch Global.`,
     copied:   "Tautan disalin!",
     copyLink: "Salin tautan",
   },

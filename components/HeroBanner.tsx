@@ -11,7 +11,7 @@ const COPY: Record<string, {
 }> = {
   en: {
     badge: "Live WHO data · 195 countries · 5 languages",
-    headline: "Real-time epidemic surveillance for health organizations",
+    headline: "Daily epidemic surveillance for health organizations",
     sub: "HealthWatch Global aggregates official WHO Disease Outbreak News into a multilingual dashboard your teams can act on immediately.",
     ctaPrimary: "Create free account",
     ctaSecondary: "See pricing",
@@ -22,7 +22,7 @@ const COPY: Record<string, {
   },
   fr: {
     badge: "Données OMS en direct · 195 pays · 5 langues",
-    headline: "Surveillance épidémique en temps réel pour les organisations de santé",
+    headline: "Surveillance épidémique quotidienne pour les organisations de santé",
     sub: "HealthWatch Global agrège les bulletins officiels Disease Outbreak News de l'OMS dans un tableau de bord multilingue sur lequel vos équipes peuvent agir immédiatement.",
     ctaPrimary: "Créer un compte gratuit",
     ctaSecondary: "Voir les tarifs",
@@ -33,7 +33,7 @@ const COPY: Record<string, {
   },
   es: {
     badge: "Datos OMS en vivo · 195 países · 5 idiomas",
-    headline: "Vigilancia epidémica en tiempo real para organizaciones de salud",
+    headline: "Vigilancia epidémica diaria para organizaciones de salud",
     sub: "HealthWatch Global agrega los boletines oficiales Disease Outbreak News de la OMS en un panel multilingüe sobre el que sus equipos pueden actuar de inmediato.",
     ctaPrimary: "Crear cuenta gratuita",
     ctaSecondary: "Ver precios",
@@ -44,7 +44,7 @@ const COPY: Record<string, {
   },
   ar: {
     badge: "بيانات منظمة الصحة العالمية مباشرة · 195 دولة · 5 لغات",
-    headline: "مراقبة وبائية في الوقت الفعلي للمنظمات الصحية",
+    headline: "مراقبة وبائية يومية للمنظمات الصحية",
     sub: "تجمع HealthWatch Global نشرات Disease Outbreak News الرسمية لمنظمة الصحة العالمية في لوحة تحكم متعددة اللغات يمكن لفرقك التصرف بناءً عليها فوراً.",
     ctaPrimary: "إنشاء حساب مجاني",
     ctaSecondary: "عرض الأسعار",
@@ -55,7 +55,7 @@ const COPY: Record<string, {
   },
   id: {
     badge: "Data WHO langsung · 195 negara · 5 bahasa",
-    headline: "Pemantauan epidemi real-time untuk organisasi kesehatan",
+    headline: "Pemantauan epidemi harian untuk organisasi kesehatan",
     sub: "HealthWatch Global menggabungkan buletin resmi WHO Disease Outbreak News ke dalam dasbor multibahasa yang bisa langsung ditindaklanjuti oleh tim Anda.",
     ctaPrimary: "Buat akun gratis",
     ctaSecondary: "Lihat harga",

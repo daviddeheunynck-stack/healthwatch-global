@@ -13,11 +13,11 @@ function service() {
 }
 
 const COPY: Record<string, { title: string; body: string }> = {
-  fr: { title: "🔔 HealthWatch Global",      body: "Notifications activées — vous recevrez désormais les alertes en temps réel." },
-  en: { title: "🔔 HealthWatch Global",      body: "Notifications enabled — you'll now receive real-time alerts here." },
-  es: { title: "🔔 HealthWatch Global",      body: "Notificaciones activadas — ahora recibirás alertas en tiempo real aquí." },
+  fr: { title: "🔔 HealthWatch Global",      body: "Notifications activées — vous recevrez désormais les alertes instantanées." },
+  en: { title: "🔔 HealthWatch Global",      body: "Notifications enabled — you'll now receive instant alerts here." },
+  es: { title: "🔔 HealthWatch Global",      body: "Notificaciones activadas — ahora recibirás alertas instantáneas aquí." },
   ar: { title: "🔔 HealthWatch Global",      body: "تم تفعيل الإشعارات — ستتلقى الآن التنبيهات الفورية هنا." },
-  id: { title: "🔔 HealthWatch Global",      body: "Notifikasi diaktifkan — Anda akan menerima peringatan secara real-time di sini." },
+  id: { title: "🔔 HealthWatch Global",      body: "Notifikasi diaktifkan — Anda akan menerima peringatan instan di sini." },
 };
 
 // POST — send a one-off test notification to every subscription the logged-in

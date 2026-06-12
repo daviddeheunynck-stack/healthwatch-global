@@ -1,6 +1,6 @@
 import { ImageResponse } from "next/og";
 
-export const alt = "HealthWatch Global — Real-time epidemic surveillance";
+export const alt = "HealthWatch Global — Daily epidemic surveillance";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -75,7 +75,7 @@ export default function OgImage() {
             lineHeight: 1.4,
           }}
         >
-          Real-time epidemic intelligence for health organizations worldwide
+          Daily epidemic intelligence for health organizations worldwide
         </p>
 
         {/* Stats row */}

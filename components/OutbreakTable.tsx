@@ -433,11 +433,11 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
                 <Search className="w-4 h-4 text-amber-400" />
               </div>
               <p className="text-sm font-semibold text-amber-300">
-                {locale === "fr" ? "Cas confirmés · Décès · Rapports PDF · Alertes temps réel"
-                : locale === "es" ? "Casos confirmados · Fallecidos · Informes PDF · Alertas en tiempo real"
+                {locale === "fr" ? "Cas confirmés · Décès · Rapports PDF · Alertes instantanées"
+                : locale === "es" ? "Casos confirmados · Fallecidos · Informes PDF · Alertas instantáneas"
                 : locale === "ar" ? "الحالات المؤكدة · الوفيات · تقارير PDF · تنبيهات فورية"
-                : locale === "id" ? "Kasus terkonfirmasi · Kematian · Laporan PDF · Peringatan real-time"
-                : "Confirmed cases · Deaths · PDF reports · Real-time alerts"}
+                : locale === "id" ? "Kasus terkonfirmasi · Kematian · Laporan PDF · Peringatan instan"
+                : "Confirmed cases · Deaths · PDF reports · Instant alerts"}
               </p>
             </div>
             <LockedUpgradeButton feature="cases" label={l.lockedCta} variant="banner" />

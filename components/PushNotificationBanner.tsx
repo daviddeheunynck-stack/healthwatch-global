@@ -19,19 +19,19 @@ const COPY: Record<string, {
   enabling: string;
 }> = {
   fr: {
-    title: "Soyez alerté en temps réel — gratuitement",
+    title: "Soyez alerté instantanément — gratuitement",
     desc: "Activez les notifications pour être prévenu dès qu'un nouveau foyer est détecté dans le monde, même quand HealthWatch est fermé.",
     cta: "Activer les notifications",
     enabling: "Activation…",
   },
   en: {
-    title: "Get real-time alerts — for free",
+    title: "Get instant alerts — for free",
     desc: "Turn on notifications to be alerted the instant a new outbreak is detected anywhere in the world, even when HealthWatch is closed.",
     cta: "Enable notifications",
     enabling: "Enabling…",
   },
   es: {
-    title: "Reciba alertas en tiempo real — gratis",
+    title: "Reciba alertas instantáneas — gratis",
     desc: "Active las notificaciones para que le avisemos en cuanto se detecte un nuevo brote en cualquier parte del mundo, incluso con HealthWatch cerrado.",
     cta: "Activar notificaciones",
     enabling: "Activando…",
@@ -43,7 +43,7 @@ const COPY: Record<string, {
     enabling: "جارٍ التفعيل…",
   },
   id: {
-    title: "Dapatkan peringatan real-time — gratis",
+    title: "Dapatkan peringatan instan — gratis",
     desc: "Aktifkan notifikasi agar Anda diberi tahu begitu wabah baru terdeteksi di mana pun di dunia, bahkan saat HealthWatch tertutup.",
     cta: "Aktifkan notifikasi",
     enabling: "Mengaktifkan…",

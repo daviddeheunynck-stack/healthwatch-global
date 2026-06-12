@@ -110,7 +110,7 @@ const J12_CONTENT: Record<string, {
   fr: {
     subject: "12 jours avec HealthWatch — une question 👋",
     headline: "Vous utilisez HealthWatch depuis 12 jours.",
-    intro: "La carte mondiale est active. Les données OMS arrivent chaque jour. Mais sans plan payant, vous voyez encore les chiffres floutés — et vous ne recevez pas les alertes en temps réel qui permettent d'anticiper.",
+    intro: "La carte mondiale est active. Les données OMS arrivent chaque jour. Mais sans plan payant, vous voyez encore les chiffres floutés — et vous ne recevez pas les alertes instantanées qui permettent d'anticiper.",
     questionLabel: "Notre question :",
     question: "Est-ce que les données que vous voyez ont déjà orienté une décision de votre équipe ?",
     urgencyText: "Si oui, vous méritez les données complètes. Cas confirmés, décès, rapports PDF, alertes instantanées — tout ce dont votre organisation a besoin pour ne jamais réagir trop tard.",
@@ -123,7 +123,7 @@ const J12_CONTENT: Record<string, {
   en: {
     subject: "12 days with HealthWatch — a question 👋",
     headline: "You've been using HealthWatch for 12 days.",
-    intro: "The world map is active. WHO data comes in every day. But without a paid plan, you still see blurred figures — and you don't receive the real-time alerts that help you stay ahead.",
+    intro: "The world map is active. WHO data comes in every day. But without a paid plan, you still see blurred figures — and you don't receive the instant alerts that help you stay ahead.",
     questionLabel: "Our question:",
     question: "Has the data you've seen already influenced a decision in your team?",
     urgencyText: "If so, you deserve the full data. Confirmed cases, deaths, PDF reports, instant alerts — everything your organization needs to never react too late.",
@@ -136,7 +136,7 @@ const J12_CONTENT: Record<string, {
   es: {
     subject: "12 días con HealthWatch — una pregunta 👋",
     headline: "Lleva 12 días usando HealthWatch.",
-    intro: "El mapa mundial está activo. Los datos de la OMS llegan cada día. Pero sin un plan de pago, todavía ve cifras borrosas — y no recibe las alertas en tiempo real que le permiten anticiparse.",
+    intro: "El mapa mundial está activo. Los datos de la OMS llegan cada día. Pero sin un plan de pago, todavía ve cifras borrosas — y no recibe las alertas instantáneas que le permiten anticiparse.",
     questionLabel: "Nuestra pregunta:",
     question: "¿Los datos que ha visto ya han orientado alguna decisión de su equipo?",
     urgencyText: "Si es así, merece los datos completos. Casos confirmados, fallecidos, informes PDF, alertas instantáneas — todo lo que su organización necesita para no reaccionar demasiado tarde.",
@@ -162,7 +162,7 @@ const J12_CONTENT: Record<string, {
   id: {
     subject: "12 hari dengan HealthWatch — sebuah pertanyaan 👋",
     headline: "Anda telah menggunakan HealthWatch selama 12 hari.",
-    intro: "Peta dunia aktif. Data WHO masuk setiap hari. Namun tanpa paket berbayar, Anda masih melihat angka yang dikaburkan — dan tidak menerima peringatan real-time yang membantu Anda selalu selangkah lebih maju.",
+    intro: "Peta dunia aktif. Data WHO masuk setiap hari. Namun tanpa paket berbayar, Anda masih melihat angka yang dikaburkan — dan tidak menerima peringatan instan yang membantu Anda selalu selangkah lebih maju.",
     questionLabel: "Pertanyaan kami:",
     question: "Apakah data yang Anda lihat sudah mempengaruhi keputusan tim Anda?",
     urgencyText: "Jika iya, Anda layak mendapatkan data lengkap. Kasus terkonfirmasi, kematian, laporan PDF, peringatan instan — semua yang dibutuhkan organisasi Anda untuk tidak pernah bereaksi terlambat.",

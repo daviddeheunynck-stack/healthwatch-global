@@ -44,16 +44,16 @@ const LABELS: Record<string, {
   fr: {
     back: "← Retour au tableau de bord",
     title: "À propos de HealthWatch Global",
-    subtitle: "Surveillance épidémique en temps réel pour un monde plus sûr.",
+    subtitle: "Surveillance épidémique quotidienne pour un monde plus sûr.",
     founderTitle: "Pourquoi j'ai créé HealthWatch",
     founderText:
       "Passionné depuis plusieurs années par le suivi des grandes dynamiques sanitaires mondiales, je consultais régulièrement les bulletins de l'OMS — et je perdais un temps fou à naviguer entre des pages en anglais, sans filtres, sans alertes, sans vue d'ensemble. J'ai construit HealthWatch pour résoudre ce problème à la source : agréger ces données, les traduire et les structurer pour qu'un professionnel y accède en quelques clics plutôt qu'en heures de recherche manuelle.",
     missionTitle: "Notre mission",
     missionText:
-      "HealthWatch Global agrège en temps réel les alertes officielles de l'Organisation Mondiale de la Santé afin de fournir un tableau de bord lisible aux professionnels de santé, aux voyageurs, aux journalistes et aux organisations qui ont besoin d'être informés des foyers épidémiques dès leur déclaration.",
+      "HealthWatch Global agrège quotidiennement les alertes officielles de l'Organisation Mondiale de la Santé afin de fournir un tableau de bord lisible aux professionnels de santé, aux voyageurs, aux journalistes et aux organisations qui ont besoin d'être informés des foyers épidémiques dès leur déclaration.",
     whoTitle: "Source des données : OMS",
     whoText:
-      "Toutes les alertes sanitaires proviennent de l'API officielle Disease Outbreak News (DON) de l'OMS — la même source que celle utilisée par les gouvernements et les agences de santé publique du monde entier. Aucune donnée non vérifiée, aucun média tiers. Nous interrogeons cette API plusieurs fois par semaine pour vous garantir une information à jour.",
+      "Toutes les alertes sanitaires proviennent de l'API officielle Disease Outbreak News (DON) de l'OMS — la même source que celle utilisée par les gouvernements et les agences de santé publique du monde entier. Aucune donnée non vérifiée, aucun média tiers. Nous interrogeons cette API quotidiennement pour vous garantir une information à jour.",
     howTitle: "Comment ça marche",
     howSteps: [
       { title: "Collecte", text: "Notre pipeline interroge l'API OData de l'OMS et extrait les informations clés : maladie, pays, cas confirmés, décès." },
@@ -80,16 +80,16 @@ const LABELS: Record<string, {
   en: {
     back: "← Back to dashboard",
     title: "About HealthWatch Global",
-    subtitle: "Real-time epidemic surveillance for a safer world.",
+    subtitle: "Daily epidemic surveillance for a safer world.",
     founderTitle: "Why I built HealthWatch",
     founderText:
       "I've spent years following major global health dynamics out of genuine interest. I'd regularly check WHO bulletins — and kept losing time navigating English-only pages with no filters, no alerts, no overview. I built HealthWatch to fix that at the root: aggregate this data, translate it, and structure it so a professional can access it in a few clicks instead of hours of manual digging.",
     missionTitle: "Our mission",
     missionText:
-      "HealthWatch Global aggregates real-time official alerts from the World Health Organization to provide a readable dashboard for health professionals, travellers, journalists and organisations that need to be informed of disease outbreaks as soon as they are declared.",
+      "HealthWatch Global aggregates daily official alerts from the World Health Organization to provide a readable dashboard for health professionals, travellers, journalists and organisations that need to be informed of disease outbreaks as soon as they are declared.",
     whoTitle: "Data source: WHO",
     whoText:
-      "All health alerts come from the WHO's official Disease Outbreak News (DON) API — the same source used by governments and public health agencies worldwide. No unverified data, no third-party media. We query this API several times a week to keep information up to date.",
+      "All health alerts come from the WHO's official Disease Outbreak News (DON) API — the same source used by governments and public health agencies worldwide. No unverified data, no third-party media. We query this API daily to keep information up to date.",
     howTitle: "How it works",
     howSteps: [
       { title: "Collection", text: "Our pipeline queries the WHO OData API and extracts key information: disease, country, confirmed cases, deaths." },
@@ -116,22 +116,22 @@ const LABELS: Record<string, {
   es: {
     back: "← Volver al panel",
     title: "Acerca de HealthWatch Global",
-    subtitle: "Vigilancia epidémica en tiempo real para un mundo más seguro.",
+    subtitle: "Vigilancia epidémica diaria para un mundo más seguro.",
     founderTitle: "Por qué creé HealthWatch",
     founderText:
       "Llevo años siguiendo de cerca las grandes dinámicas sanitarias mundiales por puro interés. Consultaba regularmente los boletines de la OMS — y perdía mucho tiempo navegando páginas en inglés, sin filtros, sin alertas, sin visión de conjunto. Construí HealthWatch para resolver este problema de raíz: agregar estos datos, traducirlos y estructurarlos para que un profesional acceda a ellos en unos clics en lugar de horas de búsqueda manual.",
     missionTitle: "Nuestra misión",
     missionText:
-      "HealthWatch Global agrega en tiempo real las alertas oficiales de la Organización Mundial de la Salud para proporcionar un panel legible a los profesionales de la salud, viajeros, periodistas y organizaciones que necesitan estar informados sobre brotes de enfermedades en cuanto se declaran.",
+      "HealthWatch Global agrega diariamente las alertas oficiales de la Organización Mundial de la Salud para proporcionar un panel legible a los profesionales de la salud, viajeros, periodistas y organizaciones que necesitan estar informados sobre brotes de enfermedades en cuanto se declaran.",
     whoTitle: "Fuente de datos: OMS",
     whoText:
-      "Todas las alertas sanitarias provienen de la API oficial Disease Outbreak News (DON) de la OMS, la misma fuente utilizada por gobiernos y agencias de salud pública de todo el mundo. Sin datos no verificados, sin medios de terceros. Consultamos esta API varias veces por semana para mantener la información actualizada.",
+      "Todas las alertas sanitarias provienen de la API oficial Disease Outbreak News (DON) de la OMS, la misma fuente utilizada por gobiernos y agencias de salud pública de todo el mundo. Sin datos no verificados, sin medios de terceros. Consultamos esta API a diario para mantener la información actualizada.",
     howTitle: "Cómo funciona",
     howSteps: [
       { title: "Recopilación", text: "Nuestro pipeline consulta la API OData de la OMS y extrae información clave: enfermedad, país, casos confirmados, fallecimientos." },
       { title: "Geolocalización", text: "Cada alerta se asocia a un país y se posiciona en un mapa mundial interactivo." },
       { title: "Análisis de riesgo", text: "Se calcula automáticamente una puntuación de riesgo (bajo / moderado / alto / crítico) según la letalidad y contagiosidad conocidas de cada patógeno." },
-      { title: "Distribución", text: "Digest semanal, alertas email regionales en tiempo real, integración Slack / Teams para sus equipos y API REST para organizaciones Enterprise." },
+      { title: "Distribución", text: "Digest semanal, alertas email regionales instantáneas, integración Slack / Teams para sus equipos y API REST para organizaciones Enterprise." },
     ],
     usersTitle: "¿Para quién?",
     users: [
@@ -152,16 +152,16 @@ const LABELS: Record<string, {
   ar: {
     back: "→ العودة إلى لوحة التحكم",
     title: "حول HealthWatch Global",
-    subtitle: "مراقبة الأوبئة في الوقت الفعلي لعالم أكثر أمانًا.",
+    subtitle: "مراقبة الأوبئة اليومية لعالم أكثر أمانًا.",
     founderTitle: "لماذا أنشأت HealthWatch",
     founderText:
       "منذ سنوات وأنا أتابع باهتمام كبير التطورات الصحية الكبرى حول العالم. كنت أطّلع بانتظام على نشرات منظمة الصحة العالمية، وأفقد وقتاً طويلاً في التنقل بين صفحات باللغة الإنجليزية فقط، دون مرشحات أو تنبيهات أو رؤية شاملة. أنشأتُ HealthWatch لحل هذه المشكلة من جذورها: تجميع هذه البيانات وترجمتها وتنظيمها، ليتمكن أي مختص من الوصول إليها خلال نقرات معدودة بدلاً من ساعات من البحث اليدوي.",
     missionTitle: "مهمتنا",
     missionText:
-      "تجمع HealthWatch Global التنبيهات الرسمية لمنظمة الصحة العالمية في الوقت الفعلي لتوفير لوحة تحكم واضحة للمهنيين الصحيين والمسافرين والصحفيين والمنظمات التي تحتاج إلى إخطار بتفشي الأمراض فور الإعلان عنها.",
+      "تجمع HealthWatch Global التنبيهات الرسمية لمنظمة الصحة العالمية يومياً لتوفير لوحة تحكم واضحة للمهنيين الصحيين والمسافرين والصحفيين والمنظمات التي تحتاج إلى إخطار بتفشي الأمراض فور الإعلان عنها.",
     whoTitle: "مصدر البيانات: منظمة الصحة العالمية",
     whoText:
-      "تأتي جميع التنبيهات الصحية من واجهة برمجة تطبيقات Disease Outbreak News (DON) الرسمية لمنظمة الصحة العالمية — نفس المصدر الذي تستخدمه الحكومات ووكالات الصحة العامة حول العالم. لا بيانات غير مُتحقَّق منها، ولا وسائل إعلام خارجية. نستعلم هذه الواجهة عدة مرات في الأسبوع للحفاظ على تحديث المعلومات.",
+      "تأتي جميع التنبيهات الصحية من واجهة برمجة تطبيقات Disease Outbreak News (DON) الرسمية لمنظمة الصحة العالمية — نفس المصدر الذي تستخدمه الحكومات ووكالات الصحة العامة حول العالم. لا بيانات غير مُتحقَّق منها، ولا وسائل إعلام خارجية. نستعلم هذه الواجهة يومياً للحفاظ على تحديث المعلومات.",
     howTitle: "كيف يعمل",
     howSteps: [
       { title: "الجمع", text: "تستعلم خطوط أنابيبنا واجهة OData لمنظمة الصحة العالمية وتستخرج المعلومات الرئيسية: المرض، البلد، الحالات المؤكدة، الوفيات." },
@@ -188,22 +188,22 @@ const LABELS: Record<string, {
   id: {
     back: "← Kembali ke dasbor",
     title: "Tentang HealthWatch Global",
-    subtitle: "Pemantauan epidemi real-time untuk dunia yang lebih aman.",
+    subtitle: "Pemantauan epidemi harian untuk dunia yang lebih aman.",
     founderTitle: "Mengapa saya membuat HealthWatch",
     founderText:
       "Selama bertahun-tahun saya tertarik mengikuti dinamika kesehatan global yang besar. Saya rutin memeriksa buletin WHO — dan terus kehilangan waktu menavigasi halaman berbahasa Inggris tanpa filter, tanpa peringatan, tanpa gambaran menyeluruh. Saya membangun HealthWatch untuk menyelesaikan masalah ini dari akarnya: mengumpulkan data ini, menerjemahkannya, dan menyusunnya agar seorang profesional bisa mengaksesnya hanya dengan beberapa klik — bukan berjam-jam pencarian manual.",
     missionTitle: "Misi kami",
     missionText:
-      "HealthWatch Global mengumpulkan peringatan resmi Organisasi Kesehatan Dunia secara real-time untuk menyediakan dasbor yang mudah dibaca bagi tenaga kesehatan, wisatawan, jurnalis, dan organisasi yang perlu mendapatkan informasi tentang wabah penyakit segera setelah dideklarasikan.",
+      "HealthWatch Global mengumpulkan peringatan resmi Organisasi Kesehatan Dunia setiap hari untuk menyediakan dasbor yang mudah dibaca bagi tenaga kesehatan, wisatawan, jurnalis, dan organisasi yang perlu mendapatkan informasi tentang wabah penyakit segera setelah dideklarasikan.",
     whoTitle: "Sumber data: WHO",
     whoText:
-      "Semua peringatan kesehatan berasal dari API Disease Outbreak News (DON) resmi WHO — sumber yang sama yang digunakan oleh pemerintah dan badan kesehatan masyarakat di seluruh dunia. Tidak ada data yang tidak terverifikasi, tidak ada media pihak ketiga. Kami mengkueri API ini beberapa kali seminggu untuk menjaga informasi tetap terkini.",
+      "Semua peringatan kesehatan berasal dari API Disease Outbreak News (DON) resmi WHO — sumber yang sama yang digunakan oleh pemerintah dan badan kesehatan masyarakat di seluruh dunia. Tidak ada data yang tidak terverifikasi, tidak ada media pihak ketiga. Kami mengkueri API ini setiap hari untuk menjaga informasi tetap terkini.",
     howTitle: "Cara kerjanya",
     howSteps: [
       { title: "Pengumpulan", text: "Pipeline kami mengkueri WHO OData API dan mengekstrak informasi kunci: penyakit, negara, kasus yang dikonfirmasi, kematian." },
       { title: "Geolokasi", text: "Setiap peringatan dikaitkan dengan suatu negara dan ditempatkan di peta dunia interaktif." },
       { title: "Analisis risiko", text: "Skor risiko (rendah / sedang / tinggi / kritis) dihitung secara otomatis berdasarkan tingkat kematian dan penularan patogen yang diketahui." },
-      { title: "Distribusi", text: "Digest mingguan, peringatan email regional real-time, integrasi Slack / Teams untuk tim Anda, dan REST API untuk organisasi Enterprise." },
+      { title: "Distribusi", text: "Digest mingguan, peringatan email regional instan, integrasi Slack / Teams untuk tim Anda, dan REST API untuk organisasi Enterprise." },
     ],
     usersTitle: "Untuk siapa?",
     users: [

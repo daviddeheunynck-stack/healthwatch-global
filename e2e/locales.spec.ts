@@ -13,7 +13,7 @@ test.describe("Landing page — all locales", () => {
       // Must NOT show Next.js error boundary
       await expect(page.locator("h1").filter({ hasText: /404|500/i })).not.toBeVisible();
       // Must show HealthWatch branding
-      await expect(page.getByText("HealthWatch")).toBeVisible({ timeout: 8000 });
+      await expect(page.getByText("HealthWatch").first()).toBeVisible({ timeout: 8000 });
     });
   }
 });
@@ -23,9 +23,10 @@ test.describe("Pricing page — all locales", () => {
     test(`/${locale}/pricing loads`, async ({ page }) => {
       await page.goto(`/${locale}/pricing`);
       // Free plan always visible (no auth required)
-      await expect(page.getByText("Free", { exact: true }).first()
+      await expect(page.getByText("Free", { exact: true })
         .or(page.getByText("Gratis", { exact: true }))
         .or(page.getByText("مجاني", { exact: true }))
+        .first()
       ).toBeVisible({ timeout: 8000 });
     });
   }

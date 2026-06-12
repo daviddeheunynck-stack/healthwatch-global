@@ -40,7 +40,7 @@ const COPY: Record<string, {
       },
       {
         title: "Débloquez la surveillance complète",
-        body: "Cas confirmés · Décès · Rapports PDF · Alertes temps réel · Export CSV. Essai Pro 14 jours — sans carte bancaire requise.",
+        body: "Cas confirmés · Décès · Rapports PDF · Alertes instantanées · Export CSV. Essai Pro 14 jours — sans carte bancaire requise.",
         cta: "C'est parti →",
       },
     ],
@@ -68,7 +68,7 @@ const COPY: Record<string, {
       },
       {
         title: "Unlock full surveillance",
-        body: "Confirmed cases · Deaths · PDF reports · Real-time alerts · CSV export. 14-day Pro trial — no credit card required.",
+        body: "Confirmed cases · Deaths · PDF reports · Instant alerts · CSV export. 14-day Pro trial — no credit card required.",
         cta: "Let's go →",
       },
     ],
@@ -96,7 +96,7 @@ const COPY: Record<string, {
       },
       {
         title: "Desbloquee la vigilancia completa",
-        body: "Casos confirmados · Fallecidos · Informes PDF · Alertas en tiempo real · Exportación CSV. Prueba Pro de 14 días — sin tarjeta de crédito.",
+        body: "Casos confirmados · Fallecidos · Informes PDF · Alertas instantáneas · Exportación CSV. Prueba Pro de 14 días — sin tarjeta de crédito.",
         cta: "¡Vamos! →",
       },
     ],
@@ -152,7 +152,7 @@ const COPY: Record<string, {
       },
       {
         title: "Buka pemantauan lengkap",
-        body: "Kasus terkonfirmasi · Kematian · Laporan PDF · Peringatan real-time · Ekspor CSV. Uji coba Pro 14 hari — tanpa kartu kredit.",
+        body: "Kasus terkonfirmasi · Kematian · Laporan PDF · Peringatan instan · Ekspor CSV. Uji coba Pro 14 hari — tanpa kartu kredit.",
         cta: "Ayo mulai →",
       },
     ],

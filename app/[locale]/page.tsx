@@ -20,11 +20,11 @@ import type { Metadata } from "next";
 export const dynamic = "force-dynamic";
 
 const DASHBOARD_META: Record<string, { title: string; description: string }> = {
-  en: { title: "Global Disease Outbreak Dashboard", description: "Real-time map and table of active disease outbreaks worldwide. Data sourced from the WHO Disease Outbreak News API." },
-  fr: { title: "Tableau de bord — Foyers épidémiques mondiaux", description: "Carte et tableau en temps réel des foyers épidémiques actifs dans le monde. Données issues de l'API WHO Disease Outbreak News." },
-  es: { title: "Panel de vigilancia epidémica mundial", description: "Mapa y tabla en tiempo real de brotes de enfermedades activos en todo el mundo. Datos de la API WHO Disease Outbreak News." },
-  ar: { title: "لوحة تحكم تفشي الأمراض العالمية", description: "خريطة وجدول في الوقت الفعلي لتفشي الأمراض النشطة حول العالم. بيانات من واجهة أخبار تفشي أمراض منظمة الصحة العالمية." },
-  id: { title: "Dasbor Wabah Penyakit Global", description: "Peta dan tabel real-time wabah penyakit aktif di seluruh dunia. Data dari API WHO Disease Outbreak News." },
+  en: { title: "Global Disease Outbreak Dashboard", description: "Daily-updated map and table of active disease outbreaks worldwide. Data sourced from the WHO Disease Outbreak News API." },
+  fr: { title: "Tableau de bord — Foyers épidémiques mondiaux", description: "Carte et tableau quotidiens des foyers épidémiques actifs dans le monde. Données issues de l'API WHO Disease Outbreak News." },
+  es: { title: "Panel de vigilancia epidémica mundial", description: "Mapa y tabla actualizados a diario de brotes de enfermedades activos en todo el mundo. Datos de la API WHO Disease Outbreak News." },
+  ar: { title: "لوحة تحكم تفشي الأمراض العالمية", description: "خريطة وجدول يوميان لتفشي الأمراض النشطة حول العالم. بيانات من واجهة أخبار تفشي أمراض منظمة الصحة العالمية." },
+  id: { title: "Dasbor Wabah Penyakit Global", description: "Peta dan tabel harian wabah penyakit aktif di seluruh dunia. Data dari API WHO Disease Outbreak News." },
 };
 
 // ─── Filter strings (avoids touching 5 message files) ────────────────────────
@@ -50,11 +50,11 @@ const FILTER_COPY: Record<string, {
 };
 
 const LANDING_META: Record<string, { title: string; description: string }> = {
-  en: { title: "WHO outbreak tracker for health professionals | HealthWatch Global", description: "All WHO Disease Outbreak News, aggregated and translated — without the manual research. Real-time alerts, PDF reports and CFR data for travel medicine doctors, health consultants and epidemiologists." },
-  fr: { title: "Surveillance épidémique OMS pour professionnels de santé | HealthWatch Global", description: "Toutes les données OMS sur les foyers épidémiques, agrégées et traduites — sans les heures de recherche. Alertes temps réel, rapports PDF et données de létalité pour médecins, consultants et épidémiologistes." },
-  es: { title: "Vigilancia de brotes OMS para profesionales de salud | HealthWatch Global", description: "Todos los datos OMS sobre brotes, agregados y traducidos — sin horas de investigación. Alertas en tiempo real, informes PDF y datos de letalidad para médicos, consultores y epidemiólogos." },
+  en: { title: "WHO outbreak tracker for health professionals | HealthWatch Global", description: "All WHO Disease Outbreak News, aggregated and translated — without the manual research. Instant alerts, PDF reports and CFR data for travel medicine doctors, health consultants and epidemiologists." },
+  fr: { title: "Surveillance épidémique OMS pour professionnels de santé | HealthWatch Global", description: "Toutes les données OMS sur les foyers épidémiques, agrégées et traduites — sans les heures de recherche. Alertes instantanées, rapports PDF et données de létalité pour médecins, consultants et épidémiologistes." },
+  es: { title: "Vigilancia de brotes OMS para profesionales de salud | HealthWatch Global", description: "Todos los datos OMS sobre brotes, agregados y traducidos — sin horas de investigación. Alertas instantáneas, informes PDF y datos de letalidad para médicos, consultores y epidemiólogos." },
   ar: { title: "متابعة تفشيات منظمة الصحة العالمية للمتخصصين الصحيين | HealthWatch Global", description: "جميع بيانات تفشي الأمراض من منظمة الصحة العالمية، مجمعة ومترجمة — دون ساعات البحث. تنبيهات فورية وتقارير PDF لأطباء السفر والمستشارين وعلماء الأوبئة." },
-  id: { title: "Pemantau wabah WHO untuk profesional kesehatan | HealthWatch Global", description: "Semua data wabah WHO, diagregasi dan diterjemahkan — tanpa berjam-jam penelitian. Peringatan real-time, laporan PDF untuk dokter, konsultan, dan epidemiolog." },
+  id: { title: "Pemantau wabah WHO untuk profesional kesehatan | HealthWatch Global", description: "Semua data wabah WHO, diagregasi dan diterjemahkan — tanpa berjam-jam penelitian. Peringatan instan, laporan PDF untuk dokter, konsultan, dan epidemiolog." },
 };
 
 export async function generateMetadata({
@@ -234,7 +234,7 @@ export default async function DashboardPage({
         "name": "HealthWatch Global",
         "url": "https://healthwatch-global.com",
         "logo": "https://healthwatch-global.com/api/og",
-        "description": "Real-time global epidemic surveillance platform. WHO data in 5 languages for health organizations worldwide.",
+        "description": "Daily global epidemic surveillance platform. WHO data in 5 languages for health organizations worldwide.",
         "contactPoint": {
           "@type": "ContactPoint",
           "email": "contact@healthwatch-global.com",
@@ -249,7 +249,7 @@ export default async function DashboardPage({
         "applicationCategory": "HealthApplication",
         "operatingSystem": "Web",
         "url": "https://healthwatch-global.com",
-        "description": "Monitor disease outbreaks worldwide in real time. Official WHO data, 5 languages, regional alerts, PDF reports and CSV export.",
+        "description": "Monitor disease outbreaks worldwide with daily updates. Official WHO data, 5 languages, regional alerts, PDF reports and CSV export.",
         "offers": {
           "@type": "Offer",
           "price": "0",
@@ -257,7 +257,7 @@ export default async function DashboardPage({
           "description": "Free tier — live outbreak map and dashboard, no account required.",
         },
         "featureList": [
-          "Real-time WHO disease outbreak map",
+          "Daily-updated WHO disease outbreak map",
           "5 languages — English, French, Spanish, Arabic, Indonesian",
           "Regional email alerts",
           "PDF epidemiological reports",

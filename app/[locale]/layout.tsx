@@ -12,29 +12,29 @@ import "../globals.css";
 
 const META: Record<string, { title: string; description: string }> = {
   en: {
-    title: "HealthWatch Global — Real-time Epidemic Surveillance",
+    title: "HealthWatch Global — Daily Epidemic Surveillance",
     description:
-      "Monitor disease outbreaks worldwide in real time. WHO, CDC & ECDC data in 5 languages. Built for NGOs, health ministries and international organizations.",
+      "Monitor disease outbreaks worldwide with daily updates. WHO, CDC & ECDC data in 5 languages. Built for NGOs, health ministries and international organizations.",
   },
   fr: {
-    title: "HealthWatch Global — Surveillance épidémique en temps réel",
+    title: "HealthWatch Global — Surveillance épidémique quotidienne",
     description:
-      "Suivez les foyers épidémiques mondiaux en temps réel. Données OMS, CDC et ECDC en 5 langues. Conçu pour les ONG, ministères de la santé et organisations internationales.",
+      "Suivez les foyers épidémiques mondiaux au quotidien. Données OMS, CDC et ECDC en 5 langues. Conçu pour les ONG, ministères de la santé et organisations internationales.",
   },
   es: {
-    title: "HealthWatch Global — Vigilancia epidémica en tiempo real",
+    title: "HealthWatch Global — Vigilancia epidémica diaria",
     description:
-      "Monitoreo de brotes en tiempo real. Datos OMS, CDC y ECDC en 5 idiomas. Para ONG, ministerios de salud y organizaciones internacionales.",
+      "Monitoreo diario de brotes. Datos OMS, CDC y ECDC en 5 idiomas. Para ONG, ministerios de salud y organizaciones internacionales.",
   },
   ar: {
-    title: "HealthWatch Global — مراقبة الأوبئة في الوقت الفعلي",
+    title: "HealthWatch Global — مراقبة الأوبئة اليومية",
     description:
-      "رصد تفشي الأمراض حول العالم في الوقت الفعلي. بيانات منظمة الصحة العالمية ومراكز السيطرة على الأمراض بخمس لغات.",
+      "رصد تفشي الأمراض حول العالم يومياً. بيانات منظمة الصحة العالمية ومراكز السيطرة على الأمراض بخمس لغات.",
   },
   id: {
-    title: "HealthWatch Global — Pemantauan Wabah Real-time",
+    title: "HealthWatch Global — Pemantauan Wabah Harian",
     description:
-      "Pantau wabah penyakit di seluruh dunia secara real-time. Data WHO, CDC & ECDC dalam 5 bahasa. Untuk LSM, kementerian kesehatan dan organisasi internasional.",
+      "Pantau wabah penyakit di seluruh dunia setiap hari. Data WHO, CDC & ECDC dalam 5 bahasa. Untuk LSM, kementerian kesehatan dan organisasi internasional.",
   },
 };
 

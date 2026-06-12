@@ -24,13 +24,13 @@ const COPY: Record<string, {
 }> = {
   fr: {
     pdf:      { title: "Rapports PDF régionaux",      desc: "Téléchargez des rapports épidémiologiques prêts à partager avec vos équipes ou bailleurs.",   plan: "Disponible — Pro" },
-    realtime: { title: "Alertes en temps réel",       desc: "Recevez chaque nouveau foyer OMS en quelques secondes, avant tout le monde.",                  plan: "Disponible — Pro uniquement" },
+    realtime: { title: "Alertes instantanées",        desc: "Notification instantanée dès que notre synchronisation quotidienne détecte un nouveau foyer OMS.", plan: "Disponible — Pro uniquement" },
     list:     { title: "Liste complète des foyers",   desc: "Accédez à tous les foyers actifs par région avec chiffres exacts.",                            plan: "Disponible — Pro" },
     cases:    { title: "Chiffres confirmés",          desc: "Cas confirmés, décès et détails épidémiologiques complets pour chaque foyer.",                 plan: "Disponible — Pro" },
     csv:      { title: "Export CSV des données",      desc: "Téléchargez l'ensemble des foyers actifs en CSV pour Excel, R, Python ou vos outils internes.", plan: "Disponible — Pro" },
     compare:  { title: "Comparateur de foyers chiffré", desc: "Comparez cas, décès, létalité et incidence entre deux épidémies, foyer par foyer.",            plan: "Disponible — Pro" },
     proFeatures: [
-      "Alertes temps réel — flux OMS direct",
+      "Alertes instantanées — synchronisées chaque jour depuis l'OMS",
       "Rapports PDF par région en 1 clic",
       "Export CSV pour vos analyses internes",
       "Toutes les régions mondiales couvertes",
@@ -40,13 +40,13 @@ const COPY: Record<string, {
   },
   en: {
     pdf:      { title: "Regional PDF reports",     desc: "Download shareable epidemiological reports ready for your teams or donors.",             plan: "Available — Pro" },
-    realtime: { title: "Real-time alerts",         desc: "Receive every new WHO outbreak in seconds — before anyone else.",                        plan: "Available — Pro only" },
+    realtime: { title: "Instant alerts",           desc: "Get an instant notification the moment our daily WHO sync detects a new outbreak.", plan: "Available — Pro only" },
     list:     { title: "Full outbreak list",       desc: "Access all active outbreaks per region with exact case and death figures.",              plan: "Available — Pro" },
     cases:    { title: "Confirmed figures",        desc: "Confirmed cases, deaths and full epidemiological details for every outbreak.",           plan: "Available — Pro" },
     csv:      { title: "CSV data export",          desc: "Download all active outbreaks as CSV for Excel, R, Python or your internal tools.",      plan: "Available — Pro" },
     compare:  { title: "Outbreak data comparison", desc: "Compare cases, deaths, fatality rate and incidence between two epidemics, side by side.", plan: "Available — Pro" },
     proFeatures: [
-      "Real-time alerts — direct WHO feed",
+      "Instant alerts — synced daily from WHO",
       "Regional PDF reports in 1 click",
       "CSV export for your internal analyses",
       "All global regions covered",
@@ -56,13 +56,13 @@ const COPY: Record<string, {
   },
   es: {
     pdf:      { title: "Informes PDF regionales",     desc: "Descargue informes epidemiológicos listos para compartir con su equipo o financiadores.",    plan: "Disponible — Pro" },
-    realtime: { title: "Alertas en tiempo real",      desc: "Reciba cada nuevo brote de la OMS en segundos, antes que nadie.",                            plan: "Disponible — solo Pro" },
+    realtime: { title: "Alertas instantáneas",        desc: "Reciba una notificación instantánea en cuanto nuestra sincronización diaria detecte un nuevo brote de la OMS.", plan: "Disponible — solo Pro" },
     list:     { title: "Lista completa de brotes",    desc: "Acceda a todos los brotes activos por región con cifras exactas.",                           plan: "Disponible — Pro" },
     cases:    { title: "Cifras confirmadas",          desc: "Casos confirmados, fallecidos y detalles epidemiológicos completos.",                         plan: "Disponible — Pro" },
     csv:      { title: "Exportación de datos CSV",    desc: "Descargue todos los brotes activos en CSV para Excel, R, Python o sus herramientas internas.", plan: "Disponible — Pro" },
     compare:  { title: "Comparador de brotes con cifras", desc: "Compare casos, muertes, letalidad e incidencia entre dos epidemias, lado a lado.",            plan: "Disponible — Pro" },
     proFeatures: [
-      "Alertas en tiempo real — flujo OMS directo",
+      "Alertas instantáneas — sincronizadas a diario desde la OMS",
       "Informes PDF regionales en 1 clic",
       "Exportación CSV para análisis internos",
       "Todas las regiones globales cubiertas",
@@ -72,13 +72,13 @@ const COPY: Record<string, {
   },
   ar: {
     pdf:      { title: "تقارير PDF إقليمية",           desc: "حمّل تقارير وبائية جاهزة للمشاركة مع فرقك أو المموّلين بنقرة واحدة.",            plan: "متاح — Pro" },
-    realtime: { title: "تنبيهات فورية",                desc: "استقبل كل تفشٍّ جديد من منظمة الصحة العالمية في ثوانٍ، قبل الجميع.",             plan: "متاح — Pro فقط" },
+    realtime: { title: "تنبيهات فورية",                desc: "احصل على إشعار فوري بمجرد أن تكتشف مزامنتنا اليومية تفشّياً جديداً من منظمة الصحة العالمية.", plan: "متاح — Pro فقط" },
     list:     { title: "قائمة كاملة بالتفشيات",        desc: "اطلع على جميع التفشيات النشطة بالمنطقة مع الأرقام الدقيقة.",                   plan: "متاح — Pro" },
     cases:    { title: "الأرقام المؤكدة",              desc: "الحالات المؤكدة والوفيات والتفاصيل الوبائية الكاملة لكل تفشٍّ.",                plan: "متاح — Pro" },
     csv:      { title: "تصدير بيانات CSV",             desc: "حمّل جميع التفشيات النشطة بصيغة CSV لـ Excel أو R أو Python أو أدواتك الداخلية.", plan: "متاح — Pro" },
     compare:  { title: "مقارنة بيانات التفشيات",         desc: "قارن الحالات والوفيات ومعدل الفتك ومعدل الإصابة بين وباءين جنباً إلى جنب.",        plan: "متاح — Pro" },
     proFeatures: [
-      "تنبيهات فورية — بث مباشر من المنظمة",
+      "تنبيهات فورية — مزامنة يومية من المنظمة",
       "تقارير PDF إقليمية بنقرة واحدة",
       "تصدير CSV للتحليلات الداخلية",
       "جميع المناطق العالمية مشمولة",
@@ -88,13 +88,13 @@ const COPY: Record<string, {
   },
   id: {
     pdf:      { title: "Laporan PDF regional",        desc: "Unduh laporan epidemiologi siap dibagikan ke tim atau donor Anda.",                      plan: "Tersedia — Pro" },
-    realtime: { title: "Peringatan real-time",        desc: "Terima setiap wabah baru WHO dalam hitungan detik — lebih cepat dari siapapun.",         plan: "Tersedia — Pro saja" },
+    realtime: { title: "Peringatan instan",           desc: "Dapatkan notifikasi instan begitu sinkronisasi harian kami mendeteksi wabah baru dari WHO.", plan: "Tersedia — Pro saja" },
     list:     { title: "Daftar wabah lengkap",        desc: "Akses semua wabah aktif per wilayah dengan angka kasus dan kematian yang tepat.",        plan: "Tersedia — Pro" },
     cases:    { title: "Angka terkonfirmasi",         desc: "Kasus terkonfirmasi, kematian, dan detail epidemiologi lengkap setiap wabah.",           plan: "Tersedia — Pro" },
     csv:      { title: "Ekspor data CSV",             desc: "Unduh semua wabah aktif sebagai CSV untuk Excel, R, Python, atau alat internal Anda.",   plan: "Tersedia — Pro" },
     compare:  { title: "Perbandingan data wabah",     desc: "Bandingkan kasus, kematian, tingkat fatalitas, dan insidensi antara dua epidemi secara berdampingan.", plan: "Tersedia — Pro" },
     proFeatures: [
-      "Peringatan real-time — feed WHO langsung",
+      "Peringatan instan — sinkronisasi harian dari WHO",
       "Laporan PDF regional dalam 1 klik",
       "Ekspor CSV untuk analisis internal",
       "Semua wilayah global tercakup",

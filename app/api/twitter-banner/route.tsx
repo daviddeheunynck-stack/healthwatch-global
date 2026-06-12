@@ -101,7 +101,7 @@ export async function GET() {
           {/* Tagline */}
           <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
             <span style={{ fontSize: 26, fontWeight: 600, color: "rgba(255,255,255,0.9)", fontFamily: "sans-serif" }}>
-              Real-time epidemic surveillance
+              Daily epidemic surveillance
             </span>
             <span style={{ fontSize: 18, color: "rgba(255,255,255,0.45)", fontFamily: "sans-serif" }}>
               WHO official data · 5 languages · Free to start

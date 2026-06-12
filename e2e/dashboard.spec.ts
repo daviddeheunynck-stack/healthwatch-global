@@ -3,8 +3,8 @@ import { test, expect } from "@playwright/test";
 test.describe("Dashboard — Landing page (unauthenticated)", () => {
   test("affiche le hero de la landing page en français", async ({ page }) => {
     await page.goto("/fr");
-    await expect(page.getByText("Anticipez les épidémies.")).toBeVisible();
-    await expect(page.getByText("Ne réagissez plus.")).toBeVisible();
+    await expect(page.getByText("Toutes les données OMS.")).toBeVisible();
+    await expect(page.getByText("Sans les heures de recherche.")).toBeVisible();
   });
 
   test("affiche la barre de stats", async ({ page }) => {
@@ -18,7 +18,7 @@ test.describe("Dashboard — Landing page (unauthenticated)", () => {
   test("affiche la section preview des données", async ({ page }) => {
     await page.goto("/fr");
     // previewTitle is always rendered (static copy, no data dependency)
-    await expect(page.getByText("Ce que vos équipes verront en temps réel")).toBeVisible({ timeout: 10000 });
+    await expect(page.getByText("Ce que vos équipes verront")).toBeVisible({ timeout: 10000 });
   });
 
   test("redirige vers une locale depuis /", async ({ page }) => {
@@ -28,8 +28,8 @@ test.describe("Dashboard — Landing page (unauthenticated)", () => {
 
   test("fonctionne en anglais", async ({ page }) => {
     await page.goto("/en");
-    await expect(page.getByText("Anticipate outbreaks.")).toBeVisible();
+    await expect(page.getByText("All WHO outbreak data.")).toBeVisible();
     // previewTitle (static, no data dependency)
-    await expect(page.getByText("What your teams will see in real time")).toBeVisible({ timeout: 10000 });
+    await expect(page.getByText("What your teams will see")).toBeVisible({ timeout: 10000 });
   });
 });
