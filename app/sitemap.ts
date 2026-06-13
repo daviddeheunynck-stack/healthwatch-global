@@ -1,13 +1,16 @@
 import type { MetadataRoute } from "next";
+import { createClient } from "@supabase/supabase-js";
 
 const BASE_URL = "https://healthwatch-global.com";
-const LOCALES = ["en", "fr", "es", "ar", "id"];
+const LOCALES  = ["en", "fr", "es", "ar", "id"] as const;
 
-// Pages indexed by search engines (priority order)
+const BOM   = String.fromCharCode(65279);
+const clean = (v: string | undefined) => (v || "").replace(new RegExp("^" + BOM), "").trim();
+
 const PUBLIC_ROUTES = [
   { path: "",         changeFreq: "daily",   priority: 1.0 },
   { path: "/pricing", changeFreq: "weekly",  priority: 0.9 },
-  { path: "/alerts",  changeFreq: "daily",   priority: 0.8 }, // outbreak data updated daily
+  { path: "/alerts",  changeFreq: "daily",   priority: 0.8 },
   { path: "/reports", changeFreq: "weekly",  priority: 0.8 },
   { path: "/about",   changeFreq: "monthly", priority: 0.7 },
   { path: "/compare", changeFreq: "monthly", priority: 0.7 },
@@ -18,9 +21,19 @@ const PUBLIC_ROUTES = [
   { path: "/terms",   changeFreq: "yearly",  priority: 0.3 },
 ] as const;
 
-export default function sitemap(): MetadataRoute.Sitemap {
+function localeAlternates(path: string) {
+  return {
+    languages: {
+      ...Object.fromEntries(LOCALES.map((l) => [l, `${BASE_URL}/${l}${path}`])),
+      "x-default": `${BASE_URL}/en${path}`,
+    },
+  };
+}
+
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const entries: MetadataRoute.Sitemap = [];
 
+  // ── Static routes ────────────────────────────────────────────────────────
   for (const locale of LOCALES) {
     for (const route of PUBLIC_ROUTES) {
       entries.push({
@@ -28,16 +41,38 @@ export default function sitemap(): MetadataRoute.Sitemap {
         lastModified: new Date(),
         changeFrequency: route.changeFreq,
         priority: route.priority,
-        alternates: {
-          languages: {
-            ...Object.fromEntries(
-              LOCALES.map((l) => [l, `${BASE_URL}/${l}${route.path}`])
-            ),
-            "x-default": `${BASE_URL}/en${route.path}`,
-          },
-        },
+        alternates: localeAlternates(route.path),
       });
     }
+  }
+
+  // ── Outbreak pages — one per active outbreak per locale ──────────────────
+  try {
+    const supabase = createClient(
+      clean(process.env.NEXT_PUBLIC_SUPABASE_URL),
+      clean(process.env.SUPABASE_SERVICE_ROLE_KEY)
+    );
+    const { data: outbreaks } = await supabase
+      .from("outbreaks")
+      .select("id, date")
+      .eq("active", true)
+      .order("date", { ascending: false });
+
+    for (const o of outbreaks ?? []) {
+      const outbreakPath = `/outbreak/${o.id}`;
+      const lastMod = o.date ? new Date(o.date) : new Date();
+      for (const locale of LOCALES) {
+        entries.push({
+          url: `${BASE_URL}/${locale}${outbreakPath}`,
+          lastModified: lastMod,
+          changeFrequency: "daily",
+          priority: 0.7,
+          alternates: localeAlternates(outbreakPath),
+        });
+      }
+    }
+  } catch {
+    // DB unreachable at build time — static routes still returned
   }
 
   return entries;

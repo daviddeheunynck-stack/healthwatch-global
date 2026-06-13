@@ -6,7 +6,8 @@
     "reports": "Rapports",
     "pricing": "Tarifs",
     "title": "HealthWatch Global",
-    "contact": "Contact"
+    "contact": "Contact",
+    "about": "À propos"
   },
   "dashboard": {
     "title": "Surveillance Sanitaire Mondiale",
@@ -94,7 +95,7 @@
     "faq2_q": "À quelle fréquence les données sont-elles mises à jour ?",
     "faq2_a": "Les données OMS sont synchronisées toutes les heures. Les alertes maladies sont envoyées jusqu'à 1x par jour dès qu'un nouveau foyer est détecté.",
     "faq3_q": "Y a-t-il un plan gratuit ?",
-    "faq3_a": "Oui. Le plan Gratuit donne acces au tableau de bord public, une region surveillee et la synthese hebdomadaire — sans carte bancaire, sans limite de duree."
+    "faq3_a": "Oui. Le plan Gratuit donne accès au tableau de bord public, une région surveillée et la synthèse hebdomadaire — sans carte bancaire, sans limite de durée."
   },
   "auth": {
     "loginTitle": "Connexion",

@@ -112,14 +112,6 @@ function planFromPriceId(priceId: string | null | undefined): string {
   const BOM2 = String.fromCharCode(65279);
   const c = (v: string | undefined) => (v || "").replace(new RegExp("^" + BOM2), "").trim();
 
-  // Starter IDs kept for backward compatibility with any existing subscriptions
-  const STARTER_IDS = new Set([
-    c(process.env.STRIPE_STARTER_EUR_PRICE_ID),
-    c(process.env.STRIPE_STARTER_USD_PRICE_ID),
-    c(process.env.STRIPE_STARTER_EUR_ANNUAL_PRICE_ID),
-    c(process.env.STRIPE_STARTER_USD_ANNUAL_PRICE_ID),
-  ].filter(Boolean));
-
   const PRO_IDS = new Set([
     c(process.env.STRIPE_PRO_EUR_PRICE_ID),
     c(process.env.STRIPE_PRO_USD_PRICE_ID),
@@ -127,11 +119,10 @@ function planFromPriceId(priceId: string | null | undefined): string {
     c(process.env.STRIPE_PRO_USD_ANNUAL_PRICE_ID),
   ].filter(Boolean));
 
-  if (priceId && STARTER_IDS.has(priceId)) return "starter";
-  if (priceId && PRO_IDS.has(priceId))    return "pro";
+  if (priceId && PRO_IDS.has(priceId)) return "pro";
 
-  console.warn(`[webhook] Unknown price ID: ${priceId} — defaulting to starter`);
-  return "starter";
+  console.warn(`[webhook] Unknown price ID: ${priceId} — defaulting to pro`);
+  return "pro";
 }
 
 export async function POST(req: NextRequest) {
@@ -165,7 +156,7 @@ export async function POST(req: NextRequest) {
       case "checkout.session.completed": {
         const session = event.data.object as Stripe.Checkout.Session;
         const userId = session.metadata?.user_id;
-        const plan = session.metadata?.plan || "starter";
+        const plan = session.metadata?.plan || "pro";
 
         if (userId) {
           // Fetch subscription to read trial_end

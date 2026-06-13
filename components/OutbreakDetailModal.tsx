@@ -2,27 +2,29 @@
 
 import { useEffect } from "react";
 import { createPortal } from "react-dom";
-import { X, ExternalLink, AlertTriangle, TrendingUp, Users, Skull, Calendar, Globe, Clock, Activity, ImageDown, FileText, Link as LinkIcon, Check, Copy } from "lucide-react";
+import { X, ExternalLink, AlertTriangle, TrendingUp, Users, Skull, Calendar, Globe, Clock, Activity, ImageDown, FileText, Link as LinkIcon, Check, Copy, Info } from "lucide-react";
 import WatchlistButton from "@/components/WatchlistButton";
 import { getIncidenceRate } from "@/lib/population-data";
 import type { Outbreak } from "@/lib/outbreaks";
-import { getLocalizedDisease, getLocalizedCountry, getLocalizedDescription } from "@/lib/outbreaks";
+import { getLocalizedDisease, getLocalizedCountry, getLocalizedDescription, sourceStatus } from "@/lib/outbreaks";
 import type { OutbreakTrend } from "@/lib/outbreak-trend";
 import RiskBadge from "@/components/RiskBadge";
 import ShareOutbreakButton from "@/components/ShareOutbreakButton";
 
 const COPY: Record<string, {
   cases: string; deaths: string; cfr: string; incidence: string; date: string;
-  source: string; description: string; close: string;
+  source: string; officialSource: string; description: string; close: string;
   noData: string; cfrFull: string; region: string;
   partialData: string; dataAge: (d: number) => string; fresh: string; stale: string;
   incidencePer100k: string; trendDelta: (delta: number, days: number) => string;
+  illustrative: string; illustrativeNotice: string;
+  officialBadge: string; officialNotice: string;
 }> = {
-  fr: { cases: "Cas confirmés", deaths: "Décès", cfr: "Létalité", incidence: "Incidence", date: "Rapport du", source: "Bulletin OMS original", description: "Résumé", close: "Fermer", noData: "N/D", cfrFull: "Taux de létalité (CFR)", region: "Région", partialData: "Données partielles — chiffres non disponibles dans ce rapport OMS", dataAge: (d) => `Il y a ${d} jour${d > 1 ? "s" : ""}`, fresh: "Données récentes", stale: "Rapport ancien", incidencePer100k: "pour 100 000 hab.", trendDelta: (delta, days) => `${delta > 0 ? "+" : ""}${delta} cas / ${days}j` },
-  en: { cases: "Confirmed cases", deaths: "Deaths", cfr: "CFR", incidence: "Incidence", date: "Report date", source: "Original WHO bulletin", description: "Summary", close: "Close", noData: "N/A", cfrFull: "Case fatality rate (CFR)", region: "Region", partialData: "Partial data — figures not available in this WHO report", dataAge: (d) => `${d} day${d > 1 ? "s" : ""} ago`, fresh: "Recent data", stale: "Old report", incidencePer100k: "per 100,000 pop.", trendDelta: (delta, days) => `${delta > 0 ? "+" : ""}${delta} cases / ${days}d` },
-  es: { cases: "Casos confirmados", deaths: "Fallecidos", cfr: "Letalidad", incidence: "Incidencia", date: "Informe del", source: "Boletín OMS original", description: "Resumen", close: "Cerrar", noData: "N/D", cfrFull: "Tasa de letalidad (CFR)", region: "Región", partialData: "Datos parciales — cifras no disponibles en este informe OMS", dataAge: (d) => `Hace ${d} día${d > 1 ? "s" : ""}`, fresh: "Datos recientes", stale: "Informe antiguo", incidencePer100k: "por 100.000 hab.", trendDelta: (delta, days) => `${delta > 0 ? "+" : ""}${delta} casos / ${days}d` },
-  ar: { cases: "الحالات المؤكدة", deaths: "الوفيات", cfr: "معدل الوفيات", incidence: "معدل الإصابة", date: "تاريخ التقرير", source: "النشرة الرسمية لـ OMS", description: "ملخص", close: "إغلاق", noData: "غ/م", cfrFull: "معدل إماتة الحالات (CFR)", region: "المنطقة", partialData: "بيانات جزئية — الأرقام غير متوفرة في هذا التقرير", dataAge: (d) => `منذ ${d} يوم`, fresh: "بيانات حديثة", stale: "تقرير قديم", incidencePer100k: "لكل 100,000 ساكن", trendDelta: (delta, days) => `${delta > 0 ? "+" : ""}${delta} حالة / ${days} يوم` },
-  id: { cases: "Kasus terkonfirmasi", deaths: "Kematian", cfr: "CFR", incidence: "Insidensi", date: "Tanggal laporan", source: "Buletin WHO asli", description: "Ringkasan", close: "Tutup", noData: "T/S", cfrFull: "Tingkat kematian kasus (CFR)", region: "Wilayah", partialData: "Data parsial — angka tidak tersedia dalam laporan WHO ini", dataAge: (d) => `${d} hari lalu`, fresh: "Data terbaru", stale: "Laporan lama", incidencePer100k: "per 100.000 penduduk", trendDelta: (delta, days) => `${delta > 0 ? "+" : ""}${delta} kasus / ${days}h` },
+  fr: { cases: "Cas confirmés", deaths: "Décès", cfr: "Létalité", incidence: "Incidence", date: "Rapport du", source: "Bulletin OMS original", officialSource: "Source officielle", description: "Résumé", close: "Fermer", noData: "N/D", cfrFull: "Taux de létalité (CFR)", region: "Région", partialData: "Données partielles — chiffres non disponibles dans ce rapport OMS", dataAge: (d) => `Il y a ${d} jour${d > 1 ? "s" : ""}`, fresh: "Données récentes", stale: "Rapport ancien", incidencePer100k: "pour 100 000 hab.", trendDelta: (delta, days) => `${delta > 0 ? "+" : ""}${delta} cas / ${days}j`, illustrative: "NON VÉRIFIÉ", illustrativeNotice: "Chiffres provisoires non vérifiés — pas encore rattachés à un rapport OMS/officiel confirmé. À utiliser avec précaution.", officialBadge: "SOURCE OFFICIELLE", officialNotice: "Source officielle confirmée (rapport OMS, ECDC ou ministère de la santé) — sans numéro de bulletin DON. Données fiables, non directement citables comme DON." },
+  en: { cases: "Confirmed cases", deaths: "Deaths", cfr: "CFR", incidence: "Incidence", date: "Report date", source: "Original WHO bulletin", officialSource: "Official source", description: "Summary", close: "Close", noData: "N/A", cfrFull: "Case fatality rate (CFR)", region: "Region", partialData: "Partial data — figures not available in this WHO report", dataAge: (d) => `${d} day${d > 1 ? "s" : ""} ago`, fresh: "Recent data", stale: "Old report", incidencePer100k: "per 100,000 pop.", trendDelta: (delta, days) => `${delta > 0 ? "+" : ""}${delta} cases / ${days}d`, illustrative: "UNVERIFIED", illustrativeNotice: "Unverified placeholder figures — not yet matched to a confirmed WHO/official report. Treat with caution.", officialBadge: "OFFICIAL SOURCE", officialNotice: "Confirmed official source (WHO situation report, ECDC, or national Ministry of Health) — no WHO DON reference number. Data is reliable but not directly citable as a DON." },
+  es: { cases: "Casos confirmados", deaths: "Fallecidos", cfr: "Letalidad", incidence: "Incidencia", date: "Informe del", source: "Boletín OMS original", officialSource: "Fuente oficial", description: "Resumen", close: "Cerrar", noData: "N/D", cfrFull: "Tasa de letalidad (CFR)", region: "Región", partialData: "Datos parciales — cifras no disponibles en este informe OMS", dataAge: (d) => `Hace ${d} día${d > 1 ? "s" : ""}`, fresh: "Datos recientes", stale: "Informe antiguo", incidencePer100k: "por 100.000 hab.", trendDelta: (delta, days) => `${delta > 0 ? "+" : ""}${delta} casos / ${days}d`, illustrative: "NO VERIFICADO", illustrativeNotice: "Cifras provisionales no verificadas — aún no vinculadas a un informe oficial/OMS confirmado. Usar con precaución.", officialBadge: "FUENTE OFICIAL", officialNotice: "Fuente oficial confirmada (informe OMS, ECDC o ministerio de salud) — sin número de boletín DON. Datos fiables, no citables directamente como DON." },
+  ar: { cases: "الحالات المؤكدة", deaths: "الوفيات", cfr: "معدل الوفيات", incidence: "معدل الإصابة", date: "تاريخ التقرير", source: "النشرة الرسمية لـ OMS", officialSource: "المصدر الرسمي", description: "ملخص", close: "إغلاق", noData: "غ/م", cfrFull: "معدل إماتة الحالات (CFR)", region: "المنطقة", partialData: "بيانات جزئية — الأرقام غير متوفرة في هذا التقرير", dataAge: (d) => `منذ ${d} يوم`, fresh: "بيانات حديثة", stale: "تقرير قديم", incidencePer100k: "لكل 100,000 ساكن", trendDelta: (delta, days) => `${delta > 0 ? "+" : ""}${delta} حالة / ${days} يوم`, illustrative: "غير مؤكد", illustrativeNotice: "أرقام تجريبية غير مؤكدة — لم تُربط بعد بتقرير رسمي مؤكد لمنظمة الصحة العالمية. يُرجى التعامل معها بحذر.", officialBadge: "مصدر رسمي", officialNotice: "مصدر رسمي مؤكد (تقرير منظمة الصحة العالمية أو المركز الأوروبي للوقاية أو وزارة الصحة) — بدون رقم نشرة DON. البيانات موثوقة لكنها غير قابلة للاستشهاد مباشرة." },
+  id: { cases: "Kasus terkonfirmasi", deaths: "Kematian", cfr: "CFR", incidence: "Insidensi", date: "Tanggal laporan", source: "Buletin WHO asli", officialSource: "Sumber resmi", description: "Ringkasan", close: "Tutup", noData: "T/S", cfrFull: "Tingkat kematian kasus (CFR)", region: "Wilayah", partialData: "Data parsial — angka tidak tersedia dalam laporan WHO ini", dataAge: (d) => `${d} hari lalu`, fresh: "Data terbaru", stale: "Laporan lama", incidencePer100k: "per 100.000 penduduk", trendDelta: (delta, days) => `${delta > 0 ? "+" : ""}${delta} kasus / ${days}h`, illustrative: "BELUM DIVERIFIKASI", illustrativeNotice: "Angka sementara yang belum diverifikasi — belum dikaitkan dengan laporan resmi/WHO yang terkonfirmasi. Gunakan dengan hati-hati.", officialBadge: "SUMBER RESMI", officialNotice: "Sumber resmi yang dikonfirmasi (laporan situasi WHO, ECDC, atau Kementerian Kesehatan) — tanpa nomor buletin DON WHO. Data dapat diandalkan namun tidak bisa dikutip langsung sebagai DON." },
 };
 
 const RISK_BG: Record<string, string> = {
@@ -77,8 +79,16 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlis
   const isFresh   = daysSince <= 7;
   const isStale   = daysSince > 30;
 
-  // DON reference from source URL (e.g., "2026-DON603")
-  const donRef = outbreak.source?.match(/item\/([\w-]+)/)?.[1] ?? null;
+  // Three-tier source verification for this row.
+  const status = sourceStatus(outbreak);
+
+  // DON reference from source URL (e.g., "2026-DON603") — only for confirmed DON rows.
+  const donRef = status === 'don' ? (outbreak.source?.match(/item\/([\w-]+)/)?.[1] ?? null) : null;
+
+  // 'official' rows have a real https URL (WHO sitrep, ECDC, national MoH…)
+  // 'don' rows also have a real URL — both get a source link.
+  // 'unverified' rows have a placeholder source and get no link.
+  const hasDisplayableSource = status !== 'unverified';
 
   return createPortal(
     <div
@@ -100,6 +110,22 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlis
           <div className="space-y-2 flex-1 min-w-0">
             <div className="flex items-center gap-2 flex-wrap">
               <RiskBadge level={outbreak.risk_level as "high" | "medium" | "low"} />
+              {status === 'official' && (
+                <span
+                  title={c.officialNotice}
+                  className="inline-flex items-center text-xs px-2 py-0.5 rounded-full bg-amber-900/30 border border-amber-700/50 text-amber-400 font-bold cursor-help"
+                >
+                  {c.officialBadge}
+                </span>
+              )}
+              {status === 'unverified' && (
+                <span
+                  title={c.illustrativeNotice}
+                  className="inline-flex items-center text-xs px-2 py-0.5 rounded-full bg-gray-800 border border-gray-600 text-gray-400 font-bold cursor-help"
+                >
+                  {c.illustrative}
+                </span>
+              )}
               {outbreak.is_pheic && (
                 <span
                   title={
@@ -259,6 +285,20 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlis
           </div>
         )}
 
+        {/* Source verification banner */}
+        {status === 'official' && (
+          <div className="mx-5 mb-3 flex items-start gap-2 bg-amber-900/10 border border-amber-700/30 rounded-xl p-3 text-xs text-amber-300/80">
+            <Info className="w-3.5 h-3.5 shrink-0 mt-0.5" />
+            {c.officialNotice}
+          </div>
+        )}
+        {status === 'unverified' && (
+          <div className="mx-5 mb-3 flex items-start gap-2 bg-gray-800/40 border border-gray-700/40 rounded-xl p-3 text-xs text-gray-400">
+            <Info className="w-3.5 h-3.5 shrink-0 mt-0.5" />
+            {c.illustrativeNotice}
+          </div>
+        )}
+
         {/* Partial data warning */}
         {!hasData && (
           <div className="mx-5 mb-3 flex items-start gap-2 bg-amber-900/20 border border-amber-800/30 rounded-xl p-3 text-xs text-amber-300">
@@ -324,8 +364,8 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlis
           </div>
         )}
 
-        {/* Citation for reports */}
-        {isPaid && outbreak.source && (
+        {/* Citation for reports — only for WHO DON-verified rows */}
+        {isPaid && status === 'don' && (
           <div className="mx-5 mb-3">
             <button
               onClick={async (e) => {
@@ -348,17 +388,28 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlis
           </div>
         )}
 
-        {/* Source links */}
+        {/* Source links — shown for DON and official rows; hidden for unverified */}
         <div className="px-5 pb-5 space-y-2">
-          {outbreak.source && (
+          {status === 'don' && (
             <a
-              href={outbreak.source}
+              href={outbreak.source!}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-2 text-sm text-red-400 hover:text-red-300 transition-colors font-medium"
+              className="flex items-center gap-2 text-sm font-medium transition-colors text-red-400 hover:text-red-300"
             >
               <ExternalLink className="w-4 h-4 shrink-0" />
               {c.source} →
+            </a>
+          )}
+          {status === 'official' && (
+            <a
+              href={outbreak.source!}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 text-sm font-medium transition-colors text-gray-400 hover:text-gray-200"
+            >
+              <ExternalLink className="w-4 h-4 shrink-0" />
+              {c.officialSource} →
             </a>
           )}
         </div>

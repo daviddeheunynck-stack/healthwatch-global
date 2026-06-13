@@ -1,9 +1,10 @@
 "use client";
 
+import React from "react";
 import { useTranslations, useLocale } from "next-intl";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { Activity, Bell, FileText, Globe, CreditCard, LogOut, User, Menu, X, Mail, BookOpen, ArrowLeftRight } from "lucide-react";
+import { Activity, Bell, FileText, Globe, CreditCard, LogOut, Menu, X, Mail, BookOpen, ArrowLeftRight } from "lucide-react";
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase-browser";
 import type { User as SupabaseUser } from "@supabase/supabase-js";
@@ -17,6 +18,10 @@ const LOCALES = [
 ];
 
 const VALID_LOCALES = ["fr", "en", "es", "ar", "id"];
+
+const ABOUT_LABEL: Record<string, string> = {
+  fr: "À propos", en: "About", es: "Acerca de", ar: "حول المنصة", id: "Tentang",
+};
 
 const PLAN_BADGE: Record<string, string> = {
   free: "bg-gray-700 text-gray-300",
@@ -93,12 +98,13 @@ export default function Navbar() {
     window.location.href = segments.join("/") || "/";
   };
 
-  const navLinks = [
+  const navLinks: { href: string; label: string; icon: React.ElementType | null }[] = [
     { href: `/${locale}`,         label: t("dashboard"), icon: Activity  },
     { href: `/${locale}/alerts`,  label: t("alerts"),    icon: Bell           },
     { href: `/${locale}/compare`, label: t("compare"),    icon: ArrowLeftRight },
     { href: `/${locale}/reports`, label: t("reports"),   icon: FileText       },
     { href: `/${locale}/pricing`, label: t("pricing"),   icon: CreditCard },
+    { href: `/${locale}/about`,   label: ABOUT_LABEL[locale] ?? "About", icon: null },
     { href: `/${locale}/contact`, label: t("contact"),   icon: Mail      },
     ...(plan === "enterprise"
       ? [{ href: `/${locale}/docs`, label: "API Docs", icon: BookOpen }]
@@ -126,7 +132,7 @@ export default function Navbar() {
                 pathname === href ? "text-red-400" : "text-gray-400 hover:text-white"
               }`}
             >
-              <Icon className="w-4 h-4" />
+              {Icon && <Icon className="w-4 h-4" />}
               {label}
             </Link>
           ))}
@@ -223,7 +229,7 @@ export default function Navbar() {
                     : "text-gray-400 hover:text-white hover:bg-gray-800"
                 }`}
               >
-                <Icon className="w-4 h-4" />
+                {Icon && <Icon className="w-4 h-4" />}
                 {label}
               </Link>
             ))}

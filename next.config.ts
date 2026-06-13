@@ -67,11 +67,15 @@ const nextConfig: NextConfig = {
         source: "/(.*)",
         headers: securityHeaders,
       },
-      {
-        // Static assets — cache 1 year (Next.js content-hashes them)
-        source: "/_next/static/(.*)",
-        headers: [{ key: "Cache-Control", value: "public, max-age=31536000, immutable" }],
-      },
+      // Static assets — cache 1 year in production (Next.js content-hashes them).
+      // In dev, Turbopack reuses stable chunk filenames across rebuilds, so
+      // immutable caching would prevent HMR changes from reaching the browser.
+      ...(process.env.NODE_ENV === "production"
+        ? [{
+            source: "/_next/static/(.*)",
+            headers: [{ key: "Cache-Control", value: "public, max-age=31536000, immutable" }],
+          }]
+        : []),
       {
         // Favicons & public assets — cache 7 days
         source: "/(favicon.ico|robots.txt|sitemap.xml|.*\\.png|.*\\.svg|.*\\.ico|.*\\.webp)",

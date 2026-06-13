@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Star, Loader2 } from "lucide-react";
+import { useUpgradeModal } from "@/lib/upgrade-modal-context";
 
 interface Props {
   outbreakId: string;
@@ -11,22 +12,26 @@ interface Props {
 }
 
 const TOOLTIP: Record<string, { add: string; remove: string; locked: string }> = {
-  fr: { add: "Surveiller ce foyer", remove: "Ne plus surveiller", locked: "Plan Pro requis" },
-  en: { add: "Watch this outbreak", remove: "Unwatch", locked: "Pro plan required" },
-  es: { add: "Seguir este brote", remove: "Dejar de seguir", locked: "Plan Pro requerido" },
-  ar: { add: "متابعة هذا التفشي", remove: "إلغاء المتابعة", locked: "مطلوب خطة Pro" },
-  id: { add: "Pantau wabah ini", remove: "Berhenti memantau", locked: "Butuh paket Pro" },
+  fr: { add: "Surveiller ce foyer", remove: "Ne plus surveiller", locked: "Alertes Pro — cliquez pour activer" },
+  en: { add: "Watch this outbreak", remove: "Unwatch", locked: "Pro alerts — click to enable" },
+  es: { add: "Seguir este brote", remove: "Dejar de seguir", locked: "Alertas Pro — clic para activar" },
+  ar: { add: "متابعة هذا التفشي", remove: "إلغاء المتابعة", locked: "تنبيهات Pro — انقر للتفعيل" },
+  id: { add: "Pantau wabah ini", remove: "Berhenti memantau", locked: "Peringatan Pro — klik untuk aktifkan" },
 };
 
 export default function WatchlistButton({ outbreakId, initialWatched, isPaid, locale }: Props) {
   const [watched, setWatched] = useState(initialWatched);
   const [loading, setLoading] = useState(false);
+  const { openModal } = useUpgradeModal();
   const t = TOOLTIP[locale] ?? TOOLTIP.en;
 
   if (!isPaid) {
     return (
-      <button disabled title={t.locked}
-        className="p-1.5 rounded text-gray-700 cursor-not-allowed">
+      <button
+        onClick={(e) => { e.stopPropagation(); openModal("realtime"); }}
+        title={t.locked}
+        className="p-1.5 rounded text-gray-600 hover:text-amber-400 hover:bg-gray-700 transition-colors"
+      >
         <Star className="w-3.5 h-3.5" />
       </button>
     );

@@ -18,11 +18,12 @@ const LinkedInIcon = () => (
 );
 
 interface Props {
-  disease:  string;
-  country:  string;
-  cases:    number;
-  riskLevel: string;
-  locale:   string;
+  disease:    string;
+  country:    string;
+  cases:      number;
+  riskLevel:  string;
+  locale:     string;
+  outbreakId?: string;
 }
 
 const RISK_EMOJI: Record<string, string> = {
@@ -70,14 +71,16 @@ const SHARE_COPY: Record<string, {
 
 const BASE_URL = "https://healthwatch-global.com";
 
-export default function ShareOutbreakButton({ disease, country, cases, riskLevel, locale }: Props) {
+export default function ShareOutbreakButton({ disease, country, cases, riskLevel, locale, outbreakId }: Props) {
   const [open,   setOpen]   = useState(false);
   const [copied, setCopied] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   const c   = SHARE_COPY[locale] ?? SHARE_COPY.en;
 
   const text    = c.tweet(disease, country, cases, riskLevel);
-  const pageUrl = `${BASE_URL}/${locale}`;
+  const pageUrl = outbreakId
+    ? `${BASE_URL}/${locale}/outbreak/${outbreakId}`
+    : `${BASE_URL}/${locale}`;
   const encoded = encodeURIComponent(text);
   const encodedUrl = encodeURIComponent(pageUrl);
 

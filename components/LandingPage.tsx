@@ -73,6 +73,7 @@ const COPY: Record<string, {
   trustBadges: string[];
   comparisonTitle: string;
   comparisonFeatures: string[];
+  aboutLink: string;
 }> = {
   fr: {
     heroBadge: "Données OMS en direct · 195 pays · Mis à jour quotidiennement",
@@ -141,6 +142,7 @@ const COPY: Record<string, {
     trustBadges: ["RGPD conforme · Hébergement UE", "Données OMS officielles · API directe", "99,9 % de disponibilité", "Sans engagement · Annulez à tout moment"],
     comparisonTitle: "HealthWatch vs who.int",
     comparisonFeatures: ["5 langues (FR, EN, ES, AR, ID)", "Alertes email par maladie / région", "CFR & incidence calculés automatiquement", "Rapports PDF en 1 clic", "Filtres, tri & export CSV", "Watchlist & notifications"],
+    aboutLink: "Construit par un professionnel passionné par la santé mondiale → En savoir plus",
   },
   en: {
     heroBadge: "Live WHO data · 195 countries · Updated daily",
@@ -209,6 +211,7 @@ const COPY: Record<string, {
     trustBadges: ["GDPR compliant · EU hosting", "Official WHO data · Direct API", "99.9% uptime", "No commitment · Cancel anytime"],
     comparisonTitle: "HealthWatch vs who.int",
     comparisonFeatures: ["5 languages (FR, EN, ES, AR, ID)", "Email alerts by disease / region", "CFR & incidence auto-calculated", "PDF reports in 1 click", "Filters, sorting & CSV export", "Watchlist & notifications"],
+    aboutLink: "Built by a professional passionate about global health → Learn more",
   },
   es: {
     heroBadge: "Datos OMS en vivo · 195 países · Actualizado diariamente",
@@ -277,6 +280,7 @@ const COPY: Record<string, {
     trustBadges: ["Conforme RGPD · Alojamiento en UE", "Datos OMS oficiales · API directa", "99,9% disponibilidad", "Sin compromiso · Cancele cuando quiera"],
     comparisonTitle: "HealthWatch vs who.int",
     comparisonFeatures: ["5 idiomas (FR, EN, ES, AR, ID)", "Alertas email por enfermedad / región", "CFR & incidencia calculados automáticamente", "Informes PDF en 1 clic", "Filtros, orden & exportación CSV", "Lista de seguimiento & notificaciones"],
+    aboutLink: "Creado por un profesional apasionado por la salud global → Saber más",
   },
   ar: {
     heroBadge: "بيانات منظمة الصحة العالمية مباشرة · 195 دولة · تحديث يومي",
@@ -345,6 +349,7 @@ const COPY: Record<string, {
     trustBadges: ["متوافق مع GDPR · استضافة أوروبية", "بيانات WHO رسمية · API مباشر", "99.9% وقت التشغيل", "بدون التزام · ألغِ في أي وقت"],
     comparisonTitle: "HealthWatch مقابل who.int",
     comparisonFeatures: ["5 لغات (FR, EN, ES, AR, ID)", "تنبيهات البريد الإلكتروني حسب المرض / المنطقة", "CFR والإصابة محسوبان تلقائياً", "تقارير PDF بنقرة واحدة", "فلاتر وترتيب وتصدير CSV", "قائمة المراقبة والإشعارات"],
+    aboutLink: "أُنشئت بواسطة متخصص شغوف بالصحة العالمية ← تعرف أكثر",
   },
   id: {
     heroBadge: "Data WHO langsung · 195 negara · Diperbarui setiap hari",
@@ -413,6 +418,7 @@ const COPY: Record<string, {
     trustBadges: ["Sesuai GDPR · Hosting UE", "Data WHO resmi · API langsung", "Uptime 99,9%", "Tanpa komitmen · Batalkan kapan saja"],
     comparisonTitle: "HealthWatch vs who.int",
     comparisonFeatures: ["5 bahasa (FR, EN, ES, AR, ID)", "Peringatan email per penyakit / wilayah", "CFR & insidensi dihitung otomatis", "Laporan PDF dalam 1 klik", "Filter, sortir & ekspor CSV", "Daftar pantau & notifikasi"],
+    aboutLink: "Dibangun oleh profesional yang bersemangat tentang kesehatan global → Pelajari lebih lanjut",
   },
 };
 
@@ -649,6 +655,15 @@ export default async function LandingPage({ locale }: { locale: string }) {
               <span className="text-xs text-gray-400 leading-snug">{c.trustBadges[i]}</span>
             </div>
           ))}
+        </div>
+
+        <div className="text-center">
+          <Link
+            href={`/${locale}/about`}
+            className="text-xs text-gray-500 hover:text-gray-300 transition-colors underline-offset-2 hover:underline"
+          >
+            {c.aboutLink}
+          </Link>
         </div>
 
       </section>

@@ -322,3 +322,31 @@ export function isNewOutbreak(outbreak: Outbreak): boolean {
   if (!ref) return false;
   return Date.now() - new Date(ref).getTime() < 24 * 60 * 60 * 1000;
 }
+
+// A real, citable WHO Disease Outbreak News article, e.g.
+// "https://www.who.int/emergencies/disease-outbreak-news/item/2026-DON606".
+// Same pattern as scripts/cleanup-fictional-outbreaks.mjs's REAL_DON check.
+const REAL_WHO_DON_SOURCE = /^https:\/\/www\.who\.int\/emergencies\/disease-outbreak-news\/item\/\d{4}-DON\d+$/i;
+
+// Fake seed DON URLs look like /item/dengue-cotedivoire-2024 — no year-DONnumber pattern.
+const FAKE_SEED_DON = /\/disease-outbreak-news\/item\/(?!\d{4}-DON)/i;
+
+/**
+ * Three-tier source verification:
+ *   'don'        — real WHO DON article (fully citable, citation button shown)
+ *   'official'   — real https URL from WHO sitrep / ECDC / national MoH, but no DON id
+ *   'unverified' — placeholder source ("OMS", "PAHO", fake seed URL, etc.)
+ */
+export type SourceStatus = 'don' | 'official' | 'unverified';
+
+export function sourceStatus(outbreak: Pick<Outbreak, "source">): SourceStatus {
+  const src = outbreak.source || "";
+  if (REAL_WHO_DON_SOURCE.test(src)) return 'don';
+  if (src.startsWith("https://") && !FAKE_SEED_DON.test(src)) return 'official';
+  return 'unverified';
+}
+
+/** Backward-compatible alias: true when source is not a confirmed WHO DON article. */
+export function isIllustrativeData(outbreak: Pick<Outbreak, "source">): boolean {
+  return sourceStatus(outbreak) !== 'don';
+}

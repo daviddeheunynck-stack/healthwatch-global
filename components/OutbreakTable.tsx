@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useMemo, useCallback, useEffect } from "react";
-import { Search, X, ChevronUp, ChevronDown, ChevronsUpDown, Download, Lock, TrendingUp, TrendingDown, Minus } from "lucide-react";
+import { Search, X, ChevronUp, ChevronDown, ChevronsUpDown, Download, Lock, TrendingUp, TrendingDown, Minus, ExternalLink } from "lucide-react";
+import Link from "next/link";
 import OutbreakDetailModal from "@/components/OutbreakDetailModal";
 import SavedFilters from "@/components/SavedFilters";
 import WatchlistButton from "@/components/WatchlistButton";
@@ -9,7 +10,7 @@ import { track } from "@vercel/analytics/react";
 
 type SortKey = "risk" | "cases" | "deaths" | "cfr" | "date";
 type SortDir = "asc" | "desc";
-import { getLocalizedDisease, getLocalizedCountry, isNewOutbreak } from "@/lib/outbreaks";
+import { getLocalizedDisease, getLocalizedCountry, isNewOutbreak, sourceStatus } from "@/lib/outbreaks";
 import type { Outbreak } from "@/lib/outbreaks";
 import type { OutbreakTrend } from "@/lib/outbreak-trend";
 import RiskBadge from "@/components/RiskBadge";
@@ -52,6 +53,11 @@ export interface OutbreakTableLabels {
   lockedCta: string;
   // Export
   exportCsv: string;
+  // Source verification badges
+  illustrativeBadge: string;
+  illustrativeTooltip: string;
+  officialBadge: string;
+  officialTooltip: string;
 }
 
 type Region    = "all" | "africa" | "asia" | "europe" | "americas" | "oceania";
@@ -512,6 +518,16 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
                           🚨 PHEIC
                         </span>
                       )}
+                      {sourceStatus(outbreak) === 'official' && (
+                        <span title={l.officialTooltip} className="inline-flex items-center text-[10px] font-bold px-1.5 py-0.5 rounded bg-amber-900/30 border border-amber-700/50 text-amber-400 shrink-0 cursor-help whitespace-nowrap">
+                          {l.officialBadge}
+                        </span>
+                      )}
+                      {sourceStatus(outbreak) === 'unverified' && (
+                        <span title={l.illustrativeTooltip} className="inline-flex items-center text-[10px] font-bold px-1.5 py-0.5 rounded bg-gray-800 border border-gray-600 text-gray-400 shrink-0 cursor-help whitespace-nowrap">
+                          {l.illustrativeBadge}
+                        </span>
+                      )}
                     </div>
                   </td>
                   <td className="px-4 py-3 text-gray-300">
@@ -584,7 +600,17 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
                         cases={outbreak.cases}
                         riskLevel={outbreak.risk_level}
                         locale={locale}
+                        outbreakId={outbreak.id}
                       />
+                      <Link
+                        href={`/${locale}/outbreak/${outbreak.id}`}
+                        target="_blank"
+                        onClick={(e) => e.stopPropagation()}
+                        title={{ fr: "Voir la fiche", en: "View full page", es: "Ver página", ar: "عرض الصفحة", id: "Lihat halaman" }[locale] ?? "View"}
+                        className="p-1.5 rounded hover:bg-gray-700 text-gray-500 hover:text-gray-300 transition-colors"
+                      >
+                        <ExternalLink className="w-3.5 h-3.5" />
+                      </Link>
                     </div>
                   </td>
                 </tr>

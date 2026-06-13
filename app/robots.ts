@@ -15,6 +15,7 @@ export default function robots(): MetadataRoute.Robots {
           "/*/admin",
           "/*/success",
           "/*/outbreak/*/print",
+          "/*/qa-source-check",
           "/api/",
         ],
       },
