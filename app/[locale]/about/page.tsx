@@ -3,11 +3,31 @@ import { Activity, Globe, Database, Zap, Users, User, ArrowLeft, ShieldCheck, Ma
 import type { Metadata } from "next";
 
 const ABOUT_META: Record<string, { title: string; description: string }> = {
-  en: { title: "About", description: "Learn how HealthWatch Global monitors disease outbreaks using the WHO OData API, and who the platform is built for." },
-  fr: { title: "À propos", description: "Découvrez comment HealthWatch Global surveille les foyers épidémiques en utilisant l'API OData de l'OMS, et à qui la plateforme s'adresse." },
-  es: { title: "Acerca de", description: "Conozca cómo HealthWatch Global monitorea los brotes de enfermedades utilizando la API OData de la OMS y para quién está diseñada la plataforma." },
-  ar: { title: "حول المنصة", description: "تعرف على كيفية مراقبة HealthWatch Global لتفشي الأمراض باستخدام واجهة OData لمنظمة الصحة العالمية، ولمن صُممت هذه المنصة." },
-  id: { title: "Tentang", description: "Pelajari bagaimana HealthWatch Global memantau wabah penyakit menggunakan WHO OData API dan untuk siapa platform ini dibangun." },
+  en: {
+    title: "About",
+    description: "HealthWatch Global monitors disease outbreaks worldwide using official WHO Disease Outbreak News data. Built for epidemiologists, NGOs, governments and health professionals — in 5 languages.",
+  },
+  fr: {
+    title: "À propos",
+    description: "HealthWatch Global surveille les épidémies mondiales à partir des données officielles de l'OMS. Conçu pour les épidémiologistes, ONG, gouvernements et professionnels de santé — en 5 langues.",
+  },
+  es: {
+    title: "Acerca de",
+    description: "HealthWatch Global monitorea brotes de enfermedades en todo el mundo con datos oficiales de la OMS. Diseñado para epidemiólogos, ONG, gobiernos y profesionales de la salud — en 5 idiomas.",
+  },
+  ar: {
+    title: "حول المنصة",
+    description: "تراقب HealthWatch Global تفشي الأمراض حول العالم باستخدام بيانات منظمة الصحة العالمية الرسمية. مصمَّمة لعلماء الأوبئة والمنظمات غير الحكومية والحكومات والمهنيين الصحيين — بـ 5 لغات.",
+  },
+  id: {
+    title: "Tentang",
+    description: "HealthWatch Global memantau wabah penyakit di seluruh dunia menggunakan data resmi WHO Disease Outbreak News. Dibangun untuk ahli epidemiologi, LSM, pemerintah, dan tenaga kesehatan — dalam 5 bahasa.",
+  },
+};
+
+const LOCALES = ["en", "fr", "es", "ar", "id"] as const;
+const OG_LOCALE: Record<string, string> = {
+  en: "en_US", fr: "fr_FR", es: "es_ES", ar: "ar_SA", id: "id_ID",
 };
 
 export async function generateMetadata({
@@ -17,7 +37,41 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const m = ABOUT_META[locale] ?? ABOUT_META.en;
-  return { title: m.title, description: m.description };
+  const url = `https://healthwatch-global.com/${locale}/about`;
+
+  return {
+    title: m.title,
+    description: m.description,
+    alternates: {
+      canonical: url,
+      languages: Object.fromEntries(
+        LOCALES.map((l) => [l, `https://healthwatch-global.com/${l}/about`])
+      ),
+    },
+    openGraph: {
+      type: "website",
+      url,
+      title: `${m.title} | HealthWatch Global`,
+      description: m.description,
+      siteName: "HealthWatch Global",
+      locale: OG_LOCALE[locale] ?? "en_US",
+      images: [
+        {
+          url: `https://healthwatch-global.com/api/og?locale=${locale}`,
+          width: 1200,
+          height: 630,
+          alt: `${m.title} — HealthWatch Global`,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${m.title} | HealthWatch Global`,
+      description: m.description,
+      images: [`https://healthwatch-global.com/api/og?locale=${locale}`],
+    },
+    robots: { index: true, follow: true },
+  };
 }
 
 const LABELS: Record<string, {

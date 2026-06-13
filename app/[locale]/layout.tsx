@@ -111,7 +111,7 @@ export default async function LocaleLayout({
 
   return (
     <html lang={locale} dir={isRTL ? "rtl" : "ltr"}>
-      <body className="bg-gray-950 text-gray-100 min-h-screen flex flex-col">
+      <body className="bg-gray-950 text-gray-100 min-h-screen flex flex-col overflow-x-hidden">
         <NextIntlClientProvider messages={messages}>
           <UpgradeModalProvider>
             <Navbar />
