@@ -44,6 +44,24 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Email delivery failed" }, { status: 502 });
     }
 
+    // Notify founder of new signup (fire-and-forget)
+    const adminEmail = clean(process.env.ADMIN_EMAILS)?.split(",")[0];
+    if (adminEmail) {
+      fetch("https://api.brevo.com/v3/smtp/email", {
+        method: "POST",
+        headers: { "api-key": BREVO_API_KEY, "Content-Type": "application/json" },
+        body: JSON.stringify({
+          sender: { name: "HealthWatch Global", email: "alerts@healthwatch-global.com" },
+          to: [{ email: adminEmail }],
+          subject: `🆕 Nouvel inscrit : ${email}`,
+          htmlContent: `<p>Nouvelle inscription sur HealthWatch Global.</p>
+            <p><strong>Email :</strong> ${email}</p>
+            <p><strong>Langue :</strong> ${locale || "fr"}</p>
+            <p><strong>Date :</strong> ${new Date().toLocaleString("fr-FR", { timeZone: "Europe/Paris" })}</p>`,
+        }),
+      }).catch((e) => console.error("[send-welcome] founder notification failed:", e));
+    }
+
     return NextResponse.json({ sent: true });
   } catch (e: unknown) {
     console.error("[send-welcome] unexpected error:", errorMessage(e));
