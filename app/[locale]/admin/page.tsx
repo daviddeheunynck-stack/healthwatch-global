@@ -133,13 +133,22 @@ export default async function AdminPage({
     { data: profiles },
     { data: alertRegions },
     { data: slackUsers },
+    { data: { users: authUsers } },
   ] = await Promise.all([
     admin.from("outbreaks").select("*").order("date", { ascending: false }),
     admin.from("subscriptions").select("*").order("created_at", { ascending: false }),
-    admin.from("profiles").select("id, email, plan, created_at").order("created_at", { ascending: false }),
+    admin.from("profiles").select("id, email, plan, created_at, trial_ends_at").order("created_at", { ascending: false }),
     admin.from("user_alert_regions").select("user_id"),
     admin.from("profiles").select("id").not("slack_webhook_url", "is", null),
+    admin.auth.admin.listUsers(),
   ]);
+
+  const nameByEmail: Record<string, string> = {};
+  for (const u of authUsers ?? []) {
+    const meta = u.user_metadata ?? {};
+    const name = meta.full_name || meta.name || meta.display_name || null;
+    if (name && u.email) nameByEmail[u.email] = name;
+  }
 
   // ── Derived metrics ────────────────────────────────────────────────────────
   const activeCount = outbreaks?.filter((o) => o.active).length ?? 0;
@@ -279,42 +288,32 @@ export default async function AdminPage({
           <table className="w-full text-sm min-w-[500px]">
             <thead>
               <tr className="bg-gray-900 text-gray-400 text-xs uppercase tracking-wide border-b border-gray-800">
+                <th className="px-4 py-3 text-left">Nom</th>
                 <th className="px-4 py-3 text-left">Email</th>
                 <th className="px-4 py-3 text-left">Plan</th>
-                <th className="px-4 py-3 text-left">Inscrit le</th>
-                <th className="px-4 py-3 text-left">Ancienneté</th>
+                <th className="px-4 py-3 text-left">Trial jusqu'au</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-800">
               {profiles?.map((p) => {
-                const daysAgo = p.created_at
-                  ? Math.floor((now.getTime() - new Date(p.created_at).getTime()) / 86400_000)
-                  : null;
+                const trialDate = p.trial_ends_at ? new Date(p.trial_ends_at) : null;
+                const trialExpired = trialDate && trialDate < now;
                 return (
                   <tr key={p.id} className="hover:bg-gray-800/50 transition-colors">
+                    <td className="px-4 py-3 text-gray-300">{(p.email ? nameByEmail[p.email] : null) ?? "—"}</td>
                     <td className="px-4 py-3 text-white">{p.email ?? "—"}</td>
                     <td className="px-4 py-3">
-                      <span
-                        className={`text-xs px-2 py-0.5 rounded-full font-medium ${
-                          p.plan === "pro"
-                            ? "bg-red-500/10 text-red-400"
-                            : p.plan === "starter"
-                            ? "bg-blue-500/10 text-blue-400"
-                            : p.plan === "enterprise"
-                            ? "bg-purple-500/10 text-purple-400"
-                            : "bg-gray-700 text-gray-400"
-                        }`}
-                      >
+                      <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${
+                        p.plan === "pro" ? "bg-red-500/10 text-red-400"
+                        : p.plan === "starter" ? "bg-blue-500/10 text-blue-400"
+                        : p.plan === "enterprise" ? "bg-purple-500/10 text-purple-400"
+                        : "bg-gray-700 text-gray-400"
+                      }`}>
                         {p.plan ?? "free"}
                       </span>
                     </td>
-                    <td className="px-4 py-3 text-gray-400">
-                      {p.created_at
-                        ? new Date(p.created_at).toLocaleDateString("fr")
-                        : "—"}
-                    </td>
-                    <td className="px-4 py-3 text-gray-500 text-xs">
-                      {daysAgo !== null ? `J+${daysAgo}` : "—"}
+                    <td className={`px-4 py-3 text-xs ${trialExpired ? "text-red-400" : "text-gray-400"}`}>
+                      {trialDate ? trialDate.toLocaleDateString("fr") : "—"}
                     </td>
                   </tr>
                 );
