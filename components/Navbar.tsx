@@ -127,12 +127,17 @@ export default function Navbar() {
             <Link
               key={href}
               href={href}
-              className={`flex items-center gap-1.5 text-sm font-medium transition-colors whitespace-nowrap ${
-                pathname === href ? "text-red-400" : "text-gray-400 hover:text-white"
+              className={`relative flex items-center gap-1.5 text-sm font-medium transition-colors whitespace-nowrap px-2 py-1.5 rounded-md ${
+                pathname === href
+                  ? "text-white bg-gray-800"
+                  : "text-gray-400 hover:text-white hover:bg-gray-800/60"
               }`}
             >
               {Icon && <Icon className="w-4 h-4" />}
               {label}
+              {pathname === href && (
+                <span className="absolute bottom-0 left-2 right-2 h-0.5 bg-red-500 rounded-full" />
+              )}
             </Link>
           ))}
         </div>
