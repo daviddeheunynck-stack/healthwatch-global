@@ -575,16 +575,17 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
                     <RiskBadge level={outbreak.risk_level} />
                   </td>
                   <td className="px-4 py-3 hidden md:table-cell">
-                    <div className="text-gray-400 text-sm">{outbreak.date}</div>
-                    {outbreak.updated_at && (
-                      <div className="text-gray-600 text-xs mt-0.5">
-                        {(() => {
-                          const h = Math.floor((Date.now() - new Date(outbreak.updated_at!).getTime()) / 3600000);
-                          const dSuffix = ({ fr: "j", en: "d", es: "d", ar: "ي", id: "h" } as Record<string,string>)[locale] ?? "d";
-                          return h < 1 ? "< 1h" : h < 24 ? `${h}h` : `${Math.floor(h/24)}${dSuffix}`;
-                        })()}
-                      </div>
-                    )}
+                    <div className="text-gray-400 text-sm">
+                      {(() => {
+                        const [y, m, d] = outbreak.date.split("-").map(Number);
+                        const localeMap: Record<string, string> = { fr: "fr-FR", es: "es-ES", ar: "ar-SA", id: "id-ID" };
+                        const formatted = new Date(y, m - 1, d).toLocaleDateString(
+                          localeMap[locale] ?? "en-GB",
+                          { day: "numeric", month: "short", year: "numeric" }
+                        );
+                        return locale === "fr" ? `au ${formatted}` : locale === "ar" ? `بتاريخ ${formatted}` : formatted;
+                      })()}
+                    </div>
                   </td>
                   <td className="px-2 py-3">
                     <div className="flex items-center gap-0.5">

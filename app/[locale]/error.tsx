@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import * as Sentry from "@sentry/nextjs";
 import { useLocale } from "next-intl";
 import { AlertCircle, RefreshCw } from "lucide-react";
 
@@ -48,7 +49,7 @@ export default function LocaleError({
   const l = LABELS[locale] ?? LABELS.en;
 
   useEffect(() => {
-    console.error("[HealthWatch] Unhandled error:", error);
+    Sentry.captureException(error);
   }, [error]);
 
   return (

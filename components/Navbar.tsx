@@ -99,15 +99,14 @@ export default function Navbar() {
   };
 
   const navLinks: { href: string; label: string; icon: React.ElementType | null }[] = [
-    { href: `/${locale}`,         label: t("dashboard"), icon: Activity  },
-    { href: `/${locale}/alerts`,  label: t("alerts"),    icon: Bell           },
-    { href: `/${locale}/compare`, label: t("compare"),    icon: ArrowLeftRight },
-    { href: `/${locale}/reports`, label: t("reports"),   icon: FileText       },
-    { href: `/${locale}/pricing`, label: t("pricing"),   icon: CreditCard },
+    { href: `/${locale}`,         label: t("dashboard"), icon: null },
+    { href: `/${locale}/alerts`,  label: t("alerts"),    icon: null },
+    { href: `/${locale}/compare`, label: t("compare"),   icon: null },
+    { href: `/${locale}/reports`, label: t("reports"),   icon: null },
+    { href: `/${locale}/pricing`, label: t("pricing"),   icon: null },
     { href: `/${locale}/about`,   label: ABOUT_LABEL[locale] ?? "About", icon: null },
-    { href: `/${locale}/contact`, label: t("contact"),   icon: Mail      },
     ...(plan === "enterprise"
-      ? [{ href: `/${locale}/docs`, label: "API Docs", icon: BookOpen }]
+      ? [{ href: `/${locale}/docs`, label: "API Docs", icon: null }]
       : []),
   ];
 
@@ -123,7 +122,7 @@ export default function Navbar() {
         </div>
 
         {/* Desktop: nav links */}
-        <div className="hidden lg:flex items-center gap-5">
+        <div className="hidden lg:flex items-center gap-3">
           {navLinks.map(({ href, label, icon: Icon }) => (
             <Link
               key={href}

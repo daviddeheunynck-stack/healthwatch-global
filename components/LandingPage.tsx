@@ -76,7 +76,7 @@ const COPY: Record<string, {
   aboutLink: string;
 }> = {
   fr: {
-    heroBadge: "Données OMS en direct · 195 pays · Mis à jour quotidiennement",
+    heroBadge: "Données officielles OMS · 195 pays · Synchronisation automatique",
     heroTitle: ["Toutes les données OMS.", "Sans les heures de recherche."],
     heroSub: "Médecin, consultant ou analyste santé — vous consultez déjà who.int. HealthWatch l'agrège, le traduit dans votre langue et vous alerte en avance sur les événements.",
     heroCta: "Créer un compte gratuit",
@@ -85,7 +85,7 @@ const COPY: Record<string, {
     statOutbreaks: "foyers actifs",
     statCountries: "pays touchés",
     statHighRisk: "alertes haut risque",
-    statUpdated: "Mis à jour quotidiennement",
+    statUpdated: "Données officielles vérifiées",
     problemTitle: "L'OMS déclare 15 à 25 nouveaux foyers chaque mois.",
     problemSub: "La plupart des organisations de santé l'apprennent trop tard — après que les médias locaux en aient parlé, après que les équipes terrain aient signalé les premiers cas. HealthWatch Global renverse ce délai.",
     problemStats: [
@@ -94,7 +94,7 @@ const COPY: Record<string, {
       { value: "× 10", label: "coût d'une crise réactive vs anticipée" },
     ],
     previewTitle: "Ce que vos équipes verront",
-    previewSub: "Les données ci-dessous sont mises à jour quotidiennement depuis l'API WHO Disease Outbreak News.",
+    previewSub: "Les données ci-dessous proviennent de sources officielles (OMS DON et agences de santé nationales) et sont synchronisées automatiquement.",
     previewLive: "En direct",
     previewCols: { disease: "Maladie", country: "Pays", risk: "Risque" },
     featuresTitle: "Tout ce dont votre équipe a besoin",
@@ -145,7 +145,7 @@ const COPY: Record<string, {
     aboutLink: "Construit par un professionnel passionné par la santé mondiale → En savoir plus",
   },
   en: {
-    heroBadge: "Live WHO data · 195 countries · Updated daily",
+    heroBadge: "Official WHO data · 195 countries · Auto-synced",
     heroTitle: ["All WHO outbreak data.", "Without the research hours."],
     heroSub: "Travel medicine doctor, consultant or health analyst — you already check who.int. HealthWatch aggregates it, translates it into your language, and alerts you first.",
     heroCta: "Create free account",
@@ -154,7 +154,7 @@ const COPY: Record<string, {
     statOutbreaks: "active outbreaks",
     statCountries: "countries affected",
     statHighRisk: "high-risk alerts",
-    statUpdated: "Updated daily",
+    statUpdated: "Verified official data",
     problemTitle: "The WHO declares 15–25 new outbreaks every month.",
     problemSub: "Most health organizations learn too late — after local media, after field teams report first cases. HealthWatch Global reverses that delay.",
     problemStats: [
@@ -163,7 +163,7 @@ const COPY: Record<string, {
       { value: "× 10", label: "cost of reactive vs. anticipatory response" },
     ],
     previewTitle: "What your teams will see",
-    previewSub: "The data below is updated daily and sourced from the WHO Disease Outbreak News API.",
+    previewSub: "The data below comes from official sources (WHO DON and national health agencies) and is automatically synchronized.",
     previewLive: "Live",
     previewCols: { disease: "Disease", country: "Country", risk: "Risk" },
     featuresTitle: "Everything your team needs",

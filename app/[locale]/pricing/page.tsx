@@ -34,7 +34,7 @@ const COPY: Record<string, {
   en: {
     heroTag: "Designed for health organizations and their teams worldwide",
     heroTitle: "Anticipate. Don't just react.",
-    heroSub: "A single undetected outbreak can cost your organization months of crisis response. HealthWatch Global gives your teams daily intelligence sourced directly from WHO.",
+    heroSub: "A single undetected outbreak can cost your organization months of crisis response. HealthWatch Global gives your teams actionable intelligence sourced directly from official health agencies.",
     orgTypes: ["Ministries of Health", "International NGOs", "Humanitarian Organizations", "Research Institutes", "Private Health Sector"],
     orgLabel: "Built for",
     guarantee: "Cancel anytime. 14-day refund.",
@@ -65,7 +65,7 @@ const COPY: Record<string, {
   fr: {
     heroTag: "Conçu pour les organisations de santé et leurs équipes partout dans le monde",
     heroTitle: "Anticipez. Ne réagissez plus.",
-    heroSub: "Un foyer épidémique non détecté à temps peut coûter à votre organisation des mois de gestion de crise. HealthWatch Global fournit à vos équipes des données quotidiennes, directement issues de l'OMS.",
+    heroSub: "Un foyer épidémique non détecté à temps peut coûter à votre organisation des mois de gestion de crise. HealthWatch Global fournit à vos équipes des données de surveillance fiables, directement issues des sources officielles de santé.",
     orgTypes: ["Ministères de la Santé", "ONG internationales", "Organisations humanitaires", "Instituts de recherche", "Secteur privé de la santé"],
     orgLabel: "Conçu pour",
     guarantee: "Sans engagement. Remboursement sous 14 jours.",

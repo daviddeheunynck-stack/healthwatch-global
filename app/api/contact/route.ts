@@ -6,6 +6,8 @@ export const dynamic = "force-dynamic";
 const BOM = String.fromCharCode(65279);
 const clean = (val: string | undefined) =>
   (val || "").replace(new RegExp("^" + BOM), "").trim();
+const esc = (s: string) =>
+  s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 
 export async function POST(req: NextRequest) {
   // ── Rate limiting: 3 messages per IP per 10 minutes ─────────────────────────
@@ -49,12 +51,12 @@ export async function POST(req: NextRequest) {
           <div style="font-family:sans-serif;max-width:600px;margin:0 auto;">
             <h2 style="color:#dc2626;">New contact from HealthWatch Global</h2>
             <table style="width:100%;border-collapse:collapse;">
-              <tr><td style="padding:8px;color:#6b7280;width:130px;">Name</td><td style="padding:8px;font-weight:600;">${name}</td></tr>
-              <tr><td style="padding:8px;color:#6b7280;">Organization</td><td style="padding:8px;">${organization || "—"}</td></tr>
-              <tr><td style="padding:8px;color:#6b7280;">Email</td><td style="padding:8px;"><a href="mailto:${email}">${email}</a></td></tr>
+              <tr><td style="padding:8px;color:#6b7280;width:130px;">Name</td><td style="padding:8px;font-weight:600;">${esc(name)}</td></tr>
+              <tr><td style="padding:8px;color:#6b7280;">Organization</td><td style="padding:8px;">${esc(organization || "—")}</td></tr>
+              <tr><td style="padding:8px;color:#6b7280;">Email</td><td style="padding:8px;"><a href="mailto:${esc(email)}">${esc(email)}</a></td></tr>
             </table>
             <div style="margin-top:16px;padding:16px;background:#f9fafb;border-radius:8px;border-left:4px solid #dc2626;">
-              <p style="margin:0;white-space:pre-line;">${message}</p>
+              <p style="margin:0;white-space:pre-line;">${esc(message)}</p>
             </div>
           </div>
         `,

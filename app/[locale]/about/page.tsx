@@ -104,10 +104,10 @@ const LABELS: Record<string, {
       "Passionné depuis plusieurs années par le suivi des grandes dynamiques sanitaires mondiales, je consultais régulièrement les bulletins de l'OMS — et je perdais un temps fou à naviguer entre des pages en anglais, sans filtres, sans alertes, sans vue d'ensemble. J'ai construit HealthWatch pour résoudre ce problème à la source : agréger ces données, les traduire et les structurer pour qu'un professionnel y accède en quelques clics plutôt qu'en heures de recherche manuelle.",
     missionTitle: "Notre mission",
     missionText:
-      "HealthWatch Global agrège quotidiennement les alertes officielles de l'Organisation Mondiale de la Santé afin de fournir un tableau de bord lisible aux professionnels de santé, aux voyageurs, aux journalistes et aux organisations qui ont besoin d'être informés des foyers épidémiques dès leur déclaration.",
+      "HealthWatch Global agrège automatiquement les alertes officielles de l'Organisation Mondiale de la Santé et des agences de santé nationales afin de fournir un tableau de bord lisible aux professionnels de santé, aux voyageurs, aux journalistes et aux organisations qui ont besoin d'être informés des foyers épidémiques dès leur déclaration.",
     whoTitle: "Source des données : OMS",
     whoText:
-      "Toutes les alertes sanitaires proviennent de l'API officielle Disease Outbreak News (DON) de l'OMS — la même source que celle utilisée par les gouvernements et les agences de santé publique du monde entier. Aucune donnée non vérifiée, aucun média tiers. Nous interrogeons cette API quotidiennement pour vous garantir une information à jour.",
+      "Les alertes sanitaires vérifiées proviennent de l'API officielle Disease Outbreak News (DON) de l'OMS — la même source que celle utilisée par les gouvernements et les agences de santé publique du monde entier. Les données officielles (ECDC, CDC, agences nationales) complètent la couverture pour les maladies endémiques non couvertes par le DON. Aucune donnée non vérifiée, aucun média tiers.",
     howTitle: "Comment ça marche",
     howSteps: [
       { title: "Collecte", text: "Notre pipeline interroge l'API OData de l'OMS et extrait les informations clés : maladie, pays, cas confirmés, décès." },
@@ -140,10 +140,10 @@ const LABELS: Record<string, {
       "I've spent years following major global health dynamics out of genuine interest. I'd regularly check WHO bulletins — and kept losing time navigating English-only pages with no filters, no alerts, no overview. I built HealthWatch to fix that at the root: aggregate this data, translate it, and structure it so a professional can access it in a few clicks instead of hours of manual digging.",
     missionTitle: "Our mission",
     missionText:
-      "HealthWatch Global aggregates daily official alerts from the World Health Organization to provide a readable dashboard for health professionals, travellers, journalists and organisations that need to be informed of disease outbreaks as soon as they are declared.",
+      "HealthWatch Global automatically aggregates official alerts from the World Health Organization and national health agencies to provide a readable dashboard for health professionals, travellers, journalists and organisations that need to be informed of disease outbreaks as soon as they are declared.",
     whoTitle: "Data source: WHO",
     whoText:
-      "All health alerts come from the WHO's official Disease Outbreak News (DON) API — the same source used by governments and public health agencies worldwide. No unverified data, no third-party media. We query this API daily to keep information up to date.",
+      "Verified health alerts come from the WHO's official Disease Outbreak News (DON) API — the same source used by governments and public health agencies worldwide. Official data from ECDC, CDC, and national agencies supplements coverage for endemic diseases not tracked by DON bulletins. No unverified data, no third-party media.",
     howTitle: "How it works",
     howSteps: [
       { title: "Collection", text: "Our pipeline queries the WHO OData API and extracts key information: disease, country, confirmed cases, deaths." },
