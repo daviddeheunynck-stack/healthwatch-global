@@ -159,5 +159,6 @@
     "errorGeneric": "Algo salió mal. Por favor, inténtelo de nuevo.",
     "aboutText": "HealthWatch Global fue creado para dar a las organizaciones de salud inteligencia epidémica diaria en su idioma.",
     "navLink": "Contacto"
-  }
+  },
+  "lockedCta": "Desbloquear Pro →"
 }

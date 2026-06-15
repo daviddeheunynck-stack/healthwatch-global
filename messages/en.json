@@ -159,5 +159,6 @@
     "errorGeneric": "Something went wrong. Please try again.",
     "aboutText": "HealthWatch Global was built to give health organizations daily epidemic intelligence in their language.",
     "navLink": "Contact"
-  }
+  },
+  "lockedCta": "Unlock Pro →"
 }

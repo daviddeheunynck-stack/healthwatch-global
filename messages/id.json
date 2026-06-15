@@ -159,5 +159,6 @@
     "errorGeneric": "Terjadi kesalahan. Silakan coba lagi.",
     "aboutText": "HealthWatch Global dibuat untuk memberi organisasi kesehatan intelijen epidemi harian dalam bahasa mereka.",
     "navLink": "Kontak"
-  }
+  },
+  "lockedCta": "Buka Pro →"
 }

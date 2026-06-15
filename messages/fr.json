@@ -159,5 +159,6 @@
     "errorGeneric": "Une erreur est survenue. Réessayez.",
     "aboutText": "HealthWatch Global a été créé pour donner aux organisations de santé une intelligence épidémique quotidienne dans leur langue.",
     "navLink": "Contact"
-  }
+  },
+  "lockedCta": "Débloquer Pro →"
 }
