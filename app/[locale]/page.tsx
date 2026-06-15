@@ -14,6 +14,7 @@ import TrialBanner from "@/components/TrialBanner";
 import PushNotificationBanner from "@/components/PushNotificationBanner";
 import CsvExportButton from "@/components/CsvExportButton";
 import OnboardingTour from "@/components/OnboardingTour";
+import FreePlanBanner from "@/components/FreePlanBanner";
 import { Suspense } from "react";
 import type { Metadata } from "next";
 
@@ -192,10 +193,15 @@ async function DashboardContent() {
     trialEndsAt !== null &&
     new Date(trialEndsAt).getTime() > now.getTime();
 
+  const showFreeBanner = plan === "free";
+
   return (
     <>
       {showTrialBanner && (
         <TrialBanner trialEndsAt={trialEndsAt!} locale={locale} />
+      )}
+      {showFreeBanner && (
+        <FreePlanBanner locale={locale} />
       )}
 
       {/* Push opt-in nudge — self-hides (unsupported / already subscribed /
