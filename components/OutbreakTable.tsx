@@ -16,6 +16,7 @@ import type { Outbreak } from "@/lib/outbreaks";
 import type { OutbreakTrend } from "@/lib/outbreak-trend";
 import RiskBadge from "@/components/RiskBadge";
 import LockedUpgradeButton from "@/components/LockedUpgradeButton";
+import { useUpgradeModal } from "@/lib/upgrade-modal-context";
 import ShareOutbreakButton from "@/components/ShareOutbreakButton";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -128,6 +129,7 @@ function SortIcon({ col, activeKey, dir }: { col: SortKey; activeKey: SortKey; d
 }
 
 export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, trends }: Props) {
+  const { openModal } = useUpgradeModal();
   const [watchlist, setWatchlist] = useState<Set<string>>(new Set());
   const [search,   setSearch]    = useState("");
   const [region,   setRegion]    = useState<Region>("all");
@@ -333,19 +335,25 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
 
         {/* Region + Risk pills in two rows */}
         <div className="flex flex-wrap gap-1.5">
-          {regions.map(({ key, label }) => (
-            <button
-              key={key}
-              onClick={() => setRegion(key)}
-              className={`text-xs px-3 py-1 rounded-full border transition-colors ${
-                region === key
-                  ? "bg-gray-700 border-gray-500 text-white"
-                  : "bg-transparent border-gray-800 text-gray-500 hover:border-gray-600 hover:text-gray-300"
-              }`}
-            >
-              {label}
-            </button>
-          ))}
+          {regions.map(({ key, label }) => {
+            const locked = !isPaid && key !== "all";
+            return (
+              <button
+                key={key}
+                onClick={() => locked ? openModal("list") : setRegion(key)}
+                className={`text-xs px-3 py-1 rounded-full border transition-colors flex items-center gap-1 ${
+                  locked
+                    ? "border-gray-800 text-gray-600 cursor-pointer hover:border-amber-700/50 hover:text-amber-500/70"
+                    : region === key
+                      ? "bg-gray-700 border-gray-500 text-white"
+                      : "bg-transparent border-gray-800 text-gray-500 hover:border-gray-600 hover:text-gray-300"
+                }`}
+              >
+                {locked && <Lock className="w-2.5 h-2.5" />}
+                {label}
+              </button>
+            );
+          })}
         </div>
 
         <div className="flex flex-wrap gap-1.5 items-center">

@@ -42,12 +42,16 @@ export async function GET(req: NextRequest) {
 
   const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE);
 
-  // ── Find free users whose account is exactly 3 days old today ────────────
-  // DATE(created_at AT TIME ZONE 'UTC') = CURRENT_DATE - 3
+  // ── Find trial users (pro + trial_ends_at + no Stripe sub) at J+3 ─────────
+  // J+3 = "discover your Pro features" nudge.
+  // We target signup-trial users specifically (stripe_subscription_id IS NULL)
+  // to avoid duplicating the Stripe-native trial_will_end webhook email.
   const { data: j3Users, error: j3Err } = await supabase
     .from("profiles")
-    .select("id, email, plan, locale")
-    .eq("plan", "free")
+    .select("id, email, plan, locale, trial_ends_at")
+    .eq("plan", "pro")
+    .not("trial_ends_at", "is", null)
+    .is("stripe_subscription_id", null)
     .filter("created_at", "gte", new Date(Date.now() - 3.5 * 86400_000).toISOString())
     .filter("created_at", "lt",  new Date(Date.now() - 2.5 * 86400_000).toISOString());
 
@@ -56,11 +60,13 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: j3Err.message }, { status: 500 });
   }
 
-  // ── Find free users whose account is exactly 12 days old today ───────────
+  // ── Find trial users at J+12 ("2 days left, subscribe now") ──────────────
   const { data: j12Users, error: j12Err } = await supabase
     .from("profiles")
-    .select("id, email, plan, locale")
-    .eq("plan", "free")
+    .select("id, email, plan, locale, trial_ends_at")
+    .eq("plan", "pro")
+    .not("trial_ends_at", "is", null)
+    .is("stripe_subscription_id", null)
     .filter("created_at", "gte", new Date(Date.now() - 12.5 * 86400_000).toISOString())
     .filter("created_at", "lt",  new Date(Date.now() - 11.5 * 86400_000).toISOString());
 

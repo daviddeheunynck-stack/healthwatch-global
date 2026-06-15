@@ -10,6 +10,7 @@ import { slugToDisease, diseaseToSlug, allDiseases, normalizeDisease } from "@/l
 import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 import { getOutbreakTrendsBulk } from "@/lib/outbreak-trend";
 import type { Outbreak } from "@/lib/outbreaks";
+import EmailCapture from "@/components/EmailCapture";
 
 export const revalidate = 3600;
 
@@ -394,17 +395,8 @@ export default async function DiseasePage({
         <p className="text-gray-500 text-sm">{lb.noHistory}</p>
       )}
 
-      {/* CTA */}
-      <div className="bg-red-950/30 border border-red-900/40 rounded-2xl p-6 text-center space-y-3">
-        <p className="font-semibold text-white text-lg">{lb.ctaTitle}</p>
-        <p className="text-sm text-gray-400">{lb.ctaBody}</p>
-        <Link
-          href={`/${l}/signup`}
-          className="inline-block mt-1 bg-red-600 hover:bg-red-500 text-white font-semibold px-6 py-2.5 rounded-lg transition-colors text-sm"
-        >
-          {lb.ctaBtn}
-        </Link>
-      </div>
+      {/* Email capture CTA */}
+      <EmailCapture locale={l} region="all" title={lb.ctaTitle} body={lb.ctaBody} />
 
     </div>
   );

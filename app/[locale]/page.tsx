@@ -90,11 +90,26 @@ async function DashboardContent() {
   if (user) {
     const { data: profile } = await supabase
       .from("profiles")
-      .select("plan, trial_ends_at")
+      .select("plan, trial_ends_at, stripe_subscription_id")
       .eq("id", user.id)
       .single();
     plan = profile?.plan || "free";
     trialEndsAt = profile?.trial_ends_at ?? null;
+
+    // Server-side trial expiry guard: if trial_ends_at has passed and the user
+    // has no Stripe subscription, treat them as free immediately.
+    // (The expire-trials cron also handles this async, but this catches the gap
+    // on every page load so there's zero grace period after trial expiry.)
+    const hasStripeSubscription = Boolean(profile?.stripe_subscription_id);
+    if (
+      plan !== "free" &&
+      trialEndsAt &&
+      new Date(trialEndsAt).getTime() < Date.now() &&
+      !hasStripeSubscription
+    ) {
+      plan = "free";
+      trialEndsAt = null;
+    }
   }
 
   const isPaid = plan === "starter" || plan === "pro" || plan === "enterprise";

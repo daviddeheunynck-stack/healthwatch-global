@@ -172,14 +172,13 @@ export async function POST(req: NextRequest) {
             }
           }
 
+          const updateData: Record<string, unknown> = { plan, trial_ends_at: trialEndsAt };
+          if (session.customer) updateData.stripe_customer_id = session.customer;
+          if (session.subscription) updateData.stripe_subscription_id = session.subscription;
+
           const { error } = await supabase
             .from("profiles")
-            .update({
-              plan,
-              stripe_customer_id: session.customer as string,
-              stripe_subscription_id: session.subscription as string,
-              trial_ends_at: trialEndsAt,
-            })
+            .update(updateData)
             .eq("id", userId);
           if (error) console.error("[webhook] checkout.session.completed profile update:", error);
           else console.log(`[webhook] Plan set to ${plan} for user ${userId} (trial_ends_at: ${trialEndsAt})`);

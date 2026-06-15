@@ -57,5 +57,10 @@ export async function GET(req: NextRequest) {
     }
   }
 
-  return NextResponse.redirect(`${origin}/fr/login?error=oauth`);
+  // Extract locale from ?next=/{locale}/... so the error lands in the right language
+  const nextParam = searchParams.get("next") ?? "";
+  const errorLocale = nextParam.split("/").filter(Boolean)[0] ?? "en";
+  const validLocales = ["en", "fr", "es", "ar", "id"];
+  const safeLocale = validLocales.includes(errorLocale) ? errorLocale : "en";
+  return NextResponse.redirect(`${origin}/${safeLocale}/login?error=oauth`);
 }
