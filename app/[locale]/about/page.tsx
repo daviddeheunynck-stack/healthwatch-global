@@ -295,7 +295,22 @@ export default async function AboutPage({
   const l = LABELS[locale] ?? LABELS.en;
   const isRtl = locale === "ar";
 
+  const orgSchema = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: "HealthWatch Global",
+    url: "https://healthwatch-global.com",
+    logo: "https://healthwatch-global.com/logo.png",
+    email: "alerts@healthwatch-global.com",
+    description: ABOUT_META[locale]?.description ?? ABOUT_META.en.description,
+    sameAs: [
+      "https://www.linkedin.com/company/healthwatch-global",
+    ],
+  };
+
   return (
+    <>
+    <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(orgSchema) }} />
     <div className="max-w-3xl mx-auto space-y-12 py-4" dir={isRtl ? "rtl" : undefined}>
 
       {/* Back */}
@@ -469,5 +484,6 @@ export default async function AboutPage({
       </section>
 
     </div>
+    </>
   );
 }

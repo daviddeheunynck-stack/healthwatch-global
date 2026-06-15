@@ -137,7 +137,7 @@ export default async function AdminPage({
   ] = await Promise.all([
     admin.from("outbreaks").select("*").order("date", { ascending: false }),
     admin.from("subscriptions").select("*").order("created_at", { ascending: false }),
-    admin.from("profiles").select("id, email, plan, created_at, trial_ends_at").order("created_at", { ascending: false }),
+    admin.from("profiles").select("id, email, plan, created_at, trial_ends_at, stripe_subscription_id").order("created_at", { ascending: false }),
     admin.from("user_alert_regions").select("user_id"),
     admin.from("profiles").select("id").not("slack_webhook_url", "is", null),
     admin.auth.admin.listUsers(),
@@ -177,6 +177,13 @@ export default async function AdminPage({
   const alertUserCount = new Set(alertRegions?.map((r: { user_id: string }) => r.user_id)).size;
   const slackCount     = slackUsers?.length ?? 0;
 
+  // Paying vs trial distinction
+  const payingCount    = profiles?.filter((p) => p.stripe_subscription_id).length ?? 0;
+  const next7          = new Date(now.getTime() + 7 * 86400_000).toISOString();
+  const trialActive    = profiles?.filter((p) => p.plan !== "free" && !p.stripe_subscription_id && p.trial_ends_at && p.trial_ends_at > now.toISOString()) ?? [];
+  const trialExpiring7 = trialActive.filter((p) => p.trial_ends_at! <= next7).length;
+  const realMrr        = profiles?.filter((p) => p.stripe_subscription_id).reduce((sum, p) => sum + (PLAN_MRR[p.plan ?? "free"] ?? 0), 0) ?? 0;
+
   return (
     <div className="max-w-7xl mx-auto space-y-8 py-4">
 
@@ -199,25 +206,25 @@ export default async function AdminPage({
         <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-widest mb-3">Revenus</h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <StatCard
-            label="MRR estimé"
-            value={`€${mrr.toLocaleString("fr")}`}
-            sub="plans actifs × prix mensuel"
+            label="MRR réel (Stripe)"
+            value={`€${realMrr.toLocaleString("fr")}`}
+            sub={`MRR potentiel : €${mrr.toLocaleString("fr")}`}
             icon={<DollarSign className="w-4 h-4" />}
             accent="text-green-400"
           />
           <StatCard
-            label="Utilisateurs payants"
-            value={paidCount}
-            sub={`${convRate}% de conversion`}
+            label="Abonnés Stripe actifs"
+            value={payingCount}
+            sub={`${trialActive.length} en essai · ${convRate}% conv. totale`}
             icon={<Zap className="w-4 h-4" />}
             accent="text-yellow-400"
           />
           <StatCard
-            label="Nouveaux (7j)"
-            value={new7}
-            sub={`${new30} sur 30 jours`}
+            label="Essais expirant (7j)"
+            value={trialExpiring7}
+            sub={`Nouveaux inscrits : ${new7} (7j) · ${new30} (30j)`}
             icon={<TrendingUp className="w-4 h-4" />}
-            accent="text-blue-400"
+            accent={trialExpiring7 > 0 ? "text-orange-400" : "text-blue-400"}
           />
           <StatCard
             label="Total utilisateurs"
@@ -291,6 +298,7 @@ export default async function AdminPage({
                 <th className="px-4 py-3 text-left">Nom</th>
                 <th className="px-4 py-3 text-left">Email</th>
                 <th className="px-4 py-3 text-left">Plan</th>
+                <th className="px-4 py-3 text-left">Statut</th>
                 <th className="px-4 py-3 text-left">Trial jusqu'au</th>
               </tr>
             </thead>
@@ -311,6 +319,17 @@ export default async function AdminPage({
                       }`}>
                         {p.plan ?? "free"}
                       </span>
+                    </td>
+                    <td className="px-4 py-3">
+                      {p.stripe_subscription_id ? (
+                        <span className="text-xs px-2 py-0.5 rounded-full bg-green-500/10 text-green-400">💳 Payant</span>
+                      ) : p.plan !== "free" ? (
+                        <span className={`text-xs px-2 py-0.5 rounded-full ${trialExpired ? "bg-red-500/10 text-red-400" : "bg-blue-500/10 text-blue-400"}`}>
+                          {trialExpired ? "Expiré" : "Essai"}
+                        </span>
+                      ) : (
+                        <span className="text-xs px-2 py-0.5 rounded-full bg-gray-700 text-gray-500">Gratuit</span>
+                      )}
                     </td>
                     <td className={`px-4 py-3 text-xs ${trialExpired ? "text-red-400" : "text-gray-400"}`}>
                       {trialDate ? trialDate.toLocaleDateString("fr") : "—"}
