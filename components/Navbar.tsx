@@ -8,6 +8,7 @@ import { Activity, Bell, FileText, Globe, CreditCard, LogOut, Menu, X, Mail, Boo
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase-browser";
 import type { User as SupabaseUser } from "@supabase/supabase-js";
+import NotificationBell from "@/components/NotificationBell";
 
 const LOCALES = [
   { code: "fr", label: "FR" },
@@ -174,6 +175,7 @@ export default function Navbar() {
                 <span className="text-xs text-gray-400 hidden lg:block max-w-32 truncate">
                   {user.email}
                 </span>
+                <NotificationBell locale={locale} />
                 <button
                   onClick={handleLogout}
                   className="text-gray-400 hover:text-red-400 transition-colors"
