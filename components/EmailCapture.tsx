@@ -15,6 +15,7 @@ const COPY: Record<Locale, {
   proTitle: string;
   proSub: string;
   proBtn: string;
+  trialNote: string;
   divider: string;
   digestLabel: string;
 }> = {
@@ -28,6 +29,7 @@ const COPY: Record<Locale, {
     proTitle: "Track every outbreak in real time",
     proSub: "Exact case & death counts · Regional alerts · PDF reports · CSV export",
     proBtn: "Start free trial →",
+    trialNote: "14 days free · No credit card",
     divider: "or get the free weekly digest",
     digestLabel: "Weekly digest · WHO, CDC, ECDC sources · Easy unsubscribe",
   },
@@ -41,6 +43,7 @@ const COPY: Record<Locale, {
     proTitle: "Suivre chaque foyer en temps réel",
     proSub: "Chiffres exacts de cas & décès · Alertes régionales · Rapports PDF · Export CSV",
     proBtn: "Commencer l'essai gratuit →",
+    trialNote: "14 jours gratuits · Sans carte bancaire",
     divider: "ou recevoir le digest hebdomadaire gratuit",
     digestLabel: "Digest hebdomadaire · Sources OMS, CDC, ECDC · Désabonnement facile",
   },
@@ -54,6 +57,7 @@ const COPY: Record<Locale, {
     proTitle: "Seguir cada brote en tiempo real",
     proSub: "Cifras exactas de casos y fallecidos · Alertas regionales · Informes PDF · Exportación CSV",
     proBtn: "Iniciar prueba gratuita →",
+    trialNote: "14 días gratis · Sin tarjeta de crédito",
     divider: "o recibe el digest semanal gratuito",
     digestLabel: "Resumen semanal · Fuentes OMS, CDC, ECDC · Fácil cancelación",
   },
@@ -67,6 +71,7 @@ const COPY: Record<Locale, {
     proTitle: "تتبع كل تفشٍّ في الوقت الفعلي",
     proSub: "أرقام دقيقة للحالات والوفيات · تنبيهات إقليمية · تقارير PDF · تصدير CSV",
     proBtn: "← ابدأ التجربة المجانية",
+    trialNote: "14 يوماً مجاناً · بدون بطاقة بنكية",
     divider: "أو احصل على الملخص الأسبوعي المجاني",
     digestLabel: "ملخص أسبوعي · مصادر منظمة الصحة العالمية · إلغاء اشتراك سهل",
   },
@@ -80,6 +85,7 @@ const COPY: Record<Locale, {
     proTitle: "Lacak setiap wabah secara real-time",
     proSub: "Angka kasus & kematian tepat · Peringatan regional · Laporan PDF · Ekspor CSV",
     proBtn: "Mulai uji coba gratis →",
+    trialNote: "14 hari gratis · Tanpa kartu kredit",
     divider: "atau dapatkan digest mingguan gratis",
     digestLabel: "Digest mingguan · Sumber WHO, CDC, ECDC · Berhenti berlangganan mudah",
   },
@@ -144,7 +150,7 @@ export default function EmailCapture({ locale, region = "all", title, body }: Pr
           label={c.proBtn}
           className="inline-block bg-red-600 hover:bg-red-500 text-white font-semibold px-6 py-2.5 rounded-lg transition-colors text-sm"
         />
-        <p className="text-xs text-gray-600">14 days free · No credit card</p>
+        <p className="text-xs text-gray-600">{c.trialNote}</p>
       </div>
 
       {/* Divider */}
