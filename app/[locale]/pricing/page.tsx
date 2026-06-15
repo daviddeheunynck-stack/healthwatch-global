@@ -6,6 +6,11 @@ import type { Metadata } from "next";
 
 // ─── Metadata ─────────────────────────────────────────────────────────────────
 
+const LOCALES = ["en", "fr", "es", "ar", "id"] as const;
+const OG_LOCALE: Record<string, string> = {
+  en: "en_US", fr: "fr_FR", es: "es_ES", ar: "ar_SA", id: "id_ID",
+};
+
 const PRICING_META: Record<string, { title: string; description: string }> = {
   en: { title: "Pricing Plans", description: "Flexible plans for NGOs, health ministries and international organizations. Start free — upgrade when you need instant alerts and PDF exports." },
   fr: { title: "Tarifs", description: "Formules flexibles pour les ONG, ministères de la santé et organisations internationales. Démarrez gratuitement." },
@@ -17,7 +22,41 @@ const PRICING_META: Record<string, { title: string; description: string }> = {
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;
   const m = PRICING_META[locale] ?? PRICING_META.en;
-  return { title: m.title, description: m.description };
+  const url = `https://healthwatch-global.com/${locale}/pricing`;
+
+  return {
+    title: m.title,
+    description: m.description,
+    alternates: {
+      canonical: url,
+      languages: Object.fromEntries(
+        LOCALES.map((l) => [l, `https://healthwatch-global.com/${l}/pricing`])
+      ),
+    },
+    openGraph: {
+      type: "website",
+      url,
+      title: `${m.title} | HealthWatch Global`,
+      description: m.description,
+      siteName: "HealthWatch Global",
+      locale: OG_LOCALE[locale] ?? "en_US",
+      images: [
+        {
+          url: `https://healthwatch-global.com/api/og?locale=${locale}`,
+          width: 1200,
+          height: 630,
+          alt: `${m.title} — HealthWatch Global`,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${m.title} | HealthWatch Global`,
+      description: m.description,
+      images: [`https://healthwatch-global.com/api/og?locale=${locale}`],
+    },
+    robots: { index: true, follow: true },
+  };
 }
 
 // ─── Hardcoded multilingual copy for new sections ─────────────────────────────

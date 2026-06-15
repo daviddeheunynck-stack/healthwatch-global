@@ -6,11 +6,11 @@ const OG_LOCALE: Record<string, string> = {
 };
 
 const META: Record<string, { title: string; description: string }> = {
-  en: { title: "Email Alerts", description: "Subscribe to a free weekly digest of disease outbreaks for your region. Powered by WHO Disease Outbreak News." },
-  fr: { title: "Alertes email", description: "Abonnez-vous à un digest hebdomadaire gratuit des foyers épidémiques de votre région. Alimenté par le bulletin OMS." },
-  es: { title: "Alertas por email", description: "Suscríbase a un resumen semanal gratuito de brotes de enfermedades en su región. Impulsado por el boletín de la OMS." },
-  ar: { title: "تنبيهات البريد الإلكتروني", description: "اشترك في ملخص أسبوعي مجاني لتفشي الأمراض في منطقتك. مدعوم من نشرة منظمة الصحة العالمية." },
-  id: { title: "Peringatan Email", description: "Berlangganan digest mingguan gratis wabah penyakit di wilayah Anda. Didukung oleh WHO Disease Outbreak News." },
+  en: { title: "Compare Outbreaks", description: "Compare two active disease outbreaks side by side — case counts, death rates, incidence, and risk levels. Data from WHO Disease Outbreak News." },
+  fr: { title: "Comparer les épidémies", description: "Comparez deux foyers épidémiques actifs côte à côte — nombre de cas, taux de mortalité, incidence et niveaux de risque. Données OMS." },
+  es: { title: "Comparar brotes", description: "Compare dos brotes activos lado a lado — casos, tasas de mortalidad, incidencia y niveles de riesgo. Datos de la OMS." },
+  ar: { title: "مقارنة تفشي الأمراض", description: "قارن بين تفشيَّين نشطَين جنبًا إلى جنب — الحالات ومعدلات الوفيات والإصابة ومستويات الخطر. بيانات منظمة الصحة العالمية." },
+  id: { title: "Bandingkan Wabah", description: "Bandingkan dua wabah aktif secara berdampingan — jumlah kasus, tingkat kematian, insidensi, dan tingkat risiko. Data dari WHO." },
 };
 
 export async function generateMetadata({
@@ -20,7 +20,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const m = META[locale] ?? META.en;
-  const url = `https://healthwatch-global.com/${locale}/alerts`;
+  const url = `https://healthwatch-global.com/${locale}/compare`;
 
   return {
     title: m.title,
@@ -28,7 +28,7 @@ export async function generateMetadata({
     alternates: {
       canonical: url,
       languages: Object.fromEntries(
-        LOCALES.map((l) => [l, `https://healthwatch-global.com/${l}/alerts`])
+        LOCALES.map((l) => [l, `https://healthwatch-global.com/${l}/compare`])
       ),
     },
     openGraph: {
@@ -57,6 +57,6 @@ export async function generateMetadata({
   };
 }
 
-export default function AlertsLayout({ children }: { children: React.ReactNode }) {
+export default function CompareLayout({ children }: { children: React.ReactNode }) {
   return <>{children}</>;
 }
