@@ -292,7 +292,17 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlis
                locale === "id" ? "Buka angka tepat dengan Pro — uji coba 14 hari gratis" :
                "Unlock exact figures with Pro — 14-day free trial"}
             </p>
-            <LockedUpgradeButton feature="cases" label="Unlock Pro" variant="banner" />
+            <LockedUpgradeButton
+              feature="cases"
+              label={
+                locale === "fr" ? "Débloquer Pro" :
+                locale === "es" ? "Desbloquear Pro" :
+                locale === "ar" ? "فتح Pro" :
+                locale === "id" ? "Buka Pro" :
+                "Unlock Pro"
+              }
+              variant="banner"
+            />
           </div>
         )}
 
