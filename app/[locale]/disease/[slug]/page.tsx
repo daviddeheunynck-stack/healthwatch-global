@@ -234,8 +234,37 @@ export default async function DiseasePage({
     l
   );
 
+  const DISEASES_LABEL: Record<Locale, string> = {
+    fr: "Maladies", en: "Diseases", es: "Enfermedades", ar: "الأمراض", id: "Penyakit",
+  };
+
+  const jsonLd = [
+    {
+      "@context": "https://schema.org",
+      "@type": "InfectiousDisease",
+      name: info.name_en,
+      alternateName: [info.name_fr, info.name_ar].filter((n) => n !== info.name_en),
+      url: `${BASE_URL}/${l}/disease/${slug}`,
+      ...(totalCases > 0 && {
+        description: `${totalCases.toLocaleString("en")} cases and ${totalDeaths.toLocaleString("en")} deaths recorded across ${countriesSet.size} countries.`,
+      }),
+      mainEntityOfPage: { "@type": "WebPage", "@id": `${BASE_URL}/${l}/disease/${slug}` },
+      publisher: { "@type": "Organization", name: "HealthWatch Global", url: BASE_URL },
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "HealthWatch Global", item: `${BASE_URL}/${l}` },
+        { "@type": "ListItem", position: 2, name: DISEASES_LABEL[l], item: `${BASE_URL}/${l}/diseases` },
+        { "@type": "ListItem", position: 3, name: diseaseName, item: `${BASE_URL}/${l}/disease/${slug}` },
+      ],
+    },
+  ];
+
   return (
     <div className="max-w-4xl mx-auto px-4 py-8 space-y-10" dir={isRtl ? "rtl" : undefined}>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
       {/* Back link */}
       <Link href={`/${l}`} className="text-sm text-gray-500 hover:text-gray-300 transition-colors">

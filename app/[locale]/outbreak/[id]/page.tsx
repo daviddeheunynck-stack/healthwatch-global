@@ -179,6 +179,11 @@ export default async function OutbreakPage({
   const donRef  = o.source ? DON_PATTERN.exec(o.source)?.[1] : null;
   const status  = sourceStatus(o);
 
+  const diseaseSlug = diseaseToSlug(normalizeDisease(o.disease_en || o.disease).name_en);
+  const diseasesLabel: Record<string, string> = {
+    fr: "Maladies", en: "Diseases", es: "Enfermedades", ar: "الأمراض", id: "Penyakit",
+  };
+
   const jsonLd = [
     {
       "@context": "https://schema.org",
@@ -187,7 +192,11 @@ export default async function OutbreakPage({
       description: `${disease} outbreak tracking. ${hasData ? `${o.cases} cases, ${o.deaths} deaths.` : ""}`,
       datePublished: o.date,
       publisher: { "@type": "Organization", name: "HealthWatch Global", url: BASE_URL },
-      about: { "@type": "InfectiousDisease", name: disease },
+      about: {
+        "@type": "InfectiousDisease",
+        name: o.disease_en ?? o.disease,
+        url: `${BASE_URL}/${locale}/disease/${diseaseSlug}`,
+      },
       ...(donRef && { url: o.source }),
     },
     {
@@ -195,7 +204,9 @@ export default async function OutbreakPage({
       "@type": "BreadcrumbList",
       itemListElement: [
         { "@type": "ListItem", position: 1, name: "HealthWatch Global", item: `${BASE_URL}/${locale}` },
-        { "@type": "ListItem", position: 2, name: `${disease} — ${country}`, item: `${BASE_URL}/${locale}/outbreak/${id}` },
+        { "@type": "ListItem", position: 2, name: diseasesLabel[locale] ?? "Diseases", item: `${BASE_URL}/${locale}/diseases` },
+        { "@type": "ListItem", position: 3, name: disease, item: `${BASE_URL}/${locale}/disease/${diseaseSlug}` },
+        { "@type": "ListItem", position: 4, name: `${disease} — ${country}`, item: `${BASE_URL}/${locale}/outbreak/${id}` },
       ],
     },
   ];

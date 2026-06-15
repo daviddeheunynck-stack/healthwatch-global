@@ -82,9 +82,10 @@ export async function generateMetadata({
       description: m.description,
       images: [`https://healthwatch-global.com/api/og?locale=${locale}`],
     },
-    robots: {
-      index: true,
-      follow: true,
+    robots: { index: true, follow: true },
+    // RSS auto-discovery — browsers and feed readers pick this up automatically
+    other: {
+      "application/rss+xml": `https://healthwatch-global.com/${locale}/feed`,
     },
   };
 }

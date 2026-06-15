@@ -77,6 +77,21 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // DB unreachable at build time — static routes still returned
   }
 
+  // ── Region pages — 5 regions × 5 locales ───────────────────────────────
+  const REGIONS = ["africa", "asia", "europe", "americas", "oceania"];
+  for (const region of REGIONS) {
+    const regionPath = `/region/${region}`;
+    for (const locale of LOCALES) {
+      entries.push({
+        url: `${BASE_URL}/${locale}${regionPath}`,
+        lastModified: new Date(),
+        changeFrequency: "daily",
+        priority: 0.8,
+        alternates: localeAlternates(regionPath),
+      });
+    }
+  }
+
   // ── Disease profile pages — 30 diseases × 5 locales ────────────────────
   for (const disease of allDiseases()) {
     const slug = diseaseToSlug(disease.name_en);
