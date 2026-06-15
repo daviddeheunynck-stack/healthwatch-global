@@ -1,4 +1,5 @@
 import Link from "next/link";
+import CheckoutButton from "@/components/CheckoutButton";
 import {
   ArrowRight, Activity, Globe, Bell, Shield, FileText,
   Zap, Clock, CheckCircle, AlertTriangle, Building2,
@@ -49,6 +50,7 @@ const COPY: Record<string, {
   pricingFreeSub: string;
   pricingProSub: string;
   pricingEnterpriseSub: string;
+  pricingProCta: string;
   pricingCta: string;
   // Newsletter
   newsletterTitle:   string;
@@ -121,6 +123,7 @@ const COPY: Record<string, {
     pricingFreeSub: "Carte mondiale · 1 région · Digest hebdo",
     pricingProSub: "Toutes régions · Alertes · PDF · CSV · Slack",
     pricingEnterpriseSub: "API · On-premise · SLA 99,9 %",
+    pricingProCta: "Essai Pro gratuit 14 jours →",
     pricingCta: "Voir tous les tarifs →",
     newsletterTitle: "Restez informé — gratuitement",
     newsletterSub: "Le digest hebdomadaire des foyers actifs, filtré par région, directement dans votre boîte mail.",
@@ -190,6 +193,7 @@ const COPY: Record<string, {
     pricingFreeSub: "World map · 1 region · Weekly digest",
     pricingProSub: "All regions · Alerts · PDF · CSV · Slack",
     pricingEnterpriseSub: "API · On-premise · 99.9% SLA",
+    pricingProCta: "Start free trial →",
     pricingCta: "See all plans →",
     newsletterTitle: "Stay informed — for free",
     newsletterSub: "A weekly digest of active outbreaks, filtered by region, delivered straight to your inbox.",
@@ -259,6 +263,7 @@ const COPY: Record<string, {
     pricingFreeSub: "Mapa mundial · 1 región · Digest semanal",
     pricingProSub: "Todas las regiones · Alertas · PDF · CSV · Slack",
     pricingEnterpriseSub: "API · On-premise · SLA 99,9%",
+    pricingProCta: "Iniciar prueba gratuita →",
     pricingCta: "Ver todos los planes →",
     newsletterTitle: "Manténgase informado — gratis",
     newsletterSub: "Un resumen semanal de brotes activos, filtrado por región, directo a su bandeja de entrada.",
@@ -328,6 +333,7 @@ const COPY: Record<string, {
     pricingFreeSub: "خريطة عالمية · منطقة واحدة · ملخص أسبوعي",
     pricingProSub: "جميع المناطق · تنبيهات · PDF · CSV · Slack",
     pricingEnterpriseSub: "API · نشر محلي · SLA 99.9%",
+    pricingProCta: "← ابدأ التجربة المجانية",
     pricingCta: "عرض جميع الخطط ←",
     newsletterTitle: "ابقَ على اطلاع — مجاناً",
     newsletterSub: "ملخص أسبوعي بالتفشيات النشطة، مصفى حسب المنطقة، يصل مباشرة إلى بريدك الإلكتروني.",
@@ -397,6 +403,7 @@ const COPY: Record<string, {
     pricingFreeSub: "Peta dunia · 1 wilayah · Digest mingguan",
     pricingProSub: "Semua wilayah · Peringatan · PDF · CSV · Slack",
     pricingEnterpriseSub: "API · On-premise · SLA 99,9%",
+    pricingProCta: "Mulai uji coba gratis →",
     pricingCta: "Lihat semua paket →",
     newsletterTitle: "Tetap terinformasi — gratis",
     newsletterSub: "Ringkasan mingguan wabah aktif, difilter berdasarkan wilayah, langsung ke kotak masuk Anda.",
@@ -691,10 +698,10 @@ export default async function LandingPage({ locale }: { locale: string }) {
         <h2 className="text-2xl md:text-3xl font-bold text-white text-center">{c.pricingTitle}</h2>
         <div className="grid md:grid-cols-3 gap-4 max-w-3xl mx-auto">
           {[
-            { name: c.pricingFree, price: "", sub: c.pricingFreeSub, icon: CheckCircle, color: "text-green-400", border: "border-gray-800" },
-            { name: "Pro", price: c.pricingPro, sub: c.pricingProSub, icon: Shield, color: "text-red-400", border: "border-2 border-red-500" },
-            { name: "Enterprise", price: c.pricingEnterprise, sub: c.pricingEnterpriseSub, icon: Zap, color: "text-purple-400", border: "border-gray-800" },
-          ].map(({ name, price, sub, icon: Icon, color, border }) => (
+            { name: c.pricingFree, price: "", sub: c.pricingFreeSub, icon: CheckCircle, color: "text-green-400", border: "border-gray-800", cta: null },
+            { name: "Pro", price: c.pricingPro, sub: c.pricingProSub, icon: Shield, color: "text-red-400", border: "border-2 border-red-500", cta: c.pricingProCta },
+            { name: "Enterprise", price: c.pricingEnterprise, sub: c.pricingEnterpriseSub, icon: Zap, color: "text-purple-400", border: "border-gray-800", cta: null },
+          ].map(({ name, price, sub, icon: Icon, color, border, cta }) => (
             <div key={name} className={`bg-gray-900 ${border} rounded-xl p-5 space-y-3`}>
               <div className="flex items-center gap-2">
                 <Icon className={`w-4 h-4 ${color}`} />
@@ -702,6 +709,14 @@ export default async function LandingPage({ locale }: { locale: string }) {
               </div>
               <p className="text-2xl font-bold text-white">{price || <span className="text-green-400">0 €</span>}</p>
               <p className="text-xs text-gray-400">{sub}</p>
+              {cta && (
+                <CheckoutButton
+                  plan="pro"
+                  locale={locale}
+                  label={cta}
+                  className="w-full bg-red-600 hover:bg-red-500 text-white font-semibold px-4 py-2 rounded-lg transition-colors text-xs mt-1"
+                />
+              )}
             </div>
           ))}
         </div>
