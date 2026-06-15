@@ -3,59 +3,64 @@
 import { useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { createClient } from "@/lib/supabase-browser";
-import { Activity, Loader2, CheckCircle, ShieldCheck, Globe, Bell, Lock } from "lucide-react";
+import { Activity, Loader2, CheckCircle, BarChart2, Bell, FileDown, Lock, Sparkles } from "lucide-react";
 import Link from "next/link";
 import OAuthButtons from "@/components/OAuthButtons";
 
-const VALUE_PROPS: Record<string, { items: string[]; noCard: string; gdpr: string }> = {
+const VALUE_PROPS: Record<string, { trial: string; items: string[]; noCard: string; gdpr: string }> = {
   en: {
+    trial: "14-day Pro trial included — no credit card",
     items: [
-      "Daily WHO disease outbreak map",
-      "Risk scoring per pathogen",
-      "Weekly digest by region",
+      "Exact case & death figures (Pro)",
+      "Instant regional alerts (Pro)",
+      "PDF reports & CSV export (Pro)",
     ],
     noCard: "No credit card required",
     gdpr: "GDPR compliant · Data never sold",
   },
   fr: {
+    trial: "Essai Pro 14 jours inclus — sans carte bancaire",
     items: [
-      "Carte quotidienne des épidémies de l'OMS",
-      "Score de risque par pathogène",
-      "Digest hebdomadaire par région",
+      "Chiffres exacts cas & décès (Pro)",
+      "Alertes régionales instantanées (Pro)",
+      "Rapports PDF & export CSV (Pro)",
     ],
     noCard: "Sans carte bancaire",
     gdpr: "Conforme RGPD · Données jamais revendues",
   },
   es: {
+    trial: "Prueba Pro 14 días incluida — sin tarjeta",
     items: [
-      "Mapa diario de brotes de la OMS",
-      "Puntuación de riesgo por patógeno",
-      "Resumen semanal por región",
+      "Cifras exactas de casos y fallecidos (Pro)",
+      "Alertas regionales instantáneas (Pro)",
+      "Informes PDF y exportación CSV (Pro)",
     ],
     noCard: "Sin tarjeta de crédito",
     gdpr: "Cumple GDPR · Datos nunca vendidos",
   },
   ar: {
+    trial: "تجربة Pro 14 يوماً مجاناً — بدون بطاقة بنكية",
     items: [
-      "خريطة يومية لتفشي أمراض منظمة الصحة العالمية",
-      "تقييم المخاطر لكل مسبب مرض",
-      "ملخص أسبوعي حسب المنطقة",
+      "أرقام دقيقة للحالات والوفيات (Pro)",
+      "تنبيهات إقليمية فورية (Pro)",
+      "تقارير PDF وتصدير CSV (Pro)",
     ],
     noCard: "لا حاجة لبطاقة ائتمانية",
     gdpr: "متوافق مع GDPR · بياناتك لن تُباع أبداً",
   },
   id: {
+    trial: "Uji coba Pro 14 hari termasuk — tanpa kartu kredit",
     items: [
-      "Peta wabah WHO harian",
-      "Penilaian risiko per patogen",
-      "Digest mingguan per wilayah",
+      "Angka kasus & kematian tepat (Pro)",
+      "Peringatan regional instan (Pro)",
+      "Laporan PDF & ekspor CSV (Pro)",
     ],
     noCard: "Tanpa kartu kredit",
     gdpr: "Sesuai GDPR · Data tidak pernah dijual",
   },
 };
 
-const ICONS = [Globe, ShieldCheck, Bell];
+const ICONS = [BarChart2, Bell, FileDown];
 
 export default function SignupPage() {
   const t = useTranslations("auth");
@@ -127,11 +132,15 @@ export default function SignupPage() {
           </div>
 
           <div>
+            <div className="inline-flex items-center gap-1.5 bg-green-500/10 border border-green-500/20 rounded-lg px-3 py-1.5 mb-3">
+              <Sparkles className="w-3.5 h-3.5 text-green-400" />
+              <span className="text-xs font-semibold text-green-400">{vp.trial}</span>
+            </div>
             <h2 className="text-2xl font-bold text-white leading-tight">
               {t("signupTitle")}
             </h2>
             <p className="text-gray-400 mt-2 text-sm leading-relaxed">
-              {vp.noCard} — {vp.gdpr}
+              {vp.gdpr}
             </p>
           </div>
 
