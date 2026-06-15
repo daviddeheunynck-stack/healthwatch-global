@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { Bell, Lock } from "lucide-react";
-import Link from "next/link";
+import { Bell } from "lucide-react";
+import LockedUpgradeButton from "@/components/LockedUpgradeButton";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -14,7 +14,6 @@ export interface AlertRegionLabels {
   desc: string;
   locked: string;
   upgrade: string;
-  upgradeHref: string;
   error: string;
   regionLabels: Record<string, string>;
 }
@@ -77,14 +76,8 @@ export default function AlertRegionToggles({ isPaid, initialRegions, labels: l }
       {/* Locked banner for free users */}
       {!isPaid && (
         <div className="flex items-center gap-3 p-3 rounded-lg bg-amber-900/20 border border-amber-700/30">
-          <Lock className="w-4 h-4 text-amber-400 shrink-0" />
           <p className="text-sm text-gray-400 flex-1">{l.locked}</p>
-          <Link
-            href={l.upgradeHref}
-            className="text-xs font-semibold text-amber-400 hover:text-amber-300 transition-colors whitespace-nowrap"
-          >
-            {l.upgrade} →
-          </Link>
+          <LockedUpgradeButton feature="realtime" label={l.upgrade} variant="banner" />
         </div>
       )}
 

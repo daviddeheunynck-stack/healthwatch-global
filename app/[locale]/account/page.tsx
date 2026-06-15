@@ -538,7 +538,7 @@ export default async function AccountPage({
         <AlertRegionToggles
           isPaid={isPaid}
           initialRegions={initialAlertRegions}
-          labels={{ ...al, upgradeHref: `/${locale}/pricing` }}
+          labels={al}
         />
       </div>
 
@@ -555,7 +555,7 @@ export default async function AccountPage({
           isPaid={isPaid}
           initialConfigured={slackConfigured}
           initialMasked={slackMasked}
-          labels={{ ...sl, upgradeHref: `/${locale}/pricing` }}
+          labels={sl}
         />
       </div>
 
