@@ -7,6 +7,7 @@ import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 import { getIncidenceRate } from "@/lib/population-data";
 import RiskBadge from "@/components/RiskBadge";
 import LockedUpgradeButton from "@/components/LockedUpgradeButton";
+import { useUpgradeModal } from "@/lib/upgrade-modal-context";
 import type { Outbreak } from "@/lib/outbreaks";
 import { ArrowLeftRight, TrendingUp, Users, Skull, Activity, Globe, Calendar, AlertTriangle, Link as LinkIcon, Check, Lock } from "lucide-react";
 
@@ -24,11 +25,11 @@ const LABELS: Record<string, {
   id: { title: "Bandingkan Wabah", subtitle: "Analisis dua epidemi secara berdampingan", selectA: "Wabah A", selectB: "Wabah B", all: "Pilih wabah…", cases: "Kasus", deaths: "Kematian", cfr: "CFR", incidence: "Insidensi / 100.000", date: "Tanggal", region: "Wilayah", pheic: "PHEIC", winner: "↓ Lebih rendah", lower: "↑ Lebih tinggi", selectBoth: "Pilih dua wabah untuk dibandingkan.", share: "Bagikan", copied: "Disalin!", lockedCta: "Buka Pro →", lockedBanner: "Kasus terkonfirmasi · Kematian · Tingkat fatalitas · Insidensi per 100.000" },
 };
 
-function StatRow({ label, valA, valB, icon, fmt = (v: number) => v.toLocaleString(), higherIsBad = true, locked = false }: {
+function StatRow({ label, valA, valB, icon, fmt = (v: number) => v.toLocaleString(), higherIsBad = true, locked = false, onLockClick }: {
   label: string; valA: number | null; valB: number | null; icon: React.ReactNode;
   fmt?: (v: number) => string; higherIsBad?: boolean;
-  /** Pro-only metric: shows the real value blurred + suppresses the win/lose color hint (which would itself leak the comparison). */
   locked?: boolean;
+  onLockClick?: () => void;
 }) {
   const both = !locked && valA !== null && valB !== null && valA > 0 && valB > 0;
   const aWorse = both && (higherIsBad ? valA! > valB! : valA! < valB!);
@@ -37,7 +38,7 @@ function StatRow({ label, valA, valB, icon, fmt = (v: number) => v.toLocaleStrin
   const cell = (v: number | null) => {
     if (!v || v <= 0) return "—";
     return locked
-      ? <span className="blur-sm select-none">{fmt(v)}</span>
+      ? <span className="blur-sm select-none cursor-pointer" onClick={onLockClick}>{fmt(v)}</span>
       : fmt(v);
   };
 
@@ -59,6 +60,7 @@ export default function ComparePage() {
   const locale = useLocale();
   const l = LABELS[locale] ?? LABELS.en;
   const isRtl = locale === "ar";
+  const { openModal } = useUpgradeModal();
 
   const [outbreaks, setOutbreaks] = useState<Outbreak[]>([]);
   const [idA, setIdA] = useState("");
@@ -199,10 +201,10 @@ export default function ComparePage() {
                 <th className="px-4 py-3 text-center text-amber-400 font-bold text-sm">B</th>
               </tr></thead>
               <tbody>
-                <StatRow label={l.cases} valA={oA.cases} valB={oB.cases} icon={<Users className="w-3.5 h-3.5" />} locked={!isPaid} />
-                <StatRow label={l.deaths} valA={oA.deaths} valB={oB.deaths} icon={<Skull className="w-3.5 h-3.5" />} locked={!isPaid} />
-                <StatRow label={l.cfr} valA={cfrA} valB={cfrB} icon={<TrendingUp className="w-3.5 h-3.5" />} fmt={v => v.toFixed(1) + "%"} locked={!isPaid} />
-                <StatRow label={l.incidence} valA={incA} valB={incB} icon={<Activity className="w-3.5 h-3.5" />} fmt={v => v.toFixed(2)} locked={!isPaid} />
+                <StatRow label={l.cases} valA={oA.cases} valB={oB.cases} icon={<Users className="w-3.5 h-3.5" />} locked={!isPaid} onLockClick={() => openModal("compare")} />
+                <StatRow label={l.deaths} valA={oA.deaths} valB={oB.deaths} icon={<Skull className="w-3.5 h-3.5" />} locked={!isPaid} onLockClick={() => openModal("compare")} />
+                <StatRow label={l.cfr} valA={cfrA} valB={cfrB} icon={<TrendingUp className="w-3.5 h-3.5" />} fmt={v => v.toFixed(1) + "%"} locked={!isPaid} onLockClick={() => openModal("compare")} />
+                <StatRow label={l.incidence} valA={incA} valB={incB} icon={<Activity className="w-3.5 h-3.5" />} fmt={v => v.toFixed(2)} locked={!isPaid} onLockClick={() => openModal("compare")} />
                 <tr className="border-b border-gray-800">
                   <td className="px-4 py-3 text-gray-500 text-sm"><div className="flex items-center gap-2"><Calendar className="w-3.5 h-3.5" />{l.date}</div></td>
                   <td className="px-4 py-3 text-center text-white text-sm">{oA.date}</td>
