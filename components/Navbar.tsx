@@ -99,8 +99,9 @@ export default function Navbar() {
   };
 
   const navLinks: { href: string; label: string; icon: React.ElementType | null }[] = [
-    { href: `/${locale}`,         label: t("dashboard"), icon: null },
-    { href: `/${locale}/alerts`,  label: t("alerts"),    icon: null },
+    { href: `/${locale}`,           label: t("dashboard"), icon: null },
+    { href: `/${locale}/diseases`,  label: t("diseases"),  icon: null },
+    { href: `/${locale}/alerts`,    label: t("alerts"),    icon: null },
     { href: `/${locale}/compare`, label: t("compare"),   icon: null },
     { href: `/${locale}/reports`, label: t("reports"),   icon: null },
     { href: `/${locale}/pricing`, label: t("pricing"),   icon: null },
