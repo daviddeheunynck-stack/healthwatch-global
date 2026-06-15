@@ -234,11 +234,25 @@ export default async function PricingPage({ params }: { params: Promise<{ locale
     ],
   };
 
+  const faqSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [1, 2, 3, 4, 5].map((i) => ({
+      "@type": "Question",
+      "name": t(`pricing.faq${i}_q`),
+      "acceptedAnswer": { "@type": "Answer", "text": t(`pricing.faq${i}_a`) },
+    })),
+  };
+
   return (
     <>
     <script
       type="application/ld+json"
       dangerouslySetInnerHTML={{ __html: JSON.stringify(pricingSchema) }}
+    />
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
     />
     <div className="space-y-20" dir={isRtl ? "rtl" : undefined}>
 
