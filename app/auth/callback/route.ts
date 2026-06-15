@@ -46,6 +46,7 @@ export async function GET(req: NextRequest) {
           .single();
 
         const updates: Record<string, unknown> = {};
+        let isNewSignup = false;
 
         // Activate 14-day Pro trial for users who never had one
         if (profile?.plan === "free" && !profile.trial_ends_at) {
@@ -53,16 +54,27 @@ export async function GET(req: NextRequest) {
           updates.trial_ends_at = new Date(
             Date.now() + TRIAL_DAYS * 24 * 60 * 60 * 1000
           ).toISOString();
+          isNewSignup = true;
         }
 
         // Save locale for OAuth users (Google/GitHub) who bypass signup/page.tsx
-        if (!profile?.locale) {
-          const inferredLocale = localeFromNext(next);
-          if (inferredLocale) updates.locale = inferredLocale;
+        const inferredLocale = localeFromNext(next);
+        if (!profile?.locale && inferredLocale) {
+          updates.locale = inferredLocale;
         }
 
         if (Object.keys(updates).length > 0) {
           await admin.from("profiles").update(updates).eq("id", user.id);
+        }
+
+        // Send welcome email for new OAuth signups (email/password signup sends it from the form)
+        if (isNewSignup && user.email) {
+          const emailLocale = (updates.locale as string | undefined) ?? profile?.locale ?? inferredLocale ?? "fr";
+          fetch(`${origin}/api/send-welcome`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email: user.email, locale: emailLocale }),
+          }).catch((e) => console.error("[auth/callback] welcome email failed:", e));
         }
       } catch (e) {
         // Non-blocking — failures must not break login
