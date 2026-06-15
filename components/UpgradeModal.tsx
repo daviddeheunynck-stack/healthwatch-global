@@ -3,8 +3,9 @@
 import { useEffect } from "react";
 import { useLocale } from "next-intl";
 import { track } from "@vercel/analytics/react";
-import { X, FileText, Radio, List, BarChart2, TableProperties, ArrowLeftRight, Zap, ArrowRight, CheckCircle } from "lucide-react";
+import { X, FileText, Radio, List, BarChart2, TableProperties, ArrowLeftRight, Zap, CheckCircle } from "lucide-react";
 import Link from "next/link";
+import CheckoutButton from "@/components/CheckoutButton";
 import type { UpgradeFeature } from "@/lib/upgrade-modal-context";
 
 // ─── Copy ─────────────────────────────────────────────────────────────────────
@@ -35,8 +36,8 @@ const COPY: Record<string, {
       "Export CSV pour vos analyses internes",
       "Toutes les régions mondiales couvertes",
     ],
-    cta:   "Voir les offres",
-    trial: "Essai Pro 14 jours · Sans carte bancaire",
+    cta:   "Commencer l'essai gratuit",
+    trial: "14 jours gratuits · Sans carte bancaire",
   },
   en: {
     pdf:      { title: "Regional PDF reports",     desc: "Download shareable epidemiological reports ready for your teams or donors.",             plan: "Available — Pro" },
@@ -51,8 +52,8 @@ const COPY: Record<string, {
       "CSV export for your internal analyses",
       "All global regions covered",
     ],
-    cta:   "See plans",
-    trial: "14-day Pro trial · No credit card",
+    cta:   "Start free trial",
+    trial: "14 days free · No credit card",
   },
   es: {
     pdf:      { title: "Informes PDF regionales",     desc: "Descargue informes epidemiológicos listos para compartir con su equipo o financiadores.",    plan: "Disponible — Pro" },
@@ -67,8 +68,8 @@ const COPY: Record<string, {
       "Exportación CSV para análisis internos",
       "Todas las regiones globales cubiertas",
     ],
-    cta:   "Ver planes",
-    trial: "Prueba Pro 14 días · Sin tarjeta",
+    cta:   "Iniciar prueba gratuita",
+    trial: "14 días gratis · Sin tarjeta",
   },
   ar: {
     pdf:      { title: "تقارير PDF إقليمية",           desc: "حمّل تقارير وبائية جاهزة للمشاركة مع فرقك أو المموّلين بنقرة واحدة.",            plan: "متاح — Pro" },
@@ -83,8 +84,8 @@ const COPY: Record<string, {
       "تصدير CSV للتحليلات الداخلية",
       "جميع المناطق العالمية مشمولة",
     ],
-    cta:   "عرض الخطط",
-    trial: "تجربة Pro 14 يوماً · بدون بطاقة بنكية",
+    cta:   "ابدأ التجربة المجانية",
+    trial: "14 يوماً مجاناً · بدون بطاقة بنكية",
   },
   id: {
     pdf:      { title: "Laporan PDF regional",        desc: "Unduh laporan epidemiologi siap dibagikan ke tim atau donor Anda.",                      plan: "Tersedia — Pro" },
@@ -99,8 +100,8 @@ const COPY: Record<string, {
       "Ekspor CSV untuk analisis internal",
       "Semua wilayah global tercakup",
     ],
-    cta:   "Lihat paket",
-    trial: "Uji coba Pro 14 hari · Tanpa kartu kredit",
+    cta:   "Mulai uji coba gratis",
+    trial: "14 hari gratis · Tanpa kartu kredit",
   },
 };
 
@@ -201,16 +202,25 @@ export default function UpgradeModal({ feature, onClose }: Props) {
           ))}
         </ul>
 
-        {/* CTA */}
-        <Link
-          href={`/${locale}/pricing`}
-          onClick={() => { track("upgrade_modal_cta", { feature, locale }); onClose(); }}
-          className="flex items-center justify-center gap-2 w-full bg-red-600 hover:bg-red-500 text-white font-bold py-3.5 rounded-xl transition-all shadow-lg shadow-red-900/30 text-sm"
-        >
-          {c.cta}
-          <ArrowRight className="w-4 h-4" />
-        </Link>
-        <p className="text-center text-xs text-gray-600 mt-3">{c.trial}</p>
+        {/* CTA — direct checkout, no pricing page friction */}
+        <div onClick={() => { track("upgrade_modal_cta", { feature, locale }); onClose(); }}>
+          <CheckoutButton
+            plan="pro"
+            locale={locale}
+            label={c.cta}
+            className="w-full bg-red-600 hover:bg-red-500 text-white font-bold py-3.5 rounded-xl transition-all shadow-lg shadow-red-900/30 text-sm"
+          />
+        </div>
+        <p className="text-center text-xs text-gray-600 mt-2">{c.trial}</p>
+        <p className="text-center">
+          <Link
+            href={`/${locale}/pricing`}
+            onClick={onClose}
+            className="text-xs text-gray-500 hover:text-gray-400 underline underline-offset-2"
+          >
+            {locale === "fr" ? "Voir tous les plans →" : locale === "es" ? "Ver todos los planes →" : locale === "ar" ? "← عرض جميع الخطط" : locale === "id" ? "Lihat semua paket →" : "See all plans →"}
+          </Link>
+        </p>
       </div>
     </div>
   );

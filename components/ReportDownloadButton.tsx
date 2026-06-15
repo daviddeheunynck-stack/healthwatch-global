@@ -71,13 +71,8 @@ export default function ReportDownloadButton({
 
       const blob = await response.blob();
       const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = `healthwatch-${data.region}-${new Date().toISOString().split("T")[0]}.html`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
+      window.open(url, "_blank");
+      setTimeout(() => URL.revokeObjectURL(url), 10_000);
       track("pdf_download", { region: data.region, locale });
     } catch {
       setError("Download failed");

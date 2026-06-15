@@ -132,13 +132,23 @@ export async function GET(
     .risk-medium { background: #fffbeb; color: #d97706; }
     .risk-low    { background: #f0fdf4; color: #16a34a; }
     footer { margin-top: 40px; padding-top: 16px; border-top: 1px solid #e5e7eb; display: flex; justify-content: space-between; font-size: 11px; color: #9ca3af; }
+    .print-bar { position: fixed; top: 0; left: 0; right: 0; background: #1e293b; padding: 10px 40px; display: flex; align-items: center; justify-content: space-between; z-index: 100; }
+    .print-bar-brand { color: #fff; font-size: 13px; font-weight: 600; }
+    .print-btn { background: #dc2626; color: #fff; border: none; border-radius: 6px; padding: 7px 18px; font-size: 13px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 6px; }
+    .print-btn:hover { background: #b91c1c; }
     @media print {
+      .print-bar { display: none; }
       body { padding: 20px; }
       @page { margin: 1.5cm; size: A4; }
     }
   </style>
 </head>
 <body>
+  <div class="print-bar">
+    <span class="print-bar-brand">🌐 HealthWatch Global — ${regionLabel}</span>
+    <button class="print-btn" onclick="window.print()">⬇ Save as PDF</button>
+  </div>
+  <div style="height:48px"></div>
   <header>
     <div class="brand">
       <div class="brand-dot"></div>
