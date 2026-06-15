@@ -211,6 +211,118 @@ const J12_CONTENT: Record<string, {
   },
 };
 
+// ─── Trial expired (J+14) ─────────────────────────────────────────────────────
+
+const TRIAL_EXPIRED_CONTENT: Record<string, {
+  subject: string;
+  headline: string;
+  intro: string;
+  lostTitle: string;
+  lostItems: string[];
+  reactivateTitle: string;
+  ctaLabel: string;
+  altText: string;
+  altLink: string;
+  closing: string;
+  unsubNote: string;
+}> = {
+  fr: {
+    subject: "Votre essai Pro HealthWatch a expiré — réactivez en 1 clic",
+    headline: "Votre essai Pro a pris fin.",
+    intro: "Votre accès Pro est maintenant revenu au plan gratuit. Vous n'avez plus accès aux données exactes, alertes et rapports PDF que vous utilisiez.",
+    lostTitle: "Ce que vous avez perdu",
+    lostItems: [
+      "📊 Chiffres exacts de cas et de décès (retour au floutage)",
+      "📬 Alertes email régionales en temps réel",
+      "📄 Rapports PDF régionaux téléchargeables",
+      "📥 Export CSV des données brutes",
+      "🔔 Alertes push instantanées",
+    ],
+    reactivateTitle: "Réactivez votre accès Pro dès aujourd'hui",
+    ctaLabel: "Réactiver mon accès Pro — 29 €/mois →",
+    altText: "Tarif ONG ou gouvernemental disponible.",
+    altLink: "Contactez-nous →",
+    closing: "L'équipe HealthWatch Global",
+    unsubNote: "Vous recevez cet email car vous avez créé un compte sur healthwatch-global.com.",
+  },
+  en: {
+    subject: "Your HealthWatch Pro trial has expired — reactivate in 1 click",
+    headline: "Your Pro trial has ended.",
+    intro: "Your Pro access has reverted to the free plan. You no longer have access to the exact figures, alerts and PDF reports you were using.",
+    lostTitle: "What you've lost",
+    lostItems: [
+      "📊 Exact case and death figures (back to blurred data)",
+      "📬 Real-time regional email alerts",
+      "📄 Downloadable regional PDF reports",
+      "📥 CSV export of raw data",
+      "🔔 Instant push alerts",
+    ],
+    reactivateTitle: "Reactivate your Pro access today",
+    ctaLabel: "Reactivate Pro access — €29/month →",
+    altText: "NGO or government pricing available.",
+    altLink: "Contact us →",
+    closing: "The HealthWatch Global Team",
+    unsubNote: "You're receiving this email because you created an account on healthwatch-global.com.",
+  },
+  es: {
+    subject: "Su prueba Pro de HealthWatch ha expirado — reactive en 1 clic",
+    headline: "Su prueba Pro ha terminado.",
+    intro: "Su acceso Pro ha vuelto al plan gratuito. Ya no tiene acceso a las cifras exactas, alertas e informes PDF que utilizaba.",
+    lostTitle: "Lo que ha perdido",
+    lostItems: [
+      "📊 Cifras exactas de casos y fallecidos (vuelta a datos borrosos)",
+      "📬 Alertas email regionales en tiempo real",
+      "📄 Informes PDF regionales descargables",
+      "📥 Exportación CSV de datos brutos",
+      "🔔 Alertas push instantáneas",
+    ],
+    reactivateTitle: "Reactive su acceso Pro hoy",
+    ctaLabel: "Reactivar acceso Pro — 29 €/mes →",
+    altText: "Precios para ONG o gobierno disponibles.",
+    altLink: "Contáctenos →",
+    closing: "El equipo de HealthWatch Global",
+    unsubNote: "Recibe este correo porque creó una cuenta en healthwatch-global.com.",
+  },
+  ar: {
+    subject: "انتهت تجربتك Pro في HealthWatch — أعد التفعيل بنقرة واحدة",
+    headline: "انتهت تجربتك Pro.",
+    intro: "عاد وصولك Pro إلى الخطة المجانية. لم تعد تتمكن من الوصول إلى الأرقام الدقيقة والتنبيهات وتقارير PDF التي كنت تستخدمها.",
+    lostTitle: "ما الذي فقدته",
+    lostItems: [
+      "📊 الأرقام الدقيقة للحالات والوفيات (عودة إلى البيانات المطموسة)",
+      "📬 تنبيهات البريد الإلكتروني الإقليمية الفورية",
+      "📄 تقارير PDF الإقليمية القابلة للتحميل",
+      "📥 تصدير CSV للبيانات الخام",
+      "🔔 تنبيهات الدفع الفوري",
+    ],
+    reactivateTitle: "أعد تفعيل وصولك Pro اليوم",
+    ctaLabel: "← إعادة تفعيل Pro — 29 €/شهر",
+    altText: "أسعار خاصة للمنظمات غير الحكومية والحكومات.",
+    altLink: "← اتصل بنا",
+    closing: "فريق HealthWatch Global",
+    unsubNote: "تتلقى هذا البريد لأنك أنشأت حساباً على healthwatch-global.com.",
+  },
+  id: {
+    subject: "Uji coba Pro HealthWatch Anda telah berakhir — aktifkan kembali dalam 1 klik",
+    headline: "Uji coba Pro Anda telah berakhir.",
+    intro: "Akses Pro Anda telah kembali ke paket gratis. Anda tidak lagi memiliki akses ke angka tepat, peringatan, dan laporan PDF yang Anda gunakan.",
+    lostTitle: "Yang telah Anda kehilangan",
+    lostItems: [
+      "📊 Angka kasus dan kematian yang tepat (kembali ke data dikaburkan)",
+      "📬 Peringatan email regional real-time",
+      "📄 Laporan PDF regional yang dapat diunduh",
+      "📥 Ekspor CSV data mentah",
+      "🔔 Peringatan push instan",
+    ],
+    reactivateTitle: "Aktifkan kembali akses Pro Anda hari ini",
+    ctaLabel: "Aktifkan kembali Pro — €29/bulan →",
+    altText: "Harga khusus untuk LSM atau pemerintah tersedia.",
+    altLink: "Hubungi kami →",
+    closing: "Tim HealthWatch Global",
+    unsubNote: "Anda menerima email ini karena membuat akun di healthwatch-global.com.",
+  },
+};
+
 // ─── HTML builders ────────────────────────────────────────────────────────────
 
 function emailShell(locale: string, body: string): string {
@@ -303,6 +415,50 @@ export function buildJ12Email(locale: string): { subject: string; html: string }
     </div>
     <div style="padding:20px 32px;border-top:1px solid #334155;">
       <p style="margin:0 0 8px;font-size:13px;color:#e2e8f0;white-space:pre-line;">${c.closing}</p>
+      <p style="margin:0;font-size:11px;color:#475569;">${c.unsubNote}</p>
+    </div>`;
+
+  return { subject: c.subject, html: emailShell(locale, body) };
+}
+
+export function buildTrialExpiredEmail(locale: string): { subject: string; html: string } {
+  const c = TRIAL_EXPIRED_CONTENT[locale] ?? TRIAL_EXPIRED_CONTENT.en;
+  const pricingUrl = `https://healthwatch-global.com/${locale}/pricing`;
+  const contactUrl = `https://healthwatch-global.com/${locale}/contact`;
+
+  const body = `
+    <div style="padding:36px 32px;">
+      <div style="background:#dc2626;border-radius:12px;padding:16px 24px;margin-bottom:24px;text-align:center;">
+        <p style="margin:0;font-size:14px;font-weight:700;color:white;text-transform:uppercase;letter-spacing:.05em;">⏰ Trial Expired</p>
+      </div>
+
+      <h2 style="margin:0 0 12px;font-size:20px;font-weight:700;color:#f1f5f9;">${c.headline}</h2>
+      <p style="color:#94a3b8;font-size:15px;line-height:1.7;margin:0 0 24px;">${c.intro}</p>
+
+      <div style="background:#3b1515;border:1px solid #dc262644;border-radius:12px;padding:20px 24px;margin-bottom:28px;">
+        <p style="margin:0 0 12px;font-size:13px;font-weight:700;color:#fca5a5;text-transform:uppercase;letter-spacing:.05em;">${c.lostTitle}</p>
+        ${c.lostItems.map((item) => `
+        <div style="margin-bottom:8px;">
+          <p style="margin:0;font-size:14px;color:#e2e8f0;line-height:1.5;">${item}</p>
+        </div>`).join("")}
+      </div>
+
+      <p style="margin:0 0 20px;font-size:15px;font-weight:600;color:#f1f5f9;">${c.reactivateTitle}</p>
+
+      <div style="text-align:center;margin-bottom:16px;">
+        <a href="${pricingUrl}"
+           style="display:inline-block;background:#dc2626;color:white;text-decoration:none;
+                  padding:14px 36px;border-radius:8px;font-weight:700;font-size:15px;">
+          ${c.ctaLabel}
+        </a>
+      </div>
+      <div style="text-align:center;">
+        <p style="margin:0 4px;font-size:13px;color:#64748b;">${c.altText}</p>
+        <a href="${contactUrl}" style="color:#60a5fa;font-size:13px;font-weight:600;text-decoration:none;">${c.altLink}</a>
+      </div>
+    </div>
+    <div style="padding:20px 32px;border-top:1px solid #334155;">
+      <p style="margin:0 0 8px;font-size:13px;color:#e2e8f0;">${c.closing}</p>
       <p style="margin:0;font-size:11px;color:#475569;">${c.unsubNote}</p>
     </div>`;
 

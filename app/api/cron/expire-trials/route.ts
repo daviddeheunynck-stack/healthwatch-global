@@ -5,6 +5,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import { buildTrialExpiredEmail } from "@/lib/onboarding-emails";
 
 export const dynamic = "force-dynamic";
 
@@ -25,10 +26,26 @@ export async function GET(req: NextRequest) {
 
   const now = new Date().toISOString();
 
+  const BREVO_API_KEY = clean(process.env.BREVO_API_KEY);
+
+  async function sendEmail(to: string, subject: string, html: string) {
+    if (!BREVO_API_KEY) return;
+    await fetch("https://api.brevo.com/v3/smtp/email", {
+      method: "POST",
+      headers: { "api-key": BREVO_API_KEY, "Content-Type": "application/json" },
+      body: JSON.stringify({
+        sender: { name: "HealthWatch Global", email: "alerts@healthwatch-global.com" },
+        to: [{ email: to }],
+        subject,
+        htmlContent: html,
+      }),
+    });
+  }
+
   // Find non-free users whose trial has expired and who have no Stripe subscription
   const { data: expired, error: fetchErr } = await supabase
     .from("profiles")
-    .select("id, email, plan, trial_ends_at")
+    .select("id, email, plan, trial_ends_at, locale")
     .not("plan", "eq", "free")
     .not("trial_ends_at", "is", null)
     .lt("trial_ends_at", now)
@@ -58,5 +75,17 @@ export async function GET(req: NextRequest) {
   }
 
   console.log(`[expire-trials] Downgraded ${ids.length} user(s): ${ids.join(", ")}`);
+
+  // Send trial-expired email to each downgraded user
+  for (const user of expired) {
+    try {
+      const { subject, html } = buildTrialExpiredEmail(user.locale ?? "en");
+      await sendEmail(user.email, subject, html);
+    } catch (err) {
+      console.error(`[expire-trials] Email failed for ${user.email}:`, err);
+    }
+    await new Promise((r) => setTimeout(r, 150));
+  }
+
   return NextResponse.json({ downgraded: ids.length, users: expired.map((p) => p.email) });
 }
