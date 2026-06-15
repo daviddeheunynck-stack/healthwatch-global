@@ -14,13 +14,15 @@ const COPY: Record<string, {
   skip: string;
   prev: string;
   finish: string;
+  startTrial: string;
   seePlans: string;
   steps: [Step, Step, Step, Step];
 }> = {
   fr: {
     skip: "Passer",
     prev: "Précédent",
-    finish: "C'est parti →",
+    finish: "Accéder au tableau de bord →",
+    startTrial: "Commencer l'essai gratuit →",
     seePlans: "Voir les offres →",
     steps: [
       {
@@ -48,7 +50,8 @@ const COPY: Record<string, {
   en: {
     skip: "Skip",
     prev: "Back",
-    finish: "Let's go →",
+    finish: "Go to dashboard →",
+    startTrial: "Start free trial →",
     seePlans: "See plans →",
     steps: [
       {
@@ -76,7 +79,8 @@ const COPY: Record<string, {
   es: {
     skip: "Omitir",
     prev: "Anterior",
-    finish: "¡Vamos! →",
+    finish: "Ir al panel →",
+    startTrial: "Iniciar prueba gratuita →",
     seePlans: "Ver planes →",
     steps: [
       {
@@ -104,7 +108,8 @@ const COPY: Record<string, {
   ar: {
     skip: "تخطي",
     prev: "السابق",
-    finish: "لنبدأ →",
+    finish: "← إلى لوحة التحكم",
+    startTrial: "← ابدأ التجربة المجانية",
     seePlans: "← عرض الخطط",
     steps: [
       {
@@ -132,7 +137,8 @@ const COPY: Record<string, {
   id: {
     skip: "Lewati",
     prev: "Kembali",
-    finish: "Ayo mulai →",
+    finish: "Ke dasbor →",
+    startTrial: "Mulai uji coba gratis →",
     seePlans: "Lihat paket →",
     steps: [
       {
@@ -172,7 +178,7 @@ const STORAGE_KEY = "hw_tour_v1";
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
-export default function OnboardingTour() {
+export default function OnboardingTour({ isPaid = false }: { isPaid?: boolean }) {
   const locale = useLocale();
   const [visible, setVisible] = useState(false);
   const [step, setStep] = useState(0);
@@ -269,21 +275,32 @@ export default function OnboardingTour() {
           <div className="flex-1" />
 
           {isLast ? (
-            <div className="flex flex-col items-end gap-2 w-full">
-              <button
-                onClick={() => dismiss("complete")}
-                className="w-full flex items-center justify-center gap-2 bg-red-600 hover:bg-red-500 text-white font-bold py-3 rounded-xl transition-all text-sm"
-              >
-                {c.finish}
-                <ArrowRight className="w-4 h-4" />
-              </button>
-              <Link
-                href={`/${locale}/pricing`}
-                onClick={() => dismiss("complete")}
-                className="text-xs text-gray-500 hover:text-red-400 transition-colors self-center"
-              >
-                {c.seePlans}
-              </Link>
+            <div className="flex flex-col items-center gap-3 w-full">
+              {isPaid ? (
+                <button
+                  onClick={() => dismiss("complete")}
+                  className="w-full flex items-center justify-center gap-2 bg-red-600 hover:bg-red-500 text-white font-bold py-3 rounded-xl transition-all text-sm"
+                >
+                  {c.finish}
+                  <ArrowRight className="w-4 h-4" />
+                </button>
+              ) : (
+                <>
+                  <Link
+                    href={`/${locale}/signup`}
+                    onClick={() => dismiss("complete")}
+                    className="w-full flex items-center justify-center gap-2 bg-red-600 hover:bg-red-500 text-white font-bold py-3 rounded-xl transition-all text-sm"
+                  >
+                    {c.startTrial}
+                  </Link>
+                  <button
+                    onClick={() => dismiss("complete")}
+                    className="text-xs text-gray-500 hover:text-gray-400 transition-colors"
+                  >
+                    {c.finish}
+                  </button>
+                </>
+              )}
             </div>
           ) : (
             <button

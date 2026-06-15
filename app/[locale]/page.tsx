@@ -317,7 +317,7 @@ export default async function DashboardPage({
   return (
     <div className="space-y-8">
       {/* Onboarding tour — shown once to new users, client-side only */}
-      <OnboardingTour />
+      <OnboardingTour isPaid={isPaid} />
 
       <div>
         <h1 className="text-3xl font-bold text-white">{t("title")}</h1>
