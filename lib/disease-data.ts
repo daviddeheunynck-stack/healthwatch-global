@@ -134,6 +134,32 @@ const DISEASE_MAP: Array<{ patterns: string[]; info: DiseaseInfo }> = [
   },
 ];
 
+/** "Rift Valley fever" → "rift-valley-fever" */
+export function diseaseToSlug(name: string): string {
+  return name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+}
+
+/** Returns the canonical DiseaseInfo for a slug, or null if not found. */
+export function slugToDisease(slug: string): DiseaseInfo | null {
+  for (const entry of DISEASE_MAP) {
+    if (diseaseToSlug(entry.info.name_en) === slug) return entry.info;
+  }
+  return null;
+}
+
+/** All unique canonical disease infos (deduped). */
+export function allDiseases(): DiseaseInfo[] {
+  const seen = new Set<string>();
+  const result: DiseaseInfo[] = [];
+  for (const entry of DISEASE_MAP) {
+    if (!seen.has(entry.info.name_en)) {
+      seen.add(entry.info.name_en);
+      result.push(entry.info);
+    }
+  }
+  return result;
+}
+
 export function normalizeDisease(rawName: string): DiseaseInfo {
   const lower = rawName.toLowerCase();
   for (const entry of DISEASE_MAP) {
