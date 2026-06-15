@@ -179,7 +179,7 @@ const LABELS: Record<string, {
       "HealthWatch Global agrega diariamente las alertas oficiales de la Organización Mundial de la Salud para proporcionar un panel legible a los profesionales de la salud, viajeros, periodistas y organizaciones que necesitan estar informados sobre brotes de enfermedades en cuanto se declaran.",
     whoTitle: "Fuente de datos: OMS",
     whoText:
-      "Todas las alertas sanitarias provienen de la API oficial Disease Outbreak News (DON) de la OMS, la misma fuente utilizada por gobiernos y agencias de salud pública de todo el mundo. Sin datos no verificados, sin medios de terceros. Consultamos esta API a diario para mantener la información actualizada.",
+      "Todas las alertas sanitarias provienen de la API oficial Disease Outbreak News (DON) de la OMS, la misma fuente utilizada por gobiernos y agencias de salud pública de todo el mundo. Sin datos no verificados, sin medios de terceros. Consultamos esta API cada 6 horas para mantener la información actualizada.",
     howTitle: "Cómo funciona",
     howSteps: [
       { title: "Recopilación", text: "Nuestro pipeline consulta la API OData de la OMS y extrae información clave: enfermedad, país, casos confirmados, fallecimientos." },
@@ -215,7 +215,7 @@ const LABELS: Record<string, {
       "تجمع HealthWatch Global التنبيهات الرسمية لمنظمة الصحة العالمية يومياً لتوفير لوحة تحكم واضحة للمهنيين الصحيين والمسافرين والصحفيين والمنظمات التي تحتاج إلى إخطار بتفشي الأمراض فور الإعلان عنها.",
     whoTitle: "مصدر البيانات: منظمة الصحة العالمية",
     whoText:
-      "تأتي جميع التنبيهات الصحية من واجهة برمجة تطبيقات Disease Outbreak News (DON) الرسمية لمنظمة الصحة العالمية — نفس المصدر الذي تستخدمه الحكومات ووكالات الصحة العامة حول العالم. لا بيانات غير مُتحقَّق منها، ولا وسائل إعلام خارجية. نستعلم هذه الواجهة يومياً للحفاظ على تحديث المعلومات.",
+      "تأتي جميع التنبيهات الصحية من واجهة برمجة تطبيقات Disease Outbreak News (DON) الرسمية لمنظمة الصحة العالمية — نفس المصدر الذي تستخدمه الحكومات ووكالات الصحة العامة حول العالم. لا بيانات غير مُتحقَّق منها، ولا وسائل إعلام خارجية. نستعلم هذه الواجهة كل 6 ساعات للحفاظ على تحديث المعلومات.",
     howTitle: "كيف يعمل",
     howSteps: [
       { title: "الجمع", text: "تستعلم خطوط أنابيبنا واجهة OData لمنظمة الصحة العالمية وتستخرج المعلومات الرئيسية: المرض، البلد، الحالات المؤكدة، الوفيات." },
@@ -251,7 +251,7 @@ const LABELS: Record<string, {
       "HealthWatch Global mengumpulkan peringatan resmi Organisasi Kesehatan Dunia setiap hari untuk menyediakan dasbor yang mudah dibaca bagi tenaga kesehatan, wisatawan, jurnalis, dan organisasi yang perlu mendapatkan informasi tentang wabah penyakit segera setelah dideklarasikan.",
     whoTitle: "Sumber data: WHO",
     whoText:
-      "Semua peringatan kesehatan berasal dari API Disease Outbreak News (DON) resmi WHO — sumber yang sama yang digunakan oleh pemerintah dan badan kesehatan masyarakat di seluruh dunia. Tidak ada data yang tidak terverifikasi, tidak ada media pihak ketiga. Kami mengkueri API ini setiap hari untuk menjaga informasi tetap terkini.",
+      "Semua peringatan kesehatan berasal dari API Disease Outbreak News (DON) resmi WHO — sumber yang sama yang digunakan oleh pemerintah dan badan kesehatan masyarakat di seluruh dunia. Tidak ada data yang tidak terverifikasi, tidak ada media pihak ketiga. Kami mengkueri API ini setiap 6 jam untuk menjaga informasi tetap terkini.",
     howTitle: "Cara kerjanya",
     howSteps: [
       { title: "Pengumpulan", text: "Pipeline kami mengkueri WHO OData API dan mengekstrak informasi kunci: penyakit, negara, kasus yang dikonfirmasi, kematian." },
