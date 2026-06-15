@@ -197,6 +197,8 @@ async function DashboardContent() {
 
   return (
     <>
+      <OnboardingTour isPaid={isPaid} />
+
       {showTrialBanner && (
         <TrialBanner trialEndsAt={trialEndsAt!} locale={locale} />
       )}
@@ -322,9 +324,6 @@ export default async function DashboardPage({
 
   return (
     <div className="space-y-8">
-      {/* Onboarding tour — shown once to new users, client-side only */}
-      <OnboardingTour isPaid={isPaid} />
-
       <div>
         <h1 className="text-3xl font-bold text-white">{t("title")}</h1>
         <p className="text-gray-400 mt-1">{t("subtitle")}</p>
