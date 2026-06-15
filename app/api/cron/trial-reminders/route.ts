@@ -52,6 +52,7 @@ export async function GET(req: NextRequest) {
     .from("profiles")
     .select("id, email, plan, trial_ends_at, locale")
     .in("plan", ["starter", "pro"])
+    .is("stripe_subscription_id", null)   // exclude already-paying users
     .not("trial_ends_at", "is", null)
     .gte("trial_ends_at", windowStart)
     .lt("trial_ends_at", windowEnd);
