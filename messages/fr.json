@@ -96,7 +96,11 @@
     "faq2_q": "À quelle fréquence les données sont-elles mises à jour ?",
     "faq2_a": "Les données OMS sont synchronisées toutes les heures. Les alertes maladies sont envoyées jusqu'à 1x par jour dès qu'un nouveau foyer est détecté.",
     "faq3_q": "Y a-t-il un plan gratuit ?",
-    "faq3_a": "Oui. Le plan Gratuit donne accès au tableau de bord public, une région surveillée et la synthèse hebdomadaire — sans carte bancaire, sans limite de durée."
+    "faq3_a": "Oui. Le plan Gratuit donne accès au tableau de bord public, une région surveillée et la synthèse hebdomadaire — sans carte bancaire, sans limite de durée.",
+    "faq4_q": "Que se passe-t-il à la fin des 14 jours d'essai ?",
+    "faq4_a": "Si vous avez commencé l'essai sans entrer de carte, rien ne se passe — votre compte passe automatiquement au plan Gratuit, sans débit. Si vous avez ajouté une carte, votre abonnement démarre à la fin de l'essai. Vous pouvez annuler à tout moment depuis votre compte.",
+    "faq5_q": "D'où proviennent vos données ?",
+    "faq5_a": "Toutes les données sur les foyers épidémiques proviennent directement d'agences de santé publique officielles : OMS, PAHO et ECDC. Nous ne fabriquons ni n'estimons aucune donnée — si une agence n'a pas publié un chiffre, nous l'affichons comme « non communiqué » plutôt que de l'inventer."
   },
   "auth": {
     "loginTitle": "Connexion",

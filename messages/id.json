@@ -96,7 +96,11 @@
     "faq2_q": "Seberapa sering data diperbarui?",
     "faq2_a": "Data WHO disinkronkan setiap jam. Peringatan khusus penyakit dikirim dalam 24 jam setelah deteksi baru.",
     "faq3_q": "Apakah ada paket gratis?",
-    "faq3_a": "Ya. Paket Gratis memberikan akses ke dasbor publik, satu wilayah yang dipantau, dan ringkasan mingguan — tanpa kartu kredit, tanpa batas waktu."
+    "faq3_a": "Ya. Paket Gratis memberikan akses ke dasbor publik, satu wilayah yang dipantau, dan ringkasan mingguan — tanpa kartu kredit, tanpa batas waktu.",
+    "faq4_q": "Apa yang terjadi setelah 14 hari uji coba berakhir?",
+    "faq4_a": "Jika Anda memulai uji coba tanpa memasukkan kartu, tidak ada yang terjadi — akun Anda otomatis beralih ke Paket Gratis, tanpa tagihan. Jika Anda menambahkan kartu, langganan Anda dimulai di akhir uji coba. Anda dapat membatalkan kapan saja dari akun Anda.",
+    "faq5_q": "Dari mana data Anda berasal?",
+    "faq5_a": "Semua data wabah bersumber langsung dari lembaga kesehatan masyarakat resmi: WHO, PAHO, dan ECDC. Kami tidak membuat atau memperkirakan data — jika sebuah lembaga belum melaporkan angka, kami menampilkannya sebagai 'tidak dilaporkan' daripada menebak-nebak."
   },
   "auth": {
     "loginTitle": "Masuk",

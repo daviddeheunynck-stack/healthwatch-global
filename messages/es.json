@@ -96,7 +96,11 @@
     "faq2_q": "¿Con qué frecuencia se actualizan los datos?",
     "faq2_a": "Los datos de la OMS se sincronizan cada hora. Las alertas específicas por enfermedad se envían dentro de las 24h posteriores a una nueva detección.",
     "faq3_q": "¿Hay un plan gratuito?",
-    "faq3_a": "Sí. El plan Gratuito da acceso al panel público, una región supervisada y el resumen semanal, sin tarjeta de crédito ni límite de tiempo."
+    "faq3_a": "Sí. El plan Gratuito da acceso al panel público, una región supervisada y el resumen semanal, sin tarjeta de crédito ni límite de tiempo.",
+    "faq4_q": "¿Qué ocurre cuando terminan los 14 días de prueba?",
+    "faq4_a": "Si comenzó la prueba sin introducir una tarjeta, no ocurre nada: su cuenta pasa automáticamente al plan Gratuito, sin cargo. Si añadió una tarjeta, su suscripción comienza al final de la prueba. Puede cancelar en cualquier momento desde su cuenta.",
+    "faq5_q": "¿De dónde provienen sus datos?",
+    "faq5_a": "Todos los datos sobre brotes provienen directamente de organismos oficiales de salud pública: OMS, PAHO y ECDC. No fabricamos ni estimamos datos: si una agencia no ha publicado una cifra, la mostramos como 'no comunicado' en lugar de inventarla."
   },
   "auth": {
     "loginTitle": "Iniciar sesión",
