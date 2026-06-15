@@ -101,7 +101,7 @@ const COPY: Record<string, {
     previewCols: { disease: "Maladie", country: "Pays", risk: "Risque" },
     featuresTitle: "Tout ce dont votre équipe a besoin",
     features: [
-      { title: "Alertes par maladie", desc: "Abonnez-vous à H5N1, Ebola, Mpox… Recevez un email en moins de 6h dès qu'un foyer est détecté n'importe où dans le monde." },
+      { title: "Alertes par maladie", desc: "Abonnez-vous à H5N1, Ebola, Mpox… Recevez un email dans les 8h dès qu'un foyer est signalé par l'OMS n'importe où dans le monde." },
       { title: "Badge PHEIC", desc: "Le badge 🚨 PHEIC apparaît automatiquement sur chaque urgence de santé publique de portée internationale déclarée par l'OMS — le niveau d'alerte le plus élevé." },
       { title: "Taux de létalité & incidence", desc: "CFR calculé automatiquement. Incidence pour 100 000 habitants — données de population ONU intégrées pour 150 pays." },
       { title: "Comparaison de foyers", desc: "Ebola RDC 2026 vs Uganda : cas, décès, CFR, incidence côte à côte. Partagez l'URL directement avec vos collègues." },
@@ -171,7 +171,7 @@ const COPY: Record<string, {
     previewCols: { disease: "Disease", country: "Country", risk: "Risk" },
     featuresTitle: "Everything your team needs",
     features: [
-      { title: "Disease-specific alerts", desc: "Subscribe to H5N1, Ebola, Mpox… Get an email within 6 hours whenever an outbreak is detected anywhere in the world." },
+      { title: "Disease-specific alerts", desc: "Subscribe to H5N1, Ebola, Mpox… Get an email within 8 hours of any WHO-reported outbreak, anywhere in the world." },
       { title: "PHEIC badge", desc: "🚨 PHEIC badge automatically flags every WHO-declared Public Health Emergency of International Concern — the highest alert level." },
       { title: "CFR & incidence rate", desc: "Case fatality rate calculated automatically. Incidence per 100,000 with UN population data for 150 countries." },
       { title: "Outbreak comparison", desc: "Ebola DRC vs Uganda 2026: cases, deaths, CFR, incidence side by side. Share the URL directly with colleagues." },
@@ -241,7 +241,7 @@ const COPY: Record<string, {
     previewCols: { disease: "Enfermedad", country: "País", risk: "Riesgo" },
     featuresTitle: "Todo lo que su equipo necesita",
     features: [
-      { title: "Alertas por enfermedad", desc: "Suscríbase a H5N1, Ébola, Mpox… Reciba un email en menos de 6h cuando se detecte un brote en cualquier parte del mundo." },
+      { title: "Alertas por enfermedad", desc: "Suscríbase a H5N1, Ébola, Mpox… Reciba un email en menos de 8h cuando la OMS reporte un brote en cualquier parte del mundo." },
       { title: "Insignia PHEIC", desc: "🚨 La insignia PHEIC marca cada emergencia de salud pública de importancia internacional declarada por la OMS — el nivel de alerta más alto." },
       { title: "Tasa de letalidad & incidencia", desc: "CFR calculado automáticamente. Incidencia por 100.000 habitantes con datos de población de la ONU para 150 países." },
       { title: "Comparación de brotes", desc: "Ébola RDC vs Uganda: casos, muertes, CFR, incidencia lado a lado. Comparta la URL directamente con colegas." },
@@ -311,7 +311,7 @@ const COPY: Record<string, {
     previewCols: { disease: "المرض", country: "الدولة", risk: "الخطر" },
     featuresTitle: "كل ما يحتاجه فريقك",
     features: [
-      { title: "تنبيهات الأمراض", desc: "اشترك في H5N1 أو إيبولا أو جدري القرود… واستقبل بريداً إلكترونياً خلال 6 ساعات عند اكتشاف أي تفشٍّ في العالم." },
+      { title: "تنبيهات الأمراض", desc: "اشترك في H5N1 أو إيبولا أو جدري القرود… واستقبل بريداً إلكترونياً في غضون 8 ساعات من إعلان منظمة الصحة العالمية عن أي تفشٍّ في العالم." },
       { title: "شارة PHEIC", desc: "🚨 تظهر شارة PHEIC تلقائياً على كل طارئة صحية عمومية ذات اهتمام دولي تُعلنها منظمة الصحة العالمية — أعلى مستوى تأهب." },
       { title: "معدل الوفيات والإصابة", desc: "CFR يُحسب تلقائياً. معدل الإصابة لكل 100,000 نسمة مع بيانات سكان الأمم المتحدة لـ 150 دولة." },
       { title: "مقارنة التفشيات", desc: "إيبولا في الكونغو مقابل أوغندا: الحالات والوفيات ومعدل الوفيات والإصابة جنباً إلى جنب. شارك الرابط مع زملائك." },
@@ -381,7 +381,7 @@ const COPY: Record<string, {
     previewCols: { disease: "Penyakit", country: "Negara", risk: "Risiko" },
     featuresTitle: "Semua yang dibutuhkan tim Anda",
     features: [
-      { title: "Peringatan per penyakit", desc: "Berlangganan H5N1, Ebola, Mpox… Terima email dalam 6 jam ketika wabah terdeteksi di mana saja di dunia." },
+      { title: "Peringatan per penyakit", desc: "Berlangganan H5N1, Ebola, Mpox… Terima email dalam 8 jam setelah WHO melaporkan wabah di mana saja di dunia." },
       { title: "Lencana PHEIC", desc: "🚨 Lencana PHEIC otomatis menandai setiap Kedaruratan Kesehatan Masyarakat yang Meresahkan Dunia yang dinyatakan WHO — tingkat peringatan tertinggi." },
       { title: "CFR & tingkat insidensi", desc: "CFR dihitung otomatis. Insidensi per 100.000 penduduk dengan data populasi PBB untuk 150 negara." },
       { title: "Perbandingan wabah", desc: "Ebola RDC vs Uganda: kasus, kematian, CFR, insidensi berdampingan. Bagikan URL langsung ke kolega." },
