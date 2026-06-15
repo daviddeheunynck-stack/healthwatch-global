@@ -553,7 +553,7 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
                       {isPaid ? (
                         outbreak.cases > 0 ? outbreak.cases.toLocaleString() : <span className="text-gray-600 italic text-xs">{l.noData}</span>
                       ) : (
-                        <span className="blur-sm select-none text-gray-500">
+                        <span className="blur-sm select-none text-gray-500 cursor-pointer" onClick={() => openModal("cases")}>
                           {outbreak.cases.toLocaleString()}
                         </span>
                       )}
@@ -564,7 +564,7 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
                     {isPaid ? (
                       outbreak.cases > 0 ? outbreak.deaths.toLocaleString() : <span className="text-gray-600 italic text-xs">{l.noData}</span>
                     ) : (
-                      <span className="blur-sm select-none text-gray-500">
+                      <span className="blur-sm select-none text-gray-500 cursor-pointer" onClick={() => openModal("cases")}>
                         {outbreak.deaths.toLocaleString()}
                       </span>
                     )}
