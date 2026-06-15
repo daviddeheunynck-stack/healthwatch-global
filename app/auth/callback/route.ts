@@ -4,6 +4,13 @@ import { createClient } from "@supabase/supabase-js";
 import { cookies } from "next/headers";
 
 const TRIAL_DAYS = 14;
+const VALID_LOCALES = ["en", "fr", "es", "ar", "id"];
+
+function localeFromNext(next: string): string | null {
+  const parts = next.split("/").filter(Boolean);
+  const first = parts[0];
+  return first && VALID_LOCALES.includes(first) ? first : null;
+}
 
 export async function GET(req: NextRequest) {
   const { searchParams, origin } = new URL(req.url);
@@ -27,7 +34,6 @@ export async function GET(req: NextRequest) {
 
     const { data: { user }, error } = await supabase.auth.exchangeCodeForSession(code);
     if (!error && user) {
-      // Activate 14-day Pro trial for users who never had one
       try {
         const admin = createClient(
           process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -35,22 +41,32 @@ export async function GET(req: NextRequest) {
         );
         const { data: profile } = await admin
           .from("profiles")
-          .select("plan, trial_ends_at")
+          .select("plan, trial_ends_at, locale")
           .eq("id", user.id)
           .single();
 
+        const updates: Record<string, unknown> = {};
+
+        // Activate 14-day Pro trial for users who never had one
         if (profile?.plan === "free" && !profile.trial_ends_at) {
-          const trialEndsAt = new Date(
+          updates.plan = "pro";
+          updates.trial_ends_at = new Date(
             Date.now() + TRIAL_DAYS * 24 * 60 * 60 * 1000
           ).toISOString();
-          await admin
-            .from("profiles")
-            .update({ plan: "pro", trial_ends_at: trialEndsAt })
-            .eq("id", user.id);
+        }
+
+        // Save locale for OAuth users (Google/GitHub) who bypass signup/page.tsx
+        if (!profile?.locale) {
+          const inferredLocale = localeFromNext(next);
+          if (inferredLocale) updates.locale = inferredLocale;
+        }
+
+        if (Object.keys(updates).length > 0) {
+          await admin.from("profiles").update(updates).eq("id", user.id);
         }
       } catch (e) {
-        // Non-blocking — trial failure must not break login
-        console.error("[auth/callback] trial activation failed:", e);
+        // Non-blocking — failures must not break login
+        console.error("[auth/callback] profile update failed:", e);
       }
 
       return NextResponse.redirect(`${origin}${next}`);
