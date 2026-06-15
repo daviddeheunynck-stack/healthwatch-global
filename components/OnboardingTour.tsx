@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useLocale } from "next-intl";
 import { track } from "@vercel/analytics/react";
 import { Globe, BarChart2, Zap, X, ArrowRight, ChevronLeft } from "lucide-react";
-import Link from "next/link";
+import CheckoutButton from "@/components/CheckoutButton";
 
 // ─── Copy ─────────────────────────────────────────────────────────────────────
 
@@ -286,13 +286,12 @@ export default function OnboardingTour({ isPaid = false }: { isPaid?: boolean })
                 </button>
               ) : (
                 <>
-                  <Link
-                    href={`/${locale}/signup`}
-                    onClick={() => dismiss("complete")}
+                  <CheckoutButton
+                    plan="pro"
+                    locale={locale}
+                    label={c.startTrial}
                     className="w-full flex items-center justify-center gap-2 bg-red-600 hover:bg-red-500 text-white font-bold py-3 rounded-xl transition-all text-sm"
-                  >
-                    {c.startTrial}
-                  </Link>
+                  />
                   <button
                     onClick={() => dismiss("complete")}
                     className="text-xs text-gray-500 hover:text-gray-400 transition-colors"
