@@ -488,6 +488,29 @@ export default async function AccountPage({
             <p className="text-sm text-gray-400">{l.manageDesc}</p>
             <BillingPortalButton locale={locale} label={l.manageBilling} />
           </div>
+        ) : isPaid && !hasBilling ? (
+          /* Trial activated via Supabase (no Stripe checkout yet) — guide them to add a payment method */
+          <div className="pt-2 border-t border-gray-800 space-y-3">
+            <p className="text-sm text-gray-400">
+              {locale === "fr" ? "Votre essai Pro est actif. Ajoutez un moyen de paiement pour conserver l'accès après la fin de l'essai." :
+               locale === "es" ? "Su prueba Pro está activa. Añada un método de pago para conservar el acceso tras el período de prueba." :
+               locale === "ar" ? "تجربتك Pro نشطة. أضف طريقة دفع للاحتفاظ بالوصول بعد انتهاء التجربة." :
+               locale === "id" ? "Uji coba Pro Anda aktif. Tambahkan metode pembayaran untuk mempertahankan akses setelah uji coba." :
+               "Your Pro trial is active. Add a payment method to keep access after the trial ends."}
+            </p>
+            <CheckoutButton
+              plan="pro"
+              locale={locale}
+              label={
+                locale === "fr" ? "Ajouter un moyen de paiement →" :
+                locale === "es" ? "Añadir método de pago →" :
+                locale === "ar" ? "← إضافة طريقة دفع" :
+                locale === "id" ? "Tambahkan metode pembayaran →" :
+                "Add payment method →"
+              }
+              className="inline-flex items-center gap-2 bg-red-600 hover:bg-red-500 text-white font-semibold px-5 py-2.5 rounded-lg transition-colors text-sm"
+            />
+          </div>
         ) : !isPaid ? (
           <div className="pt-2 border-t border-gray-800 space-y-3">
             <p className="text-sm text-gray-400">{l.upgradeDesc}</p>
