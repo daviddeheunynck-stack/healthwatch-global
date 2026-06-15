@@ -35,6 +35,10 @@
     {
       "path": "/api/cron/sync-endemic-data",
       "schedule": "30 7 * * 1"
+    },
+    {
+      "path": "/api/cron/check-mpox-sitrep",
+      "schedule": "0 8 * * 3,6"
     }
   ]
 }
