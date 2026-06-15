@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase-server";
 import { User, Shield, Zap, Building2, Gift, ExternalLink, Download } from "lucide-react";
 import Link from "next/link";
 import BillingPortalButton from "@/components/BillingPortalButton";
+import CheckoutButton from "@/components/CheckoutButton";
 import SignOutButton from "@/components/SignOutButton";
 import AlertRegionToggles from "@/components/AlertRegionToggles";
 import PushNotificationToggle from "@/components/PushNotificationToggle";
@@ -56,7 +57,7 @@ const ALERT_LABELS: Record<string, {
     title: "Alertes par région",
     desc: "Recevez un email dès qu'un nouveau foyer est détecté dans vos régions surveillées.",
     locked: "Les alertes régionales sont disponibles avec le plan Pro.",
-    upgrade: "Voir les formules",
+    upgrade: "Débloquer Pro →",
     error: "Erreur lors de la sauvegarde. Réessayez.",
     regionLabels: { africa: "Afrique", asia: "Asie", americas: "Amériques", europe: "Europe", oceania: "Océanie" },
   },
@@ -64,7 +65,7 @@ const ALERT_LABELS: Record<string, {
     title: "Regional alerts",
     desc: "Get an email whenever a new outbreak is detected in your watched regions.",
     locked: "Regional alerts are available on the Pro plan.",
-    upgrade: "See plans",
+    upgrade: "Unlock Pro →",
     error: "Failed to save. Please try again.",
     regionLabels: { africa: "Africa", asia: "Asia", americas: "Americas", europe: "Europe", oceania: "Oceania" },
   },
@@ -72,7 +73,7 @@ const ALERT_LABELS: Record<string, {
     title: "Alertas regionales",
     desc: "Reciba un email cuando se detecte un nuevo brote en sus regiones monitoreadas.",
     locked: "Las alertas regionales están disponibles en el plan Pro.",
-    upgrade: "Ver planes",
+    upgrade: "Desbloquear Pro →",
     error: "Error al guardar. Inténtelo de nuevo.",
     regionLabels: { africa: "África", asia: "Asia", americas: "Américas", europe: "Europa", oceania: "Oceanía" },
   },
@@ -80,7 +81,7 @@ const ALERT_LABELS: Record<string, {
     title: "التنبيهات الإقليمية",
     desc: "استقبل بريداً إلكترونياً فور رصد تفشٍّ جديد في المناطق التي تتابعها.",
     locked: "التنبيهات الإقليمية متاحة في خطة Pro.",
-    upgrade: "عرض الخطط",
+    upgrade: "← فتح Pro",
     error: "فشل الحفظ. يرجى المحاولة مجدداً.",
     regionLabels: { africa: "أفريقيا", asia: "آسيا", americas: "الأمريكتان", europe: "أوروبا", oceania: "أوقيانوسيا" },
   },
@@ -88,7 +89,7 @@ const ALERT_LABELS: Record<string, {
     title: "Peringatan regional",
     desc: "Terima email saat wabah baru terdeteksi di wilayah yang Anda pantau.",
     locked: "Peringatan regional tersedia di paket Pro.",
-    upgrade: "Lihat paket",
+    upgrade: "Buka Pro →",
     error: "Gagal menyimpan. Silakan coba lagi.",
     regionLabels: { africa: "Afrika", asia: "Asia", americas: "Amerika", europe: "Eropa", oceania: "Oseania" },
   },
@@ -490,13 +491,19 @@ export default async function AccountPage({
         ) : !isPaid ? (
           <div className="pt-2 border-t border-gray-800 space-y-3">
             <p className="text-sm text-gray-400">{l.upgradeDesc}</p>
-            <Link
-              href={`/${locale}/pricing`}
+            <CheckoutButton
+              plan="pro"
+              locale={locale}
+              label={l.upgradeTo}
               className="inline-flex items-center gap-2 bg-red-600 hover:bg-red-500 text-white font-semibold px-5 py-2.5 rounded-lg transition-colors text-sm"
-            >
-              <ExternalLink className="w-4 h-4" />
-              {l.upgradeTo}
-            </Link>
+            />
+            <p className="text-xs text-gray-600">
+              {locale === "fr" ? "Essai 14 jours gratuit · sans carte bancaire" :
+               locale === "es" ? "Prueba 14 días gratis · sin tarjeta" :
+               locale === "ar" ? "تجربة 14 يوماً مجاناً · بدون بطاقة" :
+               locale === "id" ? "Uji coba 14 hari gratis · tanpa kartu" :
+               "14-day free trial · no credit card"}
+            </p>
           </div>
         ) : null}
       </div>
