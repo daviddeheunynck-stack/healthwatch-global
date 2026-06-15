@@ -18,7 +18,7 @@ const CRON_SECRET          = clean(process.env.CRON_SECRET);
 const BREVO_API_KEY        = clean(process.env.BREVO_API_KEY);
 const ADMIN_EMAILS         = clean(process.env.ADMIN_EMAILS);
 
-const WHO_SITREP_PAGE = "https://www.who.int/publications/m/item/situation-reports---mpox";
+const WHO_SITREP_PAGE = "https://www.who.int/emergencies/situations/mpox-outbreak";
 const ADMIN_PANEL_URL = "https://healthwatch-global.com/fr/admin";
 
 // ── Parse WHO listing page ────────────────────────────────────────────────────
@@ -45,6 +45,8 @@ async function fetchLatestSitrep(): Promise<{ url: string; num: number } | null>
 }
 
 function parseSitrepLinks(html: string): { url: string; num: number } | null {
+  // WHO sitrep URLs follow this pattern:
+  // /publications/m/item/multi-country-outbreak-of-mpox--external-situation-report--65---30-april-2026
   const hrefRe = /href="([^"]+)"/g;
   let m: RegExpExecArray | null;
   let bestNum = 0;
@@ -52,12 +54,10 @@ function parseSitrepLinks(html: string): { url: string; num: number } | null {
 
   while ((m = hrefRe.exec(html)) !== null) {
     const href = m[1];
-    if (!/mpox|monkeypox/i.test(href)) continue;
-    // Look for sitrep numbers: "---66", "-66", "_66" at end of slug
-    const numMatch = href.match(/[-_]{1,3}(\d{1,3})(?:[^/0-9]|$)/);
+    const numMatch = href.match(/external-situation-report--(\d+)/i);
     if (!numMatch) continue;
     const num = parseInt(numMatch[1], 10);
-    if (num > bestNum && num < 500) { // sanity: sitrep numbers < 500
+    if (num > bestNum) {
       bestNum = num;
       bestUrl  = href.startsWith("http") ? href : `https://www.who.int${href}`;
     }
