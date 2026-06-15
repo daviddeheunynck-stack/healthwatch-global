@@ -175,6 +175,10 @@ export default function SignupPage() {
           <div className="text-center mb-6 md:hidden">
             <Activity className="text-red-500 w-9 h-9 mx-auto mb-2" />
             <h1 className="text-2xl font-bold text-white">{t("signupTitle")}</h1>
+            <div className="inline-flex items-center gap-1.5 bg-green-500/10 border border-green-500/20 rounded-lg px-3 py-1.5 mt-3">
+              <Sparkles className="w-3.5 h-3.5 text-green-400" />
+              <span className="text-xs font-semibold text-green-400">{vp.trial}</span>
+            </div>
           </div>
 
           <div className="bg-gray-900 border border-gray-800 rounded-2xl p-8">
