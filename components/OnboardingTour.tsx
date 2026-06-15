@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useLocale } from "next-intl";
 import { track } from "@vercel/analytics/react";
-import { Globe, BarChart2, Zap, X, ArrowRight, ChevronLeft } from "lucide-react";
+import { Globe, BarChart2, Zap, X, ArrowRight, ChevronLeft, Activity } from "lucide-react";
 import CheckoutButton from "@/components/CheckoutButton";
 
 // ─── Copy ─────────────────────────────────────────────────────────────────────
@@ -168,7 +168,7 @@ const COPY: Record<string, {
 // ─── Step icons ───────────────────────────────────────────────────────────────
 
 const STEP_CONFIG = [
-  { Icon: Globe,    bg: "bg-red-500/10",    border: "border-red-500/20",    color: "text-red-400"    },
+  { Icon: Activity, bg: "bg-red-500/10",    border: "border-red-500/20",    color: "text-red-400"    },
   { Icon: Globe,    bg: "bg-blue-500/10",   border: "border-blue-500/20",   color: "text-blue-400"   },
   { Icon: BarChart2,bg: "bg-yellow-500/10", border: "border-yellow-500/20", color: "text-yellow-400" },
   { Icon: Zap,      bg: "bg-purple-500/10", border: "border-purple-500/20", color: "text-purple-400" },
