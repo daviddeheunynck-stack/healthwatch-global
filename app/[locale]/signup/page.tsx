@@ -87,13 +87,11 @@ export default function SignupPage() {
       return;
     }
 
+    const userId = signUpData.user?.id;
+
     // Save locale to profile so all transactional emails use the right language
-    if (signUpData.user?.id) {
-      supabase
-        .from("profiles")
-        .update({ locale })
-        .eq("id", signUpData.user.id)
-        .then(() => {});
+    if (userId) {
+      supabase.from("profiles").update({ locale }).eq("id", userId).then(() => {});
     }
 
     // Fire welcome email — non-blocking
@@ -102,6 +100,16 @@ export default function SignupPage() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, locale }),
     }).catch(() => {});
+
+    // When mailer_autoconfirm is ON, Supabase returns a session immediately —
+    // the /auth/callback route is never called, so the trial must be activated here.
+    if (signUpData.session && userId) {
+      fetch("/api/activate-trial", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId }),
+      }).catch(() => {});
+    }
 
     setSuccess(true);
     setLoading(false);
