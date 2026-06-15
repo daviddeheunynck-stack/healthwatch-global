@@ -2,7 +2,7 @@ import type { Outbreak } from "./outbreaks";
 
 const RISK_COLORS = { high: "#ef4444", medium: "#f59e0b", low: "#22c55e" };
 
-const LABELS: Record<string, Record<string, string>> = {
+const LABELS: Record<string, Record<string, string | string[]>> = {
   fr: {
     subject: "Votre briefing épidémiologique hebdomadaire",
     title: "Briefing Épidémiologique",
@@ -16,6 +16,11 @@ const LABELS: Record<string, Record<string, string>> = {
     cta: "Voir le tableau de bord complet →",
     unsubscribe: "Se désabonner",
     sources: "Sources : OMS · CDC · ECDC",
+    proTitle: "Passez à Pro — alertes instantanées & rapports PDF",
+    proDesc: "Ce briefing vous donne les chiffres de la semaine. Avec Pro, recevez une alerte dès que l'OMS détecte un nouveau foyer dans votre région — pas la semaine prochaine, le jour même.",
+    proItems: ["📬 Alertes email instantanées dès détection", "📄 Rapports PDF régionaux téléchargeables", "📊 Export CSV pour vos analyses", "🌍 Toutes les régions mondiales"],
+    proCta: "Essai gratuit 14 jours — sans carte →",
+    proNote: "Sans engagement. Annulation en 1 clic.",
   },
   en: {
     subject: "Your weekly epidemiological briefing",
@@ -30,6 +35,11 @@ const LABELS: Record<string, Record<string, string>> = {
     cta: "View full dashboard →",
     unsubscribe: "Unsubscribe",
     sources: "Sources: WHO · CDC · ECDC",
+    proTitle: "Go Pro — instant alerts & PDF reports",
+    proDesc: "This digest gives you last week's figures. With Pro, you get an alert the moment WHO detects a new outbreak in your region — not next week, the same day.",
+    proItems: ["📬 Instant email alerts on detection", "📄 Downloadable regional PDF reports", "📊 CSV export for your analyses", "🌍 All global regions covered"],
+    proCta: "14-day free trial — no credit card →",
+    proNote: "No commitment. Cancel in 1 click.",
   },
   es: {
     subject: "Su informe epidemiológico semanal",
@@ -44,6 +54,11 @@ const LABELS: Record<string, Record<string, string>> = {
     cta: "Ver el panel completo →",
     unsubscribe: "Cancelar suscripción",
     sources: "Fuentes: OMS · CDC · ECDC",
+    proTitle: "Pase a Pro — alertas instantáneas e informes PDF",
+    proDesc: "Este resumen le da las cifras de la semana. Con Pro, recibe una alerta en cuanto la OMS detecta un nuevo brote en su región — no la semana que viene, el mismo día.",
+    proItems: ["📬 Alertas por email instantáneas al detectarse", "📄 Informes PDF regionales descargables", "📊 Exportación CSV para sus análisis", "🌍 Todas las regiones mundiales"],
+    proCta: "Prueba gratuita 14 días — sin tarjeta →",
+    proNote: "Sin compromiso. Cancelación en 1 clic.",
   },
   ar: {
     subject: "ملخصك الوبائي الأسبوعي",
@@ -58,6 +73,11 @@ const LABELS: Record<string, Record<string, string>> = {
     cta: "← عرض لوحة التحكم الكاملة",
     unsubscribe: "إلغاء الاشتراك",
     sources: "المصادر: OMS · CDC · ECDC",
+    proTitle: "انتقل إلى Pro — تنبيهات فورية وتقارير PDF",
+    proDesc: "يمنحك هذا الملخص أرقام الأسبوع. مع Pro، تتلقى تنبيهاً فور اكتشاف منظمة الصحة العالمية تفشياً جديداً في منطقتك — ليس الأسبوع القادم، بل في نفس اليوم.",
+    proItems: ["📬 تنبيهات بريدية فورية عند الاكتشاف", "📄 تقارير PDF إقليمية قابلة للتنزيل", "📊 تصدير CSV لتحليلاتك", "🌍 جميع المناطق العالمية مشمولة"],
+    proCta: "← تجربة مجانية 14 يوماً — بدون بطاقة",
+    proNote: "بدون التزام. الإلغاء بنقرة واحدة.",
   },
   id: {
     subject: "Briefing epidemiologi mingguan Anda",
@@ -72,6 +92,11 @@ const LABELS: Record<string, Record<string, string>> = {
     cta: "Lihat dasbor lengkap →",
     unsubscribe: "Berhenti berlangganan",
     sources: "Sumber: WHO · CDC · ECDC",
+    proTitle: "Upgrade ke Pro — peringatan instan & laporan PDF",
+    proDesc: "Briefing ini memberi Anda angka minggu lalu. Dengan Pro, Anda mendapat peringatan begitu WHO mendeteksi wabah baru di wilayah Anda — bukan minggu depan, tapi hari yang sama.",
+    proItems: ["📬 Peringatan email instan saat terdeteksi", "📄 Laporan PDF regional yang dapat diunduh", "📊 Ekspor CSV untuk analisis Anda", "🌍 Semua wilayah global tercakup"],
+    proCta: "Uji coba gratis 14 hari — tanpa kartu →",
+    proNote: "Tanpa komitmen. Batalkan dalam 1 klik.",
   },
 };
 
@@ -180,6 +205,22 @@ export function buildDigestEmail(
       </div>
     </div>
 
+    <!-- Pro upgrade block -->
+    <div style="margin:0;padding:24px 32px;background:#1a0a0a;border-top:2px solid #dc2626;">
+      <p style="margin:0 0 8px;font-size:15px;font-weight:700;color:#fca5a5;">${l.proTitle}</p>
+      <p style="margin:0 0 16px;font-size:13px;color:#94a3b8;line-height:1.6;">${l.proDesc}</p>
+      <div style="margin-bottom:16px;">
+        ${(l.proItems as string[]).map((item: string) => `<p style="margin:0 0 6px;font-size:13px;color:#e2e8f0;">${item}</p>`).join("")}
+      </div>
+      <div style="text-align:center;margin-bottom:8px;">
+        <a href="https://healthwatch-global.com/${locale}/pricing"
+           style="display:inline-block;background:#dc2626;color:white;text-decoration:none;padding:12px 28px;border-radius:8px;font-weight:700;font-size:14px;">
+          ${l.proCta}
+        </a>
+      </div>
+      <p style="text-align:center;margin:0;font-size:11px;color:#475569;">${l.proNote}</p>
+    </div>
+
     <!-- Footer -->
     <div style="padding:20px 32px;border-top:1px solid #334155;">
       <p style="margin:0 0 4px;font-size:11px;color:#475569;">${l.sources}</p>
@@ -195,5 +236,5 @@ export function buildDigestEmail(
 </body>
 </html>`;
 
-  return { subject: l.subject, html };
+  return { subject: l.subject as string, html };
 }
