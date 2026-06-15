@@ -61,7 +61,7 @@
     "realtimeLoginRequired": "Masuk untuk mengakses peringatan instan.",
     "realtimeLogin": "Masuk",
     "realtimeProOnly": "Peringatan instan — Paket Pro",
-    "realtimeProDesc": "Terima setiap wabah baru seketika, saat terdeteksi oleh sinkronisasi harian kami.",
+    "realtimeProDesc": "Terima setiap wabah baru dalam hitungan jam, saat terdeteksi oleh sinkronisasi 6 jam kami.",
     "realtimeUpgrade": "Tingkatkan ke Paket Pro →"
   },
   "reports": {
@@ -94,7 +94,7 @@
     "faq1_q": "Bisakah saya membatalkan kapan saja?",
     "faq1_a": "Ya, tanpa komitmen. Anda dapat membatalkan langganan kapan saja dari akun Anda.",
     "faq2_q": "Seberapa sering data diperbarui?",
-    "faq2_a": "Data WHO disinkronkan setiap jam. Peringatan khusus penyakit dikirim dalam 24 jam setelah deteksi baru.",
+    "faq2_a": "Data WHO disinkronkan setiap 6 jam (4 kali per hari). Peringatan khusus penyakit dikirim dalam 8 jam setelah deteksi baru.",
     "faq3_q": "Apakah ada paket gratis?",
     "faq3_a": "Ya. Paket Gratis memberikan akses ke dasbor publik, satu wilayah yang dipantau, dan ringkasan mingguan — tanpa kartu kredit, tanpa batas waktu.",
     "faq4_q": "Apa yang terjadi setelah 14 hari uji coba berakhir?",

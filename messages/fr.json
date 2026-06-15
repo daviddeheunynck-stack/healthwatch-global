@@ -61,7 +61,7 @@
     "realtimeLoginRequired": "Connectez-vous pour accéder aux alertes instantanées.",
     "realtimeLogin": "Se connecter",
     "realtimeProOnly": "Alertes instantanées — Plan Pro",
-    "realtimeProDesc": "Recevez chaque nouvelle épidémie instantanément, dès que notre synchronisation quotidienne la détecte.",
+    "realtimeProDesc": "Recevez chaque nouvelle épidémie en quelques heures, dès que notre synchronisation 6h la détecte.",
     "realtimeUpgrade": "Passer au plan Pro →"
   },
   "reports": {
@@ -94,7 +94,7 @@
     "faq1_q": "Puis-je annuler à tout moment ?",
     "faq1_a": "Oui, sans engagement. Vous pouvez annuler votre abonnement à tout moment depuis votre espace client.",
     "faq2_q": "À quelle fréquence les données sont-elles mises à jour ?",
-    "faq2_a": "Les données OMS sont synchronisées toutes les heures. Les alertes maladies sont envoyées jusqu'à 1x par jour dès qu'un nouveau foyer est détecté.",
+    "faq2_a": "Les données OMS sont synchronisées toutes les 6 heures (4 fois par jour). Les alertes maladies sont envoyées dans les 8h suivant la détection d'un nouveau foyer.",
     "faq3_q": "Y a-t-il un plan gratuit ?",
     "faq3_a": "Oui. Le plan Gratuit donne accès au tableau de bord public, une région surveillée et la synthèse hebdomadaire — sans carte bancaire, sans limite de durée.",
     "faq4_q": "Que se passe-t-il à la fin des 14 jours d'essai ?",
