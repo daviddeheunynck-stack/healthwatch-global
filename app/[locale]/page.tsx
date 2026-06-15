@@ -265,7 +265,7 @@ export default async function DashboardPage({
         "name": "HealthWatch Global",
         "url": "https://healthwatch-global.com",
         "logo": "https://healthwatch-global.com/api/og",
-        "description": "Daily global epidemic surveillance platform. WHO data in 5 languages for health organizations worldwide.",
+        "description": "Global epidemic surveillance platform — WHO data updated every 6 hours, in 5 languages for health organizations worldwide.",
         "contactPoint": {
           "@type": "ContactPoint",
           "email": "contact@healthwatch-global.com",

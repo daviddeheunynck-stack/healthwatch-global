@@ -78,7 +78,7 @@ const COPY: Record<string, {
   aboutLink: string;
 }> = {
   fr: {
-    heroBadge: "Données officielles OMS · 195 pays · Synchronisation automatique",
+    heroBadge: "Données officielles OMS · 195 pays · Mise à jour toutes les 6h",
     heroTitle: ["Toutes les données OMS.", "Sans les heures de recherche."],
     heroSub: "Médecin, consultant ou analyste santé — vous consultez déjà who.int. HealthWatch l'agrège, le traduit dans votre langue et vous alerte en avance sur les événements.",
     heroCta: "Créer un compte gratuit",
@@ -148,7 +148,7 @@ const COPY: Record<string, {
     aboutLink: "Construit par un professionnel passionné par la santé mondiale → En savoir plus",
   },
   en: {
-    heroBadge: "Official WHO data · 195 countries · Auto-synced",
+    heroBadge: "Official WHO data · 195 countries · Updated every 6h",
     heroTitle: ["All WHO outbreak data.", "Without the research hours."],
     heroSub: "Travel medicine doctor, consultant or health analyst — you already check who.int. HealthWatch aggregates it, translates it into your language, and alerts you first.",
     heroCta: "Create free account",
