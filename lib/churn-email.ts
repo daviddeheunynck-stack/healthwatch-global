@@ -29,7 +29,7 @@ const COPY: Record<string, Record<string, ChurnCopy>> = {
       intro:       "C'est confirmé. Vous repassez sur le plan gratuit à la fin de la période en cours.",
       losingTitle: "Vous n'aurez plus accès à :",
       losing: [
-        "Alertes instantanées — dès notre synchronisation quotidienne avec l'OMS",
+        "Alertes instantanées — dès notre synchronisation (toutes les 6h) avec l'OMS",
         "Rapports PDF pour toutes les régions mondiales",
         "Intégration Slack / Teams",
         "Chiffres exacts de cas et de décès",
@@ -48,7 +48,7 @@ const COPY: Record<string, Record<string, ChurnCopy>> = {
       intro:       "Confirmed. You'll revert to the free plan at the end of your current period.",
       losingTitle: "You'll lose access to:",
       losing: [
-        "Instant alerts — the moment our daily WHO sync detects something new",
+        "Instant alerts — the moment our 6h WHO sync detects something new",
         "PDF reports for all global regions",
         "Slack / Teams integration",
         "Exact case and death figures",
@@ -67,7 +67,7 @@ const COPY: Record<string, Record<string, ChurnCopy>> = {
       intro:       "Confirmado. Volverá al plan gratuito al final de su período actual.",
       losingTitle: "Perderá acceso a:",
       losing: [
-        "Alertas instantáneas — en cada sincronización diaria con la OMS",
+        "Alertas instantáneas — en cada sincronización (cada 6h) con la OMS",
         "Informes PDF para todas las regiones",
         "Integración Slack / Teams",
         "Cifras exactas de casos y fallecidos",
@@ -86,7 +86,7 @@ const COPY: Record<string, Record<string, ChurnCopy>> = {
       intro:       "تأكيد. ستعود إلى الخطة المجانية في نهاية فترتك الحالية.",
       losingTitle: "لن تتمكن من الوصول إلى:",
       losing: [
-        "التنبيهات الفورية — مع كل مزامنة يومية مع المنظمة",
+        "التنبيهات الفورية — مع كل مزامنة (كل 6 ساعات) مع المنظمة",
         "تقارير PDF لجميع المناطق العالمية",
         "تكامل Slack / Teams",
         "الأرقام الدقيقة للحالات والوفيات",
@@ -105,7 +105,7 @@ const COPY: Record<string, Record<string, ChurnCopy>> = {
       intro:       "Dikonfirmasi. Anda akan kembali ke paket gratis di akhir periode Anda saat ini.",
       losingTitle: "Anda tidak lagi memiliki akses ke:",
       losing: [
-        "Peringatan instan — pada setiap sinkronisasi harian dengan WHO",
+        "Peringatan instan — pada setiap sinkronisasi 6 jam dengan WHO",
         "Laporan PDF untuk semua wilayah global",
         "Integrasi Slack / Teams",
         "Angka kasus dan kematian yang tepat",
@@ -133,7 +133,7 @@ const COPY: Record<string, Record<string, ChurnCopy>> = {
         "Toutes les fonctionnalités Pro (alertes, PDF, Slack, CSV)",
         "Vos clés API existantes seront révoquées automatiquement",
       ],
-      comeback:  "Si votre équipe a encore besoin de l'API ou de nos données mises à jour quotidiennement, contactez-nous — nous pouvons trouver une solution adaptée.",
+      comeback:  "Si votre équipe a encore besoin de l'API ou de nos données mises à jour toutes les 6h, contactez-nous — nous pouvons trouver une solution adaptée.",
       ctaLabel:  "Discuter avec nous →",
       ctaUrl:    `${APP_URL}/fr/contact`,
       contactLine: "Répondez directement à cet email — je lis tout personnellement.",
@@ -150,7 +150,7 @@ const COPY: Record<string, Record<string, ChurnCopy>> = {
         "All Pro features (alerts, PDF reports, Slack, CSV)",
         "Your existing API keys will be automatically revoked",
       ],
-      comeback:  "If your team still needs the API or our daily-updated data, reach out — we can find a solution that works.",
+      comeback:  "If your team still needs the API or our data updated every 6h, reach out — we can find a solution that works.",
       ctaLabel:  "Talk to us →",
       ctaUrl:    `${APP_URL}/en/contact`,
       contactLine: "Reply directly to this email — I read everything personally.",
