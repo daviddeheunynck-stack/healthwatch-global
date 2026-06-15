@@ -12,6 +12,7 @@ import Link from "next/link";
 import type { OutbreakTrend } from "@/lib/outbreak-trend";
 import RiskBadge from "@/components/RiskBadge";
 import ShareOutbreakButton from "@/components/ShareOutbreakButton";
+import LockedUpgradeButton from "@/components/LockedUpgradeButton";
 
 const COPY: Record<string, {
   cases: string; deaths: string; cfr: string; incidence: string; date: string;
@@ -278,6 +279,20 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlis
             </div>
           )}
         </div>
+
+        {/* Unlock prompt for free users */}
+        {!isPaid && (
+          <div className="mx-5 mb-3 flex items-center justify-between gap-3 p-3 rounded-xl bg-amber-900/10 border border-amber-700/20">
+            <p className="text-xs text-gray-500">
+              {locale === "fr" ? "Débloquez les chiffres exacts avec Pro — essai 14 jours gratuit" :
+               locale === "es" ? "Desbloquee las cifras exactas con Pro — prueba de 14 días gratis" :
+               locale === "ar" ? "افتح الأرقام الدقيقة مع Pro — تجربة 14 يوماً مجانية" :
+               locale === "id" ? "Buka angka tepat dengan Pro — uji coba 14 hari gratis" :
+               "Unlock exact figures with Pro — 14-day free trial"}
+            </p>
+            <LockedUpgradeButton feature="cases" label="Unlock Pro" variant="banner" />
+          </div>
+        )}
 
         {/* PHEIC banner */}
         {outbreak.is_pheic && (
