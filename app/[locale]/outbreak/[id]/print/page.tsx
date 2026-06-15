@@ -3,7 +3,8 @@
 // URL: /fr/outbreak/{id}/print
 
 import { createClient } from "@supabase/supabase-js";
-import { notFound } from "next/navigation";
+import { createClient as createServerClient } from "@/lib/supabase-server";
+import { notFound, redirect } from "next/navigation";
 import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 import { getIncidenceRate, getPopulationThousands } from "@/lib/population-data";
 import type { Metadata } from "next";
@@ -100,6 +101,14 @@ export default async function PrintPage({
   const { locale, id } = await params;
   const l = LABELS[locale] ?? LABELS.en;
   const isRtl = locale === "ar";
+
+  // Auth check — PDF reports are a Pro feature
+  const authClient = await createServerClient();
+  const { data: { user } } = await authClient.auth.getUser();
+  if (!user) redirect(`/${locale}/login`);
+  const { data: profile } = await authClient.from("profiles").select("plan").eq("id", user.id).single();
+  const plan = profile?.plan ?? "free";
+  if (plan === "free") redirect(`/${locale}/pricing`);
 
   const supabase = createClient(
     clean(process.env.NEXT_PUBLIC_SUPABASE_URL),
