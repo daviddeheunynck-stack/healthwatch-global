@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { Check, Zap, Shield, Building2, Mail, RefreshCw, Sparkles } from "lucide-react";
+import Link from "next/link";
+import { Check, Zap, Shield, Building2, RefreshCw, Sparkles } from "lucide-react";
 import CheckoutButton from "@/components/CheckoutButton";
 
 type Billing = "monthly" | "annual";
@@ -284,13 +285,12 @@ export default function PricingCards({ locale }: { locale: string }) {
               </li>
             ))}
           </ul>
-          <a
-            href={`mailto:contact@healthwatch-global.com?subject=Enterprise Plan - HealthWatch Global`}
+          <Link
+            href={`/${locale}/contact`}
             className="flex items-center justify-center gap-2 w-full bg-purple-700 hover:bg-purple-600 text-white font-semibold py-2.5 rounded-lg transition-colors"
           >
-            <Mail className="w-4 h-4" />
             {c.contactUs}
-          </a>
+          </Link>
         </div>
       </div>
     </div>
