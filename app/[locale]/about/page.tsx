@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Activity, Globe, Database, Zap, Users, User, ArrowLeft, ShieldCheck, Mail } from "lucide-react";
+import { Activity, Globe, Database, Zap, Users, User, ArrowLeft, ShieldCheck, Mail, ArrowRight } from "lucide-react";
 import type { Metadata } from "next";
 
 const ABOUT_META: Record<string, { title: string; description: string }> = {
@@ -421,6 +421,35 @@ export default async function AboutPage({
           {l.openDataTitle}
         </h2>
         <p className="text-gray-400 leading-relaxed">{l.openDataText}</p>
+      </section>
+
+      {/* Pro trial CTA */}
+      <section className="bg-gradient-to-r from-red-950/40 via-red-900/20 to-transparent border border-red-700/30 rounded-2xl p-8 space-y-4 text-center">
+        <p className="text-white font-bold text-xl">
+          {locale === "fr" ? "Commencez votre essai Pro — 14 jours gratuits" :
+           locale === "es" ? "Inicie su prueba Pro — 14 días gratis" :
+           locale === "ar" ? "ابدأ تجربة Pro — 14 يوماً مجانية" :
+           locale === "id" ? "Mulai uji coba Pro — 14 hari gratis" :
+           "Start your Pro trial — 14 days free"}
+        </p>
+        <p className="text-gray-400 text-sm">
+          {locale === "fr" ? "Sans carte bancaire · Accès immédiat · Annulation à tout moment" :
+           locale === "es" ? "Sin tarjeta de crédito · Acceso inmediato · Cancela cuando quieras" :
+           locale === "ar" ? "بدون بطاقة بنكية · وصول فوري · إلغاء في أي وقت" :
+           locale === "id" ? "Tanpa kartu kredit · Akses langsung · Batalkan kapan saja" :
+           "No credit card · Instant access · Cancel anytime"}
+        </p>
+        <Link
+          href={`/${locale}/signup`}
+          className="inline-flex items-center gap-2 bg-red-600 hover:bg-red-500 text-white font-bold px-8 py-3 rounded-xl transition-colors text-sm"
+        >
+          {locale === "fr" ? "Créer mon compte gratuit" :
+           locale === "es" ? "Crear cuenta gratuita" :
+           locale === "ar" ? "إنشاء حسابي المجاني" :
+           locale === "id" ? "Buat akun gratis" :
+           "Create my free account"}
+          <ArrowRight className="w-4 h-4" />
+        </Link>
       </section>
 
       {/* Contact CTA */}
