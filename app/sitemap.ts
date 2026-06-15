@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { createClient } from "@supabase/supabase-js";
+import { allDiseases, diseaseToSlug } from "@/lib/disease-data";
 
 const BASE_URL = "https://healthwatch-global.com";
 const LOCALES  = ["en", "fr", "es", "ar", "id"] as const;
@@ -73,6 +74,21 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }
   } catch {
     // DB unreachable at build time — static routes still returned
+  }
+
+  // ── Disease profile pages — 30 diseases × 5 locales ────────────────────
+  for (const disease of allDiseases()) {
+    const slug = diseaseToSlug(disease.name_en);
+    const diseasePath = `/disease/${slug}`;
+    for (const locale of LOCALES) {
+      entries.push({
+        url: `${BASE_URL}/${locale}${diseasePath}`,
+        lastModified: new Date(),
+        changeFrequency: "daily",
+        priority: 0.8,
+        alternates: localeAlternates(diseasePath),
+      });
+    }
   }
 
   return entries;

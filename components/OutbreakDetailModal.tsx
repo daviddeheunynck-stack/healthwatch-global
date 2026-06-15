@@ -7,6 +7,8 @@ import WatchlistButton from "@/components/WatchlistButton";
 import { getIncidenceRate } from "@/lib/population-data";
 import type { Outbreak } from "@/lib/outbreaks";
 import { getLocalizedDisease, getLocalizedCountry, getLocalizedDescription, sourceStatus } from "@/lib/outbreaks";
+import { diseaseToSlug, normalizeDisease } from "@/lib/disease-data";
+import Link from "next/link";
 import type { OutbreakTrend } from "@/lib/outbreak-trend";
 import RiskBadge from "@/components/RiskBadge";
 import ShareOutbreakButton from "@/components/ShareOutbreakButton";
@@ -141,7 +143,13 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlis
                 </span>
               )}
             </div>
-            <h2 className="text-xl font-bold text-white leading-tight">{disease}</h2>
+            <Link
+              href={`/${locale}/disease/${diseaseToSlug(normalizeDisease(outbreak.disease_en || outbreak.disease).name_en)}`}
+              onClick={onClose}
+              className="text-xl font-bold text-white leading-tight hover:text-red-400 transition-colors"
+            >
+              {disease}
+            </Link>
             <div className="flex items-center gap-1.5 text-gray-400 text-sm">
               <Globe className="w-3.5 h-3.5 shrink-0" />
               <span>{country}</span>

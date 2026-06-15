@@ -7,6 +7,7 @@ import { createClient } from "@supabase/supabase-js";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { getLocalizedDisease, getLocalizedCountry, sourceStatus } from "@/lib/outbreaks";
+import { diseaseToSlug, normalizeDisease } from "@/lib/disease-data";
 import type { Outbreak } from "@/lib/outbreaks";
 import type { Metadata } from "next";
 
@@ -232,6 +233,12 @@ export default async function OutbreakPage({
         </div>
         <h1 className="text-3xl font-bold text-white">{disease}</h1>
         <p className="text-xl text-gray-400 mt-1">📍 {country}</p>
+        <Link
+          href={`/${locale}/disease/${diseaseToSlug(normalizeDisease(o.disease_en || o.disease).name_en)}`}
+          className="inline-block mt-2 text-sm text-red-400/70 hover:text-red-400 transition-colors"
+        >
+          {{ fr: `Voir tous les foyers — ${disease}`, en: `All ${disease} outbreaks`, es: `Todos los brotes — ${disease}`, ar: `جميع تفشيات ${disease} ←`, id: `Semua wabah ${disease}` }[locale] ?? `All ${disease} outbreaks`} →
+        </Link>
         {o.is_pheic && (
           <p className="mt-2 text-xs text-purple-400 font-semibold tracking-wide">{l.pheic}</p>
         )}
