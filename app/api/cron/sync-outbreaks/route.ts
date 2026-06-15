@@ -208,7 +208,10 @@ export async function GET(req: NextRequest) {
           !isOlderArticle &&
           (existingRow.cases !== outbreak.cases ||
             existingRow.deaths !== outbreak.deaths ||
-            existingRow.date !== outbreak.date);
+            existingRow.date !== outbreak.date) &&
+          // Never overwrite a real case/death count with a parser-miss zero
+          !(outbreak.cases === 0 && existingRow.cases > 0) &&
+          !(outbreak.deaths === 0 && existingRow.deaths > 0);
 
         if (needsUpdate) {
           const { error } = await supabase
