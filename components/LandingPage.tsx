@@ -87,7 +87,7 @@ const COPY: Record<string, {
     statOutbreaks: "foyers actifs",
     statCountries: "pays touchés",
     statHighRisk: "alertes haut risque",
-    statUpdated: "Données officielles vérifiées",
+    statUpdated: "Délai de mise à jour",
     problemTitle: "L'OMS déclare 15 à 25 nouveaux foyers chaque mois.",
     problemSub: "La plupart des organisations de santé l'apprennent trop tard — après que les médias locaux en aient parlé, après que les équipes terrain aient signalé les premiers cas. HealthWatch Global renverse ce délai.",
     problemStats: [
@@ -157,7 +157,7 @@ const COPY: Record<string, {
     statOutbreaks: "active outbreaks",
     statCountries: "countries affected",
     statHighRisk: "high-risk alerts",
-    statUpdated: "Verified official data",
+    statUpdated: "Data freshness",
     problemTitle: "The WHO declares 15–25 new outbreaks every month.",
     problemSub: "Most health organizations learn too late — after local media, after field teams report first cases. HealthWatch Global reverses that delay.",
     problemStats: [
@@ -218,7 +218,7 @@ const COPY: Record<string, {
     aboutLink: "Built by a professional passionate about global health → Learn more",
   },
   es: {
-    heroBadge: "Datos OMS en vivo · 195 países · Actualizado diariamente",
+    heroBadge: "Datos OMS en vivo · 195 países · Actualizado cada 6h",
     heroTitle: ["Todos los datos OMS.", "Sin horas de investigación."],
     heroSub: "Médico, consultor o analista de salud — usted ya consulta who.int. HealthWatch lo agrega, lo traduce a su idioma y le alerta antes que nadie.",
     heroCta: "Crear cuenta gratuita",
@@ -227,7 +227,7 @@ const COPY: Record<string, {
     statOutbreaks: "brotes activos",
     statCountries: "países afectados",
     statHighRisk: "alertas de alto riesgo",
-    statUpdated: "Actualizado diariamente",
+    statUpdated: "Actualización de datos",
     problemTitle: "La OMS declara entre 15 y 25 nuevos brotes cada mes.",
     problemSub: "La mayoría de las organizaciones de salud lo descubren demasiado tarde. HealthWatch Global invierte ese retraso.",
     problemStats: [
@@ -236,7 +236,7 @@ const COPY: Record<string, {
       { value: "× 10", label: "coste de respuesta reactiva vs. anticipada" },
     ],
     previewTitle: "Lo que sus equipos verán",
-    previewSub: "Los datos a continuación se actualizan a diario y provienen de la API WHO Disease Outbreak News.",
+    previewSub: "Los datos a continuación se actualizan cada 6h y provienen de la API WHO Disease Outbreak News.",
     previewLive: "En vivo",
     previewCols: { disease: "Enfermedad", country: "País", risk: "Riesgo" },
     featuresTitle: "Todo lo que su equipo necesita",
@@ -288,7 +288,7 @@ const COPY: Record<string, {
     aboutLink: "Creado por un profesional apasionado por la salud global → Saber más",
   },
   ar: {
-    heroBadge: "بيانات منظمة الصحة العالمية مباشرة · 195 دولة · تحديث يومي",
+    heroBadge: "بيانات منظمة الصحة العالمية مباشرة · 195 دولة · تحديث كل 6 ساعات",
     heroTitle: ["كل بيانات منظمة الصحة العالمية.", "دون ساعات البحث."],
     heroSub: "طبيب، مستشار أو محلل صحي — أنت تراجع who.int أصلاً. HealthWatch يجمعها، يترجمها إلى لغتك، ويُنبِّهك قبل الجميع.",
     heroCta: "إنشاء حساب مجاني",
@@ -297,7 +297,7 @@ const COPY: Record<string, {
     statOutbreaks: "تفشيات نشطة",
     statCountries: "دول متضررة",
     statHighRisk: "تنبيهات عالية الخطورة",
-    statUpdated: "تحديث يومي",
+    statUpdated: "تأخر التحديث",
     problemTitle: "تُعلن منظمة الصحة العالمية عن 15 إلى 25 تفشياً جديداً كل شهر.",
     problemSub: "معظم منظمات الصحة تعلم متأخرة. HealthWatch Global تعكس هذا التأخير.",
     problemStats: [
@@ -306,7 +306,7 @@ const COPY: Record<string, {
       { value: "× 10", label: "تكلفة الاستجابة التفاعلية مقابل الاستباقية" },
     ],
     previewTitle: "ما ستراه فرقك",
-    previewSub: "البيانات أدناه محدّثة يومياً من API أخبار تفشي أمراض منظمة الصحة العالمية.",
+    previewSub: "البيانات أدناه محدّثة كل 6 ساعات من API أخبار تفشي أمراض منظمة الصحة العالمية.",
     previewLive: "مباشر",
     previewCols: { disease: "المرض", country: "الدولة", risk: "الخطر" },
     featuresTitle: "كل ما يحتاجه فريقك",
@@ -358,7 +358,7 @@ const COPY: Record<string, {
     aboutLink: "أُنشئت بواسطة متخصص شغوف بالصحة العالمية ← تعرف أكثر",
   },
   id: {
-    heroBadge: "Data WHO langsung · 195 negara · Diperbarui setiap hari",
+    heroBadge: "Data WHO langsung · 195 negara · Diperbarui setiap 6 jam",
     heroTitle: ["Semua data wabah WHO.", "Tanpa berjam-jam penelitian."],
     heroSub: "Dokter, konsultan atau analis kesehatan — Anda sudah mengecek who.int. HealthWatch mengagregasinya, menerjemahkannya ke bahasa Anda, dan memberi tahu Anda lebih dulu.",
     heroCta: "Buat akun gratis",
@@ -367,7 +367,7 @@ const COPY: Record<string, {
     statOutbreaks: "wabah aktif",
     statCountries: "negara terdampak",
     statHighRisk: "peringatan risiko tinggi",
-    statUpdated: "Diperbarui setiap hari",
+    statUpdated: "Kebaruan data",
     problemTitle: "WHO mendeklarasikan 15–25 wabah baru setiap bulan.",
     problemSub: "Sebagian besar organisasi kesehatan mengetahuinya terlambat. HealthWatch Global membalik keterlambatan itu.",
     problemStats: [
@@ -376,7 +376,7 @@ const COPY: Record<string, {
       { value: "× 10", label: "biaya respons reaktif vs. antisipatif" },
     ],
     previewTitle: "Yang akan dilihat tim Anda",
-    previewSub: "Data di bawah ini diperbarui setiap hari dan bersumber dari API WHO Disease Outbreak News.",
+    previewSub: "Data di bawah ini diperbarui setiap 6 jam dan bersumber dari API WHO Disease Outbreak News.",
     previewLive: "Langsung",
     previewCols: { disease: "Penyakit", country: "Negara", risk: "Risiko" },
     featuresTitle: "Semua yang dibutuhkan tim Anda",
@@ -495,7 +495,7 @@ export default async function LandingPage({ locale }: { locale: string }) {
               { value: stats.activeOutbreaks, label: c.statOutbreaks, icon: Activity, color: "text-red-400" },
               { value: stats.countriesAffected, label: c.statCountries, icon: Globe, color: "text-blue-400" },
               { value: stats.highRisk, label: c.statHighRisk, icon: AlertTriangle, color: "text-yellow-400" },
-              { value: "≤24h", label: c.statUpdated, icon: Clock, color: "text-green-400" },
+              { value: "≤6h", label: c.statUpdated, icon: Clock, color: "text-green-400" },
             ].map(({ value, label, icon: Icon, color }, i) => (
               <div key={i} className="bg-gray-900/80 border border-gray-800 rounded-xl p-4 text-center">
                 <Icon className={`w-4 h-4 ${color} mx-auto mb-1`} />
@@ -573,9 +573,9 @@ export default async function LandingPage({ locale }: { locale: string }) {
         <h2 className="text-2xl md:text-3xl font-bold text-white text-center">{c.featuresTitle}</h2>
         <div className="grid md:grid-cols-3 gap-4">
           {c.features.map(({ title, desc }, i) => {
-            const icons = [Globe, Radio, FileText, Bell, Globe, Activity];
-            const colors = ["text-blue-400", "text-red-400", "text-purple-400", "text-yellow-400", "text-green-400", "text-orange-400"];
-            const bgs = ["bg-blue-500/10 border-blue-500/20", "bg-red-500/10 border-red-500/20", "bg-purple-500/10 border-purple-500/20", "bg-yellow-500/10 border-yellow-500/20", "bg-green-500/10 border-green-500/20", "bg-orange-500/10 border-orange-500/20"];
+            const icons = [Bell, AlertTriangle, Activity, Globe, Zap, FileText];
+            const colors = ["text-red-400", "text-yellow-400", "text-purple-400", "text-blue-400", "text-green-400", "text-orange-400"];
+            const bgs = ["bg-red-500/10 border-red-500/20", "bg-yellow-500/10 border-yellow-500/20", "bg-purple-500/10 border-purple-500/20", "bg-blue-500/10 border-blue-500/20", "bg-green-500/10 border-green-500/20", "bg-orange-500/10 border-orange-500/20"];
             const Icon = icons[i] ?? Activity;
             return (
               <div key={title} className="bg-gray-900 border border-gray-800 rounded-xl p-6 space-y-3 hover:border-gray-600 transition-colors">
@@ -700,7 +700,7 @@ export default async function LandingPage({ locale }: { locale: string }) {
           {[
             { name: c.pricingFree, price: "", sub: c.pricingFreeSub, icon: CheckCircle, color: "text-green-400", border: "border-gray-800", cta: null },
             { name: "Pro", price: c.pricingPro, sub: c.pricingProSub, icon: Shield, color: "text-red-400", border: "border-2 border-red-500", cta: c.pricingProCta },
-            { name: "Enterprise", price: c.pricingEnterprise, sub: c.pricingEnterpriseSub, icon: Zap, color: "text-purple-400", border: "border-gray-800", cta: null },
+            { name: "Enterprise", price: c.pricingEnterprise, sub: c.pricingEnterpriseSub, icon: Building2, color: "text-purple-400", border: "border-gray-800", cta: null },
           ].map(({ name, price, sub, icon: Icon, color, border, cta }) => (
             <div key={name} className={`bg-gray-900 ${border} rounded-xl p-5 space-y-3`}>
               <div className="flex items-center gap-2">
