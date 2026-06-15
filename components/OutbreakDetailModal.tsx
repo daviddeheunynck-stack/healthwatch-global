@@ -13,6 +13,7 @@ import type { OutbreakTrend } from "@/lib/outbreak-trend";
 import RiskBadge from "@/components/RiskBadge";
 import ShareOutbreakButton from "@/components/ShareOutbreakButton";
 import LockedUpgradeButton from "@/components/LockedUpgradeButton";
+import { useUpgradeModal } from "@/lib/upgrade-modal-context";
 
 const COPY: Record<string, {
   cases: string; deaths: string; cfr: string; incidence: string; date: string;
@@ -56,6 +57,7 @@ interface Props {
 export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlist, trend, onClose }: Props) {
   const c = COPY[locale] ?? COPY.en;
   const isRtl = locale === "ar";
+  const { openModal } = useUpgradeModal();
 
   // Close on Escape
   useEffect(() => {
@@ -218,7 +220,7 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlis
             <p className="text-lg font-bold text-white">
               {isPaid
                 ? (hasData ? outbreak.cases.toLocaleString() : <span className="text-gray-600 text-sm italic">{c.noData}</span>)
-                : <span className="blur-sm select-none">12345</span>
+                : <span className="blur-sm select-none cursor-pointer" onClick={() => openModal("cases")}>12345</span>
               }
             </p>
             {isPaid && trend && trend.direction !== "unknown" && (
@@ -238,7 +240,7 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlis
             <p className="text-lg font-bold text-red-400">
               {isPaid
                 ? (hasData ? outbreak.deaths.toLocaleString() : <span className="text-gray-600 text-sm italic">{c.noData}</span>)
-                : <span className="blur-sm select-none">234</span>
+                : <span className="blur-sm select-none cursor-pointer" onClick={() => openModal("cases")}>234</span>
               }
             </p>
           </div>
@@ -253,7 +255,7 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlis
             }`}>
               {isPaid
                 ? (cfr ? `${cfr}%` : <span className="text-gray-600 text-sm italic">{c.noData}</span>)
-                : <span className="blur-sm select-none">9.9%</span>
+                : <span className="blur-sm select-none cursor-pointer" onClick={() => openModal("cases")}>9.9%</span>
               }
             </p>
           </div>
@@ -274,7 +276,7 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlis
                   <p className="text-[10px] text-gray-600 mt-0.5">{c.incidencePer100k}</p>
                 </div>
               ) : (
-                <p className="text-lg font-bold blur-sm select-none text-gray-300">0.36</p>
+                <p className="text-lg font-bold blur-sm select-none text-gray-300 cursor-pointer" onClick={() => openModal("cases")}>0.36</p>
               )}
             </div>
           )}
