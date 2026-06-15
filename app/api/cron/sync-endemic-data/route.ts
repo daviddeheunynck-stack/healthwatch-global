@@ -2,7 +2,7 @@
 // national agencies or WHO regional offices instead of the DON feed.
 //
 // Current targets: Philippines dengue, Ethiopia cholera, Thailand leptospirosis.
-// Schedule: 30 7 * * 1  (Monday 07:30 UTC — after the daily DON sync at 06:00)
+// Schedule: 30 7 * * 1  (Monday 07:30 UTC — after the 6h DON sync run at 06:00)
 
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
