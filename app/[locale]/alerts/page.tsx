@@ -1,11 +1,12 @@
 "use client";
 
 import { useTranslations, useLocale } from "next-intl";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Bell, CheckCircle, Loader2, Info, Zap, Globe, FileDown } from "lucide-react";
 import RealtimeAlertFeed from "@/components/RealtimeAlertFeed";
 import CheckoutButton from "@/components/CheckoutButton";
 import Link from "next/link";
+import { createClient } from "@/lib/supabase-browser";
 
 const PRO_COPY: Record<string, {
   badge: string; title: string; sub: string;
@@ -71,6 +72,18 @@ export default function AlertsPage() {
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [plan, setPlan] = useState<string | null>(null);
+
+  useEffect(() => {
+    const supabase = createClient();
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      if (!user) { setPlan("free"); return; }
+      supabase.from("profiles").select("plan").eq("id", user.id).single()
+        .then(({ data }) => setPlan(data?.plan || "free"));
+    });
+  }, []);
+
+  const isPaid = plan === "pro" || plan === "enterprise";
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -111,8 +124,8 @@ export default function AlertsPage() {
         <p className="text-gray-400 mt-2">{t("subtitle")}</p>
       </div>
 
-      {/* ── Pro upsell — shown first (anchor effect) ────────────────────── */}
-      <div className="bg-gray-900 border-2 border-red-500/60 rounded-2xl p-6 space-y-5">
+      {/* ── Pro upsell — only for free users ───────────────────────────── */}
+      {!isPaid && <div className="bg-gray-900 border-2 border-red-500/60 rounded-2xl p-6 space-y-5">
         <div className="flex items-center gap-2">
           <span className="bg-red-600 text-white text-xs font-bold px-2.5 py-1 rounded-full uppercase tracking-wide">{pc.badge}</span>
           <Zap className="w-4 h-4 text-red-400" />
@@ -140,14 +153,14 @@ export default function AlertsPage() {
           className="w-full bg-red-600 hover:bg-red-500 text-white font-bold py-3 rounded-xl transition-all shadow-lg shadow-red-900/30 text-sm"
         />
         <p className="text-center text-xs text-gray-600">14 {locale === "fr" ? "jours gratuits · sans CB" : locale === "es" ? "días gratis · sin tarjeta" : locale === "ar" ? "يوماً مجاناً · بدون بطاقة" : locale === "id" ? "hari gratis · tanpa kartu" : "days free · no credit card"}</p>
-      </div>
+      </div>}
 
-      {/* ── Divider ─────────────────────────────────────────────────────── */}
-      <div className="flex items-center gap-4">
+      {/* ── Divider — only between upsell and free form ─────────────────── */}
+      {!isPaid && <div className="flex items-center gap-4">
         <div className="flex-1 h-px bg-gray-800" />
         <span className="text-xs text-gray-600">{pc.divider}</span>
         <div className="flex-1 h-px bg-gray-800" />
-      </div>
+      </div>}
 
       {/* ── Free subscription form ───────────────────────────────────────── */}
       <div>
