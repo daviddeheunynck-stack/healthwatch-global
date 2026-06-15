@@ -194,21 +194,58 @@ const PLAN_STYLE = {
   pro:     { bg: "#78350f", color: "#fcd34d", label: { fr: "Pro",     en: "Pro",     es: "Pro",     ar: "Pro",     id: "Pro"     } },
 };
 
+// ─── Copy for users who already have a payment method (Stripe webhook path) ────
+
+const RENEW_COPY: Record<string, { intro: (d: string) => string; ctaLabel: string; reassurance: string }> = {
+  fr: {
+    intro:       (d) => `Votre essai Pro se termine le <strong>${d}</strong>. Vous avez déjà ajouté un moyen de paiement — votre abonnement Pro sera renouvelé automatiquement. Aucune action requise.`,
+    ctaLabel:    "Gérer mon abonnement →",
+    reassurance: "Annulation possible à tout moment depuis votre espace compte.",
+  },
+  en: {
+    intro:       (d) => `Your Pro trial ends on <strong>${d}</strong>. You've already added a payment method — your Pro subscription will renew automatically. No action needed.`,
+    ctaLabel:    "Manage my subscription →",
+    reassurance: "Cancel anytime from your account page.",
+  },
+  es: {
+    intro:       (d) => `Su prueba Pro termina el <strong>${d}</strong>. Ya añadió un método de pago — su suscripción Pro se renovará automáticamente. No se requiere ninguna acción.`,
+    ctaLabel:    "Gestionar mi suscripción →",
+    reassurance: "Cancelación en cualquier momento desde su cuenta.",
+  },
+  ar: {
+    intro:       (d) => `ينتهي اشتراكك التجريبي Pro في <strong>${d}</strong>. لقد أضفت بالفعل طريقة دفع — سيتجدد اشتراكك Pro تلقائياً. لا يلزم أي إجراء.`,
+    ctaLabel:    "← إدارة اشتراكي",
+    reassurance: "يمكن الإلغاء في أي وقت من صفحة حسابك.",
+  },
+  id: {
+    intro:       (d) => `Uji coba Pro Anda berakhir pada <strong>${d}</strong>. Anda sudah menambahkan metode pembayaran — langganan Pro Anda akan diperbarui secara otomatis. Tidak perlu tindakan lain.`,
+    ctaLabel:    "Kelola langganan saya →",
+    reassurance: "Batalkan kapan saja dari halaman akun Anda.",
+  },
+};
+
 // ─── HTML builder ──────────────────────────────────────────────────────────────
 
 export function buildTrialEndingEmail(
   plan: "starter" | "pro",
   locale: string,
-  trialEndsAt: string
+  trialEndsAt: string,
+  hasPaymentMethod = false
 ): { subject: string; html: string } {
   const safeLocale = COPY[locale] ? locale : "en";
   // "starter" no longer exists — redirect to pro template
   const effectivePlan = plan === "starter" ? "pro" : plan;
   const c     = COPY[safeLocale][effectivePlan];
+  const rc    = RENEW_COPY[safeLocale] ?? RENEW_COPY.en;
   const ps    = PLAN_STYLE[effectivePlan];
   const isRtl = safeLocale === "ar";
   const ctaUrl = `${APP_URL}/${safeLocale}/account`;
   const dateStr = formatTrialEnd(trialEndsAt, safeLocale);
+
+  // Override copy for users who already have a payment method
+  const intro      = hasPaymentMethod ? rc.intro(dateStr)  : c.intro(dateStr);
+  const ctaLabel   = hasPaymentMethod ? rc.ctaLabel        : c.ctaLabel;
+  const reassurance = hasPaymentMethod ? rc.reassurance    : c.reassurance;
 
   const bulletItems = c.highlights
     .map(
@@ -243,7 +280,7 @@ export function buildTrialEndingEmail(
       </h1>
 
       <p style="color:#9ca3af;font-size:14px;margin:0 0 24px;line-height:1.7">
-        ${c.intro(dateStr)}
+        ${intro}
       </p>
 
       <!-- Highlights -->
@@ -256,12 +293,12 @@ export function buildTrialEndingEmail(
       <!-- CTA -->
       <a href="${ctaUrl}"
          style="display:block;background:#2563eb;color:#ffffff;font-weight:700;font-size:15px;padding:14px 24px;border-radius:12px;text-decoration:none;text-align:center;margin-bottom:16px">
-        ${c.ctaLabel}
+        ${ctaLabel}
       </a>
 
       <!-- Reassurance -->
       <p style="color:#6b7280;font-size:12px;text-align:center;margin:0;line-height:1.6">
-        ${c.reassurance}
+        ${reassurance}
       </p>
 
     </div>

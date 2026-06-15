@@ -66,9 +66,10 @@ async function sendTrialEndingEmail(
   to: string,
   plan: "starter" | "pro",
   locale: string,
-  trialEndsAt: string
+  trialEndsAt: string,
+  hasPaymentMethod = false
 ) {
-  const { subject, html } = buildTrialEndingEmail(plan, locale, trialEndsAt);
+  const { subject, html } = buildTrialEndingEmail(plan, locale, trialEndsAt, hasPaymentMethod);
   await sendTransactionalEmail(to, subject, html, "trial_ending");
 }
 
@@ -347,11 +348,15 @@ export async function POST(req: NextRequest) {
         const trialProfile = await getUserProfile(userId);
         if (!trialProfile) break;
 
-        sendTrialEndingEmail(trialProfile.email, plan, trialProfile.locale, trialEnd).catch((e) =>
+        // If the subscription already has a default payment method, the user
+        // is on track for automatic renewal — tell them so, not "add payment method".
+        const hasPaymentMethod = !!sub.default_payment_method;
+
+        sendTrialEndingEmail(trialProfile.email, plan, trialProfile.locale, trialEnd, hasPaymentMethod).catch((e) =>
           console.error("[webhook] trial_ending email:", e)
         );
 
-        console.log(`[webhook] trial_will_end → email sent to ${trialProfile.email} (plan ${plan}, ends ${trialEnd})`);
+        console.log(`[webhook] trial_will_end → email sent to ${trialProfile.email} (plan ${plan}, ends ${trialEnd}, hasPaymentMethod: ${hasPaymentMethod})`);
         break;
       }
 
