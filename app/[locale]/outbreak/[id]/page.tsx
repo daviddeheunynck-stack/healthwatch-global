@@ -6,6 +6,7 @@ import { cache } from "react";
 import { createClient } from "@supabase/supabase-js";
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import CheckoutButton from "@/components/CheckoutButton";
 import { getLocalizedDisease, getLocalizedCountry, sourceStatus } from "@/lib/outbreaks";
 import { diseaseToSlug, normalizeDisease } from "@/lib/disease-data";
 import type { Outbreak } from "@/lib/outbreaks";
@@ -27,7 +28,9 @@ const LABELS = {
     sourceVerified: "Bulletin OMS officiel", sourceOfficial: "Source officielle",
     pheic: "URGENCE SANITAIRE INTERNATIONALE (PHEIC)",
     ctaTitle: "Recevoir les alertes épidémiques en temps réel",
-    ctaBtn: "Commencer gratuitement →",
+    ctaSub: "Essai Pro 14 jours gratuit — sans carte bancaire",
+    ctaProBtn: "Commencer l'essai gratuit →",
+    ctaFree: "Ou créer un compte gratuit",
     back: "← Tableau de bord",
     noData: "N/D",
     risk: { high: "RISQUE ÉLEVÉ", medium: "RISQUE MODÉRÉ", low: "RISQUE FAIBLE" },
@@ -38,7 +41,9 @@ const LABELS = {
     sourceVerified: "Official WHO Disease Outbreak News", sourceOfficial: "Official source",
     pheic: "PUBLIC HEALTH EMERGENCY OF INTERNATIONAL CONCERN (PHEIC)",
     ctaTitle: "Get real-time disease outbreak alerts",
-    ctaBtn: "Start for free →",
+    ctaSub: "14-day Pro trial — no credit card required",
+    ctaProBtn: "Start free trial →",
+    ctaFree: "Or create a free account",
     back: "← Dashboard",
     noData: "N/A",
     risk: { high: "HIGH RISK", medium: "MEDIUM RISK", low: "LOW RISK" },
@@ -49,7 +54,9 @@ const LABELS = {
     sourceVerified: "Boletín oficial OMS", sourceOfficial: "Fuente oficial",
     pheic: "EMERGENCIA DE SALUD PÚBLICA DE IMPORTANCIA INTERNACIONAL (ESPII)",
     ctaTitle: "Recibe alertas de brotes en tiempo real",
-    ctaBtn: "Empezar gratis →",
+    ctaSub: "Prueba Pro 14 días gratis — sin tarjeta de crédito",
+    ctaProBtn: "Iniciar prueba gratuita →",
+    ctaFree: "O crear una cuenta gratuita",
     back: "← Panel",
     noData: "N/D",
     risk: { high: "RIESGO ALTO", medium: "RIESGO MEDIO", low: "RIESGO BAJO" },
@@ -60,7 +67,9 @@ const LABELS = {
     sourceVerified: "نشرة منظمة الصحة العالمية الرسمية", sourceOfficial: "مصدر رسمي",
     pheic: "طوارئ الصحة العمومية التي تثير قلقاً دولياً",
     ctaTitle: "احصل على تنبيهات الأوبئة في الوقت الفعلي",
-    ctaBtn: "ابدأ مجاناً →",
+    ctaSub: "تجربة Pro مجانية 14 يوماً — بدون بطاقة بنكية",
+    ctaProBtn: "← ابدأ التجربة المجانية",
+    ctaFree: "أو أنشئ حساباً مجانياً",
     back: "→ لوحة التحكم",
     noData: "غ/م",
     risk: { high: "خطر عالٍ", medium: "خطر متوسط", low: "خطر منخفض" },
@@ -71,12 +80,14 @@ const LABELS = {
     sourceVerified: "Buletin resmi WHO", sourceOfficial: "Sumber resmi",
     pheic: "KEDARURATAN KESEHATAN MASYARAKAT YANG MERESAHKAN DUNIA (KKMMD)",
     ctaTitle: "Dapatkan peringatan wabah secara real-time",
-    ctaBtn: "Mulai gratis →",
+    ctaSub: "Uji coba Pro 14 hari gratis — tanpa kartu kredit",
+    ctaProBtn: "Mulai uji coba gratis →",
+    ctaFree: "Atau buat akun gratis",
     back: "← Dasbor",
     noData: "T/S",
     risk: { high: "RISIKO TINGGI", medium: "RISIKO SEDANG", low: "RISIKO RENDAH" },
   },
-} satisfies Record<string, { cases: string; deaths: string; cfr: string; date: string; region: string; sourceVerified: string; sourceOfficial: string; pheic: string; ctaTitle: string; ctaBtn: string; back: string; noData: string; risk: Record<string, string> }>;
+} satisfies Record<string, { cases: string; deaths: string; cfr: string; date: string; region: string; sourceVerified: string; sourceOfficial: string; pheic: string; ctaTitle: string; ctaSub: string; ctaProBtn: string; ctaFree: string; back: string; noData: string; risk: Record<string, string> }>;
 
 const RISK_STYLE: Record<string, string> = {
   high:   "text-red-400 bg-red-500/10 border-red-500/30",
@@ -308,14 +319,22 @@ export default async function OutbreakPage({
       )}
 
       {/* CTA */}
-      <div className="mt-10 p-6 rounded-xl border border-red-500/20 bg-red-500/5 text-center">
-        <p className="text-white font-semibold mb-3">{l.ctaTitle}</p>
-        <Link
-          href={`/${locale}`}
+      <div className="mt-10 p-6 rounded-xl border border-red-500/20 bg-red-500/5 text-center space-y-4">
+        <div>
+          <p className="text-white font-semibold">{l.ctaTitle}</p>
+          <p className="text-xs text-gray-400 mt-1">{l.ctaSub}</p>
+        </div>
+        <CheckoutButton
+          plan="pro"
+          locale={locale}
+          label={l.ctaProBtn}
           className="inline-block bg-red-600 hover:bg-red-700 text-white font-semibold px-6 py-2.5 rounded-lg transition-colors"
-        >
-          {l.ctaBtn}
-        </Link>
+        />
+        <p className="text-xs text-gray-500">
+          <Link href={`/${locale}/signup`} className="underline hover:text-gray-300 transition-colors">
+            {l.ctaFree}
+          </Link>
+        </p>
       </div>
     </div>
   );
