@@ -1,17 +1,18 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Biohazard, Plus, X, Loader2, Lock } from "lucide-react";
+import { Biohazard, Plus, X, Loader2 } from "lucide-react";
+import LockedUpgradeButton from "@/components/LockedUpgradeButton";
 
 const COPY: Record<string, {
   title: string; sub: string; add: string; remove: string;
-  empty: string; max: string; locked: string; loading: string; error: string;
+  empty: string; max: string; locked: string; upgrade: string; loading: string; error: string;
 }> = {
-  fr: { title: "Alertes par maladie", sub: "Recevez un email dès qu'un foyer est détecté pour ces pathogènes, partout dans le monde.", add: "Ajouter", remove: "Retirer", empty: "Aucune maladie surveillée.", max: "Maximum 10 maladies.", locked: "Disponible avec le plan Pro.", loading: "Chargement…", error: "Erreur." },
-  en: { title: "Disease alerts", sub: "Get an email as soon as an outbreak is detected for these pathogens, anywhere in the world.", add: "Add", remove: "Remove", empty: "No diseases monitored.", max: "Maximum 10 diseases.", locked: "Available on the Pro plan.", loading: "Loading…", error: "Error." },
-  es: { title: "Alertas por enfermedad", sub: "Reciba un email cuando se detecte un brote de estos patógenos en cualquier parte del mundo.", add: "Agregar", remove: "Quitar", empty: "Sin enfermedades monitoreadas.", max: "Máximo 10 enfermedades.", locked: "Disponible en el plan Pro.", loading: "Cargando…", error: "Error." },
-  ar: { title: "تنبيهات الأمراض", sub: "احصل على بريد إلكتروني فور اكتشاف تفشٍّ لهذه الأمراض في أي مكان بالعالم.", add: "إضافة", remove: "إزالة", empty: "لا توجد أمراض مراقبة.", max: "الحد الأقصى 10 أمراض.", locked: "متاح في خطة Pro.", loading: "جارٍ التحميل…", error: "خطأ." },
-  id: { title: "Peringatan penyakit", sub: "Dapatkan email segera saat wabah terdeteksi untuk patogen ini, di mana saja.", add: "Tambah", remove: "Hapus", empty: "Tidak ada penyakit yang dipantau.", max: "Maksimal 10 penyakit.", locked: "Tersedia di paket Pro.", loading: "Memuat…", error: "Error." },
+  fr: { title: "Alertes par maladie", sub: "Recevez un email dès qu'un foyer est détecté pour ces pathogènes, partout dans le monde.", add: "Ajouter", remove: "Retirer", empty: "Aucune maladie surveillée.", max: "Maximum 10 maladies.", locked: "Alertes par maladie — disponible avec le plan Pro.", upgrade: "Débloquer Pro", loading: "Chargement…", error: "Erreur." },
+  en: { title: "Disease alerts", sub: "Get an email as soon as an outbreak is detected for these pathogens, anywhere in the world.", add: "Add", remove: "Remove", empty: "No diseases monitored.", max: "Maximum 10 diseases.", locked: "Disease alerts — available on the Pro plan.", upgrade: "Unlock Pro", loading: "Loading…", error: "Error." },
+  es: { title: "Alertas por enfermedad", sub: "Reciba un email cuando se detecte un brote de estos patógenos en cualquier parte del mundo.", add: "Agregar", remove: "Quitar", empty: "Sin enfermedades monitoreadas.", max: "Máximo 10 enfermedades.", locked: "Alertas por enfermedad — disponible en el plan Pro.", upgrade: "Desbloquear Pro", loading: "Cargando…", error: "Error." },
+  ar: { title: "تنبيهات الأمراض", sub: "احصل على بريد إلكتروني فور اكتشاف تفشٍّ لهذه الأمراض في أي مكان بالعالم.", add: "إضافة", remove: "إزالة", empty: "لا توجد أمراض مراقبة.", max: "الحد الأقصى 10 أمراض.", locked: "تنبيهات الأمراض — متاح في خطة Pro.", upgrade: "فتح Pro", loading: "جارٍ التحميل…", error: "خطأ." },
+  id: { title: "Peringatan penyakit", sub: "Dapatkan email segera saat wabah terdeteksi untuk patogen ini, di mana saja.", add: "Tambah", remove: "Hapus", empty: "Tidak ada penyakit yang dipantau.", max: "Maksimal 10 penyakit.", locked: "Peringatan penyakit — tersedia di paket Pro.", upgrade: "Buka Pro", loading: "Memuat…", error: "Error." },
 };
 
 interface Props {
@@ -82,9 +83,9 @@ export default function DiseaseAlertPicker({ locale, isPaid }: Props) {
       </div>
 
       {!isPaid ? (
-        <div className="flex items-center gap-2 text-gray-500 text-sm">
-          <Lock className="w-4 h-4" />
-          {c.locked}
+        <div className="flex items-center gap-3 p-3 rounded-lg bg-amber-900/20 border border-amber-700/30">
+          <p className="text-sm text-gray-400 flex-1">{c.locked}</p>
+          <LockedUpgradeButton feature="realtime" label={c.upgrade} variant="banner" />
         </div>
       ) : loading ? (
         <div className="flex items-center gap-2 text-gray-500 text-sm">
