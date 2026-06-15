@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { Zap, AlertTriangle } from "lucide-react";
 import BillingPortalButton from "@/components/BillingPortalButton";
+import CheckoutButton from "@/components/CheckoutButton";
 
 // ─── Copy ─────────────────────────────────────────────────────────────────────
 
@@ -49,9 +50,10 @@ const COPY: Record<string, {
 interface Props {
   trialEndsAt: string;   // ISO timestamp
   locale: string;
+  hasBilling: boolean;   // true = has Stripe customer_id (billing portal works)
 }
 
-export default function TrialBanner({ trialEndsAt, locale }: Props) {
+export default function TrialBanner({ trialEndsAt, locale, hasBilling }: Props) {
   // BUG FIX: this used to be `useMemo(..., [trialEndsAt])`. Since trialEndsAt
   // is a fixed timestamp that never changes during a trial, that memo computed
   // Date.now() exactly ONCE on mount and then froze forever — a banner opened
@@ -106,9 +108,18 @@ export default function TrialBanner({ trialEndsAt, locale }: Props) {
           </div>
         </div>
 
-        {/* CTA */}
+        {/* CTA — billing portal for Stripe customers, checkout for trial-only users */}
         <div className="shrink-0">
-          <BillingPortalButton locale={locale} label={c.cta} />
+          {hasBilling ? (
+            <BillingPortalButton locale={locale} label={c.cta} />
+          ) : (
+            <CheckoutButton
+              plan="pro"
+              locale={locale}
+              label={c.cta}
+              className="flex items-center gap-2 bg-red-600 hover:bg-red-500 disabled:opacity-60 text-white font-semibold px-5 py-2.5 rounded-lg transition-colors text-sm"
+            />
+          )}
         </div>
       </div>
     </div>
