@@ -38,7 +38,7 @@ export default function CheckoutButton({ plan, locale, label, className, billing
       const { data: { user } } = await supabase.auth.getUser();
 
       if (!user) {
-        router.push(`/${locale}/login`);
+        router.push(`/${locale}/signup`);
         return;
       }
 

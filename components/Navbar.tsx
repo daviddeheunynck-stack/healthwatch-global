@@ -206,9 +206,9 @@ export default function Navbar() {
         {/* Mobile: auth badge + hamburger */}
         <div className="flex lg:hidden items-center gap-3">
           {user && (
-            <span className={`text-xs px-2 py-0.5 rounded font-semibold ${PLAN_BADGE[plan] || PLAN_BADGE.free}`}>
+            <Link href={`/${locale}/account`} className={`text-xs px-2 py-0.5 rounded font-semibold ${PLAN_BADGE[plan] || PLAN_BADGE.free}`}>
               {tAuth(`plan.${plan}`)}
-            </span>
+            </Link>
           )}
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
@@ -265,17 +265,30 @@ export default function Navbar() {
           {/* Auth */}
           <div className="border-t border-gray-800 pt-3">
             {user ? (
-              <div className="flex items-center justify-between">
-                <div>
+              <div className="space-y-3">
+                {plan === "free" && (
+                  <Link
+                    href={`/${locale}/pricing`}
+                    className="flex items-center justify-center gap-2 w-full py-2.5 text-sm font-semibold text-white bg-red-600 hover:bg-red-500 rounded-lg transition-colors"
+                    onClick={() => setMobileOpen(false)}
+                  >
+                    {locale === "fr" ? "Passer à Pro — essai gratuit →" :
+                     locale === "es" ? "Actualizar a Pro — prueba gratis →" :
+                     locale === "ar" ? "← ترقية إلى Pro مجاناً" :
+                     locale === "id" ? "Upgrade ke Pro — coba gratis →" :
+                     "Upgrade to Pro — free trial →"}
+                  </Link>
+                )}
+                <div className="flex items-center justify-between">
                   <p className="text-xs text-gray-500">{user.email}</p>
+                  <button
+                    onClick={handleLogout}
+                    className="flex items-center gap-2 text-sm text-gray-400 hover:text-red-400 transition-colors"
+                  >
+                    <LogOut className="w-4 h-4" />
+                    {tAuth("logout")}
+                  </button>
                 </div>
-                <button
-                  onClick={handleLogout}
-                  className="flex items-center gap-2 text-sm text-gray-400 hover:text-red-400 transition-colors"
-                >
-                  <LogOut className="w-4 h-4" />
-                  {tAuth("logout")}
-                </button>
               </div>
             ) : (
               <div className="flex gap-3">
