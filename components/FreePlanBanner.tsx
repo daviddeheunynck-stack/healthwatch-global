@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { X } from "lucide-react";
 import CheckoutButton from "@/components/CheckoutButton";
 
@@ -40,10 +40,10 @@ const COPY: Record<string, { title: string; sub: string; cta: string; trial: str
 const STORAGE_KEY = "hw_free_banner_dismissed_v1";
 
 export default function FreePlanBanner({ locale }: { locale: string }) {
-  const [dismissed, setDismissed] = useState(() => {
-    if (typeof window === "undefined") return false;
-    return !!localStorage.getItem(STORAGE_KEY);
-  });
+  const [dismissed, setDismissed] = useState(false);
+  useEffect(() => {
+    if (localStorage.getItem(STORAGE_KEY)) setDismissed(true);
+  }, []);
 
   if (dismissed) return null;
 
