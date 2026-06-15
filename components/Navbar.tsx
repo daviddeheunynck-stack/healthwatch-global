@@ -281,13 +281,16 @@ export default function Navbar() {
                 )}
                 <div className="flex items-center justify-between">
                   <p className="text-xs text-gray-500">{user.email}</p>
-                  <button
-                    onClick={handleLogout}
-                    className="flex items-center gap-2 text-sm text-gray-400 hover:text-red-400 transition-colors"
-                  >
-                    <LogOut className="w-4 h-4" />
-                    {tAuth("logout")}
-                  </button>
+                  <div className="flex items-center gap-2">
+                    <NotificationBell locale={locale} />
+                    <button
+                      onClick={handleLogout}
+                      className="flex items-center gap-2 text-sm text-gray-400 hover:text-red-400 transition-colors"
+                    >
+                      <LogOut className="w-4 h-4" />
+                      {tAuth("logout")}
+                    </button>
+                  </div>
                 </div>
               </div>
             ) : (
