@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
+import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase-browser";
 import { Activity, Loader2, CheckCircle, BarChart2, Bell, FileDown, Lock, Sparkles } from "lucide-react";
 import Link from "next/link";
@@ -65,6 +66,7 @@ const ICONS = [BarChart2, Bell, FileDown];
 export default function SignupPage() {
   const t = useTranslations("auth");
   const locale = useLocale();
+  const router = useRouter();
   const vp = VALUE_PROPS[locale] ?? VALUE_PROPS.en;
   const isRtl = locale === "ar";
 
@@ -108,12 +110,15 @@ export default function SignupPage() {
 
     // When mailer_autoconfirm is ON, Supabase returns a session immediately —
     // the /auth/callback route is never called, so the trial must be activated here.
+    // Redirect straight to the dashboard so the user doesn't see "check your email".
     if (signUpData.session && userId) {
-      fetch("/api/activate-trial", {
+      await fetch("/api/activate-trial", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ userId }),
       }).catch(() => {});
+      router.push(`/${locale}`);
+      return;
     }
 
     setSuccess(true);
