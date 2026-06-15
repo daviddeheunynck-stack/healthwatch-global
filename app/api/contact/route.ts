@@ -27,13 +27,22 @@ export async function POST(req: NextRequest) {
     );
   }
 
+  const L: Record<string, { subject: string; heading: string; nameLabel: string; orgLabel: string; emailLabel: string; noOrg: string }> = {
+    fr: { subject: "Nouveau message de",    heading: "Nouveau contact HealthWatch Global", nameLabel: "Nom",          orgLabel: "Organisation", emailLabel: "Email", noOrg: "—" },
+    en: { subject: "New message from",      heading: "New contact from HealthWatch Global", nameLabel: "Name",         orgLabel: "Organization", emailLabel: "Email", noOrg: "—" },
+    es: { subject: "Nuevo mensaje de",      heading: "Nuevo contacto HealthWatch Global",   nameLabel: "Nombre",       orgLabel: "Organización", emailLabel: "Email", noOrg: "—" },
+    ar: { subject: "رسالة جديدة من",        heading: "جهة اتصال جديدة عبر HealthWatch Global", nameLabel: "الاسم",   orgLabel: "المنظمة",      emailLabel: "البريد الإلكتروني", noOrg: "—" },
+    id: { subject: "Pesan baru dari",       heading: "Kontak baru dari HealthWatch Global",  nameLabel: "Nama",        orgLabel: "Organisasi",   emailLabel: "Email", noOrg: "—" },
+  };
+
   try {
-    const { name, organization, email, message } = await req.json();
+    const { name, organization, email, message, locale } = await req.json();
 
     if (!name || !email || !message) {
       return NextResponse.json({ error: "Missing fields" }, { status: 400 });
     }
 
+    const l = L[locale] ?? L.fr;
     const BREVO_API_KEY = clean(process.env.BREVO_API_KEY);
 
     const res = await fetch("https://api.brevo.com/v3/smtp/email", {
@@ -44,16 +53,16 @@ export async function POST(req: NextRequest) {
       },
       body: JSON.stringify({
         sender: { name: "HealthWatch Contact Form", email: "alerts@healthwatch-global.com" },
-        to: [{ email: "contact@healthwatch-global.com", name: "David Deheunynck" }],
+        to: [{ email: "david.deheunynck@gmail.com", name: "David Deheunynck" }],
         replyTo: { email, name },
-        subject: `[HealthWatch] New message from ${name} — ${organization || "No org"}`,
+        subject: `[HealthWatch] ${l.subject} ${name} — ${organization || l.noOrg}`,
         htmlContent: `
-          <div style="font-family:sans-serif;max-width:600px;margin:0 auto;">
-            <h2 style="color:#dc2626;">New contact from HealthWatch Global</h2>
+          <div style="font-family:sans-serif;max-width:600px;margin:0 auto;" dir="${locale === "ar" ? "rtl" : "ltr"}">
+            <h2 style="color:#dc2626;">${l.heading}</h2>
             <table style="width:100%;border-collapse:collapse;">
-              <tr><td style="padding:8px;color:#6b7280;width:130px;">Name</td><td style="padding:8px;font-weight:600;">${esc(name)}</td></tr>
-              <tr><td style="padding:8px;color:#6b7280;">Organization</td><td style="padding:8px;">${esc(organization || "—")}</td></tr>
-              <tr><td style="padding:8px;color:#6b7280;">Email</td><td style="padding:8px;"><a href="mailto:${esc(email)}">${esc(email)}</a></td></tr>
+              <tr><td style="padding:8px;color:#6b7280;width:130px;">${l.nameLabel}</td><td style="padding:8px;font-weight:600;">${esc(name)}</td></tr>
+              <tr><td style="padding:8px;color:#6b7280;">${l.orgLabel}</td><td style="padding:8px;">${esc(organization || l.noOrg)}</td></tr>
+              <tr><td style="padding:8px;color:#6b7280;">${l.emailLabel}</td><td style="padding:8px;"><a href="mailto:${esc(email)}">${esc(email)}</a></td></tr>
             </table>
             <div style="margin-top:16px;padding:16px;background:#f9fafb;border-radius:8px;border-left:4px solid #dc2626;">
               <p style="margin:0;white-space:pre-line;">${esc(message)}</p>
