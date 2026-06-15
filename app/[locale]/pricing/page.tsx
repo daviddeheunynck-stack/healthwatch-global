@@ -41,7 +41,7 @@ const COPY: Record<string, {
     guaranteeDesc: "No commitment. If you're not satisfied within 14 days of your first payment, we refund you — no questions asked.",
     compareTitle: "Full feature comparison",
     features: [
-      { label: "Daily outbreak map", free: true, pro: true, enterprise: true },
+      { label: "WHO outbreak map", free: true, pro: true, enterprise: true },
       { label: "WHO DON data feed", free: true, pro: true, enterprise: true },
       { label: "Monitored regions", free: "1", pro: "All", enterprise: "All" },
       { label: "Exact case & death figures", free: false, pro: true, enterprise: true },
@@ -72,7 +72,7 @@ const COPY: Record<string, {
     guaranteeDesc: "Pas d'engagement. Si vous n'êtes pas satisfait dans les 14 jours suivant votre premier paiement, nous vous remboursons — sans question.",
     compareTitle: "Comparatif complet des fonctionnalités",
     features: [
-      { label: "Carte quotidienne des épidémies", free: true, pro: true, enterprise: true },
+      { label: "Carte OMS des épidémies", free: true, pro: true, enterprise: true },
       { label: "Flux données OMS DON", free: true, pro: true, enterprise: true },
       { label: "Régions surveillées", free: "1", pro: "Toutes", enterprise: "Toutes" },
       { label: "Chiffres exacts (cas & décès)", free: false, pro: true, enterprise: true },
@@ -96,14 +96,14 @@ const COPY: Record<string, {
   es: {
     heroTag: "Diseñado para organizaciones de salud y sus equipos en todo el mundo",
     heroTitle: "Anticipe. No solo reaccione.",
-    heroSub: "Un brote no detectado a tiempo puede costarle a su organización meses de gestión de crisis. HealthWatch Global ofrece a sus equipos inteligencia diaria, directamente de la OMS.",
+    heroSub: "Un brote no detectado a tiempo puede costarle a su organización meses de gestión de crisis. HealthWatch Global ofrece a sus equipos datos de vigilancia actualizados cada 6 horas, directamente de la OMS.",
     orgTypes: ["Ministerios de Salud", "ONG internacionales", "Organizaciones humanitarias", "Institutos de investigación", "Sector sanitario privado"],
     orgLabel: "Diseñado para",
     guarantee: "Sin compromiso. Reembolso en 14 días.",
     guaranteeDesc: "Sin compromiso. Si no está satisfecho en los 14 días posteriores a su primer pago, le reembolsamos sin preguntas.",
     compareTitle: "Comparación completa de funciones",
     features: [
-      { label: "Mapa diario de brotes", free: true, pro: true, enterprise: true },
+      { label: "Mapa OMS de brotes", free: true, pro: true, enterprise: true },
       { label: "Datos OMS DON", free: true, pro: true, enterprise: true },
       { label: "Regiones supervisadas", free: "1", pro: "Todas", enterprise: "Todas" },
       { label: "Cifras exactas (casos y fallec.)", free: false, pro: true, enterprise: true },
@@ -127,14 +127,14 @@ const COPY: Record<string, {
   ar: {
     heroTag: "مصمم للمنظمات الصحية وفرقها حول العالم",
     heroTitle: "استبق الأزمات. لا تكتفِ بالاستجابة.",
-    heroSub: "قد يُكلِّف تفشٍّ واحد غير مكتشف في الوقت المناسب منظمتك أشهراً من إدارة الأزمات. توفر HealthWatch Global لفرقك بيانات استخباراتية يومية مباشرةً من منظمة الصحة العالمية.",
+    heroSub: "قد يُكلِّف تفشٍّ واحد غير مكتشف في الوقت المناسب منظمتك أشهراً من إدارة الأزمات. توفر HealthWatch Global لفرقك بيانات مراقبة محدَّثة كل 6 ساعات مباشرةً من منظمة الصحة العالمية.",
     orgTypes: ["وزارات الصحة", "المنظمات غير الحكومية الدولية", "المنظمات الإنسانية", "معاهد البحوث", "القطاع الصحي الخاص"],
     orgLabel: "مصمم لـ",
     guarantee: "بدون التزام. استرداد خلال 14 يوماً.",
     guaranteeDesc: "بدون التزام. إذا لم تكن راضياً خلال 14 يوماً من دفعتك الأولى، نعيد إليك المبلغ كاملاً دون أسئلة.",
     compareTitle: "مقارنة شاملة للميزات",
     features: [
-      { label: "خريطة التفشيات اليومية", free: true, pro: true, enterprise: true },
+      { label: "خريطة منظمة الصحة العالمية", free: true, pro: true, enterprise: true },
       { label: "بيانات منظمة الصحة العالمية DON", free: true, pro: true, enterprise: true },
       { label: "المناطق المراقبة", free: "1", pro: "جميعها", enterprise: "جميعها" },
       { label: "أرقام دقيقة (حالات ووفيات)", free: false, pro: true, enterprise: true },
@@ -158,14 +158,14 @@ const COPY: Record<string, {
   id: {
     heroTag: "Dirancang untuk organisasi kesehatan dan tim mereka di seluruh dunia",
     heroTitle: "Antisipasi. Jangan hanya bereaksi.",
-    heroSub: "Satu wabah yang tidak terdeteksi tepat waktu bisa menelan biaya berbulan-bulan manajemen krisis. HealthWatch Global memberikan intelijen harian kepada tim Anda, langsung dari WHO.",
+    heroSub: "Satu wabah yang tidak terdeteksi tepat waktu bisa menelan biaya berbulan-bulan manajemen krisis. HealthWatch Global memberikan data pemantauan yang diperbarui setiap 6 jam kepada tim Anda, langsung dari WHO.",
     orgTypes: ["Kementerian Kesehatan", "LSM Internasional", "Organisasi Kemanusiaan", "Lembaga Penelitian", "Sektor Kesehatan Swasta"],
     orgLabel: "Dirancang untuk",
     guarantee: "Tanpa komitmen. Pengembalian dana 14 hari.",
     guaranteeDesc: "Tanpa komitmen. Jika tidak puas dalam 14 hari setelah pembayaran pertama, kami kembalikan uang Anda tanpa pertanyaan.",
     compareTitle: "Perbandingan fitur lengkap",
     features: [
-      { label: "Peta wabah harian", free: true, pro: true, enterprise: true },
+      { label: "Peta wabah WHO", free: true, pro: true, enterprise: true },
       { label: "Data WHO DON", free: true, pro: true, enterprise: true },
       { label: "Wilayah yang dipantau", free: "1", pro: "Semua", enterprise: "Semua" },
       { label: "Angka tepat (kasus & kematian)", free: false, pro: true, enterprise: true },

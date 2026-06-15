@@ -176,7 +176,7 @@ const LABELS: Record<string, {
       "Llevo años siguiendo de cerca las grandes dinámicas sanitarias mundiales por puro interés. Consultaba regularmente los boletines de la OMS — y perdía mucho tiempo navegando páginas en inglés, sin filtros, sin alertas, sin visión de conjunto. Construí HealthWatch para resolver este problema de raíz: agregar estos datos, traducirlos y estructurarlos para que un profesional acceda a ellos en unos clics en lugar de horas de búsqueda manual.",
     missionTitle: "Nuestra misión",
     missionText:
-      "HealthWatch Global agrega diariamente las alertas oficiales de la Organización Mundial de la Salud para proporcionar un panel legible a los profesionales de la salud, viajeros, periodistas y organizaciones que necesitan estar informados sobre brotes de enfermedades en cuanto se declaran.",
+      "HealthWatch Global agrega automáticamente las alertas oficiales de la Organización Mundial de la Salud (actualizadas cada 6 horas) para proporcionar un panel legible a los profesionales de la salud, viajeros, periodistas y organizaciones que necesitan estar informados sobre brotes de enfermedades en cuanto se declaran.",
     whoTitle: "Fuente de datos: OMS",
     whoText:
       "Todas las alertas sanitarias provienen de la API oficial Disease Outbreak News (DON) de la OMS, la misma fuente utilizada por gobiernos y agencias de salud pública de todo el mundo. Sin datos no verificados, sin medios de terceros. Consultamos esta API cada 6 horas para mantener la información actualizada.",
@@ -212,7 +212,7 @@ const LABELS: Record<string, {
       "منذ سنوات وأنا أتابع باهتمام كبير التطورات الصحية الكبرى حول العالم. كنت أطّلع بانتظام على نشرات منظمة الصحة العالمية، وأفقد وقتاً طويلاً في التنقل بين صفحات باللغة الإنجليزية فقط، دون مرشحات أو تنبيهات أو رؤية شاملة. أنشأتُ HealthWatch لحل هذه المشكلة من جذورها: تجميع هذه البيانات وترجمتها وتنظيمها، ليتمكن أي مختص من الوصول إليها خلال نقرات معدودة بدلاً من ساعات من البحث اليدوي.",
     missionTitle: "مهمتنا",
     missionText:
-      "تجمع HealthWatch Global التنبيهات الرسمية لمنظمة الصحة العالمية يومياً لتوفير لوحة تحكم واضحة للمهنيين الصحيين والمسافرين والصحفيين والمنظمات التي تحتاج إلى إخطار بتفشي الأمراض فور الإعلان عنها.",
+      "تجمع HealthWatch Global تلقائياً التنبيهات الرسمية لمنظمة الصحة العالمية (محدَّثة كل 6 ساعات) لتوفير لوحة تحكم واضحة للمهنيين الصحيين والمسافرين والصحفيين والمنظمات التي تحتاج إلى إخطار بتفشي الأمراض فور الإعلان عنها.",
     whoTitle: "مصدر البيانات: منظمة الصحة العالمية",
     whoText:
       "تأتي جميع التنبيهات الصحية من واجهة برمجة تطبيقات Disease Outbreak News (DON) الرسمية لمنظمة الصحة العالمية — نفس المصدر الذي تستخدمه الحكومات ووكالات الصحة العامة حول العالم. لا بيانات غير مُتحقَّق منها، ولا وسائل إعلام خارجية. نستعلم هذه الواجهة كل 6 ساعات للحفاظ على تحديث المعلومات.",
@@ -248,7 +248,7 @@ const LABELS: Record<string, {
       "Selama bertahun-tahun saya tertarik mengikuti dinamika kesehatan global yang besar. Saya rutin memeriksa buletin WHO — dan terus kehilangan waktu menavigasi halaman berbahasa Inggris tanpa filter, tanpa peringatan, tanpa gambaran menyeluruh. Saya membangun HealthWatch untuk menyelesaikan masalah ini dari akarnya: mengumpulkan data ini, menerjemahkannya, dan menyusunnya agar seorang profesional bisa mengaksesnya hanya dengan beberapa klik — bukan berjam-jam pencarian manual.",
     missionTitle: "Misi kami",
     missionText:
-      "HealthWatch Global mengumpulkan peringatan resmi Organisasi Kesehatan Dunia setiap hari untuk menyediakan dasbor yang mudah dibaca bagi tenaga kesehatan, wisatawan, jurnalis, dan organisasi yang perlu mendapatkan informasi tentang wabah penyakit segera setelah dideklarasikan.",
+      "HealthWatch Global mengumpulkan secara otomatis peringatan resmi Organisasi Kesehatan Dunia (diperbarui setiap 6 jam) untuk menyediakan dasbor yang mudah dibaca bagi tenaga kesehatan, wisatawan, jurnalis, dan organisasi yang perlu mendapatkan informasi tentang wabah penyakit segera setelah dideklarasikan.",
     whoTitle: "Sumber data: WHO",
     whoText:
       "Semua peringatan kesehatan berasal dari API Disease Outbreak News (DON) resmi WHO — sumber yang sama yang digunakan oleh pemerintah dan badan kesehatan masyarakat di seluruh dunia. Tidak ada data yang tidak terverifikasi, tidak ada media pihak ketiga. Kami mengkueri API ini setiap 6 jam untuk menjaga informasi tetap terkini.",

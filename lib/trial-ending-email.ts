@@ -27,7 +27,7 @@ const COPY: Record<string, LocaleCopy> = {
       headline:    "Votre essai Starter se termine bientôt.",
       intro:       (d) => `Votre période d'essai prend fin le <strong>${d}</strong>. Après cette date, votre abonnement Starter continuera automatiquement — aucune action requise.`,
       highlights:  [
-        "Accès illimité au tableau de bord mis à jour quotidiennement",
+        "Accès illimité au tableau de bord mis à jour toutes les 6h",
         "Alertes régionales par email pour 3 régions",
         "Export CSV des données de foyers",
         "Rapports PDF hebdomadaires",
@@ -57,7 +57,7 @@ const COPY: Record<string, LocaleCopy> = {
       headline:    "Your Starter trial is ending soon.",
       intro:       (d) => `Your trial period ends on <strong>${d}</strong>. After that date, your Starter subscription will continue automatically — no action needed.`,
       highlights:  [
-        "Unlimited access to the daily-updated dashboard",
+        "Unlimited access to the dashboard updated every 6h",
         "Regional email alerts for 3 regions",
         "CSV export of outbreak data",
         "Weekly PDF reports",
@@ -87,7 +87,7 @@ const COPY: Record<string, LocaleCopy> = {
       headline:    "Su prueba Starter está por terminar.",
       intro:       (d) => `Su período de prueba finaliza el <strong>${d}</strong>. Después de esa fecha, su suscripción Starter continuará automáticamente, sin necesidad de ninguna acción.`,
       highlights:  [
-        "Acceso ilimitado al panel actualizado a diario",
+        "Acceso ilimitado al panel actualizado cada 6h",
         "Alertas regionales por correo para 3 regiones",
         "Exportación CSV de datos de brotes",
         "Informes PDF semanales",
@@ -147,7 +147,7 @@ const COPY: Record<string, LocaleCopy> = {
       headline:    "Uji coba Starter Anda akan segera berakhir.",
       intro:       (d) => `Masa uji coba Anda berakhir pada <strong>${d}</strong>. Setelah tanggal tersebut, langganan Starter Anda akan berlanjut secara otomatis — tidak diperlukan tindakan apa pun.`,
       highlights:  [
-        "Akses tak terbatas ke dasbor yang diperbarui harian",
+        "Akses tak terbatas ke dasbor yang diperbarui setiap 6 jam",
         "Peringatan regional via email untuk 3 wilayah",
         "Ekspor CSV data wabah",
         "Laporan PDF mingguan",
