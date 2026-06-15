@@ -39,6 +39,10 @@
     {
       "path": "/api/cron/check-mpox-sitrep",
       "schedule": "0 8 * * 3,6"
+    },
+    {
+      "path": "/api/cron/push-alerts",
+      "schedule": "45 6 * * *"
     }
   ]
 }
