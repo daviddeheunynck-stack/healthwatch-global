@@ -10,7 +10,9 @@ import { createClient } from "@/lib/supabase-browser";
 
 const PRO_COPY: Record<string, {
   badge: string; title: string; sub: string;
-  items: string[]; cta: string; divider: string; freeLabel: string;
+  items: string[]; cta: string; ctaExpired: string;
+  note: string; noteExpired: string;
+  divider: string; freeLabel: string;
 }> = {
   fr: {
     badge: "Pro",
@@ -18,6 +20,9 @@ const PRO_COPY: Record<string, {
     sub: "Soyez informé en temps réel dès qu'un nouveau foyer est déclaré par l'OMS — pour chaque région du monde.",
     items: ["Alertes email instantanées (toutes régions)", "Rapports PDF automatiques", "Intégration Slack / Teams"],
     cta: "Commencer l'essai gratuit →",
+    ctaExpired: "S'abonner à Pro →",
+    note: "14 jours gratuits · sans CB",
+    noteExpired: "À partir de 29 €/mois ou 249 €/an",
     divider: "ou continuer avec l'offre gratuite",
     freeLabel: "Digest hebdomadaire gratuit — 1 région",
   },
@@ -27,6 +32,9 @@ const PRO_COPY: Record<string, {
     sub: "Get notified in real time as soon as a new outbreak is declared by WHO — for every region on earth.",
     items: ["Instant email alerts (all regions)", "Automatic PDF reports", "Slack / Teams integration"],
     cta: "Start free trial →",
+    ctaExpired: "Subscribe to Pro →",
+    note: "14 days free · no credit card",
+    noteExpired: "From €29/month or €249/year",
     divider: "or continue with the free plan",
     freeLabel: "Free weekly digest — 1 region",
   },
@@ -36,6 +44,9 @@ const PRO_COPY: Record<string, {
     sub: "Reciba notificaciones en tiempo real en cuanto la OMS declare un nuevo brote — en cualquier región del mundo.",
     items: ["Alertas email instantáneas (todas las regiones)", "Informes PDF automáticos", "Integración Slack / Teams"],
     cta: "Iniciar prueba gratuita →",
+    ctaExpired: "Suscribirse a Pro →",
+    note: "14 días gratis · sin tarjeta",
+    noteExpired: "Desde 29 €/mes o 249 €/año",
     divider: "o continuar con el plan gratuito",
     freeLabel: "Digest semanal gratuito — 1 región",
   },
@@ -45,6 +56,9 @@ const PRO_COPY: Record<string, {
     sub: "احصل على إشعار فوري بمجرد إعلان منظمة الصحة العالمية عن تفشٍّ جديد — في كل منطقة في العالم.",
     items: ["تنبيهات بريد إلكتروني فورية (جميع المناطق)", "تقارير PDF تلقائية", "تكامل Slack / Teams"],
     cta: "← ابدأ التجربة المجانية",
+    ctaExpired: "← الاشتراك في Pro",
+    note: "14 يوماً مجاناً · بدون بطاقة",
+    noteExpired: "من 29 €/شهر أو 249 €/سنة",
     divider: "أو تابع مع الخطة المجانية",
     freeLabel: "ملخص أسبوعي مجاني — منطقة واحدة",
   },
@@ -54,6 +68,9 @@ const PRO_COPY: Record<string, {
     sub: "Dapatkan notifikasi real-time segera setelah WHO mendeklarasikan wabah baru — di setiap wilayah di bumi.",
     items: ["Peringatan email instan (semua wilayah)", "Laporan PDF otomatis", "Integrasi Slack / Teams"],
     cta: "Mulai uji coba gratis →",
+    ctaExpired: "Berlangganan Pro →",
+    note: "14 hari gratis · tanpa kartu",
+    noteExpired: "Mulai dari €29/bulan atau €249/tahun",
     divider: "atau lanjutkan dengan paket gratis",
     freeLabel: "Digest mingguan gratis — 1 wilayah",
   },
@@ -73,6 +90,7 @@ export default function AlertsPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [plan, setPlan] = useState<string | null>(null);
+  const [trialExpired, setTrialExpired] = useState(false);
 
   useEffect(() => {
     const supabase = createClient();
@@ -83,6 +101,7 @@ export default function AlertsPage() {
           let p = data?.plan || "free";
           if (p !== "free" && data?.trial_ends_at && new Date(data.trial_ends_at).getTime() < Date.now() && !data?.stripe_subscription_id) {
             p = "free";
+            setTrialExpired(true);
           }
           setPlan(p);
         });
@@ -155,10 +174,10 @@ export default function AlertsPage() {
         <CheckoutButton
           plan="pro"
           locale={locale}
-          label={pc.cta}
+          label={trialExpired ? pc.ctaExpired : pc.cta}
           className="w-full bg-red-600 hover:bg-red-500 text-white font-bold py-3 rounded-xl transition-all shadow-lg shadow-red-900/30 text-sm"
         />
-        <p className="text-center text-xs text-gray-600">14 {locale === "fr" ? "jours gratuits · sans CB" : locale === "es" ? "días gratis · sin tarjeta" : locale === "ar" ? "يوماً مجاناً · بدون بطاقة" : locale === "id" ? "hari gratis · tanpa kartu" : "days free · no credit card"}</p>
+        <p className="text-center text-xs text-gray-600">{trialExpired ? pc.noteExpired : pc.note}</p>
       </div>}
 
       {/* ── Divider — only between upsell and free form ─────────────────── */}
