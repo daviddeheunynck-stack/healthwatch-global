@@ -114,7 +114,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }
   }
 
-  // ── Disease profile pages — 30 diseases × 5 locales ────────────────────
+  // ── Disease profile pages — all diseases × 5 locales ────────────────────
   for (const disease of allDiseases()) {
     const slug = diseaseToSlug(disease.name_en);
     const diseasePath = `/disease/${slug}`;

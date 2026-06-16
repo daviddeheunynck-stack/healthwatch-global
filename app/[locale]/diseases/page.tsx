@@ -10,6 +10,8 @@ import { getLocalizedDisease } from "@/lib/outbreaks";
 import type { Outbreak } from "@/lib/outbreaks";
 import EmailCapture from "@/components/EmailCapture";
 
+const DISEASE_COUNT = allDiseases().length;
+
 export const revalidate = 3600;
 
 const BASE_URL = "https://healthwatch-global.com";
@@ -29,63 +31,63 @@ const LABELS: Record<Locale, {
 }> = {
   fr: {
     title: "Maladies surveillées",
-    subtitle: "30 pathogènes suivis en temps réel via les bulletins officiels de l'OMS.",
+    subtitle: `${DISEASE_COUNT} pathogènes suivis en temps réel via les bulletins officiels de l'OMS.`,
     active: (n) => n === 1 ? "1 foyer actif" : `${n} foyers actifs`,
     noActive: "Aucun foyer actif",
     cases: "cas",
     metaTitle: "Maladies infectieuses surveillées — HealthWatch Global",
-    metaDesc: "Index des 30 pathogènes suivis en temps réel par HealthWatch Global — Ebola, Mpox, Choléra, Dengue et bien d'autres. Données OMS officielles.",
+    metaDesc: `Index des ${DISEASE_COUNT} pathogènes suivis en temps réel par HealthWatch Global — Ebola, Mpox, Choléra, Dengue et bien d'autres. Données OMS officielles.`,
     back: "← Tableau de bord",
-    captureTitle: "Digest hebdomadaire de toutes les maladies",
-    captureBody: "Un résumé des 30 pathogènes surveillés — foyers actifs, cas et risques. Sources OMS, CDC et ECDC.",
+    captureTitle: "Digest hebdomadaire de toutes les maladies surveillées",
+    captureBody: `Un résumé des ${DISEASE_COUNT} pathogènes surveillés — foyers actifs, cas et risques. Sources OMS, CDC et ECDC.`,
   },
   en: {
     title: "Tracked diseases",
-    subtitle: "30 pathogens monitored in real time using official WHO Disease Outbreak News.",
+    subtitle: `${DISEASE_COUNT} pathogens monitored in real time using official WHO Disease Outbreak News.`,
     active: (n) => n === 1 ? "1 active outbreak" : `${n} active outbreaks`,
     noActive: "No active outbreaks",
     cases: "cases",
     metaTitle: "Infectious diseases tracked — HealthWatch Global",
-    metaDesc: "Index of 30 pathogens monitored in real time by HealthWatch Global — Ebola, Mpox, Cholera, Dengue and more. Official WHO data.",
+    metaDesc: `Index of ${DISEASE_COUNT} pathogens monitored in real time by HealthWatch Global — Ebola, Mpox, Cholera, Dengue and more. Official WHO data.`,
     back: "← Dashboard",
-    captureTitle: "Weekly digest covering all 30 diseases",
-    captureBody: "Active outbreaks, case counts and risk levels across every tracked pathogen. WHO, CDC and ECDC sources.",
+    captureTitle: "Weekly digest covering all tracked diseases",
+    captureBody: `Active outbreaks, case counts and risk levels across all ${DISEASE_COUNT} tracked pathogens. WHO, CDC and ECDC sources.`,
   },
   es: {
     title: "Enfermedades vigiladas",
-    subtitle: "30 patógenos monitoreados en tiempo real mediante los boletines oficiales de la OMS.",
+    subtitle: `${DISEASE_COUNT} patógenos monitoreados en tiempo real mediante los boletines oficiales de la OMS.`,
     active: (n) => n === 1 ? "1 brote activo" : `${n} brotes activos`,
     noActive: "Sin brotes activos",
     cases: "casos",
     metaTitle: "Enfermedades infecciosas vigiladas — HealthWatch Global",
-    metaDesc: "Índice de 30 patógenos monitoreados en tiempo real por HealthWatch Global — Ébola, Mpox, Cólera, Dengue y más. Datos OMS oficiales.",
+    metaDesc: `Índice de ${DISEASE_COUNT} patógenos monitoreados en tiempo real por HealthWatch Global — Ébola, Mpox, Cólera, Dengue y más. Datos OMS oficiales.`,
     back: "← Panel",
-    captureTitle: "Digest semanal de las 30 enfermedades vigiladas",
-    captureBody: "Brotes activos, recuentos de casos y niveles de riesgo por patógeno. Fuentes OMS, CDC y ECDC.",
+    captureTitle: "Digest semanal de las enfermedades vigiladas",
+    captureBody: `Brotes activos, recuentos de casos y niveles de riesgo de los ${DISEASE_COUNT} patógenos vigilados. Fuentes OMS, CDC y ECDC.`,
   },
   ar: {
     title: "الأمراض المُراقَبة",
-    subtitle: "30 مسبباً مرضياً مُراقَباً في الوقت الفعلي عبر النشرات الرسمية لمنظمة الصحة العالمية.",
+    subtitle: `${DISEASE_COUNT} مسبباً مرضياً مُراقَباً في الوقت الفعلي عبر النشرات الرسمية لمنظمة الصحة العالمية.`,
     active: (n) => n === 1 ? "تفشٍّ نشط واحد" : `${n} تفشيات نشطة`,
     noActive: "لا تفشيات نشطة",
     cases: "حالة",
     metaTitle: "الأمراض المعدية المُراقَبة — HealthWatch Global",
-    metaDesc: "فهرس 30 مسبباً مرضياً مُراقَباً في الوقت الفعلي بواسطة HealthWatch Global — إيبولا، جدري القرود، كوليرا، حمى الضنك والمزيد.",
+    metaDesc: `فهرس ${DISEASE_COUNT} مسبباً مرضياً مُراقَباً في الوقت الفعلي بواسطة HealthWatch Global — إيبولا، جدري القرود، كوليرا، حمى الضنك والمزيد.`,
     back: "→ لوحة التحكم",
-    captureTitle: "ملخص أسبوعي لجميع الأمراض الثلاثين",
-    captureBody: "التفشيات النشطة وأعداد الحالات ومستويات الخطر لكل مسبب مرضي. مصادر منظمة الصحة العالمية.",
+    captureTitle: "ملخص أسبوعي لجميع الأمراض المُراقَبة",
+    captureBody: `التفشيات النشطة وأعداد الحالات ومستويات الخطر لـ ${DISEASE_COUNT} مسبباً مرضياً مُراقَباً. مصادر منظمة الصحة العالمية.`,
   },
   id: {
     title: "Penyakit yang dipantau",
-    subtitle: "30 patogen dipantau secara real-time menggunakan buletin resmi WHO.",
+    subtitle: `${DISEASE_COUNT} patogen dipantau secara real-time menggunakan buletin resmi WHO.`,
     active: (n) => n === 1 ? "1 wabah aktif" : `${n} wabah aktif`,
     noActive: "Tidak ada wabah aktif",
     cases: "kasus",
     metaTitle: "Penyakit menular yang dipantau — HealthWatch Global",
-    metaDesc: "Indeks 30 patogen yang dipantau secara real-time oleh HealthWatch Global — Ebola, Mpox, Kolera, Dengue dan lainnya. Data WHO resmi.",
+    metaDesc: `Indeks ${DISEASE_COUNT} patogen yang dipantau secara real-time oleh HealthWatch Global — Ebola, Mpox, Kolera, Dengue dan lainnya. Data WHO resmi.`,
     back: "← Dasbor",
-    captureTitle: "Digest mingguan semua 30 penyakit yang dipantau",
-    captureBody: "Wabah aktif, jumlah kasus dan tingkat risiko per patogen. Sumber WHO, CDC dan ECDC.",
+    captureTitle: "Digest mingguan penyakit yang dipantau",
+    captureBody: `Wabah aktif, jumlah kasus dan tingkat risiko dari ${DISEASE_COUNT} patogen yang dipantau. Sumber WHO, CDC dan ECDC.`,
   },
 };
 
