@@ -45,13 +45,7 @@ export default function CheckoutButton({ plan, locale, label, className, billing
       const res = await fetch("/api/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          plan,
-          locale,
-          billing,
-          userId: user.id,
-          userEmail: user.email,
-        }),
+        body: JSON.stringify({ plan, locale, billing }),
       });
 
       const data = await res.json();

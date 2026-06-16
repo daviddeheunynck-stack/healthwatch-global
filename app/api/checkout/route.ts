@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
+import { createServerClient } from "@supabase/ssr";
+import { cookies } from "next/headers";
 import { rateLimit, getClientIp } from "@/lib/rate-limit";
 import { errorMessage } from "@/lib/error";
 
@@ -59,7 +61,23 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  let body: { plan?: string; locale?: string; userId?: string; userEmail?: string; billing?: string };
+  // Identify the caller from their session cookie — never trust client-supplied userId
+  const cookieStore = await cookies();
+  const supabase = createServerClient(
+    (process.env.NEXT_PUBLIC_SUPABASE_URL || "").replace(/^﻿/, "").trim(),
+    (process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "").replace(/^﻿/, "").trim(),
+    {
+      cookies: {
+        getAll: () => cookieStore.getAll(),
+        setAll: (toSet) => {
+          toSet.forEach(({ name, value, options }) => cookieStore.set(name, value, options));
+        },
+      },
+    }
+  );
+  const { data: { user: sessionUser } } = await supabase.auth.getUser();
+
+  let body: { plan?: string; locale?: string; userEmail?: string; billing?: string };
   try {
     body = await req.json();
   } catch {
@@ -67,7 +85,10 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const { plan, locale, userId, userEmail, billing } = body;
+    const { plan, locale, userEmail, billing } = body;
+    // Use session-authenticated userId; fall back to empty string for anonymous checkout
+    const userId = sessionUser?.id ?? "";
+    const resolvedEmail = sessionUser?.email ?? userEmail;
     const currency = getCurrency(locale ?? "fr");
     const billingPeriod = billing === "annual" ? "annual" : "monthly";
     const priceId = PRICES[plan ?? ""]?.[billingPeriod]?.[currency];
@@ -103,8 +124,8 @@ export async function POST(req: NextRequest) {
     params.set("payment_method_collection", "if_required");
 
     // Pre-fill Stripe form with user email if available
-    if (userEmail) {
-      params.set("customer_email", userEmail);
+    if (resolvedEmail) {
+      params.set("customer_email", resolvedEmail);
     }
 
     const response = await fetch("https://api.stripe.com/v1/checkout/sessions", {
