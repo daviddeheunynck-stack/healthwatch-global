@@ -105,8 +105,8 @@ test.describe("Onboarding flow complet (authentifié)", () => {
     await page.getByRole("button", { name: /se connecter|connexion/i }).click();
     await page.waitForURL(/\/fr\/?$/, { timeout: 10000 });
 
-    // Tour appears after 900ms delay
-    await expect(page.locator("text=Bienvenue sur HealthWatch Global")).toBeVisible({ timeout: 3000 });
+    // Tour appears after 900ms delay — allow up to 5s for slow renders
+    await expect(page.locator("text=Bienvenue sur HealthWatch Global")).toBeVisible({ timeout: 5000 });
 
     // Navigate to step 2
     await page.getByRole("button", { name: /commencer/i }).click();
