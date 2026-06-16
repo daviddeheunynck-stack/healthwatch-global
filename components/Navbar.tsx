@@ -133,7 +133,7 @@ export default function Navbar() {
         </div>
 
         {/* Desktop: nav links */}
-        <div className="hidden lg:flex items-center gap-3">
+        <div className="hidden xl:flex items-center gap-2">
           {navLinks.map(({ href, label, icon: Icon }) => (
             <Link
               key={href}
@@ -154,7 +154,7 @@ export default function Navbar() {
         </div>
 
         {/* Desktop: locale + auth */}
-        <div className="hidden lg:flex items-center gap-3">
+        <div className="hidden xl:flex items-center gap-3">
           <div className="flex items-center gap-1">
             <Globe className="w-4 h-4 text-gray-400" />
             {LOCALES.map((loc) => (
@@ -213,7 +213,7 @@ export default function Navbar() {
         </div>
 
         {/* Mobile: auth badge + hamburger */}
-        <div className="flex lg:hidden items-center gap-3">
+        <div className="flex xl:hidden items-center gap-3">
           {user && (
             <Link href={`/${locale}/account`} className={`text-xs px-2 py-0.5 rounded font-semibold ${PLAN_BADGE[plan] || PLAN_BADGE.free}`}>
               {tAuth(`plan.${plan}`)}
@@ -231,7 +231,7 @@ export default function Navbar() {
 
       {/* Mobile dropdown menu */}
       {mobileOpen && (
-        <div className="lg:hidden border-t border-gray-800 bg-gray-900 px-4 py-4 space-y-4">
+        <div className="xl:hidden border-t border-gray-800 bg-gray-900 px-4 py-4 space-y-4">
 
           {/* Nav links */}
           <div className="space-y-1">
