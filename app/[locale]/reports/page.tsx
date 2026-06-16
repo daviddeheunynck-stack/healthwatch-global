@@ -69,33 +69,38 @@ export async function generateMetadata({
 }
 
 // Inline copy for paywall UI — avoids touching 5 message files
-const PAYWALL_COPY: Record<string, { desc: string; cta: string; lockedDownload: string; lockedList: string }> = {
+const PAYWALL_COPY: Record<string, { desc: string; descExpired: string; cta: string; lockedDownload: string; lockedList: string }> = {
   en: {
     desc: "Case counts, deaths and PDF downloads are available on the Pro plan. 14-day free trial — no credit card.",
+    descExpired: "Your trial ended. Subscribe to Pro to get back access to case counts, deaths and PDF downloads.",
     cta: "Unlock Pro →",
     lockedDownload: "Pro — unlock to download",
     lockedList: "Pro — unlock full list",
   },
   fr: {
     desc: "Les chiffres de cas, décès et téléchargements PDF sont disponibles avec le plan Pro. Essai 14 jours gratuit — sans CB.",
+    descExpired: "Votre essai est terminé. Abonnez-vous à Pro pour retrouver l'accès aux chiffres de cas, décès et rapports PDF.",
     cta: "Débloquer Pro →",
     lockedDownload: "Pro — débloquer le téléchargement",
     lockedList: "Pro — voir la liste complète",
   },
   es: {
     desc: "Los recuentos de casos, fallecidos y descargas PDF están disponibles en el plan Pro. 14 días gratis — sin tarjeta.",
+    descExpired: "Su prueba ha terminado. Suscríbase a Pro para recuperar el acceso a casos, fallecidos y descargas PDF.",
     cta: "Desbloquear Pro →",
     lockedDownload: "Pro — desbloquear descarga",
     lockedList: "Pro — lista completa",
   },
   ar: {
     desc: "أعداد الحالات والوفيات وتنزيلات PDF متاحة في خطة Pro. تجربة 14 يوماً مجاناً — بدون بطاقة.",
+    descExpired: "انتهت فترة تجربتك. اشترك في Pro لاستعادة الوصول إلى أعداد الحالات والوفيات وتنزيلات PDF.",
     cta: "← فتح Pro",
     lockedDownload: "Pro — فتح التنزيل",
     lockedList: "Pro — عرض القائمة الكاملة",
   },
   id: {
     desc: "Jumlah kasus, kematian, dan unduhan PDF tersedia di paket Pro. Uji coba 14 hari gratis — tanpa kartu.",
+    descExpired: "Masa percobaan Anda telah berakhir. Berlangganan Pro untuk mendapatkan kembali akses ke kasus, kematian, dan unduhan PDF.",
     cta: "Buka Pro →",
     lockedDownload: "Pro — buka untuk mengunduh",
     lockedList: "Pro — lihat daftar lengkap",
@@ -116,6 +121,7 @@ async function ReportsContent() {
   } = await supabase.auth.getUser();
 
   let plan = "free";
+  let trialExpired = false;
   if (user) {
     const { data: profile } = await supabase
       .from("profiles")
@@ -123,7 +129,6 @@ async function ReportsContent() {
       .eq("id", user.id)
       .single();
     plan = profile?.plan ?? "free";
-    // Apply trial expiry guard — same logic as dashboard
     if (
       plan !== "free" &&
       profile?.trial_ends_at &&
@@ -131,6 +136,7 @@ async function ReportsContent() {
       !profile?.stripe_subscription_id
     ) {
       plan = "free";
+      trialExpired = true;
     }
   }
 
@@ -155,7 +161,7 @@ async function ReportsContent() {
               <div className="w-8 h-8 rounded-lg bg-amber-500/10 border border-amber-500/20 flex items-center justify-center shrink-0 mt-0.5">
                 <Lock className="w-4 h-4 text-amber-400" />
               </div>
-              <p className="text-sm font-semibold text-amber-300">{pc.desc}</p>
+              <p className="text-sm font-semibold text-amber-300">{trialExpired ? pc.descExpired : pc.desc}</p>
             </div>
             <LockedUpgradeButton feature="pdf" label={pc.cta} variant="banner" />
           </div>
