@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { track } from "@vercel/analytics/react";
 import { BellRing, Loader2, X } from "lucide-react";
 
 // ─── Copy ─────────────────────────────────────────────────────────────────────
@@ -125,6 +126,7 @@ export default function PushNotificationBanner({ locale }: Props) {
   }, []);
 
   function dismiss() {
+    track("push_notification_dismiss", { locale });
     localStorage.setItem(STORAGE_KEY, "1");
     setVisible(false);
   }
@@ -132,6 +134,7 @@ export default function PushNotificationBanner({ locale }: Props) {
   async function enable() {
     if (busy) return;
     setBusy(true);
+    track("push_notification_enable_click", { locale });
     try {
       const key = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY;
       if (!key) return;
@@ -163,6 +166,7 @@ export default function PushNotificationBanner({ locale }: Props) {
 
       // Success — the account-page card is now the source of truth for
       // this device; remember so the nudge never resurfaces for it.
+      track("push_notification_success", { locale });
       localStorage.setItem(STORAGE_KEY, "1");
       setVisible(false);
     } catch {
