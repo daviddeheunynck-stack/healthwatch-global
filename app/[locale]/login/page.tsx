@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import { createClient } from "@/lib/supabase-browser";
+import { track } from "@vercel/analytics/react";
 import { Activity, Loader2 } from "lucide-react";
 import Link from "next/link";
 import OAuthButtons from "@/components/OAuthButtons";
@@ -21,6 +22,7 @@ export default function LoginPage() {
     e.preventDefault();
     setLoading(true);
     setError("");
+    track("login_attempt", { method: "email", locale });
 
     const supabase = createClient();
     const { error } = await supabase.auth.signInWithPassword({ email, password });
@@ -31,6 +33,7 @@ export default function LoginPage() {
       return;
     }
 
+    track("login_success", { method: "email", locale });
     router.push(`/${locale}`);
     router.refresh();
   };
