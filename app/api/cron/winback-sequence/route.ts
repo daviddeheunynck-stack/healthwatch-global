@@ -76,8 +76,8 @@ const COPY: Record<string, {
     ],
     pricingNote: "29 €/mois, sans engagement. Annulation à tout moment.",
     ctaLabel: "Réactiver Pro maintenant →",
-    altText: "Tarif ONG ou gouvernemental disponible.",
-    altLink: "Parlez-nous de votre organisation →",
+    altText: "Vous représentez une ONG, une agence ONU ou un ministère ?",
+    altLink: "Programme pilote institutionnel gratuit →",
     closing: "L'équipe HealthWatch Global",
     unsubNote: "Vous recevez cet email car vous avez créé un compte sur healthwatch-global.com.",
   },
@@ -96,8 +96,8 @@ const COPY: Record<string, {
     ],
     pricingNote: "€29/month, no commitment. Cancel anytime.",
     ctaLabel: "Reactivate Pro now →",
-    altText: "NGO or government pricing available.",
-    altLink: "Tell us about your organization →",
+    altText: "Representing an NGO, UN agency or health ministry?",
+    altLink: "Free institutional pilot program →",
     closing: "The HealthWatch Global Team",
     unsubNote: "You're receiving this email because you created an account on healthwatch-global.com.",
   },
@@ -116,8 +116,8 @@ const COPY: Record<string, {
     ],
     pricingNote: "29 €/mes, sin compromiso. Cancele cuando quiera.",
     ctaLabel: "Reactivar Pro ahora →",
-    altText: "Precios para ONG o gobierno disponibles.",
-    altLink: "Cuéntenos sobre su organización →",
+    altText: "¿Representa una ONG, agencia ONU o ministerio de salud?",
+    altLink: "Programa piloto institucional gratuito →",
     closing: "El equipo de HealthWatch Global",
     unsubNote: "Recibe este correo porque creó una cuenta en healthwatch-global.com.",
   },
@@ -136,8 +136,8 @@ const COPY: Record<string, {
     ],
     pricingNote: "29 €/شهر، بدون التزام. إلغاء في أي وقت.",
     ctaLabel: "← إعادة تفعيل Pro الآن",
-    altText: "أسعار خاصة للمنظمات غير الحكومية والحكومات.",
-    altLink: "← أخبرنا عن مؤسستك",
+    altText: "هل تمثل منظمة غير حكومية أو وكالة أممية أو وزارة صحة؟",
+    altLink: "← برنامج تجريبي مؤسسي مجاني",
     closing: "فريق HealthWatch Global",
     unsubNote: "تتلقى هذا البريد لأنك أنشأت حساباً على healthwatch-global.com.",
   },
@@ -156,8 +156,8 @@ const COPY: Record<string, {
     ],
     pricingNote: "€29/bulan, tanpa komitmen. Batalkan kapan saja.",
     ctaLabel: "Aktifkan kembali Pro sekarang →",
-    altText: "Harga khusus untuk LSM atau pemerintah tersedia.",
-    altLink: "Ceritakan tentang organisasi Anda →",
+    altText: "Mewakili LSM, badan PBB, atau kementerian kesehatan?",
+    altLink: "Program pilot institusional gratis →",
     closing: "Tim HealthWatch Global",
     unsubNote: "Anda menerima email ini karena mendaftar di healthwatch-global.com.",
   },
@@ -166,7 +166,7 @@ const COPY: Record<string, {
 function buildEmail(locale: string): { subject: string; html: string } {
   const c = COPY[locale] ?? COPY.en;
   const pricingUrl = `https://healthwatch-global.com/${locale}/pricing`;
-  const contactUrl = `https://healthwatch-global.com/${locale}/contact`;
+  const pilotUrl   = `https://healthwatch-global.com/${locale}/pilot`;
 
   const body = `
     <div style="padding:36px 32px;">
@@ -197,7 +197,7 @@ function buildEmail(locale: string): { subject: string; html: string } {
       </div>
       <div style="text-align:center;">
         <p style="margin:0 4px;font-size:13px;color:#64748b;">${c.altText}</p>
-        <a href="${contactUrl}" style="color:#60a5fa;font-size:13px;font-weight:600;text-decoration:none;">${c.altLink}</a>
+        <a href="${pilotUrl}" style="color:#60a5fa;font-size:13px;font-weight:600;text-decoration:none;">${c.altLink}</a>
       </div>
     </div>
     <div style="padding:20px 32px;border-top:1px solid #334155;">
