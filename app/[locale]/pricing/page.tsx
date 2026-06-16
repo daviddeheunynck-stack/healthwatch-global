@@ -29,9 +29,10 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
     description: m.description,
     alternates: {
       canonical: url,
-      languages: Object.fromEntries(
-        LOCALES.map((l) => [l, `https://healthwatch-global.com/${l}/pricing`])
-      ),
+      languages: {
+        ...Object.fromEntries(LOCALES.map((l) => [l, `https://healthwatch-global.com/${l}/pricing`])),
+        "x-default": "https://healthwatch-global.com/en/pricing",
+      },
     },
     openGraph: {
       type: "website",

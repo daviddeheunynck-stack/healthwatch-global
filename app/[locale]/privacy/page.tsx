@@ -20,7 +20,10 @@ export async function generateMetadata(): Promise<Metadata> {
     description: "HealthWatch Global — RGPD / GDPR compliance, données collectées, sous-traitants, vos droits.",
     alternates: {
       canonical: url,
-      languages: Object.fromEntries(LOCALES.map((l) => [l, `https://healthwatch-global.com/${l}/privacy`])),
+      languages: {
+        ...Object.fromEntries(LOCALES.map((l) => [l, `https://healthwatch-global.com/${l}/privacy`])),
+        "x-default": "https://healthwatch-global.com/en/privacy",
+      },
     },
     robots: { index: true, follow: true },
   };
