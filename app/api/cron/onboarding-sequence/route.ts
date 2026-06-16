@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
-import { buildJ3Email, buildJ12Email } from "@/lib/onboarding-emails";
+import { buildJ3Email, buildJ7Email, buildJ12Email } from "@/lib/onboarding-emails";
 
 export const dynamic = "force-dynamic";
 
@@ -42,10 +42,7 @@ export async function GET(req: NextRequest) {
 
   const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE);
 
-  // ── Find trial users (pro + trial_ends_at + no Stripe sub) at J+3 ─────────
-  // J+3 = "discover your Pro features" nudge.
-  // We target signup-trial users specifically (stripe_subscription_id IS NULL)
-  // to avoid duplicating the Stripe-native trial_will_end webhook email.
+  // ── J+3 : Discover Pro features ──────────────────────────────────────────
   const { data: j3Users, error: j3Err } = await supabase
     .from("profiles")
     .select("id, email, plan, locale, trial_ends_at")
@@ -60,7 +57,22 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: j3Err.message }, { status: 500 });
   }
 
-  // ── Find trial users at J+12 ("2 days left, subscribe now") ──────────────
+  // ── J+7 : Mid-trial check-in — PDF report spotlight ──────────────────────
+  const { data: j7Users, error: j7Err } = await supabase
+    .from("profiles")
+    .select("id, email, plan, locale, trial_ends_at")
+    .eq("plan", "pro")
+    .not("trial_ends_at", "is", null)
+    .is("stripe_subscription_id", null)
+    .filter("created_at", "gte", new Date(Date.now() - 7.5 * 86400_000).toISOString())
+    .filter("created_at", "lt",  new Date(Date.now() - 6.5 * 86400_000).toISOString());
+
+  if (j7Err) {
+    console.error("[onboarding] J+7 query error:", j7Err);
+    return NextResponse.json({ error: j7Err.message }, { status: 500 });
+  }
+
+  // ── J+12 : 2 days left — subscribe now ───────────────────────────────────
   const { data: j12Users, error: j12Err } = await supabase
     .from("profiles")
     .select("id, email, plan, locale, trial_ends_at")
@@ -76,21 +88,36 @@ export async function GET(req: NextRequest) {
   }
 
   let j3Sent = 0, j3Failed = 0;
+  let j7Sent = 0, j7Failed = 0;
   let j12Sent = 0, j12Failed = 0;
 
   // ── Send J+3 emails ───────────────────────────────────────────────────────
   for (const user of j3Users ?? []) {
     if (!user.email) continue;
     try {
-      // Use profiles.locale (set at signup) — more reliable than subscriptions
       const locale = user.locale || "fr";
       const { subject, html } = buildJ3Email(locale);
       await sendEmail(user.email, subject, html);
       j3Sent++;
-      await new Promise((r) => setTimeout(r, 150)); // rate-limit friendly
+      await new Promise((r) => setTimeout(r, 150));
     } catch (err) {
       console.error(`[onboarding] J+3 failed for ${user.email}:`, err);
       j3Failed++;
+    }
+  }
+
+  // ── Send J+7 emails ───────────────────────────────────────────────────────
+  for (const user of j7Users ?? []) {
+    if (!user.email) continue;
+    try {
+      const locale = user.locale || "fr";
+      const { subject, html } = buildJ7Email(locale);
+      await sendEmail(user.email, subject, html);
+      j7Sent++;
+      await new Promise((r) => setTimeout(r, 150));
+    } catch (err) {
+      console.error(`[onboarding] J+7 failed for ${user.email}:`, err);
+      j7Failed++;
     }
   }
 
@@ -109,10 +136,11 @@ export async function GET(req: NextRequest) {
     }
   }
 
-  console.log(`[onboarding] J+3: ${j3Sent} sent, ${j3Failed} failed | J+12: ${j12Sent} sent, ${j12Failed} failed`);
+  console.log(`[onboarding] J+3: ${j3Sent}/${j3Failed} | J+7: ${j7Sent}/${j7Failed} | J+12: ${j12Sent}/${j12Failed}`);
 
   return NextResponse.json({
-    j3: { sent: j3Sent, failed: j3Failed, total: (j3Users ?? []).length },
+    j3:  { sent: j3Sent,  failed: j3Failed,  total: (j3Users  ?? []).length },
+    j7:  { sent: j7Sent,  failed: j7Failed,  total: (j7Users  ?? []).length },
     j12: { sent: j12Sent, failed: j12Failed, total: (j12Users ?? []).length },
   });
 }

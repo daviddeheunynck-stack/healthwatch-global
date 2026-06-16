@@ -98,6 +98,108 @@ const J3_CONTENT: Record<string, {
   },
 };
 
+// ─── J+7 : Mid-trial check-in — PDF report feature spotlight ─────────────────
+
+const J7_CONTENT: Record<string, {
+  subject: string;
+  headline: string;
+  intro: string;
+  featureTitle: string;
+  featureDesc: string;
+  steps: string[];
+  tip: string;
+  ctaLabel: string;
+  secondaryCta: string;
+  closing: string;
+  unsubNote: string;
+}> = {
+  fr: {
+    subject: "Mi-essai — avez-vous téléchargé votre premier rapport PDF ?",
+    headline: "Vous êtes à mi-chemin de votre essai Pro.",
+    intro: "Il vous reste 7 jours d'accès complet. Beaucoup de nos utilisateurs n'activent les fonctionnalités les plus utiles qu'en deuxième semaine — voici la plus impactante :",
+    featureTitle: "📄 Les rapports PDF régionaux",
+    featureDesc: "Un résumé épidémiologique structuré par région — cas actifs, tendances, niveaux de risque — prêt à partager en réunion ou à joindre à un rapport institutionnel.",
+    steps: [
+      "Allez dans « Rapports » dans le menu",
+      "Sélectionnez votre région",
+      "Cliquez sur « Générer le PDF » → téléchargement en 3 secondes",
+    ],
+    tip: "💡 Ces rapports sont utilisés par les équipes terrain pour leurs briefings hebdomadaires. Essayez d'en générer un pour votre zone géographique.",
+    ctaLabel: "Générer mon rapport PDF →",
+    secondaryCta: "Ou aller au tableau de bord →",
+    closing: "Bonne surveillance,\nL'équipe HealthWatch Global",
+    unsubNote: "Vous recevez cet email car vous avez créé un compte sur healthwatch-global.com.",
+  },
+  en: {
+    subject: "Mid-trial check-in — have you downloaded your first PDF report yet?",
+    headline: "You're halfway through your Pro trial.",
+    intro: "You still have 7 days of full access. Many of our users only activate the most useful features in their second week — here's the most impactful one:",
+    featureTitle: "📄 Regional PDF reports",
+    featureDesc: "A structured epidemiological summary by region — active outbreaks, trends, risk levels — ready to share in a meeting or attach to an institutional report.",
+    steps: [
+      "Go to 'Reports' in the menu",
+      "Select your region",
+      "Click 'Generate PDF' → download in 3 seconds",
+    ],
+    tip: "💡 These reports are used by field teams for their weekly briefings. Try generating one for your geographic area.",
+    ctaLabel: "Generate my PDF report →",
+    secondaryCta: "Or go to dashboard →",
+    closing: "Stay safe,\nThe HealthWatch Global Team",
+    unsubNote: "You're receiving this email because you created an account on healthwatch-global.com.",
+  },
+  es: {
+    subject: "A mitad del ensayo — ¿ha descargado su primer informe PDF?",
+    headline: "Está a mitad de su prueba Pro.",
+    intro: "Todavía tiene 7 días de acceso completo. Muchos de nuestros usuarios activan las funciones más útiles en la segunda semana — aquí está la más impactante:",
+    featureTitle: "📄 Informes PDF regionales",
+    featureDesc: "Un resumen epidemiológico estructurado por región — brotes activos, tendencias, niveles de riesgo — listo para compartir en una reunión o adjuntar a un informe institucional.",
+    steps: [
+      "Vaya a 'Informes' en el menú",
+      "Seleccione su región",
+      "Haga clic en 'Generar PDF' → descarga en 3 segundos",
+    ],
+    tip: "💡 Estos informes son utilizados por equipos de campo para sus briefings semanales. Intente generar uno para su área geográfica.",
+    ctaLabel: "Generar mi informe PDF →",
+    secondaryCta: "O ir al panel →",
+    closing: "Cuídese,\nEl equipo de HealthWatch Global",
+    unsubNote: "Recibe este correo porque creó una cuenta en healthwatch-global.com.",
+  },
+  ar: {
+    subject: "منتصف التجربة — هل حمّلت تقرير PDF الأول؟",
+    headline: "أنت في منتصف تجربتك Pro.",
+    intro: "لا يزال لديك 7 أيام من الوصول الكامل. يُفعِّل كثير من مستخدمينا الميزات الأكثر فائدة في الأسبوع الثاني — إليك الأكثر تأثيراً:",
+    featureTitle: "📄 تقارير PDF الإقليمية",
+    featureDesc: "ملخص وبائي منظَّم حسب المنطقة — التفشيات النشطة والاتجاهات ومستويات المخاطر — جاهز للمشاركة في اجتماع أو إرفاقه بتقرير مؤسسي.",
+    steps: [
+      "اذهب إلى 'التقارير' في القائمة",
+      "اختر منطقتك",
+      "انقر على 'إنشاء PDF' ← تحميل خلال 3 ثوانٍ",
+    ],
+    tip: "💡 تستخدم الفرق الميدانية هذه التقارير في إحاطاتها الأسبوعية. جرّب إنشاء تقرير لمنطقتك الجغرافية.",
+    ctaLabel: "← إنشاء تقريري PDF",
+    secondaryCta: "← أو الذهاب إلى لوحة التحكم",
+    closing: "مع السلامة،\nفريق HealthWatch Global",
+    unsubNote: "تتلقى هذا البريد لأنك أنشأت حساباً على healthwatch-global.com.",
+  },
+  id: {
+    subject: "Pertengahan uji coba — sudahkah mengunduh laporan PDF pertama Anda?",
+    headline: "Anda berada di pertengahan uji coba Pro.",
+    intro: "Anda masih memiliki 7 hari akses penuh. Banyak pengguna kami baru mengaktifkan fitur paling berguna di minggu kedua — inilah yang paling berdampak:",
+    featureTitle: "📄 Laporan PDF regional",
+    featureDesc: "Ringkasan epidemiologi terstruktur per wilayah — wabah aktif, tren, tingkat risiko — siap dibagikan dalam rapat atau dilampirkan ke laporan institusional.",
+    steps: [
+      "Buka 'Laporan' di menu",
+      "Pilih wilayah Anda",
+      "Klik 'Buat PDF' → unduhan dalam 3 detik",
+    ],
+    tip: "💡 Laporan ini digunakan oleh tim lapangan untuk briefing mingguan mereka. Coba buat satu untuk area geografis Anda.",
+    ctaLabel: "Buat laporan PDF saya →",
+    secondaryCta: "Atau ke dasbor →",
+    closing: "Jaga kesehatan,\nTim HealthWatch Global",
+    unsubNote: "Anda menerima email ini karena membuat akun di healthwatch-global.com.",
+  },
+};
+
 // ─── J+12 : Trial ends in 2 days — subscribe now ─────────────────────────────
 
 const J12_CONTENT: Record<string, {
@@ -368,6 +470,50 @@ export function buildJ3Email(locale: string): { subject: string; html: string } 
                   padding:14px 36px;border-radius:8px;font-weight:700;font-size:15px;">
           ${c.ctaLabel}
         </a>
+      </div>
+    </div>
+    <div style="padding:20px 32px;border-top:1px solid #334155;">
+      <p style="margin:0 0 8px;font-size:13px;color:#e2e8f0;white-space:pre-line;">${c.closing}</p>
+      <p style="margin:0;font-size:11px;color:#475569;">${c.unsubNote}</p>
+    </div>`;
+
+  return { subject: c.subject, html: emailShell(locale, body) };
+}
+
+export function buildJ7Email(locale: string): { subject: string; html: string } {
+  const c = J7_CONTENT[locale] ?? J7_CONTENT.en;
+  const dashboardUrl = `https://healthwatch-global.com/${locale}`;
+
+  const body = `
+    <div style="padding:36px 32px;">
+      <h2 style="margin:0 0 12px;font-size:20px;font-weight:700;color:#f1f5f9;">${c.headline}</h2>
+      <p style="color:#94a3b8;font-size:15px;line-height:1.7;margin:0 0 28px;">${c.intro}</p>
+
+      <div style="background:#0f172a;border-radius:12px;padding:24px;margin-bottom:24px;">
+        <p style="margin:0 0 8px;font-size:16px;font-weight:700;color:#f1f5f9;">${c.featureTitle}</p>
+        <p style="margin:0 0 20px;font-size:14px;color:#94a3b8;line-height:1.7;">${c.featureDesc}</p>
+        <div style="border-left:3px solid #dc2626;padding-left:16px;">
+          ${c.steps.map((step, i) => `
+          <p style="margin:0 0 8px;font-size:14px;color:#e2e8f0;line-height:1.5;">
+            <span style="color:#dc2626;font-weight:700;">${i + 1}.</span> ${step}
+          </p>`).join("")}
+        </div>
+      </div>
+
+      <div style="background:#1e3a2f;border:1px solid #16a34a44;border-radius:10px;padding:16px 20px;margin-bottom:28px;">
+        <p style="margin:0;font-size:14px;color:#86efac;line-height:1.6;">${c.tip}</p>
+      </div>
+
+      <div style="text-align:center;margin-bottom:12px;">
+        <a href="${dashboardUrl}"
+           style="display:inline-block;background:#dc2626;color:white;text-decoration:none;
+                  padding:14px 36px;border-radius:8px;font-weight:700;font-size:15px;">
+          ${c.ctaLabel}
+        </a>
+      </div>
+      <div style="text-align:center;">
+        <a href="${dashboardUrl}"
+           style="color:#60a5fa;font-size:13px;font-weight:500;text-decoration:none;">${c.secondaryCta}</a>
       </div>
     </div>
     <div style="padding:20px 32px;border-top:1px solid #334155;">
