@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useLocale } from "next-intl";
-import { CheckCircle, Loader2, Users, CalendarDays, MessageSquare, Shield, ArrowRight, FlaskConical } from "lucide-react";
+import { CheckCircle, Loader2, Users, CalendarDays, MessageSquare, Shield, ArrowRight, FlaskConical, ChevronDown } from "lucide-react";
 import Link from "next/link";
 
 const COPY = {
@@ -203,6 +203,59 @@ const COPY = {
   },
 } as const;
 
+const FAQ_COPY: Record<string, { title: string; items: { q: string; a: string }[] }> = {
+  en: {
+    title: "Frequently asked questions",
+    items: [
+      { q: "What data sources does HealthWatch use?", a: "All data comes directly from official WHO, PAHO, ECDC, and CDC APIs. We do not use secondary or unverified sources. The platform syncs daily." },
+      { q: "Is the platform GDPR compliant?", a: "Yes. The platform runs on European infrastructure (Vercel EU + Supabase EU). We do not collect personal health data from users. Your work email is the only personal data stored." },
+      { q: "How does multi-user access work?", a: "Each team member gets their own individual account. The 5-seat pilot gives 5 independent logins, each with full Pro access. No shared passwords, no shared sessions." },
+      { q: "What happens at the end of the 30 days?", a: "Accounts automatically revert to the Free plan. No charge, no credit card required. If your team wants to continue with Pro, we'll discuss options at the closing feedback session." },
+      { q: "Do we need IT involvement to get started?", a: "No. HealthWatch is a web platform — no installation, no VPN, no firewall changes required. Access is via any modern browser. Slack and Teams integrations are optional and take under 2 minutes." },
+    ],
+  },
+  fr: {
+    title: "Questions fréquentes",
+    items: [
+      { q: "Quelles sources de données utilise HealthWatch ?", a: "Toutes les données proviennent directement des API officielles OMS, PAHO, ECDC et CDC. Nous n'utilisons aucune source secondaire ou non vérifiée. La plateforme se synchronise chaque jour." },
+      { q: "La plateforme est-elle conforme au RGPD ?", a: "Oui. La plateforme est hébergée sur une infrastructure européenne (Vercel EU + Supabase EU). Nous ne collectons pas de données de santé personnelles. Votre email professionnel est la seule donnée personnelle stockée." },
+      { q: "Comment fonctionne l'accès multi-utilisateurs ?", a: "Chaque membre de l'équipe dispose de son propre compte individuel. Le pilote à 5 accès donne 5 logins indépendants, chacun avec l'accès Pro complet. Aucun mot de passe partagé." },
+      { q: "Que se passe-t-il à la fin des 30 jours ?", a: "Les comptes passent automatiquement au plan Gratuit. Aucun frais, aucune carte bancaire requise. Si votre équipe souhaite continuer avec Pro, nous en discutons lors de la session de feedback de clôture." },
+      { q: "Faut-il impliquer l'IT pour commencer ?", a: "Non. HealthWatch est une plateforme web — aucune installation, aucun VPN, aucune exception pare-feu nécessaire. L'accès se fait via tout navigateur moderne. Les intégrations Slack et Teams sont optionnelles et prennent moins de 2 minutes." },
+    ],
+  },
+  es: {
+    title: "Preguntas frecuentes",
+    items: [
+      { q: "¿Qué fuentes de datos utiliza HealthWatch?", a: "Todos los datos provienen directamente de las APIs oficiales de OMS, PAHO, ECDC y CDC. No utilizamos fuentes secundarias ni no verificadas. La plataforma se sincroniza diariamente." },
+      { q: "¿Es la plataforma conforme al RGPD?", a: "Sí. La plataforma se ejecuta en infraestructura europea (Vercel EU + Supabase EU). No recopilamos datos de salud personales. Su email profesional es el único dato personal almacenado." },
+      { q: "¿Cómo funciona el acceso multiusuario?", a: "Cada miembro del equipo tiene su propia cuenta individual. El piloto de 5 accesos ofrece 5 inicios de sesión independientes, cada uno con acceso Pro completo. Sin contraseñas compartidas." },
+      { q: "¿Qué sucede al final de los 30 días?", a: "Las cuentas vuelven automáticamente al plan Gratuito. Sin cargos, sin tarjeta de crédito requerida. Si su equipo desea continuar con Pro, lo discutiremos en la sesión de feedback de cierre." },
+      { q: "¿Necesitamos involucrar al departamento de TI?", a: "No. HealthWatch es una plataforma web — no requiere instalación, VPN ni cambios de firewall. El acceso es a través de cualquier navegador moderno. Las integraciones con Slack y Teams son opcionales y tardan menos de 2 minutos." },
+    ],
+  },
+  ar: {
+    title: "الأسئلة المتكررة",
+    items: [
+      { q: "ما مصادر البيانات التي يستخدمها HealthWatch؟", a: "تأتي جميع البيانات مباشرة من واجهات برمجية رسمية لمنظمة الصحة العالمية وPAHO وECDC وCDC. لا نستخدم مصادر ثانوية أو غير موثقة. تتزامن المنصة يومياً." },
+      { q: "هل المنصة متوافقة مع اللائحة الأوروبية لحماية البيانات؟", a: "نعم. تعمل المنصة على بنية تحتية أوروبية (Vercel EU + Supabase EU). لا نجمع بيانات صحية شخصية. بريدك الإلكتروني المهني هو البيانات الشخصية الوحيدة المخزنة." },
+      { q: "كيف يعمل الوصول متعدد المستخدمين؟", a: "يحصل كل عضو في الفريق على حسابه الخاص. يوفر البرنامج التجريبي 5 تسجيلات دخول مستقلة، كل منها بوصول Pro كامل. لا كلمات مرور مشتركة." },
+      { q: "ماذا يحدث في نهاية الـ 30 يوماً؟", a: "تعود الحسابات تلقائياً إلى الخطة المجانية. لا رسوم، لا بطاقة بنكية مطلوبة. إذا أراد فريقك الاستمرار مع Pro، نناقش ذلك في جلسة التغذية الراجعة الختامية." },
+      { q: "هل نحتاج إلى فريق تقنية المعلومات للبدء؟", a: "لا. HealthWatch منصة ويب — لا تثبيت، لا VPN، لا تغييرات في جدار الحماية. الوصول عبر أي متصفح حديث. تكاملات Slack وTeams اختيارية وتستغرق أقل من دقيقتين." },
+    ],
+  },
+  id: {
+    title: "Pertanyaan yang sering diajukan",
+    items: [
+      { q: "Sumber data apa yang digunakan HealthWatch?", a: "Semua data berasal langsung dari API resmi WHO, PAHO, ECDC, dan CDC. Kami tidak menggunakan sumber sekunder atau yang tidak terverifikasi. Platform disinkronkan setiap hari." },
+      { q: "Apakah platform ini mematuhi GDPR?", a: "Ya. Platform berjalan di infrastruktur Eropa (Vercel EU + Supabase EU). Kami tidak mengumpulkan data kesehatan pribadi pengguna. Email kerja Anda adalah satu-satunya data pribadi yang disimpan." },
+      { q: "Bagaimana akses multi-pengguna bekerja?", a: "Setiap anggota tim mendapatkan akun individual mereka sendiri. Pilot 5 kursi memberikan 5 login independen, masing-masing dengan akses Pro penuh. Tidak ada kata sandi bersama." },
+      { q: "Apa yang terjadi setelah 30 hari?", a: "Akun secara otomatis kembali ke paket Gratis. Tidak ada biaya, tidak perlu kartu kredit. Jika tim Anda ingin melanjutkan dengan Pro, kami akan membahasnya di sesi umpan balik penutup." },
+      { q: "Apakah kami perlu melibatkan IT untuk memulai?", a: "Tidak. HealthWatch adalah platform web — tidak ada instalasi, VPN, atau perubahan firewall yang diperlukan. Akses melalui browser modern apa pun. Integrasi Slack dan Teams bersifat opsional dan membutuhkan kurang dari 2 menit." },
+    ],
+  },
+};
+
 const INCLUDE_ICONS = {
   users:    Users,
   calendar: CalendarDays,
@@ -218,6 +271,8 @@ export default function PilotPage() {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState("");
+  const [openFaq, setOpenFaq] = useState<number | null>(null);
+  const faq = FAQ_COPY[locale] ?? FAQ_COPY.en;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -382,6 +437,28 @@ export default function PilotPage() {
             </div>
           </form>
         )}
+      </div>
+
+      {/* FAQ */}
+      <div className="space-y-4">
+        <h2 className="text-lg font-bold text-white">{faq.title}</h2>
+        <div className="divide-y divide-gray-800 rounded-xl border border-gray-800 overflow-hidden">
+          {faq.items.map((item, i) => (
+            <div key={i}>
+              <button
+                type="button"
+                onClick={() => setOpenFaq(openFaq === i ? null : i)}
+                className="w-full flex items-center justify-between gap-4 px-5 py-4 text-left hover:bg-gray-800/40 transition-colors"
+              >
+                <span className="text-sm font-medium text-gray-200">{item.q}</span>
+                <ChevronDown className={`w-4 h-4 text-gray-400 shrink-0 transition-transform ${openFaq === i ? "rotate-180" : ""}`} />
+              </button>
+              {openFaq === i && (
+                <div className="px-5 pb-4 text-sm text-gray-400 leading-relaxed">{item.a}</div>
+              )}
+            </div>
+          ))}
+        </div>
       </div>
 
     </div>
