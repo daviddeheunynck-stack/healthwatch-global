@@ -77,11 +77,15 @@ export async function GET(req: NextRequest) {
   }
 
   // ── J+12 : 2 days left — subscribe now ───────────────────────────────────
+  // Guard: trial_ends_at must be within 4 days — skips pilot users (35-day trial)
+  // who would otherwise receive a confusing "2 days left" email on day 12.
+  const j12WindowEnd = new Date(Date.now() + 4 * 86_400_000).toISOString();
   const { data: j12Users, error: j12Err } = await supabase
     .from("profiles")
     .select("id, email, plan, locale, trial_ends_at")
     .eq("plan", "pro")
     .not("trial_ends_at", "is", null)
+    .lt("trial_ends_at", j12WindowEnd)
     .is("stripe_subscription_id", null)
     .filter("created_at", "gte", new Date(Date.now() - 12.5 * 86400_000).toISOString())
     .filter("created_at", "lt",  new Date(Date.now() - 11.5 * 86400_000).toISOString());
