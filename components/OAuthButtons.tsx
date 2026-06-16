@@ -49,14 +49,15 @@ export default function OAuthButtons({ locale, redirectTo, context = "signup" }:
     track(`${context}_oauth_click`, { provider, locale });
     const supabase = createClient();
     const next = redirectTo ?? `/${locale}`;
-    const { error } = await supabase.auth.signInWithOAuth({
+    const result = await supabase.auth.signInWithOAuth({
       provider,
       options: {
         redirectTo: `${window.location.origin}/auth/callback?next=${encodeURIComponent(next)}`,
       },
     });
-    if (error) {
-      setOauthError(ERROR_LABELS[locale] ?? ERROR_LABELS.en);
+    console.log("[OAuth debug]", JSON.stringify({ error: result.error, url: result.data?.url }));
+    if (result.error) {
+      setOauthError(`${ERROR_LABELS[locale] ?? ERROR_LABELS.en} (${result.error.message})`);
       setLoading(null);
     }
     // On success: browser redirects — no need to reset loading
