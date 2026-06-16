@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import { createClient } from "@/lib/supabase-browser";
@@ -17,13 +17,25 @@ const OAUTH_ERROR: Record<string, string> = {
   id: "Gagal masuk dengan Google. Periksa bahwa provider Google diaktifkan di Supabase.",
 };
 
+function OAuthErrorBanner({ locale }: { locale: string }) {
+  const searchParams = useSearchParams();
+  const oauthFailed = searchParams.get("error") === "oauth";
+  const oauthReason = searchParams.get("reason") ?? "";
+  if (!oauthFailed) return null;
+  return (
+    <div className="bg-red-900/30 border border-red-500/40 rounded-lg px-4 py-3 space-y-1">
+      <p className="text-red-300 text-sm">{OAUTH_ERROR[locale] ?? OAUTH_ERROR.en}</p>
+      {oauthReason && (
+        <p className="text-red-400/70 text-xs font-mono">{oauthReason}</p>
+      )}
+    </div>
+  );
+}
+
 export default function LoginPage() {
   const t = useTranslations("auth");
   const locale = useLocale();
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const oauthFailed = searchParams.get("error") === "oauth";
-  const oauthReason = searchParams.get("reason") ?? "";
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -58,14 +70,9 @@ export default function LoginPage() {
         </div>
 
         <div className="bg-gray-900 border border-gray-800 rounded-xl p-8 space-y-5">
-          {oauthFailed && (
-            <div className="bg-red-900/30 border border-red-500/40 rounded-lg px-4 py-3 space-y-1">
-              <p className="text-red-300 text-sm">{OAUTH_ERROR[locale] ?? OAUTH_ERROR.en}</p>
-              {oauthReason && (
-                <p className="text-red-400/70 text-xs font-mono">{oauthReason}</p>
-              )}
-            </div>
-          )}
+          <Suspense fallback={null}>
+            <OAuthErrorBanner locale={locale} />
+          </Suspense>
           <OAuthButtons locale={locale} context="login" />
           <div className="flex items-center gap-3">
             <div className="flex-1 h-px bg-gray-800" />
