@@ -89,6 +89,17 @@ export async function POST(req: NextRequest) {
     // Use session-authenticated userId; fall back to empty string for anonymous checkout
     const userId = sessionUser?.id ?? "";
     const resolvedEmail = sessionUser?.email ?? userEmail;
+
+    // Look up existing Stripe customer to avoid duplicate customer records
+    let existingStripeCustomerId: string | null = null;
+    if (userId) {
+      const { data: profileData } = await supabase
+        .from("profiles")
+        .select("stripe_customer_id")
+        .eq("id", userId)
+        .single();
+      existingStripeCustomerId = profileData?.stripe_customer_id ?? null;
+    }
     const currency = getCurrency(locale ?? "fr");
     const billingPeriod = billing === "annual" ? "annual" : "monthly";
     const priceId = PRICES[plan ?? ""]?.[billingPeriod]?.[currency];
@@ -123,8 +134,10 @@ export async function POST(req: NextRequest) {
     params.set("subscription_data[trial_settings][end_behavior][missing_payment_method]", "cancel");
     params.set("payment_method_collection", "if_required");
 
-    // Pre-fill Stripe form with user email if available
-    if (resolvedEmail) {
+    // Reuse existing Stripe customer to avoid duplicate records
+    if (existingStripeCustomerId) {
+      params.set("customer", existingStripeCustomerId);
+    } else if (resolvedEmail) {
       params.set("customer_email", resolvedEmail);
     }
 
