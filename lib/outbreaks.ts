@@ -1,6 +1,16 @@
 import { createClient } from "@supabase/supabase-js";
 import { normalizeDisease } from "./disease-data";
 
+const BOM   = String.fromCharCode(65279);
+const clean = (v: string | undefined) => (v || "").replace(new RegExp("^" + BOM), "").trim();
+
+function getServerClient() {
+  return createClient(
+    clean(process.env.NEXT_PUBLIC_SUPABASE_URL),
+    clean(process.env.SUPABASE_SERVICE_ROLE_KEY)
+  );
+}
+
 export interface Outbreak {
   id: string;
   disease: string;
@@ -29,10 +39,7 @@ export interface Outbreak {
 }
 
 export async function getLastSync(): Promise<string | null> {
-  const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-  );
+  const supabase = getServerClient();
 
   const { data } = await supabase
     .from("outbreaks")
@@ -46,10 +53,7 @@ export async function getLastSync(): Promise<string | null> {
 }
 
 export async function getOutbreaks(): Promise<Outbreak[]> {
-  const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-  );
+  const supabase = getServerClient();
 
   const { data, error } = await supabase
     .from("outbreaks")
