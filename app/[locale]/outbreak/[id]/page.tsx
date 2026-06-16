@@ -27,6 +27,7 @@ const LABELS = {
     date: "Date", region: "Région",
     sourceVerified: "Bulletin OMS officiel", sourceOfficial: "Source officielle",
     pheic: "URGENCE SANITAIRE INTERNATIONALE (PHEIC)",
+    archived: "Foyer terminé — données archivées",
     ctaTitle: "Recevoir les alertes épidémiques en temps réel",
     ctaSub: "Essai Pro 14 jours gratuit — sans carte bancaire",
     ctaProBtn: "Commencer l'essai gratuit →",
@@ -40,6 +41,7 @@ const LABELS = {
     date: "Report date", region: "Region",
     sourceVerified: "Official WHO Disease Outbreak News", sourceOfficial: "Official source",
     pheic: "PUBLIC HEALTH EMERGENCY OF INTERNATIONAL CONCERN (PHEIC)",
+    archived: "Outbreak resolved — archived data",
     ctaTitle: "Get real-time disease outbreak alerts",
     ctaSub: "14-day Pro trial — no credit card required",
     ctaProBtn: "Start free trial →",
@@ -53,6 +55,7 @@ const LABELS = {
     date: "Fecha del informe", region: "Región",
     sourceVerified: "Boletín oficial OMS", sourceOfficial: "Fuente oficial",
     pheic: "EMERGENCIA DE SALUD PÚBLICA DE IMPORTANCIA INTERNACIONAL (ESPII)",
+    archived: "Brote resuelto — datos archivados",
     ctaTitle: "Recibe alertas de brotes en tiempo real",
     ctaSub: "Prueba Pro 14 días gratis — sin tarjeta de crédito",
     ctaProBtn: "Iniciar prueba gratuita →",
@@ -66,6 +69,7 @@ const LABELS = {
     date: "تاريخ التقرير", region: "المنطقة",
     sourceVerified: "نشرة منظمة الصحة العالمية الرسمية", sourceOfficial: "مصدر رسمي",
     pheic: "طوارئ الصحة العمومية التي تثير قلقاً دولياً",
+    archived: "انتهى التفشي — بيانات مؤرشفة",
     ctaTitle: "احصل على تنبيهات الأوبئة في الوقت الفعلي",
     ctaSub: "تجربة Pro مجانية 14 يوماً — بدون بطاقة بنكية",
     ctaProBtn: "← ابدأ التجربة المجانية",
@@ -79,6 +83,7 @@ const LABELS = {
     date: "Tanggal laporan", region: "Wilayah",
     sourceVerified: "Buletin resmi WHO", sourceOfficial: "Sumber resmi",
     pheic: "KEDARURATAN KESEHATAN MASYARAKAT YANG MERESAHKAN DUNIA (KKMMD)",
+    archived: "Wabah selesai — data diarsipkan",
     ctaTitle: "Dapatkan peringatan wabah secara real-time",
     ctaSub: "Uji coba Pro 14 hari gratis — tanpa kartu kredit",
     ctaProBtn: "Mulai uji coba gratis →",
@@ -87,7 +92,7 @@ const LABELS = {
     noData: "T/S",
     risk: { high: "RISIKO TINGGI", medium: "RISIKO SEDANG", low: "RISIKO RENDAH" },
   },
-} satisfies Record<string, { cases: string; deaths: string; cfr: string; date: string; region: string; sourceVerified: string; sourceOfficial: string; pheic: string; ctaTitle: string; ctaSub: string; ctaProBtn: string; ctaFree: string; back: string; noData: string; risk: Record<string, string> }>;
+} satisfies Record<string, { cases: string; deaths: string; cfr: string; date: string; region: string; sourceVerified: string; sourceOfficial: string; pheic: string; archived: string; ctaTitle: string; ctaSub: string; ctaProBtn: string; ctaFree: string; back: string; noData: string; risk: Record<string, string> }>;
 
 const RISK_STYLE: Record<string, string> = {
   high:   "text-red-400 bg-red-500/10 border-red-500/30",
@@ -96,6 +101,7 @@ const RISK_STYLE: Record<string, string> = {
 };
 
 // cache() deduplicates within a single render (generateMetadata + page share the same fetch)
+// No active filter — historical outbreaks are indexed in the sitemap and must render too.
 const getOutbreak = cache(async (id: string): Promise<Outbreak | null> => {
   const supabase = createClient(
     clean(process.env.NEXT_PUBLIC_SUPABASE_URL),
@@ -105,7 +111,6 @@ const getOutbreak = cache(async (id: string): Promise<Outbreak | null> => {
     .from("outbreaks")
     .select("*")
     .eq("id", id)
-    .eq("active", true)
     .maybeSingle();
   return data;
 });
@@ -242,6 +247,11 @@ export default async function OutbreakPage({
           <span className={`text-xs font-bold px-2.5 py-1 rounded-full border ${RISK_STYLE[o.risk_level] ?? RISK_STYLE.low}`}>
             {l.risk[o.risk_level] ?? o.risk_level}
           </span>
+          {!o.active && (
+            <span className="text-xs font-bold px-2.5 py-1 rounded-full border bg-gray-700/50 border-gray-600/50 text-gray-400">
+              {l.archived}
+            </span>
+          )}
           {o.is_pheic && (
             <span className="text-xs font-bold px-2.5 py-1 rounded-full border bg-purple-500/10 border-purple-500/30 text-purple-400">
               🚨 PHEIC
