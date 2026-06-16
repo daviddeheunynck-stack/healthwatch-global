@@ -118,10 +118,19 @@ async function ReportsContent() {
   if (user) {
     const { data: profile } = await supabase
       .from("profiles")
-      .select("plan")
+      .select("plan, trial_ends_at, stripe_subscription_id")
       .eq("id", user.id)
       .single();
     plan = profile?.plan ?? "free";
+    // Apply trial expiry guard — same logic as dashboard
+    if (
+      plan !== "free" &&
+      profile?.trial_ends_at &&
+      new Date(profile.trial_ends_at).getTime() < Date.now() &&
+      !profile?.stripe_subscription_id
+    ) {
+      plan = "free";
+    }
   }
 
   const isPaid = plan === "starter" || plan === "pro" || plan === "enterprise";
