@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import { createClient } from "@/lib/supabase-browser";
 import { track } from "@vercel/analytics/react";
@@ -9,10 +9,20 @@ import { Activity, Loader2 } from "lucide-react";
 import Link from "next/link";
 import OAuthButtons from "@/components/OAuthButtons";
 
+const OAUTH_ERROR: Record<string, string> = {
+  fr: "Connexion Google échouée. Vérifiez que le provider Google est activé dans Supabase.",
+  en: "Google sign-in failed. Check that the Google provider is enabled in Supabase.",
+  es: "Error con Google. Compruebe que el proveedor Google está activado en Supabase.",
+  ar: "فشل تسجيل الدخول عبر Google. تحقق من تفعيل مزود Google في Supabase.",
+  id: "Gagal masuk dengan Google. Periksa bahwa provider Google diaktifkan di Supabase.",
+};
+
 export default function LoginPage() {
   const t = useTranslations("auth");
   const locale = useLocale();
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const oauthFailed = searchParams.get("error") === "oauth";
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -47,6 +57,11 @@ export default function LoginPage() {
         </div>
 
         <div className="bg-gray-900 border border-gray-800 rounded-xl p-8 space-y-5">
+          {oauthFailed && (
+            <div className="bg-red-900/30 border border-red-500/40 rounded-lg px-4 py-3">
+              <p className="text-red-300 text-sm">{OAUTH_ERROR[locale] ?? OAUTH_ERROR.en}</p>
+            </div>
+          )}
           <OAuthButtons locale={locale} context="login" />
           <div className="flex items-center gap-3">
             <div className="flex-1 h-px bg-gray-800" />
