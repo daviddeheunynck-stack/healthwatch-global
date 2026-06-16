@@ -28,27 +28,45 @@ const LABELS: Record<string, { google: string; github: string }> = {
   id: { google: "Lanjutkan dengan Google", github: "Lanjutkan dengan GitHub" },
 };
 
+const ERROR_LABELS: Record<string, string> = {
+  en: "Google sign-in failed. Please try again or use email.",
+  fr: "Connexion Google échouée. Réessayez ou utilisez l'email.",
+  es: "Error con Google. Inténtelo de nuevo o use el correo.",
+  ar: "فشل تسجيل الدخول عبر Google. حاول مرة أخرى أو استخدم البريد.",
+  id: "Gagal masuk dengan Google. Coba lagi atau gunakan email.",
+};
+
 type Props = { locale: string; redirectTo?: string; context?: "signup" | "login" };
 
 export default function OAuthButtons({ locale, redirectTo, context = "signup" }: Props) {
   const [loading, setLoading] = useState<"google" | "github" | null>(null);
+  const [oauthError, setOauthError] = useState<string | null>(null);
   const l = LABELS[locale] ?? LABELS.en;
 
   const handleOAuth = async (provider: "google" | "github") => {
     setLoading(provider);
+    setOauthError(null);
     track(`${context}_oauth_click`, { provider, locale });
     const supabase = createClient();
     const next = redirectTo ?? `/${locale}`;
-    await supabase.auth.signInWithOAuth({
+    const { error } = await supabase.auth.signInWithOAuth({
       provider,
       options: {
         redirectTo: `${window.location.origin}/auth/callback?next=${encodeURIComponent(next)}`,
       },
     });
+    if (error) {
+      setOauthError(ERROR_LABELS[locale] ?? ERROR_LABELS.en);
+      setLoading(null);
+    }
+    // On success: browser redirects — no need to reset loading
   };
 
   return (
     <div className="space-y-2.5">
+      {oauthError && (
+        <p className="text-red-400 text-sm text-center">{oauthError}</p>
+      )}
       <button
         onClick={() => handleOAuth("google")}
         disabled={!!loading}
