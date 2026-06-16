@@ -5,12 +5,32 @@ import { createClient as createService } from "@supabase/supabase-js";
 export const dynamic = "force-dynamic";
 
 const MAX_WATCHLIST = 20;
+const PAID_PLANS = ["starter", "pro", "enterprise"] as const;
 
 function service() {
   return createService(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.SUPABASE_SERVICE_ROLE_KEY!
   );
+}
+
+async function getUserAndPlan(svc: ReturnType<typeof service>, userId: string) {
+  const { data: profile } = await svc
+    .from("profiles")
+    .select("plan, trial_ends_at, stripe_subscription_id")
+    .eq("id", userId)
+    .single();
+
+  let plan = profile?.plan ?? "free";
+  if (
+    plan !== "free" &&
+    profile?.trial_ends_at &&
+    new Date(profile.trial_ends_at).getTime() < Date.now() &&
+    !profile.stripe_subscription_id
+  ) {
+    plan = "free";
+  }
+  return plan as string;
 }
 
 // GET — return user's watchlist outbreak IDs
@@ -41,6 +61,11 @@ export async function POST(req: NextRequest) {
   if (!outbreak_id) return NextResponse.json({ error: "outbreak_id required" }, { status: 400 });
 
   const svc = service();
+
+  const plan = await getUserAndPlan(svc, user.id);
+  if (!PAID_PLANS.includes(plan as typeof PAID_PLANS[number])) {
+    return NextResponse.json({ error: "Pro plan required" }, { status: 403 });
+  }
 
   // Check max
   const { count } = await svc
