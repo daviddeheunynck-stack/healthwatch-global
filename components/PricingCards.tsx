@@ -146,7 +146,7 @@ const PRICES: Record<string, { proMonthly: string; proAnnual: string; proAnnualT
 };
 
 export default function PricingCards({ locale }: { locale: string }) {
-  const [billing, setBilling] = useState<Billing>("monthly");
+  const [billing, setBilling] = useState<Billing>("annual");
   const c = COPY[locale] ?? COPY.en;
   const p = PRICES[locale] ?? PRICES.en;
   const isAnnual = billing === "annual";
