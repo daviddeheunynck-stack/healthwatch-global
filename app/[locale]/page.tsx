@@ -89,6 +89,7 @@ async function DashboardContent() {
   let plan = "free";
   let trialEndsAt: string | null = null;
   let hasStripeSubscription = false;
+  let trialExpired = false;
   if (user) {
     const { data: profile } = await supabase
       .from("profiles")
@@ -111,6 +112,7 @@ async function DashboardContent() {
     ) {
       plan = "free";
       trialEndsAt = null;
+      trialExpired = true;
     }
   }
 
@@ -204,7 +206,7 @@ async function DashboardContent() {
         <TrialBanner trialEndsAt={trialEndsAt!} locale={locale} hasBilling={hasStripeSubscription} />
       )}
       {showFreeBanner && (
-        <FreePlanBanner locale={locale} />
+        <FreePlanBanner locale={locale} trialExpired={trialExpired} />
       )}
 
       {/* Push opt-in nudge — self-hides (unsupported / already subscribed /
