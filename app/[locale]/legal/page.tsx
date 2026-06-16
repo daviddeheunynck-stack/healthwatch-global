@@ -9,7 +9,17 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: "Mentions légales",
     description: "Mentions légales de HealthWatch Global — éditeur, hébergeur, propriété intellectuelle, données personnelles.",
-    alternates: { canonical: url },
+    alternates: {
+      canonical: url,
+      languages: {
+        en: "https://healthwatch-global.com/en/legal",
+        fr: "https://healthwatch-global.com/fr/legal",
+        es: "https://healthwatch-global.com/es/legal",
+        ar: "https://healthwatch-global.com/ar/legal",
+        id: "https://healthwatch-global.com/id/legal",
+        "x-default": "https://healthwatch-global.com/en/legal",
+      },
+    },
     robots: { index: true, follow: true },
   };
 }

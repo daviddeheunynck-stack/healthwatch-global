@@ -17,7 +17,17 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: "Terms of Service",
     description: "HealthWatch Global terms of service — acceptable use, subscriptions, billing, health data disclaimer, and governing law.",
-    alternates: { canonical: url },
+    alternates: {
+      canonical: url,
+      languages: {
+        en: "https://healthwatch-global.com/en/terms",
+        fr: "https://healthwatch-global.com/fr/terms",
+        es: "https://healthwatch-global.com/es/terms",
+        ar: "https://healthwatch-global.com/ar/terms",
+        id: "https://healthwatch-global.com/id/terms",
+        "x-default": "https://healthwatch-global.com/en/terms",
+      },
+    },
     robots: { index: true, follow: true },
   };
 }

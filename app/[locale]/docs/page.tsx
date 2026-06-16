@@ -11,7 +11,17 @@ export async function generateMetadata({
   return {
     title: "API Documentation — HealthWatch Global",
     description: "REST API reference for the HealthWatch Global Enterprise plan. Access outbreak data updated every 6 hours, programmatically.",
-    alternates: { canonical: `https://healthwatch-global.com/${locale}/docs` },
+    alternates: {
+      canonical: `https://healthwatch-global.com/${locale}/docs`,
+      languages: {
+        en: "https://healthwatch-global.com/en/docs",
+        fr: "https://healthwatch-global.com/fr/docs",
+        es: "https://healthwatch-global.com/es/docs",
+        ar: "https://healthwatch-global.com/ar/docs",
+        id: "https://healthwatch-global.com/id/docs",
+        "x-default": "https://healthwatch-global.com/en/docs",
+      },
+    },
     robots: { index: true, follow: true },
   };
 }
