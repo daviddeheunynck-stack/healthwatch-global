@@ -15,12 +15,13 @@ const LABELS: Record<string, {
   legal: string;
   contact: string;
   cookies: string;
+  pilot: string;
 }> = {
-  en: { about: "About", privacy: "Privacy Policy", terms: "Terms of Service", legal: "Legal notice", contact: "Contact", cookies: "Cookie settings" },
-  fr: { about: "À propos", privacy: "Politique de confidentialité", terms: "CGU", legal: "Mentions légales", contact: "Contact", cookies: "Paramètres cookies" },
-  es: { about: "Acerca de", privacy: "Política de privacidad", terms: "Términos de uso", legal: "Aviso legal", contact: "Contacto", cookies: "Configuración de cookies" },
-  ar: { about: "حول المنصة", privacy: "سياسة الخصوصية", terms: "شروط الاستخدام", legal: "الإشعار القانوني", contact: "تواصل معنا", cookies: "إعدادات ملفات الارتباط" },
-  id: { about: "Tentang", privacy: "Kebijakan Privasi", terms: "Syarat Penggunaan", legal: "Pemberitahuan hukum", contact: "Kontak", cookies: "Pengaturan cookie" },
+  en: { about: "About", privacy: "Privacy Policy", terms: "Terms of Service", legal: "Legal notice", contact: "Contact", cookies: "Cookie settings", pilot: "Institutional Pilot" },
+  fr: { about: "À propos", privacy: "Politique de confidentialité", terms: "CGU", legal: "Mentions légales", contact: "Contact", cookies: "Paramètres cookies", pilot: "Pilote Institutionnel" },
+  es: { about: "Acerca de", privacy: "Política de privacidad", terms: "Términos de uso", legal: "Aviso legal", contact: "Contacto", cookies: "Configuración de cookies", pilot: "Piloto Institucional" },
+  ar: { about: "حول المنصة", privacy: "سياسة الخصوصية", terms: "شروط الاستخدام", legal: "الإشعار القانوني", contact: "تواصل معنا", cookies: "إعدادات ملفات الارتباط", pilot: "البرنامج التجريبي المؤسسي" },
+  id: { about: "Tentang", privacy: "Kebijakan Privasi", terms: "Syarat Penggunaan", legal: "Pemberitahuan hukum", contact: "Kontak", cookies: "Pengaturan cookie", pilot: "Pilot Institusional" },
 };
 
 export default function Footer({ locale }: FooterProps) {
@@ -61,6 +62,9 @@ export default function Footer({ locale }: FooterProps) {
             </Link>
             <Link href={`/${locale}/contact`} className="hover:text-gray-300 transition-colors">
               {l.contact}
+            </Link>
+            <Link href={`/${locale}/pilot`} className="hover:text-red-400 transition-colors text-red-500/70">
+              {l.pilot}
             </Link>
             <a
               href="mailto:contact@healthwatch-global.com"
