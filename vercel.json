@@ -2,7 +2,7 @@
   "crons": [
     {
       "path": "/api/cron/sync-outbreaks",
-      "schedule": "0 */6 * * *"
+      "schedule": "0 6 * * *"
     },
     {
       "path": "/api/cron/data-quality",
@@ -10,19 +10,19 @@
     },
     {
       "path": "/api/cron/regional-alerts",
-      "schedule": "30 */6 * * *"
+      "schedule": "30 6 * * *"
     },
     {
       "path": "/api/cron/watchlist-alerts",
-      "schedule": "40 */6 * * *"
+      "schedule": "40 6 * * *"
     },
     {
       "path": "/api/cron/push-alerts",
-      "schedule": "45 */6 * * *"
+      "schedule": "45 6 * * *"
     },
     {
       "path": "/api/cron/disease-alerts",
-      "schedule": "50 */6 * * *"
+      "schedule": "50 6 * * *"
     },
     {
       "path": "/api/cron/onboarding-sequence",
@@ -42,7 +42,7 @@
     },
     {
       "path": "/api/cron/check-mpox-sitrep",
-      "schedule": "0 8 * * 3,6"
+      "schedule": "0 8 * * 3"
     },
     {
       "path": "/api/cron/expire-trials",
