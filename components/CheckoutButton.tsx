@@ -23,7 +23,7 @@ interface CheckoutButtonProps {
   icon?: React.ReactNode;
 }
 
-export default function CheckoutButton({ plan, locale, label, className, billing = "monthly", icon }: CheckoutButtonProps) {
+export default function CheckoutButton({ plan, locale, label, className, billing = "annual", icon }: CheckoutButtonProps) {
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
   const router = useRouter();
