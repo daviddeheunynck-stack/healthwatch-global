@@ -468,6 +468,24 @@ export default async function AboutPage({
         </Link>
       </section>
 
+      {/* Institutional pilot CTA */}
+      <section className="bg-gradient-to-r from-red-950/40 via-gray-900/40 to-transparent border border-red-800/25 rounded-2xl p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div>
+          <p className="text-white font-semibold text-sm">
+            {locale === "fr" ? "Vous représentez une organisation ?" : locale === "es" ? "¿Representa una organización?" : locale === "ar" ? "هل تمثل مؤسسة؟" : locale === "id" ? "Mewakili sebuah organisasi?" : "Representing an organization?"}
+          </p>
+          <p className="text-gray-400 text-xs mt-0.5">
+            {locale === "fr" ? "Programme pilote : 5 accès Pro gratuits, 30 jours, pour ONG, agences ONU et ministères." : locale === "es" ? "Programa piloto: 5 accesos Pro gratis, 30 días, para ONG, agencias ONU y ministerios." : locale === "ar" ? "البرنامج التجريبي: 5 مقاعد Pro مجانية لمدة 30 يوماً للمنظمات غير الحكومية ووكالات الأمم المتحدة والوزارات." : locale === "id" ? "Program pilot: 5 akses Pro gratis, 30 hari, untuk LSM, badan PBB, dan kementerian." : "Pilot program: 5 free Pro seats, 30 days, for NGOs, UN agencies and ministries."}
+          </p>
+        </div>
+        <Link
+          href={`/${locale}/pilot`}
+          className="shrink-0 text-xs bg-red-700 hover:bg-red-600 text-white font-semibold px-4 py-2 rounded-lg transition-colors whitespace-nowrap"
+        >
+          {locale === "fr" ? "En savoir plus →" : locale === "es" ? "Más información →" : locale === "ar" ? "← اكتشف المزيد" : locale === "id" ? "Pelajari lebih →" : "Learn more →"}
+        </Link>
+      </section>
+
       {/* Contact CTA */}
       <section className="bg-gray-900 border border-gray-800 rounded-2xl p-6 space-y-4">
         <div className="flex items-center gap-3">

@@ -777,6 +777,12 @@ export default async function LandingPage({ locale }: { locale: string }) {
               <ArrowRight className="w-4 h-4" />
             </Link>
             <p className="text-xs text-gray-600">{c.ctaNoCc}</p>
+            <p className="text-xs text-gray-600 pt-1">
+              {locale === "fr" ? "Une organisation ?" : locale === "es" ? "¿Una organización?" : locale === "ar" ? "مؤسسة؟" : locale === "id" ? "Sebuah organisasi?" : "An organization?"}{" "}
+              <Link href={`/${locale}/pilot`} className="text-red-400 hover:text-red-300 underline underline-offset-2 transition-colors">
+                {locale === "fr" ? "Programme pilote gratuit →" : locale === "es" ? "Programa piloto gratuito →" : locale === "ar" ? "← البرنامج التجريبي المجاني" : locale === "id" ? "Program pilot gratis →" : "Free pilot program →"}
+              </Link>
+            </p>
           </div>
         </div>
       </section>
