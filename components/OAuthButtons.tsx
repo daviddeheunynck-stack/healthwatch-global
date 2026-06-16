@@ -55,7 +55,6 @@ export default function OAuthButtons({ locale, redirectTo, context = "signup" }:
         redirectTo: `${window.location.origin}/auth/callback?next=${encodeURIComponent(next)}`,
       },
     });
-    console.log("[OAuth debug]", JSON.stringify({ error: result.error, url: result.data?.url }));
     if (result.error) {
       setOauthError(`${ERROR_LABELS[locale] ?? ERROR_LABELS.en} (${result.error.message})`);
       setLoading(null);
