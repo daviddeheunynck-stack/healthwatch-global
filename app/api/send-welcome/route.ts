@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { buildWelcomeEmail } from "@/lib/welcome-email";
 import { errorMessage } from "@/lib/error";
+import { rateLimit, getClientIp } from "@/lib/rate-limit";
 
 export const dynamic = "force-dynamic";
 
@@ -10,6 +11,13 @@ const clean = (v: string | undefined) => (v || "").replace(new RegExp("^" + BOM)
 const BREVO_API_KEY = clean(process.env.BREVO_API_KEY);
 
 export async function POST(req: NextRequest) {
+  // Rate limit: 10 welcome emails per IP per hour (prevents spam-by-proxy abuse)
+  const ip = getClientIp(req);
+  const rl = rateLimit(`send-welcome:${ip}`, { limit: 10, windowMs: 60 * 60 * 1000 });
+  if (!rl.allowed) {
+    return NextResponse.json({ error: "Too many requests" }, { status: 429 });
+  }
+
   try {
     const { email, locale } = await req.json();
 
