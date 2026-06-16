@@ -64,9 +64,14 @@ export async function GET(req: NextRequest) {
   console.log(`[expire-trials] ${expired.length} expired trial(s) to downgrade.`);
 
   const ids = expired.map((p) => p.id);
+  // Keep trial_ends_at as-is (expired date). If we null it out, the checkout
+  // route sees dbTrialEndsAt=null and re-grants a fresh 14-day Stripe trial to
+  // users who already consumed their DB trial — a second free trial they never
+  // earned. With the expired date preserved, the checkout route calculates
+  // trialDaysRemaining=0 and skips the Stripe trial entirely.
   const { error: updateErr } = await supabase
     .from("profiles")
-    .update({ plan: "free", trial_ends_at: null })
+    .update({ plan: "free" })
     .in("id", ids);
 
   if (updateErr) {
