@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { track } from "@vercel/analytics/react";
 import { Check, Zap, Shield, Building2, RefreshCw, Sparkles } from "lucide-react";
 import CheckoutButton from "@/components/CheckoutButton";
 
@@ -157,7 +158,7 @@ export default function PricingCards({ locale }: { locale: string }) {
       {/* ── Billing toggle ──────────────────────────────────────────────── */}
       <div className="flex items-center justify-center gap-1 bg-gray-900 border border-gray-800 rounded-xl p-1 w-fit mx-auto">
         <button
-          onClick={() => setBilling("monthly")}
+          onClick={() => { setBilling("monthly"); track("pricing_billing_toggle", { billing: "monthly" }); }}
           className={`px-5 py-2 rounded-lg text-sm font-semibold transition-all ${
             billing === "monthly"
               ? "bg-gray-700 text-white shadow"
@@ -167,7 +168,7 @@ export default function PricingCards({ locale }: { locale: string }) {
           {c.toggleMonthly}
         </button>
         <button
-          onClick={() => setBilling("annual")}
+          onClick={() => { setBilling("annual"); track("pricing_billing_toggle", { billing: "annual" }); }}
           className={`flex items-center gap-2 px-5 py-2 rounded-lg text-sm font-semibold transition-all ${
             billing === "annual"
               ? "bg-gray-700 text-white shadow"
