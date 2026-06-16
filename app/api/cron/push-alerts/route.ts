@@ -16,11 +16,11 @@ const clean = (v: string | undefined) => (v || "").replace(new RegExp("^" + BOM)
 const CRON_SECRET = clean(process.env.CRON_SECRET);
 
 const RISK_LABEL: Record<string, Record<string, string>> = {
-  en: { High: "High risk",        "Very High": "Very high risk", Moderate: "Moderate risk", Low: "Low risk" },
-  fr: { High: "Risque élevé",     "Very High": "Risque très élevé", Moderate: "Risque modéré", Low: "Risque faible" },
-  es: { High: "Riesgo alto",      "Very High": "Riesgo muy alto",   Moderate: "Riesgo moderado", Low: "Riesgo bajo" },
-  ar: { High: "خطر مرتفع",        "Very High": "خطر مرتفع جداً",   Moderate: "خطر متوسط",    Low: "خطر منخفض" },
-  id: { High: "Risiko tinggi",    "Very High": "Risiko sangat tinggi", Moderate: "Risiko sedang", Low: "Risiko rendah" },
+  en: { high: "High risk",     medium: "Moderate risk", low: "Low risk"     },
+  fr: { high: "Risque élevé", medium: "Risque modéré", low: "Risque faible" },
+  es: { high: "Riesgo alto",  medium: "Riesgo moderado", low: "Riesgo bajo" },
+  ar: { high: "خطر مرتفع",   medium: "خطر متوسط",      low: "خطر منخفض"   },
+  id: { high: "Risiko tinggi", medium: "Risiko sedang", low: "Risiko rendah" },
 };
 
 const CASES_LABEL: Record<string, string> = {

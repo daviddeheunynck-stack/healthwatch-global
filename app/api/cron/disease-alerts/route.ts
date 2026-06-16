@@ -1,4 +1,4 @@
-// Disease-specific alert cron — runs 3x/day (6h, 12h, 18h UTC)
+// Disease-specific alert cron — runs daily at 06:50 UTC (after sync-outbreaks at 06:00).
 // For each user's disease subscriptions, sends an alert when a matching
 // outbreak appears that hasn't been notified yet.
 
