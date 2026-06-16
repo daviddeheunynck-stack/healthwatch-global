@@ -311,7 +311,6 @@ export default async function DiseasePage({
   const isRtl = l === "ar";
 
   const allOutbreaks = await fetchDiseaseOutbreaks(info.name_en);
-  if (allOutbreaks.length === 0) notFound();
 
   const active  = allOutbreaks.filter((o) => o.active);
   const history = allOutbreaks.filter((o) => !o.active);
@@ -396,7 +395,7 @@ export default async function DiseasePage({
           { label: lb.cases,    value: totalCases  > 0 ? totalCases.toLocaleString("en")  : lb.noData },
           { label: lb.deaths,   value: totalDeaths > 0 ? totalDeaths.toLocaleString("en") : lb.noData },
           { label: lb.cfr,      value: cfr ? `${cfr}%`  : lb.noData },
-          { label: lb.countries, value: countriesSet.size.toString() },
+          { label: lb.countries, value: countriesSet.size > 0 ? countriesSet.size.toString() : lb.noData },
         ].map(({ label, value }) => (
           <div key={label} className="bg-gray-900 border border-gray-800 rounded-xl p-4 text-center">
             <p className="text-2xl font-bold text-white">{value}</p>
