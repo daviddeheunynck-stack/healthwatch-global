@@ -170,8 +170,36 @@ export default async function DiseasesPage({
   const activeCount  = byDisease.size;
   const totalActive  = active.length;
 
+  const jsonLd = [
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "HealthWatch Global", item: `${BASE_URL}/${l}` },
+        { "@type": "ListItem", position: 2, name: lb.title, item: `${BASE_URL}/${l}/diseases` },
+      ],
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "ItemList",
+      name: lb.metaTitle,
+      description: lb.metaDesc,
+      url: `${BASE_URL}/${l}/diseases`,
+      numberOfItems: diseases.length,
+      itemListElement: sorted.map((disease, i) => ({
+        "@type": "ListItem",
+        position: i + 1,
+        url: `${BASE_URL}/${l}/disease/${diseaseToSlug(disease.name_en)}`,
+        name: getLocalizedDisease(
+          { disease: disease.name_en, disease_en: disease.name_en, disease_ar: disease.name_ar }, l
+        ),
+      })),
+    },
+  ];
+
   return (
     <div className="max-w-5xl mx-auto px-4 py-8 space-y-8" dir={isRtl ? "rtl" : undefined}>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
       {/* Back */}
       <Link href={`/${l}`} className="text-sm text-gray-500 hover:text-gray-300 transition-colors">

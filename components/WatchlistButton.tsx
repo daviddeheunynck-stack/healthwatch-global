@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Star, Loader2 } from "lucide-react";
 import { useUpgradeModal } from "@/lib/upgrade-modal-context";
+import { track } from "@vercel/analytics/react";
 
 interface Props {
   outbreakId: string;
@@ -46,6 +47,7 @@ export default function WatchlistButton({ outbreakId, initialWatched, isPaid, lo
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ outbreak_id: outbreakId }),
       });
+      track(watched ? "watchlist_remove" : "watchlist_add", { locale });
       setWatched(!watched);
     } catch { /* silent */ }
     finally { setLoading(false); }
