@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import CheckoutButton from "@/components/CheckoutButton";
+import { track } from "@vercel/analytics/react";
 
 type Locale = "en" | "fr" | "es" | "ar" | "id";
 
@@ -124,6 +125,7 @@ export default function EmailCapture({ locale, region = "all", title, body }: Pr
       });
       if (res.ok) {
         setStatus("success");
+        track("digest_subscribe", { locale: l, region });
       } else {
         const data = await res.json().catch(() => ({}));
         setStatus("error");
