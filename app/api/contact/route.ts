@@ -45,6 +45,9 @@ export async function POST(req: NextRequest) {
     const l = L[locale] ?? L.fr;
     const BREVO_API_KEY = clean(process.env.BREVO_API_KEY);
 
+    const isPilot = typeof message === "string" && message.startsWith("[PILOT APPLICATION]");
+    const subjectPrefix = isPilot ? "[PILOT 🔴]" : "[HealthWatch]";
+
     const res = await fetch("https://api.brevo.com/v3/smtp/email", {
       method: "POST",
       headers: {
@@ -55,7 +58,7 @@ export async function POST(req: NextRequest) {
         sender: { name: "HealthWatch Contact Form", email: "alerts@healthwatch-global.com" },
         to: [{ email: "david.deheunynck@gmail.com", name: "David Deheunynck" }],
         replyTo: { email, name },
-        subject: `[HealthWatch] ${l.subject} ${name} — ${organization || l.noOrg}`,
+        subject: `${subjectPrefix} ${l.subject} ${name} — ${organization || l.noOrg}`,
         htmlContent: `
           <div style="font-family:sans-serif;max-width:600px;margin:0 auto;" dir="${locale === "ar" ? "rtl" : "ltr"}">
             <h2 style="color:#dc2626;">${l.heading}</h2>

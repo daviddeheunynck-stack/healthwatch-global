@@ -9,6 +9,7 @@ import {
 import Link from "next/link";
 import AdminOutbreakTable from "@/components/AdminOutbreakTable";
 import AdminSyncButton from "@/components/AdminSyncButton";
+import AdminPilotInviteForm from "@/components/AdminPilotInviteForm";
 import type { Outbreak } from "@/lib/outbreaks";
 import type { Metadata } from "next";
 
@@ -281,6 +282,9 @@ export default async function AdminPage({
         </p>
         <AdminSyncButton />
       </div>
+
+      {/* ── Pilot invites ───────────────────────────────────────────────────── */}
+      <AdminPilotInviteForm locale={locale} />
 
       {/* ── Outbreaks ───────────────────────────────────────────────────────── */}
       <div className="space-y-4">
