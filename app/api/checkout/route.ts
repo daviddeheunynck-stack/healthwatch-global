@@ -90,15 +90,17 @@ export async function POST(req: NextRequest) {
     const userId = sessionUser?.id ?? "";
     const resolvedEmail = sessionUser?.email ?? userEmail;
 
-    // Look up existing Stripe customer to avoid duplicate customer records
+    // Look up existing Stripe customer and DB trial state
     let existingStripeCustomerId: string | null = null;
+    let dbTrialEndsAt: string | null = null;
     if (userId) {
       const { data: profileData } = await supabase
         .from("profiles")
-        .select("stripe_customer_id")
+        .select("stripe_customer_id, trial_ends_at")
         .eq("id", userId)
         .single();
       existingStripeCustomerId = profileData?.stripe_customer_id ?? null;
+      dbTrialEndsAt = profileData?.trial_ends_at ?? null;
     }
     const currency = getCurrency(locale ?? "fr");
     const billingPeriod = billing === "annual" ? "annual" : "monthly";
@@ -129,10 +131,17 @@ export async function POST(req: NextRequest) {
       "metadata[billing]": billingPeriod,
     });
 
-    // 14-day free trial — no credit card required
-    params.set("subscription_data[trial_period_days]", "14");
-    params.set("subscription_data[trial_settings][end_behavior][missing_payment_method]", "cancel");
-    params.set("payment_method_collection", "if_required");
+    // Trial period: honour remaining days from the DB trial (no credit card required).
+    // If the user already had a trial, only carry over the days they still have left
+    // (prevents double-trials when subscribing mid-trial or after trial expiry).
+    const trialDaysRemaining = dbTrialEndsAt
+      ? Math.max(0, Math.ceil((new Date(dbTrialEndsAt).getTime() - Date.now()) / 86_400_000))
+      : 14; // no DB trial → first-time user: give the standard 14-day trial
+    if (trialDaysRemaining > 0) {
+      params.set("subscription_data[trial_period_days]", String(trialDaysRemaining));
+      params.set("subscription_data[trial_settings][end_behavior][missing_payment_method]", "cancel");
+      params.set("payment_method_collection", "if_required");
+    }
 
     // Reuse existing Stripe customer to avoid duplicate records
     if (existingStripeCustomerId) {
