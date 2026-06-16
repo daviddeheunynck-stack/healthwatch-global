@@ -17,6 +17,19 @@ export async function GET(req: NextRequest) {
   const code = searchParams.get("code");
   const next = searchParams.get("next") ?? "/";
 
+  // Capture error forwarded by Google/Supabase (e.g. access_denied, redirect_uri_mismatch)
+  const oauthError = searchParams.get("error");
+  const oauthErrorDesc = searchParams.get("error_description");
+  if (oauthError) {
+    console.error("[auth/callback] OAuth error received:", oauthError, oauthErrorDesc);
+    const nextParam = searchParams.get("next") ?? "";
+    const errorLocale = nextParam.split("/").filter(Boolean)[0] ?? "en";
+    const safeLocale2 = VALID_LOCALES.includes(errorLocale) ? errorLocale : "en";
+    return NextResponse.redirect(
+      `${origin}/${safeLocale2}/login?error=oauth&reason=${encodeURIComponent(oauthError)}`
+    );
+  }
+
   if (code) {
     const cookieStore = await cookies();
     const supabase = createServerClient(
