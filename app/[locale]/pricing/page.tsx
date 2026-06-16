@@ -136,7 +136,7 @@ const COPY: Record<string, {
   es: {
     heroTag: "Diseñado para organizaciones de salud y sus equipos en todo el mundo",
     heroTitle: "Anticipe. No solo reaccione.",
-    heroSub: "Un brote no detectado a tiempo puede costarle a su organización meses de gestión de crisis. HealthWatch Global ofrece a sus equipos datos de vigilancia actualizados cada 6 horas, directamente de la OMS.",
+    heroSub: "Un brote no detectado a tiempo puede costarle a su organización meses de gestión de crisis. HealthWatch Global ofrece a sus equipos datos de vigilancia oficiales de la OMS, directamente en su idioma.",
     orgTypes: ["Ministerios de Salud", "ONG internacionales", "Organizaciones humanitarias", "Institutos de investigación", "Sector sanitario privado"],
     orgLabel: "Diseñado para",
     guarantee: "Sin compromiso. Reembolso en 14 días.",

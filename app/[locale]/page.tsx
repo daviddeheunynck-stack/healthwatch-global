@@ -21,11 +21,11 @@ import type { Metadata } from "next";
 export const dynamic = "force-dynamic";
 
 const DASHBOARD_META: Record<string, { title: string; description: string }> = {
-  en: { title: "Global Disease Outbreak Dashboard", description: "Map and table of active disease outbreaks worldwide — updated every 6 hours from the WHO Disease Outbreak News API." },
-  fr: { title: "Tableau de bord — Foyers épidémiques mondiaux", description: "Carte et tableau des foyers épidémiques actifs dans le monde, mis à jour toutes les 6h via l'API WHO Disease Outbreak News." },
-  es: { title: "Panel de vigilancia epidémica mundial", description: "Mapa y tabla de brotes de enfermedades activos en todo el mundo — actualizados cada 6 horas desde la API WHO Disease Outbreak News." },
-  ar: { title: "لوحة تحكم تفشي الأمراض العالمية", description: "خريطة وجدول لتفشي الأمراض النشطة حول العالم — تُحدَّث كل 6 ساعات من واجهة أخبار تفشي أمراض منظمة الصحة العالمية." },
-  id: { title: "Dasbor Wabah Penyakit Global", description: "Peta dan tabel wabah penyakit aktif di seluruh dunia — diperbarui setiap 6 jam dari API WHO Disease Outbreak News." },
+  en: { title: "Global Disease Outbreak Dashboard", description: "Map and table of active disease outbreaks worldwide — official WHO Disease Outbreak News data." },
+  fr: { title: "Tableau de bord — Foyers épidémiques mondiaux", description: "Carte et tableau des foyers épidémiques actifs dans le monde, issus de l'API officielle WHO Disease Outbreak News." },
+  es: { title: "Panel de vigilancia epidémica mundial", description: "Mapa y tabla de brotes de enfermedades activos en todo el mundo — datos oficiales WHO Disease Outbreak News." },
+  ar: { title: "لوحة تحكم تفشي الأمراض العالمية", description: "خريطة وجدول لتفشي الأمراض النشطة حول العالم — بيانات رسمية من واجهة أخبار تفشي أمراض منظمة الصحة العالمية." },
+  id: { title: "Dasbor Wabah Penyakit Global", description: "Peta dan tabel wabah penyakit aktif di seluruh dunia — data resmi WHO Disease Outbreak News." },
 };
 
 // ─── Filter strings (avoids touching 5 message files) ────────────────────────
@@ -271,7 +271,7 @@ export default async function DashboardPage({
         "name": "HealthWatch Global",
         "url": "https://healthwatch-global.com",
         "logo": "https://healthwatch-global.com/api/og",
-        "description": "Global epidemic surveillance platform — WHO data updated every 6 hours, in 5 languages for health organizations worldwide.",
+        "description": "Global epidemic surveillance platform — official WHO data in 5 languages for health organizations worldwide.",
         "contactPoint": {
           "@type": "ContactPoint",
           "email": "contact@healthwatch-global.com",
@@ -286,7 +286,7 @@ export default async function DashboardPage({
         "applicationCategory": "HealthApplication",
         "operatingSystem": "Web",
         "url": "https://healthwatch-global.com",
-        "description": "Monitor disease outbreaks worldwide — WHO data updated every 6 hours. 5 languages, regional alerts, PDF reports and CSV export.",
+        "description": "Monitor disease outbreaks worldwide — official WHO data. 5 languages, regional alerts, PDF reports and CSV export.",
         "offers": {
           "@type": "Offer",
           "price": "0",
@@ -294,7 +294,7 @@ export default async function DashboardPage({
           "description": "Free tier — live outbreak map and dashboard, no account required.",
         },
         "featureList": [
-          "WHO disease outbreak map — updated every 6 hours",
+          "WHO disease outbreak map — daily sync from official API",
           "5 languages — English, French, Spanish, Arabic, Indonesian",
           "Regional email alerts",
           "PDF epidemiological reports",

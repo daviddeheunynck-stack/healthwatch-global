@@ -28,6 +28,8 @@ const csp = [
     "va.vercel-scripts.com",
     "api.brevo.com",
   ].join(" "),
+  // Workers: Supabase JS client spawns an internal worker from a blob URL
+  "worker-src blob:",
   // Frames: Stripe Checkout opens in a redirect, not iframe — block all
   "frame-src 'none'",
   // No plugins ever

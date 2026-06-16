@@ -177,10 +177,10 @@ const LABELS: Record<string, {
       "Llevo años siguiendo de cerca las grandes dinámicas sanitarias mundiales por puro interés. Consultaba regularmente los boletines de la OMS — y perdía mucho tiempo navegando páginas en inglés, sin filtros, sin alertas, sin visión de conjunto. Construí HealthWatch para resolver este problema de raíz: agregar estos datos, traducirlos y estructurarlos para que un profesional acceda a ellos en unos clics en lugar de horas de búsqueda manual.",
     missionTitle: "Nuestra misión",
     missionText:
-      "HealthWatch Global agrega automáticamente las alertas oficiales de la Organización Mundial de la Salud (actualizadas cada 6 horas) para proporcionar un panel legible a los profesionales de la salud, viajeros, periodistas y organizaciones que necesitan estar informados sobre brotes de enfermedades en cuanto se declaran.",
+      "HealthWatch Global agrega automáticamente las alertas oficiales de la Organización Mundial de la Salud para proporcionar un panel legible a los profesionales de la salud, viajeros, periodistas y organizaciones que necesitan estar informados sobre brotes de enfermedades en cuanto se declaran.",
     whoTitle: "Fuente de datos: OMS",
     whoText:
-      "Todas las alertas sanitarias provienen de la API oficial Disease Outbreak News (DON) de la OMS, la misma fuente utilizada por gobiernos y agencias de salud pública de todo el mundo. Sin datos no verificados, sin medios de terceros. Consultamos esta API cada 6 horas para mantener la información actualizada.",
+      "Todas las alertas sanitarias provienen de la API oficial Disease Outbreak News (DON) de la OMS, la misma fuente utilizada por gobiernos y agencias de salud pública de todo el mundo. Sin datos no verificados, sin medios de terceros. Consultamos esta API regularmente para mantener la información actualizada.",
     howTitle: "Cómo funciona",
     howSteps: [
       { title: "Recopilación", text: "Nuestro pipeline consulta la API OData de la OMS y extrae información clave: enfermedad, país, casos confirmados, fallecimientos." },

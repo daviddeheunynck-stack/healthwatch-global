@@ -78,7 +78,7 @@ const COPY: Record<string, {
   aboutLink: string;
 }> = {
   fr: {
-    heroBadge: "Données officielles OMS · 195 pays · Mise à jour toutes les 6h",
+    heroBadge: "Données officielles OMS · 195 pays · Synchronisation quotidienne",
     heroTitle: ["Toutes les données OMS.", "Sans les heures de recherche."],
     heroSub: "Médecin, consultant ou analyste santé — vous consultez déjà who.int. HealthWatch l'agrège, le traduit dans votre langue et vous alerte en avance sur les événements.",
     heroCta: "Créer un compte gratuit",
@@ -148,7 +148,7 @@ const COPY: Record<string, {
     aboutLink: "Construit par un professionnel passionné par la santé mondiale → En savoir plus",
   },
   en: {
-    heroBadge: "Official WHO data · 195 countries · Updated every 6h",
+    heroBadge: "Official WHO data · 195 countries · Daily sync",
     heroTitle: ["All WHO outbreak data.", "Without the research hours."],
     heroSub: "Travel medicine doctor, consultant or health analyst — you already check who.int. HealthWatch aggregates it, translates it into your language, and alerts you first.",
     heroCta: "Create free account",
@@ -218,7 +218,7 @@ const COPY: Record<string, {
     aboutLink: "Built by a professional passionate about global health → Learn more",
   },
   es: {
-    heroBadge: "Datos OMS en vivo · 195 países · Actualizado cada 6h",
+    heroBadge: "Datos OMS en vivo · 195 países · Actualizado diariamente",
     heroTitle: ["Todos los datos OMS.", "Sin horas de investigación."],
     heroSub: "Médico, consultor o analista de salud — usted ya consulta who.int. HealthWatch lo agrega, lo traduce a su idioma y le alerta antes que nadie.",
     heroCta: "Crear cuenta gratuita",
@@ -236,7 +236,7 @@ const COPY: Record<string, {
       { value: "× 10", label: "coste de respuesta reactiva vs. anticipada" },
     ],
     previewTitle: "Lo que sus equipos verán",
-    previewSub: "Los datos a continuación se actualizan cada 6h y provienen de la API WHO Disease Outbreak News.",
+    previewSub: "Los datos a continuación provienen de la API WHO Disease Outbreak News y se sincronizan automáticamente.",
     previewLive: "En vivo",
     previewCols: { disease: "Enfermedad", country: "País", risk: "Riesgo" },
     featuresTitle: "Todo lo que su equipo necesita",
@@ -288,7 +288,7 @@ const COPY: Record<string, {
     aboutLink: "Creado por un profesional apasionado por la salud global → Saber más",
   },
   ar: {
-    heroBadge: "بيانات منظمة الصحة العالمية مباشرة · 195 دولة · تحديث كل 6 ساعات",
+    heroBadge: "بيانات منظمة الصحة العالمية مباشرة · 195 دولة · تحديث يومي",
     heroTitle: ["كل بيانات منظمة الصحة العالمية.", "دون ساعات البحث."],
     heroSub: "طبيب، مستشار أو محلل صحي — أنت تراجع who.int أصلاً. HealthWatch يجمعها، يترجمها إلى لغتك، ويُنبِّهك قبل الجميع.",
     heroCta: "إنشاء حساب مجاني",
@@ -306,7 +306,7 @@ const COPY: Record<string, {
       { value: "× 10", label: "تكلفة الاستجابة التفاعلية مقابل الاستباقية" },
     ],
     previewTitle: "ما ستراه فرقك",
-    previewSub: "البيانات أدناه محدّثة كل 6 ساعات من API أخبار تفشي أمراض منظمة الصحة العالمية.",
+    previewSub: "البيانات أدناه مصدرها API أخبار تفشي أمراض منظمة الصحة العالمية ومزامنتها تلقائية.",
     previewLive: "مباشر",
     previewCols: { disease: "المرض", country: "الدولة", risk: "الخطر" },
     featuresTitle: "كل ما يحتاجه فريقك",
@@ -358,7 +358,7 @@ const COPY: Record<string, {
     aboutLink: "أُنشئت بواسطة متخصص شغوف بالصحة العالمية ← تعرف أكثر",
   },
   id: {
-    heroBadge: "Data WHO langsung · 195 negara · Diperbarui setiap 6 jam",
+    heroBadge: "Data WHO langsung · 195 negara · Sinkronisasi harian",
     heroTitle: ["Semua data wabah WHO.", "Tanpa berjam-jam penelitian."],
     heroSub: "Dokter, konsultan atau analis kesehatan — Anda sudah mengecek who.int. HealthWatch mengagregasinya, menerjemahkannya ke bahasa Anda, dan memberi tahu Anda lebih dulu.",
     heroCta: "Buat akun gratis",
@@ -376,7 +376,7 @@ const COPY: Record<string, {
       { value: "× 10", label: "biaya respons reaktif vs. antisipatif" },
     ],
     previewTitle: "Yang akan dilihat tim Anda",
-    previewSub: "Data di bawah ini diperbarui setiap 6 jam dan bersumber dari API WHO Disease Outbreak News.",
+    previewSub: "Data di bawah ini bersumber dari API WHO Disease Outbreak News dan disinkronkan secara otomatis.",
     previewLive: "Langsung",
     previewCols: { disease: "Penyakit", country: "Negara", risk: "Risiko" },
     featuresTitle: "Semua yang dibutuhkan tim Anda",

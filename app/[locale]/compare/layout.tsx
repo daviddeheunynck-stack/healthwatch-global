@@ -3,23 +3,23 @@ import type { Metadata } from "next";
 const META: Record<string, { title: string; description: string }> = {
   en: {
     title: "Compare Disease Outbreaks | HealthWatch Global",
-    description: "Compare two disease outbreaks side by side — cases, deaths, fatality rate, and incidence per 100,000. WHO data updated every 6 hours.",
+    description: "Compare two disease outbreaks side by side — cases, deaths, fatality rate, and incidence per 100,000. Official WHO data.",
   },
   fr: {
     title: "Comparer des épidémies | HealthWatch Global",
-    description: "Comparez deux foyers épidémiques côte à côte — cas, décès, létalité et incidence pour 100 000. Données OMS mises à jour toutes les 6h.",
+    description: "Comparez deux foyers épidémiques côte à côte — cas, décès, létalité et incidence pour 100 000. Données officielles OMS.",
   },
   es: {
     title: "Comparar brotes de enfermedades | HealthWatch Global",
-    description: "Compare dos brotes de enfermedades en paralelo — casos, muertes, tasa de letalidad e incidencia por 100.000. Datos OMS actualizados cada 6 horas.",
+    description: "Compare dos brotes de enfermedades en paralelo — casos, muertes, tasa de letalidad e incidencia por 100.000. Datos OMS oficiales.",
   },
   ar: {
     title: "مقارنة تفشيات الأمراض | HealthWatch Global",
-    description: "قارن بين تفشيين جنباً إلى جنب — الحالات والوفيات ومعدل الفتك والإصابة لكل 100,000. بيانات منظمة الصحة العالمية تُحدَّث كل 6 ساعات.",
+    description: "قارن بين تفشيين جنباً إلى جنب — الحالات والوفيات ومعدل الفتك والإصابة لكل 100,000. بيانات رسمية من منظمة الصحة العالمية.",
   },
   id: {
     title: "Bandingkan Wabah Penyakit | HealthWatch Global",
-    description: "Bandingkan dua wabah penyakit secara berdampingan — kasus, kematian, tingkat fatalitas, dan insidensi per 100.000. Data WHO diperbarui setiap 6 jam.",
+    description: "Bandingkan dua wabah penyakit secara berdampingan — kasus, kematian, tingkat fatalitas, dan insidensi per 100.000. Data resmi WHO.",
   },
 };
 

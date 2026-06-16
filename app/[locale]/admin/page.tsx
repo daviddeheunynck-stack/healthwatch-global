@@ -277,7 +277,7 @@ export default async function AdminPage({
           <h2 className="text-white font-semibold">Synchronisation WHO</h2>
         </div>
         <p className="text-sm text-gray-400">
-          Déclenche manuellement le cron de synchronisation des données OMS (automatique toutes les 6h, exécutions à 0h, 6h, 12h et 18h UTC).
+          Déclenche manuellement le cron de synchronisation des données OMS (automatique 1x/jour à 6h UTC).
         </p>
         <AdminSyncButton />
       </div>
