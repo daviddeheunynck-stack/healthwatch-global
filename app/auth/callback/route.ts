@@ -46,6 +46,9 @@ export async function GET(req: NextRequest) {
     );
 
     const { data: { user }, error } = await supabase.auth.exchangeCodeForSession(code);
+    if (error) {
+      console.error("[auth/callback] exchangeCodeForSession failed:", error.message, error.status);
+    }
     if (!error && user) {
       try {
         const admin = createClient(
@@ -103,5 +106,5 @@ export async function GET(req: NextRequest) {
   const errorLocale = nextParam.split("/").filter(Boolean)[0] ?? "en";
   const validLocales = ["en", "fr", "es", "ar", "id"];
   const safeLocale = validLocales.includes(errorLocale) ? errorLocale : "en";
-  return NextResponse.redirect(`${origin}/${safeLocale}/login?error=oauth`);
+  return NextResponse.redirect(`${origin}/${safeLocale}/login?error=oauth&reason=exchange_failed`);
 }
