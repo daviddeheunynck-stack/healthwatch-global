@@ -112,11 +112,7 @@ export default function SignupPage() {
     // the /auth/callback route is never called, so the trial must be activated here.
     // Redirect straight to the dashboard so the user doesn't see "check your email".
     if (signUpData.session && userId) {
-      await fetch("/api/activate-trial", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userId }),
-      }).catch(() => {});
+      await fetch("/api/activate-trial", { method: "POST" }).catch(() => {});
       router.push(`/${locale}`);
       return;
     }

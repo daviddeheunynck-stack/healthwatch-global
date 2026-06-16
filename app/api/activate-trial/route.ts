@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
+import { createServerClient } from "@supabase/ssr";
 import { createClient } from "@supabase/supabase-js";
+import { cookies } from "next/headers";
 
 export const dynamic = "force-dynamic";
 
@@ -8,15 +10,24 @@ const BOM = String.fromCharCode(65279);
 const clean = (v: string | undefined) => (v || "").replace(new RegExp("^" + BOM), "").trim();
 
 export async function POST(req: NextRequest) {
-  let userId: string;
-  try {
-    ({ userId } = await req.json());
-  } catch {
-    return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
-  }
+  // Identify the caller from their session cookie — never trust client-supplied userId
+  const cookieStore = await cookies();
+  const supabase = createServerClient(
+    clean(process.env.NEXT_PUBLIC_SUPABASE_URL),
+    clean(process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY),
+    {
+      cookies: {
+        getAll: () => cookieStore.getAll(),
+        setAll: (toSet) => {
+          toSet.forEach(({ name, value, options }) => cookieStore.set(name, value, options));
+        },
+      },
+    }
+  );
 
-  if (!userId || typeof userId !== "string") {
-    return NextResponse.json({ error: "Missing userId" }, { status: 400 });
+  const { data: { user }, error: authErr } = await supabase.auth.getUser();
+  if (authErr || !user) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   const admin = createClient(
@@ -27,7 +38,7 @@ export async function POST(req: NextRequest) {
   const { data: profile, error: fetchErr } = await admin
     .from("profiles")
     .select("plan, trial_ends_at")
-    .eq("id", userId)
+    .eq("id", user.id)
     .single();
 
   if (fetchErr) {
@@ -46,13 +57,13 @@ export async function POST(req: NextRequest) {
   const { error: updateErr } = await admin
     .from("profiles")
     .update({ plan: "pro", trial_ends_at: trialEndsAt })
-    .eq("id", userId);
+    .eq("id", user.id);
 
   if (updateErr) {
     console.error("[activate-trial] update failed:", updateErr);
     return NextResponse.json({ error: "Update failed" }, { status: 500 });
   }
 
-  console.log(`[activate-trial] Trial activated for user ${userId} until ${trialEndsAt}`);
+  console.log(`[activate-trial] Trial activated for user ${user.id} until ${trialEndsAt}`);
   return NextResponse.json({ activated: true, trial_ends_at: trialEndsAt });
 }
