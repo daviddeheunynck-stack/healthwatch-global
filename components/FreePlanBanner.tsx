@@ -37,12 +37,19 @@ const COPY: Record<string, { title: string; sub: string; cta: string; trial: str
   },
 };
 
-const STORAGE_KEY = "hw_free_banner_dismissed_v1";
+const STORAGE_KEY = "hw_free_banner_dismissed_v2";
+const DISMISS_TTL_MS = 30 * 24 * 60 * 60 * 1000; // 30 days
 
 export default function FreePlanBanner({ locale }: { locale: string }) {
   const [dismissed, setDismissed] = useState(false);
   useEffect(() => {
-    if (localStorage.getItem(STORAGE_KEY)) setDismissed(true);
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (stored) {
+      const dismissedAt = parseInt(stored, 10);
+      if (!isNaN(dismissedAt) && Date.now() - dismissedAt < DISMISS_TTL_MS) {
+        setDismissed(true);
+      }
+    }
   }, []);
 
   if (dismissed) return null;
@@ -51,7 +58,7 @@ export default function FreePlanBanner({ locale }: { locale: string }) {
   const isRtl = locale === "ar";
 
   const dismiss = () => {
-    localStorage.setItem(STORAGE_KEY, "1");
+    localStorage.setItem(STORAGE_KEY, String(Date.now()));
     setDismissed(true);
   };
 
