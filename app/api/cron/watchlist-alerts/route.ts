@@ -76,11 +76,17 @@ export async function GET(req: NextRequest) {
   // 4. Get user profiles for email + locale
   const { data: profiles } = await supabase
     .from("profiles")
-    .select("id, email, locale, plan")
+    .select("id, email, locale, plan, trial_ends_at, stripe_subscription_id")
     .in("id", userIds);
 
   const profileMap = new Map(
-    (profiles ?? []).map((p) => [p.id, { email: p.email, locale: p.locale ?? "fr", plan: p.plan ?? "free" }])
+    (profiles ?? []).map((p) => [p.id, {
+      email: p.email,
+      locale: p.locale ?? "fr",
+      plan: p.plan ?? "free",
+      trial_ends_at: p.trial_ends_at as string | null,
+      stripe_subscription_id: p.stripe_subscription_id as string | null,
+    }])
   );
 
   // 5. Process each watchlist entry
@@ -95,8 +101,13 @@ export async function GET(req: NextRequest) {
     const profile = profileMap.get(entry.user_id);
     if (!profile?.email) { unchanged++; continue; }
 
-    // Only Pro+ users
+    // Only Pro+ users with an active subscription (not expired-trial)
     if (!["starter", "pro", "enterprise"].includes(profile.plan)) { unchanged++; continue; }
+    const isExpiredTrial = profile.plan === "pro"
+      && !profile.stripe_subscription_id
+      && !!profile.trial_ends_at
+      && new Date(profile.trial_ends_at) < new Date();
+    if (isExpiredTrial) { unchanged++; continue; }
 
     const logKey = `${entry.user_id}:${entry.outbreak_id}`;
     const prevLog = logMap.get(logKey);

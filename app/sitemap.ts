@@ -73,6 +73,28 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         });
       }
     }
+
+    // Historical outbreaks — lower priority; rarely change so changeFrequency: monthly
+    const { data: historical } = await supabase
+      .from("outbreaks")
+      .select("id, date")
+      .eq("active", false)
+      .order("date", { ascending: false })
+      .limit(500);
+
+    for (const o of historical ?? []) {
+      const outbreakPath = `/outbreak/${o.id}`;
+      const lastMod = o.date ? new Date(o.date) : new Date();
+      for (const locale of LOCALES) {
+        entries.push({
+          url: `${BASE_URL}/${locale}${outbreakPath}`,
+          lastModified: lastMod,
+          changeFrequency: "monthly",
+          priority: 0.5,
+          alternates: localeAlternates(outbreakPath),
+        });
+      }
+    }
   } catch {
     // DB unreachable at build time — static routes still returned
   }
