@@ -129,6 +129,10 @@ export async function POST(req: NextRequest) {
       "metadata[plan]": plan ?? "",
       "metadata[user_id]": userId || "",
       "metadata[billing]": billingPeriod,
+      // Mirror user_id in subscription metadata so the webhook can recover
+      // if checkout.session.completed fails to link stripe_customer_id.
+      "subscription_data[metadata][user_id]": userId || "",
+      "subscription_data[metadata][plan]": plan ?? "",
     });
 
     // Trial period: honour remaining days from the DB trial (no credit card required).

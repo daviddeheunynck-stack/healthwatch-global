@@ -96,6 +96,41 @@ async function getUserIdFromCustomer(customerId: string): Promise<string | null>
   return data?.id ?? null;
 }
 
+/**
+ * Resolve userId from a Stripe Subscription object.
+ * Primary: look up by stripe_customer_id (fast, indexed).
+ * Fallback: use sub.metadata.user_id if stripe_customer_id lookup fails —
+ * this recovers from cases where checkout.session.completed didn't link
+ * stripe_customer_id (e.g. cold-start timeout). When falling back, also
+ * patch stripe_customer_id into the profile so future lookups succeed.
+ */
+async function resolveUserFromSubscription(
+  sub: Stripe.Subscription
+): Promise<string | null> {
+  const customerId = sub.customer as string;
+  const supabase = getSupabase();
+
+  // Primary path
+  const primary = await getUserIdFromCustomer(customerId);
+  if (primary) return primary;
+
+  // Fallback: subscription metadata set by checkout route
+  const metaUserId = sub.metadata?.user_id;
+  if (!metaUserId) return null;
+
+  // Heal the profile — link stripe_customer_id and stripe_subscription_id
+  const { error } = await supabase
+    .from("profiles")
+    .update({ stripe_customer_id: customerId, stripe_subscription_id: sub.id })
+    .eq("id", metaUserId);
+  if (error) {
+    console.error("[webhook] resolveUserFromSubscription heal failed:", error);
+  } else {
+    console.log(`[webhook] Healed stripe_customer_id for user ${metaUserId} via subscription metadata`);
+  }
+  return metaUserId;
+}
+
 /** Get user email + locale from profiles (locale preferred over subscriptions fallback) */
 async function getUserProfile(userId: string): Promise<{ email: string; locale: string } | null> {
   const supabase = getSupabase();
@@ -209,8 +244,7 @@ export async function POST(req: NextRequest) {
       // ─── Subscription updated (plan change, renewal, etc.) ────────────────
       case "customer.subscription.updated": {
         const sub = event.data.object as Stripe.Subscription;
-        const customerId = sub.customer as string;
-        const userId = await getUserIdFromCustomer(customerId);
+        const userId = await resolveUserFromSubscription(sub);
         if (!userId) break;
 
         const priceId = sub.items.data[0]?.price?.id;
@@ -244,8 +278,7 @@ export async function POST(req: NextRequest) {
       // ─── Subscription cancelled ────────────────────────────────────────────
       case "customer.subscription.deleted": {
         const sub = event.data.object as Stripe.Subscription;
-        const customerId = sub.customer as string;
-        const userId = await getUserIdFromCustomer(customerId);
+        const userId = await resolveUserFromSubscription(sub);
         if (!userId) break;
 
         // Fetch current plan + email + locale before downgrading
@@ -332,8 +365,7 @@ export async function POST(req: NextRequest) {
       // webhook settings (fired 3 days before trial_end by default).
       case "customer.subscription.trial_will_end": {
         const sub = event.data.object as Stripe.Subscription;
-        const customerId = sub.customer as string;
-        const userId = await getUserIdFromCustomer(customerId);
+        const userId = await resolveUserFromSubscription(sub);
         if (!userId) break;
 
         const priceId = sub.items.data[0]?.price?.id;
