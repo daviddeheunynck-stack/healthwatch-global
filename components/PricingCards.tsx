@@ -1,10 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { track } from "@vercel/analytics/react";
-import { Check, Zap, Shield, Building2, RefreshCw, Sparkles } from "lucide-react";
+import { Check, Zap, Shield, Building2, RefreshCw, Sparkles, Clock, AlertTriangle } from "lucide-react";
 import CheckoutButton from "@/components/CheckoutButton";
+import { createClient } from "@/lib/supabase-browser";
 
 type Billing = "monthly" | "annual";
 
@@ -137,6 +138,44 @@ const COPY: Record<string, {
   },
 };
 
+const TRIAL_COPY: Record<string, {
+  daysLeft: (n: number) => string;
+  trialExpired: string;
+  upgradeNow: string;
+  subscribed: string;
+}> = {
+  fr: {
+    daysLeft: (n) => `${n} jour${n > 1 ? "s" : ""} restant${n > 1 ? "s" : ""} dans votre essai Pro`,
+    trialExpired: "Votre essai a expiré — réactivez l'accès maintenant",
+    upgradeNow: "Activer mon abonnement →",
+    subscribed: "Votre plan actuel ✓",
+  },
+  en: {
+    daysLeft: (n) => `${n} day${n > 1 ? "s" : ""} left in your Pro trial`,
+    trialExpired: "Your trial has ended — reactivate now",
+    upgradeNow: "Activate subscription →",
+    subscribed: "Your current plan ✓",
+  },
+  es: {
+    daysLeft: (n) => `Quedan ${n} día${n > 1 ? "s" : ""} en su prueba Pro`,
+    trialExpired: "Su prueba ha caducado — reactive ahora",
+    upgradeNow: "Activar suscripción →",
+    subscribed: "Su plan actual ✓",
+  },
+  ar: {
+    daysLeft: (n) => `تبقّى ${n} يوم في تجربتك المجانية`,
+    trialExpired: "انتهت تجربتك المجانية — جدّد الاشتراك الآن",
+    upgradeNow: "تفعيل الاشتراك ←",
+    subscribed: "خطتك الحالية ✓",
+  },
+  id: {
+    daysLeft: (n) => `${n} hari tersisa dalam uji coba Pro Anda`,
+    trialExpired: "Uji coba Anda telah berakhir — aktifkan kembali sekarang",
+    upgradeNow: "Aktifkan langganan →",
+    subscribed: "Paket Anda saat ini ✓",
+  },
+};
+
 // Pro: €29/month | Annual (−28%): €249/year — saves €99/year vs monthly
 const PRICES: Record<string, { proMonthly: string; proAnnual: string; proAnnualTotal: string }> = {
   fr: { proMonthly: "29 €",  proAnnual: "249 €", proAnnualTotal: "économisez 99 €"  },
@@ -148,9 +187,38 @@ const PRICES: Record<string, { proMonthly: string; proAnnual: string; proAnnualT
 
 export default function PricingCards({ locale }: { locale: string }) {
   const [billing, setBilling] = useState<Billing>("annual");
+  const [trialDaysLeft, setTrialDaysLeft] = useState<number | null>(null);
+  const [trialExpired, setTrialExpired] = useState(false);
+  const [isSubscribed, setIsSubscribed] = useState(false);
   const c = COPY[locale] ?? COPY.en;
   const p = PRICES[locale] ?? PRICES.en;
+  const tc = TRIAL_COPY[locale] ?? TRIAL_COPY.en;
   const isAnnual = billing === "annual";
+
+  useEffect(() => {
+    const supabase = createClient();
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      if (!user) return;
+      supabase
+        .from("profiles")
+        .select("plan, trial_ends_at, stripe_subscription_id")
+        .eq("id", user.id)
+        .single()
+        .then(({ data }) => {
+          if (data?.stripe_subscription_id) {
+            setIsSubscribed(true);
+            return;
+          }
+          if (data?.trial_ends_at && data?.plan !== "free") {
+            const daysLeft = Math.max(0, Math.ceil(
+              (new Date(data.trial_ends_at).getTime() - Date.now()) / 86_400_000
+            ));
+            if (daysLeft > 0) setTrialDaysLeft(daysLeft);
+            else setTrialExpired(true);
+          }
+        });
+    });
+  }, []);
 
   return (
     <div className="space-y-6">
@@ -245,19 +313,44 @@ export default function PricingCards({ locale }: { locale: string }) {
             ))}
           </ul>
 
-          {/* Trial badge */}
-          <div className="flex items-center gap-2 bg-red-500/10 border border-red-500/20 rounded-xl p-3">
-            <Sparkles className="w-4 h-4 text-red-400 shrink-0" />
-            <span className="text-xs text-red-300 font-medium">{c.trial}</span>
-          </div>
+          {/* Trial badge / countdown / expired */}
+          {trialExpired ? (
+            <div className="flex items-center gap-2 bg-red-600/15 border border-red-500/40 rounded-xl p-3">
+              <AlertTriangle className="w-4 h-4 text-red-400 shrink-0" />
+              <span className="text-xs text-red-300 font-semibold">{tc.trialExpired}</span>
+            </div>
+          ) : trialDaysLeft !== null ? (
+            <div className={`flex items-center gap-2 rounded-xl p-3 border ${
+              trialDaysLeft <= 3
+                ? "bg-red-600/15 border-red-500/40"
+                : "bg-amber-500/10 border-amber-500/25"
+            }`}>
+              <Clock className={`w-4 h-4 shrink-0 ${trialDaysLeft <= 3 ? "text-red-400" : "text-amber-400"}`} />
+              <span className={`text-xs font-semibold ${trialDaysLeft <= 3 ? "text-red-300" : "text-amber-300"}`}>
+                {tc.daysLeft(trialDaysLeft)}
+              </span>
+            </div>
+          ) : (
+            <div className="flex items-center gap-2 bg-red-500/10 border border-red-500/20 rounded-xl p-3">
+              <Sparkles className="w-4 h-4 text-red-400 shrink-0" />
+              <span className="text-xs text-red-300 font-medium">{c.trial}</span>
+            </div>
+          )}
 
-          <CheckoutButton
-            plan="pro"
-            locale={locale}
-            label={c.getStarted}
-            billing={billing}
-            className="w-full bg-red-600 hover:bg-red-500 text-white font-semibold py-2.5 rounded-lg transition-colors"
-          />
+          {isSubscribed ? (
+            <div className="w-full flex items-center justify-center gap-2 bg-green-500/10 border border-green-500/25 text-green-400 font-semibold py-2.5 rounded-lg text-sm">
+              <Check className="w-4 h-4" />
+              {tc.subscribed}
+            </div>
+          ) : (
+            <CheckoutButton
+              plan="pro"
+              locale={locale}
+              label={trialDaysLeft !== null || trialExpired ? tc.upgradeNow : c.getStarted}
+              billing={billing}
+              className="w-full bg-red-600 hover:bg-red-500 text-white font-semibold py-2.5 rounded-lg transition-colors"
+            />
+          )}
 
           {/* Guarantee */}
           <div className="flex items-center gap-2 bg-gray-800/60 rounded-xl p-3 text-xs text-gray-400 border border-gray-700/50">
