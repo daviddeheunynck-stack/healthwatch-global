@@ -48,6 +48,12 @@ export async function GET(req: NextRequest) {
     const { data: { user }, error } = await supabase.auth.exchangeCodeForSession(code);
     if (error) {
       console.error("[auth/callback] exchangeCodeForSession failed:", error.message, error.status);
+      const nextParam2 = searchParams.get("next") ?? "";
+      const errLocale = nextParam2.split("/").filter(Boolean)[0] ?? "en";
+      const safeErrLocale = VALID_LOCALES.includes(errLocale) ? errLocale : "en";
+      return NextResponse.redirect(
+        `${origin}/${safeErrLocale}/login?error=oauth&reason=${encodeURIComponent(error.message)}`
+      );
     }
     if (!error && user) {
       try {
