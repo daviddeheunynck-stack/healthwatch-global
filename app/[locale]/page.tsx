@@ -191,10 +191,13 @@ async function DashboardContent() {
   // constructor — same instant, same result, recognized as pure. (Same idiom
   // already used for `now` in admin/page.tsx.)
   const now = new Date();
+  // Exclude paid subscribers (stripe_subscription_id set): they've already
+  // committed, so the "add payment method" banner copy doesn't apply to them.
   const showTrialBanner =
     plan === "pro" &&
     trialEndsAt !== null &&
-    new Date(trialEndsAt).getTime() > now.getTime();
+    new Date(trialEndsAt).getTime() > now.getTime() &&
+    !hasStripeSubscription;
 
   const showFreeBanner = plan === "free";
 
