@@ -27,13 +27,21 @@ export async function PUT(req: Request) {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  // Gate behind paid plan
+  // Gate behind paid plan (with trial expiry guard)
   const { data: profile } = await supabase
     .from("profiles")
-    .select("plan")
+    .select("plan, trial_ends_at, stripe_subscription_id")
     .eq("id", user.id)
     .single();
-  const plan = profile?.plan ?? "free";
+  let plan = profile?.plan ?? "free";
+  if (
+    plan !== "free" &&
+    profile?.trial_ends_at &&
+    new Date(profile.trial_ends_at).getTime() < Date.now() &&
+    !profile?.stripe_subscription_id
+  ) {
+    plan = "free";
+  }
   if (plan === "free") {
     return NextResponse.json({ error: "Upgrade required" }, { status: 403 });
   }
