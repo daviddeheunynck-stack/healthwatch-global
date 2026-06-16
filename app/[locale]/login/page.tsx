@@ -44,7 +44,7 @@ export default function LoginPage() {
         </div>
 
         <div className="bg-gray-900 border border-gray-800 rounded-xl p-8 space-y-5">
-          <OAuthButtons locale={locale} />
+          <OAuthButtons locale={locale} context="login" />
           <div className="flex items-center gap-3">
             <div className="flex-1 h-px bg-gray-800" />
             <span className="text-xs text-gray-600">{t("or")}</span>

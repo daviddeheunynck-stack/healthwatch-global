@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase-browser";
+import { track } from "@vercel/analytics/react";
 import { Activity, Loader2, CheckCircle, BarChart2, Bell, FileDown, Lock, Sparkles } from "lucide-react";
 import Link from "next/link";
 import OAuthButtons from "@/components/OAuthButtons";
@@ -80,6 +81,7 @@ export default function SignupPage() {
     e.preventDefault();
     setLoading(true);
     setError("");
+    track("signup_attempt", { method: "email", locale });
 
     const supabase = createClient();
     const { data: signUpData, error } = await supabase.auth.signUp({
@@ -112,11 +114,13 @@ export default function SignupPage() {
     // the /auth/callback route is never called, so the trial must be activated here.
     // Redirect straight to the dashboard so the user doesn't see "check your email".
     if (signUpData.session && userId) {
+      track("signup_success", { method: "email", locale, autoconfirm: true });
       await fetch("/api/activate-trial", { method: "POST" }).catch(() => {});
       router.push(`/${locale}`);
       return;
     }
 
+    track("signup_success", { method: "email", locale, autoconfirm: false });
     setSuccess(true);
     setLoading(false);
   };

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { createClient } from "@/lib/supabase-browser";
+import { track } from "@vercel/analytics/react";
 import { Loader2 } from "lucide-react";
 
 const GoogleIcon = () => (
@@ -27,14 +28,15 @@ const LABELS: Record<string, { google: string; github: string }> = {
   id: { google: "Lanjutkan dengan Google", github: "Lanjutkan dengan GitHub" },
 };
 
-type Props = { locale: string; redirectTo?: string };
+type Props = { locale: string; redirectTo?: string; context?: "signup" | "login" };
 
-export default function OAuthButtons({ locale, redirectTo }: Props) {
+export default function OAuthButtons({ locale, redirectTo, context = "signup" }: Props) {
   const [loading, setLoading] = useState<"google" | "github" | null>(null);
   const l = LABELS[locale] ?? LABELS.en;
 
   const handleOAuth = async (provider: "google" | "github") => {
     setLoading(provider);
+    track(`${context}_oauth_click`, { provider, locale });
     const supabase = createClient();
     const next = redirectTo ?? `/${locale}`;
     await supabase.auth.signInWithOAuth({
