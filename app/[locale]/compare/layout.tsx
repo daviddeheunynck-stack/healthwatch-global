@@ -1,16 +1,26 @@
 import type { Metadata } from "next";
 
-const LOCALES = ["en", "fr", "es", "ar", "id"] as const;
-const OG_LOCALE: Record<string, string> = {
-  en: "en_US", fr: "fr_FR", es: "es_ES", ar: "ar_SA", id: "id_ID",
-};
-
 const META: Record<string, { title: string; description: string }> = {
-  en: { title: "Compare Outbreaks", description: "Compare two active disease outbreaks side by side — case counts, death rates, incidence, and risk levels. Data from WHO Disease Outbreak News." },
-  fr: { title: "Comparer les épidémies", description: "Comparez deux foyers épidémiques actifs côte à côte — nombre de cas, taux de mortalité, incidence et niveaux de risque. Données OMS." },
-  es: { title: "Comparar brotes", description: "Compare dos brotes activos lado a lado — casos, tasas de mortalidad, incidencia y niveles de riesgo. Datos de la OMS." },
-  ar: { title: "مقارنة تفشي الأمراض", description: "قارن بين تفشيَّين نشطَين جنبًا إلى جنب — الحالات ومعدلات الوفيات والإصابة ومستويات الخطر. بيانات منظمة الصحة العالمية." },
-  id: { title: "Bandingkan Wabah", description: "Bandingkan dua wabah aktif secara berdampingan — jumlah kasus, tingkat kematian, insidensi, dan tingkat risiko. Data dari WHO." },
+  en: {
+    title: "Compare Disease Outbreaks | HealthWatch Global",
+    description: "Compare two disease outbreaks side by side — cases, deaths, fatality rate, and incidence per 100,000. WHO data updated every 6 hours.",
+  },
+  fr: {
+    title: "Comparer des épidémies | HealthWatch Global",
+    description: "Comparez deux foyers épidémiques côte à côte — cas, décès, létalité et incidence pour 100 000. Données OMS mises à jour toutes les 6h.",
+  },
+  es: {
+    title: "Comparar brotes de enfermedades | HealthWatch Global",
+    description: "Compare dos brotes de enfermedades en paralelo — casos, muertes, tasa de letalidad e incidencia por 100.000. Datos OMS actualizados cada 6 horas.",
+  },
+  ar: {
+    title: "مقارنة تفشيات الأمراض | HealthWatch Global",
+    description: "قارن بين تفشيين جنباً إلى جنب — الحالات والوفيات ومعدل الفتك والإصابة لكل 100,000. بيانات منظمة الصحة العالمية تُحدَّث كل 6 ساعات.",
+  },
+  id: {
+    title: "Bandingkan Wabah Penyakit | HealthWatch Global",
+    description: "Bandingkan dua wabah penyakit secara berdampingan — kasus, kematian, tingkat fatalitas, dan insidensi per 100.000. Data WHO diperbarui setiap 6 jam.",
+  },
 };
 
 export async function generateMetadata({
@@ -28,31 +38,20 @@ export async function generateMetadata({
     alternates: {
       canonical: url,
       languages: {
-        ...Object.fromEntries(LOCALES.map((l) => [l, `https://healthwatch-global.com/${l}/compare`])),
+        en: "https://healthwatch-global.com/en/compare",
+        fr: "https://healthwatch-global.com/fr/compare",
+        es: "https://healthwatch-global.com/es/compare",
+        ar: "https://healthwatch-global.com/ar/compare",
+        id: "https://healthwatch-global.com/id/compare",
         "x-default": "https://healthwatch-global.com/en/compare",
       },
     },
     openGraph: {
       type: "website",
       url,
-      title: `${m.title} | HealthWatch Global`,
+      title: m.title,
       description: m.description,
       siteName: "HealthWatch Global",
-      locale: OG_LOCALE[locale] ?? "en_US",
-      images: [
-        {
-          url: `https://healthwatch-global.com/api/og?locale=${locale}`,
-          width: 1200,
-          height: 630,
-          alt: `${m.title} — HealthWatch Global`,
-        },
-      ],
-    },
-    twitter: {
-      card: "summary_large_image",
-      title: `${m.title} | HealthWatch Global`,
-      description: m.description,
-      images: [`https://healthwatch-global.com/api/og?locale=${locale}`],
     },
     robots: { index: true, follow: true },
   };
