@@ -525,19 +525,39 @@ export default async function AccountPage({
           </div>
         ) : !isPaid ? (
           <div className="pt-2 border-t border-gray-800 space-y-3">
-            <p className="text-sm text-gray-400">{l.upgradeDesc}</p>
+            <p className="text-sm text-gray-400">
+              {trialExpired
+                ? (locale === "fr" ? "Votre essai est terminé. Abonnez-vous pour retrouver l'accès aux chiffres exacts, aux alertes et aux rapports PDF." :
+                   locale === "es" ? "Su prueba ha finalizado. Suscríbase para recuperar el acceso a cifras exactas, alertas e informes PDF." :
+                   locale === "ar" ? "انتهت تجربتك. اشترك لاستعادة الوصول إلى الأرقام الدقيقة والتنبيهات وتقارير PDF." :
+                   locale === "id" ? "Uji coba Anda telah berakhir. Berlangganan untuk mendapatkan kembali akses ke angka tepat, peringatan, dan laporan PDF." :
+                   "Your trial ended. Subscribe to get back access to exact figures, alerts and PDF reports.")
+                : l.upgradeDesc}
+            </p>
             <CheckoutButton
               plan="pro"
               locale={locale}
-              label={l.upgradeTo}
+              label={trialExpired
+                ? (locale === "fr" ? "S'abonner à Pro →" :
+                   locale === "es" ? "Suscribirse a Pro →" :
+                   locale === "ar" ? "← الاشتراك في Pro" :
+                   locale === "id" ? "Berlangganan Pro →" :
+                   "Subscribe to Pro →")
+                : l.upgradeTo}
               className="inline-flex items-center gap-2 bg-red-600 hover:bg-red-500 text-white font-semibold px-5 py-2.5 rounded-lg transition-colors text-sm"
             />
             <p className="text-xs text-gray-600">
-              {locale === "fr" ? "Essai 14 jours gratuit · sans carte bancaire" :
-               locale === "es" ? "Prueba 14 días gratis · sin tarjeta" :
-               locale === "ar" ? "تجربة 14 يوماً مجاناً · بدون بطاقة" :
-               locale === "id" ? "Uji coba 14 hari gratis · tanpa kartu" :
-               "14-day free trial · no credit card"}
+              {trialExpired
+                ? (locale === "fr" ? "À partir de 29 €/mois ou 249 €/an" :
+                   locale === "es" ? "Desde €29/mes o €249/año" :
+                   locale === "ar" ? "ابتداءً من 29 €/شهر أو 249 €/سنة" :
+                   locale === "id" ? "Mulai €29/bulan atau €249/tahun" :
+                   "From €29/month or €249/year")
+                : (locale === "fr" ? "Essai 14 jours gratuit · sans carte bancaire" :
+                   locale === "es" ? "Prueba 14 días gratis · sin tarjeta" :
+                   locale === "ar" ? "تجربة 14 يوماً مجاناً · بدون بطاقة" :
+                   locale === "id" ? "Uji coba 14 hari gratis · tanpa kartu" :
+                   "14-day free trial · no credit card")}
             </p>
           </div>
         ) : null}
