@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Zap, AlertTriangle } from "lucide-react";
+import { track } from "@vercel/analytics/react";
 import BillingPortalButton from "@/components/BillingPortalButton";
 import CheckoutButton from "@/components/CheckoutButton";
 
@@ -109,7 +110,10 @@ export default function TrialBanner({ trialEndsAt, locale, hasBilling }: Props) 
         </div>
 
         {/* CTA — billing portal for Stripe customers, checkout for trial-only users */}
-        <div className="shrink-0">
+        <div
+          className="shrink-0"
+          onClick={() => track("trial_banner_cta", { days_left: daysLeft, has_billing: hasBilling, locale })}
+        >
           {hasBilling ? (
             <BillingPortalButton locale={locale} label={c.cta} />
           ) : (

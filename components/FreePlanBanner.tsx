@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { X } from "lucide-react";
+import { track } from "@vercel/analytics/react";
 import CheckoutButton from "@/components/CheckoutButton";
 
 const COPY: Record<string, { title: string; sub: string; cta: string; trial: string }> = {
@@ -73,7 +74,7 @@ export default function FreePlanBanner({ locale }: { locale: string }) {
           <p className="text-xs text-gray-400 mt-0.5">{c.sub}</p>
         </div>
         <div className="flex items-center gap-3 shrink-0">
-          <div>
+          <div onClick={() => track("free_banner_cta", { locale })}>
             <CheckoutButton
               plan="pro"
               locale={locale}
