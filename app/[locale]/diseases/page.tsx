@@ -8,6 +8,7 @@ import type { Metadata } from "next";
 import { allDiseases, diseaseToSlug, normalizeDisease } from "@/lib/disease-data";
 import { getLocalizedDisease } from "@/lib/outbreaks";
 import type { Outbreak } from "@/lib/outbreaks";
+import EmailCapture from "@/components/EmailCapture";
 
 export const revalidate = 3600;
 
@@ -24,6 +25,7 @@ const LABELS: Record<Locale, {
   active: (n: number) => string; noActive: string;
   cases: string; metaTitle: string; metaDesc: string;
   back: string;
+  captureTitle: string; captureBody: string;
 }> = {
   fr: {
     title: "Maladies surveillées",
@@ -34,6 +36,8 @@ const LABELS: Record<Locale, {
     metaTitle: "Maladies infectieuses surveillées — HealthWatch Global",
     metaDesc: "Index des 30 pathogènes suivis en temps réel par HealthWatch Global — Ebola, Mpox, Choléra, Dengue et bien d'autres. Données OMS officielles.",
     back: "← Tableau de bord",
+    captureTitle: "Digest hebdomadaire de toutes les maladies",
+    captureBody: "Un résumé des 30 pathogènes surveillés — foyers actifs, cas et risques. Sources OMS, CDC et ECDC.",
   },
   en: {
     title: "Tracked diseases",
@@ -44,6 +48,8 @@ const LABELS: Record<Locale, {
     metaTitle: "Infectious diseases tracked — HealthWatch Global",
     metaDesc: "Index of 30 pathogens monitored in real time by HealthWatch Global — Ebola, Mpox, Cholera, Dengue and more. Official WHO data.",
     back: "← Dashboard",
+    captureTitle: "Weekly digest covering all 30 diseases",
+    captureBody: "Active outbreaks, case counts and risk levels across every tracked pathogen. WHO, CDC and ECDC sources.",
   },
   es: {
     title: "Enfermedades vigiladas",
@@ -54,6 +60,8 @@ const LABELS: Record<Locale, {
     metaTitle: "Enfermedades infecciosas vigiladas — HealthWatch Global",
     metaDesc: "Índice de 30 patógenos monitoreados en tiempo real por HealthWatch Global — Ébola, Mpox, Cólera, Dengue y más. Datos OMS oficiales.",
     back: "← Panel",
+    captureTitle: "Digest semanal de las 30 enfermedades vigiladas",
+    captureBody: "Brotes activos, recuentos de casos y niveles de riesgo por patógeno. Fuentes OMS, CDC y ECDC.",
   },
   ar: {
     title: "الأمراض المُراقَبة",
@@ -64,6 +72,8 @@ const LABELS: Record<Locale, {
     metaTitle: "الأمراض المعدية المُراقَبة — HealthWatch Global",
     metaDesc: "فهرس 30 مسبباً مرضياً مُراقَباً في الوقت الفعلي بواسطة HealthWatch Global — إيبولا، جدري القرود، كوليرا، حمى الضنك والمزيد.",
     back: "→ لوحة التحكم",
+    captureTitle: "ملخص أسبوعي لجميع الأمراض الثلاثين",
+    captureBody: "التفشيات النشطة وأعداد الحالات ومستويات الخطر لكل مسبب مرضي. مصادر منظمة الصحة العالمية.",
   },
   id: {
     title: "Penyakit yang dipantau",
@@ -74,6 +84,8 @@ const LABELS: Record<Locale, {
     metaTitle: "Penyakit menular yang dipantau — HealthWatch Global",
     metaDesc: "Indeks 30 patogen yang dipantau secara real-time oleh HealthWatch Global — Ebola, Mpox, Kolera, Dengue dan lainnya. Data WHO resmi.",
     back: "← Dasbor",
+    captureTitle: "Digest mingguan semua 30 penyakit yang dipantau",
+    captureBody: "Wabah aktif, jumlah kasus dan tingkat risiko per patogen. Sumber WHO, CDC dan ECDC.",
   },
 };
 
@@ -221,6 +233,13 @@ export default async function DiseasesPage({
           );
         })}
       </div>
+
+      {/* CTA */}
+      <EmailCapture
+        locale={l}
+        title={lb.captureTitle}
+        body={lb.captureBody}
+      />
 
     </div>
   );
