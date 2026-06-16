@@ -46,6 +46,10 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
+  if (!SUPABASE_URL || !SUPABASE_SERVICE_KEY) {
+    console.error("[weekly-digest] Missing env: NEXT_PUBLIC_SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY");
+    return NextResponse.json({ error: "env:missing" }, { status: 500 });
+  }
   const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
 
   // ── Active subscribers only ────────────────────────────────────────────────

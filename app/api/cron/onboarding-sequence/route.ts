@@ -40,6 +40,10 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: "BREVO_API_KEY not set" }, { status: 500 });
   }
 
+  if (!SUPABASE_URL || !SUPABASE_SERVICE) {
+    console.error("[onboarding-sequence] Missing env: NEXT_PUBLIC_SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY");
+    return NextResponse.json({ error: "env:missing" }, { status: 500 });
+  }
   const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE);
 
   // ── J+3 : Discover Pro features ──────────────────────────────────────────

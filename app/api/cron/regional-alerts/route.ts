@@ -64,6 +64,10 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: "BREVO_API_KEY not set" }, { status: 500 });
   }
 
+  if (!SUPABASE_URL || !SUPABASE_SERVICE) {
+    console.error("[regional-alerts] Missing env: NEXT_PUBLIC_SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY");
+    return NextResponse.json({ error: "env:missing" }, { status: 500 });
+  }
   const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE);
 
   // ── 1. Find outbreaks added in the last 25 hours ──────────────────────────

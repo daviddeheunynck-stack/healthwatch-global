@@ -101,6 +101,10 @@ export async function GET(req: NextRequest) {
   const debugLog: string[] = [];
   const errorLog: string[] = [];
 
+  if (!SUPABASE_URL || !SUPABASE_SERVICE_KEY) {
+    console.error("[sync-outbreaks] Missing env: NEXT_PUBLIC_SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY");
+    return NextResponse.json({ error: "env:missing" }, { status: 500 });
+  }
   const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
   const results = { inserted: 0, updated: 0, skipped: 0, errors: 0, staleDeactivated: 0 };
 
