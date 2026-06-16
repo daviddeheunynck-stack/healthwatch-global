@@ -7,6 +7,7 @@ import { createClient } from "@supabase/supabase-js";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import CheckoutButton from "@/components/CheckoutButton";
+import OutbreakStatsGrid from "@/components/OutbreakStatsGrid";
 import { getLocalizedDisease, getLocalizedCountry, sourceStatus } from "@/lib/outbreaks";
 import { diseaseToSlug, normalizeDisease } from "@/lib/disease-data";
 import type { Outbreak } from "@/lib/outbreaks";
@@ -276,19 +277,22 @@ export default async function OutbreakPage({
         )}
       </div>
 
-      {/* Stats */}
-      <div className="grid grid-cols-3 gap-4 mb-6">
-        {[
-          { label: l.cases,  value: hasData ? o.cases.toLocaleString()  : l.noData, cls: "text-white" },
-          { label: l.deaths, value: hasData ? o.deaths.toLocaleString() : l.noData, cls: "text-red-400" },
-          { label: l.cfr,    value: cfr,                                              cls: "text-amber-400" },
-        ].map(({ label, value, cls }) => (
-          <div key={label} className="bg-gray-800/50 rounded-lg p-4 border border-gray-700/50 text-center">
-            <div className="text-xs text-gray-400 uppercase tracking-wide mb-1">{label}</div>
-            <div className={`text-2xl font-bold ${cls}`}>{value}</div>
-          </div>
-        ))}
-      </div>
+      {/* Stats — blurred for anonymous visitors, unblurred client-side when authenticated */}
+      <OutbreakStatsGrid
+        cases={hasData ? o.cases.toLocaleString() : l.noData}
+        deaths={hasData ? o.deaths.toLocaleString() : l.noData}
+        cfr={cfr}
+        labels={{
+          cases:      l.cases,
+          deaths:     l.deaths,
+          cfr:        l.cfr,
+          ctaTitle:   l.ctaTitle,
+          ctaSub:     l.ctaSub,
+          ctaProBtn:  l.ctaProBtn,
+          ctaFree:    l.ctaFree,
+        }}
+        locale={locale}
+      />
 
       {/* Meta */}
       <div className="bg-gray-800/30 rounded-lg p-4 border border-gray-700/50 mb-6 grid grid-cols-2 gap-3 text-sm">
