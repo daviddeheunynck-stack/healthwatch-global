@@ -463,6 +463,29 @@ export default async function PricingPage({ params }: { params: Promise<{ locale
         </Link>
       </div>
 
+      {/* ── Institutional pilot banner ────────────────────────────────────── */}
+      <div className="bg-gradient-to-r from-red-950/50 via-red-900/20 to-transparent border border-red-700/30 rounded-2xl p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 max-w-4xl mx-auto w-full">
+        <div className="flex items-start gap-4">
+          <div className="w-10 h-10 rounded-lg bg-red-500/10 border border-red-500/20 flex items-center justify-center shrink-0">
+            <Building2 className="w-5 h-5 text-red-400" />
+          </div>
+          <div>
+            <p className="text-red-300 font-semibold text-sm">
+              {locale === "fr" ? "Programme pilote institutionnel — 30 jours gratuits" : locale === "es" ? "Programa piloto institucional — 30 días gratis" : locale === "ar" ? "البرنامج التجريبي المؤسسي — 30 يوماً مجاناً" : locale === "id" ? "Program pilot institusional — 30 hari gratis" : "Institutional pilot program — 30 days free"}
+            </p>
+            <p className="text-gray-400 text-xs mt-0.5">
+              {locale === "fr" ? "5 accès Pro offerts pour votre équipe (ONG, agence ONU, ministère). En échange : votre retour terrain structuré." : locale === "es" ? "5 accesos Pro para su equipo (ONG, agencia ONU, ministerio). A cambio: su retroalimentación estructurada." : locale === "ar" ? "5 مقاعد Pro لفريقك (منظمة غير حكومية، وكالة أممية، وزارة). في المقابل: ملاحظاتكم الميدانية المنظمة." : locale === "id" ? "5 akses Pro untuk tim Anda (LSM, badan PBB, kementerian). Sebagai gantinya: umpan balik lapangan terstruktur Anda." : "5 Pro seats for your team (NGO, UN agency, ministry). In exchange: your structured field feedback."}
+            </p>
+          </div>
+        </div>
+        <Link
+          href={`/${locale}/pilot`}
+          className="shrink-0 text-xs bg-red-700 hover:bg-red-600 text-white font-semibold px-4 py-2 rounded-lg transition-colors whitespace-nowrap"
+        >
+          {locale === "fr" ? "Candidater au pilote →" : locale === "es" ? "Solicitar piloto →" : locale === "ar" ? "← التقدم للبرنامج" : locale === "id" ? "Daftar pilot →" : "Apply for the pilot →"}
+        </Link>
+      </div>
+
       {/* ── CTA contact ───────────────────────────────────────────────────── */}
       <div className="bg-gray-900 border border-gray-800 rounded-2xl p-8 text-center space-y-4 max-w-2xl mx-auto w-full">
         <Users className="w-8 h-8 text-red-400 mx-auto" />
