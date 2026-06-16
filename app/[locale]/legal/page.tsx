@@ -3,11 +3,16 @@ import Link from "next/link";
 import { Scale, ArrowLeft } from "lucide-react";
 import type { Metadata } from "next";
 
-export const metadata: Metadata = {
-  title: "Mentions légales",
-  description: "Mentions légales de HealthWatch Global — éditeur, hébergeur, propriété intellectuelle, données personnelles.",
-  robots: { index: true, follow: true },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await getLocale();
+  const url = `https://healthwatch-global.com/${locale}/legal`;
+  return {
+    title: "Mentions légales",
+    description: "Mentions légales de HealthWatch Global — éditeur, hébergeur, propriété intellectuelle, données personnelles.",
+    alternates: { canonical: url },
+    robots: { index: true, follow: true },
+  };
+}
 
 const BACK_LABELS: Record<string, string> = {
   fr: "Retour au tableau de bord",

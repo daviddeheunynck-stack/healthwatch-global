@@ -3,6 +3,8 @@ import Link from "next/link";
 import { Shield, ArrowLeft } from "lucide-react";
 import type { Metadata } from "next";
 
+const LOCALES = ["en", "fr", "es", "ar", "id"] as const;
+
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getLocale();
   const titles: Record<string, string> = {
@@ -12,9 +14,14 @@ export async function generateMetadata(): Promise<Metadata> {
     ar: "سياسة الخصوصية",
     id: "Kebijakan Privasi",
   };
+  const url = `https://healthwatch-global.com/${locale}/privacy`;
   return {
     title: titles[locale] ?? titles.en,
     description: "HealthWatch Global — RGPD / GDPR compliance, données collectées, sous-traitants, vos droits.",
+    alternates: {
+      canonical: url,
+      languages: Object.fromEntries(LOCALES.map((l) => [l, `https://healthwatch-global.com/${l}/privacy`])),
+    },
     robots: { index: true, follow: true },
   };
 }

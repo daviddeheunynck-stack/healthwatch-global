@@ -11,11 +11,16 @@ const BACK_LABELS: Record<string, string> = {
   id: "Kembali ke dasbor",
 };
 
-export const metadata: Metadata = {
-  title: "Terms of Service",
-  description: "HealthWatch Global terms of service — acceptable use, subscriptions, billing, health data disclaimer, and governing law.",
-  robots: { index: true, follow: true },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await getLocale();
+  const url = `https://healthwatch-global.com/${locale}/terms`;
+  return {
+    title: "Terms of Service",
+    description: "HealthWatch Global terms of service — acceptable use, subscriptions, billing, health data disclaimer, and governing law.",
+    alternates: { canonical: url },
+    robots: { index: true, follow: true },
+  };
+}
 
 export default async function TermsPage() {
   const locale = await getLocale();

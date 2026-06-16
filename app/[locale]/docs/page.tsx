@@ -2,10 +2,19 @@ import { Terminal, Key, Zap, AlertTriangle, CheckCircle, ExternalLink } from "lu
 import Link from "next/link";
 import type { Metadata } from "next";
 
-export const metadata: Metadata = {
-  title: "API Documentation — HealthWatch Global",
-  description: "REST API reference for the HealthWatch Global Enterprise plan. Access outbreak data updated every 6 hours, programmatically.",
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  return {
+    title: "API Documentation — HealthWatch Global",
+    description: "REST API reference for the HealthWatch Global Enterprise plan. Access outbreak data updated every 6 hours, programmatically.",
+    alternates: { canonical: `https://healthwatch-global.com/${locale}/docs` },
+    robots: { index: true, follow: true },
+  };
+}
 
 const BASE = "https://healthwatch-global.com";
 
