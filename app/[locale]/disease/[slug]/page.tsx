@@ -6,7 +6,8 @@ import { createClient } from "@supabase/supabase-js";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
-import { slugToDisease, diseaseToSlug, allDiseases, normalizeDisease } from "@/lib/disease-data";
+import { slugToDisease, diseaseToSlug, allDiseases, normalizeDisease, localizedDiseaseName } from "@/lib/disease-data";
+import type { PathogenType, TransmissionMode, VaccineStatus, TreatmentStatus } from "@/lib/disease-data";
 import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 import { getOutbreakTrendsBulk } from "@/lib/outbreak-trend";
 import type { Outbreak } from "@/lib/outbreaks";
@@ -100,6 +101,103 @@ const LABELS = {
 } as const;
 
 type Locale = keyof typeof LABELS;
+
+// ── Virology panel labels ─────────────────────────────────────────────────────
+const VIRO_LABELS: Record<Locale, {
+  panelTitle: string;
+  pathogen: string; family: string; transmission: string;
+  incubation: string; days: string; cfrRef: string; r0: string;
+  vaccine: string; treatment: string;
+  vaccineStatus: Record<VaccineStatus, string>;
+  treatmentStatus: Record<TreatmentStatus, string>;
+  transmissionLabels: Record<TransmissionMode, string>;
+  pathogenLabels: Record<PathogenType, string>;
+  whoLink: string;
+}> = {
+  fr: {
+    panelTitle: "Profil clinique",
+    pathogen: "Agent pathogène", family: "Famille", transmission: "Transmission",
+    incubation: "Incubation", days: "j", cfrRef: "Létalité (référence)", r0: "R₀ de référence",
+    vaccine: "Vaccin", treatment: "Traitement", whoLink: "Fiche OMS →",
+    vaccineStatus: { yes: "Disponible", no: "Non disponible", experimental: "Expérimental", conditional: "Usage limité" },
+    treatmentStatus: { yes: "Disponible", no: "Non disponible", supportive: "Symptomatique", experimental: "Expérimental" },
+    pathogenLabels: { virus_rna: "Virus ARN", virus_dna: "Virus ADN", bacteria: "Bactérie", parasite: "Parasite", fungus: "Champignon" },
+    transmissionLabels: {
+      contact: "Contact direct", droplet: "Gouttelettes", airborne: "Aérosol / voie aérienne",
+      vector: "Vecteur arthropode", foodborne: "Alimentaire", waterborne: "Hydrique",
+      sexual: "Sexuelle", nosocomial: "Nosocomiale", fomite: "Surfaces contaminées", zoonotic: "Zoonotique",
+    },
+  },
+  en: {
+    panelTitle: "Clinical profile",
+    pathogen: "Pathogen", family: "Family", transmission: "Transmission",
+    incubation: "Incubation", days: "d", cfrRef: "CFR (reference)", r0: "R₀ (reference)",
+    vaccine: "Vaccine", treatment: "Treatment", whoLink: "WHO factsheet →",
+    vaccineStatus: { yes: "Available", no: "Not available", experimental: "Experimental", conditional: "Limited use" },
+    treatmentStatus: { yes: "Available", no: "Not available", supportive: "Supportive care", experimental: "Experimental" },
+    pathogenLabels: { virus_rna: "RNA virus", virus_dna: "DNA virus", bacteria: "Bacteria", parasite: "Parasite", fungus: "Fungus" },
+    transmissionLabels: {
+      contact: "Direct contact", droplet: "Respiratory droplets", airborne: "Airborne / aerosol",
+      vector: "Arthropod vector", foodborne: "Foodborne", waterborne: "Waterborne",
+      sexual: "Sexual", nosocomial: "Nosocomial", fomite: "Fomites", zoonotic: "Zoonotic",
+    },
+  },
+  es: {
+    panelTitle: "Perfil clínico",
+    pathogen: "Agente patógeno", family: "Familia", transmission: "Transmisión",
+    incubation: "Incubación", days: "d", cfrRef: "Letalidad (referencia)", r0: "R₀ de referencia",
+    vaccine: "Vacuna", treatment: "Tratamiento", whoLink: "Ficha OMS →",
+    vaccineStatus: { yes: "Disponible", no: "No disponible", experimental: "Experimental", conditional: "Uso limitado" },
+    treatmentStatus: { yes: "Disponible", no: "No disponible", supportive: "Cuidados de apoyo", experimental: "Experimental" },
+    pathogenLabels: { virus_rna: "Virus ARN", virus_dna: "Virus ADN", bacteria: "Bacteria", parasite: "Parásito", fungus: "Hongo" },
+    transmissionLabels: {
+      contact: "Contacto directo", droplet: "Gotículas respiratorias", airborne: "Aéreo / aerosol",
+      vector: "Vector artrópodo", foodborne: "Alimentaria", waterborne: "Hídrica",
+      sexual: "Sexual", nosocomial: "Nosocomial", fomite: "Fómites", zoonotic: "Zoonótico",
+    },
+  },
+  ar: {
+    panelTitle: "الملف السريري",
+    pathogen: "العامل الممرض", family: "العائلة", transmission: "طريقة الانتقال",
+    incubation: "الحضانة", days: "ي", cfrRef: "معدل الوفيات (مرجع)", r0: "R₀ (مرجع)",
+    vaccine: "اللقاح", treatment: "العلاج", whoLink: "← بطاقة منظمة الصحة العالمية",
+    vaccineStatus: { yes: "متوفر", no: "غير متوفر", experimental: "تجريبي", conditional: "استخدام محدود" },
+    treatmentStatus: { yes: "متوفر", no: "غير متوفر", supportive: "علاج داعم", experimental: "تجريبي" },
+    pathogenLabels: { virus_rna: "فيروس RNA", virus_dna: "فيروس DNA", bacteria: "بكتيريا", parasite: "طفيلي", fungus: "فطر" },
+    transmissionLabels: {
+      contact: "اتصال مباشر", droplet: "رذاذ تنفسي", airborne: "هواء / هباء",
+      vector: "ناقل حشري", foodborne: "عن طريق الطعام", waterborne: "عن طريق الماء",
+      sexual: "جنسي", nosocomial: "مستشفيات", fomite: "أسطح ملوثة", zoonotic: "حيواني المصدر",
+    },
+  },
+  id: {
+    panelTitle: "Profil klinis",
+    pathogen: "Patogen", family: "Famili", transmission: "Penularan",
+    incubation: "Inkubasi", days: "h", cfrRef: "CFR (referensi)", r0: "R₀ (referensi)",
+    vaccine: "Vaksin", treatment: "Pengobatan", whoLink: "Lembar fakta WHO →",
+    vaccineStatus: { yes: "Tersedia", no: "Tidak tersedia", experimental: "Eksperimental", conditional: "Penggunaan terbatas" },
+    treatmentStatus: { yes: "Tersedia", no: "Tidak tersedia", supportive: "Perawatan suportif", experimental: "Eksperimental" },
+    pathogenLabels: { virus_rna: "Virus RNA", virus_dna: "Virus DNA", bacteria: "Bakteri", parasite: "Parasit", fungus: "Jamur" },
+    transmissionLabels: {
+      contact: "Kontak langsung", droplet: "Droplet pernapasan", airborne: "Udara / aerosol",
+      vector: "Vektor artropoda", foodborne: "Melalui makanan", waterborne: "Melalui air",
+      sexual: "Seksual", nosocomial: "Nosokomial", fomite: "Fomit", zoonotic: "Zoonotik",
+    },
+  },
+} as const;
+
+const VACCINE_COLOR: Record<VaccineStatus, string> = {
+  yes: "text-green-400 bg-green-500/10 border-green-500/30",
+  experimental: "text-yellow-400 bg-yellow-500/10 border-yellow-500/30",
+  conditional: "text-blue-400 bg-blue-500/10 border-blue-500/30",
+  no: "text-gray-400 bg-gray-800/60 border-gray-700",
+};
+const TREATMENT_COLOR: Record<TreatmentStatus, string> = {
+  yes: "text-green-400 bg-green-500/10 border-green-500/30",
+  experimental: "text-yellow-400 bg-yellow-500/10 border-yellow-500/30",
+  supportive: "text-blue-400 bg-blue-500/10 border-blue-500/30",
+  no: "text-gray-400 bg-gray-800/60 border-gray-700",
+};
 
 const RISK_STYLE: Record<string, string> = {
   high:   "text-red-400 bg-red-500/10 border border-red-500/30",
@@ -209,6 +307,7 @@ export default async function DiseasePage({
 
   const l = (LOCALES.includes(locale as Locale) ? locale : "en") as Locale;
   const lb = LABELS[l];
+  const vl = VIRO_LABELS[l];
   const isRtl = l === "ar";
 
   const allOutbreaks = await fetchDiseaseOutbreaks(info.name_en);
@@ -244,7 +343,9 @@ export default async function DiseasePage({
       "@context": "https://schema.org",
       "@type": "InfectiousDisease",
       name: info.name_en,
-      alternateName: [info.name_fr, info.name_ar].filter((n) => n !== info.name_en),
+      alternateName: [info.name_fr, info.name_es, info.name_ar, info.name_id].filter((n) => n && n !== info.name_en),
+      ...(info.family && { infectiousAgentClass: info.family }),
+      ...(info.transmission.length > 0 && { transmissionMethod: info.transmission.join(", ") }),
       url: `${BASE_URL}/${l}/disease/${slug}`,
       ...(totalCases > 0 && {
         description: `${totalCases.toLocaleString("en")} cases and ${totalDeaths.toLocaleString("en")} deaths recorded across ${countriesSet.size} countries.`,
@@ -303,6 +404,89 @@ export default async function DiseasePage({
           </div>
         ))}
       </div>
+
+      {/* Virology panel */}
+      <section className="bg-gray-900 border border-gray-800 rounded-xl p-5 space-y-4">
+        <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wider">{vl.panelTitle}</h2>
+
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-x-6 gap-y-4">
+          {/* Pathogen type */}
+          <div className="space-y-1">
+            <p className="text-xs text-gray-500">{vl.pathogen}</p>
+            <p className="text-sm text-white font-medium">{vl.pathogenLabels[info.pathogenType]}</p>
+            {info.family && <p className="text-xs text-gray-500">{info.family}</p>}
+          </div>
+
+          {/* Incubation */}
+          {(info.incubationMin != null || info.incubationMax != null) && (
+            <div className="space-y-1">
+              <p className="text-xs text-gray-500">{vl.incubation}</p>
+              <p className="text-sm text-white font-medium">
+                {info.incubationMin != null && info.incubationMax != null
+                  ? `${info.incubationMin}–${info.incubationMax} ${vl.days}`
+                  : `${info.incubationMin ?? info.incubationMax} ${vl.days}`}
+              </p>
+            </div>
+          )}
+
+          {/* CFR reference */}
+          {info.cfr_ref && (
+            <div className="space-y-1">
+              <p className="text-xs text-gray-500">{vl.cfrRef}</p>
+              <p className="text-sm text-white font-medium">{info.cfr_ref}</p>
+            </div>
+          )}
+
+          {/* R0 reference */}
+          {info.r0_ref && (
+            <div className="space-y-1">
+              <p className="text-xs text-gray-500">{vl.r0}</p>
+              <p className="text-sm text-white font-medium">{info.r0_ref}</p>
+            </div>
+          )}
+
+          {/* Vaccine */}
+          <div className="space-y-1">
+            <p className="text-xs text-gray-500">{vl.vaccine}</p>
+            <span className={`inline-block text-xs font-semibold px-2 py-0.5 rounded border ${VACCINE_COLOR[info.vaccine]}`}>
+              {vl.vaccineStatus[info.vaccine]}
+            </span>
+            {info.vaccineName && <p className="text-xs text-gray-500 mt-1">{info.vaccineName}</p>}
+          </div>
+
+          {/* Treatment */}
+          <div className="space-y-1">
+            <p className="text-xs text-gray-500">{vl.treatment}</p>
+            <span className={`inline-block text-xs font-semibold px-2 py-0.5 rounded border ${TREATMENT_COLOR[info.treatment]}`}>
+              {vl.treatmentStatus[info.treatment]}
+            </span>
+          </div>
+        </div>
+
+        {/* Transmission modes */}
+        <div className="space-y-2">
+          <p className="text-xs text-gray-500">{vl.transmission}</p>
+          <div className="flex flex-wrap gap-2">
+            {info.transmission.map((mode) => (
+              <span key={mode} className="text-xs px-2.5 py-1 rounded-full bg-gray-800 border border-gray-700 text-gray-300">
+                {vl.transmissionLabels[mode]}
+              </span>
+            ))}
+          </div>
+        </div>
+
+        {/* WHO factsheet link */}
+        {info.whoFactsheet && (
+          <a
+            href={info.whoFactsheet}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center text-xs text-blue-400 hover:text-blue-300 transition-colors"
+          >
+            {vl.whoLink}
+          </a>
+        )}
+      </section>
 
       {/* Active outbreaks */}
       {active.length > 0 && (

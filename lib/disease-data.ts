@@ -1,136 +1,519 @@
+export type PathogenType = "virus_rna" | "virus_dna" | "bacteria" | "parasite" | "fungus";
+export type TransmissionMode =
+  | "contact"       // direct contact with bodily fluids / infected animals
+  | "droplet"       // respiratory droplets (< 1 m)
+  | "airborne"      // aerosol / long-range
+  | "vector"        // arthropod vector (mosquito, tick, sandfly, flea…)
+  | "foodborne"     // contaminated food
+  | "waterborne"    // contaminated water
+  | "sexual"        // sexual transmission
+  | "nosocomial"    // healthcare-associated
+  | "fomite"        // contaminated surfaces / objects
+  | "zoonotic";     // animal reservoir, no sustained human-to-human
+export type VaccineStatus = "yes" | "no" | "experimental" | "conditional";
+export type TreatmentStatus = "yes" | "no" | "supportive" | "experimental";
+
 export interface DiseaseInfo {
   name_en: string;
   name_fr: string;
+  name_es: string;
   name_ar: string;
+  name_id: string;
+
+  // Virology / microbiology
+  pathogenType: PathogenType;
+  family?: string;
+
+  // Epidemiology
+  transmission: TransmissionMode[];
+  incubationMin?: number;  // days
+  incubationMax?: number;  // days
+
+  // Clinical reference (historical / literature, not current outbreak)
+  cfr_ref?: string;        // e.g. "25–90 %"
+  r0_ref?: string;         // basic reproduction number
+
+  // Control
+  vaccine: VaccineStatus;
+  vaccineName?: string;
+  treatment: TreatmentStatus;
+
+  // Links
+  whoFactsheet?: string;
 }
 
-// Keys: lowercase normalized English name (as it appears in WHO DON titles)
-// Partial/prefix matching is used, so "avian influenza" matches "Avian Influenza A(H5N1)"
 const DISEASE_MAP: Array<{ patterns: string[]; info: DiseaseInfo }> = [
   {
     patterns: ["mpox", "monkeypox"],
-    info: { name_en: "Mpox", name_fr: "Mpox", name_ar: "جدري القرود" },
+    info: {
+      name_en: "Mpox", name_fr: "Mpox", name_es: "Mpox", name_ar: "جدري القرود", name_id: "Mpox",
+      pathogenType: "virus_dna", family: "Poxviridae",
+      transmission: ["contact", "droplet", "sexual", "nosocomial"],
+      incubationMin: 5, incubationMax: 21,
+      cfr_ref: "0.1–10 % (selon le clade)",
+      r0_ref: "1.1–2.4",
+      vaccine: "yes", vaccineName: "MVA-BN (Jynneos / Imvamune)",
+      treatment: "experimental",
+      whoFactsheet: "https://www.who.int/news-room/fact-sheets/detail/mpox",
+    },
   },
   {
     patterns: ["ebola"],
-    info: { name_en: "Ebola virus disease", name_fr: "Maladie à virus Ebola", name_ar: "مرض فيروس إيبولا" },
+    info: {
+      name_en: "Ebola virus disease", name_fr: "Maladie à virus Ebola",
+      name_es: "Enfermedad por virus del Ébola", name_ar: "مرض فيروس إيبولا",
+      name_id: "Penyakit virus Ebola",
+      pathogenType: "virus_rna", family: "Filoviridae",
+      transmission: ["contact", "nosocomial"],
+      incubationMin: 2, incubationMax: 21,
+      cfr_ref: "25–90 %",
+      vaccine: "yes", vaccineName: "Ervebo (espèce Zaïre uniquement)",
+      treatment: "experimental",
+      whoFactsheet: "https://www.who.int/news-room/fact-sheets/detail/ebola-virus-disease",
+    },
   },
   {
     patterns: ["marburg"],
-    info: { name_en: "Marburg virus disease", name_fr: "Maladie à virus Marburg", name_ar: "مرض فيروس ماربورغ" },
+    info: {
+      name_en: "Marburg virus disease", name_fr: "Maladie à virus Marburg",
+      name_es: "Enfermedad por virus de Marburgo", name_ar: "مرض فيروس ماربورغ",
+      name_id: "Penyakit virus Marburg",
+      pathogenType: "virus_rna", family: "Filoviridae",
+      transmission: ["contact", "nosocomial"],
+      incubationMin: 2, incubationMax: 21,
+      cfr_ref: "24–88 %",
+      vaccine: "experimental",
+      treatment: "supportive",
+      whoFactsheet: "https://www.who.int/news-room/fact-sheets/detail/marburg-virus-disease",
+    },
   },
   {
     patterns: ["cholera"],
-    info: { name_en: "Cholera", name_fr: "Choléra", name_ar: "الكوليرا" },
+    info: {
+      name_en: "Cholera", name_fr: "Choléra", name_es: "Cólera", name_ar: "الكوليرا", name_id: "Kolera",
+      pathogenType: "bacteria", family: "Vibrionaceae",
+      transmission: ["waterborne", "foodborne"],
+      incubationMin: 0, incubationMax: 5,
+      cfr_ref: "< 1 % si traité; 25–50 % sans traitement",
+      vaccine: "yes", vaccineName: "Vaccin oral anticholérique (OCV)",
+      treatment: "yes",
+      whoFactsheet: "https://www.who.int/news-room/fact-sheets/detail/cholera",
+    },
   },
   {
     patterns: ["avian influenza", "h5n1", "h5n2", "h5n5", "h5n6", "h7n9", "h9n2", "h3n8", "h10n3"],
-    info: { name_en: "Avian Influenza", name_fr: "Grippe aviaire", name_ar: "إنفلونزا الطيور" },
+    info: {
+      name_en: "Avian Influenza", name_fr: "Grippe aviaire",
+      name_es: "Gripe aviar", name_ar: "إنفلونزا الطيور", name_id: "Flu Burung",
+      pathogenType: "virus_rna", family: "Orthomyxoviridae",
+      transmission: ["zoonotic", "contact"],
+      incubationMin: 2, incubationMax: 8,
+      cfr_ref: "~60 % (H5N1 humain)",
+      vaccine: "conditional", vaccineName: "Stocks stratégiques — usage limité",
+      treatment: "yes",
+      whoFactsheet: "https://www.who.int/news-room/fact-sheets/detail/influenza-(avian-and-other-zoonotic)",
+    },
   },
   {
-    // MERS must be before generic "coronavirus" to avoid misclassification
     patterns: ["mers", "middle east respiratory"],
-    info: { name_en: "MERS-CoV", name_fr: "MERS-CoV", name_ar: "فيروس كورونا (متلازمة الشرق الأوسط)" },
+    info: {
+      name_en: "MERS-CoV", name_fr: "MERS-CoV",
+      name_es: "MERS-CoV", name_ar: "فيروس كورونا (متلازمة الشرق الأوسط)", name_id: "MERS-CoV",
+      pathogenType: "virus_rna", family: "Coronaviridae",
+      transmission: ["zoonotic", "droplet", "nosocomial"],
+      incubationMin: 2, incubationMax: 14,
+      cfr_ref: "~35 %",
+      vaccine: "no",
+      treatment: "supportive",
+      whoFactsheet: "https://www.who.int/news-room/fact-sheets/detail/middle-east-respiratory-syndrome-coronavirus-(mers-cov)",
+    },
   },
   {
     patterns: ["influenza"],
-    info: { name_en: "Influenza", name_fr: "Grippe", name_ar: "الإنفلونزا" },
+    info: {
+      name_en: "Influenza", name_fr: "Grippe",
+      name_es: "Gripe / Influenza", name_ar: "الإنفلونزا", name_id: "Influenza",
+      pathogenType: "virus_rna", family: "Orthomyxoviridae",
+      transmission: ["airborne", "droplet", "fomite"],
+      incubationMin: 1, incubationMax: 4,
+      cfr_ref: "< 0,1 % (saisonnier)",
+      r0_ref: "1.2–1.4",
+      vaccine: "yes",
+      treatment: "yes",
+      whoFactsheet: "https://www.who.int/news-room/fact-sheets/detail/influenza-(seasonal)",
+    },
   },
   {
     patterns: ["covid-19", "covid19", "sars-cov-2", "coronavirus"],
-    info: { name_en: "COVID-19", name_fr: "COVID-19", name_ar: "كوفيد-19" },
+    info: {
+      name_en: "COVID-19", name_fr: "COVID-19",
+      name_es: "COVID-19", name_ar: "كوفيد-19", name_id: "COVID-19",
+      pathogenType: "virus_rna", family: "Coronaviridae",
+      transmission: ["airborne", "droplet", "fomite"],
+      incubationMin: 1, incubationMax: 14,
+      cfr_ref: "Variable selon le variant",
+      vaccine: "yes",
+      treatment: "yes",
+      whoFactsheet: "https://www.who.int/news-room/fact-sheets/detail/coronavirus-disease-(covid-19)",
+    },
   },
   {
     patterns: ["dengue"],
-    info: { name_en: "Dengue fever", name_fr: "Dengue", name_ar: "حمى الضنك" },
+    info: {
+      name_en: "Dengue fever", name_fr: "Dengue",
+      name_es: "Dengue", name_ar: "حمى الضنك", name_id: "Demam Berdarah Dengue",
+      pathogenType: "virus_rna", family: "Flaviviridae",
+      transmission: ["vector"],
+      incubationMin: 4, incubationMax: 14,
+      cfr_ref: "< 1 % (pris en charge); dengue sévère : 2–5 %",
+      r0_ref: "2–6",
+      vaccine: "yes", vaccineName: "Dengvaxia, Qdenga",
+      treatment: "supportive",
+      whoFactsheet: "https://www.who.int/news-room/fact-sheets/detail/dengue-and-severe-dengue",
+    },
   },
   {
     patterns: ["yellow fever"],
-    info: { name_en: "Yellow fever", name_fr: "Fièvre jaune", name_ar: "الحمى الصفراء" },
+    info: {
+      name_en: "Yellow fever", name_fr: "Fièvre jaune",
+      name_es: "Fiebre amarilla", name_ar: "الحمى الصفراء", name_id: "Demam Kuning",
+      pathogenType: "virus_rna", family: "Flaviviridae",
+      transmission: ["vector"],
+      incubationMin: 3, incubationMax: 6,
+      cfr_ref: "3–7,5 % (phase toxique : 20–50 %)",
+      vaccine: "yes", vaccineName: "YF-Vax / Stamaril (protection à vie)",
+      treatment: "supportive",
+      whoFactsheet: "https://www.who.int/news-room/fact-sheets/detail/yellow-fever",
+    },
   },
   {
     patterns: ["lassa"],
-    info: { name_en: "Lassa fever", name_fr: "Fièvre de Lassa", name_ar: "حمى لاسا" },
+    info: {
+      name_en: "Lassa fever", name_fr: "Fièvre de Lassa",
+      name_es: "Fiebre de Lassa", name_ar: "حمى لاسا", name_id: "Demam Lassa",
+      pathogenType: "virus_rna", family: "Arenaviridae",
+      transmission: ["contact", "zoonotic", "nosocomial"],
+      incubationMin: 6, incubationMax: 21,
+      cfr_ref: "~1 % global; 15 % hospitalisé",
+      vaccine: "no",
+      treatment: "yes", vaccineName: "Ribavirine (phase précoce)",
+      whoFactsheet: "https://www.who.int/news-room/fact-sheets/detail/lassa-fever",
+    },
   },
   {
     patterns: ["meningitis", "meningococcal"],
-    info: { name_en: "Meningitis", name_fr: "Méningite", name_ar: "التهاب السحايا" },
+    info: {
+      name_en: "Meningitis", name_fr: "Méningite",
+      name_es: "Meningitis", name_ar: "التهاب السحايا", name_id: "Meningitis",
+      pathogenType: "bacteria", family: "Neisseriaceae",
+      transmission: ["droplet"],
+      incubationMin: 2, incubationMax: 10,
+      cfr_ref: "5–15 % (méningococcique)",
+      vaccine: "yes",
+      treatment: "yes",
+      whoFactsheet: "https://www.who.int/news-room/fact-sheets/detail/meningitis",
+    },
   },
   {
     patterns: ["nipah"],
-    info: { name_en: "Nipah virus", name_fr: "Virus Nipah", name_ar: "فيروس نيباه" },
+    info: {
+      name_en: "Nipah virus", name_fr: "Virus Nipah",
+      name_es: "Virus Nipah", name_ar: "فيروس نيباه", name_id: "Virus Nipah",
+      pathogenType: "virus_rna", family: "Paramyxoviridae",
+      transmission: ["zoonotic", "contact", "droplet"],
+      incubationMin: 4, incubationMax: 14,
+      cfr_ref: "40–75 %",
+      vaccine: "experimental",
+      treatment: "supportive",
+      whoFactsheet: "https://www.who.int/news-room/fact-sheets/detail/nipah-virus",
+    },
   },
   {
     patterns: ["plague"],
-    info: { name_en: "Plague", name_fr: "Peste", name_ar: "الطاعون" },
+    info: {
+      name_en: "Plague", name_fr: "Peste",
+      name_es: "Peste", name_ar: "الطاعون", name_id: "Pes",
+      pathogenType: "bacteria", family: "Yersiniaceae",
+      transmission: ["vector", "droplet", "contact"],
+      incubationMin: 1, incubationMax: 7,
+      cfr_ref: "30–100 % (sans traitement)",
+      vaccine: "no",
+      treatment: "yes",
+      whoFactsheet: "https://www.who.int/news-room/fact-sheets/detail/plague",
+    },
   },
   {
     patterns: ["typhoid"],
-    info: { name_en: "Typhoid fever", name_fr: "Fièvre typhoïde", name_ar: "حمى التيفوئيد" },
+    info: {
+      name_en: "Typhoid fever", name_fr: "Fièvre typhoïde",
+      name_es: "Fiebre tifoidea", name_ar: "حمى التيفوئيد", name_id: "Demam Tifoid",
+      pathogenType: "bacteria", family: "Enterobacteriaceae",
+      transmission: ["waterborne", "foodborne"],
+      incubationMin: 6, incubationMax: 30,
+      cfr_ref: "< 1 % si traité; 10–30 % sans traitement",
+      vaccine: "yes",
+      treatment: "yes",
+      whoFactsheet: "https://www.who.int/news-room/fact-sheets/detail/typhoid",
+    },
   },
   {
     patterns: ["measles"],
-    info: { name_en: "Measles", name_fr: "Rougeole", name_ar: "الحصبة" },
+    info: {
+      name_en: "Measles", name_fr: "Rougeole",
+      name_es: "Sarampión", name_ar: "الحصبة", name_id: "Campak",
+      pathogenType: "virus_rna", family: "Paramyxoviridae",
+      transmission: ["airborne", "droplet"],
+      incubationMin: 7, incubationMax: 14,
+      cfr_ref: "0,1 % (pays à revenus élevés) → 1–5 % (pays à faibles revenus)",
+      r0_ref: "12–18",
+      vaccine: "yes", vaccineName: "ROR / MMR",
+      treatment: "supportive",
+      whoFactsheet: "https://www.who.int/news-room/fact-sheets/detail/measles",
+    },
   },
   {
     patterns: ["polio", "poliovirus"],
-    info: { name_en: "Polio", name_fr: "Poliomyélite", name_ar: "شلل الأطفال" },
+    info: {
+      name_en: "Polio", name_fr: "Poliomyélite",
+      name_es: "Poliomielitis", name_ar: "شلل الأطفال", name_id: "Polio",
+      pathogenType: "virus_rna", family: "Picornaviridae",
+      transmission: ["foodborne", "waterborne", "fomite"],
+      incubationMin: 6, incubationMax: 20,
+      cfr_ref: "< 1 % (paralytique : 2–5 %)",
+      r0_ref: "5–7",
+      vaccine: "yes", vaccineName: "VPO (oral) / VPI (injectable)",
+      treatment: "supportive",
+      whoFactsheet: "https://www.who.int/news-room/fact-sheets/detail/poliomyelitis",
+    },
   },
   {
     patterns: ["malaria"],
-    info: { name_en: "Malaria", name_fr: "Paludisme", name_ar: "الملاريا" },
+    info: {
+      name_en: "Malaria", name_fr: "Paludisme",
+      name_es: "Malaria / Paludismo", name_ar: "الملاريا", name_id: "Malaria",
+      pathogenType: "parasite", family: "Plasmodium spp.",
+      transmission: ["vector"],
+      incubationMin: 7, incubationMax: 30,
+      cfr_ref: "< 1 % si traité; P. falciparum sévère : 15–20 %",
+      vaccine: "yes", vaccineName: "RTS,S/AS01 (Mosquirix) / R21",
+      treatment: "yes",
+      whoFactsheet: "https://www.who.int/news-room/fact-sheets/detail/malaria",
+    },
   },
   {
     patterns: ["rabies"],
-    info: { name_en: "Rabies", name_fr: "Rage", name_ar: "داء الكلب" },
+    info: {
+      name_en: "Rabies", name_fr: "Rage",
+      name_es: "Rabia", name_ar: "داء الكلب", name_id: "Rabies",
+      pathogenType: "virus_rna", family: "Rhabdoviridae",
+      transmission: ["contact", "zoonotic"],
+      incubationMin: 7, incubationMax: 365,
+      cfr_ref: "~100 % (après apparition des symptômes)",
+      vaccine: "yes", vaccineName: "Prophylaxie post-exposition (PPE)",
+      treatment: "supportive",
+      whoFactsheet: "https://www.who.int/news-room/fact-sheets/detail/rabies",
+    },
   },
   {
     patterns: ["anthrax"],
-    info: { name_en: "Anthrax", name_fr: "Charbon bactéridien", name_ar: "الجمرة الخبيثة" },
+    info: {
+      name_en: "Anthrax", name_fr: "Charbon bactéridien",
+      name_es: "Ántrax", name_ar: "الجمرة الخبيثة", name_id: "Antraks",
+      pathogenType: "bacteria", family: "Bacillaceae",
+      transmission: ["contact", "zoonotic"],
+      incubationMin: 1, incubationMax: 5,
+      cfr_ref: "Cutané < 1 %; inhalation ~80 % (sans traitement)",
+      vaccine: "yes", vaccineName: "Usage militaire / professionnel",
+      treatment: "yes",
+      whoFactsheet: "https://www.who.int/news-room/fact-sheets/detail/anthrax",
+    },
   },
   {
     patterns: ["chikungunya"],
-    info: { name_en: "Chikungunya", name_fr: "Chikungunya", name_ar: "حمى تشيكونغونيا" },
+    info: {
+      name_en: "Chikungunya", name_fr: "Chikungunya",
+      name_es: "Chikungunya", name_ar: "حمى تشيكونغونيا", name_id: "Chikungunya",
+      pathogenType: "virus_rna", family: "Togaviridae",
+      transmission: ["vector"],
+      incubationMin: 2, incubationMax: 12,
+      cfr_ref: "< 0,1 %",
+      vaccine: "yes", vaccineName: "Ixchiq (Valneva, 2023)",
+      treatment: "supportive",
+      whoFactsheet: "https://www.who.int/news-room/fact-sheets/detail/chikungunya",
+    },
   },
   {
     patterns: ["zika"],
-    info: { name_en: "Zika virus", name_fr: "Virus Zika", name_ar: "فيروس زيكا" },
+    info: {
+      name_en: "Zika virus", name_fr: "Virus Zika",
+      name_es: "Virus Zika", name_ar: "فيروس زيكا", name_id: "Virus Zika",
+      pathogenType: "virus_rna", family: "Flaviviridae",
+      transmission: ["vector", "sexual"],
+      incubationMin: 3, incubationMax: 14,
+      cfr_ref: "< 0,1 % (risque tératogène majeur en grossesse)",
+      r0_ref: "1.4–6.6",
+      vaccine: "no",
+      treatment: "supportive",
+      whoFactsheet: "https://www.who.int/news-room/fact-sheets/detail/zika-virus",
+    },
   },
   {
     patterns: ["hepatitis"],
-    info: { name_en: "Hepatitis", name_fr: "Hépatite", name_ar: "التهاب الكبد" },
+    info: {
+      name_en: "Hepatitis", name_fr: "Hépatite",
+      name_es: "Hepatitis", name_ar: "التهاب الكبد", name_id: "Hepatitis",
+      pathogenType: "virus_rna", family: "Multiple (VHA, VHB, VHC, VHD, VHE)",
+      transmission: ["waterborne", "foodborne", "contact", "sexual", "nosocomial"],
+      incubationMin: 14, incubationMax: 180,
+      cfr_ref: "Variable selon le type (VHE en grossesse : 20–25 %)",
+      vaccine: "yes", vaccineName: "VHA, VHB (pas pour C/D/E)",
+      treatment: "yes",
+      whoFactsheet: "https://www.who.int/health-topics/hepatitis",
+    },
   },
   {
     patterns: ["rift valley"],
-    info: { name_en: "Rift Valley fever", name_fr: "Fièvre de la Vallée du Rift", name_ar: "حمى الوادي المتصدع" },
+    info: {
+      name_en: "Rift Valley fever", name_fr: "Fièvre de la Vallée du Rift",
+      name_es: "Fiebre del Valle del Rift", name_ar: "حمى الوادي المتصدع", name_id: "Demam Lembah Rift",
+      pathogenType: "virus_rna", family: "Phenuiviridae",
+      transmission: ["vector", "contact", "zoonotic"],
+      incubationMin: 2, incubationMax: 6,
+      cfr_ref: "~1 % globale; formes hémorragiques : 10–12 %",
+      vaccine: "experimental",
+      treatment: "supportive",
+      whoFactsheet: "https://www.who.int/news-room/fact-sheets/detail/rift-valley-fever",
+    },
   },
   {
     patterns: ["crimean-congo", "cchf"],
-    info: { name_en: "Crimean-Congo haemorrhagic fever", name_fr: "Fièvre hémorragique de Crimée-Congo", name_ar: "حمى القرم-الكونغو النزفية" },
+    info: {
+      name_en: "Crimean-Congo haemorrhagic fever", name_fr: "Fièvre hémorragique de Crimée-Congo",
+      name_es: "Fiebre hemorrágica de Crimea-Congo", name_ar: "حمى القرم-الكونغو النزفية",
+      name_id: "Demam Hemoragik Krimea-Kongo",
+      pathogenType: "virus_rna", family: "Nairoviridae",
+      transmission: ["vector", "contact", "nosocomial"],
+      incubationMin: 1, incubationMax: 9,
+      cfr_ref: "10–40 %",
+      vaccine: "no",
+      treatment: "experimental",
+      whoFactsheet: "https://www.who.int/news-room/fact-sheets/detail/crimean-congo-haemorrhagic-fever",
+    },
   },
   {
     patterns: ["hantavirus"],
-    info: { name_en: "Hantavirus", name_fr: "Hantavirus", name_ar: "فيروس هانتا" },
+    info: {
+      name_en: "Hantavirus", name_fr: "Hantavirus",
+      name_es: "Hantavirus", name_ar: "فيروس هانتا", name_id: "Hantavirus",
+      pathogenType: "virus_rna", family: "Hantaviridae",
+      transmission: ["contact", "zoonotic"],
+      incubationMin: 7, incubationMax: 35,
+      cfr_ref: "FHSR 1–5 %; SPH 35–50 %",
+      vaccine: "no",
+      treatment: "supportive",
+      whoFactsheet: "https://www.who.int/news-room/fact-sheets/detail/hantavirus-disease",
+    },
   },
   {
     patterns: ["sudan virus", "bundibugyo"],
-    info: { name_en: "Ebola virus disease", name_fr: "Maladie à virus Ebola", name_ar: "مرض فيروس إيبولا" },
+    info: {
+      name_en: "Ebola virus disease", name_fr: "Maladie à virus Ebola",
+      name_es: "Enfermedad por virus del Ébola", name_ar: "مرض فيروس إيبولا",
+      name_id: "Penyakit virus Ebola",
+      pathogenType: "virus_rna", family: "Filoviridae",
+      transmission: ["contact", "nosocomial"],
+      incubationMin: 2, incubationMax: 21,
+      cfr_ref: "25–90 %",
+      vaccine: "experimental",
+      treatment: "experimental",
+      whoFactsheet: "https://www.who.int/news-room/fact-sheets/detail/ebola-virus-disease",
+    },
   },
   {
     patterns: ["diphtheria"],
-    info: { name_en: "Diphtheria", name_fr: "Diphtérie", name_ar: "الخناق" },
+    info: {
+      name_en: "Diphtheria", name_fr: "Diphtérie",
+      name_es: "Difteria", name_ar: "الخناق", name_id: "Difteri",
+      pathogenType: "bacteria", family: "Corynebacteriaceae",
+      transmission: ["droplet", "contact"],
+      incubationMin: 2, incubationMax: 5,
+      cfr_ref: "5–10 % (enfants non vaccinés)",
+      vaccine: "yes", vaccineName: "DTP / DT",
+      treatment: "yes",
+      whoFactsheet: "https://www.who.int/news-room/fact-sheets/detail/diphtheria",
+    },
   },
   {
     patterns: ["pertussis", "whooping cough"],
-    info: { name_en: "Pertussis", name_fr: "Coqueluche", name_ar: "السعال الديكي" },
+    info: {
+      name_en: "Pertussis", name_fr: "Coqueluche",
+      name_es: "Tos ferina", name_ar: "السعال الديكي", name_id: "Batuk Rejan",
+      pathogenType: "bacteria", family: "Alcaligenaceae",
+      transmission: ["airborne", "droplet"],
+      incubationMin: 5, incubationMax: 10,
+      cfr_ref: "< 1 % adultes; nourrissons < 1 an : 1–4 %",
+      r0_ref: "5.5–17",
+      vaccine: "yes", vaccineName: "DTP / Tdap",
+      treatment: "yes",
+      whoFactsheet: "https://www.who.int/news-room/fact-sheets/detail/pertussis",
+    },
   },
   {
     patterns: ["leishmaniasis", "leishmaniose"],
-    info: { name_en: "Leishmaniasis", name_fr: "Leishmaniose", name_ar: "داء الليشمانيات" },
+    info: {
+      name_en: "Leishmaniasis", name_fr: "Leishmaniose",
+      name_es: "Leishmaniasis", name_ar: "داء الليشمانيات", name_id: "Leishmaniasis",
+      pathogenType: "parasite", family: "Leishmania spp.",
+      transmission: ["vector"],
+      incubationMin: 14, incubationMax: 180,
+      cfr_ref: "Viscérale : 95 % si non traitée; cutanée : faible",
+      vaccine: "no",
+      treatment: "yes",
+      whoFactsheet: "https://www.who.int/news-room/fact-sheets/detail/leishmaniasis",
+    },
   },
   {
     patterns: ["trypanosomiasis", "sleeping sickness", "chagas"],
-    info: { name_en: "Trypanosomiasis", name_fr: "Trypanosomose", name_ar: "داء النوم" },
+    info: {
+      name_en: "Trypanosomiasis", name_fr: "Trypanosomose",
+      name_es: "Tripanosomiasis", name_ar: "داء النوم", name_id: "Tripanosomiasis",
+      pathogenType: "parasite", family: "Trypanosoma spp.",
+      transmission: ["vector", "contact"],
+      incubationMin: 1, incubationMax: 21,
+      cfr_ref: "Quasi 100 % (HAT sans traitement)",
+      vaccine: "no",
+      treatment: "yes",
+      whoFactsheet: "https://www.who.int/news-room/fact-sheets/detail/trypanosomiasis-human-african-(sleeping-sickness)",
+    },
+  },
+  {
+    patterns: ["oropouche"],
+    info: {
+      name_en: "Oropouche virus disease", name_fr: "Maladie à virus Oropouche",
+      name_es: "Enfermedad por virus Oropouche", name_ar: "مرض فيروس أوروبوشي",
+      name_id: "Penyakit virus Oropouche",
+      pathogenType: "virus_rna", family: "Peribunyaviridae",
+      transmission: ["vector"],
+      incubationMin: 3, incubationMax: 8,
+      cfr_ref: "< 1 % (transmission verticale documentée en 2024)",
+      vaccine: "no",
+      treatment: "supportive",
+      whoFactsheet: "https://www.who.int/news-room/fact-sheets/detail/oropouche-fever",
+    },
+  },
+  {
+    patterns: ["west nile"],
+    info: {
+      name_en: "West Nile fever", name_fr: "Fièvre du Nil occidental",
+      name_es: "Fiebre del Nilo Occidental", name_ar: "حمى غرب النيل", name_id: "Demam Nil Barat",
+      pathogenType: "virus_rna", family: "Flaviviridae",
+      transmission: ["vector"],
+      incubationMin: 2, incubationMax: 14,
+      cfr_ref: "< 1 % (neuro-invasive : 3–15 %)",
+      vaccine: "no",
+      treatment: "supportive",
+      whoFactsheet: "https://www.who.int/news-room/fact-sheets/detail/west-nile-virus",
+    },
   },
 ];
 
@@ -167,6 +550,20 @@ export function normalizeDisease(rawName: string): DiseaseInfo {
       return entry.info;
     }
   }
-  // Fallback: use the raw name as-is for all languages
-  return { name_en: rawName, name_fr: rawName, name_ar: rawName };
+  return {
+    name_en: rawName, name_fr: rawName, name_es: rawName, name_ar: rawName, name_id: rawName,
+    pathogenType: "virus_rna",
+    transmission: ["contact"],
+    vaccine: "no",
+    treatment: "supportive",
+  };
+}
+
+/** Returns the localized disease name for a given locale, falling back to EN. */
+export function localizedDiseaseName(info: DiseaseInfo, locale: string): string {
+  const map: Record<string, keyof Pick<DiseaseInfo, "name_fr" | "name_es" | "name_ar" | "name_id">> = {
+    fr: "name_fr", es: "name_es", ar: "name_ar", id: "name_id",
+  };
+  const key = map[locale];
+  return key ? (info[key] as string) || info.name_en : info.name_en;
 }

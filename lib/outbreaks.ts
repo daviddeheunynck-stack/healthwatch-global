@@ -185,12 +185,12 @@ export function getLocalizedDisease(outbreak: LocalizedDiseaseFields, locale: st
   // disease_en is the preferred key (English, already normalized).
   // Fallback: disease column (French for new records, English for legacy).
   // This ensures "Dengue" and "Dengue fever" resolve to the same canonical names.
-  const { name_en, name_fr, name_ar } = normalizeDisease(outbreak.disease_en || outbreak.disease);
-  if (locale === "fr") return name_fr;
-  if (locale === "ar") return outbreak.disease_ar || name_ar;
-  if (locale === "es") return DISEASE_ES[name_en] ?? name_en;
-  if (locale === "id") return DISEASE_ID[name_en] ?? name_en;
-  return name_en; // en = default
+  const info = normalizeDisease(outbreak.disease_en || outbreak.disease);
+  if (locale === "fr") return info.name_fr;
+  if (locale === "ar") return outbreak.disease_ar || info.name_ar;
+  if (locale === "es") return info.name_es;
+  if (locale === "id") return info.name_id;
+  return info.name_en;
 }
 
 // ── Description localization ──────────────────────────────────────────────────
