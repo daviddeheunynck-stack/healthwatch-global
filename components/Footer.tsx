@@ -42,7 +42,7 @@ export default function Footer({ locale }: FooterProps) {
             <Activity className="w-4 h-4 text-red-500" />
             <span className="font-semibold text-gray-400">HealthWatch Global</span>
             <span>·</span>
-            <span>© {new Date().getFullYear()}</span>
+            <span suppressHydrationWarning>© {new Date().getFullYear()}</span>
           </div>
 
           {/* Links */}

@@ -170,7 +170,7 @@ export default async function LegalPage() {
         </section>
 
         <p className="text-xs text-gray-600 pt-4 border-t border-gray-800">
-          Dernière mise à jour : {new Date().toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" })}
+          Dernière mise à jour : 25 mai 2026
         </p>
 
       </div>
