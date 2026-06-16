@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useLocale } from "next-intl";
+import { createClient } from "@/lib/supabase-browser";
 import { track } from "@vercel/analytics/react";
 import { X, FileText, Radio, List, BarChart2, TableProperties, ArrowLeftRight, Zap, CheckCircle } from "lucide-react";
 import Link from "next/link";
@@ -21,7 +22,9 @@ const COPY: Record<string, {
   compare: FeatureCopy;
   proFeatures: string[];
   cta: string;
+  ctaExpired: string;
   trial: string;
+  trialExpired: string;
 }> = {
   fr: {
     pdf:      { title: "Rapports PDF régionaux",      desc: "Téléchargez des rapports épidémiologiques prêts à partager avec vos équipes ou bailleurs.",   plan: "Disponible — Pro" },
@@ -36,8 +39,10 @@ const COPY: Record<string, {
       "Export CSV pour vos analyses internes",
       "Toutes les régions mondiales couvertes",
     ],
-    cta:   "Commencer l'essai gratuit",
-    trial: "14 jours gratuits · Sans carte bancaire",
+    cta:         "Commencer l'essai gratuit",
+    ctaExpired:  "S'abonner à Pro →",
+    trial:       "14 jours gratuits · Sans carte bancaire",
+    trialExpired:"À partir de 29 €/mois ou 249 €/an",
   },
   en: {
     pdf:      { title: "Regional PDF reports",     desc: "Download shareable epidemiological reports ready for your teams or donors.",             plan: "Available — Pro" },
@@ -52,8 +57,10 @@ const COPY: Record<string, {
       "CSV export for your internal analyses",
       "All global regions covered",
     ],
-    cta:   "Start free trial",
-    trial: "14 days free · No credit card",
+    cta:         "Start free trial",
+    ctaExpired:  "Subscribe to Pro →",
+    trial:       "14 days free · No credit card",
+    trialExpired:"From €29/month or €249/year",
   },
   es: {
     pdf:      { title: "Informes PDF regionales",     desc: "Descargue informes epidemiológicos listos para compartir con su equipo o financiadores.",    plan: "Disponible — Pro" },
@@ -68,8 +75,10 @@ const COPY: Record<string, {
       "Exportación CSV para análisis internos",
       "Todas las regiones globales cubiertas",
     ],
-    cta:   "Iniciar prueba gratuita",
-    trial: "14 días gratis · Sin tarjeta",
+    cta:         "Iniciar prueba gratuita",
+    ctaExpired:  "Suscribirse a Pro →",
+    trial:       "14 días gratis · Sin tarjeta",
+    trialExpired:"Desde 29 €/mes o 249 €/año",
   },
   ar: {
     pdf:      { title: "تقارير PDF إقليمية",           desc: "حمّل تقارير وبائية جاهزة للمشاركة مع فرقك أو المموّلين بنقرة واحدة.",            plan: "متاح — Pro" },
@@ -84,8 +93,10 @@ const COPY: Record<string, {
       "تصدير CSV للتحليلات الداخلية",
       "جميع المناطق العالمية مشمولة",
     ],
-    cta:   "ابدأ التجربة المجانية",
-    trial: "14 يوماً مجاناً · بدون بطاقة بنكية",
+    cta:         "ابدأ التجربة المجانية",
+    ctaExpired:  "اشترك في Pro ←",
+    trial:       "14 يوماً مجاناً · بدون بطاقة بنكية",
+    trialExpired:"من 29 €/شهر أو 249 €/سنة",
   },
   id: {
     pdf:      { title: "Laporan PDF regional",        desc: "Unduh laporan epidemiologi siap dibagikan ke tim atau donor Anda.",                      plan: "Tersedia — Pro" },
@@ -100,8 +111,10 @@ const COPY: Record<string, {
       "Ekspor CSV untuk analisis internal",
       "Semua wilayah global tercakup",
     ],
-    cta:   "Mulai uji coba gratis",
-    trial: "14 hari gratis · Tanpa kartu kredit",
+    cta:         "Mulai uji coba gratis",
+    ctaExpired:  "Berlangganan Pro →",
+    trial:       "14 hari gratis · Tanpa kartu kredit",
+    trialExpired:"Mulai €29/bulan atau €249/tahun",
   },
 };
 
@@ -133,6 +146,20 @@ export default function UpgradeModal({ feature, onClose }: Props) {
   const c = COPY[locale] ?? COPY.en;
   const feat = c[feature];
   const { Icon, ring, iconColor, bg } = FEATURE_CONFIG[feature];
+
+  const [trialExpired, setTrialExpired] = useState(false);
+  useEffect(() => {
+    const supabase = createClient();
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      if (!user) return;
+      supabase.from("profiles").select("plan, trial_ends_at, stripe_subscription_id").eq("id", user.id).single()
+        .then(({ data }) => {
+          if (data?.plan !== "free" && data?.trial_ends_at && new Date(data.trial_ends_at).getTime() < Date.now() && !data?.stripe_subscription_id) {
+            setTrialExpired(true);
+          }
+        });
+    });
+  }, []);
 
   // Track modal open
   useEffect(() => {
@@ -207,11 +234,11 @@ export default function UpgradeModal({ feature, onClose }: Props) {
           <CheckoutButton
             plan="pro"
             locale={locale}
-            label={c.cta}
+            label={trialExpired ? c.ctaExpired : c.cta}
             className="w-full bg-red-600 hover:bg-red-500 text-white font-bold py-3.5 rounded-xl transition-all shadow-lg shadow-red-900/30 text-sm"
           />
         </div>
-        <p className="text-center text-xs text-gray-600 mt-2">{c.trial}</p>
+        <p className="text-center text-xs text-gray-600 mt-2">{trialExpired ? c.trialExpired : c.trial}</p>
         <p className="text-center">
           <Link
             href={`/${locale}/pricing`}
