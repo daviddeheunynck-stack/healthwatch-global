@@ -317,6 +317,21 @@ export default function PilotPage() {
         <p className="text-gray-400 text-base max-w-2xl mx-auto leading-relaxed">{c.sub}</p>
       </div>
 
+      {/* Credibility strip */}
+      <div className="flex flex-wrap justify-center gap-6 border-y border-gray-800/60 py-5">
+        {[
+          { label: locale === "fr" ? "Données OMS officielles" : locale === "es" ? "Datos OMS oficiales" : locale === "ar" ? "بيانات WHO رسمية" : locale === "id" ? "Data WHO resmi" : "Official WHO data" },
+          { label: locale === "fr" ? "195 pays surveillés" : locale === "es" ? "195 países monitorizados" : locale === "ar" ? "195 دولة مراقبة" : locale === "id" ? "195 negara dipantau" : "195 countries monitored" },
+          { label: locale === "fr" ? "5 langues" : locale === "es" ? "5 idiomas" : locale === "ar" ? "5 لغات" : locale === "id" ? "5 bahasa" : "5 languages" },
+          { label: locale === "fr" ? "Synchronisation quotidienne" : locale === "es" ? "Sincronización diaria" : locale === "ar" ? "تزامن يومي" : locale === "id" ? "Sinkronisasi harian" : "Daily sync" },
+        ].map(({ label }) => (
+          <div key={label} className="flex items-center gap-2 text-sm text-gray-400">
+            <CheckCircle className="w-4 h-4 text-green-500 shrink-0" />
+            <span>{label}</span>
+          </div>
+        ))}
+      </div>
+
       {/* Two columns: includes + for whom */}
       <div className="grid md:grid-cols-2 gap-10">
 
