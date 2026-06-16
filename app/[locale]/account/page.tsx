@@ -400,11 +400,24 @@ export default async function AccountPage({
 
   const { data: profile } = await supabase
     .from("profiles")
-    .select("plan, stripe_customer_id, created_at, slack_webhook_url, trial_ends_at")
+    .select("plan, stripe_customer_id, stripe_subscription_id, created_at, slack_webhook_url, trial_ends_at")
     .eq("id", user.id)
     .single();
 
-  const plan = (profile?.plan || "free") as string;
+  // Apply the same trial-expiry guard as the dashboard: if trial has ended and
+  // no Stripe subscription exists, treat the user as free immediately rather
+  // than waiting for the expire-trials cron (runs daily at 10:00 UTC).
+  let plan = (profile?.plan || "free") as string;
+  const rawEnd = profile?.trial_ends_at ?? null;
+  if (
+    plan !== "free" &&
+    rawEnd &&
+    new Date(rawEnd).getTime() < Date.now() &&
+    !profile?.stripe_subscription_id
+  ) {
+    plan = "free";
+  }
+
   const meta = PLAN_META[plan] ?? PLAN_META.free;
   const planIcon = PLAN_ICONS[meta.iconName] ?? PLAN_ICONS.gift;
   const hasBilling = !!profile?.stripe_customer_id;
@@ -440,8 +453,7 @@ export default async function AccountPage({
     ? new Date(profile.created_at).toLocaleDateString(locale, { year: "numeric", month: "long" })
     : "—";
 
-  const rawTrialEnd = (profile?.trial_ends_at as string | null) ?? null;
-  const trialEndsAt = rawTrialEnd ? new Date(rawTrialEnd) : null;
+  const trialEndsAt = rawEnd ? new Date(rawEnd) : null;
   const trialActive = trialEndsAt !== null && trialEndsAt > new Date();
   const trialExpired = trialEndsAt !== null && trialEndsAt <= new Date();
   const trialDateStr = trialEndsAt
