@@ -74,11 +74,19 @@ export async function GET(req: NextRequest) {
   const userIds = [...new Set(subs.map((s) => s.user_id))];
   const { data: profiles } = await supabase
     .from("profiles")
-    .select("id, email, locale, plan")
+    .select("id, email, locale, plan, trial_ends_at, stripe_subscription_id")
     .in("id", userIds);
 
+  const now = Date.now();
   const profileMap = new Map(
-    (profiles ?? []).map((p) => [p.id, { email: p.email, locale: p.locale ?? "fr", plan: p.plan ?? "free" }])
+    (profiles ?? []).map((p) => {
+      let plan = p.plan ?? "free";
+      // Apply trial expiry guard
+      if (plan !== "free" && p.trial_ends_at && new Date(p.trial_ends_at).getTime() < now && !p.stripe_subscription_id) {
+        plan = "free";
+      }
+      return [p.id, { email: p.email, locale: p.locale ?? "fr", plan }];
+    })
   );
 
   // 4. Fetch already-sent log to avoid duplicates

@@ -109,13 +109,21 @@ export async function GET(req: NextRequest) {
     const userIds = subscribers.map((s: { user_id: string }) => s.user_id);
 
     // Get their email, locale, and Slack webhook (from profiles)
-    const { data: profiles } = await supabase
+    const { data: rawProfiles } = await supabase
       .from("profiles")
-      .select("id, email, plan, locale, slack_webhook_url")
+      .select("id, email, plan, trial_ends_at, stripe_subscription_id, locale, slack_webhook_url")
       .in("id", userIds)
       .in("plan", ["starter", "pro", "enterprise"]);
 
-    if (!profiles || profiles.length === 0) continue;
+    // Apply trial expiry guard: skip users whose trial has ended and have no active Stripe sub
+    const now = Date.now();
+    const profiles = (rawProfiles ?? []).filter((p) => {
+      if (p.plan === "free") return false;
+      if (p.trial_ends_at && new Date(p.trial_ends_at).getTime() < now && !p.stripe_subscription_id) return false;
+      return true;
+    });
+
+    if (profiles.length === 0) continue;
 
     // Build locale map from profiles.locale (set at signup)
     const localeMap = new Map<string, string>();
