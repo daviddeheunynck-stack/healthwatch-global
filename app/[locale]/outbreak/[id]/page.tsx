@@ -208,6 +208,8 @@ export default async function OutbreakPage({
       headline: `${disease} outbreak in ${country}`,
       description: `${disease} outbreak tracking. ${hasData ? `${o.cases} cases, ${o.deaths} deaths.` : ""}`,
       datePublished: o.date,
+      dateModified: o.updated_at?.substring(0, 10) ?? o.date,
+      image: `${BASE_URL}/api/outbreak-card/${id}?locale=${locale}`,
       publisher: { "@type": "Organization", name: "HealthWatch Global", url: BASE_URL },
       about: {
         "@type": "InfectiousDisease",
