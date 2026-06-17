@@ -217,6 +217,7 @@ export default function SignupPage() {
                       onChange={(e) => setEmail(e.target.value)}
                       required
                       disabled={loading}
+                      autoComplete="email"
                       className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-red-500 transition-colors disabled:opacity-50"
                       placeholder="you@organization.org"
                     />
@@ -230,6 +231,7 @@ export default function SignupPage() {
                       required
                       disabled={loading}
                       minLength={8}
+                      autoComplete="new-password"
                       className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-red-500 transition-colors disabled:opacity-50"
                       placeholder="••••••••"
                     />
