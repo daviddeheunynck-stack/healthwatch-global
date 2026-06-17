@@ -1,6 +1,6 @@
-// Africa CDC Disease Outbreak News scraper — runs Wed + Sat at 09:00 UTC.
-// Fetches recent outbreak posts from Africa CDC (africacdc.org), extracts
-// disease / country / cases, and upserts to outbreaks. Covers sub-Saharan
+// Africa CDC News scraper — runs Wed + Sat at 09:00 UTC.
+// Fetches recent news posts from africacdc.org/news-item/ (previously /disease-outbreak-news/),
+// extracts disease / country / cases, and upserts to outbreaks. Covers sub-Saharan
 // African outbreaks (Guinea, Sierra Leone, Burkina Faso, etc.) that may not
 // appear in WHO DON or ReliefWeb until later in the outbreak timeline.
 // Never overwrites rows owned by the WHO DON daily sync.
@@ -23,7 +23,7 @@ const SUPABASE_SERVICE_KEY = clean(process.env.SUPABASE_SERVICE_ROLE_KEY);
 const CRON_SECRET          = clean(process.env.CRON_SECRET);
 
 const AFRICA_CDC_BASE = "https://africacdc.org";
-const AFRICA_CDC_URL  = "https://africacdc.org/disease-outbreak-news/";
+const AFRICA_CDC_URL  = "https://africacdc.org/news-item/";
 const MAX_AGE_DAYS    = 45;
 
 const FETCH_HEADERS = {
@@ -119,9 +119,9 @@ function parseListing(html: string): OutbreakPost[] {
   const cutoff = new Date();
   cutoff.setDate(cutoff.getDate() - MAX_AGE_DAYS);
 
-  // Africa CDC uses WordPress — links are absolute or relative under /disease-outbreak-news/
-  // Match: href="https://africacdc.org/disease-outbreak-news/some-slug/" or "/disease-outbreak-news/..."
-  const linkRe = /<a\s[^>]*href="((?:https?:\/\/africacdc\.org)?\/disease-outbreak-news\/[^/"]+\/?)"[^>]*>([^<]+)<\/a>/gi;
+  // Africa CDC uses WordPress — news items are at /news-item/[slug]/
+  // Match: href="https://africacdc.org/news-item/some-slug/" or "/news-item/..."
+  const linkRe = /<a\s[^>]*href="((?:https?:\/\/africacdc\.org)?\/news-item\/[^/"]+\/?)"[^>]*>([^<]+)<\/a>/gi;
   let m: RegExpExecArray | null;
 
   while ((m = linkRe.exec(html)) !== null) {

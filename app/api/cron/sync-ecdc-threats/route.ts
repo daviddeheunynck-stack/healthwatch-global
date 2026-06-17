@@ -1,7 +1,8 @@
-// ECDC Rapid Risk Assessment scraper — runs every Friday at 09:00 UTC.
-// Fetches recent threat assessment briefs from ECDC (< 45 days old), extracts
-// disease / country / cases from the brief page, and upserts to outbreaks.
-// Covers EU/EEA-specific threats (West Nile, CCHF, etc.) not in WHO DON.
+// ECDC Epidemiological Update scraper — runs every Friday at 09:00 UTC.
+// Reads the ECDC "Epidemiological update" RSS feed (taxonomy/term/1310), fetches
+// each article page for case numbers and country mentions, and upserts to outbreaks.
+// Replaces the old Threat Assessment Brief HTML scraper (that URL is now 404).
+// Covers EU/EEA-specific threats (Ebola, MERS-CoV, Mpox, Hantavirus, etc.).
 // Never overwrites rows owned by the WHO DON daily sync.
 
 import { NextRequest, NextResponse } from "next/server";
@@ -21,19 +22,14 @@ const SUPABASE_URL         = clean(process.env.NEXT_PUBLIC_SUPABASE_URL);
 const SUPABASE_SERVICE_KEY = clean(process.env.SUPABASE_SERVICE_ROLE_KEY);
 const CRON_SECRET          = clean(process.env.CRON_SECRET);
 
-const ECDC_BASE     = "https://www.ecdc.europa.eu";
-const ECDC_TAB_LIST = "https://www.ecdc.europa.eu/en/publications-data/threat-assessment-briefs";
+// RSS feed for "Epidemiological update" content type — 10 items, updated weekly
+const ECDC_RSS_FEED = "https://www.ecdc.europa.eu/en/taxonomy/term/1310/feed";
 const MAX_AGE_DAYS  = 45;
 
 const FETCH_HEADERS = {
   "User-Agent":      "HealthWatch-Global/1.0 (health surveillance; contact@healthwatch-global.com)",
-  "Accept":          "text/html,*/*",
+  "Accept":          "application/rss+xml,text/html,*/*",
   "Accept-Language": "en-US,en;q=0.9",
-};
-
-const MONTHS: Record<string, string> = {
-  jan:"01", feb:"02", mar:"03", apr:"04", may:"05", jun:"06",
-  jul:"07", aug:"08", sep:"09", oct:"10", nov:"11", dec:"12",
 };
 
 // Country names sorted longest-first to avoid "Congo" matching before "Democratic Republic of the Congo"
@@ -52,24 +48,9 @@ function htmlToText(html: string): string {
     .trim();
 }
 
-function parseECDCDate(text: string): string | null {
-  // "14 Mar 2025" / "14 March 2025"
-  const verbal = text.match(/\b(\d{1,2})\s+(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\w*\.?\s+(\d{4})\b/i);
-  if (verbal) {
-    const day = verbal[1].padStart(2, "0");
-    const mon = MONTHS[verbal[2].toLowerCase().substring(0, 3)];
-    return mon ? `${verbal[3]}-${mon}-${day}` : null;
-  }
-  // ISO format: "2025-03-14"
-  const iso = text.match(/\b(\d{4})-(\d{2})-(\d{2})\b/);
-  if (iso) return `${iso[1]}-${iso[2]}-${iso[3]}`;
-  return null;
-}
-
 // Detect if a disease term maps to a known entry in our disease map
 function isKnownDisease(rawName: string): boolean {
   const info = normalizeDisease(rawName);
-  // The unknown-disease fallback has no family / cfr_ref / r0_ref set
   return !!(info.family || info.cfr_ref || info.r0_ref || info.incubationMin);
 }
 
@@ -81,56 +62,77 @@ function findMentionedCountries(text: string): string[] {
   for (const name of COUNTRY_NAMES) {
     const geo = COUNTRIES[name];
     if (!geo) continue;
-    const canonical = name; // key in COUNTRIES
-    if (seen.has(canonical)) continue;
+    if (seen.has(name)) continue;
     if (lower.includes(name.toLowerCase())) {
-      found.push(canonical);
-      seen.add(canonical);
+      found.push(name);
+      seen.add(name);
     }
   }
   return found;
 }
 
-// ── Listing page parser ───────────────────────────────────────────────────────
-
-interface BriefEntry {
-  url:    string;
-  title:  string;
-  date:   string;  // YYYY-MM-DD
+// Extract disease name from an ECDC epidemiological update title.
+// e.g. "Ebola disease outbreak in DRC and Uganda" → "Ebola disease"
+//      "MERS-CoV worldwide overview" → "MERS-CoV"
+//      "Mpox worldwide overview" → "Mpox"
+//      "Epidemiological update: Shigella in Europe" → "Shigella"
+function extractECDCDisease(title: string): string {
+  return title
+    .replace(/^epidemiological\s+update\s*:\s*/i, "")
+    .replace(/^(?:rapid\s+risk\s+assessment|threat\s+assessment\s+brief)\s*:\s*/i, "")
+    .replace(/\s+worldwide\s+overview\b.*/i, "")
+    .replace(/\s+situation\s+update\b.*/i, "")
+    .replace(/\s+outbreak\b.*/i, "")
+    .replace(/\s+in\s+.+$/i, "")
+    .replace(/\s*[-–—]\s*.+$/, "")
+    .trim();
 }
 
-function parseListing(html: string): BriefEntry[] {
-  const entries: BriefEntry[] = [];
-  const seen    = new Set<string>();
-  const cutoff  = new Date();
+// ── RSS feed parser ───────────────────────────────────────────────────────────
+
+interface RSSItem {
+  url:         string;
+  title:       string;
+  date:        string;   // YYYY-MM-DD
+  description: string;   // plain text from RSS <description>
+}
+
+function parseRSSFeed(xml: string): RSSItem[] {
+  const items:   RSSItem[] = [];
+  const cutoff   = new Date();
   cutoff.setDate(cutoff.getDate() - MAX_AGE_DAYS);
 
-  // Match <a href="..."> where href points to a TAB/RRA page, then capture link text
-  const linkRe = /<a\s[^>]*href="(\/en\/publications-data\/(?:rapid-risk-assessment|threat-assessment-brief)[^"]*)"[^>]*>([^<]+)<\/a>/gi;
-  let m: RegExpExecArray | null;
+  for (const m of xml.matchAll(/<item>([\s\S]*?)<\/item>/gi)) {
+    const raw = m[1];
 
-  while ((m = linkRe.exec(html)) !== null) {
-    const relPath = m[1];
-    const title   = m[2].trim();
-    if (seen.has(relPath) || !title) continue;
-    seen.add(relPath);
+    const title = raw.match(/<title>(?:<!\[CDATA\[)?([^\]<]+)/i)?.[1]?.trim();
+    if (!title) continue;
 
-    // Find the nearest date in a 600-char window around this link
-    const start   = Math.max(0, m.index - 300);
-    const window  = html.substring(start, m.index + 300);
-    const dateStr = parseECDCDate(window);
-    if (!dateStr) continue;
+    // <link> in RSS 2.0 is a text node between tags
+    const link = raw.match(/<link>\s*(https?:\/\/[^\s<]+)/i)?.[1]?.trim() ??
+                 raw.match(/<guid[^>]*>\s*(https?:\/\/[^\s<]+)/i)?.[1]?.trim();
+    if (!link) continue;
 
-    const briefDate = new Date(dateStr);
-    if (isNaN(briefDate.getTime()) || briefDate < cutoff) continue;
+    const pubDate = raw.match(/<pubDate>([^<]+)/i)?.[1]?.trim();
+    if (!pubDate) continue;
+    const d = new Date(pubDate);  // RFC 2822 — native JS Date handles this
+    if (isNaN(d.getTime()) || d < cutoff) continue;
 
-    entries.push({ url: ECDC_BASE + relPath, title, date: dateStr });
+    const descRaw = raw.match(/<description>([\s\S]*?)<\/description>/i)?.[1] ?? "";
+    const description = descRaw
+      .replace(/<!\[CDATA\[/gi, "").replace(/\]\]>/gi, "")
+      .replace(/<[^>]+>/g, " ")
+      .replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">")
+      .replace(/&nbsp;/g, " ").replace(/\s+/g, " ")
+      .trim();
+
+    items.push({ url: link, title, date: d.toISOString().substring(0, 10), description });
   }
 
-  return entries;
+  return items;
 }
 
-// ── Individual brief page ─────────────────────────────────────────────────────
+// ── Individual article page ───────────────────────────────────────────────────
 
 interface BriefData {
   disease_en:  string;
@@ -142,68 +144,42 @@ interface BriefData {
   date:        string;
 }
 
-async function extractBriefData(entry: BriefEntry): Promise<BriefData[]> {
-  // Identify disease from the title (strip "Rapid Risk Assessment:" / "Threat Assessment:" prefix)
-  const titleCore = entry.title
-    .replace(/^(rapid\s+risk\s+assessment|threat\s+assessment\s+brief)\s*:?\s*/i, "")
-    .replace(/\s+—\s+.*$/, "")    // strip "— update #N"
-    .replace(/\s+in\s+.+$/i, "")  // strip "in Italy" (we'll get country from body)
-    .trim();
-
-  if (!isKnownDisease(titleCore)) return [];
-
+async function extractItemData(item: RSSItem): Promise<BriefData[]> {
+  const titleCore = extractECDCDisease(item.title);
+  if (!titleCore || !isKnownDisease(titleCore)) return [];
   const diseaseInfo = normalizeDisease(titleCore);
 
-  // Fetch the brief page
-  let html: string;
+  // Fetch article page for full case numbers and country context
+  let articleText = "";
   try {
-    const res = await fetch(entry.url, { headers: FETCH_HEADERS, signal: AbortSignal.timeout(12_000) });
-    if (!res.ok) return [];
-    html = await res.text();
+    const res = await fetch(item.url, { headers: FETCH_HEADERS, signal: AbortSignal.timeout(12_000) });
+    if (res.ok) articleText = htmlToText(await res.text());
   } catch (e) {
-    console.warn("[ecdc] fetch brief:", errorMessage(e));
-    return [];
+    console.warn("[ecdc] fetch article:", errorMessage(e));
   }
 
-  const bodyText    = htmlToText(html);
-  const { cases, deaths } = extractNumbers(bodyText);
+  // Combine RSS description + article intro for extraction
+  const fullText = `${item.description} ${articleText}`.trim();
+  const { cases, deaths } = extractNumbers(fullText.substring(0, 3000));
 
-  // Primary country: look in the ORIGINAL title first ("in [Country]" pattern)
-  let primaryCountries: string[] = [];
-  const titleInMatch = entry.title.match(/\bin\s+([A-Z][a-zA-Z\s]+?)(?:\s*[,–—,]|$)/);
-  if (titleInMatch) {
-    const geo = findCountry(titleInMatch[1].trim());
-    if (geo) primaryCountries = [titleInMatch[1].trim()];
-  }
+  // Country detection: scan description + article intro (first 800 chars of article)
+  const searchText = `${item.description} ${articleText.substring(0, 800)}`;
+  const countries  = findMentionedCountries(searchText);
+  if (countries.length === 0) return [];
 
-  // Fallback: scan the first 800 chars of the body (intro paragraph) for countries
-  if (primaryCountries.length === 0) {
-    const intro   = bodyText.substring(0, 800);
-    primaryCountries = findMentionedCountries(intro).slice(0, 3);
-  }
+  // Take the first mentioned country only (avoid noise from "worldwide overview" items)
+  const geo = findCountry(countries[0]);
+  if (!geo) return [];
 
-  // Skip multi-country events without a clear primary (WHO DON likely covers them)
-  if (primaryCountries.length === 0) return [];
-
-  // For single-country events OR when we have a clear primary, take the first
-  const targetCountries = primaryCountries.length === 1 ? primaryCountries : primaryCountries.slice(0, 1);
-  const description     = bodyText.substring(0, 500).trim();
-
-  const results: BriefData[] = [];
-  for (const countryKey of targetCountries) {
-    const geo = findCountry(countryKey);
-    if (!geo) continue;
-    results.push({
-      disease_en:  diseaseInfo.name_en,
-      country_en:  geo.name_en,
-      cases,
-      deaths,
-      source:      entry.url,
-      description: `ECDC Rapid Risk Assessment — ${entry.title}. ${description}`.substring(0, 600),
-      date:        entry.date,
-    });
-  }
-  return results;
+  return [{
+    disease_en:  diseaseInfo.name_en,
+    country_en:  geo.name_en,
+    cases,
+    deaths,
+    source:      item.url,
+    description: `ECDC — ${item.title}. ${item.description}`.substring(0, 600),
+    date:        item.date,
+  }];
 }
 
 // ── Main handler ──────────────────────────────────────────────────────────────
@@ -220,22 +196,22 @@ export async function GET(req: NextRequest) {
   const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
   const today    = new Date().toISOString().substring(0, 10);
 
-  // ── 1. Fetch ECDC TAB listing ─────────────────────────────────────────────
-  let listingHtml: string;
+  // ── 1. Fetch ECDC Epidemiological Update RSS feed ─────────────────────────
+  let rssXml: string;
   try {
-    const res = await fetch(ECDC_TAB_LIST, { headers: FETCH_HEADERS, signal: AbortSignal.timeout(15_000) });
+    const res = await fetch(ECDC_RSS_FEED, { headers: FETCH_HEADERS, signal: AbortSignal.timeout(15_000) });
     if (!res.ok) {
-      console.error(`[ecdc] listing HTTP ${res.status}`);
-      return NextResponse.json({ error: `ECDC listing HTTP ${res.status}` }, { status: 502 });
+      console.error(`[ecdc] RSS HTTP ${res.status}`);
+      return NextResponse.json({ error: `ECDC RSS HTTP ${res.status}` }, { status: 502 });
     }
-    listingHtml = await res.text();
+    rssXml = await res.text();
   } catch (e) {
-    console.error("[ecdc] fetch listing:", errorMessage(e));
+    console.error("[ecdc] fetch RSS:", errorMessage(e));
     return NextResponse.json({ error: errorMessage(e) }, { status: 502 });
   }
 
-  const entries = parseListing(listingHtml);
-  console.log(`[ecdc] Found ${entries.length} recent brief(s) within ${MAX_AGE_DAYS} days`);
+  const entries = parseRSSFeed(rssXml);
+  console.log(`[ecdc] Found ${entries.length} recent item(s) within ${MAX_AGE_DAYS} days`);
 
   if (entries.length === 0) {
     return NextResponse.json({ success: true, briefs: 0, inserted: 0, updated: 0, skipped: 0 });
@@ -257,7 +233,7 @@ export async function GET(req: NextRequest) {
     if (!prev || (row.active && !prev.active)) byDC.set(k, row);
   }
 
-  // ── 3. Process each brief ─────────────────────────────────────────────────
+  // ── 3. Process each RSS item ──────────────────────────────────────────────
   const results = { briefs: entries.length, inserted: 0, updated: 0, skipped: 0, errors: 0 };
   type LogEntry = { label: string; status: string; detail?: string };
   const log: LogEntry[] = [];
@@ -265,7 +241,7 @@ export async function GET(req: NextRequest) {
   for (const entry of entries) {
     let briefItems: BriefData[] = [];
     try {
-      briefItems = await extractBriefData(entry);
+      briefItems = await extractItemData(entry);
     } catch (e) {
       log.push({ label: entry.title, status: "error", detail: errorMessage(e) });
       results.errors++;
