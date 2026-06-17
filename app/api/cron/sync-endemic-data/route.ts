@@ -253,10 +253,11 @@ async function tryWHOAFROBulletins(currentDate: string): Promise<Found | null> {
 }
 
 async function tryReliefWebEthiopiaCholera(currentDate: string): Promise<Found | null> {
-  // ReliefWeb has a public JSON API — no auth required
-  const apiUrl = new URL("https://api.reliefweb.int/v1/reports");
+  // ReliefWeb v2 API (v1 decommissioned). Requires approved appname.
+  const year = new Date().getFullYear();
+  const apiUrl = new URL("https://api.reliefweb.int/v2/reports");
   apiUrl.searchParams.set("appname", "healthwatch-global");
-  apiUrl.searchParams.set("query[value]", "Ethiopia cholera cases 2025");
+  apiUrl.searchParams.set("query[value]", `Ethiopia cholera cases ${year}`);
   apiUrl.searchParams.set("fields[include][]", "title");
   apiUrl.searchParams.set("fields[include][]", "date");
   apiUrl.searchParams.set("fields[include][]", "url");
