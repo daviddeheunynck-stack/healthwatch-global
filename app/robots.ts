@@ -13,6 +13,7 @@ export default function robots(): MetadataRoute.Robots {
           "/*/forgot-password",
           "/*/reset-password",
           "/*/admin",
+          "/*/qa-source-check",
           "/*/success",
           "/*/outbreak/*/print",
           "/*/qa-source-check",
