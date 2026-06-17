@@ -14,6 +14,7 @@ const PUBLIC_ROUTES = [
   { path: "/alerts",  changeFreq: "daily",   priority: 0.8 },
   { path: "/reports", changeFreq: "weekly",  priority: 0.8 },
   { path: "/diseases", changeFreq: "daily",   priority: 0.9 },
+  { path: "/pilot",   changeFreq: "monthly", priority: 0.8 },
   { path: "/about",   changeFreq: "monthly", priority: 0.7 },
   { path: "/compare", changeFreq: "monthly", priority: 0.7 },
   { path: "/docs",    changeFreq: "weekly",  priority: 0.6 },
