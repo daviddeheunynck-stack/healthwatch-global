@@ -90,7 +90,7 @@ export default function ComparePage() {
 
   useEffect(() => {
     const sp = new URLSearchParams(window.location.search);
-    createClient().from("outbreaks").select("*").eq("active", true).order("risk_level").limit(100)
+    createClient().from("outbreaks").select("*").eq("active", true).order("is_pheic", { ascending: false }).order("date", { ascending: false }).limit(100)
       .then(({ data }) => {
         const list = (data as unknown as Outbreak[]) ?? [];
         setOutbreaks(list);
