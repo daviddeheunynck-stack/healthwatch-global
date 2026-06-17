@@ -63,6 +63,10 @@
     {
       "path": "/api/cron/sync-paho-alerts",
       "schedule": "30 9 * * 2"
+    },
+    {
+      "path": "/api/cron/sync-africa-cdc",
+      "schedule": "0 9 * * 3,6"
     }
   ]
 }

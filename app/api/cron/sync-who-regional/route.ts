@@ -16,7 +16,7 @@ import { extractNumbers, assessRisk } from "@/lib/outbreak-parser";
 import { errorMessage } from "@/lib/error";
 
 export const dynamic = "force-dynamic";
-export const maxDuration = 60;
+export const maxDuration = 120; // 45 targets × ~2s each; Vercel Pro allows 300s for crons
 
 const BOM = String.fromCharCode(65279);
 const clean = (v: string | undefined) => (v ?? "").replace(new RegExp("^" + BOM), "").trim();
