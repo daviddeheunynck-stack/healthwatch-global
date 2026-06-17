@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { Zap, AlertTriangle } from "lucide-react";
 import { track } from "@vercel/analytics/react";
+import Link from "next/link";
 import BillingPortalButton from "@/components/BillingPortalButton";
 import CheckoutButton from "@/components/CheckoutButton";
 
@@ -13,36 +14,48 @@ const COPY: Record<string, {
   desc: string;
   cta: string;
   today: string;
+  pilotNudge: string;
+  pilotLink: string;
 }> = {
   fr: {
     title: (d) => d <= 0 ? "Votre essai Pro se termine aujourd'hui" : d === 1 ? "Il reste 1 jour sur votre essai Pro" : `Il reste ${d} jours sur votre essai Pro`,
     desc: "Ajoutez un moyen de paiement pour conserver l'accès aux alertes instantanées, rapports PDF et export CSV.",
     cta: "Activer mon abonnement",
     today: "Ajoutez un moyen de paiement maintenant pour ne pas perdre l'accès.",
+    pilotNudge: "Vous représentez une organisation ?",
+    pilotLink: "Programme pilote gratuit →",
   },
   en: {
     title: (d) => d <= 0 ? "Your Pro trial ends today" : d === 1 ? "1 day left on your Pro trial" : `${d} days left on your Pro trial`,
     desc: "Add a payment method to keep access to instant alerts, PDF reports and CSV export.",
     cta: "Activate my subscription",
     today: "Add a payment method now to avoid losing access.",
+    pilotNudge: "Representing an organization?",
+    pilotLink: "Free institutional pilot →",
   },
   es: {
     title: (d) => d <= 0 ? "Su prueba Pro termina hoy" : d === 1 ? "Queda 1 día en su prueba Pro" : `Quedan ${d} días en su prueba Pro`,
     desc: "Añada un método de pago para conservar el acceso a alertas instantáneas, informes PDF y exportación CSV.",
     cta: "Activar mi suscripción",
     today: "Añada un método de pago ahora para no perder el acceso.",
+    pilotNudge: "¿Representa una organización?",
+    pilotLink: "Piloto institucional gratuito →",
   },
   ar: {
     title: (d) => d <= 0 ? "تجربتك Pro تنتهي اليوم" : d === 1 ? "يوم واحد متبقٍّ في تجربة Pro" : `${d} أيام متبقية في تجربة Pro`,
     desc: "أضف طريقة دفع للاحتفاظ بالوصول إلى التنبيهات الفورية وتقارير PDF وتصدير CSV.",
     cta: "تفعيل اشتراكي",
     today: "أضف طريقة دفع الآن لتجنب فقدان الوصول.",
+    pilotNudge: "هل تمثل منظمة؟",
+    pilotLink: "← برنامج تجريبي مؤسسي مجاني",
   },
   id: {
     title: (d) => d <= 0 ? "Uji coba Pro Anda berakhir hari ini" : d === 1 ? "Sisa 1 hari uji coba Pro Anda" : `Sisa ${d} hari uji coba Pro Anda`,
     desc: "Tambahkan metode pembayaran untuk mempertahankan akses ke peringatan instan, laporan PDF, dan ekspor CSV.",
     cta: "Aktifkan langganan saya",
     today: "Tambahkan metode pembayaran sekarang agar tidak kehilangan akses.",
+    pilotNudge: "Mewakili sebuah organisasi?",
+    pilotLink: "Program pilot institusional gratis →",
   },
 };
 
@@ -110,19 +123,30 @@ export default function TrialBanner({ trialEndsAt, locale, hasBilling }: Props) 
         </div>
 
         {/* CTA — billing portal for Stripe customers, checkout for trial-only users */}
-        <div
-          className="shrink-0"
-          onClick={() => track("trial_banner_cta", { days_left: daysLeft, has_billing: hasBilling, locale })}
-        >
-          {hasBilling ? (
-            <BillingPortalButton locale={locale} label={c.cta} />
-          ) : (
-            <CheckoutButton
-              plan="pro"
-              locale={locale}
-              label={c.cta}
-              className="flex items-center gap-2 bg-red-600 hover:bg-red-500 disabled:opacity-60 text-white font-semibold px-5 py-2.5 rounded-lg transition-colors text-sm"
-            />
+        <div className="shrink-0 flex flex-col items-end gap-1.5">
+          <div onClick={() => track("trial_banner_cta", { days_left: daysLeft, has_billing: hasBilling, locale })}>
+            {hasBilling ? (
+              <BillingPortalButton locale={locale} label={c.cta} />
+            ) : (
+              <CheckoutButton
+                plan="pro"
+                locale={locale}
+                label={c.cta}
+                className="flex items-center gap-2 bg-red-600 hover:bg-red-500 disabled:opacity-60 text-white font-semibold px-5 py-2.5 rounded-lg transition-colors text-sm"
+              />
+            )}
+          </div>
+          {!isCritical && (
+            <p className="text-xs text-gray-600">
+              {c.pilotNudge}{" "}
+              <Link
+                href={`/${locale}/pilot`}
+                className="text-gray-500 hover:text-gray-300 underline underline-offset-2 transition-colors"
+                onClick={() => track("trial_banner_pilot_click", { days_left: daysLeft, locale })}
+              >
+                {c.pilotLink}
+              </Link>
+            </p>
           )}
         </div>
       </div>
