@@ -354,3 +354,22 @@ export function sourceStatus(outbreak: Pick<Outbreak, "source">): SourceStatus {
 export function isIllustrativeData(outbreak: Pick<Outbreak, "source">): boolean {
   return sourceStatus(outbreak) !== 'don';
 }
+
+/**
+ * Human-readable name for the organisation that published the source URL.
+ * Used for source attribution badges in the UI.
+ */
+export function sourceName(source: string | null | undefined): string {
+  const src = source ?? "";
+  if (src.includes("who.int/emergencies/disease-outbreak-news")) return "WHO DON";
+  if (src.includes("ecdc.europa.eu"))    return "ECDC";
+  if (src.includes("paho.org"))          return "PAHO";
+  if (src.includes("africacdc.org"))     return "Africa CDC";
+  if (src.includes("info.dengue.mat.br")) return "InfoDengue";
+  if (src.includes("reliefweb.int"))     return "ReliefWeb";
+  if (src.includes("ncdc.gov.ng"))       return "Nigeria CDC";
+  if (src.includes("doh.gov.ph"))        return "PH DOH";
+  if (src.includes("moph.go.th"))        return "Thailand MOPH";
+  if (src.includes("who.int"))           return "WHO";
+  return "Official";
+}

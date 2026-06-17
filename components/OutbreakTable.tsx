@@ -10,7 +10,7 @@ import { track } from "@vercel/analytics/react";
 
 type SortKey = "risk" | "cases" | "deaths" | "cfr" | "date";
 type SortDir = "asc" | "desc";
-import { getLocalizedDisease, getLocalizedCountry, isNewOutbreak, sourceStatus } from "@/lib/outbreaks";
+import { getLocalizedDisease, getLocalizedCountry, isNewOutbreak, sourceStatus, sourceName } from "@/lib/outbreaks";
 import { diseaseToSlug, normalizeDisease } from "@/lib/disease-data";
 import type { Outbreak } from "@/lib/outbreaks";
 import type { OutbreakTrend } from "@/lib/outbreak-trend";
@@ -535,7 +535,7 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
                       )}
                       {sourceStatus(outbreak) === 'official' && (
                         <span title={l.officialTooltip} className="inline-flex items-center text-[10px] font-bold px-1.5 py-0.5 rounded bg-amber-900/30 border border-amber-700/50 text-amber-400 shrink-0 cursor-help whitespace-nowrap">
-                          {l.officialBadge}
+                          {sourceName(outbreak.source)}
                         </span>
                       )}
                       {sourceStatus(outbreak) === 'unverified' && (

@@ -6,7 +6,7 @@ import { X, ExternalLink, AlertTriangle, TrendingUp, Users, Skull, Calendar, Glo
 import WatchlistButton from "@/components/WatchlistButton";
 import { getIncidenceRate } from "@/lib/population-data";
 import type { Outbreak } from "@/lib/outbreaks";
-import { getLocalizedDisease, getLocalizedCountry, getLocalizedDescription, sourceStatus } from "@/lib/outbreaks";
+import { getLocalizedDisease, getLocalizedCountry, getLocalizedDescription, sourceStatus, sourceName } from "@/lib/outbreaks";
 import { diseaseToSlug, normalizeDisease } from "@/lib/disease-data";
 import Link from "next/link";
 import type { OutbreakTrend } from "@/lib/outbreak-trend";
@@ -120,7 +120,7 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlis
                   title={c.officialNotice}
                   className="inline-flex items-center text-xs px-2 py-0.5 rounded-full bg-amber-900/30 border border-amber-700/50 text-amber-400 font-bold cursor-help"
                 >
-                  {c.officialBadge}
+                  {sourceName(outbreak.source)}
                 </span>
               )}
               {status === 'unverified' && (
