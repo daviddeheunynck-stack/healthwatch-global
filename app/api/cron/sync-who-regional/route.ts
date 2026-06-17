@@ -204,32 +204,64 @@ async function queryReliefWeb(target: Target): Promise<Found | null> {
 // ── Target list ───────────────────────────────────────────────────────────────
 
 const TARGETS: Target[] = [
-  // Dengue — Brazil via InfoDengue (Fiocruz); others via ReliefWeb once appname approved
-  { disease_en: "Dengue",       country_en: "Brazil",                           minCases: 50_000, fetcher: fetchBrazilDengue },
-  { disease_en: "Dengue",       country_en: "India",                            minCases: 50_000 },
-  { disease_en: "Dengue",       country_en: "Bangladesh",                       minCases: 1_000  },
-  { disease_en: "Dengue",       country_en: "Colombia",                         minCases: 5_000  },
-  { disease_en: "Dengue",       country_en: "Indonesia",                        minCases: 10_000 },
-  { disease_en: "Dengue",       country_en: "Vietnam",                          minCases: 5_000  },
-  // Cholera — endemic in fragile/conflict states
-  { disease_en: "Cholera",      country_en: "Democratic Republic of the Congo", minCases: 100    },
-  { disease_en: "Cholera",      country_en: "Haiti",                            minCases: 100    },
-  { disease_en: "Cholera",      country_en: "Somalia",                          minCases: 100    },
-  { disease_en: "Cholera",      country_en: "Sudan",                            minCases: 100    },
-  { disease_en: "Cholera",      country_en: "Yemen",                            minCases: 100    },
-  { disease_en: "Cholera",      country_en: "Zimbabwe",                         minCases:  50    },
-  // Yellow Fever — any confirmed case is epidemiologically significant
-  { disease_en: "Yellow Fever", country_en: "Nigeria",                          minCases:   1    },
-  { disease_en: "Yellow Fever", country_en: "Cameroon",                         minCases:   1    },
-  // Meningitis — meningitis belt countries
-  { disease_en: "Meningitis",   country_en: "Niger",                            minCases:  10    },
-  { disease_en: "Meningitis",   country_en: "Nigeria",                          minCases:  10    },
-  // MERS-CoV — sporadic but ongoing; any case is significant
-  { disease_en: "MERS-CoV",    country_en: "Saudi Arabia",                      minCases:   1    },
-  // Typhoid — XDR strain active since 2016
-  { disease_en: "Typhoid",     country_en: "Pakistan",                          minCases: 100    },
-  // Mpox — DRC clade I ongoing (may also be in WHO DON; dedup logic handles overlap)
-  { disease_en: "Mpox",        country_en: "Democratic Republic of the Congo",  minCases: 100    },
+  // ── Dengue — Brazil via InfoDengue (Fiocruz); others via ReliefWeb ────────────
+  { disease_en: "Dengue",        country_en: "Brazil",                           minCases: 50_000, fetcher: fetchBrazilDengue },
+  { disease_en: "Dengue",        country_en: "India",                            minCases: 50_000 },
+  { disease_en: "Dengue",        country_en: "Bangladesh",                       minCases: 1_000  },
+  { disease_en: "Dengue",        country_en: "Colombia",                         minCases: 5_000  },
+  { disease_en: "Dengue",        country_en: "Indonesia",                        minCases: 10_000 },
+  { disease_en: "Dengue",        country_en: "Vietnam",                          minCases: 5_000  },
+  { disease_en: "Dengue",        country_en: "Thailand",                         minCases: 5_000  },
+  { disease_en: "Dengue",        country_en: "Malaysia",                         minCases: 1_000  },
+  { disease_en: "Dengue",        country_en: "Peru",                             minCases: 1_000  },
+  // ── Cholera — endemic in fragile/conflict states ──────────────────────────────
+  { disease_en: "Cholera",       country_en: "Democratic Republic of the Congo", minCases: 100    },
+  { disease_en: "Cholera",       country_en: "Haiti",                            minCases: 100    },
+  { disease_en: "Cholera",       country_en: "Somalia",                          minCases: 100    },
+  { disease_en: "Cholera",       country_en: "Sudan",                            minCases: 100    },
+  { disease_en: "Cholera",       country_en: "Yemen",                            minCases: 100    },
+  { disease_en: "Cholera",       country_en: "Zimbabwe",                         minCases:  50    },
+  { disease_en: "Cholera",       country_en: "Afghanistan",                      minCases: 100    },
+  { disease_en: "Cholera",       country_en: "Mozambique",                       minCases:  50    },
+  { disease_en: "Cholera",       country_en: "Kenya",                            minCases:  50    },
+  { disease_en: "Cholera",       country_en: "Cameroon",                         minCases:  50    },
+  { disease_en: "Cholera",       country_en: "Syria",                            minCases:  50    },
+  { disease_en: "Cholera",       country_en: "Malawi",                           minCases:  50    },
+  // ── Measles — high-burden countries not consistently in WHO DON ───────────────
+  { disease_en: "Measles",       country_en: "Democratic Republic of the Congo", minCases: 1_000  },
+  { disease_en: "Measles",       country_en: "Ethiopia",                         minCases: 500    },
+  { disease_en: "Measles",       country_en: "Nigeria",                          minCases: 500    },
+  { disease_en: "Measles",       country_en: "Yemen",                            minCases: 100    },
+  { disease_en: "Measles",       country_en: "Somalia",                          minCases: 100    },
+  { disease_en: "Measles",       country_en: "Pakistan",                         minCases: 100    },
+  { disease_en: "Measles",       country_en: "Ukraine",                          minCases:  50    },
+  // ── Yellow Fever — any confirmed case is epidemiologically significant ─────────
+  { disease_en: "Yellow Fever",  country_en: "Nigeria",                          minCases:   1    },
+  { disease_en: "Yellow Fever",  country_en: "Cameroon",                         minCases:   1    },
+  // ── Meningitis — meningitis belt extended coverage ────────────────────────────
+  { disease_en: "Meningitis",    country_en: "Niger",                            minCases:  10    },
+  { disease_en: "Meningitis",    country_en: "Nigeria",                          minCases:  10    },
+  { disease_en: "Meningitis",    country_en: "Chad",                             minCases:  10    },
+  { disease_en: "Meningitis",    country_en: "Ethiopia",                         minCases:  10    },
+  // ── MERS-CoV — sporadic but ongoing; any case is significant ──────────────────
+  { disease_en: "MERS-CoV",     country_en: "Saudi Arabia",                      minCases:   1    },
+  // ── Typhoid — XDR strain active since 2016 ────────────────────────────────────
+  { disease_en: "Typhoid",      country_en: "Pakistan",                          minCases: 100    },
+  // ── Polio — wild and vaccine-derived poliovirus ────────────────────────────────
+  { disease_en: "Polio",        country_en: "Pakistan",                          minCases:   1    },
+  { disease_en: "Polio",        country_en: "Afghanistan",                       minCases:   1    },
+  // ── Hepatitis E — outbreak-prone conflict/displacement settings ───────────────
+  { disease_en: "Hepatitis E",  country_en: "Sudan",                             minCases:  50    },
+  { disease_en: "Hepatitis E",  country_en: "Somalia",                           minCases:  50    },
+  { disease_en: "Hepatitis E",  country_en: "Nigeria",                           minCases: 100    },
+  // ── Diphtheria — resurgent in fragile states ──────────────────────────────────
+  { disease_en: "Diphtheria",   country_en: "Haiti",                             minCases:  10    },
+  { disease_en: "Diphtheria",   country_en: "Yemen",                             minCases:  10    },
+  // ── Leishmaniasis — visceral form, east Africa / conflict settings ────────────
+  { disease_en: "Leishmaniasis", country_en: "Sudan",                            minCases: 100    },
+  { disease_en: "Leishmaniasis", country_en: "Ethiopia",                         minCases: 100    },
+  // ── Mpox — DRC clade I ongoing (WHO DON dedup guard handles overlap) ──────────
+  { disease_en: "Mpox",         country_en: "Democratic Republic of the Congo",  minCases: 100    },
 ];
 
 // ── Main handler ──────────────────────────────────────────────────────────────
