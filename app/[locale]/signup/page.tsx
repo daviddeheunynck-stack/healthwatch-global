@@ -116,7 +116,9 @@ export default function SignupPage() {
     if (signUpData.session && userId) {
       track("signup_success", { method: "email", locale, autoconfirm: true });
       await fetch("/api/activate-trial", { method: "POST" }).catch(() => {});
-      router.push(`/${locale}`);
+      // Hard redirect (not router.push) so the Navbar remounts and reads the
+      // updated plan from Supabase — client-side nav keeps the old "free" state.
+      window.location.assign(`/${locale}`);
       return;
     }
 
