@@ -198,37 +198,31 @@ async function runPAHO(): Promise<Result[]> {
 // ── Africa CDC ────────────────────────────────────────────────────────────────
 
 async function runAfricaCDC(): Promise<Result[]> {
-  const res  = await fetch("https://africacdc.org/news-item/", { headers: HEADERS });
-  const html = await res.text();
+  const res = await fetch("https://africacdc.org/news-item/feed/", {
+    headers: { ...HEADERS, Accept: "application/rss+xml,*/*" },
+  });
+  const xml     = await res.text();
   const results: Result[] = [];
-  const seen  = new Set<string>();
 
-  const links = [...new Set(
-    [...html.matchAll(/href="(https?:\/\/africacdc\.org\/news-item\/[^"/][^"]+)"/gi)].map(m => m[1])
-  )].filter(u => !u.includes("/feed") && !u.includes("/page/"));
+  for (const m of xml.matchAll(/<item>([\s\S]*?)<\/item>/gi)) {
+    const raw = m[1];
+    const title = raw.match(/<title>(?:<!\[CDATA\[)?([^\]<]+)/i)?.[1]?.trim();
+    if (!title) continue;
+    const link = raw.match(/<link>\s*(https?:\/\/[^\s<]+)/i)?.[1]?.trim() ??
+                 raw.match(/<guid[^>]*>\s*(https?:\/\/[^\s<]+)/i)?.[1]?.trim();
+    if (!link) continue;
+    const pubDate = raw.match(/<pubDate>([^<]+)/i)?.[1]?.trim();
+    if (!pubDate) continue;
+    const d = new Date(pubDate);
+    if (isNaN(d.getTime()) || d < cutoff) continue;
+    const date = d.toISOString().slice(0, 10);
 
-  for (const url of links) {
-    if (seen.has(url)) continue;
-    seen.add(url);
+    const descRaw = raw.match(/<description>([\s\S]*?)<\/description>/i)?.[1] ?? "";
+    const desc = descRaw.replace(/<!\[CDATA\[/gi,"").replace(/\]\]>/gi,"")
+      .replace(/<[^>]+>/g," ").replace(/&nbsp;/g," ").replace(/\s+/g," ").trim();
 
-    let artHtml = "";
-    try {
-      const ar = await fetch(url, { headers: HEADERS, signal: AbortSignal.timeout(10_000) });
-      if (!ar.ok) continue;
-      artHtml = await ar.text();
-    } catch { continue; }
-
-    const bodyText = htmlToText(artHtml);
-    const titleMatch = artHtml.match(/<h1[^>]*>([^<]+)<\/h1>/i);
-    if (!titleMatch) continue;
-    const rawTitle = titleMatch[1].trim();
-
-    // Extract date from page body
-    const dateStr = parsePAHODate(bodyText.slice(0, 2000));
-    if (!dateStr || new Date(dateStr) < cutoff) continue;
-
-    // Disease from title — same logic as sync-africa-cdc/route.ts extractDiseaseFromTitle
-    const diseaseRaw = rawTitle
+    // Disease from title
+    const diseaseRaw = title
       .replace(/^\d{4}\s+/, "")
       .replace(/:.*$/, "")
       .replace(/\s+without\b.*/i, "")
@@ -238,22 +232,40 @@ async function runAfricaCDC(): Promise<Result[]> {
       .replace(/\s*[-–—]\s*.+$/,"")
       .trim();
 
-    if (!isKnownDisease(diseaseRaw)) {
-      console.log(`  [Africa CDC skip] ${rawTitle.slice(0,60)} → disease not in map`);
+    if (!diseaseRaw || diseaseRaw.length > 40 || !isKnownDisease(diseaseRaw)) {
+      console.log(`  [Africa CDC skip] ${title.slice(0,60)} → disease not in map`);
       continue;
     }
 
-    const { cases, deaths } = extractNumbers(bodyText.slice(0, 3000));
-    const countries = findCountries(`${rawTitle} ${bodyText.slice(0,800)}`, AFRICA_CTRIES);
+    // Country: scan RSS description first, then article body
+    let countries = findCountries(desc, AFRICA_CTRIES);
     if (countries.length === 0) {
-      console.log(`  [Africa CDC skip] ${rawTitle.slice(0,60)} → no African country found`);
+      try {
+        const ar = await fetch(link, { headers: HEADERS, signal: AbortSignal.timeout(10_000) });
+        if (ar.ok) {
+          const bodyText = htmlToText(await ar.text());
+          countries = findCountries(bodyText.slice(0, 1500), AFRICA_CTRIES);
+        }
+      } catch { /* ignore */ }
+    }
+
+    if (countries.length === 0) {
+      console.log(`  [Africa CDC skip] ${title.slice(0,60)} → no African country found`);
       continue;
     }
-    const geo     = findCountry(countries[0]);
+    const geo = findCountry(countries[0]);
     if (!geo) continue;
+
+    // Numbers: description + article body
+    let artText = "";
+    try {
+      const ar = await fetch(link, { headers: HEADERS, signal: AbortSignal.timeout(10_000) });
+      if (ar.ok) artText = htmlToText(await ar.text());
+    } catch { /* ignore */ }
+    const { cases, deaths } = extractNumbers(`${desc} ${artText}`.slice(0, 3000));
     const disease = normalizeDisease(diseaseRaw);
 
-    results.push({ source:"Africa CDC", disease_en:disease.name_en, country_en:geo.name_en, cases, deaths, date:dateStr, url });
+    results.push({ source:"Africa CDC", disease_en:disease.name_en, country_en:geo.name_en, cases, deaths, date, url:link });
   }
 
   return results;

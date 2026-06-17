@@ -22,19 +22,13 @@ const SUPABASE_URL         = clean(process.env.NEXT_PUBLIC_SUPABASE_URL);
 const SUPABASE_SERVICE_KEY = clean(process.env.SUPABASE_SERVICE_ROLE_KEY);
 const CRON_SECRET          = clean(process.env.CRON_SECRET);
 
-const AFRICA_CDC_BASE = "https://africacdc.org";
-const AFRICA_CDC_URL  = "https://africacdc.org/news-item/";
-const MAX_AGE_DAYS    = 45;
+const AFRICA_CDC_RSS = "https://africacdc.org/news-item/feed/";
+const MAX_AGE_DAYS   = 45;
 
 const FETCH_HEADERS = {
   "User-Agent":      "HealthWatch-Global/1.0 (health surveillance; contact@healthwatch-global.com)",
-  "Accept":          "text/html,*/*",
+  "Accept":          "application/rss+xml,text/html,*/*",
   "Accept-Language": "en-US,en;q=0.9",
-};
-
-const MONTHS: Record<string, string> = {
-  jan:"01", feb:"02", mar:"03", apr:"04", may:"05", jun:"06",
-  jul:"07", aug:"08", sep:"09", oct:"10", nov:"11", dec:"12",
 };
 
 // African country names sorted longest-first
@@ -54,18 +48,6 @@ function htmlToText(html: string): string {
     .replace(/&nbsp;/g, " ").replace(/&apos;/g, "'").replace(/&quot;/g, '"')
     .replace(/\s+/g, " ")
     .trim();
-}
-
-function parseAfricaCDCDate(text: string): string | null {
-  const verbal = text.match(/\b(\d{1,2})\s+(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\w*\.?\s+(\d{4})\b/i);
-  if (verbal) {
-    const day = verbal[1].padStart(2, "0");
-    const mon = MONTHS[verbal[2].toLowerCase().substring(0, 3)];
-    return mon ? `${verbal[3]}-${mon}-${day}` : null;
-  }
-  const iso = text.match(/\b(\d{4})-(\d{2})-(\d{2})\b/);
-  if (iso) return `${iso[1]}-${iso[2]}-${iso[3]}`;
-  return null;
 }
 
 function isKnownDisease(rawName: string): boolean {
@@ -110,50 +92,52 @@ function extractDiseaseFromTitle(title: string): string {
     .trim();
 }
 
-// ── Listing page parser ───────────────────────────────────────────────────────
+// ── RSS feed parser ───────────────────────────────────────────────────────────
+// Africa CDC publishes all news items at /news-item/feed/ (WordPress RSS 2.0).
+// RSS gives reliable <pubDate> and <description> with country mentions baked in.
 
-interface OutbreakPost {
-  url:   string;
-  title: string;
-  date:  string;  // YYYY-MM-DD
+interface RSSItem {
+  url:         string;
+  title:       string;
+  date:        string;   // YYYY-MM-DD
+  description: string;   // plain text stripped from RSS <description>
 }
 
-function parseListing(html: string): OutbreakPost[] {
-  const posts:  OutbreakPost[] = [];
-  const seen   = new Set<string>();
+function parseRSSFeed(xml: string): RSSItem[] {
+  const items:  RSSItem[] = [];
   const cutoff = new Date();
   cutoff.setDate(cutoff.getDate() - MAX_AGE_DAYS);
 
-  // Africa CDC uses WordPress — news items are at /news-item/[slug]/
-  // Match: href="https://africacdc.org/news-item/some-slug/" or "/news-item/..."
-  const linkRe = /<a\s[^>]*href="((?:https?:\/\/africacdc\.org)?\/news-item\/[^/"]+\/?)"[^>]*>([^<]+)<\/a>/gi;
-  let m: RegExpExecArray | null;
+  for (const m of xml.matchAll(/<item>([\s\S]*?)<\/item>/gi)) {
+    const raw = m[1];
 
-  while ((m = linkRe.exec(html)) !== null) {
-    const rawUrl = m[1];
-    const title  = m[2].trim();
-    if (!title || title.length < 5) continue;
+    const title = raw.match(/<title>(?:<!\[CDATA\[)?([^\]<]+)/i)?.[1]?.trim();
+    if (!title) continue;
 
-    // Resolve to absolute URL
-    const absUrl = rawUrl.startsWith("http") ? rawUrl : AFRICA_CDC_BASE + rawUrl;
-    if (seen.has(absUrl)) continue;
-    seen.add(absUrl);
+    const link = raw.match(/<link>\s*(https?:\/\/[^\s<]+)/i)?.[1]?.trim() ??
+                 raw.match(/<guid[^>]*>\s*(https?:\/\/[^\s<]+)/i)?.[1]?.trim();
+    if (!link) continue;
 
-    // Find date in surrounding HTML window
-    const window  = html.substring(Math.max(0, m.index - 400), m.index + 400);
-    const dateStr = parseAfricaCDCDate(window);
-    if (!dateStr) continue;
+    const pubDate = raw.match(/<pubDate>([^<]+)/i)?.[1]?.trim();
+    if (!pubDate) continue;
+    const d = new Date(pubDate);  // RFC 2822 — native JS Date handles this
+    if (isNaN(d.getTime()) || d < cutoff) continue;
 
-    const postDate = new Date(dateStr);
-    if (isNaN(postDate.getTime()) || postDate < cutoff) continue;
+    const descRaw = raw.match(/<description>([\s\S]*?)<\/description>/i)?.[1] ?? "";
+    const description = descRaw
+      .replace(/<!\[CDATA\[/gi, "").replace(/\]\]>/gi, "")
+      .replace(/<[^>]+>/g, " ")
+      .replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">")
+      .replace(/&nbsp;/g, " ").replace(/&#8211;/g, "–").replace(/&#124;/g, "|")
+      .replace(/\s+/g, " ").trim();
 
-    posts.push({ url: absUrl, title, date: dateStr });
+    items.push({ url: link, title, date: d.toISOString().substring(0, 10), description });
   }
 
-  return posts;
+  return items;
 }
 
-// ── Individual post page ──────────────────────────────────────────────────────
+// ── Individual item extraction ────────────────────────────────────────────────
 
 interface PostData {
   disease_en:  string;
@@ -165,57 +149,48 @@ interface PostData {
   date:        string;
 }
 
-async function extractPostData(post: OutbreakPost): Promise<PostData[]> {
-  const diseaseRaw = extractDiseaseFromTitle(post.title);
-  if (!diseaseRaw || !isKnownDisease(diseaseRaw)) return [];
+async function extractItemData(item: RSSItem): Promise<PostData[]> {
+  const diseaseRaw = extractDiseaseFromTitle(item.title);
+  // If the title couldn't be cleaned to a short disease name (> 40 chars remain),
+  // it's likely an institutional/funding article rather than an outbreak report.
+  if (!diseaseRaw || diseaseRaw.length > 40 || !isKnownDisease(diseaseRaw)) return [];
   const diseaseInfo = normalizeDisease(diseaseRaw);
 
-  let html: string;
+  // Country detection — RSS description has compact text with key country mentions.
+  // e.g. "...Ebola outbreak...in the Democratic Republic of the Congo and Uganda..."
+  const descCountries = findMentionedAfricanCountries(item.description);
+  let primaryCountry: string | null = descCountries.length > 0 ? descCountries[0] : null;
+
+  // Fetch article page: needed for case/death numbers and country fallback.
+  let articleText = "";
   try {
-    const res = await fetch(post.url, { headers: FETCH_HEADERS, signal: AbortSignal.timeout(12_000) });
-    if (!res.ok) return [];
-    html = await res.text();
+    const res = await fetch(item.url, { headers: FETCH_HEADERS, signal: AbortSignal.timeout(12_000) });
+    if (res.ok) articleText = htmlToText(await res.text());
   } catch (e) {
     console.warn("[africa-cdc] fetch post:", errorMessage(e));
-    return [];
   }
 
-  const bodyText      = htmlToText(html);
-  const { cases, deaths } = extractNumbers(bodyText);
-
-  // Primary country: try title first
-  let primaryCountry: string | null = null;
-
-  // "in [Country]" from title
-  const titleInMatch = post.title.match(/\bin\s+([A-Z][a-zA-Z\s]+?)(?:\s*[-–—|]|$)/);
-  if (titleInMatch) {
-    const candidate = titleInMatch[1].trim();
-    const geo       = findCountry(candidate);
-    if (geo) primaryCountry = candidate;
-  }
-
-  // Fallback: scan first 600 chars of body for African country names
-  if (!primaryCountry) {
-    const intro    = bodyText.substring(0, 600);
-    const mentions = findMentionedAfricanCountries(intro);
-    if (mentions.length > 0) primaryCountry = mentions[0];
+  // Fallback country detection from article body (first 1500 chars)
+  if (!primaryCountry && articleText) {
+    const bodyMentions = findMentionedAfricanCountries(articleText.substring(0, 1500));
+    if (bodyMentions.length > 0) primaryCountry = bodyMentions[0];
   }
 
   if (!primaryCountry) return [];
-
   const geo = findCountry(primaryCountry);
   if (!geo) return [];
 
-  const description = bodyText.substring(0, 500).trim();
+  const fullText = `${item.description} ${articleText}`.trim();
+  const { cases, deaths } = extractNumbers(fullText.substring(0, 3000));
 
   return [{
     disease_en:  diseaseInfo.name_en,
     country_en:  geo.name_en,
     cases,
     deaths,
-    source:      post.url,
-    description: `Africa CDC — ${post.title}. ${description}`.substring(0, 600),
-    date:        post.date,
+    source:      item.url,
+    description: `Africa CDC — ${item.title}. ${item.description}`.substring(0, 600),
+    date:        item.date,
   }];
 }
 
@@ -233,25 +208,25 @@ export async function GET(req: NextRequest) {
   const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
   const today    = new Date().toISOString().substring(0, 10);
 
-  // ── 1. Fetch Africa CDC listing ───────────────────────────────────────────
-  let listingHtml: string;
+  // ── 1. Fetch Africa CDC RSS feed ─────────────────────────────────────────
+  let rssXml: string;
   try {
-    const res = await fetch(AFRICA_CDC_URL, { headers: FETCH_HEADERS, signal: AbortSignal.timeout(15_000) });
+    const res = await fetch(AFRICA_CDC_RSS, { headers: FETCH_HEADERS, signal: AbortSignal.timeout(15_000) });
     if (!res.ok) {
-      console.error(`[africa-cdc] listing HTTP ${res.status}`);
-      return NextResponse.json({ error: `Africa CDC HTTP ${res.status}` }, { status: 502 });
+      console.error(`[africa-cdc] RSS HTTP ${res.status}`);
+      return NextResponse.json({ error: `Africa CDC RSS HTTP ${res.status}` }, { status: 502 });
     }
-    listingHtml = await res.text();
+    rssXml = await res.text();
   } catch (e) {
-    console.error("[africa-cdc] fetch listing:", errorMessage(e));
+    console.error("[africa-cdc] fetch RSS:", errorMessage(e));
     return NextResponse.json({ error: errorMessage(e) }, { status: 502 });
   }
 
-  const posts = parseListing(listingHtml);
-  console.log(`[africa-cdc] Found ${posts.length} recent post(s) within ${MAX_AGE_DAYS} days`);
+  const items = parseRSSFeed(rssXml);
+  console.log(`[africa-cdc] Found ${items.length} recent item(s) within ${MAX_AGE_DAYS} days`);
 
-  if (posts.length === 0) {
-    return NextResponse.json({ success: true, posts: 0, inserted: 0, updated: 0, skipped: 0 });
+  if (items.length === 0) {
+    return NextResponse.json({ success: true, items: 0, inserted: 0, updated: 0, skipped: 0 });
   }
 
   // ── 2. Load existing outbreaks for dedup ──────────────────────────────────
@@ -270,28 +245,28 @@ export async function GET(req: NextRequest) {
     if (!prev || (row.active && !prev.active)) byDC.set(k, row);
   }
 
-  // ── 3. Process each post ──────────────────────────────────────────────────
-  const results = { posts: posts.length, inserted: 0, updated: 0, skipped: 0, errors: 0 };
+  // ── 3. Process each RSS item ──────────────────────────────────────────────
+  const results = { items: items.length, inserted: 0, updated: 0, skipped: 0, errors: 0 };
   type LogEntry = { label: string; status: string; detail?: string };
   const log: LogEntry[] = [];
 
-  for (const post of posts) {
-    let items: PostData[] = [];
+  for (const item of items) {
+    let extracted: PostData[] = [];
     try {
-      items = await extractPostData(post);
+      extracted = await extractItemData(item);
     } catch (e) {
-      log.push({ label: post.title, status: "error", detail: errorMessage(e) });
+      log.push({ label: item.title, status: "error", detail: errorMessage(e) });
       results.errors++;
       continue;
     }
 
-    if (items.length === 0) {
-      log.push({ label: post.title, status: "skip", detail: "disease not in map or no country found" });
+    if (extracted.length === 0) {
+      log.push({ label: item.title, status: "skip", detail: "disease not in map or no country found" });
       results.skipped++;
       continue;
     }
 
-    for (const item of items) {
+    for (const item of extracted) {
       const label = `${item.disease_en}/${item.country_en}`;
 
       if (item.date > today) {
