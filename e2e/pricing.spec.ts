@@ -10,15 +10,19 @@ test.describe("Page Tarifs", () => {
 
   test("affiche les prix", async ({ page }) => {
     await page.goto("/fr/pricing");
-    // Free card heading "Free" and Pro price "29 €"
+    // Default billing is annual → "249 €" visible
     await expect(page.getByText("Free", { exact: true }).first()).toBeVisible();
+    await expect(page.getByText("249 €", { exact: true })).toBeVisible();
+    // Switch to monthly → "29 €" visible
+    await page.getByRole("button", { name: /mensuel/i }).click();
     await expect(page.getByText("29 €", { exact: true })).toBeVisible();
   });
 
-  test("bouton checkout redirige vers login si non connecté", async ({ page }) => {
+  test("bouton checkout redirige vers signup si non connecté", async ({ page }) => {
     await page.goto("/fr/pricing");
     await page.getByRole("button", { name: /commencer/i }).first().click();
-    await expect(page).toHaveURL(/login|stripe\.com/, { timeout: 8000 });
+    // CheckoutButton redirects unauthenticated users to /signup (not /login)
+    await expect(page).toHaveURL(/login|signup|stripe\.com/, { timeout: 8000 });
   });
 
   test("section FAQ visible", async ({ page }) => {
