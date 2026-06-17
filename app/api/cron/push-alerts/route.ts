@@ -102,7 +102,7 @@ export async function GET(req: NextRequest) {
         title: `⚠️ ${disease} — ${country}`,
         body:  bodyParts.join(" · ") || disease,
         tag:   `hwg-outbreak-${outbreak.id}`,
-        url:   `/${locale}/`,
+        url:   `/${locale}/outbreak/${outbreak.id}`,
         icon:  "/icons/icon-192.png",
       };
 
