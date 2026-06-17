@@ -58,7 +58,7 @@ const DISEASE_MAP: Array<{ patterns: string[]; info: DiseaseInfo }> = [
     },
   },
   {
-    patterns: ["ebola"],
+    patterns: ["ebola", "bundibugyo"],
     info: {
       name_en: "Ebola virus disease", name_fr: "Maladie à virus Ebola",
       name_es: "Enfermedad por virus del Ébola", name_ar: "مرض فيروس إيبولا",
