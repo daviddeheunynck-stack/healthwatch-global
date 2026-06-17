@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useLocale } from "next-intl";
 import { track } from "@vercel/analytics/react";
 import { Globe, BarChart2, Zap, X, ArrowRight, ChevronLeft, Activity } from "lucide-react";
+import Link from "next/link";
 import CheckoutButton from "@/components/CheckoutButton";
 
 // ─── Copy ─────────────────────────────────────────────────────────────────────
@@ -16,6 +17,8 @@ const COPY: Record<string, {
   finish: string;
   startTrial: string;
   seePlans: string;
+  pilotNudge: string;
+  pilotLink: string;
   steps: [Step, Step, Step, Step];
 }> = {
   fr: {
@@ -24,6 +27,8 @@ const COPY: Record<string, {
     finish: "Accéder au tableau de bord →",
     startTrial: "Commencer l'essai gratuit →",
     seePlans: "Voir les offres →",
+    pilotNudge: "Vous représentez une organisation ?",
+    pilotLink: "Programme pilote gratuit →",
     steps: [
       {
         title: "Bienvenue sur HealthWatch Global 🌍",
@@ -53,6 +58,8 @@ const COPY: Record<string, {
     finish: "Go to dashboard →",
     startTrial: "Start free trial →",
     seePlans: "See plans →",
+    pilotNudge: "Representing an organization?",
+    pilotLink: "Free institutional pilot →",
     steps: [
       {
         title: "Welcome to HealthWatch Global 🌍",
@@ -82,6 +89,8 @@ const COPY: Record<string, {
     finish: "Ir al panel →",
     startTrial: "Iniciar prueba gratuita →",
     seePlans: "Ver planes →",
+    pilotNudge: "¿Representa una organización?",
+    pilotLink: "Piloto institucional gratuito →",
     steps: [
       {
         title: "Bienvenido a HealthWatch Global 🌍",
@@ -111,6 +120,8 @@ const COPY: Record<string, {
     finish: "← إلى لوحة التحكم",
     startTrial: "← ابدأ التجربة المجانية",
     seePlans: "← عرض الخطط",
+    pilotNudge: "هل تمثل منظمة؟",
+    pilotLink: "← برنامج تجريبي مؤسسي مجاني",
     steps: [
       {
         title: "مرحباً بك في HealthWatch Global 🌍",
@@ -140,6 +151,8 @@ const COPY: Record<string, {
     finish: "Ke dasbor →",
     startTrial: "Mulai uji coba gratis →",
     seePlans: "Lihat paket →",
+    pilotNudge: "Mewakili sebuah organisasi?",
+    pilotLink: "Program pilot institusional gratis →",
     steps: [
       {
         title: "Selamat datang di HealthWatch Global 🌍",
@@ -298,6 +311,16 @@ export default function OnboardingTour({ isPaid = false }: { isPaid?: boolean })
                   >
                     {c.finish}
                   </button>
+                  <p className="text-xs text-gray-600 text-center">
+                    {c.pilotNudge}{" "}
+                    <Link
+                      href={`/${locale}/pilot`}
+                      className="text-gray-500 hover:text-gray-300 underline underline-offset-2 transition-colors"
+                      onClick={() => { track("onboarding_tour_pilot_click", { locale }); dismiss("skip"); }}
+                    >
+                      {c.pilotLink}
+                    </Link>
+                  </p>
                 </>
               )}
             </div>
