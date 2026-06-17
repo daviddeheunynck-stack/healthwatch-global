@@ -15,4 +15,6 @@ Sentry.init({
   enableLogs: true,
 
   sendDefaultPii: false,
+  // Next.js throws these internally to signal 404/redirect — not real errors
+  ignoreErrors: ["NEXT_NOT_FOUND", "NEXT_REDIRECT"],
 });
