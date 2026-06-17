@@ -260,6 +260,20 @@ const TARGETS: Target[] = [
   // ── Leishmaniasis — visceral form, east Africa / conflict settings ────────────
   { disease_en: "Leishmaniasis", country_en: "Sudan",                            minCases: 100    },
   { disease_en: "Leishmaniasis", country_en: "Ethiopia",                         minCases: 100    },
+  // ── Lassa fever — endemic West African reservoir; under-reported globally ─────
+  { disease_en: "Lassa",         country_en: "Nigeria",                           minCases:  10    },
+  { disease_en: "Lassa",         country_en: "Sierra Leone",                      minCases:  10    },
+  { disease_en: "Lassa",         country_en: "Guinea",                            minCases:  10    },
+  { disease_en: "Lassa",         country_en: "Liberia",                           minCases:  10    },
+  // ── Crimean-Congo Hemorrhagic Fever — endemic in Balkans, Caucasus, SW Asia ──
+  { disease_en: "Crimean-Congo", country_en: "Turkey",                            minCases:   1    },
+  { disease_en: "Crimean-Congo", country_en: "Iraq",                              minCases:   1    },
+  { disease_en: "Crimean-Congo", country_en: "Pakistan",                          minCases:   1    },
+  // ── Nipah virus — sporadic zoonotic, India/Bangladesh hotspots ───────────────
+  { disease_en: "Nipah",         country_en: "India",                             minCases:   1    },
+  { disease_en: "Nipah",         country_en: "Bangladesh",                        minCases:   1    },
+  // ── Rift Valley fever — periodic outbreaks, East and Southern Africa ─────────
+  { disease_en: "Rift Valley",   country_en: "Kenya",                             minCases:  10    },
   // ── Mpox — DRC clade I ongoing (WHO DON dedup guard handles overlap) ──────────
   { disease_en: "Mpox",         country_en: "Democratic Republic of the Congo",  minCases: 100    },
 ];
