@@ -59,6 +59,10 @@
     {
       "path": "/api/cron/sync-ecdc-threats",
       "schedule": "0 9 * * 5"
+    },
+    {
+      "path": "/api/cron/sync-paho-alerts",
+      "schedule": "30 9 * * 2"
     }
   ]
 }
