@@ -16,7 +16,6 @@ export default function robots(): MetadataRoute.Robots {
           "/*/qa-source-check",
           "/*/success",
           "/*/outbreak/*/print",
-          "/*/qa-source-check",
           "/api/",
         ],
       },
