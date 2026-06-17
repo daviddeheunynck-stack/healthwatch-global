@@ -331,11 +331,16 @@ interface Outbreak {
   disease: string;
   country: string;
   region: string;
+  lat: number;
+  lng: number;
   risk_level: "high" | "medium" | "low";
   cases: number;
   deaths: number;
   date: string;
-  source_url: string;
+  source: string;
+  description: string;
+  is_pheic: boolean;
+  active: boolean;
 }
 
 interface OutbreakResponse {

@@ -152,7 +152,7 @@ export async function GET(req: NextRequest) {
   let query = supabase
     .from("outbreaks")
     .select(
-      "id, disease, country, region, risk_level, cases, deaths, date, source_url",
+      "id, disease, country, region, lat, lng, risk_level, cases, deaths, date, source, description, is_pheic, active",
       { count: "exact" }
     )
     .eq("active", true)
