@@ -73,6 +73,46 @@ export async function generateMetadata({
   };
 }
 
-export default function PilotLayout({ children }: { children: React.ReactNode }) {
-  return <>{children}</>;
+export default async function PilotLayout({
+  children,
+  params,
+}: {
+  children: React.ReactNode;
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  const m = META[locale] ?? META.en;
+  const url = `https://healthwatch-global.com/${locale}/pilot`;
+
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": `${m.title} | HealthWatch Global`,
+    "description": m.description,
+    "url": url,
+    "mainEntity": {
+      "@type": "Offer",
+      "name": "Institutional Pilot Program",
+      "description": "Free 30-day Pro access for up to 5 members of your health organization (NGO, UN agency, ministry). No credit card required.",
+      "price": "0",
+      "priceCurrency": "EUR",
+      "availability": "https://schema.org/InStock",
+      "validThrough": "2026-12-31",
+      "seller": {
+        "@type": "Organization",
+        "name": "HealthWatch Global",
+        "url": "https://healthwatch-global.com",
+      },
+    },
+  };
+
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+      />
+      {children}
+    </>
+  );
 }
