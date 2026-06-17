@@ -46,20 +46,27 @@ export async function GET(req: NextRequest) {
   }
   const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE);
 
-  // ── Target window: trial_ends_at in [now + 2.5d, now + 3.5d) ───────────────
-  // The cron runs daily at 09:30 UTC. The ±0.5-day window around J-3 ensures
-  // each user is caught exactly once even if the cron drifts slightly.
-  const windowStart = new Date(Date.now() + 2.5 * 86_400_000).toISOString();
-  const windowEnd   = new Date(Date.now() + 3.5 * 86_400_000).toISOString();
+  // ── Target windows ──────────────────────────────────────────────────────────
+  // J-3 window: trial_ends_at in [now + 2.5d, now + 3.5d)
+  // J-1 window: trial_ends_at in [now + 0.5d, now + 1.5d)
+  // The cron runs daily at 09:30 UTC. The ±0.5-day window ensures each user is
+  // caught exactly once per reminder even if the cron drifts slightly.
+  // Note: stripe_subscription_id filter is intentionally omitted — users who
+  // went through checkout with a trial but no payment method would otherwise
+  // be silently skipped. The trial_ends_at window already excludes converted
+  // subscribers (their trial_end is in the past).
+  const now = Date.now();
+  const j3Start = new Date(now + 2.5 * 86_400_000).toISOString();
+  const j3End   = new Date(now + 3.5 * 86_400_000).toISOString();
+  const j1Start = new Date(now + 0.5 * 86_400_000).toISOString();
+  const j1End   = new Date(now + 1.5 * 86_400_000).toISOString();
 
   const { data: profiles, error } = await supabase
     .from("profiles")
-    .select("id, email, plan, trial_ends_at, locale")
+    .select("id, email, plan, trial_ends_at, locale, stripe_subscription_id")
     .in("plan", ["starter", "pro"])
-    .is("stripe_subscription_id", null)   // exclude already-paying users
     .not("trial_ends_at", "is", null)
-    .gte("trial_ends_at", windowStart)
-    .lt("trial_ends_at", windowEnd);
+    .or(`and(trial_ends_at.gte.${j3Start},trial_ends_at.lt.${j3End}),and(trial_ends_at.gte.${j1Start},trial_ends_at.lt.${j1End})`);
 
   if (error) {
     console.error("[trial-reminders] DB query error:", error);
@@ -71,7 +78,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ sent: 0, failed: 0, total: 0 });
   }
 
-  console.log(`[trial-reminders] ${profiles.length} trial(s) ending in ~3 days`);
+  console.log(`[trial-reminders] ${profiles.length} trial(s) ending soon (J-3 or J-1)`);
 
   let sent   = 0;
   let failed = 0;
