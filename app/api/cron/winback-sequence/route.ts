@@ -166,7 +166,7 @@ const COPY: Record<string, {
 function buildEmail(locale: string): { subject: string; html: string } {
   const c = COPY[locale] ?? COPY.en;
   const pricingUrl = `https://healthwatch-global.com/${locale}/pricing`;
-  const pilotUrl   = `https://healthwatch-global.com/${locale}/pilot`;
+  const pilotUrl   = `https://healthwatch-global.com/${locale}/contact`;
 
   const body = `
     <div style="padding:36px 32px;">
