@@ -1,5 +1,8 @@
 // High-burden endemic disease situations not covered by WHO DON
-// Source: ReliefWeb API (UN OCHA — open data, no auth required)
+// Sources:
+//   - Brazil dengue: InfoDengue / Fiocruz / PROCC (open JSON API, no auth)
+//   - All others:    ReliefWeb API v2 (UN OCHA) — requires registered appname
+//     → Register at https://apidoc.reliefweb.int/ ; update RELIEFWEB_APPNAME below
 // Schedule: 0 8 * * 2,5  (Tuesday and Friday 08:00 UTC)
 //
 // Never overwrites rows whose source URL is from who.int/emergencies
@@ -18,49 +21,13 @@ export const maxDuration = 60;
 const BOM = String.fromCharCode(65279);
 const clean = (v: string | undefined) => (v ?? "").replace(new RegExp("^" + BOM), "").trim();
 
-const SUPABASE_URL        = clean(process.env.NEXT_PUBLIC_SUPABASE_URL);
+const SUPABASE_URL         = clean(process.env.NEXT_PUBLIC_SUPABASE_URL);
 const SUPABASE_SERVICE_KEY = clean(process.env.SUPABASE_SERVICE_ROLE_KEY);
 const CRON_SECRET          = clean(process.env.CRON_SECRET);
 
+// TODO: replace with approved appname once ReliefWeb registration is confirmed
 const RELIEFWEB_APPNAME = "healthwatch-global";
-const RELIEFWEB_BASE    = "https://api.reliefweb.int/v1/reports";
-
-// ── Target list ───────────────────────────────────────────────────────────────
-
-interface Target {
-  disease_en: string;   // must match a pattern in normalizeDisease()
-  country_en: string;   // must match findCountry() key
-  minCases:   number;   // minimum to avoid low-count false positives
-}
-
-const TARGETS: Target[] = [
-  // Dengue — annually tens/hundreds of thousands of cases in each country
-  { disease_en: "Dengue",       country_en: "Brazil",                          minCases: 50_000 },
-  { disease_en: "Dengue",       country_en: "India",                           minCases: 50_000 },
-  { disease_en: "Dengue",       country_en: "Bangladesh",                      minCases: 1_000  },
-  { disease_en: "Dengue",       country_en: "Colombia",                        minCases: 5_000  },
-  { disease_en: "Dengue",       country_en: "Indonesia",                       minCases: 10_000 },
-  { disease_en: "Dengue",       country_en: "Vietnam",                         minCases: 5_000  },
-  // Cholera — endemic in fragile/conflict states
-  { disease_en: "Cholera",      country_en: "Democratic Republic of the Congo", minCases: 100   },
-  { disease_en: "Cholera",      country_en: "Haiti",                            minCases: 100   },
-  { disease_en: "Cholera",      country_en: "Somalia",                          minCases: 100   },
-  { disease_en: "Cholera",      country_en: "Sudan",                            minCases: 100   },
-  { disease_en: "Cholera",      country_en: "Yemen",                            minCases: 100   },
-  { disease_en: "Cholera",      country_en: "Zimbabwe",                         minCases:  50   },
-  // Yellow Fever — any confirmed case is epidemiologically significant
-  { disease_en: "Yellow Fever", country_en: "Nigeria",                          minCases:   1   },
-  { disease_en: "Yellow Fever", country_en: "Cameroon",                         minCases:   1   },
-  // Meningitis — meningitis belt countries
-  { disease_en: "Meningitis",   country_en: "Niger",                            minCases:  10   },
-  { disease_en: "Meningitis",   country_en: "Nigeria",                          minCases:  10   },
-  // MERS-CoV — sporadic but ongoing; any case is significant
-  { disease_en: "MERS-CoV",    country_en: "Saudi Arabia",                      minCases:   1   },
-  // Typhoid — XDR strain active since 2016
-  { disease_en: "Typhoid",     country_en: "Pakistan",                          minCases: 100   },
-  // Mpox — DRC clade I ongoing (may also be in WHO DON; dedup logic handles overlap)
-  { disease_en: "Mpox",        country_en: "Democratic Republic of the Congo",  minCases: 100   },
-];
+const RELIEFWEB_BASE    = "https://api.reliefweb.int/v2/reports";
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -77,7 +44,7 @@ function htmlToText(html: string): string {
 
 const delay = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
-// ── ReliefWeb query ───────────────────────────────────────────────────────────
+// ── Shared result type ────────────────────────────────────────────────────────
 
 interface Found {
   cases:       number;
@@ -85,6 +52,85 @@ interface Found {
   date:        string;
   source:      string;
   description: string;
+}
+
+// ── Brazil Dengue via InfoDengue (Fiocruz / PROCC) ───────────────────────────
+// Open API with per-city weekly surveillance data for Brazil.
+// We sum notif_accum_year (YTD accumulated cases) from 12 major cities.
+
+const INFODENGUE_CITIES: Array<{ geocode: number; name: string }> = [
+  { geocode: 3550308, name: "São Paulo"      },
+  { geocode: 3304557, name: "Rio de Janeiro" },
+  { geocode: 3106200, name: "Belo Horizonte" },
+  { geocode: 2304400, name: "Fortaleza"      },
+  { geocode: 1302603, name: "Manaus"         },
+  { geocode: 2927408, name: "Salvador"       },
+  { geocode: 4106902, name: "Curitiba"       },
+  { geocode: 2611606, name: "Recife"         },
+  { geocode: 4314902, name: "Porto Alegre"   },
+  { geocode: 1501402, name: "Belém"          },
+  { geocode: 5208707, name: "Goiânia"        },
+  { geocode: 5300108, name: "Brasília"       },
+];
+
+async function fetchBrazilDengue(): Promise<Found | null> {
+  const year = new Date().getFullYear();
+
+  type InfoDengueRecord = {
+    data_iniSE:       number; // week-start Unix timestamp in milliseconds
+    notif_accum_year: number; // YTD accumulated probable case count for this city
+  };
+
+  let totalCases  = 0;
+  let latestDateMs = 0;
+  const citySummary: string[] = [];
+
+  for (const city of INFODENGUE_CITIES) {
+    try {
+      const url = `https://info.dengue.mat.br/api/alertcity?geocode=${city.geocode}&disease=dengue&format=json&ew_start=1&ew_end=52&ey_start=${year}&ey_end=${year}`;
+      const res = await fetch(url, {
+        headers: { "User-Agent": "HealthWatch-Global/1.0 (health surveillance; contact@healthwatch-global.com)" },
+        signal:  AbortSignal.timeout(8_000),
+      });
+      if (!res.ok) { await delay(120); continue; }
+
+      const data = await res.json() as InfoDengueRecord[];
+      if (!Array.isArray(data) || data.length === 0) { await delay(120); continue; }
+
+      // Last record = most recent reported week; notif_accum_year = YTD total
+      const last       = data[data.length - 1];
+      const cityCases  = last.notif_accum_year ?? 0;
+      totalCases      += cityCases;
+
+      if ((last.data_iniSE ?? 0) > latestDateMs) latestDateMs = last.data_iniSE;
+      if (cityCases > 0) citySummary.push(`${city.name} (${cityCases.toLocaleString("en")})`);
+    } catch {
+      // skip city on network error
+    }
+    await delay(120);
+  }
+
+  if (totalCases < 50_000) return null;
+
+  const date   = latestDateMs
+    ? new Date(latestDateMs).toISOString().substring(0, 10)
+    : new Date().toISOString().substring(0, 10);
+  const source = "https://info.dengue.mat.br/";
+
+  const preview = citySummary.slice(0, 4).join(", ");
+  const more    = citySummary.length > 4 ? ` and ${citySummary.length - 4} other cities` : "";
+  const description = `Dengue fever surveillance in Brazil — ${totalCases.toLocaleString("en")} probable cases reported year-to-date in ${year} across 12 major cities: ${preview}${more}. Source: InfoDengue surveillance platform (Fiocruz / PROCC / SVS-MS).`;
+
+  return { cases: totalCases, deaths: 0, date, source, description };
+}
+
+// ── ReliefWeb query ───────────────────────────────────────────────────────────
+
+interface Target {
+  disease_en: string;                        // must match a pattern in normalizeDisease()
+  country_en: string;                        // must match findCountry() key
+  minCases:   number;                        // minimum to avoid low-count false positives
+  fetcher?:   () => Promise<Found | null>;   // custom data source (overrides ReliefWeb)
 }
 
 async function queryReliefWeb(target: Target): Promise<Found | null> {
@@ -122,8 +168,6 @@ async function queryReliefWeb(target: Target): Promise<Found | null> {
 
     const json = await res.json() as { data?: RWReport[] };
 
-    // Match tokens: first word of disease ("dengue", "cholera", "yellow", "mpox"…)
-    // and first word of country ("brazil", "democratic", "haiti"…)
     const diseaseToken  = target.disease_en.toLowerCase().split(/\s+/)[0];
     const countryTokens = target.country_en.toLowerCase().split(/\s+/).slice(0, 2);
 
@@ -131,13 +175,11 @@ async function queryReliefWeb(target: Target): Promise<Found | null> {
       const f = item.fields;
       if (!f?.body) continue;
 
-      const text  = htmlToText(f.body);
-      const lower = text.toLowerCase();
+      const text       = htmlToText(f.body);
+      const lower      = text.toLowerCase();
       const titleLower = (f.title ?? "").toLowerCase();
 
-      // Report must mention the disease
       if (!lower.includes(diseaseToken)) continue;
-      // Report must mention the country (in body or title)
       const mentionsCountry = countryTokens.some(
         (t) => lower.includes(t) || titleLower.includes(t)
       );
@@ -146,9 +188,8 @@ async function queryReliefWeb(target: Target): Promise<Found | null> {
       const { cases, deaths } = extractNumbers(text);
       if (cases < target.minCases) continue;
 
-      const date    = f.date?.created?.substring(0, 10) ?? new Date().toISOString().substring(0, 10);
-      const source  = f.url ?? url.toString();
-      // Trim body to a concise description
+      const date        = f.date?.created?.substring(0, 10) ?? new Date().toISOString().substring(0, 10);
+      const source      = f.url ?? url.toString();
       const description = text.substring(0, 500).trim();
 
       return { cases, deaths, date, source, description };
@@ -159,6 +200,37 @@ async function queryReliefWeb(target: Target): Promise<Found | null> {
 
   return null;
 }
+
+// ── Target list ───────────────────────────────────────────────────────────────
+
+const TARGETS: Target[] = [
+  // Dengue — Brazil via InfoDengue (Fiocruz); others via ReliefWeb once appname approved
+  { disease_en: "Dengue",       country_en: "Brazil",                           minCases: 50_000, fetcher: fetchBrazilDengue },
+  { disease_en: "Dengue",       country_en: "India",                            minCases: 50_000 },
+  { disease_en: "Dengue",       country_en: "Bangladesh",                       minCases: 1_000  },
+  { disease_en: "Dengue",       country_en: "Colombia",                         minCases: 5_000  },
+  { disease_en: "Dengue",       country_en: "Indonesia",                        minCases: 10_000 },
+  { disease_en: "Dengue",       country_en: "Vietnam",                          minCases: 5_000  },
+  // Cholera — endemic in fragile/conflict states
+  { disease_en: "Cholera",      country_en: "Democratic Republic of the Congo", minCases: 100    },
+  { disease_en: "Cholera",      country_en: "Haiti",                            minCases: 100    },
+  { disease_en: "Cholera",      country_en: "Somalia",                          minCases: 100    },
+  { disease_en: "Cholera",      country_en: "Sudan",                            minCases: 100    },
+  { disease_en: "Cholera",      country_en: "Yemen",                            minCases: 100    },
+  { disease_en: "Cholera",      country_en: "Zimbabwe",                         minCases:  50    },
+  // Yellow Fever — any confirmed case is epidemiologically significant
+  { disease_en: "Yellow Fever", country_en: "Nigeria",                          minCases:   1    },
+  { disease_en: "Yellow Fever", country_en: "Cameroon",                         minCases:   1    },
+  // Meningitis — meningitis belt countries
+  { disease_en: "Meningitis",   country_en: "Niger",                            minCases:  10    },
+  { disease_en: "Meningitis",   country_en: "Nigeria",                          minCases:  10    },
+  // MERS-CoV — sporadic but ongoing; any case is significant
+  { disease_en: "MERS-CoV",    country_en: "Saudi Arabia",                      minCases:   1    },
+  // Typhoid — XDR strain active since 2016
+  { disease_en: "Typhoid",     country_en: "Pakistan",                          minCases: 100    },
+  // Mpox — DRC clade I ongoing (may also be in WHO DON; dedup logic handles overlap)
+  { disease_en: "Mpox",        country_en: "Democratic Republic of the Congo",  minCases: 100    },
+];
 
 // ── Main handler ──────────────────────────────────────────────────────────────
 
@@ -175,7 +247,7 @@ export async function GET(req: NextRequest) {
   const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
   const today    = new Date().toISOString().substring(0, 10);
 
-  // ── Load existing outbreaks (active + recently deactivated to avoid ghost dups)
+  // Load existing outbreaks (active + recently deactivated to avoid ghost dups)
   const { data: existing, error: fetchErr } = await supabase
     .from("outbreaks")
     .select("id, disease_en, country_en, cases, deaths, date, source, active")
@@ -183,11 +255,11 @@ export async function GET(req: NextRequest) {
 
   if (fetchErr) return NextResponse.json({ error: fetchErr.message }, { status: 500 });
 
-  // Index by "disease_en|country_en" — keep active row if multiple
+  // Index by "disease_en|country_en" — prefer active row when duplicates exist
   type Row = NonNullable<typeof existing>[number];
   const byDC = new Map<string, Row>();
   for (const row of existing ?? []) {
-    const k   = `${(row.disease_en ?? "").toLowerCase()}|${(row.country_en ?? "").toLowerCase()}`;
+    const k    = `${(row.disease_en ?? "").toLowerCase()}|${(row.country_en ?? "").toLowerCase()}`;
     const prev = byDC.get(k);
     if (!prev || (row.active && !prev.active)) byDC.set(k, row);
   }
@@ -196,10 +268,10 @@ export async function GET(req: NextRequest) {
   type LogEntry = { label: string; status: string; detail?: string };
   const log: LogEntry[] = [];
 
-  // ── Process each target ───────────────────────────────────────────────────
+  // Process each target
   for (const target of TARGETS) {
-    const diseaseInfo  = normalizeDisease(target.disease_en);
-    const countryInfo  = findCountry(target.country_en);
+    const diseaseInfo = normalizeDisease(target.disease_en);
+    const countryInfo = findCountry(target.country_en);
     if (!countryInfo) {
       log.push({ label: `${target.disease_en}/${target.country_en}`, status: "skip", detail: "country not in geo-data" });
       results.skipped++;
@@ -208,7 +280,6 @@ export async function GET(req: NextRequest) {
 
     const dcKey       = `${diseaseInfo.name_en.toLowerCase()}|${countryInfo.name_en.toLowerCase()}`;
     const existingRow = byDC.get(dcKey)
-      // Also try the raw disease/country names (for diseases whose normalizedName differs)
       ?? byDC.get(`${target.disease_en.toLowerCase()}|${target.country_en.toLowerCase()}`);
 
     // Never overwrite rows managed by the WHO DON daily sync
@@ -218,11 +289,13 @@ export async function GET(req: NextRequest) {
       continue;
     }
 
-    await delay(300);
-    const found = await queryReliefWeb(target);
+    if (!target.fetcher) await delay(300); // rate-limit ReliefWeb; InfoDengue self-paces internally
+
+    const found = await (target.fetcher ? target.fetcher() : queryReliefWeb(target));
 
     if (!found) {
-      log.push({ label: `${target.disease_en}/${target.country_en}`, status: "skip", detail: "no ReliefWeb report with cases ≥ " + target.minCases });
+      const source = target.fetcher ? "InfoDengue" : "ReliefWeb";
+      log.push({ label: `${target.disease_en}/${target.country_en}`, status: "skip", detail: `no ${source} data with cases ≥ ${target.minCases}` });
       results.skipped++;
       continue;
     }
@@ -235,9 +308,8 @@ export async function GET(req: NextRequest) {
     }
 
     if (existingRow) {
-      // Only update if the report is more recent and brings new data
       const isNewer    = found.date > existingRow.date;
-      const casesDiff  = found.cases !== existingRow.cases;
+      const casesDiff  = found.cases  !== existingRow.cases;
       const deathsDiff = found.deaths !== existingRow.deaths;
 
       if (!isNewer && !casesDiff && !deathsDiff) {
@@ -267,7 +339,6 @@ export async function GET(req: NextRequest) {
         results.updated++;
       }
     } else {
-      // New row — build full outbreak record
       const { error } = await supabase.from("outbreaks").insert({
         disease:     diseaseInfo.name_fr,
         disease_en:  diseaseInfo.name_en,
@@ -303,7 +374,7 @@ export async function GET(req: NextRequest) {
   return NextResponse.json({
     success: true,
     timestamp: new Date().toISOString(),
-    targets:  TARGETS.length,
+    targets:   TARGETS.length,
     ...results,
     log,
   });
