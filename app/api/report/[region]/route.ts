@@ -100,13 +100,16 @@ export async function GET(
   });
   const fileDate = new Date().toISOString().split("T")[0];
 
-  const diseases = regionOutbreaks.map((o) => ({
-    name: getLocalizedDisease(o, locale),
-    country: getLocalizedCountry(o, locale),
-    cases: o.cases,
-    deaths: o.deaths,
-    risk: o.risk_level,
-  }));
+  const RISK_ORDER: Record<string, number> = { high: 0, medium: 1, low: 2 };
+  const diseases = regionOutbreaks
+    .sort((a, b) => (RISK_ORDER[a.risk_level] ?? 3) - (RISK_ORDER[b.risk_level] ?? 3))
+    .map((o) => ({
+      name: getLocalizedDisease(o, locale),
+      country: getLocalizedCountry(o, locale),
+      cases: o.cases,
+      deaths: o.deaths,
+      risk: o.risk_level,
+    }));
 
   const html = `<!DOCTYPE html>
 <html lang="${locale}" dir="${locale === "ar" ? "rtl" : "ltr"}">
