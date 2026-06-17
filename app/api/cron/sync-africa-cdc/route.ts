@@ -95,8 +95,13 @@ function findMentionedAfricanCountries(text: string): string[] {
 //   "Cholera Outbreak Update — Cameroon"
 //   "Marburg Virus Disease — Rwanda"
 //   "Yellow Fever — Nigeria | Update 5"
+//   "Bundibugyo Ebola without vaccines or therapeutics: why..."
+//   "2026 Ebola Disease Outbreak Triggers Unified Response..."
 function extractDiseaseFromTitle(title: string): string {
   return title
+    .replace(/^\d{4}\s+/, "")                                       // "2026 Ebola Disease..." → "Ebola Disease..."
+    .replace(/:.*$/, "")                                             // "Bundibugyo Ebola...: why..." → "Bundibugyo Ebola..."
+    .replace(/\s+without\b.*/i, "")                                  // "Bundibugyo Ebola without vaccines" → "Bundibugyo Ebola"
     .replace(/\s*[-–—|]\s*(update|situation|report)\s*#?\d*.*/i, "")
     .replace(/\s+outbreak\s+(?:update\s+)?(?:in|update)\s*.*/i, "")
     .replace(/\s+outbreak\s*$/i, "")

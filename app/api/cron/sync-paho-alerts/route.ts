@@ -179,9 +179,11 @@ async function extractAlertData(entry: AlertEntry): Promise<AlertData[]> {
     }
   }
 
-  // Fallback: scan first 800 chars of body for Americas country names
+  // Fallback: scan first 2500 chars of body for Americas country names.
+  // PAHO "in the Americas Region" alerts list specific countries in the
+  // article body (often 500-2000 chars in, after the heading/summary).
   if (primaryCountries.length === 0) {
-    const intro  = bodyText.substring(0, 800);
+    const intro  = bodyText.substring(0, 2500);
     primaryCountries = findMentionedAmericasCountries(intro).slice(0, 3);
   }
 

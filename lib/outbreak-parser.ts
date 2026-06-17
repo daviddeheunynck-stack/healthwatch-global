@@ -105,13 +105,21 @@ export function parseTitle(title: string): { disease: string; country: string } 
 // ─── Number extraction from free text ─────────────────────────
 
 export function extractNumbers(text: string): { cases: number; deaths: number } {
-  const clean = text.replace(/\n/g, " ");
+  const clean = text
+    .replace(/\n/g, " ")
+    .replace(/ /g, " ")
+    // Normalize space-as-thousands-separator (European style: "2 649" → "2649")
+    .replace(/\b(\d{1,3}) (\d{3})\b/g, "$1$2")
+    .replace(/\b(\d{1,3}) (\d{3}) (\d{3})\b/g, "$1$2$3");
 
   // Qualifier words that can appear between a number and "cases"
   // e.g. "746 suspected cases", "83 confirmed cases", "12 probable cases"
   const QUALIFIERS = "(?:(?:suspected|probable|confirmed|laboratory[- ]confirmed|human|new|reported|additional)\\s+)*";
 
   const casePatterns = [
+    // "a total of 2649 MERS cases" — allows 0-3 words between count and "cases"
+    // catches "total of N [disease name(s)] cases" (e.g. ECDC: "2 649 MERS cases")
+    /\btotal\s+of\s+(\d[\d,]*)\s+(?:[\w-]+\s+){0,3}cases?/i,
     // "a total of 746 suspected cases"
     new RegExp(`total\\s+of\\s+(\\d[\\d,]*)\\s+${QUALIFIERS}cases?`, "i"),
     // "746 suspected/confirmed/probable/etc cases [have been reported]"
