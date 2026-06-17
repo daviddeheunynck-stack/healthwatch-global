@@ -1,9 +1,14 @@
-// High-burden endemic disease situations not covered by WHO DON
+// Endemic / high-burden disease surveillance not systematically covered by WHO DON.
+// 66 disease × country targets across 5 disease categories:
+//   Dengue (9), Cholera (12), Measles (9), Meningitis (6), Polio (2), Typhoid (1),
+//   MERS-CoV (1), Hepatitis E (3), Diphtheria (2), Leishmaniasis (2), Lassa (4),
+//   CCHF (3), Nipah (2), Rift Valley fever (1), Mpox (1), Yellow Fever (2), Dengue-Myanmar (1)
 // Sources:
 //   - Brazil dengue: InfoDengue / Fiocruz / PROCC (open JSON API, no auth)
 //   - All others:    ReliefWeb API v2 (UN OCHA) — requires registered appname
 //     → Register at https://apidoc.reliefweb.int/ ; update RELIEFWEB_APPNAME below
 // Schedule: 0 8 * * 2,5  (Tuesday and Friday 08:00 UTC)
+// maxDuration: 150s (Vercel Pro cron; ~66 targets × 2s avg, many skipped early)
 //
 // Never overwrites rows whose source URL is from who.int/emergencies
 // (those are owned by the WHO DON daily sync).
