@@ -47,7 +47,7 @@ export default async function WidgetPage({
     .select("id, disease, disease_en, country, country_en, cases, deaths, risk_level, is_pheic")
     .eq("active", true)
     .order("is_pheic", { ascending: false })
-    .order("risk_level")
+    .order("cases", { ascending: false })
     .limit(maxItems);
 
   if (region && region !== "all") {
@@ -55,7 +55,12 @@ export default async function WidgetPage({
   }
 
   const { data: outbreaks } = await query;
-  const items = outbreaks ?? [];
+  const RISK_ORDER: Record<string, number> = { high: 0, medium: 1, low: 2 };
+  const items = (outbreaks ?? []).sort((a, b) => {
+    const pd = (b.is_pheic ? 1 : 0) - (a.is_pheic ? 1 : 0);
+    if (pd !== 0) return pd;
+    return (RISK_ORDER[a.risk_level] ?? 3) - (RISK_ORDER[b.risk_level] ?? 3);
+  });
 
   const bg      = isDark ? "#0f172a" : "#ffffff";
   const cardBg  = isDark ? "#1e293b" : "#f8fafc";
