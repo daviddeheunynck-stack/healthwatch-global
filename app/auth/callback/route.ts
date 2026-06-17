@@ -89,8 +89,10 @@ export async function GET(req: NextRequest) {
           await admin.from("profiles").update(updates).eq("id", user.id);
         }
 
-        // Send welcome email for new OAuth signups (email/password signup sends it from the form)
-        if (isNewSignup && user.email) {
+        // Send welcome email only for OAuth signups — email/password users already
+        // receive it from signup/page.tsx immediately after form submission.
+        const isOAuth = user.app_metadata?.provider !== "email";
+        if (isNewSignup && isOAuth && user.email) {
           const emailLocale = (updates.locale as string | undefined) ?? profile?.locale ?? inferredLocale ?? "fr";
           fetch(`${origin}/api/send-welcome`, {
             method: "POST",
