@@ -62,6 +62,11 @@ const LANDING_META: Record<string, { title: string; description: string }> = {
   id: { title: "Pemantau wabah WHO untuk profesional kesehatan | HealthWatch Global", description: "Semua data wabah WHO, diagregasi dan diterjemahkan — tanpa berjam-jam penelitian. Peringatan instan, laporan PDF untuk dokter, konsultan, dan epidemiolog." },
 };
 
+const LOCALES = ["en", "fr", "es", "ar", "id"] as const;
+const OG_LOCALE: Record<string, string> = {
+  en: "en_US", fr: "fr_FR", es: "es_ES", ar: "ar_SA", id: "id_ID",
+};
+
 export async function generateMetadata({
   params,
 }: {
@@ -73,7 +78,41 @@ export async function generateMetadata({
   const m = user
     ? (DASHBOARD_META[locale] ?? DASHBOARD_META.en)
     : (LANDING_META[locale] ?? LANDING_META.en);
-  return { title: m.title, description: m.description };
+  const url = `https://healthwatch-global.com/${locale}`;
+  return {
+    title: m.title,
+    description: m.description,
+    alternates: {
+      canonical: url,
+      languages: {
+        ...Object.fromEntries(LOCALES.map((l) => [l, `https://healthwatch-global.com/${l}`])),
+        "x-default": "https://healthwatch-global.com/en",
+      },
+    },
+    openGraph: {
+      type: "website",
+      url,
+      title: m.title,
+      description: m.description,
+      siteName: "HealthWatch Global",
+      locale: OG_LOCALE[locale] ?? "en_US",
+      images: [
+        {
+          url: `https://healthwatch-global.com/api/og?locale=${locale}`,
+          width: 1200,
+          height: 630,
+          alt: "HealthWatch Global — WHO Disease Outbreak Surveillance",
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: m.title,
+      description: m.description,
+      images: [`https://healthwatch-global.com/api/og?locale=${locale}`],
+    },
+    robots: { index: !user, follow: true },
+  };
 }
 
 async function DashboardContent() {
