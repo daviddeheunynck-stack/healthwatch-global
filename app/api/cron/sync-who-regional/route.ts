@@ -16,7 +16,7 @@ import { extractNumbers, assessRisk } from "@/lib/outbreak-parser";
 import { errorMessage } from "@/lib/error";
 
 export const dynamic = "force-dynamic";
-export const maxDuration = 120; // 45 targets × ~2s each; Vercel Pro allows 300s for crons
+export const maxDuration = 150; // 66 targets × ~2s each; Vercel Pro allows 300s for crons
 
 const BOM = String.fromCharCode(65279);
 const clean = (v: string | undefined) => (v ?? "").replace(new RegExp("^" + BOM), "").trim();
@@ -274,6 +274,18 @@ const TARGETS: Target[] = [
   { disease_en: "Nipah",         country_en: "Bangladesh",                        minCases:   1    },
   // ── Rift Valley fever — periodic outbreaks, East and Southern Africa ─────────
   { disease_en: "Rift Valley",   country_en: "Kenya",                             minCases:  10    },
+  // ── Cholera — additional high-burden countries ────────────────────────────────
+  { disease_en: "Cholera",       country_en: "Lebanon",                           minCases:  50    },
+  { disease_en: "Cholera",       country_en: "South Sudan",                       minCases: 100    },
+  { disease_en: "Cholera",       country_en: "Central African Republic",          minCases:  50    },
+  // ── Measles — additional high-burden countries ────────────────────────────────
+  { disease_en: "Measles",       country_en: "South Sudan",                       minCases: 100    },
+  { disease_en: "Measles",       country_en: "Myanmar",                           minCases: 100    },
+  // ── Dengue — Myanmar (rising burden, conflict-affected surveillance) ──────────
+  { disease_en: "Dengue",        country_en: "Myanmar",                           minCases: 1_000  },
+  // ── Meningitis — extended belt into the Sahel ────────────────────────────────
+  { disease_en: "Meningitis",    country_en: "Burkina Faso",                      minCases:  10    },
+  { disease_en: "Meningitis",    country_en: "South Sudan",                       minCases:  10    },
   // ── Mpox — DRC clade I ongoing (WHO DON dedup guard handles overlap) ──────────
   { disease_en: "Mpox",         country_en: "Democratic Republic of the Congo",  minCases: 100    },
 ];
