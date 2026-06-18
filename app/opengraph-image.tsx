@@ -93,7 +93,7 @@ export default function OgImage() {
             { value: "195", label: "Countries" },
             { value: "5", label: "Languages" },
             { value: "24/7", label: "Live data" },
-            { value: "WHO · CDC · ECDC", label: "Sources" },
+            { value: "WHO · ECDC · PAHO", label: "Sources" },
           ].map(({ value, label }) => (
             <div
               key={label}

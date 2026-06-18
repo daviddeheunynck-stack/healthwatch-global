@@ -33,7 +33,7 @@ const EMAIL_COPY: Record<string, {
     ctaLabel: "Voir le tableau de bord →",
     ctaText: "https://healthwatch-global.com/fr",
     unsubscribeLabel: "Se désabonner",
-    sourcesLabel: "Sources : OMS · CDC · ECDC · PAHO",
+    sourcesLabel: "Sources : OMS · ECDC · PAHO · Africa CDC",
   },
   en: {
     subject: "Your health alert subscription is confirmed",
@@ -43,7 +43,7 @@ const EMAIL_COPY: Record<string, {
     ctaLabel: "Go to dashboard →",
     ctaText: "https://healthwatch-global.com/en",
     unsubscribeLabel: "Unsubscribe",
-    sourcesLabel: "Sources: WHO · CDC · ECDC · PAHO",
+    sourcesLabel: "Sources: WHO · ECDC · PAHO · Africa CDC",
   },
   es: {
     subject: "Su suscripción a alertas de salud está confirmada",
@@ -53,7 +53,7 @@ const EMAIL_COPY: Record<string, {
     ctaLabel: "Ir al panel →",
     ctaText: "https://healthwatch-global.com/es",
     unsubscribeLabel: "Cancelar suscripción",
-    sourcesLabel: "Fuentes: OMS · CDC · ECDC · PAHO",
+    sourcesLabel: "Fuentes: OMS · ECDC · PAHO · Africa CDC",
   },
   ar: {
     subject: "تم تأكيد اشتراكك في تنبيهات الصحة",
@@ -63,7 +63,7 @@ const EMAIL_COPY: Record<string, {
     ctaLabel: "الذهاب إلى لوحة التحكم ←",
     ctaText: "https://healthwatch-global.com/ar",
     unsubscribeLabel: "إلغاء الاشتراك",
-    sourcesLabel: "المصادر: منظمة الصحة العالمية · CDC · ECDC · PAHO",
+    sourcesLabel: "المصادر: WHO · ECDC · PAHO · Africa CDC",
   },
   id: {
     subject: "Langganan peringatan kesehatan Anda telah dikonfirmasi",
@@ -73,7 +73,7 @@ const EMAIL_COPY: Record<string, {
     ctaLabel: "Buka dasbor →",
     ctaText: "https://healthwatch-global.com/id",
     unsubscribeLabel: "Berhenti berlangganan",
-    sourcesLabel: "Sumber: WHO · CDC · ECDC · PAHO",
+    sourcesLabel: "Sumber: WHO · ECDC · PAHO · Africa CDC",
   },
 };
 
