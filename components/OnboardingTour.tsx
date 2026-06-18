@@ -42,7 +42,7 @@ const COPY: Record<string, {
       },
       {
         title: "Le tableau de bord épidémiologique",
-        body: "Tous les foyers actifs triés par niveau de risque. Les chiffres exacts de cas et de décès sont disponibles avec le plan Pro — les utilisateurs gratuits voient les données floutées.",
+        body: "Tous les foyers actifs triés par niveau de risque. Les chiffres exacts de cas et de décès sont disponibles avec les plans Pro et Team — les utilisateurs gratuits voient les données floutées.",
         cta: "Suivant",
       },
       {
@@ -73,7 +73,7 @@ const COPY: Record<string, {
       },
       {
         title: "The epidemiological dashboard",
-        body: "All active outbreaks sorted by risk level. Exact case and death figures are available on the Pro plan — free users see blurred data.",
+        body: "All active outbreaks sorted by risk level. Exact case and death figures are available on the Pro and Team plans — free users see blurred data.",
         cta: "Next",
       },
       {
@@ -104,7 +104,7 @@ const COPY: Record<string, {
       },
       {
         title: "El panel epidemiológico",
-        body: "Todos los brotes activos ordenados por nivel de riesgo. Las cifras exactas de casos y fallecidos están disponibles en el plan Pro.",
+        body: "Todos los brotes activos ordenados por nivel de riesgo. Las cifras exactas de casos y fallecidos están disponibles en los planes Pro y Team.",
         cta: "Siguiente",
       },
       {
@@ -135,7 +135,7 @@ const COPY: Record<string, {
       },
       {
         title: "لوحة التحكم الوبائية",
-        body: "جميع التفشيات النشطة مرتّبة حسب مستوى الخطر. الأرقام الدقيقة للحالات والوفيات متاحة في خطة Pro.",
+        body: "جميع التفشيات النشطة مرتّبة حسب مستوى الخطر. الأرقام الدقيقة للحالات والوفيات متاحة في خطط Pro و Team.",
         cta: "التالي",
       },
       {
@@ -166,7 +166,7 @@ const COPY: Record<string, {
       },
       {
         title: "Dasbor epidemiologi",
-        body: "Semua wabah aktif diurutkan berdasarkan tingkat risiko. Angka kasus dan kematian yang tepat tersedia di paket Pro.",
+        body: "Semua wabah aktif diurutkan berdasarkan tingkat risiko. Angka kasus dan kematian yang tepat tersedia di paket Pro dan Team.",
         cta: "Lanjut",
       },
       {
