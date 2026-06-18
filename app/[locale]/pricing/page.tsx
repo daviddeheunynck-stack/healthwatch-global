@@ -136,7 +136,7 @@ const COPY: Record<string, {
   es: {
     heroTag: "Diseñado para organizaciones de salud y sus equipos en todo el mundo",
     heroTitle: "Anticipe. No solo reaccione.",
-    heroSub: "Un brote no detectado a tiempo puede costarle a su organización meses de gestión de crisis. HealthWatch Global ofrece a sus equipos datos de vigilancia oficiales de la OMS, directamente en su idioma.",
+    heroSub: "Un brote no detectado a tiempo puede costarle a su organización meses de gestión de crisis. HealthWatch Global ofrece a sus equipos datos de vigilancia de la OMS, ECDC, PAHO y Africa CDC, directamente en su idioma.",
     orgTypes: ["Ministerios de Salud", "ONG internacionales", "Organizaciones humanitarias", "Institutos de investigación", "Sector sanitario privado"],
     orgLabel: "Diseñado para",
     guarantee: "Sin compromiso. Reembolso en 14 días.",
@@ -167,7 +167,7 @@ const COPY: Record<string, {
   ar: {
     heroTag: "مصمم للمنظمات الصحية وفرقها حول العالم",
     heroTitle: "استبق الأزمات. لا تكتفِ بالاستجابة.",
-    heroSub: "قد يُكلِّف تفشٍّ واحد غير مكتشف في الوقت المناسب منظمتك أشهراً من إدارة الأزمات. توفر HealthWatch Global لفرقك بيانات مراقبة محدَّثة كل 6 ساعات مباشرةً من منظمة الصحة العالمية.",
+    heroSub: "قد يُكلِّف تفشٍّ واحد غير مكتشف في الوقت المناسب منظمتك أشهراً من إدارة الأزمات. توفر HealthWatch Global لفرقك بيانات مراقبة محدَّثة كل 6 ساعات من WHO وECDC وPAHO وAfrica CDC.",
     orgTypes: ["وزارات الصحة", "المنظمات غير الحكومية الدولية", "المنظمات الإنسانية", "معاهد البحوث", "القطاع الصحي الخاص"],
     orgLabel: "مصمم لـ",
     guarantee: "بدون التزام. استرداد خلال 14 يوماً.",
@@ -198,7 +198,7 @@ const COPY: Record<string, {
   id: {
     heroTag: "Dirancang untuk organisasi kesehatan dan tim mereka di seluruh dunia",
     heroTitle: "Antisipasi. Jangan hanya bereaksi.",
-    heroSub: "Satu wabah yang tidak terdeteksi tepat waktu bisa menelan biaya berbulan-bulan manajemen krisis. HealthWatch Global memberikan data pemantauan yang diperbarui setiap 6 jam kepada tim Anda, langsung dari WHO.",
+    heroSub: "Satu wabah yang tidak terdeteksi tepat waktu bisa menelan biaya berbulan-bulan manajemen krisis. HealthWatch Global memberikan data pemantauan WHO, ECDC, PAHO dan Africa CDC yang diperbarui setiap 6 jam kepada tim Anda.",
     orgTypes: ["Kementerian Kesehatan", "LSM Internasional", "Organisasi Kemanusiaan", "Lembaga Penelitian", "Sektor Kesehatan Swasta"],
     orgLabel: "Dirancang untuk",
     guarantee: "Tanpa komitmen. Pengembalian dana 14 hari.",
