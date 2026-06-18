@@ -105,13 +105,13 @@ const LABELS: Record<string, {
       "Passionné depuis plusieurs années par le suivi des grandes dynamiques sanitaires mondiales, je consultais régulièrement les bulletins de l'OMS — et je perdais un temps fou à naviguer entre des pages en anglais, sans filtres, sans alertes, sans vue d'ensemble. J'ai construit HealthWatch pour résoudre ce problème à la source : agréger ces données, les traduire et les structurer pour qu'un professionnel y accède en quelques clics plutôt qu'en heures de recherche manuelle.",
     missionTitle: "Notre mission",
     missionText:
-      "HealthWatch Global agrège automatiquement les alertes officielles de l'Organisation Mondiale de la Santé et des agences de santé nationales afin de fournir un tableau de bord lisible aux professionnels de santé, aux voyageurs, aux journalistes et aux organisations qui ont besoin d'être informés des foyers épidémiques dès leur déclaration.",
-    whoTitle: "Source des données : OMS",
+      "HealthWatch Global agrège automatiquement les données officielles de l'OMS, l'ECDC, l'OPAS/PAHO et l'Africa CDC — mises à jour toutes les 6 heures — pour fournir un tableau de bord unique aux épidémiologistes, professionnels de santé, journalistes et organisations qui suivent les foyers épidémiques dès leur déclaration.",
+    whoTitle: "4 sources de données officielles",
     whoText:
-      "Les alertes sanitaires vérifiées proviennent de l'API officielle Disease Outbreak News (DON) de l'OMS — la même source que celle utilisée par les gouvernements et les agences de santé publique du monde entier. Les données officielles (ECDC, CDC, agences nationales) complètent la couverture pour les maladies endémiques non couvertes par le DON. Aucune donnée non vérifiée, aucun média tiers.",
+      "Toutes les données sont agrégées directement depuis 4 sources officielles : le Disease Outbreak News de l'OMS, les évaluations rapides de risque de l'ECDC, les alertes épidémiologiques de l'OPAS/PAHO et les rapports de l'Africa CDC — les mêmes agences que celles utilisées comme références primaires par les gouvernements et institutions de santé publique. Aucune donnée non vérifiée, aucun média tiers. Mise à jour toutes les 6 heures.",
     howTitle: "Comment ça marche",
     howSteps: [
-      { title: "Collecte", text: "Notre pipeline interroge l'API OData de l'OMS et extrait les informations clés : maladie, pays, cas confirmés, décès." },
+      { title: "Collecte", text: "Notre pipeline agrège les données officielles de l'OMS, l'ECDC, l'OPAS/PAHO et l'Africa CDC — maladie, pays, cas confirmés, décès et létalité pour chaque foyer." },
       { title: "Géolocalisation", text: "Chaque alerte est associée à un pays et positionnée sur une carte interactive mondiale." },
       { title: "Analyse du risque", text: "Un score de risque (faible / modéré / élevé / critique) est calculé automatiquement selon la létalité et la contagiosité connues de chaque pathogène." },
       { title: "Diffusion", text: "Alertes email par maladie (H5N1, Ebola…) ou par région, intégration Slack / Teams, watchlist de foyers suivis avec notifications de changement, widget embarquable, rapports PDF par foyer, outil de comparaison, et API REST Enterprise." },
@@ -141,13 +141,13 @@ const LABELS: Record<string, {
       "I've spent years following major global health dynamics out of genuine interest. I'd regularly check WHO bulletins — and kept losing time navigating English-only pages with no filters, no alerts, no overview. I built HealthWatch to fix that at the root: aggregate this data, translate it, and structure it so a professional can access it in a few clicks instead of hours of manual digging.",
     missionTitle: "Our mission",
     missionText:
-      "HealthWatch Global automatically aggregates official alerts from the World Health Organization and national health agencies to provide a readable dashboard for health professionals, travellers, journalists and organisations that need to be informed of disease outbreaks as soon as they are declared.",
-    whoTitle: "Data source: WHO",
+      "HealthWatch Global automatically aggregates official outbreak data from WHO, ECDC, PAHO, and Africa CDC — updated every 6 hours — to provide a single readable dashboard for epidemiologists, health professionals, journalists and organisations that need to track disease outbreaks the moment they are declared.",
+    whoTitle: "4 official data sources",
     whoText:
-      "Verified health alerts come from the WHO's official Disease Outbreak News (DON) API — the same source used by governments and public health agencies worldwide. Official data from ECDC, CDC, and national agencies supplements coverage for endemic diseases not tracked by DON bulletins. No unverified data, no third-party media.",
+      "All outbreak data is aggregated directly from 4 official sources: WHO Disease Outbreak News, ECDC rapid risk assessments and threat briefs, PAHO epidemiological alerts, and Africa CDC outbreak reports — the same agencies governments and public health institutions use as primary references. No secondary media, no unverified data. Updated every 6 hours.",
     howTitle: "How it works",
     howSteps: [
-      { title: "Collection", text: "Our pipeline queries the WHO OData API and extracts key information: disease, country, confirmed cases, deaths." },
+      { title: "Collection", text: "Our pipeline aggregates official data from WHO, ECDC, PAHO, and Africa CDC — extracting disease, country, confirmed cases, deaths, and CFR for each outbreak." },
       { title: "Geolocation", text: "Each alert is linked to a country and placed on an interactive world map." },
       { title: "Risk analysis", text: "A risk score (low / moderate / high / critical) is automatically calculated based on the known lethality and contagiousness of each pathogen." },
       { title: "Distribution", text: "Disease-specific alerts (H5N1, Ebola…) or regional, Slack / Teams integration, watchlist with change notifications, embeddable widget, per-outbreak PDF reports, comparison tool, and Enterprise REST API." },
@@ -178,9 +178,9 @@ const LABELS: Record<string, {
     missionTitle: "Nuestra misión",
     missionText:
       "HealthWatch Global agrega automáticamente las alertas oficiales de la Organización Mundial de la Salud para proporcionar un panel legible a los profesionales de la salud, viajeros, periodistas y organizaciones que necesitan estar informados sobre brotes de enfermedades en cuanto se declaran.",
-    whoTitle: "Fuente de datos: OMS",
+    whoTitle: "4 fuentes de datos oficiales",
     whoText:
-      "Todas las alertas sanitarias provienen de la API oficial Disease Outbreak News (DON) de la OMS, la misma fuente utilizada por gobiernos y agencias de salud pública de todo el mundo. Sin datos no verificados, sin medios de terceros. Consultamos esta API regularmente para mantener la información actualizada.",
+      "Todos los datos se agregan directamente desde 4 fuentes oficiales: WHO Disease Outbreak News, evaluaciones rápidas de riesgo de ECDC, alertas epidemiológicas de PAHO y reportes de Africa CDC — las mismas agencias utilizadas como referencias primarias por gobiernos e instituciones de salud pública. Sin datos no verificados, sin medios de terceros. Actualizado cada 6 horas.",
     howTitle: "Cómo funciona",
     howSteps: [
       { title: "Recopilación", text: "Nuestro pipeline consulta la API OData de la OMS y extrae información clave: enfermedad, país, casos confirmados, fallecimientos." },
@@ -214,9 +214,9 @@ const LABELS: Record<string, {
     missionTitle: "مهمتنا",
     missionText:
       "تجمع HealthWatch Global تلقائياً التنبيهات الرسمية لمنظمة الصحة العالمية (محدَّثة كل 6 ساعات) لتوفير لوحة تحكم واضحة للمهنيين الصحيين والمسافرين والصحفيين والمنظمات التي تحتاج إلى إخطار بتفشي الأمراض فور الإعلان عنها.",
-    whoTitle: "مصدر البيانات: منظمة الصحة العالمية",
+    whoTitle: "4 مصادر بيانات رسمية",
     whoText:
-      "تأتي جميع التنبيهات الصحية من واجهة برمجة تطبيقات Disease Outbreak News (DON) الرسمية لمنظمة الصحة العالمية — نفس المصدر الذي تستخدمه الحكومات ووكالات الصحة العامة حول العالم. لا بيانات غير مُتحقَّق منها، ولا وسائل إعلام خارجية. نستعلم هذه الواجهة كل 6 ساعات للحفاظ على تحديث المعلومات.",
+      "تُجمَّع جميع البيانات مباشرة من 4 مصادر رسمية: Disease Outbreak News التابع لمنظمة الصحة العالمية، والتقييمات السريعة للمخاطر من ECDC، والتنبيهات الوبائية من PAHO، وتقارير Africa CDC — نفس الوكالات التي تستخدمها الحكومات ومؤسسات الصحة العامة مرجعاً أساسياً. لا بيانات غير موثقة، لا وسائل إعلام خارجية. تحديث كل 6 ساعات.",
     howTitle: "كيف يعمل",
     howSteps: [
       { title: "الجمع", text: "تستعلم خطوط أنابيبنا واجهة OData لمنظمة الصحة العالمية وتستخرج المعلومات الرئيسية: المرض، البلد، الحالات المؤكدة، الوفيات." },
@@ -250,9 +250,9 @@ const LABELS: Record<string, {
     missionTitle: "Misi kami",
     missionText:
       "HealthWatch Global mengumpulkan secara otomatis peringatan resmi Organisasi Kesehatan Dunia (diperbarui setiap 6 jam) untuk menyediakan dasbor yang mudah dibaca bagi tenaga kesehatan, wisatawan, jurnalis, dan organisasi yang perlu mendapatkan informasi tentang wabah penyakit segera setelah dideklarasikan.",
-    whoTitle: "Sumber data: WHO",
+    whoTitle: "4 sumber data resmi",
     whoText:
-      "Semua peringatan kesehatan berasal dari API Disease Outbreak News (DON) resmi WHO — sumber yang sama yang digunakan oleh pemerintah dan badan kesehatan masyarakat di seluruh dunia. Tidak ada data yang tidak terverifikasi, tidak ada media pihak ketiga. Kami mengkueri API ini setiap 6 jam untuk menjaga informasi tetap terkini.",
+      "Semua data diagregasi langsung dari 4 sumber resmi: WHO Disease Outbreak News, penilaian risiko cepat ECDC, peringatan epidemiologi PAHO, dan laporan Africa CDC — lembaga yang sama yang digunakan pemerintah dan institusi kesehatan masyarakat sebagai referensi utama. Tidak ada data tidak terverifikasi, tidak ada media pihak ketiga. Diperbarui setiap 6 jam.",
     howTitle: "Cara kerjanya",
     howSteps: [
       { title: "Pengumpulan", text: "Pipeline kami mengkueri WHO OData API dan mengekstrak informasi kunci: penyakit, negara, kasus yang dikonfirmasi, kematian." },
@@ -281,7 +281,7 @@ const LABELS: Record<string, {
 const TECH_STACK = [
   { name: "Next.js 16", desc: "App Router, RSC, edge-ready" },
   { name: "Supabase", desc: "PostgreSQL · Auth · Edge Functions" },
-  { name: "WHO OData API", desc: "Disease Outbreak News (DON)" },
+  { name: "WHO · ECDC · PAHO · Africa CDC", desc: "4 official outbreak data sources" },
   { name: "Brevo", desc: "Transactional & digest emails" },
   { name: "Stripe", desc: "Secure subscription billing" },
   { name: "Vercel", desc: "Global CDN deployment" },
@@ -475,7 +475,7 @@ export default async function AboutPage({
             {locale === "fr" ? "Vous représentez une organisation ?" : locale === "es" ? "¿Representa una organización?" : locale === "ar" ? "هل تمثل مؤسسة؟" : locale === "id" ? "Mewakili sebuah organisasi?" : "Representing an organization?"}
           </p>
           <p className="text-gray-400 text-xs mt-0.5">
-            {locale === "fr" ? "Programme pilote : 5 accès Pro gratuits, 30 jours, pour ONG, agences ONU et ministères." : locale === "es" ? "Programa piloto: 5 accesos Pro gratis, 30 días, para ONG, agencias ONU y ministerios." : locale === "ar" ? "البرنامج التجريبي: 5 مقاعد Pro مجانية لمدة 30 يوماً للمنظمات غير الحكومية ووكالات الأمم المتحدة والوزارات." : locale === "id" ? "Program pilot: 5 akses Pro gratis, 30 hari, untuk LSM, badan PBB, dan kementerian." : "Pilot program: 5 free Pro seats, 30 days, for NGOs, UN agencies and ministries."}
+            {locale === "fr" ? "Programme pilote : 5 accès Pro gratuits, 30 jours, pour agences de santé internationales, ONG et ministères." : locale === "es" ? "Programa piloto: 5 accesos Pro gratis, 30 días, para agencias internacionales de salud, ONG y ministerios." : locale === "ar" ? "البرنامج التجريبي: 5 مقاعد Pro مجانية لمدة 30 يوماً لوكالات الصحة الدولية والمنظمات غير الحكومية والوزارات." : locale === "id" ? "Program pilot: 5 akses Pro gratis, 30 hari, untuk lembaga kesehatan internasional, LSM, dan kementerian." : "Pilot program: 5 free Pro seats, 30 days, for international health agencies, NGOs and ministries."}
           </p>
         </div>
         <Link
