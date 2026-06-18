@@ -115,6 +115,14 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlis
           <div className="space-y-2 flex-1 min-w-0">
             <div className="flex items-center gap-2 flex-wrap">
               <RiskBadge level={outbreak.risk_level as "high" | "medium" | "low"} />
+              {status === 'don' && (
+                <span
+                  title="WHO Disease Outbreak News — officially citable WHO bulletin with a unique DON reference number."
+                  className="inline-flex items-center text-xs px-2 py-0.5 rounded-full bg-blue-900/30 border border-blue-700/50 text-blue-400 font-bold cursor-help"
+                >
+                  WHO DON
+                </span>
+              )}
               {status === 'official' && (
                 <span
                   title={c.officialNotice}

@@ -60,6 +60,8 @@ export interface OutbreakTableLabels {
   illustrativeTooltip: string;
   officialBadge: string;
   officialTooltip: string;
+  donBadge: string;
+  donTooltip: string;
 }
 
 type Region    = "all" | "africa" | "asia" | "europe" | "americas" | "oceania";
@@ -531,6 +533,11 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
                       {outbreak.is_pheic && (
                         <span title="PHEIC — Public Health Emergency of International Concern" className="inline-flex items-center text-[10px] font-bold px-1.5 py-0.5 rounded bg-purple-900/50 border border-purple-700/50 text-purple-300 shrink-0 cursor-help">
                           🚨 PHEIC
+                        </span>
+                      )}
+                      {sourceStatus(outbreak) === 'don' && (
+                        <span title={l.donTooltip} className="inline-flex items-center text-[10px] font-bold px-1.5 py-0.5 rounded bg-blue-900/30 border border-blue-700/50 text-blue-400 shrink-0 cursor-help whitespace-nowrap">
+                          {l.donBadge}
                         </span>
                       )}
                       {sourceStatus(outbreak) === 'official' && (
