@@ -32,7 +32,7 @@ const COPY: Record<string, {
     steps: [
       {
         title: "Bienvenue sur HealthWatch Global 🌍",
-        body: "Votre plateforme de surveillance épidémique mondiale, alimentée par les données officielles de l'OMS. Laissez-nous vous montrer l'essentiel en 3 étapes.",
+        body: "Votre plateforme de surveillance épidémique mondiale, alimentée par l'OMS, l'ECDC, l'OPAS et l'Africa CDC. Laissez-nous vous montrer l'essentiel en 3 étapes.",
         cta: "Commencer",
       },
       {
@@ -94,7 +94,7 @@ const COPY: Record<string, {
     steps: [
       {
         title: "Bienvenido a HealthWatch Global 🌍",
-        body: "Su plataforma de vigilancia epidémica mundial, impulsada por datos oficiales de la OMS. Déjenos mostrarle lo esencial en 3 pasos.",
+        body: "Su plataforma de vigilancia epidémica mundial, impulsada por la OMS, ECDC, PAHO y Africa CDC. Déjenos mostrarle lo esencial en 3 pasos.",
         cta: "Comenzar",
       },
       {

@@ -82,13 +82,13 @@ const COPY: Record<string, {
   },
   ar: {
     pdf:      { title: "تقارير PDF إقليمية",           desc: "حمّل تقارير وبائية جاهزة للمشاركة مع فرقك أو المموّلين بنقرة واحدة.",            plan: "متاح — Pro" },
-    realtime: { title: "تنبيهات فورية",                desc: "احصل على إشعار في غضون ساعات بمجرد أن تكتشف مزامنتنا (كل 6 ساعات) تفشّياً جديداً من منظمة الصحة العالمية.", plan: "متاح — Pro فقط" },
+    realtime: { title: "تنبيهات فورية",                desc: "احصل على إشعار في غضون ساعات بمجرد أن تكتشف مزامنتنا (كل 6 ساعات) تفشّياً جديداً من WHO أو ECDC أو PAHO أو Africa CDC.", plan: "متاح — Pro فقط" },
     list:     { title: "قائمة كاملة بالتفشيات",        desc: "اطلع على جميع التفشيات النشطة بالمنطقة مع الأرقام الدقيقة.",                   plan: "متاح — Pro" },
     cases:    { title: "الأرقام المؤكدة",              desc: "الحالات المؤكدة والوفيات والتفاصيل الوبائية الكاملة لكل تفشٍّ.",                plan: "متاح — Pro" },
     csv:      { title: "تصدير بيانات CSV",             desc: "حمّل جميع التفشيات النشطة بصيغة CSV لـ Excel أو R أو Python أو أدواتك الداخلية.", plan: "متاح — Pro" },
     compare:  { title: "مقارنة بيانات التفشيات",         desc: "قارن الحالات والوفيات ومعدل الفتك ومعدل الإصابة بين وباءين جنباً إلى جنب.",        plan: "متاح — Pro" },
     proFeatures: [
-      "تنبيهات فورية — مزامنة كل 6 ساعات من المنظمة",
+      "تنبيهات فورية — WHO وECDC وPAHO وAfrica CDC",
       "تقارير PDF إقليمية بنقرة واحدة",
       "تصدير CSV للتحليلات الداخلية",
       "جميع المناطق العالمية مشمولة",
@@ -100,13 +100,13 @@ const COPY: Record<string, {
   },
   id: {
     pdf:      { title: "Laporan PDF regional",        desc: "Unduh laporan epidemiologi siap dibagikan ke tim atau donor Anda.",                      plan: "Tersedia — Pro" },
-    realtime: { title: "Peringatan instan",           desc: "Dapatkan notifikasi dalam hitungan jam begitu sinkronisasi 6 jam kami mendeteksi wabah baru dari WHO.", plan: "Tersedia — Pro saja" },
+    realtime: { title: "Peringatan instan",           desc: "Dapatkan notifikasi dalam hitungan jam begitu sinkronisasi 6 jam kami mendeteksi wabah baru dari WHO, ECDC, PAHO atau Africa CDC.", plan: "Tersedia — Pro saja" },
     list:     { title: "Daftar wabah lengkap",        desc: "Akses semua wabah aktif per wilayah dengan angka kasus dan kematian yang tepat.",        plan: "Tersedia — Pro" },
     cases:    { title: "Angka terkonfirmasi",         desc: "Kasus terkonfirmasi, kematian, dan detail epidemiologi lengkap setiap wabah.",           plan: "Tersedia — Pro" },
     csv:      { title: "Ekspor data CSV",             desc: "Unduh semua wabah aktif sebagai CSV untuk Excel, R, Python, atau alat internal Anda.",   plan: "Tersedia — Pro" },
     compare:  { title: "Perbandingan data wabah",     desc: "Bandingkan kasus, kematian, tingkat fatalitas, dan insidensi antara dua epidemi secara berdampingan.", plan: "Tersedia — Pro" },
     proFeatures: [
-      "Peringatan instan — sinkronisasi setiap 6 jam dari WHO",
+      "Peringatan instan — WHO, ECDC, PAHO & Africa CDC",
       "Laporan PDF regional dalam 1 klik",
       "Ekspor CSV untuk analisis internal",
       "Semua wilayah global tercakup",

@@ -9,15 +9,15 @@ const ABOUT_META: Record<string, { title: string; description: string }> = {
   },
   fr: {
     title: "À propos",
-    description: "HealthWatch Global surveille les épidémies mondiales à partir des données officielles de l'OMS. Conçu pour les épidémiologistes, ONG, gouvernements et professionnels de santé — en 5 langues.",
+    description: "HealthWatch Global agrège les données épidémiques de l'OMS, l'ECDC, l'OPAS et l'Africa CDC en un seul tableau de bord, mis à jour toutes les 6h. Conçu pour les épidémiologistes, ONG, gouvernements et professionnels de santé — en 5 langues.",
   },
   es: {
     title: "Acerca de",
-    description: "HealthWatch Global monitorea brotes de enfermedades en todo el mundo con datos oficiales de la OMS. Diseñado para epidemiólogos, ONG, gobiernos y profesionales de la salud — en 5 idiomas.",
+    description: "HealthWatch Global agrega datos de brotes de la OMS, ECDC, PAHO y Africa CDC en un solo panel, actualizado cada 6 horas. Diseñado para epidemiólogos, ONG, gobiernos y profesionales de la salud — en 5 idiomas.",
   },
   ar: {
     title: "حول المنصة",
-    description: "تراقب HealthWatch Global تفشي الأمراض حول العالم باستخدام بيانات منظمة الصحة العالمية الرسمية. مصمَّمة لعلماء الأوبئة والمنظمات غير الحكومية والحكومات والمهنيين الصحيين — بـ 5 لغات.",
+    description: "تجمع HealthWatch Global بيانات تفشي الأمراض من WHO وECDC وPAHO وAfrica CDC في لوحة تحكم واحدة، محدَّثة كل 6 ساعات. مصمَّمة لعلماء الأوبئة والمنظمات غير الحكومية والحكومات والمهنيين الصحيين — بـ 5 لغات.",
   },
   id: {
     title: "Tentang",
@@ -183,7 +183,7 @@ const LABELS: Record<string, {
       "Todos los datos se agregan directamente desde 4 fuentes oficiales: WHO Disease Outbreak News, evaluaciones rápidas de riesgo de ECDC, alertas epidemiológicas de PAHO y reportes de Africa CDC — las mismas agencias utilizadas como referencias primarias por gobiernos e instituciones de salud pública. Sin datos no verificados, sin medios de terceros. Actualizado cada 6 horas.",
     howTitle: "Cómo funciona",
     howSteps: [
-      { title: "Recopilación", text: "Nuestro pipeline consulta la API OData de la OMS y extrae información clave: enfermedad, país, casos confirmados, fallecimientos." },
+      { title: "Recopilación", text: "Nuestro pipeline agrega datos de la OMS, ECDC, PAHO y Africa CDC — extrayendo enfermedad, país, casos confirmados y fallecimientos de cada fuente." },
       { title: "Geolocalización", text: "Cada alerta se asocia a un país y se posiciona en un mapa mundial interactivo." },
       { title: "Análisis de riesgo", text: "Se calcula automáticamente una puntuación de riesgo (bajo / moderado / alto / crítico) según la letalidad y contagiosidad conocidas de cada patógeno." },
       { title: "Distribución", text: "Digest semanal, alertas email regionales instantáneas, integración Slack / Teams para sus equipos y API REST para organizaciones Enterprise." },
@@ -194,12 +194,12 @@ const LABELS: Record<string, {
       { title: "Periodistas e investigadores", text: "Acceda a datos estructurados, con fuentes y exportables (CSV, PDF) para sus trabajos." },
       { title: "Viajeros y expatriados", text: "Consulte las alertas activas antes y durante sus viajes al extranjero." },
       { title: "ONG y organizaciones humanitarias", text: "Monitoree regiones prioritarias y reciba alertas específicas para reaccionar rápidamente." },
-      { title: "Gobiernos y agencias", text: "Integre datos de la OMS directamente en sus sistemas mediante nuestra API REST Enterprise." },
+      { title: "Gobiernos y agencias", text: "Integre datos de la OMS, ECDC, PAHO y Africa CDC directamente en sus sistemas mediante nuestra API REST Enterprise." },
     ],
     techTitle: "Tecnología",
     openDataTitle: "Datos abiertos y transparencia",
     openDataText:
-      "Nos basamos exclusivamente en datos oficiales y públicos. Sin algoritmos de predicción opacos. Las fuentes siempre se citan y enlazan directamente a los boletines originales de la OMS.",
+      "Nos basamos exclusivamente en datos oficiales y públicos. Sin algoritmos de predicción opacos. Las fuentes siempre se citan y enlazan directamente a los boletines originales de la OMS, ECDC, PAHO y Africa CDC.",
     contactTitle: "Contacto",
     contactText: "¿Una pregunta, una asociación, un error? Escríbenos.",
     contactBtn: "Contáctenos",
