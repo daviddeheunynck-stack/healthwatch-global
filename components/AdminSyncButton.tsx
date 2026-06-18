@@ -10,19 +10,32 @@ export default function AdminSyncButton() {
   const handleSync = async () => {
     setStatus("loading");
     setResult("");
+
+    let res: Response;
     try {
-      const res = await fetch("/api/admin/sync", { method: "POST" });
-      const data = await res.json();
-      if (res.ok) {
-        setStatus("success");
-        setResult(`+${data.inserted} insérés · ${data.updated} mis à jour · ${data.staleDeactivated} désactivés`);
-      } else {
-        setStatus("error");
-        setResult(data.error || "Erreur inconnue");
-      }
+      res = await fetch("/api/admin/sync", { method: "POST" });
+    } catch (e: unknown) {
+      setStatus("error");
+      setResult(`Réseau : ${e instanceof Error ? e.message : String(e)}`);
+      return;
+    }
+
+    let data: Record<string, unknown>;
+    try {
+      data = await res.json();
     } catch {
       setStatus("error");
-      setResult("Impossible de contacter le serveur");
+      setResult(`Réponse non-JSON — HTTP ${res.status} ${res.statusText}`);
+      return;
+    }
+
+    if (res.ok) {
+      setStatus("success");
+      setResult(`+${data.inserted} insérés · ${data.updated} mis à jour · ${data.staleDeactivated} désactivés`);
+    } else {
+      setStatus("error");
+      const detail = data.detail ? ` — ${String(data.detail).slice(0, 120)}` : "";
+      setResult(`${String(data.error || "Erreur inconnue")}${detail}`);
     }
   };
 

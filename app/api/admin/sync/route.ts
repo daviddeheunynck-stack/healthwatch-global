@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase-server";
 import { isAdmin } from "@/lib/admin";
 import { rateLimit, getClientIp } from "@/lib/rate-limit";
-import { GET as runSync } from "@/app/api/cron/sync-outbreaks/route";
+import { errorMessage } from "@/lib/error";
 
 export const dynamic = "force-dynamic";
 
@@ -19,13 +19,34 @@ export async function POST(req: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser();
   if (!isAdmin(user?.email)) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
-  const baseUrl = clean(process.env.NEXT_PUBLIC_BASE_URL) || "http://localhost:3000";
-  const secret = clean(process.env.CRON_SECRET);
+  // Derive base URL from the incoming request host — correct in every environment
+  // (avoids NEXT_PUBLIC_BASE_URL falling back to http://localhost:3000 in serverless)
+  const host   = req.headers.get("host") ?? "localhost:3000";
+  const proto  = host.startsWith("localhost") ? "http" : "https";
+  const baseUrl = `${proto}://${host}`;
+  const secret  = clean(process.env.CRON_SECRET);
 
-  // Call the cron handler directly in-process — avoids HTTP self-referential
-  // fetch (which can block in dev and timeout on Vercel serverless).
-  const cronReq = new NextRequest(`${baseUrl}/api/cron/sync-outbreaks`, {
-    headers: { Authorization: `Bearer ${secret}` },
-  });
-  return runSync(cronReq);
+  let res: Response;
+  try {
+    res = await fetch(`${baseUrl}/api/cron/sync-outbreaks`, {
+      headers: { Authorization: `Bearer ${secret}` },
+      signal: AbortSignal.timeout(120_000),
+    });
+  } catch (e: unknown) {
+    return NextResponse.json(
+      { error: `Cron endpoint unreachable: ${errorMessage(e)}` },
+      { status: 502 }
+    );
+  }
+
+  const text = await res.text();
+  try {
+    const data = JSON.parse(text);
+    return NextResponse.json(data, { status: res.status });
+  } catch {
+    return NextResponse.json(
+      { error: `Sync HTTP ${res.status}`, detail: text.slice(0, 400) },
+      { status: 502 }
+    );
+  }
 }
