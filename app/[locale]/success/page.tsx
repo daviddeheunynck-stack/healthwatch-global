@@ -1,4 +1,4 @@
-import { CheckCircle, Clock, Zap, Shield, ArrowRight } from "lucide-react";
+import { CheckCircle, Clock, Users, Shield, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase-server";
 import type { Metadata } from "next";
@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 const PLAN_META: Record<string, { label: string; icon: React.ReactNode; color: string }> = {
   starter:    { label: "Pro",         icon: <Shield className="w-5 h-5" />, color: "text-red-400 bg-red-500/10 border-red-500/30" },
   pro:        { label: "Pro",         icon: <Shield className="w-5 h-5" />, color: "text-red-400 bg-red-500/10 border-red-500/30" },
-  team:       { label: "Team",        icon: <Zap    className="w-5 h-5" />, color: "text-amber-400 bg-amber-500/10 border-amber-500/30" },
+  team:       { label: "Team",        icon: <Users   className="w-5 h-5" />, color: "text-amber-400 bg-amber-500/10 border-amber-500/30" },
   enterprise: { label: "Enterprise",  icon: <Zap    className="w-5 h-5" />, color: "text-purple-400 bg-purple-500/10 border-purple-500/30" },
 };
 
@@ -154,7 +154,7 @@ export default async function SuccessPage({
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 
-  let plan = "pro"; // optimistic: only Pro exists
+  let plan = "pro"; // optimistic fallback before DB read
   if (user) {
     const { data: profile } = await supabase
       .from("profiles")
