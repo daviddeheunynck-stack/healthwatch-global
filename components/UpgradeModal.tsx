@@ -70,7 +70,7 @@ const COPY: Record<string, {
     csv:      { title: "Exportación de datos CSV",    desc: "Descargue todos los brotes activos en CSV para Excel, R, Python o sus herramientas internas.", plan: "Disponible — Pro" },
     compare:  { title: "Comparador de brotes con cifras", desc: "Compare casos, muertes, letalidad e incidencia entre dos epidemias, lado a lado.",            plan: "Disponible — Pro" },
     proFeatures: [
-      "Alertas instantáneas — sincronizadas cada 6h desde la OMS",
+      "Alertas instantáneas — OMS, ECDC, PAHO & Africa CDC, cada 6h",
       "Informes PDF regionales en 1 clic",
       "Exportación CSV para análisis internos",
       "Todas las regiones globales cubiertas",
