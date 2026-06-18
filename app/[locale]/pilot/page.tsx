@@ -12,11 +12,11 @@ const COPY = {
     sub: "We offer a free 30-day Pro access for up to 5 members of your organization. No credit card. No sales pitch. In exchange, we ask for honest feedback from people who work in the field.",
     forTitle: "Built for",
     forItems: [
-      "International NGO health coordinators",
-      "UN agency epidemiologists",
+      "Epidemiologists at global health agencies (Africa CDC, ECDC, PAHO, WHO)",
       "Ministry of Health surveillance teams",
-      "Humanitarian response program managers",
       "Public health research institutes",
+      "International NGO health coordinators",
+      "Humanitarian response program managers",
     ],
     includesTitle: "What the pilot includes",
     includes: [
@@ -51,11 +51,11 @@ const COPY = {
     sub: "Nous offrons un accès Pro gratuit de 30 jours pour jusqu'à 5 membres de votre organisation. Sans carte bancaire. Sans démarche commerciale. En échange, nous demandons un retour honnête de personnes qui travaillent sur le terrain.",
     forTitle: "Conçu pour",
     forItems: [
-      "Coordinateurs santé d'ONG internationales",
-      "Épidémiologistes d'agences onusiennes",
+      "Épidémiologistes d'agences internationales (Africa CDC, ECDC, PAHO, OMS)",
       "Équipes de surveillance des ministères de la santé",
-      "Responsables de programmes de réponse humanitaire",
       "Instituts de recherche en santé publique",
+      "Coordinateurs santé d'ONG internationales",
+      "Responsables de programmes de réponse humanitaire",
     ],
     includesTitle: "Ce que le pilote inclut",
     includes: [
@@ -90,11 +90,11 @@ const COPY = {
     sub: "Ofrecemos acceso Pro gratuito de 30 días para hasta 5 miembros de su organización. Sin tarjeta de crédito. Sin presión comercial. A cambio, pedimos comentarios honestos de personas que trabajan sobre el terreno.",
     forTitle: "Diseñado para",
     forItems: [
-      "Coordinadores de salud de ONG internacionales",
-      "Epidemiólogos de agencias de la ONU",
+      "Epidemiólogos en agencias internacionales (Africa CDC, ECDC, PAHO, OMS)",
       "Equipos de vigilancia de ministerios de salud",
-      "Responsables de programas de respuesta humanitaria",
       "Institutos de investigación en salud pública",
+      "Coordinadores de salud de ONG internacionales",
+      "Responsables de programas de respuesta humanitaria",
     ],
     includesTitle: "Qué incluye el piloto",
     includes: [
@@ -129,11 +129,11 @@ const COPY = {
     sub: "نقدم وصولاً مجانياً لخطة Pro لمدة 30 يوماً لما يصل إلى 5 أعضاء في مؤسستك. بدون بطاقة بنكية. بدون ضغوط تجارية. في المقابل، نطلب ملاحظات صادقة من أشخاص يعملون في الميدان.",
     forTitle: "مصمم لـ",
     forItems: [
-      "منسقو الصحة في المنظمات غير الحكومية الدولية",
-      "علماء الأوبئة في وكالات الأمم المتحدة",
+      "علماء الأوبئة في الوكالات الدولية (Africa CDC، ECDC، PAHO، WHO)",
       "فرق مراقبة وزارات الصحة",
-      "مديرو برامج الاستجابة الإنسانية",
       "معاهد البحوث في الصحة العامة",
+      "منسقو الصحة في المنظمات غير الحكومية الدولية",
+      "مديرو برامج الاستجابة الإنسانية",
     ],
     includesTitle: "ما يتضمنه البرنامج التجريبي",
     includes: [
@@ -168,11 +168,11 @@ const COPY = {
     sub: "Kami menawarkan akses Pro gratis selama 30 hari untuk hingga 5 anggota organisasi Anda. Tanpa kartu kredit. Tanpa tekanan penjualan. Sebagai gantinya, kami meminta umpan balik jujur dari orang-orang yang bekerja di lapangan.",
     forTitle: "Dirancang untuk",
     forItems: [
-      "Koordinator kesehatan LSM internasional",
-      "Epidemiolog badan PBB",
+      "Epidemiolog di lembaga internasional (Africa CDC, ECDC, PAHO, WHO)",
       "Tim surveilans kementerian kesehatan",
-      "Manajer program respons kemanusiaan",
       "Institut penelitian kesehatan masyarakat",
+      "Koordinator kesehatan LSM internasional",
+      "Manajer program respons kemanusiaan",
     ],
     includesTitle: "Apa yang termasuk dalam pilot",
     includes: [
@@ -207,7 +207,7 @@ const FAQ_COPY: Record<string, { title: string; items: { q: string; a: string }[
   en: {
     title: "Frequently asked questions",
     items: [
-      { q: "What data sources does HealthWatch use?", a: "All data comes directly from official WHO, PAHO, ECDC, and CDC APIs. We do not use secondary or unverified sources. The platform syncs daily." },
+      { q: "What data sources does HealthWatch use?", a: "All data comes directly from official WHO, ECDC, PAHO, and Africa CDC sources. We do not use secondary or unverified sources. The platform updates every 6 hours." },
       { q: "Is the platform GDPR compliant?", a: "Yes. The platform runs on European infrastructure (Vercel EU + Supabase EU). We do not collect personal health data from users. Your work email is the only personal data stored." },
       { q: "How does multi-user access work?", a: "Each team member gets their own individual account. The 5-seat pilot gives 5 independent logins, each with full Pro access. No shared passwords, no shared sessions." },
       { q: "What happens at the end of the 30 days?", a: "Accounts automatically revert to the Free plan. No charge, no credit card required. If your team wants to continue with Pro, we'll discuss options at the closing feedback session." },
@@ -217,7 +217,7 @@ const FAQ_COPY: Record<string, { title: string; items: { q: string; a: string }[
   fr: {
     title: "Questions fréquentes",
     items: [
-      { q: "Quelles sources de données utilise HealthWatch ?", a: "Toutes les données proviennent directement des API officielles OMS, PAHO, ECDC et CDC. Nous n'utilisons aucune source secondaire ou non vérifiée. La plateforme se synchronise chaque jour." },
+      { q: "Quelles sources de données utilise HealthWatch ?", a: "Toutes les données proviennent directement des sources officielles OMS, ECDC, PAHO et Africa CDC. Nous n'utilisons aucune source secondaire ou non vérifiée. La plateforme se met à jour toutes les 6 heures." },
       { q: "La plateforme est-elle conforme au RGPD ?", a: "Oui. La plateforme est hébergée sur une infrastructure européenne (Vercel EU + Supabase EU). Nous ne collectons pas de données de santé personnelles. Votre email professionnel est la seule donnée personnelle stockée." },
       { q: "Comment fonctionne l'accès multi-utilisateurs ?", a: "Chaque membre de l'équipe dispose de son propre compte individuel. Le pilote à 5 accès donne 5 logins indépendants, chacun avec l'accès Pro complet. Aucun mot de passe partagé." },
       { q: "Que se passe-t-il à la fin des 30 jours ?", a: "Les comptes passent automatiquement au plan Gratuit. Aucun frais, aucune carte bancaire requise. Si votre équipe souhaite continuer avec Pro, nous en discutons lors de la session de feedback de clôture." },
@@ -227,7 +227,7 @@ const FAQ_COPY: Record<string, { title: string; items: { q: string; a: string }[
   es: {
     title: "Preguntas frecuentes",
     items: [
-      { q: "¿Qué fuentes de datos utiliza HealthWatch?", a: "Todos los datos provienen directamente de las APIs oficiales de OMS, PAHO, ECDC y CDC. No utilizamos fuentes secundarias ni no verificadas. La plataforma se sincroniza diariamente." },
+      { q: "¿Qué fuentes de datos utiliza HealthWatch?", a: "Todos los datos provienen directamente de las fuentes oficiales de OMS, ECDC, PAHO y Africa CDC. No utilizamos fuentes secundarias ni no verificadas. La plataforma se actualiza cada 6 horas." },
       { q: "¿Es la plataforma conforme al RGPD?", a: "Sí. La plataforma se ejecuta en infraestructura europea (Vercel EU + Supabase EU). No recopilamos datos de salud personales. Su email profesional es el único dato personal almacenado." },
       { q: "¿Cómo funciona el acceso multiusuario?", a: "Cada miembro del equipo tiene su propia cuenta individual. El piloto de 5 accesos ofrece 5 inicios de sesión independientes, cada uno con acceso Pro completo. Sin contraseñas compartidas." },
       { q: "¿Qué sucede al final de los 30 días?", a: "Las cuentas vuelven automáticamente al plan Gratuito. Sin cargos, sin tarjeta de crédito requerida. Si su equipo desea continuar con Pro, lo discutiremos en la sesión de feedback de cierre." },
@@ -237,7 +237,7 @@ const FAQ_COPY: Record<string, { title: string; items: { q: string; a: string }[
   ar: {
     title: "الأسئلة المتكررة",
     items: [
-      { q: "ما مصادر البيانات التي يستخدمها HealthWatch؟", a: "تأتي جميع البيانات مباشرة من واجهات برمجية رسمية لمنظمة الصحة العالمية وPAHO وECDC وCDC. لا نستخدم مصادر ثانوية أو غير موثقة. تتزامن المنصة يومياً." },
+      { q: "ما مصادر البيانات التي يستخدمها HealthWatch؟", a: "تأتي جميع البيانات مباشرة من المصادر الرسمية لمنظمة الصحة العالمية وECDC وPAHO وAfrica CDC. لا نستخدم مصادر ثانوية أو غير موثقة. تتحدث المنصة كل 6 ساعات." },
       { q: "هل المنصة متوافقة مع اللائحة الأوروبية لحماية البيانات؟", a: "نعم. تعمل المنصة على بنية تحتية أوروبية (Vercel EU + Supabase EU). لا نجمع بيانات صحية شخصية. بريدك الإلكتروني المهني هو البيانات الشخصية الوحيدة المخزنة." },
       { q: "كيف يعمل الوصول متعدد المستخدمين؟", a: "يحصل كل عضو في الفريق على حسابه الخاص. يوفر البرنامج التجريبي 5 تسجيلات دخول مستقلة، كل منها بوصول Pro كامل. لا كلمات مرور مشتركة." },
       { q: "ماذا يحدث في نهاية الـ 30 يوماً؟", a: "تعود الحسابات تلقائياً إلى الخطة المجانية. لا رسوم، لا بطاقة بنكية مطلوبة. إذا أراد فريقك الاستمرار مع Pro، نناقش ذلك في جلسة التغذية الراجعة الختامية." },
@@ -247,7 +247,7 @@ const FAQ_COPY: Record<string, { title: string; items: { q: string; a: string }[
   id: {
     title: "Pertanyaan yang sering diajukan",
     items: [
-      { q: "Sumber data apa yang digunakan HealthWatch?", a: "Semua data berasal langsung dari API resmi WHO, PAHO, ECDC, dan CDC. Kami tidak menggunakan sumber sekunder atau yang tidak terverifikasi. Platform disinkronkan setiap hari." },
+      { q: "Sumber data apa yang digunakan HealthWatch?", a: "Semua data berasal langsung dari sumber resmi WHO, ECDC, PAHO, dan Africa CDC. Kami tidak menggunakan sumber sekunder atau yang tidak terverifikasi. Platform diperbarui setiap 6 jam." },
       { q: "Apakah platform ini mematuhi GDPR?", a: "Ya. Platform berjalan di infrastruktur Eropa (Vercel EU + Supabase EU). Kami tidak mengumpulkan data kesehatan pribadi pengguna. Email kerja Anda adalah satu-satunya data pribadi yang disimpan." },
       { q: "Bagaimana akses multi-pengguna bekerja?", a: "Setiap anggota tim mendapatkan akun individual mereka sendiri. Pilot 5 kursi memberikan 5 login independen, masing-masing dengan akses Pro penuh. Tidak ada kata sandi bersama." },
       { q: "Apa yang terjadi setelah 30 hari?", a: "Akun secara otomatis kembali ke paket Gratis. Tidak ada biaya, tidak perlu kartu kredit. Jika tim Anda ingin melanjutkan dengan Pro, kami akan membahasnya di sesi umpan balik penutup." },
@@ -320,10 +320,10 @@ export default function PilotPage() {
       {/* Credibility strip */}
       <div className="flex flex-wrap justify-center gap-6 border-y border-gray-800/60 py-5">
         {[
-          { label: locale === "fr" ? "Données OMS officielles" : locale === "es" ? "Datos OMS oficiales" : locale === "ar" ? "بيانات WHO رسمية" : locale === "id" ? "Data WHO resmi" : "Official WHO data" },
+          { label: locale === "fr" ? "4 sources officielles : OMS · ECDC · PAHO · Africa CDC" : locale === "es" ? "4 fuentes oficiales: OMS · ECDC · PAHO · Africa CDC" : locale === "ar" ? "4 مصادر رسمية: WHO · ECDC · PAHO · Africa CDC" : locale === "id" ? "4 sumber resmi: WHO · ECDC · PAHO · Africa CDC" : "4 official sources: WHO · ECDC · PAHO · Africa CDC" },
           { label: locale === "fr" ? "195 pays surveillés" : locale === "es" ? "195 países monitorizados" : locale === "ar" ? "195 دولة مراقبة" : locale === "id" ? "195 negara dipantau" : "195 countries monitored" },
           { label: locale === "fr" ? "5 langues" : locale === "es" ? "5 idiomas" : locale === "ar" ? "5 لغات" : locale === "id" ? "5 bahasa" : "5 languages" },
-          { label: locale === "fr" ? "Synchronisation quotidienne" : locale === "es" ? "Sincronización diaria" : locale === "ar" ? "تزامن يومي" : locale === "id" ? "Sinkronisasi harian" : "Daily sync" },
+          { label: locale === "fr" ? "Mise à jour toutes les 6h" : locale === "es" ? "Actualización cada 6h" : locale === "ar" ? "تحديث كل 6 ساعات" : locale === "id" ? "Diperbarui setiap 6 jam" : "Updated every 6h" },
         ].map(({ label }) => (
           <div key={label} className="flex items-center gap-2 text-sm text-gray-400">
             <CheckCircle className="w-4 h-4 text-green-500 shrink-0" />
