@@ -32,7 +32,7 @@ const COPY: Record<Locale, {
     proBtn: "Start free trial →",
     trialNote: "14 days free · No credit card",
     divider: "or get the free weekly digest",
-    digestLabel: "Weekly digest · WHO, CDC, ECDC sources · Easy unsubscribe",
+    digestLabel: "Weekly digest · WHO, ECDC, PAHO & Africa CDC · Easy unsubscribe",
   },
   fr: {
     placeholder: "votre@email.com",
@@ -46,7 +46,7 @@ const COPY: Record<Locale, {
     proBtn: "Commencer l'essai gratuit →",
     trialNote: "14 jours gratuits · Sans carte bancaire",
     divider: "ou recevoir le digest hebdomadaire gratuit",
-    digestLabel: "Digest hebdomadaire · Sources OMS, CDC, ECDC · Désabonnement facile",
+    digestLabel: "Digest hebdomadaire · OMS, ECDC, PAHO, Africa CDC · Désabonnement facile",
   },
   es: {
     placeholder: "tu@email.com",
@@ -60,7 +60,7 @@ const COPY: Record<Locale, {
     proBtn: "Iniciar prueba gratuita →",
     trialNote: "14 días gratis · Sin tarjeta de crédito",
     divider: "o recibe el digest semanal gratuito",
-    digestLabel: "Resumen semanal · Fuentes OMS, CDC, ECDC · Fácil cancelación",
+    digestLabel: "Resumen semanal · OMS, ECDC, PAHO, Africa CDC · Fácil cancelación",
   },
   ar: {
     placeholder: "بريدك@الإلكتروني.com",
@@ -74,7 +74,7 @@ const COPY: Record<Locale, {
     proBtn: "← ابدأ التجربة المجانية",
     trialNote: "14 يوماً مجاناً · بدون بطاقة بنكية",
     divider: "أو احصل على الملخص الأسبوعي المجاني",
-    digestLabel: "ملخص أسبوعي · مصادر منظمة الصحة العالمية · إلغاء اشتراك سهل",
+    digestLabel: "ملخص أسبوعي · WHO وECDC وPAHO وAfrica CDC · إلغاء اشتراك سهل",
   },
   id: {
     placeholder: "email@anda.com",
@@ -88,7 +88,7 @@ const COPY: Record<Locale, {
     proBtn: "Mulai uji coba gratis →",
     trialNote: "14 hari gratis · Tanpa kartu kredit",
     divider: "atau dapatkan digest mingguan gratis",
-    digestLabel: "Digest mingguan · Sumber WHO, CDC, ECDC · Berhenti berlangganan mudah",
+    digestLabel: "Digest mingguan · WHO, ECDC, PAHO & Africa CDC · Berhenti berlangganan mudah",
   },
 };
 

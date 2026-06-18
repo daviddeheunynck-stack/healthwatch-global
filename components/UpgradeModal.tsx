@@ -34,7 +34,7 @@ const COPY: Record<string, {
     csv:      { title: "Export CSV des données",      desc: "Téléchargez l'ensemble des foyers actifs en CSV pour Excel, R, Python ou vos outils internes.", plan: "Disponible — Pro" },
     compare:  { title: "Comparateur de foyers chiffré", desc: "Comparez cas, décès, létalité et incidence entre deux épidémies, foyer par foyer.",            plan: "Disponible — Pro" },
     proFeatures: [
-      "Alertes instantanées — synchronisées toutes les 6h depuis l'OMS",
+      "Alertes instantanées — OMS, ECDC, PAHO & Africa CDC, toutes les 6h",
       "Rapports PDF par région en 1 clic",
       "Export CSV pour vos analyses internes",
       "Toutes les régions mondiales couvertes",
@@ -46,7 +46,7 @@ const COPY: Record<string, {
   },
   en: {
     pdf:      { title: "Regional PDF reports",     desc: "Download shareable epidemiological reports ready for your teams or donors.",             plan: "Available — Pro" },
-    realtime: { title: "Instant alerts",           desc: "Get notified within hours the moment our WHO sync (every 6h) detects a new outbreak.", plan: "Available — Pro only" },
+    realtime: { title: "Instant alerts",           desc: "Get notified within hours the moment our WHO, ECDC, PAHO & Africa CDC sync (every 6h) detects a new outbreak.", plan: "Available — Pro only" },
     list:     { title: "Full outbreak list",       desc: "Access all active outbreaks per region with exact case and death figures.",              plan: "Available — Pro" },
     cases:    { title: "Confirmed figures",        desc: "Confirmed cases, deaths and full epidemiological details for every outbreak.",           plan: "Available — Pro" },
     csv:      { title: "CSV data export",          desc: "Download all active outbreaks as CSV for Excel, R, Python or your internal tools.",      plan: "Available — Pro" },
