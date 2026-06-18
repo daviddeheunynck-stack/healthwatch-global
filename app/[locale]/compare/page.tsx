@@ -70,9 +70,9 @@ export default function ComparePage() {
   const [plan, setPlan] = useState<string | null>(null);
   const isPaid = plan === "starter" || plan === "pro" || plan === "team" || plan === "enterprise";
 
-  // Fetch user plan — the exact figures (cases/deaths/CFR/incidence) are Pro-only,
-  // exactly like the dashboard table. Without this check, Compare would be a
-  // back door around that paywall (pick any outbreak here, read its real numbers).
+  // Fetch user plan — the exact figures (cases/deaths/CFR/incidence) are paid-only
+  // (Pro/Team/Enterprise), exactly like the dashboard table. Without this check,
+  // Compare would be a back door around that paywall.
   useEffect(() => {
     const supabase = createClient();
     supabase.auth.getUser().then(({ data: { user } }) => {
@@ -240,7 +240,7 @@ export default function ComparePage() {
               </tbody>
             </table>
           </div>
-          {/* Legend only makes sense once the win/lose colours are actually visible (Pro) */}
+          {/* Legend only makes sense once the win/lose colours are actually visible (paid plan) */}
           {isPaid && <p className="text-xs text-gray-600 text-center">🟢 = {l.winner} · 🔴 = {l.lower}</p>}
 
           {/* ── Upgrade banner — shown right when engagement peaks: user just picked 2 outbreaks ── */}
