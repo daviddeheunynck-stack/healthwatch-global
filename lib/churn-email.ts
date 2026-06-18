@@ -120,6 +120,111 @@ const COPY: Record<string, Record<string, ChurnCopy>> = {
     },
   },
 
+  // ── Team ─────────────────────────────────────────────────────────────────
+
+  team: {
+    fr: {
+      subject:     "Votre abonnement Team est annulé — à bientôt 👋",
+      headline:    "Votre abonnement Team a été annulé.",
+      intro:       "C'est confirmé. Votre équipe repassera sur le plan gratuit à la fin de la période en cours.",
+      losingTitle: "Votre équipe n'aura plus accès à :",
+      losing: [
+        "Les 5 sièges Pro pour votre institution",
+        "Alertes instantanées — dès notre synchronisation (toutes les 6h)",
+        "Rapports PDF pour toutes les régions mondiales",
+        "Intégration Slack / Teams",
+        "Chiffres exacts de cas et de décès",
+        "Export CSV + facture institutionnelle unique",
+      ],
+      comeback:  "Vous pouvez vous réabonner à tout moment — ou discuter d'un accès institutionnel adapté à votre structure.",
+      ctaLabel:  "Voir les formules →",
+      ctaUrl:    `${APP_URL}/fr/pricing`,
+      contactLine: "Quelque chose n'a pas fonctionné ? Je lis tous les emails — répondez directement.",
+      contactUrl:  `${APP_URL}/fr/contact`,
+      closing:   "Bonne continuation,\nDavid — HealthWatch Global",
+    },
+    en: {
+      subject:     "Your Team subscription has been cancelled — take care 👋",
+      headline:    "Your Team subscription has been cancelled.",
+      intro:       "Confirmed. Your team will revert to the free plan at the end of your current period.",
+      losingTitle: "Your team will lose access to:",
+      losing: [
+        "5 Pro seats for your institution",
+        "Instant alerts — the moment our 6h sync detects something new",
+        "PDF reports for all global regions",
+        "Slack / Teams integration",
+        "Exact case and death figures",
+        "CSV export + single institutional invoice",
+      ],
+      comeback:  "You can resubscribe at any time — or reach out to discuss an institutional arrangement.",
+      ctaLabel:  "See plans →",
+      ctaUrl:    `${APP_URL}/en/pricing`,
+      contactLine: "Something didn't work as expected? I read every email — reply directly.",
+      contactUrl:  `${APP_URL}/en/contact`,
+      closing:   "Take care,\nDavid — HealthWatch Global",
+    },
+    es: {
+      subject:     "Su suscripción Team ha sido cancelada — hasta pronto 👋",
+      headline:    "Su suscripción Team ha sido cancelada.",
+      intro:       "Confirmado. Su equipo volverá al plan gratuito al final de su período actual.",
+      losingTitle: "Su equipo perderá acceso a:",
+      losing: [
+        "5 puestos Pro para su institución",
+        "Alertas instantáneas — en cada sincronización (cada 6h)",
+        "Informes PDF para todas las regiones",
+        "Integración Slack / Teams",
+        "Cifras exactas de casos y fallecidos",
+        "Exportación CSV + factura institucional única",
+      ],
+      comeback:  "Puede volver a suscribirse en cualquier momento o contactarnos para un acuerdo institucional.",
+      ctaLabel:  "Ver planes →",
+      ctaUrl:    `${APP_URL}/es/pricing`,
+      contactLine: "¿Algo no funcionó como esperaba? Leo todos los correos — responda directamente.",
+      contactUrl:  `${APP_URL}/es/contact`,
+      closing:   "Hasta pronto,\nDavid — HealthWatch Global",
+    },
+    ar: {
+      subject:     "تم إلغاء اشتراك فريقك في Team — وداعاً 👋",
+      headline:    "تم إلغاء اشتراك فريقك في Team.",
+      intro:       "تأكيد. سيعود فريقك إلى الخطة المجانية في نهاية فترتك الحالية.",
+      losingTitle: "لن يتمكن فريقك من الوصول إلى:",
+      losing: [
+        "5 مقاعد Pro لمؤسستك",
+        "التنبيهات الفورية — مع كل مزامنة (كل 6 ساعات)",
+        "تقارير PDF لجميع المناطق العالمية",
+        "تكامل Slack / Teams",
+        "الأرقام الدقيقة للحالات والوفيات",
+        "تصدير CSV + فاتورة مؤسسية واحدة",
+      ],
+      comeback:  "يمكنك إعادة الاشتراك في أي وقت أو التواصل معنا لترتيب مؤسسي مناسب.",
+      ctaLabel:  "← عرض الخطط",
+      ctaUrl:    `${APP_URL}/ar/pricing`,
+      contactLine: "شيء لم يسر كما هو متوقع؟ أقرأ كل رسالة — أجب مباشرةً.",
+      contactUrl:  `${APP_URL}/ar/contact`,
+      closing:   "مع السلامة،\nDavid — HealthWatch Global",
+    },
+    id: {
+      subject:     "Langganan Team Anda telah dibatalkan — sampai jumpa 👋",
+      headline:    "Langganan Team Anda telah dibatalkan.",
+      intro:       "Dikonfirmasi. Tim Anda akan kembali ke paket gratis di akhir periode saat ini.",
+      losingTitle: "Tim Anda tidak lagi memiliki akses ke:",
+      losing: [
+        "5 kursi Pro untuk institusi Anda",
+        "Peringatan instan — pada setiap sinkronisasi 6 jam",
+        "Laporan PDF untuk semua wilayah global",
+        "Integrasi Slack / Teams",
+        "Angka kasus dan kematian yang tepat",
+        "Ekspor CSV + satu faktur institusional",
+      ],
+      comeback:  "Anda dapat berlangganan kembali kapan saja atau hubungi kami untuk pengaturan institusional.",
+      ctaLabel:  "Lihat paket →",
+      ctaUrl:    `${APP_URL}/id/pricing`,
+      contactLine: "Sesuatu tidak berjalan seperti yang diharapkan? Saya membaca setiap email — balas langsung.",
+      contactUrl:  `${APP_URL}/id/contact`,
+      closing:   "Sampai jumpa,\nDavid — HealthWatch Global",
+    },
+  },
+
   // ── Enterprise ────────────────────────────────────────────────────────────
 
   enterprise: {
@@ -214,7 +319,7 @@ const COPY: Record<string, Record<string, ChurnCopy>> = {
 // ─── HTML builder ─────────────────────────────────────────────────────────────
 
 export function buildChurnEmail(
-  plan: "starter" | "pro" | "enterprise",
+  plan: "starter" | "pro" | "team" | "enterprise",
   locale: string
 ): { subject: string; html: string } {
   const effectivePlan = plan === "starter" ? "pro" : plan;

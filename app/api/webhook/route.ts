@@ -50,7 +50,7 @@ async function sendUpgradeEmail(
 
 async function sendChurnEmail(
   to: string,
-  plan: "starter" | "pro" | "enterprise",
+  plan: "starter" | "pro" | "team" | "enterprise",
   locale: string
 ) {
   const { subject, html } = buildChurnEmail(plan, locale);
@@ -294,7 +294,7 @@ export async function POST(req: NextRequest) {
           .eq("id", userId)
           .single();
 
-        const cancelledPlan = (profile?.plan ?? "starter") as "starter" | "pro" | "enterprise";
+        const cancelledPlan = (profile?.plan ?? "starter") as "starter" | "pro" | "team" | "enterprise";
         const userEmail     = profile?.email as string | null;
 
         const { error } = await supabase
@@ -308,7 +308,7 @@ export async function POST(req: NextRequest) {
           console.log(`[webhook] Subscription deleted → plan free for user ${userId}`);
 
           // Send churn email (fire-and-forget)
-          if (userEmail && ["starter", "pro", "enterprise"].includes(cancelledPlan)) {
+          if (userEmail && ["starter", "pro", "team", "enterprise"].includes(cancelledPlan)) {
             const churnProfile = await getUserProfile(userId);
             const locale = churnProfile?.locale ?? "fr";
             sendChurnEmail(userEmail, cancelledPlan, locale).catch((e) =>

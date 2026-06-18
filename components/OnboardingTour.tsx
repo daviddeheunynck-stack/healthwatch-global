@@ -63,7 +63,7 @@ const COPY: Record<string, {
     steps: [
       {
         title: "Welcome to HealthWatch Global 🌍",
-        body: "Your global epidemic surveillance platform, powered by official WHO data. Let us show you the essentials in 3 steps.",
+        body: "Your global epidemic surveillance platform, powered by WHO, ECDC, PAHO & Africa CDC. Let us show you the essentials in 3 steps.",
         cta: "Get started",
       },
       {
@@ -125,7 +125,7 @@ const COPY: Record<string, {
     steps: [
       {
         title: "مرحباً بك في HealthWatch Global 🌍",
-        body: "منصتك لمراقبة الأوبئة العالمية، مدعومة ببيانات منظمة الصحة العالمية الرسمية. دعنا نُريك الأساسيات في 3 خطوات.",
+        body: "منصتك لمراقبة الأوبئة العالمية، مدعومة ببيانات WHO وECDC وPAHO وAfrica CDC. دعنا نُريك الأساسيات في 3 خطوات.",
         cta: "ابدأ",
       },
       {
@@ -156,7 +156,7 @@ const COPY: Record<string, {
     steps: [
       {
         title: "Selamat datang di HealthWatch Global 🌍",
-        body: "Platform pemantauan epidemi global Anda, didukung oleh data resmi WHO. Biarkan kami menunjukkan hal-hal penting dalam 3 langkah.",
+        body: "Platform pemantauan epidemi global Anda, didukung oleh WHO, ECDC, PAHO & Africa CDC. Biarkan kami menunjukkan hal-hal penting dalam 3 langkah.",
         cta: "Mulai",
       },
       {

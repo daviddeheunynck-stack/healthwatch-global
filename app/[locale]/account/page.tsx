@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase-server";
-import { User, Shield, Zap, Building2, Gift, ExternalLink, Download } from "lucide-react";
+import { User, Shield, Zap, Building2, Gift, ExternalLink, Download, Users } from "lucide-react";
 import Link from "next/link";
 import BillingPortalButton from "@/components/BillingPortalButton";
 import CheckoutButton from "@/components/CheckoutButton";
@@ -37,6 +37,7 @@ const PLAN_META: Record<string, { label: string; color: string; iconName: string
   free:       { label: "Free",       color: "text-green-400 bg-green-500/10 border-green-500/20",    iconName: "gift"       },
   starter:    { label: "Starter",    color: "text-blue-400 bg-blue-500/10 border-blue-500/20",       iconName: "zap"        },
   pro:        { label: "Pro",        color: "text-red-400 bg-red-500/10 border-red-500/20",          iconName: "shield"     },
+  team:       { label: "Team",       color: "text-amber-400 bg-amber-500/10 border-amber-500/20",    iconName: "users"      },
   enterprise: { label: "Enterprise", color: "text-purple-400 bg-purple-500/10 border-purple-500/20", iconName: "building2"  },
 };
 
@@ -44,6 +45,7 @@ const PLAN_ICONS: Record<string, React.ReactNode> = {
   gift:      <Gift className="w-4 h-4" />,
   zap:       <Zap className="w-4 h-4" />,
   shield:    <Shield className="w-4 h-4" />,
+  users:     <Users className="w-4 h-4" />,
   building2: <Building2 className="w-4 h-4" />,
 };
 
@@ -562,6 +564,38 @@ export default async function AccountPage({
           </div>
         ) : null}
       </div>
+
+      {/* Team seats info — team plan only */}
+      {plan === "team" && (
+        <div className="bg-gray-900 border border-amber-600/30 rounded-2xl p-6 space-y-3">
+          <h2 className="text-sm font-semibold text-amber-400/80 uppercase tracking-wide flex items-center gap-2">
+            <Users className="w-4 h-4" />
+            {locale === "fr" ? "Sièges de l'équipe" :
+             locale === "es" ? "Puestos del equipo" :
+             locale === "ar" ? "مقاعد الفريق" :
+             locale === "id" ? "Kursi tim" :
+             "Team seats"}
+          </h2>
+          <p className="text-sm text-gray-400">
+            {locale === "fr" ? "5 sièges inclus dans votre abonnement Team. Pour ajouter des membres ou gérer votre équipe, contactez-nous." :
+             locale === "es" ? "5 puestos incluidos en su suscripción Team. Para añadir miembros o gestionar su equipo, contáctenos." :
+             locale === "ar" ? "5 مقاعد مشمولة في اشتراكك Team. للإضافة أعضاء أو إدارة فريقك، تواصل معنا." :
+             locale === "id" ? "5 kursi termasuk dalam langganan Team Anda. Untuk menambahkan anggota atau mengelola tim Anda, hubungi kami." :
+             "5 seats included in your Team subscription. To add members or manage your team, contact us."}
+          </p>
+          <a
+            href="mailto:contact@healthwatch-global.com"
+            className="inline-flex items-center gap-2 bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 text-amber-400 font-semibold px-4 py-2 rounded-lg transition-colors text-sm"
+          >
+            <ExternalLink className="w-4 h-4" />
+            {locale === "fr" ? "Contacter l'équipe →" :
+             locale === "es" ? "Contactar al equipo →" :
+             locale === "ar" ? "← التواصل مع الفريق" :
+             locale === "id" ? "Hubungi tim →" :
+             "Contact team →"}
+          </a>
+        </div>
+      )}
 
       {/* CSV export — paid users only */}
       {isPaid && (
