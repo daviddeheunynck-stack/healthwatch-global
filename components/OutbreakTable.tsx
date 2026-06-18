@@ -62,15 +62,18 @@ export interface OutbreakTableLabels {
   officialTooltip: string;
   donBadge: string;
   donTooltip: string;
+  allSources: string;
 }
 
-type Region    = "all" | "africa" | "asia" | "europe" | "americas" | "oceania";
-type Risk      = "all" | "high" | "medium" | "low";
-type CfrFilter = "all" | "critical" | "elevated" | "low" | "nodata";
+type Region       = "all" | "africa" | "asia" | "europe" | "americas" | "oceania";
+type Risk         = "all" | "high" | "medium" | "low";
+type CfrFilter    = "all" | "critical" | "elevated" | "low" | "nodata";
+type SourceFilter = "all" | "don" | "official" | "unverified";
 
-const REGIONS:     readonly Region[]    = ["all", "africa", "asia", "europe", "americas", "oceania"];
-const RISKS:       readonly Risk[]      = ["all", "high", "medium", "low"];
-const CFR_FILTERS: readonly CfrFilter[] = ["all", "critical", "elevated", "low", "nodata"];
+const REGIONS:        readonly Region[]       = ["all", "africa", "asia", "europe", "americas", "oceania"];
+const RISKS:          readonly Risk[]         = ["all", "high", "medium", "low"];
+const CFR_FILTERS:    readonly CfrFilter[]    = ["all", "critical", "elevated", "low", "nodata"];
+const SOURCE_FILTERS: readonly SourceFilter[] = ["all", "don", "official", "unverified"];
 
 // Saved filters round-trip through localStorage as loose strings — validate
 // against the known union members so stale/corrupted entries fall back to
@@ -139,8 +142,9 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
   const [dateFrom, setDateFrom]  = useState<string>("");
   const [dateTo,   setDateTo]    = useState<string>("");
   const [selected, setSelected]  = useState<Outbreak | null>(null);
-  const [risk,      setRisk]      = useState<Risk>("all");
-  const [cfrFilter, setCfrFilter] = useState<CfrFilter>("all");
+  const [risk,         setRisk]         = useState<Risk>("all");
+  const [cfrFilter,    setCfrFilter]    = useState<CfrFilter>("all");
+  const [sourceFilter, setSourceFilter] = useState<SourceFilter>("all");
   const [sortKey,   setSortKey]   = useState<SortKey>("risk");
   const [sortDir,   setSortDir]   = useState<SortDir>("asc");
 
@@ -192,11 +196,12 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
         if (cfrFilter === "low"      && !(cfr !== null && cfr < 3))               return false;
         if (cfrFilter === "nodata"   && cfr !== null)                             return false;
       }
+      if (sourceFilter !== "all" && sourceStatus(o) !== sourceFilter) return false;
       if (q && !getLocalizedDisease(o, locale).toLowerCase().includes(q) &&
                !getLocalizedCountry(o, locale).toLowerCase().includes(q)) return false;
       return true;
     });
-  }, [outbreaks, region, country, risk, cfrFilter, dateFrom, dateTo, search, locale]);
+  }, [outbreaks, region, country, risk, cfrFilter, sourceFilter, dateFrom, dateTo, search, locale]);
 
   const sorted = useMemo(() => {
     const RISK_ORDER: Record<string, number> = { high: 0, medium: 1, low: 2 };
@@ -218,7 +223,7 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
     });
   }, [filtered, sortKey, sortDir]);
 
-  const hasFilters = search !== "" || region !== "all" || country !== "all" || risk !== "all" || cfrFilter !== "all" || dateFrom !== "" || dateTo !== "";
+  const hasFilters = search !== "" || region !== "all" || country !== "all" || risk !== "all" || cfrFilter !== "all" || sourceFilter !== "all" || dateFrom !== "" || dateTo !== "";
 
   const downloadCsv = useCallback(() => {
     const esc = (s: string | number | null | undefined) => {
@@ -250,7 +255,7 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
     track("csv_export_filtered", { rows: sorted.length, locale });
   }, [sorted, locale]);
 
-  function loadFilter(f: { search: string; region: string; country: string; risk: string; dateFrom: string; dateTo: string; cfrFilter?: string }) {
+  function loadFilter(f: { search: string; region: string; country: string; risk: string; dateFrom: string; dateTo: string; cfrFilter?: string; sourceFilter?: string }) {
     setSearch(f.search);
     setRegion(asEnum(f.region, REGIONS, "all"));
     setCountry(f.country);
@@ -258,6 +263,7 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
     setDateFrom(f.dateFrom);
     setDateTo(f.dateTo);
     setCfrFilter(asEnum(f.cfrFilter, CFR_FILTERS, "all"));
+    setSourceFilter(asEnum(f.sourceFilter, SOURCE_FILTERS, "all"));
   }
 
   const clearFilters = () => {
@@ -266,6 +272,7 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
     setCountry("all");
     setRisk("all");
     setCfrFilter("all");
+    setSourceFilter("all");
     setDateFrom("");
     setDateTo("");
   };
@@ -404,6 +411,26 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
             <option value="nodata">{l.noData}</option>
           </select>
 
+          {/* Source dropdown */}
+          <select
+            value={sourceFilter}
+            onChange={(e) => setSourceFilter(e.target.value as SourceFilter)}
+            className={`text-xs px-3 py-1 rounded-full border bg-gray-900 hover:border-gray-600 focus:outline-none focus:border-gray-600 transition-colors cursor-pointer ${
+              sourceFilter === "don"
+                ? "border-blue-700/50 text-blue-400"
+                : sourceFilter === "official"
+                ? "border-amber-700/50 text-amber-400"
+                : sourceFilter === "unverified"
+                ? "border-gray-600 text-gray-400"
+                : "border-gray-800 text-gray-400"
+            }`}
+          >
+            <option value="all">{l.allSources}</option>
+            <option value="don">{l.donBadge}</option>
+            <option value="official">{l.officialBadge}</option>
+            <option value="unverified">{l.illustrativeBadge}</option>
+          </select>
+
           {/* Date range */}
           <div className="flex items-center gap-1.5 text-xs text-gray-500">
             <span className="hidden sm:inline">{l.dateFrom}</span>
@@ -436,7 +463,7 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
       {/* ── Saved filters ──────────────────────────────────────────────── */}
       <SavedFilters
         locale={locale}
-        currentFilters={{ search, region, country, risk, dateFrom, dateTo, cfrFilter }}
+        currentFilters={{ search, region, country, risk, dateFrom, dateTo, cfrFilter, sourceFilter }}
         hasActiveFilters={hasFilters}
         onLoad={loadFilter}
       />
