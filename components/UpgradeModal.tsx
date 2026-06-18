@@ -52,7 +52,7 @@ const COPY: Record<string, {
     csv:      { title: "CSV data export",          desc: "Download all active outbreaks as CSV for Excel, R, Python or your internal tools.",      plan: "Available — Pro" },
     compare:  { title: "Outbreak data comparison", desc: "Compare cases, deaths, fatality rate and incidence between two epidemics, side by side.", plan: "Available — Pro" },
     proFeatures: [
-      "Instant alerts — synced every 6h from WHO",
+      "Instant alerts — WHO, ECDC, PAHO & Africa CDC",
       "Regional PDF reports in 1 click",
       "CSV export for your internal analyses",
       "All global regions covered",
