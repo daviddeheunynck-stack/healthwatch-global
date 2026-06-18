@@ -26,7 +26,7 @@
     "date": "Tanggal",
     "loading": "Memuat data...",
     "lastUpdated": "Terakhir diperbarui",
-    "lockedDesc": "Angka pasti hanya untuk pelanggan Pro dan Enterprise.",
+    "lockedDesc": "Angka pasti hanya untuk pelanggan Pro, Team, dan Enterprise.",
     "lockedCta": "Lihat paket →"
   },
   "risk": {

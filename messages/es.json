@@ -26,7 +26,7 @@
     "date": "Fecha",
     "loading": "Cargando datos...",
     "lastUpdated": "Última actualización",
-    "lockedDesc": "Cifras exactas reservadas para suscriptores Pro y Enterprise.",
+    "lockedDesc": "Cifras exactas reservadas para suscriptores Pro, Team y Enterprise.",
     "lockedCta": "Ver planes →"
   },
   "risk": {

@@ -26,7 +26,7 @@
     "date": "Date",
     "loading": "Loading data...",
     "lastUpdated": "Last updated",
-    "lockedDesc": "Exact figures reserved for Pro and Enterprise subscribers.",
+    "lockedDesc": "Exact figures reserved for Pro, Team and Enterprise subscribers.",
     "lockedCta": "See plans →"
   },
   "risk": {
@@ -61,7 +61,7 @@
     "realtimeLoginRequired": "Sign in to access instant alerts.",
     "realtimeLogin": "Sign in",
     "realtimeProOnly": "Instant alerts — Pro Plan",
-    "realtimeProDesc": "Get every new outbreak within hours, the moment our 6h WHO sync detects it.",
+    "realtimeProDesc": "Get every new outbreak within hours, the moment our 6h WHO, ECDC, PAHO & Africa CDC sync detects it.",
     "realtimeUpgrade": "Upgrade to Pro →"
   },
   "reports": {

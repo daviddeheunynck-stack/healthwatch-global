@@ -26,7 +26,7 @@
     "date": "Date",
     "loading": "Chargement des données...",
     "lastUpdated": "Dernière mise à jour",
-    "lockedDesc": "Chiffres exacts réservés aux abonnés Pro et Enterprise.",
+    "lockedDesc": "Chiffres exacts réservés aux abonnés Pro, Team et Enterprise.",
     "lockedCta": "Voir les offres →"
   },
   "risk": {
