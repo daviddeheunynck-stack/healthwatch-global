@@ -157,11 +157,11 @@ export async function generateMetadata({
     id: `Wabah penyakit di ${regionName} — Pengawasan WHO · HealthWatch Global`,
   };
   const DESC: Record<Locale, string> = {
-    fr: `Tous les foyers de maladies infectieuses actifs et historiques en ${regionName}. Données officielles OMS, ECDC, PAHO et Africa CDC, mises à jour toutes les 6h par HealthWatch Global.`,
-    en: `All active and historical infectious disease outbreaks in ${regionName}. Official WHO, ECDC, PAHO and Africa CDC data, updated every 6 hours by HealthWatch Global.`,
-    es: `Todos los brotes activos e históricos en ${regionName}. Datos oficiales OMS, ECDC, PAHO y Africa CDC, actualizados cada 6 horas por HealthWatch Global.`,
-    ar: `جميع تفشيات الأمراض المعدية النشطة والتاريخية في ${regionName}. بيانات رسمية من منظمة الصحة العالمية، ECDC، PAHO وAfrica CDC، محدّثة كل 6 ساعات.`,
-    id: `Semua wabah penyakit menular aktif dan historis di ${regionName}. Data resmi WHO, ECDC, PAHO dan Africa CDC, diperbarui setiap 6 jam oleh HealthWatch Global.`,
+    fr: `Tous les foyers de maladies infectieuses actifs et historiques en ${regionName}. Données officielles OMS, ECDC, PAHO et Africa CDC, mises à jour quotidiennement par HealthWatch Global.`,
+    en: `All active and historical infectious disease outbreaks in ${regionName}. Official WHO, ECDC, PAHO and Africa CDC data, updated daily by HealthWatch Global.`,
+    es: `Todos los brotes activos e históricos en ${regionName}. Datos oficiales OMS, ECDC, PAHO y Africa CDC, actualizados diariamente por HealthWatch Global.`,
+    ar: `جميع تفشيات الأمراض المعدية النشطة والتاريخية في ${regionName}. بيانات رسمية من منظمة الصحة العالمية، ECDC، PAHO وAfrica CDC، محدّثة يومياً.`,
+    id: `Semua wabah penyakit menular aktif dan historis di ${regionName}. Data resmi WHO, ECDC, PAHO dan Africa CDC, diperbarui setiap hari oleh HealthWatch Global.`,
   };
 
   const canonical = `${BASE_URL}/${l}/region/${region}`;

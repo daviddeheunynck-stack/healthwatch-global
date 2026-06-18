@@ -21,11 +21,11 @@ import type { Metadata } from "next";
 export const dynamic = "force-dynamic";
 
 const DASHBOARD_META: Record<string, { title: string; description: string }> = {
-  en: { title: "Global Disease Outbreak Dashboard", description: "Map and table of active disease outbreaks worldwide — official WHO, ECDC, PAHO and Africa CDC data, updated every 6 hours." },
-  fr: { title: "Tableau de bord — Foyers épidémiques mondiaux", description: "Carte et tableau des foyers épidémiques actifs dans le monde, issus des sources officielles OMS, ECDC, PAHO et Africa CDC — mis à jour toutes les 6h." },
-  es: { title: "Panel de vigilancia epidémica mundial", description: "Mapa y tabla de brotes de enfermedades activos en todo el mundo — datos oficiales OMS, ECDC, PAHO y Africa CDC, actualizados cada 6 horas." },
-  ar: { title: "لوحة تحكم تفشي الأمراض العالمية", description: "خريطة وجدول لتفشي الأمراض النشطة حول العالم — بيانات رسمية من منظمة الصحة العالمية، ECDC، PAHO وAfrica CDC، محدّثة كل 6 ساعات." },
-  id: { title: "Dasbor Wabah Penyakit Global", description: "Peta dan tabel wabah penyakit aktif di seluruh dunia — data resmi WHO, ECDC, PAHO dan Africa CDC, diperbarui setiap 6 jam." },
+  en: { title: "Global Disease Outbreak Dashboard", description: "Map and table of active disease outbreaks worldwide — official WHO, ECDC, PAHO and Africa CDC data, updated daily." },
+  fr: { title: "Tableau de bord — Foyers épidémiques mondiaux", description: "Carte et tableau des foyers épidémiques actifs dans le monde, issus des sources officielles OMS, ECDC, PAHO et Africa CDC — mis à jour quotidiennement." },
+  es: { title: "Panel de vigilancia epidémica mundial", description: "Mapa y tabla de brotes de enfermedades activos en todo el mundo — datos oficiales OMS, ECDC, PAHO y Africa CDC, actualizados diariamente." },
+  ar: { title: "لوحة تحكم تفشي الأمراض العالمية", description: "خريطة وجدول لتفشي الأمراض النشطة حول العالم — بيانات رسمية من منظمة الصحة العالمية، ECDC، PAHO وAfrica CDC، محدّثة يومياً." },
+  id: { title: "Dasbor Wabah Penyakit Global", description: "Peta dan tabel wabah penyakit aktif di seluruh dunia — data resmi WHO, ECDC, PAHO dan Africa CDC, diperbarui setiap hari." },
 };
 
 // ─── Filter strings (avoids touching 5 message files) ────────────────────────
@@ -58,11 +58,11 @@ const FILTER_COPY: Record<string, {
 };
 
 const LANDING_META: Record<string, { title: string; description: string }> = {
-  en: { title: "Epidemic surveillance for epidemiologists — WHO, ECDC, PAHO, Africa CDC | HealthWatch Global", description: "WHO, ECDC, PAHO and Africa CDC outbreak data — aggregated, translated and updated every 6 hours. Instant alerts, PDF reports and CFR data for epidemiologists, travel medicine doctors and health consultants." },
+  en: { title: "Epidemic surveillance for epidemiologists — WHO, ECDC, PAHO, Africa CDC | HealthWatch Global", description: "WHO, ECDC, PAHO and Africa CDC outbreak data — aggregated, translated and updated daily. Instant alerts, PDF reports and CFR data for epidemiologists, travel medicine doctors and health consultants." },
   fr: { title: "Surveillance épidémique pour épidémiologistes — OMS, ECDC, PAHO, Africa CDC | HealthWatch Global", description: "Données OMS, ECDC, PAHO et Africa CDC sur les foyers épidémiques — agrégées, traduites et mises à jour toutes les 6h. Alertes instantanées, rapports PDF et létalité pour épidémiologistes, médecins et consultants." },
-  es: { title: "Vigilancia epidémica para epidemiólogos — OMS, ECDC, PAHO, Africa CDC | HealthWatch Global", description: "Datos de brotes OMS, ECDC, PAHO y Africa CDC — agregados, traducidos y actualizados cada 6 horas. Alertas instantáneas, informes PDF y datos de letalidad para epidemiólogos, médicos y consultores." },
+  es: { title: "Vigilancia epidémica para epidemiólogos — OMS, ECDC, PAHO, Africa CDC | HealthWatch Global", description: "Datos de brotes OMS, ECDC, PAHO y Africa CDC — agregados, traducidos y actualizados diariamente. Alertas instantáneas, informes PDF y datos de letalidad para epidemiólogos, médicos y consultores." },
   ar: { title: "مراقبة وبائية لعلماء الأوبئة — WHO، ECDC، PAHO، Africa CDC | HealthWatch Global", description: "بيانات تفشي الأمراض من WHO وECDC وPAHO وAfrica CDC — مجمعة ومترجمة ومحدثة كل 6 ساعات. تنبيهات فورية وتقارير PDF لعلماء الأوبئة والمتخصصين." },
-  id: { title: "Surveilans epidemi untuk epidemiolog — WHO, ECDC, PAHO, Africa CDC | HealthWatch Global", description: "Data wabah WHO, ECDC, PAHO dan Africa CDC — diagregasi, diterjemahkan, diperbarui setiap 6 jam. Peringatan instan, laporan PDF dan data CFR untuk epidemiolog, dokter, dan konsultan." },
+  id: { title: "Surveilans epidemi untuk epidemiolog — WHO, ECDC, PAHO, Africa CDC | HealthWatch Global", description: "Data wabah WHO, ECDC, PAHO dan Africa CDC — diagregasi, diterjemahkan, diperbarui setiap hari. Peringatan instan, laporan PDF dan data CFR untuk epidemiolog, dokter, dan konsultan." },
 };
 
 const SNAPSHOT_COPY: Record<string, { cases: string; cfr: string; totalCases: string }> = {
@@ -394,7 +394,7 @@ export default async function DashboardPage({
           "description": "Free tier — live outbreak map and dashboard, no account required.",
         },
         "featureList": [
-          "WHO, ECDC, PAHO and Africa CDC outbreak data — updated every 6 hours",
+          "WHO, ECDC, PAHO and Africa CDC outbreak data — updated daily",
           "5 languages — English, French, Spanish, Arabic, Indonesian",
           "Regional email alerts",
           "PDF epidemiological reports",

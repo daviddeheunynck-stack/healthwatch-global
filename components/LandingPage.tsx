@@ -81,7 +81,7 @@ const COPY: Record<string, {
   focalPointTiers: { label: string; desc: string; example: string; action: string }[];
 }> = {
   fr: {
-    heroBadge: "4 sources officielles · 195 pays · Mise à jour toutes les 6h",
+    heroBadge: "4 sources officielles · 195 pays · Mise à jour quotidienne",
     heroTitle: ["Toutes les données OMS.", "Sans les heures de recherche."],
     heroSub: "Épidémiologiste, médecin, consultant ou analyste santé — vous consultez déjà l'OMS, l'ECDC, l'OPAS et l'Africa CDC. HealthWatch les agrège en un seul tableau de bord, calcule automatiquement la létalité, et vous alerte dès la publication.",
     heroCta: "Créer un compte gratuit",
@@ -158,7 +158,7 @@ const COPY: Record<string, {
     ],
   },
   en: {
-    heroBadge: "4 official sources · 195 countries · Updated every 6h",
+    heroBadge: "4 official sources · 195 countries · Updated daily",
     heroTitle: ["All WHO outbreak data.", "Without the research hours."],
     heroSub: "Epidemiologist, travel medicine doctor, or health consultant — you already cross-reference WHO, ECDC, PAHO and Africa CDC. HealthWatch aggregates all four, calculates CFR automatically, and alerts you within hours of publication.",
     heroCta: "Create free account",
@@ -235,7 +235,7 @@ const COPY: Record<string, {
     ],
   },
   es: {
-    heroBadge: "4 fuentes oficiales · 195 países · Actualización cada 6h",
+    heroBadge: "4 fuentes oficiales · 195 países · Actualización diaria",
     heroTitle: ["Todos los datos OMS.", "Sin horas de investigación."],
     heroSub: "Epidemiólogo, médico, consultor o analista de salud — usted ya cruza datos de OMS, ECDC, OPS y Africa CDC. HealthWatch los agrega en un solo panel, calcula el CFR automáticamente y le alerta en horas tras cada publicación oficial.",
     heroCta: "Crear cuenta gratuita",
@@ -312,7 +312,7 @@ const COPY: Record<string, {
     ],
   },
   ar: {
-    heroBadge: "4 مصادر رسمية · 195 دولة · تحديث كل 6 ساعات",
+    heroBadge: "4 مصادر رسمية · 195 دولة · تحديث يومي",
     heroTitle: ["كل بيانات منظمة الصحة العالمية.", "دون ساعات البحث."],
     heroSub: "عالم أوبئة، طبيب، مستشار أو محلل صحي — أنت تتقاطع بيانات منظمة الصحة العالمية وECDC وPAHO وAfrica CDC. HealthWatch يجمعها في لوحة واحدة، يحسب معدل الوفيات تلقائياً، ويُنبِّهك في ساعات من النشر الرسمي.",
     heroCta: "إنشاء حساب مجاني",
@@ -389,7 +389,7 @@ const COPY: Record<string, {
     ],
   },
   id: {
-    heroBadge: "4 sumber resmi · 195 negara · Diperbarui setiap 6 jam",
+    heroBadge: "4 sumber resmi · 195 negara · Diperbarui setiap hari",
     heroTitle: ["Semua data wabah WHO.", "Tanpa berjam-jam penelitian."],
     heroSub: "Epidemiolog, dokter, konsultan atau analis kesehatan — Anda sudah memeriksa silang data WHO, ECDC, PAHO dan Africa CDC. HealthWatch mengagregasi keempatnya dalam satu dasbor, menghitung CFR secara otomatis, dan memberi tahu Anda dalam hitungan jam setelah publikasi resmi.",
     heroCta: "Buat akun gratis",
@@ -533,7 +533,7 @@ export default async function LandingPage({ locale }: { locale: string }) {
               { value: stats.activeOutbreaks, label: c.statOutbreaks, icon: Activity, color: "text-red-400" },
               { value: stats.countriesAffected, label: c.statCountries, icon: Globe, color: "text-blue-400" },
               { value: stats.highRisk, label: c.statHighRisk, icon: AlertTriangle, color: "text-yellow-400" },
-              { value: "≤6h", label: c.statUpdated, icon: Clock, color: "text-green-400" },
+              { value: "≤24h", label: c.statUpdated, icon: Clock, color: "text-green-400" },
             ].map(({ value, label, icon: Icon, color }, i) => (
               <div key={i} className="bg-gray-900/80 border border-gray-800 rounded-xl p-4 text-center">
                 <Icon className={`w-4 h-4 ${color} mx-auto mb-1`} />
