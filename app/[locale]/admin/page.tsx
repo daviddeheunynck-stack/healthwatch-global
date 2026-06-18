@@ -319,6 +319,7 @@ export default async function AdminPage({
                       <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${
                         p.plan === "pro" ? "bg-red-500/10 text-red-400"
                         : p.plan === "starter" ? "bg-blue-500/10 text-blue-400"
+                        : p.plan === "team" ? "bg-amber-500/10 text-amber-400"
                         : p.plan === "enterprise" ? "bg-purple-500/10 text-purple-400"
                         : "bg-gray-700 text-gray-400"
                       }`}>
