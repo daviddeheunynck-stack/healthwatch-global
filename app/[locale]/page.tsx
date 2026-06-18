@@ -55,11 +55,11 @@ const FILTER_COPY: Record<string, {
 };
 
 const LANDING_META: Record<string, { title: string; description: string }> = {
-  en: { title: "WHO outbreak tracker for health professionals | HealthWatch Global", description: "All WHO Disease Outbreak News, aggregated and translated — without the manual research. Instant alerts, PDF reports and CFR data for travel medicine doctors, health consultants and epidemiologists." },
-  fr: { title: "Surveillance épidémique OMS pour professionnels de santé | HealthWatch Global", description: "Toutes les données OMS sur les foyers épidémiques, agrégées et traduites — sans les heures de recherche. Alertes instantanées, rapports PDF et données de létalité pour médecins, consultants et épidémiologistes." },
-  es: { title: "Vigilancia de brotes OMS para profesionales de salud | HealthWatch Global", description: "Todos los datos OMS sobre brotes, agregados y traducidos — sin horas de investigación. Alertas instantáneas, informes PDF y datos de letalidad para médicos, consultores y epidemiólogos." },
-  ar: { title: "متابعة تفشيات منظمة الصحة العالمية للمتخصصين الصحيين | HealthWatch Global", description: "جميع بيانات تفشي الأمراض من منظمة الصحة العالمية، مجمعة ومترجمة — دون ساعات البحث. تنبيهات فورية وتقارير PDF لأطباء السفر والمستشارين وعلماء الأوبئة." },
-  id: { title: "Pemantau wabah WHO untuk profesional kesehatan | HealthWatch Global", description: "Semua data wabah WHO, diagregasi dan diterjemahkan — tanpa berjam-jam penelitian. Peringatan instan, laporan PDF untuk dokter, konsultan, dan epidemiolog." },
+  en: { title: "Epidemic surveillance for epidemiologists — WHO, ECDC, PAHO, Africa CDC | HealthWatch Global", description: "WHO, ECDC, PAHO and Africa CDC outbreak data — aggregated, translated and updated every 6 hours. Instant alerts, PDF reports and CFR data for epidemiologists, travel medicine doctors and health consultants." },
+  fr: { title: "Surveillance épidémique pour épidémiologistes — OMS, ECDC, PAHO, Africa CDC | HealthWatch Global", description: "Données OMS, ECDC, PAHO et Africa CDC sur les foyers épidémiques — agrégées, traduites et mises à jour toutes les 6h. Alertes instantanées, rapports PDF et létalité pour épidémiologistes, médecins et consultants." },
+  es: { title: "Vigilancia epidémica para epidemiólogos — OMS, ECDC, PAHO, Africa CDC | HealthWatch Global", description: "Datos de brotes OMS, ECDC, PAHO y Africa CDC — agregados, traducidos y actualizados cada 6 horas. Alertas instantáneas, informes PDF y datos de letalidad para epidemiólogos, médicos y consultores." },
+  ar: { title: "مراقبة وبائية لعلماء الأوبئة — WHO، ECDC، PAHO، Africa CDC | HealthWatch Global", description: "بيانات تفشي الأمراض من WHO وECDC وPAHO وAfrica CDC — مجمعة ومترجمة ومحدثة كل 6 ساعات. تنبيهات فورية وتقارير PDF لعلماء الأوبئة والمتخصصين." },
+  id: { title: "Surveilans epidemi untuk epidemiolog — WHO, ECDC, PAHO, Africa CDC | HealthWatch Global", description: "Data wabah WHO, ECDC, PAHO dan Africa CDC — diagregasi, diterjemahkan, diperbarui setiap 6 jam. Peringatan instan, laporan PDF dan data CFR untuk epidemiolog, dokter, dan konsultan." },
 };
 
 const LOCALES = ["en", "fr", "es", "ar", "id"] as const;
@@ -101,7 +101,7 @@ export async function generateMetadata({
           url: `https://healthwatch-global.com/api/og?locale=${locale}`,
           width: 1200,
           height: 630,
-          alt: "HealthWatch Global — WHO Disease Outbreak Surveillance",
+          alt: "HealthWatch Global — WHO · ECDC · PAHO · Africa CDC Outbreak Surveillance",
         },
       ],
     },
@@ -310,7 +310,7 @@ export default async function DashboardPage({
         "name": "HealthWatch Global",
         "url": "https://healthwatch-global.com",
         "logo": "https://healthwatch-global.com/api/og",
-        "description": "Global epidemic surveillance platform — official WHO data in 5 languages for health organizations worldwide.",
+        "description": "Global epidemic surveillance platform — WHO, ECDC, PAHO and Africa CDC data in 5 languages for health organizations worldwide.",
         "contactPoint": {
           "@type": "ContactPoint",
           "email": "contact@healthwatch-global.com",
@@ -325,7 +325,7 @@ export default async function DashboardPage({
         "applicationCategory": "HealthApplication",
         "operatingSystem": "Web",
         "url": "https://healthwatch-global.com",
-        "description": "Monitor disease outbreaks worldwide — official WHO data. 5 languages, regional alerts, PDF reports and CSV export.",
+        "description": "Monitor disease outbreaks worldwide — WHO, ECDC, PAHO and Africa CDC. 5 languages, regional alerts, PDF reports and CSV export.",
         "offers": {
           "@type": "Offer",
           "price": "0",
