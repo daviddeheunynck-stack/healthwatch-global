@@ -104,7 +104,7 @@ export async function GET() {
               Daily epidemic surveillance
             </span>
             <span style={{ fontSize: 18, color: "rgba(255,255,255,0.45)", fontFamily: "sans-serif" }}>
-              WHO official data · 5 languages · Free to start
+              4 official sources · 5 languages · Free to start
             </span>
           </div>
 
