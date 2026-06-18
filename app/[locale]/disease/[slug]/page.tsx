@@ -264,11 +264,11 @@ export async function generateMetadata({
     id: `${diseaseName} — Pengawasan wabah global · HealthWatch Global`,
   };
   const DESC: Record<Locale, string> = {
-    fr: `Suivez les foyers de ${diseaseName} en temps réel — cas confirmés, décès, pays touchés et alertes OMS. Données officielles agrégées par HealthWatch Global.`,
-    en: `Track ${diseaseName} outbreaks in real time — confirmed cases, deaths, affected countries and WHO alerts. Official data aggregated by HealthWatch Global.`,
-    es: `Siga los brotes de ${diseaseName} en tiempo real — casos confirmados, fallecidos, países afectados y alertas OMS.`,
-    ar: `تتبع تفشيات ${diseaseName} في الوقت الفعلي — حالات مؤكدة، وفيات، دول متضررة وتنبيهات منظمة الصحة العالمية.`,
-    id: `Pantau wabah ${diseaseName} secara real-time — kasus terkonfirmasi, kematian, negara terdampak dan peringatan WHO.`,
+    fr: `Suivez les foyers de ${diseaseName} en temps réel — cas confirmés, décès, CFR et pays touchés. Données officielles OMS, ECDC, PAHO et Africa CDC agrégées par HealthWatch Global.`,
+    en: `Track ${diseaseName} outbreaks in real time — confirmed cases, deaths, case fatality rate and affected countries. Official WHO, ECDC, PAHO and Africa CDC data aggregated by HealthWatch Global.`,
+    es: `Siga los brotes de ${diseaseName} en tiempo real — casos confirmados, fallecidos, tasa de letalidad y países afectados. Datos oficiales OMS, ECDC, PAHO y Africa CDC.`,
+    ar: `تتبع تفشيات ${diseaseName} في الوقت الفعلي — حالات مؤكدة، وفيات، معدل الوفيات ودول متضررة. بيانات رسمية من WHO وECDC وPAHO وAfrica CDC.`,
+    id: `Pantau wabah ${diseaseName} secara real-time — kasus terkonfirmasi, kematian, CFR dan negara terdampak. Data resmi WHO, ECDC, PAHO dan Africa CDC.`,
   };
 
   const canonical = `${BASE_URL}/${l}/disease/${slug}`;
