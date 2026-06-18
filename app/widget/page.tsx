@@ -15,11 +15,11 @@ const LABEL: Record<string, {
   title: string; active: string; high: string; medium: string; low: string;
   pheic: string; poweredBy: string; viewAll: string; updated: string;
 }> = {
-  fr: { title: "Foyers actifs", active: "foyers actifs", high: "Élevé", medium: "Modéré", low: "Faible", pheic: "PHEIC", poweredBy: "HealthWatch Global", viewAll: "Voir tout →", updated: "Données OMS" },
-  en: { title: "Active outbreaks", active: "active outbreaks", high: "High", medium: "Medium", low: "Low", pheic: "PHEIC", poweredBy: "HealthWatch Global", viewAll: "View all →", updated: "WHO data" },
-  es: { title: "Brotes activos", active: "brotes activos", high: "Alto", medium: "Medio", low: "Bajo", pheic: "PHEIC", poweredBy: "HealthWatch Global", viewAll: "Ver todo →", updated: "Datos OMS" },
-  ar: { title: "التفشيات النشطة", active: "تفشيات نشطة", high: "عالٍ", medium: "متوسط", low: "منخفض", pheic: "PHEIC", poweredBy: "HealthWatch Global", viewAll: "← عرض الكل", updated: "بيانات OMS" },
-  id: { title: "Wabah Aktif", active: "wabah aktif", high: "Tinggi", medium: "Sedang", low: "Rendah", pheic: "PHEIC", poweredBy: "HealthWatch Global", viewAll: "Lihat semua →", updated: "Data WHO" },
+  fr: { title: "Foyers actifs", active: "foyers actifs", high: "Élevé", medium: "Modéré", low: "Faible", pheic: "PHEIC", poweredBy: "HealthWatch Global", viewAll: "Voir tout →", updated: "4 sources officielles" },
+  en: { title: "Active outbreaks", active: "active outbreaks", high: "High", medium: "Medium", low: "Low", pheic: "PHEIC", poweredBy: "HealthWatch Global", viewAll: "View all →", updated: "4 official sources" },
+  es: { title: "Brotes activos", active: "brotes activos", high: "Alto", medium: "Medio", low: "Bajo", pheic: "PHEIC", poweredBy: "HealthWatch Global", viewAll: "Ver todo →", updated: "4 fuentes oficiales" },
+  ar: { title: "التفشيات النشطة", active: "تفشيات نشطة", high: "عالٍ", medium: "متوسط", low: "منخفض", pheic: "PHEIC", poweredBy: "HealthWatch Global", viewAll: "← عرض الكل", updated: "4 مصادر رسمية" },
+  id: { title: "Wabah Aktif", active: "wabah aktif", high: "Tinggi", medium: "Sedang", low: "Rendah", pheic: "PHEIC", poweredBy: "HealthWatch Global", viewAll: "Lihat semua →", updated: "4 sumber resmi" },
 };
 
 export const dynamic = "force-dynamic";

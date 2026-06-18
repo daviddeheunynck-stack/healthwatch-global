@@ -14,11 +14,11 @@ const BOM      = String.fromCharCode(65279);
 const clean    = (v: string | undefined) => (v || "").replace(new RegExp("^" + BOM), "").trim();
 
 const FEED_META: Record<string, { title: string; description: string; lang: string }> = {
-  fr: { title: "HealthWatch Global — Épidémies mondiales", description: "Foyers de maladies infectieuses actifs — données officielles OMS, synchronisées quotidiennement.", lang: "fr" },
-  en: { title: "HealthWatch Global — Global Disease Outbreaks", description: "Active infectious disease outbreaks — official WHO data, synced daily.", lang: "en" },
-  es: { title: "HealthWatch Global — Brotes mundiales", description: "Brotes activos de enfermedades infecciosas — datos OMS oficiales, sincronizados diariamente.", lang: "es" },
-  ar: { title: "HealthWatch Global — تفشيات الأمراض العالمية", description: "تفشيات الأمراض المعدية النشطة — بيانات رسمية من منظمة الصحة العالمية، مزامنة يومية.", lang: "ar" },
-  id: { title: "HealthWatch Global — Wabah Penyakit Global", description: "Wabah penyakit menular aktif — data WHO resmi, disinkronkan setiap hari.", lang: "id" },
+  fr: { title: "HealthWatch Global — Épidémies mondiales", description: "Foyers de maladies infectieuses actifs — données officielles OMS, ECDC, PAHO et Africa CDC, mises à jour toutes les 6h.", lang: "fr" },
+  en: { title: "HealthWatch Global — Global Disease Outbreaks", description: "Active infectious disease outbreaks — official WHO, ECDC, PAHO and Africa CDC data, updated every 6 hours.", lang: "en" },
+  es: { title: "HealthWatch Global — Brotes mundiales", description: "Brotes activos de enfermedades infecciosas — datos oficiales OMS, ECDC, PAHO y Africa CDC, actualizados cada 6 horas.", lang: "es" },
+  ar: { title: "HealthWatch Global — تفشيات الأمراض العالمية", description: "تفشيات الأمراض المعدية النشطة — بيانات رسمية من منظمة الصحة العالمية، ECDC، PAHO وAfrica CDC، محدّثة كل 6 ساعات.", lang: "ar" },
+  id: { title: "HealthWatch Global — Wabah Penyakit Global", description: "Wabah penyakit menular aktif — data resmi WHO, ECDC, PAHO dan Africa CDC, diperbarui setiap 6 jam.", lang: "id" },
 };
 
 const RISK_LABEL: Record<string, Record<string, string>> = {

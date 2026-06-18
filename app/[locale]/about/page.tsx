@@ -21,7 +21,7 @@ const ABOUT_META: Record<string, { title: string; description: string }> = {
   },
   id: {
     title: "Tentang",
-    description: "HealthWatch Global memantau wabah penyakit di seluruh dunia menggunakan data resmi WHO Disease Outbreak News. Dibangun untuk ahli epidemiologi, LSM, pemerintah, dan tenaga kesehatan — dalam 5 bahasa.",
+    description: "HealthWatch Global memantau wabah penyakit di seluruh dunia menggunakan data resmi WHO, ECDC, PAHO dan Africa CDC. Dibangun untuk ahli epidemiologi, LSM, pemerintah, dan tenaga kesehatan — dalam 5 bahasa.",
   },
 };
 

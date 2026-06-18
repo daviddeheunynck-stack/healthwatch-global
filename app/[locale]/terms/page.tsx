@@ -137,7 +137,7 @@ export default async function TermsPage() {
           <h2 className="text-lg font-semibold text-white">7. Intellectual Property</h2>
           <p className="text-gray-400 text-sm leading-relaxed">
             The platform design, code, branding, and compiled datasets are the intellectual property of
-            HealthWatch Global. Underlying public health data originates from WHO, CDC, and ECDC and
+            HealthWatch Global. Underlying public health data originates from WHO, ECDC, PAHO and Africa CDC and
             is subject to their respective terms of use. CSV data export rights granted under paid plans do not transfer ownership of any data.
           </p>
         </section>

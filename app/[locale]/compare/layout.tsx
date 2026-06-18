@@ -3,23 +3,23 @@ import type { Metadata } from "next";
 const META: Record<string, { title: string; description: string }> = {
   en: {
     title: "Compare Disease Outbreaks | HealthWatch Global",
-    description: "Compare two disease outbreaks side by side — cases, deaths, fatality rate, and incidence per 100,000. Official WHO data.",
+    description: "Compare two disease outbreaks side by side — cases, deaths, fatality rate, and incidence per 100,000. Official WHO, ECDC, PAHO and Africa CDC data.",
   },
   fr: {
     title: "Comparer des épidémies | HealthWatch Global",
-    description: "Comparez deux foyers épidémiques côte à côte — cas, décès, létalité et incidence pour 100 000. Données officielles OMS.",
+    description: "Comparez deux foyers épidémiques côte à côte — cas, décès, létalité et incidence pour 100 000. Données officielles OMS, ECDC, PAHO et Africa CDC.",
   },
   es: {
     title: "Comparar brotes de enfermedades | HealthWatch Global",
-    description: "Compare dos brotes de enfermedades en paralelo — casos, muertes, tasa de letalidad e incidencia por 100.000. Datos OMS oficiales.",
+    description: "Compare dos brotes de enfermedades en paralelo — casos, muertes, tasa de letalidad e incidencia por 100.000. Datos oficiales OMS, ECDC, PAHO y Africa CDC.",
   },
   ar: {
     title: "مقارنة تفشيات الأمراض | HealthWatch Global",
-    description: "قارن بين تفشيين جنباً إلى جنب — الحالات والوفيات ومعدل الفتك والإصابة لكل 100,000. بيانات رسمية من منظمة الصحة العالمية.",
+    description: "قارن بين تفشيين جنباً إلى جنب — الحالات والوفيات ومعدل الفتك والإصابة لكل 100,000. بيانات رسمية من منظمة الصحة العالمية، ECDC، PAHO وAfrica CDC.",
   },
   id: {
     title: "Bandingkan Wabah Penyakit | HealthWatch Global",
-    description: "Bandingkan dua wabah penyakit secara berdampingan — kasus, kematian, tingkat fatalitas, dan insidensi per 100.000. Data resmi WHO.",
+    description: "Bandingkan dua wabah penyakit secara berdampingan — kasus, kematian, tingkat fatalitas, dan insidensi per 100.000. Data resmi WHO, ECDC, PAHO dan Africa CDC.",
   },
 };
 

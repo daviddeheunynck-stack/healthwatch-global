@@ -191,7 +191,7 @@ export default function DocsPage({ params }: { params: Promise<{ locale: string 
               Returns a paginated list of active disease outbreaks sourced from the WHO, sorted by date descending.
             </p>
             <p className="text-sm text-gray-500">
-              Data is refreshed daily via the WHO Disease Outbreak News feed.
+              Data is refreshed every 6 hours from WHO, ECDC, PAHO and Africa CDC.
             </p>
           </div>
         </div>

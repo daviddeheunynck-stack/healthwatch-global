@@ -6,11 +6,11 @@ const OG_LOCALE: Record<string, string> = {
 };
 
 const META: Record<string, { title: string; description: string }> = {
-  en: { title: "Email Alerts", description: "Subscribe to a free weekly digest of disease outbreaks for your region. Powered by WHO Disease Outbreak News." },
-  fr: { title: "Alertes email", description: "Abonnez-vous à un digest hebdomadaire gratuit des foyers épidémiques de votre région. Alimenté par le bulletin OMS." },
-  es: { title: "Alertas por email", description: "Suscríbase a un resumen semanal gratuito de brotes de enfermedades en su región. Impulsado por el boletín de la OMS." },
-  ar: { title: "تنبيهات البريد الإلكتروني", description: "اشترك في ملخص أسبوعي مجاني لتفشي الأمراض في منطقتك. مدعوم من نشرة منظمة الصحة العالمية." },
-  id: { title: "Peringatan Email", description: "Berlangganan digest mingguan gratis wabah penyakit di wilayah Anda. Didukung oleh WHO Disease Outbreak News." },
+  en: { title: "Email Alerts", description: "Subscribe to a free weekly digest of disease outbreaks for your region. Powered by official WHO, ECDC, PAHO and Africa CDC data." },
+  fr: { title: "Alertes email", description: "Abonnez-vous à un digest hebdomadaire gratuit des foyers épidémiques de votre région. Alimenté par les données officielles OMS, ECDC, PAHO et Africa CDC." },
+  es: { title: "Alertas por email", description: "Suscríbase a un resumen semanal gratuito de brotes de enfermedades en su región. Impulsado por datos oficiales de OMS, ECDC, PAHO y Africa CDC." },
+  ar: { title: "تنبيهات البريد الإلكتروني", description: "اشترك في ملخص أسبوعي مجاني لتفشي الأمراض في منطقتك. مدعوم بالبيانات الرسمية لمنظمة الصحة العالمية، ECDC، PAHO وAfrica CDC." },
+  id: { title: "Peringatan Email", description: "Berlangganan digest mingguan gratis wabah penyakit di wilayah Anda. Didukung data resmi WHO, ECDC, PAHO dan Africa CDC." },
 };
 
 export async function generateMetadata({
