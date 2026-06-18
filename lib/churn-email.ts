@@ -29,7 +29,7 @@ const COPY: Record<string, Record<string, ChurnCopy>> = {
       intro:       "C'est confirmé. Vous repassez sur le plan gratuit à la fin de la période en cours.",
       losingTitle: "Vous n'aurez plus accès à :",
       losing: [
-        "Alertes instantanées — dès notre synchronisation (toutes les 6h) avec l'OMS",
+        "Alertes instantanées — sync 6h depuis l'OMS, l'ECDC, l'OPAS et l'Africa CDC",
         "Rapports PDF pour toutes les régions mondiales",
         "Intégration Slack / Teams",
         "Chiffres exacts de cas et de décès",
@@ -48,7 +48,7 @@ const COPY: Record<string, Record<string, ChurnCopy>> = {
       intro:       "Confirmed. You'll revert to the free plan at the end of your current period.",
       losingTitle: "You'll lose access to:",
       losing: [
-        "Instant alerts — the moment our 6h WHO sync detects something new",
+        "Instant alerts — 6h sync from WHO, ECDC, PAHO & Africa CDC",
         "PDF reports for all global regions",
         "Slack / Teams integration",
         "Exact case and death figures",
@@ -67,7 +67,7 @@ const COPY: Record<string, Record<string, ChurnCopy>> = {
       intro:       "Confirmado. Volverá al plan gratuito al final de su período actual.",
       losingTitle: "Perderá acceso a:",
       losing: [
-        "Alertas instantáneas — en cada sincronización (cada 6h) con la OMS",
+        "Alertas instantáneas — sync 6h desde la OMS, ECDC, PAHO y Africa CDC",
         "Informes PDF para todas las regiones",
         "Integración Slack / Teams",
         "Cifras exactas de casos y fallecidos",
@@ -86,7 +86,7 @@ const COPY: Record<string, Record<string, ChurnCopy>> = {
       intro:       "تأكيد. ستعود إلى الخطة المجانية في نهاية فترتك الحالية.",
       losingTitle: "لن تتمكن من الوصول إلى:",
       losing: [
-        "التنبيهات الفورية — مع كل مزامنة (كل 6 ساعات) مع المنظمة",
+        "التنبيهات الفورية — مزامنة 6 ساعات من WHO وECDC وPAHO وAfrica CDC",
         "تقارير PDF لجميع المناطق العالمية",
         "تكامل Slack / Teams",
         "الأرقام الدقيقة للحالات والوفيات",
@@ -105,7 +105,7 @@ const COPY: Record<string, Record<string, ChurnCopy>> = {
       intro:       "Dikonfirmasi. Anda akan kembali ke paket gratis di akhir periode Anda saat ini.",
       losingTitle: "Anda tidak lagi memiliki akses ke:",
       losing: [
-        "Peringatan instan — pada setiap sinkronisasi 6 jam dengan WHO",
+        "Peringatan instan — sinkronisasi 6 jam dari WHO, ECDC, PAHO & Africa CDC",
         "Laporan PDF untuk semua wilayah global",
         "Integrasi Slack / Teams",
         "Angka kasus dan kematian yang tepat",
