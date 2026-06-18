@@ -124,7 +124,7 @@ export default async function LegalPage() {
           <h2 className="text-lg font-semibold text-white">4. Données épidémiologiques — avertissement</h2>
           <p>
             Les données épidémiologiques affichées sur HealthWatch Global proviennent exclusivement de sources officielles
-            et publiques (API OMS Disease Outbreak News, CDC, ECDC). Elles sont fournies à titre informatif
+            et publiques (OMS Disease Outbreak News, ECDC, PAHO et Africa CDC). Elles sont fournies à titre informatif
             uniquement et ne constituent pas un avis médical.
           </p>
           <p>
