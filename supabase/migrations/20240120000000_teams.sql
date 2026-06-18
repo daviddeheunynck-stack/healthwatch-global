@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS public.team_invites (
   id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   team_id     UUID NOT NULL REFERENCES public.teams(id) ON DELETE CASCADE,
   email       TEXT NOT NULL,
-  token       TEXT NOT NULL UNIQUE DEFAULT encode(gen_random_bytes(32), 'hex'),
+  token       TEXT NOT NULL UNIQUE DEFAULT replace(gen_random_uuid()::text, '-', ''),
   invited_by  UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   accepted_at TIMESTAMPTZ,
   expires_at  TIMESTAMPTZ NOT NULL DEFAULT NOW() + INTERVAL '7 days',
