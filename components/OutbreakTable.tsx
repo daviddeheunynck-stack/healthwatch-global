@@ -231,7 +231,7 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
       return str.includes(",") || str.includes('"') || str.includes("\n")
         ? `"${str.replace(/"/g, '""')}"` : str;
     };
-    const headers = ["disease", "country", "region", "cases", "deaths", "cfr_%", "risk_level", "date", "source", "description"];
+    const headers = ["disease", "country", "region", "cases", "deaths", "cfr_%", "risk_level", "date", "source_tier", "source_url", "description"];
     const rows = sorted.map((o) => [
       esc(o.disease_en || o.disease),
       esc(o.country_en || o.country),
@@ -241,6 +241,7 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
       o.cases > 0 ? (o.deaths / o.cases * 100).toFixed(1) : "",
       esc(o.risk_level),
       esc(o.date),
+      esc(sourceStatus(o) === 'don' ? "WHO DON" : sourceStatus(o) === 'official' ? "Official" : "Unverified"),
       esc(o.source),
       esc(o.description),
     ]);
