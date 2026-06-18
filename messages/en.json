@@ -60,7 +60,7 @@
     "realtimeDeaths": "deaths",
     "realtimeLoginRequired": "Sign in to access instant alerts.",
     "realtimeLogin": "Sign in",
-    "realtimeProOnly": "Instant alerts — Pro Plan",
+    "realtimeProOnly": "Instant alerts — Pro & Team Plans",
     "realtimeProDesc": "Get every new outbreak within hours, the moment our 6h WHO, ECDC, PAHO & Africa CDC sync detects it.",
     "realtimeUpgrade": "Upgrade to Pro →"
   },

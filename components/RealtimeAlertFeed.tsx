@@ -50,7 +50,7 @@ export default function RealtimeAlertFeed() {
     });
   }, []);
 
-  // Connect to Supabase Realtime (Pro/Enterprise only)
+  // Connect to Supabase Realtime (Pro, Team & Enterprise only)
   useEffect(() => {
     if (plan !== "pro" && plan !== "team" && plan !== "enterprise") return;
 
@@ -117,7 +117,7 @@ export default function RealtimeAlertFeed() {
     );
   }
 
-  // Pro/Enterprise — live feed
+  // Pro, Team & Enterprise — live feed
   return (
     <div className="bg-gray-900 border border-gray-800 rounded-xl overflow-hidden">
       {/* Header */}

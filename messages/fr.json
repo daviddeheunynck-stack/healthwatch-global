@@ -60,8 +60,8 @@
     "realtimeDeaths": "décès",
     "realtimeLoginRequired": "Connectez-vous pour accéder aux alertes instantanées.",
     "realtimeLogin": "Se connecter",
-    "realtimeProOnly": "Alertes instantanées — Plan Pro",
-    "realtimeProDesc": "Recevez chaque nouvelle épidémie en quelques heures, dès que notre synchronisation 6h la détecte.",
+    "realtimeProOnly": "Alertes instantanées — Plans Pro & Team",
+    "realtimeProDesc": "Recevez chaque nouvelle épidémie en quelques heures, dès que notre synchronisation OMS, ECDC, PAHO & Africa CDC (6h) la détecte.",
     "realtimeUpgrade": "Passer au plan Pro →"
   },
   "reports": {

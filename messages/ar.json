@@ -60,8 +60,8 @@
     "realtimeDeaths": "وفاة",
     "realtimeLoginRequired": "سجّل الدخول للوصول إلى التنبيهات الفورية.",
     "realtimeLogin": "تسجيل الدخول",
-    "realtimeProOnly": "التنبيهات الفورية — خطة Pro",
-    "realtimeProDesc": "تلقَّ كل تفشٍّ جديد في غضون ساعات، فور رصده عبر مزامنتنا كل 6 ساعات.",
+    "realtimeProOnly": "التنبيهات الفورية — خطط Pro و Team",
+    "realtimeProDesc": "تلقَّ كل تفشٍّ جديد في غضون ساعات، فور رصده عبر مزامنتنا كل 6 ساعات من WHO وECDC وPAHO وAfrica CDC.",
     "realtimeUpgrade": "الترقية إلى خطة Pro ←"
   },
   "reports": {

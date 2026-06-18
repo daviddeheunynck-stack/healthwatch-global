@@ -60,8 +60,8 @@
     "realtimeDeaths": "kematian",
     "realtimeLoginRequired": "Masuk untuk mengakses peringatan instan.",
     "realtimeLogin": "Masuk",
-    "realtimeProOnly": "Peringatan instan — Paket Pro",
-    "realtimeProDesc": "Terima setiap wabah baru dalam hitungan jam, saat terdeteksi oleh sinkronisasi 6 jam kami.",
+    "realtimeProOnly": "Peringatan instan — Paket Pro & Team",
+    "realtimeProDesc": "Terima setiap wabah baru dalam hitungan jam, saat terdeteksi oleh sinkronisasi 6 jam WHO, ECDC, PAHO & Africa CDC kami.",
     "realtimeUpgrade": "Tingkatkan ke Paket Pro →"
   },
   "reports": {
