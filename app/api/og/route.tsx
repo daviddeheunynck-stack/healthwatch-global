@@ -10,11 +10,11 @@ export const runtime = "edge";
 // Note: Satori (used by ImageResponse) only supports Latin-based scripts without
 // a custom font. Arabic is not rendered — fall back to English for ar locale.
 const TAGLINES: Record<string, { line1: string; line2: string }> = {
-  en: { line1: "Daily epidemic surveillance",   line2: "WHO data · 5 languages · Free to start" },
-  fr: { line1: "Surveillance épidémique quotidienne", line2: "Données OMS · 5 langues · Gratuit" },
-  es: { line1: "Vigilancia epidémica diaria",   line2: "Datos OMS · 5 idiomas · Gratis" },
-  ar: { line1: "Daily epidemic surveillance",   line2: "WHO data · 5 languages · Free to start" },
-  id: { line1: "Pemantauan wabah harian", line2: "Data WHO · 5 bahasa · Gratis" },
+  en: { line1: "Epidemic surveillance for epidemiologists", line2: "WHO · ECDC · PAHO · Africa CDC · Free to start" },
+  fr: { line1: "Surveillance épidémique pour épidémiologistes", line2: "OMS · ECDC · PAHO · Africa CDC · Gratuit" },
+  es: { line1: "Vigilancia epidémica para epidemiólogos", line2: "OMS · ECDC · PAHO · Africa CDC · Gratis" },
+  ar: { line1: "Epidemic surveillance for epidemiologists", line2: "WHO · ECDC · PAHO · Africa CDC · Free to start" },
+  id: { line1: "Pemantauan wabah untuk epidemiolog", line2: "WHO · ECDC · PAHO · Africa CDC · Gratis" },
 };
 
 export async function GET(req: NextRequest) {
@@ -186,10 +186,10 @@ export async function GET(req: NextRequest) {
           {/* Stats row */}
           <div style={{ display: "flex", gap: 16, marginTop: 8 }}>
             {[
-              { value: "LIVE", label: "Outbreaks", color: "#dc2626" },
-              { value: "5",    label: "Languages", color: "#3b82f6" },
-              { value: "WHO",  label: "Data source", color: "#10b981" },
-              { value: "Free", label: "To start",   color: "#f59e0b" },
+              { value: "LIVE", label: "Outbreaks",       color: "#dc2626" },
+              { value: "4",    label: "Official sources", color: "#10b981" },
+              { value: "5",    label: "Languages",       color: "#3b82f6" },
+              { value: "Free", label: "To start",        color: "#f59e0b" },
             ].map(({ value, label, color }) => (
               <div
                 key={label}
