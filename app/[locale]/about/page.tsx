@@ -177,7 +177,7 @@ const LABELS: Record<string, {
       "Llevo años siguiendo de cerca las grandes dinámicas sanitarias mundiales por puro interés. Consultaba regularmente los boletines de la OMS — y perdía mucho tiempo navegando páginas en inglés, sin filtros, sin alertas, sin visión de conjunto. Construí HealthWatch para resolver este problema de raíz: agregar estos datos, traducirlos y estructurarlos para que un profesional acceda a ellos en unos clics en lugar de horas de búsqueda manual.",
     missionTitle: "Nuestra misión",
     missionText:
-      "HealthWatch Global agrega automáticamente las alertas oficiales de la Organización Mundial de la Salud para proporcionar un panel legible a los profesionales de la salud, viajeros, periodistas y organizaciones que necesitan estar informados sobre brotes de enfermedades en cuanto se declaran.",
+      "HealthWatch Global agrega automáticamente las alertas oficiales de la OMS, ECDC, PAHO y Africa CDC — actualizadas cada 6 horas — para proporcionar un panel legible a los profesionales de la salud, periodistas y organizaciones que necesitan estar informados sobre brotes de enfermedades en cuanto se declaran.",
     whoTitle: "4 fuentes de datos oficiales",
     whoText:
       "Todos los datos se agregan directamente desde 4 fuentes oficiales: WHO Disease Outbreak News, evaluaciones rápidas de riesgo de ECDC, alertas epidemiológicas de PAHO y reportes de Africa CDC — las mismas agencias utilizadas como referencias primarias por gobiernos e instituciones de salud pública. Sin datos no verificados, sin medios de terceros. Actualizado cada 6 horas.",
@@ -213,7 +213,7 @@ const LABELS: Record<string, {
       "منذ سنوات وأنا أتابع باهتمام كبير التطورات الصحية الكبرى حول العالم. كنت أطّلع بانتظام على نشرات منظمة الصحة العالمية، وأفقد وقتاً طويلاً في التنقل بين صفحات باللغة الإنجليزية فقط، دون مرشحات أو تنبيهات أو رؤية شاملة. أنشأتُ HealthWatch لحل هذه المشكلة من جذورها: تجميع هذه البيانات وترجمتها وتنظيمها، ليتمكن أي مختص من الوصول إليها خلال نقرات معدودة بدلاً من ساعات من البحث اليدوي.",
     missionTitle: "مهمتنا",
     missionText:
-      "تجمع HealthWatch Global تلقائياً التنبيهات الرسمية لمنظمة الصحة العالمية (محدَّثة كل 6 ساعات) لتوفير لوحة تحكم واضحة للمهنيين الصحيين والمسافرين والصحفيين والمنظمات التي تحتاج إلى إخطار بتفشي الأمراض فور الإعلان عنها.",
+      "تجمع HealthWatch Global تلقائياً التنبيهات الرسمية من WHO وECDC وPAHO وAfrica CDC — محدَّثة كل 6 ساعات — لتوفير لوحة تحكم واضحة للمهنيين الصحيين والصحفيين والمنظمات التي تحتاج إلى إخطار بتفشي الأمراض فور الإعلان عنها.",
     whoTitle: "4 مصادر بيانات رسمية",
     whoText:
       "تُجمَّع جميع البيانات مباشرة من 4 مصادر رسمية: Disease Outbreak News التابع لمنظمة الصحة العالمية، والتقييمات السريعة للمخاطر من ECDC، والتنبيهات الوبائية من PAHO، وتقارير Africa CDC — نفس الوكالات التي تستخدمها الحكومات ومؤسسات الصحة العامة مرجعاً أساسياً. لا بيانات غير موثقة، لا وسائل إعلام خارجية. تحديث كل 6 ساعات.",
@@ -249,7 +249,7 @@ const LABELS: Record<string, {
       "Selama bertahun-tahun saya tertarik mengikuti dinamika kesehatan global yang besar. Saya rutin memeriksa buletin WHO — dan terus kehilangan waktu menavigasi halaman berbahasa Inggris tanpa filter, tanpa peringatan, tanpa gambaran menyeluruh. Saya membangun HealthWatch untuk menyelesaikan masalah ini dari akarnya: mengumpulkan data ini, menerjemahkannya, dan menyusunnya agar seorang profesional bisa mengaksesnya hanya dengan beberapa klik — bukan berjam-jam pencarian manual.",
     missionTitle: "Misi kami",
     missionText:
-      "HealthWatch Global mengumpulkan secara otomatis peringatan resmi Organisasi Kesehatan Dunia (diperbarui setiap 6 jam) untuk menyediakan dasbor yang mudah dibaca bagi tenaga kesehatan, wisatawan, jurnalis, dan organisasi yang perlu mendapatkan informasi tentang wabah penyakit segera setelah dideklarasikan.",
+      "HealthWatch Global mengumpulkan secara otomatis data resmi dari WHO, ECDC, PAHO, dan Africa CDC — diperbarui setiap 6 jam — untuk menyediakan dasbor yang mudah dibaca bagi tenaga kesehatan, jurnalis, dan organisasi yang perlu mendapatkan informasi tentang wabah penyakit segera setelah dideklarasikan.",
     whoTitle: "4 sumber data resmi",
     whoText:
       "Semua data diagregasi langsung dari 4 sumber resmi: WHO Disease Outbreak News, penilaian risiko cepat ECDC, peringatan epidemiologi PAHO, dan laporan Africa CDC — lembaga yang sama yang digunakan pemerintah dan institusi kesehatan masyarakat sebagai referensi utama. Tidak ada data tidak terverifikasi, tidak ada media pihak ketiga. Diperbarui setiap 6 jam.",
