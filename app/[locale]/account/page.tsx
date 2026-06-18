@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase-server";
-import { User, Shield, Zap, Building2, Gift, ExternalLink, Download, Users } from "lucide-react";
+import { User, Shield, Zap, Building2, Gift, Download, Users } from "lucide-react";
 import Link from "next/link";
 import BillingPortalButton from "@/components/BillingPortalButton";
 import CheckoutButton from "@/components/CheckoutButton";
@@ -565,35 +565,35 @@ export default async function AccountPage({
         ) : null}
       </div>
 
-      {/* Team seats info — team plan only */}
+      {/* Team management — team plan only */}
       {plan === "team" && (
         <div className="bg-gray-900 border border-amber-600/30 rounded-2xl p-6 space-y-3">
           <h2 className="text-sm font-semibold text-amber-400/80 uppercase tracking-wide flex items-center gap-2">
             <Users className="w-4 h-4" />
-            {locale === "fr" ? "Sièges de l'équipe" :
-             locale === "es" ? "Puestos del equipo" :
-             locale === "ar" ? "مقاعد الفريق" :
-             locale === "id" ? "Kursi tim" :
-             "Team seats"}
+            {locale === "fr" ? "Gestion de l'équipe" :
+             locale === "es" ? "Gestión del equipo" :
+             locale === "ar" ? "إدارة الفريق" :
+             locale === "id" ? "Manajemen Tim" :
+             "Team management"}
           </h2>
           <p className="text-sm text-gray-400">
-            {locale === "fr" ? "5 sièges inclus dans votre abonnement Team. Pour ajouter des membres ou gérer votre équipe, contactez-nous." :
-             locale === "es" ? "5 puestos incluidos en su suscripción Team. Para añadir miembros o gestionar su equipo, contáctenos." :
-             locale === "ar" ? "5 مقاعد مشمولة في اشتراكك Team. للإضافة أعضاء أو إدارة فريقك، تواصل معنا." :
-             locale === "id" ? "5 kursi termasuk dalam langganan Team Anda. Untuk menambahkan anggota atau mengelola tim Anda, hubungi kami." :
-             "5 seats included in your Team subscription. To add members or manage your team, contact us."}
+            {locale === "fr" ? "Invitez des membres, gérez les sièges et suivez l'accès de votre équipe." :
+             locale === "es" ? "Invite miembros, gestione puestos y controle el acceso de su equipo." :
+             locale === "ar" ? "ادعُ أعضاءً وأدِر المقاعد وتابع وصول فريقك." :
+             locale === "id" ? "Undang anggota, kelola kursi, dan pantau akses tim Anda." :
+             "Invite members, manage seats and track your team's access."}
           </p>
-          <a
-            href="mailto:contact@healthwatch-global.com"
+          <Link
+            href={`/${locale}/account/team`}
             className="inline-flex items-center gap-2 bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 text-amber-400 font-semibold px-4 py-2 rounded-lg transition-colors text-sm"
           >
-            <ExternalLink className="w-4 h-4" />
-            {locale === "fr" ? "Contacter l'équipe →" :
-             locale === "es" ? "Contactar al equipo →" :
-             locale === "ar" ? "← التواصل مع الفريق" :
-             locale === "id" ? "Hubungi tim →" :
-             "Contact team →"}
-          </a>
+            <Users className="w-4 h-4" />
+            {locale === "fr" ? "Gérer l'équipe →" :
+             locale === "es" ? "Gestionar equipo →" :
+             locale === "ar" ? "← إدارة الفريق" :
+             locale === "id" ? "Kelola tim →" :
+             "Manage team →"}
+          </Link>
         </div>
       )}
 

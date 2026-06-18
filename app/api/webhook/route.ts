@@ -299,13 +299,43 @@ export async function POST(req: NextRequest) {
 
         const { error } = await supabase
           .from("profiles")
-          .update({ plan: "free", stripe_subscription_id: null, trial_ends_at: null })
+          .update({ plan: "free", stripe_subscription_id: null, trial_ends_at: null, team_id: null })
           .eq("id", userId);
 
         if (error) {
           console.error("[webhook] subscription.deleted:", error);
         } else {
           console.log(`[webhook] Subscription deleted → plan free for user ${userId}`);
+
+          // If team plan cancelled, revoke all member access and delete the team
+          if (cancelledPlan === "team") {
+            const { data: ownedTeam } = await supabase
+              .from("teams")
+              .select("id")
+              .eq("owner_id", userId)
+              .maybeSingle();
+
+            if (ownedTeam) {
+              // Collect non-owner member ids before cascade delete
+              const { data: memberRows } = await supabase
+                .from("team_members")
+                .select("user_id")
+                .eq("team_id", ownedTeam.id)
+                .neq("user_id", userId);
+
+              const memberIds = (memberRows ?? []).map((m: { user_id: string }) => m.user_id);
+              if (memberIds.length > 0) {
+                await supabase
+                  .from("profiles")
+                  .update({ plan: "free", team_id: null })
+                  .in("id", memberIds);
+              }
+
+              // Delete team — cascades to team_members and team_invites
+              await supabase.from("teams").delete().eq("id", ownedTeam.id);
+              console.log(`[webhook] Team ${ownedTeam.id} disbanded — ${memberIds.length} member(s) reverted to free`);
+            }
+          }
 
           // Send churn email (fire-and-forget)
           if (userEmail && ["starter", "pro", "team", "enterprise"].includes(cancelledPlan)) {
