@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase-server";
 import { isAdmin } from "@/lib/admin";
 import { rateLimit, getClientIp } from "@/lib/rate-limit";
-import { errorMessage } from "@/lib/error";
+import { GET as runSync } from "@/app/api/cron/sync-outbreaks/route";
 
 export const dynamic = "force-dynamic";
 
@@ -22,27 +22,10 @@ export async function POST(req: NextRequest) {
   const baseUrl = clean(process.env.NEXT_PUBLIC_BASE_URL) || "http://localhost:3000";
   const secret = clean(process.env.CRON_SECRET);
 
-  let res: Response;
-  try {
-    res = await fetch(`${baseUrl}/api/cron/sync-outbreaks`, {
-      headers: { Authorization: `Bearer ${secret}` },
-      signal: AbortSignal.timeout(120_000),
-    });
-  } catch (e: unknown) {
-    return NextResponse.json(
-      { error: `Cron endpoint unreachable (${baseUrl}): ${errorMessage(e)}` },
-      { status: 502 }
-    );
-  }
-
-  const text = await res.text();
-  try {
-    const data = JSON.parse(text);
-    return NextResponse.json(data, { status: res.status });
-  } catch {
-    return NextResponse.json(
-      { error: `Sync returned non-JSON (HTTP ${res.status})`, detail: text.slice(0, 400) },
-      { status: 502 }
-    );
-  }
+  // Call the cron handler directly in-process — avoids HTTP self-referential
+  // fetch (which can block in dev and timeout on Vercel serverless).
+  const cronReq = new NextRequest(`${baseUrl}/api/cron/sync-outbreaks`, {
+    headers: { Authorization: `Bearer ${secret}` },
+  });
+  return runSync(cronReq);
 }
