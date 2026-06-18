@@ -15,7 +15,7 @@ const ERROR_LABELS: Record<string, string> = {
 };
 
 interface CheckoutButtonProps {
-  plan: "pro";
+  plan: "pro" | "team";
   locale: string;
   label: string;
   className: string;

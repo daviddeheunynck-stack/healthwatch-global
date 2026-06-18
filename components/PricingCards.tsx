@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { track } from "@vercel/analytics/react";
-import { Check, Zap, Shield, Building2, RefreshCw, Sparkles, Clock, AlertTriangle } from "lucide-react";
+import { Check, Zap, Shield, Users, RefreshCw, Sparkles, Clock, AlertTriangle, Building2 } from "lucide-react";
 import CheckoutButton from "@/components/CheckoutButton";
 import { createClient } from "@/lib/supabase-browser";
 
@@ -21,15 +21,15 @@ const COPY: Record<string, {
   guarantee: string;
   starterDesc: string;
   proDesc: string;
-  enterpriseDesc: string;
+  teamDesc: string;
   contactUs: string;
   getStarted: string;
   popular: string;
-  custom: string;
+  forOrgs: string;
   freeBadge: string;
   starterFeatures: string[];
   proFeatures: string[];
-  enterpriseFeatures: string[];
+  teamFeatures: string[];
 }> = {
   fr: {
     toggleMonthly: "Mensuel",
@@ -42,15 +42,15 @@ const COPY: Record<string, {
     guarantee: "Sans engagement · Remboursement 14 jours",
     starterDesc: "Pour découvrir la plateforme sans engagement.",
     proDesc: "Pour les professionnels de santé qui suivent l'épidémiologie mondiale.",
-    enterpriseDesc: "Pour les gouvernements et grands groupes pharmaceutiques.",
+    teamDesc: "Pour les équipes épidémiologiques. 5 sièges Pro sur une seule facture institutionnelle.",
     contactUs: "Nous contacter",
     getStarted: "Commencer →",
     popular: "Le plus populaire",
-    custom: "Sur devis",
+    forOrgs: "Pour organisations",
     freeBadge: "Gratuit",
     starterFeatures: ["Carte mondiale interactive", "1 région surveillée", "Données OMS (sync 6h)", "Digest hebdomadaire gratuit", "Tableau de bord multilingue"],
     proFeatures: ["Toutes les régions mondiales", "Alertes instantanées", "Rapports PDF automatiques", "Intégration Slack / Teams", "Export CSV illimité", "Support prioritaire"],
-    enterpriseFeatures: ["Tout le plan Pro", "Accès API REST + docs", "Déploiement on-premise", "SLA 99,9 % garanti", "Account manager dédié", "Support dédié 24/7"],
+    teamFeatures: ["5 sièges inclus", "Toutes les régions mondiales", "Alertes instantanées", "Rapports PDF · Export CSV", "Intégration Slack / Teams", "Une seule facture institutionnelle"],
   },
   en: {
     toggleMonthly: "Monthly",
@@ -63,15 +63,15 @@ const COPY: Record<string, {
     guarantee: "No commitment · 14-day refund",
     starterDesc: "Explore the platform with no commitment.",
     proDesc: "For health professionals tracking global epidemiology.",
-    enterpriseDesc: "For governments and large pharmaceutical groups.",
+    teamDesc: "For epidemiology teams. 5 Pro seats on a single institutional invoice.",
     contactUs: "Contact us",
     getStarted: "Get started →",
     popular: "Most popular",
-    custom: "Custom",
+    forOrgs: "For organizations",
     freeBadge: "Free",
     starterFeatures: ["Interactive world map", "1 monitored region", "WHO data (6h sync)", "Free weekly digest", "Multilingual dashboard"],
     proFeatures: ["All global regions", "Instant alerts", "Automatic PDF reports", "Slack / Teams integration", "Unlimited CSV export", "Priority support"],
-    enterpriseFeatures: ["Everything in Pro", "REST API access + docs", "On-premise deployment", "99.9% SLA guarantee", "Dedicated account manager", "24/7 dedicated support"],
+    teamFeatures: ["5 seats included", "All global regions", "Instant alerts", "PDF reports · CSV export", "Slack / Teams integration", "Single institutional invoice"],
   },
   es: {
     toggleMonthly: "Mensual",
@@ -84,15 +84,15 @@ const COPY: Record<string, {
     guarantee: "Sin compromiso · Reembolso 14 días",
     starterDesc: "Explore la plataforma sin compromiso.",
     proDesc: "Para profesionales de salud que siguen la epidemiología global.",
-    enterpriseDesc: "Para gobiernos y grandes grupos farmacéuticos.",
+    teamDesc: "Para equipos de epidemiología. 5 puestos Pro en una sola factura institucional.",
     contactUs: "Contáctenos",
     getStarted: "Empezar →",
     popular: "Más popular",
-    custom: "A medida",
+    forOrgs: "Para organizaciones",
     freeBadge: "Gratis",
     starterFeatures: ["Mapa mundial interactivo", "1 región monitoreada", "Datos OMS (sync 6h)", "Digest semanal gratuito", "Panel multilingüe"],
     proFeatures: ["Todas las regiones", "Alertas instantáneas", "Informes PDF automáticos", "Integración Slack / Teams", "Exportación CSV ilimitada", "Soporte prioritario"],
-    enterpriseFeatures: ["Todo lo de Pro", "Acceso API REST + docs", "Implementación on-premise", "SLA 99,9% garantizado", "Gestor de cuenta dedicado", "Soporte 24/7 dedicado"],
+    teamFeatures: ["5 puestos incluidos", "Todas las regiones", "Alertas instantáneas", "Informes PDF · CSV", "Integración Slack / Teams", "Una sola factura institucional"],
   },
   ar: {
     toggleMonthly: "شهري",
@@ -105,15 +105,15 @@ const COPY: Record<string, {
     guarantee: "بدون التزام · استرداد 14 يوماً",
     starterDesc: "استكشف المنصة دون أي التزام.",
     proDesc: "للمختصين الصحيين الذين يتابعون الأوبئة العالمية.",
-    enterpriseDesc: "للحكومات وكبرى مجموعات الأدوية.",
+    teamDesc: "للفرق الوبائية. 5 مقاعد Pro في فاتورة مؤسسية واحدة.",
     contactUs: "اتصل بنا",
     getStarted: "ابدأ الآن ←",
     popular: "الأكثر شعبية",
-    custom: "حسب الطلب",
+    forOrgs: "للمؤسسات",
     freeBadge: "مجاني",
     starterFeatures: ["خريطة العالم التفاعلية", "منطقة مراقبة واحدة", "بيانات WHO (sync كل 6س)", "ملخص أسبوعي مجاني", "لوحة تحكم متعددة اللغات"],
     proFeatures: ["جميع المناطق العالمية", "تنبيهات فورية", "تقارير PDF تلقائية", "تكامل Slack / Teams", "تصدير CSV غير محدود", "دعم ذو أولوية"],
-    enterpriseFeatures: ["كل ما في Pro", "الوصول لـ REST API + التوثيق", "نشر محلي", "ضمان SLA 99.9%", "مدير حساب مخصص", "دعم مخصص 24/7"],
+    teamFeatures: ["5 مقاعد مشمولة", "جميع المناطق العالمية", "تنبيهات فورية", "تقارير PDF · تصدير CSV", "تكامل Slack / Teams", "فاتورة مؤسسية واحدة"],
   },
   id: {
     toggleMonthly: "Bulanan",
@@ -126,15 +126,15 @@ const COPY: Record<string, {
     guarantee: "Tanpa komitmen · Pengembalian 14 hari",
     starterDesc: "Jelajahi platform tanpa komitmen.",
     proDesc: "Untuk profesional kesehatan yang memantau epidemiologi global.",
-    enterpriseDesc: "Untuk pemerintah dan kelompok farmasi besar.",
+    teamDesc: "Untuk tim epidemiologi. 5 kursi Pro dalam satu faktur institusional.",
     contactUs: "Hubungi kami",
     getStarted: "Mulai →",
     popular: "Paling populer",
-    custom: "Kustom",
+    forOrgs: "Untuk organisasi",
     freeBadge: "Gratis",
     starterFeatures: ["Peta dunia interaktif", "1 wilayah dipantau", "Data WHO (sync 6j)", "Digest mingguan gratis", "Dasbor multibahasa"],
     proFeatures: ["Semua wilayah global", "Peringatan instan", "Laporan PDF otomatis", "Integrasi Slack / Teams", "Ekspor CSV tak terbatas", "Dukungan prioritas"],
-    enterpriseFeatures: ["Semua fitur Pro", "Akses REST API + dokumentasi", "Penerapan on-premise", "Jaminan SLA 99,9%", "Manajer akun khusus", "Dukungan 24/7 khusus"],
+    teamFeatures: ["5 kursi termasuk", "Semua wilayah global", "Peringatan instan", "Laporan PDF · Ekspor CSV", "Integrasi Slack / Teams", "Satu faktur institusional"],
   },
 };
 
@@ -176,20 +176,23 @@ const TRIAL_COPY: Record<string, {
   },
 };
 
-// Pro: €29/month | Annual (−28%): €249/year — saves €99/year vs monthly
-const PRICES: Record<string, { proMonthly: string; proAnnual: string; proAnnualTotal: string }> = {
-  fr: { proMonthly: "29 €",  proAnnual: "249 €", proAnnualTotal: "économisez 99 €"  },
-  en: { proMonthly: "€29",   proAnnual: "€249",  proAnnualTotal: "save €99"          },
-  es: { proMonthly: "€29",   proAnnual: "€249",  proAnnualTotal: "ahorre €99"        },
-  ar: { proMonthly: "€29",   proAnnual: "€249",  proAnnualTotal: "وفّر 99 €"         },
-  id: { proMonthly: "€29",   proAnnual: "€249",  proAnnualTotal: "hemat €99"         },
+// Pro: €29/mo | €249/yr · Team: €149/mo | €1 290/yr
+const PRICES: Record<string, {
+  proMonthly: string; proAnnual: string; proAnnualTotal: string;
+  teamMonthly: string; teamAnnual: string; teamAnnualTotal: string;
+}> = {
+  fr: { proMonthly: "29 €",  proAnnual: "249 €",    proAnnualTotal: "économisez 99 €",  teamMonthly: "149 €", teamAnnual: "1 290 €", teamAnnualTotal: "économisez 498 €" },
+  en: { proMonthly: "€29",   proAnnual: "€249",     proAnnualTotal: "save €99",         teamMonthly: "€149",  teamAnnual: "€1,290",  teamAnnualTotal: "save €498"        },
+  es: { proMonthly: "€29",   proAnnual: "€249",     proAnnualTotal: "ahorre €99",       teamMonthly: "€149",  teamAnnual: "€1.290",  teamAnnualTotal: "ahorre €498"      },
+  ar: { proMonthly: "€29",   proAnnual: "€249",     proAnnualTotal: "وفّر 99 €",        teamMonthly: "€149",  teamAnnual: "€1.290",  teamAnnualTotal: "وفّر 498 €"       },
+  id: { proMonthly: "€29",   proAnnual: "€249",     proAnnualTotal: "hemat €99",        teamMonthly: "€149",  teamAnnual: "€1.290",  teamAnnualTotal: "hemat €498"       },
 };
 
 export default function PricingCards({ locale }: { locale: string }) {
   const [billing, setBilling] = useState<Billing>("annual");
   const [trialDaysLeft, setTrialDaysLeft] = useState<number | null>(null);
   const [trialExpired, setTrialExpired] = useState(false);
-  const [isSubscribed, setIsSubscribed] = useState(false);
+  const [currentPlan, setCurrentPlan] = useState<string | null>(null);
   const c = COPY[locale] ?? COPY.en;
   const p = PRICES[locale] ?? PRICES.en;
   const tc = TRIAL_COPY[locale] ?? TRIAL_COPY.en;
@@ -206,7 +209,7 @@ export default function PricingCards({ locale }: { locale: string }) {
         .single()
         .then(({ data }) => {
           if (data?.stripe_subscription_id) {
-            setIsSubscribed(true);
+            setCurrentPlan(data.plan ?? "pro");
             return;
           }
           if (data?.trial_ends_at && data?.plan !== "free") {
@@ -219,6 +222,9 @@ export default function PricingCards({ locale }: { locale: string }) {
         });
     });
   }, []);
+
+  const isProSubscribed  = currentPlan === "pro";
+  const isTeamSubscribed = currentPlan === "team";
 
   return (
     <div className="space-y-6">
@@ -337,7 +343,7 @@ export default function PricingCards({ locale }: { locale: string }) {
             </div>
           )}
 
-          {isSubscribed ? (
+          {isProSubscribed ? (
             <div className="w-full flex items-center justify-center gap-2 bg-green-500/10 border border-green-500/25 text-green-400 font-semibold py-2.5 rounded-lg text-sm">
               <Check className="w-4 h-4" />
               {tc.subscribed}
@@ -359,33 +365,88 @@ export default function PricingCards({ locale }: { locale: string }) {
           </div>
         </div>
 
-        {/* Enterprise */}
-        <div className="bg-gray-900 border border-gray-800 rounded-2xl p-6 space-y-6">
+        {/* Team */}
+        <div className="bg-gray-900 border-2 border-amber-600/60 rounded-2xl p-6 space-y-6 relative">
+          <div className="absolute -top-3.5 left-1/2 -translate-x-1/2">
+            <span className="bg-amber-700 text-white text-xs font-bold px-4 py-1 rounded-full uppercase tracking-wide">
+              {c.forOrgs}
+            </span>
+          </div>
           <div>
             <div className="flex items-center gap-2 mb-3">
-              <Building2 className="w-5 h-5 text-purple-400" />
-              <span className="text-purple-400 font-semibold text-sm uppercase tracking-wide">Enterprise</span>
+              <Users className="w-5 h-5 text-amber-400" />
+              <span className="text-amber-400 font-semibold text-sm uppercase tracking-wide">Team</span>
+              <span className="text-xs text-amber-600 font-medium bg-amber-900/20 border border-amber-700/30 px-2 py-0.5 rounded-full">5 seats</span>
             </div>
             <div className="flex items-end gap-1">
-              <span className="text-4xl font-bold text-white">{c.custom}</span>
+              <span className="text-4xl font-bold text-white">
+                {isAnnual ? p.teamAnnual : p.teamMonthly}
+              </span>
+              <span className="text-gray-400 mb-1">{isAnnual ? c.perYear : c.perMonth}</span>
             </div>
-            <p className="text-gray-400 text-sm mt-2">{c.enterpriseDesc}</p>
+            {isAnnual && (
+              <p className="text-xs text-green-400 mt-1">{p.teamAnnualTotal} · {c.billedAnnually}</p>
+            )}
+            <p className="text-gray-400 text-sm mt-2">{c.teamDesc}</p>
           </div>
           <ul className="space-y-3">
-            {c.enterpriseFeatures.map((feat) => (
+            {c.teamFeatures.map((feat) => (
               <li key={feat} className="flex items-start gap-2.5 text-sm text-gray-300">
-                <Check className="w-4 h-4 text-purple-400 mt-0.5 shrink-0" />
+                <Check className="w-4 h-4 text-amber-400 mt-0.5 shrink-0" />
                 {feat}
               </li>
             ))}
           </ul>
-          <Link
-            href={`/${locale}/contact`}
-            className="flex items-center justify-center gap-2 w-full bg-purple-700 hover:bg-purple-600 text-white font-semibold py-2.5 rounded-lg transition-colors"
-          >
-            {c.contactUs}
-          </Link>
+
+          <div className="flex items-center gap-2 bg-amber-500/10 border border-amber-500/20 rounded-xl p-3">
+            <Sparkles className="w-4 h-4 text-amber-400 shrink-0" />
+            <span className="text-xs text-amber-300 font-medium">{c.trial}</span>
+          </div>
+
+          {isTeamSubscribed ? (
+            <div className="w-full flex items-center justify-center gap-2 bg-green-500/10 border border-green-500/25 text-green-400 font-semibold py-2.5 rounded-lg text-sm">
+              <Check className="w-4 h-4" />
+              {tc.subscribed}
+            </div>
+          ) : (
+            <CheckoutButton
+              plan="team"
+              locale={locale}
+              label={c.getStarted}
+              billing={billing}
+              className="w-full bg-amber-700 hover:bg-amber-600 text-white font-semibold py-2.5 rounded-lg transition-colors"
+            />
+          )}
+
+          <div className="flex items-center gap-2 bg-gray-800/60 rounded-xl p-3 text-xs text-gray-400 border border-gray-700/50">
+            <RefreshCw className="w-3.5 h-3.5 text-green-400 shrink-0" />
+            {c.guarantee}
+          </div>
         </div>
+      </div>
+
+      {/* ── Enterprise strip ─────────────────────────────────────────────── */}
+      <div className="bg-gray-900 border border-gray-800 rounded-2xl p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div className="flex items-center gap-3">
+          <Building2 className="w-5 h-5 text-purple-400 shrink-0" />
+          <div>
+            <span className="text-purple-400 font-semibold text-sm">Enterprise</span>
+            <span className="text-gray-500 text-sm"> — </span>
+            <span className="text-gray-400 text-sm">
+              {locale === "fr" ? "API REST · déploiement on-premise · SLA 99,9 % · account manager dédié" :
+               locale === "es" ? "API REST · despliegue on-premise · SLA 99,9% · gestor de cuenta dedicado" :
+               locale === "ar" ? "API REST · نشر محلي · ضمان SLA 99.9% · مدير حساب مخصص" :
+               locale === "id" ? "API REST · penerapan on-premise · SLA 99,9% · manajer akun khusus" :
+               "REST API · on-premise deployment · 99.9% SLA · dedicated account manager"}
+            </span>
+          </div>
+        </div>
+        <Link
+          href={`/${locale}/contact`}
+          className="shrink-0 text-sm bg-purple-700 hover:bg-purple-600 text-white font-semibold px-5 py-2 rounded-lg transition-colors whitespace-nowrap"
+        >
+          {c.contactUs}
+        </Link>
       </div>
     </div>
   );

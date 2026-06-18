@@ -9,7 +9,7 @@ export const dynamic = "force-dynamic";
 const stripBOM = (val: string | undefined) =>
   (val || "").replace(/^﻿/, "").trim();
 
-// Single paid plan: Pro — €29/month | annual: €249/year (−28% vs monthly)
+// Paid plans: Pro (€29/mo | €249/yr) · Team (€149/mo | €1290/yr, 5 seats)
 const PRICES: Record<string, Record<string, Record<string, string>>> = {
   pro: {
     monthly: {
@@ -19,6 +19,16 @@ const PRICES: Record<string, Record<string, Record<string, string>>> = {
     annual: {
       eur: stripBOM(process.env.STRIPE_PRO_EUR_ANNUAL_PRICE_ID),
       usd: stripBOM(process.env.STRIPE_PRO_USD_ANNUAL_PRICE_ID),
+    },
+  },
+  team: {
+    monthly: {
+      eur: stripBOM(process.env.STRIPE_TEAM_EUR_PRICE_ID),
+      usd: stripBOM(process.env.STRIPE_TEAM_EUR_PRICE_ID), // EUR only for now
+    },
+    annual: {
+      eur: stripBOM(process.env.STRIPE_TEAM_EUR_ANNUAL_PRICE_ID),
+      usd: stripBOM(process.env.STRIPE_TEAM_EUR_ANNUAL_PRICE_ID),
     },
   },
 };
