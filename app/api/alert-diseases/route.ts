@@ -84,7 +84,7 @@ export async function POST(req: NextRequest) {
     plan = "free";
   }
   if (!["starter", "pro", "team", "enterprise"].includes(plan)) {
-    return NextResponse.json({ error: "Pro plan required" }, { status: 403 });
+    return NextResponse.json({ error: "Pro or Team plan required" }, { status: 403 });
   }
 
   // Enforce max

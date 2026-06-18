@@ -174,7 +174,7 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlis
               isPaid={isPaid}
               locale={locale}
             />
-            {/* PDF one-pager — Pro only */}
+            {/* PDF one-pager — Pro/Team/Enterprise */}
             {isPaid ? (
               <a
                 href={`/${locale}/outbreak/${outbreak.id}/print`}

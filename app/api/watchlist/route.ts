@@ -64,7 +64,7 @@ export async function POST(req: NextRequest) {
 
   const plan = await getUserAndPlan(svc, user.id);
   if (!PAID_PLANS.includes(plan as typeof PAID_PLANS[number])) {
-    return NextResponse.json({ error: "Pro plan required" }, { status: 403 });
+    return NextResponse.json({ error: "Pro or Team plan required" }, { status: 403 });
   }
 
   // Check max
