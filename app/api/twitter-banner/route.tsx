@@ -167,7 +167,7 @@ export async function GET() {
             {[
               { label: "Outbreaks", value: "Live", color: "#dc2626" },
               { label: "Languages", value: "5", color: "#3b82f6" },
-              { label: "Source", value: "WHO", color: "#10b981" },
+              { label: "Sources", value: "4 official", color: "#10b981" },
             ].map(({ label, value, color }) => (
               <div
                 key={label}

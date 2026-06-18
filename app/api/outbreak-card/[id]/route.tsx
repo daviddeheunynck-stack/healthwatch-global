@@ -140,7 +140,7 @@ export async function GET(
             <span style={{ color: "#94a3b8", fontSize: 15, fontWeight: 600 }}>HealthWatch Global</span>
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-            <span style={{ color: "#475569", fontSize: 13 }}>Source: WHO Disease Outbreak News</span>
+            <span style={{ color: "#475569", fontSize: 13 }}>Sources: WHO · ECDC · PAHO · Africa CDC</span>
           </div>
         </div>
       </div>
