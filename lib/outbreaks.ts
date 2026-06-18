@@ -316,8 +316,16 @@ export function getStats(outbreaks: Outbreak[]) {
     (o) => new Date(o.date) >= new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)
   ).length;
   const pheicCount        = outbreaks.filter((o) => o.is_pheic).length;
+  const totalCases        = outbreaks.reduce((sum, o) => sum + (o.cases || 0), 0);
 
-  return { activeOutbreaks, countriesAffected, highRisk, alertsToday, pheicCount };
+  // Top priority: PHEIC first, then by case count descending
+  const topOutbreak = [...outbreaks].sort((a, b) => {
+    if (a.is_pheic && !b.is_pheic) return -1;
+    if (!a.is_pheic && b.is_pheic) return 1;
+    return (b.cases || 0) - (a.cases || 0);
+  })[0] ?? null;
+
+  return { activeOutbreaks, countriesAffected, highRisk, alertsToday, pheicCount, totalCases, topOutbreak };
 }
 
 /** Returns true if the outbreak was updated or created within the last 24 hours */

@@ -1,6 +1,6 @@
 import { getTranslations, getLocale } from "next-intl/server";
 import { Activity, Globe, Bell, AlertTriangle } from "lucide-react";
-import { getOutbreaks, getStats, getLastSync } from "@/lib/outbreaks";
+import { getOutbreaks, getStats, getLastSync, getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 import { getOutbreakTrendsBulk, type OutbreakTrend } from "@/lib/outbreak-trend";
 import { createClient } from "@/lib/supabase-server";
 import { createClient as createService } from "@supabase/supabase-js";
@@ -60,6 +60,14 @@ const LANDING_META: Record<string, { title: string; description: string }> = {
   es: { title: "Vigilancia epidémica para epidemiólogos — OMS, ECDC, PAHO, Africa CDC | HealthWatch Global", description: "Datos de brotes OMS, ECDC, PAHO y Africa CDC — agregados, traducidos y actualizados cada 6 horas. Alertas instantáneas, informes PDF y datos de letalidad para epidemiólogos, médicos y consultores." },
   ar: { title: "مراقبة وبائية لعلماء الأوبئة — WHO، ECDC، PAHO، Africa CDC | HealthWatch Global", description: "بيانات تفشي الأمراض من WHO وECDC وPAHO وAfrica CDC — مجمعة ومترجمة ومحدثة كل 6 ساعات. تنبيهات فورية وتقارير PDF لعلماء الأوبئة والمتخصصين." },
   id: { title: "Surveilans epidemi untuk epidemiolog — WHO, ECDC, PAHO, Africa CDC | HealthWatch Global", description: "Data wabah WHO, ECDC, PAHO dan Africa CDC — diagregasi, diterjemahkan, diperbarui setiap 6 jam. Peringatan instan, laporan PDF dan data CFR untuk epidemiolog, dokter, dan konsultan." },
+};
+
+const SNAPSHOT_COPY: Record<string, { cases: string; cfr: string; totalCases: string }> = {
+  en: { cases: "cases", cfr: "CFR",           totalCases: "total confirmed cases" },
+  fr: { cases: "cas",   cfr: "létalité",      totalCases: "cas confirmés au total" },
+  es: { cases: "casos", cfr: "letalidad",     totalCases: "casos confirmados en total" },
+  ar: { cases: "حالة",  cfr: "معدل الوفيات", totalCases: "حالة مؤكدة إجمالاً" },
+  id: { cases: "kasus", cfr: "CFR",           totalCases: "total kasus terkonfirmasi" },
 };
 
 const LOCALES = ["en", "fr", "es", "ar", "id"] as const;
@@ -256,6 +264,53 @@ async function DashboardContent() {
           click becomes a live "it actually pinged me" demo. See
           PushNotificationBanner for the full marketing rationale. */}
       <PushNotificationBanner locale={locale} />
+
+      {/* Situation Snapshot — top-priority outbreak at a glance */}
+      {stats.topOutbreak && (() => {
+        const top  = stats.topOutbreak;
+        const snap = SNAPSHOT_COPY[locale] ?? SNAPSHOT_COPY.en;
+        const cfr  = top.cases > 0 && top.deaths > 0
+          ? (top.deaths / top.cases * 100).toFixed(1)
+          : null;
+        const isRtl = locale === "ar";
+        return (
+          <div
+            dir={isRtl ? "rtl" : undefined}
+            className="flex flex-wrap items-center gap-x-3 gap-y-1 bg-gray-900/50 border border-gray-800 rounded-xl px-4 py-3 text-sm"
+          >
+            {top.is_pheic && (
+              <span className="bg-purple-950/60 text-purple-300 border border-purple-800/60 rounded px-2 py-0.5 text-xs font-bold shrink-0">
+                PHEIC
+              </span>
+            )}
+            {!top.is_pheic && top.risk_level === "high" && (
+              <span className="bg-red-950/60 text-red-400 border border-red-800/60 rounded px-2 py-0.5 text-xs font-bold shrink-0">
+                HIGH RISK
+              </span>
+            )}
+            <span className="font-semibold text-white">{getLocalizedDisease(top, locale)}</span>
+            <span className="text-gray-600">·</span>
+            <span className="text-gray-400">{getLocalizedCountry(top, locale)}</span>
+            {top.cases > 0 && (
+              <>
+                <span className="text-gray-600">·</span>
+                <span className="text-gray-300">{top.cases.toLocaleString("en")} {snap.cases}</span>
+              </>
+            )}
+            {cfr && (
+              <>
+                <span className="text-gray-600">·</span>
+                <span className="text-red-400 font-medium">{cfr}% {snap.cfr}</span>
+              </>
+            )}
+            {stats.totalCases > 0 && (
+              <span className={`${isRtl ? "mr-auto" : "ml-auto"} text-gray-500 text-xs`}>
+                {stats.totalCases.toLocaleString("en")} {snap.totalCases}
+              </span>
+            )}
+          </div>
+        );
+      })()}
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <StatsCard label={t("activeOutbreaks")} value={stats.activeOutbreaks} icon={<Activity className="w-5 h-5" />} color="red" />
