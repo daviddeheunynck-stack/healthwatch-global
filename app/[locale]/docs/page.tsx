@@ -123,6 +123,7 @@ export default function DocsPage({ params }: { params: Promise<{ locale: string 
             ["#endpoints",        "Endpoints"],
             ["#parameters",       "Query parameters"],
             ["#response",         "Response schema"],
+            ["#data-quality",     "Data quality & source tiers"],
             ["#code-examples",    "Code examples"],
             ["#rate-limits",      "Rate limits"],
             ["#errors",           "Error codes"],
@@ -265,7 +266,7 @@ export default function DocsPage({ params }: { params: Promise<{ locale: string 
                 ["cases",         "integer", "Confirmed case count (0 = not reported in this bulletin)"],
                 ["deaths",        "integer", "Confirmed death count"],
                 ["date",          "string",  "Report publication date (ISO 8601: YYYY-MM-DD)"],
-                ["source",        "string",  "WHO Disease Outbreak News article URL"],
+                ["source",        "string",  "Source URL — WHO DON bulletin, ECDC, PAHO, or Africa CDC report page"],
                 ["description",   "string",  "Summary extracted from the WHO bulletin (≤ 400 chars)"],
                 ["is_pheic",      "boolean", "True when WHO has declared a Public Health Emergency of International Concern"],
                 ["active",        "boolean", "False for deactivated / resolved outbreaks"],
@@ -279,6 +280,61 @@ export default function DocsPage({ params }: { params: Promise<{ locale: string 
             </tbody>
           </table>
         </div>
+      </Section>
+
+      {/* ── Data quality ────────────────────────────────────────────────────── */}
+      <Section id="data-quality" title="Data quality &amp; source tiers">
+        <p className="text-gray-400">
+          Every outbreak record carries an implicit <strong className="text-white">source tier</strong> derived from its <code className="text-purple-300 font-mono">source</code> URL.
+          Use this to decide how to handle the data in your own analysis or citation workflow.
+        </p>
+        <div className="space-y-3">
+          {/* WHO DON */}
+          <div className="rounded-xl border border-blue-700/40 bg-blue-900/10 p-4 space-y-1">
+            <div className="flex items-center gap-2">
+              <span className="inline-flex items-center text-[11px] font-bold px-1.5 py-0.5 rounded bg-blue-900/40 border border-blue-700/60 text-blue-400">WHO DON</span>
+              <span className="text-sm font-semibold text-white">WHO Disease Outbreak News</span>
+            </div>
+            <p className="text-sm text-gray-400">
+              Source URL contains <code className="text-blue-300 font-mono">/emergencies/disease-outbreak-news/item/</code> with a unique reference number
+              (e.g. <code className="text-blue-300 font-mono">2026-DON603</code>). Directly citable in academic and institutional reports.
+              The dashboard&apos;s citation copy button generates a ready-to-use reference for these rows.
+            </p>
+            <p className="text-xs text-gray-500 font-mono">source: "https://www.who.int/emergencies/disease-outbreak-news/item/2026-DON603"</p>
+          </div>
+          {/* Official */}
+          <div className="rounded-xl border border-amber-700/40 bg-amber-900/10 p-4 space-y-1">
+            <div className="flex items-center gap-2">
+              <span className="inline-flex items-center text-[11px] font-bold px-1.5 py-0.5 rounded bg-amber-900/30 border border-amber-700/50 text-amber-400">ECDC / PAHO / Africa CDC</span>
+              <span className="text-sm font-semibold text-white">Official non-DON source</span>
+            </div>
+            <p className="text-sm text-gray-400">
+              Sourced from an ECDC Rapid Risk Assessment, PAHO Epidemiological Alert, or Africa CDC situation report.
+              Data is authoritative but does not carry a WHO DON reference number.
+              Use for internal monitoring; cite the linked source page directly in publications.
+            </p>
+          </div>
+          {/* Unverified */}
+          <div className="rounded-xl border border-gray-700/40 bg-gray-800/20 p-4 space-y-1">
+            <div className="flex items-center gap-2">
+              <span className="inline-flex items-center text-[11px] font-bold px-1.5 py-0.5 rounded bg-gray-800 border border-gray-600 text-gray-400">UNVERIFIED</span>
+              <span className="text-sm font-semibold text-white">Provisional — not yet matched to a confirmed bulletin</span>
+            </div>
+            <p className="text-sm text-gray-400">
+              Figures are provisional and have not yet been matched to a confirmed WHO, ECDC, PAHO, or Africa CDC report.
+              Treat as early-warning signal only. Do not cite in external reports.
+              HealthWatch upgrades these rows to a higher tier as soon as a matching official bulletin is published.
+            </p>
+          </div>
+        </div>
+        <p className="text-sm text-gray-500">
+          To filter by tier in the API, check whether the <code className="text-purple-300 font-mono">source</code> URL contains{" "}
+          <code className="text-purple-300 font-mono">disease-outbreak-news/item/</code> (WHO DON),{" "}
+          <code className="text-purple-300 font-mono">ecdc.europa.eu</code>,{" "}
+          <code className="text-purple-300 font-mono">paho.org</code>, or{" "}
+          <code className="text-purple-300 font-mono">africacdc.org</code> (official),
+          or is empty / a placeholder (unverified).
+        </p>
       </Section>
 
       {/* ── Code examples ───────────────────────────────────────────────────── */}
@@ -337,7 +393,7 @@ interface Outbreak {
   cases: number;
   deaths: number;
   date: string;
-  source: string;
+  source: string; // WHO DON, ECDC, PAHO, or Africa CDC URL
   description: string;
   is_pheic: boolean;
   active: boolean;
