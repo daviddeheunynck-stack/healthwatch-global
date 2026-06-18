@@ -162,4 +162,43 @@ test.describe("Onboarding flow complet (authentifié)", () => {
     const stored = await page.evaluate(() => localStorage.getItem("hw_tour_v1"));
     expect(stored).toBe("1");
   });
+
+  test("étape 3 du tour mentionne Pro et Team (FR)", async ({ page }) => {
+    await page.addInitScript(() => localStorage.removeItem("hw_tour_v1"));
+
+    await page.goto("/fr/login");
+    await page.fill("input[type='email']", testEmail!);
+    await page.fill("input[type='password']", testPassword!);
+    await page.getByRole("button", { name: /se connecter|connexion/i }).click();
+    await page.waitForURL(/\/fr\/?$/, { timeout: 10000 });
+
+    await expect(page.locator("text=Bienvenue sur HealthWatch Global")).toBeVisible({ timeout: 3000 });
+    await page.getByRole("button", { name: /commencer/i }).click();
+
+    await expect(page.locator("text=La carte mondiale interactive")).toBeVisible();
+    await page.getByRole("button", { name: /suivant/i }).click();
+
+    // Step 3 — dashboard intro, must mention both Pro and Team
+    await expect(page.locator("text=Le tableau de bord épidémiologique")).toBeVisible();
+    await expect(page.getByText(/Pro et Team/)).toBeVisible();
+  });
+
+  test("étape 3 du tour mentionne Pro and Team (EN)", async ({ page }) => {
+    await page.addInitScript(() => localStorage.removeItem("hw_tour_v1"));
+
+    await page.goto("/en/login");
+    await page.fill("input[type='email']", testEmail!);
+    await page.fill("input[type='password']", testPassword!);
+    await page.getByRole("button", { name: /sign in|log in|connect/i }).click();
+    await page.waitForURL(/\/en\/?$/, { timeout: 10000 });
+
+    await expect(page.locator("text=Welcome to HealthWatch Global")).toBeVisible({ timeout: 3000 });
+    await page.getByRole("button", { name: /get started/i }).click();
+
+    await expect(page.locator("text=The interactive world map")).toBeVisible();
+    await page.getByRole("button", { name: /next/i }).click();
+
+    await expect(page.locator("text=The epidemiological dashboard")).toBeVisible();
+    await expect(page.getByText(/Pro and Team plans/)).toBeVisible();
+  });
 });
