@@ -29,7 +29,7 @@ const [profiles, subscriptions, pushSubs, outbreaks, alertRegions] = await Promi
   fetchTable("user_alert_regions", "user_id"),
 ]);
 
-const PLAN_MRR = { starter: 29, pro: 29, enterprise: 299, free: 0 };
+const PLAN_MRR = { starter: 29, pro: 29, team: 149, enterprise: 299, free: 0 };
 
 const now = new Date();
 const ago7 = new Date(now.getTime() - 7 * 86400_000).toISOString();
@@ -42,7 +42,7 @@ for (const p of profiles) {
   planCounts[plan] = (planCounts[plan] ?? 0) + 1;
 }
 
-const paidCount = (planCounts.starter ?? 0) + (planCounts.pro ?? 0) + (planCounts.enterprise ?? 0);
+const paidCount = (planCounts.starter ?? 0) + (planCounts.pro ?? 0) + (planCounts.team ?? 0) + (planCounts.enterprise ?? 0);
 const userCount = profiles.length;
 const mrr = Object.entries(planCounts).reduce((sum, [plan, count]) => sum + (PLAN_MRR[plan] ?? 0) * count, 0);
 

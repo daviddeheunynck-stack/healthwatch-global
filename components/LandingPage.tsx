@@ -561,8 +561,8 @@ export default async function LandingPage({ locale }: { locale: string }) {
           </table>
           <div className="bg-gray-900/60 border-t border-gray-800 px-5 py-3 flex items-center justify-between">
             <span className="text-xs text-gray-500">
-                {({ fr: "Source : ", es: "Fuente: ", ar: "المصدر: ", id: "Sumber: " } as Record<string, string>)[locale] ?? "Source: "}
-                WHO Disease Outbreak News
+                {({ fr: "Sources : ", es: "Fuentes: ", ar: "المصادر: ", id: "Sumber: " } as Record<string, string>)[locale] ?? "Sources: "}
+                WHO DON · ECDC · PAHO · Africa CDC
               </span>
             <Link href={`/${locale}/signup`} className="text-xs text-red-400 hover:text-red-300 font-medium transition-colors">
               {c.heroCta} →

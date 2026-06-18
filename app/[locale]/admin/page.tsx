@@ -26,6 +26,7 @@ const clean = (v: string | undefined) => (v || "").replace(new RegExp("^" + BOM)
 const PLAN_MRR: Record<string, number> = {
   starter:    29, // legacy — treated as Pro
   pro:        29,
+  team:       149,
   enterprise: 299,
   free:       0,
 };
@@ -156,13 +157,13 @@ export default async function AdminPage({
   const userCount   = profiles?.length ?? 0;
 
   // Plan counts
-  const planCounts: Record<string, number> = { free: 0, starter: 0, pro: 0, enterprise: 0 };
+  const planCounts: Record<string, number> = { free: 0, starter: 0, pro: 0, team: 0, enterprise: 0 };
   for (const p of profiles ?? []) {
     const plan = p.plan ?? "free";
     planCounts[plan] = (planCounts[plan] ?? 0) + 1;
   }
 
-  const paidCount = (planCounts.starter ?? 0) + (planCounts.pro ?? 0) + (planCounts.enterprise ?? 0);
+  const paidCount = (planCounts.starter ?? 0) + (planCounts.pro ?? 0) + (planCounts.team ?? 0) + (planCounts.enterprise ?? 0);
   const convRate  = userCount > 0 ? ((paidCount / userCount) * 100).toFixed(1) : "0";
 
   const mrr = Object.entries(planCounts).reduce(
