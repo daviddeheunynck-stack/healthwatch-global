@@ -1,6 +1,20 @@
 // Watchlist change alert — sent when cases/deaths update for a starred outbreak
 
+import { getResponseGuidance, RESPONSE_ACTIONS } from "./response-guidance";
+
 const APP_URL = "https://healthwatch-global.com";
+
+const TIER_LABELS: Record<string, Record<string, string>> = {
+  immediate: { fr: "IMMÉDIAT · NOTIFIABLE RSI", en: "IMMEDIATE · IHR NOTIFIABLE", es: "INMEDIATO · NOTIFICABLE RSI", ar: "فوري · إخطار إلزامي", id: "SEGERA · WAJIB LAPOR IHR" },
+  rapid:     { fr: "RÉPONSE RAPIDE", en: "RAPID RESPONSE", es: "RESPUESTA RÁPIDA", ar: "استجابة سريعة", id: "RESPONS CEPAT" },
+  monitor:   { fr: "SURVEILLANCE", en: "MONITORING", es: "VIGILANCIA", ar: "مراقبة", id: "PEMANTAUAN" },
+};
+
+const TIER_COLORS: Record<string, { bg: string; border: string; text: string }> = {
+  immediate: { bg: "#4c0519", border: "#dc2626", text: "#fda4af" },
+  rapid:     { bg: "#422006", border: "#d97706", text: "#fde68a" },
+  monitor:   { bg: "#1e293b", border: "#475569", text: "#94a3b8" },
+};
 
 const COPY: Record<string, {
   subject:   (disease: string, country: string) => string;
@@ -116,6 +130,12 @@ export function buildWatchlistAlertEmail(
   const caseSign   = caseDelta  > 0 ? "+" : "";
   const deathSign  = deathDelta > 0 ? "+" : "";
 
+  const guidance    = getResponseGuidance(outbreak.disease_en || outbreak.disease);
+  const tc          = TIER_COLORS[guidance.tier];
+  const tierLabel   = TIER_LABELS[guidance.tier]?.[locale] ?? TIER_LABELS[guidance.tier].en;
+  const firstAction = (RESPONSE_ACTIONS[guidance.tier][locale] ?? RESPONSE_ACTIONS[guidance.tier].en)[0];
+  const showAction  = guidance.tier !== "monitor";
+
   const subject = c.subject(outbreak.disease || outbreak.disease_en, outbreak.country || outbreak.country_en);
 
   const html = `<!DOCTYPE html>
@@ -172,6 +192,14 @@ export function buildWatchlistAlertEmail(
           <div style="color:#fbbf24;font-size:22px;font-weight:800;">${cfr}</div>
         </td>
       </tr>
+    </table>
+
+    <!-- IHR tier + action -->
+    <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:20px;">
+      <tr><td style="background:${tc.bg};border-left:3px solid ${tc.border};border-radius:0 6px 6px 0;padding:10px 14px;">
+        <div style="color:${tc.text};font-size:10px;font-weight:700;letter-spacing:0.5px;margin-bottom:${showAction ? "6px" : "0"};">${tierLabel}</div>
+        ${showAction ? `<div style="color:${tc.text};font-size:12px;opacity:0.9;">▶ ${firstAction}</div>` : ""}
+      </td></tr>
     </table>
 
     <!-- Source -->

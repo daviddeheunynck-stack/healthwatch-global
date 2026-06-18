@@ -1,6 +1,20 @@
 // Disease-specific alert email — sent when a tracked pathogen is detected anywhere
 
+import { getResponseGuidance, RESPONSE_ACTIONS } from "./response-guidance";
+
 const APP_URL = "https://healthwatch-global.com";
+
+const TIER_LABELS: Record<string, Record<string, string>> = {
+  immediate: { fr: "IMMÉDIAT · NOTIFIABLE RSI", en: "IMMEDIATE · IHR NOTIFIABLE", es: "INMEDIATO · NOTIFICABLE RSI", ar: "فوري · إخطار إلزامي", id: "SEGERA · WAJIB LAPOR IHR" },
+  rapid:     { fr: "RÉPONSE RAPIDE", en: "RAPID RESPONSE", es: "RESPUESTA RÁPIDA", ar: "استجابة سريعة", id: "RESPONS CEPAT" },
+  monitor:   { fr: "SURVEILLANCE", en: "MONITORING", es: "VIGILANCIA", ar: "مراقبة", id: "PEMANTAUAN" },
+};
+
+const TIER_COLORS: Record<string, { bg: string; border: string; text: string }> = {
+  immediate: { bg: "#4c0519", border: "#dc2626", text: "#fda4af" },
+  rapid:     { bg: "#422006", border: "#d97706", text: "#fde68a" },
+  monitor:   { bg: "#1e293b", border: "#475569", text: "#94a3b8" },
+};
 
 const COPY: Record<string, {
   subject:    (disease: string) => string;
@@ -114,7 +128,12 @@ export function buildDiseaseAlertEmail(
     medium: "#d97706",
     low:    "#16a34a",
   };
-  const riskColor = RISK_COLOR[outbreak.risk_level] ?? "#6b7280";
+  const riskColor   = RISK_COLOR[outbreak.risk_level] ?? "#6b7280";
+  const guidance    = getResponseGuidance(outbreak.disease_en || outbreak.disease);
+  const tc          = TIER_COLORS[guidance.tier];
+  const tierLabel   = TIER_LABELS[guidance.tier]?.[locale] ?? TIER_LABELS[guidance.tier].en;
+  const firstAction = (RESPONSE_ACTIONS[guidance.tier][locale] ?? RESPONSE_ACTIONS[guidance.tier].en)[0];
+  const showAction  = guidance.tier !== "monitor";
 
   const subject = c.subject(outbreak.disease || outbreak.disease_en);
 
@@ -145,9 +164,17 @@ export function buildDiseaseAlertEmail(
     </p>
     <p style="margin:0 0 20px;font-size:14px;color:#94a3b8;">${c.intro}</p>
 
-    <!-- Risk badge -->
-    <div style="display:inline-block;background:${riskColor}20;border:1px solid ${riskColor}50;border-radius:999px;padding:4px 12px;margin-bottom:20px;">
-      <span style="color:${riskColor};font-size:12px;font-weight:700;text-transform:uppercase;">${outbreak.risk_level.toUpperCase()}</span>
+    <!-- Risk badge + IHR tier -->
+    <div style="margin-bottom:20px;">
+      <div style="display:inline-block;background:${riskColor}20;border:1px solid ${riskColor}50;border-radius:999px;padding:4px 12px;margin-bottom:8px;">
+        <span style="color:${riskColor};font-size:12px;font-weight:700;text-transform:uppercase;">${outbreak.risk_level.toUpperCase()}</span>
+      </div>
+      <table width="100%" cellpadding="0" cellspacing="0">
+        <tr><td style="background:${tc.bg};border-left:3px solid ${tc.border};border-radius:0 6px 6px 0;padding:10px 14px;">
+          <div style="color:${tc.text};font-size:10px;font-weight:700;letter-spacing:0.5px;margin-bottom:${showAction ? "6px" : "0"};">${tierLabel}</div>
+          ${showAction ? `<div style="color:${tc.text};font-size:12px;opacity:0.9;">▶ ${firstAction}</div>` : ""}
+        </td></tr>
+      </table>
     </div>
 
     <!-- Stats row -->
