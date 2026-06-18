@@ -189,7 +189,7 @@ export default function DocsPage({ params }: { params: Promise<{ locale: string 
           </div>
           <div className="px-4 py-4 space-y-2">
             <p className="text-sm text-gray-400">
-              Returns a paginated list of active disease outbreaks sourced from the WHO, sorted by date descending.
+              Returns a paginated list of active disease outbreaks sourced from WHO, ECDC, PAHO and Africa CDC, sorted by date descending.
             </p>
             <p className="text-sm text-gray-500">
               Data is refreshed every 6 hours from WHO, ECDC, PAHO and Africa CDC.
@@ -262,12 +262,12 @@ export default function DocsPage({ params }: { params: Promise<{ locale: string 
                 ["country",       "string",  "Affected country (English)"],
                 ["region",        "string",  "Continent: africa · asia · americas · europe · oceania"],
                 ["lat / lng",     "number",  "Geographic coordinates of the country centroid"],
-                ["risk_level",    "string",  "WHO risk assessment: high · medium · low"],
+                ["risk_level",    "string",  "Risk level: high · medium · low"],
                 ["cases",         "integer", "Confirmed case count (0 = not reported in this bulletin)"],
                 ["deaths",        "integer", "Confirmed death count"],
                 ["date",          "string",  "Report publication date (ISO 8601: YYYY-MM-DD)"],
                 ["source",        "string",  "Source URL — WHO DON bulletin, ECDC, PAHO, or Africa CDC report page"],
-                ["description",   "string",  "Summary extracted from the WHO bulletin (≤ 400 chars)"],
+                ["description",   "string",  "Summary extracted from the source bulletin (≤ 400 chars)"],
                 ["is_pheic",      "boolean", "True when WHO has declared a Public Health Emergency of International Concern"],
                 ["active",        "boolean", "False for deactivated / resolved outbreaks"],
               ].map(([field, type, desc]) => (
