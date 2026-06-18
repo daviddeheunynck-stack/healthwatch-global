@@ -59,9 +59,9 @@ const FILTER_COPY: Record<string, {
 
 const LANDING_META: Record<string, { title: string; description: string }> = {
   en: { title: "Epidemic surveillance for epidemiologists — WHO, ECDC, PAHO, Africa CDC | HealthWatch Global", description: "WHO, ECDC, PAHO and Africa CDC outbreak data — aggregated, translated and updated daily. Instant alerts, PDF reports and CFR data for epidemiologists, travel medicine doctors and health consultants." },
-  fr: { title: "Surveillance épidémique pour épidémiologistes — OMS, ECDC, PAHO, Africa CDC | HealthWatch Global", description: "Données OMS, ECDC, PAHO et Africa CDC sur les foyers épidémiques — agrégées, traduites et mises à jour toutes les 6h. Alertes instantanées, rapports PDF et létalité pour épidémiologistes, médecins et consultants." },
+  fr: { title: "Surveillance épidémique pour épidémiologistes — OMS, ECDC, PAHO, Africa CDC | HealthWatch Global", description: "Données OMS, ECDC, PAHO et Africa CDC sur les foyers épidémiques — agrégées, traduites et mises à jour quotidiennement. Alertes instantanées, rapports PDF et létalité pour épidémiologistes, médecins et consultants." },
   es: { title: "Vigilancia epidémica para epidemiólogos — OMS, ECDC, PAHO, Africa CDC | HealthWatch Global", description: "Datos de brotes OMS, ECDC, PAHO y Africa CDC — agregados, traducidos y actualizados diariamente. Alertas instantáneas, informes PDF y datos de letalidad para epidemiólogos, médicos y consultores." },
-  ar: { title: "مراقبة وبائية لعلماء الأوبئة — WHO، ECDC، PAHO، Africa CDC | HealthWatch Global", description: "بيانات تفشي الأمراض من WHO وECDC وPAHO وAfrica CDC — مجمعة ومترجمة ومحدثة كل 6 ساعات. تنبيهات فورية وتقارير PDF لعلماء الأوبئة والمتخصصين." },
+  ar: { title: "مراقبة وبائية لعلماء الأوبئة — WHO، ECDC، PAHO، Africa CDC | HealthWatch Global", description: "بيانات تفشي الأمراض من WHO وECDC وPAHO وAfrica CDC — مجمعة ومترجمة ومحدثة يومياً. تنبيهات فورية وتقارير PDF لعلماء الأوبئة والمتخصصين." },
   id: { title: "Surveilans epidemi untuk epidemiolog — WHO, ECDC, PAHO, Africa CDC | HealthWatch Global", description: "Data wabah WHO, ECDC, PAHO dan Africa CDC — diagregasi, diterjemahkan, diperbarui setiap hari. Peringatan instan, laporan PDF dan data CFR untuk epidemiolog, dokter, dan konsultan." },
 };
 
