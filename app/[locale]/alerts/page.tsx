@@ -17,7 +17,7 @@ const PRO_COPY: Record<string, {
   fr: {
     badge: "Pro",
     title: "Alertes instantanées · Toutes les régions",
-    sub: "Soyez informé en temps réel dès qu'un nouveau foyer est déclaré par l'OMS — pour chaque région du monde.",
+    sub: "Soyez informé en temps réel dès qu'un nouveau foyer est signalé par l'OMS, l'ECDC, l'OPAS ou l'Africa CDC — pour chaque région du monde.",
     items: ["Alertes email instantanées (toutes régions)", "Rapports PDF automatiques", "Intégration Slack / Teams"],
     cta: "Commencer l'essai gratuit →",
     ctaExpired: "S'abonner à Pro →",
@@ -29,7 +29,7 @@ const PRO_COPY: Record<string, {
   en: {
     badge: "Pro",
     title: "Instant alerts · All regions",
-    sub: "Get notified in real time as soon as a new outbreak is declared by WHO — for every region on earth.",
+    sub: "Get notified in real time as soon as a new outbreak is reported by WHO, ECDC, PAHO or Africa CDC — for every region on earth.",
     items: ["Instant email alerts (all regions)", "Automatic PDF reports", "Slack / Teams integration"],
     cta: "Start free trial →",
     ctaExpired: "Subscribe to Pro →",
@@ -41,7 +41,7 @@ const PRO_COPY: Record<string, {
   es: {
     badge: "Pro",
     title: "Alertas instantáneas · Todas las regiones",
-    sub: "Reciba notificaciones en tiempo real en cuanto la OMS declare un nuevo brote — en cualquier región del mundo.",
+    sub: "Reciba notificaciones en tiempo real en cuanto la OMS, ECDC, PAHO o Africa CDC reporten un nuevo brote — en cualquier región del mundo.",
     items: ["Alertas email instantáneas (todas las regiones)", "Informes PDF automáticos", "Integración Slack / Teams"],
     cta: "Iniciar prueba gratuita →",
     ctaExpired: "Suscribirse a Pro →",
@@ -53,7 +53,7 @@ const PRO_COPY: Record<string, {
   ar: {
     badge: "Pro",
     title: "تنبيهات فورية · جميع المناطق",
-    sub: "احصل على إشعار فوري بمجرد إعلان منظمة الصحة العالمية عن تفشٍّ جديد — في كل منطقة في العالم.",
+    sub: "احصل على إشعار فوري بمجرد الإبلاغ عن تفشٍّ جديد من WHO أو ECDC أو PAHO أو Africa CDC — في كل منطقة في العالم.",
     items: ["تنبيهات بريد إلكتروني فورية (جميع المناطق)", "تقارير PDF تلقائية", "تكامل Slack / Teams"],
     cta: "← ابدأ التجربة المجانية",
     ctaExpired: "← الاشتراك في Pro",
@@ -65,7 +65,7 @@ const PRO_COPY: Record<string, {
   id: {
     badge: "Pro",
     title: "Peringatan instan · Semua wilayah",
-    sub: "Dapatkan notifikasi real-time segera setelah WHO mendeklarasikan wabah baru — di setiap wilayah di bumi.",
+    sub: "Dapatkan notifikasi real-time segera setelah WHO, ECDC, PAHO atau Africa CDC melaporkan wabah baru — di setiap wilayah di bumi.",
     items: ["Peringatan email instan (semua wilayah)", "Laporan PDF otomatis", "Integrasi Slack / Teams"],
     cta: "Mulai uji coba gratis →",
     ctaExpired: "Berlangganan Pro →",
