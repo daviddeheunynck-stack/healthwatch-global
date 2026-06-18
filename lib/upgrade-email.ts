@@ -120,6 +120,110 @@ const COPY: Record<string, Record<string, PlanCopy>> = {
     },
   },
 
+  // ── Team ───────────────────────────────────────────────────────────────────
+  team: {
+    fr: {
+      subject:  "Bienvenue sur HealthWatch Team 🤝",
+      headline: "Votre plan Team est actif.",
+      intro:    "Accès Pro complet pour toute votre équipe — 5 sièges, une seule facture institutionnelle. Voici ce qui est inclus :",
+      features: [
+        "👥 5 sièges — invitez vos collaborateurs depuis les paramètres du compte",
+        "📊 Chiffres exacts — cas confirmés et décès pour chaque foyer",
+        "📄 Rapports PDF — toutes les régions mondiales",
+        "📥 Export CSV — données complètes pour vos analyses d'équipe",
+        "⚡ Alertes instantanées — sync 6h depuis l'OMS, l'ECDC, l'OPAS et l'Africa CDC",
+        "💬 Intégration Slack/Teams — alertes directement dans votre channel",
+        "🧾 Facture unique — un seul prélèvement pour votre institution",
+      ],
+      ctaLabel: "Aller au tableau de bord →",
+      ctaUrl:   `${APP_URL}/fr`,
+      secondaryLabel: "Inviter des collaborateurs →",
+      secondaryUrl:   `${APP_URL}/fr/account`,
+      closing:  "Bonne surveillance,\nL'équipe HealthWatch Global",
+      trialNote: "Votre essai Team de 14 jours est en cours. Aucun prélèvement ne sera effectué avant la fin de la période d'essai.",
+    },
+    en: {
+      subject:  "Welcome to HealthWatch Team 🤝",
+      headline: "Your Team plan is now active.",
+      intro:    "Full Pro access for your entire team — 5 seats, one institutional invoice. Here's what's included:",
+      features: [
+        "👥 5 seats — invite your colleagues from your account settings",
+        "📊 Exact figures — confirmed cases and deaths for every outbreak",
+        "📄 PDF reports — all global regions",
+        "📥 CSV export — complete data for your team's analyses",
+        "⚡ Instant alerts — 6h sync from WHO, ECDC, PAHO & Africa CDC",
+        "💬 Slack/Teams integration — alerts directly in your channel",
+        "🧾 Single invoice — one charge for your institution, no per-person billing",
+      ],
+      ctaLabel: "Go to dashboard →",
+      ctaUrl:   `${APP_URL}/en`,
+      secondaryLabel: "Invite team members →",
+      secondaryUrl:   `${APP_URL}/en/account`,
+      closing:  "Stay vigilant,\nThe HealthWatch Global team",
+      trialNote: "Your 14-day Team trial is running. No charge will be made until the trial period ends.",
+    },
+    es: {
+      subject:  "Bienvenido a HealthWatch Team 🤝",
+      headline: "Su plan Team ya está activo.",
+      intro:    "Acceso Pro completo para todo su equipo — 5 puestos, una sola factura institucional. Esto es lo que incluye:",
+      features: [
+        "👥 5 puestos — invite a sus colegas desde la configuración de la cuenta",
+        "📊 Cifras exactas — casos y fallecidos por brote",
+        "📄 Informes PDF — todas las regiones mundiales",
+        "📥 Exportación CSV — datos completos para los análisis del equipo",
+        "⚡ Alertas instantáneas — sync 6h desde la OMS, ECDC, PAHO y Africa CDC",
+        "💬 Integración Slack/Teams — alertas en su canal",
+        "🧾 Factura única — un solo cargo para su institución",
+      ],
+      ctaLabel: "Ir al panel →",
+      ctaUrl:   `${APP_URL}/es`,
+      secondaryLabel: "Invitar colaboradores →",
+      secondaryUrl:   `${APP_URL}/es/account`,
+      closing:  "Permanezca alerta,\nEl equipo de HealthWatch Global",
+      trialNote: "Su prueba Team de 14 días está en marcha. No se realizará ningún cobro hasta el final del período de prueba.",
+    },
+    ar: {
+      subject:  "مرحباً بك في HealthWatch Team 🤝",
+      headline: "خطة Team الخاصة بك نشطة الآن.",
+      intro:    "وصول Pro كامل لفريقك بالكامل — 5 مقاعد، فاتورة مؤسسية واحدة:",
+      features: [
+        "👥 5 مقاعد — ادعُ زملاءك من إعدادات الحساب",
+        "📊 الأرقام الدقيقة — الحالات والوفيات لكل تفشٍّ",
+        "📄 تقارير PDF — جميع المناطق العالمية",
+        "📥 تصدير CSV — بيانات كاملة لتحليلات فريقك",
+        "⚡ تنبيهات فورية — مزامنة 6 ساعات من WHO وECDC وPAHO وAfrica CDC",
+        "💬 تكامل Slack/Teams — تنبيهات في قناتك مباشرة",
+        "🧾 فاتورة واحدة — رسوم موحدة لمؤسستك",
+      ],
+      ctaLabel: "← لوحة التحكم",
+      ctaUrl:   `${APP_URL}/ar`,
+      secondaryLabel: "← دعوة أعضاء الفريق",
+      secondaryUrl:   `${APP_URL}/ar/account`,
+      closing:  "ابقوا يقظين،\nفريق HealthWatch Global",
+      trialNote: "تجربة Team لمدة 14 يوماً جارية. لن يتم أي خصم قبل انتهاء فترة التجربة.",
+    },
+    id: {
+      subject:  "Selamat datang di HealthWatch Team 🤝",
+      headline: "Paket Team Anda sekarang aktif.",
+      intro:    "Akses Pro penuh untuk seluruh tim Anda — 5 kursi, satu faktur institusional. Berikut yang termasuk:",
+      features: [
+        "👥 5 kursi — undang rekan Anda dari pengaturan akun",
+        "📊 Angka tepat — kasus dan kematian setiap wabah",
+        "📄 Laporan PDF — semua wilayah global",
+        "📥 Ekspor CSV — data lengkap untuk analisis tim Anda",
+        "⚡ Peringatan instan — sinkronisasi 6 jam dari WHO, ECDC, PAHO & Africa CDC",
+        "💬 Integrasi Slack/Teams — peringatan langsung di channel Anda",
+        "🧾 Satu faktur — satu tagihan untuk institusi Anda",
+      ],
+      ctaLabel: "Ke dasbor →",
+      ctaUrl:   `${APP_URL}/id`,
+      secondaryLabel: "Undang anggota tim →",
+      secondaryUrl:   `${APP_URL}/id/account`,
+      closing:  "Tetap waspada,\nTim HealthWatch Global",
+      trialNote: "Uji coba Team 14 hari Anda sedang berjalan. Tidak ada tagihan hingga masa uji coba berakhir.",
+    },
+  },
+
   // ── Enterprise ─────────────────────────────────────────────────────────────
   enterprise: {
     fr: {
@@ -210,11 +314,12 @@ const COPY: Record<string, Record<string, PlanCopy>> = {
 const PLAN_COLORS: Record<string, { badge: string; accent: string }> = {
   starter:    { badge: "#3b82f6", accent: "#60a5fa" },
   pro:        { badge: "#dc2626", accent: "#f87171" },
+  team:       { badge: "#b45309", accent: "#fbbf24" },
   enterprise: { badge: "#9333ea", accent: "#c084fc" },
 };
 
 export function buildUpgradeEmail(
-  plan: "starter" | "pro" | "enterprise",
+  plan: "starter" | "pro" | "team" | "enterprise",
   locale: string
 ): { subject: string; html: string } {
   // "starter" no longer exists as a user-facing plan — redirect to pro template

@@ -41,7 +41,7 @@ async function sendTransactionalEmail(
 
 async function sendUpgradeEmail(
   to: string,
-  plan: "starter" | "pro" | "enterprise",
+  plan: "starter" | "pro" | "team" | "enterprise",
   locale: string
 ) {
   const { subject, html } = buildUpgradeEmail(plan, locale);
@@ -240,8 +240,8 @@ export async function POST(req: NextRequest) {
               { onConflict: "email" }
             );
 
-          if (["starter", "pro", "enterprise"].includes(plan)) {
-            await sendUpgradeEmail(email, plan as "starter" | "pro" | "enterprise", locale);
+          if (["starter", "pro", "team", "enterprise"].includes(plan)) {
+            await sendUpgradeEmail(email, plan as "starter" | "pro" | "team" | "enterprise", locale);
           }
         }
         break;
