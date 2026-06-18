@@ -545,6 +545,21 @@ export default async function LandingPage({ locale }: { locale: string }) {
         </div>
       </section>
 
+      {/* ── Official sources — early credibility strip ───────────────────── */}
+      <div className="flex flex-wrap items-center justify-center gap-2">
+        <span className="text-xs text-gray-600 mr-1">{c.trustSourcesLabel} :</span>
+        {[
+          { name: "WHO DON",    cls: "text-blue-400 border-blue-800/50 bg-blue-950/20" },
+          { name: "ECDC",       cls: "text-sky-400 border-sky-800/50 bg-sky-950/20" },
+          { name: "PAHO",       cls: "text-teal-400 border-teal-800/50 bg-teal-950/20" },
+          { name: "Africa CDC", cls: "text-green-400 border-green-800/50 bg-green-950/20" },
+        ].map(({ name, cls }) => (
+          <span key={name} className={`text-[11px] font-bold px-2.5 py-1 rounded border ${cls}`}>
+            {name}
+          </span>
+        ))}
+      </div>
+
       {/* ── Problem ──────────────────────────────────────────────────────── */}
       <section className="max-w-4xl mx-auto space-y-10">
         <div className="text-center space-y-4">
@@ -681,14 +696,23 @@ export default async function LandingPage({ locale }: { locale: string }) {
       {/* ── Social proof ─────────────────────────────────────────────────── */}
       <section className="space-y-10">
 
-        {/* Data sources strip */}
+        {/* Data sources cards */}
         <div className="text-center space-y-4">
           <p className="text-xs text-gray-500 uppercase tracking-widest font-semibold">{c.trustSourcesLabel}</p>
-          <div className="flex flex-wrap items-center justify-center gap-2">
-            {["WHO DON", "ECDC", "PAHO", "Africa CDC", "InfoDengue"].map((src) => (
-              <span key={src} className="text-xs font-semibold text-gray-300 bg-gray-800 border border-gray-700 px-3 py-1.5 rounded-full">
-                {src}
-              </span>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 max-w-3xl mx-auto">
+            {[
+              { name: "WHO DON",    dot: "bg-blue-400",  border: "border-blue-800/40 bg-blue-950/20",  sub: "Disease Outbreak News" },
+              { name: "ECDC",       dot: "bg-sky-400",   border: "border-sky-800/40 bg-sky-950/20",    sub: "Communicable Disease Threats" },
+              { name: "PAHO",       dot: "bg-teal-400",  border: "border-teal-800/40 bg-teal-950/20",  sub: "Pan American Health Org." },
+              { name: "Africa CDC", dot: "bg-green-400", border: "border-green-800/40 bg-green-950/20", sub: "Africa Centres for Disease Control" },
+            ].map(({ name, dot, border, sub }) => (
+              <div key={name} className={`rounded-xl border ${border} px-4 py-3 flex items-center gap-3`}>
+                <span className={`w-2.5 h-2.5 rounded-full shrink-0 ${dot}`} />
+                <div className="text-left">
+                  <p className="text-sm font-bold text-white leading-tight">{name}</p>
+                  <p className="text-[10px] text-gray-500 leading-tight mt-0.5">{sub}</p>
+                </div>
+              </div>
             ))}
           </div>
         </div>
