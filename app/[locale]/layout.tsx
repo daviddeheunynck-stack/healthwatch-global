@@ -12,29 +12,29 @@ import "../globals.css";
 
 const META: Record<string, { title: string; description: string }> = {
   en: {
-    title: "HealthWatch Global — Daily Epidemic Surveillance",
+    title: "HealthWatch Global — Epidemic Surveillance",
     description:
-      "Monitor disease outbreaks worldwide — WHO, CDC & ECDC data in 5 languages. Built for NGOs, health ministries and international organizations.",
+      "Monitor disease outbreaks worldwide — WHO, ECDC, PAHO & Africa CDC data in 5 languages, updated every 6 hours. Built for epidemiologists, NGOs and health ministries.",
   },
   fr: {
-    title: "HealthWatch Global — Surveillance épidémique quotidienne",
+    title: "HealthWatch Global — Surveillance épidémique",
     description:
-      "Suivez les foyers épidémiques mondiaux au quotidien. Données OMS, CDC et ECDC en 5 langues. Conçu pour les ONG, ministères de la santé et organisations internationales.",
+      "Suivez les foyers épidémiques mondiaux. Données officielles OMS, ECDC, PAHO et Africa CDC en 5 langues, mises à jour toutes les 6h. Conçu pour les épidémiologistes, ONG et ministères de la santé.",
   },
   es: {
-    title: "HealthWatch Global — Vigilancia epidémica diaria",
+    title: "HealthWatch Global — Vigilancia epidémica",
     description:
-      "Monitoreo diario de brotes. Datos OMS, CDC y ECDC en 5 idiomas. Para ONG, ministerios de salud y organizaciones internacionales.",
+      "Monitoreo de brotes en todo el mundo. Datos oficiales OMS, ECDC, PAHO y Africa CDC en 5 idiomas, actualizados cada 6 horas. Para epidemiólogos, ONG y ministerios de salud.",
   },
   ar: {
-    title: "HealthWatch Global — مراقبة الأوبئة اليومية",
+    title: "HealthWatch Global — مراقبة الأوبئة",
     description:
-      "رصد تفشي الأمراض حول العالم يومياً. بيانات منظمة الصحة العالمية ومراكز السيطرة على الأمراض بخمس لغات.",
+      "رصد تفشي الأمراض حول العالم. بيانات رسمية من منظمة الصحة العالمية، ECDC، PAHO وAfrica CDC بخمس لغات، محدّثة كل 6 ساعات.",
   },
   id: {
-    title: "HealthWatch Global — Pemantauan Wabah Harian",
+    title: "HealthWatch Global — Pemantauan Wabah",
     description:
-      "Pantau wabah penyakit di seluruh dunia setiap hari. Data WHO, CDC & ECDC dalam 5 bahasa. Untuk LSM, kementerian kesehatan dan organisasi internasional.",
+      "Pantau wabah penyakit di seluruh dunia. Data resmi WHO, ECDC, PAHO & Africa CDC dalam 5 bahasa, diperbarui setiap 6 jam. Untuk epidemiolog, LSM dan kementerian kesehatan.",
   },
 };
 

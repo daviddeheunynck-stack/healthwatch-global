@@ -4,7 +4,7 @@ export default function manifest(): MetadataRoute.Manifest {
   return {
     name:             "HealthWatch Global",
     short_name:       "HealthWatch",
-    description:      "Daily epidemic surveillance — WHO, CDC & ECDC data in 5 languages",
+    description:      "Epidemic surveillance — WHO, ECDC, PAHO & Africa CDC data in 5 languages",
     start_url:        "/en",
     display:          "standalone",
     background_color: "#111827",

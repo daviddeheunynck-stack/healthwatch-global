@@ -91,7 +91,7 @@ export default function DocsPage({ params }: { params: Promise<{ locale: string 
         </div>
         <h1 className="text-4xl font-bold text-white">API Documentation</h1>
         <p className="text-gray-400 text-lg leading-relaxed max-w-2xl">
-          Programmatic access to WHO outbreak data, synced daily. Available on the{" "}
+          Programmatic access to WHO, ECDC, PAHO and Africa CDC outbreak data, updated every 6 hours. Available on the{" "}
           <span className="text-purple-400 font-semibold">Enterprise plan</span>.
           Manage your API keys from{" "}
           <Link href="account" className="text-red-400 hover:text-red-300 underline underline-offset-2">
