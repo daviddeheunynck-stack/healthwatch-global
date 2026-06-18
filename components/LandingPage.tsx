@@ -76,6 +76,9 @@ const COPY: Record<string, {
   comparisonTitle: string;
   comparisonFeatures: string[];
   aboutLink: string;
+  focalPointTitle: string;
+  focalPointSub: string;
+  focalPointTiers: { label: string; desc: string; example: string; action: string }[];
 }> = {
   fr: {
     heroBadge: "4 sources officielles · 195 pays · Mise à jour toutes les 6h",
@@ -146,6 +149,13 @@ const COPY: Record<string, {
     comparisonTitle: "HealthWatch vs who.int",
     comparisonFeatures: ["5 langues (FR, EN, ES, AR, ID)", "Alertes email par maladie / région", "CFR & incidence calculés automatiquement", "Rapports PDF en 1 clic", "Filtres, tri & export CSV", "Watchlist & notifications"],
     aboutLink: "Construit par un professionnel passionné par la santé mondiale → En savoir plus",
+    focalPointTitle: "Pensé pour les Points focaux nationaux",
+    focalPointSub: "Pour chaque foyer actif, HealthWatch calcule le tier RSI et propose les premières actions alignées sur le cadre OMS/RSI 2005.",
+    focalPointTiers: [
+      { label: "IMMÉDIAT · NOTIFIABLE RSI", desc: "Maladies à notification obligatoire — article 6 du RSI. Alerte à l'OMS requise sous 24 h.", example: "Ebola, polio, SRAS, fièvre jaune", action: "Notifier le Point focal national OMS sous 24 h" },
+      { label: "RÉPONSE RAPIDE", desc: "Investigation terrain requise sous 48 h. Alerte aux bureaux régionaux et points focaux de district.", example: "Mpox, choléra, méningite à méningocoque", action: "Lancer l'investigation terrain sous 48 h" },
+      { label: "SURVEILLANCE STANDARD", desc: "Veille et signalement de routine. Signaler si la tendance se détériore.", example: "Tous autres foyers actifs", action: "Inclure dans le briefing de surveillance hebdomadaire" },
+    ],
   },
   en: {
     heroBadge: "4 official sources · 195 countries · Updated every 6h",
@@ -216,6 +226,13 @@ const COPY: Record<string, {
     comparisonTitle: "HealthWatch vs who.int",
     comparisonFeatures: ["5 languages (FR, EN, ES, AR, ID)", "Email alerts by disease / region", "CFR & incidence auto-calculated", "PDF reports in 1 click", "Filters, sorting & CSV export", "Watchlist & notifications"],
     aboutLink: "Built by a professional passionate about global health → Learn more",
+    focalPointTitle: "Built for National Focal Points",
+    focalPointSub: "For every active outbreak, HealthWatch calculates the IHR response tier and surfaces first actions aligned with the WHO/IHR 2005 framework.",
+    focalPointTiers: [
+      { label: "IMMEDIATE · IHR NOTIFIABLE", desc: "Mandatory WHO notification under IHR Article 6 — National Focal Point must alert WHO within 24 h.", example: "Ebola, poliovirus, SARS, yellow fever", action: "Notify WHO National Focal Point within 24 h" },
+      { label: "RAPID RESPONSE", desc: "Field investigation required within 48 h. Alert regional offices and district focal points.", example: "Mpox, cholera, meningococcal meningitis", action: "Initiate field investigation within 48 h" },
+      { label: "STANDARD MONITORING", desc: "Routine surveillance and reporting. Escalate if trend worsens.", example: "All other active outbreaks", action: "Include in weekly surveillance briefing" },
+    ],
   },
   es: {
     heroBadge: "4 fuentes oficiales · 195 países · Actualización cada 6h",
@@ -286,6 +303,13 @@ const COPY: Record<string, {
     comparisonTitle: "HealthWatch vs who.int",
     comparisonFeatures: ["5 idiomas (FR, EN, ES, AR, ID)", "Alertas email por enfermedad / región", "CFR & incidencia calculados automáticamente", "Informes PDF en 1 clic", "Filtros, orden & exportación CSV", "Lista de seguimiento & notificaciones"],
     aboutLink: "Creado por un profesional apasionado por la salud global → Saber más",
+    focalPointTitle: "Diseñado para Puntos focales nacionales",
+    focalPointSub: "Para cada brote activo, HealthWatch calcula el nivel de respuesta RSI y propone las primeras acciones alineadas con el marco OMS/RSI 2005.",
+    focalPointTiers: [
+      { label: "INMEDIATO · NOTIFICABLE RSI", desc: "Notificación obligatoria a la OMS según el artículo 6 del RSI — el Punto focal debe alertar a la OMS en 24 h.", example: "Ébola, poliovirus, SRAS, fiebre amarilla", action: "Notificar al Punto focal nacional OMS en 24 h" },
+      { label: "RESPUESTA RÁPIDA", desc: "Investigación de campo requerida en 48 h. Alertar a oficinas regionales y puntos focales de distrito.", example: "Mpox, cólera, meningitis meningocócica", action: "Iniciar investigación de campo en 48 h" },
+      { label: "VIGILANCIA ESTÁNDAR", desc: "Vigilancia y reporte de rutina. Escalar si la tendencia empeora.", example: "Todos los demás brotes activos", action: "Incluir en el informe de vigilancia semanal" },
+    ],
   },
   ar: {
     heroBadge: "4 مصادر رسمية · 195 دولة · تحديث كل 6 ساعات",
@@ -356,6 +380,13 @@ const COPY: Record<string, {
     comparisonTitle: "HealthWatch مقابل who.int",
     comparisonFeatures: ["5 لغات (FR, EN, ES, AR, ID)", "تنبيهات البريد الإلكتروني حسب المرض / المنطقة", "CFR والإصابة محسوبان تلقائياً", "تقارير PDF بنقرة واحدة", "فلاتر وترتيب وتصدير CSV", "قائمة المراقبة والإشعارات"],
     aboutLink: "أُنشئت بواسطة متخصص شغوف بالصحة العالمية ← تعرف أكثر",
+    focalPointTitle: "مصمم لنقاط الاتصال الوطنية",
+    focalPointSub: "لكل تفشٍّ نشط، تحسب HealthWatch تلقائياً مستوى اللوائح الصحية الدولية وتقترح أولى الإجراءات وفق إطار منظمة الصحة العالمية 2005.",
+    focalPointTiers: [
+      { label: "فوري · إخطار إلزامي RSI", desc: "إخطار إلزامي لمنظمة الصحة العالمية بموجب المادة 6 — يجب إخطار المنظمة خلال 24 ساعة.", example: "إيبولا، شلل الأطفال، سارس، الحمى الصفراء", action: "إخطار نقطة الاتصال الوطنية لمنظمة الصحة العالمية خلال 24 ساعة" },
+      { label: "استجابة سريعة", desc: "تحقيق ميداني مطلوب خلال 48 ساعة. تنبيه المكاتب الإقليمية ونقاط الاتصال.", example: "جدري القرود، الكوليرا، التهاب السحايا", action: "الشروع في التحقيق الميداني خلال 48 ساعة" },
+      { label: "مراقبة روتينية", desc: "مراقبة وإبلاغ روتيني. التصعيد إذا ساءت الاتجاهات.", example: "جميع التفشيات النشطة الأخرى", action: "التضمين في إحاطة المراقبة الأسبوعية" },
+    ],
   },
   id: {
     heroBadge: "4 sumber resmi · 195 negara · Diperbarui setiap 6 jam",
@@ -426,6 +457,13 @@ const COPY: Record<string, {
     comparisonTitle: "HealthWatch vs who.int",
     comparisonFeatures: ["5 bahasa (FR, EN, ES, AR, ID)", "Peringatan email per penyakit / wilayah", "CFR & insidensi dihitung otomatis", "Laporan PDF dalam 1 klik", "Filter, sortir & ekspor CSV", "Daftar pantau & notifikasi"],
     aboutLink: "Dibangun oleh profesional yang bersemangat tentang kesehatan global → Pelajari lebih lanjut",
+    focalPointTitle: "Dirancang untuk Focal Point Nasional",
+    focalPointSub: "Untuk setiap wabah aktif, HealthWatch secara otomatis menghitung tingkat respons IHR dan menyarankan tindakan pertama sesuai kerangka WHO/IHR 2005.",
+    focalPointTiers: [
+      { label: "SEGERA · WAJIB LAPOR IHR", desc: "Notifikasi wajib ke WHO berdasarkan IHR Pasal 6 — Focal Point Nasional harus memberi tahu WHO dalam 24 jam.", example: "Ebola, poliovirus, SARS, demam kuning", action: "Notifikasi Focal Point Nasional WHO dalam 24 jam" },
+      { label: "RESPONS CEPAT", desc: "Investigasi lapangan diperlukan dalam 48 jam. Peringatkan kantor regional dan focal point kabupaten.", example: "Mpox, kolera, meningitis meningokokal", action: "Mulai investigasi lapangan dalam 48 jam" },
+      { label: "PEMANTAUAN STANDAR", desc: "Surveilans dan pelaporan rutin. Eskalasi jika tren memburuk.", example: "Semua wabah aktif lainnya", action: "Sertakan dalam brifing surveilans mingguan" },
+    ],
   },
 };
 
@@ -587,6 +625,35 @@ export default async function LandingPage({ locale }: { locale: string }) {
                 </div>
                 <h3 className="font-semibold text-white">{title}</h3>
                 <p className="text-gray-400 text-sm leading-relaxed">{desc}</p>
+              </div>
+            );
+          })}
+        </div>
+      </section>
+
+      {/* ── Focal Point Guidance ─────────────────────────────────────────── */}
+      <section className="space-y-8">
+        <div className="text-center space-y-2">
+          <p className="text-xs text-gray-500 uppercase tracking-widest font-semibold">IHR · WHO 2005</p>
+          <h2 className="text-2xl md:text-3xl font-bold text-white">{c.focalPointTitle}</h2>
+          <p className="text-gray-400 text-sm max-w-xl mx-auto leading-relaxed">{c.focalPointSub}</p>
+        </div>
+        <div className="grid md:grid-cols-3 gap-4">
+          {c.focalPointTiers.map(({ label, desc, example, action }, i) => {
+            const styles = [
+              { card: "border-red-800/40 bg-red-950/30", badge: "bg-red-500/10 border-red-500/30 text-red-400", arrow: "text-red-400" },
+              { card: "border-yellow-800/40 bg-yellow-950/20", badge: "bg-yellow-500/10 border-yellow-500/30 text-yellow-400", arrow: "text-yellow-400" },
+              { card: "border-gray-700/40 bg-gray-900/40", badge: "bg-gray-600/20 border-gray-500/30 text-gray-300", arrow: "text-gray-400" },
+            ][i];
+            return (
+              <div key={label} className={`rounded-xl border ${styles.card} p-5 space-y-3`}>
+                <span className={`inline-block text-[10px] font-bold px-2.5 py-1 rounded border ${styles.badge} tracking-wide`}>{label}</span>
+                <p className="text-gray-300 text-sm leading-relaxed">{desc}</p>
+                <p className="text-xs text-gray-500">Ex : {example}</p>
+                <div className="flex items-start gap-1.5 pt-1 border-t border-white/5">
+                  <span className={`mt-0.5 shrink-0 font-bold text-xs ${styles.arrow}`}>›</span>
+                  <p className="text-xs text-gray-400 leading-relaxed">{action}</p>
+                </div>
               </div>
             );
           })}
