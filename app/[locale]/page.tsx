@@ -166,7 +166,7 @@ async function DashboardContent() {
     }
   }
 
-  const isPaid = plan === "starter" || plan === "pro" || plan === "enterprise";
+  const isPaid = plan === "starter" || plan === "pro" || plan === "team" || plan === "enterprise";
 
   const [outbreaks, lastSync] = await Promise.all([getOutbreaks(), getLastSync()]);
   const stats = getStats(outbreaks);

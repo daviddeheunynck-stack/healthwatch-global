@@ -117,7 +117,7 @@ export async function GET(req: NextRequest) {
       .from("profiles")
       .select("id, email, plan, trial_ends_at, stripe_subscription_id, locale, slack_webhook_url")
       .in("id", userIds)
-      .in("plan", ["starter", "pro", "enterprise"]);
+      .in("plan", ["starter", "pro", "team", "enterprise"]);
 
     // Apply trial expiry guard: skip users whose trial has ended and have no active Stripe sub
     const now = Date.now();

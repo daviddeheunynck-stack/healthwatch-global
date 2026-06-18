@@ -5,7 +5,7 @@ import { createClient as createService } from "@supabase/supabase-js";
 export const dynamic = "force-dynamic";
 
 const MAX_WATCHLIST = 20;
-const PAID_PLANS = ["starter", "pro", "enterprise"] as const;
+const PAID_PLANS = ["starter", "pro", "team", "enterprise"] as const;
 
 function service() {
   return createService(

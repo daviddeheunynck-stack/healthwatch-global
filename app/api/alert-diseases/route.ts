@@ -83,7 +83,7 @@ export async function POST(req: NextRequest) {
   ) {
     plan = "free";
   }
-  if (!["starter", "pro", "enterprise"].includes(plan)) {
+  if (!["starter", "pro", "team", "enterprise"].includes(plan)) {
     return NextResponse.json({ error: "Pro plan required" }, { status: 403 });
   }
 

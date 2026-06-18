@@ -102,7 +102,7 @@ export async function GET(req: NextRequest) {
     if (!profile?.email) { unchanged++; continue; }
 
     // Only Pro+ users with an active subscription (not expired-trial)
-    if (!["starter", "pro", "enterprise"].includes(profile.plan)) { unchanged++; continue; }
+    if (!["starter", "pro", "team", "enterprise"].includes(profile.plan)) { unchanged++; continue; }
     const isExpiredTrial = profile.plan === "pro"
       && !profile.stripe_subscription_id
       && !!profile.trial_ends_at

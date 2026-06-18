@@ -115,7 +115,7 @@ export async function GET(req: NextRequest) {
       if (!profile?.email) { skipped++; continue; }
 
       // Only Pro+ users get disease alerts
-      if (!["starter", "pro", "enterprise"].includes(profile.plan)) { skipped++; continue; }
+      if (!["starter", "pro", "team", "enterprise"].includes(profile.plan)) { skipped++; continue; }
 
       try {
         const locale = profile.locale;

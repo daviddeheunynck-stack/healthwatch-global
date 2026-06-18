@@ -68,7 +68,7 @@ export default function ComparePage() {
   const [copied, setCopied] = useState(false);
   const [ready, setReady] = useState(false);
   const [plan, setPlan] = useState<string | null>(null);
-  const isPaid = plan === "starter" || plan === "pro" || plan === "enterprise";
+  const isPaid = plan === "starter" || plan === "pro" || plan === "team" || plan === "enterprise";
 
   // Fetch user plan — the exact figures (cases/deaths/CFR/incidence) are Pro-only,
   // exactly like the dashboard table. Without this check, Compare would be a

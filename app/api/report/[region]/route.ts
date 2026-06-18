@@ -75,7 +75,7 @@ export async function GET(
   ) {
     plan = "free";
   }
-  const isPaid = plan === "starter" || plan === "pro" || plan === "enterprise";
+  const isPaid = plan === "starter" || plan === "pro" || plan === "team" || plan === "enterprise";
 
   if (!isPaid) {
     return new NextResponse(

@@ -42,7 +42,7 @@ export async function GET(request: NextRequest) {
   ) {
     plan = "free";
   }
-  const isPaid = plan === "starter" || plan === "pro" || plan === "enterprise";
+  const isPaid = plan === "starter" || plan === "pro" || plan === "team" || plan === "enterprise";
 
   if (!isPaid) {
     return new NextResponse("Upgrade to Pro to export data", { status: 403 });
