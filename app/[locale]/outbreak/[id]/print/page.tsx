@@ -6,6 +6,7 @@ import { createClient } from "@supabase/supabase-js";
 import { createClient as createServerClient } from "@/lib/supabase-server";
 import { notFound, redirect } from "next/navigation";
 import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
+import { getResponseGuidance, RESPONSE_ACTIONS } from "@/lib/response-guidance";
 import { getIncidenceRate, getPopulationThousands } from "@/lib/population-data";
 import type { Metadata } from "next";
 
@@ -93,6 +94,26 @@ const RISK_COLOR: Record<string, string> = {
   high: "#dc2626", medium: "#d97706", low: "#16a34a",
 };
 
+const TIER_LABEL: Record<string, Record<string, string>> = {
+  immediate: { fr: "IMMÉDIAT · NOTIFIABLE RSI", en: "IMMEDIATE · IHR NOTIFIABLE", es: "INMEDIATO · NOTIFICABLE RSI", ar: "فوري · إخطار إلزامي (اللوائح الصحية الدولية)", id: "SEGERA · WAJIB LAPOR IHR" },
+  rapid:     { fr: "RÉPONSE RAPIDE", en: "RAPID RESPONSE", es: "RESPUESTA RÁPIDA", ar: "استجابة سريعة", id: "RESPONS CEPAT" },
+  monitor:   { fr: "SURVEILLANCE STANDARD", en: "STANDARD MONITORING", es: "VIGILANCIA ESTÁNDAR", ar: "مراقبة روتينية", id: "PEMANTAUAN STANDAR" },
+};
+
+const TIER_COLOR: Record<string, { bg: string; border: string; text: string }> = {
+  immediate: { bg: "#fef2f2", border: "#dc2626", text: "#991b1b" },
+  rapid:     { bg: "#fffbeb", border: "#d97706", text: "#92400e" },
+  monitor:   { bg: "#f8fafc", border: "#94a3b8", text: "#475569" },
+};
+
+const FP_LABELS: Record<string, { fpGuidance: string; firstActions: string }> = {
+  fr: { fpGuidance: "Guide d'action — Point focal",  firstActions: "Premières actions" },
+  en: { fpGuidance: "Focal Point Guidance",           firstActions: "First actions" },
+  es: { fpGuidance: "Guía del Punto focal",           firstActions: "Primeras acciones" },
+  ar: { fpGuidance: "توجيهات نقطة الاتصال",          firstActions: "الإجراءات الأولى" },
+  id: { fpGuidance: "Panduan Focal Point",            firstActions: "Tindakan pertama" },
+};
+
 export default async function PrintPage({
   params,
 }: {
@@ -138,6 +159,11 @@ export default async function PrintPage({
   const incidence  = getIncidenceRate(o.cases, o.country_en);
   const riskColor  = RISK_COLOR[o.risk_level] ?? "#6b7280";
   const riskLabel  = (RISK_LABEL[o.risk_level] ?? RISK_LABEL.low)[locale] ?? "RISK";
+  const guidance   = getResponseGuidance(o.disease_en || o.disease);
+  const tc         = TIER_COLOR[guidance.tier];
+  const tierLabel  = (TIER_LABEL[guidance.tier])[locale] ?? (TIER_LABEL[guidance.tier]).en;
+  const fpActions  = (RESPONSE_ACTIONS[guidance.tier][locale] ?? RESPONSE_ACTIONS[guidance.tier].en).slice(0, 3);
+  const fp         = FP_LABELS[locale] ?? FP_LABELS.en;
   const today      = new Date().toLocaleDateString(locale === "ar" ? "ar" : locale === "id" ? "id-ID" : locale, {
     year: "numeric", month: "long", day: "numeric",
   });
@@ -178,6 +204,16 @@ export default async function PrintPage({
           .source-link { color: #dc2626; word-break: break-all; }
           .print-btn { position: fixed; bottom: 24px; right: 24px; background: #dc2626; color: white; border: none; padding: 12px 24px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; box-shadow: 0 4px 12px rgba(220,38,38,0.3); }
           .print-btn:hover { background: #b91c1c; }
+          .tier-badge-print { display: inline-block; margin-top: 6px; background: ${tc.bg}; border: 1px solid ${tc.border}; color: ${tc.text}; padding: 3px 10px; border-radius: 99px; font-size: 10px; font-weight: 700; letter-spacing: 0.5px; }
+          .fp-section { margin: 20px 0; padding: 16px; background: ${tc.bg}; border: 1px solid ${tc.border}40; border-left: 4px solid ${tc.border}; border-radius: 0 8px 8px 0; page-break-inside: avoid; }
+          .fp-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+          .fp-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: ${tc.text}; }
+          .fp-tier { font-size: 10px; font-weight: 700; color: ${tc.text}; background: white; border: 1px solid ${tc.border}; padding: 2px 8px; border-radius: 4px; }
+          .fp-actions-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: ${tc.text}; opacity: 0.7; margin-bottom: 6px; }
+          .fp-actions { list-style: none; }
+          .fp-actions li { font-size: 12px; color: #1e293b; padding: 4px 0 4px 16px; border-bottom: 1px solid ${tc.border}20; position: relative; }
+          .fp-actions li:last-child { border-bottom: none; }
+          .fp-actions li::before { content: "›"; font-weight: 700; color: ${tc.text}; position: absolute; left: 0; }
         `}</style>
       </head>
       <body>
@@ -193,6 +229,7 @@ export default async function PrintPage({
             </div>
             <div style={{ textAlign: isRtl ? "left" : "right" }}>
               <div className="risk-badge">{riskLabel}</div>
+              <div className="tier-badge-print">{tierLabel}</div>
               <div style={{ fontSize: 11, color: "#94a3b8", marginTop: 8 }}>{today}</div>
             </div>
           </div>
@@ -242,6 +279,22 @@ export default async function PrintPage({
             <div className="description">
               <h3>{l.description}</h3>
               <p>{o.description}</p>
+            </div>
+          )}
+
+          {/* Focal Point Guidance — active outbreaks only */}
+          {o.active && (
+            <div className="fp-section">
+              <div className="fp-header">
+                <div className="fp-title">{fp.fpGuidance}</div>
+                <div className="fp-tier">{tierLabel}</div>
+              </div>
+              <div className="fp-actions-label">{fp.firstActions}</div>
+              <ul className="fp-actions">
+                {fpActions.map((action, i) => (
+                  <li key={i}>{action}</li>
+                ))}
+              </ul>
             </div>
           )}
 
