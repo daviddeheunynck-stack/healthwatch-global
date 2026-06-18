@@ -11,6 +11,7 @@ import OutbreakStatsGrid from "@/components/OutbreakStatsGrid";
 import { getLocalizedDisease, getLocalizedCountry, sourceStatus } from "@/lib/outbreaks";
 import { diseaseToSlug, normalizeDisease } from "@/lib/disease-data";
 import type { Outbreak } from "@/lib/outbreaks";
+import { getResponseGuidance, RESPONSE_ACTIONS } from "@/lib/response-guidance";
 import type { Metadata } from "next";
 
 export const revalidate = 3600;
@@ -36,6 +37,9 @@ const LABELS = {
     back: "← Tableau de bord",
     noData: "N/D",
     risk: { high: "RISQUE ÉLEVÉ", medium: "RISQUE MODÉRÉ", low: "RISQUE FAIBLE" },
+    fpGuidance: "Guide d'action — Point focal",
+    tierLabels: { immediate: "IMMÉDIAT · NOTIFICATION RSI", rapid: "RÉPONSE RAPIDE", monitor: "SURVEILLANCE STANDARD" },
+    firstActions: "Premières actions",
   },
   en: {
     cases: "Confirmed cases", deaths: "Deaths", cfr: "Case fatality rate",
@@ -50,6 +54,9 @@ const LABELS = {
     back: "← Dashboard",
     noData: "N/A",
     risk: { high: "HIGH RISK", medium: "MEDIUM RISK", low: "LOW RISK" },
+    fpGuidance: "Focal Point Guidance",
+    tierLabels: { immediate: "IMMEDIATE · IHR NOTIFIABLE", rapid: "RAPID RESPONSE", monitor: "STANDARD MONITORING" },
+    firstActions: "First actions",
   },
   es: {
     cases: "Casos confirmados", deaths: "Fallecidos", cfr: "Tasa de letalidad",
@@ -64,6 +71,9 @@ const LABELS = {
     back: "← Panel",
     noData: "N/D",
     risk: { high: "RIESGO ALTO", medium: "RIESGO MEDIO", low: "RIESGO BAJO" },
+    fpGuidance: "Guía para el Punto Focal",
+    tierLabels: { immediate: "INMEDIATO · NOTIFICABLE RSI", rapid: "RESPUESTA RÁPIDA", monitor: "VIGILANCIA ESTÁNDAR" },
+    firstActions: "Primeras acciones",
   },
   ar: {
     cases: "الحالات المؤكدة", deaths: "الوفيات", cfr: "معدل الوفيات",
@@ -78,6 +88,9 @@ const LABELS = {
     back: "→ لوحة التحكم",
     noData: "غ/م",
     risk: { high: "خطر عالٍ", medium: "خطر متوسط", low: "خطر منخفض" },
+    fpGuidance: "دليل نقطة الاتصال",
+    tierLabels: { immediate: "فوري · إخطار اللوائح الصحية الدولية", rapid: "استجابة سريعة", monitor: "مراقبة قياسية" },
+    firstActions: "الإجراءات الأولى",
   },
   id: {
     cases: "Kasus terkonfirmasi", deaths: "Kematian", cfr: "Tingkat kematian",
@@ -92,8 +105,11 @@ const LABELS = {
     back: "← Dasbor",
     noData: "T/S",
     risk: { high: "RISIKO TINGGI", medium: "RISIKO SEDANG", low: "RISIKO RENDAH" },
+    fpGuidance: "Panduan Focal Point",
+    tierLabels: { immediate: "SEGERA · WAJIB LAPOR IHR", rapid: "RESPONS CEPAT", monitor: "PEMANTAUAN STANDAR" },
+    firstActions: "Tindakan pertama",
   },
-} satisfies Record<string, { cases: string; deaths: string; cfr: string; date: string; region: string; sourceVerified: string; sourceOfficial: string; pheic: string; archived: string; ctaTitle: string; ctaSub: string; ctaProBtn: string; ctaFree: string; back: string; noData: string; risk: Record<string, string> }>;
+} satisfies Record<string, { cases: string; deaths: string; cfr: string; date: string; region: string; sourceVerified: string; sourceOfficial: string; pheic: string; archived: string; ctaTitle: string; ctaSub: string; ctaProBtn: string; ctaFree: string; back: string; noData: string; risk: Record<string, string>; fpGuidance: string; tierLabels: Record<string, string>; firstActions: string }>;
 
 const RISK_STYLE: Record<string, string> = {
   high:   "text-red-400 bg-red-500/10 border-red-500/30",
@@ -197,6 +213,13 @@ export default async function OutbreakPage({
   const status  = sourceStatus(o);
 
   const diseaseSlug = diseaseToSlug(normalizeDisease(o.disease_en || o.disease).name_en);
+  const guidance = getResponseGuidance(o.disease_en || o.disease);
+  const fpActions = RESPONSE_ACTIONS[guidance.tier][locale] ?? RESPONSE_ACTIONS[guidance.tier].en;
+  const TIER_STYLE: Record<string, string> = {
+    immediate: "text-red-400 bg-red-500/10 border-red-500/30",
+    rapid:     "text-yellow-400 bg-yellow-500/10 border-yellow-500/30",
+    monitor:   "text-gray-300 bg-gray-600/20 border-gray-500/30",
+  };
   const diseasesLabel: Record<string, string> = {
     fr: "Maladies", en: "Diseases", es: "Enfermedades", ar: "الأمراض", id: "Penyakit",
   };
@@ -316,6 +339,29 @@ export default async function OutbreakPage({
       {o.description && (
         <div className="bg-gray-800/30 rounded-lg p-4 border border-gray-700/50 mb-6">
           <p className="text-gray-300 text-sm leading-relaxed">{o.description}</p>
+        </div>
+      )}
+
+      {/* Focal Point Guidance — Respond tier */}
+      {o.active && (
+        <div className="bg-gray-800/30 rounded-lg p-4 border border-gray-700/50 mb-6">
+          <div className={`flex items-center gap-2 mb-3 ${isRtl ? "flex-row-reverse" : ""}`}>
+            <span className="text-xs font-semibold text-gray-400 uppercase tracking-wide">
+              {l.fpGuidance}
+            </span>
+            <span className={`text-xs font-bold px-2 py-0.5 rounded border ${TIER_STYLE[guidance.tier]}`}>
+              {l.tierLabels[guidance.tier]}
+            </span>
+          </div>
+          <p className="text-xs text-gray-500 mb-2 uppercase tracking-wide">{l.firstActions}</p>
+          <ul className={`space-y-1.5 ${isRtl ? "text-right" : ""}`}>
+            {fpActions.map((action, i) => (
+              <li key={i} className={`flex items-start gap-2 text-sm text-gray-300 ${isRtl ? "flex-row-reverse" : ""}`}>
+                <span className="text-gray-500 mt-0.5 shrink-0">{isRtl ? "←" : "→"}</span>
+                <span>{action}</span>
+              </li>
+            ))}
+          </ul>
         </div>
       )}
 
