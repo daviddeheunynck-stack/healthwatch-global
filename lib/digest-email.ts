@@ -1,6 +1,25 @@
 import type { Outbreak } from "./outbreaks";
+import { getResponseGuidance, RESPONSE_ACTIONS } from "./response-guidance";
 
 const RISK_COLORS = { high: "#ef4444", medium: "#f59e0b", low: "#22c55e" };
+
+const TIER_BADGE: Record<string, { style: string; labels: Record<string, string> }> = {
+  immediate: {
+    style: "background:#4c0519;color:#fda4af;border:1px solid #be123c;padding:2px 6px;border-radius:4px;font-size:10px;font-weight:700;",
+    labels: { en: "IMMEDIATE · IHR", fr: "IMMÉDIAT · RSI", es: "INMEDIATO · RSI", ar: "فوري · لوائح صحية", id: "SEGERA · IHR" },
+  },
+  rapid: {
+    style: "background:#422006;color:#fde68a;border:1px solid #b45309;padding:2px 6px;border-radius:4px;font-size:10px;font-weight:700;",
+    labels: { en: "RAPID RESPONSE", fr: "RÉPONSE RAPIDE", es: "RESPUESTA RÁPIDA", ar: "استجابة سريعة", id: "RESPONS CEPAT" },
+  },
+  monitor: {
+    style: "background:#1e293b;color:#64748b;border:1px solid #334155;padding:2px 6px;border-radius:4px;font-size:10px;font-weight:600;",
+    labels: { en: "MONITORING", fr: "SURVEILLANCE", es: "VIGILANCIA", ar: "مراقبة روتينية", id: "PEMANTAUAN" },
+  },
+};
+
+const ACTION_ROW_BG:    Record<string, string> = { immediate: "#1c0008", rapid: "#1a0f00" };
+const ACTION_TEXT_COLOR: Record<string, string> = { immediate: "#fda4af", rapid: "#fde68a" };
 
 const LABELS: Record<string, Record<string, string | string[]>> = {
   fr: {
@@ -138,22 +157,31 @@ export function buildDigestEmail(
     : outbreaks
         .sort((a, b) => ({ high: 0, medium: 1, low: 2 }[a.risk_level] - { high: 0, medium: 1, low: 2 }[b.risk_level]))
         .map((o) => {
-          const color = RISK_COLORS[o.risk_level] || "#6b7280";
+          const color     = RISK_COLORS[o.risk_level] || "#6b7280";
           const riskLabel = l[o.risk_level as "high" | "medium" | "low"] || o.risk_level;
-          const disease = getLocalizedName(o, locale, "disease");
-          const country = getLocalizedName(o, locale, "country");
+          const disease   = getLocalizedName(o, locale, "disease");
+          const country   = getLocalizedName(o, locale, "country");
+          const guidance  = getResponseGuidance(o.disease_en || o.disease);
+          const tier      = TIER_BADGE[guidance.tier];
+          const tierLabel = tier.labels[locale] ?? tier.labels.en;
+          const firstAction = (RESPONSE_ACTIONS[guidance.tier][locale] ?? RESPONSE_ACTIONS[guidance.tier].en)[0];
+          const showAction  = guidance.tier !== "monitor";
+          const actionBg    = ACTION_ROW_BG[guidance.tier];
+          const actionColor = ACTION_TEXT_COLOR[guidance.tier] ?? "#64748b";
           return `
-            <tr style="border-bottom:1px solid #1e293b;">
+            <tr style="border-bottom:${showAction ? "none" : "1px solid #1e293b"};">
               <td style="padding:12px 8px;color:#f1f5f9;font-weight:600;">${disease}</td>
               <td style="padding:12px 8px;color:#94a3b8;">${country}</td>
               <td style="padding:12px 8px;color:#e2e8f0;">${o.cases.toLocaleString()}</td>
               <td style="padding:12px 8px;color:#fca5a5;">${o.deaths.toLocaleString()}</td>
               <td style="padding:12px 8px;">
-                <span style="background:${color}22;color:${color};border:1px solid ${color}44;padding:2px 8px;border-radius:20px;font-size:12px;font-weight:600;">
-                  ${riskLabel}
-                </span>
+                <span style="background:${color}22;color:${color};border:1px solid ${color}44;padding:2px 8px;border-radius:20px;font-size:12px;font-weight:600;">${riskLabel}</span><br/>
+                <span style="display:inline-block;margin-top:4px;${tier.style}">${tierLabel}</span>
               </td>
-            </tr>`;
+            </tr>
+            ${showAction ? `<tr style="background:${actionBg};border-bottom:1px solid #1e293b;">
+              <td colspan="5" style="padding:6px 8px 10px;font-size:12px;color:${actionColor};font-style:italic;">▶ ${firstAction}</td>
+            </tr>` : ""}`;
         }).join("");
 
   const html = `
