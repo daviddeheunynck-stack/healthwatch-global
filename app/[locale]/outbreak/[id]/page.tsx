@@ -27,6 +27,7 @@ const LABELS = {
   fr: {
     cases: "Cas confirmés", deaths: "Décès", cfr: "Létalité",
     date: "Date", region: "Région",
+    printReport: "Rapport PDF",
     sourceVerified: "Bulletin OMS officiel", sourceOfficial: "Source officielle",
     pheic: "URGENCE SANITAIRE INTERNATIONALE (PHEIC)",
     archived: "Foyer terminé — données archivées",
@@ -46,6 +47,7 @@ const LABELS = {
   en: {
     cases: "Confirmed cases", deaths: "Deaths", cfr: "Case fatality rate",
     date: "Report date", region: "Region",
+    printReport: "PDF Report",
     sourceVerified: "Official WHO Disease Outbreak News", sourceOfficial: "Official source",
     pheic: "PUBLIC HEALTH EMERGENCY OF INTERNATIONAL CONCERN (PHEIC)",
     archived: "Outbreak resolved — archived data",
@@ -65,6 +67,7 @@ const LABELS = {
   es: {
     cases: "Casos confirmados", deaths: "Fallecidos", cfr: "Tasa de letalidad",
     date: "Fecha del informe", region: "Región",
+    printReport: "Informe PDF",
     sourceVerified: "Boletín oficial OMS", sourceOfficial: "Fuente oficial",
     pheic: "EMERGENCIA DE SALUD PÚBLICA DE IMPORTANCIA INTERNACIONAL (ESPII)",
     archived: "Brote resuelto — datos archivados",
@@ -84,6 +87,7 @@ const LABELS = {
   ar: {
     cases: "الحالات المؤكدة", deaths: "الوفيات", cfr: "معدل الوفيات",
     date: "تاريخ التقرير", region: "المنطقة",
+    printReport: "تقرير PDF",
     sourceVerified: "نشرة منظمة الصحة العالمية الرسمية", sourceOfficial: "مصدر رسمي",
     pheic: "طوارئ الصحة العمومية التي تثير قلقاً دولياً",
     archived: "انتهى التفشي — بيانات مؤرشفة",
@@ -103,6 +107,7 @@ const LABELS = {
   id: {
     cases: "Kasus terkonfirmasi", deaths: "Kematian", cfr: "Tingkat kematian",
     date: "Tanggal laporan", region: "Wilayah",
+    printReport: "Laporan PDF",
     sourceVerified: "Buletin resmi WHO", sourceOfficial: "Sumber resmi",
     pheic: "KEDARURATAN KESEHATAN MASYARAKAT YANG MERESAHKAN DUNIA (KKMMD)",
     archived: "Wabah selesai — data diarsipkan",
@@ -119,7 +124,7 @@ const LABELS = {
     reportingLag: "Tanggal laporan resmi — di zona terisolasi, onset di lapangan biasanya mendahului tanggal ini beberapa hari hingga minggu.",
     staleBulletin: (d: number) => `Tidak ada buletin resmi dalam ${d} hari — mungkin sudah selesai atau tidak dilaporkan.`,
   },
-} satisfies Record<string, { cases: string; deaths: string; cfr: string; date: string; region: string; sourceVerified: string; sourceOfficial: string; pheic: string; archived: string; ctaTitle: string; ctaSub: string; ctaProBtn: string; ctaFree: string; back: string; noData: string; risk: Record<string, string>; fpGuidance: string; tierLabels: Record<string, string>; firstActions: string; reportingLag: string; staleBulletin: (d: number) => string }>;
+} satisfies Record<string, { cases: string; deaths: string; cfr: string; date: string; region: string; printReport: string; sourceVerified: string; sourceOfficial: string; pheic: string; archived: string; ctaTitle: string; ctaSub: string; ctaProBtn: string; ctaFree: string; back: string; noData: string; risk: Record<string, string>; fpGuidance: string; tierLabels: Record<string, string>; firstActions: string; reportingLag: string; staleBulletin: (d: number) => string }>;
 
 const RISK_STYLE: Record<string, string> = {
   high:   "text-red-400 bg-red-500/10 border-red-500/30",
@@ -399,6 +404,19 @@ export default async function OutbreakPage({
           <span className="text-gray-600">↗</span>
         </div>
       )}
+
+      {/* PDF Report — Pro feature, print page handles auth/gating */}
+      <div className={`mb-6 flex ${isRtl ? "justify-start" : "justify-end"}`}>
+        <Link
+          href={`/${locale}/outbreak/${id}/print`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-2 text-xs font-medium text-gray-300 hover:text-white bg-gray-800/60 hover:bg-gray-700 border border-gray-700 hover:border-gray-500 px-3 py-1.5 rounded-lg transition-colors"
+        >
+          <span>🖨️</span>
+          {l.printReport}
+        </Link>
+      </div>
 
       {/* CTA */}
       <div className="mt-10 p-6 rounded-xl border border-red-500/20 bg-red-500/5 text-center space-y-4">
