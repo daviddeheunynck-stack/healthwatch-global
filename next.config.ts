@@ -110,6 +110,31 @@ const nextConfig: NextConfig = {
       },
     ];
   },
+
+  async redirects() {
+    // Short-slug aliases → canonical disease page slugs (permanent 301).
+    // Lets us share /en/disease/ebola in posts even though the canonical
+    // slug is /en/disease/ebola-virus-disease.
+    const aliases: Array<[string, string]> = [
+      ["ebola",      "ebola-virus-disease"],
+      ["marburg",    "marburg-virus-disease"],
+      ["dengue",     "dengue-fever"],
+      ["lassa",      "lassa-fever"],
+      ["nipah",      "nipah-virus"],
+      ["typhoid",    "typhoid-fever"],
+      ["zika",       "zika-virus"],
+      ["oropouche",  "oropouche-virus-disease"],
+      ["west-nile",  "west-nile-fever"],
+      ["cchf",       "crimean-congo-haemorrhagic-fever"],
+      ["bird-flu",   "avian-influenza"],
+      ["avian-flu",  "avian-influenza"],
+    ];
+    return aliases.map(([short, canonical]) => ({
+      source:      `/:locale/disease/${short}`,
+      destination: `/:locale/disease/${canonical}`,
+      permanent:   true,
+    }));
+  },
 };
 
 // Only wrap with Sentry when org + project + auth token are all configured.
