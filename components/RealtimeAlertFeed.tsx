@@ -52,7 +52,7 @@ export default function RealtimeAlertFeed() {
 
   // Connect to Supabase Realtime (Pro/Enterprise only)
   useEffect(() => {
-    if (plan !== "pro" && plan !== "enterprise") return;
+    if (plan !== "pro" && plan !== "team" && plan !== "enterprise") return;
 
     const supabase = createClient();
     const channel = supabase
@@ -101,7 +101,7 @@ export default function RealtimeAlertFeed() {
   }
 
   // Free or Starter plan — upgrade prompt
-  if (plan !== "pro" && plan !== "enterprise") {
+  if (plan !== "pro" && plan !== "team" && plan !== "enterprise") {
     return (
       <div className="bg-gray-900 border border-gray-800 rounded-xl p-6 flex flex-col items-center gap-3 text-center">
         <Zap className="w-8 h-8 text-yellow-500" />

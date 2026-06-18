@@ -108,7 +108,7 @@ export default function AlertsPage() {
     });
   }, []);
 
-  const isPaid = plan === "pro" || plan === "enterprise";
+  const isPaid = plan === "starter" || plan === "pro" || plan === "team" || plan === "enterprise";
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
