@@ -1,4 +1,4 @@
-import { CheckCircle, Clock, Users, Shield, ArrowRight } from "lucide-react";
+import { CheckCircle, Clock, Users, Shield, Zap, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase-server";
 import type { Metadata } from "next";
