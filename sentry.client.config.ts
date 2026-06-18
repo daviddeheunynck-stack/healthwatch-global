@@ -7,6 +7,11 @@ Sentry.init({
   replaysOnErrorSampleRate: 1.0,
   replaysSessionSampleRate: 0.01,
   integrations: [Sentry.replayIntegration()],
-  // Next.js throws these internally to signal 404/redirect — not real errors
   ignoreErrors: ["NEXT_NOT_FOUND", "NEXT_REDIRECT"],
+  beforeSend(event, hint) {
+    const err = hint.originalException as { digest?: string } | null;
+    if (err?.digest === "NEXT_NOT_FOUND") return null;
+    if (err?.digest?.startsWith("NEXT_REDIRECT")) return null;
+    return event;
+  },
 });
