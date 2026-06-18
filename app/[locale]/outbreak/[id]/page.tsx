@@ -8,7 +8,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import CheckoutButton from "@/components/CheckoutButton";
 import OutbreakStatsGrid from "@/components/OutbreakStatsGrid";
-import { getLocalizedDisease, getLocalizedCountry, sourceStatus } from "@/lib/outbreaks";
+import { getLocalizedDisease, getLocalizedCountry, sourceStatus, staleOutbreakDays } from "@/lib/outbreaks";
 import { diseaseToSlug, normalizeDisease } from "@/lib/disease-data";
 import type { Outbreak } from "@/lib/outbreaks";
 import { getResponseGuidance, RESPONSE_ACTIONS } from "@/lib/response-guidance";
@@ -40,6 +40,8 @@ const LABELS = {
     fpGuidance: "Guide d'action — Point focal",
     tierLabels: { immediate: "IMMÉDIAT · NOTIFICATION RSI", rapid: "RÉPONSE RAPIDE", monitor: "SURVEILLANCE STANDARD" },
     firstActions: "Premières actions",
+    reportingLag: "Date de rapport officiel — dans les zones enclavées, le signal de terrain précède généralement cette date de plusieurs jours à plusieurs semaines.",
+    staleBulletin: (d: number) => `Aucun bulletin officiel depuis ${d} jours — foyer peut-être résolu ou non rapporté.`,
   },
   en: {
     cases: "Confirmed cases", deaths: "Deaths", cfr: "Case fatality rate",
@@ -57,6 +59,8 @@ const LABELS = {
     fpGuidance: "Focal Point Guidance",
     tierLabels: { immediate: "IMMEDIATE · IHR NOTIFIABLE", rapid: "RAPID RESPONSE", monitor: "STANDARD MONITORING" },
     firstActions: "First actions",
+    reportingLag: "Official report date — in isolated zones, field onset typically precedes this by days to weeks.",
+    staleBulletin: (d: number) => `No official bulletin in ${d} days — may be resolved or unreported in isolated areas.`,
   },
   es: {
     cases: "Casos confirmados", deaths: "Fallecidos", cfr: "Tasa de letalidad",
@@ -74,6 +78,8 @@ const LABELS = {
     fpGuidance: "Guía para el Punto Focal",
     tierLabels: { immediate: "INMEDIATO · NOTIFICABLE RSI", rapid: "RESPUESTA RÁPIDA", monitor: "VIGILANCIA ESTÁNDAR" },
     firstActions: "Primeras acciones",
+    reportingLag: "Fecha del informe oficial — en zonas aisladas, el inicio en el campo suele preceder a esta fecha por días o semanas.",
+    staleBulletin: (d: number) => `Sin boletín oficial en ${d} días — puede estar resuelto o sin reporte en zonas aisladas.`,
   },
   ar: {
     cases: "الحالات المؤكدة", deaths: "الوفيات", cfr: "معدل الوفيات",
@@ -91,6 +97,8 @@ const LABELS = {
     fpGuidance: "دليل نقطة الاتصال",
     tierLabels: { immediate: "فوري · إخطار اللوائح الصحية الدولية", rapid: "استجابة سريعة", monitor: "مراقبة قياسية" },
     firstActions: "الإجراءات الأولى",
+    reportingLag: "تاريخ التقرير الرسمي — في المناطق المعزولة، يسبق ظهور المرض ميدانياً هذا التاريخ بأيام إلى أسابيع.",
+    staleBulletin: (d: number) => `لا يوجد نشرة رسمية منذ ${d} يوماً — قد يكون التفشي انتهى أو غير مُبلَّغ عنه.`,
   },
   id: {
     cases: "Kasus terkonfirmasi", deaths: "Kematian", cfr: "Tingkat kematian",
@@ -108,8 +116,10 @@ const LABELS = {
     fpGuidance: "Panduan Focal Point",
     tierLabels: { immediate: "SEGERA · WAJIB LAPOR IHR", rapid: "RESPONS CEPAT", monitor: "PEMANTAUAN STANDAR" },
     firstActions: "Tindakan pertama",
+    reportingLag: "Tanggal laporan resmi — di zona terisolasi, onset di lapangan biasanya mendahului tanggal ini beberapa hari hingga minggu.",
+    staleBulletin: (d: number) => `Tidak ada buletin resmi dalam ${d} hari — mungkin sudah selesai atau tidak dilaporkan.`,
   },
-} satisfies Record<string, { cases: string; deaths: string; cfr: string; date: string; region: string; sourceVerified: string; sourceOfficial: string; pheic: string; archived: string; ctaTitle: string; ctaSub: string; ctaProBtn: string; ctaFree: string; back: string; noData: string; risk: Record<string, string>; fpGuidance: string; tierLabels: Record<string, string>; firstActions: string }>;
+} satisfies Record<string, { cases: string; deaths: string; cfr: string; date: string; region: string; sourceVerified: string; sourceOfficial: string; pheic: string; archived: string; ctaTitle: string; ctaSub: string; ctaProBtn: string; ctaFree: string; back: string; noData: string; risk: Record<string, string>; fpGuidance: string; tierLabels: Record<string, string>; firstActions: string; reportingLag: string; staleBulletin: (d: number) => string }>;
 
 const RISK_STYLE: Record<string, string> = {
   high:   "text-red-400 bg-red-500/10 border-red-500/30",
@@ -213,6 +223,7 @@ export default async function OutbreakPage({
   const status  = sourceStatus(o);
 
   const diseaseSlug = diseaseToSlug(normalizeDisease(o.disease_en || o.disease).name_en);
+  const staleDays = staleOutbreakDays(o);
   const guidance = getResponseGuidance(o.disease_en || o.disease);
   const fpActions = RESPONSE_ACTIONS[guidance.tier][locale] ?? RESPONSE_ACTIONS[guidance.tier].en;
   const TIER_STYLE: Record<string, string> = {
@@ -322,9 +333,10 @@ export default async function OutbreakPage({
       {/* Meta */}
       <div className="bg-gray-800/30 rounded-lg p-4 border border-gray-700/50 mb-6 grid grid-cols-2 gap-3 text-sm">
         {o.date && (
-          <div>
+          <div className="col-span-2 sm:col-span-1">
             <span className="text-gray-400">{l.date} : </span>
             <span className="text-white font-medium">{o.date}</span>
+            <p className="text-[11px] text-gray-500 mt-0.5 leading-snug">{l.reportingLag}</p>
           </div>
         )}
         {o.region && (
@@ -334,6 +346,14 @@ export default async function OutbreakPage({
           </div>
         )}
       </div>
+
+      {/* Stale bulletin warning */}
+      {staleDays !== null && (
+        <div className="flex items-start gap-2 bg-orange-500/5 border border-orange-500/20 rounded-lg px-4 py-3 mb-6 text-sm text-orange-300">
+          <span className="shrink-0 mt-0.5">⚠</span>
+          <span>{l.staleBulletin(staleDays)}</span>
+        </div>
+      )}
 
       {/* Description */}
       {o.description && (

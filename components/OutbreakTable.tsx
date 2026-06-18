@@ -10,7 +10,7 @@ import { track } from "@vercel/analytics/react";
 
 type SortKey = "risk" | "cases" | "deaths" | "cfr" | "date";
 type SortDir = "asc" | "desc";
-import { getLocalizedDisease, getLocalizedCountry, isNewOutbreak, sourceStatus, sourceName } from "@/lib/outbreaks";
+import { getLocalizedDisease, getLocalizedCountry, isNewOutbreak, staleOutbreakDays, sourceStatus, sourceName } from "@/lib/outbreaks";
 import { diseaseToSlug, normalizeDisease } from "@/lib/disease-data";
 import type { Outbreak } from "@/lib/outbreaks";
 import type { OutbreakTrend } from "@/lib/outbreak-trend";
@@ -578,6 +578,17 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
                           {l.illustrativeBadge}
                         </span>
                       )}
+                      {(() => {
+                        const d = staleOutbreakDays(outbreak);
+                        if (!d) return null;
+                        const label = { fr: `SANS MAJ · ${d}j`, en: `NO UPDATE · ${d}d`, es: `SIN ACTU. · ${d}d`, ar: `${d}د · بلا تحديث`, id: `TK ADA UPDATE · ${d}h` }[locale] ?? `NO UPDATE · ${d}d`;
+                        const tip   = { fr: `Aucun bulletin officiel depuis ${d} jours — foyer peut-être résolu ou non rapporté`, en: `No official bulletin in ${d} days — may be resolved or unreported`, es: `Sin boletín oficial en ${d} días — puede estar resuelto o sin reporte`, ar: `لا يوجد نشرة رسمية منذ ${d} يوماً`, id: `Tidak ada buletin resmi dalam ${d} hari` }[locale] ?? `No official update in ${d} days`;
+                        return (
+                          <span title={tip} className="inline-flex items-center text-[10px] font-bold px-1.5 py-0.5 rounded bg-orange-900/30 border border-orange-700/50 text-orange-400 shrink-0 cursor-help whitespace-nowrap">
+                            ⚠ {label}
+                          </span>
+                        );
+                      })()}
                     </div>
                   </td>
                   <td className="px-4 py-3 text-gray-300">

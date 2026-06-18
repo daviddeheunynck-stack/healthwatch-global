@@ -335,6 +335,23 @@ export function isNewOutbreak(outbreak: Outbreak): boolean {
   return Date.now() - new Date(ref).getTime() < 24 * 60 * 60 * 1000;
 }
 
+const STALE_DAYS = 60;
+
+/**
+ * Returns how many days since the last official update for an active outbreak,
+ * or null if the outbreak is not stale (< STALE_DAYS) or not active.
+ *
+ * A stale active outbreak signals either resolution without a closing bulletin,
+ * or a reporting gap — both meaningful for surveillance in enclosed zones.
+ */
+export function staleOutbreakDays(outbreak: Outbreak): number | null {
+  if (!outbreak.active) return null;
+  const ref = outbreak.updated_at ?? outbreak.date;
+  if (!ref) return null;
+  const days = Math.floor((Date.now() - new Date(ref).getTime()) / 86_400_000);
+  return days >= STALE_DAYS ? days : null;
+}
+
 // A real, citable WHO Disease Outbreak News article, e.g.
 // "https://www.who.int/emergencies/disease-outbreak-news/item/2026-DON606".
 // Same pattern as scripts/cleanup-fictional-outbreaks.mjs's REAL_DON check.
