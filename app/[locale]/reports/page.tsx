@@ -140,7 +140,7 @@ async function ReportsContent() {
     }
   }
 
-  const isPaid = plan === "starter" || plan === "pro" || plan === "enterprise";
+  const isPaid = plan === "starter" || plan === "pro" || plan === "team" || plan === "enterprise";
   const pc = PAYWALL_COPY[locale] ?? PAYWALL_COPY.en;
 
   const outbreaks = await getOutbreaks();
