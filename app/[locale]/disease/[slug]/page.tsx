@@ -7,6 +7,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { slugToDisease, diseaseToSlug, allDiseases, normalizeDisease, localizedDiseaseName } from "@/lib/disease-data";
+import { countryToSlug } from "@/lib/country-utils";
 import type { PathogenType, TransmissionMode, VaccineStatus, TreatmentStatus } from "@/lib/disease-data";
 import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 import { getOutbreakTrendsBulk } from "@/lib/outbreak-trend";
@@ -320,6 +321,18 @@ export default async function DiseasePage({
   const cfr         = totalCases > 0 ? ((totalDeaths / totalCases) * 100).toFixed(1) : null;
   const countriesSet = new Set(allOutbreaks.map((o) => o.country_en || o.country).filter(Boolean));
 
+  // Unique countries with active-status for the "Countries affected" chips
+  const affectedCountryMap = new Map<string, { country_en: string; hasActive: boolean }>();
+  for (const o of allOutbreaks) {
+    const key = o.country_en || o.country;
+    if (!key) continue;
+    const existing = affectedCountryMap.get(key);
+    if (existing) { if (o.active) existing.hasActive = true; }
+    else affectedCountryMap.set(key, { country_en: o.country_en ?? key, hasActive: o.active ?? false });
+  }
+  const affectedCountries = [...affectedCountryMap.values()]
+    .sort((a, b) => (b.hasActive ? 1 : 0) - (a.hasActive ? 1 : 0) || a.country_en.localeCompare(b.country_en));
+
   const supabase = createClient(
     clean(process.env.NEXT_PUBLIC_SUPABASE_URL),
     clean(process.env.SUPABASE_SERVICE_ROLE_KEY)
@@ -576,6 +589,32 @@ export default async function DiseasePage({
 
       {history.length === 0 && active.length === 0 && (
         <p className="text-gray-500 text-sm">{lb.noHistory}</p>
+      )}
+
+      {/* Countries affected */}
+      {affectedCountries.length > 0 && (
+        <section className="space-y-3">
+          <h2 className="text-lg font-semibold text-white">
+            {l === "fr" ? "Pays touchés" : l === "es" ? "Países afectados" : l === "ar" ? "الدول المتضررة" : l === "id" ? "Negara terdampak" : "Countries affected"}
+            <span className="ml-2 text-sm font-normal text-gray-500">({affectedCountries.length})</span>
+          </h2>
+          <div className="flex flex-wrap gap-2">
+            {affectedCountries.map(({ country_en, hasActive }) => (
+              <Link
+                key={country_en}
+                href={`/${l}/country/${countryToSlug(country_en)}`}
+                className={`inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-full border transition-colors hover:scale-[1.03] ${
+                  hasActive
+                    ? "bg-red-950/30 border-red-800/40 text-red-300 hover:border-red-600/60"
+                    : "bg-gray-900/50 border-gray-800 text-gray-400 hover:border-gray-600 hover:text-gray-200"
+                }`}
+              >
+                {hasActive && <span className="w-1.5 h-1.5 rounded-full bg-red-400 animate-pulse shrink-0" />}
+                {country_en}
+              </Link>
+            ))}
+          </div>
+        </section>
       )}
 
       {/* Email capture CTA */}
