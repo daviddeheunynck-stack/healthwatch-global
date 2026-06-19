@@ -640,6 +640,58 @@ export default async function LandingPage({ locale }: { locale: string }) {
       {/* ── World map ────────────────────────────────────────────────────── */}
       <LandingMapSection outbreaks={outbreaks} locale={locale} />
 
+      {/* ── New this week ────────────────────────────────────────────────── */}
+      {(() => {
+        const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
+        const newThis = outbreaks.filter((o) => o.date >= sevenDaysAgo).slice(0, 5);
+        if (newThis.length === 0) return null;
+
+        const NTW: Record<string, { title: string; sub: string; viewAll: string }> = {
+          fr: { title: "Nouveau cette semaine", sub: "Foyers rapportés par l'OMS ces 7 derniers jours", viewAll: "Voir tout →" },
+          en: { title: "New this week", sub: "Outbreaks newly reported by WHO in the last 7 days", viewAll: "View all →" },
+          es: { title: "Nuevo esta semana", sub: "Brotes recién reportados por la OMS en los últimos 7 días", viewAll: "Ver todo →" },
+          ar: { title: "جديد هذا الأسبوع", sub: "تفشيات بلّغت عنها منظمة الصحة العالمية خلال الأيام السبعة الماضية", viewAll: "← عرض الكل" },
+          id: { title: "Baru minggu ini", sub: "Wabah yang baru dilaporkan WHO dalam 7 hari terakhir", viewAll: "Lihat semua →" },
+        };
+        const ntw = NTW[locale] ?? NTW.en;
+        const isRtl = locale === "ar";
+        const RISK_DOT: Record<string, string> = { high: "bg-red-500", medium: "bg-yellow-500", low: "bg-green-500" };
+
+        return (
+          <section className="space-y-4" dir={isRtl ? "rtl" : undefined}>
+            <div className={`flex items-end justify-between ${isRtl ? "flex-row-reverse" : ""}`}>
+              <div>
+                <h2 className="text-xl md:text-2xl font-bold text-white">{ntw.title}</h2>
+                <p className="text-sm text-gray-400 mt-0.5">{ntw.sub}</p>
+              </div>
+              <Link href={`/${locale}`} className="text-xs text-red-400 hover:text-red-300 transition-colors shrink-0">
+                {ntw.viewAll}
+              </Link>
+            </div>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
+              {newThis.map((o) => {
+                const dName = getLocalizedDisease(o, locale);
+                const cName = getLocalizedCountry(o, locale);
+                return (
+                  <Link
+                    key={o.id}
+                    href={`/${locale}/outbreak/${o.id}`}
+                    className="group flex items-start gap-3 bg-gray-900 border border-gray-800 hover:border-gray-600 rounded-xl p-4 transition-colors"
+                  >
+                    <span className={`mt-1.5 w-2 h-2 rounded-full shrink-0 ${RISK_DOT[o.risk_level] ?? "bg-gray-500"}`} />
+                    <div className="min-w-0">
+                      <p className="text-sm font-semibold text-white truncate group-hover:text-red-300 transition-colors">{dName}</p>
+                      <p className="text-xs text-gray-400 truncate">📍 {cName}</p>
+                      <p className="text-[11px] text-gray-600 mt-0.5">{o.date}</p>
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
+          </section>
+        );
+      })()}
+
       {/* ── Features ─────────────────────────────────────────────────────── */}
       <section className="space-y-10">
         <h2 className="text-2xl md:text-3xl font-bold text-white text-center">{c.featuresTitle}</h2>
