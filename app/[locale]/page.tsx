@@ -288,13 +288,13 @@ async function DashboardContent({ demo = false }: { demo?: boolean }) {
             <span className="font-semibold text-white">{getLocalizedDisease(top, locale)}</span>
             <span className="text-gray-600">·</span>
             <span className="text-gray-400">{getLocalizedCountry(top, locale)}</span>
-            {top.cases > 0 && (
+            {isPaid && top.cases > 0 && (
               <>
                 <span className="text-gray-600">·</span>
                 <span className="text-gray-300">{top.cases.toLocaleString("en")} {snap.cases}</span>
               </>
             )}
-            {cfr && (
+            {isPaid && cfr && (
               <>
                 <span className="text-gray-600">·</span>
                 <span className="text-red-400 font-medium">{cfr}% {snap.cfr}</span>
