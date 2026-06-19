@@ -148,10 +148,11 @@ export default function UpgradeModal({ feature, onClose }: Props) {
   const { Icon, ring, iconColor, bg } = FEATURE_CONFIG[feature];
 
   const [trialExpired, setTrialExpired] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(true); // optimistic
   useEffect(() => {
     const supabase = createClient();
     supabase.auth.getUser().then(({ data: { user } }) => {
-      if (!user) return;
+      if (!user) { setIsAuthenticated(false); return; }
       supabase.from("profiles").select("plan, trial_ends_at, stripe_subscription_id").eq("id", user.id).single()
         .then(({ data }) => {
           if (data?.plan !== "free" && data?.trial_ends_at && new Date(data.trial_ends_at).getTime() < Date.now() && !data?.stripe_subscription_id) {
@@ -229,16 +230,31 @@ export default function UpgradeModal({ feature, onClose }: Props) {
           ))}
         </ul>
 
-        {/* CTA — direct checkout, no pricing page friction */}
-        <div onClick={() => { track("upgrade_modal_cta", { feature, locale }); onClose(); }}>
-          <CheckoutButton
-            plan="pro"
-            locale={locale}
-            label={trialExpired ? c.ctaExpired : c.cta}
-            className="w-full bg-red-600 hover:bg-red-500 text-white font-bold py-3.5 rounded-xl transition-all shadow-lg shadow-red-900/30 text-sm"
-          />
-        </div>
-        <p className="text-center text-xs text-gray-600 mt-2">{trialExpired ? c.trialExpired : c.trial}</p>
+        {/* CTA — direct checkout for logged-in users; signup link for demo visitors */}
+        {isAuthenticated ? (
+          <>
+            <div onClick={() => { track("upgrade_modal_cta", { feature, locale }); onClose(); }}>
+              <CheckoutButton
+                plan="pro"
+                locale={locale}
+                label={trialExpired ? c.ctaExpired : c.cta}
+                className="w-full bg-red-600 hover:bg-red-500 text-white font-bold py-3.5 rounded-xl transition-all shadow-lg shadow-red-900/30 text-sm"
+              />
+            </div>
+            <p className="text-center text-xs text-gray-600 mt-2">{trialExpired ? c.trialExpired : c.trial}</p>
+          </>
+        ) : (
+          <>
+            <Link
+              href={`/${locale}/signup`}
+              onClick={() => { track("upgrade_modal_cta", { feature, locale }); onClose(); }}
+              className="block w-full text-center bg-red-600 hover:bg-red-500 text-white font-bold py-3.5 rounded-xl transition-all shadow-lg shadow-red-900/30 text-sm"
+            >
+              {c.cta}
+            </Link>
+            <p className="text-center text-xs text-gray-600 mt-2">{c.trial}</p>
+          </>
+        )}
         <p className="text-center">
           <Link
             href={`/${locale}/pricing`}

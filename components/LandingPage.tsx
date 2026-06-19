@@ -18,6 +18,7 @@ const COPY: Record<string, {
   heroSub: string;
   heroCta: string;
   heroCtaSecondary: string;
+  heroCtaDemo: string;
   heroNoCc: string;
   // Stats bar
   statOutbreaks: string;
@@ -86,6 +87,7 @@ const COPY: Record<string, {
     heroSub: "Épidémiologiste, médecin, consultant ou analyste santé — vous consultez déjà l'OMS, l'ECDC, l'OPAS et l'Africa CDC. HealthWatch les agrège en un seul tableau de bord, calcule automatiquement la létalité, et vous alerte dès la publication.",
     heroCta: "Créer un compte gratuit",
     heroCtaSecondary: "Voir les tarifs",
+    heroCtaDemo: "Voir le tableau de bord en direct →",
     heroNoCc: "Gratuit · 14 jours Pro offerts · Sans carte bancaire",
     statOutbreaks: "foyers actifs",
     statCountries: "pays touchés",
@@ -163,6 +165,7 @@ const COPY: Record<string, {
     heroSub: "Epidemiologist, travel medicine doctor, or health consultant — you already cross-reference WHO, ECDC, PAHO and Africa CDC. HealthWatch aggregates all four, calculates CFR automatically, and alerts you within hours of publication.",
     heroCta: "Create free account",
     heroCtaSecondary: "See pricing",
+    heroCtaDemo: "Try the live dashboard →",
     heroNoCc: "Free · 14-day Pro trial · No credit card required",
     statOutbreaks: "active outbreaks",
     statCountries: "countries affected",
@@ -240,6 +243,7 @@ const COPY: Record<string, {
     heroSub: "Epidemiólogo, médico, consultor o analista de salud — usted ya cruza datos de OMS, ECDC, OPS y Africa CDC. HealthWatch los agrega en un solo panel, calcula el CFR automáticamente y le alerta en horas tras cada publicación oficial.",
     heroCta: "Crear cuenta gratuita",
     heroCtaSecondary: "Ver precios",
+    heroCtaDemo: "Ver el panel en directo →",
     heroNoCc: "Gratis · 14 días Pro de prueba · Sin tarjeta de crédito",
     statOutbreaks: "brotes activos",
     statCountries: "países afectados",
@@ -317,6 +321,7 @@ const COPY: Record<string, {
     heroSub: "عالم أوبئة، طبيب، مستشار أو محلل صحي — أنت تتقاطع بيانات منظمة الصحة العالمية وECDC وPAHO وAfrica CDC. HealthWatch يجمعها في لوحة واحدة، يحسب معدل الوفيات تلقائياً، ويُنبِّهك في ساعات من النشر الرسمي.",
     heroCta: "إنشاء حساب مجاني",
     heroCtaSecondary: "عرض الأسعار",
+    heroCtaDemo: "← تجربة لوحة التحكم مباشرةً",
     heroNoCc: "مجاني · 14 يوم Pro مجاناً · لا بطاقة بنكية مطلوبة",
     statOutbreaks: "تفشيات نشطة",
     statCountries: "دول متضررة",
@@ -394,6 +399,7 @@ const COPY: Record<string, {
     heroSub: "Epidemiolog, dokter, konsultan atau analis kesehatan — Anda sudah memeriksa silang data WHO, ECDC, PAHO dan Africa CDC. HealthWatch mengagregasi keempatnya dalam satu dasbor, menghitung CFR secara otomatis, dan memberi tahu Anda dalam hitungan jam setelah publikasi resmi.",
     heroCta: "Buat akun gratis",
     heroCtaSecondary: "Lihat harga",
+    heroCtaDemo: "Coba dasbor langsung →",
     heroNoCc: "Gratis · 14 hari Pro gratis · Tanpa kartu kredit",
     statOutbreaks: "wabah aktif",
     statCountries: "negara terdampak",
@@ -517,6 +523,12 @@ export default async function LandingPage({ locale }: { locale: string }) {
             >
               {c.heroCta}
               <ArrowRight className="w-4 h-4" />
+            </Link>
+            <Link
+              href={`/${locale}?demo=1`}
+              className="inline-flex items-center gap-2 bg-blue-900/60 hover:bg-blue-800/60 border border-blue-700/50 text-blue-200 font-semibold px-8 py-4 rounded-xl transition-colors text-sm"
+            >
+              {c.heroCtaDemo}
             </Link>
             <Link
               href={`/${locale}/pricing`}

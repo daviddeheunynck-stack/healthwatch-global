@@ -15,6 +15,7 @@ import PushNotificationBanner from "@/components/PushNotificationBanner";
 import CsvExportButton from "@/components/CsvExportButton";
 import OnboardingTour from "@/components/OnboardingTour";
 import FreePlanBanner from "@/components/FreePlanBanner";
+import DemoBanner from "@/components/DemoBanner";
 import { Suspense } from "react";
 import type { Metadata } from "next";
 
@@ -126,43 +127,42 @@ export async function generateMetadata({
   };
 }
 
-async function DashboardContent() {
+async function DashboardContent({ demo = false }: { demo?: boolean }) {
   const locale = await getLocale();
   const t = await getTranslations("dashboard");
   const tRisk = await getTranslations("risk");
   const tAlerts = await getTranslations("alerts");
 
-  // Check user plan
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-
+  // Check user plan — skipped entirely in demo mode (treat as anonymous free visitor)
   let plan = "free";
   let trialEndsAt: string | null = null;
   let hasStripeSubscription = false;
   let trialExpired = false;
-  if (user) {
-    const { data: profile } = await supabase
-      .from("profiles")
-      .select("plan, trial_ends_at, stripe_subscription_id")
-      .eq("id", user.id)
-      .single();
-    plan = profile?.plan || "free";
-    trialEndsAt = profile?.trial_ends_at ?? null;
+  if (!demo) {
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    if (user) {
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("plan, trial_ends_at, stripe_subscription_id")
+        .eq("id", user.id)
+        .single();
+      plan = profile?.plan || "free";
+      trialEndsAt = profile?.trial_ends_at ?? null;
 
-    // Server-side trial expiry guard: if trial_ends_at has passed and the user
-    // has no Stripe subscription, treat them as free immediately.
-    // (The expire-trials cron also handles this async, but this catches the gap
-    // on every page load so there's zero grace period after trial expiry.)
-    hasStripeSubscription = Boolean(profile?.stripe_subscription_id);
-    if (
-      plan !== "free" &&
-      trialEndsAt &&
-      new Date(trialEndsAt).getTime() < Date.now() &&
-      !hasStripeSubscription
-    ) {
-      plan = "free";
-      trialEndsAt = null;
-      trialExpired = true;
+      // Server-side trial expiry guard: if trial_ends_at has passed and the user
+      // has no Stripe subscription, treat them as free immediately.
+      hasStripeSubscription = Boolean(profile?.stripe_subscription_id);
+      if (
+        plan !== "free" &&
+        trialEndsAt &&
+        new Date(trialEndsAt).getTime() < Date.now() &&
+        !hasStripeSubscription
+      ) {
+        plan = "free";
+        trialEndsAt = null;
+        trialExpired = true;
+      }
     }
   }
 
@@ -256,20 +256,18 @@ async function DashboardContent() {
 
   return (
     <>
-      <OnboardingTour isPaid={isPaid} />
+      {demo && <DemoBanner locale={locale} />}
 
-      {showTrialBanner && (
+      {!demo && <OnboardingTour isPaid={isPaid} />}
+
+      {!demo && showTrialBanner && (
         <TrialBanner trialEndsAt={trialEndsAt!} locale={locale} hasBilling={hasStripeSubscription} />
       )}
-      {showFreeBanner && (
+      {!demo && showFreeBanner && (
         <FreePlanBanner locale={locale} trialExpired={trialExpired} />
       )}
 
-      {/* Push opt-in nudge — self-hides (unsupported / already subscribed /
-          dismissed / denied), so it only ever reaches someone for whom one
-          click becomes a live "it actually pinged me" demo. See
-          PushNotificationBanner for the full marketing rationale. */}
-      <PushNotificationBanner locale={locale} />
+      {!demo && <PushNotificationBanner locale={locale} />}
 
       {/* Situation Snapshot — top-priority outbreak at a glance */}
       {stats.topOutbreak && (() => {
@@ -355,15 +353,19 @@ async function DashboardContent() {
 
 export default async function DashboardPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ locale: string }>;
+  searchParams?: Promise<Record<string, string | string[] | undefined>>;
 }) {
   const { locale } = await params;
+  const sp = searchParams ? await searchParams : {};
+  const isDemo = sp?.demo === "1";
 
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 
-  if (!user) {
+  if (!user && !isDemo) {
     const schemas = [
       {
         "@context": "https://schema.org",
@@ -440,7 +442,7 @@ export default async function DashboardPage({
           {t("loading")}
         </div>
       }>
-        <DashboardContent />
+        <DashboardContent demo={isDemo && !user} />
       </Suspense>
     </div>
   );
