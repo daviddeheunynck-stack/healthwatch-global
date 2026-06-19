@@ -219,6 +219,11 @@ export default async function DiseasesPage({
           <span>·</span>
           <span><span className="text-white font-semibold">{totalActive}</span> {l === "fr" ? "foyers actifs au total" : l === "es" ? "brotes activos en total" : l === "ar" ? "تفشٍّ نشط إجمالاً" : l === "id" ? "wabah aktif total" : "total active outbreaks"}</span>
         </div>
+        <div className="pt-1">
+          <Link href={`/${l}/countries`} className="text-sm text-gray-500 hover:text-red-400 transition-colors">
+            {l === "fr" ? "→ Voir par pays" : l === "es" ? "→ Ver por país" : l === "ar" ? "← عرض حسب الدولة" : l === "id" ? "→ Lihat per negara" : "→ Browse by country"}
+          </Link>
+        </div>
       </div>
 
       {/* Grid */}
