@@ -55,13 +55,6 @@ export async function generateMetadata({
     },
     description: m.description,
     metadataBase: new URL("https://healthwatch-global.com"),
-    alternates: {
-      canonical: url,
-      languages: {
-        ...Object.fromEntries(routing.locales.map((l) => [l, `https://healthwatch-global.com/${l}`])),
-        "x-default": "https://healthwatch-global.com/en",
-      },
-    },
     openGraph: {
       type: "website",
       url,
@@ -85,9 +78,15 @@ export async function generateMetadata({
       images: [`https://healthwatch-global.com/api/og?locale=${locale}`],
     },
     robots: { index: true, follow: true },
-    // RSS auto-discovery — browsers and feed readers pick this up automatically
-    other: {
-      "application/rss+xml": `https://healthwatch-global.com/${locale}/feed`,
+    alternates: {
+      canonical: url,
+      languages: {
+        ...Object.fromEntries(routing.locales.map((l) => [l, `https://healthwatch-global.com/${l}`])),
+        "x-default": "https://healthwatch-global.com/en",
+      },
+      types: {
+        "application/rss+xml": `https://healthwatch-global.com/api/feed?locale=${locale}`,
+      },
     },
   };
 }
