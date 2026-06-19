@@ -49,6 +49,63 @@ Merci d'avoir été parmi nos premiers utilisateurs.`,
     closing: "Merci,<br>David<br>HealthWatch Global",
     unsub: "Vous recevez cet email car vous avez un compte sur healthwatch-global.com.",
   },
+  es: {
+    subject: "HealthWatch Global ya está en Product Hunt 🚀",
+    headline: "Estamos en Product Hunt",
+    body: `Hoy lanzamos oficialmente HealthWatch Global en Product Hunt.
+
+Si has encontrado útil la plataforma para seguir los brotes, tu voto hoy significaría mucho para nosotros — es lo que determina nuestro ranking en las primeras horas.
+
+Novedades desde que te registraste:
+• Panel accesible sin cuenta
+• Plan Team — 5 puestos por €149/mes
+• Disponible en 5 idiomas: EN, FR, ES, AR, ID
+• TLF calculado automáticamente desde OMS, ECDC, PAHO y Africa CDC
+
+Gracias por ser uno de nuestros primeros usuarios.`,
+    voteCta: "Votar en Product Hunt →",
+    dashCta: "Explorar el panel →",
+    closing: "Gracias,<br>David<br>HealthWatch Global",
+    unsub: "Recibes este email porque tienes una cuenta en healthwatch-global.com.",
+  },
+  ar: {
+    subject: "HealthWatch Global متاح الآن على Product Hunt 🚀",
+    headline: "نحن مباشر على Product Hunt",
+    body: `اليوم أطلقنا رسمياً HealthWatch Global على Product Hunt.
+
+إذا وجدت المنصة مفيدة لتتبع تفشيات الأمراض، فإن تصويتك اليوم سيعني لنا الكثير — إذ يحدد ترتيبنا في الساعات الأولى من الإطلاق.
+
+الجديد منذ تسجيلك:
+• لوحة التحكم متاحة بدون حساب
+• خطة Team — 5 مقاعد بـ €149 شهرياً
+• 5 لغات: EN, FR, ES, AR, ID
+• معدل إماتة الحالات محسوب تلقائياً من WHO وECDC وPAHO وAfrica CDC
+
+شكراً لكونك من أوائل مستخدمينا.`,
+    voteCta: "صوّت على Product Hunt ←",
+    dashCta: "استكشف لوحة التحكم ←",
+    closing: "شكراً،<br>David<br>HealthWatch Global",
+    unsub: "تتلقى هذا البريد لأن لديك حساباً على healthwatch-global.com.",
+  },
+  id: {
+    subject: "HealthWatch Global kini live di Product Hunt 🚀",
+    headline: "Kami live di Product Hunt",
+    body: `Hari ini kami resmi meluncurkan HealthWatch Global di Product Hunt.
+
+Jika kamu merasa platform ini berguna untuk memantau wabah, suaramu hari ini sangat berarti bagi kami — itu yang menentukan peringkat kami di jam-jam pertama peluncuran.
+
+Yang baru sejak kamu mendaftar:
+• Dashboard bisa diakses tanpa akun
+• Paket Team — 5 kursi seharga €149/bulan
+• Tersedia dalam 5 bahasa: EN, FR, ES, AR, ID
+• CFR dihitung otomatis dari WHO, ECDC, PAHO & Africa CDC
+
+Terima kasih telah menjadi salah satu pengguna pertama kami.`,
+    voteCta: "Dukung di Product Hunt →",
+    dashCta: "Jelajahi dasbor →",
+    closing: "Terima kasih,<br>David<br>HealthWatch Global",
+    unsub: "Kamu menerima email ini karena memiliki akun di healthwatch-global.com.",
+  },
 };
 
 function buildHtml(c: typeof COPY.en): string {

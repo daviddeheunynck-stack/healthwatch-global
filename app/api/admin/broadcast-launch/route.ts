@@ -67,7 +67,7 @@ export async function POST(req: NextRequest) {
   // Fetch all profiles with an email
   const { data: profiles, error } = await admin
     .from("profiles")
-    .select("email, plan")
+    .select("email, plan, locale")
     .not("email", "is", null);
 
   if (error) {
@@ -75,11 +75,11 @@ export async function POST(req: NextRequest) {
   }
 
   const targets = (profiles ?? [])
-    .map((p) => p.email as string)
-    .filter((e) => e && e.includes("@"));
+    .map((p) => ({ email: p.email as string, locale: (p.locale as string) ?? "en" }))
+    .filter((p) => p.email && p.email.includes("@"));
 
   if (dry) {
-    return NextResponse.json({ dry: true, total: targets.length, preview: targets.slice(0, 5) });
+    return NextResponse.json({ dry: true, total: targets.length, preview: targets.slice(0, 5).map((p) => p.email) });
   }
 
   // Send in batches
@@ -90,8 +90,8 @@ export async function POST(req: NextRequest) {
   for (let i = 0; i < targets.length; i += BATCH_SIZE) {
     const batch = targets.slice(i, i + BATCH_SIZE);
     await Promise.all(
-      batch.map(async (email) => {
-        const ok = await sendOne(email, "en");
+      batch.map(async ({ email, locale }) => {
+        const ok = await sendOne(email, locale);
         if (ok) { sent++; } else { failed++; errors.push(email); }
       })
     );
