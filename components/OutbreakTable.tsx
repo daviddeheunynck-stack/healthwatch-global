@@ -597,10 +597,10 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
                   <td className="px-4 py-3 text-gray-300">
                     <div className="flex items-center gap-1.5">
                       {isPaid ? (
-                        outbreak.cases > 0 ? outbreak.cases.toLocaleString() : <span className="text-gray-600 italic text-xs">{l.noData}</span>
+                        outbreak.cases > 0 ? outbreak.cases.toLocaleString("en") : <span className="text-gray-600 italic text-xs">{l.noData}</span>
                       ) : (
                         <span className="blur-sm select-none text-gray-500 cursor-pointer" onClick={() => openModal("cases")}>
-                          {outbreak.cases.toLocaleString()}
+                          {outbreak.cases.toLocaleString("en")}
                         </span>
                       )}
                       {outbreak.cases > 0 && <TrendBadge trend={trends?.[outbreak.id]} />}
@@ -608,10 +608,10 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
                   </td>
                   <td className="px-4 py-3 text-red-400 hidden sm:table-cell">
                     {isPaid ? (
-                      outbreak.cases > 0 ? outbreak.deaths.toLocaleString() : <span className="text-gray-600 italic text-xs">{l.noData}</span>
+                      outbreak.cases > 0 ? outbreak.deaths.toLocaleString("en") : <span className="text-gray-600 italic text-xs">{l.noData}</span>
                     ) : (
                       <span className="blur-sm select-none text-gray-500 cursor-pointer" onClick={() => openModal("cases")}>
-                        {outbreak.deaths.toLocaleString()}
+                        {outbreak.deaths.toLocaleString("en")}
                       </span>
                     )}
                   </td>

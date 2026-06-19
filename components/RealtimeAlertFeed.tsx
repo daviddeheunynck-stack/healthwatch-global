@@ -161,8 +161,8 @@ export default function RealtimeAlertFeed() {
                 </div>
                 <p className="text-gray-400 text-xs mt-0.5">
                   {getLocalizedCountry(alert.data, locale)} ·{" "}
-                  {alert.data.cases.toLocaleString()} {t("realtimeCases")} ·{" "}
-                  {alert.data.deaths.toLocaleString()} {t("realtimeDeaths")}
+                  {alert.data.cases.toLocaleString("en")} {t("realtimeCases")} ·{" "}
+                  {alert.data.deaths.toLocaleString("en")} {t("realtimeDeaths")}
                 </p>
               </div>
             </div>

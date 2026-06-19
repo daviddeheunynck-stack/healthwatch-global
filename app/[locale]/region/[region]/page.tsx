@@ -285,16 +285,19 @@ export default async function RegionPage({
               const riskKey  = o.risk_level as string;
 
               return (
-                <Link
+                <div
                   key={o.id}
-                  href={`/${l}/outbreak/${o.id}`}
-                  className="block bg-gray-900 border border-gray-800 hover:border-gray-600 rounded-xl p-5 transition-colors group"
+                  className="relative bg-gray-900 border border-gray-800 hover:border-gray-600 rounded-xl p-5 transition-colors group"
                 >
-                  <div className="flex items-start justify-between gap-4 flex-wrap">
+                  <Link
+                    href={`/${l}/outbreak/${o.id}`}
+                    className="absolute inset-0 rounded-xl"
+                    aria-label={`${disease} – ${country}`}
+                  />
+                  <div className="relative z-10 flex items-start justify-between gap-4 flex-wrap">
                     <div className="space-y-1">
                       <Link
                         href={`/${l}/disease/${diseaseToSlug(normalizeDisease(o.disease_en || o.disease).name_en)}`}
-                        onClick={(e) => e.stopPropagation()}
                         className="font-semibold text-white group-hover:text-red-400 transition-colors hover:underline"
                       >
                         {disease}
@@ -319,7 +322,7 @@ export default async function RegionPage({
                       )}
                     </div>
                   </div>
-                </Link>
+                </div>
               );
             })}
           </div>
