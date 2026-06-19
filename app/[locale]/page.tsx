@@ -387,7 +387,7 @@ export default async function DashboardPage({
           "description": "Free tier — live outbreak map and dashboard, no account required.",
         },
         "featureList": [
-          "WHO, ECDC, PAHO and Africa CDC outbreak data — updated daily",
+          "WHO, ECDC, PAHO and Africa CDC outbreak data — updated every 6 hours",
           "5 languages — English, French, Spanish, Arabic, Indonesian",
           "Regional email alerts",
           "PDF epidemiological reports",
