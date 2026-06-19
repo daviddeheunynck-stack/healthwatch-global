@@ -226,9 +226,14 @@ export default async function CountriesPage({
           )}
         </div>
         <p className="text-gray-400 leading-relaxed max-w-2xl">{lb.subtitle}</p>
-        <Link href={`/${l}/diseases`} className="text-sm text-gray-500 hover:text-red-400 transition-colors">
-          {l === "fr" ? "→ Voir par maladie" : l === "es" ? "→ Ver por enfermedad" : l === "ar" ? "← عرض حسب المرض" : l === "id" ? "→ Lihat per penyakit" : "→ Browse by disease"}
-        </Link>
+        <div className="flex items-center gap-4">
+          <Link href={`/${l}/diseases`} className="text-sm text-gray-500 hover:text-red-400 transition-colors">
+            {l === "fr" ? "→ Par maladie" : l === "es" ? "→ Por enfermedad" : l === "ar" ? "← حسب المرض" : l === "id" ? "→ Per penyakit" : "→ By disease"}
+          </Link>
+          <Link href={`/${l}/regions`} className="text-sm text-gray-500 hover:text-red-400 transition-colors">
+            {l === "fr" ? "→ Par région" : l === "es" ? "→ Por región" : l === "ar" ? "← حسب المنطقة" : l === "id" ? "→ Per wilayah" : "→ By region"}
+          </Link>
+        </div>
       </div>
 
       {/* Countries by region */}

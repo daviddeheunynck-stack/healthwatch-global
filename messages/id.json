@@ -9,7 +9,8 @@
     "contact": "Kontak",
     "about": "Tentang",
     "diseases": "Penyakit",
-    "countries": "Negara"
+    "countries": "Negara",
+    "regions": "Wilayah"
   },
   "dashboard": {
     "title": "Pengawasan Kesehatan Global",

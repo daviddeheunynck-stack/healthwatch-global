@@ -9,7 +9,8 @@
     "contact": "Contact",
     "about": "About",
     "diseases": "Diseases",
-    "countries": "Countries"
+    "countries": "Countries",
+    "regions": "Regions"
   },
   "dashboard": {
     "title": "Global Health Surveillance",

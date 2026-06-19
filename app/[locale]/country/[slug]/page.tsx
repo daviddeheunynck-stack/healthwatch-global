@@ -255,6 +255,9 @@ export default async function CountryPage({
   const uniqueDiseases = new Set(outbreaks.map((o) => o.disease_en ?? o.disease)).size;
 
   // Get a sample outbreak's country name in the current locale
+  const regionRaw   = outbreaks[0]?.region ?? null;
+  const regionSlug  = regionRaw ? regionRaw.toLowerCase().replace(/\s+/g, "-") : null;
+
   const displayName = outbreaks[0]
     ? getLocalizedCountry(outbreaks[0], l) ?? countryEn
     : countryEn;
@@ -262,10 +265,22 @@ export default async function CountryPage({
   return (
     <div className="max-w-4xl mx-auto py-4 space-y-10" dir={isRtl ? "rtl" : "ltr"}>
 
-      {/* Back */}
-      <Link href={`/${l}`} className="text-sm text-gray-500 hover:text-gray-300 transition-colors">
-        {lb.back}
-      </Link>
+      {/* Breadcrumb */}
+      <div className="flex items-center gap-2 text-sm text-gray-500 flex-wrap">
+        <Link href={`/${l}`} className="hover:text-gray-300 transition-colors">{lb.back}</Link>
+        <span>·</span>
+        <Link href={`/${l}/countries`} className="hover:text-gray-300 transition-colors">
+          {l === "fr" ? "Pays" : l === "es" ? "Países" : l === "ar" ? "الدول" : l === "id" ? "Negara" : "Countries"}
+        </Link>
+        {regionSlug && (
+          <>
+            <span>·</span>
+            <Link href={`/${l}/region/${regionSlug}`} className="hover:text-gray-300 transition-colors capitalize">
+              {regionRaw}
+            </Link>
+          </>
+        )}
+      </div>
 
       {/* Header */}
       <div className="space-y-4">
