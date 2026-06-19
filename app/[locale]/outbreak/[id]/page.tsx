@@ -9,6 +9,7 @@ import Link from "next/link";
 import CheckoutButton from "@/components/CheckoutButton";
 import OutbreakStatsGrid from "@/components/OutbreakStatsGrid";
 import ShareOutbreakButton from "@/components/ShareOutbreakButton";
+import OutbreakCasesChart from "@/components/OutbreakCasesChart";
 import { getLocalizedDisease, getLocalizedCountry, sourceStatus, staleOutbreakDays } from "@/lib/outbreaks";
 import { diseaseToSlug, normalizeDisease } from "@/lib/disease-data";
 import { countryToSlug } from "@/lib/country-utils";
@@ -38,6 +39,7 @@ const LABELS = {
     ctaProBtn: "Commencer l'essai gratuit →",
     ctaFree: "Ou créer un compte gratuit",
     back: "← Tableau de bord",
+    chartTitle: "Évolution des cas",
     noData: "N/D",
     risk: { high: "RISQUE ÉLEVÉ", medium: "RISQUE MODÉRÉ", low: "RISQUE FAIBLE" },
     fpGuidance: "Guide d'action — Point focal",
@@ -58,6 +60,7 @@ const LABELS = {
     ctaProBtn: "Start free trial →",
     ctaFree: "Or create a free account",
     back: "← Dashboard",
+    chartTitle: "Case trend",
     noData: "N/A",
     risk: { high: "HIGH RISK", medium: "MEDIUM RISK", low: "LOW RISK" },
     fpGuidance: "Focal Point Guidance",
@@ -78,6 +81,7 @@ const LABELS = {
     ctaProBtn: "Iniciar prueba gratuita →",
     ctaFree: "O crear una cuenta gratuita",
     back: "← Panel",
+    chartTitle: "Evolución de casos",
     noData: "N/D",
     risk: { high: "RIESGO ALTO", medium: "RIESGO MEDIO", low: "RIESGO BAJO" },
     fpGuidance: "Guía para el Punto Focal",
@@ -98,6 +102,7 @@ const LABELS = {
     ctaProBtn: "← ابدأ التجربة المجانية",
     ctaFree: "أو أنشئ حساباً مجانياً",
     back: "→ لوحة التحكم",
+    chartTitle: "اتجاه الحالات",
     noData: "غ/م",
     risk: { high: "خطر عالٍ", medium: "خطر متوسط", low: "خطر منخفض" },
     fpGuidance: "دليل نقطة الاتصال",
@@ -118,6 +123,7 @@ const LABELS = {
     ctaProBtn: "Mulai uji coba gratis →",
     ctaFree: "Atau buat akun gratis",
     back: "← Dasbor",
+    chartTitle: "Tren kasus",
     noData: "T/S",
     risk: { high: "RISIKO TINGGI", medium: "RISIKO SEDANG", low: "RISIKO RENDAH" },
     fpGuidance: "Panduan Focal Point",
@@ -126,7 +132,7 @@ const LABELS = {
     reportingLag: "Tanggal laporan resmi — di zona terisolasi, onset di lapangan biasanya mendahului tanggal ini beberapa hari hingga minggu.",
     staleBulletin: (d: number) => `Tidak ada buletin resmi dalam ${d} hari — mungkin sudah selesai atau tidak dilaporkan.`,
   },
-} satisfies Record<string, { cases: string; deaths: string; cfr: string; date: string; region: string; printReport: string; sourceVerified: string; sourceOfficial: string; pheic: string; archived: string; ctaTitle: string; ctaSub: string; ctaProBtn: string; ctaFree: string; back: string; noData: string; risk: Record<string, string>; fpGuidance: string; tierLabels: Record<string, string>; firstActions: string; reportingLag: string; staleBulletin: (d: number) => string }>;
+} satisfies Record<string, { cases: string; deaths: string; cfr: string; date: string; region: string; printReport: string; sourceVerified: string; sourceOfficial: string; pheic: string; archived: string; ctaTitle: string; ctaSub: string; ctaProBtn: string; ctaFree: string; back: string; chartTitle: string; noData: string; risk: Record<string, string>; fpGuidance: string; tierLabels: Record<string, string>; firstActions: string; reportingLag: string; staleBulletin: (d: number) => string }>;
 
 const RISK_STYLE: Record<string, string> = {
   high:   "text-red-400 bg-red-500/10 border-red-500/30",
@@ -147,6 +153,20 @@ const getOutbreak = cache(async (id: string): Promise<Outbreak | null> => {
     .eq("id", id)
     .maybeSingle();
   return data;
+});
+
+const getSnapshots = cache(async (id: string) => {
+  const supabase = createClient(
+    clean(process.env.NEXT_PUBLIC_SUPABASE_URL),
+    clean(process.env.SUPABASE_SERVICE_ROLE_KEY)
+  );
+  const { data } = await supabase
+    .from("outbreak_snapshots")
+    .select("cases, deaths, snapped_at")
+    .eq("outbreak_id", id)
+    .order("snapped_at", { ascending: true })
+    .limit(90);
+  return data ?? [];
 });
 
 export async function generateMetadata({
@@ -217,7 +237,7 @@ export default async function OutbreakPage({
   params: Promise<{ locale: string; id: string }>;
 }) {
   const { locale, id } = await params;
-  const o = await getOutbreak(id);
+  const [o, snapshots] = await Promise.all([getOutbreak(id), getSnapshots(id)]);
   if (!o) notFound();
 
   const l       = LABELS[locale as keyof typeof LABELS] ?? LABELS.en;
@@ -389,6 +409,14 @@ export default async function OutbreakPage({
       {o.description && (
         <div className="bg-gray-800/30 rounded-lg p-4 border border-gray-700/50 mb-6">
           <p className="text-gray-300 text-sm leading-relaxed">{o.description}</p>
+        </div>
+      )}
+
+      {/* Case trend chart */}
+      {snapshots.length > 0 && (
+        <div className="bg-gray-800/30 rounded-lg p-4 border border-gray-700/50 mb-6">
+          <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-3">{l.chartTitle}</p>
+          <OutbreakCasesChart snapshots={snapshots} riskLevel={o.risk_level} locale={locale} />
         </div>
       )}
 
