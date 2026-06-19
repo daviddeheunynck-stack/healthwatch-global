@@ -8,6 +8,7 @@ import Footer from "@/components/Footer";
 import CookieBanner from "@/components/CookieBanner";
 import { UpgradeModalProvider } from "@/lib/upgrade-modal-context";
 import ConsentAwareAnalytics from "@/components/ConsentAwareAnalytics";
+import PHLaunchBar from "@/components/PHLaunchBar";
 import "../globals.css";
 
 const META: Record<string, { title: string; description: string }> = {
@@ -114,6 +115,7 @@ export default async function LocaleLayout({
   return (
     <html lang={locale} dir={isRTL ? "rtl" : "ltr"}>
       <body className="bg-gray-950 text-gray-100 min-h-screen flex flex-col overflow-x-hidden">
+        <PHLaunchBar locale={locale} />
         <NextIntlClientProvider messages={messages}>
           <UpgradeModalProvider>
             <Navbar />
