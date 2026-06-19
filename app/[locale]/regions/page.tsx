@@ -152,7 +152,6 @@ export async function generateMetadata({
       url,
       type: "website",
       siteName: "HealthWatch Global",
-      images: [{ url: `${BASE_URL}/api/og?locale=${l}`, width: 1200, height: 630 }],
     },
     twitter: { card: "summary_large_image", title: lb.metaTitle, description: lb.metaDesc },
     robots: { index: true, follow: true },
@@ -218,9 +217,32 @@ export default async function RegionsPage({
 
   const regions = await fetchRegionStats();
   const totalActive = regions.reduce((s, r) => s + r.activeCount, 0);
+  const totalCases  = regions.reduce((s, r) => s + r.totalCases, 0);
+
+  const jsonLd = [
+    {
+      "@context": "https://schema.org",
+      "@type": "Dataset",
+      name: lb.metaTitle,
+      description: lb.metaDesc,
+      url: `${BASE_URL}/${l}/regions`,
+      creator: { "@type": "Organization", name: "HealthWatch Global", url: BASE_URL },
+      ...(totalActive > 0 && { measurementTechnique: `${totalActive} active outbreak${totalActive === 1 ? "" : "s"} across WHO regions` }),
+      ...(totalCases > 0 && { size: `${totalCases.toLocaleString("en")} confirmed cases tracked` }),
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "HealthWatch Global", item: `${BASE_URL}/${l}` },
+        { "@type": "ListItem", position: 2, name: lb.title, item: `${BASE_URL}/${l}/regions` },
+      ],
+    },
+  ];
 
   return (
     <div className="max-w-4xl mx-auto py-4 space-y-10" dir={isRtl ? "rtl" : "ltr"}>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
       {/* Header */}
       <div className="space-y-3">
