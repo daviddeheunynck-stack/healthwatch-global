@@ -13,6 +13,7 @@ import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 import { getOutbreakTrendsBulk } from "@/lib/outbreak-trend";
 import type { Outbreak } from "@/lib/outbreaks";
 import EmailCapture from "@/components/EmailCapture";
+import ShareOutbreakButton from "@/components/ShareOutbreakButton";
 
 export const revalidate = 3600;
 
@@ -381,9 +382,20 @@ export default async function DiseasePage({
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
       {/* Back link */}
-      <Link href={`/${l}`} className="text-sm text-gray-500 hover:text-gray-300 transition-colors">
-        {lb.back}
-      </Link>
+      <div className={`flex items-center justify-between gap-2 ${isRtl ? "flex-row-reverse" : ""}`}>
+        <Link href={`/${l}`} className="text-sm text-gray-500 hover:text-gray-300 transition-colors">
+          {lb.back}
+        </Link>
+        <ShareOutbreakButton
+          disease={diseaseName}
+          country={active[0] ? (active[0].country_en ?? active[0].country) : ""}
+          cases={totalCases}
+          riskLevel={active.some((o) => o.risk_level === "high") ? "high" : active.some((o) => o.risk_level === "medium") ? "medium" : "low"}
+          locale={l}
+          pageUrl={`https://healthwatch-global.com/${l}/disease/${slug}`}
+          compact={false}
+        />
+      </div>
 
       {/* Header */}
       <div className="space-y-3">

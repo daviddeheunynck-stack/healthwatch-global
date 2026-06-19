@@ -10,6 +10,7 @@ import { countryToSlug, slugToCountryEn, getLocalizedCountryName } from "@/lib/c
 import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 import { diseaseToSlug } from "@/lib/disease-data";
 import type { Outbreak } from "@/lib/outbreaks";
+import ShareOutbreakButton from "@/components/ShareOutbreakButton";
 
 export const revalidate = 3600;
 
@@ -299,20 +300,31 @@ export default async function CountryPage({
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
       {/* Breadcrumb */}
-      <div className="flex items-center gap-2 text-sm text-gray-500 flex-wrap">
-        <Link href={`/${l}`} className="hover:text-gray-300 transition-colors">{lb.back}</Link>
-        <span>·</span>
-        <Link href={`/${l}/countries`} className="hover:text-gray-300 transition-colors">
-          {l === "fr" ? "Pays" : l === "es" ? "Países" : l === "ar" ? "الدول" : l === "id" ? "Negara" : "Countries"}
-        </Link>
-        {regionSlug && (
-          <>
-            <span>·</span>
-            <Link href={`/${l}/region/${regionSlug}`} className="hover:text-gray-300 transition-colors capitalize">
-              {regionRaw}
-            </Link>
-          </>
-        )}
+      <div className={`flex items-center justify-between gap-2 flex-wrap ${isRtl ? "flex-row-reverse" : ""}`}>
+        <div className="flex items-center gap-2 text-sm text-gray-500 flex-wrap">
+          <Link href={`/${l}`} className="hover:text-gray-300 transition-colors">{lb.back}</Link>
+          <span>·</span>
+          <Link href={`/${l}/countries`} className="hover:text-gray-300 transition-colors">
+            {l === "fr" ? "Pays" : l === "es" ? "Países" : l === "ar" ? "الدول" : l === "id" ? "Negara" : "Countries"}
+          </Link>
+          {regionSlug && (
+            <>
+              <span>·</span>
+              <Link href={`/${l}/region/${regionSlug}`} className="hover:text-gray-300 transition-colors capitalize">
+                {regionRaw}
+              </Link>
+            </>
+          )}
+        </div>
+        <ShareOutbreakButton
+          disease={active[0] ? (active[0].disease_en ?? active[0].disease) : (outbreaks[0]?.disease_en ?? outbreaks[0]?.disease ?? "")}
+          country={displayName}
+          cases={totalCases}
+          riskLevel={active.some((o) => o.risk_level === "high") ? "high" : active.some((o) => o.risk_level === "medium") ? "medium" : "low"}
+          locale={l}
+          pageUrl={`https://healthwatch-global.com/${l}/country/${slug}`}
+          compact={false}
+        />
       </div>
 
       {/* Header */}

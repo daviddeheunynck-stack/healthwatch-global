@@ -24,6 +24,7 @@ interface Props {
   riskLevel:  string;
   locale:     string;
   outbreakId?: string;
+  pageUrl?:   string;
   compact?:   boolean;
 }
 
@@ -78,16 +79,15 @@ const SHARE_COPY: Record<string, {
 
 const BASE_URL = "https://healthwatch-global.com";
 
-export default function ShareOutbreakButton({ disease, country, cases, riskLevel, locale, outbreakId, compact = true }: Props) {
+export default function ShareOutbreakButton({ disease, country, cases, riskLevel, locale, outbreakId, pageUrl: pageUrlProp, compact = true }: Props) {
   const [open,   setOpen]   = useState(false);
   const [copied, setCopied] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   const c   = SHARE_COPY[locale] ?? SHARE_COPY.en;
 
   const text    = c.tweet(disease, country, cases, riskLevel);
-  const pageUrl = outbreakId
-    ? `${BASE_URL}/${locale}/outbreak/${outbreakId}`
-    : `${BASE_URL}/${locale}`;
+  const pageUrl = pageUrlProp
+    ?? (outbreakId ? `${BASE_URL}/${locale}/outbreak/${outbreakId}` : `${BASE_URL}/${locale}`);
   const encoded = encodeURIComponent(text);
   const encodedUrl = encodeURIComponent(pageUrl);
 
