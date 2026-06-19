@@ -526,7 +526,7 @@ export default async function LandingPage({ locale }: { locale: string }) {
               <ArrowRight className="w-4 h-4" />
             </Link>
             <Link
-              href={`/${locale}?demo=1`}
+              href="#live-data"
               className="inline-flex items-center gap-2 bg-blue-900/60 hover:bg-blue-800/60 border border-blue-700/50 text-blue-200 font-semibold px-8 py-4 rounded-xl transition-colors text-sm"
             >
               {c.heroCtaDemo}
@@ -590,7 +590,7 @@ export default async function LandingPage({ locale }: { locale: string }) {
       </section>
 
       {/* ── Live data preview ─────────────────────────────────────────────── */}
-      <section className="space-y-5">
+      <section id="live-data" className="space-y-5">
         <div className="text-center space-y-2">
           <div className="inline-flex items-center gap-2 bg-green-500/10 border border-green-500/20 rounded-full px-3 py-1 text-xs text-green-400 font-medium">
             <Radio className="w-3.5 h-3.5" />
