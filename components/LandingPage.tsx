@@ -238,7 +238,7 @@ const COPY: Record<string, {
     ],
   },
   es: {
-    heroBadge: "4 fuentes oficiales · 195 países · Actualización diaria",
+    heroBadge: "4 fuentes oficiales · 32 enfermedades · 5 idiomas · Fuente RSS",
     heroTitle: ["Todos los datos OMS.", "Sin horas de investigación."],
     heroSub: "Epidemiólogo, médico, consultor o analista de salud — usted ya cruza datos de OMS, ECDC, OPS y Africa CDC. HealthWatch los agrega en un solo panel, calcula el CFR automáticamente y le alerta en horas tras cada publicación oficial.",
     heroCta: "Crear cuenta gratuita",
@@ -266,8 +266,8 @@ const COPY: Record<string, {
       { title: "Insignia PHEIC", desc: "🚨 La insignia PHEIC marca cada emergencia de salud pública de importancia internacional declarada por la OMS — el nivel de alerta más alto." },
       { title: "Tasa de letalidad & incidencia", desc: "CFR calculado automáticamente. Incidencia por 100.000 habitantes con datos de población de la ONU para 150 países." },
       { title: "Comparación de brotes", desc: "Ébola RDC vs Uganda: casos, muertes, CFR, incidencia lado a lado. Comparta la URL directamente con colegas." },
-      { title: "Lista de seguimiento & notificaciones", desc: "Marque ⭐ hasta 20 brotes. Notificación automática por email cuando cambian las cifras." },
-      { title: "Informes PDF & widget embebible", desc: "Informe PDF profesional por brote con 1 clic. Widget iframe para su sitio. Tarjeta PNG para WhatsApp y Slack." },
+      { title: "Búsqueda global ⌘K", desc: "Busque entre 32 enfermedades, todos los países y brotes activos en un solo atajo. Navegue enfermedad → país → región con vínculos cruzados completos." },
+      { title: "Informes PDF, widget & RSS", desc: "Informe PDF profesional por brote en 1 clic. Widget embebible para su sitio. Fuente RSS pública en /api/feed — suscríbase desde cualquier lector." },
     ],
     howTitle: "Operativo en 3 minutos",
     steps: [
@@ -316,7 +316,7 @@ const COPY: Record<string, {
     ],
   },
   ar: {
-    heroBadge: "4 مصادر رسمية · 195 دولة · تحديث يومي",
+    heroBadge: "4 مصادر رسمية · 32 مرضاً · 5 لغات · تغذية RSS",
     heroTitle: ["كل بيانات منظمة الصحة العالمية.", "دون ساعات البحث."],
     heroSub: "عالم أوبئة، طبيب، مستشار أو محلل صحي — أنت تتقاطع بيانات منظمة الصحة العالمية وECDC وPAHO وAfrica CDC. HealthWatch يجمعها في لوحة واحدة، يحسب معدل الوفيات تلقائياً، ويُنبِّهك في ساعات من النشر الرسمي.",
     heroCta: "إنشاء حساب مجاني",
@@ -344,8 +344,8 @@ const COPY: Record<string, {
       { title: "شارة PHEIC", desc: "🚨 تظهر شارة PHEIC تلقائياً على كل طارئة صحية عمومية ذات اهتمام دولي تُعلنها منظمة الصحة العالمية — أعلى مستوى تأهب." },
       { title: "معدل الوفيات والإصابة", desc: "CFR يُحسب تلقائياً. معدل الإصابة لكل 100,000 نسمة مع بيانات سكان الأمم المتحدة لـ 150 دولة." },
       { title: "مقارنة التفشيات", desc: "إيبولا في الكونغو مقابل أوغندا: الحالات والوفيات ومعدل الوفيات والإصابة جنباً إلى جنب. شارك الرابط مع زملائك." },
-      { title: "قائمة المراقبة والإشعارات", desc: "تتبع ⭐ حتى 20 تفشياً. إشعار تلقائي بالبريد عند تغيير الأرقام." },
-      { title: "تقارير PDF وويدجت", desc: "تقرير PDF احترافي لكل تفشٍّ بنقرة واحدة. ويدجت قابل للتضمين في موقعك. بطاقة PNG للمشاركة." },
+      { title: "البحث العالمي ⌘K", desc: "ابحث في 32 مرضاً وجميع الدول والتفشيات النشطة بضغطة واحدة. تنقل مرض ← دولة ← منطقة مع روابط متقاطعة كاملة." },
+      { title: "تقارير PDF وويدجت وRSS", desc: "تقرير PDF احترافي لكل تفشٍّ بنقرة واحدة. ويدجت قابل للتضمين في موقعك. تغذية RSS عامة على /api/feed — اشترك في أي قارئ تغذية." },
     ],
     howTitle: "جاهز للعمل في 3 دقائق",
     steps: [
@@ -394,7 +394,7 @@ const COPY: Record<string, {
     ],
   },
   id: {
-    heroBadge: "4 sumber resmi · 195 negara · Diperbarui setiap hari",
+    heroBadge: "4 sumber resmi · 32 penyakit · 5 bahasa · RSS feed",
     heroTitle: ["Semua data wabah WHO.", "Tanpa berjam-jam penelitian."],
     heroSub: "Epidemiolog, dokter, konsultan atau analis kesehatan — Anda sudah memeriksa silang data WHO, ECDC, PAHO dan Africa CDC. HealthWatch mengagregasi keempatnya dalam satu dasbor, menghitung CFR secara otomatis, dan memberi tahu Anda dalam hitungan jam setelah publikasi resmi.",
     heroCta: "Buat akun gratis",
@@ -422,8 +422,8 @@ const COPY: Record<string, {
       { title: "Lencana PHEIC", desc: "🚨 Lencana PHEIC otomatis menandai setiap Kedaruratan Kesehatan Masyarakat yang Meresahkan Dunia yang dinyatakan WHO — tingkat peringatan tertinggi." },
       { title: "CFR & tingkat insidensi", desc: "CFR dihitung otomatis. Insidensi per 100.000 penduduk dengan data populasi PBB untuk 150 negara." },
       { title: "Perbandingan wabah", desc: "Ebola RDC vs Uganda: kasus, kematian, CFR, insidensi berdampingan. Bagikan URL langsung ke kolega." },
-      { title: "Daftar pantau & notifikasi", desc: "Tandai ⭐ hingga 20 wabah. Email otomatis ketika angka berubah — tidak ada eskalasi yang terlewat." },
-      { title: "Laporan PDF & widget embeddable", desc: "PDF profesional per wabah dengan 1 klik. Widget iframe untuk situs Anda. Kartu PNG untuk WhatsApp dan Slack." },
+      { title: "Pencarian global ⌘K", desc: "Cari di antara 32 penyakit, semua negara, dan wabah aktif dalam satu pintasan. Navigasi penyakit → negara → wilayah dengan tautan silang lengkap." },
+      { title: "Laporan PDF, widget & RSS", desc: "PDF profesional per wabah dengan 1 klik. Widget iframe untuk situs Anda. Feed RSS publik di /api/feed — berlangganan di pembaca feed mana pun." },
     ],
     howTitle: "Siap dalam 3 menit",
     steps: [
