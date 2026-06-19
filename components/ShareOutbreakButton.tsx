@@ -42,35 +42,35 @@ const SHARE_COPY: Record<string, {
 }> = {
   fr: {
     tweet: (d, c, n, r) =>
-      `${RISK_EMOJI[r] ?? "⚠️"} Foyer OMS : ${d} en ${c} — ${n.toLocaleString()} cas confirmés. Suivi toutes les 6h sur HealthWatch Global.`,
+      `${RISK_EMOJI[r] ?? "⚠️"} Foyer OMS : ${d} en ${c} — ${n.toLocaleString("en")} cas confirmés. Suivi toutes les 6h sur HealthWatch Global.`,
     copied:     "Lien copié !",
     copyLink:   "Copier le lien",
     shareLabel: "Partager",
   },
   en: {
     tweet: (d, c, n, r) =>
-      `${RISK_EMOJI[r] ?? "⚠️"} WHO outbreak: ${d} in ${c} — ${n.toLocaleString()} confirmed cases. Tracked every 6h on HealthWatch Global.`,
+      `${RISK_EMOJI[r] ?? "⚠️"} WHO outbreak: ${d} in ${c} — ${n.toLocaleString("en")} confirmed cases. Tracked every 6h on HealthWatch Global.`,
     copied:     "Link copied!",
     copyLink:   "Copy link",
     shareLabel: "Share",
   },
   es: {
     tweet: (d, c, n, r) =>
-      `${RISK_EMOJI[r] ?? "⚠️"} Brote OMS: ${d} en ${c} — ${n.toLocaleString()} casos confirmados. Seguimiento cada 6h en HealthWatch Global.`,
+      `${RISK_EMOJI[r] ?? "⚠️"} Brote OMS: ${d} en ${c} — ${n.toLocaleString("en")} casos confirmados. Seguimiento cada 6h en HealthWatch Global.`,
     copied:     "¡Enlace copiado!",
     copyLink:   "Copiar enlace",
     shareLabel: "Compartir",
   },
   ar: {
     tweet: (d, c, n, r) =>
-      `${RISK_EMOJI[r] ?? "⚠️"} تفشٍّ OMS: ${d} في ${c} — ${n.toLocaleString()} حالة مؤكدة. متابعة كل 6 ساعات على HealthWatch Global.`,
+      `${RISK_EMOJI[r] ?? "⚠️"} تفشٍّ OMS: ${d} في ${c} — ${n.toLocaleString("en")} حالة مؤكدة. متابعة كل 6 ساعات على HealthWatch Global.`,
     copied:     "تم نسخ الرابط!",
     copyLink:   "نسخ الرابط",
     shareLabel: "مشاركة",
   },
   id: {
     tweet: (d, c, n, r) =>
-      `${RISK_EMOJI[r] ?? "⚠️"} Wabah WHO: ${d} di ${c} — ${n.toLocaleString()} kasus terkonfirmasi. Dipantau setiap 6 jam di HealthWatch Global.`,
+      `${RISK_EMOJI[r] ?? "⚠️"} Wabah WHO: ${d} di ${c} — ${n.toLocaleString("en")} kasus terkonfirmasi. Dipantau setiap 6 jam di HealthWatch Global.`,
     copied:     "Tautan disalin!",
     copyLink:   "Salin tautan",
     shareLabel: "Bagikan",

@@ -339,7 +339,7 @@ export default async function DiseasePage({
     clean(process.env.SUPABASE_SERVICE_ROLE_KEY)
   );
   const trendsMap = active.length > 0
-    ? await getOutbreakTrendsBulk(supabase, active.map((o) => o.id))
+    ? await getOutbreakTrendsBulk(supabase, active.map((o) => o.id)).catch(() => new Map())
     : new Map();
 
   const diseaseName = getLocalizedDisease(

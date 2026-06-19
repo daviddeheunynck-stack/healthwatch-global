@@ -16,7 +16,9 @@ export async function POST(req: NextRequest) {
   if (!rl.allowed) return NextResponse.json({ error: "Too many sync requests — wait before retrying" }, { status: 429 });
 
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const authResult = await supabase.auth.getUser().catch(() => null);
+  if (!authResult) return NextResponse.json({ error: "Auth service unreachable" }, { status: 503 });
+  const { data: { user } } = authResult;
   if (!isAdmin(user?.email)) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
   // Derive base URL from the incoming request host — correct in every environment
