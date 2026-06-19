@@ -227,7 +227,7 @@ const FAQ_COPY: Record<string, { title: string; items: { q: string; a: string }[
   es: {
     title: "Preguntas frecuentes",
     items: [
-      { q: "¿Qué fuentes de datos utiliza HealthWatch?", a: "Todos los datos provienen directamente de las fuentes oficiales de OMS, ECDC, PAHO y Africa CDC. No utilizamos fuentes secundarias ni no verificadas. La plataforma se actualiza diariamente." },
+      { q: "¿Qué fuentes de datos utiliza HealthWatch?", a: "Todos los datos provienen directamente de las fuentes oficiales de OMS, ECDC, PAHO y Africa CDC. No utilizamos fuentes secundarias ni no verificadas. La plataforma se actualiza cada 6 horas." },
       { q: "¿Es la plataforma conforme al RGPD?", a: "Sí. La plataforma se ejecuta en infraestructura europea (Vercel EU + Supabase EU). No recopilamos datos de salud personales. Su email profesional es el único dato personal almacenado." },
       { q: "¿Cómo funciona el acceso multiusuario?", a: "Cada miembro del equipo tiene su propia cuenta individual. El piloto de 5 accesos ofrece 5 inicios de sesión independientes, cada uno con acceso Pro completo. Sin contraseñas compartidas." },
       { q: "¿Qué sucede al final de los 30 días?", a: "Las cuentas vuelven automáticamente al plan Gratuito. Sin cargos, sin tarjeta de crédito requerida. Si su equipo desea continuar con Pro, lo discutiremos en la sesión de feedback de cierre." },
@@ -237,7 +237,7 @@ const FAQ_COPY: Record<string, { title: string; items: { q: string; a: string }[
   ar: {
     title: "الأسئلة المتكررة",
     items: [
-      { q: "ما مصادر البيانات التي يستخدمها HealthWatch؟", a: "تأتي جميع البيانات مباشرة من المصادر الرسمية لمنظمة الصحة العالمية وECDC وPAHO وAfrica CDC. لا نستخدم مصادر ثانوية أو غير موثقة. تتحدث المنصة يومياً." },
+      { q: "ما مصادر البيانات التي يستخدمها HealthWatch؟", a: "تأتي جميع البيانات مباشرة من المصادر الرسمية لمنظمة الصحة العالمية وECDC وPAHO وAfrica CDC. لا نستخدم مصادر ثانوية أو غير موثقة. تتحدث المنصة كل 6 ساعات." },
       { q: "هل المنصة متوافقة مع اللائحة الأوروبية لحماية البيانات؟", a: "نعم. تعمل المنصة على بنية تحتية أوروبية (Vercel EU + Supabase EU). لا نجمع بيانات صحية شخصية. بريدك الإلكتروني المهني هو البيانات الشخصية الوحيدة المخزنة." },
       { q: "كيف يعمل الوصول متعدد المستخدمين؟", a: "يحصل كل عضو في الفريق على حسابه الخاص. يوفر البرنامج التجريبي 5 تسجيلات دخول مستقلة، كل منها بوصول Pro كامل. لا كلمات مرور مشتركة." },
       { q: "ماذا يحدث في نهاية الـ 30 يوماً؟", a: "تعود الحسابات تلقائياً إلى الخطة المجانية. لا رسوم، لا بطاقة بنكية مطلوبة. إذا أراد فريقك الاستمرار مع Pro، نناقش ذلك في جلسة التغذية الراجعة الختامية." },
@@ -247,7 +247,7 @@ const FAQ_COPY: Record<string, { title: string; items: { q: string; a: string }[
   id: {
     title: "Pertanyaan yang sering diajukan",
     items: [
-      { q: "Sumber data apa yang digunakan HealthWatch?", a: "Semua data berasal langsung dari sumber resmi WHO, ECDC, PAHO, dan Africa CDC. Kami tidak menggunakan sumber sekunder atau yang tidak terverifikasi. Platform diperbarui setiap hari." },
+      { q: "Sumber data apa yang digunakan HealthWatch?", a: "Semua data berasal langsung dari sumber resmi WHO, ECDC, PAHO, dan Africa CDC. Kami tidak menggunakan sumber sekunder atau yang tidak terverifikasi. Platform diperbarui setiap 6 jam." },
       { q: "Apakah platform ini mematuhi GDPR?", a: "Ya. Platform berjalan di infrastruktur Eropa (Vercel EU + Supabase EU). Kami tidak mengumpulkan data kesehatan pribadi pengguna. Email kerja Anda adalah satu-satunya data pribadi yang disimpan." },
       { q: "Bagaimana akses multi-pengguna bekerja?", a: "Setiap anggota tim mendapatkan akun individual mereka sendiri. Pilot 5 kursi memberikan 5 login independen, masing-masing dengan akses Pro penuh. Tidak ada kata sandi bersama." },
       { q: "Apa yang terjadi setelah 30 hari?", a: "Akun secara otomatis kembali ke paket Gratis. Tidak ada biaya, tidak perlu kartu kredit. Jika tim Anda ingin melanjutkan dengan Pro, kami akan membahasnya di sesi umpan balik penutup." },
