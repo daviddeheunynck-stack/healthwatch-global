@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase-browser";
 import type { User as SupabaseUser } from "@supabase/supabase-js";
 import NotificationBell from "@/components/NotificationBell";
+import GlobalSearch from "@/components/GlobalSearch";
 
 const LOCALES = [
   { code: "fr", label: "FR" },
@@ -156,6 +157,7 @@ export default function Navbar() {
 
         {/* Desktop: locale + auth */}
         <div className="hidden xl:flex items-center gap-3">
+          <GlobalSearch />
           <div className="flex items-center gap-1">
             <Globe className="w-4 h-4 text-gray-400" />
             {LOCALES.map((loc) => (
@@ -213,13 +215,14 @@ export default function Navbar() {
           </div>
         </div>
 
-        {/* Mobile: auth badge + hamburger */}
+        {/* Mobile: auth badge + search + hamburger */}
         <div className="flex xl:hidden items-center gap-3">
           {user && (
             <Link href={`/${locale}/account`} className={`text-xs px-2 py-0.5 rounded font-semibold ${PLAN_BADGE[plan] || PLAN_BADGE.free}`}>
               {tAuth(`plan.${plan}`)}
             </Link>
           )}
+          <GlobalSearch />
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
             className="text-gray-400 hover:text-white transition-colors p-1"
