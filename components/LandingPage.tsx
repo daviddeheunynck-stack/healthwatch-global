@@ -82,7 +82,7 @@ const COPY: Record<string, {
   focalPointTiers: { label: string; desc: string; example: string; action: string }[];
 }> = {
   fr: {
-    heroBadge: "4 sources officielles · 195 pays · Mise à jour quotidienne",
+    heroBadge: "4 sources officielles · 32 maladies · 5 langues · Flux RSS",
     heroTitle: ["Toutes les données OMS.", "Sans les heures de recherche."],
     heroSub: "Épidémiologiste, médecin, consultant ou analyste santé — vous consultez déjà l'OMS, l'ECDC, l'OPAS et l'Africa CDC. HealthWatch les agrège en un seul tableau de bord, calcule automatiquement la létalité, et vous alerte dès la publication.",
     heroCta: "Créer un compte gratuit",
@@ -110,8 +110,8 @@ const COPY: Record<string, {
       { title: "Badge PHEIC", desc: "Le badge 🚨 PHEIC apparaît automatiquement sur chaque urgence de santé publique de portée internationale déclarée par l'OMS — le niveau d'alerte le plus élevé." },
       { title: "Taux de létalité & incidence", desc: "CFR calculé automatiquement. Incidence pour 100 000 habitants — données de population ONU intégrées pour 150 pays." },
       { title: "Comparaison de foyers", desc: "Ebola RDC 2026 vs Uganda : cas, décès, CFR, incidence côte à côte. Partagez l'URL directement avec vos collègues." },
-      { title: "Watchlist & notifications", desc: "Suivez ⭐ jusqu'à 20 foyers spécifiques. Notification automatique par email dès que les chiffres changent." },
-      { title: "PDF one-pager & widget", desc: "Rapport PDF professionnel par foyer en 1 clic. Widget embarquable pour votre site. PNG partageable pour WhatsApp et Slack." },
+      { title: "Recherche globale ⌘K", desc: "Cherchez parmi 32 maladies, tous les pays et les foyers actifs en une touche. Navigation maladie → pays → région avec liens croisés complets." },
+      { title: "PDF, widget & flux RSS", desc: "Rapport PDF professionnel par foyer en 1 clic. Widget embarquable pour votre site. Flux RSS public sur /api/feed — abonnez-vous dans n'importe quel lecteur RSS." },
     ],
     howTitle: "Opérationnel en 3 minutes",
     steps: [
@@ -160,7 +160,7 @@ const COPY: Record<string, {
     ],
   },
   en: {
-    heroBadge: "4 official sources · 195 countries · Updated daily",
+    heroBadge: "4 official sources · 32 diseases · 5 languages · RSS feed",
     heroTitle: ["All WHO outbreak data.", "Without the research hours."],
     heroSub: "Epidemiologist, travel medicine doctor, or health consultant — you already cross-reference WHO, ECDC, PAHO and Africa CDC. HealthWatch aggregates all four, calculates CFR automatically, and alerts you within hours of publication.",
     heroCta: "Create free account",
@@ -188,8 +188,8 @@ const COPY: Record<string, {
       { title: "PHEIC badge", desc: "🚨 PHEIC badge automatically flags every WHO-declared Public Health Emergency of International Concern — the highest alert level." },
       { title: "CFR & incidence rate", desc: "Case fatality rate calculated automatically. Incidence per 100,000 with UN population data for 150 countries." },
       { title: "Outbreak comparison", desc: "Ebola DRC vs Uganda 2026: cases, deaths, CFR, incidence side by side. Share the URL directly with colleagues." },
-      { title: "Watchlist & notifications", desc: "Star ⭐ up to 20 specific outbreaks. Automatic email when figures change — never miss an escalation." },
-      { title: "PDF reports & embeddable widget", desc: "Professional PDF per outbreak in 1 click. Embeddable iframe widget for your site. PNG card for WhatsApp and Slack." },
+      { title: "⌘K global search", desc: "Search across 32 diseases, all countries, and active outbreaks in one keystroke. Navigate by disease → country → region with full cross-links." },
+      { title: "PDF reports, widget & RSS", desc: "One-click PDF per outbreak. Embeddable iframe for your site. Public RSS feed at /api/feed — subscribe in any feed reader, no account needed." },
     ],
     howTitle: "Up and running in 3 minutes",
     steps: [
