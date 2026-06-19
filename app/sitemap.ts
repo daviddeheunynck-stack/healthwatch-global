@@ -41,6 +41,12 @@ function localeAlternates(path: string) {
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const entries: MetadataRoute.Sitemap = [];
 
+  // Shared DB client — declared outside try blocks so all sections can use it
+  const supabase = createClient(
+    clean(process.env.NEXT_PUBLIC_SUPABASE_URL),
+    clean(process.env.SUPABASE_SERVICE_ROLE_KEY)
+  );
+
   // ── Static routes ────────────────────────────────────────────────────────
   for (const locale of LOCALES) {
     for (const route of PUBLIC_ROUTES) {
@@ -56,10 +62,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   // ── Outbreak pages — one per active outbreak per locale ──────────────────
   try {
-    const supabase = createClient(
-      clean(process.env.NEXT_PUBLIC_SUPABASE_URL),
-      clean(process.env.SUPABASE_SERVICE_ROLE_KEY)
-    );
     const { data: outbreaks } = await supabase
       .from("outbreaks")
       .select("id, date")
