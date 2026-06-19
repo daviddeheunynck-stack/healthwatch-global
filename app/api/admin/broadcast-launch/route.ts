@@ -75,7 +75,7 @@ export async function POST(req: NextRequest) {
   }
 
   const targets = (profiles ?? [])
-    .map((p) => ({ email: p.email as string, locale: (p.locale as string) ?? "en" }))
+    .map((p) => ({ email: p.email as string, locale: (p.locale as string) ?? "fr" }))
     .filter((p) => p.email && p.email.includes("@"));
 
   if (dry) {
