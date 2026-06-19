@@ -5,7 +5,7 @@ import type { Metadata } from "next";
 const ABOUT_META: Record<string, { title: string; description: string }> = {
   en: {
     title: "About",
-    description: "HealthWatch Global aggregates WHO, ECDC, PAHO and Africa CDC outbreak data into a single dashboard, updated daily. Built for epidemiologists, NGOs, governments and health professionals — in 5 languages.",
+    description: "HealthWatch Global aggregates WHO, ECDC, PAHO and Africa CDC outbreak data into a single dashboard, updated every 6 hours. Built for epidemiologists, NGOs, governments and health professionals — in 5 languages.",
   },
   fr: {
     title: "À propos",

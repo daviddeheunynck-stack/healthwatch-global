@@ -6,7 +6,7 @@ const LOCALES = ["en", "fr", "es", "ar", "id"] as const;
 const META: Record<string, { title: string; description: string }> = {
   en: {
     title: "Embed the Outbreak Widget — HealthWatch Global",
-    description: "Add a live WHO/ECDC/PAHO outbreak tracker to any website or intranet. One iframe, no API key, updated daily.",
+    description: "Add a live WHO/ECDC/PAHO outbreak tracker to any website or intranet. One iframe, no API key, updated every 6 hours.",
   },
   fr: {
     title: "Intégrer le widget épidémique — HealthWatch Global",

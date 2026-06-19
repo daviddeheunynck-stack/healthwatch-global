@@ -207,7 +207,7 @@ const FAQ_COPY: Record<string, { title: string; items: { q: string; a: string }[
   en: {
     title: "Frequently asked questions",
     items: [
-      { q: "What data sources does HealthWatch use?", a: "All data comes directly from official WHO, ECDC, PAHO, and Africa CDC sources. We do not use secondary or unverified sources. The platform updates daily." },
+      { q: "What data sources does HealthWatch use?", a: "All data comes directly from official WHO, ECDC, PAHO, and Africa CDC sources. We do not use secondary or unverified sources. The platform updates every 6 hours." },
       { q: "Is the platform GDPR compliant?", a: "Yes. The platform runs on European infrastructure (Vercel EU + Supabase EU). We do not collect personal health data from users. Your work email is the only personal data stored." },
       { q: "How does multi-user access work?", a: "Each team member gets their own individual account. The 5-seat pilot gives 5 independent logins, each with full Pro access. No shared passwords, no shared sessions." },
       { q: "What happens at the end of the 30 days?", a: "Accounts automatically revert to the Free plan. No charge, no credit card required. If your team wants to continue with Pro, we'll discuss options at the closing feedback session." },
@@ -323,7 +323,7 @@ export default function PilotPage() {
           { label: locale === "fr" ? "4 sources officielles : OMS · ECDC · PAHO · Africa CDC" : locale === "es" ? "4 fuentes oficiales: OMS · ECDC · PAHO · Africa CDC" : locale === "ar" ? "4 مصادر رسمية: WHO · ECDC · PAHO · Africa CDC" : locale === "id" ? "4 sumber resmi: WHO · ECDC · PAHO · Africa CDC" : "4 official sources: WHO · ECDC · PAHO · Africa CDC" },
           { label: locale === "fr" ? "195 pays surveillés" : locale === "es" ? "195 países monitorizados" : locale === "ar" ? "195 دولة مراقبة" : locale === "id" ? "195 negara dipantau" : "195 countries monitored" },
           { label: locale === "fr" ? "5 langues" : locale === "es" ? "5 idiomas" : locale === "ar" ? "5 لغات" : locale === "id" ? "5 bahasa" : "5 languages" },
-          { label: locale === "fr" ? "Mise à jour quotidiennement" : locale === "es" ? "Actualización diariamente" : locale === "ar" ? "تحديث يومياً" : locale === "id" ? "Diperbarui setiap hari" : "Updated daily" },
+          { label: locale === "fr" ? "Mise à jour toutes les 6h" : locale === "es" ? "Actualización cada 6 horas" : locale === "ar" ? "تحديث كل 6 ساعات" : locale === "id" ? "Diperbarui setiap 6 jam" : "Updated every 6 hours" },
         ].map(({ label }) => (
           <div key={label} className="flex items-center gap-2 text-sm text-gray-400">
             <CheckCircle className="w-4 h-4 text-green-500 shrink-0" />

@@ -28,13 +28,13 @@ const COPY: Record<string, {
 }> = {
   fr: {
     pdf:      { title: "Rapports PDF régionaux",      desc: "Téléchargez des rapports épidémiologiques prêts à partager avec vos équipes ou bailleurs.",   plan: "Disponible — Pro" },
-    realtime: { title: "Alertes instantanées",        desc: "Notification instantanée dès que notre synchronisation OMS, ECDC, PAHO & Africa CDC (daily) détecte un nouveau foyer.", plan: "Disponible — Pro & Team" },
+    realtime: { title: "Alertes instantanées",        desc: "Notification instantanée dès que notre synchronisation OMS, ECDC, PAHO & Africa CDC (toutes les 6h) détecte un nouveau foyer.", plan: "Disponible — Pro & Team" },
     list:     { title: "Liste complète des foyers",   desc: "Accédez à tous les foyers actifs par région avec chiffres exacts.",                            plan: "Disponible — Pro" },
     cases:    { title: "Chiffres confirmés",          desc: "Cas confirmés, décès et détails épidémiologiques complets pour chaque foyer.",                 plan: "Disponible — Pro" },
     csv:      { title: "Export CSV des données",      desc: "Téléchargez l'ensemble des foyers actifs en CSV pour Excel, R, Python ou vos outils internes.", plan: "Disponible — Pro" },
     compare:  { title: "Comparateur de foyers chiffré", desc: "Comparez cas, décès, létalité et incidence entre deux épidémies, foyer par foyer.",            plan: "Disponible — Pro" },
     proFeatures: [
-      "Alertes instantanées — OMS, ECDC, PAHO & Africa CDC, quotidiennement",
+      "Alertes instantanées — OMS, ECDC, PAHO & Africa CDC, toutes les 6h",
       "Rapports PDF par région en 1 clic",
       "Export CSV pour vos analyses internes",
       "Toutes les régions mondiales couvertes",
@@ -46,7 +46,7 @@ const COPY: Record<string, {
   },
   en: {
     pdf:      { title: "Regional PDF reports",     desc: "Download shareable epidemiological reports ready for your teams or donors.",             plan: "Available — Pro" },
-    realtime: { title: "Instant alerts",           desc: "Get notified within hours the moment our WHO, ECDC, PAHO & Africa CDC sync (daily) detects a new outbreak.", plan: "Available — Pro & Team" },
+    realtime: { title: "Instant alerts",           desc: "Get notified within hours the moment our WHO, ECDC, PAHO & Africa CDC sync (every 6h) detects a new outbreak.", plan: "Available — Pro & Team" },
     list:     { title: "Full outbreak list",       desc: "Access all active outbreaks per region with exact case and death figures.",              plan: "Available — Pro" },
     cases:    { title: "Confirmed figures",        desc: "Confirmed cases, deaths and full epidemiological details for every outbreak.",           plan: "Available — Pro" },
     csv:      { title: "CSV data export",          desc: "Download all active outbreaks as CSV for Excel, R, Python or your internal tools.",      plan: "Available — Pro" },
@@ -64,13 +64,13 @@ const COPY: Record<string, {
   },
   es: {
     pdf:      { title: "Informes PDF regionales",     desc: "Descargue informes epidemiológicos listos para compartir con su equipo o financiadores.",    plan: "Disponible — Pro" },
-    realtime: { title: "Alertas instantáneas",        desc: "Reciba una notificación en horas, en cuanto nuestra sincronización OMS, ECDC, PAHO & Africa CDC (daily) detecte un nuevo brote.", plan: "Disponible — Pro y Team" },
+    realtime: { title: "Alertas instantáneas",        desc: "Reciba una notificación en horas, en cuanto nuestra sincronización OMS, ECDC, PAHO & Africa CDC (cada 6h) detecte un nuevo brote.", plan: "Disponible — Pro y Team" },
     list:     { title: "Lista completa de brotes",    desc: "Acceda a todos los brotes activos por región con cifras exactas.",                           plan: "Disponible — Pro" },
     cases:    { title: "Cifras confirmadas",          desc: "Casos confirmados, fallecidos y detalles epidemiológicos completos.",                         plan: "Disponible — Pro" },
     csv:      { title: "Exportación de datos CSV",    desc: "Descargue todos los brotes activos en CSV para Excel, R, Python o sus herramientas internas.", plan: "Disponible — Pro" },
     compare:  { title: "Comparador de brotes con cifras", desc: "Compare casos, muertes, letalidad e incidencia entre dos epidemias, lado a lado.",            plan: "Disponible — Pro" },
     proFeatures: [
-      "Alertas instantáneas — OMS, ECDC, PAHO & Africa CDC, diariamente",
+      "Alertas instantáneas — OMS, ECDC, PAHO & Africa CDC, cada 6h",
       "Informes PDF regionales en 1 clic",
       "Exportación CSV para análisis internos",
       "Todas las regiones globales cubiertas",
@@ -82,7 +82,7 @@ const COPY: Record<string, {
   },
   ar: {
     pdf:      { title: "تقارير PDF إقليمية",           desc: "حمّل تقارير وبائية جاهزة للمشاركة مع فرقك أو المموّلين بنقرة واحدة.",            plan: "متاح — Pro" },
-    realtime: { title: "تنبيهات فورية",                desc: "احصل على إشعار في غضون ساعات بمجرد أن تكتشف مزامنتنا (يومياً) تفشّياً جديداً من WHO أو ECDC أو PAHO أو Africa CDC.", plan: "متاح — Pro و Team" },
+    realtime: { title: "تنبيهات فورية",                desc: "احصل على إشعار في غضون ساعات بمجرد أن تكتشف مزامنتنا (كل 6 ساعات) تفشّياً جديداً من WHO أو ECDC أو PAHO أو Africa CDC.", plan: "متاح — Pro و Team" },
     list:     { title: "قائمة كاملة بالتفشيات",        desc: "اطلع على جميع التفشيات النشطة بالمنطقة مع الأرقام الدقيقة.",                   plan: "متاح — Pro" },
     cases:    { title: "الأرقام المؤكدة",              desc: "الحالات المؤكدة والوفيات والتفاصيل الوبائية الكاملة لكل تفشٍّ.",                plan: "متاح — Pro" },
     csv:      { title: "تصدير بيانات CSV",             desc: "حمّل جميع التفشيات النشطة بصيغة CSV لـ Excel أو R أو Python أو أدواتك الداخلية.", plan: "متاح — Pro" },

@@ -15,7 +15,7 @@ const META: Record<string, { title: string; description: string }> = {
   en: {
     title: "HealthWatch Global — Epidemic Surveillance",
     description:
-      "Monitor disease outbreaks worldwide — WHO, ECDC, PAHO & Africa CDC data in 5 languages, updated daily. Built for epidemiologists, NGOs and health ministries.",
+      "Monitor disease outbreaks worldwide — WHO, ECDC, PAHO & Africa CDC data in 5 languages, updated every 6 hours. Built for epidemiologists, NGOs and health ministries.",
   },
   fr: {
     title: "HealthWatch Global — Surveillance épidémique",
