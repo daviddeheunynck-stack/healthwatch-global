@@ -57,8 +57,14 @@ export default function LoginPage() {
     }
 
     track("login_success", { method: "email", locale });
-    router.push(`/${locale}`);
-    router.refresh();
+    const redirectTo = new URLSearchParams(window.location.search).get("redirect");
+    if (redirectTo) {
+      // API routes (e.g. team invite accept) need a full page load, not client nav
+      window.location.href = redirectTo;
+    } else {
+      router.push(`/${locale}`);
+      router.refresh();
+    }
   };
 
   return (
