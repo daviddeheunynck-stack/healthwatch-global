@@ -317,8 +317,8 @@ export default async function DiseasePage({
   const active  = allOutbreaks.filter((o) => o.active);
   const history = allOutbreaks.filter((o) => !o.active);
 
-  const totalCases  = allOutbreaks.reduce((s, o) => s + (o.cases || 0), 0);
-  const totalDeaths = allOutbreaks.reduce((s, o) => s + (o.deaths || 0), 0);
+  const totalCases  = active.reduce((s, o) => s + (o.cases || 0), 0);
+  const totalDeaths = active.reduce((s, o) => s + (o.deaths || 0), 0);
   const cfr         = totalCases > 0 ? ((totalDeaths / totalCases) * 100).toFixed(1) : null;
   const countriesSet = new Set(allOutbreaks.map((o) => o.country_en || o.country).filter(Boolean));
 
