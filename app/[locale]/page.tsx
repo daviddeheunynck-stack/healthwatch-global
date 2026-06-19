@@ -108,20 +108,11 @@ export async function generateMetadata({
       description: m.description,
       siteName: "HealthWatch Global",
       locale: OG_LOCALE[locale] ?? "en_US",
-      images: [
-        {
-          url: `https://healthwatch-global.com/api/og?locale=${locale}`,
-          width: 1200,
-          height: 630,
-          alt: "HealthWatch Global — WHO · ECDC · PAHO · Africa CDC Outbreak Surveillance",
-        },
-      ],
     },
     twitter: {
       card: "summary_large_image",
       title: m.title,
       description: m.description,
-      images: [`https://healthwatch-global.com/api/og?locale=${locale}`],
     },
     robots: { index: !user, follow: true },
   };
