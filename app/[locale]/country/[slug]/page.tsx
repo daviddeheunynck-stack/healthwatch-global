@@ -217,13 +217,11 @@ export async function generateMetadata({
       url: canonical,
       type: "website",
       siteName: "HealthWatch Global",
-      images: [{ url: `${BASE_URL}/api/og?locale=${l}`, width: 1200, height: 630 }],
     },
     twitter: {
       card: "summary_large_image",
       title: `${title} | HealthWatch Global`,
       description,
-      images: [`${BASE_URL}/api/og?locale=${l}`],
     },
     robots: { index: true, follow: true },
   };
@@ -272,8 +270,33 @@ export default async function CountryPage({
     ? getLocalizedCountry(outbreaks[0], l) ?? countryEn
     : countryEn;
 
+  const jsonLd = [
+    {
+      "@context": "https://schema.org",
+      "@type": "Dataset",
+      name: `${countryEn} — Disease Outbreaks`,
+      description: `${active.length} active outbreak${active.length !== 1 ? "s" : ""} in ${countryEn}. Confirmed cases, deaths, CFR and disease breakdown. Official WHO, ECDC, PAHO and Africa CDC data.`,
+      url: `${BASE_URL}/${l}/country/${slug}`,
+      spatialCoverage: { "@type": "Country", name: countryEn },
+      creator: { "@type": "Organization", name: "HealthWatch Global", url: BASE_URL },
+      ...(totalCases > 0 && { measurementTechnique: `${totalCases.toLocaleString("en")} confirmed cases tracked` }),
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "HealthWatch Global", item: `${BASE_URL}/${l}` },
+        { "@type": "ListItem", position: 2, name: "Countries", item: `${BASE_URL}/${l}/countries` },
+        ...(regionSlug ? [{ "@type": "ListItem", position: 3, name: regionRaw ? regionRaw.charAt(0).toUpperCase() + regionRaw.slice(1) : regionRaw, item: `${BASE_URL}/${l}/region/${regionSlug}` },
+                          { "@type": "ListItem", position: 4, name: displayName, item: `${BASE_URL}/${l}/country/${slug}` }]
+                       : [{ "@type": "ListItem", position: 3, name: displayName, item: `${BASE_URL}/${l}/country/${slug}` }]),
+      ],
+    },
+  ];
+
   return (
     <div className="max-w-4xl mx-auto py-4 space-y-10" dir={isRtl ? "rtl" : "ltr"}>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
       {/* Breadcrumb */}
       <div className="flex items-center gap-2 text-sm text-gray-500 flex-wrap">
