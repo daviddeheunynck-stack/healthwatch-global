@@ -24,6 +24,7 @@ interface Props {
   riskLevel:  string;
   locale:     string;
   outbreakId?: string;
+  compact?:   boolean;
 }
 
 const RISK_EMOJI: Record<string, string> = {
@@ -33,45 +34,51 @@ const RISK_EMOJI: Record<string, string> = {
 };
 
 const SHARE_COPY: Record<string, {
-  tweet:    (disease: string, country: string, cases: number, risk: string) => string;
-  copied:   string;
-  copyLink: string;
+  tweet:      (disease: string, country: string, cases: number, risk: string) => string;
+  copied:     string;
+  copyLink:   string;
+  shareLabel: string;
 }> = {
   fr: {
     tweet: (d, c, n, r) =>
-      `${RISK_EMOJI[r] ?? "⚠️"} Foyer OMS : ${d} en ${c} — ${n.toLocaleString()} cas confirmés. Suivi quotidien sur HealthWatch Global.`,
-    copied:   "Lien copié !",
-    copyLink: "Copier le lien",
+      `${RISK_EMOJI[r] ?? "⚠️"} Foyer OMS : ${d} en ${c} — ${n.toLocaleString()} cas confirmés. Suivi toutes les 6h sur HealthWatch Global.`,
+    copied:     "Lien copié !",
+    copyLink:   "Copier le lien",
+    shareLabel: "Partager",
   },
   en: {
     tweet: (d, c, n, r) =>
-      `${RISK_EMOJI[r] ?? "⚠️"} WHO outbreak: ${d} in ${c} — ${n.toLocaleString()} confirmed cases. Tracked daily on HealthWatch Global.`,
-    copied:   "Link copied!",
-    copyLink: "Copy link",
+      `${RISK_EMOJI[r] ?? "⚠️"} WHO outbreak: ${d} in ${c} — ${n.toLocaleString()} confirmed cases. Tracked every 6h on HealthWatch Global.`,
+    copied:     "Link copied!",
+    copyLink:   "Copy link",
+    shareLabel: "Share",
   },
   es: {
     tweet: (d, c, n, r) =>
-      `${RISK_EMOJI[r] ?? "⚠️"} Brote OMS: ${d} en ${c} — ${n.toLocaleString()} casos confirmados. Seguimiento diario en HealthWatch Global.`,
-    copied:   "¡Enlace copiado!",
-    copyLink: "Copiar enlace",
+      `${RISK_EMOJI[r] ?? "⚠️"} Brote OMS: ${d} en ${c} — ${n.toLocaleString()} casos confirmados. Seguimiento cada 6h en HealthWatch Global.`,
+    copied:     "¡Enlace copiado!",
+    copyLink:   "Copiar enlace",
+    shareLabel: "Compartir",
   },
   ar: {
     tweet: (d, c, n, r) =>
-      `${RISK_EMOJI[r] ?? "⚠️"} تفشٍّ OMS: ${d} في ${c} — ${n.toLocaleString()} حالة مؤكدة. متابعة فورية على HealthWatch Global.`,
-    copied:   "تم نسخ الرابط!",
-    copyLink: "نسخ الرابط",
+      `${RISK_EMOJI[r] ?? "⚠️"} تفشٍّ OMS: ${d} في ${c} — ${n.toLocaleString()} حالة مؤكدة. متابعة كل 6 ساعات على HealthWatch Global.`,
+    copied:     "تم نسخ الرابط!",
+    copyLink:   "نسخ الرابط",
+    shareLabel: "مشاركة",
   },
   id: {
     tweet: (d, c, n, r) =>
-      `${RISK_EMOJI[r] ?? "⚠️"} Wabah WHO: ${d} di ${c} — ${n.toLocaleString()} kasus terkonfirmasi. Dipantau harian di HealthWatch Global.`,
-    copied:   "Tautan disalin!",
-    copyLink: "Salin tautan",
+      `${RISK_EMOJI[r] ?? "⚠️"} Wabah WHO: ${d} di ${c} — ${n.toLocaleString()} kasus terkonfirmasi. Dipantau setiap 6 jam di HealthWatch Global.`,
+    copied:     "Tautan disalin!",
+    copyLink:   "Salin tautan",
+    shareLabel: "Bagikan",
   },
 };
 
 const BASE_URL = "https://healthwatch-global.com";
 
-export default function ShareOutbreakButton({ disease, country, cases, riskLevel, locale, outbreakId }: Props) {
+export default function ShareOutbreakButton({ disease, country, cases, riskLevel, locale, outbreakId, compact = true }: Props) {
   const [open,   setOpen]   = useState(false);
   const [copied, setCopied] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -108,10 +115,14 @@ export default function ShareOutbreakButton({ disease, country, cases, riskLevel
       <button
         onClick={() => setOpen(!open)}
         title="Partager"
-        className="p-1.5 rounded hover:bg-gray-700 text-gray-500 hover:text-gray-300 transition-colors"
+        className={compact
+          ? "p-1.5 rounded hover:bg-gray-700 text-gray-500 hover:text-gray-300 transition-colors"
+          : "inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border border-gray-700 hover:border-gray-500 bg-gray-800/60 hover:bg-gray-700 text-gray-300 hover:text-white text-xs font-medium transition-colors"
+        }
         aria-label="Share outbreak"
       >
-        <Share2 className="w-3.5 h-3.5" />
+        <Share2 className={compact ? "w-3.5 h-3.5" : "w-3.5 h-3.5 shrink-0"} />
+        {!compact && <span>{c.shareLabel}</span>}
       </button>
 
       {open && (

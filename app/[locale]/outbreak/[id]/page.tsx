@@ -8,6 +8,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import CheckoutButton from "@/components/CheckoutButton";
 import OutbreakStatsGrid from "@/components/OutbreakStatsGrid";
+import ShareOutbreakButton from "@/components/ShareOutbreakButton";
 import { getLocalizedDisease, getLocalizedCountry, sourceStatus, staleOutbreakDays } from "@/lib/outbreaks";
 import { diseaseToSlug, normalizeDisease } from "@/lib/disease-data";
 import { countryToSlug } from "@/lib/country-utils";
@@ -294,6 +295,17 @@ export default async function OutbreakPage({
             </Link>
           </>
         )}
+        <div className="ml-auto">
+          <ShareOutbreakButton
+            disease={disease}
+            country={country}
+            cases={o.cases}
+            riskLevel={o.risk_level}
+            locale={locale}
+            outbreakId={id}
+            compact={false}
+          />
+        </div>
       </div>
 
       {/* Header */}
