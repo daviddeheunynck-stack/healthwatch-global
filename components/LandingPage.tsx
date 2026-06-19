@@ -546,7 +546,7 @@ export default async function LandingPage({ locale }: { locale: string }) {
               { value: stats.activeOutbreaks, label: c.statOutbreaks, icon: Activity, color: "text-red-400" },
               { value: stats.countriesAffected, label: c.statCountries, icon: Globe, color: "text-blue-400" },
               { value: stats.highRisk, label: c.statHighRisk, icon: AlertTriangle, color: "text-yellow-400" },
-              { value: "≤24h", label: c.statUpdated, icon: Clock, color: "text-green-400" },
+              { value: "≤6h", label: c.statUpdated, icon: Clock, color: "text-green-400" },
             ].map(({ value, label, icon: Icon, color }, i) => (
               <div key={i} className="bg-gray-900/80 border border-gray-800 rounded-xl p-4 text-center">
                 <Icon className={`w-4 h-4 ${color} mx-auto mb-1`} />
