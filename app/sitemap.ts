@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { createClient } from "@supabase/supabase-js";
 import { allDiseases, diseaseToSlug } from "@/lib/disease-data";
+import { countryToSlug } from "@/lib/country-utils";
 
 const BASE_URL = "https://healthwatch-global.com";
 const LOCALES  = ["en", "fr", "es", "ar", "id"] as const;
@@ -130,6 +131,33 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         alternates: localeAlternates(diseasePath),
       });
     }
+  }
+
+  // ── Country pages — all countries × 5 locales ────────────────────────────
+  try {
+    const { data: countryRows } = await supabase
+      .from("outbreaks")
+      .select("country_en")
+      .not("country_en", "is", null);
+
+    const uniqueCountries = [
+      ...new Set((countryRows ?? []).map((r) => r.country_en as string).filter(Boolean)),
+    ];
+
+    for (const c of uniqueCountries) {
+      const countryPath = `/country/${countryToSlug(c)}`;
+      for (const locale of LOCALES) {
+        entries.push({
+          url: `${BASE_URL}/${locale}${countryPath}`,
+          lastModified: new Date(),
+          changeFrequency: "daily",
+          priority: 0.7,
+          alternates: localeAlternates(countryPath),
+        });
+      }
+    }
+  } catch {
+    // DB unreachable at build time — skip country pages
   }
 
   return entries;

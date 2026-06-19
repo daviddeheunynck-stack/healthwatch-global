@@ -10,6 +10,7 @@ import CheckoutButton from "@/components/CheckoutButton";
 import OutbreakStatsGrid from "@/components/OutbreakStatsGrid";
 import { getLocalizedDisease, getLocalizedCountry, sourceStatus, staleOutbreakDays } from "@/lib/outbreaks";
 import { diseaseToSlug, normalizeDisease } from "@/lib/disease-data";
+import { countryToSlug } from "@/lib/country-utils";
 import type { Outbreak } from "@/lib/outbreaks";
 import { getResponseGuidance, RESPONSE_ACTIONS } from "@/lib/response-guidance";
 import type { Metadata } from "next";
@@ -227,7 +228,8 @@ export default async function OutbreakPage({
   const donRef  = o.source ? DON_PATTERN.exec(o.source)?.[1] : null;
   const status  = sourceStatus(o);
 
-  const diseaseSlug = diseaseToSlug(normalizeDisease(o.disease_en || o.disease).name_en);
+  const diseaseSlug  = diseaseToSlug(normalizeDisease(o.disease_en || o.disease).name_en);
+  const countrySlug  = o.country_en ? countryToSlug(o.country_en) : null;
   const staleDays = staleOutbreakDays(o);
   const guidance = getResponseGuidance(o.disease_en || o.disease);
   const fpActions = RESPONSE_ACTIONS[guidance.tier][locale] ?? RESPONSE_ACTIONS[guidance.tier].en;
@@ -276,12 +278,23 @@ export default async function OutbreakPage({
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      <Link
-        href={`/${locale}`}
-        className="text-sm text-gray-400 hover:text-white transition-colors mb-6 inline-block"
-      >
-        {l.back}
-      </Link>
+      {/* Breadcrumb row */}
+      <div className={`flex items-center gap-2 mb-6 flex-wrap ${isRtl ? "flex-row-reverse" : ""}`}>
+        <Link href={`/${locale}`} className="text-sm text-gray-400 hover:text-white transition-colors">
+          {l.back}
+        </Link>
+        {countrySlug && (
+          <>
+            <span className="text-gray-700">·</span>
+            <Link
+              href={`/${locale}/country/${countrySlug}`}
+              className="text-sm text-gray-400 hover:text-white transition-colors"
+            >
+              {country}
+            </Link>
+          </>
+        )}
+      </div>
 
       {/* Header */}
       <div className="mb-6">
