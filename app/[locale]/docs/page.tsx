@@ -111,6 +111,25 @@ export default function DocsPage({ params }: { params: Promise<{ locale: string 
         </Link>
       </div>
 
+      {/* RSS feed banner */}
+      <div className="flex items-center justify-between gap-4 bg-orange-950/20 border border-orange-700/20 rounded-2xl px-6 py-4 flex-wrap">
+        <div className="space-y-0.5">
+          <p className="text-sm font-semibold text-orange-300">Free RSS feed — no API key required</p>
+          <p className="text-xs text-gray-500">
+            Subscribe to active outbreaks in any RSS reader.{" "}
+            <code className="font-mono text-orange-400">{BASE}/api/feed?locale=en&amp;region=africa</code>
+          </p>
+        </div>
+        <a
+          href={`${BASE}/api/feed?locale=en`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="shrink-0 flex items-center gap-1.5 text-sm font-semibold text-orange-400 hover:text-orange-300 transition-colors"
+        >
+          View feed <ExternalLink className="w-3.5 h-3.5" />
+        </a>
+      </div>
+
       {/* Quick-start */}
       <div className="bg-gradient-to-r from-purple-950/40 via-gray-900/60 to-transparent border border-purple-700/30 rounded-2xl p-6 space-y-4">
         <div className="flex items-center gap-2">

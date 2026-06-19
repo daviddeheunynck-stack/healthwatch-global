@@ -67,6 +67,13 @@ export default function Footer({ locale }: FooterProps) {
               {l.pilot}
             </Link>
             <a
+              href={`/api/feed?locale=${locale}`}
+              className="hover:text-orange-400 transition-colors"
+              title="RSS feed — active outbreaks"
+            >
+              RSS
+            </a>
+            <a
               href="mailto:contact@healthwatch-global.com"
               className="hover:text-gray-300 transition-colors"
             >
