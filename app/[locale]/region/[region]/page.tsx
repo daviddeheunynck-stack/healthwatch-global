@@ -214,14 +214,27 @@ export default async function RegionPage({
     ? await getOutbreakTrendsBulk(supabase, active.map((o) => o.id))
     : new Map();
 
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    itemListElement: [
-      { "@type": "ListItem", position: 1, name: "HealthWatch Global", item: `${BASE_URL}/${l}` },
-      { "@type": "ListItem", position: 2, name: regionName, item: `${BASE_URL}/${l}/region/${region}` },
-    ],
-  };
+  const jsonLd = [
+    {
+      "@context": "https://schema.org",
+      "@type": "Dataset",
+      name: `${regionName} — Disease Outbreaks`,
+      description: `${active.length} active outbreak${active.length !== 1 ? "s" : ""} in ${regionName}. ${countriesSet.size} countries tracked. Official WHO, ECDC, PAHO and Africa CDC data.`,
+      url: `${BASE_URL}/${l}/region/${region}`,
+      spatialCoverage: { "@type": "Place", name: regionName },
+      creator: { "@type": "Organization", name: "HealthWatch Global", url: BASE_URL },
+      ...(totalCases > 0 && { measurementTechnique: `${totalCases.toLocaleString("en")} confirmed cases tracked` }),
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "HealthWatch Global", item: `${BASE_URL}/${l}` },
+        { "@type": "ListItem", position: 2, name: "Regions", item: `${BASE_URL}/${l}/regions` },
+        { "@type": "ListItem", position: 3, name: regionName, item: `${BASE_URL}/${l}/region/${region}` },
+      ],
+    },
+  ];
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8 space-y-10" dir={isRtl ? "rtl" : undefined}>
