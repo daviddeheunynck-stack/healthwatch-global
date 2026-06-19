@@ -700,14 +700,21 @@ export default async function LandingPage({ locale }: { locale: string }) {
             const icons = [Bell, AlertTriangle, Activity, Globe, Zap, FileText];
             const colors = ["text-red-400", "text-yellow-400", "text-purple-400", "text-blue-400", "text-green-400", "text-orange-400"];
             const bgs = ["bg-red-500/10 border-red-500/20", "bg-yellow-500/10 border-yellow-500/20", "bg-purple-500/10 border-purple-500/20", "bg-blue-500/10 border-blue-500/20", "bg-green-500/10 border-green-500/20", "bg-orange-500/10 border-orange-500/20"];
+            const featureLinks: (string | null)[] = [null, null, null, null, null, `/${locale}/embed`];
             const Icon = icons[i] ?? Activity;
+            const href = featureLinks[i] ?? null;
             return (
-              <div key={title} className="bg-gray-900 border border-gray-800 rounded-xl p-6 space-y-3 hover:border-gray-600 transition-colors">
+              <div key={title} className="bg-gray-900 border border-gray-800 rounded-xl p-6 space-y-3 hover:border-gray-600 transition-colors flex flex-col">
                 <div className={`w-10 h-10 rounded-lg border flex items-center justify-center ${bgs[i]}`}>
                   <Icon className={`w-5 h-5 ${colors[i]}`} />
                 </div>
                 <h3 className="font-semibold text-white">{title}</h3>
-                <p className="text-gray-400 text-sm leading-relaxed">{desc}</p>
+                <p className="text-gray-400 text-sm leading-relaxed flex-1">{desc}</p>
+                {href && (
+                  <Link href={href} className="text-xs text-orange-400 hover:text-orange-300 transition-colors font-medium mt-1">
+                    {({ fr: "Essayer le widget →", en: "Try the widget →", es: "Probar el widget →", ar: "← جرّب الأداة", id: "Coba widget →" } as Record<string, string>)[locale] ?? "Try the widget →"}
+                  </Link>
+                )}
               </div>
             );
           })}
