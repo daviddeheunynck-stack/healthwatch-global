@@ -525,12 +525,13 @@ export default async function LandingPage({ locale }: { locale: string }) {
               {c.heroCta}
               <ArrowRight className="w-4 h-4" />
             </Link>
-            <Link
-              href="#live-data"
+            {/* Hard navigation forces a fresh server render with ?demo=1 (same-path client nav can be cached) */}
+            <a
+              href={`/${locale}?demo=1`}
               className="inline-flex items-center gap-2 bg-blue-900/60 hover:bg-blue-800/60 border border-blue-700/50 text-blue-200 font-semibold px-8 py-4 rounded-xl transition-colors text-sm"
             >
               {c.heroCtaDemo}
-            </Link>
+            </a>
             <Link
               href={`/${locale}/pricing`}
               className="inline-flex items-center gap-2 bg-gray-800 hover:bg-gray-700 text-gray-200 font-semibold px-8 py-4 rounded-xl transition-colors text-sm"
