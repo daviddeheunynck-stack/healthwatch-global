@@ -254,6 +254,16 @@ export default async function CountryPage({
   const cfr         = totalCases > 0 ? (totalDeaths / totalCases * 100).toFixed(1) + "%" : lb.noData;
   const uniqueDiseases = new Set(outbreaks.map((o) => o.disease_en ?? o.disease)).size;
 
+  // Unique diseases for chips
+  const diseaseChips = new Map<string, { name_en: string; hasActive: boolean }>();
+  for (const o of outbreaks) {
+    const key = o.disease_en ?? o.disease;
+    if (!key) continue;
+    const existing = diseaseChips.get(key);
+    if (existing) { if (o.active) existing.hasActive = true; }
+    else diseaseChips.set(key, { name_en: key, hasActive: o.active ?? false });
+  }
+
   // Get a sample outbreak's country name in the current locale
   const regionRaw   = outbreaks[0]?.region ?? null;
   const regionSlug  = regionRaw ? regionRaw.toLowerCase().replace(/\s+/g, "-") : null;
@@ -384,6 +394,34 @@ export default async function CountryPage({
           {lb.ctaBtn}
         </Link>
       </div>
+
+      {/* Disease chips */}
+      {diseaseChips.size > 0 && (
+        <section className="space-y-3">
+          <h2 className="text-lg font-semibold text-white">
+            {l === "fr" ? "Maladies enregistrées" : l === "es" ? "Enfermedades registradas" : l === "ar" ? "الأمراض المسجلة" : l === "id" ? "Penyakit tercatat" : "Diseases recorded"}
+            <span className="ml-2 text-sm font-normal text-gray-500">({diseaseChips.size})</span>
+          </h2>
+          <div className="flex flex-wrap gap-2">
+            {[...diseaseChips.values()]
+              .sort((a, b) => (b.hasActive ? 1 : 0) - (a.hasActive ? 1 : 0) || a.name_en.localeCompare(b.name_en))
+              .map(({ name_en, hasActive }) => (
+                <Link
+                  key={name_en}
+                  href={`/${l}/disease/${diseaseToSlug(name_en)}`}
+                  className={`inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-full border transition-colors hover:scale-[1.03] ${
+                    hasActive
+                      ? "bg-purple-950/30 border-purple-800/40 text-purple-300 hover:border-purple-600/60"
+                      : "bg-gray-900/50 border-gray-800 text-gray-400 hover:border-gray-600 hover:text-gray-200"
+                  }`}
+                >
+                  {hasActive && <span className="w-1.5 h-1.5 rounded-full bg-purple-400 animate-pulse shrink-0" />}
+                  {name_en}
+                </Link>
+              ))}
+          </div>
+        </section>
+      )}
 
       {/* Historical outbreaks */}
       {historical.length > 0 && (
