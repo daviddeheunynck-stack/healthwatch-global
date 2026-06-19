@@ -11,6 +11,7 @@ import AdminOutbreakTable from "@/components/AdminOutbreakTable";
 import AdminSyncButton from "@/components/AdminSyncButton";
 import AdminBroadcastButton from "@/components/AdminBroadcastButton";
 import AdminPilotInviteForm from "@/components/AdminPilotInviteForm";
+import AdminExtendTrialButton from "@/components/AdminExtendTrialButton";
 import type { Outbreak } from "@/lib/outbreaks";
 import type { Metadata } from "next";
 
@@ -321,6 +322,7 @@ export default async function AdminPage({
                 <th className="px-4 py-3 text-left">Plan</th>
                 <th className="px-4 py-3 text-left">Statut</th>
                 <th className="px-4 py-3 text-left">Trial jusqu'au</th>
+                <th className="px-4 py-3 text-left">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-800">
@@ -355,6 +357,11 @@ export default async function AdminPage({
                     </td>
                     <td className={`px-4 py-3 text-xs ${trialExpired ? "text-red-400" : "text-gray-400"}`}>
                       {trialDate ? trialDate.toLocaleDateString("fr") : "—"}
+                    </td>
+                    <td className="px-4 py-3">
+                      {p.email && !p.stripe_subscription_id && (
+                        <AdminExtendTrialButton email={p.email} />
+                      )}
                     </td>
                   </tr>
                 );
