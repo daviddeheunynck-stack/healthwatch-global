@@ -29,6 +29,11 @@ async function main() {
 
   const page = await context.newPage();
 
+  // Dismiss cookie banner before each screenshot by pre-setting consent
+  await page.addInitScript(() => {
+    localStorage.setItem("hwg_cookie_consent", "declined");
+  });
+
   // --- 1. Full dashboard hero ---
   console.log("📸 1/4  Full dashboard…");
   await page.goto(DEMO_URL, { waitUntil: "networkidle" });
@@ -45,11 +50,21 @@ async function main() {
 
   // --- 3. Demo banner close-up ---
   console.log("📸 3/4  Demo banner…");
-  await page.evaluate(() => window.scrollTo(0, 0));
-  // Resize viewport to banner height only
-  await page.setViewportSize({ width: 1280, height: 160 });
-  await page.screenshot({ path: path.join(OUT_DIR, "03-demo-banner.png") });
   await page.setViewportSize({ width: 1280, height: 900 });
+  await page.goto(DEMO_URL, { waitUntil: "networkidle" });
+  // Target the blue demo banner by its unique text
+  const banner = page.locator('div.bg-blue-950\\/60').first();
+  const bannerExists = await banner.count() > 0;
+  if (bannerExists) {
+    await banner.screenshot({ path: path.join(OUT_DIR, "03-demo-banner.png") });
+  } else {
+    // Fallback: crop to ~y=170 where the banner appears (below navbar + heading)
+    await page.evaluate(() => window.scrollTo(0, 0));
+    await page.screenshot({
+      path: path.join(OUT_DIR, "03-demo-banner.png"),
+      clip: { x: 0, y: 166, width: 1280, height: 64 },
+    });
+  }
   console.log("    ✅ 03-demo-banner.png");
 
   // --- 4. CFR / trend badge zoom — resize for square-ish crop ---
