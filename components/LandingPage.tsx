@@ -8,6 +8,7 @@ import {
 import { getOutbreaks, getStats, getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 import RiskBadge from "@/components/RiskBadge";
 import NewsletterSubscribeForm from "@/components/NewsletterSubscribeForm";
+import LandingMapSection from "@/components/LandingMapSection";
 
 // ─── Multilingual copy ────────────────────────────────────────────────────────
 
@@ -635,6 +636,9 @@ export default async function LandingPage({ locale }: { locale: string }) {
           </div>
         </div>
       </section>
+
+      {/* ── World map ────────────────────────────────────────────────────── */}
+      <LandingMapSection outbreaks={outbreaks} locale={locale} />
 
       {/* ── Features ─────────────────────────────────────────────────────── */}
       <section className="space-y-10">
