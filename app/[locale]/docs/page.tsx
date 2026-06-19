@@ -100,6 +100,17 @@ export default function DocsPage({ params }: { params: Promise<{ locale: string 
         </p>
       </div>
 
+      {/* Widget embed banner */}
+      <div className="flex items-center justify-between gap-4 bg-red-950/30 border border-red-700/30 rounded-2xl px-6 py-4 flex-wrap">
+        <div className="space-y-0.5">
+          <p className="text-sm font-semibold text-red-300">Looking for the embeddable widget?</p>
+          <p className="text-xs text-gray-500">Embed a live outbreak feed on any site — one iframe, no API key required.</p>
+        </div>
+        <Link href="embed" className="shrink-0 text-sm font-semibold text-red-400 hover:text-red-300 transition-colors">
+          Widget embed docs →
+        </Link>
+      </div>
+
       {/* Quick-start */}
       <div className="bg-gradient-to-r from-purple-950/40 via-gray-900/60 to-transparent border border-purple-700/30 rounded-2xl p-6 space-y-4">
         <div className="flex items-center gap-2">
