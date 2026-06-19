@@ -18,8 +18,9 @@ const PUBLIC_ROUTES = [
   { path: "/about",   changeFreq: "monthly", priority: 0.7 },
   { path: "/compare", changeFreq: "monthly", priority: 0.7 },
   { path: "/docs",    changeFreq: "weekly",  priority: 0.6 },
-  { path: "/contact", changeFreq: "monthly", priority: 0.5 },
-  { path: "/legal",   changeFreq: "yearly",  priority: 0.3 },
+  { path: "/coming-soon", changeFreq: "daily",   priority: 0.6 },
+  { path: "/contact",    changeFreq: "monthly", priority: 0.5 },
+  { path: "/legal",      changeFreq: "yearly",  priority: 0.3 },
   { path: "/privacy", changeFreq: "yearly",  priority: 0.3 },
   { path: "/terms",   changeFreq: "yearly",  priority: 0.3 },
 ] as const;
