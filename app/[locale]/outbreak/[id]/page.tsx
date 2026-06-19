@@ -30,6 +30,7 @@ const LABELS = {
   fr: {
     cases: "Cas confirmés", deaths: "Décès", cfr: "Létalité",
     date: "Date", region: "Région",
+    compareLabel: "Comparer",
     printReport: "Rapport PDF",
     sourceVerified: "Bulletin OMS officiel", sourceOfficial: "Source officielle",
     pheic: "URGENCE SANITAIRE INTERNATIONALE (PHEIC)",
@@ -60,6 +61,7 @@ const LABELS = {
     ctaProBtn: "Start free trial →",
     ctaFree: "Or create a free account",
     back: "← Dashboard",
+    compareLabel: "Compare",
     chartTitle: "Case trend",
     noData: "N/A",
     risk: { high: "HIGH RISK", medium: "MEDIUM RISK", low: "LOW RISK" },
@@ -81,6 +83,7 @@ const LABELS = {
     ctaProBtn: "Iniciar prueba gratuita →",
     ctaFree: "O crear una cuenta gratuita",
     back: "← Panel",
+    compareLabel: "Comparar",
     chartTitle: "Evolución de casos",
     noData: "N/D",
     risk: { high: "RIESGO ALTO", medium: "RIESGO MEDIO", low: "RIESGO BAJO" },
@@ -102,6 +105,7 @@ const LABELS = {
     ctaProBtn: "← ابدأ التجربة المجانية",
     ctaFree: "أو أنشئ حساباً مجانياً",
     back: "→ لوحة التحكم",
+    compareLabel: "مقارنة",
     chartTitle: "اتجاه الحالات",
     noData: "غ/م",
     risk: { high: "خطر عالٍ", medium: "خطر متوسط", low: "خطر منخفض" },
@@ -123,6 +127,7 @@ const LABELS = {
     ctaProBtn: "Mulai uji coba gratis →",
     ctaFree: "Atau buat akun gratis",
     back: "← Dasbor",
+    compareLabel: "Bandingkan",
     chartTitle: "Tren kasus",
     noData: "T/S",
     risk: { high: "RISIKO TINGGI", medium: "RISIKO SEDANG", low: "RISIKO RENDAH" },
@@ -132,7 +137,7 @@ const LABELS = {
     reportingLag: "Tanggal laporan resmi — di zona terisolasi, onset di lapangan biasanya mendahului tanggal ini beberapa hari hingga minggu.",
     staleBulletin: (d: number) => `Tidak ada buletin resmi dalam ${d} hari — mungkin sudah selesai atau tidak dilaporkan.`,
   },
-} satisfies Record<string, { cases: string; deaths: string; cfr: string; date: string; region: string; printReport: string; sourceVerified: string; sourceOfficial: string; pheic: string; archived: string; ctaTitle: string; ctaSub: string; ctaProBtn: string; ctaFree: string; back: string; chartTitle: string; noData: string; risk: Record<string, string>; fpGuidance: string; tierLabels: Record<string, string>; firstActions: string; reportingLag: string; staleBulletin: (d: number) => string }>;
+} satisfies Record<string, { cases: string; deaths: string; cfr: string; date: string; region: string; printReport: string; sourceVerified: string; sourceOfficial: string; pheic: string; archived: string; ctaTitle: string; ctaSub: string; ctaProBtn: string; ctaFree: string; back: string; compareLabel: string; chartTitle: string; noData: string; risk: Record<string, string>; fpGuidance: string; tierLabels: Record<string, string>; firstActions: string; reportingLag: string; staleBulletin: (d: number) => string }>;
 
 const RISK_STYLE: Record<string, string> = {
   high:   "text-red-400 bg-red-500/10 border-red-500/30",
@@ -315,6 +320,13 @@ export default async function OutbreakPage({
             </Link>
           </>
         )}
+        <span className="text-gray-700">·</span>
+        <Link
+          href={`/${locale}/compare?a=${id}`}
+          className="text-xs text-gray-500 hover:text-gray-300 transition-colors"
+        >
+          {l.compareLabel} →
+        </Link>
         <div className="ml-auto">
           <ShareOutbreakButton
             disease={disease}
