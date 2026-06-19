@@ -254,7 +254,7 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlis
             <p className="text-xs text-gray-500">{c.cases}</p>
             <p className="text-lg font-bold text-white">
               {isPaid
-                ? (hasData ? outbreak.cases.toLocaleString() : <span className="text-gray-600 text-sm italic">{c.noData}</span>)
+                ? (hasData ? outbreak.cases.toLocaleString("en") : <span className="text-gray-600 text-sm italic">{c.noData}</span>)
                 : <span className="blur-sm select-none cursor-pointer" onClick={() => openModal("cases")}>12345</span>
               }
             </p>
@@ -274,7 +274,7 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlis
             <p className="text-xs text-gray-500">{c.deaths}</p>
             <p className="text-lg font-bold text-red-400">
               {isPaid
-                ? (hasData ? outbreak.deaths.toLocaleString() : <span className="text-gray-600 text-sm italic">{c.noData}</span>)
+                ? (hasData ? outbreak.deaths.toLocaleString("en") : <span className="text-gray-600 text-sm italic">{c.noData}</span>)
                 : <span className="blur-sm select-none cursor-pointer" onClick={() => openModal("cases")}>234</span>
               }
             </p>

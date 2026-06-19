@@ -25,7 +25,7 @@ const LABELS: Record<string, {
   id: { title: "Bandingkan Wabah", subtitle: "Analisis dua epidemi secara berdampingan", selectA: "Wabah A", selectB: "Wabah B", all: "Pilih wabah…", cases: "Kasus", deaths: "Kematian", cfr: "CFR", incidence: "Insidensi / 100.000", date: "Tanggal", region: "Wilayah", pheic: "PHEIC", winner: "↓ Lebih rendah", lower: "↑ Lebih tinggi", selectBoth: "Pilih dua wabah untuk dibandingkan.", share: "Bagikan", copied: "Disalin!", lockedCta: "Buka Pro →", lockedBanner: "Kasus terkonfirmasi · Kematian · Tingkat fatalitas · Insidensi per 100.000" },
 };
 
-function StatRow({ label, valA, valB, icon, fmt = (v: number) => v.toLocaleString(), higherIsBad = true, locked = false, onLockClick }: {
+function StatRow({ label, valA, valB, icon, fmt = (v: number) => v.toLocaleString("en"), higherIsBad = true, locked = false, onLockClick }: {
   label: string; valA: number | null; valB: number | null; icon: React.ReactNode;
   fmt?: (v: number) => string; higherIsBad?: boolean;
   locked?: boolean;

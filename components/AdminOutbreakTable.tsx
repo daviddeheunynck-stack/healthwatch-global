@@ -206,8 +206,8 @@ export default function AdminOutbreakTable({ initial }: { initial: Outbreak[] })
                     <td className="px-4 py-3 text-white font-medium">{o.disease_en || o.disease}</td>
                     <td className="px-4 py-3 text-gray-300">{o.country_en || o.country}</td>
                     <td className="px-4 py-3 text-gray-400 capitalize">{o.region}</td>
-                    <td className="px-4 py-3 text-right text-gray-300">{o.cases.toLocaleString()}</td>
-                    <td className="px-4 py-3 text-right text-gray-400">{o.deaths.toLocaleString()}</td>
+                    <td className="px-4 py-3 text-right text-gray-300">{o.cases.toLocaleString("en")}</td>
+                    <td className="px-4 py-3 text-right text-gray-400">{o.deaths.toLocaleString("en")}</td>
                     <td className="px-4 py-3"><RiskBadge level={o.risk_level as "high" | "medium" | "low"} /></td>
                     <td className="px-4 py-3 text-gray-400">{o.date}</td>
                     <td className="px-4 py-3 text-center">
