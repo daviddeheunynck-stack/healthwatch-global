@@ -217,7 +217,7 @@ const FAQ_COPY: Record<string, { title: string; items: { q: string; a: string }[
   fr: {
     title: "Questions fréquentes",
     items: [
-      { q: "Quelles sources de données utilise HealthWatch ?", a: "Toutes les données proviennent directement des sources officielles OMS, ECDC, PAHO et Africa CDC. Nous n'utilisons aucune source secondaire ou non vérifiée. La plateforme se met à jour quotidiennement." },
+      { q: "Quelles sources de données utilise HealthWatch ?", a: "Toutes les données proviennent directement des sources officielles OMS, ECDC, PAHO et Africa CDC. Nous n'utilisons aucune source secondaire ou non vérifiée. La plateforme se met à jour toutes les 6h." },
       { q: "La plateforme est-elle conforme au RGPD ?", a: "Oui. La plateforme est hébergée sur une infrastructure européenne (Vercel EU + Supabase EU). Nous ne collectons pas de données de santé personnelles. Votre email professionnel est la seule donnée personnelle stockée." },
       { q: "Comment fonctionne l'accès multi-utilisateurs ?", a: "Chaque membre de l'équipe dispose de son propre compte individuel. Le pilote à 5 accès donne 5 logins indépendants, chacun avec l'accès Pro complet. Aucun mot de passe partagé." },
       { q: "Que se passe-t-il à la fin des 30 jours ?", a: "Les comptes passent automatiquement au plan Gratuit. Aucun frais, aucune carte bancaire requise. Si votre équipe souhaite continuer avec Pro, nous en discutons lors de la session de feedback de clôture." },
