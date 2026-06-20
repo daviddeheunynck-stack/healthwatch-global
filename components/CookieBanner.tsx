@@ -102,7 +102,7 @@ export default function CookieBanner({ locale }: { locale: string }) {
       dir={dir}
       role="dialog"
       aria-label="Cookie consent"
-      className="fixed bottom-0 left-0 right-0 z-50 p-4"
+      className="fixed bottom-0 left-0 right-0 z-[9999] p-4"
     >
       <div className="max-w-3xl mx-auto bg-slate-800 border border-slate-600 rounded-xl shadow-2xl
                       flex flex-col sm:flex-row items-start sm:items-center gap-4 px-5 py-4">
