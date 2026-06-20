@@ -10,6 +10,7 @@ interface FooterProps {
 
 const LABELS: Record<string, {
   about: string;
+  methodology: string;
   privacy: string;
   terms: string;
   legal: string;
@@ -17,11 +18,11 @@ const LABELS: Record<string, {
   cookies: string;
   pilot: string;
 }> = {
-  en: { about: "About", privacy: "Privacy Policy", terms: "Terms of Service", legal: "Legal notice", contact: "Contact", cookies: "Cookie settings", pilot: "Institutional Pilot" },
-  fr: { about: "À propos", privacy: "Politique de confidentialité", terms: "CGU", legal: "Mentions légales", contact: "Contact", cookies: "Paramètres cookies", pilot: "Pilote Institutionnel" },
-  es: { about: "Acerca de", privacy: "Política de privacidad", terms: "Términos de uso", legal: "Aviso legal", contact: "Contacto", cookies: "Configuración de cookies", pilot: "Piloto Institucional" },
-  ar: { about: "حول المنصة", privacy: "سياسة الخصوصية", terms: "شروط الاستخدام", legal: "الإشعار القانوني", contact: "تواصل معنا", cookies: "إعدادات ملفات الارتباط", pilot: "البرنامج التجريبي المؤسسي" },
-  id: { about: "Tentang", privacy: "Kebijakan Privasi", terms: "Syarat Penggunaan", legal: "Pemberitahuan hukum", contact: "Kontak", cookies: "Pengaturan cookie", pilot: "Pilot Institusional" },
+  en: { about: "About", methodology: "Data methodology", privacy: "Privacy Policy", terms: "Terms of Service", legal: "Legal notice", contact: "Contact", cookies: "Cookie settings", pilot: "Institutional Pilot" },
+  fr: { about: "À propos", methodology: "Méthodologie", privacy: "Politique de confidentialité", terms: "CGU", legal: "Mentions légales", contact: "Contact", cookies: "Paramètres cookies", pilot: "Pilote Institutionnel" },
+  es: { about: "Acerca de", methodology: "Metodología", privacy: "Política de privacidad", terms: "Términos de uso", legal: "Aviso legal", contact: "Contacto", cookies: "Configuración de cookies", pilot: "Piloto Institucional" },
+  ar: { about: "حول المنصة", methodology: "منهجية البيانات", privacy: "سياسة الخصوصية", terms: "شروط الاستخدام", legal: "الإشعار القانوني", contact: "تواصل معنا", cookies: "إعدادات ملفات الارتباط", pilot: "البرنامج التجريبي المؤسسي" },
+  id: { about: "Tentang", methodology: "Metodologi data", privacy: "Kebijakan Privasi", terms: "Syarat Penggunaan", legal: "Pemberitahuan hukum", contact: "Kontak", cookies: "Pengaturan cookie", pilot: "Pilot Institusional" },
 };
 
 export default function Footer({ locale }: FooterProps) {
@@ -50,6 +51,9 @@ export default function Footer({ locale }: FooterProps) {
           <nav className="flex items-center gap-5 text-xs text-gray-500 flex-wrap justify-center" dir={locale === "ar" ? "rtl" : undefined}>
             <Link href={`/${locale}/about`} className="hover:text-gray-300 transition-colors">
               {l.about}
+            </Link>
+            <Link href={`/${locale}/methodology`} className="hover:text-gray-300 transition-colors">
+              {l.methodology}
             </Link>
             <Link href={`/${locale}/privacy`} className="hover:text-gray-300 transition-colors">
               {l.privacy}
