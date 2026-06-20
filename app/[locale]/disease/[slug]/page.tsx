@@ -14,6 +14,8 @@ import { getOutbreakTrendsBulk } from "@/lib/outbreak-trend";
 import type { Outbreak } from "@/lib/outbreaks";
 import EmailCapture from "@/components/EmailCapture";
 import ShareOutbreakButton from "@/components/ShareOutbreakButton";
+import WatchButton from "@/components/WatchButton";
+import WatchDiseaseButton from "@/components/WatchDiseaseButton";
 
 export const revalidate = 3600;
 
@@ -408,6 +410,7 @@ export default async function DiseasePage({
           }`}>
             {active.length > 0 ? lb.activeBadge(active.length) : lb.noActive}
           </span>
+          <WatchDiseaseButton diseaseName={info.name_en} locale={l} />
         </div>
         {info.name_en !== diseaseName && (
           <p className="text-sm text-gray-500">{info.name_en}</p>
@@ -524,12 +527,18 @@ export default async function DiseasePage({
               const riskLabel = riskKey ? (lb.risk as Record<string, string>)[riskKey] : undefined;
 
               return (
-                <Link
+                <div
                   key={o.id}
-                  href={`/${l}/outbreak/${o.id}`}
-                  className="block bg-gray-900 border border-gray-800 hover:border-gray-600 rounded-xl p-5 transition-colors group"
+                  className="relative bg-gray-900 border border-gray-800 hover:border-gray-600 rounded-xl p-5 transition-colors group"
                 >
-                  <div className="flex items-start justify-between gap-4 flex-wrap">
+                  {/* Full-card link overlay */}
+                  <Link
+                    href={`/${l}/outbreak/${o.id}`}
+                    className="absolute inset-0 rounded-xl"
+                    aria-label={country}
+                  />
+                  {/* Content above the link */}
+                  <div className="relative z-10 flex items-start justify-between gap-4 flex-wrap">
                     <div className="space-y-1">
                       <p className="font-semibold text-white group-hover:text-red-400 transition-colors">
                         {country}
@@ -567,9 +576,10 @@ export default async function DiseasePage({
                           {riskLabel}
                         </span>
                       )}
+                      <WatchButton outbreakId={o.id} locale={l} />
                     </div>
                   </div>
-                </Link>
+                </div>
               );
             })}
           </div>
