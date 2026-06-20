@@ -167,11 +167,12 @@ async function extractAlertData(entry: AlertEntry): Promise<AlertData[]> {
   const bodyText       = htmlToText(html);
   const { cases, deaths } = extractNumbers(bodyText);
 
-  // Primary country: look in the ORIGINAL title for "in [Country]" pattern
+  // Primary country: look in the ORIGINAL title for "in [the] Country" pattern.
+  // Optional "the" handles "in the Democratic Republic of the Congo and Uganda".
   let primaryCountries: string[] = [];
-  const titleInMatch = entry.title.match(/\bin\s+([A-Z][a-zA-Z\s]+?)(?:\s*[,–—]|$)/);
+  const titleInMatch = entry.title.match(/\bin\s+(?:the\s+)?([A-Z][a-zA-Z\s,]+?)(?:\s*[-–—]|$)/i);
   if (titleInMatch) {
-    const candidate = titleInMatch[1].replace(/\s+$/,"").trim();
+    const candidate = titleInMatch[1].replace(/\s+(and|or)\s+.+$/i, "").trim();
     // exclude generic phrases
     if (!/(region|americas|caribbean|paho)/i.test(candidate)) {
       const geo = findCountry(candidate);

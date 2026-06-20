@@ -54,11 +54,28 @@ function isKnownDisease(rawName: string): boolean {
   return !!(info.family || info.cfr_ref || info.r0_ref || info.incubationMin);
 }
 
+// Abbreviations that appear in ECDC titles/text → canonical country key
+const TEXT_ALIASES: Record<string, string> = {
+  " drc ":   "Democratic Republic of the Congo",
+  "(drc)":   "Democratic Republic of the Congo",
+  " rdc ":   "Democratic Republic of the Congo",
+  " dr congo": "Democratic Republic of the Congo",
+};
+
 // Find countries mentioned in the text (returns canonical country keys from COUNTRIES)
 function findMentionedCountries(text: string): string[] {
-  const lower = text.toLowerCase();
+  const lower = ` ${text.toLowerCase()} `;
   const found: string[] = [];
   const seen  = new Set<string>();
+
+  // Check abbreviation aliases first
+  for (const [abbr, canonical] of Object.entries(TEXT_ALIASES)) {
+    if (lower.includes(abbr) && !seen.has(canonical)) {
+      found.push(canonical);
+      seen.add(canonical);
+    }
+  }
+
   for (const name of COUNTRY_NAMES) {
     const geo = COUNTRIES[name];
     if (!geo) continue;

@@ -217,15 +217,39 @@ export const COUNTRIES: Record<string, CountryGeo> = {
   "Region of the Americas": { lat: 0.0, lng: -60.0, region: "americas", name_en: "Americas (regional)", name_fr: "Région des Amériques", name_ar: "منطقة الأمريكتين" },
 };
 
-// Fuzzy lookup: try exact match, then partial match
+// Common abbreviations / display names → canonical COUNTRIES key
+const COUNTRY_ALIASES: Record<string, string> = {
+  "drc":                            "Democratic Republic of the Congo",
+  "rdc":                            "Democratic Republic of the Congo",
+  "dr congo":                       "Democratic Republic of the Congo",
+  "democratic republic of congo":   "Democratic Republic of the Congo",
+  "congo dr":                       "Democratic Republic of the Congo",
+  "uk":                             "United Kingdom",
+  "usa":                            "United States of America",
+  "uae":                            "United Arab Emirates",
+};
+
+// Fuzzy lookup: try exact match, alias, name_en, then partial match
 export function findCountry(name: string): CountryGeo | null {
-  // Exact match
+  if (!name) return null;
+
+  // Exact match on canonical key
   if (COUNTRIES[name]) return COUNTRIES[name];
 
-  // Case-insensitive exact
   const lower = name.toLowerCase();
+
+  // Alias lookup (abbreviations + display names like "DR Congo")
+  const aliasKey = COUNTRY_ALIASES[lower];
+  if (aliasKey) return COUNTRIES[aliasKey] ?? null;
+
+  // Case-insensitive exact match on canonical key
   for (const [key, val] of Object.entries(COUNTRIES)) {
     if (key.toLowerCase() === lower) return val;
+  }
+
+  // Match on display name (name_en) — fixes double-lookup when routes store geo.name_en
+  for (const [, val] of Object.entries(COUNTRIES)) {
+    if (val.name_en.toLowerCase() === lower) return val;
   }
 
   // Partial: the RSS name contains a known key (e.g. "the Democratic Republic of the Congo")
