@@ -292,6 +292,13 @@ export async function GET(req: NextRequest) {
         continue;
       }
 
+      // Skip 0/0 entries — they are institutional/funding articles parsed as outbreaks
+      if (item.cases === 0 && item.deaths === 0) {
+        log.push({ label, status: "skip", detail: "0 cases and 0 deaths — likely non-surveillance article" });
+        results.skipped++;
+        continue;
+      }
+
       const geo = findCountry(item.country_en);
       if (!geo) {
         log.push({ label, status: "skip", detail: "country not in geo-data" });
