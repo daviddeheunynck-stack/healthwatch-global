@@ -56,7 +56,7 @@ async function translateDescription(text: string): Promise<{
   return results;
 }
 
-const STALE_DAYS = 90;
+const STALE_DAYS = 60;
 
 // RSS fallback sources (tried only if WHO OData fails) — WHO official feeds only
 const RSS_FALLBACKS = [

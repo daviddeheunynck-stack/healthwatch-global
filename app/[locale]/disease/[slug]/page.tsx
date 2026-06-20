@@ -28,7 +28,7 @@ const LABELS = {
   fr: {
     activeBadge: (n: number) => n === 1 ? "1 foyer actif" : `${n} foyers actifs`,
     noActive: "Aucun foyer actif",
-    cases: "Cas confirmés", deaths: "Décès", recovered: "Guéris", cfr: "Létalité", countries: "Pays touchés",
+    cases: "Cas confirmés", deaths: "Décès", recovered: "Guéris", cfr: "Létalité", countries: "Pays touchés", lastUpdated: "Mis à jour :",
     activeSection: "Foyers en cours",
     historySection: "Historique des épidémies",
     noHistory: "Aucun foyer historique enregistré.",
@@ -43,7 +43,7 @@ const LABELS = {
   en: {
     activeBadge: (n: number) => n === 1 ? "1 active outbreak" : `${n} active outbreaks`,
     noActive: "No active outbreaks",
-    cases: "Confirmed cases", deaths: "Deaths", recovered: "Recovered", cfr: "Case fatality rate", countries: "Countries affected",
+    cases: "Confirmed cases", deaths: "Deaths", recovered: "Recovered", cfr: "Case fatality rate", countries: "Countries affected", lastUpdated: "Updated:",
     activeSection: "Active outbreaks",
     historySection: "Outbreak history",
     noHistory: "No historical outbreaks on record.",
@@ -58,7 +58,7 @@ const LABELS = {
   es: {
     activeBadge: (n: number) => n === 1 ? "1 brote activo" : `${n} brotes activos`,
     noActive: "Sin brotes activos",
-    cases: "Casos confirmados", deaths: "Fallecidos", recovered: "Recuperados", cfr: "Tasa de letalidad", countries: "Países afectados",
+    cases: "Casos confirmados", deaths: "Fallecidos", recovered: "Recuperados", cfr: "Tasa de letalidad", countries: "Países afectados", lastUpdated: "Actualizado:",
     activeSection: "Brotes en curso",
     historySection: "Historial de epidemias",
     noHistory: "Sin brotes históricos registrados.",
@@ -73,7 +73,7 @@ const LABELS = {
   ar: {
     activeBadge: (n: number) => n === 1 ? "تفشٍّ نشط واحد" : `${n} تفشيات نشطة`,
     noActive: "لا تفشيات نشطة",
-    cases: "الحالات المؤكدة", deaths: "الوفيات", recovered: "المتعافون", cfr: "معدل الوفيات", countries: "الدول المتضررة",
+    cases: "الحالات المؤكدة", deaths: "الوفيات", recovered: "المتعافون", cfr: "معدل الوفيات", countries: "الدول المتضررة", lastUpdated: "تحديث:",
     activeSection: "التفشيات الجارية",
     historySection: "تاريخ الأوبئة",
     noHistory: "لا سجل لتفشيات سابقة.",
@@ -88,7 +88,7 @@ const LABELS = {
   id: {
     activeBadge: (n: number) => n === 1 ? "1 wabah aktif" : `${n} wabah aktif`,
     noActive: "Tidak ada wabah aktif",
-    cases: "Kasus terkonfirmasi", deaths: "Kematian", recovered: "Sembuh", cfr: "Tingkat kematian", countries: "Negara terdampak",
+    cases: "Kasus terkonfirmasi", deaths: "Kematian", recovered: "Sembuh", cfr: "Tingkat kematian", countries: "Negara terdampak", lastUpdated: "Diperbarui:",
     activeSection: "Wabah yang sedang berlangsung",
     historySection: "Riwayat epidemi",
     noHistory: "Tidak ada riwayat wabah.",
@@ -546,6 +546,14 @@ export default async function DiseasePage({
                           </span>
                         )}
                       </p>
+                      {o.updated_at && (
+                        <p className="text-xs text-gray-600">
+                          {lb.lastUpdated} {new Date(o.updated_at).toLocaleDateString(
+                            l === "ar" ? "ar-SA" : l,
+                            { year: "numeric", month: "short", day: "numeric" }
+                          )}
+                        </p>
+                      )}
                     </div>
                     <div className="flex items-center gap-2 flex-wrap">
                       {trend && trend.direction !== "unknown" && (

@@ -74,6 +74,24 @@ async function fetchArticleNumbers(
   }
 }
 
+// ── End-of-outbreak signal detection ─────────────────────────
+// WHO DON articles that formally close an outbreak contain these phrases.
+const OUTBREAK_ENDED_SIGNALS = [
+  "no new cases have been reported",
+  "no further cases",
+  "the outbreak has ended",
+  "end of the outbreak",
+  "declared the end",
+  "outbreak has been declared over",
+  "this outbreak is considered to be over",
+  "outbreak is over",
+];
+
+function isOutbreakEnded(text: string): boolean {
+  const lower = text.toLowerCase();
+  return OUTBREAK_ENDED_SIGNALS.some((s) => lower.includes(s));
+}
+
 // ── 3. Parse a WHO DON item → ParsedOutbreak ──────────────────
 
 export async function parseWHODONItem(
@@ -141,6 +159,7 @@ export async function parseWHODONItem(
   }
 
   const risk_level = assessRisk(parsed.disease, description, cases, deaths);
+  const active = !isOutbreakEnded(description);
 
   return {
     disease: disease.name_fr,
@@ -159,6 +178,6 @@ export async function parseWHODONItem(
     date,
     source: articleUrl,
     description,
-    active: true,
+    active,
   };
 }
