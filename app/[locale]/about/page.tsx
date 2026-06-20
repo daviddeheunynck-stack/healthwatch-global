@@ -120,6 +120,7 @@ const LABELS: Record<string, {
     users: [
       { title: "Professionnels de santé", text: "Médecins, infirmiers, épidémiologistes : restez informés des foyers actifs à l'échelle mondiale." },
       { title: "Journalistes & chercheurs", text: "Accédez à des données structurées, sourcées et exportables (CSV, PDF) pour vos travaux." },
+      { title: "Risk management & mobilité internationale", text: "Responsables sécurité, risk managers et équipes RH : anticipez les risques sanitaires dans les zones d'opération de vos équipes expatriées." },
       { title: "Voyageurs & expatriés", text: "Consultez les alertes actives avant et pendant vos déplacements à l'étranger." },
       { title: "ONG & organisations humanitaires", text: "Surveillez les régions prioritaires et recevez des alertes ciblées pour réagir rapidement." },
       { title: "Gouvernements & agences", text: "Intégrez les données épidémiques directement dans vos systèmes via notre API REST Enterprise." },
@@ -156,6 +157,7 @@ const LABELS: Record<string, {
     users: [
       { title: "Health professionals", text: "Doctors, nurses, epidemiologists: stay informed of active outbreaks worldwide." },
       { title: "Journalists & researchers", text: "Access structured, sourced, exportable data (CSV, PDF) for your work." },
+      { title: "Corporate risk & global mobility", text: "Security managers, risk officers and HR teams: anticipate health risks in regions where your employees and expatriates operate." },
       { title: "Travellers & expats", text: "Check active alerts before and during your trips abroad." },
       { title: "NGOs & humanitarian organisations", text: "Monitor priority regions and receive targeted alerts to react quickly." },
       { title: "Governments & agencies", text: "Integrate outbreak data from WHO, ECDC, PAHO & Africa CDC into your systems via our Enterprise REST API." },
@@ -192,6 +194,7 @@ const LABELS: Record<string, {
     users: [
       { title: "Profesionales de la salud", text: "Médicos, enfermeros, epidemiólogos: manténgase informado sobre los brotes activos en todo el mundo." },
       { title: "Periodistas e investigadores", text: "Acceda a datos estructurados, con fuentes y exportables (CSV, PDF) para sus trabajos." },
+      { title: "Gestión de riesgos y movilidad global", text: "Responsables de seguridad, gestores de riesgos y equipos de RRHH: anticipe los riesgos sanitarios en las zonas de operación de sus empleados y expatriados." },
       { title: "Viajeros y expatriados", text: "Consulte las alertas activas antes y durante sus viajes al extranjero." },
       { title: "ONG y organizaciones humanitarias", text: "Monitoree regiones prioritarias y reciba alertas específicas para reaccionar rápidamente." },
       { title: "Gobiernos y agencias", text: "Integre datos de la OMS, ECDC, PAHO y Africa CDC directamente en sus sistemas mediante nuestra API REST Enterprise." },
@@ -228,6 +231,7 @@ const LABELS: Record<string, {
     users: [
       { title: "المهنيون الصحيون", text: "الأطباء والممرضون وعلماء الأوبئة: ابقَ على اطلاع بالتفشيات النشطة حول العالم." },
       { title: "الصحفيون والباحثون", text: "الوصول إلى بيانات منظمة ومُسنَدة وقابلة للتصدير (CSV، PDF) لأعمالك." },
+      { title: "إدارة المخاطر والتنقل الدولي", text: "مسؤولو الأمن ومديرو المخاطر وفرق الموارد البشرية: توقّعوا المخاطر الصحية في مناطق عمليات موظفيكم والمغتربين." },
       { title: "المسافرون والمغتربون", text: "تحقق من التنبيهات النشطة قبل رحلاتك إلى الخارج وخلالها." },
       { title: "المنظمات غير الحكومية والإنسانية", text: "راقب المناطق ذات الأولوية واستقبل تنبيهات مستهدفة للاستجابة السريعة." },
       { title: "الحكومات والوكالات", text: "ادمج بيانات التفشيات (WHO وECDC وPAHO وAfrica CDC) في أنظمتك عبر REST API لخطة Enterprise." },
@@ -264,6 +268,7 @@ const LABELS: Record<string, {
     users: [
       { title: "Tenaga kesehatan", text: "Dokter, perawat, ahli epidemiologi: tetap terinformasi tentang wabah aktif di seluruh dunia." },
       { title: "Jurnalis & peneliti", text: "Akses data terstruktur, bersumber, dan dapat diekspor (CSV, PDF) untuk pekerjaan Anda." },
+      { title: "Manajemen risiko & mobilitas global", text: "Manajer keamanan, manajer risiko, dan tim HR: antisipasi risiko kesehatan di wilayah operasi karyawan dan ekspatriat Anda." },
       { title: "Wisatawan & ekspatriat", text: "Periksa peringatan aktif sebelum dan selama perjalanan Anda ke luar negeri." },
       { title: "LSM & organisasi kemanusiaan", text: "Pantau wilayah prioritas dan terima peringatan yang ditargetkan untuk bereaksi dengan cepat." },
       { title: "Pemerintah & lembaga", text: "Integrasikan data wabah WHO, ECDC, PAHO & Africa CDC langsung ke sistem Anda melalui REST API Enterprise kami." },
