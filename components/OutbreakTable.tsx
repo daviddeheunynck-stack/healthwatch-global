@@ -702,6 +702,17 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
         </p>
       )}
 
+      {/* Data note */}
+      <p className="text-xs text-gray-700 mt-1">
+        {{
+          fr: "Cas et décès issus des sources officielles (OMS, ECDC, PAHO). Les guéris ne sont pas publiés par l'OMS dans un format structuré.",
+          es: "Casos y muertes según fuentes oficiales (OMS, ECDC, PAHO). Los recuperados no son publicados por la OMS en formato estructurado.",
+          ar: "الحالات والوفيات من مصادر رسمية (WHO، ECDC، PAHO). لا تنشر منظمة الصحة العالمية بيانات المتعافين بصيغة منظمة.",
+          id: "Kasus dan kematian dari sumber resmi (WHO, ECDC, PAHO). Data sembuh tidak dipublikasikan WHO dalam format terstruktur.",
+          en: "Cases and deaths from official sources (WHO, ECDC, PAHO). Recovered figures are not published by WHO in a structured format.",
+        }[locale] ?? "Cases and deaths from official sources (WHO, ECDC, PAHO). Recovered figures are not published by WHO in a structured format."}
+      </p>
+
       {/* Detail modal */}
       <OutbreakDetailModal
         outbreak={selected}
