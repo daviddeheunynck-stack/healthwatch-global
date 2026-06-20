@@ -7,9 +7,9 @@ import { track } from "@vercel/analytics/react";
 // Update this URL once the PH submission is live
 const PH_URL = "https://www.producthunt.com/posts/healthwatch-global";
 
-// PH launch day window (UTC) — show the bar on June 24 and 25, 2026
-const LAUNCH_START = new Date("2026-06-24T00:00:00Z");
-const LAUNCH_END   = new Date("2026-06-25T23:59:59Z");
+// PH launch day window (UTC) — show the bar on June 25 and 26, 2026
+const LAUNCH_START = new Date("2026-06-25T00:00:00Z");
+const LAUNCH_END   = new Date("2026-06-26T23:59:59Z");
 
 const COPY: Record<string, {
   launchDay:  { text: string; cta: string };
