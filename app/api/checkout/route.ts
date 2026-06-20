@@ -98,7 +98,9 @@ export async function POST(req: NextRequest) {
     }
     const currency = getCurrency(locale ?? "fr");
     const billingPeriod = billing === "annual" ? "annual" : "monthly";
-    const priceId = PRICES[`${plan ?? ""}:${billingPeriod}`]?.[currency];
+    const priceRow = PRICES[`${plan ?? ""}:${billingPeriod}`];
+    // Fall back to EUR if the USD price ID is not configured (e.g. Team USD not yet created in Stripe)
+    const priceId = priceRow?.[currency] || priceRow?.["eur"];
 
     if (!priceId) {
       return NextResponse.json({ error: "Plan ou devise invalide." }, { status: 400 });
