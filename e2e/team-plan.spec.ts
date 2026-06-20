@@ -34,19 +34,21 @@ test.describe("Plan Team — page tarifs", () => {
 
   test("fonctionnalités Team — 5 sièges + facture institutionnelle", async ({ page }) => {
     await page.goto("/fr/pricing");
-    await expect(page.getByText("5 sièges inclus")).toBeVisible();
-    await expect(page.getByText("Une seule facture institutionnelle")).toBeVisible();
+    // Target the feature <li> specifically — the text also appears in teamDesc paragraph
+    await expect(page.locator("li").filter({ hasText: "5 sièges inclus" })).toBeVisible();
+    await expect(page.locator("li").filter({ hasText: "Une seule facture institutionnelle" })).toBeVisible();
   });
 
   test("fonctionnalités Team — EN: 5 seats + single invoice", async ({ page }) => {
     await page.goto("/en/pricing");
-    await expect(page.getByText("5 seats included")).toBeVisible();
-    await expect(page.getByText("Single institutional invoice")).toBeVisible();
+    await expect(page.locator("li").filter({ hasText: "5 seats included" })).toBeVisible();
+    await expect(page.locator("li").filter({ hasText: "Single institutional invoice" })).toBeVisible();
   });
 
-  test("prix Team EN — €149/mois après bascule mensuel", async ({ page }) => {
-    await page.goto("/en/pricing");
-    await page.getByRole("button", { name: /monthly/i }).click();
+  test("prix Team ES — €149/mois après bascule mensuel", async ({ page }) => {
+    // EN locale shows USD ($165); use ES locale to verify €149 monthly price
+    await page.goto("/es/pricing");
+    await page.getByRole("button", { name: /mensual/i }).click();
     await expect(page.getByText("€149", { exact: true })).toBeVisible();
   });
 });

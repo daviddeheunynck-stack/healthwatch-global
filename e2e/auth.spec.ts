@@ -23,9 +23,10 @@ test.describe("Authentification", () => {
 
   test("lien mot de passe oublié fonctionne", async ({ page }) => {
     await page.goto("/fr/login");
-    // Use href selector — more reliable than text match with accented chars + punctuation
-    await page.locator("a[href*='forgot-password']").click();
-    await expect(page).toHaveURL(/forgot-password/);
+    await Promise.all([
+      page.waitForURL(/forgot-password/, { timeout: 10000 }),
+      page.locator("a[href*='forgot-password']").click(),
+    ]);
   });
 
   test("page forgot-password s'affiche", async ({ page }) => {

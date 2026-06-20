@@ -33,8 +33,9 @@ test.describe("Page Tarifs", () => {
 
   test("Plan Team — liste les fonctionnalités clés (5 sièges, facture institutionnelle)", async ({ page }) => {
     await page.goto("/fr/pricing");
-    await expect(page.getByText("5 sièges inclus")).toBeVisible();
-    await expect(page.getByText("Une seule facture institutionnelle")).toBeVisible();
+    // Target feature <li> — text also appears in teamDesc, causing strict mode violation
+    await expect(page.locator("li").filter({ hasText: "5 sièges inclus" })).toBeVisible();
+    await expect(page.locator("li").filter({ hasText: "Une seule facture institutionnelle" })).toBeVisible();
   });
 
   test("Plan Team — bouton CTA existe", async ({ page }) => {
