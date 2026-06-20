@@ -55,7 +55,7 @@ const COPY: Record<string, {
   en: {
     toggleMonthly: "Monthly",
     toggleAnnual: "Annual",
-    saveLabel: "-28%",
+    saveLabel: "-20%",
     perMonth: "/month",
     perYear: "/year",
     billedAnnually: "billed annually",
@@ -176,13 +176,14 @@ const TRIAL_COPY: Record<string, {
   },
 };
 
-// Pro: €29/mo | €249/yr · Team: €149/mo | €1 290/yr
+// EUR: Pro €29/mo | €249/yr · Team €149/mo | €1 290/yr
+// USD: Pro $49/mo | $468/yr · Team $165/mo | $1 425/yr  (en locale only)
 const PRICES: Record<string, {
   proMonthly: string; proAnnual: string; proAnnualTotal: string;
   teamMonthly: string; teamAnnual: string; teamAnnualTotal: string;
 }> = {
   fr: { proMonthly: "29 €",  proAnnual: "249 €",    proAnnualTotal: "économisez 99 €",  teamMonthly: "149 €", teamAnnual: "1 290 €", teamAnnualTotal: "économisez 498 €" },
-  en: { proMonthly: "€29",   proAnnual: "€249",     proAnnualTotal: "save €99",         teamMonthly: "€149",  teamAnnual: "€1,290",  teamAnnualTotal: "save €498"        },
+  en: { proMonthly: "$49",   proAnnual: "$468",     proAnnualTotal: "save $120",        teamMonthly: "$165",  teamAnnual: "$1,425",  teamAnnualTotal: "save $555"        },
   es: { proMonthly: "€29",   proAnnual: "€249",     proAnnualTotal: "ahorre €99",       teamMonthly: "€149",  teamAnnual: "€1.290",  teamAnnualTotal: "ahorre €498"      },
   ar: { proMonthly: "€29",   proAnnual: "€249",     proAnnualTotal: "وفّر 99 €",        teamMonthly: "€149",  teamAnnual: "€1.290",  teamAnnualTotal: "وفّر 498 €"       },
   id: { proMonthly: "€29",   proAnnual: "€249",     proAnnualTotal: "hemat €99",        teamMonthly: "€149",  teamAnnual: "€1.290",  teamAnnualTotal: "hemat €498"       },
