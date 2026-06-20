@@ -317,10 +317,9 @@ export default async function DiseasePage({
   const active  = allOutbreaks.filter((o) => o.active);
   const history = allOutbreaks.filter((o) => !o.active);
 
-  const totalCases     = active.reduce((s, o) => s + (o.cases || 0), 0);
-  const totalDeaths    = active.reduce((s, o) => s + (o.deaths || 0), 0);
-  const totalRecovered = active.reduce((s, o) => s + ((o as unknown as Record<string, unknown>).recovered as number || 0), 0);
-  const cfr            = totalCases > 0 ? ((totalDeaths / totalCases) * 100).toFixed(1) : null;
+  const totalCases  = active.reduce((s, o) => s + (o.cases || 0), 0);
+  const totalDeaths = active.reduce((s, o) => s + (o.deaths || 0), 0);
+  const cfr         = totalCases > 0 ? ((totalDeaths / totalCases) * 100).toFixed(1) : null;
   const countriesSet = new Set(allOutbreaks.map((o) => o.country_en || o.country).filter(Boolean));
 
   // Unique countries with active-status for the "Countries affected" chips
@@ -416,16 +415,15 @@ export default async function DiseasePage({
       </div>
 
       {/* Stats bar */}
-      <div className={`grid gap-4 ${totalRecovered > 0 ? "grid-cols-2 sm:grid-cols-5" : "grid-cols-2 sm:grid-cols-4"}`}>
+      <div className="grid gap-4 grid-cols-2 sm:grid-cols-4">
         {[
-          { label: lb.cases,     value: totalCases     > 0 ? totalCases.toLocaleString("en")     : lb.noData },
-          { label: lb.deaths,    value: totalDeaths    > 0 ? totalDeaths.toLocaleString("en")    : lb.noData },
-          ...(totalRecovered > 0 ? [{ label: lb.recovered, value: totalRecovered.toLocaleString("en"), green: true }] : []),
+          { label: lb.cases,     value: totalCases  > 0 ? totalCases.toLocaleString("en")  : lb.noData },
+          { label: lb.deaths,    value: totalDeaths > 0 ? totalDeaths.toLocaleString("en") : lb.noData },
           { label: lb.cfr,       value: cfr ? `${cfr}%` : lb.noData },
           { label: lb.countries, value: countriesSet.size > 0 ? countriesSet.size.toString() : lb.noData },
-        ].map(({ label, value, green }) => (
+        ].map(({ label, value }) => (
           <div key={label} className="bg-gray-900 border border-gray-800 rounded-xl p-4 text-center">
-            <p className={`text-2xl font-bold ${green ? "text-emerald-400" : "text-white"}`}>{value}</p>
+            <p className="text-2xl font-bold text-white">{value}</p>
             <p className="text-xs text-gray-500 mt-1">{label}</p>
           </div>
         ))}
