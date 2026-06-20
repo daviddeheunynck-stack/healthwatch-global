@@ -10,33 +10,13 @@ const stripBOM = (val: string | undefined) =>
   (val || "").replace(/^﻿/, "").trim();
 
 // Paid plans: Pro (€29/mo | €249/yr) · Team (€149/mo | €1290/yr, 5 seats)
-const PRICES: Record<string, Record<string, Record<string, string>>> = {
-  pro: {
-    monthly: {
-      eur: stripBOM(process.env.STRIPE_PRO_EUR_PRICE_ID),
-      usd: stripBOM(process.env.STRIPE_PRO_USD_PRICE_ID),
-    },
-    annual: {
-      eur: stripBOM(process.env.STRIPE_PRO_EUR_ANNUAL_PRICE_ID),
-      usd: stripBOM(process.env.STRIPE_PRO_USD_ANNUAL_PRICE_ID),
-    },
-  },
-  team: {
-    monthly: {
-      eur: stripBOM(process.env.STRIPE_TEAM_EUR_PRICE_ID),
-      usd: stripBOM(process.env.STRIPE_TEAM_EUR_PRICE_ID), // EUR only for now
-    },
-    annual: {
-      eur: stripBOM(process.env.STRIPE_TEAM_EUR_ANNUAL_PRICE_ID),
-      usd: stripBOM(process.env.STRIPE_TEAM_EUR_ANNUAL_PRICE_ID),
-    },
-  },
+// EUR-only billing for now — add USD price IDs and restore getCurrency() when multi-currency is needed.
+const PRICES: Record<string, string> = {
+  "pro:monthly":  stripBOM(process.env.STRIPE_PRO_EUR_PRICE_ID),
+  "pro:annual":   stripBOM(process.env.STRIPE_PRO_EUR_ANNUAL_PRICE_ID),
+  "team:monthly": stripBOM(process.env.STRIPE_TEAM_EUR_PRICE_ID),
+  "team:annual":  stripBOM(process.env.STRIPE_TEAM_EUR_ANNUAL_PRICE_ID),
 };
-
-function getCurrency(_locale: string): "eur" | "usd" {
-  // Pricing page shows EUR for all locales — always bill in EUR
-  return "eur";
-}
 
 // Stripe Checkout's `locale` is a closed enum (auto, bg, cs, … fr, … id, … zh-TW)
 // — "ar" is NOT in it. Sending it makes the Checkout Sessions API reject the
@@ -112,9 +92,8 @@ export async function POST(req: NextRequest) {
       existingStripeCustomerId = profileData?.stripe_customer_id ?? null;
       dbTrialEndsAt = profileData?.trial_ends_at ?? null;
     }
-    const currency = getCurrency(locale ?? "fr");
     const billingPeriod = billing === "annual" ? "annual" : "monthly";
-    const priceId = PRICES[plan ?? ""]?.[billingPeriod]?.[currency];
+    const priceId = PRICES[`${plan ?? ""}:${billingPeriod}`];
 
     if (!priceId) {
       return NextResponse.json({ error: "Plan ou devise invalide." }, { status: 400 });
