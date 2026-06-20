@@ -158,6 +158,8 @@ function planFromPriceId(priceId: string | null | undefined): string {
   const TEAM_IDS = new Set([
     c(process.env.STRIPE_TEAM_EUR_PRICE_ID),
     c(process.env.STRIPE_TEAM_EUR_ANNUAL_PRICE_ID),
+    c(process.env.STRIPE_TEAM_USD_PRICE_ID),
+    c(process.env.STRIPE_TEAM_USD_ANNUAL_PRICE_ID),
   ].filter(Boolean));
 
   if (priceId && PRO_IDS.has(priceId)) return "pro";
