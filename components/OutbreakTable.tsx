@@ -12,6 +12,7 @@ type SortKey = "risk" | "cases" | "deaths" | "cfr" | "date";
 type SortDir = "asc" | "desc";
 import { getLocalizedDisease, getLocalizedCountry, isNewOutbreak, staleOutbreakDays, sourceStatus, sourceName } from "@/lib/outbreaks";
 import { diseaseToSlug, normalizeDisease } from "@/lib/disease-data";
+import { countryToSlug } from "@/lib/country-utils";
 import type { Outbreak } from "@/lib/outbreaks";
 import type { OutbreakTrend } from "@/lib/outbreak-trend";
 import RiskBadge from "@/components/RiskBadge";
@@ -592,7 +593,13 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
                     </div>
                   </td>
                   <td className="px-4 py-3 text-gray-300">
-                    {getLocalizedCountry(outbreak, locale)}
+                    <Link
+                      href={`/${locale}/country/${countryToSlug(outbreak.country_en ?? outbreak.country ?? "")}`}
+                      onClick={(e) => e.stopPropagation()}
+                      className="hover:text-white transition-colors"
+                    >
+                      {getLocalizedCountry(outbreak, locale)}
+                    </Link>
                   </td>
                   <td className="px-4 py-3 text-gray-300">
                     <div className="flex items-center gap-1.5">
