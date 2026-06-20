@@ -11,6 +11,7 @@ import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 import { diseaseToSlug } from "@/lib/disease-data";
 import type { Outbreak } from "@/lib/outbreaks";
 import ShareOutbreakButton from "@/components/ShareOutbreakButton";
+import WatchButton from "@/components/WatchButton";
 
 export const revalidate = 3600;
 
@@ -376,42 +377,45 @@ export default async function CountryPage({
               const disease = getLocalizedDisease(o, l) ?? o.disease_en ?? o.disease;
               const cfr1 = o.cases > 0 ? (o.deaths / o.cases * 100).toFixed(1) + "%" : lb.noData;
               return (
-                <Link
+                <div
                   key={o.id}
-                  href={`/${l}/outbreak/${o.id}`}
-                  className="flex items-center justify-between gap-4 bg-gray-900/60 hover:bg-gray-900 border border-gray-800 hover:border-gray-700 rounded-xl p-4 transition-colors group"
+                  className="relative bg-gray-900/60 hover:bg-gray-900 border border-gray-800 hover:border-gray-700 rounded-xl p-4 transition-colors group"
                 >
-                  <div className="flex items-center gap-3 min-w-0">
-                    <div className={`w-2 h-2 rounded-full shrink-0 ${
-                      o.risk_level === "high" ? "bg-red-400 animate-pulse" :
-                      o.risk_level === "medium" ? "bg-yellow-400" : "bg-green-400"
-                    }`} />
-                    <div className="min-w-0">
-                      <p className="font-semibold text-white truncate group-hover:text-red-300 transition-colors">
-                        {disease}
-                      </p>
-                      {o.date && (
-                        <p className="text-xs text-gray-500">{o.date}</p>
+                  <Link href={`/${l}/outbreak/${o.id}`} className="absolute inset-0 rounded-xl z-0" aria-label={disease ?? ""} />
+                  <div className="relative z-10 flex items-center justify-between gap-4">
+                    <div className="flex items-center gap-3 min-w-0">
+                      <div className={`w-2 h-2 rounded-full shrink-0 ${
+                        o.risk_level === "high" ? "bg-red-400 animate-pulse" :
+                        o.risk_level === "medium" ? "bg-yellow-400" : "bg-green-400"
+                      }`} />
+                      <div className="min-w-0">
+                        <p className="font-semibold text-white truncate group-hover:text-red-300 transition-colors">
+                          {disease}
+                        </p>
+                        {o.date && (
+                          <p className="text-xs text-gray-500">{o.date}</p>
+                        )}
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-3 shrink-0">
+                      {o.is_pheic && (
+                        <span className="text-xs font-bold text-purple-400 bg-purple-500/10 border border-purple-500/30 rounded px-2 py-0.5">
+                          PHEIC
+                        </span>
                       )}
+                      <span className={`text-xs font-semibold border rounded-full px-2.5 py-1 ${RISK_STYLE[o.risk_level] ?? RISK_STYLE.low}`}>
+                        {lb.risk[o.risk_level] ?? o.risk_level}
+                      </span>
+                      {o.cases > 0 && (
+                        <div className="text-right">
+                          <p className="text-sm font-bold text-white">{o.cases.toLocaleString()}</p>
+                          <p className="text-xs text-gray-500">{cfr1}</p>
+                        </div>
+                      )}
+                      <WatchButton outbreakId={o.id} locale={l} />
                     </div>
                   </div>
-                  <div className="flex items-center gap-3 shrink-0">
-                    {o.is_pheic && (
-                      <span className="text-xs font-bold text-purple-400 bg-purple-500/10 border border-purple-500/30 rounded px-2 py-0.5">
-                        PHEIC
-                      </span>
-                    )}
-                    <span className={`text-xs font-semibold border rounded-full px-2.5 py-1 ${RISK_STYLE[o.risk_level] ?? RISK_STYLE.low}`}>
-                      {lb.risk[o.risk_level] ?? o.risk_level}
-                    </span>
-                    {o.cases > 0 && (
-                      <div className="text-right">
-                        <p className="text-sm font-bold text-white">{o.cases.toLocaleString()}</p>
-                        <p className="text-xs text-gray-500">{cfr1}</p>
-                      </div>
-                    )}
-                  </div>
-                </Link>
+                </div>
               );
             })}
           </div>
