@@ -46,14 +46,14 @@ export async function fetchWHODONList(top = 25): Promise<WHONewsItem[]> {
 async function fetchArticleNumbers(
   path: string,
   countryAliases: string[] | null
-): Promise<{ cases: number; deaths: number; description: string }> {
+): Promise<{ cases: number; deaths: number; recovered: number; description: string }> {
   try {
     const url = path.startsWith("http") ? path : `https://www.who.int${path}`;
     const res = await fetch(url, {
       headers: FETCH_HEADERS,
       signal: AbortSignal.timeout(8000),
     });
-    if (!res.ok) return { cases: 0, deaths: 0, description: "" };
+    if (!res.ok) return { cases: 0, deaths: 0, recovered: 0, description: "" };
 
     const html = await res.text();
 
@@ -68,9 +68,9 @@ async function fetchArticleNumbers(
 
     const nums = (countryAliases && extractNumbersForCountry(rawText, countryAliases)) || extractNumbers(rawText);
     const description = rawText.slice(0, 400);
-    return { cases: nums.cases, deaths: nums.deaths, description };
+    return { cases: nums.cases, deaths: nums.deaths, recovered: nums.recovered ?? 0, description };
   } catch {
-    return { cases: 0, deaths: 0, description: "" };
+    return { cases: 0, deaths: 0, recovered: 0, description: "" };
   }
 }
 
@@ -111,24 +111,31 @@ export async function parseWHODONItem(
     ? `https://www.who.int/emergencies/disease-outbreak-news/item/${donSlug}`
     : `https://www.who.int${ItemDefaultUrl || ""}`;
 
-  // Try to get numbers from Summary field first (API field, fast)
+  // Try to get numbers from Summary field first (API field, fast).
+  // Summary rarely contains recovered data — body fetch is needed for that.
   let cases = 0;
   let deaths = 0;
+  let recovered = 0;
   let description = "";
 
   if (Summary) {
     const plain = Summary.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
     const nums = (countryAliases && extractNumbersForCountry(plain, countryAliases)) || extractNumbers(plain);
-    cases  = nums.cases  ?? 0;
-    deaths = nums.deaths ?? 0;
+    cases     = nums.cases     ?? 0;
+    deaths    = nums.deaths    ?? 0;
+    recovered = nums.recovered ?? 0;
     description = plain.slice(0, 400);
   }
 
-  // Fallback: fetch full article page for numbers (only for new entries)
-  if (fetchBody && cases === 0 && ItemDefaultUrl) {
+  // Fetch full article page for new entries OR when recovered is still 0
+  // (WHO summaries rarely include survivor counts — body always does).
+  if (fetchBody && (cases === 0 || recovered === 0) && ItemDefaultUrl) {
     const bodyData = await fetchArticleNumbers(ItemDefaultUrl, countryAliases);
-    cases  = bodyData.cases  ?? 0;
-    deaths = bodyData.deaths ?? 0;
+    if (cases === 0) {
+      cases  = bodyData.cases  ?? 0;
+      deaths = bodyData.deaths ?? 0;
+    }
+    recovered   = bodyData.recovered ?? 0;
     description = bodyData.description || description;
     await new Promise((r) => setTimeout(r, 150)); // polite delay
   }
@@ -147,6 +154,7 @@ export async function parseWHODONItem(
     lng: geo.lng,
     cases,
     deaths,
+    recovered,
     risk_level,
     date,
     source: articleUrl,

@@ -126,6 +126,7 @@ export function parseReliefWebItem(item: ReliefWebItem): ParsedOutbreak | null {
     lng: geo.lng,
     cases,
     deaths,
+    recovered: 0,
     risk_level,
     date: dateStr,
     source: `https://reliefweb.int/node/${item.id}`,

@@ -208,24 +208,28 @@ export async function GET(req: NextRequest) {
         // reflects a more recent one (e.g. byDiseaseCountry matched the
         // current row, but this article predates it).
         const isOlderArticle = outbreak.date < existingRow.date;
+        const existingRecovered = (existingRow as Record<string, unknown>).recovered as number | null ?? 0;
         const needsUpdate =
           !isOlderArticle &&
           (existingRow.cases !== outbreak.cases ||
             existingRow.deaths !== outbreak.deaths ||
-            existingRow.date !== outbreak.date) &&
+            existingRow.date !== outbreak.date ||
+            (outbreak.recovered > 0 && outbreak.recovered !== existingRecovered)) &&
           // Never overwrite a real case/death count with a parser-miss zero
           !(outbreak.cases === 0 && existingRow.cases > 0) &&
           !(outbreak.deaths === 0 && existingRow.deaths > 0);
 
         if (needsUpdate) {
+          const updatePayload: Record<string, unknown> = {
+            cases: outbreak.cases, deaths: outbreak.deaths,
+            date: outbreak.date, description: outbreak.description,
+            risk_level: outbreak.risk_level, source: outbreak.source,
+            active: true,
+          };
+          if (outbreak.recovered > 0) updatePayload.recovered = outbreak.recovered;
           const { error } = await supabase
             .from("outbreaks")
-            .update({
-              cases: outbreak.cases, deaths: outbreak.deaths,
-              date: outbreak.date, description: outbreak.description,
-              risk_level: outbreak.risk_level, source: outbreak.source,
-              active: true,
-            })
+            .update(updatePayload)
             .eq("id", existingRow.id);
           if (error) {
             console.error("[sync] update:", error);

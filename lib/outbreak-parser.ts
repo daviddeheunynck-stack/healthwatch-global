@@ -14,6 +14,7 @@ export interface ParsedOutbreak {
   lng: number;
   cases: number;
   deaths: number;
+  recovered: number;
   risk_level: "high" | "medium" | "low";
   date: string;          // YYYY-MM-DD
   source: string;        // WHO article URL (used as external ID for dedup)
@@ -104,7 +105,7 @@ export function parseTitle(title: string): { disease: string; country: string } 
 
 // ─── Number extraction from free text ─────────────────────────
 
-export function extractNumbers(text: string): { cases: number; deaths: number } {
+export function extractNumbers(text: string): { cases: number; deaths: number; recovered: number } {
   const clean = text
     .replace(/\n/g, " ")
     .replace(/ /g, " ")
@@ -144,6 +145,21 @@ export function extractNumbers(text: string): { cases: number; deaths: number } 
     /(\d[\d,]*)\s+(?:fatal\s+)?(?:casualties|casulties)/i,
   ];
 
+  const recoveredPatterns = [
+    // "88 patients have recovered" / "88 have recovered"
+    /(\d[\d,]*)\s+(?:patients?\s+)?have\s+recovered\b/i,
+    // "88 recovered" (standalone)
+    /(\d[\d,]*)\s+recovered\b(?!\s+(?:case|death|confirm))/i,
+    // "88 recoveries"
+    /(\d[\d,]*)\s+recoveries?\b/i,
+    // "recovered: 88"
+    /recovered[:\s]+(\d[\d,]*)/i,
+    // "88 patients discharged from" (ETU context)
+    /(\d[\d,]*)\s+patients?\s+(?:have\s+been\s+)?discharged\b/i,
+    // "discharged: 88"
+    /discharged[:\s]+(\d[\d,]*)/i,
+  ];
+
   let cases = 0;
   for (const p of casePatterns) {
     const m = clean.match(p);
@@ -156,7 +172,13 @@ export function extractNumbers(text: string): { cases: number; deaths: number } 
     if (m) { deaths = parseInt(m[1].replace(/,/g, ""), 10); break; }
   }
 
-  return { cases, deaths };
+  let recovered = 0;
+  for (const p of recoveredPatterns) {
+    const m = clean.match(p);
+    if (m) { recovered = parseInt(m[1].replace(/,/g, ""), 10); break; }
+  }
+
+  return { cases, deaths, recovered };
 }
 
 function escapeRegExp(s: string): string {
@@ -175,7 +197,7 @@ function escapeRegExp(s: string): string {
 export function extractNumbersForCountry(
   text: string,
   countryAliases: string[]
-): { cases: number; deaths: number } | null {
+): { cases: number; deaths: number; recovered: number } | null {
   const clean = text.replace(/\n/g, " ");
   const QUALIFIERS = "(?:(?:suspected|probable|confirmed|laboratory[- ]confirmed|human|new|reported|additional)\\s+)*";
   const aliasPattern = new RegExp(countryAliases.map(escapeRegExp).join("|"), "i");
@@ -196,8 +218,9 @@ export function extractNumbersForCountry(
   for (const m of clean.matchAll(pairPattern)) {
     if (nearCountry(m.index ?? 0, m[0].length)) {
       return {
-        cases: parseInt(m[1].replace(/,/g, ""), 10),
-        deaths: parseInt(m[2].replace(/,/g, ""), 10),
+        cases:     parseInt(m[1].replace(/,/g, ""), 10),
+        deaths:    parseInt(m[2].replace(/,/g, ""), 10),
+        recovered: 0,
       };
     }
   }
@@ -224,7 +247,19 @@ export function extractNumbersForCountry(
   }
 
   if (cases === null && deaths === null) return null;
-  return { cases: cases ?? 0, deaths: deaths ?? 0 };
+
+  // Recovered: anchor to country name in text
+  const recovPattern = /(\d[\d,]*)\s+(?:patients?\s+)?(?:have\s+)?recovered\b|(\d[\d,]*)\s+recoveries?\b|recovered[:\s]+(\d[\d,]*)|(\d[\d,]*)\s+patients?\s+(?:have\s+been\s+)?discharged\b/gi;
+  let recovered = 0;
+  for (const m of clean.matchAll(recovPattern)) {
+    if (nearCountry(m.index ?? 0, m[0].length)) {
+      const raw = m[1] ?? m[2] ?? m[3] ?? m[4] ?? "0";
+      recovered = parseInt(raw.replace(/,/g, ""), 10);
+      break;
+    }
+  }
+
+  return { cases: cases ?? 0, deaths: deaths ?? 0, recovered };
 }
 
 // Splits a WHO DON country fragment like "Democratic Republic of the Congo
@@ -334,6 +369,7 @@ export function buildOutbreakFromRSSItem(item: RSSItem): ParsedOutbreak | null {
     lng: geo.lng,
     cases,
     deaths,
+    recovered: 0,
     risk_level,
     date,
     source: item.link || "https://www.who.int/emergencies/disease-outbreak-news",
