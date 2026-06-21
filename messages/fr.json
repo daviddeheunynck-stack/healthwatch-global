@@ -102,7 +102,9 @@
     "faq4_q": "Que se passe-t-il à la fin des 14 jours d'essai ?",
     "faq4_a": "Si vous avez commencé l'essai sans entrer de carte, rien ne se passe — votre compte passe automatiquement au plan Gratuit, sans débit. Si vous avez ajouté une carte, votre abonnement démarre à la fin de l'essai. Vous pouvez annuler à tout moment depuis votre compte.",
     "faq5_q": "D'où proviennent vos données ?",
-    "faq5_a": "Toutes les données sur les foyers épidémiques proviennent directement d'agences de santé publique officielles : OMS, PAHO et ECDC. Nous ne fabriquons ni n'estimons aucune donnée — si une agence n'a pas publié un chiffre, nous l'affichons comme « non communiqué » plutôt que de l'inventer."
+    "faq5_a": "Toutes les données sur les foyers épidémiques proviennent directement d'agences de santé publique officielles : OMS, PAHO et ECDC. Nous ne fabriquons ni n'estimons aucune donnée — si une agence n'a pas publié un chiffre, nous l'affichons comme « non communiqué » plutôt que de l'inventer.",
+    "faq6_q": "HealthWatch remplace-t-il les outils OMS comme EIOS ou EWARN ?",
+    "faq6_a": "Non — et ce n'est pas notre objectif. EIOS est un outil puissant conçu pour les analystes OMS et les institutions affiliées. HealthWatch Global répond à un besoin différent : les équipes opérationnelles (coordinateurs terrain ONG, agents humanitaires, responsables de programmes santé) qui ont besoin d'un digest lisible des données officielles OMS/ECDC/PAHO — avec alertes email proactives, intégration Slack, support multilingue et rapports PDF — sans credentials OMS ni formation analytique spécialisée. Si votre équipe utilise déjà EIOS, HealthWatch peut le compléter en poussant les alertes directement vers vos boîtes mail et votre canal Slack."
   },
   "auth": {
     "loginTitle": "Connexion",

@@ -102,7 +102,9 @@
     "faq4_q": "Apa yang terjadi setelah 14 hari uji coba berakhir?",
     "faq4_a": "Jika Anda memulai uji coba tanpa memasukkan kartu, tidak ada yang terjadi — akun Anda otomatis beralih ke Paket Gratis, tanpa tagihan. Jika Anda menambahkan kartu, langganan Anda dimulai di akhir uji coba. Anda dapat membatalkan kapan saja dari akun Anda.",
     "faq5_q": "Dari mana data Anda berasal?",
-    "faq5_a": "Semua data wabah bersumber langsung dari lembaga kesehatan masyarakat resmi: WHO, PAHO, dan ECDC. Kami tidak membuat atau memperkirakan data — jika sebuah lembaga belum melaporkan angka, kami menampilkannya sebagai 'tidak dilaporkan' daripada menebak-nebak."
+    "faq5_a": "Semua data wabah bersumber langsung dari lembaga kesehatan masyarakat resmi: WHO, PAHO, dan ECDC. Kami tidak membuat atau memperkirakan data — jika sebuah lembaga belum melaporkan angka, kami menampilkannya sebagai 'tidak dilaporkan' daripada menebak-nebak.",
+    "faq6_q": "Apakah HealthWatch menggantikan alat WHO seperti EIOS atau EWARN?",
+    "faq6_a": "Tidak. EIOS adalah alat canggih untuk analis WHO dan institusi afiliasi. HealthWatch Global melayani kebutuhan yang berbeda: tim operasional (koordinator LSM, staf kemanusiaan, manajer program kesehatan) yang membutuhkan ringkasan data resmi WHO/ECDC/PAHO yang dapat ditindaklanjuti — dengan peringatan email proaktif, integrasi Slack, dukungan multibahasa, dan laporan PDF — tanpa memerlukan kredensial WHO."
   },
   "auth": {
     "loginTitle": "Masuk",

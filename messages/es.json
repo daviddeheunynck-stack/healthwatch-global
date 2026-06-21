@@ -102,7 +102,9 @@
     "faq4_q": "¿Qué ocurre cuando terminan los 14 días de prueba?",
     "faq4_a": "Si comenzó la prueba sin introducir una tarjeta, no ocurre nada: su cuenta pasa automáticamente al plan Gratuito, sin cargo. Si añadió una tarjeta, su suscripción comienza al final de la prueba. Puede cancelar en cualquier momento desde su cuenta.",
     "faq5_q": "¿De dónde provienen sus datos?",
-    "faq5_a": "Todos los datos sobre brotes provienen directamente de organismos oficiales de salud pública: OMS, PAHO y ECDC. No fabricamos ni estimamos datos: si una agencia no ha publicado una cifra, la mostramos como 'no comunicado' en lugar de inventarla."
+    "faq5_a": "Todos los datos sobre brotes provienen directamente de organismos oficiales de salud pública: OMS, PAHO y ECDC. No fabricamos ni estimamos datos: si una agencia no ha publicado una cifra, la mostramos como 'no comunicado' en lugar de inventarla.",
+    "faq6_q": "¿HealthWatch reemplaza herramientas de la OMS como EIOS o EWARN?",
+    "faq6_a": "No. EIOS es una herramienta potente para analistas de la OMS e instituciones afiliadas. HealthWatch Global atiende una necesidad distinta: equipos operativos (coordinadores de ONG, personal humanitario, responsables de programas de salud) que necesitan un resumen accionable de datos oficiales OMS/ECDC/PAHO — con alertas proactivas por correo, integración Slack, soporte multilingüe e informes PDF — sin credenciales de la OMS. Si su equipo ya usa EIOS, HealthWatch puede complementarlo enviando alertas directamente a su bandeja de entrada y canal de Slack."
   },
   "auth": {
     "loginTitle": "Iniciar sesión",

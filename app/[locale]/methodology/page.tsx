@@ -56,6 +56,9 @@ const COPY: Record<Locale, {
   riskLevels: { label: string; labelClass: string; criteria: string }[];
   limitsTitle: string;
   limits: string[];
+  eiosTitle: string;
+  eiosSub: string;
+  eiosItems: { label: string; hwg: string; other: string }[];
   correctionsTitle: string;
   correctionsDesc: string;
   correctionsBtn: string;
@@ -118,6 +121,17 @@ const COPY: Record<Locale, {
       "Outbreak-end detection is manual. We do not automatically close outbreaks unless the source explicitly reports resolution.",
       "Translations (disease names, country names) are maintained by our team — minor localization nuances may exist in edge cases.",
       "HealthWatch Global is not a medical authority. Data on this platform should not replace direct consultation of official WHO/ECDC publications for clinical or policy decisions.",
+      "The 'date' field for each outbreak reflects the date reported by the official source bulletin — not when HealthWatch ingested it. Ingestion typically occurs within 6 hours of source publication. The freshness badge on the dashboard shows the actual last ingestion timestamp.",
+    ],
+    eiosTitle: "HealthWatch vs WHO surveillance tools (EIOS, EWARN)",
+    eiosSub: "EIOS and similar WHO tools are designed for WHO analysts and affiliated institutions. HealthWatch Global serves a different audience — here is how they differ.",
+    eiosItems: [
+      { label: "Access", hwg: "Open to any organization — no WHO credentials or affiliation required", other: "EIOS requires WHO affiliation or national IHR focal point access" },
+      { label: "Target user", hwg: "Operational teams: NGO coordinators, humanitarian staff, health programme managers", other: "Epidemiological analysts with WHO/institutional training" },
+      { label: "Proactive alerts", hwg: "Automated email + Slack/Teams alerts per monitored region", other: "No proactive alert system — requires active daily monitoring" },
+      { label: "Languages", hwg: "English, French, Spanish, Arabic, Indonesian", other: "Primarily English" },
+      { label: "Team access", hwg: "Shared team plans with seat management and single invoice", other: "Individual credentials, no shared team workspace" },
+      { label: "Data export", hwg: "PDF reports + CSV export per outbreak or region", other: "Not designed for export to third-party systems" },
     ],
     correctionsTitle: "Corrections and data disputes",
     correctionsDesc: "If you identify a data error, incorrect figure, or source mismatch, contact us. We review and correct within 48 hours.",
@@ -181,6 +195,17 @@ const COPY: Record<Locale, {
       "La détection de la fin d'un foyer est manuelle. Nous ne fermons pas automatiquement les foyers à moins que la source ne signale explicitement la résolution.",
       "Les traductions (noms de maladies, noms de pays) sont maintenues par notre équipe — des nuances mineures de localisation peuvent exister dans des cas atypiques.",
       "HealthWatch Global n'est pas une autorité médicale. Les données sur cette plateforme ne doivent pas remplacer la consultation directe des publications officielles OMS/ECDC pour des décisions cliniques ou politiques.",
+      "Le champ « date » de chaque foyer reflète la date rapportée dans le bulletin officiel — pas la date d'intégration par HealthWatch. L'intégration intervient généralement dans les 6 heures suivant la publication source. Le badge de fraîcheur sur le tableau de bord affiche le timestamp réel de la dernière synchronisation.",
+    ],
+    eiosTitle: "HealthWatch vs les outils OMS (EIOS, EWARN)",
+    eiosSub: "EIOS et les outils OMS similaires sont conçus pour les analystes OMS et les institutions affiliées. HealthWatch Global s'adresse à un public différent — voici les différences clés.",
+    eiosItems: [
+      { label: "Accès", hwg: "Ouvert à toute organisation — sans credentials OMS ni affiliation", other: "EIOS requiert une affiliation OMS ou un accès de point focal national RSI" },
+      { label: "Utilisateur cible", hwg: "Équipes opérationnelles : coordinateurs ONG, agents humanitaires, responsables de programmes santé", other: "Analystes épidémiologiques avec formation OMS/institutionnelle" },
+      { label: "Alertes proactives", hwg: "Alertes email + Slack/Teams automatiques par région surveillée", other: "Aucun système d'alerte proactif — nécessite une surveillance active quotidienne" },
+      { label: "Langues", hwg: "Anglais, français, espagnol, arabe, indonésien", other: "Principalement anglais" },
+      { label: "Accès équipe", hwg: "Plans équipe partagés avec gestion des sièges et facture unique", other: "Identifiants individuels, pas d'espace de travail partagé" },
+      { label: "Export des données", hwg: "Rapports PDF + export CSV par foyer ou par région", other: "Non conçu pour l'export vers des systèmes tiers" },
     ],
     correctionsTitle: "Corrections et contestations de données",
     correctionsDesc: "Si vous identifiez une erreur de données, un chiffre incorrect ou une discordance de source, contactez-nous. Nous examinons et corrigeons dans les 48 heures.",
@@ -228,6 +253,17 @@ const COPY: Record<Locale, {
       "Los recuentos de casos reflejan lo notificado oficialmente — la carga real suele ser mayor por subdiagnóstico.",
       "La detección del fin de un brote es manual. No cerramos brotes automáticamente.",
       "HealthWatch Global no es una autoridad médica. Los datos no deben reemplazar la consulta directa de publicaciones oficiales para decisiones clínicas.",
+      "El campo 'fecha' de cada brote refleja la fecha reportada en el boletín oficial — no cuándo HealthWatch lo ingirió. La ingesta ocurre en general en menos de 6 horas desde la publicación fuente.",
+    ],
+    eiosTitle: "HealthWatch vs herramientas de vigilancia OMS (EIOS, EWARN)",
+    eiosSub: "EIOS y herramientas similares de la OMS están diseñadas para analistas de la OMS e instituciones afiliadas. HealthWatch Global sirve a un público diferente.",
+    eiosItems: [
+      { label: "Acceso", hwg: "Abierto a cualquier organización — sin credenciales OMS", other: "EIOS requiere afiliación OMS o acceso de punto focal nacional RSI" },
+      { label: "Usuario objetivo", hwg: "Equipos operativos: coordinadores ONG, personal humanitario, responsables de programas de salud", other: "Analistas epidemiológicos con formación OMS" },
+      { label: "Alertas proactivas", hwg: "Alertas automáticas por email + Slack/Teams por región", other: "Sin sistema de alertas proactivas — requiere monitoreo activo diario" },
+      { label: "Idiomas", hwg: "Inglés, francés, español, árabe, indonesio", other: "Principalmente inglés" },
+      { label: "Acceso en equipo", hwg: "Planes de equipo compartidos con gestión de asientos y factura única", other: "Credenciales individuales, sin espacio de trabajo compartido" },
+      { label: "Exportación", hwg: "Informes PDF + exportación CSV por brote o región", other: "No diseñado para exportar a sistemas de terceros" },
     ],
     correctionsTitle: "Correcciones y disputas de datos",
     correctionsDesc: "Si detecta un error de datos, una cifra incorrecta o una discrepancia de fuente, contáctenos. Revisamos y corregimos en 48 horas.",
@@ -275,6 +311,17 @@ const COPY: Record<Locale, {
       "أعداد الحالات تعكس ما أُبلغ عنه رسمياً — العبء الحقيقي عادةً أعلى بسبب نقص التشخيص والإبلاغ.",
       "الكشف عن انتهاء التفشي يدوي. لا نغلق التفشيات تلقائياً.",
       "HealthWatch Global ليست سلطة طبية. لا تحل البيانات محل الاستشارة المباشرة من المصادر الرسمية للقرارات الصحية.",
+      "يعكس حقل «التاريخ» لكل تفشٍّ التاريخ الوارد في النشرة الرسمية — لا تاريخ إدراجه في HealthWatch. يُجرى الإدراج عموماً في غضون 6 ساعات من النشر. يُظهر شارة الحداثة على لوحة التحكم الطابع الزمني الفعلي لآخر مزامنة.",
+    ],
+    eiosTitle: "HealthWatch مقابل أدوات مراقبة منظمة الصحة العالمية (EIOS، EWARN)",
+    eiosSub: "صُمِّم EIOS وأدوات مماثلة لمحللي منظمة الصحة العالمية والمؤسسات المنتسبة. تخدم HealthWatch Global جمهوراً مختلفاً.",
+    eiosItems: [
+      { label: "الوصول", hwg: "مفتوح لأي منظمة — دون بيانات اعتماد OMS أو انتساب", other: "EIOS يتطلب انتسابًا لمنظمة الصحة العالمية أو صلاحية نقطة التواصل الوطنية RSI" },
+      { label: "المستخدم المستهدف", hwg: "الفرق التشغيلية: منسقو المنظمات غير الحكومية، العاملون الإنسانيون، مديرو برامج الصحة", other: "محللون وبائيون مع تدريب OMS/مؤسسي" },
+      { label: "تنبيهات استباقية", hwg: "تنبيهات بريد إلكتروني + Slack/Teams تلقائية حسب المنطقة", other: "لا يوجد نظام تنبيه استباقي — يتطلب مراقبة يومية نشطة" },
+      { label: "اللغات", hwg: "الإنجليزية والفرنسية والإسبانية والعربية والإندونيسية", other: "الإنجليزية بصورة رئيسية" },
+      { label: "وصول الفريق", hwg: "خطط فريق مشتركة مع إدارة المقاعد وفاتورة واحدة", other: "بيانات اعتماد فردية، لا مساحة عمل مشتركة" },
+      { label: "تصدير البيانات", hwg: "تقارير PDF + تصدير CSV لكل تفشٍّ أو منطقة", other: "غير مصمم للتصدير إلى أنظمة خارجية" },
     ],
     correctionsTitle: "التصحيحات والنزاعات",
     correctionsDesc: "إذا رصدت خطأً في البيانات أو تناقضاً في المصادر، تواصل معنا. نراجع ونصحح خلال 48 ساعة.",
@@ -322,6 +369,17 @@ const COPY: Record<Locale, {
       "Jumlah kasus mencerminkan yang dilaporkan secara resmi — beban sebenarnya biasanya lebih tinggi.",
       "Deteksi akhir wabah dilakukan secara manual. Kami tidak menutup wabah secara otomatis.",
       "HealthWatch Global bukan otoritas medis. Data tidak boleh menggantikan konsultasi publikasi resmi WHO/ECDC untuk keputusan klinis.",
+      "Bidang 'tanggal' setiap wabah mencerminkan tanggal yang dilaporkan dalam buletin resmi — bukan kapan HealthWatch menerimanya. Penerimaan biasanya terjadi dalam 6 jam setelah publikasi sumber.",
+    ],
+    eiosTitle: "HealthWatch vs alat surveilans WHO (EIOS, EWARN)",
+    eiosSub: "EIOS dan alat WHO serupa dirancang untuk analis WHO dan institusi afiliasi. HealthWatch Global melayani audiens yang berbeda.",
+    eiosItems: [
+      { label: "Akses", hwg: "Terbuka untuk organisasi mana pun — tanpa kredensial WHO", other: "EIOS memerlukan afiliasi WHO atau akses focal point RSI nasional" },
+      { label: "Pengguna target", hwg: "Tim operasional: koordinator LSM, staf kemanusiaan, manajer program kesehatan", other: "Analis epidemiologi dengan pelatihan WHO/institusional" },
+      { label: "Peringatan proaktif", hwg: "Peringatan email + Slack/Teams otomatis per wilayah", other: "Tidak ada sistem peringatan proaktif — memerlukan pemantauan aktif harian" },
+      { label: "Bahasa", hwg: "Inggris, Prancis, Spanyol, Arab, Indonesia", other: "Terutama Inggris" },
+      { label: "Akses tim", hwg: "Paket tim bersama dengan manajemen kursi dan satu faktur", other: "Kredensial individual, tanpa ruang kerja bersama" },
+      { label: "Ekspor data", hwg: "Laporan PDF + ekspor CSV per wabah atau wilayah", other: "Tidak dirancang untuk ekspor ke sistem pihak ketiga" },
     ],
     correctionsTitle: "Koreksi dan sengketa data",
     correctionsDesc: "Jika Anda menemukan kesalahan data, angka yang salah, atau ketidaksesuaian sumber, hubungi kami. Kami meninjau dan memperbaiki dalam 48 jam.",
@@ -502,6 +560,35 @@ export default async function MethodologyPage({
             </li>
           ))}
         </ul>
+      </section>
+
+      {/* EIOS comparison */}
+      <section className="space-y-5">
+        <h2 className="text-xl font-bold text-white border-b border-gray-800 pb-3">
+          <Info className="w-5 h-5 inline mr-2 text-blue-400 -mt-0.5" />
+          {c.eiosTitle}
+        </h2>
+        <p className="text-gray-400 text-sm leading-relaxed">{c.eiosSub}</p>
+        <div className="overflow-x-auto rounded-xl border border-gray-800">
+          <table className="w-full text-sm min-w-[520px]">
+            <thead>
+              <tr className="border-b border-gray-800 bg-gray-900">
+                <th className="text-left px-4 py-3 text-gray-500 font-medium w-1/4"></th>
+                <th className="text-left px-4 py-3 font-bold text-red-400">HealthWatch Global</th>
+                <th className="text-left px-4 py-3 font-bold text-gray-500">EIOS / EWARN</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-800/60">
+              {c.eiosItems.map((row, i) => (
+                <tr key={i} className={i % 2 === 0 ? "bg-gray-900/20" : ""}>
+                  <td className="px-4 py-3 text-gray-500 text-xs font-medium">{row.label}</td>
+                  <td className="px-4 py-3 text-gray-300 text-xs leading-relaxed">{row.hwg}</td>
+                  <td className="px-4 py-3 text-gray-600 text-xs leading-relaxed">{row.other}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </section>
 
       {/* Corrections CTA */}

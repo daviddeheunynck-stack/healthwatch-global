@@ -287,7 +287,7 @@ export default async function PricingPage({ params }: { params: Promise<{ locale
   const faqSchema = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
-    "mainEntity": [1, 2, 3, 4, 5].map((i) => ({
+    "mainEntity": [1, 2, 3, 4, 5, 6].map((i) => ({
       "@type": "Question",
       "name": t(`pricing.faq${i}_q`),
       "acceptedAnswer": { "@type": "Answer", "text": t(`pricing.faq${i}_a`) },
@@ -547,7 +547,7 @@ export default async function PricingPage({ params }: { params: Promise<{ locale
       {/* ── FAQ ──────────────────────────────────────────────────────────── */}
       <div className="max-w-2xl mx-auto space-y-4 w-full">
         <h2 className="text-xl font-semibold text-white text-center mb-6">{t("pricing.faq_title")}</h2>
-        {[1, 2, 3, 4, 5].map((i) => (
+        {[1, 2, 3, 4, 5, 6].map((i) => (
           <div key={i} className="bg-gray-900 border border-gray-800 rounded-xl p-5">
             <p className="font-medium text-white mb-2">{t(`pricing.faq${i}_q`)}</p>
             <p className="text-gray-400 text-sm">{t(`pricing.faq${i}_a`)}</p>

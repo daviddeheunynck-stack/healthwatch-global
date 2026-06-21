@@ -102,7 +102,9 @@
     "faq4_q": "What happens when my 14-day trial ends?",
     "faq4_a": "If you started your trial without entering a card, nothing happens — your account moves to the Free plan automatically, no charge. If you added a card, your subscription starts at the end of the trial. You can cancel at any time before that from your account.",
     "faq5_q": "Where does your data come from?",
-    "faq5_a": "All outbreak data is sourced directly from official public health agencies: WHO, PAHO, and ECDC. We do not fabricate or estimate data — if an agency hasn't reported a figure, we display it as 'not reported' rather than guessing."
+    "faq5_a": "All outbreak data is sourced directly from official public health agencies: WHO, PAHO, and ECDC. We do not fabricate or estimate data — if an agency hasn't reported a figure, we display it as 'not reported' rather than guessing.",
+    "faq6_q": "Does HealthWatch replace WHO tools like EIOS or EWARN?",
+    "faq6_a": "No — and we don't try to. EIOS is a powerful tool for WHO analysts and affiliated institutions. HealthWatch Global serves a different need: operational teams (NGO coordinators, humanitarian staff, national health programme managers) who need a clean, actionable digest of official WHO/ECDC/PAHO data — with proactive email alerts, Slack integration, multilingual support and PDF reports — without requiring WHO credentials or epidemiological analyst training. If your team already uses EIOS, HealthWatch can complement it by pushing alerts directly to your team's inbox and Slack channel."
   },
   "auth": {
     "loginTitle": "Sign in",
