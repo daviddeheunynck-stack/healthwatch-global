@@ -27,78 +27,101 @@ const SUPABASE_SERVICE_KEY = clean(process.env.SUPABASE_SERVICE_ROLE_KEY);
 const CRON_SECRET          = clean(process.env.CRON_SECRET);
 
 // ── Endemic defaults ──────────────────────────────────────────────────────────
-// Key = "disease_en|country_en" (exact DB values).
-// Only include where the disease is geographically concentrated with high confidence.
-const ENDEMIC_DEFAULTS: Record<string, string> = {
-  // Nipah: Kerala accounts for >90 % of Indian cases; Bangladesh cases cluster in Rajshahi/Faridpur
-  "Nipah virus|India":                                      "Kerala",
-  "Nipah virus|Bangladesh":                                 "Rajshahi Division",
+// Fuzzy matchers: diseaseIncludes / countryIncludes (all lowercase, substring).
+// Handles raw WHO DON variants: "Mpox (Clade Ib)", "Marburg Fever", "H5N1", etc.
+// Skip rows where country is "global", "multiple", or "regional" — no province possible.
+interface EndemicMatcher { disease: string[]; country: string[]; admin1: string }
 
-  // Marburg: Rwanda 2024 outbreak was in Kigali; Ghana 2022 in Ashanti Region; Tanzania in Kagera
-  "Marburg virus disease|Rwanda":                           "Kigali",
-  "Marburg virus disease|Ghana":                            "Ashanti Region",
-  "Marburg virus disease|Tanzania":                         "Kagera Region",
-  "Marburg virus disease|Kenya":                            "Nairobi County",
+const ENDEMIC_MATCHERS: EndemicMatcher[] = [
+  // Mpox / Monkeypox — DRC (Clade I cluster: Nord-Kivu, South Kivu)
+  { disease: ["mpox", "monkeypox"], country: ["congo"],              admin1: "Nord-Kivu Province" },
+  { disease: ["mpox", "monkeypox"], country: ["germany"],            admin1: "Berlin" },
 
-  // Plague: Madagascar outbreaks concentrate in the central highlands (Analamanga / Antananarivo)
-  "Plague|Madagascar":                                      "Analamanga Region",
+  // Ebola / Sudan virus disease — DRC & Uganda
+  { disease: ["ebola", "sudan virus"],  country: ["congo"],          admin1: "Nord-Kivu Province" },
+  { disease: ["ebola"],                 country: ["uganda"],         admin1: "Mubende District" },
+  { disease: ["sudan virus"],           country: ["uganda"],         admin1: "Kagadi District" },
 
-  // Lassa fever: Nigerian epidemic zone is Edo, Ondo, Bauchi triangle
-  "Lassa fever|Nigeria":                                    "Edo State",
-  "Lassa fever|Sierra Leone":                               "Kenema District",
-  "Lassa fever|Guinea":                                     "Guéckédou Prefecture",
-  "Lassa fever|Liberia":                                    "Lofa County",
+  // Marburg — Rwanda, Ghana, Tanzania, Ethiopia, Kenya
+  { disease: ["marburg"],  country: ["rwanda"],                      admin1: "Kigali" },
+  { disease: ["marburg"],  country: ["ghana"],                       admin1: "Ashanti Region" },
+  { disease: ["marburg"],  country: ["tanzania"],                    admin1: "Kagera Region" },
+  { disease: ["marburg"],  country: ["ethiopia"],                    admin1: "Oromia Region" },
+  { disease: ["marburg"],  country: ["kenya"],                       admin1: "Nairobi County" },
 
-  // Mpox (Clade I): ongoing DRC outbreak concentrated in North and South Kivu
-  "Mpox|DR Congo":                                          "Nord-Kivu Province",
+  // Nipah — India (Kerala >90 %) and Bangladesh (Rajshahi/Faridpur)
+  { disease: ["nipah"],    country: ["india"],                       admin1: "Kerala" },
+  { disease: ["nipah"],    country: ["bangladesh"],                  admin1: "Rajshahi Division" },
 
-  // Ebola: most DRC outbreaks since 2018 have been in North Kivu or Équateur
-  "Ebola virus disease|DR Congo":                           "Nord-Kivu Province",
-  "Ebola virus disease|Uganda":                             "Mubende District",
+  // Lassa fever — Nigeria, Sierra Leone, Guinea, Liberia
+  { disease: ["lassa"],    country: ["nigeria"],                     admin1: "Edo State" },
+  { disease: ["lassa"],    country: ["sierra leone"],                admin1: "Kenema District" },
+  { disease: ["lassa"],    country: ["guinea"],                      admin1: "Guéckédou Prefecture" },
+  { disease: ["lassa"],    country: ["liberia"],                     admin1: "Lofa County" },
 
-  // MERS-CoV: Saudi cases cluster around Riyadh and Jeddah; UAE mostly Abu Dhabi
-  "MERS-CoV|Saudi Arabia":                                  "Riyadh Region",
-  "MERS-CoV|UAE":                                           "Abu Dhabi",
-  "MERS-CoV|Jordan":                                        "Amman Governorate",
+  // Plague — Madagascar (central highlands)
+  { disease: ["plague"],   country: ["madagascar"],                  admin1: "Analamanga Region" },
 
-  // Rift Valley fever: Kenya outbreaks typically in northern pastoralist counties
-  "Rift Valley fever|Kenya":                                "Wajir County",
-  "Rift Valley fever|Uganda":                               "Kabale District",
+  // Avian Influenza — Cambodia (Kandal), Vietnam (Ha Noi area)
+  { disease: ["avian influenza"],  country: ["cambodia"],            admin1: "Kandal Province" },
+  { disease: ["avian influenza"],  country: ["vietnam"],             admin1: "Ha Noi" },
 
-  // Avian Influenza: Cambodia cases historically in Kandal and Prey Veng
-  "Avian Influenza|Cambodia":                               "Kandal Province",
-  "Avian Influenza|Vietnam":                                "Ha Noi",
+  // MERS-CoV — Saudi Arabia, UAE, Jordan
+  { disease: ["mers"],     country: ["saudi"],                       admin1: "Riyadh Region" },
+  { disease: ["mers"],     country: ["uae", "emirates"],             admin1: "Abu Dhabi" },
+  { disease: ["mers"],     country: ["jordan"],                      admin1: "Amman Governorate" },
 
-  // Meningitis belt — epidemic zone for meningococcal meningitis
-  "Meningitis|Niger":                                       "Niamey Region",
-  "Meningitis|Burkina Faso":                                "Centre Region",
-  "Meningitis|Chad":                                        "Hadjer-Lamis Region",
+  // Rift Valley fever — Kenya, Uganda, Mauritania, Senegal
+  { disease: ["rift valley"],  country: ["kenya"],                   admin1: "Wajir County" },
+  { disease: ["rift valley"],  country: ["uganda"],                  admin1: "Kabale District" },
+  { disease: ["rift valley"],  country: ["mauritania"],              admin1: "Hodh Ech Chargui Region" },
+  { disease: ["rift valley"],  country: ["senegal"],                 admin1: "Louga Region" },
 
-  // Cholera: endemic + seasonal outbreak zones
-  "Cholera|Haiti":                                          "Artibonite Department",
-  "Cholera|Yemen":                                          "Hadramawt Governorate",
-  "Cholera|DR Congo":                                       "South Kivu Province",
-  "Cholera|Somalia":                                        "Banadir Region",
-  "Cholera|Ethiopia":                                       "Oromia Region",
-  "Cholera|Mozambique":                                     "Nampula Province",
-  "Cholera|Zimbabwe":                                       "Harare",
-  "Cholera|Sudan":                                          "Khartoum State",
+  // Meningitis / Meningococcal — Sahel belt
+  { disease: ["meningitis", "meningococcal"],  country: ["niger"],   admin1: "Niamey Region" },
+  { disease: ["meningitis", "meningococcal"],  country: ["burkina"], admin1: "Centre Region" },
+  { disease: ["meningitis", "meningococcal"],  country: ["chad"],    admin1: "Hadjer-Lamis Region" },
+  { disease: ["meningitis"],                   country: ["saudi"],   admin1: "Mecca Region" },
 
-  // Yellow fever: vaccine-preventable — outbreaks when coverage gaps exist
-  "Yellow fever|Nigeria":                                   "Bauchi State",
-  "Yellow fever|DR Congo":                                  "Équateur Province",
-  "Yellow fever|Ethiopia":                                  "Oromia Region",
+  // Cholera — endemic outbreak zones
+  { disease: ["cholera"],  country: ["haiti"],                       admin1: "Artibonite Department" },
+  { disease: ["cholera"],  country: ["yemen"],                       admin1: "Hadramawt Governorate" },
+  { disease: ["cholera"],  country: ["congo"],                       admin1: "South Kivu Province" },
+  { disease: ["cholera"],  country: ["somalia"],                     admin1: "Banadir Region" },
+  { disease: ["cholera"],  country: ["ethiopia"],                    admin1: "Oromia Region" },
+  { disease: ["cholera"],  country: ["mozambique"],                  admin1: "Nampula Province" },
+  { disease: ["cholera"],  country: ["zimbabwe"],                    admin1: "Harare" },
+  { disease: ["cholera"],  country: ["sudan"],                       admin1: "Khartoum State" },
+  { disease: ["cholera"],  country: ["angola"],                      admin1: "Luanda Province" },
 
-  // Measles: conflict-affected zones with vaccination gaps
-  "Measles|Yemen":                                          "Sana'a Governorate",
-  "Measles|DR Congo":                                       "Kasaï Province",
-  "Measles|Ethiopia":                                       "Oromia Region",
-  "Measles|Somalia":                                        "Banadir Region",
+  // Yellow fever
+  { disease: ["yellow fever"],  country: ["nigeria"],                admin1: "Bauchi State" },
+  { disease: ["yellow fever"],  country: ["congo"],                  admin1: "Équateur Province" },
+  { disease: ["yellow fever"],  country: ["ethiopia"],               admin1: "Oromia Region" },
 
-  // Polio: Pakistan transmission concentrated in KPK and FATA (Khyber Pakhtunkhwa)
-  "Polio|Pakistan":                                         "Khyber Pakhtunkhwa",
-  "Polio|Afghanistan":                                      "Kandahar Province",
-};
+  // Measles — conflict/vaccine-gap zones
+  { disease: ["measles"],  country: ["yemen"],                       admin1: "Sana'a Governorate" },
+  { disease: ["measles"],  country: ["congo"],                       admin1: "Kasaï Province" },
+  { disease: ["measles"],  country: ["ethiopia"],                    admin1: "Oromia Region" },
+  { disease: ["measles"],  country: ["somalia"],                     admin1: "Banadir Region" },
+
+  // Polio / Poliomyelitis — Pakistan (KPK), Afghanistan
+  { disease: ["polio"],    country: ["pakistan"],                    admin1: "Khyber Pakhtunkhwa" },
+  { disease: ["polio"],    country: ["afghanistan"],                 admin1: "Kandahar Province" },
+  { disease: ["polio"],    country: ["israel"],                      admin1: "Jerusalem District" },
+
+  // Oropouche — Cuba (eastern provinces are endemic)
+  { disease: ["oropouche"],  country: ["cuba"],                      admin1: "Santiago de Cuba Province" },
+
+  // Anthrax — Thailand (northern provinces)
+  { disease: ["anthrax"],  country: ["thailand"],                    admin1: "Chiang Rai Province" },
+
+  // Rabies — Timor-Leste (Dili is main affected area)
+  { disease: ["rabies"],   country: ["timor"],                       admin1: "Dili" },
+];
+
+// Countries with no meaningful sub-national scope (skip enrichment)
+const SKIP_COUNTRIES = ["global", "multiple", "regional"];
 
 // ── Handler ───────────────────────────────────────────────────────────────────
 
@@ -170,8 +193,22 @@ export async function POST(req: NextRequest) {
       continue;
     }
 
-    // ── Pass 2: endemic default ──────────────────────────────────────────────
-    const defaultAdmin1 = ENDEMIC_DEFAULTS[k];
+    // ── Pass 2: endemic default (fuzzy match) ───────────────────────────────
+    const countryLower  = (row.country_en ?? "").toLowerCase();
+    const diseaseLower  = (row.disease_en ?? "").toLowerCase();
+
+    // Skip rows where country is definitively non-localizable
+    if (SKIP_COUNTRIES.some((s) => countryLower.includes(s))) {
+      stats.unchanged++;
+      continue;
+    }
+
+    const matcher = ENDEMIC_MATCHERS.find(
+      (m) =>
+        m.disease.some((d) => diseaseLower.includes(d)) &&
+        m.country.some((c) => countryLower.includes(c))
+    );
+    const defaultAdmin1 = matcher?.admin1;
     if (defaultAdmin1) {
       // Geocode the default admin1 via Nominatim
       let lat: number | null = null;
