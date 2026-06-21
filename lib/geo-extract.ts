@@ -29,6 +29,19 @@ const ADMIN1_PATTERNS = [
  * Extract admin1 location name from WHO DON bulletin text.
  * Returns null when no reliable sub-national location can be detected.
  */
+// Broad geographic terms that are NOT sub-national locations
+const NOISE_TERMS = new Set([
+  "the country", "the region", "the area", "the zone", "the district",
+  "the americas region", "americas region",
+  "the african region", "african region",
+  "the eastern mediterranean region", "eastern mediterranean region",
+  "the european region", "european region",
+  "the south-east asia region", "south-east asia region",
+  "the western pacific region", "western pacific region",
+  "the region", "the state", "the province", "the district",
+  "a region", "a province", "a state",
+]);
+
 export function extractAdmin1(text: string): string | null {
   if (!text || text.length < 30) return null;
 
@@ -36,10 +49,10 @@ export function extractAdmin1(text: string): string | null {
     const m = text.match(pattern);
     if (m?.[1]) {
       const raw = m[1].trim();
-      // Reject noise: single common words that aren't meaningful location names
       const lower = raw.toLowerCase();
-      if (["the country", "the region", "the area", "the zone", "the district"].includes(lower)) continue;
-      // Reject matches that are just the country name repeated (common in multi-country articles)
+      if (NOISE_TERMS.has(lower)) continue;
+      // Reject very short or very long matches
+      if (raw.length < 4 || raw.length > 60) continue;
       return raw;
     }
   }
