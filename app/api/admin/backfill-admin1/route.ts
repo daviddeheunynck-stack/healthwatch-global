@@ -60,10 +60,19 @@ export async function POST(req: NextRequest) {
 
   const { searchParams } = req.nextUrl;
   const limit = Math.min(parseInt(searchParams.get("limit") ?? "5", 10), 20);
+  const reset = searchParams.get("reset") === "true";
 
   const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
 
-  // Select rows with null OR empty admin1 (empty = previous failed attempt using 400-char description)
+  // ?reset=true: clear the "~" sentinel so LLM can re-attempt those rows
+  if (reset) {
+    await supabase
+      .from("outbreaks")
+      .update({ admin1: null })
+      .eq("admin1", "~");
+  }
+
+  // Select rows with null OR empty admin1
   const { data: rows, error: fetchErr } = await supabase
     .from("outbreaks")
     .select("id, source, description, country_en")
