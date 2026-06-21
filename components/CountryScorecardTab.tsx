@@ -1,0 +1,125 @@
+"use client";
+
+import { useState, useEffect } from "react";
+import { Globe, Loader2, RefreshCw } from "lucide-react";
+import type { ScorecardCountry } from "@/app/api/country-scorecard/route";
+
+const COPY: Record<string, {
+  title: string; outbreaks: string; cases: string; lastUpdate: string;
+  empty: string; refresh: string; pheic: string;
+}> = {
+  fr: { title: "Vue par pays", outbreaks: "foyer(s)", cases: "cas", lastUpdate: "mis à jour", empty: "Aucune donnée", refresh: "Rafraîchir", pheic: "USPPI" },
+  en: { title: "Country view",  outbreaks: "outbreak(s)", cases: "cases", lastUpdate: "updated", empty: "No data", refresh: "Refresh", pheic: "PHEIC" },
+  es: { title: "Vista por país", outbreaks: "brote(s)",   cases: "casos", lastUpdate: "actualizado", empty: "Sin datos", refresh: "Actualizar", pheic: "ESPII" },
+  ar: { title: "عرض الدول",    outbreaks: "تفشٍّ",       cases: "حالات", lastUpdate: "آخر تحديث",  empty: "لا بيانات", refresh: "تحديث", pheic: "طوارئ صحية" },
+  id: { title: "Tampilan negara", outbreaks: "wabah",   cases: "kasus", lastUpdate: "diperbarui", empty: "Tidak ada data", refresh: "Perbarui", pheic: "KKMMD" },
+};
+
+const RISK_BADGE: Record<string, string> = {
+  high:   "bg-red-900/40 border-red-700/50 text-red-300",
+  medium: "bg-amber-900/30 border-amber-700/40 text-amber-300",
+  low:    "bg-green-900/30 border-green-700/40 text-green-300",
+};
+
+function timeSince(iso: string, locale: string): string {
+  if (!iso) return "";
+  const h = Math.floor((Date.now() - new Date(iso).getTime()) / 3_600_000);
+  if (h < 1)   return locale === "fr" ? "< 1h" : "< 1h";
+  if (h < 24)  return `${h}h`;
+  return `${Math.floor(h / 24)}d`;
+}
+
+export default function CountryScorecardTab({ locale }: { locale: string }) {
+  const c = COPY[locale] ?? COPY.en;
+  const [countries, setCountries] = useState<ScorecardCountry[]>([]);
+  const [loading,   setLoading]   = useState(true);
+  const [filter,    setFilter]    = useState("");
+
+  async function load() {
+    setLoading(true);
+    try {
+      const res  = await fetch("/api/country-scorecard");
+      const data = await res.json() as { countries: ScorecardCountry[] };
+      setCountries(data.countries ?? []);
+    } catch { /* ignore */ } finally { setLoading(false); }
+  }
+
+  useEffect(() => { load(); }, []);
+
+  const visible = filter
+    ? countries.filter((c) => c.country_en.toLowerCase().includes(filter.toLowerCase()))
+    : countries;
+
+  return (
+    <div className="rounded-xl border border-gray-800 bg-gray-900/40 overflow-hidden">
+      {/* Toolbar */}
+      <div className="flex items-center justify-between gap-3 px-4 py-3 border-b border-gray-800">
+        <div className="flex items-center gap-2">
+          <Globe className="w-4 h-4 text-gray-500" />
+          <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide">{c.title}</p>
+          <span className="text-[10px] text-gray-600">({countries.length})</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <input
+            type="text"
+            value={filter}
+            onChange={(e) => setFilter(e.target.value)}
+            placeholder={locale === "fr" ? "Filtrer…" : "Filter…"}
+            className="text-xs px-2 py-1 rounded-lg border border-gray-800 bg-gray-900 text-gray-400 placeholder-gray-600 focus:outline-none focus:border-gray-600 w-28"
+          />
+          <button onClick={load} disabled={loading} className="p-1 text-gray-600 hover:text-gray-300 disabled:opacity-40 transition-colors">
+            <RefreshCw className={`w-3.5 h-3.5 ${loading ? "animate-spin" : ""}`} />
+          </button>
+        </div>
+      </div>
+
+      {/* Grid */}
+      {loading ? (
+        <div className="flex items-center justify-center py-12">
+          <Loader2 className="w-5 h-5 animate-spin text-gray-600" />
+        </div>
+      ) : visible.length === 0 ? (
+        <p className="text-xs text-gray-600 italic text-center py-8">{c.empty}</p>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-px bg-gray-800/50">
+          {visible.map((country) => (
+            <div key={country.country_en} className="bg-gray-900/60 p-3 space-y-1.5 hover:bg-gray-800/40 transition-colors">
+              {/* Country name + PHEIC */}
+              <div className="flex items-center gap-1.5 flex-wrap">
+                <p className="text-xs font-semibold text-white leading-tight">{country.country_en}</p>
+                {country.has_pheic && (
+                  <span className="inline-flex items-center text-[9px] font-bold px-1.5 py-0.5 rounded bg-purple-900/50 border border-purple-700/50 text-purple-300">
+                    🚨 {c.pheic}
+                  </span>
+                )}
+              </div>
+
+              {/* Risk + counts */}
+              <div className="flex items-center gap-2 flex-wrap">
+                <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded border uppercase ${RISK_BADGE[country.max_risk] ?? RISK_BADGE.low}`}>
+                  {country.max_risk}
+                </span>
+                <span className="text-[10px] text-gray-400 tabular-nums">{country.outbreak_count} {c.outbreaks}</span>
+                {country.total_cases > 0 && (
+                  <span className="text-[10px] text-gray-500 tabular-nums">{country.total_cases.toLocaleString("en")} {c.cases}</span>
+                )}
+              </div>
+
+              {/* Diseases */}
+              <p className="text-[10px] text-gray-600 leading-snug truncate" title={country.diseases.join(", ")}>
+                {country.diseases.slice(0, 3).join(", ")}{country.diseases.length > 3 ? ` +${country.diseases.length - 3}` : ""}
+              </p>
+
+              {/* Last update */}
+              {country.last_updated && (
+                <p className="text-[9px] text-gray-700">
+                  {c.lastUpdate} {timeSince(country.last_updated, locale)}
+                </p>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}

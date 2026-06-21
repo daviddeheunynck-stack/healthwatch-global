@@ -67,6 +67,15 @@ export async function GET(req: NextRequest) {
     ).join("");
 
     try {
+      // Log in-app notification (non-fatal)
+      void Promise.resolve(supabase.from("alert_notifications").insert({
+        user_id: alert.user_id,
+        type:    "category_alert",
+        title:   `${catLabel} alert — ${matches.length} outbreak${matches.length > 1 ? "s" : ""} ≥ ${alert.min_cases.toLocaleString("en")} cases`,
+        body:    matches.slice(0, 3).map((o) => `${o.disease_en ?? "—"} (${o.country_en ?? "—"}): ${o.cases.toLocaleString("en")} cases`).join(" · "),
+        outbreak_id: matches[0]?.id ?? null,
+      })).catch(() => {});
+
       await resend.emails.send({
         from: "HealthWatch Global <alerts@healthwatch-global.com>",
         to:   alert.email,

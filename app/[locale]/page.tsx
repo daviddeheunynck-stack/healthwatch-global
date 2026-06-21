@@ -27,6 +27,7 @@ import DataStatusWidget from "@/components/DataStatusWidget";
 import OnboardingTour from "@/components/OnboardingTour";
 import FreePlanBanner from "@/components/FreePlanBanner";
 import DemoBanner from "@/components/DemoBanner";
+import CountryScorecardTab from "@/components/CountryScorecardTab";
 import { Suspense } from "react";
 import type { Metadata } from "next";
 
@@ -395,6 +396,8 @@ async function DashboardContent({ demo = false }: { demo?: boolean }) {
           </Link>
         </p>
       </div>
+
+      {isPaid && <CountryScorecardTab locale={locale} />}
 
       {isPaid && <DataAccessPanel locale={locale} />}
 

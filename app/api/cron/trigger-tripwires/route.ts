@@ -88,6 +88,15 @@ export async function GET(req: NextRequest) {
     const deepLink = `${APP_URL}/en?outbreak=${o.id}`;
 
     try {
+      // Log in-app notification (non-fatal)
+      void Promise.resolve(supabase.from("alert_notifications").insert({
+        user_id:     tw.user_id,
+        type:        "tripwire",
+        title:       `⚠ ${disease} (${country}) — ${o.cases.toLocaleString("en")} cases`,
+        body:        `Tripwire crossed: ${o.cases.toLocaleString("en")} cases (threshold: ${tw.threshold_cases.toLocaleString("en")}) · Risk: ${o.risk_level}`,
+        outbreak_id: o.id,
+      })).catch(() => {});
+
       await resend.emails.send({
         from: "HealthWatch Global <alerts@healthwatch-global.com>",
         to:   tw.email,

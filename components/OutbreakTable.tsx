@@ -7,6 +7,7 @@ import OutbreakDetailModal from "@/components/OutbreakDetailModal";
 import SavedFilters from "@/components/SavedFilters";
 import WatchlistButton from "@/components/WatchlistButton";
 import { track } from "@vercel/analytics/react";
+import { getEpiWeek } from "@/lib/epi-week";
 
 type SortKey = "risk" | "cases" | "deaths" | "cfr" | "date";
 type SortDir = "asc" | "desc";
@@ -177,6 +178,7 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
   const [watchlistOnly,    setWatchlistOnly]    = useState(false);
   const [lastCases,        setLastCases]        = useState<Record<string, number>>({});
   const [admin1Filter,     setAdmin1Filter]     = useState("");
+  const [epiWeekMode,      setEpiWeekMode]      = useState(false);
 
   // Load watchlist IDs on mount (Pro users only)
   useEffect(() => {
@@ -640,6 +642,19 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
             className="text-xs px-2 py-1 rounded-lg border border-gray-800 bg-gray-900 text-gray-400 placeholder-gray-600 focus:outline-none focus:border-gray-600 transition-colors w-36"
           />
 
+          {/* Epi-week toggle */}
+          <button
+            onClick={() => setEpiWeekMode((v) => !v)}
+            title={epiWeekMode ? "Switch to calendar date" : "Switch to epidemiological week (ISO)"}
+            className={`text-xs px-2 py-1 rounded-lg border transition-colors whitespace-nowrap ${
+              epiWeekMode
+                ? "border-teal-700/50 bg-teal-900/20 text-teal-300"
+                : "border-gray-800 text-gray-600 hover:border-gray-600 hover:text-gray-400"
+            }`}
+          >
+            {{ fr: "S. épi", en: "Epi wk", es: "S. epi", ar: "أ. وبائي", id: "Mgg epi" }[locale] ?? "Epi wk"}
+          </button>
+
           {hasFilters && (
             <button
               onClick={clearFilters}
@@ -765,7 +780,11 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
                   className="text-left px-4 py-3 hidden md:table-cell cursor-pointer hover:text-gray-200 select-none whitespace-nowrap"
                   onClick={() => handleSort("date")}
                 >
-                  {l.date}<SortIcon col="date" activeKey={sortKey} dir={sortDir} />
+                  {epiWeekMode
+                    ? ({ fr: "S. épi.", en: "Epi wk", es: "S. epi.", ar: "أسبوع وبائي", id: "Mgg epi" }[locale] ?? "Epi wk")
+                    : l.date
+                  }
+                  <SortIcon col="date" activeKey={sortKey} dir={sortDir} />
                 </th>
                 <th className="px-2 py-3 w-8" />
               </tr>
@@ -922,8 +941,10 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
                     </div>
                   </td>
                   <td className="px-4 py-3 hidden md:table-cell">
-                    <div className="text-gray-400 text-sm">
-                      {(() => {
+                    <div className="text-gray-400 text-sm tabular-nums">
+                      {epiWeekMode ? (
+                        <span className="text-teal-400/80">{getEpiWeek(outbreak.date)}</span>
+                      ) : (() => {
                         const [y, m, d] = outbreak.date.split("-").map(Number);
                         const localeMap: Record<string, string> = { fr: "fr-FR", es: "es-ES", ar: "ar-SA", id: "id-ID" };
                         const formatted = new Date(y, m - 1, d).toLocaleDateString(

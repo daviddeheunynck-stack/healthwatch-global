@@ -24,6 +24,7 @@ import OutbreakWorkflow from "@/components/OutbreakWorkflow";
 import OutbreakCluster from "@/components/OutbreakCluster";
 import OutbreakBenchmark from "@/components/OutbreakBenchmark";
 import CountryCapacity from "@/components/CountryCapacity";
+import { getVaccineCoverage, COVERAGE_YEAR, COVERAGE_SOURCE } from "@/lib/vaccine-coverage";
 
 const COPY: Record<string, {
   cases: string; deaths: string; cfr: string; incidence: string; date: string;
@@ -1240,6 +1241,33 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlis
                   </table>
                 </div>
               )}
+            </div>
+          );
+        })()}
+
+        {/* P1 — Vaccination coverage */}
+        {isPaid && (() => {
+          const cov = getVaccineCoverage(outbreak.disease_en, outbreak.country_en);
+          if (!cov) return null;
+          const barColor = cov.coverage >= 80 ? "bg-green-500" : cov.coverage >= 60 ? "bg-amber-500" : "bg-red-500";
+          const label = cov.label[locale] ?? cov.label.en;
+          const srcLabel = locale === "fr" ? "Source" : locale === "es" ? "Fuente" : locale === "ar" ? "المصدر" : locale === "id" ? "Sumber" : "Source";
+          const titleLabel = locale === "fr" ? "Couverture vaccinale" : locale === "es" ? "Cobertura vacunal" : locale === "ar" ? "التغطية التطعيمية" : locale === "id" ? "Cakupan vaksin" : "Vaccination coverage";
+          return (
+            <div className="mx-5 mb-3">
+              <p className="text-[10px] font-semibold text-gray-500 uppercase tracking-wide mb-2">{titleLabel}</p>
+              <div className="rounded-xl border border-gray-700/50 bg-gray-800/30 p-3 space-y-2">
+                <div className="flex items-center justify-between gap-3">
+                  <span className="text-xs text-gray-300">{label}</span>
+                  <span className={`text-sm font-bold tabular-nums ${cov.coverage >= 80 ? "text-green-400" : cov.coverage >= 60 ? "text-amber-400" : "text-red-400"}`}>
+                    {cov.coverage}%
+                  </span>
+                </div>
+                <div className="w-full h-2 bg-gray-800 rounded-full overflow-hidden">
+                  <div className={`h-2 rounded-full transition-all ${barColor}`} style={{ width: `${cov.coverage}%` }} />
+                </div>
+                <p className="text-[9px] text-gray-700">{srcLabel}: {COVERAGE_SOURCE} {COVERAGE_YEAR} · {outbreak.country_en}</p>
+              </div>
             </div>
           );
         })()}
