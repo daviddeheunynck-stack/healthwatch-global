@@ -126,5 +126,10 @@ export async function POST(req: NextRequest) {
     .select("id", { count: "exact", head: true })
     .or("admin1.is.null,admin1.eq.");
 
-  return NextResponse.json({ processed, geocoded, remaining: remaining ?? 0 });
+  return NextResponse.json({
+    processed,
+    geocoded,
+    remaining: remaining ?? 0,
+    llm_active: !!(process.env.ANTHROPIC_API_KEY ?? "").trim(),
+  });
 }
