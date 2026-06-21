@@ -10,6 +10,7 @@ import { createClient } from "@supabase/supabase-js";
 import { normalizeDisease } from "@/lib/disease-data";
 import { COUNTRIES, findCountry } from "@/lib/geo-data";
 import { extractNumbers, assessRisk } from "@/lib/outbreak-parser";
+import { extractAdmin1, geocodeAdmin1 } from "@/lib/geo-extract";
 import { errorMessage } from "@/lib/error";
 
 export const dynamic     = "force-dynamic";
@@ -164,6 +165,9 @@ interface PostData {
   source:      string;
   description: string;
   date:        string;
+  admin1:      string | null;
+  admin1_lat:  number | null;
+  admin1_lng:  number | null;
 }
 
 async function extractItemData(item: RSSItem): Promise<PostData[]> {
@@ -200,6 +204,15 @@ async function extractItemData(item: RSSItem): Promise<PostData[]> {
   const fullText = `${item.description} ${articleText}`.trim();
   const { cases, deaths } = extractNumbers(fullText.substring(0, 3000));
 
+  const admin1 = await extractAdmin1(fullText.substring(0, 3000), geo.name_en);
+  let admin1_lat: number | null = null;
+  let admin1_lng: number | null = null;
+  if (admin1) {
+    const coords = await geocodeAdmin1(admin1, geo.name_en);
+    if (coords) { admin1_lat = coords.lat; admin1_lng = coords.lng; }
+    await new Promise((r) => setTimeout(r, 1100));
+  }
+
   return [{
     disease_en:  diseaseInfo.name_en,
     country_en:  geo.name_en,
@@ -208,6 +221,9 @@ async function extractItemData(item: RSSItem): Promise<PostData[]> {
     source:      item.url,
     description: `Africa CDC — ${item.title}. ${item.description}`.substring(0, 600),
     date:        item.date,
+    admin1,
+    admin1_lat,
+    admin1_lng,
   }];
 }
 
@@ -369,6 +385,9 @@ export async function GET(req: NextRequest) {
           description: item.description,
           active:      true,
           is_seed:     false,
+          admin1:      item.admin1 ?? null,
+          admin1_lat:  item.admin1_lat ?? null,
+          admin1_lng:  item.admin1_lng ?? null,
         });
 
         if (error) {

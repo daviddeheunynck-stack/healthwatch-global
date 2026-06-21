@@ -71,6 +71,10 @@
     {
       "path": "/api/cron/sync-africa-cdc",
       "schedule": "0 9 * * 3,6"
+    },
+    {
+      "path": "/api/cron/sync-cdc-notices",
+      "schedule": "0 10 * * *"
     }
   ]
 }
