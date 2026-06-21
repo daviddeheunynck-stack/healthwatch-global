@@ -22,6 +22,8 @@ import ScheduledReportPanel from "@/components/ScheduledReportPanel";
 import OrgPanel from "@/components/OrgPanel";
 import DiseaseWatchlistPanel from "@/components/DiseaseWatchlistPanel";
 import TravelRiskWidget from "@/components/TravelRiskWidget";
+import CategoryAlertPanel from "@/components/CategoryAlertPanel";
+import DataStatusWidget from "@/components/DataStatusWidget";
 import OnboardingTour from "@/components/OnboardingTour";
 import FreePlanBanner from "@/components/FreePlanBanner";
 import DemoBanner from "@/components/DemoBanner";
@@ -397,6 +399,8 @@ async function DashboardContent({ demo = false }: { demo?: boolean }) {
       {isPaid && <DataAccessPanel locale={locale} />}
 
       {isPaid && <TravelRiskWidget locale={locale} />}
+      {isPaid && <CategoryAlertPanel locale={locale} />}
+      {isPaid && <DataStatusWidget locale={locale} />}
 
       {isPaid && <DiseaseWatchlistPanel locale={locale} initialWatchlist={diseaseWatchlist} />}
       {isPaid && <WebhookPanel locale={locale} />}

@@ -176,6 +176,7 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const [watchlistOnly,    setWatchlistOnly]    = useState(false);
   const [lastCases,        setLastCases]        = useState<Record<string, number>>({});
+  const [admin1Filter,     setAdmin1Filter]     = useState("");
 
   // Load watchlist IDs on mount (Pro users only)
   useEffect(() => {
@@ -257,6 +258,10 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
         if (cfrFilter === "nodata"   && cfr !== null)                             return false;
       }
       if (sourceFilter !== "all" && sourceStatus(o) !== sourceFilter) return false;
+      if (admin1Filter) {
+        const q = admin1Filter.toLowerCase();
+        if (!(o.admin1 ?? "").toLowerCase().includes(q)) return false;
+      }
       if (watchlistOnly && (diseaseWatchlist?.length ?? 0) > 0) {
         const dl = diseaseWatchlist!.map((d) => d.toLowerCase());
         const den = (o.disease_en ?? "").toLowerCase();
@@ -266,7 +271,7 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
                !getLocalizedCountry(o, locale).toLowerCase().includes(q)) return false;
       return true;
     });
-  }, [outbreaks, region, country, risk, cfrFilter, sourceFilter, dateFrom, dateTo, search, locale, watchlistOnly, diseaseWatchlist]);
+  }, [outbreaks, region, country, risk, cfrFilter, sourceFilter, dateFrom, dateTo, search, locale, watchlistOnly, diseaseWatchlist, admin1Filter]);
 
   const sorted = useMemo(() => {
     const RISK_ORDER: Record<string, number> = { high: 0, medium: 1, low: 2 };
@@ -288,7 +293,7 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
     });
   }, [filtered, sortKey, sortDir]);
 
-  const hasFilters = search !== "" || region !== "all" || country !== "all" || risk !== "all" || cfrFilter !== "all" || sourceFilter !== "all" || dateFrom !== "" || dateTo !== "" || watchlistOnly;
+  const hasFilters = search !== "" || region !== "all" || country !== "all" || risk !== "all" || cfrFilter !== "all" || sourceFilter !== "all" || dateFrom !== "" || dateTo !== "" || watchlistOnly || admin1Filter !== "";
 
   // P2: multi-country event clusters — how many countries share the same event_id
   const eventClusters = useMemo(() => {
@@ -422,6 +427,7 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
     setDateFrom("");
     setDateTo("");
     setWatchlistOnly(false);
+    setAdmin1Filter("");
   };
 
   // ── Region pills ──────────────────────────────────────────────────────────
@@ -624,6 +630,15 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
               className="text-xs px-2 py-1 rounded-lg border border-gray-800 bg-gray-900 text-gray-400 focus:outline-none focus:border-gray-600 transition-colors cursor-pointer w-32"
             />
           </div>
+
+          {/* Admin1 / province filter */}
+          <input
+            type="text"
+            value={admin1Filter}
+            onChange={(e) => setAdmin1Filter(e.target.value)}
+            placeholder={locale === "fr" ? "Province / région…" : locale === "es" ? "Provincia / región…" : "Province / admin1…"}
+            className="text-xs px-2 py-1 rounded-lg border border-gray-800 bg-gray-900 text-gray-400 placeholder-gray-600 focus:outline-none focus:border-gray-600 transition-colors w-36"
+          />
 
           {hasFilters && (
             <button

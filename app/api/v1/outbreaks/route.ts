@@ -1,14 +1,16 @@
 /**
  * GET /api/v1/outbreaks
  *
- * Public API endpoint for Enterprise customers.
+ * Public API endpoint for Pro/Team/Enterprise customers.
  * Authenticated via X-API-Key header.
  *
  * Query params:
- *   region  — africa | asia | americas | europe | oceania
- *   risk    — high | medium | low
- *   limit   — 1–100 (default 50)
- *   offset  — pagination offset (default 0)
+ *   region            — africa | asia | americas | europe | oceania
+ *   risk              — high | medium | low
+ *   disease_category  — respiratory | hemorrhagic | waterborne | vector-borne | zoonotic | other
+ *   admin1            — sub-national name substring match (case-insensitive)
+ *   limit             — 1–100 (default 50)
+ *   offset            — pagination offset (default 0)
  *
  * Response:
  *   { data: Outbreak[], total: number, limit: number, offset: number }
@@ -17,6 +19,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { createHash } from "crypto";
+import { getDiseaseCategory, type DiseaseCategory } from "@/lib/disease-category";
 
 export const dynamic = "force-dynamic";
 
@@ -26,8 +29,9 @@ const clean = (v: string | undefined) => (v || "").replace(new RegExp("^" + BOM)
 const SUPABASE_URL     = clean(process.env.NEXT_PUBLIC_SUPABASE_URL);
 const SUPABASE_SERVICE = clean(process.env.SUPABASE_SERVICE_ROLE_KEY);
 
-const VALID_REGIONS = new Set(["africa", "asia", "americas", "europe", "oceania"]);
-const VALID_RISKS   = new Set(["high", "medium", "low"]);
+const VALID_REGIONS     = new Set(["africa", "asia", "americas", "europe", "oceania"]);
+const VALID_RISKS       = new Set(["high", "medium", "low"]);
+const VALID_CATEGORIES  = new Set(["respiratory", "hemorrhagic", "waterborne", "vector-borne", "zoonotic", "other"]);
 
 function sha256(input: string): string {
   return createHash("sha256").update(input).digest("hex");
@@ -111,8 +115,10 @@ export async function GET(req: NextRequest) {
 
   // ── 4. Parse query params ─────────────────────────────────────────────────
   const { searchParams } = new URL(req.url);
-  const region    = searchParams.get("region") ?? "";
-  const risk      = searchParams.get("risk")   ?? "";
+  const region           = searchParams.get("region")           ?? "";
+  const risk             = searchParams.get("risk")             ?? "";
+  const diseaseCatParam  = searchParams.get("disease_category") ?? "";
+  const admin1Param      = searchParams.get("admin1")           ?? "";
   const limitRaw  = searchParams.get("limit");
   const offsetRaw = searchParams.get("offset");
 
@@ -147,12 +153,18 @@ export async function GET(req: NextRequest) {
       { status: 400 }
     );
   }
+  if (diseaseCatParam && !VALID_CATEGORIES.has(diseaseCatParam)) {
+    return NextResponse.json(
+      { error: `Invalid disease_category. Allowed: ${[...VALID_CATEGORIES].join(", ")}` },
+      { status: 400 }
+    );
+  }
 
   // ── 5. Query outbreaks ────────────────────────────────────────────────────
   let query = supabase
     .from("outbreaks")
     .select(
-      "id, disease, country, region, lat, lng, risk_level, cases, deaths, date, source, description, is_pheic, active",
+      "id, disease_en, disease, country_en, country, region, lat, lng, admin1, risk_level, cases, deaths, date, source, description, is_pheic, ihr_event_id, active",
       { count: "exact" }
     )
     .eq("active", true)
@@ -161,6 +173,7 @@ export async function GET(req: NextRequest) {
 
   if (region) query = query.eq("region", region);
   if (risk)   query = query.eq("risk_level", risk);
+  if (admin1Param) query = query.ilike("admin1", `%${admin1Param}%`);
 
   const { data, error, count } = await query;
 
@@ -168,8 +181,16 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 
+  // Enrich with computed disease_category and apply client-side category filter
+  type Row = { disease_en: string | null; [k: string]: unknown };
+  let rows = (data ?? []) as Row[];
+  if (diseaseCatParam) {
+    rows = rows.filter((r) => getDiseaseCategory(r.disease_en) === (diseaseCatParam as DiseaseCategory));
+  }
+  const enriched = rows.map((r) => ({ ...r, disease_category: getDiseaseCategory(r.disease_en) }));
+
   return NextResponse.json(
-    { data: data ?? [], total: count ?? 0, limit, offset },
+    { data: enriched, total: diseaseCatParam ? enriched.length : (count ?? 0), limit, offset },
     {
       headers: {
         "X-RateLimit-Remaining": String(rl.remaining),
