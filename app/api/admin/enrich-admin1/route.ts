@@ -118,6 +118,28 @@ const ENDEMIC_MATCHERS: EndemicMatcher[] = [
 
   // Rabies — Timor-Leste (Dili is main affected area)
   { disease: ["rabies"],   country: ["timor"],                       admin1: "Dili" },
+
+  // Avian Influenza — Mexico (Jalisco is the main commercial poultry zone)
+  { disease: ["avian influenza"],  country: ["mexico"],              admin1: "Jalisco" },
+  // Avian Influenza H9N2 — Italy outbreaks concentrated in Veneto
+  { disease: ["avian influenza"],  country: ["italy"],               admin1: "Veneto Region" },
+
+  // Chikungunya — Brazil (2024 epicenter: Rio de Janeiro); Réunion (entire island = one zone)
+  { disease: ["chikungunya"],  country: ["brazil"],                  admin1: "Rio de Janeiro State" },
+  { disease: ["chikungunya"],  country: ["réunion", "reunion"],      admin1: "Saint-Denis" },
+
+  // Cholera — Bangladesh (Dhaka cluster)
+  { disease: ["cholera"],  country: ["bangladesh"],                  admin1: "Dhaka Division" },
+
+  // Dengue — Brazil (São Paulo largest outbreak), Fiji (Central Division), Philippines (NCR)
+  { disease: ["dengue"],   country: ["brazil"],                      admin1: "São Paulo State" },
+  { disease: ["dengue"],   country: ["fiji"],                        admin1: "Central Division" },
+  { disease: ["dengue"],   country: ["philippines"],                 admin1: "National Capital Region" },
+
+  // Measles — Romania (Bucharest-Ilfov epicenter), Bangladesh (Dhaka)
+  { disease: ["measles"],  country: ["romania"],                     admin1: "Ilfov County" },
+  { disease: ["measles"],  country: ["bangladesh"],                  admin1: "Dhaka Division" },
+  { disease: ["measles"],  country: ["morocco"],                     admin1: "Casablanca-Settat" },
 ];
 
 // Countries with no meaningful sub-national scope (skip enrichment)
