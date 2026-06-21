@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { Clock } from "lucide-react";
 
 // ─── Multilingual labels ──────────────────────────────────────────────────────
@@ -107,12 +108,14 @@ export default function FreshnessBadge({ lastSync, locale }: Props) {
   const s = STATUS_STYLES[status];
 
   return (
-    <span
-      className={`inline-flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-full border ${s.border} ${s.bg}`}
+    <Link
+      href={`/${locale}/methodology`}
+      className={`inline-flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-full border ${s.border} ${s.bg} hover:brightness-125 transition-all`}
+      title="Data sources &amp; methodology"
     >
       <span className={`w-1.5 h-1.5 rounded-full ${s.dot} ${status === "fresh" ? "animate-pulse" : ""}`} />
       <Clock className={`w-3 h-3 ${s.text}`} />
       <span className={s.text}>{label}</span>
-    </span>
+    </Link>
   );
 }

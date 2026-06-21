@@ -1,4 +1,5 @@
 import { getTranslations, getLocale } from "next-intl/server";
+import Link from "next/link";
 import { Activity, Globe, Bell, AlertTriangle } from "lucide-react";
 import { getOutbreaks, getStats, getLastSync, getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 import { getOutbreakTrendsBulk, type OutbreakTrend } from "@/lib/outbreak-trend";
@@ -339,6 +340,12 @@ async function DashboardContent({ demo = false }: { demo?: boolean }) {
           labels={tableLabels}
           trends={trends}
         />
+
+        <p className="text-xs text-gray-600 mt-3 text-right">
+          <Link href={`/${locale}/methodology`} className="hover:text-gray-400 transition-colors">
+            {locale === "fr" ? "Sources & méthodologie →" : locale === "es" ? "Fuentes y metodología →" : locale === "ar" ? "المصادر والمنهجية ←" : locale === "id" ? "Sumber & metodologi →" : "Data sources & methodology →"}
+          </Link>
+        </p>
       </div>
     </>
   );

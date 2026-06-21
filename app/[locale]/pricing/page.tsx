@@ -496,7 +496,40 @@ export default async function PricingPage({ params }: { params: Promise<{ locale
         </Link>
       </div>
 
-      {/* ── CTA contact ───────────────────────────────────────────────────── */}
+      {/* ── Institutional procurement ─────────────────────────────────────── */}
+      <div className="bg-gray-900/40 border border-gray-700/50 rounded-2xl p-6 flex flex-col sm:flex-row items-start gap-5 max-w-4xl mx-auto w-full">
+        <div className="w-10 h-10 rounded-lg bg-gray-700/40 border border-gray-600/40 flex items-center justify-center shrink-0 mt-0.5">
+          <Shield className="w-5 h-5 text-gray-400" />
+        </div>
+        <div className="space-y-3 flex-1">
+          <p className="font-semibold text-white text-sm">
+            {locale === "fr" ? "Achat institutionnel & facturation" : locale === "es" ? "Compra institucional y facturación" : locale === "ar" ? "الشراء المؤسسي والفواتير" : locale === "id" ? "Pengadaan institusional & faktur" : "Institutional procurement & invoicing"}
+          </p>
+          <ul className="space-y-1.5 text-xs text-gray-400">
+            <li className="flex items-start gap-2">
+              <Check className="w-3.5 h-3.5 text-gray-500 shrink-0 mt-0.5" />
+              {locale === "fr" ? "Une facture PDF est générée automatiquement pour chaque paiement (mensuel ou annuel)." : locale === "es" ? "Se genera automáticamente una factura PDF por cada pago (mensual o anual)." : locale === "ar" ? "يتم إنشاء فاتورة PDF تلقائياً لكل دفعة (شهرية أو سنوية)." : locale === "id" ? "Faktur PDF dibuat otomatis untuk setiap pembayaran (bulanan atau tahunan)." : "A PDF invoice is generated automatically for every payment (monthly or annual)."}
+            </li>
+            <li className="flex items-start gap-2">
+              <Check className="w-3.5 h-3.5 text-gray-500 shrink-0 mt-0.5" />
+              {locale === "fr" ? "Le plan annuel émet une seule facture pour l'année — idéal pour les bons de commande." : locale === "es" ? "El plan anual emite una única factura para todo el año — ideal para órdenes de compra." : locale === "ar" ? "تصدر الخطة السنوية فاتورة و��حدة للسنة كاملة — مثالية لأوامر الشراء." : locale === "id" ? "Paket tahunan menerbitkan satu faktur untuk seluruh tahun — ideal untuk purchase order." : "The annual plan issues a single invoice for the year — ideal for purchase orders."}
+            </li>
+            <li className="flex items-start gap-2">
+              <Check className="w-3.5 h-3.5 text-gray-500 shrink-0 mt-0.5" />
+              {locale === "fr" ? "Besoin d'un devis formel avant engagement ? Contactez-nous — nous répondons sous 24h." : locale === "es" ? "¿Necesita un presupuesto formal antes de comprometerse? Cont��ctenos — respondemos en 24h." : locale === "ar" ? "تحتاج إلى عرض سعر رسمي قبل الالتزام؟ تواصلوا معنا — نرد في غضون 24 ساعة." : locale === "id" ? "Butuh penawaran formal sebelum berkomitmen? Hubungi kami — kami merespons dalam 24 jam." : "Need a formal quote before committing? Contact us — we respond within 24h."}
+            </li>
+          </ul>
+          <Link
+            href={`/${locale}/contact`}
+            className="inline-flex items-center gap-1.5 text-xs text-gray-400 hover:text-white transition-colors border border-gray-700 hover:border-gray-500 rounded-lg px-3 py-1.5"
+          >
+            <Mail className="w-3.5 h-3.5" />
+            {locale === "fr" ? "Demander un devis →" : locale === "es" ? "Solicitar presupuesto →" : locale === "ar" ? "طلب عرض سعر ←" : locale === "id" ? "Minta penawaran →" : "Request a quote →"}
+          </Link>
+        </div>
+      </div>
+
+      {/* ── CTA contact ────────��──────────────────��───────────────────────── */}
       <div className="bg-gray-900 border border-gray-800 rounded-2xl p-8 text-center space-y-4 max-w-2xl mx-auto w-full">
         <Users className="w-8 h-8 text-red-400 mx-auto" />
         <h2 className="text-xl font-bold text-white">{c.ctaTitle}</h2>
