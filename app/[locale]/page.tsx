@@ -21,6 +21,7 @@ import SignalsFeed from "@/components/SignalsFeed";
 import ScheduledReportPanel from "@/components/ScheduledReportPanel";
 import OrgPanel from "@/components/OrgPanel";
 import DiseaseWatchlistPanel from "@/components/DiseaseWatchlistPanel";
+import TravelRiskWidget from "@/components/TravelRiskWidget";
 import OnboardingTour from "@/components/OnboardingTour";
 import FreePlanBanner from "@/components/FreePlanBanner";
 import DemoBanner from "@/components/DemoBanner";
@@ -141,6 +142,7 @@ async function DashboardContent({ demo = false }: { demo?: boolean }) {
   let trialExpired = false;
   let displayFilters: { region: string; country: string } | null = null;
   let diseaseWatchlist: string[] = [];
+  let countryTagsMap: Record<string, string> = {};
   let orgMemberAccess = false;
   if (!demo) {
     const supabase = await createClient();
@@ -174,6 +176,13 @@ async function DashboardContent({ demo = false }: { demo?: boolean }) {
       }
       if (isPaidPlan) {
         diseaseWatchlist = (profile?.disease_watchlist as string[] | null) ?? [];
+        const { data: tagRows } = await supabase
+          .from("user_country_tags")
+          .select("country_en, label")
+          .eq("user_id", user.id);
+        for (const t of (tagRows ?? []) as { country_en: string; label: string }[]) {
+          countryTagsMap[t.country_en] = t.label;
+        }
       }
       // Org members inherit Team-level access even if their own plan is free
       if (!isPaidPlan) {
@@ -375,6 +384,7 @@ async function DashboardContent({ demo = false }: { demo?: boolean }) {
             country: displayFilters.country ?? "all",
           } : undefined}
           diseaseWatchlist={diseaseWatchlist.length > 0 ? diseaseWatchlist : undefined}
+          countryTags={Object.keys(countryTagsMap).length > 0 ? countryTagsMap : undefined}
         />
 
         <p className="text-xs text-gray-600 mt-3 text-right">
@@ -385,6 +395,8 @@ async function DashboardContent({ demo = false }: { demo?: boolean }) {
       </div>
 
       {isPaid && <DataAccessPanel locale={locale} />}
+
+      {isPaid && <TravelRiskWidget locale={locale} />}
 
       {isPaid && <DiseaseWatchlistPanel locale={locale} initialWatchlist={diseaseWatchlist} />}
       {isPaid && <WebhookPanel locale={locale} />}

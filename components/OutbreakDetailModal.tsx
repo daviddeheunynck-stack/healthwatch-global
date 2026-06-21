@@ -267,6 +267,10 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlis
   // IHR Article 6 copy
   const [ihrCopied,    setIhrCopied]    = useState(false);
 
+  // P4 — historical outbreak frequency for this country
+  const [historyByCountry,        setHistoryByCountry]        = useState<{ year: number; total: number; high: number; medium: number; low: number }[]>([]);
+  const [historyByCountryLoading, setHistoryByCountryLoading] = useState(false);
+
   // Neighboring country outbreaks
   const [neighborOutbreaks, setNeighborOutbreaks] = useState<NeighborOutbreak[]>([]);
   const [neighborLoading,   setNeighborLoading]   = useState(false);
@@ -369,6 +373,18 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlis
       .then((d) => { if (d.subscriber?.emails) setSubscriberEmails(d.subscriber.emails); })
       .catch(() => {});
   }, [outbreak?.id, isPaid]);
+
+  // P4 Osei-Bonsu — fetch historical outbreak frequency for this country
+  useEffect(() => {
+    if (!outbreak?.country_en || !isPaid) return;
+    setHistoryByCountry([]);
+    setHistoryByCountryLoading(true);
+    fetch(`/api/outbreak-history-by-country?country_en=${encodeURIComponent(outbreak.country_en)}`)
+      .then((r) => r.json())
+      .then((d) => { if (d.history) setHistoryByCountry(d.history); })
+      .catch(() => {})
+      .finally(() => setHistoryByCountryLoading(false));
+  }, [outbreak?.country_en, isPaid]);
 
   // Log outbreak view to org activity log (fire-and-forget, non-blocking)
   useEffect(() => {
@@ -762,6 +778,51 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlis
         {isPaid && (
           <CountryCapacity countryEn={outbreak.country_en ?? null} locale={locale} />
         )}
+
+        {/* ── Historical outbreak frequency by country ─────────────────── */}
+        {isPaid && (() => {
+          const label = locale === "fr" ? "Fréquence historique des foyers" :
+                        locale === "es" ? "Frecuencia histórica de brotes" :
+                        locale === "ar" ? "التكرار التاريخي للتفشيات" :
+                        locale === "id" ? "Frekuensi historis wabah" :
+                        "Historical outbreak frequency";
+          const maxTotal = Math.max(...historyByCountry.map((h) => h.total), 1);
+          return (
+            <div className="px-5 pb-4">
+              <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">
+                {label} — {outbreak.country_en}
+              </p>
+              {historyByCountryLoading ? (
+                <div className="h-4 w-32 bg-gray-800 rounded animate-pulse" />
+              ) : historyByCountry.length === 0 ? (
+                <p className="text-xs text-gray-600 italic">
+                  {locale === "fr" ? "Aucune donnée historique" : locale === "es" ? "Sin datos históricos" : "No historical data"}
+                </p>
+              ) : (
+                <div className="space-y-1.5">
+                  {historyByCountry.map((h) => (
+                    <div key={h.year} className="flex items-center gap-2">
+                      <span className="text-[10px] text-gray-500 w-9 shrink-0 tabular-nums">{h.year}</span>
+                      <div className="flex-1 flex rounded overflow-hidden h-3 bg-gray-800/60">
+                        {h.high   > 0 && <div style={{ width: `${h.high   / maxTotal * 100}%` }} className="bg-red-500/60" title={`High: ${h.high}`} />}
+                        {h.medium > 0 && <div style={{ width: `${h.medium / maxTotal * 100}%` }} className="bg-amber-500/60" title={`Medium: ${h.medium}`} />}
+                        {h.low    > 0 && <div style={{ width: `${h.low    / maxTotal * 100}%` }} className="bg-green-500/60" title={`Low: ${h.low}`} />}
+                      </div>
+                      <span className="text-[10px] text-gray-400 w-4 shrink-0 tabular-nums text-right">{h.total}</span>
+                    </div>
+                  ))}
+                  <div className="flex items-center gap-3 mt-1">
+                    {[["bg-red-500/60", locale === "fr" ? "Élevé" : "High"], ["bg-amber-500/60", locale === "fr" ? "Modéré" : "Medium"], ["bg-green-500/60", locale === "fr" ? "Faible" : "Low"]].map(([cls, lbl]) => (
+                      <span key={lbl} className="flex items-center gap-1 text-[9px] text-gray-600">
+                        <span className={`w-2 h-2 rounded-sm ${cls}`} />{lbl}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          );
+        })()}
 
         {/* Unlock prompt for free users */}
         {!isPaid && (
