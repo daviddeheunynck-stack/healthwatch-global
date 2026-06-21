@@ -79,18 +79,31 @@ export default function WorldMap({ outbreaks, locale, isPaid, popupLabels, riskL
         const diseaseName = getLocalizedDisease(outbreak, locale);
         const countryName = getLocalizedCountry(outbreak, locale);
 
-        const circle = L.circleMarker([outbreak.lat, outbreak.lng], {
+        // Use admin1 coords when available — sub-national precision
+        const hasAdmin1 = typeof outbreak.admin1_lat === "number" && typeof outbreak.admin1_lng === "number";
+        const pinLat = hasAdmin1 ? outbreak.admin1_lat! : outbreak.lat;
+        const pinLng = hasAdmin1 ? outbreak.admin1_lng! : outbreak.lng;
+
+        const circle = L.circleMarker([pinLat, pinLng], {
           radius,
           fillColor: color,
           color: color,
-          weight: 2,
+          weight: hasAdmin1 ? 2.5 : 1.5,
           opacity: 0.9,
           fillOpacity: 0.5,
+          // Solid border on admin1-precise pins, dashed on country-centroid fallbacks
+          dashArray: hasAdmin1 ? undefined : "4 3",
         }).addTo(map);
 
-        // Lightweight tooltip on hover (desktop)
+        // Tooltip: show province when available
+        const locationLine = hasAdmin1 && outbreak.admin1
+          ? `<span style="color:#9ca3af">${outbreak.admin1}, ${countryName}</span>`
+          : `<span style="color:#9ca3af">${countryName}</span>`;
+        const precisionTag = hasAdmin1
+          ? `<span style="color:#6b7280;font-size:10px"> · ${locale === "fr" ? "niveau province" : locale === "es" ? "nivel provincia" : locale === "ar" ? "المستوى الإقليمي" : locale === "id" ? "tingkat provinsi" : "province-level"}</span>`
+          : "";
         circle.bindTooltip(
-          `<strong style="color:${color}">${diseaseName}</strong><br/><span style="color:#9ca3af">${countryName}</span>`,
+          `<strong style="color:${color}">${diseaseName}</strong>${precisionTag}<br/>${locationLine}`,
           { className: "dark-popup", sticky: true }
         );
 

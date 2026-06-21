@@ -2,6 +2,7 @@ import { findCountry } from "./geo-data";
 import { normalizeDisease } from "./disease-data";
 import { parseWHOTitle, extractNumbers, extractNumbersForCountry, countryAliasesForMultiCountry, assessRisk } from "./outbreak-parser";
 import type { ParsedOutbreak } from "./outbreak-parser";
+import { extractAdmin1, geocodeAdmin1 } from "./geo-extract";
 
 const WHO_DON_API = "https://www.who.int/api/news/diseaseoutbreaknews";
 
@@ -161,6 +162,23 @@ export async function parseWHODONItem(
   const risk_level = assessRisk(parsed.disease, description, cases, deaths);
   const active = !isOutbreakEnded(description);
 
+  // ── Sub-national location extraction ──────────────────────────────
+  // Extract province / health-zone from bulletin text, then geocode.
+  // Nominatim: max 1 req/sec, per-process cache avoids redundant calls.
+  let admin1:     string | null = null;
+  let admin1_lat: number | null = null;
+  let admin1_lng: number | null = null;
+  if (description) {
+    const extracted = extractAdmin1(description);
+    if (extracted) {
+      admin1 = extracted;
+      const coords = await geocodeAdmin1(extracted, geo.name_en);
+      if (coords) { admin1_lat = coords.lat; admin1_lng = coords.lng; }
+      // Nominatim rate limit: 1 req/sec
+      await new Promise((r) => setTimeout(r, 1100));
+    }
+  }
+
   return {
     disease: disease.name_fr,
     disease_en: disease.name_en,
@@ -171,6 +189,9 @@ export async function parseWHODONItem(
     region: geo.region,
     lat: geo.lat,
     lng: geo.lng,
+    admin1,
+    admin1_lat,
+    admin1_lng,
     cases,
     deaths,
     recovered,

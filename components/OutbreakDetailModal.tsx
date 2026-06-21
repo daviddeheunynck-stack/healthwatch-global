@@ -406,6 +406,27 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlis
               {(REGION_NAMES[locale] ?? REGION_NAMES.en)[outbreak.region] ?? outbreak.region}
             </span>
           </div>
+          {outbreak.admin1 && (
+            <div className="flex items-center gap-2 text-gray-400">
+              <Globe className="w-3.5 h-3.5 shrink-0 text-blue-500/70" />
+              <span className="text-xs">
+                {locale === "fr" ? "Province / zone" :
+                 locale === "es" ? "Provincia / zona" :
+                 locale === "ar" ? "المقاطعة / المنطقة" :
+                 locale === "id" ? "Provinsi / zona" :
+                 "Province / zone"}
+                {" : "}
+              </span>
+              <span className="text-gray-300 text-xs font-medium">{outbreak.admin1}</span>
+              <span className="text-[10px] text-blue-500/60 bg-blue-900/20 border border-blue-800/30 px-1.5 py-0.5 rounded-full">
+                {locale === "fr" ? "infra-national" :
+                 locale === "es" ? "subnacional" :
+                 locale === "ar" ? "دون الوطني" :
+                 locale === "id" ? "sub-nasional" :
+                 "sub-national"}
+              </span>
+            </div>
+          )}
           <p className="text-[10px] text-gray-600 leading-snug">{c.reportingLag}</p>
         </div>
 

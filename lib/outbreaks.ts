@@ -33,6 +33,9 @@ export interface Outbreak {
   description_ar: string | null;
   description_id: string | null;
   active: boolean;
+  admin1:     string | null;
+  admin1_lat: number | null;
+  admin1_lng: number | null;
   is_pheic:      boolean;       // Public Health Emergency of International Concern
   updated_at:    string | null; // last sync timestamp
   created_at:    string | null; // first insertion timestamp

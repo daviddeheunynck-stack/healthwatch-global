@@ -227,6 +227,12 @@ export async function GET(req: NextRequest) {
             active: true,
           };
           if (outbreak.recovered > 0) updatePayload.recovered = outbreak.recovered;
+          // Always update admin1 when we have fresh extraction (can be null → clears stale data)
+          if (outbreak.admin1 !== undefined) {
+            updatePayload.admin1     = outbreak.admin1;
+            updatePayload.admin1_lat = outbreak.admin1_lat;
+            updatePayload.admin1_lng = outbreak.admin1_lng;
+          }
           const { error } = await supabase
             .from("outbreaks")
             .update(updatePayload)

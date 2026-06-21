@@ -12,6 +12,9 @@ export interface ParsedOutbreak {
   region: string;
   lat: number;
   lng: number;
+  admin1:     string | null;  // province / health-zone extracted from bulletin text
+  admin1_lat: number | null;  // geocoded admin1 latitude  (Nominatim)
+  admin1_lng: number | null;  // geocoded admin1 longitude (Nominatim)
   cases: number;
   deaths: number;
   recovered: number;
@@ -367,6 +370,9 @@ export function buildOutbreakFromRSSItem(item: RSSItem): ParsedOutbreak | null {
     region: geo.region,
     lat: geo.lat,
     lng: geo.lng,
+    admin1:     null,
+    admin1_lat: null,
+    admin1_lng: null,
     cases,
     deaths,
     recovered: 0,
