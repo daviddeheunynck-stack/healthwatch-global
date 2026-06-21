@@ -1,4 +1,34 @@
 import Anthropic from "@anthropic-ai/sdk";
+import { createClient } from "@supabase/supabase-js";
+
+// Module-level cache so Supabase isn't hit on every call within one function invocation
+let _cachedKey: string | null = null;
+
+async function resolveAnthropicKey(): Promise<string> {
+  // 1. process.env (local dev + works if Vercel ever picks it up)
+  const envKey = (process.env.ANTHROPIC_API_KEY ?? "").trim();
+  if (envKey) return envKey;
+
+  // 2. In-process cache
+  if (_cachedKey !== null) return _cachedKey;
+
+  // 3. Supabase app_settings fallback (used in Vercel production)
+  try {
+    const url = (process.env.NEXT_PUBLIC_SUPABASE_URL ?? "").trim();
+    const svc = (process.env.SUPABASE_SERVICE_ROLE_KEY ?? "").trim();
+    if (!url || !svc) return "";
+    const supabase = createClient(url, svc);
+    const { data } = await supabase
+      .from("app_settings")
+      .select("value")
+      .eq("key", "ANTHROPIC_API_KEY")
+      .single();
+    _cachedKey = (data?.value ?? "").trim() || "";
+    return _cachedKey;
+  } catch {
+    return "";
+  }
+}
 
 // Responses Haiku gives when no specific sub-national location is found
 const NOISE_RESPONSES = new Set([
@@ -36,7 +66,7 @@ export async function extractAdmin1LLM(
   text: string,
   countryEn?: string
 ): Promise<string | null> {
-  const apiKey = (process.env.ANTHROPIC_API_KEY ?? "").trim();
+  const apiKey = await resolveAnthropicKey();
   if (!apiKey) return null;
 
   const countryClause = countryEn
