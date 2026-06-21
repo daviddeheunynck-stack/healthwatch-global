@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Download, ChevronDown, ChevronUp, Copy, Check, Loader2, Key, Plus, Trash2 } from "lucide-react";
+import { Download, ChevronDown, ChevronUp, Copy, Check, Loader2, Key, Plus, Trash2, FileBarChart2 } from "lucide-react";
 import { track } from "@vercel/analytics/react";
 
 const COPY: Record<string, {
@@ -293,6 +293,15 @@ export default function DataAccessPanel({ locale }: Props) {
             </button>
             {csvError  && <span className="text-xs text-red-400 self-center">{csvError}</span>}
             {jsonError && <span className="text-xs text-red-400 self-center">{jsonError}</span>}
+            <a
+              href={`/${locale}/sitrep`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-1.5 px-3 py-2 text-xs bg-gray-800 hover:bg-gray-700 border border-gray-700 text-gray-300 rounded-lg transition-colors"
+            >
+              <FileBarChart2 className="w-3.5 h-3.5" />
+              {{ fr: "Sitrep hebdo", en: "Weekly sitrep", es: "Sitrep semanal", ar: "تقرير أسبوعي", id: "Sitrep mingguan" }[locale] ?? "Weekly sitrep"}
+            </a>
           </div>
 
           {/* Code snippets */}

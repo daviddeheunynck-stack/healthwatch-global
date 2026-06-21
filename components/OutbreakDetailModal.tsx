@@ -18,6 +18,9 @@ import { useUpgradeModal } from "@/lib/upgrade-modal-context";
 import OutbreakCasesChart from "@/components/OutbreakCasesChart";
 import { createClient as createBrowserClient } from "@/lib/supabase-browser";
 import { wilsonCI } from "@/lib/cfr-ci";
+import OutbreakMetrics from "@/components/OutbreakMetrics";
+import OutbreakWorkflow from "@/components/OutbreakWorkflow";
+import OutbreakCluster from "@/components/OutbreakCluster";
 
 const COPY: Record<string, {
   cases: string; deaths: string; cfr: string; incidence: string; date: string;
@@ -438,6 +441,15 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlis
           )}
         </div>
 
+        {/* ── Transmission dynamics (P1) ───────────────────────────────── */}
+        {isPaid && snapshots.length >= 2 && (
+          <OutbreakMetrics
+            snapshots={snapshots}
+            diseaseEn={outbreak.disease_en}
+            locale={locale}
+          />
+        )}
+
         {/* ── Epidemic curve (Pro) ──────────────────────────────────────── */}
         {isPaid && (
           <div className="px-5 pb-4">
@@ -488,6 +500,15 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlis
               </div>
             )}
           </div>
+        )}
+
+        {/* ── Multi-country cluster (P3) ───────────────────────────────── */}
+        {outbreak.event_id && (
+          <OutbreakCluster
+            eventId={outbreak.event_id}
+            excludeId={outbreak.id}
+            locale={locale}
+          />
         )}
 
         {/* Unlock prompt for free users */}
@@ -680,6 +701,11 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlis
                "Copy citation"}
             </button>
           </div>
+        )}
+
+        {/* ── Response workflow (P2) ───────────────────────────────────── */}
+        {isPaid && (
+          <OutbreakWorkflow outbreakId={outbreak.id} locale={locale} />
         )}
 
         {/* ── Team notes (Pro/Team) ─────────────────────────────────────── */}

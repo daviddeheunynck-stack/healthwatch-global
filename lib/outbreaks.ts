@@ -40,6 +40,7 @@ export interface Outbreak {
   is_pheic:      boolean;       // Public Health Emergency of International Concern
   updated_at:    string | null; // last sync timestamp
   created_at:    string | null; // first insertion timestamp
+  event_id:      string | null; // multi-country cluster linkage
 }
 
 export async function getLastSync(): Promise<string | null> {
