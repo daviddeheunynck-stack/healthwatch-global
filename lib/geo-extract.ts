@@ -81,8 +81,10 @@ export async function geocodeAdmin1(
   if (_geoCache.has(key)) return _geoCache.get(key)!;
 
   try {
+    // Multi-province strings (e.g. "South Kivu, North Kivu") can't geocode as-is — use first
+    const primaryAdmin1 = admin1.split(/,|\s+and\s+/i)[0].trim();
     const url = new URL(NOMINATIM);
-    url.searchParams.set("q", `${admin1}, ${countryEn}`);
+    url.searchParams.set("q", `${primaryAdmin1}, ${countryEn}`);
     url.searchParams.set("format", "json");
     url.searchParams.set("limit", "1");
     url.searchParams.set("addressdetails", "0");

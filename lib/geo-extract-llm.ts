@@ -11,6 +11,25 @@ const NOISE_RESPONSES = new Set([
   "no specific location",
   "no sub-national location",
   "no specific sub-national location",
+  // WHO/PAHO regional constructs — not sub-national locations
+  "who region",
+  "who african region",
+  "who american region",
+  "who european region",
+  "who eastern mediterranean region",
+  "who south-east asia region",
+  "who western pacific region",
+  "african region",
+  "european region",
+  "americas region",
+  "eastern mediterranean region",
+  "south-east asia region",
+  "western pacific region",
+  "the state",
+  "the province",
+  "the region",
+  "the district",
+  "the zone",
 ]);
 
 export async function extractAdmin1LLM(
@@ -24,11 +43,12 @@ export async function extractAdmin1LLM(
     ? ` within ${countryEn} (ignore sub-national locations from neighboring or other countries)`
     : "";
   const systemPrompt =
-    `Extract the specific sub-national location (province, state, region, district, or health zone)` +
+    `Extract the single most specific sub-national location (province, state, region, district, or health zone)` +
     ` WHERE THE OUTBREAK IS OCCURRING${countryClause} from this WHO disease outbreak bulletin text.` +
+    ` If the outbreak spans multiple provinces, return only the PRIMARY or FIRST one mentioned.` +
     ` Return ONLY the location name (e.g. 'North Kivu Province', 'Lagos State', 'Aden Governorate')` +
     ` or the word 'none' if no specific sub-national location is mentioned.` +
-    ` Do not include the country name. Do not explain. One line only.`;
+    ` Do not include the country name. Do not list multiple locations. Do not explain. One line only.`;
 
   try {
     const client = new Anthropic({ apiKey });
@@ -45,7 +65,7 @@ export async function extractAdmin1LLM(
 
     if (!raw) return null;
     if (NOISE_RESPONSES.has(raw.toLowerCase())) return null;
-    // Sanity-check length: reject single words under 4 chars or extremely long strings
+    // Sanity-check length
     if (raw.length < 4 || raw.length > 80) return null;
 
     return raw;
