@@ -53,8 +53,8 @@ const LABELS: Record<string, {
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
 function getStatus(diffMs: number): "fresh" | "ok" | "stale" {
-  if (diffMs < 6 * 3600_000)  return "fresh";
-  if (diffMs < 48 * 3600_000) return "ok";
+  if (diffMs < 2 * 3600_000)  return "fresh";
+  if (diffMs < 24 * 3600_000) return "ok";
   return "stale";
 }
 
