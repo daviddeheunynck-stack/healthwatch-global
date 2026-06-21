@@ -23,8 +23,9 @@ async function resolveAnthropicKey(): Promise<string> {
       .select("value")
       .eq("key", "ANTHROPIC_API_KEY")
       .single();
-    _cachedKey = (data?.value ?? "").trim() || "";
-    return _cachedKey;
+    const resolved = (data?.value ?? "").trim() || "";
+    _cachedKey = resolved;
+    return resolved;
   } catch {
     return "";
   }
