@@ -47,14 +47,14 @@ export async function fetchWHODONList(top = 25): Promise<WHONewsItem[]> {
 async function fetchArticleNumbers(
   path: string,
   countryAliases: string[] | null
-): Promise<{ cases: number; deaths: number; recovered: number; description: string }> {
+): Promise<{ cases: number; deaths: number; recovered: number; description: string; fullText: string }> {
   try {
     const url = path.startsWith("http") ? path : `https://www.who.int${path}`;
     const res = await fetch(url, {
       headers: FETCH_HEADERS,
       signal: AbortSignal.timeout(8000),
     });
-    if (!res.ok) return { cases: 0, deaths: 0, recovered: 0, description: "" };
+    if (!res.ok) return { cases: 0, deaths: 0, recovered: 0, description: "", fullText: "" };
 
     const html = await res.text();
 
@@ -69,9 +69,9 @@ async function fetchArticleNumbers(
 
     const nums = (countryAliases && extractNumbersForCountry(rawText, countryAliases)) || extractNumbers(rawText);
     const description = rawText.slice(0, 400);
-    return { cases: nums.cases, deaths: nums.deaths, recovered: nums.recovered ?? 0, description };
+    return { cases: nums.cases, deaths: nums.deaths, recovered: nums.recovered ?? 0, description, fullText: rawText };
   } catch {
-    return { cases: 0, deaths: 0, recovered: 0, description: "" };
+    return { cases: 0, deaths: 0, recovered: 0, description: "", fullText: "" };
   }
 }
 
@@ -136,40 +136,45 @@ export async function parseWHODONItem(
   let deaths = 0;
   let recovered = 0;
   let description = "";
+  let fullText = "";
 
   if (Summary) {
     const plain = Summary.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
     const nums = (countryAliases && extractNumbersForCountry(plain, countryAliases)) || extractNumbers(plain);
-    cases     = nums.cases     ?? 0;
-    deaths    = nums.deaths    ?? 0;
-    recovered = nums.recovered ?? 0;
+    cases       = nums.cases     ?? 0;
+    deaths      = nums.deaths    ?? 0;
+    recovered   = nums.recovered ?? 0;
     description = plain.slice(0, 400);
   }
 
-  // Fetch full article page for new entries OR when recovered is still 0
-  // (WHO summaries rarely include survivor counts — body always does).
-  if (fetchBody && (cases === 0 || recovered === 0) && ItemDefaultUrl) {
+  // Always fetch the full article body — we need the complete text for:
+  //   1. Case/death numbers (when Summary is missing or zero)
+  //   2. Admin1 extraction (province mention is often in paragraph 2-3,
+  //      beyond the 400-char description slice)
+  if (ItemDefaultUrl) {
     const bodyData = await fetchArticleNumbers(ItemDefaultUrl, countryAliases);
     if (cases === 0) {
       cases  = bodyData.cases  ?? 0;
       deaths = bodyData.deaths ?? 0;
     }
-    recovered   = bodyData.recovered ?? 0;
+    if (recovered === 0) recovered = bodyData.recovered ?? 0;
     description = bodyData.description || description;
+    fullText    = bodyData.fullText;
     await new Promise((r) => setTimeout(r, 150)); // polite delay
   }
 
   const risk_level = assessRisk(parsed.disease, description, cases, deaths);
-  const active = !isOutbreakEnded(description);
+  const active = !isOutbreakEnded(fullText || description);
 
   // ── Sub-national location extraction ──────────────────────────────
-  // Extract province / health-zone from bulletin text, then geocode.
-  // Nominatim: max 1 req/sec, per-process cache avoids redundant calls.
+  // Use fullText (up to 8000 chars) so province mentions in paragraph 2-3
+  // are reachable — description is only 400 chars and misses most of them.
   let admin1:     string | null = null;
   let admin1_lat: number | null = null;
   let admin1_lng: number | null = null;
-  if (description) {
-    const extracted = extractAdmin1(description);
+  const textForAdmin1 = fullText || description;
+  if (textForAdmin1) {
+    const extracted = extractAdmin1(textForAdmin1);
     if (extracted) {
       admin1 = extracted;
       const coords = await geocodeAdmin1(extracted, geo.name_en);

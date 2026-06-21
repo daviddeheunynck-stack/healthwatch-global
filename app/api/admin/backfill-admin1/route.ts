@@ -1,14 +1,16 @@
 /**
  * POST /api/admin/backfill-admin1
  *
- * Backfills admin1 / admin1_lat / admin1_lng for existing outbreak rows
- * that have a description but no admin1 yet.
+ * Backfills admin1 / admin1_lat / admin1_lng for existing outbreak rows.
+ * Fetches the full WHO DON article body from the source URL so province
+ * mentions in paragraph 2-3 are reachable (stored description is 400 chars,
+ * far too short to reliably find sub-national location mentions).
  *
- * Processes up to `limit` rows per call (default 20) to stay within
- * Nominatim's 1 req/sec rate limit and Vercel's 10-second default timeout.
+ * Processes up to `limit` rows per call (default 5) — each row requires
+ * one HTTP fetch (~1s) + one Nominatim geocode (~1s) = ~2s/row.
  * Call repeatedly until `remaining === 0`.
  *
- * Protected by CRON_SECRET (same as cron routes).
+ * Protected by CRON_SECRET.
  */
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
@@ -17,9 +19,34 @@ import { extractAdmin1, geocodeAdmin1 } from "@/lib/geo-extract";
 const BOM = String.fromCharCode(65279);
 const clean = (v: string | undefined) => (v || "").replace(new RegExp("^" + BOM), "").trim();
 
-const SUPABASE_URL        = clean(process.env.NEXT_PUBLIC_SUPABASE_URL);
+const SUPABASE_URL         = clean(process.env.NEXT_PUBLIC_SUPABASE_URL);
 const SUPABASE_SERVICE_KEY = clean(process.env.SUPABASE_SERVICE_ROLE_KEY);
 const CRON_SECRET          = clean(process.env.CRON_SECRET);
+
+const FETCH_HEADERS = {
+  "User-Agent": "HealthWatch-Global/1.0 (health surveillance; contact@healthwatch-global.com)",
+  "Accept": "text/html, */*",
+};
+
+async function fetchFullText(url: string): Promise<string> {
+  try {
+    const res = await fetch(url, {
+      headers: FETCH_HEADERS,
+      signal: AbortSignal.timeout(10000),
+    });
+    if (!res.ok) return "";
+    const html = await res.text();
+    const bodyMatch = html.match(
+      /(?:sf-content-block|article-content|content-block-article|don-content)([\s\S]{0,8000})/i
+    );
+    return (bodyMatch ? bodyMatch[1] : html)
+      .replace(/<[^>]+>/g, " ")
+      .replace(/\s+/g, " ")
+      .trim();
+  } catch {
+    return "";
+  }
+}
 
 export async function POST(req: NextRequest) {
   const auth = req.headers.get("authorization");
@@ -32,17 +59,16 @@ export async function POST(req: NextRequest) {
   }
 
   const { searchParams } = req.nextUrl;
-  const limit = Math.min(parseInt(searchParams.get("limit") ?? "20", 10), 50);
+  const limit = Math.min(parseInt(searchParams.get("limit") ?? "5", 10), 20);
 
   const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
 
-  // Fetch rows that have a description but no admin1 yet
+  // Select rows with null OR empty admin1 (empty = previous failed attempt using 400-char description)
   const { data: rows, error: fetchErr } = await supabase
     .from("outbreaks")
-    .select("id, description, country_en")
-    .is("admin1", null)
-    .not("description", "is", null)
-    .neq("description", "")
+    .select("id, source, description, country_en")
+    .or("admin1.is.null,admin1.eq.")
+    .not("source", "is", null)
     .order("created_at", { ascending: false })
     .limit(limit);
 
@@ -50,14 +76,23 @@ export async function POST(req: NextRequest) {
   if (!rows || rows.length === 0) return NextResponse.json({ processed: 0, remaining: 0 });
 
   let processed = 0;
-  let geocoded = 0;
+  let geocoded  = 0;
 
   for (const row of rows) {
-    const admin1 = extractAdmin1(row.description ?? "");
+    // Fetch full article body — province mentions live beyond the 400-char description
+    const fullText = row.source?.startsWith("https://www.who.int")
+      ? await fetchFullText(row.source)
+      : "";
+
+    const textToSearch = fullText || row.description || "";
+    const admin1 = extractAdmin1(textToSearch);
+
     if (!admin1) {
-      // Mark as attempted (empty string) so we don't retry indefinitely
+      // Mark with empty string so we skip on next backfill run
       await supabase.from("outbreaks").update({ admin1: "" }).eq("id", row.id);
       processed++;
+      // Polite delay even on misses (we already fetched the article)
+      await new Promise((r) => setTimeout(r, 500));
       continue;
     }
 
@@ -76,13 +111,11 @@ export async function POST(req: NextRequest) {
     await new Promise((r) => setTimeout(r, 1100));
   }
 
-  // Count remaining rows needing backfill
+  // Count rows still needing backfill (null or empty admin1)
   const { count: remaining } = await supabase
     .from("outbreaks")
     .select("id", { count: "exact", head: true })
-    .is("admin1", null)
-    .not("description", "is", null)
-    .neq("description", "");
+    .or("admin1.is.null,admin1.eq.");
 
   return NextResponse.json({ processed, geocoded, remaining: remaining ?? 0 });
 }
