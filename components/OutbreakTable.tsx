@@ -174,6 +174,7 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
   const [sortDir,          setSortDir]          = useState<SortDir>("asc");
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const [watchlistOnly,    setWatchlistOnly]    = useState(false);
+  const [lastCases,        setLastCases]        = useState<Record<string, number>>({});
 
   // Load watchlist IDs on mount (Pro users only)
   useEffect(() => {
@@ -183,6 +184,37 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
       .then((d) => { if (d.watchlist) setWatchlist(new Set(d.watchlist)); })
       .catch(() => {});
   }, [isPaid]);
+
+  // P3 — load previous cases snapshot from localStorage
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem("hwg_cases_snapshot");
+      if (raw) setLastCases(JSON.parse(raw) as Record<string, number>);
+    } catch { /* ignore */ }
+  }, []);
+
+  // P3 — save snapshot on beforeunload and every 30 s
+  useEffect(() => {
+    const save = () => {
+      try {
+        const snapshot: Record<string, number> = {};
+        for (const o of outbreaks) snapshot[o.id] = o.cases;
+        localStorage.setItem("hwg_cases_snapshot", JSON.stringify(snapshot));
+      } catch { /* ignore */ }
+    };
+    window.addEventListener("beforeunload", save);
+    const timer = setInterval(save, 30_000);
+    return () => { window.removeEventListener("beforeunload", save); clearInterval(timer); };
+  }, [outbreaks]);
+
+  // P4 — auto-open modal when ?outbreak=ID is in the URL
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const id = new URLSearchParams(window.location.search).get("outbreak");
+    if (!id) return;
+    const o = outbreaks.find((x) => x.id === id);
+    if (o) setSelected(o);
+  }, [outbreaks]);
 
   // Unique sorted country list from current outbreaks
   const countryOptions = useMemo(() => {
@@ -754,6 +786,12 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
                         </span>
                       )}
                       {outbreak.cases > 0 && <TrendBadge trend={trends?.[outbreak.id]} />}
+                      {isPaid && (() => {
+                        const prev = lastCases[outbreak.id];
+                        if (!prev || outbreak.cases <= prev) return null;
+                        const delta = outbreak.cases - prev;
+                        return <span className="text-[10px] text-amber-400 font-semibold whitespace-nowrap">+{delta.toLocaleString("en")}</span>;
+                      })()}
                     </div>
                   </td>
                   <td className="px-4 py-3 text-red-400 hidden sm:table-cell">

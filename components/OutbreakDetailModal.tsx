@@ -90,6 +90,25 @@ const REGION_NAMES: Record<string, Record<string, string>> = {
   id: { africa: "Afrika",     asia: "Asia",   europe: "Eropa",   americas: "Amerika",   oceania: "Oseania"    },
 };
 
+const TRIPWIRE_COPY: Record<string, {
+  label: string; placeholder: string; set: string; setting: string; active: string;
+  remove: string; linkCopied: string; copyLink: string;
+}> = {
+  fr: { label: "M'alerter quand les cas dépassent", placeholder: "5000", set: "Activer", setting: "Activation…", active: "Alerte active", remove: "Supprimer", linkCopied: "Lien copié !", copyLink: "Copier le lien" },
+  en: { label: "Alert me when cases exceed", placeholder: "5000", set: "Set alert", setting: "Setting…", active: "Alert active", remove: "Remove", linkCopied: "Link copied!", copyLink: "Copy link" },
+  es: { label: "Alertarme cuando los casos superen", placeholder: "5000", set: "Activar", setting: "Activando…", active: "Alerta activa", remove: "Eliminar", linkCopied: "¡Enlace copiado!", copyLink: "Copiar enlace" },
+  ar: { label: "تنبيهي عند تجاوز الحالات", placeholder: "5000", set: "تفعيل", setting: "جارٍ التفعيل…", active: "تنبيه نشط", remove: "حذف", linkCopied: "تم نسخ الرابط", copyLink: "نسخ الرابط" },
+  id: { label: "Beri tahu saya saat kasus melebihi", placeholder: "5000", set: "Aktifkan", setting: "Mengaktifkan…", active: "Peringatan aktif", remove: "Hapus", linkCopied: "Tautan disalin!", copyLink: "Salin tautan" },
+};
+
+const COMPARE_COPY: Record<string, { title: string; select: string; noHistory: string; metric: string; current: string; period: string; cases: string; deaths: string; cfr: string; risk: string; duration: string }> = {
+  fr: { title: "Comparer avec un épisode précédent", select: "Sélectionner un épisode", noHistory: "Aucun épisode antérieur", metric: "Indicateur", current: "Actuel", period: "Période", cases: "Cas", deaths: "Décès", cfr: "Létalité", risk: "Risque", duration: "Durée (depuis début)" },
+  en: { title: "Compare with a previous episode", select: "Select an episode", noHistory: "No previous episodes", metric: "Metric", current: "Current", period: "Period", cases: "Cases", deaths: "Deaths", cfr: "CFR", risk: "Risk", duration: "Duration (since onset)" },
+  es: { title: "Comparar con un episodio anterior", select: "Seleccionar un episodio", noHistory: "Sin episodios anteriores", metric: "Indicador", current: "Actual", period: "Período", cases: "Casos", deaths: "Fallecidos", cfr: "Letalidad", risk: "Riesgo", duration: "Duración (desde inicio)" },
+  ar: { title: "مقارنة مع حلقة سابقة", select: "اختر حلقة", noHistory: "لا توجد حلقات سابقة", metric: "المؤشر", current: "الحالي", period: "الفترة", cases: "الحالات", deaths: "الوفيات", cfr: "معدل الإماتة", risk: "الخطر", duration: "المدة (منذ البداية)" },
+  id: { title: "Bandingkan dengan episode sebelumnya", select: "Pilih episode", noHistory: "Tidak ada episode sebelumnya", metric: "Metrik", current: "Saat ini", period: "Periode", cases: "Kasus", deaths: "Kematian", cfr: "CFR", risk: "Risiko", duration: "Durasi (sejak awal)" },
+};
+
 interface Props {
   outbreak: Outbreak | null;
   locale: string;
@@ -187,7 +206,16 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlis
   const [pastOutbreaks,  setPastOutbreaks]  = useState<PastOutbreak[]>([]);
   const [historyLoading, setHistoryLoading] = useState(false);
 
-  const [sitrepCopied, setSitrepCopied] = useState(false);
+  const [sitrepCopied,  setSitrepCopied]  = useState(false);
+  const [linkCopied,    setLinkCopied]    = useState(false);
+
+  // Tripwire state
+  const [tripwire,      setTripwire]      = useState<{ id: string; threshold_cases: number } | null>(null);
+  const [tripwireInput, setTripwireInput] = useState<number | "">("");
+  const [tripwireSaving, setTripwireSaving] = useState(false);
+
+  // Comparison state
+  const [compareIdx,   setCompareIdx]   = useState<number>(-1);
 
   const [notes,       setNotes]       = useState<Note[]>([]);
   const [noteText,    setNoteText]    = useState("");
@@ -241,6 +269,21 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlis
       setSubmitting(false);
     }
   }
+
+  // Fetch existing tripwire for this outbreak
+  useEffect(() => {
+    if (!outbreak || !isPaid) return;
+    setTripwire(null);
+    setTripwireInput("");
+    setCompareIdx(-1);
+    fetch(`/api/tripwires?outbreak_id=${outbreak.id}`)
+      .then((r) => r.json())
+      .then((d) => {
+        const tw = d.tripwires?.[0];
+        if (tw) { setTripwire(tw); setTripwireInput(tw.threshold_cases); }
+      })
+      .catch(() => {});
+  }, [outbreak?.id, isPaid]);
 
   // Log outbreak view to org activity log (fire-and-forget, non-blocking)
   useEffect(() => {
@@ -872,8 +915,143 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlis
                  "Copy citation"}
               </button>
             )}
+
+            {/* P4 — Deep link copy */}
+            <button
+              onClick={async () => {
+                await navigator.clipboard.writeText(`${window.location.origin}/${locale}?outbreak=${outbreak.id}`);
+                setLinkCopied(true);
+                setTimeout(() => setLinkCopied(false), 2000);
+              }}
+              className={`flex items-center gap-2 text-xs transition-colors ${linkCopied ? "text-green-400" : "text-gray-500 hover:text-gray-300"}`}
+            >
+              {linkCopied ? <Check className="w-3 h-3" /> : <LinkIcon className="w-3 h-3" />}
+              {(TRIPWIRE_COPY[locale] ?? TRIPWIRE_COPY.en)[linkCopied ? "linkCopied" : "copyLink"]}
+            </button>
           </div>
         )}
+
+        {/* P1 — Tripwire: case-threshold alert */}
+        {isPaid && (
+          <div className="mx-5 mb-3 flex items-center gap-2 flex-wrap">
+            {tripwire ? (
+              <div className="flex items-center gap-2 text-xs flex-wrap">
+                <span className="text-amber-400 font-medium">
+                  🔔 {(TRIPWIRE_COPY[locale] ?? TRIPWIRE_COPY.en).active} — {tripwire.threshold_cases.toLocaleString("en")} {(COMPARE_COPY[locale] ?? COMPARE_COPY.en).cases.toLowerCase()}
+                </span>
+                <button
+                  onClick={async () => {
+                    await fetch(`/api/tripwires/${outbreak.id}`, { method: "DELETE" });
+                    setTripwire(null);
+                    setTripwireInput("");
+                  }}
+                  className="text-gray-600 hover:text-red-400 transition-colors text-[10px] underline underline-offset-2"
+                >
+                  {(TRIPWIRE_COPY[locale] ?? TRIPWIRE_COPY.en).remove}
+                </button>
+              </div>
+            ) : (
+              <div className="flex items-center gap-1.5 flex-wrap">
+                <span className="text-xs text-gray-500">{(TRIPWIRE_COPY[locale] ?? TRIPWIRE_COPY.en).label}</span>
+                <input
+                  type="number"
+                  min="1"
+                  value={tripwireInput}
+                  onChange={(e) => setTripwireInput(e.target.value === "" ? "" : Number(e.target.value))}
+                  placeholder={(TRIPWIRE_COPY[locale] ?? TRIPWIRE_COPY.en).placeholder}
+                  className="w-24 bg-gray-800 border border-gray-700 rounded-lg px-2 py-1 text-xs text-white placeholder-gray-600 focus:outline-none focus:border-amber-500"
+                />
+                <span className="text-xs text-gray-500">{(COMPARE_COPY[locale] ?? COMPARE_COPY.en).cases.toLowerCase()}</span>
+                <button
+                  disabled={tripwireInput === "" || tripwireSaving}
+                  onClick={async () => {
+                    if (tripwireInput === "") return;
+                    setTripwireSaving(true);
+                    try {
+                      const res = await fetch("/api/tripwires", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ outbreak_id: outbreak.id, threshold_cases: Number(tripwireInput), email: "" }),
+                      });
+                      const d = await res.json();
+                      if (d.tripwire) setTripwire(d.tripwire);
+                    } catch { /* ignore */ } finally { setTripwireSaving(false); }
+                  }}
+                  className="text-xs px-2 py-1 bg-amber-700/40 hover:bg-amber-700/60 disabled:opacity-40 border border-amber-700/40 text-amber-300 rounded-lg transition-colors"
+                >
+                  {tripwireSaving ? (TRIPWIRE_COPY[locale] ?? TRIPWIRE_COPY.en).setting : (TRIPWIRE_COPY[locale] ?? TRIPWIRE_COPY.en).set}
+                </button>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* P2 — Historical comparison */}
+        {isPaid && pastOutbreaks.length > 0 && (() => {
+          const cc = COMPARE_COPY[locale] ?? COMPARE_COPY.en;
+          const cmp = compareIdx >= 0 ? pastOutbreaks[compareIdx] ?? null : null;
+          const cCFR  = outbreak.cases  > 0 ? (outbreak.deaths  / outbreak.cases  * 100).toFixed(1) : null;
+          const pCFR  = cmp && cmp.cases > 0 ? (cmp.deaths / cmp.cases * 100).toFixed(1) : null;
+          const ageCurrentDays  = Math.round((Date.now() - new Date(outbreak.date).getTime()) / 86400000);
+          const agePastDays     = cmp ? Math.round((Date.now() - new Date(cmp.date).getTime()) / 86400000) : 0;
+          return (
+            <div className="mx-5 mb-3">
+              <div className="flex items-center gap-2 mb-2 flex-wrap">
+                <span className="text-[10px] font-semibold text-gray-500 uppercase tracking-wide">{cc.title}</span>
+                <select
+                  value={compareIdx}
+                  onChange={(e) => setCompareIdx(Number(e.target.value))}
+                  className="text-xs bg-gray-800 border border-gray-700 rounded-lg px-2 py-0.5 text-gray-300 focus:outline-none focus:border-blue-500"
+                >
+                  <option value={-1}>{cc.select}</option>
+                  {pastOutbreaks.map((p, i) => (
+                    <option key={p.id} value={i}>{p.date.slice(0, 7)} — {p.cases.toLocaleString("en")} {cc.cases.toLowerCase()}</option>
+                  ))}
+                </select>
+              </div>
+              {cmp && (
+                <div className="rounded-xl border border-gray-700/50 overflow-hidden text-xs">
+                  <table className="w-full">
+                    <thead>
+                      <tr className="border-b border-gray-700/50 bg-gray-800/40">
+                        <th className="text-left px-3 py-2 text-gray-500 font-medium">{cc.metric}</th>
+                        <th className="text-right px-3 py-2 text-blue-400 font-medium">{cc.current}</th>
+                        <th className="text-right px-3 py-2 text-gray-500 font-medium">{cmp.date.slice(0, 7)}</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-800/60">
+                      <tr>
+                        <td className="px-3 py-1.5 text-gray-500">{cc.cases}</td>
+                        <td className="px-3 py-1.5 text-right text-white tabular-nums">{outbreak.cases.toLocaleString("en")}</td>
+                        <td className="px-3 py-1.5 text-right text-gray-400 tabular-nums">{cmp.cases.toLocaleString("en")}</td>
+                      </tr>
+                      <tr>
+                        <td className="px-3 py-1.5 text-gray-500">{cc.deaths}</td>
+                        <td className="px-3 py-1.5 text-right text-white tabular-nums">{outbreak.deaths?.toLocaleString("en") ?? "—"}</td>
+                        <td className="px-3 py-1.5 text-right text-gray-400 tabular-nums">{cmp.deaths?.toLocaleString("en") ?? "—"}</td>
+                      </tr>
+                      <tr>
+                        <td className="px-3 py-1.5 text-gray-500">{cc.cfr}</td>
+                        <td className="px-3 py-1.5 text-right text-white">{cCFR ? `${cCFR}%` : "—"}</td>
+                        <td className="px-3 py-1.5 text-right text-gray-400">{pCFR ? `${pCFR}%` : "—"}</td>
+                      </tr>
+                      <tr>
+                        <td className="px-3 py-1.5 text-gray-500">{cc.risk}</td>
+                        <td className="px-3 py-1.5 text-right text-white capitalize">{outbreak.risk_level}</td>
+                        <td className="px-3 py-1.5 text-right text-gray-400 capitalize">{cmp.risk_level}</td>
+                      </tr>
+                      <tr>
+                        <td className="px-3 py-1.5 text-gray-500">{cc.duration}</td>
+                        <td className="px-3 py-1.5 text-right text-white">{ageCurrentDays}d</td>
+                        <td className="px-3 py-1.5 text-right text-gray-400">{agePastDays}d</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </div>
+          );
+        })()}
 
         {/* ── Response workflow (P2) ───────────────────────────────────── */}
         {isPaid && (

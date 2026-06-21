@@ -91,6 +91,10 @@
     {
       "path": "/api/cron/send-sitrep-emails",
       "schedule": "20 7 * * 1"
+    },
+    {
+      "path": "/api/cron/trigger-tripwires",
+      "schedule": "0,30 * * * *"
     }
   ]
 }
