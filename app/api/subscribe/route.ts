@@ -165,6 +165,11 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Missing fields" }, { status: 400 });
     }
 
+    const VALID_REGIONS = ["allRegions", "africa", "asia", "europe", "americas", "oceania"];
+    if (!VALID_REGIONS.includes(region)) {
+      return NextResponse.json({ error: "Invalid region" }, { status: 400 });
+    }
+
     const safeLocale = ["fr", "en", "es", "ar", "id"].includes(locale) ? locale : "en";
 
     const supabase = createClient(

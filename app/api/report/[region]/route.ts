@@ -85,7 +85,9 @@ export async function GET(
   }
 
   // ── Generate report ─────────────────────────────────────────────────────────
-  const locale = request.nextUrl.searchParams.get("locale") ?? "en";
+  const VALID_LOCALES = ["en", "fr", "es", "ar", "id"] as const;
+  const rawLocale = request.nextUrl.searchParams.get("locale") ?? "en";
+  const locale = VALID_LOCALES.includes(rawLocale as (typeof VALID_LOCALES)[number]) ? rawLocale : "en";
   const rl = REPORT_LABELS[locale] ?? REPORT_LABELS.en;
   const outbreaks = await getOutbreaks();
   const regionOutbreaks = outbreaks.filter((o) => o.region === region);
