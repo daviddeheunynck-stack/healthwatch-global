@@ -50,15 +50,15 @@ const ENDEMIC_DEFAULTS: Record<string, string> = {
   "Lassa fever|Liberia":                                    "Lofa County",
 
   // Mpox (Clade I): ongoing DRC outbreak concentrated in North and South Kivu
-  "Mpox|Democratic Republic of the Congo":                  "Nord-Kivu Province",
+  "Mpox|DR Congo":                                          "Nord-Kivu Province",
 
   // Ebola: most DRC outbreaks since 2018 have been in North Kivu or Équateur
-  "Ebola virus disease|Democratic Republic of the Congo":   "Nord-Kivu Province",
+  "Ebola virus disease|DR Congo":                           "Nord-Kivu Province",
   "Ebola virus disease|Uganda":                             "Mubende District",
 
   // MERS-CoV: Saudi cases cluster around Riyadh and Jeddah; UAE mostly Abu Dhabi
   "MERS-CoV|Saudi Arabia":                                  "Riyadh Region",
-  "MERS-CoV|United Arab Emirates":                          "Abu Dhabi",
+  "MERS-CoV|UAE":                                           "Abu Dhabi",
   "MERS-CoV|Jordan":                                        "Amman Governorate",
 
   // Rift Valley fever: Kenya outbreaks typically in northern pastoralist counties
@@ -67,7 +67,7 @@ const ENDEMIC_DEFAULTS: Record<string, string> = {
 
   // Avian Influenza: Cambodia cases historically in Kandal and Prey Veng
   "Avian Influenza|Cambodia":                               "Kandal Province",
-  "Avian Influenza|Viet Nam":                               "Ha Noi",
+  "Avian Influenza|Vietnam":                                "Ha Noi",
 
   // Meningitis belt — epidemic zone for meningococcal meningitis
   "Meningitis|Niger":                                       "Niamey Region",
@@ -77,7 +77,7 @@ const ENDEMIC_DEFAULTS: Record<string, string> = {
   // Cholera: endemic + seasonal outbreak zones
   "Cholera|Haiti":                                          "Artibonite Department",
   "Cholera|Yemen":                                          "Hadramawt Governorate",
-  "Cholera|Democratic Republic of the Congo":               "South Kivu Province",
+  "Cholera|DR Congo":                                       "South Kivu Province",
   "Cholera|Somalia":                                        "Banadir Region",
   "Cholera|Ethiopia":                                       "Oromia Region",
   "Cholera|Mozambique":                                     "Nampula Province",
@@ -86,12 +86,12 @@ const ENDEMIC_DEFAULTS: Record<string, string> = {
 
   // Yellow fever: vaccine-preventable — outbreaks when coverage gaps exist
   "Yellow fever|Nigeria":                                   "Bauchi State",
-  "Yellow fever|Democratic Republic of the Congo":          "Équateur Province",
+  "Yellow fever|DR Congo":                                  "Équateur Province",
   "Yellow fever|Ethiopia":                                  "Oromia Region",
 
   // Measles: conflict-affected zones with vaccination gaps
   "Measles|Yemen":                                          "Sana'a Governorate",
-  "Measles|Democratic Republic of the Congo":               "Kasaï Province",
+  "Measles|DR Congo":                                       "Kasaï Province",
   "Measles|Ethiopia":                                       "Oromia Region",
   "Measles|Somalia":                                        "Banadir Region",
 
