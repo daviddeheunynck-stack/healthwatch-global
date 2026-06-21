@@ -17,6 +17,7 @@ import LockedUpgradeButton from "@/components/LockedUpgradeButton";
 import { useUpgradeModal } from "@/lib/upgrade-modal-context";
 import OutbreakCasesChart from "@/components/OutbreakCasesChart";
 import { createClient as createBrowserClient } from "@/lib/supabase-browser";
+import { wilsonCI } from "@/lib/cfr-ci";
 
 const COPY: Record<string, {
   cases: string; deaths: string; cfr: string; incidence: string; date: string;
@@ -404,6 +405,15 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlis
                 : <span className="blur-sm select-none cursor-pointer" onClick={() => openModal("cases")}>9.9%</span>
               }
             </p>
+            {isPaid && cfr && (() => {
+              const ci = wilsonCI(outbreak.deaths, outbreak.cases);
+              if (!ci) return null;
+              return (
+                <p className="text-[10px] text-gray-600" title="Wilson score 95% confidence interval">
+                  IC95% [{ci[0]}–{ci[1]}%]
+                </p>
+              );
+            })()}
           </div>
 
           {/* Incidence rate */}

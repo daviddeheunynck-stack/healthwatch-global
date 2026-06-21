@@ -16,6 +16,7 @@ import TrialBanner from "@/components/TrialBanner";
 import PushNotificationBanner from "@/components/PushNotificationBanner";
 import CsvExportButton from "@/components/CsvExportButton";
 import DataAccessPanel from "@/components/DataAccessPanel";
+import WebhookPanel from "@/components/WebhookPanel";
 import SignalsFeed from "@/components/SignalsFeed";
 import OnboardingTour from "@/components/OnboardingTour";
 import FreePlanBanner from "@/components/FreePlanBanner";
@@ -364,6 +365,8 @@ async function DashboardContent({ demo = false }: { demo?: boolean }) {
       </div>
 
       {isPaid && <DataAccessPanel locale={locale} />}
+
+      {isPaid && <WebhookPanel locale={locale} />}
 
       {isPaid && (
         <div className="rounded-xl border border-amber-800/20 bg-amber-950/10 p-4">

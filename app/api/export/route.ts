@@ -100,12 +100,14 @@ async function buildExportResponse(request: NextRequest) {
 
   // ── Build response ───────────────────────────────────────────────────────────
   const { getIncidenceRate } = await import("@/lib/population-data");
+  const { wilsonCI } = await import("@/lib/cfr-ci");
   const outbreaks = await getOutbreaks();
   const format = new URL(request.url).searchParams.get("format");
   const date = new Date().toISOString().split("T")[0];
 
   const records = outbreaks.map((o) => {
     const cfr       = o.cases > 0 ? parseFloat((o.deaths / o.cases * 100).toFixed(1)) : null;
+    const ci        = wilsonCI(o.deaths, o.cases);
     const incidence = getIncidenceRate(o.cases, o.country_en);
     return {
       id:                 o.id,
@@ -117,6 +119,8 @@ async function buildExportResponse(request: NextRequest) {
       cases:              o.cases,
       deaths:             o.deaths,
       cfr_pct:            cfr,
+      cfr_ci_low:         ci ? ci[0] : null,
+      cfr_ci_high:        ci ? ci[1] : null,
       incidence_per_100k: incidence !== null ? parseFloat(incidence.toFixed(2)) : null,
       risk_level:         o.risk_level,
       date:               o.date,

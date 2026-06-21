@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo, useCallback, useEffect } from "react";
-import { Search, X, ChevronUp, ChevronDown, ChevronsUpDown, Download, Lock, TrendingUp, TrendingDown, Minus, ExternalLink } from "lucide-react";
+import { Search, X, ChevronUp, ChevronDown, ChevronsUpDown, Download, Lock, TrendingUp, TrendingDown, Minus, ExternalLink, SlidersHorizontal } from "lucide-react";
 import Link from "next/link";
 import OutbreakDetailModal from "@/components/OutbreakDetailModal";
 import SavedFilters from "@/components/SavedFilters";
@@ -169,8 +169,9 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
   const [risk,         setRisk]         = useState<Risk>("all");
   const [cfrFilter,    setCfrFilter]    = useState<CfrFilter>("all");
   const [sourceFilter, setSourceFilter] = useState<SourceFilter>("all");
-  const [sortKey,   setSortKey]   = useState<SortKey>("risk");
-  const [sortDir,   setSortDir]   = useState<SortDir>("asc");
+  const [sortKey,          setSortKey]          = useState<SortKey>("risk");
+  const [sortDir,          setSortDir]          = useState<SortDir>("asc");
+  const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
 
   // Load watchlist IDs on mount (Pro users only)
   useEffect(() => {
@@ -367,7 +368,26 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
         )}
         </div>
 
-        {/* Region + Risk pills in two rows */}
+        {/* Mobile filter toggle — hidden on sm+ where filters are always visible */}
+        <div className="flex items-center justify-between sm:hidden">
+          <button
+            onClick={() => setMobileFiltersOpen((v) => !v)}
+            className={`flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg border transition-colors ${
+              mobileFiltersOpen
+                ? "bg-gray-700 border-gray-500 text-white"
+                : "border-gray-800 text-gray-500 hover:border-gray-600 hover:text-gray-300"
+            }`}
+          >
+            <SlidersHorizontal className="w-3.5 h-3.5" />
+            {{ fr: "Filtres", en: "Filters", es: "Filtros", ar: "الفلاتر", id: "Filter" }[locale] ?? "Filters"}
+            {hasFilters && <span className="w-1.5 h-1.5 rounded-full bg-red-500 shrink-0" />}
+          </button>
+        </div>
+
+        {/* Region + Risk pills + dropdowns — always visible on sm+, collapsible on mobile */}
+        <div className={`${mobileFiltersOpen ? "block" : "hidden"} sm:block space-y-2`}>
+
+        {/* Region pills */}
         <div className="flex flex-wrap gap-1.5">
           {regions.map(({ key, label }) => {
             const locked = !isPaid && key !== "all";
@@ -483,6 +503,7 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
             </button>
           )}
         </div>
+        </div>{/* end collapsible filters */}
       </div>
 
       {/* ── Saved filters ──────────────────────────────────────────────── */}
