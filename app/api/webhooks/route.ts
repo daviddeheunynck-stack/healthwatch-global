@@ -49,6 +49,7 @@ export async function POST(req: Request) {
     regions?: string[]; risk_levels?: string[];
     rt_threshold?: number;
     disease_thresholds?: { disease_en?: string; min_cases?: number }[];
+    proximity?: { lat?: number; lng?: number; radius_km?: number; label?: string };
   };
 
   const name = (body.name ?? "").trim().slice(0, 64) || "My webhook";
@@ -75,6 +76,24 @@ export async function POST(req: Request) {
         .slice(0, 10)
     : [];
 
+  const proximity =
+    body.proximity &&
+    typeof body.proximity.lat === "number" &&
+    typeof body.proximity.lng === "number" &&
+    typeof body.proximity.radius_km === "number" &&
+    body.proximity.radius_km > 0 && body.proximity.radius_km <= 5000 &&
+    body.proximity.lat >= -90 && body.proximity.lat <= 90 &&
+    body.proximity.lng >= -180 && body.proximity.lng <= 180
+      ? {
+          lat: body.proximity.lat,
+          lng: body.proximity.lng,
+          radius_km: Math.round(body.proximity.radius_km),
+          ...(typeof body.proximity.label === "string" && body.proximity.label.trim()
+            ? { label: body.proximity.label.trim().slice(0, 64) }
+            : {}),
+        }
+      : undefined;
+
   const secret = randomBytes(32).toString("hex");
 
   const { data, error } = await supabase.from("webhooks").insert({
@@ -84,6 +103,7 @@ export async function POST(req: Request) {
       risk_levels,
       ...(rt_threshold !== undefined ? { rt_threshold } : {}),
       ...(disease_thresholds.length > 0 ? { disease_thresholds } : {}),
+      ...(proximity ? { proximity } : {}),
     },
   }).select("id, name, url, filters, active, created_at").single();
 

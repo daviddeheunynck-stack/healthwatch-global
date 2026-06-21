@@ -14,6 +14,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { createHmac } from "crypto";
 import { computeEpidemicMetrics } from "@/lib/epidemic-metrics";
+import { getCountryCoords } from "@/lib/country-coords";
+import { haversineKm } from "@/lib/haversine";
 
 export const dynamic = "force-dynamic";
 
@@ -28,7 +30,13 @@ interface Webhook {
   id: string;
   url: string;
   secret: string;
-  filters: { regions?: string[]; risk_levels?: string[]; rt_threshold?: number; disease_thresholds?: { disease_en: string; min_cases: number }[] };
+  filters: {
+    regions?: string[];
+    risk_levels?: string[];
+    rt_threshold?: number;
+    disease_thresholds?: { disease_en: string; min_cases: number }[];
+    proximity?: { lat: number; lng: number; radius_km: number; label?: string };
+  };
   last_triggered_at: string | null;
   created_at: string;
 }
@@ -45,6 +53,8 @@ interface Outbreak {
   deaths: number;
   date: string;
   is_pheic: boolean;
+  lat: number | null;
+  lng: number | null;
   updated_at: string | null;
 }
 
@@ -53,12 +63,22 @@ function sign(secret: string, body: string): string {
 }
 
 function outbreakMatchesWebhook(o: Outbreak, w: Webhook): boolean {
-  const { regions = [], risk_levels = ["high"], disease_thresholds = [] } = w.filters;
+  const { regions = [], risk_levels = ["high"], disease_thresholds = [], proximity } = w.filters;
   if (regions.length > 0 && !regions.includes(o.region)) return false;
-  // Disease threshold: bypass risk_level filter when a specific disease+cases match
+  // Disease threshold bypass
   for (const dt of disease_thresholds) {
     if (o.disease_en?.toLowerCase() === dt.disease_en.toLowerCase() && o.cases >= dt.min_cases) {
       return true;
+    }
+  }
+  // Proximity bypass: trigger if outbreak is within radius, regardless of risk_level
+  if (proximity) {
+    const outLat = o.lat ?? getCountryCoords(o.country_en)?.[0];
+    const outLng = o.lng ?? getCountryCoords(o.country_en)?.[1];
+    if (outLat != null && outLng != null) {
+      if (haversineKm(proximity.lat, proximity.lng, outLat, outLng) <= proximity.radius_km) {
+        return true;
+      }
     }
   }
   return risk_levels.length === 0 || risk_levels.includes(o.risk_level);
@@ -86,7 +106,7 @@ export async function GET(req: NextRequest) {
 
     const { data: outbreaks } = await supabase
       .from("outbreaks")
-      .select("id, disease, disease_en, country, country_en, region, risk_level, cases, deaths, date, is_pheic, updated_at")
+      .select("id, disease, disease_en, country, country_en, region, risk_level, cases, deaths, date, is_pheic, lat, lng, updated_at")
       .eq("active", true)
       .gt("updated_at", since);
 

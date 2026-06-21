@@ -10,7 +10,7 @@ interface WebhookEntry {
   id: string;
   name: string;
   url: string;
-  filters: { regions?: string[]; risk_levels?: string[]; rt_threshold?: number; disease_thresholds?: { disease_en: string; min_cases: number }[] };
+  filters: { regions?: string[]; risk_levels?: string[]; rt_threshold?: number; disease_thresholds?: { disease_en: string; min_cases: number }[]; proximity?: { lat: number; lng: number; radius_km: number; label?: string } };
   active: boolean;
   last_triggered_at: string | null;
   last_status_code: number | null;
@@ -26,6 +26,7 @@ const COPY: Record<string, {
   secretLabel: string; secretCopied: string; copySecret: string;
   toggle: string; status: (code: number | null) => string;
   rtThreshold: string; rtNote: string; diseaseThresholds: string; diseasePlaceholder: string; minCasesLabel: string;
+  proximity: string; proxLat: string; proxLng: string; proxRadius: string; proxLabelInput: string;
 }> = {
   fr: {
     title: "Webhooks", subtitle: "Recevez un push HTTPS chaque fois qu'un foyer atteint le niveau de risque configuré.",
@@ -40,6 +41,7 @@ const COPY: Record<string, {
     toggle: "Activer/désactiver",
     rtThreshold: "Seuil Rt", rtNote: "Déclencher si Rt ≥ ce seuil (ex: 1.5)",
     diseaseThresholds: "Seuils IHR par maladie", diseasePlaceholder: "Ebola", minCasesLabel: "cas min",
+    proximity: "Alerte de proximité", proxLat: "Latitude", proxLng: "Longitude", proxRadius: "Rayon (km)", proxLabelInput: "Lieu (optionnel)",
     status: (c) => c === null ? "—" : c >= 200 && c < 300 ? `✓ ${c}` : `✗ ${c}`,
   },
   en: {
@@ -55,6 +57,7 @@ const COPY: Record<string, {
     toggle: "Enable/disable",
     rtThreshold: "Rt threshold", rtNote: "Trigger if Rt ≥ value (e.g. 1.5)",
     diseaseThresholds: "IHR thresholds per disease", diseasePlaceholder: "Ebola", minCasesLabel: "min cases",
+    proximity: "Proximity alert", proxLat: "Latitude", proxLng: "Longitude", proxRadius: "Radius (km)", proxLabelInput: "Label (optional)",
     status: (c) => c === null ? "—" : c >= 200 && c < 300 ? `✓ ${c}` : `✗ ${c}`,
   },
   es: {
@@ -70,6 +73,7 @@ const COPY: Record<string, {
     toggle: "Activar/desactivar",
     rtThreshold: "Umbral Rt", rtNote: "Activar si Rt ≥ umbral (ej: 1.5)",
     diseaseThresholds: "Umbrales IHR por enfermedad", diseasePlaceholder: "Ebola", minCasesLabel: "casos mín",
+    proximity: "Alerta de proximidad", proxLat: "Latitud", proxLng: "Longitud", proxRadius: "Radio (km)", proxLabelInput: "Lugar (opcional)",
     status: (c) => c === null ? "—" : c >= 200 && c < 300 ? `✓ ${c}` : `✗ ${c}`,
   },
   ar: {
@@ -85,6 +89,7 @@ const COPY: Record<string, {
     toggle: "تفعيل/تعطيل",
     rtThreshold: "عتبة Rt", rtNote: "تشغيل إذا Rt ≥ العتبة",
     diseaseThresholds: "عتبات IHR لكل مرض", diseasePlaceholder: "Ebola", minCasesLabel: "حالات دنيا",
+    proximity: "تنبيه القرب", proxLat: "خط العرض", proxLng: "خط الطول", proxRadius: "نطاق (كم)", proxLabelInput: "المكان (اختياري)",
     status: (c) => c === null ? "—" : c !== null && c >= 200 && c < 300 ? `✓ ${c}` : `✗ ${c}`,
   },
   id: {
@@ -100,6 +105,7 @@ const COPY: Record<string, {
     toggle: "Aktifkan/nonaktifkan",
     rtThreshold: "Ambang Rt", rtNote: "Aktifkan jika Rt ≥ nilai (mis. 1.5)",
     diseaseThresholds: "Ambang IHR per penyakit", diseasePlaceholder: "Ebola", minCasesLabel: "kasus min",
+    proximity: "Peringatan kedekatan", proxLat: "Lintang", proxLng: "Bujur", proxRadius: "Radius (km)", proxLabelInput: "Lokasi (opsional)",
     status: (c) => c === null ? "—" : c !== null && c >= 200 && c < 300 ? `✓ ${c}` : `✗ ${c}`,
   },
 };
@@ -148,6 +154,11 @@ export default function WebhookPanel({ locale }: Props) {
   const [disThresholds, setDisThresholds] = useState<{ disease_en: string; min_cases: number }[]>([]);
   const [newDisEn,      setNewDisEn]      = useState("");
   const [newMinCases,   setNewMinCases]   = useState<number | "">(1);
+  const [enableProximity, setEnableProximity] = useState(false);
+  const [proxLat,   setProxLat]   = useState<number | "">("");
+  const [proxLng,   setProxLng]   = useState<number | "">("");
+  const [proxRadius, setProxRadius] = useState<number | "">(500);
+  const [proxLabel, setProxLabel]  = useState("");
 
   useEffect(() => {
     if (!open) return;
@@ -196,6 +207,12 @@ export default function WebhookPanel({ locale }: Props) {
           risk_levels: selRisks.length > 0 ? selRisks : ["high"],
           rt_threshold: rtThreshold !== "" ? Number(rtThreshold) : undefined,
           disease_thresholds: disThresholds.length > 0 ? disThresholds : undefined,
+          proximity: enableProximity && proxLat !== "" && proxLng !== "" ? {
+            lat: Number(proxLat),
+            lng: Number(proxLng),
+            radius_km: proxRadius !== "" ? Number(proxRadius) : 500,
+            label: proxLabel.trim() || undefined,
+          } : undefined,
         }),
       });
       const d = await res.json();
@@ -204,6 +221,7 @@ export default function WebhookPanel({ locale }: Props) {
         setWebhooks((prev) => [d.webhook, ...prev]);
         setNewSecret(d.secret);
         setName(""); setUrl(""); setSelRegions([]); setSelRisks(["high"]); setRtThreshold(""); setDisThresholds([]); setNewDisEn(""); setNewMinCases(1);
+        setEnableProximity(false); setProxLat(""); setProxLng(""); setProxRadius(500); setProxLabel("");
         setShowForm(false);
       }
     } catch { setFormError("Network error"); } finally { setCreating(false); }
@@ -358,6 +376,11 @@ export default function WebhookPanel({ locale }: Props) {
                             {dt.disease_en} ≥{dt.min_cases}
                           </span>
                         ))}
+                        {w.filters?.proximity && (
+                          <span className="px-1.5 py-0.5 rounded bg-blue-900/20 border border-blue-700/30 text-blue-400">
+                            📍 {w.filters.proximity.label || "proximity"} ≤{w.filters.proximity.radius_km}km
+                          </span>
+                        )}
                         {!w.active && (
                           <span className="px-1.5 py-0.5 rounded bg-gray-800 border border-gray-700 text-gray-500">
                             {locale === "fr" ? "Désactivé" : locale === "es" ? "Desactivado" : locale === "ar" ? "معطَّل" : locale === "id" ? "Nonaktif" : "Disabled"}
@@ -489,6 +512,63 @@ export default function WebhookPanel({ locale }: Props) {
                         +
                       </button>
                     </div>
+                  </div>
+
+                  {/* Proximity alert */}
+                  <div className="space-y-1.5">
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={enableProximity}
+                        onChange={(e) => setEnableProximity(e.target.checked)}
+                        className="rounded border-gray-600"
+                      />
+                      <span className="text-[10px] text-gray-400 uppercase tracking-wide">{c.proximity}</span>
+                    </label>
+                    {enableProximity && (
+                      <div className="grid grid-cols-2 gap-1.5">
+                        <div className="space-y-0.5">
+                          <p className="text-[9px] text-gray-600">{c.proxLat}</p>
+                          <input
+                            type="number" min="-90" max="90" step="0.0001"
+                            value={proxLat}
+                            onChange={(e) => setProxLat(e.target.value === "" ? "" : Number(e.target.value))}
+                            placeholder="-1.68"
+                            className="w-full bg-gray-800 border border-gray-700 rounded-lg px-2 py-1 text-xs text-white placeholder-gray-600 focus:outline-none focus:border-blue-500"
+                          />
+                        </div>
+                        <div className="space-y-0.5">
+                          <p className="text-[9px] text-gray-600">{c.proxLng}</p>
+                          <input
+                            type="number" min="-180" max="180" step="0.0001"
+                            value={proxLng}
+                            onChange={(e) => setProxLng(e.target.value === "" ? "" : Number(e.target.value))}
+                            placeholder="29.23"
+                            className="w-full bg-gray-800 border border-gray-700 rounded-lg px-2 py-1 text-xs text-white placeholder-gray-600 focus:outline-none focus:border-blue-500"
+                          />
+                        </div>
+                        <div className="space-y-0.5">
+                          <p className="text-[9px] text-gray-600">{c.proxRadius}</p>
+                          <input
+                            type="number" min="1" max="5000" step="1"
+                            value={proxRadius}
+                            onChange={(e) => setProxRadius(e.target.value === "" ? "" : Number(e.target.value))}
+                            placeholder="500"
+                            className="w-full bg-gray-800 border border-gray-700 rounded-lg px-2 py-1 text-xs text-white placeholder-gray-600 focus:outline-none focus:border-blue-500"
+                          />
+                        </div>
+                        <div className="space-y-0.5">
+                          <p className="text-[9px] text-gray-600">{c.proxLabelInput}</p>
+                          <input
+                            type="text" maxLength={64}
+                            value={proxLabel}
+                            onChange={(e) => setProxLabel(e.target.value)}
+                            placeholder="Goma"
+                            className="w-full bg-gray-800 border border-gray-700 rounded-lg px-2 py-1 text-xs text-white placeholder-gray-600 focus:outline-none focus:border-blue-500"
+                          />
+                        </div>
+                      </div>
+                    )}
                   </div>
 
                   {formError && (

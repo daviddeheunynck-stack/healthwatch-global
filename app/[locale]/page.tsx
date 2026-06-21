@@ -19,6 +19,7 @@ import DataAccessPanel from "@/components/DataAccessPanel";
 import WebhookPanel from "@/components/WebhookPanel";
 import SignalsFeed from "@/components/SignalsFeed";
 import ScheduledReportPanel from "@/components/ScheduledReportPanel";
+import OrgPanel from "@/components/OrgPanel";
 import OnboardingTour from "@/components/OnboardingTour";
 import FreePlanBanner from "@/components/FreePlanBanner";
 import DemoBanner from "@/components/DemoBanner";
@@ -138,6 +139,7 @@ async function DashboardContent({ demo = false }: { demo?: boolean }) {
   let hasStripeSubscription = false;
   let trialExpired = false;
   let displayFilters: { region: string; country: string } | null = null;
+  let orgMemberAccess = false;
   if (!demo) {
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
@@ -168,10 +170,21 @@ async function DashboardContent({ demo = false }: { demo?: boolean }) {
       if (isPaidPlan && profile?.display_filters) {
         displayFilters = profile.display_filters as { region: string; country: string };
       }
+      // Org members inherit Team-level access even if their own plan is free
+      if (!isPaidPlan) {
+        const { data: orgMembership } = await supabase
+          .from("organization_members")
+          .select("id")
+          .eq("user_id", user.id)
+          .eq("status", "active")
+          .limit(1)
+          .maybeSingle();
+        orgMemberAccess = !!orgMembership;
+      }
     }
   }
 
-  const isPaid = plan === "starter" || plan === "pro" || plan === "team" || plan === "enterprise";
+  const isPaid = plan === "starter" || plan === "pro" || plan === "team" || plan === "enterprise" || orgMemberAccess;
 
   const [outbreaks, lastSync] = await Promise.all([getOutbreaks(), getLastSync()]);
   const stats = getStats(outbreaks);
@@ -369,6 +382,7 @@ async function DashboardContent({ demo = false }: { demo?: boolean }) {
 
       {isPaid && <WebhookPanel locale={locale} />}
       {isPaid && <ScheduledReportPanel locale={locale} />}
+      {isPaid && <OrgPanel locale={locale} />}
 
       {isPaid && (
         <div className="rounded-xl border border-amber-800/20 bg-amber-950/10 p-4">
