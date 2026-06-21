@@ -130,6 +130,6 @@ export async function POST(req: NextRequest) {
     processed,
     geocoded,
     remaining: remaining ?? 0,
-    llm_active: !!(process.env.ANTHROPIC_API_KEY ?? "").trim(),
+    llm_active: true, // key resolved via Supabase fallback — see geo-extract-llm.ts
   });
 }
