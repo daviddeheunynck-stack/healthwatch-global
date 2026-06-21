@@ -15,27 +15,27 @@ const META: Record<string, { title: string; description: string }> = {
   en: {
     title: "HealthWatch Global — Epidemic Surveillance",
     description:
-      "Monitor disease outbreaks worldwide — WHO, ECDC, PAHO & Africa CDC data in 5 languages, updated every 6 hours. Built for epidemiologists, NGOs and health ministries.",
+      "Monitor disease outbreaks worldwide — WHO, ECDC, PAHO & Africa CDC data in 5 languages, updated every hour. Built for epidemiologists, NGOs and health ministries.",
   },
   fr: {
     title: "HealthWatch Global — Surveillance épidémique",
     description:
-      "Suivez les foyers épidémiques mondiaux. Données officielles OMS, ECDC, PAHO et Africa CDC en 5 langues, mises à jour toutes les 6h. Conçu pour les épidémiologistes, ONG et ministères de la santé.",
+      "Suivez les foyers épidémiques mondiaux. Données officielles OMS, ECDC, PAHO et Africa CDC en 5 langues, mises à jour toutes les heures. Conçu pour les épidémiologistes, ONG et ministères de la santé.",
   },
   es: {
     title: "HealthWatch Global — Vigilancia epidémica",
     description:
-      "Monitoreo de brotes en todo el mundo. Datos oficiales OMS, ECDC, PAHO y Africa CDC en 5 idiomas, actualizados cada 6 horas. Para epidemiólogos, ONG y ministerios de salud.",
+      "Monitoreo de brotes en todo el mundo. Datos oficiales OMS, ECDC, PAHO y Africa CDC en 5 idiomas, actualizados cada hora. Para epidemiólogos, ONG y ministerios de salud.",
   },
   ar: {
     title: "HealthWatch Global — مراقبة الأوبئة",
     description:
-      "رصد تفشي الأمراض حول العالم. بيانات رسمية من منظمة الصحة العالمية، ECDC، PAHO وAfrica CDC بخمس لغات، محدّثة كل 6 ساعات.",
+      "رصد تفشي الأمراض حول العالم. بيانات رسمية من منظمة الصحة العالمية، ECDC، PAHO وAfrica CDC بخمس لغات، محدّثة كل ساعة.",
   },
   id: {
     title: "HealthWatch Global — Pemantauan Wabah",
     description:
-      "Pantau wabah penyakit di seluruh dunia. Data resmi WHO, ECDC, PAHO & Africa CDC dalam 5 bahasa, diperbarui setiap 6 jam. Untuk epidemiolog, LSM dan kementerian kesehatan.",
+      "Pantau wabah penyakit di seluruh dunia. Data resmi WHO, ECDC, PAHO & Africa CDC dalam 5 bahasa, diperbarui setiap jam. Untuk epidemiolog, LSM dan kementerian kesehatan.",
   },
 };
 

@@ -63,7 +63,7 @@
     "realtimeLoginRequired": "Sign in to access instant alerts.",
     "realtimeLogin": "Sign in",
     "realtimeProOnly": "Instant alerts — Pro & Team Plans",
-    "realtimeProDesc": "Get every new outbreak within hours, the moment our 6h WHO, ECDC, PAHO & Africa CDC sync detects it.",
+    "realtimeProDesc": "Get every new outbreak within the hour, the moment our hourly WHO, ECDC, PAHO & Africa CDC sync detects it.",
     "realtimeUpgrade": "Upgrade to Pro →"
   },
   "reports": {
@@ -96,7 +96,7 @@
     "faq1_q": "Can I cancel at any time?",
     "faq1_a": "Yes, no commitment. You can cancel your subscription at any time from your account.",
     "faq2_q": "How often is data updated?",
-    "faq2_a": "WHO data syncs every 6 hours (4 times per day). Disease-specific alerts fire within 8 hours of a new WHO detection.",
+    "faq2_a": "WHO data syncs every hour (every hour). Disease-specific alerts fire within 8 hours of a new WHO detection.",
     "faq3_q": "Is there a free plan?",
     "faq3_a": "Yes. The Free plan gives you access to the public dashboard, one monitored region and the weekly digest — no credit card required, no time limit.",
     "faq4_q": "What happens when my 14-day trial ends?",

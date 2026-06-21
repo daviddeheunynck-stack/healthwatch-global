@@ -10,7 +10,7 @@ export async function generateMetadata({
   const { locale } = await params;
   return {
     title: "API Documentation — HealthWatch Global",
-    description: "REST API reference for the HealthWatch Global Enterprise plan. Access outbreak data updated every 6 hours, programmatically.",
+    description: "REST API reference for the HealthWatch Global Enterprise plan. Access outbreak data updated every hour, programmatically.",
     alternates: {
       canonical: `https://healthwatch-global.com/${locale}/docs`,
       languages: {
@@ -91,7 +91,7 @@ export default function DocsPage({ params }: { params: Promise<{ locale: string 
         </div>
         <h1 className="text-4xl font-bold text-white">API Documentation</h1>
         <p className="text-gray-400 text-lg leading-relaxed max-w-2xl">
-          Programmatic access to WHO, ECDC, PAHO and Africa CDC outbreak data, updated every 6 hours. Available on the{" "}
+          Programmatic access to WHO, ECDC, PAHO and Africa CDC outbreak data, updated every hour. Available on the{" "}
           <span className="text-purple-400 font-semibold">Enterprise plan</span>.
           Manage your API keys from{" "}
           <Link href="account" className="text-red-400 hover:text-red-300 underline underline-offset-2">
@@ -222,7 +222,7 @@ export default function DocsPage({ params }: { params: Promise<{ locale: string 
               Returns a paginated list of active disease outbreaks sourced from WHO, ECDC, PAHO and Africa CDC, sorted by date descending.
             </p>
             <p className="text-sm text-gray-500">
-              Data is refreshed every 6 hours from WHO, ECDC, PAHO and Africa CDC.
+              Data is refreshed every hour from WHO, ECDC, PAHO and Africa CDC.
             </p>
           </div>
         </div>

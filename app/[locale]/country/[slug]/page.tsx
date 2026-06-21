@@ -192,11 +192,11 @@ export async function generateMetadata({
   };
 
   const DESC_TPL: Record<Locale, string> = {
-    en: `${active.length} active outbreak${active.length !== 1 ? "s" : ""} in ${countryEn}. WHO, ECDC, PAHO and Africa CDC data updated every 6 hours by HealthWatch Global.`,
-    fr: `${active.length} foyer${active.length !== 1 ? "s" : ""} actif${active.length !== 1 ? "s" : ""} en ${countryEn}. Données OMS, ECDC, PAHO et Africa CDC suivies toutes les 6h par HealthWatch Global.`,
-    es: `${active.length} brote${active.length !== 1 ? "s" : ""} activo${active.length !== 1 ? "s" : ""} en ${countryEn}. Datos de OMS, ECDC, PAHO y Africa CDC actualizados cada 6 horas.`,
+    en: `${active.length} active outbreak${active.length !== 1 ? "s" : ""} in ${countryEn}. WHO, ECDC, PAHO and Africa CDC data updated every hour by HealthWatch Global.`,
+    fr: `${active.length} foyer${active.length !== 1 ? "s" : ""} actif${active.length !== 1 ? "s" : ""} en ${countryEn}. Données OMS, ECDC, PAHO et Africa CDC suivies toutes les heures par HealthWatch Global.`,
+    es: `${active.length} brote${active.length !== 1 ? "s" : ""} activo${active.length !== 1 ? "s" : ""} en ${countryEn}. Datos de OMS, ECDC, PAHO y Africa CDC actualizados cada hora.`,
     ar: `${active.length} تفشٍّ نشط في ${countryEn}. بيانات منظمة الصحة العالمية، ECDC، PAHO وAfrica CDC.`,
-    id: `${active.length} wabah aktif di ${countryEn}. Data WHO, ECDC, PAHO dan Africa CDC diperbarui setiap 6 jam.`,
+    id: `${active.length} wabah aktif di ${countryEn}. Data WHO, ECDC, PAHO dan Africa CDC diperbarui setiap jam.`,
   };
 
   const title       = TITLE_TPL[l];

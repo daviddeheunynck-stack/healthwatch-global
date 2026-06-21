@@ -6,23 +6,23 @@ const LOCALES = ["en", "fr", "es", "ar", "id"] as const;
 const META: Record<string, { title: string; description: string }> = {
   en: {
     title: "Embed the Outbreak Widget — HealthWatch Global",
-    description: "Add a live WHO/ECDC/PAHO outbreak tracker to any website or intranet. One iframe, no API key, updated every 6 hours.",
+    description: "Add a live WHO/ECDC/PAHO outbreak tracker to any website or intranet. One iframe, no API key, updated every hour.",
   },
   fr: {
     title: "Intégrer le widget épidémique — HealthWatch Global",
-    description: "Ajoutez un suivi des foyers OMS/ECDC/PAHO en temps réel à n'importe quel site ou intranet. Un iframe, sans clé API, mis à jour toutes les 6h.",
+    description: "Ajoutez un suivi des foyers OMS/ECDC/PAHO en temps réel à n'importe quel site ou intranet. Un iframe, sans clé API, mis à jour toutes les heures.",
   },
   es: {
     title: "Insertar el widget de brotes — HealthWatch Global",
-    description: "Añade un rastreador en vivo de brotes OMS/ECDC/PAHO a cualquier web o intranet. Un iframe, sin clave API, actualizado cada 6 horas.",
+    description: "Añade un rastreador en vivo de brotes OMS/ECDC/PAHO a cualquier web o intranet. Un iframe, sin clave API, actualizado cada hora.",
   },
   ar: {
     title: "تضمين أداة التفشيات — HealthWatch Global",
-    description: "أضف متتبعاً حياً لتفشيات منظمة الصحة العالمية/ECDC/PAHO إلى أي موقع أو شبكة داخلية. إطار واحد، بدون مفتاح API، يُحدَّث كل 6 ساعات.",
+    description: "أضف متتبعاً حياً لتفشيات منظمة الصحة العالمية/ECDC/PAHO إلى أي موقع أو شبكة داخلية. إطار واحد، بدون مفتاح API، يُحدَّث كل ساعة.",
   },
   id: {
     title: "Sematkan Widget Wabah — HealthWatch Global",
-    description: "Tambahkan pelacak wabah WHO/ECDC/PAHO secara langsung ke website atau intranet. Satu iframe, tanpa kunci API, diperbarui setiap 6 jam.",
+    description: "Tambahkan pelacak wabah WHO/ECDC/PAHO secara langsung ke website atau intranet. Satu iframe, tanpa kunci API, diperbarui setiap jam.",
   },
 };
 
