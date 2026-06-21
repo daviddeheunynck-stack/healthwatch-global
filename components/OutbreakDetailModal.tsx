@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { X, ExternalLink, AlertTriangle, TrendingUp, Users, Skull, Calendar, Globe, Clock, Activity, ImageDown, FileText, Link as LinkIcon, Check, Copy, Info } from "lucide-react";
 import WatchlistButton from "@/components/WatchlistButton";
@@ -15,6 +15,8 @@ import RiskBadge from "@/components/RiskBadge";
 import ShareOutbreakButton from "@/components/ShareOutbreakButton";
 import LockedUpgradeButton from "@/components/LockedUpgradeButton";
 import { useUpgradeModal } from "@/lib/upgrade-modal-context";
+import OutbreakCasesChart from "@/components/OutbreakCasesChart";
+import { createClient as createBrowserClient } from "@/lib/supabase-browser";
 
 const COPY: Record<string, {
   cases: string; deaths: string; cfr: string; incidence: string; date: string;
@@ -63,10 +65,119 @@ interface Props {
   onClose: () => void;
 }
 
+interface Snapshot { snapped_at: string; cases: number; deaths: number; }
+interface PastOutbreak { id: string; date: string; cases: number; deaths: number; risk_level: string; }
+interface Note { id: string; note: string; status: string | null; author_email: string; user_id: string; created_at: string; }
+
+const HISTORY_COPY: Record<string, { curve: string; past: string; peak: string; noHistory: string }> = {
+  fr: { curve: "Courbe épidémique", past: "Épisodes précédents", peak: "pic", noHistory: "Aucun épisode antérieur enregistré" },
+  en: { curve: "Epidemic curve",    past: "Previous episodes",   peak: "peak", noHistory: "No previous episode on record" },
+  es: { curve: "Curva epidémica",   past: "Episodios anteriores", peak: "pico", noHistory: "Sin episodios anteriores registrados" },
+  ar: { curve: "المنحنى الوبائي",  past: "الحلقات السابقة",    peak: "ذروة", noHistory: "لا توجد حلقات سابقة مسجلة" },
+  id: { curve: "Kurva epidemi",     past: "Episode sebelumnya",  peak: "puncak", noHistory: "Tidak ada episode sebelumnya" },
+};
+
+const NOTES_COPY: Record<string, {
+  title: string; placeholder: string; add: string; adding: string;
+  statusLabel: string; noStatus: string; statuses: Record<string, string>;
+  you: string; team: string;
+}> = {
+  fr: { title: "Notes d'équipe", placeholder: "Ajouter une note (investigation, contact terrain, décision…)", add: "Ajouter", adding: "Envoi…", statusLabel: "Statut", noStatus: "Sans statut", statuses: { monitoring: "Surveillance", investigating: "Investigation", closed: "Clôturé" }, you: "Vous", team: "Équipe" },
+  en: { title: "Team notes", placeholder: "Add a note (investigation, field contact, decision…)", add: "Add", adding: "Sending…", statusLabel: "Status", noStatus: "No status", statuses: { monitoring: "Monitoring", investigating: "Investigating", closed: "Closed" }, you: "You", team: "Team" },
+  es: { title: "Notas del equipo", placeholder: "Agregar una nota (investigación, contacto de campo, decisión…)", add: "Agregar", adding: "Enviando…", statusLabel: "Estado", noStatus: "Sin estado", statuses: { monitoring: "Vigilancia", investigating: "Investigando", closed: "Cerrado" }, you: "Tú", team: "Equipo" },
+  ar: { title: "ملاحظات الفريق", placeholder: "إضافة ملاحظة (تحقيق، اتصال ميداني، قرار…)", add: "إضافة", adding: "جارٍ الإرسال…", statusLabel: "الحالة", noStatus: "بدون حالة", statuses: { monitoring: "مراقبة", investigating: "تحقيق", closed: "مغلق" }, you: "أنت", team: "الفريق" },
+  id: { title: "Catatan tim", placeholder: "Tambahkan catatan (investigasi, kontak lapangan, keputusan…)", add: "Tambah", adding: "Mengirim…", statusLabel: "Status", noStatus: "Tanpa status", statuses: { monitoring: "Pemantauan", investigating: "Investigasi", closed: "Ditutup" }, you: "Anda", team: "Tim" },
+};
+
+const STATUS_STYLE: Record<string, string> = {
+  monitoring:   "bg-blue-900/30 border-blue-700/40 text-blue-300",
+  investigating: "bg-amber-900/30 border-amber-700/40 text-amber-300",
+  closed:       "bg-gray-700/40 border-gray-600/40 text-gray-400",
+};
+
 export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlist, trend, onClose }: Props) {
   const c = COPY[locale] ?? COPY.en;
+  const hc = HISTORY_COPY[locale] ?? HISTORY_COPY.en;
   const isRtl = locale === "ar";
   const { openModal } = useUpgradeModal();
+
+  const [snapshots,      setSnapshots]      = useState<Snapshot[]>([]);
+  const [pastOutbreaks,  setPastOutbreaks]  = useState<PastOutbreak[]>([]);
+  const [historyLoading, setHistoryLoading] = useState(false);
+
+  const [notes,       setNotes]       = useState<Note[]>([]);
+  const [noteText,    setNoteText]    = useState("");
+  const [noteStatus,  setNoteStatus]  = useState<string>("");
+  const [submitting,  setSubmitting]  = useState(false);
+
+  // Fetch notes
+  useEffect(() => {
+    if (!outbreak || !isPaid) return;
+    setNotes([]);
+    fetch(`/api/outbreak-notes?outbreak_id=${outbreak.id}`)
+      .then((r) => r.json())
+      .then((d) => { if (d.notes) setNotes(d.notes); })
+      .catch(() => {});
+  }, [outbreak?.id, isPaid]);
+
+  // Realtime subscription — receive team notes inserted by others without refresh
+  useEffect(() => {
+    if (!outbreak?.id || !isPaid) return;
+    const supabase = createBrowserClient();
+    const channel = supabase
+      .channel(`notes:${outbreak.id}`)
+      .on(
+        "postgres_changes",
+        { event: "INSERT", schema: "public", table: "outbreak_notes", filter: `outbreak_id=eq.${outbreak.id}` },
+        (payload) => {
+          const incoming = payload.new as Note;
+          setNotes((prev) => prev.some((n) => n.id === incoming.id) ? prev : [incoming, ...prev]);
+        }
+      )
+      .subscribe();
+    return () => { void supabase.removeChannel(channel); };
+  }, [outbreak?.id, isPaid]);
+
+  async function handleAddNote() {
+    if (!outbreak || !noteText.trim() || submitting) return;
+    setSubmitting(true);
+    try {
+      const res = await fetch("/api/outbreak-notes", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ outbreak_id: outbreak.id, note: noteText.trim(), status: noteStatus || null }),
+      });
+      const d = await res.json();
+      if (d.note) {
+        setNotes((prev) => [d.note, ...prev]);
+        setNoteText("");
+        setNoteStatus("");
+      }
+    } catch { /* ignore */ } finally {
+      setSubmitting(false);
+    }
+  }
+
+  // Fetch epidemic curve + past episodes whenever the modal opens on a new outbreak
+  useEffect(() => {
+    if (!outbreak || !isPaid) return;
+    setSnapshots([]);
+    setPastOutbreaks([]);
+    setHistoryLoading(true);
+    const params = new URLSearchParams({
+      outbreak_id: outbreak.id,
+      ...(outbreak.disease_en ? { disease_en: outbreak.disease_en } : {}),
+      ...(outbreak.country_en ? { country_en: outbreak.country_en } : {}),
+    });
+    fetch(`/api/outbreak-history?${params}`)
+      .then((r) => r.json())
+      .then((d) => {
+        if (d.snapshots)     setSnapshots(d.snapshots);
+        if (d.pastOutbreaks) setPastOutbreaks(d.pastOutbreaks);
+      })
+      .catch(() => {})
+      .finally(() => setHistoryLoading(false));
+  }, [outbreak?.id, isPaid]);
 
   // Close on Escape
   useEffect(() => {
@@ -317,6 +428,58 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlis
           )}
         </div>
 
+        {/* ── Epidemic curve (Pro) ──────────────────────────────────────── */}
+        {isPaid && (
+          <div className="px-5 pb-4">
+            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">{hc.curve}</p>
+            {historyLoading ? (
+              <div className="flex items-center justify-center h-[180px]">
+                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-red-500" />
+              </div>
+            ) : (
+              <OutbreakCasesChart
+                snapshots={snapshots}
+                riskLevel={outbreak.risk_level}
+                locale={locale}
+              />
+            )}
+          </div>
+        )}
+
+        {/* ── Previous episodes (Pro) ───────────────────────────────────── */}
+        {isPaid && (
+          <div className="px-5 pb-4">
+            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">{hc.past}</p>
+            {historyLoading ? (
+              <div className="h-4 w-24 bg-gray-800 rounded animate-pulse" />
+            ) : pastOutbreaks.length === 0 ? (
+              <p className="text-xs text-gray-600 italic">{hc.noHistory}</p>
+            ) : (
+              <div className="space-y-1.5">
+                {pastOutbreaks.map((p) => {
+                  const cfr = p.cases > 0 ? (p.deaths / p.cases * 100).toFixed(1) : null;
+                  return (
+                    <div key={p.id} className="flex items-center justify-between text-xs text-gray-400">
+                      <span className="text-gray-500">{p.date.slice(0, 7)}</span>
+                      <span className="flex items-center gap-2">
+                        {p.cases > 0 && (
+                          <span>{p.cases.toLocaleString("en")} {hc.peak}</span>
+                        )}
+                        {cfr && (
+                          <span className={`${parseFloat(cfr) > 10 ? "text-red-400" : parseFloat(cfr) > 3 ? "text-amber-400" : "text-gray-500"}`}>
+                            CFR {cfr}%
+                          </span>
+                        )}
+                        <RiskBadge level={p.risk_level as "high" | "medium" | "low"} />
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        )}
+
         {/* Unlock prompt for free users */}
         {!isPaid && (
           <div className="mx-5 mb-3 flex items-center justify-between gap-3 p-3 rounded-xl bg-amber-900/10 border border-amber-700/20">
@@ -508,6 +671,81 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlis
             </button>
           </div>
         )}
+
+        {/* ── Team notes (Pro/Team) ─────────────────────────────────────── */}
+        {isPaid && (() => {
+          const nc = NOTES_COPY[locale] ?? NOTES_COPY.en;
+          const currentStatus = notes.find((n) => n.status)?.status ?? null;
+          return (
+            <div className="px-5 pb-4 space-y-3">
+              <div className="flex items-center gap-2">
+                <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">{nc.title}</p>
+                {currentStatus && (
+                  <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${STATUS_STYLE[currentStatus] ?? ""}`}>
+                    {nc.statuses[currentStatus] ?? currentStatus}
+                  </span>
+                )}
+              </div>
+
+              {/* Add note form */}
+              <div className="space-y-2">
+                <textarea
+                  value={noteText}
+                  onChange={(e) => setNoteText(e.target.value)}
+                  placeholder={nc.placeholder}
+                  maxLength={1000}
+                  rows={2}
+                  className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-xs text-white placeholder-gray-600 focus:outline-none focus:border-gray-500 resize-none transition-colors"
+                />
+                <div className="flex items-center gap-2">
+                  <select
+                    value={noteStatus}
+                    onChange={(e) => setNoteStatus(e.target.value)}
+                    className="text-xs px-2 py-1.5 rounded-lg border border-gray-700 bg-gray-800 text-gray-400 focus:outline-none focus:border-gray-500 transition-colors cursor-pointer"
+                  >
+                    <option value="">{nc.noStatus}</option>
+                    <option value="monitoring">{nc.statuses.monitoring}</option>
+                    <option value="investigating">{nc.statuses.investigating}</option>
+                    <option value="closed">{nc.statuses.closed}</option>
+                  </select>
+                  <button
+                    onClick={handleAddNote}
+                    disabled={!noteText.trim() || submitting}
+                    className="ml-auto px-3 py-1.5 bg-red-600 hover:bg-red-500 disabled:opacity-40 disabled:cursor-not-allowed text-white text-xs font-semibold rounded-lg transition-colors"
+                  >
+                    {submitting ? nc.adding : nc.add}
+                  </button>
+                </div>
+              </div>
+
+              {/* Existing notes */}
+              {notes.length > 0 && (
+                <div className="space-y-2 max-h-48 overflow-y-auto pr-1">
+                  {notes.map((n) => (
+                    <div key={n.id} className="bg-gray-800/60 rounded-lg px-3 py-2 space-y-1">
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="text-[10px] text-gray-500 truncate">
+                          {n.author_email.split("@")[0]}
+                        </span>
+                        <div className="flex items-center gap-1.5 shrink-0">
+                          {n.status && (
+                            <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded border ${STATUS_STYLE[n.status] ?? ""}`}>
+                              {nc.statuses[n.status] ?? n.status}
+                            </span>
+                          )}
+                          <span className="text-[10px] text-gray-600">
+                            {new Date(n.created_at).toLocaleDateString(locale === "ar" ? "ar-SA" : locale === "fr" ? "fr-FR" : locale === "es" ? "es-ES" : locale === "id" ? "id-ID" : "en-GB", { day: "numeric", month: "short" })}
+                          </span>
+                        </div>
+                      </div>
+                      <p className="text-xs text-gray-300 leading-relaxed">{n.note}</p>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          );
+        })()}
 
         {/* Source links — shown for DON and official rows; hidden for unverified */}
         <div className="px-5 pb-5 space-y-2">

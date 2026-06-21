@@ -15,6 +15,8 @@ import NewThisWeekWidget from "@/components/NewThisWeekWidget";
 import TrialBanner from "@/components/TrialBanner";
 import PushNotificationBanner from "@/components/PushNotificationBanner";
 import CsvExportButton from "@/components/CsvExportButton";
+import DataAccessPanel from "@/components/DataAccessPanel";
+import SignalsFeed from "@/components/SignalsFeed";
 import OnboardingTour from "@/components/OnboardingTour";
 import FreePlanBanner from "@/components/FreePlanBanner";
 import DemoBanner from "@/components/DemoBanner";
@@ -133,13 +135,14 @@ async function DashboardContent({ demo = false }: { demo?: boolean }) {
   let trialEndsAt: string | null = null;
   let hasStripeSubscription = false;
   let trialExpired = false;
+  let displayFilters: { region: string; country: string } | null = null;
   if (!demo) {
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
     if (user) {
       const { data: profile } = await supabase
         .from("profiles")
-        .select("plan, trial_ends_at, stripe_subscription_id")
+        .select("plan, trial_ends_at, stripe_subscription_id, display_filters")
         .eq("id", user.id)
         .single();
       plan = profile?.plan || "free";
@@ -157,6 +160,11 @@ async function DashboardContent({ demo = false }: { demo?: boolean }) {
         plan = "free";
         trialEndsAt = null;
         trialExpired = true;
+      }
+
+      const isPaidPlan = ["starter", "pro", "team", "enterprise"].includes(plan);
+      if (isPaidPlan && profile?.display_filters) {
+        displayFilters = profile.display_filters as { region: string; country: string };
       }
     }
   }
@@ -342,6 +350,10 @@ async function DashboardContent({ demo = false }: { demo?: boolean }) {
           isPaid={isPaid}
           labels={tableLabels}
           trends={trends}
+          defaultFilters={displayFilters ? {
+            region:  (displayFilters.region  as "all" | "africa" | "asia" | "europe" | "americas" | "oceania") ?? "all",
+            country: displayFilters.country ?? "all",
+          } : undefined}
         />
 
         <p className="text-xs text-gray-600 mt-3 text-right">
@@ -350,6 +362,14 @@ async function DashboardContent({ demo = false }: { demo?: boolean }) {
           </Link>
         </p>
       </div>
+
+      {isPaid && <DataAccessPanel locale={locale} />}
+
+      {isPaid && (
+        <div className="rounded-xl border border-amber-800/20 bg-amber-950/10 p-4">
+          <SignalsFeed locale={locale} />
+        </div>
+      )}
     </>
   );
 }

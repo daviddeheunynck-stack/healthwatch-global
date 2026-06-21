@@ -47,8 +47,8 @@ export async function POST(req: Request) {
     .eq("id", user.id)
     .single();
 
-  if (profile?.plan !== "enterprise") {
-    return NextResponse.json({ error: "Enterprise plan required" }, { status: 403 });
+  if (!["pro", "team", "enterprise"].includes(profile?.plan ?? "")) {
+    return NextResponse.json({ error: "Pro plan required" }, { status: 403 });
   }
 
   // Enforce per-user key limit

@@ -130,12 +130,18 @@ function RiskScoreBadge({ score }: { score: number }) {
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
+interface DefaultFilters {
+  region:  Region;
+  country: string;
+}
+
 interface Props {
-  outbreaks: Outbreak[];
-  locale: string;
-  isPaid: boolean;
-  labels: OutbreakTableLabels;
-  trends?: Record<string, OutbreakTrend>;
+  outbreaks:      Outbreak[];
+  locale:         string;
+  isPaid:         boolean;
+  labels:         OutbreakTableLabels;
+  trends?:        Record<string, OutbreakTrend>;
+  defaultFilters?: DefaultFilters;
 }
 
 // Module-level (not redefined every render): React was remounting this on each
@@ -150,12 +156,13 @@ function SortIcon({ col, activeKey, dir }: { col: SortKey; activeKey: SortKey; d
     : <ChevronDown className="inline w-3 h-3 ml-1 text-red-400" />;
 }
 
-export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, trends }: Props) {
+export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, trends, defaultFilters }: Props) {
   const { openModal } = useUpgradeModal();
   const [watchlist, setWatchlist] = useState<Set<string>>(new Set());
   const [search,   setSearch]    = useState("");
-  const [region,   setRegion]    = useState<Region>("all");
-  const [country,  setCountry]   = useState<string>("all");
+  const [region,   setRegion]    = useState<Region>(defaultFilters?.region  ?? "all");
+  const [country,  setCountry]   = useState<string>(defaultFilters?.country ?? "all");
+  const [defaultSaved, setDefaultSaved] = useState(false);
   const [dateFrom, setDateFrom]  = useState<string>("");
   const [dateTo,   setDateTo]    = useState<string>("");
   const [selected, setSelected]  = useState<Outbreak | null>(null);
@@ -485,6 +492,33 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
         hasActiveFilters={hasFilters}
         onLoad={loadFilter}
       />
+
+      {/* ── Default workspace (Pro) ────────────────────────────────────── */}
+      {isPaid && (region !== "all" || country !== "all") && (
+        <button
+          onClick={async () => {
+            await fetch("/api/display-prefs", {
+              method: "PUT",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ region, country }),
+            });
+            setDefaultSaved(true);
+            setTimeout(() => setDefaultSaved(false), 2000);
+          }}
+          className="flex items-center gap-1.5 text-xs text-gray-500 hover:text-green-400 transition-colors"
+        >
+          {defaultSaved ? (
+            <span className="text-green-400">
+              {{ fr: "Vue par défaut enregistrée", en: "Default view saved", es: "Vista guardada", ar: "تم حفظ العرض", id: "Tampilan disimpan" }[locale] ?? "Default view saved"}
+            </span>
+          ) : (
+            <>
+              <span>⊙</span>
+              {{ fr: "Définir comme vue par défaut", en: "Set as default view", es: "Establecer como vista predeterminada", ar: "تعيين كعرض افتراضي", id: "Jadikan tampilan default" }[locale] ?? "Set as default view"}
+            </>
+          )}
+        </button>
+      )}
 
       {/* ── Upgrade banner ─────────────────────────────────────────────── */}
       {!isPaid && (

@@ -83,9 +83,9 @@ export async function GET(req: NextRequest) {
     .eq("id", apiKey.user_id)
     .single();
 
-  if (profile?.plan !== "enterprise") {
+  if (!["pro", "team", "enterprise"].includes(profile?.plan ?? "")) {
     return NextResponse.json(
-      { error: "API access requires an active Enterprise subscription." },
+      { error: "API access requires an active Pro, Team, or Enterprise subscription." },
       { status: 403 }
     );
   }
