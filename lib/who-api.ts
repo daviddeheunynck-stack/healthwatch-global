@@ -174,7 +174,7 @@ export async function parseWHODONItem(
   let admin1_lng: number | null = null;
   const textForAdmin1 = fullText || description;
   if (textForAdmin1) {
-    const extracted = extractAdmin1(textForAdmin1);
+    const extracted = await extractAdmin1(textForAdmin1);
     if (extracted) {
       admin1 = extracted;
       const coords = await geocodeAdmin1(extracted, geo.name_en);

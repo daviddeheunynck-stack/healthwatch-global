@@ -85,7 +85,7 @@ export async function POST(req: NextRequest) {
       : "";
 
     const textToSearch = fullText || row.description || "";
-    const admin1 = extractAdmin1(textToSearch);
+    const admin1 = await extractAdmin1(textToSearch);
 
     if (!admin1) {
       // "~" = full-text attempted, no province found — excluded from future runs
