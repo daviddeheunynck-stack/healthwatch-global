@@ -11,6 +11,7 @@ import LandingPage from "@/components/LandingPage";
 import CampaignRefTracker from "@/components/CampaignRefTracker";
 import OutbreakTable from "@/components/OutbreakTable";
 import FreshnessBadge from "@/components/FreshnessBadge";
+import NewThisWeekWidget from "@/components/NewThisWeekWidget";
 import TrialBanner from "@/components/TrialBanner";
 import PushNotificationBanner from "@/components/PushNotificationBanner";
 import CsvExportButton from "@/components/CsvExportButton";
@@ -321,6 +322,8 @@ async function DashboardContent({ demo = false }: { demo?: boolean }) {
           color={stats.pheicCount > 0 ? "purple" : "gray"}
         />
       </div>
+
+      <NewThisWeekWidget outbreaks={outbreaks} locale={locale} trends={trends} />
 
       <WorldMap outbreaks={outbreaks} locale={locale} isPaid={isPaid} popupLabels={popupLabels} riskLabels={riskLabels} />
 

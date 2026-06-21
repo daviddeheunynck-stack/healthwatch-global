@@ -474,6 +474,27 @@ const COPY: Record<string, {
   },
 };
 
+// ─── EIOS comparison (defined outside COPY to avoid 5-locale overhead) ────────
+
+const EIOS_ROWS: { en: string; fr: string; es: string; ar: string; id: string; hw: "✓" | "~" | "✗"; eios: "✓" | "~" | "✗"; manual: "✓" | "~" | "✗" }[] = [
+  { en: "Instant access — no WHO approval", fr: "Accès instantané (aucune approbation requise)", es: "Acceso instantáneo (sin aprobación)", ar: "وصول فوري — بدون موافقة WHO", id: "Akses instan — tanpa persetujuan WHO", hw: "✓", eios: "✗", manual: "✗" },
+  { en: "Multi-source: WHO + ECDC + PAHO + Africa CDC", fr: "Multi-sources : OMS + ECDC + OPAS + Africa CDC", es: "Multi-fuente: OMS + ECDC + OPS + Africa CDC", ar: "متعدد المصادر: WHO + ECDC + PAHO + Africa CDC", id: "Multi-sumber: WHO + ECDC + PAHO + Africa CDC", hw: "✓", eios: "~", manual: "✗" },
+  { en: "Automatic risk score per outbreak", fr: "Score de risque automatique par foyer", es: "Puntuación de riesgo automática por brote", ar: "درجة خطر تلقائية لكل تفشٍّ", id: "Skor risiko otomatis per wabah", hw: "✓", eios: "✗", manual: "✗" },
+  { en: "Proactive alerts (email + push)", fr: "Alertes proactives (email + push)", es: "Alertas proactivas (email + push)", ar: "تنبيهات استباقية (بريد + push)", id: "Peringatan proaktif (email + push)", hw: "✓", eios: "✗", manual: "✗" },
+  { en: "Sub-national geolocation (province level)", fr: "Localisation sous-nationale (niveau province)", es: "Geolocalización subnacional (nivel provincia)", ar: "تحديد الموقع الجغرافي الإقليمي", id: "Geolokasi sub-nasional (level provinsi)", hw: "✓", eios: "✗", manual: "~" },
+  { en: "One-click PDF briefing", fr: "Rapport PDF automatique en 1 clic", es: "Informe PDF automático en 1 clic", ar: "تقرير PDF تلقائي بنقرة واحدة", id: "Laporan PDF otomatis 1 klik", hw: "✓", eios: "✗", manual: "✗" },
+  { en: "5 languages: EN / FR / ES / AR / ID", fr: "5 langues : EN / FR / ES / AR / ID", es: "5 idiomas: EN / FR / ES / AR / ID", ar: "5 لغات: AR / FR / ES / EN / ID", id: "5 bahasa: EN / FR / ES / AR / ID", hw: "✓", eios: "~", manual: "✗" },
+  { en: "Hourly data refresh", fr: "Mise à jour toutes les heures", es: "Actualización cada hora", ar: "تحديث كل ساعة", id: "Pembaruan data setiap jam", hw: "✓", eios: "✗", manual: "✗" },
+];
+
+const EIOS_TITLES: Record<string, { title: string; sub: string; colHw: string; colEios: string; colManual: string; partial: string }> = {
+  en: { title: "HealthWatch vs EIOS & manual surveillance", sub: "EIOS (WHO's Early Warning System) requires institutional access — HealthWatch Global is open, faster, and richer.", colHw: "HealthWatch", colEios: "EIOS", colManual: "Manual", partial: "Partial" },
+  fr: { title: "HealthWatch vs EIOS & surveillance manuelle", sub: "EIOS (système d'alerte précoce de l'OMS) est réservé aux institutions — HealthWatch Global est ouvert, plus rapide et plus riche.", colHw: "HealthWatch", colEios: "EIOS", colManual: "Manuel", partial: "Partiel" },
+  es: { title: "HealthWatch vs EIOS & vigilancia manual", sub: "EIOS (sistema de alerta temprana de la OMS) requiere acceso institucional — HealthWatch Global es abierto, más rápido y más completo.", colHw: "HealthWatch", colEios: "EIOS", colManual: "Manual", partial: "Parcial" },
+  ar: { title: "HealthWatch مقابل EIOS والمراقبة اليدوية", sub: "EIOS (نظام الإنذار المبكر لمنظمة الصحة العالمية) يتطلب وصولاً مؤسسياً — HealthWatch Global مفتوح وأسرع وأشمل.", colHw: "HealthWatch", colEios: "EIOS", colManual: "يدوي", partial: "جزئي" },
+  id: { title: "HealthWatch vs EIOS & surveilans manual", sub: "EIOS (sistem peringatan dini WHO) membutuhkan akses institusional — HealthWatch Global terbuka, lebih cepat, dan lebih lengkap.", colHw: "HealthWatch", colEios: "EIOS", colManual: "Manual", partial: "Parsial" },
+};
+
 const ORG_ICONS = [Landmark, HeartHandshake, Microscope, Stethoscope];
 
 // ─── Component ────────────────────────────────────────────────────────────────
@@ -721,6 +742,50 @@ export default async function LandingPage({ locale }: { locale: string }) {
           })}
         </div>
       </section>
+
+      {/* ── EIOS / competitive comparison ───────────────────────────────── */}
+      {(() => {
+        const et = EIOS_TITLES[locale] ?? EIOS_TITLES.en;
+        const isRtl = locale === "ar";
+        return (
+          <section className="space-y-6" dir={isRtl ? "rtl" : undefined}>
+            <div className="text-center space-y-2">
+              <h2 className="text-2xl md:text-3xl font-bold text-white">{et.title}</h2>
+              <p className="text-gray-400 text-sm max-w-2xl mx-auto leading-relaxed">{et.sub}</p>
+            </div>
+            <div className="max-w-3xl mx-auto rounded-xl border border-gray-800 overflow-hidden">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="bg-gray-900 border-b border-gray-800">
+                    <th className="text-left px-5 py-3 text-gray-500 font-medium w-[44%]" />
+                    <th className="text-center px-4 py-3 text-gray-400 font-medium text-xs">{et.colEios}</th>
+                    <th className="text-center px-4 py-3 text-gray-400 font-medium text-xs">{et.colManual}</th>
+                    <th className="text-center px-4 py-3 text-red-400 font-bold text-xs">{et.colHw}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {EIOS_ROWS.map((row, i) => {
+                    const label = (row as Record<string, string>)[locale] ?? row.en;
+                    const renderCell = (val: "✓" | "~" | "✗") => {
+                      if (val === "✓") return <span className="text-green-400 font-bold text-base">✓</span>;
+                      if (val === "~") return <span className="text-amber-400 text-xs font-medium">{et.partial}</span>;
+                      return <span className="text-gray-600 text-base">✕</span>;
+                    };
+                    return (
+                      <tr key={i} className={`border-t border-gray-800 ${i % 2 === 0 ? "bg-gray-900/20" : ""}`}>
+                        <td className="px-5 py-2.5 text-gray-300 text-sm">{label}</td>
+                        <td className="px-4 py-2.5 text-center">{renderCell(row.eios)}</td>
+                        <td className="px-4 py-2.5 text-center">{renderCell(row.manual)}</td>
+                        <td className="px-4 py-2.5 text-center">{renderCell(row.hw)}</td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          </section>
+        );
+      })()}
 
       {/* ── Focal Point Guidance ─────────────────────────────────────────── */}
       <section className="space-y-8">

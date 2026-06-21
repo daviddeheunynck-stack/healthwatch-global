@@ -1,5 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
 import { normalizeDisease } from "./disease-data";
+import type { OutbreakTrend } from "./outbreak-trend";
 
 const BOM   = String.fromCharCode(65279);
 const clean = (v: string | undefined) => (v || "").replace(new RegExp("^" + BOM), "").trim();
@@ -381,6 +382,35 @@ export function sourceStatus(outbreak: Pick<Outbreak, "source">): SourceStatus {
 /** Backward-compatible alias: true when source is not a confirmed WHO DON article. */
 export function isIllustrativeData(outbreak: Pick<Outbreak, "source">): boolean {
   return sourceStatus(outbreak) !== 'don';
+}
+
+/**
+ * 1–10 risk score per outbreak.
+ * Base from risk_level, boosted by PHEIC, trend, high CFR; reduced if stale.
+ * Shown as a qualitative signal (like TrendBadge) — visible to all users.
+ */
+export function computeRiskScore(
+  outbreak: Outbreak,
+  trend?: Pick<OutbreakTrend, "direction">
+): number {
+  // Base: high=6, medium=4, low=2
+  let score = outbreak.risk_level === "high" ? 6 : outbreak.risk_level === "medium" ? 4 : 2;
+
+  if (outbreak.is_pheic) score += 2;
+
+  if (trend?.direction === "up")   score += 1;
+  if (trend?.direction === "down") score -= 0.5;
+
+  if (outbreak.cases > 0) {
+    const cfr = outbreak.deaths / outbreak.cases;
+    if (cfr > 0.10) score += 1;
+    else if (cfr > 0.03) score += 0.5;
+  }
+
+  // Stale = may be resolving
+  if (staleOutbreakDays(outbreak) !== null) score -= 0.5;
+
+  return Math.round(Math.min(10, Math.max(1, score)));
 }
 
 /**

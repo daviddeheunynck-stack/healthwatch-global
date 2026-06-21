@@ -10,7 +10,7 @@ import { track } from "@vercel/analytics/react";
 
 type SortKey = "risk" | "cases" | "deaths" | "cfr" | "date";
 type SortDir = "asc" | "desc";
-import { getLocalizedDisease, getLocalizedCountry, isNewOutbreak, staleOutbreakDays, sourceStatus, sourceName } from "@/lib/outbreaks";
+import { getLocalizedDisease, getLocalizedCountry, isNewOutbreak, staleOutbreakDays, sourceStatus, sourceName, computeRiskScore } from "@/lib/outbreaks";
 import { diseaseToSlug, normalizeDisease } from "@/lib/disease-data";
 import { countryToSlug } from "@/lib/country-utils";
 import type { Outbreak } from "@/lib/outbreaks";
@@ -108,6 +108,22 @@ function TrendBadge({ trend }: { trend?: OutbreakTrend }) {
     >
       <Icon className="w-3 h-3 shrink-0" aria-hidden />
       {up ? "+" : ""}{trend.deltaPercent}%
+    </span>
+  );
+}
+
+function RiskScoreBadge({ score }: { score: number }) {
+  const cls =
+    score >= 8 ? "bg-red-900/40 border-red-700/50 text-red-300" :
+    score >= 5 ? "bg-orange-900/30 border-orange-700/40 text-orange-300" :
+    score >= 3 ? "bg-yellow-900/25 border-yellow-700/35 text-yellow-400" :
+                 "bg-gray-800 border-gray-700 text-gray-400";
+  return (
+    <span
+      className={`inline-flex items-center justify-center w-5 h-5 rounded border text-[10px] font-bold tabular-nums shrink-0 ${cls}`}
+      title={`Risk score ${score}/10`}
+    >
+      {score}
     </span>
   );
 }
@@ -646,7 +662,10 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
                     )}
                   </td>
                   <td className="px-4 py-3">
-                    <RiskBadge level={outbreak.risk_level} />
+                    <div className="flex items-center gap-1.5">
+                      <RiskBadge level={outbreak.risk_level} />
+                      <RiskScoreBadge score={computeRiskScore(outbreak, trends?.[outbreak.id])} />
+                    </div>
                   </td>
                   <td className="px-4 py-3 hidden md:table-cell">
                     <div className="text-gray-400 text-sm">
