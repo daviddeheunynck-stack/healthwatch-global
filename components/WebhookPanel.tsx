@@ -10,7 +10,7 @@ interface WebhookEntry {
   id: string;
   name: string;
   url: string;
-  filters: { regions?: string[]; risk_levels?: string[]; rt_threshold?: number; disease_thresholds?: { disease_en: string; min_cases: number }[]; proximity?: { lat: number; lng: number; radius_km: number; label?: string } };
+  filters: { regions?: string[]; risk_levels?: string[]; rt_threshold?: number; disease_thresholds?: { disease_en: string; min_cases: number }[]; proximity?: { lat: number; lng: number; radius_km: number; label?: string }; min_change_pct?: number };
   active: boolean;
   last_triggered_at: string | null;
   last_status_code: number | null;
@@ -27,6 +27,7 @@ const COPY: Record<string, {
   toggle: string; status: (code: number | null) => string;
   rtThreshold: string; rtNote: string; diseaseThresholds: string; diseasePlaceholder: string; minCasesLabel: string;
   proximity: string; proxLat: string; proxLng: string; proxRadius: string; proxLabelInput: string;
+  minChangePct: string; minChangePctNote: string;
 }> = {
   fr: {
     title: "Webhooks", subtitle: "Recevez un push HTTPS chaque fois qu'un foyer atteint le niveau de risque configuré.",
@@ -42,6 +43,7 @@ const COPY: Record<string, {
     rtThreshold: "Seuil Rt", rtNote: "Déclencher si Rt ≥ ce seuil (ex: 1.5)",
     diseaseThresholds: "Seuils IHR par maladie", diseasePlaceholder: "Ebola", minCasesLabel: "cas min",
     proximity: "Alerte de proximité", proxLat: "Latitude", proxLng: "Longitude", proxRadius: "Rayon (km)", proxLabelInput: "Lieu (optionnel)",
+    minChangePct: "Seuil de variation", minChangePctNote: "Déclencher si les cas augmentent de ≥ X % ou si le niveau de risque change (évite les alertes répétitives)",
     status: (c) => c === null ? "—" : c >= 200 && c < 300 ? `✓ ${c}` : `✗ ${c}`,
   },
   en: {
@@ -58,6 +60,7 @@ const COPY: Record<string, {
     rtThreshold: "Rt threshold", rtNote: "Trigger if Rt ≥ value (e.g. 1.5)",
     diseaseThresholds: "IHR thresholds per disease", diseasePlaceholder: "Ebola", minCasesLabel: "min cases",
     proximity: "Proximity alert", proxLat: "Latitude", proxLng: "Longitude", proxRadius: "Radius (km)", proxLabelInput: "Label (optional)",
+    minChangePct: "Change threshold", minChangePctNote: "Fire only if cases increase by ≥ X % or risk level changes (reduces alert fatigue)",
     status: (c) => c === null ? "—" : c >= 200 && c < 300 ? `✓ ${c}` : `✗ ${c}`,
   },
   es: {
@@ -74,6 +77,7 @@ const COPY: Record<string, {
     rtThreshold: "Umbral Rt", rtNote: "Activar si Rt ≥ umbral (ej: 1.5)",
     diseaseThresholds: "Umbrales IHR por enfermedad", diseasePlaceholder: "Ebola", minCasesLabel: "casos mín",
     proximity: "Alerta de proximidad", proxLat: "Latitud", proxLng: "Longitud", proxRadius: "Radio (km)", proxLabelInput: "Lugar (opcional)",
+    minChangePct: "Umbral de variación", minChangePctNote: "Disparar si los casos aumentan ≥ X % o cambia el nivel de riesgo (reduce alertas repetidas)",
     status: (c) => c === null ? "—" : c >= 200 && c < 300 ? `✓ ${c}` : `✗ ${c}`,
   },
   ar: {
@@ -90,6 +94,7 @@ const COPY: Record<string, {
     rtThreshold: "عتبة Rt", rtNote: "تشغيل إذا Rt ≥ العتبة",
     diseaseThresholds: "عتبات IHR لكل مرض", diseasePlaceholder: "Ebola", minCasesLabel: "حالات دنيا",
     proximity: "تنبيه القرب", proxLat: "خط العرض", proxLng: "خط الطول", proxRadius: "نطاق (كم)", proxLabelInput: "المكان (اختياري)",
+    minChangePct: "حد التغيير", minChangePctNote: "إطلاق التنبيه عند زيادة الحالات بنسبة ≥ X٪ أو تغيير مستوى الخطر",
     status: (c) => c === null ? "—" : c !== null && c >= 200 && c < 300 ? `✓ ${c}` : `✗ ${c}`,
   },
   id: {
@@ -106,6 +111,7 @@ const COPY: Record<string, {
     rtThreshold: "Ambang Rt", rtNote: "Aktifkan jika Rt ≥ nilai (mis. 1.5)",
     diseaseThresholds: "Ambang IHR per penyakit", diseasePlaceholder: "Ebola", minCasesLabel: "kasus min",
     proximity: "Peringatan kedekatan", proxLat: "Lintang", proxLng: "Bujur", proxRadius: "Radius (km)", proxLabelInput: "Lokasi (opsional)",
+    minChangePct: "Ambang perubahan", minChangePctNote: "Picu jika kasus naik ≥ X% atau tingkat risiko berubah (kurangi kelelahan peringatan)",
     status: (c) => c === null ? "—" : c !== null && c >= 200 && c < 300 ? `✓ ${c}` : `✗ ${c}`,
   },
 };
@@ -159,6 +165,7 @@ export default function WebhookPanel({ locale }: Props) {
   const [proxLng,   setProxLng]   = useState<number | "">("");
   const [proxRadius, setProxRadius] = useState<number | "">(500);
   const [proxLabel, setProxLabel]  = useState("");
+  const [minChangePct, setMinChangePct] = useState<number | "">("");
 
   useEffect(() => {
     if (!open) return;
@@ -213,6 +220,7 @@ export default function WebhookPanel({ locale }: Props) {
             radius_km: proxRadius !== "" ? Number(proxRadius) : 500,
             label: proxLabel.trim() || undefined,
           } : undefined,
+          min_change_pct: minChangePct !== "" ? Number(minChangePct) : undefined,
         }),
       });
       const d = await res.json();
@@ -222,6 +230,7 @@ export default function WebhookPanel({ locale }: Props) {
         setNewSecret(d.secret);
         setName(""); setUrl(""); setSelRegions([]); setSelRisks(["high"]); setRtThreshold(""); setDisThresholds([]); setNewDisEn(""); setNewMinCases(1);
         setEnableProximity(false); setProxLat(""); setProxLng(""); setProxRadius(500); setProxLabel("");
+        setMinChangePct("");
         setShowForm(false);
       }
     } catch { setFormError("Network error"); } finally { setCreating(false); }
@@ -379,6 +388,11 @@ export default function WebhookPanel({ locale }: Props) {
                         {w.filters?.proximity && (
                           <span className="px-1.5 py-0.5 rounded bg-blue-900/20 border border-blue-700/30 text-blue-400">
                             📍 {w.filters.proximity.label || "proximity"} ≤{w.filters.proximity.radius_km}km
+                          </span>
+                        )}
+                        {w.filters?.min_change_pct !== undefined && (
+                          <span className="px-1.5 py-0.5 rounded bg-teal-900/20 border border-teal-700/30 text-teal-400">
+                            Δ ≥{w.filters.min_change_pct}%
                           </span>
                         )}
                         {!w.active && (
@@ -569,6 +583,26 @@ export default function WebhookPanel({ locale }: Props) {
                         </div>
                       </div>
                     )}
+                  </div>
+
+                  {/* Alert fatigue threshold */}
+                  <div className="space-y-1">
+                    <p className="text-[10px] text-gray-500 uppercase tracking-wide">{c.minChangePct}</p>
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <span className="text-[10px] text-gray-400">Δ ≥</span>
+                      <input
+                        type="number"
+                        min="1"
+                        max="1000"
+                        step="1"
+                        value={minChangePct}
+                        onChange={(e) => setMinChangePct(e.target.value === "" ? "" : Number(e.target.value))}
+                        placeholder="25"
+                        className="w-20 bg-gray-800 border border-gray-700 rounded-lg px-2 py-1 text-xs text-white placeholder-gray-600 focus:outline-none focus:border-gray-500 transition-colors"
+                      />
+                      <span className="text-[10px] text-gray-500">%</span>
+                      <span className="text-[10px] text-gray-600">{c.minChangePctNote}</span>
+                    </div>
                   </div>
 
                   {formError && (

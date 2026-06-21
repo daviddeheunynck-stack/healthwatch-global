@@ -50,6 +50,7 @@ export async function POST(req: Request) {
     rt_threshold?: number;
     disease_thresholds?: { disease_en?: string; min_cases?: number }[];
     proximity?: { lat?: number; lng?: number; radius_km?: number; label?: string };
+    min_change_pct?: number;
   };
 
   const name = (body.name ?? "").trim().slice(0, 64) || "My webhook";
@@ -94,6 +95,13 @@ export async function POST(req: Request) {
         }
       : undefined;
 
+  const min_change_pct =
+    typeof body.min_change_pct === "number" &&
+    body.min_change_pct > 0 &&
+    body.min_change_pct <= 1000
+      ? Math.round(body.min_change_pct)
+      : undefined;
+
   const secret = randomBytes(32).toString("hex");
 
   const { data, error } = await supabase.from("webhooks").insert({
@@ -104,6 +112,7 @@ export async function POST(req: Request) {
       ...(rt_threshold !== undefined ? { rt_threshold } : {}),
       ...(disease_thresholds.length > 0 ? { disease_thresholds } : {}),
       ...(proximity ? { proximity } : {}),
+      ...(min_change_pct !== undefined ? { min_change_pct } : {}),
     },
   }).select("id, name, url, filters, active, created_at").single();
 

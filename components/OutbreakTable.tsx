@@ -250,6 +250,28 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
 
   const hasFilters = search !== "" || region !== "all" || country !== "all" || risk !== "all" || cfrFilter !== "all" || sourceFilter !== "all" || dateFrom !== "" || dateTo !== "";
 
+  // P2: multi-country event clusters — how many countries share the same event_id
+  const eventClusters = useMemo(() => {
+    const map = new Map<string, number>();
+    for (const o of outbreaks) {
+      if (o.event_id) map.set(o.event_id, (map.get(o.event_id) ?? 0) + 1);
+    }
+    return map;
+  }, [outbreaks]);
+
+  // P3: countries with ≥2 simultaneous active high-risk outbreaks
+  const compoundCrisisCountries = useMemo(() => {
+    const counts = new Map<string, number>();
+    for (const o of outbreaks) {
+      if (o.risk_level === "high" && o.country_en) {
+        counts.set(o.country_en, (counts.get(o.country_en) ?? 0) + 1);
+      }
+    }
+    const result = new Set<string>();
+    for (const [c, n] of counts) { if (n >= 2) result.add(c); }
+    return result;
+  }, [outbreaks]);
+
   const downloadCsv = useCallback(() => {
     const esc = (s: string | number | null | undefined) => {
       const str = String(s ?? "");
@@ -661,16 +683,41 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
                           </span>
                         );
                       })()}
+                      {/* P2: multi-country event cluster badge */}
+                      {outbreak.event_id && (eventClusters.get(outbreak.event_id) ?? 0) > 1 && (
+                        <span
+                          title={{ fr: `Événement multi-pays (${eventClusters.get(outbreak.event_id)} foyers liés)`, en: `Multi-country event (${eventClusters.get(outbreak.event_id)} linked outbreaks)`, es: `Evento multipaís (${eventClusters.get(outbreak.event_id)} focos vinculados)`, ar: `حدث متعدد الدول (${eventClusters.get(outbreak.event_id)} بؤر مرتبطة)`, id: `Kejadian multi-negara (${eventClusters.get(outbreak.event_id)} wabah terhubung)` }[locale] ?? `Multi-country event`}
+                          className="inline-flex items-center text-[10px] font-bold px-1.5 py-0.5 rounded bg-cyan-900/30 border border-cyan-700/40 text-cyan-400 shrink-0 cursor-help whitespace-nowrap"
+                        >
+                          🌍 {eventClusters.get(outbreak.event_id)}
+                        </span>
+                      )}
                     </div>
                   </td>
+                  {/* P3 compound crisis + P4 admin1 */}
                   <td className="px-4 py-3 text-gray-300">
-                    <Link
-                      href={`/${locale}/country/${countryToSlug(outbreak.country_en ?? outbreak.country ?? "")}`}
-                      onClick={(e) => e.stopPropagation()}
-                      className="hover:text-white transition-colors"
-                    >
-                      {getLocalizedCountry(outbreak, locale)}
-                    </Link>
+                    <div className="space-y-0.5">
+                      <div className="flex items-center gap-1.5 flex-wrap">
+                        <Link
+                          href={`/${locale}/country/${countryToSlug(outbreak.country_en ?? outbreak.country ?? "")}`}
+                          onClick={(e) => e.stopPropagation()}
+                          className="hover:text-white transition-colors"
+                        >
+                          {getLocalizedCountry(outbreak, locale)}
+                        </Link>
+                        {compoundCrisisCountries.has(outbreak.country_en ?? "") && (
+                          <span
+                            title={{ fr: "≥ 2 foyers à haut risque simultanés dans ce pays", en: "≥ 2 simultaneous high-risk outbreaks in this country", es: "≥ 2 brotes de alto riesgo simultáneos en este país", ar: "≥ تفشيَّان عاليا الخطورة في نفس الوقت في هذا البلد", id: "≥ 2 wabah risiko tinggi simultan di negara ini" }[locale] ?? "Compound crisis"}
+                            className="inline-flex items-center text-[9px] px-1.5 py-0.5 rounded bg-red-900/30 border border-red-700/40 text-red-400 whitespace-nowrap cursor-help"
+                          >
+                            {{ fr: "crise composée", en: "compound crisis", es: "crisis compuesta", ar: "أزمة مركبة", id: "krisis majemuk" }[locale] ?? "compound crisis"}
+                          </span>
+                        )}
+                      </div>
+                      {outbreak.admin1 && (
+                        <p className="text-[10px] text-gray-600 leading-tight">{outbreak.admin1}</p>
+                      )}
+                    </div>
                   </td>
                   <td className="px-4 py-3 text-gray-300">
                     <div className="flex items-center gap-1.5">

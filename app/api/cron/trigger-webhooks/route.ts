@@ -36,8 +36,10 @@ interface Webhook {
     rt_threshold?: number;
     disease_thresholds?: { disease_en: string; min_cases: number }[];
     proximity?: { lat: number; lng: number; radius_km: number; label?: string };
+    min_change_pct?: number;
   };
   last_triggered_at: string | null;
+  last_fired_cases: Record<string, { cases: number; risk_level: string }>;
   created_at: string;
 }
 
@@ -94,7 +96,7 @@ export async function GET(req: NextRequest) {
 
   const { data: webhooks, error: wErr } = await supabase
     .from("webhooks")
-    .select("id, url, secret, filters, last_triggered_at, created_at")
+    .select("id, url, secret, filters, last_triggered_at, last_fired_cases, created_at")
     .eq("active", true);
 
   if (wErr || !webhooks?.length)
@@ -150,6 +152,21 @@ export async function GET(req: NextRequest) {
       if (matches.length === 0) continue;
     }
 
+    // min_change_pct: skip outbreaks whose case count hasn't changed enough
+    // AND whose risk_level is unchanged since the last firing
+    if (webhook.filters.min_change_pct !== undefined) {
+      const minPct = webhook.filters.min_change_pct;
+      const prevFired = (webhook.last_fired_cases ?? {}) as Record<string, { cases: number; risk_level: string }>;
+      matches = matches.filter((o) => {
+        const prev = prevFired[o.id];
+        if (!prev) return true;
+        if (o.risk_level !== prev.risk_level) return true;
+        const changePct = prev.cases > 0 ? (o.cases - prev.cases) / prev.cases * 100 : 100;
+        return changePct >= minPct;
+      });
+      if (matches.length === 0) continue;
+    }
+
     let lastStatus = 200;
 
     for (const outbreak of matches) {
@@ -198,9 +215,14 @@ export async function GET(req: NextRequest) {
       }
     }
 
+    const updatedFiredCases = { ...((webhook.last_fired_cases ?? {}) as Record<string, { cases: number; risk_level: string }>) };
+    for (const o of matches) {
+      updatedFiredCases[o.id] = { cases: o.cases, risk_level: o.risk_level };
+    }
+
     await supabase
       .from("webhooks")
-      .update({ last_triggered_at: now, last_status_code: lastStatus })
+      .update({ last_triggered_at: now, last_status_code: lastStatus, last_fired_cases: updatedFiredCases })
       .eq("id", webhook.id);
   }
 
