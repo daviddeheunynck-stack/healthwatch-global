@@ -34,6 +34,7 @@ const REGION_LABELS: Record<string, Record<string, string>> = {
 };
 
 async function sendEmail(to: string, subject: string, html: string) {
+  if (!BREVO_API_KEY) throw new Error("BREVO_API_KEY not set");
   const res = await fetch("https://api.brevo.com/v3/smtp/email", {
     method: "POST",
     headers: { "api-key": BREVO_API_KEY, "Content-Type": "application/json" },
@@ -173,6 +174,17 @@ export async function GET(req: NextRequest) {
         const dashboardUrl = `${APP_URL}/${locale}`;
 
         try {
+          // ── Log first — prevents duplicate alerts if log insert fails later ─
+          const { error: logErr } = await supabase.from("outbreak_alert_log").insert({
+            user_id:     profile.id,
+            outbreak_id: String(outbreak.id),
+          });
+          if (logErr) {
+            console.error(`[regional-alerts] log insert failed for ${profile.id}/${outbreak.id}:`, logErr.message);
+            failed++;
+            continue;
+          }
+
           // ── Email ───────────────────────────────────────────────────────
           const { subject, html } = buildOutbreakAlertEmail(
             locale,
@@ -226,12 +238,6 @@ export async function GET(req: NextRequest) {
               body: JSON.stringify(slackBody),
             }).catch((e) => console.error("[regional-alerts] Slack post failed:", e));
           }
-
-          // ── Log the send ────────────────────────────────────────────────
-          await supabase.from("outbreak_alert_log").insert({
-            user_id:     profile.id,
-            outbreak_id: String(outbreak.id),
-          });
 
           sent++;
         } catch (err) {

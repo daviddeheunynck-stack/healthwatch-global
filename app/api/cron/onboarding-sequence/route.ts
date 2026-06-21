@@ -12,6 +12,7 @@ const SUPABASE_URL     = clean(process.env.NEXT_PUBLIC_SUPABASE_URL);
 const SUPABASE_SERVICE = clean(process.env.SUPABASE_SERVICE_ROLE_KEY);
 
 async function sendEmail(to: string, subject: string, html: string) {
+  if (!BREVO_API_KEY) throw new Error("BREVO_API_KEY not set");
   const res = await fetch("https://api.brevo.com/v3/smtp/email", {
     method: "POST",
     headers: { "api-key": BREVO_API_KEY, "Content-Type": "application/json" },

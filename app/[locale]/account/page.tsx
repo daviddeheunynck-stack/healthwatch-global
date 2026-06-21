@@ -447,9 +447,7 @@ export default async function AccountPage({
     : { data: [] };
 
   const slackConfigured = !!slackUrl;
-  const slackMasked = slackUrl && slackUrl.length > 36
-    ? `${slackUrl.slice(0, 30)}…${slackUrl.slice(-6)}`
-    : slackUrl;
+  const slackMasked = slackUrl ? `${slackUrl.slice(0, 30)}…${slackUrl.slice(-6)}` : slackUrl;
 
   const memberSince = profile?.created_at
     ? new Date(profile.created_at).toLocaleDateString(locale, { year: "numeric", month: "long" })

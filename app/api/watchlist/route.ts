@@ -58,7 +58,7 @@ export async function POST(req: NextRequest) {
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const { outbreak_id } = await req.json();
-  if (!outbreak_id) return NextResponse.json({ error: "outbreak_id required" }, { status: 400 });
+  if (!outbreak_id || typeof outbreak_id !== "string") return NextResponse.json({ error: "outbreak_id required" }, { status: 400 });
 
   const svc = service();
 
@@ -93,13 +93,15 @@ export async function DELETE(req: NextRequest) {
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const { outbreak_id } = await req.json();
-  if (!outbreak_id) return NextResponse.json({ error: "outbreak_id required" }, { status: 400 });
+  if (!outbreak_id || typeof outbreak_id !== "string") return NextResponse.json({ error: "outbreak_id required" }, { status: 400 });
 
-  await service()
+  const { error: delErr } = await service()
     .from("user_watchlist")
     .delete()
     .eq("user_id", user.id)
     .eq("outbreak_id", outbreak_id);
+
+  if (delErr) return NextResponse.json({ error: delErr.message }, { status: 500 });
 
   return NextResponse.json({ success: true });
 }
