@@ -59,14 +59,17 @@ export async function POST(req: NextRequest) {
     { auth: { autoRefreshToken: false, persistSession: false } }
   );
 
-  // 1. Create or update the user
-  const { data: existing } = await admin.auth.admin.listUsers();
-  const existingUser = existing?.users?.find((u) => u.email === email);
+  // 1. Create or update the user (query profiles table — avoids listUsers() 1000-user limit)
+  const { data: existingProfile } = await admin
+    .from("profiles")
+    .select("id")
+    .eq("email", email)
+    .maybeSingle();
 
   let userId: string;
 
-  if (existingUser) {
-    userId = existingUser.id;
+  if (existingProfile?.id) {
+    userId = existingProfile.id;
   } else {
     const { data: created, error: createErr } = await admin.auth.admin.createUser({
       email,
@@ -110,6 +113,7 @@ export async function POST(req: NextRequest) {
   const l = locale === "fr" ? PILOT_EMAIL.fr : PILOT_EMAIL.en;
   const BREVO_API_KEY = clean(process.env.BREVO_API_KEY);
 
+  const esc = (s: string) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
   const featureList = l.features.map((f) => `<li style="margin:6px 0;">✓ ${f}</li>`).join("");
 
   const htmlContent = `
@@ -119,7 +123,7 @@ export async function POST(req: NextRequest) {
         <span style="font-weight:700;font-size:18px;color:#fff;">HealthWatch Global</span>
       </div>
       <h1 style="color:#fff;font-size:22px;font-weight:700;margin-bottom:8px;">${l.heading}</h1>
-      <div style="color:#9ca3af;font-size:15px;line-height:1.6;">${l.body(name, organization)}</div>
+      <div style="color:#9ca3af;font-size:15px;line-height:1.6;">${l.body(esc(name), esc(organization))}</div>
       <div style="text-align:center;margin:28px 0;">
         <a href="${magicLink}" style="display:inline-block;background:#dc2626;color:#fff;font-weight:700;padding:14px 32px;border-radius:10px;text-decoration:none;font-size:15px;">${l.cta}</a>
       </div>

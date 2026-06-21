@@ -56,7 +56,7 @@ export async function GET(req: NextRequest) {
   // Auth
   const cronSecret = clean(process.env.CRON_SECRET);
   const auth = req.headers.get("authorization");
-  if (cronSecret && auth !== `Bearer ${cronSecret}`) {
+  if (!cronSecret || auth !== `Bearer ${cronSecret}`) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 

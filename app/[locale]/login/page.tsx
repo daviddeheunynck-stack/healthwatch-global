@@ -58,7 +58,8 @@ export default function LoginPage() {
 
     track("login_success", { method: "email", locale });
     const redirectTo = new URLSearchParams(window.location.search).get("redirect");
-    if (redirectTo) {
+    // Only follow relative redirects — reject external URLs to prevent open redirect
+    if (redirectTo && redirectTo.startsWith("/")) {
       // API routes (e.g. team invite accept) need a full page load, not client nav
       window.location.href = redirectTo;
     } else {

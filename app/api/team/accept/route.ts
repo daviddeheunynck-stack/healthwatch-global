@@ -53,6 +53,10 @@ export async function GET(req: NextRequest) {
   if (new Date(invite.expires_at) < new Date()) {
     return NextResponse.redirect(`${BASE_URL}/${locale}/account/team?error=invite_expired`);
   }
+  // Ensure the invite was sent to the authenticated user's email
+  if (invite.email.toLowerCase() !== (user.email ?? "").toLowerCase()) {
+    return NextResponse.redirect(`${BASE_URL}/${locale}/account/team?error=invite_email_mismatch`);
+  }
 
   // Get team
   const { data: team } = await service
@@ -97,11 +101,18 @@ export async function GET(req: NextRequest) {
     return NextResponse.redirect(`${BASE_URL}/${locale}/account/team?error=server_error`);
   }
 
-  // Upgrade invitee's profile to team
-  await service
+  // Upgrade invitee to team plan — preserve higher plans (enterprise) unchanged
+  const { data: currentProfile } = await service
     .from("profiles")
-    .update({ plan: "team", team_id: team.id })
-    .eq("id", user.id);
+    .select("plan")
+    .eq("id", user.id)
+    .single();
+  const shouldUpgradePlan = !["team", "enterprise"].includes(currentProfile?.plan ?? "free");
+  if (shouldUpgradePlan) {
+    await service.from("profiles").update({ plan: "team", team_id: team.id }).eq("id", user.id);
+  } else {
+    await service.from("profiles").update({ team_id: team.id }).eq("id", user.id);
+  }
 
   // Mark invite accepted
   await service

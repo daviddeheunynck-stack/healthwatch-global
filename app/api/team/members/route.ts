@@ -115,10 +115,16 @@ export async function DELETE(req: NextRequest) {
     return NextResponse.json({ error: "Failed to remove member" }, { status: 500 });
   }
 
-  // Reset removed member's profile
+  // Reset removed member's plan — preserve if they have an active individual Stripe subscription
+  const { data: removedProfile } = await service
+    .from("profiles")
+    .select("plan, stripe_subscription_id")
+    .eq("id", body.userId)
+    .single();
+  const restoredPlan = removedProfile?.stripe_subscription_id ? removedProfile.plan : "free";
   await service
     .from("profiles")
-    .update({ plan: "free", team_id: null })
+    .update({ plan: restoredPlan, team_id: null })
     .eq("id", body.userId);
 
   return NextResponse.json({ ok: true });

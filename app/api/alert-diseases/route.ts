@@ -114,7 +114,7 @@ export async function DELETE(req: NextRequest) {
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const { disease_en } = await req.json();
-  if (!disease_en) return NextResponse.json({ error: "disease_en required" }, { status: 400 });
+  if (!disease_en || typeof disease_en !== "string") return NextResponse.json({ error: "disease_en required" }, { status: 400 });
 
   const service = getServiceClient();
   await service

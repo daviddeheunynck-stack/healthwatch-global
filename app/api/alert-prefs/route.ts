@@ -52,6 +52,9 @@ export async function PUT(req: Request) {
   if (!region || !VALID_REGIONS.has(region)) {
     return NextResponse.json({ error: "Invalid region" }, { status: 400 });
   }
+  if (typeof enabled !== "boolean") {
+    return NextResponse.json({ error: "enabled (boolean) required" }, { status: 400 });
+  }
 
   if (enabled) {
     await supabase

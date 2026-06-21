@@ -9,8 +9,9 @@ const clean = (v: string | undefined) => (v || "").replace(new RegExp("^" + BOM)
 
 export async function POST(req: NextRequest) {
   try {
-    const { locale } = await req.json();
-    const returnUrl = `${clean(process.env.NEXT_PUBLIC_BASE_URL) || "https://healthwatch-global.com"}/${locale || "fr"}/account`;
+    const { locale: rawLocale } = await req.json();
+    const safeLocale = ["fr", "en", "es", "ar", "id"].includes(rawLocale) ? rawLocale : "fr";
+    const returnUrl = `${clean(process.env.NEXT_PUBLIC_BASE_URL) || "https://healthwatch-global.com"}/${safeLocale}/account`;
 
     // Get authenticated user
     const supabase = await createClient();
