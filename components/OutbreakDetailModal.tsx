@@ -21,6 +21,8 @@ import { wilsonCI } from "@/lib/cfr-ci";
 import OutbreakMetrics from "@/components/OutbreakMetrics";
 import OutbreakWorkflow from "@/components/OutbreakWorkflow";
 import OutbreakCluster from "@/components/OutbreakCluster";
+import OutbreakBenchmark from "@/components/OutbreakBenchmark";
+import CountryCapacity from "@/components/CountryCapacity";
 
 const COPY: Record<string, {
   cases: string; deaths: string; cfr: string; incidence: string; date: string;
@@ -502,6 +504,11 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlis
           </div>
         )}
 
+        {/* ── Historical benchmark (P2) ────────────────────────────────── */}
+        {isPaid && outbreak.cases > 0 && (
+          <OutbreakBenchmark outbreakId={outbreak.id} currentCases={outbreak.cases} locale={locale} />
+        )}
+
         {/* ── Multi-country cluster (P3) ───────────────────────────────── */}
         {outbreak.event_id && (
           <OutbreakCluster
@@ -509,6 +516,11 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlis
             excludeId={outbreak.id}
             locale={locale}
           />
+        )}
+
+        {/* ── Country capacity (P4) ────────────────────────────────────── */}
+        {isPaid && (
+          <CountryCapacity countryEn={outbreak.country_en ?? null} locale={locale} />
         )}
 
         {/* Unlock prompt for free users */}

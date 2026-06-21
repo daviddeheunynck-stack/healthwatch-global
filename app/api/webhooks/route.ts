@@ -4,8 +4,8 @@ import { randomBytes } from "crypto";
 
 export const dynamic = "force-dynamic";
 
-const PAID_PLANS = ["pro", "team", "enterprise"];
-const MAX_WEBHOOKS = 10;
+const PAID_PLANS       = ["pro", "team", "enterprise"];
+const MAX_WEBHOOKS     = 10;
 const VALID_REGIONS    = new Set(["africa", "asia", "americas", "europe", "oceania"]);
 const VALID_RISK_LEVELS = new Set(["high", "medium", "low"]);
 
@@ -47,6 +47,7 @@ export async function POST(req: Request) {
   const body = await req.json() as {
     name?: string; url?: string;
     regions?: string[]; risk_levels?: string[];
+    rt_threshold?: number;
   };
 
   const name = (body.name ?? "").trim().slice(0, 64) || "My webhook";
@@ -59,11 +60,22 @@ export async function POST(req: Request) {
   const regions    = (body.regions    ?? []).filter((r) => VALID_REGIONS.has(r));
   const risk_levels = (body.risk_levels ?? ["high"]).filter((r) => VALID_RISK_LEVELS.has(r));
 
+  const rt_threshold =
+    typeof body.rt_threshold === "number" &&
+    body.rt_threshold > 0 &&
+    body.rt_threshold <= 10
+      ? parseFloat(body.rt_threshold.toFixed(2))
+      : undefined;
+
   const secret = randomBytes(32).toString("hex");
 
   const { data, error } = await supabase.from("webhooks").insert({
     user_id: user.id, name, url, secret,
-    filters: { regions, risk_levels },
+    filters: {
+      regions,
+      risk_levels,
+      ...(rt_threshold !== undefined ? { rt_threshold } : {}),
+    },
   }).select("id, name, url, filters, active, created_at").single();
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });

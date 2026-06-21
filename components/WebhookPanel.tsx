@@ -10,7 +10,7 @@ interface WebhookEntry {
   id: string;
   name: string;
   url: string;
-  filters: { regions?: string[]; risk_levels?: string[] };
+  filters: { regions?: string[]; risk_levels?: string[]; rt_threshold?: number };
   active: boolean;
   last_triggered_at: string | null;
   last_status_code: number | null;
@@ -25,6 +25,7 @@ const COPY: Record<string, {
   lastFired: string; neverFired: string; planError: string;
   secretLabel: string; secretCopied: string; copySecret: string;
   toggle: string; status: (code: number | null) => string;
+  rtThreshold: string; rtNote: string;
 }> = {
   fr: {
     title: "Webhooks", subtitle: "Recevez un push HTTPS chaque fois qu'un foyer atteint le niveau de risque configuré.",
@@ -37,6 +38,7 @@ const COPY: Record<string, {
     planError: "Webhooks disponibles sur les plans Pro, Équipe et Enterprise.",
     secretLabel: "Secret HMAC", secretCopied: "Copié", copySecret: "Copier le secret",
     toggle: "Activer/désactiver",
+    rtThreshold: "Seuil Rt", rtNote: "Déclencher si Rt ≥ ce seuil (ex: 1.5)",
     status: (c) => c === null ? "—" : c >= 200 && c < 300 ? `✓ ${c}` : `✗ ${c}`,
   },
   en: {
@@ -50,6 +52,7 @@ const COPY: Record<string, {
     planError: "Webhooks are available on Pro, Team, and Enterprise plans.",
     secretLabel: "HMAC secret", secretCopied: "Copied", copySecret: "Copy secret",
     toggle: "Enable/disable",
+    rtThreshold: "Rt threshold", rtNote: "Trigger if Rt ≥ value (e.g. 1.5)",
     status: (c) => c === null ? "—" : c >= 200 && c < 300 ? `✓ ${c}` : `✗ ${c}`,
   },
   es: {
@@ -63,6 +66,7 @@ const COPY: Record<string, {
     planError: "Los webhooks están disponibles en los planes Pro, Team y Enterprise.",
     secretLabel: "Secreto HMAC", secretCopied: "Copiado", copySecret: "Copiar secreto",
     toggle: "Activar/desactivar",
+    rtThreshold: "Umbral Rt", rtNote: "Activar si Rt ≥ umbral (ej: 1.5)",
     status: (c) => c === null ? "—" : c >= 200 && c < 300 ? `✓ ${c}` : `✗ ${c}`,
   },
   ar: {
@@ -76,6 +80,7 @@ const COPY: Record<string, {
     planError: "Webhooks متاحة في خطط Pro وTeam وEnterprise.",
     secretLabel: "السر HMAC", secretCopied: "تم النسخ", copySecret: "نسخ السر",
     toggle: "تفعيل/تعطيل",
+    rtThreshold: "عتبة Rt", rtNote: "تشغيل إذا Rt ≥ العتبة",
     status: (c) => c === null ? "—" : c !== null && c >= 200 && c < 300 ? `✓ ${c}` : `✗ ${c}`,
   },
   id: {
@@ -89,6 +94,7 @@ const COPY: Record<string, {
     planError: "Webhook tersedia di paket Pro, Team, dan Enterprise.",
     secretLabel: "Rahasia HMAC", secretCopied: "Disalin", copySecret: "Salin secret",
     toggle: "Aktifkan/nonaktifkan",
+    rtThreshold: "Ambang Rt", rtNote: "Aktifkan jika Rt ≥ nilai (mis. 1.5)",
     status: (c) => c === null ? "—" : c !== null && c >= 200 && c < 300 ? `✓ ${c}` : `✗ ${c}`,
   },
 };
@@ -133,6 +139,7 @@ export default function WebhookPanel({ locale }: Props) {
   const [secretCopied, setSecretCopied] = useState(false);
   const [deletingId,   setDeletingId]   = useState<string | null>(null);
   const [togglingId,   setTogglingId]   = useState<string | null>(null);
+  const [rtThreshold,  setRtThreshold]  = useState<number | "">("");
 
   useEffect(() => {
     if (!open) return;
@@ -168,6 +175,7 @@ export default function WebhookPanel({ locale }: Props) {
           url: url.trim(),
           regions: selRegions,
           risk_levels: selRisks.length > 0 ? selRisks : ["high"],
+          rt_threshold: rtThreshold !== "" ? Number(rtThreshold) : undefined,
         }),
       });
       const d = await res.json();
@@ -175,7 +183,7 @@ export default function WebhookPanel({ locale }: Props) {
       if (d.webhook) {
         setWebhooks((prev) => [d.webhook, ...prev]);
         setNewSecret(d.secret);
-        setName(""); setUrl(""); setSelRegions([]); setSelRisks(["high"]);
+        setName(""); setUrl(""); setSelRegions([]); setSelRisks(["high"]); setRtThreshold("");
         setShowForm(false);
       }
     } catch { setFormError("Network error"); } finally { setCreating(false); }
@@ -320,6 +328,11 @@ export default function WebhookPanel({ locale }: Props) {
                             "bg-gray-800 border-gray-700"
                           }`}>{riskL[r] ?? r}</span>
                         ))}
+                        {w.filters?.rt_threshold !== undefined && (
+                          <span className="px-1.5 py-0.5 rounded bg-purple-900/20 border border-purple-700/30 text-purple-400">
+                            {`Rt ≥ ${w.filters.rt_threshold}`}
+                          </span>
+                        )}
                         {!w.active && (
                           <span className="px-1.5 py-0.5 rounded bg-gray-800 border border-gray-700 text-gray-500">
                             {locale === "fr" ? "Désactivé" : locale === "es" ? "Desactivado" : locale === "ar" ? "معطَّل" : locale === "id" ? "Nonaktif" : "Disabled"}
@@ -394,6 +407,25 @@ export default function WebhookPanel({ locale }: Props) {
                           {riskL[r]}
                         </button>
                       ))}
+                    </div>
+                  </div>
+
+                  {/* Rt threshold */}
+                  <div className="space-y-1">
+                    <p className="text-[10px] text-gray-500 uppercase tracking-wide">{c.rtThreshold}</p>
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <span className="text-[10px] text-gray-400">Rt ≥</span>
+                      <input
+                        type="number"
+                        min="1"
+                        max="10"
+                        step="0.1"
+                        value={rtThreshold}
+                        onChange={(e) => setRtThreshold(e.target.value === "" ? "" : Number(e.target.value))}
+                        placeholder="1.5"
+                        className="w-20 bg-gray-800 border border-gray-700 rounded-lg px-2 py-1 text-xs text-white placeholder-gray-600 focus:outline-none focus:border-gray-500 transition-colors"
+                      />
+                      <span className="text-[10px] text-gray-600">{c.rtNote}</span>
                     </div>
                   </div>
 

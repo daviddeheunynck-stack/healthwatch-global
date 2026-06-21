@@ -1,18 +1,19 @@
 /**
  * GET /api/cron/trigger-webhooks
  *
- * Fires configured webhooks for high/medium risk outbreaks that changed
- * since each webhook's last_triggered_at. Runs every 30 minutes via Vercel Cron.
+ * Fires configured webhooks for high/medium risk outbreaks updated since
+ * each webhook's last_triggered_at. Supports optional Rt threshold filter.
+ * Runs every 30 minutes via Vercel Cron.
  *
- * Payload per delivery:
+ * Payload headers:
  *   X-HealthWatch-Signature: sha256=HMAC-SHA256(secret, body)
  *   X-HealthWatch-Event: outbreak.alert
- *   Body: { event, data: { outbreak fields } }
  */
 
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { createHmac } from "crypto";
+import { computeEpidemicMetrics } from "@/lib/epidemic-metrics";
 
 export const dynamic = "force-dynamic";
 
@@ -27,7 +28,7 @@ interface Webhook {
   id: string;
   url: string;
   secret: string;
-  filters: { regions?: string[]; risk_levels?: string[] };
+  filters: { regions?: string[]; risk_levels?: string[]; rt_threshold?: number };
   last_triggered_at: string | null;
   created_at: string;
 }
@@ -53,7 +54,7 @@ function sign(secret: string, body: string): string {
 
 function outbreakMatchesWebhook(o: Outbreak, w: Webhook): boolean {
   const { regions = [], risk_levels = ["high"] } = w.filters;
-  if (regions.length > 0     && !regions.includes(o.region))      return false;
+  if (regions.length > 0     && !regions.includes(o.region))         return false;
   if (risk_levels.length > 0 && !risk_levels.includes(o.risk_level)) return false;
   return true;
 }
@@ -64,7 +65,6 @@ export async function GET(req: NextRequest) {
 
   const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE);
 
-  // Load all active webhooks
   const { data: webhooks, error: wErr } = await supabase
     .from("webhooks")
     .select("id, url, secret, filters, last_triggered_at, created_at")
@@ -79,7 +79,6 @@ export async function GET(req: NextRequest) {
   for (const webhook of webhooks as Webhook[]) {
     const since = webhook.last_triggered_at ?? webhook.created_at;
 
-    // Find outbreaks updated after this webhook's last trigger
     const { data: outbreaks } = await supabase
       .from("outbreaks")
       .select("id, disease, disease_en, country, country_en, region, risk_level, cases, deaths, date, is_pheic, updated_at")
@@ -87,29 +86,66 @@ export async function GET(req: NextRequest) {
       .gt("updated_at", since)
       .in("risk_level", ["high", "medium"]);
 
-    const matches = (outbreaks ?? []).filter((o) => outbreakMatchesWebhook(o as Outbreak, webhook));
+    let matches = (outbreaks ?? [])
+      .filter((o) => outbreakMatchesWebhook(o as Outbreak, webhook)) as Outbreak[];
+
     if (matches.length === 0) continue;
 
+    // Rt threshold: fetch snapshots and compute Rt, keep only outbreaks that exceed the threshold
+    const rtMap = new Map<string, number | null>();
+
+    if (webhook.filters.rt_threshold !== undefined) {
+      const ids = matches.map((o) => o.id);
+
+      const { data: allSnaps } = await supabase
+        .from("outbreak_snapshots")
+        .select("outbreak_id, snapped_at, cases")
+        .in("outbreak_id", ids)
+        .order("snapped_at", { ascending: true });
+
+      const snapMap = new Map<string, { snapped_at: string; cases: number }[]>();
+      for (const s of allSnaps ?? []) {
+        if (!snapMap.has(s.outbreak_id)) snapMap.set(s.outbreak_id, []);
+        snapMap.get(s.outbreak_id)!.push({ snapped_at: s.snapped_at, cases: s.cases });
+      }
+
+      const threshold = webhook.filters.rt_threshold;
+      for (const o of matches) {
+        const snaps = snapMap.get(o.id) ?? [];
+        const m = computeEpidemicMetrics(snaps, o.disease_en);
+        rtMap.set(o.id, m.rtEstimate);
+      }
+
+      matches = matches.filter((o) => {
+        const rt = rtMap.get(o.id);
+        return rt !== null && rt !== undefined && rt >= threshold;
+      });
+
+      if (matches.length === 0) continue;
+    }
+
     let lastStatus = 200;
-    for (const outbreak of matches as Outbreak[]) {
+
+    for (const outbreak of matches) {
       const cfr = outbreak.cases > 0
         ? parseFloat((outbreak.deaths / outbreak.cases * 100).toFixed(1))
         : null;
 
       const payload = {
-        event: "outbreak.alert",
+        event:     "outbreak.alert",
         timestamp: now,
         data: {
-          outbreak_id: outbreak.id,
-          disease:     outbreak.disease_en || outbreak.disease,
-          country:     outbreak.country_en || outbreak.country,
-          region:      outbreak.region,
-          risk_level:  outbreak.risk_level,
-          cases:       outbreak.cases,
-          deaths:      outbreak.deaths,
-          cfr_pct:     cfr,
-          is_pheic:    outbreak.is_pheic,
-          date:        outbreak.date,
+          outbreak_id:  outbreak.id,
+          disease:      outbreak.disease_en || outbreak.disease,
+          country:      outbreak.country_en || outbreak.country,
+          region:       outbreak.region,
+          risk_level:   outbreak.risk_level,
+          cases:        outbreak.cases,
+          deaths:       outbreak.deaths,
+          cfr_pct:      cfr,
+          is_pheic:     outbreak.is_pheic,
+          date:         outbreak.date,
+          rt_estimate:  rtMap.get(outbreak.id) ?? null,
         },
       };
 
@@ -119,10 +155,10 @@ export async function GET(req: NextRequest) {
         const res = await fetch(webhook.url, {
           method: "POST",
           headers: {
-            "Content-Type": "application/json",
-            "X-HealthWatch-Signature": sign(webhook.secret, body),
-            "X-HealthWatch-Event": "outbreak.alert",
-            "X-HealthWatch-Timestamp": String(Date.now()),
+            "Content-Type":             "application/json",
+            "X-HealthWatch-Signature":  sign(webhook.secret, body),
+            "X-HealthWatch-Event":      "outbreak.alert",
+            "X-HealthWatch-Timestamp":  String(Date.now()),
           },
           body,
           signal: AbortSignal.timeout(10_000),

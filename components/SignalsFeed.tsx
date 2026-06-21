@@ -23,12 +23,13 @@ const COPY: Record<string, {
   headlinePlaceholder: string; diseasePlaceholder: string; countryPlaceholder: string;
   urlPlaceholder: string; send: string; sending: string; confidence: string;
   sourceLabel: string; voted: string; signal: string;
+  escalate: string; escalated: string;
 }> = {
-  fr: { title: "Veille signaux", disclaimer: "Signaux de veille complémentaires — pré-confirmation, non vérifiés, non citables. Les sources automatiques (ReliefWeb) reflètent des publications institutionnelles et peuvent ne pas précéder les rapports OMS. Les soumissions terrain peuvent être plus précoces. Croiser systématiquement avec des sources officielles.", empty: "Aucun signal en cours.", submit: "Soumettre un signal", cancel: "Annuler", headlinePlaceholder: "Titre ou description du signal…", diseasePlaceholder: "Maladie suspectée", countryPlaceholder: "Pays", urlPlaceholder: "URL source (optionnel)", send: "Soumettre", sending: "Envoi…", confidence: "Confiance", sourceLabel: "Source", voted: "Voté", signal: "signal" },
-  en: { title: "Signal watch", disclaimer: "Complementary surveillance signals — pre-confirmation, unverified, not citable. Automated sources (ReliefWeb) reflect institutional publications and may not precede WHO reporting. Field submissions may be earlier. Always cross-check with official sources.", empty: "No active signals.", submit: "Submit a signal", cancel: "Cancel", headlinePlaceholder: "Signal headline or description…", diseasePlaceholder: "Suspected disease", countryPlaceholder: "Country", urlPlaceholder: "Source URL (optional)", send: "Submit", sending: "Sending…", confidence: "Confidence", sourceLabel: "Source", voted: "Voted", signal: "signal" },
-  es: { title: "Vigilancia de señales", disclaimer: "Señales de vigilancia complementarias — preconfirmación, no verificadas, no citables. Las fuentes automatizadas (ReliefWeb) reflejan publicaciones institucionales y pueden no preceder a los informes OMS. Verificar siempre con fuentes oficiales.", empty: "Sin señales activas.", submit: "Enviar una señal", cancel: "Cancelar", headlinePlaceholder: "Titular o descripción de la señal…", diseasePlaceholder: "Enfermedad sospechada", countryPlaceholder: "País", urlPlaceholder: "URL fuente (opcional)", send: "Enviar", sending: "Enviando…", confidence: "Confianza", sourceLabel: "Fuente", voted: "Votado", signal: "señal" },
-  ar: { title: "مراقبة الإشارات", disclaimer: "إشارات مراقبة تكميلية — ما قبل التأكيد، غير مؤكدة وغير قابلة للاستشهاد. قد لا تسبق المصادر الآلية (ReliefWeb) تقارير منظمة الصحة العالمية. التقديمات الميدانية قد تكون أسبق. راجع دائماً المصادر الرسمية.", empty: "لا توجد إشارات نشطة.", submit: "إرسال إشارة", cancel: "إلغاء", headlinePlaceholder: "عنوان أو وصف الإشارة…", diseasePlaceholder: "المرض المشتبه به", countryPlaceholder: "الدولة", urlPlaceholder: "رابط المصدر (اختياري)", send: "إرسال", sending: "جارٍ الإرسال…", confidence: "الثقة", sourceLabel: "المصدر", voted: "تم التصويت", signal: "إشارة" },
-  id: { title: "Pantau sinyal", disclaimer: "Sinyal pengawasan pelengkap — pra-konfirmasi, belum diverifikasi, tidak dapat dikutip. Sumber otomatis (ReliefWeb) mencerminkan publikasi institusional dan mungkin tidak mendahului laporan WHO. Kiriman lapangan bisa lebih awal. Selalu periksa silang dengan sumber resmi.", empty: "Tidak ada sinyal aktif.", submit: "Kirim sinyal", cancel: "Batal", headlinePlaceholder: "Judul atau deskripsi sinyal…", diseasePlaceholder: "Penyakit yang dicurigai", countryPlaceholder: "Negara", urlPlaceholder: "URL sumber (opsional)", send: "Kirim", sending: "Mengirim…", confidence: "Kepercayaan", sourceLabel: "Sumber", voted: "Sudah divote", signal: "sinyal" },
+  fr: { title: "Veille signaux", disclaimer: "Signaux de veille complémentaires — pré-confirmation, non vérifiés, non citables. Les sources automatiques (ReliefWeb) reflètent des publications institutionnelles et peuvent ne pas précéder les rapports OMS. Les soumissions terrain peuvent être plus précoces. Croiser systématiquement avec des sources officielles.", empty: "Aucun signal en cours.", submit: "Soumettre un signal", cancel: "Annuler", headlinePlaceholder: "Titre ou description du signal…", diseasePlaceholder: "Maladie suspectée", countryPlaceholder: "Pays", urlPlaceholder: "URL source (optionnel)", send: "Soumettre", sending: "Envoi…", confidence: "Confiance", sourceLabel: "Source", voted: "Voté", signal: "signal", escalate: "→ Investigation", escalated: "En investigation" },
+  en: { title: "Signal watch", disclaimer: "Complementary surveillance signals — pre-confirmation, unverified, not citable. Automated sources (ReliefWeb) reflect institutional publications and may not precede WHO reporting. Field submissions may be earlier. Always cross-check with official sources.", empty: "No active signals.", submit: "Submit a signal", cancel: "Cancel", headlinePlaceholder: "Signal headline or description…", diseasePlaceholder: "Suspected disease", countryPlaceholder: "Country", urlPlaceholder: "Source URL (optional)", send: "Submit", sending: "Sending…", confidence: "Confidence", sourceLabel: "Source", voted: "Voted", signal: "signal", escalate: "→ Investigate", escalated: "Under investigation" },
+  es: { title: "Vigilancia de señales", disclaimer: "Señales de vigilancia complementarias — preconfirmación, no verificadas, no citables. Las fuentes automatizadas (ReliefWeb) reflejan publicaciones institucionales y pueden no preceder a los informes OMS. Verificar siempre con fuentes oficiales.", empty: "Sin señales activas.", submit: "Enviar una señal", cancel: "Cancelar", headlinePlaceholder: "Titular o descripción de la señal…", diseasePlaceholder: "Enfermedad sospechada", countryPlaceholder: "País", urlPlaceholder: "URL fuente (opcional)", send: "Enviar", sending: "Enviando…", confidence: "Confianza", sourceLabel: "Fuente", voted: "Votado", signal: "señal", escalate: "→ Investigar", escalated: "En investigación" },
+  ar: { title: "مراقبة الإشارات", disclaimer: "إشارات مراقبة تكميلية — ما قبل التأكيد، غير مؤكدة وغير قابلة للاستشهاد. قد لا تسبق المصادر الآلية (ReliefWeb) تقارير منظمة الصحة العالمية. التقديمات الميدانية قد تكون أسبق. راجع دائماً المصادر الرسمية.", empty: "لا توجد إشارات نشطة.", submit: "إرسال إشارة", cancel: "إلغاء", headlinePlaceholder: "عنوان أو وصف الإشارة…", diseasePlaceholder: "المرض المشتبه به", countryPlaceholder: "الدولة", urlPlaceholder: "رابط المصدر (اختياري)", send: "إرسال", sending: "جارٍ الإرسال…", confidence: "الثقة", sourceLabel: "المصدر", voted: "تم التصويت", signal: "إشارة", escalate: "→ تحقيق", escalated: "قيد التحقيق" },
+  id: { title: "Pantau sinyal", disclaimer: "Sinyal pengawasan pelengkap — pra-konfirmasi, belum diverifikasi, tidak dapat dikutip. Sumber otomatis (ReliefWeb) mencerminkan publikasi institusional dan mungkin tidak mendahului laporan WHO. Kiriman lapangan bisa lebih awal. Selalu periksa silang dengan sumber resmi.", empty: "Tidak ada sinyal aktif.", submit: "Kirim sinyal", cancel: "Batal", headlinePlaceholder: "Judul atau deskripsi sinyal…", diseasePlaceholder: "Penyakit yang dicurigai", countryPlaceholder: "Negara", urlPlaceholder: "URL sumber (opsional)", send: "Kirim", sending: "Mengirim…", confidence: "Kepercayaan", sourceLabel: "Sumber", voted: "Sudah divote", signal: "sinyal", escalate: "→ Investigasi", escalated: "Sedang diselidiki" },
 };
 
 const CONFIDENCE_LABELS: Record<string, (score: number) => string> = {
@@ -73,7 +74,9 @@ export default function SignalsFeed({ locale }: Props) {
   const [signals,   setSignals]   = useState<Signal[]>([]);
   const [loading,   setLoading]   = useState(true);
   const [showForm,  setShowForm]  = useState(false);
-  const [voted,     setVoted]     = useState<Set<string>>(new Set());
+  const [voted,      setVoted]      = useState<Set<string>>(new Set());
+  const [escalating, setEscalating] = useState<Set<string>>(new Set());
+  const [escalated,  setEscalated]  = useState<Set<string>>(new Set());
 
   const [headline,    setHeadline]    = useState("");
   const [diseaseHint, setDiseaseHint] = useState("");
@@ -100,6 +103,21 @@ export default function SignalsFeed({ locale }: Props) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ id, vote }),
     }).catch(() => {});
+  }
+
+  async function handleEscalate(s: Signal) {
+    if (escalating.has(s.id) || escalated.has(s.id)) return;
+    setEscalating((v) => new Set(v).add(s.id));
+    try {
+      const res = await fetch("/api/signals/escalate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ headline: s.headline, disease_hint: s.disease_hint, country_hint: s.country_hint, source_url: s.source_url }),
+      });
+      if (res.ok) setEscalated((v) => new Set(v).add(s.id));
+    } catch { /* ignore */ } finally {
+      setEscalating((prev) => { const n = new Set(prev); n.delete(s.id); return n; });
+    }
   }
 
   async function handleSubmit() {
@@ -249,6 +267,20 @@ export default function SignalsFeed({ locale }: Props) {
                   >
                     <ThumbsDown className="w-3 h-3" />
                     <span>{s.votes_down}</span>
+                  </button>
+                  <button
+                    onClick={() => handleEscalate(s)}
+                    disabled={escalating.has(s.id) || escalated.has(s.id)}
+                    title={c.escalate}
+                    className={`px-1.5 py-1 rounded text-[10px] font-medium transition-colors ${
+                      escalated.has(s.id)
+                        ? "text-purple-400 cursor-default"
+                        : escalating.has(s.id)
+                        ? "text-gray-500 cursor-wait"
+                        : "text-gray-500 hover:text-purple-400 hover:bg-gray-700"
+                    }`}
+                  >
+                    {escalated.has(s.id) ? c.escalated : c.escalate}
                   </button>
                 </div>
               </div>
