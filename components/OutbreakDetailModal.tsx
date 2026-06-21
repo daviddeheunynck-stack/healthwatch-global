@@ -19,6 +19,7 @@ import OutbreakCasesChart from "@/components/OutbreakCasesChart";
 import { createClient as createBrowserClient } from "@/lib/supabase-browser";
 import { wilsonCI } from "@/lib/cfr-ci";
 import OutbreakMetrics from "@/components/OutbreakMetrics";
+import { computeEpidemicMetrics } from "@/lib/epidemic-metrics";
 import OutbreakWorkflow from "@/components/OutbreakWorkflow";
 import OutbreakCluster from "@/components/OutbreakCluster";
 import OutbreakBenchmark from "@/components/OutbreakBenchmark";
@@ -102,6 +103,54 @@ interface Snapshot { snapped_at: string; cases: number; deaths: number; }
 interface PastOutbreak { id: string; date: string; cases: number; deaths: number; risk_level: string; }
 interface Note { id: string; note: string; status: string | null; author_email: string; user_id: string; created_at: string; }
 
+const SITREP_COPY: Record<string, {
+  header: string; src: string; disease: string; country: string; riskLevel: string;
+  pheic: string; epiData: string; asOf: string; cases: string; deaths: string;
+  cfr: string; incidence: string; verification: string; responsePhase: string;
+  rt: string; rtNote: string; previousEpisodes: string; btnLabel: string; btnCopied: string;
+}> = {
+  fr: {
+    header: "DRAFT SITREP", src: "Source : HealthWatch Global", disease: "Maladie", country: "Pays",
+    riskLevel: "Niveau de risque", pheic: "⚠️ USPPI — Urgence de Santé Publique de Portée Internationale",
+    epiData: "DONNÉES ÉPIDÉMIOLOGIQUES", asOf: "au", cases: "Cas", deaths: "Décès", cfr: "Létalité (CFR)",
+    incidence: "Incidence", verification: "Vérification", responsePhase: "Phase de réponse",
+    rt: "Rt estimé", rtNote: "estimation préliminaire",
+    previousEpisodes: "ÉPISODES PRÉCÉDENTS", btnLabel: "Copier le sitrep", btnCopied: "Copié !",
+  },
+  en: {
+    header: "SITREP DRAFT", src: "Source: HealthWatch Global", disease: "Disease", country: "Country",
+    riskLevel: "Risk level", pheic: "⚠️ PHEIC — Public Health Emergency of International Concern",
+    epiData: "EPIDEMIOLOGICAL DATA", asOf: "as of", cases: "Cases", deaths: "Deaths", cfr: "CFR",
+    incidence: "Incidence", verification: "Verification", responsePhase: "Response phase",
+    rt: "Rt estimated", rtNote: "preliminary estimate",
+    previousEpisodes: "PREVIOUS EPISODES", btnLabel: "Copy sitrep", btnCopied: "Copied!",
+  },
+  es: {
+    header: "BORRADOR DE SITREP", src: "Fuente: HealthWatch Global", disease: "Enfermedad", country: "País",
+    riskLevel: "Nivel de riesgo", pheic: "⚠️ ESPII — Emergencia de Salud Pública de Importancia Internacional",
+    epiData: "DATOS EPIDEMIOLÓGICOS", asOf: "al", cases: "Casos", deaths: "Fallecidos", cfr: "Letalidad (CFR)",
+    incidence: "Incidencia", verification: "Verificación", responsePhase: "Fase de respuesta",
+    rt: "Rt estimado", rtNote: "estimación preliminar",
+    previousEpisodes: "EPISODIOS ANTERIORES", btnLabel: "Copiar sitrep", btnCopied: "¡Copiado!",
+  },
+  ar: {
+    header: "مسودة تقرير الوضع", src: "المصدر: HealthWatch Global", disease: "المرض", country: "الدولة",
+    riskLevel: "مستوى الخطر", pheic: "⚠️ طوارئ الصحة العمومية التي تثير قلقاً دولياً",
+    epiData: "البيانات الوبائية", asOf: "بتاريخ", cases: "الحالات", deaths: "الوفيات", cfr: "معدل الإماتة",
+    incidence: "معدل الإصابة", verification: "التحقق", responsePhase: "مرحلة الاستجابة",
+    rt: "Rt المُقدَّر", rtNote: "تقدير أولي",
+    previousEpisodes: "حلقات سابقة", btnLabel: "نسخ تقرير الوضع", btnCopied: "تم النسخ",
+  },
+  id: {
+    header: "DRAFT SITREP", src: "Sumber: HealthWatch Global", disease: "Penyakit", country: "Negara",
+    riskLevel: "Tingkat risiko", pheic: "⚠️ KKMMD — Kedaruratan Kesehatan Masyarakat yang Meresahkan Dunia",
+    epiData: "DATA EPIDEMIOLOGI", asOf: "per", cases: "Kasus", deaths: "Kematian", cfr: "CFR",
+    incidence: "Insidensi", verification: "Verifikasi", responsePhase: "Fase respons",
+    rt: "Rt perkiraan", rtNote: "perkiraan awal",
+    previousEpisodes: "EPISODE SEBELUMNYA", btnLabel: "Salin sitrep", btnCopied: "Disalin!",
+  },
+};
+
 const HISTORY_COPY: Record<string, { curve: string; past: string; peak: string; noHistory: string }> = {
   fr: { curve: "Courbe épidémique", past: "Épisodes précédents", peak: "pic", noHistory: "Aucun épisode antérieur enregistré" },
   en: { curve: "Epidemic curve",    past: "Previous episodes",   peak: "peak", noHistory: "No previous episode on record" },
@@ -137,6 +186,8 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlis
   const [snapshots,      setSnapshots]      = useState<Snapshot[]>([]);
   const [pastOutbreaks,  setPastOutbreaks]  = useState<PastOutbreak[]>([]);
   const [historyLoading, setHistoryLoading] = useState(false);
+
+  const [sitrepCopied, setSitrepCopied] = useState(false);
 
   const [notes,       setNotes]       = useState<Note[]>([]);
   const [noteText,    setNoteText]    = useState("");
@@ -190,6 +241,23 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlis
       setSubmitting(false);
     }
   }
+
+  // Log outbreak view to org activity log (fire-and-forget, non-blocking)
+  useEffect(() => {
+    if (!outbreak || !isPaid) return;
+    fetch("/api/org/activity", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        action: "view_outbreak",
+        metadata: {
+          outbreak_id: outbreak.id,
+          disease: outbreak.disease_en || outbreak.disease,
+          country: outbreak.country_en || outbreak.country,
+        },
+      }),
+    }).catch(() => {});
+  }, [outbreak?.id, isPaid]);
 
   // Fetch epidemic curve + past episodes whenever the modal opens on a new outbreak
   useEffect(() => {
@@ -730,27 +798,80 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlis
           </div>
         )}
 
-        {/* Citation for reports — only for WHO DON-verified rows */}
-        {isPaid && status === 'don' && (
-          <div className="mx-5 mb-3">
+        {/* Sitrep draft + citation buttons */}
+        {isPaid && (
+          <div className="mx-5 mb-3 flex items-center gap-4 flex-wrap">
+            {/* Copy sitrep — available for all paid users */}
             <button
-              onClick={async (e) => {
-                const donRef = outbreak.source?.match(/item\/([\w-]+)/)?.[1] ?? "";
-                const citation = `${disease} (${country}). WHO Disease Outbreak News${donRef ? ` — ${donRef}` : ""}, ${outbreak.date}. Via HealthWatch Global — https://healthwatch-global.com/${locale}`;
-                await navigator.clipboard.writeText(citation);
-                const btn = e.currentTarget;
-                btn.classList.add("text-green-400");
-                setTimeout(() => btn.classList.remove("text-green-400"), 2000);
+              onClick={async () => {
+                const sc = SITREP_COPY[locale] ?? SITREP_COPY.en;
+                const today = new Date().toISOString().split("T")[0];
+                const regionName = (REGION_NAMES[locale] ?? REGION_NAMES.en)[outbreak.region] ?? outbreak.region;
+                const vstatus = (VSTATUS_LABELS[locale] ?? VSTATUS_LABELS.en)[outbreak.verification_status ?? "suspected"] ?? outbreak.verification_status;
+                const rphase  = (RPHASE_LABELS[locale] ?? RPHASE_LABELS.en)[outbreak.response_phase  ?? "monitoring"] ?? outbreak.response_phase;
+                const riskLabel = (({ high: { fr:"ÉLEVÉ",en:"HIGH",es:"ALTO",ar:"عالٍ",id:"TINGGI" }, medium: { fr:"MODÉRÉ",en:"MEDIUM",es:"MEDIO",ar:"متوسط",id:"SEDANG" }, low: { fr:"FAIBLE",en:"LOW",es:"BAJO",ar:"منخفض",id:"RENDAH" } } as Record<string,Record<string,string>>)[outbreak.risk_level]?.[locale]) ?? outbreak.risk_level.toUpperCase();
+                const metrics = snapshots.length > 1 ? computeEpidemicMetrics(snapshots.map((s) => ({ snapped_at: s.snapped_at, cases: s.cases })), outbreak.disease_en) : null;
+
+                const lines: (string | null)[] = [
+                  `${sc.header} — ${today}`,
+                  sc.src,
+                  "",
+                  `${sc.disease}: ${disease}`,
+                  `${sc.country}: ${country} (${regionName})`,
+                  `${sc.riskLevel}: ${riskLabel}`,
+                  outbreak.is_pheic ? sc.pheic : null,
+                  "",
+                  `${sc.epiData} (${sc.asOf} ${outbreak.date}):`,
+                  outbreak.cases > 0 ? `• ${sc.cases}: ${outbreak.cases.toLocaleString("en")}` : null,
+                  outbreak.deaths > 0 ? `• ${sc.deaths}: ${outbreak.deaths.toLocaleString("en")}` : null,
+                  cfr ? `• ${sc.cfr}: ${cfr}%` : null,
+                  incidence ? `• ${sc.incidence}: ${incidence} ${c.incidencePer100k}` : null,
+                  "",
+                  `${sc.verification}: ${vstatus}`,
+                  `${sc.responsePhase}: ${rphase}`,
+                  metrics && metrics.trend !== "insufficient_data" && metrics.rtEstimate !== null
+                    ? `${sc.rt}: ${metrics.rtEstimate.toFixed(2)} (${metrics.rtConfidence ?? ""}) — ${sc.rtNote}`
+                    : null,
+                  pastOutbreaks.length > 0 ? "" : null,
+                  pastOutbreaks.length > 0 ? `${sc.previousEpisodes}:` : null,
+                  ...pastOutbreaks.slice(0, 3).map((p) => {
+                    const pcfr = p.cases > 0 ? (p.deaths / p.cases * 100).toFixed(1) : null;
+                    return `• ${p.date.slice(0, 7)} — ${p.cases.toLocaleString("en")} ${sc.cases.toLowerCase()}${pcfr ? `, CFR ${pcfr}%` : ""}`;
+                  }),
+                  "",
+                  `${today} | healthwatch-global.com/${locale}`,
+                ];
+                await navigator.clipboard.writeText(lines.filter((l) => l !== null).join("\n"));
+                setSitrepCopied(true);
+                setTimeout(() => setSitrepCopied(false), 2500);
               }}
-              className="flex items-center gap-2 text-xs text-gray-500 hover:text-gray-300 transition-colors"
+              className={`flex items-center gap-2 text-xs transition-colors ${sitrepCopied ? "text-green-400" : "text-gray-400 hover:text-white"}`}
             >
-              <Copy className="w-3 h-3" />
-              {locale === "fr" ? "Copier la citation" :
-               locale === "es" ? "Copiar cita" :
-               locale === "ar" ? "نسخ الاستشهاد" :
-               locale === "id" ? "Salin kutipan" :
-               "Copy citation"}
+              {sitrepCopied ? <Check className="w-3 h-3" /> : <FileText className="w-3 h-3" />}
+              {(SITREP_COPY[locale] ?? SITREP_COPY.en)[sitrepCopied ? "btnCopied" : "btnLabel"]}
             </button>
+
+            {/* Citation — only for WHO DON rows */}
+            {status === 'don' && (
+              <button
+                onClick={async (e) => {
+                  const donRef = outbreak.source?.match(/item\/([\w-]+)/)?.[1] ?? "";
+                  const citation = `${disease} (${country}). WHO Disease Outbreak News${donRef ? ` — ${donRef}` : ""}, ${outbreak.date}. Via HealthWatch Global — https://healthwatch-global.com/${locale}`;
+                  await navigator.clipboard.writeText(citation);
+                  const btn = e.currentTarget;
+                  btn.classList.add("text-green-400");
+                  setTimeout(() => btn.classList.remove("text-green-400"), 2000);
+                }}
+                className="flex items-center gap-2 text-xs text-gray-500 hover:text-gray-300 transition-colors"
+              >
+                <Copy className="w-3 h-3" />
+                {locale === "fr" ? "Copier la citation" :
+                 locale === "es" ? "Copiar cita" :
+                 locale === "ar" ? "نسخ الاستشهاد" :
+                 locale === "id" ? "Salin kutipan" :
+                 "Copy citation"}
+              </button>
+            )}
           </div>
         )}
 

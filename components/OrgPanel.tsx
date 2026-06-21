@@ -2,6 +2,35 @@
 import { useState } from "react";
 import { ChevronDown, ChevronRight, Users, Plus, Mail, Link2, Trash2, UserCheck } from "lucide-react";
 
+interface ActivityEntry {
+  id: string;
+  user_id: string;
+  action: string;
+  metadata: { user_email?: string; disease?: string; country?: string };
+  created_at: string;
+}
+
+const ACTIVITY_COPY: Record<string, { title: string; noActivity: string; viewed: string }> = {
+  fr: { title: "Activité récente", noActivity: "Aucune activité pour l'instant", viewed: "a consulté" },
+  en: { title: "Recent activity",  noActivity: "No activity yet",               viewed: "viewed" },
+  es: { title: "Actividad reciente", noActivity: "Sin actividad aún",           viewed: "consultó" },
+  ar: { title: "النشاط الأخير",   noActivity: "لا يوجد نشاط بعد",             viewed: "اطّلع على" },
+  id: { title: "Aktivitas terbaru", noActivity: "Belum ada aktivitas",          viewed: "melihat" },
+};
+
+function timeAgo(iso: string, locale: string): string {
+  const diff = Math.floor((Date.now() - new Date(iso).getTime()) / 1000);
+  if (diff < 60)  return { fr: "à l'instant", en: "just now", es: "ahora mismo", ar: "الآن", id: "baru saja" }[locale] ?? "just now";
+  if (diff < 3600) {
+    const m = Math.floor(diff / 60);
+    return { fr: `il y a ${m} min`, en: `${m}m ago`, es: `hace ${m} min`, ar: `منذ ${m} دق`, id: `${m} mnt lalu` }[locale] ?? `${m}m ago`;
+  }
+  const h = Math.floor(diff / 3600);
+  if (h < 24) return { fr: `il y a ${h}h`, en: `${h}h ago`, es: `hace ${h}h`, ar: `منذ ${h}س`, id: `${h}j lalu` }[locale] ?? `${h}h ago`;
+  const d = Math.floor(h / 24);
+  return { fr: `il y a ${d}j`, en: `${d}d ago`, es: `hace ${d}d`, ar: `منذ ${d}ي`, id: `${d}h lalu` }[locale] ?? `${d}d ago`;
+}
+
 interface OrgInfo { id: string; name: string; owner_id: string; created_at: string }
 interface MemberInfo { id: string; invited_email: string; role: string; status: string; user_id: string | null; invite_token?: string; created_at: string }
 
@@ -166,16 +195,19 @@ export default function OrgPanel({ locale }: { locale: string }) {
 
   const [removing, setRemoving] = useState<Set<string>>(new Set());
   const [copiedId, setCopiedId] = useState<string | null>(null);
+  const [activity, setActivity] = useState<ActivityEntry[]>([]);
 
   async function load() {
     if (loaded) return;
-    const res  = await fetch("/api/org");
-    const data = await res.json() as { org: OrgInfo | null; role: string | null; plan: string; maxSeats: number; members: MemberInfo[] };
+    const [res, actRes] = await Promise.all([fetch("/api/org"), fetch("/api/org/activity")]);
+    const data    = await res.json() as { org: OrgInfo | null; role: string | null; plan: string; maxSeats: number; members: MemberInfo[] };
+    const actData = await actRes.json() as { activity?: ActivityEntry[] };
     setOrg(data.org);
     setRole(data.role);
     setPlan(data.plan);
     setMaxSeats(data.maxSeats);
     setMembers(data.members);
+    setActivity(actData.activity ?? []);
     setLoaded(true);
   }
 
@@ -381,6 +413,34 @@ export default function OrgPanel({ locale }: { locale: string }) {
               {role === "owner" && totalCount >= maxSeats && (
                 <p className="text-xs text-gray-500 italic">{totalCount}/{maxSeats} — {plan === "team" ? "Enterprise plan unlocks 50 seats." : "Seat limit reached."}</p>
               )}
+
+              {/* Activity log */}
+              {activity.length > 0 && (() => {
+                const ac = ACTIVITY_COPY[locale] ?? ACTIVITY_COPY.en;
+                return (
+                  <div className="space-y-1.5">
+                    <p className="text-xs font-medium text-gray-400 uppercase tracking-wider">{ac.title}</p>
+                    <div className="space-y-1">
+                      {activity.slice(0, 10).map((a) => {
+                        const email   = a.metadata.user_email ?? "—";
+                        const name    = email.split("@")[0];
+                        const disease = a.metadata.disease ?? "";
+                        const country = a.metadata.country ?? "";
+                        return (
+                          <div key={a.id} className="flex items-start justify-between gap-2 text-[10px] py-1 border-b border-gray-800/40 last:border-0">
+                            <span className="text-gray-400 min-w-0">
+                              <span className="text-gray-300 font-medium">{name}</span>
+                              {" "}{ac.viewed}{" "}
+                              <span className="text-gray-300">{disease}{country ? ` — ${country}` : ""}</span>
+                            </span>
+                            <span className="text-gray-600 shrink-0 whitespace-nowrap">{timeAgo(a.created_at, locale)}</span>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                );
+              })()}
             </div>
           )}
         </div>

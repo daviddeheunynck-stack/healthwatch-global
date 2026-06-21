@@ -20,6 +20,7 @@ import WebhookPanel from "@/components/WebhookPanel";
 import SignalsFeed from "@/components/SignalsFeed";
 import ScheduledReportPanel from "@/components/ScheduledReportPanel";
 import OrgPanel from "@/components/OrgPanel";
+import DiseaseWatchlistPanel from "@/components/DiseaseWatchlistPanel";
 import OnboardingTour from "@/components/OnboardingTour";
 import FreePlanBanner from "@/components/FreePlanBanner";
 import DemoBanner from "@/components/DemoBanner";
@@ -139,6 +140,7 @@ async function DashboardContent({ demo = false }: { demo?: boolean }) {
   let hasStripeSubscription = false;
   let trialExpired = false;
   let displayFilters: { region: string; country: string } | null = null;
+  let diseaseWatchlist: string[] = [];
   let orgMemberAccess = false;
   if (!demo) {
     const supabase = await createClient();
@@ -146,7 +148,7 @@ async function DashboardContent({ demo = false }: { demo?: boolean }) {
     if (user) {
       const { data: profile } = await supabase
         .from("profiles")
-        .select("plan, trial_ends_at, stripe_subscription_id, display_filters")
+        .select("plan, trial_ends_at, stripe_subscription_id, display_filters, disease_watchlist")
         .eq("id", user.id)
         .single();
       plan = profile?.plan || "free";
@@ -169,6 +171,9 @@ async function DashboardContent({ demo = false }: { demo?: boolean }) {
       const isPaidPlan = ["starter", "pro", "team", "enterprise"].includes(plan);
       if (isPaidPlan && profile?.display_filters) {
         displayFilters = profile.display_filters as { region: string; country: string };
+      }
+      if (isPaidPlan) {
+        diseaseWatchlist = (profile?.disease_watchlist as string[] | null) ?? [];
       }
       // Org members inherit Team-level access even if their own plan is free
       if (!isPaidPlan) {
@@ -369,6 +374,7 @@ async function DashboardContent({ demo = false }: { demo?: boolean }) {
             region:  (displayFilters.region  as "all" | "africa" | "asia" | "europe" | "americas" | "oceania") ?? "all",
             country: displayFilters.country ?? "all",
           } : undefined}
+          diseaseWatchlist={diseaseWatchlist.length > 0 ? diseaseWatchlist : undefined}
         />
 
         <p className="text-xs text-gray-600 mt-3 text-right">
@@ -380,6 +386,7 @@ async function DashboardContent({ demo = false }: { demo?: boolean }) {
 
       {isPaid && <DataAccessPanel locale={locale} />}
 
+      {isPaid && <DiseaseWatchlistPanel locale={locale} initialWatchlist={diseaseWatchlist} />}
       {isPaid && <WebhookPanel locale={locale} />}
       {isPaid && <ScheduledReportPanel locale={locale} />}
       {isPaid && <OrgPanel locale={locale} />}

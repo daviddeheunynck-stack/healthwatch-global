@@ -136,12 +136,13 @@ interface DefaultFilters {
 }
 
 interface Props {
-  outbreaks:      Outbreak[];
-  locale:         string;
-  isPaid:         boolean;
-  labels:         OutbreakTableLabels;
-  trends?:        Record<string, OutbreakTrend>;
+  outbreaks:       Outbreak[];
+  locale:          string;
+  isPaid:          boolean;
+  labels:          OutbreakTableLabels;
+  trends?:         Record<string, OutbreakTrend>;
   defaultFilters?: DefaultFilters;
+  diseaseWatchlist?: string[];
 }
 
 // Module-level (not redefined every render): React was remounting this on each
@@ -156,7 +157,7 @@ function SortIcon({ col, activeKey, dir }: { col: SortKey; activeKey: SortKey; d
     : <ChevronDown className="inline w-3 h-3 ml-1 text-red-400" />;
 }
 
-export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, trends, defaultFilters }: Props) {
+export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, trends, defaultFilters, diseaseWatchlist }: Props) {
   const { openModal } = useUpgradeModal();
   const [watchlist, setWatchlist] = useState<Set<string>>(new Set());
   const [search,   setSearch]    = useState("");
@@ -172,6 +173,7 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
   const [sortKey,          setSortKey]          = useState<SortKey>("risk");
   const [sortDir,          setSortDir]          = useState<SortDir>("asc");
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
+  const [watchlistOnly,    setWatchlistOnly]    = useState(false);
 
   // Load watchlist IDs on mount (Pro users only)
   useEffect(() => {
@@ -222,11 +224,16 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
         if (cfrFilter === "nodata"   && cfr !== null)                             return false;
       }
       if (sourceFilter !== "all" && sourceStatus(o) !== sourceFilter) return false;
+      if (watchlistOnly && (diseaseWatchlist?.length ?? 0) > 0) {
+        const dl = diseaseWatchlist!.map((d) => d.toLowerCase());
+        const den = (o.disease_en ?? "").toLowerCase();
+        if (!dl.some((d) => den.includes(d) || d.includes(den))) return false;
+      }
       if (q && !getLocalizedDisease(o, locale).toLowerCase().includes(q) &&
                !getLocalizedCountry(o, locale).toLowerCase().includes(q)) return false;
       return true;
     });
-  }, [outbreaks, region, country, risk, cfrFilter, sourceFilter, dateFrom, dateTo, search, locale]);
+  }, [outbreaks, region, country, risk, cfrFilter, sourceFilter, dateFrom, dateTo, search, locale, watchlistOnly, diseaseWatchlist]);
 
   const sorted = useMemo(() => {
     const RISK_ORDER: Record<string, number> = { high: 0, medium: 1, low: 2 };
@@ -248,7 +255,7 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
     });
   }, [filtered, sortKey, sortDir]);
 
-  const hasFilters = search !== "" || region !== "all" || country !== "all" || risk !== "all" || cfrFilter !== "all" || sourceFilter !== "all" || dateFrom !== "" || dateTo !== "";
+  const hasFilters = search !== "" || region !== "all" || country !== "all" || risk !== "all" || cfrFilter !== "all" || sourceFilter !== "all" || dateFrom !== "" || dateTo !== "" || watchlistOnly;
 
   // P2: multi-country event clusters — how many countries share the same event_id
   const eventClusters = useMemo(() => {
@@ -323,6 +330,7 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
     setSourceFilter("all");
     setDateFrom("");
     setDateTo("");
+    setWatchlistOnly(false);
   };
 
   // ── Region pills ──────────────────────────────────────────────────────────
@@ -527,6 +535,23 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
         </div>
         </div>{/* end collapsible filters */}
       </div>
+
+      {/* ── Disease watchlist toggle ───────────────────────────────────── */}
+      {(diseaseWatchlist?.length ?? 0) > 0 && (
+        <button
+          onClick={() => setWatchlistOnly((v) => !v)}
+          className={`inline-flex items-center gap-1.5 text-xs px-3 py-1 rounded-full border transition-colors ${
+            watchlistOnly
+              ? "bg-blue-900/40 border-blue-700/50 text-blue-300"
+              : "border-gray-700 text-gray-500 hover:border-gray-500 hover:text-gray-300"
+          }`}
+        >
+          🔬 {watchlistOnly
+            ? ({ fr: "Maladies prioritaires actif", en: "Priority diseases active", es: "Enfermedades prioritarias activo", ar: "الأمراض ذات الأولوية مفعَّل", id: "Penyakit prioritas aktif" }[locale] ?? "Priority diseases active")
+            : ({ fr: `${diseaseWatchlist!.length} maladies prioritaires`, en: `${diseaseWatchlist!.length} priority diseases`, es: `${diseaseWatchlist!.length} enf. prioritarias`, ar: `${diseaseWatchlist!.length} أمراض ذات أولوية`, id: `${diseaseWatchlist!.length} penyakit prioritas` }[locale] ?? `${diseaseWatchlist!.length} priority diseases`)
+          }
+        </button>
+      )}
 
       {/* ── Saved filters ──────────────────────────────────────────────── */}
       <SavedFilters
