@@ -55,6 +55,8 @@ interface Outbreak {
   is_pheic: boolean;
   lat: number | null;
   lng: number | null;
+  verification_status: string;
+  response_phase: string;
   updated_at: string | null;
 }
 
@@ -106,7 +108,7 @@ export async function GET(req: NextRequest) {
 
     const { data: outbreaks } = await supabase
       .from("outbreaks")
-      .select("id, disease, disease_en, country, country_en, region, risk_level, cases, deaths, date, is_pheic, lat, lng, updated_at")
+      .select("id, disease, disease_en, country, country_en, region, risk_level, cases, deaths, date, is_pheic, lat, lng, verification_status, response_phase, updated_at")
       .eq("active", true)
       .gt("updated_at", since);
 
@@ -167,9 +169,11 @@ export async function GET(req: NextRequest) {
           cases:        outbreak.cases,
           deaths:       outbreak.deaths,
           cfr_pct:      cfr,
-          is_pheic:     outbreak.is_pheic,
-          date:         outbreak.date,
-          rt_estimate:  rtMap.get(outbreak.id) ?? null,
+          is_pheic:            outbreak.is_pheic,
+          date:                outbreak.date,
+          verification_status: outbreak.verification_status,
+          response_phase:      outbreak.response_phase,
+          rt_estimate:         rtMap.get(outbreak.id) ?? null,
         },
       };
 

@@ -42,6 +42,33 @@ const COPY: Record<string, {
   id: { cases: "Kasus terkonfirmasi", deaths: "Kematian", cfr: "CFR", incidence: "Insidensi", date: "Tanggal laporan", source: "Buletin WHO asli", officialSource: "Sumber resmi", description: "Ringkasan", close: "Tutup", noData: "T/S", cfrFull: "Tingkat kematian kasus (CFR)", region: "Wilayah", partialData: "Data parsial — angka tidak tersedia dalam laporan WHO ini", dataAge: (d) => `${d} hari lalu`, fresh: "Data terbaru", stale: "Laporan lama", incidencePer100k: "per 100.000 penduduk", trendDelta: (delta, days) => `${delta > 0 ? "+" : ""}${delta} kasus / ${days}h`, illustrative: "BELUM DIVERIFIKASI", illustrativeNotice: "Angka sementara yang belum diverifikasi — belum dikaitkan dengan laporan resmi/WHO yang terkonfirmasi. Gunakan dengan hati-hati.", officialBadge: "SUMBER RESMI", officialNotice: "Sumber resmi yang dikonfirmasi (laporan situasi WHO, ECDC, atau Kementerian Kesehatan) — tanpa nomor buletin DON WHO. Data dapat diandalkan namun tidak bisa dikutip langsung sebagai DON.", fpGuidance: "Panduan Focal Point", tierLabels: { immediate: "SEGERA · WAJIB LAPOR IHR", rapid: "RESPONS CEPAT", monitor: "PEMANTAUAN STANDAR" }, firstActions: "Tindakan pertama", reportingLag: "Tanggal berdasarkan sumber resmi — onset lapangan bisa mendahului beberapa hari hingga minggu di wilayah terpencil", staleBulletin: (d) => `Tidak ada buletin resmi sejak ${d} hari — wabah mungkin sudah teratasi atau tidak dilaporkan` },
 };
 
+const VSTATUS_STYLE: Record<string, string> = {
+  suspected:           "bg-yellow-900/30 border-yellow-700/40 text-yellow-400",
+  under_investigation: "bg-blue-900/30 border-blue-700/40 text-blue-400",
+  confirmed:           "bg-green-900/30 border-green-700/40 text-green-400",
+  closed:              "bg-gray-800/40 border-gray-700/40 text-gray-500",
+};
+const VSTATUS_LABELS: Record<string, Record<string, string>> = {
+  fr: { suspected: "Suspecté",   under_investigation: "En investigation", confirmed: "Confirmé",      closed: "Clôturé"    },
+  en: { suspected: "Suspected",  under_investigation: "Under investigation", confirmed: "Confirmed",  closed: "Closed"     },
+  es: { suspected: "Sospechado", under_investigation: "En investigación",  confirmed: "Confirmado",   closed: "Cerrado"    },
+  ar: { suspected: "مشتبه به",  under_investigation: "قيد التحقيق",       confirmed: "مؤكد",         closed: "مغلق"       },
+  id: { suspected: "Diduga",     under_investigation: "Dalam investigasi", confirmed: "Terkonfirmasi", closed: "Tertutup"  },
+};
+const RPHASE_STYLE: Record<string, string> = {
+  monitoring:      "bg-gray-800/40 border-gray-700/40 text-gray-400",
+  investigating:   "bg-amber-900/30 border-amber-700/40 text-amber-400",
+  active_response: "bg-red-900/30 border-red-700/40 text-red-400",
+  contained:       "bg-green-900/30 border-green-700/40 text-green-400",
+};
+const RPHASE_LABELS: Record<string, Record<string, string>> = {
+  fr: { monitoring: "Surveillance", investigating: "Investigation",  active_response: "Réponse active", contained: "Contenu"     },
+  en: { monitoring: "Monitoring",   investigating: "Investigating",  active_response: "Active response", contained: "Contained"   },
+  es: { monitoring: "Vigilancia",   investigating: "Investigación",  active_response: "Respuesta activa", contained: "Contenido"  },
+  ar: { monitoring: "مراقبة",       investigating: "تحقيق",          active_response: "استجابة نشطة",    contained: "محتوى"      },
+  id: { monitoring: "Pemantauan",   investigating: "Investigasi",    active_response: "Respons aktif",   contained: "Terkendali"  },
+};
+
 const RISK_BG: Record<string, string> = {
   high:   "from-red-950/60 border-red-800/40",
   medium: "from-amber-950/60 border-amber-800/40",
@@ -281,6 +308,18 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlis
                   className="inline-flex items-center gap-1 text-xs px-2 py-0.5 rounded-full bg-purple-900/40 border border-purple-700/50 text-purple-300 font-bold cursor-help"
                 >
                   🚨 PHEIC
+                </span>
+              )}
+              {/* Verification status — hidden for default "suspected" to avoid noise */}
+              {outbreak.verification_status && outbreak.verification_status !== "suspected" && (
+                <span className={`inline-flex items-center text-xs px-2 py-0.5 rounded-full border font-medium ${VSTATUS_STYLE[outbreak.verification_status] ?? VSTATUS_STYLE.suspected}`}>
+                  {(VSTATUS_LABELS[locale] ?? VSTATUS_LABELS.en)[outbreak.verification_status] ?? outbreak.verification_status}
+                </span>
+              )}
+              {/* Response phase — hidden for default "monitoring" */}
+              {outbreak.response_phase && outbreak.response_phase !== "monitoring" && (
+                <span className={`inline-flex items-center text-xs px-2 py-0.5 rounded-full border font-medium ${RPHASE_STYLE[outbreak.response_phase] ?? RPHASE_STYLE.monitoring}`}>
+                  {(RPHASE_LABELS[locale] ?? RPHASE_LABELS.en)[outbreak.response_phase] ?? outbreak.response_phase}
                 </span>
               )}
             </div>

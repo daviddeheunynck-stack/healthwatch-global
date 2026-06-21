@@ -10,6 +10,7 @@ export interface EpidemicMetrics {
   trend:            "growing" | "declining" | "stable" | "insufficient_data";
   basedOnDays:      number;
   serialIntervalDays: number;
+  rtConfidence:     "insufficient" | "moderate" | "reliable" | null;
 }
 
 // Mean serial intervals (days) — conservative midpoints from published literature
@@ -58,6 +59,7 @@ export function computeEpidemicMetrics(
     trend:            "insufficient_data",
     basedOnDays:      0,
     serialIntervalDays: DEFAULT_SI,
+    rtConfidence:     null,
   };
 
   const sorted = [...snapshots]
@@ -87,6 +89,14 @@ export function computeEpidemicMetrics(
 
   const basedOnDays = Math.round(daysDiff);
 
+  const daysSinceLastSnap = (Date.now() - new Date(last.snapped_at).getTime()) / 86_400_000;
+  const rtConfidence: "insufficient" | "moderate" | "reliable" =
+    sorted.length >= 15 && basedOnDays >= 14 && daysSinceLastSnap <= 14
+      ? "reliable"
+      : sorted.length >= 5 && basedOnDays >= 7
+      ? "moderate"
+      : "insufficient";
+
   if (r > 0.02) {
     return {
       doublingTimeDays:   parseFloat((Math.LN2 / r).toFixed(1)),
@@ -96,6 +106,7 @@ export function computeEpidemicMetrics(
       trend:              "growing",
       basedOnDays,
       serialIntervalDays: si,
+      rtConfidence,
     };
   }
 
@@ -108,6 +119,7 @@ export function computeEpidemicMetrics(
       trend:              "declining",
       basedOnDays,
       serialIntervalDays: si,
+      rtConfidence,
     };
   }
 
@@ -119,5 +131,6 @@ export function computeEpidemicMetrics(
     trend:              "stable",
     basedOnDays,
     serialIntervalDays: si,
+    rtConfidence,
   };
 }

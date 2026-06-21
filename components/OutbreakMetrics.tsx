@@ -11,6 +11,7 @@ const COPY: Record<string, {
   days: (n: number) => string;
   disclaimer: string;
   si: (n: number) => string;
+  rtConf: { insufficient: string; moderate: string; reliable: string };
 }> = {
   fr: {
     title: "Dynamique de transmission",
@@ -19,6 +20,7 @@ const COPY: Record<string, {
     days: (n) => `${n} jours de données`,
     disclaimer: "Estimation préliminaire — modèle exponentiel, délais de déclaration non pris en compte.",
     si: (n) => `IS supposé : ${n} j`,
+    rtConf: { insufficient: "données insuf.", moderate: "approx.", reliable: "fiable" },
   },
   en: {
     title: "Transmission dynamics",
@@ -27,6 +29,7 @@ const COPY: Record<string, {
     days: (n) => `${n} days of data`,
     disclaimer: "Preliminary estimate — exponential model, reporting delays not accounted for.",
     si: (n) => `Assumed SI: ${n} d`,
+    rtConf: { insufficient: "insuf. data", moderate: "approx.", reliable: "reliable" },
   },
   es: {
     title: "Dinámica de transmisión",
@@ -35,6 +38,7 @@ const COPY: Record<string, {
     days: (n) => `${n} días de datos`,
     disclaimer: "Estimación preliminar — modelo exponencial, sin retrasos de notificación.",
     si: (n) => `IS asumido: ${n} d`,
+    rtConf: { insufficient: "datos insuf.", moderate: "aprox.", reliable: "fiable" },
   },
   ar: {
     title: "ديناميكيات الانتقال",
@@ -43,6 +47,7 @@ const COPY: Record<string, {
     days: (n) => `بيانات ${n} أيام`,
     disclaimer: "تقدير أولي — نموذج أسي، دون احتساب تأخيرات الإبلاغ.",
     si: (n) => `الفترة التسلسلية: ${n} يوماً`,
+    rtConf: { insufficient: "بيانات غير كافية", moderate: "تقريبي", reliable: "موثوق" },
   },
   id: {
     title: "Dinamika transmisi",
@@ -51,6 +56,7 @@ const COPY: Record<string, {
     days: (n) => `data ${n} hari`,
     disclaimer: "Perkiraan awal — model eksponensial, tanpa keterlambatan pelaporan.",
     si: (n) => `SI diasumsikan: ${n} h`,
+    rtConf: { insufficient: "data insuf.", moderate: "perkiraan", reliable: "andal" },
   },
 };
 
@@ -115,6 +121,17 @@ export default function OutbreakMetrics({ snapshots, diseaseEn, locale }: Props)
              m.trend === "declining" ? `↓ ${c.declining}` :
              `→ ${c.stable}`}
           </p>
+          {m.rtConfidence && (
+            <span className={`inline-block text-[9px] px-1.5 py-0.5 rounded border font-medium ${
+              m.rtConfidence === "reliable"
+                ? "bg-green-900/30 border-green-700/30 text-green-500"
+                : m.rtConfidence === "moderate"
+                ? "bg-amber-900/30 border-amber-700/30 text-amber-500"
+                : "bg-gray-800/40 border-gray-700/30 text-gray-500"
+            }`}>
+              {c.rtConf[m.rtConfidence]}
+            </span>
+          )}
         </div>
 
         {/* Growth rate */}
