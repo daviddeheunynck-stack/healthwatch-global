@@ -44,11 +44,11 @@ const NOISE_TERMS = new Set([
   "a region", "a province", "a state",
 ]);
 
-export async function extractAdmin1(text: string): Promise<string | null> {
+export async function extractAdmin1(text: string, countryEn?: string): Promise<string | null> {
   if (!text || text.length < 30) return null;
 
   // LLM path: Claude Haiku gives ~65% hit rate vs ~8% for regex alone
-  const llmResult = await extractAdmin1LLM(text);
+  const llmResult = await extractAdmin1LLM(text, countryEn);
   if (llmResult) return llmResult;
 
   // Regex fallback (no API key, or Haiku returned null)

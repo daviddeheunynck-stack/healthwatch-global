@@ -13,23 +13,29 @@ const NOISE_RESPONSES = new Set([
   "no specific sub-national location",
 ]);
 
-const SYSTEM_PROMPT =
-  "Extract the specific sub-national location (province, state, region, district, or health zone) " +
-  "from this WHO disease outbreak bulletin text. Return ONLY the location name " +
-  "(e.g. 'North Kivu Province', 'Lagos State', 'Aden Governorate', 'Ayeyarwady Region') " +
-  "or the word 'none' if no specific sub-national location is mentioned. " +
-  "Do not include the country name. Do not explain. One line only.";
-
-export async function extractAdmin1LLM(text: string): Promise<string | null> {
+export async function extractAdmin1LLM(
+  text: string,
+  countryEn?: string
+): Promise<string | null> {
   const apiKey = (process.env.ANTHROPIC_API_KEY ?? "").trim();
   if (!apiKey) return null;
+
+  const countryClause = countryEn
+    ? ` within ${countryEn} (ignore sub-national locations from neighboring or other countries)`
+    : "";
+  const systemPrompt =
+    `Extract the specific sub-national location (province, state, region, district, or health zone)` +
+    ` WHERE THE OUTBREAK IS OCCURRING${countryClause} from this WHO disease outbreak bulletin text.` +
+    ` Return ONLY the location name (e.g. 'North Kivu Province', 'Lagos State', 'Aden Governorate')` +
+    ` or the word 'none' if no specific sub-national location is mentioned.` +
+    ` Do not include the country name. Do not explain. One line only.`;
 
   try {
     const client = new Anthropic({ apiKey });
     const response = await client.messages.create({
       model: "claude-haiku-4-5-20251001",
       max_tokens: 60,
-      system: SYSTEM_PROMPT,
+      system: systemPrompt,
       messages: [{ role: "user", content: text.slice(0, 3000) }],
     });
 
