@@ -215,6 +215,13 @@ export const COUNTRIES: Record<string, CountryGeo> = {
   "African Region": { lat: 0.0, lng: 20.0, region: "africa", name_en: "Africa (regional)", name_fr: "Région africaine", name_ar: "المنطقة الأفريقية" },
   "African Region (AFRO)": { lat: 0.0, lng: 20.0, region: "africa", name_en: "Africa (regional)", name_fr: "Région africaine", name_ar: "المنطقة الأفريقية" },
   "Region of the Americas": { lat: 0.0, lng: -60.0, region: "americas", name_en: "Americas (regional)", name_fr: "Région des Amériques", name_ar: "منطقة الأمريكتين" },
+  // ── Territories / small island states absent from the initial list ─────────
+  "French Guiana":  { lat: 3.9, lng: -53.1, region: "americas", name_en: "French Guiana", name_fr: "Guyane française", name_ar: "غويانا الفرنسية" },
+  "Guyane française": { lat: 3.9, lng: -53.1, region: "americas", name_en: "French Guiana", name_fr: "Guyane française", name_ar: "غويانا الفرنسية" },
+  "Mauritius":      { lat: -20.3, lng: 57.6, region: "africa", name_en: "Mauritius", name_fr: "Maurice", name_ar: "موريشيوس" },
+  "Seychelles":     { lat: -4.7, lng: 55.5, region: "africa", name_en: "Seychelles", name_fr: "Seychelles", name_ar: "سيشل" },
+  "Suriname":       { lat: 3.9, lng: -56.0, region: "americas", name_en: "Suriname", name_fr: "Suriname", name_ar: "سورينام" },
+  "Vanuatu":        { lat: -15.4, lng: 166.9, region: "oceania", name_en: "Vanuatu", name_fr: "Vanuatu", name_ar: "فانواتو" },
 };
 
 // Common abbreviations / display names → canonical COUNTRIES key

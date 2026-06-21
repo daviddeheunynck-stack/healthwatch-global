@@ -142,16 +142,28 @@ export async function GET(req: NextRequest) {
   }
 
   // ── 3. Load existing outbreaks for dedup ──────────────────────────────────
-  const { data: existing, error: fetchErr } = await supabase
-    .from("outbreaks")
-    .select("id, disease_en, country_en, cases, deaths, date, source, active")
-    .or("active.eq.true,date.gte." + new Date(Date.now() - 90 * 86400_000).toISOString().substring(0, 10));
+  // Fetch all CDC-sourced rows (to catch duplicates by URL regardless of date)
+  // plus active/recent rows from all sources (to avoid overwriting WHO DON etc.)
+  const [{ data: cdcRows, error: cdcErr }, { data: recentRows, error: recentErr }] = await Promise.all([
+    supabase.from("outbreaks").select("id, disease_en, country_en, cases, deaths, date, source, active")
+      .like("source", "%wwwnc.cdc.gov%"),
+    supabase.from("outbreaks").select("id, disease_en, country_en, cases, deaths, date, source, active")
+      .or("active.eq.true,date.gte." + new Date(Date.now() - 90 * 86400_000).toISOString().substring(0, 10)),
+  ]);
 
-  if (fetchErr) return NextResponse.json({ error: fetchErr.message }, { status: 500 });
+  if (cdcErr)    return NextResponse.json({ error: cdcErr.message }, { status: 500 });
+  if (recentErr) return NextResponse.json({ error: recentErr.message }, { status: 500 });
 
-  type Row = NonNullable<typeof existing>[number];
+  type Row = NonNullable<typeof cdcRows>[number];
+
+  // URL-based dedup: set of existing CDC source paths
+  const existingSources = new Set<string>(
+    (cdcRows ?? []).map((r) => (r.source ?? "").replace(/^https?:\/\/[^/]+/, ""))
+  );
+
+  // Disease+country dedup (for cross-source ownership checks)
   const byDC = new Map<string, Row>();
-  for (const row of existing ?? []) {
+  for (const row of [...(cdcRows ?? []), ...(recentRows ?? [])]) {
     const k    = `${(row.disease_en ?? "").toLowerCase()}|${(row.country_en ?? "").toLowerCase()}`;
     const prev = byDC.get(k);
     if (!prev || (row.active && !prev.active)) byDC.set(k, row);
@@ -185,6 +197,14 @@ export async function GET(req: NextRequest) {
     }
 
     const label = `${diseaseInfo.name_en}/${geo.name_en}`;
+
+    // Primary dedup: same source URL already in DB
+    if (existingSources.has(notice.path)) {
+      log.push({ label, status: "skip", detail: "source URL already in DB" });
+      results.skipped++;
+      continue;
+    }
+
     const dcKey = `${diseaseInfo.name_en.toLowerCase()}|${geo.name_en.toLowerCase()}`;
     const existRow = byDC.get(dcKey);
 
