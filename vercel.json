@@ -87,6 +87,10 @@
     {
       "path": "/api/cron/trigger-webhooks",
       "schedule": "0,30 * * * *"
+    },
+    {
+      "path": "/api/cron/send-sitrep-emails",
+      "schedule": "20 7 * * 1"
     }
   ]
 }

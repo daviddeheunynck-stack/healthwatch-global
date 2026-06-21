@@ -48,6 +48,7 @@ export async function POST(req: Request) {
     name?: string; url?: string;
     regions?: string[]; risk_levels?: string[];
     rt_threshold?: number;
+    disease_thresholds?: { disease_en?: string; min_cases?: number }[];
   };
 
   const name = (body.name ?? "").trim().slice(0, 64) || "My webhook";
@@ -67,6 +68,13 @@ export async function POST(req: Request) {
       ? parseFloat(body.rt_threshold.toFixed(2))
       : undefined;
 
+  const disease_thresholds = Array.isArray(body.disease_thresholds)
+    ? (body.disease_thresholds as { disease_en?: string; min_cases?: number }[])
+        .filter((dt) => typeof dt.disease_en === "string" && dt.disease_en.trim().length > 0 && typeof dt.min_cases === "number" && dt.min_cases > 0)
+        .map((dt) => ({ disease_en: dt.disease_en!.trim().slice(0, 64), min_cases: Math.round(dt.min_cases!) }))
+        .slice(0, 10)
+    : [];
+
   const secret = randomBytes(32).toString("hex");
 
   const { data, error } = await supabase.from("webhooks").insert({
@@ -75,6 +83,7 @@ export async function POST(req: Request) {
       regions,
       risk_levels,
       ...(rt_threshold !== undefined ? { rt_threshold } : {}),
+      ...(disease_thresholds.length > 0 ? { disease_thresholds } : {}),
     },
   }).select("id, name, url, filters, active, created_at").single();
 

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Download, ChevronDown, ChevronUp, Copy, Check, Loader2, Key, Plus, Trash2, FileBarChart2 } from "lucide-react";
+import { Download, ChevronDown, ChevronUp, Copy, Check, Loader2, Key, Plus, Trash2, FileBarChart2, LayoutDashboard } from "lucide-react";
 import { track } from "@vercel/analytics/react";
 
 const COPY: Record<string, {
@@ -301,6 +301,13 @@ export default function DataAccessPanel({ locale }: Props) {
             >
               <FileBarChart2 className="w-3.5 h-3.5" />
               {{ fr: "Sitrep hebdo", en: "Weekly sitrep", es: "Sitrep semanal", ar: "تقرير أسبوعي", id: "Sitrep mingguan" }[locale] ?? "Weekly sitrep"}
+            </a>
+            <a
+              href={`/${locale}/briefing`}
+              className="flex items-center gap-1.5 px-3 py-2 text-xs bg-red-900/30 hover:bg-red-900/50 border border-red-700/40 text-red-300 hover:text-red-200 rounded-lg transition-colors"
+            >
+              <LayoutDashboard className="w-3.5 h-3.5" />
+              {{ fr: "Briefing exécutif", en: "Executive briefing", es: "Informe ejecutivo", ar: "إحاطة تنفيذية", id: "Laporan eksekutif" }[locale] ?? "Executive briefing"}
             </a>
           </div>
 

@@ -28,7 +28,7 @@ interface Webhook {
   id: string;
   url: string;
   secret: string;
-  filters: { regions?: string[]; risk_levels?: string[]; rt_threshold?: number };
+  filters: { regions?: string[]; risk_levels?: string[]; rt_threshold?: number; disease_thresholds?: { disease_en: string; min_cases: number }[] };
   last_triggered_at: string | null;
   created_at: string;
 }
@@ -53,10 +53,15 @@ function sign(secret: string, body: string): string {
 }
 
 function outbreakMatchesWebhook(o: Outbreak, w: Webhook): boolean {
-  const { regions = [], risk_levels = ["high"] } = w.filters;
-  if (regions.length > 0     && !regions.includes(o.region))         return false;
-  if (risk_levels.length > 0 && !risk_levels.includes(o.risk_level)) return false;
-  return true;
+  const { regions = [], risk_levels = ["high"], disease_thresholds = [] } = w.filters;
+  if (regions.length > 0 && !regions.includes(o.region)) return false;
+  // Disease threshold: bypass risk_level filter when a specific disease+cases match
+  for (const dt of disease_thresholds) {
+    if (o.disease_en?.toLowerCase() === dt.disease_en.toLowerCase() && o.cases >= dt.min_cases) {
+      return true;
+    }
+  }
+  return risk_levels.length === 0 || risk_levels.includes(o.risk_level);
 }
 
 export async function GET(req: NextRequest) {
@@ -83,8 +88,7 @@ export async function GET(req: NextRequest) {
       .from("outbreaks")
       .select("id, disease, disease_en, country, country_en, region, risk_level, cases, deaths, date, is_pheic, updated_at")
       .eq("active", true)
-      .gt("updated_at", since)
-      .in("risk_level", ["high", "medium"]);
+      .gt("updated_at", since);
 
     let matches = (outbreaks ?? [])
       .filter((o) => outbreakMatchesWebhook(o as Outbreak, webhook)) as Outbreak[];

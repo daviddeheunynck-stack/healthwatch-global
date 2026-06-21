@@ -7,6 +7,7 @@ import type { Map as LeafletMap } from "leaflet";
 import type { Outbreak } from "@/lib/outbreaks";
 import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 import OutbreakDetailModal from "@/components/OutbreakDetailModal";
+import { getCountryCoords } from "@/lib/country-coords";
 
 interface WorldMapProps {
   outbreaks: Outbreak[];
@@ -79,10 +80,12 @@ export default function WorldMap({ outbreaks, locale, isPaid, popupLabels, riskL
         const diseaseName = getLocalizedDisease(outbreak, locale);
         const countryName = getLocalizedCountry(outbreak, locale);
 
-        // Use admin1 coords when available — sub-national precision
+        // Use admin1 coords when available; fall back to country centroid if lat/lng is null
         const hasAdmin1 = typeof outbreak.admin1_lat === "number" && typeof outbreak.admin1_lng === "number";
-        const pinLat = hasAdmin1 ? outbreak.admin1_lat! : outbreak.lat;
-        const pinLng = hasAdmin1 ? outbreak.admin1_lng! : outbreak.lng;
+        const countryFallback = !hasAdmin1 ? getCountryCoords(outbreak.country_en) : null;
+        const pinLat = hasAdmin1 ? outbreak.admin1_lat! : ((outbreak.lat as number | null | undefined) ?? countryFallback?.[0]);
+        const pinLng = hasAdmin1 ? outbreak.admin1_lng! : ((outbreak.lng as number | null | undefined) ?? countryFallback?.[1]);
+        if (pinLat == null || pinLng == null) return;
 
         const circle = L.circleMarker([pinLat, pinLng], {
           radius,

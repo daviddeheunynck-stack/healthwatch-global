@@ -18,6 +18,7 @@ import CsvExportButton from "@/components/CsvExportButton";
 import DataAccessPanel from "@/components/DataAccessPanel";
 import WebhookPanel from "@/components/WebhookPanel";
 import SignalsFeed from "@/components/SignalsFeed";
+import ScheduledReportPanel from "@/components/ScheduledReportPanel";
 import OnboardingTour from "@/components/OnboardingTour";
 import FreePlanBanner from "@/components/FreePlanBanner";
 import DemoBanner from "@/components/DemoBanner";
@@ -367,6 +368,7 @@ async function DashboardContent({ demo = false }: { demo?: boolean }) {
       {isPaid && <DataAccessPanel locale={locale} />}
 
       {isPaid && <WebhookPanel locale={locale} />}
+      {isPaid && <ScheduledReportPanel locale={locale} />}
 
       {isPaid && (
         <div className="rounded-xl border border-amber-800/20 bg-amber-950/10 p-4">

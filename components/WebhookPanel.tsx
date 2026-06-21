@@ -10,7 +10,7 @@ interface WebhookEntry {
   id: string;
   name: string;
   url: string;
-  filters: { regions?: string[]; risk_levels?: string[]; rt_threshold?: number };
+  filters: { regions?: string[]; risk_levels?: string[]; rt_threshold?: number; disease_thresholds?: { disease_en: string; min_cases: number }[] };
   active: boolean;
   last_triggered_at: string | null;
   last_status_code: number | null;
@@ -25,7 +25,7 @@ const COPY: Record<string, {
   lastFired: string; neverFired: string; planError: string;
   secretLabel: string; secretCopied: string; copySecret: string;
   toggle: string; status: (code: number | null) => string;
-  rtThreshold: string; rtNote: string;
+  rtThreshold: string; rtNote: string; diseaseThresholds: string; diseasePlaceholder: string; minCasesLabel: string;
 }> = {
   fr: {
     title: "Webhooks", subtitle: "Recevez un push HTTPS chaque fois qu'un foyer atteint le niveau de risque configuré.",
@@ -39,6 +39,7 @@ const COPY: Record<string, {
     secretLabel: "Secret HMAC", secretCopied: "Copié", copySecret: "Copier le secret",
     toggle: "Activer/désactiver",
     rtThreshold: "Seuil Rt", rtNote: "Déclencher si Rt ≥ ce seuil (ex: 1.5)",
+    diseaseThresholds: "Seuils IHR par maladie", diseasePlaceholder: "Ebola", minCasesLabel: "cas min",
     status: (c) => c === null ? "—" : c >= 200 && c < 300 ? `✓ ${c}` : `✗ ${c}`,
   },
   en: {
@@ -53,6 +54,7 @@ const COPY: Record<string, {
     secretLabel: "HMAC secret", secretCopied: "Copied", copySecret: "Copy secret",
     toggle: "Enable/disable",
     rtThreshold: "Rt threshold", rtNote: "Trigger if Rt ≥ value (e.g. 1.5)",
+    diseaseThresholds: "IHR thresholds per disease", diseasePlaceholder: "Ebola", minCasesLabel: "min cases",
     status: (c) => c === null ? "—" : c >= 200 && c < 300 ? `✓ ${c}` : `✗ ${c}`,
   },
   es: {
@@ -67,6 +69,7 @@ const COPY: Record<string, {
     secretLabel: "Secreto HMAC", secretCopied: "Copiado", copySecret: "Copiar secreto",
     toggle: "Activar/desactivar",
     rtThreshold: "Umbral Rt", rtNote: "Activar si Rt ≥ umbral (ej: 1.5)",
+    diseaseThresholds: "Umbrales IHR por enfermedad", diseasePlaceholder: "Ebola", minCasesLabel: "casos mín",
     status: (c) => c === null ? "—" : c >= 200 && c < 300 ? `✓ ${c}` : `✗ ${c}`,
   },
   ar: {
@@ -81,6 +84,7 @@ const COPY: Record<string, {
     secretLabel: "السر HMAC", secretCopied: "تم النسخ", copySecret: "نسخ السر",
     toggle: "تفعيل/تعطيل",
     rtThreshold: "عتبة Rt", rtNote: "تشغيل إذا Rt ≥ العتبة",
+    diseaseThresholds: "عتبات IHR لكل مرض", diseasePlaceholder: "Ebola", minCasesLabel: "حالات دنيا",
     status: (c) => c === null ? "—" : c !== null && c >= 200 && c < 300 ? `✓ ${c}` : `✗ ${c}`,
   },
   id: {
@@ -95,6 +99,7 @@ const COPY: Record<string, {
     secretLabel: "Rahasia HMAC", secretCopied: "Disalin", copySecret: "Salin secret",
     toggle: "Aktifkan/nonaktifkan",
     rtThreshold: "Ambang Rt", rtNote: "Aktifkan jika Rt ≥ nilai (mis. 1.5)",
+    diseaseThresholds: "Ambang IHR per penyakit", diseasePlaceholder: "Ebola", minCasesLabel: "kasus min",
     status: (c) => c === null ? "—" : c !== null && c >= 200 && c < 300 ? `✓ ${c}` : `✗ ${c}`,
   },
 };
@@ -140,6 +145,9 @@ export default function WebhookPanel({ locale }: Props) {
   const [deletingId,   setDeletingId]   = useState<string | null>(null);
   const [togglingId,   setTogglingId]   = useState<string | null>(null);
   const [rtThreshold,  setRtThreshold]  = useState<number | "">("");
+  const [disThresholds, setDisThresholds] = useState<{ disease_en: string; min_cases: number }[]>([]);
+  const [newDisEn,      setNewDisEn]      = useState("");
+  const [newMinCases,   setNewMinCases]   = useState<number | "">(1);
 
   useEffect(() => {
     if (!open) return;
@@ -162,6 +170,17 @@ export default function WebhookPanel({ locale }: Props) {
     setSelRisks((prev) => prev.includes(r) ? prev.filter((x) => x !== r) : [...prev, r]);
   }
 
+  function addDisThreshold() {
+    const disease = newDisEn.trim();
+    if (!disease) return;
+    const cases = typeof newMinCases === "number" && newMinCases > 0 ? Math.round(newMinCases) : 1;
+    setDisThresholds((prev) => [...prev, { disease_en: disease, min_cases: cases }]);
+    setNewDisEn(""); setNewMinCases(1);
+  }
+  function removeDisThreshold(idx: number) {
+    setDisThresholds((prev) => prev.filter((_, i) => i !== idx));
+  }
+
   async function createWebhook() {
     if (creating) return;
     if (!url.startsWith("https://")) { setFormError("URL must start with https://"); return; }
@@ -176,6 +195,7 @@ export default function WebhookPanel({ locale }: Props) {
           regions: selRegions,
           risk_levels: selRisks.length > 0 ? selRisks : ["high"],
           rt_threshold: rtThreshold !== "" ? Number(rtThreshold) : undefined,
+          disease_thresholds: disThresholds.length > 0 ? disThresholds : undefined,
         }),
       });
       const d = await res.json();
@@ -183,7 +203,7 @@ export default function WebhookPanel({ locale }: Props) {
       if (d.webhook) {
         setWebhooks((prev) => [d.webhook, ...prev]);
         setNewSecret(d.secret);
-        setName(""); setUrl(""); setSelRegions([]); setSelRisks(["high"]); setRtThreshold("");
+        setName(""); setUrl(""); setSelRegions([]); setSelRisks(["high"]); setRtThreshold(""); setDisThresholds([]); setNewDisEn(""); setNewMinCases(1);
         setShowForm(false);
       }
     } catch { setFormError("Network error"); } finally { setCreating(false); }
@@ -333,6 +353,11 @@ export default function WebhookPanel({ locale }: Props) {
                             {`Rt ≥ ${w.filters.rt_threshold}`}
                           </span>
                         )}
+                        {(w.filters?.disease_thresholds ?? []).map((dt, i) => (
+                          <span key={i} className="px-1.5 py-0.5 rounded bg-purple-900/20 border border-purple-700/30 text-purple-400">
+                            {dt.disease_en} ≥{dt.min_cases}
+                          </span>
+                        ))}
                         {!w.active && (
                           <span className="px-1.5 py-0.5 rounded bg-gray-800 border border-gray-700 text-gray-500">
                             {locale === "fr" ? "Désactivé" : locale === "es" ? "Desactivado" : locale === "ar" ? "معطَّل" : locale === "id" ? "Nonaktif" : "Disabled"}
@@ -426,6 +451,43 @@ export default function WebhookPanel({ locale }: Props) {
                         className="w-20 bg-gray-800 border border-gray-700 rounded-lg px-2 py-1 text-xs text-white placeholder-gray-600 focus:outline-none focus:border-gray-500 transition-colors"
                       />
                       <span className="text-[10px] text-gray-600">{c.rtNote}</span>
+                    </div>
+                  </div>
+
+                  {/* IHR disease thresholds */}
+                  <div className="space-y-1.5">
+                    <p className="text-[10px] text-gray-500 uppercase tracking-wide">{c.diseaseThresholds}</p>
+                    {disThresholds.map((dt, idx) => (
+                      <div key={idx} className="flex items-center justify-between gap-2 px-2.5 py-1.5 bg-purple-900/20 border border-purple-700/30 rounded-lg">
+                        <span className="text-[10px] text-purple-300 font-mono">{dt.disease_en} ≥ {dt.min_cases} cas</span>
+                        <button type="button" onClick={() => removeDisThreshold(idx)} className="text-purple-700 hover:text-purple-400 text-sm leading-none">×</button>
+                      </div>
+                    ))}
+                    <div className="flex items-center gap-1.5 flex-wrap">
+                      <input
+                        value={newDisEn}
+                        onChange={(e) => setNewDisEn(e.target.value)}
+                        onKeyDown={(e) => e.key === "Enter" && addDisThreshold()}
+                        placeholder={c.diseasePlaceholder}
+                        maxLength={64}
+                        className="flex-1 min-w-[80px] bg-gray-800 border border-gray-700 rounded-lg px-2 py-1 text-xs text-white placeholder-gray-600 focus:outline-none focus:border-gray-500"
+                      />
+                      <input
+                        type="number" min="1" max="1000000"
+                        value={newMinCases}
+                        onChange={(e) => setNewMinCases(e.target.value === "" ? "" : Number(e.target.value))}
+                        placeholder="1"
+                        className="w-16 bg-gray-800 border border-gray-700 rounded-lg px-2 py-1 text-xs text-white placeholder-gray-600 focus:outline-none focus:border-gray-500"
+                      />
+                      <span className="text-[10px] text-gray-600">{c.minCasesLabel}</span>
+                      <button
+                        type="button"
+                        onClick={addDisThreshold}
+                        disabled={!newDisEn.trim()}
+                        className="px-2 py-1 bg-purple-900/40 hover:bg-purple-900/60 disabled:opacity-40 border border-purple-700/40 text-purple-300 text-xs rounded-lg transition-colors"
+                      >
+                        +
+                      </button>
                     </div>
                   </div>
 
