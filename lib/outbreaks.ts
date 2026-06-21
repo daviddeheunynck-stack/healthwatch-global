@@ -41,6 +41,7 @@ export interface Outbreak {
   updated_at:    string | null; // last sync timestamp
   created_at:    string | null; // first insertion timestamp
   event_id:      string | null; // multi-country cluster linkage
+  ihr_event_id:  string | null; // WHO IHR event reference (Article 6/7)
   verification_status: string; // suspected | under_investigation | confirmed | closed
   response_phase:      string; // monitoring | investigating | active_response | contained
 }

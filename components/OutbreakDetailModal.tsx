@@ -109,6 +109,52 @@ const COMPARE_COPY: Record<string, { title: string; select: string; noHistory: s
   id: { title: "Bandingkan dengan episode sebelumnya", select: "Pilih episode", noHistory: "Tidak ada episode sebelumnya", metric: "Metrik", current: "Saat ini", period: "Periode", cases: "Kasus", deaths: "Kematian", cfr: "CFR", risk: "Risiko", duration: "Durasi (sejak awal)" },
 };
 
+const IHR_COPY: Record<string, {
+  badge: string; banner: string; btnLabel: string; btnCopied: string;
+  notif: string; eventDesc: string; geo: string; onset: string;
+  epi: string; pop: string; measures: string; src: string; lab: string; contact: string;
+}> = {
+  fr: { badge: "RSI", banner: "Événement RSI enregistré — référencé au Siège OMS", btnLabel: "Générer notification Art. 6", btnCopied: "Copié !",
+    notif: "NOTIFICATION RSI — ARTICLE 6 (IHR 2005)", eventDesc: "Description de l'événement", geo: "Zone géographique affectée",
+    onset: "Date d'apparition des premiers cas", epi: "Données épidémiologiques", pop: "Population exposée / à risque",
+    measures: "Mesures prises", src: "Source de l'information", lab: "Confirmation de laboratoire", contact: "Point focal RSI national" },
+  en: { badge: "IHR EVENT", banner: "Active IHR event — referenced at WHO HQ", btnLabel: "Generate Art. 6 notification", btnCopied: "Copied!",
+    notif: "IHR NOTIFICATION — ARTICLE 6 (IHR 2005)", eventDesc: "Event description", geo: "Affected geographic area",
+    onset: "Date of onset of first cases", epi: "Epidemiological data", pop: "Exposed / at-risk population",
+    measures: "Measures taken", src: "Information source", lab: "Laboratory confirmation", contact: "National IHR focal point" },
+  es: { badge: "EVENTO RSI", banner: "Evento RSI activo — referenciado en la sede de la OMS", btnLabel: "Generar notificación Art. 6", btnCopied: "¡Copiado!",
+    notif: "NOTIFICACIÓN RSI — ARTÍCULO 6 (RSI 2005)", eventDesc: "Descripción del evento", geo: "Zona geográfica afectada",
+    onset: "Fecha de aparición de los primeros casos", epi: "Datos epidemiológicos", pop: "Población expuesta / en riesgo",
+    measures: "Medidas adoptadas", src: "Fuente de información", lab: "Confirmación de laboratorio", contact: "Punto focal RSI nacional" },
+  ar: { badge: "حدث RSI", banner: "حدث RSI نشط — مسجل في المقر الرئيسي لمنظمة الصحة العالمية", btnLabel: "إنشاء إشعار المادة 6", btnCopied: "تم النسخ",
+    notif: "إشعار اللوائح الصحية الدولية — المادة 6 (IHR 2005)", eventDesc: "وصف الحدث", geo: "المنطقة الجغرافية المتضررة",
+    onset: "تاريخ ظهور أول حالة", epi: "البيانات الوبائية", pop: "السكان المعرضون / المعرضون للخطر",
+    measures: "التدابير المتخذة", src: "مصدر المعلومات", lab: "التأكيد المخبري", contact: "نقطة الاتصال الوطنية لـ RSI" },
+  id: { badge: "KEJADIAN IHR", banner: "Kejadian IHR aktif — tercatat di Kantor Pusat WHO", btnLabel: "Buat notifikasi Pasal 6", btnCopied: "Disalin!",
+    notif: "NOTIFIKASI IHR — PASAL 6 (IHR 2005)", eventDesc: "Deskripsi kejadian", geo: "Wilayah geografis yang terdampak",
+    onset: "Tanggal onset kasus pertama", epi: "Data epidemiologi", pop: "Populasi yang terpapar / berisiko",
+    measures: "Tindakan yang diambil", src: "Sumber informasi", lab: "Konfirmasi laboratorium", contact: "Focal point IHR nasional" },
+};
+
+const NEIGHBOR_COPY: Record<string, { title: string; noNeighbors: string; km: string }> = {
+  fr: { title: "Pays limitrophes actifs (< 1500 km)", noNeighbors: "Aucun foyer actif dans un rayon de 1500 km", km: "km" },
+  en: { title: "Active neighboring outbreaks (< 1500 km)", noNeighbors: "No active outbreaks within 1500 km", km: "km" },
+  es: { title: "Focos vecinos activos (< 1500 km)", noNeighbors: "Sin focos activos en un radio de 1500 km", km: "km" },
+  ar: { title: "تفشيات نشطة في الدول المجاورة (< 1500 كم)", noNeighbors: "لا توجد تفشيات نشطة في نطاق 1500 كم", km: "كم" },
+  id: { title: "Wabah aktif negara tetangga (< 1500 km)", noNeighbors: "Tidak ada wabah aktif dalam radius 1500 km", km: "km" },
+};
+
+const SUBSCRIBER_COPY: Record<string, {
+  label: string; placeholder: string; add: string; save: string; saving: string;
+  active: string; remove: string; emailList: string;
+}> = {
+  fr: { label: "Alertes email pour ce foyer :", placeholder: "email@exemple.fr", add: "Ajouter", save: "Enregistrer", saving: "Enregistrement…", active: "Liste active", remove: "Supprimer la liste", emailList: "emails enregistrés" },
+  en: { label: "Email alerts for this outbreak:", placeholder: "email@example.com", add: "Add", save: "Save", saving: "Saving…", active: "Active list", remove: "Remove list", emailList: "emails saved" },
+  es: { label: "Alertas de email para este brote:", placeholder: "email@ejemplo.com", add: "Agregar", save: "Guardar", saving: "Guardando…", active: "Lista activa", remove: "Eliminar lista", emailList: "emails guardados" },
+  ar: { label: "تنبيهات البريد الإلكتروني لهذا التفشي:", placeholder: "email@example.com", add: "إضافة", save: "حفظ", saving: "جارٍ الحفظ…", active: "القائمة النشطة", remove: "حذف القائمة", emailList: "بريد إلكتروني محفوظ" },
+  id: { label: "Peringatan email untuk wabah ini:", placeholder: "email@contoh.com", add: "Tambah", save: "Simpan", saving: "Menyimpan…", active: "Daftar aktif", remove: "Hapus daftar", emailList: "email tersimpan" },
+};
+
 interface Props {
   outbreak: Outbreak | null;
   locale: string;
@@ -120,6 +166,7 @@ interface Props {
 
 interface Snapshot { snapped_at: string; cases: number; deaths: number; }
 interface PastOutbreak { id: string; date: string; cases: number; deaths: number; risk_level: string; }
+interface NeighborOutbreak { id: string; disease_en: string | null; country_en: string | null; cases: number; deaths: number; risk_level: string; date: string; distKm: number; }
 interface Note { id: string; note: string; status: string | null; author_email: string; user_id: string; created_at: string; }
 
 const SITREP_COPY: Record<string, {
@@ -217,6 +264,18 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlis
   // Comparison state
   const [compareIdx,   setCompareIdx]   = useState<number>(-1);
 
+  // IHR Article 6 copy
+  const [ihrCopied,    setIhrCopied]    = useState(false);
+
+  // Neighboring country outbreaks
+  const [neighborOutbreaks, setNeighborOutbreaks] = useState<NeighborOutbreak[]>([]);
+  const [neighborLoading,   setNeighborLoading]   = useState(false);
+
+  // Subscriber email list
+  const [subscriberEmails,  setSubscriberEmails]  = useState<string[]>([]);
+  const [subscriberInput,   setSubscriberInput]   = useState("");
+  const [subscriberSaving,  setSubscriberSaving]  = useState(false);
+
   const [notes,       setNotes]       = useState<Note[]>([]);
   const [noteText,    setNoteText]    = useState("");
   const [noteStatus,  setNoteStatus]  = useState<string>("");
@@ -282,6 +341,32 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlis
         const tw = d.tripwires?.[0];
         if (tw) { setTripwire(tw); setTripwireInput(tw.threshold_cases); }
       })
+      .catch(() => {});
+  }, [outbreak?.id, isPaid]);
+
+  // P3 — fetch neighboring country outbreaks
+  useEffect(() => {
+    if (!outbreak || !isPaid) return;
+    setNeighborOutbreaks([]);
+    setNeighborLoading(true);
+    const params = new URLSearchParams({ country_en: outbreak.country_en ?? "" });
+    if (outbreak.lat) params.set("lat", String(outbreak.lat));
+    if (outbreak.lng) params.set("lng", String(outbreak.lng));
+    fetch(`/api/outbreak-neighbors?${params}`)
+      .then((r) => r.json())
+      .then((d) => { if (d.neighbors) setNeighborOutbreaks(d.neighbors); })
+      .catch(() => {})
+      .finally(() => setNeighborLoading(false));
+  }, [outbreak?.id, isPaid]);
+
+  // P4 — fetch existing subscriber email list
+  useEffect(() => {
+    if (!outbreak || !isPaid) return;
+    setSubscriberEmails([]);
+    setSubscriberInput("");
+    fetch(`/api/outbreak-subscribers?outbreak_id=${outbreak.id}`)
+      .then((r) => r.json())
+      .then((d) => { if (d.subscriber?.emails) setSubscriberEmails(d.subscriber.emails); })
       .catch(() => {});
   }, [outbreak?.id, isPaid]);
 
@@ -419,6 +504,11 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlis
                   className="inline-flex items-center gap-1 text-xs px-2 py-0.5 rounded-full bg-purple-900/40 border border-purple-700/50 text-purple-300 font-bold cursor-help"
                 >
                   🚨 PHEIC
+                </span>
+              )}
+              {outbreak.ihr_event_id && (
+                <span className="inline-flex items-center gap-1 text-xs px-2 py-0.5 rounded-full bg-blue-900/40 border border-blue-700/50 text-blue-300 font-bold">
+                  🔵 {(IHR_COPY[locale] ?? IHR_COPY.en).badge} #{outbreak.ihr_event_id}
                 </span>
               )}
               {/* Verification status — hidden for default "suspected" to avoid noise */}
@@ -697,6 +787,14 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlis
           </div>
         )}
 
+        {/* IHR event banner */}
+        {outbreak.ihr_event_id && (
+          <div className="mx-5 mb-3 flex items-start gap-2 bg-blue-900/20 border border-blue-700/30 rounded-xl p-3 text-xs text-blue-300">
+            <span className="shrink-0 text-base">🔵</span>
+            <span>{(IHR_COPY[locale] ?? IHR_COPY.en).banner} — <strong className="font-semibold">#{outbreak.ihr_event_id}</strong></span>
+          </div>
+        )}
+
         {/* PHEIC banner */}
         {outbreak.is_pheic && (
           <div className="mx-5 mb-3 flex items-start gap-2 bg-purple-900/20 border border-purple-700/30 rounded-xl p-3 text-xs text-purple-300">
@@ -928,6 +1026,38 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlis
               {linkCopied ? <Check className="w-3 h-3" /> : <LinkIcon className="w-3 h-3" />}
               {(TRIPWIRE_COPY[locale] ?? TRIPWIRE_COPY.en)[linkCopied ? "linkCopied" : "copyLink"]}
             </button>
+
+            {/* P2 — IHR Article 6 notification template */}
+            <button
+              onClick={async () => {
+                const ic = IHR_COPY[locale] ?? IHR_COPY.en;
+                const cfr = outbreak.cases > 0 ? (outbreak.deaths / outbreak.cases * 100).toFixed(1) : "N/A";
+                const incidence = getIncidenceRate(outbreak.cases, outbreak.country_en);
+                const text = [
+                  ic.notif,
+                  `${locale === "fr" ? "Date de notification" : "Date of notification"}: ${new Date().toISOString().split("T")[0]}`,
+                  "",
+                  `1. ${ic.eventDesc}: ${disease} (${country})`,
+                  `2. ${ic.geo}: ${country}${outbreak.admin1 ? `, ${outbreak.admin1}` : ""}`,
+                  `3. ${ic.onset}: ${outbreak.date}`,
+                  `4. ${ic.epi}: ${outbreak.cases.toLocaleString("en")} ${locale === "fr" ? "cas" : "cases"} / ${outbreak.deaths.toLocaleString("en")} ${locale === "fr" ? "décès" : "deaths"} / CFR ${cfr}%${incidence ? ` / ${incidence.toFixed(1)} ${locale === "fr" ? "pour 100 000" : "per 100,000"}` : ""}`,
+                  `5. ${ic.pop}: [${locale === "fr" ? "à renseigner" : "to fill in"}]`,
+                  `6. ${ic.measures}: [${locale === "fr" ? "à renseigner" : "to fill in"}]`,
+                  `7. ${ic.src}: HealthWatch Global / ${outbreak.source || "OMS / WHO"}`,
+                  `8. ${ic.lab}: [${locale === "fr" ? "à renseigner" : "to fill in"}]`,
+                  `9. ${ic.contact}: [${locale === "fr" ? "à renseigner" : "to fill in"}]`,
+                  "",
+                  `--- ${locale === "fr" ? "Généré via" : "Generated via"} HealthWatch Global — https://healthwatch-global.com`,
+                ].join("\n");
+                await navigator.clipboard.writeText(text);
+                setIhrCopied(true);
+                setTimeout(() => setIhrCopied(false), 2500);
+              }}
+              className={`flex items-center gap-2 text-xs transition-colors ${ihrCopied ? "text-green-400" : "text-gray-500 hover:text-gray-300"}`}
+            >
+              {ihrCopied ? <Check className="w-3 h-3" /> : <FileText className="w-3 h-3" />}
+              {(IHR_COPY[locale] ?? IHR_COPY.en)[ihrCopied ? "btnCopied" : "btnLabel"]}
+            </button>
           </div>
         )}
 
@@ -1047,6 +1177,113 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlis
                       </tr>
                     </tbody>
                   </table>
+                </div>
+              )}
+            </div>
+          );
+        })()}
+
+        {/* P3 — Neighboring country outbreaks */}
+        {isPaid && (
+          <div className="mx-5 mb-3">
+            <p className="text-[10px] font-semibold text-gray-500 uppercase tracking-wide mb-2">
+              {(NEIGHBOR_COPY[locale] ?? NEIGHBOR_COPY.en).title}
+            </p>
+            {neighborLoading ? (
+              <div className="h-4 w-32 bg-gray-800 rounded animate-pulse" />
+            ) : neighborOutbreaks.length === 0 ? (
+              <p className="text-xs text-gray-600 italic">{(NEIGHBOR_COPY[locale] ?? NEIGHBOR_COPY.en).noNeighbors}</p>
+            ) : (
+              <div className="space-y-1">
+                {neighborOutbreaks.map((n) => (
+                  <div key={n.id} className="flex items-center justify-between text-xs gap-2">
+                    <div className="flex items-center gap-1.5 min-w-0">
+                      <span className={`shrink-0 w-1.5 h-1.5 rounded-full ${n.risk_level === "high" ? "bg-red-400" : n.risk_level === "medium" ? "bg-amber-400" : "bg-green-400"}`} />
+                      <span className="text-gray-400 truncate">{n.disease_en ?? "—"}</span>
+                      <span className="text-gray-600">·</span>
+                      <span className="text-gray-500 truncate">{n.country_en ?? "—"}</span>
+                    </div>
+                    <div className="flex items-center gap-2 shrink-0 text-gray-600">
+                      <span className="tabular-nums">{n.cases.toLocaleString("en")}</span>
+                      <span className="text-[10px]">{n.distKm.toLocaleString("en")} {(NEIGHBOR_COPY[locale] ?? NEIGHBOR_COPY.en).km}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* P4 — Outbreak subscriber email list */}
+        {isPaid && (() => {
+          const sc = SUBSCRIBER_COPY[locale] ?? SUBSCRIBER_COPY.en;
+          return (
+            <div className="mx-5 mb-3">
+              <p className="text-[10px] font-semibold text-gray-500 uppercase tracking-wide mb-2">{sc.label}</p>
+              {subscriberEmails.length > 0 ? (
+                <div className="flex items-center gap-2 flex-wrap mb-2">
+                  <span className="text-xs text-green-400">{sc.active} — {subscriberEmails.length} {sc.emailList}</span>
+                  <button
+                    onClick={async () => {
+                      await fetch(`/api/outbreak-subscribers?outbreak_id=${outbreak.id}`, { method: "DELETE" });
+                      setSubscriberEmails([]);
+                    }}
+                    className="text-[10px] text-gray-600 hover:text-red-400 transition-colors underline underline-offset-2"
+                  >{sc.remove}</button>
+                </div>
+              ) : null}
+              <div className="flex items-center gap-1.5 flex-wrap">
+                <input
+                  type="email"
+                  value={subscriberInput}
+                  onChange={(e) => setSubscriberInput(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key !== "Enter") return;
+                    e.preventDefault();
+                    const v = subscriberInput.trim();
+                    if (v && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) && !subscriberEmails.includes(v)) {
+                      setSubscriberEmails((prev) => [...prev, v]);
+                      setSubscriberInput("");
+                    }
+                  }}
+                  placeholder={sc.placeholder}
+                  className="w-48 bg-gray-800 border border-gray-700 rounded-lg px-2 py-1 text-xs text-white placeholder-gray-600 focus:outline-none focus:border-blue-500"
+                />
+                <button
+                  onClick={() => {
+                    const v = subscriberInput.trim();
+                    if (v && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) && !subscriberEmails.includes(v)) {
+                      setSubscriberEmails((prev) => [...prev, v]);
+                      setSubscriberInput("");
+                    }
+                  }}
+                  className="text-xs px-2 py-1 bg-gray-700/60 hover:bg-gray-700 border border-gray-600/40 text-gray-300 rounded-lg transition-colors"
+                >{sc.add}</button>
+                {subscriberEmails.length > 0 && (
+                  <button
+                    disabled={subscriberSaving}
+                    onClick={async () => {
+                      setSubscriberSaving(true);
+                      try {
+                        await fetch("/api/outbreak-subscribers", {
+                          method: "POST",
+                          headers: { "Content-Type": "application/json" },
+                          body: JSON.stringify({ outbreak_id: outbreak.id, emails: subscriberEmails, locale }),
+                        });
+                      } catch { /* ignore */ } finally { setSubscriberSaving(false); }
+                    }}
+                    className="text-xs px-2 py-1 bg-blue-700/40 hover:bg-blue-700/60 disabled:opacity-40 border border-blue-700/40 text-blue-300 rounded-lg transition-colors"
+                  >{subscriberSaving ? sc.saving : sc.save}</button>
+                )}
+              </div>
+              {subscriberEmails.length > 0 && (
+                <div className="flex flex-wrap gap-1 mt-1.5">
+                  {subscriberEmails.map((e) => (
+                    <span key={e} className="inline-flex items-center gap-1 text-[10px] bg-gray-800 border border-gray-700 text-gray-400 rounded-full px-2 py-0.5">
+                      {e}
+                      <button onClick={() => setSubscriberEmails((prev) => prev.filter((x) => x !== e))} className="text-gray-600 hover:text-red-400">×</button>
+                    </span>
+                  ))}
                 </div>
               )}
             </div>
