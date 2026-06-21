@@ -1,6 +1,6 @@
 import Anthropic from "@anthropic-ai/sdk";
 
-// Responses the LLM gives when no specific sub-national location is found
+// Responses Haiku gives when no specific sub-national location is found
 const NOISE_RESPONSES = new Set([
   "none",
   "n/a",
