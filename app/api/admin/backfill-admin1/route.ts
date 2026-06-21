@@ -88,10 +88,10 @@ export async function POST(req: NextRequest) {
     const admin1 = extractAdmin1(textToSearch);
 
     if (!admin1) {
-      // Mark with empty string so we skip on next backfill run
-      await supabase.from("outbreaks").update({ admin1: "" }).eq("id", row.id);
+      // "~" = full-text attempted, no province found — excluded from future runs
+      // (distinguishes from "" = first-pass 400-char miss, still eligible for retry)
+      await supabase.from("outbreaks").update({ admin1: "~" }).eq("id", row.id);
       processed++;
-      // Polite delay even on misses (we already fetched the article)
       await new Promise((r) => setTimeout(r, 500));
       continue;
     }
@@ -111,7 +111,7 @@ export async function POST(req: NextRequest) {
     await new Promise((r) => setTimeout(r, 1100));
   }
 
-  // Count rows still needing backfill (null or empty admin1)
+  // Count rows still needing backfill: null (never attempted) or "" (only tried with 400-char description)
   const { count: remaining } = await supabase
     .from("outbreaks")
     .select("id", { count: "exact", head: true })
