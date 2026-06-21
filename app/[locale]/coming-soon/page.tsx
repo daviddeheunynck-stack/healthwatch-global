@@ -3,24 +3,24 @@ import ComingSoonClient from "./ComingSoonClient";
 
 const OG: Record<string, { title: string; description: string }> = {
   en: {
-    title: "HealthWatch Global — Launching on Product Hunt June 24",
-    description: "Real-time epidemic surveillance for epidemiologists & health ministries. Live on Product Hunt June 24. Preview the dashboard now — no account needed.",
+    title: "HealthWatch Global — Launching on Product Hunt June 25",
+    description: "Real-time epidemic surveillance for epidemiologists & health ministries. Live on Product Hunt June 25. Preview the dashboard now — no account needed.",
   },
   fr: {
-    title: "HealthWatch Global — Lancement sur Product Hunt le 24 juin",
-    description: "Surveillance épidémique en temps réel pour épidémiologistes et ministères de la santé. Lancement sur Product Hunt le 24 juin. Découvrez le tableau de bord dès maintenant.",
+    title: "HealthWatch Global — Lancement sur Product Hunt le 25 juin",
+    description: "Surveillance épidémique en temps réel pour épidémiologistes et ministères de la santé. Lancement sur Product Hunt le 25 juin. Découvrez le tableau de bord dès maintenant.",
   },
   es: {
-    title: "HealthWatch Global — Lanzamiento en Product Hunt el 24 de junio",
-    description: "Vigilancia epidémica en tiempo real para epidemiólogos y ministerios de salud. Lanzamiento en Product Hunt el 24 de junio.",
+    title: "HealthWatch Global — Lanzamiento en Product Hunt el 25 de junio",
+    description: "Vigilancia epidémica en tiempo real para epidemiólogos y ministerios de salud. Lanzamiento en Product Hunt el 25 de junio.",
   },
   ar: {
-    title: "HealthWatch Global — الإطلاق على Product Hunt في 24 يونيو",
-    description: "مراقبة وبائية في الوقت الفعلي لوزارات الصحة والمنظمات غير الحكومية. الإطلاق على Product Hunt في 24 يونيو.",
+    title: "HealthWatch Global — الإطلاق على Product Hunt في 25 يونيو",
+    description: "مراقبة وبائية في الوقت الفعلي لوزارات الصحة والمنظمات غير الحكومية. الإطلاق على Product Hunt في 25 يونيو.",
   },
   id: {
-    title: "HealthWatch Global — Peluncuran di Product Hunt 24 Juni",
-    description: "Pemantauan wabah real-time untuk epidemiolog dan kementerian kesehatan. Peluncuran di Product Hunt 24 Juni.",
+    title: "HealthWatch Global — Peluncuran di Product Hunt 25 Juni",
+    description: "Pemantauan wabah real-time untuk epidemiolog dan kementerian kesehatan. Peluncuran di Product Hunt 25 Juni.",
   },
 };
 

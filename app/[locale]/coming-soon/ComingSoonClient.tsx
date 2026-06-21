@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 
-const LAUNCH_DATE = new Date("2026-06-24T07:01:00Z"); // 00:01 PT
+const LAUNCH_DATE = new Date("2026-06-25T07:30:00Z"); // 09:30 CEST
 
 const COPY: Record<string, {
   eyebrow: string;
@@ -19,7 +19,7 @@ const COPY: Record<string, {
 }> = {
   en: {
     eyebrow: "Launching on Product Hunt",
-    title: "HealthWatch Global goes live\non June 24, 2026",
+    title: "HealthWatch Global goes live\non June 25, 2026",
     subtitle: "Real-time epidemic surveillance for epidemiologists, NGOs & health ministries.\nOfficially launching on Product Hunt in:",
     days: "Days", hours: "Hours", minutes: "Minutes", seconds: "Seconds",
     demoBtn: "Preview the live dashboard →",
@@ -28,7 +28,7 @@ const COPY: Record<string, {
   },
   fr: {
     eyebrow: "Lancement sur Product Hunt",
-    title: "HealthWatch Global arrive\nle 24 juin 2026",
+    title: "HealthWatch Global arrive\nle 25 juin 2026",
     subtitle: "Surveillance épidémique en temps réel pour épidémiologistes, ONG et ministères de la santé.\nLancement officiel sur Product Hunt dans :",
     days: "Jours", hours: "Heures", minutes: "Minutes", seconds: "Secondes",
     demoBtn: "Voir le tableau de bord en direct →",
@@ -37,7 +37,7 @@ const COPY: Record<string, {
   },
   es: {
     eyebrow: "Lanzamiento en Product Hunt",
-    title: "HealthWatch Global llega\nel 24 de junio de 2026",
+    title: "HealthWatch Global llega\nel 25 de junio de 2026",
     subtitle: "Vigilancia epidémica en tiempo real para epidemiólogos, ONG y ministerios de salud.\nLanzamiento oficial en Product Hunt en:",
     days: "Días", hours: "Horas", minutes: "Minutos", seconds: "Segundos",
     demoBtn: "Ver el panel en directo →",
