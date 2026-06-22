@@ -1,4 +1,4 @@
-import { getTranslations, getLocale } from "next-intl/server";
+﻿import { getTranslations, getLocale } from "next-intl/server";
 import { Check, Gift, ArrowRight, Star, Clock, Shield, Mail, Users, Globe, Building2, HeartHandshake, Microscope, Stethoscope, Landmark, RefreshCw } from "lucide-react";
 import PricingCards from "@/components/PricingCards";
 import Link from "next/link";
@@ -516,7 +516,15 @@ export default async function PricingPage({ params }: { params: Promise<{ locale
             </li>
             <li className="flex items-start gap-2">
               <Check className="w-3.5 h-3.5 text-gray-500 shrink-0 mt-0.5" />
-              {locale === "fr" ? "Besoin d'un devis formel avant engagement ? Contactez-nous — nous répondons sous 24h." : locale === "es" ? "¿Necesita un presupuesto formal antes de comprometerse? Cont��ctenos — respondemos en 24h." : locale === "ar" ? "تحتاج إلى عرض سعر رسمي قبل الالتزام؟ تواصلوا معنا — نرد في غضون 24 ساعة." : locale === "id" ? "Butuh penawaran formal sebelum berkomitmen? Hubungi kami — kami merespons dalam 24 jam." : "Need a formal quote before committing? Contact us — we respond within 24h."}
+                            {locale === "fr" ? "Besoin d'un devis formel avant engagement ? Contactez-nous — nous répondons sous 24h." : locale === "es" ? "¿Necesita un presupuesto formal antes de comprometerse? Contáctenos — respondemos en 24h." : locale === "ar" ? "تحتاج إلى عرض سعر رسمي قبل الالتزام؟ تواصلوا معنا — نرد في غضون 24 ساعة." : locale === "id" ? "Butuh penawaran formal sebelum berkomitmen? Hubungi kami — kami merespons dalam 24 jam." : "Need a formal quote before committing? Contact us — we respond within 24h."}
+            </li>
+            <li className="flex items-start gap-2">
+              <Check className="w-3.5 h-3.5 text-gray-500 shrink-0 mt-0.5" />
+              {locale === "fr" ? "Données hébergées en UE — Supabase (Francfort) + Brevo (Paris). Conformité RGPD complète." : locale === "es" ? "Datos alojados en la UE — Supabase (Frankfurt) + Brevo (París). Conformidad RGPD completa." : locale === "ar" ? "البيانات مستضافة في الاتحاد الأوروبي — Supabase (فرانكفورت) + Brevo (باريس). امتثال كامل لـ GDPR." : locale === "id" ? "Data dihosting di UE — Supabase (Frankfurt) + Brevo (Paris). Kepatuhan GDPR penuh." : "Data hosted in the EU — Supabase (Frankfurt) + Brevo (Paris). Full GDPR compliance."}
+            </li>
+            <li className="flex items-start gap-2">
+              <Check className="w-3.5 h-3.5 text-gray-500 shrink-0 mt-0.5" />
+              {locale === "fr" ? "Facturation au nom de votre organisation. Marchés publics et procédures d'achat institutionnel : contactez-nous." : locale === "es" ? "Facturación a nombre de su organización. Contratación pública y compra institucional: contáctenos." : locale === "ar" ? "الفوترة باسم مؤسستك. المشتريات العامة والإجراءات المؤسسية: تواصلوا معنا." : locale === "id" ? "Penagihan atas nama organisasi Anda. Pengadaan publik dan pembelian institusional: hubungi kami." : "Invoicing in your organization's name. Public procurement and institutional purchasing: contact us."}
             </li>
           </ul>
           <Link
