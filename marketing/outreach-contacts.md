@@ -14,7 +14,7 @@
 | 8 | — | GOARN | goarn@who.int | ❌ pas de nom fiable |
 | 9 | Sam Abbott | LSHTM | Email direct | ✅ Sam.Abbott@lshtm.ac.uk |
 | 10 | Dr Mamadou Aliou Barry | Institut Pasteur Dakar | Email direct | ✅ aliou.barry@pasteur.sn |
-| 11 | Lilian Mayieka | KEMRI | Email à vérifier | ⚠️ l***@kemri.go.ke — voir kemri.go.ke/km-rd-staff-profiles |
+| 11 | Lilian Mayieka | KEMRI | Email direct | ✅ lmayieka@kemri.go.ke |
 | 12 | Prof. Lê Văn Tấn | OUCRU | Email direct | ✅ tanlv@oucru.org |
 
 ## Contacts en cours de conversation (hors outreach 25 juin)
