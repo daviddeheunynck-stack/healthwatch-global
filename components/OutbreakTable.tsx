@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo, useCallback, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { Search, X, ChevronUp, ChevronDown, ChevronsUpDown, Download, Lock, TrendingUp, TrendingDown, Minus, ExternalLink, SlidersHorizontal } from "lucide-react";
 import Link from "next/link";
 import OutbreakDetailModal from "@/components/OutbreakDetailModal";
@@ -148,6 +149,7 @@ function TrendBar({ trend }: { trend?: OutbreakTrend }) {
 interface DefaultFilters {
   region:  Region;
   country: string;
+  risk?:   Risk;
 }
 
 interface Props {
@@ -175,6 +177,7 @@ function SortIcon({ col, activeKey, dir }: { col: SortKey; activeKey: SortKey; d
 
 export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, trends, defaultFilters, diseaseWatchlist, countryTags = {} }: Props) {
   const { openModal } = useUpgradeModal();
+  const router = useRouter();
   const [watchlist, setWatchlist] = useState<Set<string>>(new Set());
   const [search,   setSearch]    = useState("");
   const [region,   setRegion]    = useState<Region>(defaultFilters?.region  ?? "all");
@@ -183,7 +186,7 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
   const [dateFrom, setDateFrom]  = useState<string>("");
   const [dateTo,   setDateTo]    = useState<string>("");
   const [selected, setSelected]  = useState<Outbreak | null>(null);
-  const [risk,         setRisk]         = useState<Risk>("all");
+  const [risk,         setRisk]         = useState<Risk>(defaultFilters?.risk ?? "all");
   const [cfrFilter,    setCfrFilter]    = useState<CfrFilter>("all");
   const [sourceFilter, setSourceFilter] = useState<SourceFilter>("all");
   const [sortKey,          setSortKey]          = useState<SortKey>("risk");
@@ -195,6 +198,15 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
   const [admin1Filter,     setAdmin1Filter]     = useState("");
   const [epiWeekMode,      setEpiWeekMode]      = useState(false);
   const [ageMode,          setAgeMode]          = useState(false);
+
+  // Sync region + risk to URL so shared links preserve filter state
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (region !== "all") params.set("region", region); else params.delete("region");
+    if (risk   !== "all") params.set("risk",   risk);   else params.delete("risk");
+    const qs = params.toString();
+    router.replace(qs ? `?${qs}` : window.location.pathname, { scroll: false });
+  }, [region, risk]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Load watchlist IDs on mount (Pro users only)
   useEffect(() => {

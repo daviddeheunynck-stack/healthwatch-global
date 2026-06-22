@@ -164,7 +164,10 @@ export async function generateMetadata({
   };
 }
 
-async function DashboardContent({ demo = false }: { demo?: boolean }) {
+const VALID_REGIONS = new Set(["all","africa","asia","americas","europe","oceania"]);
+const VALID_RISKS   = new Set(["all","high","medium","low"]);
+
+async function DashboardContent({ demo = false, urlRegion, urlRisk }: { demo?: boolean; urlRegion?: string; urlRisk?: string }) {
   const locale = await getLocale();
   const t = await getTranslations("dashboard");
   const tRisk = await getTranslations("risk");
@@ -416,10 +419,11 @@ async function DashboardContent({ demo = false }: { demo?: boolean }) {
           isPaid={isPaid}
           labels={tableLabels}
           trends={trends}
-          defaultFilters={displayFilters ? {
-            region:  (displayFilters.region  as "all" | "africa" | "asia" | "europe" | "americas" | "oceania") ?? "all",
-            country: displayFilters.country ?? "all",
-          } : undefined}
+          defaultFilters={{
+            region:  (VALID_REGIONS.has(urlRegion ?? "") ? urlRegion : displayFilters?.region ?? "all") as "all" | "africa" | "asia" | "europe" | "americas" | "oceania",
+            country: displayFilters?.country ?? "all",
+            risk:    (VALID_RISKS.has(urlRisk ?? "") ? urlRisk : "all") as "all" | "high" | "medium" | "low",
+          }}
           diseaseWatchlist={diseaseWatchlist.length > 0 ? diseaseWatchlist : undefined}
           countryTags={Object.keys(countryTagsMap).length > 0 ? countryTagsMap : undefined}
         />
@@ -553,7 +557,11 @@ export default async function DashboardPage({
           {t("loading")}
         </div>
       }>
-        <DashboardContent demo={isDemo && !user} />
+        <DashboardContent
+          demo={isDemo && !user}
+          urlRegion={typeof sp.region === "string" ? sp.region : undefined}
+          urlRisk={typeof sp.risk === "string" ? sp.risk : undefined}
+        />
       </Suspense>
     </div>
   );
