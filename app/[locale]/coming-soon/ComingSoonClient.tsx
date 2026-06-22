@@ -46,7 +46,7 @@ const COPY: Record<string, {
   },
   ar: {
     eyebrow: "الإطلاق على Product Hunt",
-    title: "HealthWatch Global ينطلق\nفي 24 يونيو 2026",
+    title: "HealthWatch Global ينطلق\nفي 25 يونيو 2026",
     subtitle: "مراقبة وبائية في الوقت الفعلي للأوبئة والمنظمات غير الحكومية ووزارات الصحة.\nالإطلاق الرسمي على Product Hunt بعد:",
     days: "أيام", hours: "ساعات", minutes: "دقائق", seconds: "ثوان",
     demoBtn: "← تجربة لوحة التحكم مباشرةً",
@@ -55,7 +55,7 @@ const COPY: Record<string, {
   },
   id: {
     eyebrow: "Peluncuran di Product Hunt",
-    title: "HealthWatch Global hadir\n24 Juni 2026",
+    title: "HealthWatch Global hadir\n25 Juni 2026",
     subtitle: "Pemantauan wabah real-time untuk epidemiolog, LSM & kementerian kesehatan.\nPeluncuran resmi di Product Hunt dalam:",
     days: "Hari", hours: "Jam", minutes: "Menit", seconds: "Detik",
     demoBtn: "Coba dasbor langsung →",
@@ -130,9 +130,14 @@ export default function ComingSoonClient({ locale }: { locale: string }) {
           ))}
         </div>
       ) : (
-        <div className="text-2xl font-bold text-[#ff6154] mb-12">
-          🎉 We&apos;re live!
-        </div>
+        <a
+          href="https://www.producthunt.com/posts/healthwatch-global"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-2xl font-bold text-[#ff6154] mb-12 hover:underline"
+        >
+          🎉 We&apos;re live on Product Hunt →
+        </a>
       )}
 
       {/* CTAs */}
