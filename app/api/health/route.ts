@@ -38,7 +38,7 @@ export async function GET() {
       const hours = Math.floor(
         (Date.now() - new Date(latest.updated_at).getTime()) / 3_600_000
       );
-      checks.data_freshness = hours < 12 ? "ok" : "error";
+      checks.data_freshness = hours < 48 ? "ok" : "error";
     } else {
       checks.data_freshness = "error";
     }
