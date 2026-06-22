@@ -30,6 +30,7 @@ import DemoBanner from "@/components/DemoBanner";
 import CountryScorecardTab from "@/components/CountryScorecardTab";
 import GeofenceAlertPanel from "@/components/GeofenceAlertPanel";
 import CountryRiskAlertPanel from "@/components/CountryRiskAlertPanel";
+import AlertLocalePanel from "@/components/AlertLocalePanel";
 import ResolvedOutbreaksWidget from "@/components/ResolvedOutbreaksWidget";
 import APIKeyPanel from "@/components/APIKeyPanel";
 import DigestPanel from "@/components/DigestPanel";
@@ -419,6 +420,7 @@ async function DashboardContent({ demo = false }: { demo?: boolean }) {
       {isPaid && <DiseaseWatchlistPanel locale={locale} initialWatchlist={diseaseWatchlist} />}
       {isPaid && <GeofenceAlertPanel locale={locale} />}
       {isPaid && <CountryRiskAlertPanel locale={locale} />}
+      {isPaid && <AlertLocalePanel locale={locale} />}
       {isPaid && <WebhookPanel locale={locale} />}
       {isPaid && <ScheduledReportPanel locale={locale} />}
       {isPaid && <OrgPanel locale={locale} />}

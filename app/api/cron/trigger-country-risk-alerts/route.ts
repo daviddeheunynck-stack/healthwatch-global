@@ -29,6 +29,13 @@ export async function GET(req: NextRequest) {
 
   if (!alerts?.length) return Response.json({ fired: 0 });
 
+  const alertUserIds = [...new Set(alerts.map((a) => a.user_id as string))];
+  const { data: profileLocales } = await supabase
+    .from("profiles").select("id, alert_locale").in("id", alertUserIds);
+  const localeMap: Record<string, string> = Object.fromEntries(
+    (profileLocales ?? []).map((p: { id: string; alert_locale?: string | null }) => [p.id, p.alert_locale ?? "en"])
+  );
+
   const cooldownCutoff = new Date(Date.now() - COOLDOWN_H * 3_600_000).toISOString();
   let fired = 0;
 
@@ -46,24 +53,45 @@ export async function GET(req: NextRequest) {
     );
     if (!matches.length) continue;
 
+    const locale = localeMap[alert.user_id] ?? "en";
     const top = matches[0];
     const pheic = top.is_pheic ? " [PHEIC]" : "";
     const cfr =
       top.cases > 0 && top.deaths > 0
         ? `CFR ${(top.deaths / top.cases * 100).toFixed(1)}%`
         : "";
+    const level = (top.risk_level ?? "unknown").toUpperCase();
 
-    const subject = `[HealthWatch] ${alert.country_en} — ${(top.risk_level ?? "unknown").toUpperCase()}${pheic}: ${top.disease_en}`;
+    const subject = `[HealthWatch] ${alert.country_en} — ${level}${pheic}: ${top.disease_en}`;
+
+    const INTRO: Record<string, string> = {
+      fr: `Un foyer à risque <strong>${level}</strong> a été détecté en <strong>${alert.country_en}</strong>.`,
+      es: `Se ha detectado un brote de riesgo <strong>${level}</strong> en <strong>${alert.country_en}</strong>.`,
+      ar: `تم رصد تفشٍّ ذو خطر <strong>${level}</strong> في <strong>${alert.country_en}</strong>.`,
+      id: `Wabah berisiko <strong>${level}</strong> terdeteksi di <strong>${alert.country_en}</strong>.`,
+      en: `A <strong>${level}</strong> risk outbreak has been detected in <strong>${alert.country_en}</strong>.`,
+    };
+    const LABELS: Record<string, [string, string, string, string, string]> = {
+      fr: ["Maladie", "Cas", "🚨 PHEIC déclaré", "Signalé le", "Voir le tableau de bord →"],
+      es: ["Enfermedad", "Casos", "🚨 PHEIC declarado", "Reportado", "Ver panel →"],
+      ar: ["المرض", "الحالات", "🚨 إعلان PHEIC", "تاريخ الإبلاغ", "عرض لوحة المعلومات ←"],
+      id: ["Penyakit", "Kasus", "🚨 PHEIC dideklarasikan", "Dilaporkan", "Lihat dasbor →"],
+      en: ["Disease", "Cases", "🚨 PHEIC declared", "Reported", "View dashboard →"],
+    };
+    const lb = LABELS[locale] ?? LABELS.en;
+    const intro = INTRO[locale] ?? INTRO.en;
+    const dashUrl = `https://healthwatch-global.com/${locale}`;
+
     const html = `
-<p>A <strong>${(top.risk_level ?? "unknown").toUpperCase()}</strong> risk outbreak has been detected in <strong>${alert.country_en}</strong>.</p>
+<p>${intro}</p>
 <ul>
-  <li>Disease: ${top.disease_en}</li>
-  <li>Cases: ${(top.cases ?? 0).toLocaleString("en")}${cfr ? ` · ${cfr}` : ""}</li>
-  ${top.is_pheic ? "<li>🚨 PHEIC declared</li>" : ""}
-  <li>Reported: ${top.date}</li>
+  <li>${lb[0]}: ${top.disease_en}</li>
+  <li>${lb[1]}: ${(top.cases ?? 0).toLocaleString("en")}${cfr ? ` · ${cfr}` : ""}</li>
+  ${top.is_pheic ? `<li>${lb[2]}</li>` : ""}
+  <li>${lb[3]}: ${top.date}</li>
   ${matches.length > 1 ? `<li>+${matches.length - 1} other outbreak(s) in this country</li>` : ""}
 </ul>
-<p><a href="https://healthwatch-global.com/en">View dashboard →</a></p>
+<p><a href="${dashUrl}">${lb[4]}</a></p>
 <hr/>
 <p style="color:#666;font-size:12px">HealthWatch Global · Manage alerts in your dashboard</p>`;
 

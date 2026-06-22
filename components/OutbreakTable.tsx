@@ -312,6 +312,14 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
 
   const hasFilters = search !== "" || region !== "all" || country !== "all" || risk !== "all" || cfrFilter !== "all" || sourceFilter !== "all" || dateFrom !== "" || dateTo !== "" || watchlistOnly || admin1Filter !== "";
 
+  useEffect(() => {
+    const highCount = sorted.filter((o) => o.risk_level === "high").length;
+    document.title = highCount > 0
+      ? `(${highCount} HIGH) HealthWatch Global`
+      : "HealthWatch Global";
+    return () => { document.title = "HealthWatch Global"; };
+  }, [sorted]);
+
   // P2: multi-country event clusters — how many countries share the same event_id
   const eventClusters = useMemo(() => {
     const map = new Map<string, number>();

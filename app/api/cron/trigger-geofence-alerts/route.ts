@@ -39,6 +39,13 @@ export async function GET(req: NextRequest) {
     .select("id, user_id, label, lat, lng, radius_km, email, last_fired_at");
   if (!alerts?.length) return NextResponse.json({ ok: true, fired: 0 });
 
+  const alertUserIds = [...new Set((alerts as GeofenceAlert[]).map((a) => a.user_id))];
+  const { data: profileLocales } = await supabase
+    .from("profiles").select("id, alert_locale").in("id", alertUserIds);
+  const localeMap: Record<string, string> = Object.fromEntries(
+    (profileLocales ?? []).map((p: { id: string; alert_locale?: string | null }) => [p.id, p.alert_locale ?? "en"])
+  );
+
   const { data: outbreaks } = await supabase
     .from("outbreaks")
     .select("id, disease_en, country_en, cases, risk_level, lat, lng")
@@ -62,6 +69,30 @@ export async function GET(req: NextRequest) {
 
     if (!matches.length) continue;
 
+    const locale   = localeMap[alert.user_id] ?? "en";
+    const plural   = matches.length > 1;
+    const emailSubject = {
+      fr: `[HealthWatch] Alerte zone : ${matches.length} foyer${plural ? "s" : ""} près de ${alert.label}`,
+      es: `[HealthWatch] Alerta de zona: ${matches.length} brote${plural ? "s" : ""} cerca de ${alert.label}`,
+      ar: `[HealthWatch] تنبيه المنطقة: ${matches.length} تفشٍّ بالقرب من ${alert.label}`,
+      id: `[HealthWatch] Peringatan zona: ${matches.length} wabah dekat ${alert.label}`,
+      en: `[HealthWatch] Geofence alert: ${matches.length} outbreak${plural ? "s" : ""} near ${alert.label}`,
+    }[locale] ?? `[HealthWatch] Geofence alert: ${matches.length} outbreak${plural ? "s" : ""} near ${alert.label}`;
+    const emailHeader = {
+      fr: "HealthWatch Global — Alerte de zone",
+      es: "HealthWatch Global — Alerta de zona",
+      ar: "HealthWatch Global — تنبيه المنطقة",
+      id: "HealthWatch Global — Peringatan zona",
+      en: "HealthWatch Global — Geofence Alert",
+    }[locale] ?? "HealthWatch Global — Geofence Alert";
+    const emailIntro = {
+      fr: `📍 <strong style="color:#fff">${alert.label}</strong> — ${matches.length} foyer${plural ? "s" : ""} actif${plural ? "s" : ""} dans un rayon de <strong>${alert.radius_km} km</strong>`,
+      es: `📍 <strong style="color:#fff">${alert.label}</strong> — ${matches.length} brote${plural ? "s" : ""} activo${plural ? "s" : ""} en un radio de <strong>${alert.radius_km} km</strong>`,
+      ar: `📍 <strong style="color:#fff">${alert.label}</strong> — ${matches.length} تفشٍّ نشط في نطاق <strong>${alert.radius_km} كم</strong>`,
+      id: `📍 <strong style="color:#fff">${alert.label}</strong> — ${matches.length} wabah aktif dalam radius <strong>${alert.radius_km} km</strong>`,
+      en: `📍 <strong style="color:#fff">${alert.label}</strong> — ${matches.length} active outbreak${plural ? "s" : ""} within <strong>${alert.radius_km} km</strong>`,
+    }[locale] ?? `📍 <strong style="color:#fff">${alert.label}</strong> — ${matches.length} active outbreak${plural ? "s" : ""} within <strong>${alert.radius_km} km</strong>`;
+
     const rows = matches.slice(0, 8).map((o) =>
       `<tr><td style="padding:4px 8px">${o.disease_en ?? "—"}</td><td style="padding:4px 8px">${o.country_en ?? "—"}</td><td style="padding:4px 8px;text-align:right">${o.cases.toLocaleString("en")}</td><td style="padding:4px 8px;text-transform:uppercase;font-size:11px;font-weight:700;color:${o.risk_level === "high" ? "#f87171" : o.risk_level === "medium" ? "#fbbf24" : "#4ade80"}">${o.risk_level}</td></tr>`
     ).join("");
@@ -78,14 +109,14 @@ export async function GET(req: NextRequest) {
       await resend.emails.send({
         from:    "HealthWatch Global <alerts@healthwatch-global.com>",
         to:      alert.email,
-        subject: `[HealthWatch] Geofence alert: ${matches.length} outbreak${matches.length > 1 ? "s" : ""} near ${alert.label}`,
+        subject: emailSubject,
         html: `
 <div style="font-family:sans-serif;max-width:520px;margin:0 auto;padding:24px;background:#0f172a;color:#e2e8f0;border-radius:12px">
-  <p style="color:#60a5fa;font-size:17px;font-weight:700;margin:0 0 4px">HealthWatch Global — Geofence Alert</p>
+  <p style="color:#60a5fa;font-size:17px;font-weight:700;margin:0 0 4px">${emailHeader}</p>
   <p style="font-size:12px;color:#64748b;margin:0 0 16px">${new Date().toISOString().split("T")[0]}</p>
   <hr style="border:none;border-top:1px solid #334155;margin:0 0 16px"/>
   <p style="font-size:14px;margin:0 0 4px">
-    📍 <strong style="color:#fff">${alert.label}</strong> — ${matches.length} active outbreak${matches.length > 1 ? "s" : ""} within <strong>${alert.radius_km} km</strong>
+    ${emailIntro}
   </p>
   <p style="font-size:12px;color:#94a3b8;margin:0 0 16px">Coordinates: ${alert.lat.toFixed(4)}, ${alert.lng.toFixed(4)}</p>
   <table style="width:100%;border-collapse:collapse;font-size:13px">
