@@ -414,6 +414,14 @@ export default async function PricingPage({ params }: { params: Promise<{ locale
         </div>
       </div>
 
+      {/* ── API docs link for Enterprise ─────────────────────────────────── */}
+      <p className="text-center text-xs text-gray-500">
+        {locale === "fr" ? "Accès API REST (Enterprise) — " : locale === "es" ? "Acceso REST API (Enterprise) — " : locale === "ar" ? "وصول REST API (Enterprise) — " : locale === "id" ? "Akses REST API (Enterprise) — " : "REST API access (Enterprise) — "}
+        <Link href={`/${locale}/docs`} className="text-purple-400 hover:text-purple-300 underline transition-colors">
+          {locale === "fr" ? "voir la documentation →" : locale === "es" ? "ver documentación →" : locale === "ar" ? "← عرض التوثيق" : locale === "id" ? "lihat dokumentasi →" : "view API docs →"}
+        </Link>
+      </p>
+
       {/* ── Designed for — organisation types ────────────────────────────── */}
       <div className="space-y-5">
         <p className="text-center text-xs text-gray-500 uppercase tracking-widest font-semibold">
