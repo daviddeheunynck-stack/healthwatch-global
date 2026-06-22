@@ -74,9 +74,24 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 
+  const TEST_EMAILS = [
+    "shintayuliawati28@gmail.com",
+    "analin1309@gmail.com",
+    "e2e@healthwatch-global.com",
+  ];
+  const isTestAccount = (email: string) => {
+    const e = email.toLowerCase();
+    return (
+      e.includes("deheunynck") ||
+      e.includes("healthwatch-test.dev") ||
+      e.startsWith("test-e2e") ||
+      TEST_EMAILS.includes(e)
+    );
+  };
+
   const targets = (profiles ?? [])
     .map((p) => ({ email: p.email as string, locale: (p.locale as string) ?? "fr" }))
-    .filter((p) => p.email && p.email.includes("@"));
+    .filter((p) => p.email && p.email.includes("@") && !isTestAccount(p.email));
 
   if (dry) {
     return NextResponse.json({ dry: true, total: targets.length, preview: targets.slice(0, 5).map((p) => p.email) });
