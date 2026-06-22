@@ -32,6 +32,7 @@ const LABELS = {
     date: "Date", region: "Région",
     compareLabel: "Comparer",
     printReport: "Rapport PDF",
+    lastSynced: "Vérifié par HealthWatch",
     sourceVerified: "Bulletin OMS officiel", sourceOfficial: "Source officielle",
     pheic: "URGENCE SANITAIRE INTERNATIONALE (PHEIC)",
     archived: "Foyer terminé — données archivées",
@@ -53,6 +54,7 @@ const LABELS = {
     cases: "Confirmed cases", deaths: "Deaths", cfr: "Case fatality rate",
     date: "Report date", region: "Region",
     printReport: "PDF Report",
+    lastSynced: "Last checked by HealthWatch",
     sourceVerified: "Official WHO Disease Outbreak News", sourceOfficial: "Official source",
     pheic: "PUBLIC HEALTH EMERGENCY OF INTERNATIONAL CONCERN (PHEIC)",
     archived: "Outbreak resolved — archived data",
@@ -75,6 +77,7 @@ const LABELS = {
     cases: "Casos confirmados", deaths: "Fallecidos", cfr: "Tasa de letalidad",
     date: "Fecha del informe", region: "Región",
     printReport: "Informe PDF",
+    lastSynced: "Última verificación por HealthWatch",
     sourceVerified: "Boletín oficial OMS", sourceOfficial: "Fuente oficial",
     pheic: "EMERGENCIA DE SALUD PÚBLICA DE IMPORTANCIA INTERNACIONAL (ESPII)",
     archived: "Brote resuelto — datos archivados",
@@ -97,6 +100,7 @@ const LABELS = {
     cases: "الحالات المؤكدة", deaths: "الوفيات", cfr: "معدل الوفيات",
     date: "تاريخ التقرير", region: "المنطقة",
     printReport: "تقرير PDF",
+    lastSynced: "آخر تحقق بواسطة HealthWatch",
     sourceVerified: "نشرة منظمة الصحة العالمية الرسمية", sourceOfficial: "مصدر رسمي",
     pheic: "طوارئ الصحة العمومية التي تثير قلقاً دولياً",
     archived: "انتهى التفشي — بيانات مؤرشفة",
@@ -119,6 +123,7 @@ const LABELS = {
     cases: "Kasus terkonfirmasi", deaths: "Kematian", cfr: "Tingkat kematian",
     date: "Tanggal laporan", region: "Wilayah",
     printReport: "Laporan PDF",
+    lastSynced: "Terakhir dicek oleh HealthWatch",
     sourceVerified: "Buletin resmi WHO", sourceOfficial: "Sumber resmi",
     pheic: "KEDARURATAN KESEHATAN MASYARAKAT YANG MERESAHKAN DUNIA (KKMMD)",
     archived: "Wabah selesai — data diarsipkan",
@@ -137,7 +142,7 @@ const LABELS = {
     reportingLag: "Tanggal laporan resmi — di zona terisolasi, onset di lapangan biasanya mendahului tanggal ini beberapa hari hingga minggu.",
     staleBulletin: (d: number) => `Tidak ada buletin resmi dalam ${d} hari — mungkin sudah selesai atau tidak dilaporkan.`,
   },
-} satisfies Record<string, { cases: string; deaths: string; cfr: string; date: string; region: string; printReport: string; sourceVerified: string; sourceOfficial: string; pheic: string; archived: string; ctaTitle: string; ctaSub: string; ctaProBtn: string; ctaFree: string; back: string; compareLabel: string; chartTitle: string; noData: string; risk: Record<string, string>; fpGuidance: string; tierLabels: Record<string, string>; firstActions: string; reportingLag: string; staleBulletin: (d: number) => string }>;
+} satisfies Record<string, { cases: string; deaths: string; cfr: string; date: string; region: string; printReport: string; lastSynced: string; sourceVerified: string; sourceOfficial: string; pheic: string; archived: string; ctaTitle: string; ctaSub: string; ctaProBtn: string; ctaFree: string; back: string; compareLabel: string; chartTitle: string; noData: string; risk: Record<string, string>; fpGuidance: string; tierLabels: Record<string, string>; firstActions: string; reportingLag: string; staleBulletin: (d: number) => string }>;
 
 const RISK_STYLE: Record<string, string> = {
   high:   "text-red-400 bg-red-500/10 border-red-500/30",
@@ -457,7 +462,7 @@ export default async function OutbreakPage({
 
       {/* Source link */}
       {status !== "unverified" && o.source && (
-        <div className="mb-6 text-sm flex items-center gap-2">
+        <div className="mb-2 text-sm flex items-center gap-2">
           <a
             href={o.source}
             target="_blank"
@@ -467,6 +472,19 @@ export default async function OutbreakPage({
             {status === "don" ? l.sourceVerified : l.sourceOfficial}
           </a>
           <span className="text-gray-600">↗</span>
+        </div>
+      )}
+      {/* Last synced timestamp */}
+      {o.updated_at && (
+        <div className="mb-6 text-xs text-gray-500 flex items-center gap-1">
+          <span>🔄</span>
+          <span>{l.lastSynced} : {(() => {
+            const mins = Math.round((Date.now() - new Date(o.updated_at!).getTime()) / 60_000);
+            if (mins < 60)  return `${mins} min ago`;
+            const hrs = Math.floor(mins / 60);
+            if (hrs < 24)   return `${hrs}h ago`;
+            return `${Math.floor(hrs / 24)}d ago`;
+          })()}</span>
         </div>
       )}
 
