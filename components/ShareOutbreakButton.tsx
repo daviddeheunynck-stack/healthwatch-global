@@ -170,6 +170,7 @@ export default function ShareOutbreakButton({ disease, country, cases, deaths, r
   const [open,         setOpen]         = useState(false);
   const [copied,       setCopied]       = useState(false);
   const [copiedReport, setCopiedReport] = useState(false);
+  const [canShare,     setCanShare]     = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   const c   = SHARE_COPY[locale] ?? SHARE_COPY.en;
 
@@ -185,6 +186,11 @@ export default function ShareOutbreakButton({ disease, country, cases, deaths, r
   const linkedinUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}&summary=${encoded}`;
   const whatsappUrl = `https://wa.me/?text=${encoded}%20${encodedUrl}`;
 
+  // Detect Web Share API (available on mobile browsers)
+  useEffect(() => {
+    setCanShare(typeof navigator.share === "function");
+  }, []);
+
   // Close on outside click
   useEffect(() => {
     function handler(e: MouseEvent) {
@@ -193,6 +199,14 @@ export default function ShareOutbreakButton({ disease, country, cases, deaths, r
     document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
   }, []);
+
+  async function nativeShare() {
+    try {
+      await navigator.share({ title: `${disease} — ${country}`, text, url: pageUrl });
+    } catch {
+      // user cancelled — no-op
+    }
+  }
 
   async function copyLink() {
     await navigator.clipboard.writeText(`${text}\n${pageUrl}`);
@@ -209,7 +223,7 @@ export default function ShareOutbreakButton({ disease, country, cases, deaths, r
   return (
     <div ref={ref} className="relative">
       <button
-        onClick={() => setOpen(!open)}
+        onClick={() => canShare ? nativeShare() : setOpen(!open)}
         title="Partager"
         className={compact
           ? "p-1.5 rounded hover:bg-gray-700 text-gray-500 hover:text-gray-300 transition-colors"
