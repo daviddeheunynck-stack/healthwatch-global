@@ -337,6 +337,7 @@ export default async function OutbreakPage({
             disease={disease}
             country={country}
             cases={o.cases}
+            deaths={o.deaths}
             riskLevel={o.risk_level}
             locale={locale}
             outbreakId={id}

@@ -21,6 +21,7 @@ interface Props {
   disease:    string;
   country:    string;
   cases:      number;
+  deaths?:    number;
   riskLevel:  string;
   locale:     string;
   outbreakId?: string;
@@ -35,42 +36,52 @@ const RISK_EMOJI: Record<string, string> = {
 };
 
 const SHARE_COPY: Record<string, {
-  tweet:      (disease: string, country: string, cases: number, risk: string) => string;
+  tweet:      (disease: string, country: string, cases: number, deaths: number | undefined, risk: string) => string;
   copied:     string;
   copyLink:   string;
   shareLabel: string;
 }> = {
   fr: {
-    tweet: (d, c, n, r) =>
-      `${RISK_EMOJI[r] ?? "⚠️"} Foyer OMS : ${d} en ${c} — ${n.toLocaleString("en")} cas confirmés. Suivi toutes les 6h sur HealthWatch Global.`,
+    tweet: (d, c, n, deaths, r) => {
+      const cfr = (deaths && n > 0) ? ` · ${deaths} décès · létalité ${(deaths / n * 100).toFixed(1)}%` : "";
+      return `${RISK_EMOJI[r] ?? "⚠️"} Foyer OMS : ${d} en ${c} — ${n.toLocaleString("en")} cas${cfr}. Suivi en temps réel sur HealthWatch Global.`;
+    },
     copied:     "Lien copié !",
     copyLink:   "Copier le lien",
     shareLabel: "Partager",
   },
   en: {
-    tweet: (d, c, n, r) =>
-      `${RISK_EMOJI[r] ?? "⚠️"} WHO outbreak: ${d} in ${c} — ${n.toLocaleString("en")} confirmed cases. Tracked every 6h on HealthWatch Global.`,
+    tweet: (d, c, n, deaths, r) => {
+      const cfr = (deaths && n > 0) ? ` · ${deaths} deaths · CFR ${(deaths / n * 100).toFixed(1)}%` : "";
+      return `${RISK_EMOJI[r] ?? "⚠️"} WHO outbreak: ${d} in ${c} — ${n.toLocaleString("en")} cases${cfr}. Live on HealthWatch Global.`;
+    },
     copied:     "Link copied!",
     copyLink:   "Copy link",
     shareLabel: "Share",
   },
   es: {
-    tweet: (d, c, n, r) =>
-      `${RISK_EMOJI[r] ?? "⚠️"} Brote OMS: ${d} en ${c} — ${n.toLocaleString("en")} casos confirmados. Seguimiento cada 6h en HealthWatch Global.`,
+    tweet: (d, c, n, deaths, r) => {
+      const cfr = (deaths && n > 0) ? ` · ${deaths} fallecidos · letalidad ${(deaths / n * 100).toFixed(1)}%` : "";
+      return `${RISK_EMOJI[r] ?? "⚠️"} Brote OMS: ${d} en ${c} — ${n.toLocaleString("en")} casos${cfr}. Seguimiento en tiempo real en HealthWatch Global.`;
+    },
     copied:     "¡Enlace copiado!",
     copyLink:   "Copiar enlace",
     shareLabel: "Compartir",
   },
   ar: {
-    tweet: (d, c, n, r) =>
-      `${RISK_EMOJI[r] ?? "⚠️"} تفشٍّ OMS: ${d} في ${c} — ${n.toLocaleString("en")} حالة مؤكدة. متابعة كل 6 ساعات على HealthWatch Global.`,
+    tweet: (d, c, n, deaths, r) => {
+      const cfr = (deaths && n > 0) ? ` · ${deaths} وفاة · معدل الوفيات ${(deaths / n * 100).toFixed(1)}%` : "";
+      return `${RISK_EMOJI[r] ?? "⚠️"} تفشٍّ OMS: ${d} في ${c} — ${n.toLocaleString("en")} حالة${cfr}. متابعة مباشرة على HealthWatch Global.`;
+    },
     copied:     "تم نسخ الرابط!",
     copyLink:   "نسخ الرابط",
     shareLabel: "مشاركة",
   },
   id: {
-    tweet: (d, c, n, r) =>
-      `${RISK_EMOJI[r] ?? "⚠️"} Wabah WHO: ${d} di ${c} — ${n.toLocaleString("en")} kasus terkonfirmasi. Dipantau setiap 6 jam di HealthWatch Global.`,
+    tweet: (d, c, n, deaths, r) => {
+      const cfr = (deaths && n > 0) ? ` · ${deaths} kematian · CFR ${(deaths / n * 100).toFixed(1)}%` : "";
+      return `${RISK_EMOJI[r] ?? "⚠️"} Wabah WHO: ${d} di ${c} — ${n.toLocaleString("en")} kasus${cfr}. Dipantau langsung di HealthWatch Global.`;
+    },
     copied:     "Tautan disalin!",
     copyLink:   "Salin tautan",
     shareLabel: "Bagikan",
@@ -79,13 +90,13 @@ const SHARE_COPY: Record<string, {
 
 const BASE_URL = "https://healthwatch-global.com";
 
-export default function ShareOutbreakButton({ disease, country, cases, riskLevel, locale, outbreakId, pageUrl: pageUrlProp, compact = true }: Props) {
+export default function ShareOutbreakButton({ disease, country, cases, deaths, riskLevel, locale, outbreakId, pageUrl: pageUrlProp, compact = true }: Props) {
   const [open,   setOpen]   = useState(false);
   const [copied, setCopied] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   const c   = SHARE_COPY[locale] ?? SHARE_COPY.en;
 
-  const text    = c.tweet(disease, country, cases, riskLevel);
+  const text    = c.tweet(disease, country, cases, deaths, riskLevel);
   const pageUrl = pageUrlProp
     ?? (outbreakId ? `${BASE_URL}/${locale}/outbreak/${outbreakId}` : `${BASE_URL}/${locale}`);
   const encoded = encodeURIComponent(text);
