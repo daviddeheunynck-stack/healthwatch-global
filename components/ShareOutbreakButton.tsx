@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { Share2, MessageCircle, Link as LinkIcon, Check, FileText } from "lucide-react";
+import { Share2, MessageCircle, Link as LinkIcon, Check, FileText, ExternalLink } from "lucide-react";
 
 // Twitter/X SVG (not in lucide-react)
 const XIcon = () => (
@@ -61,6 +61,7 @@ const SHARE_COPY: Record<string, {
   copyLink:     string;
   copyReport:   string;
   shareLabel:   string;
+  cardImage:    string;
 }> = {
   fr: {
     tweet: (d, c, n, deaths, r) => {
@@ -81,6 +82,7 @@ const SHARE_COPY: Record<string, {
     copyLink:     "Copier le lien",
     copyReport:   "Copier pour rapport",
     shareLabel:   "Partager",
+    cardImage:    "Image de carte (PNG)",
   },
   en: {
     tweet: (d, c, n, deaths, r) => {
@@ -101,6 +103,7 @@ const SHARE_COPY: Record<string, {
     copyLink:     "Copy link",
     copyReport:   "Copy for report",
     shareLabel:   "Share",
+    cardImage:    "Card image (PNG)",
   },
   es: {
     tweet: (d, c, n, deaths, r) => {
@@ -121,6 +124,7 @@ const SHARE_COPY: Record<string, {
     copyLink:     "Copiar enlace",
     copyReport:   "Copiar para informe",
     shareLabel:   "Compartir",
+    cardImage:    "Imagen de tarjeta (PNG)",
   },
   ar: {
     tweet: (d, c, n, deaths, r) => {
@@ -141,6 +145,7 @@ const SHARE_COPY: Record<string, {
     copyLink:     "نسخ الرابط",
     copyReport:   "نسخ للتقرير",
     shareLabel:   "مشاركة",
+    cardImage:    "صورة البطاقة (PNG)",
   },
   id: {
     tweet: (d, c, n, deaths, r) => {
@@ -161,6 +166,7 @@ const SHARE_COPY: Record<string, {
     copyLink:     "Salin tautan",
     copyReport:   "Salin untuk laporan",
     shareLabel:   "Bagikan",
+    cardImage:    "Gambar kartu (PNG)",
   },
 };
 
@@ -296,6 +302,20 @@ export default function ShareOutbreakButton({ disease, country, cases, deaths, r
             }
             {copiedReport ? c.copiedReport : c.copyReport}
           </button>
+
+          {/* Card image — only shown when outbreakId is available */}
+          {outbreakId && (
+            <a
+              href={`${BASE_URL}/api/outbreak-card/${outbreakId}?locale=${locale}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-gray-700 text-gray-300 hover:text-white transition-colors text-sm"
+              onClick={() => setOpen(false)}
+            >
+              <ExternalLink className="w-4 h-4 text-gray-400 shrink-0" />
+              {c.cardImage}
+            </a>
+          )}
         </div>
       )}
     </div>
