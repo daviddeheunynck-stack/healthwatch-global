@@ -342,6 +342,7 @@ export default async function OutbreakPage({
             locale={locale}
             outbreakId={id}
             compact={false}
+            updatedAt={o.updated_at ?? undefined}
           />
         </div>
       </div>

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { Share2, MessageCircle, Link as LinkIcon, Check } from "lucide-react";
+import { Share2, MessageCircle, Link as LinkIcon, Check, FileText } from "lucide-react";
 
 // Twitter/X SVG (not in lucide-react)
 const XIcon = () => (
@@ -27,6 +27,7 @@ interface Props {
   outbreakId?: string;
   pageUrl?:   string;
   compact?:   boolean;
+  updatedAt?: string;
 }
 
 const RISK_EMOJI: Record<string, string> = {
@@ -35,70 +36,142 @@ const RISK_EMOJI: Record<string, string> = {
   low:    "🟢",
 };
 
+function relativeTime(iso: string): string {
+  const mins = Math.round((Date.now() - new Date(iso).getTime()) / 60_000);
+  if (mins < 60) return `${mins}m ago`;
+  const hrs = Math.floor(mins / 60);
+  if (hrs < 24) return `${hrs}h ago`;
+  return `${Math.floor(hrs / 24)}d ago`;
+}
+
+const RISK_LABEL: Record<string, Record<string, string>> = {
+  en: { high: "HIGH",    medium: "MEDIUM",  low: "LOW"    },
+  fr: { high: "ÉLEVÉ",   medium: "MODÉRÉ",  low: "FAIBLE" },
+  es: { high: "ALTO",    medium: "MEDIO",   low: "BAJO"   },
+  ar: { high: "مرتفع",   medium: "متوسط",   low: "منخفض"  },
+  id: { high: "TINGGI",  medium: "SEDANG",  low: "RENDAH" },
+};
+
 const SHARE_COPY: Record<string, {
-  tweet:      (disease: string, country: string, cases: number, deaths: number | undefined, risk: string) => string;
-  copied:     string;
-  copyLink:   string;
-  shareLabel: string;
+  tweet:        (disease: string, country: string, cases: number, deaths: number | undefined, risk: string) => string;
+  report:       (disease: string, country: string, cases: number, deaths: number | undefined, risk: string, lastSync: string, url: string) => string;
+  copied:       string;
+  copiedReport: string;
+  copyLink:     string;
+  copyReport:   string;
+  shareLabel:   string;
 }> = {
   fr: {
     tweet: (d, c, n, deaths, r) => {
       const cfr = (deaths && n > 0) ? ` · ${deaths} décès · létalité ${(deaths / n * 100).toFixed(1)}%` : "";
       return `${RISK_EMOJI[r] ?? "⚠️"} Foyer OMS : ${d} en ${c} — ${n.toLocaleString("en")} cas${cfr}. Suivi en temps réel sur HealthWatch Global.`;
     },
-    copied:     "Lien copié !",
-    copyLink:   "Copier le lien",
-    shareLabel: "Partager",
+    report: (d, c, n, deaths, r, lastSync, url) => {
+      const risk = RISK_LABEL.fr[r] ?? r.toUpperCase();
+      const caseLine = (deaths && n > 0)
+        ? `Cas : ${n.toLocaleString("en")} | Décès : ${deaths} | Létalité : ${(deaths / n * 100).toFixed(1)}%`
+        : `Cas : ${n.toLocaleString("en")}`;
+      const syncLine = lastSync ? `\nSource : OMS DON | Dernière MAJ : ${lastSync}` : `\nSource : OMS DON`;
+      return `[HealthWatch Global — Rapport de situation]\nMaladie : ${d} | Pays : ${c} | Risque : ${risk}\n${caseLine}${syncLine}\nFiche complète : ${url}`;
+    },
+    copied:       "Lien copié !",
+    copiedReport: "Rapport copié !",
+    copyLink:     "Copier le lien",
+    copyReport:   "Copier pour rapport",
+    shareLabel:   "Partager",
   },
   en: {
     tweet: (d, c, n, deaths, r) => {
       const cfr = (deaths && n > 0) ? ` · ${deaths} deaths · CFR ${(deaths / n * 100).toFixed(1)}%` : "";
       return `${RISK_EMOJI[r] ?? "⚠️"} WHO outbreak: ${d} in ${c} — ${n.toLocaleString("en")} cases${cfr}. Live on HealthWatch Global.`;
     },
-    copied:     "Link copied!",
-    copyLink:   "Copy link",
-    shareLabel: "Share",
+    report: (d, c, n, deaths, r, lastSync, url) => {
+      const risk = RISK_LABEL.en[r] ?? r.toUpperCase();
+      const caseLine = (deaths && n > 0)
+        ? `Cases: ${n.toLocaleString("en")} | Deaths: ${deaths} | CFR: ${(deaths / n * 100).toFixed(1)}%`
+        : `Cases: ${n.toLocaleString("en")}`;
+      const syncLine = lastSync ? `\nSource: WHO DON | Last updated: ${lastSync}` : `\nSource: WHO DON`;
+      return `[HealthWatch Global — Situation Report]\nDisease: ${d} | Country: ${c} | Risk: ${risk}\n${caseLine}${syncLine}\nFull brief: ${url}`;
+    },
+    copied:       "Link copied!",
+    copiedReport: "Report copied!",
+    copyLink:     "Copy link",
+    copyReport:   "Copy for report",
+    shareLabel:   "Share",
   },
   es: {
     tweet: (d, c, n, deaths, r) => {
       const cfr = (deaths && n > 0) ? ` · ${deaths} fallecidos · letalidad ${(deaths / n * 100).toFixed(1)}%` : "";
       return `${RISK_EMOJI[r] ?? "⚠️"} Brote OMS: ${d} en ${c} — ${n.toLocaleString("en")} casos${cfr}. Seguimiento en tiempo real en HealthWatch Global.`;
     },
-    copied:     "¡Enlace copiado!",
-    copyLink:   "Copiar enlace",
-    shareLabel: "Compartir",
+    report: (d, c, n, deaths, r, lastSync, url) => {
+      const risk = RISK_LABEL.es[r] ?? r.toUpperCase();
+      const caseLine = (deaths && n > 0)
+        ? `Casos: ${n.toLocaleString("en")} | Fallecidos: ${deaths} | Letalidad: ${(deaths / n * 100).toFixed(1)}%`
+        : `Casos: ${n.toLocaleString("en")}`;
+      const syncLine = lastSync ? `\nFuente: OMS DON | Última actualización: ${lastSync}` : `\nFuente: OMS DON`;
+      return `[HealthWatch Global — Informe de situación]\nEnfermedad: ${d} | País: ${c} | Riesgo: ${risk}\n${caseLine}${syncLine}\nInforme completo: ${url}`;
+    },
+    copied:       "¡Enlace copiado!",
+    copiedReport: "¡Informe copiado!",
+    copyLink:     "Copiar enlace",
+    copyReport:   "Copiar para informe",
+    shareLabel:   "Compartir",
   },
   ar: {
     tweet: (d, c, n, deaths, r) => {
       const cfr = (deaths && n > 0) ? ` · ${deaths} وفاة · معدل الوفيات ${(deaths / n * 100).toFixed(1)}%` : "";
       return `${RISK_EMOJI[r] ?? "⚠️"} تفشٍّ OMS: ${d} في ${c} — ${n.toLocaleString("en")} حالة${cfr}. متابعة مباشرة على HealthWatch Global.`;
     },
-    copied:     "تم نسخ الرابط!",
-    copyLink:   "نسخ الرابط",
-    shareLabel: "مشاركة",
+    report: (d, c, n, deaths, r, lastSync, url) => {
+      const risk = RISK_LABEL.ar[r] ?? r;
+      const caseLine = (deaths && n > 0)
+        ? `الحالات: ${n.toLocaleString("en")} | الوفيات: ${deaths} | معدل الوفيات: ${(deaths / n * 100).toFixed(1)}%`
+        : `الحالات: ${n.toLocaleString("en")}`;
+      const syncLine = lastSync ? `\nالمصدر: WHO DON | آخر تحديث: ${lastSync}` : `\nالمصدر: WHO DON`;
+      return `[HealthWatch Global — تقرير الوضع الوبائي]\nالمرض: ${d} | البلد: ${c} | المخاطر: ${risk}\n${caseLine}${syncLine}\nالتقرير الكامل: ${url}`;
+    },
+    copied:       "تم نسخ الرابط!",
+    copiedReport: "تم نسخ التقرير!",
+    copyLink:     "نسخ الرابط",
+    copyReport:   "نسخ للتقرير",
+    shareLabel:   "مشاركة",
   },
   id: {
     tweet: (d, c, n, deaths, r) => {
       const cfr = (deaths && n > 0) ? ` · ${deaths} kematian · CFR ${(deaths / n * 100).toFixed(1)}%` : "";
       return `${RISK_EMOJI[r] ?? "⚠️"} Wabah WHO: ${d} di ${c} — ${n.toLocaleString("en")} kasus${cfr}. Dipantau langsung di HealthWatch Global.`;
     },
-    copied:     "Tautan disalin!",
-    copyLink:   "Salin tautan",
-    shareLabel: "Bagikan",
+    report: (d, c, n, deaths, r, lastSync, url) => {
+      const risk = RISK_LABEL.id[r] ?? r.toUpperCase();
+      const caseLine = (deaths && n > 0)
+        ? `Kasus: ${n.toLocaleString("en")} | Kematian: ${deaths} | CFR: ${(deaths / n * 100).toFixed(1)}%`
+        : `Kasus: ${n.toLocaleString("en")}`;
+      const syncLine = lastSync ? `\nSumber: WHO DON | Diperbarui: ${lastSync}` : `\nSumber: WHO DON`;
+      return `[HealthWatch Global — Laporan Situasi]\nPenyakit: ${d} | Negara: ${c} | Risiko: ${risk}\n${caseLine}${syncLine}\nLaporan lengkap: ${url}`;
+    },
+    copied:       "Tautan disalin!",
+    copiedReport: "Laporan disalin!",
+    copyLink:     "Salin tautan",
+    copyReport:   "Salin untuk laporan",
+    shareLabel:   "Bagikan",
   },
 };
 
 const BASE_URL = "https://healthwatch-global.com";
 
-export default function ShareOutbreakButton({ disease, country, cases, deaths, riskLevel, locale, outbreakId, pageUrl: pageUrlProp, compact = true }: Props) {
-  const [open,   setOpen]   = useState(false);
-  const [copied, setCopied] = useState(false);
+export default function ShareOutbreakButton({ disease, country, cases, deaths, riskLevel, locale, outbreakId, pageUrl: pageUrlProp, compact = true, updatedAt }: Props) {
+  const [open,         setOpen]         = useState(false);
+  const [copied,       setCopied]       = useState(false);
+  const [copiedReport, setCopiedReport] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   const c   = SHARE_COPY[locale] ?? SHARE_COPY.en;
 
   const text    = c.tweet(disease, country, cases, deaths, riskLevel);
   const pageUrl = pageUrlProp
     ?? (outbreakId ? `${BASE_URL}/${locale}/outbreak/${outbreakId}` : `${BASE_URL}/${locale}`);
+  const lastSync   = updatedAt ? relativeTime(updatedAt) : "";
+  const reportText = c.report(disease, country, cases, deaths, riskLevel, lastSync, pageUrl);
   const encoded = encodeURIComponent(text);
   const encodedUrl = encodeURIComponent(pageUrl);
 
@@ -119,6 +192,12 @@ export default function ShareOutbreakButton({ disease, country, cases, deaths, r
     await navigator.clipboard.writeText(`${text}\n${pageUrl}`);
     setCopied(true);
     setTimeout(() => { setCopied(false); setOpen(false); }, 1500);
+  }
+
+  async function copyReport() {
+    await navigator.clipboard.writeText(reportText);
+    setCopiedReport(true);
+    setTimeout(() => { setCopiedReport(false); setOpen(false); }, 1500);
   }
 
   return (
@@ -184,6 +263,18 @@ export default function ShareOutbreakButton({ disease, country, cases, deaths, r
               : <LinkIcon className="w-4 h-4 text-gray-400 shrink-0" />
             }
             {copied ? c.copied : c.copyLink}
+          </button>
+
+          {/* Copy for report */}
+          <button
+            onClick={copyReport}
+            className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-gray-700 text-gray-300 hover:text-white transition-colors text-sm"
+          >
+            {copiedReport
+              ? <Check className="w-4 h-4 text-green-400 shrink-0" />
+              : <FileText className="w-4 h-4 text-gray-400 shrink-0" />
+            }
+            {copiedReport ? c.copiedReport : c.copyReport}
           </button>
         </div>
       )}
