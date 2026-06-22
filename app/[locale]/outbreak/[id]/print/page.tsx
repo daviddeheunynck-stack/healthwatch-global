@@ -317,7 +317,6 @@ export default async function PrintPage({
         {/* Print button */}
         <button
           className="print-btn no-print"
-          onClick={() => window.print()}
         >
           🖨️ {l.print}
         </button>
