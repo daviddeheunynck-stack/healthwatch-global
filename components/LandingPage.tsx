@@ -21,6 +21,7 @@ const COPY: Record<string, {
   heroCtaSecondary: string;
   heroCtaDemo: string;
   heroNoCc: string;
+  heroDigestLink: string;
   liveTracking: (n: number) => string;
   // Stats bar
   statOutbreaks: string;
@@ -91,6 +92,7 @@ const COPY: Record<string, {
     heroCtaSecondary: "Voir les tarifs",
     heroCtaDemo: "Voir le tableau de bord en direct →",
     heroNoCc: "Gratuit · 14 jours Pro offerts · Sans carte bancaire",
+    heroDigestLink: "Juste le digest hebdomadaire gratuit ? →",
     liveTracking: (n: number) => `🟢 ${n} foyers épidémiques actifs suivis en ce moment`,
     statOutbreaks: "foyers actifs",
     statCountries: "pays touchés",
@@ -170,6 +172,7 @@ const COPY: Record<string, {
     heroCtaSecondary: "See pricing",
     heroCtaDemo: "Try the live dashboard →",
     heroNoCc: "Free · 14-day Pro trial · No credit card required",
+    heroDigestLink: "Just want the free weekly digest? →",
     liveTracking: (n: number) => `🟢 ${n} active outbreaks tracked right now`,
     statOutbreaks: "active outbreaks",
     statCountries: "countries affected",
@@ -249,6 +252,7 @@ const COPY: Record<string, {
     heroCtaSecondary: "Ver precios",
     heroCtaDemo: "Ver el panel en directo →",
     heroNoCc: "Gratis · 14 días Pro de prueba · Sin tarjeta de crédito",
+    heroDigestLink: "¿Solo quieres el digest semanal gratuito? →",
     liveTracking: (n: number) => `🟢 ${n} brotes activos monitoreados ahora mismo`,
     statOutbreaks: "brotes activos",
     statCountries: "países afectados",
@@ -328,6 +332,7 @@ const COPY: Record<string, {
     heroCtaSecondary: "عرض الأسعار",
     heroCtaDemo: "← تجربة لوحة التحكم مباشرةً",
     heroNoCc: "مجاني · 14 يوم Pro مجاناً · لا بطاقة بنكية مطلوبة",
+    heroDigestLink: "← تريد فقط الملخص الأسبوعي المجاني؟",
     liveTracking: (n: number) => `🟢 ${n} تفشٍّ نشط تحت المراقبة الآن`,
     statOutbreaks: "تفشيات نشطة",
     statCountries: "دول متضررة",
@@ -407,6 +412,7 @@ const COPY: Record<string, {
     heroCtaSecondary: "Lihat harga",
     heroCtaDemo: "Coba dasbor langsung →",
     heroNoCc: "Gratis · 14 hari Pro gratis · Tanpa kartu kredit",
+    heroDigestLink: "Hanya ingin digest mingguan gratis? →",
     liveTracking: (n: number) => `🟢 ${n} wabah aktif dipantau saat ini`,
     statOutbreaks: "wabah aktif",
     statCountries: "negara terdampak",
@@ -570,6 +576,9 @@ export default async function LandingPage({ locale }: { locale: string }) {
             </Link>
           </div>
           <p className="text-xs text-gray-600">{c.heroNoCc}</p>
+          <a href="#newsletter" className="text-xs text-gray-500 hover:text-gray-300 transition-colors underline underline-offset-2">
+            {c.heroDigestLink}
+          </a>
 
           {/* Live stats bar */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-4">
@@ -972,7 +981,7 @@ export default async function LandingPage({ locale }: { locale: string }) {
       </section>
 
       {/* ── Newsletter subscribe ─────────────────────────────────────────── */}
-      <section className="bg-gray-900 border border-gray-800 rounded-2xl p-8 space-y-5">
+      <section id="newsletter" className="bg-gray-900 border border-gray-800 rounded-2xl p-8 space-y-5">
         <div className="text-center space-y-2">
           <h2 className="text-xl font-bold text-white">{c.newsletterTitle}</h2>
           <p className="text-sm text-gray-400 max-w-lg mx-auto">{c.newsletterSub}</p>
