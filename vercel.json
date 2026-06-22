@@ -107,6 +107,10 @@
     {
       "path": "/api/cron/trigger-geofence-alerts",
       "schedule": "0 */6 * * *"
+    },
+    {
+      "path": "/api/cron/trigger-country-risk-alerts",
+      "schedule": "5 */6 * * *"
     }
   ]
 }

@@ -29,6 +29,8 @@ import FreePlanBanner from "@/components/FreePlanBanner";
 import DemoBanner from "@/components/DemoBanner";
 import CountryScorecardTab from "@/components/CountryScorecardTab";
 import GeofenceAlertPanel from "@/components/GeofenceAlertPanel";
+import CountryRiskAlertPanel from "@/components/CountryRiskAlertPanel";
+import ResolvedOutbreaksWidget from "@/components/ResolvedOutbreaksWidget";
 import RegionalPulseSummary from "@/components/RegionalPulseSummary";
 import { Suspense } from "react";
 import type { Metadata } from "next";
@@ -406,11 +408,13 @@ async function DashboardContent({ demo = false }: { demo?: boolean }) {
       {isPaid && <DataAccessPanel locale={locale} />}
 
       {isPaid && <TravelRiskWidget locale={locale} />}
+      {isPaid && <ResolvedOutbreaksWidget locale={locale} />}
       {isPaid && <CategoryAlertPanel locale={locale} />}
       {isPaid && <DataStatusWidget locale={locale} />}
 
       {isPaid && <DiseaseWatchlistPanel locale={locale} initialWatchlist={diseaseWatchlist} />}
       {isPaid && <GeofenceAlertPanel locale={locale} />}
+      {isPaid && <CountryRiskAlertPanel locale={locale} />}
       {isPaid && <WebhookPanel locale={locale} />}
       {isPaid && <ScheduledReportPanel locale={locale} />}
       {isPaid && <OrgPanel locale={locale} />}

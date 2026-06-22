@@ -21,6 +21,29 @@ const RISK_BADGE: Record<string, string> = {
   low:    "bg-green-900/30 border-green-700/40 text-green-300",
 };
 
+function computeTHI(country: ScorecardCountry): number {
+  let score = 10;
+  score -= country.max_risk === "high" ? 3 : country.max_risk === "medium" ? 1 : 0;
+  score -= country.has_pheic ? 2 : 0;
+  score -= Math.min(3, Math.floor(country.outbreak_count / 2));
+  return Math.max(1, Math.min(10, score));
+}
+
+function THIBadge({ score }: { score: number }) {
+  const cls =
+    score >= 8 ? "bg-green-900/30 border-green-700/40 text-green-300"
+    : score >= 5 ? "bg-amber-900/20 border-amber-700/30 text-amber-300"
+    : "bg-red-900/30 border-red-700/40 text-red-300";
+  return (
+    <span
+      className={`text-[9px] font-bold px-1.5 py-0.5 rounded border tabular-nums ${cls}`}
+      title="Travel Health Index (1–10) — computed from active risk levels, outbreak count, and PHEIC status"
+    >
+      THI {score}
+    </span>
+  );
+}
+
 function timeSince(iso: string, locale: string): string {
   if (!iso) return "";
   const h = Math.floor((Date.now() - new Date(iso).getTime()) / 3_600_000);
@@ -94,7 +117,7 @@ export default function CountryScorecardTab({ locale }: { locale: string }) {
                 )}
               </div>
 
-              {/* Risk + counts */}
+              {/* Risk + counts + THI */}
               <div className="flex items-center gap-2 flex-wrap">
                 <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded border uppercase ${RISK_BADGE[country.max_risk] ?? RISK_BADGE.low}`}>
                   {country.max_risk}
@@ -103,6 +126,7 @@ export default function CountryScorecardTab({ locale }: { locale: string }) {
                 {country.total_cases > 0 && (
                   <span className="text-[10px] text-gray-500 tabular-nums">{country.total_cases.toLocaleString("en")} {c.cases}</span>
                 )}
+                <THIBadge score={computeTHI(country)} />
               </div>
 
               {/* Diseases */}
