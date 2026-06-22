@@ -106,7 +106,7 @@ export default function Navbar() {
     } else {
       segments.splice(1, 0, newLocale);
     }
-    window.location.href = segments.join("/") || "/";
+    window.location.href = (segments.join("/") || "/") + window.location.search;
   };
 
   const navLinks: { href: string; label: string; icon: React.ElementType | null }[] = [
