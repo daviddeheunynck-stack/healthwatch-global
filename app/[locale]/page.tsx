@@ -107,9 +107,33 @@ export async function generateMetadata({
   const { locale } = await params;
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
-  const m = user
+  let m = user
     ? (DASHBOARD_META[locale] ?? DASHBOARD_META.en)
     : (LANDING_META[locale] ?? LANDING_META.en);
+
+  if (!user) {
+    try {
+      const svc = createService(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.SUPABASE_SERVICE_ROLE_KEY!
+      );
+      const { count } = await svc
+        .from("outbreaks")
+        .select("*", { count: "exact", head: true })
+        .eq("active", true);
+      if (count && count > 0) {
+        const prefix: Record<string, string> = {
+          en: `${count} active outbreaks tracked — `,
+          fr: `${count} foyers épidémiques actifs — `,
+          es: `${count} brotes activos — `,
+          ar: `${count} تفشٍّ نشط — `,
+          id: `${count} wabah aktif — `,
+        };
+        m = { ...m, description: (prefix[locale] ?? prefix.en) + m.description };
+      }
+    } catch { /* static description as fallback */ }
+  }
+
   const url = `https://healthwatch-global.com/${locale}`;
   return {
     title: m.title,
