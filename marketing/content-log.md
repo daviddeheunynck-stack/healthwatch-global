@@ -142,11 +142,70 @@ Happy to answer questions about the niche, the data pipeline, or what it's like 
 **Relations :** 28
 **Posts planifiés :** 4 (calendrier dans `linkedin-calendar.md`)
 
-### Post lancement PH (25 juin 2026) — À RECONSTITUER
-*Post créé le 21 juin, perdu en compaction. Reconstituer avec l'utilisateur.*
+### Post 2 — Ebola Bundibugyo (24 juin 2026) — RÉDIGÉ ✓
 
-### Post 2 — Ebola Bundibugyo (24 juin 2026) — À VÉRIFIER
-*Voir linkedin-calendar.md pour le calendrier. Contenu à vérifier.*
+**Ton :** éducatif, aucune mention explicite de HealthWatch (laisse la curiosité sur le profil)
+
+---
+
+Trois espèces d'Ebola. Trois protocoles de réponse différents.
+
+La plupart des alertes disent simplement « Ebola détecté ».
+
+Mais pour un point focal national dans un pays voisin, l'espèce change tout.
+
+**Ebola Zaire (EBOV)**
+TLC : 25–90 %. Vaccins approuvés (ERVEBO, Ad26.ZEBOV/MVA-BN-Filo).
+2014 Afrique de l'Ouest : 28 616 cas.
+Réponse RSI : vaccination en anneau, coordination transfrontalière immédiate.
+
+**Ebola Sudan (SUDV)**
+TLC : 41–65 %. Aucun vaccin approuvé (candidats en essai).
+2022 Uganda : 142 cas confirmés avant confinement.
+Réponse RSI : surveillance renforcée — pas d'option de vaccination.
+
+**Ebola Bundibugyo (BDBV)**
+TLC : 25–47 % dans les foyers documentés (Uganda 2007 : 25 %, RDC 2012 : 47 %).
+Géographiquement concentré dans les deux épisodes connus.
+Réponse RSI : similaire à SUDV — confinement en priorité, pas de vaccin.
+
+Ce que « détection Ebola » signifie pour votre équipe de réponse dépend entièrement de laquelle des trois espèces il s'agit.
+
+La plupart des outils de surveillance les regroupent. Le DON OMS, lui, ne le fait pas. C'est l'écart qui compte.
+
+Que vous pilotiez une équipe de surveillance ministérielle, coordonniez pour une ONG internationale, ou gériez une fonction de risk management corporate — les premières 24 heures d'un événement Ebola sont celles qui définissent votre réponse. Et l'espèce virale est le premier point d'interprétation.
+
+---
+
+### Post lancement PH (25 juin 2026) — RÉDIGÉ ✓
+
+**Note :** insérer l'URL PH réelle au moment de la publication (à récupérer à 09h00 CEST)
+
+---
+
+Aujourd'hui, HealthWatch Global est live sur Product Hunt.
+
+Il y a six mois, je regardais des épidémiologistes terrain vérifier 4 sources manuellement chaque matin : WHO DON. ECDC. PAHO. Africa CDC. Une par une. Copier-coller dans des tableurs. Pas d'agrégation, pas de scoring de risque, pas de vue centralisée.
+
+C'est un problème de tooling. J'ai construit l'outil.
+
+Ce que fait HealthWatch Global :
+→ Un seul tableau de bord pour WHO, ECDC, PAHO et Africa CDC — mis à jour 4x/jour
+→ Classification automatique selon les niveaux RSI (Immédiat / Réponse rapide / Surveillance)
+→ Alertes email par maladie, pays ou niveau de risque
+→ 5 langues : EN, FR, ES, AR, ID
+→ Rapports PDF, flux RSS, widget embarquable
+
+Pour qui : points focaux nationaux RSI, équipes des Ministères de la Santé, coordinateurs santé ONG, gestionnaires de risques corporate.
+
+Fondateur solo. Premier client payant la semaine dernière. Une poignée d'utilisateurs en test depuis WHO AFRO, l'Institut Pasteur et le KEMRI.
+
+Si vous avez une minute aujourd'hui : [URL PH — à insérer]
+Accès Pro gratuit 30 jours, sans carte.
+
+Et si vous travaillez en santé globale, réponse épidémique, ou gestion de crise internationale — vos retours seraient précieux. Le marché est petit (peut-être 5 000 personnes dans le monde ont besoin de cet outil exact). Mais ces 5 000 personnes prennent des décisions qui affectent des millions.
+
+---
 
 ---
 
