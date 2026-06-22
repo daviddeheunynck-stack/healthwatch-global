@@ -22,7 +22,9 @@ export async function GET(req: NextRequest) {
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.SUPABASE_SERVICE_ROLE_KEY!
   );
-  const resend = new Resend(process.env.RESEND_API_KEY!);
+  const resendKey = (process.env.RESEND_API_KEY ?? "").replace(/^﻿/, "").trim();
+  if (!resendKey) return Response.json({ ok: true, skipped: "RESEND_API_KEY not configured" });
+  const resend = new Resend(resendKey);
 
   const { data: alerts } = await supabase
     .from("country_risk_alerts")

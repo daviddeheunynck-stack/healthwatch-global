@@ -45,6 +45,8 @@ export async function GET(req: NextRequest) {
   if (!CRON_SECRET || req.headers.get("x-cron-secret") !== CRON_SECRET)
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
+  if (!RESEND_KEY) return NextResponse.json({ ok: true, skipped: "RESEND_API_KEY not configured" });
+
   const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE);
   const resend   = new Resend(RESEND_KEY);
 

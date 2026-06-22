@@ -73,8 +73,11 @@ export async function GET(req: NextRequest) {
   if (!cronSecret || authHeader !== `Bearer ${cronSecret}`)
     return new Response("Unauthorized", { status: 401 });
 
+  const resendKey = (process.env.RESEND_API_KEY ?? "").replace(/^﻿/, "").trim();
+  if (!resendKey) return new Response(JSON.stringify({ ok: true, skipped: "RESEND_API_KEY not configured" }), { status: 200 });
+
   const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
-  const resend   = new Resend(process.env.RESEND_API_KEY!);
+  const resend   = new Resend(resendKey);
 
   // Pro users with a specific region preference
   const { data: users } = await supabase
