@@ -426,7 +426,7 @@ export async function POST(req: NextRequest) {
           console.error("[webhook] trial_ending email:", e)
         );
 
-        console.log(`[webhook] trial_will_end → email sent to ${trialProfile.email} (plan ${plan}, ends ${trialEnd}, hasPaymentMethod: ${hasPaymentMethod})`);
+        console.log(`[webhook] trial_will_end → email sent (plan ${plan}, ends ${trialEnd}, hasPaymentMethod: ${hasPaymentMethod})`);
         break;
       }
 

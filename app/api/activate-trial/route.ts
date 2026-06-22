@@ -64,6 +64,6 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Update failed" }, { status: 500 });
   }
 
-  console.log(`[activate-trial] Trial activated for user ${user.id} until ${trialEndsAt}`);
+  console.log(`[activate-trial] Trial activated until ${trialEndsAt}`);
   return NextResponse.json({ activated: true, trial_ends_at: trialEndsAt });
 }
