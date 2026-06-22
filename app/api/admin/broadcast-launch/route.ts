@@ -78,6 +78,9 @@ export async function POST(req: NextRequest) {
     "shintayuliawati28@gmail.com",
     "analin1309@gmail.com",
     "e2e@healthwatch-global.com",
+    "elyan.delaunay@proton.me",
+    "davy_skye@yahoo.fr",
+    "clarence_skye@yahoo.fr",
   ];
   const isTestAccount = (email: string) => {
     const e = email.toLowerCase();
