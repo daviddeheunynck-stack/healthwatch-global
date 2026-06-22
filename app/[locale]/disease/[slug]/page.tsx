@@ -322,7 +322,9 @@ export default async function DiseasePage({
   const totalCases  = active.reduce((s, o) => s + (o.cases || 0), 0);
   const totalDeaths = active.reduce((s, o) => s + (o.deaths || 0), 0);
   const cfr         = totalCases > 0 ? ((totalDeaths / totalCases) * 100).toFixed(1) : null;
-  const countriesSet = new Set(allOutbreaks.map((o) => o.country_en || o.country).filter(Boolean));
+  // Active countries only — consistent with cases/deaths which also use `active`.
+  // Historical countries are still visible in the country pills section below.
+  const countriesSet = new Set(active.map((o) => o.country_en || o.country).filter(Boolean));
 
   // Unique countries with active-status for the "Countries affected" chips
   const affectedCountryMap = new Map<string, { country_en: string; hasActive: boolean }>();
