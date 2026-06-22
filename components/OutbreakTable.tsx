@@ -190,6 +190,7 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
   const [sortDir,          setSortDir]          = useState<SortDir>("asc");
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const [watchlistOnly,    setWatchlistOnly]    = useState(false);
+  const [ihrOnly,          setIhrOnly]          = useState(false);
   const [lastCases,        setLastCases]        = useState<Record<string, number>>({});
   const [admin1Filter,     setAdmin1Filter]     = useState("");
   const [epiWeekMode,      setEpiWeekMode]      = useState(false);
@@ -293,6 +294,7 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
         const q = admin1Filter.toLowerCase();
         if (!(o.admin1 ?? "").toLowerCase().includes(q)) return false;
       }
+      if (ihrOnly && !o.ihr_event_id) return false;
       if (watchlistOnly && (diseaseWatchlist?.length ?? 0) > 0) {
         const dl = diseaseWatchlist!.map((d) => d.toLowerCase());
         const den = (o.disease_en ?? "").toLowerCase();
@@ -302,7 +304,7 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
                !getLocalizedCountry(o, locale).toLowerCase().includes(q)) return false;
       return true;
     });
-  }, [outbreaks, region, country, risk, cfrFilter, sourceFilter, dateFrom, dateTo, search, locale, watchlistOnly, diseaseWatchlist, admin1Filter]);
+  }, [outbreaks, region, country, risk, cfrFilter, sourceFilter, dateFrom, dateTo, search, locale, watchlistOnly, ihrOnly, diseaseWatchlist, admin1Filter]);
 
   const sorted = useMemo(() => {
     const RISK_ORDER: Record<string, number> = { high: 0, medium: 1, low: 2 };
@@ -324,7 +326,7 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
     });
   }, [filtered, sortKey, sortDir]);
 
-  const hasFilters = search !== "" || region !== "all" || country !== "all" || risk !== "all" || cfrFilter !== "all" || sourceFilter !== "all" || dateFrom !== "" || dateTo !== "" || watchlistOnly || admin1Filter !== "";
+  const hasFilters = search !== "" || region !== "all" || country !== "all" || risk !== "all" || cfrFilter !== "all" || sourceFilter !== "all" || dateFrom !== "" || dateTo !== "" || watchlistOnly || ihrOnly || admin1Filter !== "";
 
   useEffect(() => {
     const highCount = sorted.filter((o) => o.risk_level === "high").length;
@@ -458,6 +460,58 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
     win.document.close();
     track("pdf_export", { rows: sorted.length, locale });
   }, [sorted, locale, countryTags]);
+
+  const generateIhrReport = useCallback(() => {
+    const ihrEvents = sorted.filter((o) => !!o.ihr_event_id);
+    if (!ihrEvents.length) return;
+    const today = new Date().toISOString().split("T")[0];
+    const title = { fr: "Résumé des Événements RSI Actifs", en: "Active IHR Events Summary", es: "Resumen de Eventos RSI Activos", ar: "ملخص أحداث اللوائح الصحية الدولية النشطة", id: "Ringkasan Acara IHR Aktif" }[locale] ?? "Active IHR Events Summary";
+    const rows = ihrEvents.map((o, i) => {
+      const cfr = o.cases > 0 && o.deaths > 0 ? ` · CFR ${(o.deaths / o.cases * 100).toFixed(1)}%` : "";
+      const pheic = o.is_pheic ? " [PHEIC]" : "";
+      return `<tr>
+        <td style="padding:5px 8px;border-bottom:1px solid #e2e8f0">${i + 1}</td>
+        <td style="padding:5px 8px;border-bottom:1px solid #e2e8f0"><strong>${o.ihr_event_id}</strong></td>
+        <td style="padding:5px 8px;border-bottom:1px solid #e2e8f0">${o.disease_en ?? o.disease}</td>
+        <td style="padding:5px 8px;border-bottom:1px solid #e2e8f0">${o.country_en ?? o.country}</td>
+        <td style="padding:5px 8px;border-bottom:1px solid #e2e8f0;text-align:right">${o.cases.toLocaleString("en")}${cfr}</td>
+        <td style="padding:5px 8px;border-bottom:1px solid #e2e8f0;font-weight:700;color:${o.risk_level === "high" ? "#dc2626" : o.risk_level === "medium" ? "#d97706" : "#16a34a"}">${(o.risk_level ?? "").toUpperCase()}${pheic}</td>
+        <td style="padding:5px 8px;border-bottom:1px solid #e2e8f0">${o.date}</td>
+      </tr>`;
+    }).join("");
+    const html = `<!DOCTYPE html><html><head><meta charset="utf-8"><title>${title}</title>
+<style>
+  body { font-family: system-ui, sans-serif; color: #111; font-size: 11px; margin: 32px; }
+  h1 { font-size: 15px; font-weight: 700; margin: 0 0 2px; }
+  .meta { color: #666; font-size: 10px; margin-bottom: 20px; }
+  table { width: 100%; border-collapse: collapse; }
+  th { background: #0f172a; color: #fff; padding: 6px 8px; text-align: left; font-size: 10px; text-transform: uppercase; letter-spacing: .05em; }
+  .footer { margin-top: 16px; font-size: 9px; color: #94a3b8; }
+  @media print { body { margin: 16px; } }
+</style></head><body>
+  <h1>${title}</h1>
+  <p class="meta">HealthWatch Global &nbsp;·&nbsp; ${today} &nbsp;·&nbsp; ${ihrEvents.length} IHR event${ihrEvents.length > 1 ? "s" : ""} &nbsp;·&nbsp; Source: WHO International Health Regulations</p>
+  <table>
+    <thead><tr>
+      <th>#</th>
+      <th>IHR Event ID</th>
+      <th>${{ fr: "Maladie", en: "Disease", es: "Enfermedad", ar: "المرض", id: "Penyakit" }[locale] ?? "Disease"}</th>
+      <th>${{ fr: "Pays", en: "Country", es: "País", ar: "الدولة", id: "Negara" }[locale] ?? "Country"}</th>
+      <th style="text-align:right">${{ fr: "Cas", en: "Cases", es: "Casos", ar: "الحالات", id: "Kasus" }[locale] ?? "Cases"}</th>
+      <th>${{ fr: "Risque", en: "Risk", es: "Riesgo", ar: "الخطر", id: "Risiko" }[locale] ?? "Risk"}</th>
+      <th>${{ fr: "Date", en: "Date", es: "Fecha", ar: "التاريخ", id: "Tanggal" }[locale] ?? "Date"}</th>
+    </tr></thead>
+    <tbody>${rows}</tbody>
+  </table>
+  <p class="footer">Generated by HealthWatch Global · IHR Event data from WHO · ${new Date().toISOString()}</p>
+  <script>window.onload=function(){window.print();}<\/script>
+</body></html>`;
+    const win = window.open("", "_blank");
+    if (!win) return;
+    win.document.write(html);
+    win.document.close();
+    track("ihr_export", { rows: ihrEvents.length, locale });
+  }, [sorted, locale]);
 
   const downloadHtml = useCallback(() => {
     const today = new Date().toLocaleDateString(locale === "fr" ? "fr-FR" : locale === "es" ? "es-ES" : "en-GB", { dateStyle: "long" });
@@ -653,6 +707,16 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
               <Download className="w-3.5 h-3.5" />
               <span className="hidden sm:inline">GeoJSON</span>
             </button>
+            {sorted.some((o) => o.ihr_event_id) && (
+              <button
+                onClick={generateIhrReport}
+                title="IHR/RSI Events PDF"
+                className="flex items-center gap-1.5 px-3 py-2 bg-teal-900/40 hover:bg-teal-800/50 border border-teal-700/50 text-teal-300 hover:text-teal-200 rounded-lg text-xs font-medium transition-colors"
+              >
+                <Download className="w-3.5 h-3.5" />
+                <span className="hidden sm:inline">IHR PDF</span>
+              </button>
+            )}
           </div>
         ) : (
           <button
@@ -853,6 +917,22 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
             ? ({ fr: "Maladies prioritaires actif", en: "Priority diseases active", es: "Enfermedades prioritarias activo", ar: "الأمراض ذات الأولوية مفعَّل", id: "Penyakit prioritas aktif" }[locale] ?? "Priority diseases active")
             : ({ fr: `${diseaseWatchlist!.length} maladies prioritaires`, en: `${diseaseWatchlist!.length} priority diseases`, es: `${diseaseWatchlist!.length} enf. prioritarias`, ar: `${diseaseWatchlist!.length} أمراض ذات أولوية`, id: `${diseaseWatchlist!.length} penyakit prioritas` }[locale] ?? `${diseaseWatchlist!.length} priority diseases`)
           }
+        </button>
+      )}
+
+      {/* ── IHR/RSI event filter ──────────────────────────────────────── */}
+      {isPaid && outbreaks.some((o) => o.ihr_event_id) && (
+        <button
+          onClick={() => setIhrOnly((v) => !v)}
+          className={`inline-flex items-center gap-1.5 text-xs px-3 py-1 rounded-full border transition-colors ${
+            ihrOnly
+              ? "bg-teal-900/40 border-teal-700/50 text-teal-300"
+              : "border-gray-700 text-gray-500 hover:border-gray-500 hover:text-gray-300"
+          }`}
+        >
+          📋 {ihrOnly
+            ? ({ fr: "Évén. RSI actif", en: "IHR events active", es: "Eventos RSI activo", ar: "أحداث اللوائح مفعَّل", id: "Acara IHR aktif" }[locale] ?? "IHR events active")
+            : ({ fr: "Filtrer par évén. RSI", en: "IHR events only", es: "Solo eventos RSI", ar: "أحداث اللوائح فقط", id: "Hanya acara IHR" }[locale] ?? "IHR events only")}
         </button>
       )}
 
