@@ -37,6 +37,7 @@ interface Webhook {
     disease_thresholds?: { disease_en: string; min_cases: number }[];
     proximity?: { lat: number; lng: number; radius_km: number; label?: string };
     min_change_pct?: number;
+    slack_format?: boolean;
   };
   last_triggered_at: string | null;
   last_fired_cases: Record<string, { cases: number; risk_level: string }>;
@@ -174,25 +175,53 @@ export async function GET(req: NextRequest) {
         ? parseFloat((outbreak.deaths / outbreak.cases * 100).toFixed(1))
         : null;
 
-      const payload = {
-        event:     "outbreak.alert",
-        timestamp: now,
-        data: {
-          outbreak_id:  outbreak.id,
-          disease:      outbreak.disease_en || outbreak.disease,
-          country:      outbreak.country_en || outbreak.country,
-          region:       outbreak.region,
-          risk_level:   outbreak.risk_level,
-          cases:        outbreak.cases,
-          deaths:       outbreak.deaths,
-          cfr_pct:      cfr,
-          is_pheic:            outbreak.is_pheic,
-          date:                outbreak.date,
-          verification_status: outbreak.verification_status,
-          response_phase:      outbreak.response_phase,
-          rt_estimate:         rtMap.get(outbreak.id) ?? null,
-        },
-      };
+      const disease = outbreak.disease_en || outbreak.disease;
+      const country = outbreak.country_en || outbreak.country;
+      const riskEmoji = outbreak.risk_level === "high" ? "🔴" : outbreak.risk_level === "medium" ? "🟡" : "🟢";
+
+      const payload = webhook.filters.slack_format
+        ? {
+            blocks: [
+              {
+                type: "header",
+                text: { type: "plain_text", text: `${riskEmoji} Outbreak alert — ${disease}` },
+              },
+              {
+                type: "section",
+                fields: [
+                  { type: "mrkdwn", text: `*Disease:*\n${disease}` },
+                  { type: "mrkdwn", text: `*Country:*\n${country}` },
+                  { type: "mrkdwn", text: `*Cases:*\n${outbreak.cases.toLocaleString("en")}` },
+                  { type: "mrkdwn", text: `*Risk level:*\n${outbreak.risk_level.toUpperCase()}` },
+                  ...(cfr !== null ? [{ type: "mrkdwn", text: `*CFR:*\n${cfr}%` }] : []),
+                  ...(outbreak.is_pheic ? [{ type: "mrkdwn", text: `*PHEIC:*\n⚠ Declared` }] : []),
+                ],
+              },
+              {
+                type: "context",
+                elements: [{ type: "mrkdwn", text: `HealthWatch Global · ${outbreak.date} · <https://healthwatch-global.com|View dashboard>` }],
+              },
+            ],
+          }
+        : {
+            event:     "outbreak.alert",
+            timestamp: now,
+            data: {
+              outbreak_id:  outbreak.id,
+              disease,
+              country,
+              region:       outbreak.region,
+              risk_level:   outbreak.risk_level,
+              cases:        outbreak.cases,
+              deaths:       outbreak.deaths,
+              cfr_pct:      cfr,
+              is_pheic:            outbreak.is_pheic,
+              date:                outbreak.date,
+              verification_status: outbreak.verification_status,
+              response_phase:      outbreak.response_phase,
+              rt_estimate:         rtMap.get(outbreak.id) ?? null,
+            },
+          };
 
       const body = JSON.stringify(payload);
 

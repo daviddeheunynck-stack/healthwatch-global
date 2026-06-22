@@ -103,6 +103,10 @@
     {
       "path": "/api/cron/trigger-category-alerts",
       "schedule": "15,45 * * * *"
+    },
+    {
+      "path": "/api/cron/trigger-geofence-alerts",
+      "schedule": "0 */6 * * *"
     }
   ]
 }

@@ -10,7 +10,7 @@ interface WebhookEntry {
   id: string;
   name: string;
   url: string;
-  filters: { regions?: string[]; risk_levels?: string[]; rt_threshold?: number; disease_thresholds?: { disease_en: string; min_cases: number }[]; proximity?: { lat: number; lng: number; radius_km: number; label?: string }; min_change_pct?: number };
+  filters: { regions?: string[]; risk_levels?: string[]; rt_threshold?: number; disease_thresholds?: { disease_en: string; min_cases: number }[]; proximity?: { lat: number; lng: number; radius_km: number; label?: string }; min_change_pct?: number; slack_format?: boolean };
   active: boolean;
   last_triggered_at: string | null;
   last_status_code: number | null;
@@ -28,6 +28,7 @@ const COPY: Record<string, {
   rtThreshold: string; rtNote: string; diseaseThresholds: string; diseasePlaceholder: string; minCasesLabel: string;
   proximity: string; proxLat: string; proxLng: string; proxRadius: string; proxLabelInput: string;
   minChangePct: string; minChangePctNote: string;
+  slackFormat: string; slackFormatNote: string;
 }> = {
   fr: {
     title: "Webhooks", subtitle: "Recevez un push HTTPS chaque fois qu'un foyer atteint le niveau de risque configuré.",
@@ -44,6 +45,7 @@ const COPY: Record<string, {
     diseaseThresholds: "Seuils IHR par maladie", diseasePlaceholder: "Ebola", minCasesLabel: "cas min",
     proximity: "Alerte de proximité", proxLat: "Latitude", proxLng: "Longitude", proxRadius: "Rayon (km)", proxLabelInput: "Lieu (optionnel)",
     minChangePct: "Seuil de variation", minChangePctNote: "Déclencher si les cas augmentent de ≥ X % ou si le niveau de risque change (évite les alertes répétitives)",
+    slackFormat: "Format Slack", slackFormatNote: "Payload Slack Block Kit (compatible Slack Incoming Webhooks)",
     status: (c) => c === null ? "—" : c >= 200 && c < 300 ? `✓ ${c}` : `✗ ${c}`,
   },
   en: {
@@ -61,6 +63,7 @@ const COPY: Record<string, {
     diseaseThresholds: "IHR thresholds per disease", diseasePlaceholder: "Ebola", minCasesLabel: "min cases",
     proximity: "Proximity alert", proxLat: "Latitude", proxLng: "Longitude", proxRadius: "Radius (km)", proxLabelInput: "Label (optional)",
     minChangePct: "Change threshold", minChangePctNote: "Fire only if cases increase by ≥ X % or risk level changes (reduces alert fatigue)",
+    slackFormat: "Slack format", slackFormatNote: "Send Slack Block Kit payload (compatible with Slack Incoming Webhooks)",
     status: (c) => c === null ? "—" : c >= 200 && c < 300 ? `✓ ${c}` : `✗ ${c}`,
   },
   es: {
@@ -78,6 +81,7 @@ const COPY: Record<string, {
     diseaseThresholds: "Umbrales IHR por enfermedad", diseasePlaceholder: "Ebola", minCasesLabel: "casos mín",
     proximity: "Alerta de proximidad", proxLat: "Latitud", proxLng: "Longitud", proxRadius: "Radio (km)", proxLabelInput: "Lugar (opcional)",
     minChangePct: "Umbral de variación", minChangePctNote: "Disparar si los casos aumentan ≥ X % o cambia el nivel de riesgo (reduce alertas repetidas)",
+    slackFormat: "Formato Slack", slackFormatNote: "Payload Slack Block Kit (compatible con Slack Incoming Webhooks)",
     status: (c) => c === null ? "—" : c >= 200 && c < 300 ? `✓ ${c}` : `✗ ${c}`,
   },
   ar: {
@@ -95,6 +99,7 @@ const COPY: Record<string, {
     diseaseThresholds: "عتبات IHR لكل مرض", diseasePlaceholder: "Ebola", minCasesLabel: "حالات دنيا",
     proximity: "تنبيه القرب", proxLat: "خط العرض", proxLng: "خط الطول", proxRadius: "نطاق (كم)", proxLabelInput: "المكان (اختياري)",
     minChangePct: "حد التغيير", minChangePctNote: "إطلاق التنبيه عند زيادة الحالات بنسبة ≥ X٪ أو تغيير مستوى الخطر",
+    slackFormat: "تنسيق Slack", slackFormatNote: "إرسال Slack Block Kit payload (متوافق مع Slack Incoming Webhooks)",
     status: (c) => c === null ? "—" : c !== null && c >= 200 && c < 300 ? `✓ ${c}` : `✗ ${c}`,
   },
   id: {
@@ -112,6 +117,7 @@ const COPY: Record<string, {
     diseaseThresholds: "Ambang IHR per penyakit", diseasePlaceholder: "Ebola", minCasesLabel: "kasus min",
     proximity: "Peringatan kedekatan", proxLat: "Lintang", proxLng: "Bujur", proxRadius: "Radius (km)", proxLabelInput: "Lokasi (opsional)",
     minChangePct: "Ambang perubahan", minChangePctNote: "Picu jika kasus naik ≥ X% atau tingkat risiko berubah (kurangi kelelahan peringatan)",
+    slackFormat: "Format Slack", slackFormatNote: "Kirim payload Slack Block Kit (kompatibel dengan Slack Incoming Webhooks)",
     status: (c) => c === null ? "—" : c !== null && c >= 200 && c < 300 ? `✓ ${c}` : `✗ ${c}`,
   },
 };
@@ -166,6 +172,7 @@ export default function WebhookPanel({ locale }: Props) {
   const [proxRadius, setProxRadius] = useState<number | "">(500);
   const [proxLabel, setProxLabel]  = useState("");
   const [minChangePct, setMinChangePct] = useState<number | "">("");
+  const [slackFormat,  setSlackFormat]  = useState(false);
 
   useEffect(() => {
     if (!open) return;
@@ -221,6 +228,7 @@ export default function WebhookPanel({ locale }: Props) {
             label: proxLabel.trim() || undefined,
           } : undefined,
           min_change_pct: minChangePct !== "" ? Number(minChangePct) : undefined,
+          slack_format: slackFormat || undefined,
         }),
       });
       const d = await res.json();
@@ -231,6 +239,7 @@ export default function WebhookPanel({ locale }: Props) {
         setName(""); setUrl(""); setSelRegions([]); setSelRisks(["high"]); setRtThreshold(""); setDisThresholds([]); setNewDisEn(""); setNewMinCases(1);
         setEnableProximity(false); setProxLat(""); setProxLng(""); setProxRadius(500); setProxLabel("");
         setMinChangePct("");
+        setSlackFormat(false);
         setShowForm(false);
       }
     } catch { setFormError("Network error"); } finally { setCreating(false); }
@@ -393,6 +402,11 @@ export default function WebhookPanel({ locale }: Props) {
                         {w.filters?.min_change_pct !== undefined && (
                           <span className="px-1.5 py-0.5 rounded bg-teal-900/20 border border-teal-700/30 text-teal-400">
                             Δ ≥{w.filters.min_change_pct}%
+                          </span>
+                        )}
+                        {w.filters?.slack_format && (
+                          <span className="px-1.5 py-0.5 rounded bg-green-900/20 border border-green-700/30 text-green-400">
+                            Slack
                           </span>
                         )}
                         {!w.active && (
@@ -604,6 +618,18 @@ export default function WebhookPanel({ locale }: Props) {
                       <span className="text-[10px] text-gray-600">{c.minChangePctNote}</span>
                     </div>
                   </div>
+
+                  {/* Slack Block Kit format */}
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={slackFormat}
+                      onChange={(e) => setSlackFormat(e.target.checked)}
+                      className="rounded border-gray-600"
+                    />
+                    <span className="text-[10px] text-gray-400 uppercase tracking-wide">{c.slackFormat}</span>
+                    <span className="text-[10px] text-gray-600">{c.slackFormatNote}</span>
+                  </label>
 
                   {formError && (
                     <div className="flex items-center gap-1.5 text-xs text-red-400">

@@ -28,6 +28,7 @@ import OnboardingTour from "@/components/OnboardingTour";
 import FreePlanBanner from "@/components/FreePlanBanner";
 import DemoBanner from "@/components/DemoBanner";
 import CountryScorecardTab from "@/components/CountryScorecardTab";
+import GeofenceAlertPanel from "@/components/GeofenceAlertPanel";
 import { Suspense } from "react";
 import type { Metadata } from "next";
 
@@ -406,6 +407,7 @@ async function DashboardContent({ demo = false }: { demo?: boolean }) {
       {isPaid && <DataStatusWidget locale={locale} />}
 
       {isPaid && <DiseaseWatchlistPanel locale={locale} initialWatchlist={diseaseWatchlist} />}
+      {isPaid && <GeofenceAlertPanel locale={locale} />}
       {isPaid && <WebhookPanel locale={locale} />}
       {isPaid && <ScheduledReportPanel locale={locale} />}
       {isPaid && <OrgPanel locale={locale} />}

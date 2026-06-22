@@ -44,6 +44,37 @@ const COPY: Record<string, {
   id: { cases: "Kasus terkonfirmasi", deaths: "Kematian", cfr: "CFR", incidence: "Insidensi", date: "Tanggal laporan", source: "Buletin WHO asli", officialSource: "Sumber resmi", description: "Ringkasan", close: "Tutup", noData: "T/S", cfrFull: "Tingkat kematian kasus (CFR)", region: "Wilayah", partialData: "Data parsial — angka tidak tersedia dalam laporan WHO ini", dataAge: (d) => `${d} hari lalu`, fresh: "Data terbaru", stale: "Laporan lama", incidencePer100k: "per 100.000 penduduk", trendDelta: (delta, days) => `${delta > 0 ? "+" : ""}${delta} kasus / ${days}h`, illustrative: "BELUM DIVERIFIKASI", illustrativeNotice: "Angka sementara yang belum diverifikasi — belum dikaitkan dengan laporan resmi/WHO yang terkonfirmasi. Gunakan dengan hati-hati.", officialBadge: "SUMBER RESMI", officialNotice: "Sumber resmi yang dikonfirmasi (laporan situasi WHO, ECDC, atau Kementerian Kesehatan) — tanpa nomor buletin DON WHO. Data dapat diandalkan namun tidak bisa dikutip langsung sebagai DON.", fpGuidance: "Panduan Focal Point", tierLabels: { immediate: "SEGERA · WAJIB LAPOR IHR", rapid: "RESPONS CEPAT", monitor: "PEMANTAUAN STANDAR" }, firstActions: "Tindakan pertama", reportingLag: "Tanggal berdasarkan sumber resmi — onset lapangan bisa mendahului beberapa hari hingga minggu di wilayah terpencil", staleBulletin: (d) => `Tidak ada buletin resmi sejak ${d} hari — wabah mungkin sudah teratasi atau tidak dilaporkan` },
 };
 
+const DONOR_BRIEF_COPY: Record<string, {
+  copy: string; copied: string;
+  generate: (date: string, cases: number, disease: string, country: string, risk: string, pheic: boolean) => string;
+}> = {
+  fr: {
+    copy: "Copier note donateur", copied: "Copié",
+    generate: (date, cases, disease, country, risk, pheic) =>
+      `Au ${date}, ${cases.toLocaleString("fr")} cas de ${disease} ont été signalés en ${country} (niveau de risque : ${risk.toUpperCase()}).${pheic ? " L'OMS a déclaré une Urgence de Santé Publique de Portée Internationale (USPPI)." : ""} Source : HealthWatch Global · healthwatch-global.com`,
+  },
+  en: {
+    copy: "Copy donor brief", copied: "Copied",
+    generate: (date, cases, disease, country, risk, pheic) =>
+      `As of ${date}, ${cases.toLocaleString("en")} cases of ${disease} have been reported in ${country} (risk level: ${risk.toUpperCase()}).${pheic ? " WHO has declared a Public Health Emergency of International Concern (PHEIC)." : ""} Source: HealthWatch Global · healthwatch-global.com`,
+  },
+  es: {
+    copy: "Copiar nota donante", copied: "Copiado",
+    generate: (date, cases, disease, country, risk, pheic) =>
+      `Al ${date}, se han notificado ${cases.toLocaleString("es")} casos de ${disease} en ${country} (nivel de riesgo: ${risk.toUpperCase()}).${pheic ? " La OMS ha declarado una Emergencia de Salud Pública de Importancia Internacional (ESPII)." : ""} Fuente: HealthWatch Global · healthwatch-global.com`,
+  },
+  ar: {
+    copy: "نسخ ملاحظة المانح", copied: "تم النسخ",
+    generate: (date, cases, disease, country, risk, pheic) =>
+      `اعتباراً من ${date}، تم الإبلاغ عن ${cases.toLocaleString("ar")} حالة ${disease} في ${country} (مستوى الخطر: ${risk.toUpperCase()}).${pheic ? " أعلنت منظمة الصحة العالمية حالة طوارئ صحية عامة تثير قلقاً دولياً (PHEIC)." : ""} المصدر: HealthWatch Global · healthwatch-global.com`,
+  },
+  id: {
+    copy: "Salin ringkasan donor", copied: "Disalin",
+    generate: (date, cases, disease, country, risk, pheic) =>
+      `Per ${date}, ${cases.toLocaleString("id")} kasus ${disease} telah dilaporkan di ${country} (tingkat risiko: ${risk.toUpperCase()}).${pheic ? " WHO telah menyatakan Kedaruratan Kesehatan Masyarakat yang Meresahkan Dunia (PHEIC)." : ""} Sumber: HealthWatch Global · healthwatch-global.com`,
+  },
+};
+
 const VSTATUS_STYLE: Record<string, string> = {
   suspected:           "bg-yellow-900/30 border-yellow-700/40 text-yellow-400",
   under_investigation: "bg-blue-900/30 border-blue-700/40 text-blue-400",
@@ -285,6 +316,7 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlis
   const [noteText,    setNoteText]    = useState("");
   const [noteStatus,  setNoteStatus]  = useState<string>("");
   const [submitting,  setSubmitting]  = useState(false);
+  const [briefCopied, setBriefCopied] = useState(false);
 
   // Fetch notes
   useEffect(() => {
@@ -1455,6 +1487,31 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlis
                   ))}
                 </div>
               )}
+            </div>
+          );
+        })()}
+
+        {/* ── Donor brief (Pro) ─────────────────────────────────────── */}
+        {isPaid && (() => {
+          const bc = DONOR_BRIEF_COPY[locale] ?? DONOR_BRIEF_COPY.en;
+          const disease = getLocalizedDisease(outbreak, locale) ?? outbreak.disease_en ?? outbreak.disease;
+          const country = getLocalizedCountry(outbreak, locale) ?? outbreak.country_en ?? outbreak.country;
+          const brief = bc.generate(outbreak.date, outbreak.cases, disease, country, outbreak.risk_level, !!outbreak.is_pheic);
+          return (
+            <div className="px-5 pb-3">
+              <button
+                onClick={async () => {
+                  await navigator.clipboard.writeText(brief);
+                  setBriefCopied(true);
+                  setTimeout(() => setBriefCopied(false), 2500);
+                }}
+                className="flex items-center gap-1.5 text-xs text-gray-400 hover:text-white transition-colors border border-gray-700 hover:border-gray-500 rounded-lg px-3 py-1.5"
+              >
+                {briefCopied
+                  ? <Check className="w-3.5 h-3.5 text-green-400" />
+                  : <Copy className="w-3.5 h-3.5" />}
+                {briefCopied ? bc.copied : bc.copy}
+              </button>
             </div>
           );
         })()}
