@@ -754,10 +754,7 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
           </button>
         </div>
 
-        {/* Region + Risk pills + dropdowns — always visible on sm+, collapsible on mobile */}
-        <div className={`${mobileFiltersOpen ? "block" : "hidden"} sm:block space-y-2`}>
-
-        {/* Region pills */}
+        {/* Region pills — always visible (primary filter) */}
         <div className="flex flex-wrap gap-1.5">
           {regions.map(({ key, label }) => {
             const locked = !isPaid && key !== "all";
@@ -780,6 +777,8 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
           })}
         </div>
 
+        {/* Risk pills + dropdowns — collapsible on mobile */}
+        <div className={`${mobileFiltersOpen ? "block" : "hidden"} sm:block`}>
         <div className="flex flex-wrap gap-1.5 items-center">
           {risks.map(({ key, label }) => (
             <button
