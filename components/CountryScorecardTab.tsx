@@ -7,12 +7,13 @@ import type { ScorecardCountry } from "@/app/api/country-scorecard/route";
 const COPY: Record<string, {
   title: string; outbreaks: string; cases: string; lastUpdate: string;
   empty: string; refresh: string; pheic: string;
+  sortRisk: string; sortAlpha: string; sortCases: string;
 }> = {
-  fr: { title: "Vue par pays", outbreaks: "foyer(s)", cases: "cas", lastUpdate: "mis à jour", empty: "Aucune donnée", refresh: "Rafraîchir", pheic: "USPPI" },
-  en: { title: "Country view",  outbreaks: "outbreak(s)", cases: "cases", lastUpdate: "updated", empty: "No data", refresh: "Refresh", pheic: "PHEIC" },
-  es: { title: "Vista por país", outbreaks: "brote(s)",   cases: "casos", lastUpdate: "actualizado", empty: "Sin datos", refresh: "Actualizar", pheic: "ESPII" },
-  ar: { title: "عرض الدول",    outbreaks: "تفشٍّ",       cases: "حالات", lastUpdate: "آخر تحديث",  empty: "لا بيانات", refresh: "تحديث", pheic: "طوارئ صحية" },
-  id: { title: "Tampilan negara", outbreaks: "wabah",   cases: "kasus", lastUpdate: "diperbarui", empty: "Tidak ada data", refresh: "Perbarui", pheic: "KKMMD" },
+  fr: { title: "Vue par pays", outbreaks: "foyer(s)", cases: "cas", lastUpdate: "mis à jour", empty: "Aucune donnée", refresh: "Rafraîchir", pheic: "USPPI", sortRisk: "Par risque", sortAlpha: "A–Z", sortCases: "Par cas" },
+  en: { title: "Country view",  outbreaks: "outbreak(s)", cases: "cases", lastUpdate: "updated", empty: "No data", refresh: "Refresh", pheic: "PHEIC", sortRisk: "By risk", sortAlpha: "A–Z", sortCases: "By cases" },
+  es: { title: "Vista por país", outbreaks: "brote(s)",   cases: "casos", lastUpdate: "actualizado", empty: "Sin datos", refresh: "Actualizar", pheic: "ESPII", sortRisk: "Por riesgo", sortAlpha: "A–Z", sortCases: "Por casos" },
+  ar: { title: "عرض الدول",    outbreaks: "تفشٍّ",       cases: "حالات", lastUpdate: "آخر تحديث",  empty: "لا بيانات", refresh: "تحديث", pheic: "طوارئ صحية", sortRisk: "حسب الخطر", sortAlpha: "أ–ي", sortCases: "حسب الحالات" },
+  id: { title: "Tampilan negara", outbreaks: "wabah",   cases: "kasus", lastUpdate: "diperbarui", empty: "Tidak ada data", refresh: "Perbarui", pheic: "KKMMD", sortRisk: "Berdasar risiko", sortAlpha: "A–Z", sortCases: "Berdasar kasus" },
 };
 
 const RISK_BADGE: Record<string, string> = {
@@ -57,6 +58,9 @@ export default function CountryScorecardTab({ locale }: { locale: string }) {
   const [countries, setCountries] = useState<ScorecardCountry[]>([]);
   const [loading,   setLoading]   = useState(true);
   const [filter,    setFilter]    = useState("");
+  const [sort,      setSort]      = useState<"risk" | "alpha" | "cases">("risk");
+
+  const RISK_ORDER: Record<string, number> = { high: 3, medium: 2, low: 1 };
 
   async function load() {
     setLoading(true);
@@ -69,9 +73,19 @@ export default function CountryScorecardTab({ locale }: { locale: string }) {
 
   useEffect(() => { load(); }, []);
 
-  const visible = filter
-    ? countries.filter((c) => c.country_en.toLowerCase().includes(filter.toLowerCase()))
+  const filtered = filter
+    ? countries.filter((co) => co.country_en.toLowerCase().includes(filter.toLowerCase()))
     : countries;
+
+  const visible = [...filtered].sort((a, b) => {
+    if (sort === "alpha") return a.country_en.localeCompare(b.country_en);
+    if (sort === "cases") return b.total_cases - a.total_cases;
+    if (a.has_pheic !== b.has_pheic) return a.has_pheic ? -1 : 1;
+    const ra = RISK_ORDER[a.max_risk] ?? 0;
+    const rb = RISK_ORDER[b.max_risk] ?? 0;
+    if (ra !== rb) return rb - ra;
+    return b.outbreak_count - a.outbreak_count;
+  });
 
   return (
     <div className="rounded-xl border border-gray-800 bg-gray-900/40 overflow-hidden">
@@ -83,12 +97,27 @@ export default function CountryScorecardTab({ locale }: { locale: string }) {
           <span className="text-[10px] text-gray-600">({countries.length})</span>
         </div>
         <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1 text-[10px]">
+            {(["risk", "alpha", "cases"] as const).map((v) => (
+              <button
+                key={v}
+                onClick={() => setSort(v)}
+                className={`px-1.5 py-0.5 rounded transition-colors ${
+                  sort === v
+                    ? "bg-gray-700 text-gray-300"
+                    : "text-gray-600 hover:text-gray-400"
+                }`}
+              >
+                {v === "risk" ? c.sortRisk : v === "alpha" ? c.sortAlpha : c.sortCases}
+              </button>
+            ))}
+          </div>
           <input
             type="text"
             value={filter}
             onChange={(e) => setFilter(e.target.value)}
             placeholder={locale === "fr" ? "Filtrer…" : "Filter…"}
-            className="text-xs px-2 py-1 rounded-lg border border-gray-800 bg-gray-900 text-gray-400 placeholder-gray-600 focus:outline-none focus:border-gray-600 w-28"
+            className="text-xs px-2 py-1 rounded-lg border border-gray-800 bg-gray-900 text-gray-400 placeholder-gray-600 focus:outline-none focus:border-gray-600 w-24"
           />
           <button onClick={load} disabled={loading} className="p-1 text-gray-600 hover:text-gray-300 disabled:opacity-40 transition-colors">
             <RefreshCw className={`w-3.5 h-3.5 ${loading ? "animate-spin" : ""}`} />

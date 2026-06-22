@@ -17,14 +17,6 @@ function escapeXml(str: string): string {
 export const dynamic = "force-dynamic";
 
 export async function GET(req: NextRequest) {
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return new Response("Unauthorized", { status: 401 });
-
-  const { data: profile } = await supabase.from("profiles").select("plan").eq("id", user.id).single();
-  if (!PAID_PLANS.includes(profile?.plan ?? ""))
-    return new Response("Pro plan required", { status: 403 });
-
   const { searchParams } = new URL(req.url);
   const region = searchParams.get("region");
   const risk   = searchParams.get("risk");
@@ -33,6 +25,28 @@ export async function GET(req: NextRequest) {
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.SUPABASE_SERVICE_ROLE_KEY!
   );
+
+  // Auth: session cookie OR ?api_key= / X-API-Key header
+  let profilePlan: string | null = null;
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  if (user) {
+    const { data: profile } = await supabase
+      .from("profiles").select("plan").eq("id", user.id).single();
+    profilePlan = profile?.plan ?? null;
+  } else {
+    const keyParam = searchParams.get("api_key") ?? req.headers.get("x-api-key");
+    if (keyParam) {
+      const { data: profile } = await service
+        .from("profiles").select("plan").eq("api_key", keyParam).single();
+      profilePlan = profile?.plan ?? null;
+    }
+  }
+
+  if (!profilePlan) return new Response("Unauthorized", { status: 401 });
+  if (!PAID_PLANS.includes(profilePlan))
+    return new Response("Pro plan required", { status: 403 });
 
   let query = service
     .from("outbreaks")

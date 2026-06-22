@@ -23,18 +23,21 @@ export default function RegionalPulseSummary({ outbreaks, locale }: Props) {
   const [open, setOpen] = useState(true);
   const rl = REGION_LABELS[locale] ?? REGION_LABELS.en;
 
-  interface RegionStat { region: string; label: string; count: number; totalCases: number; highCount: number; medCount: number }
+  interface RegionStat { region: string; label: string; count: number; totalCases: number; highCount: number; medCount: number; multiThreat: boolean }
   const stats: RegionStat[] = [];
   for (const region of REGION_ORDER) {
     const regional = outbreaks.filter((o) => o.region === region);
     if (regional.length === 0) continue;
+    const highOnes = regional.filter((o) => o.risk_level === "high");
+    const distinctHighDiseases = new Set(highOnes.map((o) => o.disease_en)).size;
     stats.push({
       region,
-      label:      rl[region] ?? region,
-      count:      regional.length,
-      totalCases: regional.reduce((s, o) => s + o.cases, 0),
-      highCount:  regional.filter((o) => o.risk_level === "high").length,
-      medCount:   regional.filter((o) => o.risk_level === "medium").length,
+      label:       rl[region] ?? region,
+      count:       regional.length,
+      totalCases:  regional.reduce((s, o) => s + o.cases, 0),
+      highCount:   highOnes.length,
+      medCount:    regional.filter((o) => o.risk_level === "medium").length,
+      multiThreat: distinctHighDiseases >= 3,
     });
   }
 
@@ -56,7 +59,7 @@ export default function RegionalPulseSummary({ outbreaks, locale }: Props) {
 
       {open && (
         <div className="px-4 pb-3 flex flex-wrap gap-2">
-          {stats.map(({ region, label, count, totalCases, highCount, medCount }) => (
+          {stats.map(({ region, label, count, totalCases, highCount, medCount, multiThreat }) => (
             <div key={region} className="flex items-center gap-2.5 border border-gray-800 rounded-lg px-3 py-2 bg-gray-950/60">
               <div className="min-w-0">
                 <p className="text-[11px] font-semibold text-gray-300 whitespace-nowrap">{label}</p>
@@ -73,6 +76,11 @@ export default function RegionalPulseSummary({ outbreaks, locale }: Props) {
                 {medCount > 0 && (
                   <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-amber-900/20 border border-amber-700/30 text-amber-500 whitespace-nowrap">
                     {medCount} MED
+                  </span>
+                )}
+                {multiThreat && (
+                  <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-purple-900/20 border border-purple-700/30 text-purple-400 whitespace-nowrap">
+                    MULTI
                   </span>
                 )}
               </div>
