@@ -235,6 +235,20 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
     if (o) setSelected(o);
   }, [outbreaks]);
 
+  // URL sync — read filter params on mount so shared links restore filters
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const p = new URLSearchParams(window.location.search);
+    const q = p.get("q"); if (q) setSearch(q);
+    const r = p.get("region");
+    if (r && ["africa","asia","americas","europe","oceania"].includes(r)) setRegion(r as Region);
+    const c = p.get("country"); if (c) setCountry(c);
+    const rk = p.get("risk");
+    if (rk && ["high","medium","low"].includes(rk)) setRisk(rk as Risk);
+    const df = p.get("from"); if (df) setDateFrom(df);
+    const dt = p.get("to");   if (dt) setDateTo(dt);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
   // Unique sorted country list from current outbreaks
   const countryOptions = useMemo(() => {
     const seen = new Set<string>();
@@ -319,6 +333,20 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
       : "HealthWatch Global";
     return () => { document.title = "HealthWatch Global"; };
   }, [sorted]);
+
+  // URL sync — write filter params so the link is always shareable
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const p = new URLSearchParams(window.location.search);
+    search    ? p.set("q", search)          : p.delete("q");
+    region  !== "all" ? p.set("region", region)   : p.delete("region");
+    country !== "all" ? p.set("country", country) : p.delete("country");
+    risk    !== "all" ? p.set("risk",    risk)     : p.delete("risk");
+    dateFrom ? p.set("from", dateFrom) : p.delete("from");
+    dateTo   ? p.set("to",   dateTo)   : p.delete("to");
+    const qs = p.toString();
+    window.history.replaceState(null, "", qs ? `?${qs}` : window.location.pathname);
+  }, [search, region, country, risk, dateFrom, dateTo]);
 
   // P2: multi-country event clusters — how many countries share the same event_id
   const eventClusters = useMemo(() => {
@@ -1093,21 +1121,31 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
                     <TrendBar trend={trends?.[outbreak.id]} />
                   </td>
                   <td className="px-4 py-3 hidden md:table-cell">
-                    <div className="text-gray-400 text-sm tabular-nums">
-                      {ageMode ? (() => {
-                        const days = Math.round((Date.now() - new Date(outbreak.date).getTime()) / 86_400_000);
-                        const cls  = days < 14 ? "text-green-400" : days < 30 ? "text-amber-400" : "text-red-400";
-                        return <span className={`text-xs font-semibold tabular-nums ${cls}`}>{days}d</span>;
-                      })() : epiWeekMode ? (
-                        <span className="text-teal-400/80">{getEpiWeek(outbreak.date)}</span>
-                      ) : (() => {
-                        const [y, m, d] = outbreak.date.split("-").map(Number);
-                        const localeMap: Record<string, string> = { fr: "fr-FR", es: "es-ES", ar: "ar-SA", id: "id-ID" };
-                        const formatted = new Date(y, m - 1, d).toLocaleDateString(
-                          localeMap[locale] ?? "en-GB",
-                          { day: "numeric", month: "short", year: "numeric" }
-                        );
-                        return locale === "fr" ? `au ${formatted}` : locale === "ar" ? `بتاريخ ${formatted}` : formatted;
+                    <div className="flex items-center gap-1 text-gray-400 text-sm tabular-nums">
+                      <span>
+                        {ageMode ? (() => {
+                          const days = Math.round((Date.now() - new Date(outbreak.date).getTime()) / 86_400_000);
+                          const cls  = days < 14 ? "text-green-400" : days < 30 ? "text-amber-400" : "text-red-400";
+                          return <span className={`text-xs font-semibold tabular-nums ${cls}`}>{days}d</span>;
+                        })() : epiWeekMode ? (
+                          <span className="text-teal-400/80">{getEpiWeek(outbreak.date)}</span>
+                        ) : (() => {
+                          const [y, m, d] = outbreak.date.split("-").map(Number);
+                          const localeMap: Record<string, string> = { fr: "fr-FR", es: "es-ES", ar: "ar-SA", id: "id-ID" };
+                          const formatted = new Date(y, m - 1, d).toLocaleDateString(
+                            localeMap[locale] ?? "en-GB",
+                            { day: "numeric", month: "short", year: "numeric" }
+                          );
+                          return locale === "fr" ? `au ${formatted}` : locale === "ar" ? `بتاريخ ${formatted}` : formatted;
+                        })()}
+                      </span>
+                      {!ageMode && !epiWeekMode && (() => {
+                        const ref = outbreak.updated_at ?? outbreak.date;
+                        const staleDays = Math.floor((Date.now() - new Date(ref).getTime()) / 86_400_000);
+                        if (staleDays < 3) return null;
+                        const cls = staleDays < 7 ? "text-amber-400" : "text-orange-500";
+                        const tip = ({ fr: `Dernière mise à jour il y a ${staleDays}j`, en: `Last updated ${staleDays}d ago`, es: `Última actualización hace ${staleDays}d`, ar: `آخر تحديث: ${staleDays} أيام`, id: `Terakhir diperbarui ${staleDays} hari lalu` }[locale]) ?? `${staleDays}d ago`;
+                        return <span title={tip} className={`text-[10px] cursor-help shrink-0 ${cls}`}>⏰{staleDays}d</span>;
                       })()}
                     </div>
                   </td>
