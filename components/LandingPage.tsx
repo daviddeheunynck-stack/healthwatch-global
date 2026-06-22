@@ -484,7 +484,7 @@ const EIOS_ROWS: { en: string; fr: string; es: string; ar: string; id: string; h
   { en: "Sub-national geolocation (province level)", fr: "Localisation sous-nationale (niveau province)", es: "Geolocalización subnacional (nivel provincia)", ar: "تحديد الموقع الجغرافي الإقليمي", id: "Geolokasi sub-nasional (level provinsi)", hw: "✓", eios: "✗", manual: "~" },
   { en: "One-click PDF briefing", fr: "Rapport PDF automatique en 1 clic", es: "Informe PDF automático en 1 clic", ar: "تقرير PDF تلقائي بنقرة واحدة", id: "Laporan PDF otomatis 1 klik", hw: "✓", eios: "✗", manual: "✗" },
   { en: "5 languages: EN / FR / ES / AR / ID", fr: "5 langues : EN / FR / ES / AR / ID", es: "5 idiomas: EN / FR / ES / AR / ID", ar: "5 لغات: AR / FR / ES / EN / ID", id: "5 bahasa: EN / FR / ES / AR / ID", hw: "✓", eios: "~", manual: "✗" },
-  { en: "Hourly data refresh", fr: "Mise à jour toutes les heures", es: "Actualización cada hora", ar: "تحديث كل ساعة", id: "Pembaruan data setiap jam", hw: "✓", eios: "✗", manual: "✗" },
+  { en: "WHO: hourly · ECDC, PAHO & Africa CDC: weekly", fr: "OMS : toutes les heures · ECDC, OPAS & Africa CDC : hebdomadaire", es: "OMS: cada hora · ECDC, OPS & Africa CDC: semanal", ar: "WHO: كل ساعة · ECDC وPAHO وAfrica CDC: أسبوعياً", id: "WHO: setiap jam · ECDC, PAHO & Africa CDC: mingguan", hw: "✓", eios: "✗", manual: "✗" },
 ];
 
 const EIOS_TITLES: Record<string, { title: string; sub: string; colHw: string; colEios: string; colManual: string; partial: string }> = {

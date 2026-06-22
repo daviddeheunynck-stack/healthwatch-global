@@ -42,11 +42,11 @@ import type { Metadata } from "next";
 export const dynamic = "force-dynamic";
 
 const DASHBOARD_META: Record<string, { title: string; description: string }> = {
-  en: { title: "Global Disease Outbreak Dashboard", description: "Map and table of active disease outbreaks worldwide — official WHO, ECDC, PAHO and Africa CDC data, updated every hour." },
-  fr: { title: "Tableau de bord — Foyers épidémiques mondiaux", description: "Carte et tableau des foyers épidémiques actifs dans le monde, issus des sources officielles OMS, ECDC, PAHO et Africa CDC — mis à jour toutes les heures." },
-  es: { title: "Panel de vigilancia epidémica mundial", description: "Mapa y tabla de brotes de enfermedades activos en todo el mundo — datos oficiales OMS, ECDC, PAHO y Africa CDC, actualizados cada hora." },
-  ar: { title: "لوحة تحكم تفشي الأمراض العالمية", description: "خريطة وجدول لتفشي الأمراض النشطة حول العالم — بيانات رسمية من منظمة الصحة العالمية، ECDC، PAHO وAfrica CDC، محدّثة كل ساعة." },
-  id: { title: "Dasbor Wabah Penyakit Global", description: "Peta dan tabel wabah penyakit aktif di seluruh dunia — data resmi WHO, ECDC, PAHO dan Africa CDC, diperbarui setiap jam." },
+  en: { title: "Global Disease Outbreak Dashboard", description: "Map and table of active disease outbreaks worldwide — official WHO (hourly), ECDC, PAHO and Africa CDC data (weekly)." },
+  fr: { title: "Tableau de bord — Foyers épidémiques mondiaux", description: "Carte et tableau des foyers épidémiques actifs dans le monde, issus des sources officielles OMS (toutes les heures), ECDC, PAHO et Africa CDC (hebdomadaire)." },
+  es: { title: "Panel de vigilancia epidémica mundial", description: "Mapa y tabla de brotes de enfermedades activos en todo el mundo — datos oficiales OMS (cada hora), ECDC, PAHO y Africa CDC (semanal)." },
+  ar: { title: "لوحة تحكم تفشي الأمراض العالمية", description: "خريطة وجدول لتفشي الأمراض النشطة حول العالم — بيانات رسمية من WHO (كل ساعة) وECDC وPAHO وAfrica CDC (أسبوعياً)." },
+  id: { title: "Dasbor Wabah Penyakit Global", description: "Peta dan tabel wabah penyakit aktif di seluruh dunia — data resmi WHO (setiap jam), ECDC, PAHO dan Africa CDC (mingguan)." },
 };
 
 // ─── Filter strings (avoids touching 5 message files) ────────────────────────
@@ -481,7 +481,7 @@ export default async function DashboardPage({
           "description": "Free tier — live outbreak map and dashboard, no account required.",
         },
         "featureList": [
-          "WHO, ECDC, PAHO and Africa CDC outbreak data — updated every hour",
+          "WHO, ECDC, PAHO and Africa CDC outbreak data — WHO updated hourly, ECDC/PAHO/Africa CDC weekly",
           "5 languages — English, French, Spanish, Arabic, Indonesian",
           "Regional email alerts",
           "PDF epidemiological reports",

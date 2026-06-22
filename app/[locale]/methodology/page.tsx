@@ -76,7 +76,7 @@ const COPY: Record<Locale, {
     ],
     pipelineTitle: "Data pipeline",
     pipelineSteps: [
-      { title: "Automated sync — every hour", desc: "A scheduled cron job fetches the latest publications from each source API and RSS feed. New outbreaks are ingested within 1 hour of official publication." },
+      { title: "Automated sync — WHO: hourly | ECDC, PAHO & Africa CDC: weekly", desc: "Scheduled cron jobs fetch the latest publications from each source. WHO DON is checked every hour. ECDC, PAHO and Africa CDC are checked weekly. New outbreaks are ingested within 1 hour of WHO publication, or within the same week for the other sources." },
       { title: "Normalization", desc: "Country names, disease names, dates and case counts are standardized to a common schema. Disease names are mapped to canonical English names used across all 5 languages." },
       { title: "Deduplication", desc: "Outbreaks from multiple sources for the same event are matched and merged. The highest-authority source (WHO DON > ECDC > PAHO > Africa CDC) takes precedence for case counts." },
       { title: "Storage & ISR", desc: "Data is stored in a PostgreSQL database (Supabase). Dashboard pages are revalidated every hour via Next.js ISR. The data freshness badge on the dashboard shows the last successful sync timestamp." },
@@ -150,7 +150,7 @@ const COPY: Record<Locale, {
     ],
     pipelineTitle: "Pipeline de données",
     pipelineSteps: [
-      { title: "Synchronisation automatique — toutes les heures", desc: "Un job cron planifié récupère les dernières publications de chaque source API et flux RSS. Les nouveaux foyers sont intégrés dans l'heure suivant la publication officielle." },
+      { title: "Synchronisation automatique — OMS : toutes les heures | ECDC, OPAS & Africa CDC : hebdomadaire", desc: "Des jobs cron planifiés récupèrent les dernières publications de chaque source. L'OMS DON est vérifiée toutes les heures. L'ECDC, l'OPAS et l'Africa CDC sont vérifiés chaque semaine. Les nouveaux foyers OMS sont intégrés dans l'heure, les autres dans la semaine suivant la publication." },
       { title: "Normalisation", desc: "Les noms de pays, noms de maladies, dates et chiffres de cas sont standardisés dans un schéma commun. Les noms de maladies sont mappés sur des noms canoniques en anglais, utilisés dans les 5 langues." },
       { title: "Déduplication", desc: "Les foyers issus de plusieurs sources pour le même événement sont rapprochés et fusionnés. La source de plus haute autorité (WHO DON > ECDC > OPAS > Africa CDC) prend la priorité pour les chiffres de cas." },
       { title: "Stockage & ISR", desc: "Les données sont stockées dans une base PostgreSQL (Supabase). Les pages du tableau de bord sont revalidées toutes les heures via Next.js ISR. Le badge de fraîcheur sur le tableau de bord affiche le timestamp de la dernière synchronisation réussie." },
@@ -224,7 +224,7 @@ const COPY: Record<Locale, {
     ],
     pipelineTitle: "Flujo de datos",
     pipelineSteps: [
-      { title: "Sincronización automática — cada hora", desc: "Un trabajo cron programado obtiene las últimas publicaciones de cada API y feed RSS. Los nuevos brotes se incorporan en 1 hora tras la publicación oficial." },
+      { title: "Sincronización automática — OMS: cada hora | ECDC, OPS & Africa CDC: semanal", desc: "Trabajos cron programados obtienen las últimas publicaciones de cada fuente. OMS DON se verifica cada hora. ECDC, OPS y Africa CDC se verifican semanalmente. Los nuevos brotes OMS se integran en 1 hora; los demás, en la misma semana de publicación." },
       { title: "Normalización", desc: "Nombres de países, nombres de enfermedades, fechas y recuentos de casos se estandarizan en un esquema común." },
       { title: "Deduplicación", desc: "Los brotes de múltiples fuentes para el mismo evento se emparejan y fusionan. La fuente de mayor autoridad (WHO DON > ECDC > PAHO > Africa CDC) tiene prioridad." },
       { title: "Almacenamiento e ISR", desc: "Los datos se almacenan en PostgreSQL (Supabase). Las páginas del panel se revalidan cada hora mediante Next.js ISR." },
@@ -282,7 +282,7 @@ const COPY: Record<Locale, {
     ],
     pipelineTitle: "خط أنابيب البيانات",
     pipelineSteps: [
-      { title: "مزامنة تلقائية — كل ساعة", desc: "يجلب جدول cron آلي أحدث المنشورات من كل مصدر. تُدرج تفشيات جديدة في غضون ساعة من النشر الرسمي." },
+      { title: "مزامنة تلقائية — WHO: كل ساعة | ECDC وPAHO وAfrica CDC: أسبوعياً", desc: "تجلب مهام cron منتظمة أحدث المنشورات من كل مصدر. يُفحص WHO DON كل ساعة. أما ECDC وPAHO وAfrica CDC فتُفحص أسبوعياً. تُدرج تفشيات WHO في غضون ساعة، وتفشيات المصادر الأخرى خلال نفس الأسبوع." },
       { title: "التوحيد والتطبيع", desc: "تُوحَّد أسماء الدول والأمراض والتواريخ وأعداد الحالات وفق مخطط مشترك." },
       { title: "إزالة التكرار", desc: "تُدمج التفشيات من مصادر متعددة لنفس الحدث. تحتل المصادر الأعلى سلطةً (WHO DON > ECDC > PAHO > Africa CDC) الأولوية." },
       { title: "التخزين والتحديث", desc: "تُخزَّن البيانات في قاعدة بيانات PostgreSQL. تُحدَّث صفحات لوحة التحكم كل ساعة." },
@@ -340,7 +340,7 @@ const COPY: Record<Locale, {
     ],
     pipelineTitle: "Alur data",
     pipelineSteps: [
-      { title: "Sinkronisasi otomatis — setiap jam", desc: "Cron job terjadwal mengambil publikasi terbaru dari setiap sumber API dan RSS feed. Wabah baru masuk dalam 1 jam setelah publikasi resmi." },
+      { title: "Sinkronisasi otomatis — WHO: setiap jam | ECDC, PAHO & Africa CDC: mingguan", desc: "Cron job terjadwal mengambil publikasi terbaru dari setiap sumber. WHO DON dicek setiap jam. ECDC, PAHO dan Africa CDC dicek setiap minggu. Wabah baru WHO masuk dalam 1 jam; sumber lain dalam minggu yang sama setelah publikasi." },
       { title: "Normalisasi", desc: "Nama negara, nama penyakit, tanggal, dan jumlah kasus distandarisasi ke skema umum." },
       { title: "Deduplikasi", desc: "Wabah dari beberapa sumber untuk kejadian yang sama dicocokkan dan digabungkan. Sumber otoritas tertinggi (WHO DON > ECDC > PAHO > Africa CDC) diprioritaskan." },
       { title: "Penyimpanan & ISR", desc: "Data disimpan di PostgreSQL (Supabase). Halaman dasbor divalidasi ulang setiap jam via Next.js ISR." },
