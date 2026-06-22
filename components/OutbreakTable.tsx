@@ -1034,6 +1034,7 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
                 <th
                   className="text-left px-4 py-3 hidden md:table-cell cursor-pointer hover:text-gray-200 select-none whitespace-nowrap"
                   onClick={() => handleSort("date")}
+                  title={{ fr: "Date du dernier bulletin officiel (WHO, ECDC, PAHO ou Africa CDC) — pas nécessairement la date de début du foyer", en: "Date of the latest official bulletin (WHO, ECDC, PAHO or Africa CDC) — not necessarily the outbreak start date", es: "Fecha del último boletín oficial (OMS, ECDC, PAHO o Africa CDC) — no necesariamente la fecha de inicio del brote", ar: "تاريخ آخر نشرة رسمية (WHO أو ECDC أو PAHO أو Africa CDC) — لا يمثل بالضرورة تاريخ بداية التفشي", id: "Tanggal buletin resmi terbaru (WHO, ECDC, PAHO atau Africa CDC) — bukan tanggal mulai wabah" }[locale] ?? "Date of latest official bulletin"}
                 >
                   {ageMode
                     ? ({ fr: "Âge", en: "Age", es: "Edad", ar: "العمر", id: "Usia" }[locale] ?? "Age")
