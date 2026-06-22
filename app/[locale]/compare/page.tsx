@@ -137,7 +137,9 @@ export default function ComparePage() {
   const cfrB = oB && oB.cases > 0 ? oB.deaths / oB.cases * 100 : null;
   const incA = oA ? getIncidenceRate(oA.cases, oA.country_en) : null;
   const incB = oB ? getIncidenceRate(oB.cases, oB.country_en) : null;
-  const options = outbreaks.map(o => ({ id: o.id, label: `${getLocalizedDisease(o, locale)} — ${getLocalizedCountry(o, locale)}` }));
+  const options = outbreaks
+    .map(o => ({ id: o.id, label: `${getLocalizedDisease(o, locale)} — ${getLocalizedCountry(o, locale)}` }))
+    .sort((a, b) => a.label.localeCompare(b.label));
 
   return (
     <div className="space-y-6 max-w-4xl mx-auto" dir={isRtl ? "rtl" : undefined}>
