@@ -1,4 +1,4 @@
-import { Terminal, Key, Zap, AlertTriangle, CheckCircle, ExternalLink } from "lucide-react";
+import { Terminal, Key, Zap, AlertTriangle, CheckCircle, ExternalLink, FlaskConical } from "lucide-react";
 import Link from "next/link";
 import type { Metadata } from "next";
 
@@ -141,6 +141,23 @@ export default function DocsPage({ params }: { params: Promise<{ locale: string 
         <p className="text-sm text-gray-500">
           Replace <code className="text-purple-300 font-mono">hwg_your_key_here</code> with a key generated in your account settings.
         </p>
+      </div>
+
+      {/* Trial key banner */}
+      <div className="flex items-start sm:items-center justify-between gap-4 bg-teal-950/30 border border-teal-700/30 rounded-2xl px-6 py-4 flex-wrap">
+        <div className="flex items-start gap-3">
+          <FlaskConical className="w-5 h-5 text-teal-400 mt-0.5 shrink-0" />
+          <div className="space-y-0.5">
+            <p className="text-sm font-semibold text-teal-300">Academic or research institution?</p>
+            <p className="text-xs text-gray-400">Request a 30-day trial API key — no credit card required. We review requests within 24 h.</p>
+          </div>
+        </div>
+        <a
+          href="mailto:contact@healthwatch-global.com?subject=Trial%20API%20key%20request&body=Institution%3A%0AUse%20case%3A%0AExpected%20volume%3A"
+          className="shrink-0 text-sm font-semibold text-teal-400 hover:text-teal-300 transition-colors whitespace-nowrap"
+        >
+          Request trial key →
+        </a>
       </div>
 
       {/* TOC */}
@@ -578,7 +595,14 @@ console.log(data);`}</Code>
         <div>
           <p className="text-white font-semibold">Ready to integrate?</p>
           <p className="text-sm text-gray-400 mt-0.5">
-            Generate your first API key from your account settings.
+            Enterprise customers: generate your API key in account settings.
+            Academic / research institution?{" "}
+            <a
+              href="mailto:contact@healthwatch-global.com?subject=Trial%20API%20key%20request"
+              className="text-teal-400 hover:text-teal-300 underline transition-colors"
+            >
+              Request a free trial key
+            </a>.
           </p>
         </div>
         <Link
