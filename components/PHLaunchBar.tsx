@@ -4,8 +4,7 @@ import { useEffect, useState } from "react";
 import { X } from "lucide-react";
 import { track } from "@vercel/analytics/react";
 
-// Update this URL once the PH submission is live
-const PH_URL = "https://www.producthunt.com/posts/healthwatch-global";
+const PH_URL = "https://www.producthunt.com/products/healthwatch-global";
 
 // PH launch day window (UTC) — show the bar on June 25 and 26, 2026
 const LAUNCH_START = new Date("2026-06-25T00:00:00Z");

@@ -1,5 +1,4 @@
-// ⚠️  Update PH_URL once the Product Hunt post is live (June 24)
-const PH_URL = "https://www.producthunt.com/posts/healthwatch-global";
+const PH_URL = "https://www.producthunt.com/products/healthwatch-global";
 const DEMO_URL = "https://healthwatch-global.com/en?demo=1&utm_source=email&utm_medium=launch_blast&utm_campaign=ph_launch_2026";
 
 const COPY: Record<string, {
