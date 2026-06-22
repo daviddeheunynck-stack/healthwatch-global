@@ -26,8 +26,9 @@ interface Props {
   locale:     string;
   outbreakId?: string;
   pageUrl?:   string;
-  compact?:   boolean;
-  updatedAt?: string;
+  compact?:    boolean;
+  updatedAt?:  string;
+  reportDate?: string;
 }
 
 const RISK_EMOJI: Record<string, string> = {
@@ -54,7 +55,7 @@ const RISK_LABEL: Record<string, Record<string, string>> = {
 
 const SHARE_COPY: Record<string, {
   tweet:        (disease: string, country: string, cases: number, deaths: number | undefined, risk: string) => string;
-  report:       (disease: string, country: string, cases: number, deaths: number | undefined, risk: string, lastSync: string, url: string) => string;
+  report:       (disease: string, country: string, cases: number, deaths: number | undefined, risk: string, lastSync: string, url: string, reportDate?: string) => string;
   copied:       string;
   copiedReport: string;
   copyLink:     string;
@@ -66,11 +67,12 @@ const SHARE_COPY: Record<string, {
       const cfr = (deaths && n > 0) ? ` · ${deaths} décès · létalité ${(deaths / n * 100).toFixed(1)}%` : "";
       return `${RISK_EMOJI[r] ?? "⚠️"} Foyer OMS : ${d} en ${c} — ${n.toLocaleString("en")} cas${cfr}. Suivi en temps réel sur HealthWatch Global.`;
     },
-    report: (d, c, n, deaths, r, lastSync, url) => {
+    report: (d, c, n, deaths, r, lastSync, url, reportDate) => {
       const risk = RISK_LABEL.fr[r] ?? r.toUpperCase();
+      const asOf = reportDate ? ` (au ${reportDate})` : "";
       const caseLine = (deaths && n > 0)
-        ? `Cas : ${n.toLocaleString("en")} | Décès : ${deaths} | Létalité : ${(deaths / n * 100).toFixed(1)}%`
-        : `Cas : ${n.toLocaleString("en")}`;
+        ? `Cas${asOf} : ${n.toLocaleString("en")} | Décès : ${deaths} | Létalité : ${(deaths / n * 100).toFixed(1)}%`
+        : `Cas${asOf} : ${n.toLocaleString("en")}`;
       const syncLine = lastSync ? `\nSource : OMS DON | Dernière MAJ : ${lastSync}` : `\nSource : OMS DON`;
       return `[HealthWatch Global — Rapport de situation]\nMaladie : ${d} | Pays : ${c} | Risque : ${risk}\n${caseLine}${syncLine}\nFiche complète : ${url}`;
     },
@@ -85,11 +87,12 @@ const SHARE_COPY: Record<string, {
       const cfr = (deaths && n > 0) ? ` · ${deaths} deaths · CFR ${(deaths / n * 100).toFixed(1)}%` : "";
       return `${RISK_EMOJI[r] ?? "⚠️"} WHO outbreak: ${d} in ${c} — ${n.toLocaleString("en")} cases${cfr}. Live on HealthWatch Global.`;
     },
-    report: (d, c, n, deaths, r, lastSync, url) => {
+    report: (d, c, n, deaths, r, lastSync, url, reportDate) => {
       const risk = RISK_LABEL.en[r] ?? r.toUpperCase();
+      const asOf = reportDate ? ` (as of ${reportDate})` : "";
       const caseLine = (deaths && n > 0)
-        ? `Cases: ${n.toLocaleString("en")} | Deaths: ${deaths} | CFR: ${(deaths / n * 100).toFixed(1)}%`
-        : `Cases: ${n.toLocaleString("en")}`;
+        ? `Cases${asOf}: ${n.toLocaleString("en")} | Deaths: ${deaths} | CFR: ${(deaths / n * 100).toFixed(1)}%`
+        : `Cases${asOf}: ${n.toLocaleString("en")}`;
       const syncLine = lastSync ? `\nSource: WHO DON | Last updated: ${lastSync}` : `\nSource: WHO DON`;
       return `[HealthWatch Global — Situation Report]\nDisease: ${d} | Country: ${c} | Risk: ${risk}\n${caseLine}${syncLine}\nFull brief: ${url}`;
     },
@@ -104,11 +107,12 @@ const SHARE_COPY: Record<string, {
       const cfr = (deaths && n > 0) ? ` · ${deaths} fallecidos · letalidad ${(deaths / n * 100).toFixed(1)}%` : "";
       return `${RISK_EMOJI[r] ?? "⚠️"} Brote OMS: ${d} en ${c} — ${n.toLocaleString("en")} casos${cfr}. Seguimiento en tiempo real en HealthWatch Global.`;
     },
-    report: (d, c, n, deaths, r, lastSync, url) => {
+    report: (d, c, n, deaths, r, lastSync, url, reportDate) => {
       const risk = RISK_LABEL.es[r] ?? r.toUpperCase();
+      const asOf = reportDate ? ` (al ${reportDate})` : "";
       const caseLine = (deaths && n > 0)
-        ? `Casos: ${n.toLocaleString("en")} | Fallecidos: ${deaths} | Letalidad: ${(deaths / n * 100).toFixed(1)}%`
-        : `Casos: ${n.toLocaleString("en")}`;
+        ? `Casos${asOf}: ${n.toLocaleString("en")} | Fallecidos: ${deaths} | Letalidad: ${(deaths / n * 100).toFixed(1)}%`
+        : `Casos${asOf}: ${n.toLocaleString("en")}`;
       const syncLine = lastSync ? `\nFuente: OMS DON | Última actualización: ${lastSync}` : `\nFuente: OMS DON`;
       return `[HealthWatch Global — Informe de situación]\nEnfermedad: ${d} | País: ${c} | Riesgo: ${risk}\n${caseLine}${syncLine}\nInforme completo: ${url}`;
     },
@@ -123,11 +127,12 @@ const SHARE_COPY: Record<string, {
       const cfr = (deaths && n > 0) ? ` · ${deaths} وفاة · معدل الوفيات ${(deaths / n * 100).toFixed(1)}%` : "";
       return `${RISK_EMOJI[r] ?? "⚠️"} تفشٍّ OMS: ${d} في ${c} — ${n.toLocaleString("en")} حالة${cfr}. متابعة مباشرة على HealthWatch Global.`;
     },
-    report: (d, c, n, deaths, r, lastSync, url) => {
+    report: (d, c, n, deaths, r, lastSync, url, reportDate) => {
       const risk = RISK_LABEL.ar[r] ?? r;
+      const asOf = reportDate ? ` (بتاريخ ${reportDate})` : "";
       const caseLine = (deaths && n > 0)
-        ? `الحالات: ${n.toLocaleString("en")} | الوفيات: ${deaths} | معدل الوفيات: ${(deaths / n * 100).toFixed(1)}%`
-        : `الحالات: ${n.toLocaleString("en")}`;
+        ? `الحالات${asOf}: ${n.toLocaleString("en")} | الوفيات: ${deaths} | معدل الوفيات: ${(deaths / n * 100).toFixed(1)}%`
+        : `الحالات${asOf}: ${n.toLocaleString("en")}`;
       const syncLine = lastSync ? `\nالمصدر: WHO DON | آخر تحديث: ${lastSync}` : `\nالمصدر: WHO DON`;
       return `[HealthWatch Global — تقرير الوضع الوبائي]\nالمرض: ${d} | البلد: ${c} | المخاطر: ${risk}\n${caseLine}${syncLine}\nالتقرير الكامل: ${url}`;
     },
@@ -142,11 +147,12 @@ const SHARE_COPY: Record<string, {
       const cfr = (deaths && n > 0) ? ` · ${deaths} kematian · CFR ${(deaths / n * 100).toFixed(1)}%` : "";
       return `${RISK_EMOJI[r] ?? "⚠️"} Wabah WHO: ${d} di ${c} — ${n.toLocaleString("en")} kasus${cfr}. Dipantau langsung di HealthWatch Global.`;
     },
-    report: (d, c, n, deaths, r, lastSync, url) => {
+    report: (d, c, n, deaths, r, lastSync, url, reportDate) => {
       const risk = RISK_LABEL.id[r] ?? r.toUpperCase();
+      const asOf = reportDate ? ` (per ${reportDate})` : "";
       const caseLine = (deaths && n > 0)
-        ? `Kasus: ${n.toLocaleString("en")} | Kematian: ${deaths} | CFR: ${(deaths / n * 100).toFixed(1)}%`
-        : `Kasus: ${n.toLocaleString("en")}`;
+        ? `Kasus${asOf}: ${n.toLocaleString("en")} | Kematian: ${deaths} | CFR: ${(deaths / n * 100).toFixed(1)}%`
+        : `Kasus${asOf}: ${n.toLocaleString("en")}`;
       const syncLine = lastSync ? `\nSumber: WHO DON | Diperbarui: ${lastSync}` : `\nSumber: WHO DON`;
       return `[HealthWatch Global — Laporan Situasi]\nPenyakit: ${d} | Negara: ${c} | Risiko: ${risk}\n${caseLine}${syncLine}\nLaporan lengkap: ${url}`;
     },
@@ -160,7 +166,7 @@ const SHARE_COPY: Record<string, {
 
 const BASE_URL = "https://healthwatch-global.com";
 
-export default function ShareOutbreakButton({ disease, country, cases, deaths, riskLevel, locale, outbreakId, pageUrl: pageUrlProp, compact = true, updatedAt }: Props) {
+export default function ShareOutbreakButton({ disease, country, cases, deaths, riskLevel, locale, outbreakId, pageUrl: pageUrlProp, compact = true, updatedAt, reportDate }: Props) {
   const [open,         setOpen]         = useState(false);
   const [copied,       setCopied]       = useState(false);
   const [copiedReport, setCopiedReport] = useState(false);
@@ -171,7 +177,7 @@ export default function ShareOutbreakButton({ disease, country, cases, deaths, r
   const pageUrl = pageUrlProp
     ?? (outbreakId ? `${BASE_URL}/${locale}/outbreak/${outbreakId}` : `${BASE_URL}/${locale}`);
   const lastSync   = updatedAt ? relativeTime(updatedAt) : "";
-  const reportText = c.report(disease, country, cases, deaths, riskLevel, lastSync, pageUrl);
+  const reportText = c.report(disease, country, cases, deaths, riskLevel, lastSync, pageUrl, reportDate);
   const encoded = encodeURIComponent(text);
   const encodedUrl = encodeURIComponent(pageUrl);
 

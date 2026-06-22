@@ -48,6 +48,7 @@ const LABELS = {
     tierLabels: { immediate: "IMMÉDIAT · NOTIFICATION RSI", rapid: "RÉPONSE RAPIDE", monitor: "SURVEILLANCE STANDARD" },
     firstActions: "Premières actions",
     reportingLag: "Date de rapport officiel — dans les zones enclavées, le signal de terrain précède généralement cette date de plusieurs jours à plusieurs semaines.",
+    cumulativeAs: (date: string) => `Cas cumulés depuis le début de l'épidémie — bulletin OMS du ${date}`,
     staleBulletin: (d: number) => `Aucun bulletin officiel depuis ${d} jours — foyer peut-être résolu ou non rapporté.`,
   },
   en: {
@@ -71,6 +72,7 @@ const LABELS = {
     tierLabels: { immediate: "IMMEDIATE · IHR NOTIFIABLE", rapid: "RAPID RESPONSE", monitor: "STANDARD MONITORING" },
     firstActions: "First actions",
     reportingLag: "Official report date — in isolated zones, field onset typically precedes this by days to weeks.",
+    cumulativeAs: (date: string) => `Cumulative cases since outbreak start — WHO DON bulletin dated ${date}`,
     staleBulletin: (d: number) => `No official bulletin in ${d} days — may be resolved or unreported in isolated areas.`,
   },
   es: {
@@ -94,6 +96,7 @@ const LABELS = {
     tierLabels: { immediate: "INMEDIATO · NOTIFICABLE RSI", rapid: "RESPUESTA RÁPIDA", monitor: "VIGILANCIA ESTÁNDAR" },
     firstActions: "Primeras acciones",
     reportingLag: "Fecha del informe oficial — en zonas aisladas, el inicio en el campo suele preceder a esta fecha por días o semanas.",
+    cumulativeAs: (date: string) => `Casos acumulados desde el inicio del brote — boletín OMS del ${date}`,
     staleBulletin: (d: number) => `Sin boletín oficial en ${d} días — puede estar resuelto o sin reporte en zonas aisladas.`,
   },
   ar: {
@@ -117,6 +120,7 @@ const LABELS = {
     tierLabels: { immediate: "فوري · إخطار اللوائح الصحية الدولية", rapid: "استجابة سريعة", monitor: "مراقبة قياسية" },
     firstActions: "الإجراءات الأولى",
     reportingLag: "تاريخ التقرير الرسمي — في المناطق المعزولة، يسبق ظهور المرض ميدانياً هذا التاريخ بأيام إلى أسابيع.",
+    cumulativeAs: (date: string) => `الحالات التراكمية منذ بداية التفشي — نشرة منظمة الصحة العالمية بتاريخ ${date}`,
     staleBulletin: (d: number) => `لا يوجد نشرة رسمية منذ ${d} يوماً — قد يكون التفشي انتهى أو غير مُبلَّغ عنه.`,
   },
   id: {
@@ -140,9 +144,10 @@ const LABELS = {
     tierLabels: { immediate: "SEGERA · WAJIB LAPOR IHR", rapid: "RESPONS CEPAT", monitor: "PEMANTAUAN STANDAR" },
     firstActions: "Tindakan pertama",
     reportingLag: "Tanggal laporan resmi — di zona terisolasi, onset di lapangan biasanya mendahului tanggal ini beberapa hari hingga minggu.",
+    cumulativeAs: (date: string) => `Kasus kumulatif sejak awal wabah — buletin WHO tanggal ${date}`,
     staleBulletin: (d: number) => `Tidak ada buletin resmi dalam ${d} hari — mungkin sudah selesai atau tidak dilaporkan.`,
   },
-} satisfies Record<string, { cases: string; deaths: string; cfr: string; date: string; region: string; printReport: string; lastSynced: string; sourceVerified: string; sourceOfficial: string; pheic: string; archived: string; ctaTitle: string; ctaSub: string; ctaProBtn: string; ctaFree: string; back: string; compareLabel: string; chartTitle: string; noData: string; risk: Record<string, string>; fpGuidance: string; tierLabels: Record<string, string>; firstActions: string; reportingLag: string; staleBulletin: (d: number) => string }>;
+} satisfies Record<string, { cases: string; deaths: string; cfr: string; date: string; region: string; printReport: string; lastSynced: string; sourceVerified: string; sourceOfficial: string; pheic: string; archived: string; ctaTitle: string; ctaSub: string; ctaProBtn: string; ctaFree: string; back: string; compareLabel: string; chartTitle: string; noData: string; risk: Record<string, string>; fpGuidance: string; tierLabels: Record<string, string>; firstActions: string; reportingLag: string; cumulativeAs: (date: string) => string; staleBulletin: (d: number) => string }>;
 
 const RISK_STYLE: Record<string, string> = {
   high:   "text-red-400 bg-red-500/10 border-red-500/30",
@@ -343,6 +348,7 @@ export default async function OutbreakPage({
             outbreakId={id}
             compact={false}
             updatedAt={o.updated_at ?? undefined}
+            reportDate={o.date ?? undefined}
           />
         </div>
       </div>
@@ -398,6 +404,9 @@ export default async function OutbreakPage({
         }}
         locale={locale}
       />
+      {hasData && o.date && (
+        <p className="text-[11px] text-gray-500 -mt-3 mb-5 text-center">{l.cumulativeAs(o.date)}</p>
+      )}
 
       {/* Meta */}
       <div className="bg-gray-800/30 rounded-lg p-4 border border-gray-700/50 mb-6 grid grid-cols-2 gap-3 text-sm">
