@@ -129,6 +129,20 @@ function RiskScoreBadge({ score }: { score: number }) {
   );
 }
 
+function TrendBar({ trend }: { trend?: OutbreakTrend }) {
+  if (!trend || trend.direction === "unknown") {
+    return <span className="text-gray-700 text-[10px]">—</span>;
+  }
+  const fillW = Math.round(Math.min(100, Math.abs(trend.deltaPercent) * 2) * 40 / 100);
+  const color  = trend.direction === "up" ? "#f87171" : trend.direction === "down" ? "#4ade80" : "#6b7280";
+  return (
+    <svg width="40" height="10" viewBox="0 0 40 10" className="shrink-0" aria-hidden>
+      <rect x="0" y="2" width="40" height="6" rx="2" fill="#1e293b" />
+      {fillW > 0 && <rect x="0" y="2" width={fillW} height="6" rx="2" fill={color} fillOpacity="0.75" />}
+    </svg>
+  );
+}
+
 // ─── Component ────────────────────────────────────────────────────────────────
 
 interface DefaultFilters {
@@ -179,6 +193,7 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
   const [lastCases,        setLastCases]        = useState<Record<string, number>>({});
   const [admin1Filter,     setAdmin1Filter]     = useState("");
   const [epiWeekMode,      setEpiWeekMode]      = useState(false);
+  const [ageMode,          setAgeMode]          = useState(false);
 
   // Load watchlist IDs on mount (Pro users only)
   useEffect(() => {
@@ -465,6 +480,41 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
     track("html_export", { rows: sorted.length, locale });
   }, [sorted, locale, countryTags]);
 
+  const downloadGeoJson = useCallback(() => {
+    const features = sorted.map((o) => ({
+      type: "Feature" as const,
+      geometry: {
+        type: "Point" as const,
+        coordinates: [
+          o.admin1_lng ?? o.lng,
+          o.admin1_lat ?? o.lat,
+        ],
+      },
+      properties: {
+        disease:    o.disease_en ?? o.disease,
+        country:    o.country_en ?? o.country,
+        region:     o.region,
+        cases:      o.cases,
+        deaths:     o.deaths,
+        cfr_pct:    o.cases > 0 ? parseFloat((o.deaths / o.cases * 100).toFixed(1)) : null,
+        risk_level: o.risk_level,
+        is_pheic:   o.is_pheic,
+        date:       o.date,
+        admin1:     o.admin1 ?? null,
+        id:         o.id,
+      },
+    }));
+    const geojson = { type: "FeatureCollection" as const, features };
+    const blob = new Blob([JSON.stringify(geojson, null, 2)], { type: "application/geo+json;charset=utf-8;" });
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement("a");
+    a.href     = url;
+    a.download = `healthwatch-${new Date().toISOString().split("T")[0]}.geojson`;
+    a.click();
+    URL.revokeObjectURL(url);
+    track("geojson_export", { rows: features.length, locale });
+  }, [sorted, locale]);
+
   function loadFilter(f: { search: string; region: string; country: string; risk: string; dateFrom: string; dateTo: string; cfrFilter?: string; sourceFilter?: string }) {
     setSearch(f.search);
     setRegion(asEnum(f.region, REGIONS, "all"));
@@ -558,6 +608,14 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
             >
               <Download className="w-3.5 h-3.5" />
               <span className="hidden sm:inline">HTML</span>
+            </button>
+            <button
+              onClick={downloadGeoJson}
+              title="GeoJSON (QGIS / ArcGIS)"
+              className="flex items-center gap-1.5 px-3 py-2 bg-gray-800 hover:bg-gray-700 border border-gray-700 text-gray-300 hover:text-white rounded-lg text-xs font-medium transition-colors"
+            >
+              <Download className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">GeoJSON</span>
             </button>
           </div>
         ) : (
@@ -720,6 +778,19 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
             {{ fr: "S. épi", en: "Epi wk", es: "S. epi", ar: "أ. وبائي", id: "Mgg epi" }[locale] ?? "Epi wk"}
           </button>
 
+          {/* Age / duration toggle */}
+          <button
+            onClick={() => setAgeMode((v) => !v)}
+            title={ageMode ? "Switch to report date" : "Show outbreak duration (days since report date)"}
+            className={`text-xs px-2 py-1 rounded-lg border transition-colors whitespace-nowrap ${
+              ageMode
+                ? "border-orange-700/50 bg-orange-900/20 text-orange-300"
+                : "border-gray-800 text-gray-600 hover:border-gray-600 hover:text-gray-400"
+            }`}
+          >
+            {{ fr: "Âge", en: "Age", es: "Edad", ar: "العمر", id: "Usia" }[locale] ?? "Age"}
+          </button>
+
           {hasFilters && (
             <button
               onClick={clearFilters}
@@ -841,11 +912,16 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
                 >
                   {l.riskLevel}<SortIcon col="risk" activeKey={sortKey} dir={sortDir} />
                 </th>
+                <th className="px-2 py-3 hidden lg:table-cell text-gray-600 text-left text-[10px] uppercase tracking-wide whitespace-nowrap">
+                  {{ fr: "Tend.", en: "Trend", es: "Tend.", ar: "اتجاه", id: "Tren" }[locale] ?? "Trend"}
+                </th>
                 <th
                   className="text-left px-4 py-3 hidden md:table-cell cursor-pointer hover:text-gray-200 select-none whitespace-nowrap"
                   onClick={() => handleSort("date")}
                 >
-                  {epiWeekMode
+                  {ageMode
+                    ? ({ fr: "Âge", en: "Age", es: "Edad", ar: "العمر", id: "Usia" }[locale] ?? "Age")
+                    : epiWeekMode
                     ? ({ fr: "S. épi.", en: "Epi wk", es: "S. epi.", ar: "أسبوع وبائي", id: "Mgg epi" }[locale] ?? "Epi wk")
                     : l.date
                   }
@@ -1005,9 +1081,16 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
                       <RiskScoreBadge score={computeRiskScore(outbreak, trends?.[outbreak.id])} />
                     </div>
                   </td>
+                  <td className="px-2 py-3 hidden lg:table-cell">
+                    <TrendBar trend={trends?.[outbreak.id]} />
+                  </td>
                   <td className="px-4 py-3 hidden md:table-cell">
                     <div className="text-gray-400 text-sm tabular-nums">
-                      {epiWeekMode ? (
+                      {ageMode ? (() => {
+                        const days = Math.round((Date.now() - new Date(outbreak.date).getTime()) / 86_400_000);
+                        const cls  = days < 14 ? "text-green-400" : days < 30 ? "text-amber-400" : "text-red-400";
+                        return <span className={`text-xs font-semibold tabular-nums ${cls}`}>{days}d</span>;
+                      })() : epiWeekMode ? (
                         <span className="text-teal-400/80">{getEpiWeek(outbreak.date)}</span>
                       ) : (() => {
                         const [y, m, d] = outbreak.date.split("-").map(Number);

@@ -29,6 +29,7 @@ import FreePlanBanner from "@/components/FreePlanBanner";
 import DemoBanner from "@/components/DemoBanner";
 import CountryScorecardTab from "@/components/CountryScorecardTab";
 import GeofenceAlertPanel from "@/components/GeofenceAlertPanel";
+import RegionalPulseSummary from "@/components/RegionalPulseSummary";
 import { Suspense } from "react";
 import type { Metadata } from "next";
 
@@ -376,6 +377,8 @@ async function DashboardContent({ demo = false }: { demo?: boolean }) {
           </div>
           <CsvExportButton isPaid={isPaid} locale={locale} />
         </div>
+
+        {isPaid && <RegionalPulseSummary outbreaks={outbreaks} locale={locale} />}
 
         <OutbreakTable
           outbreaks={outbreaks}
