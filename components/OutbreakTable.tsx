@@ -1075,14 +1075,26 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
                         </span>
                       )}
                       {sourceStatus(outbreak) === 'don' && (
-                        <span title={l.donTooltip} className="inline-flex items-center text-[10px] font-bold px-1.5 py-0.5 rounded bg-blue-900/30 border border-blue-700/50 text-blue-400 shrink-0 cursor-help whitespace-nowrap">
-                          {l.donBadge}
-                        </span>
+                        outbreak.source ? (
+                          <a href={outbreak.source} target="_blank" rel="noopener noreferrer" title={l.donTooltip} className="inline-flex items-center text-[10px] font-bold px-1.5 py-0.5 rounded bg-blue-900/30 border border-blue-700/50 text-blue-400 shrink-0 cursor-pointer whitespace-nowrap hover:bg-blue-900/60 transition-colors">
+                            {l.donBadge} ↗
+                          </a>
+                        ) : (
+                          <span title={l.donTooltip} className="inline-flex items-center text-[10px] font-bold px-1.5 py-0.5 rounded bg-blue-900/30 border border-blue-700/50 text-blue-400 shrink-0 cursor-help whitespace-nowrap">
+                            {l.donBadge}
+                          </span>
+                        )
                       )}
                       {sourceStatus(outbreak) === 'official' && (
-                        <span title={l.officialTooltip} className="inline-flex items-center text-[10px] font-bold px-1.5 py-0.5 rounded bg-amber-900/30 border border-amber-700/50 text-amber-400 shrink-0 cursor-help whitespace-nowrap">
-                          {sourceName(outbreak.source)}
-                        </span>
+                        outbreak.source ? (
+                          <a href={outbreak.source} target="_blank" rel="noopener noreferrer" title={l.officialTooltip} className="inline-flex items-center text-[10px] font-bold px-1.5 py-0.5 rounded bg-amber-900/30 border border-amber-700/50 text-amber-400 shrink-0 cursor-pointer whitespace-nowrap hover:bg-amber-900/60 transition-colors">
+                            {sourceName(outbreak.source)} ↗
+                          </a>
+                        ) : (
+                          <span title={l.officialTooltip} className="inline-flex items-center text-[10px] font-bold px-1.5 py-0.5 rounded bg-amber-900/30 border border-amber-700/50 text-amber-400 shrink-0 cursor-help whitespace-nowrap">
+                            {sourceName(outbreak.source)}
+                          </span>
+                        )
                       )}
                       {sourceStatus(outbreak) === 'unverified' && (
                         <span title={l.illustrativeTooltip} className="inline-flex items-center text-[10px] font-bold px-1.5 py-0.5 rounded bg-gray-800 border border-gray-600 text-gray-400 shrink-0 cursor-help whitespace-nowrap">
