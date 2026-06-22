@@ -21,6 +21,7 @@ const COPY: Record<string, {
   heroCtaSecondary: string;
   heroCtaDemo: string;
   heroNoCc: string;
+  liveTracking: (n: number) => string;
   // Stats bar
   statOutbreaks: string;
   statCountries: string;
@@ -90,6 +91,7 @@ const COPY: Record<string, {
     heroCtaSecondary: "Voir les tarifs",
     heroCtaDemo: "Voir le tableau de bord en direct →",
     heroNoCc: "Gratuit · 14 jours Pro offerts · Sans carte bancaire",
+    liveTracking: (n: number) => `🟢 ${n} foyers épidémiques actifs suivis en ce moment`,
     statOutbreaks: "foyers actifs",
     statCountries: "pays touchés",
     statHighRisk: "alertes haut risque",
@@ -168,6 +170,7 @@ const COPY: Record<string, {
     heroCtaSecondary: "See pricing",
     heroCtaDemo: "Try the live dashboard →",
     heroNoCc: "Free · 14-day Pro trial · No credit card required",
+    liveTracking: (n: number) => `🟢 ${n} active outbreaks tracked right now`,
     statOutbreaks: "active outbreaks",
     statCountries: "countries affected",
     statHighRisk: "high-risk alerts",
@@ -246,6 +249,7 @@ const COPY: Record<string, {
     heroCtaSecondary: "Ver precios",
     heroCtaDemo: "Ver el panel en directo →",
     heroNoCc: "Gratis · 14 días Pro de prueba · Sin tarjeta de crédito",
+    liveTracking: (n: number) => `🟢 ${n} brotes activos monitoreados ahora mismo`,
     statOutbreaks: "brotes activos",
     statCountries: "países afectados",
     statHighRisk: "alertas de alto riesgo",
@@ -324,6 +328,7 @@ const COPY: Record<string, {
     heroCtaSecondary: "عرض الأسعار",
     heroCtaDemo: "← تجربة لوحة التحكم مباشرةً",
     heroNoCc: "مجاني · 14 يوم Pro مجاناً · لا بطاقة بنكية مطلوبة",
+    liveTracking: (n: number) => `🟢 ${n} تفشٍّ نشط تحت المراقبة الآن`,
     statOutbreaks: "تفشيات نشطة",
     statCountries: "دول متضررة",
     statHighRisk: "تنبيهات عالية الخطورة",
@@ -402,6 +407,7 @@ const COPY: Record<string, {
     heroCtaSecondary: "Lihat harga",
     heroCtaDemo: "Coba dasbor langsung →",
     heroNoCc: "Gratis · 14 hari Pro gratis · Tanpa kartu kredit",
+    liveTracking: (n: number) => `🟢 ${n} wabah aktif dipantau saat ini`,
     statOutbreaks: "wabah aktif",
     statCountries: "negara terdampak",
     statHighRisk: "peringatan risiko tinggi",
@@ -525,6 +531,9 @@ export default async function LandingPage({ locale }: { locale: string }) {
             <span className="w-1.5 h-1.5 rounded-full bg-red-400 animate-pulse" />
             {c.heroBadge}
           </div>
+
+          {/* Live count */}
+          <p className="text-sm text-gray-400 font-medium">{c.liveTracking(stats.activeOutbreaks)}</p>
 
           {/* Headline */}
           <h1 className="text-4xl md:text-6xl font-extrabold leading-tight tracking-tight">

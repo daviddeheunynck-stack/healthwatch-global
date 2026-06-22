@@ -25,6 +25,49 @@ Archive de tout le contenu créé. Mise à jour à chaque session.
 > — What do we do?
 > Ministries have data. What they lack is [actionable framing].
 
+### Thread teaser J-2 (23 juin 2026) — À poster aujourd'hui
+
+**Tweet 1**
+> 48 hours until launch.
+>
+> A quick thread on what we built, and why it took longer than expected.
+
+**Tweet 2**
+> Disease outbreak data is public. WHO DON, ECDC, PAHO, Africa CDC — all free, all official.
+>
+> The problem: they live in 4 different portals, 4 different formats, updated on different schedules.
+>
+> Nobody had aggregated them in one place. We did.
+
+**Tweet 3**
+> What HealthWatch Global tracks right now:
+>
+> 🔴 High-risk outbreaks: Mpox DRC, H5N1 US, Marburg Uganda
+> 🟡 Medium: Dengue across 8 countries, Cholera Sudan
+> 🟢 Monitoring: 30+ active events
+>
+> Updated every hour from WHO. Weekly from ECDC, PAHO, Africa CDC.
+
+**Tweet 4**
+> Built for the people who can't afford a 6-hour information gap:
+>
+> — IHR national focal points
+> — International NGO ops teams
+> — Corporate risk & travel security managers
+>
+> 5 languages. PDF reports. Automated alerts.
+
+**Tweet 5**
+> We launch on Product Hunt Thursday 00:01 PT.
+>
+> If you work in global health, crisis management, or international ops — this one's for you.
+>
+> Free 14-day Pro trial. No card required.
+>
+> 👉 healthwatch-global.com
+
+---
+
 ### Post lancement PH (25 juin 2026)
 
 Thread @HWatchGlobal — à poster dès que la page PH est live (09h30 CEST) :
@@ -142,3 +185,16 @@ Court DM LinkedIn à envoyer à ~20-40 contacts le 25 juin matin :
 | Silvestre Suh (CHAI Sierra Leone) | Message envoyé 22 juin (Lassa hook) | Lui | Attendre réponse |
 | Zahra BOUZIDI (épidémiologiste Algérie) | A répondu 👏👍😊 + "je vous répondrai" | Elle | Activer Pro 30j quand elle répond |
 | Jalal Nourlil (Institut Pasteur Maroc) | 4 emails envoyés | Lui | Ne plus relancer |
+
+---
+
+## Commentaires LinkedIn opportunistes
+
+### Vital Strategies — post #Data4Health Indonésie (22 juin 2026)
+
+**Contexte :** Vital Strategies recrute un consultant international pour le Ministère de la Santé indonésien sur un système national de registre. Tag #Data4Health.
+
+**Commentaire posté le 22 juin 2026 :**
+> Building a national registry for Indonesia's MoH is one of the harder data problems in the region — upstream disease reporting varies dramatically by province. We built HealthWatch Global's Indonesia coverage around that fragmentation. If it's useful background for your consultant's scope, happy to share what we mapped.
+
+**Suivi :** attendre réponse. Si quelqu'un répond, préparer un angle concret sur les lacunes de reporting provinciaux en Indonésie.
