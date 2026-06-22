@@ -21,6 +21,31 @@ export async function GET() {
     checks.supabase = "error";
   }
 
+  // ── Data freshness (crons running?) ──────────────────────────────────────
+  try {
+    const supabase2 = createClient(
+      clean(process.env.NEXT_PUBLIC_SUPABASE_URL),
+      clean(process.env.SUPABASE_SERVICE_ROLE_KEY)
+    );
+    const { data: latest } = await supabase2
+      .from("outbreaks")
+      .select("updated_at")
+      .order("updated_at", { ascending: false })
+      .limit(1)
+      .single();
+
+    if (latest?.updated_at) {
+      const hours = Math.floor(
+        (Date.now() - new Date(latest.updated_at).getTime()) / 3_600_000
+      );
+      checks.data_freshness = hours < 12 ? "ok" : "error";
+    } else {
+      checks.data_freshness = "error";
+    }
+  } catch {
+    checks.data_freshness = "error";
+  }
+
   // ── Stripe ────────────────────────────────────────────────────────────────
   try {
     const res = await fetch("https://api.stripe.com/v1/prices?limit=1", {
