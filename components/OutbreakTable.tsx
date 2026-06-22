@@ -412,6 +412,8 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
       const cfr = o.cases > 0 ? `${(o.deaths / o.cases * 100).toFixed(1)}%` : "—";
       const tag = countryTags[o.country_en ?? ""] ? ` <span class="tag">${countryTags[o.country_en ?? ""]}</span>` : "";
       const riskCls = o.risk_level === "high" ? "#f87171" : o.risk_level === "medium" ? "#fbbf24" : "#4ade80";
+      const srcLabel = o.source ? sourceName(o.source) : "—";
+      const srcCell  = o.source ? `<a href="${o.source}" style="color:#2563eb;text-decoration:none">${srcLabel} ↗</a>` : srcLabel;
       return `<tr>
         <td>${o.disease_en ?? o.disease}</td>
         <td>${o.country_en ?? o.country}${tag}</td>
@@ -420,6 +422,7 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
         <td style="text-align:right">${cfr}</td>
         <td><span style="color:${riskCls};font-weight:700;text-transform:uppercase;font-size:10px">${o.risk_level}</span></td>
         <td>${o.date}</td>
+        <td>${srcCell}</td>
       </tr>`;
     }).join("");
 
@@ -446,7 +449,8 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
       <th style="text-align:right">${locale === "fr" ? "Décès" : locale === "es" ? "Fallecidos" : "Deaths"}</th>
       <th style="text-align:right">CFR</th>
       <th>${locale === "fr" ? "Risque" : locale === "es" ? "Riesgo" : "Risk"}</th>
-      <th>${locale === "fr" ? "Date" : "Date"}</th>
+      <th>${locale === "fr" ? "Date bulletin" : locale === "es" ? "Fecha boletín" : "Report date"}</th>
+      <th>${locale === "fr" ? "Source primaire" : locale === "es" ? "Fuente primaria" : "Primary source"}</th>
     </tr></thead>
     <tbody>${rows}</tbody>
   </table>
@@ -522,6 +526,8 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
       const cfr = o.cases > 0 ? `${(o.deaths / o.cases * 100).toFixed(1)}%` : "—";
       const tag = countryTags[o.country_en ?? ""] ? ` <span class="tag">${countryTags[o.country_en ?? ""]}</span>` : "";
       const riskCls = o.risk_level === "high" ? "#f87171" : o.risk_level === "medium" ? "#fbbf24" : "#4ade80";
+      const srcLabel = o.source ? sourceName(o.source) : "—";
+      const srcCell  = o.source ? `<a href="${o.source}" style="color:#2563eb;text-decoration:none">${srcLabel} ↗</a>` : srcLabel;
       return `<tr>
         <td>${o.disease_en ?? o.disease}</td>
         <td>${o.country_en ?? o.country}${tag}</td>
@@ -530,6 +536,7 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
         <td style="text-align:right">${cfr}</td>
         <td><span style="color:${riskCls};font-weight:700;text-transform:uppercase;font-size:10px">${o.risk_level}</span></td>
         <td>${o.date}</td>
+        <td>${srcCell}</td>
       </tr>`;
     }).join("");
     const html = `<!DOCTYPE html><html><head><meta charset="utf-8"><title>${title}</title>
@@ -554,7 +561,8 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
       <th style="text-align:right">${locale === "fr" ? "Décès" : locale === "es" ? "Fallecidos" : "Deaths"}</th>
       <th style="text-align:right">CFR</th>
       <th>${locale === "fr" ? "Risque" : locale === "es" ? "Riesgo" : "Risk"}</th>
-      <th>Date</th>
+      <th>${locale === "fr" ? "Date bulletin" : locale === "es" ? "Fecha boletín" : "Report date"}</th>
+      <th>${locale === "fr" ? "Source primaire" : locale === "es" ? "Fuente primaria" : "Primary source"}</th>
     </tr></thead>
     <tbody>${rows}</tbody>
   </table>
