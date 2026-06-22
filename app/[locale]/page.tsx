@@ -31,6 +31,7 @@ import CountryScorecardTab from "@/components/CountryScorecardTab";
 import GeofenceAlertPanel from "@/components/GeofenceAlertPanel";
 import CountryRiskAlertPanel from "@/components/CountryRiskAlertPanel";
 import AlertLocalePanel from "@/components/AlertLocalePanel";
+import DigestRegionPanel from "@/components/DigestRegionPanel";
 import ResolvedOutbreaksWidget from "@/components/ResolvedOutbreaksWidget";
 import APIKeyPanel from "@/components/APIKeyPanel";
 import DigestPanel from "@/components/DigestPanel";
@@ -410,6 +411,7 @@ async function DashboardContent({ demo = false }: { demo?: boolean }) {
 
       {isPaid && <DataAccessPanel locale={locale} />}
       {isPaid && <DigestPanel locale={locale} />}
+      {isPaid && <DigestRegionPanel locale={locale} />}
       {isPaid && <APIKeyPanel locale={locale} />}
 
       {isPaid && <TravelRiskWidget locale={locale} />}

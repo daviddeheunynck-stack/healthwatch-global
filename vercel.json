@@ -115,6 +115,10 @@
     {
       "path": "/api/cron/trigger-pheic-alerts",
       "schedule": "0,30 * * * *"
+    },
+    {
+      "path": "/api/cron/trigger-regional-digest",
+      "schedule": "5 7 * * 1"
     }
   ]
 }
