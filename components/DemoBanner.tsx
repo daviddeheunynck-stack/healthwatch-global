@@ -3,32 +3,32 @@ import { Eye } from "lucide-react";
 
 const COPY: Record<string, { badge: string; text: string; cta: string; signin: string }> = {
   fr: {
-    badge:   "Mode démo",
-    text:    "Vous consultez des données épidémiques en direct — sans compte.",
+    badge:   "🟢 Données en direct",
+    text:    "Vous consultez des données épidémiques officielles en temps réel — sans compte.",
     cta:     "Créer un compte gratuit →",
     signin:  "Se connecter",
   },
   en: {
-    badge:   "Demo",
-    text:    "You're viewing live outbreak data — no account required.",
+    badge:   "🟢 Live data",
+    text:    "You're viewing real, official outbreak data — no account required.",
     cta:     "Create free account →",
     signin:  "Sign in",
   },
   es: {
-    badge:   "Demo",
-    text:    "Está viendo datos de brotes en directo — sin cuenta.",
+    badge:   "🟢 Datos en directo",
+    text:    "Está viendo datos oficiales de brotes en tiempo real — sin cuenta.",
     cta:     "Crear cuenta gratuita →",
     signin:  "Iniciar sesión",
   },
   ar: {
-    badge:   "عرض تجريبي",
-    text:    "أنت تستعرض بيانات تفشيات حية — دون حساب.",
+    badge:   "🟢 بيانات مباشرة",
+    text:    "أنت تستعرض بيانات تفشيات رسمية وحقيقية — دون حساب.",
     cta:     "← إنشاء حساب مجاني",
     signin:  "تسجيل الدخول",
   },
   id: {
-    badge:   "Demo",
-    text:    "Anda melihat data wabah langsung — tanpa akun.",
+    badge:   "🟢 Data langsung",
+    text:    "Anda melihat data wabah resmi secara real-time — tanpa akun.",
     cta:     "Buat akun gratis →",
     signin:  "Masuk",
   },
