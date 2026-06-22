@@ -5,6 +5,7 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import { Database, Clock, ShieldCheck, AlertTriangle, TrendingUp, Info, Mail } from "lucide-react";
+import CitationBlock from "@/components/CitationBlock";
 
 export const revalidate = 86400;
 
@@ -62,6 +63,9 @@ const COPY: Record<Locale, {
   correctionsTitle: string;
   correctionsDesc: string;
   correctionsBtn: string;
+  citeLabel: string;
+  citeCopy: string;
+  citeCopied: string;
 }> = {
   en: {
     back: "← About",
@@ -136,6 +140,9 @@ const COPY: Record<Locale, {
     correctionsTitle: "Corrections and data disputes",
     correctionsDesc: "If you identify a data error, incorrect figure, or source mismatch, contact us. We review and correct within 48 hours.",
     correctionsBtn: "Report a data issue →",
+    citeLabel: "Cite this page",
+    citeCopy: "Copy citation",
+    citeCopied: "Copied!",
   },
   fr: {
     back: "← À propos",
@@ -210,6 +217,9 @@ const COPY: Record<Locale, {
     correctionsTitle: "Corrections et contestations de données",
     correctionsDesc: "Si vous identifiez une erreur de données, un chiffre incorrect ou une discordance de source, contactez-nous. Nous examinons et corrigeons dans les 48 heures.",
     correctionsBtn: "Signaler un problème de données →",
+    citeLabel: "Citer cette page",
+    citeCopy: "Copier la citation",
+    citeCopied: "Copié !",
   },
   es: {
     back: "← Acerca de",
@@ -268,6 +278,9 @@ const COPY: Record<Locale, {
     correctionsTitle: "Correcciones y disputas de datos",
     correctionsDesc: "Si detecta un error de datos, una cifra incorrecta o una discrepancia de fuente, contáctenos. Revisamos y corregimos en 48 horas.",
     correctionsBtn: "Reportar un problema de datos →",
+    citeLabel: "Citar esta página",
+    citeCopy: "Copiar cita",
+    citeCopied: "¡Copiado!",
   },
   ar: {
     back: "→ حول المنصة",
@@ -326,6 +339,9 @@ const COPY: Record<Locale, {
     correctionsTitle: "التصحيحات والنزاعات",
     correctionsDesc: "إذا رصدت خطأً في البيانات أو تناقضاً في المصادر، تواصل معنا. نراجع ونصحح خلال 48 ساعة.",
     correctionsBtn: "← الإبلاغ عن مشكلة في البيانات",
+    citeLabel: "اقتبس هذه الصفحة",
+    citeCopy: "نسخ الاقتباس",
+    citeCopied: "تم النسخ!",
   },
   id: {
     back: "← Tentang",
@@ -384,6 +400,9 @@ const COPY: Record<Locale, {
     correctionsTitle: "Koreksi dan sengketa data",
     correctionsDesc: "Jika Anda menemukan kesalahan data, angka yang salah, atau ketidaksesuaian sumber, hubungi kami. Kami meninjau dan memperbaiki dalam 48 jam.",
     correctionsBtn: "Laporkan masalah data →",
+    citeLabel: "Kutip halaman ini",
+    citeCopy: "Salin kutipan",
+    citeCopied: "Disalin!",
   },
 };
 
@@ -592,6 +611,13 @@ export default async function MethodologyPage({
       </section>
 
       {/* Corrections CTA */}
+      <CitationBlock
+        label={c.citeLabel}
+        copyLabel={c.citeCopy}
+        copiedLabel={c.citeCopied}
+        citation={`HealthWatch Global. How we process data — methodology and sources [Internet]. [cited YYYY Mon DD]. Available from: ${BASE_URL}/${locale}/methodology.`}
+      />
+
       <section className="bg-gray-900 border border-gray-800 rounded-2xl p-6 space-y-3">
         <div className="flex items-center gap-3">
           <Mail className="w-5 h-5 text-red-400 shrink-0" />
