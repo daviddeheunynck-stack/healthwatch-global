@@ -14,6 +14,7 @@ export const dynamic = "force-dynamic";
 
 const BOM   = String.fromCharCode(65279);
 const clean = (v: string | undefined) => (v || "").replace(new RegExp("^" + BOM), "").trim();
+const esc   = (s: string | null | undefined) => (s ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 
 const SUPABASE_URL     = clean(process.env.NEXT_PUBLIC_SUPABASE_URL);
 const SUPABASE_SERVICE = clean(process.env.SUPABASE_SERVICE_ROLE_KEY);
@@ -78,8 +79,8 @@ function buildEmailHtml(outbreaks: Outbreak[], locale: string, date: string): st
   const deathsLbl = { fr: "décès", en: "deaths", es: "fallecidos", ar: "وفاة", id: "kematian" }[locale] ?? "deaths";
 
   const rows = outbreaks.slice(0, 10).map((o) => {
-    const disease = o.disease_en || o.disease;
-    const country = o.country_en || o.country;
+    const disease = esc(o.disease_en || o.disease);
+    const country = esc(o.country_en || o.country);
     const cfr = o.cases > 0 ? ` · CFR ${(o.deaths / o.cases * 100).toFixed(1)}%` : "";
     const pheic = o.is_pheic ? " · PHEIC" : "";
     return `
