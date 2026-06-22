@@ -168,7 +168,7 @@ const COPY: Record<string, {
     ctaTitle: "¿No sabe qué plan elegir?",
     ctaDesc: "Reserve una llamada de 20 minutos. Analizaremos sus necesidades de vigilancia y le recomendaremos el plan adecuado, sin presión comercial.",
     roiTitle: "El coste de no saber",
-    roiText: "La OMS declara entre 15 y 25 nuevos brotes de enfermedades cada mes. Un solo brote que llegue a su región antes de que sus equipos estén informados puede significar semanas de operaciones reactivas y exposición reputacional. A €29/mes, el plan Pro cuesta menos de una hora de gestión de crisis.",
+    roiText: "La OMS declara entre 15 y 25 nuevos brotes de enfermedades cada mes. Un solo brote que llegue a su región antes de que sus equipos estén informados puede significar semanas de operaciones reactivas, disrupciones en la cadena de suministro y exposición reputacional — y un incumplimiento del deber de protección para organizaciones con personal desplegado en el extranjero. A €29/mes, el plan Pro cuesta menos de una hora de gestión de crisis.",
   },
   ar: {
     heroTag: "مصمم للمنظمات الصحية وفرقها حول العالم",
@@ -201,7 +201,7 @@ const COPY: Record<string, {
     ctaTitle: "لست متأكداً من الخطة المناسبة؟",
     ctaDesc: "احجز مكالمة مدتها 20 دقيقة. سنحلل احتياجاتك في المراقبة ونوصي بالخطة المناسبة — دون ضغوط تجارية.",
     roiTitle: "تكلفة عدم المعرفة",
-    roiText: "تُعلن منظمة الصحة العالمية عن 15 إلى 25 تفشياً جديداً للأمراض كل شهر. تفشٍّ واحد يصل إلى منطقتك قبل إحاطة فريقك قد يعني أسابيع من العمليات التفاعلية والأضرار المؤسسية. بـ 29 €/شهر، تكلفة خطة Pro أقل من ساعة واحدة لإدارة الأزمات.",
+    roiText: "تُعلن منظمة الصحة العالمية عن 15 إلى 25 تفشياً جديداً للأمراض كل شهر. تفشٍّ واحد يصل إلى منطقتك قبل إحاطة فريقك قد يعني أسابيع من العمليات التفاعلية، واضطراب في سلاسل التوريد، وأضرار مؤسسية — فضلاً عن إخلال بواجب الحماية للمؤسسات التي لديها موظفون في الخارج. بـ 29 €/شهر، تكلفة خطة Pro أقل من ساعة واحدة لإدارة الأزمات.",
   },
   id: {
     heroTag: "Dirancang untuk organisasi kesehatan dan tim mereka di seluruh dunia",
@@ -234,7 +234,7 @@ const COPY: Record<string, {
     ctaTitle: "Tidak yakin paket mana yang cocok?",
     ctaDesc: "Jadwalkan panggilan 20 menit. Kami akan memetakan kebutuhan pemantauan Anda dan merekomendasikan paket yang tepat — tanpa tekanan penjualan.",
     roiTitle: "Biaya ketidaktahuan",
-    roiText: "WHO mendeklarasikan 15–25 wabah penyakit baru setiap bulan. Satu wabah yang mencapai wilayah Anda sebelum tim Anda mendapat informasi bisa berarti berminggu-minggu operasi reaktif dan kerusakan reputasi. Dengan €29/bulan, Pro lebih murah dari satu jam manajemen krisis.",
+    roiText: "WHO mendeklarasikan 15–25 wabah penyakit baru setiap bulan. Satu wabah yang mencapai wilayah Anda sebelum tim Anda mendapat informasi bisa berarti berminggu-minggu operasi reaktif, gangguan rantai pasokan, dan kerusakan reputasi — serta kegagalan duty-of-care bagi organisasi yang memiliki staf di luar negeri. Dengan €29/bulan, Pro lebih murah dari satu jam manajemen krisis.",
   },
 };
 
