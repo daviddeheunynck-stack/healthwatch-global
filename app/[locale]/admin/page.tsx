@@ -144,7 +144,7 @@ export default async function AdminPage({
     admin.from("profiles").select("id, email, plan, created_at, trial_ends_at, stripe_subscription_id").order("created_at", { ascending: false }),
     admin.from("user_alert_regions").select("user_id"),
     admin.from("profiles").select("id").not("slack_webhook_url", "is", null),
-    admin.auth.admin.listUsers(),
+    admin.auth.admin.listUsers({ page: 1, perPage: 1000 }),
   ]);
 
   const nameByEmail: Record<string, string> = {};

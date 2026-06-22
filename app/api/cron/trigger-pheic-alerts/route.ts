@@ -42,7 +42,7 @@ const LOCALE_COPY: Record<string, LocaleCopy> = {
 
 export async function GET(req: NextRequest) {
   const authHeader = req.headers.get("authorization");
-  if (authHeader !== `Bearer ${CRON_SECRET}`)
+  if (!CRON_SECRET || authHeader !== `Bearer ${CRON_SECRET}`)
     return new Response("Unauthorized", { status: 401 });
 
   const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);

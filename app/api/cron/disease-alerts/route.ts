@@ -12,13 +12,15 @@ export const dynamic = "force-dynamic";
 
 const BOM    = String.fromCharCode(65279);
 const clean  = (v: string | undefined) => (v || "").replace(new RegExp("^" + BOM), "").trim();
-const CRON_SECRET = clean(process.env.CRON_SECRET);
+const CRON_SECRET  = clean(process.env.CRON_SECRET);
+const BREVO_API_KEY = clean(process.env.BREVO_API_KEY);
 
 async function sendEmail(to: string, subject: string, html: string) {
+  if (!BREVO_API_KEY) throw new Error("BREVO_API_KEY not set");
   const res = await fetch("https://api.brevo.com/v3/smtp/email", {
     method: "POST",
     headers: {
-      "api-key":     clean(process.env.BREVO_API_KEY),
+      "api-key":     BREVO_API_KEY,
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
@@ -102,7 +104,6 @@ export async function GET(req: NextRequest) {
   // 5. Send alerts
   let sent = 0;
   let skipped = 0;
-  const toLog: { user_id: string; outbreak_id: string }[] = [];
 
   for (const outbreak of outbreaks) {
     const interestedUsers = diseaseUsers.get(outbreak.disease_en ?? "") ?? [];
@@ -132,9 +133,18 @@ export async function GET(req: NextRequest) {
           source:       outbreak.source,
         };
 
+        // Log BEFORE sending — prevents duplicate alert if email succeeds but a later batch upsert fails
+        const { error: logErr } = await supabase
+          .from("disease_alert_log")
+          .upsert([{ user_id: userId, outbreak_id: outbreak.id }], { onConflict: "user_id,outbreak_id" });
+        if (logErr) {
+          console.error(`[disease-alerts] log insert failed for ${userId}/${outbreak.id}:`, errorMessage(logErr));
+          skipped++;
+          continue;
+        }
+
         const { subject, html } = buildDiseaseAlertEmail(alertOutbreak, locale, userId);
         await sendEmail(profile.email, subject, html);
-        toLog.push({ user_id: userId, outbreak_id: outbreak.id });
         sent++;
 
         await new Promise((r) => setTimeout(r, 150)); // rate-limit friendly
@@ -142,13 +152,6 @@ export async function GET(req: NextRequest) {
         console.error(`[disease-alerts] Failed for ${profile.email}:`, errorMessage(err));
       }
     }
-  }
-
-  // 6. Log sent alerts (prevent duplicates on next run)
-  if (toLog.length > 0) {
-    await supabase
-      .from("disease_alert_log")
-      .upsert(toLog, { onConflict: "user_id,outbreak_id" });
   }
 
   console.log(`[disease-alerts] Done — sent: ${sent}, skipped: ${skipped}`);

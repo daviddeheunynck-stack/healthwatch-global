@@ -12,13 +12,15 @@ export const dynamic = "force-dynamic";
 
 const BOM   = String.fromCharCode(65279);
 const clean = (v: string | undefined) => (v || "").replace(new RegExp("^" + BOM), "").trim();
-const CRON_SECRET = clean(process.env.CRON_SECRET);
+const CRON_SECRET   = clean(process.env.CRON_SECRET);
+const BREVO_API_KEY = clean(process.env.BREVO_API_KEY);
 
 async function sendEmail(to: string, subject: string, html: string) {
+  if (!BREVO_API_KEY) throw new Error("BREVO_API_KEY not set");
   const res = await fetch("https://api.brevo.com/v3/smtp/email", {
     method: "POST",
     headers: {
-      "api-key":      clean(process.env.BREVO_API_KEY),
+      "api-key":      BREVO_API_KEY,
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
@@ -92,7 +94,6 @@ export async function GET(req: NextRequest) {
   // 5. Process each watchlist entry
   let sent = 0;
   let unchanged = 0;
-  const toLog: { user_id: string; outbreak_id: string; cases_at_alert: number; deaths_at_alert: number }[] = [];
 
   for (const entry of entries) {
     const outbreak = outbreakMap.get(entry.outbreak_id);
@@ -140,27 +141,27 @@ export async function GET(req: NextRequest) {
         prevDeaths:   Math.max(prevDeaths, 0),
       };
 
+      // Log BEFORE sending — prevents duplicate alert if email succeeds but a later batch upsert fails
+      const { error: logErr } = await supabase
+        .from("watchlist_alert_log")
+        .upsert(
+          [{ user_id: entry.user_id, outbreak_id: entry.outbreak_id, cases_at_alert: outbreak.cases, deaths_at_alert: outbreak.deaths }],
+          { onConflict: "user_id,outbreak_id" }
+        );
+      if (logErr) {
+        console.error(`[watchlist-alerts] log insert failed for ${entry.user_id}/${entry.outbreak_id}:`, errorMessage(logErr));
+        unchanged++;
+        continue;
+      }
+
       const { subject, html } = buildWatchlistAlertEmail(alertOutbreak, locale, entry.user_id);
       await sendEmail(profile.email, subject, html);
-      toLog.push({
-        user_id:        entry.user_id,
-        outbreak_id:    entry.outbreak_id,
-        cases_at_alert: outbreak.cases,
-        deaths_at_alert: outbreak.deaths,
-      });
       sent++;
 
       await new Promise((r) => setTimeout(r, 150));
     } catch (err: unknown) {
       console.error(`[watchlist-alerts] Failed for ${profile.email}:`, errorMessage(err));
     }
-  }
-
-  // 6. Update alert log
-  if (toLog.length > 0) {
-    await supabase
-      .from("watchlist_alert_log")
-      .upsert(toLog, { onConflict: "user_id,outbreak_id" });
   }
 
   console.log(`[watchlist-alerts] Done — sent: ${sent}, unchanged: ${unchanged}`);

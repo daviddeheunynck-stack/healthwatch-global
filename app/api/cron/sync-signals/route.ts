@@ -54,7 +54,7 @@ function guessRegion(country: string | null): string | null {
 }
 
 export async function GET(req: NextRequest) {
-  if (req.headers.get("x-cron-secret") !== CRON_SECRET) {
+  if (!CRON_SECRET || req.headers.get("x-cron-secret") !== CRON_SECRET) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 

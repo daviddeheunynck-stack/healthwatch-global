@@ -120,7 +120,7 @@ function buildEmailHtml(outbreaks: Outbreak[], locale: string, date: string): st
 }
 
 export async function GET(req: NextRequest) {
-  if (req.headers.get("x-cron-secret") !== CRON_SECRET)
+  if (!CRON_SECRET || req.headers.get("x-cron-secret") !== CRON_SECRET)
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
   if (!RESEND_KEY) return NextResponse.json({ error: "RESEND_API_KEY not configured" }, { status: 500 });

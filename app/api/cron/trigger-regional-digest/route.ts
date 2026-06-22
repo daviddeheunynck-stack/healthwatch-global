@@ -68,8 +68,9 @@ const COPY: Record<string, {
 };
 
 export async function GET(req: NextRequest) {
+  const cronSecret = (process.env.CRON_SECRET ?? "").replace(/^﻿/, "").trim();
   const authHeader = req.headers.get("authorization");
-  if (authHeader !== `Bearer ${process.env.CRON_SECRET}`)
+  if (!cronSecret || authHeader !== `Bearer ${cronSecret}`)
     return new Response("Unauthorized", { status: 401 });
 
   const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
