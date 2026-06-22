@@ -23,6 +23,7 @@ const PUBLIC_ROUTES = [
   { path: "/countries", changeFreq: "daily",   priority: 0.8 },
   { path: "/regions",   changeFreq: "daily",   priority: 0.8 },
   { path: "/coming-soon", changeFreq: "daily",   priority: 0.6 },
+  { path: "/methodology", changeFreq: "monthly", priority: 0.7 },
   { path: "/contact",    changeFreq: "monthly", priority: 0.5 },
   { path: "/legal",      changeFreq: "yearly",  priority: 0.3 },
   { path: "/privacy", changeFreq: "yearly",  priority: 0.3 },
