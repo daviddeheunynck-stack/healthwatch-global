@@ -1,7 +1,6 @@
 # Product Hunt — Assets complets
 
-**Date de lancement recommandée** : mardi 1er juillet 2026 à 00h01 PST (9h01 Paris)  
-**Raison** : mardi = pic de trafic PH, coïncide avec le Post LinkedIn 4 (CFR) → synergie audience.
+**Date de lancement** : jeudi 25 juin 2026 à 00h01 PST (09h01 Paris CEST)
 
 ---
 
