@@ -171,6 +171,7 @@ export default async function DiseasesPage({
 
   const activeCount  = byDisease.size;
   const totalActive  = active.length;
+  const numLocale    = l === "ar" ? "ar-SA" : l;
 
   const jsonLd = [
     {
@@ -264,7 +265,7 @@ export default async function DiseasesPage({
               </p>
               {hasActive && stats!.cases > 0 && (
                 <p className="text-xs text-gray-500">
-                  {stats!.cases.toLocaleString(l)} {lb.cases}
+                  {stats!.cases.toLocaleString(numLocale)} {lb.cases}
                 </p>
               )}
             </Link>

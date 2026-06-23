@@ -204,6 +204,7 @@ export default async function RegionPage({
 
   const totalCases  = allOutbreaks.reduce((s, o) => s + (o.cases || 0), 0);
   const totalDeaths = allOutbreaks.reduce((s, o) => s + (o.deaths || 0), 0);
+  const numLocale   = l === "ar" ? "ar-SA" : l;
   const countriesSet = new Set(allOutbreaks.map((o) => o.country_en || o.country).filter(Boolean));
 
   const supabase = createClient(
@@ -265,8 +266,8 @@ export default async function RegionPage({
       {/* Stats */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
         {[
-          { label: lb.cases,     value: totalCases  > 0 ? totalCases.toLocaleString(l)  : lb.noData },
-          { label: lb.deaths,    value: totalDeaths > 0 ? totalDeaths.toLocaleString(l) : lb.noData },
+          { label: lb.cases,     value: totalCases  > 0 ? totalCases.toLocaleString(numLocale)  : lb.noData },
+          { label: lb.deaths,    value: totalDeaths > 0 ? totalDeaths.toLocaleString(numLocale) : lb.noData },
           { label: lb.countries, value: countriesSet.size.toString() },
           { label: lb.outbreaks, value: allOutbreaks.length.toString() },
         ].map(({ label, value }) => (
@@ -308,8 +309,8 @@ export default async function RegionPage({
                       </Link>
                       <p className="text-sm text-gray-400">
                         📍 {country}
-                        {o.cases > 0 && <span className="ml-2">· {o.cases.toLocaleString(l)} {lb.cases_unit}</span>}
-                        {o.deaths > 0 && <span className="ml-1 text-gray-500">· {o.deaths.toLocaleString(l)} {lb.deaths_unit}</span>}
+                        {o.cases > 0 && <span className="ml-2">· {o.cases.toLocaleString(numLocale)} {lb.cases_unit}</span>}
+                        {o.deaths > 0 && <span className="ml-1 text-gray-500">· {o.deaths.toLocaleString(numLocale)} {lb.deaths_unit}</span>}
                       </p>
                     </div>
                     <div className="flex items-center gap-2">
@@ -357,7 +358,7 @@ export default async function RegionPage({
                     <span className="text-gray-500 text-sm truncate hidden sm:block">· {country}</span>
                   </div>
                   <span className="text-sm text-gray-500 shrink-0">
-                    {o.cases > 0 ? `${o.cases.toLocaleString(l)} ${lb.cases_unit}` : lb.noData}
+                    {o.cases > 0 ? `${o.cases.toLocaleString(numLocale)} ${lb.cases_unit}` : lb.noData}
                   </span>
                 </Link>
               );

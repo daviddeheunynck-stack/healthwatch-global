@@ -321,6 +321,7 @@ export default async function DiseasePage({
 
   const totalCases  = active.reduce((s, o) => s + (o.cases || 0), 0);
   const totalDeaths = active.reduce((s, o) => s + (o.deaths || 0), 0);
+  const numLocale   = l === "ar" ? "ar-SA" : l;
   const cfr         = totalCases > 0 ? ((totalDeaths / totalCases) * 100).toFixed(1) : null;
   // Active countries only — consistent with cases/deaths which also use `active`.
   // Historical countries are still visible in the country pills section below.
@@ -430,8 +431,8 @@ export default async function DiseasePage({
       <div className="space-y-2">
         <div className="grid gap-4 grid-cols-2 sm:grid-cols-4">
           {[
-            { label: lb.cases,     value: totalCases  > 0 ? totalCases.toLocaleString(l)  : lb.noData },
-            { label: lb.deaths,    value: totalDeaths > 0 ? totalDeaths.toLocaleString(l) : lb.noData },
+            { label: lb.cases,     value: totalCases  > 0 ? totalCases.toLocaleString(numLocale)  : lb.noData },
+            { label: lb.deaths,    value: totalDeaths > 0 ? totalDeaths.toLocaleString(numLocale) : lb.noData },
             { label: lb.cfr,       value: cfr ? `${cfr}%` : lb.noData },
             { label: lb.countries, value: countriesSet.size > 0 ? countriesSet.size.toString() : lb.noData },
           ].map(({ label, value }) => (
@@ -563,8 +564,8 @@ export default async function DiseasePage({
                         {country}
                       </p>
                       <p className="text-sm text-gray-400">
-                        {o.cases > 0 && <span>{o.cases.toLocaleString(l)} {lb.cases_unit}</span>}
-                        {o.deaths > 0 && <span className="ml-2 text-gray-500">· {o.deaths.toLocaleString(l)} {lb.deaths_unit}</span>}
+                        {o.cases > 0 && <span>{o.cases.toLocaleString(numLocale)} {lb.cases_unit}</span>}
+                        {o.deaths > 0 && <span className="ml-2 text-gray-500">· {o.deaths.toLocaleString(numLocale)} {lb.deaths_unit}</span>}
                         {o.date && (
                           <span className="ml-2 text-gray-600">
                             · {new Date(o.date).toLocaleDateString(
@@ -627,7 +628,7 @@ export default async function DiseasePage({
                     </span>
                   </div>
                   <span className="text-sm text-gray-500 shrink-0">
-                    {o.cases > 0 ? `${o.cases.toLocaleString(l)} ${lb.cases_unit}` : lb.noData}
+                    {o.cases > 0 ? `${o.cases.toLocaleString(numLocale)} ${lb.cases_unit}` : lb.noData}
                   </span>
                 </Link>
               );

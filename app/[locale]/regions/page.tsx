@@ -218,6 +218,7 @@ export default async function RegionsPage({
   const regions = await fetchRegionStats();
   const totalActive = regions.reduce((s, r) => s + r.activeCount, 0);
   const totalCases  = regions.reduce((s, r) => s + r.totalCases, 0);
+  const numLocale   = l === "ar" ? "ar-SA" : l;
 
   const jsonLd = [
     {
@@ -320,7 +321,7 @@ export default async function RegionsPage({
                 )}
                 {r.totalCases > 0 && (
                   <span>
-                    <span className="font-semibold text-gray-300">{r.totalCases.toLocaleString(l)}</span>{" "}
+                    <span className="font-semibold text-gray-300">{r.totalCases.toLocaleString(numLocale)}</span>{" "}
                     {lb.cases}
                   </span>
                 )}

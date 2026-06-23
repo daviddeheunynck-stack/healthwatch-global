@@ -51,10 +51,11 @@ export async function GET(
   { params }: { params: Promise<{ locale: string }> }
 ) {
   const { locale } = await params;
-  const l     = FEED_META[locale] ? locale : "en";
-  const meta  = FEED_META[l];
-  const risks = RISK_LABEL[l] ?? RISK_LABEL.en;
-  const stats = STATS_LABEL[l] ?? STATS_LABEL.en;
+  const l        = FEED_META[locale] ? locale : "en";
+  const meta     = FEED_META[l];
+  const risks    = RISK_LABEL[l] ?? RISK_LABEL.en;
+  const stats    = STATS_LABEL[l] ?? STATS_LABEL.en;
+  const numLocale = l === "ar" ? "ar-SA" : l;
 
   const supabase = createClient(
     clean(process.env.NEXT_PUBLIC_SUPABASE_URL),
@@ -80,7 +81,7 @@ export async function GET(
     const guid        = `${BASE_URL}/outbreak/${o.id}`;
 
     const statsLine = o.cases > 0
-      ? `${o.cases.toLocaleString(l)} ${stats.cases} · ${o.deaths.toLocaleString(l)} ${stats.deaths}`
+      ? `${o.cases.toLocaleString(numLocale)} ${stats.cases} · ${o.deaths.toLocaleString(numLocale)} ${stats.deaths}`
       : "";
 
     const descParts = [

@@ -198,6 +198,7 @@ export default async function CountriesPage({
   const countries = await fetchCountryStats();
   const activeCount = countries.filter((c) => c.activeCount > 0).length;
   const totalCases  = countries.reduce((s, c) => s + c.totalCases, 0);
+  const numLocale   = l === "ar" ? "ar-SA" : l;
 
   const regionGroups = new Map<string, CountryStats[]>();
   for (const c of countries) {
@@ -292,7 +293,7 @@ export default async function CountriesPage({
                       </p>
                       <p className="text-xs text-gray-500 mt-0.5">
                         {c.totalCount} {lb.total}
-                        {c.totalCases > 0 && ` · ${c.totalCases.toLocaleString(l)} ${lb.cases}`}
+                        {c.totalCases > 0 && ` · ${c.totalCases.toLocaleString(numLocale)} ${lb.cases}`}
                       </p>
                     </div>
                     <div className="shrink-0">
