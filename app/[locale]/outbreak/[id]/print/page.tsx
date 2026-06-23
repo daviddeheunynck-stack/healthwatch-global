@@ -164,7 +164,7 @@ export default async function PrintPage({
   const tierLabel  = (TIER_LABEL[guidance.tier])[locale] ?? (TIER_LABEL[guidance.tier]).en;
   const fpActions  = (RESPONSE_ACTIONS[guidance.tier][locale] ?? RESPONSE_ACTIONS[guidance.tier].en).slice(0, 3);
   const fp         = FP_LABELS[locale] ?? FP_LABELS.en;
-  const today      = new Date().toLocaleDateString(locale === "ar" ? "ar" : locale === "id" ? "id-ID" : locale, {
+  const today      = new Date().toLocaleDateString(locale === "ar" ? "ar-SA" : locale === "id" ? "id-ID" : locale, {
     year: "numeric", month: "long", day: "numeric",
   });
 
