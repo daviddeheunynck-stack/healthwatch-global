@@ -87,6 +87,19 @@ function asEnum<T extends string>(value: string | undefined, members: readonly T
 }
 
 const REPORT_LOCALE: Record<string, string> = { fr: "fr-FR", es: "es-ES", ar: "ar-SA", id: "id-ID", en: "en-GB" };
+const PDF_RISK: Record<string, Record<string, string>> = {
+  high:   { fr: "ÉLEVÉ",  es: "ALTO",    ar: "مرتفع", id: "TINGGI", en: "HIGH"   },
+  medium: { fr: "MODÉRÉ", es: "MODERADO", ar: "متوسط", id: "SEDANG", en: "MEDIUM" },
+  low:    { fr: "FAIBLE", es: "BAJO",     ar: "منخفض", id: "RENDAH", en: "LOW"    },
+};
+const PDF_H: Record<string, string[]> = {
+  fr: ["Maladie",    "Pays",    "Cas",    "Décès",     "CFR", "Risque", "Date bulletin", "Source primaire"],
+  es: ["Enfermedad", "País",    "Casos",  "Fallecidos", "CFR", "Riesgo", "Fecha boletín", "Fuente primaria"],
+  ar: ["المرض",      "الدولة", "الحالات", "الوفيات",   "CFR", "الخطر", "تاريخ التقرير", "المصدر الأساسي"],
+  id: ["Penyakit",   "Negara",  "Kasus",  "Kematian",  "CFR", "Risiko", "Tanggal laporan", "Sumber utama"],
+  en: ["Disease",    "Country", "Cases",  "Deaths",    "CFR", "Risk",   "Report date",    "Primary source"],
+};
+const PDF_COUNT: Record<string, string> = { fr: "foyer(s) actif(s)", es: "brote(s) activo(s)", ar: "تفشٍّ نشط", id: "wabah aktif", en: "active outbreak(s)" };
 const REPORT_TITLE:  Record<string, string> = {
   fr: "Rapport Situation Sanitaire Mondiale",
   es: "Informe Situación Sanitaria Mundial",
@@ -427,19 +440,22 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
   const generatePdf = useCallback(() => {
     const today = new Date().toLocaleDateString(REPORT_LOCALE[locale] ?? "en-GB", { dateStyle: "long" });
     const title  = REPORT_TITLE[locale] ?? REPORT_TITLE.en;
+    const numLocale = REPORT_LOCALE[locale] ?? locale;
+    const hdr = PDF_H[locale] ?? PDF_H.en;
     const rows = sorted.map((o) => {
       const cfr = o.cases > 0 ? `${(o.deaths / o.cases * 100).toFixed(1)}%` : "—";
       const tag = countryTags[o.country_en ?? ""] ? ` <span class="tag">${countryTags[o.country_en ?? ""]}</span>` : "";
       const riskCls = o.risk_level === "high" ? "#f87171" : o.risk_level === "medium" ? "#fbbf24" : "#4ade80";
+      const riskLbl = PDF_RISK[o.risk_level]?.[locale] ?? o.risk_level.toUpperCase();
       const srcLabel = o.source ? sourceName(o.source) : "—";
       const srcCell  = o.source ? `<a href="${o.source}" style="color:#2563eb;text-decoration:none">${srcLabel} ↗</a>` : srcLabel;
       return `<tr>
         <td>${o.disease_en ?? o.disease}</td>
         <td>${o.country_en ?? o.country}${tag}</td>
-        <td style="text-align:right">${o.cases.toLocaleString(locale)}</td>
-        <td style="text-align:right">${o.deaths.toLocaleString(locale)}</td>
+        <td style="text-align:right">${o.cases.toLocaleString(numLocale)}</td>
+        <td style="text-align:right">${o.deaths.toLocaleString(numLocale)}</td>
         <td style="text-align:right">${cfr}</td>
-        <td><span style="color:${riskCls};font-weight:700;text-transform:uppercase;font-size:10px">${o.risk_level}</span></td>
+        <td><span style="color:${riskCls};font-weight:700;text-transform:uppercase;font-size:10px">${riskLbl}</span></td>
         <td>${o.date}</td>
         <td>${srcCell}</td>
       </tr>`;
@@ -459,17 +475,17 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
   @media print { body { margin: 16px; } }
 </style></head><body>
   <h1>${title}</h1>
-  <p class="meta">HealthWatch Global &nbsp;·&nbsp; ${today} &nbsp;·&nbsp; ${sorted.length} ${locale === "fr" ? "foyer(s) actif(s)" : locale === "es" ? "brote(s) activo(s)" : "active outbreak(s)"}</p>
+  <p class="meta">HealthWatch Global &nbsp;·&nbsp; ${today} &nbsp;·&nbsp; ${sorted.length} ${PDF_COUNT[locale] ?? PDF_COUNT.en}</p>
   <table>
     <thead><tr>
-      <th>${locale === "fr" ? "Maladie" : locale === "es" ? "Enfermedad" : "Disease"}</th>
-      <th>${locale === "fr" ? "Pays" : locale === "es" ? "País" : "Country"}</th>
-      <th style="text-align:right">${locale === "fr" ? "Cas" : locale === "es" ? "Casos" : "Cases"}</th>
-      <th style="text-align:right">${locale === "fr" ? "Décès" : locale === "es" ? "Fallecidos" : "Deaths"}</th>
+      <th>${hdr[0]}</th>
+      <th>${hdr[1]}</th>
+      <th style="text-align:right">${hdr[2]}</th>
+      <th style="text-align:right">${hdr[3]}</th>
       <th style="text-align:right">CFR</th>
-      <th>${locale === "fr" ? "Risque" : locale === "es" ? "Riesgo" : "Risk"}</th>
-      <th>${locale === "fr" ? "Date bulletin" : locale === "es" ? "Fecha boletín" : "Report date"}</th>
-      <th>${locale === "fr" ? "Source primaire" : locale === "es" ? "Fuente primaria" : "Primary source"}</th>
+      <th>${hdr[5]}</th>
+      <th>${hdr[6]}</th>
+      <th>${hdr[7]}</th>
     </tr></thead>
     <tbody>${rows}</tbody>
   </table>
@@ -497,8 +513,8 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
         <td style="padding:5px 8px;border-bottom:1px solid #e2e8f0"><strong>${o.ihr_event_id}</strong></td>
         <td style="padding:5px 8px;border-bottom:1px solid #e2e8f0">${o.disease_en ?? o.disease}</td>
         <td style="padding:5px 8px;border-bottom:1px solid #e2e8f0">${o.country_en ?? o.country}</td>
-        <td style="padding:5px 8px;border-bottom:1px solid #e2e8f0;text-align:right">${o.cases.toLocaleString(locale)}${cfr}</td>
-        <td style="padding:5px 8px;border-bottom:1px solid #e2e8f0;font-weight:700;color:${o.risk_level === "high" ? "#dc2626" : o.risk_level === "medium" ? "#d97706" : "#16a34a"}">${(o.risk_level ?? "").toUpperCase()}${pheic}</td>
+        <td style="padding:5px 8px;border-bottom:1px solid #e2e8f0;text-align:right">${o.cases.toLocaleString(REPORT_LOCALE[locale] ?? locale)}${cfr}</td>
+        <td style="padding:5px 8px;border-bottom:1px solid #e2e8f0;font-weight:700;color:${o.risk_level === "high" ? "#dc2626" : o.risk_level === "medium" ? "#d97706" : "#16a34a"}">${(PDF_RISK[o.risk_level]?.[locale] ?? o.risk_level ?? "").toUpperCase()}${pheic}</td>
         <td style="padding:5px 8px;border-bottom:1px solid #e2e8f0">${o.date}</td>
       </tr>`;
     }).join("");
@@ -539,19 +555,22 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
   const downloadHtml = useCallback(() => {
     const today = new Date().toLocaleDateString(REPORT_LOCALE[locale] ?? "en-GB", { dateStyle: "long" });
     const title  = REPORT_TITLE[locale] ?? REPORT_TITLE.en;
+    const numLocale = REPORT_LOCALE[locale] ?? locale;
+    const hdr = PDF_H[locale] ?? PDF_H.en;
     const rows = sorted.map((o) => {
       const cfr = o.cases > 0 ? `${(o.deaths / o.cases * 100).toFixed(1)}%` : "—";
       const tag = countryTags[o.country_en ?? ""] ? ` <span class="tag">${countryTags[o.country_en ?? ""]}</span>` : "";
       const riskCls = o.risk_level === "high" ? "#f87171" : o.risk_level === "medium" ? "#fbbf24" : "#4ade80";
+      const riskLbl = PDF_RISK[o.risk_level]?.[locale] ?? o.risk_level.toUpperCase();
       const srcLabel = o.source ? sourceName(o.source) : "—";
       const srcCell  = o.source ? `<a href="${o.source}" style="color:#2563eb;text-decoration:none">${srcLabel} ↗</a>` : srcLabel;
       return `<tr>
         <td>${o.disease_en ?? o.disease}</td>
         <td>${o.country_en ?? o.country}${tag}</td>
-        <td style="text-align:right">${o.cases.toLocaleString(locale)}</td>
-        <td style="text-align:right">${o.deaths.toLocaleString(locale)}</td>
+        <td style="text-align:right">${o.cases.toLocaleString(numLocale)}</td>
+        <td style="text-align:right">${o.deaths.toLocaleString(numLocale)}</td>
         <td style="text-align:right">${cfr}</td>
-        <td><span style="color:${riskCls};font-weight:700;text-transform:uppercase;font-size:10px">${o.risk_level}</span></td>
+        <td><span style="color:${riskCls};font-weight:700;text-transform:uppercase;font-size:10px">${riskLbl}</span></td>
         <td>${o.date}</td>
         <td>${srcCell}</td>
       </tr>`;
@@ -569,17 +588,17 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
   .footer { margin-top: 16px; font-size: 9px; color: #94a3b8; }
 </style></head><body>
   <h1>${title}</h1>
-  <p class="meta">HealthWatch Global &nbsp;·&nbsp; ${today} &nbsp;·&nbsp; ${sorted.length} ${locale === "fr" ? "foyer(s) actif(s)" : locale === "es" ? "brote(s) activo(s)" : "active outbreak(s)"}</p>
+  <p class="meta">HealthWatch Global &nbsp;·&nbsp; ${today} &nbsp;·&nbsp; ${sorted.length} ${PDF_COUNT[locale] ?? PDF_COUNT.en}</p>
   <table>
     <thead><tr>
-      <th>${locale === "fr" ? "Maladie" : locale === "es" ? "Enfermedad" : "Disease"}</th>
-      <th>${locale === "fr" ? "Pays" : locale === "es" ? "País" : "Country"}</th>
-      <th style="text-align:right">${locale === "fr" ? "Cas" : locale === "es" ? "Casos" : "Cases"}</th>
-      <th style="text-align:right">${locale === "fr" ? "Décès" : locale === "es" ? "Fallecidos" : "Deaths"}</th>
+      <th>${hdr[0]}</th>
+      <th>${hdr[1]}</th>
+      <th style="text-align:right">${hdr[2]}</th>
+      <th style="text-align:right">${hdr[3]}</th>
       <th style="text-align:right">CFR</th>
-      <th>${locale === "fr" ? "Risque" : locale === "es" ? "Riesgo" : "Risk"}</th>
-      <th>${locale === "fr" ? "Date bulletin" : locale === "es" ? "Fecha boletín" : "Report date"}</th>
-      <th>${locale === "fr" ? "Source primaire" : locale === "es" ? "Fuente primaria" : "Primary source"}</th>
+      <th>${hdr[5]}</th>
+      <th>${hdr[6]}</th>
+      <th>${hdr[7]}</th>
     </tr></thead>
     <tbody>${rows}</tbody>
   </table>
