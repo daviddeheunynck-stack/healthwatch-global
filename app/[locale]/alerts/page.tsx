@@ -8,6 +8,34 @@ import CheckoutButton from "@/components/CheckoutButton";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase-browser";
 
+const PRO_ALERT_LINK: Record<string, { label: string; sub: string; btn: string }> = {
+  fr: {
+    label: "Vos alertes Pro sont actives",
+    sub: "Configurez vos régions et maladies surveillées dans les paramètres du compte.",
+    btn: "Gérer mes alertes →",
+  },
+  en: {
+    label: "Your Pro alerts are active",
+    sub: "Configure your monitored regions and diseases in account settings.",
+    btn: "Manage my alerts →",
+  },
+  es: {
+    label: "Sus alertas Pro están activas",
+    sub: "Configure sus regiones y enfermedades monitoreadas en los ajustes de cuenta.",
+    btn: "Gestionar mis alertas →",
+  },
+  ar: {
+    label: "تنبيهاتك Pro نشطة",
+    sub: "قم بضبط المناطق والأمراض المراقبة في إعدادات الحساب.",
+    btn: "← إدارة تنبيهاتي",
+  },
+  id: {
+    label: "Peringatan Pro Anda aktif",
+    sub: "Konfigurasikan wilayah dan penyakit yang dipantau di pengaturan akun.",
+    btn: "Kelola peringatan saya →",
+  },
+};
+
 const PRO_COPY: Record<string, {
   badge: string; title: string; sub: string;
   items: string[]; cta: string; ctaExpired: string;
@@ -109,6 +137,7 @@ export default function AlertsPage() {
   }, []);
 
   const isPaid = plan === "starter" || plan === "pro" || plan === "team" || plan === "enterprise";
+  const pal = PRO_ALERT_LINK[locale] ?? PRO_ALERT_LINK.en;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -148,6 +177,25 @@ export default function AlertsPage() {
         </h1>
         <p className="text-gray-400 mt-2">{t("subtitle")}</p>
       </div>
+
+      {/* ── Pro alert management link — Pro/Team/Enterprise users ─────── */}
+      {isPaid && (
+        <div className="bg-green-500/5 border border-green-500/20 rounded-xl p-4 flex items-center justify-between gap-4 flex-wrap">
+          <div className="flex items-start gap-3">
+            <Zap className="w-4 h-4 text-green-400 shrink-0 mt-0.5" />
+            <div>
+              <p className="text-sm font-semibold text-green-300">{pal.label}</p>
+              <p className="text-xs text-gray-500 mt-0.5">{pal.sub}</p>
+            </div>
+          </div>
+          <Link
+            href={`/${locale}/account`}
+            className="shrink-0 text-xs font-semibold text-green-400 hover:text-green-300 transition-colors whitespace-nowrap"
+          >
+            {pal.btn}
+          </Link>
+        </div>
+      )}
 
       {/* ── Pro upsell — only for free users ───────────────────────────── */}
       {!isPaid && <div className="bg-gray-900 border-2 border-red-500/60 rounded-2xl p-6 space-y-5">
