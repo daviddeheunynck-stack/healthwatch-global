@@ -89,6 +89,7 @@ export async function GET(
   const rawLocale = request.nextUrl.searchParams.get("locale") ?? "en";
   const locale = VALID_LOCALES.includes(rawLocale as (typeof VALID_LOCALES)[number]) ? rawLocale : "en";
   const rl = REPORT_LABELS[locale] ?? REPORT_LABELS.en;
+  const numLocale = locale === "ar" ? "ar-SA" : locale;
   const outbreaks = await getOutbreaks();
   const regionOutbreaks = outbreaks.filter((o) => o.region === region);
   const totalCases = regionOutbreaks.reduce((sum, o) => sum + o.cases, 0);
@@ -179,7 +180,7 @@ export async function GET(
       <div class="stat-label">${rl.activeOutbreaks}</div>
     </div>
     <div class="stat">
-      <div class="stat-value">${totalCases.toLocaleString()}</div>
+      <div class="stat-value">${totalCases.toLocaleString(numLocale)}</div>
       <div class="stat-label">${rl.totalCases}</div>
     </div>
     <div class="stat">
@@ -207,8 +208,8 @@ export async function GET(
           (d) => `<tr>
         <td><strong>${d.name}</strong></td>
         <td>${d.country}</td>
-        <td>${d.cases.toLocaleString()}</td>
-        <td>${d.deaths.toLocaleString()}</td>
+        <td>${d.cases.toLocaleString(numLocale)}</td>
+        <td>${d.deaths.toLocaleString(numLocale)}</td>
         <td><span class="risk-badge risk-${d.risk}">${d.risk === "high" ? rl.riskHigh : d.risk === "medium" ? rl.riskMedium : rl.riskLow}</span></td>
       </tr>`
         )
