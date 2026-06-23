@@ -320,7 +320,7 @@ export default async function RegionsPage({
                 )}
                 {r.totalCases > 0 && (
                   <span>
-                    <span className="font-semibold text-gray-300">{r.totalCases.toLocaleString()}</span>{" "}
+                    <span className="font-semibold text-gray-300">{r.totalCases.toLocaleString(l)}</span>{" "}
                     {lb.cases}
                   </span>
                 )}
