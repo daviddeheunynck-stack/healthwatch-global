@@ -44,7 +44,7 @@ export default async function WidgetPage({
 
   let query = supabase
     .from("outbreaks")
-    .select("id, disease, disease_en, country, country_en, cases, deaths, risk_level, is_pheic")
+    .select("id, disease, disease_en, disease_ar, country, country_en, cases, deaths, risk_level, is_pheic")
     .eq("active", true)
     .order("is_pheic", { ascending: false })
     .order("cases", { ascending: false })
@@ -72,7 +72,8 @@ export default async function WidgetPage({
   // Row shape mirrors the `.select(...)` above — derived rather than
   // hand-typed so it can't drift from the query.
   type WidgetOutbreakRow = NonNullable<typeof outbreaks>[number];
-  const disease = (o: WidgetOutbreakRow) => (locale === "fr" ? o.disease : null) ?? o.disease_en ?? o.disease ?? "—";
+  const disease = (o: WidgetOutbreakRow) =>
+    (locale === "ar" ? o.disease_ar : locale === "fr" ? o.disease : null) ?? o.disease_en ?? o.disease ?? "—";
   const country = (o: WidgetOutbreakRow) => o.country_en ?? o.country ?? "—";
 
   // `l` is a fixed-shape label record (no index signature — title/active/...
