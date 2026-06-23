@@ -114,7 +114,7 @@ export default function CategoryAlertPanel({ locale, userEmail }: { locale: stri
                   {a.region !== "all" && <span className="text-gray-500">· {a.region}</span>}
                   <span className="text-red-400 font-semibold">≥ {a.min_cases.toLocaleString(locale)}</span>
                 </div>
-                <p className="text-[10px] text-gray-600">{a.email} · {c.lastFired}: {a.last_fired_at ? new Date(a.last_fired_at).toLocaleDateString() : c.never}</p>
+                <p className="text-[10px] text-gray-600">{a.email} · {c.lastFired}: {a.last_fired_at ? new Date(a.last_fired_at).toLocaleDateString(locale) : c.never}</p>
               </div>
               <button onClick={() => remove(a.id)} disabled={!!removing}
                 className="p-1.5 text-gray-600 hover:text-red-400 transition-colors shrink-0">

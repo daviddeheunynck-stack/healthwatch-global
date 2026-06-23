@@ -9,12 +9,12 @@ interface SourceStatus {
   count: number;
 }
 
-const COPY: Record<string, { title: string; outbreaks: string; ago: string; never: string; refresh: string }> = {
-  fr: { title: "Statut des sources", outbreaks: "foyer(s)", ago: "il y a", never: "Jamais", refresh: "Rafraîchir" },
-  en: { title: "Data source status", outbreaks: "outbreak(s)", ago: "ago", never: "Never", refresh: "Refresh" },
-  es: { title: "Estado de fuentes", outbreaks: "brote(s)", ago: "hace", never: "Nunca", refresh: "Actualizar" },
-  ar: { title: "حالة المصادر", outbreaks: "تفشٍّ", ago: "منذ", never: "أبدًا", refresh: "تحديث" },
-  id: { title: "Status sumber data", outbreaks: "wabah", ago: "yang lalu", never: "Tidak pernah", refresh: "Perbarui" },
+const COPY: Record<string, { title: string; outbreaks: string; ago: string; never: string; refresh: string; checked: string }> = {
+  fr: { title: "Statut des sources", outbreaks: "foyer(s)", ago: "il y a", never: "Jamais", refresh: "Rafraîchir", checked: "Vérifié" },
+  en: { title: "Data source status", outbreaks: "outbreak(s)", ago: "ago", never: "Never", refresh: "Refresh", checked: "Checked" },
+  es: { title: "Estado de fuentes", outbreaks: "brote(s)", ago: "hace", never: "Nunca", refresh: "Actualizar", checked: "Verificado" },
+  ar: { title: "حالة المصادر", outbreaks: "تفشٍّ", ago: "منذ", never: "أبدًا", refresh: "تحديث", checked: "تم التحقق" },
+  id: { title: "Status sumber data", outbreaks: "wabah", ago: "yang lalu", never: "Tidak pernah", refresh: "Perbarui", checked: "Diperiksa" },
 };
 
 function timeAgo(iso: string, locale: string): string {
@@ -22,7 +22,7 @@ function timeAgo(iso: string, locale: string): string {
   const m = Math.floor(diff / 60000);
   const h = Math.floor(diff / 3600000);
   const d = Math.floor(diff / 86400000);
-  if (m < 2)  return locale === "fr" ? "à l'instant" : locale === "es" ? "ahora" : "just now";
+  if (m < 2)  return ({ fr: "à l'instant", es: "ahora", ar: "الآن", id: "baru saja", en: "just now" } as Record<string, string>)[locale] ?? "just now";
   if (h < 1)  return `${m}m`;
   if (d < 1)  return `${h}h`;
   return `${d}d`;
@@ -89,7 +89,7 @@ export default function DataStatusWidget({ locale }: { locale: string }) {
 
       {checkedAt && (
         <p className="text-[10px] text-gray-700">
-          {locale === "fr" ? "Vérifié" : locale === "es" ? "Verificado" : "Checked"}: {new Date(checkedAt).toLocaleTimeString()}
+          {c.checked}: {new Date(checkedAt).toLocaleTimeString(locale)}
         </p>
       )}
     </div>
