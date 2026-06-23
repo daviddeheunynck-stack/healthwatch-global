@@ -60,6 +60,10 @@ const CONTENT: Record<string, {
   },
 };
 
+function esc(s: string): string {
+  return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+}
+
 export function buildTeamInviteEmail(
   inviterEmail: string,
   teamName:     string,
@@ -68,6 +72,8 @@ export function buildTeamInviteEmail(
 ): { subject: string; html: string } {
   const c   = CONTENT[locale] ?? CONTENT.en;
   const dir = locale === "ar" ? "rtl" : "ltr";
+  const safeTeamName = esc(teamName);
+  const safeInviter  = esc(inviterEmail);
 
   const html = `<!DOCTYPE html>
 <html lang="${locale}" dir="${dir}">
@@ -84,11 +90,11 @@ export function buildTeamInviteEmail(
     <!-- Body -->
     <div style="padding:36px 32px;">
       <p style="font-size:20px;font-weight:700;color:#f1f5f9;margin:0 0 8px;">${c.greeting}</p>
-      <p style="color:#94a3b8;font-size:15px;line-height:1.7;margin:0 0 32px;">${c.intro(inviterEmail, teamName)}</p>
+      <p style="color:#94a3b8;font-size:15px;line-height:1.7;margin:0 0 32px;">${c.intro(safeInviter, safeTeamName)}</p>
 
       <!-- Feature highlight -->
       <div style="background:#0f172a;border-radius:12px;padding:18px 20px;border-left:3px solid #d97706;margin-bottom:32px;">
-        <p style="margin:0 0 6px;font-weight:700;color:#f1f5f9;font-size:14px;">👥 ${teamName}</p>
+        <p style="margin:0 0 6px;font-weight:700;color:#f1f5f9;font-size:14px;">👥 ${safeTeamName}</p>
         <p style="margin:0;color:#94a3b8;font-size:13px;line-height:1.6;">
           WHO DON · ECDC · PAHO · Africa CDC — 4× daily sync · IHR response tiers · PDF reports · CSV export
         </p>

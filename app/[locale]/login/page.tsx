@@ -59,8 +59,8 @@ export default function LoginPage() {
     track("login_success", { method: "email", locale });
     const sp = new URLSearchParams(window.location.search);
     const redirectTo = sp.get("next") ?? sp.get("redirect");
-    // Only follow relative redirects — reject external URLs to prevent open redirect
-    if (redirectTo && redirectTo.startsWith("/")) {
+    // Only follow relative redirects — reject external and protocol-relative URLs
+    if (redirectTo && redirectTo.startsWith("/") && !redirectTo.startsWith("//")) {
       // API routes (e.g. team invite accept) need a full page load, not client nav
       window.location.href = redirectTo;
     } else {
