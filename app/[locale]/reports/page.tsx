@@ -251,12 +251,16 @@ async function ReportsContent() {
                   {isPaid ? (
                     <div className="space-y-1">
                       {regionOutbreaks.map((o) => (
-                        <div key={o.id} className="text-xs text-gray-400 flex justify-between">
-                          <span>{getLocalizedDisease(o, locale)}</span>
+                        <a
+                          key={o.id}
+                          href={`/${locale}/outbreak/${o.id}`}
+                          className="text-xs text-gray-400 flex justify-between hover:text-gray-200 transition-colors group"
+                        >
+                          <span className="group-hover:text-white transition-colors">{getLocalizedDisease(o, locale)}</span>
                           <span className={o.risk_level === "high" ? "text-red-400" : "text-yellow-400"}>
                             {getLocalizedCountry(o, locale)}
                           </span>
-                        </div>
+                        </a>
                       ))}
                     </div>
                   ) : (
