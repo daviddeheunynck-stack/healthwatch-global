@@ -21,6 +21,14 @@ const FEED_META: Record<string, { title: string; description: string; lang: stri
   id: { title: "HealthWatch Global — Wabah Penyakit Global", description: "Wabah penyakit menular aktif — data resmi WHO, ECDC, PAHO dan Africa CDC, diperbarui setiap jam.", lang: "id" },
 };
 
+const STATS_LABEL: Record<string, { cases: string; deaths: string }> = {
+  fr: { cases: "cas",    deaths: "décès"      },
+  en: { cases: "cases",  deaths: "deaths"     },
+  es: { cases: "casos",  deaths: "fallecidos" },
+  ar: { cases: "حالة",   deaths: "وفاة"       },
+  id: { cases: "kasus",  deaths: "kematian"   },
+};
+
 const RISK_LABEL: Record<string, Record<string, string>> = {
   fr: { high: "Risque élevé", medium: "Risque modéré", low: "Risque faible" },
   en: { high: "High risk",    medium: "Moderate risk", low: "Low risk"    },
@@ -46,6 +54,7 @@ export async function GET(
   const l     = FEED_META[locale] ? locale : "en";
   const meta  = FEED_META[l];
   const risks = RISK_LABEL[l] ?? RISK_LABEL.en;
+  const stats = STATS_LABEL[l] ?? STATS_LABEL.en;
 
   const supabase = createClient(
     clean(process.env.NEXT_PUBLIC_SUPABASE_URL),
@@ -71,7 +80,7 @@ export async function GET(
     const guid        = `${BASE_URL}/outbreak/${o.id}`;
 
     const statsLine = o.cases > 0
-      ? `${o.cases.toLocaleString("en")} cases · ${o.deaths.toLocaleString("en")} deaths`
+      ? `${o.cases.toLocaleString(l)} ${stats.cases} · ${o.deaths.toLocaleString(l)} ${stats.deaths}`
       : "";
 
     const descParts = [
