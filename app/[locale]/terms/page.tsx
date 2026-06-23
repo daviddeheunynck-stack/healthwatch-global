@@ -11,11 +11,19 @@ const BACK_LABELS: Record<string, string> = {
   id: "Kembali ke dasbor",
 };
 
+const TERMS_TITLES: Record<string, string> = {
+  en: "Terms of Service",
+  fr: "Conditions d'utilisation",
+  es: "Condiciones de servicio",
+  ar: "شروط الخدمة",
+  id: "Ketentuan Layanan",
+};
+
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getLocale();
   const url = `https://healthwatch-global.com/${locale}/terms`;
   return {
-    title: "Terms of Service",
+    title: TERMS_TITLES[locale] ?? TERMS_TITLES.en,
     description: "HealthWatch Global terms of service — acceptable use, subscriptions, billing, health data disclaimer, and governing law.",
     alternates: {
       canonical: url,
