@@ -436,7 +436,12 @@ export default async function OutbreakPage({
         {o.region && (
           <div>
             <span className="text-gray-400">{l.region} : </span>
-            <span className="text-white font-medium capitalize">{o.region}</span>
+            <Link
+              href={`/${locale}/region/${o.region}`}
+              className="text-white font-medium capitalize hover:text-red-400 transition-colors"
+            >
+              {o.region}
+            </Link>
           </div>
         )}
       </div>
