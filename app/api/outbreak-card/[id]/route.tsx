@@ -108,8 +108,8 @@ export async function GET(
           {/* Stats row */}
           <div style={{ display: "flex", gap: 24 }}>
             {[
-              { label: casesLabel,  value: hasData ? o.cases.toLocaleString() : "—", color: "#60a5fa" },
-              { label: deathsLabel, value: hasData ? o.deaths.toLocaleString() : "—", color: "#f87171" },
+              { label: casesLabel,  value: hasData ? o.cases.toLocaleString(locale) : "—", color: "#60a5fa" },
+              { label: deathsLabel, value: hasData ? o.deaths.toLocaleString(locale) : "—", color: "#f87171" },
               { label: cfrLabel,    value: cfr,                                        color: "#fbbf24" },
             ].map(({ label, value, color: c }) => (
               <div key={label} style={{
