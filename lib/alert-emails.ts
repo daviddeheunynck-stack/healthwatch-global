@@ -114,6 +114,7 @@ export function buildOutbreakAlertEmail(
   dashboardUrl: string
 ): { subject: string; html: string } {
   const c = CONTENT[locale] ?? CONTENT.en;
+  const numLocale = locale === "ar" ? "ar-SA" : locale;
 
   const riskColor =
     outbreak.risk_level === "high"
@@ -129,11 +130,11 @@ export function buildOutbreakAlertEmail(
      <td style="color:#e5e7eb">${outbreak.date}</td></tr>`,
     ...(outbreak.cases !== undefined
       ? [`<tr><td style="color:#9ca3af;padding:6px 0">${c.casesLabel}</td>
-         <td style="color:#e5e7eb">${outbreak.cases.toLocaleString(locale)}</td></tr>`]
+         <td style="color:#e5e7eb">${outbreak.cases.toLocaleString(numLocale)}</td></tr>`]
       : []),
     ...(outbreak.deaths !== undefined
       ? [`<tr><td style="color:#9ca3af;padding:6px 0">${c.deathsLabel}</td>
-         <td style="color:#e5e7eb">${outbreak.deaths.toLocaleString(locale)}</td></tr>`]
+         <td style="color:#e5e7eb">${outbreak.deaths.toLocaleString(numLocale)}</td></tr>`]
       : []),
   ].join("");
 

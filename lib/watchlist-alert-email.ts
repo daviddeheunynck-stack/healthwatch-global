@@ -114,6 +114,7 @@ export function buildWatchlistAlertEmail(
   const c = COPY[locale] ?? COPY.en;
   const isRtl = locale === "ar";
   const dir   = isRtl ? "rtl" : "ltr";
+  const numLocale = locale === "ar" ? "ar-SA" : locale;
 
   const hasData    = outbreak.cases > 0;
   const cfr        = hasData ? (outbreak.deaths / outbreak.cases * 100).toFixed(1) + "%" : c.noData;
@@ -176,16 +177,16 @@ export function buildWatchlistAlertEmail(
         <td width="33%" style="background:#0f172a;border-radius:8px;padding:14px;text-align:center;">
           <div style="color:#60a5fa;font-size:11px;margin-bottom:6px;">${c.newCases}</div>
           <div style="color:white;font-size:22px;font-weight:800;">
-            ${hasData ? outbreak.cases.toLocaleString(locale) : c.noData}
+            ${hasData ? outbreak.cases.toLocaleString(numLocale) : c.noData}
           </div>
-          ${caseDelta !== 0 ? `<div style="color:${caseDelta > 0 ? "#f87171" : "#4ade80"};font-size:12px;margin-top:4px;">${caseSign}${caseDelta.toLocaleString(locale)}</div>` : ""}
+          ${caseDelta !== 0 ? `<div style="color:${caseDelta > 0 ? "#f87171" : "#4ade80"};font-size:12px;margin-top:4px;">${caseSign}${caseDelta.toLocaleString(numLocale)}</div>` : ""}
         </td>
         <td width="33%" style="background:#0f172a;border-radius:8px;padding:14px;text-align:center;">
           <div style="color:#f87171;font-size:11px;margin-bottom:6px;">${c.newDeaths}</div>
           <div style="color:#f87171;font-size:22px;font-weight:800;">
-            ${hasData ? outbreak.deaths.toLocaleString(locale) : c.noData}
+            ${hasData ? outbreak.deaths.toLocaleString(numLocale) : c.noData}
           </div>
-          ${deathDelta !== 0 ? `<div style="color:${deathDelta > 0 ? "#f87171" : "#4ade80"};font-size:12px;margin-top:4px;">${deathSign}${deathDelta.toLocaleString(locale)}</div>` : ""}
+          ${deathDelta !== 0 ? `<div style="color:${deathDelta > 0 ? "#f87171" : "#4ade80"};font-size:12px;margin-top:4px;">${deathSign}${deathDelta.toLocaleString(numLocale)}</div>` : ""}
         </td>
         <td width="33%" style="background:#0f172a;border-radius:8px;padding:14px;text-align:center;">
           <div style="color:#fbbf24;font-size:11px;margin-bottom:6px;">${c.cfr}</div>
