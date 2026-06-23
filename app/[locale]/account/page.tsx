@@ -657,6 +657,7 @@ export default async function AccountPage({
           <ApiKeyManager
             initialKeys={apiKeysData ?? []}
             labels={akl}
+            locale={locale}
           />
         </div>
       )}

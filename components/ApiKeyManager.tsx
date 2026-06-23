@@ -37,11 +37,13 @@ export interface ApiKeyLabels {
 interface Props {
   initialKeys: ApiKey[];
   labels: ApiKeyLabels;
+  locale: string;
 }
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
-export default function ApiKeyManager({ initialKeys, labels: l }: Props) {
+export default function ApiKeyManager({ initialKeys, labels: l, locale }: Props) {
+  const localeTag = locale === "ar" ? "ar-SA" : locale;
   const [keys,     setKeys]     = useState<ApiKey[]>(initialKeys);
   const [name,     setName]     = useState("");
   const [creating, setCreating] = useState(false);
@@ -201,11 +203,11 @@ export default function ApiKeyManager({ initialKeys, labels: l }: Props) {
                 <div className="text-right hidden sm:block">
                   <p className="text-xs text-gray-500">
                     {k.last_used_at
-                      ? `${l.lastUsed}: ${new Date(k.last_used_at).toLocaleDateString()}`
+                      ? `${l.lastUsed}: ${new Date(k.last_used_at).toLocaleDateString(localeTag)}`
                       : l.never}
                   </p>
                   <p className="text-xs text-gray-600">
-                    {l.created}: {new Date(k.created_at).toLocaleDateString()}
+                    {l.created}: {new Date(k.created_at).toLocaleDateString(localeTag)}
                   </p>
                 </div>
                 <button
