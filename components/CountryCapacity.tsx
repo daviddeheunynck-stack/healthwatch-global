@@ -5,6 +5,7 @@ import { ShieldCheck } from "lucide-react";
 
 const COPY: Record<string, {
   title: string;
+  overall: string;
   surveillance: string;
   laboratory: string;
   emergency: string;
@@ -16,6 +17,7 @@ const COPY: Record<string, {
 }> = {
   fr: {
     title: "Capacité sanitaire pays",
+    overall: "Score global",
     surveillance: "Surveillance", laboratory: "Laboratoire", emergency: "Réponse urgence",
     icu: "Lits SI", icuUnit: "/100 000 hab.",
     source: "Source : OMS JEE",
@@ -24,6 +26,7 @@ const COPY: Record<string, {
   },
   en: {
     title: "Country health capacity",
+    overall: "Overall score",
     surveillance: "Surveillance", laboratory: "Laboratory", emergency: "Emergency response",
     icu: "ICU beds", icuUnit: "per 100k pop.",
     source: "Source: WHO JEE",
@@ -32,6 +35,7 @@ const COPY: Record<string, {
   },
   es: {
     title: "Capacidad sanitaria del país",
+    overall: "Puntuación global",
     surveillance: "Vigilancia", laboratory: "Laboratorio", emergency: "Respuesta emergencia",
     icu: "Camas UCI", icuUnit: "por 100k hab.",
     source: "Fuente: OMS JEE",
@@ -40,6 +44,7 @@ const COPY: Record<string, {
   },
   ar: {
     title: "القدرة الصحية للبلد",
+    overall: "الدرجة الإجمالية",
     surveillance: "المراقبة", laboratory: "المختبر", emergency: "الاستجابة للطوارئ",
     icu: "أسرة العناية المركزة", icuUnit: "لكل 100 ألف",
     source: "المصدر: منظمة الصحة العالمية JEE",
@@ -48,6 +53,7 @@ const COPY: Record<string, {
   },
   id: {
     title: "Kapasitas kesehatan negara",
+    overall: "Skor keseluruhan",
     surveillance: "Surveilans", laboratory: "Laboratorium", emergency: "Respons darurat",
     icu: "Tempat tidur ICU", icuUnit: "per 100rb penduduk",
     source: "Sumber: WHO JEE",
@@ -113,7 +119,7 @@ export default function CountryCapacity({ countryEn, locale }: Props) {
       <div className="bg-white/5 rounded-xl p-3 space-y-2.5">
         {/* Overall score row */}
         <div className="flex items-center justify-between">
-          <span className="text-[10px] text-gray-500">Score global</span>
+          <span className="text-[10px] text-gray-500">{c.overall}</span>
           <div className="flex items-center gap-2">
             <span className={`text-sm font-bold ${overallColor}`}>{overall}/5</span>
             <span className={`text-[10px] ${overallColor}`}>
