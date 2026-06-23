@@ -5,10 +5,21 @@ import type { Metadata } from "next";
 
 export const dynamic = "force-dynamic";
 
-export const metadata: Metadata = {
-  title: "Subscription Confirmed",
-  robots: { index: false, follow: false },
+const SUCCESS_TITLES: Record<string, string> = {
+  en: "Subscription Confirmed",
+  fr: "Abonnement confirmé",
+  es: "Suscripción confirmada",
+  ar: "تأكيد الاشتراك",
+  id: "Langganan Dikonfirmasi",
 };
+
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+  const { locale } = await params;
+  return {
+    title: SUCCESS_TITLES[locale] ?? SUCCESS_TITLES.en,
+    robots: { index: false, follow: false },
+  };
+}
 
 const PLAN_META: Record<string, { label: string; icon: React.ReactNode; color: string }> = {
   starter:    { label: "Pro",         icon: <Shield className="w-5 h-5" />, color: "text-red-400 bg-red-500/10 border-red-500/30" },
