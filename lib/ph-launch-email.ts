@@ -107,13 +107,17 @@ Terima kasih telah menjadi salah satu pengguna pertama kami.`,
   },
 };
 
-function buildHtml(c: typeof COPY.en): string {
+function buildHtml(c: typeof COPY.en, locale: string): string {
+  const isRtl = locale === "ar";
+  const dir   = isRtl ? "rtl" : "ltr";
+  const listPad = isRtl ? "padding-right:20px;padding-left:0" : "padding-left:20px";
+
   const bodyHtml = c.body
     .split("\n\n")
     .map((para) => {
       const lines = para.split("\n");
       if (lines.every((l) => l.startsWith("•"))) {
-        return `<ul style="margin:0 0 16px;padding-left:20px;color:#9ca3af;font-size:15px;line-height:1.7;">${
+        return `<ul style="margin:0 0 16px;${listPad};color:#9ca3af;font-size:15px;line-height:1.7;">${
           lines.map((l) => `<li style="margin-bottom:4px;">${l.replace(/^•\s*/, "")}</li>`).join("")
         }</ul>`;
       }
@@ -122,7 +126,7 @@ function buildHtml(c: typeof COPY.en): string {
     .join("");
 
   return `<!DOCTYPE html>
-<html>
+<html lang="${locale}" dir="${dir}">
 <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
 <body style="margin:0;padding:0;background:#030712;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;">
   <table width="100%" cellpadding="0" cellspacing="0" style="background:#030712;">
@@ -179,5 +183,5 @@ function buildHtml(c: typeof COPY.en): string {
 
 export function buildPHLaunchEmail(locale: string): { subject: string; html: string } {
   const c = COPY[locale] ?? COPY.en;
-  return { subject: c.subject, html: buildHtml(c) };
+  return { subject: c.subject, html: buildHtml(c, locale) };
 }
