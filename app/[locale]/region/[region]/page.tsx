@@ -265,8 +265,8 @@ export default async function RegionPage({
       {/* Stats */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
         {[
-          { label: lb.cases,     value: totalCases  > 0 ? totalCases.toLocaleString("en")  : lb.noData },
-          { label: lb.deaths,    value: totalDeaths > 0 ? totalDeaths.toLocaleString("en") : lb.noData },
+          { label: lb.cases,     value: totalCases  > 0 ? totalCases.toLocaleString(l)  : lb.noData },
+          { label: lb.deaths,    value: totalDeaths > 0 ? totalDeaths.toLocaleString(l) : lb.noData },
           { label: lb.countries, value: countriesSet.size.toString() },
           { label: lb.outbreaks, value: allOutbreaks.length.toString() },
         ].map(({ label, value }) => (
@@ -308,8 +308,8 @@ export default async function RegionPage({
                       </Link>
                       <p className="text-sm text-gray-400">
                         📍 {country}
-                        {o.cases > 0 && <span className="ml-2">· {o.cases.toLocaleString("en")} {lb.cases_unit}</span>}
-                        {o.deaths > 0 && <span className="ml-1 text-gray-500">· {o.deaths.toLocaleString("en")} {lb.deaths_unit}</span>}
+                        {o.cases > 0 && <span className="ml-2">· {o.cases.toLocaleString(l)} {lb.cases_unit}</span>}
+                        {o.deaths > 0 && <span className="ml-1 text-gray-500">· {o.deaths.toLocaleString(l)} {lb.deaths_unit}</span>}
                       </p>
                     </div>
                     <div className="flex items-center gap-2">
@@ -357,7 +357,7 @@ export default async function RegionPage({
                     <span className="text-gray-500 text-sm truncate hidden sm:block">· {country}</span>
                   </div>
                   <span className="text-sm text-gray-500 shrink-0">
-                    {o.cases > 0 ? `${o.cases.toLocaleString("en")} ${lb.cases_unit}` : lb.noData}
+                    {o.cases > 0 ? `${o.cases.toLocaleString(l)} ${lb.cases_unit}` : lb.noData}
                   </span>
                 </Link>
               );
