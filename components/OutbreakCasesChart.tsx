@@ -31,9 +31,9 @@ const LABEL: Record<string, { cases: string; deaths: string; noData: string }> =
   id: { cases: "Kasus",   deaths: "Kematian", noData: "Data tidak cukup (< 7 hari)" },
 };
 
-function formatDate(d: string) {
+function formatDate(d: string, locale: string) {
   try {
-    return new Date(d).toLocaleDateString("en", { month: "short", day: "numeric" });
+    return new Date(d).toLocaleDateString(locale, { month: "short", day: "numeric" });
   } catch {
     return d;
   }
@@ -51,7 +51,7 @@ export default function OutbreakCasesChart({ snapshots, riskLevel, locale }: Pro
   }
 
   const data = snapshots.map((s) => ({
-    date: formatDate(s.snapped_at),
+    date: formatDate(s.snapped_at, locale),
     cases: s.cases,
     deaths: s.deaths,
   }));

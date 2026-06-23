@@ -86,6 +86,15 @@ function asEnum<T extends string>(value: string | undefined, members: readonly T
   return (members as readonly string[]).includes(value ?? "") ? (value as T) : fallback;
 }
 
+const REPORT_LOCALE: Record<string, string> = { fr: "fr-FR", es: "es-ES", ar: "ar-SA", id: "id-ID", en: "en-GB" };
+const REPORT_TITLE:  Record<string, string> = {
+  fr: "Rapport Situation Sanitaire Mondiale",
+  es: "Informe Situación Sanitaria Mundial",
+  ar: "تقرير الوضع الصحي العالمي",
+  id: "Laporan Situasi Kesehatan Global",
+  en: "Global Health Situation Report",
+};
+
 const RISK_COLORS: Record<string, string> = {
   high:   "bg-red-500/15 border-red-500/30 text-red-400 hover:bg-red-500/25",
   medium: "bg-yellow-500/15 border-yellow-500/30 text-yellow-400 hover:bg-yellow-500/25",
@@ -416,10 +425,8 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
   }, [sorted, locale]);
 
   const generatePdf = useCallback(() => {
-    const today = new Date().toLocaleDateString(locale === "fr" ? "fr-FR" : locale === "es" ? "es-ES" : "en-GB", { dateStyle: "long" });
-    const title  = locale === "fr" ? "Rapport Situation Sanitaire Mondiale" :
-                   locale === "es" ? "Informe Situación Sanitaria Mundial" :
-                   "Global Health Situation Report";
+    const today = new Date().toLocaleDateString(REPORT_LOCALE[locale] ?? "en-GB", { dateStyle: "long" });
+    const title  = REPORT_TITLE[locale] ?? REPORT_TITLE.en;
     const rows = sorted.map((o) => {
       const cfr = o.cases > 0 ? `${(o.deaths / o.cases * 100).toFixed(1)}%` : "—";
       const tag = countryTags[o.country_en ?? ""] ? ` <span class="tag">${countryTags[o.country_en ?? ""]}</span>` : "";
@@ -530,10 +537,8 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
   }, [sorted, locale]);
 
   const downloadHtml = useCallback(() => {
-    const today = new Date().toLocaleDateString(locale === "fr" ? "fr-FR" : locale === "es" ? "es-ES" : "en-GB", { dateStyle: "long" });
-    const title  = locale === "fr" ? "Rapport Situation Sanitaire Mondiale" :
-                   locale === "es" ? "Informe Situación Sanitaria Mundial" :
-                   "Global Health Situation Report";
+    const today = new Date().toLocaleDateString(REPORT_LOCALE[locale] ?? "en-GB", { dateStyle: "long" });
+    const title  = REPORT_TITLE[locale] ?? REPORT_TITLE.en;
     const rows = sorted.map((o) => {
       const cfr = o.cases > 0 ? `${(o.deaths / o.cases * 100).toFixed(1)}%` : "—";
       const tag = countryTags[o.country_en ?? ""] ? ` <span class="tag">${countryTags[o.country_en ?? ""]}</span>` : "";
