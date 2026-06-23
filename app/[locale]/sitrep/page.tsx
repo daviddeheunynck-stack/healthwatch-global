@@ -20,6 +20,8 @@ const COPY: Record<string, {
   disease: string; country: string; cases: string; deaths: string;
   cfr: string; ci95: string; risk: string; date: string; source: string;
   generated: string; disclaimer: string; noData: string; back: string;
+  riskLabels: Record<string, string>;
+  srcLabels: { don: string; official: string; unverified: string };
 }> = {
   en: {
     title: "Weekly Epidemiological Situation Report",
@@ -29,6 +31,8 @@ const COPY: Record<string, {
     cfr: "CFR %", ci95: "95% CI", risk: "Risk", date: "Date", source: "Source",
     generated: "Generated", noData: "N/A", back: "Dashboard",
     disclaimer: "For information only. Always verify with official WHO and national health authority sources before operational decisions.",
+    riskLabels: { high: "HIGH", medium: "MEDIUM", low: "LOW" },
+    srcLabels: { don: "WHO DON", official: "Official", unverified: "Unverified" },
   },
   fr: {
     title: "Rapport de situation épidémiologique hebdomadaire",
@@ -38,6 +42,8 @@ const COPY: Record<string, {
     cfr: "Létalité %", ci95: "IC95%", risk: "Risque", date: "Date", source: "Source",
     generated: "Généré le", noData: "N/D", back: "Tableau de bord",
     disclaimer: "À titre informatif uniquement. Toujours vérifier avec les sources officielles OMS et autorités sanitaires avant toute décision opérationnelle.",
+    riskLabels: { high: "ÉLEVÉ", medium: "MODÉRÉ", low: "FAIBLE" },
+    srcLabels: { don: "WHO DON", official: "Officiel", unverified: "Non vérifié" },
   },
   es: {
     title: "Informe de situación epidemiológica semanal",
@@ -47,6 +53,8 @@ const COPY: Record<string, {
     cfr: "Letalidad %", ci95: "IC95%", risk: "Riesgo", date: "Fecha", source: "Fuente",
     generated: "Generado el", noData: "N/D", back: "Panel",
     disclaimer: "Solo para información. Verificar siempre con fuentes oficiales de la OMS antes de decisiones operativas.",
+    riskLabels: { high: "ALTO", medium: "MEDIO", low: "BAJO" },
+    srcLabels: { don: "WHO DON", official: "Oficial", unverified: "Sin verificar" },
   },
   ar: {
     title: "التقرير الأسبوعي للوضع الوبائي",
@@ -56,6 +64,8 @@ const COPY: Record<string, {
     cfr: "معدل الوفيات %", ci95: "فترة ثقة 95%", risk: "المخاطر", date: "التاريخ", source: "المصدر",
     generated: "تم التوليد في", noData: "غ/م", back: "لوحة التحكم",
     disclaimer: "للمعلومات فقط. يُرجى التحقق من المصادر الرسمية قبل أي قرار تشغيلي.",
+    riskLabels: { high: "مرتفع", medium: "متوسط", low: "منخفض" },
+    srcLabels: { don: "WHO DON", official: "رسمي", unverified: "غير موثق" },
   },
   id: {
     title: "Laporan Situasi Epidemiologi Mingguan",
@@ -65,14 +75,16 @@ const COPY: Record<string, {
     cfr: "CFR %", ci95: "IK 95%", risk: "Risiko", date: "Tanggal", source: "Sumber",
     generated: "Dibuat", noData: "T/S", back: "Dasbor",
     disclaimer: "Hanya untuk informasi. Selalu verifikasi dengan sumber resmi WHO sebelum keputusan operasional.",
+    riskLabels: { high: "TINGGI", medium: "SEDANG", low: "RENDAH" },
+    srcLabels: { don: "WHO DON", official: "Resmi", unverified: "Belum diverifikasi" },
   },
 };
 
-function srcLabel(source?: string | null): string {
+function srcKey(source?: string | null): "don" | "official" | "unverified" {
   const s = sourceStatus({ source } as Parameters<typeof sourceStatus>[0]);
-  if (s === "don")        return "WHO DON";
-  if (s === "official")   return "Official";
-  return "Unverified";
+  if (s === "don")      return "don";
+  if (s === "official") return "official";
+  return "unverified";
 }
 
 export default async function SitrepPage({
@@ -205,7 +217,7 @@ export default async function SitrepPage({
               const cfrCls = cfrNum !== null && cfrNum > 10 ? "text-red-400 font-bold" :
                              cfrNum !== null && cfrNum > 3  ? "text-amber-400 font-semibold" :
                                                               "text-gray-300";
-              const src = srcLabel(o.source);
+              const src = srcKey(o.source);
               return (
                 <tr
                   key={o.id}
@@ -219,7 +231,7 @@ export default async function SitrepPage({
                       {getLocalizedDisease(o, locale)}
                     </Link>
                     {o.is_pheic && (
-                      <span className="text-[9px] font-bold px-1 py-0.5 rounded bg-purple-900/50 text-purple-300 border border-purple-700/50 ml-1">PHEIC</span>
+                      <span className="text-[9px] font-bold px-1 py-0.5 rounded bg-purple-900/50 text-purple-300 border border-purple-700/50 ml-1">{c.pheic}</span>
                     )}
                   </td>
                   <td className="px-3 py-2 text-gray-300 max-w-[140px]">
@@ -243,16 +255,16 @@ export default async function SitrepPage({
                       o.risk_level === "medium" ? "bg-amber-900/30 border border-amber-700/40 text-amber-400" :
                                                   "bg-green-900/30 border border-green-700/40 text-green-400"
                     }`}>
-                      {o.risk_level}
+                      {c.riskLabels[o.risk_level] ?? o.risk_level.toUpperCase()}
                     </span>
                   </td>
                   <td className="px-3 py-2 text-gray-500 whitespace-nowrap">{o.date}</td>
                   <td className={`px-3 py-2 whitespace-nowrap ${
-                    src === "WHO DON"     ? "text-blue-400"   :
-                    src === "Official"    ? "text-amber-400"  :
-                                           "text-gray-600"
+                    src === "don"      ? "text-blue-400"   :
+                    src === "official" ? "text-amber-400"  :
+                                        "text-gray-600"
                   }`}>
-                    {src}
+                    {c.srcLabels[src]}
                   </td>
                 </tr>
               );
