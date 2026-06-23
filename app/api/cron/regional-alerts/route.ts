@@ -216,7 +216,7 @@ export async function GET(req: NextRequest) {
                 {
                   type: "context",
                   elements: [
-                    { type: "mrkdwn", text: `Risk: *${outbreak.risk_level}* · Date: ${outbreak.date}${outbreak.cases ? ` · Cases: ${outbreak.cases.toLocaleString()}` : ""}` },
+                    { type: "mrkdwn", text: `Risk: *${outbreak.risk_level}* · Date: ${outbreak.date}${outbreak.cases ? ` · Cases: ${outbreak.cases.toLocaleString("en")}` : ""}` },
                   ],
                 },
                 {
