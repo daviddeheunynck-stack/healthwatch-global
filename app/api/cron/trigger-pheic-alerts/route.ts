@@ -107,7 +107,7 @@ export async function GET(req: NextRequest) {
   <hr style="border:none;border-top:1px solid #334155;margin:0 0 16px"/>
   <p style="font-size:14px;margin:0 0 12px">${intro}</p>
   <ul style="font-size:13px;color:#cbd5e1;margin:0 0 16px;padding-left:20px">
-    <li>Cases: ${outbreak.cases.toLocaleString("en")}</li>
+    <li>Cases: ${outbreak.cases.toLocaleString(locale)}</li>
     ${cfr ? `<li>${cfr}</li>` : ""}
     <li>Reported: ${outbreak.date}</li>
     <li>Risk: <strong style="color:#f87171">HIGH${outbreak.risk_level === "high" ? "" : " — ".concat(outbreak.risk_level)}</strong></li>

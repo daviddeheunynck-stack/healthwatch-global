@@ -89,7 +89,7 @@ export async function GET(req: NextRequest) {
 <p>${intro}</p>
 <ul>
   <li>${lb[0]}: ${top.disease_en}</li>
-  <li>${lb[1]}: ${(top.cases ?? 0).toLocaleString("en")}${cfr ? ` · ${cfr}` : ""}</li>
+  <li>${lb[1]}: ${(top.cases ?? 0).toLocaleString(locale)}${cfr ? ` · ${cfr}` : ""}</li>
   ${top.is_pheic ? `<li>${lb[2]}</li>` : ""}
   <li>${lb[3]}: ${top.date}</li>
   ${matches.length > 1 ? `<li>+${matches.length - 1} other outbreak(s) in this country</li>` : ""}
