@@ -16,6 +16,7 @@ const COPY: Record<string, {
   demoBtn: string;
   phBtn: string;
   phNote: string;
+  doneMsg: string;
 }> = {
   en: {
     eyebrow: "Launching on Product Hunt",
@@ -25,6 +26,7 @@ const COPY: Record<string, {
     demoBtn: "Preview the live dashboard →",
     phBtn: "Follow us on Product Hunt",
     phNote: "Get notified the moment we go live",
+    doneMsg: "🎉 We're live on Product Hunt →",
   },
   fr: {
     eyebrow: "Lancement sur Product Hunt",
@@ -34,6 +36,7 @@ const COPY: Record<string, {
     demoBtn: "Voir le tableau de bord en direct →",
     phBtn: "Nous suivre sur Product Hunt",
     phNote: "Soyez notifié dès le lancement",
+    doneMsg: "🎉 Nous sommes en ligne sur Product Hunt →",
   },
   es: {
     eyebrow: "Lanzamiento en Product Hunt",
@@ -43,6 +46,7 @@ const COPY: Record<string, {
     demoBtn: "Ver el panel en directo →",
     phBtn: "Síguenos en Product Hunt",
     phNote: "Recibe una notificación cuando lancemos",
+    doneMsg: "🎉 ¡Estamos en vivo en Product Hunt! →",
   },
   ar: {
     eyebrow: "الإطلاق على Product Hunt",
@@ -52,6 +56,7 @@ const COPY: Record<string, {
     demoBtn: "← تجربة لوحة التحكم مباشرةً",
     phBtn: "تابعنا على Product Hunt",
     phNote: "احصل على إشعار لحظة الإطلاق",
+    doneMsg: "← 🎉 نحن الآن مباشر على Product Hunt",
   },
   id: {
     eyebrow: "Peluncuran di Product Hunt",
@@ -61,6 +66,7 @@ const COPY: Record<string, {
     demoBtn: "Coba dasbor langsung →",
     phBtn: "Ikuti kami di Product Hunt",
     phNote: "Dapatkan notifikasi saat kami meluncur",
+    doneMsg: "🎉 Kami sudah tayang di Product Hunt →",
   },
 };
 
@@ -136,7 +142,7 @@ export default function ComingSoonClient({ locale }: { locale: string }) {
           rel="noopener noreferrer"
           className="text-2xl font-bold text-[#ff6154] mb-12 hover:underline"
         >
-          🎉 We&apos;re live on Product Hunt →
+          {c.doneMsg}
         </a>
       )}
 
