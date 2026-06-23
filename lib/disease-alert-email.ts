@@ -182,11 +182,11 @@ export function buildDiseaseAlertEmail(
       <tr>
         <td width="33%" style="background:#0f172a;border-radius:8px;padding:14px;text-align:center;">
           <div style="color:#60a5fa;font-size:11px;margin-bottom:6px;">${c.cases}</div>
-          <div style="color:white;font-size:20px;font-weight:800;">${hasData ? outbreak.cases.toLocaleString() : c.noData}</div>
+          <div style="color:white;font-size:20px;font-weight:800;">${hasData ? outbreak.cases.toLocaleString(locale) : c.noData}</div>
         </td>
         <td width="33%" style="background:#0f172a;border-radius:8px;padding:14px;text-align:center;">
           <div style="color:#f87171;font-size:11px;margin-bottom:6px;">${c.deaths}</div>
-          <div style="color:#f87171;font-size:20px;font-weight:800;">${hasData ? outbreak.deaths.toLocaleString() : c.noData}</div>
+          <div style="color:#f87171;font-size:20px;font-weight:800;">${hasData ? outbreak.deaths.toLocaleString(locale) : c.noData}</div>
         </td>
         <td width="33%" style="background:#0f172a;border-radius:8px;padding:14px;text-align:center;">
           <div style="color:#fbbf24;font-size:11px;margin-bottom:6px;">${c.cfr}</div>

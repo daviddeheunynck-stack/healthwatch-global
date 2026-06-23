@@ -172,8 +172,8 @@ export function buildDigestEmail(
             <tr style="border-bottom:${showAction ? "none" : "1px solid #1e293b"};">
               <td style="padding:12px 8px;color:#f1f5f9;font-weight:600;">${disease}</td>
               <td style="padding:12px 8px;color:#94a3b8;">${country}</td>
-              <td style="padding:12px 8px;color:#e2e8f0;">${o.cases.toLocaleString()}</td>
-              <td style="padding:12px 8px;color:#fca5a5;">${o.deaths.toLocaleString()}</td>
+              <td style="padding:12px 8px;color:#e2e8f0;">${o.cases.toLocaleString(locale)}</td>
+              <td style="padding:12px 8px;color:#fca5a5;">${o.deaths.toLocaleString(locale)}</td>
               <td style="padding:12px 8px;">
                 <span style="background:${color}22;color:${color};border:1px solid ${color}44;padding:2px 8px;border-radius:20px;font-size:12px;font-weight:600;">${riskLabel}</span><br/>
                 <span style="display:inline-block;margin-top:4px;${tier.style}">${tierLabel}</span>

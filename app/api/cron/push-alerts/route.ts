@@ -93,7 +93,7 @@ export async function GET(req: NextRequest) {
       const country = getLocalizedCountry(outbreak, locale);
       const risk    = RISK_LABEL[locale]?.[outbreak.risk_level ?? ""] ?? "";
       const cases   = outbreak.cases != null
-        ? `${outbreak.cases.toLocaleString("en")} ${CASES_LABEL[locale] ?? "cases"}`
+        ? `${outbreak.cases.toLocaleString(locale)} ${CASES_LABEL[locale] ?? "cases"}`
         : "";
 
       const bodyParts = [cases, risk].filter(Boolean);
