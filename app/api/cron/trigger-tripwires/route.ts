@@ -150,11 +150,12 @@ export async function GET(req: NextRequest) {
     if (!crossed) continue;
 
     const locale       = localeMap[tw.user_id] ?? "en";
+    const numLocale    = locale === "ar" ? "ar-SA" : locale;
     const lc           = COPY[locale] ?? COPY.en;
     const disease      = o.disease_en ?? "Unknown disease";
     const country      = o.country_en ?? "Unknown country";
-    const casesStr     = o.cases.toLocaleString(locale);
-    const thresholdStr = tw.threshold_cases.toLocaleString(locale);
+    const casesStr     = o.cases.toLocaleString(numLocale);
+    const thresholdStr = tw.threshold_cases.toLocaleString(numLocale);
     const deepLink     = `${APP_URL}/${locale}?outbreak=${o.id}`;
 
     try {

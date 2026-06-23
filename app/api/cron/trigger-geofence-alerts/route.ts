@@ -71,7 +71,8 @@ export async function GET(req: NextRequest) {
 
     if (!matches.length) continue;
 
-    const locale   = localeMap[alert.user_id] ?? "en";
+    const locale    = localeMap[alert.user_id] ?? "en";
+    const numLocale = locale === "ar" ? "ar-SA" : locale;
     const plural   = matches.length > 1;
     const emailSubject = {
       fr: `[HealthWatch] Alerte zone : ${matches.length} foyer${plural ? "s" : ""} près de ${alert.label}`,
@@ -128,7 +129,7 @@ export async function GET(req: NextRequest) {
     } as Record<string, string>)[locale] ?? `This alert fires every ${COOLDOWN_H}h when outbreaks exist within your zone radius. Manage geofence alerts on your dashboard.`;
 
     const rows = matches.slice(0, 8).map((o) =>
-      `<tr><td style="padding:4px 8px">${o.disease_en ?? "—"}</td><td style="padding:4px 8px">${o.country_en ?? "—"}</td><td style="padding:4px 8px;text-align:right">${o.cases.toLocaleString(locale)}</td><td style="padding:4px 8px;text-transform:uppercase;font-size:11px;font-weight:700;color:${o.risk_level === "high" ? "#f87171" : o.risk_level === "medium" ? "#fbbf24" : "#4ade80"}">${o.risk_level}</td></tr>`
+      `<tr><td style="padding:4px 8px">${o.disease_en ?? "—"}</td><td style="padding:4px 8px">${o.country_en ?? "—"}</td><td style="padding:4px 8px;text-align:right">${o.cases.toLocaleString(numLocale)}</td><td style="padding:4px 8px;text-transform:uppercase;font-size:11px;font-weight:700;color:${o.risk_level === "high" ? "#f87171" : o.risk_level === "medium" ? "#fbbf24" : "#4ade80"}">${o.risk_level}</td></tr>`
     ).join("");
 
     try {
@@ -136,7 +137,7 @@ export async function GET(req: NextRequest) {
         user_id:     alert.user_id,
         type:        "watchlist",
         title:       inAppTitleStr,
-        body:        matches.slice(0, 3).map((o) => `${o.disease_en ?? "—"} (${o.country_en ?? "—"}): ${o.cases.toLocaleString(locale)}`).join(" · "),
+        body:        matches.slice(0, 3).map((o) => `${o.disease_en ?? "—"} (${o.country_en ?? "—"}): ${o.cases.toLocaleString(numLocale)}`).join(" · "),
         outbreak_id: matches[0]?.id ?? null,
       })).catch(() => {});
 

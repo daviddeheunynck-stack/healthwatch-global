@@ -133,13 +133,14 @@ export async function GET(req: NextRequest) {
 
     if (!matches.length) continue;
 
-    const locale   = localeMap[alert.user_id] ?? "en";
+    const locale    = localeMap[alert.user_id] ?? "en";
+    const numLocale = locale === "ar" ? "ar-SA" : locale;
     const lc       = COPY[locale] ?? COPY.en;
     const catLabel = (CATEGORY_LABELS[alert.disease_category as keyof typeof CATEGORY_LABELS]?.en) ?? alert.disease_category;
-    const minStr   = alert.min_cases.toLocaleString(locale);
+    const minStr   = alert.min_cases.toLocaleString(numLocale);
 
     const rows = matches.slice(0, 8).map((o) =>
-      `<tr><td style="padding:4px 8px">${o.disease_en ?? "—"}</td><td style="padding:4px 8px">${o.country_en ?? "—"}</td><td style="padding:4px 8px;text-align:right">${o.cases.toLocaleString(locale)}</td></tr>`
+      `<tr><td style="padding:4px 8px">${o.disease_en ?? "—"}</td><td style="padding:4px 8px">${o.country_en ?? "—"}</td><td style="padding:4px 8px;text-align:right">${o.cases.toLocaleString(numLocale)}</td></tr>`
     ).join("");
 
     try {

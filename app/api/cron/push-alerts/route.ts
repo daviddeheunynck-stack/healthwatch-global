@@ -89,11 +89,12 @@ export async function GET(req: NextRequest) {
 
     for (const locale of locales) {
       const group = allSubs.filter((s) => (s.locale ?? "en") === locale);
+      const numLocale = locale === "ar" ? "ar-SA" : locale;
       const disease = getLocalizedDisease(outbreak, locale);
       const country = getLocalizedCountry(outbreak, locale);
       const risk    = RISK_LABEL[locale]?.[outbreak.risk_level ?? ""] ?? "";
       const cases   = outbreak.cases != null
-        ? `${outbreak.cases.toLocaleString(locale)} ${CASES_LABEL[locale] ?? "cases"}`
+        ? `${outbreak.cases.toLocaleString(numLocale)} ${CASES_LABEL[locale] ?? "cases"}`
         : "";
 
       const bodyParts = [cases, risk].filter(Boolean);

@@ -101,6 +101,7 @@ export async function GET(req: NextRequest) {
 
   for (const user of users as Array<{ id: string; email: string; alert_locale?: string | null; digest_region: string }>) {
     const locale       = user.alert_locale ?? "en";
+    const numLocale    = locale === "ar" ? "ar-SA" : locale;
     const digestRegion = user.digest_region;
     const lc           = COPY[locale] ?? COPY.en;
     const regionLabel  = REGION_LABELS[digestRegion]?.[locale] ?? digestRegion;
@@ -116,7 +117,7 @@ export async function GET(req: NextRequest) {
       return `<tr>
         <td style="padding:4px 8px;border-bottom:1px solid #1e293b">${o.disease_en ?? "—"}${o.is_pheic ? ' <span style="color:#f87171;font-size:10px">PHEIC</span>' : ""}</td>
         <td style="padding:4px 8px;border-bottom:1px solid #1e293b">${o.country_en ?? "—"}</td>
-        <td style="padding:4px 8px;border-bottom:1px solid #1e293b;text-align:right">${o.cases.toLocaleString(locale)}</td>
+        <td style="padding:4px 8px;border-bottom:1px solid #1e293b;text-align:right">${o.cases.toLocaleString(numLocale)}</td>
         <td style="padding:4px 8px;border-bottom:1px solid #1e293b;font-weight:700;font-size:11px;color:${riskColor}">${o.risk_level.toUpperCase()}</td>
         <td style="padding:4px 8px;border-bottom:1px solid #1e293b;color:#94a3b8">${o.date}</td>
       </tr>`;

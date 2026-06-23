@@ -77,6 +77,7 @@ export async function GET(req: NextRequest) {
     }
 
     const locale    = sub.locale in SUBJECT ? sub.locale : "en";
+    const numLocale = locale === "ar" ? "ar-SA" : locale;
     const disease   = o.disease_en ?? "Unknown disease";
     const country   = o.country_en ?? "Unknown country";
     const risk      = (RISK_LABEL[locale] ?? RISK_LABEL.en)[o.risk_level] ?? o.risk_level.toUpperCase();
@@ -95,8 +96,8 @@ export async function GET(req: NextRequest) {
   <hr style="border:none;border-top:1px solid #334155;margin:0 0 16px"/>
   <p style="margin:0 0 4px;font-size:16px;font-weight:600;color:#fff">${disease} — ${country}</p>
   <p style="margin:0 0 12px;font-size:13px;color:#94a3b8">
-    Cases: <strong style="color:#f1f5f9">${o.cases.toLocaleString(locale)}</strong> &nbsp;|&nbsp;
-    Deaths: <strong style="color:#f1f5f9">${o.deaths.toLocaleString(locale)}</strong>
+    Cases: <strong style="color:#f1f5f9">${o.cases.toLocaleString(numLocale)}</strong> &nbsp;|&nbsp;
+    Deaths: <strong style="color:#f1f5f9">${o.deaths.toLocaleString(numLocale)}</strong>
     ${cfr ? `&nbsp;|&nbsp; CFR: <strong style="color:#f1f5f9">${cfr}%</strong>` : ""}
   </p>
   <p style="margin:0 0 20px;font-size:13px;color:#94a3b8">

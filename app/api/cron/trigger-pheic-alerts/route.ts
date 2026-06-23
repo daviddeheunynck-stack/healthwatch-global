@@ -94,7 +94,8 @@ export async function GET(req: NextRequest) {
       const key = `${user.id}::${outbreak.id}`;
       if (notifiedSet.has(key)) continue;
 
-      const locale = user.alert_locale ?? "en";
+      const locale    = user.alert_locale ?? "en";
+      const numLocale = locale === "ar" ? "ar-SA" : locale;
       const lc = LOCALE_COPY[locale] ?? LOCALE_COPY.en;
       const subject = lc.subject(disease, country);
       const intro   = lc.intro(disease, country);
@@ -107,7 +108,7 @@ export async function GET(req: NextRequest) {
   <hr style="border:none;border-top:1px solid #334155;margin:0 0 16px"/>
   <p style="font-size:14px;margin:0 0 12px">${intro}</p>
   <ul style="font-size:13px;color:#cbd5e1;margin:0 0 16px;padding-left:20px">
-    <li>Cases: ${outbreak.cases.toLocaleString(locale)}</li>
+    <li>Cases: ${outbreak.cases.toLocaleString(numLocale)}</li>
     ${cfr ? `<li>${cfr}</li>` : ""}
     <li>Reported: ${outbreak.date}</li>
     <li>Risk: <strong style="color:#f87171">HIGH${outbreak.risk_level === "high" ? "" : " — ".concat(outbreak.risk_level)}</strong></li>

@@ -57,6 +57,7 @@ interface Outbreak {
 
 function buildEmailHtml(outbreaks: Outbreak[], locale: string, date: string): string {
   const rl = RISK_LABEL[locale] ?? RISK_LABEL.en;
+  const numLocale = locale === "ar" ? "ar-SA" : locale;
   const sitrep_url = `${APP_URL}/${locale}/sitrep`;
 
   const header = {
@@ -87,7 +88,7 @@ function buildEmailHtml(outbreaks: Outbreak[], locale: string, date: string): st
       <tr style="border-bottom:1px solid #374151">
         <td style="padding:10px 8px;font-weight:600;color:#f9fafb">${disease}</td>
         <td style="padding:10px 8px;color:#9ca3af">${country}</td>
-        <td style="padding:10px 8px;color:#e5e7eb;font-variant-numeric:tabular-nums">${o.cases.toLocaleString(locale)}&nbsp;${casesLbl}${o.deaths > 0 ? ` · ${o.deaths.toLocaleString(locale)}&nbsp;${deathsLbl}` : ""}${cfr}${pheic}</td>
+        <td style="padding:10px 8px;color:#e5e7eb;font-variant-numeric:tabular-nums">${o.cases.toLocaleString(numLocale)}&nbsp;${casesLbl}${o.deaths > 0 ? ` · ${o.deaths.toLocaleString(numLocale)}&nbsp;${deathsLbl}` : ""}${cfr}${pheic}</td>
         <td style="padding:10px 8px;white-space:nowrap">${rl[o.risk_level] ?? o.risk_level}</td>
       </tr>`;
   }).join("");
