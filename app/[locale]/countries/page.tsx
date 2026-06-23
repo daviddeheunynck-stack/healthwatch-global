@@ -37,7 +37,7 @@ const LABELS: Record<Locale, {
     metaDesc: "Browse all countries with recorded disease outbreaks from WHO, ECDC, PAHO and Africa CDC. Active and historical data.",
     sortActive: "Active first",
     sortAlpha: "A–Z",
-    regionLabel: { africa: "Africa", asia: "Asia", americas: "Americas", europe: "Europe", oceania: "Oceania" },
+    regionLabel: { africa: "Africa", asia: "Asia", americas: "Americas", europe: "Europe", oceania: "Oceania", other: "Other" },
   },
   fr: {
     title: "Pays",
@@ -51,7 +51,7 @@ const LABELS: Record<Locale, {
     metaDesc: "Explorez tous les pays avec des foyers enregistrés par l'OMS, l'ECDC, le PAHO et Africa CDC. Données actives et historiques.",
     sortActive: "Actifs en premier",
     sortAlpha: "A–Z",
-    regionLabel: { africa: "Afrique", asia: "Asie", americas: "Amériques", europe: "Europe", oceania: "Océanie" },
+    regionLabel: { africa: "Afrique", asia: "Asie", americas: "Amériques", europe: "Europe", oceania: "Océanie", other: "Autre" },
   },
   es: {
     title: "Países",
@@ -65,7 +65,7 @@ const LABELS: Record<Locale, {
     metaDesc: "Explore todos los países con brotes registrados por OMS, ECDC, PAHO y Africa CDC. Datos activos e históricos.",
     sortActive: "Activos primero",
     sortAlpha: "A–Z",
-    regionLabel: { africa: "África", asia: "Asia", americas: "Américas", europe: "Europa", oceania: "Oceanía" },
+    regionLabel: { africa: "África", asia: "Asia", americas: "Américas", europe: "Europa", oceania: "Oceanía", other: "Otro" },
   },
   ar: {
     title: "الدول",
@@ -79,7 +79,7 @@ const LABELS: Record<Locale, {
     metaDesc: "تصفح جميع الدول التي سُجّلت فيها تفشيات بواسطة منظمة الصحة العالمية وECDC وPAHO وAfrica CDC.",
     sortActive: "النشطة أولاً",
     sortAlpha: "أ–ي",
-    regionLabel: { africa: "أفريقيا", asia: "آسيا", americas: "الأمريكتان", europe: "أوروبا", oceania: "أوقيانوسيا" },
+    regionLabel: { africa: "أفريقيا", asia: "آسيا", americas: "الأمريكتان", europe: "أوروبا", oceania: "أوقيانوسيا", other: "أخرى" },
   },
   id: {
     title: "Negara",
@@ -93,7 +93,7 @@ const LABELS: Record<Locale, {
     metaDesc: "Jelajahi semua negara dengan wabah yang tercatat dari WHO, ECDC, PAHO dan Africa CDC. Data aktif dan historis.",
     sortActive: "Aktif dulu",
     sortAlpha: "A–Z",
-    regionLabel: { africa: "Afrika", asia: "Asia", americas: "Amerika", europe: "Eropa", oceania: "Oseania" },
+    regionLabel: { africa: "Afrika", asia: "Asia", americas: "Amerika", europe: "Eropa", oceania: "Oseania", other: "Lainnya" },
   },
 };
 
@@ -292,7 +292,7 @@ export default async function CountriesPage({
                       </p>
                       <p className="text-xs text-gray-500 mt-0.5">
                         {c.totalCount} {lb.total}
-                        {c.totalCases > 0 && ` · ${c.totalCases.toLocaleString()} ${lb.cases}`}
+                        {c.totalCases > 0 && ` · ${c.totalCases.toLocaleString(l)} ${lb.cases}`}
                       </p>
                     </div>
                     <div className="shrink-0">
