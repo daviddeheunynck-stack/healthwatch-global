@@ -145,27 +145,33 @@ const IHR_COPY: Record<string, {
   badge: string; banner: string; btnLabel: string; btnCopied: string;
   notif: string; eventDesc: string; geo: string; onset: string;
   epi: string; pop: string; measures: string; src: string; lab: string; contact: string;
+  notifDate: string; cases: string; deaths: string; per100k: string; fillIn: string; generatedVia: string;
 }> = {
   fr: { badge: "RSI", banner: "Événement RSI enregistré — référencé au Siège OMS", btnLabel: "Générer notification Art. 6", btnCopied: "Copié !",
     notif: "NOTIFICATION RSI — ARTICLE 6 (IHR 2005)", eventDesc: "Description de l'événement", geo: "Zone géographique affectée",
     onset: "Date d'apparition des premiers cas", epi: "Données épidémiologiques", pop: "Population exposée / à risque",
-    measures: "Mesures prises", src: "Source de l'information", lab: "Confirmation de laboratoire", contact: "Point focal RSI national" },
+    measures: "Mesures prises", src: "Source de l'information", lab: "Confirmation de laboratoire", contact: "Point focal RSI national",
+    notifDate: "Date de notification", cases: "cas", deaths: "décès", per100k: "pour 100 000", fillIn: "à renseigner", generatedVia: "Généré via" },
   en: { badge: "IHR EVENT", banner: "Active IHR event — referenced at WHO HQ", btnLabel: "Generate Art. 6 notification", btnCopied: "Copied!",
     notif: "IHR NOTIFICATION — ARTICLE 6 (IHR 2005)", eventDesc: "Event description", geo: "Affected geographic area",
     onset: "Date of onset of first cases", epi: "Epidemiological data", pop: "Exposed / at-risk population",
-    measures: "Measures taken", src: "Information source", lab: "Laboratory confirmation", contact: "National IHR focal point" },
+    measures: "Measures taken", src: "Information source", lab: "Laboratory confirmation", contact: "National IHR focal point",
+    notifDate: "Date of notification", cases: "cases", deaths: "deaths", per100k: "per 100,000", fillIn: "to fill in", generatedVia: "Generated via" },
   es: { badge: "EVENTO RSI", banner: "Evento RSI activo — referenciado en la sede de la OMS", btnLabel: "Generar notificación Art. 6", btnCopied: "¡Copiado!",
     notif: "NOTIFICACIÓN RSI — ARTÍCULO 6 (RSI 2005)", eventDesc: "Descripción del evento", geo: "Zona geográfica afectada",
     onset: "Fecha de aparición de los primeros casos", epi: "Datos epidemiológicos", pop: "Población expuesta / en riesgo",
-    measures: "Medidas adoptadas", src: "Fuente de información", lab: "Confirmación de laboratorio", contact: "Punto focal RSI nacional" },
+    measures: "Medidas adoptadas", src: "Fuente de información", lab: "Confirmación de laboratorio", contact: "Punto focal RSI nacional",
+    notifDate: "Fecha de notificación", cases: "casos", deaths: "fallecidos", per100k: "por 100.000", fillIn: "a completar", generatedVia: "Generado via" },
   ar: { badge: "حدث RSI", banner: "حدث RSI نشط — مسجل في المقر الرئيسي لمنظمة الصحة العالمية", btnLabel: "إنشاء إشعار المادة 6", btnCopied: "تم النسخ",
     notif: "إشعار اللوائح الصحية الدولية — المادة 6 (IHR 2005)", eventDesc: "وصف الحدث", geo: "المنطقة الجغرافية المتضررة",
     onset: "تاريخ ظهور أول حالة", epi: "البيانات الوبائية", pop: "السكان المعرضون / المعرضون للخطر",
-    measures: "التدابير المتخذة", src: "مصدر المعلومات", lab: "التأكيد المخبري", contact: "نقطة الاتصال الوطنية لـ RSI" },
+    measures: "التدابير المتخذة", src: "مصدر المعلومات", lab: "التأكيد المخبري", contact: "نقطة الاتصال الوطنية لـ RSI",
+    notifDate: "تاريخ الإشعار", cases: "حالات", deaths: "وفيات", per100k: "لكل 100,000", fillIn: "للإكمال", generatedVia: "تم التوليد عبر" },
   id: { badge: "KEJADIAN IHR", banner: "Kejadian IHR aktif — tercatat di Kantor Pusat WHO", btnLabel: "Buat notifikasi Pasal 6", btnCopied: "Disalin!",
     notif: "NOTIFIKASI IHR — PASAL 6 (IHR 2005)", eventDesc: "Deskripsi kejadian", geo: "Wilayah geografis yang terdampak",
     onset: "Tanggal onset kasus pertama", epi: "Data epidemiologi", pop: "Populasi yang terpapar / berisiko",
-    measures: "Tindakan yang diambil", src: "Sumber informasi", lab: "Konfirmasi laboratorium", contact: "Focal point IHR nasional" },
+    measures: "Tindakan yang diambil", src: "Sumber informasi", lab: "Konfirmasi laboratorium", contact: "Focal point IHR nasional",
+    notifDate: "Tanggal notifikasi", cases: "kasus", deaths: "kematian", per100k: "per 100.000", fillIn: "isi di sini", generatedVia: "Dibuat melalui" },
 };
 
 const NEIGHBOR_COPY: Record<string, { title: string; noNeighbors: string; km: string }> = {
@@ -1129,19 +1135,19 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlis
                 const incidence = getIncidenceRate(outbreak.cases, outbreak.country_en);
                 const text = [
                   ic.notif,
-                  `${locale === "fr" ? "Date de notification" : "Date of notification"}: ${new Date().toISOString().split("T")[0]}`,
+                  `${ic.notifDate}: ${new Date().toISOString().split("T")[0]}`,
                   "",
                   `1. ${ic.eventDesc}: ${disease} (${country})`,
                   `2. ${ic.geo}: ${country}${outbreak.admin1 ? `, ${outbreak.admin1}` : ""}`,
                   `3. ${ic.onset}: ${outbreak.date}`,
-                  `4. ${ic.epi}: ${outbreak.cases.toLocaleString(locale)} ${locale === "fr" ? "cas" : "cases"} / ${outbreak.deaths.toLocaleString(locale)} ${locale === "fr" ? "décès" : "deaths"} / CFR ${cfr}%${incidence ? ` / ${incidence.toFixed(1)} ${locale === "fr" ? "pour 100 000" : "per 100,000"}` : ""}`,
-                  `5. ${ic.pop}: [${locale === "fr" ? "à renseigner" : "to fill in"}]`,
-                  `6. ${ic.measures}: [${locale === "fr" ? "à renseigner" : "to fill in"}]`,
+                  `4. ${ic.epi}: ${outbreak.cases.toLocaleString(locale)} ${ic.cases} / ${outbreak.deaths.toLocaleString(locale)} ${ic.deaths} / CFR ${cfr}%${incidence ? ` / ${incidence.toFixed(1)} ${ic.per100k}` : ""}`,
+                  `5. ${ic.pop}: [${ic.fillIn}]`,
+                  `6. ${ic.measures}: [${ic.fillIn}]`,
                   `7. ${ic.src}: HealthWatch Global / ${outbreak.source || "OMS / WHO"}`,
-                  `8. ${ic.lab}: [${locale === "fr" ? "à renseigner" : "to fill in"}]`,
-                  `9. ${ic.contact}: [${locale === "fr" ? "à renseigner" : "to fill in"}]`,
+                  `8. ${ic.lab}: [${ic.fillIn}]`,
+                  `9. ${ic.contact}: [${ic.fillIn}]`,
                   "",
-                  `--- ${locale === "fr" ? "Généré via" : "Generated via"} HealthWatch Global — https://healthwatch-global.com`,
+                  `--- ${ic.generatedVia} HealthWatch Global — https://healthwatch-global.com`,
                 ].join("\n");
                 await navigator.clipboard.writeText(text);
                 setIhrCopied(true);
