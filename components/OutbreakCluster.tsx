@@ -69,7 +69,7 @@ export default function OutbreakCluster({ eventId, excludeId, locale }: Props) {
                 <p className="text-[10px] text-gray-600 truncate">{o.country_en || o.country}</p>
               </div>
               {o.cases > 0 && (
-                <span className="text-[10px] text-gray-600 shrink-0">{o.cases.toLocaleString("en")}</span>
+                <span className="text-[10px] text-gray-600 shrink-0">{o.cases.toLocaleString(locale)}</span>
               )}
               <ExternalLink className="w-3 h-3 text-gray-700 group-hover:text-gray-400 transition-colors shrink-0" />
             </Link>

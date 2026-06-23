@@ -134,7 +134,7 @@ export default function OutbreakBenchmark({ outbreakId, currentCases, locale }: 
             />
           </div>
           <span className="text-[10px] text-gray-300 w-16 text-right shrink-0">
-            {data.current_cases.toLocaleString("en")}
+            {data.current_cases.toLocaleString(locale)}
           </span>
         </div>
         {/* Median bar */}
@@ -147,7 +147,7 @@ export default function OutbreakBenchmark({ outbreakId, currentCases, locale }: 
             />
           </div>
           <span className="text-[10px] text-gray-500 w-16 text-right shrink-0">
-            {data.historical_median_cases.toLocaleString("en")}
+            {data.historical_median_cases.toLocaleString(locale)}
           </span>
         </div>
       </div>
