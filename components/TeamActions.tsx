@@ -51,6 +51,7 @@ const L: Record<string, {
   removeConfirm: string;
   revokeConfirm: string;
   seats:         (used: number, max: number) => string;
+  seatsFull:     string;
   errGeneric:    string;
   okInvite:      string;
   okRemove:      string;
@@ -72,6 +73,7 @@ const L: Record<string, {
     removeConfirm: "Retirer ce membre ? Son accès Team sera révoqué.",
     revokeConfirm: "Révoquer cette invitation ?",
     seats:         (u, m) => `${u} / ${m} sièges`,
+    seatsFull:     "Tous les sièges sont occupés. Retirez un membre pour inviter quelqu'un de nouveau.",
     errGeneric:    "Erreur. Réessayez.",
     okInvite:      "Invitation envoyée.",
     okRemove:      "Membre retiré.",
@@ -93,6 +95,7 @@ const L: Record<string, {
     removeConfirm: "Remove this member? Their Team access will be revoked.",
     revokeConfirm: "Revoke this invitation?",
     seats:         (u, m) => `${u} / ${m} seats`,
+    seatsFull:     "All seats are taken. Remove a member to invite someone new.",
     errGeneric:    "An error occurred. Try again.",
     okInvite:      "Invitation sent.",
     okRemove:      "Member removed.",
@@ -114,6 +117,7 @@ const L: Record<string, {
     removeConfirm: "¿Eliminar este miembro? Se revocará su acceso Team.",
     revokeConfirm: "¿Revocar esta invitación?",
     seats:         (u, m) => `${u} / ${m} puestos`,
+    seatsFull:     "Todos los puestos están ocupados. Elimine un miembro para invitar a alguien nuevo.",
     errGeneric:    "Error. Inténtelo de nuevo.",
     okInvite:      "Invitación enviada.",
     okRemove:      "Miembro eliminado.",
@@ -135,6 +139,7 @@ const L: Record<string, {
     removeConfirm: "إزالة هذا العضو؟ سيُلغى وصوله إلى Team.",
     revokeConfirm: "إلغاء هذه الدعوة؟",
     seats:         (u, m) => `${u} / ${m} مقاعد`,
+    seatsFull:     "جميع المقاعد مشغولة. أزِل عضواً لدعوة شخص جديد.",
     errGeneric:    "حدث خطأ. يرجى المحاولة مجدداً.",
     okInvite:      "تم إرسال الدعوة.",
     okRemove:      "تم إزالة العضو.",
@@ -156,6 +161,7 @@ const L: Record<string, {
     removeConfirm: "Hapus anggota ini? Akses Team mereka akan dicabut.",
     revokeConfirm: "Batalkan undangan ini?",
     seats:         (u, m) => `${u} / ${m} kursi`,
+    seatsFull:     "Semua kursi terisi. Hapus anggota untuk mengundang orang baru.",
     errGeneric:    "Terjadi kesalahan. Coba lagi.",
     okInvite:      "Undangan terkirim.",
     okRemove:      "Anggota dihapus.",
@@ -335,6 +341,14 @@ export default function TeamActions({ team, members, invites, isOwner, locale, u
               </li>
             ))}
           </ul>
+        </div>
+      )}
+
+      {/* Seats full notice — owner only, no available seats */}
+      {isOwner && seatsUsed >= team.max_seats && (
+        <div className="bg-gray-900 border border-gray-700 rounded-2xl p-5 flex items-start gap-3">
+          <UserPlus className="w-4 h-4 text-gray-500 shrink-0 mt-0.5" />
+          <p className="text-sm text-gray-500">{l.seatsFull}</p>
         </div>
       )}
 
