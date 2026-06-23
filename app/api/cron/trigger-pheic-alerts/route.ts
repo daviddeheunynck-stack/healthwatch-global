@@ -10,33 +10,67 @@ const SUPABASE_KEY = (process.env.SUPABASE_SERVICE_ROLE_KEY ?? "").replace(/^﻿
 const CRON_SECRET  = (process.env.CRON_SECRET ?? "").replace(/^﻿/, "").trim();
 const APP_URL      = (process.env.NEXT_PUBLIC_APP_URL ?? "https://healthwatch-global.com").replace(/^﻿/, "").trim();
 
-type LocaleCopy = { subject: (d: string, c: string) => string; intro: (d: string, c: string) => string; view: string };
+type LocaleCopy = {
+  subject:  (d: string, c: string) => string;
+  intro:    (d: string, c: string) => string;
+  title:    string;
+  cases:    string;
+  reported: string;
+  risk:     string;
+  view:     string;
+  footer:   string;
+};
 
 const LOCALE_COPY: Record<string, LocaleCopy> = {
   fr: {
-    subject: (d, c) => `[HealthWatch] 🚨 URGENCE PHEIC : ${d} — ${c}`,
-    intro:   (d, c) => `L'OMS a déclaré une Urgence de Santé Publique de Portée Internationale (PHEIC) pour <strong>${d}</strong> en <strong>${c}</strong>.`,
-    view:    "Voir le tableau de bord →",
+    subject:  (d, c) => `[HealthWatch] 🚨 URGENCE PHEIC : ${d} — ${c}`,
+    intro:    (d, c) => `L'OMS a déclaré une Urgence de Santé Publique de Portée Internationale (PHEIC) pour <strong>${d}</strong> en <strong>${c}</strong>.`,
+    title:    "🚨 HealthWatch Global — Alerte PHEIC",
+    cases:    "Cas :",
+    reported: "Signalé le :",
+    risk:     "Risque :",
+    view:     "Voir le tableau de bord →",
+    footer:   "HealthWatch Global · Gérez vos préférences d'alertes dans le tableau de bord.",
   },
   es: {
-    subject: (d, c) => `[HealthWatch] 🚨 EMERGENCIA PHEIC: ${d} — ${c}`,
-    intro:   (d, c) => `La OMS ha declarado una Emergencia de Salud Pública de Importancia Internacional (PHEIC) por <strong>${d}</strong> en <strong>${c}</strong>.`,
-    view:    "Ver panel →",
+    subject:  (d, c) => `[HealthWatch] 🚨 EMERGENCIA PHEIC: ${d} — ${c}`,
+    intro:    (d, c) => `La OMS ha declarado una Emergencia de Salud Pública de Importancia Internacional (PHEIC) por <strong>${d}</strong> en <strong>${c}</strong>.`,
+    title:    "🚨 HealthWatch Global — Alerta PHEIC",
+    cases:    "Casos:",
+    reported: "Reportado:",
+    risk:     "Riesgo:",
+    view:     "Ver panel →",
+    footer:   "HealthWatch Global · Gestione sus preferencias de alertas en el panel.",
   },
   ar: {
-    subject: (d, c) => `[HealthWatch] 🚨 طوارئ PHEIC: ${d} — ${c}`,
-    intro:   (d, c) => `أعلنت منظمة الصحة العالمية حالة طوارئ صحية عامة دولية (PHEIC) بشأن <strong>${d}</strong> في <strong>${c}</strong>.`,
-    view:    "عرض لوحة المعلومات ←",
+    subject:  (d, c) => `[HealthWatch] 🚨 طوارئ PHEIC: ${d} — ${c}`,
+    intro:    (d, c) => `أعلنت منظمة الصحة العالمية حالة طوارئ صحية عامة دولية (PHEIC) بشأن <strong>${d}</strong> في <strong>${c}</strong>.`,
+    title:    "🚨 HealthWatch Global — تنبيه PHEIC",
+    cases:    "الحالات:",
+    reported: "تاريخ الإبلاغ:",
+    risk:     "مستوى الخطر:",
+    view:     "عرض لوحة المعلومات ←",
+    footer:   "HealthWatch Global · أدر تفضيلات التنبيهات من لوحة المعلومات.",
   },
   id: {
-    subject: (d, c) => `[HealthWatch] 🚨 DARURAT PHEIC: ${d} — ${c}`,
-    intro:   (d, c) => `WHO telah menyatakan Kedaruratan Kesehatan Masyarakat yang Meresahkan Dunia (PHEIC) untuk <strong>${d}</strong> di <strong>${c}</strong>.`,
-    view:    "Lihat dasbor →",
+    subject:  (d, c) => `[HealthWatch] 🚨 DARURAT PHEIC: ${d} — ${c}`,
+    intro:    (d, c) => `WHO telah menyatakan Kedaruratan Kesehatan Masyarakat yang Meresahkan Dunia (PHEIC) untuk <strong>${d}</strong> di <strong>${c}</strong>.`,
+    title:    "🚨 HealthWatch Global — Peringatan PHEIC",
+    cases:    "Kasus:",
+    reported: "Dilaporkan:",
+    risk:     "Risiko:",
+    view:     "Lihat dasbor →",
+    footer:   "HealthWatch Global · Kelola preferensi peringatan di dasbor Anda.",
   },
   en: {
-    subject: (d, c) => `[HealthWatch] 🚨 PHEIC ALERT: ${d} — ${c}`,
-    intro:   (d, c) => `WHO has declared a Public Health Emergency of International Concern (PHEIC) for <strong>${d}</strong> in <strong>${c}</strong>.`,
-    view:    "View dashboard →",
+    subject:  (d, c) => `[HealthWatch] 🚨 PHEIC ALERT: ${d} — ${c}`,
+    intro:    (d, c) => `WHO has declared a Public Health Emergency of International Concern (PHEIC) for <strong>${d}</strong> in <strong>${c}</strong>.`,
+    title:    "🚨 HealthWatch Global — PHEIC Alert",
+    cases:    "Cases:",
+    reported: "Reported:",
+    risk:     "Risk:",
+    view:     "View dashboard →",
+    footer:   "HealthWatch Global · Manage alert preferences in your dashboard.",
   },
 };
 
@@ -96,29 +130,28 @@ export async function GET(req: NextRequest) {
 
       const locale    = user.alert_locale ?? "en";
       const numLocale = locale === "ar" ? "ar-SA" : locale;
+      const isRtl     = locale === "ar";
       const lc = LOCALE_COPY[locale] ?? LOCALE_COPY.en;
       const subject = lc.subject(disease, country);
       const intro   = lc.intro(disease, country);
       const dashUrl = `${APP_URL}/${locale}`;
 
       const html = `
-<div style="font-family:sans-serif;max-width:520px;margin:0 auto;padding:24px;background:#0f172a;color:#e2e8f0;border-radius:12px">
-  <p style="color:#f87171;font-size:17px;font-weight:700;margin:0 0 4px">🚨 HealthWatch Global — PHEIC Alert</p>
+<div dir="${isRtl ? "rtl" : "ltr"}" style="font-family:sans-serif;max-width:520px;margin:0 auto;padding:24px;background:#0f172a;color:#e2e8f0;border-radius:12px;direction:${isRtl ? "rtl" : "ltr"};text-align:${isRtl ? "right" : "left"}">
+  <p style="color:#f87171;font-size:17px;font-weight:700;margin:0 0 4px">${lc.title}</p>
   <p style="font-size:12px;color:#64748b;margin:0 0 16px">${new Date().toISOString().split("T")[0]}</p>
   <hr style="border:none;border-top:1px solid #334155;margin:0 0 16px"/>
   <p style="font-size:14px;margin:0 0 12px">${intro}</p>
   <ul style="font-size:13px;color:#cbd5e1;margin:0 0 16px;padding-left:20px">
-    <li>Cases: ${outbreak.cases.toLocaleString(numLocale)}</li>
+    <li>${lc.cases} ${outbreak.cases.toLocaleString(numLocale)}</li>
     ${cfr ? `<li>${cfr}</li>` : ""}
-    <li>Reported: ${outbreak.date}</li>
-    <li>Risk: <strong style="color:#f87171">HIGH${outbreak.risk_level === "high" ? "" : " — ".concat(outbreak.risk_level)}</strong></li>
+    <li>${lc.reported} ${outbreak.date}</li>
+    <li>${lc.risk} <strong style="color:#f87171">HIGH${outbreak.risk_level === "high" ? "" : " — ".concat(outbreak.risk_level)}</strong></li>
   </ul>
   <a href="${dashUrl}" style="display:inline-block;padding:10px 20px;background:#dc2626;color:#fff;text-decoration:none;border-radius:8px;font-size:14px;font-weight:600">
     ${lc.view}
   </a>
-  <p style="margin-top:20px;font-size:11px;color:#475569">
-    HealthWatch Global · Manage alert preferences in your dashboard.
-  </p>
+  <p style="margin-top:20px;font-size:11px;color:#475569">${lc.footer}</p>
 </div>`;
 
       try {

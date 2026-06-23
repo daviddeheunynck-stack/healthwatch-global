@@ -29,6 +29,14 @@ const SUBJECT: Record<string, (d: string, c: string) => string> = {
   id: (d, c) => `[HealthWatch] Pembaruan: ${d} — ${c}`,
 };
 
+const BODY_LABELS: Record<string, { subtitle: string; cases: string; deaths: string; cfr: string; risk: string; lastReport: string; view: string; footer: string }> = {
+  en: { subtitle: "Outbreak subscriber alert", cases: "Cases:", deaths: "Deaths:", cfr: "CFR:", risk: "Risk level:", lastReport: "Last report:", view: "View outbreak →", footer: `You subscribed to updates for this outbreak on HealthWatch Global. To unsubscribe, open the outbreak detail and remove your email. ${APP_URL}` },
+  fr: { subtitle: "Alerte abonné — foyer épidémique", cases: "Cas :", deaths: "Décès :", cfr: "Létalité :", risk: "Risque :", lastReport: "Dernier rapport :", view: "Voir le foyer →", footer: `Vous êtes abonné aux mises à jour de ce foyer sur HealthWatch Global. Pour vous désabonner, ouvrez les détails du foyer et supprimez votre email. ${APP_URL}` },
+  es: { subtitle: "Alerta de seguimiento — brote", cases: "Casos:", deaths: "Fallecidos:", cfr: "Letalidad:", risk: "Riesgo:", lastReport: "Último informe:", view: "Ver brote →", footer: `Estás suscrito a las actualizaciones de este brote en HealthWatch Global. Para cancelar, abre el detalle del brote y elimina tu email. ${APP_URL}` },
+  ar: { subtitle: "تنبيه متابعة التفشي", cases: "الحالات:", deaths: "الوفيات:", cfr: "معدل الوفيات:", risk: "مستوى الخطر:", lastReport: "آخر تقرير:", view: "← عرض التفشي", footer: `اشتركت في تحديثات هذا التفشي على HealthWatch Global. لإلغاء الاشتراك، افتح تفاصيل التفشي وأزل بريدك الإلكتروني. ${APP_URL}` },
+  id: { subtitle: "Peringatan pemantauan wabah", cases: "Kasus:", deaths: "Kematian:", cfr: "CFR:", risk: "Tingkat risiko:", lastReport: "Laporan terakhir:", view: "Lihat wabah →", footer: `Anda berlangganan pembaruan wabah ini di HealthWatch Global. Untuk berhenti berlangganan, buka detail wabah dan hapus email Anda. ${APP_URL}` },
+};
+
 interface Subscriber {
   id: string; user_id: string; outbreak_id: string;
   emails: string[]; locale: string; last_sent_at: string | null;
@@ -78,6 +86,8 @@ export async function GET(req: NextRequest) {
 
     const locale    = sub.locale in SUBJECT ? sub.locale : "en";
     const numLocale = locale === "ar" ? "ar-SA" : locale;
+    const isRtl     = locale === "ar";
+    const bl        = BODY_LABELS[locale] ?? BODY_LABELS.en;
     const disease   = o.disease_en ?? "Unknown disease";
     const country   = o.country_en ?? "Unknown country";
     const risk      = (RISK_LABEL[locale] ?? RISK_LABEL.en)[o.risk_level] ?? o.risk_level.toUpperCase();
@@ -90,28 +100,24 @@ export async function GET(req: NextRequest) {
         to:   sub.emails,
         subject: (SUBJECT[locale] ?? SUBJECT.en)(disease, country),
         html: `
-<div style="font-family:sans-serif;max-width:520px;margin:0 auto;padding:24px;background:#0f172a;color:#e2e8f0;border-radius:12px">
+<div dir="${isRtl ? "rtl" : "ltr"}" style="font-family:sans-serif;max-width:520px;margin:0 auto;padding:24px;background:#0f172a;color:#e2e8f0;border-radius:12px;direction:${isRtl ? "rtl" : "ltr"};text-align:${isRtl ? "right" : "left"}">
   <p style="color:#60a5fa;font-size:18px;font-weight:700;margin:0 0 4px">HealthWatch Global</p>
-  <p style="margin:0 0 16px;font-size:12px;color:#64748b">Outbreak subscriber alert</p>
+  <p style="margin:0 0 16px;font-size:12px;color:#64748b">${bl.subtitle}</p>
   <hr style="border:none;border-top:1px solid #334155;margin:0 0 16px"/>
   <p style="margin:0 0 4px;font-size:16px;font-weight:600;color:#fff">${disease} — ${country}</p>
   <p style="margin:0 0 12px;font-size:13px;color:#94a3b8">
-    Cases: <strong style="color:#f1f5f9">${o.cases.toLocaleString(numLocale)}</strong> &nbsp;|&nbsp;
-    Deaths: <strong style="color:#f1f5f9">${o.deaths.toLocaleString(numLocale)}</strong>
-    ${cfr ? `&nbsp;|&nbsp; CFR: <strong style="color:#f1f5f9">${cfr}%</strong>` : ""}
+    ${bl.cases} <strong style="color:#f1f5f9">${o.cases.toLocaleString(numLocale)}</strong> &nbsp;|&nbsp;
+    ${bl.deaths} <strong style="color:#f1f5f9">${o.deaths.toLocaleString(numLocale)}</strong>
+    ${cfr ? `&nbsp;|&nbsp; ${bl.cfr} <strong style="color:#f1f5f9">${cfr}%</strong>` : ""}
   </p>
   <p style="margin:0 0 20px;font-size:13px;color:#94a3b8">
-    Risk level: <strong style="color:${o.risk_level === "high" ? "#f87171" : o.risk_level === "medium" ? "#fbbf24" : "#4ade80"}">${risk}</strong>
-    &nbsp;|&nbsp; Last report: ${o.date}
+    ${bl.risk} <strong style="color:${o.risk_level === "high" ? "#f87171" : o.risk_level === "medium" ? "#fbbf24" : "#4ade80"}">${risk}</strong>
+    &nbsp;|&nbsp; ${bl.lastReport} ${o.date}
   </p>
   <a href="${deepLink}" style="display:inline-block;padding:10px 20px;background:#1d4ed8;color:#fff;text-decoration:none;border-radius:8px;font-size:14px;font-weight:600">
-    View outbreak →
+    ${bl.view}
   </a>
-  <p style="margin-top:20px;font-size:11px;color:#475569">
-    You subscribed to updates for this outbreak on HealthWatch Global.
-    To unsubscribe, open the outbreak detail and remove your email list.
-    <br/>${APP_URL}
-  </p>
+  <p style="margin-top:20px;font-size:11px;color:#475569">${bl.footer}</p>
 </div>`,
       });
 

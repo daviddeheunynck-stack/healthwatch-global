@@ -151,6 +151,7 @@ export async function GET(req: NextRequest) {
 
     const locale       = localeMap[tw.user_id] ?? "en";
     const numLocale    = locale === "ar" ? "ar-SA" : locale;
+    const isRtl        = locale === "ar";
     const lc           = COPY[locale] ?? COPY.en;
     const disease      = o.disease_en ?? "Unknown disease";
     const country      = o.country_en ?? "Unknown country";
@@ -173,7 +174,7 @@ export async function GET(req: NextRequest) {
         to:   tw.email,
         subject: `⚠ Tripwire: ${disease} (${country}) — ${casesStr}`,
         html: `
-<div style="font-family:sans-serif;max-width:520px;margin:0 auto;padding:24px;background:#0f172a;color:#e2e8f0;border-radius:12px">
+<div dir="${isRtl ? "rtl" : "ltr"}" style="font-family:sans-serif;max-width:520px;margin:0 auto;padding:24px;background:#0f172a;color:#e2e8f0;border-radius:12px;direction:${isRtl ? "rtl" : "ltr"};text-align:${isRtl ? "right" : "left"}">
   <p style="color:#f87171;font-size:18px;font-weight:700;margin:0 0 8px">${lc.emailTitle}</p>
   <p style="margin:0 0 16px;font-size:14px;color:#94a3b8">HealthWatch Global</p>
   <hr style="border:none;border-top:1px solid #334155;margin:0 0 16px"/>

@@ -102,6 +102,7 @@ export async function GET(req: NextRequest) {
   for (const user of users as Array<{ id: string; email: string; alert_locale?: string | null; digest_region: string }>) {
     const locale       = user.alert_locale ?? "en";
     const numLocale    = locale === "ar" ? "ar-SA" : locale;
+    const isRtl        = locale === "ar";
     const digestRegion = user.digest_region;
     const lc           = COPY[locale] ?? COPY.en;
     const regionLabel  = REGION_LABELS[digestRegion]?.[locale] ?? digestRegion;
@@ -127,7 +128,7 @@ export async function GET(req: NextRequest) {
     const dashUrl  = `${APP_URL}/${locale}?region=${digestRegion}`;
 
     const html = `
-<div style="font-family:sans-serif;max-width:560px;margin:0 auto;padding:24px;background:#0f172a;color:#e2e8f0;border-radius:12px">
+<div dir="${isRtl ? "rtl" : "ltr"}" style="font-family:sans-serif;max-width:560px;margin:0 auto;padding:24px;background:#0f172a;color:#e2e8f0;border-radius:12px;direction:${isRtl ? "rtl" : "ltr"};text-align:${isRtl ? "right" : "left"}">
   <p style="color:#60a5fa;font-size:16px;font-weight:700;margin:0 0 4px">HealthWatch Global</p>
   <p style="font-size:13px;color:#94a3b8;margin:0 0 16px">${lc.header(regionLabel)}</p>
   <hr style="border:none;border-top:1px solid #334155;margin:0 0 12px"/>

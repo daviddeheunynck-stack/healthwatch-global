@@ -73,6 +73,7 @@ export async function GET(req: NextRequest) {
 
     const locale    = localeMap[alert.user_id] ?? "en";
     const numLocale = locale === "ar" ? "ar-SA" : locale;
+    const isRtl     = locale === "ar";
     const plural   = matches.length > 1;
     const emailSubject = {
       fr: `[HealthWatch] Alerte zone : ${matches.length} foyer${plural ? "s" : ""} près de ${alert.label}`,
@@ -146,7 +147,7 @@ export async function GET(req: NextRequest) {
         to:      alert.email,
         subject: emailSubject,
         html: `
-<div style="font-family:sans-serif;max-width:520px;margin:0 auto;padding:24px;background:#0f172a;color:#e2e8f0;border-radius:12px">
+<div dir="${isRtl ? "rtl" : "ltr"}" style="font-family:sans-serif;max-width:520px;margin:0 auto;padding:24px;background:#0f172a;color:#e2e8f0;border-radius:12px;direction:${isRtl ? "rtl" : "ltr"};text-align:${isRtl ? "right" : "left"}">
   <p style="color:#60a5fa;font-size:17px;font-weight:700;margin:0 0 4px">${emailHeader}</p>
   <p style="font-size:12px;color:#64748b;margin:0 0 16px">${new Date().toISOString().split("T")[0]}</p>
   <hr style="border:none;border-top:1px solid #334155;margin:0 0 16px"/>
