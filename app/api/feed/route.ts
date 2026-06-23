@@ -101,8 +101,8 @@ export async function GET(req: NextRequest) {
 
     const descParts: string[] = [];
     if (risk) descParts.push(risk);
-    if (o.cases)  descParts.push(`Cases: ${o.cases.toLocaleString("en")}`);
-    if (o.deaths) descParts.push(`Deaths: ${o.deaths.toLocaleString("en")}${cfr}`);
+    if (o.cases)  descParts.push(`Cases: ${o.cases.toLocaleString(locale)}`);
+    if (o.deaths) descParts.push(`Deaths: ${o.deaths.toLocaleString(locale)}${cfr}`);
     if (pheicFlag) descParts.push(pheicFlag);
 
     const pubDate = o.date ? new Date(o.date).toUTCString() : now;
