@@ -31,6 +31,7 @@ const COPY: Record<string, {
   optRegion: string;
   optTheme: string;
   optLimit: string;
+  optWidth: string;
   dark: string;
   light: string;
   embedCode: string;
@@ -57,6 +58,7 @@ const COPY: Record<string, {
     optRegion: "Region",
     optTheme: "Theme",
     optLimit: "Max rows",
+    optWidth: "Width",
     dark: "Dark",
     light: "Light",
     embedCode: "Embed code",
@@ -92,6 +94,7 @@ const COPY: Record<string, {
     optRegion: "Région",
     optTheme: "Thème",
     optLimit: "Lignes max",
+    optWidth: "Largeur",
     dark: "Sombre",
     light: "Clair",
     embedCode: "Code d'intégration",
@@ -127,6 +130,7 @@ const COPY: Record<string, {
     optRegion: "Región",
     optTheme: "Tema",
     optLimit: "Filas máx",
+    optWidth: "Ancho",
     dark: "Oscuro",
     light: "Claro",
     embedCode: "Código de inserción",
@@ -162,6 +166,7 @@ const COPY: Record<string, {
     optRegion: "المنطقة",
     optTheme: "السمة",
     optLimit: "الحد الأقصى للصفوف",
+    optWidth: "العرض",
     dark: "داكن",
     light: "فاتح",
     embedCode: "كود التضمين",
@@ -197,6 +202,7 @@ const COPY: Record<string, {
     optRegion: "Wilayah",
     optTheme: "Tema",
     optLimit: "Maks baris",
+    optWidth: "Lebar",
     dark: "Gelap",
     light: "Terang",
     embedCode: "Kode sematan",
@@ -231,7 +237,13 @@ function buildWidgetUrl(locale: string, region: string, theme: string, limit: nu
   return `${BASE_URL}/widget?${p.toString()}`;
 }
 
-function buildEmbedCode(locale: string, region: string, theme: string, limit: number): string {
+const WIDTH_OPTIONS = [
+  { value: 280, label: "280px" },
+  { value: 400, label: "400px" },
+  { value: 600, label: "600px" },
+] as const;
+
+function buildEmbedCode(locale: string, region: string, theme: string, limit: number, width: number): string {
   const src = buildWidgetUrl(locale, region, theme, limit);
   const titleMap: Record<string, string> = {
     en: "Active disease outbreaks — HealthWatch Global",
@@ -241,7 +253,8 @@ function buildEmbedCode(locale: string, region: string, theme: string, limit: nu
     id: "Wabah penyakit aktif — HealthWatch Global",
   };
   const title = titleMap[locale] ?? titleMap.en;
-  return `<iframe\n  src="${src}"\n  width="400"\n  height="340"\n  frameborder="0"\n  style="border:none;border-radius:12px;"\n  title="${title}"\n></iframe>`;
+  const height = Math.max(240, 100 + limit * 52);
+  return `<iframe\n  src="${src}"\n  width="${width}"\n  height="${height}"\n  frameborder="0"\n  style="border:none;border-radius:12px;"\n  title="${title}"\n></iframe>`;
 }
 
 interface Props { locale: string }
@@ -254,10 +267,11 @@ export default function EmbedClient({ locale }: Props) {
   const [region,      setRegion]      = useState("");
   const [theme,       setTheme]       = useState<"dark" | "light">("dark");
   const [limit,       setLimit]       = useState(5);
+  const [width,       setWidth]       = useState(400);
   const [copied,      setCopied]      = useState(false);
 
   const widgetUrl  = buildWidgetUrl(embedLocale, region, theme, limit);
-  const embedCode  = buildEmbedCode(embedLocale, region, theme, limit);
+  const embedCode  = buildEmbedCode(embedLocale, region, theme, limit, width);
 
   const handleCopy = useCallback(async () => {
     await navigator.clipboard.writeText(embedCode);
@@ -298,13 +312,13 @@ export default function EmbedClient({ locale }: Props) {
             <Monitor className="w-4 h-4 text-gray-500" />
             {c.livePreview}
           </div>
-          <div className="bg-gray-950 border border-gray-800 rounded-2xl p-4 flex items-center justify-center min-h-[360px]">
+          <div className="bg-gray-950 border border-gray-800 rounded-2xl p-4 flex items-center justify-center min-h-[360px] overflow-hidden">
             <iframe
-              key={widgetUrl}
+              key={`${widgetUrl}-${width}-${limit}`}
               src={widgetUrl}
-              width={380}
-              height={340}
-              style={{ border: "none", borderRadius: 12, display: "block" }}
+              width={Math.min(width, 560)}
+              height={Math.max(240, 100 + limit * 52)}
+              style={{ border: "none", borderRadius: 12, display: "block", maxWidth: "100%" }}
               title="Widget preview"
             />
           </div>
@@ -372,6 +386,26 @@ export default function EmbedClient({ locale }: Props) {
                   onChange={(e) => setLimit(parseInt(e.target.value, 10))}
                   className="w-full accent-red-500 mt-1"
                 />
+              </div>
+
+              {/* Width */}
+              <div className="space-y-1.5 col-span-2">
+                <label className="text-xs text-gray-500 font-medium">{c.optWidth}</label>
+                <div className="flex gap-2">
+                  {WIDTH_OPTIONS.map((opt) => (
+                    <button
+                      key={opt.value}
+                      onClick={() => setWidth(opt.value)}
+                      className={`flex-1 py-1.5 text-sm font-medium rounded-lg border transition-colors ${
+                        width === opt.value
+                          ? "bg-gray-700 border-gray-500 text-white"
+                          : "bg-gray-800 border-gray-700 text-gray-400 hover:text-gray-200"
+                      }`}
+                    >
+                      {opt.label}
+                    </button>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
