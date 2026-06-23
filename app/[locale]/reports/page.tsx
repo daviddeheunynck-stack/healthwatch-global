@@ -144,7 +144,8 @@ async function ReportsContent() {
   const pc = PAYWALL_COPY[locale] ?? PAYWALL_COPY.en;
 
   const outbreaks = await getOutbreaks();
-  const dateStr = new Date().toLocaleDateString(locale, {
+  const localeTag = locale === "ar" ? "ar-SA" : locale;
+  const dateStr = new Date().toLocaleDateString(localeTag, {
     year: "numeric",
     month: "long",
     day: "numeric",
