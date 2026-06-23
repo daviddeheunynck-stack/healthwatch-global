@@ -24,6 +24,7 @@ type LocaleLabels = {
   readyTitle: string;
   readyItems: string[];
   cta: string;
+  setupAlerts: string;
   retryNote: string;
 };
 
@@ -41,8 +42,9 @@ const LABELS: Record<string, LocaleLabels> = {
     planLabel:  "Your plan",
     readyTitle: "You now have access to:",
     readyItems: ["Exact case & death figures", "Full regional reports (PDF)", "Instant alerts", "All global regions"],
-    cta:        "Go to dashboard →",
-    retryNote:  "If your plan does not appear immediately, refresh the page in a few seconds.",
+    cta:          "Go to dashboard →",
+    setupAlerts:  "Configure your alert regions →",
+    retryNote:    "If your plan does not appear immediately, refresh the page in a few seconds.",
   },
   fr: {
     trial: {
@@ -57,8 +59,9 @@ const LABELS: Record<string, LocaleLabels> = {
     planLabel:  "Votre formule",
     readyTitle: "Vous avez maintenant accès à :",
     readyItems: ["Chiffres exacts (cas & décès)", "Rapports régionaux complets (PDF)", "Alertes instantanées", "Toutes les régions mondiales"],
-    cta:        "Aller au tableau de bord →",
-    retryNote:  "Si votre plan n'apparaît pas immédiatement, rafraîchissez la page dans quelques secondes.",
+    cta:          "Aller au tableau de bord →",
+    setupAlerts:  "Configurer vos régions d'alerte →",
+    retryNote:    "Si votre plan n'apparaît pas immédiatement, rafraîchissez la page dans quelques secondes.",
   },
   es: {
     trial: {
@@ -73,8 +76,9 @@ const LABELS: Record<string, LocaleLabels> = {
     planLabel:  "Su plan",
     readyTitle: "Ahora tiene acceso a:",
     readyItems: ["Cifras exactas (casos y fallecimientos)", "Informes regionales completos (PDF)", "Alertas instantáneas", "Todas las regiones mundiales"],
-    cta:        "Ir al panel →",
-    retryNote:  "Si su plan no aparece de inmediato, actualice la página en unos segundos.",
+    cta:          "Ir al panel →",
+    setupAlerts:  "Configurar sus regiones de alerta →",
+    retryNote:    "Si su plan no aparece de inmediato, actualice la página en unos segundos.",
   },
   ar: {
     trial: {
@@ -89,8 +93,9 @@ const LABELS: Record<string, LocaleLabels> = {
     planLabel:  "خطتك",
     readyTitle: "يمكنك الآن الوصول إلى:",
     readyItems: ["أرقام دقيقة (الحالات والوفيات)", "تقارير إقليمية كاملة (PDF)", "تنبيهات فورية", "جميع المناطق العالمية"],
-    cta:        "→ الذهاب إلى لوحة التحكم",
-    retryNote:  "إذا لم تظهر خطتك فورًا، يرجى تحديث الصفحة بعد بضع ثوانٍ.",
+    cta:          "→ الذهاب إلى لوحة التحكم",
+    setupAlerts:  "← ضبط مناطق التنبيه",
+    retryNote:    "إذا لم تظهر خطتك فورًا، يرجى تحديث الصفحة بعد بضع ثوانٍ.",
   },
   id: {
     trial: {
@@ -105,8 +110,9 @@ const LABELS: Record<string, LocaleLabels> = {
     planLabel:  "Paket Anda",
     readyTitle: "Anda sekarang memiliki akses ke:",
     readyItems: ["Angka tepat (kasus & kematian)", "Laporan regional lengkap (PDF)", "Peringatan instan", "Semua wilayah global"],
-    cta:        "Buka dasbor →",
-    retryNote:  "Jika paket Anda tidak muncul segera, segarkan halaman dalam beberapa detik.",
+    cta:          "Buka dasbor →",
+    setupAlerts:  "Konfigurasikan wilayah peringatan Anda →",
+    retryNote:    "Jika paket Anda tidak muncul segera, segarkan halaman dalam beberapa detik.",
   },
 };
 
@@ -234,6 +240,13 @@ export default async function SuccessPage({
           className="block w-full text-center bg-red-600 hover:bg-red-500 text-white font-semibold py-3 rounded-xl transition-colors text-sm"
         >
           {l.cta}
+        </Link>
+
+        <Link
+          href={`/${locale}/account#regional-alerts`}
+          className="block w-full text-center text-sm text-gray-500 hover:text-gray-300 transition-colors py-1"
+        >
+          {l.setupAlerts}
         </Link>
 
         <p className="text-center text-xs text-gray-600">{l.retryNote}</p>
