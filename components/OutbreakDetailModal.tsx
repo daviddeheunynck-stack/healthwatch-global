@@ -66,7 +66,7 @@ const DONOR_BRIEF_COPY: Record<string, {
   ar: {
     copy: "نسخ ملاحظة المانح", copied: "تم النسخ",
     generate: (date, cases, disease, country, risk, pheic) =>
-      `اعتباراً من ${date}، تم الإبلاغ عن ${cases.toLocaleString("ar")} حالة ${disease} في ${country} (مستوى الخطر: ${risk.toUpperCase()}).${pheic ? " أعلنت منظمة الصحة العالمية حالة طوارئ صحية عامة تثير قلقاً دولياً (PHEIC)." : ""} المصدر: HealthWatch Global · healthwatch-global.com`,
+      `اعتباراً من ${date}، تم الإبلاغ عن ${cases.toLocaleString("ar-SA")} حالة ${disease} في ${country} (مستوى الخطر: ${risk.toUpperCase()}).${pheic ? " أعلنت منظمة الصحة العالمية حالة طوارئ صحية عامة تثير قلقاً دولياً (PHEIC)." : ""} المصدر: HealthWatch Global · healthwatch-global.com`,
   },
   id: {
     copy: "Salin ringkasan donor", copied: "Disalin",
