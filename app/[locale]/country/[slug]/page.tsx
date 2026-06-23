@@ -354,8 +354,8 @@ export default async function CountryPage({
         {totalCases > 0 && (
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             {[
-              { label: lb.cases,    value: totalCases.toLocaleString(),  color: "text-blue-400" },
-              { label: lb.deaths,   value: totalDeaths.toLocaleString(), color: "text-red-400"  },
+              { label: lb.cases,    value: totalCases.toLocaleString(l),  color: "text-blue-400" },
+              { label: lb.deaths,   value: totalDeaths.toLocaleString(l), color: "text-red-400"  },
               { label: lb.cfr,      value: cfr,                          color: "text-yellow-400" },
               { label: lb.diseases, value: String(uniqueDiseases),       color: "text-purple-400" },
             ].map(({ label, value, color }) => (
@@ -412,7 +412,7 @@ export default async function CountryPage({
                       </span>
                       {o.cases > 0 && (
                         <div className="text-right">
-                          <p className="text-sm font-bold text-white">{o.cases.toLocaleString()}</p>
+                          <p className="text-sm font-bold text-white">{o.cases.toLocaleString(l)}</p>
                           <p className="text-xs text-gray-500">{cfr1}</p>
                         </div>
                       )}
@@ -501,7 +501,7 @@ export default async function CountryPage({
                   </div>
                   <div className="flex items-center gap-4 shrink-0 text-right">
                     {o.cases > 0 && (
-                      <span className="text-sm text-gray-400">{o.cases.toLocaleString()} {lb.cases.toLowerCase()}</span>
+                      <span className="text-sm text-gray-400">{o.cases.toLocaleString(l)} {lb.cases.toLowerCase()}</span>
                     )}
                     {o.date && (
                       <span className="text-xs text-gray-600 w-24">{o.date}</span>
