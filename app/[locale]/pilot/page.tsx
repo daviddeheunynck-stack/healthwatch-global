@@ -294,7 +294,13 @@ export default function PilotPage() {
       if (!res.ok) throw new Error();
       setSuccess(true);
     } catch {
-      setError(locale === "fr" ? "Une erreur est survenue. Réessayez." : "Something went wrong. Please try again.");
+      setError(
+        locale === "fr" ? "Une erreur est survenue. Réessayez." :
+        locale === "es" ? "Algo salió mal. Por favor, inténtalo de nuevo." :
+        locale === "ar" ? "حدث خطأ. يرجى المحاولة مجدداً." :
+        locale === "id" ? "Terjadi kesalahan. Silakan coba lagi." :
+        "Something went wrong. Please try again."
+      );
     } finally {
       setLoading(false);
     }
