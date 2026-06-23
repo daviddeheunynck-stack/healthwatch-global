@@ -429,8 +429,8 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
       return `<tr>
         <td>${o.disease_en ?? o.disease}</td>
         <td>${o.country_en ?? o.country}${tag}</td>
-        <td style="text-align:right">${o.cases.toLocaleString("en")}</td>
-        <td style="text-align:right">${o.deaths.toLocaleString("en")}</td>
+        <td style="text-align:right">${o.cases.toLocaleString(locale)}</td>
+        <td style="text-align:right">${o.deaths.toLocaleString(locale)}</td>
         <td style="text-align:right">${cfr}</td>
         <td><span style="color:${riskCls};font-weight:700;text-transform:uppercase;font-size:10px">${o.risk_level}</span></td>
         <td>${o.date}</td>
@@ -490,7 +490,7 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
         <td style="padding:5px 8px;border-bottom:1px solid #e2e8f0"><strong>${o.ihr_event_id}</strong></td>
         <td style="padding:5px 8px;border-bottom:1px solid #e2e8f0">${o.disease_en ?? o.disease}</td>
         <td style="padding:5px 8px;border-bottom:1px solid #e2e8f0">${o.country_en ?? o.country}</td>
-        <td style="padding:5px 8px;border-bottom:1px solid #e2e8f0;text-align:right">${o.cases.toLocaleString("en")}${cfr}</td>
+        <td style="padding:5px 8px;border-bottom:1px solid #e2e8f0;text-align:right">${o.cases.toLocaleString(locale)}${cfr}</td>
         <td style="padding:5px 8px;border-bottom:1px solid #e2e8f0;font-weight:700;color:${o.risk_level === "high" ? "#dc2626" : o.risk_level === "medium" ? "#d97706" : "#16a34a"}">${(o.risk_level ?? "").toUpperCase()}${pheic}</td>
         <td style="padding:5px 8px;border-bottom:1px solid #e2e8f0">${o.date}</td>
       </tr>`;
@@ -543,8 +543,8 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
       return `<tr>
         <td>${o.disease_en ?? o.disease}</td>
         <td>${o.country_en ?? o.country}${tag}</td>
-        <td style="text-align:right">${o.cases.toLocaleString("en")}</td>
-        <td style="text-align:right">${o.deaths.toLocaleString("en")}</td>
+        <td style="text-align:right">${o.cases.toLocaleString(locale)}</td>
+        <td style="text-align:right">${o.deaths.toLocaleString(locale)}</td>
         <td style="text-align:right">${cfr}</td>
         <td><span style="color:${riskCls};font-weight:700;text-transform:uppercase;font-size:10px">${o.risk_level}</span></td>
         <td>${o.date}</td>
@@ -1176,10 +1176,10 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
                   <td className="px-4 py-3 text-gray-300">
                     <div className="flex items-center gap-1.5">
                       {isPaid ? (
-                        outbreak.cases > 0 ? outbreak.cases.toLocaleString("en") : <span className="text-gray-600 italic text-xs">{l.noData}</span>
+                        outbreak.cases > 0 ? outbreak.cases.toLocaleString(locale) : <span className="text-gray-600 italic text-xs">{l.noData}</span>
                       ) : (
                         <span className="blur-sm select-none text-gray-500 cursor-pointer" onClick={() => openModal("cases")}>
-                          {outbreak.cases.toLocaleString("en")}
+                          {outbreak.cases.toLocaleString(locale)}
                         </span>
                       )}
                       {outbreak.cases > 0 && <TrendBadge trend={trends?.[outbreak.id]} />}
@@ -1187,16 +1187,16 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
                         const prev = lastCases[outbreak.id];
                         if (!prev || outbreak.cases <= prev) return null;
                         const delta = outbreak.cases - prev;
-                        return <span className="text-[10px] text-amber-400 font-semibold whitespace-nowrap">+{delta.toLocaleString("en")}</span>;
+                        return <span className="text-[10px] text-amber-400 font-semibold whitespace-nowrap">+{delta.toLocaleString(locale)}</span>;
                       })()}
                     </div>
                   </td>
                   <td className="px-4 py-3 text-red-400 hidden sm:table-cell">
                     {isPaid ? (
-                      outbreak.cases > 0 ? outbreak.deaths.toLocaleString("en") : <span className="text-gray-600 italic text-xs">{l.noData}</span>
+                      outbreak.cases > 0 ? outbreak.deaths.toLocaleString(locale) : <span className="text-gray-600 italic text-xs">{l.noData}</span>
                     ) : (
                       <span className="blur-sm select-none text-gray-500 cursor-pointer" onClick={() => openModal("cases")}>
-                        {outbreak.deaths.toLocaleString("en")}
+                        {outbreak.deaths.toLocaleString(locale)}
                       </span>
                     )}
                   </td>

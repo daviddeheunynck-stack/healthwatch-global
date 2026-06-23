@@ -39,13 +39,10 @@ function formatDate(d: string) {
   }
 }
 
-function formatNum(n: number) {
-  return n.toLocaleString("en");
-}
-
 export default function OutbreakCasesChart({ snapshots, riskLevel, locale }: Props) {
   const l = LABEL[locale] ?? LABEL.en;
   const color = RISK_COLOR[riskLevel] ?? "#ef4444";
+  const formatNum = (n: number) => n.toLocaleString(locale);
 
   if (snapshots.length < 2) {
     return (
