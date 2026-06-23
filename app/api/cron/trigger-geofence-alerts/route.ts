@@ -95,16 +95,48 @@ export async function GET(req: NextRequest) {
       en: `📍 <strong style="color:#fff">${alert.label}</strong> — ${matches.length} active outbreak${plural ? "s" : ""} within <strong>${alert.radius_km} km</strong>`,
     }[locale] ?? `📍 <strong style="color:#fff">${alert.label}</strong> — ${matches.length} active outbreak${plural ? "s" : ""} within <strong>${alert.radius_km} km</strong>`;
 
+    const colH = ({
+      fr: ["Maladie", "Pays", "Cas", "Risque"],
+      es: ["Enfermedad", "País", "Casos", "Riesgo"],
+      ar: ["المرض", "الدولة", "الحالات", "الخطر"],
+      id: ["Penyakit", "Negara", "Kasus", "Risiko"],
+      en: ["Disease", "Country", "Cases", "Risk"],
+    } as Record<string, string[]>)[locale] ?? ["Disease", "Country", "Cases", "Risk"];
+
+    const inAppTitleStr = ({
+      fr: `📍 ${alert.label} — ${matches.length} foyer${plural ? "s" : ""} dans un rayon de ${alert.radius_km}km`,
+      es: `📍 ${alert.label} — ${matches.length} brote${plural ? "s" : ""} a ${alert.radius_km}km`,
+      ar: `📍 ${alert.label} — ${matches.length} تفشٍّ في نطاق ${alert.radius_km}كم`,
+      id: `📍 ${alert.label} — ${matches.length} wabah dalam radius ${alert.radius_km}km`,
+      en: `📍 ${alert.label} — ${matches.length} outbreak${plural ? "s" : ""} within ${alert.radius_km}km`,
+    } as Record<string, string>)[locale] ?? `📍 ${alert.label} — ${matches.length} outbreak${plural ? "s" : ""} within ${alert.radius_km}km`;
+
+    const viewBtn = ({
+      fr: "Voir le tableau de bord →",
+      es: "Ver panel →",
+      ar: "← عرض لوحة المعلومات",
+      id: "Lihat dasbor →",
+      en: "View dashboard →",
+    } as Record<string, string>)[locale] ?? "View dashboard →";
+
+    const footerText = ({
+      fr: `Cette alerte se déclenche toutes les ${COOLDOWN_H}h quand des foyers existent dans votre zone. Gérez vos alertes de zone dans le tableau de bord.`,
+      es: `Esta alerta se activa cada ${COOLDOWN_H}h cuando hay brotes en su zona. Gestione las alertas de geovalla en su panel.`,
+      ar: `يُطلَق هذا التنبيه كل ${COOLDOWN_H} ساعة عند وجود تفشيات في منطقتك. أدر تنبيهاتك من لوحة المعلومات.`,
+      id: `Peringatan ini aktif setiap ${COOLDOWN_H} jam saat wabah ada dalam zona Anda. Kelola peringatan di dasbor Anda.`,
+      en: `This alert fires every ${COOLDOWN_H}h when outbreaks exist within your zone radius. Manage geofence alerts on your dashboard.`,
+    } as Record<string, string>)[locale] ?? `This alert fires every ${COOLDOWN_H}h when outbreaks exist within your zone radius. Manage geofence alerts on your dashboard.`;
+
     const rows = matches.slice(0, 8).map((o) =>
-      `<tr><td style="padding:4px 8px">${o.disease_en ?? "—"}</td><td style="padding:4px 8px">${o.country_en ?? "—"}</td><td style="padding:4px 8px;text-align:right">${o.cases.toLocaleString("en")}</td><td style="padding:4px 8px;text-transform:uppercase;font-size:11px;font-weight:700;color:${o.risk_level === "high" ? "#f87171" : o.risk_level === "medium" ? "#fbbf24" : "#4ade80"}">${o.risk_level}</td></tr>`
+      `<tr><td style="padding:4px 8px">${o.disease_en ?? "—"}</td><td style="padding:4px 8px">${o.country_en ?? "—"}</td><td style="padding:4px 8px;text-align:right">${o.cases.toLocaleString(locale)}</td><td style="padding:4px 8px;text-transform:uppercase;font-size:11px;font-weight:700;color:${o.risk_level === "high" ? "#f87171" : o.risk_level === "medium" ? "#fbbf24" : "#4ade80"}">${o.risk_level}</td></tr>`
     ).join("");
 
     try {
       void Promise.resolve(supabase.from("alert_notifications").insert({
         user_id:     alert.user_id,
         type:        "watchlist",
-        title:       `📍 ${alert.label} — ${matches.length} outbreak${matches.length > 1 ? "s" : ""} within ${alert.radius_km}km`,
-        body:        matches.slice(0, 3).map((o) => `${o.disease_en ?? "—"} (${o.country_en ?? "—"}): ${o.cases.toLocaleString("en")} cases`).join(" · "),
+        title:       inAppTitleStr,
+        body:        matches.slice(0, 3).map((o) => `${o.disease_en ?? "—"} (${o.country_en ?? "—"}): ${o.cases.toLocaleString(locale)}`).join(" · "),
         outbreak_id: matches[0]?.id ?? null,
       })).catch(() => {});
 
@@ -123,19 +155,19 @@ export async function GET(req: NextRequest) {
   <p style="font-size:12px;color:#94a3b8;margin:0 0 16px">Coordinates: ${alert.lat.toFixed(4)}, ${alert.lng.toFixed(4)}</p>
   <table style="width:100%;border-collapse:collapse;font-size:13px">
     <thead><tr style="background:#1e293b;color:#94a3b8">
-      <th style="padding:6px 8px;text-align:left">Disease</th>
-      <th style="padding:6px 8px;text-align:left">Country</th>
-      <th style="padding:6px 8px;text-align:right">Cases</th>
-      <th style="padding:6px 8px;text-align:left">Risk</th>
+      <th style="padding:6px 8px;text-align:left">${colH[0]}</th>
+      <th style="padding:6px 8px;text-align:left">${colH[1]}</th>
+      <th style="padding:6px 8px;text-align:right">${colH[2]}</th>
+      <th style="padding:6px 8px;text-align:left">${colH[3]}</th>
     </tr></thead>
     <tbody>${rows}</tbody>
   </table>
   <br/>
-  <a href="${APP_URL}" style="display:inline-block;padding:10px 20px;background:#1d4ed8;color:#fff;text-decoration:none;border-radius:8px;font-size:14px;font-weight:600">
-    View dashboard →
+  <a href="${APP_URL}/${locale}" style="display:inline-block;padding:10px 20px;background:#1d4ed8;color:#fff;text-decoration:none;border-radius:8px;font-size:14px;font-weight:600">
+    ${viewBtn}
   </a>
   <p style="margin-top:20px;font-size:11px;color:#475569">
-    This alert fires every ${COOLDOWN_H}h when outbreaks exist within your zone radius. Manage geofence alerts on your dashboard.
+    ${footerText}
   </p>
 </div>`,
       });
