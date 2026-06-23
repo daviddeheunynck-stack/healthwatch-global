@@ -37,12 +37,19 @@ const RISK_EMOJI: Record<string, string> = {
   low:    "🟢",
 };
 
-function relativeTime(iso: string): string {
+function relativeTime(iso: string, locale: string): string {
   const mins = Math.round((Date.now() - new Date(iso).getTime()) / 60_000);
-  if (mins < 60) return `${mins}m ago`;
+  const lb = ({
+    en: { m: (n: number) => `${n}m ago`,        h: (n: number) => `${n}h ago`,      d: (n: number) => `${n}d ago`      },
+    fr: { m: (n: number) => `il y a ${n} min`,  h: (n: number) => `il y a ${n}h`,   d: (n: number) => `il y a ${n}j`   },
+    es: { m: (n: number) => `hace ${n} min`,     h: (n: number) => `hace ${n}h`,     d: (n: number) => `hace ${n}d`     },
+    ar: { m: (n: number) => `منذ ${n} دق`,       h: (n: number) => `منذ ${n}س`,      d: (n: number) => `منذ ${n}ي`      },
+    id: { m: (n: number) => `${n} mnt lalu`,     h: (n: number) => `${n}j lalu`,     d: (n: number) => `${n}h lalu`    },
+  } as Record<string, { m: (n: number) => string; h: (n: number) => string; d: (n: number) => string }>)[locale] ?? { m: (n) => `${n}m ago`, h: (n) => `${n}h ago`, d: (n) => `${n}d ago` };
+  if (mins < 60) return lb.m(mins);
   const hrs = Math.floor(mins / 60);
-  if (hrs < 24) return `${hrs}h ago`;
-  return `${Math.floor(hrs / 24)}d ago`;
+  if (hrs < 24) return lb.h(hrs);
+  return lb.d(Math.floor(hrs / 24));
 }
 
 const RISK_LABEL: Record<string, Record<string, string>> = {
@@ -183,7 +190,7 @@ export default function ShareOutbreakButton({ disease, country, cases, deaths, r
   const text    = c.tweet(disease, country, cases, deaths, riskLevel);
   const pageUrl = pageUrlProp
     ?? (outbreakId ? `${BASE_URL}/${locale}/outbreak/${outbreakId}` : `${BASE_URL}/${locale}`);
-  const lastSync   = updatedAt ? relativeTime(updatedAt) : "";
+  const lastSync   = updatedAt ? relativeTime(updatedAt, locale) : "";
   const reportText = c.report(disease, country, cases, deaths, riskLevel, lastSync, pageUrl, reportDate);
   const encoded = encodeURIComponent(text);
   const encodedUrl = encodeURIComponent(pageUrl);
