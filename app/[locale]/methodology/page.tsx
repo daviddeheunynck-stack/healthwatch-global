@@ -37,10 +37,13 @@ const META: Record<Locale, { title: string; description: string }> = {
   },
 };
 
+const METHODOLOGY_UPDATED = new Date("2026-06-01");
+
 const COPY: Record<Locale, {
   back: string;
   title: string;
   subtitle: string;
+  updatedLabel: string;
   sourcesTitle: string;
   sources: { name: string; type: string; coverage: string; freq: string; url: string }[];
   pipelineTitle: string;
@@ -71,6 +74,7 @@ const COPY: Record<Locale, {
     back: "← About",
     title: "How we process data",
     subtitle: "HealthWatch Global does not produce original surveillance data. We aggregate, normalize and present data from four official international health authorities — without editorial interpretation.",
+    updatedLabel: "Last updated:",
     sourcesTitle: "Official data sources",
     sources: [
       { name: "WHO DON", type: "Disease Outbreak News", coverage: "Global", freq: "Irregular — per outbreak event", url: "https://www.who.int/emergencies/disease-outbreak-news" },
@@ -148,6 +152,7 @@ const COPY: Record<Locale, {
     back: "← À propos",
     title: "Comment nous traitons les données",
     subtitle: "HealthWatch Global ne produit pas de données de surveillance originales. Nous agrégeons, normalisons et présentons les données de quatre autorités sanitaires internationales officielles — sans interprétation éditoriale.",
+    updatedLabel: "Mis à jour :",
     sourcesTitle: "Sources de données officielles",
     sources: [
       { name: "WHO DON", type: "Disease Outbreak News", coverage: "Mondial", freq: "Irrégulier — par événement épidémique", url: "https://www.who.int/emergencies/disease-outbreak-news" },
@@ -225,6 +230,7 @@ const COPY: Record<Locale, {
     back: "← Acerca de",
     title: "Cómo procesamos los datos",
     subtitle: "HealthWatch Global no produce datos de vigilancia originales. Agregamos, normalizamos y presentamos datos de cuatro autoridades sanitarias internacionales oficiales, sin interpretación editorial.",
+    updatedLabel: "Actualizado:",
     sourcesTitle: "Fuentes de datos oficiales",
     sources: [
       { name: "WHO DON", type: "Disease Outbreak News", coverage: "Mundial", freq: "Irregular — por evento epidémico", url: "https://www.who.int/emergencies/disease-outbreak-news" },
@@ -286,6 +292,7 @@ const COPY: Record<Locale, {
     back: "→ حول المنصة",
     title: "كيف نعالج البيانات",
     subtitle: "لا تنتج HealthWatch Global بيانات مراقبة أصلية. نجمع بيانات أربع هيئات صحية دولية رسمية ونوحّدها ونعرضها — دون تفسير تحريري.",
+    updatedLabel: "آخر تحديث:",
     sourcesTitle: "مصادر البيانات الرسمية",
     sources: [
       { name: "WHO DON", type: "أخبار تفشي الأمراض", coverage: "عالمي", freq: "غير منتظم — لكل حدث وبائي", url: "https://www.who.int/emergencies/disease-outbreak-news" },
@@ -347,6 +354,7 @@ const COPY: Record<Locale, {
     back: "← Tentang",
     title: "Cara kami memproses data",
     subtitle: "HealthWatch Global tidak memproduksi data surveilans orisinal. Kami mengagregasi, menormalisasi, dan menyajikan data dari empat otoritas kesehatan internasional resmi — tanpa interpretasi editorial.",
+    updatedLabel: "Terakhir diperbarui:",
     sourcesTitle: "Sumber data resmi",
     sources: [
       { name: "WHO DON", type: "Disease Outbreak News", coverage: "Global", freq: "Tidak teratur — per kejadian wabah", url: "https://www.who.int/emergencies/disease-outbreak-news" },
@@ -442,6 +450,11 @@ export default async function MethodologyPage({
   const c = COPY[l];
   const isRtl = l === "ar";
 
+  const updatedStr = METHODOLOGY_UPDATED.toLocaleDateString(
+    l === "ar" ? "ar-SA" : l === "fr" ? "fr-FR" : l === "es" ? "es-ES" : l === "id" ? "id-ID" : "en-GB",
+    { year: "numeric", month: "long" }
+  );
+
   return (
     <div className="max-w-3xl mx-auto py-4 space-y-12" dir={isRtl ? "rtl" : "ltr"}>
 
@@ -459,6 +472,9 @@ export default async function MethodologyPage({
           <h1 className="text-3xl font-bold text-white">{c.title}</h1>
         </div>
         <p className="text-gray-400 leading-relaxed text-lg">{c.subtitle}</p>
+        <p className="text-xs text-gray-600">
+          {c.updatedLabel} <span className="text-gray-500">{updatedStr}</span>
+        </p>
       </div>
 
       {/* Sources */}
@@ -615,7 +631,7 @@ export default async function MethodologyPage({
         label={c.citeLabel}
         copyLabel={c.citeCopy}
         copiedLabel={c.citeCopied}
-        citation={`HealthWatch Global. How we process data — methodology and sources [Internet]. [cited YYYY Mon DD]. Available from: ${BASE_URL}/${locale}/methodology.`}
+        citation={`HealthWatch Global. How we process data — methodology and sources [Internet]. 2026 [cited YYYY Mon DD]. Available from: ${BASE_URL}/${l}/methodology`}
       />
 
       <section className="bg-gray-900 border border-gray-800 rounded-2xl p-6 space-y-3">
