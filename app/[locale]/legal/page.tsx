@@ -3,12 +3,28 @@ import Link from "next/link";
 import { Scale, ArrowLeft } from "lucide-react";
 import type { Metadata } from "next";
 
+const LEGAL_META: Record<string, { title: string; description: string }> = {
+  fr: { title: "Mentions légales", description: "Mentions légales de HealthWatch Global — éditeur, hébergeur, propriété intellectuelle, données personnelles." },
+  en: { title: "Legal notices", description: "HealthWatch Global legal notices — publisher, hosting, intellectual property, personal data (French law LCEN)." },
+  es: { title: "Avisos legales", description: "Avisos legales de HealthWatch Global — editor, alojamiento, propiedad intelectual, datos personales." },
+  ar: { title: "الإشعارات القانونية", description: "الإشعارات القانونية لـ HealthWatch Global — الناشر، الاستضافة، الملكية الفكرية، البيانات الشخصية." },
+  id: { title: "Pemberitahuan hukum", description: "Pemberitahuan hukum HealthWatch Global — penerbit, hosting, kekayaan intelektual, data pribadi." },
+};
+
+const NON_FR_NOTE: Record<string, string> = {
+  en: "This legal notice is required by French law (LCEN). It is provided in French as legally mandated. For questions, contact contact@healthwatch-global.com.",
+  es: "Este aviso legal es obligatorio según la ley francesa (LCEN). Se proporciona en francés según lo exige la ley. Contacto: contact@healthwatch-global.com.",
+  ar: "هذا الإشعار القانوني مطلوب بموجب القانون الفرنسي (LCEN). يتم تقديمه باللغة الفرنسية كما يقتضي القانون. للتواصل: contact@healthwatch-global.com.",
+  id: "Pemberitahuan hukum ini diwajibkan oleh hukum Prancis (LCEN). Disediakan dalam bahasa Prancis sesuai ketentuan hukum. Kontak: contact@healthwatch-global.com.",
+};
+
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getLocale();
+  const m = LEGAL_META[locale] ?? LEGAL_META.en;
   const url = `https://healthwatch-global.com/${locale}/legal`;
   return {
-    title: "Mentions légales",
-    description: "Mentions légales de HealthWatch Global — éditeur, hébergeur, propriété intellectuelle, données personnelles.",
+    title: m.title,
+    description: m.description,
     alternates: {
       canonical: url,
       languages: {
@@ -59,6 +75,12 @@ export default async function LegalPage() {
         </div>
         <p className="text-gray-500 text-sm">Conformément à la loi n° 2004-575 du 21 juin 2004 pour la confiance dans l'économie numérique (LCEN)</p>
       </div>
+
+      {locale !== "fr" && NON_FR_NOTE[locale] && (
+        <div className="bg-amber-500/10 border border-amber-500/30 rounded-xl px-4 py-3 text-sm text-amber-300">
+          {NON_FR_NOTE[locale]}
+        </div>
+      )}
 
       <div className="space-y-8 text-sm text-gray-400 leading-relaxed">
 
