@@ -207,6 +207,65 @@ Et si vous travaillez en santé globale, réponse épidémique, ou gestion de cr
 
 ---
 
+### Post 3 — Délais de déclaration (26 juin 2026) — RÉDIGÉ ✓
+
+**Ton :** éducatif, données chiffrées réelles, aucune mention de HealthWatch
+
+---
+
+Entre la détection terrain et la publication d'un Disease Outbreak News OMS, combien de temps s'écoule réellement ?
+
+La réponse varie selon la maladie, le pays et les capacités de laboratoire locales. Mais les patterns des dix dernières années dessinent un tableau clair.
+
+**Ebola :** délai médian de publication DON après confirmation : 5 à 8 jours pour les épisodes RDC depuis 2018 (capacités INRB renforcées). Premier épisode Afrique de l'Ouest 2014 : 16 jours entre les premiers cas documentés et le premier DON.
+
+**Mpox (2022) :** détection en mai → qualification URGSS en juillet. Plus de 60 jours entre le signal et la reconnaissance formelle. Ce décalage a structuré les premières semaines de réponse dans les pays sans surveillance active.
+
+**Fièvre de Lassa :** déclarée souvent en agrégat trimestriel par le Nigeria CDC. Les cas individuels ne remontent au DON qu'au franchissement de seuils d'alerte. Lag possible : 4 à 6 semaines.
+
+**Choléra :** les DON sont régulièrement publiés avec 3 à 4 semaines de retard sur les données terrain — en raison des étapes de vérification entre Ministère de la Santé et bureau régional OMS.
+
+Ce délai n'est pas un dysfonctionnement. C'est un artefact structurel : confirmation de laboratoire, notification au Point Focal National RSI, remontée au bureau régional, validation, publication. Chaque étape est nécessaire. Chaque étape prend du temps.
+
+Pour les équipes qui opèrent en amont de ces délais, la question n'est plus « quand l'OMS va-t-il publier ? »
+
+C'est : « quelle source surveille-t-on en attendant ? »
+
+---
+
+### Post 4 — CFR : une variable, pas un chiffre (1er juillet 2026) — RÉDIGÉ ✓
+
+**Ton :** analytique, données OMS/ECDC/INRB, aucune mention de HealthWatch
+
+---
+
+Le CFR d'un foyer n'est pas un chiffre. C'est une variable.
+
+Selon la source, la définition de cas retenue et la phase de l'épidémie, le même foyer peut afficher des taux de létalité très différents.
+
+**Marburg Uganda 2023 :**
+CFR OMS officiel : 86,7 % (13/15 cas confirmés)
+CFR ECDC : 72 % (inclut cas probables)
+CFR historique global Marburg : 24 à 88 % selon les épisodes
+
+**Ebola RDC 2022-2024 :**
+CFR cas confirmés (épisode Équateur) : 57 %
+CFR avec probables et suspects : 42 %
+Les deux chiffres sont corrects. Ils ne mesurent pas la même chose.
+
+**Mpox clade I RDC (2024) :**
+CFR global tous âges : 3,6 % (données Ministère de la Santé RDC)
+CFR < 1 an : 8 à 10 % (données INRB)
+CFR adultes > 15 ans : < 1 %
+Le chiffre global masque la distribution par âge — critique pour prioriser la vaccination.
+
+Ce que cette variabilité implique pour la réponse :
+
+Un CFR de 5 % sur un foyer Ebola dans un pays avec accès limité aux soins intensifs impose une préparation très différente d'un CFR de 5 % sur un foyer H5N1 dans un contexte de surveillance active.
+
+La létalité brute est un signal.
+Le contexte est le protocole.
+
 ---
 
 ## Product Hunt
