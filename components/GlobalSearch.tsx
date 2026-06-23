@@ -32,6 +32,14 @@ const SECTION_LABEL: Record<string, Record<string, string>> = {
   id: { disease: "Penyakit", country: "Negara", outbreak: "Wabah" },
 };
 
+const SECTION_CHIP: Record<string, Record<string, string>> = {
+  en: { disease: "Disease", country: "Country", outbreak: "Outbreak" },
+  fr: { disease: "Maladie", country: "Pays", outbreak: "Foyer" },
+  es: { disease: "Enfermedad", country: "País", outbreak: "Brote" },
+  ar: { disease: "مرض", country: "دولة", outbreak: "تفشٍّ" },
+  id: { disease: "Penyakit", country: "Negara", outbreak: "Wabah" },
+};
+
 const NO_RESULTS: Record<string, string> = {
   en: "No results found",
   fr: "Aucun résultat",
@@ -236,7 +244,7 @@ export default function GlobalSearch() {
                         type === "country" ? "bg-blue-500/10 text-blue-400" :
                         "bg-red-500/10 text-red-400"
                       }`}>
-                        {SECTION_LABEL[l][type].replace(/s$/, "").replace(/يات$/, "").replace(/es$/, "e")}
+                        {(SECTION_CHIP[l] ?? SECTION_CHIP.en)[type]}
                       </span>
                     </Link>
                   );

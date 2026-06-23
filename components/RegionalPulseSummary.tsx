@@ -14,8 +14,11 @@ const REGION_LABELS: Record<string, Record<string, string>> = {
 
 const REGION_ORDER = ["africa", "asia", "americas", "europe", "oceania"] as const;
 
-const CASE_LABEL: Record<string, string> = { fr: "cas", es: "casos", ar: "حالة", id: "kasus", en: "cases" };
-const OB_LABEL: Record<string, string>   = { fr: "foyers", es: "focos", ar: "بؤر", id: "wabah", en: "outbreaks" };
+const CASE_LABEL:  Record<string, string> = { fr: "cas", es: "casos", ar: "حالة", id: "kasus", en: "cases" };
+const OB_LABEL:    Record<string, string> = { fr: "foyers", es: "focos", ar: "بؤر", id: "wabah", en: "outbreaks" };
+const HIGH_LABEL:  Record<string, string> = { fr: "ÉLEVÉ", es: "ALTO", ar: "مرتفع", id: "TINGGI", en: "HIGH" };
+const MED_LABEL:   Record<string, string> = { fr: "MOY", es: "MED", ar: "متوسط", id: "SEDANG", en: "MED" };
+const MULTI_LABEL: Record<string, string> = { fr: "MULTI", es: "MULTI", ar: "متعدد", id: "MULTI", en: "MULTI" };
 
 interface Props { outbreaks: Outbreak[]; locale: string }
 
@@ -70,17 +73,17 @@ export default function RegionalPulseSummary({ outbreaks, locale }: Props) {
               <div className="flex items-center gap-1 shrink-0">
                 {highCount > 0 && (
                   <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-red-900/30 border border-red-700/40 text-red-400 whitespace-nowrap">
-                    {highCount} HIGH
+                    {highCount} {HIGH_LABEL[locale] ?? "HIGH"}
                   </span>
                 )}
                 {medCount > 0 && (
                   <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-amber-900/20 border border-amber-700/30 text-amber-500 whitespace-nowrap">
-                    {medCount} MED
+                    {medCount} {MED_LABEL[locale] ?? "MED"}
                   </span>
                 )}
                 {multiThreat && (
                   <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-purple-900/20 border border-purple-700/30 text-purple-400 whitespace-nowrap">
-                    MULTI
+                    {MULTI_LABEL[locale] ?? "MULTI"}
                   </span>
                 )}
               </div>
