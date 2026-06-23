@@ -105,7 +105,7 @@ export default function TravelRiskWidget({ locale }: { locale: string }) {
                   <div className="flex items-center gap-1.5">
                     <span className="tabular-nums text-gray-500">{o.cases.toLocaleString(locale)}</span>
                     <span className={`px-1 rounded text-[9px] font-bold ${o.risk_level === "high" ? "bg-red-900/40 text-red-400" : o.risk_level === "medium" ? "bg-amber-900/40 text-amber-400" : "bg-green-900/40 text-green-400"}`}>
-                      {o.risk_level.toUpperCase()}
+                      {(RISK_STYLE[o.risk_level as Risk]?.label[locale] ?? o.risk_level).toUpperCase()}
                     </span>
                   </div>
                 </div>
