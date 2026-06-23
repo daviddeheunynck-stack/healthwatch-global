@@ -188,7 +188,7 @@ export default function CountryRiskAlertPanel({ locale }: { locale: string }) {
                     <div className="flex items-center gap-2 shrink-0">
                       <span className="text-[9px] text-gray-700 whitespace-nowrap">
                         {alert.last_fired_at
-                          ? `${c.lastFired} ${new Date(alert.last_fired_at).toLocaleDateString(locale)}`
+                          ? `${c.lastFired} ${new Date(alert.last_fired_at).toLocaleDateString(locale === "ar" ? "ar-SA" : locale)}`
                           : c.neverFired}
                       </span>
                       <button
