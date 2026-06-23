@@ -449,15 +449,16 @@ export default async function AccountPage({
   const slackConfigured = !!slackUrl;
   const slackMasked = slackUrl ? `${slackUrl.slice(0, 30)}…${slackUrl.slice(-6)}` : slackUrl;
 
+  const localeTag = locale === "ar" ? "ar-SA" : locale;
   const memberSince = profile?.created_at
-    ? new Date(profile.created_at).toLocaleDateString(locale, { year: "numeric", month: "long" })
+    ? new Date(profile.created_at).toLocaleDateString(localeTag, { year: "numeric", month: "long" })
     : "—";
 
   const trialEndsAt = rawEnd ? new Date(rawEnd) : null;
   const trialActive = trialEndsAt !== null && trialEndsAt > new Date();
   const trialExpired = trialEndsAt !== null && trialEndsAt <= new Date();
   const trialDateStr = trialEndsAt
-    ? trialEndsAt.toLocaleDateString(locale === "ar" ? "ar-SA" : locale, {
+    ? trialEndsAt.toLocaleDateString(localeTag, {
         day: "numeric", month: "long", year: "numeric",
       })
     : null;
