@@ -212,7 +212,12 @@ export default async function SitrepPage({
                   className={`border-t border-gray-800 ${i % 2 === 0 ? "bg-gray-900/20" : ""}`}
                 >
                   <td className="px-3 py-2 font-medium text-white max-w-[200px]">
-                    <span className="truncate block">{getLocalizedDisease(o, locale)}</span>
+                    <Link
+                      href={`/${locale}/outbreak/${o.id}`}
+                      className="truncate block hover:text-red-300 transition-colors"
+                    >
+                      {getLocalizedDisease(o, locale)}
+                    </Link>
                     {o.is_pheic && (
                       <span className="text-[9px] font-bold px-1 py-0.5 rounded bg-purple-900/50 text-purple-300 border border-purple-700/50 ml-1">PHEIC</span>
                     )}
