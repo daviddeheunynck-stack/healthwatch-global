@@ -211,8 +211,8 @@ export default function ComparePage() {
                 <th className="px-4 py-3 text-center text-amber-400 font-bold text-sm">B</th>
               </tr></thead>
               <tbody>
-                <StatRow label={l.cases} valA={oA.cases} valB={oB.cases} icon={<Users className="w-3.5 h-3.5" />} locked={!isPaid} onLockClick={() => openModal("compare")} />
-                <StatRow label={l.deaths} valA={oA.deaths} valB={oB.deaths} icon={<Skull className="w-3.5 h-3.5" />} locked={!isPaid} onLockClick={() => openModal("compare")} />
+                <StatRow label={l.cases} valA={oA.cases} valB={oB.cases} icon={<Users className="w-3.5 h-3.5" />} fmt={v => v.toLocaleString(locale)} locked={!isPaid} onLockClick={() => openModal("compare")} />
+                <StatRow label={l.deaths} valA={oA.deaths} valB={oB.deaths} icon={<Skull className="w-3.5 h-3.5" />} fmt={v => v.toLocaleString(locale)} locked={!isPaid} onLockClick={() => openModal("compare")} />
                 <StatRow label={l.cfr} valA={cfrA} valB={cfrB} icon={<TrendingUp className="w-3.5 h-3.5" />} fmt={v => v.toFixed(1) + "%"} locked={!isPaid} onLockClick={() => openModal("compare")} />
                 <StatRow label={l.incidence} valA={incA} valB={incB} icon={<Activity className="w-3.5 h-3.5" />} fmt={v => v.toFixed(2)} locked={!isPaid} onLockClick={() => openModal("compare")} />
                 <tr className="border-b border-gray-800">
