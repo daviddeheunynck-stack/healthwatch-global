@@ -238,11 +238,11 @@ export default async function PrintPage({
           <div className="stats">
             <div className="stat-card">
               <div className="stat-label">{l.cases}</div>
-              <div className="stat-value">{hasData ? o.cases.toLocaleString() : l.noData}</div>
+              <div className="stat-value">{hasData ? o.cases.toLocaleString(locale) : l.noData}</div>
             </div>
             <div className="stat-card">
               <div className="stat-label">{l.deaths}</div>
-              <div className="stat-value red">{hasData ? o.deaths.toLocaleString() : l.noData}</div>
+              <div className="stat-value red">{hasData ? o.deaths.toLocaleString(locale) : l.noData}</div>
             </div>
             <div className="stat-card">
               <div className="stat-label">{l.cfr}</div>
@@ -269,7 +269,7 @@ export default async function PrintPage({
             {getPopulationThousands(o.country_en) && (
               <div className="meta-item">
                 <span className="meta-label">Population :</span>
-                <span className="meta-value">{((getPopulationThousands(o.country_en) ?? 0) * 1000).toLocaleString()}</span>
+                <span className="meta-value">{((getPopulationThousands(o.country_en) ?? 0) * 1000).toLocaleString(locale)}</span>
               </div>
             )}
           </div>

@@ -368,7 +368,7 @@ async function DashboardContent({ demo = false, urlRegion, urlRisk }: { demo?: b
             {isPaid && top.cases > 0 && (
               <>
                 <span className="text-gray-600">·</span>
-                <span className="text-gray-300">{top.cases.toLocaleString("en")} {snap.cases}</span>
+                <span className="text-gray-300">{top.cases.toLocaleString(locale)} {snap.cases}</span>
               </>
             )}
             {isPaid && cfr && (
@@ -379,7 +379,7 @@ async function DashboardContent({ demo = false, urlRegion, urlRisk }: { demo?: b
             )}
             {stats.totalCases > 0 && (
               <span className={`${isRtl ? "mr-auto" : "ml-auto"} text-gray-500 text-xs`}>
-                {stats.totalCases.toLocaleString("en")} {snap.totalCases}
+                {stats.totalCases.toLocaleString(locale)} {snap.totalCases}
               </span>
             )}
           </div>
