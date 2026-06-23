@@ -171,16 +171,16 @@ export default function Navbar() {
         {/* Desktop: locale + auth */}
         <div className="hidden xl:flex items-center gap-3">
           <GlobalSearch />
-          <div className="flex items-center gap-1">
-            <Globe className="w-4 h-4 text-gray-400" />
+          <div className="flex items-center gap-1 border border-gray-700 rounded-lg px-2 py-1">
+            <Globe className="w-4 h-4 text-gray-300 mr-0.5" />
             {LOCALES.map((loc) => (
               <button
                 key={loc.code}
                 onClick={() => switchLocale(loc.code)}
-                className={`text-xs px-2 py-1 rounded font-medium transition-colors ${
+                className={`text-xs px-2 py-1 rounded-md font-semibold transition-colors ${
                   locale === loc.code
                     ? "bg-red-600 text-white"
-                    : "text-gray-400 hover:text-white hover:bg-gray-700"
+                    : "text-gray-300 hover:text-white bg-gray-800 hover:bg-gray-700"
                 }`}
               >
                 {loc.label}
