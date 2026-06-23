@@ -246,6 +246,7 @@ export async function generateMetadata({
       url: canonical,
       type: "article",
       siteName: "HealthWatch Global",
+      locale: ({ en: "en_US", fr: "fr_FR", es: "es_ES", ar: "ar_SA", id: "id_ID" } as Record<string, string>)[locale] ?? "en_US",
       images: [{
         url: `${BASE_URL}/api/outbreak-card/${id}?locale=${locale}`,
         width: 1200,

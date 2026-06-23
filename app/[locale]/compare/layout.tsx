@@ -52,6 +52,7 @@ export async function generateMetadata({
       title: m.title,
       description: m.description,
       siteName: "HealthWatch Global",
+      locale: ({ en: "en_US", fr: "fr_FR", es: "es_ES", ar: "ar_SA", id: "id_ID" } as Record<string, string>)[locale] ?? "en_US",
     },
     robots: { index: true, follow: true },
   };

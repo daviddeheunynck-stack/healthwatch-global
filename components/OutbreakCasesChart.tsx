@@ -33,7 +33,8 @@ const LABEL: Record<string, { cases: string; deaths: string; noData: string }> =
 
 function formatDate(d: string, locale: string) {
   try {
-    return new Date(d).toLocaleDateString(locale, { month: "short", day: "numeric" });
+    const tag = locale === "ar" ? "ar-SA" : locale;
+    return new Date(d).toLocaleDateString(tag, { month: "short", day: "numeric" });
   } catch {
     return d;
   }

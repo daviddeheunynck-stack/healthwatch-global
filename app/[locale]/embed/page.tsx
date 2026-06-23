@@ -51,6 +51,7 @@ export async function generateMetadata({
       url,
       type: "website",
       siteName: "HealthWatch Global",
+      locale: ({ en: "en_US", fr: "fr_FR", es: "es_ES", ar: "ar_SA", id: "id_ID" } as Record<string, string>)[locale] ?? "en_US",
       images: [{ url: `https://healthwatch-global.com/api/og?locale=${locale}`, width: 1200, height: 630 }],
     },
     twitter: {

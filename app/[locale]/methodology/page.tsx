@@ -434,7 +434,7 @@ export async function generateMetadata({
         "x-default": `${BASE_URL}/en/methodology`,
       },
     },
-    openGraph: { title: m.title, description: m.description, url, type: "website", siteName: "HealthWatch Global" },
+    openGraph: { title: m.title, description: m.description, url, type: "website", siteName: "HealthWatch Global", locale: ({ en: "en_US", fr: "fr_FR", es: "es_ES", ar: "ar_SA", id: "id_ID" } as Record<string, string>)[l] ?? "en_US" },
     twitter: { card: "summary_large_image", title: m.title, description: m.description },
     robots: { index: true, follow: true },
   };

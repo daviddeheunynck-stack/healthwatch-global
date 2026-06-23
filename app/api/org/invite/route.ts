@@ -32,9 +32,10 @@ function buildInviteEmail(orgName: string, inviteUrl: string, locale: string): s
 
   const cta = { fr: "Accepter l'invitation", en: "Accept invitation", es: "Aceptar invitación", ar: "قبول الدعوة", id: "Terima undangan" }[locale] ?? "Accept invitation";
 
-  return `<!DOCTYPE html><html lang="${locale}"><head><meta charset="utf-8"/></head>
-<body style="margin:0;padding:0;background:#111827;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:#f9fafb">
-  <div style="max-width:480px;margin:0 auto;padding:40px 20px">
+  const isRtl = locale === "ar";
+  return `<!DOCTYPE html><html lang="${locale}" dir="${isRtl ? "rtl" : "ltr"}"><head><meta charset="utf-8"/></head>
+<body style="margin:0;padding:0;background:#111827;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:#f9fafb;direction:${isRtl ? "rtl" : "ltr"}">
+  <div style="max-width:480px;margin:0 auto;padding:40px 20px;text-align:${isRtl ? "right" : "left"}">
     <p style="margin:0 0 4px;font-size:11px;color:#6b7280;letter-spacing:0.1em;text-transform:uppercase">HEALTHWATCH GLOBAL</p>
     <h1 style="margin:0 0 16px;font-size:20px;font-weight:700">${subject}</h1>
     <p style="margin:0 0 24px;font-size:14px;color:#d1d5db">${body}</p>
