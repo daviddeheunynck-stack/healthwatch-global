@@ -253,12 +253,12 @@ export default async function BriefingPage({ params }: { params: Promise<{ local
                     {/* Row 2: stats */}
                     <div className="flex items-center gap-4 text-sm mb-3 flex-wrap">
                       <span className="font-mono font-semibold text-gray-200 print:text-black">
-                        {outbreak.cases.toLocaleString("en")}
+                        {outbreak.cases.toLocaleString(locale)}
                         <span className="font-normal text-gray-500 print:text-gray-600 ml-1">{c.cases}</span>
                       </span>
                       {outbreak.deaths > 0 && (
                         <span className="text-gray-400 print:text-gray-600">
-                          {outbreak.deaths.toLocaleString("en")}
+                          {outbreak.deaths.toLocaleString(locale)}
                           <span className="ml-1">{c.deaths}</span>
                         </span>
                       )}
@@ -276,7 +276,7 @@ export default async function BriefingPage({ params }: { params: Promise<{ local
 
                     {/* Row 3: action recommendation */}
                     <p className={`text-xs leading-relaxed font-medium ${colors.action} print:text-gray-800 border-t border-gray-700/30 print:border-gray-200 pt-3`}>
-                      → {c.actions[outbreak.risk_level]}
+                      {isRtl ? "←" : "→"} {c.actions[outbreak.risk_level]}
                     </p>
                   </div>
                 );
