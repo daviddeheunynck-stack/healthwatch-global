@@ -326,6 +326,13 @@ export default async function DiseasePage({
   // Historical countries are still visible in the country pills section below.
   const countriesSet = new Set(active.map((o) => o.country_en || o.country).filter(Boolean));
 
+  // Most recent update across active outbreaks — used as "data as of" timestamp
+  const latestUpdate = active.reduce<string | null>((latest, o) => {
+    if (!o.updated_at) return latest;
+    if (!latest || o.updated_at > latest) return o.updated_at;
+    return latest;
+  }, null);
+
   // Unique countries with active-status for the "Countries affected" chips
   const affectedCountryMap = new Map<string, { country_en: string; hasActive: boolean }>();
   for (const o of allOutbreaks) {
@@ -420,18 +427,28 @@ export default async function DiseasePage({
       </div>
 
       {/* Stats bar */}
-      <div className="grid gap-4 grid-cols-2 sm:grid-cols-4">
-        {[
-          { label: lb.cases,     value: totalCases  > 0 ? totalCases.toLocaleString("en")  : lb.noData },
-          { label: lb.deaths,    value: totalDeaths > 0 ? totalDeaths.toLocaleString("en") : lb.noData },
-          { label: lb.cfr,       value: cfr ? `${cfr}%` : lb.noData },
-          { label: lb.countries, value: countriesSet.size > 0 ? countriesSet.size.toString() : lb.noData },
-        ].map(({ label, value }) => (
-          <div key={label} className="bg-gray-900 border border-gray-800 rounded-xl p-4 text-center">
-            <p className="text-2xl font-bold text-white">{value}</p>
-            <p className="text-xs text-gray-500 mt-1">{label}</p>
-          </div>
-        ))}
+      <div className="space-y-2">
+        <div className="grid gap-4 grid-cols-2 sm:grid-cols-4">
+          {[
+            { label: lb.cases,     value: totalCases  > 0 ? totalCases.toLocaleString("en")  : lb.noData },
+            { label: lb.deaths,    value: totalDeaths > 0 ? totalDeaths.toLocaleString("en") : lb.noData },
+            { label: lb.cfr,       value: cfr ? `${cfr}%` : lb.noData },
+            { label: lb.countries, value: countriesSet.size > 0 ? countriesSet.size.toString() : lb.noData },
+          ].map(({ label, value }) => (
+            <div key={label} className="bg-gray-900 border border-gray-800 rounded-xl p-4 text-center">
+              <p className="text-2xl font-bold text-white">{value}</p>
+              <p className="text-xs text-gray-500 mt-1">{label}</p>
+            </div>
+          ))}
+        </div>
+        {latestUpdate && (
+          <p className="text-xs text-gray-600 text-right">
+            {lb.lastUpdated} {new Date(latestUpdate).toLocaleDateString(
+              l === "ar" ? "ar-SA" : l,
+              { year: "numeric", month: "long", day: "numeric" }
+            )}
+          </p>
+        )}
       </div>
 
       {/* Virology panel */}
