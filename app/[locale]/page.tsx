@@ -359,7 +359,7 @@ async function DashboardContent({ demo = false, urlRegion, urlRisk }: { demo?: b
             )}
             {!top.is_pheic && top.risk_level === "high" && (
               <span className="bg-red-950/60 text-red-400 border border-red-800/60 rounded px-2 py-0.5 text-xs font-bold shrink-0">
-                HIGH RISK
+                {riskLabels.high}
               </span>
             )}
             <span className="font-semibold text-white">{getLocalizedDisease(top, locale)}</span>
