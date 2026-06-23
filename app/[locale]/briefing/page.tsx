@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase-server";
 import { getOutbreaks, getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 import { PrintButton } from "@/components/PrintButton";
+import Link from "next/link";
 import { LayoutDashboard } from "lucide-react";
 
 export const dynamic = "force-dynamic";
@@ -160,12 +161,12 @@ export default async function BriefingPage({ params }: { params: Promise<{ local
           </div>
           <h2 className="text-white font-semibold">{c.title}</h2>
           <p className="text-gray-400 text-sm">{c.planRequired}</p>
-          <a
-            href={`/${locale}`}
+          <Link
+            href={`/${locale}/pricing`}
             className="inline-block px-4 py-2 bg-red-600 hover:bg-red-500 text-white text-sm font-semibold rounded-lg transition-colors"
           >
             {c.upgrade}
-          </a>
+          </Link>
         </div>
       </div>
     );
@@ -226,8 +227,13 @@ export default async function BriefingPage({ params }: { params: Promise<{ local
                 return (
                   <div
                     key={outbreak.id}
-                    className={`rounded-xl border p-4 sm:p-5 ${colors.bg} ${colors.border} print:border print:rounded-lg print:bg-white`}
+                    className={`relative rounded-xl border p-4 sm:p-5 ${colors.bg} ${colors.border} print:border print:rounded-lg print:bg-white hover:brightness-110 transition-all`}
                   >
+                    <Link
+                      href={`/${locale}/outbreak/${outbreak.id}`}
+                      className="absolute inset-0 rounded-xl print:hidden"
+                      aria-label={`${disease} – ${country}`}
+                    />
                     {/* Row 1: rank + name + badge */}
                     <div className="flex items-start justify-between gap-3 mb-3">
                       <div className="flex items-start gap-3 min-w-0">
