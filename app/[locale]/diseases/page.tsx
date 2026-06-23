@@ -264,7 +264,7 @@ export default async function DiseasesPage({
               </p>
               {hasActive && stats!.cases > 0 && (
                 <p className="text-xs text-gray-500">
-                  {stats!.cases.toLocaleString("en")} {lb.cases}
+                  {stats!.cases.toLocaleString(l)} {lb.cases}
                 </p>
               )}
             </Link>
