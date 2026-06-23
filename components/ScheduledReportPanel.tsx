@@ -17,6 +17,7 @@ const COPY: Record<string, {
   delete: string; noConfig: string; setup: string; cancel: string;
   lastSent: string; neverSent: string; toggle: string;
   limitNote: (n: number) => string; saved: string;
+  invalidEmail: string; networkError: string;
 }> = {
   fr: {
     title: "Sitrep automatique", subtitle: "Rapport épidémiologique hebdomadaire par email (chaque lundi).",
@@ -28,7 +29,7 @@ const COPY: Record<string, {
     lastSent: "Dernier envoi", neverSent: "Jamais envoyé",
     toggle: "Activer/désactiver",
     limitNote: (n) => n === 1 ? "Plan Pro — 1 destinataire max" : `Plan Team/Enterprise — jusqu'à ${n} destinataires`,
-    saved: "Sauvegardé !",
+    saved: "Sauvegardé !", invalidEmail: "Email invalide", networkError: "Erreur réseau",
   },
   en: {
     title: "Automated sitrep", subtitle: "Weekly epidemic situation report by email (every Monday).",
@@ -40,7 +41,7 @@ const COPY: Record<string, {
     lastSent: "Last sent", neverSent: "Never sent",
     toggle: "Enable/disable",
     limitNote: (n) => n === 1 ? "Pro plan — 1 recipient max" : `Team/Enterprise — up to ${n} recipients`,
-    saved: "Saved!",
+    saved: "Saved!", invalidEmail: "Invalid email", networkError: "Network error",
   },
   es: {
     title: "Sitrep automático", subtitle: "Informe epidemiológico semanal por email (cada lunes).",
@@ -52,7 +53,7 @@ const COPY: Record<string, {
     lastSent: "Último envío", neverSent: "Nunca enviado",
     toggle: "Activar/desactivar",
     limitNote: (n) => n === 1 ? "Plan Pro — 1 destinatario máx" : `Team/Enterprise — hasta ${n} destinatarios`,
-    saved: "¡Guardado!",
+    saved: "¡Guardado!", invalidEmail: "Email inválido", networkError: "Error de red",
   },
   ar: {
     title: "التقرير التلقائي", subtitle: "تقرير الوضع الوبائي الأسبوعي عبر البريد الإلكتروني (كل يوم الاثنين).",
@@ -64,7 +65,7 @@ const COPY: Record<string, {
     lastSent: "آخر إرسال", neverSent: "لم يُرسَل قط",
     toggle: "تفعيل/تعطيل",
     limitNote: (n) => n === 1 ? "خطة Pro — مستلم واحد" : `Team/Enterprise — حتى ${n} مستلمين`,
-    saved: "تم الحفظ!",
+    saved: "تم الحفظ!", invalidEmail: "البريد الإلكتروني غير صالح", networkError: "خطأ في الشبكة",
   },
   id: {
     title: "Sitrep otomatis", subtitle: "Laporan situasi epidemi mingguan via email (setiap Senin).",
@@ -76,7 +77,7 @@ const COPY: Record<string, {
     lastSent: "Terakhir dikirim", neverSent: "Belum pernah dikirim",
     toggle: "Aktifkan/nonaktifkan",
     limitNote: (n) => n === 1 ? "Paket Pro — 1 penerima maks" : `Team/Enterprise — hingga ${n} penerima`,
-    saved: "Tersimpan!",
+    saved: "Tersimpan!", invalidEmail: "Email tidak valid", networkError: "Kesalahan jaringan",
   },
 };
 
@@ -120,7 +121,7 @@ export default function ScheduledReportPanel({ locale }: Props) {
 
   function addEmail() {
     const email = emailInput.trim().toLowerCase();
-    if (!VALID_EMAIL.test(email)) { setError("Invalid email"); return; }
+    if (!VALID_EMAIL.test(email)) { setError(c.invalidEmail); return; }
     if (recipients.includes(email)) { setEmailInput(""); return; }
     if (recipients.length >= maxR) { setError(c.limitNote(maxR)); return; }
     setRecipients((prev) => [...prev, email]);
@@ -146,7 +147,7 @@ export default function ScheduledReportPanel({ locale }: Props) {
       setSaved(true);
       setShowForm(false);
       setTimeout(() => setSaved(false), 3000);
-    } catch { setError("Network error"); } finally { setSaving(false); }
+    } catch { setError(c.networkError); } finally { setSaving(false); }
   }
 
   async function toggleActive() {
