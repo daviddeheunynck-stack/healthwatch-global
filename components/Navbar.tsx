@@ -5,7 +5,7 @@ import { useTranslations, useLocale } from "next-intl";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { Activity, Bell, FileText, Globe, CreditCard, LogOut, Menu, X, Mail, BookOpen, ArrowLeftRight } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { createClient } from "@/lib/supabase-browser";
 import type { User as SupabaseUser } from "@supabase/supabase-js";
 import NotificationBell from "@/components/NotificationBell";
@@ -41,6 +41,8 @@ export default function Navbar() {
   const [user, setUser] = useState<SupabaseUser | null>(null);
   const [plan, setPlan] = useState<string>("free");
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [localeDropOpen, setLocaleDropOpen] = useState(false);
+  const localeDropRef = useRef<HTMLDivElement>(null);
 
   // Close the mobile menu on route change. Adjusting state *while rendering* —
   // comparing against the last-seen pathname and calling setState immediately
@@ -55,6 +57,17 @@ export default function Navbar() {
     setPrevPathname(pathname);
     setMobileOpen(false);
   }
+
+  useEffect(() => {
+    if (!localeDropOpen) return;
+    function handleOutside(e: MouseEvent) {
+      if (localeDropRef.current && !localeDropRef.current.contains(e.target as Node)) {
+        setLocaleDropOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleOutside);
+    return () => document.removeEventListener("mousedown", handleOutside);
+  }, [localeDropOpen]);
 
   useEffect(() => {
     const supabase = createClient();
@@ -223,8 +236,35 @@ export default function Navbar() {
             </Link>
           )}
           <GlobalSearch />
+          {/* Locale quick-switcher — visible without opening the hamburger */}
+          <div ref={localeDropRef} className="relative">
+            <button
+              onClick={() => { setLocaleDropOpen(!localeDropOpen); setMobileOpen(false); }}
+              className={`transition-colors p-1 ${localeDropOpen ? "text-white" : "text-gray-400 hover:text-white"}`}
+              aria-label="Change language"
+            >
+              <Globe className="w-5 h-5" />
+            </button>
+            {localeDropOpen && (
+              <div className="absolute right-0 top-8 bg-gray-900 border border-gray-700 rounded-xl p-2 flex gap-1.5 z-50 shadow-xl">
+                {LOCALES.map((loc) => (
+                  <button
+                    key={loc.code}
+                    onClick={() => { switchLocale(loc.code); setLocaleDropOpen(false); }}
+                    className={`text-xs px-2.5 py-1.5 rounded-lg font-semibold transition-colors ${
+                      locale === loc.code
+                        ? "bg-red-600 text-white"
+                        : "text-gray-400 hover:text-white bg-gray-800 hover:bg-gray-700"
+                    }`}
+                  >
+                    {loc.label}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
           <button
-            onClick={() => setMobileOpen(!mobileOpen)}
+            onClick={() => { setMobileOpen(!mobileOpen); setLocaleDropOpen(false); }}
             className="text-gray-400 hover:text-white transition-colors p-1"
             aria-label="Menu"
           >
