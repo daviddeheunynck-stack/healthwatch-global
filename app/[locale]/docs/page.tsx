@@ -79,7 +79,8 @@ function ErrorRow({ code, meaning }: { code: number; meaning: string }) {
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
-export default function DocsPage({ params }: { params: Promise<{ locale: string }> }) {
+export default async function DocsPage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
   return (
     <div className="max-w-4xl mx-auto py-4 space-y-12">
 
@@ -94,7 +95,7 @@ export default function DocsPage({ params }: { params: Promise<{ locale: string 
           Programmatic access to WHO, ECDC, PAHO and Africa CDC outbreak data, updated every hour. Available on the{" "}
           <span className="text-purple-400 font-semibold">Enterprise plan</span>.
           Manage your API keys from{" "}
-          <Link href="account" className="text-red-400 hover:text-red-300 underline underline-offset-2">
+          <Link href={`/${locale}/account`} className="text-red-400 hover:text-red-300 underline underline-offset-2">
             your account
           </Link>.
         </p>
@@ -106,7 +107,7 @@ export default function DocsPage({ params }: { params: Promise<{ locale: string 
           <p className="text-sm font-semibold text-red-300">Looking for the embeddable widget?</p>
           <p className="text-xs text-gray-500">Embed a live outbreak feed on any site — one iframe, no API key required.</p>
         </div>
-        <Link href="embed" className="shrink-0 text-sm font-semibold text-red-400 hover:text-red-300 transition-colors">
+        <Link href={`/${locale}/embed`} className="shrink-0 text-sm font-semibold text-red-400 hover:text-red-300 transition-colors">
           Widget embed docs →
         </Link>
       </div>
@@ -606,7 +607,7 @@ console.log(data);`}</Code>
           </p>
         </div>
         <Link
-          href="account"
+          href={`/${locale}/account`}
           className="flex items-center gap-2 bg-purple-600 hover:bg-purple-500 text-white font-semibold px-5 py-2.5 rounded-xl transition-colors text-sm shrink-0"
         >
           Go to account settings
