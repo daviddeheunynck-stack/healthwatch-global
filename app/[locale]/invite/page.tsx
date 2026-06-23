@@ -93,7 +93,7 @@ export default async function InvitePage({
               <div className="space-y-3">
                 <p className="text-gray-400 text-sm">{c.login}</p>
                 <Link
-                  href={`/${locale}/auth?next=/${locale}/invite?token=${token}`}
+                  href={`/${locale}/login?next=${encodeURIComponent(`/${locale}/invite?token=${token}`)}`}
                   className="block w-full text-center px-6 py-3 bg-red-600 hover:bg-red-500 text-white font-semibold rounded-lg transition-colors"
                 >
                   {c.loginCTA}
