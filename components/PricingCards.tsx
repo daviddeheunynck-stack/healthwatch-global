@@ -27,6 +27,7 @@ const COPY: Record<string, {
   popular: string;
   forOrgs: string;
   freeBadge: string;
+  teamSeats: string;
   starterFeatures: string[];
   proFeatures: string[];
   teamFeatures: string[];
@@ -48,6 +49,7 @@ const COPY: Record<string, {
     popular: "Le plus populaire",
     forOrgs: "Pour organisations",
     freeBadge: "Gratuit",
+    teamSeats: "5 sièges",
     starterFeatures: ["Carte mondiale interactive", "1 région surveillée", "Données OMS (sync ≤6h)", "Digest hebdomadaire gratuit", "Tableau de bord multilingue"],
     proFeatures: ["Toutes les régions mondiales", "Graphiques de tendance + comparaison", "Alertes instantanées", "Rapports PDF & export CSV", "Intégration Slack / Teams", "Support prioritaire"],
     teamFeatures: ["5 sièges inclus", "Toutes les régions mondiales", "Alertes instantanées", "Rapports PDF · Export CSV", "Intégration Slack / Teams", "Une seule facture institutionnelle"],
@@ -69,6 +71,7 @@ const COPY: Record<string, {
     popular: "Most popular",
     forOrgs: "For organizations",
     freeBadge: "Free",
+    teamSeats: "5 seats",
     starterFeatures: ["Interactive world map", "1 monitored region", "WHO data (sync ≤6h)", "Free weekly digest", "Multilingual dashboard"],
     proFeatures: ["All global regions", "Case trend charts + comparison", "Instant alerts", "PDF reports & CSV export", "Slack / Teams integration", "Priority support"],
     teamFeatures: ["5 seats included", "All global regions", "Instant alerts", "PDF reports · CSV export", "Slack / Teams integration", "Single institutional invoice"],
@@ -90,6 +93,7 @@ const COPY: Record<string, {
     popular: "Más popular",
     forOrgs: "Para organizaciones",
     freeBadge: "Gratis",
+    teamSeats: "5 puestos",
     starterFeatures: ["Mapa mundial interactivo", "1 región monitoreada", "Datos OMS (sync ≤6h)", "Digest semanal gratuito", "Panel multilingüe"],
     proFeatures: ["Todas las regiones", "Gráficos de tendencia + comparación", "Alertas instantáneas", "Informes PDF y CSV", "Integración Slack / Teams", "Soporte prioritario"],
     teamFeatures: ["5 puestos incluidos", "Todas las regiones", "Alertas instantáneas", "Informes PDF · CSV", "Integración Slack / Teams", "Una sola factura institucional"],
@@ -111,6 +115,7 @@ const COPY: Record<string, {
     popular: "الأكثر شعبية",
     forOrgs: "للمؤسسات",
     freeBadge: "مجاني",
+    teamSeats: "5 مقاعد",
     starterFeatures: ["خريطة العالم التفاعلية", "منطقة مراقبة واحدة", "بيانات WHO (sync ≤6س)", "ملخص أسبوعي مجاني", "لوحة تحكم متعددة اللغات"],
     proFeatures: ["جميع المناطق العالمية", "مخططات الاتجاه + المقارنة", "تنبيهات فورية", "تقارير PDF وتصدير CSV", "تكامل Slack / Teams", "دعم ذو أولوية"],
     teamFeatures: ["5 مقاعد مشمولة", "جميع المناطق العالمية", "تنبيهات فورية", "تقارير PDF · تصدير CSV", "تكامل Slack / Teams", "فاتورة مؤسسية واحدة"],
@@ -132,6 +137,7 @@ const COPY: Record<string, {
     popular: "Paling populer",
     forOrgs: "Untuk organisasi",
     freeBadge: "Gratis",
+    teamSeats: "5 kursi",
     starterFeatures: ["Peta dunia interaktif", "1 wilayah dipantau", "Data WHO (sync ≤6j)", "Digest mingguan gratis", "Dasbor multibahasa"],
     proFeatures: ["Semua wilayah global", "Grafik tren + perbandingan wabah", "Peringatan instan", "Laporan PDF & ekspor CSV", "Integrasi Slack / Teams", "Dukungan prioritas"],
     teamFeatures: ["5 kursi termasuk", "Semua wilayah global", "Peringatan instan", "Laporan PDF · Ekspor CSV", "Integrasi Slack / Teams", "Satu faktur institusional"],
@@ -377,7 +383,7 @@ export default function PricingCards({ locale }: { locale: string }) {
             <div className="flex items-center gap-2 mb-3">
               <Users className="w-5 h-5 text-amber-400" />
               <span className="text-amber-400 font-semibold text-sm uppercase tracking-wide">Team</span>
-              <span className="text-xs text-amber-600 font-medium bg-amber-900/20 border border-amber-700/30 px-2 py-0.5 rounded-full">5 seats</span>
+              <span className="text-xs text-amber-600 font-medium bg-amber-900/20 border border-amber-700/30 px-2 py-0.5 rounded-full">{c.teamSeats}</span>
             </div>
             <div className="flex items-end gap-1">
               <span className="text-4xl font-bold text-white">
