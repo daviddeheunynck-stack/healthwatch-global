@@ -199,6 +199,7 @@ function SortIcon({ col, activeKey, dir }: { col: SortKey; activeKey: SortKey; d
 
 export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, trends, defaultFilters, diseaseWatchlist, countryTags = {} }: Props) {
   const { openModal } = useUpgradeModal();
+  const numLocale = locale === "ar" ? "ar-SA" : locale;
   const router = useRouter();
   const [watchlist, setWatchlist] = useState<Set<string>>(new Set());
   const [search,   setSearch]    = useState("");
@@ -1200,10 +1201,10 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
                   <td className="px-4 py-3 text-gray-300">
                     <div className="flex items-center gap-1.5">
                       {isPaid ? (
-                        outbreak.cases > 0 ? outbreak.cases.toLocaleString(locale) : <span className="text-gray-600 italic text-xs">{l.noData}</span>
+                        outbreak.cases > 0 ? outbreak.cases.toLocaleString(numLocale) : <span className="text-gray-600 italic text-xs">{l.noData}</span>
                       ) : (
                         <span className="blur-sm select-none text-gray-500 cursor-pointer" onClick={() => openModal("cases")}>
-                          {outbreak.cases.toLocaleString(locale)}
+                          {outbreak.cases.toLocaleString(numLocale)}
                         </span>
                       )}
                       {outbreak.cases > 0 && <TrendBadge trend={trends?.[outbreak.id]} />}
@@ -1211,16 +1212,16 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
                         const prev = lastCases[outbreak.id];
                         if (!prev || outbreak.cases <= prev) return null;
                         const delta = outbreak.cases - prev;
-                        return <span className="text-[10px] text-amber-400 font-semibold whitespace-nowrap">+{delta.toLocaleString(locale)}</span>;
+                        return <span className="text-[10px] text-amber-400 font-semibold whitespace-nowrap">+{delta.toLocaleString(numLocale)}</span>;
                       })()}
                     </div>
                   </td>
                   <td className="px-4 py-3 text-red-400 hidden sm:table-cell">
                     {isPaid ? (
-                      outbreak.cases > 0 ? outbreak.deaths.toLocaleString(locale) : <span className="text-gray-600 italic text-xs">{l.noData}</span>
+                      outbreak.cases > 0 ? outbreak.deaths.toLocaleString(numLocale) : <span className="text-gray-600 italic text-xs">{l.noData}</span>
                     ) : (
                       <span className="blur-sm select-none text-gray-500 cursor-pointer" onClick={() => openModal("cases")}>
-                        {outbreak.deaths.toLocaleString(locale)}
+                        {outbreak.deaths.toLocaleString(numLocale)}
                       </span>
                     )}
                   </td>

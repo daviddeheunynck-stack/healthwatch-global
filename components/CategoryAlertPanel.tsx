@@ -112,7 +112,7 @@ export default function CategoryAlertPanel({ locale, userEmail }: { locale: stri
                     {CATEGORY_LABELS[a.disease_category as DiseaseCategory]?.[locale] ?? a.disease_category}
                   </span>
                   {a.region !== "all" && <span className="text-gray-500">· {a.region}</span>}
-                  <span className="text-red-400 font-semibold">≥ {a.min_cases.toLocaleString(locale)}</span>
+                  <span className="text-red-400 font-semibold">≥ {a.min_cases.toLocaleString(locale === "ar" ? "ar-SA" : locale)}</span>
                 </div>
                 <p className="text-[10px] text-gray-600">{a.email} · {c.lastFired}: {a.last_fired_at ? new Date(a.last_fired_at).toLocaleDateString(locale === "ar" ? "ar-SA" : locale) : c.never}</p>
               </div>

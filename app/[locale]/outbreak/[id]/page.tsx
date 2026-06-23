@@ -406,8 +406,8 @@ export default async function OutbreakPage({
 
       {/* Stats — blurred for anonymous visitors, unblurred client-side when authenticated */}
       <OutbreakStatsGrid
-        cases={hasData ? o.cases.toLocaleString(locale) : l.noData}
-        deaths={hasData ? o.deaths.toLocaleString(locale) : l.noData}
+        cases={hasData ? o.cases.toLocaleString(locale === "ar" ? "ar-SA" : locale) : l.noData}
+        deaths={hasData ? o.deaths.toLocaleString(locale === "ar" ? "ar-SA" : locale) : l.noData}
         cfr={cfr}
         labels={{
           cases:      l.cases,

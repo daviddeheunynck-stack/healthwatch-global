@@ -143,7 +143,7 @@ export default async function WidgetPage({
                   <div className="item-country">{country(o)}</div>
                 </div>
                 <div className="item-right">
-                  {o.cases > 0 && <div className="cases">{o.cases.toLocaleString(locale)}</div>}
+                  {o.cases > 0 && <div className="cases">{o.cases.toLocaleString(locale === "ar" ? "ar-SA" : locale)}</div>}
                   <div style={{ color: RISK_COLOR[o.risk_level], fontSize: 10, fontWeight: 600 }}>
                     {riskLabel(o.risk_level) ?? o.risk_level}
                   </div>

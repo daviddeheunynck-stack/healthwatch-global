@@ -149,7 +149,7 @@ export async function GET(req: NextRequest) {
         user_id: alert.user_id,
         type:    "category_alert",
         title:   lc.inAppTitle(catLabel, matches.length, minStr),
-        body:    matches.slice(0, 3).map((o) => lc.inAppBody(o.disease_en ?? "—", o.country_en ?? "—", o.cases.toLocaleString(locale))).join(" · "),
+        body:    matches.slice(0, 3).map((o) => lc.inAppBody(o.disease_en ?? "—", o.country_en ?? "—", o.cases.toLocaleString(numLocale))).join(" · "),
         outbreak_id: matches[0]?.id ?? null,
       })).catch(() => {});
 

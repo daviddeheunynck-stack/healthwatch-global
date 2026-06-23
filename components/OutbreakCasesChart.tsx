@@ -42,7 +42,8 @@ function formatDate(d: string, locale: string) {
 export default function OutbreakCasesChart({ snapshots, riskLevel, locale }: Props) {
   const l = LABEL[locale] ?? LABEL.en;
   const color = RISK_COLOR[riskLevel] ?? "#ef4444";
-  const formatNum = (n: number) => n.toLocaleString(locale);
+  const numLocale = locale === "ar" ? "ar-SA" : locale;
+  const formatNum = (n: number) => n.toLocaleString(numLocale);
 
   if (snapshots.length < 2) {
     return (

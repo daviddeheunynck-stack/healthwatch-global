@@ -285,6 +285,7 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlis
   const c = COPY[locale] ?? COPY.en;
   const hc = HISTORY_COPY[locale] ?? HISTORY_COPY.en;
   const isRtl = locale === "ar";
+  const numLocale = locale === "ar" ? "ar-SA" : locale;
   const { openModal } = useUpgradeModal();
 
   const [snapshots,      setSnapshots]      = useState<Snapshot[]>([]);
@@ -666,7 +667,7 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlis
             <p className="text-xs text-gray-500">{c.cases}</p>
             <p className="text-lg font-bold text-white">
               {isPaid
-                ? (hasData ? outbreak.cases.toLocaleString(locale) : <span className="text-gray-600 text-sm italic">{c.noData}</span>)
+                ? (hasData ? outbreak.cases.toLocaleString(numLocale) : <span className="text-gray-600 text-sm italic">{c.noData}</span>)
                 : <span className="blur-sm select-none cursor-pointer" onClick={() => openModal("cases")}>12345</span>
               }
             </p>
@@ -686,7 +687,7 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlis
             <p className="text-xs text-gray-500">{c.deaths}</p>
             <p className="text-lg font-bold text-red-400">
               {isPaid
-                ? (hasData ? outbreak.deaths.toLocaleString(locale) : <span className="text-gray-600 text-sm italic">{c.noData}</span>)
+                ? (hasData ? outbreak.deaths.toLocaleString(numLocale) : <span className="text-gray-600 text-sm italic">{c.noData}</span>)
                 : <span className="blur-sm select-none cursor-pointer" onClick={() => openModal("cases")}>234</span>
               }
             </p>
@@ -782,7 +783,7 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlis
                       <span className="text-gray-500">{p.date.slice(0, 7)}</span>
                       <span className="flex items-center gap-2">
                         {p.cases > 0 && (
-                          <span>{p.cases.toLocaleString(locale)} {hc.peak}</span>
+                          <span>{p.cases.toLocaleString(numLocale)} {hc.peak}</span>
                         )}
                         {cfr && (
                           <span className={`${parseFloat(cfr) > 10 ? "text-red-400" : parseFloat(cfr) > 3 ? "text-amber-400" : "text-gray-500"}`}>
@@ -1063,8 +1064,8 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlis
                   outbreak.is_pheic ? sc.pheic : null,
                   "",
                   `${sc.epiData} (${sc.asOf} ${outbreak.date}):`,
-                  outbreak.cases > 0 ? `• ${sc.cases}: ${outbreak.cases.toLocaleString(locale)}` : null,
-                  outbreak.deaths > 0 ? `• ${sc.deaths}: ${outbreak.deaths.toLocaleString(locale)}` : null,
+                  outbreak.cases > 0 ? `• ${sc.cases}: ${outbreak.cases.toLocaleString(numLocale)}` : null,
+                  outbreak.deaths > 0 ? `• ${sc.deaths}: ${outbreak.deaths.toLocaleString(numLocale)}` : null,
                   cfr ? `• ${sc.cfr}: ${cfr}%` : null,
                   incidence ? `• ${sc.incidence}: ${incidence} ${c.incidencePer100k}` : null,
                   "",
@@ -1077,7 +1078,7 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlis
                   pastOutbreaks.length > 0 ? `${sc.previousEpisodes}:` : null,
                   ...pastOutbreaks.slice(0, 3).map((p) => {
                     const pcfr = p.cases > 0 ? (p.deaths / p.cases * 100).toFixed(1) : null;
-                    return `• ${p.date.slice(0, 7)} — ${p.cases.toLocaleString(locale)} ${sc.cases.toLowerCase()}${pcfr ? `, CFR ${pcfr}%` : ""}`;
+                    return `• ${p.date.slice(0, 7)} — ${p.cases.toLocaleString(numLocale)} ${sc.cases.toLowerCase()}${pcfr ? `, CFR ${pcfr}%` : ""}`;
                   }),
                   "",
                   `${today} | healthwatch-global.com/${locale}`,
@@ -1140,7 +1141,7 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlis
                   `1. ${ic.eventDesc}: ${disease} (${country})`,
                   `2. ${ic.geo}: ${country}${outbreak.admin1 ? `, ${outbreak.admin1}` : ""}`,
                   `3. ${ic.onset}: ${outbreak.date}`,
-                  `4. ${ic.epi}: ${outbreak.cases.toLocaleString(locale)} ${ic.cases} / ${outbreak.deaths.toLocaleString(locale)} ${ic.deaths} / CFR ${cfr}%${incidence ? ` / ${incidence.toFixed(1)} ${ic.per100k}` : ""}`,
+                  `4. ${ic.epi}: ${outbreak.cases.toLocaleString(numLocale)} ${ic.cases} / ${outbreak.deaths.toLocaleString(numLocale)} ${ic.deaths} / CFR ${cfr}%${incidence ? ` / ${incidence.toFixed(1)} ${ic.per100k}` : ""}`,
                   `5. ${ic.pop}: [${ic.fillIn}]`,
                   `6. ${ic.measures}: [${ic.fillIn}]`,
                   `7. ${ic.src}: HealthWatch Global / ${outbreak.source || "OMS / WHO"}`,
@@ -1167,7 +1168,7 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlis
             {tripwire ? (
               <div className="flex items-center gap-2 text-xs flex-wrap">
                 <span className="text-amber-400 font-medium">
-                  🔔 {(TRIPWIRE_COPY[locale] ?? TRIPWIRE_COPY.en).active} — {tripwire.threshold_cases.toLocaleString(locale)} {(COMPARE_COPY[locale] ?? COMPARE_COPY.en).cases.toLowerCase()}
+                  🔔 {(TRIPWIRE_COPY[locale] ?? TRIPWIRE_COPY.en).active} — {tripwire.threshold_cases.toLocaleString(numLocale)} {(COMPARE_COPY[locale] ?? COMPARE_COPY.en).cases.toLowerCase()}
                 </span>
                 <button
                   onClick={async () => {
@@ -1235,7 +1236,7 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlis
                 >
                   <option value={-1}>{cc.select}</option>
                   {pastOutbreaks.map((p, i) => (
-                    <option key={p.id} value={i}>{p.date.slice(0, 7)} — {p.cases.toLocaleString(locale)} {cc.cases.toLowerCase()}</option>
+                    <option key={p.id} value={i}>{p.date.slice(0, 7)} — {p.cases.toLocaleString(numLocale)} {cc.cases.toLowerCase()}</option>
                   ))}
                 </select>
               </div>
@@ -1252,13 +1253,13 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlis
                     <tbody className="divide-y divide-gray-800/60">
                       <tr>
                         <td className="px-3 py-1.5 text-gray-500">{cc.cases}</td>
-                        <td className="px-3 py-1.5 text-right text-white tabular-nums">{outbreak.cases.toLocaleString(locale)}</td>
-                        <td className="px-3 py-1.5 text-right text-gray-400 tabular-nums">{cmp.cases.toLocaleString(locale)}</td>
+                        <td className="px-3 py-1.5 text-right text-white tabular-nums">{outbreak.cases.toLocaleString(numLocale)}</td>
+                        <td className="px-3 py-1.5 text-right text-gray-400 tabular-nums">{cmp.cases.toLocaleString(numLocale)}</td>
                       </tr>
                       <tr>
                         <td className="px-3 py-1.5 text-gray-500">{cc.deaths}</td>
-                        <td className="px-3 py-1.5 text-right text-white tabular-nums">{outbreak.deaths?.toLocaleString(locale) ?? "—"}</td>
-                        <td className="px-3 py-1.5 text-right text-gray-400 tabular-nums">{cmp.deaths?.toLocaleString(locale) ?? "—"}</td>
+                        <td className="px-3 py-1.5 text-right text-white tabular-nums">{outbreak.deaths?.toLocaleString(numLocale) ?? "—"}</td>
+                        <td className="px-3 py-1.5 text-right text-gray-400 tabular-nums">{cmp.deaths?.toLocaleString(numLocale) ?? "—"}</td>
                       </tr>
                       <tr>
                         <td className="px-3 py-1.5 text-gray-500">{cc.cfr}</td>
@@ -1331,8 +1332,8 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlis
                       <span className="text-gray-500 truncate">{n.country_en ?? "—"}</span>
                     </div>
                     <div className="flex items-center gap-2 shrink-0 text-gray-600">
-                      <span className="tabular-nums">{n.cases.toLocaleString(locale)}</span>
-                      <span className="text-[10px]">{n.distKm.toLocaleString(locale)} {(NEIGHBOR_COPY[locale] ?? NEIGHBOR_COPY.en).km}</span>
+                      <span className="tabular-nums">{n.cases.toLocaleString(numLocale)}</span>
+                      <span className="text-[10px]">{n.distKm.toLocaleString(numLocale)} {(NEIGHBOR_COPY[locale] ?? NEIGHBOR_COPY.en).km}</span>
                     </div>
                   </div>
                 ))}

@@ -253,12 +253,12 @@ export default async function BriefingPage({ params }: { params: Promise<{ local
                     {/* Row 2: stats */}
                     <div className="flex items-center gap-4 text-sm mb-3 flex-wrap">
                       <span className="font-mono font-semibold text-gray-200 print:text-black">
-                        {outbreak.cases.toLocaleString(locale)}
+                        {outbreak.cases.toLocaleString(locale === "ar" ? "ar-SA" : locale)}
                         <span className="font-normal text-gray-500 print:text-gray-600 ml-1">{c.cases}</span>
                       </span>
                       {outbreak.deaths > 0 && (
                         <span className="text-gray-400 print:text-gray-600">
-                          {outbreak.deaths.toLocaleString(locale)}
+                          {outbreak.deaths.toLocaleString(locale === "ar" ? "ar-SA" : locale)}
                           <span className="ml-1">{c.deaths}</span>
                         </span>
                       )}

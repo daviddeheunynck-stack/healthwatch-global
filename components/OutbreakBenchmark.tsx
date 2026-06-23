@@ -74,6 +74,7 @@ interface Props {
 
 export default function OutbreakBenchmark({ outbreakId, currentCases, locale }: Props) {
   const c = COPY[locale] ?? COPY.en;
+  const numLocale = locale === "ar" ? "ar-SA" : locale;
   const [data,    setData]    = useState<BenchmarkData | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -134,7 +135,7 @@ export default function OutbreakBenchmark({ outbreakId, currentCases, locale }: 
             />
           </div>
           <span className="text-[10px] text-gray-300 w-16 text-right shrink-0">
-            {data.current_cases.toLocaleString(locale)}
+            {data.current_cases.toLocaleString(numLocale)}
           </span>
         </div>
         {/* Median bar */}
@@ -147,7 +148,7 @@ export default function OutbreakBenchmark({ outbreakId, currentCases, locale }: 
             />
           </div>
           <span className="text-[10px] text-gray-500 w-16 text-right shrink-0">
-            {data.historical_median_cases.toLocaleString(locale)}
+            {data.historical_median_cases.toLocaleString(numLocale)}
           </span>
         </div>
       </div>
