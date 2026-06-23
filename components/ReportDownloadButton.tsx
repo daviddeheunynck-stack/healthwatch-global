@@ -21,6 +21,11 @@ interface ReportData {
   }>;
 }
 
+const DOWNLOAD_ERROR: Record<string, string> = {
+  fr: "Échec du téléchargement", en: "Download failed", es: "Error al descargar",
+  ar: "فشل التنزيل", id: "Gagal mengunduh",
+};
+
 interface Props {
   data: ReportData;
   label: string;
@@ -75,7 +80,7 @@ export default function ReportDownloadButton({
       setTimeout(() => URL.revokeObjectURL(url), 10_000);
       track("pdf_download", { region: data.region, locale });
     } catch {
-      setError("Download failed");
+      setError(DOWNLOAD_ERROR[locale] ?? DOWNLOAD_ERROR.en);
     } finally {
       setLoading(false);
     }

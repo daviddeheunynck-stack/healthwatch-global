@@ -15,14 +15,16 @@ interface TravelResult {
 
 const COPY: Record<string, {
   title: string; placeholder: string; check: string; checking: string;
-  noOutbreaks: string; outbreaks: string; asOf: string;
+  noOutbreaks: string; outbreaks: string; asOf: string; networkError: string;
 }> = {
-  fr: { title: "Risque voyage", placeholder: "Pays (ex: India)", check: "Évaluer", checking: "Analyse…", noOutbreaks: "Aucun foyer actif", outbreaks: "foyer(s) actif(s)", asOf: "au" },
-  en: { title: "Travel risk", placeholder: "Country (e.g. India)", check: "Check", checking: "Checking…", noOutbreaks: "No active outbreaks", outbreaks: "active outbreak(s)", asOf: "as of" },
-  es: { title: "Riesgo de viaje", placeholder: "País (ej: India)", check: "Evaluar", checking: "Evaluando…", noOutbreaks: "Sin brotes activos", outbreaks: "brote(s) activo(s)", asOf: "al" },
-  ar: { title: "مخاطر السفر", placeholder: "الدولة (مثال: India)", check: "تحقق", checking: "جارٍ التحليل…", noOutbreaks: "لا تفشيات نشطة", outbreaks: "تفشٍّ نشط", asOf: "بتاريخ" },
-  id: { title: "Risiko perjalanan", placeholder: "Negara (mis: India)", check: "Periksa", checking: "Memeriksa…", noOutbreaks: "Tidak ada wabah aktif", outbreaks: "wabah aktif", asOf: "per" },
+  fr: { title: "Risque voyage", placeholder: "Pays (ex: India)", check: "Évaluer", checking: "Analyse…", noOutbreaks: "Aucun foyer actif", outbreaks: "foyer(s) actif(s)", asOf: "au", networkError: "Erreur réseau" },
+  en: { title: "Travel risk", placeholder: "Country (e.g. India)", check: "Check", checking: "Checking…", noOutbreaks: "No active outbreaks", outbreaks: "active outbreak(s)", asOf: "as of", networkError: "Network error" },
+  es: { title: "Riesgo de viaje", placeholder: "País (ej: India)", check: "Evaluar", checking: "Evaluando…", noOutbreaks: "Sin brotes activos", outbreaks: "brote(s) activo(s)", asOf: "al", networkError: "Error de red" },
+  ar: { title: "مخاطر السفر", placeholder: "الدولة (مثال: India)", check: "تحقق", checking: "جارٍ التحليل…", noOutbreaks: "لا تفشيات نشطة", outbreaks: "تفشٍّ نشط", asOf: "بتاريخ", networkError: "خطأ في الشبكة" },
+  id: { title: "Risiko perjalanan", placeholder: "Negara (mis: India)", check: "Periksa", checking: "Memeriksa…", noOutbreaks: "Tidak ada wabah aktif", outbreaks: "wabah aktif", asOf: "per", networkError: "Kesalahan jaringan" },
 };
+
+const LOCALE_TAG: Record<string, string> = { fr: "fr-FR", es: "es-ES", ar: "ar-SA", id: "id-ID", en: "en-GB" };
 
 const RISK_STYLE: Record<Risk, { border: string; text: string; icon: typeof CheckCircle; label: Record<string, string> }> = {
   none:     { border: "border-green-700/30",  text: "text-green-400",  icon: CheckCircle, label: { en: "No risk", fr: "Aucun risque", es: "Sin riesgo", ar: "بلا خطر", id: "Tidak berisiko" } },
@@ -50,7 +52,7 @@ export default function TravelRiskWidget({ locale }: { locale: string }) {
       const data = await res.json() as TravelResult & { error?: string };
       if (data.error) { setError(data.error); return; }
       setResult(data);
-    } catch { setError("Network error"); } finally { setLoading(false); }
+    } catch { setError(c.networkError); } finally { setLoading(false); }
   }
 
   const rs = result ? RISK_STYLE[result.risk] : null;
@@ -111,7 +113,7 @@ export default function TravelRiskWidget({ locale }: { locale: string }) {
             </div>
           )}
 
-          <p className="text-[10px] text-gray-600">{c.asOf} {new Date(result.checked_at).toLocaleString(locale === "fr" ? "fr-FR" : locale === "es" ? "es-ES" : "en-GB", { dateStyle: "short", timeStyle: "short" })}</p>
+          <p className="text-[10px] text-gray-600">{c.asOf} {new Date(result.checked_at).toLocaleString(LOCALE_TAG[locale] ?? "en-GB", { dateStyle: "short", timeStyle: "short" })}</p>
         </div>
       )}
     </div>
