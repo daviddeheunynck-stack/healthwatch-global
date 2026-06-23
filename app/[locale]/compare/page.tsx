@@ -181,7 +181,8 @@ export default function ComparePage() {
       {oA && oB && (
         <div className="space-y-4">
           <div className="grid grid-cols-3 gap-4">
-            <div className="bg-blue-900/20 border border-blue-700/30 rounded-2xl p-4 space-y-2">
+            <div className="relative bg-blue-900/20 border border-blue-700/30 rounded-2xl p-4 space-y-2 hover:border-blue-500/50 transition-colors">
+              <a href={`/${locale}/outbreak/${oA.id}`} className="absolute inset-0 rounded-2xl" aria-label={getLocalizedDisease(oA, locale) ?? ""} />
               <RiskBadge level={oA.risk_level} />
               <h3 className="text-white font-bold text-lg leading-tight">{getLocalizedDisease(oA, locale)}</h3>
               <p className="text-gray-400 text-sm">📍 {getLocalizedCountry(oA, locale)}</p>
@@ -192,7 +193,8 @@ export default function ComparePage() {
                 <ArrowLeftRight className="w-4 h-4 text-gray-500" />
               </div>
             </div>
-            <div className="bg-amber-900/20 border border-amber-700/30 rounded-2xl p-4 space-y-2">
+            <div className="relative bg-amber-900/20 border border-amber-700/30 rounded-2xl p-4 space-y-2 hover:border-amber-500/50 transition-colors">
+              <a href={`/${locale}/outbreak/${oB.id}`} className="absolute inset-0 rounded-2xl" aria-label={getLocalizedDisease(oB, locale) ?? ""} />
               <RiskBadge level={oB.risk_level} />
               <h3 className="text-white font-bold text-lg leading-tight">{getLocalizedDisease(oB, locale)}</h3>
               <p className="text-gray-400 text-sm">📍 {getLocalizedCountry(oB, locale)}</p>
