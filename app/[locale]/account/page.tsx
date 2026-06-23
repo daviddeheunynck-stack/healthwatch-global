@@ -617,7 +617,7 @@ export default async function AccountPage({
       <PushNotificationToggle locale={locale} />
 
       {/* Regional alerts */}
-      <div className="bg-gray-900 border border-gray-800 rounded-2xl p-6 space-y-4">
+      <div id="regional-alerts" className="bg-gray-900 border border-gray-800 rounded-2xl p-6 space-y-4">
         <div>
           <h2 className="text-sm font-semibold text-gray-400 uppercase tracking-wide">{al.title}</h2>
           <p className="text-sm text-gray-500 mt-1">{al.desc}</p>

@@ -189,7 +189,7 @@ export default function AlertsPage() {
             </div>
           </div>
           <Link
-            href={`/${locale}/account`}
+            href={`/${locale}/account#regional-alerts`}
             className="shrink-0 text-xs font-semibold text-green-400 hover:text-green-300 transition-colors whitespace-nowrap"
           >
             {pal.btn}
