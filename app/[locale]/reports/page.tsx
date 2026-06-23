@@ -228,10 +228,10 @@ async function ReportsContent() {
                 <div className="flex justify-between text-gray-400">
                   <span>{t("totalCases")}</span>
                   {isPaid ? (
-                    <span className="text-white font-medium">{totalCases.toLocaleString()}</span>
+                    <span className="text-white font-medium">{totalCases.toLocaleString(locale)}</span>
                   ) : (
                     <span className="blur-sm select-none text-gray-500 font-medium">
-                      {totalCases.toLocaleString()}
+                      {totalCases.toLocaleString(locale)}
                     </span>
                   )}
                 </div>
