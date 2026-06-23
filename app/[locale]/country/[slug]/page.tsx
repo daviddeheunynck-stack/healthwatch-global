@@ -255,13 +255,17 @@ export default async function CountryPage({
   const uniqueDiseases = new Set(outbreaks.map((o) => o.disease_en ?? o.disease)).size;
 
   // Unique diseases for chips
-  const diseaseChips = new Map<string, { name_en: string; hasActive: boolean }>();
+  const diseaseChips = new Map<string, { name_en: string; displayName: string; hasActive: boolean }>();
   for (const o of outbreaks) {
     const key = o.disease_en ?? o.disease;
     if (!key) continue;
     const existing = diseaseChips.get(key);
     if (existing) { if (o.active) existing.hasActive = true; }
-    else diseaseChips.set(key, { name_en: key, hasActive: o.active ?? false });
+    else diseaseChips.set(key, {
+      name_en: key,
+      displayName: getLocalizedDisease(o, l) ?? key,
+      hasActive: o.active ?? false,
+    });
   }
 
   // Get a sample outbreak's country name in the current locale
@@ -444,7 +448,7 @@ export default async function CountryPage({
           <div className="flex flex-wrap gap-2">
             {[...diseaseChips.values()]
               .sort((a, b) => (b.hasActive ? 1 : 0) - (a.hasActive ? 1 : 0) || a.name_en.localeCompare(b.name_en))
-              .map(({ name_en, hasActive }) => (
+              .map(({ name_en, displayName, hasActive }) => (
                 <Link
                   key={name_en}
                   href={`/${l}/disease/${diseaseToSlug(name_en)}`}
@@ -455,7 +459,7 @@ export default async function CountryPage({
                   }`}
                 >
                   {hasActive && <span className="w-1.5 h-1.5 rounded-full bg-purple-400 animate-pulse shrink-0" />}
-                  {name_en}
+                  {displayName}
                 </Link>
               ))}
           </div>
