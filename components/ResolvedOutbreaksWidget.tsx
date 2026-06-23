@@ -16,41 +16,46 @@ interface Resolved {
 
 const COPY: Record<string, {
   title: string; subtitle: string;
-  noData: string; daysAgo: string; planError: string;
+  noData: string; today: string; daysAgo: (d: number) => string; planError: string;
 }> = {
   fr: {
     title: "Foyers récemment résolus",
     subtitle: "Signal de levée — foyers inactifs des 30 derniers jours.",
     noData: "Aucun foyer résolu récemment.",
-    daysAgo: "il y a",
+    today: "Aujourd'hui",
+    daysAgo: (d) => `il y a ${d}j`,
     planError: "Requiert un plan Pro ou supérieur.",
   },
   en: {
     title: "Recently resolved outbreaks",
     subtitle: "Clearance signal — outbreaks closed in the last 30 days.",
     noData: "No recently resolved outbreaks.",
-    daysAgo: "ago",
+    today: "Today",
+    daysAgo: (d) => `${d}d ago`,
     planError: "Requires a Pro plan or higher.",
   },
   es: {
     title: "Brotes resueltos recientemente",
     subtitle: "Señal de despeje — brotes cerrados en los últimos 30 días.",
     noData: "No hay brotes resueltos recientemente.",
-    daysAgo: "hace",
+    today: "Hoy",
+    daysAgo: (d) => `hace ${d}d`,
     planError: "Requiere un plan Pro o superior.",
   },
   ar: {
     title: "التفشيات المحلولة مؤخراً",
     subtitle: "إشارة التخليص — التفشيات المغلقة في آخر 30 يوماً.",
     noData: "لا توجد تفشيات محلولة مؤخراً.",
-    daysAgo: "منذ",
+    today: "اليوم",
+    daysAgo: (d) => `منذ ${d}ي`,
     planError: "يتطلب خطة Pro أو أعلى.",
   },
   id: {
     title: "Wabah yang baru selesai",
     subtitle: "Sinyal pembebasan — wabah yang ditutup dalam 30 hari terakhir.",
     noData: "Tidak ada wabah yang baru selesai.",
-    daysAgo: "lalu",
+    today: "Hari ini",
+    daysAgo: (d) => `${d}h lalu`,
     planError: "Memerlukan paket Pro atau lebih tinggi.",
   },
 };
@@ -61,10 +66,9 @@ const RISK_STYLE: Record<string, string> = {
   low:    "text-green-400",
 };
 
-function daysAgoStr(iso: string, label: string): string {
+function daysAgoStr(iso: string, c: { today: string; daysAgo: (d: number) => string }): string {
   const d = Math.round((Date.now() - new Date(iso).getTime()) / 86_400_000);
-  if (d === 0) return "today";
-  return `${d}d ${label}`;
+  return d === 0 ? c.today : c.daysAgo(d);
 }
 
 export default function ResolvedOutbreaksWidget({ locale }: { locale: string }) {
@@ -140,7 +144,7 @@ export default function ResolvedOutbreaksWidget({ locale }: { locale: string }) 
                     </span>
                   </div>
                   <span className="text-[9px] text-gray-700 shrink-0 whitespace-nowrap">
-                    {r.updated_at ? daysAgoStr(r.updated_at, c.daysAgo) : ""}
+                    {r.updated_at ? daysAgoStr(r.updated_at, c) : ""}
                   </span>
                 </div>
               ))}
