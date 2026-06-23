@@ -39,7 +39,7 @@ const LABELS: Record<Locale, {
   activeSection: string; historySection: string; noHistory: string;
   risk: Record<string, string>;
   ctaTitle: string; ctaBody: string; ctaBtn: string;
-  back: string; cases_unit: string; deaths_unit: string; noData: string;
+  back: string; regionsHub: string; cases_unit: string; deaths_unit: string; noData: string;
 }> = {
   fr: {
     active: (n) => n === 1 ? "1 foyer actif" : `${n} foyers actifs`,
@@ -50,7 +50,7 @@ const LABELS: Record<Locale, {
     risk: { high: "RISQUE ÉLEVÉ", medium: "RISQUE MODÉRÉ", low: "RISQUE FAIBLE" },
     ctaTitle: "Alertes en temps réel pour cette région",
     ctaBody: "Soyez alerté dès qu'un nouveau foyer est détecté.",
-    ctaBtn: "Commencer gratuitement →", back: "← Tableau de bord",
+    ctaBtn: "Commencer gratuitement →", back: "← Tableau de bord", regionsHub: "Régions",
     cases_unit: "cas", deaths_unit: "décès", noData: "N/D",
   },
   en: {
@@ -62,7 +62,7 @@ const LABELS: Record<Locale, {
     risk: { high: "HIGH RISK", medium: "MODERATE RISK", low: "LOW RISK" },
     ctaTitle: "Real-time alerts for this region",
     ctaBody: "Be notified as soon as a new outbreak is detected.",
-    ctaBtn: "Start for free →", back: "← Dashboard",
+    ctaBtn: "Start for free →", back: "← Dashboard", regionsHub: "Regions",
     cases_unit: "cases", deaths_unit: "deaths", noData: "N/A",
   },
   es: {
@@ -74,7 +74,7 @@ const LABELS: Record<Locale, {
     risk: { high: "RIESGO ALTO", medium: "RIESGO MODERADO", low: "RIESGO BAJO" },
     ctaTitle: "Alertas en tiempo real para esta región",
     ctaBody: "Sé notificado en cuanto se detecte un nuevo brote.",
-    ctaBtn: "Empezar gratis →", back: "← Panel",
+    ctaBtn: "Empezar gratis →", back: "← Panel", regionsHub: "Regiones",
     cases_unit: "casos", deaths_unit: "fallecidos", noData: "N/D",
   },
   ar: {
@@ -86,7 +86,7 @@ const LABELS: Record<Locale, {
     risk: { high: "خطر مرتفع", medium: "خطر متوسط", low: "خطر منخفض" },
     ctaTitle: "تنبيهات فورية لهذه المنطقة",
     ctaBody: "احصل على إشعار فور اكتشاف تفشٍّ جديد.",
-    ctaBtn: "ابدأ مجاناً ←", back: "→ لوحة التحكم",
+    ctaBtn: "ابدأ مجاناً ←", back: "→ لوحة التحكم", regionsHub: "المناطق",
     cases_unit: "حالة", deaths_unit: "وفاة", noData: "غ/م",
   },
   id: {
@@ -98,7 +98,7 @@ const LABELS: Record<Locale, {
     risk: { high: "RISIKO TINGGI", medium: "RISIKO SEDANG", low: "RISIKO RENDAH" },
     ctaTitle: "Peringatan real-time untuk wilayah ini",
     ctaBody: "Dapatkan notifikasi segera setelah wabah baru terdeteksi.",
-    ctaBtn: "Mulai gratis →", back: "← Dasbor",
+    ctaBtn: "Mulai gratis →", back: "← Dasbor", regionsHub: "Wilayah",
     cases_unit: "kasus", deaths_unit: "kematian", noData: "T/S",
   },
 };
@@ -240,9 +240,13 @@ export default async function RegionPage({
     <div className="max-w-4xl mx-auto px-4 py-8 space-y-10" dir={isRtl ? "rtl" : undefined}>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
-      <Link href={`/${l}`} className="text-sm text-gray-500 hover:text-gray-300 transition-colors">
-        {lb.back}
-      </Link>
+      <nav className="flex items-center gap-2 text-sm text-gray-500">
+        <Link href={`/${l}`} className="hover:text-gray-300 transition-colors">{lb.back}</Link>
+        <span className="text-gray-700">·</span>
+        <Link href={`/${l}/regions`} className="hover:text-gray-300 transition-colors">{lb.regionsHub}</Link>
+        <span className="text-gray-700">·</span>
+        <span className="text-gray-400">{regionName}</span>
+      </nav>
 
       {/* Header */}
       <div className="space-y-3">
