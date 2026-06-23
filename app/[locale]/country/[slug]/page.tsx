@@ -155,6 +155,7 @@ async function getCountryOutbreaks(countryEn: string): Promise<Outbreak[]> {
 // ── Static params ─────────────────────────────────────────────────────────────
 
 export async function generateStaticParams() {
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL) return [];
   const countries = await getAllCountryEn();
   const params: { locale: string; slug: string }[] = [];
   for (const c of countries) {

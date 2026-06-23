@@ -9,9 +9,12 @@ export const dynamic = "force-dynamic";
 const BOM   = String.fromCharCode(65279);
 const clean = (v: string | undefined) => (v || "").replace(new RegExp("^" + BOM), "").trim();
 
-const stripe = new Stripe(clean(process.env.STRIPE_SECRET_KEY), {
-  apiVersion: "2026-04-22.dahlia",
-});
+let _stripe: Stripe | null = null;
+function getStripe() {
+  return (_stripe ??= new Stripe(clean(process.env.STRIPE_SECRET_KEY), {
+    apiVersion: "2026-04-22.dahlia",
+  }));
+}
 
 export async function POST(req: NextRequest) {
   const supabase = await createClient();
@@ -48,7 +51,7 @@ export async function POST(req: NextRequest) {
   if (profile.stripe_subscription_id) {
     let sub: Stripe.Subscription;
     try {
-      sub = await stripe.subscriptions.retrieve(profile.stripe_subscription_id);
+      sub = await getStripe().subscriptions.retrieve(profile.stripe_subscription_id);
     } catch {
       sub = { status: "canceled" } as Stripe.Subscription;
     }
@@ -58,7 +61,7 @@ export async function POST(req: NextRequest) {
     }
 
     if (sub.status === "trialing") {
-      await stripe.subscriptions.update(profile.stripe_subscription_id, { trial_end: trialEndUnix });
+      await getStripe().subscriptions.update(profile.stripe_subscription_id, { trial_end: trialEndUnix });
       await admin.from("profiles").update({ plan: "pro", trial_ends_at: newEndsAt }).eq("id", profile.id);
       return NextResponse.json({ ok: true, trial_ends_at: newEndsAt, via: "stripe" });
     }

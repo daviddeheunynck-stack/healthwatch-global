@@ -73,10 +73,13 @@ async function sendTrialEndingEmail(
   await sendTransactionalEmail(to, subject, html, "trial_ending");
 }
 
-const stripe = new Stripe(clean(process.env.STRIPE_SECRET_KEY), {
-  apiVersion: "2026-04-22.dahlia",
-  httpClient: Stripe.createFetchHttpClient(),
-});
+let _stripe: Stripe | null = null;
+function getStripe() {
+  return (_stripe ??= new Stripe(clean(process.env.STRIPE_SECRET_KEY), {
+    apiVersion: "2026-04-22.dahlia",
+    httpClient: Stripe.createFetchHttpClient(),
+  }));
+}
 
 function getSupabase() {
   return createClient(
@@ -185,7 +188,7 @@ export async function POST(req: NextRequest) {
 
   let event: Stripe.Event;
   try {
-    event = stripe.webhooks.constructEvent(body, sig, webhookSecret);
+    event = getStripe().webhooks.constructEvent(body, sig, webhookSecret);
   } catch (err: unknown) {
     console.error("[webhook] Signature verification failed:", errorMessage(err));
     return NextResponse.json({ error: "Invalid signature" }, { status: 400 });
@@ -207,7 +210,7 @@ export async function POST(req: NextRequest) {
           let trialEndsAt: string | null = null;
           if (session.subscription) {
             try {
-              const sub = await stripe.subscriptions.retrieve(session.subscription as string);
+              const sub = await getStripe().subscriptions.retrieve(session.subscription as string);
               if (sub.trial_end) {
                 trialEndsAt = new Date(sub.trial_end * 1000).toISOString();
               }
