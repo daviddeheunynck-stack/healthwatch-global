@@ -90,6 +90,7 @@ export async function GET(req: NextRequest) {
   const feedTitle = FEED_TITLE[locale] ?? FEED_TITLE.en;
   const feedDesc  = FEED_DESC[locale] ?? FEED_DESC.en;
 
+  const numLocale = locale === "ar" ? "ar-SA" : locale;
   const items = outbreaks.map((o) => {
     const diseaseName = (locale === "ar" && o.disease_ar) ? o.disease_ar : (o.disease_en ?? o.disease ?? "Unknown");
     const countryName = (locale === "ar" && o.country_ar) ? o.country_ar : (o.country_en ?? o.country ?? "");
@@ -101,8 +102,8 @@ export async function GET(req: NextRequest) {
 
     const descParts: string[] = [];
     if (risk) descParts.push(risk);
-    if (o.cases)  descParts.push(`Cases: ${o.cases.toLocaleString(locale)}`);
-    if (o.deaths) descParts.push(`Deaths: ${o.deaths.toLocaleString(locale)}${cfr}`);
+    if (o.cases)  descParts.push(`Cases: ${o.cases.toLocaleString(numLocale)}`);
+    if (o.deaths) descParts.push(`Deaths: ${o.deaths.toLocaleString(numLocale)}${cfr}`);
     if (pheicFlag) descParts.push(pheicFlag);
 
     const pubDate = o.date ? new Date(o.date).toUTCString() : now;
