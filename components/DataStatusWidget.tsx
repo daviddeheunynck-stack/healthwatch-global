@@ -89,7 +89,7 @@ export default function DataStatusWidget({ locale }: { locale: string }) {
 
       {checkedAt && (
         <p className="text-[10px] text-gray-700">
-          {c.checked}: {new Date(checkedAt).toLocaleTimeString(locale)}
+          {c.checked}: {new Date(checkedAt).toLocaleTimeString(locale === "ar" ? "ar-SA" : locale)}
         </p>
       )}
     </div>
