@@ -6,14 +6,20 @@ import type { ScorecardCountry } from "@/app/api/country-scorecard/route";
 
 const COPY: Record<string, {
   title: string; outbreaks: string; cases: string; lastUpdate: string;
-  empty: string; refresh: string; pheic: string;
+  empty: string; refresh: string; pheic: string; filter: string;
   sortRisk: string; sortAlpha: string; sortCases: string;
+  risk: Record<string, string>;
 }> = {
-  fr: { title: "Vue par pays", outbreaks: "foyer(s)", cases: "cas", lastUpdate: "mis à jour", empty: "Aucune donnée", refresh: "Rafraîchir", pheic: "USPPI", sortRisk: "Par risque", sortAlpha: "A–Z", sortCases: "Par cas" },
-  en: { title: "Country view",  outbreaks: "outbreak(s)", cases: "cases", lastUpdate: "updated", empty: "No data", refresh: "Refresh", pheic: "PHEIC", sortRisk: "By risk", sortAlpha: "A–Z", sortCases: "By cases" },
-  es: { title: "Vista por país", outbreaks: "brote(s)",   cases: "casos", lastUpdate: "actualizado", empty: "Sin datos", refresh: "Actualizar", pheic: "ESPII", sortRisk: "Por riesgo", sortAlpha: "A–Z", sortCases: "Por casos" },
-  ar: { title: "عرض الدول",    outbreaks: "تفشٍّ",       cases: "حالات", lastUpdate: "آخر تحديث",  empty: "لا بيانات", refresh: "تحديث", pheic: "طوارئ صحية", sortRisk: "حسب الخطر", sortAlpha: "أ–ي", sortCases: "حسب الحالات" },
-  id: { title: "Tampilan negara", outbreaks: "wabah",   cases: "kasus", lastUpdate: "diperbarui", empty: "Tidak ada data", refresh: "Perbarui", pheic: "KKMMD", sortRisk: "Berdasar risiko", sortAlpha: "A–Z", sortCases: "Berdasar kasus" },
+  fr: { title: "Vue par pays", outbreaks: "foyer(s)", cases: "cas", lastUpdate: "mis à jour", empty: "Aucune donnée", refresh: "Rafraîchir", pheic: "USPPI", filter: "Filtrer…", sortRisk: "Par risque", sortAlpha: "A–Z", sortCases: "Par cas",
+    risk: { high: "ÉLEVÉ", medium: "MOYEN", low: "FAIBLE" } },
+  en: { title: "Country view",  outbreaks: "outbreak(s)", cases: "cases", lastUpdate: "updated", empty: "No data", refresh: "Refresh", pheic: "PHEIC", filter: "Filter…", sortRisk: "By risk", sortAlpha: "A–Z", sortCases: "By cases",
+    risk: { high: "HIGH", medium: "MED", low: "LOW" } },
+  es: { title: "Vista por país", outbreaks: "brote(s)", cases: "casos", lastUpdate: "actualizado", empty: "Sin datos", refresh: "Actualizar", pheic: "ESPII", filter: "Filtrar…", sortRisk: "Por riesgo", sortAlpha: "A–Z", sortCases: "Por casos",
+    risk: { high: "ALTO", medium: "MEDIO", low: "BAJO" } },
+  ar: { title: "عرض الدول", outbreaks: "تفشٍّ", cases: "حالات", lastUpdate: "آخر تحديث", empty: "لا بيانات", refresh: "تحديث", pheic: "طوارئ صحية", filter: "تصفية…", sortRisk: "حسب الخطر", sortAlpha: "أ–ي", sortCases: "حسب الحالات",
+    risk: { high: "مرتفع", medium: "متوسط", low: "منخفض" } },
+  id: { title: "Tampilan negara", outbreaks: "wabah", cases: "kasus", lastUpdate: "diperbarui", empty: "Tidak ada data", refresh: "Perbarui", pheic: "KKMMD", filter: "Filter…", sortRisk: "Berdasar risiko", sortAlpha: "A–Z", sortCases: "Berdasar kasus",
+    risk: { high: "TINGGI", medium: "SEDANG", low: "RENDAH" } },
 };
 
 const RISK_BADGE: Record<string, string> = {
@@ -116,7 +122,7 @@ export default function CountryScorecardTab({ locale }: { locale: string }) {
             type="text"
             value={filter}
             onChange={(e) => setFilter(e.target.value)}
-            placeholder={locale === "fr" ? "Filtrer…" : "Filter…"}
+            placeholder={c.filter}
             className="text-xs px-2 py-1 rounded-lg border border-gray-800 bg-gray-900 text-gray-400 placeholder-gray-600 focus:outline-none focus:border-gray-600 w-24"
           />
           <button onClick={load} disabled={loading} className="p-1 text-gray-600 hover:text-gray-300 disabled:opacity-40 transition-colors">
@@ -149,7 +155,7 @@ export default function CountryScorecardTab({ locale }: { locale: string }) {
               {/* Risk + counts + THI */}
               <div className="flex items-center gap-2 flex-wrap">
                 <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded border uppercase ${RISK_BADGE[country.max_risk] ?? RISK_BADGE.low}`}>
-                  {country.max_risk}
+                  {c.risk[country.max_risk] ?? country.max_risk.toUpperCase()}
                 </span>
                 <span className="text-[10px] text-gray-400 tabular-nums">{country.outbreak_count} {c.outbreaks}</span>
                 {country.total_cases > 0 && (
