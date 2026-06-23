@@ -58,6 +58,7 @@ interface Outbreak {
 function buildEmailHtml(outbreaks: Outbreak[], locale: string, date: string): string {
   const rl = RISK_LABEL[locale] ?? RISK_LABEL.en;
   const numLocale = locale === "ar" ? "ar-SA" : locale;
+  const isRtl     = locale === "ar";
   const sitrep_url = `${APP_URL}/${locale}/sitrep`;
 
   const header = {
@@ -94,10 +95,10 @@ function buildEmailHtml(outbreaks: Outbreak[], locale: string, date: string): st
   }).join("");
 
   return `<!DOCTYPE html>
-<html lang="${locale}" ${locale === "ar" ? 'dir="rtl"' : ""}>
+<html lang="${locale}" dir="${isRtl ? "rtl" : "ltr"}">
 <head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/></head>
-<body style="margin:0;padding:0;background:#111827;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:#f9fafb">
-  <div style="max-width:640px;margin:0 auto;padding:32px 16px">
+<body style="margin:0;padding:0;background:#111827;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:#f9fafb;direction:${isRtl ? "rtl" : "ltr"}">
+  <div style="max-width:640px;margin:0 auto;padding:32px 16px;text-align:${isRtl ? "right" : "left"}">
     <div style="margin-bottom:24px">
       <p style="margin:0 0 4px;font-size:11px;color:#6b7280;letter-spacing:0.1em;text-transform:uppercase">HEALTHWATCH GLOBAL</p>
       <h1 style="margin:0 0 4px;font-size:22px;font-weight:700">${header}</h1>

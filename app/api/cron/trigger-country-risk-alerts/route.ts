@@ -58,6 +58,7 @@ export async function GET(req: NextRequest) {
 
     const locale    = localeMap[alert.user_id] ?? "en";
     const numLocale = locale === "ar" ? "ar-SA" : locale;
+    const isRtl     = locale === "ar";
     const top = matches[0];
     const pheic = top.is_pheic ? " [PHEIC]" : "";
     const cfr =
@@ -86,18 +87,23 @@ export async function GET(req: NextRequest) {
     const intro = INTRO[locale] ?? INTRO.en;
     const dashUrl = `https://healthwatch-global.com/${locale}`;
 
+    const moreStr = ({ fr: `+${matches.length - 1} autre(s) foyer(s) dans ce pays`, es: `+${matches.length - 1} brote(s) más en este país`, ar: `+${matches.length - 1} تفشٍّ آخر في هذا البلد`, id: `+${matches.length - 1} wabah lain di negara ini`, en: `+${matches.length - 1} other outbreak(s) in this country` } as Record<string, string>)[locale] ?? `+${matches.length - 1} other outbreak(s) in this country`;
+    const manageStr = ({ fr: "HealthWatch Global · Gérez vos alertes dans le tableau de bord", es: "HealthWatch Global · Gestione sus alertas en el panel", ar: "HealthWatch Global · أدر تنبيهاتك من لوحة المعلومات", id: "HealthWatch Global · Kelola peringatan di dasbor Anda", en: "HealthWatch Global · Manage alerts in your dashboard" } as Record<string, string>)[locale] ?? "HealthWatch Global · Manage alerts in your dashboard";
+
     const html = `
+<div dir="${isRtl ? "rtl" : "ltr"}" style="font-family:sans-serif;max-width:520px;margin:0 auto;direction:${isRtl ? "rtl" : "ltr"};text-align:${isRtl ? "right" : "left"}">
 <p>${intro}</p>
 <ul>
   <li>${lb[0]}: ${top.disease_en}</li>
   <li>${lb[1]}: ${(top.cases ?? 0).toLocaleString(numLocale)}${cfr ? ` · ${cfr}` : ""}</li>
   ${top.is_pheic ? `<li>${lb[2]}</li>` : ""}
   <li>${lb[3]}: ${top.date}</li>
-  ${matches.length > 1 ? `<li>+${matches.length - 1} other outbreak(s) in this country</li>` : ""}
+  ${matches.length > 1 ? `<li>${moreStr}</li>` : ""}
 </ul>
 <p><a href="${dashUrl}">${lb[4]}</a></p>
 <hr/>
-<p style="color:#666;font-size:12px">HealthWatch Global · Manage alerts in your dashboard</p>`;
+<p style="color:#666;font-size:12px">${manageStr}</p>
+</div>`;
 
     try {
       await resend.emails.send({
