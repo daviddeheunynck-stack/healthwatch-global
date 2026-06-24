@@ -24,6 +24,10 @@ const CRON_SECRET      = clean(process.env.CRON_SECRET);
 const RESEND_KEY       = clean(process.env.RESEND_API_KEY);
 const APP_URL          = clean(process.env.NEXT_PUBLIC_APP_URL) || "https://healthwatch-global.com";
 
+function esc(s: string): string {
+  return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+}
+
 const COPY: Record<string, {
   emailTitle:  string;
   currentCases: string;
@@ -180,7 +184,7 @@ export async function GET(req: NextRequest) {
   <p style="margin:0 0 16px;font-size:14px;color:#94a3b8">HealthWatch Global</p>
   <hr style="border:none;border-top:1px solid #334155;margin:0 0 16px"/>
   <p style="margin:0 0 8px;font-size:15px">
-    <strong style="color:#fff">${disease}</strong> — ${country}
+    <strong style="color:#fff">${esc(disease)}</strong> — ${esc(country)}
   </p>
   <p style="margin:0 0 4px;font-size:14px;color:#cbd5e1">
     ${lc.currentCases} <strong style="color:#f87171">${casesStr}</strong>
