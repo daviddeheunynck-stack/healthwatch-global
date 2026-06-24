@@ -57,6 +57,7 @@ const COPY: Record<Locale, {
   cfrFormula: string;
   cfrWarning: string;
   riskTitle: string;
+  riskDisclaimer: string;
   riskLevels: { label: string; labelClass: string; criteria: string }[];
   limitsTitle: string;
   limits: string[];
@@ -117,6 +118,7 @@ const COPY: Record<Locale, {
     cfrFormula: "CFR = Deaths ÷ Confirmed cases × 100",
     cfrWarning: "This is the crude CFR as reported — not age-standardized, adjusted for underreporting, or corrected for reporting lag. Early-outbreak CFR is inherently unstable. Use with appropriate epidemiological caution.",
     riskTitle: "Risk level assignment",
+    riskDisclaimer: "Risk levels are assigned algorithmically from published WHO IHR criteria (Art. 6, 9, 12) — not by editorial judgment. HIGH means an outbreak matches WHO's published NFP notification threshold. HealthWatch Global does not conduct independent epidemiological risk assessment. All clinical and policy decisions must rely on primary WHO/ECDC sources and qualified professionals.",
     riskLevels: [
       { label: "HIGH RISK", labelClass: "text-red-400 bg-red-500/10 border-red-500/30", criteria: "WHO DON issued, PHEIC declared, CFR > 5%, or novel pathogen / first human cases. High-consequence pathogens (Ebola, Marburg, SARS) are always HIGH." },
       { label: "MODERATE RISK", labelClass: "text-yellow-400 bg-yellow-500/10 border-yellow-500/30", criteria: "Confirmed official source, regional spread documented, CFR 1–5%, or significant case counts in endemic disease (cholera, dengue, mpox)." },
@@ -195,6 +197,7 @@ const COPY: Record<Locale, {
     cfrFormula: "CFR = Décès ÷ Cas confirmés × 100",
     cfrWarning: "Il s'agit du CFR brut tel que rapporté — non standardisé par âge, non ajusté pour la sous-déclaration, ni corrigé pour le délai de signalement. Le CFR en début d'épidémie est intrinsèquement instable. À utiliser avec la prudence épidémiologique appropriée.",
     riskTitle: "Attribution du niveau de risque",
+    riskDisclaimer: "Les niveaux de risque sont attribués algorithmiquement à partir des critères RSI publiés par l'OMS (Art. 6, 9, 12) — sans jugement éditorial. ÉLEVÉ signifie qu'un foyer correspond au seuil de notification des Points focaux nationaux publié par l'OMS. HealthWatch Global ne conduit aucune évaluation épidémiologique indépendante. Toute décision clinique ou de santé publique doit s'appuyer sur les sources primaires OMS/ECDC et des professionnels qualifiés.",
     riskLevels: [
       { label: "RISQUE ÉLEVÉ", labelClass: "text-red-400 bg-red-500/10 border-red-500/30", criteria: "DON OMS publié, USPPI déclarée, CFR > 5 %, ou pathogène nouveau / premiers cas humains. Les pathogènes à haute conséquence (Ebola, Marburg, SRAS) sont toujours ÉLEVÉ." },
       { label: "RISQUE MODÉRÉ", labelClass: "text-yellow-400 bg-yellow-500/10 border-yellow-500/30", criteria: "Source officielle confirmée, diffusion régionale documentée, CFR 1–5 %, ou nombre de cas significatif pour une maladie endémique (choléra, dengue, mpox)." },
@@ -258,6 +261,7 @@ const COPY: Record<Locale, {
     cfrFormula: "CFR = Muertes ÷ Casos confirmados × 100",
     cfrWarning: "Este es el CFR bruto reportado — no estandarizado por edad ni ajustado por subnotificación. El CFR al inicio de un brote es intrínsecamente inestable.",
     riskTitle: "Asignación del nivel de riesgo",
+    riskDisclaimer: "Los niveles de riesgo se asignan algorítmicamente a partir de los criterios del RSI publicados por la OMS (Art. 6, 9, 12) — sin juicio editorial. ALTO significa que un brote cumple el umbral de notificación para Puntos Focales Nacionales publicado por la OMS. HealthWatch Global no realiza evaluación epidemiológica independiente. Toda decisión clínica o de salud pública debe basarse en fuentes primarias OMS/ECDC y profesionales cualificados.",
     riskLevels: [
       { label: "RIESGO ALTO", labelClass: "text-red-400 bg-red-500/10 border-red-500/30", criteria: "DON OMS publicado, PHEIC declarada, CFR > 5%, o patógeno nuevo. Ébola, Marburg, SRAS siempre son ALTO." },
       { label: "RIESGO MODERADO", labelClass: "text-yellow-400 bg-yellow-500/10 border-yellow-500/30", criteria: "Fuente oficial confirmada, dispersión regional, CFR 1–5%, o casos significativos en enfermedad endémica." },
@@ -320,6 +324,7 @@ const COPY: Record<Locale, {
     cfrFormula: "CFR = الوفيات ÷ الحالات المؤكدة × 100",
     cfrWarning: "هذا هو CFR الخام كما أُبلغ عنه — غير معيّر بالعمر وغير مصحَّح للتقصير في الإبلاغ. CFR في بداية التفشي غير مستقر بطبيعته.",
     riskTitle: "تحديد مستوى الخطر",
+    riskDisclaimer: "تُحدَّد مستويات الخطر خوارزمياً استناداً إلى معايير اللوائح الصحية الدولية المنشورة من قِبل منظمة الصحة العالمية (المواد 6 و9 و12) — دون اجتهاد تحريري. ÉLEVÉ يعني أن التفشي يستوفي عتبة إخطار نقاط الاتصال الوطنية المنشورة من المنظمة. لا تُجري HealthWatch Global أي تقييم وبائي مستقل. يجب أن تستند جميع القرارات السريرية وقرارات الصحة العامة إلى المصادر الأولية لمنظمة الصحة العالمية/ECDC والمختصين المؤهلين.",
     riskLevels: [
       { label: "خطر مرتفع", labelClass: "text-red-400 bg-red-500/10 border-red-500/30", criteria: "صدر WHO DON، أو أُعلنت حالة PHEIC، أو CFR > 5%، أو مسبب وبائي جديد. إيبولا وماربورغ وسارس دائماً مرتفع." },
       { label: "خطر متوسط", labelClass: "text-yellow-400 bg-yellow-500/10 border-yellow-500/30", criteria: "مصدر رسمي مؤكد، انتشار إقليمي، CFR بين 1-5%، أو حالات كبيرة في مرض متوطن." },
@@ -382,6 +387,7 @@ const COPY: Record<Locale, {
     cfrFormula: "CFR = Kematian ÷ Kasus terkonfirmasi × 100",
     cfrWarning: "Ini adalah CFR kasar yang dilaporkan — tidak distandarisasi berdasarkan usia atau disesuaikan untuk pelaporan yang kurang. CFR awal wabah secara inheren tidak stabil.",
     riskTitle: "Penentuan tingkat risiko",
+    riskDisclaimer: "Tingkat risiko ditetapkan secara algoritmis berdasarkan kriteria IHR yang diterbitkan WHO (Psl. 6, 9, 12) — bukan penilaian editorial. TINGGI berarti suatu wabah memenuhi ambang notifikasi Focal Point Nasional yang diterbitkan WHO. HealthWatch Global tidak melakukan penilaian risiko epidemiologis independen. Semua keputusan klinis dan kebijakan kesehatan harus mengandalkan sumber primer WHO/ECDC dan profesional terlatih.",
     riskLevels: [
       { label: "RISIKO TINGGI", labelClass: "text-red-400 bg-red-500/10 border-red-500/30", criteria: "WHO DON diterbitkan, PHEIC dinyatakan, CFR > 5%, atau patogen baru. Ebola, Marburg, SARS selalu TINGGI." },
       { label: "RISIKO SEDANG", labelClass: "text-yellow-400 bg-yellow-500/10 border-yellow-500/30", criteria: "Sumber resmi terkonfirmasi, penyebaran regional, CFR 1–5%, atau kasus signifikan pada penyakit endemik." },
@@ -572,6 +578,10 @@ export default async function MethodologyPage({
           <ShieldCheck className="w-5 h-5 inline mr-2 text-red-400 -mt-0.5" />
           {c.riskTitle}
         </h2>
+        <div className="flex gap-3 bg-amber-500/8 border border-amber-500/25 rounded-xl p-4 text-sm text-amber-300/80 leading-relaxed">
+          <Info className="w-4 h-4 shrink-0 mt-0.5 text-amber-400" />
+          {c.riskDisclaimer}
+        </div>
         <div className="space-y-3">
           {c.riskLevels.map((r) => (
             <div key={r.label} className="flex gap-4 items-start bg-gray-900/50 border border-gray-800 rounded-xl p-4">
