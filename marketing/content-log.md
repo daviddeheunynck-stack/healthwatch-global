@@ -458,6 +458,49 @@ cadre.
 
 ---
 
+---
+
+## Templates — Réponses concurrents PH (Axe 13)
+
+*À copier-coller directement depuis ce fichier dans les commentaires PH.*
+
+### "How is this different from HealthMap?"
+```
+HealthMap is great for early signal detection from news and social media —
+it's built for researchers who want to catch whispers before official reports.
+
+We solve a different problem: the public health team that already has the
+official WHO/ECDC/PAHO alerts in 4 separate tabs and needs them unified,
+risk-scored, and ready to brief their director in 2 minutes.
+
+Different workflow, different user.
+```
+
+### "BlueDot / Metabiota already does this"
+```
+BlueDot is built for governments and airlines willing to pay $50K+/year
+for predictive AI. Genuinely impressive — and genuinely inaccessible to
+90% of surveillance teams.
+
+We're for the Institut Pasteur regional office, the NGO epidemiologist,
+the ministry focal point who has a real-time monitoring need and a
+€250/month budget. That market doesn't have a tool right now.
+```
+
+### "WHO already has Disease Outbreak News / ECDC has their Atlas"
+```
+WHO DON and ECDC Atlas are excellent — we aggregate directly from them.
+
+The gap: WHO DON is a publication, not a dashboard. You can't filter by
+region, sort by risk, set alerts, or see all 4 sources side by side.
+Our users open 4 tabs every morning and manually cross-reference.
+We close those 4 tabs. No GPHIN required.
+```
+
+**Règle** : ne jamais critiquer le concurrent directement — positionner par le workflow, pas par les features.
+
+---
+
 ### Screenshots PH — recommandations
 
 1. **Screenshot 1** — Dashboard avec filtre Africa actif + alerte Ebola visible (badge HIGH) — montre le produit en action, pas l'interface vide
