@@ -274,6 +274,8 @@ Le contexte est le protocole.
 **Maker comment :** voir `ph-launch-content.md`
 **Assets complets :** voir `producthunt.md`
 
+**Reddit :** abandonné (décision 23 juin 2026)
+
 ---
 
 ## Emails institutionnels
@@ -316,3 +318,45 @@ Court DM LinkedIn à envoyer à ~20-40 contacts le 25 juin matin :
 > Building a national registry for Indonesia's MoH is one of the harder data problems in the region — upstream disease reporting varies dramatically by province. We built HealthWatch Global's Indonesia coverage around that fragmentation. If it's useful background for your consultant's scope, happy to share what we mapped.
 
 **Suivi :** attendre réponse. Si quelqu'un répond, préparer un angle concret sur les lacunes de reporting provinciaux en Indonésie.
+
+---
+
+## Product Hunt — Launch June 25th, 2026
+
+### Tagline PH (EN — à coller dans Edit > Tagline)
+
+> Real-time WHO outbreak monitoring for teams without GPHIN access
+
+*(63 caractères — problem-first, nomme l'audience, nomme l'ennemi implicite)*
+
+---
+
+### Description PH — opening paragraph (EN — à coller dans Edit > Description)
+
+> Most public health teams monitor outbreaks the same way: WHO DON bookmarked in one tab, ECDC in another, PAHO somewhere in their inbox. The signal arrives. The window to act is already closing.
+>
+> HealthWatch Global brings WHO, ECDC, PAHO and Africa CDC into one classified, real-time view — with automated IHR risk scoring (Art. 6, 9, 12) so your team knows what to prioritize. 195 countries, 5 languages, 4 official sources. Free tier available today.
+
+---
+
+### Maker Comment PH (EN — à poster à 09h01 PDT = 18h01 Paris)
+
+> I built this after watching an Ebola alert in Central Africa sit simultaneously in three separate RSS feeds — while the field coordination team had none of them in their workflow. The signal was live. The window was open. The tools were just wrong.
+>
+> Most public health teams don't have access to GPHIN, the WHO-affiliated surveillance network used by governments and large agencies (~$50K+/year). They're left cross-referencing WHO DON, ECDC, PAHO and Africa CDC manually in four browser tabs, hoping they catch the signal before it spreads.
+>
+> HealthWatch Global unifies all four sources in real time — automated IHR risk scoring based on published RSI criteria (Art. 6, 9, 12), 5 languages, regional filters, and a 30-day institutional pilot for teams that need DPA + SLA before committing.
+>
+> What it doesn't do: replace official WHO determinations. The scoring helps your team triage, not declare a PHEIC.
+>
+> Free account, no credit card. Happy to answer anything about data sources, IHR methodology, or running a pilot 👇
+
+---
+
+### Screenshots PH — recommandations
+
+1. **Screenshot 1** — Dashboard avec filtre Africa actif + alerte Ebola visible (badge HIGH) — montre le produit en action, pas l'interface vide
+2. **Screenshot 2** — Badge de risque avec tooltip IHR affiché (hover) — prouve le scoring automatique
+3. **Screenshot 3** — Email digest reçu ou modal détail foyer — montre la profondeur
+
+*(À capturer sur le dashboard live avant 23h ce soir)*
