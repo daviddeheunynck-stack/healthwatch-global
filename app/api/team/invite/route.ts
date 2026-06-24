@@ -49,7 +49,7 @@ export async function POST(req: NextRequest) {
   catch { return NextResponse.json({ error: "Invalid JSON" }, { status: 400 }); }
 
   const email  = (body.email || "").trim().toLowerCase();
-  const locale = body.locale || "en";
+  const locale = ["fr", "en", "es", "ar", "id"].includes(body.locale ?? "") ? body.locale! : "en";
 
   if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
     return NextResponse.json({ error: "Invalid email" }, { status: 400 });

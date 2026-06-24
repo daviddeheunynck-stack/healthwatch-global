@@ -98,7 +98,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Already invited or member" }, { status: 409 });
 
   const invite_token = randomBytes(24).toString("hex");
-  const locale = body.locale ?? "en";
+  const locale = ["fr", "en", "es", "ar", "id"].includes(body.locale ?? "") ? body.locale! : "en";
   const inviteUrl = `${APP_URL}/${locale}/invite?token=${invite_token}`;
 
   const { data: member, error } = await supabase
