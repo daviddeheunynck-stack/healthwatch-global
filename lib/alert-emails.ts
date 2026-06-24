@@ -1,6 +1,10 @@
 // ─── Regional outbreak alert email ────────────────────────────────────────────
 // Sent when a new outbreak is detected in a region the user subscribed to.
 
+function esc(s: string): string {
+  return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+}
+
 interface OutbreakData {
   disease: string;
   country: string;
@@ -156,8 +160,8 @@ export function buildOutbreakAlertEmail(
 
       <!-- Outbreak card -->
       <div style="background:#111827;border:1px solid #374151;border-radius:12px;padding:20px;margin-bottom:24px">
-        <p style="color:#ffffff;font-size:17px;font-weight:700;margin:0 0 4px">${outbreak.disease}</p>
-        <p style="color:#9ca3af;font-size:13px;margin:0 0 16px">${outbreak.country}</p>
+        <p style="color:#ffffff;font-size:17px;font-weight:700;margin:0 0 4px">${esc(outbreak.disease)}</p>
+        <p style="color:#9ca3af;font-size:13px;margin:0 0 16px">${esc(outbreak.country)}</p>
         <table style="width:100%;border-collapse:collapse;font-size:14px">
           <tbody>${rows}</tbody>
         </table>
