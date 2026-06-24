@@ -85,7 +85,7 @@ const COPY: Record<string, {
   focalPointTiers: { label: string; desc: string; example: string; action: string }[];
 }> = {
   fr: {
-    heroBadge: "4 sources officielles · 32 maladies · 5 langues · Flux RSS",
+    heroBadge: "OMS · ECDC · OPAS · Africa CDC · 5 langues · Temps réel",
     heroTitle: ["Toutes les données OMS.", "Sans les heures de recherche."],
     heroSub: "Sachez quels foyers épidémiques affectent vos équipes, vos opérations et vos décisions — avant les médias. HealthWatch agrège l'OMS, l'ECDC, l'OPAS et l'Africa CDC en un seul tableau de bord, calcule la létalité automatiquement, et vous alerte dès chaque nouvelle publication.",
     heroCta: "Créer un compte gratuit",
@@ -165,7 +165,7 @@ const COPY: Record<string, {
     ],
   },
   en: {
-    heroBadge: "4 official sources · 32 diseases · 5 languages · RSS feed",
+    heroBadge: "WHO · ECDC · PAHO · Africa CDC · 5 languages · Real-time",
     heroTitle: ["All WHO outbreak data.", "Without the research hours."],
     heroSub: "Know which disease outbreaks affect your teams, operations and decisions — before the news does. HealthWatch aggregates WHO, ECDC, PAHO and Africa CDC, calculates CFR automatically, and alerts you within hours of each new report.",
     heroCta: "Create free account",
@@ -245,7 +245,7 @@ const COPY: Record<string, {
     ],
   },
   es: {
-    heroBadge: "4 fuentes oficiales · 32 enfermedades · 5 idiomas · Fuente RSS",
+    heroBadge: "OMS · ECDC · OPS · Africa CDC · 5 idiomas · Tiempo real",
     heroTitle: ["Todos los datos OMS.", "Sin horas de investigación."],
     heroSub: "Sepa qué brotes de enfermedades afectan a sus equipos, operaciones y decisiones — antes que los medios. HealthWatch agrega OMS, ECDC, PAHO y Africa CDC, calcula el CFR automáticamente y le alerta en horas tras cada nueva publicación oficial.",
     heroCta: "Crear cuenta gratuita",
@@ -325,7 +325,7 @@ const COPY: Record<string, {
     ],
   },
   ar: {
-    heroBadge: "4 مصادر رسمية · 32 مرضاً · 5 لغات · تغذية RSS",
+    heroBadge: "WHO · ECDC · PAHO · Africa CDC · 5 لغات · فوري",
     heroTitle: ["كل بيانات منظمة الصحة العالمية.", "دون ساعات البحث."],
     heroSub: "اعرف أي تفشيات الأمراض تؤثر على فرقك وعملياتك وقراراتك — قبل وسائل الإعلام. HealthWatch يجمع WHO وECDC وPAHO وAfrica CDC في لوحة واحدة، يحسب معدل الوفيات تلقائياً، ويُنبهك في ساعات من كل تقرير جديد.",
     heroCta: "إنشاء حساب مجاني",
@@ -405,7 +405,7 @@ const COPY: Record<string, {
     ],
   },
   id: {
-    heroBadge: "4 sumber resmi · 32 penyakit · 5 bahasa · RSS feed",
+    heroBadge: "WHO · ECDC · PAHO · Africa CDC · 5 bahasa · Real-time",
     heroTitle: ["Semua data wabah WHO.", "Tanpa berjam-jam penelitian."],
     heroSub: "Ketahui wabah penyakit mana yang memengaruhi tim, operasi, dan keputusan Anda — sebelum media melaporkannya. HealthWatch mengagregasi WHO, ECDC, PAHO dan Africa CDC, menghitung CFR otomatis, dan memberi tahu Anda dalam jam setelah setiap laporan baru.",
     heroCta: "Buat akun gratis",
