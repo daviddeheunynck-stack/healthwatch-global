@@ -159,7 +159,7 @@ export default function CountryScorecardTab({ locale }: { locale: string }) {
                 </span>
                 <span className="text-[10px] text-gray-400 tabular-nums">{country.outbreak_count} {c.outbreaks}</span>
                 {country.total_cases > 0 && (
-                  <span className="text-[10px] text-gray-500 tabular-nums">{country.total_cases.toLocaleString(locale === "ar" ? "ar-SA" : locale)} {c.cases}</span>
+                  <span className="text-[10px] text-gray-500 tabular-nums">{country.total_cases.toLocaleString(locale === "ar" ? "ar-SA" : (locale || "en"))} {c.cases}</span>
                 )}
                 <THIBadge score={computeTHI(country)} />
               </div>

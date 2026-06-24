@@ -67,7 +67,7 @@ export default function RegionalPulseSummary({ outbreaks, locale }: Props) {
               <div className="min-w-0">
                 <p className="text-[11px] font-semibold text-gray-300 whitespace-nowrap">{label}</p>
                 <p className="text-[10px] text-gray-600 whitespace-nowrap">
-                  {count} {OB_LABEL[locale] ?? "outbreaks"} · {totalCases.toLocaleString(locale === "ar" ? "ar-SA" : locale)} {CASE_LABEL[locale] ?? "cases"}
+                  {count} {OB_LABEL[locale] ?? "outbreaks"} · {totalCases.toLocaleString(locale === "ar" ? "ar-SA" : (locale || "en"))} {CASE_LABEL[locale] ?? "cases"}
                 </p>
               </div>
               <div className="flex items-center gap-1 shrink-0">

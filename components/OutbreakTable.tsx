@@ -199,7 +199,7 @@ function SortIcon({ col, activeKey, dir }: { col: SortKey; activeKey: SortKey; d
 
 export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, trends, defaultFilters, diseaseWatchlist, countryTags = {} }: Props) {
   const { openModal } = useUpgradeModal();
-  const numLocale = locale === "ar" ? "ar-SA" : locale;
+  const numLocale = locale === "ar" ? "ar-SA" : (locale || "en");
   const router = useRouter();
   const [watchlist, setWatchlist] = useState<Set<string>>(new Set());
   const [search,   setSearch]    = useState("");
@@ -442,7 +442,7 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
   const generatePdf = useCallback(() => {
     const today = new Date().toLocaleDateString(REPORT_LOCALE[locale] ?? "en-GB", { dateStyle: "long" });
     const title  = REPORT_TITLE[locale] ?? REPORT_TITLE.en;
-    const numLocale = REPORT_LOCALE[locale] ?? locale;
+    const numLocale = REPORT_LOCALE[locale] ?? (locale || "en-GB");
     const hdr = PDF_H[locale] ?? PDF_H.en;
     const rows = sorted.map((o) => {
       const cfr = o.cases > 0 ? `${(o.deaths / o.cases * 100).toFixed(1)}%` : "—";
@@ -557,7 +557,7 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
   const downloadHtml = useCallback(() => {
     const today = new Date().toLocaleDateString(REPORT_LOCALE[locale] ?? "en-GB", { dateStyle: "long" });
     const title  = REPORT_TITLE[locale] ?? REPORT_TITLE.en;
-    const numLocale = REPORT_LOCALE[locale] ?? locale;
+    const numLocale = REPORT_LOCALE[locale] ?? (locale || "en-GB");
     const hdr = PDF_H[locale] ?? PDF_H.en;
     const rows = sorted.map((o) => {
       const cfr = o.cases > 0 ? `${(o.deaths / o.cases * 100).toFixed(1)}%` : "—";

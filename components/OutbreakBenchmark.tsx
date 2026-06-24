@@ -74,7 +74,7 @@ interface Props {
 
 export default function OutbreakBenchmark({ outbreakId, currentCases, locale }: Props) {
   const c = COPY[locale] ?? COPY.en;
-  const numLocale = locale === "ar" ? "ar-SA" : locale;
+  const numLocale = locale === "ar" ? "ar-SA" : (locale || "en");
   const [data,    setData]    = useState<BenchmarkData | null>(null);
   const [loading, setLoading] = useState(true);
 

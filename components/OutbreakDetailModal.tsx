@@ -285,7 +285,7 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlis
   const c = COPY[locale] ?? COPY.en;
   const hc = HISTORY_COPY[locale] ?? HISTORY_COPY.en;
   const isRtl = locale === "ar";
-  const numLocale = locale === "ar" ? "ar-SA" : locale;
+  const numLocale = locale === "ar" ? "ar-SA" : (locale || "en");
   const { openModal } = useUpgradeModal();
 
   const [snapshots,      setSnapshots]      = useState<Snapshot[]>([]);
