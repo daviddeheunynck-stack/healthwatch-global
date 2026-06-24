@@ -1,52 +1,64 @@
-# Product Hunt Launch Content — 25 juin 2026
+# Product Hunt — Maker comment
 
-## Maker Comment (premier commentaire sur la page PH)
-
-Hi Product Hunt 👋
-
-I'm David — a product engineer, not an epidemiologist.
-
-A few years ago I started tracking outbreak news closely and realized the people who need this most — field epidemiologists, IHR focal points, NGO responders — were manually checking WHO DON, ECDC, PAHO, and Africa CDC *one by one*, every morning. No aggregation. No risk scoring. No single view.
-
-HealthWatch Global fixes that: one dashboard, all major surveillance feeds, automated IHR classification, real-time trend indicators, and country-level filtering. Built for global health professionals who can't afford to miss an early signal.
-
-Launched today as a solo founder. If you work in public health or infectious disease research — feedback is extremely valuable at this stage. Pro access is free for 30 days, no card required.
-
-Ask me anything — data sources, methodology, why I built this outside academia.
+**Date de lancement :** 25 juin 2026 — 09h01 CEST (18h01 Paris)  
+**Produit :** HealthWatch Global  
+**Lien PH :** à mettre à jour une fois le post créé
 
 ---
 
-## Message activation réseau personnel (LinkedIn DM)
+## Maker comment — Version finale (validée)
 
-À envoyer à 20-40 contacts perso (ex-collègues tech, amis — pas les épidémiologistes) :
-
-> Hey [prénom], je lance HealthWatch Global aujourd'hui sur Product Hunt — un dashboard de surveillance épidémio mondiale que j'ai construit en solo cette année.
+> Most public health teams monitor outbreaks the same way: WHO DON bookmarked in one tab, ECDC in another, PAHO somewhere in their inbox. The signal arrives. The window to act is already closing.
 >
-> Si tu as 30 secondes : [URL PH]
+> I built HealthWatch Global to fix that.
 >
-> Ça m'aide beaucoup, merci 🙏
+> It brings WHO, ECDC, PAHO and Africa CDC into one unified, real-time view — with automated IHR risk scoring (Articles 6, 9, 12) so your team knows what to prioritize from the moment the alert lands.
+>
+> 195 countries · 5 languages · 4 official sources · Free tier available today.
+>
+> Happy to answer questions from anyone working in outbreak response, NGOs, or health ministries — this is day one, and your feedback shapes what comes next.
 
 ---
 
-## Planning lancement 25 juin
+## Brouillon original (J-1)
 
-| Heure (CEST) | Action |
-|---|---|
-| 09h00 | PH page live |
-| 09h30 | Copier URL PH → update PHLaunchBar.tsx + lib/ph-launch-email.ts → push |
-| 09h35 | Email blast /fr/admin (dry run d'abord, puis envoi) |
-| 09h40 | Post LinkedIn |
-| 09h45 | Messages activation réseau perso |
-| 10h00 | Coller maker comment sur PH |
-| 10h00 | Envoyer 8 emails institutionnels (outreach-contacts.md) |
-| 10h00–12h00 | Surveiller classement PH, répondre aux commentaires < 30 min |
-| 12h00 | Si < 50 votes → pousser sur Indie Hackers + Twitter |
+> Most public health teams monitor outbreaks the same way: WHO DON bookmarked in one tab, ECDC in another, PAHO somewhere in their inbox. The signal arrives. The window to act is already closing. HealthWatch Global brings WHO, ECDC, PAHO and Africa CDC into one classified, real-time view — with automated IHR risk scoring (Art. 6, 9, 12) so your team knows what to prioritize. 195 countries, 5 languages, 4 official sources. Free tier available today.
+
+**Corrections apportées :**
+- `classified` → `unified` (faux ami : "classified" = documents secrets en anglais)
+- Voix fondateur : "I built HealthWatch Global to fix that."
+- `Art. 6, 9, 12` → `Articles 6, 9, 12` (lisibilité public PH mixte)
+- Stats avec separateurs `·` — plus scannable
+- Closing invitation feedback → commentaires → upvotes organiques
 
 ---
 
-## Notes
+## Description du lancement (≤ 500 chars) — VERSION FINALE — 472 chars
 
-- PH URL à insérer dans PHLaunchBar.tsx:8 et lib/ph-launch-email.ts:2 le matin du 25
-- Email blast : dry run en premier (1 email test sur david.deheunynck@yahoo.fr)
-- KEMRI email Lilian Mayieka : vérifier sur kemri.go.ke/km-rd-staff-profiles avant envoi
-- LinkedIn post : rédigé dans session précédente (voir historique si besoin)
+Most public health teams monitor outbreaks with WHO DON in one tab, ECDC in another, PAHO in their inbox. The signal arrives. The window to act is already closing.
+
+HealthWatch Global unifies WHO, ECDC, PAHO and Africa CDC into one real-time dashboard — with automated IHR risk scoring so your team knows what to prioritize the moment the alert lands. Built for epidemiologists, NGOs and health ministries.
+
+195 countries · 5 languages · 4 official sources · Free to start.
+
+---
+
+## Tagline PH (200 chars max)
+
+Real-time epidemic surveillance — WHO, ECDC, PAHO & Africa CDC in one dashboard. IHR risk scoring. 5 languages. Free to start.
+
+---
+
+## Description PH (260 chars max)
+
+HealthWatch Global aggregates outbreak data from WHO, ECDC, PAHO and Africa CDC into a single real-time dashboard with automated IHR risk scoring. Built for epidemiologists, NGOs and health ministries. 195 countries, 5 languages, free tier included.
+
+---
+
+## DM réseau personnel — activation PH (25 juin matin)
+
+Hey [prénom], je lance HealthWatch Global aujourd'hui sur Product Hunt — un dashboard de surveillance épidémio mondiale que j'ai construit en solo cette année.
+
+Si tu as 30 secondes : [URL PH]
+
+Ca m'aide beaucoup, merci

@@ -142,11 +142,36 @@ Happy to answer questions about the niche, the data pipeline, or what it's like 
 **Relations :** 28
 **Posts planifiés :** 4 (calendrier dans `linkedin-calendar.md`)
 
-### Post 2 — Ebola Bundibugyo (24 juin 2026) — RÉDIGÉ ✓
+### Post 2 — Ebola Bundibugyo (24 juin 2026) — RÉDIGÉ ✓ — CHIFFRES MIS À JOUR 24 juin (DON608, données au 17 juin)
 
 **Ton :** éducatif, aucune mention explicite de HealthWatch (laisse la curiosité sur le profil)
 
+**Version EN (publiée profil David) — chiffres vérifiés WHO DON608 :**
+
 ---
+
+The only approved Ebola vaccine doesn't cover the current DRC outbreak.
+
+Ervebo (rVSV-ZEBOV) was developed during the 2018–2020 crisis in DRC. It works against Zaïre strain — not what's circulating now.
+
+The active outbreak: Ebola Bundibugyo. 915 confirmed cases. 234 deaths. Case fatality rate: 26% — up from 17.7% when WHO declared the PHEIC six weeks ago.
+
+Bundibugyo was first identified in Uganda in 2007. No approved vaccine exists for it. Response relies entirely on isolation, contact tracing, and ring vaccination trials with candidates that haven't completed Phase III.
+
+Three things that rarely appear in outbreak reporting but define the response:
+→ Strain (determines vaccine options and historical CFR reference ranges)
+→ CFR trajectory (a rising rate signals undercounting of deaths, delayed case detection, or both)
+→ Which health zones are affected (controls whether existing ring-vaccination logistics apply)
+
+The PHEIC gives WHO authority to issue temporary recommendations. What it doesn't give: a vaccine that covers this strain.
+
+**1er commentaire :**
+Data updated every 6 hours on HealthWatch Global — including strain, CFR and affected health zones:
+healthwatch-global.com/en/disease/ebola
+
+---
+
+**Version FR (post alternatif) :**
 
 Trois espèces d'Ebola. Trois protocoles de réponse différents.
 
@@ -280,9 +305,13 @@ Le contexte est le protocole.
 
 ## Emails institutionnels
 
-**Vague 1 (25 juin) :** 8 emails — voir `outreach-contacts.md`
-**Vague 2 (30 juin) :** 9 emails — à préparer
-**Relance J+10 (5 juillet) :** batch 1
+**Vague 1 (25 juin) :** 12 emails complets avec contacts + placeholders — voir `institutional-emails-25juin.md`
+**Vague 2 (30 juin) :** 9 emails prêts ✓ — voir `institutional-emails-30juin.md` (MSF/Epicentre, IRC, PIH, ACF, IMC + JHU, Harvard, INSP, IRD)
+**Vague 3 (7–11 juillet) :** 4 emails prêts ✓ — voir `institutional-emails-july-wave3.md` (Oxfam, CARE, Samaritan's Purse, World Vision)
+**Relance J+10 (5 juillet) :** batch 1 — templates dans `project_institutional_outreach.md` ligne 189
+**Relance J+10 (10 juillet) :** batch 2 — templates dans `institutional-emails-30juin.md` dernière section
+**Relance J+10 (17–21 juillet) :** batch 3 — templates dans `institutional-emails-july-wave3.md` dernière section
+**Playbook J-0 :** `marketing/J0-playbook.md` — plan de match complet pour le 25 juin (ordre des actions, code à changer, maker comment, broadcast email)
 
 ---
 
@@ -339,7 +368,7 @@ Court DM LinkedIn à envoyer à ~20-40 contacts le 25 juin matin :
 
 ---
 
-### Maker Comment PH (EN — à poster à 09h01 PDT = 18h01 Paris)
+### Maker Comment PH (EN — à poster à 09h01 CEST = 00h01 PDT)
 
 > I built this after watching an Ebola alert in Central Africa sit simultaneously in three separate RSS feeds — while the field coordination team had none of them in their workflow. The signal was live. The window was open. The tools were just wrong.
 >
