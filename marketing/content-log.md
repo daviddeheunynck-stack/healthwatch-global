@@ -333,7 +333,29 @@ Court DM LinkedIn à envoyer à ~20-40 contacts le 25 juin matin :
 |---|---|---|---|
 | Silvestre Suh (CHAI Sierra Leone) | Message envoyé 22 juin (Lassa hook) | Lui | Attendre réponse |
 | Zahra BOUZIDI (épidémiologiste Algérie) | A répondu 👏👍😊 + "je vous répondrai" | Elle | Activer Pro 30j quand elle répond |
-| Jalal Nourlil (Institut Pasteur Maroc) | 4 emails envoyés | Lui | Ne plus relancer |
+| Jalal Nourlil (Institut Pasteur Maroc) | 5 emails envoyés → **RÉPONDU 24/06 16h12** : "virologue pas épidémiologiste, mais peut examiner méthodologie" | Lui | Répondre avec angle viral (Ebola/Mpox/Marburg) — réponse archivée ci-dessous |
+
+---
+
+### Réponse à Jalal Nourlil — 24 juin 2026 (à envoyer)
+
+**Sa réponse (16h12) :** "Je vous remercie pour votre confiance, mais je suis davantage virologue qu'épidémiologiste. Cependant, je peux encore examiner la méthodologie si mon expérience correspond à vos attentes."
+
+**Réponse David :**
+
+> Bonjour Jalal,
+>
+> Merci pour la précision — et un profil virologique est exactement ce dont on a besoin pour évaluer la méthodologie.
+>
+> La plateforme surveille en priorité des foyers d'épidémies virales : Ebola Bundibugyo (PHEIC en cours en RDC), Mpox, Marburg, H5N1, Lassa. C'est le cœur du suivi DON OMS et ECDC que nous agrégeons. La classification RSI IMMÉDIAT/RAPIDE/SURVEILLANCE est tirée des articles 6, 9 et 12 — ce que j'aimerais que vous examiniez, c'est précisément si le mapping entre les données de terrain et ces niveaux vous semble cohérent sur les foyers viraux actifs.
+>
+> Votre compte est déjà actif. La vue Ebola Bundibugyo est ici :
+> healthwatch-global.com/fr/disease/ebola-virus-disease
+>
+> Si quelque chose vous semble mal classé ou manquant, votre retour serait très utile.
+>
+> Bien à vous,
+> David
 
 ---
 
