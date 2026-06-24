@@ -4,6 +4,10 @@ import { getResponseGuidance, RESPONSE_ACTIONS } from "./response-guidance";
 
 const APP_URL = "https://healthwatch-global.com";
 
+function esc(s: string): string {
+  return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+}
+
 const TIER_LABELS: Record<string, Record<string, string>> = {
   immediate: { fr: "IMMÉDIAT · NOTIFIABLE RSI", en: "IMMEDIATE · IHR NOTIFIABLE", es: "INMEDIATO · NOTIFICABLE RSI", ar: "فوري · إخطار إلزامي", id: "SEGERA · WAJIB LAPOR IHR" },
   rapid:     { fr: "RÉPONSE RAPIDE", en: "RAPID RESPONSE", es: "RESPUESTA RÁPIDA", ar: "استجابة سريعة", id: "RESPONS CEPAT" },
@@ -161,7 +165,7 @@ export function buildDiseaseAlertEmail(
 
     <!-- Disease + country headline -->
     <p style="margin:0 0 4px;font-size:22px;font-weight:800;color:white;line-height:1.3;">
-      ${c.headline(outbreak.disease || outbreak.disease_en, outbreak.country || outbreak.country_en)}
+      ${c.headline(esc(outbreak.disease || outbreak.disease_en || ""), esc(outbreak.country || outbreak.country_en || ""))}
     </p>
     <p style="margin:0 0 20px;font-size:14px;color:#94a3b8;">${c.intro}</p>
 
