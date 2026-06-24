@@ -40,6 +40,10 @@ export async function POST(req: Request) {
 
   if (!member) return NextResponse.json({ error: "Invalid or expired invitation" }, { status: 404 });
 
+  if (member.invited_email && user.email?.toLowerCase() !== member.invited_email.toLowerCase()) {
+    return NextResponse.json({ error: "This invitation was sent to a different email address" }, { status: 403 });
+  }
+
   const { error } = await supabase
     .from("organization_members")
     .update({ status: "active", user_id: user.id })
