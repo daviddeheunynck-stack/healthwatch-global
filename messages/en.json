@@ -35,7 +35,8 @@
     "high": "High",
     "medium": "Medium",
     "low": "Low",
-    "unknown": "Unknown"
+    "unknown": "Unknown",
+    "scoringNote": "Automated scoring based on IHR criteria (Art. 6, 9, 12) — does not replace official WHO determination"
   },
   "alerts": {
     "title": "Alert Center",

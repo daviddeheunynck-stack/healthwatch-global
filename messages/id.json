@@ -35,7 +35,8 @@
     "high": "Tinggi",
     "medium": "Sedang",
     "low": "Rendah",
-    "unknown": "Tidak diketahui"
+    "unknown": "Tidak diketahui",
+    "scoringNote": "Skor otomatis berdasarkan kriteria IHR (Psl. 6, 9, 12) — bukan pengganti penilaian resmi WHO"
   },
   "alerts": {
     "title": "Pusat Peringatan",

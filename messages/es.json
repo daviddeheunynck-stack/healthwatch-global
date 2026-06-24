@@ -35,7 +35,8 @@
     "high": "Alto",
     "medium": "Medio",
     "low": "Bajo",
-    "unknown": "Desconocido"
+    "unknown": "Desconocido",
+    "scoringNote": "Puntuación automática según criterios RSI (Art. 6, 9, 12) — no reemplaza la evaluación oficial de la OMS"
   },
   "alerts": {
     "title": "Centro de Alertas",
