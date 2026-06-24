@@ -9,6 +9,7 @@ const BOM = String.fromCharCode(65279);
 const clean = (v: string | undefined) => (v || "").replace(new RegExp("^" + BOM), "").trim();
 
 const BASE_URL = "https://healthwatch-global.com";
+const esc = (s: string) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 
 // ─── Localized labels ────────────────────────────────────────────────────────
 
@@ -108,7 +109,7 @@ function buildConfirmationEmail(
           ${locale === "ar" ? "تفاصيل الاشتراك" : "Subscription details"}
         </p>
         <p style="margin:0;color:#e2e8f0;font-size:14px;">
-          <span style="color:#64748b;">${l.emailLabel} : </span>${email}
+          <span style="color:#64748b;">${l.emailLabel} : </span>${esc(email)}
         </p>
         <p style="margin:8px 0 0;color:#e2e8f0;font-size:14px;">
           <span style="color:#64748b;">${l.regionLabel} : </span>${regionLabel}
