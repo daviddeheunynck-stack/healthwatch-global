@@ -43,7 +43,7 @@ export async function GET(req: NextRequest) {
     ) p = "free";
     profilePlan = p;
   } else {
-    const keyParam = searchParams.get("api_key") ?? req.headers.get("x-api-key");
+    const keyParam = req.headers.get("x-api-key");
     if (keyParam) {
       const { data: profile } = await service
         .from("profiles").select("plan, trial_ends_at, stripe_subscription_id").eq("api_key", keyParam).single();
