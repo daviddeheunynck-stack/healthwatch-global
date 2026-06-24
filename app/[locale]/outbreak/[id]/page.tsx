@@ -11,7 +11,7 @@ import CitationBlock from "@/components/CitationBlock";
 import OutbreakStatsGrid from "@/components/OutbreakStatsGrid";
 import ShareOutbreakButton from "@/components/ShareOutbreakButton";
 import OutbreakCasesChart from "@/components/OutbreakCasesChart";
-import { getLocalizedDisease, getLocalizedCountry, sourceStatus, staleOutbreakDays } from "@/lib/outbreaks";
+import { getLocalizedDisease, getLocalizedCountry, sourceStatus, sourceName, staleOutbreakDays } from "@/lib/outbreaks";
 import { diseaseToSlug, normalizeDisease } from "@/lib/disease-data";
 import { countryToSlug } from "@/lib/country-utils";
 import type { Outbreak } from "@/lib/outbreaks";
@@ -34,7 +34,7 @@ const LABELS = {
     compareLabel: "Comparer",
     printReport: "Rapport PDF",
     lastSynced: "Vérifié par HealthWatch",
-    sourceVerified: "Bulletin OMS officiel", sourceOfficial: "Source officielle",
+    sourceLabel: "Source", sourceVerified: "Bulletin OMS officiel", sourceOfficial: "Source officielle",
     pheic: "URGENCE SANITAIRE INTERNATIONALE (PHEIC)",
     archived: "Foyer terminé — données archivées",
     ctaTitle: "Recevoir les alertes épidémiques en temps réel",
@@ -61,7 +61,7 @@ const LABELS = {
     date: "Report date", region: "Region",
     printReport: "PDF Report",
     lastSynced: "Last checked by HealthWatch",
-    sourceVerified: "Official WHO Disease Outbreak News", sourceOfficial: "Official source",
+    sourceLabel: "Source", sourceVerified: "Official WHO Disease Outbreak News", sourceOfficial: "Official source",
     pheic: "PUBLIC HEALTH EMERGENCY OF INTERNATIONAL CONCERN (PHEIC)",
     archived: "Outbreak resolved — archived data",
     ctaTitle: "Get real-time disease outbreak alerts",
@@ -89,7 +89,7 @@ const LABELS = {
     date: "Fecha del informe", region: "Región",
     printReport: "Informe PDF",
     lastSynced: "Última verificación por HealthWatch",
-    sourceVerified: "Boletín oficial OMS", sourceOfficial: "Fuente oficial",
+    sourceLabel: "Fuente", sourceVerified: "Boletín oficial OMS", sourceOfficial: "Fuente oficial",
     pheic: "EMERGENCIA DE SALUD PÚBLICA DE IMPORTANCIA INTERNACIONAL (ESPII)",
     archived: "Brote resuelto — datos archivados",
     ctaTitle: "Recibe alertas de brotes en tiempo real",
@@ -117,7 +117,7 @@ const LABELS = {
     date: "تاريخ التقرير", region: "المنطقة",
     printReport: "تقرير PDF",
     lastSynced: "آخر تحقق بواسطة HealthWatch",
-    sourceVerified: "نشرة منظمة الصحة العالمية الرسمية", sourceOfficial: "مصدر رسمي",
+    sourceLabel: "المصدر", sourceVerified: "نشرة منظمة الصحة العالمية الرسمية", sourceOfficial: "مصدر رسمي",
     pheic: "طوارئ الصحة العمومية التي تثير قلقاً دولياً",
     archived: "انتهى التفشي — بيانات مؤرشفة",
     ctaTitle: "احصل على تنبيهات الأوبئة في الوقت الفعلي",
@@ -145,7 +145,7 @@ const LABELS = {
     date: "Tanggal laporan", region: "Wilayah",
     printReport: "Laporan PDF",
     lastSynced: "Terakhir dicek oleh HealthWatch",
-    sourceVerified: "Buletin resmi WHO", sourceOfficial: "Sumber resmi",
+    sourceLabel: "Sumber", sourceVerified: "Buletin resmi WHO", sourceOfficial: "Sumber resmi",
     pheic: "KEDARURATAN KESEHATAN MASYARAKAT YANG MERESAHKAN DUNIA (KKMMD)",
     archived: "Wabah selesai — data diarsipkan",
     ctaTitle: "Dapatkan peringatan wabah secara real-time",
@@ -168,7 +168,7 @@ const LABELS = {
     citeCopied: "Disalin!",
     staleBulletin: (d: number) => `Tidak ada buletin resmi dalam ${d} hari — mungkin sudah selesai atau tidak dilaporkan.`,
   },
-} satisfies Record<string, { cases: string; deaths: string; cfr: string; date: string; region: string; printReport: string; lastSynced: string; sourceVerified: string; sourceOfficial: string; pheic: string; archived: string; ctaTitle: string; ctaSub: string; ctaProBtn: string; ctaFree: string; back: string; compareLabel: string; chartTitle: string; noData: string; risk: Record<string, string>; fpGuidance: string; tierLabels: Record<string, string>; firstActions: string; reportingLag: string; cumulativeAs: (date: string) => string; citeLabel: string; citeCopy: string; citeCopied: string; staleBulletin: (d: number) => string }>;
+} satisfies Record<string, { cases: string; deaths: string; cfr: string; date: string; region: string; printReport: string; lastSynced: string; sourceLabel: string; sourceVerified: string; sourceOfficial: string; pheic: string; archived: string; ctaTitle: string; ctaSub: string; ctaProBtn: string; ctaFree: string; back: string; compareLabel: string; chartTitle: string; noData: string; risk: Record<string, string>; fpGuidance: string; tierLabels: Record<string, string>; firstActions: string; reportingLag: string; cumulativeAs: (date: string) => string; citeLabel: string; citeCopy: string; citeCopied: string; staleBulletin: (d: number) => string; operationalDisclaimer: string }>;
 
 const RISK_STYLE: Record<string, string> = {
   high:   "text-red-400 bg-red-500/10 border-red-500/30",
@@ -513,7 +513,7 @@ export default async function OutbreakPage({
             rel="noopener noreferrer"
             className={`underline ${status === "don" ? "text-red-400 hover:text-red-300" : "text-gray-400 hover:text-gray-200"}`}
           >
-            {status === "don" ? l.sourceVerified : l.sourceOfficial}
+            {l.sourceLabel}: {sourceName(o.source)}
           </a>
           <span className="text-gray-600">↗</span>
         </div>
@@ -550,7 +550,7 @@ export default async function OutbreakPage({
         label={l.citeLabel}
         copyLabel={l.citeCopy}
         copiedLabel={l.citeCopied}
-        citation={`HealthWatch Global. ${disease} outbreak — ${country} [Internet]. ${o.date ?? ""} [cited YYYY Mon DD]. Available from: ${BASE_URL}/${locale}/outbreak/${id}. Data source: ${o.source ? "WHO Disease Outbreak News" : "official surveillance sources"}.`}
+        citation={`HealthWatch Global. ${disease} outbreak — ${country} [Internet]. ${o.date ?? ""} [cited YYYY Mon DD]. Available from: ${BASE_URL}/${locale}/outbreak/${id}. Data source: ${o.source ? sourceName(o.source) : "official surveillance sources"}.`}
       />
 
       {/* Data dispute link */}
