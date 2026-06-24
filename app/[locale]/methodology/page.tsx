@@ -636,6 +636,24 @@ export default async function MethodologyPage({
         </div>
       </section>
 
+      {/* GPHIN complementarity note */}
+      <section className="bg-blue-950/30 border border-blue-800/30 rounded-xl p-5 space-y-2">
+        <p className="text-sm font-semibold text-blue-300">
+          {locale === "fr" ? "Vous utilisez déjà GPHIN ?" :
+           locale === "es" ? "¿Ya usa GPHIN?" :
+           locale === "ar" ? "هل تستخدم GPHIN بالفعل؟" :
+           locale === "id" ? "Sudah menggunakan GPHIN?" :
+           "Already using GPHIN?"}
+        </p>
+        <p className="text-sm text-gray-400 leading-relaxed">
+          {locale === "fr" ? "GPHIN est une infrastructure d'intelligence gouvernementale pour vos analystes centraux. HealthWatch est la couche opérationnelle que vous donnez à vos équipes terrain — ceux qui n'ont pas de credentials GPHIN, qui travaillent en arabe, français ou indonésien, et qui ont besoin d'alertes et de PDFs partageables. Les deux outils sont complémentaires." :
+           locale === "es" ? "GPHIN es infraestructura de inteligencia gubernamental para analistas centrales. HealthWatch es la capa operacional para sus equipos de campo — sin credenciales GPHIN, en 5 idiomas, con alertas y PDF compartibles. Ambas herramientas son complementarias." :
+           locale === "ar" ? "GPHIN بنية تحتية استخباراتية حكومية للمحللين المركزيين. HealthWatch هي الطبقة التشغيلية لفرقك الميدانية — بدون بيانات اعتماد GPHIN، بـ 5 لغات، مع تنبيهات وتقارير PDF قابلة للمشاركة. الأداتان متكاملتان." :
+           locale === "id" ? "GPHIN adalah infrastruktur intelijen pemerintah untuk analis pusat. HealthWatch adalah lapisan operasional untuk tim lapangan Anda — tanpa kredensial GPHIN, dalam 5 bahasa, dengan peringatan dan PDF yang dapat dibagikan. Kedua alat ini saling melengkapi." :
+           "GPHIN is government intelligence infrastructure for your central analysts. HealthWatch is the operational layer for your field teams — those without GPHIN credentials, working in Arabic, French or Indonesian, who need alerts and shareable PDFs. The two tools are complementary."}
+        </p>
+      </section>
+
       {/* Corrections CTA */}
       <CitationBlock
         label={c.citeLabel}
