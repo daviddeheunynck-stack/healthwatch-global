@@ -33,14 +33,28 @@ export async function GET(req: NextRequest) {
 
   if (user) {
     const { data: profile } = await supabase
-      .from("profiles").select("plan").eq("id", user.id).single();
-    profilePlan = profile?.plan ?? null;
+      .from("profiles").select("plan, trial_ends_at, stripe_subscription_id").eq("id", user.id).single();
+    let p = profile?.plan ?? null;
+    if (
+      p !== "free" && p !== null &&
+      profile?.trial_ends_at &&
+      new Date(profile.trial_ends_at).getTime() < Date.now() &&
+      !profile?.stripe_subscription_id
+    ) p = "free";
+    profilePlan = p;
   } else {
     const keyParam = searchParams.get("api_key") ?? req.headers.get("x-api-key");
     if (keyParam) {
       const { data: profile } = await service
-        .from("profiles").select("plan").eq("api_key", keyParam).single();
-      profilePlan = profile?.plan ?? null;
+        .from("profiles").select("plan, trial_ends_at, stripe_subscription_id").eq("api_key", keyParam).single();
+      let p = profile?.plan ?? null;
+      if (
+        p !== "free" && p !== null &&
+        profile?.trial_ends_at &&
+        new Date(profile.trial_ends_at).getTime() < Date.now() &&
+        !profile?.stripe_subscription_id
+      ) p = "free";
+      profilePlan = p;
     }
   }
 
