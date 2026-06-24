@@ -79,7 +79,9 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const { plan, locale, userEmail, billing } = body;
+    const { plan, userEmail, billing } = body;
+    const VALID_LOCALES_CO = ["fr", "en", "es", "ar", "id"];
+    const locale = VALID_LOCALES_CO.includes(body.locale ?? "") ? (body.locale ?? "fr") : "fr";
     // Use session-authenticated userId; fall back to empty string for anonymous checkout
     const userId = sessionUser?.id ?? "";
     const resolvedEmail = sessionUser?.email ?? userEmail;
