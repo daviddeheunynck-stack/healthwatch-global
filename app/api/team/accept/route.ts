@@ -22,7 +22,9 @@ function getService() {
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const token  = searchParams.get("token");
-  const locale = searchParams.get("locale") || "en";
+  const VALID_LOCALES = ["en", "fr", "es", "ar", "id"];
+  const rawLocale = searchParams.get("locale") ?? "en";
+  const locale = VALID_LOCALES.includes(rawLocale) ? rawLocale : "en";
 
   if (!token) {
     return NextResponse.redirect(`${BASE_URL}/${locale}?error=invalid_invite`);

@@ -8,6 +8,10 @@ export const maxDuration = 300;
 const COOLDOWN_H = 6;
 const RISK_RANK: Record<string, number> = { high: 3, medium: 2, low: 1 };
 
+function esc(s: string): string {
+  return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+}
+
 function riskMeetsThreshold(risk: string, minRisk: string): boolean {
   return (RISK_RANK[risk] ?? 0) >= (RISK_RANK[minRisk] ?? 0);
 }
@@ -69,12 +73,13 @@ export async function GET(req: NextRequest) {
 
     const subject = `[HealthWatch] ${alert.country_en} — ${level}${pheic}: ${top.disease_en}`;
 
+    const escCountry = esc(alert.country_en);
     const INTRO: Record<string, string> = {
-      fr: `Un foyer à risque <strong>${level}</strong> a été détecté en <strong>${alert.country_en}</strong>.`,
-      es: `Se ha detectado un brote de riesgo <strong>${level}</strong> en <strong>${alert.country_en}</strong>.`,
-      ar: `تم رصد تفشٍّ ذو خطر <strong>${level}</strong> في <strong>${alert.country_en}</strong>.`,
-      id: `Wabah berisiko <strong>${level}</strong> terdeteksi di <strong>${alert.country_en}</strong>.`,
-      en: `A <strong>${level}</strong> risk outbreak has been detected in <strong>${alert.country_en}</strong>.`,
+      fr: `Un foyer à risque <strong>${level}</strong> a été détecté en <strong>${escCountry}</strong>.`,
+      es: `Se ha detectado un brote de riesgo <strong>${level}</strong> en <strong>${escCountry}</strong>.`,
+      ar: `تم رصد تفشٍّ ذو خطر <strong>${level}</strong> في <strong>${escCountry}</strong>.`,
+      id: `Wabah berisiko <strong>${level}</strong> terdeteksi di <strong>${escCountry}</strong>.`,
+      en: `A <strong>${level}</strong> risk outbreak has been detected in <strong>${escCountry}</strong>.`,
     };
     const LABELS: Record<string, [string, string, string, string, string]> = {
       fr: ["Maladie", "Cas", "🚨 PHEIC déclaré", "Signalé le", "Voir le tableau de bord →"],
@@ -94,7 +99,7 @@ export async function GET(req: NextRequest) {
 <div dir="${isRtl ? "rtl" : "ltr"}" style="font-family:sans-serif;max-width:520px;margin:0 auto;direction:${isRtl ? "rtl" : "ltr"};text-align:${isRtl ? "right" : "left"}">
 <p>${intro}</p>
 <ul>
-  <li>${lb[0]}: ${top.disease_en}</li>
+  <li>${lb[0]}: ${esc(top.disease_en ?? "")}</li>
   <li>${lb[1]}: ${(top.cases ?? 0).toLocaleString(numLocale)}${cfr ? ` · ${cfr}` : ""}</li>
   ${top.is_pheic ? `<li>${lb[2]}</li>` : ""}
   <li>${lb[3]}: ${top.date}</li>

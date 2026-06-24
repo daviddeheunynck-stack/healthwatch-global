@@ -10,6 +10,10 @@ const SUPABASE_KEY = (process.env.SUPABASE_SERVICE_ROLE_KEY ?? "").replace(/^﻿
 const CRON_SECRET  = (process.env.CRON_SECRET ?? "").replace(/^﻿/, "").trim();
 const APP_URL      = (process.env.NEXT_PUBLIC_APP_URL ?? "https://healthwatch-global.com").replace(/^﻿/, "").trim();
 
+function esc(s: string): string {
+  return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+}
+
 type LocaleCopy = {
   subject:  (d: string, c: string) => string;
   intro:    (d: string, c: string) => string;
@@ -133,7 +137,7 @@ export async function GET(req: NextRequest) {
       const isRtl     = locale === "ar";
       const lc = LOCALE_COPY[locale] ?? LOCALE_COPY.en;
       const subject = lc.subject(disease, country);
-      const intro   = lc.intro(disease, country);
+      const intro   = lc.intro(esc(disease), esc(country));
       const dashUrl = `${APP_URL}/${locale}`;
 
       const html = `
