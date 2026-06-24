@@ -24,13 +24,17 @@ export async function GET(req: NextRequest) {
   let profilePlan: string | null = null;
 
   if (user) {
-    const { data: p } = await supabase.from("profiles").select("plan").eq("id", user.id).single();
-    profilePlan = p?.plan ?? null;
+    const { data: p } = await supabase.from("profiles").select("plan, trial_ends_at, stripe_subscription_id").eq("id", user.id).single();
+    let plan = p?.plan ?? null;
+    if (plan !== "free" && plan !== null && p?.trial_ends_at && new Date(p.trial_ends_at).getTime() < Date.now() && !p?.stripe_subscription_id) plan = "free";
+    profilePlan = plan;
   } else {
     const keyParam = searchParams.get("api_key") ?? req.headers.get("x-api-key");
     if (keyParam) {
-      const { data: p } = await service.from("profiles").select("plan").eq("api_key", keyParam).single();
-      profilePlan = p?.plan ?? null;
+      const { data: p } = await service.from("profiles").select("plan, trial_ends_at, stripe_subscription_id").eq("api_key", keyParam).single();
+      let plan = p?.plan ?? null;
+      if (plan !== "free" && plan !== null && p?.trial_ends_at && new Date(p.trial_ends_at).getTime() < Date.now() && !p?.stripe_subscription_id) plan = "free";
+      profilePlan = plan;
     }
   }
 
