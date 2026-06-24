@@ -162,7 +162,10 @@ export async function POST(req: NextRequest) {
   try {
     const { email, region, locale } = body;
 
-    if (!email || !region) {
+    if (!email || typeof email !== "string" || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      return NextResponse.json({ error: "Invalid email" }, { status: 400 });
+    }
+    if (!region) {
       return NextResponse.json({ error: "Missing fields" }, { status: 400 });
     }
 
@@ -185,25 +188,18 @@ export async function POST(req: NextRequest) {
       .select("id")
       .single();
 
-    // 23505 = unique_violation (already subscribed) — still return success
-    if (dbError && dbError.code !== "23505") {
+    // 23505 = unique_violation (already subscribed) — return success silently,
+    // but DO NOT re-send the confirmation email (prevents spam-by-re-subscribe abuse).
+    const isDuplicate = !row && dbError?.code === "23505";
+    if (dbError && !isDuplicate) {
       return NextResponse.json({ error: dbError.message }, { status: 500 });
     }
 
-    // If already subscribed (duplicate), fetch existing row to get the ID
-    let subscriptionId = row?.id as string | undefined;
-    if (!subscriptionId) {
-      const { data: existing } = await supabase
-        .from("subscriptions")
-        .select("id")
-        .eq("email", email)
-        .single();
-      subscriptionId = existing?.id;
-    }
+    const subscriptionId = row?.id as string | undefined;
 
-    // Send confirmation email with unsubscribe link
+    // Send confirmation email only for NEW subscriptions
     const brevoKey = clean(process.env.BREVO_API_KEY);
-    if (brevoKey && subscriptionId) {
+    if (!isDuplicate && brevoKey && subscriptionId) {
       const { subject, html } = buildConfirmationEmail(email, region, safeLocale, subscriptionId);
       await fetch("https://api.brevo.com/v3/smtp/email", {
         method: "POST",
