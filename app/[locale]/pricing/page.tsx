@@ -486,6 +486,19 @@ export default async function PricingPage({ params }: { params: Promise<{ locale
         </Link>
       </div>
 
+      {/* ── LMIC equity note ─────────────────────────────────────────────── */}
+      <p className="text-center text-xs text-gray-600 max-w-2xl mx-auto -mt-2">
+        {locale === "fr"
+          ? "Unité de santé publique dans un pays à revenu faible ou intermédiaire ? Écrivez-nous — nous avons une politique de prix libre pour les équipes dont le budget ne permet pas le tarif standard."
+          : locale === "es"
+          ? "¿Unidad de salud pública en un país de renta baja o media? Escríbanos — tenemos una política de precio libre para equipos con presupuesto limitado."
+          : locale === "ar"
+          ? "وحدة صحة عامة في دولة منخفضة أو متوسطة الدخل؟ راسلونا — لدينا سياسة سعر حر للفرق ذات الميزانيات المحدودة."
+          : locale === "id"
+          ? "Unit kesehatan publik di negara berpenghasilan rendah atau menengah? Hubungi kami — kami memiliki kebijakan harga bebas untuk tim dengan anggaran terbatas."
+          : "Public health unit in a low- or middle-income country? Write to us — we have a pay-what-you-can policy for teams whose budget doesn't allow the standard rate."}
+      </p>
+
       {/* ── Institutional pilot banner ────────────────────────────────────── */}
       <div className="bg-gradient-to-r from-red-950/50 via-red-900/20 to-transparent border border-red-700/30 rounded-2xl p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 max-w-4xl mx-auto w-full">
         <div className="flex items-start gap-4">
