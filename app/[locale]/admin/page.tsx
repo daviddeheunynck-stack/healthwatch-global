@@ -5,6 +5,7 @@ import { createClient as createServiceClient } from "@supabase/supabase-js";
 import {
   Shield, Users, Activity, RefreshCw,
   TrendingUp, DollarSign, Zap, Bell, Link2,
+  CheckCircle, XCircle, BarChart2,
 } from "lucide-react";
 import Link from "next/link";
 import AdminOutbreakTable from "@/components/AdminOutbreakTable";
@@ -188,6 +189,31 @@ export default async function AdminPage({
   const trialExpiring7 = trialActive.filter((p) => p.trial_ends_at! <= next7).length;
   const realMrr        = profiles?.filter((p) => p.stripe_subscription_id).reduce((sum, p) => sum + (PLAN_MRR[p.plan ?? "free"] ?? 0), 0) ?? 0;
 
+  // ── Retention metrics (from already-fetched authUsers) ────────────────────
+  // "Returned" = last_sign_in_at more than 2 days after created_at (not just signup ping)
+  const returnedUsers = (authUsers ?? []).filter((u) => {
+    if (!u.last_sign_in_at || !u.created_at) return false;
+    return new Date(u.last_sign_in_at).getTime() - new Date(u.created_at).getTime() > 2 * 86_400_000;
+  });
+  // Active in last 30 days
+  const active30 = (authUsers ?? []).filter((u) =>
+    u.last_sign_in_at && new Date(u.last_sign_in_at).getTime() > now.getTime() - 30 * 86_400_000
+  );
+  // Never returned (signed in only at signup)
+  const neverReturned = (authUsers ?? []).filter((u) => {
+    if (!u.last_sign_in_at || !u.created_at) return true;
+    return new Date(u.last_sign_in_at).getTime() - new Date(u.created_at).getTime() < 60_000;
+  });
+
+  // J+30 Go/No-Go checklist
+  const goNoGo = {
+    retention:  returnedUsers.length >= 5,   // ≥5 users returned after 2+ days
+    active30:   active30.length >= 3,         // ≥3 active in last 30 days
+    paying:     payingCount >= 1,             // ≥1 Stripe payment
+    pipeline:   false,                        // manual — pilot active discussion
+    response:   false,                        // manual — institutional email response
+  } as const;
+
   return (
     <div className="max-w-7xl mx-auto space-y-8 py-4">
 
@@ -271,6 +297,72 @@ export default async function AdminPage({
             icon={<Activity className="w-4 h-4" />}
             accent="text-orange-400"
           />
+        </div>
+      </div>
+
+      {/* ── Retention & J+30 checklist ─────────────────────────────────────── */}
+      <div className="space-y-4">
+        <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-widest flex items-center gap-2">
+          <BarChart2 className="w-3.5 h-3.5" />
+          Rétention & Activation
+        </h2>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <StatCard
+            label="Utilisateurs revenus"
+            value={returnedUsers.length}
+            sub="login > 2j après inscription"
+            icon={<TrendingUp className="w-4 h-4" />}
+            accent={returnedUsers.length >= 5 ? "text-green-400" : "text-orange-400"}
+          />
+          <StatCard
+            label="Actifs 30j"
+            value={active30.length}
+            sub="au moins 1 session ce mois"
+            icon={<Activity className="w-4 h-4" />}
+            accent={active30.length >= 3 ? "text-green-400" : "text-orange-400"}
+          />
+          <StatCard
+            label="Jamais revenus"
+            value={neverReturned.length}
+            sub="login unique au signup"
+            icon={<Users className="w-4 h-4" />}
+            accent={neverReturned.length > (authUsers?.length ?? 0) / 2 ? "text-red-400" : "text-gray-400"}
+          />
+          <StatCard
+            label="Taux activation"
+            value={authUsers?.length ? `${((returnedUsers.length / authUsers.length) * 100).toFixed(0)}%` : "—"}
+            sub={`${returnedUsers.length} / ${authUsers?.length ?? 0} inscrits`}
+            icon={<Zap className="w-4 h-4" />}
+            accent="text-blue-400"
+          />
+        </div>
+
+        {/* J+30 Go/No-Go */}
+        <div className="bg-gray-900 border border-gray-800 rounded-xl p-5 space-y-3">
+          <p className="text-xs font-semibold text-gray-500 uppercase tracking-widest">Checklist J+30 — Go / No-Go</p>
+          <div className="space-y-2">
+            {[
+              { ok: goNoGo.retention, label: `≥5 utilisateurs revenus après J+2`, value: `${returnedUsers.length} actuellement` },
+              { ok: goNoGo.active30,  label: `≥3 utilisateurs actifs sur 30 jours`, value: `${active30.length} actuellement` },
+              { ok: goNoGo.paying,    label: `≥1 paiement Stripe actif`, value: `${payingCount} actuellement` },
+              { ok: goNoGo.pipeline,  label: `≥1 pilot en discussion active (14 derniers jours)`, value: "à vérifier manuellement" },
+              { ok: goNoGo.response,  label: `≥1 réponse parmi les emails institutionnels`, value: "à vérifier manuellement" },
+            ].map(({ ok, label, value }) => (
+              <div key={label} className="flex items-start gap-3">
+                {ok
+                  ? <CheckCircle className="w-4 h-4 text-green-400 shrink-0 mt-0.5" />
+                  : <XCircle    className="w-4 h-4 text-red-400/60 shrink-0 mt-0.5" />
+                }
+                <div>
+                  <p className={`text-sm ${ok ? "text-gray-300" : "text-gray-500"}`}>{label}</p>
+                  <p className="text-xs text-gray-600">{value}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+          <p className="text-xs text-gray-600 pt-2 border-t border-gray-800">
+            ≥4/5 cochées → continuer sans changer de cap · &lt;3/5 → diagnostiquer l&apos;activation
+          </p>
         </div>
       </div>
 
