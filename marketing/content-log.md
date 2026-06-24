@@ -501,6 +501,50 @@ We close those 4 tabs. No GPHIN required.
 
 ---
 
+---
+
+## Templates — Presse / Journaliste (Axe 14)
+
+### 3 phrases clés à placer dans toute interview
+```
+1. "We unify WHO, ECDC, PAHO and Africa CDC in one dashboard —
+   surveillance teams open 4 tabs every morning. We close them."
+
+2. "We don't produce data. We alert on official sources, in real time."
+
+3. "The underserved market is the hundreds of thousands of surveillance
+   teams that don't have GPHIN access and work anyway."
+```
+
+### "Vos données sont 'real-time' mais WHO publie parfois avec 2 semaines de délai ?"
+```
+'Real-time' applies to the sync, not the source publication. When WHO
+publishes a report, we integrate it within the hour. What we eliminate
+is the latency between publication and the moment the surveillance team
+sees it — because nobody monitors 4 RSS feeds continuously.
+
+We don't produce data. We unify and alert on official data.
+```
+
+### "Vous êtes seul, pas épidémiologiste — qui valide la méthodologie ?"
+```
+Fair question. The IHR risk-scoring methodology comes directly from
+Articles 6, 9 and 12 of the International Health Regulations —
+no proprietary interpretation. Data comes from WHO, ECDC, PAHO
+and Africa CDC. I invent neither the data nor the risk criteria.
+```
+
+### "Il y a eu une plainte de ProMED contre vous ?"
+```
+We received a communication from ProMED in June, responded immediately
+and complied. We use no ProMED data. I'd rather not comment further
+on private correspondence.
+```
+
+**Règle presse** : répondre par écrit quand possible. Confirmer que les citations sont vérifiées avant publication. Ne jamais improviser sur ProMED.
+
+---
+
 ### Screenshots PH — recommandations
 
 1. **Screenshot 1** — Dashboard avec filtre Africa actif + alerte Ebola visible (badge HIGH) — montre le produit en action, pas l'interface vide
