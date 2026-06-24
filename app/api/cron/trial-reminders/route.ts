@@ -63,10 +63,19 @@ export async function GET(req: NextRequest) {
 
   const { data: profiles, error } = await supabase
     .from("profiles")
-    .select("id, email, plan, trial_ends_at, locale, stripe_subscription_id")
+    .select("id, email, plan, trial_ends_at, locale, stripe_subscription_id, display_filters")
     .in("plan", ["starter", "pro"])
     .not("trial_ends_at", "is", null)
     .or(`and(trial_ends_at.gte.${j3Start},trial_ends_at.lt.${j3End}),and(trial_ends_at.gte.${j1Start},trial_ends_at.lt.${j1End})`);
+
+  // Fetch active HIGH/MEDIUM outbreaks once for all users — filter per region below
+  const sevenDaysAgo = new Date(Date.now() - 7 * 86_400_000).toISOString();
+  const { data: recentOutbreaks } = await supabase
+    .from("outbreaks")
+    .select("disease, country, risk_level, region")
+    .eq("active", true)
+    .in("risk_level", ["high", "medium"])
+    .gte("updated_at", sevenDaysAgo);
 
   if (error) {
     console.error("[trial-reminders] DB query error:", error);
@@ -88,9 +97,18 @@ export async function GET(req: NextRequest) {
 
     try {
       const locale = profile.locale ?? "fr";
-
       const plan = profile.plan as "starter" | "pro";
-      const { subject, html } = buildTrialEndingEmail(plan, locale, profile.trial_ends_at);
+
+      // Build regional context from already-fetched outbreaks
+      const userRegion = (profile.display_filters as { region?: string } | null)?.region ?? "all";
+      const regionalOutbreaks = (recentOutbreaks ?? []).filter(o =>
+        userRegion === "all" || o.region === userRegion
+      );
+      const regionalContext = regionalOutbreaks.length > 0
+        ? { count: regionalOutbreaks.length, diseases: [...new Set(regionalOutbreaks.map(o => o.disease))].slice(0, 3) }
+        : null;
+
+      const { subject, html } = buildTrialEndingEmail(plan, locale, profile.trial_ends_at, !!profile.stripe_subscription_id, regionalContext);
 
       await sendEmail(profile.email, subject, html);
       sent++;

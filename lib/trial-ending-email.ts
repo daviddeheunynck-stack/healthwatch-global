@@ -226,11 +226,22 @@ const RENEW_COPY: Record<string, { intro: (d: string) => string; ctaLabel: strin
 
 // ─── HTML builder ──────────────────────────────────────────────────────────────
 
+type RegionalContext = { count: number; diseases: string[] };
+
+const REGIONAL_COPY: Record<string, (ctx: RegionalContext) => string> = {
+  fr: (c) => `🔔 <strong>${c.count} foyer${c.count > 1 ? "s" : ""} actif${c.count > 1 ? "s" : ""}</strong> dans votre région cette semaine${c.diseases.length ? ` (${c.diseases.join(", ")})` : ""} — les utilisateurs Pro ont été alertés sous 8h. Restez couvert.`,
+  en: (c) => `🔔 <strong>${c.count} active outbreak${c.count > 1 ? "s" : ""}</strong> in your region this week${c.diseases.length ? ` (${c.diseases.join(", ")})` : ""} — Pro users were notified within 8h. Stay covered.`,
+  es: (c) => `🔔 <strong>${c.count} brote${c.count > 1 ? "s" : ""} activo${c.count > 1 ? "s" : ""}</strong> en su región esta semana${c.diseases.length ? ` (${c.diseases.join(", ")})` : ""} — usuarios Pro notificados en menos de 8h.`,
+  ar: (c) => `🔔 <strong>${c.count} تفشٍّ نشط</strong> في منطقتك هذا الأسبوع${c.diseases.length ? ` (${c.diseases.join("، ")})` : ""} — أُبلغ مستخدمو Pro خلال 8 ساعات.`,
+  id: (c) => `🔔 <strong>${c.count} wabah aktif</strong> di wilayah Anda minggu ini${c.diseases.length ? ` (${c.diseases.join(", ")})` : ""} — pengguna Pro diberitahu dalam 8 jam.`,
+};
+
 export function buildTrialEndingEmail(
   plan: "starter" | "pro",
   locale: string,
   trialEndsAt: string,
-  hasPaymentMethod = false
+  hasPaymentMethod = false,
+  regionalContext: RegionalContext | null = null
 ): { subject: string; html: string } {
   const safeLocale = COPY[locale] ? locale : "en";
   // "starter" no longer exists — redirect to pro template
@@ -289,6 +300,11 @@ export function buildTrialEndingEmail(
           ${bulletItems}
         </ul>
       </div>
+
+      ${regionalContext ? `<!-- Regional context -->
+      <div style="background:#1c2a1c;border:1px solid #365436;border-radius:10px;padding:14px 18px;margin-bottom:20px;font-size:13px;color:#86efac;line-height:1.6">
+        ${(REGIONAL_COPY[safeLocale] ?? REGIONAL_COPY.en)(regionalContext)}
+      </div>` : ""}
 
       <!-- CTA -->
       <a href="${ctaUrl}"
