@@ -122,6 +122,10 @@ export async function POST(req: NextRequest) {
       cancel_url: `${baseUrl}/${locale}/pricing`,
       allow_promotion_codes: "true",
       locale: stripeLocale,
+      // Collect billing address + company name → institutional invoices show org name
+      billing_address_collection: "required",
+      // Collect VAT/tax ID for institutional buyers (SIRET, EU VAT, etc.)
+      "tax_id_collection[enabled]": "true",
       "metadata[plan]": plan ?? "",
       "metadata[user_id]": userId || "",
       "metadata[billing]": billingPeriod,
