@@ -1,6 +1,10 @@
 import type { Outbreak } from "./outbreaks";
 import { getResponseGuidance, RESPONSE_ACTIONS } from "./response-guidance";
 
+function esc(s: string): string {
+  return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+}
+
 const RISK_COLORS = { high: "#ef4444", medium: "#f59e0b", low: "#22c55e" };
 
 const TIER_BADGE: Record<string, { style: string; labels: Record<string, string> }> = {
@@ -171,8 +175,8 @@ export function buildDigestEmail(
           const actionColor = ACTION_TEXT_COLOR[guidance.tier] ?? "#64748b";
           return `
             <tr style="border-bottom:${showAction ? "none" : "1px solid #1e293b"};">
-              <td style="padding:12px 8px;color:#f1f5f9;font-weight:600;">${disease}</td>
-              <td style="padding:12px 8px;color:#94a3b8;">${country}</td>
+              <td style="padding:12px 8px;color:#f1f5f9;font-weight:600;">${esc(disease)}</td>
+              <td style="padding:12px 8px;color:#94a3b8;">${esc(country)}</td>
               <td style="padding:12px 8px;color:#e2e8f0;">${o.cases.toLocaleString(numLocale)}</td>
               <td style="padding:12px 8px;color:#fca5a5;">${o.deaths.toLocaleString(numLocale)}</td>
               <td style="padding:12px 8px;">

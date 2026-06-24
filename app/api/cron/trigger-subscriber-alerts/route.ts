@@ -13,6 +13,10 @@ const CRON_SECRET      = clean(process.env.CRON_SECRET);
 const RESEND_KEY       = clean(process.env.RESEND_API_KEY);
 const APP_URL          = clean(process.env.NEXT_PUBLIC_APP_URL) || "https://healthwatch-global.com";
 
+function esc(s: string): string {
+  return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+}
+
 const RISK_LABEL: Record<string, Record<string, string>> = {
   en: { high: "HIGH", medium: "MEDIUM", low: "LOW" },
   fr: { high: "ÉLEVÉ", medium: "MODÉRÉ", low: "FAIBLE" },
@@ -105,7 +109,7 @@ export async function GET(req: NextRequest) {
   <p style="color:#60a5fa;font-size:18px;font-weight:700;margin:0 0 4px">HealthWatch Global</p>
   <p style="margin:0 0 16px;font-size:12px;color:#64748b">${bl.subtitle}</p>
   <hr style="border:none;border-top:1px solid #334155;margin:0 0 16px"/>
-  <p style="margin:0 0 4px;font-size:16px;font-weight:600;color:#fff">${disease} — ${country}</p>
+  <p style="margin:0 0 4px;font-size:16px;font-weight:600;color:#fff">${esc(disease)} — ${esc(country)}</p>
   <p style="margin:0 0 12px;font-size:13px;color:#94a3b8">
     ${bl.cases} <strong style="color:#f1f5f9">${o.cases.toLocaleString(numLocale)}</strong> &nbsp;|&nbsp;
     ${bl.deaths} <strong style="color:#f1f5f9">${o.deaths.toLocaleString(numLocale)}</strong>
