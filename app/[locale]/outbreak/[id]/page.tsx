@@ -553,6 +553,20 @@ export default async function OutbreakPage({
         citation={`HealthWatch Global. ${disease} outbreak — ${country} [Internet]. ${o.date ?? ""} [cited YYYY Mon DD]. Available from: ${BASE_URL}/${locale}/outbreak/${id}. Data source: ${o.source ? "WHO Disease Outbreak News" : "official surveillance sources"}.`}
       />
 
+      {/* Data dispute link */}
+      <div className="text-center mt-2">
+        <a
+          href={`mailto:contact@healthwatch-global.com?subject=${encodeURIComponent(`[Data dispute] ${disease} — ${country} (ID: ${id})`)}&body=${encodeURIComponent(`Hello,\n\nI would like to report a data issue on the following outbreak:\n\nDisease: ${disease}\nCountry: ${country}\nOutbreak ID: ${id}\nURL: ${BASE_URL}/${locale}/outbreak/${id}\n\nIssue description:\n[Please describe the issue and attach any official documentation]\n\nThank you.`)}`}
+          className="text-xs text-gray-600 hover:text-gray-400 transition-colors underline underline-offset-2"
+        >
+          {locale === "fr" ? "Signaler une erreur sur ce foyer →" :
+           locale === "es" ? "Reportar un error en este brote →" :
+           locale === "ar" ? "← الإبلاغ عن خطأ في هذا التفشي" :
+           locale === "id" ? "Laporkan kesalahan pada wabah ini →" :
+           "Report a data error on this outbreak →"}
+        </a>
+      </div>
+
       {/* CTA */}
       <div className="mt-10 p-6 rounded-xl border border-red-500/20 bg-red-500/5 text-center space-y-4">
         <div>
