@@ -377,6 +377,33 @@ Court DM LinkedIn à envoyer à ~20-40 contacts le 25 juin matin :
 
 ---
 
+### Réponses aux commentaires PH — Axe 4 : objections fondamentales (EN)
+
+**"WHO already has this — who.int/emergencies/disease-outbreak-news"**
+> Great question — yes, those exist. The WHO DON page requires you to manually scan a list with no filter by region, risk level, or disease. ECDC has their own format. PAHO has a third. Africa CDC a fourth.
+>
+> For a field coordinator managing surveillance across 12 countries, that's 4 browser tabs open every morning, no unified risk scoring, and no way to share a filtered view with your team.
+>
+> HealthWatch Global is for the person who already knows those sources exist and is currently doing the aggregation manually.
+
+**"I could build this in a weekend with n8n + Airtable"**
+> You could. And you'd spend the next 6 months dealing with WHO DON's inconsistent RSS formatting, PAHO's PDF-only sitreps that need parsing, Africa CDC's page structure that changes every few months, and the edge cases where the same outbreak appears in 3 sources under 3 different country names.
+>
+> The moat isn't the dashboard. It's the normalization layer, the deduplication logic, and the fact that the IHR focal point at a national health ministry doesn't have a weekend to build this.
+>
+> But honestly — if you build it, let me know. I'll be curious what you find.
+
+**"How is this different from ProMED?"**
+> ProMED is an incredible resource — 30 years of institutional credibility. Different model though: it's community-contributed, discussion-based, designed for researchers who want to follow threads and debates.
+>
+> HealthWatch Global is exclusively official sources (WHO, ECDC, PAHO, Africa CDC) — no contributor content, no discussion threads. The goal isn't breadth of signal, it's signal quality for operational teams who need to justify their response decisions to a ministry or a donor. "WHO DON confirmed" carries different weight than "ProMED subscriber reported."
+>
+> Both have their place. They solve different problems for different users.
+
+*(Note légale : ProMED peut être mentionné en comparaison compétitive — le C&D interdit l'utilisation de leurs données/RSS, pas la référence au nom dans une conversation publique.)*
+
+---
+
 ### Screenshots PH — recommandations
 
 1. **Screenshot 1** — Dashboard avec filtre Africa actif + alerte Ebola visible (badge HIGH) — montre le produit en action, pas l'interface vide
