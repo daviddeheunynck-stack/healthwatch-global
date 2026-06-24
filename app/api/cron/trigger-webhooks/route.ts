@@ -90,8 +90,9 @@ function outbreakMatchesWebhook(o: Outbreak, w: Webhook): boolean {
 }
 
 export async function GET(req: NextRequest) {
-  if (!CRON_SECRET || req.headers.get("x-cron-secret") !== CRON_SECRET)
-    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  const auth = req.headers.get("authorization");
+  if (!CRON_SECRET || auth !== `Bearer ${CRON_SECRET}`)
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE);
 
