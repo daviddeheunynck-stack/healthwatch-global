@@ -29,7 +29,7 @@ export async function GET(req: NextRequest) {
     if (plan !== "free" && plan !== null && p?.trial_ends_at && new Date(p.trial_ends_at).getTime() < Date.now() && !p?.stripe_subscription_id) plan = "free";
     profilePlan = plan;
   } else {
-    const keyParam = searchParams.get("api_key") ?? req.headers.get("x-api-key");
+    const keyParam = req.headers.get("x-api-key");
     if (keyParam) {
       const { data: p } = await service.from("profiles").select("plan, trial_ends_at, stripe_subscription_id").eq("api_key", keyParam).single();
       let plan = p?.plan ?? null;
@@ -62,10 +62,10 @@ export async function GET(req: NextRequest) {
   }
   if (region  && VALID_REGIONS.includes(region))  query = query.eq("region", region);
   if (risk    && VALID_RISKS.includes(risk))       query = query.eq("risk_level", risk);
-  if (country) query = query.ilike("country_en", `%${country}%`);
-  if (search)  {
-    const q = search.trim();
-    query = query.or(`disease_en.ilike.%${q}%,country_en.ilike.%${q}%`);
+  if (country) query = query.ilike("country_en", `%${country.trim().slice(0, 100)}%`);
+  if (search) {
+    const q = search.trim().slice(0, 200).replace(/[,()]/g, "");
+    if (q) query = query.or(`disease_en.ilike.%${q}%,country_en.ilike.%${q}%`);
   }
 
   const { data, error } = await query;
