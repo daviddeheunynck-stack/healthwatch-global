@@ -83,7 +83,8 @@ const COPY: Record<string, {
     faqs: [
       { q: "Où sont hébergées les données ?", a: "Base de données : Supabase, Francfort (Allemagne, UE). Emails : Brevo, Paris (France, UE). Aucune donnée en dehors de l'Union Européenne." },
       { q: "HealthWatch Global est-il conforme au RGPD ?", a: "Oui. Conformité RGPD complète. DPA disponible (Art. 28). Données hébergées en UE. Droit d'accès, de rectification et de suppression garanti." },
-      { q: "Que se passe-t-il si vous cessez votre activité ?", a: "Vos données vous appartiennent. Export CSV disponible à tout moment. En cas d'arrêt de service : notification 90 jours à l'avance et export complet fourni." },
+      { q: "Que se passe-t-il si vous cessez votre activité ?", a: "Vos données vous appartiennent. Export CSV à tout moment. En cas d'arrêt : notification 90 jours à l'avance, export complet fourni. Trois protections structurelles : (1) les sources sont publiques — OMS, ECDC, OPAS et Africa CDC restent accessibles indépendamment ; (2) modèle bootstrappé — pas de levée de fonds, pas de runway à épuiser, rentable dès le premier mois ; (3) infrastructure standard (Vercel + Supabase + Next.js) — tout développeur peut reprendre l'hébergement depuis le dépôt." },
+      { q: "Quel est le bus factor — que se passe-t-il si le fondateur est indisponible ?", a: "L'infrastructure tourne de manière autonome : crons Vercel, alertes automatiques, synchronisation horaire — aucune intervention manuelle requise. En cas d'absence courte : impact zéro. Pour les contrats Enterprise, une clause de portabilité est disponible : documentation d'auto-hébergement et export complet sur demande." },
       { q: "Puis-je obtenir un devis formel avant de m'engager ?", a: "Oui. Contactez-nous avec le nom de votre organisation et le plan souhaité. Réponse sous 24h avec devis PDF." },
     ],
     contact_title: "Une question sur votre procédure ?",
@@ -132,7 +133,8 @@ const COPY: Record<string, {
     faqs: [
       { q: "Where is data hosted?", a: "Database: Supabase, Frankfurt (Germany, EU). Emails: Brevo, Paris (France, EU). No data outside the European Union." },
       { q: "Is HealthWatch Global GDPR compliant?", a: "Yes. Full GDPR compliance. DPA available (Art. 28). EU-hosted data. Right of access, rectification and deletion guaranteed." },
-      { q: "What happens if you cease operations?", a: "Your data belongs to you. CSV export available at any time. In case of service shutdown: 90-day advance notice and full export provided." },
+      { q: "What happens if you cease operations?", a: "Your data belongs to you. CSV export available at any time. In case of shutdown: 90-day advance notice and full export provided. Three structural protections: (1) data sources are public — WHO, ECDC, PAHO and Africa CDC remain accessible regardless; (2) bootstrapped by design — no VC runway to run out, profitable from month one; (3) standard stack (Vercel + Supabase + Next.js) — any developer can self-host from the repository." },
+      { q: "What is the bus factor — what if the founder is unavailable?", a: "The infrastructure runs autonomously: Vercel crons sync data hourly, alerts fire automatically, no manual intervention required. Short-term absence has zero impact on service. For Enterprise contracts, a portability clause is available: self-hosting documentation and full export on request." },
       { q: "Can I get a formal quote before committing?", a: "Yes. Contact us with your organization name and desired plan. Response within 24h with PDF quote." },
     ],
     contact_title: "A question about your procurement process?",
@@ -181,7 +183,8 @@ const COPY: Record<string, {
     faqs: [
       { q: "¿Dónde se alojan los datos?", a: "Base de datos: Supabase, Frankfurt (Alemania, UE). Emails: Brevo, París (Francia, UE). Sin datos fuera de la Unión Europea." },
       { q: "¿Es HealthWatch Global conforme al RGPD?", a: "Sí. Conformidad RGPD completa. DPA disponible (Art. 28). Datos en UE. Derechos de acceso, rectificación y supresión garantizados." },
-      { q: "¿Qué pasa si cesa la actividad?", a: "Sus datos le pertenecen. Exportación CSV disponible en cualquier momento. En caso de cierre: aviso 90 días y exportación completa." },
+      { q: "¿Qué pasa si cesa la actividad?", a: "Sus datos le pertenecen. Exportación CSV en cualquier momento. En caso de cierre: aviso 90 días y exportación completa. Tres protecciones estructurales: (1) fuentes públicas — OMS, ECDC, OPS y Africa CDC permanecen accesibles; (2) modelo bootstrapped — sin inversores, rentable desde el primer mes; (3) stack estándar (Vercel + Supabase + Next.js) — cualquier desarrollador puede auto-alojar desde el repositorio." },
+      { q: "¿Cuál es el bus factor — qué pasa si el fundador no está disponible?", a: "La infraestructura funciona de forma autónoma: crons de Vercel, alertas automáticas, sincronización horaria sin intervención manual. Una ausencia corta no tiene impacto. Para Enterprise, cláusula de portabilidad disponible: documentación de auto-alojamiento y exportación completa." },
       { q: "¿Puedo obtener un presupuesto formal?", a: "Sí. Contáctenos con el nombre de su organización y el plan deseado. Respuesta en 24h con presupuesto PDF." },
     ],
     contact_title: "¿Una pregunta sobre su proceso de compras?",
@@ -230,7 +233,8 @@ const COPY: Record<string, {
     faqs: [
       { q: "أين تُستضاف البيانات؟", a: "قاعدة البيانات: Supabase، فرانكفورت (ألمانيا، UE). البريد الإلكتروني: Brevo، باريس (فرنسا، UE). لا بيانات خارج الاتحاد الأوروبي." },
       { q: "هل HealthWatch Global متوافق مع RGPD؟", a: "نعم. امتثال كامل. اتفاقية DPA متاحة (المادة 28). بيانات مستضافة في الاتحاد الأوروبي. حقوق الوصول والتصحيح والحذف مضمونة." },
-      { q: "ماذا يحدث إذا توقفت الخدمة؟", a: "بياناتك ملكك. تصدير CSV متاح في أي وقت. في حالة إيقاف الخدمة: إشعار مسبق 90 يوماً وتصدير كامل." },
+      { q: "ماذا يحدث إذا توقفت الخدمة؟", a: "بياناتك ملكك. تصدير CSV في أي وقت. في حالة الإيقاف: إشعار 90 يوماً وتصدير كامل. ثلاثة ضمانات هيكلية: (1) المصادر عامة — WHO وECDC وPAHO وAfrica CDC متاحة دائماً؛ (2) نموذج bootstrapped — لا مستثمرين، مربح من الشهر الأول؛ (3) بنية تحتية قياسية (Vercel + Supabase + Next.js) — أي مطور يستطيع استضافته ذاتياً." },
+      { q: "ما هو bus factor — ماذا لو كان المؤسس غير متاح؟", a: "البنية التحتية تعمل باستقلالية كاملة: مزامنة تلقائية كل ساعة، تنبيهات دون تدخل يدوي. الغياب القصير لا يؤثر على الخدمة. لعقود Enterprise: وثائق الاستضافة الذاتية والتصدير الكامل عند الطلب." },
       { q: "هل يمكنني الحصول على عرض سعر رسمي؟", a: "نعم. تواصل معنا باسم مؤسستك والخطة المطلوبة. رد خلال 24 ساعة مع عرض سعر PDF." },
     ],
     contact_title: "سؤال حول إجراءات الشراء لديكم؟",
@@ -279,7 +283,8 @@ const COPY: Record<string, {
     faqs: [
       { q: "Di mana data dihosting?", a: "Database: Supabase, Frankfurt (Jerman, UE). Email: Brevo, Paris (Prancis, UE). Tidak ada data di luar Uni Eropa." },
       { q: "Apakah HealthWatch Global patuh GDPR?", a: "Ya. Kepatuhan GDPR penuh. DPA tersedia (Psl. 28). Data di UE. Hak akses, perbaikan, dan penghapusan dijamin." },
-      { q: "Apa yang terjadi jika layanan berhenti?", a: "Data Anda milik Anda. Ekspor CSV tersedia kapan saja. Jika layanan berhenti: pemberitahuan 90 hari sebelumnya dan ekspor lengkap diberikan." },
+      { q: "Apa yang terjadi jika layanan berhenti?", a: "Data Anda milik Anda. Ekspor CSV tersedia kapan saja. Jika berhenti: pemberitahuan 90 hari dan ekspor lengkap. Tiga perlindungan struktural: (1) sumber data publik — WHO, ECDC, PAHO dan Africa CDC tetap dapat diakses; (2) model bootstrapped — tanpa investor, menguntungkan sejak bulan pertama; (3) stack standar (Vercel + Supabase + Next.js) — developer mana pun dapat self-host dari repositori." },
+      { q: "Apa bus factor layanan ini — bagaimana jika pendiri tidak tersedia?", a: "Infrastruktur berjalan otomatis: cron Vercel menyinkronkan data setiap jam, peringatan aktif tanpa intervensi manual. Ketidakhadiran jangka pendek tidak berdampak. Untuk kontrak Enterprise: dokumentasi self-hosting dan ekspor lengkap tersedia atas permintaan." },
       { q: "Bisakah saya mendapatkan penawaran formal?", a: "Ya. Hubungi kami dengan nama organisasi dan paket yang diinginkan. Respons dalam 24 jam dengan penawaran PDF." },
     ],
     contact_title: "Ada pertanyaan tentang proses pengadaan Anda?",
