@@ -1,7 +1,9 @@
 import { getTranslations, getLocale } from "next-intl/server";
+import { headers } from "next/headers";
 import Link from "next/link";
 import { Activity, Globe, Bell, AlertTriangle } from "lucide-react";
 import { getOutbreaks, getStats, getLastSync, getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
+import { ISO_REGION } from "@/lib/geo-data";
 import { getOutbreakTrendsBulk, type OutbreakTrend } from "@/lib/outbreak-trend";
 import { createClient } from "@/lib/supabase-server";
 import { createClient as createService } from "@supabase/supabase-js";
@@ -172,6 +174,11 @@ async function DashboardContent({ demo = false, urlRegion, urlRisk }: { demo?: b
   const t = await getTranslations("dashboard");
   const tRisk = await getTranslations("risk");
   const tAlerts = await getTranslations("alerts");
+
+  // Geo-detect visitor region from Vercel edge header (falls back to "all" locally or if unknown)
+  const reqHeaders = await headers();
+  const geoCountry = (reqHeaders.get("x-vercel-ip-country") ?? "").toUpperCase();
+  const geoRegion: string = ISO_REGION[geoCountry] ?? "all";
 
   // Check user plan — skipped entirely in demo mode (treat as anonymous free visitor)
   let plan = "free";
@@ -420,7 +427,7 @@ async function DashboardContent({ demo = false, urlRegion, urlRisk }: { demo?: b
           labels={tableLabels}
           trends={trends}
           defaultFilters={{
-            region:  (VALID_REGIONS.has(urlRegion ?? "") ? urlRegion : displayFilters?.region ?? "all") as "all" | "africa" | "asia" | "europe" | "americas" | "oceania",
+            region:  (VALID_REGIONS.has(urlRegion ?? "") ? urlRegion : displayFilters?.region ?? geoRegion) as "all" | "africa" | "asia" | "europe" | "americas" | "oceania",
             country: displayFilters?.country ?? "all",
             risk:    (VALID_RISKS.has(urlRisk ?? "") ? urlRisk : "all") as "all" | "high" | "medium" | "low",
           }}
