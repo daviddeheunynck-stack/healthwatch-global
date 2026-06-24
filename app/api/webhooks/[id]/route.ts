@@ -3,6 +3,14 @@ import { createClient } from "@/lib/supabase-server";
 
 export const dynamic = "force-dynamic";
 
+const PAID_PLANS = ["pro", "team", "enterprise"];
+
+function resolvedPlan(profile: { plan?: string | null; trial_ends_at?: string | null; stripe_subscription_id?: string | null } | null): string {
+  const plan = profile?.plan ?? "free";
+  if (plan !== "free" && profile?.trial_ends_at && new Date(profile.trial_ends_at).getTime() < Date.now() && !profile?.stripe_subscription_id) return "free";
+  return plan;
+}
+
 export async function PATCH(
   req: Request,
   { params }: { params: Promise<{ id: string }> }
@@ -10,6 +18,11 @@ export async function PATCH(
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  const { data: profile } = await supabase
+    .from("profiles").select("plan, trial_ends_at, stripe_subscription_id").eq("id", user.id).single();
+  if (!PAID_PLANS.includes(resolvedPlan(profile)))
+    return NextResponse.json({ error: "Pro plan required" }, { status: 403 });
 
   const { id } = await params;
   const body = await req.json() as { active?: boolean };
