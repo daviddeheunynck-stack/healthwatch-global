@@ -36,7 +36,7 @@
     "medium": "Sedang",
     "low": "Rendah",
     "unknown": "Tidak diketahui",
-    "scoringNote": "Skor otomatis berdasarkan kriteria IHR (Psl. 6, 9, 12) — bukan pengganti penilaian resmi WHO"
+    "scoringNote": "TINGGI/SEDANG/RENDAH = ambang batas notifikasi IHR Psl. 6, 9 & 12 — ditetapkan secara algoritmik, bukan penilaian editorial. Selalu verifikasi dengan sumber WHO primer."
   },
   "alerts": {
     "title": "Pusat Peringatan",

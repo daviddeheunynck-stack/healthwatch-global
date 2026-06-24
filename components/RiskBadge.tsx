@@ -16,7 +16,7 @@ export default function RiskBadge({ level }: RiskBadgeProps) {
   const t = useTranslations("risk");
   return (
     <span
-      className={`text-xs px-2 py-0.5 rounded-full font-medium ${styles[level]}`}
+      className={`text-xs px-2 py-0.5 rounded-full font-medium cursor-help ${styles[level]}`}
       title={t("scoringNote")}
     >
       {t(level)}

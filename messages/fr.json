@@ -36,7 +36,7 @@
     "medium": "Moyen",
     "low": "Faible",
     "unknown": "Inconnu",
-    "scoringNote": "Scoring automatique basé sur les critères RSI (Art. 6, 9, 12) — ne remplace pas l'évaluation officielle de l'OMS"
+    "scoringNote": "ÉLEVÉ/MOYEN/FAIBLE = seuils de notification RSI Art. 6, 9 & 12 — attribués algorithmiquement, non par jugement éditorial. Vérifier systématiquement la source OMS primaire."
   },
   "alerts": {
     "title": "Centre d'Alertes",
