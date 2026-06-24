@@ -9,14 +9,25 @@ const MAX_WEBHOOKS     = 10;
 const VALID_REGIONS    = new Set(["africa", "asia", "americas", "europe", "oceania"]);
 const VALID_RISK_LEVELS = new Set(["high", "medium", "low"]);
 
+function resolvedPlan(profile: { plan?: string | null; trial_ends_at?: string | null; stripe_subscription_id?: string | null } | null): string {
+  const plan = profile?.plan ?? "free";
+  if (
+    plan !== "free" &&
+    profile?.trial_ends_at &&
+    new Date(profile.trial_ends_at).getTime() < Date.now() &&
+    !profile?.stripe_subscription_id
+  ) return "free";
+  return plan;
+}
+
 export async function GET() {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const { data: profile } = await supabase
-    .from("profiles").select("plan").eq("id", user.id).single();
-  if (!PAID_PLANS.includes(profile?.plan ?? ""))
+    .from("profiles").select("plan, trial_ends_at, stripe_subscription_id").eq("id", user.id).single();
+  if (!PAID_PLANS.includes(resolvedPlan(profile)))
     return NextResponse.json({ error: "Pro plan required" }, { status: 403 });
 
   const { data, error } = await supabase
@@ -35,8 +46,8 @@ export async function POST(req: Request) {
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const { data: profile } = await supabase
-    .from("profiles").select("plan").eq("id", user.id).single();
-  if (!PAID_PLANS.includes(profile?.plan ?? ""))
+    .from("profiles").select("plan, trial_ends_at, stripe_subscription_id").eq("id", user.id).single();
+  if (!PAID_PLANS.includes(resolvedPlan(profile)))
     return NextResponse.json({ error: "Pro plan required" }, { status: 403 });
 
   const { count } = await supabase

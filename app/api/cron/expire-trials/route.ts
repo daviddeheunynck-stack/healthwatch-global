@@ -79,6 +79,9 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: updateErr.message }, { status: 500 });
   }
 
+  // Deactivate webhooks so they stop firing after trial expiry
+  await supabase.from("webhooks").update({ active: false }).in("user_id", ids);
+
   console.log(`[expire-trials] Downgraded ${ids.length} user(s): ${ids.join(", ")}`);
 
   // Send trial-expired email to each downgraded user
