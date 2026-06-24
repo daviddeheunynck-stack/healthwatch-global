@@ -15,6 +15,10 @@ const CRON_SECRET          = clean(process.env.CRON_SECRET);
 const BREVO_API_KEY        = clean(process.env.BREVO_API_KEY);
 const ADMIN_EMAILS         = clean(process.env.ADMIN_EMAILS);
 
+function esc(s: string): string {
+  return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+}
+
 const DON_RE = /^https:\/\/www\.who\.int\/emergencies\/disease-outbreak-news\/item\/\d{4}-DON\d+$/i;
 const FETCH_HEADERS = {
   "User-Agent": "HealthWatch-Global/1.0 (health surveillance; contact@healthwatch-global.com)",
@@ -211,13 +215,13 @@ export async function GET(req: NextRequest) {
 
   const fixesHtml = fixes.length > 0
     ? `<h3 style="color:#16a34a">✅ Corrections appliquées (${fixes.length})</h3><ul>` +
-      fixes.map((f) => `<li><strong>${f.label}</strong> : ${f.before} → ${f.after}</li>`).join("") +
+      fixes.map((f) => `<li><strong>${esc(f.label)}</strong> : ${f.before} → ${f.after}</li>`).join("") +
       `</ul>`
     : `<p style="color:#16a34a">✅ Aucune correction nécessaire.</p>`;
 
   const reviewHtml = needsReview.length > 0
     ? `<h3 style="color:#d97706">⚠️ À vérifier manuellement (${needsReview.length})</h3><ul>` +
-      needsReview.map((r) => `<li><strong>${r.label}</strong> : ${r.detail}</li>`).join("") +
+      needsReview.map((r) => `<li><strong>${esc(r.label)}</strong> : ${r.detail}</li>`).join("") +
       `</ul>`
     : "";
 
@@ -226,7 +230,7 @@ export async function GET(req: NextRequest) {
       topMovements.map((m) => {
         const pct = Math.round(((m.after - m.before) / m.before) * 100);
         const sign = pct >= 0 ? "+" : "";
-        return `<li>${m.label} : ${m.before.toLocaleString("fr-FR")} → ${m.after.toLocaleString("fr-FR")} cas (${sign}${pct}%)</li>`;
+        return `<li>${esc(m.label)} : ${m.before.toLocaleString("fr-FR")} → ${m.after.toLocaleString("fr-FR")} cas (${sign}${pct}%)</li>`;
       }).join("") +
       `</ul>`
     : "";

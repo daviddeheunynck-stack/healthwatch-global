@@ -5,6 +5,10 @@
 
 const APP_URL = "https://healthwatch-global.com";
 
+function esc(s: string): string {
+  return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+}
+
 type PlanCopy = {
   subject:     string;
   headline:    string;
@@ -229,11 +233,11 @@ const RENEW_COPY: Record<string, { intro: (d: string) => string; ctaLabel: strin
 type RegionalContext = { count: number; diseases: string[] };
 
 const REGIONAL_COPY: Record<string, (ctx: RegionalContext) => string> = {
-  fr: (c) => `🔔 <strong>${c.count} foyer${c.count > 1 ? "s" : ""} actif${c.count > 1 ? "s" : ""}</strong> dans votre région cette semaine${c.diseases.length ? ` (${c.diseases.join(", ")})` : ""} — les utilisateurs Pro ont été alertés sous 8h. Restez couvert.`,
-  en: (c) => `🔔 <strong>${c.count} active outbreak${c.count > 1 ? "s" : ""}</strong> in your region this week${c.diseases.length ? ` (${c.diseases.join(", ")})` : ""} — Pro users were notified within 8h. Stay covered.`,
-  es: (c) => `🔔 <strong>${c.count} brote${c.count > 1 ? "s" : ""} activo${c.count > 1 ? "s" : ""}</strong> en su región esta semana${c.diseases.length ? ` (${c.diseases.join(", ")})` : ""} — usuarios Pro notificados en menos de 8h.`,
-  ar: (c) => `🔔 <strong>${c.count} تفشٍّ نشط</strong> في منطقتك هذا الأسبوع${c.diseases.length ? ` (${c.diseases.join("، ")})` : ""} — أُبلغ مستخدمو Pro خلال 8 ساعات.`,
-  id: (c) => `🔔 <strong>${c.count} wabah aktif</strong> di wilayah Anda minggu ini${c.diseases.length ? ` (${c.diseases.join(", ")})` : ""} — pengguna Pro diberitahu dalam 8 jam.`,
+  fr: (c) => `🔔 <strong>${c.count} foyer${c.count > 1 ? "s" : ""} actif${c.count > 1 ? "s" : ""}</strong> dans votre région cette semaine${c.diseases.length ? ` (${c.diseases.map(esc).join(", ")})` : ""} — les utilisateurs Pro ont été alertés sous 8h. Restez couvert.`,
+  en: (c) => `🔔 <strong>${c.count} active outbreak${c.count > 1 ? "s" : ""}</strong> in your region this week${c.diseases.length ? ` (${c.diseases.map(esc).join(", ")})` : ""} — Pro users were notified within 8h. Stay covered.`,
+  es: (c) => `🔔 <strong>${c.count} brote${c.count > 1 ? "s" : ""} activo${c.count > 1 ? "s" : ""}</strong> en su región esta semana${c.diseases.length ? ` (${c.diseases.map(esc).join(", ")})` : ""} — usuarios Pro notificados en menos de 8h.`,
+  ar: (c) => `🔔 <strong>${c.count} تفشٍّ نشط</strong> في منطقتك هذا الأسبوع${c.diseases.length ? ` (${c.diseases.map(esc).join("، ")})` : ""} — أُبلغ مستخدمو Pro خلال 8 ساعات.`,
+  id: (c) => `🔔 <strong>${c.count} wabah aktif</strong> di wilayah Anda minggu ini${c.diseases.length ? ` (${c.diseases.map(esc).join(", ")})` : ""} — pengguna Pro diberitahu dalam 8 jam.`,
 };
 
 export function buildTrialEndingEmail(
