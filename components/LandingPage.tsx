@@ -209,7 +209,7 @@ const COPY: Record<string, {
     orgs: ["Epidemiologists & researchers", "Corporate risk & global mobility", "Travel medicine doctors", "Humanitarian agencies, donors & analysts"],
     pricingTitle: "Start free. Scale when you need to.",
     pricingFree: "Free",
-    pricingPro: `${PRICE_DISPLAY.en_eur.proMonthly} /month`,
+    pricingPro: `${PRICE_DISPLAY.en.proMonthly} /month`,
     pricingEnterprise: "Custom",
     pricingFreeSub: "World map · 1 region · Weekly digest",
     pricingProSub: "All regions · Alerts · PDF · CSV · Slack",
