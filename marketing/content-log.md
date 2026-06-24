@@ -345,11 +345,35 @@ Court DM LinkedIn à envoyer à ~20-40 contacts le 25 juin matin :
 >
 > Most public health teams don't have access to GPHIN, the WHO-affiliated surveillance network used by governments and large agencies (~$50K+/year). They're left cross-referencing WHO DON, ECDC, PAHO and Africa CDC manually in four browser tabs, hoping they catch the signal before it spreads.
 >
-> HealthWatch Global unifies all four sources in real time — automated IHR risk scoring based on published RSI criteria (Art. 6, 9, 12), 5 languages, regional filters, and a 30-day institutional pilot for teams that need DPA + SLA before committing.
+> HealthWatch Global unifies all four in real time — automated IHR risk scoring based on published RSI criteria (Art. 6, 9, 12), 5 languages including Arabic and Indonesian (the markets where GPHIN isn't a realistic option), regional filters, and a 30-day institutional pilot for teams that need DPA + SLA before committing.
+>
+> One early signal I'm proud of: a researcher at Institut Pasteur Morocco signed up without any outreach from us. That's exactly the profile we built this for — qualified, resource-constrained, working in a context where official surveillance data matters but GPHIN access doesn't exist.
 >
 > What it doesn't do: replace official WHO determinations. The scoring helps your team triage, not declare a PHEIC.
 >
-> Free account, no credit card. Happy to answer anything about data sources, IHR methodology, or running a pilot 👇
+> Free account, no credit card. Ask me anything about data sources, IHR methodology, or running a pilot 👇
+
+---
+
+### Réponses aux commentaires PH — templates (EN)
+
+**"How is this different from WHO's own tools?"**
+> WHO's tools are designed for national authorities and require formal credentials. HealthWatch Global is built for the field teams that report to those authorities — coordinators, IHR focal points, NGO health teams — who need actionable signals without navigating WHO's access system. We're downstream of WHO, not a replacement.
+
+**"Where does the data come from / how current is it?"**
+> Exclusively official sources: WHO Disease Outbreak News, ECDC Rapid Risk Assessments, PAHO Epidemiological Alerts, and Africa CDC outbreak updates. Synced automatically — last sync timestamp is visible on the dashboard. No crowdsourced content, no news aggregation.
+
+**"Is the IHR scoring validated by health authorities?"**
+> The data comes directly from health authorities. The IHR scoring is automated based on the published criteria in RSI Articles 6, 9, and 12 — we're explicit that it doesn't replace official WHO determinations. It helps teams triage incoming signals, not declare a PHEIC.
+
+**"What about crowdsourced platforms? They have more signals."**
+> More signals means more noise. For field teams making operational decisions, a false positive can be as costly as a missed signal. We made the deliberate choice to stay on official sources only — fewer alerts, higher signal quality.
+
+**"GPHIN might open access eventually — aren't you building for the gap?"**
+> Maybe. But field coordinators in Morocco, Indonesia, and West Africa need this today, not when GPHIN decides to expand. The 5-language interface with Arabic and Indonesian support isn't on GPHIN's roadmap. We're not betting against GPHIN — we're building for the markets they've never prioritized.
+
+**"What's the business model?"**
+> Free tier for individual monitoring. Pro for advanced filters + email digest. Team plan (€250/month, 5 seats) for organizations that need multi-seat access + DPA + SLA. The goal is adoption at field level, then pulled up to an org subscription when the team lead sees the value.
 
 ---
 
