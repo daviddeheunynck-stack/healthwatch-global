@@ -6,6 +6,10 @@ export const dynamic = "force-dynamic";
 const BOM = String.fromCharCode(65279);
 const clean = (v: string | undefined) => (v || "").replace(new RegExp("^" + BOM), "").trim();
 
+function esc(s: string): string {
+  return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+}
+
 const BREVO_API_KEY    = clean(process.env.BREVO_API_KEY);
 const SUPABASE_URL     = clean(process.env.NEXT_PUBLIC_SUPABASE_URL);
 const SUPABASE_SERVICE = clean(process.env.SUPABASE_SERVICE_ROLE_KEY);
@@ -36,8 +40,8 @@ function buildHtml(
     .map(
       (o) => `
       <tr>
-        <td style="padding:10px 0;border-bottom:1px solid #1f2937;font-size:14px;color:#e5e7eb;">${o.disease}</td>
-        <td style="padding:10px 0;border-bottom:1px solid #1f2937;font-size:14px;color:#9ca3af;">${o.country}</td>
+        <td style="padding:10px 0;border-bottom:1px solid #1f2937;font-size:14px;color:#e5e7eb;">${esc(o.disease)}</td>
+        <td style="padding:10px 0;border-bottom:1px solid #1f2937;font-size:14px;color:#9ca3af;">${esc(o.country)}</td>
         <td style="padding:10px 0;border-bottom:1px solid #1f2937;font-size:13px;color:#f87171;text-align:right;font-weight:600;">HIGH</td>
       </tr>`,
     )

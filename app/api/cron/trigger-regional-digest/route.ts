@@ -9,6 +9,10 @@ const SUPABASE_URL = (process.env.NEXT_PUBLIC_SUPABASE_URL ?? "").replace(/^﻿/
 const SUPABASE_KEY = (process.env.SUPABASE_SERVICE_ROLE_KEY ?? "").replace(/^﻿/, "").trim();
 const APP_URL      = (process.env.NEXT_PUBLIC_APP_URL ?? "https://healthwatch-global.com").replace(/^﻿/, "").trim();
 
+function esc(s: string): string {
+  return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+}
+
 const REGION_LABELS: Record<string, Record<string, string>> = {
   africa:   { fr: "Afrique",    en: "Africa",   es: "África",    ar: "أفريقيا",      id: "Afrika"  },
   asia:     { fr: "Asie",       en: "Asia",      es: "Asia",      ar: "آسيا",          id: "Asia"    },
@@ -116,8 +120,8 @@ export async function GET(req: NextRequest) {
     const rows = regional.map((o) => {
       const riskColor = o.risk_level === "high" ? "#f87171" : o.risk_level === "medium" ? "#fbbf24" : "#4ade80";
       return `<tr>
-        <td style="padding:4px 8px;border-bottom:1px solid #1e293b">${o.disease_en ?? "—"}${o.is_pheic ? ' <span style="color:#f87171;font-size:10px">PHEIC</span>' : ""}</td>
-        <td style="padding:4px 8px;border-bottom:1px solid #1e293b">${o.country_en ?? "—"}</td>
+        <td style="padding:4px 8px;border-bottom:1px solid #1e293b">${esc(o.disease_en ?? "—")}${o.is_pheic ? ' <span style="color:#f87171;font-size:10px">PHEIC</span>' : ""}</td>
+        <td style="padding:4px 8px;border-bottom:1px solid #1e293b">${esc(o.country_en ?? "—")}</td>
         <td style="padding:4px 8px;border-bottom:1px solid #1e293b;text-align:right">${o.cases.toLocaleString(numLocale)}</td>
         <td style="padding:4px 8px;border-bottom:1px solid #1e293b;font-weight:700;font-size:11px;color:${riskColor}">${o.risk_level.toUpperCase()}</td>
         <td style="padding:4px 8px;border-bottom:1px solid #1e293b;color:#94a3b8">${o.date}</td>
