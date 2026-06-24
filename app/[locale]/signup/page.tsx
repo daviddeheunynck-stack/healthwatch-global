@@ -9,7 +9,7 @@ import { Activity, Loader2, CheckCircle, BarChart2, Bell, FileDown, Lock, Sparkl
 import Link from "next/link";
 import OAuthButtons from "@/components/OAuthButtons";
 
-const VALUE_PROPS: Record<string, { trial: string; items: string[]; noCard: string; gdpr: string }> = {
+const VALUE_PROPS: Record<string, { trial: string; items: string[]; noCard: string; gdpr: string; alreadyRegistered: { text: string; signIn: string; or: string; reset: string } }> = {
   en: {
     trial: "14-day Pro trial included — no credit card",
     items: [
@@ -19,6 +19,7 @@ const VALUE_PROPS: Record<string, { trial: string; items: string[]; noCard: stri
     ],
     noCard: "No credit card required",
     gdpr: "GDPR compliant · Data never sold",
+    alreadyRegistered: { text: "An account already exists for this email.", signIn: "Sign in", or: "or", reset: "reset your password" },
   },
   fr: {
     trial: "Essai Pro 14 jours inclus — sans carte bancaire",
@@ -29,6 +30,7 @@ const VALUE_PROPS: Record<string, { trial: string; items: string[]; noCard: stri
     ],
     noCard: "Sans carte bancaire",
     gdpr: "Conforme RGPD · Données jamais revendues",
+    alreadyRegistered: { text: "Un compte existe déjà pour cet email.", signIn: "Se connecter", or: "ou", reset: "réinitialiser votre mot de passe" },
   },
   es: {
     trial: "Prueba Pro 14 días incluida — sin tarjeta",
@@ -39,6 +41,7 @@ const VALUE_PROPS: Record<string, { trial: string; items: string[]; noCard: stri
     ],
     noCard: "Sin tarjeta de crédito",
     gdpr: "Cumple GDPR · Datos nunca vendidos",
+    alreadyRegistered: { text: "Ya existe una cuenta con este email.", signIn: "Iniciar sesión", or: "o", reset: "restablecer tu contraseña" },
   },
   ar: {
     trial: "تجربة Pro 14 يوماً مجاناً — بدون بطاقة بنكية",
@@ -49,6 +52,7 @@ const VALUE_PROPS: Record<string, { trial: string; items: string[]; noCard: stri
     ],
     noCard: "لا حاجة لبطاقة ائتمانية",
     gdpr: "متوافق مع GDPR · بياناتك لن تُباع أبداً",
+    alreadyRegistered: { text: "يوجد حساب مرتبط بهذا البريد الإلكتروني.", signIn: "تسجيل الدخول", or: "أو", reset: "إعادة تعيين كلمة المرور" },
   },
   id: {
     trial: "Uji coba Pro 14 hari termasuk — tanpa kartu kredit",
@@ -59,6 +63,7 @@ const VALUE_PROPS: Record<string, { trial: string; items: string[]; noCard: stri
     ],
     noCard: "Tanpa kartu kredit",
     gdpr: "Sesuai GDPR · Data tidak pernah dijual",
+    alreadyRegistered: { text: "Akun dengan email ini sudah ada.", signIn: "Masuk", or: "atau", reset: "atur ulang kata sandi" },
   },
 };
 
@@ -240,7 +245,23 @@ export default function SignupPage() {
                     <p className="text-xs text-gray-600 mt-1">{t("passwordHint")}</p>
                   </div>
 
-                  {error && <p className="text-red-400 text-sm">{error}</p>}
+                  {error && (
+                    /already registered/i.test(error) ? (
+                      <p className="text-sm text-amber-400">
+                        {vp.alreadyRegistered.text}{" "}
+                        <Link href={`/${locale}/login`} className="underline hover:text-amber-300 font-medium">
+                          {vp.alreadyRegistered.signIn}
+                        </Link>
+                        {" "}{vp.alreadyRegistered.or}{" "}
+                        <Link href={`/${locale}/forgot-password`} className="underline hover:text-amber-300 font-medium">
+                          {vp.alreadyRegistered.reset}
+                        </Link>
+                        .
+                      </p>
+                    ) : (
+                      <p className="text-red-400 text-sm">{error}</p>
+                    )
+                  )}
 
                   <button
                     type="submit"
