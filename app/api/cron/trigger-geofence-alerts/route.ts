@@ -15,6 +15,10 @@ const CRON_SECRET      = clean(process.env.CRON_SECRET);
 const RESEND_KEY       = clean(process.env.RESEND_API_KEY);
 const APP_URL          = clean(process.env.NEXT_PUBLIC_APP_URL) || "https://healthwatch-global.com";
 
+function esc(s: string): string {
+  return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+}
+
 const COOLDOWN_H = 6;
 
 interface GeofenceAlert {
@@ -131,7 +135,7 @@ export async function GET(req: NextRequest) {
     } as Record<string, string>)[locale] ?? `This alert fires every ${COOLDOWN_H}h when outbreaks exist within your zone radius. Manage geofence alerts on your dashboard.`;
 
     const rows = matches.slice(0, 8).map((o) =>
-      `<tr><td style="padding:4px 8px">${o.disease_en ?? "—"}</td><td style="padding:4px 8px">${o.country_en ?? "—"}</td><td style="padding:4px 8px;text-align:right">${o.cases.toLocaleString(numLocale)}</td><td style="padding:4px 8px;text-transform:uppercase;font-size:11px;font-weight:700;color:${o.risk_level === "high" ? "#f87171" : o.risk_level === "medium" ? "#fbbf24" : "#4ade80"}">${o.risk_level}</td></tr>`
+      `<tr><td style="padding:4px 8px">${esc(o.disease_en ?? "—")}</td><td style="padding:4px 8px">${esc(o.country_en ?? "—")}</td><td style="padding:4px 8px;text-align:right">${o.cases.toLocaleString(numLocale)}</td><td style="padding:4px 8px;text-transform:uppercase;font-size:11px;font-weight:700;color:${o.risk_level === "high" ? "#f87171" : o.risk_level === "medium" ? "#fbbf24" : "#4ade80"}">${o.risk_level}</td></tr>`
     ).join("");
 
     try {
