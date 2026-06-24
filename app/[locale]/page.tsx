@@ -331,6 +331,16 @@ async function DashboardContent({ demo = false, urlRegion, urlRisk }: { demo?: b
 
   const showFreeBanner = plan === "free";
 
+  const sevenDaysAgo = new Date(Date.now() - 7 * 86_400_000);
+  const missedAlerts = showFreeBanner
+    ? outbreaks.filter(o =>
+        o.active &&
+        ["high", "medium"].includes(o.risk_level) &&
+        (geoRegion === "all" || o.region === geoRegion) &&
+        o.updated_at && new Date(o.updated_at) > sevenDaysAgo
+      ).length
+    : 0;
+
   return (
     <>
       {demo && <DemoBanner locale={locale} />}
@@ -341,7 +351,7 @@ async function DashboardContent({ demo = false, urlRegion, urlRisk }: { demo?: b
         <TrialBanner trialEndsAt={trialEndsAt!} locale={locale} hasBilling={hasStripeSubscription} />
       )}
       {!demo && showFreeBanner && (
-        <FreePlanBanner locale={locale} trialExpired={trialExpired} />
+        <FreePlanBanner locale={locale} trialExpired={trialExpired} missedAlerts={missedAlerts} />
       )}
 
       {!demo && <PushNotificationBanner locale={locale} />}
