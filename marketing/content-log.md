@@ -433,6 +433,31 @@ Happy to share source docs for this specific outbreak — DM.
 
 ---
 
+## Template — Déclin investisseur (Axe 11)
+
+*À utiliser pour tout message d'investisseur post-PH. Réponse en < 3 min.*
+
+```
+Bonjour [Prénom], merci — ravi que le lancement ait attiré votre attention.
+
+Pour être direct : HealthWatch Global est bootstrapped by design et je n'ouvre
+pas de tour en ce moment. Ce n'est pas une question de timing — c'est un choix
+structurel.
+
+Ce qui m'intéresse en revanche : si vous avez des contacts dans des équipes de
+surveillance épidémique (ONG santé, agences régionales, instituts nationaux),
+une introduction est infiniment plus utile pour moi qu'un term sheet.
+
+Si ça colle avec ce que vous faites — avec plaisir de garder le contact dans ce
+cadre.
+
+— David
+```
+
+**Règle** : fermer sans "pas pour l'instant". Transformer en introducteur potentiel.
+
+---
+
 ### Screenshots PH — recommandations
 
 1. **Screenshot 1** — Dashboard avec filtre Africa actif + alerte Ebola visible (badge HIGH) — montre le produit en action, pas l'interface vide
