@@ -5,7 +5,7 @@ import { createClient as createServiceClient } from "@supabase/supabase-js";
 import {
   Shield, Users, Activity, RefreshCw,
   TrendingUp, DollarSign, Zap, Bell, Link2,
-  CheckCircle, XCircle, BarChart2,
+  CheckCircle, XCircle, BarChart2, AlertTriangle, ExternalLink,
 } from "lucide-react";
 import Link from "next/link";
 import AdminOutbreakTable from "@/components/AdminOutbreakTable";
@@ -188,6 +188,21 @@ export default async function AdminPage({
   const trialActive    = profiles?.filter((p) => p.plan !== "free" && !p.stripe_subscription_id && p.trial_ends_at && p.trial_ends_at > now.toISOString()) ?? [];
   const trialExpiring7 = trialActive.filter((p) => p.trial_ends_at! <= next7).length;
   const realMrr        = profiles?.filter((p) => p.stripe_subscription_id).reduce((sum, p) => sum + (PLAN_MRR[p.plan ?? "free"] ?? 0), 0) ?? 0;
+
+  // ── Duplicate outbreak detection (same disease + country, both active) ──────
+  const dupMap: Record<string, { id: string; date: string | null }[]> = {};
+  for (const o of outbreaks ?? []) {
+    if (!o.active) continue;
+    const key = `${o.disease}||${o.country_en ?? o.country}`;
+    if (!dupMap[key]) dupMap[key] = [];
+    dupMap[key].push({ id: o.id, date: o.date ?? null });
+  }
+  const duplicates = Object.entries(dupMap)
+    .filter(([, entries]) => entries.length > 1)
+    .map(([key, entries]) => {
+      const [disease, country] = key.split("||");
+      return { disease, country, entries };
+    });
 
   // ── Retention metrics (from already-fetched authUsers) ────────────────────
   // "Returned" = last_sign_in_at more than 2 days after created_at (not just signup ping)
@@ -400,6 +415,49 @@ export default async function AdminPage({
       <div className="space-y-4">
         <h2 className="text-white font-semibold text-lg">Épidémies</h2>
         <AdminOutbreakTable initial={(outbreaks as Outbreak[]) ?? []} />
+      </div>
+
+      {/* ── Duplicate detection ─────────────────────────────────────────────── */}
+      <div className={`bg-gray-900 border rounded-xl p-5 space-y-3 ${duplicates.length > 0 ? "border-orange-500/40" : "border-gray-800"}`}>
+        <div className="flex items-center gap-2">
+          {duplicates.length > 0
+            ? <AlertTriangle className="w-4 h-4 text-orange-400" />
+            : <CheckCircle   className="w-4 h-4 text-green-400" />}
+          <h2 className="text-white font-semibold">
+            Doublons potentiels
+            {duplicates.length > 0 && (
+              <span className="ml-2 text-xs font-normal text-orange-400 bg-orange-500/10 border border-orange-500/20 px-2 py-0.5 rounded-full">
+                {duplicates.length} détecté{duplicates.length > 1 ? "s" : ""}
+              </span>
+            )}
+          </h2>
+        </div>
+        {duplicates.length === 0 ? (
+          <p className="text-sm text-green-400">✓ Aucun doublon actif détecté (même maladie + même pays).</p>
+        ) : (
+          <div className="space-y-2">
+            <p className="text-xs text-gray-500">Foyers actifs partageant la même maladie et le même pays — vérifier et désactiver le doublon dans Supabase.</p>
+            {duplicates.map(({ disease, country, entries }) => (
+              <div key={`${disease}-${country}`} className="bg-orange-950/30 border border-orange-500/20 rounded-lg px-4 py-3 flex flex-col gap-1.5">
+                <p className="text-sm font-semibold text-orange-300">{disease} — {country}</p>
+                <div className="flex flex-wrap gap-2">
+                  {entries.map(e => (
+                    <Link
+                      key={e.id}
+                      href={`/${locale}/outbreak/${e.id}`}
+                      target="_blank"
+                      className="inline-flex items-center gap-1 text-xs text-gray-400 hover:text-white bg-gray-800 border border-gray-700 px-2 py-1 rounded transition-colors"
+                    >
+                      <ExternalLink className="w-3 h-3" />
+                      ID {e.id.slice(0, 8)}…
+                      {e.date && <span className="text-gray-600 ml-1">{e.date}</span>}
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* ── Users ───────────────────────────────────────────────────────────── */}
