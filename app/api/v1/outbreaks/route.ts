@@ -80,14 +80,22 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: "Invalid API key." }, { status: 401 });
   }
 
-  // Verify user is still on Enterprise plan
+  // Verify user is still on an active paid plan (check trial expiry)
   const { data: profile } = await supabase
     .from("profiles")
-    .select("plan")
+    .select("plan, trial_ends_at, stripe_subscription_id")
     .eq("id", apiKey.user_id)
     .single();
 
-  if (!["pro", "team", "enterprise"].includes(profile?.plan ?? "")) {
+  let activePlan = profile?.plan ?? "";
+  if (
+    activePlan !== "free" && activePlan !== "" &&
+    profile?.trial_ends_at &&
+    new Date(profile.trial_ends_at).getTime() < Date.now() &&
+    !profile?.stripe_subscription_id
+  ) activePlan = "free";
+
+  if (!["pro", "team", "enterprise"].includes(activePlan)) {
     return NextResponse.json(
       { error: "API access requires an active Pro, Team, or Enterprise subscription." },
       { status: 403 }
