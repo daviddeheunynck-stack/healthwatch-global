@@ -983,6 +983,30 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlis
             </div>
           )}
           <p className="text-[10px] text-gray-600 leading-snug">{c.reportingLag}</p>
+          <p className="text-[10px] text-gray-500 leading-snug flex items-center gap-1 mt-0.5">
+            <Info className="w-3 h-3 shrink-0 text-gray-600" />
+            {locale === "fr" ? "Cas confirmés + probables — agrégés OMS, ECDC, OPAS et Africa CDC" :
+             locale === "es" ? "Casos confirmados + probables — agregados OMS, ECDC, PAHO y Africa CDC" :
+             locale === "ar" ? "الحالات المؤكدة + المحتملة — مجمّعة من WHO وECDC وPAHO وAfrica CDC" :
+             locale === "id" ? "Kasus terkonfirmasi + probable — agregat WHO, ECDC, PAHO dan Africa CDC" :
+             "Confirmed + probable cases — aggregated from WHO, ECDC, PAHO & Africa CDC"}
+          </p>
+          {outbreak.updated_at && (
+            <p className="text-[10px] text-gray-600 leading-snug flex items-center gap-1">
+              <Clock className="w-3 h-3 shrink-0" />
+              {locale === "fr" ? "Synchro" :
+               locale === "es" ? "Sincronizado" :
+               locale === "ar" ? "آخر مزامنة" :
+               locale === "id" ? "Sinkronisasi" :
+               "Synced"}{" "}
+              <span className="text-gray-500">
+                {new Date(outbreak.updated_at).toLocaleDateString(
+                  locale === "fr" ? "fr-FR" : locale === "es" ? "es-ES" : locale === "ar" ? "ar-SA" : locale === "id" ? "id-ID" : "en-GB",
+                  { day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" }
+                )}
+              </span>
+            </p>
+          )}
         </div>
 
         {/* Stale-signal warning */}
