@@ -105,7 +105,8 @@ export async function GET(req: NextRequest) {
         console.error("[auth/callback] profile update failed:", e);
       }
 
-      return NextResponse.redirect(`${origin}${next}`);
+      const safeNext = next.startsWith("/") && !next.startsWith("//") ? next : `/${VALID_LOCALES[0]}`;
+      return NextResponse.redirect(`${origin}${safeNext}`);
     }
   }
 
