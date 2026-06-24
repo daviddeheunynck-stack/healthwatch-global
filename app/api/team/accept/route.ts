@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase-server";
 import { createClient as createService } from "@supabase/supabase-js";
+import { resolvedPlan } from "@/lib/resolved-plan";
 
 export const dynamic = "force-dynamic";
 
@@ -58,15 +59,25 @@ export async function GET(req: NextRequest) {
     return NextResponse.redirect(`${BASE_URL}/${locale}/account/team?error=invite_email_mismatch`);
   }
 
-  // Get team
+  // Get team + verify owner still has active plan
   const { data: team } = await service
     .from("teams")
-    .select("id, name, max_seats")
+    .select("id, name, max_seats, owner_id")
     .eq("id", invite.team_id)
     .single();
 
   if (!team) {
     return NextResponse.redirect(`${BASE_URL}/${locale}/account/team?error=team_not_found`);
+  }
+
+  const { data: ownerProfile } = await service
+    .from("profiles")
+    .select("plan, trial_ends_at, stripe_subscription_id")
+    .eq("id", team.owner_id)
+    .single();
+
+  if (resolvedPlan(ownerProfile) !== "team") {
+    return NextResponse.redirect(`${BASE_URL}/${locale}/account/team?error=team_plan_expired`);
   }
 
   // Already a member?

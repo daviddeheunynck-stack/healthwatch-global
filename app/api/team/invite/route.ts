@@ -4,6 +4,7 @@ import { createClient as createService } from "@supabase/supabase-js";
 import { buildTeamInviteEmail } from "@/lib/team-invite-email";
 import { rateLimit, getClientIp } from "@/lib/rate-limit";
 import { errorMessage } from "@/lib/error";
+import { resolvedPlan } from "@/lib/resolved-plan";
 
 export const dynamic = "force-dynamic";
 
@@ -56,14 +57,14 @@ export async function POST(req: NextRequest) {
 
   const service = getService();
 
-  // Verify caller has a team plan and owns a team
+  // Verify caller has an active team plan and owns a team
   const { data: profile } = await service
     .from("profiles")
-    .select("plan, team_id")
+    .select("plan, trial_ends_at, stripe_subscription_id, team_id")
     .eq("id", user.id)
     .single();
 
-  if (profile?.plan !== "team") {
+  if (resolvedPlan(profile) !== "team") {
     return NextResponse.json({ error: "Team plan required" }, { status: 403 });
   }
   if (!profile?.team_id) {
