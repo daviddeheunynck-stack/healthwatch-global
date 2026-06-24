@@ -404,6 +404,35 @@ Court DM LinkedIn à envoyer à ~20-40 contacts le 25 juin matin :
 
 ---
 
+---
+
+## Template — Réponse fact-check public (Axe 9)
+
+*À utiliser si un épidémiologiste ou journaliste poste une comparaison publique WHO vs HealthWatch avec écart de chiffres.*
+
+```
+@[USERNAME] Thanks for doing this — exactly the scrutiny this kind of tool needs.
+
+Methodology note to make the comparison fair:
+
+[DISEASE + COUNTRY]: WHO sitrep = [WHO_NUMBER] (lab-confirmed only).
+HealthWatch = [HW_NUMBER] — confirmed + probable cases aggregated from
+[WHO / Africa CDC / ECDC / PAHO]. The [DELTA]-case delta is the probable
+case count from [SOURCE]'s [DATE] report.
+
+We don't replace WHO sitrep. We display confirmed+probable (IHR Art. 9)
+for early-warning visibility, before lab confirmation arrives.
+Case definition is visible in each outbreak modal (ⓘ Cases column header).
+
+Happy to share source docs for this specific outbreak — DM.
+```
+
+**Règle d'or** : répondre en < 30 min. Passé 2h, le thread a sa propre vie.
+**Ton** : factuel, pas défensif. Remercier pour le fact-check.
+**Jamais** : "nos chiffres sont justes" — toujours expliquer la définition de cas.
+
+---
+
 ### Screenshots PH — recommandations
 
 1. **Screenshot 1** — Dashboard avec filtre Africa actif + alerte Ebola visible (badge HIGH) — montre le produit en action, pas l'interface vide

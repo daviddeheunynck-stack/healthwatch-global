@@ -2,7 +2,7 @@
 
 import { useState, useMemo, useCallback, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Search, X, ChevronUp, ChevronDown, ChevronsUpDown, Download, Lock, TrendingUp, TrendingDown, Minus, ExternalLink, SlidersHorizontal, Share2, CheckCircle } from "lucide-react";
+import { Search, X, ChevronUp, ChevronDown, ChevronsUpDown, Download, Lock, TrendingUp, TrendingDown, Minus, ExternalLink, SlidersHorizontal, Share2, CheckCircle, Info } from "lucide-react";
 import Link from "next/link";
 import OutbreakDetailModal from "@/components/OutbreakDetailModal";
 import SavedFilters from "@/components/SavedFilters";
@@ -1073,8 +1073,13 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
                 <th
                   className="text-left px-4 py-3 cursor-pointer hover:text-gray-200 select-none whitespace-nowrap"
                   onClick={() => handleSort("cases")}
+                  title={{ fr: "Cas confirmés + probables — agrégés OMS, ECDC, OPAS et Africa CDC. Peut différer du sitrep OMS (cas confirmés uniquement).", en: "Confirmed + probable cases — aggregated from WHO, ECDC, PAHO & Africa CDC. May differ from WHO sitrep (lab-confirmed only).", es: "Casos confirmados + probables — agregados OMS, ECDC, PAHO y Africa CDC. Puede diferir del sitrep OMS (solo confirmados).", ar: "الحالات المؤكدة + المحتملة — مجمّعة من WHO وECDC وPAHO وAfrica CDC. قد تختلف عن تقارير WHO (المؤكدة مخبرياً فقط).", id: "Kasus terkonfirmasi + probable — agregat dari WHO, ECDC, PAHO & Africa CDC. Mungkin berbeda dari sitrep WHO (hanya terkonfirmasi lab)." }[locale] ?? "Confirmed + probable cases — aggregated from WHO, ECDC, PAHO & Africa CDC. May differ from WHO sitrep (lab-confirmed only)."}
                 >
-                  {l.cases}<SortIcon col="cases" activeKey={sortKey} dir={sortDir} />
+                  <span className="inline-flex items-center gap-1">
+                    {l.cases}
+                    <Info className="w-3 h-3 text-gray-600 shrink-0" />
+                  </span>
+                  <SortIcon col="cases" activeKey={sortKey} dir={sortDir} />
                 </th>
                 <th
                   className="text-left px-4 py-3 hidden sm:table-cell cursor-pointer hover:text-gray-200 select-none whitespace-nowrap"
