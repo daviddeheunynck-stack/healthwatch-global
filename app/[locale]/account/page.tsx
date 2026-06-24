@@ -10,6 +10,7 @@ import PushNotificationToggle from "@/components/PushNotificationToggle";
 import DiseaseAlertPicker from "@/components/DiseaseAlertPicker";
 import SlackWebhookForm from "@/components/SlackWebhookForm";
 import ApiKeyManager from "@/components/ApiKeyManager";
+import { PRICE_DISPLAY } from "@/lib/pricing";
 import type { Metadata } from "next";
 
 const ACCOUNT_META: Record<string, { title: string }> = {
@@ -549,11 +550,11 @@ export default async function AccountPage({
             />
             <p className="text-xs text-gray-600">
               {trialExpired
-                ? (locale === "fr" ? "À partir de 29 €/mois ou 249 €/an" :
-                   locale === "es" ? "Desde €29/mes o €249/año" :
-                   locale === "ar" ? "ابتداءً من 29 €/شهر أو 249 €/سنة" :
-                   locale === "id" ? "Mulai €29/bulan atau €249/tahun" :
-                   "From €29/month or €249/year")
+                ? (locale === "fr" ? `À partir de ${PRICE_DISPLAY.fr.proMonthly}/mois ou ${PRICE_DISPLAY.fr.proAnnual}/an` :
+                   locale === "es" ? `Desde ${PRICE_DISPLAY.es.proMonthly}/mes o ${PRICE_DISPLAY.es.proAnnual}/año` :
+                   locale === "ar" ? `ابتداءً من ${PRICE_DISPLAY.ar.proMonthly}/شهر أو ${PRICE_DISPLAY.ar.proAnnual}/سنة` :
+                   locale === "id" ? `Mulai ${PRICE_DISPLAY.id.proMonthly}/bulan atau ${PRICE_DISPLAY.id.proAnnual}/tahun` :
+                   `From ${PRICE_DISPLAY.en_eur.proMonthly}/month or ${PRICE_DISPLAY.en_eur.proAnnual}/year`)
                 : (locale === "fr" ? "Essai 14 jours gratuit · sans carte bancaire" :
                    locale === "es" ? "Prueba 14 días gratis · sin tarjeta" :
                    locale === "ar" ? "تجربة 14 يوماً مجاناً · بدون بطاقة" :

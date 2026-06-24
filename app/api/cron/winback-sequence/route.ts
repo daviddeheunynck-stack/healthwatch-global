@@ -4,6 +4,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import { PRICE_DISPLAY } from "@/lib/pricing";
 
 export const dynamic = "force-dynamic";
 
@@ -74,7 +75,7 @@ const COPY: Record<string, {
       "📄 Les rapports PDF épidémiologiques régionaux",
       "📥 L'export CSV complet des données brutes",
     ],
-    pricingNote: "29 €/mois, sans engagement. Annulation à tout moment.",
+    pricingNote: `${PRICE_DISPLAY.fr.proMonthly}/mois, sans engagement. Annulation à tout moment.`,
     ctaLabel: "Réactiver Pro maintenant →",
     altText: "Vous représentez une ONG, une agence ONU ou un ministère ?",
     altLink: "Programme pilote institutionnel gratuit →",
@@ -94,7 +95,7 @@ const COPY: Record<string, {
       "📄 Regional epidemiological PDF reports",
       "📥 Full CSV export of raw data",
     ],
-    pricingNote: "€29/month, no commitment. Cancel anytime.",
+    pricingNote: `${PRICE_DISPLAY.en_eur.proMonthly}/month, no commitment. Cancel anytime.`,
     ctaLabel: "Reactivate Pro now →",
     altText: "Representing an NGO, UN agency or health ministry?",
     altLink: "Free institutional pilot program →",
@@ -114,7 +115,7 @@ const COPY: Record<string, {
       "📄 Informes PDF epidemiológicos regionales",
       "📥 Exportación CSV completa de datos brutos",
     ],
-    pricingNote: "29 €/mes, sin compromiso. Cancele cuando quiera.",
+    pricingNote: `${PRICE_DISPLAY.es.proMonthly}/mes, sin compromiso. Cancele cuando quiera.`,
     ctaLabel: "Reactivar Pro ahora →",
     altText: "¿Representa una ONG, agencia ONU o ministerio de salud?",
     altLink: "Programa piloto institucional gratuito →",
@@ -134,7 +135,7 @@ const COPY: Record<string, {
       "📄 تقارير PDF وبائية إقليمية",
       "📥 تصدير CSV كامل للبيانات الخام",
     ],
-    pricingNote: "29 €/شهر، بدون التزام. إلغاء في أي وقت.",
+    pricingNote: `${PRICE_DISPLAY.ar.proMonthly}/شهر، بدون التزام. إلغاء في أي وقت.`,
     ctaLabel: "← إعادة تفعيل Pro الآن",
     altText: "هل تمثل منظمة غير حكومية أو وكالة أممية أو وزارة صحة؟",
     altLink: "← برنامج تجريبي مؤسسي مجاني",
@@ -154,7 +155,7 @@ const COPY: Record<string, {
       "📄 Laporan PDF epidemiologi regional",
       "📥 Ekspor CSV lengkap dari data mentah",
     ],
-    pricingNote: "€29/bulan, tanpa komitmen. Batalkan kapan saja.",
+    pricingNote: `${PRICE_DISPLAY.id.proMonthly}/bulan, tanpa komitmen. Batalkan kapan saja.`,
     ctaLabel: "Aktifkan kembali Pro sekarang →",
     altText: "Mewakili LSM, badan PBB, atau kementerian kesehatan?",
     altLink: "Program pilot institusional gratis →",

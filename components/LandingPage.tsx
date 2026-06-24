@@ -9,6 +9,7 @@ import { getOutbreaks, getStats, getLocalizedDisease, getLocalizedCountry } from
 import RiskBadge from "@/components/RiskBadge";
 import NewsletterSubscribeForm from "@/components/NewsletterSubscribeForm";
 import LandingMapSection from "@/components/LandingMapSection";
+import { PRICE_DISPLAY } from "@/lib/pricing";
 
 // ─── Multilingual copy ────────────────────────────────────────────────────────
 
@@ -128,7 +129,7 @@ const COPY: Record<string, {
     orgs: ["Épidémiologistes & chercheurs", "Risque corporate & mobilité internationale", "Médecins de médecine des voyages", "Agences humanitaires, donors & analystes"],
     pricingTitle: "Commencez gratuitement. Évoluez quand vous en avez besoin.",
     pricingFree: "Gratuit",
-    pricingPro: "29 € /mois",
+    pricingPro: `${PRICE_DISPLAY.fr.proMonthly} /mois`,
     pricingEnterprise: "Sur devis",
     pricingFreeSub: "Carte mondiale · 1 région · Digest hebdo",
     pricingProSub: "Toutes régions · Alertes · PDF · CSV · Slack",
@@ -208,7 +209,7 @@ const COPY: Record<string, {
     orgs: ["Epidemiologists & researchers", "Corporate risk & global mobility", "Travel medicine doctors", "Humanitarian agencies, donors & analysts"],
     pricingTitle: "Start free. Scale when you need to.",
     pricingFree: "Free",
-    pricingPro: "€29 /month",
+    pricingPro: `${PRICE_DISPLAY.en_eur.proMonthly} /month`,
     pricingEnterprise: "Custom",
     pricingFreeSub: "World map · 1 region · Weekly digest",
     pricingProSub: "All regions · Alerts · PDF · CSV · Slack",
@@ -288,7 +289,7 @@ const COPY: Record<string, {
     orgs: ["Epidemiólogos & investigadores", "Riesgo corporativo & movilidad global", "Médicos de medicina de viaje", "Agencias humanitarias, donantes & analistas"],
     pricingTitle: "Empiece gratis. Escale cuando lo necesite.",
     pricingFree: "Gratis",
-    pricingPro: "€29 /mes",
+    pricingPro: `${PRICE_DISPLAY.es.proMonthly} /mes`,
     pricingEnterprise: "A medida",
     pricingFreeSub: "Mapa mundial · 1 región · Digest semanal",
     pricingProSub: "Todas las regiones · Alertas · PDF · CSV · Slack",
@@ -368,7 +369,7 @@ const COPY: Record<string, {
     orgs: ["علماء الأوبئة والباحثون", "إدارة المخاطر والتنقل الدولي", "أطباء طب السفر", "الوكالات الإنسانية والجهات المانحة والمحللون"],
     pricingTitle: "ابدأ مجاناً. طوِّر عندما تحتاج.",
     pricingFree: "مجاني",
-    pricingPro: "€29 / شهر",
+    pricingPro: `${PRICE_DISPLAY.ar.proMonthly} / شهر`,
     pricingEnterprise: "حسب الطلب",
     pricingFreeSub: "خريطة عالمية · منطقة واحدة · ملخص أسبوعي",
     pricingProSub: "جميع المناطق · تنبيهات · PDF · CSV · Slack",
@@ -448,7 +449,7 @@ const COPY: Record<string, {
     orgs: ["Epidemiolog & peneliti", "Manajemen risiko & mobilitas global", "Dokter kedokteran perjalanan", "Lembaga kemanusiaan, donor & analis"],
     pricingTitle: "Mulai gratis. Kembangkan saat dibutuhkan.",
     pricingFree: "Gratis",
-    pricingPro: "€29 /bulan",
+    pricingPro: `${PRICE_DISPLAY.id.proMonthly} /bulan`,
     pricingEnterprise: "Kustom",
     pricingFreeSub: "Peta dunia · 1 wilayah · Digest mingguan",
     pricingProSub: "Semua wilayah · Peringatan · PDF · CSV · Slack",

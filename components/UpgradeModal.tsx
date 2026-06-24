@@ -8,6 +8,7 @@ import { X, FileText, Radio, List, BarChart2, TableProperties, ArrowLeftRight, Z
 import Link from "next/link";
 import CheckoutButton from "@/components/CheckoutButton";
 import type { UpgradeFeature } from "@/lib/upgrade-modal-context";
+import { PRICE_DISPLAY } from "@/lib/pricing";
 
 // ─── Copy ─────────────────────────────────────────────────────────────────────
 
@@ -42,7 +43,7 @@ const COPY: Record<string, {
     cta:         "Commencer l'essai gratuit",
     ctaExpired:  "S'abonner à Pro →",
     trial:       "14 jours gratuits · Sans carte bancaire",
-    trialExpired:"À partir de 29 €/mois ou 249 €/an",
+    trialExpired: `À partir de ${PRICE_DISPLAY.fr.proMonthly}/mois ou ${PRICE_DISPLAY.fr.proAnnual}/an`,
   },
   en: {
     pdf:      { title: "Regional PDF reports",     desc: "Download shareable epidemiological reports ready for your teams or donors.",             plan: "Available — Pro" },
@@ -60,7 +61,7 @@ const COPY: Record<string, {
     cta:         "Start free trial",
     ctaExpired:  "Subscribe to Pro →",
     trial:       "14 days free · No credit card",
-    trialExpired:"From €29/month or €249/year",
+    trialExpired: `From ${PRICE_DISPLAY.en_eur.proMonthly}/month or ${PRICE_DISPLAY.en_eur.proAnnual}/year`,
   },
   es: {
     pdf:      { title: "Informes PDF regionales",     desc: "Descargue informes epidemiológicos listos para compartir con su equipo o financiadores.",    plan: "Disponible — Pro" },
@@ -78,7 +79,7 @@ const COPY: Record<string, {
     cta:         "Iniciar prueba gratuita",
     ctaExpired:  "Suscribirse a Pro →",
     trial:       "14 días gratis · Sin tarjeta",
-    trialExpired:"Desde 29 €/mes o 249 €/año",
+    trialExpired: `Desde ${PRICE_DISPLAY.es.proMonthly}/mes o ${PRICE_DISPLAY.es.proAnnual}/año`,
   },
   ar: {
     pdf:      { title: "تقارير PDF إقليمية",           desc: "حمّل تقارير وبائية جاهزة للمشاركة مع فرقك أو المموّلين بنقرة واحدة.",            plan: "متاح — Pro" },
@@ -96,7 +97,7 @@ const COPY: Record<string, {
     cta:         "ابدأ التجربة المجانية",
     ctaExpired:  "اشترك في Pro ←",
     trial:       "14 يوماً مجاناً · بدون بطاقة بنكية",
-    trialExpired:"من 29 €/شهر أو 249 €/سنة",
+    trialExpired: `من ${PRICE_DISPLAY.ar.proMonthly}/شهر أو ${PRICE_DISPLAY.ar.proAnnual}/سنة`,
   },
   id: {
     pdf:      { title: "Laporan PDF regional",        desc: "Unduh laporan epidemiologi siap dibagikan ke tim atau donor Anda.",                      plan: "Tersedia — Pro" },
@@ -114,7 +115,7 @@ const COPY: Record<string, {
     cta:         "Mulai uji coba gratis",
     ctaExpired:  "Berlangganan Pro →",
     trial:       "14 hari gratis · Tanpa kartu kredit",
-    trialExpired:"Mulai €29/bulan atau €249/tahun",
+    trialExpired: `Mulai ${PRICE_DISPLAY.id.proMonthly}/bulan atau ${PRICE_DISPLAY.id.proAnnual}/tahun`,
   },
 };
 

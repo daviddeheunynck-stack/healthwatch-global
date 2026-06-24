@@ -6,6 +6,7 @@ import { track } from "@vercel/analytics/react";
 import { Check, Zap, Shield, Users, RefreshCw, Sparkles, Clock, AlertTriangle, Building2 } from "lucide-react";
 import CheckoutButton from "@/components/CheckoutButton";
 import { createClient } from "@/lib/supabase-browser";
+import { PRICE_DISPLAY } from "@/lib/pricing";
 
 type Billing = "monthly" | "annual";
 
@@ -182,17 +183,16 @@ const TRIAL_COPY: Record<string, {
   },
 };
 
-// EUR: Pro €29/mo | €249/yr · Team €149/mo | €1 290/yr
-// USD: Pro $49/mo | $468/yr · Team $165/mo | $1 425/yr  (en locale only)
+// To update prices, edit lib/pricing.ts only.
 const PRICES: Record<string, {
   proMonthly: string; proAnnual: string; proAnnualTotal: string;
   teamMonthly: string; teamAnnual: string; teamAnnualTotal: string;
 }> = {
-  fr: { proMonthly: "29 €",  proAnnual: "249 €",    proAnnualTotal: "économisez 99 €",  teamMonthly: "149 €", teamAnnual: "1 290 €", teamAnnualTotal: "économisez 498 €" },
-  en: { proMonthly: "$49",   proAnnual: "$468",     proAnnualTotal: "save $120",        teamMonthly: "$165",  teamAnnual: "$1,425",  teamAnnualTotal: "save $555"        },
-  es: { proMonthly: "€29",   proAnnual: "€249",     proAnnualTotal: "ahorre €99",       teamMonthly: "€149",  teamAnnual: "€1.290",  teamAnnualTotal: "ahorre €498"      },
-  ar: { proMonthly: "€29",   proAnnual: "€249",     proAnnualTotal: "وفّر 99 €",        teamMonthly: "€149",  teamAnnual: "€1.290",  teamAnnualTotal: "وفّر 498 €"       },
-  id: { proMonthly: "€29",   proAnnual: "€249",     proAnnualTotal: "hemat €99",        teamMonthly: "€149",  teamAnnual: "€1.290",  teamAnnualTotal: "hemat €498"       },
+  fr: { proMonthly: PRICE_DISPLAY.fr.proMonthly, proAnnual: PRICE_DISPLAY.fr.proAnnual, proAnnualTotal: `économisez ${PRICE_DISPLAY.fr.proAnnualSavings}`, teamMonthly: PRICE_DISPLAY.fr.teamMonthly, teamAnnual: PRICE_DISPLAY.fr.teamAnnual, teamAnnualTotal: `économisez ${PRICE_DISPLAY.fr.teamAnnualSavings}` },
+  en: { proMonthly: PRICE_DISPLAY.en.proMonthly, proAnnual: PRICE_DISPLAY.en.proAnnual, proAnnualTotal: `save ${PRICE_DISPLAY.en.proAnnualSavings}`,         teamMonthly: PRICE_DISPLAY.en.teamMonthly, teamAnnual: PRICE_DISPLAY.en.teamAnnual, teamAnnualTotal: `save ${PRICE_DISPLAY.en.teamAnnualSavings}` },
+  es: { proMonthly: PRICE_DISPLAY.es.proMonthly, proAnnual: PRICE_DISPLAY.es.proAnnual, proAnnualTotal: `ahorre ${PRICE_DISPLAY.es.proAnnualSavings}`,       teamMonthly: PRICE_DISPLAY.es.teamMonthly, teamAnnual: PRICE_DISPLAY.es.teamAnnual, teamAnnualTotal: `ahorre ${PRICE_DISPLAY.es.teamAnnualSavings}` },
+  ar: { proMonthly: PRICE_DISPLAY.ar.proMonthly, proAnnual: PRICE_DISPLAY.ar.proAnnual, proAnnualTotal: `وفّر ${PRICE_DISPLAY.ar.proAnnualSavings}`,          teamMonthly: PRICE_DISPLAY.ar.teamMonthly, teamAnnual: PRICE_DISPLAY.ar.teamAnnual, teamAnnualTotal: `وفّر ${PRICE_DISPLAY.ar.teamAnnualSavings}` },
+  id: { proMonthly: PRICE_DISPLAY.id.proMonthly, proAnnual: PRICE_DISPLAY.id.proAnnual, proAnnualTotal: `hemat ${PRICE_DISPLAY.id.proAnnualSavings}`,         teamMonthly: PRICE_DISPLAY.id.teamMonthly, teamAnnual: PRICE_DISPLAY.id.teamAnnual, teamAnnualTotal: `hemat ${PRICE_DISPLAY.id.teamAnnualSavings}` },
 };
 
 export default function PricingCards({ locale }: { locale: string }) {

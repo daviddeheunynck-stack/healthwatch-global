@@ -2,6 +2,7 @@ import { getLocale } from "next-intl/server";
 import Link from "next/link";
 import { ArrowLeft, Check, FileText, Shield, Clock, Building2, Mail, ArrowRight, Lock } from "lucide-react";
 import type { Metadata } from "next";
+import { PRICE_DISPLAY } from "@/lib/pricing";
 
 const LOCALES = ["en", "fr", "es", "ar", "id"] as const;
 
@@ -54,7 +55,7 @@ const COPY: Record<string, {
     phase1_items: ["5 sièges Pro complets", "Accès toutes fonctionnalités", "Aucun document requis", "Aucune CB demandée"],
     phase1_cta: "Candidater au pilote →",
     phase2_title: "Phase 2 — Abonnement institutionnel",
-    phase2_badge: "Team · €149/mois",
+    phase2_badge: `Team · ${PRICE_DISPLAY.fr.teamMonthly}/mois`,
     phase2_desc: "Après le pilote : 4 documents suffisent pour activer l'abonnement dans la plupart des procédures institutionnelles.",
     docs_title: "Documents disponibles",
     doc1_title: "Accord de Traitement des Données (DPA)",
@@ -105,7 +106,7 @@ const COPY: Record<string, {
     phase1_items: ["5 full Pro seats", "Access to all features", "No documents required", "No credit card required"],
     phase1_cta: "Apply for the pilot →",
     phase2_title: "Phase 2 — Institutional Subscription",
-    phase2_badge: "Team · €149/month",
+    phase2_badge: `Team · ${PRICE_DISPLAY.en_eur.teamMonthly}/month`,
     phase2_desc: "After the pilot: 4 documents are sufficient to activate the subscription in most institutional procurement procedures.",
     docs_title: "Available documents",
     doc1_title: "Data Processing Agreement (DPA)",
@@ -156,7 +157,7 @@ const COPY: Record<string, {
     phase1_items: ["5 plazas Pro completas", "Acceso a todas las funciones", "Sin documentos requeridos", "Sin tarjeta de crédito"],
     phase1_cta: "Solicitar piloto →",
     phase2_title: "Fase 2 — Suscripción institucional",
-    phase2_badge: "Team · €149/mes",
+    phase2_badge: `Team · ${PRICE_DISPLAY.es.teamMonthly}/mes`,
     phase2_desc: "Después del piloto: 4 documentos son suficientes para activar la suscripción.",
     docs_title: "Documentos disponibles",
     doc1_title: "Acuerdo de Tratamiento de Datos (DPA)",
@@ -207,7 +208,7 @@ const COPY: Record<string, {
     phase1_items: ["5 مقاعد Pro كاملة", "وصول لجميع الميزات", "لا وثائق مطلوبة", "لا بطاقة ائتمانية"],
     phase1_cta: "التقديم للبرنامج التجريبي ←",
     phase2_title: "المرحلة 2 — الاشتراك المؤسسي",
-    phase2_badge: "Team · €149/شهر",
+    phase2_badge: `Team · ${PRICE_DISPLAY.ar.teamMonthly}/شهر`,
     phase2_desc: "بعد التجربة: 4 وثائق تكفي لتفعيل الاشتراك في معظم إجراءات المشتريات المؤسسية.",
     docs_title: "الوثائق المتاحة",
     doc1_title: "اتفاقية معالجة البيانات (DPA)",
@@ -258,7 +259,7 @@ const COPY: Record<string, {
     phase1_items: ["5 kursi Pro penuh", "Akses ke semua fitur", "Tidak ada dokumen yang diperlukan", "Tidak perlu kartu kredit"],
     phase1_cta: "Daftar pilot →",
     phase2_title: "Fase 2 — Langganan Institusional",
-    phase2_badge: "Team · €149/bulan",
+    phase2_badge: `Team · ${PRICE_DISPLAY.id.teamMonthly}/bulan`,
     phase2_desc: "Setelah pilot: 4 dokumen cukup untuk mengaktifkan langganan dalam prosedur pengadaan institusional.",
     docs_title: "Dokumen yang tersedia",
     doc1_title: "Perjanjian Pemrosesan Data (DPA)",

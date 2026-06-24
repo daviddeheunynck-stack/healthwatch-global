@@ -7,6 +7,7 @@ import RealtimeAlertFeed from "@/components/RealtimeAlertFeed";
 import CheckoutButton from "@/components/CheckoutButton";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase-browser";
+import { PRICE_DISPLAY } from "@/lib/pricing";
 
 const PRO_ALERT_LINK: Record<string, { label: string; sub: string; btn: string }> = {
   fr: {
@@ -50,7 +51,7 @@ const PRO_COPY: Record<string, {
     cta: "Commencer l'essai gratuit →",
     ctaExpired: "S'abonner à Pro →",
     note: "14 jours gratuits · sans CB",
-    noteExpired: "À partir de 29 €/mois ou 249 €/an",
+    noteExpired: `À partir de ${PRICE_DISPLAY.fr.proMonthly}/mois ou ${PRICE_DISPLAY.fr.proAnnual}/an`,
     divider: "ou continuer avec l'offre gratuite",
     freeLabel: "Digest hebdomadaire gratuit — 1 région",
   },
@@ -62,7 +63,7 @@ const PRO_COPY: Record<string, {
     cta: "Start free trial →",
     ctaExpired: "Subscribe to Pro →",
     note: "14 days free · no credit card",
-    noteExpired: "From €29/month or €249/year",
+    noteExpired: `From ${PRICE_DISPLAY.en_eur.proMonthly}/month or ${PRICE_DISPLAY.en_eur.proAnnual}/year`,
     divider: "or continue with the free plan",
     freeLabel: "Free weekly digest — 1 region",
   },
@@ -74,7 +75,7 @@ const PRO_COPY: Record<string, {
     cta: "Iniciar prueba gratuita →",
     ctaExpired: "Suscribirse a Pro →",
     note: "14 días gratis · sin tarjeta",
-    noteExpired: "Desde 29 €/mes o 249 €/año",
+    noteExpired: `Desde ${PRICE_DISPLAY.es.proMonthly}/mes o ${PRICE_DISPLAY.es.proAnnual}/año`,
     divider: "o continuar con el plan gratuito",
     freeLabel: "Digest semanal gratuito — 1 región",
   },
@@ -86,7 +87,7 @@ const PRO_COPY: Record<string, {
     cta: "← ابدأ التجربة المجانية",
     ctaExpired: "← الاشتراك في Pro",
     note: "14 يوماً مجاناً · بدون بطاقة",
-    noteExpired: "من 29 €/شهر أو 249 €/سنة",
+    noteExpired: `من ${PRICE_DISPLAY.ar.proMonthly}/شهر أو ${PRICE_DISPLAY.ar.proAnnual}/سنة`,
     divider: "أو تابع مع الخطة المجانية",
     freeLabel: "ملخص أسبوعي مجاني — منطقة واحدة",
   },
@@ -98,7 +99,7 @@ const PRO_COPY: Record<string, {
     cta: "Mulai uji coba gratis →",
     ctaExpired: "Berlangganan Pro →",
     note: "14 hari gratis · tanpa kartu",
-    noteExpired: "Mulai dari €29/bulan atau €249/tahun",
+    noteExpired: `Mulai dari ${PRICE_DISPLAY.id.proMonthly}/bulan atau ${PRICE_DISPLAY.id.proAnnual}/tahun`,
     divider: "atau lanjutkan dengan paket gratis",
     freeLabel: "Digest mingguan gratis — 1 wilayah",
   },

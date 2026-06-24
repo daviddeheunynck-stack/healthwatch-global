@@ -1,3 +1,5 @@
+import { PRICE_DISPLAY } from "@/lib/pricing";
+
 // ─── J+3 : Discover your Pro trial features ───────────────────────────────────
 
 const J3_CONTENT: Record<string, {
@@ -341,7 +343,7 @@ const TRIAL_EXPIRED_CONTENT: Record<string, {
       "🔔 Alertes push instantanées",
     ],
     reactivateTitle: "Réactivez votre accès Pro dès aujourd'hui",
-    ctaLabel: "Réactiver mon accès Pro — 29 €/mois →",
+    ctaLabel: `Réactiver mon accès Pro — ${PRICE_DISPLAY.fr.proMonthly}/mois →`,
     altText: "Tarif ONG ou gouvernemental disponible.",
     altLink: "Contactez-nous →",
     closing: "L'équipe HealthWatch Global",
@@ -360,7 +362,7 @@ const TRIAL_EXPIRED_CONTENT: Record<string, {
       "🔔 Instant push alerts",
     ],
     reactivateTitle: "Reactivate your Pro access today",
-    ctaLabel: "Reactivate Pro access — €29/month →",
+    ctaLabel: `Reactivate Pro access — ${PRICE_DISPLAY.en_eur.proMonthly}/month →`,
     altText: "NGO or government pricing available.",
     altLink: "Contact us →",
     closing: "The HealthWatch Global Team",
@@ -379,7 +381,7 @@ const TRIAL_EXPIRED_CONTENT: Record<string, {
       "🔔 Alertas push instantáneas",
     ],
     reactivateTitle: "Reactive su acceso Pro hoy",
-    ctaLabel: "Reactivar acceso Pro — 29 €/mes →",
+    ctaLabel: `Reactivar acceso Pro — ${PRICE_DISPLAY.es.proMonthly}/mes →`,
     altText: "Precios para ONG o gobierno disponibles.",
     altLink: "Contáctenos →",
     closing: "El equipo de HealthWatch Global",
@@ -398,7 +400,7 @@ const TRIAL_EXPIRED_CONTENT: Record<string, {
       "🔔 تنبيهات الدفع الفوري",
     ],
     reactivateTitle: "أعد تفعيل وصولك Pro اليوم",
-    ctaLabel: "← إعادة تفعيل Pro — 29 €/شهر",
+    ctaLabel: `← إعادة تفعيل Pro — ${PRICE_DISPLAY.ar.proMonthly}/شهر`,
     altText: "أسعار خاصة للمنظمات غير الحكومية والحكومات.",
     altLink: "← اتصل بنا",
     closing: "فريق HealthWatch Global",
@@ -417,7 +419,7 @@ const TRIAL_EXPIRED_CONTENT: Record<string, {
       "🔔 Peringatan push instan",
     ],
     reactivateTitle: "Aktifkan kembali akses Pro Anda hari ini",
-    ctaLabel: "Aktifkan kembali Pro — €29/bulan →",
+    ctaLabel: `Aktifkan kembali Pro — ${PRICE_DISPLAY.id.proMonthly}/bulan →`,
     altText: "Harga khusus untuk LSM atau pemerintah tersedia.",
     altLink: "Hubungi kami →",
     closing: "Tim HealthWatch Global",

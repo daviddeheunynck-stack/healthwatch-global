@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { X } from "lucide-react";
 import { track } from "@vercel/analytics/react";
 import CheckoutButton from "@/components/CheckoutButton";
+import { PRICE_DISPLAY } from "@/lib/pricing";
 
 const COPY: Record<string, {
   title: string; sub: string; cta: string; trial: string;
@@ -18,7 +19,7 @@ const COPY: Record<string, {
     trial: "Sans carte bancaire",
     titleExpired: "Votre essai est terminé — passez à Pro",
     ctaExpired: "S'abonner à Pro →",
-    trialExpired: "À partir de 29 €/mois ou 249 €/an",
+    trialExpired: `À partir de ${PRICE_DISPLAY.fr.proMonthly}/mois ou ${PRICE_DISPLAY.fr.proAnnual}/an`,
   },
   en: {
     title: "Upgrade to Pro — 14-day free trial",
@@ -28,7 +29,7 @@ const COPY: Record<string, {
     trial: "No credit card",
     titleExpired: "Your trial ended — subscribe to keep Pro access",
     ctaExpired: "Subscribe to Pro →",
-    trialExpired: "From €29/month or €249/year",
+    trialExpired: `From ${PRICE_DISPLAY.en_eur.proMonthly}/month or ${PRICE_DISPLAY.en_eur.proAnnual}/year`,
   },
   es: {
     title: "Pasa a Pro — 14 días de prueba gratis",
@@ -38,7 +39,7 @@ const COPY: Record<string, {
     trial: "Sin tarjeta de crédito",
     titleExpired: "Tu prueba ha terminado — suscríbete a Pro",
     ctaExpired: "Suscribirse a Pro →",
-    trialExpired: "Desde €29/mes o €249/año",
+    trialExpired: `Desde ${PRICE_DISPLAY.es.proMonthly}/mes o ${PRICE_DISPLAY.es.proAnnual}/año`,
   },
   ar: {
     title: "انتقل إلى Pro — تجربة 14 يوماً مجاناً",
@@ -48,7 +49,7 @@ const COPY: Record<string, {
     trial: "بدون بطاقة بنكية",
     titleExpired: "انتهت تجربتك — اشترك في Pro للاستمرار",
     ctaExpired: "← الاشتراك في Pro",
-    trialExpired: "ابتداءً من 29 € شهرياً أو 249 € سنوياً",
+    trialExpired: `ابتداءً من ${PRICE_DISPLAY.ar.proMonthly} شهرياً أو ${PRICE_DISPLAY.ar.proAnnual} سنوياً`,
   },
   id: {
     title: "Upgrade ke Pro — uji coba 14 hari gratis",
@@ -58,7 +59,7 @@ const COPY: Record<string, {
     trial: "Tanpa kartu kredit",
     titleExpired: "Uji coba Anda berakhir — langganan Pro untuk melanjutkan",
     ctaExpired: "Berlangganan Pro →",
-    trialExpired: "Mulai €29/bulan atau €249/tahun",
+    trialExpired: `Mulai ${PRICE_DISPLAY.id.proMonthly}/bulan atau ${PRICE_DISPLAY.id.proAnnual}/tahun`,
   },
 };
 
