@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase-server";
+import { resolvedPlan } from "@/lib/resolved-plan";
 import { getOutbreaks, getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 import { PrintButton } from "@/components/PrintButton";
 import Link from "next/link";
@@ -149,8 +150,8 @@ export default async function BriefingPage({ params }: { params: Promise<{ local
   }
 
   const { data: profile } = await supabase
-    .from("profiles").select("plan").eq("id", user.id).single();
-  const isPaid = ["pro", "team", "enterprise"].includes(profile?.plan ?? "");
+    .from("profiles").select("plan, trial_ends_at, stripe_subscription_id").eq("id", user.id).single();
+  const isPaid = ["pro", "team", "enterprise"].includes(resolvedPlan(profile));
 
   if (!isPaid) {
     return (
