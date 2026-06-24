@@ -5,6 +5,7 @@ import Link from "next/link";
 import BillingPortalButton from "@/components/BillingPortalButton";
 import CheckoutButton from "@/components/CheckoutButton";
 import SignOutButton from "@/components/SignOutButton";
+import DeleteAccountButton from "@/components/DeleteAccountButton";
 import AlertRegionToggles from "@/components/AlertRegionToggles";
 import PushNotificationToggle from "@/components/PushNotificationToggle";
 import DiseaseAlertPicker from "@/components/DiseaseAlertPicker";
@@ -687,6 +688,11 @@ export default async function AccountPage({
         {/* Sign out */}
         <div className="pt-2 border-t border-gray-800">
           <SignOutButton locale={locale} label={l.logout} />
+        </div>
+
+        {/* Danger zone */}
+        <div className="pt-4 border-t border-red-900/30">
+          <DeleteAccountButton locale={locale} />
         </div>
       </div>
 
