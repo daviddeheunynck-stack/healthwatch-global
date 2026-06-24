@@ -2,7 +2,7 @@
 
 import { useState, useMemo, useCallback, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Search, X, ChevronUp, ChevronDown, ChevronsUpDown, Download, Lock, TrendingUp, TrendingDown, Minus, ExternalLink, SlidersHorizontal } from "lucide-react";
+import { Search, X, ChevronUp, ChevronDown, ChevronsUpDown, Download, Lock, TrendingUp, TrendingDown, Minus, ExternalLink, SlidersHorizontal, Share2, CheckCircle } from "lucide-react";
 import Link from "next/link";
 import OutbreakDetailModal from "@/components/OutbreakDetailModal";
 import SavedFilters from "@/components/SavedFilters";
@@ -221,6 +221,7 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
   const [admin1Filter,     setAdmin1Filter]     = useState("");
   const [epiWeekMode,      setEpiWeekMode]      = useState(false);
   const [ageMode,          setAgeMode]          = useState(false);
+  const [copied,           setCopied]           = useState(false);
 
   // Sync region + risk to URL so shared links preserve filter state
   useEffect(() => {
@@ -773,6 +774,27 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
             <span className="hidden sm:inline">CSV</span>
           </button>
         )}
+        {/* Share this view — copies current URL with active filters, visible to all */}
+        <button
+          onClick={() => {
+            navigator.clipboard.writeText(window.location.href).catch(() => {});
+            setCopied(true);
+            setTimeout(() => setCopied(false), 2000);
+          }}
+          title={{ fr: "Copier le lien de cette vue", en: "Copy link to this view", es: "Copiar enlace de esta vista", ar: "نسخ رابط هذه العرض", id: "Salin tautan tampilan ini" }[locale] ?? "Copy link to this view"}
+          className="flex items-center gap-1.5 px-3 py-2 bg-gray-900 hover:bg-gray-800 border border-gray-800 hover:border-gray-600 text-gray-500 hover:text-gray-300 rounded-lg text-xs transition-colors shrink-0"
+        >
+          {copied
+            ? <CheckCircle className="w-3.5 h-3.5 text-green-400" />
+            : <Share2 className="w-3.5 h-3.5" />
+          }
+          <span className="hidden sm:inline">
+            {copied
+              ? ({ fr: "Copié !", en: "Copied!", es: "¡Copiado!", ar: "تم!", id: "Disalin!" }[locale] ?? "Copied!")
+              : ({ fr: "Partager", en: "Share", es: "Compartir", ar: "مشاركة", id: "Bagikan" }[locale] ?? "Share")
+            }
+          </span>
+        </button>
         </div>
 
         {/* Mobile filter toggle — hidden on sm+ where filters are always visible */}
