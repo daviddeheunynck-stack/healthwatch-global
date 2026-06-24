@@ -30,7 +30,8 @@ export default async function WidgetPage({
   searchParams: Promise<{ locale?: string; region?: string; theme?: string; limit?: string }>;
 }) {
   const sp        = await searchParams;
-  const locale    = (sp.locale ?? "en") as string;
+  const VALID_LOCALES = new Set(["fr", "en", "es", "ar", "id"]);
+  const locale    = VALID_LOCALES.has(sp.locale ?? "") ? (sp.locale as string) : "en";
   const region    = sp.region as string | undefined;
   const isDark    = (sp.theme ?? "dark") !== "light";
   const maxItems  = Math.min(parseInt(sp.limit ?? "5", 10), 10);

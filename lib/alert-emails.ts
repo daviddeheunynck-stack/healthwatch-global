@@ -114,7 +114,7 @@ export function buildOutbreakAlertEmail(
   dashboardUrl: string
 ): { subject: string; html: string } {
   const c = CONTENT[locale] ?? CONTENT.en;
-  const numLocale = locale === "ar" ? "ar-SA" : locale;
+  const numLocale = locale === "ar" ? "ar-SA" : (locale || "en");
 
   const riskColor =
     outbreak.risk_level === "high"

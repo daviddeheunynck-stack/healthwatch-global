@@ -147,7 +147,7 @@ export function buildDigestEmail(
   const l = LABELS[locale] || LABELS.fr;
   const regionLabel = REGION_LABELS[locale]?.[region] || region;
   const dir = locale === "ar" ? "rtl" : "ltr";
-  const numLocale = locale === "ar" ? "ar-SA" : locale;
+  const numLocale = locale === "ar" ? "ar-SA" : (locale || "en");
   const weekStr = new Date().toLocaleDateString(numLocale, { day: "numeric", month: "long", year: "numeric" });
   const unsubUrl = subscriptionId
     ? `https://healthwatch-global.com/api/unsubscribe?id=${encodeURIComponent(subscriptionId)}&locale=${locale}`

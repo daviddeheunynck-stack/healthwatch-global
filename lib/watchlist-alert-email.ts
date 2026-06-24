@@ -114,7 +114,7 @@ export function buildWatchlistAlertEmail(
   const c = COPY[locale] ?? COPY.en;
   const isRtl = locale === "ar";
   const dir   = isRtl ? "rtl" : "ltr";
-  const numLocale = locale === "ar" ? "ar-SA" : locale;
+  const numLocale = locale === "ar" ? "ar-SA" : (locale || "en");
 
   const hasData    = outbreak.cases > 0;
   const cfr        = hasData ? (outbreak.deaths / outbreak.cases * 100).toFixed(1) + "%" : c.noData;
