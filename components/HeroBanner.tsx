@@ -12,7 +12,7 @@ const COPY: Record<string, {
   en: {
     badge: "4 official sources · 195 countries · 5 languages",
     headline: "Epidemic surveillance for health organizations",
-    sub: "HealthWatch Global aggregates WHO, ECDC, PAHO and Africa CDC outbreak data into a multilingual dashboard your teams can act on immediately.",
+    sub: "HealthWatch Global gives your surveillance team one classified view of WHO, ECDC, PAHO and Africa CDC signals — so they can act immediately without cross-referencing sources.",
     ctaPrimary: "Create free account",
     ctaSecondary: "See pricing",
     proof: "Built for NGOs, health ministries and international organizations.",
@@ -23,7 +23,7 @@ const COPY: Record<string, {
   fr: {
     badge: "4 sources officielles · 195 pays · 5 langues",
     headline: "Surveillance épidémique pour les organisations de santé",
-    sub: "HealthWatch Global agrège les données de l'OMS, l'ECDC, l'OPAS et l'Africa CDC dans un tableau de bord multilingue sur lequel vos équipes peuvent agir immédiatement.",
+    sub: "HealthWatch Global donne à votre équipe de surveillance une vue unifiée et classifiée des signaux OMS, ECDC, PAHO et Africa CDC — pour agir immédiatement sans croiser plusieurs sources.",
     ctaPrimary: "Créer un compte gratuit",
     ctaSecondary: "Voir les tarifs",
     proof: "Conçu pour les ONG, ministères de la santé et organisations internationales.",
@@ -34,7 +34,7 @@ const COPY: Record<string, {
   es: {
     badge: "4 fuentes oficiales · 195 países · 5 idiomas",
     headline: "Vigilancia epidémica para organizaciones de salud",
-    sub: "HealthWatch Global agrega datos de brotes de la OMS, ECDC, PAHO y Africa CDC en un panel multilingüe sobre el que sus equipos pueden actuar de inmediato.",
+    sub: "HealthWatch Global da a su equipo de vigilancia una vista clasificada única de las señales OMS, ECDC, PAHO y Africa CDC — para actuar de inmediato sin cruzar fuentes.",
     ctaPrimary: "Crear cuenta gratuita",
     ctaSecondary: "Ver precios",
     proof: "Diseñado para ONG, ministerios de salud y organizaciones internacionales.",
@@ -45,7 +45,7 @@ const COPY: Record<string, {
   ar: {
     badge: "4 مصادر رسمية · 195 دولة · 5 لغات",
     headline: "مراقبة وبائية للمنظمات الصحية",
-    sub: "تجمع HealthWatch Global بيانات تفشي الأمراض من WHO وECDC وPAHO وAfrica CDC في لوحة تحكم متعددة اللغات يمكن لفرقك التصرف بناءً عليها فوراً.",
+    sub: "توفر HealthWatch Global لفريق مراقبتك رؤية موحدة ومصنّفة لإشارات WHO وECDC وPAHO وAfrica CDC — للتصرف فوراً دون الحاجة لمقاطعة المصادر.",
     ctaPrimary: "إنشاء حساب مجاني",
     ctaSecondary: "عرض الأسعار",
     proof: "مصمم للمنظمات غير الحكومية ووزارات الصحة والمنظمات الدولية.",
@@ -56,7 +56,7 @@ const COPY: Record<string, {
   id: {
     badge: "4 sumber resmi · 195 negara · 5 bahasa",
     headline: "Surveilans epidemi untuk organisasi kesehatan",
-    sub: "HealthWatch Global menggabungkan data wabah WHO, ECDC, PAHO dan Africa CDC ke dalam dasbor multibahasa yang bisa langsung ditindaklanjuti oleh tim Anda.",
+    sub: "HealthWatch Global memberi tim surveilans Anda satu tampilan terklasifikasi dari sinyal WHO, ECDC, PAHO dan Africa CDC — agar bisa bertindak langsung tanpa perlu menyilangkan berbagai sumber.",
     ctaPrimary: "Buat akun gratis",
     ctaSecondary: "Lihat harga",
     proof: "Dirancang untuk LSM, kementerian kesehatan, dan organisasi internasional.",
