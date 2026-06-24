@@ -2,6 +2,10 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase-server";
 import { getOutbreaks, getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 
+function esc(s: string): string {
+  return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+}
+
 export const dynamic = "force-dynamic";
 
 const VALID_REGIONS = ["africa", "asia", "americas", "europe", "oceania"] as const;
@@ -206,8 +210,8 @@ export async function GET(
       ${diseases
         .map(
           (d) => `<tr>
-        <td><strong>${d.name}</strong></td>
-        <td>${d.country}</td>
+        <td><strong>${esc(d.name)}</strong></td>
+        <td>${esc(d.country)}</td>
         <td>${d.cases.toLocaleString(numLocale)}</td>
         <td>${d.deaths.toLocaleString(numLocale)}</td>
         <td><span class="risk-badge risk-${d.risk}">${d.risk === "high" ? rl.riskHigh : d.risk === "medium" ? rl.riskMedium : rl.riskLow}</span></td>
