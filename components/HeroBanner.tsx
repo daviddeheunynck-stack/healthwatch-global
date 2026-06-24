@@ -11,8 +11,8 @@ const COPY: Record<string, {
 }> = {
   en: {
     badge: "4 official sources · 195 countries · 5 languages",
-    headline: "Epidemic surveillance for health organizations",
-    sub: "HealthWatch Global gives your surveillance team one classified view of WHO, ECDC, PAHO and Africa CDC signals — so they can act immediately without cross-referencing sources.",
+    headline: "Global outbreak monitoring for public health teams",
+    sub: "Your surveillance team is cross-referencing WHO, ECDC, PAHO and Africa CDC in separate tabs — and losing the window to act. HealthWatch Global unifies all four in one classified real-time view. No GPHIN required.",
     ctaPrimary: "Create free account",
     ctaSecondary: "See pricing",
     proof: "Field health coordinators · National IHR Focal Points · Public health teams without GPHIN access",
@@ -22,8 +22,8 @@ const COPY: Record<string, {
   },
   fr: {
     badge: "4 sources officielles · 195 pays · 5 langues",
-    headline: "Surveillance épidémique pour les organisations de santé",
-    sub: "HealthWatch Global donne à votre équipe de surveillance une vue unifiée et classifiée des signaux OMS, ECDC, PAHO et Africa CDC — pour agir immédiatement sans croiser plusieurs sources.",
+    headline: "Veille des foyers épidémiques mondiaux pour les équipes de santé publique",
+    sub: "Votre équipe croise manuellement les alertes OMS, ECDC, OPAS et Africa CDC dans des onglets séparés — et perd la fenêtre d'action. HealthWatch Global unifie les quatre en temps réel. Sans GPHIN.",
     ctaPrimary: "Créer un compte gratuit",
     ctaSecondary: "Voir les tarifs",
     proof: "Coordinateurs santé terrain · Points focaux nationaux RSI · Équipes sans accès GPHIN",
@@ -33,8 +33,8 @@ const COPY: Record<string, {
   },
   es: {
     badge: "4 fuentes oficiales · 195 países · 5 idiomas",
-    headline: "Vigilancia epidémica para organizaciones de salud",
-    sub: "HealthWatch Global da a su equipo de vigilancia una vista clasificada única de las señales OMS, ECDC, PAHO y Africa CDC — para actuar de inmediato sin cruzar fuentes.",
+    headline: "Monitoreo global de brotes para equipos de salud pública",
+    sub: "Su equipo cruza manualmente alertas de OMS, ECDC, PAHO y Africa CDC en pestañas separadas — y pierde la ventana de acción. HealthWatch Global las unifica en tiempo real. Sin GPHIN.",
     ctaPrimary: "Crear cuenta gratuita",
     ctaSecondary: "Ver precios",
     proof: "Coordinadores de salud en campo · Puntos focales nacionales RSI · Equipos sin acceso GPHIN",
@@ -44,8 +44,8 @@ const COPY: Record<string, {
   },
   ar: {
     badge: "4 مصادر رسمية · 195 دولة · 5 لغات",
-    headline: "مراقبة وبائية للمنظمات الصحية",
-    sub: "توفر HealthWatch Global لفريق مراقبتك رؤية موحدة ومصنّفة لإشارات WHO وECDC وPAHO وAfrica CDC — للتصرف فوراً دون الحاجة لمقاطعة المصادر.",
+    headline: "مراقبة عالمية لتفشّي الأوبئة لفرق الصحة العامة",
+    sub: "فريقك يتابع تنبيهات WHO وECDC وPAHO وAfrica CDC يدوياً في تبويبات منفصلة — ويضيع وقت التصرف. HealthWatch Global يوحّدها في رؤية واحدة آنية. بدون GPHIN.",
     ctaPrimary: "إنشاء حساب مجاني",
     ctaSecondary: "عرض الأسعار",
     proof: "منسقو الصحة الميدانيون · نقاط الاتصال الوطنية RSI · فرق الصحة العامة دون وصول GPHIN",
@@ -55,8 +55,8 @@ const COPY: Record<string, {
   },
   id: {
     badge: "4 sumber resmi · 195 negara · 5 bahasa",
-    headline: "Surveilans epidemi untuk organisasi kesehatan",
-    sub: "HealthWatch Global memberi tim surveilans Anda satu tampilan terklasifikasi dari sinyal WHO, ECDC, PAHO dan Africa CDC — agar bisa bertindak langsung tanpa perlu menyilangkan berbagai sumber.",
+    headline: "Pemantauan wabah global untuk tim kesehatan masyarakat",
+    sub: "Tim Anda memantau peringatan WHO, ECDC, PAHO dan Africa CDC di tab terpisah secara manual — dan kehilangan jendela waktu untuk bertindak. HealthWatch Global menyatukannya dalam satu tampilan real time. Tanpa GPHIN.",
     ctaPrimary: "Buat akun gratis",
     ctaSecondary: "Lihat harga",
     proof: "Koordinator kesehatan lapangan · Focal Point Nasional IHR · Tim tanpa akses GPHIN",
