@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase-server";
 import { createClient as createService } from "@supabase/supabase-js";
+import { resolvedPlan } from "@/lib/resolved-plan";
 
 export async function GET(req: Request) {
   const supabase = await createClient();
@@ -9,11 +10,11 @@ export async function GET(req: Request) {
 
   const { data: profile } = await supabase
     .from("profiles")
-    .select("plan")
+    .select("plan, trial_ends_at, stripe_subscription_id")
     .eq("id", user.id)
     .single();
 
-  const isPaid = ["starter", "pro", "team", "enterprise"].includes(profile?.plan ?? "");
+  const isPaid = ["starter", "pro", "team", "enterprise"].includes(resolvedPlan(profile));
   if (!isPaid) return NextResponse.json({ error: "Pro plan required" }, { status: 403 });
 
   const { searchParams } = new URL(req.url);

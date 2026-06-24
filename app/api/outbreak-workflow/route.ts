@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase-server";
+import { resolvedPlan } from "@/lib/resolved-plan";
 
 export const dynamic = "force-dynamic";
 
@@ -21,8 +22,8 @@ export async function GET(req: Request) {
   if (!outbreak_id) return NextResponse.json({ error: "outbreak_id required" }, { status: 400 });
 
   const { data: profile } = await supabase
-    .from("profiles").select("plan").eq("id", user.id).single();
-  if (!PAID_PLANS.includes(profile?.plan ?? ""))
+    .from("profiles").select("plan, trial_ends_at, stripe_subscription_id").eq("id", user.id).single();
+  if (!PAID_PLANS.includes(resolvedPlan(profile)))
     return NextResponse.json({ error: "Pro plan required" }, { status: 403 });
 
   const { data, error } = await supabase
@@ -41,8 +42,8 @@ export async function POST(req: Request) {
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const { data: profile } = await supabase
-    .from("profiles").select("plan").eq("id", user.id).single();
-  if (!PAID_PLANS.includes(profile?.plan ?? ""))
+    .from("profiles").select("plan, trial_ends_at, stripe_subscription_id").eq("id", user.id).single();
+  if (!PAID_PLANS.includes(resolvedPlan(profile)))
     return NextResponse.json({ error: "Pro plan required" }, { status: 403 });
 
   const body = await req.json() as {

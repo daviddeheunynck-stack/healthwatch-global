@@ -6,6 +6,7 @@
 import { createClient } from "@/lib/supabase-server";
 import { NextResponse } from "next/server";
 import { createHash, randomBytes } from "crypto";
+import { resolvedPlan } from "@/lib/resolved-plan";
 
 export const dynamic = "force-dynamic";
 
@@ -43,11 +44,11 @@ export async function POST(req: Request) {
   // Require enterprise plan
   const { data: profile } = await supabase
     .from("profiles")
-    .select("plan")
+    .select("plan, trial_ends_at, stripe_subscription_id")
     .eq("id", user.id)
     .single();
 
-  if (!["pro", "team", "enterprise"].includes(profile?.plan ?? "")) {
+  if (!["pro", "team", "enterprise"].includes(resolvedPlan(profile))) {
     return NextResponse.json({ error: "Pro plan required" }, { status: 403 });
   }
 

@@ -1,5 +1,6 @@
 import { NextRequest } from "next/server";
 import { createClient } from "@/lib/supabase-server";
+import { resolvedPlan } from "@/lib/resolved-plan";
 
 const PAID_PLANS = ["pro", "team", "enterprise"];
 const MAX_ALERTS = 30;
@@ -11,8 +12,8 @@ export async function GET() {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return Response.json({ error: "Unauthorized" }, { status: 401 });
 
-  const { data: profile } = await supabase.from("profiles").select("plan").eq("id", user.id).single();
-  if (!PAID_PLANS.includes(profile?.plan ?? ""))
+  const { data: profile } = await supabase.from("profiles").select("plan, trial_ends_at, stripe_subscription_id").eq("id", user.id).single();
+  if (!PAID_PLANS.includes(resolvedPlan(profile)))
     return Response.json({ error: "Pro plan required" }, { status: 403 });
 
   const { data } = await supabase
@@ -29,8 +30,8 @@ export async function POST(req: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return Response.json({ error: "Unauthorized" }, { status: 401 });
 
-  const { data: profile } = await supabase.from("profiles").select("plan").eq("id", user.id).single();
-  if (!PAID_PLANS.includes(profile?.plan ?? ""))
+  const { data: profile } = await supabase.from("profiles").select("plan, trial_ends_at, stripe_subscription_id").eq("id", user.id).single();
+  if (!PAID_PLANS.includes(resolvedPlan(profile)))
     return Response.json({ error: "Pro plan required" }, { status: 403 });
 
   const body = await req.json() as { country_en?: string; min_risk?: string; email?: string };

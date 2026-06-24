@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase-server";
+import { resolvedPlan } from "@/lib/resolved-plan";
 
 const PAID_PLANS = ["pro", "team", "enterprise"];
 
@@ -11,11 +12,11 @@ export async function GET() {
 
   const { data: profile } = await supabase
     .from("profiles")
-    .select("plan, api_key")
+    .select("plan, trial_ends_at, stripe_subscription_id, api_key")
     .eq("id", user.id)
     .single();
 
-  if (!PAID_PLANS.includes(profile?.plan ?? ""))
+  if (!PAID_PLANS.includes(resolvedPlan(profile)))
     return Response.json({ error: "Pro plan required" }, { status: 403 });
 
   return Response.json({ api_key: profile?.api_key ?? null });
@@ -28,11 +29,11 @@ export async function POST() {
 
   const { data: profile } = await supabase
     .from("profiles")
-    .select("plan")
+    .select("plan, trial_ends_at, stripe_subscription_id")
     .eq("id", user.id)
     .single();
 
-  if (!PAID_PLANS.includes(profile?.plan ?? ""))
+  if (!PAID_PLANS.includes(resolvedPlan(profile)))
     return Response.json({ error: "Pro plan required" }, { status: 403 });
 
   const { data } = await supabase

@@ -1,6 +1,7 @@
 import { NextRequest } from "next/server";
 import { createClient } from "@/lib/supabase-server";
 import { createClient as createService } from "@supabase/supabase-js";
+import { resolvedPlan } from "@/lib/resolved-plan";
 
 const PAID_PLANS = ["pro", "team", "enterprise"];
 const REGION_ORDER = ["africa", "asia", "americas", "europe", "oceania"] as const;
@@ -12,8 +13,8 @@ export async function GET(req: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return Response.json({ error: "Unauthorized" }, { status: 401 });
 
-  const { data: profile } = await supabase.from("profiles").select("plan").eq("id", user.id).single();
-  if (!PAID_PLANS.includes(profile?.plan ?? ""))
+  const { data: profile } = await supabase.from("profiles").select("plan, trial_ends_at, stripe_subscription_id").eq("id", user.id).single();
+  if (!PAID_PLANS.includes(resolvedPlan(profile)))
     return Response.json({ error: "Pro plan required" }, { status: 403 });
 
   const { searchParams } = new URL(req.url);

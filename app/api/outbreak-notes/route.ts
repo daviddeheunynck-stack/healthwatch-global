@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase-server";
+import { resolvedPlan } from "@/lib/resolved-plan";
 
 const PAID_PLANS = ["starter", "pro", "team", "enterprise"];
 
@@ -10,11 +11,11 @@ export async function GET(req: Request) {
 
   const { data: profile } = await supabase
     .from("profiles")
-    .select("plan")
+    .select("plan, trial_ends_at, stripe_subscription_id")
     .eq("id", user.id)
     .single();
 
-  if (!PAID_PLANS.includes(profile?.plan ?? "")) {
+  if (!PAID_PLANS.includes(resolvedPlan(profile))) {
     return NextResponse.json({ error: "Pro plan required" }, { status: 403 });
   }
 
@@ -41,11 +42,11 @@ export async function POST(req: Request) {
 
   const { data: profile } = await supabase
     .from("profiles")
-    .select("plan, team_id, email")
+    .select("plan, trial_ends_at, stripe_subscription_id, team_id, email")
     .eq("id", user.id)
     .single();
 
-  if (!PAID_PLANS.includes(profile?.plan ?? "")) {
+  if (!PAID_PLANS.includes(resolvedPlan(profile))) {
     return NextResponse.json({ error: "Pro plan required" }, { status: 403 });
   }
 
