@@ -11,6 +11,13 @@ const clean = (v: string | undefined) => (v || "").replace(new RegExp("^" + BOM)
 const RESEND_KEY = clean(process.env.RESEND_API_KEY);
 const APP_URL    = clean(process.env.NEXT_PUBLIC_APP_URL) || "https://healthwatch-global.com";
 const MAX_SEATS: Record<string, number> = { team: 5, enterprise: 50 };
+const TEAM_PLANS = ["team", "enterprise"];
+
+function resolvedPlan(profile: { plan?: string | null; trial_ends_at?: string | null; stripe_subscription_id?: string | null } | null): string {
+  const plan = profile?.plan ?? "free";
+  if (plan !== "free" && profile?.trial_ends_at && new Date(profile.trial_ends_at).getTime() < Date.now() && !profile?.stripe_subscription_id) return "free";
+  return plan;
+}
 
 const INVITE_SUBJECT: Record<string, (org: string) => string> = {
   fr: (org) => `Invitation à rejoindre ${org} sur HealthWatch Global`,
@@ -50,14 +57,17 @@ export async function POST(req: Request) {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
+  const { data: profile } = await supabase
+    .from("profiles").select("plan, trial_ends_at, stripe_subscription_id").eq("id", user.id).single();
+  if (!TEAM_PLANS.includes(resolvedPlan(profile)))
+    return NextResponse.json({ error: "Team or Enterprise plan required" }, { status: 403 });
+
   // Must be org owner
   const { data: org } = await supabase
     .from("organizations").select("id, name").eq("owner_id", user.id).maybeSingle();
   if (!org) return NextResponse.json({ error: "No organization found" }, { status: 404 });
 
-  const { data: profile } = await supabase
-    .from("profiles").select("plan").eq("id", user.id).single();
-  const plan = profile?.plan ?? "free";
+  const plan = resolvedPlan(profile);
   const maxSeats = MAX_SEATS[plan] ?? 5;
 
   const body = await req.json() as { email?: string; locale?: string };

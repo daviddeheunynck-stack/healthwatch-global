@@ -11,14 +11,20 @@ const PLAN_LIMITS: Record<string, number> = {
 
 const PAID_PLANS = Object.keys(PLAN_LIMITS);
 
+function resolvedPlan(profile: { plan?: string | null; trial_ends_at?: string | null; stripe_subscription_id?: string | null } | null): string {
+  const plan = profile?.plan ?? "free";
+  if (plan !== "free" && profile?.trial_ends_at && new Date(profile.trial_ends_at).getTime() < Date.now() && !profile?.stripe_subscription_id) return "free";
+  return plan;
+}
+
 export async function GET() {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const { data: profile } = await supabase
-    .from("profiles").select("plan").eq("id", user.id).single();
-  const plan = profile?.plan ?? "free";
+    .from("profiles").select("plan, trial_ends_at, stripe_subscription_id").eq("id", user.id).single();
+  const plan = resolvedPlan(profile);
 
   if (!PAID_PLANS.includes(plan))
     return NextResponse.json({ error: "Pro plan required" }, { status: 403 });
@@ -42,8 +48,8 @@ export async function POST(req: Request) {
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const { data: profile } = await supabase
-    .from("profiles").select("plan").eq("id", user.id).single();
-  const plan = profile?.plan ?? "free";
+    .from("profiles").select("plan, trial_ends_at, stripe_subscription_id").eq("id", user.id).single();
+  const plan = resolvedPlan(profile);
 
   if (!PAID_PLANS.includes(plan))
     return NextResponse.json({ error: "Pro plan required" }, { status: 403 });
