@@ -8,6 +8,7 @@ interface FooterProps {
   locale: string;
 }
 
+
 const LABELS: Record<string, {
   about: string;
   methodology: string;
@@ -17,12 +18,14 @@ const LABELS: Record<string, {
   contact: string;
   cookies: string;
   pilot: string;
+  dpa: string;
+  institutional: string;
 }> = {
-  en: { about: "About", methodology: "Data methodology", privacy: "Privacy Policy", terms: "Terms of Service", legal: "Legal notice", contact: "Contact", cookies: "Cookie settings", pilot: "Institutional Pilot" },
-  fr: { about: "À propos", methodology: "Méthodologie", privacy: "Politique de confidentialité", terms: "CGU", legal: "Mentions légales", contact: "Contact", cookies: "Paramètres cookies", pilot: "Pilote Institutionnel" },
-  es: { about: "Acerca de", methodology: "Metodología", privacy: "Política de privacidad", terms: "Términos de uso", legal: "Aviso legal", contact: "Contacto", cookies: "Configuración de cookies", pilot: "Piloto Institucional" },
-  ar: { about: "حول المنصة", methodology: "منهجية البيانات", privacy: "سياسة الخصوصية", terms: "شروط الاستخدام", legal: "الإشعار القانوني", contact: "تواصل معنا", cookies: "إعدادات ملفات الارتباط", pilot: "البرنامج التجريبي المؤسسي" },
-  id: { about: "Tentang", methodology: "Metodologi data", privacy: "Kebijakan Privasi", terms: "Syarat Penggunaan", legal: "Pemberitahuan hukum", contact: "Kontak", cookies: "Pengaturan cookie", pilot: "Pilot Institusional" },
+  en: { about: "About", methodology: "Data methodology", privacy: "Privacy Policy", terms: "Terms of Service", legal: "Legal notice", contact: "Contact", cookies: "Cookie settings", pilot: "Institutional Pilot", dpa: "DPA", institutional: "Institutional" },
+  fr: { about: "À propos", methodology: "Méthodologie", privacy: "Politique de confidentialité", terms: "CGU", legal: "Mentions légales", contact: "Contact", cookies: "Paramètres cookies", pilot: "Pilote Institutionnel", dpa: "DPA", institutional: "Institutionnel" },
+  es: { about: "Acerca de", methodology: "Metodología", privacy: "Política de privacidad", terms: "Términos de uso", legal: "Aviso legal", contact: "Contacto", cookies: "Configuración de cookies", pilot: "Piloto Institucional", dpa: "DPA", institutional: "Institucional" },
+  ar: { about: "حول المنصة", methodology: "منهجية البيانات", privacy: "سياسة الخصوصية", terms: "شروط الاستخدام", legal: "الإشعار القانوني", contact: "تواصل معنا", cookies: "إعدادات ملفات الارتباط", pilot: "البرنامج التجريبي المؤسسي", dpa: "DPA", institutional: "مؤسسي" },
+  id: { about: "Tentang", methodology: "Metodologi data", privacy: "Kebijakan Privasi", terms: "Syarat Penggunaan", legal: "Pemberitahuan hukum", contact: "Kontak", cookies: "Pengaturan cookie", pilot: "Pilot Institusional", dpa: "DPA", institutional: "Institusional" },
 };
 
 export default function Footer({ locale }: FooterProps) {
@@ -69,6 +72,12 @@ export default function Footer({ locale }: FooterProps) {
             </Link>
             <Link href={`/${locale}/pilot`} className="hover:text-red-400 transition-colors text-red-500/70">
               {l.pilot}
+            </Link>
+            <Link href={`/${locale}/dpa`} className="hover:text-gray-300 transition-colors">
+              {l.dpa}
+            </Link>
+            <Link href={`/${locale}/institutional`} className="hover:text-gray-300 transition-colors">
+              {l.institutional}
             </Link>
             <a
               href={`/api/feed?locale=${locale}`}

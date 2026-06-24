@@ -52,7 +52,7 @@ const COPY: Record<string, {
     teamSeats: "5 sièges",
     starterFeatures: ["Carte mondiale interactive", "1 région surveillée", "Données OMS (sync ≤6h)", "Digest hebdomadaire gratuit", "Tableau de bord multilingue"],
     proFeatures: ["Toutes les régions mondiales", "Graphiques de tendance + comparaison", "Alertes instantanées", "Rapports PDF & export CSV", "Intégration Slack / Teams", "Support prioritaire"],
-    teamFeatures: ["5 sièges inclus", "Toutes les régions mondiales", "Alertes instantanées", "Rapports PDF · Export CSV", "Intégration Slack / Teams", "Une seule facture institutionnelle"],
+    teamFeatures: ["5 sièges inclus", "Toutes les régions mondiales", "Alertes instantanées", "Rapports PDF · Export CSV", "Intégration Slack / Teams", "Une seule facture institutionnelle", "SLA 99,9 % écrit + DPA disponible"],
   },
   en: {
     toggleMonthly: "Monthly",
@@ -74,7 +74,7 @@ const COPY: Record<string, {
     teamSeats: "5 seats",
     starterFeatures: ["Interactive world map", "1 monitored region", "WHO data (sync ≤6h)", "Free weekly digest", "Multilingual dashboard"],
     proFeatures: ["All global regions", "Case trend charts + comparison", "Instant alerts", "PDF reports & CSV export", "Slack / Teams integration", "Priority support"],
-    teamFeatures: ["5 seats included", "All global regions", "Instant alerts", "PDF reports · CSV export", "Slack / Teams integration", "Single institutional invoice"],
+    teamFeatures: ["5 seats included", "All global regions", "Instant alerts", "PDF reports · CSV export", "Slack / Teams integration", "Single institutional invoice", "Written 99.9% SLA + DPA available"],
   },
   es: {
     toggleMonthly: "Mensual",
@@ -96,7 +96,7 @@ const COPY: Record<string, {
     teamSeats: "5 puestos",
     starterFeatures: ["Mapa mundial interactivo", "1 región monitoreada", "Datos OMS (sync ≤6h)", "Digest semanal gratuito", "Panel multilingüe"],
     proFeatures: ["Todas las regiones", "Gráficos de tendencia + comparación", "Alertas instantáneas", "Informes PDF y CSV", "Integración Slack / Teams", "Soporte prioritario"],
-    teamFeatures: ["5 puestos incluidos", "Todas las regiones", "Alertas instantáneas", "Informes PDF · CSV", "Integración Slack / Teams", "Una sola factura institucional"],
+    teamFeatures: ["5 puestos incluidos", "Todas las regiones", "Alertas instantáneas", "Informes PDF · CSV", "Integración Slack / Teams", "Una sola factura institucional", "SLA 99,9% escrito + DPA disponible"],
   },
   ar: {
     toggleMonthly: "شهري",
@@ -118,7 +118,7 @@ const COPY: Record<string, {
     teamSeats: "5 مقاعد",
     starterFeatures: ["خريطة العالم التفاعلية", "منطقة مراقبة واحدة", "بيانات WHO (sync ≤6س)", "ملخص أسبوعي مجاني", "لوحة تحكم متعددة اللغات"],
     proFeatures: ["جميع المناطق العالمية", "مخططات الاتجاه + المقارنة", "تنبيهات فورية", "تقارير PDF وتصدير CSV", "تكامل Slack / Teams", "دعم ذو أولوية"],
-    teamFeatures: ["5 مقاعد مشمولة", "جميع المناطق العالمية", "تنبيهات فورية", "تقارير PDF · تصدير CSV", "تكامل Slack / Teams", "فاتورة مؤسسية واحدة"],
+    teamFeatures: ["5 مقاعد مشمولة", "جميع المناطق العالمية", "تنبيهات فورية", "تقارير PDF · تصدير CSV", "تكامل Slack / Teams", "فاتورة مؤسسية واحدة", "SLA 99.9% مكتوب + DPA متاحة"],
   },
   id: {
     toggleMonthly: "Bulanan",
@@ -140,7 +140,7 @@ const COPY: Record<string, {
     teamSeats: "5 kursi",
     starterFeatures: ["Peta dunia interaktif", "1 wilayah dipantau", "Data WHO (sync ≤6j)", "Digest mingguan gratis", "Dasbor multibahasa"],
     proFeatures: ["Semua wilayah global", "Grafik tren + perbandingan wabah", "Peringatan instan", "Laporan PDF & ekspor CSV", "Integrasi Slack / Teams", "Dukungan prioritas"],
-    teamFeatures: ["5 kursi termasuk", "Semua wilayah global", "Peringatan instan", "Laporan PDF · Ekspor CSV", "Integrasi Slack / Teams", "Satu faktur institusional"],
+    teamFeatures: ["5 kursi termasuk", "Semua wilayah global", "Peringatan instan", "Laporan PDF · Ekspor CSV", "Integrasi Slack / Teams", "Satu faktur institusional", "SLA 99,9% tertulis + DPA tersedia"],
   },
 };
 
