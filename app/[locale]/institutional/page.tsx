@@ -1,6 +1,6 @@
 import { getLocale } from "next-intl/server";
 import Link from "next/link";
-import { ArrowLeft, Check, FileText, Shield, Clock, Building2, Mail, ArrowRight } from "lucide-react";
+import { ArrowLeft, Check, FileText, Shield, Clock, Building2, Mail, ArrowRight, Lock } from "lucide-react";
 import type { Metadata } from "next";
 
 const LOCALES = ["en", "fr", "es", "ar", "id"] as const;
@@ -301,6 +301,23 @@ export default async function InstitutionalPage() {
     { icon: Clock, title: c.doc2_title, desc: c.doc2_desc, status: c.doc2_status, statusColor: "text-green-400", cta: null, href: null },
     { icon: FileText, title: c.doc3_title, desc: c.doc3_desc, status: c.doc3_status, statusColor: "text-green-400", cta: null, href: null },
     { icon: Building2, title: c.doc4_title, desc: c.doc4_desc, status: c.doc4_status, statusColor: "text-gray-400", cta: c.doc4_cta, href: `/${locale}/contact` },
+    {
+      icon: Lock,
+      title: locale === "fr" ? "Réponses IT Security" : locale === "es" ? "Respuestas IT Security" : locale === "ar" ? "أسئلة أمان IT" : locale === "id" ? "Jawaban IT Security" : "IT Security Q&A",
+      desc: locale === "fr"
+        ? "Hébergement, chiffrement, contrôle d'accès, sauvegardes, SLA, notification de breach — toutes les questions IT avec réponses directes. Transmissible à votre DSI ou votre homologation."
+        : locale === "es"
+        ? "Alojamiento, cifrado, acceso, copias de seguridad, SLA — todas las preguntas IT respondidas. Transmisible a su equipo IT."
+        : locale === "ar"
+        ? "الاستضافة، التشفير، التحكم في الوصول، النسخ الاحتياطية، SLA — جميع أسئلة IT مجابة."
+        : locale === "id"
+        ? "Hosting, enkripsi, akses, backup, SLA — semua pertanyaan IT terjawab. Kirimkan langsung ke tim IT Anda."
+        : "Hosting, encryption, access control, backups, SLA, breach notification — all IT questions answered. Forward directly to your IT or InfoSec team.",
+      status: locale === "fr" ? "✓ Disponible" : locale === "es" ? "✓ Disponible" : locale === "ar" ? "✓ متاح" : locale === "id" ? "✓ Tersedia" : "✓ Available",
+      statusColor: "text-green-400",
+      cta: locale === "fr" ? "Consulter →" : locale === "es" ? "Ver →" : locale === "ar" ? "← عرض" : locale === "id" ? "Lihat →" : "View →",
+      href: `/${locale}/security`,
+    },
   ];
 
   return (
