@@ -11,11 +11,12 @@ export async function GET(req: Request) {
 
   const { data: profile } = await supabase
     .from("profiles")
-    .select("plan, trial_ends_at, stripe_subscription_id")
+    .select("plan, trial_ends_at, stripe_subscription_id, team_id")
     .eq("id", user.id)
     .single();
 
-  if (!PAID_PLANS.includes(resolvedPlan(profile))) {
+  const plan = resolvedPlan(profile);
+  if (!PAID_PLANS.includes(plan)) {
     return NextResponse.json({ error: "Pro plan required" }, { status: 403 });
   }
 
@@ -23,10 +24,20 @@ export async function GET(req: Request) {
   const outbreakId = searchParams.get("outbreak_id");
   if (!outbreakId) return NextResponse.json({ error: "Missing outbreak_id" }, { status: 400 });
 
-  const { data, error } = await supabase
+  const isTeam = (plan === "team" || plan === "enterprise") && !!profile?.team_id;
+
+  let query = supabase
     .from("outbreak_notes")
     .select("id, note, status, author_email, user_id, created_at")
-    .eq("outbreak_id", outbreakId)
+    .eq("outbreak_id", outbreakId);
+
+  if (isTeam) {
+    query = query.or(`user_id.eq.${user.id},team_id.eq.${profile!.team_id}`);
+  } else {
+    query = query.eq("user_id", user.id);
+  }
+
+  const { data, error } = await query
     .order("created_at", { ascending: false })
     .limit(20);
 
