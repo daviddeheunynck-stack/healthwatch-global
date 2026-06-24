@@ -49,6 +49,7 @@ const LABELS = {
     tierLabels: { immediate: "IMMÉDIAT · NOTIFICATION RSI", rapid: "RÉPONSE RAPIDE", monitor: "SURVEILLANCE STANDARD" },
     firstActions: "Premières actions",
     reportingLag: "Date de rapport officiel — dans les zones enclavées, le signal de terrain précède généralement cette date de plusieurs jours à plusieurs semaines.",
+    operationalDisclaimer: "Outil de veille — pas un déclencheur opérationnel. Toute mobilisation requiert vérification OMS directe et validation par votre protocole institutionnel.",
     cumulativeAs: (date: string) => `Cas cumulés depuis le début de l'épidémie — bulletin OMS du ${date}`,
     citeLabel: "Citer cette page (Vancouver)",
     citeCopy: "Copier la citation",
@@ -76,6 +77,7 @@ const LABELS = {
     tierLabels: { immediate: "IMMEDIATE · IHR NOTIFIABLE", rapid: "RAPID RESPONSE", monitor: "STANDARD MONITORING" },
     firstActions: "First actions",
     reportingLag: "Official report date — in isolated zones, field onset typically precedes this by days to weeks.",
+    operationalDisclaimer: "Situational awareness tool — not an operational trigger. Any mobilization requires direct WHO verification and validation through your institutional protocol.",
     cumulativeAs: (date: string) => `Cumulative cases since outbreak start — WHO DON bulletin dated ${date}`,
     citeLabel: "Cite this page (Vancouver)",
     citeCopy: "Copy citation",
@@ -103,6 +105,7 @@ const LABELS = {
     tierLabels: { immediate: "INMEDIATO · NOTIFICABLE RSI", rapid: "RESPUESTA RÁPIDA", monitor: "VIGILANCIA ESTÁNDAR" },
     firstActions: "Primeras acciones",
     reportingLag: "Fecha del informe oficial — en zonas aisladas, el inicio en el campo suele preceder a esta fecha por días o semanas.",
+    operationalDisclaimer: "Herramienta de vigilancia — no es un disparador operacional. Cualquier movilización requiere verificación OMS directa y validación por su protocolo institucional.",
     cumulativeAs: (date: string) => `Casos acumulados desde el inicio del brote — boletín OMS del ${date}`,
     citeLabel: "Citar esta página (Vancouver)",
     citeCopy: "Copiar cita",
@@ -130,6 +133,7 @@ const LABELS = {
     tierLabels: { immediate: "فوري · إخطار اللوائح الصحية الدولية", rapid: "استجابة سريعة", monitor: "مراقبة قياسية" },
     firstActions: "الإجراءات الأولى",
     reportingLag: "تاريخ التقرير الرسمي — في المناطق المعزولة، يسبق ظهور المرض ميدانياً هذا التاريخ بأيام إلى أسابيع.",
+    operationalDisclaimer: "أداة رصد فقط — ليست مُحفِّزاً تشغيلياً. أي تعبئة تستلزم التحقق المباشر من منظمة الصحة العالمية والتحقق عبر بروتوكولك المؤسسي.",
     cumulativeAs: (date: string) => `الحالات التراكمية منذ بداية التفشي — نشرة منظمة الصحة العالمية بتاريخ ${date}`,
     citeLabel: "اقتبس هذه الصفحة (فانكوفر)",
     citeCopy: "نسخ الاقتباس",
@@ -157,6 +161,7 @@ const LABELS = {
     tierLabels: { immediate: "SEGERA · WAJIB LAPOR IHR", rapid: "RESPONS CEPAT", monitor: "PEMANTAUAN STANDAR" },
     firstActions: "Tindakan pertama",
     reportingLag: "Tanggal laporan resmi — di zona terisolasi, onset di lapangan biasanya mendahului tanggal ini beberapa hari hingga minggu.",
+    operationalDisclaimer: "Alat pemantauan saja — bukan pemicu operasional. Mobilisasi apa pun memerlukan verifikasi langsung ke WHO dan validasi melalui protokol institusional Anda.",
     cumulativeAs: (date: string) => `Kasus kumulatif sejak awal wabah — buletin WHO tanggal ${date}`,
     citeLabel: "Kutip halaman ini (Vancouver)",
     citeCopy: "Salin kutipan",
@@ -368,6 +373,12 @@ export default async function OutbreakPage({
             reportDate={o.date ?? undefined}
           />
         </div>
+      </div>
+
+      {/* Operational disclaimer */}
+      <div className="flex gap-2 items-start bg-amber-500/8 border border-amber-500/20 rounded-lg px-4 py-2.5 mb-5 text-xs text-amber-400/80 leading-relaxed">
+        <span className="shrink-0 mt-0.5">⚠</span>
+        {l.operationalDisclaimer}
       </div>
 
       {/* Header */}
