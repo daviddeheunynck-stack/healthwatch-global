@@ -11,6 +11,10 @@ const clean = (v: string | undefined) => (v || "").replace(new RegExp("^" + BOM)
 const RESEND_KEY = clean(process.env.RESEND_API_KEY);
 const APP_URL    = clean(process.env.NEXT_PUBLIC_APP_URL) || "https://healthwatch-global.com";
 const MAX_SEATS: Record<string, number> = { team: 5, enterprise: 50 };
+
+function esc(s: string): string {
+  return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+}
 const TEAM_PLANS = ["team", "enterprise"];
 
 function resolvedPlan(profile: { plan?: string | null; trial_ends_at?: string | null; stripe_subscription_id?: string | null } | null): string {
@@ -29,13 +33,14 @@ const INVITE_SUBJECT: Record<string, (org: string) => string> = {
 
 function buildInviteEmail(orgName: string, inviteUrl: string, locale: string): string {
   const subject = (INVITE_SUBJECT[locale] ?? INVITE_SUBJECT.en)(orgName);
+  const safeOrgName = esc(orgName);
   const body = {
-    fr: `Vous avez été invité à rejoindre l'organisation <strong>${orgName}</strong> sur HealthWatch Global.`,
-    en: `You have been invited to join <strong>${orgName}</strong> on HealthWatch Global.`,
-    es: `Has sido invitado a unirte a <strong>${orgName}</strong> en HealthWatch Global.`,
-    ar: `لقد تمت دعوتك للانضمام إلى <strong>${orgName}</strong> على HealthWatch Global.`,
-    id: `Anda telah diundang untuk bergabung dengan <strong>${orgName}</strong> di HealthWatch Global.`,
-  }[locale] ?? `You have been invited to join <strong>${orgName}</strong> on HealthWatch Global.`;
+    fr: `Vous avez été invité à rejoindre l'organisation <strong>${safeOrgName}</strong> sur HealthWatch Global.`,
+    en: `You have been invited to join <strong>${safeOrgName}</strong> on HealthWatch Global.`,
+    es: `Has sido invitado a unirte a <strong>${safeOrgName}</strong> en HealthWatch Global.`,
+    ar: `لقد تمت دعوتك للانضمام إلى <strong>${safeOrgName}</strong> على HealthWatch Global.`,
+    id: `Anda telah diundang untuk bergabung dengan <strong>${safeOrgName}</strong> di HealthWatch Global.`,
+  }[locale] ?? `You have been invited to join <strong>${safeOrgName}</strong> on HealthWatch Global.`;
 
   const cta = { fr: "Accepter l'invitation", en: "Accept invitation", es: "Aceptar invitación", ar: "قبول الدعوة", id: "Terima undangan" }[locale] ?? "Accept invitation";
 
@@ -44,7 +49,7 @@ function buildInviteEmail(orgName: string, inviteUrl: string, locale: string): s
 <body style="margin:0;padding:0;background:#111827;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:#f9fafb;direction:${isRtl ? "rtl" : "ltr"}">
   <div style="max-width:480px;margin:0 auto;padding:40px 20px;text-align:${isRtl ? "right" : "left"}">
     <p style="margin:0 0 4px;font-size:11px;color:#6b7280;letter-spacing:0.1em;text-transform:uppercase">HEALTHWATCH GLOBAL</p>
-    <h1 style="margin:0 0 16px;font-size:20px;font-weight:700">${subject}</h1>
+    <h1 style="margin:0 0 16px;font-size:20px;font-weight:700">${esc(subject)}</h1>
     <p style="margin:0 0 24px;font-size:14px;color:#d1d5db">${body}</p>
     <a href="${inviteUrl}" style="display:inline-block;padding:12px 24px;background:#dc2626;color:#fff;font-weight:600;font-size:14px;text-decoration:none;border-radius:8px">${cta}</a>
     <p style="margin:32px 0 0;font-size:11px;color:#6b7280">Powered by <strong style="color:#9ca3af">HealthWatch Global</strong> · <a href="${APP_URL}" style="color:#6b7280">${APP_URL.replace("https://", "")}</a></p>
