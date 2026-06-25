@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useCallback } from "react";
-import { Check, Copy, Code2, Globe, Layers, Monitor } from "lucide-react";
+import Link from "next/link";
+import { Check, Copy, Code2, Globe, Layers, Monitor, ArrowRight } from "lucide-react";
 
 const BASE_URL = "https://healthwatch-global.com";
 
@@ -45,6 +46,10 @@ const COPY: Record<string, {
   params: { name: string; type: string; default: string; desc: string }[];
   useCases: string;
   useCasesItems: { title: string; desc: string }[];
+  ctaBanner: string;
+  ctaBannerSub: string;
+  ctaBtn: string;
+  ctaNoCc: string;
   freeBadge: string;
   apiBanner: string;
   apiLink: string;
@@ -77,10 +82,14 @@ const COPY: Record<string, {
     ],
     useCases: "Common use cases",
     useCasesItems: [
-      { title: "Hospital intranet", desc: "Display a live Africa outbreak feed for infectious disease units." },
-      { title: "University portal",  desc: "Embed a regional widget in epidemiology department pages." },
-      { title: "NGO dashboard",      desc: "Keep field teams aware of active outbreaks in their region." },
+      { title: "WHO & PAHO regional portals", desc: "Embed a filtered regional outbreak feed in internal briefing pages. Auto-updates every 6 hours — no maintenance." },
+      { title: "Humanitarian field operations", desc: "Field teams see active outbreaks in their deployment zone without needing an account or login." },
+      { title: "Ministry of Health intranets",  desc: "Put official WHO/ECDC data on your surveillance team's homepage. One paste, always current." },
     ],
+    ctaBanner: "The widget shows what's active. The full dashboard tells you what to do.",
+    ctaBannerSub: "Pro subscribers get instant alerts by disease and region, PDF situation reports, CSV export, Slack integration, and team access — all on the same official data.",
+    ctaBtn: "Start free trial →",
+    ctaNoCc: "14 days free · No credit card",
     freeBadge: "No API key required — free for all plans",
     apiBanner: "Need programmatic access? The REST API (Enterprise) gives full JSON access to all outbreak data.",
     apiLink: "See API documentation →",
@@ -113,10 +122,14 @@ const COPY: Record<string, {
     ],
     useCases: "Cas d'usage courants",
     useCasesItems: [
-      { title: "Intranet hospitalier",  desc: "Afficher un flux Afrique en temps réel pour les unités de maladies infectieuses." },
-      { title: "Portail universitaire", desc: "Intégrer un widget régional dans les pages du département d'épidémiologie." },
-      { title: "Tableau de bord ONG",   desc: "Tenir les équipes terrain informées des foyers actifs dans leur région." },
+      { title: "Portails régionaux OMS & PAHO", desc: "Intégrez un flux de foyers filtré par région dans vos pages de briefing internes. Mise à jour automatique toutes les 6h." },
+      { title: "Opérations humanitaires terrain", desc: "Les équipes terrain voient les foyers actifs dans leur zone de déploiement sans avoir besoin de compte." },
+      { title: "Intranet ministères de la Santé",  desc: "Affichez les données OMS/ECDC officielles sur la page d'accueil de votre équipe de surveillance. Un copier-coller, toujours à jour." },
     ],
+    ctaBanner: "Le widget montre ce qui est actif. Le tableau de bord complet vous dit quoi faire.",
+    ctaBannerSub: "Les abonnés Pro reçoivent des alertes instantanées par maladie et région, des rapports PDF, l'export CSV, l'intégration Slack et l'accès équipe — sur les mêmes données officielles.",
+    ctaBtn: "Commencer l'essai gratuit →",
+    ctaNoCc: "14 jours gratuits · Sans carte bancaire",
     freeBadge: "Aucune clé API requise — gratuit pour tous les plans",
     apiBanner: "Besoin d'un accès programmatique ? L'API REST (Enterprise) donne accès JSON complet à toutes les données.",
     apiLink: "Voir la documentation API →",
@@ -149,10 +162,14 @@ const COPY: Record<string, {
     ],
     useCases: "Casos de uso comunes",
     useCasesItems: [
-      { title: "Intranet hospitalaria",    desc: "Mostrar un feed en vivo de brotes africanos para unidades de enfermedades infecciosas." },
-      { title: "Portal universitario",     desc: "Insertar un widget regional en páginas de departamentos de epidemiología." },
-      { title: "Panel de control de ONG",  desc: "Mantener a los equipos de campo al tanto de los brotes activos en su región." },
+      { title: "Portales regionales OMS & PAHO", desc: "Inserte un feed de brotes filtrado por región en páginas de briefing internas. Actualización automática cada 6 horas." },
+      { title: "Operaciones humanitarias",        desc: "Los equipos de campo ven los brotes activos en su zona de despliegue sin necesidad de cuenta." },
+      { title: "Intranets de Ministerios de Salud", desc: "Datos OMS/ECDC oficiales en la página de inicio de su equipo de vigilancia. Un pegado, siempre actualizado." },
     ],
+    ctaBanner: "El widget muestra lo que está activo. El panel completo le dice qué hacer.",
+    ctaBannerSub: "Los suscriptores Pro reciben alertas instantáneas por enfermedad y región, informes PDF, exportación CSV, integración Slack y acceso en equipo — con los mismos datos oficiales.",
+    ctaBtn: "Iniciar prueba gratuita →",
+    ctaNoCc: "14 días gratis · Sin tarjeta de crédito",
     freeBadge: "Sin clave API — gratuito para todos los planes",
     apiBanner: "¿Necesita acceso programático? La API REST (Enterprise) da acceso JSON completo a todos los datos.",
     apiLink: "Ver documentación de la API →",
@@ -185,10 +202,14 @@ const COPY: Record<string, {
     ],
     useCases: "حالات الاستخدام الشائعة",
     useCasesItems: [
-      { title: "الشبكة الداخلية للمستشفى",  desc: "عرض خلاصة حية للتفشيات الأفريقية لوحدات الأمراض المعدية." },
-      { title: "بوابة الجامعة",             desc: "تضمين أداة إقليمية في صفحات قسم الوبائيات." },
-      { title: "لوحة تحكم المنظمة غير الحكومية", desc: "إبقاء الفرق الميدانية على اطلاع بالتفشيات النشطة في منطقتها." },
+      { title: "بوابات WHO وPAHO الإقليمية",       desc: "ضمِّن خلاصة تفشيات مُصفَّاة حسب المنطقة في صفحات الإحاطة الداخلية. تحديث تلقائي كل 6 ساعات." },
+      { title: "العمليات الإنسانية الميدانية",     desc: "يرى أفراد الفرق الميدانية التفشيات النشطة في مناطق انتشارهم دون الحاجة إلى حساب." },
+      { title: "شبكات وزارات الصحة الداخلية",      desc: "بيانات WHO/ECDC الرسمية على الصفحة الرئيسية لفريق المراقبة. لصق واحد، دائماً محدَّث." },
     ],
+    ctaBanner: "الأداة تُظهر ما هو نشط. لوحة التحكم الكاملة تخبرك بما يجب فعله.",
+    ctaBannerSub: "يحصل مشتركو Pro على تنبيهات فورية حسب المرض والمنطقة، وتقارير PDF، وتصدير CSV، وتكامل Slack، والوصول الجماعي — على نفس البيانات الرسمية.",
+    ctaBtn: "← بدء التجربة المجانية",
+    ctaNoCc: "14 يوماً مجاناً · بدون بطاقة بنكية",
     freeBadge: "لا يلزم مفتاح API — مجاني لجميع الخطط",
     apiBanner: "تحتاج وصولاً برمجياً؟ تتيح واجهة برمجة REST (Enterprise) الوصول الكامل بصيغة JSON لجميع البيانات.",
     apiLink: "← رؤية وثائق API",
@@ -221,10 +242,14 @@ const COPY: Record<string, {
     ],
     useCases: "Kasus penggunaan umum",
     useCasesItems: [
-      { title: "Intranet rumah sakit",  desc: "Tampilkan feed wabah Afrika langsung untuk unit penyakit menular." },
-      { title: "Portal universitas",    desc: "Sematkan widget regional di halaman departemen epidemiologi." },
-      { title: "Dasbor NGO",            desc: "Buat tim lapangan selalu tahu tentang wabah aktif di wilayah mereka." },
+      { title: "Portal regional WHO & PAHO",     desc: "Sematkan feed wabah yang difilter per wilayah di halaman briefing internal. Diperbarui otomatis setiap 6 jam." },
+      { title: "Operasi lapangan kemanusiaan",   desc: "Tim lapangan melihat wabah aktif di zona penempatan mereka tanpa perlu akun." },
+      { title: "Intranet Kementerian Kesehatan", desc: "Data resmi WHO/ECDC di halaman utama tim surveilans Anda. Satu tempel, selalu terkini." },
     ],
+    ctaBanner: "Widget menunjukkan apa yang aktif. Dasbor lengkap memberi tahu apa yang harus dilakukan.",
+    ctaBannerSub: "Pelanggan Pro mendapat peringatan instan per penyakit dan wilayah, laporan PDF, ekspor CSV, integrasi Slack, dan akses tim — semua dengan data resmi yang sama.",
+    ctaBtn: "Mulai uji coba gratis →",
+    ctaNoCc: "14 hari gratis · Tanpa kartu kredit",
     freeBadge: "Tidak perlu kunci API — gratis untuk semua paket",
     apiBanner: "Perlu akses terprogram? REST API (Enterprise) memberikan akses JSON penuh ke semua data wabah.",
     apiLink: "Lihat dokumentasi API →",
@@ -476,6 +501,22 @@ export default function EmbedClient({ locale }: Props) {
               <p className="text-sm text-gray-400 leading-relaxed">{item.desc}</p>
             </div>
           ))}
+        </div>
+      </div>
+
+      {/* Acquisition CTA */}
+      <div className="bg-gradient-to-r from-red-950/50 via-gray-900/60 to-transparent border border-red-700/30 rounded-2xl p-8 space-y-4">
+        <h2 className="text-xl font-bold text-white">{c.ctaBanner}</h2>
+        <p className="text-gray-400 text-sm leading-relaxed max-w-2xl">{c.ctaBannerSub}</p>
+        <div className="flex items-center gap-4 flex-wrap">
+          <Link
+            href={`/${locale}/signup`}
+            className="inline-flex items-center gap-2 bg-red-600 hover:bg-red-500 text-white font-bold px-6 py-3 rounded-xl transition-colors text-sm"
+          >
+            {c.ctaBtn}
+            <ArrowRight className="w-4 h-4" />
+          </Link>
+          <span className="text-xs text-gray-500">{c.ctaNoCc}</span>
         </div>
       </div>
 
