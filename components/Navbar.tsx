@@ -29,6 +29,7 @@ const PLAN_BADGE: Record<string, string> = {
   free: "bg-gray-700 text-gray-300",
   starter: "bg-blue-900 text-blue-300",
   pro: "bg-amber-900 text-amber-300",
+  team: "bg-emerald-900 text-emerald-300",
   enterprise: "bg-purple-900 text-purple-300",
 };
 
