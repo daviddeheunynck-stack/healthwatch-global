@@ -13,9 +13,9 @@ const VALUE_PROPS: Record<string, { trial: string; items: string[]; noCard: stri
   en: {
     trial: "14-day Pro trial included — no credit card",
     items: [
-      "Exact case & death figures (Pro)",
-      "Instant regional alerts (Pro)",
-      "PDF reports & CSV export (Pro)",
+      "Exact case & death figures",
+      "Instant regional alerts",
+      "PDF reports & CSV export",
     ],
     noCard: "No credit card required",
     gdpr: "GDPR compliant · Data never sold",
@@ -24,9 +24,9 @@ const VALUE_PROPS: Record<string, { trial: string; items: string[]; noCard: stri
   fr: {
     trial: "Essai Pro 14 jours inclus — sans carte bancaire",
     items: [
-      "Chiffres exacts cas & décès (Pro)",
-      "Alertes régionales instantanées (Pro)",
-      "Rapports PDF & export CSV (Pro)",
+      "Chiffres exacts cas & décès",
+      "Alertes régionales instantanées",
+      "Rapports PDF & export CSV",
     ],
     noCard: "Sans carte bancaire",
     gdpr: "Conforme RGPD · Données jamais revendues",
@@ -35,9 +35,9 @@ const VALUE_PROPS: Record<string, { trial: string; items: string[]; noCard: stri
   es: {
     trial: "Prueba Pro 14 días incluida — sin tarjeta",
     items: [
-      "Cifras exactas de casos y fallecidos (Pro)",
-      "Alertas regionales instantáneas (Pro)",
-      "Informes PDF y exportación CSV (Pro)",
+      "Cifras exactas de casos y fallecidos",
+      "Alertas regionales instantáneas",
+      "Informes PDF y exportación CSV",
     ],
     noCard: "Sin tarjeta de crédito",
     gdpr: "Cumple GDPR · Datos nunca vendidos",
@@ -46,9 +46,9 @@ const VALUE_PROPS: Record<string, { trial: string; items: string[]; noCard: stri
   ar: {
     trial: "تجربة Pro 14 يوماً مجاناً — بدون بطاقة بنكية",
     items: [
-      "أرقام دقيقة للحالات والوفيات (Pro)",
-      "تنبيهات إقليمية فورية (Pro)",
-      "تقارير PDF وتصدير CSV (Pro)",
+      "أرقام دقيقة للحالات والوفيات",
+      "تنبيهات إقليمية فورية",
+      "تقارير PDF وتصدير CSV",
     ],
     noCard: "لا حاجة لبطاقة ائتمانية",
     gdpr: "متوافق مع GDPR · بياناتك لن تُباع أبداً",
@@ -57,9 +57,9 @@ const VALUE_PROPS: Record<string, { trial: string; items: string[]; noCard: stri
   id: {
     trial: "Uji coba Pro 14 hari termasuk — tanpa kartu kredit",
     items: [
-      "Angka kasus & kematian tepat (Pro)",
-      "Peringatan regional instan (Pro)",
-      "Laporan PDF & ekspor CSV (Pro)",
+      "Angka kasus & kematian tepat",
+      "Peringatan regional instan",
+      "Laporan PDF & ekspor CSV",
     ],
     noCard: "Tanpa kartu kredit",
     gdpr: "Sesuai GDPR · Data tidak pernah dijual",

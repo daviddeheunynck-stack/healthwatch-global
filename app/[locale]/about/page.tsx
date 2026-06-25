@@ -96,7 +96,7 @@ const LABELS: Record<string, {
   contactBtn: string;
 }> = {
   fr: {
-    back: "← Retour au tableau de bord",
+    back: "← Accueil",
     title: "À propos de HealthWatch Global",
     subtitle: "Surveillance épidémique quotidienne pour un monde plus sûr.",
     founderTitle: "Pourquoi j'ai créé HealthWatch",
@@ -132,7 +132,7 @@ const LABELS: Record<string, {
     contactBtn: "Nous contacter",
   },
   en: {
-    back: "← Back to dashboard",
+    back: "← Home",
     title: "About HealthWatch Global",
     subtitle: "Daily epidemic surveillance for a safer world.",
     founderTitle: "Why I built HealthWatch",
@@ -168,7 +168,7 @@ const LABELS: Record<string, {
     contactBtn: "Contact us",
   },
   es: {
-    back: "← Volver al panel",
+    back: "← Inicio",
     title: "Acerca de HealthWatch Global",
     subtitle: "Vigilancia epidémica diaria para un mundo más seguro.",
     founderTitle: "Por qué creé HealthWatch",
@@ -204,7 +204,7 @@ const LABELS: Record<string, {
     contactBtn: "Contáctenos",
   },
   ar: {
-    back: "→ العودة إلى لوحة التحكم",
+    back: "→ الرئيسية",
     title: "حول HealthWatch Global",
     subtitle: "مراقبة الأوبئة اليومية لعالم أكثر أمانًا.",
     founderTitle: "لماذا أنشأت HealthWatch",
@@ -240,7 +240,7 @@ const LABELS: Record<string, {
     contactBtn: "تواصل معنا",
   },
   id: {
-    back: "← Kembali ke dasbor",
+    back: "← Beranda",
     title: "Tentang HealthWatch Global",
     subtitle: "Pemantauan epidemi harian untuk dunia yang lebih aman.",
     founderTitle: "Mengapa saya membuat HealthWatch",
@@ -444,7 +444,7 @@ export default async function AboutPage({
       </section>
 
       {/* Institutional pilot CTA */}
-      <section className="bg-gradient-to-r from-red-950/40 via-gray-900/40 to-transparent border border-red-800/25 rounded-2xl p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+      <section className="bg-amber-500/5 border border-amber-500/20 rounded-2xl p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
           <p className="text-white font-semibold text-sm">
             {locale === "fr" ? "Vous représentez une organisation ?" : locale === "es" ? "¿Representa una organización?" : locale === "ar" ? "هل تمثل مؤسسة؟" : locale === "id" ? "Mewakili sebuah organisasi?" : "Representing an organization?"}
@@ -455,7 +455,7 @@ export default async function AboutPage({
         </div>
         <Link
           href={`/${locale}/pilot`}
-          className="shrink-0 text-xs bg-red-700 hover:bg-red-600 text-white font-semibold px-4 py-2 rounded-lg transition-colors whitespace-nowrap"
+          className="shrink-0 text-xs bg-amber-600 hover:bg-amber-500 text-white font-semibold px-4 py-2 rounded-lg transition-colors whitespace-nowrap"
         >
           {locale === "fr" ? "En savoir plus →" : locale === "es" ? "Más información →" : locale === "ar" ? "← اكتشف المزيد" : locale === "id" ? "Pelajari lebih →" : "Learn more →"}
         </Link>
