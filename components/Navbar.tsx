@@ -218,6 +218,12 @@ export default function Navbar() {
                   {tAuth("login")}
                 </Link>
                 <Link
+                  href={`/${locale}/pilot`}
+                  className="text-sm text-amber-400 hover:text-amber-300 border border-amber-500/30 hover:border-amber-400/60 font-semibold px-3 py-1.5 rounded-lg transition-colors whitespace-nowrap"
+                >
+                  {locale === "fr" ? "Pilote →" : locale === "es" ? "Piloto →" : locale === "ar" ? "← تجريبي" : locale === "id" ? "Pilot →" : "Pilot →"}
+                </Link>
+                <Link
                   href={`/${locale}/signup`}
                   className="text-sm bg-red-600 hover:bg-red-500 text-white font-semibold px-3 py-1.5 rounded-lg transition-colors whitespace-nowrap"
                 >
@@ -347,19 +353,28 @@ export default function Navbar() {
                 </div>
               </div>
             ) : (
-              <div className="flex gap-3">
+              <div className="space-y-2">
                 <Link
-                  href={`/${locale}/login`}
-                  className="flex-1 text-center py-2 text-sm text-gray-400 hover:text-white bg-gray-800 rounded-lg transition-colors"
+                  href={`/${locale}/pilot`}
+                  className="block w-full text-center py-2.5 text-sm font-semibold text-amber-400 border border-amber-500/30 rounded-lg hover:border-amber-400/60 transition-colors"
+                  onClick={() => setMobileOpen(false)}
                 >
-                  {tAuth("login")}
+                  {locale === "fr" ? "Programme pilote institutionnel →" : locale === "es" ? "Programa piloto institucional →" : locale === "ar" ? "← البرنامج التجريبي المؤسسي" : locale === "id" ? "Program pilot institusional →" : "Institutional pilot program →"}
                 </Link>
-                <Link
-                  href={`/${locale}/signup`}
-                  className="flex-1 text-center py-2 text-sm text-white bg-red-600 hover:bg-red-500 rounded-lg transition-colors"
-                >
-                  {tAuth("signup")}
-                </Link>
+                <div className="flex gap-3">
+                  <Link
+                    href={`/${locale}/login`}
+                    className="flex-1 text-center py-2 text-sm text-gray-400 hover:text-white bg-gray-800 rounded-lg transition-colors"
+                  >
+                    {tAuth("login")}
+                  </Link>
+                  <Link
+                    href={`/${locale}/signup`}
+                    className="flex-1 text-center py-2 text-sm text-white bg-red-600 hover:bg-red-500 rounded-lg transition-colors"
+                  >
+                    {tAuth("signup")}
+                  </Link>
+                </div>
               </div>
             )}
           </div>
