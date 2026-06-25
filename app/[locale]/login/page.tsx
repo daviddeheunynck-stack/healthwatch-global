@@ -32,6 +32,12 @@ function OAuthErrorBanner({ locale }: { locale: string }) {
   );
 }
 
+function OAuthButtonsWithNext({ locale }: { locale: string }) {
+  const searchParams = useSearchParams();
+  const next = searchParams.get("next") ?? searchParams.get("redirect");
+  return <OAuthButtons locale={locale} context="login" redirectTo={next ?? undefined} />;
+}
+
 export default function LoginPage() {
   const t = useTranslations("auth");
   const locale = useLocale();
@@ -81,7 +87,9 @@ export default function LoginPage() {
           <Suspense fallback={null}>
             <OAuthErrorBanner locale={locale} />
           </Suspense>
-          <OAuthButtons locale={locale} context="login" />
+          <Suspense fallback={<OAuthButtons locale={locale} context="login" />}>
+            <OAuthButtonsWithNext locale={locale} />
+          </Suspense>
           <div className="flex items-center gap-3">
             <div className="flex-1 h-px bg-gray-800" />
             <span className="text-xs text-gray-600">{t("or")}</span>
