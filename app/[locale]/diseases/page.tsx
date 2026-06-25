@@ -9,6 +9,7 @@ import { allDiseases, diseaseToSlug, normalizeDisease } from "@/lib/disease-data
 import { getLocalizedDisease } from "@/lib/outbreaks";
 import type { Outbreak } from "@/lib/outbreaks";
 import EmailCapture from "@/components/EmailCapture";
+import DiseasesGrid from "./DiseasesGrid";
 
 const DISEASE_COUNT = allDiseases().length;
 
@@ -185,7 +186,6 @@ export default async function DiseasesPage({
 
   const activeCount  = byDisease.size;
   const totalActive  = active.length;
-  const numLocale    = l === "ar" ? "ar-SA" : l;
 
   const jsonLd = [
     {
@@ -271,47 +271,11 @@ export default async function DiseasesPage({
       </div>
 
       {/* Grid */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
-        {(filterActive ? sorted.filter((d) => (byDisease.get(d.name_en)?.count ?? 0) > 0) : sorted).map((disease) => {
-          const slug     = diseaseToSlug(disease.name_en);
-          const stats    = byDisease.get(disease.name_en);
-          const hasActive = (stats?.count ?? 0) > 0;
-          const name     = getLocalizedDisease(
-            { disease: disease.name_en, disease_en: disease.name_en, disease_ar: disease.name_ar },
-            l
-          );
-
-          return (
-            <Link
-              key={slug}
-              href={`/${l}/disease/${slug}`}
-              className={`group relative flex flex-col gap-2 rounded-xl border p-4 transition-all hover:scale-[1.02] ${
-                hasActive
-                  ? "bg-red-950/20 border-red-800/40 hover:border-red-600/60"
-                  : "bg-gray-900/50 border-gray-800 hover:border-gray-600"
-              }`}
-            >
-              {hasActive && (
-                <span className="absolute top-3 right-3 w-2 h-2 rounded-full bg-red-500 animate-pulse" />
-              )}
-              <p className={`font-semibold leading-tight pr-4 ${hasActive ? "text-white" : "text-gray-300 group-hover:text-white"} transition-colors`}>
-                {name}
-              </p>
-              <p className={`text-xs font-medium ${hasActive ? "text-red-400" : "text-gray-600"}`}>
-                {hasActive
-                  ? lb.active(stats!.count)
-                  : lb.noActive
-                }
-              </p>
-              {hasActive && stats!.cases > 0 && (
-                <p className="text-xs text-gray-500">
-                  {stats!.cases.toLocaleString(numLocale)} {lb.cases}
-                </p>
-              )}
-            </Link>
-          );
-        })}
-      </div>
+      <DiseasesGrid
+        locale={l}
+        diseases={filterActive ? sorted.filter((d) => (byDisease.get(d.name_en)?.count ?? 0) > 0) : sorted}
+        byDisease={Object.fromEntries(byDisease)}
+      />
 
       {/* CTA */}
       <EmailCapture
