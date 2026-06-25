@@ -244,7 +244,9 @@ export default async function RegionsPage({
 
   return (
     <div className="max-w-4xl mx-auto py-4 space-y-10" dir={isRtl ? "rtl" : "ltr"}>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      {jsonLd.map((s, i) => (
+        <script key={i} type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(s) }} />
+      ))}
 
       {/* Header */}
       <div className="space-y-3">

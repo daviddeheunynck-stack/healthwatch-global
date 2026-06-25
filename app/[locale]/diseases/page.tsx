@@ -203,7 +203,9 @@ export default async function DiseasesPage({
 
   return (
     <div className="max-w-5xl mx-auto px-4 py-8 space-y-8" dir={isRtl ? "rtl" : undefined}>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      {jsonLd.map((s, i) => (
+        <script key={i} type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(s) }} />
+      ))}
 
       {/* Back */}
       <Link href={`/${l}`} className="text-sm text-gray-500 hover:text-gray-300 transition-colors">

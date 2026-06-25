@@ -392,7 +392,9 @@ export default async function DiseasePage({
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8 space-y-10" dir={isRtl ? "rtl" : undefined}>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      {jsonLd.map((s, i) => (
+        <script key={i} type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(s) }} />
+      ))}
 
       {/* Back link */}
       <div className={`flex items-center justify-between gap-2 ${isRtl ? "flex-row-reverse" : ""}`}>

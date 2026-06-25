@@ -331,10 +331,9 @@ export default async function OutbreakPage({
 
   return (
     <div className={`max-w-3xl mx-auto${isRtl ? " text-right" : ""}`}>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
+      {jsonLd.map((s, i) => (
+        <script key={i} type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(s) }} />
+      ))}
 
       {/* Breadcrumb row */}
       <div className={`flex items-center gap-2 mb-6 flex-wrap ${isRtl ? "flex-row-reverse" : ""}`}>

@@ -548,10 +548,9 @@ export default async function DashboardPage({
     ];
     return (
       <>
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(schemas) }}
-        />
+        {schemas.map((s, i) => (
+          <script key={i} type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(s) }} />
+        ))}
         <LandingPage locale={locale} />
         <CampaignRefTracker />
       </>

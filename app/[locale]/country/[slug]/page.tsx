@@ -305,7 +305,9 @@ export default async function CountryPage({
 
   return (
     <div className="max-w-4xl mx-auto py-4 space-y-10" dir={isRtl ? "rtl" : "ltr"}>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      {jsonLd.map((s, i) => (
+        <script key={i} type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(s) }} />
+      ))}
 
       {/* Breadcrumb */}
       <div className={`flex items-center justify-between gap-2 flex-wrap ${isRtl ? "flex-row-reverse" : ""}`}>
