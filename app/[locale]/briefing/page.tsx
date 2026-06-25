@@ -1,3 +1,4 @@
+import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase-server";
 import { resolvedPlan } from "@/lib/resolved-plan";
 import { getOutbreaks, getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
@@ -138,16 +139,7 @@ export default async function BriefingPage({ params }: { params: Promise<{ local
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 
-  if (!user) {
-    return (
-      <div className="min-h-screen bg-gray-950 flex items-center justify-center p-6">
-        <div className="text-center space-y-3">
-          <p className="text-gray-400 text-sm">{c.loginRequired}</p>
-          <a href={`/${locale}`} className="text-red-400 hover:text-red-300 text-sm underline">← {c.back}</a>
-        </div>
-      </div>
-    );
-  }
+  if (!user) redirect(`/${locale}/login?next=/${locale}/briefing`);
 
   const { data: profile } = await supabase
     .from("profiles").select("plan, trial_ends_at, stripe_subscription_id").eq("id", user.id).single();
