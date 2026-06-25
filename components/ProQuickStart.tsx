@@ -14,7 +14,7 @@ const COPY: Record<string, {
     steps: [
       "Configurez vos alertes email",
       "Téléchargez un rapport PDF",
-      "Explorez une région",
+      "Suivez un foyer en watchlist",
     ],
     dismiss: "Fermer",
   },
@@ -23,7 +23,7 @@ const COPY: Record<string, {
     steps: [
       "Set up your email alerts",
       "Download a PDF report",
-      "Explore a region",
+      "Star an outbreak to track it",
     ],
     dismiss: "Close",
   },
@@ -32,7 +32,7 @@ const COPY: Record<string, {
     steps: [
       "Configure sus alertas de email",
       "Descargue un informe PDF",
-      "Explore una región",
+      "Siga un brote en su lista de vigilancia",
     ],
     dismiss: "Cerrar",
   },
@@ -41,7 +41,7 @@ const COPY: Record<string, {
     steps: [
       "إعداد تنبيهات البريد الإلكتروني",
       "تنزيل تقرير PDF",
-      "استكشاف منطقة",
+      "تابع تفشياً في قائمة المراقبة",
     ],
     dismiss: "إغلاق",
   },
@@ -50,7 +50,7 @@ const COPY: Record<string, {
     steps: [
       "Atur peringatan email Anda",
       "Unduh laporan PDF",
-      "Jelajahi sebuah wilayah",
+      "Pantau wabah di watchlist Anda",
     ],
     dismiss: "Tutup",
   },
@@ -119,7 +119,7 @@ export default function ProQuickStart({
     {
       key: "s3" as const,
       label: c.steps[2],
-      href: `/${locale}/regions`,
+      href: `/${locale}/`,
       done: st.s3,
       onComplete: () => save({ ...st, s3: true }),
     },
