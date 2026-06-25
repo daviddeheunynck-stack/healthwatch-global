@@ -6,6 +6,7 @@ const CONTENT: Record<string, {
   feature2Title: string; feature2Body: string;
   feature3Title: string; feature3Body: string;
   cta: string;
+  alertsCta: string;
   upgrade: string;
   upgradeLink: string;
   closing: string;
@@ -20,9 +21,10 @@ const CONTENT: Record<string, {
     feature1Body: "Visualisez les foyers actifs sur une carte mise à jour toutes les heures, filtrés par région et niveau de risque.",
     feature2Title: "📊 Tableau de bord actualisé toutes les heures",
     feature2Body: "Données agrégées de l'OMS, l'ECDC, l'OPAS et l'Africa CDC — mises à jour toutes les heures.",
-    feature3Title: "📧 Briefing hebdomadaire",
-    feature3Body: "Recevez chaque lundi un digest épidémiologique personnalisé selon votre région d'intérêt.",
+    feature3Title: "🔔 Configurez vos alertes régionales",
+    feature3Body: "Définissez vos priorités de maladies et votre zone géographique pour recevoir des alertes ciblées dès qu'un foyer préoccupant apparaît dans votre région.",
     cta: "Accéder au tableau de bord →",
+    alertsCta: "Configurer mes alertes →",
     upgrade: "✅ Votre essai Pro de 14 jours est déjà actif. Chiffres exacts, alertes régionales, export CSV et rapports PDF — tout inclus pendant 14 jours.",
     upgradeLink: "Voir toutes les fonctionnalités →",
     closing: "Bonne surveillance,",
@@ -37,9 +39,10 @@ const CONTENT: Record<string, {
     feature1Body: "Visualise active outbreaks on a map updated every hour, filtered by region and risk level.",
     feature2Title: "📊 Dashboard updated every hour",
     feature2Body: "Data aggregated from WHO, ECDC, PAHO and Africa CDC — updated every hour.",
-    feature3Title: "📧 Weekly briefing",
-    feature3Body: "Receive a personalised epidemiological digest every Monday, tailored to your region of interest.",
+    feature3Title: "🔔 Configure your regional alerts",
+    feature3Body: "Set your disease priorities and geographic focus to receive targeted alerts when an outbreak of concern emerges in your region.",
     cta: "Go to dashboard →",
+    alertsCta: "Configure my alerts →",
     upgrade: "✅ Your 14-day Pro trial is already active. Exact figures, regional alerts, CSV export and PDF reports — all included for 14 days.",
     upgradeLink: "See all features →",
     closing: "Stay safe,",
@@ -54,9 +57,10 @@ const CONTENT: Record<string, {
     feature1Body: "Visualice brotes activos en un mapa actualizado cada hora, filtrados por región y nivel de riesgo.",
     feature2Title: "📊 Panel actualizado cada hora",
     feature2Body: "Datos agregados de la OMS, ECDC, PAHO y Africa CDC — actualizados cada hora.",
-    feature3Title: "📧 Informe semanal",
-    feature3Body: "Reciba cada lunes un digest epidemiológico personalizado según su región de interés.",
+    feature3Title: "🔔 Configure sus alertas regionales",
+    feature3Body: "Defina sus prioridades de enfermedades y zona geográfica para recibir alertas precisas cuando surja un brote relevante en su región.",
     cta: "Ir al panel →",
+    alertsCta: "Configurar mis alertas →",
     upgrade: "✅ Su prueba Pro de 14 días ya está activa. Cifras exactas, alertas regionales, exportación CSV e informes PDF — todo incluido durante 14 días.",
     upgradeLink: "Ver todas las funciones →",
     closing: "Cuídese,",
@@ -71,9 +75,10 @@ const CONTENT: Record<string, {
     feature1Body: "تصور تفشيات الأمراض النشطة على خريطة محدّثة كل ساعة، مصفّاة حسب المنطقة ومستوى الخطر.",
     feature2Title: "📊 لوحة تحكم محدّثة كل ساعة",
     feature2Body: "بيانات مجمّعة من WHO وECDC وPAHO وAfrica CDC — تُحدَّث كل ساعة.",
-    feature3Title: "📧 ملخص أسبوعي",
-    feature3Body: "استلم كل اثنين ملخصاً وبائياً مخصصاً وفق منطقة اهتمامك.",
+    feature3Title: "🔔 إعداد تنبيهاتك الإقليمية",
+    feature3Body: "حدد أولوياتك من الأمراض ومنطقتك الجغرافية لتلقي تنبيهات فورية عند ظهور تفشٍّ مقلق في منطقتك.",
     cta: "← الذهاب إلى لوحة التحكم",
+    alertsCta: "← إعداد التنبيهات",
     upgrade: "✅ تجربتك المجانية Pro لمدة 14 يوماً نشطة الآن. أرقام دقيقة، تنبيهات إقليمية، تصدير CSV وتقارير PDF — كل شيء مشمول لمدة 14 يوماً.",
     upgradeLink: "← استعراض جميع الميزات",
     closing: "مع السلامة،",
@@ -88,9 +93,10 @@ const CONTENT: Record<string, {
     feature1Body: "Visualisasikan wabah aktif di peta yang diperbarui setiap jam, difilter berdasarkan wilayah dan tingkat risiko.",
     feature2Title: "📊 Dasbor diperbarui setiap jam",
     feature2Body: "Data diagregasi dari WHO, ECDC, PAHO dan Africa CDC — diperbarui setiap jam.",
-    feature3Title: "📧 Briefing mingguan",
-    feature3Body: "Terima digest epidemiologi yang dipersonalisasi setiap Senin, disesuaikan dengan wilayah minat Anda.",
+    feature3Title: "🔔 Konfigurasi peringatan regional Anda",
+    feature3Body: "Tetapkan prioritas penyakit dan fokus geografis untuk menerima peringatan yang ditargetkan saat wabah muncul di wilayah Anda.",
     cta: "Buka dasbor →",
+    alertsCta: "Konfigurasi peringatan →",
     upgrade: "✅ Uji coba Pro 14 hari Anda sudah aktif. Angka tepat, peringatan regional, ekspor CSV dan laporan PDF — semua termasuk selama 14 hari.",
     upgradeLink: "Lihat semua fitur →",
     closing: "Jaga kesehatan,",
@@ -104,6 +110,8 @@ export function buildWelcomeEmail(locale: string): { subject: string; html: stri
   const dir = locale === "ar" ? "rtl" : "ltr";
   const dashboardUrl = `https://healthwatch-global.com/${locale}`;
   const pricingUrl = `https://healthwatch-global.com/${locale}/pricing`;
+
+  const alertsUrl = `https://healthwatch-global.com/${locale}/alerts`;
 
   const html = `<!DOCTYPE html>
 <html lang="${locale}" dir="${dir}">
@@ -143,11 +151,17 @@ export function buildWelcomeEmail(locale: string): { subject: string; html: stri
       </div>
 
       <!-- CTA -->
-      <div style="text-align:center;margin-bottom:28px;">
+      <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:28px;">
         <a href="${dashboardUrl}"
            style="display:inline-block;background:#dc2626;color:white;text-decoration:none;
-                  padding:14px 32px;border-radius:8px;font-weight:700;font-size:15px;">
+                  padding:14px 24px;border-radius:8px;font-weight:700;font-size:14px;">
           ${c.cta}
+        </a>
+        <a href="${alertsUrl}"
+           style="display:inline-block;background:#1e293b;color:#f59e0b;text-decoration:none;
+                  padding:14px 24px;border-radius:8px;font-weight:700;font-size:14px;
+                  border:1px solid #f59e0b44;">
+          ${c.alertsCta}
         </a>
       </div>
 
