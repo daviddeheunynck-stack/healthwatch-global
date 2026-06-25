@@ -72,7 +72,7 @@ export default function AlertSetupBanner({ locale }: { locale: string }) {
         </div>
         <div className="flex items-center gap-3 shrink-0">
           <Link
-            href={`/${locale}/account`}
+            href={`/${locale}/account#regional-alerts`}
             className="text-xs bg-amber-600 hover:bg-amber-500 text-white font-semibold px-4 py-2 rounded-lg transition-colors whitespace-nowrap"
             onClick={dismiss}
           >

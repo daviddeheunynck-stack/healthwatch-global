@@ -67,15 +67,14 @@ const STORAGE_KEY = "hw_free_banner_dismissed_v2";
 const DISMISS_TTL_MS = 30 * 24 * 60 * 60 * 1000; // 30 days
 
 export default function FreePlanBanner({ locale, trialExpired = false, missedAlerts = 0 }: { locale: string; trialExpired?: boolean; missedAlerts?: number }) {
-  const [dismissed, setDismissed] = useState(false);
+  const [dismissed, setDismissed] = useState(true);
   useEffect(() => {
     const stored = localStorage.getItem(STORAGE_KEY);
     if (stored) {
       const dismissedAt = parseInt(stored, 10);
-      if (!isNaN(dismissedAt) && Date.now() - dismissedAt < DISMISS_TTL_MS) {
-        setDismissed(true);
-      }
+      if (!isNaN(dismissedAt) && Date.now() - dismissedAt < DISMISS_TTL_MS) return;
     }
+    setDismissed(false);
   }, []);
 
   if (dismissed) return null;
