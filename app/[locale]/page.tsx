@@ -38,6 +38,7 @@ import ResolvedOutbreaksWidget from "@/components/ResolvedOutbreaksWidget";
 import APIKeyPanel from "@/components/APIKeyPanel";
 import DigestPanel from "@/components/DigestPanel";
 import RegionalPulseSummary from "@/components/RegionalPulseSummary";
+import AlertSetupBanner from "@/components/AlertSetupBanner";
 import { Suspense } from "react";
 import type { Metadata } from "next";
 
@@ -189,6 +190,7 @@ async function DashboardContent({ demo = false, urlRegion, urlRisk }: { demo?: b
   let diseaseWatchlist: string[] = [];
   let countryTagsMap: Record<string, string> = {};
   let orgMemberAccess = false;
+  let hasNoAlerts = false;
   if (!demo) {
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
@@ -221,13 +223,14 @@ async function DashboardContent({ demo = false, urlRegion, urlRisk }: { demo?: b
       }
       if (isPaidPlan) {
         diseaseWatchlist = (profile?.disease_watchlist as string[] | null) ?? [];
-        const { data: tagRows } = await supabase
-          .from("user_country_tags")
-          .select("country_en, label")
-          .eq("user_id", user.id);
-        for (const t of (tagRows ?? []) as { country_en: string; label: string }[]) {
+        const [tagResult, alertRegionResult] = await Promise.all([
+          supabase.from("user_country_tags").select("country_en, label").eq("user_id", user.id),
+          supabase.from("user_alert_regions").select("region", { count: "exact", head: true }).eq("user_id", user.id),
+        ]);
+        for (const t of (tagResult.data ?? []) as { country_en: string; label: string }[]) {
           countryTagsMap[t.country_en] = t.label;
         }
+        hasNoAlerts = (alertRegionResult.count ?? 0) === 0;
       }
       // Org members inherit Team-level access even if their own plan is free
       if (!isPaidPlan) {
@@ -355,6 +358,8 @@ async function DashboardContent({ demo = false, urlRegion, urlRisk }: { demo?: b
       )}
 
       {!demo && <PushNotificationBanner locale={locale} />}
+
+      {!demo && isPaid && hasNoAlerts && <AlertSetupBanner locale={locale} />}
 
       {/* Situation Snapshot — top-priority outbreak at a glance */}
       {stats.topOutbreak && (() => {
