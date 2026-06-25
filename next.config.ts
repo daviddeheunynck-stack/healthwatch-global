@@ -150,11 +150,14 @@ export default sentryConfigured
       org:           process.env.SENTRY_ORG,
       project:       process.env.SENTRY_PROJECT,
       authToken:     process.env.SENTRY_AUTH_TOKEN,
-      // EU region — driven by SENTRY_URL env var (https://de.sentry.io/)
+      // EU ingest region — must be explicit so the build plugin hits de.sentry.io
+      // instead of the default sentry.io for source-map uploads.
+      sentryUrl:     process.env.SENTRY_URL ?? "https://de.sentry.io/",
       silent:        true,
       disableLogger: true,
-      // Disable source map upload on build failure to unblock CI
-      sourcemaps:    { disable: false },
+      // Delete .js.map files after uploading to Sentry so they are never
+      // served to browsers (prevents source code exposure).
+      sourcemaps: { disable: false, deleteSourcemapsAfterUpload: true },
       telemetry:     false,
     })
   : withNextIntl(nextConfig);
