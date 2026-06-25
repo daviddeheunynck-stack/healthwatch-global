@@ -30,11 +30,9 @@ export async function GET() {
 
   const url: string | null = data?.slack_webhook_url ?? null;
 
-  // Mask the URL — only expose the first and last 6 chars
+  // Mask the URL — always expose only the first 30 and last 6 chars
   const masked = url
-    ? url.length > 20
-      ? `${url.slice(0, 30)}…${url.slice(-6)}`
-      : url
+    ? `${url.slice(0, 30)}…${url.slice(-6)}`
     : null;
 
   return NextResponse.json({ configured: !!url, masked });

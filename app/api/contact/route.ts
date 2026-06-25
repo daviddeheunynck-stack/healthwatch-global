@@ -44,6 +44,9 @@ export async function POST(req: NextRequest) {
 
     const l = L[locale] ?? L.fr;
     const BREVO_API_KEY = clean(process.env.BREVO_API_KEY);
+    if (!BREVO_API_KEY) {
+      return NextResponse.json({ error: "Email service unavailable" }, { status: 503 });
+    }
 
     const isPilot = typeof message === "string" && message.startsWith("[PILOT APPLICATION]");
     const subjectPrefix = isPilot ? "[PILOT 🔴]" : "[HealthWatch]";
