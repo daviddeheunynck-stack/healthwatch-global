@@ -82,22 +82,12 @@ const COPY: Record<string, {
     compareTitle: "Full feature comparison",
     features: [
       { label: "Seats included", free: "1", pro: "1", team: "5", enterprise: "Unlimited" },
-      { label: "WHO outbreak map", free: true, pro: true, team: true, enterprise: true },
-      { label: "WHO DON data feed", free: true, pro: true, team: true, enterprise: true },
       { label: "Monitored regions", free: "1", pro: "All", team: "All", enterprise: "All" },
-      { label: "Exact case & death figures", free: false, pro: true, team: true, enterprise: true },
-      { label: "Weekly email digest", free: true, pro: true, team: true, enterprise: true },
-      { label: "Regional email alerts", free: false, pro: "All regions", team: "All regions", enterprise: "All regions" },
-      { label: "Instant alerts (all regions)", free: false, pro: true, team: true, enterprise: true },
-      { label: "PDF regional reports", free: false, pro: "All regions", team: "All regions", enterprise: "All regions" },
-      { label: "CSV data export", free: false, pro: true, team: true, enterprise: true },
+      { label: "Instant alerts (email + push)", free: false, pro: true, team: true, enterprise: true },
+      { label: "PDF reports + CSV export", free: false, pro: true, team: true, enterprise: true },
       { label: "Slack / Teams integration", free: false, pro: true, team: true, enterprise: true },
-      { label: "Single team invoice", free: false, pro: false, team: true, enterprise: true },
-      { label: "REST API access", free: false, pro: false, team: false, enterprise: true },
-      { label: "Webhook alerts (signed payloads)", free: false, pro: false, team: false, enterprise: true },
-      { label: "On-premise deployment", free: false, pro: false, team: false, enterprise: true },
-      { label: "99.9% SLA", free: false, pro: false, team: false, enterprise: true },
-      { label: "Dedicated account manager", free: false, pro: false, team: false, enterprise: true },
+      { label: "Single team invoice + DPA", free: false, pro: false, team: true, enterprise: true },
+      { label: "REST API + Webhooks", free: false, pro: false, team: false, enterprise: true },
       { label: "Support", free: "Email", pro: "Priority", team: "Priority", enterprise: "Dedicated" },
     ],
     ctaTitle: "Not sure which plan fits?",
@@ -116,22 +106,12 @@ const COPY: Record<string, {
     compareTitle: "Comparatif complet des fonctionnalités",
     features: [
       { label: "Sièges inclus", free: "1", pro: "1", team: "5", enterprise: "Illimité" },
-      { label: "Carte OMS des épidémies", free: true, pro: true, team: true, enterprise: true },
-      { label: "Flux données OMS DON", free: true, pro: true, team: true, enterprise: true },
       { label: "Régions surveillées", free: "1", pro: "Toutes", team: "Toutes", enterprise: "Toutes" },
-      { label: "Chiffres exacts (cas & décès)", free: false, pro: true, team: true, enterprise: true },
-      { label: "Digest email hebdomadaire", free: true, pro: true, team: true, enterprise: true },
-      { label: "Alertes email régionales", free: false, pro: "Toutes les régions", team: "Toutes les régions", enterprise: "Toutes les régions" },
-      { label: "Alertes instantanées (toutes régions)", free: false, pro: true, team: true, enterprise: true },
-      { label: "Rapports PDF régionaux", free: false, pro: "Toutes les régions", team: "Toutes les régions", enterprise: "Toutes les régions" },
-      { label: "Export CSV des données", free: false, pro: true, team: true, enterprise: true },
+      { label: "Alertes instantanées (email + push)", free: false, pro: true, team: true, enterprise: true },
+      { label: "Rapports PDF + export CSV", free: false, pro: true, team: true, enterprise: true },
       { label: "Intégration Slack / Teams", free: false, pro: true, team: true, enterprise: true },
-      { label: "Facture institutionnelle unique", free: false, pro: false, team: true, enterprise: true },
-      { label: "Accès API REST", free: false, pro: false, team: false, enterprise: true },
-      { label: "Alertes webhook (payloads signés)", free: false, pro: false, team: false, enterprise: true },
-      { label: "Déploiement on-premise", free: false, pro: false, team: false, enterprise: true },
-      { label: "SLA 99,9 %", free: false, pro: false, team: false, enterprise: true },
-      { label: "Account manager dédié", free: false, pro: false, team: false, enterprise: true },
+      { label: "Facture institutionnelle + DPA", free: false, pro: false, team: true, enterprise: true },
+      { label: "API REST + Webhooks", free: false, pro: false, team: false, enterprise: true },
       { label: "Support", free: "Email", pro: "Prioritaire", team: "Prioritaire", enterprise: "Dédié" },
     ],
     ctaTitle: "Vous ne savez pas quelle formule choisir ?",
@@ -150,22 +130,12 @@ const COPY: Record<string, {
     compareTitle: "Comparación completa de funciones",
     features: [
       { label: "Puestos incluidos", free: "1", pro: "1", team: "5", enterprise: "Ilimitado" },
-      { label: "Mapa OMS de brotes", free: true, pro: true, team: true, enterprise: true },
-      { label: "Datos OMS DON", free: true, pro: true, team: true, enterprise: true },
       { label: "Regiones supervisadas", free: "1", pro: "Todas", team: "Todas", enterprise: "Todas" },
-      { label: "Cifras exactas (casos y fallec.)", free: false, pro: true, team: true, enterprise: true },
-      { label: "Digest semanal por email", free: true, pro: true, team: true, enterprise: true },
-      { label: "Alertas email regionales", free: false, pro: "Todas las regiones", team: "Todas las regiones", enterprise: "Todas las regiones" },
-      { label: "Alertas instantáneas (todas las regiones)", free: false, pro: true, team: true, enterprise: true },
-      { label: "Informes PDF regionales", free: false, pro: "Todas las regiones", team: "Todas las regiones", enterprise: "Todas las regiones" },
-      { label: "Exportación de datos CSV", free: false, pro: true, team: true, enterprise: true },
+      { label: "Alertas instantáneas (email + push)", free: false, pro: true, team: true, enterprise: true },
+      { label: "Informes PDF + exportación CSV", free: false, pro: true, team: true, enterprise: true },
       { label: "Integración Slack / Teams", free: false, pro: true, team: true, enterprise: true },
-      { label: "Factura institucional única", free: false, pro: false, team: true, enterprise: true },
-      { label: "Acceso API REST", free: false, pro: false, team: false, enterprise: true },
-      { label: "Alertas webhook (payloads firmados)", free: false, pro: false, team: false, enterprise: true },
-      { label: "Implementación on-premise", free: false, pro: false, team: false, enterprise: true },
-      { label: "SLA del 99,9%", free: false, pro: false, team: false, enterprise: true },
-      { label: "Gestor de cuenta dedicado", free: false, pro: false, team: false, enterprise: true },
+      { label: "Factura institucional + DPA", free: false, pro: false, team: true, enterprise: true },
+      { label: "API REST + Webhooks", free: false, pro: false, team: false, enterprise: true },
       { label: "Soporte", free: "Email", pro: "Prioritario", team: "Prioritario", enterprise: "Dedicado" },
     ],
     ctaTitle: "¿No sabe qué plan elegir?",
@@ -184,22 +154,12 @@ const COPY: Record<string, {
     compareTitle: "مقارنة شاملة للميزات",
     features: [
       { label: "المقاعد المشمولة", free: "1", pro: "1", team: "5", enterprise: "غير محدود" },
-      { label: "خريطة منظمة الصحة العالمية", free: true, pro: true, team: true, enterprise: true },
-      { label: "بيانات منظمة الصحة العالمية DON", free: true, pro: true, team: true, enterprise: true },
       { label: "المناطق المراقبة", free: "1", pro: "جميعها", team: "جميعها", enterprise: "جميعها" },
-      { label: "أرقام دقيقة (حالات ووفيات)", free: false, pro: true, team: true, enterprise: true },
-      { label: "ملخص بريدي أسبوعي", free: true, pro: true, team: true, enterprise: true },
-      { label: "تنبيهات بريدية إقليمية", free: false, pro: "جميع المناطق", team: "جميع المناطق", enterprise: "جميع المناطق" },
-      { label: "تنبيهات فورية (جميع المناطق)", free: false, pro: true, team: true, enterprise: true },
-      { label: "تقارير PDF إقليمية", free: false, pro: "جميع المناطق", team: "جميع المناطق", enterprise: "جميع المناطق" },
-      { label: "تصدير البيانات CSV", free: false, pro: true, team: true, enterprise: true },
+      { label: "تنبيهات فورية (بريد + إشعارات)", free: false, pro: true, team: true, enterprise: true },
+      { label: "تقارير PDF + تصدير CSV", free: false, pro: true, team: true, enterprise: true },
       { label: "تكامل Slack / Teams", free: false, pro: true, team: true, enterprise: true },
-      { label: "فاتورة مؤسسية واحدة", free: false, pro: false, team: true, enterprise: true },
-      { label: "الوصول لـ REST API", free: false, pro: false, team: false, enterprise: true },
-      { label: "تنبيهات Webhook (حمولات موقعة)", free: false, pro: false, team: false, enterprise: true },
-      { label: "نشر محلي", free: false, pro: false, team: false, enterprise: true },
-      { label: "ضمان SLA 99.9%", free: false, pro: false, team: false, enterprise: true },
-      { label: "مدير حساب مخصص", free: false, pro: false, team: false, enterprise: true },
+      { label: "فاتورة مؤسسية + DPA", free: false, pro: false, team: true, enterprise: true },
+      { label: "REST API + Webhooks", free: false, pro: false, team: false, enterprise: true },
       { label: "الدعم", free: "بريد إلكتروني", pro: "أولوية", team: "أولوية", enterprise: "مخصص" },
     ],
     ctaTitle: "لست متأكداً من الخطة المناسبة؟",
@@ -218,22 +178,12 @@ const COPY: Record<string, {
     compareTitle: "Perbandingan fitur lengkap",
     features: [
       { label: "Kursi termasuk", free: "1", pro: "1", team: "5", enterprise: "Tak terbatas" },
-      { label: "Peta wabah WHO", free: true, pro: true, team: true, enterprise: true },
-      { label: "Data WHO DON", free: true, pro: true, team: true, enterprise: true },
       { label: "Wilayah yang dipantau", free: "1", pro: "Semua", team: "Semua", enterprise: "Semua" },
-      { label: "Angka tepat (kasus & kematian)", free: false, pro: true, team: true, enterprise: true },
-      { label: "Digest email mingguan", free: true, pro: true, team: true, enterprise: true },
-      { label: "Peringatan email regional", free: false, pro: "Semua wilayah", team: "Semua wilayah", enterprise: "Semua wilayah" },
-      { label: "Peringatan instan (semua wilayah)", free: false, pro: true, team: true, enterprise: true },
-      { label: "Laporan PDF regional", free: false, pro: "Semua wilayah", team: "Semua wilayah", enterprise: "Semua wilayah" },
-      { label: "Ekspor data CSV", free: false, pro: true, team: true, enterprise: true },
+      { label: "Peringatan instan (email + push)", free: false, pro: true, team: true, enterprise: true },
+      { label: "Laporan PDF + ekspor CSV", free: false, pro: true, team: true, enterprise: true },
       { label: "Integrasi Slack / Teams", free: false, pro: true, team: true, enterprise: true },
-      { label: "Satu faktur institusional", free: false, pro: false, team: true, enterprise: true },
-      { label: "Akses REST API", free: false, pro: false, team: false, enterprise: true },
-      { label: "Peringatan webhook (payload bertanda)", free: false, pro: false, team: false, enterprise: true },
-      { label: "Penerapan on-premise", free: false, pro: false, team: false, enterprise: true },
-      { label: "SLA 99,9%", free: false, pro: false, team: false, enterprise: true },
-      { label: "Manajer akun khusus", free: false, pro: false, team: false, enterprise: true },
+      { label: "Faktur institusional + DPA", free: false, pro: false, team: true, enterprise: true },
+      { label: "REST API + Webhooks", free: false, pro: false, team: false, enterprise: true },
       { label: "Dukungan", free: "Email", pro: "Prioritas", team: "Prioritas", enterprise: "Khusus" },
     ],
     ctaTitle: "Tidak yakin paket mana yang cocok?",
@@ -335,6 +285,15 @@ export default async function PricingPage({ params }: { params: Promise<{ locale
         </div>
       </div>
 
+      {/* ── ROI framing ───────────────────────────────────────────────────── */}
+      <div className="bg-amber-500/5 border border-amber-500/20 rounded-2xl p-8 max-w-3xl mx-auto w-full space-y-3">
+        <div className="flex items-center gap-2">
+          <Clock className="w-5 h-5 text-amber-400 shrink-0" />
+          <h2 className="font-bold text-white text-lg">{c.roiTitle}</h2>
+        </div>
+        <p className="text-gray-400 text-sm leading-relaxed">{c.roiText}</p>
+      </div>
+
       {/* ── Free tier ────────────────────────────────────────────────────── */}
       <div className="border border-gray-700 rounded-2xl p-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 bg-gray-900/40 max-w-4xl mx-auto w-full">
         <div className="flex items-start gap-4">
@@ -375,15 +334,6 @@ export default async function PricingPage({ params }: { params: Promise<{ locale
           <p className="font-semibold text-white text-sm">{c.guarantee}</p>
           <p className="text-gray-400 text-sm mt-1">{c.guaranteeDesc}</p>
         </div>
-      </div>
-
-      {/* ── ROI framing ───────────────────────────────────────────────────── */}
-      <div className="bg-gray-900/60 border border-gray-800 rounded-2xl p-8 max-w-3xl mx-auto w-full space-y-3">
-        <div className="flex items-center gap-2 text-amber-400">
-          <Clock className="w-5 h-5 shrink-0" />
-          <h2 className="font-bold text-white text-lg">{c.roiTitle}</h2>
-        </div>
-        <p className="text-gray-400 text-sm leading-relaxed">{c.roiText}</p>
       </div>
 
       {/* ── Feature comparison table ──────────────────────────────────────── */}

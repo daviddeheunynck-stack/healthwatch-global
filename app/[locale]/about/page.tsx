@@ -89,7 +89,6 @@ const LABELS: Record<string, {
   howSteps: { title: string; text: string }[];
   usersTitle: string;
   users: { title: string; text: string }[];
-  techTitle: string;
   openDataTitle: string;
   openDataText: string;
   contactTitle: string;
@@ -125,7 +124,6 @@ const LABELS: Record<string, {
       { title: "ONG & organisations humanitaires", text: "Surveillez les régions prioritaires et recevez des alertes ciblées pour réagir rapidement." },
       { title: "Gouvernements & agences", text: "Intégrez les données épidémiques directement dans vos systèmes via notre API REST Enterprise." },
     ],
-    techTitle: "Technologies",
     openDataTitle: "Open data & transparence",
     openDataText:
       "Nous nous appuyons exclusivement sur des données officielles et publiques. Aucun algorithme de prédiction opaque. Les sources sont toujours citées et liées directement aux bulletins officiels d'origine (OMS, ECDC, OPAS, Africa CDC).",
@@ -162,7 +160,6 @@ const LABELS: Record<string, {
       { title: "NGOs & humanitarian organisations", text: "Monitor priority regions and receive targeted alerts to react quickly." },
       { title: "Governments & agencies", text: "Integrate outbreak data from WHO, ECDC, PAHO & Africa CDC into your systems via our Enterprise REST API." },
     ],
-    techTitle: "Technology",
     openDataTitle: "Open data & transparency",
     openDataText:
       "We rely exclusively on official, public data. No opaque prediction algorithms. Sources are always cited and linked directly to the original bulletins (WHO, ECDC, PAHO, Africa CDC).",
@@ -199,7 +196,6 @@ const LABELS: Record<string, {
       { title: "ONG y organizaciones humanitarias", text: "Monitoree regiones prioritarias y reciba alertas específicas para reaccionar rápidamente." },
       { title: "Gobiernos y agencias", text: "Integre datos de la OMS, ECDC, PAHO y Africa CDC directamente en sus sistemas mediante nuestra API REST Enterprise." },
     ],
-    techTitle: "Tecnología",
     openDataTitle: "Datos abiertos y transparencia",
     openDataText:
       "Nos basamos exclusivamente en datos oficiales y públicos. Sin algoritmos de predicción opacos. Las fuentes siempre se citan y enlazan directamente a los boletines originales de la OMS, ECDC, PAHO y Africa CDC.",
@@ -236,7 +232,6 @@ const LABELS: Record<string, {
       { title: "المنظمات غير الحكومية والإنسانية", text: "راقب المناطق ذات الأولوية واستقبل تنبيهات مستهدفة للاستجابة السريعة." },
       { title: "الحكومات والوكالات", text: "ادمج بيانات التفشيات (WHO وECDC وPAHO وAfrica CDC) في أنظمتك عبر REST API لخطة Enterprise." },
     ],
-    techTitle: "التقنيات",
     openDataTitle: "البيانات المفتوحة والشفافية",
     openDataText:
       "نعتمد حصريًا على بيانات رسمية وعامة. لا خوارزميات تنبؤ غامضة. المصادر مُستشهَد بها دائمًا ومرتبطة مباشرةً بالنشرات الرسمية الأصلية (WHO وECDC وPAHO وAfrica CDC).",
@@ -273,7 +268,6 @@ const LABELS: Record<string, {
       { title: "LSM & organisasi kemanusiaan", text: "Pantau wilayah prioritas dan terima peringatan yang ditargetkan untuk bereaksi dengan cepat." },
       { title: "Pemerintah & lembaga", text: "Integrasikan data wabah WHO, ECDC, PAHO & Africa CDC langsung ke sistem Anda melalui REST API Enterprise kami." },
     ],
-    techTitle: "Teknologi",
     openDataTitle: "Data terbuka & transparansi",
     openDataText:
       "Kami mengandalkan data resmi dan publik secara eksklusif. Tidak ada algoritma prediksi yang tidak transparan. Sumber selalu dikutip dan ditautkan langsung ke buletin resmi asli (WHO, ECDC, PAHO, Africa CDC).",
@@ -283,14 +277,6 @@ const LABELS: Record<string, {
   },
 };
 
-const TECH_STACK = [
-  { name: "Next.js 16", desc: "App Router, RSC, edge-ready" },
-  { name: "Supabase", desc: "PostgreSQL · Auth · Edge Functions" },
-  { name: "WHO · ECDC · PAHO · Africa CDC", desc: "4 official outbreak data sources" },
-  { name: "Brevo", desc: "Transactional & digest emails" },
-  { name: "Stripe", desc: "Secure subscription billing" },
-  { name: "Vercel", desc: "Global CDN deployment" },
-];
 
 export default async function AboutPage({
   params,
@@ -414,22 +400,6 @@ export default async function AboutPage({
             <div key={i} className="bg-gray-900 border border-gray-800 rounded-xl p-4 space-y-1">
               <p className="text-white text-sm font-semibold">{u.title}</p>
               <p className="text-gray-400 text-sm leading-relaxed">{u.text}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Technology */}
-      <section className="space-y-4">
-        <h2 className="text-xl font-semibold text-white">{l.techTitle}</h2>
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-          {TECH_STACK.map(({ name, desc }) => (
-            <div
-              key={name}
-              className="bg-gray-900 border border-gray-800 rounded-xl p-3 space-y-0.5"
-            >
-              <p className="text-white text-sm font-semibold">{name}</p>
-              <p className="text-gray-500 text-xs">{desc}</p>
             </div>
           ))}
         </div>
