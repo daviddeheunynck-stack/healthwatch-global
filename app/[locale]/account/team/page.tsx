@@ -95,7 +95,7 @@ export default async function TeamPage({
 
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
-  if (!user) redirect(`/${locale}/login`);
+  if (!user) redirect(`/${locale}/login?next=/${locale}/account/team`);
 
   const service = getService();
 

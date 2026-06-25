@@ -126,7 +126,7 @@ export default async function PrintPage({
   // Auth check — PDF reports are a Pro feature
   const authClient = await createServerClient();
   const { data: { user } } = await authClient.auth.getUser();
-  if (!user) redirect(`/${locale}/login`);
+  if (!user) redirect(`/${locale}/login?next=/${locale}/outbreak/${id}/print`);
   const { data: profile } = await authClient.from("profiles").select("plan, trial_ends_at, stripe_subscription_id").eq("id", user.id).single();
   let plan = profile?.plan ?? "free";
   if (
