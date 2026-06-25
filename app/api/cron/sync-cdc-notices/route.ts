@@ -236,6 +236,19 @@ export async function GET(req: NextRequest) {
       continue;
     }
 
+    // Level 1/2 notices with no case data are travel advisories for endemic risk,
+    // not reportable outbreak events. Only Level 3 (Warning) is inserted without counts.
+    if (cases === 0 && deaths === 0 && notice.level !== "level3") {
+      if (existRow?.active) {
+        await supabase.from("outbreaks").update({ active: false }).eq("id", existRow.id);
+        log.push({ label, status: "deactivated", detail: "0/0 cases — endemic advisory" });
+      } else {
+        log.push({ label, status: "skip", detail: "0/0 cases — endemic advisory, not inserted" });
+      }
+      results.skipped++;
+      continue;
+    }
+
     const riskLevel  = LEVEL_TO_RISK[notice.level] ?? assessRisk(diseaseInfo.name_en, pageText, cases, deaths);
     const description = `CDC Travel Notice (${notice.level.replace("level", "Level ")}) — ${notice.title}. ${pageText.substring(0, 380)}`.substring(0, 600);
 
