@@ -120,7 +120,7 @@ export default function GeofenceAlertPanel({ locale, userEmail }: Props) {
       if (d.error) { setFormError(d.error); return; }
       if (d.alert) {
         setAlerts((prev) => [d.alert, ...prev]);
-        setLabel(""); setLat(""); setLng(""); setRadiusKm(500); setEmail("");
+        setLabel(""); setLat(""); setLng(""); setRadiusKm(500); setEmail(userEmail ?? "");
         setShowForm(false);
       }
     } catch { setFormError("Network error"); } finally { setCreating(false); }

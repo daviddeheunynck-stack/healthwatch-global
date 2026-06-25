@@ -122,7 +122,7 @@ export default function CountryRiskAlertPanel({ locale, userEmail }: { locale: s
         const d = await res.json() as { error?: string };
         setFormError(d.error ?? "Error"); return;
       }
-      setCountryEn(""); setMinRisk("high"); setEmail(""); setShowForm(false);
+      setCountryEn(""); setMinRisk("high"); setEmail(userEmail ?? ""); setShowForm(false);
       load();
     } finally { setSubmitting(false); }
   }
