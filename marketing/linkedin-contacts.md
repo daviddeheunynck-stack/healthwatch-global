@@ -69,7 +69,8 @@ Profils récupérés des sessions précédentes. Statut à confirmer.
 | Contact | Statut | Dernier message | Prochaine action |
 |---|---|---|---|
 | Silvestre Suh (CHAI Sierra Leone) | Message envoyé 22 juin (Lassa hook) | Lui | Attendre réponse |
-| Zahra BOUZIDI (épidémiologiste Algérie) | A répondu 👏👍😊 + "je vous répondrai" | Elle | Activer Pro 30j quand elle répond |
+| Zahra BOUZIDI (épidémiologiste Algérie) | Feedback produit 25 juin — 2 suggestions intégrées. Compte iinnerre@gmail.com supprimé (email inaccessible). En attente nouvelle adresse. | Elle | Recréer compte Pro dès réception email |
+| Liz Yaslik (Amazon, Abu Dhabi) | Connexion acceptée 25 juin. DM envoyé 25 juin — hook travelerRisk feature + offre Pro. | Lui | Attendre réponse |
 | Feydeau BOTON | Déjà connecté | — | DM avec URL PH demain matin 09h01 |
 | Jalal Nourlil (Institut Pasteur Maroc) | 4 emails envoyés | Lui | Ne plus relancer |
 

@@ -73,7 +73,7 @@ Archive de tout le contenu créé. Mise à jour à chaque session.
 Thread @HWatchGlobal — à poster dès que la page PH est live (09h30 CEST) :
 
 **Tweet 1**
-> We spent 2 years watching epidemiologists check 4 sources manually every morning.
+> Six months ago, I watched field epidemiologists check 4 sources manually every morning.
 >
 > WHO DON. ECDC. PAHO. Africa CDC. One by one.
 >
@@ -87,11 +87,9 @@ Thread @HWatchGlobal — à poster dès que la page PH est live (09h30 CEST) :
 > Built for the people who can't afford to miss an early signal.
 
 **Tweet 3**
-> Launching on Product Hunt today 👇
->
-> [URL PH — à insérer le 25 juin matin]
->
 > Free 30-day Pro access for field epidemiologists and IHR focal points. No card required.
+>
+> 👉 healthwatch-global.com
 
 ---
 
@@ -132,7 +130,30 @@ Happy to answer questions about the niche, the data pipeline, or what it's like 
 
 ---
 
-### Post LinkedIn (25 juin 2026) — À CRÉER LE JOUR J
+### Post LinkedIn (25 juin 2026) — PUBLIÉ ✅ 25 juin 2026
+
+**Version EN (publiée) :**
+
+HealthWatch Global officially launched today.
+
+Six months ago, I was watching field epidemiologists manually check 4 sources every morning: WHO DON. ECDC. PAHO. Africa CDC. One by one. Copy-pasting into spreadsheets. No aggregation, no risk scoring, no single view.
+
+That's a tooling problem. I built the tool.
+
+What HealthWatch Global does:
+→ One dashboard for WHO, ECDC, PAHO and Africa CDC — updated 4x/day
+→ Automated IHR tier classification (Immediate / Rapid / Surveillance)
+→ Email alerts by disease, country, or risk level
+→ 5 languages: EN, FR, ES, AR, ID
+→ PDF reports, RSS feeds, embeddable widget
+
+Built for: IHR national focal points, health ministry surveillance teams, NGO health coordinators, corporate risk managers.
+
+Solo founder. First paying customer last week. A handful of trial users from WHO AFRO, Institut Pasteur, and KEMRI.
+
+If you work in global health, outbreak response, or international crisis management — your feedback would mean a lot. The market is small (maybe 5,000 people in the world need this exact tool). But those 5,000 people make decisions that affect millions.
+
+👉 healthwatch-global.com — 30-day Pro access, no card required.
 
 ---
 
@@ -142,7 +163,7 @@ Happy to answer questions about the niche, the data pipeline, or what it's like 
 **Relations :** 28
 **Posts planifiés :** 4 (calendrier dans `linkedin-calendar.md`)
 
-### Post 2 — Ebola Bundibugyo (24 juin 2026) — RÉDIGÉ ✓ — CHIFFRES MIS À JOUR 24 juin (DON608, données au 17 juin)
+### Post 2 — Ebola Bundibugyo (24 juin 2026) — PUBLIÉ ✅ 24 juin ~17h CEST — chiffres dashboard HWG (1,792 cas / 464 morts / 26% CFR, updated June 21)
 
 **Ton :** éducatif, aucune mention explicite de HealthWatch (laisse la curiosité sur le profil)
 
@@ -324,6 +345,89 @@ Court DM LinkedIn à envoyer à ~20-40 contacts le 25 juin matin :
 > Si tu as 30 secondes : [URL PH]
 >
 > Ça m'aide beaucoup, merci 🙏
+
+---
+
+## DMs LinkedIn — 26 juin 2026 (à envoyer après post EN 9h)
+
+Hook commun : cas Ebola France confirmé le 25/06, tracé sur HWG avant WHO DON.
+Ordre d'envoi : BAVON → Premice → Paul Kibati → Celestine → Feydeau → Arran.
+
+---
+
+**BAVON TANGUNZA NGUNGA (WHO) — Français**
+
+> Bonjour BAVON,
+>
+> La France a confirmé hier son premier cas d'Ebola Bundibugyo — on le suit sur HealthWatch Global avec la classification RSI Article 6, données SPF croisées avec le DON OMS.
+>
+> On a officiellement lancé hier. J'aimerais avoir ton regard sur la classification des signaux — quelqu'un qui travaille à l'OMS peut dire si les niveaux IMMÉDIAT/RAPIDE/SURVEILLANCE correspondent à ce que vous observez sur le terrain.
+>
+> Je t'ouvre un accès si tu veux.
+>
+> David
+
+---
+
+**Premice Kayembe — Français**
+
+> Bonjour Premice,
+>
+> La France a confirmé hier son premier cas d'Ebola — on suit le foyer sur HealthWatch Global, RDC à 1 772 cas confirmés, Ouganda à 20, classification RSI en temps réel.
+>
+> On a officiellement lancé hier. Si tu travailles sur des données Ebola ou la réponse en Afrique centrale, je t'ouvre un accès complet directement.
+>
+> David
+
+---
+
+**Dr Paul Kibati — English**
+
+> Hi Paul,
+>
+> France confirmed its first Ebola case yesterday — we have it live on HealthWatch Global alongside the DRC outbreak (1,772 cases) and Uganda cluster (20), IHR Article 6/9/12 classification updated hourly.
+>
+> We officially launched yesterday. If your work touches outbreak surveillance or emergency response, happy to open full access so you can explore it directly.
+>
+> David
+
+---
+
+**Celestine Emeka Ekwuluo — English**
+
+> Hi Celestine,
+>
+> France confirmed its first Ebola case yesterday — still the lead event in global health today. HealthWatch Global has it live with IHR Article 6 classification, alongside the DRC and Uganda clusters.
+>
+> We officially launched yesterday. Happy to give you direct access if a consolidated real-time view would be useful for your work.
+>
+> David
+
+---
+
+**Feydeau BOTON — Français**
+
+> Bonjour Feydeau,
+>
+> La France a confirmé hier son premier cas d'Ebola — je suis sûr que tu avais les yeux dessus. On le suit sur HealthWatch Global, classification RSI Article 6, données SPF + DON OMS croisées en temps réel.
+>
+> On a officiellement lancé hier. Accès Pro direct si tu veux tester.
+> healthwatch-global.com
+>
+> David
+
+---
+
+**Arran Hamlet (PATH / CDC EIS Alumni) — English**
+
+> Hi Arran,
+>
+> France confirmed its first Ebola case yesterday — it was live on HealthWatch Global within hours of the SPF announcement, IHR Article 6 classified. Good timing for a launch day.
+>
+> Given your EPR work at PATH, the signal aggregation (WHO DON + ECDC + Africa CDC, updated hourly) should be directly useful in the field. Happy to open full access.
+> healthwatch-global.com
+>
+> David
 
 ---
 
@@ -551,6 +655,52 @@ We close those 4 tabs. No GPHIN required.
 **Règle** : ne jamais critiquer le concurrent directement — positionner par le workflow, pas par les features.
 
 ---
+
+## DMs LinkedIn — Nouvelles connexions — 25 juin 2026
+
+### Helene Barroy — WHO Sr Public Finance Expert (demande de connexion entrante — suite commentaire post Ebola financing)
+
+**DM initial — 25 juin 2026**
+> Bonjour Helene,
+>
+> Merci pour la connexion — content que le commentaire ait été utile.
+>
+> Votre guide sur le financement soulève quelque chose qui me préoccupe : la plupart des mécanismes de financement d'urgence s'activent sur publication du DON OMS, mais au moment où la notice est formellement publiée, la courbe épidémique est déjà 5 à 10 jours en avance sur le déclencheur.
+>
+> Je développe HealthWatch Global — surveillance en temps réel agrégeant WHO DON, ECDC, PAHO et Africa CDC avec classification RSI automatique (IMMÉDIAT / RAPIDE / SURVEILLANCE). L'idée étant qu'un signal classifié plus tôt pourrait déclencher le financement plus tôt.
+>
+> Est-ce que les signaux pré-DON ont une place pratique dans les mécanismes de financement des crises sanitaires — ou la publication formelle OMS reste toujours le déclencheur obligatoire par design ?
+>
+> David
+
+**Réponse Helene — 25 juin 2026, 10:54**
+> Absolument. Je suis bien d'accord avec vous. Seriez vous disponible que que nous échangions, disons la semaine prochaine? barroyh@who.int
+
+**Réponse David — confirmation appel**
+> Bonjour Helene,
+>
+> Avec plaisir — je suis disponible toute la semaine prochaine. Mardi 30 juin ou mercredi 1er juillet, matin ou début d'après-midi, si ça vous convient.
+>
+> Sinon je vous envoie un mot à barroyh@who.int pour coordonner directement.
+>
+> À très vite,
+> David
+
+**Statut :** appel à confirmer — semaine du 30 juin. Email WHO : barroyh@who.int
+
+---
+
+### Mahgoub Hamid — WHO EMRO, Cairo, Egypt (connexion spontanée — relation commune Dr René)
+
+> Hi Mahgoub,
+>
+> Thanks for connecting — good to have a WHO EMRO contact in the network.
+>
+> I'm building HealthWatch Global — real-time outbreak surveillance aggregating WHO DON, ECDC, PAHO, and Africa CDC, with automated IHR classification (IMMEDIATE / RAPID / SURVEILLANCE). We just added a dedicated EMRO pipeline: MERS-CoV, cholera in Yemen and Syria, and regional alerts come in ahead of global DON publication.
+>
+> Curious how your team currently consumes outbreak signals — and whether the IHR scoring layer would fit your workflow. Happy to give you access to explore.
+>
+> David
 
 ---
 
