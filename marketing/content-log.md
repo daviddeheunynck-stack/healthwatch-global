@@ -688,6 +688,21 @@ We close those 4 tabs. No GPHIN required.
 
 **Statut :** appel à confirmer — semaine du 30 juin. Email WHO : barroyh@who.int
 
+**Email de confirmation — à envoyer à barroyh@who.int**
+
+**À :** barroyh@who.int
+**Objet :** Échange semaine prochaine — suite à notre conversation LinkedIn
+
+> Bonjour Helene,
+>
+> Suite à notre échange de ce matin sur LinkedIn — merci pour votre réponse et pour le temps que vous proposez.
+>
+> Je suis disponible mardi 30 juin ou mercredi 1er juillet, matin ou début d'après-midi (CEST). Dites-moi ce qui vous convient et je vous envoie une invitation de calendrier.
+>
+> Bien à vous,
+> David Deheunynck
+> HealthWatch Global — healthwatch-global.com
+
 ---
 
 ### Mahgoub Hamid — WHO EMRO, Cairo, Egypt (connexion spontanée — relation commune Dr René)
