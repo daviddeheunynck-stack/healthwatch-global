@@ -14,7 +14,7 @@ const CONTENT: Record<string, {
   unsubNote: string;
 }> = {
   fr: {
-    subject: "Bienvenue sur HealthWatch Global 🌍",
+    subject: "Bienvenue sur HealthWatch Global",
     greeting: "Bienvenue,",
     intro: "Votre compte HealthWatch Global est créé. Vous avez maintenant accès à la surveillance épidémique mondiale quotidienne.",
     feature1Title: "🗺️ Carte mondiale interactive",
@@ -32,7 +32,7 @@ const CONTENT: Record<string, {
     unsubNote: "Vous recevez cet email car vous venez de créer un compte sur healthwatch-global.com.",
   },
   en: {
-    subject: "Welcome to HealthWatch Global 🌍",
+    subject: "Welcome to HealthWatch Global",
     greeting: "Welcome,",
     intro: "Your HealthWatch Global account is ready. You now have access to daily global epidemic surveillance.",
     feature1Title: "🗺️ Interactive world map",
@@ -50,7 +50,7 @@ const CONTENT: Record<string, {
     unsubNote: "You're receiving this email because you just created an account on healthwatch-global.com.",
   },
   es: {
-    subject: "Bienvenido a HealthWatch Global 🌍",
+    subject: "Bienvenido a HealthWatch Global",
     greeting: "Bienvenido,",
     intro: "Su cuenta de HealthWatch Global está lista. Ahora tiene acceso a la vigilancia epidémica mundial diaria.",
     feature1Title: "🗺️ Mapa mundial interactivo",
@@ -68,7 +68,7 @@ const CONTENT: Record<string, {
     unsubNote: "Recibe este correo porque acaba de crear una cuenta en healthwatch-global.com.",
   },
   ar: {
-    subject: "مرحباً بك في HealthWatch Global 🌍",
+    subject: "مرحباً بك في HealthWatch Global",
     greeting: "أهلاً وسهلاً،",
     intro: "حسابك في HealthWatch Global جاهز. يمكنك الآن الوصول إلى مراقبة الأوبئة العالمية اليومية.",
     feature1Title: "🗺️ خريطة العالم التفاعلية",
@@ -86,7 +86,7 @@ const CONTENT: Record<string, {
     unsubNote: "تتلقى هذا البريد الإلكتروني لأنك أنشأت للتو حساباً على healthwatch-global.com.",
   },
   id: {
-    subject: "Selamat datang di HealthWatch Global 🌍",
+    subject: "Selamat datang di HealthWatch Global",
     greeting: "Selamat datang,",
     intro: "Akun HealthWatch Global Anda siap. Anda sekarang memiliki akses ke pemantauan epidemi global harian.",
     feature1Title: "🗺️ Peta dunia interaktif",

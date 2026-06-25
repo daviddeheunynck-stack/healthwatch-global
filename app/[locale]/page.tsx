@@ -39,6 +39,7 @@ import APIKeyPanel from "@/components/APIKeyPanel";
 import DigestPanel from "@/components/DigestPanel";
 import RegionalPulseSummary from "@/components/RegionalPulseSummary";
 import AlertSetupBanner from "@/components/AlertSetupBanner";
+import ProQuickStart from "@/components/ProQuickStart";
 import { Suspense } from "react";
 import type { Metadata } from "next";
 
@@ -191,10 +192,12 @@ async function DashboardContent({ demo = false, urlRegion, urlRisk }: { demo?: b
   let countryTagsMap: Record<string, string> = {};
   let orgMemberAccess = false;
   let hasNoAlerts = false;
+  let currentUserId: string | null = null;
   if (!demo) {
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
     if (user) {
+      currentUserId = user.id;
       const { data: profile } = await supabase
         .from("profiles")
         .select("plan, trial_ends_at, stripe_subscription_id, display_filters, disease_watchlist")
@@ -359,7 +362,10 @@ async function DashboardContent({ demo = false, urlRegion, urlRisk }: { demo?: b
 
       {!demo && <PushNotificationBanner locale={locale} />}
 
-      {!demo && isPaid && hasNoAlerts && <AlertSetupBanner locale={locale} />}
+      {!demo && isPaid && currentUserId && !hasStripeSubscription && trialEndsAt && (
+        <ProQuickStart locale={locale} userId={currentUserId} hasAlerts={!hasNoAlerts} />
+      )}
+      {!demo && isPaid && hasNoAlerts && hasStripeSubscription && <AlertSetupBanner locale={locale} />}
 
       {/* Situation Snapshot — top-priority outbreak at a glance */}
       {stats.topOutbreak && (() => {
