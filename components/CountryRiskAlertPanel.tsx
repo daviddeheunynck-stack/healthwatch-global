@@ -84,7 +84,7 @@ const RISK_CHIP: Record<string, string> = {
   low:    "text-green-400 bg-green-900/20 border-green-700/30",
 };
 
-export default function CountryRiskAlertPanel({ locale }: { locale: string }) {
+export default function CountryRiskAlertPanel({ locale, userEmail }: { locale: string; userEmail?: string }) {
   const c = COPY[locale] ?? COPY.en;
   const [open,       setOpen]       = useState(false);
   const [alerts,     setAlerts]     = useState<Alert[]>([]);
@@ -95,7 +95,7 @@ export default function CountryRiskAlertPanel({ locale }: { locale: string }) {
   const [formError,  setFormError]  = useState("");
   const [countryEn,  setCountryEn]  = useState("");
   const [minRisk,    setMinRisk]    = useState("high");
-  const [email,      setEmail]      = useState("");
+  const [email,      setEmail]      = useState(userEmail ?? "");
 
   const load = useCallback(async () => {
     setLoading(true);

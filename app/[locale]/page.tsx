@@ -478,8 +478,8 @@ async function DashboardContent({ demo = false, urlRegion, urlRisk }: { demo?: b
       {isPaid && <DataStatusWidget locale={locale} />}
 
       {isPaid && <DiseaseWatchlistPanel locale={locale} initialWatchlist={diseaseWatchlist} />}
-      {isPaid && <GeofenceAlertPanel locale={locale} />}
-      {isPaid && <CountryRiskAlertPanel locale={locale} />}
+      {isPaid && <GeofenceAlertPanel locale={locale} userEmail={currentUserEmail ?? undefined} />}
+      {isPaid && <CountryRiskAlertPanel locale={locale} userEmail={currentUserEmail ?? undefined} />}
       {isPaid && <AlertLocalePanel locale={locale} />}
       {isPaid && <WebhookPanel locale={locale} />}
       {isPaid && <ScheduledReportPanel locale={locale} />}

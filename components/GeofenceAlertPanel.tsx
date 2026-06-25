@@ -72,9 +72,9 @@ const COPY: Record<string, {
   },
 };
 
-interface Props { locale: string }
+interface Props { locale: string; userEmail?: string }
 
-export default function GeofenceAlertPanel({ locale }: Props) {
+export default function GeofenceAlertPanel({ locale, userEmail }: Props) {
   const c = COPY[locale] ?? COPY.en;
 
   const [open,      setOpen]      = useState(false);
@@ -87,7 +87,7 @@ export default function GeofenceAlertPanel({ locale }: Props) {
   const [lat,      setLat]      = useState<number | "">("");
   const [lng,      setLng]      = useState<number | "">("");
   const [radiusKm, setRadiusKm] = useState<number | "">(500);
-  const [email,    setEmail]    = useState("");
+  const [email,    setEmail]    = useState(userEmail ?? "");
   const [creating, setCreating] = useState(false);
   const [formError, setFormError] = useState("");
   const [deletingId, setDeletingId] = useState<string | null>(null);
