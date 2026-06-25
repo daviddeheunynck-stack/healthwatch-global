@@ -1,4 +1,6 @@
 export type PathogenType = "virus_rna" | "virus_dna" | "bacteria" | "parasite" | "fungus";
+export type AppRegion = "africa" | "asia" | "americas" | "europe" | "oceania";
+export type TravelerRiskLevel = "high" | "moderate" | "low";
 export type TransmissionMode =
   | "contact"       // direct contact with bodily fluids / infected animals
   | "droplet"       // respiratory droplets (< 1 m)
@@ -40,6 +42,9 @@ export interface DiseaseInfo {
 
   // Links
   whoFactsheet?: string;
+
+  // Travel health — endemic risk for travelers by broad region
+  travelerRisk?: Partial<Record<AppRegion, TravelerRiskLevel>>;
 }
 
 const DISEASE_MAP: Array<{ patterns: string[]; info: DiseaseInfo }> = [
@@ -55,6 +60,7 @@ const DISEASE_MAP: Array<{ patterns: string[]; info: DiseaseInfo }> = [
       vaccine: "yes", vaccineName: "MVA-BN (Jynneos / Imvamune)",
       treatment: "experimental",
       whoFactsheet: "https://www.who.int/news-room/fact-sheets/detail/mpox",
+      travelerRisk: { africa: "high", asia: "low", americas: "low", europe: "low" },
     },
   },
   {
@@ -70,6 +76,7 @@ const DISEASE_MAP: Array<{ patterns: string[]; info: DiseaseInfo }> = [
       vaccine: "yes", vaccineName: "Ervebo (Zaïre strain only)",
       treatment: "experimental",
       whoFactsheet: "https://www.who.int/news-room/fact-sheets/detail/ebola-virus-disease",
+      travelerRisk: { africa: "high" },
     },
   },
   {
@@ -85,6 +92,7 @@ const DISEASE_MAP: Array<{ patterns: string[]; info: DiseaseInfo }> = [
       vaccine: "experimental",
       treatment: "supportive",
       whoFactsheet: "https://www.who.int/news-room/fact-sheets/detail/marburg-virus-disease",
+      travelerRisk: { africa: "high" },
     },
   },
   {
@@ -98,6 +106,7 @@ const DISEASE_MAP: Array<{ patterns: string[]; info: DiseaseInfo }> = [
       vaccine: "yes", vaccineName: "Oral Cholera Vaccine (OCV)",
       treatment: "yes",
       whoFactsheet: "https://www.who.int/news-room/fact-sheets/detail/cholera",
+      travelerRisk: { africa: "high", asia: "moderate", americas: "low" },
     },
   },
   {
@@ -112,6 +121,7 @@ const DISEASE_MAP: Array<{ patterns: string[]; info: DiseaseInfo }> = [
       vaccine: "conditional", vaccineName: "Strategic stockpiles — limited use",
       treatment: "yes",
       whoFactsheet: "https://www.who.int/news-room/fact-sheets/detail/influenza-(avian-and-other-zoonotic)",
+      travelerRisk: { asia: "high", africa: "moderate" },
     },
   },
   {
@@ -126,6 +136,7 @@ const DISEASE_MAP: Array<{ patterns: string[]; info: DiseaseInfo }> = [
       vaccine: "no",
       treatment: "supportive",
       whoFactsheet: "https://www.who.int/news-room/fact-sheets/detail/middle-east-respiratory-syndrome-coronavirus-(mers-cov)",
+      travelerRisk: { asia: "high" },
     },
   },
   {
@@ -170,6 +181,7 @@ const DISEASE_MAP: Array<{ patterns: string[]; info: DiseaseInfo }> = [
       vaccine: "yes", vaccineName: "Dengvaxia, Qdenga",
       treatment: "supportive",
       whoFactsheet: "https://www.who.int/news-room/fact-sheets/detail/dengue-and-severe-dengue",
+      travelerRisk: { africa: "moderate", asia: "high", americas: "high", oceania: "moderate" },
     },
   },
   {
@@ -184,6 +196,7 @@ const DISEASE_MAP: Array<{ patterns: string[]; info: DiseaseInfo }> = [
       vaccine: "yes", vaccineName: "YF-Vax / Stamaril (lifelong protection)",
       treatment: "supportive",
       whoFactsheet: "https://www.who.int/news-room/fact-sheets/detail/yellow-fever",
+      travelerRisk: { africa: "high", americas: "moderate" },
     },
   },
   {
@@ -198,6 +211,7 @@ const DISEASE_MAP: Array<{ patterns: string[]; info: DiseaseInfo }> = [
       vaccine: "no",
       treatment: "yes", vaccineName: "Ribavirin (early phase)",
       whoFactsheet: "https://www.who.int/news-room/fact-sheets/detail/lassa-fever",
+      travelerRisk: { africa: "high" },
     },
   },
   {
@@ -212,6 +226,7 @@ const DISEASE_MAP: Array<{ patterns: string[]; info: DiseaseInfo }> = [
       vaccine: "yes",
       treatment: "yes",
       whoFactsheet: "https://www.who.int/news-room/fact-sheets/detail/meningitis",
+      travelerRisk: { africa: "high", asia: "low", americas: "low" },
     },
   },
   {
@@ -226,6 +241,7 @@ const DISEASE_MAP: Array<{ patterns: string[]; info: DiseaseInfo }> = [
       vaccine: "experimental",
       treatment: "supportive",
       whoFactsheet: "https://www.who.int/news-room/fact-sheets/detail/nipah-virus",
+      travelerRisk: { asia: "high" },
     },
   },
   {
@@ -240,6 +256,7 @@ const DISEASE_MAP: Array<{ patterns: string[]; info: DiseaseInfo }> = [
       vaccine: "no",
       treatment: "yes",
       whoFactsheet: "https://www.who.int/news-room/fact-sheets/detail/plague",
+      travelerRisk: { africa: "moderate", asia: "low", americas: "low" },
     },
   },
   {
@@ -254,6 +271,7 @@ const DISEASE_MAP: Array<{ patterns: string[]; info: DiseaseInfo }> = [
       vaccine: "yes",
       treatment: "yes",
       whoFactsheet: "https://www.who.int/news-room/fact-sheets/detail/typhoid",
+      travelerRisk: { africa: "moderate", asia: "high", americas: "low", oceania: "low" },
     },
   },
   {
@@ -269,6 +287,7 @@ const DISEASE_MAP: Array<{ patterns: string[]; info: DiseaseInfo }> = [
       vaccine: "yes", vaccineName: "ROR / MMR",
       treatment: "supportive",
       whoFactsheet: "https://www.who.int/news-room/fact-sheets/detail/measles",
+      travelerRisk: { africa: "high", asia: "moderate", americas: "low", europe: "low", oceania: "low" },
     },
   },
   {
@@ -284,6 +303,7 @@ const DISEASE_MAP: Array<{ patterns: string[]; info: DiseaseInfo }> = [
       vaccine: "yes", vaccineName: "OPV (oral) / IPV (injectable)",
       treatment: "supportive",
       whoFactsheet: "https://www.who.int/news-room/fact-sheets/detail/poliomyelitis",
+      travelerRisk: { africa: "moderate", asia: "moderate" },
     },
   },
   {
@@ -298,6 +318,7 @@ const DISEASE_MAP: Array<{ patterns: string[]; info: DiseaseInfo }> = [
       vaccine: "yes", vaccineName: "RTS,S/AS01 (Mosquirix) / R21",
       treatment: "yes",
       whoFactsheet: "https://www.who.int/news-room/fact-sheets/detail/malaria",
+      travelerRisk: { africa: "high", asia: "moderate", americas: "moderate", oceania: "moderate" },
     },
   },
   {
@@ -312,6 +333,7 @@ const DISEASE_MAP: Array<{ patterns: string[]; info: DiseaseInfo }> = [
       vaccine: "yes", vaccineName: "Post-exposure prophylaxis (PEP)",
       treatment: "supportive",
       whoFactsheet: "https://www.who.int/news-room/fact-sheets/detail/rabies",
+      travelerRisk: { africa: "high", asia: "high", americas: "moderate", europe: "low" },
     },
   },
   {
@@ -326,6 +348,7 @@ const DISEASE_MAP: Array<{ patterns: string[]; info: DiseaseInfo }> = [
       vaccine: "yes", vaccineName: "Military / occupational use",
       treatment: "yes",
       whoFactsheet: "https://www.who.int/news-room/fact-sheets/detail/anthrax",
+      travelerRisk: { africa: "low", asia: "low" },
     },
   },
   {
@@ -340,6 +363,7 @@ const DISEASE_MAP: Array<{ patterns: string[]; info: DiseaseInfo }> = [
       vaccine: "yes", vaccineName: "Ixchiq (Valneva, 2023)",
       treatment: "supportive",
       whoFactsheet: "https://www.who.int/news-room/fact-sheets/detail/chikungunya",
+      travelerRisk: { africa: "moderate", asia: "moderate", americas: "moderate", oceania: "low" },
     },
   },
   {
@@ -355,6 +379,7 @@ const DISEASE_MAP: Array<{ patterns: string[]; info: DiseaseInfo }> = [
       vaccine: "no",
       treatment: "supportive",
       whoFactsheet: "https://www.who.int/news-room/fact-sheets/detail/zika-virus",
+      travelerRisk: { americas: "moderate", asia: "low", africa: "low", oceania: "low" },
     },
   },
   {
@@ -369,6 +394,7 @@ const DISEASE_MAP: Array<{ patterns: string[]; info: DiseaseInfo }> = [
       vaccine: "yes", vaccineName: "HAV, HBV vaccines (not for types C/D/E)",
       treatment: "yes",
       whoFactsheet: "https://www.who.int/health-topics/hepatitis",
+      travelerRisk: { africa: "moderate", asia: "moderate", americas: "low" },
     },
   },
   {
@@ -383,6 +409,7 @@ const DISEASE_MAP: Array<{ patterns: string[]; info: DiseaseInfo }> = [
       vaccine: "experimental",
       treatment: "supportive",
       whoFactsheet: "https://www.who.int/news-room/fact-sheets/detail/rift-valley-fever",
+      travelerRisk: { africa: "high", asia: "low" },
     },
   },
   {
@@ -398,6 +425,7 @@ const DISEASE_MAP: Array<{ patterns: string[]; info: DiseaseInfo }> = [
       vaccine: "no",
       treatment: "experimental",
       whoFactsheet: "https://www.who.int/news-room/fact-sheets/detail/crimean-congo-haemorrhagic-fever",
+      travelerRisk: { africa: "moderate", asia: "moderate", europe: "low" },
     },
   },
   {
@@ -412,6 +440,7 @@ const DISEASE_MAP: Array<{ patterns: string[]; info: DiseaseInfo }> = [
       vaccine: "no",
       treatment: "supportive",
       whoFactsheet: "https://www.who.int/news-room/fact-sheets/detail/hantavirus-disease",
+      travelerRisk: { americas: "moderate", asia: "low", europe: "low" },
     },
   },
   {
@@ -427,6 +456,7 @@ const DISEASE_MAP: Array<{ patterns: string[]; info: DiseaseInfo }> = [
       vaccine: "experimental",
       treatment: "experimental",
       whoFactsheet: "https://www.who.int/news-room/fact-sheets/detail/ebola-virus-disease",
+      travelerRisk: { africa: "high" },
     },
   },
   {
@@ -441,6 +471,7 @@ const DISEASE_MAP: Array<{ patterns: string[]; info: DiseaseInfo }> = [
       vaccine: "yes", vaccineName: "DTP / DT",
       treatment: "yes",
       whoFactsheet: "https://www.who.int/news-room/fact-sheets/detail/diphtheria",
+      travelerRisk: { africa: "moderate", asia: "moderate", americas: "low" },
     },
   },
   {
@@ -456,6 +487,7 @@ const DISEASE_MAP: Array<{ patterns: string[]; info: DiseaseInfo }> = [
       vaccine: "yes", vaccineName: "DTP / Tdap",
       treatment: "yes",
       whoFactsheet: "https://www.who.int/news-room/fact-sheets/detail/pertussis",
+      travelerRisk: { africa: "low", asia: "low", americas: "low" },
     },
   },
   {
@@ -470,6 +502,7 @@ const DISEASE_MAP: Array<{ patterns: string[]; info: DiseaseInfo }> = [
       vaccine: "no",
       treatment: "yes",
       whoFactsheet: "https://www.who.int/news-room/fact-sheets/detail/leishmaniasis",
+      travelerRisk: { africa: "moderate", asia: "moderate", americas: "moderate", europe: "low" },
     },
   },
   {
@@ -484,6 +517,7 @@ const DISEASE_MAP: Array<{ patterns: string[]; info: DiseaseInfo }> = [
       vaccine: "no",
       treatment: "yes",
       whoFactsheet: "https://www.who.int/news-room/fact-sheets/detail/trypanosomiasis-human-african-(sleeping-sickness)",
+      travelerRisk: { africa: "high", americas: "moderate" },
     },
   },
   {
@@ -499,6 +533,7 @@ const DISEASE_MAP: Array<{ patterns: string[]; info: DiseaseInfo }> = [
       vaccine: "no",
       treatment: "supportive",
       whoFactsheet: "https://www.who.int/news-room/fact-sheets/detail/oropouche-fever",
+      travelerRisk: { americas: "high" },
     },
   },
   {
@@ -513,6 +548,7 @@ const DISEASE_MAP: Array<{ patterns: string[]; info: DiseaseInfo }> = [
       vaccine: "no",
       treatment: "supportive",
       whoFactsheet: "https://www.who.int/news-room/fact-sheets/detail/west-nile-virus",
+      travelerRisk: { americas: "moderate", europe: "moderate", africa: "low", asia: "low" },
     },
   },
 ];

@@ -8,7 +8,8 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { countryToSlug, slugToCountryEn, getLocalizedCountryName } from "@/lib/country-utils";
 import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
-import { diseaseToSlug } from "@/lib/disease-data";
+import { allDiseases, diseaseToSlug } from "@/lib/disease-data";
+import type { DiseaseInfo, AppRegion } from "@/lib/disease-data";
 import type { Outbreak } from "@/lib/outbreaks";
 import { getOutbreakTrendsBulk } from "@/lib/outbreak-trend";
 import ShareOutbreakButton from "@/components/ShareOutbreakButton";
@@ -132,6 +133,24 @@ const LABELS: Record<Locale, {
     lastUpdated: "Data per",
   },
 };
+
+// ── Traveler risk labels ──────────────────────────────────────────────────────
+
+const TRAVELER_LABELS: Record<Locale, { title: string; high: string; moderate: string; note: string }> = {
+  en: { title: "Traveler health advisory", high: "High risk", moderate: "Moderate risk", note: "Regional-level risk based on endemic disease burden. Consult a travel health specialist." },
+  fr: { title: "Avertissement santé voyageurs", high: "Risque élevé", moderate: "Risque modéré", note: "Risque au niveau régional. Consultez un médecin spécialisé en médecine du voyage." },
+  es: { title: "Aviso sanitario para viajeros", high: "Riesgo alto", moderate: "Riesgo moderado", note: "Riesgo a nivel regional. Consulte a un especialista en medicina del viajero." },
+  ar: { title: "تنبيه صحي للمسافرين", high: "خطر مرتفع", moderate: "خطر متوسط", note: "خطر على المستوى الإقليمي. استشر طبيب متخصص في طب السفر." },
+  id: { title: "Peringatan kesehatan wisatawan", high: "Risiko tinggi", moderate: "Risiko sedang", note: "Risiko tingkat regional. Konsultasikan dengan dokter spesialis kesehatan perjalanan." },
+};
+
+function getDiseaseName(d: DiseaseInfo, locale: string): string {
+  if (locale === "fr") return d.name_fr;
+  if (locale === "es") return d.name_es;
+  if (locale === "ar") return d.name_ar;
+  if (locale === "id") return d.name_id;
+  return d.name_en;
+}
 
 // ── Data helpers ──────────────────────────────────────────────────────────────
 
@@ -297,6 +316,13 @@ export default async function CountryPage({
   // Get a sample outbreak's country name in the current locale
   const regionRaw   = outbreaks[0]?.region ?? null;
   const regionSlug  = regionRaw ? regionRaw.toLowerCase().replace(/\s+/g, "-") : null;
+
+  // Traveler health advisory — endemic diseases for this region
+  const tl = TRAVELER_LABELS[l];
+  const allDiseasesList = allDiseases();
+  const region = regionSlug as AppRegion | null;
+  const travelerHigh = region ? allDiseasesList.filter(d => d.travelerRisk?.[region] === "high") : [];
+  const travelerMod  = region ? allDiseasesList.filter(d => d.travelerRisk?.[region] === "moderate") : [];
 
   const displayName = outbreaks[0]
     ? getLocalizedCountry(outbreaks[0], l) ?? countryEn
@@ -468,6 +494,48 @@ export default async function CountryPage({
           </div>
         )}
       </section>
+
+      {/* Traveler health advisory */}
+      {region && (travelerHigh.length > 0 || travelerMod.length > 0) && (
+        <section className="space-y-4 border border-amber-800/30 bg-amber-950/10 rounded-2xl p-5">
+          <div className="flex items-center gap-2">
+            <h2 className="text-base font-bold text-amber-400">{tl.title}</h2>
+          </div>
+          {travelerHigh.length > 0 && (
+            <div className="space-y-2">
+              <p className="text-xs font-semibold text-red-400 uppercase tracking-wide">{tl.high}</p>
+              <div className="flex flex-wrap gap-2">
+                {travelerHigh.map(d => (
+                  <Link
+                    key={d.name_en}
+                    href={`/${l}/disease/${diseaseToSlug(d.name_en)}`}
+                    className="text-xs px-3 py-1.5 rounded-full border border-red-800/50 bg-red-950/20 text-red-300 hover:border-red-600/70 hover:text-red-200 transition-colors"
+                  >
+                    {getDiseaseName(d, l)}
+                  </Link>
+                ))}
+              </div>
+            </div>
+          )}
+          {travelerMod.length > 0 && (
+            <div className="space-y-2">
+              <p className="text-xs font-semibold text-yellow-400 uppercase tracking-wide">{tl.moderate}</p>
+              <div className="flex flex-wrap gap-2">
+                {travelerMod.map(d => (
+                  <Link
+                    key={d.name_en}
+                    href={`/${l}/disease/${diseaseToSlug(d.name_en)}`}
+                    className="text-xs px-3 py-1.5 rounded-full border border-yellow-800/50 bg-yellow-950/20 text-yellow-300 hover:border-yellow-600/70 hover:text-yellow-200 transition-colors"
+                  >
+                    {getDiseaseName(d, l)}
+                  </Link>
+                ))}
+              </div>
+            </div>
+          )}
+          <p className="text-xs text-gray-600 italic">{tl.note}</p>
+        </section>
+      )}
 
       {/* CTA */}
       <div className="bg-gradient-to-r from-red-950/40 via-gray-900/60 to-transparent border border-red-700/30 rounded-2xl p-6 space-y-3">
