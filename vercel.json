@@ -77,6 +77,10 @@
       "schedule": "0 10 * * *"
     },
     {
+      "path": "/api/cron/sync-cdc-han",
+      "schedule": "30 */4 * * *"
+    },
+    {
       "path": "/api/admin/enrich-admin1",
       "schedule": "15 * * * *"
     },
