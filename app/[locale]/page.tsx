@@ -193,11 +193,13 @@ async function DashboardContent({ demo = false, urlRegion, urlRisk }: { demo?: b
   let orgMemberAccess = false;
   let hasNoAlerts = false;
   let currentUserId: string | null = null;
+  let currentUserEmail: string | null = null;
   if (!demo) {
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
     if (user) {
       currentUserId = user.id;
+      currentUserEmail = user.email ?? null;
       const { data: profile } = await supabase
         .from("profiles")
         .select("plan, trial_ends_at, stripe_subscription_id, display_filters, disease_watchlist")
@@ -472,7 +474,7 @@ async function DashboardContent({ demo = false, urlRegion, urlRisk }: { demo?: b
 
       {isPaid && <TravelRiskWidget locale={locale} />}
       {isPaid && <ResolvedOutbreaksWidget locale={locale} />}
-      {isPaid && <CategoryAlertPanel locale={locale} />}
+      {isPaid && <CategoryAlertPanel locale={locale} userEmail={currentUserEmail ?? undefined} />}
       {isPaid && <DataStatusWidget locale={locale} />}
 
       {isPaid && <DiseaseWatchlistPanel locale={locale} initialWatchlist={diseaseWatchlist} />}
