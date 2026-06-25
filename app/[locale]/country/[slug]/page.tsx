@@ -10,6 +10,7 @@ import { countryToSlug, slugToCountryEn, getLocalizedCountryName } from "@/lib/c
 import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 import { diseaseToSlug } from "@/lib/disease-data";
 import type { Outbreak } from "@/lib/outbreaks";
+import { getOutbreakTrendsBulk } from "@/lib/outbreak-trend";
 import ShareOutbreakButton from "@/components/ShareOutbreakButton";
 import WatchButton from "@/components/WatchButton";
 
@@ -27,6 +28,9 @@ const RISK_STYLE: Record<string, string> = {
   medium: "text-yellow-400 bg-yellow-500/10 border-yellow-500/30",
   low:    "text-green-400 bg-green-500/10 border-green-500/30",
 };
+
+const TREND_ICON  = { up: "▲", stable: "→", down: "▼" } as const;
+const TREND_COLOR = { up: "text-red-400", stable: "text-gray-500", down: "text-green-400" } as const;
 
 const LABELS: Record<Locale, {
   activeSection: string; historySection: string; noHistory: string; noActive: string;
@@ -256,6 +260,14 @@ export default async function CountryPage({
   const active    = outbreaks.filter((o) => o.active);
   const historical = outbreaks.filter((o) => !o.active);
 
+  const supabase = createClient(
+    clean(process.env.NEXT_PUBLIC_SUPABASE_URL),
+    clean(process.env.SUPABASE_SERVICE_ROLE_KEY)
+  );
+  const trendsMap = active.length > 0
+    ? await getOutbreakTrendsBulk(supabase, active.map((o) => o.id)).catch(() => new Map())
+    : new Map<string, import("@/lib/outbreak-trend").OutbreakTrend>();
+
   const totalCases  = outbreaks.reduce((s, o) => s + (o.cases  ?? 0), 0);
   const totalDeaths = outbreaks.reduce((s, o) => s + (o.deaths ?? 0), 0);
   const numLocale   = l === "ar" ? "ar-SA" : l;
@@ -404,6 +416,7 @@ export default async function CountryPage({
             {active.map((o) => {
               const disease = getLocalizedDisease(o, l) ?? o.disease_en ?? o.disease;
               const cfr1 = o.cases > 0 ? (o.deaths / o.cases * 100).toFixed(1) + "%" : lb.noData;
+              const trend = trendsMap.get(o.id);
               return (
                 <div
                   key={o.id}
@@ -434,6 +447,12 @@ export default async function CountryPage({
                       <span className={`text-xs font-semibold border rounded-full px-2.5 py-1 ${RISK_STYLE[o.risk_level] ?? RISK_STYLE.low}`}>
                         {lb.risk[o.risk_level] ?? o.risk_level}
                       </span>
+                      {trend && trend.direction !== "unknown" && (
+                        <span className={`text-xs font-medium ${TREND_COLOR[trend.direction as "up" | "stable" | "down"]}`}>
+                          {TREND_ICON[trend.direction as "up" | "stable" | "down"]}
+                          {trend.deltaPercent !== 0 && ` ${Math.abs(trend.deltaPercent)}%`}
+                        </span>
+                      )}
                       {o.cases > 0 && (
                         <div className="text-right">
                           <p className="text-sm font-bold text-white">{o.cases.toLocaleString(numLocale)}</p>
