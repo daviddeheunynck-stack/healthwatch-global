@@ -81,6 +81,22 @@
       "schedule": "30 */4 * * *"
     },
     {
+      "path": "/api/cron/sync-ukhsa",
+      "schedule": "0 6,14 * * *"
+    },
+    {
+      "path": "/api/cron/sync-spf",
+      "schedule": "0 7,15 * * *"
+    },
+    {
+      "path": "/api/cron/sync-who-afro",
+      "schedule": "0 8 * * 1,3,5"
+    },
+    {
+      "path": "/api/cron/sync-who-emro",
+      "schedule": "0 9 * * 1,3,5"
+    },
+    {
       "path": "/api/admin/enrich-admin1",
       "schedule": "15 * * * *"
     },
