@@ -321,6 +321,14 @@ export default function PilotPage() {
           {c.title}
         </h1>
         <p className="text-gray-400 text-base max-w-2xl mx-auto leading-relaxed">{c.sub}</p>
+        {/* Scarcity */}
+        <p className="text-xs text-amber-400/80 font-medium">
+          {locale === "fr" ? "↳ Capacité : 3 institutions par mois maximum — onboarding guidé inclus."
+           : locale === "es" ? "↳ Capacidad: máximo 3 instituciones por mes — onboarding guiado incluido."
+           : locale === "ar" ? "↳ الطاقة الاستيعابية: 3 مؤسسات كحد أقصى شهرياً — مع إعداد مُوجَّه."
+           : locale === "id" ? "↳ Kapasitas: maksimum 3 institusi per bulan — onboarding terpandu termasuk."
+           : "↳ Capacity: maximum 3 institutions per month — guided onboarding included."}
+        </p>
       </div>
 
       {/* Credibility strip */}

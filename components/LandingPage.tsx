@@ -569,12 +569,6 @@ export default async function LandingPage({ locale }: { locale: string }) {
             >
               {c.heroCtaDemo}
             </a>
-            <Link
-              href={`/${locale}/pricing`}
-              className="inline-flex items-center gap-2 bg-gray-800 hover:bg-gray-700 text-gray-200 font-semibold px-8 py-4 rounded-xl transition-colors text-sm"
-            >
-              {c.heroCtaSecondary}
-            </Link>
           </div>
           <p className="text-xs text-gray-600">{c.heroNoCc}</p>
 
@@ -584,7 +578,7 @@ export default async function LandingPage({ locale }: { locale: string }) {
               { value: stats.activeOutbreaks, label: c.statOutbreaks, icon: Activity, color: "text-red-400" },
               { value: stats.countriesAffected, label: c.statCountries, icon: Globe, color: "text-blue-400" },
               { value: stats.highRisk, label: c.statHighRisk, icon: AlertTriangle, color: "text-yellow-400" },
-              { value: "≤6h", label: c.statUpdated, icon: Clock, color: "text-green-400" },
+              { value: "≤1h", label: c.statUpdated, icon: Clock, color: "text-green-400" },
             ].map(({ value, label, icon: Icon, color }, i) => (
               <div key={i} className="bg-gray-900/80 border border-gray-800 rounded-xl p-4 text-center">
                 <Icon className={`w-4 h-4 ${color} mx-auto mb-1`} />
@@ -702,7 +696,7 @@ export default async function LandingPage({ locale }: { locale: string }) {
                 <h2 className="text-xl md:text-2xl font-bold text-white">{ntw.title}</h2>
                 <p className="text-sm text-gray-400 mt-0.5">{ntw.sub}</p>
               </div>
-              <Link href={`/${locale}`} className="text-xs text-red-400 hover:text-red-300 transition-colors shrink-0">
+              <Link href={`/${locale}/diseases`} className="text-xs text-red-400 hover:text-red-300 transition-colors shrink-0">
                 {ntw.viewAll}
               </Link>
             </div>
