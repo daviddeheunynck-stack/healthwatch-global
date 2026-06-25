@@ -27,9 +27,9 @@ type LocaleCopy = {
 
 const LOCALE_COPY: Record<string, LocaleCopy> = {
   fr: {
-    subject:  (d, c) => `[HealthWatch] 🚨 URGENCE PHEIC : ${d} — ${c}`,
+    subject:  (d, c) => `[HealthWatch] Déclaration PHEIC : ${d} — ${c}`,
     intro:    (d, c) => `L'OMS a déclaré une Urgence de Santé Publique de Portée Internationale (PHEIC) pour <strong>${d}</strong> en <strong>${c}</strong>.`,
-    title:    "🚨 HealthWatch Global — Alerte PHEIC",
+    title:    "HealthWatch Global — Déclaration PHEIC",
     cases:    "Cas :",
     reported: "Signalé le :",
     risk:     "Risque :",
@@ -37,9 +37,9 @@ const LOCALE_COPY: Record<string, LocaleCopy> = {
     footer:   "HealthWatch Global · Gérez vos préférences d'alertes dans le tableau de bord.",
   },
   es: {
-    subject:  (d, c) => `[HealthWatch] 🚨 EMERGENCIA PHEIC: ${d} — ${c}`,
+    subject:  (d, c) => `[HealthWatch] Declaración PHEIC: ${d} — ${c}`,
     intro:    (d, c) => `La OMS ha declarado una Emergencia de Salud Pública de Importancia Internacional (PHEIC) por <strong>${d}</strong> en <strong>${c}</strong>.`,
-    title:    "🚨 HealthWatch Global — Alerta PHEIC",
+    title:    "HealthWatch Global — Declaración PHEIC",
     cases:    "Casos:",
     reported: "Reportado:",
     risk:     "Riesgo:",
@@ -47,9 +47,9 @@ const LOCALE_COPY: Record<string, LocaleCopy> = {
     footer:   "HealthWatch Global · Gestione sus preferencias de alertas en el panel.",
   },
   ar: {
-    subject:  (d, c) => `[HealthWatch] 🚨 طوارئ PHEIC: ${d} — ${c}`,
+    subject:  (d, c) => `[HealthWatch] إعلان PHEIC: ${d} — ${c}`,
     intro:    (d, c) => `أعلنت منظمة الصحة العالمية حالة طوارئ صحية عامة دولية (PHEIC) بشأن <strong>${d}</strong> في <strong>${c}</strong>.`,
-    title:    "🚨 HealthWatch Global — تنبيه PHEIC",
+    title:    "HealthWatch Global — إعلان PHEIC",
     cases:    "الحالات:",
     reported: "تاريخ الإبلاغ:",
     risk:     "مستوى الخطر:",
@@ -57,9 +57,9 @@ const LOCALE_COPY: Record<string, LocaleCopy> = {
     footer:   "HealthWatch Global · أدر تفضيلات التنبيهات من لوحة المعلومات.",
   },
   id: {
-    subject:  (d, c) => `[HealthWatch] 🚨 DARURAT PHEIC: ${d} — ${c}`,
+    subject:  (d, c) => `[HealthWatch] Deklarasi PHEIC: ${d} — ${c}`,
     intro:    (d, c) => `WHO telah menyatakan Kedaruratan Kesehatan Masyarakat yang Meresahkan Dunia (PHEIC) untuk <strong>${d}</strong> di <strong>${c}</strong>.`,
-    title:    "🚨 HealthWatch Global — Peringatan PHEIC",
+    title:    "HealthWatch Global — Deklarasi PHEIC",
     cases:    "Kasus:",
     reported: "Dilaporkan:",
     risk:     "Risiko:",
@@ -67,9 +67,9 @@ const LOCALE_COPY: Record<string, LocaleCopy> = {
     footer:   "HealthWatch Global · Kelola preferensi peringatan di dasbor Anda.",
   },
   en: {
-    subject:  (d, c) => `[HealthWatch] 🚨 PHEIC ALERT: ${d} — ${c}`,
+    subject:  (d, c) => `[HealthWatch] PHEIC Declaration: ${d} — ${c}`,
     intro:    (d, c) => `WHO has declared a Public Health Emergency of International Concern (PHEIC) for <strong>${d}</strong> in <strong>${c}</strong>.`,
-    title:    "🚨 HealthWatch Global — PHEIC Alert",
+    title:    "HealthWatch Global — PHEIC Declaration",
     cases:    "Cases:",
     reported: "Reported:",
     risk:     "Risk:",
