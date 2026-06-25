@@ -219,7 +219,7 @@ const J12_CONTENT: Record<string, {
   unsubNote: string;
 }> = {
   fr: {
-    subject: "Votre essai Pro se termine dans 2 jours ⏳",
+    subject: "Votre essai Pro se termine dans 2 jours",
     headline: "Votre essai Pro se termine dans 2 jours.",
     intro: "Vous avez utilisé HealthWatch Pro pendant 12 jours. Dans 48 heures, votre accès sera limité au plan gratuit si vous ne souscrivez pas.",
     loseTitle: "Ce que vous perdez à la fin de l'essai",
@@ -238,7 +238,7 @@ const J12_CONTENT: Record<string, {
     unsubNote: "Vous recevez cet email car vous avez créé un compte sur healthwatch-global.com.",
   },
   en: {
-    subject: "Your Pro trial ends in 2 days ⏳",
+    subject: "Your Pro trial ends in 2 days",
     headline: "Your Pro trial ends in 2 days.",
     intro: "You've used HealthWatch Pro for 12 days. In 48 hours, your access will be limited to the free plan if you don't subscribe.",
     loseTitle: "What you lose at the end of the trial",
@@ -257,7 +257,7 @@ const J12_CONTENT: Record<string, {
     unsubNote: "You're receiving this email because you created an account on healthwatch-global.com.",
   },
   es: {
-    subject: "Su prueba Pro termina en 2 días ⏳",
+    subject: "Su prueba Pro termina en 2 días",
     headline: "Su prueba Pro termina en 2 días.",
     intro: "Ha utilizado HealthWatch Pro durante 12 días. En 48 horas, su acceso se limitará al plan gratuito si no se suscribe.",
     loseTitle: "Lo que pierde al final de la prueba",
@@ -276,7 +276,7 @@ const J12_CONTENT: Record<string, {
     unsubNote: "Recibe este correo porque creó una cuenta en healthwatch-global.com.",
   },
   ar: {
-    subject: "تجربتك Pro تنتهي خلال يومين ⏳",
+    subject: "تجربتك Pro تنتهي خلال يومين",
     headline: "تجربتك Pro تنتهي خلال يومين.",
     intro: "لقد استخدمت HealthWatch Pro لمدة 12 يوماً. خلال 48 ساعة، سيُقيَّد وصولك بالخطة المجانية إذا لم تشترك.",
     loseTitle: "ما الذي ستفقده عند انتهاء التجربة",
@@ -295,7 +295,7 @@ const J12_CONTENT: Record<string, {
     unsubNote: "تتلقى هذا البريد لأنك أنشأت حساباً على healthwatch-global.com.",
   },
   id: {
-    subject: "Uji coba Pro Anda berakhir dalam 2 hari ⏳",
+    subject: "Uji coba Pro Anda berakhir dalam 2 hari",
     headline: "Uji coba Pro Anda berakhir dalam 2 hari.",
     intro: "Anda telah menggunakan HealthWatch Pro selama 12 hari. Dalam 48 jam, akses Anda akan dibatasi ke paket gratis jika tidak berlangganan.",
     loseTitle: "Yang Anda kehilangan di akhir uji coba",

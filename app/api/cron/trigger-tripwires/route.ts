@@ -177,7 +177,7 @@ export async function GET(req: NextRequest) {
       await resend.emails.send({
         from: "HealthWatch Global <alerts@healthwatch-global.com>",
         to:   tw.email,
-        subject: `⚠ Tripwire: ${disease} (${country}) — ${casesStr}`,
+        subject: `[HealthWatch] Tripwire : ${disease} — ${country} (${casesStr})`,
         html: `
 <div dir="${isRtl ? "rtl" : "ltr"}" style="font-family:sans-serif;max-width:520px;margin:0 auto;padding:24px;background:#0f172a;color:#e2e8f0;border-radius:12px;direction:${isRtl ? "rtl" : "ltr"};text-align:${isRtl ? "right" : "left"}">
   <p style="color:#f87171;font-size:18px;font-weight:700;margin:0 0 8px">${lc.emailTitle}</p>

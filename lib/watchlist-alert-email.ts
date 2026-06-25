@@ -33,7 +33,7 @@ const COPY: Record<string, {
   unsubNote: string;
 }> = {
   fr: {
-    subject:   (d, c) => `⭐ Mise à jour : ${d} — ${c}`,
+    subject:   (d, c) => `[HealthWatch] Mise à jour : ${d} — ${c}`,
     headline:  "Un foyer que vous surveillez a été mis à jour.",
     newCases:  "Cas confirmés",
     newDeaths: "Décès",
