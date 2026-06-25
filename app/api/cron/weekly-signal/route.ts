@@ -103,7 +103,7 @@ async function sendEmail(to: string, subject: string, html: string) {
 export async function GET(req: NextRequest) {
   const cronSecret = clean(process.env.CRON_SECRET);
   const auth = req.headers.get("authorization");
-  if (cronSecret && auth !== `Bearer ${cronSecret}`) {
+  if (!cronSecret || auth !== `Bearer ${cronSecret}`) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
