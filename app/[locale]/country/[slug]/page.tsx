@@ -35,7 +35,7 @@ const LABELS: Record<Locale, {
   risk: Record<string, string>;
   ctaTitle: string; ctaBody: string; ctaBtn: string;
   back: string; noData: string; source: string;
-  outbreaksSince: string;
+  outbreaksSince: string; lastUpdated: string;
 }> = {
   en: {
     activeSection: "Active outbreaks",
@@ -53,6 +53,7 @@ const LABELS: Record<Locale, {
     noData: "N/A",
     source: "Source",
     outbreaksSince: "outbreaks tracked",
+    lastUpdated: "Data as of",
   },
   fr: {
     activeSection: "Foyers en cours",
@@ -70,6 +71,7 @@ const LABELS: Record<Locale, {
     noData: "N/D",
     source: "Source",
     outbreaksSince: "foyers suivis",
+    lastUpdated: "Données au",
   },
   es: {
     activeSection: "Brotes en curso",
@@ -87,6 +89,7 @@ const LABELS: Record<Locale, {
     noData: "N/D",
     source: "Fuente",
     outbreaksSince: "brotes registrados",
+    lastUpdated: "Datos al",
   },
   ar: {
     activeSection: "التفشيات الجارية",
@@ -104,6 +107,7 @@ const LABELS: Record<Locale, {
     noData: "غ/م",
     source: "المصدر",
     outbreaksSince: "تفشيات مرصودة",
+    lastUpdated: "بيانات حتى",
   },
   id: {
     activeSection: "Wabah yang sedang berlangsung",
@@ -121,6 +125,7 @@ const LABELS: Record<Locale, {
     noData: "T/S",
     source: "Sumber",
     outbreaksSince: "wabah terlacak",
+    lastUpdated: "Data per",
   },
 };
 
@@ -254,6 +259,12 @@ export default async function CountryPage({
   const totalCases  = outbreaks.reduce((s, o) => s + (o.cases  ?? 0), 0);
   const totalDeaths = outbreaks.reduce((s, o) => s + (o.deaths ?? 0), 0);
   const numLocale   = l === "ar" ? "ar-SA" : l;
+  const latestUpdate = outbreaks.reduce<string | null>((latest, o) => {
+    const t = (o as { updated_at?: string }).updated_at ?? o.date ?? null;
+    if (!t) return latest;
+    if (!latest || t > latest) return t;
+    return latest;
+  }, null);
   const cfr         = totalCases > 0 ? (totalDeaths / totalCases * 100).toFixed(1) + "%" : lb.noData;
   const uniqueDiseases = new Set(outbreaks.map((o) => o.disease_en ?? o.disease)).size;
 
@@ -350,6 +361,14 @@ export default async function CountryPage({
                 </span>
               ) : (
                 <span className="text-sm text-gray-500">{lb.noActive}</span>
+              )}
+              {latestUpdate && (
+                <span className="text-xs text-gray-600">
+                  {lb.lastUpdated} {new Date(latestUpdate).toLocaleDateString(
+                    l === "ar" ? "ar-SA" : l,
+                    { year: "numeric", month: "long", day: "numeric" }
+                  )}
+                </span>
               )}
             </div>
           </div>

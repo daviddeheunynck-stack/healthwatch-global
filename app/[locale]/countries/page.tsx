@@ -188,13 +188,17 @@ async function fetchCountryStats(): Promise<CountryStats[]> {
 
 export default async function CountriesPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ locale: string }>;
+  searchParams: Promise<{ active?: string }>;
 }) {
   const { locale } = await params;
+  const { active: activeFilter } = await searchParams;
   const l  = (LOCALES.includes(locale as Locale) ? locale : "en") as Locale;
   const lb = LABELS[l];
   const isRtl = l === "ar";
+  const filterActive = activeFilter === "1";
 
   const countries = await fetchCountryStats();
   const activeCount = countries.filter((c) => c.activeCount > 0).length;
@@ -252,7 +256,7 @@ export default async function CountriesPage({
           )}
         </div>
         <p className="text-gray-400 leading-relaxed max-w-2xl">{lb.subtitle}</p>
-        <div className="flex items-center gap-4">
+        <div className="flex flex-wrap items-center gap-4">
           <Link href={`/${l}/diseases`} className="text-sm text-gray-500 hover:text-red-400 transition-colors">
             {l === "fr" ? "→ Par maladie" : l === "es" ? "→ Por enfermedad" : l === "ar" ? "← حسب المرض" : l === "id" ? "→ Per penyakit" : "→ By disease"}
           </Link>
@@ -260,12 +264,37 @@ export default async function CountriesPage({
             {l === "fr" ? "→ Par région" : l === "es" ? "→ Por región" : l === "ar" ? "← حسب المنطقة" : l === "id" ? "→ Per wilayah" : "→ By region"}
           </Link>
         </div>
+
+        {/* Filter toggle */}
+        <div className="flex items-center gap-2 pt-1">
+          <Link
+            href={`/${l}/countries`}
+            className={`text-xs px-3 py-1.5 rounded-full border transition-colors ${
+              !filterActive
+                ? "bg-gray-700 border-gray-600 text-white font-semibold"
+                : "border-gray-700 text-gray-500 hover:text-gray-300 hover:border-gray-600"
+            }`}
+          >
+            {lb.sortAlpha}
+          </Link>
+          <Link
+            href={`/${l}/countries?active=1`}
+            className={`text-xs px-3 py-1.5 rounded-full border transition-colors ${
+              filterActive
+                ? "bg-red-900/40 border-red-700 text-red-400 font-semibold"
+                : "border-gray-700 text-gray-500 hover:text-gray-300 hover:border-gray-600"
+            }`}
+          >
+            🔴 {lb.sortActive}
+          </Link>
+        </div>
       </div>
 
       {/* Countries by region */}
       {REGION_ORDER.map((region) => {
-        const group = regionGroups.get(region);
-        if (!group || group.length === 0) return null;
+        const raw   = regionGroups.get(region) ?? [];
+        const group = filterActive ? raw.filter((c) => c.activeCount > 0) : raw;
+        if (group.length === 0) return null;
         const regionLabel = lb.regionLabel[region] ?? region;
 
         return (
