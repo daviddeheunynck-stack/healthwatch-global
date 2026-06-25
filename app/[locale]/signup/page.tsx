@@ -105,7 +105,7 @@ export default function SignupPage() {
 
     // Save locale to profile so all transactional emails use the right language
     if (userId) {
-      supabase.from("profiles").update({ locale }).eq("id", userId).then(() => {});
+      supabase.from("profiles").update({ locale, alert_locale: locale }).eq("id", userId).then(() => {});
     }
 
     // Fire welcome email — non-blocking

@@ -83,6 +83,7 @@ export async function GET(req: NextRequest) {
         const inferredLocale = localeFromNext(next);
         if (!profile?.locale && inferredLocale) {
           updates.locale = inferredLocale;
+          updates.alert_locale = inferredLocale;
         }
 
         if (Object.keys(updates).length > 0) {
