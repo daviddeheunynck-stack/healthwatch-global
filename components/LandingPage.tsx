@@ -88,7 +88,7 @@ const COPY: Record<string, {
   fr: {
     heroBadge: "OMS · ECDC · OPAS · Africa CDC · 5 langues · Temps réel",
     heroTitle: ["Toutes les données OMS.", "Sans les heures de recherche."],
-    heroSub: "Sachez quels foyers épidémiques affectent vos équipes, vos opérations et vos décisions — avant les médias. HealthWatch agrège l'OMS, l'ECDC, l'OPAS et l'Africa CDC en un seul tableau de bord, calcule la létalité automatiquement, et vous alerte dès chaque nouvelle publication.",
+    heroSub: "OMS, ECDC, OPAS et Africa CDC — agrégés et classifiés RSI en temps réel. Sachez quels foyers affectent vos équipes avant que le rapport n'arrive dans votre boîte mail, avec scoring de létalité automatique et alertes dans les 6 à 8 heures suivant chaque publication officielle.",
     heroCta: "Créer un compte gratuit",
     heroCtaSecondary: "Voir les tarifs",
     heroCtaDemo: "Voir le tableau de bord en direct →",
@@ -168,7 +168,7 @@ const COPY: Record<string, {
   en: {
     heroBadge: "WHO · ECDC · PAHO · Africa CDC · 5 languages · Real-time",
     heroTitle: ["All WHO outbreak data.", "Without the research hours."],
-    heroSub: "Know which disease outbreaks affect your teams, operations and decisions — before the news does. HealthWatch aggregates WHO, ECDC, PAHO and Africa CDC, calculates CFR automatically, and alerts you within hours of each new report.",
+    heroSub: "WHO, ECDC, PAHO and Africa CDC — aggregated and IHR-classified in real time. Know which outbreaks affect your teams and operations before the report hits your inbox, with automated CFR scoring and alerts within 6–8 hours of official publication.",
     heroCta: "Create free account",
     heroCtaSecondary: "See pricing",
     heroCtaDemo: "Try the live dashboard →",

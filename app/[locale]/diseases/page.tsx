@@ -138,16 +138,29 @@ async function fetchActiveOutbreaks(): Promise<Outbreak[]> {
   return (data ?? []) as Outbreak[];
 }
 
+const FILTER_LABELS: Record<Locale, { all: string; activeOnly: string }> = {
+  en: { all: "All diseases",        activeOnly: "Active outbreaks only" },
+  fr: { all: "Toutes les maladies", activeOnly: "Foyers actifs uniquement" },
+  es: { all: "Todas las enfermedades", activeOnly: "Solo brotes activos" },
+  ar: { all: "جميع الأمراض",        activeOnly: "التفشيات النشطة فقط" },
+  id: { all: "Semua penyakit",      activeOnly: "Wabah aktif saja" },
+};
+
 // ── Page ──────────────────────────────────────────────────────────────────────
 export default async function DiseasesPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ locale: string }>;
+  searchParams: Promise<{ active?: string }>;
 }) {
   const { locale } = await params;
+  const { active: activeFilter } = await searchParams;
   const l = (LOCALES.includes(locale as Locale) ? locale : "en") as Locale;
   const lb = LABELS[l];
+  const fl = FILTER_LABELS[l];
   const isRtl = l === "ar";
+  const filterActive = activeFilter === "1";
 
   const active = await fetchActiveOutbreaks();
 
@@ -223,7 +236,7 @@ export default async function DiseasesPage({
           <span>·</span>
           <span><span className="text-white font-semibold">{totalActive}</span> {l === "fr" ? "foyers actifs au total" : l === "es" ? "brotes activos en total" : l === "ar" ? "تفشٍّ نشط إجمالاً" : l === "id" ? "wabah aktif total" : "total active outbreaks"}</span>
         </div>
-        <div className="flex items-center gap-4 pt-1">
+        <div className="flex flex-wrap items-center gap-4 pt-1">
           <Link href={`/${l}/countries`} className="text-sm text-gray-500 hover:text-red-400 transition-colors">
             {l === "fr" ? "→ Par pays" : l === "es" ? "→ Por país" : l === "ar" ? "← حسب الدولة" : l === "id" ? "→ Per negara" : "→ By country"}
           </Link>
@@ -231,11 +244,35 @@ export default async function DiseasesPage({
             {l === "fr" ? "→ Par région" : l === "es" ? "→ Por región" : l === "ar" ? "← حسب المنطقة" : l === "id" ? "→ Per wilayah" : "→ By region"}
           </Link>
         </div>
+
+        {/* Filter toggle */}
+        <div className="flex items-center gap-2 pt-2">
+          <Link
+            href={`/${l}/diseases`}
+            className={`text-xs px-3 py-1.5 rounded-full border transition-colors ${
+              !filterActive
+                ? "bg-gray-700 border-gray-600 text-white font-semibold"
+                : "border-gray-700 text-gray-500 hover:text-gray-300 hover:border-gray-600"
+            }`}
+          >
+            {fl.all}
+          </Link>
+          <Link
+            href={`/${l}/diseases?active=1`}
+            className={`text-xs px-3 py-1.5 rounded-full border transition-colors ${
+              filterActive
+                ? "bg-red-900/40 border-red-700 text-red-400 font-semibold"
+                : "border-gray-700 text-gray-500 hover:text-gray-300 hover:border-gray-600"
+            }`}
+          >
+            🔴 {fl.activeOnly}
+          </Link>
+        </div>
       </div>
 
       {/* Grid */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
-        {sorted.map((disease) => {
+        {(filterActive ? sorted.filter((d) => (byDisease.get(d.name_en)?.count ?? 0) > 0) : sorted).map((disease) => {
           const slug     = diseaseToSlug(disease.name_en);
           const stats    = byDisease.get(disease.name_en);
           const hasActive = (stats?.count ?? 0) > 0;

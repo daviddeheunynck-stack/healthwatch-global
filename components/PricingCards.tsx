@@ -185,14 +185,14 @@ const TRIAL_COPY: Record<string, {
 
 // To update prices, edit lib/pricing.ts only.
 const PRICES: Record<string, {
-  proMonthly: string; proAnnual: string; proAnnualTotal: string;
-  teamMonthly: string; teamAnnual: string; teamAnnualTotal: string;
+  proMonthly: string; proAnnual: string; proAnnualTotal: string; proAnnualPerMonth: string;
+  teamMonthly: string; teamAnnual: string; teamAnnualTotal: string; teamAnnualPerMonth: string;
 }> = {
-  fr: { proMonthly: PRICE_DISPLAY.fr.proMonthly, proAnnual: PRICE_DISPLAY.fr.proAnnual, proAnnualTotal: `économisez ${PRICE_DISPLAY.fr.proAnnualSavings}`, teamMonthly: PRICE_DISPLAY.fr.teamMonthly, teamAnnual: PRICE_DISPLAY.fr.teamAnnual, teamAnnualTotal: `économisez ${PRICE_DISPLAY.fr.teamAnnualSavings}` },
-  en: { proMonthly: PRICE_DISPLAY.en.proMonthly, proAnnual: PRICE_DISPLAY.en.proAnnual, proAnnualTotal: `save ${PRICE_DISPLAY.en.proAnnualSavings}`,         teamMonthly: PRICE_DISPLAY.en.teamMonthly, teamAnnual: PRICE_DISPLAY.en.teamAnnual, teamAnnualTotal: `save ${PRICE_DISPLAY.en.teamAnnualSavings}` },
-  es: { proMonthly: PRICE_DISPLAY.es.proMonthly, proAnnual: PRICE_DISPLAY.es.proAnnual, proAnnualTotal: `ahorre ${PRICE_DISPLAY.es.proAnnualSavings}`,       teamMonthly: PRICE_DISPLAY.es.teamMonthly, teamAnnual: PRICE_DISPLAY.es.teamAnnual, teamAnnualTotal: `ahorre ${PRICE_DISPLAY.es.teamAnnualSavings}` },
-  ar: { proMonthly: PRICE_DISPLAY.ar.proMonthly, proAnnual: PRICE_DISPLAY.ar.proAnnual, proAnnualTotal: `وفّر ${PRICE_DISPLAY.ar.proAnnualSavings}`,          teamMonthly: PRICE_DISPLAY.ar.teamMonthly, teamAnnual: PRICE_DISPLAY.ar.teamAnnual, teamAnnualTotal: `وفّر ${PRICE_DISPLAY.ar.teamAnnualSavings}` },
-  id: { proMonthly: PRICE_DISPLAY.id.proMonthly, proAnnual: PRICE_DISPLAY.id.proAnnual, proAnnualTotal: `hemat ${PRICE_DISPLAY.id.proAnnualSavings}`,         teamMonthly: PRICE_DISPLAY.id.teamMonthly, teamAnnual: PRICE_DISPLAY.id.teamAnnual, teamAnnualTotal: `hemat ${PRICE_DISPLAY.id.teamAnnualSavings}` },
+  fr: { proMonthly: PRICE_DISPLAY.fr.proMonthly, proAnnual: PRICE_DISPLAY.fr.proAnnual, proAnnualTotal: `économisez ${PRICE_DISPLAY.fr.proAnnualSavings}`, proAnnualPerMonth: "21 €", teamMonthly: PRICE_DISPLAY.fr.teamMonthly, teamAnnual: PRICE_DISPLAY.fr.teamAnnual, teamAnnualTotal: `économisez ${PRICE_DISPLAY.fr.teamAnnualSavings}`, teamAnnualPerMonth: "108 €" },
+  en: { proMonthly: PRICE_DISPLAY.en.proMonthly, proAnnual: PRICE_DISPLAY.en.proAnnual, proAnnualTotal: `save ${PRICE_DISPLAY.en.proAnnualSavings}`,         proAnnualPerMonth: "$39",   teamMonthly: PRICE_DISPLAY.en.teamMonthly, teamAnnual: PRICE_DISPLAY.en.teamAnnual, teamAnnualTotal: `save ${PRICE_DISPLAY.en.teamAnnualSavings}`,   teamAnnualPerMonth: "$119" },
+  es: { proMonthly: PRICE_DISPLAY.es.proMonthly, proAnnual: PRICE_DISPLAY.es.proAnnual, proAnnualTotal: `ahorre ${PRICE_DISPLAY.es.proAnnualSavings}`,       proAnnualPerMonth: "€21",   teamMonthly: PRICE_DISPLAY.es.teamMonthly, teamAnnual: PRICE_DISPLAY.es.teamAnnual, teamAnnualTotal: `ahorre ${PRICE_DISPLAY.es.teamAnnualSavings}`,   teamAnnualPerMonth: "€108" },
+  ar: { proMonthly: PRICE_DISPLAY.ar.proMonthly, proAnnual: PRICE_DISPLAY.ar.proAnnual, proAnnualTotal: `وفّر ${PRICE_DISPLAY.ar.proAnnualSavings}`,          proAnnualPerMonth: "€21",   teamMonthly: PRICE_DISPLAY.ar.teamMonthly, teamAnnual: PRICE_DISPLAY.ar.teamAnnual, teamAnnualTotal: `وفّر ${PRICE_DISPLAY.ar.teamAnnualSavings}`,    teamAnnualPerMonth: "€108" },
+  id: { proMonthly: PRICE_DISPLAY.id.proMonthly, proAnnual: PRICE_DISPLAY.id.proAnnual, proAnnualTotal: `hemat ${PRICE_DISPLAY.id.proAnnualSavings}`,         proAnnualPerMonth: "€21",   teamMonthly: PRICE_DISPLAY.id.teamMonthly, teamAnnual: PRICE_DISPLAY.id.teamAnnual, teamAnnualTotal: `hemat ${PRICE_DISPLAY.id.teamAnnualSavings}`,    teamAnnualPerMonth: "€108" },
 };
 
 export default function PricingCards({ locale }: { locale: string }) {
@@ -313,7 +313,10 @@ export default function PricingCards({ locale }: { locale: string }) {
               <span className="text-gray-400 mb-1">{isAnnual ? c.perYear : c.perMonth}</span>
             </div>
             {isAnnual && (
-              <p className="text-xs text-green-400 mt-1">{p.proAnnualTotal} · {c.billedAnnually}</p>
+              <>
+                <p className="text-xs text-green-400 mt-1">{p.proAnnualPerMonth}{c.perMonth} · {p.proAnnualTotal}</p>
+                <p className="text-xs text-gray-500 mt-0.5">{c.billedAnnually}</p>
+              </>
             )}
             <p className="text-gray-400 text-sm mt-2">{c.proDesc}</p>
           </div>
@@ -392,7 +395,10 @@ export default function PricingCards({ locale }: { locale: string }) {
               <span className="text-gray-400 mb-1">{isAnnual ? c.perYear : c.perMonth}</span>
             </div>
             {isAnnual && (
-              <p className="text-xs text-green-400 mt-1">{p.teamAnnualTotal} · {c.billedAnnually}</p>
+              <>
+                <p className="text-xs text-green-400 mt-1">{p.teamAnnualPerMonth}{c.perMonth} · {p.teamAnnualTotal}</p>
+                <p className="text-xs text-gray-500 mt-0.5">{c.billedAnnually}</p>
+              </>
             )}
             <p className="text-gray-400 text-sm mt-2">{c.teamDesc}</p>
           </div>
