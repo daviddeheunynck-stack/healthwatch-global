@@ -1,4 +1,4 @@
-const PH_URL = "https://www.producthunt.com/products/healthwatch-global";
+const PH_URL = "https://www.producthunt.com/products/healthwatch-global?launch=healthwatch-global-2";
 const DEMO_URL = "https://healthwatch-global.com/en?demo=1&utm_source=email&utm_medium=launch_blast&utm_campaign=ph_launch_2026";
 
 const COPY: Record<string, {
