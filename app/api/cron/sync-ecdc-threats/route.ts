@@ -365,11 +365,12 @@ export async function GET(req: NextRequest) {
           date:        item.date,
           source:      item.source,
           description: item.description,
-          active:      true,
-          is_seed:     false,
-          admin1:      item.admin1 ?? null,
-          admin1_lat:  item.admin1_lat ?? null,
-          admin1_lng:  item.admin1_lng ?? null,
+          active:       true,
+          is_seed:      false,
+          admin1:       item.admin1 ?? null,
+          admin1_lat:   item.admin1_lat ?? null,
+          admin1_lng:   item.admin1_lng ?? null,
+          first_seen_at: item.date,
         });
 
         if (error) {

@@ -176,7 +176,7 @@ export async function GET(req: NextRequest) {
   // ── 2. Load existing outbreaks ────────────────────────────────
   const { data: existing, error: fetchErr } = await supabase
     .from("outbreaks")
-    .select("id, disease_en, country_en, source, date, cases, deaths, active");
+    .select("id, disease_en, country_en, source, date, cases, deaths, active, who_don_published_at");
 
   if (fetchErr) return NextResponse.json({ error: fetchErr.message }, { status: 500 });
 
@@ -201,7 +201,27 @@ export async function GET(req: NextRequest) {
   for (const outbreak of outbreaks) {
     try {
       const dcKey = `${outbreak.disease_en.toLowerCase()}|${outbreak.country_en.toLowerCase()}`;
-      const existingRow = bySource.get(outbreak.source) || byDiseaseCountry.get(dcKey);
+      const matchViaSource = bySource.get(outbreak.source);
+      const matchViaDC     = byDiseaseCountry.get(dcKey);
+      const existingRow    = matchViaSource ?? matchViaDC;
+
+      // Detect: WHO DON now officially covers an outbreak first seen via ECDC/PAHO.
+      // Record first_seen_at (original source's pub date) and who_don_published_at once.
+      if (!matchViaSource && matchViaDC) {
+        const isNonWhoDon = !(matchViaDC.source ?? "").includes("who.int/emergencies/disease-outbreak-news");
+        if (isNonWhoDon && !matchViaDC.who_don_published_at) {
+          const { error: ltErr } = await supabase
+            .from("outbreaks")
+            .update({
+              first_seen_at:        matchViaDC.date,
+              who_don_published_at: outbreak.date,
+            })
+            .eq("id", matchViaDC.id)
+            .is("who_don_published_at", null);
+          if (ltErr) console.error("[sync] lead-time update:", ltErr);
+          else console.log(`[sync] lead-time ✓ ${outbreak.disease_en}/${outbreak.country_en}: first=${matchViaDC.date} WHO DON=${outbreak.date}`);
+        }
+      }
 
       if (existingRow) {
         // Never let an older-dated WHO article overwrite a row that already
