@@ -1,14 +1,18 @@
-// Weekly check for two classes of data gaps in the disease reference layer:
+// Hourly check for two classes of data gaps in the disease reference layer,
+// triggered 30 minutes after every ingestion cycle (sync-outbreaks runs at :00,
+// sync-africa-cdc / sync-ecdc-threats / sync-paho-alerts run at various times).
 //
-//   1. Unknown diseases — disease_en values in the outbreaks table that do not
-//      match any pattern in DISEASE_MAP.  These are new/renamed pathogens that
-//      need a DISEASE_MAP entry (transmission, travelerRisk, factsheet…).
+//   1. Unknown diseases — disease_en values inserted in the last 90 minutes that
+//      do not match any pattern in DISEASE_MAP.  New/renamed pathogens that need
+//      a DISEASE_MAP entry (transmission, travelerRisk, factsheet…).
 //
-//   2. travelerRisk gaps — active outbreaks where the matched disease has no
-//      travelerRisk entry for the outbreak's region.  Signals that the static
-//      travelerRisk table is out of date for that disease × region pair.
+//   2. travelerRisk gaps — newly inserted active outbreaks where the matched
+//      disease has no travelerRisk entry for the outbreak's region.
 //
-// Schedule: 0 8 * * 1  (Monday 08:00 UTC)
+// Both classes fire a Sentry warning immediately + a batched admin email when
+// issues are found.
+//
+// Schedule: 30 * * * *  (every hour at :30)
 
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
@@ -68,12 +72,12 @@ export async function GET(req: NextRequest) {
   const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
   const adminEmail = ADMIN_EMAILS?.split(",")[0]?.trim();
 
-  // ── 1. All unique disease_en values (last 180 days + all active) ─────────
-  const cutoff = new Date(Date.now() - 180 * 86_400_000).toISOString().split("T")[0];
+  // ── 1. Outbreaks inserted in the last 90 minutes (covers all sync routes) ─
+  const windowStart = new Date(Date.now() - 90 * 60_000).toISOString();
   const { data: rows, error } = await supabase
     .from("outbreaks")
     .select("disease_en, disease, region, active")
-    .or(`date.gte.${cutoff},active.eq.true`);
+    .gte("created_at", windowStart);
 
   if (error) {
     console.error("[disease-coverage] DB error:", error.message);
