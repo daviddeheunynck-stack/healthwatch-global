@@ -105,7 +105,7 @@ export default function ProQuickStart({
     {
       key: "s1" as const,
       label: c.steps[0],
-      href: `/${locale}/account`,
+      href: `/${locale}/account#regional-alerts`,
       done: st.s1,
       onComplete: undefined,
     },

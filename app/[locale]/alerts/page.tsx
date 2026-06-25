@@ -236,8 +236,8 @@ export default function AlertsPage() {
         <div className="flex-1 h-px bg-gray-800" />
       </div>}
 
-      {/* ── Free subscription form ───────────────────────────────────────── */}
-      <div>
+      {/* ── Free subscription form — hidden for paid users who already have instant alerts ── */}
+      {!isPaid && <div>
         <p className="text-xs font-semibold text-gray-500 uppercase tracking-widest mb-3 flex items-center gap-2">
           <Info className="w-3.5 h-3.5 text-blue-400" />
           {pc.freeLabel}
@@ -292,7 +292,7 @@ export default function AlertsPage() {
             </form>
           )}
         </div>
-      </div>
+      </div>}
 
       <RealtimeAlertFeed />
 

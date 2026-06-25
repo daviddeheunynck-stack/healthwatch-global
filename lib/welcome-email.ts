@@ -111,7 +111,7 @@ export function buildWelcomeEmail(locale: string): { subject: string; html: stri
   const dashboardUrl = `https://healthwatch-global.com/${locale}`;
   const pricingUrl = `https://healthwatch-global.com/${locale}/pricing`;
 
-  const alertsUrl = `https://healthwatch-global.com/${locale}/alerts`;
+  const alertsUrl = `https://healthwatch-global.com/${locale}/account#regional-alerts`;
 
   const html = `<!DOCTYPE html>
 <html lang="${locale}" dir="${dir}">
