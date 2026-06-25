@@ -169,10 +169,12 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Missing fields" }, { status: 400 });
     }
 
-    const VALID_REGIONS = ["allRegions", "africa", "asia", "europe", "americas", "oceania"];
+    const VALID_REGIONS = ["all", "allRegions", "africa", "asia", "europe", "americas", "oceania"];
     if (!VALID_REGIONS.includes(region)) {
       return NextResponse.json({ error: "Invalid region" }, { status: 400 });
     }
+    // Normalize "all" to the canonical "allRegions" used by the digest cron
+    const normalizedRegion = region === "all" ? "allRegions" : region;
 
     const safeLocale = ["fr", "en", "es", "ar", "id"].includes(locale) ? locale : "en";
 
@@ -184,7 +186,7 @@ export async function POST(req: NextRequest) {
     // Insert and get back the generated UUID
     const { data: row, error: dbError } = await supabase
       .from("subscriptions")
-      .insert({ email, region, locale: safeLocale, active: true })
+      .insert({ email, region: normalizedRegion, locale: safeLocale, active: true })
       .select("id")
       .single();
 
@@ -200,7 +202,7 @@ export async function POST(req: NextRequest) {
     // Send confirmation email only for NEW subscriptions
     const brevoKey = clean(process.env.BREVO_API_KEY);
     if (!isDuplicate && brevoKey && subscriptionId) {
-      const { subject, html } = buildConfirmationEmail(email, region, safeLocale, subscriptionId);
+      const { subject, html } = buildConfirmationEmail(email, normalizedRegion, safeLocale, subscriptionId);
       await fetch("https://api.brevo.com/v3/smtp/email", {
         method: "POST",
         headers: { "api-key": brevoKey, "Content-Type": "application/json" },
