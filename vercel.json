@@ -151,6 +151,10 @@
     {
       "path": "/api/cron/pilot-follow-up",
       "schedule": "0 8 * * *"
+    },
+    {
+      "path": "/api/cron/disease-coverage",
+      "schedule": "0 8 * * 1"
     }
   ]
 }

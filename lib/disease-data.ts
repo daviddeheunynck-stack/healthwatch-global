@@ -579,20 +579,28 @@ export function allDiseases(): DiseaseInfo[] {
   return result;
 }
 
-export function normalizeDisease(rawName: string): DiseaseInfo {
+/** Returns { info, matched: true } when found in DISEASE_MAP, { info (fallback), matched: false } otherwise. */
+export function matchDisease(rawName: string): { info: DiseaseInfo; matched: boolean } {
   const lower = rawName.toLowerCase();
   for (const entry of DISEASE_MAP) {
     if (entry.patterns.some((p) => lower.includes(p))) {
-      return entry.info;
+      return { info: entry.info, matched: true };
     }
   }
   return {
-    name_en: rawName, name_fr: rawName, name_es: rawName, name_ar: rawName, name_id: rawName,
-    pathogenType: "virus_rna",
-    transmission: ["contact"],
-    vaccine: "no",
-    treatment: "supportive",
+    info: {
+      name_en: rawName, name_fr: rawName, name_es: rawName, name_ar: rawName, name_id: rawName,
+      pathogenType: "virus_rna",
+      transmission: ["contact"],
+      vaccine: "no",
+      treatment: "supportive",
+    },
+    matched: false,
   };
+}
+
+export function normalizeDisease(rawName: string): DiseaseInfo {
+  return matchDisease(rawName).info;
 }
 
 /** Returns the localized disease name for a given locale, falling back to EN. */
