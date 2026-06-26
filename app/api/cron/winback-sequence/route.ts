@@ -236,7 +236,7 @@ export async function GET(req: NextRequest) {
 
   const { data: profiles, error } = await supabase
     .from("profiles")
-    .select("id, email, locale, trial_ends_at, display_filters")
+    .select("id, email, locale, trial_ends_at, created_at, display_filters")
     .eq("plan", "free")
     .not("trial_ends_at", "is", null)
     .is("stripe_subscription_id", null)
@@ -262,6 +262,12 @@ export async function GET(req: NextRequest) {
     if (!profile.email) continue;
     const filters = profile.display_filters as Record<string, unknown> | null;
     if (filters?.no_weekly_signal) continue;
+    // Skip pilot users (35-day trials) — they had a dedicated J+32 conversion email
+    // and should be followed up personally, not with a generic "14-day" winback.
+    const trialDays = profile.trial_ends_at && profile.created_at
+      ? (new Date(profile.trial_ends_at).getTime() - new Date(profile.created_at).getTime()) / 86_400_000
+      : 14;
+    if (trialDays > 20) continue;
     try {
       const locale = profile.locale ?? "en";
       const { subject, html } = buildEmail(locale, profile.id);
