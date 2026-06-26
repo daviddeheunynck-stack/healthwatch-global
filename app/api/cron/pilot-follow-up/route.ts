@@ -9,6 +9,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import * as Sentry from "@sentry/nextjs";
 
 export const dynamic = "force-dynamic";
 
@@ -213,6 +214,9 @@ export async function GET(req: NextRequest) {
 
   if (pErr) {
     console.error("[pilot-follow-up] profiles query error:", pErr);
+    Sentry.captureException(new Error(`[pilot-follow-up] profiles query failed: ${pErr.message}`), {
+      tags: { cron: "pilot-follow-up" },
+    });
     return NextResponse.json({ error: pErr.message }, { status: 500 });
   }
 
@@ -225,8 +229,11 @@ export async function GET(req: NextRequest) {
   let skipped = 0;
   let failed  = 0;
 
+  const hasOptedOut = (u: { display_filters: unknown }) =>
+    !!(u.display_filters as Record<string, unknown> | null)?.no_weekly_signal;
+
   for (const pilot of pilots) {
-    if (!pilot.email) { skipped++; continue; }
+    if (!pilot.email || hasOptedOut(pilot)) { skipped++; continue; }
 
     // Skip expired trials with no Stripe sub
     if (pilot.trial_ends_at && new Date(pilot.trial_ends_at).getTime() < now && !pilot.stripe_subscription_id) {
@@ -277,6 +284,7 @@ export async function GET(req: NextRequest) {
       console.log(`[pilot-follow-up] sent to ${pilot.email} (region: ${region ?? "all"})`);
     } catch (err) {
       console.error(`[pilot-follow-up] failed for ${pilot.email}:`, err);
+      Sentry.captureException(err, { tags: { cron: "pilot-follow-up", user_id: pilot.id } });
       failed++;
     }
 

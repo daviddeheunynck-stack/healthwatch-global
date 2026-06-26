@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { buildDigestEmail } from "@/lib/digest-email";
 import type { Outbreak } from "@/lib/outbreaks";
+import * as Sentry from "@sentry/nextjs";
 
 export const dynamic = "force-dynamic";
 
@@ -110,6 +111,7 @@ export async function GET(req: NextRequest) {
       sent++;
     } catch (err) {
       console.error(`[weekly-digest] Failed to send to ${sub.email}:`, err);
+      Sentry.captureException(err, { tags: { cron: "weekly-digest", sub_id: sub.id } });
       failed++;
     }
 

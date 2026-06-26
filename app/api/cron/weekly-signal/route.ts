@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import * as Sentry from "@sentry/nextjs";
 
 export const dynamic = "force-dynamic";
 
@@ -154,6 +155,7 @@ export async function GET(req: NextRequest) {
       sent++;
     } catch (e) {
       console.error(`[weekly-signal] ${user.email}:`, e);
+      Sentry.captureException(e, { tags: { cron: "weekly-signal", user_id: user.id } });
       failed++;
     }
   }
