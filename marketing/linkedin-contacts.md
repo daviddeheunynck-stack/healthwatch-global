@@ -95,6 +95,21 @@ Profils récupérés des sessions précédentes. Statut à confirmer.
 
 ---
 
+## Connexions ANRS JNI2026 — 26 juin 2026
+
+Post ANRS "#JNI2026 — Mpox, Ebola, Marburg : quand la science affronte les épidémies"
+Commentaire HWG posté. 5 demandes de connexion envoyées.
+
+| Nom | Organisation | Statut | Action suivante |
+|---|---|---|---|
+| Yazdan Yazdanpanah | ANRS MIE (Directeur) | Demande envoyée 26/06 | DM si acceptée |
+| Arnaud Fontanet | Institut Pasteur | Demande envoyée 26/06 | DM si acceptée |
+| Karine Lacombe | Hôpital Saint-Antoine | Demande envoyée 26/06 | DM si acceptée |
+| Nyombayire Mutagisha | International | Demande envoyée 26/06 | DM si acceptée |
+| Marie Jaspard | À confirmer | Demande envoyée 26/06 | DM si acceptée |
+
+---
+
 ## Règle d'archivage
 
 **À chaque profil partagé en session :** ajouter immédiatement dans ce fichier avec nom, contexte, et action prévue.
