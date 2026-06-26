@@ -465,6 +465,19 @@ Ordre d'envoi : BAVON → Premice → Paul Kibati → Celestine → Feydeau → 
 
 ## Commentaires LinkedIn opportunistes
 
+### ANRS Maladies infectieuses émergentes — JNI2026 (26 juin 2026)
+
+**Contexte :** Post ANRS récapitulant les 27es Journées Nationales d'Infectiologie — session "Mpox, Ebola, Marburg : quand la science affronte les épidémies". Tags : Fontanet, Lacombe, Yazdanpanah, Jaspard, Mutagisha, Trouillet-Assant, Bancel, Sauvage.
+
+**Commentaire posté le 26 juin 2026 :**
+> Mpox, Ebola, Marburg dans la même session — les trois pathogènes qui ont dominé l'agenda épidémio depuis 2024, avec Ebola DRC et Mpox toujours actifs aujourd'hui.
+>
+> Si des participants aux JNI veulent explorer les signaux en temps réel (DON OMS, ECDC, Africa CDC), HealthWatch Global agrège tout en un seul endroit — accès libre.
+
+**Connexions envoyées le 26 juin :** Yazdan Yazdanpanah, Arnaud Fontanet, Karine Lacombe, Nyombayire Mutagisha, Marie Jaspard.
+
+---
+
 ### Vital Strategies — post #Data4Health Indonésie (22 juin 2026)
 
 **Contexte :** Vital Strategies recrute un consultant international pour le Ministère de la Santé indonésien sur un système national de registre. Tag #Data4Health.
