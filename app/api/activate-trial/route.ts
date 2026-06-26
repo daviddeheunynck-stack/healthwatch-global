@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createServerClient } from "@supabase/ssr";
 import { createClient } from "@supabase/supabase-js";
 import { cookies } from "next/headers";
+import * as Sentry from "@sentry/nextjs";
 
 export const dynamic = "force-dynamic";
 
@@ -61,6 +62,9 @@ export async function POST(req: NextRequest) {
 
   if (updateErr) {
     console.error("[activate-trial] update failed:", updateErr);
+    Sentry.captureException(new Error(`[activate-trial] DB update failed: ${updateErr.message}`), {
+      tags: { user_id: user.id },
+    });
     return NextResponse.json({ error: "Update failed" }, { status: 500 });
   }
 
