@@ -13,6 +13,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { createHmac } from "crypto";
+import * as Sentry from "@sentry/nextjs";
 import { computeEpidemicMetrics } from "@/lib/epidemic-metrics";
 import { getCountryCoords } from "@/lib/country-coords";
 import { haversineKm } from "@/lib/haversine";
@@ -240,8 +241,9 @@ export async function GET(req: NextRequest) {
         });
         lastStatus = res.status;
         totalFired++;
-      } catch {
+      } catch (err) {
         lastStatus = 0;
+        Sentry.captureException(err, { tags: { cron: "trigger-webhooks", webhook_id: webhook.id, outbreak_id: outbreak.id } });
       }
     }
 
