@@ -215,6 +215,8 @@ const J12_CONTENT: Record<string, {
   ctaLabel: string;
   altText: string;
   altLink: string;
+  pilotText: string;
+  pilotLink: string;
   closing: string;
   unsubNote: string;
 }> = {
@@ -234,6 +236,8 @@ const J12_CONTENT: Record<string, {
     ctaLabel: "Conserver mon accès Pro →",
     altText: "Des questions sur l'offre ou un tarif ONG ?",
     altLink: "Contactez-nous →",
+    pilotText: "Ministère, ONG ou institution ? Pas de procurement nécessaire.",
+    pilotLink: "Programme Pilot 30 jours gratuits →",
     closing: "Bonne surveillance,\nL'équipe HealthWatch Global",
     unsubNote: "Vous recevez cet email car vous avez créé un compte sur healthwatch-global.com.",
   },
@@ -253,6 +257,8 @@ const J12_CONTENT: Record<string, {
     ctaLabel: "Keep my Pro access →",
     altText: "Questions about the plans or an NGO rate?",
     altLink: "Contact us →",
+    pilotText: "Ministry, NGO, or institution? No procurement process required.",
+    pilotLink: "30-day free Pilot programme →",
     closing: "Stay safe,\nThe HealthWatch Global Team",
     unsubNote: "You're receiving this email because you created an account on healthwatch-global.com.",
   },
@@ -272,6 +278,8 @@ const J12_CONTENT: Record<string, {
     ctaLabel: "Mantener mi acceso Pro →",
     altText: "¿Preguntas sobre los planes o una tarifa ONG?",
     altLink: "Contáctenos →",
+    pilotText: "¿Ministerio, ONG o institución? Sin proceso de compras.",
+    pilotLink: "Programa Pilot 30 días gratuitos →",
     closing: "Cuídese,\nEl equipo de HealthWatch Global",
     unsubNote: "Recibe este correo porque creó una cuenta en healthwatch-global.com.",
   },
@@ -291,6 +299,8 @@ const J12_CONTENT: Record<string, {
     ctaLabel: "← الاحتفاظ بوصولي Pro",
     altText: "أسئلة حول الخطط أو سعر المنظمات غير الحكومية؟",
     altLink: "← اتصل بنا",
+    pilotText: "وزارة أو منظمة غير حكومية أو مؤسسة؟ لا إجراءات شراء مطلوبة.",
+    pilotLink: "← برنامج تجريبي مجاني 30 يوماً",
     closing: "مع السلامة،\nفريق HealthWatch Global",
     unsubNote: "تتلقى هذا البريد لأنك أنشأت حساباً على healthwatch-global.com.",
   },
@@ -310,6 +320,8 @@ const J12_CONTENT: Record<string, {
     ctaLabel: "Pertahankan akses Pro saya →",
     altText: "Pertanyaan tentang paket atau tarif LSM?",
     altLink: "Hubungi kami →",
+    pilotText: "Kementerian, LSM, atau institusi? Tidak perlu proses pengadaan.",
+    pilotLink: "Program Pilot 30 hari gratis →",
     closing: "Jaga kesehatan,\nTim HealthWatch Global",
     unsubNote: "Anda menerima email ini karena membuat akun di healthwatch-global.com.",
   },
@@ -327,6 +339,8 @@ const TRIAL_EXPIRED_CONTENT: Record<string, {
   ctaLabel: string;
   altText: string;
   altLink: string;
+  pilotText: string;
+  pilotLink: string;
   closing: string;
   unsubNote: string;
 }> = {
@@ -346,6 +360,8 @@ const TRIAL_EXPIRED_CONTENT: Record<string, {
     ctaLabel: `Réactiver mon accès Pro — ${PRICE_DISPLAY.fr.proMonthly}/mois →`,
     altText: "Tarif ONG ou gouvernemental disponible.",
     altLink: "Contactez-nous →",
+    pilotText: "Ministère, ONG ou institution ? Pas de procurement nécessaire.",
+    pilotLink: "Programme Pilot institutionnel 30 jours →",
     closing: "L'équipe HealthWatch Global",
     unsubNote: "Vous recevez cet email car vous avez créé un compte sur healthwatch-global.com.",
   },
@@ -365,6 +381,8 @@ const TRIAL_EXPIRED_CONTENT: Record<string, {
     ctaLabel: `Reactivate Pro access — ${PRICE_DISPLAY.en_eur.proMonthly}/month →`,
     altText: "NGO or government pricing available.",
     altLink: "Contact us →",
+    pilotText: "Ministry, NGO, or institution? No procurement process required.",
+    pilotLink: "30-day institutional Pilot programme →",
     closing: "The HealthWatch Global Team",
     unsubNote: "You're receiving this email because you created an account on healthwatch-global.com.",
   },
@@ -384,6 +402,8 @@ const TRIAL_EXPIRED_CONTENT: Record<string, {
     ctaLabel: `Reactivar acceso Pro — ${PRICE_DISPLAY.es.proMonthly}/mes →`,
     altText: "Precios para ONG o gobierno disponibles.",
     altLink: "Contáctenos →",
+    pilotText: "¿Ministerio, ONG o institución? Sin proceso de compras.",
+    pilotLink: "Programa Pilot institucional 30 días →",
     closing: "El equipo de HealthWatch Global",
     unsubNote: "Recibe este correo porque creó una cuenta en healthwatch-global.com.",
   },
@@ -403,6 +423,8 @@ const TRIAL_EXPIRED_CONTENT: Record<string, {
     ctaLabel: `← إعادة تفعيل Pro — ${PRICE_DISPLAY.ar.proMonthly}/شهر`,
     altText: "أسعار خاصة للمنظمات غير الحكومية والحكومات.",
     altLink: "← اتصل بنا",
+    pilotText: "وزارة أو منظمة غير حكومية أو مؤسسة؟ لا إجراءات شراء مطلوبة.",
+    pilotLink: "← البرنامج التجريبي المؤسسي 30 يوماً",
     closing: "فريق HealthWatch Global",
     unsubNote: "تتلقى هذا البريد لأنك أنشأت حساباً على healthwatch-global.com.",
   },
@@ -422,6 +444,8 @@ const TRIAL_EXPIRED_CONTENT: Record<string, {
     ctaLabel: `Aktifkan kembali Pro — ${PRICE_DISPLAY.id.proMonthly}/bulan →`,
     altText: "Harga khusus untuk LSM atau pemerintah tersedia.",
     altLink: "Hubungi kami →",
+    pilotText: "Kementerian, LSM, atau institusi? Tidak perlu proses pengadaan.",
+    pilotLink: "Program Pilot institusional 30 hari →",
     closing: "Tim HealthWatch Global",
     unsubNote: "Anda menerima email ini karena membuat akun di healthwatch-global.com.",
   },
@@ -530,6 +554,7 @@ export function buildJ12Email(locale: string): { subject: string; html: string }
   const c = J12_CONTENT[locale] ?? J12_CONTENT.en;
   const pricingUrl = `https://healthwatch-global.com/${locale}/pricing`;
   const contactUrl = `https://healthwatch-global.com/${locale}/contact`;
+  const pilotUrl   = `https://healthwatch-global.com/${locale}/pilot`;
 
   const body = `
     <div style="padding:36px 32px;">
@@ -556,9 +581,13 @@ export function buildJ12Email(locale: string): { subject: string; html: string }
           ${c.ctaLabel}
         </a>
       </div>
-      <div style="text-align:center;">
+      <div style="text-align:center;margin-bottom:16px;">
         <p style="margin:0 4px;font-size:13px;color:#64748b;">${c.altText}</p>
         <a href="${contactUrl}" style="color:#60a5fa;font-size:13px;font-weight:600;text-decoration:none;">${c.altLink}</a>
+      </div>
+      <div style="background:#1e3a5f;border:1px solid #2563eb44;border-radius:10px;padding:14px 20px;text-align:center;">
+        <p style="margin:0 0 6px;font-size:13px;color:#93c5fd;">${c.pilotText}</p>
+        <a href="${pilotUrl}" style="color:#60a5fa;font-size:13px;font-weight:700;text-decoration:none;">${c.pilotLink}</a>
       </div>
     </div>
     <div style="padding:20px 32px;border-top:1px solid #334155;">
@@ -573,6 +602,7 @@ export function buildTrialExpiredEmail(locale: string): { subject: string; html:
   const c = TRIAL_EXPIRED_CONTENT[locale] ?? TRIAL_EXPIRED_CONTENT.en;
   const pricingUrl = `https://healthwatch-global.com/${locale}/pricing`;
   const contactUrl = `https://healthwatch-global.com/${locale}/contact`;
+  const pilotUrl   = `https://healthwatch-global.com/${locale}/pilot`;
 
   const body = `
     <div style="padding:36px 32px;">
@@ -600,9 +630,13 @@ export function buildTrialExpiredEmail(locale: string): { subject: string; html:
           ${c.ctaLabel}
         </a>
       </div>
-      <div style="text-align:center;">
+      <div style="text-align:center;margin-bottom:16px;">
         <p style="margin:0 4px;font-size:13px;color:#64748b;">${c.altText}</p>
         <a href="${contactUrl}" style="color:#60a5fa;font-size:13px;font-weight:600;text-decoration:none;">${c.altLink}</a>
+      </div>
+      <div style="background:#1e3a5f;border:1px solid #2563eb44;border-radius:10px;padding:14px 20px;text-align:center;">
+        <p style="margin:0 0 6px;font-size:13px;color:#93c5fd;">${c.pilotText}</p>
+        <a href="${pilotUrl}" style="color:#60a5fa;font-size:13px;font-weight:700;text-decoration:none;">${c.pilotLink}</a>
       </div>
     </div>
     <div style="padding:20px 32px;border-top:1px solid #334155;">
