@@ -79,28 +79,40 @@ function parseSitrepLinks(html: string): { url: string; num: number } | null {
   return bestNum > 0 ? { url: bestUrl, num: bestNum } : null;
 }
 
-// ── 2. Find the PDF download link on the sitrep page ─────────────────────────
+// ── 2. Find the PDF download link ────────────────────────────────────────────
+// WHO sitrep pages are JS-rendered — PDF link not in raw HTML.
+// Use the stable CDN URL pattern instead:
+//   https://cdn.who.int/media/docs/default-source/_sage-YEAR/
+//   multi-country-outbreak-of-mpox--external-situation-report_NUM.pdf
 
-async function fetchPdfUrl(sitrепPageUrl: string): Promise<string | null> {
+async function fetchPdfUrl(sitrepPageUrl: string, num: number): Promise<string | null> {
+  // Extract year from the page URL slug (e.g. "---31-may-2026" → 2026)
+  const yearMatch = sitrepPageUrl.match(/---\d+-\w+-(\d{4})$/);
+  if (yearMatch) {
+    const year = yearMatch[1];
+    const directUrl = `https://cdn.who.int/media/docs/default-source/_sage-${year}/multi-country-outbreak-of-mpox--external-situation-report_${num}.pdf`;
+    try {
+      const r = await fetch(directUrl, { method: "HEAD", headers: FETCH_HEADERS, signal: AbortSignal.timeout(8000) });
+      if (r.ok) {
+        console.log(`[mpox] Direct PDF URL → ${directUrl}`);
+        return directUrl;
+      }
+    } catch (e) {
+      console.log("[mpox] Direct PDF HEAD failed:", errorMessage(e));
+    }
+  }
+
+  // Fallback: try to parse PDF link from the HTML page (may fail on JS-rendered pages)
   try {
-    const res = await fetch(sitrепPageUrl, {
-      headers: FETCH_HEADERS,
-      signal: AbortSignal.timeout(12000),
-    });
+    const res = await fetch(sitrepPageUrl, { headers: FETCH_HEADERS, signal: AbortSignal.timeout(12000) });
     if (!res.ok) return null;
     const html = await res.text();
-
-    // Look for cdn.who.int PDF links on the page
     const hrefRe = /href="(https?:\/\/cdn\.who\.int[^"]+\.pdf[^"]*)"/gi;
     let m: RegExpExecArray | null;
     while ((m = hrefRe.exec(html)) !== null) {
-      const href = m[1];
-      if (/mpox|monkeypox|situation.?report/i.test(href)) return href;
+      if (/mpox|monkeypox|situation.?report/i.test(m[1])) return m[1];
     }
-
-    // Fallback: any cdn.who.int PDF
-    const fallbackRe = /href="(https?:\/\/cdn\.who\.int[^"]+\.pdf[^"]*)"/i;
-    const fb = fallbackRe.exec(html);
+    const fb = /href="(https?:\/\/cdn\.who\.int[^"]+\.pdf[^"]*)"/.exec(html);
     return fb?.[1] ?? null;
   } catch (e) {
     console.log("[mpox] fetch sitrep page:", errorMessage(e));
@@ -301,7 +313,7 @@ export async function GET(req: NextRequest) {
   console.log(`[mpox] NEW sitrep #${latest.num} detected.`);
 
   // Step 2: find PDF URL on the sitrep page
-  const pdfUrl = await fetchPdfUrl(latest.url);
+  const pdfUrl = await fetchPdfUrl(latest.url, latest.num);
   console.log(`[mpox] PDF URL: ${pdfUrl ?? "(not found)"}`);
 
   // Step 3: extract data from PDF
