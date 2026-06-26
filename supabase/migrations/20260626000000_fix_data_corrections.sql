@@ -50,3 +50,9 @@ WHERE id = 'dbc9c1d0-9299-4607-a027-f229ec8c25ce';
 --    Deactivate until a static/parseable source is found.
 UPDATE outbreaks SET active = false
 WHERE id = 'dfc8f147-7803-4d28-9627-9070a1a38368';
+
+-- 8. Reset mpox sitrep URL cache so the improved regex can reprocess sitrep #66.
+--    The check-mpox-sitrep cron stores the last processed sitrep URL in site_config;
+--    once stored (even on a failed parse), the cron skips it as "up_to_date".
+--    Clearing the key forces the next Wed/Sat run to retry with the fixed parser.
+DELETE FROM site_config WHERE key = 'mpox_last_sitrep_url';

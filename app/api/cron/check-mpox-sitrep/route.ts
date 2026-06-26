@@ -29,8 +29,18 @@ const FETCH_HEADERS = {
 };
 
 const MONTHS: Record<string, string> = {
-  jan:"01", feb:"02", mar:"03", apr:"04", may:"05", jun:"06",
-  jul:"07", aug:"08", sep:"09", oct:"10", nov:"11", dec:"12",
+  jan:"01", january:"01",
+  feb:"02", february:"02",
+  mar:"03", march:"03",
+  apr:"04", april:"04",
+  may:"05",
+  jun:"06", june:"06",
+  jul:"07", july:"07",
+  aug:"08", august:"08",
+  sep:"09", september:"09",
+  oct:"10", october:"10",
+  nov:"11", november:"11",
+  dec:"12", december:"12",
 };
 
 // ── 1. Detect latest sitrep on WHO page ──────────────────────────────────────
@@ -142,27 +152,27 @@ function parseSitrepText(text: string): SitrepData | null {
 
   // Find "Global (D Mon YYYY – D Mon YYYY)*" and the numbers following it.
   // WHO key figures table, first row:
-  //   Global (1 Jan 2025 – 31 Mar 2026)*   58 214   238   100
-  const dateRe = /Global\s*\(\s*\d{1,2}\s+\w+\s+\d{4}\s*[–\-]\s*(\d{1,2})\s+(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s+(\d{4})\s*\)\s*\*?/i;
+  //   Global (1 Jan 2022 – 30 Apr 2026)*   179 612   1 047   117
+  // Accepts both abbreviated (Apr) and full (April) month names.
+  const dateRe = /Global\s*\(\s*\d{1,2}\s+\w+\s+\d{4}\s*[–\-—]\s*(\d{1,2})\s+(January|February|March|April|May|June|July|August|September|October|November|December|Jan|Feb|Mar|Apr|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s+(\d{4})\s*\)\s*\*?/i;
   const dateMatch = dateRe.exec(t);
   if (!dateMatch) {
-    console.log("[mpox] parseSitrepText: could not find Global date row");
+    console.log("[mpox] parseSitrepText: no Global date row found. Text excerpt:", t.substring(0, 300));
     return null;
   }
 
-  // The numbers immediately follow the date row (possibly on next line)
-  const afterGlobal = t.slice(dateMatch.index + dateMatch[0].length, dateMatch.index + dateMatch[0].length + 150);
-  // Cases may be space-formatted: "58 214" → need to grab 1-2 digit groups
-  // Pattern: one or two digit chunks separated by a space = one number, then deaths, then countries
-  const numsRe = /\s*([\d][\d ]{1,8}[\d]|\d+)\s+([\d]{1,5})\s+(\d{1,3})/;
+  // The numbers immediately follow the date row (possibly on next line).
+  // Cases may be space-formatted: "179 612" → need to strip spaces.
+  const afterGlobal = t.slice(dateMatch.index + dateMatch[0].length, dateMatch.index + dateMatch[0].length + 200);
+  const numsRe = /\s*([\d][\d ]{1,8}[\d]|\d+)\s+([\d][\d ,]{0,6}[\d]|\d+)\s+(\d{1,3})/;
   const numsMatch = numsRe.exec(afterGlobal);
   if (!numsMatch) {
-    console.log("[mpox] parseSitrepText: could not extract numbers after Global row. Excerpt:", afterGlobal.slice(0, 80));
+    console.log("[mpox] parseSitrepText: no numbers after Global row. Excerpt:", afterGlobal.slice(0, 100));
     return null;
   }
 
-  const cases  = parseInt(numsMatch[1].replace(/\s/g, ""), 10);
-  const deaths = parseInt(numsMatch[2], 10);
+  const cases  = parseInt(numsMatch[1].replace(/[\s,]/g, ""), 10);
+  const deaths = parseInt(numsMatch[2].replace(/[\s,]/g, ""), 10);
 
   if (isNaN(cases) || isNaN(deaths) || cases < 1000 || deaths < 0 || deaths > cases) {
     console.log("[mpox] parseSitrepText: implausible values", { cases, deaths });
