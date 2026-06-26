@@ -9,6 +9,7 @@ import DeleteAccountButton from "@/components/DeleteAccountButton";
 import AlertRegionToggles from "@/components/AlertRegionToggles";
 import PushNotificationToggle from "@/components/PushNotificationToggle";
 import DiseaseAlertPicker from "@/components/DiseaseAlertPicker";
+import AlertLocalePanel from "@/components/AlertLocalePanel";
 import SlackWebhookForm from "@/components/SlackWebhookForm";
 import ApiKeyManager from "@/components/ApiKeyManager";
 import { PRICE_DISPLAY } from "@/lib/pricing";
@@ -634,6 +635,9 @@ export default async function AccountPage({
 
       {/* Disease-specific alerts */}
       <DiseaseAlertPicker locale={locale} isPaid={isPaid} />
+
+      {/* Alert email language */}
+      {isPaid && <AlertLocalePanel locale={locale} />}
 
       {/* Slack / Teams integration */}
       <div className="bg-gray-900 border border-gray-800 rounded-2xl p-6 space-y-4">

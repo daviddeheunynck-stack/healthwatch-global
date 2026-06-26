@@ -279,15 +279,16 @@ export default function PilotPage() {
     setLoading(true);
     setError("");
     try {
-      const message = `[PILOT APPLICATION]\nRole: ${form.role}\nTeam size: ${form.teamSize}\nUse case: ${form.useCase}`;
-      const res = await fetch("/api/contact", {
+      const res = await fetch("/api/pilot", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           name:         form.name,
           organization: form.organization,
           email:        form.email,
-          message,
+          role:         form.role,
+          teamSize:     form.teamSize,
+          useCase:      form.useCase,
           locale,
         }),
       });
