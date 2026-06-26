@@ -130,7 +130,6 @@ export default async function PrintPage({
   const { data: profile } = await authClient.from("profiles").select("plan, trial_ends_at, stripe_subscription_id").eq("id", user.id).single();
   let plan = profile?.plan ?? "free";
   if (
-    plan !== "free" &&
     profile?.trial_ends_at &&
     new Date(profile.trial_ends_at).getTime() < Date.now() &&
     !profile?.stripe_subscription_id
