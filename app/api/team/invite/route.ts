@@ -5,6 +5,7 @@ import { buildTeamInviteEmail } from "@/lib/team-invite-email";
 import { rateLimit, getClientIp } from "@/lib/rate-limit";
 import { errorMessage } from "@/lib/error";
 import { resolvedPlan } from "@/lib/resolved-plan";
+import * as Sentry from "@sentry/nextjs";
 
 export const dynamic = "force-dynamic";
 
@@ -125,6 +126,9 @@ export async function POST(req: NextRequest) {
 
   if (inviteErr || !invite) {
     console.error("[team/invite] insert error:", inviteErr);
+    Sentry.captureException(new Error(`[team/invite] insert failed: ${inviteErr?.message}`), {
+      tags: { route: "team-invite", user_id: user.id },
+    });
     return NextResponse.json({ error: "Failed to create invite" }, { status: 500 });
   }
 
@@ -144,6 +148,7 @@ export async function POST(req: NextRequest) {
   } catch (err) {
     // Non-fatal — invite exists even if email fails
     console.error("[team/invite] email error:", errorMessage(err));
+    Sentry.captureException(err, { tags: { route: "team-invite", user_id: user.id } });
   }
 
   return NextResponse.json({ ok: true });

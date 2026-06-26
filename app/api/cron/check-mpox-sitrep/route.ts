@@ -5,6 +5,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { errorMessage } from "@/lib/error";
+import * as Sentry from "@sentry/nextjs";
 
 export const dynamic     = "force-dynamic";
 export const maxDuration = 60;
@@ -213,7 +214,10 @@ async function sendEmail(to: string, subject: string, html: string) {
       subject,
       htmlContent: html,
     }),
-  }).catch((e) => console.error("[mpox] email:", errorMessage(e)));
+  }).catch((e) => {
+    console.error("[mpox] email:", errorMessage(e));
+    Sentry.captureException(e, { tags: { cron: "check-mpox-sitrep" } });
+  });
 }
 
 function emailAutoUpdated(sitrep: { num: number; url: string }, data: SitrepData) {
