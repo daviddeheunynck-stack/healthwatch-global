@@ -50,7 +50,7 @@ export async function GET(req: NextRequest) {
   // ── J+3 : Discover Pro features ──────────────────────────────────────────
   const { data: j3Users, error: j3Err } = await supabase
     .from("profiles")
-    .select("id, email, plan, locale, trial_ends_at")
+    .select("id, email, plan, locale, trial_ends_at, display_filters")
     .eq("plan", "pro")
     .not("trial_ends_at", "is", null)
     .is("stripe_subscription_id", null)
@@ -65,7 +65,7 @@ export async function GET(req: NextRequest) {
   // ── J+7 : Mid-trial check-in — PDF report spotlight ──────────────────────
   const { data: j7Users, error: j7Err } = await supabase
     .from("profiles")
-    .select("id, email, plan, locale, trial_ends_at")
+    .select("id, email, plan, locale, trial_ends_at, display_filters")
     .eq("plan", "pro")
     .not("trial_ends_at", "is", null)
     .is("stripe_subscription_id", null)
@@ -83,7 +83,7 @@ export async function GET(req: NextRequest) {
   const j12WindowEnd = new Date(Date.now() + 4 * 86_400_000).toISOString();
   const { data: j12Users, error: j12Err } = await supabase
     .from("profiles")
-    .select("id, email, plan, locale, trial_ends_at")
+    .select("id, email, plan, locale, trial_ends_at, display_filters")
     .eq("plan", "pro")
     .not("trial_ends_at", "is", null)
     .lt("trial_ends_at", j12WindowEnd)
@@ -100,9 +100,12 @@ export async function GET(req: NextRequest) {
   let j7Sent = 0, j7Failed = 0;
   let j12Sent = 0, j12Failed = 0;
 
+  const hasOptedOut = (u: { display_filters: unknown }) =>
+    !!(u.display_filters as Record<string, unknown> | null)?.no_weekly_signal;
+
   // ── Send J+3 emails ───────────────────────────────────────────────────────
   for (const user of j3Users ?? []) {
-    if (!user.email) continue;
+    if (!user.email || hasOptedOut(user)) continue;
     try {
       const locale = user.locale || "fr";
       const { subject, html } = buildJ3Email(locale, user.id);
@@ -117,7 +120,7 @@ export async function GET(req: NextRequest) {
 
   // ── Send J+7 emails ───────────────────────────────────────────────────────
   for (const user of j7Users ?? []) {
-    if (!user.email) continue;
+    if (!user.email || hasOptedOut(user)) continue;
     try {
       const locale = user.locale || "fr";
       const { subject, html } = buildJ7Email(locale, user.id);
@@ -132,7 +135,7 @@ export async function GET(req: NextRequest) {
 
   // ── Send J+12 emails ──────────────────────────────────────────────────────
   for (const user of j12Users ?? []) {
-    if (!user.email) continue;
+    if (!user.email || hasOptedOut(user)) continue;
     try {
       const locale = user.locale || "fr";
       const { subject, html } = buildJ12Email(locale, user.id);

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import Stripe from "stripe";
+import * as Sentry from "@sentry/nextjs";
 import { buildUpgradeEmail }        from "@/lib/upgrade-email";
 import { buildChurnEmail }          from "@/lib/churn-email";
 import { buildPaymentFailedEmail }  from "@/lib/payment-failed-email";
@@ -227,8 +228,14 @@ export async function POST(req: NextRequest) {
             .from("profiles")
             .update(updateData)
             .eq("id", userId);
-          if (error) console.error("[webhook] checkout.session.completed profile update:", error);
-          else console.log(`[webhook] Plan set to ${plan} for user ${userId} (trial_ends_at: ${trialEndsAt})`);
+          if (error) {
+            console.error("[webhook] checkout.session.completed profile update:", error);
+            Sentry.captureException(new Error(`[webhook] checkout.session.completed DB update failed: ${error.message}`), {
+              tags: { event_type: "checkout.session.completed", plan, user_id: userId },
+            });
+          } else {
+            console.log(`[webhook] Plan set to ${plan} for user ${userId} (trial_ends_at: ${trialEndsAt})`);
+          }
         }
 
         // Auto-subscribe to weekly digest + send upgrade welcome email
@@ -270,8 +277,14 @@ export async function POST(req: NextRequest) {
             .from("profiles")
             .update({ plan, stripe_subscription_id: sub.id, trial_ends_at: trialEndsAt })
             .eq("id", userId);
-          if (error) console.error("[webhook] subscription.updated:", error);
-          else console.log(`[webhook] Subscription updated → plan ${plan} for user ${userId} (trial_ends_at: ${trialEndsAt})`);
+          if (error) {
+            console.error("[webhook] subscription.updated:", error);
+            Sentry.captureException(new Error(`[webhook] subscription.updated DB failed: ${error.message}`), {
+              tags: { event_type: "customer.subscription.updated", plan, user_id: userId },
+            });
+          } else {
+            console.log(`[webhook] Subscription updated → plan ${plan} for user ${userId} (trial_ends_at: ${trialEndsAt})`);
+          }
         } else if (status === "canceled" || status === "unpaid" || status === "past_due") {
           // Don't immediately downgrade on past_due — let invoice.payment_failed handle it
           if (status === "canceled") {
@@ -439,6 +452,7 @@ export async function POST(req: NextRequest) {
     }
   } catch (err: unknown) {
     console.error("[webhook] Handler error:", errorMessage(err));
+    Sentry.captureException(err, { tags: { event_type: event.type } });
     // Return 200 so Stripe doesn't retry — log the error for investigation
     return NextResponse.json({ received: true, warning: errorMessage(err) });
   }

@@ -9,6 +9,7 @@ import CookieBanner from "@/components/CookieBanner";
 import { UpgradeModalProvider } from "@/lib/upgrade-modal-context";
 import ConsentAwareAnalytics from "@/components/ConsentAwareAnalytics";
 import PHLaunchBar from "@/components/PHLaunchBar";
+import SentryUserIdentifier from "@/components/SentryUserIdentifier";
 import "../globals.css";
 
 const META: Record<string, { title: string; description: string }> = {
@@ -123,6 +124,7 @@ export default async function LocaleLayout({
             <CookieBanner locale={locale} />
           </UpgradeModalProvider>
         </NextIntlClientProvider>
+        <SentryUserIdentifier locale={locale} />
         <ConsentAwareAnalytics />
       </body>
     </html>

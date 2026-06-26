@@ -121,7 +121,7 @@
     "signupLink": "Sign up",
     "errorInvalid": "Invalid email or password.",
     "successSignup": "Account created! Check your email.",
-    "checkEmailSignup": "Click the confirmation link sent to your address to activate your account.",
+    "checkEmailSignup": "Click the confirmation link sent to your address to activate your account. If you don't see it, check your spam folder.",
     "plan": {
       "free": "Free",
       "starter": "Starter",

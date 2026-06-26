@@ -121,7 +121,7 @@
     "signupLink": "Daftar",
     "errorInvalid": "Email atau kata sandi salah.",
     "successSignup": "Akun dibuat! Periksa email Anda.",
-    "checkEmailSignup": "Klik tautan konfirmasi yang dikirim ke alamat Anda untuk mengaktifkan akun.",
+    "checkEmailSignup": "Klik tautan konfirmasi yang dikirim ke alamat Anda untuk mengaktifkan akun. Jika tidak muncul, periksa folder spam Anda.",
     "plan": {
       "free": "Gratis",
       "starter": "Starter",
