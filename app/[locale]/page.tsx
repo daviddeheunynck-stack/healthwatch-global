@@ -208,11 +208,12 @@ async function DashboardContent({ demo = false, urlRegion, urlRisk }: { demo?: b
       plan = profile?.plan || "free";
       trialEndsAt = profile?.trial_ends_at ?? null;
 
-      // Server-side trial expiry guard: if trial_ends_at has passed and the user
-      // has no Stripe subscription, treat them as free immediately.
+      // Server-side trial expiry guard: covers two cases —
+      // (a) expire-trials cron hasn't run yet: plan=pro, trial_ends_at < now
+      // (b) cron already ran: plan=free, trial_ends_at < now (preserved by cron)
+      // Both should show "Subscribe" copy, not "Start free trial".
       hasStripeSubscription = Boolean(profile?.stripe_subscription_id);
       if (
-        plan !== "free" &&
         trialEndsAt &&
         new Date(trialEndsAt).getTime() < Date.now() &&
         !hasStripeSubscription

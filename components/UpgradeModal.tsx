@@ -156,7 +156,7 @@ export default function UpgradeModal({ feature, onClose }: Props) {
       if (!user) { setIsAuthenticated(false); return; }
       supabase.from("profiles").select("plan, trial_ends_at, stripe_subscription_id").eq("id", user.id).single()
         .then(({ data }) => {
-          if (data?.plan !== "free" && data?.trial_ends_at && new Date(data.trial_ends_at).getTime() < Date.now() && !data?.stripe_subscription_id) {
+          if (data?.trial_ends_at && new Date(data.trial_ends_at).getTime() < Date.now() && !data?.stripe_subscription_id) {
             setTrialExpired(true);
           }
         });
