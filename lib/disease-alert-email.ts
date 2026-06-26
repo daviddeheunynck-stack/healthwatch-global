@@ -21,17 +21,20 @@ const TIER_COLORS: Record<string, { bg: string; border: string; text: string }> 
 };
 
 const COPY: Record<string, {
-  subject:    (disease: string) => string;
-  headline:   (disease: string, country: string) => string;
-  intro:      string;
-  cases:      string;
-  deaths:     string;
-  cfr:        string;
-  date:       string;
-  source:     string;
-  cta:        string;
-  noData:     string;
-  unsubNote:  string;
+  subject:         (disease: string) => string;
+  headline:        (disease: string, country: string) => string;
+  intro:           string;
+  cases:           string;
+  deaths:          string;
+  cfr:             string;
+  date:            string;
+  source:          string;
+  cta:             string;
+  noData:          string;
+  unsubNote:       string;
+  daysAgoToday:    string;
+  daysAgoYesterday: string;
+  daysAgoN:        (n: number) => string;
 }> = {
   fr: {
     subject:      (d) => `🔴 Alerte maladie : ${d} détecté`,
@@ -44,59 +47,74 @@ const COPY: Record<string, {
     source:       "Source OMS",
     cta:          "Voir le tableau de bord →",
     noData:       "N/D",
-    unsubNote:    "Vous recevez cet email car vous surveillez cette maladie sur healthwatch-global.com.",
+    unsubNote:       "Vous recevez cet email car vous surveillez cette maladie sur healthwatch-global.com.",
+    daysAgoToday:    "aujourd'hui",
+    daysAgoYesterday: "hier",
+    daysAgoN:        (n) => `il y a ${n}j`,
   },
   en: {
-    subject:      (d) => `🔴 Disease alert: ${d} detected`,
-    headline:     (d, c) => `${d} — ${c}`,
-    intro:        "An outbreak was detected for a disease you are monitoring.",
-    cases:        "Confirmed cases",
-    deaths:       "Deaths",
-    cfr:          "Case fatality rate",
-    date:         "Report date",
-    source:       "WHO source",
-    cta:          "View dashboard →",
-    noData:       "N/A",
-    unsubNote:    "You receive this email because you're monitoring this disease on healthwatch-global.com.",
+    subject:         (d) => `🔴 Disease alert: ${d} detected`,
+    headline:        (d, c) => `${d} — ${c}`,
+    intro:           "An outbreak was detected for a disease you are monitoring.",
+    cases:           "Confirmed cases",
+    deaths:          "Deaths",
+    cfr:             "Case fatality rate",
+    date:            "Report date",
+    source:          "WHO source",
+    cta:             "View dashboard →",
+    noData:          "N/A",
+    unsubNote:       "You receive this email because you're monitoring this disease on healthwatch-global.com.",
+    daysAgoToday:    "today",
+    daysAgoYesterday: "yesterday",
+    daysAgoN:        (n) => `${n}d ago`,
   },
   es: {
-    subject:      (d) => `🔴 Alerta de enfermedad: ${d} detectado`,
-    headline:     (d, c) => `${d} — ${c}`,
-    intro:        "Se detectó un brote de una enfermedad que está monitoreando.",
-    cases:        "Casos confirmados",
-    deaths:       "Fallecidos",
-    cfr:          "Tasa de letalidad",
-    date:         "Fecha del informe",
-    source:       "Fuente OMS",
-    cta:          "Ver el panel →",
-    noData:       "N/D",
-    unsubNote:    "Recibe este correo porque monitorea esta enfermedad en healthwatch-global.com.",
+    subject:         (d) => `🔴 Alerta de enfermedad: ${d} detectado`,
+    headline:        (d, c) => `${d} — ${c}`,
+    intro:           "Se detectó un brote de una enfermedad que está monitoreando.",
+    cases:           "Casos confirmados",
+    deaths:          "Fallecidos",
+    cfr:             "Tasa de letalidad",
+    date:            "Fecha del informe",
+    source:          "Fuente OMS",
+    cta:             "Ver el panel →",
+    noData:          "N/D",
+    unsubNote:       "Recibe este correo porque monitorea esta enfermedad en healthwatch-global.com.",
+    daysAgoToday:    "hoy",
+    daysAgoYesterday: "ayer",
+    daysAgoN:        (n) => `hace ${n}d`,
   },
   ar: {
-    subject:      (d) => `🔴 تنبيه مرض: تم اكتشاف ${d}`,
-    headline:     (d, c) => `${d} — ${c}`,
-    intro:        "تم اكتشاف تفشٍّ لمرض تراقبه.",
-    cases:        "الحالات المؤكدة",
-    deaths:       "الوفيات",
-    cfr:          "معدل الوفيات",
-    date:         "تاريخ التقرير",
-    source:       "مصدر OMS",
-    cta:          "← عرض لوحة التحكم",
-    noData:       "غ/م",
-    unsubNote:    "تتلقى هذا البريد لأنك تراقب هذا المرض على healthwatch-global.com.",
+    subject:         (d) => `🔴 تنبيه مرض: تم اكتشاف ${d}`,
+    headline:        (d, c) => `${d} — ${c}`,
+    intro:           "تم اكتشاف تفشٍّ لمرض تراقبه.",
+    cases:           "الحالات المؤكدة",
+    deaths:          "الوفيات",
+    cfr:             "معدل الوفيات",
+    date:            "تاريخ التقرير",
+    source:          "مصدر OMS",
+    cta:             "← عرض لوحة التحكم",
+    noData:          "غ/م",
+    unsubNote:       "تتلقى هذا البريد لأنك تراقب هذا المرض على healthwatch-global.com.",
+    daysAgoToday:    "اليوم",
+    daysAgoYesterday: "أمس",
+    daysAgoN:        (n) => `منذ ${n} أيام`,
   },
   id: {
-    subject:      (d) => `🔴 Peringatan penyakit: ${d} terdeteksi`,
-    headline:     (d, c) => `${d} — ${c}`,
-    intro:        "Wabah terdeteksi untuk penyakit yang Anda pantau.",
-    cases:        "Kasus terkonfirmasi",
-    deaths:       "Kematian",
-    cfr:          "Tingkat kematian kasus",
-    date:         "Tanggal laporan",
-    source:       "Sumber WHO",
-    cta:          "Lihat dasbor →",
-    noData:       "T/S",
-    unsubNote:    "Anda menerima email ini karena memantau penyakit ini di healthwatch-global.com.",
+    subject:         (d) => `🔴 Peringatan penyakit: ${d} terdeteksi`,
+    headline:        (d, c) => `${d} — ${c}`,
+    intro:           "Wabah terdeteksi untuk penyakit yang Anda pantau.",
+    cases:           "Kasus terkonfirmasi",
+    deaths:          "Kematian",
+    cfr:             "Tingkat kematian kasus",
+    date:            "Tanggal laporan",
+    source:          "Sumber WHO",
+    cta:             "Lihat dasbor →",
+    noData:          "T/S",
+    unsubNote:       "Anda menerima email ini karena memantau penyakit ini di healthwatch-global.com.",
+    daysAgoToday:    "hari ini",
+    daysAgoYesterday: "kemarin",
+    daysAgoN:        (n) => `${n}h lalu`,
   },
 };
 
@@ -125,6 +143,11 @@ export function buildDiseaseAlertEmail(
 
   const hasData    = outbreak.cases > 0;
   const cfr        = hasData ? (outbreak.deaths / outbreak.cases * 100).toFixed(1) + "%" : c.noData;
+  const daysAgo    = outbreak.date
+    ? Math.floor((Date.now() - new Date(outbreak.date).getTime()) / 86_400_000)
+    : null;
+  const ageLabel   = daysAgo === null ? "" : daysAgo === 0 ? c.daysAgoToday : daysAgo === 1 ? c.daysAgoYesterday : c.daysAgoN(daysAgo);
+  const ageColor   = daysAgo === null ? "#94a3b8" : daysAgo <= 7 ? "#22c55e" : daysAgo <= 21 ? "#f59e0b" : "#ef4444";
   const unsubUrl   = `${APP_URL}/api/unsubscribe?id=${encodeURIComponent(subscriptionId)}&locale=${locale}`;
   const dashUrl    = `${APP_URL}/${locale}`;
 
@@ -203,7 +226,7 @@ export function buildDiseaseAlertEmail(
     <!-- Date + Source -->
     <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:24px;">
       <tr>
-        <td style="color:#64748b;font-size:12px;padding:4px 0;">${c.date} : <span style="color:#94a3b8;">${outbreak.date}</span></td>
+        <td style="color:#64748b;font-size:12px;padding:4px 0;">${c.date} : <span style="color:#94a3b8;">${outbreak.date}</span>${ageLabel ? ` <span style="color:${ageColor};">(${ageLabel})</span>` : ""}</td>
       </tr>
       ${outbreak.source ? `<tr><td style="color:#64748b;font-size:12px;padding:4px 0;">${c.source} : <a href="${outbreak.source}" style="color:#ef4444;">${outbreak.source.replace("https://", "")}</a></td></tr>` : ""}
     </table>
