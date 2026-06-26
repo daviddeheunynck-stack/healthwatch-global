@@ -87,7 +87,7 @@ export async function GET(req: NextRequest) {
   // Send trial-expired email to each downgraded user
   for (const user of expired) {
     try {
-      const { subject, html } = buildTrialExpiredEmail(user.locale ?? "en");
+      const { subject, html } = buildTrialExpiredEmail(user.locale ?? "en", user.id);
       await sendEmail(user.email, subject, html);
     } catch (err) {
       console.error(`[expire-trials] Email failed for ${user.email}:`, err);

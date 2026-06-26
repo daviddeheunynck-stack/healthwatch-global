@@ -469,9 +469,10 @@ function emailShell(locale: string, body: string): string {
 </html>`;
 }
 
-export function buildJ3Email(locale: string): { subject: string; html: string } {
+export function buildJ3Email(locale: string, userId: string): { subject: string; html: string } {
   const c = J3_CONTENT[locale] ?? J3_CONTENT.en;
   const dashboardUrl = `https://healthwatch-global.com/${locale}`;
+  const unsubUrl = `https://healthwatch-global.com/api/unsubscribe-signal?id=${encodeURIComponent(userId)}&locale=${locale}`;
 
   const body = `
     <div style="padding:36px 32px;">
@@ -500,15 +501,16 @@ export function buildJ3Email(locale: string): { subject: string; html: string } 
     </div>
     <div style="padding:20px 32px;border-top:1px solid #334155;">
       <p style="margin:0 0 8px;font-size:13px;color:#e2e8f0;white-space:pre-line;">${c.closing}</p>
-      <p style="margin:0;font-size:11px;color:#475569;">${c.unsubNote}</p>
+      <p style="margin:0;font-size:11px;color:#475569;">${c.unsubNote} <a href="${unsubUrl}" style="color:#475569;text-decoration:underline;">Unsubscribe</a></p>
     </div>`;
 
   return { subject: c.subject, html: emailShell(locale, body) };
 }
 
-export function buildJ7Email(locale: string): { subject: string; html: string } {
+export function buildJ7Email(locale: string, userId: string): { subject: string; html: string } {
   const c = J7_CONTENT[locale] ?? J7_CONTENT.en;
   const dashboardUrl = `https://healthwatch-global.com/${locale}`;
+  const unsubUrl = `https://healthwatch-global.com/api/unsubscribe-signal?id=${encodeURIComponent(userId)}&locale=${locale}`;
 
   const body = `
     <div style="padding:36px 32px;">
@@ -544,15 +546,16 @@ export function buildJ7Email(locale: string): { subject: string; html: string } 
     </div>
     <div style="padding:20px 32px;border-top:1px solid #334155;">
       <p style="margin:0 0 8px;font-size:13px;color:#e2e8f0;white-space:pre-line;">${c.closing}</p>
-      <p style="margin:0;font-size:11px;color:#475569;">${c.unsubNote}</p>
+      <p style="margin:0;font-size:11px;color:#475569;">${c.unsubNote} <a href="${unsubUrl}" style="color:#475569;text-decoration:underline;">Unsubscribe</a></p>
     </div>`;
 
   return { subject: c.subject, html: emailShell(locale, body) };
 }
 
-export function buildJ12Email(locale: string): { subject: string; html: string } {
+export function buildJ12Email(locale: string, userId: string): { subject: string; html: string } {
   const c = J12_CONTENT[locale] ?? J12_CONTENT.en;
   const pricingUrl = `https://healthwatch-global.com/${locale}/pricing`;
+  const unsubUrl = `https://healthwatch-global.com/api/unsubscribe-signal?id=${encodeURIComponent(userId)}&locale=${locale}`;
   const contactUrl = `https://healthwatch-global.com/${locale}/contact`;
   const pilotUrl   = `https://healthwatch-global.com/${locale}/pilot`;
 
@@ -592,15 +595,16 @@ export function buildJ12Email(locale: string): { subject: string; html: string }
     </div>
     <div style="padding:20px 32px;border-top:1px solid #334155;">
       <p style="margin:0 0 8px;font-size:13px;color:#e2e8f0;white-space:pre-line;">${c.closing}</p>
-      <p style="margin:0;font-size:11px;color:#475569;">${c.unsubNote}</p>
+      <p style="margin:0;font-size:11px;color:#475569;">${c.unsubNote} <a href="${unsubUrl}" style="color:#475569;text-decoration:underline;">Unsubscribe</a></p>
     </div>`;
 
   return { subject: c.subject, html: emailShell(locale, body) };
 }
 
-export function buildTrialExpiredEmail(locale: string): { subject: string; html: string } {
+export function buildTrialExpiredEmail(locale: string, userId: string): { subject: string; html: string } {
   const c = TRIAL_EXPIRED_CONTENT[locale] ?? TRIAL_EXPIRED_CONTENT.en;
   const pricingUrl = `https://healthwatch-global.com/${locale}/pricing`;
+  const unsubUrl = `https://healthwatch-global.com/api/unsubscribe-signal?id=${encodeURIComponent(userId)}&locale=${locale}`;
   const contactUrl = `https://healthwatch-global.com/${locale}/contact`;
   const pilotUrl   = `https://healthwatch-global.com/${locale}/pilot`;
 
@@ -641,7 +645,7 @@ export function buildTrialExpiredEmail(locale: string): { subject: string; html:
     </div>
     <div style="padding:20px 32px;border-top:1px solid #334155;">
       <p style="margin:0 0 8px;font-size:13px;color:#e2e8f0;">${c.closing}</p>
-      <p style="margin:0;font-size:11px;color:#475569;">${c.unsubNote}</p>
+      <p style="margin:0;font-size:11px;color:#475569;">${c.unsubNote} <a href="${unsubUrl}" style="color:#475569;text-decoration:underline;">Unsubscribe</a></p>
     </div>`;
 
   return { subject: c.subject, html: emailShell(locale, body) };

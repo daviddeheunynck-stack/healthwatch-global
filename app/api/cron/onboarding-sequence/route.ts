@@ -105,7 +105,7 @@ export async function GET(req: NextRequest) {
     if (!user.email) continue;
     try {
       const locale = user.locale || "fr";
-      const { subject, html } = buildJ3Email(locale);
+      const { subject, html } = buildJ3Email(locale, user.id);
       await sendEmail(user.email, subject, html);
       j3Sent++;
       await new Promise((r) => setTimeout(r, 150));
@@ -120,7 +120,7 @@ export async function GET(req: NextRequest) {
     if (!user.email) continue;
     try {
       const locale = user.locale || "fr";
-      const { subject, html } = buildJ7Email(locale);
+      const { subject, html } = buildJ7Email(locale, user.id);
       await sendEmail(user.email, subject, html);
       j7Sent++;
       await new Promise((r) => setTimeout(r, 150));
@@ -135,7 +135,7 @@ export async function GET(req: NextRequest) {
     if (!user.email) continue;
     try {
       const locale = user.locale || "fr";
-      const { subject, html } = buildJ12Email(locale);
+      const { subject, html } = buildJ12Email(locale, user.id);
       await sendEmail(user.email, subject, html);
       j12Sent++;
       await new Promise((r) => setTimeout(r, 150));
