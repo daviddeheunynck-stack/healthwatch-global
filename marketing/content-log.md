@@ -132,6 +132,9 @@ Happy to answer questions about the niche, the data pipeline, or what it's like 
 
 ### Post LinkedIn (25 juin 2026) — PUBLIÉ ✅ 25 juin 2026
 
+**Engagement J+1 (26 juin) :**
+- Like organique : **Nicole Wehbe, MPH** — Program & Operations Specialist, Global Health, Generator Health / BU School of Public Health, Atlanta. Profil cible exact (NGO health coordinator). DM envoyé 26 juin.
+
 **Version EN (publiée) :**
 
 HealthWatch Global officially launched today.
