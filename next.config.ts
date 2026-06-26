@@ -135,6 +135,12 @@ const nextConfig: NextConfig = {
       permanent:   true,
     }));
   },
+
+  // Expose Vercel's automatic VERCEL_ENV (production | preview | development)
+  // as a NEXT_PUBLIC_ variable so the Sentry client SDK can use it.
+  env: {
+    NEXT_PUBLIC_VERCEL_ENV: process.env.VERCEL_ENV ?? process.env.NODE_ENV,
+  },
 };
 
 // Only wrap with Sentry when org + project + auth token are all configured.
