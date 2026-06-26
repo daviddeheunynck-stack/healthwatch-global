@@ -113,6 +113,7 @@ const VIRO_LABELS: Record<Locale, {
   incubation: string; days: string; cfrRef: string; r0: string;
   vaccine: string; treatment: string;
   vaccineStatus: Record<VaccineStatus, string>;
+  vaccineStrainWarning: string;
   treatmentStatus: Record<TreatmentStatus, string>;
   transmissionLabels: Record<TransmissionMode, string>;
   pathogenLabels: Record<PathogenType, string>;
@@ -124,6 +125,7 @@ const VIRO_LABELS: Record<Locale, {
     incubation: "Incubation", days: "j", cfrRef: "Létalité (référence)", r0: "R₀ de référence",
     vaccine: "Vaccin", treatment: "Traitement", whoLink: "Fiche OMS →",
     vaccineStatus: { yes: "Disponible", no: "Non disponible", experimental: "Expérimental", conditional: "Usage limité" },
+    vaccineStrainWarning: "Non disponible pour la souche active",
     treatmentStatus: { yes: "Disponible", no: "Non disponible", supportive: "Symptomatique", experimental: "Expérimental" },
     pathogenLabels: { virus_rna: "Virus ARN", virus_dna: "Virus ADN", bacteria: "Bactérie", parasite: "Parasite", fungus: "Champignon" },
     transmissionLabels: {
@@ -138,6 +140,7 @@ const VIRO_LABELS: Record<Locale, {
     incubation: "Incubation", days: "d", cfrRef: "CFR (reference)", r0: "R₀ (reference)",
     vaccine: "Vaccine", treatment: "Treatment", whoLink: "WHO factsheet →",
     vaccineStatus: { yes: "Available", no: "Not available", experimental: "Experimental", conditional: "Limited use" },
+    vaccineStrainWarning: "Not available for active strain",
     treatmentStatus: { yes: "Available", no: "Not available", supportive: "Supportive care", experimental: "Experimental" },
     pathogenLabels: { virus_rna: "RNA virus", virus_dna: "DNA virus", bacteria: "Bacteria", parasite: "Parasite", fungus: "Fungus" },
     transmissionLabels: {
@@ -152,6 +155,7 @@ const VIRO_LABELS: Record<Locale, {
     incubation: "Incubación", days: "d", cfrRef: "Letalidad (referencia)", r0: "R₀ de referencia",
     vaccine: "Vacuna", treatment: "Tratamiento", whoLink: "Ficha OMS →",
     vaccineStatus: { yes: "Disponible", no: "No disponible", experimental: "Experimental", conditional: "Uso limitado" },
+    vaccineStrainWarning: "No disponible para la cepa activa",
     treatmentStatus: { yes: "Disponible", no: "No disponible", supportive: "Cuidados de apoyo", experimental: "Experimental" },
     pathogenLabels: { virus_rna: "Virus ARN", virus_dna: "Virus ADN", bacteria: "Bacteria", parasite: "Parásito", fungus: "Hongo" },
     transmissionLabels: {
@@ -166,6 +170,7 @@ const VIRO_LABELS: Record<Locale, {
     incubation: "الحضانة", days: "ي", cfrRef: "معدل الوفيات (مرجع)", r0: "R₀ (مرجع)",
     vaccine: "اللقاح", treatment: "العلاج", whoLink: "← بطاقة منظمة الصحة العالمية",
     vaccineStatus: { yes: "متوفر", no: "غير متوفر", experimental: "تجريبي", conditional: "استخدام محدود" },
+    vaccineStrainWarning: "غير متوفر للسلالة النشطة",
     treatmentStatus: { yes: "متوفر", no: "غير متوفر", supportive: "علاج داعم", experimental: "تجريبي" },
     pathogenLabels: { virus_rna: "فيروس RNA", virus_dna: "فيروس DNA", bacteria: "بكتيريا", parasite: "طفيلي", fungus: "فطر" },
     transmissionLabels: {
@@ -180,6 +185,7 @@ const VIRO_LABELS: Record<Locale, {
     incubation: "Inkubasi", days: "h", cfrRef: "CFR (referensi)", r0: "R₀ (referensi)",
     vaccine: "Vaksin", treatment: "Pengobatan", whoLink: "Lembar fakta WHO →",
     vaccineStatus: { yes: "Tersedia", no: "Tidak tersedia", experimental: "Eksperimental", conditional: "Penggunaan terbatas" },
+    vaccineStrainWarning: "Tidak tersedia untuk galur aktif",
     treatmentStatus: { yes: "Tersedia", no: "Tidak tersedia", supportive: "Perawatan suportif", experimental: "Eksperimental" },
     pathogenLabels: { virus_rna: "Virus RNA", virus_dna: "Virus DNA", bacteria: "Bakteri", parasite: "Parasit", fungus: "Jamur" },
     transmissionLabels: {
@@ -319,6 +325,13 @@ export default async function DiseasePage({
 
   const active  = allOutbreaks.filter((o) => o.active);
   const history = allOutbreaks.filter((o) => !o.active);
+
+  // Strain-specific vaccine override: if any active outbreak is a strain not covered by the
+  // listed vaccine (e.g. Bundibugyo Ebola vs Ervebo which covers Zaïre strain only), downgrade badge.
+  const vaccineStrainOverride =
+    info.vaccine === "yes" &&
+    /za[ïi]re/i.test(info.vaccineName ?? "") &&
+    active.some((o) => /bundibugyo/i.test(o.disease_en || o.disease || ""));
 
   const totalCases  = active.reduce((s, o) => s + (o.cases || 0), 0);
   const totalDeaths = active.reduce((s, o) => s + (o.deaths || 0), 0);
@@ -498,8 +511,12 @@ export default async function DiseasePage({
           {/* Vaccine */}
           <div className="space-y-1">
             <p className="text-xs text-gray-500">{vl.vaccine}</p>
-            <span className={`inline-block text-xs font-semibold px-2 py-0.5 rounded border ${VACCINE_COLOR[info.vaccine]}`}>
-              {vl.vaccineStatus[info.vaccine]}
+            <span className={`inline-block text-xs font-semibold px-2 py-0.5 rounded border ${
+              vaccineStrainOverride
+                ? "text-amber-400 bg-amber-500/10 border-amber-500/30"
+                : VACCINE_COLOR[info.vaccine]
+            }`}>
+              {vaccineStrainOverride ? vl.vaccineStrainWarning : vl.vaccineStatus[info.vaccine]}
             </span>
             {info.vaccineName && <p className="text-xs text-gray-500 mt-1">{info.vaccineName}</p>}
           </div>
