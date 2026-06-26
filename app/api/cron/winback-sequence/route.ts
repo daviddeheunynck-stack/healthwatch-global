@@ -164,10 +164,11 @@ const COPY: Record<string, {
   },
 };
 
-function buildEmail(locale: string): { subject: string; html: string } {
+function buildEmail(locale: string, userId: string): { subject: string; html: string } {
   const c = COPY[locale] ?? COPY.en;
   const pricingUrl = `https://healthwatch-global.com/${locale}/pricing`;
   const pilotUrl   = `https://healthwatch-global.com/${locale}/pilot`;
+  const unsubUrl   = `https://healthwatch-global.com/api/unsubscribe-signal?id=${encodeURIComponent(userId)}&locale=${locale}`;
 
   const body = `
     <div style="padding:36px 32px;">
@@ -203,7 +204,7 @@ function buildEmail(locale: string): { subject: string; html: string } {
     </div>
     <div style="padding:20px 32px;border-top:1px solid #334155;">
       <p style="margin:0 0 8px;font-size:13px;color:#e2e8f0;">${c.closing}</p>
-      <p style="margin:0;font-size:11px;color:#475569;">${c.unsubNote}</p>
+      <p style="margin:0;font-size:11px;color:#475569;">${c.unsubNote} <a href="${unsubUrl}" style="color:#475569;text-decoration:underline;">Unsubscribe</a></p>
     </div>`;
 
   return { subject: c.subject, html: emailShell(locale, body) };
@@ -234,7 +235,7 @@ export async function GET(req: NextRequest) {
 
   const { data: profiles, error } = await supabase
     .from("profiles")
-    .select("id, email, locale, trial_ends_at")
+    .select("id, email, locale, trial_ends_at, display_filters")
     .eq("plan", "free")
     .not("trial_ends_at", "is", null)
     .is("stripe_subscription_id", null)
@@ -258,9 +259,11 @@ export async function GET(req: NextRequest) {
 
   for (const profile of profiles) {
     if (!profile.email) continue;
+    const filters = profile.display_filters as Record<string, unknown> | null;
+    if (filters?.no_weekly_signal) continue;
     try {
       const locale = profile.locale ?? "en";
-      const { subject, html } = buildEmail(locale);
+      const { subject, html } = buildEmail(locale, profile.id);
       const res = await fetch("https://api.brevo.com/v3/smtp/email", {
         method: "POST",
         headers: { "api-key": BREVO_KEY, "Content-Type": "application/json" },

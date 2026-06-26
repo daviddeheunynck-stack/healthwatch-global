@@ -13,11 +13,11 @@ const VALID_LOCALES = new Set(["fr", "en", "es", "ar", "id"]);
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 const MESSAGES: Record<string, { title: string; body: string; back: string }> = {
-  fr: { title: "Désabonnement confirmé", body: "Vous ne recevrez plus le signal épidémique hebdomadaire.", back: "← Retour au site" },
-  en: { title: "Unsubscribed",           body: "You will no longer receive the weekly outbreak signal.",  back: "← Back to website" },
-  es: { title: "Suscripción cancelada",  body: "Ya no recibirá la señal de brote semanal.",             back: "← Volver al sitio" },
-  ar: { title: "تم إلغاء الاشتراك",      body: "لن تتلقى بعد الآن إشارة الوباء الأسبوعية.",           back: "العودة إلى الموقع →" },
-  id: { title: "Berhasil berhenti",      body: "Anda tidak akan menerima sinyal wabah mingguan lagi.",  back: "← Kembali ke situs" },
+  fr: { title: "Désabonnement confirmé", body: "Vous ne recevrez plus d'emails promotionnels de HealthWatch Global.", back: "← Retour au site" },
+  en: { title: "Unsubscribed",           body: "You will no longer receive promotional emails from HealthWatch Global.", back: "← Back to website" },
+  es: { title: "Suscripción cancelada",  body: "Ya no recibirá correos promocionales de HealthWatch Global.",          back: "← Volver al sitio" },
+  ar: { title: "تم إلغاء الاشتراك",      body: "لن تتلقى بعد الآن رسائل ترويجية من HealthWatch Global.",             back: "العودة إلى الموقع →" },
+  id: { title: "Berhasil berhenti",      body: "Anda tidak akan menerima email promosi dari HealthWatch Global lagi.",  back: "← Kembali ke situs" },
 };
 
 const ERROR_MESSAGES: Record<string, { title: string; body: string }> = {
