@@ -37,6 +37,7 @@ async function sendTransactionalEmail(
     });
   } catch (err) {
     console.error(`[webhook] ${tag} email failed:`, err);
+    Sentry.captureException(err, { tags: { route: "stripe-webhook", tag } });
   }
 }
 
@@ -129,6 +130,7 @@ async function resolveUserFromSubscription(
     .eq("id", metaUserId);
   if (error) {
     console.error("[webhook] resolveUserFromSubscription heal failed:", error);
+    Sentry.captureException(new Error(`[webhook] resolveUserFromSubscription heal failed: ${error.message}`), { tags: { route: "stripe-webhook", user_id: metaUserId } });
   } else {
     console.log(`[webhook] Healed stripe_customer_id for user ${metaUserId} via subscription metadata`);
   }
@@ -292,7 +294,10 @@ export async function POST(req: NextRequest) {
               .from("profiles")
               .update({ plan: "free", stripe_subscription_id: null, trial_ends_at: null })
               .eq("id", userId);
-            if (error) console.error("[webhook] subscription.updated cancel:", error);
+            if (error) {
+              console.error("[webhook] subscription.updated cancel:", error);
+              Sentry.captureException(new Error(`[webhook] subscription.updated cancel DB failed: ${error.message}`), { tags: { event_type: "customer.subscription.updated", user_id: userId } });
+            }
             else console.log(`[webhook] Subscription cancelled → plan free for user ${userId}`);
           }
         }
@@ -322,6 +327,7 @@ export async function POST(req: NextRequest) {
 
         if (error) {
           console.error("[webhook] subscription.deleted:", error);
+          Sentry.captureException(new Error(`[webhook] subscription.deleted DB failed: ${error.message}`), { tags: { event_type: "customer.subscription.deleted", user_id: userId } });
         } else {
           console.log(`[webhook] Subscription deleted → plan free for user ${userId}`);
 
@@ -359,9 +365,10 @@ export async function POST(req: NextRequest) {
           if (userEmail && ["starter", "pro", "team", "enterprise"].includes(cancelledPlan)) {
             const churnProfile = await getUserProfile(userId);
             const locale = churnProfile?.locale ?? "fr";
-            sendChurnEmail(userEmail, cancelledPlan, locale).catch((e) =>
-              console.error("[webhook] churn email:", e)
-            );
+            sendChurnEmail(userEmail, cancelledPlan, locale).catch((e) => {
+              console.error("[webhook] churn email:", e);
+              Sentry.captureException(e, { tags: { event_type: "customer.subscription.deleted", user_id: userId } });
+            });
           }
         }
         break;
@@ -378,9 +385,10 @@ export async function POST(req: NextRequest) {
 
         const failedProfile = await getUserProfile(userId);
         if (failedProfile) {
-          sendPaymentFailedEmail(failedProfile.email, failedProfile.locale).catch((e) =>
-            console.error("[webhook] payment_failed email:", e)
-          );
+          sendPaymentFailedEmail(failedProfile.email, failedProfile.locale).catch((e) => {
+            console.error("[webhook] payment_failed email:", e);
+            Sentry.captureException(e, { tags: { event_type: "invoice.payment_failed", user_id: userId } });
+          });
         }
         break;
       }
@@ -408,7 +416,10 @@ export async function POST(req: NextRequest) {
           .from("profiles")
           .update({ plan })
           .eq("id", userId);
-        if (error) console.error("[webhook] invoice.payment_succeeded renewal:", error);
+        if (error) {
+          console.error("[webhook] invoice.payment_succeeded renewal:", error);
+          Sentry.captureException(new Error(`[webhook] invoice.payment_succeeded renewal DB failed: ${error.message}`), { tags: { event_type: "invoice.payment_succeeded", plan, user_id: userId } });
+        }
         else console.log(`[webhook] Subscription renewed → plan ${plan} for user ${userId}`);
         break;
       }
@@ -438,9 +449,10 @@ export async function POST(req: NextRequest) {
         // is on track for automatic renewal — tell them so, not "add payment method".
         const hasPaymentMethod = !!sub.default_payment_method;
 
-        sendTrialEndingEmail(trialProfile.email, plan, trialProfile.locale, trialEnd, hasPaymentMethod).catch((e) =>
-          console.error("[webhook] trial_ending email:", e)
-        );
+        sendTrialEndingEmail(trialProfile.email, plan, trialProfile.locale, trialEnd, hasPaymentMethod).catch((e) => {
+          console.error("[webhook] trial_ending email:", e);
+          Sentry.captureException(e, { tags: { event_type: "customer.subscription.trial_will_end", user_id: userId } });
+        });
 
         console.log(`[webhook] trial_will_end → email sent (plan ${plan}, ends ${trialEnd}, hasPaymentMethod: ${hasPaymentMethod})`);
         break;

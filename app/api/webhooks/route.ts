@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase-server";
 import { randomBytes } from "crypto";
+import * as Sentry from "@sentry/nextjs";
 
 export const dynamic = "force-dynamic";
 
@@ -36,7 +37,10 @@ export async function GET() {
     .eq("user_id", user.id)
     .order("created_at", { ascending: false });
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) {
+    Sentry.captureException(error, { tags: { route: "webhooks", method: "GET", user_id: user.id } });
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
   return NextResponse.json({ webhooks: data ?? [] });
 }
 
@@ -127,7 +131,10 @@ export async function POST(req: Request) {
     },
   }).select("id, name, url, filters, active, created_at").single();
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) {
+    Sentry.captureException(error, { tags: { route: "webhooks", method: "POST", user_id: user.id } });
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
 
   return NextResponse.json({ webhook: data, secret }, { status: 201 });
 }

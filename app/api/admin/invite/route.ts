@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase-server";
 import { createClient as createServiceClient } from "@supabase/supabase-js";
 import { isAdmin } from "@/lib/admin";
+import * as Sentry from "@sentry/nextjs";
 
 export const dynamic = "force-dynamic";
 
@@ -151,6 +152,7 @@ export async function POST(req: NextRequest) {
   if (!brevoRes.ok) {
     const err = await brevoRes.text();
     console.error("Brevo pilot invite error:", err);
+    Sentry.captureException(new Error(`[admin/invite] Brevo error: ${err}`), { tags: { route: "admin-invite" } });
     return NextResponse.json({ error: "Email send failed" }, { status: 500 });
   }
 

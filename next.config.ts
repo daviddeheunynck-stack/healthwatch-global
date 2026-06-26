@@ -158,6 +158,8 @@ export default sentryConfigured
       // Delete .js.map files after uploading to Sentry so they are never
       // served to browsers (prevents source code exposure).
       sourcemaps: { disable: false, deleteSourcemapsAfterUpload: true },
+      // Proxy Sentry events through /api/monitoring to bypass adblockers
+      tunnelRoute:   "/monitoring",
       telemetry:     false,
     })
   : withNextIntl(nextConfig);

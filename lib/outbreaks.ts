@@ -1,4 +1,5 @@
 import { createClient } from "@supabase/supabase-js";
+import * as Sentry from "@sentry/nextjs";
 import { normalizeDisease } from "./disease-data";
 import type { OutbreakTrend } from "./outbreak-trend";
 
@@ -71,6 +72,7 @@ export async function getOutbreaks(): Promise<Outbreak[]> {
 
   if (error) {
     console.error("Error fetching outbreaks:", error);
+    Sentry.captureException(error, { tags: { lib: "outbreaks", fn: "getOutbreaks" } });
     return [];
   }
 

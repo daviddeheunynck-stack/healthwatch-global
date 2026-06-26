@@ -2,7 +2,9 @@ import * as Sentry from "@sentry/nextjs";
 
 Sentry.init({
   dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
-  environment: process.env.NODE_ENV,
+  // NEXT_PUBLIC_VERCEL_ENV distinguishes preview from production on Vercel
+  // (add it in Vercel project settings → Environment Variables if not set)
+  environment: process.env.NEXT_PUBLIC_VERCEL_ENV ?? process.env.NODE_ENV,
   tracesSampleRate: 0.1,
   sendDefaultPii: false,
   replaysOnErrorSampleRate: 1.0,
