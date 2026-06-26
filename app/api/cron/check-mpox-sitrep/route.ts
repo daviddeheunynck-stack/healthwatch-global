@@ -144,10 +144,12 @@ async function extractFromPdf(pdfUrl: string): Promise<SitrepData | null> {
     return null;
   }
 
-  // Parse PDF — dynamic import avoids Next.js build-time issues with pdf-parse
+  // Parse PDF — import lib directly to bypass the index.js debug-mode check
+  // that tries to open ./test/data/05-versions-space.pdf (absent in Vercel lambdas).
   let text: string;
   try {
-    const pdfParse = (await import("pdf-parse")).default;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const pdfParse = (await import("pdf-parse/lib/pdf-parse.js" as any)).default as (buf: Buffer, opts?: object) => Promise<{ text: string }>;
     const result   = await pdfParse(buffer, { max: 2 }); // only first 2 pages
     text = result.text;
   } catch (e) {
