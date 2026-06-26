@@ -1,6 +1,7 @@
 import { NextRequest } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { Resend } from "resend";
+import * as Sentry from "@sentry/nextjs";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 300;
@@ -133,8 +134,9 @@ export async function GET(req: NextRequest) {
         .eq("id", alert.id);
 
       fired++;
-    } catch {
-      /* email failure — skip */
+    } catch (err) {
+      console.error(`[trigger-country-risk-alerts] Failed for alert ${alert.id}:`, err);
+      Sentry.captureException(err, { tags: { cron: "trigger-country-risk-alerts", alert_id: alert.id, user_id: alert.user_id } });
     }
   }
 

@@ -12,6 +12,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { Resend } from "resend";
+import * as Sentry from "@sentry/nextjs";
 
 export const dynamic = "force-dynamic";
 
@@ -203,7 +204,10 @@ export async function GET(req: NextRequest) {
 </div>`,
       });
       fired++;
-    } catch { /* Resend errors are non-fatal */ }
+    } catch (err) {
+      console.error(`[trigger-tripwires] Failed for tripwire ${tw.id}:`, err);
+      Sentry.captureException(err, { tags: { cron: "trigger-tripwires", tripwire_id: tw.id, user_id: tw.user_id } });
+    }
   }
 
   return NextResponse.json({ ok: true, fired });

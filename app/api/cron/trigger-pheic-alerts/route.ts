@@ -1,6 +1,7 @@
 import { NextRequest } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { Resend } from "resend";
+import * as Sentry from "@sentry/nextjs";
 
 export const dynamic    = "force-dynamic";
 export const maxDuration = 300;
@@ -178,7 +179,10 @@ export async function GET(req: NextRequest) {
 
         notifiedSet.add(key);
         fired++;
-      } catch { /* email failure — skip */ }
+      } catch (err) {
+        console.error(`[trigger-pheic-alerts] Failed for user ${user.id} / outbreak ${outbreak.id}:`, err);
+        Sentry.captureException(err, { tags: { cron: "trigger-pheic-alerts", user_id: user.id, outbreak_id: outbreak.id } });
+      }
     }
   }
 

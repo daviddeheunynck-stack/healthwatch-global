@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { Resend } from "resend";
+import * as Sentry from "@sentry/nextjs";
 
 export const dynamic = "force-dynamic";
 
@@ -132,7 +133,10 @@ export async function GET(req: NextRequest) {
         .eq("id", sub.id);
 
       sent++;
-    } catch { /* Resend errors non-fatal */ }
+    } catch (err) {
+      console.error(`[trigger-subscriber-alerts] Failed for sub ${sub.id}:`, err);
+      Sentry.captureException(err, { tags: { cron: "trigger-subscriber-alerts", sub_id: sub.id, user_id: sub.user_id } });
+    }
   }
 
   return NextResponse.json({ ok: true, sent });

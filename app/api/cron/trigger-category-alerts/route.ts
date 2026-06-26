@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { Resend } from "resend";
 import { getDiseaseCategory, CATEGORY_LABELS } from "@/lib/disease-category";
+import * as Sentry from "@sentry/nextjs";
 
 export const dynamic = "force-dynamic";
 
@@ -196,7 +197,10 @@ export async function GET(req: NextRequest) {
         .eq("id", alert.id);
 
       fired++;
-    } catch { /* non-fatal */ }
+    } catch (err) {
+      console.error(`[trigger-category-alerts] Failed for alert ${alert.id}:`, err);
+      Sentry.captureException(err, { tags: { cron: "trigger-category-alerts", alert_id: alert.id } });
+    }
   }
 
   return NextResponse.json({ ok: true, fired });

@@ -3,6 +3,7 @@ import { createClient } from "@supabase/supabase-js";
 import { Resend } from "resend";
 import { haversineKm } from "@/lib/haversine";
 import { getCountryCoords } from "@/lib/country-coords";
+import * as Sentry from "@sentry/nextjs";
 
 export const dynamic = "force-dynamic";
 
@@ -185,7 +186,10 @@ export async function GET(req: NextRequest) {
         .eq("id", alert.id);
 
       fired++;
-    } catch { /* non-fatal */ }
+    } catch (err) {
+      console.error(`[trigger-geofence-alerts] Failed for alert ${alert.id}:`, err);
+      Sentry.captureException(err, { tags: { cron: "trigger-geofence-alerts", alert_id: alert.id } });
+    }
   }
 
   return NextResponse.json({ ok: true, fired });
