@@ -3,6 +3,7 @@ import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { rateLimit, getClientIp } from "@/lib/rate-limit";
 import { errorMessage } from "@/lib/error";
+import * as Sentry from "@sentry/nextjs";
 
 export const dynamic = "force-dynamic";
 
@@ -173,6 +174,9 @@ export async function POST(req: NextRequest) {
 
     if (!response.ok) {
       console.error("Stripe API error:", JSON.stringify(data));
+      Sentry.captureException(new Error(`[checkout] Stripe API error: ${data.error?.message ?? response.status}`), {
+        tags: { plan: body.plan ?? "", user_id: sessionUser?.id ?? "anon" },
+      });
       return NextResponse.json(
         { error: data.error?.message || "Erreur Stripe." },
         { status: response.status }
@@ -182,6 +186,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ url: data.url });
   } catch (err: unknown) {
     console.error("Checkout fetch error:", errorMessage(err));
+    Sentry.captureException(err, { tags: { route: "checkout" } });
     return NextResponse.json(
       { error: "Erreur serveur. Réessayez dans quelques instants." },
       { status: 500 }
