@@ -40,7 +40,21 @@ export async function PUT(req: Request) {
   const region  = VALID_REGIONS.includes(body.region) ? body.region : "all";
   const country = typeof body.country === "string" ? body.country : "all";
 
-  const filters = region === "all" && country === "all" ? null : { region, country };
+  // Read existing display_filters so we don't clobber flags like no_weekly_signal
+  const { data: existing } = await supabase
+    .from("profiles")
+    .select("display_filters")
+    .eq("id", user.id)
+    .single();
+
+  const prev = (existing?.display_filters as Record<string, unknown> | null) ?? {};
+  const merged: Record<string, unknown> = { ...prev, region, country };
+
+  // If both are "all", drop them from the object (keep other flags like no_weekly_signal)
+  if (region === "all") delete merged.region;
+  if (country === "all") delete merged.country;
+
+  const filters = Object.keys(merged).length > 0 ? merged : null;
 
   await supabase
     .from("profiles")
