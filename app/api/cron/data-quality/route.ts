@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { extractNumbers } from "@/lib/outbreak-parser";
 import { errorMessage } from "@/lib/error";
+import * as Sentry from "@sentry/nextjs";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 60;
@@ -63,7 +64,10 @@ async function sendEmail(to: string, subject: string, html: string) {
       subject,
       htmlContent: html,
     }),
-  }).catch((e) => console.error("[data-quality] email send failed:", errorMessage(e)));
+  }).catch((e) => {
+    console.error("[data-quality] email send failed:", errorMessage(e));
+    Sentry.captureException(e, { tags: { cron: "data-quality" } });
+  });
 }
 
 // ── Main handler ──────────────────────────────────────────────────────────────
