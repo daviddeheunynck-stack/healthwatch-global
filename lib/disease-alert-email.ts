@@ -14,16 +14,22 @@ const TIER_LABELS: Record<string, Record<string, string>> = {
   monitor:   { fr: "SURVEILLANCE", en: "MONITORING", es: "VIGILANCIA", ar: "مراقبة", id: "PEMANTAUAN" },
 };
 
+// Light-theme tier colors (Outlook-safe)
 const TIER_COLORS: Record<string, { bg: string; border: string; text: string }> = {
-  immediate: { bg: "#4c0519", border: "#dc2626", text: "#fda4af" },
-  rapid:     { bg: "#422006", border: "#d97706", text: "#fde68a" },
-  monitor:   { bg: "#1e293b", border: "#475569", text: "#94a3b8" },
+  immediate: { bg: "#fff1f2", border: "#dc2626", text: "#991b1b" },
+  rapid:     { bg: "#fffbeb", border: "#d97706", text: "#92400e" },
+  monitor:   { bg: "#f8fafc", border: "#64748b", text: "#475569" },
+};
+
+const RISK_STYLE: Record<string, { bg: string; border: string; color: string }> = {
+  high:   { bg: "#fff1f2", border: "#fca5a5", color: "#dc2626" },
+  medium: { bg: "#fffbeb", border: "#fde68a", color: "#b45309" },
+  low:    { bg: "#f0fdf4", border: "#86efac", color: "#16a34a" },
 };
 
 const COPY: Record<string, {
   subject:         (disease: string) => string;
-  headline:        (disease: string, country: string) => string;
-  intro:           string;
+  preheader:       (disease: string, country: string) => string;
   cases:           string;
   deaths:          string;
   cfr:             string;
@@ -37,16 +43,15 @@ const COPY: Record<string, {
   daysAgoN:        (n: number) => string;
 }> = {
   fr: {
-    subject:      (d) => `🔴 Alerte maladie : ${d} détecté`,
-    headline:     (d, c) => `${d} — ${c}`,
-    intro:        "Un foyer a été détecté pour une maladie que vous surveillez.",
-    cases:        "Cas confirmés",
-    deaths:       "Décès",
-    cfr:          "Taux de létalité",
-    date:         "Date du rapport",
-    source:       "Source OMS",
-    cta:          "Voir le tableau de bord →",
-    noData:       "N/D",
+    subject:         (d) => `🔴 Alerte maladie : ${d} détecté`,
+    preheader:       (d, c) => `Nouveau foyer actif — ${d} · ${c}`,
+    cases:           "Cas confirmés",
+    deaths:          "Décès",
+    cfr:             "Létalité",
+    date:            "Date du rapport",
+    source:          "Source OMS",
+    cta:             "Voir le tableau de bord →",
+    noData:          "N/D",
     unsubNote:       "Vous recevez cet email car vous surveillez cette maladie sur healthwatch-global.com.",
     daysAgoToday:    "aujourd'hui",
     daysAgoYesterday: "hier",
@@ -54,14 +59,13 @@ const COPY: Record<string, {
   },
   en: {
     subject:         (d) => `🔴 Disease alert: ${d} detected`,
-    headline:        (d, c) => `${d} — ${c}`,
-    intro:           "An outbreak was detected for a disease you are monitoring.",
+    preheader:       (d, c) => `Active outbreak — ${d} · ${c}`,
     cases:           "Confirmed cases",
     deaths:          "Deaths",
     cfr:             "Case fatality rate",
     date:            "Report date",
     source:          "WHO source",
-    cta:             "View dashboard →",
+    cta:             "View outbreak →",
     noData:          "N/A",
     unsubNote:       "You receive this email because you're monitoring this disease on healthwatch-global.com.",
     daysAgoToday:    "today",
@@ -70,14 +74,13 @@ const COPY: Record<string, {
   },
   es: {
     subject:         (d) => `🔴 Alerta de enfermedad: ${d} detectado`,
-    headline:        (d, c) => `${d} — ${c}`,
-    intro:           "Se detectó un brote de una enfermedad que está monitoreando.",
+    preheader:       (d, c) => `Brote activo — ${d} · ${c}`,
     cases:           "Casos confirmados",
     deaths:          "Fallecidos",
     cfr:             "Tasa de letalidad",
     date:            "Fecha del informe",
     source:          "Fuente OMS",
-    cta:             "Ver el panel →",
+    cta:             "Ver brote →",
     noData:          "N/D",
     unsubNote:       "Recibe este correo porque monitorea esta enfermedad en healthwatch-global.com.",
     daysAgoToday:    "hoy",
@@ -86,14 +89,13 @@ const COPY: Record<string, {
   },
   ar: {
     subject:         (d) => `🔴 تنبيه مرض: تم اكتشاف ${d}`,
-    headline:        (d, c) => `${d} — ${c}`,
-    intro:           "تم اكتشاف تفشٍّ لمرض تراقبه.",
+    preheader:       (d, c) => `تفشٍّ نشط — ${d} · ${c}`,
     cases:           "الحالات المؤكدة",
     deaths:          "الوفيات",
     cfr:             "معدل الوفيات",
     date:            "تاريخ التقرير",
     source:          "مصدر OMS",
-    cta:             "← عرض لوحة التحكم",
+    cta:             "← عرض التفشي",
     noData:          "غ/م",
     unsubNote:       "تتلقى هذا البريد لأنك تراقب هذا المرض على healthwatch-global.com.",
     daysAgoToday:    "اليوم",
@@ -102,14 +104,13 @@ const COPY: Record<string, {
   },
   id: {
     subject:         (d) => `🔴 Peringatan penyakit: ${d} terdeteksi`,
-    headline:        (d, c) => `${d} — ${c}`,
-    intro:           "Wabah terdeteksi untuk penyakit yang Anda pantau.",
+    preheader:       (d, c) => `Wabah aktif — ${d} · ${c}`,
     cases:           "Kasus terkonfirmasi",
     deaths:          "Kematian",
     cfr:             "Tingkat kematian kasus",
     date:            "Tanggal laporan",
     source:          "Sumber WHO",
-    cta:             "Lihat dasbor →",
+    cta:             "Lihat wabah →",
     noData:          "T/S",
     unsubNote:       "Anda menerima email ini karena memantau penyakit ini di healthwatch-global.com.",
     daysAgoToday:    "hari ini",
@@ -121,9 +122,9 @@ const COPY: Record<string, {
 export interface DiseaseAlertOutbreak {
   id:           string;
   disease_en:   string;
-  disease:      string;  // localized
+  disease:      string;
   country_en:   string;
-  country:      string;  // localized
+  country:      string;
   cases:        number;
   deaths:       number;
   risk_level:   string;
@@ -134,112 +135,129 @@ export interface DiseaseAlertOutbreak {
 export function buildDiseaseAlertEmail(
   outbreak: DiseaseAlertOutbreak,
   locale: string,
-  subscriptionId: string
+  subscriptionId: string,
+  diseaseSlug: string
 ): { subject: string; html: string } {
-  const c = COPY[locale] ?? COPY.en;
-  const isRtl = locale === "ar";
-  const dir   = isRtl ? "rtl" : "ltr";
+  const c        = COPY[locale] ?? COPY.en;
+  const isRtl    = locale === "ar";
+  const dir      = isRtl ? "rtl" : "ltr";
   const numLocale = locale === "ar" ? "ar-SA" : (locale || "en");
 
-  const hasData    = outbreak.cases > 0;
-  const cfr        = hasData ? (outbreak.deaths / outbreak.cases * 100).toFixed(1) + "%" : c.noData;
+  const disease  = esc(outbreak.disease  || outbreak.disease_en  || "");
+  const country  = esc(outbreak.country  || outbreak.country_en  || "");
+
+  const hasData  = outbreak.cases > 0;
+  const cfr      = hasData ? (outbreak.deaths / outbreak.cases * 100).toFixed(1) + "%" : c.noData;
+  const casesStr = hasData ? outbreak.cases.toLocaleString(numLocale)  : c.noData;
+  const deathStr = hasData ? outbreak.deaths.toLocaleString(numLocale) : c.noData;
+
   const daysAgo    = outbreak.date
     ? Math.floor((Date.now() - new Date(outbreak.date).getTime()) / 86_400_000)
     : null;
   const ageLabel   = daysAgo === null ? "" : daysAgo === 0 ? c.daysAgoToday : daysAgo === 1 ? c.daysAgoYesterday : c.daysAgoN(daysAgo);
-  const ageColor   = daysAgo === null ? "#94a3b8" : daysAgo <= 7 ? "#22c55e" : daysAgo <= 21 ? "#f59e0b" : "#ef4444";
+  const ageColor   = daysAgo === null ? "#94a3b8" : daysAgo <= 7 ? "#16a34a" : daysAgo <= 21 ? "#b45309" : "#dc2626";
+
   const unsubUrl   = `${APP_URL}/api/unsubscribe?id=${encodeURIComponent(subscriptionId)}&locale=${locale}`;
-  const dashUrl    = `${APP_URL}/${locale}`;
+  const diseaseUrl = `${APP_URL}/${locale}/disease/${diseaseSlug}`;
 
-  const RISK_COLOR: Record<string, string> = {
-    high:   "#dc2626",
-    medium: "#d97706",
-    low:    "#16a34a",
-  };
-  const riskColor   = RISK_COLOR[outbreak.risk_level] ?? "#6b7280";
-  const guidance    = getResponseGuidance(outbreak.disease_en || outbreak.disease);
-  const tc          = TIER_COLORS[guidance.tier];
-  const tierLabel   = TIER_LABELS[guidance.tier]?.[locale] ?? TIER_LABELS[guidance.tier].en;
+  const rs         = RISK_STYLE[outbreak.risk_level] ?? RISK_STYLE.medium;
+  const guidance   = getResponseGuidance(outbreak.disease_en || outbreak.disease);
+  const tc         = TIER_COLORS[guidance.tier];
+  const tierLabel  = TIER_LABELS[guidance.tier]?.[locale] ?? TIER_LABELS[guidance.tier].en;
   const firstAction = (RESPONSE_ACTIONS[guidance.tier][locale] ?? RESPONSE_ACTIONS[guidance.tier].en)[0];
-  const showAction  = guidance.tier !== "monitor";
+  const showAction = guidance.tier !== "monitor";
 
-  const subject = c.subject(outbreak.disease || outbreak.disease_en);
+  const subject    = c.subject(outbreak.disease || outbreak.disease_en);
+  const preheader  = c.preheader(outbreak.disease || outbreak.disease_en, outbreak.country || outbreak.country_en);
+
+  const sourceLabel = outbreak.source
+    ? outbreak.source.replace(/^https?:\/\//, "").replace(/\/.*$/, "") + " →"
+    : "";
 
   const html = `<!DOCTYPE html>
 <html lang="${locale}" dir="${dir}">
-<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>${subject}</title></head>
-<body style="margin:0;padding:0;background:#0f172a;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;">
-<table width="100%" cellpadding="0" cellspacing="0" style="background:#0f172a;padding:32px 16px;">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${subject}</title>
+</head>
+<body style="margin:0;padding:0;background:#f1f5f9;font-family:Arial,Helvetica,sans-serif;">
+
+<div style="display:none;max-height:0;overflow:hidden;mso-hide:all;">${preheader}&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;</div>
+
+<table width="100%" cellpadding="0" cellspacing="0" style="background:#f1f5f9;padding:28px 16px;">
 <tr><td align="center">
-<table width="580" cellpadding="0" cellspacing="0" style="max-width:580px;width:100%;">
+<table width="560" cellpadding="0" cellspacing="0" style="max-width:560px;width:100%;">
 
   <!-- Header -->
-  <tr><td style="background:#dc2626;border-radius:12px 12px 0 0;padding:20px 28px;">
-    <table width="100%" cellpadding="0" cellspacing="0">
-      <tr>
-        <td style="color:white;font-size:13px;font-weight:600;letter-spacing:1px;text-transform:uppercase;opacity:.8;">HealthWatch Global · Disease Alert</td>
-      </tr>
-    </table>
+  <tr><td style="background:#dc2626;padding:16px 24px;">
+    <table width="100%" cellpadding="0" cellspacing="0"><tr>
+      <td style="color:#ffffff;font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;font-family:Arial,Helvetica,sans-serif;">HealthWatch Global</td>
+      <td align="right" style="color:#fca5a5;font-size:11px;font-weight:600;letter-spacing:0.5px;text-transform:uppercase;font-family:Arial,Helvetica,sans-serif;">Disease Alert</td>
+    </tr></table>
   </td></tr>
 
   <!-- Body -->
-  <tr><td style="background:#1e293b;border-radius:0 0 12px 12px;padding:28px;">
+  <tr><td style="background:#ffffff;padding:28px 24px;border:1px solid #e2e8f0;border-top:0;">
 
-    <!-- Disease + country headline -->
-    <p style="margin:0 0 4px;font-size:22px;font-weight:800;color:white;line-height:1.3;">
-      ${c.headline(esc(outbreak.disease || outbreak.disease_en || ""), esc(outbreak.country || outbreak.country_en || ""))}
-    </p>
-    <p style="margin:0 0 20px;font-size:14px;color:#94a3b8;">${c.intro}</p>
+    <!-- Disease headline -->
+    <p style="margin:0 0 2px;font-size:20px;font-weight:700;color:#0f172a;line-height:1.3;font-family:Arial,Helvetica,sans-serif;">${disease}</p>
+    <p style="margin:0 0 20px;font-size:15px;color:#64748b;font-family:Arial,Helvetica,sans-serif;">${country}</p>
 
-    <!-- Risk badge + IHR tier -->
-    <div style="margin-bottom:20px;">
-      <div style="display:inline-block;background:${riskColor}20;border:1px solid ${riskColor}50;border-radius:999px;padding:4px 12px;margin-bottom:8px;">
-        <span style="color:${riskColor};font-size:12px;font-weight:700;text-transform:uppercase;">${outbreak.risk_level.toUpperCase()}</span>
-      </div>
-      <table width="100%" cellpadding="0" cellspacing="0">
-        <tr><td style="background:${tc.bg};border-left:3px solid ${tc.border};border-radius:0 6px 6px 0;padding:10px 14px;">
-          <div style="color:${tc.text};font-size:10px;font-weight:700;letter-spacing:0.5px;margin-bottom:${showAction ? "6px" : "0"};">${tierLabel}</div>
-          ${showAction ? `<div style="color:${tc.text};font-size:12px;opacity:0.9;">▶ ${firstAction}</div>` : ""}
-        </td></tr>
-      </table>
-    </div>
+    <!-- Risk badge (table-based, Outlook-safe) -->
+    <table cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+      <tr><td style="background:${rs.bg};border:1px solid ${rs.border};padding:4px 12px;">
+        <span style="color:${rs.color};font-size:11px;font-weight:700;text-transform:uppercase;font-family:Arial,Helvetica,sans-serif;">${esc(outbreak.risk_level.toUpperCase())}</span>
+      </td></tr>
+    </table>
+
+    <!-- IHR tier bar -->
+    <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:20px;">
+      <tr><td style="background:${tc.bg};border-left:3px solid ${tc.border};padding:10px 14px;">
+        <div style="color:${tc.text};font-size:10px;font-weight:700;letter-spacing:0.5px;margin-bottom:${showAction ? "6px" : "0"};font-family:Arial,Helvetica,sans-serif;">${tierLabel}</div>
+        ${showAction ? `<div style="color:${tc.text};font-size:12px;font-family:Arial,Helvetica,sans-serif;">&#9658; ${firstAction}</div>` : ""}
+      </td></tr>
+    </table>
 
     <!-- Stats row -->
-    <table width="100%" cellpadding="0" cellspacing="8" style="margin-bottom:20px;">
+    <table width="100%" cellpadding="0" cellspacing="6" style="margin-bottom:20px;">
       <tr>
-        <td width="33%" style="background:#0f172a;border-radius:8px;padding:14px;text-align:center;">
-          <div style="color:#60a5fa;font-size:11px;margin-bottom:6px;">${c.cases}</div>
-          <div style="color:white;font-size:20px;font-weight:800;">${hasData ? outbreak.cases.toLocaleString(numLocale) : c.noData}</div>
+        <td width="33%" style="background:#f8fafc;border:1px solid #e2e8f0;padding:14px 8px;text-align:center;">
+          <div style="color:#2563eb;font-size:10px;font-weight:700;text-transform:uppercase;margin-bottom:6px;font-family:Arial,Helvetica,sans-serif;">${c.cases}</div>
+          <div style="color:#0f172a;font-size:20px;font-weight:700;font-family:Arial,Helvetica,sans-serif;">${casesStr}</div>
         </td>
-        <td width="33%" style="background:#0f172a;border-radius:8px;padding:14px;text-align:center;">
-          <div style="color:#f87171;font-size:11px;margin-bottom:6px;">${c.deaths}</div>
-          <div style="color:#f87171;font-size:20px;font-weight:800;">${hasData ? outbreak.deaths.toLocaleString(numLocale) : c.noData}</div>
+        <td width="33%" style="background:#f8fafc;border:1px solid #e2e8f0;padding:14px 8px;text-align:center;">
+          <div style="color:#dc2626;font-size:10px;font-weight:700;text-transform:uppercase;margin-bottom:6px;font-family:Arial,Helvetica,sans-serif;">${c.deaths}</div>
+          <div style="color:#dc2626;font-size:20px;font-weight:700;font-family:Arial,Helvetica,sans-serif;">${deathStr}</div>
         </td>
-        <td width="33%" style="background:#0f172a;border-radius:8px;padding:14px;text-align:center;">
-          <div style="color:#fbbf24;font-size:11px;margin-bottom:6px;">${c.cfr}</div>
-          <div style="color:#fbbf24;font-size:20px;font-weight:800;">${cfr}</div>
+        <td width="33%" style="background:#f8fafc;border:1px solid #e2e8f0;padding:14px 8px;text-align:center;">
+          <div style="color:#b45309;font-size:10px;font-weight:700;text-transform:uppercase;margin-bottom:6px;font-family:Arial,Helvetica,sans-serif;">${c.cfr}</div>
+          <div style="color:#b45309;font-size:20px;font-weight:700;font-family:Arial,Helvetica,sans-serif;">${cfr}</div>
         </td>
       </tr>
     </table>
 
     <!-- Date + Source -->
-    <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:24px;">
-      <tr>
-        <td style="color:#64748b;font-size:12px;padding:4px 0;">${c.date} : <span style="color:#94a3b8;">${outbreak.date}</span>${ageLabel ? ` <span style="color:${ageColor};">(${ageLabel})</span>` : ""}</td>
-      </tr>
-      ${outbreak.source ? `<tr><td style="color:#64748b;font-size:12px;padding:4px 0;">${c.source} : <a href="${outbreak.source}" style="color:#ef4444;">${outbreak.source.replace("https://", "")}</a></td></tr>` : ""}
+    <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:24px;border-top:1px solid #f1f5f9;">
+      <tr><td style="color:#94a3b8;font-size:12px;padding:12px 0 3px;font-family:Arial,Helvetica,sans-serif;">
+        ${c.date} : <span style="color:#475569;">${esc(outbreak.date ?? "")}</span>${ageLabel ? ` <span style="color:${ageColor};font-weight:700;">(${ageLabel})</span>` : ""}
+      </td></tr>
+      ${outbreak.source ? `<tr><td style="color:#94a3b8;font-size:12px;padding:3px 0;font-family:Arial,Helvetica,sans-serif;">${c.source} : <a href="${esc(outbreak.source)}" style="color:#dc2626;text-decoration:none;font-family:Arial,Helvetica,sans-serif;">${esc(sourceLabel)}</a></td></tr>` : ""}
     </table>
 
-    <!-- CTA -->
-    <a href="${dashUrl}" style="display:inline-block;background:#dc2626;color:white;padding:12px 28px;border-radius:8px;font-weight:700;font-size:14px;text-decoration:none;">${c.cta}</a>
+    <!-- CTA (table-based for Outlook) -->
+    <table cellpadding="0" cellspacing="0">
+      <tr><td style="background:#dc2626;padding:12px 28px;">
+        <a href="${diseaseUrl}" style="color:#ffffff;font-size:14px;font-weight:700;text-decoration:none;font-family:Arial,Helvetica,sans-serif;">${c.cta}</a>
+      </td></tr>
+    </table>
 
   </td></tr>
 
   <!-- Footer -->
-  <tr><td style="padding:20px 0;text-align:center;">
-    <p style="color:#475569;font-size:11px;margin:0 0 8px;">${c.unsubNote}</p>
-    <a href="${unsubUrl}" style="color:#475569;font-size:11px;">Unsubscribe</a>
+  <tr><td style="padding:16px 0;text-align:center;">
+    <p style="color:#94a3b8;font-size:11px;margin:0 0 6px;font-family:Arial,Helvetica,sans-serif;">${c.unsubNote}</p>
+    <a href="${unsubUrl}" style="color:#94a3b8;font-size:11px;font-family:Arial,Helvetica,sans-serif;">Unsubscribe</a>
   </td></tr>
 
 </table>

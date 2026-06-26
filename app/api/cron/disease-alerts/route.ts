@@ -6,6 +6,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { buildDiseaseAlertEmail } from "@/lib/disease-alert-email";
 import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
+import { diseaseToSlug } from "@/lib/disease-data";
 import { errorMessage } from "@/lib/error";
 
 export const dynamic = "force-dynamic";
@@ -143,7 +144,8 @@ export async function GET(req: NextRequest) {
           continue;
         }
 
-        const { subject, html } = buildDiseaseAlertEmail(alertOutbreak, locale, userId);
+        const diseaseSlug = diseaseToSlug(alertOutbreak.disease_en);
+        const { subject, html } = buildDiseaseAlertEmail(alertOutbreak, locale, userId, diseaseSlug);
         await sendEmail(profile.email, subject, html);
         sent++;
 
