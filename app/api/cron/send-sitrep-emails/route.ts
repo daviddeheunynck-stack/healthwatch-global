@@ -9,6 +9,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { Resend } from "resend";
+import * as Sentry from "@sentry/nextjs";
 
 export const dynamic = "force-dynamic";
 
@@ -180,8 +181,9 @@ export async function GET(req: NextRequest) {
         html,
       });
       totalSent += recipients.length;
-    } catch {
-      // continue with next report
+    } catch (err) {
+      console.error(`[send-sitrep-emails] Failed for report ${report.id}:`, err);
+      Sentry.captureException(err, { tags: { cron: "send-sitrep-emails", report_id: report.id, user_id: report.user_id } });
     }
 
     await supabase

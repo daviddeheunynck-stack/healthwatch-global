@@ -7,6 +7,7 @@ import { createClient } from "@supabase/supabase-js";
 import { buildWatchlistAlertEmail } from "@/lib/watchlist-alert-email";
 import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 import { errorMessage } from "@/lib/error";
+import * as Sentry from "@sentry/nextjs";
 
 export const dynamic = "force-dynamic";
 
@@ -161,6 +162,7 @@ export async function GET(req: NextRequest) {
       await new Promise((r) => setTimeout(r, 150));
     } catch (err: unknown) {
       console.error(`[watchlist-alerts] Failed for ${profile.email}:`, errorMessage(err));
+      Sentry.captureException(err, { tags: { cron: "watchlist-alerts", user_id: entry.user_id, outbreak_id: entry.outbreak_id } });
     }
   }
 
