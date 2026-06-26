@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { rateLimit, getClientIp } from "@/lib/rate-limit";
 import { errorMessage } from "@/lib/error";
+import * as Sentry from "@sentry/nextjs";
 
 export const dynamic = "force-dynamic";
 
@@ -212,12 +213,16 @@ export async function POST(req: NextRequest) {
           subject,
           htmlContent: html,
         }),
-      }).catch((e) => console.error("[subscribe] Email send error:", e.message));
+      }).catch((e) => {
+        console.error("[subscribe] Email send error:", e.message);
+        Sentry.captureException(e, { tags: { route: "subscribe" } });
+      });
     }
 
     return NextResponse.json({ success: true });
   } catch (err: unknown) {
     console.error("[subscribe] Error:", errorMessage(err));
+    Sentry.captureException(err, { tags: { route: "subscribe" } });
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

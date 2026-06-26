@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase-server";
 import { errorMessage } from "@/lib/error";
+import * as Sentry from "@sentry/nextjs";
 
 export const dynamic = "force-dynamic";
 
@@ -53,12 +54,16 @@ export async function POST(req: NextRequest) {
 
     if (!res.ok) {
       console.error("[billing-portal] Stripe error:", data);
+      Sentry.captureException(new Error(`[billing-portal] Stripe error: ${data.error?.message ?? res.status}`), {
+        tags: { route: "billing-portal", user_id: user.id },
+      });
       return NextResponse.json({ error: data.error?.message || "Stripe error" }, { status: 502 });
     }
 
     return NextResponse.json({ url: data.url });
   } catch (e: unknown) {
     console.error("[billing-portal] error:", errorMessage(e));
+    Sentry.captureException(e, { tags: { route: "billing-portal" } });
     return NextResponse.json({ error: errorMessage(e) }, { status: 500 });
   }
 }
