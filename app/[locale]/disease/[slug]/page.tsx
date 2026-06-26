@@ -41,6 +41,7 @@ const LABELS = {
     back: "← Tableau de bord",
     cases_unit: "cas", deaths_unit: "décès",
     noData: "N/D",
+    daysAgo: (n: number) => n === 0 ? "aujourd'hui" : n === 1 ? "hier" : `${n}j`,
   },
   en: {
     activeBadge: (n: number) => n === 1 ? "1 active outbreak" : `${n} active outbreaks`,
@@ -56,6 +57,7 @@ const LABELS = {
     back: "← Dashboard",
     cases_unit: "cases", deaths_unit: "deaths",
     noData: "N/A",
+    daysAgo: (n: number) => n === 0 ? "today" : n === 1 ? "yesterday" : `${n}d`,
   },
   es: {
     activeBadge: (n: number) => n === 1 ? "1 brote activo" : `${n} brotes activos`,
@@ -71,6 +73,7 @@ const LABELS = {
     back: "← Panel",
     cases_unit: "casos", deaths_unit: "fallecidos",
     noData: "N/D",
+    daysAgo: (n: number) => n === 0 ? "hoy" : n === 1 ? "ayer" : `${n}d`,
   },
   ar: {
     activeBadge: (n: number) => n === 1 ? "تفشٍّ نشط واحد" : `${n} تفشيات نشطة`,
@@ -86,6 +89,7 @@ const LABELS = {
     back: "→ لوحة التحكم",
     cases_unit: "حالة", deaths_unit: "وفاة",
     noData: "غ/م",
+    daysAgo: (n: number) => n === 0 ? "اليوم" : n === 1 ? "أمس" : `${n}ي`,
   },
   id: {
     activeBadge: (n: number) => n === 1 ? "1 wabah aktif" : `${n} wabah aktif`,
@@ -101,6 +105,7 @@ const LABELS = {
     back: "← Dasbor",
     cases_unit: "kasus", deaths_unit: "kematian",
     noData: "T/S",
+    daysAgo: (n: number) => n === 0 ? "hari ini" : n === 1 ? "kemarin" : `${n}h`,
   },
 } as const;
 
@@ -566,6 +571,14 @@ export default async function DiseasePage({
               const riskKey  = o.risk_level as string | undefined;
               const riskLabel = riskKey ? (lb.risk as Record<string, string>)[riskKey] : undefined;
 
+              const daysAgo = o.date
+                ? Math.floor((Date.now() - new Date(o.date).getTime()) / 86_400_000)
+                : null;
+              const ageColor = daysAgo === null ? "text-gray-600"
+                : daysAgo <= 7  ? "text-green-500"
+                : daysAgo <= 21 ? "text-amber-500"
+                : "text-red-500";
+
               return (
                 <div
                   key={o.id}
@@ -590,19 +603,16 @@ export default async function DiseasePage({
                           <span className="ml-2 text-gray-600">
                             · {new Date(o.date).toLocaleDateString(
                                 l === "ar" ? "ar-SA" : l,
-                                { year: "numeric", month: "short" }
+                                { year: "numeric", month: "short", day: "numeric" }
                               )}
                           </span>
                         )}
+                        {daysAgo !== null && (
+                          <span className={`ml-1 text-xs font-medium ${ageColor}`}>
+                            ({lb.daysAgo(daysAgo)})
+                          </span>
+                        )}
                       </p>
-                      {o.updated_at && (
-                        <p className="text-xs text-gray-600">
-                          {lb.lastUpdated} {new Date(o.updated_at).toLocaleDateString(
-                            l === "ar" ? "ar-SA" : l,
-                            { year: "numeric", month: "short", day: "numeric" }
-                          )}
-                        </p>
-                      )}
                     </div>
                     <div className="flex items-center gap-2 flex-wrap">
                       {trend && trend.direction !== "unknown" && (
