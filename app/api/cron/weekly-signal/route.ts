@@ -34,6 +34,7 @@ function buildHtml(
   outbreaks: Array<{ disease: string; country: string }>,
   locale: string,
   dashUrl: string,
+  unsubUrl: string,
 ): string {
   const l = L[locale] ?? L.en;
   const rows = outbreaks
@@ -74,7 +75,7 @@ function buildHtml(
   <div style="margin-top:32px;padding-top:20px;border-top:1px solid #1e293b;">
     <p style="color:#374151;font-size:11px;text-align:center;margin:0;">
       HealthWatch Global &middot;
-      <a href="https://healthwatch-global.com/${locale}/unsubscribe" style="color:#4b5563;">${l.unsub}</a>
+      <a href="${unsubUrl}" style="color:#4b5563;">${l.unsub}</a>
     </p>
   </div>
 </div>
@@ -125,10 +126,10 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ skipped: "no HIGH outbreaks" });
   }
 
-  // Free users with email, registered more than 24h ago
+  // Free users with email, registered more than 24h ago, who haven't opted out
   const { data: users, error: userErr } = await supabase
     .from("profiles")
-    .select("email, locale")
+    .select("id, email, locale, display_filters")
     .eq("plan", "free")
     .not("email", "is", null)
     .lt("created_at", new Date(Date.now() - 86_400_000).toISOString());
@@ -142,8 +143,12 @@ export async function GET(req: NextRequest) {
 
   for (const user of users) {
     if (!user.email) continue;
+    const filters = user.display_filters as Record<string, unknown> | null;
+    if (filters?.no_weekly_signal) continue;
+
     const locale = user.locale ?? "en";
-    const html = buildHtml(outbreaks, locale, `https://healthwatch-global.com/${locale}`);
+    const unsubUrl = `https://healthwatch-global.com/api/unsubscribe-signal?id=${encodeURIComponent(user.id)}&locale=${locale}`;
+    const html = buildHtml(outbreaks, locale, `https://healthwatch-global.com/${locale}`, unsubUrl);
     try {
       await sendEmail(user.email, SUBJECTS[locale] ?? SUBJECTS.en, html);
       sent++;
