@@ -58,11 +58,9 @@ async function translateDescription(text: string): Promise<{
 
 const STALE_DAYS = 60;
 
-// RSS fallback sources (tried only if WHO OData fails) — WHO official feeds only
-const RSS_FALLBACKS = [
-  "https://www.who.int/feeds/entity/csr/don/en/rss.xml",
-  "https://www.who.int/feeds/entity/emergencies/disease-outbreak-news/en/rss.xml",
-];
+// WHO deprecated their RSS feeds — both old URLs return 404/timeout (verified 2026-06-26).
+// OData API (fetchWHODONList) is the only reliable source.
+const RSS_FALLBACKS: string[] = [];
 
 async function fetchRSSFallback(): Promise<{ items: ParsedOutbreak[]; source: string } | null> {
   for (const url of RSS_FALLBACKS) {
