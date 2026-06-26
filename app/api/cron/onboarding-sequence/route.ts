@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { buildJ3Email, buildJ7Email, buildJ12Email } from "@/lib/onboarding-emails";
+import * as Sentry from "@sentry/nextjs";
 
 export const dynamic = "force-dynamic";
 
@@ -114,6 +115,7 @@ export async function GET(req: NextRequest) {
       await new Promise((r) => setTimeout(r, 150));
     } catch (err) {
       console.error(`[onboarding] J+3 failed for ${user.email}:`, err);
+      Sentry.captureException(err, { tags: { cron: "onboarding-sequence", step: "j3", user_id: user.id } });
       j3Failed++;
     }
   }
@@ -129,6 +131,7 @@ export async function GET(req: NextRequest) {
       await new Promise((r) => setTimeout(r, 150));
     } catch (err) {
       console.error(`[onboarding] J+7 failed for ${user.email}:`, err);
+      Sentry.captureException(err, { tags: { cron: "onboarding-sequence", step: "j7", user_id: user.id } });
       j7Failed++;
     }
   }
@@ -144,6 +147,7 @@ export async function GET(req: NextRequest) {
       await new Promise((r) => setTimeout(r, 150));
     } catch (err) {
       console.error(`[onboarding] J+12 failed for ${user.email}:`, err);
+      Sentry.captureException(err, { tags: { cron: "onboarding-sequence", step: "j12", user_id: user.id } });
       j12Failed++;
     }
   }

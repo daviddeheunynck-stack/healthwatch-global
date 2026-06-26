@@ -5,6 +5,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { PRICE_DISPLAY } from "@/lib/pricing";
+import * as Sentry from "@sentry/nextjs";
 
 export const dynamic = "force-dynamic";
 
@@ -278,6 +279,7 @@ export async function GET(req: NextRequest) {
       sent++;
     } catch (err) {
       console.error(`[winback] Failed for ${profile.email}:`, err);
+      Sentry.captureException(err, { tags: { cron: "winback-sequence", user_id: profile.id } });
       failed++;
     }
     await new Promise((r) => setTimeout(r, 150));

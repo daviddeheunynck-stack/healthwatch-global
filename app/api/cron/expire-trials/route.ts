@@ -6,6 +6,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { buildTrialExpiredEmail } from "@/lib/onboarding-emails";
+import * as Sentry from "@sentry/nextjs";
 
 export const dynamic = "force-dynamic";
 
@@ -93,6 +94,7 @@ export async function GET(req: NextRequest) {
       await sendEmail(user.email, subject, html);
     } catch (err) {
       console.error(`[expire-trials] Email failed for ${user.email}:`, err);
+      Sentry.captureException(err, { tags: { cron: "expire-trials", user_id: user.id } });
     }
     await new Promise((r) => setTimeout(r, 150));
   }

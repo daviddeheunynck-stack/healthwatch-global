@@ -8,6 +8,7 @@ import { buildDiseaseAlertEmail } from "@/lib/disease-alert-email";
 import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 import { diseaseToSlug } from "@/lib/disease-data";
 import { errorMessage } from "@/lib/error";
+import * as Sentry from "@sentry/nextjs";
 
 export const dynamic = "force-dynamic";
 
@@ -152,6 +153,7 @@ export async function GET(req: NextRequest) {
         await new Promise((r) => setTimeout(r, 150)); // rate-limit friendly
       } catch (err: unknown) {
         console.error(`[disease-alerts] Failed for ${profile.email}:`, errorMessage(err));
+        Sentry.captureException(err, { tags: { cron: "disease-alerts", user_id: userId, outbreak_id: outbreak.id } });
       }
     }
   }
