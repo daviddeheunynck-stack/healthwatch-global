@@ -1,6 +1,7 @@
 import { NextRequest } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { Resend } from "resend";
+import * as Sentry from "@sentry/nextjs";
 
 export const dynamic    = "force-dynamic";
 export const maxDuration = 300;
@@ -86,7 +87,7 @@ export async function GET(req: NextRequest) {
   // Pro users with a specific region preference
   const { data: users } = await supabase
     .from("profiles")
-    .select("id, email, alert_locale, digest_region")
+    .select("id, email, alert_locale, digest_region, display_filters")
     .in("plan", ["pro", "team", "enterprise"])
     .not("digest_region", "eq", "all")
     .not("email", "is", null);
@@ -103,7 +104,9 @@ export async function GET(req: NextRequest) {
   const active = outbreaks ?? [];
   let fired = 0;
 
-  for (const user of users as Array<{ id: string; email: string; alert_locale?: string | null; digest_region: string }>) {
+  for (const user of users as Array<{ id: string; email: string; alert_locale?: string | null; digest_region: string; display_filters: unknown }>) {
+    const df = user.display_filters as Record<string, unknown> | null;
+    if (df?.no_weekly_signal) continue;
     const locale       = user.alert_locale ?? "en";
     const numLocale    = locale === "ar" ? "ar-SA" : locale;
     const isRtl        = locale === "ar";
@@ -165,7 +168,10 @@ export async function GET(req: NextRequest) {
         html,
       });
       fired++;
-    } catch { /* non-fatal */ }
+    } catch (err) {
+      console.error(`[trigger-regional-digest] Failed for ${user.email}:`, err);
+      Sentry.captureException(err, { tags: { cron: "trigger-regional-digest", user_id: user.id } });
+    }
   }
 
   return Response.json({ fired });
