@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { buildWelcomeEmail } from "@/lib/welcome-email";
 import { errorMessage } from "@/lib/error";
 import { rateLimit, getClientIp } from "@/lib/rate-limit";
+import * as Sentry from "@sentry/nextjs";
 
 export const dynamic = "force-dynamic";
 
@@ -57,6 +58,7 @@ export async function POST(req: NextRequest) {
     if (!res.ok) {
       const err = await res.text();
       console.error("[send-welcome] Brevo error:", err);
+      Sentry.captureException(new Error(`[send-welcome] Brevo error: ${err}`), { tags: { route: "send-welcome" } });
       return NextResponse.json({ error: "Email delivery failed" }, { status: 502 });
     }
 
@@ -81,6 +83,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ sent: true });
   } catch (e: unknown) {
     console.error("[send-welcome] unexpected error:", errorMessage(e));
+    Sentry.captureException(e, { tags: { route: "send-welcome" } });
     return NextResponse.json({ error: errorMessage(e) }, { status: 500 });
   }
 }
