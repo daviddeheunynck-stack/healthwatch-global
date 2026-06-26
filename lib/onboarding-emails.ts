@@ -601,6 +601,177 @@ export function buildJ12Email(locale: string, userId: string): { subject: string
   return { subject: c.subject, html: emailShell(locale, body) };
 }
 
+// ─── Pilot J+32 : 3 days left → upgrade to Team ──────────────────────────────
+// Sent to pilot users (35-day trial) at day 32, before expire-trials kicks in.
+// By day 32, regular 14-day pro users are already on free — plan=pro here = pilot.
+
+const PILOT_CONVERSION_CONTENT: Record<string, {
+  subject: string;
+  headline: string;
+  intro: string;
+  loseTitle: string;
+  loseItems: string[];
+  ctaLabel: string;
+  altText: string;
+  altLink: string;
+  invoiceText: string;
+  invoiceLink: string;
+  closing: string;
+  unsubNote: string;
+}> = {
+  fr: {
+    subject: "Votre accès Pilot expire dans 3 jours — passez à l'offre Team",
+    headline: "Votre programme Pilot touche à sa fin.",
+    intro: "Vous avez bénéficié d'un accès complet pendant 32 jours. Dans 72 heures, votre compte sera limité au plan gratuit si vous ne souscrivez pas.",
+    loseTitle: "Ce que votre équipe perd à l'expiration",
+    loseItems: [
+      "📊 Chiffres exacts — cas confirmés et décès (retour au floutage)",
+      "📬 Alertes email et push en temps réel",
+      "📄 Rapports PDF régionaux exportables",
+      "📥 Export CSV des données brutes",
+      "🔗 Intégrations Slack et Teams",
+      "🪝 Webhooks et API outbreaks",
+    ],
+    ctaLabel: `Passer à l'offre Team — 149 €/mois →`,
+    altText: "Tarif institutionnel, ONG ou gouvernemental disponible.",
+    altLink: "Contactez-nous pour un devis →",
+    invoiceText: "Pas de procurement requis — facturation sur devis disponible.",
+    invoiceLink: "Demander une facture proforma →",
+    closing: "L'équipe HealthWatch Global",
+    unsubNote: "Vous recevez cet email car vous avez créé un compte sur healthwatch-global.com.",
+  },
+  en: {
+    subject: "Your Pilot access expires in 3 days — continue with Team",
+    headline: "Your Pilot programme is ending.",
+    intro: "You've had full access for 32 days. In 72 hours, your account will be limited to the free plan unless you subscribe.",
+    loseTitle: "What your team loses at expiry",
+    loseItems: [
+      "📊 Exact figures — confirmed cases and deaths (back to blurred data)",
+      "📬 Real-time email and push alerts",
+      "📄 Exportable regional PDF reports",
+      "📥 CSV export of raw data",
+      "🔗 Slack and Teams integrations",
+      "🪝 Webhooks and outbreak API",
+    ],
+    ctaLabel: `Continue with Team — €149/month →`,
+    altText: "Institutional, NGO or government pricing available.",
+    altLink: "Contact us for a quote →",
+    invoiceText: "No procurement process required — invoice-based billing available.",
+    invoiceLink: "Request a pro-forma invoice →",
+    closing: "The HealthWatch Global Team",
+    unsubNote: "You're receiving this email because you created an account on healthwatch-global.com.",
+  },
+  es: {
+    subject: "Su acceso Pilot expira en 3 días — continúe con Team",
+    headline: "Su programa Pilot está llegando a su fin.",
+    intro: "Ha tenido acceso completo durante 32 días. En 72 horas, su cuenta se limitará al plan gratuito si no se suscribe.",
+    loseTitle: "Lo que su equipo pierde al vencer",
+    loseItems: [
+      "📊 Cifras exactas — casos confirmados y fallecidos (vuelta a datos borrosos)",
+      "📬 Alertas email y push en tiempo real",
+      "📄 Informes PDF regionales exportables",
+      "📥 Exportación CSV de datos brutos",
+      "🔗 Integraciones Slack y Teams",
+      "🪝 Webhooks y API de brotes",
+    ],
+    ctaLabel: `Continuar con Team — €149/mes →`,
+    altText: "Precios institucionales, ONG o gubernamentales disponibles.",
+    altLink: "Contáctenos para un presupuesto →",
+    invoiceText: "Sin proceso de compras — facturación bajo demanda disponible.",
+    invoiceLink: "Solicitar factura pro forma →",
+    closing: "El equipo de HealthWatch Global",
+    unsubNote: "Recibe este correo porque creó una cuenta en healthwatch-global.com.",
+  },
+  ar: {
+    subject: "وصولك التجريبي ينتهي خلال 3 أيام — استمر مع خطة Team",
+    headline: "يقترب برنامجك التجريبي من نهايته.",
+    intro: "تمتّعت بوصول كامل لمدة 32 يوماً. خلال 72 ساعة، سيُقيَّد حسابك بالخطة المجانية إذا لم تشترك.",
+    loseTitle: "ما الذي سيفقده فريقك عند الانتهاء",
+    loseItems: [
+      "📊 الأرقام الدقيقة للحالات والوفيات (عودة إلى البيانات المطموسة)",
+      "📬 تنبيهات البريد والدفع الفوري",
+      "📄 تقارير PDF الإقليمية القابلة للتصدير",
+      "📥 تصدير CSV للبيانات الخام",
+      "🔗 تكاملات Slack وTeams",
+      "🪝 Webhooks وواجهة برمجة التفشيات",
+    ],
+    ctaLabel: `← الاستمرار مع Team — €149/شهر`,
+    altText: "أسعار مؤسسية ومنظمات غير حكومية وحكومية متاحة.",
+    altLink: "← اتصل بنا للحصول على عرض",
+    invoiceText: "لا إجراءات شراء مطلوبة — الفوترة بالفاتورة متاحة.",
+    invoiceLink: "← طلب فاتورة أولية",
+    closing: "فريق HealthWatch Global",
+    unsubNote: "تتلقى هذا البريد لأنك أنشأت حساباً على healthwatch-global.com.",
+  },
+  id: {
+    subject: "Akses Pilot Anda berakhir dalam 3 hari — lanjutkan dengan Team",
+    headline: "Program Pilot Anda hampir berakhir.",
+    intro: "Anda telah memiliki akses penuh selama 32 hari. Dalam 72 jam, akun Anda akan dibatasi ke paket gratis jika tidak berlangganan.",
+    loseTitle: "Yang akan hilang dari tim Anda saat berakhir",
+    loseItems: [
+      "📊 Angka tepat — kasus terkonfirmasi dan kematian (kembali ke data dikaburkan)",
+      "📬 Peringatan email dan push real-time",
+      "📄 Laporan PDF regional yang dapat diekspor",
+      "📥 Ekspor CSV data mentah",
+      "🔗 Integrasi Slack dan Teams",
+      "🪝 Webhook dan API wabah",
+    ],
+    ctaLabel: `Lanjutkan dengan Team — €149/bulan →`,
+    altText: "Harga institusional, LSM, atau pemerintah tersedia.",
+    altLink: "Hubungi kami untuk penawaran →",
+    invoiceText: "Tidak perlu proses pengadaan — penagihan berbasis faktur tersedia.",
+    invoiceLink: "Minta faktur pro-forma →",
+    closing: "Tim HealthWatch Global",
+    unsubNote: "Anda menerima email ini karena membuat akun di healthwatch-global.com.",
+  },
+};
+
+export function buildPilotConversionEmail(locale: string, userId: string): { subject: string; html: string } {
+  const c = PILOT_CONVERSION_CONTENT[locale] ?? PILOT_CONVERSION_CONTENT.en;
+  const pricingUrl = `https://healthwatch-global.com/${locale}/pricing`;
+  const contactUrl = `https://healthwatch-global.com/${locale}/contact`;
+  const unsubUrl   = `https://healthwatch-global.com/api/unsubscribe-signal?id=${encodeURIComponent(userId)}&locale=${locale}`;
+
+  const body = `
+    <div style="padding:36px 32px;">
+      <div style="background:#1e3a5f;border:1px solid #2563eb55;border-radius:10px;padding:12px 20px;margin-bottom:24px;text-align:center;">
+        <p style="margin:0;font-size:12px;font-weight:700;color:#93c5fd;text-transform:uppercase;letter-spacing:.06em;">⏳ Pilot Programme — 3 jours restants</p>
+      </div>
+
+      <h2 style="margin:0 0 12px;font-size:20px;font-weight:700;color:#f1f5f9;">${c.headline}</h2>
+      <p style="color:#94a3b8;font-size:15px;line-height:1.7;margin:0 0 24px;">${c.intro}</p>
+
+      <div style="background:#3b1515;border:1px solid #dc262644;border-radius:12px;padding:20px 24px;margin-bottom:28px;">
+        <p style="margin:0 0 12px;font-size:13px;font-weight:700;color:#fca5a5;text-transform:uppercase;letter-spacing:.05em;">${c.loseTitle}</p>
+        ${c.loseItems.map((item) => `
+        <div style="margin-bottom:8px;">
+          <p style="margin:0;font-size:14px;color:#e2e8f0;line-height:1.5;">${item}</p>
+        </div>`).join("")}
+      </div>
+
+      <div style="text-align:center;margin-bottom:16px;">
+        <a href="${pricingUrl}"
+           style="display:inline-block;background:#dc2626;color:white;text-decoration:none;
+                  padding:14px 36px;border-radius:8px;font-weight:700;font-size:15px;">
+          ${c.ctaLabel}
+        </a>
+      </div>
+
+      <div style="background:#0f172a;border-radius:10px;padding:16px 20px;text-align:center;">
+        <p style="margin:0 0 6px;font-size:13px;color:#64748b;">${c.altText}</p>
+        <a href="${contactUrl}" style="color:#60a5fa;font-size:13px;font-weight:600;text-decoration:none;display:block;margin-bottom:8px;">${c.altLink}</a>
+        <p style="margin:0 0 4px;font-size:12px;color:#475569;">${c.invoiceText}</p>
+        <a href="${contactUrl}" style="color:#60a5fa;font-size:12px;text-decoration:none;">${c.invoiceLink}</a>
+      </div>
+    </div>
+    <div style="padding:20px 32px;border-top:1px solid #334155;">
+      <p style="margin:0 0 8px;font-size:13px;color:#e2e8f0;">${c.closing}</p>
+      <p style="margin:0;font-size:11px;color:#475569;">${c.unsubNote} <a href="${unsubUrl}" style="color:#475569;text-decoration:underline;">Unsubscribe</a></p>
+    </div>`;
+
+  return { subject: c.subject, html: emailShell(locale, body) };
+}
+
 export function buildTrialExpiredEmail(locale: string, userId: string): { subject: string; html: string } {
   const c = TRIAL_EXPIRED_CONTENT[locale] ?? TRIAL_EXPIRED_CONTENT.en;
   const pricingUrl = `https://healthwatch-global.com/${locale}/pricing`;

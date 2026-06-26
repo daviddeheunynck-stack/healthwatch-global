@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
-import { buildJ3Email, buildJ7Email, buildJ12Email } from "@/lib/onboarding-emails";
+import { buildJ3Email, buildJ7Email, buildJ12Email, buildPilotConversionEmail } from "@/lib/onboarding-emails";
 import * as Sentry from "@sentry/nextjs";
 
 export const dynamic = "force-dynamic";
@@ -97,9 +97,31 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: j12Err.message }, { status: 500 });
   }
 
+  // ── J+32 : Pilot conversion — 3 days left → upgrade to Team ─────────────
+  // Pilot users have 35-day trials. By day 32, regular 14-day pro users have
+  // already been downgraded to free by expire-trials, so plan=pro + created_at
+  // ~32 days ago + no stripe sub uniquely identifies pilot users.
+  const j32WindowEnd = new Date(Date.now() + 4 * 86_400_000).toISOString();
+  const { data: j32Users, error: j32Err } = await supabase
+    .from("profiles")
+    .select("id, email, plan, locale, trial_ends_at, display_filters")
+    .eq("plan", "pro")
+    .not("trial_ends_at", "is", null)
+    .lt("trial_ends_at", j32WindowEnd)
+    .gt("trial_ends_at", new Date().toISOString())
+    .is("stripe_subscription_id", null)
+    .filter("created_at", "gte", new Date(Date.now() - 32.5 * 86400_000).toISOString())
+    .filter("created_at", "lt",  new Date(Date.now() - 31.5 * 86400_000).toISOString());
+
+  if (j32Err) {
+    console.error("[onboarding] J+32 query error:", j32Err);
+    return NextResponse.json({ error: j32Err.message }, { status: 500 });
+  }
+
   let j3Sent = 0, j3Failed = 0;
   let j7Sent = 0, j7Failed = 0;
   let j12Sent = 0, j12Failed = 0;
+  let j32Sent = 0, j32Failed = 0;
 
   const hasOptedOut = (u: { display_filters: unknown }) =>
     !!(u.display_filters as Record<string, unknown> | null)?.no_weekly_signal;
@@ -152,11 +174,28 @@ export async function GET(req: NextRequest) {
     }
   }
 
-  console.log(`[onboarding] J+3: ${j3Sent}/${j3Failed} | J+7: ${j7Sent}/${j7Failed} | J+12: ${j12Sent}/${j12Failed}`);
+  // ── Send J+32 pilot conversion emails ────────────────────────────────────
+  for (const user of j32Users ?? []) {
+    if (!user.email || hasOptedOut(user)) continue;
+    try {
+      const locale = user.locale || "fr";
+      const { subject, html } = buildPilotConversionEmail(locale, user.id);
+      await sendEmail(user.email, subject, html);
+      j32Sent++;
+      await new Promise((r) => setTimeout(r, 150));
+    } catch (err) {
+      console.error(`[onboarding] J+32 failed for ${user.email}:`, err);
+      Sentry.captureException(err, { tags: { cron: "onboarding-sequence", step: "j32", user_id: user.id } });
+      j32Failed++;
+    }
+  }
+
+  console.log(`[onboarding] J+3: ${j3Sent}/${j3Failed} | J+7: ${j7Sent}/${j7Failed} | J+12: ${j12Sent}/${j12Failed} | J+32: ${j32Sent}/${j32Failed}`);
 
   return NextResponse.json({
     j3:  { sent: j3Sent,  failed: j3Failed,  total: (j3Users  ?? []).length },
     j7:  { sent: j7Sent,  failed: j7Failed,  total: (j7Users  ?? []).length },
     j12: { sent: j12Sent, failed: j12Failed, total: (j12Users ?? []).length },
+    j32: { sent: j32Sent, failed: j32Failed, total: (j32Users ?? []).length },
   });
 }
