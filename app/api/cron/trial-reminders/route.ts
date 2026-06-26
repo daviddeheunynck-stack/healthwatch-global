@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { buildTrialEndingEmail } from "@/lib/trial-ending-email";
+import * as Sentry from "@sentry/nextjs";
 
 export const dynamic = "force-dynamic";
 
@@ -114,6 +115,7 @@ export async function GET(req: NextRequest) {
       sent++;
     } catch (err) {
       console.error(`[trial-reminders] Failed for ${profile.email}:`, err);
+      Sentry.captureException(err, { tags: { cron: "trial-reminders", user_id: profile.id } });
       failed++;
     }
 

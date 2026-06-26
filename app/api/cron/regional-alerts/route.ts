@@ -12,6 +12,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { buildOutbreakAlertEmail } from "@/lib/alert-emails";
+import * as Sentry from "@sentry/nextjs";
 
 export const dynamic = "force-dynamic";
 
@@ -242,6 +243,7 @@ export async function GET(req: NextRequest) {
           sent++;
         } catch (err) {
           console.error(`[regional-alerts] failed to send to ${profile.email}:`, err);
+          Sentry.captureException(err, { tags: { cron: "regional-alerts", user_id: profile.id, outbreak_id: String(outbreak.id) } });
           failed++;
         }
 

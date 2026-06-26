@@ -8,6 +8,7 @@ import { createClient } from "@supabase/supabase-js";
 import { sendPushToMany } from "@/lib/push";
 import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 import { errorMessage } from "@/lib/error";
+import * as Sentry from "@sentry/nextjs";
 
 export const dynamic = "force-dynamic";
 
@@ -113,6 +114,7 @@ export async function GET(req: NextRequest) {
         allExpiredIds.push(...result.expiredIds);
       } catch (e: unknown) {
         console.error(`[push-alerts] ${disease}/${country}/${locale}:`, errorMessage(e));
+        Sentry.captureException(e, { tags: { cron: "push-alerts", outbreak_id: outbreak.id } });
       }
     }
 
