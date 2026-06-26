@@ -86,7 +86,7 @@ export async function GET(req: NextRequest) {
   // ── 1. Load active rows ───────────────────────────────────────────────────
   const { data: rows, error: rowsErr } = await supabase
     .from("outbreaks")
-    .select("id, disease, country, cases, deaths, source, is_seed")
+    .select("id, disease, country, cases, deaths, date, source, is_seed")
     .eq("active", true);
 
   if (rowsErr) return NextResponse.json({ error: rowsErr.message }, { status: 500 });
@@ -186,6 +186,25 @@ export async function GET(req: NextRequest) {
     }
 
     await new Promise((r) => setTimeout(r, 150)); // polite delay
+  }
+
+  // ── 4b. Staleness check ───────────────────────────────────────────────────
+  // Flag active entries whose `date` is >21 days old — signals a silent cron failure
+  // Excludes: is_seed rows (manual), dashboard/tracker sources (non-article cadence)
+  const STALE_DAYS = 21;
+  const staleThreshold = new Date(Date.now() - STALE_DAYS * 86_400_000).toISOString().split("T")[0];
+  const DASHBOARD_SOURCES = ["shinyapps.io", "ecdc.europa.eu/en/mpox/surveillance"];
+
+  for (const row of rows ?? []) {
+    if (row.is_seed || !row.date || anomalies.some((a) => a.row.id === row.id)) continue;
+    if (DASHBOARD_SOURCES.some((d) => (row.source ?? "").includes(d))) continue;
+    if (row.date < staleThreshold) {
+      const daysSince = Math.round((Date.now() - new Date(row.date).getTime()) / 86_400_000);
+      needsReview.push({
+        label: `${row.disease} / ${row.country}`,
+        detail: `Stale — dernière donnée il y a ${daysSince}j (${row.date}) — vérifier source : ${row.source ?? "N/A"}`,
+      });
+    }
   }
 
   // ── 5. Notable movements (top 5 largest absolute change, no anomaly) ──────
