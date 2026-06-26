@@ -5,6 +5,7 @@
 // Schedule: 30 7 * * 1  (Monday 07:30 UTC — after the 6h DON sync run at 06:00)
 
 import { NextRequest, NextResponse } from "next/server";
+import * as Sentry from "@sentry/nextjs";
 import { createClient } from "@supabase/supabase-js";
 import { extractNumbers } from "@/lib/outbreak-parser";
 import { errorMessage } from "@/lib/error";
@@ -504,7 +505,10 @@ async function sendEmail(to: string, subject: string, html: string) {
       subject,
       htmlContent: html,
     }),
-  }).catch((e) => console.error("[endemic] email failed:", errorMessage(e)));
+  }).catch((e) => {
+    console.error("[endemic] email failed:", errorMessage(e));
+    Sentry.captureException(e, { tags: { cron: "sync-endemic-data" } });
+  });
 }
 
 // ══════════════════════════════════════════════════════════════════════════════
@@ -591,6 +595,7 @@ export async function GET(req: NextRequest) {
       found = await target.fetch(row.date);
     } catch (e) {
       console.error(`[endemic] ${target.label} fetch error:`, errorMessage(e));
+      Sentry.captureException(e, { tags: { cron: "sync-endemic-data", label: target.label } });
       skipped.push({ label: target.label, reason: `fetch error: ${errorMessage(e)}` });
       continue;
     }

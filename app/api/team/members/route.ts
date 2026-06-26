@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase-server";
 import { createClient as createService } from "@supabase/supabase-js";
 import { errorMessage } from "@/lib/error";
+import * as Sentry from "@sentry/nextjs";
 
 export const dynamic = "force-dynamic";
 
@@ -112,6 +113,7 @@ export async function DELETE(req: NextRequest) {
 
   if (removeErr) {
     console.error("[team/members] remove error:", errorMessage(removeErr));
+    Sentry.captureException(removeErr, { tags: { route: "team-members" } });
     return NextResponse.json({ error: "Failed to remove member" }, { status: 500 });
   }
 

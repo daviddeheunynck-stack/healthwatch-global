@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase-server";
 import { createClient as createService } from "@supabase/supabase-js";
 import { errorMessage } from "@/lib/error";
+import * as Sentry from "@sentry/nextjs";
 
 export const dynamic = "force-dynamic";
 
@@ -61,6 +62,7 @@ export async function POST(req: NextRequest) {
 
   if (error) {
     console.error("[push/subscribe] upsert failed:", errorMessage(error));
+    Sentry.captureException(error, { tags: { route: "push-subscribe", user_id: user.id } });
     return NextResponse.json({ error: "Could not save subscription" }, { status: 500 });
   }
 

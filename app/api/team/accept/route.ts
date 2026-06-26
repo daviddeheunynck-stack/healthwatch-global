@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase-server";
 import { createClient as createService } from "@supabase/supabase-js";
 import { resolvedPlan } from "@/lib/resolved-plan";
+import * as Sentry from "@sentry/nextjs";
 
 export const dynamic = "force-dynamic";
 
@@ -111,6 +112,7 @@ export async function GET(req: NextRequest) {
 
   if (memberErr) {
     console.error("[team/accept] insert member:", memberErr);
+    Sentry.captureException(new Error(`[team/accept] insert member: ${memberErr?.message}`), { tags: { route: "team-accept" } });
     return NextResponse.redirect(`${BASE_URL}/${locale}/account/team?error=server_error`);
   }
 

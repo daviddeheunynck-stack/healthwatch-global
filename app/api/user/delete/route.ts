@@ -3,6 +3,7 @@ import { createServerClient } from "@supabase/ssr";
 import { createClient } from "@supabase/supabase-js";
 import { cookies } from "next/headers";
 import Stripe from "stripe";
+import * as Sentry from "@sentry/nextjs";
 
 export const dynamic = "force-dynamic";
 
@@ -53,6 +54,7 @@ export async function DELETE(req: NextRequest) {
       });
     } catch (err) {
       console.error("[delete-account] Stripe cancellation failed:", err);
+      Sentry.captureException(err, { tags: { route: "user-delete", user_id: user.id } });
     }
   }
 
@@ -60,6 +62,7 @@ export async function DELETE(req: NextRequest) {
   const { error: deleteErr } = await admin.auth.admin.deleteUser(user.id);
   if (deleteErr) {
     console.error("[delete-account] deleteUser failed:", deleteErr);
+    Sentry.captureException(new Error(`[user/delete] deleteUser failed: ${deleteErr.message}`), { tags: { route: "user-delete", user_id: user.id } });
     return NextResponse.json({ error: "Deletion failed" }, { status: 500 });
   }
 

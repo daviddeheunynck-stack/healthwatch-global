@@ -6,6 +6,7 @@
 // Never overwrites rows owned by the WHO DON daily sync.
 
 import { NextRequest, NextResponse } from "next/server";
+import * as Sentry from "@sentry/nextjs";
 import { createClient } from "@supabase/supabase-js";
 import { normalizeDisease } from "@/lib/disease-data";
 import { COUNTRIES, findCountry } from "@/lib/geo-data";
@@ -239,6 +240,7 @@ export async function GET(req: NextRequest) {
       }
     } catch (e) {
       console.error("[spf] HTML fallback failed:", errorMessage(e));
+      Sentry.captureException(e, { tags: { cron: "sync-spf" } });
       return NextResponse.json({ error: "SPF unreachable" }, { status: 502 });
     }
   }

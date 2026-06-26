@@ -9,6 +9,7 @@
 // Never overwrites rows owned by the WHO DON daily sync.
 
 import { NextRequest, NextResponse } from "next/server";
+import * as Sentry from "@sentry/nextjs";
 import { createClient } from "@supabase/supabase-js";
 import { normalizeDisease } from "@/lib/disease-data";
 import { findCountry } from "@/lib/geo-data";
@@ -119,6 +120,7 @@ export async function GET(req: NextRequest) {
     listHtml = await res.text();
   } catch (e) {
     console.error("[cdc-notices] fetch listing:", errorMessage(e));
+    Sentry.captureException(e, { tags: { cron: "sync-cdc-notices" } });
     return NextResponse.json({ error: errorMessage(e) }, { status: 502 });
   }
 

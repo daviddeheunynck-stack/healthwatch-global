@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase-server";
 import { randomBytes } from "crypto";
 import { Resend } from "resend";
+import * as Sentry from "@sentry/nextjs";
 
 export const dynamic = "force-dynamic";
 
@@ -116,7 +117,7 @@ export async function POST(req: Request) {
       to: [email],
       subject: (INVITE_SUBJECT[locale] ?? INVITE_SUBJECT.en)(org.name),
       html: buildInviteEmail(org.name, inviteUrl, locale),
-    }).catch(() => {});
+    }).catch((e) => { Sentry.captureException(e, { tags: { route: "org-invite" } }); });
   }
 
   return NextResponse.json({ member, inviteUrl }, { status: 201 });

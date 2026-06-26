@@ -6,6 +6,7 @@
 // Never overwrites rows owned by the WHO DON daily sync.
 
 import { NextRequest, NextResponse } from "next/server";
+import * as Sentry from "@sentry/nextjs";
 import { createClient } from "@supabase/supabase-js";
 import { normalizeDisease } from "@/lib/disease-data";
 import { COUNTRIES, findCountry } from "@/lib/geo-data";
@@ -167,6 +168,7 @@ export async function GET(req: NextRequest) {
     if (!res.ok) return NextResponse.json({ error: `UKHSA ATOM HTTP ${res.status}` }, { status: 502 });
     atomXml = await res.text();
   } catch (e) {
+    Sentry.captureException(e, { tags: { cron: "sync-ukhsa" } });
     return NextResponse.json({ error: errorMessage(e) }, { status: 502 });
   }
 

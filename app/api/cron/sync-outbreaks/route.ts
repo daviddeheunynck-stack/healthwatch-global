@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import * as Sentry from "@sentry/nextjs";
 import { createClient } from "@supabase/supabase-js";
 import { parseRSSFeed, buildOutbreakFromRSSItem } from "@/lib/outbreak-parser";
 import { fetchWHODONList, parseWHODONItem } from "@/lib/who-api";
@@ -301,6 +302,7 @@ export async function GET(req: NextRequest) {
       await new Promise((r) => setTimeout(r, 50));
     } catch (e: unknown) {
       console.error("[sync] item error:", errorMessage(e));
+      Sentry.captureException(e, { tags: { cron: "sync-outbreaks" } });
       results.errors++;
     }
   }

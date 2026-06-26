@@ -6,6 +6,7 @@
  * Inserts new signals; skips duplicates (source_url UNIQUE constraint).
  */
 import { NextRequest, NextResponse } from "next/server";
+import * as Sentry from "@sentry/nextjs";
 import { createClient } from "@supabase/supabase-js";
 
 export const dynamic = "force-dynamic";
@@ -72,6 +73,7 @@ export async function GET(req: NextRequest) {
     rwData = json.data ?? [];
   } catch (err) {
     console.error("[sync-signals] ReliefWeb fetch error:", err);
+    Sentry.captureException(err, { tags: { cron: "sync-signals" } });
     return NextResponse.json({ error: "ReliefWeb fetch failed" }, { status: 502 });
   }
 
