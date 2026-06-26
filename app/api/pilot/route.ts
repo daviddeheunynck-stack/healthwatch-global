@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { rateLimit, getClientIp } from "@/lib/rate-limit";
+import * as Sentry from "@sentry/nextjs";
 
 export const dynamic = "force-dynamic";
 
@@ -300,6 +301,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ success: true, activated });
   } catch (err: unknown) {
     console.error("Pilot route error:", err);
+    Sentry.captureException(err, { tags: { route: "pilot" } });
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }
