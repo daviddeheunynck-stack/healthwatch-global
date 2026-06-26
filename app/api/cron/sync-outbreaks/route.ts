@@ -236,12 +236,18 @@ export async function GET(req: NextRequest) {
         const isOlderArticle = outbreak.date < existingRow.date;
         const existingRecovered = (existingRow as Record<string, unknown>).recovered as number | null ?? 0;
 
-        // Spike guard: if new cases are >3× existing, something went wrong in
-        // parsing (e.g. combined multi-country total vs. per-country figure).
-        // Skip the update and log — a human can review and correct manually.
+        // Spike guard: >3× jump is almost certainly a parsing anomaly.
         if (outbreak.cases > 0 && existingRow.cases > 0 && outbreak.cases > existingRow.cases * 3) {
           console.warn(`[sync] guard:spike — ${outbreak.disease_en}/${outbreak.country_en} — parsed ${outbreak.cases} vs existing ${existingRow.cases} (>3×) — skipping`);
           if (debug) debugLog.push(`⚠️ Spike rejected: ${outbreak.disease_en}/${outbreak.country_en} — ${outbreak.cases} vs ${existingRow.cases}`);
+          results.skipped++;
+          continue;
+        }
+        // Collapse guard: a >70% reduction in an active outbreak is also suspect
+        // (e.g. WHO DON article only covers one region but DB has global total).
+        if (existingRow.cases > 100 && outbreak.cases > 0 && outbreak.cases < existingRow.cases * 0.3) {
+          console.warn(`[sync] guard:collapse — ${outbreak.disease_en}/${outbreak.country_en} — parsed ${outbreak.cases} vs existing ${existingRow.cases} (<30%) — skipping`);
+          if (debug) debugLog.push(`⚠️ Collapse rejected: ${outbreak.disease_en}/${outbreak.country_en} — ${outbreak.cases} vs ${existingRow.cases}`);
           results.skipped++;
           continue;
         }
