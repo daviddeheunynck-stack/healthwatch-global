@@ -302,6 +302,21 @@ export async function GET(req: NextRequest) {
       continue;
     }
 
+    // SPF guard: France entries require explicit French case language.
+    // SPF publishes awareness bulletins for foreign outbreaks (e.g. Ebola DRC)
+    // that mention France in an advisory context — these must NOT create France rows.
+    if (geo.name_en === "France") {
+      const hasFrenchCase =
+        /(?:cas|patient|voyageur|contact)\s+(?:confirmé|identifi[eé]|import[eé]|signalé|hospitalisé)\s+(?:en\s+france|sur\s+le\s+territoire)/i.test(searchText) ||
+        /france\s+(?:a\s+)?(?:confirm[eé]|signal[eé]|notifi[eé])\s+(?:\d+|un[e]?\s+(?:cas|patient))/i.test(searchText) ||
+        /cas\s+(?:autochtone|import[eé])\s+(?:en\s+france|sur\s+le\s+territoire)/i.test(searchText);
+      if (!hasFrenchCase) {
+        log.push({ label: item.title, status: "skip", detail: "France not primary event country" });
+        results.skipped++;
+        continue;
+      }
+    }
+
     if (item.date > today) { results.skipped++; continue; }
     if (bySource.has(item.url)) {
       log.push({ label: item.title, status: "skip", detail: "URL in DB" });

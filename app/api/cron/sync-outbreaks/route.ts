@@ -221,12 +221,31 @@ export async function GET(req: NextRequest) {
         }
       }
 
+      // ── Pre-upsert sanity guards ─────────────────────────────────
+      // Reject impossible or suspicious data before touching the DB.
+      if (outbreak.deaths > outbreak.cases && outbreak.cases > 0) {
+        console.warn(`[sync] guard:deaths>cases — ${outbreak.disease_en}/${outbreak.country_en} (${outbreak.deaths}d > ${outbreak.cases}c) — skipping`);
+        results.skipped++;
+        continue;
+      }
+
       if (existingRow) {
         // Never let an older-dated WHO article overwrite a row that already
         // reflects a more recent one (e.g. byDiseaseCountry matched the
         // current row, but this article predates it).
         const isOlderArticle = outbreak.date < existingRow.date;
         const existingRecovered = (existingRow as Record<string, unknown>).recovered as number | null ?? 0;
+
+        // Spike guard: if new cases are >3× existing, something went wrong in
+        // parsing (e.g. combined multi-country total vs. per-country figure).
+        // Skip the update and log — a human can review and correct manually.
+        if (outbreak.cases > 0 && existingRow.cases > 0 && outbreak.cases > existingRow.cases * 3) {
+          console.warn(`[sync] guard:spike — ${outbreak.disease_en}/${outbreak.country_en} — parsed ${outbreak.cases} vs existing ${existingRow.cases} (>3×) — skipping`);
+          if (debug) debugLog.push(`⚠️ Spike rejected: ${outbreak.disease_en}/${outbreak.country_en} — ${outbreak.cases} vs ${existingRow.cases}`);
+          results.skipped++;
+          continue;
+        }
+
         const needsUpdate =
           !isOlderArticle &&
           (existingRow.cases !== outbreak.cases ||

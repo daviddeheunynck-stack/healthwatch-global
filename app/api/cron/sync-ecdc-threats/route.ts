@@ -314,6 +314,20 @@ export async function GET(req: NextRequest) {
         continue;
       }
 
+      // ── Plausibility guards ──────────────────────────────────────────────
+      // "Worldwide overview" ECDC articles often have 0/0 because numbers are
+      // in tables the regex can't parse. Skip rather than insert empty rows.
+      if (item.cases === 0 && item.deaths === 0) {
+        log.push({ label, status: "skip", detail: "0/0 — no parseable case numbers" });
+        results.skipped++;
+        continue;
+      }
+      if (item.deaths > item.cases && item.cases > 0) {
+        log.push({ label, status: "skip", detail: `deaths (${item.deaths}) > cases (${item.cases})` });
+        results.skipped++;
+        continue;
+      }
+
       const diseaseInfo = normalizeDisease(item.disease_en);
       const riskLevel   = assessRisk(item.disease_en, item.description, item.cases, item.deaths);
 
@@ -324,6 +338,13 @@ export async function GET(req: NextRequest) {
 
         if (!isNewer && !casesDiff && !deathsDiff) {
           log.push({ label, status: "skip", detail: "data unchanged" });
+          results.skipped++;
+          continue;
+        }
+
+        // Spike guard: >3× jump is almost certainly a parsing anomaly.
+        if (item.cases > 0 && existing.cases > 0 && item.cases > existing.cases * 3) {
+          log.push({ label, status: "skip", detail: `spike: ${item.cases} vs existing ${existing.cases} (>3×)` });
           results.skipped++;
           continue;
         }
