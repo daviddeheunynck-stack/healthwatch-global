@@ -1,7 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase-server";
+import { createClient as createService } from "@supabase/supabase-js";
 import { isAdmin } from "@/lib/admin";
 import { rateLimit, getClientIp } from "@/lib/rate-limit";
+
+const BOM = String.fromCharCode(65279);
+const clean = (v: string | undefined) => (v || "").replace(new RegExp("^" + BOM), "").trim();
+
+function getService() {
+  return createService(
+    clean(process.env.NEXT_PUBLIC_SUPABASE_URL),
+    clean(process.env.SUPABASE_SERVICE_ROLE_KEY)
+  );
+}
 
 function adminRateLimit(req: NextRequest) {
   const ip = getClientIp(req);
@@ -62,7 +73,8 @@ export async function PATCH(
   if (err) return NextResponse.json({ error: err }, { status: 422 });
 
   const safe = pick(body);
-  const { error, data } = await supabase
+  const svc = getService();
+  const { error, data } = await svc
     .from("outbreaks")
     .update(safe)
     .eq("id", id)
@@ -89,7 +101,8 @@ export async function DELETE(
 
   const { id } = await params;
 
-  const { error, data } = await supabase
+  const svc = getService();
+  const { error, data } = await svc
     .from("outbreaks")
     .update({ active: false })
     .eq("id", id)
