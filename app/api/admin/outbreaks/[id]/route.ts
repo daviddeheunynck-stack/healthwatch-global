@@ -74,15 +74,20 @@ export async function PATCH(
 
   const safe = pick(body);
   const svc = getService();
-  const { error, data } = await svc
+  const { error } = await svc
     .from("outbreaks")
     .update(safe)
-    .eq("id", id)
-    .select()
-    .single();
+    .eq("id", id);
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-  return NextResponse.json(data);
+
+  const { data: updated } = await svc
+    .from("outbreaks")
+    .select("*")
+    .eq("id", id)
+    .single();
+
+  return NextResponse.json(updated);
 }
 
 // ─── DELETE — soft-delete (active = false) ────────────────────────────────────
