@@ -105,9 +105,9 @@ const LABELS: Record<string, {
     missionTitle: "Notre mission",
     missionText:
       "HealthWatch Global agrège automatiquement les données officielles de l'OMS, l'ECDC, l'OPAS/PAHO et l'Africa CDC — mises à jour toutes les heures — pour fournir un tableau de bord unique aux épidémiologistes, professionnels de santé, journalistes et organisations qui suivent les foyers épidémiques dès leur déclaration.",
-    whoTitle: "4 sources de données officielles",
+    whoTitle: "10+ sources de données officielles",
     whoText:
-      "Toutes les données sont agrégées directement depuis 4 sources officielles : le Disease Outbreak News de l'OMS, les évaluations rapides de risque de l'ECDC, les alertes épidémiologiques de l'OPAS/PAHO et les rapports de l'Africa CDC — les mêmes agences que celles utilisées comme références primaires par les gouvernements et institutions de santé publique. Aucune donnée non vérifiée, aucun média tiers. Mise à jour toutes les heures.",
+      "Toutes les données sont agrégées directement depuis des agences officielles : OMS (DON, AFRO, EMRO), ECDC, OPAS/PAHO, Africa CDC, CDC HAN & Notices, UKHSA, Santé Publique France et USDA APHIS pour les foyers HPAI H5N1 bovins — les mêmes institutions utilisées comme références primaires par les gouvernements et organisations de santé publique. Aucune donnée non vérifiée, aucun média tiers. Mise à jour toutes les heures.",
     howTitle: "Comment ça marche",
     howSteps: [
       { title: "Collecte", text: "Notre pipeline agrège les données officielles de l'OMS, l'ECDC, l'OPAS/PAHO et l'Africa CDC — maladie, pays, cas confirmés, décès et létalité pour chaque foyer." },
@@ -141,9 +141,9 @@ const LABELS: Record<string, {
     missionTitle: "Our mission",
     missionText:
       "HealthWatch Global automatically aggregates official outbreak data from WHO, ECDC, PAHO, and Africa CDC — updated every hour — to provide a single readable dashboard for epidemiologists, health professionals, journalists and organisations that need to track disease outbreaks the moment they are declared.",
-    whoTitle: "4 official data sources",
+    whoTitle: "10+ official data sources",
     whoText:
-      "All outbreak data is aggregated directly from 4 official sources: WHO Disease Outbreak News, ECDC rapid risk assessments and threat briefs, PAHO epidemiological alerts, and Africa CDC outbreak reports — the same agencies governments and public health institutions use as primary references. No secondary media, no unverified data. Updated every hour.",
+      "All outbreak data is aggregated directly from official agencies: WHO (DON, AFRO, EMRO), ECDC, PAHO, Africa CDC, CDC HAN & Notices, UKHSA, Santé Publique France, and USDA APHIS for H5N1 bovine HPAI outbreaks — the same institutions governments and public health organisations use as primary references. No secondary media, no unverified data. Updated every hour.",
     howTitle: "How it works",
     howSteps: [
       { title: "Collection", text: "Our pipeline aggregates official data from WHO, ECDC, PAHO, and Africa CDC — extracting disease, country, confirmed cases, deaths, and CFR for each outbreak." },
@@ -177,9 +177,9 @@ const LABELS: Record<string, {
     missionTitle: "Nuestra misión",
     missionText:
       "HealthWatch Global agrega automáticamente las alertas oficiales de la OMS, ECDC, PAHO y Africa CDC — actualizadas cada hora — para proporcionar un panel legible a los profesionales de la salud, periodistas y organizaciones que necesitan estar informados sobre brotes de enfermedades en cuanto se declaran.",
-    whoTitle: "4 fuentes de datos oficiales",
+    whoTitle: "10+ fuentes de datos oficiales",
     whoText:
-      "Todos los datos se agregan directamente desde 4 fuentes oficiales: WHO Disease Outbreak News, evaluaciones rápidas de riesgo de ECDC, alertas epidemiológicas de PAHO y reportes de Africa CDC — las mismas agencias utilizadas como referencias primarias por gobiernos e instituciones de salud pública. Sin datos no verificados, sin medios de terceros. Actualizado cada hora.",
+      "Todos los datos se agregan directamente desde agencias oficiales: OMS (DON, AFRO, EMRO), ECDC, PAHO, Africa CDC, CDC HAN y Notices, UKHSA, Santé Publique France y USDA APHIS para brotes de H5N1 HPAI bovino — las mismas instituciones utilizadas como referencias primarias por gobiernos e instituciones de salud pública. Sin datos no verificados, sin medios de terceros. Actualizado cada hora.",
     howTitle: "Cómo funciona",
     howSteps: [
       { title: "Recopilación", text: "Nuestro pipeline agrega datos de la OMS, ECDC, PAHO y Africa CDC — extrayendo enfermedad, país, casos confirmados y fallecimientos de cada fuente." },
@@ -213,9 +213,9 @@ const LABELS: Record<string, {
     missionTitle: "مهمتنا",
     missionText:
       "تجمع HealthWatch Global تلقائياً التنبيهات الرسمية من WHO وECDC وPAHO وAfrica CDC — محدَّثة كل ساعة — لتوفير لوحة تحكم واضحة للمهنيين الصحيين والصحفيين والمنظمات التي تحتاج إلى إخطار بتفشي الأمراض فور الإعلان عنها.",
-    whoTitle: "4 مصادر بيانات رسمية",
+    whoTitle: "10+ مصادر بيانات رسمية",
     whoText:
-      "تُجمَّع جميع البيانات مباشرة من 4 مصادر رسمية: Disease Outbreak News التابع لمنظمة الصحة العالمية، والتقييمات السريعة للمخاطر من ECDC، والتنبيهات الوبائية من PAHO، وتقارير Africa CDC — نفس الوكالات التي تستخدمها الحكومات ومؤسسات الصحة العامة مرجعاً أساسياً. لا بيانات غير موثقة، لا وسائل إعلام خارجية. تحديث كل ساعة.",
+      "تُجمَّع جميع البيانات مباشرة من وكالات رسمية: منظمة الصحة العالمية (DON, AFRO, EMRO)، وECDC، وPAHO، وAfrica CDC، وCDC HAN & Notices، وUKHSA، وSanté Publique France، وUSDA APHIS لحالات تفشي H5N1 HPAI في الأبقار — نفس المؤسسات التي تستخدمها الحكومات ومؤسسات الصحة العامة مرجعاً أساسياً. لا بيانات غير موثقة، لا وسائل إعلام خارجية. تحديث كل ساعة.",
     howTitle: "كيف يعمل",
     howSteps: [
       { title: "الجمع", text: "تستعلم خطوط أنابيبنا واجهة OData لمنظمة الصحة العالمية وتستخرج المعلومات الرئيسية: المرض، البلد، الحالات المؤكدة، الوفيات." },
@@ -249,9 +249,9 @@ const LABELS: Record<string, {
     missionTitle: "Misi kami",
     missionText:
       "HealthWatch Global mengumpulkan secara otomatis data resmi dari WHO, ECDC, PAHO, dan Africa CDC — diperbarui setiap jam — untuk menyediakan dasbor yang mudah dibaca bagi tenaga kesehatan, jurnalis, dan organisasi yang perlu mendapatkan informasi tentang wabah penyakit segera setelah dideklarasikan.",
-    whoTitle: "4 sumber data resmi",
+    whoTitle: "10+ sumber data resmi",
     whoText:
-      "Semua data diagregasi langsung dari 4 sumber resmi: WHO Disease Outbreak News, penilaian risiko cepat ECDC, peringatan epidemiologi PAHO, dan laporan Africa CDC — lembaga yang sama yang digunakan pemerintah dan institusi kesehatan masyarakat sebagai referensi utama. Tidak ada data tidak terverifikasi, tidak ada media pihak ketiga. Diperbarui setiap jam.",
+      "Semua data diagregasi langsung dari lembaga resmi: WHO (DON, AFRO, EMRO), ECDC, PAHO, Africa CDC, CDC HAN & Notices, UKHSA, Santé Publique France, dan USDA APHIS untuk wabah H5N1 HPAI pada sapi — lembaga yang sama yang digunakan pemerintah dan institusi kesehatan masyarakat sebagai referensi utama. Tidak ada data tidak terverifikasi, tidak ada media pihak ketiga. Diperbarui setiap jam.",
     howTitle: "Cara kerjanya",
     howSteps: [
       { title: "Pengumpulan", text: "Pipeline kami mengkueri WHO OData API dan mengekstrak informasi kunci: penyakit, negara, kasus yang dikonfirmasi, kematian." },
@@ -351,17 +351,30 @@ export default async function AboutPage({
           <Database className="w-5 h-5 text-red-400 shrink-0" />
           {l.whoTitle}
         </h2>
-        <div className="bg-gray-900 border border-gray-800 rounded-2xl p-5 space-y-3">
+        <div className="bg-gray-900 border border-gray-800 rounded-2xl p-5 space-y-4">
           <p className="text-gray-400 leading-relaxed">{l.whoText}</p>
-          <a
-            href="https://www.who.int/emergencies/disease-outbreak-news"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 text-sm text-red-400 hover:text-red-300 transition-colors font-medium"
-          >
-            who.int/emergencies/disease-outbreak-news
-            <span className="text-xs">↗</span>
-          </a>
+          <div className="flex flex-wrap gap-2">
+            {[
+              { label: "WHO DON",      href: "https://www.who.int/emergencies/disease-outbreak-news" },
+              { label: "ECDC",         href: "https://www.ecdc.europa.eu/en/threats-and-outbreaks" },
+              { label: "PAHO",         href: "https://www.paho.org/en/epidemiological-alerts-and-updates" },
+              { label: "Africa CDC",   href: "https://africacdc.org/disease-outbreaks/" },
+              { label: "CDC HAN",      href: "https://emergency.cdc.gov/han/" },
+              { label: "UKHSA",        href: "https://www.gov.uk/government/collections/health-protection-report" },
+              { label: "SPF",          href: "https://www.santepubliquefrance.fr/maladies-et-traumatismes/" },
+              { label: "USDA APHIS",   href: "https://www.aphis.usda.gov/livestock-poultry-disease/avian/avian-influenza/hpai-detections/livestock" },
+            ].map((s) => (
+              <a
+                key={s.label}
+                href={s.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1 text-xs font-medium text-red-400 hover:text-red-300 bg-red-950/30 hover:bg-red-950/50 border border-red-800/30 rounded-lg px-2.5 py-1 transition-colors"
+              >
+                {s.label} <span className="text-xs opacity-60">↗</span>
+              </a>
+            ))}
+          </div>
         </div>
       </section>
 
