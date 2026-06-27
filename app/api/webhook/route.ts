@@ -322,7 +322,8 @@ export async function POST(req: NextRequest) {
 
         const { error } = await supabase
           .from("profiles")
-          .update({ plan: "free", stripe_subscription_id: null, trial_ends_at: null, team_id: null })
+          // Keep trial_ends_at as a sentinel (past date) so activate-trial cannot grant a new free trial to ex-subscribers
+          .update({ plan: "free", stripe_subscription_id: null, trial_ends_at: new Date().toISOString(), team_id: null })
           .eq("id", userId);
 
         if (error) {
