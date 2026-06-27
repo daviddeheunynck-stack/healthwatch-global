@@ -278,12 +278,13 @@ export async function GET(req: NextRequest) {
         .from("outbreaks")
         .update({
           cases, deaths, date,
-          source:      CDC_BASE + notice.path,
+          source:          CDC_BASE + notice.path,
           description,
-          risk_level:  riskLevel,
-          active:      true,
+          risk_level:      riskLevel,
+          active:          true,
+          source_priority: 5,
         })
-        .eq("id", existRow.id);
+        .eq("id", existRow.id).lte("source_priority", 5);
 
       if (error) {
         log.push({ label, status: "error", detail: error.message });

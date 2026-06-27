@@ -384,15 +384,17 @@ export async function GET(req: NextRequest) {
       const { error } = await supabase
         .from("outbreaks")
         .update({
-          cases:       found.cases,
-          deaths:      found.deaths,
-          date:        found.date,
-          source:      found.source,
-          description: found.description,
-          risk_level:  assessRisk(target.disease_en, found.description, found.cases, found.deaths),
-          active:      true,
+          cases:           found.cases,
+          deaths:          found.deaths,
+          date:            found.date,
+          source:          found.source,
+          description:     found.description,
+          risk_level:      assessRisk(target.disease_en, found.description, found.cases, found.deaths),
+          active:          true,
+          source_priority: 5,
         })
-        .eq("id", existingRow.id);
+        .eq("id", existingRow.id)
+        .lte("source_priority", 5);
 
       if (error) {
         log.push({ label: `${target.disease_en}/${target.country_en}`, status: "error", detail: error.message });

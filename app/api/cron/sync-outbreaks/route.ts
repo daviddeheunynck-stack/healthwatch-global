@@ -279,8 +279,9 @@ export async function GET(req: NextRequest) {
           }
           const { error } = await supabase
             .from("outbreaks")
-            .update(updatePayload)
-            .eq("id", existingRow.id);
+            .update({ ...updatePayload, source_priority: 3 })
+            .eq("id", existingRow.id)
+            .lte("source_priority", 3); // never overwrite higher-priority sources (sitrep=10, regional=5)
           if (error) {
             console.error("[sync] update:", error);
             errorLog.push(`UPDATE ${outbreak.disease_en}/${outbreak.country_en}: ${error.message}`);

@@ -332,8 +332,9 @@ export async function GET(req: NextRequest) {
       }
       const { error } = await supabase.from("outbreaks").update({
         cases, deaths, date, source: entry.url,
-        description, risk_level: riskLevel, active: true,
-      }).eq("id", existingRow.id);
+        description, risk_level: riskLevel, active: true, source_priority: 5,
+      }).eq("id", existingRow.id)
+        .lte("source_priority", 5); // never overwrite sitrep (priority 10)
       if (error) { log.push({ label, status: "error", detail: error.message }); results.errors++; }
       else { log.push({ label, status: "updated" }); results.updated++; }
     } else {

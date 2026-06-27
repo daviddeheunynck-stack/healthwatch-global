@@ -331,14 +331,16 @@ export async function GET(req: NextRequest) {
     const { error } = await supabase
       .from("outbreaks")
       .update({
-        cases:      data.cases,
-        deaths:     data.deaths,
-        date:       data.date,
-        source:     latest.url,
-        active:     true,
-        updated_at: new Date().toISOString(),
+        cases:           data.cases,
+        deaths:          data.deaths,
+        date:            data.date,
+        source:          latest.url,
+        active:          true,
+        updated_at:      new Date().toISOString(),
+        source_priority: 5,
       })
-      .eq("id", MPOX_MONDIAL_ID);
+      .eq("id", MPOX_MONDIAL_ID)
+      .lte("source_priority", 5);
 
     if (error) {
       console.error("[mpox] DB update error:", error.message);

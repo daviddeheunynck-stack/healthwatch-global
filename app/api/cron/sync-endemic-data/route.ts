@@ -615,12 +615,13 @@ export async function GET(req: NextRequest) {
     const { error: upErr } = await supabase
       .from("outbreaks")
       .update({
-        cases:  found.cases,
-        deaths: found.deaths,
-        date:   found.date,
-        source: found.source,
+        cases:           found.cases,
+        deaths:          found.deaths,
+        date:            found.date,
+        source:          found.source,
+        source_priority: 5,
       })
-      .eq("id", row.id);
+      .eq("id", row.id).lte("source_priority", 5);
 
     if (upErr) {
       console.error(`[endemic] DB update ${target.label}:`, upErr.message);
