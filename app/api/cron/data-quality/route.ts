@@ -215,6 +215,30 @@ export async function GET(req: NextRequest) {
     }
   }
 
+  // ── 4c. Duplication check ─────────────────────────────────────────────────
+  // Flag active outbreaks where ≥3 countries share the exact same case count
+  // from the same source domain — almost always signals a parser distributing
+  // a regional total to individual country rows instead of one aggregate row.
+  const dupGroups = new Map<string, string[]>();
+  for (const row of rows ?? []) {
+    if (!row.cases || row.cases === 0 || row.is_seed) continue;
+    let domain = "unknown";
+    try { domain = new URL(row.source ?? "").hostname; } catch { /* ignore */ }
+    const key = `${(row.disease ?? "").toLowerCase()}|${domain}|${row.cases}`;
+    const group = dupGroups.get(key) ?? [];
+    group.push(row.country ?? "?");
+    dupGroups.set(key, group);
+  }
+  for (const [key, countries] of dupGroups.entries()) {
+    if (countries.length >= 3) {
+      const [disease, domain] = key.split("|");
+      needsReview.push({
+        label: `Duplication suspecte — ${disease} (${domain})`,
+        detail: `${countries.length} pays avec le même nombre de cas : ${countries.slice(0, 6).join(", ")}${countries.length > 6 ? "…" : ""}`,
+      });
+    }
+  }
+
   // ── 5. Notable movements (top 5 largest absolute change, no anomaly) ──────
   type Movement = { label: string; before: number; after: number; delta: number };
   const movements: Movement[] = [];
