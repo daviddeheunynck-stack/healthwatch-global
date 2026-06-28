@@ -136,7 +136,7 @@ const DISEASE_MAP: Array<{ patterns: string[]; info: DiseaseInfo }> = [
       vaccine: "no",
       treatment: "supportive",
       whoFactsheet: "https://www.who.int/news-room/fact-sheets/detail/middle-east-respiratory-syndrome-coronavirus-(mers-cov)",
-      travelerRisk: { asia: "high" },
+      travelerRisk: { asia: "high", africa: "low" },
     },
   },
   {
@@ -440,7 +440,7 @@ const DISEASE_MAP: Array<{ patterns: string[]; info: DiseaseInfo }> = [
       vaccine: "no",
       treatment: "supportive",
       whoFactsheet: "https://www.who.int/news-room/fact-sheets/detail/hantavirus-disease",
-      travelerRisk: { americas: "moderate", asia: "low", europe: "low" },
+      travelerRisk: { americas: "moderate", asia: "low", europe: "low", africa: "low" },
     },
   },
   {
