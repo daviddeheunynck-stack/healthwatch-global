@@ -11,7 +11,6 @@ import Link from "next/link";
 import AdminOutbreakTable from "@/components/AdminOutbreakTable";
 import AdminSyncButton from "@/components/AdminSyncButton";
 import AdminQCFixButton from "@/components/AdminQCFixButton";
-import AdminECDCTestButton from "@/components/AdminECDCTestButton";
 import AdminPilotInviteForm from "@/components/AdminPilotInviteForm";
 import AdminExtendTrialButton from "@/components/AdminExtendTrialButton";
 import type { Outbreak } from "@/lib/outbreaks";
@@ -404,18 +403,6 @@ export default async function AdminPage({
           Anomalies détectées par le cron qualité — appliquer manuellement si les chiffres sources ont été vérifiés.
         </p>
         <AdminQCFixButton />
-      </div>
-
-      {/* ── ECDC Debug ──────────────────────────────────────────────────────── */}
-      <div className="bg-gray-900 border border-indigo-800/30 rounded-xl p-5 space-y-3">
-        <div className="flex items-center gap-2">
-          <Activity className="w-4 h-4 text-indigo-400" />
-          <h2 className="text-white font-semibold">Debug ECDC</h2>
-        </div>
-        <p className="text-sm text-gray-400">
-          Lance le scraper ECDC en mode synchrone et affiche les logs détaillés (articles traités, insérés, skippés).
-        </p>
-        <AdminECDCTestButton />
       </div>
 
       {/* ── Pilot invites ───────────────────────────────────────────────────── */}
