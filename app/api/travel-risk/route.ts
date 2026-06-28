@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import { fetchFcdoAdvisory, getGovLinks } from "@/lib/travel-advisory";
 
 export const dynamic = "force-dynamic";
 
@@ -57,12 +58,15 @@ export async function GET(req: Request) {
 
   const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE);
 
-  const { data: outbreaks } = await supabase
-    .from("outbreaks")
-    .select("id, disease_en, cases, deaths, risk_level, date, is_pheic")
-    .eq("active", true)
-    .eq("country_en", countryEn)
-    .order("risk_level", { ascending: true });
+  const [{ data: outbreaks }, fcdo] = await Promise.all([
+    supabase
+      .from("outbreaks")
+      .select("id, disease_en, cases, deaths, risk_level, date, is_pheic")
+      .eq("active", true)
+      .eq("country_en", countryEn)
+      .order("risk_level", { ascending: true }),
+    fetchFcdoAdvisory(countryEn),
+  ]);
 
   const active = (outbreaks ?? []) as ActiveOutbreak[];
   const risk   = aggregateRisk(active);
@@ -73,6 +77,8 @@ export async function GET(req: Request) {
     risk,
     outbreaks: active,
     recommendation: RECOMMENDATIONS[risk][lang as keyof typeof RECOMMENDATIONS["none"]],
+    fcdo:     fcdo ?? null,
+    govLinks: getGovLinks(countryEn),
     checked_at: new Date().toISOString(),
   });
 }

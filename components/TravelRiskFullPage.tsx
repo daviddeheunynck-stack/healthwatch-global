@@ -19,19 +19,60 @@ interface ActiveOutbreak {
   is_pheic: boolean;
 }
 
+interface FcdoAdvisory {
+  level: "do-not-travel" | "essential-only" | "high-caution" | "normal" | "unknown";
+  levelText: string;
+  url: string;
+}
+
+interface GovLinks {
+  fcdo:   string | null;
+  france: string | null;
+  spain:  string | null;
+}
+
 interface TravelResult {
   country_en: string;
   risk: Risk;
   outbreaks: ActiveOutbreak[];
   recommendation: string;
+  fcdo:     FcdoAdvisory | null;
+  govLinks: GovLinks;
   checked_at: string;
 }
+
+const FCDO_LEVEL_LABEL: Record<string, Record<string, string>> = {
+  "do-not-travel":  { en: "Do Not Travel",             fr: "Ne pas voyager",                es: "No viajar",                   ar: "لا تسافر",              id: "Jangan Bepergian"           },
+  "essential-only": { en: "Essential Travel Only",      fr: "Voyages essentiels uniquement", es: "Solo viajes esenciales",       ar: "السفر الضروري فقط",     id: "Perjalanan Penting Saja"    },
+  "high-caution":   { en: "Exercise Caution",           fr: "Vigilance renforcée",           es: "Ejercer precaución",          ar: "توخَّ الحذر",            id: "Tingkatkan Kewaspadaan"     },
+  "normal":         { en: "Normal Precautions",         fr: "Précautions normales",          es: "Precauciones normales",       ar: "احتياطات عادية",         id: "Tindakan Normal"            },
+  "unknown":        { en: "See FCDO Advice",            fr: "Voir conseils FCDO",            es: "Ver consejos FCDO",           ar: "انظر نصيحة FCDO",        id: "Lihat Saran FCDO"           },
+};
+
+const FCDO_LEVEL_STYLE: Record<string, { bg: string; border: string; text: string; dot: string }> = {
+  "do-not-travel":  { bg: "bg-red-900/20",    border: "border-red-600/40",    text: "text-red-300",    dot: "bg-red-500"    },
+  "essential-only": { bg: "bg-orange-900/20", border: "border-orange-600/40", text: "text-orange-300", dot: "bg-orange-500" },
+  "high-caution":   { bg: "bg-amber-900/15",  border: "border-amber-600/40",  text: "text-amber-300",  dot: "bg-amber-500"  },
+  "normal":         { bg: "bg-green-900/15",  border: "border-green-700/40",  text: "text-green-300",  dot: "bg-green-500"  },
+  "unknown":        { bg: "bg-gray-800/40",   border: "border-gray-600/40",   text: "text-gray-300",   dot: "bg-gray-500"   },
+};
+
+const GOV_LINK_LABELS: Record<string, {
+  fcdoLabel: string; franceLabel: string; spainLabel: string; officialTitle: string;
+}> = {
+  en: { fcdoLabel: "UK FCDO Travel Advice",         franceLabel: "France Diplomatie",          spainLabel: "Spain Exteriores",   officialTitle: "Official Government Advisories" },
+  fr: { fcdoLabel: "Conseils FCDO (Royaume-Uni)",   franceLabel: "Diplomatie.gouv.fr",         spainLabel: "Exteriores (Espagne)", officialTitle: "Avis gouvernementaux officiels" },
+  es: { fcdoLabel: "Consejos FCDO (Reino Unido)",   franceLabel: "Diplomatie France",          spainLabel: "Exteriores España",  officialTitle: "Avisos gubernamentales oficiales" },
+  ar: { fcdoLabel: "نصائح FCDO (المملكة المتحدة)", franceLabel: "دبلوماسية فرنسا",           spainLabel: "خارجية إسبانيا",    officialTitle: "النصائح الحكومية الرسمية"       },
+  id: { fcdoLabel: "Saran Perjalanan FCDO (UK)",    franceLabel: "Diplomasi Prancis",          spainLabel: "Kemenlu Spanyol",    officialTitle: "Saran Pemerintah Resmi"         },
+};
 
 const COPY: Record<string, {
   title: string; subtitle: string; searchLabel: string; placeholder: string;
   check: string; checking: string; noOutbreaks: string; outbreaksTitle: string;
   precautionsTitle: string; resourcesTitle: string; checkedAt: string;
   cases: string; deaths: string; updated: string; networkError: string;
+  fcdoTitle: string;
 }> = {
   en: {
     title: "Travel Health Risk", subtitle: "Epidemiological risk assessment before travel",
@@ -40,6 +81,7 @@ const COPY: Record<string, {
     outbreaksTitle: "Active Outbreaks", precautionsTitle: "Recommended Precautions",
     resourcesTitle: "Official Health Resources", checkedAt: "Assessed at",
     cases: "Cases", deaths: "Deaths", updated: "Updated", networkError: "Network error — please retry.",
+    fcdoTitle: "FCDO Travel Advisory",
   },
   fr: {
     title: "Risque santé voyage", subtitle: "Évaluation épidémiologique avant déplacement",
@@ -48,6 +90,7 @@ const COPY: Record<string, {
     outbreaksTitle: "Foyers actifs", precautionsTitle: "Précautions recommandées",
     resourcesTitle: "Sources de santé officielles", checkedAt: "Évalué le",
     cases: "Cas", deaths: "Décès", updated: "Mise à jour", networkError: "Erreur réseau — réessayez.",
+    fcdoTitle: "Avis de voyage FCDO (Royaume-Uni)",
   },
   es: {
     title: "Riesgo sanitario de viaje", subtitle: "Evaluación epidemiológica antes del viaje",
@@ -56,6 +99,7 @@ const COPY: Record<string, {
     outbreaksTitle: "Brotes activos", precautionsTitle: "Precauciones recomendadas",
     resourcesTitle: "Fuentes de salud oficiales", checkedAt: "Evaluado el",
     cases: "Casos", deaths: "Fallecidos", updated: "Actualizado", networkError: "Error de red — inténtelo de nuevo.",
+    fcdoTitle: "Aviso de viaje FCDO (Reino Unido)",
   },
   ar: {
     title: "مخاطر صحة السفر", subtitle: "تقييم وبائي قبل السفر",
@@ -64,12 +108,13 @@ const COPY: Record<string, {
     outbreaksTitle: "التفشيات النشطة", precautionsTitle: "الاحتياطات الموصى بها",
     resourcesTitle: "مصادر الصحة الرسمية", checkedAt: "تم التقييم في",
     cases: "الحالات", deaths: "الوفيات", updated: "تحديث", networkError: "خطأ في الشبكة — يرجى المحاولة مرة أخرى.",
+    fcdoTitle: "تحذير سفر FCDO (المملكة المتحدة)",
   },
   id: {
     title: "Risiko Kesehatan Perjalanan", subtitle: "Penilaian epidemiologis sebelum perjalanan",
     searchLabel: "Negara tujuan", placeholder: "Mis: India, Brasil, Nigeria…",
     check: "Nilai", checking: "Menilai…", noOutbreaks: "Tidak ada wabah aktif terdeteksi di negara ini.",
-    outbreaksTitle: "Wabah Aktif", precautionsTitle: "Tindakan Pencegahan yang Direkomendasikan",
+    outbreaksTitle: "Wabah Aktif", precautionsTitle: "Tindakan Pencegahan yang Direkomendasikan", fcdoTitle: "Peringatan Perjalanan FCDO (UK)",
     resourcesTitle: "Sumber Kesehatan Resmi", checkedAt: "Dinilai pada",
     cases: "Kasus", deaths: "Kematian", updated: "Diperbarui", networkError: "Kesalahan jaringan — coba lagi.",
   },
@@ -286,6 +331,73 @@ export default function TravelRiskFullPage({ locale }: { locale: string }) {
               {result.recommendation}
             </p>
           </div>
+
+          {/* FCDO advisory + government links */}
+          {(() => {
+            const gl  = GOV_LINK_LABELS[locale] ?? GOV_LINK_LABELS.en;
+            const fcdo = result.fcdo;
+            const govLinks = result.govLinks;
+            const fcdoStyle = fcdo ? (FCDO_LEVEL_STYLE[fcdo.level] ?? FCDO_LEVEL_STYLE.unknown) : null;
+            const fcdoLabel = fcdo ? (FCDO_LEVEL_LABEL[fcdo.level]?.[locale] ?? FCDO_LEVEL_LABEL[fcdo.level]?.en ?? "") : null;
+
+            const links: { label: string; url: string }[] = [];
+            if (govLinks.fcdo)   links.push({ label: gl.fcdoLabel,   url: govLinks.fcdo });
+            if (govLinks.france) links.push({ label: gl.franceLabel, url: govLinks.france });
+            if (govLinks.spain)  links.push({ label: gl.spainLabel,  url: govLinks.spain });
+
+            if (!fcdo && links.length === 0) return null;
+            return (
+              <div className="bg-gray-900/60 border border-gray-700/50 rounded-2xl overflow-hidden">
+                {/* FCDO inline advisory */}
+                {fcdo && fcdoStyle && fcdoLabel && (
+                  <div className={`px-6 py-4 border-b border-gray-800 ${fcdoStyle.bg}`}>
+                    <div className="flex items-start justify-between gap-4 flex-wrap">
+                      <div>
+                        <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-1.5">{c.fcdoTitle}</p>
+                        <div className="flex items-center gap-2 mb-2">
+                          <span className={`w-2 h-2 rounded-full shrink-0 ${fcdoStyle.dot}`} />
+                          <span className={`text-sm font-bold ${fcdoStyle.text}`}>{fcdoLabel}</span>
+                        </div>
+                        {fcdo.levelText && (
+                          <p className="text-xs text-gray-400 leading-relaxed max-w-xl">{fcdo.levelText}</p>
+                        )}
+                      </div>
+                      <a
+                        href={fcdo.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="shrink-0 flex items-center gap-1.5 text-xs text-blue-400 hover:text-blue-300 transition-colors border border-blue-700/30 rounded-lg px-3 py-1.5 hover:bg-blue-900/20"
+                      >
+                        <ExternalLink className="w-3 h-3" />
+                        {gl.fcdoLabel}
+                      </a>
+                    </div>
+                  </div>
+                )}
+
+                {/* Government deep links */}
+                {links.length > 0 && (
+                  <div className="px-6 py-4">
+                    <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">{gl.officialTitle}</p>
+                    <div className="flex flex-wrap gap-2">
+                      {links.map((l) => (
+                        <a
+                          key={l.url}
+                          href={l.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center gap-1.5 text-xs text-gray-300 hover:text-white border border-gray-700 hover:border-gray-500 rounded-lg px-3 py-2 transition-colors hover:bg-gray-800/60"
+                        >
+                          <ExternalLink className="w-3 h-3 text-gray-500" />
+                          {l.label}
+                        </a>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            );
+          })()}
 
           {/* Outbreaks list */}
           {result.outbreaks.length > 0 ? (
