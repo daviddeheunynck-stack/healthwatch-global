@@ -206,12 +206,12 @@ export const COUNTRIES: Record<string, CountryGeo> = {
   "New Caledonia": { lat: -20.9, lng: 165.6, region: "oceania", name_en: "New Caledonia", name_fr: "Nouvelle-Calédonie", name_ar: "كاليدونيا الجديدة" },
 
   // ── MULTI-COUNTRY / GLOBAL ────────────────────────────────────
-  "Multi-country": { lat: 20.0, lng: 0.0, region: "africa", name_en: "Multiple countries", name_fr: "Plusieurs pays", name_ar: "دول متعددة" },
-  "Global": { lat: 20.0, lng: 0.0, region: "africa", name_en: "Global", name_fr: "Mondial", name_ar: "عالمي" },
-  "Global situation": { lat: 20.0, lng: 0.0, region: "africa", name_en: "Global", name_fr: "Mondial", name_ar: "عالمي" },
-  "Global Situation": { lat: 20.0, lng: 0.0, region: "africa", name_en: "Global", name_fr: "Mondial", name_ar: "عالمي" },
-  "Global update": { lat: 20.0, lng: 0.0, region: "africa", name_en: "Global", name_fr: "Mondial", name_ar: "عالمي" },
-  "Global Update": { lat: 20.0, lng: 0.0, region: "africa", name_en: "Global", name_fr: "Mondial", name_ar: "عالمي" },
+  "Multi-country": { lat: 10.0, lng: -25.0, region: "africa", name_en: "Multiple countries", name_fr: "Plusieurs pays", name_ar: "دول متعددة" },
+  "Global": { lat: 10.0, lng: -25.0, region: "africa", name_en: "Global", name_fr: "Mondial", name_ar: "عالمي" },
+  "Global situation": { lat: 10.0, lng: -25.0, region: "africa", name_en: "Global", name_fr: "Mondial", name_ar: "عالمي" },
+  "Global Situation": { lat: 10.0, lng: -25.0, region: "africa", name_en: "Global", name_fr: "Mondial", name_ar: "عالمي" },
+  "Global update": { lat: 10.0, lng: -25.0, region: "africa", name_en: "Global", name_fr: "Mondial", name_ar: "عالمي" },
+  "Global Update": { lat: 10.0, lng: -25.0, region: "africa", name_en: "Global", name_fr: "Mondial", name_ar: "عالمي" },
   "African Region": { lat: 0.0, lng: 20.0, region: "africa", name_en: "Africa (regional)", name_fr: "Région africaine", name_ar: "المنطقة الأفريقية" },
   "African Region (AFRO)": { lat: 0.0, lng: 20.0, region: "africa", name_en: "Africa (regional)", name_fr: "Région africaine", name_ar: "المنطقة الأفريقية" },
   "Region of the Americas": { lat: 0.0, lng: -60.0, region: "americas", name_en: "Americas (regional)", name_fr: "Région des Amériques", name_ar: "منطقة الأمريكتين" },

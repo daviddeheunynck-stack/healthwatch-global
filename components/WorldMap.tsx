@@ -75,6 +75,10 @@ export default function WorldMap({ outbreaks, locale, isPaid, popupLabels, riskL
       const dir = locale === "ar" ? "rtl" : "ltr";
 
       outbreaks.forEach((outbreak) => {
+        // Skip worldwide/multi-country aggregates — no meaningful geographic pin
+        const cen = (outbreak.country_en ?? "").toLowerCase();
+        if (cen === "multiple countries" || cen === "global") return;
+
         const color = riskColors[outbreak.risk_level] || "#6b7280";
         const radius = Math.max(8, Math.min(30, Math.log10(outbreak.cases + 1) * 6));
         const diseaseName = getLocalizedDisease(outbreak, locale);
