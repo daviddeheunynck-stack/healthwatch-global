@@ -162,7 +162,7 @@
     },
     {
       "path": "/api/cron/sync-usda-aphis",
-      "schedule": "0 14 * * *"
+      "schedule": "0 14 * * 1"
     }
   ]
 }

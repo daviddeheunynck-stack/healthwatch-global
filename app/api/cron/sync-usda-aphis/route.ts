@@ -20,9 +20,14 @@ const SUPABASE_URL         = clean(process.env.NEXT_PUBLIC_SUPABASE_URL);
 const SUPABASE_SERVICE_KEY = clean(process.env.SUPABASE_SERVICE_ROLE_KEY);
 const CRON_SECRET          = clean(process.env.CRON_SECRET);
 
-// CSV published by APHIS alongside the livestock detections page
-const APHIS_CSV_URL  = "https://www.aphis.usda.gov/sites/default/files/hpai-dairy-herd-detections.csv";
-// Fallback: HTML table page if CSV is not available
+// CSV candidates — APHIS periodically renames files during site migrations
+const APHIS_CSV_CANDIDATES = [
+  "https://www.aphis.usda.gov/sites/default/files/hpai-dairy-herd-detections.csv",
+  "https://www.aphis.usda.gov/sites/default/files/hpai-livestock-herd-detections.csv",
+  "https://www.aphis.usda.gov/sites/default/files/hpai-detections-livestock.csv",
+  "https://www.aphis.usda.gov/sites/default/files/hpai-confirmed-livestock-cases.csv",
+];
+// Fallback: HTML table page if no CSV is available
 const APHIS_HTML_URL = "https://www.aphis.usda.gov/livestock-poultry-disease/avian/avian-influenza/hpai-detections/hpai-confirmed-cases-livestock";
 const APHIS_PAGE_URL = APHIS_HTML_URL; // used in descriptions
 // Synthetic source prefix — one URL per state used as the dedup key
@@ -268,50 +273,56 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: "geo:United States not found" }, { status: 500 });
   }
 
-  // ── 1. Fetch data (CSV preferred, HTML table fallback) ───────────────────
-  let rawText: string;
-  let dataFormat: "csv" | "html";
+  // ── 1. Fetch data (CSV candidates first, HTML table fallback) ────────────
+  let rawText = "";
+  let dataFormat: "csv" | "html" = "html";
+  let csvSource: string | null = null;
+
   try {
-    const csvRes = await fetch(APHIS_CSV_URL, {
-      headers: FETCH_HEADERS,
-      signal: AbortSignal.timeout(20_000),
-    });
-    if (csvRes.ok) {
-      const ct = csvRes.headers.get("content-type") ?? "";
-      const body = await csvRes.text();
-      // Confirm it's actually CSV data (not a Cloudflare challenge / HTML error page)
-      if (!ct.includes("text/html") && !body.trimStart().startsWith("<")) {
-        rawText = body;
-        dataFormat = "csv";
-      } else {
-        // CSV URL returned HTML (Cloudflare or redirect) — fetch the HTML table page instead
-        console.warn("[usda-aphis] CSV URL returned HTML, falling back to table page");
-        const htmlRes = await fetch(APHIS_HTML_URL, {
-          headers: FETCH_HEADERS,
-          signal: AbortSignal.timeout(25_000),
-        });
-        if (!htmlRes.ok) {
-          console.error(`[usda-aphis] HTML fallback HTTP ${htmlRes.status}`);
-          return NextResponse.json({ error: `APHIS HTTP ${htmlRes.status}` }, { status: 502 });
-        }
-        rawText = await htmlRes.text();
-        dataFormat = "html";
+    // Try each CSV candidate until one succeeds
+    for (const url of APHIS_CSV_CANDIDATES) {
+      let res: Response;
+      try {
+        res = await fetch(url, { headers: FETCH_HEADERS, signal: AbortSignal.timeout(8_000) });
+      } catch {
+        continue; // network error / timeout on this candidate — try next
       }
-    } else {
-      console.warn(`[usda-aphis] CSV HTTP ${csvRes.status} — trying HTML page`);
-      const htmlRes = await fetch(APHIS_HTML_URL, {
-        headers: FETCH_HEADERS,
-        signal: AbortSignal.timeout(25_000),
-      });
+      if (!res.ok) continue; // 404 / 4xx — try next
+      const ct = res.headers.get("content-type") ?? "";
+      const body = await res.text();
+      if (ct.includes("text/html") || body.trimStart().startsWith("<")) {
+        // Cloudflare challenge or HTML redirect — not real CSV
+        continue;
+      }
+      rawText = body;
+      dataFormat = "csv";
+      csvSource = url;
+      break;
+    }
+
+    if (!csvSource) {
+      // No CSV worked — try HTML table page
+      console.warn("[usda-aphis] All CSV candidates failed — trying HTML page");
+      let htmlRes: Response;
+      try {
+        htmlRes = await fetch(APHIS_HTML_URL, { headers: FETCH_HEADERS, signal: AbortSignal.timeout(15_000) });
+      } catch (e) {
+        const msg = `[usda-aphis] APHIS unreachable (all CSV + HTML failed): ${errorMessage(e)}`;
+        console.warn(msg);
+        Sentry.captureMessage(msg, { level: "warning", tags: { cron: "sync-usda-aphis" } });
+        return NextResponse.json({ success: false, error: "aphis_unreachable" }, { status: 200 });
+      }
       if (!htmlRes.ok) {
-        console.error(`[usda-aphis] HTML HTTP ${htmlRes.status}`);
-        return NextResponse.json({ error: `APHIS HTTP ${htmlRes.status}` }, { status: 502 });
+        const msg = `[usda-aphis] HTML fallback HTTP ${htmlRes.status}`;
+        console.warn(msg);
+        Sentry.captureMessage(msg, { level: "warning", tags: { cron: "sync-usda-aphis" } });
+        return NextResponse.json({ success: false, error: `aphis_http_${htmlRes.status}` }, { status: 200 });
       }
       rawText = await htmlRes.text();
       dataFormat = "html";
     }
   } catch (e) {
-    console.error("[usda-aphis] fetch:", errorMessage(e));
+    console.error("[usda-aphis] unexpected fetch error:", errorMessage(e));
     Sentry.captureException(e, { tags: { cron: "sync-usda-aphis" } });
     return NextResponse.json({ error: errorMessage(e) }, { status: 502 });
   }
