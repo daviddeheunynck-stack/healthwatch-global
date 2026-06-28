@@ -184,15 +184,22 @@ async function extractItemData(item: RSSItem): Promise<BriefData[]> {
   const fullText = `${item.description} ${articleText}`.trim();
   const { cases, deaths } = extractNumbers(fullText.substring(0, 3000));
 
-  // Country detection: scan description + article body.
-  // ECDC pages have heavy nav HTML; after stripping, content starts ~7-8k chars in.
-  // Use 12 000 chars to reliably capture the country list in the article body.
-  const searchText = `${item.description} ${articleText.substring(0, 12_000)}`;
-  let countries  = findMentionedCountries(searchText);
+  // Detect if this article is explicitly about a European outbreak (used for both
+  // country fallback and EU multi-country mode guard below).
+  const titleLower = item.title.toLowerCase();
+  const isEuropeArticle =
+    titleLower.includes("europe") ||
+    titleLower.includes("eu/eea") ||
+    titleLower.includes(" eu ") ||
+    titleLower.includes("european");
 
-  // Fallback for EU articles: if no specific countries detected (JS-rendered body
-  // not accessible to server-side scraper), use the ECDC EU/EEA surveillance set.
-  // Case numbers come reliably from the RSS description; only the country list is missing.
+  // Country detection: description + first 12k chars of stripped article body.
+  const searchText = `${item.description} ${articleText.substring(0, 12_000)}`;
+  let countries = findMentionedCountries(searchText);
+
+  // Fallback for EU articles whose body is JS-rendered (no static country names):
+  // use the ECDC EU/EEA surveillance country set when cases are parseable but
+  // no countries were detected in the HTML.
   if (countries.length === 0 && isEuropeArticle && cases > 0) {
     countries = [
       "Belgium", "Denmark", "France", "Germany", "Ireland",
@@ -202,19 +209,6 @@ async function extractItemData(item: RSSItem): Promise<BriefData[]> {
 
   if (countries.length === 0) return [];
 
-  // For EU multi-country articles (≥ 2 European countries found), create one entry
-  // per country using the EU-wide aggregate figures. For single-country or global
-  // articles, keep the original behaviour (first country only).
-  // Guard: only activate EU multi-country mode when the article title explicitly
-  // signals a European outbreak ("in Europe", "EU/EEA", etc.). Without this guard,
-  // global outbreak articles (e.g. Ebola/DRC) that incidentally mention European
-  // institutions or contacts would generate spurious EU rows.
-  const titleLower = item.title.toLowerCase();
-  const isEuropeArticle =
-    titleLower.includes("europe") ||
-    titleLower.includes("eu/eea") ||
-    titleLower.includes(" eu ") ||
-    titleLower.includes("european");
   const euCountries = countries.filter((c) => {
     const g = findCountry(c);
     return g?.region === "europe";
