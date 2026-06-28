@@ -70,11 +70,12 @@ export default function AdminQCFixButton() {
     <div className="space-y-3">
       {FIXES.map((fix, idx) => {
         const st = statuses[idx] ?? "idle";
+        if (st === "success") return null;
         return (
           <div key={idx} className="flex items-center gap-3 flex-wrap">
             <button
               onClick={() => applyFix(idx, fix)}
-              disabled={st === "loading" || st === "success"}
+              disabled={st === "loading"}
               className="flex items-center gap-2 bg-amber-700 hover:bg-amber-600 disabled:opacity-60 text-white font-semibold px-4 py-2 rounded-lg text-sm transition-colors"
             >
               {st === "loading"
@@ -82,11 +83,6 @@ export default function AdminQCFixButton() {
                 : <Wrench className="w-4 h-4" />}
               {fix.label}
             </button>
-            {st === "success" && (
-              <span className="flex items-center gap-1 text-green-400 text-xs">
-                <CheckCircle className="w-3.5 h-3.5" /> {messages[idx]}
-              </span>
-            )}
             {st === "error" && (
               <span className="flex items-center gap-1 text-red-400 text-xs">
                 <AlertCircle className="w-3.5 h-3.5" /> {messages[idx]}
