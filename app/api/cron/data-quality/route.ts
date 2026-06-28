@@ -197,7 +197,11 @@ export async function GET(req: NextRequest) {
   // Excludes: is_seed rows (manual), dashboard/tracker sources (non-article cadence)
   const STALE_DAYS = 21;
   const staleThreshold = new Date(Date.now() - STALE_DAYS * 86_400_000).toISOString().split("T")[0];
-  const DASHBOARD_SOURCES = ["shinyapps.io", "ecdc.europa.eu/en/mpox/surveillance"];
+  const DASHBOARD_SOURCES = [
+    "shinyapps.io",
+    "ecdc.europa.eu/en/mpox/surveillance",
+    "who.int/publications/m/item",          // WHO monthly situation reports (Mpox, etc.) — monthly cadence, 28d staleness expected
+  ];
 
   for (const row of rows ?? []) {
     if (row.is_seed || !row.date || anomalies.some((a) => a.row.id === row.id)) continue;
