@@ -327,6 +327,9 @@ export async function GET(req: NextRequest) {
   console.log(`[usda-aphis] ${dataFormat} → ${rows.length} rows → ${byState.length} states with HPAI herds`);
 
   if (byState.length === 0) {
+    const msg = `[usda-aphis] 0 states parsed (format=${dataFormat}, rows=${rows.length}) — APHIS page may have changed structure`;
+    console.warn(msg);
+    Sentry.captureMessage(msg, { level: "warning", tags: { cron: "sync-usda-aphis" } });
     return NextResponse.json({ success: true, dataFormat, rows: rows.length, states: 0, inserted: 0, updated: 0, skipped: 0 });
   }
 
