@@ -188,7 +188,18 @@ async function extractItemData(item: RSSItem): Promise<BriefData[]> {
   // ECDC pages have heavy nav HTML; after stripping, content starts ~7-8k chars in.
   // Use 12 000 chars to reliably capture the country list in the article body.
   const searchText = `${item.description} ${articleText.substring(0, 12_000)}`;
-  const countries  = findMentionedCountries(searchText);
+  let countries  = findMentionedCountries(searchText);
+
+  // Fallback for EU articles: if no specific countries detected (JS-rendered body
+  // not accessible to server-side scraper), use the ECDC EU/EEA surveillance set.
+  // Case numbers come reliably from the RSS description; only the country list is missing.
+  if (countries.length === 0 && isEuropeArticle && cases > 0) {
+    countries = [
+      "Belgium", "Denmark", "France", "Germany", "Ireland",
+      "Luxembourg", "Netherlands", "Norway", "Spain", "Sweden",
+    ];
+  }
+
   if (countries.length === 0) return [];
 
   // For EU multi-country articles (≥ 2 European countries found), create one entry
