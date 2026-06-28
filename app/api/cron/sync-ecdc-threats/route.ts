@@ -184,9 +184,10 @@ async function extractItemData(item: RSSItem): Promise<BriefData[]> {
   const fullText = `${item.description} ${articleText}`.trim();
   const { cases, deaths } = extractNumbers(fullText.substring(0, 3000));
 
-  // Country detection: scan description + article body (first 3000 chars of stripped text).
-  // Navigation HTML collapses to ~200 chars of text, so 3000 chars reaches the content.
-  const searchText = `${item.description} ${articleText.substring(0, 3000)}`;
+  // Country detection: scan description + article body.
+  // ECDC pages have heavy nav HTML; after stripping, content starts ~7-8k chars in.
+  // Use 12 000 chars to reliably capture the country list in the article body.
+  const searchText = `${item.description} ${articleText.substring(0, 12_000)}`;
   const countries  = findMentionedCountries(searchText);
   if (countries.length === 0) return [];
 
