@@ -16,6 +16,8 @@ import { diseaseToSlug, normalizeDisease } from "@/lib/disease-data";
 import { countryToSlug } from "@/lib/country-utils";
 import type { Outbreak } from "@/lib/outbreaks";
 import { getResponseGuidance, RESPONSE_ACTIONS } from "@/lib/response-guidance";
+import { getOutbreakTrend } from "@/lib/outbreak-trend";
+import PhaseBadge from "@/components/PhaseBadge";
 import type { Metadata } from "next";
 
 export const revalidate = 3600;
@@ -205,6 +207,14 @@ const getSnapshots = cache(async (id: string) => {
   return data ?? [];
 });
 
+const getTrend = cache(async (id: string) => {
+  const supabase = createClient(
+    clean(process.env.NEXT_PUBLIC_SUPABASE_URL),
+    clean(process.env.SUPABASE_SERVICE_ROLE_KEY)
+  );
+  return getOutbreakTrend(supabase, id);
+});
+
 export async function generateMetadata({
   params,
 }: {
@@ -274,7 +284,7 @@ export default async function OutbreakPage({
   params: Promise<{ locale: string; id: string }>;
 }) {
   const { locale, id } = await params;
-  const [o, snapshots] = await Promise.all([getOutbreak(id), getSnapshots(id)]);
+  const [o, snapshots, trend] = await Promise.all([getOutbreak(id), getSnapshots(id), getTrend(id)]);
   if (!o) notFound();
 
   const l       = LABELS[locale as keyof typeof LABELS] ?? LABELS.en;
@@ -391,6 +401,7 @@ export default async function OutbreakPage({
               {l.archived}
             </span>
           )}
+          <PhaseBadge trend={trend} staleDays={staleDays} locale={locale} />
           {o.is_pheic && (
             <span className="text-xs font-bold px-2.5 py-1 rounded-full border bg-purple-500/10 border-purple-500/30 text-purple-400">
               🚨 PHEIC

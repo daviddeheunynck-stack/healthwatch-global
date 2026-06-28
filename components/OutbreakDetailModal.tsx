@@ -12,6 +12,7 @@ import { diseaseToSlug, normalizeDisease } from "@/lib/disease-data";
 import Link from "next/link";
 import type { OutbreakTrend } from "@/lib/outbreak-trend";
 import RiskBadge from "@/components/RiskBadge";
+import PhaseBadge from "@/components/PhaseBadge";
 import ShareOutbreakButton from "@/components/ShareOutbreakButton";
 import LockedUpgradeButton from "@/components/LockedUpgradeButton";
 import { useUpgradeModal } from "@/lib/upgrade-modal-context";
@@ -524,6 +525,7 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlis
           <div className="space-y-2 flex-1 min-w-0">
             <div className="flex items-center gap-2 flex-wrap">
               <RiskBadge level={outbreak.risk_level as "high" | "medium" | "low"} />
+              <PhaseBadge trend={trend} staleDays={staleDays} locale={locale} />
               {status === 'don' && (
                 <span
                   title="WHO Disease Outbreak News — officially citable WHO bulletin with a unique DON reference number."
