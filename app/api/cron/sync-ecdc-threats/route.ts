@@ -194,11 +194,21 @@ async function extractItemData(item: RSSItem): Promise<BriefData[]> {
   // For EU multi-country articles (≥ 2 European countries found), create one entry
   // per country using the EU-wide aggregate figures. For single-country or global
   // articles, keep the original behaviour (first country only).
+  // Guard: only activate EU multi-country mode when the article title explicitly
+  // signals a European outbreak ("in Europe", "EU/EEA", etc.). Without this guard,
+  // global outbreak articles (e.g. Ebola/DRC) that incidentally mention European
+  // institutions or contacts would generate spurious EU rows.
+  const titleLower = item.title.toLowerCase();
+  const isEuropeArticle =
+    titleLower.includes("europe") ||
+    titleLower.includes("eu/eea") ||
+    titleLower.includes(" eu ") ||
+    titleLower.includes("european");
   const euCountries = countries.filter((c) => {
     const g = findCountry(c);
     return g?.region === "europe";
   });
-  const isEUMultiCountry = euCountries.length >= 2;
+  const isEUMultiCountry = isEuropeArticle && euCountries.length >= 2;
 
   const targetCountries = isEUMultiCountry
     ? euCountries.slice(0, 8)   // up to 8 EU countries per article

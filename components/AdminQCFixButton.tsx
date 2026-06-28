@@ -33,6 +33,12 @@ const FIXES: Fix[] = [
     country_en: "Plusieurs pays",
     active: false,
   },
+  {
+    label: "Ebola / Allemagne — désactiver (ligne parasite ECDC, outbreak en RDC)",
+    disease_en: "Ebola",
+    country_en: "Germany",
+    active: false,
+  },
 ];
 
 type Status = "idle" | "loading" | "success" | "error";
