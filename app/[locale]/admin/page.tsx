@@ -384,10 +384,10 @@ export default async function AdminPage({
       <div className="bg-gray-900 border border-gray-800 rounded-xl p-5 space-y-3">
         <div className="flex items-center gap-2">
           <RefreshCw className="w-4 h-4 text-blue-400" />
-          <h2 className="text-white font-semibold">Synchronisation WHO</h2>
+          <h2 className="text-white font-semibold">Synchronisation des sources</h2>
         </div>
         <p className="text-sm text-gray-400">
-          Déclenche manuellement le cron de synchronisation des données OMS (automatique 1x/jour à 6h UTC).
+          Déclenche manuellement la synchronisation WHO, ECDC, PAHO et données régionales (automatique plusieurs fois/jour).
         </p>
         <AdminSyncButton />
       </div>
