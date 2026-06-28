@@ -27,14 +27,25 @@ export async function GET(req: NextRequest) {
 
   const cutoff = new Date(Date.now() - days * 86_400_000).toISOString();
 
+  // Fetch extra rows to account for duplicates before deduplication
   const { data, error } = await service
     .from("outbreaks")
     .select("id, disease_en, country_en, risk_level, date, updated_at, region, cases")
     .eq("active", false)
     .gte("updated_at", cutoff)
     .order("updated_at", { ascending: false })
-    .limit(limit);
+    .limit(limit * 5);
 
   if (error) return Response.json({ error: error.message }, { status: 500 });
-  return Response.json({ resolved: data ?? [], days });
+
+  // Deduplicate: keep most-recent row per (disease_en, country_en) pair
+  const seen = new Set<string>();
+  const deduped = (data ?? []).filter((r) => {
+    const key = `${(r.disease_en ?? "").toLowerCase()}|${(r.country_en ?? "").toLowerCase()}`;
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  }).slice(0, limit);
+
+  return Response.json({ resolved: deduped, days });
 }
