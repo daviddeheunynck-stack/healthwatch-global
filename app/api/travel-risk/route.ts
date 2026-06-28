@@ -37,9 +37,22 @@ const RECOMMENDATIONS: Record<string, { en: string; fr: string; es: string; ar: 
 
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
-  const countryEn = searchParams.get("country_en") ?? "";
   const locale    = searchParams.get("locale") ?? "en";
 
+  // ?list=1 → return distinct countries that have active outbreaks
+  if (searchParams.get("list") === "1") {
+    const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE);
+    const { data } = await supabase
+      .from("outbreaks")
+      .select("country_en")
+      .eq("active", true)
+      .not("country_en", "is", null)
+      .order("country_en");
+    const countries = [...new Set((data ?? []).map((r) => r.country_en as string))].sort();
+    return NextResponse.json({ countries }, { headers: { "Cache-Control": "public, max-age=3600, s-maxage=3600" } });
+  }
+
+  const countryEn = searchParams.get("country_en") ?? "";
   if (!countryEn) return NextResponse.json({ error: "country_en required" }, { status: 400 });
 
   const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE);

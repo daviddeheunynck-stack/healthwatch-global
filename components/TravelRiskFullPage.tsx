@@ -1,10 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import {
   Plane, AlertTriangle, CheckCircle, ShieldAlert, ShieldOff,
-  Search, Shield, ExternalLink, MapPin, ChevronRight,
+  Search, Shield, ExternalLink, MapPin, ChevronRight, ChevronDown,
 } from "lucide-react";
 
 type Risk = "none" | "low" | "medium" | "high" | "critical";
@@ -133,17 +133,41 @@ const RESOURCES = [
 
 export default function TravelRiskFullPage({ locale }: { locale: string }) {
   const c = COPY[locale] ?? COPY.en;
-  const [query,   setQuery]   = useState("");
-  const [loading, setLoading] = useState(false);
-  const [result,  setResult]  = useState<TravelResult | null>(null);
-  const [error,   setError]   = useState("");
+  const [query,     setQuery]     = useState("");
+  const [countries, setCountries] = useState<string[]>([]);
+  const [open,      setOpen]      = useState(false);
+  const [loading,   setLoading]   = useState(false);
+  const [result,    setResult]    = useState<TravelResult | null>(null);
+  const [error,     setError]     = useState("");
+  const containerRef = useRef<HTMLDivElement>(null);
 
-  async function check() {
-    const country = query.trim();
+  useEffect(() => {
+    fetch(`/api/travel-risk?list=1`)
+      .then((r) => r.json())
+      .then((d: { countries?: string[] }) => setCountries(d.countries ?? []))
+      .catch(() => {});
+  }, []);
+
+  useEffect(() => {
+    function handleOutside(e: MouseEvent) {
+      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+        setOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleOutside);
+    return () => document.removeEventListener("mousedown", handleOutside);
+  }, []);
+
+  const filtered = query.trim().length > 0
+    ? countries.filter((c) => c.toLowerCase().includes(query.toLowerCase()))
+    : countries;
+
+  async function check(country = query.trim()) {
     if (!country) return;
     setLoading(true);
     setResult(null);
     setError("");
+    setOpen(false);
     try {
       const res  = await fetch(`/api/travel-risk?country_en=${encodeURIComponent(country)}&locale=${locale}`);
       const data = await res.json() as TravelResult & { error?: string };
@@ -153,10 +177,16 @@ export default function TravelRiskFullPage({ locale }: { locale: string }) {
     finally { setLoading(false); }
   }
 
-  const rc      = result ? RISK_CONFIG[result.risk] : null;
+  function select(country: string) {
+    setQuery(country);
+    setOpen(false);
+    check(country);
+  }
+
+  const rc       = result ? RISK_CONFIG[result.risk] : null;
   const RiskIcon = rc?.icon;
-  const lang    = (locale in (PRECAUTIONS.none)) ? locale : "en";
-  const precs   = result ? (PRECAUTIONS[result.risk][lang] ?? PRECAUTIONS[result.risk].en) : null;
+  const lang     = (locale in (PRECAUTIONS.none)) ? locale : "en";
+  const precs    = result ? (PRECAUTIONS[result.risk][lang] ?? PRECAUTIONS[result.risk].en) : null;
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8 space-y-6">
@@ -179,20 +209,47 @@ export default function TravelRiskFullPage({ locale }: { locale: string }) {
           {c.searchLabel}
         </label>
         <div className="flex gap-3">
-          <input
-            type="text"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && check()}
-            placeholder={c.placeholder}
-            className="flex-1 bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500/30"
-          />
+          {/* Combobox */}
+          <div ref={containerRef} className="relative flex-1">
+            <div
+              className="flex items-center bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 gap-2 cursor-text focus-within:border-blue-500 focus-within:ring-1 focus-within:ring-blue-500/30"
+              onClick={() => setOpen(true)}
+            >
+              <Search className="w-4 h-4 text-gray-500 shrink-0" />
+              <input
+                type="text"
+                value={query}
+                onChange={(e) => { setQuery(e.target.value); setOpen(true); }}
+                onFocus={() => setOpen(true)}
+                onKeyDown={(e) => { if (e.key === "Enter") check(); if (e.key === "Escape") setOpen(false); }}
+                placeholder={c.placeholder}
+                className="flex-1 bg-transparent text-sm text-white placeholder-gray-600 focus:outline-none min-w-0"
+              />
+              <ChevronDown className={`w-4 h-4 text-gray-500 shrink-0 transition-transform ${open ? "rotate-180" : ""}`} />
+            </div>
+
+            {open && filtered.length > 0 && (
+              <ul className="absolute z-50 left-0 right-0 mt-1 bg-gray-800 border border-gray-700 rounded-xl shadow-xl overflow-y-auto max-h-64">
+                {filtered.map((country) => (
+                  <li key={country}>
+                    <button
+                      type="button"
+                      onMouseDown={(e) => { e.preventDefault(); select(country); }}
+                      className="w-full text-left px-4 py-2.5 text-sm text-gray-200 hover:bg-gray-700 hover:text-white transition-colors"
+                    >
+                      {country}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+
           <button
-            onClick={check}
+            onClick={() => check()}
             disabled={loading || !query.trim()}
             className="px-6 py-3 bg-blue-600 hover:bg-blue-500 disabled:opacity-40 disabled:cursor-not-allowed text-white text-sm font-semibold rounded-xl transition-colors flex items-center gap-2 shrink-0"
           >
-            <Search className="w-4 h-4" />
             {loading ? c.checking : c.check}
           </button>
         </div>
