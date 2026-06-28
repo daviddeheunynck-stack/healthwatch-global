@@ -10,7 +10,8 @@
     "about": "About",
     "diseases": "Diseases",
     "countries": "Countries",
-    "regions": "Regions"
+    "regions": "Regions",
+    "travel": "Travel Risk"
   },
   "dashboard": {
     "title": "Global Health Surveillance",
