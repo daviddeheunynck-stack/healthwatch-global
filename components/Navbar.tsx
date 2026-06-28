@@ -345,7 +345,7 @@ export default function Navbar() {
                   </Link>
                 )}
                 <div className="flex items-center justify-end gap-2">
-                  <NotificationBell locale={locale} />
+                  <NotificationBell locale={locale} dropUp />
                   <button
                     onClick={handleLogout}
                     className="flex items-center gap-2 text-sm text-gray-400 hover:text-red-400 transition-colors"

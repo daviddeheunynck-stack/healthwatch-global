@@ -63,7 +63,7 @@ function timeAgo(isoString: string, locale: string): string {
   return diffH === 0 ? lb.justNow : lb.ago(diffH);
 }
 
-export default function NotificationBell({ locale }: { locale: string }) {
+export default function NotificationBell({ locale, dropUp = false }: { locale: string; dropUp?: boolean }) {
   const lb    = LABELS[locale] ?? LABELS.en;
   const isRtl = locale === "ar";
 
@@ -154,7 +154,7 @@ export default function NotificationBell({ locale }: { locale: string }) {
 
       {open && (
         <div
-          className={`absolute ${isRtl ? "left-0" : "right-0"} top-full mt-2 w-80 bg-gray-900 border border-gray-700 rounded-xl shadow-xl z-50 overflow-hidden`}
+          className={`absolute ${isRtl ? "left-0" : "right-0"} ${dropUp ? "bottom-full mb-2" : "top-full mt-2"} w-80 bg-gray-900 border border-gray-700 rounded-xl shadow-xl z-50 overflow-hidden`}
           dir={isRtl ? "rtl" : undefined}
         >
           {/* Header */}
