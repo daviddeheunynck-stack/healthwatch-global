@@ -101,11 +101,18 @@ export default async function TeamPage({
 
   const { data: profile } = await service
     .from("profiles")
-    .select("plan, team_id, email")
+    .select("plan, team_id, email, trial_ends_at, stripe_subscription_id")
     .eq("id", user.id)
     .single();
 
-  const plan   = profile?.plan || "free";
+  let   plan   = profile?.plan || "free";
+  const trialExpired =
+    plan !== "free" &&
+    !!profile?.trial_ends_at &&
+    new Date(profile.trial_ends_at).getTime() < Date.now() &&
+    !profile?.stripe_subscription_id;
+  if (trialExpired) plan = "free";
+
   let   teamId = profile?.team_id as string | null | undefined;
 
   // Not on team plan and no team membership → upgrade prompt
