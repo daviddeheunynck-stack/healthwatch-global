@@ -1,9 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { Eye, EyeOff, Pencil, Trash2, Plus, X, Check } from "lucide-react";
+import { Eye, EyeOff, Pencil, Trash2, Plus, X, Check, ChevronUp, ChevronDown, ArrowUpDown } from "lucide-react";
 import RiskBadge from "@/components/RiskBadge";
 import type { Outbreak } from "@/lib/outbreaks";
+
+type SortKey = "disease_en" | "country_en" | "region" | "cases" | "deaths" | "risk_level" | "date" | "active";
+type SortDir = "asc" | "desc";
+const RISK_ORDER: Record<string, number> = { high: 3, medium: 2, low: 1 };
 
 const REGIONS = ["africa", "asia", "europe", "americas", "oceania"];
 const RISKS = ["high", "medium", "low"] as const;
@@ -23,6 +27,44 @@ export default function AdminOutbreakTable({ initial }: { initial: Outbreak[] })
   const [adding, setAdding] = useState(false);
   const [loading, setLoading] = useState<string | null>(null);
   const [formError, setFormError] = useState<string | null>(null);
+  const [sortKey, setSortKey] = useState<SortKey>("cases");
+  const [sortDir, setSortDir] = useState<SortDir>("desc");
+
+  function handleSort(key: SortKey) {
+    if (sortKey === key) setSortDir((d) => (d === "asc" ? "desc" : "asc"));
+    else { setSortKey(key); setSortDir("desc"); }
+  }
+
+  const sortedOutbreaks = [...outbreaks].sort((a, b) => {
+    let v = 0;
+    switch (sortKey) {
+      case "disease_en": v = (a.disease_en || a.disease || "").localeCompare(b.disease_en || b.disease || ""); break;
+      case "country_en": v = (a.country_en || a.country || "").localeCompare(b.country_en || b.country || ""); break;
+      case "region":     v = (a.region || "").localeCompare(b.region || ""); break;
+      case "cases":      v = a.cases - b.cases; break;
+      case "deaths":     v = a.deaths - b.deaths; break;
+      case "risk_level": v = (RISK_ORDER[a.risk_level ?? ""] ?? 0) - (RISK_ORDER[b.risk_level ?? ""] ?? 0); break;
+      case "date":       v = a.date.localeCompare(b.date); break;
+      case "active":     v = (a.active ? 1 : 0) - (b.active ? 1 : 0); break;
+    }
+    return sortDir === "asc" ? v : -v;
+  });
+
+  function ColHeader({ col, label, align = "left" }: { col: SortKey; label: string; align?: "left" | "right" | "center" }) {
+    const active = sortKey === col;
+    const Icon = active ? (sortDir === "asc" ? ChevronUp : ChevronDown) : ArrowUpDown;
+    return (
+      <th
+        onClick={() => handleSort(col)}
+        className={`px-4 py-3 text-${align} cursor-pointer select-none hover:text-white group whitespace-nowrap`}
+      >
+        <span className={`inline-flex items-center gap-1 ${align === "right" ? "flex-row-reverse" : ""}`}>
+          {label}
+          <Icon className={`w-3 h-3 shrink-0 ${active ? "text-white" : "opacity-30 group-hover:opacity-60"}`} />
+        </span>
+      </th>
+    );
+  }
 
   const toggleActive = async (o: Outbreak) => {
     setLoading(o.id);
@@ -188,19 +230,19 @@ export default function AdminOutbreakTable({ initial }: { initial: Outbreak[] })
           <table className="w-full text-sm">
             <thead>
               <tr className="bg-gray-900 text-gray-400 text-xs uppercase tracking-wide">
-                <th className="px-4 py-3 text-left">Maladie</th>
-                <th className="px-4 py-3 text-left">Pays</th>
-                <th className="px-4 py-3 text-left">Région</th>
-                <th className="px-4 py-3 text-right">Cas</th>
-                <th className="px-4 py-3 text-right">Décès</th>
-                <th className="px-4 py-3 text-left">Risque</th>
-                <th className="px-4 py-3 text-left">Date</th>
-                <th className="px-4 py-3 text-center">Statut</th>
+                <ColHeader col="disease_en" label="Maladie" />
+                <ColHeader col="country_en" label="Pays" />
+                <ColHeader col="region"     label="Région" />
+                <ColHeader col="cases"      label="Cas"    align="right" />
+                <ColHeader col="deaths"     label="Décès"  align="right" />
+                <ColHeader col="risk_level" label="Risque" />
+                <ColHeader col="date"       label="Date" />
+                <ColHeader col="active"     label="Statut" align="center" />
                 <th className="px-4 py-3 text-center">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-800">
-              {outbreaks.map((o) => (
+              {sortedOutbreaks.map((o) => (
                 <>
                   <tr key={o.id} className={`hover:bg-gray-800/50 transition-colors ${!o.active ? "opacity-50" : ""}`}>
                     <td className="px-4 py-3 text-white font-medium">{o.disease_en || o.disease}</td>
