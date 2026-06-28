@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import { WORLD_COUNTRIES } from "@/lib/world-countries";
 import Link from "next/link";
 import {
   Plane, AlertTriangle, CheckCircle, ShieldAlert, ShieldOff,
@@ -178,20 +179,12 @@ const RESOURCES = [
 
 export default function TravelRiskFullPage({ locale }: { locale: string }) {
   const c = COPY[locale] ?? COPY.en;
-  const [query,     setQuery]     = useState("");
-  const [countries, setCountries] = useState<string[]>([]);
-  const [open,      setOpen]      = useState(false);
-  const [loading,   setLoading]   = useState(false);
-  const [result,    setResult]    = useState<TravelResult | null>(null);
-  const [error,     setError]     = useState("");
+  const [query,   setQuery]   = useState("");
+  const [open,    setOpen]    = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [result,  setResult]  = useState<TravelResult | null>(null);
+  const [error,   setError]   = useState("");
   const containerRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    fetch(`/api/travel-risk?list=1`)
-      .then((r) => r.json())
-      .then((d: { countries?: string[] }) => setCountries(d.countries ?? []))
-      .catch(() => {});
-  }, []);
 
   useEffect(() => {
     function handleOutside(e: MouseEvent) {
@@ -204,8 +197,8 @@ export default function TravelRiskFullPage({ locale }: { locale: string }) {
   }, []);
 
   const filtered = query.trim().length > 0
-    ? countries.filter((c) => c.toLowerCase().includes(query.toLowerCase()))
-    : countries;
+    ? WORLD_COUNTRIES.filter((country) => country.toLowerCase().includes(query.toLowerCase()))
+    : WORLD_COUNTRIES;
 
   async function check(country = query.trim()) {
     if (!country) return;
