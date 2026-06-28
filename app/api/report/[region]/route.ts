@@ -224,7 +224,7 @@ export async function GET(
   }
 
   <footer>
-    <span>Source: WHO · ECDC · PAHO · Africa CDC · InfoDengue — healthwatch-global.com</span>
+    <span>Sources: WHO · ECDC · PAHO · Africa CDC · CDC HAN · UKHSA · SPF · USDA APHIS · InfoDengue — healthwatch-global.com</span>
     <span>${rl.generated} ${dateStr} · ${plan.charAt(0).toUpperCase() + plan.slice(1)}</span>
   </footer>
 </body>
