@@ -166,9 +166,12 @@ interface BriefData {
   admin1_lng:  number | null;
 }
 
-async function extractItemData(item: RSSItem): Promise<BriefData[]> {
+async function extractItemData(item: RSSItem, dbg?: { reason?: string }): Promise<BriefData[]> {
   const titleCore = extractECDCDisease(item.title);
-  if (!titleCore || !isKnownDisease(titleCore)) return [];
+  if (!titleCore || !isKnownDisease(titleCore)) {
+    if (dbg) dbg.reason = `unknown disease: titleCore="${titleCore}"`;
+    return [];
+  }
   const diseaseInfo = normalizeDisease(titleCore);
 
   // Fetch article page for full case numbers and country context
@@ -207,7 +210,10 @@ async function extractItemData(item: RSSItem): Promise<BriefData[]> {
     ];
   }
 
-  if (countries.length === 0) return [];
+  if (countries.length === 0) {
+    if (dbg) dbg.reason = `no country: cases=${cases} isEU=${isEuropeArticle} desc="${item.description.substring(0, 120)}"`;
+    return [];
+  }
 
   const euCountries = countries.filter((c) => {
     const g = findCountry(c);
@@ -313,8 +319,9 @@ export async function GET(req: NextRequest) {
 
   for (const entry of entries) {
     let briefItems: BriefData[] = [];
+    const dbg: { reason?: string } = {};
     try {
-      briefItems = await extractItemData(entry);
+      briefItems = await extractItemData(entry, dbg);
     } catch (e) {
       log.push({ label: entry.title, status: "error", detail: errorMessage(e) });
       Sentry.captureException(e, { tags: { cron: "sync-ecdc-threats" } });
@@ -323,7 +330,7 @@ export async function GET(req: NextRequest) {
     }
 
     if (briefItems.length === 0) {
-      log.push({ label: entry.title, status: "skip", detail: "disease not in map or no country found" });
+      log.push({ label: entry.title, status: "skip", detail: dbg.reason ?? "disease not in map or no country found" });
       results.skipped++;
       continue;
     }
