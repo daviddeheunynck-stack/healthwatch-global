@@ -199,9 +199,6 @@ export default function Navbar() {
                 >
                   {tAuth(`plan.${plan}`)}
                 </Link>
-                <span className="text-xs text-gray-400 hidden lg:block max-w-32 truncate">
-                  {user.email}
-                </span>
                 <Link
                   href={`/${locale}/settings`}
                   className="text-gray-400 hover:text-gray-200 transition-colors"
@@ -347,18 +344,15 @@ export default function Navbar() {
                      "Upgrade to Pro — free trial →"}
                   </Link>
                 )}
-                <div className="flex items-center justify-between">
-                  <p className="text-xs text-gray-500">{user.email}</p>
-                  <div className="flex items-center gap-2">
-                    <NotificationBell locale={locale} />
-                    <button
-                      onClick={handleLogout}
-                      className="flex items-center gap-2 text-sm text-gray-400 hover:text-red-400 transition-colors"
-                    >
-                      <LogOut className="w-4 h-4" />
-                      {tAuth("logout")}
-                    </button>
-                  </div>
+                <div className="flex items-center justify-end gap-2">
+                  <NotificationBell locale={locale} />
+                  <button
+                    onClick={handleLogout}
+                    className="flex items-center gap-2 text-sm text-gray-400 hover:text-red-400 transition-colors"
+                  >
+                    <LogOut className="w-4 h-4" />
+                    {tAuth("logout")}
+                  </button>
                 </div>
               </div>
             ) : (
