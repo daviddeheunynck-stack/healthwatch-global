@@ -25,6 +25,7 @@ import DemoBanner from "@/components/DemoBanner";
 import CountryScorecardTab from "@/components/CountryScorecardTab";
 import ResolvedOutbreaksWidget from "@/components/ResolvedOutbreaksWidget";
 import FeatureHub from "@/components/FeatureHub";
+import DashboardAlertsWidget from "@/components/DashboardAlertsWidget";
 import RegionalPulseSummary from "@/components/RegionalPulseSummary";
 import AlertSetupBanner from "@/components/AlertSetupBanner";
 import ProQuickStart from "@/components/ProQuickStart";
@@ -416,6 +417,10 @@ async function DashboardContent({ demo = false, urlRegion, urlRisk }: { demo?: b
           color={stats.pheicCount > 0 ? "purple" : "gray"}
         />
       </div>
+
+      {isPaid && currentUserId && (
+        <DashboardAlertsWidget locale={locale} userId={currentUserId} />
+      )}
 
       <NewThisWeekWidget outbreaks={outbreaks} locale={locale} trends={trends} />
 
