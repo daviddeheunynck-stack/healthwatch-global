@@ -1,7 +1,9 @@
 "use client";
 
-import { useState } from "react";
-import { Wrench, CheckCircle, AlertCircle, Loader2 } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Wrench, AlertCircle, Loader2 } from "lucide-react";
+
+const LS_KEY = "qc_fixes_applied";
 
 type Fix = {
   label: string;
@@ -38,6 +40,14 @@ type Status = "idle" | "loading" | "success" | "error";
 export default function AdminQCFixButton() {
   const [statuses, setStatuses] = useState<Record<number, Status>>({});
   const [messages, setMessages] = useState<Record<number, string>>({});
+  const [applied, setApplied] = useState<Set<string>>(new Set());
+
+  useEffect(() => {
+    try {
+      const stored: string[] = JSON.parse(localStorage.getItem(LS_KEY) ?? "[]");
+      setApplied(new Set(stored));
+    } catch {}
+  }, []);
 
   async function applyFix(idx: number, fix: Fix) {
     setStatuses((s) => ({ ...s, [idx]: "loading" }));
@@ -60,6 +70,11 @@ export default function AdminQCFixButton() {
     if (res.ok) {
       setStatuses((s) => ({ ...s, [idx]: "success" }));
       setMessages((m) => ({ ...m, [idx]: `OK — id ${data.id}` }));
+      setApplied((prev) => {
+        const next = new Set(prev).add(fix.label);
+        try { localStorage.setItem(LS_KEY, JSON.stringify([...next])); } catch {}
+        return next;
+      });
     } else {
       setStatuses((s) => ({ ...s, [idx]: "error" }));
       setMessages((m) => ({ ...m, [idx]: data.error ?? `HTTP ${res.status}` }));
@@ -70,7 +85,7 @@ export default function AdminQCFixButton() {
     <div className="space-y-3">
       {FIXES.map((fix, idx) => {
         const st = statuses[idx] ?? "idle";
-        if (st === "success") return null;
+        if (st === "success" || applied.has(fix.label)) return null;
         return (
           <div key={idx} className="flex items-center gap-3 flex-wrap">
             <button
