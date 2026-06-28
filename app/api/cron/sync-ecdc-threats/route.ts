@@ -103,7 +103,7 @@ function extractECDCDisease(title: string): string {
     .replace(/\s+situation\s+update\b.*/i, "")
     .replace(/\s+outbreak\b.*/i, "")
     .replace(/\s+in\s+.+$/i, "")
-    .replace(/\s*[-–—]\s*.+$/, "")
+    .replace(/\s*[–—]\s*.+$/, "")
     .trim();
 }
 
