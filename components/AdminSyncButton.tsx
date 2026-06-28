@@ -31,7 +31,7 @@ export default function AdminSyncButton() {
 
     if (res.ok) {
       setStatus("success");
-      setResult(`WHO DON : +${data.inserted} insérés · ${data.updated} mis à jour · ${data.staleDeactivated} désactivés — ECDC, PAHO & régional en cours…`);
+      setResult(`WHO DON : +${data.inserted} insérés · ${data.updated} mis à jour · ${data.staleDeactivated} désactivés — ECDC, PAHO & régional déclenchés (résultats dans 30–60 s, rafraîchir la page).`);
     } else {
       setStatus("error");
       const detail = data.detail ? ` — ${String(data.detail).slice(0, 120)}` : "";

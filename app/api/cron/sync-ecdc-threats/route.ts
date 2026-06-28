@@ -184,8 +184,9 @@ async function extractItemData(item: RSSItem): Promise<BriefData[]> {
   const fullText = `${item.description} ${articleText}`.trim();
   const { cases, deaths } = extractNumbers(fullText.substring(0, 3000));
 
-  // Country detection: scan description + article intro (first 800 chars of article)
-  const searchText = `${item.description} ${articleText.substring(0, 800)}`;
+  // Country detection: scan description + article body (first 3000 chars of stripped text).
+  // Navigation HTML collapses to ~200 chars of text, so 3000 chars reaches the content.
+  const searchText = `${item.description} ${articleText.substring(0, 3000)}`;
   const countries  = findMentionedCountries(searchText);
   if (countries.length === 0) return [];
 

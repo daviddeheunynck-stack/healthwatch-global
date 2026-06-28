@@ -130,6 +130,11 @@ export function extractNumbers(text: string): { cases: number; deaths: number; r
     new RegExp(`(\\d[\\d,]*)\\s+${QUALIFIERS}cases?(?:\\s+(?:have\\s+been|were|are)\\s+reported)?`, "i"),
     // "cases: 746" / "cases reported: 746"
     /cases?(?:\s+reported)?[:\s]+(\d[\d,]*)/i,
+    // ECDC uses "infections" instead of "cases": "more than 2 300 infections", "2 300 reported infections"
+    /(\d[\d,]*)\s+(?:reported\s+)?infections?\b/i,
+    /\btotal\s+of\s+(\d[\d,]*)\s+(?:[\w-]+\s+){0,3}infections?/i,
+    // "N notified" (ECDC surveillance style: "2 300 notified")
+    /(\d[\d,]*)\s+notified\b/i,
   ];
 
   const deathPatterns = [
