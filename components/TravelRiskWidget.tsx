@@ -17,7 +17,7 @@ const COPY: Record<string, {
   title: string; placeholder: string; check: string; checking: string;
   noOutbreaks: string; outbreaks: string; asOf: string; networkError: string;
 }> = {
-  fr: { title: "Risque voyage", placeholder: "Pays (ex: India)", check: "Évaluer", checking: "Analyse…", noOutbreaks: "Aucun foyer actif", outbreaks: "foyer(s) actif(s)", asOf: "au", networkError: "Erreur réseau" },
+  fr: { title: "Santé-voyage", placeholder: "Pays (ex: India)", check: "Évaluer", checking: "Analyse…", noOutbreaks: "Aucun foyer actif", outbreaks: "foyer(s) actif(s)", asOf: "au", networkError: "Erreur réseau" },
   en: { title: "Travel risk", placeholder: "Country (e.g. India)", check: "Check", checking: "Checking…", noOutbreaks: "No active outbreaks", outbreaks: "active outbreak(s)", asOf: "as of", networkError: "Network error" },
   es: { title: "Riesgo de viaje", placeholder: "País (ej: India)", check: "Evaluar", checking: "Evaluando…", noOutbreaks: "Sin brotes activos", outbreaks: "brote(s) activo(s)", asOf: "al", networkError: "Error de red" },
   ar: { title: "مخاطر السفر", placeholder: "الدولة (مثال: India)", check: "تحقق", checking: "جارٍ التحليل…", noOutbreaks: "لا تفشيات نشطة", outbreaks: "تفشٍّ نشط", asOf: "بتاريخ", networkError: "خطأ في الشبكة" },

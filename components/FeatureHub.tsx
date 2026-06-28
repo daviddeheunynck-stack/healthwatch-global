@@ -27,7 +27,7 @@ export default function FeatureHub({ locale }: { locale: string }) {
     {
       icon: <Plane className="w-5 h-5 text-blue-400" />,
       bg: "bg-blue-950/60",
-      title: { fr: "Risque voyage", en: "Travel Risk", es: "Riesgo de viaje", ar: "مخاطر السفر", id: "Risiko Perjalanan" },
+      title: { fr: "Santé-voyage", en: "Travel Risk", es: "Riesgo de viaje", ar: "مخاطر السفر", id: "Risiko Perjalanan" },
       desc:  { fr: "Évaluation épidémiologique par destination + avis gouvernementaux en temps réel", en: "Epidemiological risk by destination with live government advisories", es: "Riesgo por destino con avisos gubernamentales en tiempo real", ar: "تقييم المخاطر الوبائية حسب الوجهة مع النصائح الحكومية الفورية", id: "Risiko epidemiologi per tujuan + saran pemerintah langsung" },
       badge: { fr: "Nouveau", en: "New", es: "Nuevo", ar: "جديد", id: "Baru" },
       badgeCls: "bg-emerald-950/60 text-emerald-400 border-emerald-800/40",
