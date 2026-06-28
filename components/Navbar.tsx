@@ -143,10 +143,10 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto px-4 flex items-center justify-between h-16">
 
         {/* Logo */}
-        <div className="flex items-center gap-2 shrink-0">
+        <Link href={`/${locale}`} className="flex items-center gap-2 shrink-0">
           <Activity className="text-red-500 w-6 h-6" />
           <span className="font-bold text-lg text-white">{t("title")}</span>
-        </div>
+        </Link>
 
         {/* Desktop: nav links */}
         <div className="hidden xl:flex items-center gap-2">
