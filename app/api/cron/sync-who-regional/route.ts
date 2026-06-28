@@ -293,6 +293,37 @@ const TARGETS: Target[] = [
   { disease_en: "Meningitis",    country_en: "South Sudan",                       minCases:  10    },
   // ── Mpox — DRC clade I ongoing (WHO DON dedup guard handles overlap) ──────────
   { disease_en: "Mpox",         country_en: "Democratic Republic of the Congo",  minCases: 100    },
+
+  // ── South America — dengue & malaria (previously under-covered) ──────────────
+  // Argentina: solid national surveillance (SIVILA); 2024 epidemic ~330k cases documented on PAHO/ReliefWeb
+  { disease_en: "Dengue",        country_en: "Argentina",                         minCases: 10_000 },
+  // Ecuador, Bolivia, Paraguay: seasonal dengue well documented in PAHO sitreps on ReliefWeb
+  { disease_en: "Dengue",        country_en: "Ecuador",                           minCases:  1_000 },
+  { disease_en: "Dengue",        country_en: "Bolivia",                           minCases:  1_000 },
+  { disease_en: "Dengue",        country_en: "Paraguay",                          minCases:  1_000 },
+  // Venezuela: national surveillance has collapsed; figures are PAHO extrapolations — treat as approximate
+  { disease_en: "Dengue",        country_en: "Venezuela",                         minCases:  5_000 },
+  { disease_en: "Malaria",       country_en: "Venezuela",                         minCases:    100 },
+  // Colombia: significant endemic malaria burden beyond the dengue row already present
+  { disease_en: "Malaria",       country_en: "Colombia",                          minCases:  5_000 },
+
+  // ── Asia — WHO SEARO / WPRO gap-fill ─────────────────────────────────────────
+  // Philippines: DOH + WHO WPRO publish regularly on ReliefWeb; 100-200k dengue cases/year typical
+  { disease_en: "Dengue",        country_en: "Philippines",                       minCases: 10_000 },
+  { disease_en: "Measles",       country_en: "Philippines",                       minCases:    100 },
+  // Cambodia, Laos, Sri Lanka: present on ReliefWeb via WPRO/SEARO — conservative thresholds
+  { disease_en: "Dengue",        country_en: "Cambodia",                          minCases:  1_000 },
+  { disease_en: "Dengue",        country_en: "Laos",                              minCases:    500 },
+  { disease_en: "Dengue",        country_en: "Sri Lanka",                         minCases:  1_000 },
+  // Bangladesh cholera: WHO SEARO publishes; ReliefWeb has good coverage
+  { disease_en: "Cholera",       country_en: "Bangladesh",                        minCases:    100 },
+  // Nepal cholera: monsoon-seasonal, well documented in ReliefWeb SEARO reports
+  { disease_en: "Cholera",       country_en: "Nepal",                             minCases:     50 },
+  // Myanmar malaria: WHO SEARO + OCHA publish; conflict limits surveillance but ReliefWeb has estimates
+  { disease_en: "Malaria",       country_en: "Myanmar",                           minCases:  1_000 },
+  // China avian influenza: human H5N1 cases are usually in WHO DON (dedup guard applies);
+  // this catches events before DON publication or sub-threshold clusters on ReliefWeb
+  { disease_en: "Avian Influenza", country_en: "China",                           minCases:      1 },
 ];
 
 // ── Main handler ──────────────────────────────────────────────────────────────
