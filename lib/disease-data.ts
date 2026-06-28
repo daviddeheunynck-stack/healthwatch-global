@@ -444,6 +444,21 @@ const DISEASE_MAP: Array<{ patterns: string[]; info: DiseaseInfo }> = [
     },
   },
   {
+    patterns: ["shigella", "shigellosis", "bacillary dysentery"],
+    info: {
+      name_en: "Shigellosis", name_fr: "Shigellose",
+      name_es: "Shigelosis", name_ar: "داء الشيغيلا", name_id: "Shigelosis",
+      pathogenType: "bacteria", family: "Enterobacteriaceae",
+      transmission: ["foodborne", "waterborne", "contact"],
+      incubationMin: 1, incubationMax: 4,
+      cfr_ref: "< 1 % (MDR strains: higher)",
+      vaccine: "no",
+      treatment: "supportive",
+      whoFactsheet: "https://www.who.int/news-room/fact-sheets/detail/shigellosis",
+      travelerRisk: { africa: "moderate", asia: "moderate", americas: "low", europe: "low" },
+    },
+  },
+  {
     patterns: ["sudan virus", "bundibugyo"],
     info: {
       name_en: "Ebola virus disease", name_fr: "Maladie à virus Ebola",

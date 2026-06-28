@@ -189,31 +189,52 @@ async function extractItemData(item: RSSItem): Promise<BriefData[]> {
   const countries  = findMentionedCountries(searchText);
   if (countries.length === 0) return [];
 
-  // Take the first mentioned country only (avoid noise from "worldwide overview" items)
-  const geo = findCountry(countries[0]);
-  if (!geo) return [];
+  // For EU multi-country articles (≥ 2 European countries found), create one entry
+  // per country using the EU-wide aggregate figures. For single-country or global
+  // articles, keep the original behaviour (first country only).
+  const euCountries = countries.filter((c) => {
+    const g = findCountry(c);
+    return g?.region === "europe";
+  });
+  const isEUMultiCountry = euCountries.length >= 2;
 
-  const admin1 = await extractAdmin1(fullText.substring(0, 3000), geo.name_en);
-  let admin1_lat: number | null = null;
-  let admin1_lng: number | null = null;
-  if (admin1) {
-    const coords = await geocodeAdmin1(admin1, geo.name_en);
-    if (coords) { admin1_lat = coords.lat; admin1_lng = coords.lng; }
-    await new Promise((r) => setTimeout(r, 1100));
+  const targetCountries = isEUMultiCountry
+    ? euCountries.slice(0, 8)   // up to 8 EU countries per article
+    : [countries[0]];
+
+  const results: BriefData[] = [];
+  const descBase = `ECDC — ${item.title}. ${item.description}`.substring(0, 600);
+
+  for (const countryName of targetCountries) {
+    const geo = findCountry(countryName);
+    if (!geo) continue;
+
+    const admin1 = isEUMultiCountry
+      ? null  // skip admin1 geocoding for bulk EU processing (performance)
+      : await extractAdmin1(fullText.substring(0, 3000), geo.name_en);
+    let admin1_lat: number | null = null;
+    let admin1_lng: number | null = null;
+    if (admin1) {
+      const coords = await geocodeAdmin1(admin1, geo.name_en);
+      if (coords) { admin1_lat = coords.lat; admin1_lng = coords.lng; }
+      await new Promise((r) => setTimeout(r, 1100));
+    }
+
+    results.push({
+      disease_en:  diseaseInfo.name_en,
+      country_en:  geo.name_en,
+      cases,
+      deaths,
+      source:      item.url,
+      description: descBase,
+      date:        item.date,
+      admin1,
+      admin1_lat,
+      admin1_lng,
+    });
   }
 
-  return [{
-    disease_en:  diseaseInfo.name_en,
-    country_en:  geo.name_en,
-    cases,
-    deaths,
-    source:      item.url,
-    description: `ECDC — ${item.title}. ${item.description}`.substring(0, 600),
-    date:        item.date,
-    admin1,
-    admin1_lat,
-    admin1_lng,
-  }];
+  return results;
 }
 
 // ── Main handler ──────────────────────────────────────────────────────────────
