@@ -17,26 +17,13 @@ import NewThisWeekWidget from "@/components/NewThisWeekWidget";
 import TrialBanner from "@/components/TrialBanner";
 import PushNotificationBanner from "@/components/PushNotificationBanner";
 import CsvExportButton from "@/components/CsvExportButton";
-import DataAccessPanel from "@/components/DataAccessPanel";
-import WebhookPanel from "@/components/WebhookPanel";
 import SignalsFeed from "@/components/SignalsFeed";
-import ScheduledReportPanel from "@/components/ScheduledReportPanel";
-import OrgPanel from "@/components/OrgPanel";
-import DiseaseWatchlistPanel from "@/components/DiseaseWatchlistPanel";
-import TravelRiskWidget from "@/components/TravelRiskWidget";
-import CategoryAlertPanel from "@/components/CategoryAlertPanel";
 import DataStatusWidget from "@/components/DataStatusWidget";
 import OnboardingTour from "@/components/OnboardingTour";
 import FreePlanBanner from "@/components/FreePlanBanner";
 import DemoBanner from "@/components/DemoBanner";
 import CountryScorecardTab from "@/components/CountryScorecardTab";
-import GeofenceAlertPanel from "@/components/GeofenceAlertPanel";
-import CountryRiskAlertPanel from "@/components/CountryRiskAlertPanel";
-import AlertLocalePanel from "@/components/AlertLocalePanel";
-import DigestRegionPanel from "@/components/DigestRegionPanel";
 import ResolvedOutbreaksWidget from "@/components/ResolvedOutbreaksWidget";
-import APIKeyPanel from "@/components/APIKeyPanel";
-import DigestPanel from "@/components/DigestPanel";
 import RegionalPulseSummary from "@/components/RegionalPulseSummary";
 import AlertSetupBanner from "@/components/AlertSetupBanner";
 import ProQuickStart from "@/components/ProQuickStart";
@@ -467,29 +454,31 @@ async function DashboardContent({ demo = false, urlRegion, urlRisk }: { demo?: b
       </div>
 
       {isPaid && <CountryScorecardTab locale={locale} />}
-
-      {isPaid && <DataAccessPanel locale={locale} />}
-      {isPaid && <DigestPanel locale={locale} />}
-      {isPaid && <DigestRegionPanel locale={locale} />}
-      {isPaid && <APIKeyPanel locale={locale} />}
-
-      {isPaid && <TravelRiskWidget locale={locale} />}
       {isPaid && <ResolvedOutbreaksWidget locale={locale} />}
-      {isPaid && <CategoryAlertPanel locale={locale} userEmail={currentUserEmail ?? undefined} />}
       {isPaid && <DataStatusWidget locale={locale} />}
-
-      {isPaid && <DiseaseWatchlistPanel locale={locale} initialWatchlist={diseaseWatchlist} />}
-      {isPaid && <GeofenceAlertPanel locale={locale} userEmail={currentUserEmail ?? undefined} />}
-      {isPaid && <CountryRiskAlertPanel locale={locale} userEmail={currentUserEmail ?? undefined} />}
-      {isPaid && <AlertLocalePanel locale={locale} />}
-      {isPaid && <WebhookPanel locale={locale} />}
-      {isPaid && <ScheduledReportPanel locale={locale} />}
-      {isPaid && <OrgPanel locale={locale} />}
 
       {isPaid && (
         <div className="rounded-xl border border-amber-800/20 bg-amber-950/10 p-4">
           <SignalsFeed locale={locale} />
         </div>
+      )}
+
+      {isPaid && (
+        <Link
+          href={`/${locale}/settings`}
+          className="flex items-center justify-between px-5 py-4 rounded-xl border border-gray-700/50 bg-gray-900/40 hover:bg-gray-800/60 hover:border-gray-600/60 transition-colors group"
+        >
+          <div className="flex items-center gap-3">
+            <span className="text-sm font-medium text-gray-300 group-hover:text-white transition-colors">
+              {locale === "fr" ? "⚙️ Paramètres — alertes, notifications, intégrations" :
+               locale === "es" ? "⚙️ Configuración — alertas, notificaciones, integraciones" :
+               locale === "ar" ? "⚙️ الإعدادات — التنبيهات والإشعارات والتكاملات" :
+               locale === "id" ? "⚙️ Pengaturan — peringatan, notifikasi, integrasi" :
+               "⚙️ Settings — alerts, notifications, integrations"}
+            </span>
+          </div>
+          <span className="text-gray-600 group-hover:text-gray-400 transition-colors text-sm">→</span>
+        </Link>
       )}
     </>
   );

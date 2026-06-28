@@ -4,7 +4,7 @@ import React from "react";
 import { useTranslations, useLocale } from "next-intl";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { Activity, Bell, FileText, Globe, CreditCard, LogOut, Menu, X, Mail, BookOpen, ArrowLeftRight } from "lucide-react";
+import { Activity, Bell, FileText, Globe, CreditCard, LogOut, Menu, X, Mail, BookOpen, ArrowLeftRight, Settings } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { createClient } from "@/lib/supabase-browser";
 import type { User as SupabaseUser } from "@supabase/supabase-js";
@@ -202,6 +202,13 @@ export default function Navbar() {
                 <span className="text-xs text-gray-400 hidden lg:block max-w-32 truncate">
                   {user.email}
                 </span>
+                <Link
+                  href={`/${locale}/settings`}
+                  className="text-gray-400 hover:text-gray-200 transition-colors"
+                  title="Settings"
+                >
+                  <Settings className="w-4 h-4" />
+                </Link>
                 <NotificationBell locale={locale} />
                 <button
                   onClick={handleLogout}
