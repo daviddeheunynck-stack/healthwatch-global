@@ -206,6 +206,7 @@ export const COUNTRIES: Record<string, CountryGeo> = {
   "New Caledonia": { lat: -20.9, lng: 165.6, region: "oceania", name_en: "New Caledonia", name_fr: "Nouvelle-Calédonie", name_ar: "كاليدونيا الجديدة" },
 
   // ── MULTI-COUNTRY / GLOBAL ────────────────────────────────────
+  "EU/EEA": { lat: 50.85, lng: 4.35, region: "europe", name_en: "EU/EEA", name_fr: "UE/EEE", name_ar: "الاتحاد الأوروبي" },
   "Multi-country": { lat: 10.0, lng: -25.0, region: "africa", name_en: "Multiple countries", name_fr: "Plusieurs pays", name_ar: "دول متعددة" },
   "Global": { lat: 10.0, lng: -25.0, region: "africa", name_en: "Global", name_fr: "Mondial", name_ar: "عالمي" },
   "Global situation": { lat: 10.0, lng: -25.0, region: "africa", name_en: "Global", name_fr: "Mondial", name_ar: "عالمي" },

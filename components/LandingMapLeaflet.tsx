@@ -79,7 +79,7 @@ export default function LandingMapLeaflet({ outbreaks, locale }: Props) {
       outbreaks.forEach((ob) => {
         // Skip worldwide/multi-country aggregates — no meaningful geographic pin
         const cen = (ob.country_en ?? "").toLowerCase();
-        if (cen === "multiple countries" || cen === "global") return;
+        if (cen === "multiple countries" || cen === "global" || cen === "eu/eea") return;
         if (!ob.lat || !ob.lng) return;
         const color  = RISK_COLOR[ob.risk_level] || "#6b7280";
         const dName  = getLocalizedDisease(ob, locale);

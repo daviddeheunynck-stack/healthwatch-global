@@ -204,10 +204,7 @@ async function extractItemData(item: RSSItem, dbg?: { reason?: string }): Promis
   // use the ECDC EU/EEA surveillance country set when cases are parseable but
   // no countries were detected in the HTML.
   if (countries.length === 0 && isEuropeArticle && cases > 0) {
-    countries = [
-      "Belgium", "Denmark", "France", "Germany", "Ireland",
-      "Luxembourg", "Netherlands", "Norway", "Spain", "Sweden",
-    ];
+    countries = ["EU/EEA"];
   }
 
   if (countries.length === 0) {
