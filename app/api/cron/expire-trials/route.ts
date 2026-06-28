@@ -99,5 +99,8 @@ export async function GET(req: NextRequest) {
     await new Promise((r) => setTimeout(r, 150));
   }
 
+  const hb = process.env.BETTERSTACK_HB_EXPIRE_TRIALS;
+  if (hb) fetch(hb).catch(() => {});
+
   return NextResponse.json({ downgraded: ids.length, users: expired.map((p) => p.email) });
 }

@@ -379,6 +379,9 @@ export async function GET(req: NextRequest) {
 
   results.staleDeactivated = count ?? 0;
 
+  const hb = process.env.BETTERSTACK_HB_SYNC_OUTBREAKS;
+  if (hb) fetch(hb).catch(() => {});
+
   console.log("[sync] Done:", results, "source:", usedSource);
   return NextResponse.json({
     success: true,

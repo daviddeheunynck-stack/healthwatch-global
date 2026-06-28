@@ -190,6 +190,9 @@ export async function GET(req: NextRequest) {
     }
   }
 
+  const hb = process.env.BETTERSTACK_HB_ONBOARDING;
+  if (hb) fetch(hb).catch(() => {});
+
   console.log(`[onboarding] J+3: ${j3Sent}/${j3Failed} | J+7: ${j7Sent}/${j7Failed} | J+12: ${j12Sent}/${j12Failed} | J+32: ${j32Sent}/${j32Failed}`);
 
   return NextResponse.json({

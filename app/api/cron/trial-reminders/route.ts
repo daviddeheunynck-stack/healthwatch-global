@@ -123,6 +123,9 @@ export async function GET(req: NextRequest) {
     await new Promise((r) => setTimeout(r, 150));
   }
 
+  const hb = process.env.BETTERSTACK_HB_TRIAL_REMINDERS;
+  if (hb) fetch(hb).catch(() => {});
+
   console.log(`[trial-reminders] Done — ${sent} sent, ${failed} failed.`);
   return NextResponse.json({ sent, failed, total: profiles.length });
 }
