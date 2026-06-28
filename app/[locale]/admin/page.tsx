@@ -10,7 +10,6 @@ import {
 import Link from "next/link";
 import AdminOutbreakTable from "@/components/AdminOutbreakTable";
 import AdminSyncButton from "@/components/AdminSyncButton";
-import AdminBroadcastButton from "@/components/AdminBroadcastButton";
 import AdminPilotInviteForm from "@/components/AdminPilotInviteForm";
 import AdminExtendTrialButton from "@/components/AdminExtendTrialButton";
 import type { Outbreak } from "@/lib/outbreaks";
@@ -393,20 +392,6 @@ export default async function AdminPage({
         <AdminSyncButton />
       </div>
 
-      {/* ── PH launch broadcast ─────────────────────────────────────────────── */}
-      <div className="bg-gray-900 border border-[#ff6154]/30 rounded-xl p-5 space-y-3">
-        <div className="flex items-center gap-2">
-          <span className="text-[#ff6154] text-lg">🚀</span>
-          <h2 className="text-white font-semibold">Email Product Hunt Launch</h2>
-          <span className="text-xs text-gray-500 ml-1">— 24 juin 2026</span>
-        </div>
-        <p className="text-sm text-gray-400">
-          Envoie l&apos;email de lancement PH à tous les inscrits. Fais d&apos;abord un <strong className="text-gray-300">dry run</strong> pour vérifier le nombre de destinataires.
-          <br />
-          <span className="text-yellow-500">⚠️ Mettre à jour <code className="text-yellow-400">PH_URL</code> dans <code className="text-yellow-400">lib/ph-launch-email.ts</code> avant d&apos;envoyer.</span>
-        </p>
-        <AdminBroadcastButton />
-      </div>
 
       {/* ── Pilot invites ───────────────────────────────────────────────────── */}
       <AdminPilotInviteForm locale={locale} />
