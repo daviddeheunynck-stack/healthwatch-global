@@ -28,6 +28,12 @@ export async function POST(req: NextRequest) {
   const baseUrl = `${proto}://${host}`;
   const secret  = clean(process.env.CRON_SECRET);
 
+  // Kick off regional endemic sync as a fire-and-forget — it runs as an independent
+  // Vercel function invocation (maxDuration 150s) and does not block this response.
+  fetch(`${baseUrl}/api/cron/sync-who-regional`, {
+    headers: { Authorization: `Bearer ${secret}` },
+  }).catch((e) => console.error("[admin-sync] sync-who-regional:", errorMessage(e)));
+
   let res: Response;
   try {
     res = await fetch(`${baseUrl}/api/cron/sync-outbreaks`, {
@@ -44,7 +50,10 @@ export async function POST(req: NextRequest) {
   const text = await res.text();
   try {
     const data = JSON.parse(text);
-    return NextResponse.json(data, { status: res.status });
+    return NextResponse.json(
+      { ...data, regional_sync: "started" },
+      { status: res.status }
+    );
   } catch {
     return NextResponse.json(
       { error: `Sync HTTP ${res.status}`, detail: text.slice(0, 400) },
