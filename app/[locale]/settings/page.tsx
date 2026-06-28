@@ -17,10 +17,14 @@ const PAGE_SUB: Record<string, string> = {
 
 export default async function SettingsPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ locale: string }>;
+  searchParams?: Promise<Record<string, string | string[] | undefined>>;
 }) {
   const { locale } = await params;
+  const sp = searchParams ? await searchParams : {};
+  const initialTab = typeof sp.tab === "string" ? sp.tab : "alerts";
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 
@@ -63,6 +67,7 @@ export default async function SettingsPage({
         locale={locale}
         userEmail={user.email ?? null}
         initialWatchlist={diseaseWatchlist}
+        initialTab={initialTab}
       />
     </div>
   );

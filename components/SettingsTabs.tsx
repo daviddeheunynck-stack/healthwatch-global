@@ -36,12 +36,17 @@ export default function SettingsTabs({
   locale,
   userEmail,
   initialWatchlist,
+  initialTab = "alerts",
 }: {
   locale: string;
   userEmail: string | null;
   initialWatchlist: string[];
+  initialTab?: string;
 }) {
-  const [active, setActive] = useState<TabKey>("alerts");
+  const safeTab = (["alerts", "notifications", "integration", "team"] as TabKey[]).includes(initialTab as TabKey)
+    ? (initialTab as TabKey)
+    : "alerts";
+  const [active, setActive] = useState<TabKey>(safeTab);
   const labels = TAB_LABELS[locale] ?? TAB_LABELS.en;
 
   return (
