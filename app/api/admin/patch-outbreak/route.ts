@@ -47,12 +47,14 @@ export async function POST(req: NextRequest) {
 
   const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
 
-  // Find the matching row (active OR recently active)
+  // Find the matching row (active OR recently active).
+  // Search both disease_en/country_en (English) and disease/country (French)
+  // because some rows are inserted with only the French columns populated.
   const { data: rows, error: fetchErr } = await supabase
     .from("outbreaks")
     .select("id, disease_en, country_en, cases, deaths, date, active")
-    .ilike("disease_en", `%${disease_en}%`)
-    .ilike("country_en", `%${country_en}%`)
+    .or(`disease_en.ilike.%${disease_en}%,disease.ilike.%${disease_en}%`)
+    .or(`country_en.ilike.%${country_en}%,country.ilike.%${country_en}%`)
     .order("active", { ascending: false })
     .limit(1);
 

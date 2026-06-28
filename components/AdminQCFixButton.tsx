@@ -18,7 +18,7 @@ const FIXES: Fix[] = [
   {
     label: "Ebola / RD Congo — DON606 (534 cas / 93 morts, 8 juin 2026)",
     disease_en: "Ebola",
-    country_en: "Democratic Republic of the Congo",
+    country_en: "DR Congo",
     cases: 534,
     deaths: 93,
     date: "2026-06-08",
@@ -28,7 +28,7 @@ const FIXES: Fix[] = [
   {
     label: "Hantavirus / Cruise ship MV Hondius — désactiver (résolu, DON604)",
     disease_en: "Hantavirus",
-    country_en: "Netherlands",
+    country_en: "Plusieurs pays",
     active: false,
   },
 ];
