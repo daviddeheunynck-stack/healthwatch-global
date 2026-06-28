@@ -294,6 +294,18 @@ const TARGETS: Target[] = [
   // ── Mpox — DRC clade I ongoing (WHO DON dedup guard handles overlap) ──────────
   { disease_en: "Mpox",         country_en: "Democratic Republic of the Congo",  minCases: 100    },
 
+  // ── Europe — measles endemic tracking (ECDC RSS covers emerging threats;
+  //    these targets add systematic ReliefWeb back-fill for high-burden EU countries) ──
+  // Romania: consistently highest measles burden in EU — ECDC/WHO publish on ReliefWeb
+  { disease_en: "Measles",        country_en: "Romania",                           minCases:  50    },
+  // France, Italy: periodic sub-national outbreaks documented in WHO/ECDC ReliefWeb reports
+  { disease_en: "Measles",        country_en: "France",                            minCases:  50    },
+  { disease_en: "Measles",        country_en: "Italy",                             minCases:  50    },
+  // West Nile: already in disease-data.ts; ECDC RSS is primary source; ReliefWeb as fallback
+  { disease_en: "West Nile fever", country_en: "Italy",                            minCases:  10    },
+  { disease_en: "West Nile fever", country_en: "Greece",                           minCases:   5    },
+  { disease_en: "West Nile fever", country_en: "Romania",                          minCases:   5    },
+
   // ── South America — dengue & malaria (previously under-covered) ──────────────
   // Argentina: solid national surveillance (SIVILA); 2024 epidemic ~330k cases documented on PAHO/ReliefWeb
   { disease_en: "Dengue",        country_en: "Argentina",                         minCases: 10_000 },

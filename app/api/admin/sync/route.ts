@@ -28,11 +28,17 @@ export async function POST(req: NextRequest) {
   const baseUrl = `${proto}://${host}`;
   const secret  = clean(process.env.CRON_SECRET);
 
-  // Kick off regional endemic sync as a fire-and-forget — it runs as an independent
-  // Vercel function invocation (maxDuration 150s) and does not block this response.
-  fetch(`${baseUrl}/api/cron/sync-who-regional`, {
-    headers: { Authorization: `Bearer ${secret}` },
-  }).catch((e) => console.error("[admin-sync] sync-who-regional:", errorMessage(e)));
+  // Fire all supplementary scrapers as independent Vercel function invocations —
+  // none of these block the response; each runs to its own maxDuration.
+  const supplementary = [
+    "/api/cron/sync-who-regional",   // endemic disease targets — Americas + Asia + EU (150s)
+    "/api/cron/sync-ecdc-threats",   // ECDC epidemiological updates RSS — EU/EEA (60s)
+    "/api/cron/sync-paho-alerts",    // PAHO epidemiological alerts — Americas (60s)
+  ];
+  for (const path of supplementary) {
+    fetch(`${baseUrl}${path}`, { headers: { Authorization: `Bearer ${secret}` } })
+      .catch((e) => console.error(`[admin-sync] ${path}:`, errorMessage(e)));
+  }
 
   let res: Response;
   try {
