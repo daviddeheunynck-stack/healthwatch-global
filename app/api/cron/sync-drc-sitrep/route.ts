@@ -21,9 +21,9 @@ const CRON_SECRET          = clean(process.env.CRON_SECRET);
 const BREVO_API_KEY        = clean(process.env.BREVO_API_KEY);
 const ADMIN_EMAILS         = clean(process.env.ADMIN_EMAILS);
 
-// WHO AFRO Ebola DRC situation reports page
-const SITREP_INDEX_URL = "https://www.afro.who.int/health-topics/ebola-virus-disease/drc";
-const ADMIN_PANEL_URL  = "https://healthwatch-global.com/fr/admin";
+const RELIEFWEB_BASE    = "https://api.reliefweb.int/v2/reports";
+const RELIEFWEB_APPNAME = "healthwatch-global";
+const ADMIN_PANEL_URL   = "https://healthwatch-global.com/fr/admin";
 
 const FETCH_HEADERS = {
   "User-Agent":      "HealthWatch-Global/1.0 (health surveillance; contact@healthwatch-global.com)",
@@ -66,44 +66,71 @@ async function findEbolaDrcRow(supabase: any) {
   return data as { id: string; cases: number; deaths: number; date: string; source_priority: number };
 }
 
-// ── 2. Detect latest situation report PDF on WHO AFRO page ───────────────────
+// ── 2. Detect latest situation report via ReliefWeb API ──────────────────────
+// ReliefWeb aggregates DRC Ministry of Health / INSP sitreps within ~24h.
+// This replaces the broken WHO AFRO page (restructured, sitreps removed).
 
-async function fetchLatestSitrepPdf(): Promise<{ url: string; num: number } | null> {
-  try {
-    const res = await fetch(SITREP_INDEX_URL, {
-      headers: FETCH_HEADERS,
-      signal: AbortSignal.timeout(15000),
-    });
-    if (!res.ok) { console.log(`[drc-sitrep] WHO AFRO page → HTTP ${res.status}`); return null; }
-    return parseSitrepLinks(await res.text());
-  } catch (e) {
-    console.log("[drc-sitrep] fetch WHO AFRO page:", errorMessage(e));
-    return null;
-  }
+interface RWFile { url?: string; filename?: string; mimetype?: string; }
+interface RWReport {
+  fields?: {
+    title?: string;
+    date?:  { created?: string };
+    url?:   string;
+    files?: RWFile[];
+  };
 }
 
-function parseSitrepLinks(html: string): { url: string; num: number } | null {
-  const hrefRe = /href="([^"]+)"/g;
-  let m: RegExpExecArray | null;
-  let bestNum = 0;
-  let bestUrl = "";
+async function fetchLatestSitrep(): Promise<{ pageUrl: string; pdfUrl: string | null; num: number } | null> {
+  const year = new Date().getFullYear();
+  const rwUrl = new URL(RELIEFWEB_BASE);
+  rwUrl.searchParams.set("appname", RELIEFWEB_APPNAME);
+  rwUrl.searchParams.set("query[value]", `Ebola Congo MVB sitrep situation report ${year}`);
+  rwUrl.searchParams.append("fields[include][]", "title");
+  rwUrl.searchParams.append("fields[include][]", "date");
+  rwUrl.searchParams.append("fields[include][]", "url");
+  rwUrl.searchParams.append("fields[include][]", "files");
+  rwUrl.searchParams.set("sort[]", "date:desc");
+  rwUrl.searchParams.set("limit", "5");
 
-  while ((m = hrefRe.exec(html)) !== null) {
-    const href = m[1];
-    // Match patterns like: situation-report-042, sitrep-42, n°042, n42
-    const numMatch = href.match(/(?:situation[-_]?report|sitrep|n[°o]?\s*)[_-]?(\d{2,3})(?:[._-]|$)/i);
-    if (!numMatch) continue;
-    if (!/(?:ebola|drc|congo|rdc)/i.test(href)) continue;
-    if (!href.endsWith(".pdf") && !href.includes(".pdf")) continue;
+  try {
+    const res = await fetch(rwUrl.toString(), {
+      headers: { ...FETCH_HEADERS, "Accept": "application/json" },
+      signal: AbortSignal.timeout(10_000),
+    });
+    if (!res.ok) { console.log(`[drc-sitrep] ReliefWeb → HTTP ${res.status}`); return null; }
 
-    const num = parseInt(numMatch[1], 10);
-    if (num > bestNum) {
-      bestNum = num;
-      bestUrl = href.startsWith("http") ? href : `https://www.afro.who.int${href}`;
+    const json = await res.json() as { data?: RWReport[] };
+
+    for (const item of json.data ?? []) {
+      const f = item.fields;
+      if (!f?.title) continue;
+
+      const lower = f.title.toLowerCase();
+      // Must be an Ebola or MVB sitrep from DRC
+      if (!lower.includes("ebola") && !lower.includes("mvb")) continue;
+      if (!lower.includes("congo") && !lower.includes("drc") && !lower.includes("rdc")) continue;
+
+      // Extract sitrep number from title (e.g. "SitRep N°044/MVB" or "Situation Report No. 44")
+      const numMatch = f.title.match(/(?:sitrep|situation[-\s]?report|rapport[-\s]?de[-\s]?situation)\s*[n°no#.]?\s*0*(\d{2,3})/i)
+        ?? f.title.match(/[nN][°o]?\s*0*(\d{2,3})\s*[/|\\]?\s*(?:MVB|EVD|ebola)/i);
+      if (!numMatch) continue;
+
+      const num    = parseInt(numMatch[1], 10);
+      const pageUrl = f.url ?? "";
+      const pdfUrl  = f.files?.find(
+        (file) => file.mimetype === "application/pdf" || file.filename?.endsWith(".pdf")
+      )?.url ?? null;
+
+      console.log(`[drc-sitrep] ReliefWeb found: "${f.title}" — sitrep N°${num}, PDF: ${pdfUrl ?? "none"}`);
+      return { pageUrl, pdfUrl, num };
     }
-  }
 
-  return bestNum > 0 ? { url: bestUrl, num: bestNum } : null;
+    console.log("[drc-sitrep] ReliefWeb: no matching sitrep found in top 5 results");
+    return null;
+  } catch (e) {
+    console.log("[drc-sitrep] ReliefWeb query error:", errorMessage(e));
+    return null;
+  }
 }
 
 // ── 3. Download PDF + extract DRC cumulative figures ─────────────────────────
@@ -276,16 +303,16 @@ function emailManualNeeded(num: number, sitrepUrl: string) {
 
 function emailNoSitrep() {
   return {
-    subject: `⚠️ Ébola RDC — aucun nouveau sitrep détecté cette semaine`,
+    subject: `⚠️ Ébola RDC — aucun nouveau sitrep détecté`,
     html: `
       <div style="font-family:sans-serif;max-width:600px;margin:0 auto;color:#1f2937">
         <h2 style="border-bottom:2px solid #f59e0b;padding-bottom:8px;color:#b45309">
           ⚠️ Ébola RDC — sitrep non détecté automatiquement
         </h2>
-        <p>La page WHO AFRO n'a pas retourné de nouveau sitrep PDF. Vérification manuelle conseillée.</p>
+        <p>ReliefWeb n'a pas retourné de nouveau sitrep MVB correspondant. Vérification manuelle conseillée.</p>
         <p>
-          <a href="${SITREP_INDEX_URL}" style="display:inline-block;background:#dc2626;color:white;padding:8px 16px;border-radius:6px;text-decoration:none;font-weight:bold;margin-right:8px">
-            🌐 WHO AFRO Ébola DRC
+          <a href="https://reliefweb.int/updates?search=ebola+congo+sitrep" style="display:inline-block;background:#dc2626;color:white;padding:8px 16px;border-radius:6px;text-decoration:none;font-weight:bold;margin-right:8px">
+            🌐 ReliefWeb Ébola DRC
           </a>
           <a href="${ADMIN_PANEL_URL}" style="display:inline-block;background:#111827;color:white;padding:8px 16px;border-radius:6px;text-decoration:none;font-weight:bold">
             ⚙️ Admin
@@ -332,11 +359,11 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ status: "error", detail: "Ebola DRC row not found" }, { status: 500 });
   }
 
-  // Step 2: detect latest sitrep PDF on WHO AFRO page
-  const latest = await fetchLatestSitrepPdf();
+  // Step 2: detect latest sitrep via ReliefWeb
+  const latest = await fetchLatestSitrep();
 
   if (!latest) {
-    console.log("[drc-sitrep] No sitrep PDF found on WHO AFRO page.");
+    console.log("[drc-sitrep] No sitrep found on ReliefWeb.");
     if (adminEmail) {
       const { subject, html } = emailNoSitrep();
       await sendEmail(adminEmail, subject, html);
@@ -344,15 +371,15 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ status: "no_sitrep_found" });
   }
 
-  console.log(`[drc-sitrep] Found sitrep N°${latest.num} — ${latest.url}`);
+  console.log(`[drc-sitrep] Found sitrep N°${latest.num} — ${latest.pageUrl}`);
 
   if (latest.num <= lastKnownNum) {
     console.log(`[drc-sitrep] Already processed N°${latest.num}.`);
     return NextResponse.json({ status: "up_to_date", sitrep: latest.num });
   }
 
-  // Step 3: extract data from PDF
-  const data = await extractFromPdf(latest.url, latest.num);
+  // Step 3: extract data from PDF (if available)
+  const data = latest.pdfUrl ? await extractFromPdf(latest.pdfUrl, latest.num) : null;
   console.log(`[drc-sitrep] Extracted:`, data);
 
   if (data) {
@@ -363,7 +390,7 @@ export async function GET(req: NextRequest) {
         cases:           data.cases,
         deaths:          data.deaths,
         date:            data.date,
-        source:          latest.url,
+        source:          latest.pdfUrl ?? latest.pageUrl,
         active:          true,
         updated_at:      new Date().toISOString(),
         source_priority: 10,
@@ -382,7 +409,7 @@ export async function GET(req: NextRequest) {
   } else {
     // Step 4b: PDF parsing failed — notify for manual update
     console.log("[drc-sitrep] PDF extraction failed — sending manual notification.");
-    const { subject, html } = emailManualNeeded(latest.num, latest.url);
+    const { subject, html } = emailManualNeeded(latest.num, latest.pdfUrl ?? latest.pageUrl);
     if (adminEmail) await sendEmail(adminEmail, subject, html);
   }
 
@@ -397,7 +424,8 @@ export async function GET(req: NextRequest) {
   return NextResponse.json({
     status:     data ? "auto_updated" : "manual_needed",
     sitrep:     latest.num,
-    url:        latest.url,
+    pageUrl:    latest.pageUrl,
+    pdfUrl:     latest.pdfUrl,
     extracted:  data,
     emailSent:  !!adminEmail,
   });
