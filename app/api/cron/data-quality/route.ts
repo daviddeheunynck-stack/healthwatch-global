@@ -201,6 +201,7 @@ export async function GET(req: NextRequest) {
     "shinyapps.io",
     "ecdc.europa.eu/en/mpox/surveillance",
     "who.int/publications/m/item",          // WHO monthly situation reports (Mpox, etc.) — monthly cadence, 28d staleness expected
+    "ecdc.europa.eu/en/news-events",        // ECDC epidemiological updates — quarterly cadence, 90d+ staleness expected
   ];
 
   for (const row of rows ?? []) {
