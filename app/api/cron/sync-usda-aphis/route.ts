@@ -6,6 +6,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import * as Sentry from "@sentry/nextjs";
 import { createClient } from "@supabase/supabase-js";
+import { logCronRun } from "@/lib/cron-monitor";
 import { normalizeDisease } from "@/lib/disease-data";
 import { findCountry } from "@/lib/geo-data";
 import { errorMessage } from "@/lib/error";
@@ -439,5 +440,6 @@ export async function GET(req: NextRequest) {
   }
 
   console.log("[usda-aphis] Done:", results, log);
+  await logCronRun(supabase, "sync-usda-aphis", "ok", results.inserted ?? 0);
   return NextResponse.json({ success: true, timestamp: new Date().toISOString(), ...results, log });
 }

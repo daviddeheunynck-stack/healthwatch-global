@@ -6,6 +6,7 @@
 // Never overwrites rows owned by the WHO DON daily sync.
 
 import { NextRequest, NextResponse } from "next/server";
+import { logCronRun } from "@/lib/cron-monitor";
 import * as Sentry from "@sentry/nextjs";
 import { createClient } from "@supabase/supabase-js";
 import { normalizeDisease } from "@/lib/disease-data";
@@ -370,5 +371,6 @@ export async function GET(req: NextRequest) {
   }
 
   console.log("[spf] Done:", results, log);
+  await logCronRun(supabase, "sync-spf", "ok", (results.inserted ?? 0) + (results.updated ?? 0));
   return NextResponse.json({ success: true, timestamp: new Date().toISOString(), ...results, log });
 }

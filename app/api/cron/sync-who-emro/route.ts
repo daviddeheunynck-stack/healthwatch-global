@@ -11,6 +11,7 @@ import { createClient } from "@supabase/supabase-js";
 import { normalizeDisease } from "@/lib/disease-data";
 import { COUNTRIES, findCountry } from "@/lib/geo-data";
 import { extractNumbers, assessRisk } from "@/lib/outbreak-parser";
+import { logCronRun } from "@/lib/cron-monitor";
 import { errorMessage } from "@/lib/error";
 
 export const dynamic     = "force-dynamic";
@@ -335,5 +336,6 @@ export async function GET(req: NextRequest) {
   }
 
   console.log("[who-emro] Done:", results, log);
+  await logCronRun(supabase, "sync-who-emro", "ok", (results.inserted ?? 0) + (results.updated ?? 0));
   return NextResponse.json({ success: true, timestamp: new Date().toISOString(), ...results, log });
 }

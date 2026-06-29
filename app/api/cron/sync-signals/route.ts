@@ -6,6 +6,7 @@
  * Inserts new signals; skips duplicates (source_url UNIQUE constraint).
  */
 import { NextRequest, NextResponse } from "next/server";
+import { logCronRun } from "@/lib/cron-monitor";
 import * as Sentry from "@sentry/nextjs";
 import { createClient } from "@supabase/supabase-js";
 
@@ -106,5 +107,6 @@ export async function GET(req: NextRequest) {
     else                         { inserted++; }
   }
 
+  await logCronRun(supabase, "sync-signals", "ok", inserted);
   return NextResponse.json({ ok: true, inserted, skipped });
 }

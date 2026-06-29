@@ -46,7 +46,7 @@
     },
     {
       "path": "/api/cron/sync-who-regional",
-      "schedule": "0 8 * * 2,5"
+      "schedule": "0 8 * * 1,3,5"
     },
     {
       "path": "/api/cron/check-mpox-sitrep",
@@ -70,7 +70,7 @@
     },
     {
       "path": "/api/cron/sync-paho-alerts",
-      "schedule": "30 9 * * 2"
+      "schedule": "30 9 * * 2,5"
     },
     {
       "path": "/api/cron/sync-africa-cdc",
