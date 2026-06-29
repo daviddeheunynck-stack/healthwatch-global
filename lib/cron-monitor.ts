@@ -54,12 +54,12 @@ export const CRON_WINDOWS: Record<string, number> = {
   "sync-ukhsa":        14,   // twice daily
   "sync-spf":          14,   // twice daily
   "sync-cdc-notices":  30,   // daily
-  "sync-who-afro":     60,   // Mon/Wed/Fri
-  "sync-who-emro":     60,   // Mon/Wed/Fri
-  "sync-africa-cdc":   96,   // Wed/Sat
-  "sync-who-regional": 96,   // Tue/Fri
-  "check-mpox-sitrep": 96,   // Wed/Sat
-  "sync-paho-alerts":  192,  // weekly Tue
+  "sync-who-afro":     80,   // Mon/Wed/Fri — max gap 72h (Fri→Mon)
+  "sync-who-emro":     80,   // Mon/Wed/Fri — max gap 72h (Fri→Mon)
+  "sync-africa-cdc":   110,  // Wed/Sat — max gap 96h (Sat→Wed)
+  "sync-who-regional": 80,   // Mon/Wed/Fri — max gap 72h (updated from Tue/Fri)
+  "check-mpox-sitrep": 110,  // Wed/Sat — max gap 96h (Sat→Wed)
+  "sync-paho-alerts":  110,  // Tue/Fri — max gap 96h (updated from weekly)
   "sync-ecdc-threats": 192,  // weekly Fri
   "sync-drc-sitrep":   192,  // weekly Mon
   "sync-endemic-data": 192,  // weekly Mon
