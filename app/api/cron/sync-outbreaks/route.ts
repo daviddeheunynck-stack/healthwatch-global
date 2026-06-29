@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import * as Sentry from "@sentry/nextjs";
+import { logCronRun } from "@/lib/cron-monitor";
 import { createClient } from "@supabase/supabase-js";
 import { parseRSSFeed, buildOutbreakFromRSSItem } from "@/lib/outbreak-parser";
 import { fetchWHODONList, parseWHODONItem } from "@/lib/who-api";
@@ -383,6 +384,7 @@ export async function GET(req: NextRequest) {
   if (hb) fetch(hb).catch(() => {});
 
   console.log("[sync] Done:", results, "source:", usedSource);
+  await logCronRun(supabase, "sync-outbreaks", "ok", outbreaks.length);
   return NextResponse.json({
     success: true,
     timestamp: new Date().toISOString(),

@@ -6,6 +6,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import * as Sentry from "@sentry/nextjs";
+import { logCronRun } from "@/lib/cron-monitor";
 import { createClient } from "@supabase/supabase-js";
 import { extractNumbers } from "@/lib/outbreak-parser";
 import { errorMessage } from "@/lib/error";
@@ -679,6 +680,7 @@ export async function GET(req: NextRequest) {
     </div>`;
 
   if (adminEmail) await sendEmail(adminEmail, subject, html);
+  await logCronRun(supabase, "sync-endemic-data", "ok", updates.length);
 
   return NextResponse.json({
     success: true,

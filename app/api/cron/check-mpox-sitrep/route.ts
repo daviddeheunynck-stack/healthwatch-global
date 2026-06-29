@@ -4,6 +4,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import { logCronRun } from "@/lib/cron-monitor";
 import { errorMessage } from "@/lib/error";
 import * as Sentry from "@sentry/nextjs";
 
@@ -362,6 +363,7 @@ export async function GET(req: NextRequest) {
     value:      latest.url,
     updated_at: new Date().toISOString(),
   });
+  await logCronRun(supabase, "check-mpox-sitrep", "ok", data ? 1 : 0);
 
   return NextResponse.json({
     status:      data ? "auto_updated" : "manual_needed",

@@ -7,6 +7,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import * as Sentry from "@sentry/nextjs";
+import { logCronRun } from "@/lib/cron-monitor";
 import { createClient } from "@supabase/supabase-js";
 import { normalizeDisease } from "@/lib/disease-data";
 import { COUNTRIES, findCountry } from "@/lib/geo-data";
@@ -404,5 +405,6 @@ export async function GET(req: NextRequest) {
   }
 
   console.log("[paho] Done:", results, log);
+  await logCronRun(supabase, "sync-paho-alerts", "ok", results.inserted ?? 0);
   return NextResponse.json({ success: true, timestamp: new Date().toISOString(), ...results, log });
 }

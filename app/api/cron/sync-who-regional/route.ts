@@ -14,6 +14,7 @@
 // (those are owned by the WHO DON daily sync).
 
 import { NextRequest, NextResponse } from "next/server";
+import { logCronRun } from "@/lib/cron-monitor";
 import { createClient } from "@supabase/supabase-js";
 import { normalizeDisease } from "@/lib/disease-data";
 import { findCountry } from "@/lib/geo-data";
@@ -478,6 +479,7 @@ export async function GET(req: NextRequest) {
   }
 
   console.log("[regional] Done:", results, log);
+  await logCronRun(supabase, "sync-who-regional", "ok", results.inserted ?? 0);
 
   return NextResponse.json({
     success: true,

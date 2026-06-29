@@ -4,6 +4,7 @@
 // Falls back to a manual-notification email if PDF parsing fails.
 
 import { NextRequest, NextResponse } from "next/server";
+import { logCronRun } from "@/lib/cron-monitor";
 import { createClient } from "@supabase/supabase-js";
 import { errorMessage } from "@/lib/error";
 import * as Sentry from "@sentry/nextjs";
@@ -391,6 +392,7 @@ export async function GET(req: NextRequest) {
     value:      String(latest.num),
     updated_at: new Date().toISOString(),
   });
+  await logCronRun(supabase, "sync-drc-sitrep", "ok", data ? 1 : 0);
 
   return NextResponse.json({
     status:     data ? "auto_updated" : "manual_needed",
