@@ -61,7 +61,7 @@ export const CRON_WINDOWS: Record<string, number> = {
   "check-mpox-sitrep": 110,  // Wed/Sat — max gap 96h (Sat→Wed)
   "sync-paho-alerts":  110,  // Tue/Fri — max gap 96h (updated from weekly)
   "sync-ecdc-threats": 192,  // weekly Fri
-  "sync-drc-sitrep":   192,  // weekly Mon
+  "sync-drc-sitrep":   26,   // daily — PHEIC cadence
   "sync-endemic-data": 192,  // weekly Mon
   "sync-usda-aphis":   192,  // weekly Mon
 };
