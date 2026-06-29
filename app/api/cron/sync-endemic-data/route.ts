@@ -529,7 +529,6 @@ export async function GET(req: NextRequest) {
   const { data: rows, error } = await supabase
     .from("outbreaks")
     .select("id, disease, country, cases, deaths, date, source")
-    .eq("active", true)
     .or(
       "and(disease.eq.Dengue,country.eq.Philippines)," +
       "and(disease.eq.Choléra,country.eq.Éthiopie)," +
