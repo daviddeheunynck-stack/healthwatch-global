@@ -69,7 +69,8 @@ Profils récupérés des sessions précédentes. Statut à confirmer.
 | Contact | Statut | Dernier message | Prochaine action |
 |---|---|---|---|
 | Silvestre Suh (CHAI Sierra Leone) | Message envoyé 22 juin (Lassa hook) | Lui | Attendre réponse |
-| Zahra BOUZIDI (épidémiologiste Algérie) | Feedback produit 25 juin — 2 suggestions intégrées. Compte iinnerre@gmail.com supprimé (email inaccessible). En attente nouvelle adresse. | Elle | Recréer compte Pro dès réception email |
+| Zahra BOUZIDI (épidémiologiste Algérie) | Feedback produit (filtres transmission + endémicité voyageurs). Compte recréé 29 juin sur iinnerre@gmail.com — Pro jusqu'au 29 juillet. Credentials envoyés via DM 29 juin. | Elle | Attendre confirmation connexion |
+| Eva Kamau (Clinician/AMR, Kiambu District Hospital, Kenya — #OpenToWork, suit HWG) | DM envoyé 29 juin. Hook : Kenya + agrégation WHO/ECDC/PAHO/Africa CDC. Angle AMR écarté (pas de surveillance AMR dédiée sur HWG). | Lui | Attendre réponse. Si répond : proposer accès Pro. |
 | Liz Yaslik (Amazon, Abu Dhabi) | Connexion acceptée 25 juin. DM envoyé 25 juin — hook travelerRisk feature + offre Pro. | Lui | Attendre réponse |
 | Nicole Wehbe, MPH (Generator Health / BU SPH, Atlanta) | Like sur post lancement 25 juin. DM envoyé 26 juin EN. | Lui | Attendre réponse |
 | Feydeau BOTON | Déjà connecté | — | DM avec URL PH demain matin 09h01 |
@@ -81,7 +82,7 @@ Profils récupérés des sessions précédentes. Statut à confirmer.
 
 | Nom | Profil | Institution | Statut |
 |---|---|---|---|
-| Jacob Mbaihondoum | Sociologue Postdoctoral NTDs | Swiss TPH / Univ. Yaoundé 1 — Tchad | Suit la page HWG. Connexion acceptée 26 juin. Message envoyé 26 juin 14h12 : "Bonjour Jacob, ravi de voir un profil santé publique suivre HealthWatch Global. Je construis la plateforme et serais curieux d'en savoir plus sur votre travail." — Attente réponse. Si répond : proposer accès Pro. |
+| Jacob Mbaihondoum | Sociologue Postdoctoral NTDs | Swiss TPH / Univ. Yaoundé 1 — Tchad | Expertise : schistosomiase + ver de Guinée. Hors scope HWG (NTDs, pas DON OMS). Thread fermé proprement 29 juin. Pas de prospect. |
 
 ---
 

@@ -504,6 +504,15 @@ Ordre d'envoi : BAVON → Premice → Paul Kibati → Celestine → Feydeau → 
 
 ---
 
+### Health Policy Watch — Ghana malaria 86% decline (29 juin 2026)
+
+**Commentaire posté le 29 juin 2026 :**
+> The 86% figure is the headline. The harder question is what sustains it. Sri Lanka reached near-elimination in 1963 (17 recorded cases), then saw cases rise to over a million within five years after control programmes were scaled back. The financing continuity point at the end of this post is exactly right.
+
+**Note :** pas de mention HWG. Personal brand David, angle surveillance/continuité financement. Sri Lanka 1963 = fait épidémio standard, nombre exact varié selon sources (1M-2,5M) — formulé "over a million" pour rester précis.
+
+---
+
 ### Vital Strategies — post #Data4Health Indonésie (22 juin 2026)
 
 **Contexte :** Vital Strategies recrute un consultant international pour le Ministère de la Santé indonésien sur un système national de registre. Tag #Data4Health.
@@ -725,22 +734,38 @@ We close those 4 tabs. No GPHIN required.
 > À très vite,
 > David
 
-**Statut :** appel à confirmer — semaine du 30 juin. Email WHO : barroyh@who.int
+**Statut :** email envoyé 29 juin 2026 — échange écrit, pas d'appel. Attente réponse.
 
-**Email de confirmation — à envoyer à barroyh@who.int**
+**Email envoyé le 29 juin 2026 à barroyh@who.int**
 
-**À :** barroyh@who.int
-**Objet :** Échange semaine prochaine — suite à notre conversation LinkedIn
+**Objet :** Suite à notre échange LinkedIn — timing signal / déclencheur financement
 
-> Bonjour Helene,
+> Bonjour Hélène,
 >
-> Suite à notre échange de ce matin sur LinkedIn — merci pour votre réponse et pour le temps que vous proposez.
+> Merci pour votre réponse sur LinkedIn. Pour ne pas prendre plus de votre temps qu'il ne faut, je me permets de vous soumettre deux questions directement — si elles appellent un échange plus long, je reviens vers vous.
 >
-> Je suis disponible mardi 30 juin ou mercredi 1er juillet, matin ou début d'après-midi (CEST). Dites-moi ce qui vous convient et je vous envoie une invitation de calendrier.
+> **1.** Dans les mécanismes de financement d'urgence que vous connaissez (CERF, fonds de contingence régionaux, mécanismes bilatéraux), le déclencheur formel est-il systématiquement la publication du DON OMS — ou existe-t-il des dispositifs qui s'activent sur un signal pré-DON (notification Article 6, alerte régionale) ?
+>
+> **2.** HealthWatch Global classifie les signaux épidémiques en temps réel, avant la publication formelle du DON. Est-ce qu'un tel outil trouverait une place pratique dans ces mécanismes — ou le financement reste-t-il structurellement lié à la publication OMS par construction ?
+>
+> Pas besoin d'une réponse longue — même deux ou trois lignes par question seraient précieuses.
 >
 > Bien à vous,
 > David Deheunynck
 > HealthWatch Global — healthwatch-global.com
+
+---
+
+### Eva Kamau — Clinician & Clinical Researcher, AMR (Kiambu District Hospital, Kenya — #OpenToWork — suit HWG)
+
+**DM envoyé 29 juin 2026 :**
+> Hi Eva, your profile caught my eye. We aggregate outbreak signals from WHO, ECDC, PAHO and Africa CDC in real time. Happy to open Pro access to explore. Useful for your work in Kenya?
+>
+> David
+
+**Note :** angle AMR écarté (HWG ne fait pas de surveillance AMR dédiée — MDR-Shigella tracé incidemment via ECDC uniquement). Hook utilisé : Kenya + Africa CDC.
+
+**Statut :** DM envoyé 29 juin. Attente réponse.
 
 ---
 
