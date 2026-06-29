@@ -313,6 +313,21 @@ export async function GET(req: NextRequest) {
   // Step 1: find Ebola DRC outbreak row
   const outbreakRow = await findEbolaDrcRow(supabase);
   if (!outbreakRow) {
+    const err = new Error("[drc-sitrep] Ebola DRC row not found in DB — cron cannot update");
+    console.error(err.message);
+    Sentry.captureException(err, { tags: { cron: "sync-drc-sitrep" } });
+    if (adminEmail) {
+      await sendEmail(
+        adminEmail,
+        "🚨 Ébola RDC — ligne DB introuvable (cron bloqué)",
+        `<div style="font-family:sans-serif;color:#1f2937">
+          <h2 style="color:#dc2626">🚨 sync-drc-sitrep : ligne Ebola RDC introuvable</h2>
+          <p>Le cron n'a pas pu trouver la ligne Ebola / RD Congo dans la table <code>outbreaks</code>.</p>
+          <p>Les données Ebola DRC <strong>ne sont pas mises à jour</strong> tant que ce problème persiste.</p>
+          <p><a href="${ADMIN_PANEL_URL}" style="background:#dc2626;color:white;padding:8px 16px;border-radius:6px;text-decoration:none;font-weight:bold">⚙️ Admin</a></p>
+        </div>`,
+      );
+    }
     return NextResponse.json({ status: "error", detail: "Ebola DRC row not found" }, { status: 500 });
   }
 
