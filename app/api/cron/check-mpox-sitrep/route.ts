@@ -23,6 +23,7 @@ const ADMIN_EMAILS         = clean(process.env.ADMIN_EMAILS);
 const WHO_SITREP_PAGE  = "https://www.who.int/emergencies/situations/mpox-outbreak";
 const ADMIN_PANEL_URL  = "https://healthwatch-global.com/fr/admin";
 const MPOX_MONDIAL_ID  = "dbc9c1d0-9299-4607-a027-f229ec8c25ce";
+const MPOX_DRC_ID      = "c5632295-8df7-4546-9225-60f844d40a00";
 
 const FETCH_HEADERS = {
   "User-Agent":      "HealthWatch-Global/1.0 (health surveillance; contact@healthwatch-global.com)",
@@ -130,7 +131,12 @@ interface SitrepData {
   date:   string; // YYYY-MM-DD
 }
 
-async function extractFromPdf(pdfUrl: string): Promise<SitrepData | null> {
+interface SitrepResult {
+  global: SitrepData | null;
+  drc:    SitrepData | null;
+}
+
+async function extractFromPdf(pdfUrl: string): Promise<SitrepResult> {
   // Download PDF as ArrayBuffer
   let buffer: Buffer;
   try {
@@ -138,12 +144,12 @@ async function extractFromPdf(pdfUrl: string): Promise<SitrepData | null> {
       headers: FETCH_HEADERS,
       signal: AbortSignal.timeout(30000),
     });
-    if (!res.ok) { console.log(`[mpox] PDF download → HTTP ${res.status}`); return null; }
+    if (!res.ok) { console.log(`[mpox] PDF download → HTTP ${res.status}`); return { global: null, drc: null }; }
     const ab = await res.arrayBuffer();
     buffer = Buffer.from(ab);
   } catch (e) {
     console.log("[mpox] PDF download:", errorMessage(e));
-    return null;
+    return { global: null, drc: null };
   }
 
   // Parse PDF — import lib directly to bypass the index.js debug-mode check
@@ -156,10 +162,10 @@ async function extractFromPdf(pdfUrl: string): Promise<SitrepData | null> {
     text = result.text;
   } catch (e) {
     console.log("[mpox] pdf-parse error:", errorMessage(e));
-    return null;
+    return { global: null, drc: null };
   }
 
-  return parseSitrepText(text);
+  return { global: parseSitrepText(text), drc: parseDrcFromSitrepText(text) };
 }
 
 function parseSitrepText(text: string): SitrepData | null {
@@ -198,6 +204,39 @@ function parseSitrepText(text: string): SitrepData | null {
   const month = MONTHS[dateMatch[2].toLowerCase()];
   if (!month) return null;
   const date = `${dateMatch[3]}-${month}-${dateMatch[1].padStart(2, "0")}`;
+
+  return { cases, deaths, date };
+}
+
+function parseDrcFromSitrepText(text: string): SitrepData | null {
+  const t = text.replace(/[ \t]+/g, " ").replace(/\r/g, "");
+
+  const drcRe = /Democratic\s+Republic\s+of\s+(?:the\s+)?Congo\s*\(\s*\d{1,2}\s+\w+\s+\d{4}\s*[–\-—]\s*(\d{1,2})\s+(January|February|March|April|May|June|July|August|September|October|November|December|Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s+(\d{4})\s*\)\s*\*?/i;
+  const drcMatch = drcRe.exec(t);
+  if (!drcMatch) {
+    console.log("[mpox] parseDrcFromSitrepText: no DRC date row found.");
+    return null;
+  }
+
+  const afterDrc = t.slice(drcMatch.index + drcMatch[0].length, drcMatch.index + drcMatch[0].length + 200);
+  const numsRe   = /\s*([\d][\d ]{1,8}[\d]|\d+)\s+([\d][\d ,]{0,6}[\d]|\d+)/;
+  const numsMatch = numsRe.exec(afterDrc);
+  if (!numsMatch) {
+    console.log("[mpox] parseDrcFromSitrepText: no numbers after DRC row. Excerpt:", afterDrc.slice(0, 100));
+    return null;
+  }
+
+  const cases  = parseInt(numsMatch[1].replace(/[\s,]/g, ""), 10);
+  const deaths = parseInt(numsMatch[2].replace(/[\s,]/g, ""), 10);
+
+  if (isNaN(cases) || isNaN(deaths) || cases < 100 || deaths < 0 || deaths > cases) {
+    console.log("[mpox] parseDrcFromSitrepText: implausible DRC values", { cases, deaths });
+    return null;
+  }
+
+  const month = MONTHS[drcMatch[2].toLowerCase()];
+  if (!month) return null;
+  const date = `${drcMatch[3]}-${month}-${drcMatch[1].padStart(2, "0")}`;
 
   return { cases, deaths, date };
 }
@@ -324,8 +363,10 @@ export async function GET(req: NextRequest) {
   console.log(`[mpox] PDF URL: ${pdfUrl ?? "(not found)"}`);
 
   // Step 3: extract data from PDF
-  const data = pdfUrl ? await extractFromPdf(pdfUrl) : null;
-  console.log(`[mpox] Extracted data:`, data);
+  const result  = pdfUrl ? await extractFromPdf(pdfUrl) : null;
+  const data    = result?.global ?? null;
+  const drcData = result?.drc    ?? null;
+  console.log(`[mpox] Extracted global:`, data, "DRC:", drcData);
 
   // Step 4a: auto-update DB if extraction succeeded
   if (data) {
@@ -344,9 +385,9 @@ export async function GET(req: NextRequest) {
       .lte("source_priority", 5);
 
     if (error) {
-      console.error("[mpox] DB update error:", error.message);
+      console.error("[mpox] DB update global error:", error.message);
     } else {
-      console.log(`[mpox] ✅ DB updated: ${data.cases} cas / ${data.deaths} décès / ${data.date}`);
+      console.log(`[mpox] ✅ Global updated: ${data.cases} cas / ${data.deaths} décès / ${data.date}`);
       const { subject, html } = emailAutoUpdated(latest, data);
       if (adminEmail) await sendEmail(adminEmail, subject, html);
     }
@@ -357,13 +398,33 @@ export async function GET(req: NextRequest) {
     if (adminEmail) await sendEmail(adminEmail, subject, html);
   }
 
+  // Step 4c: also update DRC PHEIC row if DRC data extracted
+  if (drcData) {
+    const { error: drcErr } = await supabase
+      .from("outbreaks")
+      .update({
+        cases:           drcData.cases,
+        deaths:          drcData.deaths,
+        date:            drcData.date,
+        source:          latest.url,
+        active:          true,
+        updated_at:      new Date().toISOString(),
+        source_priority: 5,
+      })
+      .eq("id", MPOX_DRC_ID)
+      .lte("source_priority", 5);
+
+    if (drcErr) console.error("[mpox] DB update DRC error:", drcErr.message);
+    else console.log(`[mpox] ✅ DRC updated: ${drcData.cases} cas / ${drcData.deaths} décès / ${drcData.date}`);
+  }
+
   // Step 5: persist last known URL regardless of outcome
   await supabase.from("site_config").upsert({
     key:        "mpox_last_sitrep_url",
     value:      latest.url,
     updated_at: new Date().toISOString(),
   });
-  await logCronRun(supabase, "check-mpox-sitrep", "ok", data ? 1 : 0);
+  await logCronRun(supabase, "check-mpox-sitrep", "ok", (data ? 1 : 0) + (drcData ? 1 : 0));
 
   return NextResponse.json({
     status:      data ? "auto_updated" : "manual_needed",
@@ -371,6 +432,7 @@ export async function GET(req: NextRequest) {
     url:         latest.url,
     pdfUrl:      pdfUrl ?? null,
     extracted:   data,
+    drc:         drcData,
     emailSent:   !!adminEmail,
   });
 }
