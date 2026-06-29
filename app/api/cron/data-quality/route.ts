@@ -90,7 +90,7 @@ export async function GET(req: NextRequest) {
   // ── 1. Load active rows ───────────────────────────────────────────────────
   const { data: rows, error: rowsErr } = await supabase
     .from("outbreaks")
-    .select("id, disease, country, cases, deaths, date, source, is_seed")
+    .select("id, disease, country, cases, deaths, date, source, is_seed, is_pheic")
     .eq("active", true);
 
   if (rowsErr) return NextResponse.json({ error: rowsErr.message }, { status: 500 });
@@ -193,10 +193,14 @@ export async function GET(req: NextRequest) {
   }
 
   // ── 4b. Staleness check ───────────────────────────────────────────────────
-  // Flag active entries whose `date` is >21 days old — signals a silent cron failure
+  // Flag active entries whose `date` is older than threshold:
+  //   - PHEIC events: 7 days (weekly sitreps, any gap is critical)
+  //   - All others:   21 days (standard cron cadence)
   // Excludes: is_seed rows (manual), dashboard/tracker sources (non-article cadence)
-  const STALE_DAYS = 21;
-  const staleThreshold = new Date(Date.now() - STALE_DAYS * 86_400_000).toISOString().split("T")[0];
+  const STALE_DAYS_PHEIC = 7;
+  const STALE_DAYS       = 21;
+  const pheicThreshold = new Date(Date.now() - STALE_DAYS_PHEIC * 86_400_000).toISOString().split("T")[0];
+  const staleThreshold = new Date(Date.now() - STALE_DAYS       * 86_400_000).toISOString().split("T")[0];
   const DASHBOARD_SOURCES = [
     "shinyapps.io",
     "ecdc.europa.eu/en/mpox/surveillance",
@@ -207,7 +211,8 @@ export async function GET(req: NextRequest) {
   for (const row of rows ?? []) {
     if (row.is_seed || !row.date || anomalies.some((a) => a.row.id === row.id)) continue;
     if (DASHBOARD_SOURCES.some((d) => (row.source ?? "").includes(d))) continue;
-    if (row.date < staleThreshold) {
+    const threshold = row.is_pheic ? pheicThreshold : staleThreshold;
+    if (row.date <= threshold) {
       const daysSince = Math.round((Date.now() - new Date(row.date).getTime()) / 86_400_000);
       needsReview.push({
         label: `${row.disease} / ${row.country}`,

@@ -53,8 +53,10 @@ async function findEbolaDrcRow(supabase: any) {
     .from("outbreaks")
     .select("id, cases, deaths, date, source_priority")
     .ilike("disease_en", "%ebola%")
-    .ilike("country_en", "%democratic republic%")
-    .single();
+    .ilike("country_en", "%Congo%")
+    .order("source_priority", { ascending: false })
+    .limit(1)
+    .maybeSingle();
 
   if (error || !data) {
     console.log("[drc-sitrep] Could not find Ebola DRC row:", error?.message);
