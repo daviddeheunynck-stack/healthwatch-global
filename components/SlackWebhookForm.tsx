@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { Link2, Link2Off, Loader2, CheckCircle } from "lucide-react";
-import Link from "next/link";
 import LockedUpgradeButton from "@/components/LockedUpgradeButton";
 
 // ─── Types ────────────────────────────────────────────────────────────────────

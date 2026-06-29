@@ -376,12 +376,12 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
   useEffect(() => {
     if (typeof window === "undefined") return;
     const p = new URLSearchParams(window.location.search);
-    search    ? p.set("q", search)          : p.delete("q");
-    region  !== "all" ? p.set("region", region)   : p.delete("region");
-    country !== "all" ? p.set("country", country) : p.delete("country");
-    risk    !== "all" ? p.set("risk",    risk)     : p.delete("risk");
-    dateFrom ? p.set("from", dateFrom) : p.delete("from");
-    dateTo   ? p.set("to",   dateTo)   : p.delete("to");
+    if (search) p.set("q", search); else p.delete("q");
+    if (region  !== "all") p.set("region", region);  else p.delete("region");
+    if (country !== "all") p.set("country", country); else p.delete("country");
+    if (risk    !== "all") p.set("risk",    risk);    else p.delete("risk");
+    if (dateFrom) p.set("from", dateFrom); else p.delete("from");
+    if (dateTo)   p.set("to",   dateTo);   else p.delete("to");
     const qs = p.toString();
     window.history.replaceState(null, "", qs ? `?${qs}` : window.location.pathname);
   }, [search, region, country, risk, dateFrom, dateTo]);

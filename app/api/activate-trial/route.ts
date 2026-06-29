@@ -10,7 +10,7 @@ const TRIAL_DAYS = 14;
 const BOM = String.fromCharCode(65279);
 const clean = (v: string | undefined) => (v || "").replace(new RegExp("^" + BOM), "").trim();
 
-export async function POST(req: NextRequest) {
+export async function POST(_req: NextRequest) {
   // Identify the caller from their session cookie — never trust client-supplied userId
   const cookieStore = await cookies();
   const supabase = createServerClient(

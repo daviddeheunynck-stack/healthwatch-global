@@ -64,7 +64,6 @@ export default async function WidgetPage({
   });
 
   const bg      = isDark ? "#0f172a" : "#ffffff";
-  const cardBg  = isDark ? "#1e293b" : "#f8fafc";
   const text     = isDark ? "#f1f5f9" : "#1e293b";
   const subtext  = isDark ? "#94a3b8" : "#64748b";
   const border   = isDark ? "#334155" : "#e2e8f0";

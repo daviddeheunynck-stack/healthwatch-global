@@ -68,6 +68,19 @@ Archive de tout le contenu créé. Mise à jour à chaque session.
 
 ---
 
+### Replies engagement — 26 juin 2026
+
+**@CIDRAP** (tweet "Africa CDC triples amount needed to fight Ebola") — ✅ PRÊT À POSTER
+> @CIDRAP Current Ebola picture: 916 cases · 234 deaths · 25.5% CFR · 2 active outbreaks · 2 countries (June 26). Real-time IHR-classified tracking: healthwatch-global.com/en/disease/ebola-virus-disease
+
+**@HelenBranswell** (tweet "clinical trial Bundibugyo DRC") — ✅ PRÊT À POSTER
+> @HelenBranswell The scale context: 916 confirmed cases, 234 deaths, 25.5% CFR — 2 active outbreaks across 2 countries as of today. No licensed treatment for Bundibugyo makes the trial timeline critical. Tracking in real time: healthwatch-global.com/en/disease/ebola-virus-disease
+
+**@ReutersWorld** (tweet "Congo confirmed Ebola cases rises to 1,155") — ⏳ ATTENDRE dashboard update
+Dashboard affiche 916, Reuters cite 1,155 (chiffres gouvernement DRC, DON OMS pas encore publié). Attendre que sync-outbreaks intègre le nouveau DON, puis répondre avec chiffres cohérents.
+
+---
+
 ### Post lancement PH (25 juin 2026)
 
 Thread @HWatchGlobal — à poster dès que la page PH est live (09h30 CEST) :
@@ -261,29 +274,34 @@ Et si vous travaillez en santé globale, réponse épidémique, ou gestion de cr
 
 ---
 
-### Post 3 — Délais de déclaration (26 juin 2026) — RÉDIGÉ ✓
+### Post 3 — Reporting delays (26 juin 2026) — PUBLIÉ ✅ 26 juin 2026
 
 **Ton :** éducatif, données chiffrées réelles, aucune mention de HealthWatch
+**Corrections appliquées :** Ebola 2014 "16 jours" → "plus de 3 mois" (vérifié WHO DON 23 mars 2014) ; URGSS → USPPI/PHEIC ; CTA commentaire ajouté ; traduit EN
 
 ---
 
-Entre la détection terrain et la publication d'un Disease Outbreak News OMS, combien de temps s'écoule réellement ?
+Between the first case in the field and a WHO Disease Outbreak News: sometimes 5 days. Sometimes 3 months. Here's why both are structurally normal.
 
-La réponse varie selon la maladie, le pays et les capacités de laboratoire locales. Mais les patterns des dix dernières années dessinent un tableau clair.
+The answer varies by disease, country, and local laboratory capacity. But patterns from the last decade paint a clear picture.
 
-**Ebola :** délai médian de publication DON après confirmation : 5 à 8 jours pour les épisodes RDC depuis 2018 (capacités INRB renforcées). Premier épisode Afrique de l'Ouest 2014 : 16 jours entre les premiers cas documentés et le premier DON.
+**Ebola:** Median DON publication delay after laboratory confirmation: 5 to 8 days for DRC episodes since 2018 (strengthened INRB capacity). 2014 West Africa epidemic: more than 3 months between the first documented case (December 2013, Meliandou, Forest Region of Guinea) and the first WHO DON (March 23, 2014).
 
-**Mpox (2022) :** détection en mai → qualification URGSS en juillet. Plus de 60 jours entre le signal et la reconnaissance formelle. Ce décalage a structuré les premières semaines de réponse dans les pays sans surveillance active.
+**Mpox (2022):** Detection in May → PHEIC declaration in July. More than 60 days between the signal and formal recognition. This lag structured the first weeks of response in countries without active surveillance.
 
-**Fièvre de Lassa :** déclarée souvent en agrégat trimestriel par le Nigeria CDC. Les cas individuels ne remontent au DON qu'au franchissement de seuils d'alerte. Lag possible : 4 à 6 semaines.
+**Lassa fever:** Often reported in quarterly aggregates by the Nigeria CDC. Individual cases only reach the DON when alert thresholds are crossed. Possible lag: 4 to 6 weeks.
 
-**Choléra :** les DON sont régulièrement publiés avec 3 à 4 semaines de retard sur les données terrain — en raison des étapes de vérification entre Ministère de la Santé et bureau régional OMS.
+**Cholera:** DONs are regularly published 3 to 4 weeks behind field data — due to verification steps between the Ministry of Health and the regional WHO office.
 
-Ce délai n'est pas un dysfonctionnement. C'est un artefact structurel : confirmation de laboratoire, notification au Point Focal National RSI, remontée au bureau régional, validation, publication. Chaque étape est nécessaire. Chaque étape prend du temps.
+This delay is not a malfunction. It's a structural artifact: laboratory confirmation, notification to the National IHR Focal Point, escalation to the regional office, validation, publication. Each step is necessary. Each step takes time.
 
-Pour les équipes qui opèrent en amont de ces délais, la question n'est plus « quand l'OMS va-t-il publier ? »
+For teams operating upstream of these delays, the question is no longer "when will WHO publish?"
 
-C'est : « quelle source surveille-t-on en attendant ? »
+It's: "what source are we monitoring in the meantime?"
+
+*What reporting delay has surprised you the most in your practice?*
+
+#Epidemiology #GlobalHealth #DiseaseSurveillance
 
 ---
 

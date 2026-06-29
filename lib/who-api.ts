@@ -97,7 +97,7 @@ function isOutbreakEnded(text: string): boolean {
 
 export async function parseWHODONItem(
   item: WHONewsItem,
-  fetchBody = false
+  _fetchBody = false
 ): Promise<ParsedOutbreak | null> {
   const { Title, ItemDefaultUrl, PublicationDateAndTime, Summary, DonId } = item;
   if (!Title) return null;

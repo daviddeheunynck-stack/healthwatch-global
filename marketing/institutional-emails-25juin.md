@@ -10,7 +10,7 @@
 |---|---|---|---|---|
 | 1 | WHO AFRO | Dr. Abdou Salam Gueye | `gueyea@who.int` | ✅ ENVOYÉ 25 juin 2026 |
 | 2 | WHO EMRO | Dr. Rick Brennan | `brennanr@who.int` | ✅ ENVOYÉ 25 juin 2026 |
-| 3 | PAHO/AMRO | Dr. Ciro Ugarte | `ugartec@paho.org` | ✅ ENVOYÉ 25 juin 2026 |
+| 3 | PAHO/AMRO | Dr. Ciro Ugarte | `ugartec@paho.org` | 🔁 À RETENTER — bounce 26 juin (serveur PAHO injoignable). Rappel déclenché 27 juin. Si bounce à nouveau : LinkedIn DM ou formulaire paho.org/en/contact-us |
 | 4 | Africa CDC | Dr. Merawi Aragaw (Head, Surveillance & Disease Intelligence) | `merawia@africacdc.org` | ✅ ENVOYÉ 25 juin 2026 |
 | 5 | Maroc DELM | Dr Mohamed Lyoubi (Directeur) | `contact@sante.gov.ma` | ✅ ENVOYÉ 25 juin 2026 |
 | 6 | IRESSEF Sénégal | Pr. Souleymane Mboup (Fondateur) | `contact@iressef.org` | ✅ ENVOYÉ 25 juin 2026 |

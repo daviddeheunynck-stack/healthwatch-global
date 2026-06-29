@@ -10,7 +10,7 @@ interface InvitedUser {
   trialEnd: string;
 }
 
-export default function AdminPilotInviteForm({ locale }: { locale: string }) {
+export default function AdminPilotInviteForm({ locale: _locale }: { locale: string }) {
   const [email, setEmail]         = useState("");
   const [name, setName]           = useState("");
   const [organization, setOrg]    = useState("");

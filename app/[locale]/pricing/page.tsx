@@ -1,4 +1,4 @@
-﻿import { getTranslations, getLocale } from "next-intl/server";
+﻿import { getTranslations } from "next-intl/server";
 import { Check, Gift, ArrowRight, Star, Clock, Shield, Mail, Users, Globe, Building2, HeartHandshake, Microscope, Stethoscope, Landmark, RefreshCw } from "lucide-react";
 import PricingCards from "@/components/PricingCards";
 import Link from "next/link";

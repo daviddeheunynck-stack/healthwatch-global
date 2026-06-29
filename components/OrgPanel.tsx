@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { ChevronDown, ChevronRight, Users, Plus, Mail, Link2, Trash2, UserCheck } from "lucide-react";
+import { ChevronDown, ChevronRight, Users, Mail, Link2, Trash2, UserCheck } from "lucide-react";
 
 interface ActivityEntry {
   id: string;
@@ -267,7 +267,6 @@ export default function OrgPanel({ locale }: { locale: string }) {
   }
 
   const isTeamPlan = ["team", "enterprise"].includes(plan);
-  const activeCount = members.filter((m) => m.status === "active").length;
   const totalCount  = members.length;
 
   return (

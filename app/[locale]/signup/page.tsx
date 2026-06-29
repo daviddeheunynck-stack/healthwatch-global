@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
-import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase-browser";
 import { track } from "@vercel/analytics/react";
 import { Activity, Loader2, CheckCircle, BarChart2, Bell, FileDown, Lock, Sparkles } from "lucide-react";
@@ -72,7 +71,6 @@ const ICONS = [BarChart2, Bell, FileDown];
 export default function SignupPage() {
   const t = useTranslations("auth");
   const locale = useLocale();
-  const router = useRouter();
   const vp = VALUE_PROPS[locale] ?? VALUE_PROPS.en;
   const isRtl = locale === "ar";
 

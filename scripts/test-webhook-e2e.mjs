@@ -46,7 +46,7 @@ const supabase = createClient(
   clean(vars["SUPABASE_SERVICE_ROLE_KEY"])
 );
 
-const PRO_PRICE_ID  = clean(vars["STRIPE_PRO_EUR_PRICE_ID"]);
+const _PRO_PRICE_ID  = clean(vars["STRIPE_PRO_EUR_PRICE_ID"]);
 const TEAM_PRICE_ID = clean(vars["STRIPE_TEAM_EUR_PRICE_ID"]);
 
 // Test user — created by scripts/setup-test-user.mjs

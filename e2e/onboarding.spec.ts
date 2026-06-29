@@ -12,7 +12,7 @@
 
 import { test, expect } from "@playwright/test";
 
-const TOUR_KEY = "hw_tour_v1";
+const _TOUR_KEY = "hw_tour_v1";
 
 // ─── Signup page (no auth required) ──────────────────────────────────────────
 

@@ -44,7 +44,7 @@ export default function AlertRegionToggles({ isPaid, initialRegions, labels: l }
     // Optimistic update
     setEnabled((prev) => {
       const s = new Set(prev);
-      turningOn ? s.add(region) : s.delete(region);
+      if (turningOn) s.add(region); else s.delete(region);
       return s;
     });
     setPending(region);
@@ -61,7 +61,7 @@ export default function AlertRegionToggles({ isPaid, initialRegions, labels: l }
       // Revert on failure
       setEnabled((prev) => {
         const s = new Set(prev);
-        turningOn ? s.delete(region) : s.add(region);
+        if (turningOn) s.delete(region); else s.add(region);
         return s;
       });
       setError(l.error);

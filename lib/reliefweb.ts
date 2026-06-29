@@ -66,7 +66,7 @@ function extractDisease(title: string): string {
 }
 
 export function parseReliefWebItem(item: ReliefWebItem): ParsedOutbreak | null {
-  const { title, date, "body-html": bodyHtml, country, source } = item.fields;
+  const { title, date, "body-html": bodyHtml, country } = item.fields;
   if (!title) return null;
 
   // ── Country ────────────────────────────────────────────────────
@@ -112,7 +112,6 @@ export function parseReliefWebItem(item: ReliefWebItem): ParsedOutbreak | null {
   // ── Description ────────────────────────────────────────────────
   const description = plainText.trim().slice(0, 400);
 
-  const sourceLabel = (source || []).map((s) => s.shortname).join(", ") || "ReliefWeb";
 
   return {
     disease: disease.name_fr,

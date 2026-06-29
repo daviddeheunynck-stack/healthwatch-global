@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useTranslations, useLocale } from "next-intl";
-import { Mail, Building2, MessageSquare, CheckCircle, Loader2, Activity, Globe, Shield } from "lucide-react";
+import { Mail, MessageSquare, CheckCircle, Loader2, Activity, Globe, Shield } from "lucide-react";
 
 export default function ContactPage() {
   const t = useTranslations("contact");

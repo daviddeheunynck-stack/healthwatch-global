@@ -113,7 +113,7 @@ export interface WatchlistOutbreak {
 export function buildWatchlistAlertEmail(
   outbreak: WatchlistOutbreak,
   locale: string,
-  userId: string
+  _userId: string
 ): { subject: string; html: string } {
   const c = COPY[locale] ?? COPY.en;
   const isRtl = locale === "ar";

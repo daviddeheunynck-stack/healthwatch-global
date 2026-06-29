@@ -77,6 +77,14 @@ Profils récupérés des sessions précédentes. Statut à confirmer.
 
 ---
 
+## Connexions acceptées — suivi en cours
+
+| Nom | Profil | Institution | Statut |
+|---|---|---|---|
+| Jacob Mbaihondoum | Sociologue Postdoctoral NTDs | Swiss TPH / Univ. Yaoundé 1 — Tchad | Suit la page HWG. Connexion acceptée 26 juin. Message envoyé 26 juin 14h12 : "Bonjour Jacob, ravi de voir un profil santé publique suivre HealthWatch Global. Je construis la plateforme et serais curieux d'en savoir plus sur votre travail." — Attente réponse. Si répond : proposer accès Pro. |
+
+---
+
 ## Contacts institutionnels identifiés (emails — voir institutional-emails-25juin.md)
 
 | Nom | Organisation | Email / Canal |

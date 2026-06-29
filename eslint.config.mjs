@@ -23,6 +23,12 @@ const eslintConfig = defineConfig([
       // localStorage/props are standard patterns. None of the 30 flagged cases
       // cause actual cascading render bugs — the rule is overly strict here.
       "react-hooks/set-state-in-effect": "off",
+      // Variables/params prefixed with _ are intentionally unused (e.g. _req, _userId).
+      "@typescript-eslint/no-unused-vars": ["warn", {
+        varsIgnorePattern: "^_",
+        argsIgnorePattern: "^_",
+        caughtErrorsIgnorePattern: "^_",
+      }],
     },
   },
 ]);

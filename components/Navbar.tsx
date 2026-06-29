@@ -4,7 +4,7 @@ import React from "react";
 import { useTranslations, useLocale } from "next-intl";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { Activity, Bell, FileText, Globe, CreditCard, LogOut, Menu, X, Mail, BookOpen, ArrowLeftRight, Settings } from "lucide-react";
+import { Activity, Globe, LogOut, Menu, X, Settings } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { createClient } from "@/lib/supabase-browser";
 import type { User as SupabaseUser } from "@supabase/supabase-js";

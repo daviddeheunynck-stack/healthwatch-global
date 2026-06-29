@@ -36,13 +36,6 @@ const FETCH_HEADERS = {
 
 const COUNTRY_NAMES = Object.keys(COUNTRIES).sort((a, b) => b.length - a.length);
 
-const TEXT_ALIASES: Record<string, string> = {
-  " drc ":     "Democratic Republic of the Congo",
-  "(drc)":     "Democratic Republic of the Congo",
-  " rdc ":     "Democratic Republic of the Congo",
-  " dr congo": "Democratic Republic of the Congo",
-  " cong":     "", // handled below via full names
-};
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 

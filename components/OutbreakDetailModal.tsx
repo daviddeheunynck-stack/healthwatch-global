@@ -334,6 +334,7 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlis
       .then((r) => r.json())
       .then((d) => { if (d.notes) setNotes(d.notes); })
       .catch(() => {});
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [outbreak?.id, isPaid]);
 
   // Realtime subscription — receive team notes inserted by others without refresh
@@ -387,6 +388,7 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlis
         if (tw) { setTripwire(tw); setTripwireInput(tw.threshold_cases); }
       })
       .catch(() => {});
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [outbreak?.id, isPaid]);
 
   // P3 — fetch neighboring country outbreaks
@@ -402,6 +404,7 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlis
       .then((d) => { if (d.neighbors) setNeighborOutbreaks(d.neighbors); })
       .catch(() => {})
       .finally(() => setNeighborLoading(false));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [outbreak?.id, isPaid]);
 
   // P4 — fetch existing subscriber email list
@@ -413,6 +416,7 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlis
       .then((r) => r.json())
       .then((d) => { if (d.subscriber?.emails) setSubscriberEmails(d.subscriber.emails); })
       .catch(() => {});
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [outbreak?.id, isPaid]);
 
   // P4 Osei-Bonsu — fetch historical outbreak frequency for this country
@@ -442,6 +446,7 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlis
         },
       }),
     }).catch(() => {});
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [outbreak?.id, isPaid]);
 
   // Fetch epidemic curve + past episodes whenever the modal opens on a new outbreak
@@ -463,6 +468,7 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlis
       })
       .catch(() => {})
       .finally(() => setHistoryLoading(false));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [outbreak?.id, isPaid]);
 
   // Close on Escape
@@ -499,7 +505,6 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlis
   // 'official' rows have a real https URL (WHO sitrep, ECDC, national MoH…)
   // 'don' rows also have a real URL — both get a source link.
   // 'unverified' rows have a placeholder source and get no link.
-  const hasDisplayableSource = status !== 'unverified';
 
   const staleDays = staleOutbreakDays(outbreak);
   const guidance  = getResponseGuidance(outbreak.disease_en || outbreak.disease);

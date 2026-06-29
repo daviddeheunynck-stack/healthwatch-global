@@ -88,7 +88,7 @@ export async function PUT(req: Request) {
       body: JSON.stringify({ text: "✅ HealthWatch Global — webhook connected successfully." }),
     });
     if (!test.ok) throw new Error(`Webhook responded with ${test.status}`);
-  } catch (err) {
+  } catch {
     return NextResponse.json(
       { error: "Could not reach the webhook URL. Please check it and try again." },
       { status: 422 }

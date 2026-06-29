@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { Activity, ShieldCheck, Globe, Bell, ArrowRight, Lock } from "lucide-react";
-import { useLocale, useTranslations } from "next-intl";
+import { ShieldCheck, Globe, Bell, ArrowRight, Lock } from "lucide-react";
+import { useLocale } from "next-intl";
 
 const COPY: Record<string, {
   badge: string; headline: string; sub: string;

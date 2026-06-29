@@ -20,7 +20,7 @@ const APP_URL   = "https://healthwatch-global.com";
 // ── Email content (Indonesian) ─────────────────────────────────────────────
 const trialEnd = "2026-06-19";
 const locale   = "id";
-const plan     = "pro";
+const _plan     = "pro";
 
 const formatDate = (iso) => {
   const [y, m, d] = iso.split("T")[0].split("-").map(Number);

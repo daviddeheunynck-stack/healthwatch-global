@@ -1,7 +1,7 @@
 import { getTranslations, getLocale } from "next-intl/server";
 import { headers } from "next/headers";
 import Link from "next/link";
-import { Activity, Globe, Bell, AlertTriangle } from "lucide-react";
+import { Activity, Globe, AlertTriangle } from "lucide-react";
 import { getOutbreaks, getStats, getLastSync, getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 import { ISO_REGION } from "@/lib/geo-data";
 import { getOutbreakTrendsBulk, type OutbreakTrend } from "@/lib/outbreak-trend";
@@ -182,13 +182,11 @@ async function DashboardContent({ demo = false, urlRegion, urlRisk }: { demo?: b
   let orgMemberAccess = false;
   let hasNoAlerts = false;
   let currentUserId: string | null = null;
-  let currentUserEmail: string | null = null;
   if (!demo) {
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
     if (user) {
       currentUserId = user.id;
-      currentUserEmail = user.email ?? null;
       const { data: profile } = await supabase
         .from("profiles")
         .select("plan, trial_ends_at, stripe_subscription_id, display_filters, disease_watchlist")

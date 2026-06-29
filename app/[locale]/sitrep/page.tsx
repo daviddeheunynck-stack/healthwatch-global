@@ -8,9 +8,7 @@ import type { Metadata } from "next";
 
 export const dynamic = "force-dynamic";
 
-export async function generateMetadata({
-  params,
-}: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+export async function generateMetadata(): Promise<Metadata> {
   return { title: "Situation Report", robots: { index: false, follow: false } };
 }
 
@@ -272,11 +270,6 @@ export default async function SitrepPage({
     return (r[a.risk_level] ?? 3) - (r[b.risk_level] ?? 3);
   });
 
-  const RISK_PILL: Record<string, string> = {
-    high:   "background:#fef2f2;color:#b91c1c;border:1px solid #fecaca",
-    medium: "background:#fffbeb;color:#92400e;border:1px solid #fde68a",
-    low:    "background:#f0fdf4;color:#15803d;border:1px solid #bbf7d0",
-  };
 
   return (
     <>

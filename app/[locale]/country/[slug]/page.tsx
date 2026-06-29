@@ -6,7 +6,7 @@ import { createClient } from "@supabase/supabase-js";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
-import { countryToSlug, slugToCountryEn, getLocalizedCountryName } from "@/lib/country-utils";
+import { countryToSlug, slugToCountryEn } from "@/lib/country-utils";
 import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 import { allDiseases, diseaseToSlug } from "@/lib/disease-data";
 import type { DiseaseInfo, AppRegion } from "@/lib/disease-data";

@@ -32,7 +32,7 @@ const riskColors: Record<string, string> = {
   low: "#22c55e",
 };
 
-export default function WorldMap({ outbreaks, locale, isPaid, popupLabels, riskLabels }: WorldMapProps) {
+export default function WorldMap({ outbreaks, locale, isPaid, popupLabels: _popupLabels, riskLabels }: WorldMapProps) {
   const mapRef      = useRef<LeafletMap | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [selected,  setSelected] = useState<Outbreak | null>(null);
@@ -72,7 +72,6 @@ export default function WorldMap({ outbreaks, locale, isPaid, popupLabels, riskL
         }
       ).addTo(map);
 
-      const dir = locale === "ar" ? "rtl" : "ltr";
 
       outbreaks.forEach((outbreak) => {
         // Skip worldwide/multi-country aggregates — no meaningful geographic pin
@@ -128,6 +127,7 @@ export default function WorldMap({ outbreaks, locale, isPaid, popupLabels, riskL
         mapRef.current = null;
       }
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [outbreaks]);
 
   return (

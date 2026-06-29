@@ -14,7 +14,7 @@ const BOM   = String.fromCharCode(65279);
 const clean = (v: string | undefined) => (v || "").replace(new RegExp("^" + BOM), "").trim();
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string; id: string }> }): Promise<Metadata> {
-  const { id } = await params;
+  await params;
   return {
     title: `Outbreak Report — HealthWatch Global`,
     robots: { index: false, follow: false },

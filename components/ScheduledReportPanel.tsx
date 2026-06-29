@@ -90,7 +90,7 @@ export default function ScheduledReportPanel({ locale }: Props) {
 
   const [open,         setOpen]         = useState(false);
   const [report,       setReport]       = useState<ReportConfig | null>(null);
-  const [plan,         setPlan]         = useState("pro");
+  const [_plan,        setPlan]         = useState("pro");
   const [maxR,         setMaxR]         = useState(1);
   const [loading,      setLoading]      = useState(false);
   const [planError,    setPlanError]    = useState(false);

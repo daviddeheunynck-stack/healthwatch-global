@@ -107,7 +107,7 @@ function findMentionedCountries(text: string): string[] {
 
 interface PageEntry { url: string; title: string; dateHint?: string }
 
-function extractOutbreakLinks(html: string, baseUrl: string): PageEntry[] {
+function extractOutbreakLinks(html: string, _baseUrl: string): PageEntry[] {
   const entries: PageEntry[] = [];
   const seen = new Set<string>();
   const cutoff = new Date();
