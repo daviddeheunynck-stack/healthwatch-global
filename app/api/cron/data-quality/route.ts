@@ -5,7 +5,7 @@ import { errorMessage } from "@/lib/error";
 import * as Sentry from "@sentry/nextjs";
 
 export const dynamic = "force-dynamic";
-export const maxDuration = 60;
+export const maxDuration = 120;
 
 const BOM = String.fromCharCode(65279);
 const clean = (v: string | undefined) => (v || "").replace(new RegExp("^" + BOM), "").trim();
@@ -26,9 +26,33 @@ const FETCH_HEADERS = {
   "Accept": "text/html,*/*",
 };
 
-// ── Fetch and extract numbers from a WHO DON page ─────────────────────────────
+// ── Fetch and extract numbers + resolution signals from a WHO DON page ────────
 
-async function verifyFromDON(url: string): Promise<{ cases: number; deaths: number } | null> {
+interface DONResult {
+  cases:     number;
+  deaths:    number;
+  resolved:  boolean; // formal "end of outbreak declared" language
+  contained: boolean; // strong containment signal (contacts cleared, no new cases)
+}
+
+// Phrases that unambiguously indicate WHO has formally declared the outbreak over.
+const RESOLUTION_PHRASES = [
+  "the outbreak has been declared over",
+  "this outbreak has been declared over",
+  "outbreak is over",
+  "end of the outbreak has been declared",
+  "who has declared the end of the outbreak",
+];
+
+// Phrases indicating strong containment (contacts cleared, no secondary cases)
+// but not necessarily a formal "end of outbreak" declaration yet.
+const CONTAINMENT_PHRASES = [
+  "all contacts have completed their follow-up period, with no additional cases",
+  "no additional human cases have been reported",
+  "quarantine and follow-up periods have been completed for everyone",
+];
+
+async function verifyFromDON(url: string): Promise<DONResult | null> {
   if (!DON_RE.test(url)) return null;
   try {
     const res = await fetch(url, {
@@ -40,12 +64,16 @@ async function verifyFromDON(url: string): Promise<{ cases: number; deaths: numb
     const bodyMatch = html.match(
       /(?:sf-content-block|article-content|content-block-article|don-content)([\s\S]{0,8000})/i,
     );
-    const text = (bodyMatch ? bodyMatch[1] : html)
+    const rawText = (bodyMatch ? bodyMatch[1] : html)
       .replace(/<[^>]+>/g, " ")
       .replace(/\s+/g, " ")
       .trim();
-    const nums = extractNumbers(text);
-    return nums.cases > 0 || nums.deaths > 0 ? nums : null;
+    const lower    = rawText.toLowerCase();
+    const nums     = extractNumbers(rawText);
+    const resolved  = RESOLUTION_PHRASES.some(p => lower.includes(p));
+    const contained = !resolved && CONTAINMENT_PHRASES.some(p => lower.includes(p));
+    if (nums.cases === 0 && nums.deaths === 0 && !resolved && !contained) return null;
+    return { cases: nums.cases, deaths: nums.deaths, resolved, contained };
   } catch {
     return null;
   }
@@ -245,11 +273,33 @@ export async function GET(req: NextRequest) {
     }
   }
 
+  // ── 4d. WHO DON resolution / containment detection ──────────────────────────
+  // For active WHO DON rows not already flagged as anomalies:
+  //   - Formal end-of-outbreak declaration → auto-deactivate
+  //   - Strong containment signal          → flag for manual review
+  const anomalyIds = new Set(anomalies.map((a) => a.row.id));
+  for (const row of rows ?? []) {
+    if (row.is_seed) continue;
+    if (!DON_RE.test(row.source ?? "")) continue;
+    if (anomalyIds.has(row.id)) continue;
+    const label = `${row.disease} / ${row.country}`;
+    const don = await verifyFromDON(row.source);
+    if (don?.resolved) {
+      await supabase.from("outbreaks").update({ active: false }).eq("id", row.id);
+      fixes.push({ label, before: "active", after: "inactive — fin d'épidémie déclarée (WHO DON)" });
+    } else if (don?.contained) {
+      needsReview.push({
+        label,
+        detail: `Signal de containment détecté dans le DON — vérifier si l'épidémie est terminée : ${row.source}`,
+      });
+    }
+    await new Promise((r) => setTimeout(r, 150));
+  }
+
   // ── 5. Notable movements (top 5 largest absolute change, no anomaly) ──────
   type Movement = { label: string; before: number; after: number; delta: number };
   const movements: Movement[] = [];
 
-  const anomalyIds = new Set(anomalies.map((a) => a.row.id));
   for (const row of rows ?? []) {
     if (anomalyIds.has(row.id)) continue;
     const snap = snapMap.get(row.id);
