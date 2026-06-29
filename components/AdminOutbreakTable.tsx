@@ -9,6 +9,27 @@ type SortKey = "disease_en" | "country_en" | "region" | "cases" | "deaths" | "ri
 type SortDir = "asc" | "desc";
 const RISK_ORDER: Record<string, number> = { high: 3, medium: 2, low: 1 };
 
+function ColHeader({
+  col, label, align = "left", sortKey, sortDir, onSort,
+}: {
+  col: SortKey; label: string; align?: "left" | "right" | "center";
+  sortKey: SortKey; sortDir: SortDir; onSort: (col: SortKey) => void;
+}) {
+  const active = sortKey === col;
+  const Icon = active ? (sortDir === "asc" ? ChevronUp : ChevronDown) : ArrowUpDown;
+  return (
+    <th
+      onClick={() => onSort(col)}
+      className={`px-4 py-3 text-${align} cursor-pointer select-none hover:text-white group whitespace-nowrap`}
+    >
+      <span className={`inline-flex items-center gap-1 ${align === "right" ? "flex-row-reverse" : ""}`}>
+        {label}
+        <Icon className={`w-3 h-3 shrink-0 ${active ? "text-white" : "opacity-30 group-hover:opacity-60"}`} />
+      </span>
+    </th>
+  );
+}
+
 const REGIONS = ["africa", "asia", "europe", "americas", "oceania"];
 const RISKS = ["high", "medium", "low"] as const;
 
@@ -49,22 +70,6 @@ export default function AdminOutbreakTable({ initial }: { initial: Outbreak[] })
     }
     return sortDir === "asc" ? v : -v;
   });
-
-  function ColHeader({ col, label, align = "left" }: { col: SortKey; label: string; align?: "left" | "right" | "center" }) {
-    const active = sortKey === col;
-    const Icon = active ? (sortDir === "asc" ? ChevronUp : ChevronDown) : ArrowUpDown;
-    return (
-      <th
-        onClick={() => handleSort(col)}
-        className={`px-4 py-3 text-${align} cursor-pointer select-none hover:text-white group whitespace-nowrap`}
-      >
-        <span className={`inline-flex items-center gap-1 ${align === "right" ? "flex-row-reverse" : ""}`}>
-          {label}
-          <Icon className={`w-3 h-3 shrink-0 ${active ? "text-white" : "opacity-30 group-hover:opacity-60"}`} />
-        </span>
-      </th>
-    );
-  }
 
   const toggleActive = async (o: Outbreak) => {
     setLoading(o.id);
@@ -223,6 +228,7 @@ export default function AdminOutbreakTable({ initial }: { initial: Outbreak[] })
         </button>
       </div>
 
+      {/* eslint-disable-next-line react-hooks/static-components */}
       {adding && <OutbreakForm />}
 
       <div className="rounded-xl border border-gray-800 overflow-hidden">
@@ -230,14 +236,14 @@ export default function AdminOutbreakTable({ initial }: { initial: Outbreak[] })
           <table className="w-full text-sm">
             <thead>
               <tr className="bg-gray-900 text-gray-400 text-xs uppercase tracking-wide">
-                <ColHeader col="disease_en" label="Maladie" />
-                <ColHeader col="country_en" label="Pays" />
-                <ColHeader col="region"     label="Région" />
-                <ColHeader col="cases"      label="Cas"    align="right" />
-                <ColHeader col="deaths"     label="Décès"  align="right" />
-                <ColHeader col="risk_level" label="Risque" />
-                <ColHeader col="date"       label="Date" />
-                <ColHeader col="active"     label="Statut" align="center" />
+                <ColHeader col="disease_en" label="Maladie" sortKey={sortKey} sortDir={sortDir} onSort={handleSort} />
+                <ColHeader col="country_en" label="Pays"   sortKey={sortKey} sortDir={sortDir} onSort={handleSort} />
+                <ColHeader col="region"     label="Région" sortKey={sortKey} sortDir={sortDir} onSort={handleSort} />
+                <ColHeader col="cases"      label="Cas"    align="right"  sortKey={sortKey} sortDir={sortDir} onSort={handleSort} />
+                <ColHeader col="deaths"     label="Décès"  align="right"  sortKey={sortKey} sortDir={sortDir} onSort={handleSort} />
+                <ColHeader col="risk_level" label="Risque" sortKey={sortKey} sortDir={sortDir} onSort={handleSort} />
+                <ColHeader col="date"       label="Date"   sortKey={sortKey} sortDir={sortDir} onSort={handleSort} />
+                <ColHeader col="active"     label="Statut" align="center" sortKey={sortKey} sortDir={sortDir} onSort={handleSort} />
                 <th className="px-4 py-3 text-center">Actions</th>
               </tr>
             </thead>

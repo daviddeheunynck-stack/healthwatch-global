@@ -284,7 +284,7 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
     if (rk && ["high","medium","low"].includes(rk)) setRisk(rk as Risk);
     const df = p.get("from"); if (df) setDateFrom(df);
     const dt = p.get("to");   if (dt) setDateTo(dt);
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, []);
 
   // Unique sorted country list from current outbreaks
   const countryOptions = useMemo(() => {

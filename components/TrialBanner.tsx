@@ -84,7 +84,6 @@ export default function TrialBanner({ trialEndsAt, locale, hasBilling }: Props) 
   // above forces that re-render once a minute, so this impurity is intentional
   // (the disable must sit directly above the flagged line, or ESLint reports
   // it as unused and the rule still fires on the real line below).
-  // eslint-disable-next-line react-hooks/purity
   const daysLeft   = Math.ceil((new Date(trialEndsAt).getTime() - Date.now()) / 86_400_000);
   const isUrgent   = daysLeft <= 3;
   const isCritical = daysLeft <= 1;

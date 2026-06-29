@@ -468,7 +468,7 @@ export default async function AdminPage({
                 <th className="px-4 py-3 text-left">Email</th>
                 <th className="px-4 py-3 text-left">Plan</th>
                 <th className="px-4 py-3 text-left">Statut</th>
-                <th className="px-4 py-3 text-left">Trial jusqu'au</th>
+                <th className="px-4 py-3 text-left">Trial jusqu&apos;au</th>
                 <th className="px-4 py-3 text-left">Actions</th>
               </tr>
             </thead>

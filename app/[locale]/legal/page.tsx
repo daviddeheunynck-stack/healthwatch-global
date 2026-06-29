@@ -73,7 +73,7 @@ export default async function LegalPage() {
           </div>
           <h1 className="text-3xl font-bold text-white">Mentions légales</h1>
         </div>
-        <p className="text-gray-500 text-sm">Conformément à la loi n° 2004-575 du 21 juin 2004 pour la confiance dans l'économie numérique (LCEN)</p>
+        <p className="text-gray-500 text-sm">Conformément à la loi n° 2004-575 du 21 juin 2004 pour la confiance dans l&apos;économie numérique (LCEN)</p>
       </div>
 
       {locale !== "fr" && NON_FR_NOTE[locale] && (
@@ -130,13 +130,13 @@ export default async function LegalPage() {
         <section className="space-y-3">
           <h2 className="text-lg font-semibold text-white">3. Propriété intellectuelle</h2>
           <p>
-            L'ensemble du contenu de ce site (textes, graphiques, logiciels, code source, marques, logos) est la propriété
+            L&apos;ensemble du contenu de ce site (textes, graphiques, logiciels, code source, marques, logos) est la propriété
             exclusive de David Deheunynck, sous réserve des données issues de sources tierces (Organisation Mondiale de la
             Santé, CDC, ECDC) qui demeurent la propriété de leurs auteurs respectifs.
           </p>
           <p>
             Toute reproduction, représentation, modification, publication ou adaptation de tout ou partie des éléments du
-            site, quel que soit le moyen ou le procédé utilisé, est interdite sans l'autorisation écrite préalable de
+            site, quel que soit le moyen ou le procédé utilisé, est interdite sans l&apos;autorisation écrite préalable de
             David Deheunynck.
           </p>
         </section>
@@ -150,7 +150,7 @@ export default async function LegalPage() {
             uniquement et ne constituent pas un avis médical.
           </p>
           <p>
-            HealthWatch Global décline toute responsabilité quant à l'utilisation faite de ces données dans un contexte
+            HealthWatch Global décline toute responsabilité quant à l&apos;utilisation faite de ces données dans un contexte
             clinique ou de prise de décision médicale.
           </p>
         </section>
@@ -177,8 +177,8 @@ export default async function LegalPage() {
         <section className="space-y-3">
           <h2 className="text-lg font-semibold text-white">6. Cookies</h2>
           <p>
-            Ce site utilise des cookies de mesure d'audience (Vercel Analytics) uniquement avec votre consentement explicite.
-            Vous pouvez modifier vos préférences à tout moment via le lien "Paramètres cookies" en bas de page.
+            Ce site utilise des cookies de mesure d&apos;audience (Vercel Analytics) uniquement avec votre consentement explicite.
+            Vous pouvez modifier vos préférences à tout moment via le lien &quot;Paramètres cookies&quot; en bas de page.
           </p>
         </section>
 

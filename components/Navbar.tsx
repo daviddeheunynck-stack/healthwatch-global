@@ -70,23 +70,6 @@ export default function Navbar() {
     return () => document.removeEventListener("mousedown", handleOutside);
   }, [localeDropOpen]);
 
-  useEffect(() => {
-    const supabase = createClient();
-
-    supabase.auth.getUser().then(({ data: { user } }) => {
-      setUser(user);
-      if (user) fetchPlan(user.id, supabase);
-    });
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null);
-      if (session?.user) fetchPlan(session.user.id, supabase);
-      else setPlan("free");
-    });
-
-    return () => subscription.unsubscribe();
-  }, []);
-
   async function fetchPlan(userId: string, supabase: ReturnType<typeof createClient>) {
     const { data } = await supabase
       .from("profiles")
@@ -105,6 +88,23 @@ export default function Navbar() {
     setPlan(p);
   }
 
+  useEffect(() => {
+    const supabase = createClient();
+
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      setUser(user);
+      if (user) fetchPlan(user.id, supabase);
+    });
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+      if (session?.user) fetchPlan(session.user.id, supabase);
+      else setPlan("free");
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
   const handleLogout = async () => {
     const supabase = createClient();
     await supabase.auth.signOut();
@@ -120,6 +120,7 @@ export default function Navbar() {
     } else {
       segments.splice(1, 0, newLocale);
     }
+    // eslint-disable-next-line react-hooks/immutability
     window.location.href = (segments.join("/") || "/") + window.location.search;
   };
 

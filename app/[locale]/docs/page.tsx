@@ -348,7 +348,7 @@ export default async function DocsPage({ params }: { params: Promise<{ locale: s
               (e.g. <code className="text-blue-300 font-mono">2026-DON603</code>). Directly citable in academic and institutional reports.
               The dashboard&apos;s citation copy button generates a ready-to-use reference for these rows.
             </p>
-            <p className="text-xs text-gray-500 font-mono">source: "https://www.who.int/emergencies/disease-outbreak-news/item/2026-DON603"</p>
+            <p className="text-xs text-gray-500 font-mono">source: &quot;https://www.who.int/emergencies/disease-outbreak-news/item/2026-DON603&quot;</p>
           </div>
           {/* Official */}
           <div className="rounded-xl border border-amber-700/40 bg-amber-900/10 p-4 space-y-1">

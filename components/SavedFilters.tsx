@@ -63,7 +63,6 @@ export default function SavedFilters({ locale, currentFilters, hasActiveFilters,
     // tool here.)
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
-      // eslint-disable-next-line react-hooks/set-state-in-effect
       if (raw) setSaved(JSON.parse(raw));
     } catch { /* ignore */ }
   }, []);
