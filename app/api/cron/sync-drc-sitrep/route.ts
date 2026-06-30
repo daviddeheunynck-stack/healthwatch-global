@@ -179,7 +179,7 @@ async function extractFromPdf(pdfUrl: string, num: number): Promise<{ data: Sitr
   try {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const pdfParse = (await import("pdf-parse/lib/pdf-parse.js" as any)).default as (buf: Buffer, opts?: object) => Promise<{ text: string }>;
-    const result   = await pdfParse(buffer, { max: 3 });
+    const result   = await pdfParse(buffer, { max: 5 });
     text = result.text;
   } catch (e) {
     console.log("[drc-sitrep] pdf-parse error:", errorMessage(e));
@@ -251,37 +251,79 @@ function extractDate(text: string): string | null {
   return month ? `${m[3]}-${month}-${m[1].padStart(2, "0")}` : null;
 }
 
-const COUNTRY_ALIASES: Record<string, string[]> = {
-  Uganda: ["Uganda", "Ouganda"],
-  France: ["France"],
+// Word-to-number for small counts used in WHO sitrep prose ("two confirmed deaths")
+const WORDS_TO_NUM: Record<string, number> = {
+  zero:0,one:1,two:2,three:3,four:4,five:5,
+  six:6,seven:7,eight:8,nine:9,ten:10,
+  eleven:11,twelve:12,thirteen:13,fourteen:14,fifteen:15,
+  sixteen:16,seventeen:17,eighteen:18,nineteen:19,twenty:20,
 };
+function wordOrNum(s: string): number {
+  const n = parseInt(s.replace(/[\s,]/g, ""), 10);
+  if (!isNaN(n)) return n;
+  return WORDS_TO_NUM[s.toLowerCase().trim()] ?? -1;
+}
+const WORD_OR_NUM = "(?:zero|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen|twenty|\\d+)";
 
 function parseCountryRow(text: string, country: string): { cases: number; deaths: number } | null {
-  const names = COUNTRY_ALIASES[country] ?? [country];
-  const t = text.replace(/\r/g, "").replace(/[ \t]+/g, " ");
+  const t = text.replace(/\r/g, "");
+
+  // ── Uganda: parse from WHO sitrep prose body (page 4+) ──────────────────
+  // Template: "cumulative total of N cases (M confirmed and ... probable),
+  //            including Q deaths (R confirmed and ... probable)"
+  // The summary table is unreliable (DRC+Uganda numbers appear merged in the
+  // same column, so DRC's large count precedes Uganda's in the extracted text).
+  if (country === "Uganda") {
+    const re = new RegExp(
+      `cumulative total of \\d+ cases? \\((\\d+) confirmed[^)]*\\)[\\s\\S]{1,800}?` +
+      `including\\s+(?:${WORD_OR_NUM})\\s+deaths?\\s*\\((${WORD_OR_NUM})\\s+confirmed`,
+      "i",
+    );
+    const m = re.exec(t);
+    if (m) {
+      const cases  = parseInt(m[1], 10);
+      const deaths = wordOrNum(m[2]);
+      if (!isNaN(cases) && deaths >= 0 && deaths <= cases) {
+        console.log(`[drc-sitrep] Uganda (prose): cases=${cases}, deaths=${deaths}`);
+        return { cases, deaths };
+      }
+    }
+    // Prose section not found — happens when the PDF format changes or page limit is reached.
+    console.log("[drc-sitrep] Uganda: prose pattern not found — skipping update");
+    return null;
+  }
+
+  // ── France + future satellite countries: standalone table row ────────────
+  // France always occupies its own row at the end of the summary table, so
+  // the default pdftotext output is clean: "France\n1\n0\n0\n0\n..."
+  // WHO weekly sitrep columns: Confirmed Cases | Confirmed Deaths | Probable Cases | Probable Deaths | ...
+  // WHO weekly sitrep: country name appears multiple times (title, table, body).
+  // Iterate ALL occurrences and take the first that passes sanity checks —
+  // the header occurrence (e.g. "France\nWeekly External Sitrep…") produces
+  // implausible numbers (deaths > cases) that the sanity check rejects,
+  // while the summary-table occurrence produces the correct confirmed figures.
+  const NAMES: Record<string, string[]> = { France: ["France"] };
+  const names = NAMES[country] ?? [country];
+  const tn = t.replace(/[ \t]+/g, " ");
 
   for (const name of names) {
-    const idx = t.search(new RegExp("\\b" + name + "\\b", "i"));
-    if (idx < 0) continue;
+    for (const match of tn.matchAll(new RegExp("\\b" + name + "\\b", "gi"))) {
+      const idx = (match.index ?? 0) + name.length;
+      const context = tn.slice(idx, idx + 300);
+      const nums = Array.from(
+        context.matchAll(/(\d{1,3}(?:[\s,]\d{3})*|\d+)/g),
+        (m) => parseInt(m[1].replace(/[\s,]/g, ""), 10),
+      ).filter((n) => !isNaN(n) && n < 100_000);
 
-    // Collect numbers in the ~300 chars following the country name
-    const context = t.slice(idx + name.length, idx + name.length + 300);
-    const nums = Array.from(
-      context.matchAll(/(\d{1,3}(?:[\s,]\d{3})*|\d+)/g),
-      (m) => parseInt(m[1].replace(/[\s,]/g, ""), 10),
-    ).filter((n) => !isNaN(n) && n < 100_000);
+      if (nums.length < 2) continue;
+      // cols: [0]=Confirmed Cases, [1]=Confirmed Deaths, [2]=Probable Cases, ...
+      const cases  = nums[0];
+      const deaths = nums[1];
+      if (cases < 0 || deaths < 0 || deaths > cases) continue;
 
-    if (nums.length < 2) continue;
-
-    // WHO BVD sitrep table: Confirmed | Probable | Suspected | Deaths
-    // 4+ columns → cols 0=cases, 3=deaths; 2 columns → 0=cases, 1=deaths
-    const cases  = nums[0];
-    const deaths = nums.length >= 4 ? nums[3] : nums[1];
-
-    if (cases < 0 || deaths < 0 || deaths > cases) continue;
-
-    console.log(`[drc-sitrep] ${country}: cases=${cases}, deaths=${deaths}`);
-    return { cases, deaths };
+      console.log(`[drc-sitrep] ${country} (table): cases=${cases}, deaths=${deaths}`);
+      return { cases, deaths };
+    }
   }
   return null;
 }
