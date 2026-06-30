@@ -307,6 +307,45 @@ function fetchYellowFeverGHO(country_en: string): () => Promise<Found | null> {
   };
 }
 
+// ── WHO GHO visceral leishmaniasis fetcher ────────────────────────────────────
+// Indicator NTD_LEISHVNUM: WHO-reported annual visceral leishmaniasis cases.
+// 2024 data available for Sudan (4,808) and Ethiopia (1,434).
+
+const GHO_LEISH_ISO3: Record<string, string> = {
+  "Sudan":    "SDN",
+  "Ethiopia": "ETH",
+};
+
+function fetchLeishmaniasisGHO(country_en: string): () => Promise<Found | null> {
+  return async () => {
+    const iso3 = GHO_LEISH_ISO3[country_en];
+    if (!iso3) return null;
+    try {
+      const url = `https://ghoapi.azureedge.net/api/NTD_LEISHVNUM?%24filter=SpatialDim%20eq%20'${iso3}'&%24orderby=TimeDim%20desc&%24top=1`;
+      const res = await fetch(url, {
+        headers: { "User-Agent": "HealthWatch-Global/1.0 (health surveillance; contact@healthwatch-global.com)" },
+        signal:  AbortSignal.timeout(10_000),
+      });
+      if (!res.ok) return null;
+      type GHORec = { SpatialDim: string; TimeDim: number; NumericValue: number | null };
+      const json = await res.json() as { value: GHORec[] };
+      const rec  = json.value?.[0];
+      if (!rec?.NumericValue) return null;
+      const cases = Math.round(rec.NumericValue);
+      const year  = rec.TimeDim;
+      return {
+        cases,
+        deaths: 0,
+        date:   `${year}-01-01`,
+        source: "https://www.who.int/data/gho/data/indicators/indicator-details/GHO/number-of-cases-of-visceral-leishmaniasis-reported",
+        description: `Leishmaniasis (visceral) in ${country_en} — ${cases.toLocaleString("en")} cases reported in ${year}. Source: WHO Global Health Observatory (GHO / NTD programme).`,
+      };
+    } catch {
+      return null;
+    }
+  };
+}
+
 // ── ReliefWeb query ───────────────────────────────────────────────────────────
 
 interface Target {
@@ -441,8 +480,8 @@ const TARGETS: Target[] = [
   { disease_en: "Diphtheria",   country_en: "Haiti",                             minCases:  10    },
   { disease_en: "Diphtheria",   country_en: "Yemen",                             minCases:  10    },
   // ── Leishmaniasis — visceral form, east Africa / conflict settings ────────────
-  { disease_en: "Leishmaniasis", country_en: "Sudan",                            minCases: 100    },
-  { disease_en: "Leishmaniasis", country_en: "Ethiopia",                         minCases: 100    },
+  { disease_en: "Leishmaniasis", country_en: "Sudan",    minCases: 100, fetcher: fetchLeishmaniasisGHO("Sudan")    },
+  { disease_en: "Leishmaniasis", country_en: "Ethiopia", minCases: 100, fetcher: fetchLeishmaniasisGHO("Ethiopia") },
   // ── Lassa fever — endemic West African reservoir; under-reported globally ─────
   { disease_en: "Lassa",         country_en: "Nigeria",                           minCases:  10    },
   { disease_en: "Lassa",         country_en: "Sierra Leone",                      minCases:  10    },
