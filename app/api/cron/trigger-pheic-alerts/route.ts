@@ -162,10 +162,20 @@ export async function GET(req: NextRequest) {
         ? `CFR ${(totalDeaths / totalCases * 100).toFixed(1)}%`
         : "";
 
+    // Most recent date and highest risk across all outbreaks in the group
+    const latestDate  = outbreaks.reduce((best, o) => (!best || (o.date ?? "") > best ? o.date ?? best : best), primary.date);
+    const riskPriority: Record<string, number> = { low: 1, moderate: 2, high: 3, critical: 4 };
+    const topRisk = outbreaks.reduce(
+      (best, o) => (riskPriority[o.risk_level ?? ""] ?? 0) > (riskPriority[best] ?? 0) ? (o.risk_level ?? best) : best,
+      primary.risk_level ?? "high",
+    );
+
     for (const user of proUsers as Array<{ id: string; email: string; alert_locale?: string | null }>) {
-      // Dedup against the primary outbreak id — one record covers the whole PHEIC event
-      const key = `${user.id}::${primary.id}`;
-      if (notifiedSet.has(key)) continue;
+      // Dedup: skip if user was already notified for ANY outbreak in this disease group.
+      // This covers both old per-country records (e.g. user::uganda_id, user::france_id)
+      // AND new grouped records (user::primary_id) inserted after this fix.
+      const alreadyNotified = outbreaks.some((o) => notifiedSet.has(`${user.id}::${o.id}`));
+      if (alreadyNotified) continue;
 
       const locale    = user.alert_locale ?? "en";
       const numLocale = locale === "ar" ? "ar-SA" : locale;
@@ -184,8 +194,8 @@ export async function GET(req: NextRequest) {
   <ul style="font-size:13px;color:#cbd5e1;margin:0 0 16px;padding-left:20px">
     <li>${lc.cases} ${totalCases.toLocaleString(numLocale)}</li>
     ${cfr ? `<li>${cfr}</li>` : ""}
-    <li>${lc.reported} ${primary.date}</li>
-    <li>${lc.risk} <strong style="color:#f87171">HIGH${primary.risk_level === "high" ? "" : " — ".concat(primary.risk_level)}</strong></li>
+    <li>${lc.reported} ${latestDate}</li>
+    <li>${lc.risk} <strong style="color:#f87171">${topRisk.toUpperCase()}</strong></li>
   </ul>
   <a href="${dashUrl}" style="display:inline-block;padding:10px 20px;background:#dc2626;color:#fff;text-decoration:none;border-radius:8px;font-size:14px;font-weight:600">
     ${lc.view}
@@ -207,7 +217,9 @@ export async function GET(req: NextRequest) {
         }
 
         await sendEmail(user.email, subject, html);
-        notifiedSet.add(key);
+        // Add all outbreak ids for this disease group so the check above
+        // catches them on the next cron run without a DB re-query.
+        outbreaks.forEach((o) => notifiedSet.add(`${user.id}::${o.id}`));
         fired++;
       } catch (err) {
         console.error(`[trigger-pheic-alerts] Failed for user ${user.id} / outbreak ${primary.id}:`, err);
