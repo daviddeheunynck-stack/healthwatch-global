@@ -79,12 +79,12 @@ const LANDING_META: Record<string, { title: string; description: string }> = {
   id: { title: "Pemantauan wabah penyakit — WHO, ECDC, PAHO, Africa CDC dalam satu dasbor | HealthWatch Global", description: "Pantau wabah penyakit aktif di seluruh dunia — WHO, ECDC, PAHO dan Africa CDC dalam satu dasbor. Peringatan, laporan PDF dan data CFR untuk tim kesehatan, manajer risiko, dan dokter perjalanan." },
 };
 
-const SNAPSHOT_COPY: Record<string, { cases: string; cfr: string; totalCases: string }> = {
-  en: { cases: "cases", cfr: "CFR",           totalCases: "total confirmed cases" },
-  fr: { cases: "cas",   cfr: "létalité",      totalCases: "cas confirmés au total" },
-  es: { cases: "casos", cfr: "letalidad",     totalCases: "casos confirmados en total" },
-  ar: { cases: "حالة",  cfr: "معدل الوفيات", totalCases: "حالة مؤكدة إجمالاً" },
-  id: { cases: "kasus", cfr: "CFR",           totalCases: "total kasus terkonfirmasi" },
+const SNAPSHOT_COPY: Record<string, { cases: string; cfr: string }> = {
+  en: { cases: "cases", cfr: "CFR"           },
+  fr: { cases: "cas",   cfr: "létalité"      },
+  es: { cases: "casos", cfr: "letalidad"     },
+  ar: { cases: "حالة",  cfr: "معدل الوفيات" },
+  id: { cases: "kasus", cfr: "CFR"           },
 };
 
 const LOCALES = ["en", "fr", "es", "ar", "id"] as const;
@@ -394,11 +394,6 @@ async function DashboardContent({ demo = false, urlRegion, urlRisk }: { demo?: b
                 <span className="text-gray-600">·</span>
                 <span className="text-red-400 font-medium">{cfr}% {snap.cfr}</span>
               </>
-            )}
-            {stats.totalCases > 0 && (
-              <span className={`${isRtl ? "mr-auto" : "ml-auto"} text-gray-500 text-xs`}>
-                {stats.totalCases.toLocaleString(locale === "ar" ? "ar-SA" : locale)} {snap.totalCases}
-              </span>
             )}
           </div>
         );
