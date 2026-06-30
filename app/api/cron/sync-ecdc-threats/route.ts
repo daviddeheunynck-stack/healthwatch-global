@@ -220,8 +220,11 @@ async function extractItemData(item: RSSItem, dbg?: { reason?: string }): Promis
   });
   const isEUMultiCountry = isEuropeArticle && euCountries.length >= 2;
 
+  // For EU-wide overview articles the extracted case count is an EU aggregate —
+  // not attributable to individual countries. Use a single EU/EEA entry rather
+  // than duplicating the total across every mentioned member state.
   const targetCountries = isEUMultiCountry
-    ? euCountries.slice(0, 8)   // up to 8 EU countries per article
+    ? ["EU/EEA"]
     : [countries[0]];
 
   const results: BriefData[] = [];
