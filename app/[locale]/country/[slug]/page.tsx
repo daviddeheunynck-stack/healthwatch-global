@@ -7,7 +7,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { countryToSlug, slugToCountryEn } from "@/lib/country-utils";
-import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
+import { getLocalizedDisease, getLocalizedCountry, isDisplayActive } from "@/lib/outbreaks";
 import { allDiseases, diseaseToSlug } from "@/lib/disease-data";
 import type { DiseaseInfo, AppRegion } from "@/lib/disease-data";
 import type { Outbreak } from "@/lib/outbreaks";
@@ -210,7 +210,7 @@ export async function generateMetadata({
   if (!countryEn) return { title: "Country not found" };
 
   const outbreaks = await getCountryOutbreaks(countryEn);
-  const active    = outbreaks.filter((o) => o.active);
+  const active    = outbreaks.filter(isDisplayActive);
 
   const TITLE_TPL: Record<Locale, string> = {
     en: `${countryEn} — Disease Outbreaks`,
@@ -276,8 +276,8 @@ export default async function CountryPage({
   if (!countryEn) notFound();
 
   const outbreaks = await getCountryOutbreaks(countryEn);
-  const active    = outbreaks.filter((o) => o.active);
-  const historical = outbreaks.filter((o) => !o.active);
+  const active    = outbreaks.filter(isDisplayActive);
+  const historical = outbreaks.filter((o) => !isDisplayActive(o));
 
   const supabase = createClient(
     clean(process.env.NEXT_PUBLIC_SUPABASE_URL),

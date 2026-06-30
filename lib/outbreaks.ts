@@ -35,6 +35,7 @@ export interface Outbreak {
   description_ar: string | null;
   description_id: string | null;
   active: boolean;
+  source_priority: number | null; // 10=PHEIC, 5=main crons, 3=regional, 0=seed
   admin1:     string | null;
   admin1_lat: number | null;
   admin1_lng: number | null;
@@ -255,6 +256,19 @@ export function isNewOutbreak(outbreak: Outbreak): boolean {
   const ref = outbreak.updated_at ?? outbreak.created_at;
   if (!ref) return false;
   return Date.now() - new Date(ref).getTime() < 24 * 60 * 60 * 1000;
+}
+
+// Mirrors the DB query in getOutbreaks(): active=true OR (priority>=3 AND recent).
+// Use this instead of `o.active` when splitting outbreaks into active/history for
+// display — prevents endemic diseases (Dengue, Cholera, H5N1) from falling into
+// "history" after the data-quality cron closes resolved WHO DON events.
+const THIRTY_DAYS_MS = 30 * 86_400_000;
+export function isDisplayActive(o: Pick<Outbreak, "active" | "source_priority" | "updated_at">): boolean {
+  if (o.active) return true;
+  if ((o.source_priority ?? 0) >= 3 && o.updated_at) {
+    return new Date(o.updated_at).getTime() >= Date.now() - THIRTY_DAYS_MS;
+  }
+  return false;
 }
 
 const STALE_DAYS = 60;
