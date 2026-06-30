@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase-server";
 import { randomBytes } from "crypto";
-import { Resend } from "resend";
 import * as Sentry from "@sentry/nextjs";
 
 export const dynamic = "force-dynamic";
@@ -9,7 +8,7 @@ export const dynamic = "force-dynamic";
 const BOM   = String.fromCharCode(65279);
 const clean = (v: string | undefined) => (v || "").replace(new RegExp("^" + BOM), "").trim();
 
-const RESEND_KEY = clean(process.env.RESEND_API_KEY);
+const BREVO_KEY  = clean(process.env.BREVO_API_KEY);
 const APP_URL    = clean(process.env.NEXT_PUBLIC_APP_URL) || "https://healthwatch-global.com";
 const MAX_SEATS: Record<string, number> = { team: 5, enterprise: 50 };
 
@@ -110,14 +109,22 @@ export async function POST(req: Request) {
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
 
   // Send invite email
-  if (RESEND_KEY) {
-    const resend = new Resend(RESEND_KEY);
-    await resend.emails.send({
-      from: "HealthWatch Global <alerts@healthwatch-global.com>",
-      to: [email],
-      subject: (INVITE_SUBJECT[locale] ?? INVITE_SUBJECT.en)(org.name),
-      html: buildInviteEmail(org.name, inviteUrl, locale),
-    }).catch((e) => { Sentry.captureException(e, { tags: { route: "org-invite" } }); });
+  if (BREVO_KEY) {
+    try {
+      const res = await fetch("https://api.brevo.com/v3/smtp/email", {
+        method: "POST",
+        headers: { "api-key": BREVO_KEY, "Content-Type": "application/json" },
+        body: JSON.stringify({
+          sender: { name: "HealthWatch Global", email: "alerts@healthwatch-global.com" },
+          to: [{ email }],
+          subject: (INVITE_SUBJECT[locale] ?? INVITE_SUBJECT.en)(org.name),
+          htmlContent: buildInviteEmail(org.name, inviteUrl, locale),
+        }),
+      });
+      if (!res.ok) throw new Error(`Brevo ${res.status}: ${await res.text()}`);
+    } catch (e) {
+      Sentry.captureException(e, { tags: { route: "org-invite" } });
+    }
   }
 
   return NextResponse.json({ member, inviteUrl }, { status: 201 });
