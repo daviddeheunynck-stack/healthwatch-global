@@ -230,6 +230,83 @@ function fetchMeaslesGHO(country_en: string): () => Promise<Found | null> {
   };
 }
 
+// ── WHO GHO wild poliovirus fetcher ──────────────────────────────────────────
+// Indicator VACCINEPREVENTABLE_WILDPOLIO: cases of poliovirus by WPV type.
+// Only PAK and AFG still have endemic WPV transmission; other targets use ReliefWeb.
+
+const GHO_WPV_ISO3: Record<string, string> = {
+  "Pakistan":    "PAK",
+  "Afghanistan": "AFG",
+};
+
+function fetchPolioGHO(country_en: string): () => Promise<Found | null> {
+  return async () => {
+    const iso3 = GHO_WPV_ISO3[country_en];
+    if (!iso3) return null;
+    try {
+      const url = `https://ghoapi.azureedge.net/api/VACCINEPREVENTABLE_WILDPOLIO?%24filter=SpatialDim%20eq%20'${iso3}'&%24orderby=TimeDim%20desc&%24top=1`;
+      const res = await fetch(url, {
+        headers: { "User-Agent": "HealthWatch-Global/1.0 (health surveillance; contact@healthwatch-global.com)" },
+        signal:  AbortSignal.timeout(10_000),
+      });
+      if (!res.ok) return null;
+      type GHORec = { SpatialDim: string; TimeDim: number; NumericValue: number | null };
+      const json = await res.json() as { value: GHORec[] };
+      const rec  = json.value?.[0];
+      if (!rec?.NumericValue) return null;
+      const cases = Math.round(rec.NumericValue);
+      const year  = rec.TimeDim;
+      return {
+        cases,
+        deaths: 0,
+        date:   `${year}-01-01`,
+        source: "https://www.who.int/data/gho/data/indicators/indicator-details/GHO/number-of-reported-cases-of-poliomyelitis-by-wild-poliovirus-(wpv)",
+        description: `Poliomyelitis (wild poliovirus) in ${country_en} — ${cases} confirmed WPV case${cases > 1 ? "s" : ""} in ${year}. Source: WHO Global Health Observatory / GPEI.`,
+      };
+    } catch {
+      return null;
+    }
+  };
+}
+
+// ── WHO GHO yellow fever fetcher ─────────────────────────────────────────────
+// Indicator WHS3_50: WHO-reported annual yellow fever cases by country.
+
+const GHO_YF_ISO3: Record<string, string> = {
+  "Nigeria":  "NGA",
+  "Cameroon": "CMR",
+};
+
+function fetchYellowFeverGHO(country_en: string): () => Promise<Found | null> {
+  return async () => {
+    const iso3 = GHO_YF_ISO3[country_en];
+    if (!iso3) return null;
+    try {
+      const url = `https://ghoapi.azureedge.net/api/WHS3_50?%24filter=SpatialDim%20eq%20'${iso3}'&%24orderby=TimeDim%20desc&%24top=1`;
+      const res = await fetch(url, {
+        headers: { "User-Agent": "HealthWatch-Global/1.0 (health surveillance; contact@healthwatch-global.com)" },
+        signal:  AbortSignal.timeout(10_000),
+      });
+      if (!res.ok) return null;
+      type GHORec = { SpatialDim: string; TimeDim: number; NumericValue: number | null };
+      const json = await res.json() as { value: GHORec[] };
+      const rec  = json.value?.[0];
+      if (!rec?.NumericValue) return null;
+      const cases = Math.round(rec.NumericValue);
+      const year  = rec.TimeDim;
+      return {
+        cases,
+        deaths: 0,
+        date:   `${year}-01-01`,
+        source: "https://www.who.int/data/gho/data/indicators/indicator-details/GHO/yellow-fever-number-of-reported-cases",
+        description: `Yellow Fever in ${country_en} — ${cases} confirmed case${cases > 1 ? "s" : ""} reported in ${year}. Source: WHO Global Health Observatory (GHO).`,
+      };
+    } catch {
+      return null;
+    }
+  };
+}
+
 // ── ReliefWeb query ───────────────────────────────────────────────────────────
 
 interface Target {
@@ -342,8 +419,8 @@ const TARGETS: Target[] = [
   { disease_en: "Measles", country_en: "Pakistan",                         minCases:   100, fetcher: fetchMeaslesGHO("Pakistan")  },
   { disease_en: "Measles", country_en: "Ukraine",                          minCases:    50, fetcher: fetchMeaslesGHO("Ukraine")   },
   // ── Yellow Fever — any confirmed case is epidemiologically significant ─────────
-  { disease_en: "Yellow Fever",  country_en: "Nigeria",                          minCases:   1    },
-  { disease_en: "Yellow Fever",  country_en: "Cameroon",                         minCases:   1    },
+  { disease_en: "Yellow Fever", country_en: "Nigeria",  minCases: 1, fetcher: fetchYellowFeverGHO("Nigeria")  },
+  { disease_en: "Yellow Fever", country_en: "Cameroon", minCases: 1, fetcher: fetchYellowFeverGHO("Cameroon") },
   // ── Meningitis — meningitis belt extended coverage ────────────────────────────
   { disease_en: "Meningitis",    country_en: "Niger",                            minCases:  10    },
   { disease_en: "Meningitis",    country_en: "Nigeria",                          minCases:  10    },
@@ -354,8 +431,8 @@ const TARGETS: Target[] = [
   // ── Typhoid — XDR strain active since 2016 ────────────────────────────────────
   { disease_en: "Typhoid",      country_en: "Pakistan",                          minCases: 100    },
   // ── Polio — wild and vaccine-derived poliovirus ────────────────────────────────
-  { disease_en: "Polio",        country_en: "Pakistan",                          minCases:   1    },
-  { disease_en: "Polio",        country_en: "Afghanistan",                       minCases:   1    },
+  { disease_en: "Polio", country_en: "Pakistan",    minCases: 1, fetcher: fetchPolioGHO("Pakistan")    },
+  { disease_en: "Polio", country_en: "Afghanistan", minCases: 1, fetcher: fetchPolioGHO("Afghanistan") },
   // ── Hepatitis E — outbreak-prone conflict/displacement settings ───────────────
   { disease_en: "Hepatitis E",  country_en: "Sudan",                             minCases:  50    },
   { disease_en: "Hepatitis E",  country_en: "Somalia",                           minCases:  50    },
