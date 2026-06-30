@@ -20,17 +20,17 @@ const SUPABASE_KEY = clean(process.env.SUPABASE_SERVICE_ROLE_KEY);
 const CRON_SECRET  = clean(process.env.CRON_SECRET);
 
 const RELIEFWEB_URL =
-  "https://api.reliefweb.int/v1/reports" +
+  "https://api.reliefweb.int/v2/reports" +
   "?appname=healthwatch-global" +
   "&filter[operator]=AND" +
   "&filter[conditions][0][field]=primary_type.name" +
   "&filter[conditions][0][value]=Disease+Outbreak" +
   "&fields[include][]=title" +
-  "&fields[include][]=date.created" +
+  "&fields[include][]=date" +
   "&fields[include][]=country.name" +
   "&fields[include][]=url" +
   "&limit=20" +
-  "&sort[]=date.created:desc";
+  "&sort[]=date:desc";
 
 // Very rough WHO region mapping by country — covers common signals
 const REGION_MAP: Record<string, string> = {

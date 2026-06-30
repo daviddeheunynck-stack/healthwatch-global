@@ -335,7 +335,7 @@ export async function GET(req: NextRequest) {
 
   // Load last known sitrep number to avoid re-processing
   const { data: configRow } = await supabase
-    .from("site_config").select("value").eq("key", "ebola_drc_last_sitrep_num").single();
+    .from("site_config").select("value").eq("key", "ebola_drc_last_sitrep_num").maybeSingle();
   const lastKnownNum = configRow ? parseInt(configRow.value, 10) : 0;
 
   // Step 1: find Ebola DRC outbreak row
