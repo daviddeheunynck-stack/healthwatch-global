@@ -66,6 +66,25 @@ async function findEbolaDrcRow(supabase: any) {
   return data as { id: string; cases: number; deaths: number; date: string; source_priority: number };
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+async function findBvdCountryRow(supabase: any, countryEn: string) {
+  const { data, error } = await supabase
+    .from("outbreaks")
+    .select("id, cases, deaths, date, source_priority")
+    .or("disease_en.ilike.%bundibugyo%,disease_en.ilike.%ebola%")
+    .ilike("country_en", `%${countryEn}%`)
+    .eq("active", true)
+    .order("source_priority", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+
+  if (error || !data) {
+    console.log(`[drc-sitrep] BVD row not found for ${countryEn}:`, error?.message ?? "no row");
+    return null;
+  }
+  return data as { id: string; cases: number; deaths: number; date: string; source_priority: number };
+}
+
 // ── 2. Detect latest situation report via ReliefWeb API ──────────────────────
 // ReliefWeb aggregates DRC Ministry of Health / INSP sitreps within ~24h.
 // This replaces the broken WHO AFRO page (restructured, sitreps removed).
@@ -142,18 +161,18 @@ interface SitrepData {
   num:    number;
 }
 
-async function extractFromPdf(pdfUrl: string, num: number): Promise<SitrepData | null> {
+async function extractFromPdf(pdfUrl: string, num: number): Promise<{ data: SitrepData | null; text: string | null }> {
   let buffer: Buffer;
   try {
     const res = await fetch(pdfUrl, {
       headers: FETCH_HEADERS,
       signal: AbortSignal.timeout(30000),
     });
-    if (!res.ok) { console.log(`[drc-sitrep] PDF download → HTTP ${res.status}`); return null; }
+    if (!res.ok) { console.log(`[drc-sitrep] PDF download → HTTP ${res.status}`); return { data: null, text: null }; }
     buffer = Buffer.from(await res.arrayBuffer());
   } catch (e) {
     console.log("[drc-sitrep] PDF download:", errorMessage(e));
-    return null;
+    return { data: null, text: null };
   }
 
   let text: string;
@@ -164,10 +183,10 @@ async function extractFromPdf(pdfUrl: string, num: number): Promise<SitrepData |
     text = result.text;
   } catch (e) {
     console.log("[drc-sitrep] pdf-parse error:", errorMessage(e));
-    return null;
+    return { data: null, text: null };
   }
 
-  return parseSitrepText(text, num, pdfUrl);
+  return { data: parseSitrepText(text, num, pdfUrl), text };
 }
 
 function parseSitrepText(text: string, num: number, url: string): SitrepData | null {
@@ -222,6 +241,71 @@ function parseSitrepText(text: string, num: number, url: string): SitrepData | n
   }
 
   return { cases, deaths, date, num };
+}
+
+function extractDate(text: string): string | null {
+  const t = text.replace(/[ \t]+/g, " ").replace(/\r/g, "");
+  const m = /(?:as\s+of|au|du)\s+(\d{1,2})\s+(january|february|march|april|may|june|july|august|september|october|november|december|jan|feb|mar|apr|jun|jul|aug|sep|oct|nov|dec|janvier|février|fevrier|mars|avril|mai|juin|juillet|août|aout|septembre|octobre|novembre|décembre|decembre)\s+(\d{4})/i.exec(t);
+  if (!m) return null;
+  const month = MONTHS[m[2].toLowerCase()];
+  return month ? `${m[3]}-${month}-${m[1].padStart(2, "0")}` : null;
+}
+
+const COUNTRY_ALIASES: Record<string, string[]> = {
+  Uganda: ["Uganda", "Ouganda"],
+  France: ["France"],
+};
+
+function parseCountryRow(text: string, country: string): { cases: number; deaths: number } | null {
+  const names = COUNTRY_ALIASES[country] ?? [country];
+  const t = text.replace(/\r/g, "").replace(/[ \t]+/g, " ");
+
+  for (const name of names) {
+    const idx = t.search(new RegExp("\\b" + name + "\\b", "i"));
+    if (idx < 0) continue;
+
+    // Collect numbers in the ~300 chars following the country name
+    const context = t.slice(idx + name.length, idx + name.length + 300);
+    const nums = Array.from(
+      context.matchAll(/(\d{1,3}(?:[\s,]\d{3})*|\d+)/g),
+      (m) => parseInt(m[1].replace(/[\s,]/g, ""), 10),
+    ).filter((n) => !isNaN(n) && n < 100_000);
+
+    if (nums.length < 2) continue;
+
+    // WHO BVD sitrep table: Confirmed | Probable | Suspected | Deaths
+    // 4+ columns → cols 0=cases, 3=deaths; 2 columns → 0=cases, 1=deaths
+    const cases  = nums[0];
+    const deaths = nums.length >= 4 ? nums[3] : nums[1];
+
+    if (cases < 0 || deaths < 0 || deaths > cases) continue;
+
+    console.log(`[drc-sitrep] ${country}: cases=${cases}, deaths=${deaths}`);
+    return { cases, deaths };
+  }
+  return null;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+async function updateSatelliteCountry(supabase: any, countryEn: string, cases: number, deaths: number, date: string, source: string): Promise<boolean> {
+  const row = await findBvdCountryRow(supabase, countryEn);
+  if (!row) return false;
+  if (row.cases === cases && row.deaths === deaths) {
+    console.log(`[drc-sitrep] ${countryEn}: already up to date (${cases}/${deaths})`);
+    return false;
+  }
+  const { error } = await supabase
+    .from("outbreaks")
+    .update({ cases, deaths, date, source, updated_at: new Date().toISOString(), source_priority: 5 })
+    .eq("id", row.id)
+    .lte("source_priority", 5);
+
+  if (error) {
+    console.error(`[drc-sitrep] ${countryEn} DB error:`, error.message);
+    return false;
+  }
+  console.log(`[drc-sitrep] ✅ ${countryEn}: ${cases} cas / ${deaths} décès / ${date}`);
+  return true;
 }
 
 // ── 4. Email helpers ──────────────────────────────────────────────────────────
@@ -384,7 +468,9 @@ export async function GET(req: NextRequest) {
   }
 
   // Step 3: extract data from PDF (if available)
-  const data = latest.pdfUrl ? await extractFromPdf(latest.pdfUrl, latest.num) : null;
+  const extracted = latest.pdfUrl ? await extractFromPdf(latest.pdfUrl, latest.num) : { data: null, text: null };
+  const data      = extracted.data;
+  const pdfText   = extracted.text;
   console.log(`[drc-sitrep] Extracted:`, data);
 
   if (data) {
@@ -418,13 +504,27 @@ export async function GET(req: NextRequest) {
     if (adminEmail) await sendEmail(adminEmail, subject, html);
   }
 
+  // Step 4c: update satellite countries (Uganda, France) from the same PDF text
+  let satelliteUpdated = 0;
+  if (pdfText) {
+    const sitrepDate = data?.date ?? extractDate(pdfText) ?? new Date().toISOString().split("T")[0];
+    const pdfSource  = latest.pdfUrl ?? latest.pageUrl;
+    for (const country of ["Uganda", "France"]) {
+      const countryRow = parseCountryRow(pdfText, country);
+      if (countryRow) {
+        const ok = await updateSatelliteCountry(supabase, country, countryRow.cases, countryRow.deaths, sitrepDate, pdfSource);
+        if (ok) satelliteUpdated++;
+      }
+    }
+  }
+
   // Step 5: persist last sitrep number
   await supabase.from("site_config").upsert({
     key:        "ebola_drc_last_sitrep_num",
     value:      String(latest.num),
     updated_at: new Date().toISOString(),
   });
-  await logCronRun(supabase, "sync-drc-sitrep", "ok", data ? 1 : 0);
+  await logCronRun(supabase, "sync-drc-sitrep", "ok", (data ? 1 : 0) + satelliteUpdated);
 
   return NextResponse.json({
     status:     data ? "auto_updated" : "manual_needed",
