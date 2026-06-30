@@ -20,6 +20,11 @@ export async function GET(req: NextRequest) {
   if (!cronSecret || req.headers.get("authorization") !== `Bearer ${cronSecret}`)
     return new Response("Unauthorized", { status: 401 });
 
+  const checkInId = Sentry.captureCheckIn(
+    { monitorSlug: "health-check", status: "in_progress" },
+    { schedule: { type: "crontab", value: "5 7 * * *" }, checkinMargin: 10, maxRuntime: 1, timezone: "UTC" },
+  );
+
   const brevoKey = clean(process.env.BREVO_API_KEY);
 
   const supabase = createClient(
@@ -122,6 +127,12 @@ export async function GET(req: NextRequest) {
   }
 
   await logCronRun(supabase, "health-check", hasOverdue ? "error" : "ok", overdue.length);
+
+  Sentry.captureCheckIn({
+    checkInId,
+    monitorSlug: "health-check",
+    status: hasOverdue ? "error" : "ok",
+  });
 
   return Response.json({ ok: !hasOverdue, total, high, pheic, overdue, cronStatuses });
 }
