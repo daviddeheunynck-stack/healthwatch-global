@@ -14,6 +14,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { createHmac } from "crypto";
 import * as Sentry from "@sentry/nextjs";
+import { logCronRun } from "@/lib/cron-monitor";
 import { computeEpidemicMetrics } from "@/lib/epidemic-metrics";
 import { getCountryCoords } from "@/lib/country-coords";
 import { haversineKm } from "@/lib/haversine";
@@ -102,8 +103,10 @@ export async function GET(req: NextRequest) {
     .select("id, url, secret, filters, last_triggered_at, last_fired_cases, created_at")
     .eq("active", true);
 
-  if (wErr || !webhooks?.length)
+  if (wErr || !webhooks?.length) {
+    await logCronRun(supabase, "trigger-webhooks", "ok", 0);
     return NextResponse.json({ ok: true, fired: 0, note: "no active webhooks" });
+  }
 
   let totalFired = 0;
   const now = new Date().toISOString();
@@ -258,5 +261,6 @@ export async function GET(req: NextRequest) {
       .eq("id", webhook.id);
   }
 
+  await logCronRun(supabase, "trigger-webhooks", "ok", totalFired);
   return NextResponse.json({ ok: true, fired: totalFired });
 }

@@ -79,4 +79,7 @@ export const CRON_WINDOWS: Record<string, number> = {
   "winback-sequence":    26,  // daily — churn recovery
   "weekly-digest":      200,  // weekly Mon
   "send-sitrep-emails": 200,  // weekly Mon
+  "weekly-signal":      200,  // weekly Mon (free-user newsletter)
+  // ── Enterprise & infra crons ──────────────────────────────────────────────────
+  "trigger-webhooks":   2,    // every 30min — enterprise webhook delivery
 };

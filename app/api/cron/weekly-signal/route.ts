@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import * as Sentry from "@sentry/nextjs";
+import { logCronRun } from "@/lib/cron-monitor";
 
 export const dynamic = "force-dynamic";
 
@@ -124,6 +125,7 @@ export async function GET(req: NextRequest) {
     .limit(3);
 
   if (outErr || !outbreaks?.length) {
+    await logCronRun(supabase, "weekly-signal", "ok", 0);
     return NextResponse.json({ skipped: "no HIGH outbreaks" });
   }
 
@@ -136,6 +138,7 @@ export async function GET(req: NextRequest) {
     .lt("created_at", new Date(Date.now() - 86_400_000).toISOString());
 
   if (userErr || !users?.length) {
+    await logCronRun(supabase, "weekly-signal", "ok", 0);
     return NextResponse.json({ skipped: "no free users" });
   }
 
@@ -160,5 +163,6 @@ export async function GET(req: NextRequest) {
     }
   }
 
+  await logCronRun(supabase, "weekly-signal", "ok", sent);
   return NextResponse.json({ sent, failed, outbreaks: outbreaks.length });
 }
