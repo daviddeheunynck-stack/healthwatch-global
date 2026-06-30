@@ -103,12 +103,14 @@ async function fetchBrazilDengue(): Promise<Found | null> {
       const data = await res.json() as InfoDengueRecord[];
       if (!Array.isArray(data) || data.length === 0) { await delay(120); continue; }
 
-      // Last record = most recent reported week; notif_accum_year = YTD total
-      const last       = data[data.length - 1];
-      const cityCases  = last.notif_accum_year ?? 0;
+      // The InfoDengue API returns records in descending chronological order
+      // (newest first), so data[data.length-1] is the OLDEST week, not the newest.
+      // Find the record with the highest data_iniSE (= most recent epidemiological week).
+      const latest     = data.reduce((best, r) => (r.data_iniSE ?? 0) > (best.data_iniSE ?? 0) ? r : best, data[0]);
+      const cityCases  = latest.notif_accum_year ?? 0;
       totalCases      += cityCases;
 
-      if ((last.data_iniSE ?? 0) > latestDateMs) latestDateMs = last.data_iniSE;
+      if ((latest.data_iniSE ?? 0) > latestDateMs) latestDateMs = latest.data_iniSE;
       if (cityCases > 0) citySummary.push(`${city.name} (${cityCases.toLocaleString("en")})`);
     } catch {
       // skip city on network error

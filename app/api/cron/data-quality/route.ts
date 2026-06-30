@@ -318,6 +318,34 @@ export async function GET(req: NextRequest) {
     await new Promise((r) => setTimeout(r, 150));
   }
 
+  // ── 4f. Seed data freshness check ────────────────────────────────────────────
+  // Seeds managed by sync-who-regional / sync-endemic-data must stay current.
+  // Two tiers:
+  //   - High-frequency (InfoDengue, PAHO): flag if > 30 days without update
+  //   - Annual reference (WHO GHO, etc.):  flag if > 730 days (data > 2 years old)
+  // This catches bugs like the InfoDengue newest-first ordering bug (dengue Brazil
+  // stuck at Jan 4) before they silently persist for months.
+  const SEED_FRESH_DAYS_HIGH = 30;
+  const SEED_FRESH_DAYS_REF  = 730;
+  const HIGH_FREQ_SOURCES = ["info.dengue", "paho.org", "reliefweb.int"];
+  const seedFreshHigh = new Date(Date.now() - SEED_FRESH_DAYS_HIGH * 86_400_000).toISOString().split("T")[0];
+  const seedFreshRef  = new Date(Date.now() - SEED_FRESH_DAYS_REF  * 86_400_000).toISOString().split("T")[0];
+
+  for (const row of rows ?? []) {
+    if (!row.is_seed || !row.date) continue;
+    const src = (row.source ?? "").toLowerCase();
+    const isHighFreq = HIGH_FREQ_SOURCES.some(s => src.includes(s));
+    const threshold  = isHighFreq ? seedFreshHigh : seedFreshRef;
+    if (row.date <= threshold) {
+      const daysSince = Math.round((Date.now() - new Date(row.date).getTime()) / 86_400_000);
+      const cadence   = isHighFreq ? `attendu toutes les ${SEED_FRESH_DAYS_HIGH}j` : `donnée de référence annuelle`;
+      needsReview.push({
+        label: `[SEED] ${row.disease} / ${row.country}`,
+        detail: `Donnée périmée — ${daysSince}j sans mise à jour (date: ${row.date}, ${cadence}). Vérifier que le cron sync-who-regional tourne correctement.`,
+      });
+    }
+  }
+
   // ── 5. Notable movements (top 5 largest absolute change, no anomaly) ──────
   type Movement = { label: string; before: number; after: number; delta: number };
   const movements: Movement[] = [];
