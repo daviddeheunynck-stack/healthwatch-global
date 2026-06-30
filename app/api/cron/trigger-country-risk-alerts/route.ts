@@ -1,6 +1,5 @@
 import { NextRequest } from "next/server";
 import { createClient } from "@supabase/supabase-js";
-import { Resend } from "resend";
 import * as Sentry from "@sentry/nextjs";
 
 export const dynamic = "force-dynamic";
@@ -27,9 +26,20 @@ export async function GET(req: NextRequest) {
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.SUPABASE_SERVICE_ROLE_KEY!
   );
-  const resendKey = (process.env.RESEND_API_KEY ?? "").replace(/^﻿/, "").trim();
-  if (!resendKey) return Response.json({ ok: true, skipped: "RESEND_API_KEY not configured" });
-  const resend = new Resend(resendKey);
+  const brevoKey = (process.env.BREVO_API_KEY ?? "").replace(/^﻿/, "").trim();
+  if (!brevoKey) return Response.json({ ok: true, skipped: "BREVO_API_KEY not configured" });
+
+  const sendEmail = async (to: string, subject: string, html: string) => {
+    const res = await fetch("https://api.brevo.com/v3/smtp/email", {
+      method: "POST",
+      headers: { "api-key": brevoKey, "Content-Type": "application/json" },
+      body: JSON.stringify({
+        sender: { name: "HealthWatch Global", email: "alerts@healthwatch-global.com" },
+        to: [{ email: to }], subject, htmlContent: html,
+      }),
+    });
+    if (!res.ok) throw new Error(`Brevo error ${res.status}: ${await res.text()}`);
+  };
 
   const { data: alerts } = await supabase
     .from("country_risk_alerts")
@@ -67,7 +77,7 @@ export async function GET(req: NextRequest) {
     const top = matches[0];
     const pheic = top.is_pheic ? " [PHEIC]" : "";
     const cfr =
-      top.cases > 0 && top.deaths > 0
+      top.cases > 0 && top.deaths != null && top.deaths > 0
         ? `CFR ${(top.deaths / top.cases * 100).toFixed(1)}%`
         : "";
     const level = (top.risk_level ?? "unknown").toUpperCase();
@@ -112,27 +122,20 @@ export async function GET(req: NextRequest) {
 </div>`;
 
     try {
-      await resend.emails.send({
-        from: "HealthWatch Global <alerts@healthwatch-global.com>",
-        to: alert.email,
-        subject,
-        html,
-      });
-
-      void Promise.resolve(
-        supabase.from("alert_notifications").insert({
-          user_id: alert.user_id,
-          type: "country_risk",
-          title: subject,
-          body: `${top.disease_en} · ${alert.country_en} · ${(top.risk_level ?? "unknown").toUpperCase()}`,
-        })
-      ).catch(() => {});
-
+      // Update dedup marker BEFORE sending — prevents re-send on cron retry
       await supabase
         .from("country_risk_alerts")
         .update({ last_fired_at: new Date().toISOString() })
         .eq("id", alert.id);
 
+      await supabase.from("alert_notifications").insert({
+        user_id: alert.user_id,
+        type: "country_risk",
+        title: subject,
+        body: `${top.disease_en} · ${alert.country_en} · ${(top.risk_level ?? "unknown").toUpperCase()}`,
+      }).then(() => {}, () => {});
+
+      await sendEmail(alert.email, subject, html);
       fired++;
     } catch (err) {
       console.error(`[trigger-country-risk-alerts] Failed for alert ${alert.id}:`, err);

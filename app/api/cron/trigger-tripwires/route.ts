@@ -11,7 +11,6 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
-import { Resend } from "resend";
 import * as Sentry from "@sentry/nextjs";
 
 export const dynamic = "force-dynamic";
@@ -22,8 +21,22 @@ const clean = (v: string | undefined) => (v || "").replace(new RegExp("^" + BOM)
 const SUPABASE_URL     = clean(process.env.NEXT_PUBLIC_SUPABASE_URL);
 const SUPABASE_SERVICE = clean(process.env.SUPABASE_SERVICE_ROLE_KEY);
 const CRON_SECRET      = clean(process.env.CRON_SECRET);
-const RESEND_KEY       = clean(process.env.RESEND_API_KEY);
+const BREVO_KEY        = clean(process.env.BREVO_API_KEY);
 const APP_URL          = clean(process.env.NEXT_PUBLIC_APP_URL) || "https://healthwatch-global.com";
+
+async function sendEmail(to: string, subject: string, html: string) {
+  const res = await fetch("https://api.brevo.com/v3/smtp/email", {
+    method: "POST",
+    headers: { "api-key": BREVO_KEY, "Content-Type": "application/json" },
+    body: JSON.stringify({
+      sender:      { name: "HealthWatch Global", email: "alerts@healthwatch-global.com" },
+      to:          [{ email: to }],
+      subject,
+      htmlContent: html,
+    }),
+  });
+  if (!res.ok) throw new Error(`Brevo error ${res.status}: ${await res.text()}`);
+}
 
 function esc(s: string): string {
   return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
@@ -107,10 +120,9 @@ export async function GET(req: NextRequest) {
   if (!CRON_SECRET || auth !== `Bearer ${CRON_SECRET}`)
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  if (!RESEND_KEY) return NextResponse.json({ ok: true, skipped: "RESEND_API_KEY not configured" });
+  if (!BREVO_KEY) return NextResponse.json({ ok: true, skipped: "BREVO_API_KEY not configured" });
 
   const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE);
-  const resend   = new Resend(RESEND_KEY);
 
   const { data: tripwires } = await supabase
     .from("outbreak_tripwires")
@@ -166,20 +178,15 @@ export async function GET(req: NextRequest) {
     const deepLink     = `${APP_URL}/${locale}?outbreak=${o.id}`;
 
     try {
-      // Log in-app notification (non-fatal)
-      void Promise.resolve(supabase.from("alert_notifications").insert({
+      await supabase.from("alert_notifications").insert({
         user_id:     tw.user_id,
         type:        "tripwire",
         title:       lc.inAppTitle(disease, country, casesStr),
         body:        lc.inAppBody(casesStr, thresholdStr, o.risk_level),
         outbreak_id: o.id,
-      })).catch(() => {});
+      }).then(() => {}, () => {});
 
-      await resend.emails.send({
-        from: "HealthWatch Global <alerts@healthwatch-global.com>",
-        to:   tw.email,
-        subject: `[HealthWatch] Tripwire : ${disease} — ${country} (${casesStr})`,
-        html: `
+      await sendEmail(tw.email, `[HealthWatch] Tripwire : ${disease} — ${country} (${casesStr})`, `
 <div dir="${isRtl ? "rtl" : "ltr"}" style="font-family:sans-serif;max-width:520px;margin:0 auto;padding:24px;background:#0f172a;color:#e2e8f0;border-radius:12px;direction:${isRtl ? "rtl" : "ltr"};text-align:${isRtl ? "right" : "left"}">
   <p style="color:#f87171;font-size:18px;font-weight:700;margin:0 0 8px">${lc.emailTitle}</p>
   <p style="margin:0 0 16px;font-size:14px;color:#94a3b8">HealthWatch Global</p>
@@ -201,8 +208,7 @@ export async function GET(req: NextRequest) {
     ${lc.footer(thresholdStr)}
     <br/>To manage your tripwires: ${APP_URL}
   </p>
-</div>`,
-      });
+</div>`);
       fired++;
     } catch (err) {
       console.error(`[trigger-tripwires] Failed for tripwire ${tw.id}:`, err);
