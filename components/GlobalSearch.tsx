@@ -179,8 +179,8 @@ export default function GlobalSearch() {
         aria-label="Search"
       >
         <Search className="w-3.5 h-3.5" />
-        <span className="hidden sm:inline">{l === "ar" ? "بحث" : l === "fr" ? "Chercher" : l === "es" ? "Buscar" : l === "id" ? "Cari" : "Search"}</span>
-        <kbd className="hidden sm:inline text-xs bg-gray-700 text-gray-400 px-1.5 py-0.5 rounded font-mono">⌘K</kbd>
+        <span className="hidden xl:inline">{l === "ar" ? "بحث" : l === "fr" ? "Chercher" : l === "es" ? "Buscar" : l === "id" ? "Cari" : "Search"}</span>
+        <kbd className="hidden xl:inline text-xs bg-gray-700 text-gray-400 px-1.5 py-0.5 rounded font-mono">⌘K</kbd>
       </button>
     );
   }
