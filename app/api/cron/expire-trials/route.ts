@@ -7,6 +7,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { buildTrialExpiredEmail } from "@/lib/onboarding-emails";
 import * as Sentry from "@sentry/nextjs";
+import { logCronRun } from "@/lib/cron-monitor";
 
 export const dynamic = "force-dynamic";
 
@@ -54,11 +55,14 @@ export async function GET(req: NextRequest) {
 
   if (fetchErr) {
     console.error("[expire-trials] DB query error:", fetchErr);
+    Sentry.captureException(fetchErr, { tags: { cron: "expire-trials" } });
+    await logCronRun(supabase, "expire-trials", "error", 0, fetchErr.message);
     return NextResponse.json({ error: fetchErr.message }, { status: 500 });
   }
 
   if (!expired || expired.length === 0) {
     console.log("[expire-trials] No expired trials to downgrade.");
+    await logCronRun(supabase, "expire-trials", "ok", 0);
     return NextResponse.json({ downgraded: 0 });
   }
 
@@ -77,6 +81,8 @@ export async function GET(req: NextRequest) {
 
   if (updateErr) {
     console.error("[expire-trials] Batch update error:", updateErr);
+    Sentry.captureException(updateErr, { tags: { cron: "expire-trials" } });
+    await logCronRun(supabase, "expire-trials", "error", 0, updateErr.message);
     return NextResponse.json({ error: updateErr.message }, { status: 500 });
   }
 
@@ -102,5 +108,6 @@ export async function GET(req: NextRequest) {
   const hb = process.env.BETTERSTACK_HB_EXPIRE_TRIALS;
   if (hb) fetch(hb).catch(() => {});
 
+  await logCronRun(supabase, "expire-trials", "ok", ids.length);
   return NextResponse.json({ downgraded: ids.length, users: expired.map((p) => p.email) });
 }

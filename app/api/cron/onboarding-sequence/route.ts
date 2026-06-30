@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { buildJ3Email, buildJ7Email, buildJ12Email, buildPilotConversionEmail } from "@/lib/onboarding-emails";
 import * as Sentry from "@sentry/nextjs";
+import { logCronRun } from "@/lib/cron-monitor";
 
 export const dynamic = "force-dynamic";
 
@@ -60,6 +61,8 @@ export async function GET(req: NextRequest) {
 
   if (j3Err) {
     console.error("[onboarding] J+3 query error:", j3Err);
+    Sentry.captureException(j3Err, { tags: { cron: "onboarding-sequence", step: "j3-query" } });
+    await logCronRun(supabase, "onboarding-sequence", "error", 0, j3Err.message);
     return NextResponse.json({ error: j3Err.message }, { status: 500 });
   }
 
@@ -75,6 +78,8 @@ export async function GET(req: NextRequest) {
 
   if (j7Err) {
     console.error("[onboarding] J+7 query error:", j7Err);
+    Sentry.captureException(j7Err, { tags: { cron: "onboarding-sequence", step: "j7-query" } });
+    await logCronRun(supabase, "onboarding-sequence", "error", 0, j7Err.message);
     return NextResponse.json({ error: j7Err.message }, { status: 500 });
   }
 
@@ -94,6 +99,8 @@ export async function GET(req: NextRequest) {
 
   if (j12Err) {
     console.error("[onboarding] J+12 query error:", j12Err);
+    Sentry.captureException(j12Err, { tags: { cron: "onboarding-sequence", step: "j12-query" } });
+    await logCronRun(supabase, "onboarding-sequence", "error", 0, j12Err.message);
     return NextResponse.json({ error: j12Err.message }, { status: 500 });
   }
 
@@ -115,6 +122,8 @@ export async function GET(req: NextRequest) {
 
   if (j32Err) {
     console.error("[onboarding] J+32 query error:", j32Err);
+    Sentry.captureException(j32Err, { tags: { cron: "onboarding-sequence", step: "j32-query" } });
+    await logCronRun(supabase, "onboarding-sequence", "error", 0, j32Err.message);
     return NextResponse.json({ error: j32Err.message }, { status: 500 });
   }
 
@@ -193,6 +202,8 @@ export async function GET(req: NextRequest) {
   const hb = process.env.BETTERSTACK_HB_ONBOARDING;
   if (hb) fetch(hb).catch(() => {});
 
+  const totalSent = j3Sent + j7Sent + j12Sent + j32Sent;
+  await logCronRun(supabase, "onboarding-sequence", "ok", totalSent);
   console.log(`[onboarding] J+3: ${j3Sent}/${j3Failed} | J+7: ${j7Sent}/${j7Failed} | J+12: ${j12Sent}/${j12Failed} | J+32: ${j32Sent}/${j32Failed}`);
 
   return NextResponse.json({
