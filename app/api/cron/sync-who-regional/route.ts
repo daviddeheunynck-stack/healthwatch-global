@@ -20,6 +20,7 @@ import { normalizeDisease } from "@/lib/disease-data";
 import { findCountry } from "@/lib/geo-data";
 import { extractNumbers, assessRisk } from "@/lib/outbreak-parser";
 import { errorMessage } from "@/lib/error";
+import * as Sentry from "@sentry/nextjs";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 300; // ~100 targets × ~2s each; Vercel Pro allows 300s for crons
@@ -31,8 +32,7 @@ const SUPABASE_URL         = clean(process.env.NEXT_PUBLIC_SUPABASE_URL);
 const SUPABASE_SERVICE_KEY = clean(process.env.SUPABASE_SERVICE_ROLE_KEY);
 const CRON_SECRET          = clean(process.env.CRON_SECRET);
 
-// TODO: replace with approved appname once ReliefWeb registration is confirmed
-const RELIEFWEB_APPNAME = "healthwatch-global";
+const RELIEFWEB_APPNAME = clean(process.env.RELIEFWEB_APPNAME) || "healthwatch-global";
 const RELIEFWEB_BASE    = "https://api.reliefweb.int/v2/reports";
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
@@ -439,6 +439,10 @@ async function queryReliefWeb(target: Target): Promise<Found | null> {
       },
       signal: AbortSignal.timeout(10_000),
     });
+    if (res.status === 403) {
+      console.error(`[regional] ReliefWeb 403 — appname "${RELIEFWEB_APPNAME}" not approved. Register at apidoc.reliefweb.int`);
+      return null;
+    }
     if (!res.ok) return null;
 
     const json = await res.json() as { data?: RWReport[] };
@@ -695,6 +699,24 @@ export async function GET(req: NextRequest) {
   const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
   const today    = new Date().toISOString().substring(0, 10);
 
+  // Probe ReliefWeb once — 403 means appname not approved; skip all non-custom targets
+  let reliefWebOk = true;
+  try {
+    const probe = await fetch(
+      `${RELIEFWEB_BASE}?appname=${encodeURIComponent(RELIEFWEB_APPNAME)}&limit=1&fields[include][]=title`,
+      { headers: { "User-Agent": "HealthWatch-Global/1.0 (contact@healthwatch-global.com)" },
+        signal: AbortSignal.timeout(8_000) }
+    );
+    if (probe.status === 403) {
+      reliefWebOk = false;
+      const msg = `ReliefWeb 403 — appname "${RELIEFWEB_APPNAME}" not approved. Register at apidoc.reliefweb.int and set RELIEFWEB_APPNAME env var.`;
+      console.error(`[regional] ${msg}`);
+      Sentry.captureMessage(msg, "error");
+    }
+  } catch {
+    // Network error — attempt anyway, individual targets will fail gracefully
+  }
+
   // Load existing outbreaks (active + recently deactivated to avoid ghost dups)
   const { data: existing, error: fetchErr } = await supabase
     .from("outbreaks")
@@ -742,7 +764,7 @@ export async function GET(req: NextRequest) {
 
     if (!target.fetcher) await delay(300); // rate-limit ReliefWeb; InfoDengue self-paces internally
 
-    const found = await (target.fetcher ? target.fetcher() : queryReliefWeb(target));
+    const found = await (target.fetcher ? target.fetcher() : (reliefWebOk ? queryReliefWeb(target) : null));
 
     if (!found) {
       const source = target.fetcher ? "custom fetcher" : "ReliefWeb";

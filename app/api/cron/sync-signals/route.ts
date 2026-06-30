@@ -69,6 +69,7 @@ export async function GET(req: NextRequest) {
       headers: { "User-Agent": "HealthWatch Global / contact@healthwatch-global.com" },
       next: { revalidate: 0 },
     });
+    if (res.status === 403) throw new Error("ReliefWeb 403 — appname not approved. Register at apidoc.reliefweb.int and set RELIEFWEB_APPNAME env var.");
     if (!res.ok) throw new Error(`ReliefWeb HTTP ${res.status}`);
     const json = await res.json();
     rwData = json.data ?? [];
