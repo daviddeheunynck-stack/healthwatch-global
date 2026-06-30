@@ -1,7 +1,7 @@
 import { NextRequest } from "next/server";
 import { createClient } from "@supabase/supabase-js";
-import { Resend } from "resend";
-import { CRON_WINDOWS } from "@/lib/cron-monitor";
+import * as Sentry from "@sentry/nextjs";
+import { CRON_WINDOWS, logCronRun } from "@/lib/cron-monitor";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 30;
@@ -20,8 +20,7 @@ export async function GET(req: NextRequest) {
   if (!cronSecret || req.headers.get("authorization") !== `Bearer ${cronSecret}`)
     return new Response("Unauthorized", { status: 401 });
 
-  const resendKey = clean(process.env.RESEND_API_KEY);
-  if (!resendKey) return new Response("RESEND_API_KEY not set", { status: 500 });
+  const brevoKey = clean(process.env.BREVO_API_KEY);
 
   const supabase = createClient(
     clean(process.env.NEXT_PUBLIC_SUPABASE_URL),
@@ -89,13 +88,40 @@ export async function GET(req: NextRequest) {
   <p style="margin-top:16px;font-size:11px;color:#475569">${new Date().toISOString()}</p>
 </div>`;
 
-  const resend = new Resend(resendKey);
-  await resend.emails.send({
-    from:    "HealthWatch Global <alerts@healthwatch-global.com>",
-    to:      "david.deheunynck@yahoo.fr",
-    subject: `${emoji} HealthWatch — ${total ?? "?"} foyers${hasOverdue ? ` · ${overdue.length} cron(s) en retard` : ""} · ${new Date().toLocaleDateString("fr-FR")}`,
-    html,
-  });
+  const subject = `${emoji} HealthWatch — ${total ?? "?"} foyers${hasOverdue ? ` · ${overdue.length} cron(s) en retard` : ""} · ${new Date().toLocaleDateString("fr-FR")}`;
+
+  if (!brevoKey) {
+    Sentry.captureMessage("[health-check] BREVO_API_KEY not set — health report not sent", "error");
+  } else {
+    try {
+      const emailRes = await fetch("https://api.brevo.com/v3/smtp/email", {
+        method: "POST",
+        headers: { "api-key": brevoKey, "Content-Type": "application/json" },
+        body: JSON.stringify({
+          sender:      { name: "HealthWatch Global", email: "alerts@healthwatch-global.com" },
+          to:          [{ email: "david.deheunynck@yahoo.fr" }],
+          subject,
+          htmlContent: html,
+        }),
+      });
+      if (!emailRes.ok) {
+        const errText = await emailRes.text();
+        Sentry.captureMessage(`[health-check] Brevo ${emailRes.status}: ${errText}`, "error");
+      }
+    } catch (emailErr) {
+      Sentry.captureException(emailErr, { tags: { cron: "health-check" } });
+    }
+  }
+
+  // Alert Sentry directly if crons are overdue (independent of email delivery)
+  if (hasOverdue) {
+    Sentry.captureMessage(
+      `[health-check] ${overdue.length} cron(s) overdue: ${overdue.join(", ")}`,
+      "warning",
+    );
+  }
+
+  await logCronRun(supabase, "health-check", hasOverdue ? "error" : "ok", overdue.length);
 
   return Response.json({ ok: !hasOverdue, total, high, pheic, overdue, cronStatuses });
 }
