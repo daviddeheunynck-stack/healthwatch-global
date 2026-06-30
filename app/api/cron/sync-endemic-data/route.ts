@@ -682,7 +682,11 @@ export async function GET(req: NextRequest) {
       </p>
     </div>`;
 
-  if (adminEmail) await sendEmail(adminEmail, subject, html);
+  // Only email when there are actual updates or real fetch/DB errors (not routine "no newer data").
+  const realErrors = skipped.filter((s) => !s.reason.startsWith("no newer data"));
+  if (adminEmail && (updates.length > 0 || realErrors.length > 0)) {
+    await sendEmail(adminEmail, subject, html);
+  }
   await logCronRun(supabase, "sync-endemic-data", "ok", updates.length);
 
   return NextResponse.json({
