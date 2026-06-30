@@ -118,7 +118,7 @@ export async function GET(req: NextRequest) {
   // ── 1. Load active rows ───────────────────────────────────────────────────
   const { data: rows, error: rowsErr } = await supabase
     .from("outbreaks")
-    .select("id, disease, disease_en, country, cases, deaths, date, source, is_seed, is_pheic")
+    .select("id, disease, disease_en, country, country_en, cases, deaths, date, source, is_seed, is_pheic")
     .eq("active", true);
 
   if (rowsErr) return NextResponse.json({ error: rowsErr.message }, { status: 500 });
@@ -343,6 +343,44 @@ export async function GET(req: NextRequest) {
         label: `[SEED] ${row.disease} / ${row.country}`,
         detail: `Donnée périmée — ${daysSince}j sans mise à jour (date: ${row.date}, ${cadence}). Vérifier que le cron sync-who-regional tourne correctement.`,
       });
+    }
+  }
+
+  // ── 4g. deaths=0 implausibilité pour maladies à mortalité connue ─────────────
+  // Couvre TOUTES les lignes (seed + non-seed). La section 4d ne couvre que les
+  // lignes non-seed pour ebola/marburg/nipah. Ce check élargit la couverture aux
+  // données seed et aux maladies à mortalité modérée mais systématique.
+  // deaths===0 = "zéro déclaré" (suspect) ; deaths===null = "non rapporté" (OK).
+  const LETHALITY_RULES: Array<{
+    pattern: RegExp;
+    minCases: number;
+    minCFRPct: number;
+    note: string;
+  }> = [
+    { pattern: /ebola|marburg/i,             minCases: 5,    minCFRPct: 30,   note: "CFR 25-90%" },
+    { pattern: /nipah/i,                     minCases: 5,    minCFRPct: 40,   note: "CFR 40-75%" },
+    { pattern: /mers/i,                      minCases: 10,   minCFRPct: 20,   note: "CFR ~35%" },
+    { pattern: /measles|rougeole|rubeola/i,  minCases: 1000, minCFRPct: 0.05, note: "CFR 0.05-1% selon région" },
+    { pattern: /leishmaniasis/i,             minCases: 100,  minCFRPct: 1,    note: "LV : CFR ~2.8% traité, >95% sans" },
+    { pattern: /cholera/i,                   minCases: 100,  minCFRPct: 0.5,  note: "CFR attendu 0.5-3% sans traitement rapide" },
+    { pattern: /yellow fever|fièvre jaune/i, minCases: 10,   minCFRPct: 5,    note: "fièvre jaune sévère : CFR 20-50%" },
+    { pattern: /diphtheria|diphtérie/i,      minCases: 50,   minCFRPct: 2,    note: "CFR 5-10% non vacciné" },
+  ];
+
+  for (const row of rows ?? []) {
+    if (row.deaths !== 0) continue;
+    const name = (row.disease_en ?? row.disease ?? "").toLowerCase();
+    for (const rule of LETHALITY_RULES) {
+      if (!rule.pattern.test(name)) continue;
+      if ((row.cases ?? 0) < rule.minCases) continue;
+      const expectedMin = Math.max(1, Math.round((row.cases ?? 0) * rule.minCFRPct / 100));
+      const seedTag = row.is_seed ? " [SEED]" : "";
+      const countryLabel = row.country_en ?? row.country ?? "?";
+      needsReview.push({
+        label: `[DEATHS=0?] ${row.disease_en ?? row.disease} / ${countryLabel}${seedTag}`,
+        detail: `deaths=0 avec ${(row.cases ?? 0).toLocaleString("fr-FR")} cas — suspect (${rule.note}, min ~${expectedMin} décès attendus). Vérifier si la source ne rapporte pas les décès (→ mettre NULL au lieu de 0).`,
+      });
+      break;
     }
   }
 
