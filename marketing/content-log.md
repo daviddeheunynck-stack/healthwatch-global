@@ -832,3 +832,204 @@ on private correspondence.
 3. **Screenshot 3** — Email digest reçu ou modal détail foyer — montre la profondeur
 
 *(À capturer sur le dashboard live avant 23h ce soir)*
+
+---
+
+## LinkedIn — Posts de prospection
+
+### Post 5 — 29 juin 2026 (Ebola DRC / Bundibugyo)
+
+> Your team monitors WHO, ECDC, CDC, and PAHO separately to track active outbreaks. That's 4+ sources, daily, across dozens of simultaneous events.
+>
+> There's a better way.
+>
+> This week alone: Ebola DRC surpassed 1,274 confirmed cases. NEJM confirmed the epidemic has "exceeded previous outbreaks in trajectory and scale." Nipah in Kerala. Hantavirus cluster contained across three continents.
+>
+> Every active outbreak. Official sources. One platform.
+>
+> If your work depends on knowing what's happening before it becomes headline news, this is built for you.
+>
+> 👉 healthwatch-global.com
+>
+> #GlobalHealth #PublicHealth #OutbreakSurveillance #Epidemiology
+
+**Note :** trop long selon David. Prochains posts : 5-6 lignes max, un seul angle.
+
+---
+
+## X / Réponses — 29 juin 2026
+
+**Réponse à @Yash25571056 (Hiroshi Yasuda) — CDC Ebola escalation :**
+> "Cross-border spread to Uganda is what changes the calculus here. Tracking the trajectory. healthwatch-global.com"
+
+**Réponse à @NEJM — Bundibugyo 2026 review :**
+> "1,274 confirmed cases as of June 27 — unprecedented for Bundibugyo in any prior outbreak. Real-time tracking: healthwatch-global.com"
+
+---
+
+## Emails / DMs institutionnels — Vague 2 — 30 juin 2026
+
+**Canal :** LinkedIn DM (2e) ou InMail (3e) — email non utilisé sauf ACF (Olivier) qui a une adresse confirmée.
+**Relance J+10 :** 10 juillet 2026.
+
+| # | Contact | Institution | Canal | Statut |
+|---|---|---|---|---|
+| 1 | Tony Zitti | IRD | LinkedIn DM | ✅ Envoyé 30 juin |
+| 2 | Olivier Cheminat | ACF | LinkedIn DM | ✅ Envoyé 30 juin |
+| 3 | Justin-Bienvenu EYONG | MSF / Epicentre | LinkedIn DM | ✅ Envoyé 30 juin |
+| 4 | Anastasiia Borodina | IMC Ukraine | LinkedIn DM | ✅ Envoyé 30 juin |
+| 5 | Agnes Soucat | AFD / JHU | LinkedIn DM | ✅ Envoyé 30 juin (email non confirmé) |
+| 6 | Tumusime MUSAFIRI | PIH Rwanda | LinkedIn InMail | ✅ Envoyé 30 juin (email tumusime.musafiri@pih.org bounced) |
+| 7 | Juvénal NDAYIKEZA | IRC Burundi | LinkedIn DM | ✅ Envoyé 30 juin (pas d'email confirmé) |
+| 8 | Liliana Trujillo | INSP Mexique | LinkedIn InMail | ✅ Envoyé 30 juin |
+
+---
+
+### DM Tony Zitti (IRD) — 30 juin 2026
+
+**Objet InMail (si applicable) :** HealthWatch Global vient de lancer — données OMS + ECDC + PAHO agrégées en temps réel
+
+Bonjour Tony,
+
+HealthWatch Global vient de lancer. Dashboard qui agrège WHO DON, ECDC, PAHO et Africa CDC en temps réel, classification RSI IMMÉDIAT/RAPIDE/SURVEILLANCE, 5 langues.
+
+Vu ton travail à l'IRD en santé publique et ton rôle de knowledge broker, HealthWatch donne aux chercheurs une source officielle consolidée pour les données de foyers actifs. Dengue, Paludisme, Mpox, Cholera en Afrique subsaharienne, avec export CSV, sans la recherche manuelle sur 4 portails distincts.
+
+Je peux t'ouvrir un accès Pro pour explorer, sans engagement, sans appel.
+
+healthwatch-global.com/fr
+
+Bien à toi,
+David Deheunynck
+HealthWatch Global
+
+---
+
+### DM Olivier Cheminat (ACF) — 30 juin 2026
+
+Bonjour Olivier,
+
+HealthWatch Global vient de lancer. Dashboard qui agrège WHO DON, ECDC, PAHO et Africa CDC en temps réel, classification RSI IMMÉDIAT/RAPIDE/SURVEILLANCE, 5 langues dont le français et l'arabe.
+
+Vu ton profil DHIS2 et systèmes d'information santé chez ACF, HealthWatch consolide en un seul outil la veille que vos équipes terrain font manuellement sur 4 sources. Données structurées par pays, maladie et niveau de risque, export CSV, alertes email.
+
+Pilote institutionnel 30 jours : 5 sièges, onboarding inclus, 250€/mois si votre équipe continue. Pas de procurement nécessaire pour démarrer.
+
+healthwatch-global.com/fr/disease/cholera
+
+Bien à vous,
+David Deheunynck
+HealthWatch Global
+
+---
+
+### DM Justin-Bienvenu EYONG (MSF / Epicentre) — 30 juin 2026
+
+Hi Justin-Bienvenu,
+
+HealthWatch Global just launched. Real-time dashboard aggregating WHO DON, ECDC, PAHO, and Africa CDC with IHR IMMEDIATE/RAPID/SURVEILLANCE classification across 5 languages.
+
+For Epicentre teams coordinating field response, HealthWatch consolidates the four sources your epidemiologists cross-reference manually. One classified view of active signals, updated every 4 hours, with email alerts by country and disease.
+
+30-day institutional pilot: 5 seats, full onboarding, 250€/month if your team wants to continue. No procurement required to start.
+
+healthwatch-global.com/en/disease/mpox
+
+Best,
+David Deheunynck
+HealthWatch Global
+
+---
+
+### DM Anastasiia Borodina (IMC Ukraine) — 30 juin 2026
+
+Hi Anastasiia,
+
+HealthWatch Global just launched. Real-time dashboard aggregating WHO DON, ECDC, PAHO, and Africa CDC with IHR IMMEDIATE/RAPID/SURVEILLANCE classification across 5 languages.
+
+For IMC teams in complex emergencies like Ukraine, HealthWatch gives public health specialists one consolidated view of active disease signals. Updated 4x/day from official sources, with email alerts by country and disease, no cross-referencing required.
+
+30-day institutional pilot: 5 seats, full onboarding, 250€/month if your team wants to continue. No procurement required to start.
+
+healthwatch-global.com/en
+
+Best,
+David Deheunynck
+HealthWatch Global
+
+---
+
+### DM Agnes Soucat (AFD / JHU) — 30 juin 2026
+
+Bonjour Agnes,
+
+HealthWatch Global vient de lancer. Dashboard qui agrège WHO DON, ECDC, PAHO et Africa CDC en temps réel, classification RSI IMMÉDIAT/RAPIDE/SURVEILLANCE, 5 langues.
+
+Pour les équipes AFD travaillant sur les programmes santé en Afrique et Asie du Sud-Est, HealthWatch donne une vue structurée du risque épidémique dans vos pays d'intervention. Ebola DRC, Choléra, Mpox Clade I, Dengue, sans la recherche manuelle sur 4 portails distincts.
+
+Pilote institutionnel 30 jours : 5 sièges, onboarding inclus, 250€/mois si votre équipe continue.
+
+healthwatch-global.com/fr
+
+Bien à vous,
+David Deheunynck
+HealthWatch Global
+
+---
+
+### InMail Tumusime MUSAFIRI (PIH Rwanda) — 30 juin 2026
+
+**Note :** email tumusime.musafiri@pih.org bounced "adresse introuvable". Passé en LinkedIn InMail.
+
+Hi Tumusime,
+
+HealthWatch Global just launched. Real-time dashboard aggregating WHO DON, ECDC, PAHO, and Africa CDC with automated IHR risk scoring across 5 languages.
+
+For PIH teams in Rwanda, HealthWatch gives epidemiologists one consolidated view of active signals. Marburg, Ebola DRC, Mpox Clade I, updated every 4 hours with email alerts by country and disease, without the cross-referencing overhead across 4 official portals.
+
+30-day institutional pilot: 5 seats, full onboarding, 250€/month if your team wants to continue. No procurement required to start.
+
+healthwatch-global.com/en/disease/cholera
+
+Best,
+David Deheunynck
+HealthWatch Global
+
+---
+
+### DM Juvénal NDAYIKEZA (IRC Burundi) — 30 juin 2026
+
+**Note :** IRC email format standard, mais adresse non confirmée. Passé en LinkedIn DM (2e connexion).
+**Langue :** anglais (Burundi bilingue, profil LinkedIn en anglais).
+
+Hi Juvénal,
+
+HealthWatch Global just launched. Real-time dashboard aggregating WHO DON, ECDC, PAHO, and Africa CDC with IHR risk classification across 5 languages.
+
+For IRC's emergency health teams operating in contexts like Burundi and the Great Lakes region, HealthWatch gives epidemiologists one consolidated view of active outbreak signals. Mpox DRC, Cholera, Ebola, no cross-referencing across WHO, ECDC, and PAHO required. Alerts by country, disease, and risk level.
+
+30-day institutional pilot: 5 seats, full onboarding, 250€/month if your team wants to continue. No procurement required to start.
+
+healthwatch-global.com/en/region/africa
+
+Best,
+David Deheunynck
+HealthWatch Global
+
+---
+
+### InMail Liliana Trujillo (INSP Mexique) — 30 juin 2026
+
+**Objet :** HealthWatch Global. Vigilancia epidémica consolidada para equipos INSP
+
+Hola Liliana,
+
+HealthWatch Global acaba de lanzar. Dashboard en tiempo real que agrega WHO DON, ECDC, PAHO y Africa CDC con clasificación RSI automática en 5 idiomas, incluido el español. Para los equipos del INSP, consolida en una sola herramienta la vigilancia que se hace manualmente en 4 fuentes, con alertas por país y enfermedad, exportación CSV.
+
+Piloto institucional 30 días: 5 accesos, onboarding incluido, 250€/mes si el equipo continúa. Sin proceso de compra para empezar.
+
+healthwatch-global.com/es/disease/dengue-fever
+
+Saludos,
+David Deheunynck
+HealthWatch Global

@@ -166,7 +166,7 @@ export default async function SitrepPage({
             </thead>
             <tbody>
               {preview.map((o, i) => {
-                const cfr    = o.cases > 0 ? (o.deaths / o.cases * 100).toFixed(1) : null;
+                const cfr    = o.cases > 0 && o.deaths !== null ? (o.deaths / o.cases * 100).toFixed(1) : null;
                 const cfrNum = cfr ? parseFloat(cfr) : null;
                 const cfrCls = cfrNum !== null && cfrNum > 10 ? "text-red-400 font-bold" :
                                cfrNum !== null && cfrNum > 3  ? "text-amber-400 font-semibold" : "text-gray-300";
@@ -183,7 +183,7 @@ export default async function SitrepPage({
                       {o.cases > 0 ? o.cases.toLocaleString() : <span className="text-gray-600">{c.noData}</span>}
                     </td>
                     <td className="px-3 py-2 text-right text-red-400">
-                      {o.deaths > 0 ? o.deaths.toLocaleString() : <span className="text-gray-600">{c.noData}</span>}
+                      {o.deaths !== null && o.deaths > 0 ? o.deaths.toLocaleString() : <span className="text-gray-600">{c.noData}</span>}
                     </td>
                     <td className={`px-3 py-2 text-right ${cfrCls}`}>
                       {cfr ? `${cfr}%` : <span className="text-gray-600">{c.noData}</span>}
@@ -343,7 +343,7 @@ export default async function SitrepPage({
           </thead>
           <tbody>
             {sorted.map((o, i) => {
-              const cfr    = o.cases > 0 ? (o.deaths / o.cases * 100).toFixed(1) : null;
+              const cfr    = o.cases > 0 && o.deaths !== null ? (o.deaths / o.cases * 100).toFixed(1) : null;
               const ci     = wilsonCI(o.deaths, o.cases);
               const cfrNum = cfr ? parseFloat(cfr) : null;
               const cfrCls = cfrNum !== null && cfrNum > 10 ? "text-red-400 font-bold" :
@@ -373,7 +373,7 @@ export default async function SitrepPage({
                     {o.cases > 0 ? o.cases.toLocaleString(locale === "ar" ? "ar-SA" : locale) : <span className="text-gray-600">{c.noData}</span>}
                   </td>
                   <td className="px-3 py-2 text-right text-red-400">
-                    {o.cases > 0 ? o.deaths.toLocaleString(locale === "ar" ? "ar-SA" : locale) : <span className="text-gray-600">{c.noData}</span>}
+                    {o.deaths !== null ? o.deaths.toLocaleString(locale === "ar" ? "ar-SA" : locale) : <span className="text-gray-600">{c.noData}</span>}
                   </td>
                   <td className={`px-3 py-2 text-right ${cfrCls}`}>
                     {cfr ? `${cfr}%` : <span className="text-gray-600">{c.noData}</span>}

@@ -51,7 +51,7 @@ export async function GET(req: NextRequest) {
 
   let query = service
     .from("outbreaks")
-    .select("id, disease_en, disease, country_en, country, region, cases, deaths, risk_level, is_pheic, date, updated_at, source, ihr_event_id, event_id, admin1, lat, lng")
+    .select("id, disease_en, disease, country_en, country, region, cases, deaths, is_seed, risk_level, is_pheic, date, updated_at, source, ihr_event_id, event_id, admin1, lat, lng")
     .order("cases", { ascending: false })
     .limit(limit);
 

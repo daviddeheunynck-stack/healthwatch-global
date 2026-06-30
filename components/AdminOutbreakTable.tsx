@@ -63,7 +63,12 @@ export default function AdminOutbreakTable({ initial }: { initial: Outbreak[] })
       case "country_en": v = (a.country_en || a.country || "").localeCompare(b.country_en || b.country || ""); break;
       case "region":     v = (a.region || "").localeCompare(b.region || ""); break;
       case "cases":      v = a.cases - b.cases; break;
-      case "deaths":     v = a.deaths - b.deaths; break;
+      case "deaths": {
+        if (a.deaths === null && b.deaths === null) { v = 0; break; }
+        if (a.deaths === null) { v = 1; break; }
+        if (b.deaths === null) { v = -1; break; }
+        v = a.deaths - b.deaths; break;
+      }
       case "risk_level": v = (RISK_ORDER[a.risk_level ?? ""] ?? 0) - (RISK_ORDER[b.risk_level ?? ""] ?? 0); break;
       case "date":       v = a.date.localeCompare(b.date); break;
       case "active":     v = (a.active ? 1 : 0) - (b.active ? 1 : 0); break;
@@ -255,7 +260,7 @@ export default function AdminOutbreakTable({ initial }: { initial: Outbreak[] })
                     <td className="px-4 py-3 text-gray-300">{o.country_en || o.country}</td>
                     <td className="px-4 py-3 text-gray-400 capitalize">{o.region}</td>
                     <td className="px-4 py-3 text-right text-gray-300">{o.cases.toLocaleString("en")}</td>
-                    <td className="px-4 py-3 text-right text-gray-400">{o.deaths.toLocaleString("en")}</td>
+                    <td className="px-4 py-3 text-right text-gray-400">{o.deaths !== null ? o.deaths.toLocaleString("en") : "—"}</td>
                     <td className="px-4 py-3"><RiskBadge level={o.risk_level as "high" | "medium" | "low"} /></td>
                     <td className="px-4 py-3 text-gray-400">{o.date}</td>
                     <td className="px-4 py-3 text-center">

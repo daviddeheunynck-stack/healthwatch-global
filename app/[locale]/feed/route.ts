@@ -81,7 +81,7 @@ export async function GET(
     const guid        = `${BASE_URL}/outbreak/${o.id}`;
 
     const statsLine = o.cases > 0
-      ? `${o.cases.toLocaleString(numLocale)} ${stats.cases} · ${o.deaths.toLocaleString(numLocale)} ${stats.deaths}`
+      ? `${o.cases.toLocaleString(numLocale)} ${stats.cases}${o.deaths !== null ? ` · ${o.deaths.toLocaleString(numLocale)} ${stats.deaths}` : ""}`
       : "";
 
     const descParts = [

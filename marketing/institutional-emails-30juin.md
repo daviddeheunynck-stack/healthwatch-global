@@ -11,14 +11,14 @@
 | # | Institution | Contact | Email | Statut |
 |---|---|---|---|---|
 | 1 | MSF / Epicentre | Épidémiologiste senior | epicentre@epicentre.msf.org (générique) ou LinkedIn | 🔍 LinkedIn — priorité Medical Coordinator / Field Epidemiologist |
-| 2 | IRC | Senior Health Officer | LinkedIn | 🔍 LinkedIn |
-| 3 | PIH (Partners in Health) | Epidemiologist / Research Coordinator | LinkedIn | 🔍 LinkedIn |
-| 4 | ACF (Action Contre la Faim) | Coordinateur médical / Épidémiologiste | LinkedIn | 🔍 LinkedIn |
-| 5 | IMC (International Medical Corps) | Senior Epidemiologist | LinkedIn ou jobs@internationalmedicalcorps.org | 🔍 LinkedIn |
-| 6 | JHU Bloomberg SPH | Research Scientist / Associate Professor | first.last@jhu.edu | 🔍 LinkedIn |
+| 2 | IRC | Juvénal NDAYIKEZA | juvenal.ndayikeza@rescue.org | ✅ Trouvé — Epidemiologist IRC Burundi |
+| 3 | PIH (Partners in Health) | Tumusime MUSAFIRI | tumusime.musafiri@pih.org | ✅ Trouvé — Research Project Manager PIH Rwanda |
+| 4 | ACF (Action Contre la Faim) | Olivier Cheminat | olivier.cheminat@actioncontrelafaim.org | ✅ Trouvé — DHIS2/Info systèmes ACF, Marseille, 2e (Fontanet+Helene) |
+| 5 | IMC (International Medical Corps) | Anastasiia Borodina | anastasiia.borodina@internationalmedicalcorps.org | ✅ Trouvée — Public Health Specialist IMC Ukraine, 2e (Dr. Mohamed Y.) |
+| 6 | AFD / JHU Bloomberg SPH | Agnes Soucat | agnes.soucat@afd.fr | ✅ Trouvée — Director Health & Social Protection AFD, JHU affiliation, 2e (Helene+Henrik+1) |
 | 7 | Harvard T.H. Chan SPH | Research Fellow / Instructor | first.last@hsph.harvard.edu | 🔍 LinkedIn |
-| 8 | INSP Mexique | Investigador Epidemiología | first.last@insp.mx | 🔍 LinkedIn |
-| 9 | IRD — Institut de Recherche pour le Développement | Chercheur / Épidémiologiste | first.last@ird.fr | 🔍 LinkedIn — unités MIVEGEC, MERIT, IRD Dakar |
+| 8 | INSP Mexique | Liliana Trujillo | liliana.trujillo@insp.mx | ✅ Trouvée — Coordinadora de proyecto INSP Cuernavaca |
+| 9 | IRD — Institut de Recherche pour le Développement | Tony Zitti | tony.zitti@ird.fr | ✅ Trouvé — Chercheur Postdoc IRD, Knowledge Broker, 2e (Fontanet+Helene+3) — LinkedIn DM prioritaire |
 
 **Recherches LinkedIn :**
 - MSF/Epicentre : "Epicentre MSF" + "field epidemiologist" ou "medical coordinator"
@@ -42,7 +42,7 @@
 
 Hi [First name],
 
-HealthWatch Global launched on Product Hunt last week — [X] upvotes, [Y] new signups. A real-time dashboard aggregating WHO DON, ECDC, PAHO, and Africa CDC with IHR IMMEDIATE/RAPID/SURVEILLANCE classification across 5 languages.
+HealthWatch Global just launched — a real-time dashboard aggregating WHO DON, ECDC, PAHO, and Africa CDC with IHR IMMEDIATE/RAPID/SURVEILLANCE classification across 5 languages.
 
 For Epicentre teams coordinating field response, HealthWatch consolidates the four sources your epidemiologists cross-reference manually — one classified view of active signals, updated every 4 hours, with email alerts by country and disease.
 
@@ -64,11 +64,11 @@ HealthWatch Global — healthwatch-global.com
 
 ---
 
-Hi [First name],
+Hi Juvénal,
 
-HealthWatch Global launched on Product Hunt last week — [X] upvotes, [Y] new signups. A real-time dashboard aggregating WHO DON, ECDC, PAHO, and Africa CDC with IHR risk classification across 5 languages.
+HealthWatch Global just launched — a real-time dashboard aggregating WHO DON, ECDC, PAHO, and Africa CDC with IHR risk classification across 5 languages.
 
-For IRC's emergency health teams operating across conflict-affected contexts, HealthWatch gives your epidemiologists one consolidated view of active outbreak signals — no cross-referencing across WHO, ECDC, and PAHO required. Alerts by country, disease, and risk level.
+For IRC's emergency health teams operating in complex contexts like Burundi and the Great Lakes region, HealthWatch gives epidemiologists one consolidated view of active outbreak signals — Mpox DRC, Cholera, Ebola — no cross-referencing across WHO, ECDC, and PAHO required. Alerts by country, disease, and risk level.
 
 We're offering a 30-day institutional pilot: 5 seats, full onboarding — €250/month if your team wants to continue. No procurement required to start.
 
@@ -88,11 +88,11 @@ HealthWatch Global — healthwatch-global.com
 
 ---
 
-Hi [First name],
+Hi Tumusime,
 
-HealthWatch Global launched on Product Hunt last week — [X] upvotes, [Y] new signups. A real-time dashboard aggregating WHO DON, ECDC, PAHO, and Africa CDC with automated IHR risk scoring across 5 languages.
+HealthWatch Global just launched — a real-time dashboard aggregating WHO DON, ECDC, PAHO, and Africa CDC with automated IHR risk scoring across 5 languages.
 
-For PIH teams working in Haiti, Rwanda, Sierra Leone, and other high-burden contexts, HealthWatch gives your epidemiologists a consolidated view of active outbreak signals — updated every 4 hours, with email alerts by country or disease.
+For PIH teams in Rwanda, HealthWatch gives epidemiologists one consolidated view of active signals — Marburg, Ebola DRC, Mpox Clade I — updated every 4 hours with email alerts by country and disease, without the cross-referencing overhead across 4 official portals.
 
 We're offering a 30-day institutional pilot: 5 seats, full onboarding — €250/month if your team wants to continue. No procurement required to start.
 
@@ -112,11 +112,11 @@ HealthWatch Global — healthwatch-global.com
 
 ---
 
-Bonjour [Prénom],
+Bonjour Olivier,
 
-HealthWatch Global a lancé sur Product Hunt la semaine dernière — [X] votes, [Y] inscriptions. Un dashboard qui agrège WHO DON, ECDC, PAHO et Africa CDC en temps réel, classification RSI IMMÉDIAT/RAPIDE/SURVEILLANCE, 5 langues dont le français et l'arabe.
+HealthWatch Global vient de lancer — un dashboard qui agrège WHO DON, ECDC, PAHO et Africa CDC en temps réel, classification RSI IMMÉDIAT/RAPIDE/SURVEILLANCE, 5 langues dont le français et l'arabe.
 
-Pour les équipes ACF en zones d'urgence, HealthWatch consolide en un seul outil la veille que vos épidémiologistes font manuellement sur 4 sources — alertes par pays, par maladie et par niveau de risque.
+Vu ton profil DHIS2 et systèmes d'information santé chez ACF, HealthWatch consolide en un seul outil la veille que vos équipes terrain font manuellement sur 4 sources — données structurées par pays, maladie et niveau de risque, export CSV, alertes email.
 
 On ouvre un pilote institutionnel 30 jours : 5 sièges, onboarding inclus — €250/mois si votre équipe continue. Pas de procurement nécessaire pour démarrer.
 
@@ -136,11 +136,11 @@ HealthWatch Global — healthwatch-global.com
 
 ---
 
-Hi [First name],
+Hi Anastasiia,
 
-HealthWatch Global launched on Product Hunt last week — [X] upvotes, [Y] new signups. A real-time dashboard aggregating WHO DON, ECDC, PAHO, and Africa CDC with IHR IMMEDIATE/RAPID/SURVEILLANCE classification across 5 languages.
+HealthWatch Global just launched — a real-time dashboard aggregating WHO DON, ECDC, PAHO, and Africa CDC with IHR IMMEDIATE/RAPID/SURVEILLANCE classification across 5 languages.
 
-For IMC's health teams operating in complex emergencies, HealthWatch consolidates your surveillance workflow — one classified view of active signals, with email alerts by country and disease, updated 4x/day from official sources.
+For IMC teams in complex emergencies like Ukraine, HealthWatch gives public health specialists one consolidated view of active disease signals — updated 4x/day from official sources, with email alerts by country and disease, no cross-referencing required.
 
 We're offering a 30-day institutional pilot: 5 seats, full onboarding — €250/month if your team wants to continue. No procurement required to start.
 
@@ -159,18 +159,17 @@ HealthWatch Global — healthwatch-global.com
 
 ---
 
-Hi [First name],
+Bonjour Agnes,
 
-HealthWatch Global launched on Product Hunt last week — [X] upvotes, [Y] new signups. A real-time dashboard aggregating WHO DON, ECDC, PAHO, and Africa CDC with automated IHR risk scoring (IMMEDIATE / RAPID / SURVEILLANCE) across 5 languages.
+HealthWatch Global vient de lancer — un dashboard qui agrège WHO DON, ECDC, PAHO et Africa CDC en temps réel, classification RSI IMMÉDIAT/RAPIDE/SURVEILLANCE, 5 langues.
 
-I saw your work on [specific research area — outbreak modeling / infectious disease epidemiology / global health] — HealthWatch gives researchers one consolidated source for official outbreak data, with exportable CSV and disease history, without the manual cross-referencing across WHO DON, ECDC, and PAHO.
+Pour les équipes AFD travaillant sur les programmes santé en Afrique et Asie du Sud-Est, HealthWatch donne une vue structurée du risque épidémique dans vos pays d'intervention — Ebola DRC, Choléra, Mpox Clade I, Dengue — sans la recherche manuelle sur 4 portails distincts.
 
-Happy to give you a Pro access to explore — no commitment, no demo call required.
+On ouvre un pilote institutionnel 30 jours : 5 sièges, onboarding inclus — €250/mois si votre équipe continue.
 
-Direct link to current H5N1 and Mpox signals:
-healthwatch-global.com/en/disease/avian-influenza
+healthwatch-global.com/fr
 
-Best,
+Bien à vous,
 David Deheunynck
 HealthWatch Global — healthwatch-global.com
 
@@ -185,9 +184,9 @@ HealthWatch Global — healthwatch-global.com
 
 Hi [First name],
 
-HealthWatch Global launched on Product Hunt last week — [X] upvotes, [Y] new signups. A real-time dashboard aggregating WHO DON, ECDC, PAHO, and Africa CDC with automated IHR risk scoring across 5 languages.
+HealthWatch Global just launched — a real-time dashboard aggregating WHO DON, ECDC, PAHO, and Africa CDC with automated IHR risk scoring across 5 languages.
 
-I saw your work on [specific research area] — HealthWatch gives researchers and epidemiology teams a consolidated, official source for active outbreak data with exportable CSV, without the cross-referencing overhead across 4 official portals.
+I came across your work on [specific research area] — HealthWatch gives researchers and epidemiology teams a consolidated, official source for active outbreak data with exportable CSV, without the cross-referencing overhead across 4 official portals.
 
 Happy to set up Pro access for your team — no commitment required.
 
@@ -207,15 +206,15 @@ HealthWatch Global — healthwatch-global.com
 
 ---
 
-Hola [Nombre],
+Hola Liliana,
 
-HealthWatch Global lanzó en Product Hunt la semana pasada — [X] votos, [Y] nuevos registros. Un dashboard en tiempo real que agrega WHO DON, ECDC, PAHO y Africa CDC con puntuación RSI automática (INMEDIATO / RÁPIDO / VIGILANCIA) en 5 idiomas, incluido el español.
+HealthWatch Global acaba de lanzar — un dashboard en tiempo real que agrega WHO DON, ECDC, PAHO y Africa CDC con clasificación RSI automática (INMEDIATO / RÁPIDO / VIGILANCIA) en 5 idiomas, incluido el español.
 
-Vi su trabajo en [área de investigación — epidemiología, vigilancia, salud global] — HealthWatch da a los investigadores una fuente oficial consolidada para datos de brotes activos, sin necesidad de cruzar manualmente 4 portales.
+Para los equipos de investigación del INSP, HealthWatch consolida en una sola herramienta la vigilancia que se hace manualmente en 4 fuentes distintas — alertas por país, por enfermedad y por nivel de riesgo, con historial y exportación CSV.
 
-Puedo darle acceso Pro para explorar la plataforma — sin compromiso, sin llamada de demo.
+Puedo abrir un piloto institucional de 30 días: 5 accesos, onboarding incluido — €250/mes si el equipo quiere continuar. Sin proceso de compra para empezar.
 
-Enlace directo a vigilancia actual de Dengue en América Latina:
+Enlace directo a la vigilancia de Dengue en América Latina:
 healthwatch-global.com/es/disease/dengue-fever
 
 Saludos,
@@ -231,18 +230,17 @@ HealthWatch Global — healthwatch-global.com
 
 ---
 
-Bonjour [Prénom],
+Bonjour Tony,
 
-HealthWatch Global a lancé sur Product Hunt la semaine dernière — [X] votes, [Y] inscriptions. Un dashboard qui agrège WHO DON, ECDC, PAHO et Africa CDC en temps réel, classification RSI IMMÉDIAT/RAPIDE/SURVEILLANCE, 5 langues.
+HealthWatch Global vient de lancer — un dashboard qui agrège WHO DON, ECDC, PAHO et Africa CDC en temps réel, classification RSI IMMÉDIAT/RAPIDE/SURVEILLANCE, 5 langues.
 
-J'ai vu vos travaux sur [domaine — épidémiologie des maladies vectorielles / santé Afrique subsaharienne] — HealthWatch donne aux chercheurs une source officielle consolidée pour les données de foyers actifs, avec export CSV, sans la recherche manuelle sur 4 portails distincts.
+Vu ton travail à l'IRD en santé publique et ton rôle de knowledge broker, HealthWatch donne aux chercheurs une source officielle consolidée pour les données de foyers actifs — Dengue, Paludisme, Mpox, Cholera en Afrique subsaharienne — avec export CSV, sans la recherche manuelle sur 4 portails distincts.
 
-Je peux vous ouvrir un accès Pro pour explorer — sans engagement, sans appel.
+Je peux t'ouvrir un accès Pro pour explorer — sans engagement, sans appel.
 
-Lien direct vers la surveillance Dengue et Paludisme en Afrique de l'Ouest :
-healthwatch-global.com/fr/disease/dengue-fever
+healthwatch-global.com/fr
 
-Bien à vous,
+Bien à toi,
 David Deheunynck
 HealthWatch Global — healthwatch-global.com
 

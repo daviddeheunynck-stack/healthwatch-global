@@ -4,11 +4,11 @@
  * Returns [lower, upper] as percentages, or null if not meaningful.
  */
 export function wilsonCI(
-  deaths: number,
+  deaths: number | null,
   cases: number,
   confidence = 0.95
 ): [number, number] | null {
-  if (cases < 5 || deaths < 1 || deaths > cases) return null;
+  if (deaths === null || cases < 5 || deaths < 1 || deaths > cases) return null;
 
   const z  = confidence === 0.95 ? 1.96 : confidence === 0.99 ? 2.576 : 1.645;
   const p  = deaths / cases;

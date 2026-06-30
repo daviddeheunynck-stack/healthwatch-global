@@ -319,7 +319,7 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
       if (dateFrom && o.date < dateFrom)                 return false;
       if (dateTo   && o.date > dateTo)                   return false;
       if (cfrFilter !== "all") {
-        const cfr = o.cases > 0 ? (o.deaths / o.cases * 100) : null;
+        const cfr = o.cases > 0 && o.deaths !== null ? (o.deaths / o.cases * 100) : null;
         if (cfrFilter === "critical" && !(cfr !== null && cfr > 10))              return false;
         if (cfrFilter === "elevated" && !(cfr !== null && cfr >= 3 && cfr <= 10)) return false;
         if (cfrFilter === "low"      && !(cfr !== null && cfr < 3))               return false;
@@ -348,10 +348,15 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
       let cmp = 0;
       if (sortKey === "risk")   cmp = (RISK_ORDER[a.risk_level] ?? 3) - (RISK_ORDER[b.risk_level] ?? 3);
       if (sortKey === "cases")  cmp = a.cases  - b.cases;
-      if (sortKey === "deaths") cmp = a.deaths - b.deaths;
+      if (sortKey === "deaths") {
+        if (a.deaths === null && b.deaths === null) cmp = 0;
+        else if (a.deaths === null) cmp = 1;
+        else if (b.deaths === null) cmp = -1;
+        else cmp = a.deaths - b.deaths;
+      }
       if (sortKey === "cfr") {
-        const cfrA = a.cases > 0 ? a.deaths / a.cases : null;
-        const cfrB = b.cases > 0 ? b.deaths / b.cases : null;
+        const cfrA = a.cases > 0 && a.deaths !== null ? a.deaths / a.cases : null;
+        const cfrB = b.cases > 0 && b.deaths !== null ? b.deaths / b.cases : null;
         if (cfrA === null && cfrB === null) cmp = 0;
         else if (cfrA === null) return 1;   // outbreaks without case data always sink to the bottom…
         else if (cfrB === null) return -1;  // …regardless of sort direction
@@ -421,7 +426,7 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
       esc(o.region),
       o.cases,
       o.deaths,
-      o.cases > 0 ? (o.deaths / o.cases * 100).toFixed(1) : "",
+      o.cases > 0 && o.deaths !== null ? (o.deaths / o.cases * 100).toFixed(1) : "",
       esc(o.risk_level),
       esc(o.date),
       esc(sourceStatus(o) === 'don' ? "WHO DON" : sourceStatus(o) === 'official' ? "Official" : "Unverified"),
@@ -445,7 +450,7 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
     const numLocale = REPORT_LOCALE[locale] ?? (locale || "en-GB");
     const hdr = PDF_H[locale] ?? PDF_H.en;
     const rows = sorted.map((o) => {
-      const cfr = o.cases > 0 ? `${(o.deaths / o.cases * 100).toFixed(1)}%` : "—";
+      const cfr = o.cases > 0 && o.deaths !== null ? `${(o.deaths / o.cases * 100).toFixed(1)}%` : "—";
       const tag = countryTags[o.country_en ?? ""] ? ` <span class="tag">${countryTags[o.country_en ?? ""]}</span>` : "";
       const riskCls = o.risk_level === "high" ? "#f87171" : o.risk_level === "medium" ? "#fbbf24" : "#4ade80";
       const riskLbl = PDF_RISK[o.risk_level]?.[locale] ?? o.risk_level.toUpperCase();
@@ -455,7 +460,7 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
         <td>${o.disease_en ?? o.disease}</td>
         <td>${o.country_en ?? o.country}${tag}</td>
         <td style="text-align:right">${o.cases.toLocaleString(numLocale)}</td>
-        <td style="text-align:right">${o.deaths.toLocaleString(numLocale)}</td>
+        <td style="text-align:right">${o.deaths !== null ? o.deaths.toLocaleString(numLocale) : "—"}</td>
         <td style="text-align:right">${cfr}</td>
         <td><span style="color:${riskCls};font-weight:700;text-transform:uppercase;font-size:10px">${riskLbl}</span></td>
         <td>${o.date}</td>
@@ -508,7 +513,7 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
     const today = new Date().toISOString().split("T")[0];
     const title = { fr: "Résumé des Événements RSI Actifs", en: "Active IHR Events Summary", es: "Resumen de Eventos RSI Activos", ar: "ملخص أحداث اللوائح الصحية الدولية النشطة", id: "Ringkasan Acara IHR Aktif" }[locale] ?? "Active IHR Events Summary";
     const rows = ihrEvents.map((o, i) => {
-      const cfr = o.cases > 0 && o.deaths > 0 ? ` · CFR ${(o.deaths / o.cases * 100).toFixed(1)}%` : "";
+      const cfr = o.cases > 0 && o.deaths !== null && o.deaths > 0 ? ` · CFR ${(o.deaths / o.cases * 100).toFixed(1)}%` : "";
       const pheic = o.is_pheic ? " [PHEIC]" : "";
       return `<tr>
         <td style="padding:5px 8px;border-bottom:1px solid #e2e8f0">${i + 1}</td>
@@ -560,7 +565,7 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
     const numLocale = REPORT_LOCALE[locale] ?? (locale || "en-GB");
     const hdr = PDF_H[locale] ?? PDF_H.en;
     const rows = sorted.map((o) => {
-      const cfr = o.cases > 0 ? `${(o.deaths / o.cases * 100).toFixed(1)}%` : "—";
+      const cfr = o.cases > 0 && o.deaths !== null ? `${(o.deaths / o.cases * 100).toFixed(1)}%` : "—";
       const tag = countryTags[o.country_en ?? ""] ? ` <span class="tag">${countryTags[o.country_en ?? ""]}</span>` : "";
       const riskCls = o.risk_level === "high" ? "#f87171" : o.risk_level === "medium" ? "#fbbf24" : "#4ade80";
       const riskLbl = PDF_RISK[o.risk_level]?.[locale] ?? o.risk_level.toUpperCase();
@@ -570,7 +575,7 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
         <td>${o.disease_en ?? o.disease}</td>
         <td>${o.country_en ?? o.country}${tag}</td>
         <td style="text-align:right">${o.cases.toLocaleString(numLocale)}</td>
-        <td style="text-align:right">${o.deaths.toLocaleString(numLocale)}</td>
+        <td style="text-align:right">${o.deaths !== null ? o.deaths.toLocaleString(numLocale) : "—"}</td>
         <td style="text-align:right">${cfr}</td>
         <td><span style="color:${riskCls};font-weight:700;text-transform:uppercase;font-size:10px">${riskLbl}</span></td>
         <td>${o.date}</td>
@@ -632,7 +637,7 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
         region:     o.region,
         cases:      o.cases,
         deaths:     o.deaths,
-        cfr_pct:    o.cases > 0 ? parseFloat((o.deaths / o.cases * 100).toFixed(1)) : null,
+        cfr_pct:    o.cases > 0 && o.deaths !== null ? parseFloat((o.deaths / o.cases * 100).toFixed(1)) : null,
         risk_level: o.risk_level,
         is_pheic:   o.is_pheic,
         date:       o.date,
@@ -1245,17 +1250,19 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
                   </td>
                   <td className="px-4 py-3 text-red-400 hidden sm:table-cell">
                     {isPaid ? (
-                      outbreak.cases > 0 ? outbreak.deaths.toLocaleString(numLocale) : <span className="text-gray-600 italic text-xs">{l.noData}</span>
+                      outbreak.deaths !== null
+                        ? outbreak.deaths.toLocaleString(numLocale)
+                        : <span className="text-gray-500 text-sm" title="Non rapporté dans cette source">—</span>
                     ) : (
                       <span className="blur-sm select-none text-gray-500 cursor-pointer" onClick={() => openModal("cases")}>
-                        {outbreak.deaths.toLocaleString(numLocale)}
+                        {(outbreak.deaths ?? 0).toLocaleString(numLocale)}
                       </span>
                     )}
                   </td>
                   {/* CFR */}
                   <td className="px-4 py-3 hidden sm:table-cell">
                     {isPaid ? (
-                      outbreak.cases > 0 ? (
+                      outbreak.cases > 0 && outbreak.deaths !== null ? (
                         <span className={`text-sm font-medium ${
                           (outbreak.deaths / outbreak.cases) > 0.1 ? "text-red-400" :
                           (outbreak.deaths / outbreak.cases) > 0.03 ? "text-amber-400" : "text-gray-400"

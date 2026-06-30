@@ -598,7 +598,7 @@ export default async function DiseasePage({
                       </p>
                       <p className="text-sm text-gray-400">
                         {o.cases > 0 && <span>{o.cases.toLocaleString(numLocale)} {lb.cases_unit}</span>}
-                        {o.deaths > 0 && <span className="ml-2 text-gray-500">· {o.deaths.toLocaleString(numLocale)} {lb.deaths_unit}</span>}
+                        {o.deaths !== null && o.deaths > 0 && <span className="ml-2 text-gray-500">· {o.deaths.toLocaleString(numLocale)} {lb.deaths_unit}</span>}
                         {o.date && (
                           <span className="ml-2 text-gray-600">
                             · {new Date(o.date).toLocaleDateString(

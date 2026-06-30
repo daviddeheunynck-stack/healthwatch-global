@@ -361,7 +361,7 @@ async function DashboardContent({ demo = false, urlRegion, urlRisk }: { demo?: b
       {stats.topOutbreak && (() => {
         const top  = stats.topOutbreak;
         const snap = SNAPSHOT_COPY[locale] ?? SNAPSHOT_COPY.en;
-        const cfr  = top.cases > 0 && top.deaths > 0
+        const cfr  = top.cases > 0 && top.deaths !== null && top.deaths > 0
           ? (top.deaths / top.cases * 100).toFixed(1)
           : null;
         const isRtl = locale === "ar";

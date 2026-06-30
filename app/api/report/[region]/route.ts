@@ -213,7 +213,7 @@ export async function GET(
         <td><strong>${esc(d.name)}</strong></td>
         <td>${esc(d.country)}</td>
         <td>${d.cases.toLocaleString(numLocale)}</td>
-        <td>${d.deaths.toLocaleString(numLocale)}</td>
+        <td>${d.deaths !== null ? d.deaths.toLocaleString(numLocale) : "—"}</td>
         <td><span class="risk-badge risk-${d.risk}">${d.risk === "high" ? rl.riskHigh : d.risk === "medium" ? rl.riskMedium : rl.riskLow}</span></td>
       </tr>`
         )

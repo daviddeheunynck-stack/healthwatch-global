@@ -25,7 +25,8 @@ export interface Outbreak {
   lat: number;
   lng: number;
   cases: number;
-  deaths: number;
+  deaths: number | null;
+  is_seed: boolean;
   risk_level: "high" | "medium" | "low";
   date: string;
   source: string;
@@ -333,7 +334,7 @@ export function computeRiskScore(
   if (trend?.direction === "up")   score += 1;
   if (trend?.direction === "down") score -= 0.5;
 
-  if (outbreak.cases > 0) {
+  if (outbreak.cases > 0 && outbreak.deaths !== null) {
     const cfr = outbreak.deaths / outbreak.cases;
     if (cfr > 0.10) score += 1;
     else if (cfr > 0.03) score += 0.5;

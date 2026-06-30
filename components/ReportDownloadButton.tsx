@@ -16,7 +16,7 @@ interface ReportData {
     name: string;
     country: string;
     cases: number;
-    deaths: number;
+    deaths: number | null;
     risk: string;
   }>;
 }

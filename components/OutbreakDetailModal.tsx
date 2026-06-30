@@ -484,7 +484,7 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlis
   const country     = getLocalizedCountry(outbreak, locale) ?? outbreak.country_en;
   const description = getLocalizedDescription(outbreak, locale);
   const hasData    = outbreak.cases > 0;
-  const cfr        = hasData ? (outbreak.deaths / outbreak.cases * 100).toFixed(1) : null;
+  const cfr        = hasData && outbreak.deaths !== null ? (outbreak.deaths / outbreak.cases * 100).toFixed(1) : null;
   const incidence  = getIncidenceRate(outbreak.cases, outbreak.country_en);
 
   // Data freshness. `new Date()` (not `Date.now()`) keeps this pure for
@@ -694,7 +694,9 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlis
             <p className="text-xs text-gray-500">{c.deaths}</p>
             <p className="text-lg font-bold text-red-400">
               {isPaid
-                ? (hasData ? outbreak.deaths.toLocaleString(numLocale) : <span className="text-gray-600 text-sm italic">{c.noData}</span>)
+                ? outbreak.deaths !== null
+                  ? outbreak.deaths.toLocaleString(numLocale)
+                  : <span className="text-gray-500 text-sm" title="Non rapporté dans cette source">—</span>
                 : <span className="blur-sm select-none cursor-pointer" onClick={() => openModal("cases")}>234</span>
               }
             </p>
@@ -1096,7 +1098,7 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlis
                   "",
                   `${sc.epiData} (${sc.asOf} ${outbreak.date}):`,
                   outbreak.cases > 0 ? `• ${sc.cases}: ${outbreak.cases.toLocaleString(numLocale)}` : null,
-                  outbreak.deaths > 0 ? `• ${sc.deaths}: ${outbreak.deaths.toLocaleString(numLocale)}` : null,
+                  outbreak.deaths !== null && outbreak.deaths > 0 ? `• ${sc.deaths}: ${outbreak.deaths.toLocaleString(numLocale)}` : null,
                   cfr ? `• ${sc.cfr}: ${cfr}%` : null,
                   incidence ? `• ${sc.incidence}: ${incidence} ${c.incidencePer100k}` : null,
                   "",
@@ -1163,7 +1165,7 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlis
             <button
               onClick={async () => {
                 const ic = IHR_COPY[locale] ?? IHR_COPY.en;
-                const cfr = outbreak.cases > 0 ? (outbreak.deaths / outbreak.cases * 100).toFixed(1) : "N/A";
+                const cfr = outbreak.cases > 0 && outbreak.deaths !== null ? (outbreak.deaths / outbreak.cases * 100).toFixed(1) : "N/A";
                 const incidence = getIncidenceRate(outbreak.cases, outbreak.country_en);
                 const text = [
                   ic.notif,
@@ -1172,7 +1174,7 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlis
                   `1. ${ic.eventDesc}: ${disease} (${country})`,
                   `2. ${ic.geo}: ${country}${outbreak.admin1 ? `, ${outbreak.admin1}` : ""}`,
                   `3. ${ic.onset}: ${outbreak.date}`,
-                  `4. ${ic.epi}: ${outbreak.cases.toLocaleString(numLocale)} ${ic.cases} / ${outbreak.deaths.toLocaleString(numLocale)} ${ic.deaths} / CFR ${cfr}%${incidence ? ` / ${incidence.toFixed(1)} ${ic.per100k}` : ""}`,
+                  `4. ${ic.epi}: ${outbreak.cases.toLocaleString(numLocale)} ${ic.cases}${outbreak.deaths !== null ? ` / ${outbreak.deaths.toLocaleString(numLocale)} ${ic.deaths}` : ""} / CFR ${cfr}%${incidence ? ` / ${incidence.toFixed(1)} ${ic.per100k}` : ""}`,
                   `5. ${ic.pop}: [${ic.fillIn}]`,
                   `6. ${ic.measures}: [${ic.fillIn}]`,
                   `7. ${ic.src}: HealthWatch Global / ${outbreak.source || "OMS / WHO"}`,
@@ -1252,7 +1254,7 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlis
         {isPaid && pastOutbreaks.length > 0 && (() => {
           const cc = COMPARE_COPY[locale] ?? COMPARE_COPY.en;
           const cmp = compareIdx >= 0 ? pastOutbreaks[compareIdx] ?? null : null;
-          const cCFR  = outbreak.cases  > 0 ? (outbreak.deaths  / outbreak.cases  * 100).toFixed(1) : null;
+          const cCFR  = outbreak.cases  > 0 && outbreak.deaths !== null ? (outbreak.deaths  / outbreak.cases  * 100).toFixed(1) : null;
           const pCFR  = cmp && cmp.cases > 0 ? (cmp.deaths / cmp.cases * 100).toFixed(1) : null;
           const ageCurrentDays  = Math.round((Date.now() - new Date(outbreak.date).getTime()) / 86400000);
           const agePastDays     = cmp ? Math.round((Date.now() - new Date(cmp.date).getTime()) / 86400000) : 0;

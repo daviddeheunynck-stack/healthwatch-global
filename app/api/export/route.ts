@@ -106,7 +106,7 @@ async function buildExportResponse(request: NextRequest) {
   const date = new Date().toISOString().split("T")[0];
 
   const records = outbreaks.map((o) => {
-    const cfr       = o.cases > 0 ? parseFloat((o.deaths / o.cases * 100).toFixed(1)) : null;
+    const cfr       = o.cases > 0 && o.deaths !== null ? parseFloat((o.deaths / o.cases * 100).toFixed(1)) : null;
     const ci        = wilsonCI(o.deaths, o.cases);
     const incidence = getIncidenceRate(o.cases, o.country_en);
     return {

@@ -234,7 +234,7 @@ export async function generateMetadata({
     : `${disease} outbreak — ${country} ${year}`;
 
   const caseStr = o.cases > 0
-    ? `${o.cases.toLocaleString("en")} cases, ${o.deaths.toLocaleString("en")} deaths.`
+    ? `${o.cases.toLocaleString("en")} cases${o.deaths !== null ? `, ${o.deaths.toLocaleString("en")} deaths` : ""}.`
     : "";
   const description = [
     `${disease} outbreak in ${country}.`,
@@ -292,7 +292,7 @@ export default async function OutbreakPage({
   const disease = getLocalizedDisease(o, locale) ?? o.disease_en ?? o.disease;
   const country = getLocalizedCountry(o, locale) ?? o.country_en ?? o.country;
   const hasData = o.cases > 0;
-  const cfr     = hasData ? ((o.deaths / o.cases) * 100).toFixed(1) + "%" : l.noData;
+  const cfr     = hasData && o.deaths !== null ? ((o.deaths / o.cases) * 100).toFixed(1) + "%" : l.noData;
   const donRef  = o.source ? DON_PATTERN.exec(o.source)?.[1] : null;
   const status  = sourceStatus(o);
 
@@ -315,7 +315,7 @@ export default async function OutbreakPage({
       "@context": "https://schema.org",
       "@type": "Article",
       headline: `${disease} outbreak in ${country}`,
-      description: `${disease} outbreak tracking. ${hasData ? `${o.cases} cases, ${o.deaths} deaths.` : ""}`,
+      description: `${disease} outbreak tracking. ${hasData ? `${o.cases} cases${o.deaths !== null ? `, ${o.deaths} deaths` : ""}.` : ""}`,
       datePublished: o.date,
       dateModified: o.updated_at?.substring(0, 10) ?? o.date,
       image: `${BASE_URL}/api/outbreak-card/${id}?locale=${locale}`,
@@ -373,7 +373,7 @@ export default async function OutbreakPage({
             disease={disease}
             country={country}
             cases={o.cases}
-            deaths={o.deaths}
+            deaths={o.deaths ?? undefined}
             riskLevel={o.risk_level}
             locale={locale}
             outbreakId={id}
@@ -429,7 +429,7 @@ export default async function OutbreakPage({
       {/* Stats — blurred for anonymous visitors, unblurred client-side when authenticated */}
       <OutbreakStatsGrid
         cases={hasData ? o.cases.toLocaleString(locale === "ar" ? "ar-SA" : locale) : l.noData}
-        deaths={hasData ? o.deaths.toLocaleString(locale === "ar" ? "ar-SA" : locale) : l.noData}
+        deaths={hasData && o.deaths !== null ? o.deaths.toLocaleString(locale === "ar" ? "ar-SA" : locale) : l.noData}
         cfr={cfr}
         labels={{
           cases:      l.cases,

@@ -312,7 +312,7 @@ export default async function RegionPage({
                       <p className="text-sm text-gray-400">
                         📍 {country}
                         {o.cases > 0 && <span className="ml-2">· {o.cases.toLocaleString(numLocale)} {lb.cases_unit}</span>}
-                        {o.deaths > 0 && <span className="ml-1 text-gray-500">· {o.deaths.toLocaleString(numLocale)} {lb.deaths_unit}</span>}
+                        {o.deaths !== null && o.deaths > 0 && <span className="ml-1 text-gray-500">· {o.deaths.toLocaleString(numLocale)} {lb.deaths_unit}</span>}
                       </p>
                     </div>
                     <div className="flex items-center gap-2">

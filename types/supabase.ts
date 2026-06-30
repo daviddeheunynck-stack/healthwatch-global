@@ -18,7 +18,7 @@ export type Database = {
           country_en: string | null
           created_at: string | null
           date: string
-          deaths: number
+          deaths: number | null
           description: string
           disease: string
           disease_ar: string | null

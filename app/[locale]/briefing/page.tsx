@@ -213,7 +213,7 @@ export default async function BriefingPage({ params }: { params: Promise<{ local
                 const colors = RISK_COLORS[outbreak.risk_level] ?? RISK_COLORS.low;
                 const disease = getLocalizedDisease(outbreak, locale);
                 const country = getLocalizedCountry(outbreak, locale);
-                const cfr = outbreak.cases > 0
+                const cfr = outbreak.cases > 0 && outbreak.deaths !== null
                   ? (outbreak.deaths / outbreak.cases * 100).toFixed(1)
                   : null;
 
@@ -249,7 +249,7 @@ export default async function BriefingPage({ params }: { params: Promise<{ local
                         {outbreak.cases.toLocaleString(locale === "ar" ? "ar-SA" : locale)}
                         <span className="font-normal text-gray-500 print:text-gray-600 ml-1">{c.cases}</span>
                       </span>
-                      {outbreak.deaths > 0 && (
+                      {outbreak.deaths !== null && outbreak.deaths > 0 && (
                         <span className="text-gray-400 print:text-gray-600">
                           {outbreak.deaths.toLocaleString(locale === "ar" ? "ar-SA" : locale)}
                           <span className="ml-1">{c.deaths}</span>

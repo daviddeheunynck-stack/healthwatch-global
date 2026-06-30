@@ -441,7 +441,7 @@ export default async function CountryPage({
           <div className="space-y-3">
             {active.map((o) => {
               const disease = getLocalizedDisease(o, l) ?? o.disease_en ?? o.disease;
-              const cfr1 = o.cases > 0 ? (o.deaths / o.cases * 100).toFixed(1) + "%" : lb.noData;
+              const cfr1 = o.cases > 0 && o.deaths !== null ? (o.deaths / o.cases * 100).toFixed(1) + "%" : lb.noData;
               const trend = trendsMap.get(o.id);
               return (
                 <div

@@ -133,8 +133,8 @@ export default function ComparePage() {
 
   const oA = outbreaks.find(o => o.id === idA) ?? null;
   const oB = outbreaks.find(o => o.id === idB) ?? null;
-  const cfrA = oA && oA.cases > 0 ? oA.deaths / oA.cases * 100 : null;
-  const cfrB = oB && oB.cases > 0 ? oB.deaths / oB.cases * 100 : null;
+  const cfrA = oA && oA.cases > 0 && oA.deaths !== null ? oA.deaths / oA.cases * 100 : null;
+  const cfrB = oB && oB.cases > 0 && oB.deaths !== null ? oB.deaths / oB.cases * 100 : null;
   const incA = oA ? getIncidenceRate(oA.cases, oA.country_en) : null;
   const incB = oB ? getIncidenceRate(oB.cases, oB.country_en) : null;
   const options = outbreaks
