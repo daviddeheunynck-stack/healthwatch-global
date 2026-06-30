@@ -8,8 +8,8 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
-import { Resend } from "resend";
 import * as Sentry from "@sentry/nextjs";
+import { logCronRun } from "@/lib/cron-monitor";
 
 export const dynamic = "force-dynamic";
 
@@ -20,9 +20,8 @@ const esc   = (s: string | null | undefined) => (s ?? "").replace(/&/g, "&amp;")
 const SUPABASE_URL     = clean(process.env.NEXT_PUBLIC_SUPABASE_URL);
 const SUPABASE_SERVICE = clean(process.env.SUPABASE_SERVICE_ROLE_KEY);
 const CRON_SECRET      = clean(process.env.CRON_SECRET);
-const RESEND_KEY       = clean(process.env.RESEND_API_KEY);
+const BREVO_KEY        = clean(process.env.BREVO_API_KEY);
 const APP_URL          = clean(process.env.NEXT_PUBLIC_APP_URL) || "https://healthwatch-global.com";
-const FROM_EMAIL       = "HealthWatch Global <alerts@healthwatch-global.com>";
 
 const PLAN_LIMITS: Record<string, number> = { pro: 1, team: 5, enterprise: 50 };
 const PAID_PLANS = Object.keys(PLAN_LIMITS);
@@ -128,10 +127,9 @@ export async function GET(req: NextRequest) {
   if (!CRON_SECRET || auth !== `Bearer ${CRON_SECRET}`)
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  if (!RESEND_KEY) return NextResponse.json({ error: "RESEND_API_KEY not configured" }, { status: 500 });
+  if (!BREVO_KEY) return NextResponse.json({ error: "BREVO_API_KEY not configured" }, { status: 500 });
 
   const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE);
-  const resend   = new Resend(RESEND_KEY);
 
   // Fetch all active scheduled reports
   const { data: reports } = await supabase
@@ -139,8 +137,10 @@ export async function GET(req: NextRequest) {
     .select("id, user_id, recipients, locale, active")
     .eq("active", true);
 
-  if (!reports?.length)
+  if (!reports?.length) {
+    await logCronRun(supabase, "send-sitrep-emails", "ok", 0);
     return NextResponse.json({ ok: true, sent: 0, note: "no active reports" });
+  }
 
   // Fetch all active high/medium outbreaks once (shared across all emails)
   const { data: outbreaks } = await supabase
@@ -174,12 +174,17 @@ export async function GET(req: NextRequest) {
     const subject = SUBJECT[locale] ?? SUBJECT.en;
 
     try {
-      await resend.emails.send({
-        from: FROM_EMAIL,
-        to: recipients,
-        subject,
-        html,
+      const res = await fetch("https://api.brevo.com/v3/smtp/email", {
+        method: "POST",
+        headers: { "api-key": BREVO_KEY, "Content-Type": "application/json" },
+        body: JSON.stringify({
+          sender:      { name: "HealthWatch Global", email: "alerts@healthwatch-global.com" },
+          to:          recipients.map((e) => ({ email: e })),
+          subject,
+          htmlContent: html,
+        }),
       });
+      if (!res.ok) throw new Error(`Brevo ${res.status}: ${await res.text()}`);
       totalSent += recipients.length;
     } catch (err) {
       console.error(`[send-sitrep-emails] Failed for report ${report.id}:`, err);
@@ -192,5 +197,6 @@ export async function GET(req: NextRequest) {
       .eq("id", report.id);
   }
 
+  await logCronRun(supabase, "send-sitrep-emails", "ok", totalSent);
   return NextResponse.json({ ok: true, sent: totalSent });
 }

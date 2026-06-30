@@ -3,6 +3,7 @@ import { createClient } from "@supabase/supabase-js";
 import { buildDigestEmail } from "@/lib/digest-email";
 import type { Outbreak } from "@/lib/outbreaks";
 import * as Sentry from "@sentry/nextjs";
+import { logCronRun } from "@/lib/cron-monitor";
 
 export const dynamic = "force-dynamic";
 
@@ -119,6 +120,7 @@ export async function GET(req: NextRequest) {
     await new Promise((r) => setTimeout(r, 150));
   }
 
+  await logCronRun(supabase, "weekly-digest", "ok", sent);
   console.log(`[weekly-digest] Done — ${sent} sent, ${failed} failed, ${subscribers.length} total.`);
   return NextResponse.json({ sent, failed, total: subscribers.length });
 }

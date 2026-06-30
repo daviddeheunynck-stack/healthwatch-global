@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { buildTrialEndingEmail } from "@/lib/trial-ending-email";
 import * as Sentry from "@sentry/nextjs";
+import { logCronRun } from "@/lib/cron-monitor";
 
 export const dynamic = "force-dynamic";
 
@@ -130,6 +131,7 @@ export async function GET(req: NextRequest) {
   const hb = process.env.BETTERSTACK_HB_TRIAL_REMINDERS;
   if (hb) fetch(hb).catch(() => {});
 
+  await logCronRun(supabase, "trial-reminders", "ok", sent);
   console.log(`[trial-reminders] Done — ${sent} sent, ${failed} failed.`);
   return NextResponse.json({ sent, failed, total: profiles.length });
 }

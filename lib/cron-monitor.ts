@@ -64,6 +64,10 @@ export const CRON_WINDOWS: Record<string, number> = {
   "sync-drc-sitrep":   26,   // daily — PHEIC cadence
   "sync-endemic-data": 192,  // weekly Mon
   "sync-usda-aphis":   192,  // weekly Mon
-  "expire-trials":      26,  // daily — monetization critical
-  "onboarding-sequence": 26, // daily — trial email sequence
+  "expire-trials":       26,  // daily — monetization critical
+  "onboarding-sequence": 26,  // daily — trial email sequence
+  "trial-reminders":     26,  // daily — conversion critical
+  "winback-sequence":    26,  // daily — churn recovery
+  "weekly-digest":      200,  // weekly Mon
+  "send-sitrep-emails": 200,  // weekly Mon
 };

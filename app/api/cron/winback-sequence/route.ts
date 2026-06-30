@@ -6,6 +6,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { PRICE_DISPLAY } from "@/lib/pricing";
 import * as Sentry from "@sentry/nextjs";
+import { logCronRun } from "@/lib/cron-monitor";
 
 export const dynamic = "force-dynamic";
 
@@ -291,6 +292,7 @@ export async function GET(req: NextRequest) {
     await new Promise((r) => setTimeout(r, 150));
   }
 
+  await logCronRun(supabase, "winback-sequence", "ok", sent);
   console.log(`[winback] Done — ${sent} sent, ${failed} failed`);
   return NextResponse.json({ sent, failed, total: profiles.length });
 }
