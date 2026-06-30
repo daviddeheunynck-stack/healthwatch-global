@@ -784,6 +784,39 @@ export async function GET(req: NextRequest) {
       const SIXTY_DAYS_AGO = new Date(Date.now() - 60 * 86_400_000).toISOString().substring(0, 10);
       const isAnnualRef = !!target.fetcher && found.date < SIXTY_DAYS_AGO;
 
+      // Safety net: the `existing` map is filtered to active + 90-day window.
+      // Annual GHO rows (date 1-3 years ago) can fall outside that window once
+      // deactivated, causing the cron to re-insert on every run.
+      // Do a direct lookup by disease+country before inserting to catch these.
+      const { data: directCheck } = await supabase
+        .from("outbreaks")
+        .select("id, cases, deaths, date, active")
+        .eq("disease_en", diseaseInfo.name_en)
+        .eq("country_en", countryInfo.name_en)
+        .order("date", { ascending: false })
+        .limit(1)
+        .maybeSingle();
+
+      if (directCheck) {
+        // Row already exists (likely deactivated + old) — reactivate and update
+        const { error } = await supabase
+          .from("outbreaks")
+          .update({ cases: found.cases, deaths: found.deaths, date: found.date,
+                    source: found.source, description: found.description,
+                    active: true, is_seed: isAnnualRef,
+                    risk_level: assessRisk(target.disease_en, found.description, found.cases, found.deaths) })
+          .eq("id", directCheck.id)
+          .lte("source_priority", 5);
+        if (error) {
+          log.push({ label: `${target.disease_en}/${target.country_en}`, status: "error", detail: error.message });
+          results.errors++;
+        } else {
+          log.push({ label: `${target.disease_en}/${target.country_en}`, status: "updated", detail: `reactivated (was missed by cache)` });
+          results.updated++;
+        }
+        continue;
+      }
+
       const { error } = await supabase.from("outbreaks").insert({
         disease:     diseaseInfo.name_fr,
         disease_en:  diseaseInfo.name_en,
