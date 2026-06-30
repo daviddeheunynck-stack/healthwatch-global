@@ -62,11 +62,15 @@ export async function GET(req: NextRequest) {
   const j1Start = new Date(now + 0.5 * 86_400_000).toISOString();
   const j1End   = new Date(now + 1.5 * 86_400_000).toISOString();
 
+  // Stripe users (stripe_subscription_id set) receive `customer.subscription.trial_will_end`
+  // directly from Stripe 3 days before expiry — the cron would double-email them.
+  // Only manual trials (no Stripe subscription) need cron-driven reminders.
   const { data: profiles, error } = await supabase
     .from("profiles")
     .select("id, email, plan, trial_ends_at, locale, stripe_subscription_id, display_filters")
     .in("plan", ["starter", "pro"])
     .not("trial_ends_at", "is", null)
+    .is("stripe_subscription_id", null)
     .or(`and(trial_ends_at.gte.${j3Start},trial_ends_at.lt.${j3End}),and(trial_ends_at.gte.${j1Start},trial_ends_at.lt.${j1End})`);
 
   // Fetch active HIGH/MEDIUM outbreaks once for all users — filter per region below
