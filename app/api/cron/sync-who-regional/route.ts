@@ -180,6 +180,56 @@ function fetchMalariaGHO(country_en: string): () => Promise<Found | null> {
   };
 }
 
+// ── WHO GHO measles fetcher ───────────────────────────────────────────────────
+// Indicator WHS3_62: WHO-reported annual measles cases by country.
+// Data typically lags 1–2 years (e.g. 2024 data available mid-2025).
+
+const GHO_MEASLES_ISO3: Record<string, string> = {
+  "Democratic Republic of the Congo": "COD",
+  "Ethiopia":                         "ETH",
+  "Nigeria":                          "NGA",
+  "Yemen":                            "YEM",
+  "Somalia":                          "SOM",
+  "Pakistan":                         "PAK",
+  "Ukraine":                          "UKR",
+  "South Sudan":                      "SSD",
+  "Myanmar":                          "MMR",
+  "Philippines":                      "PHL",
+  "Romania":                          "ROU",
+  "France":                           "FRA",
+  "Italy":                            "ITA",
+};
+
+function fetchMeaslesGHO(country_en: string): () => Promise<Found | null> {
+  return async () => {
+    const iso3 = GHO_MEASLES_ISO3[country_en];
+    if (!iso3) return null;
+    try {
+      const url = `https://ghoapi.azureedge.net/api/WHS3_62?%24filter=SpatialDim%20eq%20'${iso3}'&%24orderby=TimeDim%20desc&%24top=1`;
+      const res = await fetch(url, {
+        headers: { "User-Agent": "HealthWatch-Global/1.0 (health surveillance; contact@healthwatch-global.com)" },
+        signal:  AbortSignal.timeout(10_000),
+      });
+      if (!res.ok) return null;
+      type GHORec = { SpatialDim: string; TimeDim: number; NumericValue: number | null };
+      const json = await res.json() as { value: GHORec[] };
+      const rec  = json.value?.[0];
+      if (!rec?.NumericValue) return null;
+      const cases = Math.round(rec.NumericValue);
+      const year  = rec.TimeDim;
+      return {
+        cases,
+        deaths: 0,
+        date:   `${year}-01-01`,
+        source: "https://www.who.int/data/gho/data/indicators/indicator-details/GHO/incidence-of-measles",
+        description: `Measles in ${country_en} — WHO reported ${cases.toLocaleString("en")} confirmed cases in ${year}. Source: WHO Global Health Observatory (GHO).`,
+      };
+    } catch {
+      return null;
+    }
+  };
+}
+
 // ── ReliefWeb query ───────────────────────────────────────────────────────────
 
 interface Target {
@@ -284,13 +334,13 @@ const TARGETS: Target[] = [
   { disease_en: "Cholera",       country_en: "Syria",                            minCases:  50    },
   { disease_en: "Cholera",       country_en: "Malawi",                           minCases:  50    },
   // ── Measles — high-burden countries not consistently in WHO DON ───────────────
-  { disease_en: "Measles",       country_en: "Democratic Republic of the Congo", minCases: 1_000  },
-  { disease_en: "Measles",       country_en: "Ethiopia",                         minCases: 500    },
-  { disease_en: "Measles",       country_en: "Nigeria",                          minCases: 500    },
-  { disease_en: "Measles",       country_en: "Yemen",                            minCases: 100    },
-  { disease_en: "Measles",       country_en: "Somalia",                          minCases: 100    },
-  { disease_en: "Measles",       country_en: "Pakistan",                         minCases: 100    },
-  { disease_en: "Measles",       country_en: "Ukraine",                          minCases:  50    },
+  { disease_en: "Measles", country_en: "Democratic Republic of the Congo", minCases: 1_000, fetcher: fetchMeaslesGHO("Democratic Republic of the Congo") },
+  { disease_en: "Measles", country_en: "Ethiopia",                         minCases:   500, fetcher: fetchMeaslesGHO("Ethiopia")  },
+  { disease_en: "Measles", country_en: "Nigeria",                          minCases:   500, fetcher: fetchMeaslesGHO("Nigeria")   },
+  { disease_en: "Measles", country_en: "Yemen",                            minCases:   100, fetcher: fetchMeaslesGHO("Yemen")     },
+  { disease_en: "Measles", country_en: "Somalia",                          minCases:   100, fetcher: fetchMeaslesGHO("Somalia")   },
+  { disease_en: "Measles", country_en: "Pakistan",                         minCases:   100, fetcher: fetchMeaslesGHO("Pakistan")  },
+  { disease_en: "Measles", country_en: "Ukraine",                          minCases:    50, fetcher: fetchMeaslesGHO("Ukraine")   },
   // ── Yellow Fever — any confirmed case is epidemiologically significant ─────────
   { disease_en: "Yellow Fever",  country_en: "Nigeria",                          minCases:   1    },
   { disease_en: "Yellow Fever",  country_en: "Cameroon",                         minCases:   1    },
@@ -335,8 +385,8 @@ const TARGETS: Target[] = [
   { disease_en: "Cholera",       country_en: "South Sudan",                       minCases: 100    },
   { disease_en: "Cholera",       country_en: "Central African Republic",          minCases:  50    },
   // ── Measles — additional high-burden countries ────────────────────────────────
-  { disease_en: "Measles",       country_en: "South Sudan",                       minCases: 100    },
-  { disease_en: "Measles",       country_en: "Myanmar",                           minCases: 100    },
+  { disease_en: "Measles", country_en: "South Sudan", minCases: 100, fetcher: fetchMeaslesGHO("South Sudan") },
+  { disease_en: "Measles", country_en: "Myanmar",     minCases: 100, fetcher: fetchMeaslesGHO("Myanmar")    },
   // ── Dengue — Myanmar (rising burden, conflict-affected surveillance) ──────────
   { disease_en: "Dengue",        country_en: "Myanmar",                           minCases: 1_000  },
   // ── Meningitis — extended belt into the Sahel ────────────────────────────────
@@ -348,10 +398,10 @@ const TARGETS: Target[] = [
   // ── Europe — measles endemic tracking (ECDC RSS covers emerging threats;
   //    these targets add systematic ReliefWeb back-fill for high-burden EU countries) ──
   // Romania: consistently highest measles burden in EU — ECDC/WHO publish on ReliefWeb
-  { disease_en: "Measles",        country_en: "Romania",                           minCases:  50    },
+  { disease_en: "Measles", country_en: "Romania", minCases: 50, fetcher: fetchMeaslesGHO("Romania") },
   // France, Italy: periodic sub-national outbreaks documented in WHO/ECDC ReliefWeb reports
-  { disease_en: "Measles",        country_en: "France",                            minCases:  50    },
-  { disease_en: "Measles",        country_en: "Italy",                             minCases:  50    },
+  { disease_en: "Measles", country_en: "France",  minCases: 50, fetcher: fetchMeaslesGHO("France") },
+  { disease_en: "Measles", country_en: "Italy",   minCases: 50, fetcher: fetchMeaslesGHO("Italy")  },
   // West Nile: already in disease-data.ts; ECDC RSS is primary source; ReliefWeb as fallback
   { disease_en: "West Nile fever", country_en: "Italy",                            minCases:  10    },
   { disease_en: "West Nile fever", country_en: "Greece",                           minCases:   5    },
@@ -373,7 +423,7 @@ const TARGETS: Target[] = [
   // ── Asia — WHO SEARO / WPRO gap-fill ─────────────────────────────────────────
   // Philippines: DOH + WHO WPRO publish regularly on ReliefWeb; 100-200k dengue cases/year typical
   { disease_en: "Dengue",        country_en: "Philippines",                       minCases: 10_000 },
-  { disease_en: "Measles",       country_en: "Philippines",                       minCases:    100 },
+  { disease_en: "Measles", country_en: "Philippines", minCases: 100, fetcher: fetchMeaslesGHO("Philippines") },
   // Cambodia, Laos, Sri Lanka: present on ReliefWeb via WPRO/SEARO — conservative thresholds
   { disease_en: "Dengue",        country_en: "Cambodia",                          minCases:  1_000 },
   { disease_en: "Dengue",        country_en: "Laos",                              minCases:    500 },
@@ -526,7 +576,7 @@ export async function GET(req: NextRequest) {
     const found = await (target.fetcher ? target.fetcher() : queryReliefWeb(target));
 
     if (!found) {
-      const source = target.fetcher ? "InfoDengue" : "ReliefWeb";
+      const source = target.fetcher ? "custom fetcher" : "ReliefWeb";
       log.push({ label: `${target.disease_en}/${target.country_en}`, status: "skip", detail: `no ${source} data with cases ≥ ${target.minCases}` });
       results.skipped++;
       continue;
