@@ -80,7 +80,7 @@ interface RWReport {
   };
 }
 
-async function fetchLatestSitrep(): Promise<{ pageUrl: string; pdfUrl: string | null; num: number } | null> {
+async function fetchLatestSitrep(): Promise<{ pageUrl: string; pdfUrl: string | null; num: number; reliefwebError?: boolean } | null> {
   const year = new Date().getFullYear();
   const rwUrl = new URL(RELIEFWEB_BASE);
   rwUrl.searchParams.set("appname", RELIEFWEB_APPNAME);
@@ -97,7 +97,7 @@ async function fetchLatestSitrep(): Promise<{ pageUrl: string; pdfUrl: string | 
       headers: { ...FETCH_HEADERS, "Accept": "application/json" },
       signal: AbortSignal.timeout(10_000),
     });
-    if (!res.ok) { console.log(`[drc-sitrep] ReliefWeb → HTTP ${res.status}`); return null; }
+    if (!res.ok) { console.log(`[drc-sitrep] ReliefWeb → HTTP ${res.status}`); return { pageUrl: "", pdfUrl: null, num: 0, reliefwebError: true }; }
 
     const json = await res.json() as { data?: RWReport[] };
 
@@ -344,6 +344,7 @@ export async function GET(req: NextRequest) {
     const err = new Error("[drc-sitrep] Ebola DRC row not found in DB — cron cannot update");
     console.error(err.message);
     Sentry.captureException(err, { tags: { cron: "sync-drc-sitrep" } });
+    await logCronRun(supabase, "sync-drc-sitrep", "error", 0, "Ebola DRC row not found");
     if (adminEmail) {
       await sendEmail(
         adminEmail,
@@ -362,13 +363,16 @@ export async function GET(req: NextRequest) {
   // Step 2: detect latest sitrep via ReliefWeb
   const latest = await fetchLatestSitrep();
 
-  if (!latest) {
-    console.log("[drc-sitrep] No sitrep found on ReliefWeb.");
-    if (adminEmail) {
+  if (!latest || latest.reliefwebError) {
+    const detail = latest?.reliefwebError ? "ReliefWeb unavailable" : "no_sitrep_found";
+    console.log(`[drc-sitrep] ${detail}`);
+    await logCronRun(supabase, "sync-drc-sitrep", latest?.reliefwebError ? "error" : "no_data", 0, detail);
+    // Only alert for genuine "no sitrep" — skip email when ReliefWeb is just unreachable.
+    if (!latest?.reliefwebError && adminEmail) {
       const { subject, html } = emailNoSitrep();
       await sendEmail(adminEmail, subject, html);
     }
-    return NextResponse.json({ status: "no_sitrep_found" });
+    return NextResponse.json({ status: detail });
   }
 
   console.log(`[drc-sitrep] Found sitrep N°${latest.num} — ${latest.pageUrl}`);

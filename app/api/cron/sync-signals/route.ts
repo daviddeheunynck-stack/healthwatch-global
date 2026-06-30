@@ -73,8 +73,10 @@ export async function GET(req: NextRequest) {
     const json = await res.json();
     rwData = json.data ?? [];
   } catch (err) {
+    const msg = err instanceof Error ? err.message : String(err);
     console.error("[sync-signals] ReliefWeb fetch error:", err);
     Sentry.captureException(err, { tags: { cron: "sync-signals" } });
+    await logCronRun(supabase, "sync-signals", "error", 0, msg);
     return NextResponse.json({ error: "ReliefWeb fetch failed" }, { status: 502 });
   }
 
