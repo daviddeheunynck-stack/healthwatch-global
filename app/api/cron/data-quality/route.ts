@@ -118,7 +118,7 @@ export async function GET(req: NextRequest) {
   // ── 1. Load active rows ───────────────────────────────────────────────────
   const { data: rows, error: rowsErr } = await supabase
     .from("outbreaks")
-    .select("id, disease, country, cases, deaths, date, source, is_seed, is_pheic")
+    .select("id, disease, disease_en, country, cases, deaths, date, source, is_seed, is_pheic")
     .eq("active", true);
 
   if (rowsErr) return NextResponse.json({ error: rowsErr.message }, { status: 500 });
@@ -273,7 +273,29 @@ export async function GET(req: NextRequest) {
     }
   }
 
-  // ── 4d. WHO DON resolution / containment detection ──────────────────────────
+  // ── 4d. CFR plausibility check ───────────────────────────────────────────────
+  // Diseases with a known high minimum CFR cannot legitimately show 0 deaths
+  // once case counts are substantial. Catches artifacts like "Ebola Germany 1155/0".
+  const HIGH_CFR_FLOOR: Record<string, number> = {
+    "ebola":   40,  // observed range 25–90 %
+    "marburg": 40,  // observed range 24–90 %
+    "nipah":   40,  // observed range 40–75 %
+  };
+  for (const row of rows ?? []) {
+    if (row.is_seed) continue;
+    const name = (row.disease_en ?? row.disease ?? "").toLowerCase();
+    for (const [key, floor] of Object.entries(HIGH_CFR_FLOOR)) {
+      if (!name.includes(key)) continue;
+      if (row.cases > 50 && row.deaths === 0) {
+        needsReview.push({
+          label: `${row.disease} / ${row.country}`,
+          detail: `CFR impossible : ${row.cases.toLocaleString("fr-FR")} cas / 0 décès pour une maladie à CFR ≥${floor}% — probable artefact parsing (total d'un autre pays ?)`,
+        });
+      }
+    }
+  }
+
+  // ── 4e. WHO DON resolution / containment detection ──────────────────────────
   // For active WHO DON rows not already flagged as anomalies:
   //   - Formal end-of-outbreak declaration → auto-deactivate
   //   - Strong containment signal          → flag for manual review

@@ -198,15 +198,32 @@ async function extractItemData(item: RSSItem, dbg?: { reason?: string }): Promis
     titleLower.includes(" eu ") ||
     titleLower.includes("european");
 
-  // Country detection: description + first 12k chars of stripped article body.
+  // Country detection: title first (most reliable), then body text.
+  // The article body often mentions European countries in risk-assessment sections
+  // unrelated to the actual outbreak — the title explicitly names the source country.
+  const titleCountries = findMentionedCountries(item.title);
+  const titleNonEU     = titleCountries.filter((c) => {
+    const g = findCountry(c);
+    return g && g.region !== "europe";
+  });
+
   const searchText = `${item.description} ${articleText.substring(0, 12_000)}`;
-  let countries = findMentionedCountries(searchText);
+  const bodyCountries = findMentionedCountries(searchText);
+
+  // Merge: title-found non-EU countries first (outbreak source), then body countries.
+  // This prevents a European country mentioned in the risk section from overriding
+  // the actual outbreak country (e.g. Germany appearing before DRC in the body).
+  const seenMerge = new Set(titleNonEU.map((c) => c.toLowerCase()));
+  const countries = [
+    ...titleNonEU,
+    ...bodyCountries.filter((c) => !seenMerge.has(c.toLowerCase())),
+  ];
 
   // Fallback for EU articles whose body is JS-rendered (no static country names):
   // use the ECDC EU/EEA surveillance country set when cases are parseable but
   // no countries were detected in the HTML.
   if (countries.length === 0 && isEuropeArticle && cases > 0) {
-    countries = ["EU/EEA"];
+    countries.push("EU/EEA");
   }
 
   if (countries.length === 0) {
