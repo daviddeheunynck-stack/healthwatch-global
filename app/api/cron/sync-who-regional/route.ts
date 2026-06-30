@@ -346,6 +346,45 @@ function fetchLeishmaniasisGHO(country_en: string): () => Promise<Found | null> 
   };
 }
 
+// ── WHO GHO diphtheria fetcher ────────────────────────────────────────────────
+// Indicator WHS3_41: WHO-reported annual diphtheria cases by country.
+// 2024 data: Haiti 75 cases, Yemen 190 cases.
+
+const GHO_DIPHTHERIA_ISO3: Record<string, string> = {
+  "Haiti": "HTI",
+  "Yemen": "YEM",
+};
+
+function fetchDiphtheriaGHO(country_en: string): () => Promise<Found | null> {
+  return async () => {
+    const iso3 = GHO_DIPHTHERIA_ISO3[country_en];
+    if (!iso3) return null;
+    try {
+      const url = `https://ghoapi.azureedge.net/api/WHS3_41?%24filter=SpatialDim%20eq%20'${iso3}'&%24orderby=TimeDim%20desc&%24top=1`;
+      const res = await fetch(url, {
+        headers: { "User-Agent": "HealthWatch-Global/1.0 (health surveillance; contact@healthwatch-global.com)" },
+        signal:  AbortSignal.timeout(10_000),
+      });
+      if (!res.ok) return null;
+      type GHORec = { SpatialDim: string; TimeDim: number; NumericValue: number | null };
+      const json = await res.json() as { value: GHORec[] };
+      const rec  = json.value?.[0];
+      if (!rec?.NumericValue) return null;
+      const cases = Math.round(rec.NumericValue);
+      const year  = rec.TimeDim;
+      return {
+        cases,
+        deaths: 0,
+        date:   `${year}-01-01`,
+        source: "https://www.who.int/data/gho/data/indicators/indicator-details/GHO/diphtheria-number-of-reported-cases",
+        description: `Diphtheria in ${country_en} — ${cases} confirmed case${cases > 1 ? "s" : ""} reported in ${year}. Source: WHO Global Health Observatory (GHO).`,
+      };
+    } catch {
+      return null;
+    }
+  };
+}
+
 // ── ReliefWeb query ───────────────────────────────────────────────────────────
 
 interface Target {
@@ -477,8 +516,8 @@ const TARGETS: Target[] = [
   { disease_en: "Hepatitis E",  country_en: "Somalia",                           minCases:  50    },
   { disease_en: "Hepatitis E",  country_en: "Nigeria",                           minCases: 100    },
   // ── Diphtheria — resurgent in fragile states ──────────────────────────────────
-  { disease_en: "Diphtheria",   country_en: "Haiti",                             minCases:  10    },
-  { disease_en: "Diphtheria",   country_en: "Yemen",                             minCases:  10    },
+  { disease_en: "Diphtheria", country_en: "Haiti",  minCases: 10, fetcher: fetchDiphtheriaGHO("Haiti") },
+  { disease_en: "Diphtheria", country_en: "Yemen",  minCases: 10, fetcher: fetchDiphtheriaGHO("Yemen") },
   // ── Leishmaniasis — visceral form, east Africa / conflict settings ────────────
   { disease_en: "Leishmaniasis", country_en: "Sudan",    minCases: 100, fetcher: fetchLeishmaniasisGHO("Sudan")    },
   { disease_en: "Leishmaniasis", country_en: "Ethiopia", minCases: 100, fetcher: fetchLeishmaniasisGHO("Ethiopia") },
