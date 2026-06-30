@@ -64,10 +64,11 @@ export async function getLastSync(): Promise<string | null> {
 export async function getOutbreaks(): Promise<Outbreak[]> {
   const supabase = getServerClient();
 
+  const thirtyDaysAgo = new Date(Date.now() - 30 * 86_400_000).toISOString().split("T")[0];
   const { data, error } = await supabase
     .from("outbreaks")
     .select("*")
-    .eq("active", true)
+    .or(`active.eq.true,and(source_priority.gte.3,updated_at.gte.${thirtyDaysAgo})`)
     .order("date", { ascending: false });
 
   if (error) {
