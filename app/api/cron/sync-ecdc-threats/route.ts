@@ -184,9 +184,10 @@ async function extractItemData(item: RSSItem, dbg?: { reason?: string }): Promis
     console.warn("[ecdc] fetch article:", errorMessage(e));
   }
 
-  // Combine RSS description + article intro for extraction
+  // Combine RSS description + article intro for extraction.
+  // Use 8 000 chars — ECDC "worldwide overview" pages have heavy nav before the article body.
   const fullText = `${item.description} ${articleText}`.trim();
-  const { cases, deaths } = extractNumbers(fullText.substring(0, 3000));
+  const { cases, deaths } = extractNumbers(fullText.substring(0, 8_000));
 
   // Detect if this article is explicitly about a European outbreak (used for both
   // country fallback and EU multi-country mode guard below).
