@@ -121,6 +121,7 @@ interface RSSItem {
   title:       string;
   date:        string;   // YYYY-MM-DD
   description: string;   // plain text stripped from RSS <description>
+  categories:  string[]; // <category> tags — Africa CDC uses these for disease names
 }
 
 function parseRSSFeed(xml: string): RSSItem[] {
@@ -151,7 +152,14 @@ function parseRSSFeed(xml: string): RSSItem[] {
       .replace(/&nbsp;/g, " ").replace(/&#8211;/g, "–").replace(/&#124;/g, "|")
       .replace(/\s+/g, " ").trim();
 
-    items.push({ url: link, title, date: d.toISOString().substring(0, 10), description });
+    // Extract all <category> tags — Africa CDC tags articles with disease names
+    const categories: string[] = [];
+    for (const cat of raw.matchAll(/<category>(?:<!\[CDATA\[)?([^\]<]+)/gi)) {
+      const c = cat[1].trim();
+      if (c) categories.push(c);
+    }
+
+    items.push({ url: link, title, date: d.toISOString().substring(0, 10), description, categories });
   }
 
   return items;
@@ -173,10 +181,15 @@ interface PostData {
 }
 
 async function extractItemData(item: RSSItem): Promise<PostData[]> {
-  const diseaseRaw = extractDiseaseFromTitle(item.title);
-  // If the title couldn't be cleaned to a short disease name (> 40 chars remain),
-  // it's likely an institutional/funding article rather than an outbreak report.
-  if (!diseaseRaw || diseaseRaw.length > 40 || !isKnownDisease(diseaseRaw)) return [];
+  // Disease detection: try title first, then RSS <category> tags as fallback.
+  // Africa CDC often uses institutional titles ("Africa CDC Launches...") with
+  // disease names only in the <category> tags.
+  let diseaseRaw = extractDiseaseFromTitle(item.title);
+  if (!diseaseRaw || diseaseRaw.length > 40 || !isKnownDisease(diseaseRaw)) {
+    // Try each category for a recognized disease name
+    diseaseRaw = item.categories.find((c) => isKnownDisease(c)) ?? "";
+  }
+  if (!diseaseRaw || !isKnownDisease(diseaseRaw)) return [];
   const diseaseInfo = normalizeDisease(diseaseRaw);
 
   // Country detection — RSS description has compact text with key country mentions.
