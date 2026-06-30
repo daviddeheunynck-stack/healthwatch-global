@@ -13,6 +13,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { buildOutbreakAlertEmail } from "@/lib/alert-emails";
 import * as Sentry from "@sentry/nextjs";
+import { logCronRun } from "@/lib/cron-monitor";
 
 export const dynamic = "force-dynamic";
 
@@ -87,6 +88,7 @@ export async function GET(req: NextRequest) {
   }
 
   if (!newOutbreaks || newOutbreaks.length === 0) {
+    await logCronRun(supabase, "regional-alerts", "ok", 0);
     return NextResponse.json({ message: "No new outbreaks", sent: 0, skipped: 0 });
   }
 
@@ -253,6 +255,7 @@ export async function GET(req: NextRequest) {
     }
   }
 
+  await logCronRun(supabase, "regional-alerts", "ok", sent);
   return NextResponse.json({
     newOutbreaks: newOutbreaks.length,
     sent,

@@ -10,6 +10,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import * as Sentry from "@sentry/nextjs";
+import { logCronRun } from "@/lib/cron-monitor";
 
 export const dynamic = "force-dynamic";
 
@@ -221,6 +222,7 @@ export async function GET(req: NextRequest) {
   }
 
   if (!pilots || pilots.length === 0) {
+    await logCronRun(supabase, "pilot-follow-up", "ok", 0);
     return NextResponse.json({ sent: 0, skipped: 0, reason: "no pilots in window" });
   }
 
@@ -292,5 +294,6 @@ export async function GET(req: NextRequest) {
     await new Promise((r) => setTimeout(r, 150));
   }
 
+  await logCronRun(supabase, "pilot-follow-up", "ok", sent);
   return NextResponse.json({ sent, skipped, failed, total: pilots.length });
 }

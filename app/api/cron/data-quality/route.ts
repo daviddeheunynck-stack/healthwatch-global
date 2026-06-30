@@ -3,6 +3,7 @@ import { createClient } from "@supabase/supabase-js";
 import { extractNumbers } from "@/lib/outbreak-parser";
 import { errorMessage } from "@/lib/error";
 import * as Sentry from "@sentry/nextjs";
+import { logCronRun } from "@/lib/cron-monitor";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 120;
@@ -463,6 +464,7 @@ export async function GET(req: NextRequest) {
     emailSent: !!adminEmail,
   };
 
+  await logCronRun(supabase, "data-quality", "ok", fixes.length);
   console.log("[data-quality]", result);
   return NextResponse.json(result);
 }

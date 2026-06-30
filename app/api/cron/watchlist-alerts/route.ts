@@ -8,6 +8,7 @@ import { buildWatchlistAlertEmail } from "@/lib/watchlist-alert-email";
 import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 import { errorMessage } from "@/lib/error";
 import * as Sentry from "@sentry/nextjs";
+import { logCronRun } from "@/lib/cron-monitor";
 
 export const dynamic = "force-dynamic";
 
@@ -51,6 +52,7 @@ export async function GET(req: NextRequest) {
     .select("user_id, outbreak_id");
 
   if (!entries || entries.length === 0) {
+    await logCronRun(supabase, "watchlist-alerts", "ok", 0);
     return NextResponse.json({ sent: 0, unchanged: 0, message: "No watchlist entries" });
   }
 
@@ -166,6 +168,7 @@ export async function GET(req: NextRequest) {
     }
   }
 
+  await logCronRun(supabase, "watchlist-alerts", "ok", sent);
   console.log(`[watchlist-alerts] Done — sent: ${sent}, unchanged: ${unchanged}`);
   return NextResponse.json({ sent, unchanged });
 }

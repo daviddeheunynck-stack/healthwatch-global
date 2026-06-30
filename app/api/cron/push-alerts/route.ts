@@ -9,6 +9,7 @@ import { sendPushToMany } from "@/lib/push";
 import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 import { errorMessage } from "@/lib/error";
 import * as Sentry from "@sentry/nextjs";
+import { logCronRun } from "@/lib/cron-monitor";
 
 export const dynamic = "force-dynamic";
 
@@ -57,6 +58,7 @@ export async function GET(req: NextRequest) {
   }
 
   if (!newOutbreaks || newOutbreaks.length === 0) {
+    await logCronRun(supabase, "push-alerts", "ok", 0);
     console.log("[push-alerts] No new outbreaks to notify");
     return NextResponse.json({ sent: 0, outbreaks: 0 });
   }
@@ -136,6 +138,7 @@ export async function GET(req: NextRequest) {
     console.log(`[push-alerts] Swept ${allExpiredIds.length} expired subscription(s)`);
   }
 
+  await logCronRun(supabase, "push-alerts", "ok", totalSent);
   console.log(`[push-alerts] Done — outbreaks: ${notifiedIds.length}, sent: ${totalSent}, expired: ${allExpiredIds.length}`);
   return NextResponse.json({ outbreaks: notifiedIds.length, sent: totalSent, expired: allExpiredIds.length });
 }

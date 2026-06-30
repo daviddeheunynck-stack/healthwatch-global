@@ -48,22 +48,31 @@ export async function logCronRun(
  * Set to 1.5× the schedule interval to absorb Vercel timing jitter.
  */
 export const CRON_WINDOWS: Record<string, number> = {
+  // ── Sync crons ───────────────────────────────────────────────────────────────
   "sync-outbreaks":    2,    // hourly
   "sync-signals":      9,    // every 6h
   "sync-cdc-han":      7,    // every 4h
   "sync-ukhsa":        14,   // twice daily
   "sync-spf":          14,   // twice daily
-  "sync-cdc-notices":  30,   // daily
-  "sync-who-afro":     80,   // Mon/Wed/Fri — max gap 72h (Fri→Mon)
-  "sync-who-emro":     80,   // Mon/Wed/Fri — max gap 72h (Fri→Mon)
-  "sync-africa-cdc":   110,  // Wed/Sat — max gap 96h (Sat→Wed)
-  "sync-who-regional": 80,   // Mon/Wed/Fri — max gap 72h (updated from Tue/Fri)
-  "check-mpox-sitrep": 110,  // Wed/Sat — max gap 96h (Sat→Wed)
-  "sync-paho-alerts":  110,  // Tue/Fri — max gap 96h (updated from weekly)
-  "sync-ecdc-threats": 192,  // weekly Fri
+  "sync-cdc-notices":  26,   // daily
   "sync-drc-sitrep":   26,   // daily — PHEIC cadence
-  "sync-endemic-data": 192,  // weekly Mon
-  "sync-usda-aphis":   192,  // weekly Mon
+  "sync-who-afro":     26,   // daily
+  "sync-who-emro":     26,   // daily
+  "sync-africa-cdc":   26,   // daily
+  "sync-who-regional": 26,   // daily
+  "check-mpox-sitrep": 26,   // daily
+  "sync-paho-alerts":  26,   // daily
+  "sync-ecdc-threats": 26,   // daily
+  "sync-endemic-data": 26,   // daily
+  "sync-usda-aphis":   26,   // daily
+  // ── Alert delivery crons ─────────────────────────────────────────────────────
+  "regional-alerts":   26,   // daily 06:30
+  "watchlist-alerts":  26,   // daily 06:40
+  "push-alerts":       26,   // daily 06:45
+  "disease-alerts":    26,   // daily 06:50
+  "pilot-follow-up":   26,   // daily 08:00
+  "data-quality":      26,   // daily 10:00
+  // ── Billing & retention crons ────────────────────────────────────────────────
   "expire-trials":       26,  // daily — monetization critical
   "onboarding-sequence": 26,  // daily — trial email sequence
   "trial-reminders":     26,  // daily — conversion critical

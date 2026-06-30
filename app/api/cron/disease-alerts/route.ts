@@ -9,6 +9,7 @@ import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 import { diseaseToSlug } from "@/lib/disease-data";
 import { errorMessage } from "@/lib/error";
 import * as Sentry from "@sentry/nextjs";
+import { logCronRun } from "@/lib/cron-monitor";
 
 export const dynamic = "force-dynamic";
 
@@ -158,6 +159,7 @@ export async function GET(req: NextRequest) {
     }
   }
 
+  await logCronRun(supabase, "disease-alerts", "ok", sent);
   console.log(`[disease-alerts] Done — sent: ${sent}, skipped: ${skipped}`);
   return NextResponse.json({ sent, skipped });
 }
