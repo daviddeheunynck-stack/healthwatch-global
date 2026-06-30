@@ -1,6 +1,5 @@
 import { NextRequest } from "next/server";
 import { createClient } from "@supabase/supabase-js";
-import { Resend } from "resend";
 import * as Sentry from "@sentry/nextjs";
 
 export const dynamic    = "force-dynamic";
@@ -78,11 +77,22 @@ export async function GET(req: NextRequest) {
   if (!cronSecret || authHeader !== `Bearer ${cronSecret}`)
     return new Response("Unauthorized", { status: 401 });
 
-  const resendKey = (process.env.RESEND_API_KEY ?? "").replace(/^﻿/, "").trim();
-  if (!resendKey) return new Response(JSON.stringify({ ok: true, skipped: "RESEND_API_KEY not configured" }), { status: 200 });
+  const brevoKey = (process.env.BREVO_API_KEY ?? "").replace(/^﻿/, "").trim();
+  if (!brevoKey) return new Response(JSON.stringify({ ok: true, skipped: "BREVO_API_KEY not configured" }), { status: 200 });
+
+  const sendEmail = async (to: string, subject: string, html: string) => {
+    const res = await fetch("https://api.brevo.com/v3/smtp/email", {
+      method: "POST",
+      headers: { "api-key": brevoKey, "Content-Type": "application/json" },
+      body: JSON.stringify({
+        sender: { name: "HealthWatch Global", email: "digest@healthwatch-global.com" },
+        to: [{ email: to }], subject, htmlContent: html,
+      }),
+    });
+    if (!res.ok) throw new Error(`Brevo error ${res.status}: ${await res.text()}`);
+  };
 
   const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
-  const resend   = new Resend(resendKey);
 
   // Pro users with a specific region preference
   const { data: users } = await supabase
@@ -93,6 +103,17 @@ export async function GET(req: NextRequest) {
     .not("email", "is", null);
 
   if (!users?.length) return Response.json({ fired: 0 });
+
+  // Dedup: skip users who already received a regional digest in the last 6 days
+  const userIds = users.map((u) => u.id);
+  const cooldownCutoff = new Date(Date.now() - 6 * 24 * 3_600_000).toISOString();
+  const { data: recentDigests } = await supabase
+    .from("alert_notifications")
+    .select("user_id")
+    .eq("type", "regional_digest")
+    .gte("created_at", cooldownCutoff)
+    .in("user_id", userIds);
+  const digestedUsers = new Set((recentDigests ?? []).map((d: { user_id: string }) => d.user_id));
 
   // Fetch all active outbreaks once (avoids N+1)
   const { data: outbreaks } = await supabase
@@ -116,6 +137,7 @@ export async function GET(req: NextRequest) {
 
     const regional = active.filter((o) => o.region === digestRegion).slice(0, 10);
     if (!regional.length) continue;
+    if (digestedUsers.has(user.id)) continue;
 
     const highCount = regional.filter((o) => o.risk_level === "high").length;
     const pheicList = regional.filter((o) => o.is_pheic);
@@ -161,12 +183,19 @@ export async function GET(req: NextRequest) {
 </div>`;
 
     try {
-      await resend.emails.send({
-        from:    "HealthWatch Global <digest@healthwatch-global.com>",
-        to:      user.email,
-        subject,
-        html,
+      // Insert dedup record BEFORE sending — prevents re-send on cron retry
+      const { error: insertErr } = await supabase.from("alert_notifications").insert({
+        user_id:     user.id,
+        type:        "regional_digest",
+        title:       subject,
+        body:        `${digestRegion} · ${regional.length} outbreaks`,
+        outbreak_id: null,
       });
+      if (insertErr) {
+        console.warn(`[trigger-regional-digest] dedup insert failed for ${user.id}: ${insertErr.message}`);
+        continue;
+      }
+      await sendEmail(user.email, subject, html);
       fired++;
     } catch (err) {
       console.error(`[trigger-regional-digest] Failed for ${user.email}:`, err);

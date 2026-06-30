@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
-import { Resend } from "resend";
 import * as Sentry from "@sentry/nextjs";
 
 export const dynamic = "force-dynamic";
@@ -11,8 +10,23 @@ const clean = (v: string | undefined) => (v || "").replace(new RegExp("^" + BOM)
 const SUPABASE_URL     = clean(process.env.NEXT_PUBLIC_SUPABASE_URL);
 const SUPABASE_SERVICE = clean(process.env.SUPABASE_SERVICE_ROLE_KEY);
 const CRON_SECRET      = clean(process.env.CRON_SECRET);
-const RESEND_KEY       = clean(process.env.RESEND_API_KEY);
+const BREVO_KEY        = clean(process.env.BREVO_API_KEY);
 const APP_URL          = clean(process.env.NEXT_PUBLIC_APP_URL) || "https://healthwatch-global.com";
+
+async function sendEmail(to: string | string[], subject: string, html: string) {
+  const toArr = Array.isArray(to) ? to.map((e) => ({ email: e })) : [{ email: to }];
+  const res = await fetch("https://api.brevo.com/v3/smtp/email", {
+    method: "POST",
+    headers: { "api-key": BREVO_KEY, "Content-Type": "application/json" },
+    body: JSON.stringify({
+      sender:      { name: "HealthWatch Global", email: "alerts@healthwatch-global.com" },
+      to:          toArr,
+      subject,
+      htmlContent: html,
+    }),
+  });
+  if (!res.ok) throw new Error(`Brevo error ${res.status}: ${await res.text()}`);
+}
 
 function esc(s: string): string {
   return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
@@ -56,10 +70,9 @@ export async function GET(req: NextRequest) {
   if (!CRON_SECRET || auth !== `Bearer ${CRON_SECRET}`)
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  if (!RESEND_KEY) return NextResponse.json({ ok: true, skipped: "RESEND_API_KEY not configured" });
+  if (!BREVO_KEY) return NextResponse.json({ ok: true, skipped: "BREVO_API_KEY not configured" });
 
   const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE);
-  const resend   = new Resend(RESEND_KEY);
 
   const { data: subscribers } = await supabase
     .from("outbreak_subscribers")
@@ -98,14 +111,10 @@ export async function GET(req: NextRequest) {
     const country   = o.country_en ?? "Unknown country";
     const risk      = (RISK_LABEL[locale] ?? RISK_LABEL.en)[o.risk_level] ?? o.risk_level.toUpperCase();
     const deepLink  = `${APP_URL}/${locale}?outbreak=${o.id}`;
-    const cfr       = o.cases > 0 ? (o.deaths / o.cases * 100).toFixed(1) : null;
+    const cfr       = o.cases > 0 && o.deaths != null ? (o.deaths / o.cases * 100).toFixed(1) : null;
 
-    try {
-      await resend.emails.send({
-        from: "HealthWatch Global <alerts@healthwatch-global.com>",
-        to:   sub.emails,
-        subject: (SUBJECT[locale] ?? SUBJECT.en)(disease, country),
-        html: `
+    const subject = (SUBJECT[locale] ?? SUBJECT.en)(disease, country);
+    const html = `
 <div dir="${isRtl ? "rtl" : "ltr"}" style="font-family:sans-serif;max-width:520px;margin:0 auto;padding:24px;background:#0f172a;color:#e2e8f0;border-radius:12px;direction:${isRtl ? "rtl" : "ltr"};text-align:${isRtl ? "right" : "left"}">
   <p style="color:#60a5fa;font-size:18px;font-weight:700;margin:0 0 4px">HealthWatch Global</p>
   <p style="margin:0 0 16px;font-size:12px;color:#64748b">${bl.subtitle}</p>
@@ -113,7 +122,7 @@ export async function GET(req: NextRequest) {
   <p style="margin:0 0 4px;font-size:16px;font-weight:600;color:#fff">${esc(disease)} — ${esc(country)}</p>
   <p style="margin:0 0 12px;font-size:13px;color:#94a3b8">
     ${bl.cases} <strong style="color:#f1f5f9">${o.cases.toLocaleString(numLocale)}</strong> &nbsp;|&nbsp;
-    ${bl.deaths} <strong style="color:#f1f5f9">${o.deaths.toLocaleString(numLocale)}</strong>
+    ${bl.deaths} <strong style="color:#f1f5f9">${(o.deaths ?? 0).toLocaleString(numLocale)}</strong>
     ${cfr ? `&nbsp;|&nbsp; ${bl.cfr} <strong style="color:#f1f5f9">${cfr}%</strong>` : ""}
   </p>
   <p style="margin:0 0 20px;font-size:13px;color:#94a3b8">
@@ -124,14 +133,16 @@ export async function GET(req: NextRequest) {
     ${bl.view}
   </a>
   <p style="margin-top:20px;font-size:11px;color:#475569">${bl.footer}</p>
-</div>`,
-      });
+</div>`;
 
+    try {
+      // Update dedup marker BEFORE sending — prevents re-send on cron retry
       await supabase
         .from("outbreak_subscribers")
         .update({ last_sent_at: new Date().toISOString() })
         .eq("id", sub.id);
 
+      await sendEmail(sub.emails, subject, html);
       sent++;
     } catch (err) {
       console.error(`[trigger-subscriber-alerts] Failed for sub ${sub.id}:`, err);
