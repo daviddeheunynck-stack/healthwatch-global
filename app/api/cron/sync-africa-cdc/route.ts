@@ -249,12 +249,14 @@ export async function GET(req: NextRequest) {
     const res = await fetch(AFRICA_CDC_RSS, { headers: FETCH_HEADERS, signal: AbortSignal.timeout(15_000) });
     if (!res.ok) {
       console.error(`[africa-cdc] RSS HTTP ${res.status}`);
+      await logCronRun(supabase, "sync-africa-cdc", "error", 0, `Africa CDC RSS HTTP ${res.status}`);
       return NextResponse.json({ error: `Africa CDC RSS HTTP ${res.status}` }, { status: 502 });
     }
     rssXml = await res.text();
   } catch (e) {
     console.error("[africa-cdc] fetch RSS:", errorMessage(e));
     Sentry.captureException(e, { tags: { cron: "sync-africa-cdc" } });
+    await logCronRun(supabase, "sync-africa-cdc", "error", 0, errorMessage(e));
     return NextResponse.json({ error: errorMessage(e) }, { status: 502 });
   }
 
@@ -262,6 +264,7 @@ export async function GET(req: NextRequest) {
   console.log(`[africa-cdc] Found ${items.length} recent item(s) within ${MAX_AGE_DAYS} days`);
 
   if (items.length === 0) {
+    await logCronRun(supabase, "sync-africa-cdc", "no_data", 0);
     return NextResponse.json({ success: true, items: 0, inserted: 0, updated: 0, skipped: 0 });
   }
 
@@ -271,7 +274,10 @@ export async function GET(req: NextRequest) {
     .select("id, disease_en, country_en, cases, deaths, date, source, active")
     .or("active.eq.true,date.gte." + new Date(Date.now() - 90 * 86400_000).toISOString().substring(0, 10));
 
-  if (fetchErr) return NextResponse.json({ error: fetchErr.message }, { status: 500 });
+  if (fetchErr) {
+    await logCronRun(supabase, "sync-africa-cdc", "error", 0, fetchErr.message);
+    return NextResponse.json({ error: fetchErr.message }, { status: 500 });
+  }
 
   type Row = NonNullable<typeof existing>[number];
   const byDC = new Map<string, Row>();

@@ -218,6 +218,7 @@ export async function GET(req: NextRequest) {
 
   console.log(`[who-emro] ${pageEntries.length} candidate articles`);
   if (pageEntries.length === 0) {
+    await logCronRun(supabase, "sync-who-emro", "no_data", 0);
     return NextResponse.json({ success: true, articles: 0, inserted: 0, updated: 0, skipped: 0 });
   }
 
@@ -226,7 +227,10 @@ export async function GET(req: NextRequest) {
     .from("outbreaks")
     .select("id, disease_en, country_en, cases, deaths, date, source, active")
     .or("active.eq.true,date.gte." + new Date(Date.now() - 90 * 86400_000).toISOString().substring(0, 10));
-  if (fetchErr) return NextResponse.json({ error: fetchErr.message }, { status: 500 });
+  if (fetchErr) {
+    await logCronRun(supabase, "sync-who-emro", "error", 0, fetchErr.message);
+    return NextResponse.json({ error: fetchErr.message }, { status: 500 });
+  }
 
   type Row = NonNullable<typeof existing>[number];
   const bySource = new Map<string, Row>();

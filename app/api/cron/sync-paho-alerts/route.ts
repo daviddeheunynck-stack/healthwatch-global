@@ -250,12 +250,14 @@ export async function GET(req: NextRequest) {
     const res = await fetch(PAHO_ALERT_URL, { headers: FETCH_HEADERS, signal: AbortSignal.timeout(15_000) });
     if (!res.ok) {
       console.error(`[paho] listing HTTP ${res.status}`);
+      await logCronRun(supabase, "sync-paho-alerts", "error", 0, `PAHO listing HTTP ${res.status}`);
       return NextResponse.json({ error: `PAHO listing HTTP ${res.status}` }, { status: 502 });
     }
     listingHtml = await res.text();
   } catch (e) {
     console.error("[paho] fetch listing:", errorMessage(e));
     Sentry.captureException(e, { tags: { cron: "sync-paho-alerts" } });
+    await logCronRun(supabase, "sync-paho-alerts", "error", 0, errorMessage(e));
     return NextResponse.json({ error: errorMessage(e) }, { status: 502 });
   }
 
@@ -263,6 +265,7 @@ export async function GET(req: NextRequest) {
   console.log(`[paho] Found ${entries.length} recent alert(s) within ${MAX_AGE_DAYS} days`);
 
   if (entries.length === 0) {
+    await logCronRun(supabase, "sync-paho-alerts", "no_data", 0);
     return NextResponse.json({ success: true, alerts: 0, inserted: 0, updated: 0, skipped: 0 });
   }
 
@@ -272,7 +275,10 @@ export async function GET(req: NextRequest) {
     .select("id, disease_en, country_en, cases, deaths, date, source, active")
     .or("active.eq.true,date.gte." + new Date(Date.now() - 90 * 86400_000).toISOString().substring(0, 10));
 
-  if (fetchErr) return NextResponse.json({ error: fetchErr.message }, { status: 500 });
+  if (fetchErr) {
+    await logCronRun(supabase, "sync-paho-alerts", "error", 0, fetchErr.message);
+    return NextResponse.json({ error: fetchErr.message }, { status: 500 });
+  }
 
   type Row = NonNullable<typeof existing>[number];
   const byDC = new Map<string, Row>();

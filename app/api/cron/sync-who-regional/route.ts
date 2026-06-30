@@ -360,7 +360,10 @@ export async function GET(req: NextRequest) {
     .select("id, disease_en, country_en, cases, deaths, date, source, active")
     .or("active.eq.true,date.gte." + new Date(Date.now() - 90 * 86400_000).toISOString().substring(0, 10));
 
-  if (fetchErr) return NextResponse.json({ error: fetchErr.message }, { status: 500 });
+  if (fetchErr) {
+    await logCronRun(supabase, "sync-who-regional", "error", 0, fetchErr.message);
+    return NextResponse.json({ error: fetchErr.message }, { status: 500 });
+  }
 
   // Index by "disease_en|country_en" — prefer active row when duplicates exist
   type Row = NonNullable<typeof existing>[number];

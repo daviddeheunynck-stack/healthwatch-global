@@ -116,12 +116,14 @@ export async function GET(req: NextRequest) {
     });
     if (!res.ok) {
       console.error(`[cdc-notices] listing HTTP ${res.status}`);
+      await logCronRun(supabase, "sync-cdc-notices", "error", 0, `CDC notices HTTP ${res.status}`);
       return NextResponse.json({ error: `CDC notices HTTP ${res.status}` }, { status: 502 });
     }
     listHtml = await res.text();
   } catch (e) {
     console.error("[cdc-notices] fetch listing:", errorMessage(e));
     Sentry.captureException(e, { tags: { cron: "sync-cdc-notices" } });
+    await logCronRun(supabase, "sync-cdc-notices", "error", 0, errorMessage(e));
     return NextResponse.json({ error: errorMessage(e) }, { status: 502 });
   }
 
@@ -141,6 +143,7 @@ export async function GET(req: NextRequest) {
 
   console.log(`[cdc-notices] Found ${notices.length} notices`);
   if (notices.length === 0) {
+    await logCronRun(supabase, "sync-cdc-notices", "no_data", 0);
     return NextResponse.json({ success: true, notices: 0, inserted: 0, updated: 0, skipped: 0 });
   }
 
@@ -154,8 +157,14 @@ export async function GET(req: NextRequest) {
       .or("active.eq.true,date.gte." + new Date(Date.now() - 90 * 86400_000).toISOString().substring(0, 10)),
   ]);
 
-  if (cdcErr)    return NextResponse.json({ error: cdcErr.message }, { status: 500 });
-  if (recentErr) return NextResponse.json({ error: recentErr.message }, { status: 500 });
+  if (cdcErr) {
+    await logCronRun(supabase, "sync-cdc-notices", "error", 0, cdcErr.message);
+    return NextResponse.json({ error: cdcErr.message }, { status: 500 });
+  }
+  if (recentErr) {
+    await logCronRun(supabase, "sync-cdc-notices", "error", 0, recentErr.message);
+    return NextResponse.json({ error: recentErr.message }, { status: 500 });
+  }
 
   type Row = NonNullable<typeof cdcRows>[number];
 

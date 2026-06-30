@@ -536,7 +536,10 @@ export async function GET(req: NextRequest) {
       "and(disease.eq.Leptospirose,country.eq.Thaïlande)"
     );
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) {
+    await logCronRun(supabase, "sync-endemic-data", "error", 0, error.message);
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
 
   type Row = NonNullable<typeof rows>[number];
   const findRow = (disease: string, country: string): Row | undefined =>

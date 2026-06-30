@@ -346,6 +346,7 @@ export async function GET(req: NextRequest) {
   const latest = await fetchLatestSitrep();
   if (!latest) {
     console.log("[mpox] Could not detect sitrep from WHO page.");
+    await logCronRun(supabase, "check-mpox-sitrep", "no_data", 0);
     return NextResponse.json({ status: "no_data" });
   }
 
@@ -353,6 +354,7 @@ export async function GET(req: NextRequest) {
 
   if (latest.url === lastKnownUrl) {
     console.log("[mpox] Already up to date.");
+    await logCronRun(supabase, "check-mpox-sitrep", "no_data", 0);
     return NextResponse.json({ status: "up_to_date", sitrep: latest.num });
   }
 

@@ -166,16 +166,21 @@ export async function GET(req: NextRequest) {
   let atomXml: string;
   try {
     const res = await fetch(UKHSA_ATOM, { headers: FETCH_HEADERS, signal: AbortSignal.timeout(15_000) });
-    if (!res.ok) return NextResponse.json({ error: `UKHSA ATOM HTTP ${res.status}` }, { status: 502 });
+    if (!res.ok) {
+      await logCronRun(supabase, "sync-ukhsa", "error", 0, `UKHSA ATOM HTTP ${res.status}`);
+      return NextResponse.json({ error: `UKHSA ATOM HTTP ${res.status}` }, { status: 502 });
+    }
     atomXml = await res.text();
   } catch (e) {
     Sentry.captureException(e, { tags: { cron: "sync-ukhsa" } });
+    await logCronRun(supabase, "sync-ukhsa", "error", 0, errorMessage(e));
     return NextResponse.json({ error: errorMessage(e) }, { status: 502 });
   }
 
   const entries = parseATOMFeed(atomXml);
   console.log(`[ukhsa] ${entries.length} entries within ${MAX_AGE_DAYS} days`);
   if (entries.length === 0) {
+    await logCronRun(supabase, "sync-ukhsa", "no_data", 0);
     return NextResponse.json({ success: true, entries: 0, inserted: 0, updated: 0, skipped: 0 });
   }
 
@@ -184,7 +189,10 @@ export async function GET(req: NextRequest) {
     .from("outbreaks")
     .select("id, disease_en, country_en, cases, deaths, date, source, active")
     .or("active.eq.true,date.gte." + new Date(Date.now() - 90 * 86400_000).toISOString().substring(0, 10));
-  if (fetchErr) return NextResponse.json({ error: fetchErr.message }, { status: 500 });
+  if (fetchErr) {
+    await logCronRun(supabase, "sync-ukhsa", "error", 0, fetchErr.message);
+    return NextResponse.json({ error: fetchErr.message }, { status: 500 });
+  }
 
   type Row = NonNullable<typeof existing>[number];
   const bySource = new Map<string, Row>();

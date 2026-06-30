@@ -311,12 +311,14 @@ export async function GET(req: NextRequest) {
         const msg = `[usda-aphis] APHIS unreachable (all CSV + HTML failed): ${errorMessage(e)}`;
         console.warn(msg);
         Sentry.captureMessage(msg, { level: "warning", tags: { cron: "sync-usda-aphis" } });
+        await logCronRun(supabase, "sync-usda-aphis", "error", 0, "aphis_unreachable");
         return NextResponse.json({ success: false, error: "aphis_unreachable" }, { status: 200 });
       }
       if (!htmlRes.ok) {
         const msg = `[usda-aphis] HTML fallback HTTP ${htmlRes.status}`;
         console.warn(msg);
         Sentry.captureMessage(msg, { level: "warning", tags: { cron: "sync-usda-aphis" } });
+        await logCronRun(supabase, "sync-usda-aphis", "error", 0, `aphis_http_${htmlRes.status}`);
         return NextResponse.json({ success: false, error: `aphis_http_${htmlRes.status}` }, { status: 200 });
       }
       rawText = await htmlRes.text();
@@ -325,6 +327,7 @@ export async function GET(req: NextRequest) {
   } catch (e) {
     console.error("[usda-aphis] unexpected fetch error:", errorMessage(e));
     Sentry.captureException(e, { tags: { cron: "sync-usda-aphis" } });
+    await logCronRun(supabase, "sync-usda-aphis", "error", 0, errorMessage(e));
     return NextResponse.json({ error: errorMessage(e) }, { status: 502 });
   }
 
@@ -342,6 +345,7 @@ export async function GET(req: NextRequest) {
     const msg = `[usda-aphis] 0 states parsed (format=${dataFormat}, rows=${rows.length}) — APHIS page may have changed structure`;
     console.warn(msg);
     Sentry.captureMessage(msg, { level: "warning", tags: { cron: "sync-usda-aphis" } });
+    await logCronRun(supabase, "sync-usda-aphis", "no_data", 0);
     return NextResponse.json({ success: true, dataFormat, rows: rows.length, states: 0, inserted: 0, updated: 0, skipped: 0 });
   }
 
@@ -353,7 +357,10 @@ export async function GET(req: NextRequest) {
     .eq("country_en", "United States")
     .like("source", `${SOURCE_PREFIX}%`);
 
-  if (fetchErr) return NextResponse.json({ error: fetchErr.message }, { status: 500 });
+  if (fetchErr) {
+    await logCronRun(supabase, "sync-usda-aphis", "error", 0, fetchErr.message);
+    return NextResponse.json({ error: fetchErr.message }, { status: 500 });
+  }
 
   type Row = NonNullable<typeof existingRows>[number];
   const bySource = new Map<string, Row>();
