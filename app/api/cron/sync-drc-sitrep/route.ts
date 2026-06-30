@@ -379,6 +379,7 @@ export async function GET(req: NextRequest) {
 
   if (latest.num <= lastKnownNum) {
     console.log(`[drc-sitrep] Already processed N°${latest.num}.`);
+    await logCronRun(supabase, "sync-drc-sitrep", "ok", 0);
     return NextResponse.json({ status: "up_to_date", sitrep: latest.num });
   }
 
