@@ -138,26 +138,41 @@ export async function GET(req: NextRequest) {
 
   const notifiedSet = new Set((existing ?? []).map((n) => `${n.user_id}::${n.outbreak_id}`));
 
+  // Group by disease — one email per PHEIC event listing all affected countries.
+  // Without grouping, each country row (DRC, Uganda, France…) triggers a separate
+  // email for the same PHEIC declaration, spamming users.
+  const diseaseMap = new Map<string, typeof pheicOutbreaks>();
+  for (const o of pheicOutbreaks) {
+    const key = (o.disease_en ?? "unknown").toLowerCase();
+    if (!diseaseMap.has(key)) diseaseMap.set(key, []);
+    diseaseMap.get(key)!.push(o);
+  }
+
   let fired = 0;
 
-  for (const outbreak of pheicOutbreaks) {
-    const disease = outbreak.disease_en ?? "Unknown";
-    const country = outbreak.country_en ?? "Unknown";
+  for (const [, outbreaks] of diseaseMap) {
+    // Primary row = largest case count (main source country)
+    const primary  = outbreaks.reduce((a, b) => (a.cases ?? 0) >= (b.cases ?? 0) ? a : b);
+    const disease  = primary.disease_en ?? "Unknown";
+    const countries = outbreaks.map((o) => o.country_en ?? "Unknown").join(", ");
+    const totalCases  = outbreaks.reduce((s, o) => s + (o.cases ?? 0), 0);
+    const totalDeaths = outbreaks.reduce((s, o) => s + (o.deaths ?? 0), 0);
     const cfr =
-      outbreak.cases > 0 && outbreak.deaths != null && outbreak.deaths > 0
-        ? `CFR ${(outbreak.deaths / outbreak.cases * 100).toFixed(1)}%`
+      totalCases > 0 && totalDeaths > 0
+        ? `CFR ${(totalDeaths / totalCases * 100).toFixed(1)}%`
         : "";
 
     for (const user of proUsers as Array<{ id: string; email: string; alert_locale?: string | null }>) {
-      const key = `${user.id}::${outbreak.id}`;
+      // Dedup against the primary outbreak id — one record covers the whole PHEIC event
+      const key = `${user.id}::${primary.id}`;
       if (notifiedSet.has(key)) continue;
 
       const locale    = user.alert_locale ?? "en";
       const numLocale = locale === "ar" ? "ar-SA" : locale;
       const isRtl     = locale === "ar";
-      const lc = LOCALE_COPY[locale] ?? LOCALE_COPY.en;
-      const subject = lc.subject(disease, country);
-      const intro   = lc.intro(esc(disease), esc(country));
+      const lc      = LOCALE_COPY[locale] ?? LOCALE_COPY.en;
+      const subject = lc.subject(disease, countries);
+      const intro   = lc.intro(esc(disease), esc(countries));
       const dashUrl = `${APP_URL}/${locale}`;
 
       const html = `
@@ -167,10 +182,10 @@ export async function GET(req: NextRequest) {
   <hr style="border:none;border-top:1px solid #334155;margin:0 0 16px"/>
   <p style="font-size:14px;margin:0 0 12px">${intro}</p>
   <ul style="font-size:13px;color:#cbd5e1;margin:0 0 16px;padding-left:20px">
-    <li>${lc.cases} ${outbreak.cases.toLocaleString(numLocale)}</li>
+    <li>${lc.cases} ${totalCases.toLocaleString(numLocale)}</li>
     ${cfr ? `<li>${cfr}</li>` : ""}
-    <li>${lc.reported} ${outbreak.date}</li>
-    <li>${lc.risk} <strong style="color:#f87171">HIGH${outbreak.risk_level === "high" ? "" : " — ".concat(outbreak.risk_level)}</strong></li>
+    <li>${lc.reported} ${primary.date}</li>
+    <li>${lc.risk} <strong style="color:#f87171">HIGH${primary.risk_level === "high" ? "" : " — ".concat(primary.risk_level)}</strong></li>
   </ul>
   <a href="${dashUrl}" style="display:inline-block;padding:10px 20px;background:#dc2626;color:#fff;text-decoration:none;border-radius:8px;font-size:14px;font-weight:600">
     ${lc.view}
@@ -179,18 +194,15 @@ export async function GET(req: NextRequest) {
 </div>`;
 
       try {
-        // Write dedup record BEFORE sending — prevents re-send on cron retry
-        // if the email succeeds but the insert was fire-and-forget (old bug).
         const { error: insertErr } = await supabase.from("alert_notifications").insert({
           user_id:     user.id,
           type:        "pheic",
           title:       subject,
-          body:        `${disease} · ${country} · PHEIC`,
-          outbreak_id: outbreak.id,
+          body:        `${disease} · ${countries} · PHEIC`,
+          outbreak_id: primary.id,
         });
         if (insertErr) {
-          // Likely a duplicate (unique constraint) — skip silently
-          console.warn(`[trigger-pheic-alerts] Insert skipped for ${user.id}::${outbreak.id}: ${insertErr.message}`);
+          console.warn(`[trigger-pheic-alerts] Insert skipped for ${user.id}::${primary.id}: ${insertErr.message}`);
           continue;
         }
 
@@ -198,8 +210,8 @@ export async function GET(req: NextRequest) {
         notifiedSet.add(key);
         fired++;
       } catch (err) {
-        console.error(`[trigger-pheic-alerts] Failed for user ${user.id} / outbreak ${outbreak.id}:`, err);
-        Sentry.captureException(err, { tags: { cron: "trigger-pheic-alerts", user_id: user.id, outbreak_id: outbreak.id } });
+        console.error(`[trigger-pheic-alerts] Failed for user ${user.id} / outbreak ${primary.id}:`, err);
+        Sentry.captureException(err, { tags: { cron: "trigger-pheic-alerts", user_id: user.id, outbreak_id: primary.id } });
       }
     }
   }
