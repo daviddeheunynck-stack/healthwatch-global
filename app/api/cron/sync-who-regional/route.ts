@@ -153,26 +153,38 @@ function fetchMalariaGHO(country_en: string): () => Promise<Found | null> {
     const iso3 = GHO_MALARIA_ISO3[country_en];
     if (!iso3) return null;
     try {
-      const url = `https://ghoapi.azureedge.net/api/MALARIA_EST_CASES?%24filter=SpatialDim%20eq%20'${iso3}'&%24orderby=TimeDim%20desc&%24top=1`;
-      const res = await fetch(url, {
-        headers: { "User-Agent": "HealthWatch-Global/1.0 (health surveillance; contact@healthwatch-global.com)" },
-        signal:  AbortSignal.timeout(10_000),
-      });
-      if (!res.ok) return null;
+      const ua = "HealthWatch-Global/1.0 (health surveillance; contact@healthwatch-global.com)";
+      const casesUrl  = `https://ghoapi.azureedge.net/api/MALARIA_EST_CASES?%24filter=SpatialDim%20eq%20'${iso3}'&%24orderby=TimeDim%20desc&%24top=1`;
+      const deathsUrl = `https://ghoapi.azureedge.net/api/MALARIA_EST_DEATHS?%24filter=SpatialDim%20eq%20'${iso3}'&%24orderby=TimeDim%20desc&%24top=1`;
+      const [casesRes, deathsRes] = await Promise.all([
+        fetch(casesUrl,  { headers: { "User-Agent": ua }, signal: AbortSignal.timeout(10_000) }),
+        fetch(deathsUrl, { headers: { "User-Agent": ua }, signal: AbortSignal.timeout(10_000) }),
+      ]);
+      if (!casesRes.ok) return null;
       type GHORec = { SpatialDim: string; TimeDim: number; NumericValue: number | null };
-      const json = await res.json() as { value: GHORec[] };
-      const rec  = json.value?.[0];
+      const casesJson = await casesRes.json() as { value: GHORec[] };
+      const rec = casesJson.value?.[0];
       if (!rec?.NumericValue) return null;
       const cases = Math.round(rec.NumericValue);
       const year  = rec.TimeDim;
-      const date  = `${year}-01-01`;
-      const src   = "https://www.who.int/data/gho/data/indicators/indicator-details/GHO/estimated-number-of-malaria-cases";
+
+      let deaths = 0;
+      if (deathsRes.ok) {
+        const deathsJson = await deathsRes.json() as { value: GHORec[] };
+        // Use deaths from same year as cases when available
+        const deathRec = deathsJson.value?.find(r => r.TimeDim === year) ?? deathsJson.value?.[0];
+        if (deathRec?.NumericValue) deaths = Math.round(deathRec.NumericValue);
+      }
+
+      const date = `${year}-01-01`;
+      const src  = "https://www.who.int/data/gho/data/indicators/indicator-details/GHO/estimated-number-of-malaria-cases";
+      const deathsPart = deaths > 0 ? ` and an estimated ${deaths.toLocaleString("en")} deaths` : "";
       return {
         cases,
-        deaths: 0,
+        deaths,
         date,
         source: src,
-        description: `Malaria in ${country_en} — WHO estimated ${cases.toLocaleString("en")} cases in ${year}. Source: WHO Global Health Observatory (GHO / World Malaria Report ${year}).`,
+        description: `Malaria in ${country_en} — WHO estimated ${cases.toLocaleString("en")} cases${deathsPart} in ${year}. Source: WHO Global Health Observatory (GHO / World Malaria Report ${year}).`,
       };
     } catch {
       return null;
