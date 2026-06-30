@@ -778,6 +778,12 @@ export async function GET(req: NextRequest) {
         results.updated++;
       }
     } else {
+      // Annual GHO data (date > 60 days old) is endemic reference data, not a time-limited
+      // outbreak event. Mark as is_seed so sync-outbreaks' stale deactivation doesn't
+      // cycle it out and create duplicates on the next run.
+      const SIXTY_DAYS_AGO = new Date(Date.now() - 60 * 86_400_000).toISOString().substring(0, 10);
+      const isAnnualRef = !!target.fetcher && found.date < SIXTY_DAYS_AGO;
+
       const { error } = await supabase.from("outbreaks").insert({
         disease:     diseaseInfo.name_fr,
         disease_en:  diseaseInfo.name_en,
@@ -795,7 +801,7 @@ export async function GET(req: NextRequest) {
         source:      found.source,
         description: found.description,
         active:      true,
-        is_seed:     false,
+        is_seed:     isAnnualRef,
       });
 
       if (error) {
