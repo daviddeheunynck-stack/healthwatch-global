@@ -3,7 +3,7 @@
  *
  * Fetches pre-confirmation signals from ReliefWeb (UN — public, no auth required).
  * Run every 6 hours via Vercel Cron.
- * Falls back to the public RSS feed when the API returns 403 (appname not yet approved).
+ * Falls back to the public RSS feed when the API returns any non-2xx (403 = not approved, 400 = bad request, etc.).
  * Inserts new signals; skips duplicates (source_url UNIQUE constraint).
  */
 import { NextRequest, NextResponse } from "next/server";
@@ -147,23 +147,16 @@ export async function GET(req: NextRequest) {
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err);
 
-    if (msg.includes("403")) {
-      console.warn("[sync-signals] API 403 — falling back to RSS feed");
-      try {
-        signals = await fetchFromRss();
-        source = "rss";
-      } catch (rssErr) {
-        const rssMsg = rssErr instanceof Error ? rssErr.message : String(rssErr);
-        console.error("[sync-signals] RSS fallback also failed:", rssErr);
-        Sentry.captureException(rssErr, { tags: { cron: "sync-signals" } });
-        await logCronRun(supabase, "sync-signals", "error", 0, `API 403, RSS failed: ${rssMsg}`);
-        return NextResponse.json({ error: "Both ReliefWeb API and RSS failed" }, { status: 502 });
-      }
-    } else {
-      console.error("[sync-signals] fetch error:", err);
-      Sentry.captureException(err, { tags: { cron: "sync-signals" } });
-      await logCronRun(supabase, "sync-signals", "error", 0, msg);
-      return NextResponse.json({ error: "ReliefWeb fetch failed" }, { status: 502 });
+    console.warn(`[sync-signals] API error (${msg}) — falling back to RSS feed`);
+    try {
+      signals = await fetchFromRss();
+      source = "rss";
+    } catch (rssErr) {
+      const rssMsg = rssErr instanceof Error ? rssErr.message : String(rssErr);
+      console.error("[sync-signals] RSS fallback also failed:", rssErr);
+      Sentry.captureException(rssErr, { tags: { cron: "sync-signals" } });
+      await logCronRun(supabase, "sync-signals", "error", 0, `API error: ${msg}; RSS failed: ${rssMsg}`);
+      return NextResponse.json({ error: "Both ReliefWeb API and RSS failed" }, { status: 502 });
     }
   }
 
