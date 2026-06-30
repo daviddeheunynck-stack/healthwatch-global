@@ -84,7 +84,7 @@ async function fetchLatestSitrep(): Promise<{ pageUrl: string; pdfUrl: string | 
   const year = new Date().getFullYear();
   const rwUrl = new URL(RELIEFWEB_BASE);
   rwUrl.searchParams.set("appname", RELIEFWEB_APPNAME);
-  rwUrl.searchParams.set("query[value]", `Ebola Congo MVB sitrep situation report ${year}`);
+  rwUrl.searchParams.set("query[value]", `Ebola Congo sitrep situation report ${year}`);
   rwUrl.searchParams.append("fields[include][]", "title");
   rwUrl.searchParams.append("fields[include][]", "date");
   rwUrl.searchParams.append("fields[include][]", "url");
@@ -106,13 +106,13 @@ async function fetchLatestSitrep(): Promise<{ pageUrl: string; pdfUrl: string | 
       if (!f?.title) continue;
 
       const lower = f.title.toLowerCase();
-      // Must be an Ebola or MVB sitrep from DRC
-      if (!lower.includes("ebola") && !lower.includes("mvb")) continue;
+      // Must be an Ebola/MVB/Bundibugyo sitrep from DRC
+      if (!lower.includes("ebola") && !lower.includes("mvb") && !lower.includes("bundibugyo")) continue;
       if (!lower.includes("congo") && !lower.includes("drc") && !lower.includes("rdc")) continue;
 
-      // Extract sitrep number from title (e.g. "SitRep N°044/MVB" or "Situation Report No. 44")
+      // Extract sitrep number from title — handles MVB, Bundibugyo, BVD naming
       const numMatch = f.title.match(/(?:sitrep|situation[-\s]?report|rapport[-\s]?de[-\s]?situation)\s*[n°no#.]?\s*0*(\d{2,3})/i)
-        ?? f.title.match(/[nN][°o]?\s*0*(\d{2,3})\s*[/|\\]?\s*(?:MVB|EVD|ebola)/i);
+        ?? f.title.match(/[nN][°o]?\s*0*(\d{2,3})\s*[/|\\]?\s*(?:MVB|BVD|EVD|ebola|bundibugyo)/i);
       if (!numMatch) continue;
 
       const num    = parseInt(numMatch[1], 10);
