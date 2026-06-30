@@ -130,6 +130,56 @@ async function fetchBrazilDengue(): Promise<Found | null> {
   return { cases: totalCases, deaths: 0, date, source, description };
 }
 
+// ── WHO GHO malaria fetcher ───────────────────────────────────────────────────
+// WHO Global Health Observatory OData API — public, no auth required.
+// Indicator MALARIA_EST_CASES: WHO-estimated annual malaria cases by country.
+// Data typically lags 1–2 years (e.g. 2024 data published mid-2025).
+
+const GHO_MALARIA_ISO3: Record<string, string> = {
+  "Nigeria":                          "NGA",
+  "Uganda":                           "UGA",
+  "Ghana":                            "GHA",
+  "Tanzania":                         "TZA",
+  "Kenya":                            "KEN",
+  "Ethiopia":                         "ETH",
+  "Mozambique":                       "MOZ",
+  "Democratic Republic of the Congo": "COD",
+  "Burkina Faso":                     "BFA",
+  "India":                            "IND",
+};
+
+function fetchMalariaGHO(country_en: string): () => Promise<Found | null> {
+  return async () => {
+    const iso3 = GHO_MALARIA_ISO3[country_en];
+    if (!iso3) return null;
+    try {
+      const url = `https://ghoapi.azureedge.net/api/MALARIA_EST_CASES?%24filter=SpatialDim%20eq%20'${iso3}'&%24orderby=TimeDim%20desc&%24top=1`;
+      const res = await fetch(url, {
+        headers: { "User-Agent": "HealthWatch-Global/1.0 (health surveillance; contact@healthwatch-global.com)" },
+        signal:  AbortSignal.timeout(10_000),
+      });
+      if (!res.ok) return null;
+      type GHORec = { SpatialDim: string; TimeDim: number; NumericValue: number | null };
+      const json = await res.json() as { value: GHORec[] };
+      const rec  = json.value?.[0];
+      if (!rec?.NumericValue) return null;
+      const cases = Math.round(rec.NumericValue);
+      const year  = rec.TimeDim;
+      const date  = `${year}-01-01`;
+      const src   = "https://www.who.int/data/gho/data/indicators/indicator-details/GHO/estimated-number-of-malaria-cases";
+      return {
+        cases,
+        deaths: 0,
+        date,
+        source: src,
+        description: `Malaria in ${country_en} — WHO estimated ${cases.toLocaleString("en")} cases in ${year}. Source: WHO Global Health Observatory (GHO / World Malaria Report ${year}).`,
+      };
+    } catch {
+      return null;
+    }
+  };
+}
+
 // ── ReliefWeb query ───────────────────────────────────────────────────────────
 
 interface Target {
@@ -347,18 +397,17 @@ const TARGETS: Target[] = [
   { disease_en: "Avian Influenza", country_en: "Vietnam",                         minCases:      1 },
 
   // ── Malaria — high-burden countries absent from WHO DON (endemic, not outbreak) ─
-  // Sub-Saharan Africa carries ~95 % of global malaria burden; WHO AFRO + UNICEF + OCHA publish on ReliefWeb
-  { disease_en: "Malaria", country_en: "Nigeria",                                 minCases: 10_000 },
-  { disease_en: "Malaria", country_en: "Uganda",                                  minCases:  5_000 },
-  { disease_en: "Malaria", country_en: "Ghana",                                   minCases: 10_000 },
-  { disease_en: "Malaria", country_en: "Tanzania",                                minCases: 50_000 },
-  { disease_en: "Malaria", country_en: "Kenya",                                   minCases:  5_000 },
-  { disease_en: "Malaria", country_en: "Ethiopia",                                minCases:  5_000 },
-  { disease_en: "Malaria", country_en: "Mozambique",                              minCases: 50_000 },
-  { disease_en: "Malaria", country_en: "Democratic Republic of the Congo",        minCases: 50_000 },
-  { disease_en: "Malaria", country_en: "Burkina Faso",                            minCases: 10_000 },
-  // India: endemic in north-east states (Odisha, Jharkhand) + Assam; WHO SEARO + NVBDCP data
-  { disease_en: "Malaria", country_en: "India",                                   minCases: 50_000 },
+  // WHO GHO fetcher provides annual estimated case counts (public API, no auth).
+  { disease_en: "Malaria", country_en: "Nigeria",                                 minCases: 10_000, fetcher: fetchMalariaGHO("Nigeria") },
+  { disease_en: "Malaria", country_en: "Uganda",                                  minCases:  5_000, fetcher: fetchMalariaGHO("Uganda") },
+  { disease_en: "Malaria", country_en: "Ghana",                                   minCases: 10_000, fetcher: fetchMalariaGHO("Ghana") },
+  { disease_en: "Malaria", country_en: "Tanzania",                                minCases: 50_000, fetcher: fetchMalariaGHO("Tanzania") },
+  { disease_en: "Malaria", country_en: "Kenya",                                   minCases:  5_000, fetcher: fetchMalariaGHO("Kenya") },
+  { disease_en: "Malaria", country_en: "Ethiopia",                                minCases:  5_000, fetcher: fetchMalariaGHO("Ethiopia") },
+  { disease_en: "Malaria", country_en: "Mozambique",                              minCases: 50_000, fetcher: fetchMalariaGHO("Mozambique") },
+  { disease_en: "Malaria", country_en: "Democratic Republic of the Congo",        minCases: 50_000, fetcher: fetchMalariaGHO("Democratic Republic of the Congo") },
+  { disease_en: "Malaria", country_en: "Burkina Faso",                            minCases: 10_000, fetcher: fetchMalariaGHO("Burkina Faso") },
+  { disease_en: "Malaria", country_en: "India",                                   minCases: 50_000, fetcher: fetchMalariaGHO("India") },
 
   // ── Mpox — Clade I/Ib expansion beyond DRC (declared PHEIC August 2024) ─────
   // Rwanda: large clade Ib outbreak confirmed late 2024; WHO DON dedup guard applies

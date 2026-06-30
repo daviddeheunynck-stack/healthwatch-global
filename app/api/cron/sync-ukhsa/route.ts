@@ -24,7 +24,7 @@ const SUPABASE_URL         = clean(process.env.NEXT_PUBLIC_SUPABASE_URL);
 const SUPABASE_SERVICE_KEY = clean(process.env.SUPABASE_SERVICE_ROLE_KEY);
 const CRON_SECRET          = clean(process.env.CRON_SECRET);
 
-const UKHSA_ATOM   = "https://www.gov.uk/government/publications.atom?departments%5B%5D=uk-health-security-agency";
+const UKHSA_ATOM   = "https://www.gov.uk/government/organisations/uk-health-security-agency.atom";
 const GOV_BASE     = "https://www.gov.uk";
 const MAX_AGE_DAYS = 30;
 
