@@ -1,6 +1,5 @@
 import { NextRequest } from "next/server";
 import { createClient } from "@supabase/supabase-js";
-import { Resend } from "resend";
 import * as Sentry from "@sentry/nextjs";
 
 export const dynamic    = "force-dynamic";
@@ -10,6 +9,21 @@ const SUPABASE_URL = (process.env.NEXT_PUBLIC_SUPABASE_URL ?? "").replace(/^﻿/
 const SUPABASE_KEY = (process.env.SUPABASE_SERVICE_ROLE_KEY ?? "").replace(/^﻿/, "").trim();
 const CRON_SECRET  = (process.env.CRON_SECRET ?? "").replace(/^﻿/, "").trim();
 const APP_URL      = (process.env.NEXT_PUBLIC_APP_URL ?? "https://healthwatch-global.com").replace(/^﻿/, "").trim();
+const BREVO_KEY    = (process.env.BREVO_API_KEY ?? "").replace(/^﻿/, "").trim();
+
+async function sendEmail(to: string, subject: string, html: string) {
+  const res = await fetch("https://api.brevo.com/v3/smtp/email", {
+    method: "POST",
+    headers: { "api-key": BREVO_KEY, "Content-Type": "application/json" },
+    body: JSON.stringify({
+      sender:      { name: "HealthWatch Global", email: "alerts@healthwatch-global.com" },
+      to:          [{ email: to }],
+      subject,
+      htmlContent: html,
+    }),
+  });
+  if (!res.ok) throw new Error(`Brevo error ${res.status}: ${await res.text()}`);
+}
 
 function esc(s: string): string {
   return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
@@ -84,11 +98,9 @@ export async function GET(req: NextRequest) {
   if (!CRON_SECRET || authHeader !== `Bearer ${CRON_SECRET}`)
     return new Response("Unauthorized", { status: 401 });
 
-  const resendKey = (process.env.RESEND_API_KEY ?? "").replace(/^﻿/, "").trim();
-  if (!resendKey) return new Response(JSON.stringify({ ok: true, skipped: "RESEND_API_KEY not configured" }), { status: 200 });
+  if (!BREVO_KEY) return new Response(JSON.stringify({ ok: true, skipped: "BREVO_API_KEY not configured" }), { status: 200 });
 
   const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
-  const resend   = new Resend(resendKey);
 
   // 1. Active PHEIC outbreaks
   const { data: pheicOutbreaks } = await supabase
@@ -125,7 +137,7 @@ export async function GET(req: NextRequest) {
     const disease = outbreak.disease_en ?? "Unknown";
     const country = outbreak.country_en ?? "Unknown";
     const cfr =
-      outbreak.cases > 0 && outbreak.deaths > 0
+      outbreak.cases > 0 && outbreak.deaths != null && outbreak.deaths > 0
         ? `CFR ${(outbreak.deaths / outbreak.cases * 100).toFixed(1)}%`
         : "";
 
@@ -160,23 +172,22 @@ export async function GET(req: NextRequest) {
 </div>`;
 
       try {
-        await resend.emails.send({
-          from:    "HealthWatch Global <alerts@healthwatch-global.com>",
-          to:      user.email,
-          subject,
-          html,
+        // Write dedup record BEFORE sending — prevents re-send on cron retry
+        // if the email succeeds but the insert was fire-and-forget (old bug).
+        const { error: insertErr } = await supabase.from("alert_notifications").insert({
+          user_id:     user.id,
+          type:        "pheic",
+          title:       subject,
+          body:        `${disease} · ${country} · PHEIC`,
+          outbreak_id: outbreak.id,
         });
+        if (insertErr) {
+          // Likely a duplicate (unique constraint) — skip silently
+          console.warn(`[trigger-pheic-alerts] Insert skipped for ${user.id}::${outbreak.id}: ${insertErr.message}`);
+          continue;
+        }
 
-        void Promise.resolve(
-          supabase.from("alert_notifications").insert({
-            user_id:     user.id,
-            type:        "pheic",
-            title:       subject,
-            body:        `${disease} · ${country} · PHEIC`,
-            outbreak_id: outbreak.id,
-          })
-        ).catch(() => {});
-
+        await sendEmail(user.email, subject, html);
         notifiedSet.add(key);
         fired++;
       } catch (err) {
