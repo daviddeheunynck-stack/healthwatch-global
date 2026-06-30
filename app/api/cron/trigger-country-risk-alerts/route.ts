@@ -1,6 +1,7 @@
 import { NextRequest } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import * as Sentry from "@sentry/nextjs";
+import { logCronRun } from "@/lib/cron-monitor";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 300;
@@ -27,7 +28,10 @@ export async function GET(req: NextRequest) {
     process.env.SUPABASE_SERVICE_ROLE_KEY!
   );
   const brevoKey = (process.env.BREVO_API_KEY ?? "").replace(/^﻿/, "").trim();
-  if (!brevoKey) return Response.json({ ok: true, skipped: "BREVO_API_KEY not configured" });
+  if (!brevoKey) {
+    await logCronRun(supabase, "trigger-country-risk-alerts", "ok", 0);
+    return Response.json({ ok: true, skipped: "BREVO_API_KEY not configured" });
+  }
 
   const sendEmail = async (to: string, subject: string, html: string) => {
     const res = await fetch("https://api.brevo.com/v3/smtp/email", {
@@ -45,7 +49,10 @@ export async function GET(req: NextRequest) {
     .from("country_risk_alerts")
     .select("id, user_id, country_en, min_risk, email, last_fired_at");
 
-  if (!alerts?.length) return Response.json({ fired: 0 });
+  if (!alerts?.length) {
+    await logCronRun(supabase, "trigger-country-risk-alerts", "ok", 0);
+    return Response.json({ fired: 0 });
+  }
 
   const alertUserIds = [...new Set(alerts.map((a) => a.user_id as string))];
   const { data: profileLocales } = await supabase
@@ -143,5 +150,6 @@ export async function GET(req: NextRequest) {
     }
   }
 
+  await logCronRun(supabase, "trigger-country-risk-alerts", "ok", fired);
   return Response.json({ fired });
 }

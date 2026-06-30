@@ -17,6 +17,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import * as Sentry from "@sentry/nextjs";
+import { logCronRun } from "@/lib/cron-monitor";
 import { matchDisease } from "@/lib/disease-data";
 import type { AppRegion } from "@/lib/disease-data";
 import { errorMessage } from "@/lib/error";
@@ -172,6 +173,7 @@ export async function GET(req: NextRequest) {
     );
   }
 
+  await logCronRun(supabase, "disease-coverage", "ok", unknownList.length + gapList.length);
   return NextResponse.json({
     ok: true,
     unknown: unknownList,

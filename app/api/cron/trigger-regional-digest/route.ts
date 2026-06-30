@@ -1,6 +1,7 @@
 import { NextRequest } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import * as Sentry from "@sentry/nextjs";
+import { logCronRun } from "@/lib/cron-monitor";
 
 export const dynamic    = "force-dynamic";
 export const maxDuration = 300;
@@ -102,7 +103,10 @@ export async function GET(req: NextRequest) {
     .not("digest_region", "eq", "all")
     .not("email", "is", null);
 
-  if (!users?.length) return Response.json({ fired: 0 });
+  if (!users?.length) {
+    await logCronRun(supabase, "trigger-regional-digest", "ok", 0);
+    return Response.json({ fired: 0 });
+  }
 
   // Dedup: skip users who already received a regional digest in the last 6 days
   const userIds = users.map((u) => u.id);
@@ -203,5 +207,6 @@ export async function GET(req: NextRequest) {
     }
   }
 
+  await logCronRun(supabase, "trigger-regional-digest", "ok", fired);
   return Response.json({ fired });
 }

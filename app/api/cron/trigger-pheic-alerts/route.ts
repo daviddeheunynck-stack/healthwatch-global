@@ -1,6 +1,7 @@
 import { NextRequest } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import * as Sentry from "@sentry/nextjs";
+import { logCronRun } from "@/lib/cron-monitor";
 
 export const dynamic    = "force-dynamic";
 export const maxDuration = 300;
@@ -109,7 +110,10 @@ export async function GET(req: NextRequest) {
     .eq("active", true)
     .eq("is_pheic", true);
 
-  if (!pheicOutbreaks?.length) return Response.json({ fired: 0 });
+  if (!pheicOutbreaks?.length) {
+    await logCronRun(supabase, "trigger-pheic-alerts", "ok", 0);
+    return Response.json({ fired: 0 });
+  }
 
   // 2. Pro users who want PHEIC alerts
   const { data: proUsers } = await supabase
@@ -119,7 +123,10 @@ export async function GET(req: NextRequest) {
     .eq("pheic_alerts", true)
     .not("email", "is", null);
 
-  if (!proUsers?.length) return Response.json({ fired: 0 });
+  if (!proUsers?.length) {
+    await logCronRun(supabase, "trigger-pheic-alerts", "ok", 0);
+    return Response.json({ fired: 0 });
+  }
 
   // 3. Already-notified (type=pheic) per outbreak
   const outbreakIds = pheicOutbreaks.map((o) => o.id);
@@ -197,5 +204,6 @@ export async function GET(req: NextRequest) {
     }
   }
 
+  await logCronRun(supabase, "trigger-pheic-alerts", "ok", fired);
   return Response.json({ fired });
 }

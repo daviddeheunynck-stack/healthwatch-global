@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import * as Sentry from "@sentry/nextjs";
+import { logCronRun } from "@/lib/cron-monitor";
 
 export const dynamic = "force-dynamic";
 
@@ -78,7 +79,10 @@ export async function GET(req: NextRequest) {
     .from("outbreak_subscribers")
     .select("id, user_id, outbreak_id, emails, locale, last_sent_at");
 
-  if (!subscribers?.length) return NextResponse.json({ ok: true, sent: 0 });
+  if (!subscribers?.length) {
+    await logCronRun(supabase, "trigger-subscriber-alerts", "ok", 0);
+    return NextResponse.json({ ok: true, sent: 0 });
+  }
 
   const outbreakIds = [...new Set((subscribers as Subscriber[]).map((s) => s.outbreak_id))];
   const { data: outbreaks } = await supabase
@@ -150,5 +154,6 @@ export async function GET(req: NextRequest) {
     }
   }
 
+  await logCronRun(supabase, "trigger-subscriber-alerts", "ok", sent);
   return NextResponse.json({ ok: true, sent });
 }

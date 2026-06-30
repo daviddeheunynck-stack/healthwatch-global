@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { getDiseaseCategory, CATEGORY_LABELS } from "@/lib/disease-category";
 import * as Sentry from "@sentry/nextjs";
+import { logCronRun } from "@/lib/cron-monitor";
 
 export const dynamic = "force-dynamic";
 
@@ -117,7 +118,10 @@ export async function GET(req: NextRequest) {
   const { data: alerts } = await supabase
     .from("category_alerts")
     .select("id, user_id, disease_category, region, min_cases, email, last_fired_at");
-  if (!alerts?.length) return NextResponse.json({ ok: true, fired: 0 });
+  if (!alerts?.length) {
+    await logCronRun(supabase, "trigger-category-alerts", "ok", 0);
+    return NextResponse.json({ ok: true, fired: 0 });
+  }
 
   // Fetch user locales in bulk
   const userIds = [...new Set((alerts as CategoryAlert[]).map((a) => a.user_id))];
@@ -210,5 +214,6 @@ export async function GET(req: NextRequest) {
     }
   }
 
+  await logCronRun(supabase, "trigger-category-alerts", "ok", fired);
   return NextResponse.json({ ok: true, fired });
 }

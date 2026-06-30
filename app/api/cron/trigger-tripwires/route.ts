@@ -12,6 +12,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import * as Sentry from "@sentry/nextjs";
+import { logCronRun } from "@/lib/cron-monitor";
 
 export const dynamic = "force-dynamic";
 
@@ -128,7 +129,10 @@ export async function GET(req: NextRequest) {
     .from("outbreak_tripwires")
     .select("id, user_id, outbreak_id, threshold_cases, email, last_checked_cases");
 
-  if (!tripwires?.length) return NextResponse.json({ ok: true, fired: 0 });
+  if (!tripwires?.length) {
+    await logCronRun(supabase, "trigger-tripwires", "ok", 0);
+    return NextResponse.json({ ok: true, fired: 0 });
+  }
 
   // Fetch user locales in bulk
   const userIds = [...new Set((tripwires as Tripwire[]).map((t) => t.user_id))];
@@ -216,5 +220,6 @@ export async function GET(req: NextRequest) {
     }
   }
 
+  await logCronRun(supabase, "trigger-tripwires", "ok", fired);
   return NextResponse.json({ ok: true, fired });
 }

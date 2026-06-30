@@ -3,6 +3,7 @@ import { createClient } from "@supabase/supabase-js";
 import { haversineKm } from "@/lib/haversine";
 import { getCountryCoords } from "@/lib/country-coords";
 import * as Sentry from "@sentry/nextjs";
+import { logCronRun } from "@/lib/cron-monitor";
 
 export const dynamic = "force-dynamic";
 
@@ -57,7 +58,10 @@ export async function GET(req: NextRequest) {
   const { data: alerts } = await supabase
     .from("geofence_alerts")
     .select("id, user_id, label, lat, lng, radius_km, email, last_fired_at");
-  if (!alerts?.length) return NextResponse.json({ ok: true, fired: 0 });
+  if (!alerts?.length) {
+    await logCronRun(supabase, "trigger-geofence-alerts", "ok", 0);
+    return NextResponse.json({ ok: true, fired: 0 });
+  }
 
   const alertUserIds = [...new Set((alerts as GeofenceAlert[]).map((a) => a.user_id))];
   const { data: profileLocales } = await supabase
@@ -200,5 +204,6 @@ export async function GET(req: NextRequest) {
     }
   }
 
+  await logCronRun(supabase, "trigger-geofence-alerts", "ok", fired);
   return NextResponse.json({ ok: true, fired });
 }

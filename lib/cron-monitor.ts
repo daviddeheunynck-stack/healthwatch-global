@@ -81,5 +81,14 @@ export const CRON_WINDOWS: Record<string, number> = {
   "send-sitrep-emails": 200,  // weekly Mon
   "weekly-signal":      200,  // weekly Mon (free-user newsletter)
   // ── Enterprise & infra crons ──────────────────────────────────────────────────
-  "trigger-webhooks":   2,    // every 30min — enterprise webhook delivery
+  "trigger-webhooks":          2,    // every 30min — enterprise webhook delivery
+  // ── Trigger & coverage crons ──────────────────────────────────────────────────
+  "trigger-tripwires":         2,    // every 30min
+  "trigger-subscriber-alerts": 2,    // every 30min
+  "trigger-category-alerts":   2,    // every 30min
+  "trigger-pheic-alerts":      2,    // every 30min
+  "disease-coverage":          2,    // hourly at :30
+  "trigger-geofence-alerts":   9,    // every 6h
+  "trigger-country-risk-alerts": 9,  // every 6h
+  "trigger-regional-digest":  200,   // weekly Mon
 };
