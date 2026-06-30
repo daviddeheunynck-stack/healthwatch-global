@@ -65,11 +65,11 @@ export async function getLastSync(): Promise<string | null> {
 export async function getOutbreaks(): Promise<Outbreak[]> {
   const supabase = getServerClient();
 
-  const thirtyDaysAgo = new Date(Date.now() - 30 * 86_400_000).toISOString().split("T")[0];
+  const sixtyDaysAgo = new Date(Date.now() - 60 * 86_400_000).toISOString().split("T")[0];
   const { data, error } = await supabase
     .from("outbreaks")
     .select("*")
-    .or(`active.eq.true,and(source_priority.gte.3,updated_at.gte.${thirtyDaysAgo})`)
+    .or(`active.eq.true,and(source_priority.gte.3,updated_at.gte.${sixtyDaysAgo})`)
     .order("date", { ascending: false });
 
   if (error) {
@@ -262,11 +262,11 @@ export function isNewOutbreak(outbreak: Outbreak): boolean {
 // Use this instead of `o.active` when splitting outbreaks into active/history for
 // display — prevents endemic diseases (Dengue, Cholera, H5N1) from falling into
 // "history" after the data-quality cron closes resolved WHO DON events.
-const THIRTY_DAYS_MS = 30 * 86_400_000;
+const SIXTY_DAYS_MS = 60 * 86_400_000;
 export function isDisplayActive(o: Pick<Outbreak, "active" | "source_priority" | "updated_at">): boolean {
   if (o.active) return true;
   if ((o.source_priority ?? 0) >= 3 && o.updated_at) {
-    return new Date(o.updated_at).getTime() >= Date.now() - THIRTY_DAYS_MS;
+    return new Date(o.updated_at).getTime() >= Date.now() - SIXTY_DAYS_MS;
   }
   return false;
 }

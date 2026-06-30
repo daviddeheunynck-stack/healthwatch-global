@@ -58,11 +58,11 @@ export async function GET(req: NextRequest) {
   if (activeRaw === "false") {
     query = query.eq("active", false);
   } else {
-    // Show active outbreaks OR recent high-priority ones (prio >= 3, updated < 30 days)
+    // Show active outbreaks OR recent high-priority ones (prio >= 3, updated < 60 days)
     // Avoids empty map when data-quality cron deactivates resolved DON events while
     // underlying diseases (Dengue, Cholera, H5N1...) remain epidemiologically relevant.
-    const thirtyDaysAgo = new Date(Date.now() - 30 * 86_400_000).toISOString().split("T")[0];
-    query = query.or(`active.eq.true,and(source_priority.gte.3,updated_at.gte.${thirtyDaysAgo})`);
+    const sixtyDaysAgo = new Date(Date.now() - 60 * 86_400_000).toISOString().split("T")[0];
+    query = query.or(`active.eq.true,and(source_priority.gte.3,updated_at.gte.${sixtyDaysAgo})`);
   }
   if (region  && VALID_REGIONS.includes(region))  query = query.eq("region", region);
   if (risk    && VALID_RISKS.includes(risk))       query = query.eq("risk_level", risk);

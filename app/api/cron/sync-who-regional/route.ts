@@ -22,7 +22,7 @@ import { extractNumbers, assessRisk } from "@/lib/outbreak-parser";
 import { errorMessage } from "@/lib/error";
 
 export const dynamic = "force-dynamic";
-export const maxDuration = 150; // 66 targets × ~2s each; Vercel Pro allows 300s for crons
+export const maxDuration = 300; // ~100 targets × ~2s each; Vercel Pro allows 300s for crons
 
 const BOM = String.fromCharCode(65279);
 const clean = (v: string | undefined) => (v ?? "").replace(new RegExp("^" + BOM), "").trim();
@@ -337,6 +337,79 @@ const TARGETS: Target[] = [
   // China avian influenza: human H5N1 cases are usually in WHO DON (dedup guard applies);
   // this catches events before DON publication or sub-threshold clusters on ReliefWeb
   { disease_en: "Avian Influenza", country_en: "China",                           minCases:      1 },
+
+  // ── Avian Influenza — additional endemic/active countries ────────────────────
+  // Egypt: H5N1 has circulated endemically in poultry since 2006; regular human cases
+  { disease_en: "Avian Influenza", country_en: "Egypt",                           minCases:      1 },
+  // Cambodia: recurring H5N1 human cases, WHO WPRO publishes situation reports on ReliefWeb
+  { disease_en: "Avian Influenza", country_en: "Cambodia",                        minCases:      1 },
+  // Vietnam: re-emerging H5N1 clusters; WHO SEARO + WPRO cover on ReliefWeb
+  { disease_en: "Avian Influenza", country_en: "Vietnam",                         minCases:      1 },
+
+  // ── Malaria — high-burden countries absent from WHO DON (endemic, not outbreak) ─
+  // Sub-Saharan Africa carries ~95 % of global malaria burden; WHO AFRO + UNICEF + OCHA publish on ReliefWeb
+  { disease_en: "Malaria", country_en: "Nigeria",                                 minCases: 10_000 },
+  { disease_en: "Malaria", country_en: "Uganda",                                  minCases:  5_000 },
+  { disease_en: "Malaria", country_en: "Ghana",                                   minCases: 10_000 },
+  { disease_en: "Malaria", country_en: "Tanzania",                                minCases: 50_000 },
+  { disease_en: "Malaria", country_en: "Kenya",                                   minCases:  5_000 },
+  { disease_en: "Malaria", country_en: "Ethiopia",                                minCases:  5_000 },
+  { disease_en: "Malaria", country_en: "Mozambique",                              minCases: 50_000 },
+  { disease_en: "Malaria", country_en: "Democratic Republic of the Congo",        minCases: 50_000 },
+  { disease_en: "Malaria", country_en: "Burkina Faso",                            minCases: 10_000 },
+  // India: endemic in north-east states (Odisha, Jharkhand) + Assam; WHO SEARO + NVBDCP data
+  { disease_en: "Malaria", country_en: "India",                                   minCases: 50_000 },
+
+  // ── Mpox — Clade I/Ib expansion beyond DRC (declared PHEIC August 2024) ─────
+  // Rwanda: large clade Ib outbreak confirmed late 2024; WHO DON dedup guard applies
+  { disease_en: "Mpox", country_en: "Rwanda",                                     minCases:      1 },
+  // Uganda: cross-border transmission from DRC; sporadic confirmed cases
+  { disease_en: "Mpox", country_en: "Uganda",                                     minCases:      5 },
+  // Burundi: active transmission documented in WHO/AFRO bulletins on ReliefWeb
+  { disease_en: "Mpox", country_en: "Burundi",                                    minCases:      5 },
+  // Kenya: imported cases; WHO DON dedup guard handles official DON; ReliefWeb catches sub-threshold
+  { disease_en: "Mpox", country_en: "Kenya",                                      minCases:      1 },
+
+  // ── Rift Valley Fever — expansion beyond Kenya ────────────────────────────────
+  // Rwanda: large RVF outbreak in livestock and humans 2024–2025; WHO AFRO + OCHA on ReliefWeb
+  { disease_en: "Rift Valley", country_en: "Rwanda",                              minCases:      1 },
+  { disease_en: "Rift Valley", country_en: "Uganda",                              minCases:      1 },
+  { disease_en: "Rift Valley", country_en: "Tanzania",                            minCases:      1 },
+
+  // ── Polio — cVDPV2 expansion beyond endemic Pakistan/Afghanistan ─────────────
+  // Nigeria: vaccine-derived poliovirus type 2 ongoing; WHO DON dedup guard handles published DON
+  { disease_en: "Polio", country_en: "Nigeria",                                   minCases:      1 },
+  // DRC: cVDPV2 circulating; WHO DON dedup guard handles published DON
+  { disease_en: "Polio", country_en: "Democratic Republic of the Congo",          minCases:      1 },
+
+  // ── Cholera — additional high-burden countries ────────────────────────────────
+  // Nigeria: frequent cholera outbreaks during rainy season; OCHA/WHO AFRO publish on ReliefWeb
+  { disease_en: "Cholera", country_en: "Nigeria",                                 minCases:    100 },
+  // Ethiopia: Oromia + Somali region outbreaks, WHO AFRO bulletins on ReliefWeb
+  { disease_en: "Cholera", country_en: "Ethiopia",                                minCases:     50 },
+  // Tanzania: coastal and island outbreaks (Zanzibar), WHO AFRO on ReliefWeb
+  { disease_en: "Cholera", country_en: "Tanzania",                                minCases:     50 },
+  // Zambia: major outbreak 2024 (Lusaka), OCHA/WHO published on ReliefWeb
+  { disease_en: "Cholera", country_en: "Zambia",                                  minCases:     50 },
+
+  // ── Dengue — Americas gap-fill (PAHO sitreps published on ReliefWeb) ─────────
+  { disease_en: "Dengue", country_en: "Mexico",                                   minCases:  5_000 },
+  { disease_en: "Dengue", country_en: "Cuba",                                     minCases:    500 },
+  { disease_en: "Dengue", country_en: "Haiti",                                    minCases:    100 },
+  { disease_en: "Dengue", country_en: "Nicaragua",                                minCases:  1_000 },
+  { disease_en: "Dengue", country_en: "Guatemala",                                minCases:  1_000 },
+
+  // ── Typhoid — XDR/resistant strain spread beyond Pakistan ─────────────────────
+  // India: high burden of typhoid; WHO SEARO + OCHA publish on ReliefWeb
+  { disease_en: "Typhoid", country_en: "India",                                   minCases:  1_000 },
+  // Zimbabwe: XDR typhoid documented since 2019; WHO AFRO on ReliefWeb
+  { disease_en: "Typhoid", country_en: "Zimbabwe",                                minCases:    100 },
+
+  // ── Hepatitis E — displacement/conflict settings beyond current targets ───────
+  // South Sudan: mass displacement → large HepatE outbreaks in camps; OCHA/WHO on ReliefWeb
+  { disease_en: "Hepatitis E", country_en: "South Sudan",                         minCases:     50 },
+  // Ethiopia: IDP camps (Tigray, Afar); WHO AFRO + OCHA publish on ReliefWeb
+  { disease_en: "Hepatitis E", country_en: "Ethiopia",                            minCases:     50 },
 ];
 
 // ── Main handler ──────────────────────────────────────────────────────────────
