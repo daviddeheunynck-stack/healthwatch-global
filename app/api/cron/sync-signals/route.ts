@@ -153,9 +153,15 @@ export async function GET(req: NextRequest) {
       source = "rss";
     } catch (rssErr) {
       const rssMsg = rssErr instanceof Error ? rssErr.message : String(rssErr);
-      console.error("[sync-signals] RSS fallback also failed:", rssErr);
-      Sentry.captureException(rssErr, { tags: { cron: "sync-signals" } });
-      await logCronRun(supabase, "sync-signals", "error", 0, `API error: ${msg}; RSS failed: ${rssMsg}`);
+      // 4xx = expected ReliefWeb rejection (RELIEFWEB_APPNAME not approved) — don't alert Sentry
+      const both4xx = /HTTP [4]\d\d/.test(msg) && /HTTP [4]\d\d/.test(rssMsg);
+      if (both4xx) {
+        console.warn("[sync-signals] ReliefWeb 4xx on API + RSS — awaiting RELIEFWEB_APPNAME approval");
+      } else {
+        console.error("[sync-signals] RSS fallback also failed:", rssErr);
+        Sentry.captureException(rssErr, { tags: { cron: "sync-signals" } });
+      }
+      await logCronRun(supabase, "sync-signals", "error", 0, `API: ${msg}; RSS: ${rssMsg}`);
       return NextResponse.json({ error: "Both ReliefWeb API and RSS failed" }, { status: 502 });
     }
   }
