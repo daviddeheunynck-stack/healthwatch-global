@@ -78,12 +78,13 @@ export async function GET(req: NextRequest) {
 
   const { data: newOutbreaks, error: oErr } = await supabase
     .from("outbreaks")
-    .select("id, region, disease, disease_fr, disease_es, disease_ar, disease_id, country, country_fr, country_es, country_ar, country_id, risk_level, date, cases, deaths")
+    .select("id, region, disease, disease_en, disease_ar, country, country_en, country_ar, risk_level, date, cases, deaths")
     .eq("active", true)
     .gte("created_at", since);
 
   if (oErr) {
     console.error("[regional-alerts] outbreaks query error:", oErr);
+    await logCronRun(supabase, "regional-alerts", "error", 0, oErr.message);
     return NextResponse.json({ error: oErr.message }, { status: 500 });
   }
 
@@ -159,17 +160,13 @@ export async function GET(req: NextRequest) {
 
         // Resolve localized disease / country names
         const disease =
-          (locale === "fr" ? outbreak.disease_fr : null) ??
-          (locale === "es" ? outbreak.disease_es : null) ??
           (locale === "ar" ? outbreak.disease_ar : null) ??
-          (locale === "id" ? outbreak.disease_id : null) ??
+          outbreak.disease_en ??
           outbreak.disease;
 
         const country =
-          (locale === "fr" ? outbreak.country_fr : null) ??
-          (locale === "es" ? outbreak.country_es : null) ??
           (locale === "ar" ? outbreak.country_ar : null) ??
-          (locale === "id" ? outbreak.country_id : null) ??
+          outbreak.country_en ??
           outbreak.country;
 
         const regionLabel = rl[region] ?? region;
