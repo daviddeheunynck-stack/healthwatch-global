@@ -20,17 +20,31 @@ export async function GET(req: NextRequest) {
   if (!cronSecret || req.headers.get("authorization") !== `Bearer ${cronSecret}`)
     return new Response("Unauthorized", { status: 401 });
 
+  // Defensive wrapper: catch any uncaught exception so logCronRun is always called.
+  // Without this, a crash before line 129 leaves no trace in site_config.
+  const supabaseEarly = createClient(
+    clean(process.env.NEXT_PUBLIC_SUPABASE_URL),
+    clean(process.env.SUPABASE_SERVICE_ROLE_KEY),
+  );
+  try {
+    return await runHealthCheck(req, supabaseEarly);
+  } catch (err) {
+    console.error("[health-check] uncaught exception:", err);
+    Sentry.captureException(err, { tags: { cron: "health-check" } });
+    await logCronRun(supabaseEarly, "health-check", "error", 0,
+      err instanceof Error ? err.message : String(err));
+    return Response.json({ ok: false, error: String(err) }, { status: 500 });
+  }
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+async function runHealthCheck(_req: NextRequest, supabase: any) {
   const checkInId = Sentry.captureCheckIn(
     { monitorSlug: "health-check", status: "in_progress" },
     { schedule: { type: "crontab", value: "5 7 * * *" }, checkinMargin: 10, maxRuntime: 1, timezone: "UTC" },
   );
 
   const brevoKey = clean(process.env.BREVO_API_KEY);
-
-  const supabase = createClient(
-    clean(process.env.NEXT_PUBLIC_SUPABASE_URL),
-    clean(process.env.SUPABASE_SERVICE_ROLE_KEY),
-  );
 
   const [{ count: total }, { count: high }, { count: pheic }, { data: configRows }] =
     await Promise.all([
