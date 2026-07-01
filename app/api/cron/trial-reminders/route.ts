@@ -90,6 +90,7 @@ export async function GET(req: NextRequest) {
 
   if (!profiles || profiles.length === 0) {
     console.log("[trial-reminders] No trials ending in ~3 days.");
+    await logCronRun(supabase, "trial-reminders", "ok", 0);
     return NextResponse.json({ sent: 0, failed: 0, total: 0 });
   }
 

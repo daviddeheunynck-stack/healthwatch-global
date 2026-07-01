@@ -251,6 +251,7 @@ export async function GET(req: NextRequest) {
 
   if (!profiles || profiles.length === 0) {
     console.log("[winback] No expired trials in win-back window.");
+    await logCronRun(supabase, "winback-sequence", "ok", 0);
     return NextResponse.json({ sent: 0, failed: 0, total: 0 });
   }
 

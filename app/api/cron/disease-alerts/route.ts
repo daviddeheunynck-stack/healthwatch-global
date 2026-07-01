@@ -53,6 +53,7 @@ export async function GET(req: NextRequest) {
     .select("user_id, disease_en");
 
   if (!subs || subs.length === 0) {
+    await logCronRun(supabase, "disease-alerts", "ok", 0);
     return NextResponse.json({ sent: 0, skipped: 0, message: "No disease subscriptions" });
   }
 
@@ -72,6 +73,7 @@ export async function GET(req: NextRequest) {
     .in("disease_en", diseases);
 
   if (!outbreaks || outbreaks.length === 0) {
+    await logCronRun(supabase, "disease-alerts", "ok", 0);
     return NextResponse.json({ sent: 0, skipped: 0, message: "No matching outbreaks" });
   }
 

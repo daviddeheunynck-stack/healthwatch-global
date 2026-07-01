@@ -67,6 +67,7 @@ export async function GET(req: NextRequest) {
 
   if (!subscribers || subscribers.length === 0) {
     console.log("[weekly-digest] No active subscribers — nothing to send.");
+    await logCronRun(supabase, "weekly-digest", "ok", 0);
     return NextResponse.json({ message: "No active subscribers.", sent: 0 });
   }
 

@@ -79,6 +79,7 @@ export async function GET(req: NextRequest) {
       .from("outbreaks")
       .update({ push_notified_at: new Date().toISOString() })
       .in("id", newOutbreaks.map((o) => o.id));
+    await logCronRun(supabase, "push-alerts", "ok", 0);
     return NextResponse.json({ sent: 0, outbreaks: newOutbreaks.length, message: "No subscribers" });
   }
 
