@@ -329,12 +329,17 @@ export async function GET(req: NextRequest) {
   const SEED_FRESH_DAYS_HIGH = 30;
   const SEED_FRESH_DAYS_REF  = 730;
   const HIGH_FREQ_SOURCES = ["info.dengue", "paho.org", "reliefweb.int"];
+  // GHO annual indicators store the epidemiological year as date (e.g. 2024-01-01).
+  // WHO GHO publishes data 1–2 years late, so the date is always "old" by design.
+  // Staleness on GHO sources cannot be detected via the date field — skip them.
+  const GHO_ANNUAL_SOURCES = ["who.int/data/gho", "who.int/data/global-health-estimates"];
   const seedFreshHigh = new Date(Date.now() - SEED_FRESH_DAYS_HIGH * 86_400_000).toISOString().split("T")[0];
   const seedFreshRef  = new Date(Date.now() - SEED_FRESH_DAYS_REF  * 86_400_000).toISOString().split("T")[0];
 
   for (const row of rows ?? []) {
     if (!row.is_seed || !row.date) continue;
     const src = (row.source ?? "").toLowerCase();
+    if (GHO_ANNUAL_SOURCES.some(s => src.includes(s))) continue;
     const isHighFreq = HIGH_FREQ_SOURCES.some(s => src.includes(s));
     const threshold  = isHighFreq ? seedFreshHigh : seedFreshRef;
     if (row.date <= threshold) {
@@ -369,6 +374,7 @@ export async function GET(req: NextRequest) {
   ];
 
   for (const row of rows ?? []) {
+    if (row.is_seed) continue; // GHO annual data rarely tracks deaths — null preferred over 0, but skip to avoid noise
     if (row.deaths !== 0) continue;
     const name = (row.disease_en ?? row.disease ?? "").toLowerCase();
     for (const rule of LETHALITY_RULES) {
