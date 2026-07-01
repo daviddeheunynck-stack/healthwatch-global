@@ -566,6 +566,22 @@ const DISEASE_MAP: Array<{ patterns: string[]; info: DiseaseInfo }> = [
       travelerRisk: { americas: "moderate", europe: "moderate", africa: "low", asia: "low" },
     },
   },
+  {
+    patterns: ["powassan"],
+    info: {
+      name_en: "Powassan virus disease", name_fr: "Maladie à virus Powassan",
+      name_es: "Enfermedad por virus Powassan", name_ar: "مرض فيروس بواسان",
+      name_id: "Penyakit virus Powassan",
+      pathogenType: "virus_rna", family: "Flaviviridae",
+      transmission: ["vector"],
+      incubationMin: 7, incubationMax: 34,
+      cfr_ref: "~10 % (neuro-invasive)",
+      vaccine: "no",
+      treatment: "supportive",
+      whoFactsheet: "https://www.who.int/news-room/fact-sheets/detail/tick-borne-encephalitis",
+      travelerRisk: { americas: "low", asia: "low" },
+    },
+  },
 ];
 
 /** "Rift Valley fever" → "rift-valley-fever" */
