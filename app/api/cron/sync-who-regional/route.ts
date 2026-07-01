@@ -709,9 +709,7 @@ export async function GET(req: NextRequest) {
     );
     if (probe.status === 403) {
       reliefWebOk = false;
-      const msg = `ReliefWeb 403 — appname "${RELIEFWEB_APPNAME}" not approved. Register at apidoc.reliefweb.int and set RELIEFWEB_APPNAME env var.`;
-      console.error(`[regional] ${msg}`);
-      Sentry.captureMessage(msg, "error");
+      console.warn(`[regional] ReliefWeb 403 — appname "${RELIEFWEB_APPNAME}" not approved — awaiting approval at apidoc.reliefweb.int`);
     }
   } catch {
     // Network error — attempt anyway, individual targets will fail gracefully
