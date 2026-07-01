@@ -76,7 +76,7 @@ const DISEASE_MAP: Array<{ patterns: string[]; info: DiseaseInfo }> = [
       vaccine: "yes", vaccineName: "Ervebo (Zaïre strain only)",
       treatment: "experimental",
       whoFactsheet: "https://www.who.int/news-room/fact-sheets/detail/ebola-virus-disease",
-      travelerRisk: { africa: "high" },
+      travelerRisk: { africa: "high", europe: "low" },
     },
   },
   {
@@ -471,7 +471,7 @@ const DISEASE_MAP: Array<{ patterns: string[]; info: DiseaseInfo }> = [
       vaccine: "experimental",
       treatment: "experimental",
       whoFactsheet: "https://www.who.int/news-room/fact-sheets/detail/ebola-virus-disease",
-      travelerRisk: { africa: "high" },
+      travelerRisk: { africa: "high", europe: "low" },
     },
   },
   {
