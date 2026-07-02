@@ -126,6 +126,11 @@ HealthWatch Global — healthwatch-global.com
 | `[X] signups` | Supabase dashboard | 7 juillet matin |
 | `[First name]` (×4) | LinkedIn — 30 min de recherche | 7 juillet matin |
 
+**Compte signups au 2 juillet 2026 : 17 utilisateurs (7 Pro, 10 Free).**
+À vérifier le 7 juillet matin via Supabase. Utiliser le chiffre exact de ce jour-là.
+
+**Note données Choléra :** Au 2 juillet, toutes les entrées choléra sont `active=false` (dernière : Haïti, 24 mai, 28 500 cas). La page `/en/disease/cholera` montre des données historiques mais aucun foyer "actif". Le libellé "current Cholera surveillance" reste valide (surveillance = capacité, pas forcément foyer actif), mais vérifier avec WHO/PAHO avant d'envoyer si une reprise récente existe. Alternative : pointer vers `/en/disease/mpox-monkeypox` (DRC, 37 503 cas — actif) ou `/en/outbreak/[id-ebola-drc]` pour Oxfam/CARE opérant en zones touchées.
+
 Note : à J+12-16, ne pas écrire "just launched" — utiliser "two weeks in" ou "since our launch on June 25."
 
 ---

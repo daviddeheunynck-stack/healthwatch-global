@@ -1364,6 +1364,36 @@ healthwatch-global.com
 
 ---
 
+## Email — Jalal Nourlil, Institut Pasteur Maroc (2 juillet 2026)
+
+**À :** jalal.nourlil@pasteur.ma  
+**Objet :** Your HealthWatch Global account — how is it working for you?  
+**Statut :** À envoyer (David)
+
+**Contexte :** Jalal s'est inscrit spontanément le 12 juin 2026 (Institut Pasteur Maroc, domaine @pasteur.ma). Compte Pro actif jusqu'au 13 septembre 2026. 20 jours de recul sur la plateforme. Email de suivi personnel pour recueillir feedback et proposer des sièges supplémentaires.
+
+**Draft :**
+
+> Hi Jalal,
+>
+> You signed up for HealthWatch Global three weeks ago — I noticed the Institut Pasteur Maroc domain and wanted to reach out personally.
+>
+> A few questions, genuinely curious:
+> - Is the data useful for your surveillance work? Which diseases or regions are you following?
+> - Anything obviously missing or frustrating?
+>
+> Institut Pasteur Maroc sits at a genuinely important intersection — IHR focal point work, regional surveillance networks, North Africa/Sub-Saharan interface. If HealthWatch isn't giving you what you need for that context, I'd rather know now than have you churn silently.
+>
+> Your account has Pro access through September — enough time to actually put it through its paces. If you have colleagues on the surveillance team who might benefit, I can add 2–3 extra seats at no charge.
+>
+> A 20-minute call would be more useful than an email chain if you're open to it — happy to work around your schedule.
+>
+> Best,
+> David Deheunynck
+> HealthWatch Global — healthwatch-global.com
+
+---
+
 ## X — Reply Ministere de la Sante RDC @MinSanteRDC (2 juillet 2026)
 
 **Post original :** Point de situation Ebola 30 juin 2026. 1 406 cas (+73/24h), 438 deces, CFR 31.2%, 609 isolation, 192 gueris, 82.5% suivi contacts. Ituri 24 zones, Nord-Kivu 13 zones, nouvelle zone Lolwa.
@@ -1372,4 +1402,52 @@ healthwatch-global.com
 > These figures match exactly what we track on HealthWatch Global. The 82.5% contact tracing rate across 3 provinces is significant, but with +73 cases in 24h and 24 active health zones in Ituri, the untraced 17.5% represents a meaningful residual risk. The identification of Lolwa as a new zone confirms geographic expansion is still ongoing.
 
 **Contexte :** Compte officiel MoH DRC. Donnees correspondent exactement a notre DB. Angle : confirmation alignement sources + lecture analytique (17.5% non traces, expansion Lolwa).
+
+---
+
+## X — Thread Uganda dual VHF (2 juillet 2026)
+
+**Statut :** À poster (David) — peut s'appuyer sur les réponses déjà posées aujourd'hui (Abraar Karan, MinSanteRDC)
+
+**Angle :** Simultanéité de deux VHF actifs en Uganda — analyse surveillance.
+
+**Données sources (Supabase, vérifiées le 2 juillet) :**
+- Marburg virus disease, Uganda : 1 cas / 1 décès (2 juillet 2026) — district de Kyegegwa, enfant 1.5 ans — ACTIF
+- Ebola virus disease, Uganda : 20 cas / 2 décès (1 juillet 2026) — ACTIF
+
+**Thread (EN) :**
+
+Tweet 1 :
+> As of today, Uganda has two simultaneous hemorrhagic fever outbreaks active in its territory.
+>
+> Marburg: 1 case / 1 death. Confirmed today, Kyegegwa district.
+> EVD: 20 cases / 2 deaths. Active since late June.
+>
+> That's rare. Here's what it means for surveillance response.
+
+Tweet 2 :
+> Both Marburg and Ebola are high-CFR filoviruses — but they are distinct pathogens with distinct reservoirs, distinct transmission chains, and distinct outbreak dynamics.
+>
+> The first responder challenge: you cannot assume that clinical presentation in one district is the same pathogen as the other.
+
+Tweet 3 :
+> In practice, running two simultaneous VHF responses means:
+>
+> — Two separate contact tracing networks (transmission chains don't mix)
+> — Two separate lab confirmation pipelines (Marburg and EVD require different PCR panels)
+> — Competing demand for the same PPE, isolation beds, and trained responders
+
+Tweet 4 :
+> The WHO IHR risk framing matters here. Both events are HIGH risk at national level by standard VHF criteria.
+>
+> The EVD event in Uganda is a separate spillover from the DRC epidemic (now at 1,406 cases). Cross-border transmission is the working hypothesis — not confirmed secondary spread.
+
+Tweet 5 :
+> For surveillance teams: the "fog of two simultaneous events" is real.
+>
+> When contact tracers and field epidemiologists are stretched across two response structures simultaneously, signal quality degrades — exactly when you need it most.
+>
+> Tracking both via HealthWatch Global.
+
+**Note :** Thread analytique, pas alarmiste. Angle professionnel pour épidémiologistes et équipes réponse. Peut être posté en thread ou condensé en 1-2 tweets si le moment le justifie.
 
