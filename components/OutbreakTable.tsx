@@ -1306,13 +1306,22 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
                         <span className="text-gray-600 italic text-xs">{l.noData}</span>
                       )
                     ) : (
-                      <button
-                        onClick={() => openModal("cases")}
-                        className="flex items-center gap-1 text-xs text-amber-500/70 hover:text-amber-400 transition-colors"
-                      >
-                        <Lock className="w-3 h-3" />
-                        Pro
-                      </button>
+                      outbreak.cases > 0 && outbreak.deaths !== null ? (
+                        <span
+                          className="blur-sm select-none text-gray-500 cursor-pointer text-sm font-medium"
+                          onClick={() => openModal("cases")}
+                        >
+                          {(outbreak.deaths / outbreak.cases * 100).toFixed(1)}%
+                        </span>
+                      ) : (
+                        <button
+                          onClick={() => openModal("cases")}
+                          className="flex items-center gap-1 text-xs text-amber-500/70 hover:text-amber-400 transition-colors"
+                        >
+                          <Lock className="w-3 h-3" />
+                          Pro
+                        </button>
+                      )
                     )}
                   </td>
                   <td className="px-4 py-3">
