@@ -873,24 +873,39 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlis
           );
         })()}
 
-        {/* Unlock prompt for free users */}
+        {/* Unlock prompt for free users — outbreak-specific to drive conversion */}
         {!isPaid && (
-          <div className="mx-5 mb-3 flex items-center justify-between gap-3 p-3 rounded-xl bg-amber-900/10 border border-amber-700/20">
+          <div className="mx-5 mb-3 rounded-xl bg-amber-900/10 border border-amber-700/20 p-3 space-y-2">
+            <p className="text-xs text-amber-300 font-semibold">
+              {locale === "fr"
+                ? `Suivez ${getLocalizedDisease(outbreak, locale)} en temps réel`
+                : locale === "es"
+                ? `Siga ${getLocalizedDisease(outbreak, locale)} en tiempo real`
+                : locale === "ar"
+                ? `تابع ${getLocalizedDisease(outbreak, locale)} في الوقت الفعلي`
+                : locale === "id"
+                ? `Pantau ${getLocalizedDisease(outbreak, locale)} secara real-time`
+                : `Track ${getLocalizedDisease(outbreak, locale)} in real time`}
+            </p>
             <p className="text-xs text-gray-500">
-              {locale === "fr" ? "Débloquez les chiffres exacts avec Pro — essai 14 jours gratuit" :
-               locale === "es" ? "Desbloquee las cifras exactas con Pro — prueba de 14 días gratis" :
-               locale === "ar" ? "افتح الأرقام الدقيقة مع Pro — تجربة 14 يوماً مجانية" :
-               locale === "id" ? "Buka angka tepat dengan Pro — uji coba 14 hari gratis" :
-               "Unlock exact figures with Pro — 14-day free trial"}
+              {locale === "fr"
+                ? "Chiffres exacts · Alertes instantanées quand de nouveaux cas sont signalés · Graphique d'évolution · Export CSV"
+                : locale === "es"
+                ? "Cifras exactas · Alertas al instante cuando se notifican nuevos casos · Gráfico de evolución · Exportación CSV"
+                : locale === "ar"
+                ? "أرقام دقيقة · تنبيهات فورية عند تسجيل حالات جديدة · مخطط تطور · تصدير CSV"
+                : locale === "id"
+                ? "Angka tepat · Peringatan instan saat kasus baru dilaporkan · Grafik perkembangan · Ekspor CSV"
+                : "Exact figures · Instant alerts when new cases are reported · Case chart · CSV export"}
             </p>
             <LockedUpgradeButton
               feature="cases"
               label={
-                locale === "fr" ? "Débloquer Pro" :
-                locale === "es" ? "Desbloquear Pro" :
-                locale === "ar" ? "فتح Pro" :
-                locale === "id" ? "Buka Pro" :
-                "Unlock Pro"
+                locale === "fr" ? "Commencer l'essai gratuit →" :
+                locale === "es" ? "Iniciar prueba gratuita →" :
+                locale === "ar" ? "← ابدأ التجربة المجانية" :
+                locale === "id" ? "Mulai uji coba gratis →" :
+                "Start 14-day free trial →"
               }
               variant="banner"
             />
