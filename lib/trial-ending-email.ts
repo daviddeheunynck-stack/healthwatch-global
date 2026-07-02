@@ -11,6 +11,7 @@ function esc(s: string): string {
 
 type PlanCopy = {
   subject:     string;
+  subject1?:   string;
   headline:    string;
   intro:       (date: string) => string;
   highlights:  string[];
@@ -28,6 +29,7 @@ const COPY: Record<string, LocaleCopy> = {
   fr: {
     starter: {
       subject:     "Votre essai HealthWatch se termine dans 3 jours",
+      subject1:    "Votre essai HealthWatch se termine demain",
       headline:    "Votre essai Pro se termine dans 3 jours.",
       intro:       (d) => `Votre accès Pro expire le <strong>${d}</strong>. Pour conserver l'accès aux chiffres exacts, aux rapports PDF et aux alertes, ajoutez un moyen de paiement dès maintenant.`,
       highlights:  [
@@ -43,6 +45,7 @@ const COPY: Record<string, LocaleCopy> = {
     },
     pro: {
       subject:     "Votre essai HealthWatch Pro se termine dans 3 jours",
+      subject1:    "Votre essai HealthWatch Pro se termine demain",
       headline:    "Votre essai Pro se termine dans 3 jours.",
       intro:       (d) => `Votre accès Pro expire le <strong>${d}</strong>. Pour conserver l'accès aux chiffres exacts, aux rapports PDF et aux alertes, ajoutez un moyen de paiement dès maintenant.`,
       highlights:  [
@@ -60,6 +63,7 @@ const COPY: Record<string, LocaleCopy> = {
   en: {
     starter: {
       subject:     "Your HealthWatch trial ends in 3 days",
+      subject1:    "Your HealthWatch trial ends tomorrow",
       headline:    "Your Pro trial ends in 3 days.",
       intro:       (d) => `Your Pro access expires on <strong>${d}</strong>. To keep access to exact figures, PDF reports and alerts, add a payment method now.`,
       highlights:  [
@@ -75,6 +79,7 @@ const COPY: Record<string, LocaleCopy> = {
     },
     pro: {
       subject:     "Your HealthWatch Pro trial ends in 3 days",
+      subject1:    "Your HealthWatch Pro trial ends tomorrow",
       headline:    "Your Pro trial ends in 3 days.",
       intro:       (d) => `Your Pro access expires on <strong>${d}</strong>. To keep access to exact figures, PDF reports and alerts, add a payment method now.`,
       highlights:  [
@@ -92,6 +97,7 @@ const COPY: Record<string, LocaleCopy> = {
   es: {
     starter: {
       subject:     "Su prueba de HealthWatch termina en 3 días",
+      subject1:    "Su prueba de HealthWatch termina mañana",
       headline:    "Su prueba Pro termina en 3 días.",
       intro:       (d) => `Su acceso Pro expira el <strong>${d}</strong>. Para conservar el acceso a cifras exactas, informes PDF y alertas, añada un método de pago ahora.`,
       highlights:  [
@@ -107,6 +113,7 @@ const COPY: Record<string, LocaleCopy> = {
     },
     pro: {
       subject:     "Su prueba de HealthWatch Pro termina en 3 días",
+      subject1:    "Su prueba de HealthWatch Pro termina mañana",
       headline:    "Su prueba Pro termina en 3 días.",
       intro:       (d) => `Su acceso Pro expira el <strong>${d}</strong>. Para conservar el acceso a cifras exactas, informes PDF y alertas, añada un método de pago ahora.`,
       highlights:  [
@@ -124,6 +131,7 @@ const COPY: Record<string, LocaleCopy> = {
   ar: {
     starter: {
       subject:     "تنتهي تجربتك في HealthWatch خلال 3 أيام",
+      subject1:    "تنتهي تجربتك في HealthWatch غداً",
       headline:    "تجربتك Pro تنتهي خلال 3 أيام.",
       intro:       (d) => `ينتهي وصولك Pro في <strong>${d}</strong>. للاحتفاظ بالوصول إلى الأرقام الدقيقة وتقارير PDF والتنبيهات، أضف وسيلة دفع الآن.`,
       highlights:  [
@@ -139,6 +147,7 @@ const COPY: Record<string, LocaleCopy> = {
     },
     pro: {
       subject:     "تنتهي تجربتك في HealthWatch Pro خلال 3 أيام",
+      subject1:    "تنتهي تجربتك في HealthWatch Pro غداً",
       headline:    "تجربتك Pro تنتهي خلال 3 أيام.",
       intro:       (d) => `ينتهي وصولك Pro في <strong>${d}</strong>. للاحتفاظ بالوصول إلى الأرقام الدقيقة وتقارير PDF والتنبيهات، أضف وسيلة دفع الآن.`,
       highlights:  [
@@ -156,6 +165,7 @@ const COPY: Record<string, LocaleCopy> = {
   id: {
     starter: {
       subject:     "Uji coba HealthWatch Anda berakhir dalam 3 hari",
+      subject1:    "Uji coba HealthWatch Anda berakhir besok",
       headline:    "Uji coba Pro Anda berakhir dalam 3 hari.",
       intro:       (d) => `Akses Pro Anda berakhir pada <strong>${d}</strong>. Untuk mempertahankan akses ke angka tepat, laporan PDF, dan peringatan, tambahkan metode pembayaran sekarang.`,
       highlights:  [
@@ -171,6 +181,7 @@ const COPY: Record<string, LocaleCopy> = {
     },
     pro: {
       subject:     "Uji coba HealthWatch Pro Anda berakhir dalam 3 hari",
+      subject1:    "Uji coba HealthWatch Pro Anda berakhir besok",
       headline:    "Uji coba Pro Anda berakhir dalam 3 hari.",
       intro:       (d) => `Akses Pro Anda berakhir pada <strong>${d}</strong>. Untuk mempertahankan akses ke angka tepat, laporan PDF, dan peringatan, tambahkan metode pembayaran sekarang.`,
       highlights:  [
@@ -266,11 +277,13 @@ export function buildTrialEndingEmail(
   const isRtl = safeLocale === "ar";
   const ctaUrl = `${APP_URL}/${safeLocale}/account`;
   const dateStr = formatTrialEnd(trialEndsAt, safeLocale);
+  const daysLeft = Math.round((new Date(trialEndsAt).getTime() - Date.now()) / 86_400_000);
 
   // Override copy for users who already have a payment method
   const intro      = hasPaymentMethod ? rc.intro(dateStr)  : c.intro(dateStr);
   const ctaLabel   = hasPaymentMethod ? rc.ctaLabel        : c.ctaLabel;
   const reassurance = hasPaymentMethod ? rc.reassurance    : c.reassurance;
+  const subject    = daysLeft <= 1 ? (c.subject1 ?? c.subject) : c.subject;
 
   const bulletItems = c.highlights
     .map(
@@ -342,5 +355,5 @@ export function buildTrialEndingEmail(
 </body>
 </html>`;
 
-  return { subject: c.subject, html };
+  return { subject, html };
 }
