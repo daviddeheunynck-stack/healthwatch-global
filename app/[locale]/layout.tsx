@@ -10,6 +10,7 @@ import { UpgradeModalProvider } from "@/lib/upgrade-modal-context";
 import ConsentAwareAnalytics from "@/components/ConsentAwareAnalytics";
 import PHLaunchBar from "@/components/PHLaunchBar";
 import SentryUserIdentifier from "@/components/SentryUserIdentifier";
+import TrialBannerLoader from "@/components/TrialBannerLoader";
 import "../globals.css";
 
 const META: Record<string, { title: string; description: string }> = {
@@ -119,6 +120,9 @@ export default async function LocaleLayout({
         <NextIntlClientProvider messages={messages}>
           <UpgradeModalProvider>
             <Navbar />
+            <div className="max-w-7xl mx-auto px-4 pt-4 w-full">
+              <TrialBannerLoader locale={locale} />
+            </div>
             <main className="max-w-7xl mx-auto px-4 py-8 flex-1 w-full">{children}</main>
             <Footer locale={locale} />
             <CookieBanner locale={locale} />

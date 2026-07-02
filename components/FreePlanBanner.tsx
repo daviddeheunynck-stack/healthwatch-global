@@ -87,13 +87,15 @@ export default function FreePlanBanner({
 }) {
   const [dismissed, setDismissed] = useState(true);
   useEffect(() => {
+    // Expired trials always show — the user needs to act now
+    if (trialExpired) { setDismissed(false); return; }
     const stored = localStorage.getItem(STORAGE_KEY);
     if (stored) {
       const dismissedAt = parseInt(stored, 10);
       if (!isNaN(dismissedAt) && Date.now() - dismissedAt < DISMISS_TTL_MS) return;
     }
     setDismissed(false);
-  }, []);
+  }, [trialExpired]);
 
   if (dismissed) return null;
 
