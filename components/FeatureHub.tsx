@@ -71,6 +71,8 @@ export default function FeatureHub({ locale }: { locale: string }) {
       bg: "bg-slate-800/80",
       title: { fr: "Équipe & Accès", en: "Team & Access", es: "Equipo y Acceso", ar: "الفريق والوصول", id: "Tim & Akses" },
       desc:  { fr: "Inviter des membres, gérer les rôles et partager l'accès à la plateforme", en: "Invite members, manage roles and share platform access", es: "Invitar miembros, gestionar roles y acceso compartido", ar: "دعوة الأعضاء وإدارة الأدوار والوصول المشترك", id: "Undang anggota, kelola peran dan akses bersama" },
+      badge: { fr: "Team", en: "Team", es: "Team", ar: "Team", id: "Team" },
+      badgeCls: "bg-slate-800 text-slate-400 border-slate-700/60",
       href: `/${locale}/settings?tab=team`,
       cta:   { fr: "Gérer →", en: "Manage →", es: "Gestionar →", ar: "← إدارة", id: "Kelola →" },
     },

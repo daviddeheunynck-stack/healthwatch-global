@@ -24,6 +24,7 @@ export default function DiseaseAlertPicker({ locale, isPaid }: Props) {
   const c = COPY[locale] ?? COPY.en;
   const [subscribed, setSubscribed] = useState<string[]>([]);
   const [available,  setAvailable]  = useState<string[]>([]);
+  const [counts,     setCounts]     = useState<Record<string, number>>({});
   const [selected,   setSelected]   = useState<string>("");
   const [loading,    setLoading]    = useState(true);
   const [saving,     setSaving]     = useState(false);
@@ -37,6 +38,7 @@ export default function DiseaseAlertPicker({ locale, isPaid }: Props) {
       .then((d) => {
         setSubscribed(d.subscribed ?? []);
         setAvailable(d.available ?? []);
+        setCounts(d.counts ?? {});
         if (d.available?.length) setSelected(d.available[0]);
       })
       .catch(() => setError(c.error))
@@ -101,6 +103,12 @@ export default function DiseaseAlertPicker({ locale, isPaid }: Props) {
             ) : subscribed.map((d) => (
               <span key={d} className="inline-flex items-center gap-1.5 text-xs bg-red-900/30 border border-red-800/40 text-red-300 px-3 py-1 rounded-full">
                 {d}
+                {(counts[d] ?? 0) > 0 && (
+                  <>
+                    <span className="text-red-700" aria-hidden>·</span>
+                    <span className="text-[10px] text-red-400/60 tabular-nums" title={`${counts[d]} active outbreak${counts[d] === 1 ? "" : "s"}`}>{counts[d]}</span>
+                  </>
+                )}
                 <button onClick={() => remove(d)} disabled={saving} className="hover:text-white transition-colors">
                   <X className="w-3 h-3" />
                 </button>

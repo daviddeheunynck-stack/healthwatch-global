@@ -37,13 +37,17 @@ export async function GET() {
       .not("disease_en", "is", null),
   ]);
 
-  // Deduplicate available diseases
+  // Deduplicate available diseases and build per-disease outbreak counts
+  const counts: Record<string, number> = {};
   const seen = new Set<string>();
   const diseases: string[] = [];
   for (const row of available ?? []) {
-    if (row.disease_en && !seen.has(row.disease_en)) {
-      seen.add(row.disease_en);
-      diseases.push(row.disease_en);
+    if (row.disease_en) {
+      counts[row.disease_en] = (counts[row.disease_en] ?? 0) + 1;
+      if (!seen.has(row.disease_en)) {
+        seen.add(row.disease_en);
+        diseases.push(row.disease_en);
+      }
     }
   }
   diseases.sort();
@@ -52,6 +56,7 @@ export async function GET() {
     subscribed: (subscribed ?? []).map((r) => r.disease_en),
     available:  diseases,
     max:        MAX_DISEASES,
+    counts,
   });
 }
 
