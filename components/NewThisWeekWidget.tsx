@@ -10,21 +10,23 @@ const COPY: Record<string, {
   newLabel: string;
   worseningLabel: string;
   responseLabel: string;
+  alertCta: string;
 }> = {
-  en: { title: "New this week",         sub: "Outbreaks added or worsening in the last 7 days",          newLabel: "NEW",     worseningLabel: "WORSENING", responseLabel: "RESPONSE" },
-  fr: { title: "Nouveautés cette semaine", sub: "Foyers apparus ou aggravés ces 7 derniers jours",        newLabel: "NOUVEAU", worseningLabel: "EN HAUSSE",  responseLabel: "RÉPONSE"   },
-  es: { title: "Novedades esta semana",  sub: "Brotes nuevos o que empeoran en los últimos 7 días",       newLabel: "NUEVO",   worseningLabel: "EMPEORANDO", responseLabel: "RESPUESTA" },
-  ar: { title: "جديد هذا الأسبوع",      sub: "تفشيات جديدة أو متصاعدة خلال الأيام السبعة الماضية",      newLabel: "جديد",    worseningLabel: "تصاعد",      responseLabel: "استجابة"   },
-  id: { title: "Baru minggu ini",        sub: "Wabah baru atau yang memburuk dalam 7 hari terakhir",      newLabel: "BARU",    worseningLabel: "MEMBURUK",   responseLabel: "RESPONS"   },
+  en: { title: "New this week",         sub: "Outbreaks added or worsening in the last 7 days",          newLabel: "NEW",     worseningLabel: "WORSENING", responseLabel: "RESPONSE", alertCta: "Get real-time alerts for outbreaks like these" },
+  fr: { title: "Nouveautés cette semaine", sub: "Foyers apparus ou aggravés ces 7 derniers jours",        newLabel: "NOUVEAU", worseningLabel: "EN HAUSSE",  responseLabel: "RÉPONSE",  alertCta: "Recevoir des alertes en temps réel pour ces foyers" },
+  es: { title: "Novedades esta semana",  sub: "Brotes nuevos o que empeoran en los últimos 7 días",       newLabel: "NUEVO",   worseningLabel: "EMPEORANDO", responseLabel: "RESPUESTA", alertCta: "Reciba alertas en tiempo real para estos brotes" },
+  ar: { title: "جديد هذا الأسبوع",      sub: "تفشيات جديدة أو متصاعدة خلال الأيام السبعة الماضية",      newLabel: "جديد",    worseningLabel: "تصاعد",      responseLabel: "استجابة",  alertCta: "احصل على تنبيهات فورية لهذه التفشيات" },
+  id: { title: "Baru minggu ini",        sub: "Wabah baru atau yang memburuk dalam 7 hari terakhir",      newLabel: "BARU",    worseningLabel: "MEMBURUK",   responseLabel: "RESPONS",  alertCta: "Dapatkan peringatan langsung untuk wabah ini" },
 };
 
 interface Props {
   outbreaks: Outbreak[];
   locale: string;
   trends: Record<string, OutbreakTrend>;
+  isPaid?: boolean;
 }
 
-export default function NewThisWeekWidget({ outbreaks, locale, trends }: Props) {
+export default function NewThisWeekWidget({ outbreaks, locale, trends, isPaid }: Props) {
   const c = COPY[locale] ?? COPY.en;
   const isRtl = locale === "ar";
   const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
@@ -116,6 +118,13 @@ export default function NewThisWeekWidget({ outbreaks, locale, trends }: Props) 
           );
         })}
       </div>
+      {!isPaid && (
+        <p className="text-xs text-gray-500 text-center pt-1">
+          <Link href={`/${locale}/pricing`} className="text-red-400 hover:text-red-300 transition-colors">
+            {c.alertCta} →
+          </Link>
+        </p>
+      )}
     </section>
   );
 }

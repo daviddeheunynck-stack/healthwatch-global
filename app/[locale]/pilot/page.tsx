@@ -44,6 +44,7 @@ const COPY = {
     successTitle: "Application received.",
     successDesc: "We'll review it and get back to you within 48 hours.",
     backLink: "← Back to pricing",
+    trialFallback: "Not an institution? Try the 14-day free trial →",
   },
   fr: {
     tag: "Programme Pilote Institutionnel",
@@ -83,6 +84,7 @@ const COPY = {
     successTitle: "Candidature reçue.",
     successDesc: "Nous l'examinerons et reviendrons vers vous sous 48 heures.",
     backLink: "← Retour aux tarifs",
+    trialFallback: "Pas d'institution ? Essai gratuit 14 jours →",
   },
   es: {
     tag: "Programa Piloto Institucional",
@@ -122,6 +124,7 @@ const COPY = {
     successTitle: "Solicitud recibida.",
     successDesc: "La revisaremos y le responderemos en 48 horas.",
     backLink: "← Volver a precios",
+    trialFallback: "¿No es una institución? Prueba gratuita de 14 días →",
   },
   ar: {
     tag: "برنامج التجربة المؤسسية",
@@ -161,6 +164,7 @@ const COPY = {
     successTitle: "تم استلام طلبك.",
     successDesc: "سنراجعه ونتواصل معك خلال 48 ساعة.",
     backLink: "→ العودة إلى الأسعار",
+    trialFallback: "← لست مؤسسة؟ جرّب مجاناً لمدة 14 يوماً",
   },
   id: {
     tag: "Program Pilot Institusional",
@@ -200,6 +204,7 @@ const COPY = {
     successTitle: "Aplikasi diterima.",
     successDesc: "Kami akan meninjaunya dan menghubungi Anda dalam 48 jam.",
     backLink: "← Kembali ke harga",
+    trialFallback: "Bukan institusi? Coba uji coba gratis 14 hari →",
   },
 } as const;
 
@@ -454,9 +459,14 @@ export default function PilotPage() {
             {error && <p className="text-red-400 text-sm">{error}</p>}
 
             <div className="flex items-center justify-between pt-2">
-              <Link href={`/${locale}/pricing`} className="text-sm text-gray-500 hover:text-gray-300 transition-colors">
-                {c.backLink}
-              </Link>
+              <div className="flex flex-col gap-1">
+                <Link href={`/${locale}/pricing`} className="text-sm text-gray-500 hover:text-gray-300 transition-colors">
+                  {c.backLink}
+                </Link>
+                <Link href={`/${locale}/signup`} className="text-xs text-gray-600 hover:text-gray-400 transition-colors">
+                  {c.trialFallback}
+                </Link>
+              </div>
               <button
                 type="submit"
                 disabled={loading}

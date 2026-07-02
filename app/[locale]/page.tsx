@@ -494,7 +494,7 @@ async function DashboardContent({ demo = false, urlRegion, urlRisk }: { demo?: b
         <DashboardAlertsWidget locale={locale} userId={currentUserId} />
       )}
 
-      <NewThisWeekWidget outbreaks={outbreaks} locale={locale} trends={trends} />
+      <NewThisWeekWidget outbreaks={outbreaks} locale={locale} trends={trends} isPaid={isPaid} />
 
       <WorldMap outbreaks={outbreaks} locale={locale} isPaid={isPaid} popupLabels={popupLabels} riskLabels={riskLabels} />
 
