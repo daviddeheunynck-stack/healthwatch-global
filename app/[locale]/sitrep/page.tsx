@@ -180,10 +180,10 @@ export default async function SitrepPage({
                       <span className="truncate block">{getLocalizedCountry(o, locale)}</span>
                     </td>
                     <td className="px-3 py-2 text-right text-gray-300">
-                      {o.cases > 0 ? o.cases.toLocaleString() : <span className="text-gray-600">{c.noData}</span>}
+                      {o.cases > 0 ? o.cases.toLocaleString(locale === "ar" ? "ar-SA" : locale) : <span className="text-gray-600">{c.noData}</span>}
                     </td>
                     <td className="px-3 py-2 text-right text-red-400">
-                      {o.deaths !== null && o.deaths > 0 ? o.deaths.toLocaleString() : <span className="text-gray-600">{c.noData}</span>}
+                      {o.deaths !== null && o.deaths > 0 ? o.deaths.toLocaleString(locale === "ar" ? "ar-SA" : locale) : <span className="text-gray-600">{c.noData}</span>}
                     </td>
                     <td className={`px-3 py-2 text-right ${cfrCls}`}>
                       {cfr ? `${cfr}%` : <span className="text-gray-600">{c.noData}</span>}
@@ -336,10 +336,10 @@ export default async function SitrepPage({
                       <span className="truncate block">{getLocalizedCountry(o, locale)}</span>
                     </td>
                     <td className="px-3 py-2 text-right text-gray-300">
-                      {o.cases > 0 ? o.cases.toLocaleString() : <span className="text-gray-600">{c.noData}</span>}
+                      {o.cases > 0 ? o.cases.toLocaleString(locale === "ar" ? "ar-SA" : locale) : <span className="text-gray-600">{c.noData}</span>}
                     </td>
                     <td className="px-3 py-2 text-right text-red-400">
-                      {o.deaths !== null && o.deaths > 0 ? o.deaths.toLocaleString() : <span className="text-gray-600">{c.noData}</span>}
+                      {o.deaths !== null && o.deaths > 0 ? o.deaths.toLocaleString(locale === "ar" ? "ar-SA" : locale) : <span className="text-gray-600">{c.noData}</span>}
                     </td>
                     <td className={`px-3 py-2 text-right ${cfrCls}`}>
                       {cfr ? `${cfr}%` : <span className="text-gray-600">{c.noData}</span>}
