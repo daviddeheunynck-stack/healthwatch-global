@@ -3,23 +3,30 @@ import { createClient } from "@/lib/supabase-server";
 
 export const dynamic = "force-dynamic";
 
-// GET  /api/notifications          — last 30 notifications for current user
-// PATCH /api/notifications          — mark all as read
-// DELETE /api/notifications?id=X   — delete one
+// GET  /api/notifications?offset=N  — 30 notifications for current user, paginated
+// PATCH /api/notifications           — mark all as read
+// DELETE /api/notifications?id=X    — delete one
 
-export async function GET() {
+const PAGE_SIZE = 30;
+
+export async function GET(req: NextRequest) {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  const offset = parseInt(req.nextUrl.searchParams.get("offset") ?? "0", 10) || 0;
 
   const { data } = await supabase
     .from("alert_notifications")
     .select("id, type, title, body, outbreak_id, read_at, created_at")
     .eq("user_id", user.id)
     .order("created_at", { ascending: false })
-    .limit(30);
+    .range(offset, offset + PAGE_SIZE);
 
-  return NextResponse.json({ notifications: data ?? [] });
+  const all = data ?? [];
+  const hasMore = all.length > PAGE_SIZE;
+  const notifications = all.slice(0, PAGE_SIZE);
+  return NextResponse.json({ notifications, hasMore });
 }
 
 export async function PATCH() {

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Bell, Trash2, CheckCheck, ArrowLeft } from "lucide-react";
+import { Bell, Trash2, CheckCheck, ArrowLeft, Loader2 } from "lucide-react";
 
 type Notif = {
   id: string;
@@ -26,6 +26,7 @@ const LABELS: Record<string, {
   types: Record<string, string>;
   justNow: string;
   ago: (h: number) => string;
+  loadMore: string;
 }> = {
   fr: {
     title:        "Vos alertes",
@@ -39,6 +40,7 @@ const LABELS: Record<string, {
     types: { tripwire: "Tripwire", category_alert: "Catégorie", subscriber: "Foyer suivi", watchlist: "Surveillance", disease_alert: "Alerte maladie", pheic: "PHEIC", country_risk: "Risque pays", regional_digest: "Digest régional" },
     justNow: "À l'instant",
     ago: (h) => h < 24 ? `Il y a ${h}h` : `Il y a ${Math.floor(h / 24)}j`,
+    loadMore: "Charger plus",
   },
   en: {
     title:        "Your alerts",
@@ -52,6 +54,7 @@ const LABELS: Record<string, {
     types: { tripwire: "Tripwire", category_alert: "Category", subscriber: "Subscribed outbreak", watchlist: "Watchlist", disease_alert: "Disease alert", pheic: "PHEIC", country_risk: "Country risk", regional_digest: "Regional digest" },
     justNow: "Just now",
     ago: (h) => h < 24 ? `${h}h ago` : `${Math.floor(h / 24)}d ago`,
+    loadMore: "Load more",
   },
   es: {
     title:        "Tus alertas",
@@ -65,6 +68,7 @@ const LABELS: Record<string, {
     types: { tripwire: "Tripwire", category_alert: "Categoría", subscriber: "Brote suscrito", watchlist: "Vigilancia", disease_alert: "Alerta de enfermedad", pheic: "PHEIC", country_risk: "Riesgo país", regional_digest: "Resumen regional" },
     justNow: "Ahora mismo",
     ago: (h) => h < 24 ? `Hace ${h}h` : `Hace ${Math.floor(h / 24)}d`,
+    loadMore: "Cargar más",
   },
   ar: {
     title:        "تنبيهاتك",
@@ -78,6 +82,7 @@ const LABELS: Record<string, {
     types: { tripwire: "Tripwire", category_alert: "تنبيه الفئة", subscriber: "تفشٍّ مشترك", watchlist: "قائمة المراقبة", disease_alert: "تنبيه مرضي", pheic: "PHEIC", country_risk: "خطر البلد", regional_digest: "ملخص إقليمي" },
     justNow: "الآن",
     ago: (h) => h < 24 ? `منذ ${h}س` : `منذ ${Math.floor(h / 24)}ي`,
+    loadMore: "تحميل المزيد",
   },
   id: {
     title:        "Peringatan Anda",
@@ -91,6 +96,7 @@ const LABELS: Record<string, {
     types: { tripwire: "Tripwire", category_alert: "Kategori", subscriber: "Wabah langganan", watchlist: "Daftar pantau", disease_alert: "Peringatan penyakit", pheic: "PHEIC", country_risk: "Risiko negara", regional_digest: "Digest regional" },
     justNow: "Baru saja",
     ago: (h) => h < 24 ? `${h}j lalu` : `${Math.floor(h / 24)}h lalu`,
+    loadMore: "Muat lebih banyak",
   },
 };
 
@@ -111,13 +117,17 @@ function timeAgo(iso: string, locale: string): string {
 export default function AlertsPageClient({
   locale,
   initialNotifications,
+  initialHasMore = false,
   isPaid,
 }: {
   locale: string;
   initialNotifications: Notif[];
+  initialHasMore?: boolean;
   isPaid?: boolean;
 }) {
   const [notifications, setNotifications] = useState<Notif[]>(initialNotifications);
+  const [hasMore, setHasMore] = useState(initialHasMore);
+  const [loadingMore, setLoadingMore] = useState(false);
   const lb = LABELS[locale] ?? LABELS.en;
   const isRtl = locale === "ar";
   const unreadCount = notifications.filter((n) => !n.read_at).length;
@@ -131,6 +141,18 @@ export default function AlertsPageClient({
   async function deleteOne(id: string) {
     await fetch(`/api/notifications?id=${id}`, { method: "DELETE" });
     setNotifications((prev) => prev.filter((n) => n.id !== id));
+  }
+
+  async function loadMore() {
+    setLoadingMore(true);
+    try {
+      const res = await fetch(`/api/notifications?offset=${notifications.length}`);
+      const json = await res.json();
+      setNotifications((prev) => [...prev, ...(json.notifications ?? [])]);
+      setHasMore(json.hasMore ?? false);
+    } finally {
+      setLoadingMore(false);
+    }
   }
 
   return (
@@ -220,6 +242,16 @@ export default function AlertsPageClient({
             );
           })}
         </div>
+        {hasMore && (
+          <button
+            onClick={loadMore}
+            disabled={loadingMore}
+            className="w-full mt-2 flex items-center justify-center gap-2 py-2.5 text-xs text-gray-500 hover:text-gray-300 transition-colors disabled:opacity-50"
+          >
+            {loadingMore && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
+            {lb.loadMore}
+          </button>
+        )}
       )}
     </div>
   );

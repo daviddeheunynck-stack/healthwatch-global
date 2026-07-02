@@ -6,11 +6,11 @@ const OG_LOCALE: Record<string, string> = {
 };
 
 const META: Record<string, { title: string; description: string }> = {
-  en: { title: "Email Alerts", description: "Subscribe to a free weekly digest of disease outbreaks for your region. Powered by official WHO, ECDC, PAHO and Africa CDC data." },
-  fr: { title: "Alertes email", description: "Abonnez-vous à un digest hebdomadaire gratuit des foyers épidémiques de votre région. Alimenté par les données officielles OMS, ECDC, PAHO et Africa CDC." },
-  es: { title: "Alertas por email", description: "Suscríbase a un resumen semanal gratuito de brotes de enfermedades en su región. Impulsado por datos oficiales de OMS, ECDC, PAHO y Africa CDC." },
-  ar: { title: "تنبيهات البريد الإلكتروني", description: "اشترك في ملخص أسبوعي مجاني لتفشي الأمراض في منطقتك. مدعوم بالبيانات الرسمية لمنظمة الصحة العالمية، ECDC، PAHO وAfrica CDC." },
-  id: { title: "Peringatan Email", description: "Berlangganan digest mingguan gratis wabah penyakit di wilayah Anda. Didukung data resmi WHO, ECDC, PAHO dan Africa CDC." },
+  en: { title: "Alert Center", description: "Get real-time outbreak alerts by region. Instant email notifications from WHO, ECDC, PAHO and Africa CDC — or subscribe to a free weekly digest." },
+  fr: { title: "Centre d'Alertes", description: "Recevez des alertes épidémiques en temps réel par région. Notifications instantanées depuis l'OMS, l'ECDC, l'OPAS et Africa CDC — ou abonnez-vous au digest hebdomadaire gratuit." },
+  es: { title: "Centro de Alertas", description: "Reciba alertas de brotes en tiempo real por región. Notificaciones instantáneas de OMS, ECDC, PAHO y Africa CDC — o suscríbase al resumen semanal gratuito." },
+  ar: { title: "مركز التنبيهات", description: "احصل على تنبيهات التفشي الفورية حسب المنطقة. إشعارات فورية من WHO وECDC وPAHO وAfrica CDC — أو اشترك في الملخص الأسبوعي المجاني." },
+  id: { title: "Pusat Peringatan", description: "Dapatkan peringatan wabah real-time berdasarkan wilayah. Notifikasi instan dari WHO, ECDC, PAHO, dan Africa CDC — atau berlangganan digest mingguan gratis." },
 };
 
 export async function generateMetadata({

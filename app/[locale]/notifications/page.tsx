@@ -24,19 +24,24 @@ export default async function NotificationsPage({ params }: { params: Promise<{ 
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect(`/${locale}/login`);
 
+  const PAGE_SIZE = 30;
   const [{ data }, { data: profile }] = await Promise.all([
     supabase
       .from("alert_notifications")
       .select("id, type, title, body, outbreak_id, read_at, created_at")
       .eq("user_id", user.id)
       .order("created_at", { ascending: false })
-      .limit(50),
+      .range(0, PAGE_SIZE),
     supabase
       .from("profiles")
       .select("plan, trial_ends_at, stripe_subscription_id")
       .eq("id", user.id)
       .single(),
   ]);
+
+  const all = data ?? [];
+  const initialHasMore = all.length > PAGE_SIZE;
+  const initialNotifications = all.slice(0, PAGE_SIZE);
 
   const plan = profile?.plan ?? "free";
   const trialExpired =
@@ -46,5 +51,5 @@ export default async function NotificationsPage({ params }: { params: Promise<{ 
     !profile?.stripe_subscription_id;
   const isPaid = ["starter", "pro", "team", "enterprise"].includes(plan) && !trialExpired;
 
-  return <AlertsPageClient locale={locale} initialNotifications={data ?? []} isPaid={isPaid} />;
+  return <AlertsPageClient locale={locale} initialNotifications={initialNotifications} initialHasMore={initialHasMore} isPaid={isPaid} />;
 }
