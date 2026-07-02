@@ -437,7 +437,7 @@ async function DashboardContent({ demo = false, urlRegion, urlRisk }: { demo?: b
           labels={tableLabels}
           trends={trends}
           defaultFilters={{
-            region:  (VALID_REGIONS.has(urlRegion ?? "") ? urlRegion : displayFilters?.region ?? geoRegion) as "all" | "africa" | "asia" | "europe" | "americas" | "oceania",
+            region:  (VALID_REGIONS.has(urlRegion ?? "") ? urlRegion : displayFilters?.region ?? "all") as "all" | "africa" | "asia" | "europe" | "americas" | "oceania",
             country: displayFilters?.country ?? "all",
             risk:    (VALID_RISKS.has(urlRisk ?? "") ? urlRisk : "all") as "all" | "high" | "medium" | "low",
           }}
