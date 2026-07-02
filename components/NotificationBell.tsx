@@ -141,6 +141,14 @@ export default function NotificationBell({ locale, dropUp = false }: { locale: s
     setAlertItems((prev) => prev.filter((a) => a.id !== id));
   }
 
+  function markOneRead(id: string) {
+    setAlertItems((prev) => prev.map((a) =>
+      a.id === id && !a.read_at ? { ...a, read_at: new Date().toISOString() } : a
+    ));
+    setAlertUnread((prev) => Math.max(0, prev - 1));
+    fetch(`/api/notifications?id=${id}`, { method: "PATCH" }).catch(() => {});
+  }
+
   return (
     <div className="relative" ref={ref}>
       <button
@@ -185,22 +193,36 @@ export default function NotificationBell({ locale, dropUp = false }: { locale: s
             {!loading && alertItems.length > 0 && (
               <>
                 <p className="px-4 pt-3 pb-1 text-[10px] font-semibold text-gray-600 uppercase tracking-wide">{lb.alertHistory}</p>
-                {alertItems.map((a) => (
-                  <div
-                    key={a.id}
-                    className={`flex items-start gap-2.5 px-4 py-2.5 border-b border-gray-800/50 hover:bg-gray-800/30 transition-colors ${a.read_at ? "opacity-50" : ""}`}
-                  >
-                    <span className={`mt-1.5 w-1.5 h-1.5 rounded-full shrink-0 ${TYPE_DOT[a.type] ?? "bg-gray-500"}`} />
-                    <div className="flex-1 min-w-0 space-y-0.5">
-                      <p className="text-xs font-medium text-white leading-snug">{a.title}</p>
-                      <p className="text-[10px] text-gray-500 leading-snug">{a.body}</p>
-                      <p className="text-[9px] text-gray-700">{lb.types[a.type] ?? a.type} · {timeAgo(a.created_at, locale)}</p>
+                {alertItems.map((a) => {
+                  const inner = (
+                    <>
+                      <span className={`mt-1.5 w-1.5 h-1.5 rounded-full shrink-0 ${TYPE_DOT[a.type] ?? "bg-gray-500"}`} />
+                      <div className="flex-1 min-w-0 space-y-0.5">
+                        <p className="text-xs font-medium text-white leading-snug">{a.title}</p>
+                        <p className="text-[10px] text-gray-500 leading-snug">{a.body}</p>
+                        <p className="text-[9px] text-gray-700">{lb.types[a.type] ?? a.type} · {timeAgo(a.created_at, locale)}</p>
+                      </div>
+                    </>
+                  );
+                  const rowCls = `flex items-start gap-2.5 flex-1 min-w-0 ${a.outbreak_id ? "cursor-pointer" : ""}`;
+                  return (
+                    <div
+                      key={a.id}
+                      className={`flex items-start gap-0 px-4 py-2.5 border-b border-gray-800/50 hover:bg-gray-800/30 transition-colors ${a.read_at ? "opacity-50" : ""}`}
+                    >
+                      {a.outbreak_id ? (
+                        <Link href={`/${locale}/outbreak/${a.outbreak_id}`} className={rowCls} onClick={() => { markOneRead(a.id); setOpen(false); }}>
+                          {inner}
+                        </Link>
+                      ) : (
+                        <div className={rowCls}>{inner}</div>
+                      )}
+                      <button onClick={(e) => { e.stopPropagation(); dismissAlert(a.id); }} className="shrink-0 text-gray-700 hover:text-gray-400 mt-1.5 ml-1.5 transition-colors">
+                        <X className="w-3 h-3" />
+                      </button>
                     </div>
-                    <button onClick={() => dismissAlert(a.id)} className="shrink-0 text-gray-700 hover:text-gray-400 mt-0.5 transition-colors">
-                      <X className="w-3 h-3" />
-                    </button>
-                  </div>
-                ))}
+                  );
+                })}
               </>
             )}
 
