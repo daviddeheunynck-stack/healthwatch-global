@@ -10,7 +10,7 @@ export async function generateMetadata({
   const { locale } = await params;
   return {
     title: "API Documentation — HealthWatch Global",
-    description: "REST API reference for the HealthWatch Global Enterprise plan. Access outbreak data updated every hour, programmatically.",
+    description: "REST API reference for HealthWatch Global Pro, Team and Enterprise plans. Access outbreak data updated every hour, programmatically.",
     alternates: {
       canonical: `https://healthwatch-global.com/${locale}/docs`,
       languages: {
@@ -88,12 +88,12 @@ export default async function DocsPage({ params }: { params: Promise<{ locale: s
       <div className="space-y-3">
         <div className="flex items-center gap-2 text-xs text-purple-400 font-semibold uppercase tracking-widest">
           <Key className="w-3.5 h-3.5" />
-          Enterprise · API Reference
+          Pro · Team · Enterprise · API Reference
         </div>
         <h1 className="text-4xl font-bold text-white">API Documentation</h1>
         <p className="text-gray-400 text-lg leading-relaxed max-w-2xl">
-          Programmatic access to WHO, ECDC, PAHO and Africa CDC outbreak data, updated every hour. Available on the{" "}
-          <span className="text-purple-400 font-semibold">Enterprise plan</span>.
+          Programmatic access to WHO, ECDC, PAHO and Africa CDC outbreak data, updated every hour. Available on{" "}
+          <span className="text-purple-400 font-semibold">Pro, Team and Enterprise plans</span>.
           Manage your API keys from{" "}
           <Link href={`/${locale}/account`} className="text-red-400 hover:text-red-300 underline underline-offset-2">
             your account
@@ -525,7 +525,7 @@ console.log(data);`}</Code>
               <ErrorRow code={200} meaning="Success — response body contains requested data" />
               <ErrorRow code={400} meaning="Bad request — invalid query parameter value" />
               <ErrorRow code={401} meaning="Unauthorized — missing or invalid X-API-Key header" />
-              <ErrorRow code={403} meaning="Forbidden — API key valid but Enterprise subscription is not active" />
+              <ErrorRow code={403} meaning="Forbidden — API key valid but Pro, Team or Enterprise subscription required" />
               <ErrorRow code={429} meaning="Rate limit exceeded — retry after the value in the Retry-After header" />
               <ErrorRow code={500} meaning="Internal server error — contact support if this persists" />
             </tbody>
@@ -596,7 +596,7 @@ console.log(data);`}</Code>
         <div>
           <p className="text-white font-semibold">Ready to integrate?</p>
           <p className="text-sm text-gray-400 mt-0.5">
-            Enterprise customers: generate your API key in account settings.
+            Pro, Team and Enterprise subscribers: generate your API key in account settings.
             Academic / research institution?{" "}
             <a
               href="mailto:contact@healthwatch-global.com?subject=Trial%20API%20key%20request"
