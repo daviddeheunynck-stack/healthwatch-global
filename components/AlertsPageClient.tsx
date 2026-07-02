@@ -210,48 +210,50 @@ export default function AlertsPageClient({
           )}
         </div>
       ) : (
-        <div className="bg-gray-900 border border-gray-800 rounded-xl overflow-hidden divide-y divide-gray-800/60">
-          {notifications.map((n) => {
-            const rowCls = `flex items-start gap-3 px-5 py-3.5 transition-colors hover:bg-gray-800/30 pr-12 ${n.read_at ? "opacity-50" : ""}`;
-            const content = (
-              <>
-                <span className={`mt-1.5 w-2 h-2 rounded-full shrink-0 ${TYPE_DOT[n.type] ?? "bg-gray-500"}`} />
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-white leading-snug">{n.title}</p>
-                  <p className="text-xs text-gray-500 leading-snug mt-0.5">{n.body}</p>
-                  <p className="text-[10px] text-gray-700 mt-0.5">
-                    {lb.types[n.type] ?? n.type} · {timeAgo(n.created_at, locale)}
-                  </p>
+        <>
+          <div className="bg-gray-900 border border-gray-800 rounded-xl overflow-hidden divide-y divide-gray-800/60">
+            {notifications.map((n) => {
+              const rowCls = `flex items-start gap-3 px-5 py-3.5 transition-colors hover:bg-gray-800/30 pr-12 ${n.read_at ? "opacity-50" : ""}`;
+              const content = (
+                <>
+                  <span className={`mt-1.5 w-2 h-2 rounded-full shrink-0 ${TYPE_DOT[n.type] ?? "bg-gray-500"}`} />
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium text-white leading-snug">{n.title}</p>
+                    <p className="text-xs text-gray-500 leading-snug mt-0.5">{n.body}</p>
+                    <p className="text-[10px] text-gray-700 mt-0.5">
+                      {lb.types[n.type] ?? n.type} · {timeAgo(n.created_at, locale)}
+                    </p>
+                  </div>
+                </>
+              );
+              return (
+                <div key={n.id} className="relative group">
+                  {n.outbreak_id
+                    ? <Link href={`/${locale}/outbreak/${n.outbreak_id}`} className={rowCls}>{content}</Link>
+                    : <div className={rowCls}>{content}</div>
+                  }
+                  <button
+                    onClick={() => deleteOne(n.id)}
+                    className="absolute top-3.5 right-4 text-gray-700 hover:text-red-400 transition-colors opacity-0 group-hover:opacity-100"
+                    aria-label="Delete"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                  </button>
                 </div>
-              </>
-            );
-            return (
-              <div key={n.id} className="relative group">
-                {n.outbreak_id
-                  ? <Link href={`/${locale}/outbreak/${n.outbreak_id}`} className={rowCls}>{content}</Link>
-                  : <div className={rowCls}>{content}</div>
-                }
-                <button
-                  onClick={() => deleteOne(n.id)}
-                  className="absolute top-3.5 right-4 text-gray-700 hover:text-red-400 transition-colors opacity-0 group-hover:opacity-100"
-                  aria-label="Delete"
-                >
-                  <Trash2 className="w-3.5 h-3.5" />
-                </button>
-              </div>
-            );
-          })}
-        </div>
-        {hasMore && (
-          <button
-            onClick={loadMore}
-            disabled={loadingMore}
-            className="w-full mt-2 flex items-center justify-center gap-2 py-2.5 text-xs text-gray-500 hover:text-gray-300 transition-colors disabled:opacity-50"
-          >
-            {loadingMore && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
-            {lb.loadMore}
-          </button>
-        )}
+              );
+            })}
+          </div>
+          {hasMore && (
+            <button
+              onClick={loadMore}
+              disabled={loadingMore}
+              className="w-full mt-2 flex items-center justify-center gap-2 py-2.5 text-xs text-gray-500 hover:text-gray-300 transition-colors disabled:opacity-50"
+            >
+              {loadingMore && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
+              {lb.loadMore}
+            </button>
+          )}
+        </>
       )}
     </div>
   );
