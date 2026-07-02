@@ -53,10 +53,10 @@ export const PRICE_DISPLAY = {
   ar: {
     proMonthly:        "€29",
     proAnnual:         "€249",
-    proAnnualSavings:  "99 €",
+    proAnnualSavings:  "€99",
     teamMonthly:       "€149",
     teamAnnual:        "€1.290",
-    teamAnnualSavings: "498 €",
+    teamAnnualSavings: "€498",
   },
   id: {
     proMonthly:        "€29",
