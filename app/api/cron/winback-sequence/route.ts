@@ -166,6 +166,143 @@ const COPY: Record<string, {
   },
 };
 
+// ── J+7 copy ───────────────────────────────────────────────────────────────────
+
+const COPY_J7: Record<string, {
+  subject: string;
+  headline: string;
+  intro: string;
+  missedLabel: string;
+  missedItems: string[];
+  commitLabel: string;
+  commit: string;
+  ctaLabel: string;
+  closing: string;
+  unsubNote: string;
+}> = {
+  fr: {
+    subject: "7 jours sans surveillance active — ce que vous avez raté",
+    headline: "7 jours sans accès Pro.",
+    intro: "En une semaine, des dizaines de nouveaux foyers ont été signalés dans le monde. Vous n'en avez reçu aucune alerte.",
+    missedLabel: "Ce qui s'est passé pendant votre absence",
+    missedItems: [
+      "🦠 Nouveaux foyers en Afrique et en Asie du Sud-Est signalés dans les 7 derniers jours",
+      "📊 Données de cas et de décès mises à jour quotidiennement — invisibles depuis l'expiration",
+      "📬 Alertes email en temps réel — silencieuses depuis 7 jours",
+    ],
+    commitLabel: "Pas de frais cachés",
+    commit: "Chaque abonnement Pro commence immédiatement. Vous retrouvez l'accès complet en moins d'une minute.",
+    ctaLabel: "Reprendre l'accès Pro →",
+    closing: "L'équipe HealthWatch Global",
+    unsubNote: "Vous recevez cet email car vous avez créé un compte sur healthwatch-global.com.",
+  },
+  en: {
+    subject: "7 days without active surveillance — what you missed",
+    headline: "7 days without Pro access.",
+    intro: "In one week, dozens of new outbreaks were reported worldwide. You received no alerts.",
+    missedLabel: "What happened while you were away",
+    missedItems: [
+      "🦠 New outbreaks in Africa and Southeast Asia reported in the last 7 days",
+      "📊 Case and death counts updated daily — invisible since your trial ended",
+      "📬 Real-time email alerts — silent for 7 days",
+    ],
+    commitLabel: "No hidden fees",
+    commit: "Every Pro subscription starts immediately. Full access restored in under a minute.",
+    ctaLabel: "Restore Pro access →",
+    closing: "The HealthWatch Global Team",
+    unsubNote: "You're receiving this email because you created an account on healthwatch-global.com.",
+  },
+  es: {
+    subject: "7 días sin vigilancia activa — lo que se perdió",
+    headline: "7 días sin acceso Pro.",
+    intro: "En una semana, se notificaron decenas de nuevos brotes en todo el mundo. No recibió ninguna alerta.",
+    missedLabel: "Lo que ocurrió durante su ausencia",
+    missedItems: [
+      "🦠 Nuevos brotes en África y el Sudeste Asiático reportados en los últimos 7 días",
+      "📊 Recuentos de casos y fallecidos actualizados diariamente — invisibles desde la expiración",
+      "📬 Alertas email en tiempo real — silenciadas durante 7 días",
+    ],
+    commitLabel: "Sin costes ocultos",
+    commit: "Cada suscripción Pro comienza de inmediato. Acceso completo restaurado en menos de un minuto.",
+    ctaLabel: "Restaurar acceso Pro →",
+    closing: "El equipo de HealthWatch Global",
+    unsubNote: "Recibe este correo porque creó una cuenta en healthwatch-global.com.",
+  },
+  ar: {
+    subject: "7 أيام بدون مراقبة نشطة — ما فاتك",
+    headline: "7 أيام بدون وصول Pro.",
+    intro: "في أسبوع واحد، تم الإبلاغ عن عشرات التفشيات الجديدة حول العالم. لم تتلق أي تنبيه.",
+    missedLabel: "ما حدث في غيابك",
+    missedItems: [
+      "🦠 تفشيات جديدة في أفريقيا وجنوب شرق آسيا أُبلغ عنها في الأيام السبعة الماضية",
+      "📊 أرقام الحالات والوفيات تُحدَّث يومياً — غير مرئية منذ انتهاء التجربة",
+      "📬 تنبيهات بريد إلكتروني فورية — صامتة منذ 7 أيام",
+    ],
+    commitLabel: "بدون رسوم خفية",
+    commit: "كل اشتراك Pro يبدأ فوراً. استعادة الوصول الكامل في أقل من دقيقة.",
+    ctaLabel: "← استعادة وصول Pro",
+    closing: "فريق HealthWatch Global",
+    unsubNote: "تتلقى هذا البريد لأنك أنشأت حساباً على healthwatch-global.com.",
+  },
+  id: {
+    subject: "7 hari tanpa pengawasan aktif — apa yang terlewat",
+    headline: "7 hari tanpa akses Pro.",
+    intro: "Dalam satu minggu, puluhan wabah baru dilaporkan di seluruh dunia. Anda tidak menerima peringatan apapun.",
+    missedLabel: "Yang terjadi selama Anda tidak aktif",
+    missedItems: [
+      "🦠 Wabah baru di Afrika dan Asia Tenggara dilaporkan dalam 7 hari terakhir",
+      "📊 Jumlah kasus dan kematian diperbarui setiap hari — tidak terlihat sejak masa percobaan berakhir",
+      "📬 Peringatan email real-time — diam selama 7 hari",
+    ],
+    commitLabel: "Tanpa biaya tersembunyi",
+    commit: "Setiap langganan Pro dimulai segera. Akses penuh dipulihkan dalam waktu kurang dari satu menit.",
+    ctaLabel: "Pulihkan akses Pro →",
+    closing: "Tim HealthWatch Global",
+    unsubNote: "Anda menerima email ini karena mendaftar di healthwatch-global.com.",
+  },
+};
+
+function buildEmailJ7(locale: string, userId: string): { subject: string; html: string } {
+  const c = COPY_J7[locale] ?? COPY_J7.en;
+  const pricingUrl = `https://healthwatch-global.com/${locale}/pricing`;
+  const unsubUrl   = `https://healthwatch-global.com/api/unsubscribe-signal?id=${encodeURIComponent(userId)}&locale=${locale}`;
+
+  const body = `
+    <div style="padding:36px 32px;">
+      <h2 style="margin:0 0 12px;font-size:20px;font-weight:700;color:#f1f5f9;">${c.headline}</h2>
+      <p style="color:#94a3b8;font-size:15px;line-height:1.7;margin:0 0 24px;">${c.intro}</p>
+
+      <div style="background:#0f172a;border-radius:12px;padding:20px 24px;margin-bottom:24px;">
+        <p style="margin:0 0 14px;font-size:13px;font-weight:700;color:#fca5a5;text-transform:uppercase;letter-spacing:.05em;">${c.missedLabel}</p>
+        ${c.missedItems.map((item) => `
+        <div style="margin-bottom:10px;">
+          <p style="margin:0;font-size:14px;color:#e2e8f0;line-height:1.6;">${item}</p>
+        </div>`).join("")}
+      </div>
+
+      <div style="background:#1e3a2f;border:1px solid #16a34a44;border-radius:12px;padding:20px 24px;margin-bottom:24px;">
+        <p style="margin:0 0 8px;font-size:12px;font-weight:700;color:#34d399;text-transform:uppercase;letter-spacing:.05em;">${c.commitLabel}</p>
+        <p style="margin:0;font-size:14px;color:#94a3b8;line-height:1.7;">${c.commit}</p>
+      </div>
+
+      <div style="text-align:center;margin-bottom:16px;">
+        <a href="${pricingUrl}"
+           style="display:inline-block;background:#dc2626;color:white;text-decoration:none;
+                  padding:14px 36px;border-radius:8px;font-weight:700;font-size:15px;">
+          ${c.ctaLabel}
+        </a>
+      </div>
+    </div>
+    <div style="padding:20px 32px;border-top:1px solid #334155;">
+      <p style="margin:0 0 8px;font-size:13px;color:#e2e8f0;">${c.closing}</p>
+      <p style="margin:0;font-size:11px;color:#475569;">${c.unsubNote} <a href="${unsubUrl}" style="color:#475569;text-decoration:underline;">Unsubscribe</a></p>
+    </div>`;
+
+  return { subject: c.subject, html: emailShell(locale, body) };
+}
+
+// ── J+3 builder (original) ─────────────────────────────────────────────────────
+
 function buildEmail(locale: string, userId: string): { subject: string; html: string } {
   const c = COPY[locale] ?? COPY.en;
   const pricingUrl = `https://healthwatch-global.com/${locale}/pricing`;
@@ -231,69 +368,111 @@ export async function GET(req: NextRequest) {
   }
   const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE);
 
-  // Users whose trial expired 3 days ago (±0.5-day window to survive cron drift)
-  const windowStart = new Date(Date.now() - 3.5 * 86_400_000).toISOString();
-  const windowEnd   = new Date(Date.now() - 2.5 * 86_400_000).toISOString();
+  const isEligible = (p: { email: string | null; display_filters: unknown; trial_ends_at: string | null; created_at: string | null }) => {
+    if (!p.email) return false;
+    const filters = p.display_filters as Record<string, unknown> | null;
+    if (filters?.no_weekly_signal) return false;
+    // Skip pilot users (35-day trials) — followed up personally via J+32 conversion email.
+    const trialDays = p.trial_ends_at && p.created_at
+      ? (new Date(p.trial_ends_at).getTime() - new Date(p.created_at).getTime()) / 86_400_000
+      : 14;
+    return trialDays <= 20;
+  };
 
-  const { data: profiles, error } = await supabase
+  const sendBrevo = async (email: string, subject: string, html: string) => {
+    const res = await fetch("https://api.brevo.com/v3/smtp/email", {
+      method: "POST",
+      headers: { "api-key": BREVO_KEY!, "Content-Type": "application/json" },
+      body: JSON.stringify({
+        sender:      { name: "HealthWatch Global", email: "alerts@healthwatch-global.com" },
+        to:          [{ email }],
+        subject,
+        htmlContent: html,
+      }),
+    });
+    if (!res.ok) throw new Error(await res.text());
+  };
+
+  // ── J+3 query: trial expired 3 days ago ───────────────────────────────────
+  const j3Start = new Date(Date.now() - 3.5 * 86_400_000).toISOString();
+  const j3End   = new Date(Date.now() - 2.5 * 86_400_000).toISOString();
+
+  const { data: j3Profiles, error: j3Err } = await supabase
     .from("profiles")
     .select("id, email, locale, trial_ends_at, created_at, display_filters")
     .eq("plan", "free")
     .not("trial_ends_at", "is", null)
     .is("stripe_subscription_id", null)
-    .gte("trial_ends_at", windowStart)
-    .lt("trial_ends_at", windowEnd);
+    .gte("trial_ends_at", j3Start)
+    .lt("trial_ends_at", j3End);
 
-  if (error) {
-    console.error("[winback] DB query error:", error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+  if (j3Err) {
+    console.error("[winback] J+3 query error:", j3Err);
+    Sentry.captureException(j3Err, { tags: { cron: "winback-sequence", step: "j3-query" } });
+    await logCronRun(supabase, "winback-sequence", "error", 0, j3Err.message);
+    return NextResponse.json({ error: j3Err.message }, { status: 500 });
   }
 
-  if (!profiles || profiles.length === 0) {
-    console.log("[winback] No expired trials in win-back window.");
-    await logCronRun(supabase, "winback-sequence", "ok", 0);
-    return NextResponse.json({ sent: 0, failed: 0, total: 0 });
+  // ── J+7 query: trial expired 7 days ago ───────────────────────────────────
+  const j7Start = new Date(Date.now() - 7.5 * 86_400_000).toISOString();
+  const j7End   = new Date(Date.now() - 6.5 * 86_400_000).toISOString();
+
+  const { data: j7Profiles, error: j7Err } = await supabase
+    .from("profiles")
+    .select("id, email, locale, trial_ends_at, created_at, display_filters")
+    .eq("plan", "free")
+    .not("trial_ends_at", "is", null)
+    .is("stripe_subscription_id", null)
+    .gte("trial_ends_at", j7Start)
+    .lt("trial_ends_at", j7End);
+
+  if (j7Err) {
+    console.error("[winback] J+7 query error:", j7Err);
+    Sentry.captureException(j7Err, { tags: { cron: "winback-sequence", step: "j7-query" } });
+    await logCronRun(supabase, "winback-sequence", "error", 0, j7Err.message);
+    return NextResponse.json({ error: j7Err.message }, { status: 500 });
   }
 
-  console.log(`[winback] ${profiles.length} user(s) in win-back window`);
+  let j3Sent = 0, j3Failed = 0;
+  let j7Sent = 0, j7Failed = 0;
 
-  let sent   = 0;
-  let failed = 0;
-
-  for (const profile of profiles) {
-    if (!profile.email) continue;
-    const filters = profile.display_filters as Record<string, unknown> | null;
-    if (filters?.no_weekly_signal) continue;
-    // Skip pilot users (35-day trials) — they had a dedicated J+32 conversion email
-    // and should be followed up personally, not with a generic "14-day" winback.
-    const trialDays = profile.trial_ends_at && profile.created_at
-      ? (new Date(profile.trial_ends_at).getTime() - new Date(profile.created_at).getTime()) / 86_400_000
-      : 14;
-    if (trialDays > 20) continue;
+  // ── Send J+3 emails ────────────────────────────────────────────────────────
+  for (const profile of j3Profiles ?? []) {
+    if (!isEligible(profile)) continue;
     try {
       const locale = profile.locale ?? "en";
       const { subject, html } = buildEmail(locale, profile.id);
-      const res = await fetch("https://api.brevo.com/v3/smtp/email", {
-        method: "POST",
-        headers: { "api-key": BREVO_KEY, "Content-Type": "application/json" },
-        body: JSON.stringify({
-          sender:      { name: "HealthWatch Global", email: "alerts@healthwatch-global.com" },
-          to:          [{ email: profile.email }],
-          subject,
-          htmlContent: html,
-        }),
-      });
-      if (!res.ok) throw new Error(await res.text());
-      sent++;
+      await sendBrevo(profile.email!, subject, html);
+      j3Sent++;
     } catch (err) {
-      console.error(`[winback] Failed for ${profile.email}:`, err);
-      Sentry.captureException(err, { tags: { cron: "winback-sequence", user_id: profile.id } });
-      failed++;
+      console.error(`[winback] J+3 failed for ${profile.email}:`, err);
+      Sentry.captureException(err, { tags: { cron: "winback-sequence", step: "j3", user_id: profile.id } });
+      j3Failed++;
     }
     await new Promise((r) => setTimeout(r, 150));
   }
 
-  await logCronRun(supabase, "winback-sequence", "ok", sent);
-  console.log(`[winback] Done — ${sent} sent, ${failed} failed`);
-  return NextResponse.json({ sent, failed, total: profiles.length });
+  // ── Send J+7 emails ────────────────────────────────────────────────────────
+  for (const profile of j7Profiles ?? []) {
+    if (!isEligible(profile)) continue;
+    try {
+      const locale = profile.locale ?? "en";
+      const { subject, html } = buildEmailJ7(locale, profile.id);
+      await sendBrevo(profile.email!, subject, html);
+      j7Sent++;
+    } catch (err) {
+      console.error(`[winback] J+7 failed for ${profile.email}:`, err);
+      Sentry.captureException(err, { tags: { cron: "winback-sequence", step: "j7", user_id: profile.id } });
+      j7Failed++;
+    }
+    await new Promise((r) => setTimeout(r, 150));
+  }
+
+  const totalSent = j3Sent + j7Sent;
+  await logCronRun(supabase, "winback-sequence", "ok", totalSent);
+  console.log(`[winback] J+3: ${j3Sent}/${j3Failed} | J+7: ${j7Sent}/${j7Failed}`);
+  return NextResponse.json({
+    j3: { sent: j3Sent, failed: j3Failed, total: (j3Profiles ?? []).length },
+    j7: { sent: j7Sent, failed: j7Failed, total: (j7Profiles ?? []).length },
+  });
 }
