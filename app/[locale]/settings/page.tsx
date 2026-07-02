@@ -65,7 +65,7 @@ export default async function SettingsPage({
 
       <SettingsTabs
         locale={locale}
-        userEmail={null}
+        userEmail={user.email ?? null}
         initialWatchlist={diseaseWatchlist}
         initialTab={initialTab}
       />
