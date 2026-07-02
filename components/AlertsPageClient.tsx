@@ -36,7 +36,7 @@ const LABELS: Record<string, {
     setupCta:     "Configurer mes alertes",
     proUpsell:    "Les alertes régionales et maladies sont disponibles sur le plan Pro.",
     proUpsellCta: "Commencer l'essai gratuit 14 jours",
-    types: { tripwire: "Tripwire", category_alert: "Catégorie", subscriber: "Foyer suivi", watchlist: "Surveillance", disease_alert: "Alerte maladie" },
+    types: { tripwire: "Tripwire", category_alert: "Catégorie", subscriber: "Foyer suivi", watchlist: "Surveillance", disease_alert: "Alerte maladie", pheic: "PHEIC", country_risk: "Risque pays", regional_digest: "Digest régional" },
     justNow: "À l'instant",
     ago: (h) => h < 24 ? `Il y a ${h}h` : `Il y a ${Math.floor(h / 24)}j`,
   },
@@ -49,7 +49,7 @@ const LABELS: Record<string, {
     setupCta:     "Set up my alerts",
     proUpsell:    "Regional and disease alerts are available on the Pro plan.",
     proUpsellCta: "Start 14-day free trial",
-    types: { tripwire: "Tripwire", category_alert: "Category", subscriber: "Subscribed outbreak", watchlist: "Watchlist", disease_alert: "Disease alert" },
+    types: { tripwire: "Tripwire", category_alert: "Category", subscriber: "Subscribed outbreak", watchlist: "Watchlist", disease_alert: "Disease alert", pheic: "PHEIC", country_risk: "Country risk", regional_digest: "Regional digest" },
     justNow: "Just now",
     ago: (h) => h < 24 ? `${h}h ago` : `${Math.floor(h / 24)}d ago`,
   },
@@ -62,7 +62,7 @@ const LABELS: Record<string, {
     setupCta:     "Configurar mis alertas",
     proUpsell:    "Las alertas regionales y de enfermedades están disponibles en el plan Pro.",
     proUpsellCta: "Iniciar prueba gratuita de 14 días",
-    types: { tripwire: "Tripwire", category_alert: "Categoría", subscriber: "Brote suscrito", watchlist: "Vigilancia", disease_alert: "Alerta de enfermedad" },
+    types: { tripwire: "Tripwire", category_alert: "Categoría", subscriber: "Brote suscrito", watchlist: "Vigilancia", disease_alert: "Alerta de enfermedad", pheic: "PHEIC", country_risk: "Riesgo país", regional_digest: "Resumen regional" },
     justNow: "Ahora mismo",
     ago: (h) => h < 24 ? `Hace ${h}h` : `Hace ${Math.floor(h / 24)}d`,
   },
@@ -75,7 +75,7 @@ const LABELS: Record<string, {
     setupCta:     "إعداد التنبيهات",
     proUpsell:    "التنبيهات الإقليمية والمرضية متاحة في خطة Pro.",
     proUpsellCta: "← ابدأ التجربة المجانية 14 يوماً",
-    types: { tripwire: "Tripwire", category_alert: "تنبيه الفئة", subscriber: "تفشٍّ مشترك", watchlist: "قائمة المراقبة", disease_alert: "تنبيه مرضي" },
+    types: { tripwire: "Tripwire", category_alert: "تنبيه الفئة", subscriber: "تفشٍّ مشترك", watchlist: "قائمة المراقبة", disease_alert: "تنبيه مرضي", pheic: "PHEIC", country_risk: "خطر البلد", regional_digest: "ملخص إقليمي" },
     justNow: "الآن",
     ago: (h) => h < 24 ? `منذ ${h}س` : `منذ ${Math.floor(h / 24)}ي`,
   },
@@ -88,7 +88,7 @@ const LABELS: Record<string, {
     setupCta:     "Atur peringatan saya",
     proUpsell:    "Peringatan regional dan penyakit tersedia di paket Pro.",
     proUpsellCta: "Mulai uji coba gratis 14 hari",
-    types: { tripwire: "Tripwire", category_alert: "Kategori", subscriber: "Wabah langganan", watchlist: "Daftar pantau", disease_alert: "Peringatan penyakit" },
+    types: { tripwire: "Tripwire", category_alert: "Kategori", subscriber: "Wabah langganan", watchlist: "Daftar pantau", disease_alert: "Peringatan penyakit", pheic: "PHEIC", country_risk: "Risiko negara", regional_digest: "Digest regional" },
     justNow: "Baru saja",
     ago: (h) => h < 24 ? `${h}j lalu` : `${Math.floor(h / 24)}h lalu`,
   },
@@ -206,7 +206,7 @@ export default function AlertsPageClient({
             return (
               <div key={n.id} className="relative group">
                 {n.outbreak_id
-                  ? <Link href={`/${locale}?outbreak=${n.outbreak_id}`} className={rowCls}>{content}</Link>
+                  ? <Link href={`/${locale}/outbreak/${n.outbreak_id}`} className={rowCls}>{content}</Link>
                   : <div className={rowCls}>{content}</div>
                 }
                 <button
