@@ -1497,3 +1497,11 @@ Tracking both events in real time on HealthWatch Global, aggregating WHO, ECDC, 
 
 **Contexte :** Post LinkedIn long, format analytique. Audience cible : coordinateurs santé humanitaires, épidémiologistes, équipes terrain ONG. Longueur intentionnellement plus longue pour LinkedIn (2 min de lecture). Le mention "Samaritan's Purse" est le type d'orga auquel on enverra la vague 3 — signal d'autorité indirect.
 
+---
+
+## Nouveaux inscrits — suivi
+
+| Date | Email | Plan | Trial end | Locale | Note |
+|---|---|---|---|---|---|
+| 2026-07-02 14:37 | saeed.mohamood@gmail.com | Pro trial | 2026-07-16 | EN | Gmail, affiliation inconnue. Onboarding auto déclenché. Recherche LinkedIn si affinité institutionnelle. |
+
