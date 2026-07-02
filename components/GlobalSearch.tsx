@@ -107,7 +107,7 @@ export default function GlobalSearch() {
     const [{ data: cData }, { data: oData }] = await Promise.all([
       supabase
         .from("outbreaks")
-        .select("country_en, country")
+        .select("country_en, country, country_ar")
         .ilike("country_en", `%${trimmed}%`)
         .not("country_en", "is", null)
         .limit(20),
@@ -130,7 +130,7 @@ export default function GlobalSearch() {
       .slice(0, 4)
       .map((r) => ({
         type: "country" as const,
-        label: r.country_en!,
+        label: getLocalizedCountry({ country: r.country, country_en: r.country_en, country_ar: r.country_ar ?? null }, l),
         href: `/${l}/country/${countryToSlug(r.country_en!)}`,
       }));
 
