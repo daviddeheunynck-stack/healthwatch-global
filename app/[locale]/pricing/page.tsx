@@ -1,10 +1,8 @@
 ﻿import { getTranslations } from "next-intl/server";
 import { Check, Gift, ArrowRight, Star, Clock, Shield, Mail, Users, Globe, Building2, HeartHandshake, Microscope, Stethoscope, Landmark, RefreshCw } from "lucide-react";
 import PricingCards from "@/components/PricingCards";
-import TrialBanner from "@/components/TrialBanner";
 import Link from "next/link";
 import type { Metadata } from "next";
-import { createClient } from "@/lib/supabase-server";
 
 export const dynamic = "force-dynamic";
 
@@ -213,29 +211,6 @@ export default async function PricingPage({ params }: { params: Promise<{ locale
   const c = COPY[locale] ?? COPY.en;
   const isRtl = locale === "ar";
 
-  // Trial banner data — only populated for active trial users
-  let trialBanner: { trialEndsAt: string; hasBilling: boolean } | null = null;
-  try {
-    const supabase = await createClient();
-    const { data: { user } } = await supabase.auth.getUser();
-    if (user) {
-      const { data: profile } = await supabase
-        .from("profiles")
-        .select("plan, trial_ends_at, stripe_subscription_id, stripe_customer_id")
-        .eq("id", user.id)
-        .single();
-      const isPaid = ["starter", "pro", "team", "enterprise"].includes(profile?.plan ?? "");
-      if (isPaid && !profile?.stripe_subscription_id && profile?.trial_ends_at) {
-        trialBanner = {
-          trialEndsAt: profile.trial_ends_at,
-          hasBilling: !!profile.stripe_customer_id,
-        };
-      }
-    }
-  } catch {
-    // Non-fatal — unauthenticated users simply get no banner
-  }
-
   const pricingSchema = {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
@@ -287,17 +262,6 @@ export default async function PricingPage({ params }: { params: Promise<{ locale
       dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
     />
     <div className="space-y-20" dir={isRtl ? "rtl" : undefined}>
-
-      {/* ── Trial banner — visible only for active trial users ────────────── */}
-      {trialBanner && (
-        <div className="max-w-4xl mx-auto w-full pt-2">
-          <TrialBanner
-            trialEndsAt={trialBanner.trialEndsAt}
-            locale={locale}
-            hasBilling={trialBanner.hasBilling}
-          />
-        </div>
-      )}
 
       {/* ── Hero ─────────────────────────────────────────────────────────── */}
       <div className="text-center space-y-6 max-w-3xl mx-auto pt-4">
