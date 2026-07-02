@@ -156,7 +156,7 @@ export default function RealtimeAlertFeed() {
                   </span>
                   <RiskBadge level={alert.data.risk_level as "high" | "medium" | "low"} />
                   <span className="text-xs text-gray-500 ml-auto shrink-0">
-                    {alert.receivedAt.toLocaleTimeString(locale)}
+                    {alert.receivedAt.toLocaleTimeString(locale === "ar" ? "ar-SA" : locale)}
                   </span>
                 </div>
                 <p className="text-gray-400 text-xs mt-0.5">
