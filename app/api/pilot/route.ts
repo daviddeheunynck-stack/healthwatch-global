@@ -267,24 +267,34 @@ export async function POST(req: NextRequest) {
         .eq("id", profile.id);
 
       const userLocale = (locale as string) || profile.locale || "en";
+      const confirmSubject: Record<string, string> = {
+        fr: "HealthWatch Global — Votre accès Pilot est actif",
+        en: "HealthWatch Global — Your Pilot access is now active",
+        es: "HealthWatch Global — Tu acceso Pilot está activo",
+        ar: "HealthWatch Global — تم تفعيل وصولك للبرنامج التجريبي",
+        id: "HealthWatch Global — Akses Pilot Anda sudah aktif",
+      };
       await sendEmail(
         email,
         name,
-        userLocale === "fr"
-          ? "HealthWatch Global — Votre accès Pilot est actif"
-          : "HealthWatch Global — Your Pilot access is now active",
+        confirmSubject[userLocale] ?? confirmSubject.en,
         buildConfirmationEmail(name, userLocale)
       );
       activated = true;
     } else {
       // No account — prompt signup
       const userLocale = (locale as string) || "en";
+      const signupSubject: Record<string, string> = {
+        fr: "HealthWatch Global — Créez votre compte pour activer votre accès Pilot",
+        en: "HealthWatch Global — Create your account to activate Pilot access",
+        es: "HealthWatch Global — Crea tu cuenta para activar el acceso Pilot",
+        ar: "HealthWatch Global — أنشئ حسابك لتفعيل وصول البرنامج التجريبي",
+        id: "HealthWatch Global — Buat akun untuk mengaktifkan akses Pilot",
+      };
       await sendEmail(
         email,
         name,
-        userLocale === "fr"
-          ? "HealthWatch Global — Créez votre compte pour activer votre accès Pilot"
-          : "HealthWatch Global — Create your account to activate Pilot access",
+        signupSubject[userLocale] ?? signupSubject.en,
         buildSignupPromptEmail(name, userLocale)
       );
     }
