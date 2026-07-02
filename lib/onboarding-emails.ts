@@ -687,6 +687,7 @@ export function buildJ12Email(locale: string, userId: string): { subject: string
 // By day 32, regular 14-day pro users are already on free — plan=pro here = pilot.
 
 const PILOT_CONVERSION_CONTENT: Record<string, {
+  banner: string;
   subject: string;
   headline: string;
   intro: string;
@@ -701,6 +702,7 @@ const PILOT_CONVERSION_CONTENT: Record<string, {
   unsubNote: string;
 }> = {
   fr: {
+    banner: "⏳ Programme Pilot — 3 jours restants",
     subject: "Votre accès Pilot expire dans 3 jours — passez à l'offre Team",
     headline: "Votre programme Pilot touche à sa fin.",
     intro: "Vous avez bénéficié d'un accès complet pendant 32 jours. Dans 72 heures, votre compte sera limité au plan gratuit si vous ne souscrivez pas.",
@@ -722,6 +724,7 @@ const PILOT_CONVERSION_CONTENT: Record<string, {
     unsubNote: "Vous recevez cet email car vous avez créé un compte sur healthwatch-global.com.",
   },
   en: {
+    banner: "⏳ Pilot Programme — 3 days remaining",
     subject: "Your Pilot access expires in 3 days — continue with Team",
     headline: "Your Pilot programme is ending.",
     intro: "You've had full access for 32 days. In 72 hours, your account will be limited to the free plan unless you subscribe.",
@@ -743,6 +746,7 @@ const PILOT_CONVERSION_CONTENT: Record<string, {
     unsubNote: "You're receiving this email because you created an account on healthwatch-global.com.",
   },
   es: {
+    banner: "⏳ Programa Pilot — 3 días restantes",
     subject: "Su acceso Pilot expira en 3 días — continúe con Team",
     headline: "Su programa Pilot está llegando a su fin.",
     intro: "Ha tenido acceso completo durante 32 días. En 72 horas, su cuenta se limitará al plan gratuito si no se suscribe.",
@@ -764,6 +768,7 @@ const PILOT_CONVERSION_CONTENT: Record<string, {
     unsubNote: "Recibe este correo porque creó una cuenta en healthwatch-global.com.",
   },
   ar: {
+    banner: "⏳ البرنامج التجريبي — 3 أيام متبقية",
     subject: "وصولك التجريبي ينتهي خلال 3 أيام — استمر مع خطة Team",
     headline: "يقترب برنامجك التجريبي من نهايته.",
     intro: "تمتّعت بوصول كامل لمدة 32 يوماً. خلال 72 ساعة، سيُقيَّد حسابك بالخطة المجانية إذا لم تشترك.",
@@ -785,6 +790,7 @@ const PILOT_CONVERSION_CONTENT: Record<string, {
     unsubNote: "تتلقى هذا البريد لأنك أنشأت حساباً على healthwatch-global.com.",
   },
   id: {
+    banner: "⏳ Program Pilot — 3 hari tersisa",
     subject: "Akses Pilot Anda berakhir dalam 3 hari — lanjutkan dengan Team",
     headline: "Program Pilot Anda hampir berakhir.",
     intro: "Anda telah memiliki akses penuh selama 32 hari. Dalam 72 jam, akun Anda akan dibatasi ke paket gratis jika tidak berlangganan.",
@@ -816,7 +822,7 @@ export function buildPilotConversionEmail(locale: string, userId: string): { sub
   const body = `
     <div style="padding:36px 32px;">
       <div style="background:#1e3a5f;border:1px solid #2563eb55;border-radius:10px;padding:12px 20px;margin-bottom:24px;text-align:center;">
-        <p style="margin:0;font-size:12px;font-weight:700;color:#93c5fd;text-transform:uppercase;letter-spacing:.06em;">⏳ Pilot Programme — 3 jours restants</p>
+        <p style="margin:0;font-size:12px;font-weight:700;color:#93c5fd;text-transform:uppercase;letter-spacing:.06em;">${c.banner}</p>
       </div>
 
       <h2 style="margin:0 0 12px;font-size:20px;font-weight:700;color:#f1f5f9;">${c.headline}</h2>
