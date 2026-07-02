@@ -97,9 +97,10 @@ interface Props {
   region?: string;
   title: string;
   body: string;
+  proTitle?: string;
 }
 
-export default function EmailCapture({ locale, region = "all", title, body }: Props) {
+export default function EmailCapture({ locale, region = "all", title, body, proTitle }: Props) {
   const l = (["en","fr","es","ar","id"].includes(locale) ? locale : "en") as Locale;
   const c = COPY[l];
   const isRtl = l === "ar";
@@ -143,7 +144,7 @@ export default function EmailCapture({ locale, region = "all", title, body }: Pr
       {/* Pro CTA — primary */}
       <div className="text-center space-y-3">
         <div>
-          <p className="font-semibold text-white text-lg">{c.proTitle}</p>
+          <p className="font-semibold text-white text-lg">{proTitle ?? c.proTitle}</p>
           <p className="text-xs text-gray-400 mt-1">{c.proSub}</p>
         </div>
         <CheckoutButton

@@ -382,6 +382,14 @@ export default async function DiseasePage({
     fr: "Maladies", en: "Diseases", es: "Enfermedades", ar: "الأمراض", id: "Penyakit",
   };
 
+  const diseaseProTitle: Record<Locale, string> = {
+    en: `Track ${diseaseName} outbreaks in real time`,
+    fr: `Surveiller les foyers de ${diseaseName} en temps réel`,
+    es: `Seguir los brotes de ${diseaseName} en tiempo real`,
+    ar: `تتبع تفشيات ${diseaseName} في الوقت الفعلي`,
+    id: `Lacak wabah ${diseaseName} secara real-time`,
+  };
+
   const jsonLd = [
     {
       "@context": "https://schema.org",
@@ -698,7 +706,7 @@ export default async function DiseasePage({
       )}
 
       {/* Email capture CTA */}
-      <EmailCapture locale={l} region="all" title={lb.ctaTitle} body={lb.ctaBody} />
+      <EmailCapture locale={l} region="all" title={lb.ctaTitle} body={lb.ctaBody} proTitle={diseaseProTitle[l]} />
 
     </div>
   );
