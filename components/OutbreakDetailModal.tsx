@@ -675,7 +675,7 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlis
             <p className="text-lg font-bold text-white">
               {isPaid
                 ? (hasData ? outbreak.cases.toLocaleString(numLocale) : <span className="text-gray-600 text-sm italic">{c.noData}</span>)
-                : <span className="blur-sm select-none cursor-pointer" onClick={() => openModal("cases")}>12345</span>
+                : <span className="blur-sm select-none cursor-pointer" onClick={() => openModal("cases")}>{outbreak.cases.toLocaleString(numLocale)}</span>
               }
             </p>
             {isPaid && trend && trend.direction !== "unknown" && (
@@ -697,7 +697,9 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlis
                 ? outbreak.deaths !== null
                   ? outbreak.deaths.toLocaleString(numLocale)
                   : <span className="text-gray-500 text-sm" title="Non rapporté dans cette source">—</span>
-                : <span className="blur-sm select-none cursor-pointer" onClick={() => openModal("cases")}>234</span>
+                : outbreak.deaths !== null
+                  ? <span className="blur-sm select-none cursor-pointer" onClick={() => openModal("cases")}>{outbreak.deaths.toLocaleString(numLocale)}</span>
+                  : <span className="text-gray-600 text-sm">—</span>
               }
             </p>
           </div>
@@ -712,7 +714,9 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlis
             }`}>
               {isPaid
                 ? (cfr ? `${cfr}%` : <span className="text-gray-600 text-sm italic">{c.noData}</span>)
-                : <span className="blur-sm select-none cursor-pointer" onClick={() => openModal("cases")}>9.9%</span>
+                : cfr
+                  ? <span className="blur-sm select-none cursor-pointer" onClick={() => openModal("cases")}>{cfr}%</span>
+                  : <span className="text-gray-600 text-sm italic">{c.noData}</span>
               }
             </p>
             {isPaid && cfr && (() => {
