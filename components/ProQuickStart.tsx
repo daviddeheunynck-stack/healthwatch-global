@@ -87,10 +87,12 @@ export default function ProQuickStart({
   locale,
   userId,
   hasAlerts,
+  hasDiseaseAlerts = false,
 }: {
   locale: string;
   userId: string;
   hasAlerts: boolean;
+  hasDiseaseAlerts?: boolean;
 }) {
   const [st, setSt] = useState<State | null>(null);
 
@@ -102,11 +104,11 @@ export default function ProQuickStart({
         s1: hasAlerts || !!saved.s1,
         s2: !!saved.s2,
         s3: !!saved.s3,
-        s4: !!saved.s4,
+        s4: hasDiseaseAlerts || !!saved.s4,
         dismissed: !!saved.dismissed,
       });
     } catch {
-      setSt({ s1: hasAlerts, s2: false, s3: false, s4: false, dismissed: false });
+      setSt({ s1: hasAlerts, s2: false, s3: false, s4: hasDiseaseAlerts, dismissed: false });
     }
   }, [userId, hasAlerts]);
 

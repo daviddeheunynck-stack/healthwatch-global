@@ -182,6 +182,7 @@ async function DashboardContent({ demo = false, urlRegion, urlRisk }: { demo?: b
   const countryTagsMap: Record<string, string> = {};
   let orgMemberAccess = false;
   let hasNoAlerts = false;
+  let hasDiseaseAlerts = false;
   let currentUserId: string | null = null;
   if (!demo) {
     const supabase = await createClient();
@@ -217,14 +218,16 @@ async function DashboardContent({ demo = false, urlRegion, urlRisk }: { demo?: b
       }
       if (isPaidPlan) {
         diseaseWatchlist = (profile?.disease_watchlist as string[] | null) ?? [];
-        const [tagResult, alertRegionResult] = await Promise.all([
+        const [tagResult, alertRegionResult, diseaseAlertResult] = await Promise.all([
           supabase.from("user_country_tags").select("country_en, label").eq("user_id", user.id),
           supabase.from("user_alert_regions").select("region", { count: "exact", head: true }).eq("user_id", user.id),
+          supabase.from("user_alert_diseases").select("disease_en", { count: "exact", head: true }).eq("user_id", user.id),
         ]);
         for (const t of (tagResult.data ?? []) as { country_en: string; label: string }[]) {
           countryTagsMap[t.country_en] = t.label;
         }
         hasNoAlerts = (alertRegionResult.count ?? 0) === 0;
+        hasDiseaseAlerts = (diseaseAlertResult.count ?? 0) > 0;
       }
       // Org members inherit Team-level access even if their own plan is free
       if (!isPaidPlan) {
@@ -367,7 +370,7 @@ async function DashboardContent({ demo = false, urlRegion, urlRisk }: { demo?: b
       {!demo && <PushNotificationBanner locale={locale} />}
 
       {!demo && isPaid && currentUserId && !hasStripeSubscription && trialEndsAt && (
-        <ProQuickStart locale={locale} userId={currentUserId} hasAlerts={!hasNoAlerts} />
+        <ProQuickStart locale={locale} userId={currentUserId} hasAlerts={!hasNoAlerts} hasDiseaseAlerts={hasDiseaseAlerts} />
       )}
       {!demo && isPaid && hasNoAlerts && <AlertSetupBanner locale={locale} />}
       {!demo && isPaid && !hasNoAlerts && !hasStripeSubscription && (
