@@ -124,7 +124,7 @@ const COPY: Record<string, {
     steps: [
       { title: "Créez votre compte", desc: "Inscription en 30 secondes. Aucune carte bancaire requise. Accès immédiat au tableau de bord." },
       { title: "Configurez vos régions", desc: "Sélectionnez les zones géographiques que vous surveillez et recevez votre premier digest dès la semaine suivante." },
-      { title: "Passez Pro pour les alertes instantanées", desc: "Débloquez le flux en direct, les rapports PDF et l'export CSV — et restez en avance sur chaque crise." },
+      { title: "Passez Pro pour les alertes instantanées", desc: "Vos 14 premiers jours Pro sont offerts — flux en direct, rapports PDF, export CSV et alertes par maladie déjà actifs." },
     ],
     orgsTitle: "Pour les équipes qui suivent le risque épidémique",
     orgs: ["Épidémiologistes & chercheurs", "Risque corporate & mobilité internationale", "Médecins de médecine des voyages", "Agences humanitaires, donors & analystes"],
@@ -205,7 +205,7 @@ const COPY: Record<string, {
     steps: [
       { title: "Create your account", desc: "Sign up in 30 seconds. No credit card required. Immediate dashboard access." },
       { title: "Configure your regions", desc: "Select the geographies you monitor and receive your first digest the following week." },
-      { title: "Go Pro for instant alerts", desc: "Unlock the live feed, PDF reports, and CSV export — and stay ahead of every crisis." },
+      { title: "Go Pro for instant alerts", desc: "Your first 14 days are free — live feed, PDF reports, CSV export, and disease alerts already active." },
     ],
     orgsTitle: "Built for teams that track disease risk",
     orgs: ["Epidemiologists & researchers", "Corporate risk & global mobility", "Travel medicine doctors", "Humanitarian agencies, donors & analysts"],
@@ -286,7 +286,7 @@ const COPY: Record<string, {
     steps: [
       { title: "Cree su cuenta", desc: "Registro en 30 segundos. Sin tarjeta de crédito. Acceso inmediato al panel." },
       { title: "Configure sus regiones", desc: "Seleccione las geografías que monitorea y reciba su primer digest la semana siguiente." },
-      { title: "Pase a Pro para alertas instantáneas", desc: "Desbloquee el flujo en vivo, informes PDF y exportación CSV." },
+      { title: "Pase a Pro para alertas instantáneas", desc: "Sus primeros 14 días Pro están incluidos — flujo en vivo, informes PDF, exportación CSV y alertas por enfermedad ya activos." },
     ],
     orgsTitle: "Para equipos que monitorean riesgos de enfermedades",
     orgs: ["Epidemiólogos & investigadores", "Riesgo corporativo & movilidad global", "Médicos de medicina de viaje", "Agencias humanitarias, donantes & analistas"],
@@ -367,7 +367,7 @@ const COPY: Record<string, {
     steps: [
       { title: "أنشئ حسابك", desc: "التسجيل في 30 ثانية. لا بطاقة بنكية. وصول فوري للوحة التحكم." },
       { title: "حدد مناطقك", desc: "اختر المناطق الجغرافية التي تراقبها واستقبل أول ملخص الأسبوع التالي." },
-      { title: "انتقل إلى Pro للتنبيهات الفورية", desc: "افتح البث المباشر وتقارير PDF وتصدير CSV." },
+      { title: "انتقل إلى Pro للتنبيهات الفورية", desc: "أول 14 يوماً Pro مجانية — البث المباشر وتقارير PDF وتصدير CSV وتنبيهات المرض نشطة فوراً." },
     ],
     orgsTitle: "لفرق تتابع مخاطر الأمراض",
     orgs: ["علماء الأوبئة والباحثون", "إدارة المخاطر والتنقل الدولي", "أطباء طب السفر", "الوكالات الإنسانية والجهات المانحة والمحللون"],
@@ -448,7 +448,7 @@ const COPY: Record<string, {
     steps: [
       { title: "Buat akun Anda", desc: "Daftar dalam 30 detik. Tanpa kartu kredit. Akses dasbor langsung." },
       { title: "Konfigurasi wilayah Anda", desc: "Pilih geografi yang Anda pantau dan terima digest pertama minggu berikutnya." },
-      { title: "Upgrade ke Pro untuk peringatan instan", desc: "Buka umpan langsung, laporan PDF, dan ekspor CSV." },
+      { title: "Upgrade ke Pro untuk peringatan instan", desc: "14 hari pertama Pro sudah termasuk — umpan langsung, laporan PDF, ekspor CSV, dan peringatan per penyakit langsung aktif." },
     ],
     orgsTitle: "Untuk tim yang memantau risiko wabah",
     orgs: ["Epidemiolog & peneliti", "Manajemen risiko & mobilitas global", "Dokter kedokteran perjalanan", "Lembaga kemanusiaan, donor & analis"],
