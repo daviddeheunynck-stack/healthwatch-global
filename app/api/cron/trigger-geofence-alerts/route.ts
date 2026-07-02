@@ -167,7 +167,7 @@ export async function GET(req: NextRequest) {
 
       await supabase.from("alert_notifications").insert({
         user_id:     alert.user_id,
-        type:        "watchlist",
+        type:        "geofence",
         title:       inAppTitleStr,
         body:        matches.slice(0, 3).map((o) => `${getLocalizedDisease(o, locale)} (${getLocalizedCountry(o, locale)}): ${o.cases.toLocaleString(numLocale)}`).join(" · "),
         outbreak_id: matches[0]?.id ?? null,

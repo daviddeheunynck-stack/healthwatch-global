@@ -81,13 +81,13 @@ export async function GET(req: NextRequest) {
   // 4. Get user profiles for email + locale
   const { data: profiles } = await supabase
     .from("profiles")
-    .select("id, email, locale, plan, trial_ends_at, stripe_subscription_id")
+    .select("id, email, alert_locale, plan, trial_ends_at, stripe_subscription_id")
     .in("id", userIds);
 
   const profileMap = new Map(
     (profiles ?? []).map((p) => [p.id, {
       email: p.email,
-      locale: p.locale ?? "fr",
+      locale: (p.alert_locale as string | null) ?? "en",
       plan: p.plan ?? "free",
       trial_ends_at: p.trial_ends_at as string | null,
       stripe_subscription_id: p.stripe_subscription_id as string | null,
