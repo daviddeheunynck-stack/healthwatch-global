@@ -1,5 +1,5 @@
 /**
- * POST /api/api-keys  — generate a new key (enterprise only, max 5 per user)
+ * POST /api/api-keys  — generate a new key (pro/team/enterprise, max 5 per user)
  * GET  /api/api-keys  — list existing keys (without raw key)
  */
 
