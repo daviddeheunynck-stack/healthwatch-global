@@ -3,7 +3,7 @@
 import { createContext, useContext, useState, type ReactNode } from "react";
 import UpgradeModal from "@/components/UpgradeModal";
 
-export type UpgradeFeature = "pdf" | "realtime" | "list" | "cases" | "csv" | "compare";
+export type UpgradeFeature = "pdf" | "realtime" | "list" | "cases" | "csv" | "compare" | "watchlist";
 
 interface UpgradeModalContextType {
   openModal: (feature: UpgradeFeature) => void;
