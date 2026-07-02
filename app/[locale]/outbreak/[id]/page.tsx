@@ -298,6 +298,13 @@ export default async function OutbreakPage({
 
   const diseaseSlug  = diseaseToSlug(normalizeDisease(o.disease_en || o.disease).name_en);
   const countrySlug  = o.country_en ? countryToSlug(o.country_en) : null;
+
+  const diseaseCtaTitle =
+    locale === "fr" ? `Alertes ${disease} en temps réel` :
+    locale === "es" ? `Alertas ${disease} en tiempo real` :
+    locale === "ar" ? `تنبيهات ${disease} في الوقت الفعلي` :
+    locale === "id" ? `Peringatan ${disease} secara real-time` :
+    `Get real-time ${disease} alerts`;
   const staleDays = staleOutbreakDays(o);
   const guidance = getResponseGuidance(o.disease_en || o.disease);
   const fpActions = RESPONSE_ACTIONS[guidance.tier][locale] ?? RESPONSE_ACTIONS[guidance.tier].en;
@@ -435,7 +442,7 @@ export default async function OutbreakPage({
           cases:      l.cases,
           deaths:     l.deaths,
           cfr:        l.cfr,
-          ctaTitle:   l.ctaTitle,
+          ctaTitle:   diseaseCtaTitle,
           ctaSub:     l.ctaSub,
           ctaProBtn:  l.ctaProBtn,
           ctaFree:    l.ctaFree,
@@ -580,7 +587,7 @@ export default async function OutbreakPage({
       {/* CTA */}
       <div className="mt-10 p-6 rounded-xl border border-red-500/20 bg-red-500/5 text-center space-y-4">
         <div>
-          <p className="text-white font-semibold">{l.ctaTitle}</p>
+          <p className="text-white font-semibold">{diseaseCtaTitle}</p>
           <p className="text-xs text-gray-400 mt-1">{l.ctaSub}</p>
         </div>
         <CheckoutButton
