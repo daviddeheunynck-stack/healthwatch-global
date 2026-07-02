@@ -18,6 +18,20 @@ const clean  = (v: string | undefined) => (v || "").replace(new RegExp("^" + BOM
 const CRON_SECRET  = clean(process.env.CRON_SECRET);
 const BREVO_API_KEY = clean(process.env.BREVO_API_KEY);
 
+function buildDiseaseInAppBody(cases: number | null, riskLevel: string | null, locale: string): string {
+  const RISK: Record<string, Record<string, string>> = {
+    en: { high: "HIGH risk",     medium: "MEDIUM risk",  low: "LOW risk" },
+    fr: { high: "Risque ÉLEVÉ",  medium: "Risque MODÉRÉ", low: "Risque FAIBLE" },
+    es: { high: "Riesgo ALTO",   medium: "Riesgo MEDIO",  low: "Riesgo BAJO" },
+    ar: { high: "خطر مرتفع",    medium: "خطر متوسط",    low: "خطر منخفض" },
+    id: { high: "risiko TINGGI", medium: "risiko SEDANG", low: "risiko RENDAH" },
+  };
+  const CASE_SUFFIX: Record<string, string> = { en: "cases", fr: "cas", es: "casos", ar: "حالة", id: "kasus" };
+  const riskLabel  = RISK[locale]?.[riskLevel ?? ""] ?? RISK.en[riskLevel ?? ""] ?? null;
+  const casesLabel = cases != null ? `${cases} ${CASE_SUFFIX[locale] ?? "cases"}` : null;
+  return [casesLabel, riskLabel].filter(Boolean).join(" · ") || "Active outbreak";
+}
+
 async function sendEmail(to: string, subject: string, html: string) {
   if (!BREVO_API_KEY) throw new Error("BREVO_API_KEY not set");
   const res = await fetch("https://api.brevo.com/v3/smtp/email", {
@@ -152,6 +166,15 @@ export async function GET(req: NextRequest) {
         const { subject, html } = buildDiseaseAlertEmail(alertOutbreak, locale, userId, diseaseSlug);
         await sendEmail(profile.email, subject, html);
         sent++;
+
+        // Mirror in alert_notifications for in-app display (non-fatal)
+        await supabase.from("alert_notifications").insert({
+          user_id:     userId,
+          type:        "disease_alert",
+          title:       `${alertOutbreak.disease} — ${alertOutbreak.country}`,
+          body:        buildDiseaseInAppBody(alertOutbreak.cases, alertOutbreak.risk_level, locale),
+          outbreak_id: outbreak.id,
+        }).then(() => {}, () => {});
 
         await new Promise((r) => setTimeout(r, 150)); // rate-limit friendly
       } catch (err: unknown) {

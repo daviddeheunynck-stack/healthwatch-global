@@ -34,7 +34,7 @@ const LABELS: Record<string, {
     justNow: "À l'instant",
     ago: (h) => h < 24 ? `Il y a ${h}h` : `Il y a ${Math.floor(h / 24)}j`,
     setupCta: "Configurer mes alertes →",
-    types: { tripwire: "Tripwire", category_alert: "Catégorie", subscriber: "Foyer suivi", watchlist: "Surveillance" },
+    types: { tripwire: "Tripwire", category_alert: "Catégorie", subscriber: "Foyer suivi", watchlist: "Surveillance", disease_alert: "Alerte maladie" },
   },
   en: {
     title: "Your recent alerts",
@@ -45,7 +45,7 @@ const LABELS: Record<string, {
     justNow: "Just now",
     ago: (h) => h < 24 ? `${h}h ago` : `${Math.floor(h / 24)}d ago`,
     setupCta: "Set up my alerts →",
-    types: { tripwire: "Tripwire", category_alert: "Category", subscriber: "Subscribed outbreak", watchlist: "Watchlist" },
+    types: { tripwire: "Tripwire", category_alert: "Category", subscriber: "Subscribed outbreak", watchlist: "Watchlist", disease_alert: "Disease alert" },
   },
   es: {
     title: "Tus alertas recientes",
@@ -56,7 +56,7 @@ const LABELS: Record<string, {
     justNow: "Ahora mismo",
     ago: (h) => h < 24 ? `Hace ${h}h` : `Hace ${Math.floor(h / 24)}d`,
     setupCta: "Configurar mis alertas →",
-    types: { tripwire: "Tripwire", category_alert: "Categoría", subscriber: "Brote suscrito", watchlist: "Vigilancia" },
+    types: { tripwire: "Tripwire", category_alert: "Categoría", subscriber: "Brote suscrito", watchlist: "Vigilancia", disease_alert: "Alerta de enfermedad" },
   },
   ar: {
     title: "تنبيهاتك الأخيرة",
@@ -67,7 +67,7 @@ const LABELS: Record<string, {
     justNow: "الآن",
     ago: (h) => h < 24 ? `منذ ${h}س` : `منذ ${Math.floor(h / 24)}ي`,
     setupCta: "← إعداد التنبيهات",
-    types: { tripwire: "Tripwire", category_alert: "تنبيه الفئة", subscriber: "تفشٍّ مشترك", watchlist: "قائمة المراقبة" },
+    types: { tripwire: "Tripwire", category_alert: "تنبيه الفئة", subscriber: "تفشٍّ مشترك", watchlist: "قائمة المراقبة", disease_alert: "تنبيه مرضي" },
   },
   id: {
     title: "Peringatan terbaru Anda",
@@ -78,7 +78,7 @@ const LABELS: Record<string, {
     justNow: "Baru saja",
     ago: (h) => h < 24 ? `${h}j lalu` : `${Math.floor(h / 24)}h lalu`,
     setupCta: "Atur peringatan saya →",
-    types: { tripwire: "Tripwire", category_alert: "Kategori", subscriber: "Wabah langganan", watchlist: "Daftar pantau" },
+    types: { tripwire: "Tripwire", category_alert: "Kategori", subscriber: "Wabah langganan", watchlist: "Daftar pantau", disease_alert: "Peringatan penyakit" },
   },
 };
 
@@ -89,10 +89,11 @@ const RISK_DOT: Record<string, string> = {
 };
 
 const TYPE_DOT: Record<string, string> = {
-  tripwire: "bg-red-400",
+  tripwire:      "bg-red-400",
   category_alert: "bg-amber-400",
-  subscriber: "bg-blue-400",
-  watchlist: "bg-purple-400",
+  subscriber:    "bg-blue-400",
+  watchlist:     "bg-purple-400",
+  disease_alert: "bg-teal-400",
 };
 
 function timeAgo(iso: string, locale: string): string {
