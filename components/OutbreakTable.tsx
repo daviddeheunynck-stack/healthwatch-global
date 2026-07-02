@@ -1241,6 +1241,15 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
                       )}
                       {outbreak.cases > 0 && <TrendBadge trend={trends?.[outbreak.id]} />}
                       {isPaid && (() => {
+                        const d24 = trends?.[outbreak.id]?.delta24h;
+                        if (d24 === null || d24 === undefined || d24 === 0) return null;
+                        return (
+                          <span className="text-[10px] text-sky-400 font-semibold whitespace-nowrap">
+                            {d24 > 0 ? "+" : ""}{d24.toLocaleString(numLocale)}/24h
+                          </span>
+                        );
+                      })()}
+                      {isPaid && (() => {
                         const prev = lastCases[outbreak.id];
                         if (!prev || outbreak.cases <= prev) return null;
                         const delta = outbreak.cases - prev;

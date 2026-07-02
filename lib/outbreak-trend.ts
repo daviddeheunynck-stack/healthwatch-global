@@ -7,10 +7,11 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 export type TrendDirection = "up" | "stable" | "down" | "unknown";
 
 export interface OutbreakTrend {
-  direction:   TrendDirection;
-  deltaCases:  number;   // absolute change
-  deltaPercent: number;  // % change
-  daysBack:    number;   // how many days compared
+  direction:    TrendDirection;
+  deltaCases:   number;        // absolute change (7-day)
+  deltaPercent: number;        // % change (7-day)
+  daysBack:     number;        // how many days compared
+  delta24h:     number | null; // absolute cases change since yesterday's snapshot (null = no snapshot yet)
 }
 
 const THRESHOLD_PCT = 5;  // < 5% change = stable
@@ -37,7 +38,7 @@ export async function getOutbreakTrend(
     .limit(1)
     .single();
 
-  if (!data) return { direction: "unknown", deltaCases: 0, deltaPercent: 0, daysBack: 0 };
+  if (!data) return { direction: "unknown", deltaCases: 0, deltaPercent: 0, daysBack: 0, delta24h: null };
 
   // Also get today's snapshot
   const { data: todaySnap } = await supabase
@@ -48,7 +49,7 @@ export async function getOutbreakTrend(
     .limit(1)
     .single();
 
-  if (!todaySnap) return { direction: "unknown", deltaCases: 0, deltaPercent: 0, daysBack: 0 };
+  if (!todaySnap) return { direction: "unknown", deltaCases: 0, deltaPercent: 0, daysBack: 0, delta24h: null };
 
   const nowCases    = todaySnap.cases as number;
   const thenCases   = data.cases as number;
@@ -66,7 +67,21 @@ export async function getOutbreakTrend(
     (new Date(todayDate).getTime() - new Date(thenDate).getTime()) / 86_400_000
   );
 
-  return { direction, deltaCases, deltaPercent, daysBack };
+  // 24h delta: compare today vs yesterday
+  const yesterday = new Date();
+  yesterday.setDate(yesterday.getDate() - 1);
+  const yesterdayStr = yesterday.toISOString().split("T")[0];
+  const { data: ySnap } = await supabase
+    .from("outbreak_snapshots")
+    .select("cases")
+    .eq("outbreak_id", outbreakId)
+    .lte("snapped_at", yesterdayStr)
+    .order("snapped_at", { ascending: false })
+    .limit(1)
+    .single();
+  const delta24h = ySnap ? nowCases - (ySnap.cases as number) : null;
+
+  return { direction, deltaCases, deltaPercent, daysBack, delta24h };
 }
 
 /**
@@ -84,6 +99,10 @@ export async function getOutbreakTrendsBulk(
 
   type SnapRow = { outbreak_id: string; cases: number; snapped_at: string };
 
+  const yesterday = new Date();
+  yesterday.setDate(yesterday.getDate() - 1);
+  const yesterdayStr = yesterday.toISOString().split("T")[0];
+
   // Latest snapshot per outbreak
   const { data: latestRaw } = await supabase
     .from("outbreak_snapshots")
@@ -92,7 +111,7 @@ export async function getOutbreakTrendsBulk(
     .order("snapped_at", { ascending: false });
   const latest = (latestRaw ?? []) as SnapRow[];
 
-  // Oldest snapshot within DAYS_BACK window per outbreak
+  // Oldest snapshot within DAYS_BACK window per outbreak (for 7-day trend)
   const { data: oldestRaw } = await supabase
     .from("outbreak_snapshots")
     .select("outbreak_id, cases, snapped_at")
@@ -101,10 +120,21 @@ export async function getOutbreakTrendsBulk(
     .order("snapped_at", { ascending: false });
   const oldest = (oldestRaw ?? []) as SnapRow[];
 
-  const latestMap  = new Map<string, number>();
-  const oldestMap  = new Map<string, number>();
-  const seenLatest = new Set<string>();
-  const seenOldest = new Set<string>();
+  // Yesterday's snapshot per outbreak (for 24h delta)
+  const { data: yesterdayRaw } = await supabase
+    .from("outbreak_snapshots")
+    .select("outbreak_id, cases, snapped_at")
+    .in("outbreak_id", outbreakIds)
+    .lte("snapped_at", yesterdayStr)
+    .order("snapped_at", { ascending: false });
+  const yesterdaySnaps = (yesterdayRaw ?? []) as SnapRow[];
+
+  const latestMap    = new Map<string, number>();
+  const oldestMap    = new Map<string, number>();
+  const yesterdayMap = new Map<string, number>();
+  const seenLatest   = new Set<string>();
+  const seenOldest   = new Set<string>();
+  const seenYday     = new Set<string>();
 
   for (const row of latest) {
     if (!seenLatest.has(row.outbreak_id)) {
@@ -118,13 +148,20 @@ export async function getOutbreakTrendsBulk(
       seenOldest.add(row.outbreak_id);
     }
   }
+  for (const row of yesterdaySnaps) {
+    if (!seenYday.has(row.outbreak_id)) {
+      yesterdayMap.set(row.outbreak_id, row.cases);
+      seenYday.add(row.outbreak_id);
+    }
+  }
 
   const result = new Map<string, OutbreakTrend>();
   for (const id of outbreakIds) {
     const now   = latestMap.get(id);
     const then  = oldestMap.get(id);
+    const yday  = yesterdayMap.get(id);
     if (now === undefined || then === undefined) {
-      result.set(id, { direction: "unknown", deltaCases: 0, deltaPercent: 0, daysBack: DAYS_BACK });
+      result.set(id, { direction: "unknown", deltaCases: 0, deltaPercent: 0, daysBack: DAYS_BACK, delta24h: null });
       continue;
     }
     const deltaCases   = now - then;
@@ -132,7 +169,8 @@ export async function getOutbreakTrendsBulk(
     const direction: TrendDirection =
       deltaPercent >  THRESHOLD_PCT ? "up"   :
       deltaPercent < -THRESHOLD_PCT ? "down" : "stable";
-    result.set(id, { direction, deltaCases, deltaPercent, daysBack: DAYS_BACK });
+    const delta24h = yday !== undefined ? now - yday : null;
+    result.set(id, { direction, deltaCases, deltaPercent, daysBack: DAYS_BACK, delta24h });
   }
 
   return result;
