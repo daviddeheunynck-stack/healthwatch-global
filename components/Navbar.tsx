@@ -143,7 +143,7 @@ export default function Navbar() {
     { href: `/${locale}/reports`, label: t("reports"),   icon: null },
     { href: `/${locale}/pricing`, label: t("pricing"),   icon: null },
     { href: `/${locale}/about`,   label: ABOUT_LABEL[locale] ?? "About", icon: null },
-    ...(plan === "enterprise"
+    ...(["pro", "team", "enterprise"].includes(plan ?? "")
       ? [{ href: `/${locale}/docs`, label: "API Docs", icon: null }]
       : []),
   ];
