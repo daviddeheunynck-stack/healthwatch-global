@@ -8,23 +8,23 @@ const OG_LOCALE: Record<string, string> = {
 const META: Record<string, { title: string; description: string }> = {
   en: {
     title: "Institutional Pilot Program",
-    description: "Free 30-day Pro access for up to 5 members of your health organization — NGO, UN agency, or ministry. Validate epidemic surveillance with your field teams.",
+    description: "Free 35-day Pro access for up to 5 members of your health organization — NGO, UN agency, or ministry. Validate epidemic surveillance with your field teams.",
   },
   fr: {
     title: "Programme Pilote Institutionnel",
-    description: "Accès Pro gratuit de 30 jours pour jusqu'à 5 membres de votre organisation — ONG, agence ONU ou ministère. Validez la surveillance épidémique avec vos équipes terrain.",
+    description: "Accès Pro gratuit de 35 jours pour jusqu'à 5 membres de votre organisation — ONG, agence ONU ou ministère. Validez la surveillance épidémique avec vos équipes terrain.",
   },
   es: {
     title: "Programa Piloto Institucional",
-    description: "Acceso Pro gratuito de 30 días para hasta 5 miembros de su organización — ONG, agencia ONU o ministerio. Valide la vigilancia epidémica con sus equipos de campo.",
+    description: "Acceso Pro gratuito de 35 días para hasta 5 miembros de su organización — ONG, agencia ONU o ministerio. Valide la vigilancia epidémica con sus equipos de campo.",
   },
   ar: {
     title: "البرنامج التجريبي المؤسسي",
-    description: "وصول مجاني لخطة Pro لمدة 30 يوماً لـ 5 أعضاء من مؤسستك — منظمة غير حكومية أو وكالة أممية أو وزارة. تحقق من مراقبة الأوبئة مع فرقك الميدانية.",
+    description: "وصول مجاني لخطة Pro لمدة 35 يوماً لـ 5 أعضاء من مؤسستك — منظمة غير حكومية أو وكالة أممية أو وزارة. تحقق من مراقبة الأوبئة مع فرقك الميدانية.",
   },
   id: {
     title: "Program Pilot Institusional",
-    description: "Akses Pro gratis 30 hari untuk hingga 5 anggota organisasi Anda — LSM, badan PBB, atau kementerian. Validasi pemantauan epidemi bersama tim lapangan Anda.",
+    description: "Akses Pro gratis 35 hari untuk hingga 5 anggota organisasi Anda — LSM, badan PBB, atau kementerian. Validasi pemantauan epidemi bersama tim lapangan Anda.",
   },
 };
 
@@ -93,7 +93,7 @@ export default async function PilotLayout({
     "mainEntity": {
       "@type": "Offer",
       "name": "Institutional Pilot Program",
-      "description": "Free 30-day Pro access for up to 5 members of your health organization (NGO, UN agency, ministry). No credit card required.",
+      "description": "Free 35-day Pro access for up to 5 members of your health organization (NGO, UN agency, ministry). No credit card required.",
       "price": "0",
       "priceCurrency": "EUR",
       "availability": "https://schema.org/InStock",

@@ -41,31 +41,31 @@ function buildConfirmationEmail(name: string, locale: string): string {
   const COPY: Record<string, { heading: string; body: string; cta: string; note: string }> = {
     fr: {
       heading: "Votre accès Pilot est activé",
-      body: `Bonjour ${esc(name)},<br><br>Votre demande a été approuvée. Votre compte bénéficie maintenant d'un accès Pro complet pendant <strong>30 jours</strong> — sans carte bancaire requise.`,
+      body: `Bonjour ${esc(name)},<br><br>Votre demande a été approuvée. Votre compte bénéficie maintenant d'un accès Pro complet pendant <strong>35 jours</strong> — sans carte bancaire requise.`,
       cta: "Accéder à mon tableau de bord →",
       note: "L'accès Pilot inclut toutes les fonctionnalités Pro : alertes régionales, alertes maladies, exports et intégrations Slack/Teams.",
     },
     en: {
       heading: "Your Pilot access is now active",
-      body: `Hello ${esc(name)},<br><br>Your application has been approved. Your account now has full Pro access for <strong>30 days</strong> — no credit card required.`,
+      body: `Hello ${esc(name)},<br><br>Your application has been approved. Your account now has full Pro access for <strong>35 days</strong> — no credit card required.`,
       cta: "Go to my dashboard →",
       note: "Pilot access includes all Pro features: regional alerts, disease alerts, exports, and Slack/Teams integrations.",
     },
     es: {
       heading: "Tu acceso Pilot está activo",
-      body: `Hola ${esc(name)},<br><br>Tu solicitud ha sido aprobada. Tu cuenta tiene ahora acceso Pro completo durante <strong>30 días</strong>, sin tarjeta de crédito.`,
+      body: `Hola ${esc(name)},<br><br>Tu solicitud ha sido aprobada. Tu cuenta tiene ahora acceso Pro completo durante <strong>35 días</strong>, sin tarjeta de crédito.`,
       cta: "Ir a mi panel →",
       note: "El acceso Pilot incluye todas las funciones Pro: alertas regionales, alertas de enfermedades, exportaciones e integraciones.",
     },
     ar: {
       heading: "تم تفعيل وصولك للبرنامج التجريبي",
-      body: `مرحباً ${esc(name)}،<br><br>تمت الموافقة على طلبك. يتمتع حسابك الآن بإمكانية وصول Pro كاملة لمدة <strong>30 يوماً</strong> — دون بطاقة ائتمان.`,
+      body: `مرحباً ${esc(name)}،<br><br>تمت الموافقة على طلبك. يتمتع حسابك الآن بإمكانية وصول Pro كاملة لمدة <strong>35 يوماً</strong> — دون بطاقة ائتمان.`,
       cta: "← الانتقال إلى لوحتي",
       note: "يشمل وصول البرنامج التجريبي جميع ميزات Pro: التنبيهات الإقليمية والأمراض والتصديرات والتكاملات.",
     },
     id: {
       heading: "Akses Pilot Anda sudah aktif",
-      body: `Halo ${esc(name)},<br><br>Permohonan Anda telah disetujui. Akun Anda sekarang memiliki akses Pro penuh selama <strong>30 hari</strong> — tanpa kartu kredit.`,
+      body: `Halo ${esc(name)},<br><br>Permohonan Anda telah disetujui. Akun Anda sekarang memiliki akses Pro penuh selama <strong>35 hari</strong> — tanpa kartu kredit.`,
       cta: "Buka dasbor saya →",
       note: "Akses Pilot mencakup semua fitur Pro: peringatan regional, peringatan penyakit, ekspor, dan integrasi Slack/Teams.",
     },

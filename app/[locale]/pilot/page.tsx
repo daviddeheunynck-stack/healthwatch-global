@@ -9,7 +9,7 @@ const COPY = {
   en: {
     tag: "Institutional Pilot Program",
     title: "Validate epidemic surveillance\nwith your field teams.",
-    sub: "We offer a free 30-day Pro access for up to 5 members of your organization. No credit card. No sales pitch. In exchange, we ask for honest feedback from people who work in the field.",
+    sub: "We offer a free 35-day Pro access for up to 5 members of your organization. No credit card. No sales pitch. In exchange, we ask for honest feedback from people who work in the field.",
     forTitle: "Built for",
     forItems: [
       "Epidemiologists at global health agencies (Africa CDC, ECDC, PAHO, WHO)",
@@ -20,13 +20,13 @@ const COPY = {
     ],
     includesTitle: "What the pilot includes",
     includes: [
-      { icon: "users", title: "5 Pro seats, 30 days", desc: "Full access — exact figures, regional alerts, disease-specific alerts (Mpox, Ebola, Cholera...), PDF reports, CSV export, Slack/Teams integration." },
+      { icon: "users", title: "5 Pro seats, 35 days", desc: "Full access — exact figures, regional alerts, disease-specific alerts (Mpox, Ebola, Cholera...), PDF reports, CSV export, Slack/Teams integration." },
       { icon: "calendar", title: "30-min onboarding call", desc: "We walk your team through the platform and configure alerts for your regions of interest." },
       { icon: "message", title: "Feedback session at close", desc: "A 45-min structured call to collect your team's experience. That's what we're here for." },
     ],
     askTitle: "What we ask in return",
     askItems: [
-      "Two brief check-ins during the 30 days",
+      "Two brief check-ins during the 35 days",
       "A structured feedback session at the end",
       "Permission to use anonymized learnings in product development",
     ],
@@ -52,7 +52,7 @@ const COPY = {
   fr: {
     tag: "Programme Pilote Institutionnel",
     title: "Validez la surveillance épidémique\navec vos équipes terrain.",
-    sub: "Nous offrons un accès Pro gratuit de 30 jours pour jusqu'à 5 membres de votre organisation. Sans carte bancaire. Sans démarche commerciale. En échange, nous demandons un retour honnête de personnes qui travaillent sur le terrain.",
+    sub: "Nous offrons un accès Pro gratuit de 35 jours pour jusqu'à 5 membres de votre organisation. Sans carte bancaire. Sans démarche commerciale. En échange, nous demandons un retour honnête de personnes qui travaillent sur le terrain.",
     forTitle: "Conçu pour",
     forItems: [
       "Épidémiologistes d'agences internationales (Africa CDC, ECDC, PAHO, OMS)",
@@ -63,13 +63,13 @@ const COPY = {
     ],
     includesTitle: "Ce que le pilote inclut",
     includes: [
-      { icon: "users", title: "5 accès Pro, 30 jours", desc: "Accès complet — chiffres exacts, alertes régionales, alertes par maladie (Mpox, Ebola, Choléra...), rapports PDF, export CSV, intégration Slack/Teams." },
+      { icon: "users", title: "5 accès Pro, 35 jours", desc: "Accès complet — chiffres exacts, alertes régionales, alertes par maladie (Mpox, Ebola, Choléra...), rapports PDF, export CSV, intégration Slack/Teams." },
       { icon: "calendar", title: "Appel d'onboarding de 30 min", desc: "Nous accompagnons votre équipe sur la plateforme et configurons les alertes pour vos régions d'intérêt." },
       { icon: "message", title: "Session de retour à la clôture", desc: "Un appel structuré de 45 min pour recueillir l'expérience de votre équipe. C'est ce que nous recherchons." },
     ],
     askTitle: "Ce que nous demandons en retour",
     askItems: [
-      "Deux points rapides pendant les 30 jours",
+      "Deux points rapides pendant les 35 jours",
       "Une session de retour structurée en fin de pilote",
       "L'autorisation d'utiliser les apprentissages anonymisés pour le développement produit",
     ],
@@ -95,7 +95,7 @@ const COPY = {
   es: {
     tag: "Programa Piloto Institucional",
     title: "Valide la vigilancia epidémica\ncon sus equipos de campo.",
-    sub: "Ofrecemos acceso Pro gratuito de 30 días para hasta 5 miembros de su organización. Sin tarjeta de crédito. Sin presión comercial. A cambio, pedimos comentarios honestos de personas que trabajan sobre el terreno.",
+    sub: "Ofrecemos acceso Pro gratuito de 35 días para hasta 5 miembros de su organización. Sin tarjeta de crédito. Sin presión comercial. A cambio, pedimos comentarios honestos de personas que trabajan sobre el terreno.",
     forTitle: "Diseñado para",
     forItems: [
       "Epidemiólogos en agencias internacionales (Africa CDC, ECDC, PAHO, OMS)",
@@ -106,13 +106,13 @@ const COPY = {
     ],
     includesTitle: "Qué incluye el piloto",
     includes: [
-      { icon: "users", title: "5 accesos Pro, 30 días", desc: "Acceso completo — cifras exactas, alertas regionales, alertas por enfermedad (Mpox, Ébola, Cólera...), informes PDF, exportación CSV, integración Slack/Teams." },
+      { icon: "users", title: "5 accesos Pro, 35 días", desc: "Acceso completo — cifras exactas, alertas regionales, alertas por enfermedad (Mpox, Ébola, Cólera...), informes PDF, exportación CSV, integración Slack/Teams." },
       { icon: "calendar", title: "Llamada de incorporación de 30 min", desc: "Guiamos a su equipo por la plataforma y configuramos alertas para sus regiones de interés." },
       { icon: "message", title: "Sesión de feedback al cierre", desc: "Una llamada estructurada de 45 min para recoger la experiencia de su equipo." },
     ],
     askTitle: "Qué pedimos a cambio",
     askItems: [
-      "Dos breves puntos de control durante los 30 días",
+      "Dos breves puntos de control durante los 35 días",
       "Una sesión de retroalimentación estructurada al final",
       "Permiso para usar aprendizajes anonimizados en el desarrollo del producto",
     ],
@@ -138,7 +138,7 @@ const COPY = {
   ar: {
     tag: "برنامج التجربة المؤسسية",
     title: "تحقق من مراقبة الأوبئة\nمع فرق العمل الميداني.",
-    sub: "نقدم وصولاً مجانياً لخطة Pro لمدة 30 يوماً لما يصل إلى 5 أعضاء في مؤسستك. بدون بطاقة بنكية. بدون ضغوط تجارية. في المقابل، نطلب ملاحظات صادقة من أشخاص يعملون في الميدان.",
+    sub: "نقدم وصولاً مجانياً لخطة Pro لمدة 35 يوماً لما يصل إلى 5 أعضاء في مؤسستك. بدون بطاقة بنكية. بدون ضغوط تجارية. في المقابل، نطلب ملاحظات صادقة من أشخاص يعملون في الميدان.",
     forTitle: "مصمم لـ",
     forItems: [
       "علماء الأوبئة في الوكالات الدولية (Africa CDC، ECDC، PAHO، WHO)",
@@ -149,13 +149,13 @@ const COPY = {
     ],
     includesTitle: "ما يتضمنه البرنامج التجريبي",
     includes: [
-      { icon: "users", title: "5 مقاعد Pro، 30 يوماً", desc: "وصول كامل — أرقام دقيقة، تنبيهات إقليمية، تنبيهات خاصة بالأمراض (Mpox، إيبولا، كوليرا...)، تقارير PDF، تصدير CSV، تكامل Slack/Teams." },
+      { icon: "users", title: "5 مقاعد Pro، 35 يوماً", desc: "وصول كامل — أرقام دقيقة، تنبيهات إقليمية، تنبيهات خاصة بالأمراض (Mpox، إيبولا، كوليرا...)، تقارير PDF، تصدير CSV، تكامل Slack/Teams." },
       { icon: "calendar", title: "مكالمة تأهيل 30 دقيقة", desc: "نرشد فريقك عبر المنصة ونضبط التنبيهات لمناطق اهتمامكم." },
       { icon: "message", title: "جلسة تغذية راجعة في الختام", desc: "مكالمة منظمة مدتها 45 دقيقة لجمع تجربة فريقك." },
     ],
     askTitle: "ما نطلبه في المقابل",
     askItems: [
-      "متابعتان موجزتان خلال الـ 30 يوماً",
+      "متابعتان موجزتان خلال الـ 35 يوماً",
       "جلسة تغذية راجعة منظمة في النهاية",
       "إذن باستخدام المعلومات المجهولة في تطوير المنتج",
     ],
@@ -181,7 +181,7 @@ const COPY = {
   id: {
     tag: "Program Pilot Institusional",
     title: "Validasi pemantauan epidemi\nbersama tim lapangan Anda.",
-    sub: "Kami menawarkan akses Pro gratis selama 30 hari untuk hingga 5 anggota organisasi Anda. Tanpa kartu kredit. Tanpa tekanan penjualan. Sebagai gantinya, kami meminta umpan balik jujur dari orang-orang yang bekerja di lapangan.",
+    sub: "Kami menawarkan akses Pro gratis selama 35 hari untuk hingga 5 anggota organisasi Anda. Tanpa kartu kredit. Tanpa tekanan penjualan. Sebagai gantinya, kami meminta umpan balik jujur dari orang-orang yang bekerja di lapangan.",
     forTitle: "Dirancang untuk",
     forItems: [
       "Epidemiolog di lembaga internasional (Africa CDC, ECDC, PAHO, WHO)",
@@ -192,13 +192,13 @@ const COPY = {
     ],
     includesTitle: "Apa yang termasuk dalam pilot",
     includes: [
-      { icon: "users", title: "5 akses Pro, 30 hari", desc: "Akses penuh — angka tepat, peringatan regional, peringatan per penyakit (Mpox, Ebola, Kolera...), laporan PDF, ekspor CSV, integrasi Slack/Teams." },
+      { icon: "users", title: "5 akses Pro, 35 hari", desc: "Akses penuh — angka tepat, peringatan regional, peringatan per penyakit (Mpox, Ebola, Kolera...), laporan PDF, ekspor CSV, integrasi Slack/Teams." },
       { icon: "calendar", title: "Panggilan onboarding 30 menit", desc: "Kami memandu tim Anda melalui platform dan mengonfigurasi peringatan untuk wilayah yang diminati." },
       { icon: "message", title: "Sesi umpan balik di akhir", desc: "Panggilan terstruktur 45 menit untuk mengumpulkan pengalaman tim Anda." },
     ],
     askTitle: "Yang kami minta sebagai gantinya",
     askItems: [
-      "Dua check-in singkat selama 30 hari",
+      "Dua check-in singkat selama 35 hari",
       "Sesi umpan balik terstruktur di akhir",
       "Izin untuk menggunakan pembelajaran anonim dalam pengembangan produk",
     ],
@@ -230,7 +230,7 @@ const FAQ_COPY: Record<string, { title: string; items: { q: string; a: string }[
       { q: "What data sources does HealthWatch use?", a: "All data comes directly from official WHO, ECDC, PAHO, and Africa CDC sources. We do not use secondary or unverified sources. The platform updates every hour." },
       { q: "Is the platform GDPR compliant?", a: "Yes. The platform runs on European infrastructure (Vercel EU + Supabase EU). We do not collect personal health data from users. Your work email is the only personal data stored." },
       { q: "How does multi-user access work?", a: "Each team member gets their own individual account. The 5-seat pilot gives 5 independent logins, each with full Pro access. No shared passwords, no shared sessions." },
-      { q: "What happens at the end of the 30 days?", a: "Accounts automatically revert to the Free plan. No charge, no credit card required. If your team wants to continue with Pro, we'll discuss options at the closing feedback session." },
+      { q: "What happens at the end of the 35 days?", a: "Accounts automatically revert to the Free plan. No charge, no credit card required. If your team wants to continue with Pro, we'll discuss options at the closing feedback session." },
       { q: "Do we need IT involvement to get started?", a: "No. HealthWatch is a web platform — no installation, no VPN, no firewall changes required. Access is via any modern browser. Slack and Teams integrations are optional and take under 2 minutes." },
     ],
   },
@@ -240,7 +240,7 @@ const FAQ_COPY: Record<string, { title: string; items: { q: string; a: string }[
       { q: "Quelles sources de données utilise HealthWatch ?", a: "Toutes les données proviennent directement des sources officielles OMS, ECDC, PAHO et Africa CDC. Nous n'utilisons aucune source secondaire ou non vérifiée. La plateforme se met à jour toutes les heures." },
       { q: "La plateforme est-elle conforme au RGPD ?", a: "Oui. La plateforme est hébergée sur une infrastructure européenne (Vercel EU + Supabase EU). Nous ne collectons pas de données de santé personnelles. Votre email professionnel est la seule donnée personnelle stockée." },
       { q: "Comment fonctionne l'accès multi-utilisateurs ?", a: "Chaque membre de l'équipe dispose de son propre compte individuel. Le pilote à 5 accès donne 5 logins indépendants, chacun avec l'accès Pro complet. Aucun mot de passe partagé." },
-      { q: "Que se passe-t-il à la fin des 30 jours ?", a: "Les comptes passent automatiquement au plan Gratuit. Aucun frais, aucune carte bancaire requise. Si votre équipe souhaite continuer avec Pro, nous en discutons lors de la session de feedback de clôture." },
+      { q: "Que se passe-t-il à la fin des 35 jours ?", a: "Les comptes passent automatiquement au plan Gratuit. Aucun frais, aucune carte bancaire requise. Si votre équipe souhaite continuer avec Pro, nous en discutons lors de la session de feedback de clôture." },
       { q: "Faut-il impliquer l'IT pour commencer ?", a: "Non. HealthWatch est une plateforme web — aucune installation, aucun VPN, aucune exception pare-feu nécessaire. L'accès se fait via tout navigateur moderne. Les intégrations Slack et Teams sont optionnelles et prennent moins de 2 minutes." },
     ],
   },
@@ -250,7 +250,7 @@ const FAQ_COPY: Record<string, { title: string; items: { q: string; a: string }[
       { q: "¿Qué fuentes de datos utiliza HealthWatch?", a: "Todos los datos provienen directamente de las fuentes oficiales de OMS, ECDC, PAHO y Africa CDC. No utilizamos fuentes secundarias ni no verificadas. La plataforma se actualiza cada hora." },
       { q: "¿Es la plataforma conforme al RGPD?", a: "Sí. La plataforma se ejecuta en infraestructura europea (Vercel EU + Supabase EU). No recopilamos datos de salud personales. Su email profesional es el único dato personal almacenado." },
       { q: "¿Cómo funciona el acceso multiusuario?", a: "Cada miembro del equipo tiene su propia cuenta individual. El piloto de 5 accesos ofrece 5 inicios de sesión independientes, cada uno con acceso Pro completo. Sin contraseñas compartidas." },
-      { q: "¿Qué sucede al final de los 30 días?", a: "Las cuentas vuelven automáticamente al plan Gratuito. Sin cargos, sin tarjeta de crédito requerida. Si su equipo desea continuar con Pro, lo discutiremos en la sesión de feedback de cierre." },
+      { q: "¿Qué sucede al final de los 35 días?", a: "Las cuentas vuelven automáticamente al plan Gratuito. Sin cargos, sin tarjeta de crédito requerida. Si su equipo desea continuar con Pro, lo discutiremos en la sesión de feedback de cierre." },
       { q: "¿Necesitamos involucrar al departamento de TI?", a: "No. HealthWatch es una plataforma web — no requiere instalación, VPN ni cambios de firewall. El acceso es a través de cualquier navegador moderno. Las integraciones con Slack y Teams son opcionales y tardan menos de 2 minutos." },
     ],
   },
@@ -260,7 +260,7 @@ const FAQ_COPY: Record<string, { title: string; items: { q: string; a: string }[
       { q: "ما مصادر البيانات التي يستخدمها HealthWatch؟", a: "تأتي جميع البيانات مباشرة من المصادر الرسمية لمنظمة الصحة العالمية وECDC وPAHO وAfrica CDC. لا نستخدم مصادر ثانوية أو غير موثقة. تتحدث المنصة كل ساعة." },
       { q: "هل المنصة متوافقة مع اللائحة الأوروبية لحماية البيانات؟", a: "نعم. تعمل المنصة على بنية تحتية أوروبية (Vercel EU + Supabase EU). لا نجمع بيانات صحية شخصية. بريدك الإلكتروني المهني هو البيانات الشخصية الوحيدة المخزنة." },
       { q: "كيف يعمل الوصول متعدد المستخدمين؟", a: "يحصل كل عضو في الفريق على حسابه الخاص. يوفر البرنامج التجريبي 5 تسجيلات دخول مستقلة، كل منها بوصول Pro كامل. لا كلمات مرور مشتركة." },
-      { q: "ماذا يحدث في نهاية الـ 30 يوماً؟", a: "تعود الحسابات تلقائياً إلى الخطة المجانية. لا رسوم، لا بطاقة بنكية مطلوبة. إذا أراد فريقك الاستمرار مع Pro، نناقش ذلك في جلسة التغذية الراجعة الختامية." },
+      { q: "ماذا يحدث في نهاية الـ 35 يوماً؟", a: "تعود الحسابات تلقائياً إلى الخطة المجانية. لا رسوم، لا بطاقة بنكية مطلوبة. إذا أراد فريقك الاستمرار مع Pro، نناقش ذلك في جلسة التغذية الراجعة الختامية." },
       { q: "هل نحتاج إلى فريق تقنية المعلومات للبدء؟", a: "لا. HealthWatch منصة ويب — لا تثبيت، لا VPN، لا تغييرات في جدار الحماية. الوصول عبر أي متصفح حديث. تكاملات Slack وTeams اختيارية وتستغرق أقل من دقيقتين." },
     ],
   },
@@ -270,7 +270,7 @@ const FAQ_COPY: Record<string, { title: string; items: { q: string; a: string }[
       { q: "Sumber data apa yang digunakan HealthWatch?", a: "Semua data berasal langsung dari sumber resmi WHO, ECDC, PAHO, dan Africa CDC. Kami tidak menggunakan sumber sekunder atau yang tidak terverifikasi. Platform diperbarui setiap jam." },
       { q: "Apakah platform ini mematuhi GDPR?", a: "Ya. Platform berjalan di infrastruktur Eropa (Vercel EU + Supabase EU). Kami tidak mengumpulkan data kesehatan pribadi pengguna. Email kerja Anda adalah satu-satunya data pribadi yang disimpan." },
       { q: "Bagaimana akses multi-pengguna bekerja?", a: "Setiap anggota tim mendapatkan akun individual mereka sendiri. Pilot 5 kursi memberikan 5 login independen, masing-masing dengan akses Pro penuh. Tidak ada kata sandi bersama." },
-      { q: "Apa yang terjadi setelah 30 hari?", a: "Akun secara otomatis kembali ke paket Gratis. Tidak ada biaya, tidak perlu kartu kredit. Jika tim Anda ingin melanjutkan dengan Pro, kami akan membahasnya di sesi umpan balik penutup." },
+      { q: "Apa yang terjadi setelah 35 hari?", a: "Akun secara otomatis kembali ke paket Gratis. Tidak ada biaya, tidak perlu kartu kredit. Jika tim Anda ingin melanjutkan dengan Pro, kami akan membahasnya di sesi umpan balik penutup." },
       { q: "Apakah kami perlu melibatkan IT untuk memulai?", a: "Tidak. HealthWatch adalah platform web — tidak ada instalasi, VPN, atau perubahan firewall yang diperlukan. Akses melalui browser modern apa pun. Integrasi Slack dan Teams bersifat opsional dan membutuhkan kurang dari 2 menit." },
     ],
   },

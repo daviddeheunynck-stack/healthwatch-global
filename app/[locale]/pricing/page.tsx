@@ -459,7 +459,7 @@ export default async function PricingPage({ params }: { params: Promise<{ locale
           </div>
           <div>
             <p className="text-red-300 font-semibold text-sm">
-              {locale === "fr" ? "Programme pilote institutionnel — 30 jours gratuits" : locale === "es" ? "Programa piloto institucional — 30 días gratis" : locale === "ar" ? "البرنامج التجريبي المؤسسي — 30 يوماً مجاناً" : locale === "id" ? "Program pilot institusional — 30 hari gratis" : "Institutional pilot program — 30 days free"}
+              {locale === "fr" ? "Programme pilote institutionnel — 35 jours gratuits" : locale === "es" ? "Programa piloto institucional — 35 días gratis" : locale === "ar" ? "البرنامج التجريبي المؤسسي — 35 يوماً مجاناً" : locale === "id" ? "Program pilot institusional — 35 hari gratis" : "Institutional pilot program — 35 days free"}
             </p>
             <p className="text-gray-400 text-xs mt-0.5">
               {locale === "fr" ? "5 accès Pro offerts pour votre équipe (ONG, agence ONU, ministère). En échange : votre retour terrain structuré." : locale === "es" ? "5 accesos Pro para su equipo (ONG, agencia ONU, ministerio). A cambio: su retroalimentación estructurada." : locale === "ar" ? "5 مقاعد Pro لفريقك (منظمة غير حكومية، وكالة أممية، وزارة). في المقابل: ملاحظاتكم الميدانية المنظمة." : locale === "id" ? "5 akses Pro untuk tim Anda (LSM, badan PBB, kementerian). Sebagai gantinya: umpan balik lapangan terstruktur Anda." : "5 Pro seats for your team (NGO, UN agency, ministry). In exchange: your structured field feedback."}
