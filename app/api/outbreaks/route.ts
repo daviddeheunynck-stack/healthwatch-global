@@ -1,6 +1,9 @@
 import { NextRequest } from "next/server";
 import { createClient } from "@/lib/supabase-server";
 import { createClient as createService } from "@supabase/supabase-js";
+import { createHash } from "crypto";
+
+const sha256 = (s: string) => createHash("sha256").update(s).digest("hex");
 
 export const dynamic = "force-dynamic";
 
@@ -19,7 +22,7 @@ export async function GET(req: NextRequest) {
   const supabase = await createClient();
   const { searchParams } = new URL(req.url);
 
-  // Auth: session cookie OR api_key param/header
+  // Auth: session cookie OR X-API-Key header (hwg_* prefix, SHA-256 lookup in api_keys)
   const { data: { user } } = await supabase.auth.getUser();
   let profilePlan: string | null = null;
 
@@ -30,11 +33,15 @@ export async function GET(req: NextRequest) {
     profilePlan = plan;
   } else {
     const keyParam = req.headers.get("x-api-key");
-    if (keyParam) {
-      const { data: p } = await service.from("profiles").select("plan, trial_ends_at, stripe_subscription_id").eq("api_key", keyParam).single();
-      let plan = p?.plan ?? null;
-      if (plan !== "free" && plan !== null && p?.trial_ends_at && new Date(p.trial_ends_at).getTime() < Date.now() && !p?.stripe_subscription_id) plan = "free";
-      profilePlan = plan;
+    if (keyParam?.startsWith("hwg_")) {
+      const keyHash = sha256(keyParam);
+      const { data: apiKey } = await service.from("api_keys").select("user_id").eq("key_hash", keyHash).maybeSingle();
+      if (apiKey?.user_id) {
+        const { data: p } = await service.from("profiles").select("plan, trial_ends_at, stripe_subscription_id").eq("id", apiKey.user_id).single();
+        let plan = p?.plan ?? null;
+        if (plan !== "free" && plan !== null && p?.trial_ends_at && new Date(p.trial_ends_at).getTime() < Date.now() && !p?.stripe_subscription_id) plan = "free";
+        profilePlan = plan;
+      }
     }
   }
 
