@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { WORLD_COUNTRIES } from "@/lib/world-countries";
+import { countryToSlug } from "@/lib/country-utils";
 import Link from "next/link";
 import {
   Plane, AlertTriangle, CheckCircle, ShieldAlert, ShieldOff,
@@ -461,6 +462,38 @@ export default function TravelRiskFullPage({ locale }: { locale: string }) {
             </div>
           )}
         </>
+      )}
+
+      {/* Country page CTA — after results */}
+      {result && (
+        <div className="bg-red-950/20 border border-red-800/30 rounded-xl p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <p className="font-semibold text-white text-sm">
+              {locale === "fr" ? `Alertes épidémiques pour ${result.country_en} en temps réel` :
+               locale === "es" ? `Alertas de brotes para ${result.country_en} en tiempo real` :
+               locale === "ar" ? `تنبيهات تفشي الأمراض في ${result.country_en} في الوقت الفعلي` :
+               locale === "id" ? `Peringatan wabah untuk ${result.country_en} secara real-time` :
+               `Get real-time outbreak alerts for ${result.country_en}`}
+            </p>
+            <p className="text-xs text-gray-400 mt-0.5">
+              {locale === "fr" ? "Accès Pro — sources OMS, ECDC, PAHO et Africa CDC" :
+               locale === "es" ? "Acceso Pro — fuentes OMS, ECDC, PAHO y Africa CDC" :
+               locale === "ar" ? "وصول Pro — مصادر WHO وECDC وPAHO وAfrica CDC" :
+               locale === "id" ? "Akses Pro — sumber WHO, ECDC, PAHO dan Africa CDC" :
+               "Pro access — WHO, ECDC, PAHO and Africa CDC sources"}
+            </p>
+          </div>
+          <Link
+            href={`/${locale}/country/${countryToSlug(result.country_en)}`}
+            className="shrink-0 bg-red-600 hover:bg-red-500 text-white font-semibold text-sm px-5 py-2.5 rounded-lg transition-colors whitespace-nowrap"
+          >
+            {locale === "fr" ? `Voir ${result.country_en} →` :
+             locale === "es" ? `Ver ${result.country_en} →` :
+             locale === "ar" ? `← رؤية ${result.country_en}` :
+             locale === "id" ? `Lihat ${result.country_en} →` :
+             `See ${result.country_en} outbreaks →`}
+          </Link>
+        </div>
       )}
 
       {/* Official resources — always visible */}
