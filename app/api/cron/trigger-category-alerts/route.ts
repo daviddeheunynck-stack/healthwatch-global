@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { getDiseaseCategory, CATEGORY_LABELS } from "@/lib/disease-category";
+import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 import * as Sentry from "@sentry/nextjs";
 import { logCronRun } from "@/lib/cron-monitor";
 
@@ -102,7 +103,9 @@ interface CategoryAlert {
   min_cases: number; email: string; last_fired_at: string | null;
 }
 interface Outbreak {
-  id: string; disease_en: string | null; country_en: string | null;
+  id: string;
+  disease: string; disease_en: string | null; disease_ar: string | null;
+  country: string; country_en: string | null; country_ar: string | null;
   cases: number; risk_level: string; region: string;
 }
 
@@ -133,7 +136,7 @@ export async function GET(req: NextRequest) {
 
   const { data: outbreaks } = await supabase
     .from("outbreaks")
-    .select("id, disease_en, country_en, cases, risk_level, region")
+    .select("id, disease, disease_en, disease_ar, country, country_en, country_ar, cases, risk_level, region")
     .eq("active", true);
 
   const active = (outbreaks ?? []) as Outbreak[];
@@ -159,11 +162,11 @@ export async function GET(req: NextRequest) {
     const numLocale = locale === "ar" ? "ar-SA" : locale;
     const isRtl     = locale === "ar";
     const lc       = COPY[locale] ?? COPY.en;
-    const catLabel = (CATEGORY_LABELS[alert.disease_category as keyof typeof CATEGORY_LABELS]?.en) ?? alert.disease_category;
+    const catLabel = CATEGORY_LABELS[alert.disease_category as keyof typeof CATEGORY_LABELS]?.[locale] ?? alert.disease_category;
     const minStr   = alert.min_cases.toLocaleString(numLocale);
 
     const rows = matches.slice(0, 8).map((o) =>
-      `<tr><td style="padding:4px 8px">${esc(o.disease_en ?? "—")}</td><td style="padding:4px 8px">${esc(o.country_en ?? "—")}</td><td style="padding:4px 8px;text-align:right">${o.cases.toLocaleString(numLocale)}</td></tr>`
+      `<tr><td style="padding:4px 8px">${esc(getLocalizedDisease(o, locale))}</td><td style="padding:4px 8px">${esc(getLocalizedCountry(o, locale))}</td><td style="padding:4px 8px;text-align:right">${o.cases.toLocaleString(numLocale)}</td></tr>`
     ).join("");
 
     try {
@@ -177,7 +180,7 @@ export async function GET(req: NextRequest) {
         user_id: alert.user_id,
         type:    "category_alert",
         title:   lc.inAppTitle(catLabel, matches.length, minStr),
-        body:    matches.slice(0, 3).map((o) => lc.inAppBody(o.disease_en ?? "—", o.country_en ?? "—", o.cases.toLocaleString(numLocale))).join(" · "),
+        body:    matches.slice(0, 3).map((o) => lc.inAppBody(getLocalizedDisease(o, locale), getLocalizedCountry(o, locale), o.cases.toLocaleString(numLocale))).join(" · "),
         outbreak_id: matches[0]?.id ?? null,
       }).then(() => {}, () => {});
 

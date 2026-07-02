@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { haversineKm } from "@/lib/haversine";
 import { getCountryCoords } from "@/lib/country-coords";
+import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 import * as Sentry from "@sentry/nextjs";
 import { logCronRun } from "@/lib/cron-monitor";
 
@@ -42,7 +43,9 @@ interface GeofenceAlert {
   email: string; last_fired_at: string | null;
 }
 interface Outbreak {
-  id: string; disease_en: string | null; country_en: string | null;
+  id: string;
+  disease: string; disease_en: string | null; disease_ar: string | null;
+  country: string; country_en: string | null; country_ar: string | null;
   cases: number; risk_level: string; lat: number | null; lng: number | null;
 }
 
@@ -72,7 +75,7 @@ export async function GET(req: NextRequest) {
 
   const { data: outbreaks } = await supabase
     .from("outbreaks")
-    .select("id, disease_en, country_en, cases, risk_level, lat, lng")
+    .select("id, disease, disease_en, disease_ar, country, country_en, country_ar, cases, risk_level, lat, lng")
     .eq("active", true);
   const active = (outbreaks ?? []) as Outbreak[];
 
@@ -152,7 +155,7 @@ export async function GET(req: NextRequest) {
     } as Record<string, string>)[locale] ?? `This alert fires every ${COOLDOWN_H}h when outbreaks exist within your zone radius. Manage geofence alerts on your dashboard.`;
 
     const rows = matches.slice(0, 8).map((o) =>
-      `<tr><td style="padding:4px 8px">${esc(o.disease_en ?? "—")}</td><td style="padding:4px 8px">${esc(o.country_en ?? "—")}</td><td style="padding:4px 8px;text-align:right">${o.cases.toLocaleString(numLocale)}</td><td style="padding:4px 8px;text-transform:uppercase;font-size:11px;font-weight:700;color:${o.risk_level === "high" ? "#f87171" : o.risk_level === "medium" ? "#fbbf24" : "#4ade80"}">${o.risk_level}</td></tr>`
+      `<tr><td style="padding:4px 8px">${esc(getLocalizedDisease(o, locale))}</td><td style="padding:4px 8px">${esc(getLocalizedCountry(o, locale))}</td><td style="padding:4px 8px;text-align:right">${o.cases.toLocaleString(numLocale)}</td><td style="padding:4px 8px;text-transform:uppercase;font-size:11px;font-weight:700;color:${o.risk_level === "high" ? "#f87171" : o.risk_level === "medium" ? "#fbbf24" : "#4ade80"}">${o.risk_level}</td></tr>`
     ).join("");
 
     try {
@@ -166,7 +169,7 @@ export async function GET(req: NextRequest) {
         user_id:     alert.user_id,
         type:        "watchlist",
         title:       inAppTitleStr,
-        body:        matches.slice(0, 3).map((o) => `${o.disease_en ?? "—"} (${o.country_en ?? "—"}): ${o.cases.toLocaleString(numLocale)}`).join(" · "),
+        body:        matches.slice(0, 3).map((o) => `${getLocalizedDisease(o, locale)} (${getLocalizedCountry(o, locale)}): ${o.cases.toLocaleString(numLocale)}`).join(" · "),
         outbreak_id: matches[0]?.id ?? null,
       }).then(() => {}, () => {});
 
