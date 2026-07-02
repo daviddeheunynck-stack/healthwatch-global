@@ -36,6 +36,7 @@ type LocaleLabels = {
   readyItems: string[];
   cta: string;
   setupAlerts: string;
+  guarantee: string;
   retryNote: string;
 };
 
@@ -55,6 +56,7 @@ const LABELS: Record<string, LocaleLabels> = {
     readyItems: ["Exact case & death figures", "Full regional reports (PDF)", "Instant alerts", "All global regions", "Disease-specific alerts (Mpox, Ebola, Cholera...)"],
     cta:          "Go to dashboard →",
     setupAlerts:  "Configure your alert regions →",
+    guarantee:    "14-day money-back guarantee — no questions asked.",
     retryNote:    "If your plan does not appear immediately, refresh the page in a few seconds.",
   },
   fr: {
@@ -72,6 +74,7 @@ const LABELS: Record<string, LocaleLabels> = {
     readyItems: ["Chiffres exacts (cas & décès)", "Rapports régionaux complets (PDF)", "Alertes instantanées", "Toutes les régions mondiales", "Alertes par maladie (Mpox, Ebola, Choléra...)"],
     cta:          "Aller au tableau de bord →",
     setupAlerts:  "Configurer vos régions d'alerte →",
+    guarantee:    "Satisfait ou remboursé 14 jours — sans condition.",
     retryNote:    "Si votre plan n'apparaît pas immédiatement, rafraîchissez la page dans quelques secondes.",
   },
   es: {
@@ -89,6 +92,7 @@ const LABELS: Record<string, LocaleLabels> = {
     readyItems: ["Cifras exactas (casos y fallecimientos)", "Informes regionales completos (PDF)", "Alertas instantáneas", "Todas las regiones mundiales", "Alertas por enfermedad (Mpox, Ébola, Cólera...)"],
     cta:          "Ir al panel →",
     setupAlerts:  "Configurar sus regiones de alerta →",
+    guarantee:    "Garantía de devolución 14 días — sin preguntas.",
     retryNote:    "Si su plan no aparece de inmediato, actualice la página en unos segundos.",
   },
   ar: {
@@ -106,6 +110,7 @@ const LABELS: Record<string, LocaleLabels> = {
     readyItems: ["أرقام دقيقة (الحالات والوفيات)", "تقارير إقليمية كاملة (PDF)", "تنبيهات فورية", "جميع المناطق العالمية", "تنبيهات خاصة بالأمراض (Mpox، إيبولا، كوليرا...)"],
     cta:          "→ الذهاب إلى لوحة التحكم",
     setupAlerts:  "← ضبط مناطق التنبيه",
+    guarantee:    "ضمان استرداد الأموال خلال 14 يوماً — دون أسئلة.",
     retryNote:    "إذا لم تظهر خطتك فورًا، يرجى تحديث الصفحة بعد بضع ثوانٍ.",
   },
   id: {
@@ -123,6 +128,7 @@ const LABELS: Record<string, LocaleLabels> = {
     readyItems: ["Angka tepat (kasus & kematian)", "Laporan regional lengkap (PDF)", "Peringatan instan", "Semua wilayah global", "Peringatan per penyakit (Mpox, Ebola, Kolera...)"],
     cta:          "Buka dasbor →",
     setupAlerts:  "Konfigurasikan wilayah peringatan Anda →",
+    guarantee:    "Garansi uang kembali 14 hari — tanpa pertanyaan.",
     retryNote:    "Jika paket Anda tidak muncul segera, segarkan halaman dalam beberapa detik.",
   },
 };
@@ -260,6 +266,9 @@ export default async function SuccessPage({
           {l.setupAlerts}
         </Link>
 
+        {!isTrial && (
+          <p className="text-center text-xs text-gray-600">{l.guarantee}</p>
+        )}
         <p className="text-center text-xs text-gray-600">{l.retryNote}</p>
 
       </div>
