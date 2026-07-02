@@ -9,12 +9,13 @@ const COPY: Record<string, {
   sub: string;
   newLabel: string;
   worseningLabel: string;
+  responseLabel: string;
 }> = {
-  en: { title: "New this week",         sub: "Outbreaks added or worsening in the last 7 days",          newLabel: "NEW",     worseningLabel: "WORSENING" },
-  fr: { title: "Nouveautés cette semaine", sub: "Foyers apparus ou aggravés ces 7 derniers jours",        newLabel: "NOUVEAU", worseningLabel: "EN HAUSSE" },
-  es: { title: "Novedades esta semana",  sub: "Brotes nuevos o que empeoran en los últimos 7 días",       newLabel: "NUEVO",   worseningLabel: "EMPEORANDO" },
-  ar: { title: "جديد هذا الأسبوع",      sub: "تفشيات جديدة أو متصاعدة خلال الأيام السبعة الماضية",      newLabel: "جديد",    worseningLabel: "تصاعد" },
-  id: { title: "Baru minggu ini",        sub: "Wabah baru atau yang memburuk dalam 7 hari terakhir",      newLabel: "BARU",    worseningLabel: "MEMBURUK" },
+  en: { title: "New this week",         sub: "Outbreaks added or worsening in the last 7 days",          newLabel: "NEW",     worseningLabel: "WORSENING", responseLabel: "RESPONSE" },
+  fr: { title: "Nouveautés cette semaine", sub: "Foyers apparus ou aggravés ces 7 derniers jours",        newLabel: "NOUVEAU", worseningLabel: "EN HAUSSE",  responseLabel: "RÉPONSE"   },
+  es: { title: "Novedades esta semana",  sub: "Brotes nuevos o que empeoran en los últimos 7 días",       newLabel: "NUEVO",   worseningLabel: "EMPEORANDO", responseLabel: "RESPUESTA" },
+  ar: { title: "جديد هذا الأسبوع",      sub: "تفشيات جديدة أو متصاعدة خلال الأيام السبعة الماضية",      newLabel: "جديد",    worseningLabel: "تصاعد",      responseLabel: "استجابة"   },
+  id: { title: "Baru minggu ini",        sub: "Wabah baru atau yang memburuk dalam 7 hari terakhir",      newLabel: "BARU",    worseningLabel: "MEMBURUK",   responseLabel: "RESPONS"   },
 };
 
 interface Props {
@@ -33,9 +34,11 @@ export default function NewThisWeekWidget({ outbreaks, locale, trends }: Props) 
       const trend = trends[o.id];
       const isNew = o.created_at ? new Date(o.created_at) >= sevenDaysAgo : false;
       const isWorsening = trend?.direction === "up";
-      return { o, trend, isNew, isWorsening, score: computeRiskScore(o, trend) };
+      // Include active_response outbreaks even without a confirmed trend (e.g. Marburg 1 case)
+      const isActiveResponse = o.response_phase === "active_response";
+      return { o, trend, isNew, isWorsening, isActiveResponse, score: computeRiskScore(o, trend) };
     })
-    .filter(({ isNew, isWorsening }) => isNew || isWorsening)
+    .filter(({ isNew, isWorsening, isActiveResponse }) => isNew || isWorsening || isActiveResponse)
     .sort((a, b) => b.score - a.score)
     .slice(0, 6);
 
@@ -48,7 +51,7 @@ export default function NewThisWeekWidget({ outbreaks, locale, trends }: Props) 
         <p className="text-xs text-gray-500 mt-0.5">{c.sub}</p>
       </div>
       <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-2.5">
-        {relevant.map(({ o, trend, isNew, isWorsening, score }) => {
+        {relevant.map(({ o, trend, isNew, isWorsening, isActiveResponse, score }) => {
           const borderBg =
             o.risk_level === "high"   ? "border-red-800/40 bg-red-950/15 hover:border-red-700/60" :
             o.risk_level === "medium" ? "border-yellow-800/40 bg-yellow-950/10 hover:border-yellow-700/50" :
@@ -81,6 +84,11 @@ export default function NewThisWeekWidget({ outbreaks, locale, trends }: Props) 
                     <span className="inline-flex items-center gap-0.5 text-[10px] font-bold px-1.5 py-0.5 rounded bg-red-900/40 border border-red-700/40 text-red-300 shrink-0">
                       <TrendingUp className="w-2.5 h-2.5" aria-hidden />
                       {c.worseningLabel}
+                    </span>
+                  )}
+                  {isActiveResponse && !isWorsening && !isNew && (
+                    <span className="inline-flex text-[10px] font-bold px-1.5 py-0.5 rounded bg-red-900/40 border border-red-700/40 text-red-300 shrink-0">
+                      {c.responseLabel}
                     </span>
                   )}
                 </div>
