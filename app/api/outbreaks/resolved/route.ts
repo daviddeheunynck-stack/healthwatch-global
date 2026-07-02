@@ -30,7 +30,7 @@ export async function GET(req: NextRequest) {
   // Fetch extra rows to account for duplicates before deduplication
   const { data, error } = await service
     .from("outbreaks")
-    .select("id, disease_en, country_en, risk_level, date, updated_at, region, cases")
+    .select("id, disease, disease_en, disease_ar, country, country_en, country_ar, risk_level, date, updated_at, region, cases")
     .eq("active", false)
     .gte("updated_at", cutoff)
     .order("updated_at", { ascending: false })

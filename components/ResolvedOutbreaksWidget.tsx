@@ -2,11 +2,12 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { CheckCircle, ChevronDown, ChevronUp, Loader2 } from "lucide-react";
+import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 
 interface Resolved {
   id: string;
-  disease_en: string | null;
-  country_en: string | null;
+  disease: string; disease_en: string | null; disease_ar: string | null;
+  country: string; country_en: string | null; country_ar: string | null;
   risk_level: string | null;
   date: string;
   updated_at: string | null;
@@ -137,8 +138,8 @@ export default function ResolvedOutbreaksWidget({ locale }: { locale: string }) 
                 >
                   <div className="flex items-center gap-2 min-w-0">
                     <CheckCircle className="w-3 h-3 text-green-800 shrink-0" />
-                    <span className="text-[11px] font-semibold text-gray-400 truncate">{r.disease_en}</span>
-                    <span className="text-[10px] text-gray-600">— {r.country_en}</span>
+                    <span className="text-[11px] font-semibold text-gray-400 truncate">{getLocalizedDisease(r, locale)}</span>
+                    <span className="text-[10px] text-gray-600">— {getLocalizedCountry(r, locale)}</span>
                     <span className={`text-[9px] font-bold uppercase shrink-0 ${RISK_STYLE[r.risk_level ?? ""] ?? "text-gray-500"}`}>
                       {r.risk_level}
                     </span>
