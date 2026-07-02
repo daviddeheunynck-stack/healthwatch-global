@@ -32,14 +32,14 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Missing email" }, { status: 400 });
     }
 
-    const locale = VALID_LOCALES.includes(rawLocale) ? rawLocale : "fr";
+    const locale = VALID_LOCALES.includes(rawLocale) ? rawLocale : "en";
 
     if (!BREVO_API_KEY) {
       console.warn("[send-welcome] BREVO_API_KEY not set — skipping");
       return NextResponse.json({ skipped: true });
     }
 
-    const { subject, html } = buildWelcomeEmail(locale || "fr");
+    const { subject, html } = buildWelcomeEmail(locale || "en");
 
     const res = await fetch("https://api.brevo.com/v3/smtp/email", {
       method: "POST",

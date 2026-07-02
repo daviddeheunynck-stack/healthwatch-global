@@ -146,7 +146,7 @@ async function getUserProfile(userId: string): Promise<{ email: string; locale: 
     .eq("id", userId)
     .single();
   if (!data?.email) return null;
-  return { email: data.email, locale: data.locale ?? "fr" };
+  return { email: data.email, locale: data.locale ?? "en" };
 }
 
 /** Map Stripe price id → plan name */
@@ -243,7 +243,7 @@ export async function POST(req: NextRequest) {
         // Auto-subscribe to weekly digest + send upgrade welcome email
         const userProfile = userId ? await getUserProfile(userId) : null;
         const email       = userProfile?.email ?? session.customer_details?.email ?? null;
-        const locale      = userProfile?.locale ?? "fr";
+        const locale      = userProfile?.locale ?? "en";
 
         if (email) {
           // Upsert digest subscription using the profile's actual locale
@@ -365,7 +365,7 @@ export async function POST(req: NextRequest) {
           // Send churn email (fire-and-forget)
           if (userEmail && ["starter", "pro", "team", "enterprise"].includes(cancelledPlan)) {
             const churnProfile = await getUserProfile(userId);
-            const locale = churnProfile?.locale ?? "fr";
+            const locale = churnProfile?.locale ?? "en";
             sendChurnEmail(userEmail, cancelledPlan, locale).catch((e) => {
               console.error("[webhook] churn email:", e);
               Sentry.captureException(e, { tags: { event_type: "customer.subscription.deleted", user_id: userId } });
