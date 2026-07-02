@@ -15,6 +15,7 @@ import { getOutbreakTrendsBulk } from "@/lib/outbreak-trend";
 import ShareOutbreakButton from "@/components/ShareOutbreakButton";
 import WatchButton from "@/components/WatchButton";
 import EmailCapture from "@/components/EmailCapture";
+import CountryAlertNudge from "@/components/CountryAlertNudge";
 
 export const revalidate = 3600;
 
@@ -437,6 +438,8 @@ export default async function CountryPage({
           </div>
         )}
       </div>
+
+      <CountryAlertNudge locale={l} countryName={displayName} />
 
       {/* Active outbreaks */}
       <section className="space-y-4">

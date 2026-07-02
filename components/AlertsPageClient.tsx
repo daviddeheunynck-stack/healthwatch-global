@@ -21,61 +21,73 @@ const LABELS: Record<string, {
   empty: string;
   emptyDesc: string;
   setupCta: string;
+  proUpsell: string;
+  proUpsellCta: string;
   types: Record<string, string>;
   justNow: string;
   ago: (h: number) => string;
 }> = {
   fr: {
-    title:       "Vos alertes",
-    back:        "Tableau de bord",
-    markAllRead: "Tout marquer comme lu",
-    empty:       "Aucune alerte pour l'instant.",
-    emptyDesc:   "Configurez vos alertes régionales et maladies pour recevoir des notifications.",
-    setupCta:    "Configurer mes alertes",
+    title:        "Vos alertes",
+    back:         "Tableau de bord",
+    markAllRead:  "Tout marquer comme lu",
+    empty:        "Aucune alerte pour l'instant.",
+    emptyDesc:    "Configurez vos alertes régionales et maladies pour recevoir des notifications.",
+    setupCta:     "Configurer mes alertes",
+    proUpsell:    "Les alertes régionales et maladies sont disponibles sur le plan Pro.",
+    proUpsellCta: "Commencer l'essai gratuit 14 jours",
     types: { tripwire: "Tripwire", category_alert: "Catégorie", subscriber: "Foyer suivi", watchlist: "Surveillance", disease_alert: "Alerte maladie" },
     justNow: "À l'instant",
     ago: (h) => h < 24 ? `Il y a ${h}h` : `Il y a ${Math.floor(h / 24)}j`,
   },
   en: {
-    title:       "Your alerts",
-    back:        "Dashboard",
-    markAllRead: "Mark all as read",
-    empty:       "No alerts yet.",
-    emptyDesc:   "Set up regional and disease alerts to receive notifications.",
-    setupCta:    "Set up my alerts",
+    title:        "Your alerts",
+    back:         "Dashboard",
+    markAllRead:  "Mark all as read",
+    empty:        "No alerts yet.",
+    emptyDesc:    "Set up regional and disease alerts to receive notifications.",
+    setupCta:     "Set up my alerts",
+    proUpsell:    "Regional and disease alerts are available on the Pro plan.",
+    proUpsellCta: "Start 14-day free trial",
     types: { tripwire: "Tripwire", category_alert: "Category", subscriber: "Subscribed outbreak", watchlist: "Watchlist", disease_alert: "Disease alert" },
     justNow: "Just now",
     ago: (h) => h < 24 ? `${h}h ago` : `${Math.floor(h / 24)}d ago`,
   },
   es: {
-    title:       "Tus alertas",
-    back:        "Panel",
-    markAllRead: "Marcar todo como leído",
-    empty:       "Sin alertas por ahora.",
-    emptyDesc:   "Configura alertas regionales y de enfermedades para recibir notificaciones.",
-    setupCta:    "Configurar mis alertas",
+    title:        "Tus alertas",
+    back:         "Panel",
+    markAllRead:  "Marcar todo como leído",
+    empty:        "Sin alertas por ahora.",
+    emptyDesc:    "Configura alertas regionales y de enfermedades para recibir notificaciones.",
+    setupCta:     "Configurar mis alertas",
+    proUpsell:    "Las alertas regionales y de enfermedades están disponibles en el plan Pro.",
+    proUpsellCta: "Iniciar prueba gratuita de 14 días",
     types: { tripwire: "Tripwire", category_alert: "Categoría", subscriber: "Brote suscrito", watchlist: "Vigilancia", disease_alert: "Alerta de enfermedad" },
     justNow: "Ahora mismo",
     ago: (h) => h < 24 ? `Hace ${h}h` : `Hace ${Math.floor(h / 24)}d`,
   },
   ar: {
-    title:       "تنبيهاتك",
-    back:        "لوحة التحكم",
-    markAllRead: "تحديد الكل كمقروء",
-    empty:       "لا توجد تنبيهات حتى الآن.",
-    emptyDesc:   "قم بإعداد التنبيهات الإقليمية والمرضية لتلقي الإشعارات.",
-    setupCta:    "إعداد التنبيهات",
+    title:        "تنبيهاتك",
+    back:         "لوحة التحكم",
+    markAllRead:  "تحديد الكل كمقروء",
+    empty:        "لا توجد تنبيهات حتى الآن.",
+    emptyDesc:    "قم بإعداد التنبيهات الإقليمية والمرضية لتلقي الإشعارات.",
+    setupCta:     "إعداد التنبيهات",
+    proUpsell:    "التنبيهات الإقليمية والمرضية متاحة في خطة Pro.",
+    proUpsellCta: "← ابدأ التجربة المجانية 14 يوماً",
     types: { tripwire: "Tripwire", category_alert: "تنبيه الفئة", subscriber: "تفشٍّ مشترك", watchlist: "قائمة المراقبة", disease_alert: "تنبيه مرضي" },
     justNow: "الآن",
     ago: (h) => h < 24 ? `منذ ${h}س` : `منذ ${Math.floor(h / 24)}ي`,
   },
   id: {
-    title:       "Peringatan Anda",
-    back:        "Dasbor",
-    markAllRead: "Tandai semua sebagai dibaca",
-    empty:       "Belum ada peringatan.",
-    emptyDesc:   "Siapkan peringatan regional dan penyakit untuk menerima notifikasi.",
-    setupCta:    "Atur peringatan saya",
+    title:        "Peringatan Anda",
+    back:         "Dasbor",
+    markAllRead:  "Tandai semua sebagai dibaca",
+    empty:        "Belum ada peringatan.",
+    emptyDesc:    "Siapkan peringatan regional dan penyakit untuk menerima notifikasi.",
+    setupCta:     "Atur peringatan saya",
+    proUpsell:    "Peringatan regional dan penyakit tersedia di paket Pro.",
+    proUpsellCta: "Mulai uji coba gratis 14 hari",
     types: { tripwire: "Tripwire", category_alert: "Kategori", subscriber: "Wabah langganan", watchlist: "Daftar pantau", disease_alert: "Peringatan penyakit" },
     justNow: "Baru saja",
     ago: (h) => h < 24 ? `${h}j lalu` : `${Math.floor(h / 24)}h lalu`,
@@ -99,9 +111,11 @@ function timeAgo(iso: string, locale: string): string {
 export default function AlertsPageClient({
   locale,
   initialNotifications,
+  isPaid,
 }: {
   locale: string;
   initialNotifications: Notif[];
+  isPaid?: boolean;
 }) {
   const [notifications, setNotifications] = useState<Notif[]>(initialNotifications);
   const lb = LABELS[locale] ?? LABELS.en;
@@ -154,12 +168,24 @@ export default function AlertsPageClient({
         <div className="bg-gray-900 border border-gray-800 rounded-xl px-6 py-10 text-center space-y-2">
           <p className="text-sm text-gray-500">{lb.empty}</p>
           <p className="text-xs text-gray-600">{lb.emptyDesc}</p>
-          <Link
-            href={`/${locale}/account#regional-alerts`}
-            className="inline-block mt-2 text-xs text-red-400 hover:text-red-300 transition-colors"
-          >
-            {lb.setupCta} →
-          </Link>
+          {isPaid ? (
+            <Link
+              href={`/${locale}/account#regional-alerts`}
+              className="inline-block mt-2 text-xs text-red-400 hover:text-red-300 transition-colors"
+            >
+              {lb.setupCta} →
+            </Link>
+          ) : (
+            <div className="mt-3 space-y-1.5">
+              <p className="text-xs text-gray-600">{lb.proUpsell}</p>
+              <Link
+                href={`/${locale}/pricing`}
+                className="inline-block text-xs text-red-400 hover:text-red-300 transition-colors"
+              >
+                {lb.proUpsellCta} →
+              </Link>
+            </div>
+          )}
         </div>
       ) : (
         <div className="bg-gray-900 border border-gray-800 rounded-xl overflow-hidden divide-y divide-gray-800/60">

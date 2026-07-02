@@ -24,12 +24,22 @@ export default async function NotificationsPage({ params }: { params: Promise<{ 
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect(`/${locale}/login`);
 
-  const { data } = await supabase
-    .from("alert_notifications")
-    .select("id, type, title, body, outbreak_id, read_at, created_at")
-    .eq("user_id", user.id)
-    .order("created_at", { ascending: false })
-    .limit(50);
+  const [{ data }, { data: profile }] = await Promise.all([
+    supabase
+      .from("alert_notifications")
+      .select("id, type, title, body, outbreak_id, read_at, created_at")
+      .eq("user_id", user.id)
+      .order("created_at", { ascending: false })
+      .limit(50),
+    supabase
+      .from("profiles")
+      .select("plan, stripe_subscription_id")
+      .eq("id", user.id)
+      .single(),
+  ]);
 
-  return <AlertsPageClient locale={locale} initialNotifications={data ?? []} />;
+  const isPaid = ["starter", "pro", "team", "enterprise"].includes(profile?.plan ?? "")
+    && !!profile?.stripe_subscription_id;
+
+  return <AlertsPageClient locale={locale} initialNotifications={data ?? []} isPaid={isPaid} />;
 }
