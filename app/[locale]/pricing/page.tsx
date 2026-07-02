@@ -89,7 +89,7 @@ const COPY: Record<string, {
       { label: "PDF reports + CSV export", free: false, pro: true, team: true, enterprise: true },
       { label: "Slack / Teams integration", free: false, pro: true, team: true, enterprise: true },
       { label: "Single team invoice + DPA", free: false, pro: false, team: true, enterprise: true },
-      { label: "REST API + Webhooks", free: false, pro: false, team: false, enterprise: true },
+      { label: "REST API + Webhooks", free: false, pro: true, team: true, enterprise: true },
       { label: "Support", free: "Email", pro: "Priority", team: "Priority", enterprise: "Dedicated" },
     ],
     ctaTitle: "Not sure which plan fits?",
@@ -113,7 +113,7 @@ const COPY: Record<string, {
       { label: "Rapports PDF + export CSV", free: false, pro: true, team: true, enterprise: true },
       { label: "Intégration Slack / Teams", free: false, pro: true, team: true, enterprise: true },
       { label: "Facture institutionnelle + DPA", free: false, pro: false, team: true, enterprise: true },
-      { label: "API REST + Webhooks", free: false, pro: false, team: false, enterprise: true },
+      { label: "API REST + Webhooks", free: false, pro: true, team: true, enterprise: true },
       { label: "Support", free: "Email", pro: "Prioritaire", team: "Prioritaire", enterprise: "Dédié" },
     ],
     ctaTitle: "Vous ne savez pas quelle formule choisir ?",
@@ -137,7 +137,7 @@ const COPY: Record<string, {
       { label: "Informes PDF + exportación CSV", free: false, pro: true, team: true, enterprise: true },
       { label: "Integración Slack / Teams", free: false, pro: true, team: true, enterprise: true },
       { label: "Factura institucional + DPA", free: false, pro: false, team: true, enterprise: true },
-      { label: "API REST + Webhooks", free: false, pro: false, team: false, enterprise: true },
+      { label: "API REST + Webhooks", free: false, pro: true, team: true, enterprise: true },
       { label: "Soporte", free: "Email", pro: "Prioritario", team: "Prioritario", enterprise: "Dedicado" },
     ],
     ctaTitle: "¿No sabe qué plan elegir?",
@@ -161,7 +161,7 @@ const COPY: Record<string, {
       { label: "تقارير PDF + تصدير CSV", free: false, pro: true, team: true, enterprise: true },
       { label: "تكامل Slack / Teams", free: false, pro: true, team: true, enterprise: true },
       { label: "فاتورة مؤسسية + DPA", free: false, pro: false, team: true, enterprise: true },
-      { label: "REST API + Webhooks", free: false, pro: false, team: false, enterprise: true },
+      { label: "REST API + Webhooks", free: false, pro: true, team: true, enterprise: true },
       { label: "الدعم", free: "بريد إلكتروني", pro: "أولوية", team: "أولوية", enterprise: "مخصص" },
     ],
     ctaTitle: "لست متأكداً من الخطة المناسبة؟",
@@ -185,7 +185,7 @@ const COPY: Record<string, {
       { label: "Laporan PDF + ekspor CSV", free: false, pro: true, team: true, enterprise: true },
       { label: "Integrasi Slack / Teams", free: false, pro: true, team: true, enterprise: true },
       { label: "Faktur institusional + DPA", free: false, pro: false, team: true, enterprise: true },
-      { label: "REST API + Webhooks", free: false, pro: false, team: false, enterprise: true },
+      { label: "REST API + Webhooks", free: false, pro: true, team: true, enterprise: true },
       { label: "Dukungan", free: "Email", pro: "Prioritas", team: "Prioritas", enterprise: "Khusus" },
     ],
     ctaTitle: "Tidak yakin paket mana yang cocok?",
@@ -371,9 +371,9 @@ export default async function PricingPage({ params }: { params: Promise<{ locale
         </div>
       </div>
 
-      {/* ── API docs link for Enterprise ─────────────────────────────────── */}
+      {/* ── API docs link for Pro/Team/Enterprise ────────────────────────── */}
       <p className="text-center text-xs text-gray-500">
-        {locale === "fr" ? "Accès API REST (Enterprise) — " : locale === "es" ? "Acceso REST API (Enterprise) — " : locale === "ar" ? "وصول REST API (Enterprise) — " : locale === "id" ? "Akses REST API (Enterprise) — " : "REST API access (Enterprise) — "}
+        {locale === "fr" ? "Accès API REST (Pro · Team · Enterprise) — " : locale === "es" ? "Acceso REST API (Pro · Team · Enterprise) — " : locale === "ar" ? "وصول REST API (Pro · Team · Enterprise) — " : locale === "id" ? "Akses REST API (Pro · Team · Enterprise) — " : "REST API access (Pro · Team · Enterprise) — "}
         <Link href={`/${locale}/docs`} className="text-purple-400 hover:text-purple-300 underline transition-colors">
           {locale === "fr" ? "voir la documentation →" : locale === "es" ? "ver documentación →" : locale === "ar" ? "← عرض التوثيق" : locale === "id" ? "lihat dokumentasi →" : "view API docs →"}
         </Link>
