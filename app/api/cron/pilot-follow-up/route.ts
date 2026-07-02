@@ -11,6 +11,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import * as Sentry from "@sentry/nextjs";
 import { logCronRun } from "@/lib/cron-monitor";
+import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 
 export const dynamic = "force-dynamic";
 
@@ -103,7 +104,7 @@ const L: Record<string, {
 // ─── HTML builder ─────────────────────────────────────────────────────────────
 
 function buildHtml(
-  outbreaks: Array<{ disease: string; country: string; risk_level: string }>,
+  outbreaks: Array<{ disease: string; country: string; risk_level: string; disease_en?: string | null; disease_ar?: string | null; country_en?: string | null; country_ar?: string | null }>,
   locale: string,
   region: string,
   dashUrl: string,
@@ -118,10 +119,12 @@ function buildHtml(
   const rows = outbreaks.map((o) => {
     const color = RISK_COLORS[o.risk_level] ?? "#6b7280";
     const label = riskL[o.risk_level]       ?? o.risk_level.toUpperCase();
+    const diseaseName = getLocalizedDisease(o, locale);
+    const countryName = getLocalizedCountry(o, locale);
     return `
       <tr>
-        <td style="padding:10px 0;border-bottom:1px solid #1f2937;font-size:14px;color:#e5e7eb;">${esc(o.disease)}</td>
-        <td style="padding:10px 0;border-bottom:1px solid #1f2937;font-size:14px;color:#9ca3af;">${esc(o.country)}</td>
+        <td style="padding:10px 0;border-bottom:1px solid #1f2937;font-size:14px;color:#e5e7eb;">${esc(diseaseName)}</td>
+        <td style="padding:10px 0;border-bottom:1px solid #1f2937;font-size:14px;color:#9ca3af;">${esc(countryName)}</td>
         <td style="padding:10px 0;border-bottom:1px solid #1f2937;font-size:12px;color:${color};font-weight:700;text-align:${isRtl ? "left" : "right"};">${label}</td>
       </tr>`;
   }).join("");
@@ -250,7 +253,7 @@ export async function GET(req: NextRequest) {
     // Build outbreak query — filter by region if set, else global
     let query = supabase
       .from("outbreaks")
-      .select("disease, country, risk_level")
+      .select("disease, disease_en, disease_ar, country, country_en, country_ar, risk_level")
       .eq("active", true)
       .in("risk_level", ["high", "medium"])
       .order("risk_level", { ascending: true }) // high before medium
