@@ -1,5 +1,6 @@
 import { NextRequest } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 import * as Sentry from "@sentry/nextjs";
 import { logCronRun } from "@/lib/cron-monitor";
 
@@ -69,7 +70,7 @@ export async function GET(req: NextRequest) {
 
     const { data: outbreaks } = await supabase
       .from("outbreaks")
-      .select("id, disease_en, country_en, risk_level, cases, deaths, is_pheic, date")
+      .select("id, disease, disease_en, disease_ar, country, country_en, country_ar, risk_level, cases, deaths, is_pheic, date")
       .eq("active", true)
       .ilike("country_en", alert.country_en);
 
@@ -89,9 +90,11 @@ export async function GET(req: NextRequest) {
         : "";
     const level = (top.risk_level ?? "unknown").toUpperCase();
 
-    const subject = `[HealthWatch] ${alert.country_en} — ${level}${pheic}: ${top.disease_en}`;
+    const localDisease  = getLocalizedDisease(top, locale);
+    const localCountry  = getLocalizedCountry(top, locale);
+    const subject = `[HealthWatch] ${localCountry} — ${level}${pheic}: ${localDisease}`;
 
-    const escCountry = esc(alert.country_en);
+    const escCountry = esc(localCountry);
     const INTRO: Record<string, string> = {
       fr: `Un foyer à risque <strong>${level}</strong> a été détecté en <strong>${escCountry}</strong>.`,
       es: `Se ha detectado un brote de riesgo <strong>${level}</strong> en <strong>${escCountry}</strong>.`,
@@ -117,7 +120,7 @@ export async function GET(req: NextRequest) {
 <div dir="${isRtl ? "rtl" : "ltr"}" style="font-family:sans-serif;max-width:520px;margin:0 auto;direction:${isRtl ? "rtl" : "ltr"};text-align:${isRtl ? "right" : "left"}">
 <p>${intro}</p>
 <ul>
-  <li>${lb[0]}: ${esc(top.disease_en ?? "")}</li>
+  <li>${lb[0]}: ${esc(localDisease)}</li>
   <li>${lb[1]}: ${(top.cases ?? 0).toLocaleString(numLocale)}${cfr ? ` · ${cfr}` : ""}</li>
   ${top.is_pheic ? `<li>${lb[2]}</li>` : ""}
   <li>${lb[3]}: ${top.date}</li>

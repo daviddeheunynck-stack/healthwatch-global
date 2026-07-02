@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 import * as Sentry from "@sentry/nextjs";
 import { logCronRun } from "@/lib/cron-monitor";
 
@@ -62,7 +63,9 @@ interface Subscriber {
   emails: string[]; locale: string; last_sent_at: string | null;
 }
 interface Outbreak {
-  id: string; disease_en: string | null; country_en: string | null;
+  id: string;
+  disease: string; disease_en: string | null; disease_ar: string | null;
+  country: string; country_en: string | null; country_ar: string | null;
   cases: number; deaths: number; risk_level: string; date: string;
 }
 
@@ -87,7 +90,7 @@ export async function GET(req: NextRequest) {
   const outbreakIds = [...new Set((subscribers as Subscriber[]).map((s) => s.outbreak_id))];
   const { data: outbreaks } = await supabase
     .from("outbreaks")
-    .select("id, disease_en, country_en, cases, deaths, risk_level, date")
+    .select("id, disease, disease_en, disease_ar, country, country_en, country_ar, cases, deaths, risk_level, date")
     .in("id", outbreakIds)
     .eq("active", true);
 
@@ -111,8 +114,8 @@ export async function GET(req: NextRequest) {
     const numLocale = locale === "ar" ? "ar-SA" : locale;
     const isRtl     = locale === "ar";
     const bl        = BODY_LABELS[locale] ?? BODY_LABELS.en;
-    const disease   = o.disease_en ?? "Unknown disease";
-    const country   = o.country_en ?? "Unknown country";
+    const disease   = getLocalizedDisease(o, locale);
+    const country   = getLocalizedCountry(o, locale);
     const risk      = (RISK_LABEL[locale] ?? RISK_LABEL.en)[o.risk_level] ?? o.risk_level.toUpperCase();
     const deepLink  = `${APP_URL}/${locale}?outbreak=${o.id}`;
     const cfr       = o.cases > 0 && o.deaths != null ? (o.deaths / o.cases * 100).toFixed(1) : null;
