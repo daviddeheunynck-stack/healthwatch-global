@@ -12,6 +12,7 @@ type AlertNotif = {
   body: string;
   read_at: string | null;
   created_at: string;
+  outbreak_id: string | null;
 };
 
 type NotifOutbreak = Pick<
@@ -121,7 +122,7 @@ export default async function DashboardAlertsWidget({
   const [{ data: alertData }, { data: pushData }] = await Promise.all([
     supabase
       .from("alert_notifications")
-      .select("id, type, title, body, read_at, created_at")
+      .select("id, type, title, body, read_at, created_at, outbreak_id")
       .eq("user_id", userId)
       .order("created_at", { ascending: false })
       .limit(4),
@@ -176,22 +177,25 @@ export default async function DashboardAlertsWidget({
         </div>
       ) : (
         <div className="divide-y divide-gray-800/60">
-          {/* Alert notifications (tripwires, category alerts) */}
-          {alerts.map((a) => (
-            <div
-              key={a.id}
-              className={`flex items-start gap-3 px-5 py-3 transition-colors hover:bg-gray-800/30 ${a.read_at ? "opacity-50" : ""}`}
-            >
-              <span className={`mt-1.5 w-2 h-2 rounded-full shrink-0 ${TYPE_DOT[a.type] ?? "bg-gray-500"}`} />
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-white leading-snug truncate">{a.title}</p>
-                <p className="text-xs text-gray-500 leading-snug mt-0.5 line-clamp-1">{a.body}</p>
-                <p className="text-[10px] text-gray-700 mt-0.5">
-                  {lb.types[a.type] ?? a.type} · {timeAgo(a.created_at, locale)}
-                </p>
-              </div>
-            </div>
-          ))}
+          {/* Alert notifications (tripwires, category alerts, disease alerts) */}
+          {alerts.map((a) => {
+            const cls = `flex items-start gap-3 px-5 py-3 transition-colors hover:bg-gray-800/30 ${a.read_at ? "opacity-50" : ""}`;
+            const inner = (
+              <>
+                <span className={`mt-1.5 w-2 h-2 rounded-full shrink-0 ${TYPE_DOT[a.type] ?? "bg-gray-500"}`} />
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium text-white leading-snug truncate">{a.title}</p>
+                  <p className="text-xs text-gray-500 leading-snug mt-0.5 line-clamp-1">{a.body}</p>
+                  <p className="text-[10px] text-gray-700 mt-0.5">
+                    {lb.types[a.type] ?? a.type} · {timeAgo(a.created_at, locale)}
+                  </p>
+                </div>
+              </>
+            );
+            return a.outbreak_id
+              ? <Link key={a.id} href={`/${locale}?outbreak=${a.outbreak_id}`} className={cls}>{inner}</Link>
+              : <div  key={a.id} className={cls}>{inner}</div>;
+          })}
 
           {/* Push-notified outbreaks */}
           {pushItems.map((item) => (
