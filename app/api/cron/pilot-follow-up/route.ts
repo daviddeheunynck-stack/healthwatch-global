@@ -119,8 +119,8 @@ function buildHtml(
   const rows = outbreaks.map((o) => {
     const color = RISK_COLORS[o.risk_level] ?? "#6b7280";
     const label = riskL[o.risk_level]       ?? o.risk_level.toUpperCase();
-    const diseaseName = getLocalizedDisease(o, locale);
-    const countryName = getLocalizedCountry(o, locale);
+    const diseaseName = getLocalizedDisease({ disease: o.disease, disease_en: o.disease_en ?? null, disease_ar: o.disease_ar ?? null }, locale);
+    const countryName = getLocalizedCountry({ country: o.country, country_en: o.country_en ?? null, country_ar: o.country_ar ?? null }, locale);
     return `
       <tr>
         <td style="padding:10px 0;border-bottom:1px solid #1f2937;font-size:14px;color:#e5e7eb;">${esc(diseaseName)}</td>
