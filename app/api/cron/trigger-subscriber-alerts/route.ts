@@ -151,6 +151,14 @@ export async function GET(req: NextRequest) {
 
       await sendEmail(sub.emails, subject, html);
       sent++;
+
+      await supabase.from("alert_notifications").insert({
+        user_id:     sub.user_id,
+        type:        "subscriber",
+        title:       subject,
+        body:        `${disease} · ${country} · ${risk}`,
+        outbreak_id: o.id,
+      }).then(() => {}, () => {});
     } catch (err) {
       console.error(`[trigger-subscriber-alerts] Failed for sub ${sub.id}:`, err);
       Sentry.captureException(err, { tags: { cron: "trigger-subscriber-alerts", sub_id: sub.id, user_id: sub.user_id } });
