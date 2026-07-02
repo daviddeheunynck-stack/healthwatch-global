@@ -1,4 +1,5 @@
 import type { Outbreak } from "./outbreaks";
+import { getLocalizedDisease, getLocalizedCountry } from "./outbreaks";
 import { getResponseGuidance, RESPONSE_ACTIONS } from "./response-guidance";
 
 function esc(s: string): string {
@@ -131,16 +132,6 @@ const REGION_LABELS: Record<string, Record<string, string>> = {
   id: { allRegions: "Semua wilayah", africa: "Afrika", asia: "Asia", europe: "Eropa", americas: "Amerika", oceania: "Oseania" },
 };
 
-function getLocalizedName(outbreak: Outbreak, locale: string, field: "disease" | "country"): string {
-  if (field === "disease") {
-    if (locale === "ar") return outbreak.disease_ar || outbreak.disease;
-    if (locale !== "fr") return outbreak.disease_en || outbreak.disease;
-    return outbreak.disease;
-  }
-  if (locale === "ar") return outbreak.country_ar || outbreak.country;
-  if (locale !== "fr") return outbreak.country_en || outbreak.country;
-  return outbreak.country;
-}
 
 export function buildDigestEmail(
   outbreaks: Outbreak[],
@@ -164,8 +155,8 @@ export function buildDigestEmail(
         .map((o) => {
           const color     = RISK_COLORS[o.risk_level] || "#6b7280";
           const riskLabel = l[o.risk_level as "high" | "medium" | "low"] || o.risk_level;
-          const disease   = getLocalizedName(o, locale, "disease");
-          const country   = getLocalizedName(o, locale, "country");
+          const disease   = getLocalizedDisease(o, locale);
+          const country   = getLocalizedCountry(o, locale);
           const guidance  = getResponseGuidance(o.disease_en || o.disease);
           const tier      = TIER_BADGE[guidance.tier];
           const tierLabel = tier.labels[locale] ?? tier.labels.en;
