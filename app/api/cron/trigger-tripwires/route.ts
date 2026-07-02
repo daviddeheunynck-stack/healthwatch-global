@@ -11,6 +11,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 import * as Sentry from "@sentry/nextjs";
 import { logCronRun } from "@/lib/cron-monitor";
 
@@ -110,8 +111,8 @@ interface Tripwire {
 
 interface Outbreak {
   id: string;
-  disease_en: string | null;
-  country_en: string | null;
+  disease: string; disease_en: string | null; disease_ar: string | null;
+  country: string; country_en: string | null; country_ar: string | null;
   cases: number;
   risk_level: string;
 }
@@ -145,7 +146,7 @@ export async function GET(req: NextRequest) {
   const outbreakIds = [...new Set((tripwires as Tripwire[]).map((t) => t.outbreak_id))];
   const { data: outbreaks } = await supabase
     .from("outbreaks")
-    .select("id, disease_en, country_en, cases, risk_level")
+    .select("id, disease, disease_en, disease_ar, country, country_en, country_ar, cases, risk_level")
     .in("id", outbreakIds)
     .eq("active", true);
 
@@ -175,8 +176,8 @@ export async function GET(req: NextRequest) {
     const numLocale    = locale === "ar" ? "ar-SA" : locale;
     const isRtl        = locale === "ar";
     const lc           = COPY[locale] ?? COPY.en;
-    const disease      = o.disease_en ?? "Unknown disease";
-    const country      = o.country_en ?? "Unknown country";
+    const disease      = getLocalizedDisease(o, locale);
+    const country      = getLocalizedCountry(o, locale);
     const casesStr     = o.cases.toLocaleString(numLocale);
     const thresholdStr = tw.threshold_cases.toLocaleString(numLocale);
     const deepLink     = `${APP_URL}/${locale}?outbreak=${o.id}`;

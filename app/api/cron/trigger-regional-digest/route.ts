@@ -1,5 +1,6 @@
 import { NextRequest } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 import * as Sentry from "@sentry/nextjs";
 import { logCronRun } from "@/lib/cron-monitor";
 
@@ -122,7 +123,7 @@ export async function GET(req: NextRequest) {
   // Fetch all active outbreaks once (avoids N+1)
   const { data: outbreaks } = await supabase
     .from("outbreaks")
-    .select("id, disease_en, country_en, cases, deaths, risk_level, is_pheic, date, region")
+    .select("id, disease, disease_en, disease_ar, country, country_en, country_ar, cases, deaths, risk_level, is_pheic, date, region")
     .eq("active", true)
     .order("cases", { ascending: false });
 
@@ -149,8 +150,8 @@ export async function GET(req: NextRequest) {
     const rows = regional.map((o) => {
       const riskColor = o.risk_level === "high" ? "#f87171" : o.risk_level === "medium" ? "#fbbf24" : "#4ade80";
       return `<tr>
-        <td style="padding:4px 8px;border-bottom:1px solid #1e293b">${esc(o.disease_en ?? "—")}${o.is_pheic ? ' <span style="color:#f87171;font-size:10px">PHEIC</span>' : ""}</td>
-        <td style="padding:4px 8px;border-bottom:1px solid #1e293b">${esc(o.country_en ?? "—")}</td>
+        <td style="padding:4px 8px;border-bottom:1px solid #1e293b">${esc(getLocalizedDisease(o, locale))}${o.is_pheic ? ' <span style="color:#f87171;font-size:10px">PHEIC</span>' : ""}</td>
+        <td style="padding:4px 8px;border-bottom:1px solid #1e293b">${esc(getLocalizedCountry(o, locale))}</td>
         <td style="padding:4px 8px;border-bottom:1px solid #1e293b;text-align:right">${o.cases.toLocaleString(numLocale)}</td>
         <td style="padding:4px 8px;border-bottom:1px solid #1e293b;font-weight:700;font-size:11px;color:${riskColor}">${o.risk_level.toUpperCase()}</td>
         <td style="padding:4px 8px;border-bottom:1px solid #1e293b;color:#94a3b8">${o.date}</td>
