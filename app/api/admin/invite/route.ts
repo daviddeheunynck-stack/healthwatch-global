@@ -82,7 +82,7 @@ export async function POST(req: NextRequest) {
     userId = created.user.id;
   }
 
-  // 2. Set Pro plan for 35 days (30 + 5 buffer)
+  // 2. Set Pro plan for 35 days
   const trialEnd = new Date(Date.now() + 35 * 86_400_000).toISOString();
   const { error: profileErr } = await admin.from("profiles").upsert({
     id:            userId,
