@@ -9,6 +9,13 @@ export const maxDuration = 300;
 
 const COOLDOWN_H = 6;
 const RISK_RANK: Record<string, number> = { high: 3, medium: 2, low: 1 };
+const RISK_VALUES: Record<string, Record<string, string>> = {
+  fr: { high: "ÉLEVÉ",  medium: "MODÉRÉ", low: "FAIBLE"  },
+  es: { high: "ALTO",   medium: "MEDIO",  low: "BAJO"    },
+  ar: { high: "مرتفع",  medium: "متوسط",  low: "منخفض"   },
+  id: { high: "TINGGI", medium: "SEDANG", low: "RENDAH"  },
+  en: { high: "HIGH",   medium: "MEDIUM", low: "LOW"     },
+};
 
 function esc(s: string): string {
   return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
@@ -88,7 +95,8 @@ export async function GET(req: NextRequest) {
       top.cases > 0 && top.deaths != null && top.deaths > 0
         ? `CFR ${(top.deaths / top.cases * 100).toFixed(1)}%`
         : "";
-    const level = (top.risk_level ?? "unknown").toUpperCase();
+    const riskKey = top.risk_level ?? "unknown";
+    const level = RISK_VALUES[locale]?.[riskKey] ?? riskKey.toUpperCase();
 
     const localDisease  = getLocalizedDisease(top, locale);
     const localCountry  = getLocalizedCountry(top, locale);
@@ -142,7 +150,7 @@ export async function GET(req: NextRequest) {
         user_id: alert.user_id,
         type: "country_risk",
         title: subject,
-        body: `${top.disease_en} · ${alert.country_en} · ${(top.risk_level ?? "unknown").toUpperCase()}`,
+        body: `${top.disease_en} · ${alert.country_en} · ${level}`,
       }).then(() => {}, () => {});
 
       await sendEmail(alert.email, subject, html);
