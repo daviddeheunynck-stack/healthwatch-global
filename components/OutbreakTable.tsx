@@ -1151,6 +1151,22 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
                           🚨 PHEIC
                         </span>
                       )}
+                      {outbreak.verification_status === "suspected" && (
+                        <span
+                          title={{ fr: "Foyer suspecté — non encore confirmé par les autorités sanitaires", en: "Suspected outbreak — not yet confirmed by health authorities", es: "Brote sospechado — aún no confirmado por las autoridades sanitarias", ar: "تفشٍّ مشتبه به — لم يتم تأكيده بعد من قِبل السلطات الصحية", id: "Wabah diduga — belum dikonfirmasi oleh otoritas kesehatan" }[locale] ?? "Suspected — not yet confirmed"}
+                          className="inline-flex items-center text-[10px] font-bold px-1.5 py-0.5 rounded bg-yellow-900/40 border border-yellow-700/50 text-yellow-300 shrink-0 cursor-help whitespace-nowrap"
+                        >
+                          {{ fr: "SUSPECTÉ", en: "SUSPECTED", es: "SOSPECHOSO", ar: "مشتبه", id: "DIDUGA" }[locale] ?? "SUSPECTED"}
+                        </span>
+                      )}
+                      {outbreak.verification_status === "under_investigation" && (
+                        <span
+                          title={{ fr: "Foyer en cours d'investigation — données préliminaires", en: "Under investigation — preliminary data", es: "En investigación — datos preliminares", ar: "قيد التحقيق — بيانات أولية", id: "Dalam penyelidikan — data awal" }[locale] ?? "Under investigation — preliminary data"}
+                          className="inline-flex items-center text-[10px] font-bold px-1.5 py-0.5 rounded bg-orange-900/40 border border-orange-700/50 text-orange-300 shrink-0 cursor-help whitespace-nowrap"
+                        >
+                          {{ fr: "ENQUÊTE", en: "INVESTIG.", es: "INVESTIG.", ar: "تحقيق", id: "INVESTIGASI" }[locale] ?? "INVESTIG."}
+                        </span>
+                      )}
                       {sourceStatus(outbreak) === 'don' && (
                         outbreak.source ? (
                           <a href={outbreak.source} target="_blank" rel="noopener noreferrer" title={l.donTooltip} className="inline-flex items-center text-[10px] font-bold px-1.5 py-0.5 rounded bg-blue-900/30 border border-blue-700/50 text-blue-400 shrink-0 cursor-pointer whitespace-nowrap hover:bg-blue-900/60 transition-colors">

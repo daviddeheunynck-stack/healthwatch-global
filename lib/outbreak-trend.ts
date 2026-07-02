@@ -97,11 +97,20 @@ export async function getOutbreakTrendsBulk(
   targetDate.setDate(targetDate.getDate() - DAYS_BACK);
   const targetStr = targetDate.toISOString().split("T")[0];
 
+  // Lower bound for 7-day query: look back 2× DAYS_BACK to handle gaps in daily cron
+  const oldestFloor = new Date();
+  oldestFloor.setDate(oldestFloor.getDate() - DAYS_BACK * 2);
+  const oldestFloorStr = oldestFloor.toISOString().split("T")[0];
+
   type SnapRow = { outbreak_id: string; cases: number; snapped_at: string };
 
   const yesterday = new Date();
   yesterday.setDate(yesterday.getDate() - 1);
   const yesterdayStr = yesterday.toISOString().split("T")[0];
+
+  const twoDaysAgo = new Date();
+  twoDaysAgo.setDate(twoDaysAgo.getDate() - 3); // 3-day window handles cron gaps
+  const twoDaysAgoStr = twoDaysAgo.toISOString().split("T")[0];
 
   // Latest snapshot per outbreak
   const { data: latestRaw } = await supabase
@@ -111,21 +120,25 @@ export async function getOutbreakTrendsBulk(
     .order("snapped_at", { ascending: false });
   const latest = (latestRaw ?? []) as SnapRow[];
 
-  // Oldest snapshot within DAYS_BACK window per outbreak (for 7-day trend)
+  // Most recent snapshot at or before DAYS_BACK ago (for 7-day trend)
+  // Narrow window [2×DAYS_BACK, DAYS_BACK] avoids scanning full history
   const { data: oldestRaw } = await supabase
     .from("outbreak_snapshots")
     .select("outbreak_id, cases, snapped_at")
     .in("outbreak_id", outbreakIds)
     .lte("snapped_at", targetStr)
+    .gte("snapped_at", oldestFloorStr)
     .order("snapped_at", { ascending: false });
   const oldest = (oldestRaw ?? []) as SnapRow[];
 
-  // Yesterday's snapshot per outbreak (for 24h delta)
+  // Most recent snapshot at or before yesterday (for 24h delta)
+  // 3-day window keeps query tight while tolerating cron gaps
   const { data: yesterdayRaw } = await supabase
     .from("outbreak_snapshots")
     .select("outbreak_id, cases, snapped_at")
     .in("outbreak_id", outbreakIds)
     .lte("snapped_at", yesterdayStr)
+    .gte("snapped_at", twoDaysAgoStr)
     .order("snapped_at", { ascending: false });
   const yesterdaySnaps = (yesterdayRaw ?? []) as SnapRow[];
 
