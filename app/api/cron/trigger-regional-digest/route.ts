@@ -24,18 +24,20 @@ const REGION_LABELS: Record<string, Record<string, string>> = {
 };
 
 const COPY: Record<string, {
-  subject:  (region: string) => string;
-  header:   (region: string) => string;
-  active:   string;
-  colH:     [string, string, string, string, string];
-  view:     string;
-  footer:   string;
+  subject:    (region: string) => string;
+  header:     (region: string) => string;
+  active:     string;
+  colH:       [string, string, string, string, string];
+  risk:       Record<string, string>;
+  view:       string;
+  footer:     string;
 }> = {
   fr: {
     subject:  (r) => `[HealthWatch] Digest hebdomadaire — ${r}`,
     header:   (r) => `Foyers actifs — ${r} · Semaine du ${new Date().toLocaleDateString("fr-FR", { day: "numeric", month: "long" })}`,
     active:   "foyer(s) actif(s)",
     colH:     ["Maladie", "Pays", "Cas", "Risque", "Date"],
+    risk:     { high: "ÉLEVÉ", medium: "MODÉRÉ", low: "FAIBLE" },
     view:     "Voir le tableau de bord →",
     footer:   "Vous recevez cet email parce que vous avez configuré un digest régional. Gérez vos préférences dans le tableau de bord.",
   },
@@ -44,6 +46,7 @@ const COPY: Record<string, {
     header:   (r) => `Active outbreaks — ${r} · Week of ${new Date().toLocaleDateString("en-GB", { day: "numeric", month: "long" })}`,
     active:   "active outbreak(s)",
     colH:     ["Disease", "Country", "Cases", "Risk", "Date"],
+    risk:     { high: "HIGH", medium: "MEDIUM", low: "LOW" },
     view:     "View dashboard →",
     footer:   "You receive this email because you configured a regional digest. Manage preferences in your dashboard.",
   },
@@ -52,6 +55,7 @@ const COPY: Record<string, {
     header:   (r) => `Brotes activos — ${r} · Semana del ${new Date().toLocaleDateString("es-ES", { day: "numeric", month: "long" })}`,
     active:   "brote(s) activo(s)",
     colH:     ["Enfermedad", "País", "Casos", "Riesgo", "Fecha"],
+    risk:     { high: "ALTO", medium: "MEDIO", low: "BAJO" },
     view:     "Ver panel →",
     footer:   "Recibes este email porque configuraste un digest regional. Gestiona tus preferencias en el panel.",
   },
@@ -60,6 +64,7 @@ const COPY: Record<string, {
     header:   (r) => `التفشيات النشطة — ${r}`,
     active:   "تفشٍّ نشط",
     colH:     ["المرض", "الدولة", "الحالات", "الخطر", "التاريخ"],
+    risk:     { high: "مرتفع", medium: "متوسط", low: "منخفض" },
     view:     "عرض لوحة المعلومات ←",
     footer:   "تلقيت هذا البريد لأنك قمت بإعداد ملخص إقليمي. أدر تفضيلاتك من لوحة المعلومات.",
   },
@@ -68,6 +73,7 @@ const COPY: Record<string, {
     header:   (r) => `Wabah aktif — ${r} · Minggu ${new Date().toLocaleDateString("id-ID", { day: "numeric", month: "long" })}`,
     active:   "wabah aktif",
     colH:     ["Penyakit", "Negara", "Kasus", "Risiko", "Tanggal"],
+    risk:     { high: "TINGGI", medium: "SEDANG", low: "RENDAH" },
     view:     "Lihat dasbor →",
     footer:   "Anda menerima email ini karena mengatur digest regional. Kelola preferensi di dasbor Anda.",
   },
@@ -153,7 +159,7 @@ export async function GET(req: NextRequest) {
         <td style="padding:4px 8px;border-bottom:1px solid #1e293b">${esc(getLocalizedDisease(o, locale))}${o.is_pheic ? ' <span style="color:#f87171;font-size:10px">PHEIC</span>' : ""}</td>
         <td style="padding:4px 8px;border-bottom:1px solid #1e293b">${esc(getLocalizedCountry(o, locale))}</td>
         <td style="padding:4px 8px;border-bottom:1px solid #1e293b;text-align:right">${o.cases.toLocaleString(numLocale)}</td>
-        <td style="padding:4px 8px;border-bottom:1px solid #1e293b;font-weight:700;font-size:11px;color:${riskColor}">${o.risk_level.toUpperCase()}</td>
+        <td style="padding:4px 8px;border-bottom:1px solid #1e293b;font-weight:700;font-size:11px;color:${riskColor}">${esc(lc.risk[o.risk_level] ?? o.risk_level.toUpperCase())}</td>
         <td style="padding:4px 8px;border-bottom:1px solid #1e293b;color:#94a3b8">${o.date}</td>
       </tr>`;
     }).join("");
@@ -167,7 +173,7 @@ export async function GET(req: NextRequest) {
   <p style="font-size:13px;color:#94a3b8;margin:0 0 16px">${lc.header(regionLabel)}</p>
   <hr style="border:none;border-top:1px solid #334155;margin:0 0 12px"/>
   <p style="font-size:12px;color:#64748b;margin:0 0 12px">
-    ${regional.length} ${lc.active}${highCount > 0 ? ` · <span style="color:#f87171;font-weight:700">${highCount} HIGH</span>` : ""}
+    ${regional.length} ${lc.active}${highCount > 0 ? ` · <span style="color:#f87171;font-weight:700">${highCount} ${esc(lc.risk.high)}</span>` : ""}
     ${pheicList.length > 0 ? ` · <span style="color:#c084fc;font-weight:700">🚨 ${pheicList.length} PHEIC</span>` : ""}
   </p>
   <table style="width:100%;border-collapse:collapse;font-size:12px">
