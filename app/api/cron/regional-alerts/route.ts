@@ -12,6 +12,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { buildOutbreakAlertEmail } from "@/lib/alert-emails";
+import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 import * as Sentry from "@sentry/nextjs";
 import { logCronRun } from "@/lib/cron-monitor";
 
@@ -159,15 +160,8 @@ export async function GET(req: NextRequest) {
         const rl     = REGION_LABELS[locale] ?? REGION_LABELS.en;
 
         // Resolve localized disease / country names
-        const disease =
-          (locale === "ar" ? outbreak.disease_ar : null) ??
-          outbreak.disease_en ??
-          outbreak.disease;
-
-        const country =
-          (locale === "ar" ? outbreak.country_ar : null) ??
-          outbreak.country_en ??
-          outbreak.country;
+        const disease = getLocalizedDisease(outbreak, locale);
+        const country = getLocalizedCountry(outbreak, locale);
 
         const regionLabel  = rl[region] ?? region;
         const riskEmoji    = outbreak.risk_level === "high" ? "🔴" : outbreak.risk_level === "medium" ? "🟡" : "🟢";
