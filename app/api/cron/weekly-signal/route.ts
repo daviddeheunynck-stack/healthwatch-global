@@ -27,39 +27,40 @@ const SUBJECTS: Record<string, string> = {
 
 const L: Record<string, {
   headline: string; col1: string; col2: string; col3: string; col4: string;
+  riskHigh: string;
   upgradeTitle: string; upgradeDesc: string; upgradeCta: string;
   cta: string; unsub: string;
 }> = {
   fr: {
-    headline: "Signaux HIGH actifs cette semaine", col1: "Maladie", col2: "Pays", col3: "Cas", col4: "Risque",
+    headline: "Signaux HIGH actifs cette semaine", col1: "Maladie", col2: "Pays", col3: "Cas", col4: "Risque", riskHigh: "ÉLEVÉ",
     upgradeTitle: "Décès et létalité masqués dans votre tableau de bord",
     upgradeDesc: "Votre plan gratuit cache le nombre de décès et le taux de létalité (CFR) pour chaque foyer. Ces données sont disponibles avec Pro.",
     upgradeCta: "Débloquer Pro — 14 jours gratuits →",
     cta: "Voir tous les foyers →", unsub: "Se désabonner",
   },
   es: {
-    headline: "Señales HIGH activas esta semana", col1: "Enfermedad", col2: "País", col3: "Casos", col4: "Riesgo",
+    headline: "Señales HIGH activas esta semana", col1: "Enfermedad", col2: "País", col3: "Casos", col4: "Riesgo", riskHigh: "ALTO",
     upgradeTitle: "Fallecidos y letalidad ocultos en su panel",
     upgradeDesc: "Su plan gratuito oculta el número de fallecidos y la tasa de letalidad (CFR) para cada brote. Datos disponibles con Pro.",
     upgradeCta: "Desbloquear Pro — 14 días gratis →",
     cta: "Ver todos los brotes →", unsub: "Darse de baja",
   },
   ar: {
-    headline: "إشارات HIGH النشطة هذا الأسبوع", col1: "المرض", col2: "الدولة", col3: "الحالات", col4: "الخطر",
+    headline: "إشارات HIGH النشطة هذا الأسبوع", col1: "المرض", col2: "الدولة", col3: "الحالات", col4: "الخطر", riskHigh: "مرتفع",
     upgradeTitle: "الوفيات ومعدل الفتك مخفيان في لوحتك",
     upgradeDesc: "تخفي خطتك المجانية عدد الوفيات ومعدل الفتك (CFR) لكل تفشٍّ. هذه البيانات متاحة مع Pro.",
     upgradeCta: "← فتح Pro — 14 يوماً مجاناً",
     cta: "← عرض جميع التفشيات", unsub: "إلغاء الاشتراك",
   },
   id: {
-    headline: "Sinyal HIGH aktif minggu ini", col1: "Penyakit", col2: "Negara", col3: "Kasus", col4: "Risiko",
+    headline: "Sinyal HIGH aktif minggu ini", col1: "Penyakit", col2: "Negara", col3: "Kasus", col4: "Risiko", riskHigh: "TINGGI",
     upgradeTitle: "Kematian dan CFR tersembunyi di dasbor Anda",
     upgradeDesc: "Paket gratis Anda menyembunyikan jumlah kematian dan tingkat fatalitas (CFR) untuk setiap wabah. Data tersedia dengan Pro.",
     upgradeCta: "Buka Pro — 14 hari gratis →",
     cta: "Lihat semua wabah →", unsub: "Berhenti berlangganan",
   },
   en: {
-    headline: "Active HIGH-risk signals this week", col1: "Disease", col2: "Country", col3: "Cases", col4: "Risk",
+    headline: "Active HIGH-risk signals this week", col1: "Disease", col2: "Country", col3: "Cases", col4: "Risk", riskHigh: "HIGH",
     upgradeTitle: "Deaths and fatality rate hidden in your dashboard",
     upgradeDesc: "Your free plan hides the death count and case fatality rate (CFR) for every outbreak. These figures are available with Pro.",
     upgradeCta: "Unlock Pro — 14-day free trial →",
@@ -86,7 +87,7 @@ function buildHtml(
         <td style="padding:10px 0;border-bottom:1px solid #1f2937;font-size:14px;color:#e5e7eb;">${esc(disease)}</td>
         <td style="padding:10px 0;border-bottom:1px solid #1f2937;font-size:14px;color:#9ca3af;">${esc(country)}</td>
         <td style="padding:10px 0;border-bottom:1px solid #1f2937;font-size:13px;color:#e5e7eb;text-align:right;">${casesStr}</td>
-        <td style="padding:10px 0;border-bottom:1px solid #1f2937;font-size:13px;color:#f87171;text-align:right;font-weight:600;">HIGH</td>
+        <td style="padding:10px 0;border-bottom:1px solid #1f2937;font-size:13px;color:#f87171;text-align:right;font-weight:600;">${esc(l.riskHigh)}</td>
       </tr>`;
     })
     .join("");
