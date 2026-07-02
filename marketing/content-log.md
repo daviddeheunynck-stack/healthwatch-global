@@ -1451,3 +1451,49 @@ Tweet 5 :
 
 **Note :** Thread analytique, pas alarmiste. Angle professionnel pour épidémiologistes et équipes réponse. Peut être posté en thread ou condensé en 1-2 tweets si le moment le justifie.
 
+---
+
+## LinkedIn — Post Uganda dual VHF (2 juillet 2026)
+
+**Statut :** À poster (David) — version LinkedIn du thread X ci-dessus, plus long, plus structuré
+
+**Angle :** Analyse de coordination pour équipes terrain NGO et coordinateurs santé humanitaires — l'audience exacte ciblée par la vague 3.
+
+**Post :**
+
+Uganda is currently managing two simultaneous hemorrhagic fever outbreaks.
+
+Marburg virus disease: 1 case, 1 death. Confirmed today in Kyegegwa district — a 1.5-year-old child. Active.
+
+Ebola virus disease: 20 cases, 2 deaths. Active since late June.
+
+This coexistence is rare. And it creates a specific operational challenge that doesn't get discussed enough: the "two-outbreak fog."
+
+**What the fog looks like in practice:**
+
+Both Marburg and Ebola are filoviruses. They look clinically similar — fever, hemorrhagic symptoms, high CFR. But they're distinct pathogens with distinct reservoir hosts, distinct transmission chains, and distinct response protocols.
+
+This means you cannot share contact tracing networks. A contact traced for one outbreak is not traced for the other. Two separate networks, competing for the same field epidemiologists, the same contact tracers, the same lab infrastructure.
+
+It also means two separate PCR confirmation pipelines. Ebola and Marburg require different assays. When you're dealing with a suspected VHF case in a resource-constrained setting, every hour of diagnostic uncertainty matters.
+
+**The spillover context:**
+
+The EVD event in Uganda isn't isolated. The DRC epidemic is now at 1,406 cases across three provinces — Ituri alone has 24 active health zones. Cross-border spillover into Uganda is the working hypothesis for the EVD cases there, not a self-sustaining transmission chain.
+
+Marburg, on the other hand, is a separate spillover event. Fruit bats. Kyegegwa district. A child.
+
+Two separate introductions. Two separate responses. Same country. Same week.
+
+**Why this matters for your coordination:**
+
+For humanitarian health teams operating in Uganda — and there are many: MSF, IRC, Samaritan's Purse, among others — this dual outbreak creates competing demand for every resource: PPE, isolation beds, trained responders, community trust.
+
+Community trust especially. When response teams are spread across two events, community engagement quality drops. And with VHFs, community trust isn't a nice-to-have — it's what determines whether cases present to treatment centers or stay hidden.
+
+---
+
+Tracking both events in real time on HealthWatch Global, aggregating WHO, ECDC, and Africa CDC signals.
+
+**Contexte :** Post LinkedIn long, format analytique. Audience cible : coordinateurs santé humanitaires, épidémiologistes, équipes terrain ONG. Longueur intentionnellement plus longue pour LinkedIn (2 min de lecture). Le mention "Samaritan's Purse" est le type d'orga auquel on enverra la vague 3 — signal d'autorité indirect.
+
