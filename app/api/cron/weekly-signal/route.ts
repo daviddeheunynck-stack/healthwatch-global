@@ -24,30 +24,70 @@ const SUBJECTS: Record<string, string> = {
   en: "This week's outbreak signals — HealthWatch Global",
 };
 
-const L: Record<string, { headline: string; col1: string; col2: string; col3: string; cta: string; unsub: string }> = {
-  fr: { headline: "Signaux HIGH actifs cette semaine", col1: "Maladie", col2: "Pays", col3: "Risque", cta: "Voir tous les foyers →", unsub: "Se désabonner" },
-  es: { headline: "Señales HIGH activas esta semana",  col1: "Enfermedad", col2: "País", col3: "Riesgo", cta: "Ver todos los brotes →", unsub: "Darse de baja" },
-  ar: { headline: "إشارات HIGH النشطة هذا الأسبوع",  col1: "المرض", col2: "الدولة", col3: "الخطر", cta: "← عرض جميع التفشيات", unsub: "إلغاء الاشتراك" },
-  id: { headline: "Sinyal HIGH aktif minggu ini",      col1: "Penyakit", col2: "Negara", col3: "Risiko", cta: "Lihat semua wabah →", unsub: "Berhenti berlangganan" },
-  en: { headline: "Active HIGH-risk signals this week", col1: "Disease", col2: "Country", col3: "Risk", cta: "View all outbreaks →", unsub: "Unsubscribe" },
+const L: Record<string, {
+  headline: string; col1: string; col2: string; col3: string; col4: string;
+  upgradeTitle: string; upgradeDesc: string; upgradeCta: string;
+  cta: string; unsub: string;
+}> = {
+  fr: {
+    headline: "Signaux HIGH actifs cette semaine", col1: "Maladie", col2: "Pays", col3: "Cas", col4: "Risque",
+    upgradeTitle: "Décès et létalité masqués dans votre tableau de bord",
+    upgradeDesc: "Votre plan gratuit cache le nombre de décès et le taux de létalité (CFR) pour chaque foyer. Ces données sont disponibles avec Pro.",
+    upgradeCta: "Débloquer Pro — 14 jours gratuits →",
+    cta: "Voir tous les foyers →", unsub: "Se désabonner",
+  },
+  es: {
+    headline: "Señales HIGH activas esta semana", col1: "Enfermedad", col2: "País", col3: "Casos", col4: "Riesgo",
+    upgradeTitle: "Fallecidos y letalidad ocultos en su panel",
+    upgradeDesc: "Su plan gratuito oculta el número de fallecidos y la tasa de letalidad (CFR) para cada brote. Datos disponibles con Pro.",
+    upgradeCta: "Desbloquear Pro — 14 días gratis →",
+    cta: "Ver todos los brotes →", unsub: "Darse de baja",
+  },
+  ar: {
+    headline: "إشارات HIGH النشطة هذا الأسبوع", col1: "المرض", col2: "الدولة", col3: "الحالات", col4: "الخطر",
+    upgradeTitle: "الوفيات ومعدل الفتك مخفيان في لوحتك",
+    upgradeDesc: "تخفي خطتك المجانية عدد الوفيات ومعدل الفتك (CFR) لكل تفشٍّ. هذه البيانات متاحة مع Pro.",
+    upgradeCta: "← فتح Pro — 14 يوماً مجاناً",
+    cta: "← عرض جميع التفشيات", unsub: "إلغاء الاشتراك",
+  },
+  id: {
+    headline: "Sinyal HIGH aktif minggu ini", col1: "Penyakit", col2: "Negara", col3: "Kasus", col4: "Risiko",
+    upgradeTitle: "Kematian dan CFR tersembunyi di dasbor Anda",
+    upgradeDesc: "Paket gratis Anda menyembunyikan jumlah kematian dan tingkat fatalitas (CFR) untuk setiap wabah. Data tersedia dengan Pro.",
+    upgradeCta: "Buka Pro — 14 hari gratis →",
+    cta: "Lihat semua wabah →", unsub: "Berhenti berlangganan",
+  },
+  en: {
+    headline: "Active HIGH-risk signals this week", col1: "Disease", col2: "Country", col3: "Cases", col4: "Risk",
+    upgradeTitle: "Deaths and fatality rate hidden in your dashboard",
+    upgradeDesc: "Your free plan hides the death count and case fatality rate (CFR) for every outbreak. These figures are available with Pro.",
+    upgradeCta: "Unlock Pro — 14-day free trial →",
+    cta: "View all outbreaks →", unsub: "Unsubscribe",
+  },
 };
 
 function buildHtml(
-  outbreaks: Array<{ disease: string; country: string }>,
+  outbreaks: Array<{ disease: string; disease_en: string | null; country: string; country_en: string | null; cases: number }>,
   locale: string,
   dashUrl: string,
   unsubUrl: string,
+  pricingUrl: string,
 ): string {
   const l = L[locale] ?? L.en;
+  const numLocale = locale === "ar" ? "ar-SA" : locale;
   const rows = outbreaks
-    .map(
-      (o) => `
+    .map((o) => {
+      const disease = (locale === "ar" ? null : o.disease_en) ?? o.disease_en ?? o.disease;
+      const country = o.country_en ?? o.country;
+      const casesStr = o.cases > 0 ? o.cases.toLocaleString(numLocale) : "—";
+      return `
       <tr>
-        <td style="padding:10px 0;border-bottom:1px solid #1f2937;font-size:14px;color:#e5e7eb;">${esc(o.disease)}</td>
-        <td style="padding:10px 0;border-bottom:1px solid #1f2937;font-size:14px;color:#9ca3af;">${esc(o.country)}</td>
+        <td style="padding:10px 0;border-bottom:1px solid #1f2937;font-size:14px;color:#e5e7eb;">${esc(disease)}</td>
+        <td style="padding:10px 0;border-bottom:1px solid #1f2937;font-size:14px;color:#9ca3af;">${esc(country)}</td>
+        <td style="padding:10px 0;border-bottom:1px solid #1f2937;font-size:13px;color:#e5e7eb;text-align:right;">${casesStr}</td>
         <td style="padding:10px 0;border-bottom:1px solid #1f2937;font-size:13px;color:#f87171;text-align:right;font-weight:600;">HIGH</td>
-      </tr>`,
-    )
+      </tr>`;
+    })
     .join("");
 
   return `<!DOCTYPE html>
@@ -67,12 +107,21 @@ function buildHtml(
         <th style="text-align:left;font-size:10px;color:#4b5563;padding-bottom:8px;text-transform:uppercase;letter-spacing:.06em;">${l.col1}</th>
         <th style="text-align:left;font-size:10px;color:#4b5563;padding-bottom:8px;text-transform:uppercase;letter-spacing:.06em;">${l.col2}</th>
         <th style="text-align:right;font-size:10px;color:#4b5563;padding-bottom:8px;text-transform:uppercase;letter-spacing:.06em;">${l.col3}</th>
+        <th style="text-align:right;font-size:10px;color:#4b5563;padding-bottom:8px;text-transform:uppercase;letter-spacing:.06em;">${l.col4}</th>
       </tr>
     </thead>
     <tbody>${rows}</tbody>
   </table>
-  <div style="margin-top:28px;text-align:center;">
-    <a href="${dashUrl}" style="display:inline-block;background:#dc2626;color:#fff;font-weight:600;font-size:13px;padding:12px 28px;border-radius:8px;text-decoration:none;">${l.cta}</a>
+
+  <!-- Upgrade prompt -->
+  <div style="margin-top:24px;background:#1e293b;border:1px solid #dc262633;border-radius:10px;padding:16px 20px;">
+    <p style="margin:0 0 6px;font-size:13px;font-weight:700;color:#fca5a5;">${l.upgradeTitle}</p>
+    <p style="margin:0 0 14px;font-size:13px;color:#94a3b8;line-height:1.6;">${l.upgradeDesc}</p>
+    <a href="${pricingUrl}" style="display:inline-block;background:#dc2626;color:#fff;font-weight:600;font-size:13px;padding:10px 22px;border-radius:7px;text-decoration:none;">${l.upgradeCta}</a>
+  </div>
+
+  <div style="margin-top:20px;text-align:center;">
+    <a href="${dashUrl}" style="color:#4b5563;font-size:12px;text-decoration:underline;">${l.cta}</a>
   </div>
   <div style="margin-top:32px;padding-top:20px;border-top:1px solid #1e293b;">
     <p style="color:#374151;font-size:11px;text-align:center;margin:0;">
@@ -118,7 +167,7 @@ export async function GET(req: NextRequest) {
   // Top HIGH active outbreaks (max 3, ordered by cases desc)
   const { data: outbreaks, error: outErr } = await supabase
     .from("outbreaks")
-    .select("disease, country")
+    .select("disease, disease_en, country, country_en, cases")
     .eq("risk_level", "high")
     .eq("active", true)
     .order("cases", { ascending: false })
@@ -152,7 +201,13 @@ export async function GET(req: NextRequest) {
 
     const locale = user.locale ?? "en";
     const unsubUrl = `https://healthwatch-global.com/api/unsubscribe-signal?id=${encodeURIComponent(user.id)}&locale=${locale}`;
-    const html = buildHtml(outbreaks, locale, `https://healthwatch-global.com/${locale}`, unsubUrl);
+    const html = buildHtml(
+      outbreaks,
+      locale,
+      `https://healthwatch-global.com/${locale}`,
+      unsubUrl,
+      `https://healthwatch-global.com/${locale}/pricing`,
+    );
     try {
       await sendEmail(user.email, SUBJECTS[locale] ?? SUBJECTS.en, html);
       sent++;
