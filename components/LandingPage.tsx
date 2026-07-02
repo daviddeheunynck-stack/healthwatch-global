@@ -73,6 +73,7 @@ const COPY: Record<string, {
   ctaSub: string;
   ctaButton: string;
   ctaNoCc: string;
+  ctaPilotBtn: string;
   // Trust / social proof
   trustTitle: string;
   trustSub: string;
@@ -150,6 +151,7 @@ const COPY: Record<string, {
     ctaSub: "HealthWatch Global agrège les bulletins DON de l'OMS, les évaluations ECDC, les alertes de l'OPAS et les rapports de l'Africa CDC — couverture mondiale complète, mise à jour automatiquement.",
     ctaButton: "Démarrer gratuitement",
     ctaNoCc: "Sans carte bancaire · Accès immédiat",
+    ctaPilotBtn: "Pilote institutionnel gratuit →",
     trustTitle: "OMS · ECDC · OPAS · Africa CDC · 5 langues",
     trustSub: "HealthWatch Global agrège les quatre grandes sources de surveillance épidémiologique mondiale — directement, sans intermédiaire, dans votre langue.",
     trustSourcesLabel: "Sources de données officielles",
@@ -230,6 +232,7 @@ const COPY: Record<string, {
     ctaSub: "HealthWatch Global aggregates WHO Disease Outbreak News, ECDC threat assessments, PAHO epidemiological alerts and Africa CDC reports — complete global coverage, updated automatically.",
     ctaButton: "Get started free",
     ctaNoCc: "No credit card · Instant access",
+    ctaPilotBtn: "Free institutional pilot →",
     trustTitle: "WHO · ECDC · PAHO · Africa CDC · 5 languages",
     trustSub: "HealthWatch Global aggregates the four major global epidemiological surveillance sources — directly, with no intermediary, in your language.",
     trustSourcesLabel: "Official data sources",
@@ -310,6 +313,7 @@ const COPY: Record<string, {
     ctaSub: "HealthWatch Global agrega los boletines DON de la OMS, evaluaciones de amenaza del ECDC, alertas de la OPS y reportes de Africa CDC — cobertura global completa, actualizada automáticamente.",
     ctaButton: "Comenzar gratis",
     ctaNoCc: "Sin tarjeta de crédito · Acceso inmediato",
+    ctaPilotBtn: "Piloto institucional gratuito →",
     trustTitle: "OMS · ECDC · OPS · Africa CDC · 5 idiomas",
     trustSub: "HealthWatch Global agrega las cuatro grandes fuentes de vigilancia epidemiológica mundial — directamente, sin intermediarios, en su idioma.",
     trustSourcesLabel: "Fuentes de datos oficiales",
@@ -390,6 +394,7 @@ const COPY: Record<string, {
     ctaSub: "تجمع HealthWatch Global نشرات DON لمنظمة الصحة العالمية وتقييمات ECDC وتنبيهات PAHO وتقارير Africa CDC — تغطية عالمية شاملة، محدَّثة تلقائياً.",
     ctaButton: "ابدأ مجاناً",
     ctaNoCc: "بدون بطاقة بنكية · وصول فوري",
+    ctaPilotBtn: "← تجربة مؤسسية مجانية",
     trustTitle: "WHO · ECDC · PAHO · Africa CDC · 5 لغات",
     trustSub: "تجمع HealthWatch Global المصادر الأربع الكبرى للمراقبة الوبائية العالمية — مباشرةً، دون وسطاء، بلغتك.",
     trustSourcesLabel: "مصادر البيانات الرسمية",
@@ -470,6 +475,7 @@ const COPY: Record<string, {
     ctaSub: "HealthWatch Global mengumpulkan WHO Disease Outbreak News, penilaian ancaman ECDC, peringatan PAHO dan laporan Africa CDC — cakupan global lengkap, diperbarui otomatis.",
     ctaButton: "Mulai gratis",
     ctaNoCc: "Tanpa kartu kredit · Akses langsung",
+    ctaPilotBtn: "Pilot institusional gratis →",
     trustTitle: "WHO · ECDC · PAHO · Africa CDC · 5 bahasa",
     trustSub: "HealthWatch Global mengagregasi empat sumber pengawasan epidemiologi global terbesar — langsung, tanpa perantara, dalam bahasa Anda.",
     trustSourcesLabel: "Sumber data resmi",
@@ -1010,21 +1016,23 @@ export default async function LandingPage({ locale }: { locale: string }) {
           </div>
           <h2 className="text-2xl md:text-3xl font-bold text-white">{c.ctaTitle}</h2>
           <p className="text-gray-400">{c.ctaSub}</p>
-          <div className="space-y-3">
-            <Link
-              href={`/${locale}/signup`}
-              className="inline-flex items-center gap-2 bg-red-600 hover:bg-red-500 text-white font-bold px-10 py-4 rounded-xl transition-all shadow-lg shadow-red-900/30 text-sm"
-            >
-              {c.ctaButton}
-              <ArrowRight className="w-4 h-4" />
-            </Link>
-            <p className="text-xs text-gray-600">{c.ctaNoCc}</p>
-            <p className="text-xs text-gray-600 pt-1">
-              {locale === "fr" ? "Une organisation ?" : locale === "es" ? "¿Una organización?" : locale === "ar" ? "مؤسسة؟" : locale === "id" ? "Sebuah organisasi?" : "An organization?"}{" "}
-              <Link href={`/${locale}/pilot`} className="text-red-400 hover:text-red-300 underline underline-offset-2 transition-colors">
-                {locale === "fr" ? "Programme pilote gratuit →" : locale === "es" ? "Programa piloto gratuito →" : locale === "ar" ? "← البرنامج التجريبي المجاني" : locale === "id" ? "Program pilot gratis →" : "Free pilot program →"}
+          <div className="space-y-4">
+            <div className="flex flex-col sm:flex-row gap-3 justify-center">
+              <Link
+                href={`/${locale}/signup`}
+                className="inline-flex items-center justify-center gap-2 bg-red-600 hover:bg-red-500 text-white font-bold px-10 py-4 rounded-xl transition-all shadow-lg shadow-red-900/30 text-sm"
+              >
+                {c.ctaButton}
+                <ArrowRight className="w-4 h-4" />
               </Link>
-            </p>
+              <Link
+                href={`/${locale}/pilot`}
+                className="inline-flex items-center justify-center gap-2 bg-gray-800 hover:bg-gray-700 border border-gray-700 hover:border-gray-600 text-gray-300 font-semibold px-8 py-4 rounded-xl transition-colors text-sm"
+              >
+                {c.ctaPilotBtn}
+              </Link>
+            </div>
+            <p className="text-xs text-gray-600">{c.ctaNoCc}</p>
           </div>
         </div>
       </section>
