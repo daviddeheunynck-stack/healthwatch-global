@@ -1259,8 +1259,9 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
                       {isPaid ? (
                         outbreak.cases > 0 ? outbreak.cases.toLocaleString(numLocale) : <span className="text-gray-600 italic text-xs">{l.noData}</span>
                       ) : (
-                        <span className="blur-sm select-none text-gray-500 cursor-pointer" onClick={() => openModal("cases")}>
-                          {outbreak.cases.toLocaleString(numLocale)}
+                        <span className="inline-flex items-center gap-1 cursor-pointer" onClick={() => openModal("cases")} title="Pro — click to unlock">
+                          <span className="blur-sm select-none text-gray-500 pointer-events-none">{outbreak.cases.toLocaleString(numLocale)}</span>
+                          <Lock className="w-2.5 h-2.5 text-amber-500/60 pointer-events-none shrink-0" />
                         </span>
                       )}
                       {outbreak.cases > 0 && <TrendBadge trend={trends?.[outbreak.id]} />}
@@ -1287,8 +1288,9 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
                         ? outbreak.deaths.toLocaleString(numLocale)
                         : <span className="text-gray-500 text-sm" title="Non rapporté dans cette source">—</span>
                     ) : (
-                      <span className="blur-sm select-none text-gray-500 cursor-pointer" onClick={() => openModal("cases")}>
-                        {(outbreak.deaths ?? 0).toLocaleString(numLocale)}
+                      <span className="inline-flex items-center gap-1 cursor-pointer" onClick={() => openModal("cases")} title="Pro — click to unlock">
+                        <span className="blur-sm select-none text-gray-500 pointer-events-none">{(outbreak.deaths ?? 0).toLocaleString(numLocale)}</span>
+                        <Lock className="w-2.5 h-2.5 text-amber-500/60 pointer-events-none shrink-0" />
                       </span>
                     )}
                   </td>
@@ -1307,11 +1309,9 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
                       )
                     ) : (
                       outbreak.cases > 0 && outbreak.deaths !== null ? (
-                        <span
-                          className="blur-sm select-none text-gray-500 cursor-pointer text-sm font-medium"
-                          onClick={() => openModal("cases")}
-                        >
-                          {(outbreak.deaths / outbreak.cases * 100).toFixed(1)}%
+                        <span className="inline-flex items-center gap-1 cursor-pointer" onClick={() => openModal("cases")} title="Pro — click to unlock">
+                          <span className="blur-sm select-none text-gray-500 pointer-events-none text-sm font-medium">{(outbreak.deaths / outbreak.cases * 100).toFixed(1)}%</span>
+                          <Lock className="w-2.5 h-2.5 text-amber-500/60 pointer-events-none shrink-0" />
                         </span>
                       ) : (
                         <button

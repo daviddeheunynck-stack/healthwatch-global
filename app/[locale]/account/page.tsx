@@ -56,7 +56,7 @@ const PLAN_ICONS: Record<string, React.ReactNode> = {
 
 const ALERT_LABELS: Record<string, {
   title: string; desc: string; locked: string; upgrade: string; error: string;
-  regionLabels: Record<string, string>;
+  emptyHint?: string; regionLabels: Record<string, string>;
 }> = {
   fr: {
     title: "Alertes par région",
@@ -64,6 +64,7 @@ const ALERT_LABELS: Record<string, {
     locked: "Les alertes régionales sont disponibles avec les plans Pro et Team.",
     upgrade: "Débloquer Pro →",
     error: "Erreur lors de la sauvegarde. Réessayez.",
+    emptyHint: "Activez au moins une région pour recevoir des alertes email de foyers.",
     regionLabels: { africa: "Afrique", asia: "Asie", americas: "Amériques", europe: "Europe", oceania: "Océanie" },
   },
   en: {
@@ -72,6 +73,7 @@ const ALERT_LABELS: Record<string, {
     locked: "Regional alerts are available on the Pro and Team plans.",
     upgrade: "Unlock Pro →",
     error: "Failed to save. Please try again.",
+    emptyHint: "Turn on at least one region to receive outbreak alert emails.",
     regionLabels: { africa: "Africa", asia: "Asia", americas: "Americas", europe: "Europe", oceania: "Oceania" },
   },
   es: {
@@ -80,6 +82,7 @@ const ALERT_LABELS: Record<string, {
     locked: "Las alertas regionales están disponibles en los planes Pro y Team.",
     upgrade: "Desbloquear Pro →",
     error: "Error al guardar. Inténtelo de nuevo.",
+    emptyHint: "Active al menos una región para recibir alertas de brotes por email.",
     regionLabels: { africa: "África", asia: "Asia", americas: "Américas", europe: "Europa", oceania: "Oceanía" },
   },
   ar: {
@@ -88,6 +91,7 @@ const ALERT_LABELS: Record<string, {
     locked: "التنبيهات الإقليمية متاحة في خطط Pro و Team.",
     upgrade: "← فتح Pro",
     error: "فشل الحفظ. يرجى المحاولة مجدداً.",
+    emptyHint: "فعّل منطقة واحدة على الأقل لتلقي تنبيهات تفشي الأمراض عبر البريد الإلكتروني.",
     regionLabels: { africa: "أفريقيا", asia: "آسيا", americas: "الأمريكتان", europe: "أوروبا", oceania: "أوقيانوسيا" },
   },
   id: {
@@ -96,6 +100,7 @@ const ALERT_LABELS: Record<string, {
     locked: "Peringatan regional tersedia di paket Pro dan Team.",
     upgrade: "Buka Pro →",
     error: "Gagal menyimpan. Silakan coba lagi.",
+    emptyHint: "Aktifkan setidaknya satu wilayah untuk menerima peringatan wabah via email.",
     regionLabels: { africa: "Afrika", asia: "Asia", americas: "Amerika", europe: "Eropa", oceania: "Oseania" },
   },
 };
