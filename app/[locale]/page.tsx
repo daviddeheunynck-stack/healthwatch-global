@@ -364,6 +364,12 @@ async function DashboardContent({ demo = false, urlRegion, urlRisk }: { demo?: b
         const cfr  = top.cases > 0 && top.deaths !== null && top.deaths > 0
           ? (top.deaths / top.cases * 100).toFixed(1)
           : null;
+        const topTrend    = trends[top.id];
+        const d7pct       = topTrend?.direction === "up" || topTrend?.direction === "down"
+          ? topTrend.deltaPercent
+          : null;
+        const d24h        = topTrend?.delta24h ?? null;
+        const numLocale   = locale === "ar" ? "ar-SA" : locale;
         const isRtl = locale === "ar";
         return (
           <div
@@ -386,13 +392,35 @@ async function DashboardContent({ demo = false, urlRegion, urlRisk }: { demo?: b
             {isPaid && top.cases > 0 && (
               <>
                 <span className="text-gray-600">·</span>
-                <span className="text-gray-300">{top.cases.toLocaleString(locale === "ar" ? "ar-SA" : locale)} {snap.cases}</span>
+                <span className="text-gray-300">{top.cases.toLocaleString(numLocale)} {snap.cases}</span>
               </>
             )}
             {isPaid && cfr && (
               <>
                 <span className="text-gray-600">·</span>
                 <span className="text-red-400 font-medium">{cfr}% {snap.cfr}</span>
+              </>
+            )}
+            {/* 7-day trend — visible to all users (qualitative signal, same as TrendBadge) */}
+            {d7pct !== null && (
+              <>
+                <span className="text-gray-600">·</span>
+                <span className={`text-xs font-semibold tabular-nums ${d7pct > 0 ? "text-red-400" : "text-emerald-400"}`}>
+                  {d7pct > 0 ? "↑" : "↓"} {d7pct > 0 ? "+" : ""}{d7pct}%
+                  <span className="text-gray-600 font-normal ml-1">
+                    {locale === "fr" ? "7j" : locale === "es" ? "7d" : locale === "ar" ? "٧ أيام" : locale === "id" ? "7h" : "7d"}
+                  </span>
+                </span>
+              </>
+            )}
+            {/* 24h delta — visible to all, signals the data is live */}
+            {d24h !== null && d24h !== 0 && (
+              <>
+                <span className="text-gray-600">·</span>
+                <span className="text-xs font-semibold tabular-nums text-sky-400">
+                  {d24h > 0 ? "+" : ""}{d24h.toLocaleString(numLocale)}
+                  <span className="text-gray-600 font-normal ml-1">/24h</span>
+                </span>
               </>
             )}
           </div>

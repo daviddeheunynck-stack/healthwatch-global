@@ -48,7 +48,7 @@ export default function NewThisWeekWidget({ outbreaks, locale, trends }: Props) 
         <p className="text-xs text-gray-500 mt-0.5">{c.sub}</p>
       </div>
       <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-2.5">
-        {relevant.map(({ o, isNew, isWorsening, score }) => {
+        {relevant.map(({ o, trend, isNew, isWorsening, score }) => {
           const borderBg =
             o.risk_level === "high"   ? "border-red-800/40 bg-red-950/15 hover:border-red-700/60" :
             o.risk_level === "medium" ? "border-yellow-800/40 bg-yellow-950/10 hover:border-yellow-700/50" :
@@ -85,6 +85,24 @@ export default function NewThisWeekWidget({ outbreaks, locale, trends }: Props) 
                   )}
                 </div>
                 <p className="text-xs text-gray-400 truncate">{getLocalizedCountry(o, locale)}</p>
+                {/* Magnitude signals — visible to all; shows HOW MUCH, not just direction */}
+                {(trend?.deltaPercent || trend?.delta24h) && (
+                  <div className="flex items-center gap-2 mt-1">
+                    {isWorsening && trend?.deltaPercent ? (
+                      <span className="text-[10px] font-semibold tabular-nums text-red-400">
+                        +{trend.deltaPercent}%
+                        <span className="text-gray-600 font-normal ml-0.5">
+                          {locale === "fr" ? "7j" : locale === "es" ? "7d" : locale === "ar" ? "٧أ" : locale === "id" ? "7h" : "7d"}
+                        </span>
+                      </span>
+                    ) : null}
+                    {trend?.delta24h && trend.delta24h > 0 ? (
+                      <span className="text-[10px] font-semibold tabular-nums text-sky-400">
+                        +{trend.delta24h.toLocaleString()}/24h
+                      </span>
+                    ) : null}
+                  </div>
+                )}
               </div>
             </Link>
           );
