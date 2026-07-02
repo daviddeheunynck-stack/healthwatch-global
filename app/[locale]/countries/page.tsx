@@ -7,6 +7,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { countryToSlug, getLocalizedCountryName } from "@/lib/country-utils";
 import type { Outbreak } from "@/lib/outbreaks";
+import EmailCapture from "@/components/EmailCapture";
 
 export const revalidate = 3600;
 
@@ -24,6 +25,7 @@ const LABELS: Record<Locale, {
   metaTitle: string; metaDesc: string;
   sortActive: string; sortAlpha: string;
   regionLabel: Record<string, string>;
+  proTitle: string; captureTitle: string; captureBody: string;
 }> = {
   en: {
     title: "Countries",
@@ -38,6 +40,9 @@ const LABELS: Record<Locale, {
     sortActive: "Active first",
     sortAlpha: "A–Z",
     regionLabel: { africa: "Africa", asia: "Asia", americas: "Americas", europe: "Europe", oceania: "Oceania", other: "Other" },
+    proTitle: "Get real-time alerts for every country you track",
+    captureTitle: "Weekly digest — outbreaks by country",
+    captureBody: "Active outbreaks, case counts and risk levels across all tracked countries. WHO, ECDC, PAHO and Africa CDC sources.",
   },
   fr: {
     title: "Pays",
@@ -52,6 +57,9 @@ const LABELS: Record<Locale, {
     sortActive: "Actifs en premier",
     sortAlpha: "A–Z",
     regionLabel: { africa: "Afrique", asia: "Asie", americas: "Amériques", europe: "Europe", oceania: "Océanie", other: "Autre" },
+    proTitle: "Alertes en temps réel pour chaque pays que vous suivez",
+    captureTitle: "Digest hebdomadaire — foyers par pays",
+    captureBody: "Foyers actifs, cas et niveaux de risque pour l'ensemble des pays surveillés. Sources OMS, ECDC, PAHO et Africa CDC.",
   },
   es: {
     title: "Países",
@@ -66,6 +74,9 @@ const LABELS: Record<Locale, {
     sortActive: "Activos primero",
     sortAlpha: "A–Z",
     regionLabel: { africa: "África", asia: "Asia", americas: "Américas", europe: "Europa", oceania: "Oceanía", other: "Otro" },
+    proTitle: "Alertas en tiempo real para cada país que monitoriza",
+    captureTitle: "Digest semanal — brotes por país",
+    captureBody: "Brotes activos, recuentos de casos y niveles de riesgo para todos los países vigilados. Fuentes OMS, ECDC, PAHO y Africa CDC.",
   },
   ar: {
     title: "الدول",
@@ -80,6 +91,9 @@ const LABELS: Record<Locale, {
     sortActive: "النشطة أولاً",
     sortAlpha: "أ–ي",
     regionLabel: { africa: "أفريقيا", asia: "آسيا", americas: "الأمريكتان", europe: "أوروبا", oceania: "أوقيانوسيا", other: "أخرى" },
+    proTitle: "تنبيهات فورية لكل دولة تتابعها",
+    captureTitle: "ملخص أسبوعي — التفشيات حسب الدولة",
+    captureBody: "التفشيات النشطة وأعداد الحالات ومستويات الخطر لجميع الدول المُراقَبة. مصادر منظمة الصحة العالمية وECDC وPAHO وAfrica CDC.",
   },
   id: {
     title: "Negara",
@@ -94,6 +108,9 @@ const LABELS: Record<Locale, {
     sortActive: "Aktif dulu",
     sortAlpha: "A–Z",
     regionLabel: { africa: "Afrika", asia: "Asia", americas: "Amerika", europe: "Eropa", oceania: "Oseania", other: "Lainnya" },
+    proTitle: "Peringatan real-time untuk setiap negara yang Anda pantau",
+    captureTitle: "Digest mingguan — wabah per negara",
+    captureBody: "Wabah aktif, jumlah kasus dan tingkat risiko untuk semua negara yang dipantau. Sumber WHO, ECDC, PAHO dan Africa CDC.",
   },
 };
 
@@ -345,6 +362,14 @@ export default async function CountriesPage({
           </section>
         );
       })}
+
+      {/* CTA */}
+      <EmailCapture
+        locale={l}
+        title={lb.captureTitle}
+        body={lb.captureBody}
+        proTitle={lb.proTitle}
+      />
 
     </div>
   );
