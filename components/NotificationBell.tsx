@@ -18,7 +18,7 @@ type NotifOutbreak = Pick<
 
 interface AlertNotif {
   id: string;
-  type: "tripwire" | "category_alert" | "subscriber" | "watchlist";
+  type: string;
   title: string;
   body: string;
   outbreak_id: string | null;
@@ -37,6 +37,10 @@ const TYPE_DOT: Record<string, string> = {
   category_alert: "bg-amber-400",
   subscriber:     "bg-blue-400",
   watchlist:      "bg-purple-400",
+  disease_alert:  "bg-teal-400",
+  pheic:          "bg-red-500",
+  country_risk:   "bg-orange-400",
+  regional_digest:"bg-indigo-400",
 };
 
 const LABELS: Record<string, {
@@ -45,15 +49,15 @@ const LABELS: Record<string, {
   types: Record<string, string>;
 }> = {
   fr: { title: "Alertes & notifications", empty: "Aucune alerte pour l'instant.", seeAll: "Voir toutes les alertes →", justNow: "À l'instant", ago: (h) => h < 24 ? `Il y a ${h}h` : `Il y a ${Math.floor(h / 24)}j`, markRead: "Tout marquer lu", alertHistory: "Historique d'alertes", pushAlerts: "Notifications récentes",
-    types: { tripwire: "Tripwire", category_alert: "Catégorie", subscriber: "Foyer suivi", watchlist: "Surveillance" } },
+    types: { tripwire: "Tripwire", category_alert: "Catégorie", subscriber: "Foyer suivi", watchlist: "Surveillance", disease_alert: "Alerte maladie", pheic: "PHEIC", country_risk: "Risque pays", regional_digest: "Digest régional" } },
   en: { title: "Alerts & notifications", empty: "No alerts yet.", seeAll: "View all alerts →", justNow: "Just now", ago: (h) => h < 24 ? `${h}h ago` : `${Math.floor(h / 24)}d ago`, markRead: "Mark all read", alertHistory: "Alert history", pushAlerts: "Recent notifications",
-    types: { tripwire: "Tripwire", category_alert: "Category alert", subscriber: "Subscribed outbreak", watchlist: "Watchlist" } },
+    types: { tripwire: "Tripwire", category_alert: "Category alert", subscriber: "Subscribed outbreak", watchlist: "Watchlist", disease_alert: "Disease alert", pheic: "PHEIC", country_risk: "Country risk", regional_digest: "Regional digest" } },
   es: { title: "Alertas y notificaciones", empty: "Sin alertas por ahora.", seeAll: "Ver todas las alertas →", justNow: "Ahora mismo", ago: (h) => h < 24 ? `Hace ${h}h` : `Hace ${Math.floor(h / 24)}d`, markRead: "Marcar todo como leído", alertHistory: "Historial de alertas", pushAlerts: "Notificaciones recientes",
-    types: { tripwire: "Tripwire", category_alert: "Alerta categoría", subscriber: "Brote suscrito", watchlist: "Vigilancia" } },
+    types: { tripwire: "Tripwire", category_alert: "Alerta categoría", subscriber: "Brote suscrito", watchlist: "Vigilancia", disease_alert: "Alerta enfermedad", pheic: "PHEIC", country_risk: "Riesgo país", regional_digest: "Resumen regional" } },
   ar: { title: "التنبيهات والإشعارات", empty: "لا توجد تنبيهات حتى الآن.", seeAll: "← عرض جميع التنبيهات", justNow: "الآن", ago: (h) => h < 24 ? `منذ ${h}س` : `منذ ${Math.floor(h / 24)}ي`, markRead: "تحديد الكل كمقروء", alertHistory: "سجل التنبيهات", pushAlerts: "الإشعارات الأخيرة",
-    types: { tripwire: "Tripwire", category_alert: "تنبيه الفئة", subscriber: "تفشٍّ مشترك", watchlist: "قائمة المراقبة" } },
+    types: { tripwire: "Tripwire", category_alert: "تنبيه الفئة", subscriber: "تفشٍّ مشترك", watchlist: "قائمة المراقبة", disease_alert: "تنبيه مرضي", pheic: "PHEIC", country_risk: "خطر البلد", regional_digest: "ملخص إقليمي" } },
   id: { title: "Peringatan & notifikasi", empty: "Belum ada peringatan.", seeAll: "Lihat semua peringatan →", justNow: "Baru saja", ago: (h) => h < 24 ? `${h}j lalu` : `${Math.floor(h / 24)}h lalu`, markRead: "Tandai semua terbaca", alertHistory: "Riwayat peringatan", pushAlerts: "Notifikasi terbaru",
-    types: { tripwire: "Tripwire", category_alert: "Peringatan kategori", subscriber: "Wabah langganan", watchlist: "Daftar pantau" } },
+    types: { tripwire: "Tripwire", category_alert: "Peringatan kategori", subscriber: "Wabah langganan", watchlist: "Daftar pantau", disease_alert: "Peringatan penyakit", pheic: "PHEIC", country_risk: "Risiko negara", regional_digest: "Digest regional" } },
 };
 
 function timeAgo(isoString: string, locale: string): string {
@@ -210,7 +214,7 @@ export default function NotificationBell({ locale, dropUp = false }: { locale: s
                   return (
                     <Link
                       key={item.id}
-                      href={`/${locale}?outbreak=${item.id}`}
+                      href={`/${locale}/outbreak/${item.id}`}
                       onClick={() => setOpen(false)}
                       className="flex items-start gap-3 px-4 py-2.5 hover:bg-gray-800/60 transition-colors border-b border-gray-800/50 last:border-0"
                     >
@@ -233,7 +237,7 @@ export default function NotificationBell({ locale, dropUp = false }: { locale: s
 
           {pushItems.length > 0 && (
             <div className="border-t border-gray-800 px-4 py-2.5">
-              <Link href={`/${locale}/alerts`} onClick={() => setOpen(false)} className="text-xs text-red-400 hover:text-red-300 transition-colors">
+              <Link href={`/${locale}/notifications`} onClick={() => setOpen(false)} className="text-xs text-red-400 hover:text-red-300 transition-colors">
                 {lb.seeAll}
               </Link>
             </div>
