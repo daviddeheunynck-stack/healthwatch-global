@@ -117,7 +117,7 @@ export async function GET(req: NextRequest) {
     const disease   = getLocalizedDisease(o, locale);
     const country   = getLocalizedCountry(o, locale);
     const risk      = (RISK_LABEL[locale] ?? RISK_LABEL.en)[o.risk_level] ?? o.risk_level.toUpperCase();
-    const deepLink  = `${APP_URL}/${locale}?outbreak=${o.id}`;
+    const deepLink  = `${APP_URL}/${locale}/outbreak/${o.id}`;
     const cfr       = o.cases > 0 && o.deaths != null ? (o.deaths / o.cases * 100).toFixed(1) : null;
 
     const subject = (SUBJECT[locale] ?? SUBJECT.en)(disease, country);

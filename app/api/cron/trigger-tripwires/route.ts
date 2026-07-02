@@ -186,7 +186,7 @@ export async function GET(req: NextRequest) {
     const country      = getLocalizedCountry(o, locale);
     const casesStr     = o.cases.toLocaleString(numLocale);
     const thresholdStr = tw.threshold_cases.toLocaleString(numLocale);
-    const deepLink     = `${APP_URL}/${locale}?outbreak=${o.id}`;
+    const deepLink     = `${APP_URL}/${locale}/outbreak/${o.id}`;
 
     try {
       await supabase.from("alert_notifications").insert({
