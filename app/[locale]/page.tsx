@@ -328,14 +328,18 @@ async function DashboardContent({ demo = false, urlRegion, urlRisk }: { demo?: b
   const showFreeBanner = plan === "free";
 
   const sevenDaysAgo = new Date(Date.now() - 7 * 86_400_000);
-  const missedAlerts = showFreeBanner
-    ? outbreaks.filter(o =>
-        o.active &&
-        ["high", "medium"].includes(o.risk_level) &&
-        (geoRegion === "all" || o.region === geoRegion) &&
-        o.updated_at && new Date(o.updated_at) > sevenDaysAgo
-      ).length
-    : 0;
+  const missedAlertOutbreaks = showFreeBanner
+    ? outbreaks
+        .filter(o =>
+          o.active &&
+          ["high", "medium"].includes(o.risk_level) &&
+          (geoRegion === "all" || o.region === geoRegion) &&
+          o.updated_at && new Date(o.updated_at) > sevenDaysAgo
+        )
+        .sort((a, b) => (b.is_pheic ? 1 : 0) - (a.is_pheic ? 1 : 0) || (b.cases - a.cases))
+        .slice(0, 3)
+    : [];
+  const missedAlerts = missedAlertOutbreaks.length;
 
   return (
     <>
@@ -347,7 +351,16 @@ async function DashboardContent({ demo = false, urlRegion, urlRisk }: { demo?: b
         <TrialBanner trialEndsAt={trialEndsAt!} locale={locale} hasBilling={hasStripeSubscription} />
       )}
       {!demo && showFreeBanner && (
-        <FreePlanBanner locale={locale} trialExpired={trialExpired} missedAlerts={missedAlerts} />
+        <FreePlanBanner
+          locale={locale}
+          trialExpired={trialExpired}
+          missedAlerts={missedAlerts}
+          missedAlertNames={missedAlertOutbreaks.map(o => ({
+            disease: getLocalizedDisease(o, locale),
+            country: getLocalizedCountry(o, locale),
+            delta24h: trends[o.id]?.delta24h ?? null,
+          }))}
+        />
       )}
 
       {!demo && <PushNotificationBanner locale={locale} />}

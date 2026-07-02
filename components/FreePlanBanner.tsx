@@ -10,11 +10,13 @@ const COPY: Record<string, {
   title: string; sub: string; cta: string; trial: string;
   titleExpired: string; ctaExpired: string; trialExpired: string;
   missed: (n: number) => string;
+  missedNames: (names: string) => string;
 }> = {
   fr: {
     title: "Passez à Pro — essai 14 jours gratuit",
     sub: "Chiffres exacts de cas & décès · Alertes instantanées · Rapports PDF · Export CSV",
-    missed: (n) => `🔔 ${n} alerte${n > 1 ? "s" : ""} ont été envoyées aux utilisateurs Pro dans votre région cette semaine — vous les auriez reçues sous 8h.`,
+    missed: (n) => `🔔 ${n} alerte${n > 1 ? "s" : ""} ont été envoyées aux utilisateurs Pro cette semaine — vous les auriez reçues sous 8h.`,
+    missedNames: (names) => `🔔 Alertes manquées cette semaine : ${names}`,
     cta: "Commencer l'essai gratuit →",
     trial: "Sans carte bancaire",
     titleExpired: "Votre essai est terminé — passez à Pro",
@@ -24,7 +26,8 @@ const COPY: Record<string, {
   en: {
     title: "Upgrade to Pro — 14-day free trial",
     sub: "Exact case & death figures · Instant alerts · PDF reports · CSV export",
-    missed: (n) => `🔔 ${n} alert${n > 1 ? "s" : ""} fired in your region this week — Pro users were notified within 8h.`,
+    missed: (n) => `🔔 ${n} alert${n > 1 ? "s" : ""} fired this week — Pro users were notified within 8h.`,
+    missedNames: (names) => `🔔 Missed alerts this week: ${names}`,
     cta: "Start free trial →",
     trial: "No credit card",
     titleExpired: "Your trial ended — subscribe to keep Pro access",
@@ -34,7 +37,8 @@ const COPY: Record<string, {
   es: {
     title: "Pasa a Pro — 14 días de prueba gratis",
     sub: "Cifras exactas de casos y fallecidos · Alertas instantáneas · Informes PDF · Exportación CSV",
-    missed: (n) => `🔔 ${n} alerta${n > 1 ? "s" : ""} en tu región esta semana — usuarios Pro notificados en menos de 8h.`,
+    missed: (n) => `🔔 ${n} alerta${n > 1 ? "s" : ""} esta semana — usuarios Pro notificados en menos de 8h.`,
+    missedNames: (names) => `🔔 Alertas perdidas esta semana: ${names}`,
     cta: "Iniciar prueba gratuita →",
     trial: "Sin tarjeta de crédito",
     titleExpired: "Tu prueba ha terminado — suscríbete a Pro",
@@ -44,7 +48,8 @@ const COPY: Record<string, {
   ar: {
     title: "انتقل إلى Pro — تجربة 14 يوماً مجاناً",
     sub: "أرقام دقيقة للحالات والوفيات · تنبيهات فورية · تقارير PDF · تصدير CSV",
-    missed: (n) => `🔔 ${n} تنبيه${n > 1 ? "ات" : ""} في منطقتك هذا الأسبوع — أُرسلت لمستخدمي Pro خلال 8 ساعات.`,
+    missed: (n) => `🔔 ${n} تنبيه${n > 1 ? "ات" : ""} هذا الأسبوع — أُرسلت لمستخدمي Pro خلال 8 ساعات.`,
+    missedNames: (names) => `🔔 تنبيهات فائتة هذا الأسبوع: ${names}`,
     cta: "← ابدأ التجربة المجانية",
     trial: "بدون بطاقة بنكية",
     titleExpired: "انتهت تجربتك — اشترك في Pro للاستمرار",
@@ -54,7 +59,8 @@ const COPY: Record<string, {
   id: {
     title: "Upgrade ke Pro — uji coba 14 hari gratis",
     sub: "Angka kasus & kematian tepat · Peringatan instan · Laporan PDF · Ekspor CSV",
-    missed: (n) => `🔔 ${n} peringatan di wilayah Anda minggu ini — pengguna Pro menerima notifikasi dalam 8 jam.`,
+    missed: (n) => `🔔 ${n} peringatan minggu ini — pengguna Pro menerima notifikasi dalam 8 jam.`,
+    missedNames: (names) => `🔔 Peringatan yang terlewat minggu ini: ${names}`,
     cta: "Mulai uji coba gratis →",
     trial: "Tanpa kartu kredit",
     titleExpired: "Uji coba Anda berakhir — langganan Pro untuk melanjutkan",
@@ -66,7 +72,19 @@ const COPY: Record<string, {
 const STORAGE_KEY = "hw_free_banner_dismissed_v2";
 const DISMISS_TTL_MS = 30 * 24 * 60 * 60 * 1000; // 30 days
 
-export default function FreePlanBanner({ locale, trialExpired = false, missedAlerts = 0 }: { locale: string; trialExpired?: boolean; missedAlerts?: number }) {
+interface MissedAlertName { disease: string; country: string; delta24h: number | null }
+
+export default function FreePlanBanner({
+  locale,
+  trialExpired = false,
+  missedAlerts = 0,
+  missedAlertNames = [],
+}: {
+  locale: string;
+  trialExpired?: boolean;
+  missedAlerts?: number;
+  missedAlertNames?: MissedAlertName[];
+}) {
   const [dismissed, setDismissed] = useState(true);
   useEffect(() => {
     const stored = localStorage.getItem(STORAGE_KEY);
@@ -100,9 +118,19 @@ export default function FreePlanBanner({ locale, trialExpired = false, missedAle
         <div className="min-w-0">
           <p className="text-sm font-bold text-red-300">{title}</p>
           <p className="text-xs text-gray-400 mt-0.5">{c.sub}</p>
-          {missedAlerts > 0 && (
+          {missedAlerts > 0 && missedAlertNames.length > 0 ? (
+            <p className="text-xs text-amber-400 mt-1.5 font-medium">
+              {c.missedNames(
+                missedAlertNames.map(a =>
+                  a.delta24h && a.delta24h > 0
+                    ? `${a.disease} ${a.country} (+${a.delta24h.toLocaleString()}/24h)`
+                    : `${a.disease} ${a.country}`
+                ).join(" · ")
+              )}
+            </p>
+          ) : missedAlerts > 0 ? (
             <p className="text-xs text-amber-400 mt-1.5 font-medium">{c.missed(missedAlerts)}</p>
-          )}
+          ) : null}
         </div>
         <div className="flex items-center gap-3 shrink-0">
           <div onClick={() => track("free_banner_cta", { locale, trialExpired })}>

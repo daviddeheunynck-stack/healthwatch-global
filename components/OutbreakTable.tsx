@@ -1159,14 +1159,6 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
                           {{ fr: "ENQUÊTE", en: "INVESTIG.", es: "INVESTIG.", ar: "تحقيق", id: "INVESTIGASI" }[locale] ?? "INVESTIG."}
                         </span>
                       )}
-                      {outbreak.verification_status === "confirmed" && (
-                        <span
-                          title={{ fr: "Foyer confirmé par les autorités sanitaires officielles", en: "Confirmed by official health authorities", es: "Confirmado por las autoridades sanitarias oficiales", ar: "مؤكَّد من قِبل السلطات الصحية الرسمية", id: "Dikonfirmasi oleh otoritas kesehatan resmi" }[locale] ?? "Confirmed by official health authorities"}
-                          className="inline-flex items-center text-[10px] font-bold px-1.5 py-0.5 rounded bg-emerald-900/40 border border-emerald-700/50 text-emerald-300 shrink-0 cursor-help whitespace-nowrap"
-                        >
-                          {{ fr: "CONFIRMÉ", en: "CONFIRMED", es: "CONFIRMADO", ar: "مؤكَّد", id: "TERKONFIRMASI" }[locale] ?? "CONFIRMED"}
-                        </span>
-                      )}
                       {outbreak.response_phase === "active_response" && (
                         <span
                           title={{ fr: "Réponse active déployée — équipes terrain mobilisées", en: "Active response deployed — field teams mobilised", es: "Respuesta activa desplegada — equipos de campo movilizados", ar: "استجابة نشطة — فِرق ميدانية منتشرة", id: "Respons aktif dikerahkan — tim lapangan dimobilisasi" }[locale] ?? "Active response deployed"}
