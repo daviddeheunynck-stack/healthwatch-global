@@ -6,7 +6,7 @@ import { cache } from "react";
 import { createClient } from "@supabase/supabase-js";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import CheckoutButton from "@/components/CheckoutButton";
+import OutbreakBottomCta from "@/components/OutbreakBottomCta";
 import CitationBlock from "@/components/CitationBlock";
 import OutbreakStatsGrid from "@/components/OutbreakStatsGrid";
 import ShareOutbreakButton from "@/components/ShareOutbreakButton";
@@ -584,24 +584,14 @@ export default async function OutbreakPage({
         </a>
       </div>
 
-      {/* CTA */}
-      <div className="mt-10 p-6 rounded-xl border border-red-500/20 bg-red-500/5 text-center space-y-4">
-        <div>
-          <p className="text-white font-semibold">{diseaseCtaTitle}</p>
-          <p className="text-xs text-gray-400 mt-1">{l.ctaSub}</p>
-        </div>
-        <CheckoutButton
-          plan="pro"
-          locale={locale}
-          label={l.ctaProBtn}
-          className="inline-block bg-red-600 hover:bg-red-700 text-white font-semibold px-6 py-2.5 rounded-lg transition-colors"
-        />
-        <p className="text-xs text-gray-500">
-          <Link href={`/${locale}/signup`} className="underline hover:text-gray-300 transition-colors">
-            {l.ctaFree}
-          </Link>
-        </p>
-      </div>
+      {/* CTA — hidden after hydration for paid subscribers */}
+      <OutbreakBottomCta
+        locale={locale}
+        ctaTitle={diseaseCtaTitle}
+        ctaSub={l.ctaSub}
+        ctaProBtn={l.ctaProBtn}
+        ctaFree={l.ctaFree}
+      />
     </div>
   );
 }
