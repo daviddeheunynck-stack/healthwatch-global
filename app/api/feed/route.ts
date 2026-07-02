@@ -12,8 +12,9 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 3600;
 
 const BASE_URL = "https://healthwatch-global.com";
 
@@ -92,8 +93,8 @@ export async function GET(req: NextRequest) {
 
   const numLocale = locale === "ar" ? "ar-SA" : locale;
   const items = outbreaks.map((o) => {
-    const diseaseName = (locale === "ar" && o.disease_ar) ? o.disease_ar : (o.disease_en ?? o.disease ?? "Unknown");
-    const countryName = (locale === "ar" && o.country_ar) ? o.country_ar : (o.country_en ?? o.country ?? "");
+    const diseaseName = getLocalizedDisease(o, locale) || "Unknown";
+    const countryName = getLocalizedCountry(o, locale);
 
     const title = countryName ? `${diseaseName} — ${countryName}` : diseaseName;
     const risk  = o.risk_level ? (RISK_LABEL[locale]?.[o.risk_level] ?? o.risk_level.toUpperCase()) : "";
