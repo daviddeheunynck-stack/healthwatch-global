@@ -28,6 +28,7 @@ import FeatureHub from "@/components/FeatureHub";
 import DashboardAlertsWidget from "@/components/DashboardAlertsWidget";
 import RegionalPulseSummary from "@/components/RegionalPulseSummary";
 import AlertSetupBanner from "@/components/AlertSetupBanner";
+import DiseaseAlertSetupBanner from "@/components/DiseaseAlertSetupBanner";
 import ProQuickStart from "@/components/ProQuickStart";
 import { Suspense } from "react";
 import type { Metadata } from "next";
@@ -369,6 +370,9 @@ async function DashboardContent({ demo = false, urlRegion, urlRisk }: { demo?: b
         <ProQuickStart locale={locale} userId={currentUserId} hasAlerts={!hasNoAlerts} />
       )}
       {!demo && isPaid && hasNoAlerts && <AlertSetupBanner locale={locale} />}
+      {!demo && isPaid && !hasNoAlerts && !hasStripeSubscription && (
+        <DiseaseAlertSetupBanner locale={locale} />
+      )}
 
       {/* Situation Snapshot — top-priority outbreak at a glance */}
       {stats.topOutbreak && (() => {
