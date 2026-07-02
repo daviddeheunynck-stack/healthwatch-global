@@ -368,7 +368,7 @@ async function DashboardContent({ demo = false, urlRegion, urlRisk }: { demo?: b
       {!demo && isPaid && currentUserId && !hasStripeSubscription && trialEndsAt && (
         <ProQuickStart locale={locale} userId={currentUserId} hasAlerts={!hasNoAlerts} />
       )}
-      {!demo && isPaid && hasNoAlerts && hasStripeSubscription && <AlertSetupBanner locale={locale} />}
+      {!demo && isPaid && hasNoAlerts && <AlertSetupBanner locale={locale} />}
 
       {/* Situation Snapshot — top-priority outbreak at a glance */}
       {stats.topOutbreak && (() => {
