@@ -5,6 +5,13 @@ import { createClient } from "@/lib/supabase-browser";
 import Link from "next/link";
 import CheckoutButton from "@/components/CheckoutButton";
 
+// "loading" = auth check in flight (don't blur yet to avoid flash for Pro users)
+// "anon"    = no session
+// "free"    = logged in but never had a paid plan
+// "expired" = logged in, trial ended, no active subscription
+// "paid"    = active Pro/Trial/Team/Enterprise
+type AuthStatus = "loading" | "anon" | "free" | "expired" | "paid";
+
 interface Props {
   cases: string;
   deaths: string;
@@ -21,18 +28,48 @@ interface Props {
   locale: string;
 }
 
+const SUBSCRIBE_LABEL: Record<string, string> = {
+  fr: "S'abonner à Pro →",
+  es: "Suscribirse a Pro →",
+  ar: "← الاشتراك في Pro",
+  id: "Berlangganan Pro →",
+  en: "Subscribe to Pro →",
+};
+
 export default function OutbreakStatsGrid({ cases, deaths, cfr, labels, locale }: Props) {
-  // null = auth check pending, true = authenticated, false = anonymous
-  const [authed, setAuthed] = useState<boolean | null>(null);
+  const [status, setStatus] = useState<AuthStatus>("loading");
 
   useEffect(() => {
     const supabase = createClient();
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setAuthed(!!session);
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      if (!user) { setStatus("anon"); return; }
+      supabase
+        .from("profiles")
+        .select("plan, trial_ends_at, stripe_subscription_id")
+        .eq("id", user.id)
+        .single()
+        .then(({ data }) => {
+          let p = data?.plan || "free";
+          const trialExpired =
+            p !== "free" &&
+            !!data?.trial_ends_at &&
+            new Date(data.trial_ends_at).getTime() < Date.now() &&
+            !data?.stripe_subscription_id;
+          if (trialExpired) p = "free";
+          const isPaid = ["starter", "pro", "team", "enterprise"].includes(p);
+          if (isPaid) setStatus("paid");
+          else if (trialExpired) setStatus("expired");
+          else setStatus("free");
+        });
     });
   }, []);
 
-  const blurred = authed === false;
+  const blurred = status === "anon" || status === "free" || status === "expired";
+
+  const ctaBtn =
+    status === "expired"
+      ? (SUBSCRIBE_LABEL[locale] ?? SUBSCRIBE_LABEL.en)
+      : labels.ctaProBtn;
 
   return (
     <>
@@ -62,15 +99,17 @@ export default function OutbreakStatsGrid({ cases, deaths, cfr, labels, locale }
             <CheckoutButton
               plan="pro"
               locale={locale}
-              label={labels.ctaProBtn}
+              label={ctaBtn}
               className="inline-block bg-red-600 hover:bg-red-700 text-white font-semibold px-5 py-2 rounded-lg transition-colors text-sm"
             />
-            <Link
-              href={`/${locale}/signup`}
-              className="text-sm text-gray-400 underline hover:text-gray-300 transition-colors"
-            >
-              {labels.ctaFree}
-            </Link>
+            {status === "anon" && (
+              <Link
+                href={`/${locale}/signup`}
+                className="text-sm text-gray-400 underline hover:text-gray-300 transition-colors"
+              >
+                {labels.ctaFree}
+              </Link>
+            )}
           </div>
           <p className="text-xs text-gray-500">{labels.ctaSub}</p>
         </div>
