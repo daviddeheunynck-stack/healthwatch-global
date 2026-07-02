@@ -13,6 +13,7 @@ import { getLocalizedDisease, getLocalizedCountry, isDisplayActive } from "@/lib
 import { getOutbreakTrendsBulk } from "@/lib/outbreak-trend";
 import type { Outbreak } from "@/lib/outbreaks";
 import EmailCapture from "@/components/EmailCapture";
+import DiseaseAlertNudge from "@/components/DiseaseAlertNudge";
 import ShareOutbreakButton from "@/components/ShareOutbreakButton";
 import WatchButton from "@/components/WatchButton";
 import WatchDiseaseButton from "@/components/WatchDiseaseButton";
@@ -480,6 +481,8 @@ export default async function DiseasePage({
           </p>
         )}
       </div>
+
+      <DiseaseAlertNudge locale={l} diseaseName={diseaseName} />
 
       {/* Virology panel */}
       <section className="bg-gray-900 border border-gray-800 rounded-xl p-5 space-y-4">
