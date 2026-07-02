@@ -1367,29 +1367,27 @@ healthwatch-global.com
 ## Email — Jalal Nourlil, Institut Pasteur Maroc (2 juillet 2026)
 
 **À :** jalal.nourlil@pasteur.ma  
-**Objet :** Your HealthWatch Global account — how is it working for you?  
-**Statut :** À envoyer (David)
+**Objet :** Petit suivi — HealthWatch Global  
+**Statut :** À envoyer (David). Corrected 2 juillet 2026 — removed call proposal (violates rule), reframed to virological angle, switched to French.
 
-**Contexte :** Jalal s'est inscrit spontanément le 12 juin 2026 (Institut Pasteur Maroc, domaine @pasteur.ma). Compte Pro actif jusqu'au 13 septembre 2026. 20 jours de recul sur la plateforme. Email de suivi personnel pour recueillir feedback et proposer des sièges supplémentaires.
+**Contexte :** Jalal s'est inscrit spontanément le 12 juin 2026. A répondu le 24 juin : "virologue pas épidémiologiste, mais peut examiner méthodologie." Réponse de David du 24 juin envoyée (lien Ebola DRC + IHR mapping). Ce suivi : 20 jours après, VHF actifs en ce moment = angle parfait pour lui. Pas de proposition d'appel.
 
-**Draft :**
+**Email (à envoyer) :**
 
-> Hi Jalal,
+> Bonjour Jalal,
 >
-> You signed up for HealthWatch Global three weeks ago — I noticed the Institut Pasteur Maroc domain and wanted to reach out personally.
+> Merci pour votre réponse du 24 juin. Votre angle virologique est exactement ce qui manque souvent dans les retours qu'on reçoit.
 >
-> A few questions, genuinely curious:
-> - Is the data useful for your surveillance work? Which diseases or regions are you following?
-> - Anything obviously missing or frustrating?
+> Depuis notre échange, la situation a évolué : Marburg vient d'être confirmé en Ouganda (1 cas, district de Kyegegwa, 2 juillet). Le pays gère simultanément Ebola Bundibugyo (20 cas actifs) et Marburg — deux filovirus distincts, deux chaînes de transmission séparées. C'est le genre de situation où la lecture des données brutes peut être trompeuse si on ne sépare pas clairement les deux événements.
 >
-> Institut Pasteur Maroc sits at a genuinely important intersection — IHR focal point work, regional surveillance networks, North Africa/Sub-Saharan interface. If HealthWatch isn't giving you what you need for that context, I'd rather know now than have you churn silently.
+> La fiche Marburg Ouganda est ici : healthwatch-global.com/fr/disease/marburg-virus-disease
 >
-> Your account has Pro access through September — enough time to actually put it through its paces. If you have colleagues on the surveillance team who might benefit, I can add 2–3 extra seats at no charge.
+> Ce que j'aimerais savoir : est-ce que le mapping RSI qu'on applique aux événements viraux vous semble cohérent avec ce que vous observez dans la littérature ? Si quelque chose vous paraît mal classifié ou manquant, votre retour compte.
 >
-> A 20-minute call would be more useful than an email chain if you're open to it — happy to work around your schedule.
+> Si vous avez un collègue de l'équipe virologie qui suit ces foyers, je peux activer 2 sièges supplémentaires sur votre compte sans frais.
 >
-> Best,
-> David Deheunynck
+> Bien à vous,  
+> David Deheunynck  
 > HealthWatch Global — healthwatch-global.com
 
 ---

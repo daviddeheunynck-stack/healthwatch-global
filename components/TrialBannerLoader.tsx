@@ -1,8 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 import { createClient } from "@/lib/supabase-browser";
 import TrialBanner from "@/components/TrialBanner";
+
+const SKIP_PATHS = ["/login", "/signup", "/success", "/reset-password", "/forgot-password"];
 
 interface TrialData {
   trialEndsAt: string;
@@ -11,8 +14,12 @@ interface TrialData {
 
 export default function TrialBannerLoader({ locale }: { locale: string }) {
   const [trial, setTrial] = useState<TrialData | null>(null);
+  const pathname = usePathname();
+
+  const skipBanner = SKIP_PATHS.some((p) => pathname.includes(p));
 
   useEffect(() => {
+    if (skipBanner) return;
     const supabase = createClient();
     supabase.auth.getSession().then(async ({ data: { session } }) => {
       if (!session) return;
@@ -34,6 +41,6 @@ export default function TrialBannerLoader({ locale }: { locale: string }) {
     });
   }, []);
 
-  if (!trial) return null;
+  if (!trial || skipBanner) return null;
   return <TrialBanner trialEndsAt={trial.trialEndsAt} locale={locale} hasBilling={trial.hasBilling} />;
 }
