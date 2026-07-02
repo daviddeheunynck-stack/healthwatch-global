@@ -13,7 +13,9 @@ const COPY = {
     title: "Briefing Exécutif",
     subtitle: "Situation épidémiologique mondiale — ",
     planRequired: "Accès réservé aux plans Pro, Équipe et Enterprise.",
+    planRequiredExpired: "Votre essai est terminé. Abonnez-vous pour retrouver l'accès au briefing exécutif et aux chiffres exacts.",
     upgrade: "Passer à Pro",
+    upgradeExpired: "S'abonner à Pro →",
     print: "Imprimer / PDF",
     cases: "cas", deaths: "décès",
     actions: {
@@ -33,7 +35,9 @@ const COPY = {
     title: "Executive Briefing",
     subtitle: "Global epidemic situation — ",
     planRequired: "Access restricted to Pro, Team, and Enterprise plans.",
+    planRequiredExpired: "Your trial ended. Subscribe to resume access to the executive briefing and exact figures.",
     upgrade: "Upgrade to Pro",
+    upgradeExpired: "Subscribe to Pro →",
     print: "Print / PDF",
     cases: "cases", deaths: "deaths",
     actions: {
@@ -53,7 +57,9 @@ const COPY = {
     title: "Informe Ejecutivo",
     subtitle: "Situación epidemiológica mundial — ",
     planRequired: "Acceso restringido a los planes Pro, Team y Enterprise.",
+    planRequiredExpired: "Su prueba ha terminado. Suscríbase para retomar el acceso al briefing ejecutivo y cifras exactas.",
     upgrade: "Actualizar a Pro",
+    upgradeExpired: "Suscribirse a Pro →",
     print: "Imprimir / PDF",
     cases: "casos", deaths: "fallecidos",
     actions: {
@@ -73,7 +79,9 @@ const COPY = {
     title: "الإحاطة التنفيذية",
     subtitle: "الوضع الوبائي العالمي — ",
     planRequired: "الوصول محجوز لخطط Pro وTeam وEnterprise.",
+    planRequiredExpired: "انتهت تجربتك. اشترك لاستعادة الوصول إلى الإحاطة التنفيذية والأرقام الدقيقة.",
     upgrade: "الترقية إلى Pro",
+    upgradeExpired: "← الاشتراك في Pro",
     print: "طباعة / PDF",
     cases: "حالة", deaths: "وفاة",
     actions: {
@@ -93,7 +101,9 @@ const COPY = {
     title: "Laporan Eksekutif",
     subtitle: "Situasi epidemi global — ",
     planRequired: "Akses terbatas untuk paket Pro, Team, dan Enterprise.",
+    planRequiredExpired: "Masa percobaan Anda telah berakhir. Berlangganan untuk mendapatkan kembali akses ke briefing eksekutif dan angka tepat.",
     upgrade: "Upgrade ke Pro",
+    upgradeExpired: "Berlangganan Pro →",
     print: "Cetak / PDF",
     cases: "kasus", deaths: "kematian",
     actions: {
@@ -144,6 +154,11 @@ export default async function BriefingPage({ params }: { params: Promise<{ local
   const { data: profile } = await supabase
     .from("profiles").select("plan, trial_ends_at, stripe_subscription_id").eq("id", user.id).single();
   const isPaid = ["pro", "team", "enterprise"].includes(resolvedPlan(profile));
+  const trialExpired =
+    !isPaid &&
+    !!profile?.trial_ends_at &&
+    new Date(profile.trial_ends_at).getTime() < Date.now() &&
+    !profile?.stripe_subscription_id;
 
   if (!isPaid) {
     return (
@@ -153,12 +168,14 @@ export default async function BriefingPage({ params }: { params: Promise<{ local
             <LayoutDashboard className="w-6 h-6 text-red-400" />
           </div>
           <h2 className="text-white font-semibold">{c.title}</h2>
-          <p className="text-gray-400 text-sm">{c.planRequired}</p>
+          <p className="text-gray-400 text-sm">
+            {trialExpired ? c.planRequiredExpired : c.planRequired}
+          </p>
           <Link
             href={`/${locale}/pricing`}
             className="inline-block px-4 py-2 bg-red-600 hover:bg-red-500 text-white text-sm font-semibold rounded-lg transition-colors"
           >
-            {c.upgrade}
+            {trialExpired ? c.upgradeExpired : c.upgrade}
           </Link>
         </div>
       </div>
