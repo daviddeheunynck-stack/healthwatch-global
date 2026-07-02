@@ -5,8 +5,26 @@ import { getOutbreaks, getLocalizedDisease, getLocalizedCountry } from "@/lib/ou
 import { PrintButton } from "@/components/PrintButton";
 import Link from "next/link";
 import { LayoutDashboard } from "lucide-react";
+import type { Metadata } from "next";
 
 export const dynamic = "force-dynamic";
+
+const BRIEFING_TITLES: Record<string, string> = {
+  en: "Executive Briefing", fr: "Briefing Exécutif",
+  es: "Informe Ejecutivo", ar: "الإحاطة التنفيذية", id: "Laporan Eksekutif",
+};
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  return {
+    title: BRIEFING_TITLES[locale] ?? BRIEFING_TITLES.en,
+    robots: { index: false, follow: false },
+  };
+}
 
 const COPY = {
   fr: {
