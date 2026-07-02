@@ -169,9 +169,11 @@ export async function GET(req: NextRequest) {
           outbreak.country_en ??
           outbreak.country;
 
-        const regionLabel = rl[region] ?? region;
-        const riskEmoji   = outbreak.risk_level === "high" ? "🔴" : outbreak.risk_level === "medium" ? "🟡" : "🟢";
+        const regionLabel  = rl[region] ?? region;
+        const riskEmoji    = outbreak.risk_level === "high" ? "🔴" : outbreak.risk_level === "medium" ? "🟡" : "🟢";
         const dashboardUrl = `${APP_URL}/${locale}`;
+        const outbreakUrl  = `${APP_URL}/${locale}/outbreak/${outbreak.id}`;
+        const unsubUrl     = `${APP_URL}/${locale}/account#regional-alerts`;
 
         try {
           // ── Log first — prevents duplicate alerts if log insert fails later ─
@@ -197,7 +199,9 @@ export async function GET(req: NextRequest) {
               cases:      outbreak.cases,
               deaths:     outbreak.deaths,
             },
-            dashboardUrl
+            dashboardUrl,
+            outbreakUrl,
+            unsubUrl
           );
           await sendEmail(profile.email, subject, html);
 
@@ -224,8 +228,8 @@ export async function GET(req: NextRequest) {
                   elements: [
                     {
                       type: "button",
-                      text: { type: "plain_text", text: "View dashboard →" },
-                      url: dashboardUrl,
+                      text: { type: "plain_text", text: "View outbreak →" },
+                      url: outbreakUrl,
                       style: "danger",
                     },
                   ],

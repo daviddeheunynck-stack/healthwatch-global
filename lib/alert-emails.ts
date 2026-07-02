@@ -115,7 +115,9 @@ export function buildOutbreakAlertEmail(
   locale: string,
   regionLabel: string,
   outbreak: OutbreakData,
-  dashboardUrl: string
+  dashboardUrl: string,
+  outbreakUrl?: string,
+  unsubUrl?: string
 ): { subject: string; html: string } {
   const c = CONTENT[locale] ?? CONTENT.en;
   const numLocale = locale === "ar" ? "ar-SA" : (locale || "en");
@@ -168,7 +170,7 @@ export function buildOutbreakAlertEmail(
       </div>
 
       <!-- CTA -->
-      <a href="${dashboardUrl}"
+      <a href="${outbreakUrl ?? dashboardUrl}"
          style="display:inline-block;background:#dc2626;color:#ffffff;font-weight:700;font-size:14px;padding:12px 24px;border-radius:10px;text-decoration:none">
         ${c.ctaLabel}
       </a>
@@ -176,7 +178,7 @@ export function buildOutbreakAlertEmail(
 
     <!-- Footer -->
     <p style="color:#4b5563;font-size:12px;line-height:1.6;text-align:center;margin:0">
-      ${c.unsubNote}
+      ${c.unsubNote}${unsubUrl ? ` <a href="${unsubUrl}" style="color:#4b5563;text-decoration:underline">${locale === "fr" ? "Gérer mes alertes" : locale === "es" ? "Gestionar alertas" : locale === "ar" ? "إدارة التنبيهات" : locale === "id" ? "Kelola peringatan" : "Manage alerts"}</a>` : ""}
     </p>
   </div>
 </body>
