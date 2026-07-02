@@ -17,13 +17,15 @@ interface Props {
   diseaseName: string;
 }
 
+type State = "show-pricing" | "show-account" | "hidden";
+
 export default function DiseaseAlertNudge({ locale, diseaseName }: Props) {
-  const [show, setShow] = useState(true);
+  const [state, setState] = useState<State>("show-pricing");
 
   useEffect(() => {
     const supabase = createClient();
     supabase.auth.getSession().then(async ({ data: { session } }) => {
-      if (!session) return;
+      if (!session) return; // keep "show-pricing" for anon
       const { data: profile } = await supabase
         .from("profiles")
         .select("plan, stripe_subscription_id")
@@ -31,21 +33,24 @@ export default function DiseaseAlertNudge({ locale, diseaseName }: Props) {
         .single();
       const isPaid = ["starter", "pro", "team", "enterprise"].includes(profile?.plan ?? "");
       if (isPaid && !!profile?.stripe_subscription_id) {
-        setShow(false);
+        setState("hidden");
+      } else if (isPaid) {
+        // Trial user — already has access, guide to account settings
+        setState("show-account");
       }
     });
   }, []);
 
-  if (!show) return null;
+  if (state === "hidden") return null;
 
   const text = (COPY[locale] ?? COPY.en)(diseaseName);
+  const href = state === "show-account"
+    ? `/${locale}/account#disease-alerts`
+    : `/${locale}/pricing`;
 
   return (
     <p className="text-xs text-right -mt-1">
-      <Link
-        href={`/${locale}/pricing`}
-        className="text-red-400/70 hover:text-red-300 transition-colors"
-      >
+      <Link href={href} className="text-red-400/70 hover:text-red-300 transition-colors">
         {text} →
       </Link>
     </p>
