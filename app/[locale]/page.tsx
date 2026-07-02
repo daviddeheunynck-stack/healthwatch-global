@@ -14,7 +14,6 @@ import CampaignRefTracker from "@/components/CampaignRefTracker";
 import OutbreakTable from "@/components/OutbreakTable";
 import FreshnessBadge from "@/components/FreshnessBadge";
 import NewThisWeekWidget from "@/components/NewThisWeekWidget";
-import TrialBanner from "@/components/TrialBanner";
 import PushNotificationBanner from "@/components/PushNotificationBanner";
 import CsvExportButton from "@/components/CsvExportButton";
 import SignalsFeed from "@/components/SignalsFeed";
@@ -320,15 +319,6 @@ async function DashboardContent({ demo = false, urlRegion, urlRisk }: { demo?: b
   // registry lists `Date.now`/`Math.random`/`performance.now` but not the `Date`
   // constructor — same instant, same result, recognized as pure. (Same idiom
   // already used for `now` in admin/page.tsx.)
-  const now = new Date();
-  // Exclude paid subscribers (stripe_subscription_id set): they've already
-  // committed, so the "add payment method" banner copy doesn't apply to them.
-  const showTrialBanner =
-    plan === "pro" &&
-    trialEndsAt !== null &&
-    new Date(trialEndsAt).getTime() > now.getTime() &&
-    !hasStripeSubscription;
-
   const showFreeBanner = plan === "free";
 
   const sevenDaysAgo = new Date(Date.now() - 7 * 86_400_000);
@@ -351,9 +341,6 @@ async function DashboardContent({ demo = false, urlRegion, urlRisk }: { demo?: b
 
       {!demo && <OnboardingTour isPaid={isPaid} />}
 
-      {!demo && showTrialBanner && (
-        <TrialBanner trialEndsAt={trialEndsAt!} locale={locale} hasBilling={hasStripeSubscription} />
-      )}
       {!demo && showFreeBanner && (
         <FreePlanBanner
           locale={locale}
