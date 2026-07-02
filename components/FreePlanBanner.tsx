@@ -125,7 +125,7 @@ export default function FreePlanBanner({
               {c.missedNames(
                 missedAlertNames.map(a =>
                   a.delta24h && a.delta24h > 0
-                    ? `${a.disease} ${a.country} (+${a.delta24h.toLocaleString()}/24h)`
+                    ? `${a.disease} ${a.country} (+${a.delta24h.toLocaleString(locale === "ar" ? "ar-SA" : locale)}/24h)`
                     : `${a.disease} ${a.country}`
                 ).join(" · ")
               )}

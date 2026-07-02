@@ -421,11 +421,11 @@ export default function TravelRiskFullPage({ locale }: { locale: string }) {
                       </div>
                       <div className="flex items-center gap-5 shrink-0">
                         <div className="text-right hidden sm:block">
-                          <p className="text-sm font-semibold text-white tabular-nums">{o.cases.toLocaleString()}</p>
+                          <p className="text-sm font-semibold text-white tabular-nums">{o.cases.toLocaleString(locale === "ar" ? "ar-SA" : locale)}</p>
                           <p className="text-[10px] text-gray-500 uppercase tracking-wide">{c.cases}</p>
                         </div>
                         <div className="text-right hidden sm:block">
-                          <p className="text-sm font-semibold text-gray-400 tabular-nums">{o.deaths.toLocaleString()}</p>
+                          <p className="text-sm font-semibold text-gray-400 tabular-nums">{o.deaths.toLocaleString(locale === "ar" ? "ar-SA" : locale)}</p>
                           <p className="text-[10px] text-gray-500 uppercase tracking-wide">{c.deaths}</p>
                         </div>
                         <span className={`text-[11px] font-bold px-2.5 py-1 rounded-full ${oc.badgeBg} ${oc.text} border ${oc.border} uppercase tracking-wide`}>

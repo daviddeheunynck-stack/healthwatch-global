@@ -108,7 +108,7 @@ export default function NewThisWeekWidget({ outbreaks, locale, trends, isPaid }:
                     ) : null}
                     {trend?.delta24h && trend.delta24h > 0 ? (
                       <span className="text-[10px] font-semibold tabular-nums text-sky-400">
-                        +{trend.delta24h.toLocaleString()}/24h
+                        +{trend.delta24h.toLocaleString(locale === "ar" ? "ar-SA" : locale)}/24h
                       </span>
                     ) : null}
                   </div>
