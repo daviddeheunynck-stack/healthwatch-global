@@ -30,14 +30,16 @@ export async function GET(req: Request) {
 
   const { data: outbreaks } = await supabase
     .from("outbreaks")
-    .select("id, disease_en, country_en, cases, deaths, risk_level, date, lat, lng")
+    .select("id, disease, disease_en, disease_ar, country, country_en, country_ar, cases, deaths, risk_level, date, lat, lng")
     .eq("active", true)
     .neq("country_en", countryEn);
 
   if (!outbreaks?.length) return NextResponse.json({ neighbors: [] });
 
   const neighbors = (outbreaks as {
-    id: string; disease_en: string | null; country_en: string | null;
+    id: string;
+    disease: string; disease_en: string | null; disease_ar: string | null;
+    country: string; country_en: string | null; country_ar: string | null;
     cases: number; deaths: number; risk_level: string; date: string;
     lat: number; lng: number;
   }[])

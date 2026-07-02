@@ -205,7 +205,7 @@ interface Props {
 
 interface Snapshot { snapped_at: string; cases: number; deaths: number; }
 interface PastOutbreak { id: string; date: string; cases: number; deaths: number; risk_level: string; }
-interface NeighborOutbreak { id: string; disease_en: string | null; country_en: string | null; cases: number; deaths: number; risk_level: string; date: string; distKm: number; }
+interface NeighborOutbreak { id: string; disease: string; disease_en: string | null; disease_ar: string | null; country: string; country_en: string | null; country_ar: string | null; cases: number; deaths: number; risk_level: string; date: string; distKm: number; }
 interface Note { id: string; note: string; status: string | null; author_email: string; user_id: string; created_at: string; }
 
 const SITREP_COPY: Record<string, {
@@ -1422,9 +1422,9 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlis
                   <div key={n.id} className="flex items-center justify-between text-xs gap-2">
                     <div className="flex items-center gap-1.5 min-w-0">
                       <span className={`shrink-0 w-1.5 h-1.5 rounded-full ${n.risk_level === "high" ? "bg-red-400" : n.risk_level === "medium" ? "bg-amber-400" : "bg-green-400"}`} />
-                      <span className="text-gray-400 truncate">{n.disease_en ?? "—"}</span>
+                      <span className="text-gray-400 truncate">{getLocalizedDisease(n, locale) || "—"}</span>
                       <span className="text-gray-600">·</span>
-                      <span className="text-gray-500 truncate">{n.country_en ?? "—"}</span>
+                      <span className="text-gray-500 truncate">{getLocalizedCountry(n, locale) || "—"}</span>
                     </div>
                     <div className="flex items-center gap-2 shrink-0 text-gray-600">
                       <span className="tabular-nums">{n.cases.toLocaleString(numLocale)}</span>
