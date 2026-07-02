@@ -1151,20 +1151,36 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
                           🚨 PHEIC
                         </span>
                       )}
-                      {outbreak.verification_status === "suspected" && (
-                        <span
-                          title={{ fr: "Foyer suspecté — non encore confirmé par les autorités sanitaires", en: "Suspected outbreak — not yet confirmed by health authorities", es: "Brote sospechado — aún no confirmado por las autoridades sanitarias", ar: "تفشٍّ مشتبه به — لم يتم تأكيده بعد من قِبل السلطات الصحية", id: "Wabah diduga — belum dikonfirmasi oleh otoritas kesehatan" }[locale] ?? "Suspected — not yet confirmed"}
-                          className="inline-flex items-center text-[10px] font-bold px-1.5 py-0.5 rounded bg-yellow-900/40 border border-yellow-700/50 text-yellow-300 shrink-0 cursor-help whitespace-nowrap"
-                        >
-                          {{ fr: "SUSPECTÉ", en: "SUSPECTED", es: "SOSPECHOSO", ar: "مشتبه", id: "DIDUGA" }[locale] ?? "SUSPECTED"}
-                        </span>
-                      )}
                       {outbreak.verification_status === "under_investigation" && (
                         <span
                           title={{ fr: "Foyer en cours d'investigation — données préliminaires", en: "Under investigation — preliminary data", es: "En investigación — datos preliminares", ar: "قيد التحقيق — بيانات أولية", id: "Dalam penyelidikan — data awal" }[locale] ?? "Under investigation — preliminary data"}
                           className="inline-flex items-center text-[10px] font-bold px-1.5 py-0.5 rounded bg-orange-900/40 border border-orange-700/50 text-orange-300 shrink-0 cursor-help whitespace-nowrap"
                         >
                           {{ fr: "ENQUÊTE", en: "INVESTIG.", es: "INVESTIG.", ar: "تحقيق", id: "INVESTIGASI" }[locale] ?? "INVESTIG."}
+                        </span>
+                      )}
+                      {outbreak.verification_status === "confirmed" && (
+                        <span
+                          title={{ fr: "Foyer confirmé par les autorités sanitaires officielles", en: "Confirmed by official health authorities", es: "Confirmado por las autoridades sanitarias oficiales", ar: "مؤكَّد من قِبل السلطات الصحية الرسمية", id: "Dikonfirmasi oleh otoritas kesehatan resmi" }[locale] ?? "Confirmed by official health authorities"}
+                          className="inline-flex items-center text-[10px] font-bold px-1.5 py-0.5 rounded bg-emerald-900/40 border border-emerald-700/50 text-emerald-300 shrink-0 cursor-help whitespace-nowrap"
+                        >
+                          {{ fr: "CONFIRMÉ", en: "CONFIRMED", es: "CONFIRMADO", ar: "مؤكَّد", id: "TERKONFIRMASI" }[locale] ?? "CONFIRMED"}
+                        </span>
+                      )}
+                      {outbreak.response_phase === "active_response" && (
+                        <span
+                          title={{ fr: "Réponse active déployée — équipes terrain mobilisées", en: "Active response deployed — field teams mobilised", es: "Respuesta activa desplegada — equipos de campo movilizados", ar: "استجابة نشطة — فِرق ميدانية منتشرة", id: "Respons aktif dikerahkan — tim lapangan dimobilisasi" }[locale] ?? "Active response deployed"}
+                          className="inline-flex items-center text-[10px] font-bold px-1.5 py-0.5 rounded bg-red-900/40 border border-red-700/50 text-red-300 shrink-0 cursor-help whitespace-nowrap"
+                        >
+                          {{ fr: "RÉPONSE", en: "RESPONSE", es: "RESPUESTA", ar: "استجابة", id: "RESPONS" }[locale] ?? "RESPONSE"}
+                        </span>
+                      )}
+                      {outbreak.response_phase === "contained" && (
+                        <span
+                          title={{ fr: "Foyer contenu — propagation limitée par les mesures de contrôle", en: "Contained — spread limited by control measures", es: "Contenido — propagación limitada por medidas de control", ar: "محتوَى — انتشار محدود بإجراءات السيطرة", id: "Terkendali — penyebaran dibatasi oleh langkah pengendalian" }[locale] ?? "Contained — spread limited"}
+                          className="inline-flex items-center text-[10px] font-bold px-1.5 py-0.5 rounded bg-teal-900/40 border border-teal-700/50 text-teal-300 shrink-0 cursor-help whitespace-nowrap"
+                        >
+                          {{ fr: "CONTENU", en: "CONTAINED", es: "CONTENIDO", ar: "محتوَى", id: "TERKENDALI" }[locale] ?? "CONTAINED"}
                         </span>
                       )}
                       {sourceStatus(outbreak) === 'don' && (

@@ -319,7 +319,8 @@ export function isIllustrativeData(outbreak: Pick<Outbreak, "source">): boolean 
 
 /**
  * 1–10 risk score per outbreak.
- * Base from risk_level, boosted by PHEIC, trend, high CFR; reduced if stale.
+ * Base from risk_level; boosted by PHEIC, trend, high CFR, active response,
+ * confirmed status; reduced by stale data or containment.
  * Shown as a qualitative signal (like TrendBadge) — visible to all users.
  */
 export function computeRiskScore(
@@ -339,6 +340,14 @@ export function computeRiskScore(
     if (cfr > 0.10) score += 1;
     else if (cfr > 0.03) score += 0.5;
   }
+
+  // Confirmed status: data verified by health authorities
+  if (outbreak.verification_status === "confirmed") score += 0.5;
+
+  // Active response: field teams deployed — confirms severity
+  if (outbreak.response_phase === "active_response") score += 1;
+  // Contained: spread is being limited — reduce urgency
+  if (outbreak.response_phase === "contained") score -= 1;
 
   // Stale = may be resolving
   if (staleOutbreakDays(outbreak) !== null) score -= 0.5;
