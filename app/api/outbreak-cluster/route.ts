@@ -16,7 +16,7 @@ export async function GET(req: Request) {
 
   let query = supabase
     .from("outbreaks")
-    .select("id, disease, disease_en, country, country_en, risk_level, cases, deaths, date, region")
+    .select("id, disease, disease_en, disease_ar, country, country_en, country_ar, risk_level, cases, deaths, date, region")
     .eq("event_id", event_id)
     .eq("active", true);
 

@@ -7,6 +7,7 @@ import Link from "next/link";
 import { Search, X } from "lucide-react";
 import { allDiseases, diseaseToSlug } from "@/lib/disease-data";
 import { countryToSlug } from "@/lib/country-utils";
+import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 import { createClient } from "@/lib/supabase-browser";
 
 interface SearchResult {
@@ -112,7 +113,7 @@ export default function GlobalSearch() {
         .limit(20),
       supabase
         .from("outbreaks")
-        .select("id, disease, disease_en, country, country_en, active, date")
+        .select("id, disease, disease_en, disease_ar, country, country_en, country_ar, active, date")
         .or(`disease_en.ilike.%${trimmed}%,disease.ilike.%${trimmed}%,country_en.ilike.%${trimmed}%`)
         .order("date", { ascending: false })
         .limit(5),
@@ -135,8 +136,8 @@ export default function GlobalSearch() {
 
     const matchedOutbreaks: SearchResult[] = (oData ?? []).map((o) => ({
       type: "outbreak" as const,
-      label: (l === "ar" ? o.disease : o.disease_en ?? o.disease) ?? "—",
-      sublabel: o.country_en ?? o.country ?? "",
+      label: getLocalizedDisease(o, l),
+      sublabel: getLocalizedCountry(o, l),
       href: `/${l}/outbreak/${o.id}`,
     }));
 

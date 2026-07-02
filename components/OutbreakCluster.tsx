@@ -4,13 +4,12 @@ import { useState, useEffect } from "react";
 import { Loader2, Link2, ExternalLink } from "lucide-react";
 import Link from "next/link";
 import RiskBadge from "@/components/RiskBadge";
+import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 
 interface ClusterOutbreak {
   id: string;
-  disease: string;
-  disease_en: string | null;
-  country: string;
-  country_en: string | null;
+  disease: string; disease_en: string | null; disease_ar: string | null;
+  country: string; country_en: string | null; country_ar: string | null;
   risk_level: string;
   cases: number;
   date: string;
@@ -64,9 +63,9 @@ export default function OutbreakCluster({ eventId, excludeId, locale }: Props) {
               <RiskBadge level={o.risk_level as "high" | "medium" | "low"} />
               <div className="flex-1 min-w-0">
                 <p className="text-xs text-gray-300 group-hover:text-white transition-colors truncate">
-                  {o.disease_en || o.disease}
+                  {getLocalizedDisease(o, locale)}
                 </p>
-                <p className="text-[10px] text-gray-600 truncate">{o.country_en || o.country}</p>
+                <p className="text-[10px] text-gray-600 truncate">{getLocalizedCountry(o, locale)}</p>
               </div>
               {o.cases > 0 && (
                 <span className="text-[10px] text-gray-600 shrink-0">{o.cases.toLocaleString(locale === "ar" ? "ar-SA" : locale)}</span>
