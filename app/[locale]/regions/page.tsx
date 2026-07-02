@@ -6,6 +6,7 @@ import { createClient } from "@supabase/supabase-js";
 import Link from "next/link";
 import type { Metadata } from "next";
 import type { Outbreak } from "@/lib/outbreaks";
+import EmailCapture from "@/components/EmailCapture";
 
 export const revalidate = 3600;
 
@@ -71,6 +72,7 @@ const LABELS: Record<Locale, {
   countries: string; outbreaks: string; cases: string;
   back: string;
   metaTitle: string; metaDesc: string;
+  proTitle: string; captureTitle: string; captureBody: string;
 }> = {
   en: {
     title: "Regions",
@@ -81,6 +83,9 @@ const LABELS: Record<Locale, {
     back: "← Dashboard",
     metaTitle: "Disease Outbreaks by Region — HealthWatch Global",
     metaDesc: "Monitor disease outbreaks by WHO region. Real-time data from WHO, ECDC, PAHO and Africa CDC across Africa, Asia, Americas, Europe, and Oceania.",
+    proTitle: "Get real-time regional alerts for your areas of operation",
+    captureTitle: "Weekly regional digest",
+    captureBody: "Active outbreaks, case counts and risk levels by WHO region. WHO, ECDC, PAHO and Africa CDC sources.",
   },
   fr: {
     title: "Régions",
@@ -91,6 +96,9 @@ const LABELS: Record<Locale, {
     back: "← Tableau de bord",
     metaTitle: "Foyers épidémiques par région — HealthWatch Global",
     metaDesc: "Surveillance des épidémies par région OMS. Données en temps réel OMS, ECDC, PAHO et Africa CDC.",
+    proTitle: "Alertes régionales en temps réel pour vos zones d'opération",
+    captureTitle: "Digest hebdomadaire régional",
+    captureBody: "Foyers actifs, cas et niveaux de risque par région OMS. Sources OMS, ECDC, PAHO et Africa CDC.",
   },
   es: {
     title: "Regiones",
@@ -101,6 +109,9 @@ const LABELS: Record<Locale, {
     back: "← Panel",
     metaTitle: "Brotes de enfermedades por región — HealthWatch Global",
     metaDesc: "Vigilancia de brotes por región OMS. Datos en tiempo real de OMS, ECDC, PAHO y Africa CDC.",
+    proTitle: "Alertas regionales en tiempo real para sus zonas de operación",
+    captureTitle: "Digest semanal regional",
+    captureBody: "Brotes activos, recuentos de casos y niveles de riesgo por región OMS. Fuentes OMS, ECDC, PAHO y Africa CDC.",
   },
   ar: {
     title: "المناطق",
@@ -111,6 +122,9 @@ const LABELS: Record<Locale, {
     back: "→ لوحة التحكم",
     metaTitle: "تفشيات الأمراض حسب المنطقة — HealthWatch Global",
     metaDesc: "رصد تفشي الأمراض حسب منطقة منظمة الصحة العالمية. بيانات من منظمة الصحة العالمية وECDC وPAHO وAfrica CDC.",
+    proTitle: "تنبيهات إقليمية فورية لمناطق عملياتك",
+    captureTitle: "ملخص أسبوعي إقليمي",
+    captureBody: "التفشيات النشطة وأعداد الحالات ومستويات الخطر حسب منطقة منظمة الصحة العالمية.",
   },
   id: {
     title: "Wilayah",
@@ -121,6 +135,9 @@ const LABELS: Record<Locale, {
     back: "← Dasbor",
     metaTitle: "Wabah Penyakit per Wilayah — HealthWatch Global",
     metaDesc: "Pantau wabah penyakit menurut wilayah WHO. Data real-time dari WHO, ECDC, PAHO dan Africa CDC.",
+    proTitle: "Peringatan regional real-time untuk wilayah operasi Anda",
+    captureTitle: "Digest mingguan regional",
+    captureBody: "Wabah aktif, jumlah kasus dan tingkat risiko per wilayah WHO. Sumber WHO, ECDC, PAHO dan Africa CDC.",
   },
 };
 
@@ -333,6 +350,14 @@ export default async function RegionsPage({
           );
         })}
       </div>
+
+      {/* CTA */}
+      <EmailCapture
+        locale={l}
+        title={lb.captureTitle}
+        body={lb.captureBody}
+        proTitle={lb.proTitle}
+      />
 
     </div>
   );
