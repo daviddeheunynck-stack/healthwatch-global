@@ -10,7 +10,6 @@ import AlertLocalePanel      from "@/components/AlertLocalePanel";
 import DigestPanel           from "@/components/DigestPanel";
 import DigestRegionPanel     from "@/components/DigestRegionPanel";
 import ScheduledReportPanel  from "@/components/ScheduledReportPanel";
-import APIKeyPanel           from "@/components/APIKeyPanel";
 import DataAccessPanel       from "@/components/DataAccessPanel";
 import WebhookPanel          from "@/components/WebhookPanel";
 import OrgPanel              from "@/components/OrgPanel";
@@ -89,7 +88,6 @@ export default function SettingsTabs({
         )}
         {active === "integration" && (
           <>
-            <APIKeyPanel     locale={locale} />
             <DataAccessPanel locale={locale} />
             <WebhookPanel    locale={locale} />
           </>

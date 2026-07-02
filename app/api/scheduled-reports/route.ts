@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase-server";
+import { resolvedPlan } from "@/lib/resolved-plan";
 
 export const dynamic = "force-dynamic";
 
@@ -10,12 +11,6 @@ const PLAN_LIMITS: Record<string, number> = {
 };
 
 const PAID_PLANS = Object.keys(PLAN_LIMITS);
-
-function resolvedPlan(profile: { plan?: string | null; trial_ends_at?: string | null; stripe_subscription_id?: string | null } | null): string {
-  const plan = profile?.plan ?? "free";
-  if (plan !== "free" && profile?.trial_ends_at && new Date(profile.trial_ends_at).getTime() < Date.now() && !profile?.stripe_subscription_id) return "free";
-  return plan;
-}
 
 export async function GET() {
   const supabase = await createClient();

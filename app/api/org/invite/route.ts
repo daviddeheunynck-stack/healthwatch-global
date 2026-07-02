@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase-server";
+import { resolvedPlan } from "@/lib/resolved-plan";
 import { randomBytes } from "crypto";
 import * as Sentry from "@sentry/nextjs";
 
@@ -16,12 +17,6 @@ function esc(s: string): string {
   return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 }
 const TEAM_PLANS = ["team", "enterprise"];
-
-function resolvedPlan(profile: { plan?: string | null; trial_ends_at?: string | null; stripe_subscription_id?: string | null } | null): string {
-  const plan = profile?.plan ?? "free";
-  if (plan !== "free" && profile?.trial_ends_at && new Date(profile.trial_ends_at).getTime() < Date.now() && !profile?.stripe_subscription_id) return "free";
-  return plan;
-}
 
 const INVITE_SUBJECT: Record<string, (org: string) => string> = {
   fr: (org) => `Invitation à rejoindre ${org} sur HealthWatch Global`,

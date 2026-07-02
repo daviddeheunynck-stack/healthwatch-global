@@ -1,6 +1,11 @@
 import { NextRequest } from "next/server";
 import { createClient } from "@/lib/supabase-server";
 import { createClient as createService } from "@supabase/supabase-js";
+import { createHash } from "crypto";
+
+function sha256(input: string): string {
+  return createHash("sha256").update(input).digest("hex");
+}
 
 const PAID_PLANS = ["pro", "team", "enterprise"];
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "https://healthwatch-global.com";
@@ -43,18 +48,23 @@ export async function GET(req: NextRequest) {
     ) p = "free";
     profilePlan = p;
   } else {
-    const keyParam = req.headers.get("x-api-key");
-    if (keyParam) {
-      const { data: profile } = await service
-        .from("profiles").select("plan, trial_ends_at, stripe_subscription_id").eq("api_key", keyParam).single();
-      let p = profile?.plan ?? null;
-      if (
-        p !== "free" && p !== null &&
-        profile?.trial_ends_at &&
-        new Date(profile.trial_ends_at).getTime() < Date.now() &&
-        !profile?.stripe_subscription_id
-      ) p = "free";
-      profilePlan = p;
+    const rawKey = req.headers.get("x-api-key") ?? "";
+    if (rawKey.startsWith("hwg_")) {
+      const keyHash = sha256(rawKey);
+      const { data: apiKey } = await service
+        .from("api_keys").select("user_id").eq("key_hash", keyHash).maybeSingle();
+      if (apiKey) {
+        const { data: profile } = await service
+          .from("profiles").select("plan, trial_ends_at, stripe_subscription_id").eq("id", apiKey.user_id).single();
+        let p = profile?.plan ?? null;
+        if (
+          p !== "free" && p !== null &&
+          profile?.trial_ends_at &&
+          new Date(profile.trial_ends_at).getTime() < Date.now() &&
+          !profile?.stripe_subscription_id
+        ) p = "free";
+        profilePlan = p;
+      }
     }
   }
 
