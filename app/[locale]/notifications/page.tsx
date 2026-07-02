@@ -33,13 +33,18 @@ export default async function NotificationsPage({ params }: { params: Promise<{ 
       .limit(50),
     supabase
       .from("profiles")
-      .select("plan, stripe_subscription_id")
+      .select("plan, trial_ends_at, stripe_subscription_id")
       .eq("id", user.id)
       .single(),
   ]);
 
-  const isPaid = ["starter", "pro", "team", "enterprise"].includes(profile?.plan ?? "")
-    && !!profile?.stripe_subscription_id;
+  const plan = profile?.plan ?? "free";
+  const trialExpired =
+    plan !== "free" &&
+    !!profile?.trial_ends_at &&
+    new Date(profile.trial_ends_at).getTime() < Date.now() &&
+    !profile?.stripe_subscription_id;
+  const isPaid = ["starter", "pro", "team", "enterprise"].includes(plan) && !trialExpired;
 
   return <AlertsPageClient locale={locale} initialNotifications={data ?? []} isPaid={isPaid} />;
 }
