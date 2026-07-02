@@ -328,6 +328,13 @@ export default async function CountryPage({
     ? getLocalizedCountry(outbreaks[0], l) ?? countryEn
     : countryEn;
 
+  const countryCtaTitle =
+    l === "fr" ? `Alertes épidémiques pour ${displayName}` :
+    l === "es" ? `Alertas de brotes para ${displayName}` :
+    l === "ar" ? `تنبيهات تفشي الأمراض في ${displayName}` :
+    l === "id" ? `Peringatan wabah untuk ${displayName}` :
+    `Get outbreak alerts for ${displayName}`;
+
   const jsonLd = [
     {
       "@context": "https://schema.org",
@@ -539,7 +546,7 @@ export default async function CountryPage({
 
       {/* CTA */}
       <div className="bg-gradient-to-r from-red-950/40 via-gray-900/60 to-transparent border border-red-700/30 rounded-2xl p-6 space-y-3">
-        <h3 className="text-lg font-bold text-white">{lb.ctaTitle}</h3>
+        <h3 className="text-lg font-bold text-white">{countryCtaTitle}</h3>
         <p className="text-sm text-gray-400">{lb.ctaBody}</p>
         <Link
           href={`/${l}/signup`}
