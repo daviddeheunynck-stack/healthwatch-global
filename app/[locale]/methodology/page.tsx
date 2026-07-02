@@ -673,6 +673,34 @@ export default async function MethodologyPage({
         citation={`HealthWatch Global. How we process data — methodology and sources [Internet]. 2026 [cited YYYY Mon DD]. Available from: ${BASE_URL}/${l}/methodology`}
       />
 
+      {/* Institutional pilot CTA */}
+      <div className="bg-red-950/20 border border-red-800/30 rounded-2xl p-6 space-y-3">
+        <h2 className="text-base font-bold text-white">
+          {l === "fr" ? "Valider sur vos cas d'usage réels" :
+           l === "es" ? "Pruébelo en sus casos de uso reales" :
+           l === "ar" ? "اختبره على حالات استخدامك الفعلية" :
+           l === "id" ? "Coba pada kasus penggunaan nyata Anda" :
+           "Validate it on your real use cases"}
+        </h2>
+        <p className="text-gray-400 text-sm leading-relaxed">
+          {l === "fr" ? "Programme pilote gratuit : 5 accès Pro pendant 30 jours pour équipes de surveillance institutionnelles. Onboarding guidé inclus. Sans carte bancaire." :
+           l === "es" ? "Programa piloto gratuito: 5 accesos Pro durante 30 días para equipos de vigilancia institucional. Incorporación guiada incluida. Sin tarjeta de crédito." :
+           l === "ar" ? "برنامج تجريبي مجاني: 5 مقاعد Pro لمدة 30 يوماً لفرق المراقبة المؤسسية. تأهيل مُوجَّه مشمول. بدون بطاقة ائتمانية." :
+           l === "id" ? "Program pilot gratis: 5 akses Pro selama 30 hari untuk tim surveilans institusional. Onboarding terpandu termasuk. Tanpa kartu kredit." :
+           "Free pilot program: 5 Pro seats for 30 days for institutional surveillance teams. Guided onboarding included. No credit card."}
+        </p>
+        <Link
+          href={`/${l}/pilot`}
+          className="inline-block bg-red-600 hover:bg-red-500 text-white font-semibold text-sm px-5 py-2.5 rounded-lg transition-colors"
+        >
+          {l === "fr" ? "Candidater au pilote →" :
+           l === "es" ? "Solicitar el piloto →" :
+           l === "ar" ? "← التقدم للبرنامج التجريبي" :
+           l === "id" ? "Daftar untuk pilot →" :
+           "Apply for the pilot →"}
+        </Link>
+      </div>
+
       <section className="bg-gray-900 border border-gray-800 rounded-2xl p-6 space-y-3">
         <div className="flex items-center gap-3">
           <Mail className="w-5 h-5 text-red-400 shrink-0" />
