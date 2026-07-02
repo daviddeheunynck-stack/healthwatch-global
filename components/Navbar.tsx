@@ -8,6 +8,7 @@ import { Activity, Globe, LogOut, Menu, X, Settings } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { createClient } from "@/lib/supabase-browser";
 import type { User as SupabaseUser } from "@supabase/supabase-js";
+import * as Sentry from "@sentry/nextjs";
 import NotificationBell from "@/components/NotificationBell";
 import GlobalSearch from "@/components/GlobalSearch";
 
@@ -93,13 +94,21 @@ export default function Navbar() {
 
     supabase.auth.getUser().then(({ data: { user } }) => {
       setUser(user);
-      if (user) fetchPlan(user.id, supabase);
+      if (user) {
+        Sentry.setUser({ id: user.id, email: user.email });
+        fetchPlan(user.id, supabase);
+      }
     });
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user ?? null);
-      if (session?.user) fetchPlan(session.user.id, supabase);
-      else setPlan("free");
+      if (session?.user) {
+        Sentry.setUser({ id: session.user.id, email: session.user.email });
+        fetchPlan(session.user.id, supabase);
+      } else {
+        Sentry.setUser(null);
+        setPlan("free");
+      }
     });
 
     return () => subscription.unsubscribe();
