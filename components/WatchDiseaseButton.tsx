@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState, useCallback } from "react";
+import { useRouter } from "next/navigation";
 
 const L: Record<string, { on: string; off: string; pro: string; max: string }> = {
   fr: { on: "Alertes actives",        off: "Alertes maladie",       pro: "Fonctionnalité Pro", max: "Limite atteinte (10)" },
@@ -17,13 +18,18 @@ export default function WatchDiseaseButton({
   locale: string;
 }) {
   const [watching, setWatching] = useState<boolean | null>(null);
+  const [isGuest, setIsGuest] = useState(false);
   const [busy, setBusy] = useState(false);
   const [tip, setTip] = useState<string | null>(null);
   const lb = L[locale] ?? L.en;
+  const router = useRouter();
 
   useEffect(() => {
     fetch("/api/alert-diseases")
-      .then((r) => (r.ok ? r.json() : null))
+      .then((r) => {
+        if (r.status === 401) { setIsGuest(true); setWatching(false); return null; }
+        return r.ok ? r.json() : null;
+      })
       .then((d) => {
         if (d?.subscribed) setWatching(d.subscribed.includes(diseaseName));
       })
@@ -32,6 +38,10 @@ export default function WatchDiseaseButton({
 
   const toggle = useCallback(async () => {
     if (busy || watching === null) return;
+    if (isGuest) {
+      router.push(`/${locale}/signup`);
+      return;
+    }
     setBusy(true);
     try {
       const res = await fetch("/api/alert-diseases", {
@@ -48,7 +58,7 @@ export default function WatchDiseaseButton({
       }
     } catch {}
     setBusy(false);
-  }, [watching, busy, diseaseName, lb]);
+  }, [watching, busy, isGuest, diseaseName, lb, locale, router]);
 
   if (watching === null) return null;
 
