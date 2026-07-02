@@ -147,6 +147,13 @@ export default function LoginPage() {
               {t("signupLink")}
             </Link>
           </p>
+          <p className="text-center text-xs text-gray-600 -mt-4">
+            {locale === "fr" ? "Essai Pro 14 jours offert · Sans carte bancaire" :
+             locale === "es" ? "14 días Pro gratuitos · Sin tarjeta de crédito" :
+             locale === "ar" ? "14 يوم Pro مجاناً · بدون بطاقة بنكية" :
+             locale === "id" ? "14 hari Pro gratis · Tanpa kartu kredit" :
+             "14-day Pro trial · No credit card required"}
+          </p>
         </div>
       </div>
     </div>
