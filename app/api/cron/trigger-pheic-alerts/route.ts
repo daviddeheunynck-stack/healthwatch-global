@@ -1,5 +1,6 @@
 import { NextRequest } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 import * as Sentry from "@sentry/nextjs";
 import { logCronRun } from "@/lib/cron-monitor";
 
@@ -106,7 +107,7 @@ export async function GET(req: NextRequest) {
   // 1. Active PHEIC outbreaks
   const { data: pheicOutbreaks } = await supabase
     .from("outbreaks")
-    .select("id, disease_en, country_en, cases, deaths, risk_level, date")
+    .select("id, disease, disease_en, disease_ar, country, country_en, country_ar, cases, deaths, risk_level, date")
     .eq("active", true)
     .eq("is_pheic", true);
 
@@ -153,8 +154,6 @@ export async function GET(req: NextRequest) {
   for (const [, outbreaks] of diseaseMap) {
     // Primary row = largest case count (main source country)
     const primary  = outbreaks.reduce((a, b) => (a.cases ?? 0) >= (b.cases ?? 0) ? a : b);
-    const disease  = primary.disease_en ?? "Unknown";
-    const countries = outbreaks.map((o) => o.country_en ?? "Unknown").join(", ");
     const totalCases  = outbreaks.reduce((s, o) => s + (o.cases ?? 0), 0);
     const totalDeaths = outbreaks.reduce((s, o) => s + (o.deaths ?? 0), 0);
     const cfr =
@@ -180,7 +179,10 @@ export async function GET(req: NextRequest) {
       const locale    = user.alert_locale ?? "en";
       const numLocale = locale === "ar" ? "ar-SA" : locale;
       const isRtl     = locale === "ar";
+      const sep       = locale === "ar" ? "، " : ", ";
       const lc      = LOCALE_COPY[locale] ?? LOCALE_COPY.en;
+      const disease  = getLocalizedDisease(primary, locale);
+      const countries = outbreaks.map((o) => getLocalizedCountry(o, locale)).join(sep);
       const subject = lc.subject(disease, countries);
       const intro   = lc.intro(esc(disease), esc(countries));
       const dashUrl = `${APP_URL}/${locale}`;
