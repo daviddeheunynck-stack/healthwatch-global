@@ -32,66 +32,72 @@ function esc(s: string): string {
 }
 
 type LocaleCopy = {
-  subject:  (d: string, c: string) => string;
-  intro:    (d: string, c: string) => string;
-  title:    string;
-  cases:    string;
-  reported: string;
-  risk:     string;
-  view:     string;
-  footer:   string;
+  subject:     (d: string, c: string) => string;
+  intro:       (d: string, c: string) => string;
+  title:       string;
+  cases:       string;
+  reported:    string;
+  risk:        string;
+  riskValues:  Record<string, string>;
+  view:        string;
+  footer:      string;
 };
 
 const LOCALE_COPY: Record<string, LocaleCopy> = {
   fr: {
-    subject:  (d, c) => `[HealthWatch] Déclaration PHEIC : ${d} — ${c}`,
-    intro:    (d, c) => `L'OMS a déclaré une Urgence de Santé Publique de Portée Internationale (PHEIC) pour <strong>${d}</strong> en <strong>${c}</strong>.`,
-    title:    "HealthWatch Global — Déclaration PHEIC",
-    cases:    "Cas :",
-    reported: "Signalé le :",
-    risk:     "Risque :",
-    view:     "Voir le tableau de bord →",
-    footer:   "HealthWatch Global · Gérez vos préférences d'alertes dans le tableau de bord.",
+    subject:    (d, c) => `[HealthWatch] Déclaration PHEIC : ${d} — ${c}`,
+    intro:      (d, c) => `L'OMS a déclaré une Urgence de Santé Publique de Portée Internationale (PHEIC) pour <strong>${d}</strong> en <strong>${c}</strong>.`,
+    title:      "HealthWatch Global — Déclaration PHEIC",
+    cases:      "Cas :",
+    reported:   "Signalé le :",
+    risk:       "Risque :",
+    riskValues: { high: "ÉLEVÉ", medium: "MODÉRÉ", low: "FAIBLE" },
+    view:       "Voir le tableau de bord →",
+    footer:     "HealthWatch Global · Gérez vos préférences d'alertes dans le tableau de bord.",
   },
   es: {
-    subject:  (d, c) => `[HealthWatch] Declaración PHEIC: ${d} — ${c}`,
-    intro:    (d, c) => `La OMS ha declarado una Emergencia de Salud Pública de Importancia Internacional (PHEIC) por <strong>${d}</strong> en <strong>${c}</strong>.`,
-    title:    "HealthWatch Global — Declaración PHEIC",
-    cases:    "Casos:",
-    reported: "Reportado:",
-    risk:     "Riesgo:",
-    view:     "Ver panel →",
-    footer:   "HealthWatch Global · Gestione sus preferencias de alertas en el panel.",
+    subject:    (d, c) => `[HealthWatch] Declaración PHEIC: ${d} — ${c}`,
+    intro:      (d, c) => `La OMS ha declarado una Emergencia de Salud Pública de Importancia Internacional (PHEIC) por <strong>${d}</strong> en <strong>${c}</strong>.`,
+    title:      "HealthWatch Global — Declaración PHEIC",
+    cases:      "Casos:",
+    reported:   "Reportado:",
+    risk:       "Riesgo:",
+    riskValues: { high: "ALTO", medium: "MEDIO", low: "BAJO" },
+    view:       "Ver panel →",
+    footer:     "HealthWatch Global · Gestione sus preferencias de alertas en el panel.",
   },
   ar: {
-    subject:  (d, c) => `[HealthWatch] إعلان PHEIC: ${d} — ${c}`,
-    intro:    (d, c) => `أعلنت منظمة الصحة العالمية حالة طوارئ صحية عامة دولية (PHEIC) بشأن <strong>${d}</strong> في <strong>${c}</strong>.`,
-    title:    "HealthWatch Global — إعلان PHEIC",
-    cases:    "الحالات:",
-    reported: "تاريخ الإبلاغ:",
-    risk:     "مستوى الخطر:",
-    view:     "عرض لوحة المعلومات ←",
-    footer:   "HealthWatch Global · أدر تفضيلات التنبيهات من لوحة المعلومات.",
+    subject:    (d, c) => `[HealthWatch] إعلان PHEIC: ${d} — ${c}`,
+    intro:      (d, c) => `أعلنت منظمة الصحة العالمية حالة طوارئ صحية عامة دولية (PHEIC) بشأن <strong>${d}</strong> في <strong>${c}</strong>.`,
+    title:      "HealthWatch Global — إعلان PHEIC",
+    cases:      "الحالات:",
+    reported:   "تاريخ الإبلاغ:",
+    risk:       "مستوى الخطر:",
+    riskValues: { high: "مرتفع", medium: "متوسط", low: "منخفض" },
+    view:       "عرض لوحة المعلومات ←",
+    footer:     "HealthWatch Global · أدر تفضيلات التنبيهات من لوحة المعلومات.",
   },
   id: {
-    subject:  (d, c) => `[HealthWatch] Deklarasi PHEIC: ${d} — ${c}`,
-    intro:    (d, c) => `WHO telah menyatakan Kedaruratan Kesehatan Masyarakat yang Meresahkan Dunia (PHEIC) untuk <strong>${d}</strong> di <strong>${c}</strong>.`,
-    title:    "HealthWatch Global — Deklarasi PHEIC",
-    cases:    "Kasus:",
-    reported: "Dilaporkan:",
-    risk:     "Risiko:",
-    view:     "Lihat dasbor →",
-    footer:   "HealthWatch Global · Kelola preferensi peringatan di dasbor Anda.",
+    subject:    (d, c) => `[HealthWatch] Deklarasi PHEIC: ${d} — ${c}`,
+    intro:      (d, c) => `WHO telah menyatakan Kedaruratan Kesehatan Masyarakat yang Meresahkan Dunia (PHEIC) untuk <strong>${d}</strong> di <strong>${c}</strong>.`,
+    title:      "HealthWatch Global — Deklarasi PHEIC",
+    cases:      "Kasus:",
+    reported:   "Dilaporkan:",
+    risk:       "Risiko:",
+    riskValues: { high: "TINGGI", medium: "SEDANG", low: "RENDAH" },
+    view:       "Lihat dasbor →",
+    footer:     "HealthWatch Global · Kelola preferensi peringatan di dasbor Anda.",
   },
   en: {
-    subject:  (d, c) => `[HealthWatch] PHEIC Declaration: ${d} — ${c}`,
-    intro:    (d, c) => `WHO has declared a Public Health Emergency of International Concern (PHEIC) for <strong>${d}</strong> in <strong>${c}</strong>.`,
-    title:    "HealthWatch Global — PHEIC Declaration",
-    cases:    "Cases:",
-    reported: "Reported:",
-    risk:     "Risk:",
-    view:     "View dashboard →",
-    footer:   "HealthWatch Global · Manage alert preferences in your dashboard.",
+    subject:    (d, c) => `[HealthWatch] PHEIC Declaration: ${d} — ${c}`,
+    intro:      (d, c) => `WHO has declared a Public Health Emergency of International Concern (PHEIC) for <strong>${d}</strong> in <strong>${c}</strong>.`,
+    title:      "HealthWatch Global — PHEIC Declaration",
+    cases:      "Cases:",
+    reported:   "Reported:",
+    risk:       "Risk:",
+    riskValues: { high: "HIGH", medium: "MEDIUM", low: "LOW" },
+    view:       "View dashboard →",
+    footer:     "HealthWatch Global · Manage alert preferences in your dashboard.",
   },
 };
 
@@ -197,7 +203,7 @@ export async function GET(req: NextRequest) {
     <li>${lc.cases} ${totalCases.toLocaleString(numLocale)}</li>
     ${cfr ? `<li>${cfr}</li>` : ""}
     <li>${lc.reported} ${latestDate}</li>
-    <li>${lc.risk} <strong style="color:#f87171">${topRisk.toUpperCase()}</strong></li>
+    <li>${lc.risk} <strong style="color:#f87171">${esc(lc.riskValues[topRisk] ?? topRisk.toUpperCase())}</strong></li>
   </ul>
   <a href="${dashUrl}" style="display:inline-block;padding:10px 20px;background:#dc2626;color:#fff;text-decoration:none;border-radius:8px;font-size:14px;font-weight:600">
     ${lc.view}
