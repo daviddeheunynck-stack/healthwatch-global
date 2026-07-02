@@ -94,7 +94,7 @@ export async function GET(req: NextRequest) {
         // receive it from signup/page.tsx immediately after form submission.
         const isOAuth = user.app_metadata?.provider !== "email";
         if (isNewSignup && isOAuth && user.email) {
-          const emailLocale = (updates.locale as string | undefined) ?? profile?.locale ?? inferredLocale ?? "fr";
+          const emailLocale = (updates.locale as string | undefined) ?? profile?.locale ?? inferredLocale ?? "en";
           fetch(`${origin}/api/send-welcome`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
