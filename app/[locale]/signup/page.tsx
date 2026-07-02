@@ -8,6 +8,14 @@ import { Activity, Loader2, CheckCircle, BarChart2, Bell, FileDown, Lock, Sparkl
 import Link from "next/link";
 import OAuthButtons from "@/components/OAuthButtons";
 
+const TRIAL_START_NOTE: Record<string, string> = {
+  en: "Your 14-day Pro trial starts as soon as you confirm your email.",
+  fr: "Votre essai Pro de 14 jours commence dès que vous confirmez votre email.",
+  es: "Su prueba Pro de 14 días comienza en cuanto confirme su email.",
+  ar: "تجربتك المجانية لمدة 14 يوماً تبدأ بمجرد تأكيد بريدك الإلكتروني.",
+  id: "Uji coba Pro 14 hari Anda dimulai segera setelah mengkonfirmasi email.",
+};
+
 const VALUE_PROPS: Record<string, { trial: string; items: string[]; noCard: string; gdpr: string; alreadyRegistered: { text: string; signIn: string; or: string; reset: string } }> = {
   en: {
     trial: "14-day Pro trial included — no credit card",
@@ -195,6 +203,7 @@ export default function SignupPage() {
                 <div>
                   <p className="text-lg font-semibold text-white">{t("successSignup")}</p>
                   <p className="text-sm text-gray-400 mt-1">{t("checkEmailSignup")}</p>
+                  <p className="text-xs text-blue-400 mt-2">{TRIAL_START_NOTE[locale] ?? TRIAL_START_NOTE.en}</p>
                 </div>
                 <Link
                   href={`/${locale}/login`}
