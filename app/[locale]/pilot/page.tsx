@@ -43,6 +43,9 @@ const COPY = {
     submitting: "Sending…",
     successTitle: "Application received.",
     successDesc: "We'll review it and get back to you within 48 hours.",
+    successTitleActivated: "Access activated.",
+    successDescActivated: "Your 35-day Pro access is live. Check your email for confirmation.",
+    dashboardLink: "Go to dashboard →",
     backLink: "← Back to pricing",
     trialFallback: "Not an institution? Try the 14-day free trial →",
   },
@@ -83,6 +86,9 @@ const COPY = {
     submitting: "Envoi…",
     successTitle: "Candidature reçue.",
     successDesc: "Nous l'examinerons et reviendrons vers vous sous 48 heures.",
+    successTitleActivated: "Accès activé.",
+    successDescActivated: "Votre accès Pro de 35 jours est actif. Vérifiez votre email pour la confirmation.",
+    dashboardLink: "Accéder au tableau de bord →",
     backLink: "← Retour aux tarifs",
     trialFallback: "Pas d'institution ? Essai gratuit 14 jours →",
   },
@@ -123,6 +129,9 @@ const COPY = {
     submitting: "Enviando…",
     successTitle: "Solicitud recibida.",
     successDesc: "La revisaremos y le responderemos en 48 horas.",
+    successTitleActivated: "Acceso activado.",
+    successDescActivated: "Su acceso Pro de 35 días está activo. Consulte su correo para la confirmación.",
+    dashboardLink: "Ir al panel →",
     backLink: "← Volver a precios",
     trialFallback: "¿No es una institución? Prueba gratuita de 14 días →",
   },
@@ -163,6 +172,9 @@ const COPY = {
     submitting: "جارٍ الإرسال…",
     successTitle: "تم استلام طلبك.",
     successDesc: "سنراجعه ونتواصل معك خلال 48 ساعة.",
+    successTitleActivated: "تم تفعيل الوصول.",
+    successDescActivated: "وصول Pro لمدة 35 يوماً نشط الآن. راجع بريدك الإلكتروني للتأكيد.",
+    dashboardLink: "← الانتقال إلى لوحة التحكم",
     backLink: "→ العودة إلى الأسعار",
     trialFallback: "← لست مؤسسة؟ جرّب مجاناً لمدة 14 يوماً",
   },
@@ -203,6 +215,9 @@ const COPY = {
     submitting: "Mengirim…",
     successTitle: "Aplikasi diterima.",
     successDesc: "Kami akan meninjaunya dan menghubungi Anda dalam 48 jam.",
+    successTitleActivated: "Akses diaktifkan.",
+    successDescActivated: "Akses Pro 35 hari Anda sudah aktif. Cek email Anda untuk konfirmasi.",
+    dashboardLink: "Buka dasbor →",
     backLink: "← Kembali ke harga",
     trialFallback: "Bukan institusi? Coba uji coba gratis 14 hari →",
   },
@@ -275,6 +290,7 @@ export default function PilotPage() {
   const [form, setForm] = useState({ name: "", organization: "", role: "", email: "", teamSize: "", useCase: "" });
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [isActivated, setIsActivated] = useState(false);
   const [error, setError] = useState("");
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const faq = FAQ_COPY[locale] ?? FAQ_COPY.en;
@@ -298,6 +314,8 @@ export default function PilotPage() {
         }),
       });
       if (!res.ok) throw new Error();
+      const data = await res.json() as { activated?: boolean };
+      setIsActivated(!!data.activated);
       setSuccess(true);
     } catch {
       setError(
@@ -415,8 +433,13 @@ export default function PilotPage() {
         {success ? (
           <div className="text-center py-10 space-y-3">
             <CheckCircle className="w-12 h-12 text-green-400 mx-auto" />
-            <p className="text-lg font-semibold text-white">{c.successTitle}</p>
-            <p className="text-gray-400 text-sm">{c.successDesc}</p>
+            <p className="text-lg font-semibold text-white">{isActivated ? c.successTitleActivated : c.successTitle}</p>
+            <p className="text-gray-400 text-sm">{isActivated ? c.successDescActivated : c.successDesc}</p>
+            {isActivated && (
+              <Link href={`/${locale}`} className="inline-block mt-2 text-sm font-semibold text-red-400 hover:text-red-300 transition-colors">
+                {c.dashboardLink}
+              </Link>
+            )}
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-4">
