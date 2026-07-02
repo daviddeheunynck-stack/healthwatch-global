@@ -106,6 +106,9 @@ const TYPE_DOT: Record<string, string> = {
   subscriber:     "bg-blue-400",
   watchlist:      "bg-purple-400",
   disease_alert:  "bg-teal-400",
+  pheic:          "bg-red-500",
+  country_risk:   "bg-orange-400",
+  regional_digest:"bg-indigo-400",
 };
 
 function timeAgo(iso: string, locale: string): string {
