@@ -150,7 +150,8 @@ export async function GET(req: NextRequest) {
         user_id: alert.user_id,
         type: "country_risk",
         title: subject,
-        body: `${top.disease_en} · ${alert.country_en} · ${level}`,
+        body: `${localDisease} · ${localCountry} · ${level}`,
+        outbreak_id: top.id,
       }).then(() => {}, () => {});
 
       await sendEmail(alert.email, subject, html);
