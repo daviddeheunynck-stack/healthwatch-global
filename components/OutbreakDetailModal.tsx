@@ -877,6 +877,36 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlis
           );
         })()}
 
+        {/* Epidemic curve teaser for free users */}
+        {!isPaid && (
+          <div className="px-5 pb-3">
+            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">
+              {locale === "fr" ? "Courbe épidémique" : locale === "es" ? "Curva epidémica" : locale === "ar" ? "منحنى الوباء" : locale === "id" ? "Kurva epidemi" : "Epidemic curve"}
+            </p>
+            <div
+              className="relative rounded-xl border border-gray-800/60 bg-gray-900/40 h-[100px] overflow-hidden cursor-pointer"
+              onClick={() => openModal("cases")}
+            >
+              {/* Blurred fake curve */}
+              <svg className="absolute inset-0 w-full h-full blur-[3px] opacity-30" viewBox="0 0 300 100" preserveAspectRatio="none">
+                <polyline
+                  points="0,90 30,85 60,78 90,65 120,45 150,30 180,22 210,28 240,40 270,55 300,62"
+                  fill="none"
+                  stroke="#ef4444"
+                  strokeWidth="2.5"
+                  strokeLinejoin="round"
+                />
+              </svg>
+              <div className="absolute inset-0 flex items-center justify-center gap-2">
+                <Activity className="w-4 h-4 text-gray-600" />
+                <span className="text-xs text-gray-600 font-medium">
+                  {locale === "fr" ? "Graphique disponible — Pro" : locale === "es" ? "Gráfico disponible — Pro" : locale === "ar" ? "الرسم متاح — Pro" : locale === "id" ? "Grafik tersedia — Pro" : "Chart available — Pro"}
+                </span>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Unlock prompt for free users — outbreak-specific to drive conversion */}
         {!isPaid && (
           <div className="mx-5 mb-3 rounded-xl bg-amber-900/10 border border-amber-700/20 p-3 space-y-2">
