@@ -146,6 +146,13 @@ export default function AlertsPageClient({
     setNotifications((prev) => prev.filter((n) => n.id !== id));
   }
 
+  function markOneRead(id: string) {
+    setNotifications((prev) => prev.map((n) =>
+      n.id === id && !n.read_at ? { ...n, read_at: new Date().toISOString() } : n
+    ));
+    fetch(`/api/notifications?id=${id}`, { method: "PATCH" }).catch(() => {});
+  }
+
   async function loadMore() {
     setLoadingMore(true);
     try {
@@ -232,8 +239,8 @@ export default function AlertsPageClient({
               return (
                 <div key={n.id} className="relative group">
                   {n.outbreak_id
-                    ? <Link href={`/${locale}/outbreak/${n.outbreak_id}`} className={rowCls}>{content}</Link>
-                    : <div className={rowCls}>{content}</div>
+                    ? <Link href={`/${locale}/outbreak/${n.outbreak_id}`} className={rowCls} onClick={() => markOneRead(n.id)}>{content}</Link>
+                    : <div className={rowCls} onClick={() => markOneRead(n.id)}>{content}</div>
                   }
                   <button
                     onClick={() => deleteOne(n.id)}

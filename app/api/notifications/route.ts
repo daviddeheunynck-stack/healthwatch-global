@@ -29,16 +29,28 @@ export async function GET(req: NextRequest) {
   return NextResponse.json({ notifications, hasMore });
 }
 
-export async function PATCH() {
+export async function PATCH(req: NextRequest) {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  await supabase
-    .from("alert_notifications")
-    .update({ read_at: new Date().toISOString() })
-    .eq("user_id", user.id)
-    .is("read_at", null);
+  const id = req.nextUrl.searchParams.get("id");
+  const now = new Date().toISOString();
+
+  if (id) {
+    await supabase
+      .from("alert_notifications")
+      .update({ read_at: now })
+      .eq("id", id)
+      .eq("user_id", user.id)
+      .is("read_at", null);
+  } else {
+    await supabase
+      .from("alert_notifications")
+      .update({ read_at: now })
+      .eq("user_id", user.id)
+      .is("read_at", null);
+  }
 
   return NextResponse.json({ ok: true });
 }
