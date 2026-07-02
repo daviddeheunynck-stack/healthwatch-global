@@ -402,16 +402,24 @@ async function DashboardContent({ demo = false, urlRegion, urlRisk }: { demo?: b
             <span className="font-semibold text-white">{getLocalizedDisease(top, locale)}</span>
             <span className="text-gray-600">·</span>
             <span className="text-gray-400">{getLocalizedCountry(top, locale)}</span>
-            {isPaid && top.cases > 0 && (
+            {top.cases > 0 && (
               <>
                 <span className="text-gray-600">·</span>
-                <span className="text-gray-300">{top.cases.toLocaleString(numLocale)} {snap.cases}</span>
+                {isPaid ? (
+                  <span className="text-gray-300">{top.cases.toLocaleString(numLocale)} {snap.cases}</span>
+                ) : (
+                  <span className="blur-sm select-none text-gray-500">{top.cases.toLocaleString(numLocale)} {snap.cases}</span>
+                )}
               </>
             )}
-            {isPaid && cfr && (
+            {cfr && (
               <>
                 <span className="text-gray-600">·</span>
-                <span className="text-red-400 font-medium">{cfr}% {snap.cfr}</span>
+                {isPaid ? (
+                  <span className="text-red-400 font-medium">{cfr}% {snap.cfr}</span>
+                ) : (
+                  <span className="blur-sm select-none text-gray-500">{cfr}% {snap.cfr}</span>
+                )}
               </>
             )}
             {/* 7-day trend — visible to all users (qualitative signal, same as TrendBadge) */}
