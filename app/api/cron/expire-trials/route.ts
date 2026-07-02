@@ -94,7 +94,7 @@ export async function GET(req: NextRequest) {
   // Send trial-expired email to each downgraded user (skip if opted out)
   for (const user of expired) {
     const df = user.display_filters as Record<string, unknown> | null;
-    if (df?.no_weekly_signal) continue;
+    if (df?.no_onboarding_emails) continue;
     try {
       const { subject, html } = buildTrialExpiredEmail(user.locale ?? "en", user.id);
       await sendEmail(user.email, subject, html);
