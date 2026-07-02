@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import * as Sentry from "@sentry/nextjs";
 import { logCronRun } from "@/lib/cron-monitor";
+import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 
 export const dynamic = "force-dynamic";
 
@@ -67,7 +68,7 @@ const L: Record<string, {
 };
 
 function buildHtml(
-  outbreaks: Array<{ disease: string; disease_en: string | null; country: string; country_en: string | null; cases: number }>,
+  outbreaks: Array<{ disease: string; disease_en: string | null; disease_ar: string | null; country: string; country_en: string | null; country_ar: string | null; cases: number }>,
   locale: string,
   dashUrl: string,
   unsubUrl: string,
@@ -77,8 +78,8 @@ function buildHtml(
   const numLocale = locale === "ar" ? "ar-SA" : locale;
   const rows = outbreaks
     .map((o) => {
-      const disease = (locale === "ar" ? null : o.disease_en) ?? o.disease_en ?? o.disease;
-      const country = o.country_en ?? o.country;
+      const disease = getLocalizedDisease({ disease: o.disease, disease_en: o.disease_en ?? null, disease_ar: o.disease_ar ?? null }, locale);
+      const country = getLocalizedCountry({ country: o.country, country_en: o.country_en ?? null, country_ar: o.country_ar ?? null }, locale);
       const casesStr = o.cases > 0 ? o.cases.toLocaleString(numLocale) : "—";
       return `
       <tr>
@@ -167,7 +168,7 @@ export async function GET(req: NextRequest) {
   // Top HIGH active outbreaks (max 3, ordered by cases desc)
   const { data: outbreaks, error: outErr } = await supabase
     .from("outbreaks")
-    .select("disease, disease_en, country, country_en, cases")
+    .select("disease, disease_en, disease_ar, country, country_en, country_ar, cases")
     .eq("risk_level", "high")
     .eq("active", true)
     .order("cases", { ascending: false })
