@@ -368,7 +368,7 @@ export async function GET(req: NextRequest) {
     else console.log(`[sync] Snapshotted ${snapshots.length} outbreaks for ${today}`);
   }
 
-  // ── 6. Deactivate stale entries (never touch seed rows) ──────
+  // ── 6. Deactivate stale entries (never touch seed rows or high-priority) ──────
   const cutoff = new Date();
   cutoff.setDate(cutoff.getDate() - STALE_DAYS);
   const { count } = await supabase
@@ -376,6 +376,7 @@ export async function GET(req: NextRequest) {
     .update({ active: false })
     .eq("active", true)
     .neq("is_seed", true)
+    .lt("source_priority", 5) // never auto-deactivate regional/sitrep-managed entries (priority ≥ 5)
     .lt("date", cutoff.toISOString().split("T")[0]);
 
   results.staleDeactivated = count ?? 0;
