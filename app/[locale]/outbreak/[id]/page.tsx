@@ -36,6 +36,7 @@ const LABELS = {
     compareLabel: "Comparer",
     printReport: "Rapport PDF",
     lastSynced: "Vérifié par HealthWatch",
+    syncedAgo: (m: number) => m < 60 ? `Il y a ${m} min` : m < 1440 ? `Il y a ${Math.floor(m/60)}h` : `Il y a ${Math.floor(m/1440)}j`,
     sourceLabel: "Source", sourceVerified: "Bulletin OMS officiel", sourceOfficial: "Source officielle",
     pheic: "URGENCE SANITAIRE INTERNATIONALE (PHEIC)",
     archived: "Foyer terminé — données archivées",
@@ -63,6 +64,7 @@ const LABELS = {
     date: "Report date", region: "Region",
     printReport: "PDF Report",
     lastSynced: "Last checked by HealthWatch",
+    syncedAgo: (m: number) => m < 60 ? `${m}m ago` : m < 1440 ? `${Math.floor(m/60)}h ago` : `${Math.floor(m/1440)}d ago`,
     sourceLabel: "Source", sourceVerified: "Official WHO Disease Outbreak News", sourceOfficial: "Official source",
     pheic: "PUBLIC HEALTH EMERGENCY OF INTERNATIONAL CONCERN (PHEIC)",
     archived: "Outbreak resolved — archived data",
@@ -91,6 +93,7 @@ const LABELS = {
     date: "Fecha del informe", region: "Región",
     printReport: "Informe PDF",
     lastSynced: "Última verificación por HealthWatch",
+    syncedAgo: (m: number) => m < 60 ? `Hace ${m} min` : m < 1440 ? `Hace ${Math.floor(m/60)}h` : `Hace ${Math.floor(m/1440)}d`,
     sourceLabel: "Fuente", sourceVerified: "Boletín oficial OMS", sourceOfficial: "Fuente oficial",
     pheic: "EMERGENCIA DE SALUD PÚBLICA DE IMPORTANCIA INTERNACIONAL (ESPII)",
     archived: "Brote resuelto — datos archivados",
@@ -119,6 +122,7 @@ const LABELS = {
     date: "تاريخ التقرير", region: "المنطقة",
     printReport: "تقرير PDF",
     lastSynced: "آخر تحقق بواسطة HealthWatch",
+    syncedAgo: (m: number) => m < 60 ? `منذ ${m} دقيقة` : m < 1440 ? `منذ ${Math.floor(m/60)} ساعة` : `منذ ${Math.floor(m/1440)} يوم`,
     sourceLabel: "المصدر", sourceVerified: "نشرة منظمة الصحة العالمية الرسمية", sourceOfficial: "مصدر رسمي",
     pheic: "طوارئ الصحة العمومية التي تثير قلقاً دولياً",
     archived: "انتهى التفشي — بيانات مؤرشفة",
@@ -147,6 +151,7 @@ const LABELS = {
     date: "Tanggal laporan", region: "Wilayah",
     printReport: "Laporan PDF",
     lastSynced: "Terakhir dicek oleh HealthWatch",
+    syncedAgo: (m: number) => m < 60 ? `${m} mnt lalu` : m < 1440 ? `${Math.floor(m/60)}j lalu` : `${Math.floor(m/1440)}h lalu`,
     sourceLabel: "Sumber", sourceVerified: "Buletin resmi WHO", sourceOfficial: "Sumber resmi",
     pheic: "KEDARURATAN KESEHATAN MASYARAKAT YANG MERESAHKAN DUNIA (KKMMD)",
     archived: "Wabah selesai — data diarsipkan",
@@ -170,7 +175,7 @@ const LABELS = {
     citeCopied: "Disalin!",
     staleBulletin: (d: number) => `Tidak ada buletin resmi dalam ${d} hari — mungkin sudah selesai atau tidak dilaporkan.`,
   },
-} satisfies Record<string, { cases: string; deaths: string; cfr: string; date: string; region: string; printReport: string; lastSynced: string; sourceLabel: string; sourceVerified: string; sourceOfficial: string; pheic: string; archived: string; ctaTitle: string; ctaSub: string; ctaProBtn: string; ctaFree: string; back: string; compareLabel: string; chartTitle: string; noData: string; risk: Record<string, string>; fpGuidance: string; tierLabels: Record<string, string>; firstActions: string; reportingLag: string; cumulativeAs: (date: string) => string; citeLabel: string; citeCopy: string; citeCopied: string; staleBulletin: (d: number) => string; operationalDisclaimer: string }>;
+} satisfies Record<string, { cases: string; deaths: string; cfr: string; date: string; region: string; printReport: string; lastSynced: string; syncedAgo: (m: number) => string; sourceLabel: string; sourceVerified: string; sourceOfficial: string; pheic: string; archived: string; ctaTitle: string; ctaSub: string; ctaProBtn: string; ctaFree: string; back: string; compareLabel: string; chartTitle: string; noData: string; risk: Record<string, string>; fpGuidance: string; tierLabels: Record<string, string>; firstActions: string; reportingLag: string; cumulativeAs: (date: string) => string; citeLabel: string; citeCopy: string; citeCopied: string; staleBulletin: (d: number) => string; operationalDisclaimer: string }>;
 
 const RISK_STYLE: Record<string, string> = {
   high:   "text-red-400 bg-red-500/10 border-red-500/30",
@@ -539,13 +544,7 @@ export default async function OutbreakPage({
       {o.updated_at && (
         <div className="mb-6 text-xs text-gray-500 flex items-center gap-1">
           <span>🔄</span>
-          <span>{l.lastSynced} : {(() => {
-            const mins = Math.round((Date.now() - new Date(o.updated_at!).getTime()) / 60_000);
-            if (mins < 60)  return `${mins} min ago`;
-            const hrs = Math.floor(mins / 60);
-            if (hrs < 24)   return `${hrs}h ago`;
-            return `${Math.floor(hrs / 24)}d ago`;
-          })()}</span>
+          <span>{l.lastSynced} : {l.syncedAgo(Math.round((Date.now() - new Date(o.updated_at!).getTime()) / 60_000))}</span>
         </div>
       )}
 
