@@ -377,6 +377,7 @@ export async function GET(req: NextRequest) {
     .eq("active", true)
     .neq("is_seed", true)
     .lt("source_priority", 5) // never auto-deactivate regional/sitrep-managed entries (priority ≥ 5)
+    .eq("is_pheic", false)    // never auto-deactivate active WHO PHEICs
     .lt("date", cutoff.toISOString().split("T")[0]);
 
   results.staleDeactivated = count ?? 0;
