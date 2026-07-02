@@ -470,6 +470,9 @@ export default async function AccountPage({
         day: "numeric", month: "long", year: "numeric",
       })
     : null;
+  const trialDaysLeft = trialActive && trialEndsAt
+    ? Math.ceil((trialEndsAt.getTime() - Date.now()) / 86_400_000)
+    : null;
 
   return (
     <div className="max-w-2xl mx-auto space-y-6 py-4">
@@ -492,6 +495,9 @@ export default async function AccountPage({
           {trialActive && trialDateStr && (
             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs font-semibold">
               <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
+              {trialDaysLeft !== null && trialDaysLeft > 0
+                ? `${trialDaysLeft} ${locale === "fr" ? "jours restants" : locale === "es" ? "días restantes" : locale === "ar" ? "أيام متبقية" : locale === "id" ? "hari tersisa" : "days left"} · `
+                : ""}
               {l.trialEndsOn} {trialDateStr}
             </span>
           )}
@@ -568,6 +574,15 @@ export default async function AccountPage({
                    locale === "id" ? "Uji coba 14 hari gratis · tanpa kartu" :
                    "14-day free trial · no credit card")}
             </p>
+            {trialExpired && (
+              <p className="text-xs text-gray-600">
+                {locale === "fr" ? "Satisfait ou remboursé 14 jours — sans condition." :
+                 locale === "es" ? "14 días de garantía de devolución — sin preguntas." :
+                 locale === "ar" ? "ضمان استرداد الأموال خلال 14 يوماً." :
+                 locale === "id" ? "Garansi uang kembali 14 hari." :
+                 "14-day money-back guarantee — no questions asked."}
+              </p>
+            )}
           </div>
         ) : null}
       </div>
