@@ -133,7 +133,7 @@ export async function GET(req: NextRequest) {
   let j32Sent = 0, j32Failed = 0;
 
   const hasOptedOut = (u: { display_filters: unknown }) =>
-    !!(u.display_filters as Record<string, unknown> | null)?.no_weekly_signal;
+    !!(u.display_filters as Record<string, unknown> | null)?.no_onboarding_emails;
 
   // ── Send J+3 emails ───────────────────────────────────────────────────────
   for (const user of j3Users ?? []) {
