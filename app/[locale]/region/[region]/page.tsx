@@ -196,6 +196,14 @@ export default async function RegionPage({
   const isRtl = l === "ar";
   const regionName = REGION_NAME[l][region as Region];
 
+  const regionProTitle: Record<Locale, string> = {
+    en: `Track ${regionName} outbreaks in real time`,
+    fr: `Surveiller les foyers en ${regionName} en temps réel`,
+    es: `Seguir los brotes en ${regionName} en tiempo real`,
+    ar: `تتبع تفشيات الأمراض في ${regionName} في الوقت الفعلي`,
+    id: `Lacak wabah di ${regionName} secara real-time`,
+  };
+
   const allOutbreaks = await fetchRegionOutbreaks(region);
   if (allOutbreaks.length === 0) notFound();
 
@@ -370,7 +378,7 @@ export default async function RegionPage({
       )}
 
       {/* Email capture CTA */}
-      <EmailCapture locale={l} region={region} title={lb.ctaTitle} body={lb.ctaBody} />
+      <EmailCapture locale={l} region={region} title={lb.ctaTitle} body={lb.ctaBody} proTitle={regionProTitle[l]} />
     </div>
   );
 }
