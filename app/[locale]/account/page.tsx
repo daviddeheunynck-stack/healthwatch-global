@@ -445,8 +445,8 @@ export default async function AccountPage({
   const akl = API_KEY_LABELS[locale] ?? API_KEY_LABELS.en;
 
   const slackUrl: string | null = profile?.slack_webhook_url ?? null;
-  // Fetch API keys (enterprise only)
-  const { data: apiKeysData } = plan === "enterprise"
+  const showApiKeys = ["pro", "team", "enterprise"].includes(plan);
+  const { data: apiKeysData } = showApiKeys
     ? await supabase
         .from("api_keys")
         .select("id, name, key_prefix, last_used_at, created_at")
@@ -675,8 +675,8 @@ export default async function AccountPage({
         />
       </div>
 
-      {/* API keys — enterprise only */}
-      {plan === "enterprise" && (
+      {/* API keys — pro/team/enterprise */}
+      {showApiKeys && (
         <div className="bg-gray-900 border border-gray-800 rounded-2xl p-6 space-y-4">
           <div>
             <h2 className="text-sm font-semibold text-gray-400 uppercase tracking-wide">{akl.title}</h2>
