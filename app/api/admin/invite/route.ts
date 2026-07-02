@@ -15,7 +15,7 @@ const PILOT_EMAIL = {
     heading: "Welcome to the HealthWatch Global Pilot Program",
     body: (name: string, org: string) => `
       <p>Hi ${name},</p>
-      <p>Your 30-day Pro access to <strong>HealthWatch Global</strong> is now active for <strong>${org}</strong>.</p>
+      <p>Your 35-day Pro access to <strong>HealthWatch Global</strong> is now active for <strong>${org}</strong>.</p>
       <p>Click the button below to set up your account and log in — no password required, this link is valid for 24 hours:</p>
     `,
     cta: "Access the platform →",
@@ -29,7 +29,7 @@ const PILOT_EMAIL = {
     heading: "Bienvenue dans le programme pilote HealthWatch Global",
     body: (name: string, org: string) => `
       <p>Bonjour ${name},</p>
-      <p>Votre accès Pro de 30 jours à <strong>HealthWatch Global</strong> est maintenant actif pour <strong>${org}</strong>.</p>
+      <p>Votre accès Pro de 35 jours à <strong>HealthWatch Global</strong> est maintenant actif pour <strong>${org}</strong>.</p>
       <p>Cliquez sur le bouton ci-dessous pour configurer votre compte et vous connecter — sans mot de passe, ce lien est valable 24 heures :</p>
     `,
     cta: "Accéder à la plateforme →",
