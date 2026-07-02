@@ -6,7 +6,7 @@ import Link from "next/link";
 
 const COPY: Record<string, {
   title: string;
-  steps: [string, string, string];
+  steps: [string, string, string, string];
   dismiss: string;
 }> = {
   fr: {
@@ -15,6 +15,7 @@ const COPY: Record<string, {
       "Configurez vos alertes email",
       "Téléchargez un rapport PDF",
       "Suivez un foyer en watchlist",
+      "Abonnez-vous à une maladie spécifique",
     ],
     dismiss: "Fermer",
   },
@@ -24,6 +25,7 @@ const COPY: Record<string, {
       "Set up your email alerts",
       "Download a PDF report",
       "Star an outbreak to track it",
+      "Subscribe to a specific disease",
     ],
     dismiss: "Close",
   },
@@ -33,6 +35,7 @@ const COPY: Record<string, {
       "Configure sus alertas de email",
       "Descargue un informe PDF",
       "Siga un brote en su lista de vigilancia",
+      "Suscríbase a una enfermedad específica",
     ],
     dismiss: "Cerrar",
   },
@@ -42,6 +45,7 @@ const COPY: Record<string, {
       "إعداد تنبيهات البريد الإلكتروني",
       "تنزيل تقرير PDF",
       "تابع تفشياً في قائمة المراقبة",
+      "اشترك في مرض محدد",
     ],
     dismiss: "إغلاق",
   },
@@ -51,6 +55,7 @@ const COPY: Record<string, {
       "Atur peringatan email Anda",
       "Unduh laporan PDF",
       "Pantau wabah di watchlist Anda",
+      "Berlangganan penyakit tertentu",
     ],
     dismiss: "Tutup",
   },
@@ -58,7 +63,7 @@ const COPY: Record<string, {
 
 const storageKey = (uid: string) => `hw_qs_${uid}_v1`;
 
-type State = { s1: boolean; s2: boolean; s3: boolean; dismissed: boolean };
+type State = { s1: boolean; s2: boolean; s3: boolean; s4: boolean; dismissed: boolean };
 
 export default function ProQuickStart({
   locale,
@@ -79,10 +84,11 @@ export default function ProQuickStart({
         s1: hasAlerts || !!saved.s1,
         s2: !!saved.s2,
         s3: !!saved.s3,
+        s4: !!saved.s4,
         dismissed: !!saved.dismissed,
       });
     } catch {
-      setSt({ s1: hasAlerts, s2: false, s3: false, dismissed: false });
+      setSt({ s1: hasAlerts, s2: false, s3: false, s4: false, dismissed: false });
     }
   }, [userId, hasAlerts]);
 
@@ -93,13 +99,13 @@ export default function ProQuickStart({
 
   if (!st || st.dismissed) return null;
 
-  const allDone = st.s1 && st.s2 && st.s3;
+  const allDone = st.s1 && st.s2 && st.s3 && st.s4;
   if (allDone) return null;
 
   const c = COPY[locale] ?? COPY.en;
   const isRtl = locale === "ar";
-  const completed = [st.s1, st.s2, st.s3].filter(Boolean).length;
-  const pct = Math.round((completed / 3) * 100);
+  const completed = [st.s1, st.s2, st.s3, st.s4].filter(Boolean).length;
+  const pct = Math.round((completed / 4) * 100);
 
   const steps = [
     {
@@ -123,6 +129,13 @@ export default function ProQuickStart({
       done: st.s3,
       onComplete: () => save({ ...st, s3: true }),
     },
+    {
+      key: "s4" as const,
+      label: c.steps[3],
+      href: `/${locale}/account#disease-alerts`,
+      done: st.s4,
+      onComplete: () => save({ ...st, s4: true }),
+    },
   ];
 
   return (
@@ -145,7 +158,7 @@ export default function ProQuickStart({
             <span className="text-xs font-bold text-white uppercase tracking-wider">
               {c.title}
             </span>
-            <span className="text-xs text-gray-600">{completed}/3</span>
+            <span className="text-xs text-gray-600">{completed}/4</span>
           </div>
           <button
             onClick={() => save({ ...st, dismissed: true })}

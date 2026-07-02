@@ -639,7 +639,9 @@ export default async function AccountPage({
       </div>
 
       {/* Disease-specific alerts */}
-      <DiseaseAlertPicker locale={locale} isPaid={isPaid} />
+      <div id="disease-alerts">
+        <DiseaseAlertPicker locale={locale} isPaid={isPaid} />
+      </div>
 
       {/* Alert email language */}
       {isPaid && <AlertLocalePanel locale={locale} />}
