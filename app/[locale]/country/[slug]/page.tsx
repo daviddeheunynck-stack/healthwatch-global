@@ -14,6 +14,7 @@ import type { Outbreak } from "@/lib/outbreaks";
 import { getOutbreakTrendsBulk } from "@/lib/outbreak-trend";
 import ShareOutbreakButton from "@/components/ShareOutbreakButton";
 import WatchButton from "@/components/WatchButton";
+import EmailCapture from "@/components/EmailCapture";
 
 export const revalidate = 3600;
 
@@ -545,16 +546,12 @@ export default async function CountryPage({
       )}
 
       {/* CTA */}
-      <div className="bg-gradient-to-r from-red-950/40 via-gray-900/60 to-transparent border border-red-700/30 rounded-2xl p-6 space-y-3">
-        <h3 className="text-lg font-bold text-white">{countryCtaTitle}</h3>
-        <p className="text-sm text-gray-400">{lb.ctaBody}</p>
-        <Link
-          href={`/${l}/signup`}
-          className="inline-block bg-red-600 hover:bg-red-500 text-white font-semibold text-sm px-5 py-2.5 rounded-lg transition-colors"
-        >
-          {lb.ctaBtn}
-        </Link>
-      </div>
+      <EmailCapture
+        locale={l}
+        proTitle={countryCtaTitle}
+        title={lb.ctaTitle}
+        body={lb.ctaBody}
+      />
 
       {/* Disease chips */}
       {diseaseChips.size > 0 && (
