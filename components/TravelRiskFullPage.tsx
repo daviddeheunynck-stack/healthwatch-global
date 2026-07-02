@@ -8,12 +8,13 @@ import {
   Plane, AlertTriangle, CheckCircle, ShieldAlert, ShieldOff,
   Search, Shield, ExternalLink, MapPin, ChevronRight, ChevronDown,
 } from "lucide-react";
+import { getLocalizedDisease } from "@/lib/outbreaks";
 
 type Risk = "none" | "low" | "medium" | "high" | "critical";
 
 interface ActiveOutbreak {
   id: string;
-  disease_en: string | null;
+  disease: string; disease_en: string | null; disease_ar: string | null;
   cases: number;
   deaths: number;
   risk_level: string;
@@ -411,7 +412,7 @@ export default function TravelRiskFullPage({ locale }: { locale: string }) {
                     >
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2">
-                          <span className="font-semibold text-white text-sm truncate">{o.disease_en ?? "Unknown"}</span>
+                          <span className="font-semibold text-white text-sm truncate">{getLocalizedDisease(o, locale) || "Unknown"}</span>
                           {o.is_pheic && (
                             <span className="text-[10px] bg-red-800/50 text-red-300 border border-red-700/40 px-1.5 py-0.5 rounded-full font-bold shrink-0">PHEIC</span>
                           )}

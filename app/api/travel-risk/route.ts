@@ -12,7 +12,7 @@ const SUPABASE_SERVICE = clean(process.env.SUPABASE_SERVICE_ROLE_KEY);
 
 interface ActiveOutbreak {
   id: string;
-  disease_en: string | null;
+  disease: string; disease_en: string | null; disease_ar: string | null;
   cases: number;
   deaths: number;
   risk_level: string;
@@ -61,7 +61,7 @@ export async function GET(req: Request) {
   const [{ data: outbreaks }, fcdo] = await Promise.all([
     supabase
       .from("outbreaks")
-      .select("id, disease_en, cases, deaths, risk_level, date, is_pheic")
+      .select("id, disease, disease_en, disease_ar, cases, deaths, risk_level, date, is_pheic")
       .eq("active", true)
       .eq("country_en", countryEn)
       .order("risk_level", { ascending: true }),

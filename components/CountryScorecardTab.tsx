@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { Globe, Loader2, RefreshCw } from "lucide-react";
 import type { ScorecardCountry } from "@/app/api/country-scorecard/route";
+import { getLocalizedCountry } from "@/lib/outbreaks";
 
 const COPY: Record<string, {
   title: string; outbreaks: string; cases: string; lastUpdate: string;
@@ -144,7 +145,7 @@ export default function CountryScorecardTab({ locale }: { locale: string }) {
             <div key={country.country_en} className="bg-gray-900/60 p-3 space-y-1.5 hover:bg-gray-800/40 transition-colors">
               {/* Country name + PHEIC */}
               <div className="flex items-center gap-1.5 flex-wrap">
-                <p className="text-xs font-semibold text-white leading-tight">{country.country_en}</p>
+                <p className="text-xs font-semibold text-white leading-tight">{getLocalizedCountry({ country: country.country, country_en: country.country_en, country_ar: country.country_ar }, locale)}</p>
                 {country.has_pheic && (
                   <span className="inline-flex items-center text-[9px] font-bold px-1.5 py-0.5 rounded bg-purple-900/50 border border-purple-700/50 text-purple-300">
                     🚨 {c.pheic}
@@ -165,9 +166,14 @@ export default function CountryScorecardTab({ locale }: { locale: string }) {
               </div>
 
               {/* Diseases */}
-              <p className="text-[10px] text-gray-600 leading-snug truncate" title={country.diseases.join(", ")}>
-                {country.diseases.slice(0, 3).join(", ")}{country.diseases.length > 3 ? ` +${country.diseases.length - 3}` : ""}
-              </p>
+              {(() => {
+                const dl = locale === "ar" ? country.diseases_ar.filter(Boolean) : locale === "fr" ? country.diseases_fr : country.diseases;
+                return (
+                  <p className="text-[10px] text-gray-600 leading-snug truncate" title={dl.join(", ")}>
+                    {dl.slice(0, 3).join(", ")}{country.diseases.length > 3 ? ` +${country.diseases.length - 3}` : ""}
+                  </p>
+                );
+              })()}
 
               {/* Last update */}
               {country.last_updated && (

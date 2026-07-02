@@ -2,13 +2,14 @@
 
 import { useState } from "react";
 import { Plane, AlertTriangle, CheckCircle, ShieldAlert, ShieldOff } from "lucide-react";
+import { getLocalizedDisease } from "@/lib/outbreaks";
 
 type Risk = "none" | "low" | "medium" | "high" | "critical";
 
 interface TravelResult {
   country_en: string;
   risk: Risk;
-  outbreaks: { id: string; disease_en: string | null; cases: number; risk_level: string; is_pheic: boolean }[];
+  outbreaks: { id: string; disease: string; disease_en: string | null; disease_ar: string | null; cases: number; risk_level: string; is_pheic: boolean }[];
   recommendation: string;
   checked_at: string;
 }
@@ -101,7 +102,7 @@ export default function TravelRiskWidget({ locale }: { locale: string }) {
             <div className="space-y-1 pt-1 border-t border-gray-700/40">
               {result.outbreaks.map((o) => (
                 <div key={o.id} className="flex items-center justify-between text-[11px]">
-                  <span className="text-gray-400">{o.disease_en ?? "Unknown"}{o.is_pheic ? " 🚨" : ""}</span>
+                  <span className="text-gray-400">{getLocalizedDisease(o, locale) || "Unknown"}{o.is_pheic ? " 🚨" : ""}</span>
                   <div className="flex items-center gap-1.5">
                     <span className="tabular-nums text-gray-500">{o.cases.toLocaleString(locale === "ar" ? "ar-SA" : (locale || "en"))}</span>
                     <span className={`px-1 rounded text-[9px] font-bold ${o.risk_level === "high" ? "bg-red-900/40 text-red-400" : o.risk_level === "medium" ? "bg-amber-900/40 text-amber-400" : "bg-green-900/40 text-green-400"}`}>
