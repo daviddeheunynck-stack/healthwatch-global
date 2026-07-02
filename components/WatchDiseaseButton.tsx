@@ -1,13 +1,14 @@
 "use client";
 import { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
+import { useUpgradeModal } from "@/lib/upgrade-modal-context";
 
-const L: Record<string, { on: string; off: string; pro: string; max: string }> = {
-  fr: { on: "Alertes actives",        off: "Alertes maladie",       pro: "Fonctionnalité Pro", max: "Limite atteinte (10)" },
-  en: { on: "Disease alerts on",      off: "Alert me",              pro: "Pro plan required",  max: "Limit reached (10)" },
-  es: { on: "Alertas activas",        off: "Alertarme",             pro: "Plan Pro requerido", max: "Límite alcanzado (10)" },
-  ar: { on: "التنبيهات نشطة",         off: "تنبيهات المرض",         pro: "يتطلب خطة Pro",     max: "الحد الأقصى (10)" },
-  id: { on: "Peringatan aktif",       off: "Aktifkan peringatan",   pro: "Perlu paket Pro",    max: "Batas tercapai (10)" },
+const L: Record<string, { on: string; off: string; max: string }> = {
+  fr: { on: "Alertes actives",        off: "Alertes maladie",       max: "Limite atteinte (10)" },
+  en: { on: "Disease alerts on",      off: "Alert me",              max: "Limit reached (10)" },
+  es: { on: "Alertas activas",        off: "Alertarme",             max: "Límite alcanzado (10)" },
+  ar: { on: "التنبيهات نشطة",         off: "تنبيهات المرض",         max: "الحد الأقصى (10)" },
+  id: { on: "Peringatan aktif",       off: "Aktifkan peringatan",   max: "Batas tercapai (10)" },
 };
 
 export default function WatchDiseaseButton({
@@ -20,9 +21,10 @@ export default function WatchDiseaseButton({
   const [watching, setWatching] = useState<boolean | null>(null);
   const [isGuest, setIsGuest] = useState(false);
   const [busy, setBusy] = useState(false);
-  const [tip, setTip] = useState<string | null>(null);
+  const [maxTip, setMaxTip] = useState(false);
   const lb = L[locale] ?? L.en;
   const router = useRouter();
+  const { openModal } = useUpgradeModal();
 
   useEffect(() => {
     fetch("/api/alert-diseases")
@@ -51,14 +53,15 @@ export default function WatchDiseaseButton({
       });
       if (res.ok) {
         setWatching(!watching);
+      } else if (res.status === 403) {
+        openModal("realtime");
       } else {
-        const msg = res.status === 403 ? lb.pro : lb.max;
-        setTip(msg);
-        setTimeout(() => setTip(null), 2500);
+        setMaxTip(true);
+        setTimeout(() => setMaxTip(false), 2500);
       }
     } catch {}
     setBusy(false);
-  }, [watching, busy, isGuest, diseaseName, lb, locale, router]);
+  }, [watching, busy, isGuest, diseaseName, lb, locale, router, openModal]);
 
   if (watching === null) return null;
 
@@ -90,9 +93,9 @@ export default function WatchDiseaseButton({
         </svg>
         {watching ? lb.on : lb.off}
       </button>
-      {tip && (
+      {maxTip && (
         <div className="absolute bottom-full left-0 mb-1 px-2 py-1 text-xs bg-gray-800 border border-gray-700 text-white rounded whitespace-nowrap pointer-events-none z-20">
-          {tip}
+          {lb.max}
         </div>
       )}
     </div>
