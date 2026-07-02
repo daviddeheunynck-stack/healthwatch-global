@@ -3,6 +3,7 @@ import { createClient } from "@supabase/supabase-js";
 import { buildTrialEndingEmail } from "@/lib/trial-ending-email";
 import * as Sentry from "@sentry/nextjs";
 import { logCronRun } from "@/lib/cron-monitor";
+import { getLocalizedDisease } from "@/lib/outbreaks";
 
 export const dynamic = "force-dynamic";
 
@@ -78,7 +79,7 @@ export async function GET(req: NextRequest) {
   const sevenDaysAgo = new Date(Date.now() - 7 * 86_400_000).toISOString();
   const { data: recentOutbreaks } = await supabase
     .from("outbreaks")
-    .select("disease, country, risk_level, region")
+    .select("disease, disease_en, disease_ar, country, risk_level, region")
     .eq("active", true)
     .in("risk_level", ["high", "medium"])
     .gte("updated_at", sevenDaysAgo);
@@ -112,7 +113,7 @@ export async function GET(req: NextRequest) {
         userRegion === "all" || o.region === userRegion
       );
       const regionalContext = regionalOutbreaks.length > 0
-        ? { count: regionalOutbreaks.length, diseases: [...new Set(regionalOutbreaks.map(o => o.disease))].slice(0, 3) }
+        ? { count: regionalOutbreaks.length, diseases: [...new Set(regionalOutbreaks.map(o => getLocalizedDisease(o, locale)))].slice(0, 3) }
         : null;
 
       const { subject, html } = buildTrialEndingEmail(plan, locale, profile.trial_ends_at, !!profile.stripe_subscription_id, regionalContext);
