@@ -161,6 +161,14 @@ export async function GET(req: NextRequest) {
       await sendEmail(profile.email, subject, html);
       sent++;
 
+      await supabase.from("alert_notifications").insert({
+        user_id:     entry.user_id,
+        type:        "watchlist",
+        title:       subject,
+        body:        `${alertOutbreak.disease} · ${alertOutbreak.country} · ${outbreak.cases.toLocaleString(locale === "ar" ? "ar-SA" : locale)}`,
+        outbreak_id: outbreak.id,
+      }).then(() => {}, () => {});
+
       await new Promise((r) => setTimeout(r, 150));
     } catch (err: unknown) {
       console.error(`[watchlist-alerts] Failed for ${profile.email}:`, errorMessage(err));
