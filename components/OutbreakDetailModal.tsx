@@ -607,6 +607,19 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlis
               isPaid={isPaid}
               locale={locale}
             />
+            {/* Full analysis page */}
+            <Link
+              href={`/${locale}/outbreak/${outbreak.id}`}
+              onClick={onClose}
+              title={locale === "fr" ? "Analyse complète (graphique, Rt, tendance)" :
+                     locale === "es" ? "Análisis completo (gráfico, Rt, tendencia)" :
+                     locale === "ar" ? "التحليل الكامل (رسم بياني، Rt، الاتجاه)" :
+                     locale === "id" ? "Analisis lengkap (grafik, Rt, tren)" :
+                     "Full analysis (chart, Rt, trend)"}
+              className="p-1.5 rounded-lg hover:bg-white/10 text-gray-400 hover:text-white transition-colors"
+            >
+              <ExternalLink className="w-4 h-4" />
+            </Link>
             {/* PDF one-pager — Pro/Team/Enterprise */}
             {isPaid ? (
               <a
