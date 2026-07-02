@@ -589,6 +589,7 @@ export function buildJ3Email(locale: string, userId: string): { subject: string;
 
 export function buildJ7Email(locale: string, userId: string): { subject: string; html: string } {
   const c = J7_CONTENT[locale] ?? J7_CONTENT.en;
+  const reportsUrl   = `https://healthwatch-global.com/${locale}/reports`;
   const dashboardUrl = `https://healthwatch-global.com/${locale}`;
   const unsubUrl = `https://healthwatch-global.com/api/unsubscribe-signal?id=${encodeURIComponent(userId)}&locale=${locale}`;
 
@@ -613,7 +614,7 @@ export function buildJ7Email(locale: string, userId: string): { subject: string;
       </div>
 
       <div style="text-align:center;margin-bottom:12px;">
-        <a href="${dashboardUrl}"
+        <a href="${reportsUrl}"
            style="display:inline-block;background:#dc2626;color:white;text-decoration:none;
                   padding:14px 36px;border-radius:8px;font-weight:700;font-size:15px;">
           ${c.ctaLabel}
