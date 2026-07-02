@@ -502,6 +502,31 @@ async function DashboardContent({ demo = false, urlRegion, urlRisk }: { demo?: b
 
         {isPaid && <RegionalPulseSummary outbreaks={outbreaks} locale={locale} />}
 
+        {!isPaid && !demo && (
+          <div className="flex items-center justify-between gap-3 rounded-xl border border-amber-800/30 bg-amber-950/20 px-4 py-2.5 text-xs">
+            <span className="text-amber-300/80">
+              {trialExpired
+                ? (locale === "fr" ? "Votre essai a expiré — cas, décès et CFR masqués." :
+                   locale === "es" ? "Tu prueba expiró — casos, muertes y CFR ocultos." :
+                   locale === "ar" ? "انتهت تجربتك — الحالات والوفيات وCFR مخفية." :
+                   locale === "id" ? "Uji coba Anda berakhir — kasus, kematian, dan CFR tersembunyi." :
+                   "Your trial ended — case counts, deaths and CFR are hidden.")
+                : (locale === "fr" ? "Plan gratuit — cas, décès et létalité masqués." :
+                   locale === "es" ? "Plan gratuito — casos, muertes y letalidad ocultos." :
+                   locale === "ar" ? "الخطة المجانية — الحالات والوفيات وCFR مخفية." :
+                   locale === "id" ? "Paket gratis — kasus, kematian, dan CFR tersembunyi." :
+                   "Free plan — case counts, deaths and CFR hidden.")}
+            </span>
+            <Link href={`/${locale}/pricing`} className="shrink-0 font-semibold text-amber-300 hover:text-white transition-colors whitespace-nowrap">
+              {locale === "fr" ? "Passer à Pro →" :
+               locale === "es" ? "Actualizar a Pro →" :
+               locale === "ar" ? "← الترقية إلى Pro" :
+               locale === "id" ? "Upgrade ke Pro →" :
+               "Upgrade to Pro →"}
+            </Link>
+          </div>
+        )}
+
         <OutbreakTable
           outbreaks={outbreaks}
           locale={locale}
