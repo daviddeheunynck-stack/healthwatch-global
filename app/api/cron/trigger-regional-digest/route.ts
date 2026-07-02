@@ -199,8 +199,8 @@ export async function GET(req: NextRequest) {
         user_id:     user.id,
         type:        "regional_digest",
         title:       subject,
-        body:        `${digestRegion} · ${regional.length} outbreaks`,
-        outbreak_id: null,
+        body:        `${regionLabel} · ${regional.length} ${lc.active}`,
+        outbreak_id: regional[0]?.id ?? null,
       });
       if (insertErr) {
         console.warn(`[trigger-regional-digest] dedup insert failed for ${user.id}: ${insertErr.message}`);
