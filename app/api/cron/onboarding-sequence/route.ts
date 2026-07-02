@@ -157,7 +157,7 @@ export async function GET(req: NextRequest) {
   for (const user of j1Users ?? []) {
     if (!user.email || hasOptedOut(user)) continue;
     try {
-      const locale = user.locale || "fr";
+      const locale = user.locale || "en";
       const { subject, html } = buildJ1Email(locale, user.id);
       await sendEmail(user.email, subject, html);
       j1Sent++;
@@ -173,7 +173,7 @@ export async function GET(req: NextRequest) {
   for (const user of j3Users ?? []) {
     if (!user.email || hasOptedOut(user)) continue;
     try {
-      const locale = user.locale || "fr";
+      const locale = user.locale || "en";
       const { subject, html } = buildJ3Email(locale, user.id);
       await sendEmail(user.email, subject, html);
       j3Sent++;
@@ -189,7 +189,7 @@ export async function GET(req: NextRequest) {
   for (const user of j7Users ?? []) {
     if (!user.email || hasOptedOut(user)) continue;
     try {
-      const locale = user.locale || "fr";
+      const locale = user.locale || "en";
       const { subject, html } = buildJ7Email(locale, user.id);
       await sendEmail(user.email, subject, html);
       j7Sent++;
@@ -205,7 +205,7 @@ export async function GET(req: NextRequest) {
   for (const user of j12Users ?? []) {
     if (!user.email || hasOptedOut(user)) continue;
     try {
-      const locale = user.locale || "fr";
+      const locale = user.locale || "en";
       const { subject, html } = buildJ12Email(locale, user.id);
       await sendEmail(user.email, subject, html);
       j12Sent++;
@@ -221,7 +221,7 @@ export async function GET(req: NextRequest) {
   for (const user of j32Users ?? []) {
     if (!user.email || hasOptedOut(user)) continue;
     try {
-      const locale = user.locale || "fr";
+      const locale = user.locale || "en";
       const { subject, html } = buildPilotConversionEmail(locale, user.id);
       await sendEmail(user.email, subject, html);
       j32Sent++;

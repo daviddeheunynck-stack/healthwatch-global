@@ -104,7 +104,7 @@ export async function GET(req: NextRequest) {
     if (!profile.email) continue;
 
     try {
-      const locale = profile.locale ?? "fr";
+      const locale = profile.locale ?? "en";
       const plan = profile.plan as "starter" | "pro";
 
       // Build regional context from already-fetched outbreaks
