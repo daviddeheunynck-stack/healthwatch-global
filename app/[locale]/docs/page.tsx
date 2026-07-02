@@ -259,10 +259,12 @@ export default async function DocsPage({ params }: { params: Promise<{ locale: s
               </tr>
             </thead>
             <tbody>
-              <ParamRow name="region" type="string" desc="Filter by region: africa · asia · americas · europe · oceania" />
-              <ParamRow name="risk"   type="string" desc="Filter by risk level: high · medium · low" />
-              <ParamRow name="limit"  type="integer" desc="Number of results per page (1–100, default 50)" />
-              <ParamRow name="offset" type="integer" desc="Pagination offset — number of records to skip (default 0)" />
+              <ParamRow name="region"            type="string"  desc="Filter by region: africa · asia · americas · europe · oceania" />
+              <ParamRow name="risk"              type="string"  desc="Filter by risk level: high · medium · low" />
+              <ParamRow name="disease_category"  type="string"  desc="Filter by category: respiratory · hemorrhagic · waterborne · vector-borne · zoonotic · other" />
+              <ParamRow name="admin1"            type="string"  desc="Sub-national area substring match (e.g. province, state)" />
+              <ParamRow name="limit"             type="integer" desc="Number of results per page (1–100, default 50)" />
+              <ParamRow name="offset"            type="integer" desc="Pagination offset — number of records to skip (default 0)" />
             </tbody>
           </table>
         </div>
@@ -275,7 +277,11 @@ export default async function DocsPage({ params }: { params: Promise<{ locale: s
     {
       "id": "550e8400-e29b-41d4-a716-446655440000",
       "disease": "Ebola virus disease",
+      "disease_en": "Ebola virus disease",
+      "disease_category": "hemorrhagic",
       "country": "DR Congo",
+      "country_en": "DR Congo",
+      "admin1": "Équateur",
       "region": "africa",
       "lat": -4.0,
       "lng": 21.8,
@@ -286,6 +292,7 @@ export default async function DocsPage({ params }: { params: Promise<{ locale: s
       "source": "https://www.who.int/emergencies/disease-outbreak-news/item/2026-DON603",
       "description": "As of 3 June 2026, the Ministry of Health DRC...",
       "is_pheic": false,
+      "ihr_event_id": null,
       "active": true
     }
   ],
@@ -305,19 +312,24 @@ export default async function DocsPage({ params }: { params: Promise<{ locale: s
             </thead>
             <tbody>
               {[
-                ["id",            "string",  "Unique UUID identifier"],
-                ["disease",       "string",  "Disease name (English)"],
-                ["country",       "string",  "Affected country (English)"],
-                ["region",        "string",  "Continent: africa · asia · americas · europe · oceania"],
-                ["lat / lng",     "number",  "Geographic coordinates of the country centroid"],
-                ["risk_level",    "string",  "Risk level: high · medium · low"],
-                ["cases",         "integer", "Confirmed case count (0 = not reported in this bulletin)"],
-                ["deaths",        "integer", "Confirmed death count"],
-                ["date",          "string",  "Report publication date (ISO 8601: YYYY-MM-DD)"],
-                ["source",        "string",  "Source URL — WHO DON bulletin, ECDC, PAHO, or Africa CDC report page"],
-                ["description",   "string",  "Summary extracted from the source bulletin (≤ 400 chars)"],
-                ["is_pheic",      "boolean", "True when WHO has declared a Public Health Emergency of International Concern"],
-                ["active",        "boolean", "False for deactivated / resolved outbreaks"],
+                ["id",                "string",  "Unique UUID identifier"],
+                ["disease",           "string",  "Disease name (localized or English if no translation available)"],
+                ["disease_en",        "string",  "Disease name in English — use this for reliable string matching"],
+                ["disease_category",  "string",  "Computed category: respiratory · hemorrhagic · waterborne · vector-borne · zoonotic · other"],
+                ["country",           "string",  "Affected country (localized or English)"],
+                ["country_en",        "string",  "Country name in English — use for reliable string matching"],
+                ["region",            "string",  "Continent: africa · asia · americas · europe · oceania"],
+                ["admin1",            "string | null", "Sub-national area (province, state) if reported"],
+                ["lat / lng",         "number",  "Geographic coordinates of the country centroid"],
+                ["risk_level",        "string",  "Risk level: high · medium · low"],
+                ["cases",             "integer", "Confirmed case count (0 = not reported in this bulletin)"],
+                ["deaths",            "integer", "Confirmed death count"],
+                ["date",              "string",  "Report publication date (ISO 8601: YYYY-MM-DD)"],
+                ["source",            "string",  "Source URL — WHO DON bulletin, ECDC, PAHO, or Africa CDC report page"],
+                ["description",       "string | null", "Summary extracted from the source bulletin (≤ 400 chars)"],
+                ["is_pheic",          "boolean", "True when WHO has declared a Public Health Emergency of International Concern"],
+                ["ihr_event_id",      "string | null", "WHO IHR event identifier when available"],
+                ["active",            "boolean", "Always true in this endpoint (only active outbreaks are returned)"],
               ].map(([field, type, desc]) => (
                 <tr key={field} className="border-b border-gray-800">
                   <td className="px-4 py-3 font-mono text-sm text-purple-300">{field}</td>
@@ -433,7 +445,11 @@ const BASE    = "https://healthwatch-global.com/api/v1";
 interface Outbreak {
   id: string;
   disease: string;
+  disease_en: string;
+  disease_category: "respiratory" | "hemorrhagic" | "waterborne" | "vector-borne" | "zoonotic" | "other";
   country: string;
+  country_en: string;
+  admin1: string | null;
   region: string;
   lat: number;
   lng: number;
@@ -441,9 +457,10 @@ interface Outbreak {
   cases: number;
   deaths: number;
   date: string;
-  source: string; // WHO DON, ECDC, PAHO, or Africa CDC URL
-  description: string;
+  source: string;
+  description: string | null;
   is_pheic: boolean;
+  ihr_event_id: string | null;
   active: boolean;
 }
 
