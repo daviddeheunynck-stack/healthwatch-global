@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
-import { buildJ3Email, buildJ7Email, buildJ12Email, buildPilotConversionEmail } from "@/lib/onboarding-emails";
+import { buildJ1Email, buildJ3Email, buildJ7Email, buildJ12Email, buildPilotConversionEmail } from "@/lib/onboarding-emails";
 import * as Sentry from "@sentry/nextjs";
 import { logCronRun } from "@/lib/cron-monitor";
 
@@ -48,6 +48,23 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: "env:missing" }, { status: 500 });
   }
   const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE);
+
+  // ── J+1 : First action — configure alert regions ─────────────────────────
+  const { data: j1Users, error: j1Err } = await supabase
+    .from("profiles")
+    .select("id, email, plan, locale, trial_ends_at, display_filters")
+    .eq("plan", "pro")
+    .not("trial_ends_at", "is", null)
+    .is("stripe_subscription_id", null)
+    .filter("created_at", "gte", new Date(Date.now() - 1.5 * 86400_000).toISOString())
+    .filter("created_at", "lt",  new Date(Date.now() - 0.5 * 86400_000).toISOString());
+
+  if (j1Err) {
+    console.error("[onboarding] J+1 query error:", j1Err);
+    Sentry.captureException(j1Err, { tags: { cron: "onboarding-sequence", step: "j1-query" } });
+    await logCronRun(supabase, "onboarding-sequence", "error", 0, j1Err.message);
+    return NextResponse.json({ error: j1Err.message }, { status: 500 });
+  }
 
   // ── J+3 : Discover Pro features ──────────────────────────────────────────
   const { data: j3Users, error: j3Err } = await supabase
@@ -127,6 +144,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: j32Err.message }, { status: 500 });
   }
 
+  let j1Sent = 0, j1Failed = 0;
   let j3Sent = 0, j3Failed = 0;
   let j7Sent = 0, j7Failed = 0;
   let j12Sent = 0, j12Failed = 0;
@@ -134,6 +152,22 @@ export async function GET(req: NextRequest) {
 
   const hasOptedOut = (u: { display_filters: unknown }) =>
     !!(u.display_filters as Record<string, unknown> | null)?.no_onboarding_emails;
+
+  // ── Send J+1 emails ───────────────────────────────────────────────────────
+  for (const user of j1Users ?? []) {
+    if (!user.email || hasOptedOut(user)) continue;
+    try {
+      const locale = user.locale || "fr";
+      const { subject, html } = buildJ1Email(locale, user.id);
+      await sendEmail(user.email, subject, html);
+      j1Sent++;
+      await new Promise((r) => setTimeout(r, 150));
+    } catch (err) {
+      console.error(`[onboarding] J+1 failed for ${user.email}:`, err);
+      Sentry.captureException(err, { tags: { cron: "onboarding-sequence", step: "j1", user_id: user.id } });
+      j1Failed++;
+    }
+  }
 
   // ── Send J+3 emails ───────────────────────────────────────────────────────
   for (const user of j3Users ?? []) {
@@ -202,11 +236,12 @@ export async function GET(req: NextRequest) {
   const hb = process.env.BETTERSTACK_HB_ONBOARDING;
   if (hb) fetch(hb).catch(() => {});
 
-  const totalSent = j3Sent + j7Sent + j12Sent + j32Sent;
+  const totalSent = j1Sent + j3Sent + j7Sent + j12Sent + j32Sent;
   await logCronRun(supabase, "onboarding-sequence", "ok", totalSent);
-  console.log(`[onboarding] J+3: ${j3Sent}/${j3Failed} | J+7: ${j7Sent}/${j7Failed} | J+12: ${j12Sent}/${j12Failed} | J+32: ${j32Sent}/${j32Failed}`);
+  console.log(`[onboarding] J+1: ${j1Sent}/${j1Failed} | J+3: ${j3Sent}/${j3Failed} | J+7: ${j7Sent}/${j7Failed} | J+12: ${j12Sent}/${j12Failed} | J+32: ${j32Sent}/${j32Failed}`);
 
   return NextResponse.json({
+    j1:  { sent: j1Sent,  failed: j1Failed,  total: (j1Users  ?? []).length },
     j3:  { sent: j3Sent,  failed: j3Failed,  total: (j3Users  ?? []).length },
     j7:  { sent: j7Sent,  failed: j7Failed,  total: (j7Users  ?? []).length },
     j12: { sent: j12Sent, failed: j12Failed, total: (j12Users ?? []).length },

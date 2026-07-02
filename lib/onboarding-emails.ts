@@ -1,5 +1,75 @@
 import { PRICE_DISPLAY } from "@/lib/pricing";
 
+// ─── J+1 : First action — configure alert regions ─────────────────────────────
+
+const J1_CONTENT: Record<string, {
+  subject: string;
+  headline: string;
+  intro: string;
+  actionTitle: string;
+  actionDesc: string;
+  ctaLabel: string;
+  secondaryLabel: string;
+  closing: string;
+  unsubNote: string;
+}> = {
+  fr: {
+    subject: "Une action à faire maintenant — vos régions d'alerte",
+    headline: "Votre accès Pro est actif.",
+    intro: "Bienvenue. Une seule action rend HealthWatch vraiment utile dès aujourd'hui : configurer vos régions d'alerte email.",
+    actionTitle: "Configurez vos alertes en 30 secondes",
+    actionDesc: "Sélectionnez vos régions et vous recevrez un email dès qu'un nouveau foyer épidémique est détecté — avec cas confirmés, décès, niveau de risque IHR et source OMS/ECDC.",
+    ctaLabel: "Configurer mes alertes →",
+    secondaryLabel: "Ou accédez au tableau de bord →",
+    closing: "Bonne surveillance,\nDavid — HealthWatch Global",
+    unsubNote: "Vous recevez cet email car vous avez créé un compte sur healthwatch-global.com.",
+  },
+  en: {
+    subject: "One thing to set up now — your outbreak alert regions",
+    headline: "Your Pro access is live.",
+    intro: "Welcome. One action makes HealthWatch immediately useful: configuring your email alert regions.",
+    actionTitle: "Set up your alerts in 30 seconds",
+    actionDesc: "Select your regions and you'll receive an email as soon as a new outbreak is detected — with confirmed cases, deaths, IHR risk level and WHO/ECDC source.",
+    ctaLabel: "Configure my alerts →",
+    secondaryLabel: "Or go to the dashboard →",
+    closing: "Stay safe,\nDavid — HealthWatch Global",
+    unsubNote: "You're receiving this email because you created an account on healthwatch-global.com.",
+  },
+  es: {
+    subject: "Una acción que hacer ahora — sus regiones de alerta de brotes",
+    headline: "Su acceso Pro está activo.",
+    intro: "Bienvenido. Una sola acción hace que HealthWatch sea inmediatamente útil: configurar sus regiones de alerta por email.",
+    actionTitle: "Configure sus alertas en 30 segundos",
+    actionDesc: "Seleccione sus regiones y recibirá un email en cuanto se detecte un nuevo brote — con casos confirmados, fallecidos, nivel de riesgo RSI y fuente OMS/ECDC.",
+    ctaLabel: "Configurar mis alertas →",
+    secondaryLabel: "O ir al panel →",
+    closing: "Cuídese,\nDavid — HealthWatch Global",
+    unsubNote: "Recibe este correo porque creó una cuenta en healthwatch-global.com.",
+  },
+  ar: {
+    subject: "إجراء واحد الآن — مناطق تنبيه التفشيات",
+    headline: "وصولك Pro نشط.",
+    intro: "مرحباً. إجراء واحد يجعل HealthWatch مفيداً فوراً: ضبط مناطق تنبيه البريد الإلكتروني.",
+    actionTitle: "اضبط تنبيهاتك في 30 ثانية",
+    actionDesc: "اختر مناطقك وستتلقى بريداً إلكترونياً فور اكتشاف تفشٍّ جديد — مع الحالات المؤكدة والوفيات ومستوى خطر اللوائح الصحية الدولية ومصدر منظمة الصحة العالمية/ECDC.",
+    ctaLabel: "← ضبط تنبيهاتي",
+    secondaryLabel: "← أو الذهاب إلى لوحة التحكم",
+    closing: "مع السلامة،\nDavid — HealthWatch Global",
+    unsubNote: "تتلقى هذا البريد لأنك أنشأت حساباً على healthwatch-global.com.",
+  },
+  id: {
+    subject: "Satu hal yang harus dilakukan sekarang — wilayah peringatan wabah Anda",
+    headline: "Akses Pro Anda aktif.",
+    intro: "Selamat datang. Satu tindakan membuat HealthWatch langsung berguna: mengatur wilayah peringatan email Anda.",
+    actionTitle: "Atur peringatan Anda dalam 30 detik",
+    actionDesc: "Pilih wilayah Anda dan Anda akan menerima email segera setelah wabah baru terdeteksi — dengan kasus terkonfirmasi, kematian, tingkat risiko IHR, dan sumber WHO/ECDC.",
+    ctaLabel: "Atur peringatan saya →",
+    secondaryLabel: "Atau buka dasbor →",
+    closing: "Jaga kesehatan,\nDavid — HealthWatch Global",
+    unsubNote: "Anda menerima email ini karena membuat akun di healthwatch-global.com.",
+  },
+};
+
 // ─── J+3 : Discover your Pro trial features ───────────────────────────────────
 
 const J3_CONTENT: Record<string, {
@@ -816,6 +886,40 @@ export function buildTrialExpiredEmail(locale: string, userId: string): { subjec
     </div>
     <div style="padding:20px 32px;border-top:1px solid #334155;">
       <p style="margin:0 0 8px;font-size:13px;color:#e2e8f0;">${c.closing}</p>
+      <p style="margin:0;font-size:11px;color:#475569;">${c.unsubNote} <a href="${unsubUrl}" style="color:#475569;text-decoration:underline;">Unsubscribe</a></p>
+    </div>`;
+
+  return { subject: c.subject, html: emailShell(locale, body) };
+}
+
+export function buildJ1Email(locale: string, userId: string): { subject: string; html: string } {
+  const c = J1_CONTENT[locale] ?? J1_CONTENT.en;
+  const alertsUrl = `https://healthwatch-global.com/${locale}/account#regional-alerts`;
+  const dashUrl   = `https://healthwatch-global.com/${locale}`;
+  const unsubUrl  = `https://healthwatch-global.com/api/unsubscribe-signal?id=${encodeURIComponent(userId)}&locale=${locale}`;
+
+  const body = `
+    <div style="padding:36px 32px;">
+      <h2 style="margin:0 0 12px;font-size:20px;font-weight:700;color:#f1f5f9;">${c.headline}</h2>
+      <p style="color:#94a3b8;font-size:15px;line-height:1.7;margin:0 0 28px;">${c.intro}</p>
+
+      <div style="background:#1e3a2f;border:1px solid #16a34a44;border-radius:12px;padding:20px 24px;margin-bottom:28px;">
+        <p style="margin:0 0 10px;font-size:14px;font-weight:700;color:#34d399;">${c.actionTitle}</p>
+        <p style="margin:0 0 20px;font-size:14px;color:#94a3b8;line-height:1.7;">${c.actionDesc}</p>
+        <a href="${alertsUrl}"
+           style="display:inline-block;background:#16a34a;color:white;text-decoration:none;
+                  padding:12px 28px;border-radius:8px;font-weight:700;font-size:14px;">
+          ${c.ctaLabel}
+        </a>
+      </div>
+
+      <div style="text-align:center;">
+        <a href="${dashUrl}"
+           style="color:#60a5fa;font-size:13px;font-weight:500;text-decoration:none;">${c.secondaryLabel}</a>
+      </div>
+    </div>
+    <div style="padding:20px 32px;border-top:1px solid #334155;">
+      <p style="margin:0 0 8px;font-size:13px;color:#e2e8f0;white-space:pre-line;">${c.closing}</p>
       <p style="margin:0;font-size:11px;color:#475569;">${c.unsubNote} <a href="${unsubUrl}" style="color:#475569;text-decoration:underline;">Unsubscribe</a></p>
     </div>`;
 
