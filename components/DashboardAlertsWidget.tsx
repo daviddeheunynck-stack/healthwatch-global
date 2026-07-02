@@ -156,7 +156,7 @@ export default async function DashboardAlertsWidget({
           )}
         </div>
         <Link
-          href={`/${locale}/alerts`}
+          href={`/${locale}/notifications`}
           className="flex items-center gap-1 text-xs text-gray-500 hover:text-red-400 transition-colors"
         >
           {lb.seeAll}
