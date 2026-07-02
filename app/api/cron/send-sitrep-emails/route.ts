@@ -10,6 +10,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import * as Sentry from "@sentry/nextjs";
 import { logCronRun } from "@/lib/cron-monitor";
+import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 
 export const dynamic = "force-dynamic";
 
@@ -46,8 +47,10 @@ interface Outbreak {
   id: string;
   disease: string;
   disease_en: string | null;
+  disease_ar: string | null;
   country: string;
   country_en: string | null;
+  country_ar: string | null;
   region: string;
   risk_level: string;
   cases: number;
@@ -81,8 +84,8 @@ function buildEmailHtml(outbreaks: Outbreak[], locale: string, date: string): st
   const deathsLbl = { fr: "décès", en: "deaths", es: "fallecidos", ar: "وفاة", id: "kematian" }[locale] ?? "deaths";
 
   const rows = outbreaks.slice(0, 10).map((o) => {
-    const disease = esc(o.disease_en || o.disease);
-    const country = esc(o.country_en || o.country);
+    const disease = esc(getLocalizedDisease({ disease: o.disease, disease_en: o.disease_en ?? null, disease_ar: o.disease_ar ?? null }, locale));
+    const country = esc(getLocalizedCountry({ country: o.country, country_en: o.country_en ?? null, country_ar: o.country_ar ?? null }, locale));
     const cfr = o.cases > 0 ? ` · CFR ${(o.deaths / o.cases * 100).toFixed(1)}%` : "";
     const pheic = o.is_pheic ? " · PHEIC" : "";
     return `
@@ -145,7 +148,7 @@ export async function GET(req: NextRequest) {
   // Fetch all active high/medium outbreaks once (shared across all emails)
   const { data: outbreaks } = await supabase
     .from("outbreaks")
-    .select("id, disease, disease_en, country, country_en, region, risk_level, cases, deaths, is_pheic")
+    .select("id, disease, disease_en, disease_ar, country, country_en, country_ar, region, risk_level, cases, deaths, is_pheic")
     .eq("active", true)
     .in("risk_level", ["high", "medium"])
     .order("risk_level", { ascending: true })
