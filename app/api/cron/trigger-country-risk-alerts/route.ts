@@ -111,15 +111,15 @@ export async function GET(req: NextRequest) {
       en: `A <strong>${level}</strong> risk outbreak has been detected in <strong>${escCountry}</strong>.`,
     };
     const LABELS: Record<string, [string, string, string, string, string]> = {
-      fr: ["Maladie", "Cas", "🚨 PHEIC déclaré", "Signalé le", "Voir le tableau de bord →"],
-      es: ["Enfermedad", "Casos", "🚨 PHEIC declarado", "Reportado", "Ver panel →"],
-      ar: ["المرض", "الحالات", "🚨 إعلان PHEIC", "تاريخ الإبلاغ", "عرض لوحة المعلومات ←"],
-      id: ["Penyakit", "Kasus", "🚨 PHEIC dideklarasikan", "Dilaporkan", "Lihat dasbor →"],
-      en: ["Disease", "Cases", "🚨 PHEIC declared", "Reported", "View dashboard →"],
+      fr: ["Maladie", "Cas", "🚨 PHEIC déclaré", "Signalé le", "Voir le foyer →"],
+      es: ["Enfermedad", "Casos", "🚨 PHEIC declarado", "Reportado", "Ver el brote →"],
+      ar: ["المرض", "الحالات", "🚨 إعلان PHEIC", "تاريخ الإبلاغ", "← عرض التفشي"],
+      id: ["Penyakit", "Kasus", "🚨 PHEIC dideklarasikan", "Dilaporkan", "Lihat wabah →"],
+      en: ["Disease", "Cases", "🚨 PHEIC declared", "Reported", "View outbreak →"],
     };
     const lb = LABELS[locale] ?? LABELS.en;
     const intro = INTRO[locale] ?? INTRO.en;
-    const dashUrl = `https://healthwatch-global.com/${locale}`;
+    const dashUrl = `https://healthwatch-global.com/${locale}/outbreak/${top.id}`;
 
     const moreStr = ({ fr: `+${matches.length - 1} autre(s) foyer(s) dans ce pays`, es: `+${matches.length - 1} brote(s) más en este país`, ar: `+${matches.length - 1} تفشٍّ آخر في هذا البلد`, id: `+${matches.length - 1} wabah lain di negara ini`, en: `+${matches.length - 1} other outbreak(s) in this country` } as Record<string, string>)[locale] ?? `+${matches.length - 1} other outbreak(s) in this country`;
     const manageStr = ({ fr: "HealthWatch Global · Gérez vos alertes dans le tableau de bord", es: "HealthWatch Global · Gestione sus alertas en el panel", ar: "HealthWatch Global · أدر تنبيهاتك من لوحة المعلومات", id: "HealthWatch Global · Kelola peringatan di dasbor Anda", en: "HealthWatch Global · Manage alerts in your dashboard" } as Record<string, string>)[locale] ?? "HealthWatch Global · Manage alerts in your dashboard";

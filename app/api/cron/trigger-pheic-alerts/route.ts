@@ -191,7 +191,7 @@ export async function GET(req: NextRequest) {
       const countries = outbreaks.map((o) => getLocalizedCountry(o, locale)).join(sep);
       const subject = lc.subject(disease, countries);
       const intro   = lc.intro(esc(disease), esc(countries));
-      const dashUrl = `${APP_URL}/${locale}`;
+      const dashUrl = `${APP_URL}/${locale}/outbreak/${primary.id}`;
 
       const html = `
 <div dir="${isRtl ? "rtl" : "ltr"}" style="font-family:sans-serif;max-width:520px;margin:0 auto;padding:24px;background:#0f172a;color:#e2e8f0;border-radius:12px;direction:${isRtl ? "rtl" : "ltr"};text-align:${isRtl ? "right" : "left"}">
