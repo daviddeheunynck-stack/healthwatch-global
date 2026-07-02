@@ -381,7 +381,8 @@ export async function GET(req: NextRequest) {
   const isEligible = (p: { email: string | null; display_filters: unknown; trial_ends_at: string | null; created_at: string | null }) => {
     if (!p.email) return false;
     const filters = p.display_filters as Record<string, unknown> | null;
-    if (filters?.no_weekly_signal) return false;
+    // Respect both onboarding opt-out and weekly-signal opt-out.
+    if (filters?.no_onboarding_emails || filters?.no_weekly_signal) return false;
     // Skip pilot users (35-day trials) — followed up personally via J+32 conversion email.
     const trialDays = p.trial_ends_at && p.created_at
       ? (new Date(p.trial_ends_at).getTime() - new Date(p.created_at).getTime()) / 86_400_000
