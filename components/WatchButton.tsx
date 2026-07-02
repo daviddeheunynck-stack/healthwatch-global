@@ -1,12 +1,13 @@
 "use client";
 import { useEffect, useState, useCallback } from "react";
+import Link from "next/link";
 
-const L: Record<string, { on: string; off: string; pro: string; max: string }> = {
-  fr: { on: "En veille",       off: "Surveiller",  pro: "Fonctionnalité Pro", max: "Limite atteinte (20)" },
-  en: { on: "Watching",        off: "Watch",        pro: "Pro plan required",  max: "Limit reached (20)" },
-  es: { on: "Vigilando",       off: "Vigilar",      pro: "Plan Pro requerido", max: "Límite alcanzado (20)" },
-  ar: { on: "قيد المتابعة",   off: "متابعة",       pro: "يتطلب خطة Pro",     max: "الحد الأقصى (20)" },
-  id: { on: "Dipantau",        off: "Pantau",       pro: "Perlu paket Pro",    max: "Batas tercapai (20)" },
+const L: Record<string, { on: string; off: string; pro: string; upgrade: string; max: string }> = {
+  fr: { on: "En veille",       off: "Surveiller",  pro: "Fonctionnalité Pro", upgrade: "Commencer l'essai gratuit",  max: "Limite atteinte (20)" },
+  en: { on: "Watching",        off: "Watch",        pro: "Pro plan required",  upgrade: "Start free trial",           max: "Limit reached (20)" },
+  es: { on: "Vigilando",       off: "Vigilar",      pro: "Plan Pro requerido", upgrade: "Iniciar prueba gratuita",    max: "Límite alcanzado (20)" },
+  ar: { on: "قيد المتابعة",   off: "متابعة",       pro: "يتطلب خطة Pro",     upgrade: "← ابدأ التجربة المجانية",  max: "الحد الأقصى (20)" },
+  id: { on: "Dipantau",        off: "Pantau",       pro: "Perlu paket Pro",    upgrade: "Mulai uji coba gratis",      max: "Batas tercapai (20)" },
 };
 
 export default function WatchButton({
@@ -18,7 +19,7 @@ export default function WatchButton({
 }) {
   const [watched, setWatched] = useState<boolean | null>(null);
   const [busy, setBusy] = useState(false);
-  const [tip, setTip] = useState<string | null>(null);
+  const [tip, setTip] = useState<"pro" | "max" | null>(null);
   const lb = L[locale] ?? L.en;
 
   useEffect(() => {
@@ -44,9 +45,11 @@ export default function WatchButton({
         });
         if (res.ok) {
           setWatched(!watched);
+        } else if (res.status === 403) {
+          setTip("pro");
+          setTimeout(() => setTip(null), 4000);
         } else {
-          const msg = res.status === 403 ? lb.pro : lb.max;
-          setTip(msg);
+          setTip("max");
           setTimeout(() => setTip(null), 2500);
         }
       } catch {}
@@ -86,9 +89,20 @@ export default function WatchButton({
           />
         </svg>
       </button>
-      {tip && (
+      {tip === "max" && (
         <div className="absolute bottom-full right-0 mb-1 px-2 py-1 text-xs bg-gray-800 border border-gray-700 text-white rounded whitespace-nowrap pointer-events-none z-20">
-          {tip}
+          {lb.max}
+        </div>
+      )}
+      {tip === "pro" && (
+        <div className="absolute bottom-full right-0 mb-1 text-xs bg-gray-800 border border-gray-700 rounded z-20 overflow-hidden min-w-max">
+          <p className="px-2.5 py-1.5 text-white whitespace-nowrap border-b border-gray-700">{lb.pro}</p>
+          <Link
+            href={`/${locale}/pricing`}
+            className="block px-2.5 py-1.5 text-red-400 hover:text-red-300 hover:bg-gray-700/50 transition-colors whitespace-nowrap"
+          >
+            {lb.upgrade} →
+          </Link>
         </div>
       )}
     </div>
