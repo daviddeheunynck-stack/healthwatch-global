@@ -452,6 +452,29 @@ async function DashboardContent({ demo = false, urlRegion, urlRisk }: { demo?: b
         />
       </div>
 
+      {/* Active PHEIC bar — names the specific PHEICs, visible to all, drives clicks */}
+      {outbreaks.filter(o => o.is_pheic).length > 0 && (
+        <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-purple-300/80">
+          <span className="text-purple-400 font-bold shrink-0">🚨 PHEIC</span>
+          <span className="text-gray-700">·</span>
+          {outbreaks.filter(o => o.is_pheic).map((o, i, arr) => (
+            <span key={o.id} className="inline-flex items-center gap-1">
+              <span className="font-medium text-purple-200">{getLocalizedDisease(o, locale)}</span>
+              <span className="text-gray-600">{getLocalizedCountry(o, locale)}</span>
+              {i < arr.length - 1 && <span className="text-gray-700 ml-1">·</span>}
+            </span>
+          ))}
+          <span className="text-gray-700">·</span>
+          <span className="text-gray-600 italic">
+            {locale === "fr" ? "Urgence sanitaire internationale — niveau maximal OMS"
+             : locale === "es" ? "Emergencia sanitaria internacional — nivel máximo OMS"
+             : locale === "ar" ? "طوارئ صحية دولية — أعلى مستوى إنذار WHO"
+             : locale === "id" ? "Darurat kesehatan internasional — level tertinggi WHO"
+             : "International health emergency — highest WHO alert level"}
+          </span>
+        </div>
+      )}
+
       {isPaid && currentUserId && (
         <DashboardAlertsWidget locale={locale} userId={currentUserId} />
       )}
