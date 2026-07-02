@@ -121,7 +121,7 @@ export async function GET(req: NextRequest) {
     // Get their email, locale, and Slack webhook (from profiles)
     const { data: rawProfiles } = await supabase
       .from("profiles")
-      .select("id, email, plan, trial_ends_at, stripe_subscription_id, locale, slack_webhook_url")
+      .select("id, email, plan, trial_ends_at, stripe_subscription_id, alert_locale, slack_webhook_url")
       .in("id", userIds)
       .in("plan", ["starter", "pro", "team", "enterprise"]);
 
@@ -135,10 +135,9 @@ export async function GET(req: NextRequest) {
 
     if (profiles.length === 0) continue;
 
-    // Build locale map from profiles.locale (set at signup)
     const localeMap = new Map<string, string>();
     for (const p of profiles) {
-      localeMap.set(p.id, p.locale ?? "fr");
+      localeMap.set(p.id, (p.alert_locale as string | null) ?? "en");
     }
 
     for (const profile of profiles) {
@@ -156,7 +155,7 @@ export async function GET(req: NextRequest) {
           continue;
         }
 
-        const locale = localeMap.get(profile.id) ?? "fr";
+        const locale = localeMap.get(profile.id) ?? "en";
         const rl     = REGION_LABELS[locale] ?? REGION_LABELS.en;
 
         // Resolve localized disease / country names
