@@ -18,6 +18,7 @@ import type { Outbreak } from "@/lib/outbreaks";
 import { getResponseGuidance, RESPONSE_ACTIONS } from "@/lib/response-guidance";
 import { getOutbreakTrend } from "@/lib/outbreak-trend";
 import PhaseBadge from "@/components/PhaseBadge";
+import { selectWhyItMattersSignals, whyItMattersCopy } from "@/lib/why-it-matters";
 import type { Metadata } from "next";
 
 export const revalidate = 3600;
@@ -311,6 +312,7 @@ export default async function OutbreakPage({
     locale === "id" ? `Peringatan ${disease} harian` :
     `Get daily ${disease} alerts`;
   const staleDays = staleOutbreakDays(o);
+  const whyItMattersSignals = selectWhyItMattersSignals(o, trend, staleDays !== null);
   const guidance = getResponseGuidance(o.disease_en || o.disease);
   const fpActions = RESPONSE_ACTIONS[guidance.tier][locale] ?? RESPONSE_ACTIONS[guidance.tier].en;
   const TIER_STYLE: Record<string, string> = {
@@ -456,6 +458,18 @@ export default async function OutbreakPage({
       />
       {hasData && o.date && (
         <p className="text-[11px] text-gray-500 -mt-3 mb-5 text-center">{l.cumulativeAs(o.date)}</p>
+      )}
+
+      {/* Why it matters — synthesis, visible to all plans and to search engines */}
+      {whyItMattersSignals.length > 0 && (
+        <div className="bg-red-950/10 border border-red-900/30 rounded-xl p-4 mb-6 space-y-1.5" dir={isRtl ? "rtl" : undefined}>
+          {whyItMattersSignals.map((signal) => (
+            <p key={signal} className="text-sm text-gray-300 flex items-start gap-2">
+              <span className="text-red-400 shrink-0 mt-0.5">•</span>
+              <span>{whyItMattersCopy(signal, locale, trend?.deltaPercent)}</span>
+            </p>
+          ))}
+        </div>
       )}
 
       {/* Meta */}
