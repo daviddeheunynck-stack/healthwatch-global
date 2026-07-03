@@ -93,7 +93,10 @@ async function fetchFromApi(): Promise<Signal[]> {
 
 async function fetchFromRss(): Promise<Signal[]> {
   const res = await fetch(RELIEFWEB_RSS_URL, {
-    headers: { "User-Agent": "HealthWatch Global / contact@healthwatch-global.com" },
+    headers: {
+      "User-Agent": "python-requests/2.31.0",
+      "Accept": "*/*",
+    },
     next: { revalidate: 0 },
   });
   if (!res.ok) throw new Error(`ReliefWeb RSS HTTP ${res.status}`);
