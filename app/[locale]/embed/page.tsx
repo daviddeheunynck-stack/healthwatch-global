@@ -10,7 +10,7 @@ const META: Record<string, { title: string; description: string }> = {
   },
   fr: {
     title: "Intégrer le widget épidémique — HealthWatch Global",
-    description: "Ajoutez un suivi des foyers OMS/ECDC/PAHO en temps réel à n'importe quel site ou intranet. Un iframe, sans clé API, mis à jour toutes les heures.",
+    description: "Ajoutez un suivi en direct des foyers OMS/ECDC/PAHO à n'importe quel site ou intranet. Un iframe, sans clé API, mis à jour toutes les heures.",
   },
   es: {
     title: "Insertar el widget de brotes — HealthWatch Global",

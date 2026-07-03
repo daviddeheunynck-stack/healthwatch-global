@@ -4,6 +4,7 @@ import { NextResponse } from "next/server";
 export const dynamic = "force-dynamic";
 
 const VALID_REGIONS = new Set(["africa", "asia", "americas", "europe", "oceania"]);
+const VALID_MIN_RISK = new Set(["high", "medium", "low"]);
 
 // ── GET /api/alert-prefs — returns the user's subscribed regions ──────────────
 
@@ -14,10 +15,13 @@ export async function GET() {
 
   const { data } = await supabase
     .from("user_alert_regions")
-    .select("region")
+    .select("region, min_risk")
     .eq("user_id", user.id);
 
-  return NextResponse.json({ regions: (data ?? []).map((r: { region: string }) => r.region) });
+  return NextResponse.json({
+    regions: (data ?? []).map((r: { region: string }) => r.region),
+    minRisk: Object.fromEntries((data ?? []).map((r: { region: string; min_risk: string }) => [r.region, r.min_risk])),
+  });
 }
 
 // ── PUT /api/alert-prefs — toggle a region on or off ─────────────────────────
@@ -46,20 +50,30 @@ export async function PUT(req: Request) {
     return NextResponse.json({ error: "Upgrade required" }, { status: 403 });
   }
 
-  const body = await req.json() as { region?: string; enabled?: boolean };
-  const { region, enabled } = body;
+  const body = await req.json() as { region?: string; enabled?: boolean; minRisk?: string };
+  const { region, enabled, minRisk } = body;
 
   if (!region || !VALID_REGIONS.has(region)) {
     return NextResponse.json({ error: "Invalid region" }, { status: 400 });
   }
+
+  // minRisk-only update — user changed the severity threshold for an already-enabled region
   if (typeof enabled !== "boolean") {
-    return NextResponse.json({ error: "enabled (boolean) required" }, { status: 400 });
+    if (!minRisk || !VALID_MIN_RISK.has(minRisk)) {
+      return NextResponse.json({ error: "enabled (boolean) or minRisk required" }, { status: 400 });
+    }
+    await supabase
+      .from("user_alert_regions")
+      .update({ min_risk: minRisk })
+      .eq("user_id", user.id)
+      .eq("region", region);
+    return NextResponse.json({ ok: true });
   }
 
   if (enabled) {
     await supabase
       .from("user_alert_regions")
-      .upsert({ user_id: user.id, region });
+      .upsert({ user_id: user.id, region, min_risk: minRisk && VALID_MIN_RISK.has(minRisk) ? minRisk : "low" });
   } else {
     await supabase
       .from("user_alert_regions")

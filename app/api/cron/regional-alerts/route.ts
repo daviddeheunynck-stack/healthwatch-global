@@ -28,6 +28,11 @@ const SUPABASE_URL     = clean(process.env.NEXT_PUBLIC_SUPABASE_URL);
 const SUPABASE_SERVICE = clean(process.env.SUPABASE_SERVICE_ROLE_KEY);
 const APP_URL          = clean(process.env.NEXT_PUBLIC_APP_URL || "https://healthwatch-global.com");
 
+const RISK_RANK: Record<string, number> = { high: 3, medium: 2, low: 1 };
+function riskMeetsThreshold(risk: string, minRisk: string): boolean {
+  return (RISK_RANK[risk] ?? 0) >= (RISK_RANK[minRisk] ?? 0);
+}
+
 const REGION_LABELS: Record<string, Record<string, string>> = {
   fr: { africa: "Afrique", asia: "Asie", americas: "Amériques", europe: "Europe", oceania: "Océanie" },
   en: { africa: "Africa",  asia: "Asia",  americas: "Americas",  europe: "Europe", oceania: "Oceania"  },
@@ -108,15 +113,18 @@ export async function GET(req: NextRequest) {
 
   // ── 3. For each region with new outbreaks ─────────────────────────────────
   for (const [region, outbreaks] of byRegion) {
-    // Find paid users subscribed to this region
+    // Find paid users subscribed to this region, with their severity threshold
     const { data: subscribers } = await supabase
       .from("user_alert_regions")
-      .select("user_id")
+      .select("user_id, min_risk")
       .eq("region", region);
 
     if (!subscribers || subscribers.length === 0) continue;
 
     const userIds = subscribers.map((s: { user_id: string }) => s.user_id);
+    const minRiskByUser = new Map<string, string>(
+      subscribers.map((s: { user_id: string; min_risk: string | null }) => [s.user_id, s.min_risk ?? "low"])
+    );
 
     // Get their email, locale, and Slack webhook (from profiles)
     const { data: rawProfiles } = await supabase
@@ -141,7 +149,13 @@ export async function GET(req: NextRequest) {
     }
 
     for (const profile of profiles) {
+      const minRisk = minRiskByUser.get(profile.id) ?? "low";
       for (const outbreak of outbreaks) {
+        // Skip outbreaks below this user's configured severity threshold —
+        // without this, "high only" subscribers still got every low-risk
+        // outbreak in the region, which was the main driver of alert fatigue.
+        if (!riskMeetsThreshold(outbreak.risk_level ?? "", minRisk)) continue;
+
         // Check alert log to avoid duplicates
         const { data: alreadySent } = await supabase
           .from("outbreak_alert_log")

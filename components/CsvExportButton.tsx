@@ -5,24 +5,40 @@ import { Download, Loader2, Lock } from "lucide-react";
 import { track } from "@vercel/analytics/react";
 import { useUpgradeModal } from "@/lib/upgrade-modal-context";
 
-const LABELS: Record<string, { download: string; locked: string; error: string }> = {
-  fr: { download: "Exporter CSV", locked: "Exporter CSV",  error: "Échec du téléchargement" },
-  en: { download: "Export CSV",   locked: "Export CSV",    error: "Download failed"          },
-  es: { download: "Exportar CSV", locked: "Exportar CSV",  error: "Error de descarga"        },
-  ar: { download: "تصدير CSV",    locked: "تصدير CSV",     error: "فشل التنزيل"              },
-  id: { download: "Ekspor CSV",   locked: "Ekspor CSV",    error: "Gagal mengunduh"          },
+const LABELS: Record<string, Record<"csv" | "json", { download: string; locked: string; error: string }>> = {
+  fr: {
+    csv:  { download: "Exporter CSV",  locked: "Exporter CSV",  error: "Échec du téléchargement" },
+    json: { download: "Exporter JSON", locked: "Exporter JSON", error: "Échec du téléchargement" },
+  },
+  en: {
+    csv:  { download: "Export CSV",  locked: "Export CSV",  error: "Download failed" },
+    json: { download: "Export JSON", locked: "Export JSON", error: "Download failed" },
+  },
+  es: {
+    csv:  { download: "Exportar CSV",  locked: "Exportar CSV",  error: "Error de descarga" },
+    json: { download: "Exportar JSON", locked: "Exportar JSON", error: "Error de descarga" },
+  },
+  ar: {
+    csv:  { download: "تصدير CSV",  locked: "تصدير CSV",  error: "فشل التنزيل" },
+    json: { download: "تصدير JSON", locked: "تصدير JSON", error: "فشل التنزيل" },
+  },
+  id: {
+    csv:  { download: "Ekspor CSV",  locked: "Ekspor CSV",  error: "Gagal mengunduh" },
+    json: { download: "Ekspor JSON", locked: "Ekspor JSON", error: "Gagal mengunduh" },
+  },
 };
 
 interface Props {
   isPaid: boolean;
   locale: string;
+  format?: "csv" | "json";
 }
 
-export default function CsvExportButton({ isPaid, locale }: Props) {
+export default function CsvExportButton({ isPaid, locale, format = "csv" }: Props) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const { openModal } = useUpgradeModal();
-  const l = LABELS[locale] ?? LABELS.en;
+  const l = (LABELS[locale] ?? LABELS.en)[format];
 
   // ── Locked — free users ───────────────────────────────────────────────────
   if (!isPaid) {
@@ -42,20 +58,20 @@ export default function CsvExportButton({ isPaid, locale }: Props) {
     setLoading(true);
     setError("");
     try {
-      const res = await fetch("/api/export");
+      const res = await fetch(format === "json" ? "/api/export?format=json" : "/api/export");
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
       const blob = await res.blob();
       const url  = URL.createObjectURL(blob);
       const a    = document.createElement("a");
       a.href     = url;
-      a.download = `healthwatch-outbreaks-${new Date().toISOString().split("T")[0]}.csv`;
+      a.download = `healthwatch-outbreaks-${new Date().toISOString().split("T")[0]}.${format}`;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
 
-      track("csv_export", { locale });
+      track(format === "json" ? "json_export" : "csv_export", { locale });
     } catch {
       setError(l.error);
     } finally {

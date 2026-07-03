@@ -495,7 +495,10 @@ async function DashboardContent({ demo = false, urlRegion, urlRisk }: { demo?: b
             <h2 className="text-xl font-semibold text-white">{t("recentAlerts")}</h2>
             <FreshnessBadge lastSync={lastSync} locale={locale} />
           </div>
-          <CsvExportButton isPaid={isPaid} locale={locale} />
+          <div className="flex items-center gap-2">
+            <CsvExportButton isPaid={isPaid} locale={locale} format="csv" />
+            <CsvExportButton isPaid={isPaid} locale={locale} format="json" />
+          </div>
         </div>
 
         {isPaid && <RegionalPulseSummary outbreaks={outbreaks} locale={locale} />}
@@ -547,9 +550,11 @@ async function DashboardContent({ demo = false, urlRegion, urlRisk }: { demo?: b
         </p>
       </div>
 
+      {/* Public trust signal — freshness must be visible before a prospect pays, not after */}
+      <DataStatusWidget locale={locale} />
+
       {isPaid && <CountryScorecardTab locale={locale} />}
       {isPaid && <ResolvedOutbreaksWidget locale={locale} />}
-      {isPaid && <DataStatusWidget locale={locale} />}
 
       {isPaid && (
         <div className="rounded-xl border border-amber-800/20 bg-amber-950/10 p-4">

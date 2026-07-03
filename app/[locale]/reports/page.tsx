@@ -168,9 +168,10 @@ async function ReportsContent() {
         </div>
       )}
 
-      {/* Toolbar — CSV export */}
-      <div className="flex justify-end">
-        <CsvExportButton isPaid={isPaid} locale={locale} />
+      {/* Toolbar — CSV / JSON export */}
+      <div className="flex justify-end gap-2">
+        <CsvExportButton isPaid={isPaid} locale={locale} format="csv" />
+        <CsvExportButton isPaid={isPaid} locale={locale} format="json" />
       </div>
 
       {/* Report cards grid */}

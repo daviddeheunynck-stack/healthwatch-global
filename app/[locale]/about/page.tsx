@@ -85,6 +85,8 @@ const LABELS: Record<string, {
   missionText: string;
   whoTitle: string;
   whoText: string;
+  scopeTitle: string;
+  scopeText: string;
   howTitle: string;
   howSteps: { title: string; text: string }[];
   usersTitle: string;
@@ -108,6 +110,9 @@ const LABELS: Record<string, {
     whoTitle: "10+ sources de données officielles",
     whoText:
       "Toutes les données sont agrégées directement depuis des agences officielles : OMS (DON, AFRO, EMRO), ECDC, OPAS/PAHO, Africa CDC, CDC HAN & Notices, UKHSA, Santé Publique France et USDA APHIS pour les foyers HPAI H5N1 bovins — les mêmes institutions utilisées comme références primaires par les gouvernements et organisations de santé publique. Aucune donnée non vérifiée, aucun média tiers. Mise à jour toutes les heures.",
+    scopeTitle: "Une couche macro, pas un remplacement du terrain",
+    scopeText:
+      "HealthWatch travaille au niveau pays et région : c'est une vue d'ensemble pour repérer rapidement où un foyer démarre et comment il évolue. Ce n'est pas un outil de détection de clusters au niveau district ou zone de santé — pour cette granularité, les épidémiologistes de terrain restent équipés de SaTScan, ArcGIS ou d'outils de collecte comme KoboToolbox. HealthWatch est pensé pour compléter ce travail, pas le remplacer.",
     howTitle: "Comment ça marche",
     howSteps: [
       { title: "Collecte", text: "Notre pipeline agrège les données officielles de l'OMS, l'ECDC, l'OPAS/PAHO et l'Africa CDC — maladie, pays, cas confirmés, décès et létalité pour chaque foyer." },
@@ -144,6 +149,9 @@ const LABELS: Record<string, {
     whoTitle: "10+ official data sources",
     whoText:
       "All outbreak data is aggregated directly from official agencies: WHO (DON, AFRO, EMRO), ECDC, PAHO, Africa CDC, CDC HAN & Notices, UKHSA, Santé Publique France, and USDA APHIS for H5N1 bovine HPAI outbreaks — the same institutions governments and public health organisations use as primary references. No secondary media, no unverified data. Updated every hour.",
+    scopeTitle: "A macro layer, not a replacement for fieldwork",
+    scopeText:
+      "HealthWatch operates at the country and region level: a quick way to spot where an outbreak is starting and how it's evolving. It's not a district- or health-zone-level cluster detection tool — for that granularity, field epidemiologists still rely on SaTScan, ArcGIS, or data collection tools like KoboToolbox. HealthWatch is built to complement that work, not replace it.",
     howTitle: "How it works",
     howSteps: [
       { title: "Collection", text: "Our pipeline aggregates official data from WHO, ECDC, PAHO, and Africa CDC — extracting disease, country, confirmed cases, deaths, and CFR for each outbreak." },
@@ -180,6 +188,9 @@ const LABELS: Record<string, {
     whoTitle: "10+ fuentes de datos oficiales",
     whoText:
       "Todos los datos se agregan directamente desde agencias oficiales: OMS (DON, AFRO, EMRO), ECDC, PAHO, Africa CDC, CDC HAN y Notices, UKHSA, Santé Publique France y USDA APHIS para brotes de H5N1 HPAI bovino — las mismas instituciones utilizadas como referencias primarias por gobiernos e instituciones de salud pública. Sin datos no verificados, sin medios de terceros. Actualizado cada hora.",
+    scopeTitle: "Una capa macro, no un reemplazo del trabajo de campo",
+    scopeText:
+      "HealthWatch opera a nivel de país y región: una forma rápida de detectar dónde empieza un brote y cómo evoluciona. No es una herramienta de detección de clústeres a nivel de distrito o zona de salud — para esa granularidad, los epidemiólogos de campo siguen utilizando SaTScan, ArcGIS o herramientas de recolección como KoboToolbox. HealthWatch está pensado para complementar ese trabajo, no para reemplazarlo.",
     howTitle: "Cómo funciona",
     howSteps: [
       { title: "Recopilación", text: "Nuestro pipeline agrega datos de la OMS, ECDC, PAHO y Africa CDC — extrayendo enfermedad, país, casos confirmados y fallecimientos de cada fuente." },
@@ -216,6 +227,9 @@ const LABELS: Record<string, {
     whoTitle: "10+ مصادر بيانات رسمية",
     whoText:
       "تُجمَّع جميع البيانات مباشرة من وكالات رسمية: منظمة الصحة العالمية (DON, AFRO, EMRO)، وECDC، وPAHO، وAfrica CDC، وCDC HAN & Notices، وUKHSA، وSanté Publique France، وUSDA APHIS لحالات تفشي H5N1 HPAI في الأبقار — نفس المؤسسات التي تستخدمها الحكومات ومؤسسات الصحة العامة مرجعاً أساسياً. لا بيانات غير موثقة، لا وسائل إعلام خارجية. تحديث كل ساعة.",
+    scopeTitle: "طبقة كلّية، وليست بديلاً عن العمل الميداني",
+    scopeText:
+      "يعمل HealthWatch على مستوى الدولة والمنطقة: طريقة سريعة لرصد أين يبدأ التفشي وكيف يتطور. إنه ليس أداة لكشف العنقودات على مستوى المقاطعة أو المنطقة الصحية — لهذا المستوى من الدقة، لا يزال علماء الأوبئة الميدانيون يعتمدون على SaTScan وArcGIS أو أدوات جمع البيانات مثل KoboToolbox. صُمِّم HealthWatch ليكمّل هذا العمل، لا ليحل محله.",
     howTitle: "كيف يعمل",
     howSteps: [
       { title: "الجمع", text: "تستعلم خطوط أنابيبنا واجهة OData لمنظمة الصحة العالمية وتستخرج المعلومات الرئيسية: المرض، البلد، الحالات المؤكدة، الوفيات." },
@@ -252,6 +266,9 @@ const LABELS: Record<string, {
     whoTitle: "10+ sumber data resmi",
     whoText:
       "Semua data diagregasi langsung dari lembaga resmi: WHO (DON, AFRO, EMRO), ECDC, PAHO, Africa CDC, CDC HAN & Notices, UKHSA, Santé Publique France, dan USDA APHIS untuk wabah H5N1 HPAI pada sapi — lembaga yang sama yang digunakan pemerintah dan institusi kesehatan masyarakat sebagai referensi utama. Tidak ada data tidak terverifikasi, tidak ada media pihak ketiga. Diperbarui setiap jam.",
+    scopeTitle: "Lapisan makro, bukan pengganti kerja lapangan",
+    scopeText:
+      "HealthWatch beroperasi pada tingkat negara dan wilayah: cara cepat untuk melihat di mana wabah mulai dan bagaimana perkembangannya. ini bukan alat deteksi klaster tingkat distrik atau zona kesehatan — untuk tingkat kedetailan itu, epidemiolog lapangan tetap mengandalkan SaTScan, ArcGIS, atau alat pengumpulan data seperti KoboToolbox. HealthWatch dibangun untuk melengkapi kerja tersebut, bukan menggantikannya.",
     howTitle: "Cara kerjanya",
     howSteps: [
       { title: "Pengumpulan", text: "Pipeline kami mengkueri WHO OData API dan mengekstrak informasi kunci: penyakit, negara, kasus yang dikonfirmasi, kematian." },
@@ -375,6 +392,17 @@ export default async function AboutPage({
               </a>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* Scope & positioning — macro layer, complementary to field-level tools */}
+      <section className="space-y-3">
+        <h2 className="text-xl font-semibold text-white flex items-center gap-2">
+          <Globe className="w-5 h-5 text-red-400 shrink-0" />
+          {l.scopeTitle}
+        </h2>
+        <div className="bg-gray-900 border border-gray-800 rounded-2xl p-5">
+          <p className="text-gray-400 leading-relaxed">{l.scopeText}</p>
         </div>
       </section>
 

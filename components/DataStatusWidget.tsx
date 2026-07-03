@@ -5,8 +5,9 @@ import { Database, RefreshCw } from "lucide-react";
 
 interface SourceStatus {
   name: string;
-  last_synced_at: string;
+  last_synced_at: string | null;
   count: number;
+  freshness?: "ok" | "delayed" | "unknown";
 }
 
 const COPY: Record<string, { title: string; outbreaks: string; ago: string; never: string; refresh: string; checked: string }> = {
@@ -28,11 +29,13 @@ function timeAgo(iso: string, locale: string): string {
   return `${d}d`;
 }
 
-function freshnessColor(iso: string): string {
-  const h = (Date.now() - new Date(iso).getTime()) / 3600000;
-  if (h < 2)  return "bg-green-500";
-  if (h < 24) return "bg-amber-500";
-  return "bg-red-500";
+// Colors reflect each source's own sync cadence (hourly for WHO DON, daily for
+// the rest) rather than one flat threshold — otherwise daily sources read as
+// "delayed" for most of every day even when perfectly on schedule.
+function freshnessColor(freshness: SourceStatus["freshness"]): string {
+  if (freshness === "ok")      return "bg-green-500";
+  if (freshness === "delayed") return "bg-red-500";
+  return "bg-gray-600";
 }
 
 export default function DataStatusWidget({ locale }: { locale: string }) {
@@ -75,12 +78,12 @@ export default function DataStatusWidget({ locale }: { locale: string }) {
           {sources.map((s) => (
             <div key={s.name} className="flex items-center justify-between gap-3">
               <div className="flex items-center gap-2 min-w-0">
-                <span className={`w-2 h-2 rounded-full shrink-0 ${freshnessColor(s.last_synced_at)}`} />
+                <span className={`w-2 h-2 rounded-full shrink-0 ${freshnessColor(s.freshness)}`} />
                 <span className="text-xs text-gray-300 font-medium">{s.name}</span>
                 <span className="text-[10px] text-gray-600">{s.count} {c.outbreaks}</span>
               </div>
               <span className="text-[10px] text-gray-500 shrink-0 tabular-nums">
-                {timeAgo(s.last_synced_at, locale)} {c.ago}
+                {s.last_synced_at ? `${timeAgo(s.last_synced_at, locale)} ${c.ago}` : c.never}
               </span>
             </div>
           ))}

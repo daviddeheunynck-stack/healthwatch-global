@@ -1403,9 +1403,9 @@ healthwatch-global.com
 
 ---
 
-## X — Thread Uganda dual VHF (2 juillet 2026)
+## X — Thread Uganda dual VHF (3 juillet 2026)
 
-**Statut :** À poster (David) — peut s'appuyer sur les réponses déjà posées aujourd'hui (Abraar Karan, MinSanteRDC)
+**Statut :** ENVOYÉ 3 juillet 2026.
 
 **Angle :** Simultanéité de deux VHF actifs en Uganda — analyse surveillance.
 
@@ -1451,9 +1451,9 @@ Tweet 5 :
 
 ---
 
-## LinkedIn — Post Uganda dual VHF (2 juillet 2026)
+## LinkedIn — Post Uganda dual VHF (3 juillet 2026)
 
-**Statut :** À poster (David) — version LinkedIn du thread X ci-dessus, plus long, plus structuré
+**Statut :** ENVOYÉ 3 juillet 2026.
 
 **Angle :** Analyse de coordination pour équipes terrain NGO et coordinateurs santé humanitaires — l'audience exacte ciblée par la vague 3.
 
@@ -1494,6 +1494,22 @@ Community trust especially. When response teams are spread across two events, co
 Tracking both events in real time on HealthWatch Global, aggregating WHO, ECDC, and Africa CDC signals.
 
 **Contexte :** Post LinkedIn long, format analytique. Audience cible : coordinateurs santé humanitaires, épidémiologistes, équipes terrain ONG. Longueur intentionnellement plus longue pour LinkedIn (2 min de lecture). Le mention "Samaritan's Purse" est le type d'orga auquel on enverra la vague 3 — signal d'autorité indirect.
+
+---
+
+## Réponses prêtes — objections sensibles (à utiliser seulement si la question arrive, jamais proactif)
+
+### Pérennité solo founder / continuité de service
+
+**Contexte :** un prospect (surtout institutionnel/ONG) peut s'inquiéter de dépendre d'un outil porté par un fondateur solo. Ne jamais aborder le sujet spontanément — juste avoir la réponse prête si la question arrive directement (DM, email, call).
+
+**FR :**
+> Oui, HealthWatch est piloté par une seule personne aujourd'hui — je ne vais pas prétendre le contraire. Ce que ça change concrètement pour vous : vos données restent portables à tout moment. Export CSV/JSON complet inclus dans tous les plans payants, sans préavis ni justification à donner. Si vous annulez, vous gardez tous les rapports et exports déjà téléchargés — aucun lock-in propriétaire, aucun format fermé. Le pipeline lui-même s'appuie uniquement sur des sources publiques et officielles (OMS, ECDC, PAHO, Africa CDC), donc même en cas d'indisponibilité temporaire de ma part, les données sous-jacentes restent accessibles directement chez les agences sources. C'est le choix que j'ai fait plutôt que de vous enfermer dans un format propriétaire.
+
+**EN :**
+> Yes, HealthWatch is a solo-run product today — I won't pretend otherwise. What that actually means for you: your data stays portable at all times. Full CSV/JSON export is included on every paid plan, no notice or justification needed. If you cancel, you keep every report and export you've already downloaded — no proprietary lock-in, no closed format. The pipeline itself only pulls from public, official sources (WHO, ECDC, PAHO, Africa CDC), so even if I were temporarily unavailable, the underlying data stays directly accessible from the source agencies. That's the tradeoff I chose over locking you into a proprietary format.
+
+**Double-check effectué :** ton honnête sans minimiser (pas de "ne vous inquiétez pas"), aucune promesse intenable (pas de SLA de continuité fictif), s'appuie sur des faits vérifiés dans le code (export CSV/JSON réel, sources 100% publiques), pas de tirets cadratins, pas de chiffre d'équipe exagéré.
 
 ---
 

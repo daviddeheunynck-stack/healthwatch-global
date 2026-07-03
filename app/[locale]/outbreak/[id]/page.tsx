@@ -40,7 +40,7 @@ const LABELS = {
     sourceLabel: "Source", sourceVerified: "Bulletin OMS officiel", sourceOfficial: "Source officielle",
     pheic: "URGENCE SANITAIRE INTERNATIONALE (PHEIC)",
     archived: "Foyer terminé — données archivées",
-    ctaTitle: "Recevoir les alertes épidémiques en temps réel",
+    ctaTitle: "Recevoir les alertes épidémiques quotidiennes",
     ctaSub: "Essai Pro 14 jours gratuit — sans carte bancaire",
     ctaProBtn: "Commencer l'essai gratuit →",
     ctaFree: "Ou créer un compte gratuit",
@@ -68,7 +68,7 @@ const LABELS = {
     sourceLabel: "Source", sourceVerified: "Official WHO Disease Outbreak News", sourceOfficial: "Official source",
     pheic: "PUBLIC HEALTH EMERGENCY OF INTERNATIONAL CONCERN (PHEIC)",
     archived: "Outbreak resolved — archived data",
-    ctaTitle: "Get real-time disease outbreak alerts",
+    ctaTitle: "Get daily disease outbreak alerts",
     ctaSub: "14-day Pro trial — no credit card required",
     ctaProBtn: "Start free trial →",
     ctaFree: "Or create a free account",
@@ -97,7 +97,7 @@ const LABELS = {
     sourceLabel: "Fuente", sourceVerified: "Boletín oficial OMS", sourceOfficial: "Fuente oficial",
     pheic: "EMERGENCIA DE SALUD PÚBLICA DE IMPORTANCIA INTERNACIONAL (ESPII)",
     archived: "Brote resuelto — datos archivados",
-    ctaTitle: "Recibe alertas de brotes en tiempo real",
+    ctaTitle: "Recibe alertas de brotes diarias",
     ctaSub: "Prueba Pro 14 días gratis — sin tarjeta de crédito",
     ctaProBtn: "Iniciar prueba gratuita →",
     ctaFree: "O crear una cuenta gratuita",
@@ -126,7 +126,7 @@ const LABELS = {
     sourceLabel: "المصدر", sourceVerified: "نشرة منظمة الصحة العالمية الرسمية", sourceOfficial: "مصدر رسمي",
     pheic: "طوارئ الصحة العمومية التي تثير قلقاً دولياً",
     archived: "انتهى التفشي — بيانات مؤرشفة",
-    ctaTitle: "احصل على تنبيهات الأوبئة في الوقت الفعلي",
+    ctaTitle: "احصل على تنبيهات الأوبئة اليومية",
     ctaSub: "تجربة Pro مجانية 14 يوماً — بدون بطاقة بنكية",
     ctaProBtn: "← ابدأ التجربة المجانية",
     ctaFree: "أو أنشئ حساباً مجانياً",
@@ -155,7 +155,7 @@ const LABELS = {
     sourceLabel: "Sumber", sourceVerified: "Buletin resmi WHO", sourceOfficial: "Sumber resmi",
     pheic: "KEDARURATAN KESEHATAN MASYARAKAT YANG MERESAHKAN DUNIA (KKMMD)",
     archived: "Wabah selesai — data diarsipkan",
-    ctaTitle: "Dapatkan peringatan wabah secara real-time",
+    ctaTitle: "Dapatkan peringatan wabah harian",
     ctaSub: "Uji coba Pro 14 hari gratis — tanpa kartu kredit",
     ctaProBtn: "Mulai uji coba gratis →",
     ctaFree: "Atau buat akun gratis",
@@ -305,11 +305,11 @@ export default async function OutbreakPage({
   const countrySlug  = o.country_en ? countryToSlug(o.country_en) : null;
 
   const diseaseCtaTitle =
-    locale === "fr" ? `Alertes ${disease} en temps réel` :
-    locale === "es" ? `Alertas ${disease} en tiempo real` :
-    locale === "ar" ? `تنبيهات ${disease} في الوقت الفعلي` :
-    locale === "id" ? `Peringatan ${disease} secara real-time` :
-    `Get real-time ${disease} alerts`;
+    locale === "fr" ? `Alertes ${disease} quotidiennes` :
+    locale === "es" ? `Alertas ${disease} diarias` :
+    locale === "ar" ? `تنبيهات ${disease} اليومية` :
+    locale === "id" ? `Peringatan ${disease} harian` :
+    `Get daily ${disease} alerts`;
   const staleDays = staleOutbreakDays(o);
   const guidance = getResponseGuidance(o.disease_en || o.disease);
   const fpActions = RESPONSE_ACTIONS[guidance.tier][locale] ?? RESPONSE_ACTIONS[guidance.tier].en;

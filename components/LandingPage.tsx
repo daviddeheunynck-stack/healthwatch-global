@@ -87,9 +87,9 @@ const COPY: Record<string, {
   focalPointTiers: { label: string; desc: string; example: string; action: string }[];
 }> = {
   fr: {
-    heroBadge: "OMS · ECDC · OPAS · Africa CDC · 5 langues · Temps réel",
+    heroBadge: "OMS · ECDC · OPAS · Africa CDC · 5 langues · Synchro horaire à quotidienne",
     heroTitle: ["Surveillance épidémique,", "avant que la crise ne vous atteigne."],
-    heroSub: "OMS, ECDC, OPAS et Africa CDC — agrégés et classifiés RSI en temps réel. Sachez quels foyers affectent vos équipes avant que le rapport n'arrive dans votre boîte mail, avec scoring de létalité automatique et alertes dans les 6 à 8 heures suivant chaque publication officielle.",
+    heroSub: "OMS, ECDC, OPAS et Africa CDC — agrégés et classifiés RSI en continu. Sachez quels foyers affectent vos équipes avant que le rapport n'arrive dans votre boîte mail, avec scoring de létalité automatique et alertes dans les 6 à 8 heures suivant chaque publication officielle.",
     heroCta: "Créer un compte gratuit",
     heroCtaSecondary: "Voir les tarifs",
     heroCtaDemo: "Voir le tableau de bord en direct →",
@@ -168,9 +168,9 @@ const COPY: Record<string, {
     ],
   },
   en: {
-    heroBadge: "WHO · ECDC · PAHO · Africa CDC · 5 languages · Real-time",
+    heroBadge: "WHO · ECDC · PAHO · Africa CDC · 5 languages · Hourly-to-daily sync",
     heroTitle: ["Outbreak intelligence,", "before the crisis reaches you."],
-    heroSub: "WHO, ECDC, PAHO and Africa CDC — aggregated and IHR-classified in real time. Know which outbreaks affect your teams and operations before the report hits your inbox, with automated CFR scoring and alerts within 6–8 hours of official publication.",
+    heroSub: "WHO, ECDC, PAHO and Africa CDC — aggregated and IHR-classified continuously. Know which outbreaks affect your teams and operations before the report hits your inbox, with automated CFR scoring and alerts within 6–8 hours of official publication.",
     heroCta: "Create free account",
     heroCtaSecondary: "See pricing",
     heroCtaDemo: "Try the live dashboard →",
@@ -249,7 +249,7 @@ const COPY: Record<string, {
     ],
   },
   es: {
-    heroBadge: "OMS · ECDC · OPS · Africa CDC · 5 idiomas · Tiempo real",
+    heroBadge: "OMS · ECDC · OPS · Africa CDC · 5 idiomas · Sincronización horaria a diaria",
     heroTitle: ["Inteligencia epidémica,", "antes de que la crisis te alcance."],
     heroSub: "Sepa qué brotes de enfermedades afectan a sus equipos, operaciones y decisiones — antes que los medios. HealthWatch agrega OMS, ECDC, PAHO y Africa CDC, calcula el CFR automáticamente y le alerta en horas tras cada nueva publicación oficial.",
     heroCta: "Crear cuenta gratuita",
@@ -330,7 +330,7 @@ const COPY: Record<string, {
     ],
   },
   ar: {
-    heroBadge: "WHO · ECDC · PAHO · Africa CDC · 5 لغات · فوري",
+    heroBadge: "WHO · ECDC · PAHO · Africa CDC · 5 لغات · مزامنة كل ساعة إلى يومياً",
     heroTitle: ["استخبارات تفشي الأمراض،", "قبل أن تصلك الأزمة."],
     heroSub: "اعرف أي تفشيات الأمراض تؤثر على فرقك وعملياتك وقراراتك — قبل وسائل الإعلام. HealthWatch يجمع WHO وECDC وPAHO وAfrica CDC في لوحة واحدة، يحسب معدل الوفيات تلقائياً، ويُنبهك في ساعات من كل تقرير جديد.",
     heroCta: "إنشاء حساب مجاني",
@@ -411,7 +411,7 @@ const COPY: Record<string, {
     ],
   },
   id: {
-    heroBadge: "WHO · ECDC · PAHO · Africa CDC · 5 bahasa · Real-time",
+    heroBadge: "WHO · ECDC · PAHO · Africa CDC · 5 bahasa · Sinkronisasi jam-harian",
     heroTitle: ["Intelijen wabah penyakit,", "sebelum krisis mencapai Anda."],
     heroSub: "Ketahui wabah penyakit mana yang memengaruhi tim, operasi, dan keputusan Anda — sebelum media melaporkannya. HealthWatch mengagregasi WHO, ECDC, PAHO dan Africa CDC, menghitung CFR otomatis, dan memberi tahu Anda dalam jam setelah setiap laporan baru.",
     heroCta: "Buat akun gratis",

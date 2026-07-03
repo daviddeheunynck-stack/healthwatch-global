@@ -202,19 +202,24 @@ const COUNTRY_ES: Record<string, string> = {
 };
 
 const COUNTRY_ID: Record<string, string> = {
+  "Afghanistan": "Afghanistan", "Bangladesh": "Bangladesh", "Brazil": "Brasil",
+  "Burkina Faso": "Burkina Faso",
   "Cameroon": "Kamerun", "Central African Republic": "Republik Afrika Tengah",
   "China": "Tiongkok", "Côte d'Ivoire": "Pantai Gading", "Ivory Coast": "Pantai Gading",
   "Democratic Republic of the Congo": "Republik Demokratik Kongo",
   "Democratic Republic of Congo": "Republik Demokratik Kongo",
   "DR Congo": "Republik Demokratik Kongo",   // exact country_en from geo-data.ts
-  "Egypt": "Mesir", "Ethiopia": "Etiopia", "Germany": "Jerman",
-  "India": "India", "Iran": "Iran", "Iraq": "Irak", "Japan": "Jepang",
-  "Jordan": "Yordania", "Lebanon": "Lebanon", "Libya": "Libya",
-  "Morocco": "Maroko", "Netherlands": "Belanda", "Philippines": "Filipina",
-  "Saudi Arabia": "Arab Saudi", "South Africa": "Afrika Selatan",
+  "Egypt": "Mesir", "EU/EEA": "UE/EEA", "Ethiopia": "Etiopia", "France": "Prancis",
+  "Germany": "Jerman", "Ghana": "Ghana", "Global": "Global",
+  "India": "India", "Iran": "Iran", "Iraq": "Irak", "Italy": "Italia", "Japan": "Jepang",
+  "Jordan": "Yordania", "Kenya": "Kenya", "Lebanon": "Lebanon", "Libya": "Libya",
+  "Morocco": "Maroko", "Mozambique": "Mozambik",
+  "Netherlands": "Belanda", "Nigeria": "Nigeria", "Pakistan": "Pakistan",
+  "Philippines": "Filipina", "Romania": "Rumania",
+  "Saudi Arabia": "Arab Saudi", "Somalia": "Somalia", "South Africa": "Afrika Selatan",
   "South Sudan": "Sudan Selatan", "Sudan": "Sudan", "Syria": "Suriah",
-  "Thailand": "Thailand", "Tunisia": "Tunisia", "Turkey": "Turki",
-  "Türkiye": "Turki", "United Kingdom": "Inggris",
+  "Tanzania": "Tanzania", "Thailand": "Thailand", "Tunisia": "Tunisia", "Turkey": "Turki",
+  "Türkiye": "Turki", "Uganda": "Uganda", "Ukraine": "Ukraina", "United Kingdom": "Inggris",
   "United States": "Amerika Serikat", "United States of America": "Amerika Serikat",
   "Viet Nam": "Vietnam", "Vietnam": "Vietnam", "Yemen": "Yaman",
 };
@@ -287,6 +292,22 @@ export function staleOutbreakDays(outbreak: Outbreak): number | null {
   if (!ref) return null;
   const days = Math.floor((Date.now() - new Date(ref).getTime()) / 86_400_000);
   return days >= STALE_DAYS ? days : null;
+}
+
+// Positive freshness signal — mirrors staleOutbreakDays but for the other end
+// of the range: confirms to the viewer that a figure was synced recently,
+// instead of only ever warning when it's old. Capped at 7 days so the badge
+// stays meaningful (matches WHO DON's hourly/daily sync cadence) rather than
+// firing for anything merely short of the 60-day stale threshold.
+const FRESH_HOURS_CAP = 7 * 24;
+
+export function freshOutbreakHours(outbreak: Outbreak): number | null {
+  if (!outbreak.active) return null;
+  const ref = outbreak.updated_at;
+  if (!ref) return null;
+  const hours = Math.floor((Date.now() - new Date(ref).getTime()) / 3_600_000);
+  if (hours < 0 || hours > FRESH_HOURS_CAP) return null;
+  return hours;
 }
 
 // A real, citable WHO Disease Outbreak News article, e.g.

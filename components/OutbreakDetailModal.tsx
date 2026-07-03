@@ -23,6 +23,7 @@ import OutbreakMetrics from "@/components/OutbreakMetrics";
 import { computeEpidemicMetrics } from "@/lib/epidemic-metrics";
 import OutbreakWorkflow from "@/components/OutbreakWorkflow";
 import OutbreakCluster from "@/components/OutbreakCluster";
+import { selectWhyItMattersSignals, whyItMattersCopy } from "@/lib/why-it-matters";
 import OutbreakBenchmark from "@/components/OutbreakBenchmark";
 import CountryCapacity from "@/components/CountryCapacity";
 import { getVaccineCoverage, COVERAGE_YEAR, COVERAGE_SOURCE } from "@/lib/vaccine-coverage";
@@ -509,6 +510,7 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlis
   const staleDays = staleOutbreakDays(outbreak);
   const guidance  = getResponseGuidance(outbreak.disease_en || outbreak.disease);
   const fpActions = RESPONSE_ACTIONS[guidance.tier][locale] ?? RESPONSE_ACTIONS[guidance.tier].en;
+  const whyItMattersSignals = selectWhyItMattersSignals(outbreak, trend, staleDays !== null);
 
   return createPortal(
     <div
@@ -764,6 +766,18 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlis
             </div>
           )}
         </div>
+
+        {/* ── Why it matters — synthesis, visible to all plans ────────────── */}
+        {whyItMattersSignals.length > 0 && (
+          <div className="bg-red-950/10 border border-red-900/30 rounded-xl p-4 space-y-1.5">
+            {whyItMattersSignals.map((signal) => (
+              <p key={signal} className="text-sm text-gray-300 flex items-start gap-2">
+                <span className="text-red-400 shrink-0 mt-0.5">•</span>
+                <span>{whyItMattersCopy(signal, locale, trend?.deltaPercent)}</span>
+              </p>
+            ))}
+          </div>
+        )}
 
         {/* ── Transmission dynamics (P1) ───────────────────────────────── */}
         {isPaid && snapshots.length >= 2 && (

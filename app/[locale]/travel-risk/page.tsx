@@ -9,15 +9,15 @@ const OG_LOCALE: Record<string, string> = {
 const TRAVEL_META: Record<string, { title: string; description: string }> = {
   en: {
     title: "Travel Health Risk Assessment | HealthWatch Global",
-    description: "Check the epidemiological risk before traveling to any country. Real-time outbreak data from WHO, ECDC, PAHO and Africa CDC. Mpox, Ebola, Cholera, Dengue and more.",
+    description: "Check the epidemiological risk before traveling to any country. Continuously updated outbreak data from WHO, ECDC, PAHO and Africa CDC. Mpox, Ebola, Cholera, Dengue and more.",
   },
   fr: {
     title: "Risque santé voyage | HealthWatch Global",
-    description: "Évaluez le risque épidémiologique avant de voyager dans n'importe quel pays. Données en temps réel OMS, ECDC, PAHO et Africa CDC. Mpox, Ebola, Choléra, Dengue.",
+    description: "Évaluez le risque épidémiologique avant de voyager dans n'importe quel pays. Données actualisées en continu OMS, ECDC, PAHO et Africa CDC. Mpox, Ebola, Choléra, Dengue.",
   },
   es: {
     title: "Riesgo sanitario de viaje | HealthWatch Global",
-    description: "Evalúe el riesgo epidemiológico antes de viajar a cualquier país. Datos en tiempo real de OMS, ECDC, PAHO y Africa CDC. Mpox, Ébola, Cólera, Dengue y más.",
+    description: "Evalúe el riesgo epidemiológico antes de viajar a cualquier país. Datos actualizados continuamente de OMS, ECDC, PAHO y Africa CDC. Mpox, Ébola, Cólera, Dengue y más.",
   },
   ar: {
     title: "تقييم المخاطر الصحية للسفر | HealthWatch Global",
@@ -25,7 +25,7 @@ const TRAVEL_META: Record<string, { title: string; description: string }> = {
   },
   id: {
     title: "Penilaian Risiko Kesehatan Perjalanan | HealthWatch Global",
-    description: "Periksa risiko epidemiologis sebelum bepergian ke negara mana pun. Data real-time dari WHO, ECDC, PAHO, Africa CDC. Mpox, Ebola, Kolera, Dengue dan lainnya.",
+    description: "Periksa risiko epidemiologis sebelum bepergian ke negara mana pun. Data yang diperbarui berkelanjutan dari WHO, ECDC, PAHO, Africa CDC. Mpox, Ebola, Kolera, Dengue dan lainnya.",
   },
 };
 

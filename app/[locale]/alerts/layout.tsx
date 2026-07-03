@@ -6,11 +6,11 @@ const OG_LOCALE: Record<string, string> = {
 };
 
 const META: Record<string, { title: string; description: string }> = {
-  en: { title: "Alert Center", description: "Get real-time outbreak alerts by region. Instant email notifications from WHO, ECDC, PAHO and Africa CDC — or subscribe to a free weekly digest." },
-  fr: { title: "Centre d'Alertes", description: "Recevez des alertes épidémiques en temps réel par région. Notifications instantanées depuis l'OMS, l'ECDC, l'OPAS et Africa CDC — ou abonnez-vous au digest hebdomadaire gratuit." },
-  es: { title: "Centro de Alertas", description: "Reciba alertas de brotes en tiempo real por región. Notificaciones instantáneas de OMS, ECDC, PAHO y Africa CDC — o suscríbase al resumen semanal gratuito." },
-  ar: { title: "مركز التنبيهات", description: "احصل على تنبيهات التفشي الفورية حسب المنطقة. إشعارات فورية من WHO وECDC وPAHO وAfrica CDC — أو اشترك في الملخص الأسبوعي المجاني." },
-  id: { title: "Pusat Peringatan", description: "Dapatkan peringatan wabah real-time berdasarkan wilayah. Notifikasi instan dari WHO, ECDC, PAHO, dan Africa CDC — atau berlangganan digest mingguan gratis." },
+  en: { title: "Alert Center", description: "Get daily outbreak alerts by region. Email notifications from WHO, ECDC, PAHO and Africa CDC — or subscribe to a free weekly digest." },
+  fr: { title: "Centre d'Alertes", description: "Recevez des alertes épidémiques quotidiennes par région. Notifications depuis l'OMS, l'ECDC, l'OPAS et Africa CDC — ou abonnez-vous au digest hebdomadaire gratuit." },
+  es: { title: "Centro de Alertas", description: "Reciba alertas de brotes diarias por región. Notificaciones de OMS, ECDC, PAHO y Africa CDC — o suscríbase al resumen semanal gratuito." },
+  ar: { title: "مركز التنبيهات", description: "احصل على تنبيهات التفشي اليومية حسب المنطقة. إشعارات من WHO وECDC وPAHO وAfrica CDC — أو اشترك في الملخص الأسبوعي المجاني." },
+  id: { title: "Pusat Peringatan", description: "Dapatkan peringatan wabah harian berdasarkan wilayah. Notifikasi dari WHO, ECDC, PAHO, dan Africa CDC — atau berlangganan digest mingguan gratis." },
 };
 
 export async function generateMetadata({

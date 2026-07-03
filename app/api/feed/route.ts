@@ -33,11 +33,11 @@ const FEED_TITLE: Record<string, string> = {
 };
 
 const FEED_DESC: Record<string, string> = {
-  en: "Real-time active disease outbreak data from WHO, ECDC, PAHO and Africa CDC. Updated every hour.",
-  fr: "Données en temps réel sur les foyers épidémiques actifs — OMS, ECDC, PAHO et Africa CDC. Mise à jour toutes les heures.",
-  es: "Datos en tiempo real sobre brotes de enfermedades activos — OMS, ECDC, PAHO y Africa CDC. Actualizado cada hora.",
-  ar: "بيانات تفشي الأمراض النشطة في الوقت الفعلي من منظمة الصحة العالمية وECDC وPAHO وAfrica CDC. تحديث كل ساعة.",
-  id: "Data wabah penyakit aktif secara real-time dari WHO, ECDC, PAHO dan Africa CDC. Diperbarui setiap jam.",
+  en: "Live active disease outbreak data from WHO, ECDC, PAHO and Africa CDC. Updated every hour.",
+  fr: "Données en direct sur les foyers épidémiques actifs — OMS, ECDC, PAHO et Africa CDC. Mise à jour toutes les heures.",
+  es: "Datos en vivo sobre brotes de enfermedades activos — OMS, ECDC, PAHO y Africa CDC. Actualizado cada hora.",
+  ar: "بيانات حية عن تفشي الأمراض النشطة من منظمة الصحة العالمية وECDC وPAHO وAfrica CDC. تحديث كل ساعة.",
+  id: "Data langsung wabah penyakit aktif dari WHO, ECDC, PAHO dan Africa CDC. Diperbarui setiap jam.",
 };
 
 const RISK_LABEL: Record<string, Record<string, string>> = {

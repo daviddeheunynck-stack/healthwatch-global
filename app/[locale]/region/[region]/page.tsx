@@ -48,7 +48,7 @@ const LABELS: Record<Locale, {
     activeSection: "Foyers en cours", historySection: "Historique",
     noHistory: "Aucun foyer historique.",
     risk: { high: "RISQUE ÉLEVÉ", medium: "RISQUE MODÉRÉ", low: "RISQUE FAIBLE" },
-    ctaTitle: "Alertes en temps réel pour cette région",
+    ctaTitle: "Alertes quotidiennes pour cette région",
     ctaBody: "Soyez alerté dès qu'un nouveau foyer est détecté.",
     ctaBtn: "Commencer gratuitement →", back: "← Tableau de bord", regionsHub: "Régions",
     cases_unit: "cas", deaths_unit: "décès", noData: "N/D",
@@ -60,7 +60,7 @@ const LABELS: Record<Locale, {
     activeSection: "Active outbreaks", historySection: "Outbreak history",
     noHistory: "No historical outbreaks on record.",
     risk: { high: "HIGH RISK", medium: "MODERATE RISK", low: "LOW RISK" },
-    ctaTitle: "Real-time alerts for this region",
+    ctaTitle: "Daily alerts for this region",
     ctaBody: "Be notified as soon as a new outbreak is detected.",
     ctaBtn: "Start for free →", back: "← Dashboard", regionsHub: "Regions",
     cases_unit: "cases", deaths_unit: "deaths", noData: "N/A",
@@ -72,7 +72,7 @@ const LABELS: Record<Locale, {
     activeSection: "Brotes en curso", historySection: "Historial",
     noHistory: "Sin brotes históricos.",
     risk: { high: "RIESGO ALTO", medium: "RIESGO MODERADO", low: "RIESGO BAJO" },
-    ctaTitle: "Alertas en tiempo real para esta región",
+    ctaTitle: "Alertas diarias para esta región",
     ctaBody: "Sé notificado en cuanto se detecte un nuevo brote.",
     ctaBtn: "Empezar gratis →", back: "← Panel", regionsHub: "Regiones",
     cases_unit: "casos", deaths_unit: "fallecidos", noData: "N/D",
@@ -84,7 +84,7 @@ const LABELS: Record<Locale, {
     activeSection: "التفشيات الجارية", historySection: "السجل التاريخي",
     noHistory: "لا سجل لتفشيات سابقة.",
     risk: { high: "خطر مرتفع", medium: "خطر متوسط", low: "خطر منخفض" },
-    ctaTitle: "تنبيهات فورية لهذه المنطقة",
+    ctaTitle: "تنبيهات يومية لهذه المنطقة",
     ctaBody: "احصل على إشعار فور اكتشاف تفشٍّ جديد.",
     ctaBtn: "ابدأ مجاناً ←", back: "→ لوحة التحكم", regionsHub: "المناطق",
     cases_unit: "حالة", deaths_unit: "وفاة", noData: "غ/م",
@@ -96,7 +96,7 @@ const LABELS: Record<Locale, {
     activeSection: "Wabah aktif", historySection: "Riwayat wabah",
     noHistory: "Tidak ada riwayat wabah.",
     risk: { high: "RISIKO TINGGI", medium: "RISIKO SEDANG", low: "RISIKO RENDAH" },
-    ctaTitle: "Peringatan real-time untuk wilayah ini",
+    ctaTitle: "Peringatan harian untuk wilayah ini",
     ctaBody: "Dapatkan notifikasi segera setelah wabah baru terdeteksi.",
     ctaBtn: "Mulai gratis →", back: "← Dasbor", regionsHub: "Wilayah",
     cases_unit: "kasus", deaths_unit: "kematian", noData: "T/S",
@@ -197,11 +197,11 @@ export default async function RegionPage({
   const regionName = REGION_NAME[l][region as Region];
 
   const regionProTitle: Record<Locale, string> = {
-    en: `Track ${regionName} outbreaks in real time`,
-    fr: `Surveiller les foyers en ${regionName} en temps réel`,
-    es: `Seguir los brotes en ${regionName} en tiempo real`,
-    ar: `تتبع تفشيات الأمراض في ${regionName} في الوقت الفعلي`,
-    id: `Lacak wabah di ${regionName} secara real-time`,
+    en: `Track ${regionName} outbreaks continuously`,
+    fr: `Surveiller les foyers en ${regionName} en continu`,
+    es: `Seguir los brotes en ${regionName} continuamente`,
+    ar: `تتبع تفشيات الأمراض في ${regionName} بشكل مستمر`,
+    id: `Lacak wabah di ${regionName} secara berkelanjutan`,
   };
 
   const allOutbreaks = await fetchRegionOutbreaks(region);

@@ -75,6 +75,7 @@ Profils rÃ©cupÃ©rÃ©s des sessions prÃ©cÃ©dentes. Statut Ã  confirmer
 | Nicole Wehbe, MPH (Generator Health / BU SPH, Atlanta) | Like sur post lancement 25 juin. DM envoyÃ© 26 juin EN. | Lui | Attendre rÃ©ponse |
 | Feydeau BOTON | DÃ©jÃ  connectÃ© | â€” | DM avec URL PH demain matin 09h01 |
 | Jalal Nourlil (Institut Pasteur Maroc) | 4 emails envoyÃ©s | Lui | Ne plus relancer |
+| Dav Mulamba (Field Epidemiologist EIR/RRT, MPH/MSc Biostat, DRC â€” zero-dose clusters SaTScan/ArcGIS, #OpenToWork) | Ã‰change technique riche 3 juillet : mÃ©thodo SaTScan/ArcGIS/KoboToolbox, explication sources HWG (WHO DON/ECDC/PAHO/Africa CDC/AFRO, frÃ©quences cron, normalisation DB). AccÃ¨s Pro proposÃ©, pas encore activÃ©. Son "Ok. merci" lit comme un accusÃ© de rÃ©ception de l'explication technique (engagement rÃ©el, pavÃ© dÃ©taillÃ© sur sa mÃ©thodo), pas un refus ni une acceptation de l'offre Pro â€” probablement passivitÃ© (#OpenToWork, focus recherche) plus que dÃ©sintÃ©rÃªt. | Lui ("Ok. merci") | Relance lÃ©gÃ¨re sans pression dans quelques jours (pas tout de suite, conversation trop rÃ©cente) sur l'offre Pro. Si rÃ©pond avant : prÃ©parer accÃ¨s concret. |
 
 ---
 
@@ -83,6 +84,12 @@ Profils rÃ©cupÃ©rÃ©s des sessions prÃ©cÃ©dentes. Statut Ã  confirmer
 | Nom | Profil | Institution | Statut |
 |---|---|---|---|
 | Jacob Mbaihondoum | Sociologue Postdoctoral NTDs | Swiss TPH / Univ. YaoundÃ© 1 â€” Tchad | Expertise : schistosomiase + ver de GuinÃ©e. Hors scope HWG (NTDs, pas DON OMS). Thread fermÃ© proprement 29 juin. Pas de prospect. |
+| William Campbell | Regional Director, Research. Nielsen Alum, Board Member | ? | C'est lui qui a demandÃ© la connexion (3 juillet). DM envoyÃ© 3 juillet. Hook : parallÃ¨le Nielsen/monitoring + question sur son intÃ©rÃªt. Attendre rÃ©ponse. |
+| Jeta Lamaj | Public Health Specialist | Ministry of Public Health Qatar, Doha | Connexion acceptÃ©e (3 juillet, sans message). DM envoyÃ© 3 juillet. Hook : surveillance Gulf/EMRO. Attendre rÃ©ponse. |
+| Theophilus Aggrey | Disease Control Officer | Ghana Health Services, Accra | Suit HWG. Invitation envoyÃ©e 3 juillet SANS message (LinkedIn a plantÃ©). Si accepte : envoyer DM "Hi Theophilus, thanks for following HealthWatch Global. Your work in disease control at Ghana Health Services is exactly the kind of field expertise we built this for. Would love to exchange sometime." |
+| Dav Mulamba | Field Epidemiologist EIR/RRT, MPH, MSc Biostat. Outils : R, ArcGIS Pro, SaTScan, KoboToolbox | RDC (#OpenToWork) | Conversation active. Question technique sur architecture data HWG (comment on accède aux données). RÃ©pondu 3 juillet : explication crons/scraping/normalisation + rappel offre Pro. Attendre rÃ©ponse. |
+| Awulachew Tadesse | BSc, MPH. PA Africa Health Collaborative, AAU project | Addis-Abeba, Ã‰thiopie. 500+ relations | Suit HWG. Note de connexion envoyÃ©e 3 juillet. Hook : Africa Health Collaborative + HWG couvre Ã‰thiopie. Attendre acceptation. |
+| Olivier Mukuku | M.D., MPH, MSc Epi, PhD (#OpenToWork) | Institut SupÃ©rieur Techniques MÃ©dicales Lubumbashi + Univ. Goma, RDC | Publication cholÃ©ra Goma 2020-2024 (Tropical Medicine and Health). Commentaire + note de connexion envoyÃ©s 3 juillet. Hook : variation saisonnière PCR + HWG suit cholÃ©ra RDC. Attendre acceptation. |
 
 ---
 

@@ -36,7 +36,7 @@ const LABELS = {
     historySection: "Historique des épidémies",
     noHistory: "Aucun foyer historique enregistré.",
     risk: { high: "RISQUE ÉLEVÉ", medium: "RISQUE MODÉRÉ", low: "RISQUE FAIBLE" },
-    ctaTitle: "Recevoir les alertes en temps réel",
+    ctaTitle: "Recevoir les alertes quotidiennes",
     ctaBody: "Soyez alerté dès qu'un nouveau foyer est signalé.",
     ctaBtn: "Commencer gratuitement →",
     back: "← Tableau de bord",
@@ -52,7 +52,7 @@ const LABELS = {
     historySection: "Outbreak history",
     noHistory: "No historical outbreaks on record.",
     risk: { high: "HIGH RISK", medium: "MODERATE RISK", low: "LOW RISK" },
-    ctaTitle: "Get real-time outbreak alerts",
+    ctaTitle: "Get daily outbreak alerts",
     ctaBody: "Be notified as soon as a new outbreak is reported.",
     ctaBtn: "Start for free →",
     back: "← Dashboard",
@@ -68,7 +68,7 @@ const LABELS = {
     historySection: "Historial de epidemias",
     noHistory: "Sin brotes históricos registrados.",
     risk: { high: "RIESGO ALTO", medium: "RIESGO MODERADO", low: "RIESGO BAJO" },
-    ctaTitle: "Recibe alertas en tiempo real",
+    ctaTitle: "Recibe alertas diarias",
     ctaBody: "Sé notificado en cuanto se reporte un nuevo brote.",
     ctaBtn: "Empezar gratis →",
     back: "← Panel",
@@ -84,7 +84,7 @@ const LABELS = {
     historySection: "تاريخ الأوبئة",
     noHistory: "لا سجل لتفشيات سابقة.",
     risk: { high: "خطر مرتفع", medium: "خطر متوسط", low: "خطر منخفض" },
-    ctaTitle: "احصل على تنبيهات فورية",
+    ctaTitle: "احصل على تنبيهات يومية",
     ctaBody: "كن أول من يعلم عند الإبلاغ عن تفشٍّ جديد.",
     ctaBtn: "ابدأ مجاناً ←",
     back: "→ لوحة التحكم",
@@ -100,7 +100,7 @@ const LABELS = {
     historySection: "Riwayat epidemi",
     noHistory: "Tidak ada riwayat wabah.",
     risk: { high: "RISIKO TINGGI", medium: "RISIKO SEDANG", low: "RISIKO RENDAH" },
-    ctaTitle: "Dapatkan peringatan wabah secara real-time",
+    ctaTitle: "Dapatkan peringatan wabah harian",
     ctaBody: "Dapatkan notifikasi segera setelah wabah baru dilaporkan.",
     ctaBtn: "Mulai gratis →",
     back: "← Dasbor",
@@ -280,11 +280,11 @@ export async function generateMetadata({
     id: `${diseaseName} — Pengawasan wabah global · HealthWatch Global`,
   };
   const DESC: Record<Locale, string> = {
-    fr: `Suivez les foyers de ${diseaseName} en temps réel — cas confirmés, décès, CFR et pays touchés. Données officielles OMS, ECDC, PAHO et Africa CDC agrégées par HealthWatch Global.`,
-    en: `Track ${diseaseName} outbreaks in real time — confirmed cases, deaths, case fatality rate and affected countries. Official WHO, ECDC, PAHO and Africa CDC data aggregated by HealthWatch Global.`,
-    es: `Siga los brotes de ${diseaseName} en tiempo real — casos confirmados, fallecidos, tasa de letalidad y países afectados. Datos oficiales OMS, ECDC, PAHO y Africa CDC.`,
-    ar: `تتبع تفشيات ${diseaseName} في الوقت الفعلي — حالات مؤكدة، وفيات، معدل الوفيات ودول متضررة. بيانات رسمية من WHO وECDC وPAHO وAfrica CDC.`,
-    id: `Pantau wabah ${diseaseName} secara real-time — kasus terkonfirmasi, kematian, CFR dan negara terdampak. Data resmi WHO, ECDC, PAHO dan Africa CDC.`,
+    fr: `Suivez les foyers de ${diseaseName} en continu — cas confirmés, décès, CFR et pays touchés. Données officielles OMS, ECDC, PAHO et Africa CDC agrégées par HealthWatch Global.`,
+    en: `Track ${diseaseName} outbreaks continuously — confirmed cases, deaths, case fatality rate and affected countries. Official WHO, ECDC, PAHO and Africa CDC data aggregated by HealthWatch Global.`,
+    es: `Siga los brotes de ${diseaseName} continuamente — casos confirmados, fallecidos, tasa de letalidad y países afectados. Datos oficiales OMS, ECDC, PAHO y Africa CDC.`,
+    ar: `تتبع تفشيات ${diseaseName} بشكل مستمر — حالات مؤكدة، وفيات، معدل الوفيات ودول متضررة. بيانات رسمية من WHO وECDC وPAHO وAfrica CDC.`,
+    id: `Pantau wabah ${diseaseName} secara berkelanjutan — kasus terkonfirmasi, kematian, CFR dan negara terdampak. Data resmi WHO, ECDC, PAHO dan Africa CDC.`,
   };
 
   const canonical = `${BASE_URL}/${l}/disease/${slug}`;
@@ -384,11 +384,11 @@ export default async function DiseasePage({
   };
 
   const diseaseProTitle: Record<Locale, string> = {
-    en: `Track ${diseaseName} outbreaks in real time`,
-    fr: `Surveiller les foyers de ${diseaseName} en temps réel`,
-    es: `Seguir los brotes de ${diseaseName} en tiempo real`,
-    ar: `تتبع تفشيات ${diseaseName} في الوقت الفعلي`,
-    id: `Lacak wabah ${diseaseName} secara real-time`,
+    en: `Track ${diseaseName} outbreaks continuously`,
+    fr: `Surveiller les foyers de ${diseaseName} en continu`,
+    es: `Seguir los brotes de ${diseaseName} continuamente`,
+    ar: `تتبع تفشيات ${diseaseName} بشكل مستمر`,
+    id: `Lacak wabah ${diseaseName} secara berkelanjutan`,
   };
 
   const jsonLd = [

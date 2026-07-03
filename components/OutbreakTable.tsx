@@ -12,7 +12,7 @@ import { getEpiWeek } from "@/lib/epi-week";
 
 type SortKey = "risk" | "cases" | "deaths" | "cfr" | "date";
 type SortDir = "asc" | "desc";
-import { getLocalizedDisease, getLocalizedCountry, isNewOutbreak, staleOutbreakDays, sourceStatus, sourceName, computeRiskScore } from "@/lib/outbreaks";
+import { getLocalizedDisease, getLocalizedCountry, isNewOutbreak, staleOutbreakDays, freshOutbreakHours, sourceStatus, sourceName, computeRiskScore } from "@/lib/outbreaks";
 import { diseaseToSlug, normalizeDisease } from "@/lib/disease-data";
 import { countryToSlug } from "@/lib/country-utils";
 import type { Outbreak } from "@/lib/outbreaks";
@@ -1202,6 +1202,21 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
                           {l.illustrativeBadge}
                         </span>
                       )}
+                      {(() => {
+                        const h = freshOutbreakHours(outbreak);
+                        if (h === null) return null;
+                        const label = h < 24
+                          ? { fr: `MàJ · ${h}h`, en: `Updated · ${h}h`, es: `Actu. · ${h}h`, ar: `تحديث · ${h}س`, id: `Update · ${h}j` }[locale] ?? `Updated · ${h}h`
+                          : { fr: `MàJ · ${Math.floor(h / 24)}j`, en: `Updated · ${Math.floor(h / 24)}d`, es: `Actu. · ${Math.floor(h / 24)}d`, ar: `تحديث · ${Math.floor(h / 24)}ي`, id: `Update · ${Math.floor(h / 24)}h` }[locale] ?? `Updated · ${Math.floor(h / 24)}d`;
+                        const tip = h < 24
+                          ? { fr: `Synchronisé il y a ${h}h avec la source officielle`, en: `Synced ${h}h ago with the official source`, es: `Sincronizado hace ${h}h con la fuente oficial`, ar: `تمت المزامنة قبل ${h} ساعة مع المصدر الرسمي`, id: `Disinkronkan ${h}j lalu dengan sumber resmi` }[locale] ?? `Synced ${h}h ago with the official source`
+                          : { fr: `Synchronisé il y a ${Math.floor(h / 24)}j avec la source officielle`, en: `Synced ${Math.floor(h / 24)}d ago with the official source`, es: `Sincronizado hace ${Math.floor(h / 24)}d con la fuente oficial`, ar: `تمت المزامنة قبل ${Math.floor(h / 24)} يوماً مع المصدر الرسمي`, id: `Disinkronkan ${Math.floor(h / 24)}h lalu dengan sumber resmi` }[locale] ?? `Synced ${Math.floor(h / 24)}d ago with the official source`;
+                        return (
+                          <span title={tip} className="inline-flex items-center text-[10px] font-bold px-1.5 py-0.5 rounded bg-emerald-900/30 border border-emerald-700/50 text-emerald-400 shrink-0 cursor-help whitespace-nowrap">
+                            ✓ {label}
+                          </span>
+                        );
+                      })()}
                       {(() => {
                         const d = staleOutbreakDays(outbreak);
                         if (!d) return null;

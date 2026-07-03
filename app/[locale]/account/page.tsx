@@ -57,6 +57,7 @@ const PLAN_ICONS: Record<string, React.ReactNode> = {
 const ALERT_LABELS: Record<string, {
   title: string; desc: string; locked: string; upgrade: string; error: string;
   emptyHint?: string; regionLabels: Record<string, string>;
+  minRiskLabel: string; minRiskOptions: Record<string, string>;
 }> = {
   fr: {
     title: "Alertes par région",
@@ -66,6 +67,8 @@ const ALERT_LABELS: Record<string, {
     error: "Erreur lors de la sauvegarde. Réessayez.",
     emptyHint: "Activez au moins une région pour recevoir des alertes email de foyers.",
     regionLabels: { africa: "Afrique", asia: "Asie", americas: "Amériques", europe: "Europe", oceania: "Océanie" },
+    minRiskLabel: "Seuil minimum",
+    minRiskOptions: { high: "Risque élevé seulement", medium: "Risque modéré et plus", low: "Tous niveaux" },
   },
   en: {
     title: "Regional alerts",
@@ -75,6 +78,8 @@ const ALERT_LABELS: Record<string, {
     error: "Failed to save. Please try again.",
     emptyHint: "Turn on at least one region to receive outbreak alert emails.",
     regionLabels: { africa: "Africa", asia: "Asia", americas: "Americas", europe: "Europe", oceania: "Oceania" },
+    minRiskLabel: "Minimum severity",
+    minRiskOptions: { high: "High risk only", medium: "Medium risk and up", low: "All levels" },
   },
   es: {
     title: "Alertas regionales",
@@ -84,6 +89,8 @@ const ALERT_LABELS: Record<string, {
     error: "Error al guardar. Inténtelo de nuevo.",
     emptyHint: "Active al menos una región para recibir alertas de brotes por email.",
     regionLabels: { africa: "África", asia: "Asia", americas: "Américas", europe: "Europa", oceania: "Oceanía" },
+    minRiskLabel: "Severidad mínima",
+    minRiskOptions: { high: "Solo riesgo alto", medium: "Riesgo medio y superior", low: "Todos los niveles" },
   },
   ar: {
     title: "التنبيهات الإقليمية",
@@ -93,6 +100,8 @@ const ALERT_LABELS: Record<string, {
     error: "فشل الحفظ. يرجى المحاولة مجدداً.",
     emptyHint: "فعّل منطقة واحدة على الأقل لتلقي تنبيهات تفشي الأمراض عبر البريد الإلكتروني.",
     regionLabels: { africa: "أفريقيا", asia: "آسيا", americas: "الأمريكتان", europe: "أوروبا", oceania: "أوقيانوسيا" },
+    minRiskLabel: "الحد الأدنى للخطورة",
+    minRiskOptions: { high: "خطر مرتفع فقط", medium: "خطر متوسط فأعلى", low: "جميع المستويات" },
   },
   id: {
     title: "Peringatan regional",
@@ -102,6 +111,8 @@ const ALERT_LABELS: Record<string, {
     error: "Gagal menyimpan. Silakan coba lagi.",
     emptyHint: "Aktifkan setidaknya satu wilayah untuk menerima peringatan wabah via email.",
     regionLabels: { africa: "Afrika", asia: "Asia", americas: "Amerika", europe: "Eropa", oceania: "Oseania" },
+    minRiskLabel: "Tingkat keparahan minimum",
+    minRiskOptions: { high: "Hanya risiko tinggi", medium: "Risiko sedang ke atas", low: "Semua tingkat" },
   },
 };
 
@@ -436,9 +447,12 @@ export default async function AccountPage({
   // Fetch subscribed alert regions
   const { data: alertRegionsData } = await supabase
     .from("user_alert_regions")
-    .select("region")
+    .select("region, min_risk")
     .eq("user_id", user.id);
   const initialAlertRegions = (alertRegionsData ?? []).map((r: { region: string }) => r.region);
+  const initialAlertMinRisk = Object.fromEntries(
+    (alertRegionsData ?? []).map((r: { region: string; min_risk: string | null }) => [r.region, r.min_risk ?? "low"])
+  );
 
   const al = ALERT_LABELS[locale] ?? ALERT_LABELS.en;
   const sl  = SLACK_LABELS[locale]   ?? SLACK_LABELS.en;
@@ -624,14 +638,28 @@ export default async function AccountPage({
         <div className="bg-gray-900 border border-gray-800 rounded-2xl p-6 space-y-3">
           <h2 className="text-sm font-semibold text-gray-400 uppercase tracking-wide">{l.dataExport}</h2>
           <p className="text-sm text-gray-400">{l.dataExportDesc}</p>
-          <a
-            href="/api/export"
-            download
-            className="inline-flex items-center gap-2 bg-gray-800 hover:bg-gray-700 text-gray-300 font-semibold px-4 py-2 rounded-lg transition-colors text-sm"
-          >
-            <Download className="w-4 h-4" />
-            {l.downloadCsv}
-          </a>
+          <div className="flex items-center gap-2">
+            <a
+              href="/api/export"
+              download
+              className="inline-flex items-center gap-2 bg-gray-800 hover:bg-gray-700 text-gray-300 font-semibold px-4 py-2 rounded-lg transition-colors text-sm"
+            >
+              <Download className="w-4 h-4" />
+              {l.downloadCsv}
+            </a>
+            <a
+              href="/api/export?format=json"
+              download
+              className="inline-flex items-center gap-2 bg-gray-800 hover:bg-gray-700 text-gray-300 font-semibold px-4 py-2 rounded-lg transition-colors text-sm"
+            >
+              <Download className="w-4 h-4" />
+              {locale === "fr" ? "Télécharger JSON" :
+               locale === "es" ? "Descargar JSON" :
+               locale === "ar" ? "تنزيل JSON" :
+               locale === "id" ? "Unduh JSON" :
+               "Download JSON"}
+            </a>
+          </div>
         </div>
       )}
 
@@ -649,6 +677,7 @@ export default async function AccountPage({
         <AlertRegionToggles
           isPaid={isPaid}
           initialRegions={initialAlertRegions}
+          initialMinRisk={initialAlertMinRisk}
           labels={al}
         />
       </div>
