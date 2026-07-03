@@ -13,11 +13,21 @@ export function slugToCountryEn(slug: string, allCountries: string[]): string | 
   return allCountries.find((c) => countryToSlug(c) === slug) ?? null;
 }
 
-/** Preferred display name per locale (falls back to country_en then country) */
+import { getLocalizedCountry } from "@/lib/outbreaks";
+
+/**
+ * Preferred display name per locale.
+ * Thin wrapper around the canonical getLocalizedCountry() in lib/outbreaks.ts —
+ * this used to duplicate that logic but only handled `ar`, silently falling
+ * back to English for fr/es/id and never consulting the COUNTRY_FR/ES/ID maps.
+ */
 export function getLocalizedCountryName(
   o: { country?: string | null; country_en?: string | null; country_ar?: string | null },
   locale: string
 ): string {
-  if (locale === "ar" && o.country_ar) return o.country_ar;
-  return o.country_en ?? o.country ?? "—";
+  if (!o.country && !o.country_en) return "—";
+  return getLocalizedCountry(
+    { country: o.country ?? "", country_en: o.country_en ?? null, country_ar: o.country_ar ?? null },
+    locale
+  );
 }

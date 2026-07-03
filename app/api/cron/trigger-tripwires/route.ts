@@ -50,6 +50,7 @@ const COPY: Record<string, {
   riskLevel:   string;
   riskValues:  Record<string, string>;
   viewBtn:     string;
+  manageLink:  (url: string) => string;
   footer:      (threshold: string) => string;
   inAppTitle:  (disease: string, country: string, cases: string) => string;
   inAppBody:   (cases: string, threshold: string, risk: string) => string;
@@ -60,6 +61,7 @@ const COPY: Record<string, {
     riskLevel:    "Risk level:",
     riskValues:   { high: "HIGH", medium: "MEDIUM", low: "LOW" },
     viewBtn:      "View outbreak →",
+    manageLink:   (url) => `To manage your tripwires: ${url}`,
     footer:       (t) => `This alert was triggered because the outbreak crossed your configured threshold of ${t} cases. It will re-trigger if cases drop below the threshold and rise again.`,
     inAppTitle:   (d, c, n) => `⚠ ${d} (${c}) — ${n} cases`,
     inAppBody:    (n, t, r) => `Tripwire crossed: ${n} cases (threshold: ${t}) · Risk: ${r}`,
@@ -70,6 +72,7 @@ const COPY: Record<string, {
     riskLevel:    "Niveau de risque :",
     riskValues:   { high: "ÉLEVÉ", medium: "MODÉRÉ", low: "FAIBLE" },
     viewBtn:      "Voir le foyer →",
+    manageLink:   (url) => `Pour gérer vos seuils : ${url}`,
     footer:       (t) => `Cette alerte a été déclenchée car le foyer a dépassé votre seuil configuré de ${t} cas. Elle se redéclenche si les cas repassent sous le seuil puis remontent.`,
     inAppTitle:   (d, c, n) => `⚠ ${d} (${c}) — ${n} cas`,
     inAppBody:    (n, t, r) => `Seuil franchi : ${n} cas (seuil : ${t}) · Risque : ${r}`,
@@ -80,6 +83,7 @@ const COPY: Record<string, {
     riskLevel:    "Nivel de riesgo:",
     riskValues:   { high: "ALTO", medium: "MEDIO", low: "BAJO" },
     viewBtn:      "Ver brote →",
+    manageLink:   (url) => `Para gestionar sus umbrales: ${url}`,
     footer:       (t) => `Esta alerta se activó porque el brote superó su umbral configurado de ${t} casos. Se reactivará si los casos bajan del umbral y vuelven a subir.`,
     inAppTitle:   (d, c, n) => `⚠ ${d} (${c}) — ${n} casos`,
     inAppBody:    (n, t, r) => `Umbral cruzado: ${n} casos (umbral: ${t}) · Riesgo: ${r}`,
@@ -90,6 +94,7 @@ const COPY: Record<string, {
     riskLevel:    "مستوى الخطر:",
     riskValues:   { high: "مرتفع", medium: "متوسط", low: "منخفض" },
     viewBtn:      "← عرض التفشي",
+    manageLink:   (url) => `لإدارة عتباتك: ${url}`,
     footer:       (t) => `أُطلق هذا التنبيه لأن التفشي تجاوز عتبتك المحددة وهي ${t} حالة. سيُعاد تشغيله إذا انخفضت الحالات عن العتبة ثم ارتفعت مرة أخرى.`,
     inAppTitle:   (d, c, n) => `⚠ ${d} (${c}) — ${n} حالة`,
     inAppBody:    (n, t, r) => `تجاوز العتبة: ${n} حالة (العتبة: ${t}) · الخطر: ${r}`,
@@ -100,6 +105,7 @@ const COPY: Record<string, {
     riskLevel:    "Tingkat risiko:",
     riskValues:   { high: "TINGGI", medium: "SEDANG", low: "RENDAH" },
     viewBtn:      "Lihat wabah →",
+    manageLink:   (url) => `Untuk mengelola batas Anda: ${url}`,
     footer:       (t) => `Peringatan ini dipicu karena wabah melampaui ambang batas Anda sebesar ${t} kasus. Akan dipicu lagi jika kasus turun di bawah ambang lalu naik kembali.`,
     inAppTitle:   (d, c, n) => `⚠ ${d} (${c}) — ${n} kasus`,
     inAppBody:    (n, t, r) => `Ambang dilampaui: ${n} kasus (ambang: ${t}) · Risiko: ${r}`,
@@ -217,7 +223,7 @@ export async function GET(req: NextRequest) {
   </a>
   <p style="margin-top:20px;font-size:11px;color:#475569">
     ${lc.footer(thresholdStr)}
-    <br/>To manage your tripwires: ${APP_URL}
+    <br/>${lc.manageLink(APP_URL)}
   </p>
 </div>`);
       fired++;

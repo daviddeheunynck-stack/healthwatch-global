@@ -83,6 +83,22 @@ function buildEmailHtml(outbreaks: Outbreak[], locale: string, date: string): st
   const casesLbl = { fr: "cas", en: "cases", es: "casos", ar: "حالة", id: "kasus" }[locale] ?? "cases";
   const deathsLbl = { fr: "décès", en: "deaths", es: "fallecidos", ar: "وفاة", id: "kematian" }[locale] ?? "deaths";
 
+  const poweredBy = {
+    fr: `Propulsé par <strong style="color:#9ca3af">HealthWatch Global</strong> — <a href="${APP_URL}" style="color:#6b7280">healthwatch-global.com</a>`,
+    en: `Powered by <strong style="color:#9ca3af">HealthWatch Global</strong> — <a href="${APP_URL}" style="color:#6b7280">healthwatch-global.com</a>`,
+    es: `Desarrollado por <strong style="color:#9ca3af">HealthWatch Global</strong> — <a href="${APP_URL}" style="color:#6b7280">healthwatch-global.com</a>`,
+    ar: `بواسطة <strong style="color:#9ca3af">HealthWatch Global</strong> — <a href="${APP_URL}" style="color:#6b7280">healthwatch-global.com</a>`,
+    id: `Didukung oleh <strong style="color:#9ca3af">HealthWatch Global</strong> — <a href="${APP_URL}" style="color:#6b7280">healthwatch-global.com</a>`,
+  }[locale] ?? `Powered by <strong style="color:#9ca3af">HealthWatch Global</strong> — <a href="${APP_URL}" style="color:#6b7280">healthwatch-global.com</a>`;
+
+  const manageNote = {
+    fr: `Vous recevez cet email car vous avez configuré l'envoi hebdomadaire du sitrep. <a href="${APP_URL}" style="color:#6b7280">Gérer les préférences</a>`,
+    en: `You are receiving this because you configured weekly sitrep delivery. <a href="${APP_URL}" style="color:#6b7280">Manage preferences</a>`,
+    es: `Recibe este correo porque configuró el envío semanal del sitrep. <a href="${APP_URL}" style="color:#6b7280">Gestionar preferencias</a>`,
+    ar: `تتلقى هذا البريد لأنك قمت بتفعيل الإرسال الأسبوعي للتقرير الوبائي. <a href="${APP_URL}" style="color:#6b7280">إدارة التفضيلات</a>`,
+    id: `Anda menerima ini karena telah mengonfigurasi pengiriman sitrep mingguan. <a href="${APP_URL}" style="color:#6b7280">Kelola preferensi</a>`,
+  }[locale] ?? `You are receiving this because you configured weekly sitrep delivery. <a href="${APP_URL}" style="color:#6b7280">Manage preferences</a>`;
+
   const rows = outbreaks.slice(0, 10).map((o) => {
     const disease = esc(getLocalizedDisease({ disease: o.disease, disease_en: o.disease_en ?? null, disease_ar: o.disease_ar ?? null }, locale));
     const country = esc(getLocalizedCountry({ country: o.country, country_en: o.country_en ?? null, country_ar: o.country_ar ?? null }, locale));
@@ -117,8 +133,8 @@ function buildEmailHtml(outbreaks: Outbreak[], locale: string, date: string): st
     </div>
 
     <div style="margin-top:40px;padding-top:20px;border-top:1px solid #374151;font-size:11px;color:#6b7280">
-      <p style="margin:0">Powered by <strong style="color:#9ca3af">HealthWatch Global</strong> — <a href="${APP_URL}" style="color:#6b7280">healthwatch-global.com</a></p>
-      <p style="margin:4px 0 0">You are receiving this because you configured weekly sitrep delivery. <a href="${APP_URL}" style="color:#6b7280">Manage preferences</a></p>
+      <p style="margin:0">${poweredBy}</p>
+      <p style="margin:4px 0 0">${manageNote}</p>
     </div>
   </div>
 </body>

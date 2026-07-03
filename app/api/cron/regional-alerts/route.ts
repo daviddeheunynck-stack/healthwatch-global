@@ -33,6 +33,14 @@ function riskMeetsThreshold(risk: string, minRisk: string): boolean {
   return (RISK_RANK[risk] ?? 0) >= (RISK_RANK[minRisk] ?? 0);
 }
 
+const SLACK_COPY: Record<string, { newOutbreak: string; risk: string; date: string; cases: string; viewBtn: string }> = {
+  fr: { newOutbreak: "Nouveau foyer",     risk: "Risque",  date: "Date",   cases: "Cas",   viewBtn: "Voir le foyer →" },
+  en: { newOutbreak: "New outbreak",      risk: "Risk",    date: "Date",   cases: "Cases", viewBtn: "View outbreak →" },
+  es: { newOutbreak: "Nuevo brote",       risk: "Riesgo",  date: "Fecha",  cases: "Casos", viewBtn: "Ver brote →" },
+  ar: { newOutbreak: "تفشٍّ جديد",         risk: "الخطر",   date: "التاريخ", cases: "الحالات", viewBtn: "← عرض التفشي" },
+  id: { newOutbreak: "Wabah baru",        risk: "Risiko",  date: "Tanggal", cases: "Kasus", viewBtn: "Lihat wabah →" },
+};
+
 const REGION_LABELS: Record<string, Record<string, string>> = {
   fr: { africa: "Afrique", asia: "Asie", americas: "Amériques", europe: "Europe", oceania: "Océanie" },
   en: { africa: "Africa",  asia: "Asia",  americas: "Americas",  europe: "Europe", oceania: "Oceania"  },
@@ -215,19 +223,20 @@ export async function GET(req: NextRequest) {
           // ── Slack / Teams (fire-and-forget, non-blocking) ───────────────
           const slackUrl: string | null = profile.slack_webhook_url ?? null;
           if (slackUrl) {
+            const sc = SLACK_COPY[locale] ?? SLACK_COPY.en;
             const slackBody = {
               blocks: [
                 {
                   type: "section",
                   text: {
                     type: "mrkdwn",
-                    text: `${riskEmoji} *New outbreak — ${regionLabel}*\n*${disease}* · ${country}`,
+                    text: `${riskEmoji} *${sc.newOutbreak} — ${regionLabel}*\n*${disease}* · ${country}`,
                   },
                 },
                 {
                   type: "context",
                   elements: [
-                    { type: "mrkdwn", text: `Risk: *${outbreak.risk_level}* · Date: ${outbreak.date}${outbreak.cases ? ` · Cases: ${outbreak.cases.toLocaleString("en")}` : ""}` },
+                    { type: "mrkdwn", text: `${sc.risk}: *${outbreak.risk_level}* · ${sc.date}: ${outbreak.date}${outbreak.cases ? ` · ${sc.cases}: ${outbreak.cases.toLocaleString("en")}` : ""}` },
                   ],
                 },
                 {
@@ -235,7 +244,7 @@ export async function GET(req: NextRequest) {
                   elements: [
                     {
                       type: "button",
-                      text: { type: "plain_text", text: "View outbreak →" },
+                      text: { type: "plain_text", text: sc.viewBtn },
                       url: outbreakUrl,
                       style: "danger",
                     },
