@@ -6,8 +6,30 @@ export const dynamic = "force-dynamic";
 const BOM   = String.fromCharCode(65279);
 const clean = (v: string | undefined) => (v || "").replace(new RegExp("^" + BOM), "").trim();
 
-export async function GET() {
+// Price IDs the checkout tunnel actually sells (pro/team × monthly/annual × eur/usd).
+// A deleted or archived price here = checkout breaks silently, so the deep check
+// verifies each one still resolves to an *active* price in Stripe.
+const CHECKOUT_PRICE_ENV_KEYS = [
+  "STRIPE_PRO_EUR_PRICE_ID",
+  "STRIPE_PRO_USD_PRICE_ID",
+  "STRIPE_PRO_EUR_ANNUAL_PRICE_ID",
+  "STRIPE_PRO_USD_ANNUAL_PRICE_ID",
+  "STRIPE_TEAM_EUR_PRICE_ID",
+  "STRIPE_TEAM_USD_PRICE_ID",
+  "STRIPE_TEAM_EUR_ANNUAL_PRICE_ID",
+  "STRIPE_TEAM_USD_ANNUAL_PRICE_ID",
+] as const;
+
+export async function GET(req: Request) {
   const checks: Record<string, "ok" | "error" | "unconfigured"> = {};
+
+  // Deep checks (price-ID validation) are heavier and only for the daily routine,
+  // so they run only when explicitly requested AND authenticated with CRON_SECRET.
+  const cronSecret = clean(process.env.CRON_SECRET);
+  const authed =
+    !!cronSecret && req.headers.get("authorization") === `Bearer ${cronSecret}`;
+  const deep = new URL(req.url).searchParams.get("deep") === "1" && authed;
+  const priceDetail: Record<string, string> = {};
 
   // ── Supabase ──────────────────────────────────────────────────────────────
   try {
@@ -56,6 +78,31 @@ export async function GET() {
     checks.stripe = "error";
   }
 
+  // ── Stripe checkout prices (deep, authenticated) ──────────────────────────
+  // Confirm every price the checkout tunnel sells still resolves to an ACTIVE
+  // price. Catches archived/deleted price IDs that the shallow ping above misses.
+  if (deep) {
+    const stripeKey = clean(process.env.STRIPE_SECRET_KEY);
+    try {
+      const results = await Promise.all(
+        CHECKOUT_PRICE_ENV_KEYS.map(async (key) => {
+          const id = clean(process.env[key]);
+          if (!id) return { key, ok: false, reason: "missing" };
+          const res = await fetch(`https://api.stripe.com/v1/prices/${id}`, {
+            headers: { Authorization: `Bearer ${stripeKey}` },
+          });
+          if (!res.ok) return { key, ok: false, reason: `http_${res.status}` };
+          const price = (await res.json()) as { active?: boolean };
+          return { key, ok: price.active === true, reason: price.active ? "active" : "inactive" };
+        })
+      );
+      for (const r of results) if (!r.ok) priceDetail[r.key] = r.reason;
+      checks.stripe_prices = results.every((r) => r.ok) ? "ok" : "error";
+    } catch {
+      checks.stripe_prices = "error";
+    }
+  }
+
   // ── Brevo ─────────────────────────────────────────────────────────────────
   const brevoKey = clean(process.env.BREVO_API_KEY);
   if (!brevoKey) {
@@ -71,14 +118,19 @@ export async function GET() {
     }
   }
 
-  const criticalChecks = ["supabase", "stripe"];
+  const criticalChecks = deep ? ["supabase", "stripe", "stripe_prices"] : ["supabase", "stripe"];
   const allCriticalOk  = criticalChecks.every((k) => checks[k] === "ok");
   const anyError       = Object.values(checks).some((v) => v === "error");
 
   const status = !allCriticalOk ? "degraded" : anyError ? "degraded" : "ok";
 
   return NextResponse.json(
-    { status, checks, timestamp: new Date().toISOString() },
+    {
+      status,
+      checks,
+      ...(Object.keys(priceDetail).length ? { stripe_prices_detail: priceDetail } : {}),
+      timestamp: new Date().toISOString(),
+    },
     { status: status === "ok" ? 200 : 503 }
   );
 }
