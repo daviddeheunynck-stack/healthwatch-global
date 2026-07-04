@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
-import { createClient } from "@/lib/supabase-browser";
 import { Activity, Loader2, Mail, CheckCircle, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 
@@ -19,10 +18,13 @@ export default function ForgotPasswordPage() {
     setLoading(true);
     setError("");
 
-    const supabase = createClient();
-    const redirectTo = `${window.location.origin}/${locale}/reset-password`;
-
-    await supabase.auth.resetPasswordForEmail(email, { redirectTo });
+    // Sent via Brevo (app/api/auth/reset-password), not Supabase's own Auth
+    // mailer — the latter has proven unreliable delivering to some providers.
+    await fetch("/api/auth/reset-password", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, locale }),
+    }).catch(() => {});
 
     // Always show success — don't leak whether an account exists
     setLoading(false);
