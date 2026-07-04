@@ -83,6 +83,18 @@ Archive de tout le contenu crÃ©Ã©. Mise Ã  jour Ã  chaque session.
 
 ---
 
+### Replies engagement - 4 juillet 2026 - POSTEES
+
+Monitoring X quotidien. Sujet dominant: epidemie Ebola Bundibugyo RDC/Ouganda (17e epidemie). @CIDRAP $3.6B deja traite le 1er juillet (non redraft). Aucune autre mention directe a traiter (1 seule: Ton Soons). 2/3 quota utilise.
+
+**@tah_soons (Ton Soons, verifie)** - a repondu a notre point T2/CFR dans le thread sitrep RDC ("Good catch... I've added a PARTNERS enrolment marker"). Contact epidemio haute valeur (tracker perso DRC/Uganda). Reply propose un discriminant NOUVEAU (composition des cas), pas T2/CFR deja dit. Thread: https://x.com/tah_soons/status/2072995406619807747 - POSTE (validee par David)
+> A signal that helps separate the two without waiting for the trend to resolve: the share of new cases arising from listed contacts versus community deaths. If detection among registered contacts rises while community deaths fall, case-finding is lifting the denominator; if that composition stays flat while CFR drops, the treatment signal holds. At 82.7% contact-tracing coverage, that split should already be legible per health zone.
+
+**@Tuko_co_ke (TUKO.co.ke, media Kenya, verifie)** - screening intensifie a la frontiere Malaba/Busia (Kenya-Ouganda) suite a Ebola RDC; 1 500 a 2 000 voyageurs/jour, PPE/thermal guns de KEMRI. Post: https://x.com/Tuko_co_ke/status/2073326967860998278 - POSTE (validee par David)
+> Intensified screening at Malaba is the right instinct for a crossing moving 1,500 to 2,000 people a day. The limit worth naming: thermal scanning catches febrile travellers, but Ebola's incubation runs up to 21 days, so an infected person can clear the checkpoint while still asymptomatic. The region saw it in 2019, when the DRC outbreak reached Uganda despite screening in place. The durable backstop is traveller registration and cross-border contact follow-up, not the thermal gun alone.
+
+---
+
 ### Replies engagement â€” 1er juillet 2026
 
 **@OMSRDCONGO** (visite Sota Ituri, confiance communautaire Ebola, Dr. @anne_anciiaWHO) â€” POSTÃ‰ âœ…
@@ -1497,6 +1509,94 @@ Tracking both events in real time on HealthWatch Global, aggregating WHO, ECDC, 
 
 ---
 
+## LinkedIn — DM Awulachew Tadesse (4 juillet 2026)
+
+**Profil :** Awulachew Tadesse, BSc MPH, field epidemiologist (Africa Health Collaborative, AAU project, Éthiopie). Conversation active depuis le 3 juillet : a signalé un foyer de rougeole chez des personnes déplacées internes dans sa zone, se présentant comme épidémiologiste de terrain avec certificat 7-1-7 Alliance.
+
+**Contexte :** Le 4 juillet, il propose spontanément de partager le nombre de cas et la localisation exacte du foyer, le décrivant comme "formally reported and confirmed". Réponse envoyée pour accepter et qualifier la source avant tout ajout DB potentiel.
+
+**DM envoyé :**
+> Hi Awulachew,
+>
+> Yes, I'd be very interested, please share the case count and the exact location when you can. If there's a specific source behind the formal confirmation (MoH bulletin, cluster lead, WHO office, etc.), that would help us assess it properly.
+>
+> Thanks again for flagging this, field-level signals like this are exactly what we try to catch faster.
+>
+> David
+
+**Double-check effectué :** pas de tiret cadratin, ton factuel sans pitch commercial, CTA léger (demande de données + source de vérification), longueur adaptée au DM.
+
+---
+
+## LinkedIn — DM Olivier Mukuku (4 juillet 2026)
+
+**Profil :** Olivier Mukuku, M.D., MPH, MSc Epi, PhD, Institut Supérieur des Techniques Médicales de Lubumbashi / ANRS, RDC. Connexion acceptée 3 juillet, DM initial de David sur son étude choléra Goma.
+
+**Contexte :** Le 4 juillet à 17:38, Olivier remercie pour l'intérêt porté à l'étude et mentionne qu'ils travaillent maintenant sur une étude antibiogrammes dans le même milieu. Pas de demande explicite de sa part, réponse pensée pour entretenir le contact sans pression.
+
+**DM envoyé :**
+> Bonjour Olivier,
+>
+> Avec plaisir. L'angle antibiogrammes est complémentaire de votre travail sur le choléra, je suis curieux de voir où ça mène. N'hésitez pas à partager quand ce sera publié.
+>
+> Bonne continuation,
+> David
+
+**Double-check effectué :** pas de tiret cadratin, pas de "temps réel" (conforme à la note de style déjà établie sur ce contact), pas de CTA, maintien de contact chaleureux.
+
+---
+
+## LinkedIn — DM Qadeer Ahsan (4 juillet 2026)
+
+**Profil :** Qadeer Ahsan, Global Public Health Sector Specialist (UNOPS), Project Lead Fleming Fund Pakistan (£16M AMR), Strategic Advisor WHO, NIHR Global Health Research Committee. Conversation riche depuis le 18 juin sur le produit (framework Prevent/Detect/Respond, concept "one window", log d'escalade). Cherche activement du travail (TA contracts / advisory / full-time).
+
+**Contexte :** Le 2 juillet, il a demandé à David de l'aider à trouver une opportunité. David est resté honnête sur les limites de son réseau, sans rien promettre, et a demandé où se situe son terrain le plus fort pour pouvoir l'orienter plus tard. Le 4 juillet, il répond : AMR au Pakistan + santé globale en Indonésie. Réponse pensée pour rester honnête (aucune opportunité concrète inventée) tout en donnant une reconnaissance tangible immédiate.
+
+**DM envoyé :**
+> Hi Qadeer,
+>
+> Good to know, that's useful for when the right opportunity comes up. Nothing concrete on the collaboration side yet, I won't manufacture something that isn't there, but I don't want your input to go unrecognized either.
+>
+> Two things now: I'd like to give you a Pro account, on the house, for shaping the decision-support direction (the Prevent/Detect/Respond framing and the escalation log idea were genuinely useful). And separately, would you be open to that insight being credited to you in a LinkedIn post? Only with your name attached if you're comfortable, no pressure either way.
+>
+> David
+
+**Double-check effectué :** cohérent avec la position déjà tenue dans le fil (honnête, non-engageant sur une opportunité inexistante), pas de tiret cadratin, pas de témoignage fabriqué (consentement explicite demandé avant toute citation), reconnaissance concrète sans survendre. Une citation publique sur un sujet AMR sert aussi sa recherche d'emploi, alignement d'intérêts.
+
+---
+
+## LinkedIn — DM Zahra Bouzidi, réinitialisation accès (4 juillet 2026)
+
+**Profil :** Zahra Bouzidi, épidémiologiste Algérie. Feedback produit précieux (filtres transmission + endémicité voyageurs) début session. Saga d'accès compte ouverte depuis le 25 juin.
+
+**Contexte :** Après plusieurs jours de soucis de réception d'email (confirmation, puis probablement les liens de reset), une recréation de compte le 29 juin, et un nouveau blocage signalé le 3 juillet, vérification côté Supabase le 4 juillet : le compte iinnerre@gmail.com n'a jamais enregistré une seule connexion réussie depuis sa création. Diagnostic : problème de délivrabilité email récurrent plutôt qu'un mot de passe mal recopié. Mot de passe réinitialisé directement via l'API admin Supabase (contourne l'email) et transmis en DM.
+
+**DM envoyé :**
+> Bonjour Zahra,
+>
+> J'ai remis un mot de passe directement sur votre compte, sans passer par email cette fois vu les soucis de réception que vous avez eus. Voici les identifiants :
+>
+> Email : iinnerre@gmail.com
+> Mot de passe : AkDBpGPrYZXQwv
+>
+> Connexion sur healthwatch-global.com/fr/login. Une fois connectée, vous pouvez le changer dans les paramètres si vous préférez.
+>
+> Dites-moi si ça bloque encore.
+>
+> David
+
+**Double-check effectué :** salutation corrigée pour l'heure réelle d'envoi (Bonjour, pas Bonsoir), identifiants isolés sur leurs propres lignes pour copier-coller facile, pas de renvoi vers une étape déjà tentée sans succès (mot de passe oublié).
+
+**Suivi :** si le blocage persiste malgré le reset direct, creuser la délivrabilité email (Supabase SMTP / Brevo) plutôt que de réessayer un simple reset, ce pourrait être un problème plus large affectant d'autres utilisateurs.
+
+**Investigation root cause (4 juillet 2026, après-midi) :** confirmé via l'API admin Supabase que le compte iinnerre@gmail.com n'a `last_sign_in_at` à aucun moment depuis sa création (29 juin) jusqu'au reset manuel (4 juillet). `mailer_autoconfirm: true` est actif sur le projet (confirmé via `/auth/v1/settings`), donc la confirmation d'inscription n'a jamais bloqué l'accès — le vrai goulot d'étranglement est le mail de **reset de mot de passe**, entièrement dépendant du mailer Auth de Supabase (`resetPasswordForEmail`, appelé directement dans `forgot-password/page.tsx`), sans aucun fallback. Impossible de confirmer à 100% "SMTP par défaut vs custom" sans accès au Dashboard Supabase (aucun token Management API dans le repo) — à vérifier manuellement dans Project Settings > Auth > SMTP Settings. Deux autres comptes (elyan.delaunay@proton.me, ouedraogodaouda2408@gmail.com) montrent le même pattern "confirmé mais jamais connecté", signal faible (pas de champ `recovery_sent_at` exposé par l'API pour trancher) mais cohérent avec un problème plus large que le seul cas de Zahra.
+
+**Fix livré :** le pattern `generateLink()` + envoi Brevo existait déjà pour les invitations pilotes admin (`app/api/admin/invite/route.ts`) — jamais appliqué au flow self-serve grand public. Répliqué pour le reset de mot de passe : nouvelle route [app/api/auth/reset-password/route.ts](../app/api/auth/reset-password/route.ts) (génère le lien de recovery via l'API admin Supabase, envoie l'email via Brevo au lieu du mailer Supabase, rate-limité 5/h/IP, erreurs capturées dans Sentry au lieu de disparaître silencieusement) + template [lib/reset-password-email.ts](../lib/reset-password-email.ts) (5 langues, même style que l'email de bienvenue) + [forgot-password/page.tsx](../app/[locale]/forgot-password/page.tsx) mis à jour pour appeler la nouvelle route au lieu de `supabase.auth.resetPasswordForEmail()` directement. Comportement anti-enumeration préservé (toujours "email envoyé" côté UI). Testé en local : `generateLink` réussit sur un compte réel, l'appel Brevo est accepté (HTTP 201, messageId confirmé) avec la clé de `.env.local.live`. Non testé : n'a pas pu confirmer que la clé Brevo est bien configurée sur Vercel production (à vérifier), et `.env.local` local n'a PAS `BREVO_API_KEY`/`RESEND_API_KEY` (présents dans `.env.local.live`/`.env.test.local`/`.env.example` seulement) — sans impact a priori sur la prod qui a ses propres env vars Vercel, mais à surveiller si un test local de cron/email semble "silencieusement" no-op.
+
+**Reste à faire (David, côté Dashboard) :** vérifier Project Settings > Auth > SMTP Settings sur Supabase — si c'est le SMTP par défaut, envisager de basculer aussi la config globale vers un SMTP custom (nécessite les identifiants SMTP relay Brevo, différents de la clé API REST déjà utilisée) pour couvrir les autres emails Auth restants (changement d'email par ex.), en plus du fix ciblé déjà livré sur le reset de mot de passe.
+
+---
+
 ## Réponses prêtes — objections sensibles (à utiliser seulement si la question arrive, jamais proactif)
 
 ### Pérennité solo founder / continuité de service
@@ -1519,3 +1619,52 @@ Tracking both events in real time on HealthWatch Global, aggregating WHO, ECDC, 
 |---|---|---|---|---|---|
 | 2026-07-02 14:37 | saeed.mohamood@gmail.com | Pro trial | 2026-07-16 | EN | Gmail, affiliation inconnue. Onboarding auto déclenché. Recherche LinkedIn si affinité institutionnelle. |
 
+
+---
+
+## Monitoring LinkedIn — 4 juillet 2026 (session planifiée)
+
+Brouillons rédigés en attente de validation de David. Rien publié.
+
+### Commentaires (file d'attente, max 3/session)
+
+**1. Jalal NOURLIL MD. (1er, early adopter Institut Pasteur Maroc) — post arbovirus/dengue (7h)**
+Post : appel à l'action WHO Global Arbovirus Initiative, 70% de la population mondiale à risque (dengue, chikungunya, Zika, fièvre jaune), surveillance génomique et partage de données au cœur.
+> The 70% figure really captures how fast vector range has outpaced our surveillance maps. What strikes me in the arbovirus data is the lag between a local signal and its regional visibility. Genomic surveillance tells us what is circulating, but cross-border data sharing in near real time is what turns detection into preparedness. Reference labs and regional networks are exactly where that timeliness is won or lost.
+
+**2. World Health Organization African Region — briefing Ebola RDC/Ouganda (20h)**
+> The DRC and Uganda picture is really one epidemiological space, not two. With Ituri driving so many active health zones, the Uganda cases read as cross-border spillover rather than a separate transmission chain. That makes contact tracing continuity across the border the decisive variable. Briefings like this matter because shared situational awareness is what keeps the two responses from drifting apart.
+
+**3. Global Health EDCTP3 — appel des PDP pour investissement soutenu (18h)**
+> The Europe-Africa model works because it builds capacity that outlasts any single outbreak. What often gets underfunded in that equation is the surveillance layer that connects research to response. Clinical innovation matters little if the signal from the field arrives late or fragmented. Sustained investment in preparedness has to include the unglamorous data infrastructure, not just the trials it feeds.
+
+### Notes de connexion (file d'attente, max 3/session)
+
+**A. Marie Roseline Darnycka BELIZAIRE (2e) — épidémiologiste terrain, IMST continental Bundibugyo**
+> Bonjour Marie Roseline, votre message sur l'IMST continental pour la riposte Bundibugyo m'a marqué, notamment transformer la coordination en impact de terrain. Je travaille sur la surveillance épidémiologique en temps réel et votre perspective terrain m'intéresse. Au plaisir d'échanger.
+
+**B. Olivier Mukuku — chercheur Ebola RDC (a consulté le profil de David)**
+> Bonjour Olivier, votre Perspective dans The Lancet sur la confiance communautaire et les enterrements dignes en contexte Ebola en RDC m'a marqué. Un angle trop souvent absent des données de riposte. Je travaille sur la surveillance en temps réel. Au plaisir d'échanger.
+
+
+### Statut publication — 4 juillet 2026
+
+- Commentaire 1 (Jalal NOURLIL MD., post arbovirus) : **posté** ✓
+- Commentaire 2 (WHO African Region, briefing Ebola RDC/Ouganda) : **posté** ✓
+- Commentaire 3 (Global Health EDCTP3, appel investissement) : **posté** ✓
+- Connexion A (Marie Roseline Darnycka BELIZAIRE) : **invitation envoyée avec note**, statut "En attente" ✓
+- Connexion B (Olivier Mukuku) : **non envoyée** — déjà 1er degré (connexion existante), pas de bouton "Se connecter" disponible sur son profil. Note laissée en l'état, à réutiliser si pertinent pour un DM (non validé dans cette session).
+
+Bilan session : 3/3 commentaires postés, 1/2 connexions envoyées (quota respecté, aucun dépassement). 0 DM envoyé.
+
+### Correction — DM Olivier Mukuku non envoyé
+
+Avant l'envoi du DM approuvé par David, vérification de la messagerie complète : une conversation active existait déjà avec Olivier sur un tout autre sujet (son étude choléra à Goma, puis antibiogrammes), avec un dernier message de David envoyé 09:55 le jour même, sans réponse d'Olivier. Le DM Ebola/enterrements dignes rédigé plus haut n'a **pas été envoyé** pour éviter de dupliquer le contact et paraître décousu. Recommandation : attendre la réponse d'Olivier sur le fil existant avant toute relance. Quota DM final de la session : 0/2 utilisé.
+
+### Connexions supplémentaires — 4 juillet 2026 (suite de session)
+
+- Connexion C (Dr. Marc Yambayamba, épidémiologiste One Health, University of Zurich) : **invitation envoyée avec note** ✓
+  > Hello Marc, your PLOS piece on socio-ecological systems mapping in DRC captures something rarely said clearly: epidemic risk builds up long before the first case, and surveillance integration matters as much as emergency response. Would love to connect.
+- Connexion D (Simon Ruegg, systems practitioner in health, One Health) : **invitation envoyée SANS note** — erreur d'exécution, clic sur le bouton "Se connecter" compact d'une carte de suggestion (sidebar) qui envoie directement sans passer par la fenêtre d'ajout de note, contrairement au bouton sur la page de profil complète. Non retiré pour éviter le délai de recontact LinkedIn après retrait.
+
+Bilan connexions session (cumulé) : 3/3 envoyées (quota plein) — Marie Roseline (avec note), Marc Yambayamba (avec note), Simon Ruegg (sans note, erreur d'exécution notée).
