@@ -11,11 +11,26 @@
  */
 
 import crypto from "crypto";
+import { readFileSync } from "fs";
 
 // ── Config ────────────────────────────────────────────────────────────────────
-const WEBHOOK_SECRET    = "whsec_25fbc57100ef3c27adb279de6d3b4c4570976bfa79cf04bd3ac328c13598af7b";
-const SUPABASE_URL      = "https://tqznwmpkokdzrszysbcm.supabase.co";
-const SERVICE_ROLE_KEY  = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRxem53bXBrb2tkenJzenlzYmNtIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3OTM5NjQzMSwiZXhwIjoyMDk0OTcyNDMxfQ._fIWKNh438vxnLEoz_HXm0HWvbo71Ifpp-TbVJKc1kU";
+// Loaded from .env.local — never hardcode secrets (see check-webhook-db.mjs)
+const env = readFileSync(new URL("../.env.local", import.meta.url), "utf8");
+const vars = {};
+env.split("\n").forEach((line) => {
+  if (!line || line.startsWith("#")) return;
+  const idx = line.indexOf("=");
+  if (idx < 0) return;
+  const k = line.slice(0, idx).trim();
+  const v = line.slice(idx + 1).trim();
+  vars[k] = v;
+});
+const BOM = "﻿";
+const clean = (s) => (s || "").replace(BOM, "").trim();
+
+const WEBHOOK_SECRET    = clean(vars["STRIPE_WEBHOOK_SECRET"]);
+const SUPABASE_URL      = clean(vars["NEXT_PUBLIC_SUPABASE_URL"]);
+const SERVICE_ROLE_KEY  = clean(vars["SUPABASE_SERVICE_ROLE_KEY"]);
 
 // Safe test account — not a real customer
 const TEST_USER_ID      = "76cc283b-4e1f-4263-9cff-6a2f5b735678";
