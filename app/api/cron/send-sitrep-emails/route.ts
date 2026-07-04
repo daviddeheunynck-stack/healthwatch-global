@@ -205,15 +205,15 @@ export async function GET(req: NextRequest) {
       });
       if (!res.ok) throw new Error(`Brevo ${res.status}: ${await res.text()}`);
       totalSent += recipients.length;
+
+      await supabase
+        .from("scheduled_reports")
+        .update({ last_sent_at: now })
+        .eq("id", report.id);
     } catch (err) {
       console.error(`[send-sitrep-emails] Failed for report ${report.id}:`, err);
       Sentry.captureException(err, { tags: { cron: "send-sitrep-emails", report_id: report.id, user_id: report.user_id } });
     }
-
-    await supabase
-      .from("scheduled_reports")
-      .update({ last_sent_at: now })
-      .eq("id", report.id);
   }
 
   await logCronRun(supabase, "send-sitrep-emails", "ok", totalSent);
