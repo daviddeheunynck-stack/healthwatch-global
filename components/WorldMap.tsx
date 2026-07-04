@@ -132,7 +132,7 @@ export default function WorldMap({ outbreaks, locale, isPaid, popupLabels: _popu
 
   return (
     <>
-      <div className="relative rounded-xl overflow-hidden border border-gray-800">
+      <div className="relative isolate rounded-xl overflow-hidden border border-gray-800">
         <div ref={containerRef} className="h-[260px] sm:h-[340px] md:h-[420px] w-full" />
 
         {/* Click hint */}

@@ -68,7 +68,7 @@ export default function LandingMapSection({ outbreaks, locale }: Props) {
         <p className="text-gray-400 text-sm max-w-xl mx-auto">{copy.sub}</p>
       </div>
 
-      <div className="relative">
+      <div className="relative isolate">
         <LandingMapLeaflet outbreaks={mappable} locale={locale} />
 
         {/* Legend overlay */}
