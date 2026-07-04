@@ -87,17 +87,22 @@ export async function GET(req: Request) {
       const results = await Promise.all(
         CHECKOUT_PRICE_ENV_KEYS.map(async (key) => {
           const id = clean(process.env[key]);
-          if (!id) return { key, ok: false, reason: "missing" };
+          // A missing env var is NOT a breakage: checkout falls back to the EUR
+          // price for that plan (see checkout/route.ts), so the tunnel still works.
+          // Report it as an informational note, not an error.
+          if (!id) return { key, broken: false, reason: "missing (EUR fallback)" };
           const res = await fetch(`https://api.stripe.com/v1/prices/${id}`, {
             headers: { Authorization: `Bearer ${stripeKey}` },
           });
-          if (!res.ok) return { key, ok: false, reason: `http_${res.status}` };
+          if (!res.ok) return { key, broken: true, reason: `http_${res.status}` };
           const price = (await res.json()) as { active?: boolean };
-          return { key, ok: price.active === true, reason: price.active ? "active" : "inactive" };
+          // A CONFIGURED but archived/inactive price IS a breakage: checkout sends
+          // it to Stripe and the session creation fails.
+          return { key, broken: price.active !== true, reason: price.active ? "active" : "inactive" };
         })
       );
-      for (const r of results) if (!r.ok) priceDetail[r.key] = r.reason;
-      checks.stripe_prices = results.every((r) => r.ok) ? "ok" : "error";
+      for (const r of results) if (r.reason !== "active") priceDetail[r.key] = r.reason;
+      checks.stripe_prices = results.some((r) => r.broken) ? "error" : "ok";
     } catch {
       checks.stripe_prices = "error";
     }
