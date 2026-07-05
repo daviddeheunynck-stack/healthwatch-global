@@ -80,5 +80,5 @@ export async function GET(req: Request) {
     fcdo:     fcdo ?? null,
     govLinks: getGovLinks(countryEn),
     checked_at: new Date().toISOString(),
-  });
+  }, { headers: { "Cache-Control": "public, max-age=3600, s-maxage=3600" } });
 }

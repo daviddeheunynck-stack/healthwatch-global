@@ -55,5 +55,5 @@ export async function GET(req: Request) {
     .sort((a, b) => a.distKm - b.distKm)
     .slice(0, 10);
 
-  return NextResponse.json({ neighbors });
+  return NextResponse.json({ neighbors }, { headers: { "Cache-Control": "public, max-age=3600, s-maxage=3600" } });
 }

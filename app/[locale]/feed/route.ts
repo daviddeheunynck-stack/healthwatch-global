@@ -64,7 +64,7 @@ export async function GET(
 
   const { data } = await supabase
     .from("outbreaks")
-    .select("*")
+    .select("id, disease, disease_en, disease_ar, country, country_en, country_ar, risk_level, date, cases, deaths, description, description_fr, description_es, description_ar, description_id")
     .eq("active", true)
     .order("date", { ascending: false })
     .limit(30);

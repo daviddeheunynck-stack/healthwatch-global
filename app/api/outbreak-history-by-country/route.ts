@@ -42,5 +42,5 @@ export async function GET(req: Request) {
     .sort((a, b) => b.year - a.year)
     .slice(0, 8);
 
-  return NextResponse.json({ history });
+  return NextResponse.json({ history }, { headers: { "Cache-Control": "public, max-age=3600, s-maxage=3600" } });
 }

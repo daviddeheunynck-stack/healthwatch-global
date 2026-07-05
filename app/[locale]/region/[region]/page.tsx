@@ -120,7 +120,7 @@ async function fetchRegionOutbreaks(region: string): Promise<Outbreak[]> {
   );
   const { data } = await supabase
     .from("outbreaks")
-    .select("*")
+    .select("id, disease, disease_en, disease_ar, country, country_en, country_ar, cases, deaths, risk_level, date, is_pheic, active, source_priority, updated_at")
     .eq("region", region)
     .order("date", { ascending: false });
   return (data ?? []) as Outbreak[];
