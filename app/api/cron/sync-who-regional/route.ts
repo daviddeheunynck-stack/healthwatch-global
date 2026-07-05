@@ -822,12 +822,24 @@ export async function GET(req: NextRequest) {
       // Annual GHO rows (date 1-3 years ago) can fall outside that window once
       // deactivated, causing the cron to re-insert on every run.
       // Do a direct lookup by disease+country before inserting to catch these.
+      //
+      // Tiebreaker matters: duplicate rows for the same disease+country+date exist
+      // in prod (2026-06-30 backfill created 2-5 rows per GHO target — see
+      // project_polio_duplicate_rows_audit memory, 2026-07-05). Without a
+      // deterministic order, "date desc" alone ties on identical dates and
+      // .limit(1) picks whichever row the query planner happens to return first —
+      // confirmed to silently reactivate the wrong (lower-quality) duplicate in
+      // production. Prefer is_seed rows, then higher source_priority, then the
+      // most recently created row.
       const { data: directCheck } = await supabase
         .from("outbreaks")
         .select("id, cases, deaths, date, active")
         .eq("disease_en", diseaseInfo.name_en)
         .eq("country_en", countryInfo.name_en)
+        .order("is_seed", { ascending: false })
+        .order("source_priority", { ascending: false })
         .order("date", { ascending: false })
+        .order("created_at", { ascending: false })
         .limit(1)
         .maybeSingle();
 
