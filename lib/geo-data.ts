@@ -237,6 +237,64 @@ const COUNTRY_ALIASES: Record<string, string> = {
   "uae":                            "United Arab Emirates",
 };
 
+// Synthetic COUNTRIES entries that stand in for "not a single real place"
+// (multi-country DONs, global situation updates, regional roll-ups). Must be
+// excluded when scanning free text for "which countries are named here" —
+// otherwise boilerplate like "the global cholera situation" or "the African
+// Region recorded..." spuriously matches on nearly every article.
+const AGGREGATE_NAMES_EN = new Set([
+  "Multiple countries", "Global", "Africa (regional)", "Americas (regional)",
+]);
+
+export function isAggregateCountry(geo: CountryGeo): boolean {
+  return AGGREGATE_NAMES_EN.has(geo.name_en);
+}
+
+// Sorted longest-first so e.g. "Democratic Republic of the Congo" is checked
+// (and matched) before the shorter "Congo".
+const COUNTRY_KEYS_BY_LENGTH = Object.keys(COUNTRIES).sort((a, b) => b.length - a.length);
+
+// Shorthand worth recognizing in free text beyond the canonical COUNTRIES
+// keys (these aren't legitimate WHO DON title spellings, so they don't
+// belong in COUNTRY_ALIASES above, which is keyed for findCountry()).
+const TEXT_ALIASES: Record<string, string> = {
+  " ksa ":       "Saudi Arabia",
+  " saudi ":     "Saudi Arabia",
+  " uae ":       "United Arab Emirates",
+  " emirates ":  "United Arab Emirates",
+  " west bank":  "State of Palestine",
+  " gaza ":      "State of Palestine",
+  " palestine ": "State of Palestine",
+};
+
+// Scans free text for every known, real (non-aggregate) country mentioned,
+// deduped by canonical identity. Used to find which countries a multi-country
+// report actually names — e.g. distinguishing the 5 countries a WHO DON gives
+// their own case/death figures to from the 26 others only folded into a
+// regional roll-up total.
+export function findMentionedCountries(text: string): CountryGeo[] {
+  const lower = ` ${text.toLowerCase()} `;
+  const found: CountryGeo[] = [];
+  const seen = new Set<string>();
+
+  const addIfNew = (geo: CountryGeo | undefined | null) => {
+    if (geo && !isAggregateCountry(geo) && !seen.has(geo.name_en)) {
+      found.push(geo);
+      seen.add(geo.name_en);
+    }
+  };
+
+  for (const [alias, canonicalKey] of Object.entries(TEXT_ALIASES)) {
+    if (lower.includes(alias)) addIfNew(COUNTRIES[canonicalKey]);
+  }
+  for (const key of COUNTRY_KEYS_BY_LENGTH) {
+    if (lower.includes(` ${key.toLowerCase()} `) || lower.includes(` ${key.toLowerCase()},`)) {
+      addIfNew(COUNTRIES[key]);
+    }
+  }
+  return found;
+}
+
 // Fuzzy lookup: try exact match, alias, name_en, then partial match
 export function findCountry(name: string): CountryGeo | null {
   if (!name) return null;

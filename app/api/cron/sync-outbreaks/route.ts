@@ -3,7 +3,7 @@ import * as Sentry from "@sentry/nextjs";
 import { logCronRun } from "@/lib/cron-monitor";
 import { createClient } from "@supabase/supabase-js";
 import { parseRSSFeed, buildOutbreakFromRSSItem } from "@/lib/outbreak-parser";
-import { fetchWHODONList, parseWHODONItem } from "@/lib/who-api";
+import { fetchWHODONList, parseWHODONItems } from "@/lib/who-api";
 import type { ParsedOutbreak } from "@/lib/outbreak-parser";
 import { errorMessage } from "@/lib/error";
 
@@ -117,16 +117,16 @@ export async function GET(req: NextRequest) {
     const whoItems = await fetchWHODONList(40);
     const parsed: ParsedOutbreak[] = [];
     for (const item of whoItems) {
-      // First pass: fast (no body fetch)
-      let p = await parseWHODONItem(item, false);
-      // Second pass: fetch full article for items with 0 cases (N/D fix)
-      if (p && p.cases === 0 && item.ItemDefaultUrl) {
-        const full = await parseWHODONItem(item, true);
-        if (full && full.cases > 0) p = full;
-        await new Promise((r) => setTimeout(r, 200)); // polite delay
+      // parseWHODONItems() already fetches the full article body itself
+      // whenever Summary-only extraction comes up empty, and fans a single
+      // multi-country DON out into one row per country it names its own
+      // figures for — no separate retry pass needed here.
+      const items = await parseWHODONItems(item);
+      if (debug) {
+        if (items.length === 0) debugLog.push(`✗ "${item.Title}" → skipped`);
+        else for (const p of items) debugLog.push(`✓ "${item.Title}" → ${p.disease_en} / ${p.country_en} (${p.cases} cases)`);
       }
-      if (debug) debugLog.push(p ? `✓ "${item.Title}" → ${p.disease_en} / ${p.country_en} (${p.cases} cases)` : `✗ "${item.Title}" → skipped`);
-      if (p) parsed.push(p);
+      parsed.push(...items);
     }
     if (parsed.length > 0) {
       outbreaks  = parsed;
@@ -183,10 +183,14 @@ export async function GET(req: NextRequest) {
   // Row shape mirrors whatever the `.select(...)` above actually returns —
   // derived rather than hand-typed so it can't drift from the query.
   type ExistingOutbreakRow = NonNullable<typeof existing>[number];
+  // Keyed by source+country, not source alone: a multi-country DON fans out
+  // into several rows that legitimately share one source URL, so the URL
+  // alone can't identify which of them a given parsed outbreak should match.
+  const sourceKey = (source: string, countryEn: string) => `${source}|${countryEn.toLowerCase()}`;
   const bySource = new Map<string, ExistingOutbreakRow>();
   const byDiseaseCountry = new Map<string, ExistingOutbreakRow>();
   for (const row of existing || []) {
-    if (row.source) bySource.set(row.source, row);
+    if (row.source) bySource.set(sourceKey(row.source, row.country_en || ""), row);
     const k = `${(row.disease_en || "").toLowerCase()}|${(row.country_en || "").toLowerCase()}`;
     // A disease+country can have several historical rows (past episodes).
     // Keep the one a fresh WHO article should actually update: prefer the
@@ -201,7 +205,7 @@ export async function GET(req: NextRequest) {
   for (const outbreak of outbreaks) {
     try {
       const dcKey = `${outbreak.disease_en.toLowerCase()}|${outbreak.country_en.toLowerCase()}`;
-      const matchViaSource = bySource.get(outbreak.source);
+      const matchViaSource = bySource.get(sourceKey(outbreak.source, outbreak.country_en));
       const matchViaDC     = byDiseaseCountry.get(dcKey);
       const existingRow    = matchViaSource ?? matchViaDC;
 

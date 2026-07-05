@@ -9,7 +9,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { normalizeDisease } from "@/lib/disease-data";
-import { COUNTRIES, findCountry } from "@/lib/geo-data";
+import { findMentionedCountries } from "@/lib/geo-data";
 import { extractNumbers, assessRisk } from "@/lib/outbreak-parser";
 import { logCronRun } from "@/lib/cron-monitor";
 import { errorMessage } from "@/lib/error";
@@ -37,8 +37,6 @@ const FETCH_HEADERS = {
   "Accept":          "application/rss+xml,text/html,*/*",
   "Accept-Language": "en-US,en;q=0.9",
 };
-
-const COUNTRY_NAMES = Object.keys(COUNTRIES).sort((a, b) => b.length - a.length);
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -70,38 +68,10 @@ function parseEMROTitle(raw: string): { disease: string; country: string } | nul
   if (inMatch) return { disease: inMatch[1].trim(), country: inMatch[2].trim() };
 
   const dashMatch = title.match(/^(.+?)\s*[-–—]\s*(.+)$/);
-  if (dashMatch && COUNTRY_NAMES.some(n => dashMatch[2].toLowerCase().includes(n.toLowerCase()))) {
+  if (dashMatch && findMentionedCountries(dashMatch[2]).length > 0) {
     return { disease: dashMatch[1].trim(), country: dashMatch[2].trim() };
   }
   return null;
-}
-
-function findMentionedCountries(text: string): string[] {
-  const lower = ` ${text.toLowerCase()} `;
-  const found: string[] = [];
-  const seen  = new Set<string>();
-
-  const aliases: Record<string, string> = {
-    " ksa ":          "Saudi Arabia",
-    " saudi ":        "Saudi Arabia",
-    " uae ":          "United Arab Emirates",
-    " emirates ":     "United Arab Emirates",
-    " west bank":     "State of Palestine",
-    " gaza ":         "State of Palestine",
-    " palestine ":    "State of Palestine",
-  };
-  for (const [abbr, canonical] of Object.entries(aliases)) {
-    if (lower.includes(abbr) && canonical && !seen.has(canonical)) {
-      found.push(canonical); seen.add(canonical);
-    }
-  }
-  for (const name of COUNTRY_NAMES) {
-    if (seen.has(name)) continue;
-    if (lower.includes(` ${name.toLowerCase()} `) || lower.includes(` ${name.toLowerCase()},`)) {
-      found.push(name); seen.add(name);
-    }
-  }
-  return found;
 }
 
 // ── Link extraction ───────────────────────────────────────────────────────────
@@ -280,12 +250,7 @@ export async function GET(req: NextRequest) {
       continue;
     }
 
-    const geo = findCountry(countries[0]);
-    if (!geo) {
-      log.push({ label: entry.title, status: "skip", detail: `geo miss: ${countries[0]}` });
-      results.skipped++;
-      continue;
-    }
+    const geo = countries[0];
 
     let date = entry.dateHint ?? today;
     if (!entry.dateHint) {

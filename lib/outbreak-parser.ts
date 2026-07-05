@@ -1,4 +1,4 @@
-import { findCountry } from "./geo-data";
+import { findCountry, COUNTRIES } from "./geo-data";
 import { normalizeDisease } from "./disease-data";
 import type { CountryGeo } from "./geo-data";
 
@@ -60,15 +60,24 @@ export function parseRSSFeed(xml: string): RSSItem[] {
   return items;
 }
 
-function decodeEntities(str: string): string {
+// Exported: also used to clean WHO DON article body HTML before number
+// extraction. WHO's CMS glues &nbsp; directly against adjacent words with no
+// real whitespace (e.g. "a total of&nbsp;46 800 cholera cases") — left
+// undecoded, that silently breaks the "total of N cases" pattern below and
+// falls through to an unrelated number elsewhere in the same paragraph.
+export function decodeEntities(str: string): string {
   return str
+    .replace(/&nbsp;/g, " ")
     .replace(/&amp;/g, "&")
     .replace(/&lt;/g, "<")
     .replace(/&gt;/g, ">")
     .replace(/&quot;/g, '"')
-    .replace(/&#39;/g, "'")
-    .replace(/&#8211;/g, "–")
-    .replace(/&#8212;/g, "—");
+    .replace(/&#39;|&apos;|&rsquo;|&lsquo;/g, "'")
+    .replace(/&rdquo;|&ldquo;/g, '"')
+    .replace(/&mdash;|&#8212;/g, "—")
+    .replace(/&ndash;|&#8211;/g, "–")
+    .replace(/&#x([0-9a-f]+);/gi, (_, hex) => String.fromCodePoint(parseInt(hex, 16)))
+    .replace(/&#(\d+);/g, (_, dec) => String.fromCodePoint(parseInt(dec, 10)));
 }
 
 // ─── WHO DON title parsing ─────────────────────────────────────
@@ -126,6 +135,11 @@ export function extractNumbers(text: string): { cases: number; deaths: number; r
     /\btotal\s+of\s+(\d[\d,]*)\s+(?:[\w-]+\s+){0,3}cases?/i,
     // "a total of 746 suspected cases"
     new RegExp(`total\\s+of\\s+(\\d[\\d,]*)\\s+${QUALIFIERS}cases?`, "i"),
+    // "a total of 48 768 cholera and acute watery diarrhoea cases" — cholera
+    // DONs often double-label cases with a second disease/qualifier term,
+    // exceeding the tighter patterns' 3-word gap. Still anchored to "total
+    // of" so a grounded topline is preferred over an ungrounded match below.
+    /\btotal\s+of\s+(\d[\d,]*)\s+(?:[\w-]+\s+){0,6}cases?/i,
     // "746 suspected/confirmed/probable/etc cases [have been reported]"
     new RegExp(`(\\d[\\d,]*)\\s+${QUALIFIERS}cases?(?:\\s+(?:have\\s+been|were|are)\\s+reported)?`, "i"),
     // "cases: 746" / "cases reported: 746"
@@ -268,6 +282,59 @@ export function extractNumbersForCountry(
   }
 
   return { cases: cases ?? 0, deaths: deaths ?? 0, recovered };
+}
+
+// ─── Country-headed sections within multi-country DON HTML ────
+//
+// WHO's CMS renders a multi-country DON's per-country breakdown as a bare
+// "<p><strong>Country Name</strong></p>" heading immediately followed by
+// that country's own narrative (cases, deaths, dates) — repeated once per
+// country with individually-attributed figures, ending wherever the next
+// such heading begins (another country, or an unrelated section title like
+// "Epidemiology"). A fixed character radius around each country's name is
+// NOT reliable for finding its own figures here: these DONs constantly
+// cross-reference each other ("border with Sudan", "cross-border with DRC")
+// within a few hundred characters of the actual figures. This instead uses
+// the document's own heading structure as the boundary. Returns a map of
+// name_en -> that country's own section text (plain), for countries that
+// have a dedicated section; countries only named in passing (e.g. inside a
+// regional roll-up total) correctly get no entry rather than a guessed one.
+export function findCountryHeadingSections(
+  html: string,
+  candidates: CountryGeo[]
+): Map<string, string> {
+  const clean = html
+    .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, " ")
+    .replace(/<script[^>]*>[\s\S]*?<\/script>/gi, " ");
+
+  const headingRe = /<(strong|h[2-4])[^>]*>\s*([^<]{2,60}?)\s*<\/\1>/gi;
+  const headings: Array<{ start: number; end: number; label: string }> = [];
+  for (const m of clean.matchAll(headingRe)) {
+    headings.push({ start: m.index ?? 0, end: (m.index ?? 0) + m[0].length, label: m[2].trim().toLowerCase() });
+  }
+
+  // A candidate's own COUNTRIES key(s) (e.g. "Democratic Republic of the
+  // Congo") are what WHO's headings actually spell out — name_en is often a
+  // shorter display label ("DR Congo") that never appears verbatim in text.
+  const byLabel = new Map<string, CountryGeo>();
+  for (const geo of candidates) {
+    byLabel.set(geo.name_en.toLowerCase(), geo);
+    for (const [key, val] of Object.entries(COUNTRIES)) {
+      if (val.name_en === geo.name_en) byLabel.set(key.toLowerCase(), geo);
+    }
+  }
+  const blocks = new Map<string, string>();
+
+  for (let i = 0; i < headings.length; i++) {
+    const geo = byLabel.get(headings[i].label);
+    if (!geo || blocks.has(geo.name_en)) continue; // first (data) section wins over later repeats
+    const blockEnd = i + 1 < headings.length ? headings[i + 1].start : clean.length;
+    const plain = decodeEntities(
+      clean.slice(headings[i].end, blockEnd).replace(/<[^>]+>/g, " ")
+    ).replace(/\s+/g, " ").trim();
+    blocks.set(geo.name_en, plain);
+  }
+  return blocks;
 }
 
 // Splits a WHO DON country fragment like "Democratic Republic of the Congo
