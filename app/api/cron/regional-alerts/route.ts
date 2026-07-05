@@ -14,7 +14,7 @@ import { createClient } from "@supabase/supabase-js";
 import { buildOutbreakAlertEmail } from "@/lib/alert-emails";
 import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 import * as Sentry from "@sentry/nextjs";
-import { logCronRun } from "@/lib/cron-monitor";
+import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
 
 export const dynamic = "force-dynamic";
 
@@ -218,11 +218,13 @@ export async function GET(req: NextRequest) {
             outbreakUrl,
             unsubUrl
           );
-          await sendEmail(profile.email, subject, html);
+          if (isRealProduction) {
+            await sendEmail(profile.email, subject, html);
+          }
 
           // ── Slack / Teams (fire-and-forget, non-blocking) ───────────────
           const slackUrl: string | null = profile.slack_webhook_url ?? null;
-          if (slackUrl) {
+          if (slackUrl && isRealProduction) {
             const sc = SLACK_COPY[locale] ?? SLACK_COPY.en;
             const slackBody = {
               blocks: [

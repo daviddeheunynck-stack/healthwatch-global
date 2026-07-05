@@ -3,7 +3,7 @@ import { createClient } from "@supabase/supabase-js";
 import { getDiseaseCategory, CATEGORY_LABELS } from "@/lib/disease-category";
 import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 import * as Sentry from "@sentry/nextjs";
-import { logCronRun } from "@/lib/cron-monitor";
+import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
 
 export const dynamic = "force-dynamic";
 
@@ -184,7 +184,7 @@ export async function GET(req: NextRequest) {
         outbreak_id: matches[0]?.id ?? null,
       }).then(() => {}, () => {});
 
-      await sendEmail(alert.email, lc.subject(catLabel, minStr), `
+      if (isRealProduction) await sendEmail(alert.email, lc.subject(catLabel, minStr), `
 <div dir="${isRtl ? "rtl" : "ltr"}" style="font-family:sans-serif;max-width:520px;margin:0 auto;padding:24px;background:#0f172a;color:#e2e8f0;border-radius:12px;direction:${isRtl ? "rtl" : "ltr"};text-align:${isRtl ? "right" : "left"}">
   <p style="color:#60a5fa;font-size:17px;font-weight:700;margin:0 0 4px">${lc.header}</p>
   <p style="font-size:12px;color:#64748b;margin:0 0 16px">${new Date().toISOString().split("T")[0]}</p>

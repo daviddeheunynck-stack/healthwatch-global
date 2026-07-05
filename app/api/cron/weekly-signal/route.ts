@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import * as Sentry from "@sentry/nextjs";
-import { logCronRun } from "@/lib/cron-monitor";
+import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
 import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 
 export const dynamic = "force-dynamic";
@@ -211,7 +211,9 @@ export async function GET(req: NextRequest) {
       `https://healthwatch-global.com/${locale}/pricing`,
     );
     try {
-      await sendEmail(user.email, SUBJECTS[locale] ?? SUBJECTS.en, html);
+      if (isRealProduction) {
+        await sendEmail(user.email, SUBJECTS[locale] ?? SUBJECTS.en, html);
+      }
       sent++;
     } catch (e) {
       console.error(`[weekly-signal] ${user.email}:`, e);

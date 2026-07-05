@@ -3,7 +3,7 @@ import { createClient } from "@supabase/supabase-js";
 import { extractNumbers } from "@/lib/outbreak-parser";
 import { errorMessage } from "@/lib/error";
 import * as Sentry from "@sentry/nextjs";
-import { logCronRun } from "@/lib/cron-monitor";
+import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 120;
@@ -457,7 +457,7 @@ export async function GET(req: NextRequest) {
       </p>
     </div>`;
 
-  if (adminEmail) await sendEmail(adminEmail, subject, html);
+  if (adminEmail && isRealProduction) await sendEmail(adminEmail, subject, html);
 
   const result = {
     success: true,

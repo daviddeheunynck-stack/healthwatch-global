@@ -9,7 +9,7 @@ import { sendPushToMany } from "@/lib/push";
 import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 import { errorMessage } from "@/lib/error";
 import * as Sentry from "@sentry/nextjs";
-import { logCronRun } from "@/lib/cron-monitor";
+import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
 
 export const dynamic = "force-dynamic";
 
@@ -112,9 +112,11 @@ export async function GET(req: NextRequest) {
       };
 
       try {
-        const result = await sendPushToMany(group, payload);
-        totalSent += result.sent;
-        allExpiredIds.push(...result.expiredIds);
+        if (isRealProduction) {
+          const result = await sendPushToMany(group, payload);
+          totalSent += result.sent;
+          allExpiredIds.push(...result.expiredIds);
+        }
       } catch (e: unknown) {
         console.error(`[push-alerts] ${disease}/${country}/${locale}:`, errorMessage(e));
         Sentry.captureException(e, { tags: { cron: "push-alerts", outbreak_id: outbreak.id } });

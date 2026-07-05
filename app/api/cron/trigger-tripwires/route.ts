@@ -13,7 +13,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 import * as Sentry from "@sentry/nextjs";
-import { logCronRun } from "@/lib/cron-monitor";
+import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
 
 export const dynamic = "force-dynamic";
 
@@ -203,7 +203,8 @@ export async function GET(req: NextRequest) {
         outbreak_id: o.id,
       }).then(() => {}, () => {});
 
-      await sendEmail(tw.email, `[HealthWatch] Tripwire : ${disease} — ${country} (${casesStr})`, `
+      if (isRealProduction) {
+        await sendEmail(tw.email, `[HealthWatch] Tripwire : ${disease} — ${country} (${casesStr})`, `
 <div dir="${isRtl ? "rtl" : "ltr"}" style="font-family:sans-serif;max-width:520px;margin:0 auto;padding:24px;background:#0f172a;color:#e2e8f0;border-radius:12px;direction:${isRtl ? "rtl" : "ltr"};text-align:${isRtl ? "right" : "left"}">
   <p style="color:#f87171;font-size:18px;font-weight:700;margin:0 0 8px">${lc.emailTitle}</p>
   <p style="margin:0 0 16px;font-size:14px;color:#94a3b8">HealthWatch Global</p>
@@ -226,6 +227,7 @@ export async function GET(req: NextRequest) {
     <br/>${lc.manageLink(APP_URL)}
   </p>
 </div>`);
+      }
       fired++;
     } catch (err) {
       console.error(`[trigger-tripwires] Failed for tripwire ${tw.id}:`, err);

@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { buildJ1Email, buildJ3Email, buildJ7Email, buildJ12Email, buildPilotConversionEmail } from "@/lib/onboarding-emails";
 import * as Sentry from "@sentry/nextjs";
-import { logCronRun } from "@/lib/cron-monitor";
+import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
 
 export const dynamic = "force-dynamic";
 
@@ -159,7 +159,9 @@ export async function GET(req: NextRequest) {
     try {
       const locale = user.locale || "en";
       const { subject, html } = buildJ1Email(locale, user.id);
-      await sendEmail(user.email, subject, html);
+      if (isRealProduction) {
+        await sendEmail(user.email, subject, html);
+      }
       j1Sent++;
       await new Promise((r) => setTimeout(r, 150));
     } catch (err) {
@@ -175,7 +177,9 @@ export async function GET(req: NextRequest) {
     try {
       const locale = user.locale || "en";
       const { subject, html } = buildJ3Email(locale, user.id);
-      await sendEmail(user.email, subject, html);
+      if (isRealProduction) {
+        await sendEmail(user.email, subject, html);
+      }
       j3Sent++;
       await new Promise((r) => setTimeout(r, 150));
     } catch (err) {
@@ -191,7 +195,9 @@ export async function GET(req: NextRequest) {
     try {
       const locale = user.locale || "en";
       const { subject, html } = buildJ7Email(locale, user.id);
-      await sendEmail(user.email, subject, html);
+      if (isRealProduction) {
+        await sendEmail(user.email, subject, html);
+      }
       j7Sent++;
       await new Promise((r) => setTimeout(r, 150));
     } catch (err) {
@@ -207,7 +213,9 @@ export async function GET(req: NextRequest) {
     try {
       const locale = user.locale || "en";
       const { subject, html } = buildJ12Email(locale, user.id);
-      await sendEmail(user.email, subject, html);
+      if (isRealProduction) {
+        await sendEmail(user.email, subject, html);
+      }
       j12Sent++;
       await new Promise((r) => setTimeout(r, 150));
     } catch (err) {
@@ -223,7 +231,9 @@ export async function GET(req: NextRequest) {
     try {
       const locale = user.locale || "en";
       const { subject, html } = buildPilotConversionEmail(locale, user.id);
-      await sendEmail(user.email, subject, html);
+      if (isRealProduction) {
+        await sendEmail(user.email, subject, html);
+      }
       j32Sent++;
       await new Promise((r) => setTimeout(r, 150));
     } catch (err) {

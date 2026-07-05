@@ -3,7 +3,7 @@ import { createClient } from "@supabase/supabase-js";
 import { buildDigestEmail } from "@/lib/digest-email";
 import type { Outbreak } from "@/lib/outbreaks";
 import * as Sentry from "@sentry/nextjs";
-import { logCronRun } from "@/lib/cron-monitor";
+import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
 
 export const dynamic = "force-dynamic";
 
@@ -109,7 +109,9 @@ export async function GET(req: NextRequest) {
       const topOutbreaks = regionOutbreaks.slice(0, 8);
 
       const { subject, html } = buildDigestEmail(topOutbreaks, region, locale, sub.id);
-      await sendEmail(sub.email, subject, html);
+      if (isRealProduction) {
+        await sendEmail(sub.email, subject, html);
+      }
       sent++;
     } catch (err) {
       console.error(`[weekly-digest] Failed to send to ${sub.email}:`, err);

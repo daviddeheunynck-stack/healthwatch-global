@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { buildTrialEndingEmail } from "@/lib/trial-ending-email";
 import * as Sentry from "@sentry/nextjs";
-import { logCronRun } from "@/lib/cron-monitor";
+import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
 import { getLocalizedDisease } from "@/lib/outbreaks";
 
 export const dynamic = "force-dynamic";
@@ -118,7 +118,9 @@ export async function GET(req: NextRequest) {
 
       const { subject, html } = buildTrialEndingEmail(plan, locale, profile.trial_ends_at, !!profile.stripe_subscription_id, regionalContext);
 
-      await sendEmail(profile.email, subject, html);
+      if (isRealProduction) {
+        await sendEmail(profile.email, subject, html);
+      }
       sent++;
     } catch (err) {
       console.error(`[trial-reminders] Failed for ${profile.email}:`, err);

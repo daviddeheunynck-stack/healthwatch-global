@@ -9,7 +9,7 @@ import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 import { diseaseToSlug } from "@/lib/disease-data";
 import { errorMessage } from "@/lib/error";
 import * as Sentry from "@sentry/nextjs";
-import { logCronRun } from "@/lib/cron-monitor";
+import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
 
 export const dynamic = "force-dynamic";
 
@@ -164,7 +164,9 @@ export async function GET(req: NextRequest) {
 
         const diseaseSlug = diseaseToSlug(alertOutbreak.disease_en);
         const { subject, html } = buildDiseaseAlertEmail(alertOutbreak, locale, userId, diseaseSlug);
-        await sendEmail(profile.email, subject, html);
+        if (isRealProduction) {
+          await sendEmail(profile.email, subject, html);
+        }
         sent++;
 
         // Mirror in alert_notifications for in-app display (non-fatal)

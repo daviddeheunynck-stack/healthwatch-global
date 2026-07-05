@@ -2,7 +2,7 @@ import { NextRequest } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 import * as Sentry from "@sentry/nextjs";
-import { logCronRun } from "@/lib/cron-monitor";
+import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
 
 export const dynamic    = "force-dynamic";
 export const maxDuration = 300;
@@ -224,7 +224,7 @@ export async function GET(req: NextRequest) {
           continue;
         }
 
-        await sendEmail(user.email, subject, html);
+        if (isRealProduction) await sendEmail(user.email, subject, html);
         // Add all outbreak ids for this disease group so the check above
         // catches them on the next cron run without a DB re-query.
         outbreaks.forEach((o) => notifiedSet.add(`${user.id}::${o.id}`));

@@ -17,7 +17,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import * as Sentry from "@sentry/nextjs";
-import { logCronRun } from "@/lib/cron-monitor";
+import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
 import { matchDisease } from "@/lib/disease-data";
 import type { AppRegion } from "@/lib/disease-data";
 import { errorMessage } from "@/lib/error";
@@ -106,11 +106,13 @@ export async function GET(req: NextRequest) {
     if (!matched && !unknownSeen.has(rawName)) {
       unknownSeen.add(rawName);
       unknownList.push(rawName);
-      Sentry.captureMessage(`[disease-coverage] Unknown disease: "${rawName}"`, {
-        level: "warning",
-        tags: { component: "disease-coverage", type: "unknown_disease" },
-        extra: { rawName },
-      });
+      if (isRealProduction) {
+        Sentry.captureMessage(`[disease-coverage] Unknown disease: "${rawName}"`, {
+          level: "warning",
+          tags: { component: "disease-coverage", type: "unknown_disease" },
+          extra: { rawName },
+        });
+      }
     }
 
     // 2b. travelerRisk gap (active outbreaks only)
@@ -121,14 +123,16 @@ export async function GET(req: NextRequest) {
         if (!gapSeen.has(gapKey)) {
           gapSeen.add(gapKey);
           gapList.push({ disease: info.name_en, region: regionSlug });
-          Sentry.captureMessage(
-            `[disease-coverage] travelerRisk gap: ${info.name_en} × ${regionSlug}`,
-            {
-              level: "warning",
-              tags: { component: "disease-coverage", type: "traveler_risk_gap" },
-              extra: { disease: info.name_en, region: regionSlug },
-            }
-          );
+          if (isRealProduction) {
+            Sentry.captureMessage(
+              `[disease-coverage] travelerRisk gap: ${info.name_en} × ${regionSlug}`,
+              {
+                level: "warning",
+                tags: { component: "disease-coverage", type: "traveler_risk_gap" },
+                extra: { disease: info.name_en, region: regionSlug },
+              }
+            );
+          }
         }
       }
     }
@@ -140,7 +144,7 @@ export async function GET(req: NextRequest) {
   );
 
   // ── 3. Admin email if issues found ────────────────────────────────────────
-  if (hasIssues && adminEmail) {
+  if (hasIssues && adminEmail && isRealProduction) {
     const unknownHtml = unknownList.length > 0
       ? `<h3 style="color:#ef4444">Maladies non-reconnues (${unknownList.length})</h3>
          <p style="color:#9ca3af;font-size:13px">Ajouter un pattern + données dans <code>lib/disease-data.ts</code>.</p>

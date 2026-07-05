@@ -2,7 +2,7 @@ import { NextRequest } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 import * as Sentry from "@sentry/nextjs";
-import { logCronRun } from "@/lib/cron-monitor";
+import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 300;
@@ -154,7 +154,7 @@ export async function GET(req: NextRequest) {
         outbreak_id: top.id,
       }).then(() => {}, () => {});
 
-      await sendEmail(alert.email, subject, html);
+      if (isRealProduction) await sendEmail(alert.email, subject, html);
       fired++;
     } catch (err) {
       console.error(`[trigger-country-risk-alerts] Failed for alert ${alert.id}:`, err);

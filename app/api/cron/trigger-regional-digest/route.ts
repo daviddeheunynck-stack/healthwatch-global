@@ -2,7 +2,7 @@ import { NextRequest } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 import * as Sentry from "@sentry/nextjs";
-import { logCronRun } from "@/lib/cron-monitor";
+import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
 
 export const dynamic    = "force-dynamic";
 export const maxDuration = 300;
@@ -206,7 +206,9 @@ export async function GET(req: NextRequest) {
         console.warn(`[trigger-regional-digest] dedup insert failed for ${user.id}: ${insertErr.message}`);
         continue;
       }
-      await sendEmail(user.email, subject, html);
+      if (isRealProduction) {
+        await sendEmail(user.email, subject, html);
+      }
       fired++;
     } catch (err) {
       console.error(`[trigger-regional-digest] Failed for ${user.email}:`, err);

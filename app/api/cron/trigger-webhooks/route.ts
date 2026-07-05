@@ -14,7 +14,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { createHmac } from "crypto";
 import * as Sentry from "@sentry/nextjs";
-import { logCronRun } from "@/lib/cron-monitor";
+import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
 import { computeEpidemicMetrics } from "@/lib/epidemic-metrics";
 import { getCountryCoords } from "@/lib/country-coords";
 import { haversineKm } from "@/lib/haversine";
@@ -231,18 +231,20 @@ export async function GET(req: NextRequest) {
       const body = JSON.stringify(payload);
 
       try {
-        const res = await fetch(webhook.url, {
-          method: "POST",
-          headers: {
-            "Content-Type":             "application/json",
-            "X-HealthWatch-Signature":  sign(webhook.secret, body),
-            "X-HealthWatch-Event":      "outbreak.alert",
-            "X-HealthWatch-Timestamp":  String(Date.now()),
-          },
-          body,
-          signal: AbortSignal.timeout(10_000),
-        });
-        lastStatus = res.status;
+        if (isRealProduction) {
+          const res = await fetch(webhook.url, {
+            method: "POST",
+            headers: {
+              "Content-Type":             "application/json",
+              "X-HealthWatch-Signature":  sign(webhook.secret, body),
+              "X-HealthWatch-Event":      "outbreak.alert",
+              "X-HealthWatch-Timestamp":  String(Date.now()),
+            },
+            body,
+            signal: AbortSignal.timeout(10_000),
+          });
+          lastStatus = res.status;
+        }
         totalFired++;
       } catch (err) {
         lastStatus = 0;

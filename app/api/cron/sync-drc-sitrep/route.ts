@@ -4,7 +4,7 @@
 // Falls back to a manual-notification email if PDF parsing fails.
 
 import { NextRequest, NextResponse } from "next/server";
-import { logCronRun } from "@/lib/cron-monitor";
+import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
 import { createClient } from "@supabase/supabase-js";
 import { errorMessage } from "@/lib/error";
 import * as Sentry from "@sentry/nextjs";
@@ -471,7 +471,7 @@ export async function GET(req: NextRequest) {
     console.error(err.message);
     Sentry.captureException(err, { tags: { cron: "sync-drc-sitrep" } });
     await logCronRun(supabase, "sync-drc-sitrep", "error", 0, "Ebola DRC row not found");
-    if (adminEmail) {
+    if (adminEmail && isRealProduction) {
       await sendEmail(
         adminEmail,
         "🚨 Ébola RDC — ligne DB introuvable (cron bloqué)",
@@ -494,7 +494,7 @@ export async function GET(req: NextRequest) {
     console.log(`[drc-sitrep] ${detail}`);
     await logCronRun(supabase, "sync-drc-sitrep", latest?.reliefwebError ? "error" : "no_data", 0, detail);
     // Only alert for genuine "no sitrep" — skip email when ReliefWeb is just unreachable.
-    if (!latest?.reliefwebError && adminEmail) {
+    if (!latest?.reliefwebError && adminEmail && isRealProduction) {
       const { subject, html } = emailNoSitrep();
       await sendEmail(adminEmail, subject, html);
     }
@@ -537,13 +537,13 @@ export async function GET(req: NextRequest) {
     } else {
       console.log(`[drc-sitrep] ✅ Updated: ${data.cases} cas / ${data.deaths} décès / ${data.date}`);
       const { subject, html } = emailAutoUpdated(data);
-      if (adminEmail) await sendEmail(adminEmail, subject, html);
+      if (adminEmail && isRealProduction) await sendEmail(adminEmail, subject, html);
     }
   } else {
     // Step 4b: PDF parsing failed — notify for manual update
     console.log("[drc-sitrep] PDF extraction failed — sending manual notification.");
     const { subject, html } = emailManualNeeded(latest.num, latest.pdfUrl ?? latest.pageUrl);
-    if (adminEmail) await sendEmail(adminEmail, subject, html);
+    if (adminEmail && isRealProduction) await sendEmail(adminEmail, subject, html);
   }
 
   // Step 4c: update satellite countries (Uganda, France) from the same PDF text

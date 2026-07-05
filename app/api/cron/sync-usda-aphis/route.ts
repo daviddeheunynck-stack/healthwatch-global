@@ -6,7 +6,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import * as Sentry from "@sentry/nextjs";
 import { createClient } from "@supabase/supabase-js";
-import { logCronRun } from "@/lib/cron-monitor";
+import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
 import { normalizeDisease } from "@/lib/disease-data";
 import { findCountry } from "@/lib/geo-data";
 import { errorMessage } from "@/lib/error";
@@ -310,14 +310,14 @@ export async function GET(req: NextRequest) {
       } catch (e) {
         const msg = `[usda-aphis] APHIS unreachable (all CSV + HTML failed): ${errorMessage(e)}`;
         console.warn(msg);
-        Sentry.captureMessage(msg, { level: "warning", tags: { cron: "sync-usda-aphis" } });
+        if (isRealProduction) Sentry.captureMessage(msg, { level: "warning", tags: { cron: "sync-usda-aphis" } });
         await logCronRun(supabase, "sync-usda-aphis", "error", 0, "aphis_unreachable");
         return NextResponse.json({ success: false, error: "aphis_unreachable" }, { status: 200 });
       }
       if (!htmlRes.ok) {
         const msg = `[usda-aphis] HTML fallback HTTP ${htmlRes.status}`;
         console.warn(msg);
-        Sentry.captureMessage(msg, { level: "warning", tags: { cron: "sync-usda-aphis" } });
+        if (isRealProduction) Sentry.captureMessage(msg, { level: "warning", tags: { cron: "sync-usda-aphis" } });
         await logCronRun(supabase, "sync-usda-aphis", "error", 0, `aphis_http_${htmlRes.status}`);
         return NextResponse.json({ success: false, error: `aphis_http_${htmlRes.status}` }, { status: 200 });
       }
@@ -344,7 +344,7 @@ export async function GET(req: NextRequest) {
   if (byState.length === 0) {
     const msg = `[usda-aphis] 0 states parsed (format=${dataFormat}, rows=${rows.length}) — APHIS page may have changed structure`;
     console.warn(msg);
-    Sentry.captureMessage(msg, { level: "warning", tags: { cron: "sync-usda-aphis" } });
+    if (isRealProduction) Sentry.captureMessage(msg, { level: "warning", tags: { cron: "sync-usda-aphis" } });
     await logCronRun(supabase, "sync-usda-aphis", "no_data", 0);
     return NextResponse.json({ success: true, dataFormat, rows: rows.length, states: 0, inserted: 0, updated: 0, skipped: 0 });
   }

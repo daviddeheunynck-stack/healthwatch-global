@@ -6,7 +6,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { PRICE_DISPLAY } from "@/lib/pricing";
 import * as Sentry from "@sentry/nextjs";
-import { logCronRun } from "@/lib/cron-monitor";
+import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
 
 export const dynamic = "force-dynamic";
 
@@ -453,7 +453,9 @@ export async function GET(req: NextRequest) {
     try {
       const locale = profile.locale ?? "en";
       const { subject, html } = buildEmail(locale, profile.id);
-      await sendBrevo(profile.email!, subject, html);
+      if (isRealProduction) {
+        await sendBrevo(profile.email!, subject, html);
+      }
       j3Sent++;
     } catch (err) {
       console.error(`[winback] J+3 failed for ${profile.email}:`, err);
@@ -469,7 +471,9 @@ export async function GET(req: NextRequest) {
     try {
       const locale = profile.locale ?? "en";
       const { subject, html } = buildEmailJ7(locale, profile.id);
-      await sendBrevo(profile.email!, subject, html);
+      if (isRealProduction) {
+        await sendBrevo(profile.email!, subject, html);
+      }
       j7Sent++;
     } catch (err) {
       console.error(`[winback] J+7 failed for ${profile.email}:`, err);

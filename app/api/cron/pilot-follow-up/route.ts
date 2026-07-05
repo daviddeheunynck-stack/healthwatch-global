@@ -10,7 +10,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import * as Sentry from "@sentry/nextjs";
-import { logCronRun } from "@/lib/cron-monitor";
+import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
 import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 
 export const dynamic = "force-dynamic";
@@ -284,7 +284,9 @@ export async function GET(req: NextRequest) {
     const html    = buildHtml(outbreaks, locale, region ?? "all", dashUrl);
 
     try {
-      await sendEmail(pilot.email, subject, html);
+      if (isRealProduction) {
+        await sendEmail(pilot.email, subject, html);
+      }
       sent++;
       console.log(`[pilot-follow-up] sent to ${pilot.email} (region: ${region ?? "all"})`);
     } catch (err) {

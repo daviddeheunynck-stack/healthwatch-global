@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 import * as Sentry from "@sentry/nextjs";
-import { logCronRun } from "@/lib/cron-monitor";
+import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
 
 export const dynamic = "force-dynamic";
 
@@ -149,7 +149,7 @@ export async function GET(req: NextRequest) {
         .update({ last_sent_at: new Date().toISOString() })
         .eq("id", sub.id);
 
-      await sendEmail(sub.emails, subject, html);
+      if (isRealProduction) await sendEmail(sub.emails, subject, html);
       sent++;
 
       await supabase.from("alert_notifications").insert({

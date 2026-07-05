@@ -8,7 +8,7 @@ import { buildWatchlistAlertEmail } from "@/lib/watchlist-alert-email";
 import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 import { errorMessage } from "@/lib/error";
 import * as Sentry from "@sentry/nextjs";
-import { logCronRun } from "@/lib/cron-monitor";
+import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
 
 export const dynamic = "force-dynamic";
 
@@ -158,7 +158,9 @@ export async function GET(req: NextRequest) {
       }
 
       const { subject, html } = buildWatchlistAlertEmail(alertOutbreak, locale, entry.user_id);
-      await sendEmail(profile.email, subject, html);
+      if (isRealProduction) {
+        await sendEmail(profile.email, subject, html);
+      }
       sent++;
 
       await supabase.from("alert_notifications").insert({

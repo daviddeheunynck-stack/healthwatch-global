@@ -4,7 +4,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
-import { logCronRun } from "@/lib/cron-monitor";
+import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
 import { errorMessage } from "@/lib/error";
 import * as Sentry from "@sentry/nextjs";
 
@@ -391,13 +391,13 @@ export async function GET(req: NextRequest) {
     } else {
       console.log(`[mpox] ✅ Global updated: ${data.cases} cas / ${data.deaths} décès / ${data.date}`);
       const { subject, html } = emailAutoUpdated(latest, data);
-      if (adminEmail) await sendEmail(adminEmail, subject, html);
+      if (adminEmail && isRealProduction) await sendEmail(adminEmail, subject, html);
     }
   } else {
     // Step 4b: fallback — manual notification
     console.log("[mpox] PDF extraction failed — sending manual notification.");
     const { subject, html } = emailManualNeeded(latest);
-    if (adminEmail) await sendEmail(adminEmail, subject, html);
+    if (adminEmail && isRealProduction) await sendEmail(adminEmail, subject, html);
   }
 
   // Step 4c: also update DRC PHEIC row if DRC data extracted

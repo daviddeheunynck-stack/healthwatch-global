@@ -7,7 +7,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { buildTrialExpiredEmail } from "@/lib/onboarding-emails";
 import * as Sentry from "@sentry/nextjs";
-import { logCronRun } from "@/lib/cron-monitor";
+import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
 
 export const dynamic = "force-dynamic";
 
@@ -98,7 +98,9 @@ export async function GET(req: NextRequest) {
     if (df?.no_onboarding_emails) continue;
     try {
       const { subject, html } = buildTrialExpiredEmail(user.locale ?? "en", user.id);
-      await sendEmail(user.email, subject, html);
+      if (isRealProduction) {
+        await sendEmail(user.email, subject, html);
+      }
     } catch (err) {
       console.error(`[expire-trials] Email failed for ${user.email}:`, err);
       Sentry.captureException(err, { tags: { cron: "expire-trials", user_id: user.id } });
