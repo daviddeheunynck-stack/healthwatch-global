@@ -8,32 +8,14 @@ import { buildWatchlistAlertEmail } from "@/lib/watchlist-alert-email";
 import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 import { errorMessage } from "@/lib/error";
 import * as Sentry from "@sentry/nextjs";
-import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
+import { logCronRun } from "@/lib/cron-monitor";
+import { sendBrevoEmail } from "@/lib/email";
 
 export const dynamic = "force-dynamic";
 
 const BOM   = String.fromCharCode(65279);
 const clean = (v: string | undefined) => (v || "").replace(new RegExp("^" + BOM), "").trim();
 const CRON_SECRET   = clean(process.env.CRON_SECRET);
-const BREVO_API_KEY = clean(process.env.BREVO_API_KEY);
-
-async function sendEmail(to: string, subject: string, html: string) {
-  if (!BREVO_API_KEY) throw new Error("BREVO_API_KEY not set");
-  const res = await fetch("https://api.brevo.com/v3/smtp/email", {
-    method: "POST",
-    headers: {
-      "api-key":      BREVO_API_KEY,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      sender:      { name: "HealthWatch Global", email: "alerts@healthwatch-global.com" },
-      to:          [{ email: to }],
-      subject,
-      htmlContent: html,
-    }),
-  });
-  if (!res.ok) throw new Error(`Brevo ${res.status}: ${await res.text()}`);
-}
 
 export async function GET(req: NextRequest) {
   const auth = req.headers.get("authorization");
@@ -158,9 +140,7 @@ export async function GET(req: NextRequest) {
       }
 
       const { subject, html } = buildWatchlistAlertEmail(alertOutbreak, locale, entry.user_id);
-      if (isRealProduction) {
-        await sendEmail(profile.email, subject, html);
-      }
+      await sendBrevoEmail({ to: profile.email, subject, html });
       sent++;
 
       await supabase.from("alert_notifications").insert({

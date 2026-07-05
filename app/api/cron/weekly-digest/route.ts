@@ -3,7 +3,8 @@ import { createClient } from "@supabase/supabase-js";
 import { buildDigestEmail } from "@/lib/digest-email";
 import type { Outbreak } from "@/lib/outbreaks";
 import * as Sentry from "@sentry/nextjs";
-import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
+import { logCronRun } from "@/lib/cron-monitor";
+import { sendBrevoEmail } from "@/lib/email";
 
 export const dynamic = "force-dynamic";
 
@@ -12,33 +13,8 @@ const BOM = String.fromCharCode(65279);
 const clean = (val: string | undefined) =>
   (val || "").replace(new RegExp("^" + BOM), "").trim();
 
-const BREVO_API_KEY      = clean(process.env.BREVO_API_KEY);
 const SUPABASE_URL       = clean(process.env.NEXT_PUBLIC_SUPABASE_URL);
 const SUPABASE_SERVICE_KEY = clean(process.env.SUPABASE_SERVICE_ROLE_KEY);
-
-async function sendEmail(to: string, subject: string, html: string) {
-  if (!BREVO_API_KEY) {
-    console.warn("[weekly-digest] BREVO_API_KEY not set — skipping send");
-    return;
-  }
-  const res = await fetch("https://api.brevo.com/v3/smtp/email", {
-    method: "POST",
-    headers: {
-      "api-key": BREVO_API_KEY,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      sender: { name: "HealthWatch Global", email: "alerts@healthwatch-global.com" },
-      to: [{ email: to }],
-      subject,
-      htmlContent: html,
-    }),
-  });
-  if (!res.ok) {
-    const err = await res.text();
-    throw new Error(`Brevo error for ${to}: ${err}`);
-  }
-}
 
 export async function GET(req: NextRequest) {
   const authHeader = req.headers.get("authorization");
@@ -109,9 +85,7 @@ export async function GET(req: NextRequest) {
       const topOutbreaks = regionOutbreaks.slice(0, 8);
 
       const { subject, html } = buildDigestEmail(topOutbreaks, region, locale, sub.id);
-      if (isRealProduction) {
-        await sendEmail(sub.email, subject, html);
-      }
+      await sendBrevoEmail({ to: sub.email, subject, html });
       sent++;
     } catch (err) {
       console.error(`[weekly-digest] Failed to send to ${sub.email}:`, err);

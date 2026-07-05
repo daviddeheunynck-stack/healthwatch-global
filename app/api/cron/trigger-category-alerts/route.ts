@@ -3,7 +3,8 @@ import { createClient } from "@supabase/supabase-js";
 import { getDiseaseCategory, CATEGORY_LABELS } from "@/lib/disease-category";
 import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 import * as Sentry from "@sentry/nextjs";
-import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
+import { logCronRun } from "@/lib/cron-monitor";
+import { sendBrevoEmail } from "@/lib/email";
 
 export const dynamic = "force-dynamic";
 
@@ -15,20 +16,6 @@ const SUPABASE_SERVICE = clean(process.env.SUPABASE_SERVICE_ROLE_KEY);
 const CRON_SECRET      = clean(process.env.CRON_SECRET);
 const BREVO_KEY        = clean(process.env.BREVO_API_KEY);
 const APP_URL          = clean(process.env.NEXT_PUBLIC_APP_URL) || "https://healthwatch-global.com";
-
-async function sendEmail(to: string, subject: string, html: string) {
-  const res = await fetch("https://api.brevo.com/v3/smtp/email", {
-    method: "POST",
-    headers: { "api-key": BREVO_KEY, "Content-Type": "application/json" },
-    body: JSON.stringify({
-      sender:      { name: "HealthWatch Global", email: "alerts@healthwatch-global.com" },
-      to:          [{ email: to }],
-      subject,
-      htmlContent: html,
-    }),
-  });
-  if (!res.ok) throw new Error(`Brevo error ${res.status}: ${await res.text()}`);
-}
 
 function esc(s: string): string {
   return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
@@ -184,7 +171,10 @@ export async function GET(req: NextRequest) {
         outbreak_id: matches[0]?.id ?? null,
       }).then(() => {}, () => {});
 
-      if (isRealProduction) await sendEmail(alert.email, lc.subject(catLabel, minStr), `
+      await sendBrevoEmail({
+        to: alert.email,
+        subject: lc.subject(catLabel, minStr),
+        html: `
 <div dir="${isRtl ? "rtl" : "ltr"}" style="font-family:sans-serif;max-width:520px;margin:0 auto;padding:24px;background:#0f172a;color:#e2e8f0;border-radius:12px;direction:${isRtl ? "rtl" : "ltr"};text-align:${isRtl ? "right" : "left"}">
   <p style="color:#60a5fa;font-size:17px;font-weight:700;margin:0 0 4px">${lc.header}</p>
   <p style="font-size:12px;color:#64748b;margin:0 0 16px">${new Date().toISOString().split("T")[0]}</p>
@@ -208,7 +198,8 @@ export async function GET(req: NextRequest) {
     ${lc.view}
   </a>
   <p style="margin-top:20px;font-size:11px;color:#475569">${lc.footer(COOLDOWN_H)}</p>
-</div>`);
+</div>`,
+      });
 
       fired++;
     } catch (err) {

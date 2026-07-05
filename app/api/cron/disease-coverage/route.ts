@@ -21,6 +21,7 @@ import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
 import { matchDisease } from "@/lib/disease-data";
 import type { AppRegion } from "@/lib/disease-data";
 import { errorMessage } from "@/lib/error";
+import { sendBrevoEmail } from "@/lib/email";
 
 export const dynamic     = "force-dynamic";
 export const maxDuration = 60;
@@ -31,7 +32,6 @@ const clean = (v: string | undefined) => (v ?? "").replace(new RegExp("^" + BOM)
 const SUPABASE_URL        = clean(process.env.NEXT_PUBLIC_SUPABASE_URL);
 const SUPABASE_SERVICE_KEY = clean(process.env.SUPABASE_SERVICE_ROLE_KEY);
 const CRON_SECRET          = clean(process.env.CRON_SECRET);
-const BREVO_API_KEY        = clean(process.env.BREVO_API_KEY);
 const ADMIN_EMAILS         = clean(process.env.ADMIN_EMAILS);
 
 const KNOWN_REGIONS = new Set<AppRegion>(["africa", "asia", "americas", "europe", "oceania"]);
@@ -39,20 +39,10 @@ const KNOWN_REGIONS = new Set<AppRegion>(["africa", "asia", "americas", "europe"
 // ── Email helper ──────────────────────────────────────────────────────────────
 
 async function sendEmail(to: string, subject: string, html: string) {
-  if (!BREVO_API_KEY || !to) return;
-  await fetch("https://api.brevo.com/v3/smtp/email", {
-    method: "POST",
-    headers: {
-      "api-key": BREVO_API_KEY,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      sender: { name: "HealthWatch Global", email: "alerts@healthwatch-global.com" },
-      to: [{ email: to }],
-      subject,
-      htmlContent: html,
-    }),
-  }).catch((e) => console.error("[disease-coverage] email send failed:", errorMessage(e)));
+  if (!to) return;
+  await sendBrevoEmail({ to, subject, html }).catch((e) =>
+    console.error("[disease-coverage] email send failed:", errorMessage(e))
+  );
 }
 
 function esc(s: string) {
@@ -144,7 +134,7 @@ export async function GET(req: NextRequest) {
   );
 
   // ── 3. Admin email if issues found ────────────────────────────────────────
-  if (hasIssues && adminEmail && isRealProduction) {
+  if (hasIssues && adminEmail) {
     const unknownHtml = unknownList.length > 0
       ? `<h3 style="color:#ef4444">Maladies non-reconnues (${unknownList.length})</h3>
          <p style="color:#9ca3af;font-size:13px">Ajouter un pattern + données dans <code>lib/disease-data.ts</code>.</p>

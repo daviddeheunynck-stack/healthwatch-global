@@ -7,7 +7,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { buildTrialExpiredEmail } from "@/lib/onboarding-emails";
 import * as Sentry from "@sentry/nextjs";
-import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
+import { logCronRun } from "@/lib/cron-monitor";
+import { sendBrevoEmail } from "@/lib/email";
 
 export const dynamic = "force-dynamic";
 
@@ -27,22 +28,6 @@ export async function GET(req: NextRequest) {
   );
 
   const now = new Date().toISOString();
-
-  const BREVO_API_KEY = clean(process.env.BREVO_API_KEY);
-
-  async function sendEmail(to: string, subject: string, html: string) {
-    if (!BREVO_API_KEY) return;
-    await fetch("https://api.brevo.com/v3/smtp/email", {
-      method: "POST",
-      headers: { "api-key": BREVO_API_KEY, "Content-Type": "application/json" },
-      body: JSON.stringify({
-        sender: { name: "HealthWatch Global", email: "alerts@healthwatch-global.com" },
-        to: [{ email: to }],
-        subject,
-        htmlContent: html,
-      }),
-    });
-  }
 
   // Find non-free users whose trial has expired and who have no Stripe subscription
   const { data: expired, error: fetchErr } = await supabase
@@ -98,9 +83,7 @@ export async function GET(req: NextRequest) {
     if (df?.no_onboarding_emails) continue;
     try {
       const { subject, html } = buildTrialExpiredEmail(user.locale ?? "en", user.id);
-      if (isRealProduction) {
-        await sendEmail(user.email, subject, html);
-      }
+      await sendBrevoEmail({ to: user.email, subject, html });
     } catch (err) {
       console.error(`[expire-trials] Email failed for ${user.email}:`, err);
       Sentry.captureException(err, { tags: { cron: "expire-trials", user_id: user.id } });

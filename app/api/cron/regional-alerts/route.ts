@@ -15,6 +15,7 @@ import { buildOutbreakAlertEmail } from "@/lib/alert-emails";
 import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 import * as Sentry from "@sentry/nextjs";
 import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
+import { sendBrevoEmail } from "@/lib/email";
 
 export const dynamic = "force-dynamic";
 
@@ -48,24 +49,6 @@ const REGION_LABELS: Record<string, Record<string, string>> = {
   ar: { africa: "أفريقيا", asia: "آسيا",  americas: "الأمريكتان", europe: "أوروبا", oceania: "أوقيانوسيا" },
   id: { africa: "Afrika",  asia: "Asia",  americas: "Amerika",   europe: "Eropa",  oceania: "Oseania"  },
 };
-
-async function sendEmail(to: string, subject: string, html: string) {
-  if (!BREVO_API_KEY) throw new Error("BREVO_API_KEY not set");
-  const res = await fetch("https://api.brevo.com/v3/smtp/email", {
-    method: "POST",
-    headers: { "api-key": BREVO_API_KEY, "Content-Type": "application/json" },
-    body: JSON.stringify({
-      sender: { name: "HealthWatch Global", email: "alerts@healthwatch-global.com" },
-      to: [{ email: to }],
-      subject,
-      htmlContent: html,
-    }),
-  });
-  if (!res.ok) {
-    const err = await res.text();
-    throw new Error(`Brevo error: ${err}`);
-  }
-}
 
 // ─── Route handler ────────────────────────────────────────────────────────────
 
@@ -218,9 +201,7 @@ export async function GET(req: NextRequest) {
             outbreakUrl,
             unsubUrl
           );
-          if (isRealProduction) {
-            await sendEmail(profile.email, subject, html);
-          }
+          await sendBrevoEmail({ to: profile.email, subject, html });
 
           // ── Slack / Teams (fire-and-forget, non-blocking) ───────────────
           const slackUrl: string | null = profile.slack_webhook_url ?? null;

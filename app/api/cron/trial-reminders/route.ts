@@ -2,38 +2,17 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { buildTrialEndingEmail } from "@/lib/trial-ending-email";
 import * as Sentry from "@sentry/nextjs";
-import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
+import { logCronRun } from "@/lib/cron-monitor";
 import { getLocalizedDisease } from "@/lib/outbreaks";
+import { sendBrevoEmail } from "@/lib/email";
 
 export const dynamic = "force-dynamic";
 
 const BOM   = String.fromCharCode(65279);
 const clean = (v: string | undefined) => (v || "").replace(new RegExp("^" + BOM), "").trim();
 
-const BREVO_KEY        = clean(process.env.BREVO_API_KEY);
 const SUPABASE_URL     = clean(process.env.NEXT_PUBLIC_SUPABASE_URL);
 const SUPABASE_SERVICE = clean(process.env.SUPABASE_SERVICE_ROLE_KEY);
-
-async function sendEmail(to: string, subject: string, html: string) {
-  if (!BREVO_KEY) {
-    console.warn("[trial-reminders] BREVO_API_KEY not set — skipping send");
-    return;
-  }
-  const res = await fetch("https://api.brevo.com/v3/smtp/email", {
-    method: "POST",
-    headers: { "api-key": BREVO_KEY, "Content-Type": "application/json" },
-    body: JSON.stringify({
-      sender:      { name: "HealthWatch Global", email: "alerts@healthwatch-global.com" },
-      to:          [{ email: to }],
-      subject,
-      htmlContent: html,
-    }),
-  });
-  if (!res.ok) {
-    const err = await res.text();
-    throw new Error(`Brevo error for ${to}: ${err}`);
-  }
-}
 
 export async function GET(req: NextRequest) {
   // ── Auth ────────────────────────────────────────────────────────────────────
@@ -118,9 +97,7 @@ export async function GET(req: NextRequest) {
 
       const { subject, html } = buildTrialEndingEmail(plan, locale, profile.trial_ends_at, !!profile.stripe_subscription_id, regionalContext);
 
-      if (isRealProduction) {
-        await sendEmail(profile.email, subject, html);
-      }
+      await sendBrevoEmail({ to: profile.email, subject, html });
       sent++;
     } catch (err) {
       console.error(`[trial-reminders] Failed for ${profile.email}:`, err);

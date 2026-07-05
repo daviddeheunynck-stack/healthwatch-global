@@ -2,7 +2,8 @@ import { NextRequest } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 import * as Sentry from "@sentry/nextjs";
-import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
+import { logCronRun } from "@/lib/cron-monitor";
+import { sendBrevoEmail } from "@/lib/email";
 
 export const dynamic    = "force-dynamic";
 export const maxDuration = 300;
@@ -12,20 +13,6 @@ const SUPABASE_KEY = (process.env.SUPABASE_SERVICE_ROLE_KEY ?? "").replace(/^﻿
 const CRON_SECRET  = (process.env.CRON_SECRET ?? "").replace(/^﻿/, "").trim();
 const APP_URL      = (process.env.NEXT_PUBLIC_APP_URL ?? "https://healthwatch-global.com").replace(/^﻿/, "").trim();
 const BREVO_KEY    = (process.env.BREVO_API_KEY ?? "").replace(/^﻿/, "").trim();
-
-async function sendEmail(to: string, subject: string, html: string) {
-  const res = await fetch("https://api.brevo.com/v3/smtp/email", {
-    method: "POST",
-    headers: { "api-key": BREVO_KEY, "Content-Type": "application/json" },
-    body: JSON.stringify({
-      sender:      { name: "HealthWatch Global", email: "alerts@healthwatch-global.com" },
-      to:          [{ email: to }],
-      subject,
-      htmlContent: html,
-    }),
-  });
-  if (!res.ok) throw new Error(`Brevo error ${res.status}: ${await res.text()}`);
-}
 
 function esc(s: string): string {
   return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
@@ -224,7 +211,7 @@ export async function GET(req: NextRequest) {
           continue;
         }
 
-        if (isRealProduction) await sendEmail(user.email, subject, html);
+        await sendBrevoEmail({ to: user.email, subject, html });
         // Add all outbreak ids for this disease group so the check above
         // catches them on the next cron run without a DB re-query.
         outbreaks.forEach((o) => notifiedSet.add(`${user.id}::${o.id}`));

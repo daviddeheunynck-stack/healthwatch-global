@@ -2,7 +2,8 @@ import { NextRequest } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 import * as Sentry from "@sentry/nextjs";
-import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
+import { logCronRun } from "@/lib/cron-monitor";
+import { sendBrevoEmail } from "@/lib/email";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 300;
@@ -40,18 +41,6 @@ export async function GET(req: NextRequest) {
     await logCronRun(supabase, "trigger-country-risk-alerts", "ok", 0);
     return Response.json({ ok: true, skipped: "BREVO_API_KEY not configured" });
   }
-
-  const sendEmail = async (to: string, subject: string, html: string) => {
-    const res = await fetch("https://api.brevo.com/v3/smtp/email", {
-      method: "POST",
-      headers: { "api-key": brevoKey, "Content-Type": "application/json" },
-      body: JSON.stringify({
-        sender: { name: "HealthWatch Global", email: "alerts@healthwatch-global.com" },
-        to: [{ email: to }], subject, htmlContent: html,
-      }),
-    });
-    if (!res.ok) throw new Error(`Brevo error ${res.status}: ${await res.text()}`);
-  };
 
   const { data: alerts } = await supabase
     .from("country_risk_alerts")
@@ -154,7 +143,7 @@ export async function GET(req: NextRequest) {
         outbreak_id: top.id,
       }).then(() => {}, () => {});
 
-      if (isRealProduction) await sendEmail(alert.email, subject, html);
+      await sendBrevoEmail({ to: alert.email, subject, html });
       fired++;
     } catch (err) {
       console.error(`[trigger-country-risk-alerts] Failed for alert ${alert.id}:`, err);

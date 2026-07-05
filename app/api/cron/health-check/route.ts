@@ -2,6 +2,7 @@ import { NextRequest } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import * as Sentry from "@sentry/nextjs";
 import { CRON_WINDOWS, logCronRun, isRealProduction } from "@/lib/cron-monitor";
+import { postBrevoEmail, isBrevoConfigured } from "@/lib/email";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 30;
@@ -45,8 +46,6 @@ async function runHealthCheck(_req: NextRequest, supabase: any) {
         { schedule: { type: "crontab", value: "5 7 * * *" }, checkinMargin: 10, maxRuntime: 1, timezone: "UTC" },
       )
     : undefined;
-
-  const brevoKey = clean(process.env.BREVO_API_KEY);
 
   const [{ count: total }, { count: high }, { count: pheic }, { data: configRows }] =
     await Promise.all([
@@ -113,26 +112,17 @@ async function runHealthCheck(_req: NextRequest, supabase: any) {
 
   if (!isRealProduction) {
     console.log("[health-check] non-production run — skipping Brevo email and Sentry check-in/alerts");
-  } else if (!brevoKey) {
+  } else if (!isBrevoConfigured()) {
     Sentry.captureMessage("[health-check] BREVO_API_KEY not set — health report not sent", "error");
   } else {
     try {
-      const emailRes = await fetch("https://api.brevo.com/v3/smtp/email", {
-        method: "POST",
-        headers: { "api-key": brevoKey, "Content-Type": "application/json" },
-        body: JSON.stringify({
-          sender:      { name: "HealthWatch Global", email: "alerts@healthwatch-global.com" },
-          to:          [{ email: "david.deheunynck@yahoo.fr" }],
-          subject,
-          htmlContent: html,
-        }),
-      });
-      if (!emailRes.ok) {
-        const errText = await emailRes.text();
-        Sentry.captureMessage(`[health-check] Brevo ${emailRes.status}: ${errText}`, "error");
-      }
+      await postBrevoEmail({ to: "david.deheunynck@yahoo.fr", subject, html });
     } catch (emailErr) {
-      Sentry.captureException(emailErr, { tags: { cron: "health-check" } });
+      if (emailErr instanceof Error && emailErr.message.startsWith("Brevo error")) {
+        Sentry.captureMessage(`[health-check] ${emailErr.message}`, "error");
+      } else {
+        Sentry.captureException(emailErr, { tags: { cron: "health-check" } });
+      }
     }
   }
 

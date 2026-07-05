@@ -2,7 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { buildJ1Email, buildJ3Email, buildJ7Email, buildJ12Email, buildPilotConversionEmail } from "@/lib/onboarding-emails";
 import * as Sentry from "@sentry/nextjs";
-import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
+import { logCronRun } from "@/lib/cron-monitor";
+import { sendBrevoEmail } from "@/lib/email";
 
 export const dynamic = "force-dynamic";
 
@@ -12,24 +13,6 @@ const clean = (v: string | undefined) => (v || "").replace(new RegExp("^" + BOM)
 const BREVO_API_KEY    = clean(process.env.BREVO_API_KEY);
 const SUPABASE_URL     = clean(process.env.NEXT_PUBLIC_SUPABASE_URL);
 const SUPABASE_SERVICE = clean(process.env.SUPABASE_SERVICE_ROLE_KEY);
-
-async function sendEmail(to: string, subject: string, html: string) {
-  if (!BREVO_API_KEY) throw new Error("BREVO_API_KEY not set");
-  const res = await fetch("https://api.brevo.com/v3/smtp/email", {
-    method: "POST",
-    headers: { "api-key": BREVO_API_KEY, "Content-Type": "application/json" },
-    body: JSON.stringify({
-      sender: { name: "HealthWatch Global", email: "alerts@healthwatch-global.com" },
-      to: [{ email: to }],
-      subject,
-      htmlContent: html,
-    }),
-  });
-  if (!res.ok) {
-    const err = await res.text();
-    throw new Error(`Brevo error: ${err}`);
-  }
-}
 
 export async function GET(req: NextRequest) {
   // ── Auth ──────────────────────────────────────────────────────────────────
@@ -159,9 +142,7 @@ export async function GET(req: NextRequest) {
     try {
       const locale = user.locale || "en";
       const { subject, html } = buildJ1Email(locale, user.id);
-      if (isRealProduction) {
-        await sendEmail(user.email, subject, html);
-      }
+      await sendBrevoEmail({ to: user.email, subject, html });
       j1Sent++;
       await new Promise((r) => setTimeout(r, 150));
     } catch (err) {
@@ -177,9 +158,7 @@ export async function GET(req: NextRequest) {
     try {
       const locale = user.locale || "en";
       const { subject, html } = buildJ3Email(locale, user.id);
-      if (isRealProduction) {
-        await sendEmail(user.email, subject, html);
-      }
+      await sendBrevoEmail({ to: user.email, subject, html });
       j3Sent++;
       await new Promise((r) => setTimeout(r, 150));
     } catch (err) {
@@ -195,9 +174,7 @@ export async function GET(req: NextRequest) {
     try {
       const locale = user.locale || "en";
       const { subject, html } = buildJ7Email(locale, user.id);
-      if (isRealProduction) {
-        await sendEmail(user.email, subject, html);
-      }
+      await sendBrevoEmail({ to: user.email, subject, html });
       j7Sent++;
       await new Promise((r) => setTimeout(r, 150));
     } catch (err) {
@@ -213,9 +190,7 @@ export async function GET(req: NextRequest) {
     try {
       const locale = user.locale || "en";
       const { subject, html } = buildJ12Email(locale, user.id);
-      if (isRealProduction) {
-        await sendEmail(user.email, subject, html);
-      }
+      await sendBrevoEmail({ to: user.email, subject, html });
       j12Sent++;
       await new Promise((r) => setTimeout(r, 150));
     } catch (err) {
@@ -231,9 +206,7 @@ export async function GET(req: NextRequest) {
     try {
       const locale = user.locale || "en";
       const { subject, html } = buildPilotConversionEmail(locale, user.id);
-      if (isRealProduction) {
-        await sendEmail(user.email, subject, html);
-      }
+      await sendBrevoEmail({ to: user.email, subject, html });
       j32Sent++;
       await new Promise((r) => setTimeout(r, 150));
     } catch (err) {

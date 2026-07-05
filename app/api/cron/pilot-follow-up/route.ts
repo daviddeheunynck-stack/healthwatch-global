@@ -10,8 +10,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import * as Sentry from "@sentry/nextjs";
-import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
+import { logCronRun } from "@/lib/cron-monitor";
 import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
+import { sendBrevoEmail } from "@/lib/email";
 
 export const dynamic = "force-dynamic";
 
@@ -22,7 +23,6 @@ function esc(s: string): string {
   return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 }
 
-const BREVO_KEY        = clean(process.env.BREVO_API_KEY);
 const SUPABASE_URL     = clean(process.env.NEXT_PUBLIC_SUPABASE_URL);
 const SUPABASE_SERVICE = clean(process.env.SUPABASE_SERVICE_ROLE_KEY);
 const APP_URL          = clean(process.env.NEXT_PUBLIC_APP_URL || "https://healthwatch-global.com");
@@ -173,21 +173,6 @@ function buildHtml(
 
 // ─── Email sender ─────────────────────────────────────────────────────────────
 
-async function sendEmail(to: string, subject: string, html: string) {
-  if (!BREVO_KEY) throw new Error("BREVO_API_KEY not set");
-  const res = await fetch("https://api.brevo.com/v3/smtp/email", {
-    method: "POST",
-    headers: { "api-key": BREVO_KEY, "Content-Type": "application/json" },
-    body: JSON.stringify({
-      sender:      { name: "HealthWatch Global", email: "alerts@healthwatch-global.com" },
-      to:          [{ email: to }],
-      subject,
-      htmlContent: html,
-    }),
-  });
-  if (!res.ok) throw new Error(`Brevo: ${await res.text()}`);
-}
-
 // ─── Route handler ────────────────────────────────────────────────────────────
 
 export async function GET(req: NextRequest) {
@@ -284,9 +269,7 @@ export async function GET(req: NextRequest) {
     const html    = buildHtml(outbreaks, locale, region ?? "all", dashUrl);
 
     try {
-      if (isRealProduction) {
-        await sendEmail(pilot.email, subject, html);
-      }
+      await sendBrevoEmail({ to: pilot.email, subject, html });
       sent++;
       console.log(`[pilot-follow-up] sent to ${pilot.email} (region: ${region ?? "all"})`);
     } catch (err) {

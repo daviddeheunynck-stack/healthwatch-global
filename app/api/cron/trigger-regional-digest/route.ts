@@ -2,7 +2,10 @@ import { NextRequest } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 import * as Sentry from "@sentry/nextjs";
-import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
+import { logCronRun } from "@/lib/cron-monitor";
+import { sendBrevoEmail } from "@/lib/email";
+
+const DIGEST_SENDER = { name: "HealthWatch Global", email: "digest@healthwatch-global.com" };
 
 export const dynamic    = "force-dynamic";
 export const maxDuration = 300;
@@ -87,18 +90,6 @@ export async function GET(req: NextRequest) {
 
   const brevoKey = (process.env.BREVO_API_KEY ?? "").replace(/^﻿/, "").trim();
   if (!brevoKey) return new Response(JSON.stringify({ ok: true, skipped: "BREVO_API_KEY not configured" }), { status: 200 });
-
-  const sendEmail = async (to: string, subject: string, html: string) => {
-    const res = await fetch("https://api.brevo.com/v3/smtp/email", {
-      method: "POST",
-      headers: { "api-key": brevoKey, "Content-Type": "application/json" },
-      body: JSON.stringify({
-        sender: { name: "HealthWatch Global", email: "digest@healthwatch-global.com" },
-        to: [{ email: to }], subject, htmlContent: html,
-      }),
-    });
-    if (!res.ok) throw new Error(`Brevo error ${res.status}: ${await res.text()}`);
-  };
 
   const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
@@ -206,9 +197,7 @@ export async function GET(req: NextRequest) {
         console.warn(`[trigger-regional-digest] dedup insert failed for ${user.id}: ${insertErr.message}`);
         continue;
       }
-      if (isRealProduction) {
-        await sendEmail(user.email, subject, html);
-      }
+      await sendBrevoEmail({ to: user.email, subject, html, sender: DIGEST_SENDER });
       fired++;
     } catch (err) {
       console.error(`[trigger-regional-digest] Failed for ${user.email}:`, err);

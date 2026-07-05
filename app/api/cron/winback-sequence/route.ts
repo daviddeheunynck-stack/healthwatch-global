@@ -6,7 +6,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { PRICE_DISPLAY } from "@/lib/pricing";
 import * as Sentry from "@sentry/nextjs";
-import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
+import { logCronRun } from "@/lib/cron-monitor";
+import { sendBrevoEmail } from "@/lib/email";
 
 export const dynamic = "force-dynamic";
 
@@ -390,20 +391,6 @@ export async function GET(req: NextRequest) {
     return trialDays <= 20;
   };
 
-  const sendBrevo = async (email: string, subject: string, html: string) => {
-    const res = await fetch("https://api.brevo.com/v3/smtp/email", {
-      method: "POST",
-      headers: { "api-key": BREVO_KEY!, "Content-Type": "application/json" },
-      body: JSON.stringify({
-        sender:      { name: "HealthWatch Global", email: "alerts@healthwatch-global.com" },
-        to:          [{ email }],
-        subject,
-        htmlContent: html,
-      }),
-    });
-    if (!res.ok) throw new Error(await res.text());
-  };
-
   // ── J+3 query: trial expired 3 days ago ───────────────────────────────────
   const j3Start = new Date(Date.now() - 3.5 * 86_400_000).toISOString();
   const j3End   = new Date(Date.now() - 2.5 * 86_400_000).toISOString();
@@ -453,9 +440,7 @@ export async function GET(req: NextRequest) {
     try {
       const locale = profile.locale ?? "en";
       const { subject, html } = buildEmail(locale, profile.id);
-      if (isRealProduction) {
-        await sendBrevo(profile.email!, subject, html);
-      }
+      await sendBrevoEmail({ to: profile.email!, subject, html });
       j3Sent++;
     } catch (err) {
       console.error(`[winback] J+3 failed for ${profile.email}:`, err);
@@ -471,9 +456,7 @@ export async function GET(req: NextRequest) {
     try {
       const locale = profile.locale ?? "en";
       const { subject, html } = buildEmailJ7(locale, profile.id);
-      if (isRealProduction) {
-        await sendBrevo(profile.email!, subject, html);
-      }
+      await sendBrevoEmail({ to: profile.email!, subject, html });
       j7Sent++;
     } catch (err) {
       console.error(`[winback] J+7 failed for ${profile.email}:`, err);

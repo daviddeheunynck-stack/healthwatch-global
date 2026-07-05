@@ -4,10 +4,11 @@
 // Falls back to a manual-notification email if PDF parsing fails.
 
 import { NextRequest, NextResponse } from "next/server";
-import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
+import { logCronRun } from "@/lib/cron-monitor";
 import { createClient } from "@supabase/supabase-js";
 import { errorMessage } from "@/lib/error";
 import * as Sentry from "@sentry/nextjs";
+import { sendBrevoEmail } from "@/lib/email";
 
 export const dynamic     = "force-dynamic";
 export const maxDuration = 60;
@@ -18,7 +19,6 @@ const clean = (v: string | undefined) => (v ?? "").replace(new RegExp("^" + BOM)
 const SUPABASE_URL         = clean(process.env.NEXT_PUBLIC_SUPABASE_URL);
 const SUPABASE_SERVICE_KEY = clean(process.env.SUPABASE_SERVICE_ROLE_KEY);
 const CRON_SECRET          = clean(process.env.CRON_SECRET);
-const BREVO_API_KEY        = clean(process.env.BREVO_API_KEY);
 const ADMIN_EMAILS         = clean(process.env.ADMIN_EMAILS);
 
 const RELIEFWEB_BASE    = "https://api.reliefweb.int/v2/reports";
@@ -353,17 +353,8 @@ async function updateSatelliteCountry(supabase: any, countryEn: string, cases: n
 // ── 4. Email helpers ──────────────────────────────────────────────────────────
 
 async function sendEmail(to: string, subject: string, html: string) {
-  if (!BREVO_API_KEY || !to) return;
-  await fetch("https://api.brevo.com/v3/smtp/email", {
-    method: "POST",
-    headers: { "api-key": BREVO_API_KEY, "Content-Type": "application/json" },
-    body: JSON.stringify({
-      sender:      { name: "HealthWatch Global", email: "alerts@healthwatch-global.com" },
-      to:          [{ email: to }],
-      subject,
-      htmlContent: html,
-    }),
-  }).catch((e) => {
+  if (!to) return;
+  await sendBrevoEmail({ to, subject, html }).catch((e) => {
     console.error("[drc-sitrep] email:", errorMessage(e));
     Sentry.captureException(e, { tags: { cron: "sync-drc-sitrep" } });
   });
@@ -471,7 +462,7 @@ export async function GET(req: NextRequest) {
     console.error(err.message);
     Sentry.captureException(err, { tags: { cron: "sync-drc-sitrep" } });
     await logCronRun(supabase, "sync-drc-sitrep", "error", 0, "Ebola DRC row not found");
-    if (adminEmail && isRealProduction) {
+    if (adminEmail) {
       await sendEmail(
         adminEmail,
         "🚨 Ébola RDC — ligne DB introuvable (cron bloqué)",
@@ -494,7 +485,7 @@ export async function GET(req: NextRequest) {
     console.log(`[drc-sitrep] ${detail}`);
     await logCronRun(supabase, "sync-drc-sitrep", latest?.reliefwebError ? "error" : "no_data", 0, detail);
     // Only alert for genuine "no sitrep" — skip email when ReliefWeb is just unreachable.
-    if (!latest?.reliefwebError && adminEmail && isRealProduction) {
+    if (!latest?.reliefwebError && adminEmail) {
       const { subject, html } = emailNoSitrep();
       await sendEmail(adminEmail, subject, html);
     }
@@ -537,13 +528,13 @@ export async function GET(req: NextRequest) {
     } else {
       console.log(`[drc-sitrep] ✅ Updated: ${data.cases} cas / ${data.deaths} décès / ${data.date}`);
       const { subject, html } = emailAutoUpdated(data);
-      if (adminEmail && isRealProduction) await sendEmail(adminEmail, subject, html);
+      if (adminEmail) await sendEmail(adminEmail, subject, html);
     }
   } else {
     // Step 4b: PDF parsing failed — notify for manual update
     console.log("[drc-sitrep] PDF extraction failed — sending manual notification.");
     const { subject, html } = emailManualNeeded(latest.num, latest.pdfUrl ?? latest.pageUrl);
-    if (adminEmail && isRealProduction) await sendEmail(adminEmail, subject, html);
+    if (adminEmail) await sendEmail(adminEmail, subject, html);
   }
 
   // Step 4c: update satellite countries (Uganda, France) from the same PDF text

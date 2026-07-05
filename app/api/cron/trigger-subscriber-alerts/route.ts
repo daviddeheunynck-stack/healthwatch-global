@@ -2,7 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 import * as Sentry from "@sentry/nextjs";
-import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
+import { logCronRun } from "@/lib/cron-monitor";
+import { sendBrevoEmail } from "@/lib/email";
 
 export const dynamic = "force-dynamic";
 
@@ -14,21 +15,6 @@ const SUPABASE_SERVICE = clean(process.env.SUPABASE_SERVICE_ROLE_KEY);
 const CRON_SECRET      = clean(process.env.CRON_SECRET);
 const BREVO_KEY        = clean(process.env.BREVO_API_KEY);
 const APP_URL          = clean(process.env.NEXT_PUBLIC_APP_URL) || "https://healthwatch-global.com";
-
-async function sendEmail(to: string | string[], subject: string, html: string) {
-  const toArr = Array.isArray(to) ? to.map((e) => ({ email: e })) : [{ email: to }];
-  const res = await fetch("https://api.brevo.com/v3/smtp/email", {
-    method: "POST",
-    headers: { "api-key": BREVO_KEY, "Content-Type": "application/json" },
-    body: JSON.stringify({
-      sender:      { name: "HealthWatch Global", email: "alerts@healthwatch-global.com" },
-      to:          toArr,
-      subject,
-      htmlContent: html,
-    }),
-  });
-  if (!res.ok) throw new Error(`Brevo error ${res.status}: ${await res.text()}`);
-}
 
 function esc(s: string): string {
   return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
@@ -149,7 +135,7 @@ export async function GET(req: NextRequest) {
         .update({ last_sent_at: new Date().toISOString() })
         .eq("id", sub.id);
 
-      if (isRealProduction) await sendEmail(sub.emails, subject, html);
+      await sendBrevoEmail({ to: sub.emails, subject, html });
       sent++;
 
       await supabase.from("alert_notifications").insert({

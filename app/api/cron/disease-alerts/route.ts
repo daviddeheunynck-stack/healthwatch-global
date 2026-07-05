@@ -9,14 +9,14 @@ import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 import { diseaseToSlug } from "@/lib/disease-data";
 import { errorMessage } from "@/lib/error";
 import * as Sentry from "@sentry/nextjs";
-import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
+import { logCronRun } from "@/lib/cron-monitor";
+import { sendBrevoEmail } from "@/lib/email";
 
 export const dynamic = "force-dynamic";
 
 const BOM    = String.fromCharCode(65279);
 const clean  = (v: string | undefined) => (v || "").replace(new RegExp("^" + BOM), "").trim();
 const CRON_SECRET  = clean(process.env.CRON_SECRET);
-const BREVO_API_KEY = clean(process.env.BREVO_API_KEY);
 
 function buildDiseaseInAppBody(cases: number | null, riskLevel: string | null, locale: string): string {
   const RISK: Record<string, Record<string, string>> = {
@@ -30,24 +30,6 @@ function buildDiseaseInAppBody(cases: number | null, riskLevel: string | null, l
   const riskLabel  = RISK[locale]?.[riskLevel ?? ""] ?? RISK.en[riskLevel ?? ""] ?? null;
   const casesLabel = cases != null ? `${cases} ${CASE_SUFFIX[locale] ?? "cases"}` : null;
   return [casesLabel, riskLabel].filter(Boolean).join(" · ") || "Active outbreak";
-}
-
-async function sendEmail(to: string, subject: string, html: string) {
-  if (!BREVO_API_KEY) throw new Error("BREVO_API_KEY not set");
-  const res = await fetch("https://api.brevo.com/v3/smtp/email", {
-    method: "POST",
-    headers: {
-      "api-key":     BREVO_API_KEY,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      sender:  { name: "HealthWatch Global", email: "alerts@healthwatch-global.com" },
-      to:      [{ email: to }],
-      subject,
-      htmlContent: html,
-    }),
-  });
-  if (!res.ok) throw new Error(`Brevo ${res.status}: ${await res.text()}`);
 }
 
 export async function GET(req: NextRequest) {
@@ -164,9 +146,7 @@ export async function GET(req: NextRequest) {
 
         const diseaseSlug = diseaseToSlug(alertOutbreak.disease_en);
         const { subject, html } = buildDiseaseAlertEmail(alertOutbreak, locale, userId, diseaseSlug);
-        if (isRealProduction) {
-          await sendEmail(profile.email, subject, html);
-        }
+        await sendBrevoEmail({ to: profile.email, subject, html });
         sent++;
 
         // Mirror in alert_notifications for in-app display (non-fatal)

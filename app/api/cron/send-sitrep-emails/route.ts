@@ -9,8 +9,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import * as Sentry from "@sentry/nextjs";
-import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
+import { logCronRun } from "@/lib/cron-monitor";
 import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
+import { sendBrevoEmail } from "@/lib/email";
 
 export const dynamic = "force-dynamic";
 
@@ -193,19 +194,7 @@ export async function GET(req: NextRequest) {
     const subject = SUBJECT[locale] ?? SUBJECT.en;
 
     try {
-      if (isRealProduction) {
-        const res = await fetch("https://api.brevo.com/v3/smtp/email", {
-          method: "POST",
-          headers: { "api-key": BREVO_KEY, "Content-Type": "application/json" },
-          body: JSON.stringify({
-            sender:      { name: "HealthWatch Global", email: "alerts@healthwatch-global.com" },
-            to:          recipients.map((e) => ({ email: e })),
-            subject,
-            htmlContent: html,
-          }),
-        });
-        if (!res.ok) throw new Error(`Brevo ${res.status}: ${await res.text()}`);
-      }
+      await sendBrevoEmail({ to: recipients, subject, html });
       totalSent += recipients.length;
 
       await supabase
