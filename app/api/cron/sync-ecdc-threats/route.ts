@@ -190,13 +190,16 @@ async function extractItemData(item: RSSItem, dbg?: { reason?: string }): Promis
   const { cases, deaths } = extractNumbers(fullText.substring(0, 8_000));
 
   // Detect if this article is explicitly about a European outbreak (used for both
-  // country fallback and EU multi-country mode guard below).
+  // country fallback and EU multi-country mode guard below). Check the RSS
+  // description too — some articles (e.g. cruise-ship clusters) only say
+  // "EU/EEA" in the editorial summary, not the title.
   const titleLower = item.title.toLowerCase();
+  const descLower  = item.description.toLowerCase();
   const isEuropeArticle =
-    titleLower.includes("europe") ||
-    titleLower.includes("eu/eea") ||
-    titleLower.includes(" eu ") ||
-    titleLower.includes("european");
+    titleLower.includes("europe") || descLower.includes("europe") ||
+    titleLower.includes("eu/eea") || descLower.includes("eu/eea") ||
+    titleLower.includes(" eu ")   || descLower.includes(" eu ")   ||
+    titleLower.includes("european") || descLower.includes("european");
 
   // Country detection: title first (most reliable), then body text.
   // The article body often mentions European countries in risk-assessment sections
@@ -207,8 +210,16 @@ async function extractItemData(item: RSSItem, dbg?: { reason?: string }): Promis
     return g && g.region !== "europe";
   });
 
-  const searchText = `${item.description} ${articleText.substring(0, 12_000)}`;
-  const bodyCountries = findMentionedCountries(searchText);
+  // Prefer the curated RSS description over the full scraped page: the page
+  // scrape includes nav/sidebar/"related topics" text that can name countries
+  // never mentioned in the actual outbreak report (e.g. a cruise-ship article
+  // picking up an unrelated DRC link and getting geocoded to Africa). Only
+  // fall back to scanning the full article text when the description itself
+  // names no country.
+  const descriptionCountries = findMentionedCountries(item.description);
+  const bodyCountries = descriptionCountries.length > 0
+    ? descriptionCountries
+    : findMentionedCountries(`${item.description} ${articleText.substring(0, 12_000)}`);
 
   // Merge: title-found non-EU countries first (outbreak source), then body countries.
   // This prevents a European country mentioned in the risk section from overriding
