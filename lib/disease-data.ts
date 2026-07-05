@@ -642,3 +642,22 @@ export function localizedDiseaseName(info: DiseaseInfo, locale: string): string 
   const key = map[locale];
   return key ? (info[key] as string) || info.name_en : info.name_en;
 }
+
+export type ContagiosityLevel = "very-high" | "high" | "moderate" | "low";
+
+/**
+ * Buckets a free-text r0_ref range (e.g. "12–18") into a coarse category using its
+ * upper bound — gives readers a quick-scan signal without requiring R0 literacy.
+ * Thresholds follow common epidemiological usage (measles/pertussis ≈ very-high,
+ * polio/dengue/zika ≈ high, mpox ≈ moderate, seasonal flu ≈ low).
+ */
+export function getContagiosityLevel(r0_ref?: string): ContagiosityLevel | undefined {
+  if (!r0_ref) return undefined;
+  const numbers = r0_ref.match(/\d+(\.\d+)?/g);
+  if (!numbers || numbers.length === 0) return undefined;
+  const upperBound = Math.max(...numbers.map(Number));
+  if (upperBound >= 10) return "very-high";
+  if (upperBound >= 4) return "high";
+  if (upperBound >= 2) return "moderate";
+  return "low";
+}

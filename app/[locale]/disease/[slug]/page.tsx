@@ -6,9 +6,9 @@ import { createClient } from "@supabase/supabase-js";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
-import { slugToDisease, diseaseToSlug, allDiseases, normalizeDisease } from "@/lib/disease-data";
+import { slugToDisease, diseaseToSlug, allDiseases, normalizeDisease, getContagiosityLevel } from "@/lib/disease-data";
 import { countryToSlug } from "@/lib/country-utils";
-import type { PathogenType, TransmissionMode, VaccineStatus, TreatmentStatus } from "@/lib/disease-data";
+import type { PathogenType, TransmissionMode, VaccineStatus, TreatmentStatus, ContagiosityLevel } from "@/lib/disease-data";
 import { getLocalizedDisease, getLocalizedCountry, isDisplayActive } from "@/lib/outbreaks";
 import { getOutbreakTrendsBulk } from "@/lib/outbreak-trend";
 import type { Outbreak } from "@/lib/outbreaks";
@@ -123,6 +123,7 @@ const VIRO_LABELS: Record<Locale, {
   treatmentStatus: Record<TreatmentStatus, string>;
   transmissionLabels: Record<TransmissionMode, string>;
   pathogenLabels: Record<PathogenType, string>;
+  contagiosityLabels: Record<ContagiosityLevel, string>;
   whoLink: string;
 }> = {
   fr: {
@@ -134,6 +135,7 @@ const VIRO_LABELS: Record<Locale, {
     vaccineStrainWarning: "Non disponible pour la souche active",
     treatmentStatus: { yes: "Disponible", no: "Non disponible", supportive: "Symptomatique", experimental: "Expérimental" },
     pathogenLabels: { virus_rna: "Virus ARN", virus_dna: "Virus ADN", bacteria: "Bactérie", parasite: "Parasite", fungus: "Champignon" },
+    contagiosityLabels: { "very-high": "Très élevée", high: "Élevée", moderate: "Modérée", low: "Faible" },
     transmissionLabels: {
       contact: "Contact direct", droplet: "Gouttelettes", airborne: "Aérosol / voie aérienne",
       vector: "Vecteur arthropode", foodborne: "Alimentaire", waterborne: "Hydrique",
@@ -149,6 +151,7 @@ const VIRO_LABELS: Record<Locale, {
     vaccineStrainWarning: "Not available for active strain",
     treatmentStatus: { yes: "Available", no: "Not available", supportive: "Supportive care", experimental: "Experimental" },
     pathogenLabels: { virus_rna: "RNA virus", virus_dna: "DNA virus", bacteria: "Bacteria", parasite: "Parasite", fungus: "Fungus" },
+    contagiosityLabels: { "very-high": "Very high", high: "High", moderate: "Moderate", low: "Low" },
     transmissionLabels: {
       contact: "Direct contact", droplet: "Respiratory droplets", airborne: "Airborne / aerosol",
       vector: "Arthropod vector", foodborne: "Foodborne", waterborne: "Waterborne",
@@ -164,6 +167,7 @@ const VIRO_LABELS: Record<Locale, {
     vaccineStrainWarning: "No disponible para la cepa activa",
     treatmentStatus: { yes: "Disponible", no: "No disponible", supportive: "Cuidados de apoyo", experimental: "Experimental" },
     pathogenLabels: { virus_rna: "Virus ARN", virus_dna: "Virus ADN", bacteria: "Bacteria", parasite: "Parásito", fungus: "Hongo" },
+    contagiosityLabels: { "very-high": "Muy alta", high: "Alta", moderate: "Moderada", low: "Baja" },
     transmissionLabels: {
       contact: "Contacto directo", droplet: "Gotículas respiratorias", airborne: "Aéreo / aerosol",
       vector: "Vector artrópodo", foodborne: "Alimentaria", waterborne: "Hídrica",
@@ -179,6 +183,7 @@ const VIRO_LABELS: Record<Locale, {
     vaccineStrainWarning: "غير متوفر للسلالة النشطة",
     treatmentStatus: { yes: "متوفر", no: "غير متوفر", supportive: "علاج داعم", experimental: "تجريبي" },
     pathogenLabels: { virus_rna: "فيروس RNA", virus_dna: "فيروس DNA", bacteria: "بكتيريا", parasite: "طفيلي", fungus: "فطر" },
+    contagiosityLabels: { "very-high": "مرتفعة جدًا", high: "مرتفعة", moderate: "متوسطة", low: "منخفضة" },
     transmissionLabels: {
       contact: "اتصال مباشر", droplet: "رذاذ تنفسي", airborne: "هواء / هباء",
       vector: "ناقل حشري", foodborne: "عن طريق الطعام", waterborne: "عن طريق الماء",
@@ -194,6 +199,7 @@ const VIRO_LABELS: Record<Locale, {
     vaccineStrainWarning: "Tidak tersedia untuk galur aktif",
     treatmentStatus: { yes: "Tersedia", no: "Tidak tersedia", supportive: "Perawatan suportif", experimental: "Eksperimental" },
     pathogenLabels: { virus_rna: "Virus RNA", virus_dna: "Virus DNA", bacteria: "Bakteri", parasite: "Parasit", fungus: "Jamur" },
+    contagiosityLabels: { "very-high": "Sangat tinggi", high: "Tinggi", moderate: "Sedang", low: "Rendah" },
     transmissionLabels: {
       contact: "Kontak langsung", droplet: "Droplet pernapasan", airborne: "Udara / aerosol",
       vector: "Vektor artropoda", foodborne: "Melalui makanan", waterborne: "Melalui air",
@@ -213,6 +219,12 @@ const TREATMENT_COLOR: Record<TreatmentStatus, string> = {
   experimental: "text-yellow-400 bg-yellow-500/10 border-yellow-500/30",
   supportive: "text-blue-400 bg-blue-500/10 border-blue-500/30",
   no: "text-gray-400 bg-gray-800/60 border-gray-700",
+};
+const CONTAGIOSITY_COLOR: Record<ContagiosityLevel, string> = {
+  "very-high": "text-red-400 bg-red-500/10 border-red-500/30",
+  high: "text-orange-400 bg-orange-500/10 border-orange-500/30",
+  moderate: "text-yellow-400 bg-yellow-500/10 border-yellow-500/30",
+  low: "text-green-400 bg-green-500/10 border-green-500/30",
 };
 
 const RISK_STYLE: Record<string, string> = {
@@ -321,6 +333,8 @@ export default async function DiseasePage({
   const { locale, slug } = await params;
   const info = slugToDisease(slug);
   if (!info) notFound();
+
+  const contagiosityLevel = getContagiosityLevel(info.r0_ref);
 
   const l = (LOCALES.includes(locale as Locale) ? locale : "en") as Locale;
   const lb = LABELS[l];
@@ -516,11 +530,16 @@ export default async function DiseasePage({
             </div>
           )}
 
-          {/* R0 reference */}
+          {/* R0 reference + derived contagiosity level */}
           {info.r0_ref && (
             <div className="space-y-1">
               <p className="text-xs text-gray-500">{vl.r0}</p>
               <p className="text-sm text-white font-medium">{info.r0_ref}</p>
+              {contagiosityLevel && (
+                <span className={`inline-block text-xs font-semibold px-2 py-0.5 rounded border ${CONTAGIOSITY_COLOR[contagiosityLevel]}`}>
+                  {vl.contagiosityLabels[contagiosityLevel]}
+                </span>
+              )}
             </div>
           )}
 
