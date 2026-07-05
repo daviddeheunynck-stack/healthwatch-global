@@ -126,8 +126,9 @@ export function extractNumbers(text: string): { cases: number; deaths: number; r
     .replace(/\b(\d{1,3}) (\d{3}) (\d{3})\b/g, "$1$2$3");
 
   // Qualifier words that can appear between a number and "cases"
-  // e.g. "746 suspected cases", "83 confirmed cases", "12 probable cases"
-  const QUALIFIERS = "(?:(?:suspected|probable|confirmed|laboratory[- ]confirmed|human|new|reported|additional)\\s+)*";
+  // e.g. "746 suspected cases", "83 confirmed cases", "12 probable cases",
+  // and "144 suspected and confirmed cases" (qualifiers joined by "and").
+  const QUALIFIERS = "(?:(?:suspected|probable|confirmed|laboratory[- ]confirmed|human|new|reported|additional)\\s+(?:and\\s+)?)*";
 
   const casePatterns = [
     // "a total of 2649 MERS cases" — allows 0-3 words between count and "cases"
@@ -221,7 +222,7 @@ export function extractNumbersForCountry(
   countryAliases: string[]
 ): { cases: number; deaths: number; recovered: number } | null {
   const clean = text.replace(/\n/g, " ");
-  const QUALIFIERS = "(?:(?:suspected|probable|confirmed|laboratory[- ]confirmed|human|new|reported|additional)\\s+)*";
+  const QUALIFIERS = "(?:(?:suspected|probable|confirmed|laboratory[- ]confirmed|human|new|reported|additional)\\s+(?:and\\s+)?)*";
   const aliasPattern = new RegExp(countryAliases.map(escapeRegExp).join("|"), "i");
   const WINDOW = 200;
 

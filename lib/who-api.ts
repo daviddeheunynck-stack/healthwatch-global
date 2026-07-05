@@ -1,4 +1,4 @@
-import { findCountry, findMentionedCountries, isAggregateCountry } from "./geo-data";
+import { findCountry, findMentionedCountries, isAggregateCountry, findCountryParentheticals } from "./geo-data";
 import { normalizeDisease } from "./disease-data";
 import {
   parseWHOTitle, extractNumbers, extractNumbersForCountry, countryAliasesForMultiCountry,
@@ -256,6 +256,38 @@ async function parseMultiCountryDON(
     const nums = extractNumbers(block);
     rows.push({ geo, cases: nums.cases, deaths: nums.deaths, recovered: nums.recovered ?? 0 });
   }
+
+  // Fallback tier 2: "Name (N), Name (N), ..." list format (e.g. some
+  // multi-country food-safety/toxin DONs) — tried only when no <strong>
+  // heading sections were found for any candidate.
+  if (rows.length === 0) {
+    const parenNums = findCountryParentheticals(plainAll);
+    for (const geo of candidates) {
+      const n = parenNums.get(geo.name_en);
+      if (n === undefined) continue;
+      rows.push({ geo, cases: n, deaths: 0, recovered: 0 });
+    }
+  }
+
+  // A third fallback tier reusing extractNumbersForCountry's window-anchored
+  // search (the same "N cases near a country name" heuristic used for
+  // single-country articles) was tried here for free-form narrative prose
+  // (e.g. DON581/591-style "Brazil accounts for ... with 96,159 confirmed
+  // cases and 111 deaths"). Tested against DON581/591/586 via
+  // scripts/dryrun-check-4-older-dons-2026-07-05.ts: it produced wrong
+  // numbers for nearly every country in DON581 (cross-contamination between
+  // adjacent countries' figures, and year-over-year comparison numbers like
+  // "63 cases ... compared to 63 in 2024" winning over the real figure),
+  // fabricated cases=2635 for Jordan in DON591 (the 2012-2025 cumulative
+  // global total, not anything Jordan-specific), and fabricated 3 bogus
+  // country rows for DON586 (a trends-only report with zero real per-country
+  // data). A 200-char window around a country name isn't enough to reliably
+  // find "which of the several nearby numbers is actually this country's own
+  // current figure" in free narrative text — unlike the heading and
+  // parenthetical-list tiers above, there's no structural anchor tying a
+  // number to a specific country. Deliberately not shipped; DON581/591-style
+  // articles fall through to the pre-existing aggregate-row behavior below
+  // and need manual per-event verification, same as before this change.
 
   // The originally-resolved country (e.g. the epicenter in an "X & Y" title)
   // may not have its own heading section — its figures are often just the

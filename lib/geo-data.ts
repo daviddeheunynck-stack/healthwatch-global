@@ -68,6 +68,8 @@ export const COUNTRIES: Record<string, CountryGeo> = {
   "Vietnam": { lat: 14.1, lng: 108.3, region: "asia", name_en: "Vietnam", name_fr: "Viêt Nam", name_ar: "فيتنام" },
   "Thailand": { lat: 15.9, lng: 100.9, region: "asia", name_en: "Thailand", name_fr: "Thaïlande", name_ar: "تايلاند" },
   "Malaysia": { lat: 4.2, lng: 101.9, region: "asia", name_en: "Malaysia", name_fr: "Malaisie", name_ar: "ماليزيا" },
+  "Singapore": { lat: 1.35, lng: 103.8, region: "asia", name_en: "Singapore", name_fr: "Singapour", name_ar: "سنغافورة" },
+  "Hong Kong SAR": { lat: 22.3, lng: 114.2, region: "asia", name_en: "Hong Kong SAR", name_fr: "Hong Kong (Chine)", name_ar: "هونغ كونغ" },
   "Laos": { lat: 19.9, lng: 102.5, region: "asia", name_en: "Laos", name_fr: "Laos", name_ar: "لاوس" },
   "Lao People's Democratic Republic": { lat: 19.9, lng: 102.5, region: "asia", name_en: "Laos", name_fr: "Laos", name_ar: "لاوس" },
   "Nepal": { lat: 28.4, lng: 84.1, region: "asia", name_en: "Nepal", name_fr: "Népal", name_ar: "نيبال" },
@@ -235,6 +237,7 @@ const COUNTRY_ALIASES: Record<string, string> = {
   "uk":                             "United Kingdom",
   "usa":                            "United States of America",
   "uae":                            "United Arab Emirates",
+  "united kingdom of great britain and northern ireland": "United Kingdom",
 };
 
 // Synthetic COUNTRIES entries that stand in for "not a single real place"
@@ -293,6 +296,74 @@ export function findMentionedCountries(text: string): CountryGeo[] {
     }
   }
   return found;
+}
+
+// Matches WHO's "Name (N), Name (N), and Name (N)" list format (seen in some
+// multi-country food-safety/toxin DONs, e.g. "Austria (9), Brazil (5), China,
+// Hong Kong SAR, (1), ... and the United Kingdom of Great Britain and
+// Northern Ireland (61)"). Anchors on each "(N)" and looks backward for the
+// country name immediately preceding it, rather than forward from each
+// country mention — a long article can mention a country elsewhere for
+// unrelated reasons, but a number in parentheses right after a country name
+// in this list format is unambiguous. Includes COUNTRY_ALIASES (not just
+// COUNTRIES keys) so official long-form names (e.g. the UK's) resolve too.
+// Cases only — this format hasn't been observed pairing deaths per country.
+const PAREN_ALIAS_KEYS_BY_LENGTH = [...Object.keys(COUNTRIES), ...Object.keys(COUNTRY_ALIASES)].sort(
+  (a, b) => b.length - a.length
+);
+
+// A bare "Name (N)" isn't necessarily a case count — e.g. DON586 (Influenza)
+// has "22 sequences of subclade K have been reported in GISAID from Nepal
+// (1), India (4) and Thailand (17)", which is a genomic-sequence tally, not
+// disease cases. Require a case-related word somewhere in a window before
+// the whole list before trusting any match in it.
+const PAREN_CASE_CONTEXT_SIGNALS = ["case", "confirmed", "suspected", "intoxication"];
+const PAREN_CASE_CONTEXT_WINDOW = 220;
+
+// Phrases WHO uses to flag a figure as not part of the official count (e.g.
+// DON596: "In other countries, including Denmark (32) and the Netherlands
+// (221) the number of suspected cases is based on self-reporting and is
+// therefore not comparable with the INFOSAN case definition."). Checked only
+// up to the next sentence boundary — Spain/UK's own "(N)" entries end their
+// sentence with a period before this disclaimer sentence even starts, so a
+// naive fixed-size lookahead would wrongly disclaim them too (tested and
+// caught via scripts/dryrun-check-4-older-dons-2026-07-05.ts).
+const PAREN_DISCLAIMER_SIGNALS = ["not comparable", "self-report", "self report"];
+const PAREN_DISCLAIMER_MAX_WINDOW = 250;
+
+export function findCountryParentheticals(text: string): Map<string, number> {
+  const result = new Map<string, number>();
+  const re = /\(\s*(\d[\d,]*)\s*\)/g;
+
+  for (const m of text.matchAll(re)) {
+    const idx = m.index ?? 0;
+
+    const caseContext = text.slice(Math.max(0, idx - PAREN_CASE_CONTEXT_WINDOW), idx).toLowerCase();
+    if (!PAREN_CASE_CONTEXT_SIGNALS.some((s) => caseContext.includes(s))) continue;
+
+    const before = text
+      .slice(Math.max(0, idx - 80), idx)
+      .replace(/,\s*$/, "")
+      .replace(/\s+and\s*$/i, "")
+      .trim()
+      .toLowerCase();
+
+    const lookahead = text.slice(idx, idx + PAREN_DISCLAIMER_MAX_WINDOW);
+    const sentenceEnd = lookahead.indexOf(".");
+    const after = (sentenceEnd === -1 ? lookahead : lookahead.slice(0, sentenceEnd)).toLowerCase();
+    if (PAREN_DISCLAIMER_SIGNALS.some((s) => after.includes(s))) continue;
+
+    for (const key of PAREN_ALIAS_KEYS_BY_LENGTH) {
+      if (before.endsWith(key.toLowerCase())) {
+        const geo = findCountry(key);
+        if (geo && !isAggregateCountry(geo) && !result.has(geo.name_en)) {
+          result.set(geo.name_en, parseInt(m[1].replace(/,/g, ""), 10));
+        }
+        break;
+      }
+    }
+  }
+  return result;
 }
 
 // Fuzzy lookup: try exact match, alias, name_en, then partial match
