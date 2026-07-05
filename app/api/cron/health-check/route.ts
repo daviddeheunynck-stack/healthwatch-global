@@ -8,6 +8,13 @@ export const maxDuration = 30;
 
 const clean = (v: string | undefined) => (v ?? "").replace(/^﻿/, "").trim();
 
+// Vercel only sets VERCEL_ENV=production on the real production deployment —
+// unset for `next dev` and for preview builds. Schedule-adherence signals
+// (Sentry Crons check-ins, the Brevo report) are meaningless outside that
+// context: a local run against the isolated dev Supabase project has no
+// cron history at all, so it always reports every cron "jamais" (never run).
+const isRealProduction = process.env.VERCEL_ENV === "production";
+
 interface CronRun {
   ts:     string;
   status: string;
@@ -39,10 +46,12 @@ export async function GET(req: NextRequest) {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 async function runHealthCheck(_req: NextRequest, supabase: any) {
-  const checkInId = Sentry.captureCheckIn(
-    { monitorSlug: "health-check", status: "in_progress" },
-    { schedule: { type: "crontab", value: "5 7 * * *" }, checkinMargin: 10, maxRuntime: 1, timezone: "UTC" },
-  );
+  const checkInId = isRealProduction
+    ? Sentry.captureCheckIn(
+        { monitorSlug: "health-check", status: "in_progress" },
+        { schedule: { type: "crontab", value: "5 7 * * *" }, checkinMargin: 10, maxRuntime: 1, timezone: "UTC" },
+      )
+    : undefined;
 
   const brevoKey = clean(process.env.BREVO_API_KEY);
 
@@ -109,7 +118,9 @@ async function runHealthCheck(_req: NextRequest, supabase: any) {
 
   const subject = `${emoji} HealthWatch — ${total ?? "?"} foyers${hasOverdue ? ` · ${overdue.length} cron(s) en retard` : ""} · ${new Date().toLocaleDateString("fr-FR")}`;
 
-  if (!brevoKey) {
+  if (!isRealProduction) {
+    console.log("[health-check] non-production run — skipping Brevo email and Sentry check-in/alerts");
+  } else if (!brevoKey) {
     Sentry.captureMessage("[health-check] BREVO_API_KEY not set — health report not sent", "error");
   } else {
     try {
@@ -133,7 +144,7 @@ async function runHealthCheck(_req: NextRequest, supabase: any) {
   }
 
   // Alert Sentry directly if crons are overdue (independent of email delivery)
-  if (hasOverdue) {
+  if (hasOverdue && isRealProduction) {
     Sentry.captureMessage(
       `[health-check] ${overdue.length} cron(s) overdue: ${overdue.join(", ")}`,
       "warning",
@@ -142,11 +153,13 @@ async function runHealthCheck(_req: NextRequest, supabase: any) {
 
   await logCronRun(supabase, "health-check", hasOverdue ? "error" : "ok", overdue.length);
 
-  Sentry.captureCheckIn({
-    checkInId,
-    monitorSlug: "health-check",
-    status: hasOverdue ? "error" : "ok",
-  });
+  if (isRealProduction) {
+    Sentry.captureCheckIn({
+      checkInId,
+      monitorSlug: "health-check",
+      status: hasOverdue ? "error" : "ok",
+    });
+  }
 
-  return Response.json({ ok: !hasOverdue, total, high, pheic, overdue, cronStatuses });
+  return Response.json({ ok: !hasOverdue, total, high, pheic, overdue, cronStatuses, isRealProduction });
 }
