@@ -91,4 +91,6 @@ export const CRON_WINDOWS: Record<string, number> = {
   "trigger-geofence-alerts":   9,    // every 6h
   "trigger-country-risk-alerts": 9,  // every 6h
   "trigger-regional-digest":  200,   // weekly Mon
+  // ── Admin crons ──────────────────────────────────────────────────────────────
+  "enrich-admin1":             2,    // hourly at :15
 };

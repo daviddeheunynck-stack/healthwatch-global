@@ -15,6 +15,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { geocodeAdmin1 } from "@/lib/geo-extract";
+import { logCronRun } from "@/lib/cron-monitor";
 
 export const dynamic     = "force-dynamic";
 export const maxDuration = 120;
@@ -164,8 +165,12 @@ export async function POST(req: NextRequest) {
     .select("id, disease_en, country_en")
     .eq("admin1", "~");
 
-  if (tErr) return NextResponse.json({ error: tErr.message }, { status: 500 });
+  if (tErr) {
+    await logCronRun(supabase, "enrich-admin1", "error", 0, tErr.message);
+    return NextResponse.json({ error: tErr.message }, { status: 500 });
+  }
   if (!targets || targets.length === 0) {
+    await logCronRun(supabase, "enrich-admin1", "no_data", 0);
     return NextResponse.json({ message: "No rows with admin1=~ found", enriched: 0 });
   }
 
@@ -177,7 +182,10 @@ export async function POST(req: NextRequest) {
     .neq("admin1", "")
     .neq("admin1", "~");
 
-  if (sErr) return NextResponse.json({ error: sErr.message }, { status: 500 });
+  if (sErr) {
+    await logCronRun(supabase, "enrich-admin1", "error", 0, sErr.message);
+    return NextResponse.json({ error: sErr.message }, { status: 500 });
+  }
 
   // Build cross-source map: disease|country → best known admin1
   type Admin1Data = { admin1: string; admin1_lat: number | null; admin1_lng: number | null };
@@ -255,5 +263,6 @@ export async function POST(req: NextRequest) {
   }
 
   console.log("[enrich-admin1] Done:", stats);
+  await logCronRun(supabase, "enrich-admin1", "ok", stats.cross_source + stats.endemic_default);
   return NextResponse.json({ success: true, ...stats, log });
 }
