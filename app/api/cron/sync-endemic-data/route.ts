@@ -6,10 +6,11 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import * as Sentry from "@sentry/nextjs";
-import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
+import { logCronRun } from "@/lib/cron-monitor";
 import { createClient } from "@supabase/supabase-js";
 import { extractNumbers } from "@/lib/outbreak-parser";
 import { errorMessage } from "@/lib/error";
+import { sendBrevoEmail } from "@/lib/email";
 
 export const dynamic   = "force-dynamic";
 export const maxDuration = 60;
@@ -20,7 +21,6 @@ const clean = (v: string | undefined) => (v ?? "").replace(new RegExp("^" + BOM)
 const SUPABASE_URL        = clean(process.env.NEXT_PUBLIC_SUPABASE_URL);
 const SUPABASE_SERVICE_KEY = clean(process.env.SUPABASE_SERVICE_ROLE_KEY);
 const CRON_SECRET          = clean(process.env.CRON_SECRET);
-const BREVO_API_KEY        = clean(process.env.BREVO_API_KEY);
 const ADMIN_EMAILS         = clean(process.env.ADMIN_EMAILS);
 
 const FETCH_HEADERS = {
@@ -496,17 +496,8 @@ function parseLeptoThailand(text: string, source: string, currentDate: string): 
 // ══════════════════════════════════════════════════════════════════════════════
 
 async function sendEmail(to: string, subject: string, html: string) {
-  if (!BREVO_API_KEY || !to) return;
-  await fetch("https://api.brevo.com/v3/smtp/email", {
-    method: "POST",
-    headers: { "api-key": BREVO_API_KEY, "Content-Type": "application/json" },
-    body: JSON.stringify({
-      sender: { name: "HealthWatch Global", email: "alerts@healthwatch-global.com" },
-      to:     [{ email: to }],
-      subject,
-      htmlContent: html,
-    }),
-  }).catch((e) => {
+  if (!to) return;
+  await sendBrevoEmail({ to, subject, html }).catch((e) => {
     console.error("[endemic] email failed:", errorMessage(e));
     Sentry.captureException(e, { tags: { cron: "sync-endemic-data" } });
   });
@@ -684,7 +675,7 @@ export async function GET(req: NextRequest) {
 
   // Only email when there are actual updates or real fetch/DB errors (not routine "no newer data").
   const realErrors = skipped.filter((s) => !s.reason.startsWith("no newer data"));
-  if (adminEmail && isRealProduction && (updates.length > 0 || realErrors.length > 0)) {
+  if (adminEmail && (updates.length > 0 || realErrors.length > 0)) {
     await sendEmail(adminEmail, subject, html);
   }
   await logCronRun(supabase, "sync-endemic-data", "ok", updates.length);
