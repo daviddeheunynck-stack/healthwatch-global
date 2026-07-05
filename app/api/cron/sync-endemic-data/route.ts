@@ -6,7 +6,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import * as Sentry from "@sentry/nextjs";
-import { logCronRun } from "@/lib/cron-monitor";
+import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
 import { createClient } from "@supabase/supabase-js";
 import { extractNumbers } from "@/lib/outbreak-parser";
 import { errorMessage } from "@/lib/error";
@@ -684,7 +684,7 @@ export async function GET(req: NextRequest) {
 
   // Only email when there are actual updates or real fetch/DB errors (not routine "no newer data").
   const realErrors = skipped.filter((s) => !s.reason.startsWith("no newer data"));
-  if (adminEmail && (updates.length > 0 || realErrors.length > 0)) {
+  if (adminEmail && isRealProduction && (updates.length > 0 || realErrors.length > 0)) {
     await sendEmail(adminEmail, subject, html);
   }
   await logCronRun(supabase, "sync-endemic-data", "ok", updates.length);
