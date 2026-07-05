@@ -148,7 +148,7 @@ const SKIP_COUNTRIES = ["global", "multiple", "regional"];
 
 // ── Handler ───────────────────────────────────────────────────────────────────
 
-export async function POST(req: NextRequest) {
+export async function GET(req: NextRequest) {
   const auth = req.headers.get("authorization");
   if (!CRON_SECRET || auth !== `Bearer ${CRON_SECRET}`) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
