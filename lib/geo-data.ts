@@ -54,6 +54,7 @@ export const COUNTRIES: Record<string, CountryGeo> = {
   "Morocco": { lat: 31.8, lng: -7.1, region: "africa", name_en: "Morocco", name_fr: "Maroc", name_ar: "المغرب" },
   "Tunisia": { lat: 33.9, lng: 9.5, region: "africa", name_en: "Tunisia", name_fr: "Tunisie", name_ar: "تونس" },
   "Algeria": { lat: 28.0, lng: 1.7, region: "africa", name_en: "Algeria", name_fr: "Algérie", name_ar: "الجزائر" },
+  "Comoros": { lat: -11.6, lng: 43.3, region: "africa", name_en: "Comoros", name_fr: "Comores", name_ar: "جزر القمر" },
 
   // ── ASIA ─────────────────────────────────────────────────────
   "India": { lat: 20.6, lng: 78.9, region: "asia", name_en: "India", name_fr: "Inde", name_ar: "الهند" },
