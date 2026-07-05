@@ -1,19 +1,12 @@
 import { NextRequest } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import * as Sentry from "@sentry/nextjs";
-import { CRON_WINDOWS, logCronRun } from "@/lib/cron-monitor";
+import { CRON_WINDOWS, logCronRun, isRealProduction } from "@/lib/cron-monitor";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 30;
 
 const clean = (v: string | undefined) => (v ?? "").replace(/^﻿/, "").trim();
-
-// Vercel only sets VERCEL_ENV=production on the real production deployment —
-// unset for `next dev` and for preview builds. Schedule-adherence signals
-// (Sentry Crons check-ins, the Brevo report) are meaningless outside that
-// context: a local run against the isolated dev Supabase project has no
-// cron history at all, so it always reports every cron "jamais" (never run).
-const isRealProduction = process.env.VERCEL_ENV === "production";
 
 interface CronRun {
   ts:     string;

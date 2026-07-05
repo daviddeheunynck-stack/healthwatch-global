@@ -9,6 +9,16 @@
 
 import type { SupabaseClient } from "@supabase/supabase-js";
 
+/**
+ * True only on the real Vercel production deployment. Unset for `next dev`
+ * and for preview builds. Gate any outbound side effect a real person could
+ * receive (email, webhook, push, SMS) behind this — local/preview runs read
+ * from the isolated dev Supabase project, so their data is not representative
+ * and should never reach a third party. DB writes (logCronRun included) are
+ * fine unguarded: they land in whichever Supabase project is configured.
+ */
+export const isRealProduction = process.env.VERCEL_ENV === "production";
+
 export type CronStatus = "ok" | "error" | "no_data";
 
 export interface CronRun {
