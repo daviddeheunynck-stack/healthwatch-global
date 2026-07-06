@@ -3,8 +3,6 @@ import { normalizeDisease } from "./disease-data";
 import type { ParsedOutbreak } from "./outbreak-parser";
 import { extractNumbers, assessRisk } from "./outbreak-parser";
 
-const RELIEFWEB_API = "https://api.reliefweb.int/v2/reports";
-
 export interface ReliefWebItem {
   id: string;
   fields: {
@@ -16,34 +14,15 @@ export interface ReliefWebItem {
   };
 }
 
+// DISABLED (legal) — ReliefWeb's terms permit "personal, non-commercial use" only,
+// with no right to redistribute or create derivative works over third-party
+// copyrighted partner reports. HealthWatch Global is a commercial product, so
+// ingesting ReliefWeb breaches its ToS — the same legal shape as the ProMED C&D
+// (see legal_reliefweb_noncommercial). Returns empty; never calls the ReliefWeb API.
+// This module currently has no importers; kept only so the type/parse helpers below
+// remain available. Do NOT restore the fetch without a written commercial licence.
 export async function fetchReliefWebOutbreaks(): Promise<ReliefWebItem[]> {
-  const params = new URLSearchParams({
-    appname: "healthwatch-global",
-    limit: "30",
-    sort: "date:desc",
-  });
-
-  // Fields we want
-  const fields = ["title", "date.created", "body-html", "country.name", "source.shortname"];
-  fields.forEach((f) => params.append("fields[include][]", f));
-
-  // Filter: Health theme
-  params.set("filter[field]", "theme.name");
-  params.set("filter[value]", "Health");
-
-  const url = `${RELIEFWEB_API}?${params.toString()}`;
-
-  const res = await fetch(url, {
-    headers: {
-      "User-Agent": "HealthWatch-Global/1.0 (contact@healthwatch-global.com)",
-      "Accept": "application/json",
-    },
-    next: { revalidate: 0 },
-  });
-
-  if (!res.ok) throw new Error(`ReliefWeb HTTP ${res.status}`);
-  const json = await res.json();
-  return json.data || [];
+  return [];
 }
 
 // Extract disease name from a ReliefWeb report title

@@ -254,43 +254,13 @@ async function tryWHOAFROBulletins(currentDate: string): Promise<Found | null> {
   return null;
 }
 
-async function tryReliefWebEthiopiaCholera(currentDate: string): Promise<Found | null> {
-  // ReliefWeb v2 API (v1 decommissioned). Requires approved appname.
-  const year = new Date().getFullYear();
-  const apiUrl = new URL("https://api.reliefweb.int/v2/reports");
-  apiUrl.searchParams.set("appname", "healthwatch-global");
-  apiUrl.searchParams.set("query[value]", `Ethiopia cholera cases ${year}`);
-  apiUrl.searchParams.set("fields[include][]", "title");
-  apiUrl.searchParams.set("fields[include][]", "date");
-  apiUrl.searchParams.set("fields[include][]", "url");
-  apiUrl.searchParams.set("fields[include][]", "body");
-  apiUrl.searchParams.set("sort[]", "date:desc");
-  apiUrl.searchParams.set("limit", "5");
-
-  try {
-    const res = await fetch(apiUrl.toString(), {
-      headers: { ...FETCH_HEADERS, "Accept": "application/json" },
-      signal: AbortSignal.timeout(12000),
-    });
-    if (!res.ok) return null;
-
-    const json = await res.json() as {
-      data?: Array<{ fields?: { title?: string; date?: { created?: string }; url?: string; body?: string } }>
-    };
-
-    for (const item of json.data ?? []) {
-      const f = item.fields;
-      if (!f?.body) continue;
-      const text = htmlToText(f.body);
-      if (!/ethiopia/i.test(text)) continue;
-      const source = f.url ?? apiUrl.toString();
-      const found = parseEthiopiaCholera(text, source, currentDate);
-      if (found) return found;
-    }
-  } catch (e) {
-    console.log("[endemic] ReliefWeb error:", errorMessage(e));
-  }
-
+async function tryReliefWebEthiopiaCholera(_currentDate: string): Promise<Found | null> {
+  // DISABLED (legal) — ReliefWeb's terms permit "personal, non-commercial use" only,
+  // with no redistribution / derivative works over third-party copyrighted reports.
+  // HealthWatch Global is commercial, so ingesting ReliefWeb breaches its ToS — the
+  // same legal shape as the ProMED C&D (see legal_reliefweb_noncommercial). Ethiopia
+  // cholera is otherwise covered by the WHO AFRO / Africa CDC paths; this ReliefWeb
+  // fallback is retired. Never calls the ReliefWeb API.
   return null;
 }
 

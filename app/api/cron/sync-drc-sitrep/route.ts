@@ -21,8 +21,6 @@ const CRON_SECRET          = clean(process.env.CRON_SECRET);
 const BREVO_API_KEY        = clean(process.env.BREVO_API_KEY);
 const ADMIN_EMAILS         = clean(process.env.ADMIN_EMAILS);
 
-const RELIEFWEB_BASE    = "https://api.reliefweb.int/v2/reports";
-const RELIEFWEB_APPNAME = "healthwatch-global";
 const ADMIN_PANEL_URL   = "https://healthwatch-global.com/fr/admin";
 
 const FETCH_HEADERS = {
@@ -85,71 +83,19 @@ async function findBvdCountryRow(supabase: any, countryEn: string) {
   return data as { id: string; cases: number; deaths: number; date: string; source_priority: number };
 }
 
-// ── 2. Detect latest situation report via ReliefWeb API ──────────────────────
-// ReliefWeb aggregates DRC Ministry of Health / INSP sitreps within ~24h.
-// This replaces the broken WHO AFRO page (restructured, sitreps removed).
-
-interface RWFile { url?: string; filename?: string; mimetype?: string; }
-interface RWReport {
-  fields?: {
-    title?: string;
-    date?:  { created?: string };
-    url?:   string;
-    files?: RWFile[];
-  };
-}
+// ── 2. Latest situation report discovery — DISABLED (legal) ──────────────────
+// Previously discovered + downloaded DRC Ebola sitrep PDFs via the ReliefWeb API.
+// Removed: ReliefWeb's ToS permits personal, non-commercial use only, so use in this
+// commercial product breaches it (same as the ProMED C&D — see legal_reliefweb_noncommercial).
+// DRC Ebola figures come from WHO Disease Outbreak News via the main sync path instead.
 
 async function fetchLatestSitrep(): Promise<{ pageUrl: string; pdfUrl: string | null; num: number; reliefwebError?: boolean } | null> {
-  const year = new Date().getFullYear();
-  const rwUrl = new URL(RELIEFWEB_BASE);
-  rwUrl.searchParams.set("appname", RELIEFWEB_APPNAME);
-  rwUrl.searchParams.set("query[value]", `Ebola Congo sitrep situation report ${year}`);
-  rwUrl.searchParams.append("fields[include][]", "title");
-  rwUrl.searchParams.append("fields[include][]", "date");
-  rwUrl.searchParams.append("fields[include][]", "url");
-  rwUrl.searchParams.append("fields[include][]", "files");
-  rwUrl.searchParams.set("sort[]", "date:desc");
-  rwUrl.searchParams.set("limit", "5");
-
-  try {
-    const res = await fetch(rwUrl.toString(), {
-      headers: { ...FETCH_HEADERS, "Accept": "application/json" },
-      signal: AbortSignal.timeout(10_000),
-    });
-    if (!res.ok) { console.log(`[drc-sitrep] ReliefWeb → HTTP ${res.status}`); return { pageUrl: "", pdfUrl: null, num: 0, reliefwebError: true }; }
-
-    const json = await res.json() as { data?: RWReport[] };
-
-    for (const item of json.data ?? []) {
-      const f = item.fields;
-      if (!f?.title) continue;
-
-      const lower = f.title.toLowerCase();
-      // Must be an Ebola/MVB/Bundibugyo sitrep from DRC
-      if (!lower.includes("ebola") && !lower.includes("mvb") && !lower.includes("bundibugyo")) continue;
-      if (!lower.includes("congo") && !lower.includes("drc") && !lower.includes("rdc")) continue;
-
-      // Extract sitrep number from title — handles MVB, Bundibugyo, BVD naming
-      const numMatch = f.title.match(/(?:sitrep|situation[-\s]?report|rapport[-\s]?de[-\s]?situation)\s*[n°no#.]?\s*0*(\d{2,3})/i)
-        ?? f.title.match(/[nN][°o]?\s*0*(\d{2,3})\s*[/|\\]?\s*(?:MVB|BVD|EVD|ebola|bundibugyo)/i);
-      if (!numMatch) continue;
-
-      const num    = parseInt(numMatch[1], 10);
-      const pageUrl = f.url ?? "";
-      const pdfUrl  = f.files?.find(
-        (file) => file.mimetype === "application/pdf" || file.filename?.endsWith(".pdf")
-      )?.url ?? null;
-
-      console.log(`[drc-sitrep] ReliefWeb found: "${f.title}" — sitrep N°${num}, PDF: ${pdfUrl ?? "none"}`);
-      return { pageUrl, pdfUrl, num };
-    }
-
-    console.log("[drc-sitrep] ReliefWeb: no matching sitrep found in top 5 results");
-    return null;
-  } catch (e) {
-    console.log("[drc-sitrep] ReliefWeb query error:", errorMessage(e));
-    return null;
-  }
+  // DISABLED (legal) — this discovered + downloaded DRC Ebola sitrep PDFs via ReliefWeb,
+  // whose terms permit "personal, non-commercial use" only (no redistribution of
+  // third-party copyrighted reports). HealthWatch Global is commercial => breach, the
+  // same legal shape as the ProMED C&D. DRC Ebola is covered by WHO Disease Outbreak News.
+  // See legal_reliefweb_noncommercial. Returns null so the cron logs a clean no_data.
+  return null;
 }
 
 // ── 3. Download PDF + extract DRC cumulative figures ─────────────────────────
