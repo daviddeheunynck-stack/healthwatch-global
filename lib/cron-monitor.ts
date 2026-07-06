@@ -70,6 +70,7 @@ export const CRON_WINDOWS: Record<string, number> = {
   "sync-who-emro":     26,   // daily
   "sync-africa-cdc":   26,   // daily
   "sync-who-regional": 26,   // daily
+  "sync-ncdc":         26,   // daily (NCDC weekly sitreps, checked daily)
   "check-mpox-sitrep": 26,   // daily
   "sync-paho-alerts":  26,   // daily
   "sync-ecdc-threats": 26,   // daily

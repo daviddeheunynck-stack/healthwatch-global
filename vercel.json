@@ -81,6 +81,10 @@
       "schedule": "0 10 * * *"
     },
     {
+      "path": "/api/cron/sync-ncdc",
+      "schedule": "0 9 * * *"
+    },
+    {
       "path": "/api/cron/sync-cdc-han",
       "schedule": "30 */4 * * *"
     },
