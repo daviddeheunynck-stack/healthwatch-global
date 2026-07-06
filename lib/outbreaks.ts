@@ -518,13 +518,28 @@ export function computeRiskScore(
  */
 export function sourceName(source: string | null | undefined): string {
   const src = source ?? "";
+  // WHO — most specific first: DON article, then regional offices, then generic who.int.
   if (src.includes("who.int/emergencies/disease-outbreak-news")) return "WHO DON";
-  if (src.includes("ecdc.europa.eu"))    return "ECDC";
-  if (src.includes("paho.org"))          return "PAHO";
+  if (src.includes("emro.who.int"))      return "WHO EMRO";
+  if (src.includes("afro.who.int"))      return "WHO AFRO";
+  // National / regional public-health agencies.
+  // ORDER MATTERS: "ncdc.gov.ng" contains the substring "cdc.gov", so Nigeria CDC
+  // and Africa CDC must be checked BEFORE the US CDC ("cdc.gov") catch-all below,
+  // otherwise Nigerian rows would be mislabelled "US CDC".
+  if (src.includes("ncdc.gov.ng"))       return "Nigeria CDC";
   if (src.includes("africacdc.org"))     return "Africa CDC";
+  if (src.includes("cdc.gov"))           return "US CDC";          // cdc.gov + wwwnc.cdc.gov (Travel Notices / EID)
+  if (src.includes("ecdc.europa.eu"))    return "ECDC";
+  if (src.includes("efsa.europa.eu"))    return "EFSA";
+  if (src.includes("paho.org"))          return "PAHO";
+  if (src.includes("santepubliquefrance.fr")) return "Santé publique France";
+  if (src.includes("gov.uk"))            return "UKHSA";
+  if (src.includes("aphis.usda.gov"))    return "USDA APHIS";
+  if (src.includes("mohfw.gov.in"))      return "India MoHFW";
+  if (src.includes("gov.br"))            return "Brazil MoH";
+  if (src.includes("cidrap.umn.edu"))    return "CIDRAP";
   if (src.includes("info.dengue.mat.br")) return "InfoDengue";
   if (src.includes("reliefweb.int"))     return "ReliefWeb";
-  if (src.includes("ncdc.gov.ng"))       return "Nigeria CDC";
   if (src.includes("doh.gov.ph"))        return "PH DOH";
   if (src.includes("moph.go.th"))        return "Thailand MOPH";
   if (src.includes("who.int"))           return "WHO";
