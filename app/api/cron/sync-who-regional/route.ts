@@ -699,21 +699,20 @@ export async function GET(req: NextRequest) {
   const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
   const today    = new Date().toISOString().substring(0, 10);
 
-  // Probe ReliefWeb once — 403 means appname not approved; skip all non-custom targets
-  let reliefWebOk = true;
-  try {
-    const probe = await fetch(
-      `${RELIEFWEB_BASE}?appname=${encodeURIComponent(RELIEFWEB_APPNAME)}&limit=1&fields[include][]=title`,
-      { headers: { "User-Agent": "HealthWatch-Global/1.0 (contact@healthwatch-global.com)" },
-        signal: AbortSignal.timeout(8_000) }
-    );
-    if (probe.status === 403) {
-      reliefWebOk = false;
-      console.warn(`[regional] ReliefWeb 403 — appname "${RELIEFWEB_APPNAME}" not approved — awaiting approval at apidoc.reliefweb.int`);
-    }
-  } catch {
-    // Network error — attempt anyway, individual targets will fail gracefully
-  }
+  // ── ReliefWeb HARD-DISABLED — legal (non-commercial terms) ─────────────────────
+  // ReliefWeb's terms of use grant reuse for "personal, non-commercial use" only,
+  // with no right to resell, redistribute, or create derivative works, and its
+  // reports are third-party copyrighted material (WHO/OCHA/NGO partners). HealthWatch
+  // Global is a commercial product, so ingesting ReliefWeb via its API would breach
+  // those terms — the same legal shape as the ProMED cease-and-desist (June 2026).
+  // Verified 2026-07-06: reliefweb.int ToS = non-commercial; DB had 0 ReliefWeb rows.
+  //
+  // Kept hard-off (not just "awaiting appname approval") so registering an approved
+  // appname can NEVER silently start commercial ingestion. The non-fetcher targets
+  // below are retained only as a record of desired coverage, to be wired from the
+  // ORIGINAL government / IGO sources directly (WHO, PAHO, Africa CDC, national
+  // ministries) — which is where legally-clean coverage expansion must come from.
+  const reliefWebOk = false;
 
   // Load existing outbreaks (active + recently deactivated to avoid ghost dups)
   const { data: existing, error: fetchErr } = await supabase
