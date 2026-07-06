@@ -1,4 +1,5 @@
 import { createClient } from "@supabase/supabase-js";
+import { unstable_cache } from "next/cache";
 import * as Sentry from "@sentry/nextjs";
 import { normalizeDisease } from "./disease-data";
 import type { OutbreakTrend } from "./outbreak-trend";
@@ -49,48 +50,85 @@ export interface Outbreak {
   response_phase:      string; // monitoring | investigating | active_response | contained
 }
 
+// The outbreak dataset is identical for every visitor (no user-specific data),
+// but the homepage and several other read routes are force-dynamic (per-request
+// auth), so each request was re-querying Supabase — including a select("*") that
+// pulls all columns. Cache the shared query result so cache hits skip Supabase
+// entirely, cutting egress by orders of magnitude under real traffic (egress
+// quota — see project_supabase_egress_quota). Data only changes when ingestion
+// crons write (a few times/hour at most), so a 5-minute window keeps figures
+// effectively fresh while staying well within the advertised "WHO hourly" cadence.
+// On-demand invalidation is possible later via revalidateTag(OUTBREAKS_CACHE_TAG).
+export const OUTBREAKS_CACHE_TAG = "outbreaks";
+const OUTBREAKS_REVALIDATE = 300; // seconds — must be a statically-analyzable literal
+
+const getLastSyncCached = unstable_cache(
+  async (): Promise<string | null> => {
+    const supabase = getServerClient();
+    const { data, error } = await supabase
+      .from("outbreaks")
+      .select("updated_at")
+      .eq("active", true)
+      .order("updated_at", { ascending: false })
+      .limit(1)
+      .single();
+    if (error) throw error; // propagate — don't let a transient failure cache as "no sync"
+    return data?.updated_at ?? null;
+  },
+  ["outbreaks-last-sync"],
+  { tags: [OUTBREAKS_CACHE_TAG], revalidate: OUTBREAKS_REVALIDATE },
+);
+
 export async function getLastSync(): Promise<string | null> {
-  const supabase = getServerClient();
-
-  const { data } = await supabase
-    .from("outbreaks")
-    .select("updated_at")
-    .eq("active", true)
-    .order("updated_at", { ascending: false })
-    .limit(1)
-    .single();
-
-  return data?.updated_at ?? null;
+  try {
+    return await getLastSyncCached();
+  } catch {
+    return null; // preserve prior lenient behavior on error (uncached)
+  }
 }
 
+const getOutbreaksCached = unstable_cache(
+  async (): Promise<Outbreak[]> => {
+    const supabase = getServerClient();
+
+    const sixtyDaysAgo = new Date(Date.now() - 60 * 86_400_000).toISOString().split("T")[0];
+    const { data, error } = await supabase
+      .from("outbreaks")
+      .select("*")
+      .or(`active.eq.true,and(source_priority.gte.3,updated_at.gte.${sixtyDaysAgo})`)
+      .order("date", { ascending: false });
+
+    if (error) {
+      Sentry.captureException(error, { tags: { lib: "outbreaks", fn: "getOutbreaks" } });
+      throw error; // propagate so unstable_cache does NOT cache an empty result
+    }
+
+    // Deduplicate: keep only the most recent entry per (disease, country) pair.
+    // Use normalizeDisease so "Dengue" and "Dengue fever" hash to the same canonical
+    // name_en ("Dengue fever"), preventing the same outbreak from appearing twice.
+    const seen = new Set<string>();
+    return (data || []).filter((o) => {
+      const diseaseKey = normalizeDisease(o.disease_en || o.disease).name_en.toLowerCase();
+      const countryKey = (o.country_en || o.country).toLowerCase();
+      const key = `${diseaseKey}|${countryKey}`;
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
+  },
+  ["outbreaks-list"],
+  { tags: [OUTBREAKS_CACHE_TAG], revalidate: OUTBREAKS_REVALIDATE },
+);
+
 export async function getOutbreaks(): Promise<Outbreak[]> {
-  const supabase = getServerClient();
-
-  const sixtyDaysAgo = new Date(Date.now() - 60 * 86_400_000).toISOString().split("T")[0];
-  const { data, error } = await supabase
-    .from("outbreaks")
-    .select("*")
-    .or(`active.eq.true,and(source_priority.gte.3,updated_at.gte.${sixtyDaysAgo})`)
-    .order("date", { ascending: false });
-
-  if (error) {
+  try {
+    return await getOutbreaksCached();
+  } catch (error) {
+    // Uncached fallback — the next request retries instead of serving a stale
+    // empty dashboard for the whole revalidate window.
     console.error("Error fetching outbreaks:", error);
-    Sentry.captureException(error, { tags: { lib: "outbreaks", fn: "getOutbreaks" } });
     return [];
   }
-
-  // Deduplicate: keep only the most recent entry per (disease, country) pair.
-  // Use normalizeDisease so "Dengue" and "Dengue fever" hash to the same canonical
-  // name_en ("Dengue fever"), preventing the same outbreak from appearing twice.
-  const seen = new Set<string>();
-  return (data || []).filter((o) => {
-    const diseaseKey = normalizeDisease(o.disease_en || o.disease).name_en.toLowerCase();
-    const countryKey = (o.country_en || o.country).toLowerCase();
-    const key = `${diseaseKey}|${countryKey}`;
-    if (seen.has(key)) return false;
-    seen.add(key);
-    return true;
-  });
 }
 
 
