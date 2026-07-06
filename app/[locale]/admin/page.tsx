@@ -183,11 +183,16 @@ export default async function AdminPage({
   const slackCount     = slackUsers?.length ?? 0;
 
   // Paying vs trial distinction
-  const payingCount    = profiles?.filter((p) => p.stripe_subscription_id).length ?? 0;
+  // "admin_override" is a synthetic sentinel (see migrations 20260630120000/130000) that grants
+  // the founder's own account permanent Pro without a real Stripe subscription — exclude it from
+  // any metric meant to reflect actual paying customers.
+  const isRealStripeSub = (p: { stripe_subscription_id?: string | null }) =>
+    !!p.stripe_subscription_id && p.stripe_subscription_id !== "admin_override";
+  const payingCount    = profiles?.filter(isRealStripeSub).length ?? 0;
   const next7          = new Date(now.getTime() + 7 * 86400_000).toISOString();
   const trialActive    = profiles?.filter((p) => p.plan !== "free" && !p.stripe_subscription_id && p.trial_ends_at && p.trial_ends_at > now.toISOString()) ?? [];
   const trialExpiring7 = trialActive.filter((p) => p.trial_ends_at! <= next7).length;
-  const realMrr        = profiles?.filter((p) => p.stripe_subscription_id).reduce((sum, p) => sum + (PLAN_MRR[p.plan ?? "free"] ?? 0), 0) ?? 0;
+  const realMrr        = profiles?.filter(isRealStripeSub).reduce((sum, p) => sum + (PLAN_MRR[p.plan ?? "free"] ?? 0), 0) ?? 0;
 
   // ── Duplicate outbreak detection (same disease + country, both active) ──────
   const dupMap: Record<string, { id: string; date: string | null }[]> = {};
