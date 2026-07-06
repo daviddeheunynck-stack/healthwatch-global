@@ -778,6 +778,18 @@ export async function GET(req: NextRequest) {
       continue;
     }
 
+    // Annual GHO reference data (custom fetcher + date > 60 days old) is endemic
+    // reference — an annual estimate with a placeholder AAAA-01-01 date, NOT a
+    // time-limited outbreak event. It is ingested INACTIVE so it never shows on the
+    // "active outbreaks" map (misleading for an epidemiologist audience, and it was
+    // the source of a recurring cleanup loop — see project_is_seed_design_conflict).
+    // It is still refreshed + kept is_seed so sync-outbreaks' stale-deactivation
+    // (.neq is_seed true) leaves it alone and no duplicates are created.
+    // ReliefWeb-sourced rows (recent sitreps: dengue/cholera/…) stay active as before.
+    const SIXTY_DAYS_AGO = new Date(Date.now() - 60 * 86_400_000).toISOString().substring(0, 10);
+    const isAnnualRef = !!target.fetcher && found.date < SIXTY_DAYS_AGO;
+    const activeFlag  = !isAnnualRef;
+
     if (existingRow) {
       const isNewer    = found.date > existingRow.date;
       const casesDiff  = found.cases  !== existingRow.cases;
@@ -798,7 +810,8 @@ export async function GET(req: NextRequest) {
           source:          found.source,
           description:     found.description,
           risk_level:      assessRisk(target.disease_en, found.description, found.cases, found.deaths),
-          active:          true,
+          active:          activeFlag,
+          is_seed:         isAnnualRef,
           source_priority: 5,
         })
         .eq("id", existingRow.id)
@@ -812,12 +825,6 @@ export async function GET(req: NextRequest) {
         results.updated++;
       }
     } else {
-      // Annual GHO data (date > 60 days old) is endemic reference data, not a time-limited
-      // outbreak event. Mark as is_seed so sync-outbreaks' stale deactivation doesn't
-      // cycle it out and create duplicates on the next run.
-      const SIXTY_DAYS_AGO = new Date(Date.now() - 60 * 86_400_000).toISOString().substring(0, 10);
-      const isAnnualRef = !!target.fetcher && found.date < SIXTY_DAYS_AGO;
-
       // Safety net: the `existing` map is filtered to active + 90-day window.
       // Annual GHO rows (date 1-3 years ago) can fall outside that window once
       // deactivated, causing the cron to re-insert on every run.
@@ -849,7 +856,7 @@ export async function GET(req: NextRequest) {
           .from("outbreaks")
           .update({ cases: found.cases, deaths: found.deaths, date: found.date,
                     source: found.source, description: found.description,
-                    active: true, is_seed: isAnnualRef,
+                    active: activeFlag, is_seed: isAnnualRef,
                     risk_level: assessRisk(target.disease_en, found.description, found.cases, found.deaths) })
           .eq("id", directCheck.id)
           .lte("source_priority", 5);
@@ -857,7 +864,7 @@ export async function GET(req: NextRequest) {
           log.push({ label: `${target.disease_en}/${target.country_en}`, status: "error", detail: error.message });
           results.errors++;
         } else {
-          log.push({ label: `${target.disease_en}/${target.country_en}`, status: "updated", detail: `reactivated (was missed by cache)` });
+          log.push({ label: `${target.disease_en}/${target.country_en}`, status: "updated", detail: isAnnualRef ? `refreshed (endemic ref, inactive)` : `reactivated (was missed by cache)` });
           results.updated++;
         }
         continue;
@@ -879,7 +886,7 @@ export async function GET(req: NextRequest) {
         date:        found.date,
         source:      found.source,
         description: found.description,
-        active:      true,
+        active:      activeFlag,
         is_seed:     isAnnualRef,
       });
 
