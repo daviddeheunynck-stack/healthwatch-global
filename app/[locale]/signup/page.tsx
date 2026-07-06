@@ -126,7 +126,15 @@ export default function SignupPage() {
     // Redirect straight to the dashboard so the user doesn't see "check your email".
     if (signUpData.session && userId) {
       track("signup_success", { method: "email", locale, autoconfirm: true });
-      await fetch("/api/activate-trial", { method: "POST" }).catch(() => {});
+      // activate-trial reads the session from cookies, which can lag a beat right
+      // after signUp() — retry once so a losing race doesn't silently skip the trial.
+      let activated = false;
+      for (let attempt = 0; attempt < 2 && !activated; attempt++) {
+        if (attempt > 0) await new Promise((r) => setTimeout(r, 600));
+        const res = await fetch("/api/activate-trial", { method: "POST" }).catch(() => null);
+        activated = !!res?.ok;
+      }
+      if (!activated) track("activate_trial_failed", { method: "email", locale });
       // Hard redirect (not router.push) so the Navbar remounts and reads the
       // updated plan from Supabase — client-side nav keeps the old "free" state.
       window.location.assign(`/${locale}`);
