@@ -226,12 +226,14 @@ export default async function AdminPage({
   });
 
   // J+30 Go/No-Go checklist
+  // "Réponse institutionnelle" (email) reste affichée plus bas pour info mais n'est plus
+  // comptabilisée : le canal cold email institutionnel a été fermé, ce critère ne pourra
+  // structurellement plus jamais passer au vert.
   const goNoGo = {
     retention:  returnedUsers.length >= 5,   // ≥5 users returned after 2+ days
     active30:   active30.length >= 3,         // ≥3 active in last 30 days
     paying:     payingCount >= 1,             // ≥1 Stripe payment
     pipeline:   false,                        // manual — pilot active discussion
-    response:   false,                        // manual — institutional email response
   } as const;
 
   return (
@@ -366,7 +368,6 @@ export default async function AdminPage({
               { ok: goNoGo.active30,  label: `≥3 utilisateurs actifs sur 30 jours`, value: `${active30.length} actuellement` },
               { ok: goNoGo.paying,    label: `≥1 paiement Stripe actif`, value: `${payingCount} actuellement` },
               { ok: goNoGo.pipeline,  label: `≥1 pilot en discussion active (14 derniers jours)`, value: "à vérifier manuellement" },
-              { ok: goNoGo.response,  label: `≥1 réponse parmi les emails institutionnels`, value: "à vérifier manuellement" },
             ].map(({ ok, label, value }) => (
               <div key={label} className="flex items-start gap-3">
                 {ok
@@ -381,8 +382,15 @@ export default async function AdminPage({
             ))}
           </div>
           <p className="text-xs text-gray-600 pt-2 border-t border-gray-800">
-            ≥4/5 cochées → continuer sans changer de cap · &lt;3/5 → diagnostiquer l&apos;activation
+            ≥3/4 cochées → continuer sans changer de cap · &lt;2/4 → diagnostiquer l&apos;activation
           </p>
+          <div className="flex items-start gap-3 pt-2 border-t border-gray-800">
+            <div className="w-4 h-4 shrink-0 mt-0.5 flex items-center justify-center text-gray-600">·</div>
+            <div>
+              <p className="text-sm text-gray-500">Réponse parmi les emails institutionnels</p>
+              <p className="text-xs text-gray-600">à vérifier manuellement · hors scoring, canal email fermé</p>
+            </div>
+          </div>
         </div>
       </div>
 
