@@ -391,6 +391,35 @@ export async function GET(req: NextRequest) {
     }
   }
 
+  // ── 4h. Endemic GHO reference rows must never be active ──────────────────────
+  // Annual WHO GHO indicator rows (malaria / measles-incidence / yellow-fever /
+  // leishmaniasis / diphtheria) are reference statistics with placeholder AAAA-01-01
+  // dates — NOT time-limited outbreak events. Since 2026-07-06 sync-who-regional
+  // ingests them active=false (see project_is_seed_design_conflict). If any resurface
+  // as ACTIVE is_seed rows, an ingestion path has regressed and is silently
+  // repopulating the map with annual statistics dressed as current outbreaks — the
+  // exact loop that required manual cleanup on 2026-07-05 (28 rows) and 07-06 (30).
+  // The seed-freshness check (4f) deliberately skips GHO sources, so nothing else
+  // catches this. Allowlisted exception: wild-poliovirus PAK/AFG — a genuine ongoing
+  // PHEIC kept active on purpose.
+  const GHO_INDICATOR_MARKER = "indicator-details";
+  const WPV_POLIO_MARKER     = "poliomyelitis-by-wild-poliovirus";
+  const strayEndemic = (rows ?? []).filter((row) =>
+    row.is_seed &&
+    (row.source ?? "").includes(GHO_INDICATOR_MARKER) &&
+    !(row.source ?? "").includes(WPV_POLIO_MARKER),
+  );
+  if (strayEndemic.length > 0) {
+    const sample = strayEndemic
+      .slice(0, 8)
+      .map((r) => `${r.disease_en ?? r.disease}/${r.country_en ?? r.country}`)
+      .join(", ");
+    needsReview.push({
+      label: `[SEED ACTIF] ${strayEndemic.length} statistique(s) GHO annuelle(s) active(s)`,
+      detail: `Devraient être inactives (référence endémique, pas un foyer en cours) : ${sample}${strayEndemic.length > 8 ? "…" : ""}. Régression d'ingestion — vérifier sync-who-regional (doit ingérer active=false) et les scripts de seed. Désactiver via id=eq.<uuid>.`,
+    });
+  }
+
   // ── 5. Notable movements (top 5 largest absolute change, no anomaly) ──────
   type Movement = { label: string; before: number; after: number; delta: number };
   const movements: Movement[] = [];
