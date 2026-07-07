@@ -182,6 +182,7 @@ async function DashboardContent({ demo = false, urlRegion, urlRisk }: { demo?: b
   let orgMemberAccess = false;
   let hasNoAlerts = false;
   let hasDiseaseAlerts = false;
+  let hasWatchlist = false;
   let currentUserId: string | null = null;
   if (!demo) {
     const supabase = await createClient();
@@ -217,16 +218,18 @@ async function DashboardContent({ demo = false, urlRegion, urlRisk }: { demo?: b
       }
       if (isPaidPlan) {
         diseaseWatchlist = (profile?.disease_watchlist as string[] | null) ?? [];
-        const [tagResult, alertRegionResult, diseaseAlertResult] = await Promise.all([
+        const [tagResult, alertRegionResult, diseaseAlertResult, watchlistResult] = await Promise.all([
           supabase.from("user_country_tags").select("country_en, label").eq("user_id", user.id),
           supabase.from("user_alert_regions").select("region", { count: "exact", head: true }).eq("user_id", user.id),
           supabase.from("user_alert_diseases").select("disease_en", { count: "exact", head: true }).eq("user_id", user.id),
+          supabase.from("user_watchlist").select("outbreak_id", { count: "exact", head: true }).eq("user_id", user.id),
         ]);
         for (const t of (tagResult.data ?? []) as { country_en: string; label: string }[]) {
           countryTagsMap[t.country_en] = t.label;
         }
         hasNoAlerts = (alertRegionResult.count ?? 0) === 0;
         hasDiseaseAlerts = (diseaseAlertResult.count ?? 0) > 0;
+        hasWatchlist = (watchlistResult.count ?? 0) > 0;
       }
       // Org members inherit Team-level access even if their own plan is free
       if (!isPaidPlan) {
@@ -356,13 +359,29 @@ async function DashboardContent({ demo = false, urlRegion, urlRisk }: { demo?: b
 
       {!demo && <PushNotificationBanner locale={locale} />}
 
-      {!demo && isPaid && currentUserId && !hasStripeSubscription && trialEndsAt && (
-        <ProQuickStart locale={locale} userId={currentUserId} hasAlerts={!hasNoAlerts} hasDiseaseAlerts={hasDiseaseAlerts} />
-      )}
-      {!demo && isPaid && hasNoAlerts && <AlertSetupBanner locale={locale} />}
-      {!demo && isPaid && !hasNoAlerts && !hasStripeSubscription && (
-        <DiseaseAlertSetupBanner locale={locale} />
-      )}
+      {(() => {
+        const showQuickStart = isPaid && !!currentUserId && !hasStripeSubscription && !!trialEndsAt;
+        return (
+          <>
+            {!demo && showQuickStart && (
+              <ProQuickStart
+                locale={locale}
+                userId={currentUserId!}
+                hasAlerts={!hasNoAlerts}
+                hasDiseaseAlerts={hasDiseaseAlerts}
+                hasWatchlist={hasWatchlist}
+              />
+            )}
+            {/* ProQuickStart step 1 already covers this exact action for trial users —
+                only show the standalone banner when quick-start isn't rendered, so the
+                two don't stack and repeat the same ask. */}
+            {!demo && isPaid && hasNoAlerts && !showQuickStart && <AlertSetupBanner locale={locale} />}
+            {!demo && isPaid && !hasNoAlerts && !hasStripeSubscription && (
+              <DiseaseAlertSetupBanner locale={locale} />
+            )}
+          </>
+        );
+      })()}
 
       {/* Situation Snapshot — top-priority outbreak at a glance */}
       {stats.topOutbreak && (() => {

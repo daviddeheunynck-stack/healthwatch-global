@@ -15,7 +15,7 @@ env.split("\n").forEach((line) => {
 });
 
 const BOM   = "﻿";
-const clean = (s) => (s || "").replace(BOM, "").trim();
+const clean = (s) => (s || "").replace(BOM, "").trim().replace(/^"(.*)"$/, "$1");
 
 const supabase = createClient(
   clean(vars["NEXT_PUBLIC_SUPABASE_URL"]),

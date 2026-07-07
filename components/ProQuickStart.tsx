@@ -88,14 +88,19 @@ export default function ProQuickStart({
   userId,
   hasAlerts,
   hasDiseaseAlerts = false,
+  hasWatchlist = false,
 }: {
   locale: string;
   userId: string;
   hasAlerts: boolean;
   hasDiseaseAlerts?: boolean;
+  hasWatchlist?: boolean;
 }) {
   const [st, setSt] = useState<State | null>(null);
 
+  // s1/s3/s4 are verified server-side (real DB rows) — only s2 (PDF download) still
+  // relies on a localStorage flag, set by ReportDownloadButton itself after a
+  // download actually succeeds, not by clicking the link here.
   useEffect(() => {
     try {
       const raw = localStorage.getItem(storageKey(userId));
@@ -103,14 +108,14 @@ export default function ProQuickStart({
       setSt({
         s1: hasAlerts || !!saved.s1,
         s2: !!saved.s2,
-        s3: !!saved.s3,
+        s3: hasWatchlist || !!saved.s3,
         s4: hasDiseaseAlerts || !!saved.s4,
         dismissed: !!saved.dismissed,
       });
     } catch {
-      setSt({ s1: hasAlerts, s2: false, s3: false, s4: hasDiseaseAlerts, dismissed: false });
+      setSt({ s1: hasAlerts, s2: false, s3: hasWatchlist, s4: hasDiseaseAlerts, dismissed: false });
     }
-  }, [userId, hasAlerts]);
+  }, [userId, hasAlerts, hasDiseaseAlerts, hasWatchlist]);
 
   const save = (next: State) => {
     localStorage.setItem(storageKey(userId), JSON.stringify(next));
@@ -134,25 +139,28 @@ export default function ProQuickStart({
       onComplete: undefined,
     },
     {
+      // Marked done by ReportDownloadButton itself once a download actually
+      // succeeds (see components/ReportDownloadButton.tsx) — not by clicking
+      // this link, which used to claim completion before anything was downloaded.
       key: "s2" as const,
       label: c.steps[1],
       href: `/${locale}/reports`,
       done: st.s2,
-      onComplete: () => save({ ...st, s2: true }),
+      onComplete: undefined,
     },
     {
       key: "s3" as const,
       label: c.steps[2],
       href: `/${locale}/`,
       done: st.s3,
-      onComplete: () => save({ ...st, s3: true }),
+      onComplete: undefined,
     },
     {
       key: "s4" as const,
       label: c.steps[3],
       href: `/${locale}/account#disease-alerts`,
       done: st.s4,
-      onComplete: () => save({ ...st, s4: true }),
+      onComplete: undefined,
     },
   ];
 

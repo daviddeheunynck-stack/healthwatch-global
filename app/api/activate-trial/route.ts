@@ -68,6 +68,29 @@ export async function POST(_req: NextRequest) {
     return NextResponse.json({ error: "Update failed" }, { status: 500 });
   }
 
+  // Default-enroll every new trial into regional alerts (opt-out, not opt-in).
+  // Before this, 0 of the 11 real signups ever configured an alert region themselves,
+  // so the personalized re-engagement emails the product promises at signup never
+  // fired for anyone. "medium" balances enough signal to prove value during the
+  // 14-day trial against flooding a brand-new inbox. Best-effort: a failure here
+  // shouldn't fail trial activation itself.
+  const { error: alertsErr } = await admin
+    .from("user_alert_regions")
+    .upsert(
+      ["africa", "asia", "americas", "europe", "oceania"].map((region) => ({
+        user_id: user.id,
+        region,
+        min_risk: "medium",
+      })),
+      { onConflict: "user_id,region", ignoreDuplicates: true }
+    );
+  if (alertsErr) {
+    console.error("[activate-trial] default alert enrollment failed:", alertsErr);
+    Sentry.captureException(new Error(`[activate-trial] alert enrollment failed: ${alertsErr.message}`), {
+      tags: { user_id: user.id },
+    });
+  }
+
   console.log(`[activate-trial] Trial activated until ${trialEndsAt}`);
   return NextResponse.json({ activated: true, trial_ends_at: trialEndsAt });
 }

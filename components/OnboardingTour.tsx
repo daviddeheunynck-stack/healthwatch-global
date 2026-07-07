@@ -19,6 +19,7 @@ const COPY: Record<string, {
   seePlans: string;
   pilotNudge: string;
   pilotLink: string;
+  alertsActiveNote: string;
   steps: [Step, Step, Step, Step];
 }> = {
   fr: {
@@ -29,6 +30,7 @@ const COPY: Record<string, {
     seePlans: "Voir les offres →",
     pilotNudge: "Vous représentez une organisation ?",
     pilotLink: "Programme pilote gratuit →",
+    alertsActiveNote: "Vos alertes régionales sont déjà actives (risque moyen et élevé) — vous recevrez un email dès qu'un nouveau foyer sera publié.",
     steps: [
       {
         title: "Bienvenue sur HealthWatch Global 🌍",
@@ -60,6 +62,7 @@ const COPY: Record<string, {
     seePlans: "See plans →",
     pilotNudge: "Representing an organization?",
     pilotLink: "Free institutional pilot →",
+    alertsActiveNote: "Your regional alerts are already active (medium and high risk) — you'll get an email as soon as a new outbreak is published.",
     steps: [
       {
         title: "Welcome to HealthWatch Global 🌍",
@@ -91,6 +94,7 @@ const COPY: Record<string, {
     seePlans: "Ver planes →",
     pilotNudge: "¿Representa una organización?",
     pilotLink: "Piloto institucional gratuito →",
+    alertsActiveNote: "Sus alertas regionales ya están activas (riesgo medio y alto) — recibirá un email en cuanto se publique un nuevo brote.",
     steps: [
       {
         title: "Bienvenido a HealthWatch Global 🌍",
@@ -122,6 +126,7 @@ const COPY: Record<string, {
     seePlans: "← عرض الخطط",
     pilotNudge: "هل تمثل منظمة؟",
     pilotLink: "← برنامج تجريبي مؤسسي مجاني",
+    alertsActiveNote: "تنبيهاتك الإقليمية مفعّلة بالفعل (الخطر المتوسط والمرتفع) — ستصلك رسالة بريد إلكتروني بمجرد نشر تفشٍّ جديد.",
     steps: [
       {
         title: "مرحباً بك في HealthWatch Global 🌍",
@@ -153,6 +158,7 @@ const COPY: Record<string, {
     seePlans: "Lihat paket →",
     pilotNudge: "Mewakili sebuah organisasi?",
     pilotLink: "Program pilot institusional gratis →",
+    alertsActiveNote: "Peringatan regional Anda sudah aktif (risiko sedang dan tinggi) — Anda akan menerima email segera setelah wabah baru dipublikasikan.",
     steps: [
       {
         title: "Selamat datang di HealthWatch Global 🌍",
@@ -290,13 +296,18 @@ export default function OnboardingTour({ isPaid = false }: { isPaid?: boolean })
           {isLast ? (
             <div className="flex flex-col items-center gap-3 w-full">
               {isPaid ? (
-                <button
-                  onClick={() => dismiss("complete")}
-                  className="w-full flex items-center justify-center gap-2 bg-red-600 hover:bg-red-500 text-white font-bold py-3 rounded-xl transition-all text-sm"
-                >
-                  {c.finish}
-                  <ArrowRight className="w-4 h-4" />
-                </button>
+                <>
+                  <button
+                    onClick={() => dismiss("complete")}
+                    className="w-full flex items-center justify-center gap-2 bg-red-600 hover:bg-red-500 text-white font-bold py-3 rounded-xl transition-all text-sm"
+                  >
+                    {c.finish}
+                    <ArrowRight className="w-4 h-4" />
+                  </button>
+                  <p className="text-xs text-gray-500 text-center leading-relaxed">
+                    {c.alertsActiveNote}
+                  </p>
+                </>
               ) : (
                 <>
                   <CheckoutButton

@@ -32,6 +32,19 @@ interface Props {
   isPaid: boolean;
   locale: string;
   lockedLabel: string;
+  userId?: string;
+}
+
+// Same storage key/shape as components/ProQuickStart.tsx — marks its
+// "download a PDF report" step done only once a download actually succeeds.
+function markQuickStartReportDone(userId: string) {
+  try {
+    const key = `hw_qs_${userId}_v1`;
+    const saved = JSON.parse(localStorage.getItem(key) ?? "{}");
+    localStorage.setItem(key, JSON.stringify({ ...saved, s2: true }));
+  } catch {
+    // Best-effort UI nicety — never block the download over a storage error.
+  }
 }
 
 export default function ReportDownloadButton({
@@ -40,6 +53,7 @@ export default function ReportDownloadButton({
   isPaid,
   locale,
   lockedLabel,
+  userId,
 }: Props) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -79,6 +93,7 @@ export default function ReportDownloadButton({
       window.open(url, "_blank");
       setTimeout(() => URL.revokeObjectURL(url), 10_000);
       track("pdf_download", { region: data.region, locale });
+      if (userId) markQuickStartReportDone(userId);
     } catch {
       setError(DOWNLOAD_ERROR[locale] ?? DOWNLOAD_ERROR.en);
     } finally {

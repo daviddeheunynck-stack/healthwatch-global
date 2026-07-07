@@ -217,6 +217,7 @@ async function ReportsContent() {
                   isPaid={isPaid}
                   locale={locale}
                   lockedLabel={pc.lockedDownload}
+                  userId={user?.id}
                 />
               </div>
 
