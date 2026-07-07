@@ -48,6 +48,23 @@ export async function proxy(request: NextRequest) {
 export const config = {
   // Exclude: api/*, _next/*, _vercel/*, auth/*, widget, Next.js special routes, static files
   matcher: [
-    "/((?!api|_next|_vercel|auth|widget|apple-icon|icon|opengraph-image|manifest\\.webmanifest|robots\\.txt|sitemap\\.xml|.*\\..*).*)",
+    {
+      source:
+        "/((?!api|_next|_vercel|auth|widget|apple-icon|icon|opengraph-image|manifest\\.webmanifest|robots\\.txt|sitemap\\.xml|.*\\..*).*)",
+      // Skip Link prefetch requests. They still carry the browser's cookies, so
+      // they'd otherwise call supabase.auth.getUser() (and its refresh) exactly
+      // like a real navigation. Supabase refresh tokens are one-time-use: a
+      // prefetch racing a real navigation (or two overlapping prefetches — this
+      // page alone has several visible <Link>s) can each read the same
+      // not-yet-rotated refresh token, and whichever refresh loses gets an
+      // invalid_grant, writing a dead session cookie back to the browser. The
+      // next real request (or the next refresh) then finds no valid session
+      // and bounces to /login. Prefetches don't need a fresh session, so just
+      // don't run proxy for them.
+      missing: [
+        { type: "header", key: "next-router-prefetch" },
+        { type: "header", key: "purpose", value: "prefetch" },
+      ],
+    },
   ],
 };
