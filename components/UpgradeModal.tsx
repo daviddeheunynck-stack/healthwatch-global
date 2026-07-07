@@ -28,6 +28,8 @@ const COPY: Record<string, {
   ctaExpired: string;
   trial: string;
   trialExpired: string;
+  budgetNote: string;
+  budgetLink: string;
 }> = {
   fr: {
     pdf:      { title: "Rapports PDF régionaux",      desc: "Téléchargez des rapports épidémiologiques prêts à partager avec vos équipes ou bailleurs.",   plan: "Disponible — Pro" },
@@ -47,6 +49,8 @@ const COPY: Record<string, {
     ctaExpired:  "S'abonner à Pro →",
     trial:       "14 jours gratuits · Sans carte bancaire",
     trialExpired: `À partir de ${PRICE_DISPLAY.fr.proMonthly}/mois ou ${PRICE_DISPLAY.fr.proAnnual}/an`,
+    budgetNote:  "Budget limité (ONG, pays à revenu faible ou moyen) ?",
+    budgetLink:  "Nous écrire →",
   },
   en: {
     pdf:      { title: "Regional PDF reports",     desc: "Download shareable epidemiological reports ready for your teams or donors.",             plan: "Available — Pro" },
@@ -66,6 +70,8 @@ const COPY: Record<string, {
     ctaExpired:  "Subscribe to Pro →",
     trial:       "14 days free · No credit card",
     trialExpired: `From ${PRICE_DISPLAY.en_eur.proMonthly}/month or ${PRICE_DISPLAY.en_eur.proAnnual}/year`,
+    budgetNote:  "Limited budget (NGO, low or middle-income country)?",
+    budgetLink:  "Get in touch →",
   },
   es: {
     pdf:      { title: "Informes PDF regionales",     desc: "Descargue informes epidemiológicos listos para compartir con su equipo o financiadores.",    plan: "Disponible — Pro" },
@@ -85,6 +91,8 @@ const COPY: Record<string, {
     ctaExpired:  "Suscribirse a Pro →",
     trial:       "14 días gratis · Sin tarjeta",
     trialExpired: `Desde ${PRICE_DISPLAY.es.proMonthly}/mes o ${PRICE_DISPLAY.es.proAnnual}/año`,
+    budgetNote:  "¿Presupuesto limitado (ONG, país de renta baja o media)?",
+    budgetLink:  "Escríbanos →",
   },
   ar: {
     pdf:      { title: "تقارير PDF إقليمية",           desc: "حمّل تقارير وبائية جاهزة للمشاركة مع فرقك أو المموّلين بنقرة واحدة.",            plan: "متاح — Pro" },
@@ -104,6 +112,8 @@ const COPY: Record<string, {
     ctaExpired:  "اشترك في Pro ←",
     trial:       "14 يوماً مجاناً · بدون بطاقة بنكية",
     trialExpired: `من ${PRICE_DISPLAY.ar.proMonthly}/شهر أو ${PRICE_DISPLAY.ar.proAnnual}/سنة`,
+    budgetNote:  "ميزانية محدودة (منظمة غير حكومية، دولة منخفضة أو متوسطة الدخل)؟",
+    budgetLink:  "← راسلنا",
   },
   id: {
     pdf:      { title: "Laporan PDF regional",        desc: "Unduh laporan epidemiologi siap dibagikan ke tim atau donor Anda.",                      plan: "Tersedia — Pro" },
@@ -123,6 +133,8 @@ const COPY: Record<string, {
     ctaExpired:  "Berlangganan Pro →",
     trial:       "14 hari gratis · Tanpa kartu kredit",
     trialExpired: `Mulai ${PRICE_DISPLAY.id.proMonthly}/bulan atau ${PRICE_DISPLAY.id.proAnnual}/tahun`,
+    budgetNote:  "Anggaran terbatas (LSM, negara berpenghasilan rendah atau menengah)?",
+    budgetLink:  "Hubungi kami →",
   },
 };
 
@@ -271,6 +283,16 @@ export default function UpgradeModal({ feature, onClose }: Props) {
             className="text-xs text-gray-500 hover:text-gray-400 underline underline-offset-2"
           >
             {locale === "fr" ? "Voir tous les plans →" : locale === "es" ? "Ver todos los planes →" : locale === "ar" ? "← عرض جميع الخطط" : locale === "id" ? "Lihat semua paket →" : "See all plans →"}
+          </Link>
+        </p>
+        <p className="text-center text-xs text-gray-600 mt-2">
+          {c.budgetNote}{" "}
+          <Link
+            href={`/${locale}/contact`}
+            onClick={() => { track("upgrade_modal_budget_click", { feature, locale }); onClose(); }}
+            className="text-gray-500 hover:text-gray-400 underline underline-offset-2"
+          >
+            {c.budgetLink}
           </Link>
         </p>
       </div>

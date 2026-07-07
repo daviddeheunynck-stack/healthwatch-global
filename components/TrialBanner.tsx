@@ -16,6 +16,8 @@ const COPY: Record<string, {
   today: string;
   pilotNudge: string;
   pilotLink: string;
+  budgetNudge: string;
+  budgetLink: string;
 }> = {
   fr: {
     title: (d) => d <= 0 ? "Votre essai Pro se termine aujourd'hui" : d === 1 ? "Il reste 1 jour sur votre essai Pro" : `Il reste ${d} jours sur votre essai Pro`,
@@ -24,6 +26,8 @@ const COPY: Record<string, {
     today: "Ajoutez un moyen de paiement maintenant pour ne pas perdre l'accès.",
     pilotNudge: "Vous représentez une organisation ?",
     pilotLink: "Programme pilote gratuit →",
+    budgetNudge: "Budget limité (ONG, pays à revenu faible ou moyen) ?",
+    budgetLink: "Nous écrire →",
   },
   en: {
     title: (d) => d <= 0 ? "Your Pro trial ends today" : d === 1 ? "1 day left on your Pro trial" : `${d} days left on your Pro trial`,
@@ -32,6 +36,8 @@ const COPY: Record<string, {
     today: "Add a payment method now to avoid losing access.",
     pilotNudge: "Representing an organization?",
     pilotLink: "Free institutional pilot →",
+    budgetNudge: "Limited budget (NGO, low or middle-income country)?",
+    budgetLink: "Get in touch →",
   },
   es: {
     title: (d) => d <= 0 ? "Su prueba Pro termina hoy" : d === 1 ? "Queda 1 día en su prueba Pro" : `Quedan ${d} días en su prueba Pro`,
@@ -40,6 +46,8 @@ const COPY: Record<string, {
     today: "Añada un método de pago ahora para no perder el acceso.",
     pilotNudge: "¿Representa una organización?",
     pilotLink: "Piloto institucional gratuito →",
+    budgetNudge: "¿Presupuesto limitado (ONG, país de renta baja o media)?",
+    budgetLink: "Escríbanos →",
   },
   ar: {
     title: (d) => d <= 0 ? "تجربتك Pro تنتهي اليوم" : d === 1 ? "يوم واحد متبقٍّ في تجربة Pro" : `${d} أيام متبقية في تجربة Pro`,
@@ -48,6 +56,8 @@ const COPY: Record<string, {
     today: "أضف طريقة دفع الآن لتجنب فقدان الوصول.",
     pilotNudge: "هل تمثل منظمة؟",
     pilotLink: "← برنامج تجريبي مؤسسي مجاني",
+    budgetNudge: "ميزانية محدودة (منظمة غير حكومية، دولة منخفضة أو متوسطة الدخل)؟",
+    budgetLink: "← راسلنا",
   },
   id: {
     title: (d) => d <= 0 ? "Uji coba Pro Anda berakhir hari ini" : d === 1 ? "Sisa 1 hari uji coba Pro Anda" : `Sisa ${d} hari uji coba Pro Anda`,
@@ -56,6 +66,8 @@ const COPY: Record<string, {
     today: "Tambahkan metode pembayaran sekarang agar tidak kehilangan akses.",
     pilotNudge: "Mewakili sebuah organisasi?",
     pilotLink: "Program pilot institusional gratis →",
+    budgetNudge: "Anggaran terbatas (LSM, negara berpenghasilan rendah atau menengah)?",
+    budgetLink: "Hubungi kami →",
   },
 };
 
@@ -136,16 +148,28 @@ export default function TrialBanner({ trialEndsAt, locale, hasBilling }: Props) 
             )}
           </div>
           {!isCritical && (
-            <p className="text-xs text-gray-600">
-              {c.pilotNudge}{" "}
-              <Link
-                href={`/${locale}/pilot`}
-                className="text-gray-500 hover:text-gray-300 underline underline-offset-2 transition-colors"
-                onClick={() => track("trial_banner_pilot_click", { days_left: daysLeft, locale })}
-              >
-                {c.pilotLink}
-              </Link>
-            </p>
+            <>
+              <p className="text-xs text-gray-600">
+                {c.pilotNudge}{" "}
+                <Link
+                  href={`/${locale}/pilot`}
+                  className="text-gray-500 hover:text-gray-300 underline underline-offset-2 transition-colors"
+                  onClick={() => track("trial_banner_pilot_click", { days_left: daysLeft, locale })}
+                >
+                  {c.pilotLink}
+                </Link>
+              </p>
+              <p className="text-xs text-gray-600">
+                {c.budgetNudge}{" "}
+                <Link
+                  href={`/${locale}/contact`}
+                  className="text-gray-500 hover:text-gray-300 underline underline-offset-2 transition-colors"
+                  onClick={() => track("trial_banner_budget_click", { days_left: daysLeft, locale })}
+                >
+                  {c.budgetLink}
+                </Link>
+              </p>
+            </>
           )}
         </div>
       </div>
