@@ -8,7 +8,7 @@ import { getIncidenceRate } from "@/lib/population-data";
 import type { Outbreak } from "@/lib/outbreaks";
 import { getLocalizedDisease, getLocalizedCountry, getLocalizedDescription, sourceStatus, sourceName, staleOutbreakDays } from "@/lib/outbreaks";
 import { getResponseGuidance, RESPONSE_ACTIONS } from "@/lib/response-guidance";
-import { diseaseToSlug, normalizeDisease } from "@/lib/disease-data";
+import { diseaseToSlug, matchDisease } from "@/lib/disease-data";
 import Link from "next/link";
 import type { OutbreakTrend } from "@/lib/outbreak-trend";
 import RiskBadge from "@/components/RiskBadge";
@@ -589,13 +589,17 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlis
                 </span>
               )}
             </div>
-            <Link
-              href={`/${locale}/disease/${diseaseToSlug(normalizeDisease(outbreak.disease_en || outbreak.disease).name_en)}`}
-              onClick={onClose}
-              className="text-xl font-bold text-white leading-tight hover:text-red-400 transition-colors"
-            >
-              {disease}
-            </Link>
+            {matchDisease(outbreak.disease_en || outbreak.disease).matched ? (
+              <Link
+                href={`/${locale}/disease/${diseaseToSlug(matchDisease(outbreak.disease_en || outbreak.disease).info.name_en)}`}
+                onClick={onClose}
+                className="text-xl font-bold text-white leading-tight hover:text-red-400 transition-colors"
+              >
+                {disease}
+              </Link>
+            ) : (
+              <p className="text-xl font-bold text-white leading-tight">{disease}</p>
+            )}
             <div className="flex items-center gap-1.5 text-gray-400 text-sm">
               <Globe className="w-3.5 h-3.5 shrink-0" />
               <span>{country}</span>

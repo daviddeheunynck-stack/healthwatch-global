@@ -13,7 +13,7 @@ import { getEpiWeek } from "@/lib/epi-week";
 type SortKey = "risk" | "cases" | "deaths" | "cfr" | "date";
 type SortDir = "asc" | "desc";
 import { getLocalizedDisease, getLocalizedCountry, isNewOutbreak, staleOutbreakDays, freshOutbreakHours, sourceStatus, sourceName, computeRiskScore } from "@/lib/outbreaks";
-import { diseaseToSlug, normalizeDisease } from "@/lib/disease-data";
+import { diseaseToSlug, matchDisease } from "@/lib/disease-data";
 import { countryToSlug } from "@/lib/country-utils";
 import type { Outbreak } from "@/lib/outbreaks";
 import type { OutbreakTrend } from "@/lib/outbreak-trend";
@@ -1134,13 +1134,17 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
                 >
                   <td className="px-4 py-3 font-medium text-white">
                     <div className="flex items-center gap-1.5 flex-wrap">
-                      <Link
-                        href={`/${locale}/disease/${diseaseToSlug(normalizeDisease(outbreak.disease_en || outbreak.disease).name_en)}`}
-                        onClick={(e) => e.stopPropagation()}
-                        className="hover:text-red-400 transition-colors"
-                      >
-                        {getLocalizedDisease(outbreak, locale)}
-                      </Link>
+                      {matchDisease(outbreak.disease_en || outbreak.disease).matched ? (
+                        <Link
+                          href={`/${locale}/disease/${diseaseToSlug(matchDisease(outbreak.disease_en || outbreak.disease).info.name_en)}`}
+                          onClick={(e) => e.stopPropagation()}
+                          className="hover:text-red-400 transition-colors"
+                        >
+                          {getLocalizedDisease(outbreak, locale)}
+                        </Link>
+                      ) : (
+                        <span>{getLocalizedDisease(outbreak, locale)}</span>
+                      )}
                       {isNewOutbreak(outbreak) && (
                         <span className="inline-flex items-center text-[10px] font-bold px-1.5 py-0.5 rounded bg-green-900/50 border border-green-700/50 text-green-300 shrink-0 animate-pulse">
                           {{ fr: "NOUVEAU", en: "NEW", es: "NUEVO", ar: "جديد", id: "BARU" }[locale] ?? "NEW"}
