@@ -1,5 +1,7 @@
 # Emails institutionnels — Vague 3 — 7–11 juillet 2026
 
+**❌ ABANDONNÉ — décision de David le 6 juillet 2026.** Il préfère être réactif sur LinkedIn plutôt que d'envoyer des emails potentiellement jamais lus. Ne pas envoyer, ne pas reproposer. Si ces organisations (Oxfam, CARE, Samaritan's Purse, World Vision) sont pertinentes, chercher un contact LinkedIn plutôt qu'un template email. Voir `feedback_channel_preference_linkedin_over_email` (mémoire).
+
 **À envoyer entre le 7 et 11 juillet** — 12–16 jours après le lancement PH.  
 **Hook :** métriques J+12 depuis Supabase + dashboard PH (pas "just launched" — trop loin ; écrire "two weeks in" ou "depuis le lancement").  
 **Recherche LinkedIn :** 30 min le matin du 7 juillet — même protocole que Vague 1 et 2.
@@ -38,8 +40,8 @@ For Oxfam's emergency health teams operating in Yemen, DRC, Sudan, and other hig
 
 We're offering a 30-day institutional pilot: 5 seats, full onboarding — €250/month if your team wants to continue. No procurement required to start.
 
-Direct link to current Cholera surveillance in your active zones:
-healthwatch-global.com/en/disease/cholera
+Direct link to the active Ebola (Bundibugyo virus) PHEIC in DRC:
+healthwatch-global.com/en/disease/ebola-virus-disease
 
 Best,
 David Deheunynck
@@ -62,8 +64,8 @@ For CARE's health teams in Sudan, Ethiopia, Bangladesh, and other crisis context
 
 We're offering a 30-day institutional pilot: 5 seats, full onboarding — €250/month if your team wants to continue. No procurement required to start.
 
-Direct link to current Cholera and Mpox surveillance:
-healthwatch-global.com/en/disease/cholera
+Direct link to current Mpox surveillance in Africa:
+healthwatch-global.com/en/disease/mpox-monkeypox
 
 Best,
 David Deheunynck
@@ -110,7 +112,7 @@ For World Vision's health specialists operating across Sub-Saharan Africa, South
 
 We're offering a 30-day institutional pilot: 5 seats, full onboarding — €250/month if your team wants to continue. No procurement required to start.
 
-Direct link to current Dengue and Cholera surveillance in your active regions:
+Direct link to the active Dengue surge in the Americas:
 healthwatch-global.com/en/disease/dengue-fever
 
 Best,
@@ -126,10 +128,13 @@ HealthWatch Global — healthwatch-global.com
 | `[X] signups` | Supabase dashboard | 7 juillet matin |
 | `[First name]` (×4) | LinkedIn — 30 min de recherche | 7 juillet matin |
 
-**Compte signups au 2 juillet 2026 : 17 utilisateurs (7 Pro, 10 Free).**
-À vérifier le 7 juillet matin via Supabase. Utiliser le chiffre exact de ce jour-là.
+**Compte signups au 4 juillet 2026 (vérifié via Supabase) : 17 utilisateurs (8 Pro, 9 Free).** Inchangé en volume depuis le 2 juillet (juste une conversion Free→Pro). À revérifier le 7 juillet matin, utiliser le chiffre exact de ce jour-là.
 
-**Note données Choléra :** Au 2 juillet, toutes les entrées choléra sont `active=false` (dernière : Haïti, 24 mai, 28 500 cas). La page `/en/disease/cholera` montre des données historiques mais aucun foyer "actif". Le libellé "current Cholera surveillance" reste valide (surveillance = capacité, pas forcément foyer actif), mais vérifier avec WHO/PAHO avant d'envoyer si une reprise récente existe. Alternative : pointer vers `/en/disease/mpox-monkeypox` (DRC, 37 503 cas — actif) ou `/en/outbreak/[id-ebola-drc]` pour Oxfam/CARE opérant en zones touchées.
+**Note données Choléra — RÉSOLU (vérifié 4 juillet via Supabase) :** toutes les entrées choléra restent `active=false` (dernière : Haïti, 24 mai, 28 500 cas). Les emails Oxfam, CARE et World Vision ont été corrigés pour ne plus mentionner le choléra :
+- Oxfam → lien vers l'Ebola (Bundibugyo virus) PHEIC actif en RDC (`/en/disease/ebola-virus-disease`, confirmé `is_pheic:true`, `active:true`, 896 cas/232 décès, DON608)
+- CARE → lien vers le Mpox actif en Afrique (`/en/disease/mpox-monkeypox`, 37 503 cas, actif)
+- World Vision → lien Dengue conservé seul, retiré la mention choléra (Dengue Amériques actif, 178 075 cas)
+- Samaritan's Purse → inchangé, l'Ebola Bundibugyo PHEIC/RDC est bien actif et confirmé, aucune correction nécessaire
 
 Note : à J+12-16, ne pas écrire "just launched" — utiliser "two weeks in" ou "since our launch on June 25."
 

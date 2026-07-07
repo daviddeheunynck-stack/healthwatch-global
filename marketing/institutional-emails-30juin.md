@@ -259,6 +259,8 @@ HealthWatch Global — healthwatch-global.com
 
 ## Relance J+10 — 10 juillet 2026
 
+**❌ ABANDONNÉ — décision de David le 6 juillet 2026.** Il préfère être réactif sur LinkedIn plutôt que d'envoyer des emails potentiellement jamais lus. Ne pas envoyer, ne pas reproposer. Voir `feedback_channel_preference_linkedin_over_email` (mémoire).
+
 Une seule ligne, jamais deux relances :
 
 - **EN :** "Hi [First name], just following up on my note from June 30 — happy to activate your pilot access if it would be useful for your team."
