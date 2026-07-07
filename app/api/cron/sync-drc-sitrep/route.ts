@@ -1,7 +1,10 @@
-// Weekly (Mon 07:00 UTC): detects new WHO AFRO Ebola DRC situation reports,
-// downloads the PDF, extracts DRC cumulative case/death figures, and updates the DB.
+// Daily (07:00 UTC): originally detected new WHO AFRO Ebola DRC situation reports via
+// ReliefWeb, downloaded the PDF, extracted DRC cumulative case/death figures, and updated
+// the DB. Sitrep detection is now permanently disabled (see fetchLatestSitrep — legal,
+// ReliefWeb ToS) so steps 2+ never run; only the Step-1 "Ebola DRC row missing" safety
+// check still fires. Ebola DRC figures are kept fresh via sync-who-afro (WHO Disease
+// Outbreak News) instead.
 // source_priority: 10 — highest tier, never overwritten by automated crons.
-// Falls back to a manual-notification email if PDF parsing fails.
 
 import { NextRequest, NextResponse } from "next/server";
 import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
@@ -373,27 +376,6 @@ function emailManualNeeded(num: number, sitrepUrl: string) {
   };
 }
 
-function emailNoSitrep() {
-  return {
-    subject: `⚠️ Ébola RDC — aucun nouveau sitrep détecté`,
-    html: `
-      <div style="font-family:sans-serif;max-width:600px;margin:0 auto;color:#1f2937">
-        <h2 style="border-bottom:2px solid #f59e0b;padding-bottom:8px;color:#b45309">
-          ⚠️ Ébola RDC — sitrep non détecté automatiquement
-        </h2>
-        <p>ReliefWeb n'a pas retourné de nouveau sitrep MVB correspondant. Vérification manuelle conseillée.</p>
-        <p>
-          <a href="https://reliefweb.int/updates?search=ebola+congo+sitrep" style="display:inline-block;background:#dc2626;color:white;padding:8px 16px;border-radius:6px;text-decoration:none;font-weight:bold;margin-right:8px">
-            🌐 ReliefWeb Ébola DRC
-          </a>
-          <a href="${ADMIN_PANEL_URL}" style="display:inline-block;background:#111827;color:white;padding:8px 16px;border-radius:6px;text-decoration:none;font-weight:bold">
-            ⚙️ Admin
-          </a>
-        </p>
-      </div>`,
-  };
-}
-
 // ── 5. Main handler ───────────────────────────────────────────────────────────
 
 export async function GET(req: NextRequest) {
@@ -439,11 +421,10 @@ export async function GET(req: NextRequest) {
     const detail = latest?.reliefwebError ? "ReliefWeb unavailable" : "no_sitrep_found";
     console.log(`[drc-sitrep] ${detail}`);
     await logCronRun(supabase, "sync-drc-sitrep", latest?.reliefwebError ? "error" : "no_data", 0, detail);
-    // Only alert for genuine "no sitrep" — skip email when ReliefWeb is just unreachable.
-    if (!latest?.reliefwebError && adminEmail && isRealProduction) {
-      const { subject, html } = emailNoSitrep();
-      await sendEmail(adminEmail, subject, html);
-    }
+    // No email: fetchLatestSitrep() is permanently disabled (legal, see fetchLatestSitrep's
+    // own comment) and can never return non-null, so this branch fires on every single run —
+    // "no sitrep found" would stop being a signal and just become daily spam. Ebola DRC
+    // figures are kept fresh via WHO Disease Outbreak News through sync-who-afro instead.
     return NextResponse.json({ status: detail });
   }
 
