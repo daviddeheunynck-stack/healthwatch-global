@@ -1916,3 +1916,67 @@ Posts marquants repérés au fil/notifications (pour référence, certains hors 
 - **Annals of Epidemiology** — 6j (hors 48h) — publication sur systems thinking en science de l'implémentation.
 
 Aucun feedback produit substantiel reçu cette session (rien à ajouter à product-feedback.md).
+
+---
+
+## Emails de relance produit — audit onboarding — 7 juillet 2026
+
+Contexte : l'audit du 6-7 juillet a trouvé que 0/11 vrais utilisateurs n'avaient jamais configuré d'alerte régionale (tables vides en prod), expliquant le pattern "lit les emails pendant des semaines, ne revient jamais". Fix livré (commit `f1cce66`, enrollment par défaut à l'activation du trial) + backfill manuel sur les comptes réels encore en trial actif (jalal.nourlil, anakeseemmanuel8, iinnerre, saeed.mohamood — mayeul.peltier exclu, trial expiré le 6/07). Détail dans project_activation_funnel_audit et project_onboarding_alert_backfill (mémoire). Ces 3 emails sont **rédigés, prêts à envoyer par David lui-même** (pas de call proposé, pas de faux témoignage, angle honnête sur le bug trouvé).
+
+### saeed.mohamood@gmail.com — EN — trial actif jusqu'au 16 juillet, maintenant enrôlé
+
+**Subject:** A real gap in your trial, just fixed
+
+> Hi Saeed,
+>
+> A quick, honest note about your HealthWatch Global trial.
+>
+> While reviewing our alert system, we found that regional alerts had never actually been turned on for your account, even though that's meant to be part of the trial. That's fixed now. Your account is set up across all five regions, so you'll get an email as soon as a new medium or high risk outbreak is published.
+>
+> Worth checking back next time one comes through.
+>
+> If anything about the dashboard felt confusing or just not useful so far, I'd genuinely like to hear it. No pressure either way.
+>
+> healthwatch-global.com
+>
+> David
+
+### anakeseemmanuel8@gmail.com — FR — trial actif jusqu'au 19 juillet, maintenant enrôlé
+
+**Objet :** Un vrai bug sur votre essai, corrigé
+
+> Bonjour,
+>
+> Un mot rapide et honnête sur votre essai HealthWatch Global.
+>
+> En vérifiant notre système d'alertes, on s'est rendu compte que les alertes régionales n'avaient en fait jamais été activées sur votre compte, alors que ça fait partie de ce que l'essai est censé inclure. C'est corrigé maintenant. Votre compte est configuré sur les 5 régions, vous recevrez donc un email dès qu'un nouveau foyer à risque moyen ou élevé sera publié.
+>
+> Ça vaut le coup d'y jeter un œil la prochaine fois qu'une alerte arrive.
+>
+> Si quelque chose vous a semblé confus ou peu utile jusqu'ici, ça m'intéresse vraiment de le savoir. Sans aucune pression.
+>
+> healthwatch-global.com
+>
+> David
+
+**Pas de prénom utilisé** : contrairement à mayeul.peltier (prénom.nom), l'adresse "anakeseemmanuel8" ne permet pas d'isoler un prénom avec confiance suffisante — pas trouvé non plus dans linkedin-contacts.md. Salutation générique délibérée plutôt qu'un prénom deviné et potentiellement faux.
+
+### mayeul.peltier@gmail.com — FR — trial expiré le 6 juillet (hier), non enrôlé, angle feedback
+
+**Objet :** Votre essai est terminé, une question rapide
+
+> Bonjour Mayeul,
+>
+> Votre essai Pro sur HealthWatch Global s'est terminé hier.
+>
+> En creusant notre système d'alertes cette semaine, on a trouvé un vrai problème : les alertes régionales n'avaient en fait jamais été activées pour personne à l'inscription, vous y compris. Ce n'était donc pas un manque d'intérêt de votre part, la fonctionnalité n'a simplement jamais tourné. C'est corrigé maintenant pour les nouveaux inscrits.
+>
+> Ça m'intéresse d'avoir votre avis honnête. Qu'est-ce qui aurait rendu le tableau de bord plus utile pendant ces deux semaines ? Ou plus simplement, qu'est-ce qui vous a manqué pour revenir ?
+>
+> Si ça vous dit de rouvrir l'accès pour retester avec les alertes actives cette fois, dites-le-moi.
+>
+> David
+
+**Différence délibérée avec les deux autres** : pas enrôlé dans les alertes (trial terminé, ça n'aurait servi à rien), donc pas de promesse d'alertes actives — uniquement une demande de retour honnête, avec une porte ouverte non engageante en fin de message plutôt qu'un CTA produit.
+
+**Double-check (les 3 messages) :** ton honnête/transparent sur le bug trouvé, aucun call proposé, aucun témoignage fabriqué, longueur courte (80-100 mots), pas de tiret cadratin, paragraphes aérés.
