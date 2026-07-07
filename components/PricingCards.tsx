@@ -58,7 +58,7 @@ const COPY: Record<string, {
   en: {
     toggleMonthly: "Monthly",
     toggleAnnual: "Annual",
-    saveLabel: "-20%",
+    saveLabel: "-28%",
     perMonth: "/month",
     perYear: "/year",
     billedAnnually: "billed annually",
@@ -189,7 +189,7 @@ const PRICES: Record<string, {
   teamMonthly: string; teamAnnual: string; teamAnnualTotal: string; teamAnnualPerMonth: string;
 }> = {
   fr: { proMonthly: PRICE_DISPLAY.fr.proMonthly, proAnnual: PRICE_DISPLAY.fr.proAnnual, proAnnualTotal: `économisez ${PRICE_DISPLAY.fr.proAnnualSavings}`, proAnnualPerMonth: "21 €", teamMonthly: PRICE_DISPLAY.fr.teamMonthly, teamAnnual: PRICE_DISPLAY.fr.teamAnnual, teamAnnualTotal: `économisez ${PRICE_DISPLAY.fr.teamAnnualSavings}`, teamAnnualPerMonth: "108 €" },
-  en: { proMonthly: PRICE_DISPLAY.en.proMonthly, proAnnual: PRICE_DISPLAY.en.proAnnual, proAnnualTotal: `save ${PRICE_DISPLAY.en.proAnnualSavings}`,         proAnnualPerMonth: "$39",   teamMonthly: PRICE_DISPLAY.en.teamMonthly, teamAnnual: PRICE_DISPLAY.en.teamAnnual, teamAnnualTotal: `save ${PRICE_DISPLAY.en.teamAnnualSavings}`,   teamAnnualPerMonth: "$119" },
+  en: { proMonthly: PRICE_DISPLAY.en.proMonthly, proAnnual: PRICE_DISPLAY.en.proAnnual, proAnnualTotal: `save ${PRICE_DISPLAY.en.proAnnualSavings}`,         proAnnualPerMonth: "$21",   teamMonthly: PRICE_DISPLAY.en.teamMonthly, teamAnnual: PRICE_DISPLAY.en.teamAnnual, teamAnnualTotal: `save ${PRICE_DISPLAY.en.teamAnnualSavings}`,   teamAnnualPerMonth: "$119" },
   es: { proMonthly: PRICE_DISPLAY.es.proMonthly, proAnnual: PRICE_DISPLAY.es.proAnnual, proAnnualTotal: `ahorre ${PRICE_DISPLAY.es.proAnnualSavings}`,       proAnnualPerMonth: "€21",   teamMonthly: PRICE_DISPLAY.es.teamMonthly, teamAnnual: PRICE_DISPLAY.es.teamAnnual, teamAnnualTotal: `ahorre ${PRICE_DISPLAY.es.teamAnnualSavings}`,   teamAnnualPerMonth: "€108" },
   ar: { proMonthly: PRICE_DISPLAY.ar.proMonthly, proAnnual: PRICE_DISPLAY.ar.proAnnual, proAnnualTotal: `وفّر ${PRICE_DISPLAY.ar.proAnnualSavings}`,          proAnnualPerMonth: "€21",   teamMonthly: PRICE_DISPLAY.ar.teamMonthly, teamAnnual: PRICE_DISPLAY.ar.teamAnnual, teamAnnualTotal: `وفّر ${PRICE_DISPLAY.ar.teamAnnualSavings}`,    teamAnnualPerMonth: "€108" },
   id: { proMonthly: PRICE_DISPLAY.id.proMonthly, proAnnual: PRICE_DISPLAY.id.proAnnual, proAnnualTotal: `hemat ${PRICE_DISPLAY.id.proAnnualSavings}`,         proAnnualPerMonth: "€21",   teamMonthly: PRICE_DISPLAY.id.teamMonthly, teamAnnual: PRICE_DISPLAY.id.teamAnnual, teamAnnualTotal: `hemat ${PRICE_DISPLAY.id.teamAnnualSavings}`,    teamAnnualPerMonth: "€108" },

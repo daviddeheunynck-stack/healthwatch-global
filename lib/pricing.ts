@@ -6,9 +6,13 @@ export const PRICES = {
     pro:  { monthly: 29,  annual: 249,  annualSavings: 99  },
     team: { monthly: 149, annual: 1290, annualSavings: 498 },
   },
-  // USD used on the checkout page for the EN locale only (Stripe price IDs are USD)
+  // USD used on the checkout page for the EN locale only (Stripe price IDs are USD).
+  // pro realigned 2026-07-07: was $49/$468, a 58% premium over the EUR price with
+  // no equivalent gap on team — an oversight, not a deliberate policy, given most
+  // EN-locale signups are English-speaking field epidemiologists in lower-resource
+  // countries (Kenya, Nigeria, Uganda, Sierra Leone...), not a wealthier US market.
   usd: {
-    pro:  { monthly: 49,  annual: 468,  annualSavings: 120 },
+    pro:  { monthly: 29,  annual: 249,  annualSavings: 99 },
     team: { monthly: 165, annual: 1425, annualSavings: 555 },
   },
 } as const;
@@ -26,9 +30,9 @@ export const PRICE_DISPLAY = {
   },
   // EN checkout uses USD — used by PricingCards only
   en: {
-    proMonthly:        "$49",
-    proAnnual:         "$468",
-    proAnnualSavings:  "$120",
+    proMonthly:        "$29",
+    proAnnual:         "$249",
+    proAnnualSavings:  "$99",
     teamMonthly:       "$165",
     teamAnnual:        "$1,425",
     teamAnnualSavings: "$555",

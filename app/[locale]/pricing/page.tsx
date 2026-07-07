@@ -95,7 +95,7 @@ const COPY: Record<string, {
     ctaTitle: "Not sure which plan fits?",
     ctaDesc: "Email us. We'll map your surveillance needs and recommend the right plan for your organization — no sales pressure.",
     roiTitle: "The cost of not knowing",
-    roiText: "WHO declares 15–25 new disease outbreaks every month. A single crisis that reaches your region before your teams are informed can mean weeks of reactive operations, supply chain disruption, and reputational exposure — and a duty-of-care failure for organizations with staff deployed abroad. At $49/month, Pro costs less than one hour of crisis management.",
+    roiText: "WHO declares 15–25 new disease outbreaks every month. A single crisis that reaches your region before your teams are informed can mean weeks of reactive operations, supply chain disruption, and reputational exposure — and a duty-of-care failure for organizations with staff deployed abroad. At $29/month, Pro costs less than one hour of crisis management.",
   },
   fr: {
     heroTag: "Conçu pour les organisations de santé et leurs équipes partout dans le monde",

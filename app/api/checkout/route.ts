@@ -11,7 +11,7 @@ const stripBOM = (val: string | undefined) =>
   (val || "").replace(/^﻿/, "").trim();
 
 // EUR: Pro €29/mo | €249/yr · Team €149/mo | €1 290/yr
-// USD: Pro $49/mo | $468/yr · Team $165/mo | $1 425/yr  (en locale → USD, all others → EUR)
+// USD: Pro $29/mo | $249/yr · Team $165/mo | $1 425/yr  (en locale → USD, all others → EUR)
 const PRICES: Record<string, Record<"eur" | "usd", string>> = {
   "pro:monthly":  { eur: stripBOM(process.env.STRIPE_PRO_EUR_PRICE_ID),         usd: stripBOM(process.env.STRIPE_PRO_USD_PRICE_ID)         },
   "pro:annual":   { eur: stripBOM(process.env.STRIPE_PRO_EUR_ANNUAL_PRICE_ID),  usd: stripBOM(process.env.STRIPE_PRO_USD_ANNUAL_PRICE_ID)  },
