@@ -50,3 +50,6 @@ test-results/
 .env.sentry-build-plugin
 
 .env*.local
+
+# Supabase CLI local state
+supabase/.temp/
