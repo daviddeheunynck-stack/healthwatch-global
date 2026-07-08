@@ -60,77 +60,15 @@ interface Found {
   description: string;
 }
 
-// ── Brazil Dengue via InfoDengue (Fiocruz / PROCC) ───────────────────────────
-// Open API with per-city weekly surveillance data for Brazil.
-// We sum notif_accum_year (YTD accumulated cases) from 12 major cities.
-
-const INFODENGUE_CITIES: Array<{ geocode: number; name: string }> = [
-  { geocode: 3550308, name: "São Paulo"      },
-  { geocode: 3304557, name: "Rio de Janeiro" },
-  { geocode: 3106200, name: "Belo Horizonte" },
-  { geocode: 2304400, name: "Fortaleza"      },
-  { geocode: 1302603, name: "Manaus"         },
-  { geocode: 2927408, name: "Salvador"       },
-  { geocode: 4106902, name: "Curitiba"       },
-  { geocode: 2611606, name: "Recife"         },
-  { geocode: 4314902, name: "Porto Alegre"   },
-  { geocode: 1501402, name: "Belém"          },
-  { geocode: 5208707, name: "Goiânia"        },
-  { geocode: 5300108, name: "Brasília"       },
-];
-
-async function fetchBrazilDengue(): Promise<Found | null> {
-  const year = new Date().getFullYear();
-
-  type InfoDengueRecord = {
-    data_iniSE:       number; // week-start Unix timestamp in milliseconds
-    notif_accum_year: number; // YTD accumulated probable case count for this city
-  };
-
-  let totalCases  = 0;
-  let latestDateMs = 0;
-  const citySummary: string[] = [];
-
-  for (const city of INFODENGUE_CITIES) {
-    try {
-      const url = `https://info.dengue.mat.br/api/alertcity?geocode=${city.geocode}&disease=dengue&format=json&ew_start=1&ew_end=52&ey_start=${year}&ey_end=${year}`;
-      const res = await fetch(url, {
-        headers: { "User-Agent": "HealthWatch-Global/1.0 (health surveillance; contact@healthwatch-global.com)" },
-        signal:  AbortSignal.timeout(8_000),
-      });
-      if (!res.ok) { await delay(120); continue; }
-
-      const data = await res.json() as InfoDengueRecord[];
-      if (!Array.isArray(data) || data.length === 0) { await delay(120); continue; }
-
-      // The InfoDengue API returns records in descending chronological order
-      // (newest first), so data[data.length-1] is the OLDEST week, not the newest.
-      // Find the record with the highest data_iniSE (= most recent epidemiological week).
-      const latest     = data.reduce((best, r) => (r.data_iniSE ?? 0) > (best.data_iniSE ?? 0) ? r : best, data[0]);
-      const cityCases  = latest.notif_accum_year ?? 0;
-      totalCases      += cityCases;
-
-      if ((latest.data_iniSE ?? 0) > latestDateMs) latestDateMs = latest.data_iniSE;
-      if (cityCases > 0) citySummary.push(`${city.name} (${cityCases.toLocaleString("en")})`);
-    } catch {
-      // skip city on network error
-    }
-    await delay(120);
-  }
-
-  if (totalCases < 50_000) return null;
-
-  const date   = latestDateMs
-    ? new Date(latestDateMs).toISOString().substring(0, 10)
-    : new Date().toISOString().substring(0, 10);
-  const source = "https://info.dengue.mat.br/";
-
-  const preview = citySummary.slice(0, 4).join(", ");
-  const more    = citySummary.length > 4 ? ` and ${citySummary.length - 4} other cities` : "";
-  const description = `Dengue fever surveillance in Brazil — ${totalCases.toLocaleString("en")} probable cases reported year-to-date in ${year} across 12 major cities: ${preview}${more}. Source: InfoDengue surveillance platform (Fiocruz / PROCC / SVS-MS).`;
-
-  return { cases: totalCases, deaths: 0, date, source, description };
-}
+// ── Brazil Dengue — MANUAL, do NOT auto-fetch ────────────────────────────────
+// The former InfoDengue per-city fetcher was removed 2026-07-08. It summed only 12
+// municipalities via /api/alertcity and wrote the result as Brazil's NATIONAL total —
+// a structural undercount (178k vs the official ~407k) that silently overwrote the
+// verified figure on every daily run. The authoritative national count is the
+// Ministério da Saúde "Painel de Arboviroses" (gov.br), a JS/PowerBI dashboard that
+// no fetcher can read. Brazil dengue is therefore maintained MANUALLY from that
+// dashboard and must never be auto-overwritten. There is intentionally no Brazil
+// entry in TARGETS below — see project_scripts_cleanup_and_dengue_malaria_fixes_2026_07_07.
 
 // ── WHO GHO malaria fetcher ───────────────────────────────────────────────────
 // WHO Global Health Observatory OData API — public, no auth required.
@@ -483,8 +421,9 @@ async function queryReliefWeb(target: Target): Promise<Found | null> {
 // ── Target list ───────────────────────────────────────────────────────────────
 
 const TARGETS: Target[] = [
-  // ── Dengue — Brazil via InfoDengue (Fiocruz); others via ReliefWeb ────────────
-  { disease_en: "Dengue",        country_en: "Brazil",                           minCases: 50_000, fetcher: fetchBrazilDengue },
+  // ── Dengue — Brazil is maintained MANUALLY (MoH Painel de Arboviroses, not
+  //    machine-readable). Do NOT add a Brazil auto-fetcher here (see note above).
+  //    Others via ReliefWeb.
   { disease_en: "Dengue",        country_en: "India",                            minCases: 50_000 },
   { disease_en: "Dengue",        country_en: "Bangladesh",                       minCases: 1_000  },
   { disease_en: "Dengue",        country_en: "Colombia",                         minCases: 5_000  },

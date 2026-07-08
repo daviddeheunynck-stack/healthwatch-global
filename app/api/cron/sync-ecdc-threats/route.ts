@@ -29,6 +29,13 @@ const CRON_SECRET          = clean(process.env.CRON_SECRET);
 const ECDC_RSS_FEED = "https://www.ecdc.europa.eu/en/taxonomy/term/1310/feed";
 const MAX_AGE_DAYS  = 45;
 
+// Umbrella country labels for multi-country events. A WHO DON multi-country event is
+// stored as "Multiple countries" by the DON sync; this cron aggregates EU-wide articles
+// as "EU/EEA". They denote the same kind of event under different labels, so a closed
+// WHO event must not be re-opened here under a mismatched umbrella label (the hantavirus
+// cruise re-open loop, 2026-07-08 — the exact disease+country guard alone missed it).
+const UMBRELLA_LABELS = new Set(["eu/eea", "multiple countries", "multi-country", "multiple locations", "global"]);
+
 const FETCH_HEADERS = {
   "User-Agent":      "HealthWatch-Global/1.0 (health surveillance; contact@healthwatch-global.com)",
   "Accept":          "application/rss+xml,text/html,*/*",
@@ -348,6 +355,19 @@ export async function GET(req: NextRequest) {
     if (!prev || (row.active && !prev.active)) byDC.set(k, row);
   }
 
+  // Diseases that already have a WHO DON-owned row under an umbrella label. An
+  // umbrella item (e.g. "EU/EEA") for such a disease is the same multi-country event
+  // the DON sync owns — defer to WHO instead of re-inserting a parallel active row
+  // under a mismatched label. Bounded to rows in the 90-day load window above, so a
+  // genuinely new event later (which would get its own DON) is unaffected.
+  const donOwnedUmbrellaDiseases = new Set<string>();
+  for (const row of existing ?? []) {
+    if (row.source?.includes("who.int/emergencies/disease-outbreak-news") &&
+        UMBRELLA_LABELS.has((row.country_en ?? "").toLowerCase())) {
+      donOwnedUmbrellaDiseases.add((row.disease_en ?? "").toLowerCase());
+    }
+  }
+
   // ── 3. Process each RSS item ──────────────────────────────────────────────
   const results = { briefs: entries.length, inserted: 0, updated: 0, skipped: 0, errors: 0 };
   type LogEntry = { label: string; status: string; detail?: string };
@@ -394,6 +414,15 @@ export async function GET(req: NextRequest) {
       // Never overwrite WHO DON-owned rows
       if (existing?.source?.includes("who.int/emergencies/disease-outbreak-news")) {
         log.push({ label, status: "skip", detail: "owned by WHO DON sync" });
+        results.skipped++;
+        continue;
+      }
+
+      // Same multi-country event under a different umbrella label — defer to the
+      // WHO DON row rather than re-opening it here (see UMBRELLA_LABELS note).
+      if (UMBRELLA_LABELS.has(item.country_en.toLowerCase()) &&
+          donOwnedUmbrellaDiseases.has(item.disease_en.toLowerCase())) {
+        log.push({ label, status: "skip", detail: "multi-country event owned by WHO DON (umbrella match)" });
         results.skipped++;
         continue;
       }
