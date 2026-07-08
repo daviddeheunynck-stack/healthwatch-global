@@ -2,6 +2,18 @@ import { findCountry, COUNTRIES } from "./geo-data";
 import { normalizeDisease } from "./disease-data";
 import type { CountryGeo } from "./geo-data";
 
+// Umbrella country labels used for multi-country events. A WHO DON multi-country event
+// is stored as "Multiple countries" by the DON sync; ECDC-wide articles are aggregated
+// as "EU/EEA" by sync-ecdc-threats. These denote the same kind of event under different
+// labels, so a secondary-source cron (ECDC, CDC) must not re-open a WHO-closed event
+// under a mismatched umbrella label just because the exact disease+country key differs
+// from the DON row (the hantavirus cruise re-open loop, 2026-07-08 — the ownership guard
+// alone, keyed on exact disease+country, missed it). Shared by sync-ecdc-threats and
+// sync-cdc-notices so both crons defer to a WHO-DON-owned umbrella row.
+export const UMBRELLA_COUNTRY_LABELS = new Set([
+  "eu/eea", "multiple countries", "multi-country", "multiple locations", "global",
+]);
+
 export interface ParsedOutbreak {
   disease: string;       // fr
   disease_en: string;

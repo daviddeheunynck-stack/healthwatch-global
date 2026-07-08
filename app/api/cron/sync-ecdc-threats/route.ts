@@ -11,7 +11,7 @@ import { logCronRun } from "@/lib/cron-monitor";
 import { createClient } from "@supabase/supabase-js";
 import { normalizeDisease } from "@/lib/disease-data";
 import { COUNTRIES, findCountry } from "@/lib/geo-data";
-import { extractNumbers, assessRisk } from "@/lib/outbreak-parser";
+import { extractNumbers, assessRisk, UMBRELLA_COUNTRY_LABELS } from "@/lib/outbreak-parser";
 import { extractAdmin1, geocodeAdmin1 } from "@/lib/geo-extract";
 import { errorMessage } from "@/lib/error";
 
@@ -28,13 +28,6 @@ const CRON_SECRET          = clean(process.env.CRON_SECRET);
 // RSS feed for "Epidemiological update" content type — 10 items, updated weekly
 const ECDC_RSS_FEED = "https://www.ecdc.europa.eu/en/taxonomy/term/1310/feed";
 const MAX_AGE_DAYS  = 45;
-
-// Umbrella country labels for multi-country events. A WHO DON multi-country event is
-// stored as "Multiple countries" by the DON sync; this cron aggregates EU-wide articles
-// as "EU/EEA". They denote the same kind of event under different labels, so a closed
-// WHO event must not be re-opened here under a mismatched umbrella label (the hantavirus
-// cruise re-open loop, 2026-07-08 — the exact disease+country guard alone missed it).
-const UMBRELLA_LABELS = new Set(["eu/eea", "multiple countries", "multi-country", "multiple locations", "global"]);
 
 const FETCH_HEADERS = {
   "User-Agent":      "HealthWatch-Global/1.0 (health surveillance; contact@healthwatch-global.com)",
@@ -363,7 +356,7 @@ export async function GET(req: NextRequest) {
   const donOwnedUmbrellaDiseases = new Set<string>();
   for (const row of existing ?? []) {
     if (row.source?.includes("who.int/emergencies/disease-outbreak-news") &&
-        UMBRELLA_LABELS.has((row.country_en ?? "").toLowerCase())) {
+        UMBRELLA_COUNTRY_LABELS.has((row.country_en ?? "").toLowerCase())) {
       donOwnedUmbrellaDiseases.add((row.disease_en ?? "").toLowerCase());
     }
   }
@@ -419,8 +412,8 @@ export async function GET(req: NextRequest) {
       }
 
       // Same multi-country event under a different umbrella label — defer to the
-      // WHO DON row rather than re-opening it here (see UMBRELLA_LABELS note).
-      if (UMBRELLA_LABELS.has(item.country_en.toLowerCase()) &&
+      // WHO DON row rather than re-opening it here (see UMBRELLA_COUNTRY_LABELS note).
+      if (UMBRELLA_COUNTRY_LABELS.has(item.country_en.toLowerCase()) &&
           donOwnedUmbrellaDiseases.has(item.disease_en.toLowerCase())) {
         log.push({ label, status: "skip", detail: "multi-country event owned by WHO DON (umbrella match)" });
         results.skipped++;
