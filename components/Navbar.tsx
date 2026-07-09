@@ -45,6 +45,7 @@ export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [localeDropOpen, setLocaleDropOpen] = useState(false);
   const localeDropRef = useRef<HTMLDivElement>(null);
+  const desktopLocaleDropRef = useRef<HTMLDivElement>(null);
 
   // Close the mobile menu on route change. Adjusting state *while rendering* —
   // comparing against the last-seen pathname and calling setState immediately
@@ -63,7 +64,10 @@ export default function Navbar() {
   useEffect(() => {
     if (!localeDropOpen) return;
     function handleOutside(e: MouseEvent) {
-      if (localeDropRef.current && !localeDropRef.current.contains(e.target as Node)) {
+      const target = e.target as Node;
+      const insideMobile = localeDropRef.current?.contains(target) ?? false;
+      const insideDesktop = desktopLocaleDropRef.current?.contains(target) ?? false;
+      if (!insideMobile && !insideDesktop) {
         setLocaleDropOpen(false);
       }
     }
@@ -160,14 +164,14 @@ export default function Navbar() {
         </Link>
 
         {/* Desktop: nav links */}
-        <div className="hidden xl:flex items-center gap-2">
+        <div className="hidden xl:flex items-center gap-1">
           {navLinks.map(({ href, label, icon: Icon }) => {
             const isPricingUpsell = plan === "free" && href === `/${locale}/pricing`;
             return (
               <Link
                 key={href}
                 href={href}
-                className={`relative flex items-center gap-1.5 text-sm font-medium transition-colors whitespace-nowrap px-2 py-1.5 rounded-md ${
+                className={`relative flex items-center gap-1.5 text-sm font-medium transition-colors whitespace-nowrap px-1.5 py-1.5 rounded-md ${
                   isPricingUpsell
                     ? "text-red-400 hover:text-red-300 bg-red-950/40 hover:bg-red-950/60"
                     : pathname === href
@@ -188,21 +192,35 @@ export default function Navbar() {
         {/* Desktop: locale + auth */}
         <div className="hidden xl:flex items-center gap-3">
           <GlobalSearch />
-          <div className="flex items-center gap-1 border border-gray-700 rounded-lg px-2 py-1">
-            <Globe className="w-4 h-4 text-gray-300 mr-0.5" />
-            {LOCALES.map((loc) => (
-              <button
-                key={loc.code}
-                onClick={() => switchLocale(loc.code)}
-                className={`text-xs px-2 py-1 rounded-md font-semibold transition-colors ${
-                  locale === loc.code
-                    ? "bg-red-600 text-white"
-                    : "text-gray-300 hover:text-white bg-gray-800 hover:bg-gray-700"
-                }`}
-              >
-                {loc.label}
-              </button>
-            ))}
+          <div ref={desktopLocaleDropRef} className="relative">
+            <button
+              onClick={() => setLocaleDropOpen(!localeDropOpen)}
+              className={`flex items-center gap-1 text-xs font-semibold px-2 py-1.5 rounded-lg border transition-colors ${
+                localeDropOpen
+                  ? "border-gray-600 text-white bg-gray-800"
+                  : "border-gray-700 text-gray-300 hover:text-white hover:bg-gray-800/60"
+              }`}
+            >
+              <Globe className="w-4 h-4" />
+              {locale.toUpperCase()}
+            </button>
+            {localeDropOpen && (
+              <div className="absolute right-0 top-10 bg-gray-900 border border-gray-700 rounded-xl p-2 flex gap-1.5 z-50 shadow-xl">
+                {LOCALES.map((loc) => (
+                  <button
+                    key={loc.code}
+                    onClick={() => { switchLocale(loc.code); setLocaleDropOpen(false); }}
+                    className={`text-xs px-2.5 py-1.5 rounded-lg font-semibold transition-colors ${
+                      locale === loc.code
+                        ? "bg-red-600 text-white"
+                        : "text-gray-400 hover:text-white bg-gray-800 hover:bg-gray-700"
+                    }`}
+                  >
+                    {loc.label}
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
 
           <div className="border-l border-gray-700 pl-3">
