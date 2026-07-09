@@ -161,23 +161,28 @@ export default function Navbar() {
 
         {/* Desktop: nav links */}
         <div className="hidden xl:flex items-center gap-2">
-          {navLinks.map(({ href, label, icon: Icon }) => (
-            <Link
-              key={href}
-              href={href}
-              className={`relative flex items-center gap-1.5 text-sm font-medium transition-colors whitespace-nowrap px-2 py-1.5 rounded-md ${
-                pathname === href
-                  ? "text-white bg-gray-800"
-                  : "text-gray-400 hover:text-white hover:bg-gray-800/60"
-              }`}
-            >
-              {Icon && <Icon className="w-4 h-4" />}
-              {label}
-              {pathname === href && (
-                <span className="absolute bottom-0 left-2 right-2 h-0.5 bg-red-500 rounded-full" />
-              )}
-            </Link>
-          ))}
+          {navLinks.map(({ href, label, icon: Icon }) => {
+            const isPricingUpsell = plan === "free" && href === `/${locale}/pricing`;
+            return (
+              <Link
+                key={href}
+                href={href}
+                className={`relative flex items-center gap-1.5 text-sm font-medium transition-colors whitespace-nowrap px-2 py-1.5 rounded-md ${
+                  isPricingUpsell
+                    ? "text-red-400 hover:text-red-300 bg-red-950/40 hover:bg-red-950/60"
+                    : pathname === href
+                    ? "text-white bg-gray-800"
+                    : "text-gray-400 hover:text-white hover:bg-gray-800/60"
+                }`}
+              >
+                {Icon && <Icon className="w-4 h-4" />}
+                {label}
+                {pathname === href && !isPricingUpsell && (
+                  <span className="absolute bottom-0 left-2 right-2 h-0.5 bg-red-500 rounded-full" />
+                )}
+              </Link>
+            );
+          })}
         </div>
 
         {/* Desktop: locale + auth */}
@@ -204,7 +209,7 @@ export default function Navbar() {
             {user ? (
               <div className="flex items-center gap-2">
                 <Link
-                  href={`/${locale}/account`}
+                  href={plan === "free" ? `/${locale}/pricing` : `/${locale}/account`}
                   className={`text-xs px-2 py-1 rounded font-semibold ${PLAN_BADGE[plan] || PLAN_BADGE.free}`}
                 >
                   {tAuth(`plan.${plan}`)}
