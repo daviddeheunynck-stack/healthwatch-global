@@ -372,6 +372,10 @@ export async function GET(req: NextRequest) {
 
   // Step 4a: auto-update DB if extraction succeeded
   if (data) {
+    const description =
+      `WHO multi-country mpox situation report #${latest.num}: ${data.cases.toLocaleString("en")} ` +
+      `confirmed cases and ${data.deaths.toLocaleString("en")} deaths cumulative worldwide, as of ${data.date}. ` +
+      `Source: WHO mpox multi-country external situation report.`;
     const { error } = await supabase
       .from("outbreaks")
       .update({
@@ -379,6 +383,7 @@ export async function GET(req: NextRequest) {
         deaths:          data.deaths,
         date:            data.date,
         source:          latest.url,
+        description,
         active:          true,
         updated_at:      new Date().toISOString(),
         source_priority: 5,
@@ -402,6 +407,10 @@ export async function GET(req: NextRequest) {
 
   // Step 4c: also update DRC PHEIC row if DRC data extracted
   if (drcData) {
+    const drcDescription =
+      `WHO multi-country mpox situation report #${latest.num}: ${drcData.cases.toLocaleString("en")} ` +
+      `cumulative confirmed cases and ${drcData.deaths.toLocaleString("en")} deaths in the Democratic ` +
+      `Republic of the Congo, as of ${drcData.date}. Source: WHO mpox multi-country external situation report.`;
     const { error: drcErr } = await supabase
       .from("outbreaks")
       .update({
@@ -409,6 +418,7 @@ export async function GET(req: NextRequest) {
         deaths:          drcData.deaths,
         date:            drcData.date,
         source:          latest.url,
+        description:     drcDescription,
         active:          true,
         updated_at:      new Date().toISOString(),
         source_priority: 5,
