@@ -90,6 +90,68 @@ Pas de nouvelle reply ici : quota du jour deja a 3/3, et regle 1 reply/compte/se
 
 ---
 
+### Thread — 8 juillet 2026 — POSTÉ (demandé et validé explicitement par David, override ponctuel de la règle CLAUDE.md réservant la publication à David)
+
+Comparaison Ebola RDC (haute létalité, faible volume) vs Dengue Brésil (faible létalité, très haut volume) — angle double axe de risque pour décideurs. Chiffres fournis par David, cohérents avec les vérifications de session (Ebola 1 460/452 = WHO DON612 exact) et la mémoire projet (Dengue Brésil 407 750 cas résolu le 8 juillet).
+
+**Tweet 1/3** : https://x.com/HWatchGlobal (thread, voir profil)
+> 1/ Two outbreaks are live right now. They could not look more different, and that gap is the surveillance problem in one frame.
+> Ebola Bundibugyo, DR Congo: 1,460 cases, 452 deaths. ~31% CFR. No licensed vaccine or treatment. One imported case in France.
+
+**Tweet 2/3**
+> 2/ Dengue, Brazil: 407,750 cases, 241 deaths this year. CFR 0.06%.
+> Nearly 280x the case count of the Ebola outbreak. Real hospital strain. A fraction of the attention.
+
+**Tweet 3/3**
+> 3/ High fatality and high volume are different risk axes. A decision-maker has to hold both at once, without the loud signal erasing the quiet one.
+> The outbreak in the headlines is rarely the only one that matters.
+> Live figures: WHO DON612 + Brazil MoH, via healthwatch-global.com
+
+---
+
+### Replies engagement — 9 juillet 2026 — POSTÉES
+
+Monitoring X quotidien. Notifications (Helen Branswell bloquée par cadence, traction confirmée sur 2 replies de la veille), timeline, recherche mots-clés structurée. 2 replies postées (quota 2/3), aucune file d'attente restante. Chiffres BNOFeed reconfrontés en direct avant publication (voir x-watchlist.md).
+
+**@MarionKoopmans (Viroscience Dept Erasmus MC, WHO collaborating centre EID, non vérifiée sur X mais affiliation institutionnelle confirmée)** — post du 9 juil 8:17 AM : « Ebola outbreak DRC. Numbers still climbing, clinics at saturation point, walk out strikes by health care workers, and two cases in a large city, one without an epi link » (lien Bloomberg). Post : https://x.com/MarionKoopmans/status/2075102062828831188 — POSTÉ (validé par David).
+> The untraced urban case is the real signal here: it means detection is now lagging transmission, not mapping it. With health-worker walkouts cutting contact-tracing throughput at the same time, that gap, not the raw case count, is what to watch this week.
+
+**@BarryHunt008 (advocacy qualité de l'air/COVID, vérifié, 23,2k abonnés)** — quote-tweet du bilan @BNOFeed du 8 juil affichant « 66% Outcome CFR » = 582/(582+298), une erreur de métrique (létalité des cas résolus, pas le CFR). Post : https://x.com/BarryHunt008/status/2074873268163457107 — POSTÉ (validé par David).
+> That 66% is resolved-case fatality (deaths / deaths+recoveries), not the CFR. Same numbers, crude CFR is 582/1,729 = 33.7%. The resolved ratio runs hot because deaths resolve faster than recoveries, and 849 cases are still open; the real figure settles between the two.
+
+Vérification factuelle effectuée avant publication : bilan BNOFeed du 7/8 juil relu en direct (1 729 cas / 298 guéris / 582 morts), maths reconfrontées (582/1729=33,7% ; 849 actifs ; 582/880=66,1%).
+
+**Suivi du fil @BarryHunt008 (même jour, continuation d'échange, hors quota cold-outreach)** : il a répondu à notre correction (« Yes, that's why I labeled it "Outcome" CFR. CFR on its own is meaningless in the early stages of a fast growing epidemic - seriously flawed concept »). Post : https://x.com/BarryHunt008/status/2075204522897560042 — POSTÉ (validé par David, règle de cadence clarifiée : ne s'applique qu'aux nouvelles approches, pas à la continuation d'un fil déjà engagé).
+> Fair, but "meaningless" overstates it: crude CFR is right-censored early on, a known-direction underestimate. Your ratio overshoots the other way by excluding 849 open cases. Watching it climb, ~31% to 33.7% now, is the more useful signal.
+
+---
+
+### Replies engagement — 8 juillet 2026 — POSTÉES
+
+Monitoring X quotidien. Session avec incident technique initial similaire au 7 juillet (extension Chrome injoignable ~30 min, résolu via écran de confirmation switch_browser après plusieurs timeouts). @WHOAFRO avait un nouveau post (sitrep Bundibugyo) mais déjà engagé le 7 juillet, pas de nouvelle reply cette semaine sur ce compte. Découverte notable : un post Reuters citant 1 708 cas Ebola RDC a été confronté en direct au dernier WHO DON612 (1 460 RDC + 20 Ouganda, données au 1er juillet) et à nos propres notes (sitrep national RDC du 4 juillet à 1 561) — confirme que la DB HWG reflète fidèlement le dernier cycle WHO DON officiel, l'écart vient du décalage structurel sitrep national vs bulletin international, pas d'un bug de sync. **2 replies postées** (validées par David), quota 2/3. 5 comptes candidats proposés, 5 validés et suivis.
+
+**@Reuters** — post du 8 juil : « Congo says number of confirmed Ebola cases rises to 1,708 » (32,3k vues). Post : https://x.com/Reuters/status/2074727762649096212 — POSTÉ (validé par David).
+> Worth flagging for cross-checking: DRC's Ministry of Communication already reported 1,561 confirmed cases as of July 4, about 100 above the latest WHO Disease Outbreak News figure (1,460, data through July 1). National sitreps are running several days ahead of the international bulletin cycle right now, so 1,708 is plausible but best treated as provisional until the next WHO DON confirms it.
+
+**@HelenBranswell** (journaliste STAT, déjà dans la liste "à suivre" mais pas encore suivie ce jour) — post du 7 juil sur les 298 morts pédiatriques grippe US 2024-25 (29,2k vues, délai de reporting CDC). Post : https://x.com/HelenBranswell/status/2074260941416390938 — POSTÉ (validé par David).
+> Worth flagging the scale here: 298 already puts 2024-25 well above the previous record of 199, tied in 2019-20 and 2023-24, since CDC began national pediatric flu mortality surveillance in 2004. Given the lag pattern you're describing, this total will likely keep rising. Some deaths from this season may still be reported months from now.
+
+Vérifications factuelles effectuées avant publication : WHO DON612 (fetch direct who.int) pour le chiffre RDC/Ouganda ; CDC FluView + MMWR/CIDRAP (recherche web) pour le record historique 199 (2019-20 et 2023-24).
+
+---
+
+### Replies engagement — 7 juillet 2026 — POSTÉES
+
+Monitoring X quotidien. Session avec incident technique initial (extension Chrome injoignable, 3 timeouts de navigation résolus après reconnexion). Sujet dominant toujours Ebola RDC/Ouganda : nouvel angle repéré (déploiement de soignants ougandais vers la RDC, et non plus seulement réception d'aide), compte officiel gouvernemental non encore engagé. Choléra Soudan : aucune donnée nouvelle, mêmes chiffres du 6 juillet recyclés par des comptes relais. Recherche élargie mpox a mené (via un post de nomination Africa CDC) à repérer 2 comptes à très forte valeur jamais suivis : @Dr_JeanKaseya (DG Africa CDC) et @AfricaCDC elle-même. Au total 5 comptes candidats proposés sur la session, 4 validés et suivis (@MinofHealthUG, @SDN154, @Dr_JeanKaseya, @AfricaCDC), 1 laissé de côté par sélectivité (@NabusobaE, voir x-watchlist.md). Reply DrTedros écartée par choix qualité (angle trop général). **2 replies postées** (validées par David), quota 2/3.
+
+**@GCICMediaReview (Government Citizens Interaction Centre, officiel @GovUganda, gcic.go.ug, 2 705 abonnés)** — post du 7 juil : « Uganda has deployed its first team of health workers to the Democratic Republic of Congo (DRC) to support efforts to contain the country's latest Ebola outbreak. » Post : https://x.com/GCICMediaReview/status/2074390947773743125 — POSTÉ (validé par David).
+> Worth noting the other half of this deployment: WHO guidance calls for a 21-day symptom monitoring window after return, not just PPE while deployed. That return monitoring is often the weaker link in cross-border response chains, not frontline contact itself.
+
+**@WHOAFRO (déjà suivi)** — post épinglé du 7 juil : « Good nutrition is vital to #Ebola recovery. @WHO and @WFP are working closely to strengthen the Ebola response... » Post : https://x.com/WHOAFRO/status/2074401031111242166 — POSTÉ (validé par David).
+> Worth flagging why this detail matters operationally: in the same Ituri/North Kivu zones driving this outbreak's ~32% CFR, food insecurity was already acute before Ebola hit, so sourcing therapeutic nutrition for ETU patients competes with a supply chain already stretched by conflict and displacement. Nutritional status is one of the few CFR levers clinicians can influence once a patient is already infected.
+
+---
+
 ### Replies engagement — 6 juillet 2026 — POSTÉES
 
 Monitoring X quotidien. Sujet dominant toujours Ebola Bundibugyo RDC/Ouganda + choléra Soudan émergent. Fait structurant confirmé cette session (Bloomberg) : souche = **Bundibugyo (BDBV), pas Zaïre** — d'où absence de vaccin/monoclonal homologué et essai PARTNERS au CTE CME de Rwampara. Chiffres DRC (1 561 confirmés / 506 morts / CFR 32,4 % / suivi contacts 81,6 %) triangulés sur 3 sources concordantes (sitrep officiel @Com_mediasRDC = source primaire, roll-up BNO citant MoH, Bloomberg) ; cross-check dashboard live impossible (extension Chrome bloque healthwatch-global.com). Traction forte : @DianaAtwine (SP Santé Ouganda) a reposté + aimé la reply labos mobiles du 5 juil. **2 replies postées** (validées « tout » par David), quota 2/3 ; la 3e (angle corridor transfrontalier vers @kasujja) n'a pas pu être postée car il restreint les réponses sur ses posts.
@@ -1921,6 +1983,8 @@ Aucun feedback produit substantiel reçu cette session (rien à ajouter à produ
 
 ## Emails de relance produit — audit onboarding — 7 juillet 2026
 
+> **STATUT : les 3 emails ci-dessous ont été envoyés par David le 2026-07-08.** Suivi des réponses dans la mémoire early-adopters. Cadrés comme sonde de feedback + réactivation faible coût, pas win-back fiable.
+
 Contexte : l'audit du 6-7 juillet a trouvé que 0/11 vrais utilisateurs n'avaient jamais configuré d'alerte régionale (tables vides en prod), expliquant le pattern "lit les emails pendant des semaines, ne revient jamais". Fix livré (commit `f1cce66`, enrollment par défaut à l'activation du trial) + backfill manuel sur les comptes réels encore en trial actif (jalal.nourlil, anakeseemmanuel8, iinnerre, saeed.mohamood — mayeul.peltier exclu, trial expiré le 6/07). Détail dans project_activation_funnel_audit et project_onboarding_alert_backfill (mémoire). Ces 3 emails sont **rédigés, prêts à envoyer par David lui-même** (pas de call proposé, pas de faux témoignage, angle honnête sur le bug trouvé).
 
 ### saeed.mohamood@gmail.com — EN — trial actif jusqu'au 16 juillet, maintenant enrôlé
@@ -1980,3 +2044,163 @@ Contexte : l'audit du 6-7 juillet a trouvé que 0/11 vrais utilisateurs n'avaien
 **Différence délibérée avec les deux autres** : pas enrôlé dans les alertes (trial terminé, ça n'aurait servi à rien), donc pas de promesse d'alertes actives — uniquement une demande de retour honnête, avec une porte ouverte non engageante en fin de message plutôt qu'un CTA produit.
 
 **Double-check (les 3 messages) :** ton honnête/transparent sur le bug trouvé, aucun call proposé, aucun témoignage fabriqué, longueur courte (80-100 mots), pas de tiret cadratin, paragraphes aérés.
+
+
+---
+
+## Session monitoring LinkedIn — 7 juillet 2026 (brouillons, EN ATTENTE DE VALIDATION DAVID)
+
+> Run planifié autonome, David non présent. **Aucun contenu ci-dessous n'a été posté/envoyé.** Quotas visés : 2 commentaires (dont 1 optionnel), 3 notes de connexion, 1 DM. File d'attente et pertinence détaillées dans linkedin-contacts.md (bloc 7 juillet).
+
+### Commentaire 1 — Mohammad Ilias Hossain (post Marburg/Ebola Ouganda, 2j)
+
+> The concurrent Marburg and Ebola picture is what makes this so operationally hard. Two filoviruses that look alike clinically but demand separate contact-tracing networks and separate confirmation assays, all drawing on the same field teams and labs. The scarce resource isn't awareness of the threat, it's the surveillance capacity to run two responses at once without either losing focus. Cross-border data sharing with the DRC is what turns that from two strained efforts into one coherent regional picture.
+
+### Commentaire 2 (OPTIONNEL) — Hans Kluge (article "Extreme heat: More deadly weeks may still lie ahead for the European Region", 38 min)
+
+> Heat is one of the hardest hazards to see in the data, because the deaths rarely get coded as heat. They surface as cardiovascular or renal events scattered across all-cause mortality. The signal is real but diffuse, which is exactly why proactive regional warning matters more than after-the-fact counts. Reading vulnerability ahead of the peak, rather than tallying excess deaths after it, is the harder discipline.
+
+**Caveat David :** Hans Kluge est un profil prioritaire (commentaire seulement, jamais de connexion), donc engager est on-strategy. Mais le sujet chaleur extrême est en marge du cœur HWG (surveillance de foyers épidémiques). Le commentaire ne prétend rien sur HWG (pas d'overclaim), il reste un engagement analytique de santé publique. À trancher : poster ou garder le 2e commentaire du quota en réserve.
+
+### Note de connexion 1 — Ali Justin KONZI-GBERET (FR, carry-over 6 juillet)
+
+> Bonjour Ali, nous sommes tous les deux à Lille et vos sujets, One Health et diplomatie sanitaire, recoupent directement ce que je suis au quotidien avec HealthWatch Global. Votre regard sur la gouvernance sanitaire m'intéresserait beaucoup. Au plaisir d'échanger.
+
+### Note de connexion 2 — Anoop Velayudhan (EN, nouvel abonné)
+
+> Hi Anoop, thanks for following HealthWatch Global. Your outbreak investigation and surveillance work at ICMR is the field lens I care about most, especially where early detection quietly breaks down before anyone declares an outbreak. Would value your take. Would love to connect
+
+### Note de connexion 3 — Dr. Rashi Bhardwaj (EN, nouvel abonné)
+
+> Hi Rashi, thanks for following HealthWatch Global. The One Health and zoonoses lens you work on is where most outbreaks actually begin, at the animal-human interface, long before they reach any dashboard. Would value your view on spotting spillover earlier. Would love to connect
+
+### DM de suivi — Simon Ruegg (EN, réponse à sa ressource SPARCS partagée 09:51)
+
+> Thanks Simon, I'll dig into the SPARCS material properly.
+>
+> The critical-transitions framing is the part that keeps pulling at me: reading the variance of a series rather than just its level. It reframes what counts as "early" in surveillance.
+>
+> The honest first test for us is whether that signal survives the messy, incomplete case series we actually get from the field. Have you seen it hold up under real-world reporting noise, or does it need cleaner data to be reliable?
+
+**Double-check (tous les brouillons) :** angle surveillance épidémiologique/santé publique, aucun pitch commercial ni CTA produit, aucun lien, aucun faux témoignage, pas de tiret cadratin, notes de connexion < 300 caractères avec closer conforme à la langue (FR "Au plaisir d'échanger." / EN "Would love to connect"), commentaires 3-5 lignes une idée forte, DM aéré et sans CTA.
+
+---
+
+## Post MWF LinkedIn + X — 8 juillet 2026 (PUBLIÉ ✅)
+
+> Run planifié, David présent en session. Brouillons validés après recheck DB ("ok les deux, après recheck"). Sujet : contraste des profils de risque entre les deux épidémies HWG non-seed les plus fraîches (Ebola Bundibugyo RDC vs Dengue Brésil), toutes deux updated_at 2026-07-08. Angle choisi pour diversifier hors du sujet Ebola sur-couvert depuis 3 semaines, tout en restant ancré sur la donnée HWG fraîche. Chiffres vérifiés à l'étape 0 puis recheckés avant publication, identiques.
+>
+> **LinkedIn : POSTÉ ✅** — publié par l'agent via le profil personnel de David (`linkedin.com/in/healthwatchglobal`, pas de page entreprise séparée — vérifié cette session), confirmation "Le post a bien été publié" affichée.
+> **X : POSTÉ ✅** — publié par David lui-même (navigation vers x.com bloquée pour l'agent par l'extension Chrome, domaine non autorisé pour l'automatisation ; David a posté le thread manuellement).
+
+Données citées (non-seed, vérifiées) : Ebola Bundibugyo RDC 1 460 cas / 452 décès (CFR 31 %, OMS DON612) + 1 cas importé France (Santé publique France) ; Dengue Brésil 407 750 cas / 241 décès (CFR 0,06 %, Ministère Santé Brésil gov.br). Ratio cas ≈ 280×.
+
+### LinkedIn (FR)
+
+> Deux épidémies sont actives en ce moment. Elles ne se ressemblent en rien, et c'est précisément le défi que pose la surveillance.
+>
+> D'un côté, Ebola Bundibugyo en République démocratique du Congo. Au 3 juillet, 1 460 cas confirmés et 452 décès, soit une létalité proche de 31 %. Une souche sans vaccin ni traitement homologué, et un premier cas importé jusqu'en France. C'est l'épidémie qui occupe les titres, à juste titre.
+>
+> De l'autre, la dengue au Brésil. Au 7 juillet, 407 750 cas et 241 décès sur l'année en cours. Une létalité de 0,06 %, mais un volume de cas près de 280 fois supérieur, une pression hospitalière bien réelle, et beaucoup moins de couverture médiatique.
+>
+> Ces deux événements ne se mesurent pas sur la même échelle. Létalité élevée d'un côté, volume élevé de l'autre : ce sont deux axes de risque distincts. Un décideur en santé publique doit pouvoir tenir les deux en même temps, sans que le signal fort n'efface le signal diffus.
+>
+> C'est la fonction d'une plateforme de surveillance en temps réel : garder tout le tableau visible. L'épidémie qui fait les titres n'est presque jamais la seule qui compte.
+>
+> Chiffres extraits du tableau de bord HealthWatch Global, sources OMS DON612 et Ministère de la Santé du Brésil, à jour au 8 juillet.
+>
+> healthwatch-global.com
+
+### X (EN, thread 3 tweets)
+
+> 1/ Two outbreaks are live right now. They could not look more different, and that gap is the surveillance problem in one frame.
+>
+> Ebola Bundibugyo, DR Congo: 1,460 cases, 452 deaths. ~31% CFR. No licensed vaccine or treatment. One imported case in France.
+
+> 2/ Dengue, Brazil: 407,750 cases, 241 deaths this year. CFR 0.06%.
+>
+> Nearly 280x the case count of the Ebola outbreak. Real hospital strain. A fraction of the attention.
+
+> 3/ High fatality and high volume are different risk axes. A decision-maker has to hold both at once, without the loud signal erasing the quiet one.
+>
+> The outbreak in the headlines is rarely the only one that matters.
+>
+> Live figures: WHO DON612 + Brazil MoH, via healthwatch-global.com
+
+**Double-check :** chiffres alignés au mot près sur l'étape 0 (1 460/452, 407 750/241, cas importé France=1, ratio ≈280×, CFR 31 %/0,06 %) ; aucune ligne is_seed citée ; aucun faux témoignage ; pas de ProMED ; LinkedIn plus long/pro FR sans tiret cadratin, X court/dense/stratégique EN sans hashtag ; ton non-alarmiste et ne minimise pas Ebola (axes de risque distincts, pas de hiérarchie) ; lien healthwatch-global.com pertinent sur les deux.
+
+---
+
+## Monitoring LinkedIn — 8 juillet 2026 (BROUILLONS, EN ATTENTE DE VALIDATION DAVID)
+
+> Run planifié autonome, David absent. Rien exécuté. File complète et veille dans linkedin-contacts.md (bloc 8 juillet). Tous les messages ci-dessous double-checkés (ton, exactitude, pas de CTA/lien dans les commentaires, ponctuation sans tiret cadratin, longueur, closer selon la langue).
+
+### Commentaire 1 (PRIMAIRE) — World Health Organization African Region (SitRep Ebola/Bundibugyo, 14h)
+
+> Bundibugyo virus outbreaks are far rarer than Zaire ebolavirus, which makes each situation report disproportionately valuable. With a smaller historical baseline, every confirmed case and contact recalibrates the case definition and CFR expectations in real time. The cross-border dimension with Uganda is where standardized, frequent reporting earns its keep, letting surveillance teams separate a real signal from noise before it travels.
+
+**Double-check :** 4 lignes, une idée forte (rareté = valeur informationnelle de chaque SitRep), analytique, pas de CTA ni lien, pas de tiret cadratin, exact (Bundibugyo plus rare que Zaire ; dimension transfrontalière RDC-Ouganda réelle), pas de ProMED.
+
+### Commentaire 2 (OPTIONNEL) — e-Bug France / CHU de Nice (Journée intl des zoonoses, One Health, 1j)
+
+> The One Health framing lands beyond the classroom. Most high-consequence outbreaks we track, from the current Bundibugyo Ebola to Marburg and mpox, emerge at the animal-human interface, so zoonotic literacy is really upstream surveillance. Teaching young people to read spillover risk early is how a population learns to notice the signals before they become epidemics.
+
+**Double-check :** 3-4 lignes, une idée (littératie zoonotique = surveillance en amont), pas de CTA ni lien, pas de tiret cadratin, exact (Bundibugyo/Marburg/mpox zoonotiques, suivis par HWG), pas de ProMED.
+
+### Note de connexion 1 — DR-IFTIKHAR AHMAD (EN, 284 car.)
+
+> Hi Iftikhar, thanks for reacting to my post on surveillance built for detection over action. Your work as National One Health Coordinator on AMR with the Fleming Fund sits right at that signal-to-action gap, and it's the field perspective I most want in my network. Would love to connect
+
+**Double-check :** < 300 car., hook spécifique et vrai (il a réagi au post de David + rôle One Health/AMR), corps EN + closer « Would love to connect », pas de tiret cadratin, pas de CTA commercial.
+
+### ~~Note de connexion 2 — Marie Jaspard~~ ❌ RETIRÉE
+
+> **Erreur corrigée** : Marie Jaspard est **déjà relation 1er degré depuis le 6 juillet** (DM de suivi déjà envoyé). Proposée par erreur (bouton « Suivi » en page Abonnés mal lu). Aucune note à envoyer.
+
+### Note de connexion 2 — Dr. Pragya Yadav (EN, ~291 car.)
+
+> Hi Pragya, your work on high-consequence pathogens and biocontainment is exactly what the current Bundibugyo Ebola outbreak calls for. I track filovirus and VHF signals across WHO, ECDC and Africa CDC at Health Watch Global, and value staying close to that frontline view. Would love to connect
+
+**Double-check :** < 300 car., hook topique et vrai (biosécurité/filovirus pertinent pour le foyer actif), corps EN + closer « Would love to connect », pas de tiret cadratin, pas de CTA. Degré confirmé 2e (relations communes Anoop + Rashi).
+
+### Note de connexion 3 — Dr. Fleurette Domai Mbuyakala (EN, ~268 car.)
+
+> Hi Fleurette, your expertise in disease surveillance and outbreak response from Kinshasa is exactly the frontline lens I build for at Health Watch Global, which tracks the DRC and its current Bundibugyo Ebola response across WHO, Africa CDC and ECDC. Would love to connect
+
+**Double-check :** < 300 car., hook spécifique et honnête (surveillance/riposte RDC ; ne prétend PAS qu'elle travaille sur Ebola, dit que HWG suit la RDC et sa riposte Bundibugyo), corps EN + closer « Would love to connect », pas de tiret cadratin, pas de CTA. Degré confirmé 2e (« Se connecter » dispo), relations communes Zabre + Henri Alamazani. Trouvée par recherche active 8 juillet.
+
+### DM optionnel — Kassim Kamara (EN, facultatif, réponse à sa clôture du 5 juillet)
+
+> Thanks Kassim, the feeling is mutual. I'll keep an eye on your work, and I'm glad we're connected. Wishing you well until our paths cross again.
+
+**Double-check :** court, chaleureux, pas de CTA/relance commerciale, pas de tiret cadratin. **Facultatif** : sa dernière ligne (« Let's keep in touch and see what the future holds. ») est déjà une clôture, aucune réponse n'est requise.
+
+### Commentaires 2 et 3 ajoutés en session (validés + postés par David) — remplacent l'e-Bug abandonné
+
+**Commentaire 2 — WHO Kenya (préparation Ebola, définitions de cas / SOP mis à jour, 1j) — POSTÉ :**
+
+> Updating case definitions and SOPs before a single case appears is the least visible and most decisive part of surveillance. A harmonized definition means the first suspected case is classified the same way in Nairobi as across the border, and that consistency is what turns scattered reports into a usable regional signal. With Bundibugyo active next door in Uganda, this readiness window is exactly where the investment pays off.
+
+**Double-check :** 3 lignes, une idée (définitions harmonisées *avant* le foyer = travail invisible mais décisif de la surveillance transfrontalière), pas de CTA ni lien, pas de tiret cadratin, exact (Bundibugyo actif en Ouganda voisin du Kenya), pas de ProMED. Profil distinct de WHO African Region (règle 1/profil/semaine respectée).
+
+**Commentaire 3 — WHO EMRO (repartagé par ECDC), LLMs appliqués à la surveillance en production, webinaire 15 juillet, 1j — POSTÉ :**
+
+> The move from sandbox to production is exactly where this gets interesting. In real surveillance the hard part is rarely the model, it is the messy input: unstructured bulletins, five languages, duplicate signals and the need to stay auditable when a machine flags a case. LLMs earn their place when they compress that noise without becoming a black box between the data and the epidemiologist.
+
+**Double-check :** 3-4 lignes, une idée (surveillance en production = pipeline désordonné, auditabilité > modèle), pas de CTA ni lien, pas de tiret cadratin, angle builder authentique pour David (non épidémiologiste), pas de ProMED. Choisi par David vs l'alternative ECDC/Vibrio.
+
+**Alternative non retenue (ECDC — data-viz risque Vibrio / canicules, 1h)**, gardée pour référence :
+> This is what climate driven surveillance should look like. Vibrio is one of the clearest cases where an environmental variable, sea surface temperature, acts as a leading indicator weeks before the first wound or seafood infection is reported. Mapping the risk rather than only counting cases lets public health move from reacting to anticipating, which is the harder and more valuable half of surveillance.
+
+### Note procédure navigateur (fiabilité renderer, 8 juillet)
+Renderer Chrome instable en session (timeouts `Page.captureScreenshot`, clics-coordonnées ne focalisant pas les champs, fil infini qui gèle). Protocole fiable adopté et à réappliquer : **piloter par `ref` (find), lecture DOM (`get_page_text`/`read_page`) par défaut, screenshot seulement pour preuve finale, aller sur les pages entité/permalien plutôt que scroller le fil infini, recharger dès un gel.** Levier côté machine (David) : laisser la fenêtre Chrome pilotée au premier plan (les onglets en arrière-plan sont throttlés par Chrome). Cause secondaire écartée : 2 instances Chrome connectées, mais je n'en pilote qu'une (deviceId cible 23c7ecdd), non pertinent.
+
+---
+
+### Veille LinkedIn — posts notables repérés 9 juillet 2026
+- **Leighton C.** (Ingénierie Biomédicale, Georgia Tech, 1j) — a construit un dashboard interactif de la propagation spatio-temporelle du foyer Ebola Bundibugyo (rapports RDC + presse locale ; map + treemap par région). Demande explicitement des retours sur la gestion des divergences de données et les stats à mettre en avant pour les officiels. **Cible commentaire #1 du jour** (directement dans le cœur métier HWG).
+- **Africa CDC** (15h) — Ebola Outbreak Update au 04/07 (Bundibugyo, RDC + Ouganda). Cible commentaire optionnelle (redondance possible avec le commentaire WHO African Region d'hier sur le même sujet Ebola/Bundibugyo).
+- **Mohammad Ilias Hossain** (2h, notif) — étude Malaria Atlas Project : chocs climatiques (inondations/cyclones) → +123M cas malaria et +500k décès en Afrique d'ici 2050, dont ~80% dus à la perturbation des systèmes de contrôle (moustiquaires, diagnostic, infrastructures) et non à l'extension de l'habitat vectoriel. **Cible commentaire #2 du jour.**
+- **Marie Roseline Darnycka BELIZAIRE** (1er, 21h) — invitation webinaire WHO AFRO « Strengthening PH Emergency Management for Ebola and VHF in Africa » du 8 juillet (passé). Hors fenêtre d'action.
+- **FLAVIVACCINE** (22h, aimé par IRD) — projet EU vaccins flavivirus à transmission vectorielle, angle interface piqûre/peau. À surveiller.
+- **MSF Belgique** (1j, repartagé par **Maria Van Kerkhove**) — survivantes Ebola (Furaha 3 ans, Florence 42 ans) quittant le CTE d'Ituri (RDC). Fort en engagement (443 réactions). Human interest, pas de commentaire (repartage).
