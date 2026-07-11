@@ -54,7 +54,7 @@ const LABELS = {
     firstActions: "Premières actions",
     reportingLag: "Date de rapport officiel — dans les zones enclavées, le signal de terrain précède généralement cette date de plusieurs jours à plusieurs semaines.",
     operationalDisclaimer: "Outil de veille — pas un déclencheur opérationnel. Toute mobilisation requiert vérification OMS directe et validation par votre protocole institutionnel.",
-    cumulativeAs: (date: string) => `Cas cumulés depuis le début de l'épidémie — bulletin OMS du ${date}`,
+    cumulativeAs: (date: string, source: string) => `Cas cumulés depuis le début de l'épidémie — bulletin ${source} du ${date}`,
     citeLabel: "Citer cette page (Vancouver)",
     citeCopy: "Copier la citation",
     citeCopied: "Copié !",
@@ -83,7 +83,7 @@ const LABELS = {
     firstActions: "First actions",
     reportingLag: "Official report date — in isolated zones, field onset typically precedes this by days to weeks.",
     operationalDisclaimer: "Situational awareness tool — not an operational trigger. Any mobilization requires direct WHO verification and validation through your institutional protocol.",
-    cumulativeAs: (date: string) => `Cumulative cases since outbreak start — WHO DON bulletin dated ${date}`,
+    cumulativeAs: (date: string, source: string) => `Cumulative cases since outbreak start — ${source} bulletin dated ${date}`,
     citeLabel: "Cite this page (Vancouver)",
     citeCopy: "Copy citation",
     citeCopied: "Copied!",
@@ -112,7 +112,7 @@ const LABELS = {
     firstActions: "Primeras acciones",
     reportingLag: "Fecha del informe oficial — en zonas aisladas, el inicio en el campo suele preceder a esta fecha por días o semanas.",
     operationalDisclaimer: "Herramienta de vigilancia — no es un disparador operacional. Cualquier movilización requiere verificación OMS directa y validación por su protocolo institucional.",
-    cumulativeAs: (date: string) => `Casos acumulados desde el inicio del brote — boletín OMS del ${date}`,
+    cumulativeAs: (date: string, source: string) => `Casos acumulados desde el inicio del brote — boletín ${source} del ${date}`,
     citeLabel: "Citar esta página (Vancouver)",
     citeCopy: "Copiar cita",
     citeCopied: "¡Copiado!",
@@ -141,7 +141,7 @@ const LABELS = {
     firstActions: "الإجراءات الأولى",
     reportingLag: "تاريخ التقرير الرسمي — في المناطق المعزولة، يسبق ظهور المرض ميدانياً هذا التاريخ بأيام إلى أسابيع.",
     operationalDisclaimer: "أداة رصد فقط — ليست مُحفِّزاً تشغيلياً. أي تعبئة تستلزم التحقق المباشر من منظمة الصحة العالمية والتحقق عبر بروتوكولك المؤسسي.",
-    cumulativeAs: (date: string) => `الحالات التراكمية منذ بداية التفشي — نشرة منظمة الصحة العالمية بتاريخ ${date}`,
+    cumulativeAs: (date: string, source: string) => `الحالات التراكمية منذ بداية التفشي — نشرة ${source} بتاريخ ${date}`,
     citeLabel: "اقتبس هذه الصفحة (فانكوفر)",
     citeCopy: "نسخ الاقتباس",
     citeCopied: "تم النسخ!",
@@ -170,13 +170,13 @@ const LABELS = {
     firstActions: "Tindakan pertama",
     reportingLag: "Tanggal laporan resmi — di zona terisolasi, onset di lapangan biasanya mendahului tanggal ini beberapa hari hingga minggu.",
     operationalDisclaimer: "Alat pemantauan saja — bukan pemicu operasional. Mobilisasi apa pun memerlukan verifikasi langsung ke WHO dan validasi melalui protokol institusional Anda.",
-    cumulativeAs: (date: string) => `Kasus kumulatif sejak awal wabah — buletin WHO tanggal ${date}`,
+    cumulativeAs: (date: string, source: string) => `Kasus kumulatif sejak awal wabah — buletin ${source} tanggal ${date}`,
     citeLabel: "Kutip halaman ini (Vancouver)",
     citeCopy: "Salin kutipan",
     citeCopied: "Disalin!",
     staleBulletin: (d: number) => `Tidak ada buletin resmi dalam ${d} hari — mungkin sudah selesai atau tidak dilaporkan.`,
   },
-} satisfies Record<string, { cases: string; deaths: string; cfr: string; date: string; region: string; printReport: string; lastSynced: string; syncedAgo: (m: number) => string; sourceLabel: string; sourceVerified: string; sourceOfficial: string; pheic: string; archived: string; ctaTitle: string; ctaSub: string; ctaProBtn: string; ctaFree: string; back: string; compareLabel: string; chartTitle: string; noData: string; risk: Record<string, string>; fpGuidance: string; tierLabels: Record<string, string>; firstActions: string; reportingLag: string; cumulativeAs: (date: string) => string; citeLabel: string; citeCopy: string; citeCopied: string; staleBulletin: (d: number) => string; operationalDisclaimer: string }>;
+} satisfies Record<string, { cases: string; deaths: string; cfr: string; date: string; region: string; printReport: string; lastSynced: string; syncedAgo: (m: number) => string; sourceLabel: string; sourceVerified: string; sourceOfficial: string; pheic: string; archived: string; ctaTitle: string; ctaSub: string; ctaProBtn: string; ctaFree: string; back: string; compareLabel: string; chartTitle: string; noData: string; risk: Record<string, string>; fpGuidance: string; tierLabels: Record<string, string>; firstActions: string; reportingLag: string; cumulativeAs: (date: string, source: string) => string; citeLabel: string; citeCopy: string; citeCopied: string; staleBulletin: (d: number) => string; operationalDisclaimer: string }>;
 
 const RISK_STYLE: Record<string, string> = {
   high:   "text-red-400 bg-red-500/10 border-red-500/30",
@@ -457,7 +457,7 @@ export default async function OutbreakPage({
         locale={locale}
       />
       {hasData && o.date && (
-        <p className="text-[11px] text-gray-500 -mt-3 mb-5 text-center">{l.cumulativeAs(o.date)}</p>
+        <p className="text-[11px] text-gray-500 -mt-3 mb-5 text-center">{l.cumulativeAs(o.date, sourceName(o.source))}</p>
       )}
 
       {/* Why it matters — synthesis, visible to all plans and to search engines */}

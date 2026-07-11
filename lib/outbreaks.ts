@@ -561,11 +561,12 @@ export function sourceName(source: string | null | undefined): string {
   if (src.includes("emro.who.int"))      return "WHO EMRO";
   if (src.includes("afro.who.int"))      return "WHO AFRO";
   // National / regional public-health agencies.
-  // ORDER MATTERS: "ncdc.gov.ng" contains the substring "cdc.gov", so Nigeria CDC
-  // and Africa CDC must be checked BEFORE the US CDC ("cdc.gov") catch-all below,
-  // otherwise Nigerian rows would be mislabelled "US CDC".
+  // ORDER MATTERS: "ncdc.gov.ng" and "cdc.gov.au" both contain the substring "cdc.gov", so
+  // Nigeria CDC, Africa CDC and Australia CDC must be checked BEFORE the US CDC ("cdc.gov")
+  // catch-all below, otherwise their rows would be mislabelled "US CDC".
   if (src.includes("ncdc.gov.ng"))       return "Nigeria CDC";
   if (src.includes("africacdc.org"))     return "Africa CDC";
+  if (src.includes("cdc.gov.au"))        return "Australian CDC";
   if (src.includes("cdc.gov"))           return "US CDC";          // cdc.gov + wwwnc.cdc.gov (Travel Notices / EID)
   if (src.includes("ecdc.europa.eu"))    return "ECDC";
   if (src.includes("efsa.europa.eu"))    return "EFSA";
