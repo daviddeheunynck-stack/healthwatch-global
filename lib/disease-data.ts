@@ -502,7 +502,7 @@ const DISEASE_MAP: Array<{ patterns: string[]; info: DiseaseInfo }> = [
       vaccine: "yes", vaccineName: "DTP / DT",
       treatment: "yes",
       whoFactsheet: "https://www.who.int/news-room/fact-sheets/detail/diphtheria",
-      travelerRisk: { africa: "moderate", asia: "moderate", americas: "low" },
+      travelerRisk: { africa: "moderate", asia: "moderate", americas: "low", oceania: "low" },
     },
   },
   {

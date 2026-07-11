@@ -167,7 +167,7 @@ export async function GET(req: NextRequest) {
         ${unknownHtml}
         ${gapHtml}
         <hr style="border-color:#1e293b;margin:20px 0">
-        <p style="color:#475569;font-size:12px">Cron hebdomadaire automatique — lib/disease-data.ts</p>
+        <p style="color:#475569;font-size:12px">Cron horaire automatique — lib/disease-data.ts</p>
       </div>`;
 
     await sendEmail(
