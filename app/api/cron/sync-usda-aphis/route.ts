@@ -13,7 +13,9 @@ import { errorMessage } from "@/lib/error";
 import { scrapeAphisTableauCsv, parseCrosstabCsv, aggregateCrosstabByState } from "@/lib/aphis-tableau-scraper";
 
 export const dynamic     = "force-dynamic";
-export const maxDuration = 60;
+// Tableau fallback launches a real headless browser (cold Lambda start +
+// Chromium extraction can be slow) — Vercel Pro allows 300s for crons.
+export const maxDuration = 300;
 
 const BOM   = String.fromCharCode(65279);
 const clean = (v: string | undefined) => (v ?? "").replace(new RegExp("^" + BOM), "").trim();
