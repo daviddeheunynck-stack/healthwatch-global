@@ -92,12 +92,24 @@ const OG_LOCALE: Record<string, string> = {
   en: "en_US", fr: "fr_FR", es: "es_ES", ar: "ar_SA", id: "id_ID",
 };
 
+// `params.locale` is the raw path segment Next.js matched against `[locale]` —
+// for single-segment requests it never routes anywhere else (bots probing
+// /wp-login.php, /.env*, iOS auto-requesting /apple-touch-icon.png), so this
+// can be an arbitrary string despite the layout's own notFound() guard.
+// `.toLocaleString(locale)` below throws RangeError on anything that isn't a
+// real BCP-47 tag — normalize once here rather than trust the param. Mirrors
+// the same fallback i18n.ts already does for next-intl's own getLocale().
+function resolveLocale(raw: string): string {
+  return (LOCALES as readonly string[]).includes(raw) ? raw : "en";
+}
+
 export async function generateMetadata({
   params,
 }: {
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
-  const { locale } = await params;
+  const { locale: rawLocale } = await params;
+  const locale = resolveLocale(rawLocale);
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   let m = user
@@ -593,7 +605,8 @@ export default async function DashboardPage({
   params: Promise<{ locale: string }>;
   searchParams?: Promise<Record<string, string | string[] | undefined>>;
 }) {
-  const { locale } = await params;
+  const { locale: rawLocale } = await params;
+  const locale = resolveLocale(rawLocale);
   const sp = searchParams ? await searchParams : {};
   const isDemo = sp?.demo === "1";
 
