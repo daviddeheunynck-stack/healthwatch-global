@@ -2,6 +2,7 @@ import { NextRequest } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import * as Sentry from "@sentry/nextjs";
 import { CRON_WINDOWS, logCronRun, isRealProduction } from "@/lib/cron-monitor";
+import { fetchSentryIssues } from "@/lib/sentry-issues";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 30;
@@ -13,50 +14,6 @@ interface CronRun {
   status: string;
   rows:   number;
   error?: string;
-}
-
-interface SentryIssue {
-  title:     string;
-  culprit:   string;
-  count:     string;
-  level:     string;
-  permalink: string;
-  shortId:   string;
-}
-
-interface SentryCheck {
-  ok:     boolean;
-  issues: SentryIssue[];
-  error?: string;
-}
-
-// Reads unresolved issues that fired in the last 24h — separate from the
-// captureCheckIn/captureMessage calls below, which only ever *send* to Sentry.
-// Requires SENTRY_AUTH_TOKEN to carry the `event:read` + `project:read` scopes
-// (the token used for build-time source map upload does not have these).
-async function fetchSentryIssues(): Promise<SentryCheck> {
-  const token   = clean(process.env.SENTRY_AUTH_TOKEN);
-  const org     = clean(process.env.SENTRY_ORG);
-  const project = clean(process.env.SENTRY_PROJECT);
-  const baseUrl = clean(process.env.SENTRY_URL) || "https://sentry.io/";
-  if (!token || !org || !project) {
-    return { ok: false, issues: [], error: "SENTRY_AUTH_TOKEN/SENTRY_ORG/SENTRY_PROJECT manquant(s)" };
-  }
-  try {
-    const query = encodeURIComponent("is:unresolved lastSeen:-24h");
-    const res = await fetch(
-      `${baseUrl}api/0/projects/${org}/${project}/issues/?query=${query}&statsPeriod=24h&limit=25`,
-      { headers: { Authorization: `Bearer ${token}` } },
-    );
-    if (!res.ok) {
-      const body = await res.text();
-      return { ok: false, issues: [], error: `Sentry API ${res.status}: ${body.slice(0, 200)}` };
-    }
-    const issues = (await res.json()) as SentryIssue[];
-    return { ok: true, issues };
-  } catch (err) {
-    return { ok: false, issues: [], error: err instanceof Error ? err.message : String(err) };
-  }
 }
 
 export async function GET(req: NextRequest) {

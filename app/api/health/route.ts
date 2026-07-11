@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import { fetchSentryIssues } from "@/lib/sentry-issues";
 
 export const dynamic = "force-dynamic";
 
@@ -123,6 +124,28 @@ export async function GET(req: Request) {
     }
   }
 
+  // ── Sentry (unresolved errors, last 24h) ─────────────────────────────────
+  // Coarse ok/error is public like `stripe`/`brevo` above (Sentry's own coarse
+  // ping); issue titles/permalinks are sensitive detail, so — like
+  // `stripe_prices_detail` — only returned in `deep` (authenticated) mode.
+  const sentrySummary: { count: number; sample?: { title: string; count: string; permalink: string }[] } = { count: 0 };
+  try {
+    const sentryCheck = await fetchSentryIssues();
+    if (!sentryCheck.ok) {
+      checks.sentry = sentryCheck.error?.includes("manquant") ? "unconfigured" : "error";
+    } else {
+      checks.sentry = sentryCheck.issues.length > 0 ? "error" : "ok";
+      sentrySummary.count = sentryCheck.issues.length;
+      if (deep) {
+        sentrySummary.sample = sentryCheck.issues
+          .slice(0, 5)
+          .map((i) => ({ title: i.title, count: i.count, permalink: i.permalink }));
+      }
+    }
+  } catch {
+    checks.sentry = "error";
+  }
+
   const criticalChecks = deep ? ["supabase", "stripe", "stripe_prices"] : ["supabase", "stripe"];
   const allCriticalOk  = criticalChecks.every((k) => checks[k] === "ok");
   const anyError       = Object.values(checks).some((v) => v === "error");
@@ -134,6 +157,7 @@ export async function GET(req: Request) {
       status,
       checks,
       ...(Object.keys(priceDetail).length ? { stripe_prices_detail: priceDetail } : {}),
+      ...(checks.sentry && checks.sentry !== "unconfigured" ? { sentry_issues: sentrySummary } : {}),
       timestamp: new Date().toISOString(),
     },
     { status: status === "ok" ? 200 : 503 }
