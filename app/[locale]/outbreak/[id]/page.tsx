@@ -11,7 +11,7 @@ import CitationBlock from "@/components/CitationBlock";
 import OutbreakStatsGrid from "@/components/OutbreakStatsGrid";
 import ShareOutbreakButton from "@/components/ShareOutbreakButton";
 import OutbreakCasesChart from "@/components/OutbreakCasesChart";
-import { getLocalizedDisease, getLocalizedCountry, sourceStatus, sourceName, staleOutbreakDays } from "@/lib/outbreaks";
+import { getLocalizedDisease, getLocalizedCountry, getLocalizedDescription, sourceStatus, sourceName, staleOutbreakDays } from "@/lib/outbreaks";
 import { diseaseToSlug, normalizeDisease } from "@/lib/disease-data";
 import { countryToSlug } from "@/lib/country-utils";
 import type { Outbreak } from "@/lib/outbreaks";
@@ -502,10 +502,10 @@ export default async function OutbreakPage({
         </div>
       )}
 
-      {/* Description */}
+      {/* Description — localized via getLocalizedDescription(), falls back to EN */}
       {o.description && (
         <div className="bg-gray-800/30 rounded-lg p-4 border border-gray-700/50 mb-6">
-          <p className="text-gray-300 text-sm leading-relaxed">{o.description}</p>
+          <p className="text-gray-300 text-sm leading-relaxed">{getLocalizedDescription(o, locale)}</p>
         </div>
       )}
 

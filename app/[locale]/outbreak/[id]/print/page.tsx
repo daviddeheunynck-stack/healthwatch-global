@@ -5,7 +5,7 @@
 import { createClient } from "@supabase/supabase-js";
 import { createClient as createServerClient } from "@/lib/supabase-server";
 import { notFound, redirect } from "next/navigation";
-import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
+import { getLocalizedDisease, getLocalizedCountry, getLocalizedDescription } from "@/lib/outbreaks";
 import { getResponseGuidance, RESPONSE_ACTIONS } from "@/lib/response-guidance";
 import { getIncidenceRate, getPopulationThousands } from "@/lib/population-data";
 import type { Metadata } from "next";
@@ -273,11 +273,11 @@ export default async function PrintPage({
             )}
           </div>
 
-          {/* Description */}
+          {/* Description — localized via getLocalizedDescription(), falls back to EN */}
           {o.description && (
             <div className="description">
               <h3>{l.description}</h3>
-              <p>{o.description}</p>
+              <p>{getLocalizedDescription(o, locale)}</p>
             </div>
           )}
 

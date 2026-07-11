@@ -241,7 +241,43 @@ function parseDrcFromSitrepText(text: string): SitrepData | null {
   return { cases, deaths, date };
 }
 
-// ── 4. Email helpers ──────────────────────────────────────────────────────────
+// ── 4. Multi-locale descriptions ─────────────────────────────────────────────
+// Generated directly (not via translation API) so description_fr/es/ar/id can
+// never freeze out of sync with `description` the way a NULL-gated translation
+// backfill can (sync-outbreaks' MyMemory pass only fires once per row — it never
+// re-fires once description_fr is non-null, which is exactly how this bug
+// happened: the 2026-07-09 fix updated description each run but not the locale
+// columns, and the one-time backfill that had already run never came back).
+// CFR-style acronyms aside, the site keeps numbers in en-US grouping across all
+// locales in these auto-generated templates (see sync-ncdc's buildDescriptions).
+
+interface Descriptions { en: string; fr: string; es: string; ar: string; id: string; }
+
+function buildGlobalDescriptions(num: number, cases: number, deaths: number, date: string): Descriptions {
+  const c = cases.toLocaleString("en");
+  const d = deaths.toLocaleString("en");
+  return {
+    en: `WHO multi-country mpox situation report #${num}: ${c} confirmed cases and ${d} deaths cumulative worldwide, as of ${date}. Source: WHO mpox multi-country external situation report.`,
+    fr: `Rapport de situation OMS sur le mpox multi-pays n°${num} : ${c} cas confirmés et ${d} décès cumulés dans le monde, au ${date}. Source : rapport de situation multi-pays de l'OMS sur le mpox.`,
+    es: `Informe de situación multipaís de la OMS sobre mpox n.º ${num}: ${c} casos confirmados y ${d} muertes acumuladas en todo el mundo, al ${date}. Fuente: informe de situación multipaís de la OMS sobre mpox.`,
+    ar: `تقرير حالة منظمة الصحة العالمية متعدد البلدان بشأن الجدري رقم ${num}: ${c} حالة مؤكدة و${d} حالة وفاة تراكمية عالميًا، حتى ${date}. المصدر: تقرير حالة منظمة الصحة العالمية متعدد البلدان بشأن الجدري.`,
+    id: `Laporan situasi multi-negara WHO tentang mpox No. ${num}: ${c} kasus terkonfirmasi dan ${d} kematian kumulatif di seluruh dunia, per ${date}. Sumber: laporan situasi multi-negara WHO tentang mpox.`,
+  };
+}
+
+function buildDrcDescriptions(num: number, cases: number, deaths: number, date: string): Descriptions {
+  const c = cases.toLocaleString("en");
+  const d = deaths.toLocaleString("en");
+  return {
+    en: `WHO multi-country mpox situation report #${num}: ${c} cumulative confirmed cases and ${d} deaths in the Democratic Republic of the Congo, as of ${date}. Source: WHO mpox multi-country external situation report.`,
+    fr: `Rapport de situation OMS sur le mpox multi-pays n°${num} : ${c} cas confirmés cumulés et ${d} décès en République démocratique du Congo, au ${date}. Source : rapport de situation multi-pays de l'OMS sur le mpox.`,
+    es: `Informe de situación multipaís de la OMS sobre mpox n.º ${num}: ${c} casos confirmados acumulados y ${d} muertes en la República Democrática del Congo, al ${date}. Fuente: informe de situación multipaís de la OMS sobre mpox.`,
+    ar: `تقرير حالة منظمة الصحة العالمية متعدد البلدان بشأن الجدري رقم ${num}: ${c} حالة مؤكدة تراكمية و${d} حالة وفاة في جمهورية الكونغو الديمقراطية، حتى ${date}. المصدر: تقرير حالة منظمة الصحة العالمية متعدد البلدان بشأن الجدري.`,
+    id: `Laporan situasi multi-negara WHO tentang mpox No. ${num}: ${c} kasus terkonfirmasi kumulatif dan ${d} kematian di Republik Demokratik Kongo, per ${date}. Sumber: laporan situasi multi-negara WHO tentang mpox.`,
+  };
+}
+
+// ── 5. Email helpers ──────────────────────────────────────────────────────────
 
 async function sendEmail(to: string, subject: string, html: string) {
   if (!BREVO_API_KEY || !to) return;
@@ -372,10 +408,7 @@ export async function GET(req: NextRequest) {
 
   // Step 4a: auto-update DB if extraction succeeded
   if (data) {
-    const description =
-      `WHO multi-country mpox situation report #${latest.num}: ${data.cases.toLocaleString("en")} ` +
-      `confirmed cases and ${data.deaths.toLocaleString("en")} deaths cumulative worldwide, as of ${data.date}. ` +
-      `Source: WHO mpox multi-country external situation report.`;
+    const desc = buildGlobalDescriptions(latest.num, data.cases, data.deaths, data.date);
     const { error } = await supabase
       .from("outbreaks")
       .update({
@@ -383,7 +416,11 @@ export async function GET(req: NextRequest) {
         deaths:          data.deaths,
         date:            data.date,
         source:          latest.url,
-        description,
+        description:     desc.en,
+        description_fr:  desc.fr,
+        description_es:  desc.es,
+        description_ar:  desc.ar,
+        description_id:  desc.id,
         active:          true,
         updated_at:      new Date().toISOString(),
         source_priority: 5,
@@ -407,10 +444,7 @@ export async function GET(req: NextRequest) {
 
   // Step 4c: also update DRC PHEIC row if DRC data extracted
   if (drcData) {
-    const drcDescription =
-      `WHO multi-country mpox situation report #${latest.num}: ${drcData.cases.toLocaleString("en")} ` +
-      `cumulative confirmed cases and ${drcData.deaths.toLocaleString("en")} deaths in the Democratic ` +
-      `Republic of the Congo, as of ${drcData.date}. Source: WHO mpox multi-country external situation report.`;
+    const drcDesc = buildDrcDescriptions(latest.num, drcData.cases, drcData.deaths, drcData.date);
     const { error: drcErr } = await supabase
       .from("outbreaks")
       .update({
@@ -418,7 +452,11 @@ export async function GET(req: NextRequest) {
         deaths:          drcData.deaths,
         date:            drcData.date,
         source:          latest.url,
-        description:     drcDescription,
+        description:     drcDesc.en,
+        description_fr:  drcDesc.fr,
+        description_es:  drcDesc.es,
+        description_ar:  drcDesc.ar,
+        description_id:  drcDesc.id,
         active:          true,
         updated_at:      new Date().toISOString(),
         source_priority: 5,
