@@ -142,7 +142,7 @@ const DISEASE_MAP: Array<{ patterns: string[]; info: DiseaseInfo }> = [
       vaccine: "no",
       treatment: "supportive",
       whoFactsheet: "https://www.who.int/news-room/fact-sheets/detail/middle-east-respiratory-syndrome-coronavirus-(mers-cov)",
-      travelerRisk: { asia: "high", africa: "low" },
+      travelerRisk: { asia: "high", africa: "low", europe: "low" },
     },
   },
   {
@@ -376,7 +376,7 @@ const DISEASE_MAP: Array<{ patterns: string[]; info: DiseaseInfo }> = [
       vaccine: "yes", vaccineName: "Ixchiq (Valneva, 2023)",
       treatment: "supportive",
       whoFactsheet: "https://www.who.int/news-room/fact-sheets/detail/chikungunya",
-      travelerRisk: { africa: "moderate", asia: "moderate", americas: "moderate", oceania: "low" },
+      travelerRisk: { africa: "moderate", asia: "moderate", americas: "moderate", oceania: "low", europe: "low" },
     },
   },
   {

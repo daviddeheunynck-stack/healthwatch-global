@@ -342,9 +342,12 @@ export async function GET(req: NextRequest) {
   console.log(`[usda-aphis] ${dataFormat} → ${rows.length} rows → ${byState.length} states with HPAI herds`);
 
   if (byState.length === 0) {
+    // APHIS migrated this page to a Tableau dashboard embed (~2026-06-27); the CSV
+    // candidates 404 and the HTML fallback has no <table> to parse. Known, tracked
+    // separately — muted here to stop daily Sentry noise until the scraper is rebuilt
+    // against the Tableau export flow (see project memory, 2026-07-11).
     const msg = `[usda-aphis] 0 states parsed (format=${dataFormat}, rows=${rows.length}) — APHIS page may have changed structure`;
     console.warn(msg);
-    if (isRealProduction) Sentry.captureMessage(msg, { level: "warning", tags: { cron: "sync-usda-aphis" } });
     await logCronRun(supabase, "sync-usda-aphis", "no_data", 0);
     return NextResponse.json({ success: true, dataFormat, rows: rows.length, states: 0, inserted: 0, updated: 0, skipped: 0 });
   }
