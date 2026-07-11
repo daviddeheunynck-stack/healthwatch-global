@@ -25,7 +25,9 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { id }   = await params;
-  const locale   = req.nextUrl.searchParams.get("locale") ?? "en";
+  const VALID_LOCALES = new Set(["fr", "en", "es", "ar", "id"]);
+  const rawLocale = req.nextUrl.searchParams.get("locale") ?? "en";
+  const locale    = VALID_LOCALES.has(rawLocale) ? rawLocale : "en";
 
   const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
