@@ -15,6 +15,50 @@ interface CronRun {
   error?: string;
 }
 
+interface SentryIssue {
+  title:     string;
+  culprit:   string;
+  count:     string;
+  level:     string;
+  permalink: string;
+  shortId:   string;
+}
+
+interface SentryCheck {
+  ok:     boolean;
+  issues: SentryIssue[];
+  error?: string;
+}
+
+// Reads unresolved issues that fired in the last 24h — separate from the
+// captureCheckIn/captureMessage calls below, which only ever *send* to Sentry.
+// Requires SENTRY_AUTH_TOKEN to carry the `event:read` + `project:read` scopes
+// (the token used for build-time source map upload does not have these).
+async function fetchSentryIssues(): Promise<SentryCheck> {
+  const token   = clean(process.env.SENTRY_AUTH_TOKEN);
+  const org     = clean(process.env.SENTRY_ORG);
+  const project = clean(process.env.SENTRY_PROJECT);
+  const baseUrl = clean(process.env.SENTRY_URL) || "https://sentry.io/";
+  if (!token || !org || !project) {
+    return { ok: false, issues: [], error: "SENTRY_AUTH_TOKEN/SENTRY_ORG/SENTRY_PROJECT manquant(s)" };
+  }
+  try {
+    const query = encodeURIComponent("is:unresolved lastSeen:-24h");
+    const res = await fetch(
+      `${baseUrl}api/0/projects/${org}/${project}/issues/?query=${query}&statsPeriod=24h&limit=25`,
+      { headers: { Authorization: `Bearer ${token}` } },
+    );
+    if (!res.ok) {
+      const body = await res.text();
+      return { ok: false, issues: [], error: `Sentry API ${res.status}: ${body.slice(0, 200)}` };
+    }
+    const issues = (await res.json()) as SentryIssue[];
+    return { ok: true, issues };
+  } catch (err) {
+    return { ok: false, issues: [], error: err instanceof Error ? err.message : String(err) };
+  }
+}
+
 export async function GET(req: NextRequest) {
   const cronSecret = clean(process.env.CRON_SECRET);
   if (!cronSecret || req.headers.get("authorization") !== `Bearer ${cronSecret}`)
@@ -48,13 +92,20 @@ async function runHealthCheck(_req: NextRequest, supabase: any) {
 
   const brevoKey = clean(process.env.BREVO_API_KEY);
 
-  const [{ count: total }, { count: high }, { count: pheic }, { data: configRows }] =
+  const [[{ count: total }, { count: high }, { count: pheic }, { data: configRows }], sentryCheck] =
     await Promise.all([
-      supabase.from("outbreaks").select("*", { count: "exact", head: true }).eq("active", true),
-      supabase.from("outbreaks").select("*", { count: "exact", head: true }).eq("active", true).eq("risk_level", "high"),
-      supabase.from("outbreaks").select("*", { count: "exact", head: true }).eq("active", true).eq("is_pheic", true),
-      supabase.from("site_config").select("key,value").like("key", "cron:run:%"),
+      Promise.all([
+        supabase.from("outbreaks").select("*", { count: "exact", head: true }).eq("active", true),
+        supabase.from("outbreaks").select("*", { count: "exact", head: true }).eq("active", true).eq("risk_level", "high"),
+        supabase.from("outbreaks").select("*", { count: "exact", head: true }).eq("active", true).eq("is_pheic", true),
+        supabase.from("site_config").select("key,value").like("key", "cron:run:%"),
+      ]),
+      fetchSentryIssues(),
     ]);
+
+  const sentryIssues = sentryCheck.issues;
+  const sentryBroken = !sentryCheck.ok;
+  const sentryAlert  = sentryBroken || sentryIssues.length > 0;
 
   // Build map cronName -> last run info
   const cronMap: Record<string, CronRun & { ageH: number }> = {};
@@ -82,7 +133,7 @@ async function runHealthCheck(_req: NextRequest, supabase: any) {
   });
 
   const hasOverdue = overdue.length > 0;
-  const emoji      = hasOverdue || (pheic ?? 0) > 0 ? "⚠️" : "✅";
+  const emoji      = hasOverdue || sentryAlert || (pheic ?? 0) > 0 ? "⚠️" : "✅";
 
   const cronTableRows = cronStatuses
     .map(({ name, label, windowH, ok }) => {
@@ -95,6 +146,16 @@ async function runHealthCheck(_req: NextRequest, supabase: any) {
     })
     .join("");
 
+  const sentryIssueRows = sentryIssues
+    .slice(0, 10)
+    .map(
+      (i) => `<tr>
+      <td style="padding:3px 8px 3px 0;font-size:12px"><a href="${i.permalink}" style="color:#f87171;text-decoration:none">${i.title}</a></td>
+      <td style="padding:3px 0;font-size:12px;color:#64748b">${i.count}× · ${i.level}</td>
+    </tr>`,
+    )
+    .join("");
+
   const html = `
 <div style="font-family:sans-serif;max-width:580px;margin:0 auto;padding:24px;background:#0f172a;color:#e2e8f0;border-radius:12px">
   <p style="font-size:16px;font-weight:700;color:#60a5fa;margin:0 0 16px">HealthWatch — Health Check ${emoji}</p>
@@ -103,13 +164,21 @@ async function runHealthCheck(_req: NextRequest, supabase: any) {
     <tr><td style="padding:6px 0;color:#94a3b8">Risque HIGH</td><td style="padding:6px 0;font-weight:600;color:#f87171">${high ?? "?"}</td></tr>
     <tr><td style="padding:6px 0;color:#94a3b8">PHEIC actifs</td><td style="padding:6px 0;font-weight:600;color:#c084fc">${pheic ?? "?"}${(pheic ?? 0) > 0 ? " ⚠️" : ""}</td></tr>
     ${hasOverdue ? `<tr><td colspan="2" style="padding:8px 0;color:#f87171;font-weight:700">⚠️ ${overdue.length} cron(s) en retard : ${overdue.join(", ")}</td></tr>` : ""}
+    ${sentryBroken
+      ? `<tr><td colspan="2" style="padding:8px 0;color:#fbbf24;font-weight:700">🔧 Sentry non vérifiable : ${sentryCheck.error}</td></tr>`
+      : sentryIssues.length > 0
+      ? `<tr><td colspan="2" style="padding:8px 0;color:#f87171;font-weight:700">⚠️ ${sentryIssues.length} erreur(s) Sentry (24h)</td></tr>`
+      : `<tr><td style="padding:6px 0;color:#94a3b8">Erreurs Sentry (24h)</td><td style="padding:6px 0;font-weight:600;color:#34d399">0</td></tr>`}
   </table>
   <p style="font-size:12px;color:#60a5fa;margin:0 0 8px;font-weight:600">Dernier passage par cron</p>
   <table style="width:100%;border-collapse:collapse">${cronTableRows}</table>
+  ${sentryIssueRows ? `
+  <p style="font-size:12px;color:#f87171;margin:16px 0 8px;font-weight:600">Détail erreurs Sentry</p>
+  <table style="width:100%;border-collapse:collapse">${sentryIssueRows}</table>` : ""}
   <p style="margin-top:16px;font-size:11px;color:#475569">${new Date().toISOString()}</p>
 </div>`;
 
-  const subject = `${emoji} HealthWatch — ${total ?? "?"} foyers${hasOverdue ? ` · ${overdue.length} cron(s) en retard` : ""} · ${new Date().toLocaleDateString("fr-FR")}`;
+  const subject = `${emoji} HealthWatch — ${total ?? "?"} foyers${hasOverdue ? ` · ${overdue.length} cron(s) en retard` : ""}${sentryIssues.length > 0 ? ` · ${sentryIssues.length} erreur(s) Sentry` : ""} · ${new Date().toLocaleDateString("fr-FR")}`;
 
   if (!isRealProduction) {
     console.log("[health-check] non-production run — skipping Brevo email and Sentry check-in/alerts");
@@ -144,15 +213,19 @@ async function runHealthCheck(_req: NextRequest, supabase: any) {
     );
   }
 
-  await logCronRun(supabase, "health-check", hasOverdue ? "error" : "ok", overdue.length);
+  await logCronRun(supabase, "health-check", hasOverdue || sentryAlert ? "error" : "ok", overdue.length + sentryIssues.length);
 
   if (isRealProduction) {
     Sentry.captureCheckIn({
       checkInId,
       monitorSlug: "health-check",
-      status: hasOverdue ? "error" : "ok",
+      status: hasOverdue || sentryAlert ? "error" : "ok",
     });
   }
 
-  return Response.json({ ok: !hasOverdue, total, high, pheic, overdue, cronStatuses, isRealProduction });
+  return Response.json({
+    ok: !hasOverdue && !sentryAlert,
+    total, high, pheic, overdue, cronStatuses, isRealProduction,
+    sentry: { ok: sentryCheck.ok, issueCount: sentryIssues.length, error: sentryCheck.error },
+  });
 }
