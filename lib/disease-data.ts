@@ -126,7 +126,7 @@ const DISEASE_MAP: Array<{ patterns: string[]; info: DiseaseInfo }> = [
       vaccine: "conditional", vaccineName: "Strategic stockpiles — limited use",
       treatment: "yes",
       whoFactsheet: "https://www.who.int/news-room/fact-sheets/detail/influenza-(avian-and-other-zoonotic)",
-      travelerRisk: { asia: "high", africa: "moderate" },
+      travelerRisk: { asia: "high", africa: "moderate", americas: "moderate" },
     },
   },
   {
