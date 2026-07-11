@@ -10,6 +10,7 @@ import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
 import { normalizeDisease } from "@/lib/disease-data";
 import { findCountry } from "@/lib/geo-data";
 import { errorMessage } from "@/lib/error";
+import { scrapeAphisTableauCsv, parseCrosstabCsv, aggregateCrosstabByState } from "@/lib/aphis-tableau-scraper";
 
 export const dynamic     = "force-dynamic";
 export const maxDuration = 60;
@@ -276,7 +277,7 @@ export async function GET(req: NextRequest) {
 
   // ── 1. Fetch data (CSV candidates first, HTML table fallback) ────────────
   let rawText = "";
-  let dataFormat: "csv" | "html" = "html";
+  let dataFormat: "csv" | "html" | "tableau" = "html";
   let csvSource: string | null = null;
 
   try {
@@ -337,19 +338,30 @@ export async function GET(req: NextRequest) {
   } else {
     rows = parseHTMLTable(rawText);
   }
-  const byState = aggregateByState(rows);
+  let byState = aggregateByState(rows);
 
   console.log(`[usda-aphis] ${dataFormat} → ${rows.length} rows → ${byState.length} states with HPAI herds`);
 
   if (byState.length === 0) {
     // APHIS migrated this page to a Tableau dashboard embed (~2026-06-27); the CSV
-    // candidates 404 and the HTML fallback has no <table> to parse. Known, tracked
-    // separately — muted here to stop daily Sentry noise until the scraper is rebuilt
-    // against the Tableau export flow (see project memory, 2026-07-11).
-    const msg = `[usda-aphis] 0 states parsed (format=${dataFormat}, rows=${rows.length}) — APHIS page may have changed structure`;
-    console.warn(msg);
-    await logCronRun(supabase, "sync-usda-aphis", "no_data", 0);
-    return NextResponse.json({ success: true, dataFormat, rows: rows.length, states: 0, inserted: 0, updated: 0, skipped: 0 });
+    // candidates 404 and the HTML fallback has no <table> to parse. Fall back to
+    // driving the dashboard's own "Download crosstab" UI in a headless browser —
+    // same button a human would click, not a replay of Tableau's internal API.
+    try {
+      const csvText = await scrapeAphisTableauCsv();
+      const crosstabRows = parseCrosstabCsv(csvText);
+      const crosstabByState = aggregateCrosstabByState(crosstabRows);
+      byState = crosstabByState
+        .map((s) => ({ ...s, state: normalizeState(s.state), cattle: 0 }))
+        .filter((s) => US_STATES[s.state]);
+      dataFormat = "tableau";
+      console.log(`[usda-aphis] tableau fallback → ${crosstabRows.length} rows → ${byState.length} states with HPAI herds`);
+    } catch (e) {
+      const msg = `[usda-aphis] 0 states parsed (format=${dataFormat}, rows=${rows.length}) and tableau fallback failed: ${errorMessage(e)}`;
+      console.warn(msg);
+      await logCronRun(supabase, "sync-usda-aphis", "no_data", 0);
+      return NextResponse.json({ success: true, dataFormat, rows: rows.length, states: 0, inserted: 0, updated: 0, skipped: 0, tableauError: errorMessage(e) });
+    }
   }
 
   // ── 2. Load existing USDA records for dedup ───────────────────────────────

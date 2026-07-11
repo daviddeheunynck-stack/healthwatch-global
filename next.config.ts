@@ -62,6 +62,10 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
+  // @sparticuz/chromium ships a native binary + puppeteer-core drives it —
+  // both must stay external to the webpack bundle (used by the USDA APHIS
+  // Tableau-dashboard scraper cron).
+  serverExternalPackages: ["@sparticuz/chromium", "puppeteer-core"],
   async headers() {
     return [
       {
