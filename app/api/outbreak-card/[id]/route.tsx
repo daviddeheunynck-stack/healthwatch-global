@@ -47,14 +47,18 @@ export async function GET(
   const disease  = (locale === "fr" ? o.disease : null) ?? o.disease_en ?? o.disease;
   const country  = o.country_en ?? o.country;
   const color    = RISK_COLOR[o.risk_level]  ?? "#6b7280";
-  const riskLabel = (RISK_LABEL[o.risk_level] ?? RISK_LABEL.low)[locale] ?? RISK_LABEL.low.en;
+  // Satori (used by ImageResponse) can't shape Arabic glyphs — "lookupType: 5 -
+  // substFormat: 3 is not yet supported" — fall back to English for ar, same as
+  // the sibling /api/og route.
+  const labelLocale = locale === "ar" ? "en" : locale;
+  const riskLabel = (RISK_LABEL[o.risk_level] ?? RISK_LABEL.low)[labelLocale] ?? RISK_LABEL.low.en;
   const numLocale = locale === "ar" ? "ar-SA" : locale;
   const hasData  = o.cases > 0;
   const cfr      = hasData ? (o.deaths / o.cases * 100).toFixed(1) + "%" : "—";
 
-  const casesLabel  = { fr: "Cas", en: "Cases", es: "Casos", ar: "الحالات", id: "Kasus" }[locale] ?? "Cases";
-  const deathsLabel = { fr: "Décès", en: "Deaths", es: "Fallecidos", ar: "الوفيات", id: "Kematian" }[locale] ?? "Deaths";
-  const cfrLabel    = { fr: "Létalité", en: "CFR", es: "Letalidad", ar: "معدل الوفيات", id: "CFR" }[locale] ?? "CFR";
+  const casesLabel  = { fr: "Cas", en: "Cases", es: "Casos", id: "Kasus" }[labelLocale] ?? "Cases";
+  const deathsLabel = { fr: "Décès", en: "Deaths", es: "Fallecidos", id: "Kematian" }[labelLocale] ?? "Deaths";
+  const cfrLabel    = { fr: "Létalité", en: "CFR", es: "Letalidad", id: "CFR" }[labelLocale] ?? "CFR";
 
   return new ImageResponse(
     (
@@ -99,11 +103,11 @@ export async function GET(
         <div style={{ flex: 1, display: "flex", flexDirection: "column", padding: "36px 68px" }}>
 
           {/* Disease + Country */}
-          <div style={{ marginBottom: 40 }}>
+          <div style={{ display: "flex", flexDirection: "column", marginBottom: 40 }}>
             <div style={{ fontSize: 56, fontWeight: 800, color: "white", lineHeight: 1.1, marginBottom: 12 }}>
               {disease}
             </div>
-            <div style={{ fontSize: 28, color: "#94a3b8", fontWeight: 500 }}>
+            <div style={{ display: "flex", fontSize: 28, color: "#94a3b8", fontWeight: 500 }}>
               📍 {country} · {o.date}
             </div>
           </div>
