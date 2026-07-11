@@ -95,6 +95,10 @@ export async function scrapeAphisTableauCsv(): Promise<string> {
     const page = await browser.newPage();
     await page.setUserAgent(USER_AGENT);
     await page.setViewport({ width: 1280, height: 900 });
+    // Tableau renders its UI in the browser's locale — Chrome's default
+    // depends on the OS/container, so pin it explicitly. All the selectors
+    // below target the French labels this dashboard serves for fr-FR.
+    await page.setExtraHTTPHeaders({ "Accept-Language": "fr-FR,fr;q=0.9" });
 
     let csvText: string | null = null;
     page.on("response", (res) => {
