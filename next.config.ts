@@ -64,8 +64,13 @@ const securityHeaders = [
 const nextConfig: NextConfig = {
   // @sparticuz/chromium ships a native binary + puppeteer-core drives it —
   // both must stay external to the webpack bundle (used by the USDA APHIS
-  // Tableau-dashboard scraper cron).
+  // Tableau-dashboard scraper cron). serverExternalPackages alone only stops
+  // webpack from bundling the JS; the binary itself still needs to be
+  // explicitly included in the route's output trace or Vercel drops it.
   serverExternalPackages: ["@sparticuz/chromium", "puppeteer-core"],
+  outputFileTracingIncludes: {
+    "/api/cron/sync-usda-aphis": ["./node_modules/@sparticuz/chromium/**/*"],
+  },
   async headers() {
     return [
       {
