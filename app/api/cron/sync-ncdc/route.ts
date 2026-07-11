@@ -101,6 +101,31 @@ function extractCumulative(text: string, year: number): Cumulative | null {
   return best ? { confirmed: best.confirmed, deaths: best.deaths, cfr: best.cfr } : null;
 }
 
+interface Descriptions { en: string; fr: string; es: string; ar: string; id: string; }
+
+// Factual description in all 5 site locales, generated directly rather than via
+// translation API — so it can never go stale the way a NULL-gated backfill can
+// (sync-outbreaks' MyMemory backfill only fires once per row: it stops as soon as
+// description_fr is non-null, so it never re-fires when the English source changes).
+// Disease names are wrapped in quotes/an idafa construction rather than a definite
+// article so the same template works across all CATEGORIES diseases without a
+// per-language gender-agreement table. CFR is kept untranslated in every locale,
+// matching the site-wide convention (see app/[locale]/methodology/page.tsx).
+function buildDescriptions(
+  diseaseInfo: { name_en: string; name_fr: string; name_es: string; name_ar: string; name_id: string },
+  date: string, confirmed: number, deaths: number, cfr: number, year: number,
+): Descriptions {
+  const c = confirmed.toLocaleString("en");
+  const d = deaths.toLocaleString("en");
+  return {
+    en: `Nigeria CDC — ${diseaseInfo.name_en} situation report (${date}): ${c} confirmed cases and ${d} deaths (CFR ${cfr}%) cumulative in ${year}. Source: NCDC weekly sitrep.`,
+    fr: `CDC Nigeria — rapport de situation « ${diseaseInfo.name_fr} » (${date}) : ${c} cas confirmés et ${d} décès (CFR ${cfr} %) cumulés en ${year}. Source : sitrep hebdomadaire du NCDC.`,
+    es: `CDC de Nigeria — informe de situación «${diseaseInfo.name_es}» (${date}): ${c} casos confirmados y ${d} muertes (CFR ${cfr}%) acumulados en ${year}. Fuente: informe semanal del NCDC.`,
+    ar: `مركز السيطرة على الأمراض في نيجيريا — تقرير حالة ${diseaseInfo.name_ar} (${date}): ${c} حالة مؤكدة و${d} حالة وفاة (CFR ${cfr}٪) تراكمياً في عام ${year}. المصدر: التقرير الأسبوعي لمركز نيجيريا لمكافحة الأمراض.`,
+    id: `CDC Nigeria — laporan situasi ${diseaseInfo.name_id} (${date}): ${c} kasus terkonfirmasi dan ${d} kematian (CFR ${cfr}%) kumulatif pada ${year}. Sumber: sitrep mingguan NCDC.`,
+  };
+}
+
 interface Sitrep { pdfUrl: string; pageUrl: string; date: string; }
 
 // From a disease category page, find the latest sitrep's PDF + reporting date.
@@ -182,11 +207,8 @@ export async function GET(req: NextRequest) {
       const ex = extractCumulative(text, year);
       if (!ex) { log.push({ label, status: "skip", detail: "no CFR-valid cumulative row" }); results.skipped++; continue; }
 
-      const description =
-        `Nigeria CDC — ${diseaseInfo.name_en} situation report (${sit.date}): ` +
-        `${ex.confirmed.toLocaleString("en")} confirmed cases and ${ex.deaths.toLocaleString("en")} deaths ` +
-        `(CFR ${ex.cfr}%) cumulative in ${year}. Source: NCDC weekly sitrep.`;
-      const riskLevel = assessRisk(diseaseInfo.name_en, description, ex.confirmed, ex.deaths);
+      const desc = buildDescriptions(diseaseInfo, sit.date, ex.confirmed, ex.deaths, ex.cfr, year);
+      const riskLevel = assessRisk(diseaseInfo.name_en, desc.en, ex.confirmed, ex.deaths);
 
       const dcKey       = `${diseaseInfo.name_en.toLowerCase()}|nigeria`;
       const existingRow = byDC.get(dcKey);
@@ -206,7 +228,9 @@ export async function GET(req: NextRequest) {
         }
         const { error } = await supabase.from("outbreaks").update({
           cases: ex.confirmed, deaths: ex.deaths, date: sit.date, source: sit.pdfUrl,
-          description, risk_level: riskLevel, active: true, source_priority: 5,
+          description: desc.en, description_fr: desc.fr, description_es: desc.es,
+          description_ar: desc.ar, description_id: desc.id,
+          risk_level: riskLevel, active: true, source_priority: 5,
         }).eq("id", existingRow.id).lte("source_priority", 5);
         if (error) { log.push({ label, status: "error", detail: error.message }); results.errors++; }
         else { log.push({ label, status: "updated", detail: `${ex.confirmed}/${ex.deaths} (${sit.date})` }); results.updated++; }
@@ -216,7 +240,9 @@ export async function GET(req: NextRequest) {
           country: nigeria.name_fr, country_en: nigeria.name_en, country_ar: nigeria.name_ar,
           region: nigeria.region, lat: nigeria.lat, lng: nigeria.lng,
           cases: ex.confirmed, deaths: ex.deaths, risk_level: riskLevel, date: sit.date,
-          source: sit.pdfUrl, description, active: true, is_seed: false, source_priority: 5,
+          source: sit.pdfUrl, description: desc.en, description_fr: desc.fr, description_es: desc.es,
+          description_ar: desc.ar, description_id: desc.id,
+          active: true, is_seed: false, source_priority: 5,
           admin1: null, admin1_lat: null, admin1_lng: null,
         });
         if (error) { log.push({ label, status: "error", detail: error.message }); results.errors++; }
