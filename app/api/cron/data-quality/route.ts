@@ -373,10 +373,23 @@ export async function GET(req: NextRequest) {
     { pattern: /diphtheria|diphtérie/i,      minCases: 50,   minCFRPct: 2,    note: "CFR 5-10% non vacciné" },
   ];
 
+  // Verified exceptions: deaths=0 confirmed accurate against the primary source
+  // (an explicit reported zero, not a parsing gap that should be NULL instead) —
+  // without this, the check re-flags the same already-answered question every
+  // single day forever, since the underlying count has no reason to change.
+  // Re-verify against the source before ever removing an entry from this list.
+  const VERIFIED_ZERO_DEATHS = new Set([
+    // CDC explicitly states "0 confirmed deaths from measles in 2026" (measles_hosp.json) —
+    // verified live 2026-07-10, see project_measles_us_description_drift_fixed memory.
+    "measles|united states",
+  ]);
+
   for (const row of rows ?? []) {
     if (row.is_seed) continue; // GHO annual data rarely tracks deaths — null preferred over 0, but skip to avoid noise
     if (row.deaths !== 0) continue;
     const name = (row.disease_en ?? row.disease ?? "").toLowerCase();
+    const countryKey = (row.country_en ?? row.country ?? "").toLowerCase();
+    if (VERIFIED_ZERO_DEATHS.has(`${name}|${countryKey}`)) continue;
     for (const rule of LETHALITY_RULES) {
       if (!rule.pattern.test(name)) continue;
       if ((row.cases ?? 0) < rule.minCases) continue;
