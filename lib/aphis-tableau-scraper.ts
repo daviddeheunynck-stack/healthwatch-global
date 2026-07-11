@@ -36,7 +36,8 @@ async function launchBrowser(): Promise<Browser> {
   return puppeteer.launch({
     args: chromium.args,
     executablePath: await chromium.executablePath(),
-    headless: true,
+    // chromium.args already bakes in --headless='shell' — omit the headless
+    // option entirely so Puppeteer doesn't add a second, conflicting flag.
   });
 }
 
@@ -105,9 +106,11 @@ export async function scrapeAphisTableauCsv(): Promise<string> {
       res.text().then((t) => { csvText = t; }).catch(() => { /* response body unavailable — ignore */ });
     });
 
-    await page.goto(TABLEAU_VIEW_URL, { waitUntil: "networkidle2", timeout: 45_000 });
+    await page.goto(TABLEAU_VIEW_URL, { waitUntil: "networkidle2", timeout: 60_000 });
 
-    const downloadBtn = await page.waitForSelector("aria/Télécharger le tableau croisé", { timeout: 20_000 });
+    // --single-process (required in the Lambda sandbox) renders noticeably
+    // slower than a normal desktop Chrome — give this more headroom.
+    const downloadBtn = await page.waitForSelector("aria/Télécharger le tableau croisé", { timeout: 40_000 });
     if (!downloadBtn) throw new Error("download button not found");
     await downloadBtn.click();
 
