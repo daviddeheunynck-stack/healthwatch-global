@@ -106,12 +106,23 @@ export async function scrapeAphisTableauCsv(): Promise<string> {
       res.text().then((t) => { csvText = t; }).catch(() => { /* response body unavailable — ignore */ });
     });
 
+    const pageErrors: string[] = [];
+    page.on("console", (msg) => { if (msg.type() === "error") pageErrors.push(`console: ${msg.text().slice(0, 200)}`); });
+    page.on("pageerror", (err) => { pageErrors.push(`pageerror: ${String(err).slice(0, 200)}`); });
+    page.on("requestfailed", (req) => { pageErrors.push(`requestfailed: ${req.url().slice(0, 120)} ${req.failure()?.errorText ?? ""}`); });
+
     await page.goto(TABLEAU_VIEW_URL, { waitUntil: "networkidle2", timeout: 60_000 });
 
     // --single-process (required in the Lambda sandbox) renders noticeably
     // slower than a normal desktop Chrome — give this more headroom.
-    const downloadBtn = await page.waitForSelector("aria/Télécharger le tableau croisé", { timeout: 40_000 });
-    if (!downloadBtn) throw new Error("download button not found");
+    const downloadBtn = await page.waitForSelector("aria/Télécharger le tableau croisé", { timeout: 40_000 }).catch(() => null);
+    if (!downloadBtn) {
+      const title = await page.title().catch(() => "?");
+      const bodyText = await page.evaluate(() => document.body?.innerText?.slice(0, 300) ?? "").catch(() => "?");
+      throw new Error(
+        `download button not found — title="${title}" body="${bodyText.replace(/\s+/g, " ")}" errors=[${pageErrors.slice(0, 5).join(" | ")}]`
+      );
+    }
     await downloadBtn.click();
 
     // The export dialog's listbox can take a moment to populate after the
