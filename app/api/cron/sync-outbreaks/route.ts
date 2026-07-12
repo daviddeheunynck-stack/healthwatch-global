@@ -47,6 +47,11 @@ async function translateDescription(text: string): Promise<{
 
     const responses = await Promise.all(calls);
     for (let i = 0; i < pairs.length; i++) {
+      // MyMemory returns HTTP 200 with an in-body error (e.g. responseStatus 403
+      // "QUERY LENGTH LIMIT EXCEEDED. MAX ALLOWED QUERY : 500 CHARS") whose
+      // translatedText is the error message itself, not a translation — reject
+      // anything that isn't an explicit 200 before trusting translatedText.
+      if (Number(responses[i]?.responseStatus) !== 200) continue;
       const t = responses[i]?.responseData?.translatedText ?? null;
       // MyMemory returns the original text when it can't translate — discard those
       if (t && t !== text) results[pairs[i].key] = t;
