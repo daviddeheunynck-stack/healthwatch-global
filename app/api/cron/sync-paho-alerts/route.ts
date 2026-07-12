@@ -94,6 +94,73 @@ function findMentionedAmericasCountries(text: string): string[] {
   return found;
 }
 
+// ── Per-country figure extraction (regional bulletins) ─────────────────────────
+// PAHO's regional alerts ("Diphtheria in the Americas Region", "Measles in the
+// Americas Region"...) report one aggregate country list per alert, e.g.:
+//   "reported between three countries: Brazil (n= 2 cases), Haiti (n= 159
+//   cases, including five deaths), and Peru (n= 2 cases)"
+// A naive "any country name in the first 2500 chars" scan picks up incidental
+// mentions from footnotes (vaccination-coverage lists, etc.) rather than the
+// actually-affected country, and the regional total (not a single country's
+// share) for cases/deaths. Parse the "(n= X cases[, including Y deaths])"
+// idiom directly so each country gets its own figures.
+
+function escapeRegExp(s: string): string {
+  return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+const WORDS_TO_NUM: Record<string, number> = {
+  zero:0,one:1,two:2,three:3,four:4,five:5,six:6,seven:7,eight:8,nine:9,ten:10,
+  eleven:11,twelve:12,thirteen:13,fourteen:14,fifteen:15,sixteen:16,
+  seventeen:17,eighteen:18,nineteen:19,twenty:20,
+};
+function wordOrNum(s: string): number {
+  const n = parseInt(s.replace(/[\s,]/g, ""), 10);
+  if (!isNaN(n)) return n;
+  return WORDS_TO_NUM[s.toLowerCase().trim()] ?? 0;
+}
+
+// Isolate the current-year summary paragraph: from the "Summary of the
+// situation" heading (if present) up to the SECOND "In 20YY," year marker.
+// The first marker opens the current-year sentence; the second opens the
+// year-over-year comparison paragraph, which restates the same country list
+// with the prior year's (stale) figures — without this cutoff, a country
+// absent this year but present last year would resolve to last year's count.
+function currentYearBlock(text: string): string {
+  const headingIdx = text.search(/summary of the situation/i);
+  const rest = text.slice(headingIdx >= 0 ? headingIdx : 0);
+  const yearRe = /\bIn\s+20\d{2},/g;
+  let m: RegExpExecArray | null;
+  let count = 0;
+  while ((m = yearRe.exec(rest)) !== null) {
+    if (++count === 2) return rest.slice(0, m.index);
+  }
+  return rest;
+}
+
+interface CountryFigure { country: string; cases: number; deaths: number }
+
+function extractCountryFigures(text: string): CountryFigure[] {
+  const block   = currentYearBlock(text);
+  const results: CountryFigure[] = [];
+  const seen    = new Set<string>();
+  for (const name of AMERICAS_COUNTRIES) {
+    const geo = COUNTRIES[name];
+    if (!geo || seen.has(geo.name_en)) continue;
+    const re = new RegExp(
+      escapeRegExp(name) + "\\s*\\(n\\s*=?\\s*([\\d,]+)\\s*cases?(?:,?\\s*including\\s*([\\w,]+)\\s*deaths?)?\\)",
+      "i",
+    );
+    const m = re.exec(block);
+    if (!m) continue;
+    const cases = parseInt(m[1].replace(/,/g, ""), 10);
+    if (isNaN(cases)) continue;
+    results.push({ country: name, cases, deaths: m[2] ? wordOrNum(m[2]) : 0 });
+    seen.add(geo.name_en);
+  }
+  return results.sort((a, b) => b.cases - a.cases);
+}
+
 // ── Listing page parser ───────────────────────────────────────────────────────
 
 interface AlertEntry {
@@ -170,8 +237,31 @@ async function extractAlertData(entry: AlertEntry): Promise<AlertData[]> {
     return [];
   }
 
-  const bodyText       = htmlToText(html);
-  const { cases, deaths } = extractNumbers(bodyText);
+  // PAHO's /en/documents/... pages are now thin landing pages (nav chrome +
+  // a one-paragraph generic teaser, no country names) that link out to the
+  // actual alert as a PDF — e.g. "Given the emergence of new cases in some
+  // countries of the Region" with the real country/case detail only in the
+  // linked PDF. Fetch and parse it when present; fall back to the HTML body
+  // text for any alert page that still publishes inline (older format).
+  let pdfText = "";
+  const pdfHref = html.match(/href="([^"]+\.pdf)"/i)?.[1];
+  if (pdfHref) {
+    const pdfUrl = pdfHref.startsWith("http") ? pdfHref : PAHO_BASE + pdfHref;
+    try {
+      const pdfRes = await fetch(pdfUrl, { headers: FETCH_HEADERS, signal: AbortSignal.timeout(20_000) });
+      if (pdfRes.ok) {
+        const pdfParse = (await import("pdf-parse/lib/pdf-parse.js" as string)).default as
+          (buf: Buffer, opts?: object) => Promise<{ text: string }>;
+        const { text } = await pdfParse(Buffer.from(await pdfRes.arrayBuffer()), { max: 5 });
+        pdfText = text;
+      }
+    } catch (e) {
+      console.warn("[paho] fetch/parse PDF:", errorMessage(e));
+    }
+  }
+
+  const bodyText = pdfText.trim().length > 200 ? pdfText : htmlToText(html);
+  let { cases, deaths } = extractNumbers(bodyText);
 
   // Primary country: look in the ORIGINAL title for "in [the] Country" pattern.
   // Optional "the" handles "in the Democratic Republic of the Congo and Uganda".
@@ -186,9 +276,21 @@ async function extractAlertData(entry: AlertEntry): Promise<AlertData[]> {
     }
   }
 
-  // Fallback: scan first 2500 chars of body for Americas country names.
-  // PAHO "in the Americas Region" alerts list specific countries in the
-  // article body (often 500-2000 chars in, after the heading/summary).
+  // Regional alerts ("Diphtheria in the Americas Region"): parse the
+  // per-country "(n= X cases[, including Y deaths])" breakdown and take the
+  // most-affected country with its own figures — see extractCountryFigures().
+  if (primaryCountries.length === 0) {
+    const figures = extractCountryFigures(bodyText);
+    if (figures.length > 0) {
+      primaryCountries = [figures[0].country];
+      cases  = figures[0].cases;
+      deaths = figures[0].deaths;
+    }
+  }
+
+  // Last-resort fallback: any Americas country name in the first 2500 chars,
+  // paired with the document-wide totals (used only if the structured
+  // per-country breakdown above isn't present in this alert's text).
   if (primaryCountries.length === 0) {
     const intro  = bodyText.substring(0, 2500);
     primaryCountries = findMentionedAmericasCountries(intro).slice(0, 3);
@@ -198,7 +300,11 @@ async function extractAlertData(entry: AlertEntry): Promise<AlertData[]> {
 
   // Use the single primary country (or first if multiple mentioned)
   const targetCountries = [primaryCountries[0]];
-  const description     = bodyText.substring(0, 500).trim();
+  // PDF text starts with a "Suggested citation: ..." boilerplate block before
+  // the actual situation summary — skip past it so the stored description is
+  // the substantive text, not a citation line.
+  const description = (pdfText.trim().length > 200 ? currentYearBlock(bodyText) : bodyText)
+    .substring(0, 500).trim();
 
   const results: AlertData[] = [];
   for (const countryKey of targetCountries) {
@@ -319,6 +425,15 @@ export async function GET(req: NextRequest) {
         continue;
       }
 
+      // Skip 0/0 entries — routine surveillance bulletins (e.g. flu positivity-rate
+      // updates) report percentages, not case counts, and would otherwise insert an
+      // empty "outbreak" row. Same guard as sync-africa-cdc.
+      if (item.cases === 0 && item.deaths === 0) {
+        log.push({ label, status: "skip", detail: "0 cases and 0 deaths — likely a surveillance bulletin without a countable figure" });
+        results.skipped++;
+        continue;
+      }
+
       const geo = findCountry(item.country_en);
       if (!geo) {
         log.push({ label, status: "skip", detail: "country not in geo-data" });
@@ -391,6 +506,7 @@ export async function GET(req: NextRequest) {
           description: item.description,
           active:       true,
           is_seed:      false,
+          source_priority: 5,
           admin1:       item.admin1 ?? null,
           admin1_lat:   item.admin1_lat ?? null,
           admin1_lng:   item.admin1_lng ?? null,
