@@ -49,15 +49,75 @@ export async function GET(req: NextRequest) {
   }
   const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE);
 
-  // ── J+1 : First action — configure alert regions ─────────────────────────
-  const { data: j1Users, error: j1Err } = await supabase
-    .from("profiles")
-    .select("id, email, plan, locale, trial_ends_at, display_filters")
-    .eq("plan", "pro")
-    .not("trial_ends_at", "is", null)
-    .is("stripe_subscription_id", null)
-    .filter("created_at", "gte", new Date(Date.now() - 1.5 * 86400_000).toISOString())
-    .filter("created_at", "lt",  new Date(Date.now() - 0.5 * 86400_000).toISOString());
+  // Five cohort queries (J+1/J+3/J+7/J+12/J+32) — same table, different date-window
+  // filters, none depends on another's result — fetched concurrently instead of
+  // one after another. Error checks below preserve the original fail-fast order
+  // (abort on the first of the five that errored, same as when they ran in series).
+  //
+  // J+12/J+32 guard: trial_ends_at must be within 4 days of J+12 — skips pilot
+  // users (35-day trial) who would otherwise get a confusing "2 days left" email
+  // on day 12. Pilot users have 35-day trials; by day 32 regular 14-day pro users
+  // have already been downgraded to free by expire-trials, so plan=pro + created_at
+  // ~32 days ago + no stripe sub uniquely identifies pilot users.
+  const j12WindowEnd = new Date(Date.now() + 4 * 86_400_000).toISOString();
+  const j32WindowEnd = new Date(Date.now() + 4 * 86_400_000).toISOString();
+
+  const [
+    { data: j1Users,  error: j1Err },
+    { data: j3Users,  error: j3Err },
+    { data: j7Users,  error: j7Err },
+    { data: j12Users, error: j12Err },
+    { data: j32Users, error: j32Err },
+  ] = await Promise.all([
+    // ── J+1 : First action — configure alert regions ───────────────────────
+    supabase
+      .from("profiles")
+      .select("id, email, plan, locale, trial_ends_at, display_filters")
+      .eq("plan", "pro")
+      .not("trial_ends_at", "is", null)
+      .is("stripe_subscription_id", null)
+      .filter("created_at", "gte", new Date(Date.now() - 1.5 * 86400_000).toISOString())
+      .filter("created_at", "lt",  new Date(Date.now() - 0.5 * 86400_000).toISOString()),
+    // ── J+3 : Discover Pro features ─────────────────────────────────────────
+    supabase
+      .from("profiles")
+      .select("id, email, plan, locale, trial_ends_at, display_filters")
+      .eq("plan", "pro")
+      .not("trial_ends_at", "is", null)
+      .is("stripe_subscription_id", null)
+      .filter("created_at", "gte", new Date(Date.now() - 3.5 * 86400_000).toISOString())
+      .filter("created_at", "lt",  new Date(Date.now() - 2.5 * 86400_000).toISOString()),
+    // ── J+7 : Mid-trial check-in — PDF report spotlight ─────────────────────
+    supabase
+      .from("profiles")
+      .select("id, email, plan, locale, trial_ends_at, display_filters")
+      .eq("plan", "pro")
+      .not("trial_ends_at", "is", null)
+      .is("stripe_subscription_id", null)
+      .filter("created_at", "gte", new Date(Date.now() - 7.5 * 86400_000).toISOString())
+      .filter("created_at", "lt",  new Date(Date.now() - 6.5 * 86400_000).toISOString()),
+    // ── J+12 : 2 days left — subscribe now ──────────────────────────────────
+    supabase
+      .from("profiles")
+      .select("id, email, plan, locale, trial_ends_at, display_filters")
+      .eq("plan", "pro")
+      .not("trial_ends_at", "is", null)
+      .lt("trial_ends_at", j12WindowEnd)
+      .is("stripe_subscription_id", null)
+      .filter("created_at", "gte", new Date(Date.now() - 12.5 * 86400_000).toISOString())
+      .filter("created_at", "lt",  new Date(Date.now() - 11.5 * 86400_000).toISOString()),
+    // ── J+32 : Pilot conversion — 3 days left → upgrade to Team ─────────────
+    supabase
+      .from("profiles")
+      .select("id, email, plan, locale, trial_ends_at, display_filters")
+      .eq("plan", "pro")
+      .not("trial_ends_at", "is", null)
+      .lt("trial_ends_at", j32WindowEnd)
+      .gt("trial_ends_at", new Date().toISOString())
+      .is("stripe_subscription_id", null)
+      .filter("created_at", "gte", new Date(Date.now() - 32.5 * 86400_000).toISOString())
+      .filter("created_at", "lt",  new Date(Date.now() - 31.5 * 86400_000).toISOString()),
+  ]);
 
   if (j1Err) {
     console.error("[onboarding] J+1 query error:", j1Err);
@@ -65,78 +125,24 @@ export async function GET(req: NextRequest) {
     await logCronRun(supabase, "onboarding-sequence", "error", 0, j1Err.message);
     return NextResponse.json({ error: j1Err.message }, { status: 500 });
   }
-
-  // ── J+3 : Discover Pro features ──────────────────────────────────────────
-  const { data: j3Users, error: j3Err } = await supabase
-    .from("profiles")
-    .select("id, email, plan, locale, trial_ends_at, display_filters")
-    .eq("plan", "pro")
-    .not("trial_ends_at", "is", null)
-    .is("stripe_subscription_id", null)
-    .filter("created_at", "gte", new Date(Date.now() - 3.5 * 86400_000).toISOString())
-    .filter("created_at", "lt",  new Date(Date.now() - 2.5 * 86400_000).toISOString());
-
   if (j3Err) {
     console.error("[onboarding] J+3 query error:", j3Err);
     Sentry.captureException(j3Err, { tags: { cron: "onboarding-sequence", step: "j3-query" } });
     await logCronRun(supabase, "onboarding-sequence", "error", 0, j3Err.message);
     return NextResponse.json({ error: j3Err.message }, { status: 500 });
   }
-
-  // ── J+7 : Mid-trial check-in — PDF report spotlight ──────────────────────
-  const { data: j7Users, error: j7Err } = await supabase
-    .from("profiles")
-    .select("id, email, plan, locale, trial_ends_at, display_filters")
-    .eq("plan", "pro")
-    .not("trial_ends_at", "is", null)
-    .is("stripe_subscription_id", null)
-    .filter("created_at", "gte", new Date(Date.now() - 7.5 * 86400_000).toISOString())
-    .filter("created_at", "lt",  new Date(Date.now() - 6.5 * 86400_000).toISOString());
-
   if (j7Err) {
     console.error("[onboarding] J+7 query error:", j7Err);
     Sentry.captureException(j7Err, { tags: { cron: "onboarding-sequence", step: "j7-query" } });
     await logCronRun(supabase, "onboarding-sequence", "error", 0, j7Err.message);
     return NextResponse.json({ error: j7Err.message }, { status: 500 });
   }
-
-  // ── J+12 : 2 days left — subscribe now ───────────────────────────────────
-  // Guard: trial_ends_at must be within 4 days — skips pilot users (35-day trial)
-  // who would otherwise receive a confusing "2 days left" email on day 12.
-  const j12WindowEnd = new Date(Date.now() + 4 * 86_400_000).toISOString();
-  const { data: j12Users, error: j12Err } = await supabase
-    .from("profiles")
-    .select("id, email, plan, locale, trial_ends_at, display_filters")
-    .eq("plan", "pro")
-    .not("trial_ends_at", "is", null)
-    .lt("trial_ends_at", j12WindowEnd)
-    .is("stripe_subscription_id", null)
-    .filter("created_at", "gte", new Date(Date.now() - 12.5 * 86400_000).toISOString())
-    .filter("created_at", "lt",  new Date(Date.now() - 11.5 * 86400_000).toISOString());
-
   if (j12Err) {
     console.error("[onboarding] J+12 query error:", j12Err);
     Sentry.captureException(j12Err, { tags: { cron: "onboarding-sequence", step: "j12-query" } });
     await logCronRun(supabase, "onboarding-sequence", "error", 0, j12Err.message);
     return NextResponse.json({ error: j12Err.message }, { status: 500 });
   }
-
-  // ── J+32 : Pilot conversion — 3 days left → upgrade to Team ─────────────
-  // Pilot users have 35-day trials. By day 32, regular 14-day pro users have
-  // already been downgraded to free by expire-trials, so plan=pro + created_at
-  // ~32 days ago + no stripe sub uniquely identifies pilot users.
-  const j32WindowEnd = new Date(Date.now() + 4 * 86_400_000).toISOString();
-  const { data: j32Users, error: j32Err } = await supabase
-    .from("profiles")
-    .select("id, email, plan, locale, trial_ends_at, display_filters")
-    .eq("plan", "pro")
-    .not("trial_ends_at", "is", null)
-    .lt("trial_ends_at", j32WindowEnd)
-    .gt("trial_ends_at", new Date().toISOString())
-    .is("stripe_subscription_id", null)
-    .filter("created_at", "gte", new Date(Date.now() - 32.5 * 86400_000).toISOString())
-    .filter("created_at", "lt",  new Date(Date.now() - 31.5 * 86400_000).toISOString());
-
   if (j32Err) {
     console.error("[onboarding] J+32 query error:", j32Err);
     Sentry.captureException(j32Err, { tags: { cron: "onboarding-sequence", step: "j32-query" } });

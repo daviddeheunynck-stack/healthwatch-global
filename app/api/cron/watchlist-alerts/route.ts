@@ -56,33 +56,33 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ sent: 0, unchanged: 0, message: "No watchlist entries" });
   }
 
-  // 2. Get unique outbreak IDs and fetch current data
+  // 2-4. Current outbreak data, dedup log, and user profiles — three independent
+  // queries (outbreakIds/userIds are all this loop needs), fetched concurrently.
   const outbreakIds = [...new Set(entries.map((e) => e.outbreak_id))];
-  const { data: outbreaks } = await supabase
-    .from("outbreaks")
-    .select("id, disease, disease_en, disease_ar, country, country_en, country_ar, cases, deaths, risk_level, date, source, is_pheic")
-    .in("id", outbreakIds)
-    .eq("active", true);
+  const userIds = [...new Set(entries.map((e) => e.user_id))];
+
+  const [{ data: outbreaks }, { data: logs }, { data: profiles }] = await Promise.all([
+    supabase
+      .from("outbreaks")
+      .select("id, disease, disease_en, disease_ar, country, country_en, country_ar, cases, deaths, risk_level, date, source, is_pheic")
+      .in("id", outbreakIds)
+      .eq("active", true),
+    supabase
+      .from("watchlist_alert_log")
+      .select("user_id, outbreak_id, cases_at_alert, deaths_at_alert")
+      .in("user_id", userIds)
+      .in("outbreak_id", outbreakIds),
+    supabase
+      .from("profiles")
+      .select("id, email, alert_locale, plan, trial_ends_at, stripe_subscription_id")
+      .in("id", userIds),
+  ]);
 
   const outbreakMap = new Map((outbreaks ?? []).map((o) => [o.id, o]));
-
-  // 3. Get last alert log for deduplication
-  const userIds = [...new Set(entries.map((e) => e.user_id))];
-  const { data: logs } = await supabase
-    .from("watchlist_alert_log")
-    .select("user_id, outbreak_id, cases_at_alert, deaths_at_alert")
-    .in("user_id", userIds)
-    .in("outbreak_id", outbreakIds);
 
   const logMap = new Map(
     (logs ?? []).map((l) => [`${l.user_id}:${l.outbreak_id}`, l])
   );
-
-  // 4. Get user profiles for email + locale
-  const { data: profiles } = await supabase
-    .from("profiles")
-    .select("id, email, alert_locale, plan, trial_ends_at, stripe_subscription_id")
-    .in("id", userIds);
 
   const profileMap = new Map(
     (profiles ?? []).map((p) => [p.id, {

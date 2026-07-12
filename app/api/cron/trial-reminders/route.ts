@@ -67,22 +67,26 @@ export async function GET(req: NextRequest) {
   // Stripe users (stripe_subscription_id set) receive `customer.subscription.trial_will_end`
   // directly from Stripe 3 days before expiry — the cron would double-email them.
   // Only manual trials (no Stripe subscription) need cron-driven reminders.
-  const { data: profiles, error } = await supabase
-    .from("profiles")
-    .select("id, email, plan, trial_ends_at, locale, stripe_subscription_id, display_filters")
-    .in("plan", ["starter", "pro"])
-    .not("trial_ends_at", "is", null)
-    .is("stripe_subscription_id", null)
-    .or(`and(trial_ends_at.gte.${j3Start},trial_ends_at.lt.${j3End}),and(trial_ends_at.gte.${j1Start},trial_ends_at.lt.${j1End})`);
-
-  // Fetch active HIGH/MEDIUM outbreaks once for all users — filter per region below
+  //
+  // Independent of the outbreaks fetch below (neither depends on the other's
+  // result) — run both concurrently instead of one after the other.
   const sevenDaysAgo = new Date(Date.now() - 7 * 86_400_000).toISOString();
-  const { data: recentOutbreaks } = await supabase
-    .from("outbreaks")
-    .select("disease, disease_en, disease_ar, country, risk_level, region")
-    .eq("active", true)
-    .in("risk_level", ["high", "medium"])
-    .gte("updated_at", sevenDaysAgo);
+  const [{ data: profiles, error }, { data: recentOutbreaks }] = await Promise.all([
+    supabase
+      .from("profiles")
+      .select("id, email, plan, trial_ends_at, locale, stripe_subscription_id, display_filters")
+      .in("plan", ["starter", "pro"])
+      .not("trial_ends_at", "is", null)
+      .is("stripe_subscription_id", null)
+      .or(`and(trial_ends_at.gte.${j3Start},trial_ends_at.lt.${j3End}),and(trial_ends_at.gte.${j1Start},trial_ends_at.lt.${j1End})`),
+    // Active HIGH/MEDIUM outbreaks fetched once for all users — filter per region below
+    supabase
+      .from("outbreaks")
+      .select("disease, disease_en, disease_ar, country, risk_level, region")
+      .eq("active", true)
+      .in("risk_level", ["high", "medium"])
+      .gte("updated_at", sevenDaysAgo),
+  ]);
 
   if (error) {
     console.error("[trial-reminders] DB query error:", error);

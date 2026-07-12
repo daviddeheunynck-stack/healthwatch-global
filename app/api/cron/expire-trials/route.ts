@@ -86,9 +86,12 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: updateErr.message }, { status: 500 });
   }
 
-  // Deactivate webhooks and scheduled reports so they stop firing after trial expiry
-  await supabase.from("webhooks").update({ active: false }).in("user_id", ids);
-  await supabase.from("scheduled_reports").update({ active: false }).in("user_id", ids);
+  // Deactivate webhooks and scheduled reports so they stop firing after trial expiry —
+  // independent tables, both keyed off the same `ids`, no need to wait on one before the other.
+  await Promise.all([
+    supabase.from("webhooks").update({ active: false }).in("user_id", ids),
+    supabase.from("scheduled_reports").update({ active: false }).in("user_id", ids),
+  ]);
 
   console.log(`[expire-trials] Downgraded ${ids.length} user(s): ${ids.join(", ")}`);
 

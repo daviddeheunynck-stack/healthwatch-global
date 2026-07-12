@@ -387,13 +387,13 @@ export async function GET(req: NextRequest) {
   const supabase    = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
   const adminEmail  = ADMIN_EMAILS?.split(",")[0]?.trim();
 
-  // Load last known sitrep number to avoid re-processing
-  const { data: configRow } = await supabase
-    .from("site_config").select("value").eq("key", "ebola_drc_last_sitrep_num").maybeSingle();
+  // Load last known sitrep number, and find the Ebola DRC outbreak row — unrelated
+  // tables, neither depends on the other's result, so fetch both concurrently.
+  const [{ data: configRow }, outbreakRow] = await Promise.all([
+    supabase.from("site_config").select("value").eq("key", "ebola_drc_last_sitrep_num").maybeSingle(),
+    findEbolaDrcRow(supabase),
+  ]);
   const lastKnownNum = configRow ? parseInt(configRow.value, 10) : 0;
-
-  // Step 1: find Ebola DRC outbreak row
-  const outbreakRow = await findEbolaDrcRow(supabase);
   if (!outbreakRow) {
     const err = new Error("[drc-sitrep] Ebola DRC row not found in DB — cron cannot update");
     console.error(err.message);
