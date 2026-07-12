@@ -244,7 +244,12 @@ async function findLatestCholeraUpdate(): Promise<CholeraUpdateRef | null> {
     };
     for (const item of data.value ?? []) {
       if (!item.Title || !item.ItemDefaultUrl || !item.PublicationDate) continue;
-      if (!/epidemiological update/i.test(item.Title)) continue;
+      // Accept any numbered report in the series ("#N") rather than requiring
+      // the current "epidemiological update" wording — WHO already renamed
+      // this exact series once (from "external situation report" to
+      // "epidemiological update" at #33), and hard-coding the name would
+      // silently break again on the next rename.
+      if (!/#\s*\d+/.test(item.Title)) continue;
       const url = item.ItemDefaultUrl.startsWith("http")
         ? item.ItemDefaultUrl
         : `https://www.who.int${item.ItemDefaultUrl}`;
@@ -260,26 +265,34 @@ async function tryWHOGlobalCholeraUpdate(currentDate: string): Promise<Found | n
   const ref = await findLatestCholeraUpdate();
   if (!ref) return null;
 
-  const updateNum = ref.title.match(/epidemiological update\s*#?\s*(\d+)/i)?.[1];
+  const updateNum = ref.title.match(/#\s*(\d+)/)?.[1];
   const pubDate = new Date(ref.publicationDate);
   if (!updateNum || isNaN(pubDate.getTime())) return null;
 
-  // The PDF filename embeds the publish date — confirmed by reconstructing
-  // and fetching it for updates #37 and #38 from their real PublicationDate.
-  const yyyymmdd = pubDate.toISOString().slice(0, 10).replace(/-/g, "");
-  const pdfUrl = `https://cdn.who.int/media/docs/default-source/documents/emergencies/situation-reports/${yyyymmdd}_multi-country_outbreak-of-cholera_epidemiological_update_${updateNum}.pdf`;
-
+  // The PDF filename embeds the publish date as a UTC calendar date —
+  // confirmed by reconstructing and fetching it for updates #37 and #38 from
+  // their real PublicationDate. Also probe +/-1 day in case a publish close
+  // to UTC midnight makes the UTC calendar date disagree with the filename.
   let pdfText = "";
-  try {
-    const res = await fetch(pdfUrl, { headers: FETCH_HEADERS, signal: AbortSignal.timeout(20_000) });
-    if (res.ok) {
-      const pdfParse = (await import("pdf-parse/lib/pdf-parse.js" as string)).default as
-        (buf: Buffer, opts?: object) => Promise<{ text: string }>;
-      const { text } = await pdfParse(Buffer.from(await res.arrayBuffer()), { max: 20 });
-      pdfText = text;
+  for (const offsetDays of [0, -1, 1]) {
+    const d = new Date(pubDate);
+    d.setUTCDate(d.getUTCDate() + offsetDays);
+    const yyyymmdd = d.toISOString().slice(0, 10).replace(/-/g, "");
+    const pdfUrl = `https://cdn.who.int/media/docs/default-source/documents/emergencies/situation-reports/${yyyymmdd}_multi-country_outbreak-of-cholera_epidemiological_update_${updateNum}.pdf`;
+
+    try {
+      const res = await fetch(pdfUrl, { headers: FETCH_HEADERS, signal: AbortSignal.timeout(20_000) });
+      if (res.ok) {
+        const pdfParse = (await import("pdf-parse/lib/pdf-parse.js" as string)).default as
+          (buf: Buffer, opts?: object) => Promise<{ text: string }>;
+        const { text } = await pdfParse(Buffer.from(await res.arrayBuffer()), { max: 20 });
+        pdfText = text;
+        break;
+      }
+    } catch (e) {
+      console.log("[endemic] cholera PDF fetch/parse error:", errorMessage(e));
     }
-  } catch (e) {
-    console.log("[endemic] cholera PDF fetch/parse error:", errorMessage(e));
+    await delay(300);
   }
   if (!pdfText) return null;
 
