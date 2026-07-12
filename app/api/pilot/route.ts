@@ -266,6 +266,28 @@ export async function POST(req: NextRequest) {
         .update({ plan: "pro", trial_ends_at: trialEndsAt })
         .eq("id", profile.id);
 
+      // Default-enroll into regional alerts (opt-out, not opt-in) — same as the
+      // standard activate-trial path. Without this, a Pilot user gets Pro access
+      // but no alert ever fires, so the re-engagement emails never reach them and
+      // they never come back. Best-effort: a failure here must not fail activation.
+      const { error: alertsErr } = await supabase
+        .from("user_alert_regions")
+        .upsert(
+          ["africa", "asia", "americas", "europe", "oceania"].map((region) => ({
+            user_id: profile.id,
+            region,
+            min_risk: "medium",
+          })),
+          { onConflict: "user_id,region", ignoreDuplicates: true }
+        );
+      if (alertsErr) {
+        console.error("[pilot] default alert enrollment failed:", alertsErr);
+        Sentry.captureException(
+          new Error(`[pilot] alert enrollment failed: ${alertsErr.message}`),
+          { tags: { user_id: profile.id } }
+        );
+      }
+
       const userLocale = (locale as string) || profile.locale || "en";
       const confirmSubject: Record<string, string> = {
         fr: "HealthWatch Global — Votre accès Pilot est actif",
