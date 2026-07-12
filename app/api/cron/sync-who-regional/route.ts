@@ -487,6 +487,98 @@ function fetchMpoxGlobalSurveillance(country_en: string): () => Promise<Found | 
   };
 }
 
+// ── WHO Global Cholera Surveillance fetcher ───────────────────────────────────
+// WHO's own weekly cholera feed, hosted on ArcGIS Online (services.arcgis.com),
+// not the xmart platform used for Dengue/Mpox — a different public REST/JSON API,
+// no auth, confirmed live 2026 data (item description: "Weekly cholera data for
+// 2026. © World Health Organization 2026.", owner World Health Organization).
+// Rows are WEEKLY new cases (not cumulative), so — same as Dengue — this sums
+// every week within the current year into a year-to-date total; cross-checked
+// against WHO's own monthly Cholera Epidemiological Update PDF (Afghanistan
+// Jan-May 2026: summing this feed's weekly rows gives ~46,021 vs the PDF's
+// stated 43,292 — same ballpark, the small gap is expected page-to-feed timing
+// and revision lag, not a parsing error).
+// Countries with no current outbreak (Cameroon, Syria, Lebanon, Nepal) return
+// null today and need no further code change — they'll start populating
+// automatically the moment WHO's feed has real data for them.
+
+const CHOLERA_ISO3: Record<string, string> = {
+  "Somalia":                       "SOM",
+  "Zimbabwe":                      "ZWE",
+  "Afghanistan":                   "AFG",
+  "Mozambique":                    "MOZ",
+  "Kenya":                         "KEN",
+  "Cameroon":                      "CMR",
+  "Syria":                         "SYR",
+  "Malawi":                        "MWI",
+  "Lebanon":                       "LBN",
+  "Central African Republic":      "CAF",
+  "Nepal":                         "NPL",
+  "Nigeria":                       "NGA",
+  "Tanzania":                      "TZA",
+  "Zambia":                        "ZMB",
+};
+
+function fetchCholeraGlobalSurveillance(country_en: string): () => Promise<Found | null> {
+  return async () => {
+    const iso3 = CHOLERA_ISO3[country_en];
+    if (!iso3) return null;
+
+    const ua   = "HealthWatch-Global/1.0 (health surveillance; contact@healthwatch-global.com)";
+    const base = "https://services.arcgis.com/5T5nSi527N4F7luB/arcgis/rest/services/cholera_adm0_week_view/FeatureServer/0/query";
+    type Feature = { attributes: { date_wk: number; cases: number | null; deaths: number | null } };
+
+    async function sumYear(year: number): Promise<Found | null> {
+      // ArcGIS's SQL dialect needs a TIMESTAMP literal for date comparisons —
+      // a raw epoch-ms integer (what the field's own JSON values look like)
+      // silently returns HTTP 200 with a JSON {error:...} body, not a 4xx.
+      const where = `iso_3_code='${iso3}' AND date_wk>=TIMESTAMP '${year}-01-01 00:00:00' AND date_wk<TIMESTAMP '${year + 1}-01-01 00:00:00'`;
+      const url   = `${base}?where=${encodeURIComponent(where)}&outFields=date_wk,cases,deaths&orderByFields=date_wk+ASC&resultRecordCount=100&f=json`;
+      const res = await fetch(url, { headers: { "User-Agent": ua }, signal: AbortSignal.timeout(10_000) });
+      if (!res.ok) return null;
+      const json = await res.json() as { features?: Feature[]; error?: unknown };
+      const features = json.features ?? [];
+      if (json.error || features.length === 0) return null;
+
+      let cases = 0, deaths = 0, latestMs = 0;
+      for (const f of features) {
+        cases  += f.attributes.cases  ?? 0;
+        deaths += f.attributes.deaths ?? 0;
+        if (f.attributes.date_wk > latestMs) latestMs = f.attributes.date_wk;
+      }
+      if (cases <= 0 || !latestMs) return null;
+      const date = new Date(latestMs).toISOString().substring(0, 10);
+
+      return {
+        cases,
+        deaths,
+        date,
+        source: "https://www.who.int/emergencies/situations/multi-country-outbreak-of-cholera",
+        description: `Cholera in ${country_en} — WHO reported ${cases.toLocaleString("en")} cumulative case${cases > 1 ? "s" : ""}${deaths > 0 ? ` and ${deaths.toLocaleString("en")} death${deaths > 1 ? "s" : ""}` : ""} in ${year} as of the week starting ${date}. Source: WHO Global Cholera Surveillance.`,
+      };
+    }
+
+    try {
+      const current = await sumYear(new Date().getFullYear());
+      if (current) return current;
+
+      // No 2026 activity yet for this country (e.g. an outbreak that ended, or
+      // hasn't started) — same reasoning as the Dengue fetcher's fallback: a
+      // dated real figure from the most recent year with any data is more useful
+      // than silence, and correctly surfaces as stale via data-quality rather
+      // than hiding the gap.
+      const probeUrl = `${base}?where=${encodeURIComponent(`iso_3_code='${iso3}'`)}&outFields=date_wk&orderByFields=date_wk+DESC&resultRecordCount=1&f=json`;
+      const probeRes = await fetch(probeUrl, { headers: { "User-Agent": ua }, signal: AbortSignal.timeout(10_000) });
+      if (!probeRes.ok) return null;
+      const probeJson = await probeRes.json() as { features?: Feature[] };
+      const lastMs = probeJson.features?.[0]?.attributes.date_wk;
+      return lastMs ? await sumYear(new Date(lastMs).getUTCFullYear()) : null;
+    } catch {
+      return null;
+    }
+  };
+}
+
 // ── ReliefWeb query ───────────────────────────────────────────────────────────
 
 interface Target {
@@ -585,16 +677,16 @@ const TARGETS: Target[] = [
   // ── Cholera — endemic in fragile/conflict states ──────────────────────────────
   { disease_en: "Cholera",       country_en: "Democratic Republic of the Congo", minCases: 100    },
   { disease_en: "Cholera",       country_en: "Haiti",                            minCases: 100    },
-  { disease_en: "Cholera",       country_en: "Somalia",                          minCases: 100    },
+  { disease_en: "Cholera", country_en: "Somalia", minCases: 50, fetcher: fetchCholeraGlobalSurveillance("Somalia") },
   { disease_en: "Cholera",       country_en: "Sudan",                            minCases: 100    },
   { disease_en: "Cholera",       country_en: "Yemen",                            minCases: 100    },
-  { disease_en: "Cholera",       country_en: "Zimbabwe",                         minCases:  50    },
-  { disease_en: "Cholera",       country_en: "Afghanistan",                      minCases: 100    },
-  { disease_en: "Cholera",       country_en: "Mozambique",                       minCases:  50    },
-  { disease_en: "Cholera",       country_en: "Kenya",                            minCases:  50    },
-  { disease_en: "Cholera",       country_en: "Cameroon",                         minCases:  50    },
-  { disease_en: "Cholera",       country_en: "Syria",                            minCases:  50    },
-  { disease_en: "Cholera",       country_en: "Malawi",                           minCases:  50    },
+  { disease_en: "Cholera", country_en: "Zimbabwe",    minCases: 50, fetcher: fetchCholeraGlobalSurveillance("Zimbabwe") },
+  { disease_en: "Cholera", country_en: "Afghanistan", minCases: 50, fetcher: fetchCholeraGlobalSurveillance("Afghanistan") },
+  { disease_en: "Cholera", country_en: "Mozambique",  minCases: 50, fetcher: fetchCholeraGlobalSurveillance("Mozambique") },
+  { disease_en: "Cholera", country_en: "Kenya",       minCases: 50, fetcher: fetchCholeraGlobalSurveillance("Kenya") },
+  { disease_en: "Cholera", country_en: "Cameroon",    minCases: 50, fetcher: fetchCholeraGlobalSurveillance("Cameroon") },
+  { disease_en: "Cholera", country_en: "Syria",       minCases: 50, fetcher: fetchCholeraGlobalSurveillance("Syria") },
+  { disease_en: "Cholera", country_en: "Malawi",      minCases: 50, fetcher: fetchCholeraGlobalSurveillance("Malawi") },
   // ── Measles — high-burden countries not consistently in WHO DON ───────────────
   { disease_en: "Measles", country_en: "Democratic Republic of the Congo", minCases: 1_000, fetcher: fetchMeaslesGHO("Democratic Republic of the Congo") },
   { disease_en: "Measles", country_en: "Ethiopia",                         minCases:   500, fetcher: fetchMeaslesGHO("Ethiopia")  },
@@ -643,9 +735,9 @@ const TARGETS: Target[] = [
   // ── Rift Valley fever — periodic outbreaks, East and Southern Africa ─────────
   { disease_en: "Rift Valley",   country_en: "Kenya",                             minCases:  10    },
   // ── Cholera — additional high-burden countries ────────────────────────────────
-  { disease_en: "Cholera",       country_en: "Lebanon",                           minCases:  50    },
+  { disease_en: "Cholera", country_en: "Lebanon", minCases: 50, fetcher: fetchCholeraGlobalSurveillance("Lebanon") },
   { disease_en: "Cholera",       country_en: "South Sudan",                       minCases: 100    },
-  { disease_en: "Cholera",       country_en: "Central African Republic",          minCases:  50    },
+  { disease_en: "Cholera", country_en: "Central African Republic", minCases: 50, fetcher: fetchCholeraGlobalSurveillance("Central African Republic") },
   // ── Measles — additional high-burden countries ────────────────────────────────
   { disease_en: "Measles", country_en: "South Sudan", minCases: 100, fetcher: fetchMeaslesGHO("South Sudan") },
   { disease_en: "Measles", country_en: "Myanmar",     minCases: 100, fetcher: fetchMeaslesGHO("Myanmar")    },
@@ -693,7 +785,7 @@ const TARGETS: Target[] = [
   // Bangladesh cholera: WHO SEARO publishes; ReliefWeb has good coverage
   { disease_en: "Cholera",       country_en: "Bangladesh",                        minCases:    100 },
   // Nepal cholera: monsoon-seasonal, well documented in ReliefWeb SEARO reports
-  { disease_en: "Cholera",       country_en: "Nepal",                             minCases:     50 },
+  { disease_en: "Cholera", country_en: "Nepal", minCases: 50, fetcher: fetchCholeraGlobalSurveillance("Nepal") },
   // Myanmar malaria: WHO SEARO + OCHA publish; conflict limits surveillance but ReliefWeb has estimates
   { disease_en: "Malaria",       country_en: "Myanmar",                           minCases:  1_000 },
   // China avian influenza: human H5N1 cases are usually in WHO DON (dedup guard applies);
@@ -745,13 +837,13 @@ const TARGETS: Target[] = [
 
   // ── Cholera — additional high-burden countries ────────────────────────────────
   // Nigeria: frequent cholera outbreaks during rainy season; OCHA/WHO AFRO publish on ReliefWeb
-  { disease_en: "Cholera", country_en: "Nigeria",                                 minCases:    100 },
+  { disease_en: "Cholera", country_en: "Nigeria", minCases: 50, fetcher: fetchCholeraGlobalSurveillance("Nigeria") },
   // Ethiopia: Oromia + Somali region outbreaks, WHO AFRO bulletins on ReliefWeb
   { disease_en: "Cholera", country_en: "Ethiopia",                                minCases:     50 },
   // Tanzania: coastal and island outbreaks (Zanzibar), WHO AFRO on ReliefWeb
-  { disease_en: "Cholera", country_en: "Tanzania",                                minCases:     50 },
+  { disease_en: "Cholera", country_en: "Tanzania", minCases: 50, fetcher: fetchCholeraGlobalSurveillance("Tanzania") },
   // Zambia: major outbreak 2024 (Lusaka), OCHA/WHO published on ReliefWeb
-  { disease_en: "Cholera", country_en: "Zambia",                                  minCases:     50 },
+  { disease_en: "Cholera", country_en: "Zambia", minCases: 50, fetcher: fetchCholeraGlobalSurveillance("Zambia") },
 
   // ── Dengue — Americas gap-fill (PAHO sitreps published on ReliefWeb) ─────────
   { disease_en: "Dengue", country_en: "Mexico",    minCases: 100, fetcher: fetchDengueGlobalSurveillance("Mexico") },
