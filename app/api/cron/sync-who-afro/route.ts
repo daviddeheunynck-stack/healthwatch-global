@@ -55,6 +55,21 @@ function htmlToText(html: string): string {
     .replace(/&#\d+;/g, " ").replace(/\s+/g, " ").trim();
 }
 
+// afro.who.int's Drupal "field--name-body" class is reused across many
+// widgets on the same page (donation banner, language switcher, search box —
+// confirmed 8 occurrences on one real article) before the real article body,
+// which is always the LAST occurrence — verified on 2 different articles.
+// Using the first occurrence (as a naive scope would) lands on unrelated
+// widget markup; using the last one also sidesteps the country-breadcrumb
+// risk ("WHO Africa Countries Kenya"), since the breadcrumb sits earlier on
+// the page, before all the widget instances of this class.
+function extractAFROBody(html: string): string {
+  const idx = html.lastIndexOf('class="field field--name-body');
+  if (idx < 0) return html;
+  const tagEnd = html.indexOf(">", idx) + 1;
+  return html.slice(tagEnd, tagEnd + 8000);
+}
+
 // Parse "Outbreak update – Disease in Country, date" or "Disease in Country"
 function parseAFROTitle(raw: string): { disease: string; country: string } | null {
   const title = raw
@@ -265,7 +280,7 @@ export async function GET(req: NextRequest) {
     let pageText = entry.title;
     try {
       const res = await fetch(entry.url, { headers: FETCH_HEADERS, signal: AbortSignal.timeout(12_000) });
-      if (res.ok) pageText = `${entry.title} ${htmlToText(await res.text())}`;
+      if (res.ok) pageText = `${entry.title} ${htmlToText(extractAFROBody(await res.text()))}`;
     } catch (e) {
       console.warn("[who-afro] fetch:", errorMessage(e));
     }

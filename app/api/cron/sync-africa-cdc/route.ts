@@ -53,6 +53,19 @@ function htmlToText(html: string): string {
     .trim();
 }
 
+// Africa CDC's Elementor/WordPress template puts ~100,000 characters of
+// nav/mega-menu/related-posts chrome before the real article — confirmed on
+// 2 live articles. The actual post body is reliably wrapped in
+// elementor-widget-theme-post-content, WordPress's own post-content widget
+// class, immediately after which real content (with real case/death figures)
+// begins.
+function extractAfricaCdcBody(html: string): string {
+  const idx = html.indexOf("elementor-widget-theme-post-content");
+  if (idx < 0) return html;
+  const tagEnd = html.indexOf(">", idx) + 1;
+  return html.slice(tagEnd, tagEnd + 8000);
+}
+
 function isKnownDisease(rawName: string): boolean {
   const info = normalizeDisease(rawName);
   return !!(info.family || info.cfr_ref || info.r0_ref || info.incubationMin);
@@ -201,7 +214,7 @@ async function extractItemData(item: RSSItem): Promise<PostData[]> {
   let articleText = "";
   try {
     const res = await fetch(item.url, { headers: FETCH_HEADERS, signal: AbortSignal.timeout(12_000) });
-    if (res.ok) articleText = htmlToText(await res.text());
+    if (res.ok) articleText = htmlToText(extractAfricaCdcBody(await res.text()));
   } catch (e) {
     console.warn("[africa-cdc] fetch post:", errorMessage(e));
   }

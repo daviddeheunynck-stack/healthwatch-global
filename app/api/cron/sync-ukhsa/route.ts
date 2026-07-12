@@ -67,6 +67,20 @@ function htmlToText(html: string): string {
     .trim();
 }
 
+// GOV.UK's cookie banner + full mega-menu (Benefits, Business, Driving, Money
+// and tax, Visas...) run ~1,650 characters before any page's real content —
+// confirmed to still fit under the old 3,000-char budget on the page tested,
+// but only by margin, and the GOV.UK Design System's own class
+// (govuk-main-wrapper) is a stable, whole-of-government convention, not a
+// page-specific quirk, so it's worth anchoring on rather than relying on that
+// margin holding for every future UKHSA publication.
+function extractUKHSABody(html: string): string {
+  const idx = html.indexOf("govuk-main-wrapper");
+  if (idx < 0) return html;
+  const tagEnd = html.indexOf(">", idx) + 1;
+  return html.slice(tagEnd, tagEnd + 8000);
+}
+
 // Strip UKHSA-specific title prefixes → extract core disease term
 function extractUKHSADisease(title: string): string {
   return title
@@ -221,7 +235,7 @@ export async function GET(req: NextRequest) {
     let pageText = `${entry.title} ${entry.summary}`;
     try {
       const res = await fetch(entry.url, { headers: FETCH_HEADERS, signal: AbortSignal.timeout(12_000) });
-      if (res.ok) pageText = `${entry.title} ${entry.summary} ${htmlToText(await res.text())}`;
+      if (res.ok) pageText = `${entry.title} ${entry.summary} ${htmlToText(extractUKHSABody(await res.text()))}`;
     } catch (e) {
       console.warn("[ukhsa] fetch page:", errorMessage(e));
     }

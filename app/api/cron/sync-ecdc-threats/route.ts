@@ -51,6 +51,18 @@ function htmlToText(html: string): string {
     .trim();
 }
 
+// ECDC's ~2,100-char nav mega-menu (Topics A-Z, spotlight, newsroom, etc.)
+// before the article — the exact "heavy nav" this file's own comment already
+// flagged — happened to still fit under the old 8,000-char budget on the 2
+// pages tested, including a "worldwide overview" page, but only by margin.
+// role="main" scopes past it reliably (verified stable on both).
+function extractECDCBody(html: string): string {
+  const idx = html.indexOf('role="main"');
+  if (idx < 0) return html;
+  const tagEnd = html.indexOf(">", idx) + 1;
+  return html.slice(tagEnd, tagEnd + 8000);
+}
+
 // Detect if a disease term maps to a known entry in our disease map
 function isKnownDisease(rawName: string): boolean {
   const info = normalizeDisease(rawName);
@@ -179,7 +191,7 @@ async function extractItemData(item: RSSItem, dbg?: { reason?: string }): Promis
   let articleText = "";
   try {
     const res = await fetch(item.url, { headers: FETCH_HEADERS, signal: AbortSignal.timeout(12_000) });
-    if (res.ok) articleText = htmlToText(await res.text());
+    if (res.ok) articleText = htmlToText(extractECDCBody(await res.text()));
   } catch (e) {
     console.warn("[ecdc] fetch article:", errorMessage(e));
   }
