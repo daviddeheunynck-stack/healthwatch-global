@@ -20,6 +20,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { createHash } from "crypto";
 import { getDiseaseCategory, type DiseaseCategory } from "@/lib/disease-category";
+import { hasRealAdmin1 } from "@/lib/outbreaks";
 
 export const dynamic = "force-dynamic";
 
@@ -195,7 +196,13 @@ export async function GET(req: NextRequest) {
   if (diseaseCatParam) {
     rows = rows.filter((r) => getDiseaseCategory(r.disease_en) === (diseaseCatParam as DiseaseCategory));
   }
-  const enriched = rows.map((r) => ({ ...r, disease_category: getDiseaseCategory(r.disease_en) }));
+  // "~" is an internal sentinel (see lib/outbreaks.ts hasRealAdmin1) — never
+  // expose it to API consumers.
+  const enriched = rows.map((r) => ({
+    ...r,
+    admin1: hasRealAdmin1(r.admin1 as string | null) ? r.admin1 : null,
+    disease_category: getDiseaseCategory(r.disease_en),
+  }));
 
   return NextResponse.json(
     { data: enriched, total: diseaseCatParam ? enriched.length : (count ?? 0), limit, offset },

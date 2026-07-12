@@ -6,7 +6,7 @@ import { X, ExternalLink, AlertTriangle, TrendingUp, Users, Skull, Calendar, Glo
 import WatchlistButton from "@/components/WatchlistButton";
 import { getIncidenceRate } from "@/lib/population-data";
 import type { Outbreak } from "@/lib/outbreaks";
-import { getLocalizedDisease, getLocalizedCountry, getLocalizedDescription, sourceStatus, sourceName, staleOutbreakDays } from "@/lib/outbreaks";
+import { getLocalizedDisease, getLocalizedCountry, getLocalizedDescription, sourceStatus, sourceName, staleOutbreakDays, hasRealAdmin1 } from "@/lib/outbreaks";
 import { getResponseGuidance, RESPONSE_ACTIONS } from "@/lib/response-guidance";
 import { diseaseToSlug, matchDisease } from "@/lib/disease-data";
 import Link from "next/link";
@@ -1050,7 +1050,7 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlis
               {(REGION_NAMES[locale] ?? REGION_NAMES.en)[outbreak.region] ?? outbreak.region}
             </span>
           </div>
-          {outbreak.admin1 && (
+          {hasRealAdmin1(outbreak.admin1) && (
             <div className="flex items-center gap-2 text-gray-400">
               <Globe className="w-3.5 h-3.5 shrink-0 text-blue-500/70" />
               <span className="text-xs">
@@ -1252,7 +1252,7 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlis
                   `${ic.notifDate}: ${new Date().toISOString().split("T")[0]}`,
                   "",
                   `1. ${ic.eventDesc}: ${disease} (${country})`,
-                  `2. ${ic.geo}: ${country}${outbreak.admin1 ? `, ${outbreak.admin1}` : ""}`,
+                  `2. ${ic.geo}: ${country}${hasRealAdmin1(outbreak.admin1) ? `, ${outbreak.admin1}` : ""}`,
                   `3. ${ic.onset}: ${outbreak.date}`,
                   `4. ${ic.epi}: ${outbreak.cases.toLocaleString(numLocale)} ${ic.cases}${outbreak.deaths !== null ? ` / ${outbreak.deaths.toLocaleString(numLocale)} ${ic.deaths}` : ""} / CFR ${cfr}%${incidence ? ` / ${incidence.toFixed(1)} ${ic.per100k}` : ""}`,
                   `5. ${ic.pop}: [${ic.fillIn}]`,

@@ -12,7 +12,7 @@ import { getEpiWeek } from "@/lib/epi-week";
 
 type SortKey = "risk" | "cases" | "deaths" | "cfr" | "date";
 type SortDir = "asc" | "desc";
-import { getLocalizedDisease, getLocalizedCountry, isNewOutbreak, staleOutbreakDays, freshOutbreakHours, sourceStatus, sourceName, computeRiskScore } from "@/lib/outbreaks";
+import { getLocalizedDisease, getLocalizedCountry, isNewOutbreak, staleOutbreakDays, freshOutbreakHours, sourceStatus, sourceName, computeRiskScore, hasRealAdmin1 } from "@/lib/outbreaks";
 import { diseaseToSlug, matchDisease } from "@/lib/disease-data";
 import { countryToSlug } from "@/lib/country-utils";
 import type { Outbreak } from "@/lib/outbreaks";
@@ -641,7 +641,7 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
         risk_level: o.risk_level,
         is_pheic:   o.is_pheic,
         date:       o.date,
-        admin1:     o.admin1 ?? null,
+        admin1:     hasRealAdmin1(o.admin1) ? o.admin1 : null,
         id:         o.id,
       },
     }));
@@ -1268,7 +1268,7 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
                           </span>
                         )}
                       </div>
-                      {outbreak.admin1 && (
+                      {hasRealAdmin1(outbreak.admin1) && (
                         <p className="text-[10px] text-gray-600 leading-tight">{outbreak.admin1}</p>
                       )}
                     </div>

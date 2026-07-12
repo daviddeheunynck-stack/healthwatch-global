@@ -445,6 +445,13 @@ export function getStats(outbreaks: Outbreak[]) {
   return { activeOutbreaks, countriesAffected, highRisk, alertsToday, pheicCount, totalCases, topOutbreak };
 }
 
+// "~" is an internal sentinel written by backfill-admin1 (a full-text extraction
+// attempt found no province) so the cron doesn't keep retrying it — never a real
+// value to display or expose externally. Use this instead of a truthy check.
+export function hasRealAdmin1(admin1: string | null | undefined): boolean {
+  return !!admin1 && admin1 !== "~";
+}
+
 /** Returns true if the outbreak was updated or created within the last 24 hours */
 export function isNewOutbreak(outbreak: Outbreak): boolean {
   const ref = outbreak.updated_at ?? outbreak.created_at;

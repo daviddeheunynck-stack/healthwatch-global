@@ -2,6 +2,7 @@ import { NextRequest } from "next/server";
 import { createClient } from "@/lib/supabase-server";
 import { createClient as createService } from "@supabase/supabase-js";
 import { createHash } from "crypto";
+import { hasRealAdmin1 } from "@/lib/outbreaks";
 
 const sha256 = (s: string) => createHash("sha256").update(s).digest("hex");
 
@@ -82,8 +83,15 @@ export async function GET(req: NextRequest) {
   const { data, error } = await query;
   if (error) return Response.json({ error: error.message }, { status: 500 });
 
+  // "~" is an internal sentinel (see lib/outbreaks.ts hasRealAdmin1) — never
+  // expose it to API consumers.
+  const outbreaks = (data ?? []).map((row) => ({
+    ...row,
+    admin1: hasRealAdmin1(row.admin1) ? row.admin1 : null,
+  }));
+
   return new Response(
-    JSON.stringify({ outbreaks: data ?? [], count: (data ?? []).length, generated_at: new Date().toISOString() }),
+    JSON.stringify({ outbreaks, count: outbreaks.length, generated_at: new Date().toISOString() }),
     {
       headers: {
         "Content-Type":                "application/json; charset=utf-8",
