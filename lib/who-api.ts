@@ -109,7 +109,7 @@ function isOutbreakEnded(text: string): boolean {
   return OUTBREAK_ENDED_SIGNALS.some((s) => lower.includes(s));
 }
 
-function donArticleUrl(item: WHONewsItem): string {
+export function donArticleUrl(item: WHONewsItem): string {
   // Canonical DON URL: /emergencies/disease-outbreak-news/item/2026-DON603
   const donSlug = item.DonId || item.ItemDefaultUrl?.replace(/^\//, "") || "";
   return donSlug

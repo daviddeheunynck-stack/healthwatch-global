@@ -60,6 +60,7 @@ export async function logCronRun(
 export const CRON_WINDOWS: Record<string, number> = {
   // ── Sync crons ───────────────────────────────────────────────────────────────
   "sync-outbreaks":    2,    // hourly
+  "check-new-don":     2,    // hourly at :20 — new WHO DON detector
   "sync-signals":      9,    // every 6h
   "sync-cdc-han":      7,    // every 4h
   "sync-ukhsa":        14,   // twice daily

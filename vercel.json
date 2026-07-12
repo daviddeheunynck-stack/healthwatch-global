@@ -9,6 +9,10 @@
       "schedule": "0 * * * *"
     },
     {
+      "path": "/api/cron/check-new-don",
+      "schedule": "20 * * * *"
+    },
+    {
       "path": "/api/cron/data-quality",
       "schedule": "0 10 * * *"
     },
