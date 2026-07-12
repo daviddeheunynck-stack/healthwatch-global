@@ -437,6 +437,56 @@ function fetchDengueGlobalSurveillance(country_en: string): () => Promise<Found 
   };
 }
 
+// ── WHO Global Mpox Surveillance fetcher ──────────────────────────────────────
+// Same xmart platform as Dengue, different mart: MPX/V_MPX_VALIDATED_DAILY (not
+// "MPOX" — confirmed 404; also note a wrong view name in this mart returns
+// HTTP 200 with an error message body, e.g. V_MPX_GLOBAL_PUBLIC — a status-code
+// check alone would silently accept a broken URL, so this checks the JSON shape).
+// Unlike dengue, TOTAL_CONF_CASES/TOTAL_CONF_DEATHS are already a cumulative
+// snapshot as of DATE — no summing across periods needed, just take the latest.
+
+const MPOX_ISO3: Record<string, string> = {
+  "Rwanda":  "RWA",
+  "Uganda":  "UGA",
+  "Burundi": "BDI",
+  "Kenya":   "KEN",
+};
+
+function fetchMpoxGlobalSurveillance(country_en: string): () => Promise<Found | null> {
+  return async () => {
+    const iso3 = MPOX_ISO3[country_en];
+    if (!iso3) return null;
+    try {
+      const url =
+        `https://xmart-api-public.who.int/MPX/V_MPX_VALIDATED_DAILY` +
+        `?%24filter=ISO3%20eq%20'${iso3}'&%24orderby=DATE%20desc&%24top=1&excludeSysColumns=0`;
+      const res = await fetch(url, {
+        headers: { "User-Agent": "HealthWatch-Global/1.0 (health surveillance; contact@healthwatch-global.com)" },
+        signal:  AbortSignal.timeout(10_000),
+      });
+      if (!res.ok) return null;
+      type Rec = { DATE: string; TOTAL_CONF_CASES: number | null; TOTAL_PROB_CASES: number | null; TOTAL_CONF_DEATHS: number | null };
+      const json = await res.json() as { value?: Rec[] };
+      const rec = json.value?.[0];
+      if (!rec?.DATE) return null;
+
+      const cases  = (rec.TOTAL_CONF_CASES ?? 0) + (rec.TOTAL_PROB_CASES ?? 0);
+      const deaths = rec.TOTAL_CONF_DEATHS ?? 0;
+      if (cases <= 0) return null;
+
+      return {
+        cases,
+        deaths,
+        date:   rec.DATE,
+        source: "https://worldhealthorg.shinyapps.io/mpx_global/",
+        description: `Mpox in ${country_en} — WHO reported ${cases.toLocaleString("en")} cumulative case${cases > 1 ? "s" : ""}${deaths > 0 ? ` and ${deaths.toLocaleString("en")} death${deaths > 1 ? "s" : ""}` : ""} as of ${rec.DATE}. Source: WHO Global Mpox Surveillance.`,
+      };
+    } catch {
+      return null;
+    }
+  };
+}
+
 // ── ReliefWeb query ───────────────────────────────────────────────────────────
 
 interface Target {
@@ -673,13 +723,13 @@ const TARGETS: Target[] = [
 
   // ── Mpox — Clade I/Ib expansion beyond DRC (declared PHEIC August 2024) ─────
   // Rwanda: large clade Ib outbreak confirmed late 2024; WHO DON dedup guard applies
-  { disease_en: "Mpox", country_en: "Rwanda",                                     minCases:      1 },
+  { disease_en: "Mpox", country_en: "Rwanda", minCases: 1, fetcher: fetchMpoxGlobalSurveillance("Rwanda") },
   // Uganda: cross-border transmission from DRC; sporadic confirmed cases
-  { disease_en: "Mpox", country_en: "Uganda",                                     minCases:      5 },
+  { disease_en: "Mpox", country_en: "Uganda", minCases: 5, fetcher: fetchMpoxGlobalSurveillance("Uganda") },
   // Burundi: active transmission documented in WHO/AFRO bulletins on ReliefWeb
-  { disease_en: "Mpox", country_en: "Burundi",                                    minCases:      5 },
+  { disease_en: "Mpox", country_en: "Burundi", minCases: 5, fetcher: fetchMpoxGlobalSurveillance("Burundi") },
   // Kenya: imported cases; WHO DON dedup guard handles official DON; ReliefWeb catches sub-threshold
-  { disease_en: "Mpox", country_en: "Kenya",                                      minCases:      1 },
+  { disease_en: "Mpox", country_en: "Kenya", minCases: 1, fetcher: fetchMpoxGlobalSurveillance("Kenya") },
 
   // ── Rift Valley Fever — expansion beyond Kenya ────────────────────────────────
   // Rwanda: large RVF outbreak in livestock and humans 2024–2025; WHO AFRO + OCHA on ReliefWeb
