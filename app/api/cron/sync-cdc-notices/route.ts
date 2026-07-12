@@ -52,16 +52,46 @@ const LEVEL_TO_RISK: Record<string, string> = {
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
+// Named entities beyond the handful CDC markup uses directly (amp/lt/gt/etc,
+// handled below) — mainly accented Latin letters in place names (León, Español).
+const NAMED_ENTITIES: Record<string, string> = {
+  eacute: "é", egrave: "è", ecirc: "ê", euml: "ë",
+  aacute: "á", agrave: "à", acirc: "â", auml: "ä",
+  iacute: "í", igrave: "ì", icirc: "î", iuml: "ï",
+  oacute: "ó", ograve: "ò", ocirc: "ô", ouml: "ö",
+  uacute: "ú", ugrave: "ù", ucirc: "û", uuml: "ü",
+  ntilde: "ñ", ccedil: "ç",
+  Eacute: "É", Egrave: "È", Aacute: "Á", Agrave: "À",
+  Iacute: "Í", Oacute: "Ó", Uacute: "Ú", Ntilde: "Ñ", Ccedil: "Ç",
+  ndash: "–", mdash: "—", hellip: "…",
+};
+
 function htmlToText(html: string): string {
   return html
+    .replace(/<!--[\s\S]*?-->/g, " ")
     .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, " ")
     .replace(/<script[^>]*>[\s\S]*?<\/script>/gi, " ")
     .replace(/<[^>]+>/g, " ")
     .replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">")
     .replace(/&nbsp;/g, " ").replace(/&apos;/g, "'").replace(/&quot;/g, '"')
-    .replace(/&#\d+;/g, " ")
+    .replace(/&([a-zA-Z]+);/g, (m, name) => NAMED_ENTITIES[name] ?? m)
+    .replace(/&#x([0-9a-fA-F]+);/g, (_, hex) => String.fromCharCode(parseInt(hex, 16)))
+    .replace(/&#(\d+);/g, (_, dec) => String.fromCharCode(parseInt(dec, 10)))
     .replace(/\s+/g, " ")
     .trim();
+}
+
+// CDC travel notice pages wrap the actual write-up in <div class="notice"> …
+// through id="leftNav" (confirmed stable across level1/2/3 notices). Everything
+// outside that window is page chrome — skip links, masthead, the "outdated
+// browser" banner, footer — which must never leak into a scraped description.
+// Falls back to the full HTML if CDC changes their template, so callers degrade
+// rather than throw.
+function extractNoticeContent(html: string): string {
+  const start = html.indexOf('<div class="notice">');
+  if (start < 0) return html;
+  const end = html.indexOf('id="leftNav"', start);
+  return end > start ? html.slice(start, end) : html.slice(start, start + 8000);
 }
 
 function parseCDCDate(text: string): string | null {
@@ -234,7 +264,7 @@ export async function GET(req: NextRequest) {
         headers: FETCH_HEADERS,
         signal:  AbortSignal.timeout(12_000),
       });
-      if (res.ok) pageText = htmlToText(await res.text());
+      if (res.ok) pageText = htmlToText(extractNoticeContent(await res.text()));
     } catch (e) {
       console.warn("[cdc-notices] fetch page:", errorMessage(e));
     }
