@@ -682,6 +682,13 @@ const EVENT_NAME_TRANSLATIONS: Array<{ pattern: string; fr: string; es: string; 
     ar: "حدث دولي لسلامة الأغذية: حليب الأطفال والمنتجات المحتوية على زيت حمض الأراكيدونيك الملوثة بسم السيروليد",
     id: "Peristiwa keamanan pangan internasional: formula bayi dan produk yang mengandung minyak asam arakidonat terkontaminasi toksin sereulida",
   },
+  {
+    pattern: "ciguatera",
+    fr: "Ciguatera (intoxication alimentaire par poisson)",
+    es: "Ciguatera (intoxicación alimentaria por pescado)",
+    ar: "التسمم بالسيغواتيرا (تسمم سمكي)",
+    id: "Keracunan Ciguatera (keracunan ikan)",
+  },
 ];
 
 export function matchEventNameTranslation(rawName: string): { fr: string; es: string; ar: string; id: string } | null {
