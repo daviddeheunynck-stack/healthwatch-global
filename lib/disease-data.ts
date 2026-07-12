@@ -662,21 +662,32 @@ const DISEASE_MAP: Array<{ patterns: string[]; info: DiseaseInfo }> = [
       travelerRisk: { asia: "high", oceania: "moderate" },
     },
   },
+];
+
+/**
+ * Display-name translations for non-infectious "events" (food-safety recalls, toxin
+ * contaminations…) that are deliberately NOT in DISEASE_MAP above — they have no real
+ * pathogenType/transmission/vaccine, and forcing them into that schema would misrepresent
+ * a one-off contamination event as a catalogued infectious disease (see project decision
+ * 2026-07-05 re: this exact cereulide/infant-formula event). This only supplies the
+ * headline text used by getLocalizedDisease(); it must NOT affect matchDisease()'s
+ * `matched` flag, which OutbreakTable/OutbreakDetailModal use to decide whether to link
+ * to a (real-disease-only) /disease/[slug] profile page.
+ */
+const EVENT_NAME_TRANSLATIONS: Array<{ pattern: string; fr: string; es: string; ar: string; id: string }> = [
   {
-    patterns: ["cereulide"],
-    info: {
-      name_en: "International food safety event: Infant formula and products containing arachidonic acid oil contaminated with cereulide toxin",
-      name_fr: "Événement de sécurité alimentaire international : préparations pour nourrissons et produits contenant de l'huile d'acide arachidonique contaminés par la toxine céréulide",
-      name_es: "Evento internacional de seguridad alimentaria: fórmula infantil y productos que contienen aceite de ácido araquidónico contaminados con toxina cereulida",
-      name_ar: "حدث دولي لسلامة الأغذية: حليب الأطفال والمنتجات المحتوية على زيت حمض الأراكيدونيك الملوثة بسم السيروليد",
-      name_id: "Peristiwa keamanan pangan internasional: formula bayi dan produk yang mengandung minyak asam arakidonat terkontaminasi toksin sereulida",
-      pathogenType: "bacteria", family: "Bacillus cereus (toxine émétique céréulide)",
-      transmission: ["foodborne"],
-      vaccine: "no",
-      treatment: "supportive",
-    },
+    pattern: "cereulide",
+    fr: "Événement de sécurité alimentaire international : préparations pour nourrissons et produits contenant de l'huile d'acide arachidonique contaminés par la toxine céréulide",
+    es: "Evento internacional de seguridad alimentaria: fórmula infantil y productos que contienen aceite de ácido araquidónico contaminados con toxina cereulida",
+    ar: "حدث دولي لسلامة الأغذية: حليب الأطفال والمنتجات المحتوية على زيت حمض الأراكيدونيك الملوثة بسم السيروليد",
+    id: "Peristiwa keamanan pangan internasional: formula bayi dan produk yang mengandung minyak asam arakidonat terkontaminasi toksin sereulida",
   },
 ];
+
+export function matchEventNameTranslation(rawName: string): { fr: string; es: string; ar: string; id: string } | null {
+  const lower = rawName.toLowerCase();
+  return EVENT_NAME_TRANSLATIONS.find((e) => lower.includes(e.pattern)) ?? null;
+}
 
 /** "Rift Valley fever" → "rift-valley-fever" */
 export function diseaseToSlug(name: string): string {

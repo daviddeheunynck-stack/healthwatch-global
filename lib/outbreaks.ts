@@ -1,7 +1,7 @@
 import { createClient } from "@supabase/supabase-js";
 import { unstable_cache } from "next/cache";
 import * as Sentry from "@sentry/nextjs";
-import { normalizeDisease } from "./disease-data";
+import { normalizeDisease, matchEventNameTranslation } from "./disease-data";
 import type { OutbreakTrend } from "./outbreak-trend";
 
 const BOM   = String.fromCharCode(65279);
@@ -147,7 +147,19 @@ export function getLocalizedDisease(outbreak: LocalizedDiseaseFields, locale: st
   // disease_en is the preferred key (English, already normalized).
   // Fallback: disease column (French for new records, English for legacy).
   // This ensures "Dengue" and "Dengue fever" resolve to the same canonical names.
-  const info = normalizeDisease(outbreak.disease_en || outbreak.disease);
+  const raw = outbreak.disease_en || outbreak.disease;
+  const info = normalizeDisease(raw);
+  // Non-infectious "events" (food-safety recalls, toxin contaminations…) are
+  // intentionally absent from DISEASE_MAP — see matchEventNameTranslation's doc comment.
+  // Their headline still deserves a real translation instead of the raw-English fallback.
+  const evt = matchEventNameTranslation(raw);
+  if (evt) {
+    if (locale === "fr") return evt.fr;
+    if (locale === "ar") return outbreak.disease_ar || evt.ar;
+    if (locale === "es") return evt.es;
+    if (locale === "id") return evt.id;
+    return info.name_en;
+  }
   if (locale === "fr") return info.name_fr;
   if (locale === "ar") return outbreak.disease_ar || info.name_ar;
   if (locale === "es") return info.name_es;
