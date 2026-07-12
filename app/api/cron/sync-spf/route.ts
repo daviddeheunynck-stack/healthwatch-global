@@ -87,6 +87,19 @@ function htmlToText(html: string): string {
     .replace(/&#\d+;/g, " ").replace(/\s+/g, " ").trim();
 }
 
+// SPF article pages wrap all real content inside <main id="main-content-main">
+// (breadcrumb + share buttons + the actual bulletin/dossier prose) — confirmed
+// stable across hub pages, regional bulletins, and national bulletins. Before
+// it sits the full A-Z disease directory (which repeats 2-3 times across the
+// header/nav) plus the top nav — unscoped, that alone fills the entire
+// extraction window before any real content is reached.
+function extractSPFBody(html: string): string {
+  const idx = html.indexOf('id="main-content-main"');
+  if (idx < 0) return html;
+  const tagEnd = html.indexOf(">", idx) + 1;
+  return html.slice(tagEnd, tagEnd + 12000);
+}
+
 // Strip SPF title prefixes to extract core disease term
 function extractSPFDisease(title: string): string {
   return title
@@ -285,7 +298,7 @@ export async function GET(req: NextRequest) {
     let pageText = `${item.title} ${item.description}`;
     try {
       const res = await fetch(item.url, { headers: FETCH_HEADERS, signal: AbortSignal.timeout(12_000) });
-      if (res.ok) pageText = `${item.title} ${item.description} ${htmlToText(await res.text())}`;
+      if (res.ok) pageText = `${item.title} ${item.description} ${htmlToText(extractSPFBody(await res.text()))}`;
     } catch (e) {
       console.warn("[spf] fetch page:", errorMessage(e));
     }

@@ -103,45 +103,42 @@ interface Found {
 
 // ══════════════════════════════════════════════════════════════════════════════
 // TARGET 1 — Philippines / Dengue
-// Sources: Philippine News Agency (PNA) + GMA Network
-// Strategy: fetch tag/search listing → find latest article URLs → parse
+// Source: GMA Network RSS feeds (server-rendered, real <item> entries)
+// Strategy: scan the sections DOH dengue announcements land in → parse
+//
+// Philippine News Agency (pna.gov.ph) is NOT used: every path returns a
+// persistent HTTP 403 (Cloudflare bot-protection), confirmed via the actual
+// fetch() runtime, not just a broken URL — no URL fix applies to an active
+// block, and this scraper doesn't attempt to evade bot detection. GMA's own
+// search page (/news/search/) was also tried previously, but it 302s to a
+// client-rendered results widget — the real results never appear in the raw
+// HTML a server-side fetch sees, so it always returned 0 candidates. GMA's
+// RSS feeds are real, static, and reliably server-rendered.
 // ══════════════════════════════════════════════════════════════════════════════
 
 async function fetchPhilippinesDengue(currentDate: string): Promise<Found | null> {
-  // Step 1: collect candidate article URLs from listing pages
-  const listingUrls = [
-    "https://www.pna.gov.ph/tags/dengue",
-    "https://www.pna.gov.ph/search?q=dengue+DOH+cases",
-    "https://www.gmanetwork.com/news/search/?q=dengue+cases+DOH+Philippines&sort=latest",
+  const RSS_FEEDS = [
+    "https://data.gmanetwork.com/gno/rss/news/nation/feed.xml",
+    "https://data.gmanetwork.com/gno/rss/news/metro/feed.xml",
+    "https://data.gmanetwork.com/gno/rss/lifestyle/healthandwellness/feed.xml",
   ];
 
+  // Step 1: collect candidate article URLs from RSS items mentioning dengue
   const candidates: string[] = [];
+  for (const feedUrl of RSS_FEEDS) {
+    const xml = await fetchHtml(feedUrl);
+    if (!xml) { await delay(300); continue; }
 
-  for (const listing of listingUrls) {
-    const html = await fetchHtml(listing);
-    if (!html) { await delay(300); continue; }
-
-    // PNA: /articles/XXXXXXX
-    const pna = extractHrefs(html, /^\/articles\/\d+$/).map(
-      (p) => `https://www.pna.gov.ph${p}`
-    );
-    // GMA: full https URLs with numeric segment
-    const gma = extractHrefs(html, /gmanetwork\.com\/news\/[a-z]+\/[a-z]+\/\d+\/story/);
-
-    candidates.push(...pna, ...gma);
-    if (candidates.length >= 10) break;
-    await delay(400);
+    for (const m of xml.matchAll(/<item>([\s\S]*?)<\/item>/g)) {
+      if (!/dengue/i.test(m[1])) continue;
+      const link = m[1].match(/<link>([^<]+)/)?.[1]?.trim();
+      if (link) candidates.push(link);
+    }
+    await delay(300);
   }
 
-  // Sort PNA by article ID descending (higher = newer)
-  candidates.sort((a, b) => {
-    const nA = parseInt(a.match(/\/articles\/(\d+)/)?.[1] ?? "0");
-    const nB = parseInt(b.match(/\/articles\/(\d+)/)?.[1] ?? "0");
-    return nB - nA || 0;
-  });
-
-  // Step 2: parse the top candidates
-  for (const url of candidates.slice(0, 6)) {
+  // Step 2: parse the top candidates (RSS items are already newest-first)
+  for (const url of [...new Set(candidates)].slice(0, 6)) {
     await delay(350);
     const html = await fetchHtml(url);
     if (!html) continue;
@@ -207,6 +204,29 @@ function parseDengueCumulative(text: string, url: string, currentDate: string): 
 // Sources: WHO AFRO monthly bulletins (HTML text) + ReliefWeb API
 // ══════════════════════════════════════════════════════════════════════════════
 
+// KNOWN BROKEN (2026-07-12, not yet fixed): tryWHOAFROBulletins() below has
+// been dead since July 2025 — WHO AFRO discontinued the
+// "monthly-regional-cholera-bulletin-{month}-{year}" series entirely after
+// June 2025 (confirmed: .../publications/monthly-regional-cholera-bulletin-
+// june-2025 → 200, -july-2025 onward → 404, every month checked through
+// 2026). It's not a slug/naming bug — there is no more recent document under
+// this series to find, so no URL fix restores it.
+//
+// The real current replacement is WHO's GLOBAL "multi-country outbreak of
+// cholera, epidemiological update #N" series (NOT AFRO-regional — hosted on
+// who.int/cdn.who.int, still active: #38 published 30 June 2026, confirmed
+// via live fetch). Its PDF contains a real per-country table with Ethiopia's
+// own cases/deaths/CFR row (verified in update #37: "Ethiopia 53 1 1.9 0 ...").
+// PDF URL pattern: https://cdn.who.int/media/docs/default-source/documents/
+// emergencies/situation-reports/{YYYYMMDD}_multi-country_outbreak-of-cholera_
+// epidemiological_update_{N}.pdf — but the publish day-of-month varies (21st
+// to 30th across the samples checked) and the landing page at
+// who.int/publications/m/item/multi-country-outbreak-of-cholera--
+// epidemiological-update--{N}--{date} doesn't expose a plain PDF link/listing
+// a simple fetch can follow, so discovering the CURRENT number/date pair
+// needs its own mechanism (WHO publications search API, or an update-number
+// increment-and-probe loop) — not implemented here. Flagging precisely so a
+// follow-up doesn't have to re-derive this from scratch.
 async function fetchEthiopiaCholera(currentDate: string): Promise<Found | null> {
   // Strategy A: try WHO AFRO monthly bulletin pages for the last 14 months
   const result = await tryWHOAFROBulletins(currentDate);

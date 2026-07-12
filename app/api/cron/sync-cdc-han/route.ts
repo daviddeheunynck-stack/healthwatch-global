@@ -1,7 +1,10 @@
 // CDC Health Alert Network (HAN) sync — runs every 4 hours.
-// Fetches the CDC HAN RSS feed (emergency.cdc.gov/han/rss.asp),
-// parses each alert page for disease / country / case counts,
-// and upserts to outbreaks.
+// Fetches the HAN notice list from CDC's public WCMS search API (the old
+// emergency.cdc.gov/han/rss.asp feed now 301-redirects to a generic CDC
+// homepage — CDC migrated HAN to www.cdc.gov/han/php/notices/ and the
+// listing page is client-rendered, backed by this same search endpoint the
+// page's own JS calls), parses each alert page for disease / country / case
+// counts, and upserts to outbreaks.
 // CDC HAN publishes within hours of national confirmation — much faster
 // than WHO DON (3–8 days lag) and before ECDC rapid risk assessments.
 // Catches exported cases (e.g. France Ebola) before official UN publications.
@@ -26,9 +29,25 @@ const SUPABASE_URL         = clean(process.env.NEXT_PUBLIC_SUPABASE_URL);
 const SUPABASE_SERVICE_KEY = clean(process.env.SUPABASE_SERVICE_ROLE_KEY);
 const CRON_SECRET          = clean(process.env.CRON_SECRET);
 
-const HAN_RSS_URL  = "https://emergency.cdc.gov/han/rss.asp";
-const HAN_BASE     = "https://emergency.cdc.gov";
-const MAX_AGE_DAYS = 30;
+const HAN_SEARCH_URL = "https://wcmssearch.cdc.gov/srch/internet_wcms/wcms_widget";
+const MAX_AGE_DAYS   = 30;
+const FEED_ROWS       = 25;
+
+function buildHANSearchUrl(): string {
+  const params = new URLSearchParams();
+  params.set("q", "*:*");
+  params.append("fq", '(type_txt:"DFE Page" AND cdc_dfe_template_str:("cdc_health_alert")) OR type_txt:("Page")');
+  params.append("fq", "(topical_site_context_s:1984-2 AND (permalink:*/han/php/notices/*)) OR (site_id:1984 AND (permalink:*/han/2024/* OR permalink:*/han/2023/*))");
+  params.append("fq", "-id:1984_486");
+  params.append("fq", '-status:"cdc_archive"');
+  params.append("fq", "-is_hidden_b:true");
+  params.set("wt", "json");
+  params.set("start", "0");
+  params.set("rows", String(FEED_ROWS));
+  params.set("fl", "id,title_txt,permalink,excerpt_txt,cdc_article_date_dt");
+  params.set("sort", "cdc_last_reviewed_date_dt desc,cdc_article_date_dt desc");
+  return `${HAN_SEARCH_URL}?${params.toString()}`;
+}
 
 const FETCH_HEADERS = {
   "User-Agent":      "HealthWatch-Global/1.0 (health surveillance; contact@healthwatch-global.com)",
@@ -66,6 +85,16 @@ function htmlToText(html: string): string {
     .replace(/&#\d+;/g, " ")
     .replace(/\s+/g, " ")
     .trim();
+}
+
+// HAN notice pages wrap the real advisory (Summary, Background, Recommendations)
+// in <main class="container cdc-main">, confirmed stable across 3 different
+// notices — everything before it is CDC's site-wide header/nav chrome.
+function extractHANBody(html: string): string {
+  const idx = html.indexOf('class="container cdc-main"');
+  if (idx < 0) return html;
+  const tagEnd = html.indexOf(">", idx) + 1;
+  return html.slice(tagEnd, tagEnd + 8000);
 }
 
 // Strip CDC HAN prefix: "HAN00497 - Health Alert: " → clean title
@@ -110,7 +139,7 @@ function findMentionedCountries(text: string): string[] {
   return found;
 }
 
-// ── RSS parser ────────────────────────────────────────────────────────────────
+// ── HAN search-result parser ──────────────────────────────────────────────────
 
 interface RSSItem {
   url:   string;
@@ -119,36 +148,36 @@ interface RSSItem {
   description: string;
 }
 
-function parseRSSFeed(xml: string): RSSItem[] {
+interface HANSearchDoc {
+  title_txt?: string;
+  permalink?: string;
+  excerpt_txt?: string;
+  cdc_article_date_dt?: string;
+}
+
+function parseHANSearch(json: string): RSSItem[] {
   const items: RSSItem[] = [];
   const cutoff = new Date();
   cutoff.setDate(cutoff.getDate() - MAX_AGE_DAYS);
 
-  for (const m of xml.matchAll(/<item>([\s\S]*?)<\/item>/gi)) {
-    const raw = m[1];
+  let data: { response?: { docs?: HANSearchDoc[] } };
+  try {
+    data = JSON.parse(json);
+  } catch {
+    return items;
+  }
 
-    const title = raw.match(/<title>(?:<!\[CDATA\[)?([^\]<]+)/i)?.[1]?.trim();
-    if (!title) continue;
-
-    const link =
-      raw.match(/<link>\s*(https?:\/\/[^\s<]+)/i)?.[1]?.trim() ??
-      raw.match(/<guid[^>]*>\s*(https?:\/\/[^\s<]+)/i)?.[1]?.trim();
-    if (!link) continue;
-
-    const pubDate = raw.match(/<pubDate>([^<]+)/i)?.[1]?.trim();
-    if (!pubDate) continue;
-    const d = new Date(pubDate);
+  for (const doc of data.response?.docs ?? []) {
+    if (!doc.title_txt || !doc.permalink || !doc.cdc_article_date_dt) continue;
+    const d = new Date(doc.cdc_article_date_dt);
     if (isNaN(d.getTime()) || d < cutoff) continue;
 
-    const descRaw = raw.match(/<description>([\s\S]*?)<\/description>/i)?.[1] ?? "";
-    const description = descRaw
-      .replace(/<!\[CDATA\[/gi, "").replace(/\]\]>/gi, "")
-      .replace(/<[^>]+>/g, " ")
-      .replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">")
-      .replace(/&nbsp;/g, " ").replace(/\s+/g, " ")
-      .trim();
-
-    items.push({ url: link, title, date: d.toISOString().substring(0, 10), description });
+    items.push({
+      url:         doc.permalink,
+      title:       doc.title_txt,
+      date:        d.toISOString().substring(0, 10),
+      description: (doc.excerpt_txt ?? "").trim(),
+    });
   }
 
   return items;
@@ -168,24 +197,24 @@ export async function GET(req: NextRequest) {
   const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
   const today    = new Date().toISOString().substring(0, 10);
 
-  // ── 1. Fetch HAN RSS ──────────────────────────────────────────────────────
-  let rssXml: string;
+  // ── 1. Fetch HAN notice list from CDC's WCMS search API ──────────────────
+  let searchJson: string;
   try {
-    const res = await fetch(HAN_RSS_URL, { headers: FETCH_HEADERS, signal: AbortSignal.timeout(15_000) });
+    const res = await fetch(buildHANSearchUrl(), { headers: FETCH_HEADERS, signal: AbortSignal.timeout(15_000) });
     if (!res.ok) {
-      console.error(`[cdc-han] RSS HTTP ${res.status}`);
-      await logCronRun(supabase, "sync-cdc-han", "error", 0, `HAN RSS HTTP ${res.status}`);
-      return NextResponse.json({ error: `HAN RSS HTTP ${res.status}` }, { status: 502 });
+      console.error(`[cdc-han] search HTTP ${res.status}`);
+      await logCronRun(supabase, "sync-cdc-han", "error", 0, `HAN search HTTP ${res.status}`);
+      return NextResponse.json({ error: `HAN search HTTP ${res.status}` }, { status: 502 });
     }
-    rssXml = await res.text();
+    searchJson = await res.text();
   } catch (e) {
-    console.error("[cdc-han] fetch RSS:", errorMessage(e));
+    console.error("[cdc-han] fetch search:", errorMessage(e));
     Sentry.captureException(e, { tags: { cron: "sync-cdc-han" } });
     await logCronRun(supabase, "sync-cdc-han", "error", 0, errorMessage(e));
     return NextResponse.json({ error: errorMessage(e) }, { status: 502 });
   }
 
-  const entries = parseRSSFeed(rssXml);
+  const entries = parseHANSearch(searchJson);
   console.log(`[cdc-han] Found ${entries.length} recent alert(s) within ${MAX_AGE_DAYS} days`);
 
   if (entries.length === 0) {
@@ -230,12 +259,12 @@ export async function GET(req: NextRequest) {
 
     const diseaseInfo = normalizeDisease(rawDisease);
 
-    // Fetch the alert page for full text (case counts + country mentions)
+    // Fetch the alert page for full text (case counts + country mentions).
+    // entry.url (from the search API's "permalink" field) is always absolute.
     let pageText = entry.description;
     try {
-      const url = entry.url.startsWith("http") ? entry.url : HAN_BASE + entry.url;
-      const res = await fetch(url, { headers: FETCH_HEADERS, signal: AbortSignal.timeout(12_000) });
-      if (res.ok) pageText = `${entry.description} ${htmlToText(await res.text())}`;
+      const res = await fetch(entry.url, { headers: FETCH_HEADERS, signal: AbortSignal.timeout(12_000) });
+      if (res.ok) pageText = `${entry.description} ${htmlToText(extractHANBody(await res.text()))}`;
     } catch (e) {
       console.warn("[cdc-han] fetch page:", errorMessage(e));
     }

@@ -25,11 +25,18 @@ const SUPABASE_SERVICE_KEY = clean(process.env.SUPABASE_SERVICE_ROLE_KEY);
 const CRON_SECRET          = clean(process.env.CRON_SECRET);
 
 const EMRO_BASE      = "https://www.emro.who.int";
+// The old RSS feed (rss.xml) and "/eha/who-outbreaks-and-emergencies/" listing
+// both now 302-redirect to a soft-404 page — confirmed dead. "/media/news/"
+// is EMRO's actual current news listing: server-rendered (unlike the
+// Elasticsearch-widget-driven topic hub pages, which only render results
+// client-side via JS and leave literal unrendered Mustache placeholders in
+// the static HTML). "/health-topics/disease-outbreaks/" kept as a secondary
+// fallback — it returns 200 today but its own content is that same
+// client-rendered widget shell, so it rarely yields candidates.
 const EMRO_LIST_URLS = [
-  "https://www.emro.who.int/eha/who-outbreaks-and-emergencies/",
+  "https://www.emro.who.int/media/news/",
   "https://www.emro.who.int/health-topics/disease-outbreaks/",
 ];
-const EMRO_RSS_URL   = "https://www.emro.who.int/rss.xml";
 const MAX_AGE_DAYS   = 45;
 
 const FETCH_HEADERS = {
@@ -130,21 +137,14 @@ function extractOutbreakLinks(html: string, _baseUrl: string): PageEntry[] {
   return entries;
 }
 
-function parseRSSFeed(xml: string, cutoff: Date): PageEntry[] {
-  const items: PageEntry[] = [];
-  for (const m of xml.matchAll(/<item>([\s\S]*?)<\/item>/gi)) {
-    const raw = m[1];
-    const title = raw.match(/<title>(?:<!\[CDATA\[)?([^\]<]+)/i)?.[1]?.trim();
-    if (!title) continue;
-    const link = raw.match(/<link>\s*(https?:\/\/[^\s<]+)/i)?.[1]?.trim();
-    if (!link) continue;
-    const pub = raw.match(/<pubDate>([^<]+)/i)?.[1]?.trim();
-    if (!pub) continue;
-    const d = new Date(pub);
-    if (isNaN(d.getTime()) || d < cutoff) continue;
-    items.push({ url: link, title, dateHint: d.toISOString().substring(0, 10) });
-  }
-  return items;
+// EMRO article pages wrap the real body text in itemprop="articleBody"
+// (schema.org microdata) — confirmed stable, and reliably scopes past the
+// site's header/nav chrome the same way don-content/cdc-main do elsewhere.
+function extractEMROBody(html: string): string {
+  const idx = html.indexOf('itemprop="articleBody"');
+  if (idx < 0) return html;
+  const tagEnd = html.indexOf(">", idx) + 1;
+  return html.slice(tagEnd, tagEnd + 8000);
 }
 
 // ── Main handler ──────────────────────────────────────────────────────────────
@@ -160,30 +160,18 @@ export async function GET(req: NextRequest) {
 
   const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
   const today    = new Date().toISOString().substring(0, 10);
-  const cutoff   = new Date();
-  cutoff.setDate(cutoff.getDate() - MAX_AGE_DAYS);
 
-  // ── 1. Fetch EMRO list (try RSS, then HTML) ───────────────────────────────
+  // ── 1. Fetch EMRO list (HTML) ──────────────────────────────────────────────
   let pageEntries: PageEntry[] = [];
 
-  try {
-    const rssRes = await fetch(EMRO_RSS_URL, { headers: FETCH_HEADERS, signal: AbortSignal.timeout(12_000) });
-    if (rssRes.ok) {
-      const text = await rssRes.text();
-      if (text.includes("<item>")) pageEntries = parseRSSFeed(text, cutoff);
-    }
-  } catch { /* fall through */ }
-
-  if (pageEntries.length === 0) {
-    for (const listUrl of EMRO_LIST_URLS) {
-      try {
-        const res = await fetch(listUrl, { headers: FETCH_HEADERS, signal: AbortSignal.timeout(15_000) });
-        if (!res.ok) continue;
-        const html = await res.text();
-        pageEntries = extractOutbreakLinks(html, listUrl);
-        if (pageEntries.length > 0) break;
-      } catch { continue; }
-    }
+  for (const listUrl of EMRO_LIST_URLS) {
+    try {
+      const res = await fetch(listUrl, { headers: FETCH_HEADERS, signal: AbortSignal.timeout(15_000) });
+      if (!res.ok) continue;
+      const html = await res.text();
+      pageEntries = extractOutbreakLinks(html, listUrl);
+      if (pageEntries.length > 0) break;
+    } catch { continue; }
   }
 
   console.log(`[who-emro] ${pageEntries.length} candidate articles`);
@@ -229,7 +217,7 @@ export async function GET(req: NextRequest) {
     let pageText = entry.title;
     try {
       const res = await fetch(entry.url, { headers: FETCH_HEADERS, signal: AbortSignal.timeout(12_000) });
-      if (res.ok) pageText = `${entry.title} ${htmlToText(await res.text())}`;
+      if (res.ok) pageText = `${entry.title} ${htmlToText(extractEMROBody(await res.text()))}`;
     } catch (e) {
       console.warn("[who-emro] fetch:", errorMessage(e));
     }
