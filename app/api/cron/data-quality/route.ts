@@ -235,6 +235,7 @@ export async function GET(req: NextRequest) {
     "ecdc.europa.eu/en/mpox/surveillance",
     "who.int/publications/m/item",          // WHO monthly situation reports (Mpox, etc.) — monthly cadence, 28d staleness expected
     "ecdc.europa.eu/en/news-events",        // ECDC epidemiological updates — quarterly cadence, 90d+ staleness expected
+    "aphis.usda.gov/hpai-h5n1",             // USDA APHIS per-state HPAI livestock — date = last confirmed detection in that state, not a sync timestamp; many states legitimately go months/years without a new one
   ];
 
   for (const row of rows ?? []) {
@@ -251,20 +252,25 @@ export async function GET(req: NextRequest) {
   }
 
   // ── 4c. Duplication check ─────────────────────────────────────────────────
-  // Flag active outbreaks where ≥3 countries share the exact same case count
-  // from the same source domain — almost always signals a parser distributing
-  // a regional total to individual country rows instead of one aggregate row.
-  const dupGroups = new Map<string, string[]>();
+  // Flag active outbreaks where ≥3 DISTINCT countries share the exact same
+  // case count from the same source domain — almost always signals a parser
+  // distributing a regional total to individual country rows instead of one
+  // aggregate row. Must dedupe by country (Set, not array): sub-national
+  // breakdowns (USDA APHIS per US state, WHO DON per DRC health zone) push
+  // the same country string many times on purpose, which used to trip this
+  // check by row count alone even though it's the same single country.
+  const dupGroups = new Map<string, Set<string>>();
   for (const row of rows ?? []) {
     if (!row.cases || row.cases === 0 || row.is_seed) continue;
     let domain = "unknown";
     try { domain = new URL(row.source ?? "").hostname; } catch { /* ignore */ }
     const key = `${(row.disease ?? "").toLowerCase()}|${domain}|${row.cases}`;
-    const group = dupGroups.get(key) ?? [];
-    group.push(row.country ?? "?");
+    const group = dupGroups.get(key) ?? new Set<string>();
+    group.add(row.country ?? "?");
     dupGroups.set(key, group);
   }
-  for (const [key, countries] of dupGroups.entries()) {
+  for (const [key, countrySet] of dupGroups.entries()) {
+    const countries = [...countrySet];
     if (countries.length >= 3) {
       const [disease, domain] = key.split("|");
       needsReview.push({
