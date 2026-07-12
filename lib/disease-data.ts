@@ -662,6 +662,20 @@ const DISEASE_MAP: Array<{ patterns: string[]; info: DiseaseInfo }> = [
       travelerRisk: { asia: "high", oceania: "moderate" },
     },
   },
+  {
+    patterns: ["cereulide"],
+    info: {
+      name_en: "International food safety event: Infant formula and products containing arachidonic acid oil contaminated with cereulide toxin",
+      name_fr: "Événement de sécurité alimentaire international : préparations pour nourrissons et produits contenant de l'huile d'acide arachidonique contaminés par la toxine céréulide",
+      name_es: "Evento internacional de seguridad alimentaria: fórmula infantil y productos que contienen aceite de ácido araquidónico contaminados con toxina cereulida",
+      name_ar: "حدث دولي لسلامة الأغذية: حليب الأطفال والمنتجات المحتوية على زيت حمض الأراكيدونيك الملوثة بسم السيروليد",
+      name_id: "Peristiwa keamanan pangan internasional: formula bayi dan produk yang mengandung minyak asam arakidonat terkontaminasi toksin sereulida",
+      pathogenType: "bacteria", family: "Bacillus cereus (toxine émétique céréulide)",
+      transmission: ["foodborne"],
+      vaccine: "no",
+      treatment: "supportive",
+    },
+  },
 ];
 
 /** "Rift Valley fever" → "rift-valley-fever" */
