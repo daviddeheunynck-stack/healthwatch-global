@@ -60,6 +60,21 @@ function htmlToText(html: string): string {
     .trim();
 }
 
+// PAHO's current "/en/documents/..." template has NO real article text in the
+// HTML at all when there's no PDF — even the page's "field--name-body" class
+// is reused by an unrelated search-icon widget, so there's no content
+// container to scope htmlToText() to the way CDC/WHO DON pages have. If the
+// PDF path fails, the only signal available is whether the raw page text
+// matches known PAHO site chrome (nav/account-menu/library links) rather
+// than real alert prose.
+const PAHO_CHROME_MARKERS = [
+  /user account menu/i, /digital health library/i, /virtual health library/i,
+  /virtual campus for public health/i, /log in\s*english/i,
+];
+function looksLikePahoChrome(text: string): boolean {
+  return PAHO_CHROME_MARKERS.some((re) => re.test(text.slice(0, 600)));
+}
+
 function parsePAHODate(text: string): string | null {
   // "24 June 2026" / "24 Jun 2026"
   const verbal = text.match(/\b(\d{1,2})\s+(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\w*\.?\s+(\d{4})\b/i);
@@ -262,6 +277,14 @@ async function extractAlertData(entry: AlertEntry): Promise<AlertData[]> {
   }
 
   const bodyText = pdfText.trim().length > 200 ? pdfText : htmlToText(html);
+
+  // No usable PDF text and the HTML fallback is just page chrome (thin
+  // "documents" landing page with no inline content, or a fetch/parse
+  // failure) — there's nothing real to extract. Skip rather than store
+  // chrome text as the description, same principle as the 0/0-cases guard
+  // further down.
+  if (pdfText.trim().length <= 200 && looksLikePahoChrome(bodyText)) return [];
+
   let { cases, deaths } = extractNumbers(bodyText);
 
   // Primary country: look in the ORIGINAL title for "in [the] Country" pattern.

@@ -73,6 +73,27 @@ function htmlToPlainText(html: string): string {
   ).replace(/\s+/g, " ").trim();
 }
 
+// "don-content" precisely anchors each real section of a DON article body
+// (Situation at a glance, Epidemiology, WHO risk assessment, ...) — confirmed
+// stable across every DON template tested. The other markers below
+// (sf-content-block etc.) ALSO occur earlier in the page's nav/widget chrome
+// under the same class name, so matching them via alternation picks
+// whichever occurs FIRST in raw byte order — which in practice is always the
+// nav chrome (~27,000 chars in), tens of thousands of characters before the
+// real article (~61,000 chars in), not the content itself. Try don-content
+// first; only fall back to the generic alternation for WHO page types that
+// don't use the DON template.
+function extractDonBody(html: string): string {
+  const donIdx = html.indexOf("don-content");
+  if (donIdx >= 0) {
+    const tagEnd = html.indexOf(">", donIdx) + 1;
+    return html.slice(tagEnd, tagEnd + 8000);
+  }
+
+  const bodyMatch = html.match(/(?:sf-content-block|article-content|content-block-article)([\s\S]{0,8000})/i);
+  return bodyMatch ? bodyMatch[1] : html;
+}
+
 async function fetchArticleNumbers(
   url: string,
   countryAliases: string[] | null
@@ -80,11 +101,7 @@ async function fetchArticleNumbers(
   const html = await fetchArticleHtml(url);
   if (!html) return { cases: 0, deaths: 0, recovered: 0, description: "", fullText: "" };
 
-  // Extract text from the main content area
-  const bodyMatch = html.match(
-    /(?:sf-content-block|article-content|content-block-article|don-content)([\s\S]{0,8000})/i
-  );
-  const rawText = htmlToPlainText(bodyMatch ? bodyMatch[1] : html);
+  const rawText = htmlToPlainText(extractDonBody(html));
 
   const nums = (countryAliases && extractNumbersForCountry(rawText, countryAliases)) || extractNumbers(rawText);
   const description = rawText.slice(0, 400);
@@ -244,7 +261,7 @@ async function parseMultiCountryDON(
   const plainSummary = item.Summary
     ? decodeEntities(item.Summary.replace(/<[^>]+>/g, " ")).replace(/\s+/g, " ").trim()
     : "";
-  const plainAll = html ? htmlToPlainText(html) : plainSummary;
+  const plainAll = html ? htmlToPlainText(extractDonBody(html)) : plainSummary;
 
   const candidates = findMentionedCountries(plainAll);
   const blocks = html ? findCountryHeadingSections(html, candidates) : new Map<string, string>();
