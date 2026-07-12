@@ -204,32 +204,14 @@ function parseDengueCumulative(text: string, url: string, currentDate: string): 
 // Sources: WHO AFRO monthly bulletins (HTML text) + ReliefWeb API
 // ══════════════════════════════════════════════════════════════════════════════
 
-// KNOWN BROKEN (2026-07-12, not yet fixed): tryWHOAFROBulletins() below has
-// been dead since July 2025 — WHO AFRO discontinued the
-// "monthly-regional-cholera-bulletin-{month}-{year}" series entirely after
-// June 2025 (confirmed: .../publications/monthly-regional-cholera-bulletin-
-// june-2025 → 200, -july-2025 onward → 404, every month checked through
-// 2026). It's not a slug/naming bug — there is no more recent document under
-// this series to find, so no URL fix restores it.
-//
-// The real current replacement is WHO's GLOBAL "multi-country outbreak of
-// cholera, epidemiological update #N" series (NOT AFRO-regional — hosted on
-// who.int/cdn.who.int, still active: #38 published 30 June 2026, confirmed
-// via live fetch). Its PDF contains a real per-country table with Ethiopia's
-// own cases/deaths/CFR row (verified in update #37: "Ethiopia 53 1 1.9 0 ...").
-// PDF URL pattern: https://cdn.who.int/media/docs/default-source/documents/
-// emergencies/situation-reports/{YYYYMMDD}_multi-country_outbreak-of-cholera_
-// epidemiological_update_{N}.pdf — but the publish day-of-month varies (21st
-// to 30th across the samples checked) and the landing page at
-// who.int/publications/m/item/multi-country-outbreak-of-cholera--
-// epidemiological-update--{N}--{date} doesn't expose a plain PDF link/listing
-// a simple fetch can follow, so discovering the CURRENT number/date pair
-// needs its own mechanism (WHO publications search API, or an update-number
-// increment-and-probe loop) — not implemented here. Flagging precisely so a
-// follow-up doesn't have to re-derive this from scratch.
 async function fetchEthiopiaCholera(currentDate: string): Promise<Found | null> {
-  // Strategy A: try WHO AFRO monthly bulletin pages for the last 14 months
-  const result = await tryWHOAFROBulletins(currentDate);
+  // Strategy A: WHO's global "multi-country outbreak of cholera,
+  // epidemiological update #N" series. Replaces the old AFRO-regional
+  // "monthly-regional-cholera-bulletin-{month}-{year}" series, which WHO AFRO
+  // discontinued after June 2025 (confirmed: the June 2025 slug returns 200,
+  // every month from July 2025 onward 404s, checked through today) — not a
+  // slug/naming bug, the series itself stopped.
+  const result = await tryWHOGlobalCholeraUpdate(currentDate);
   if (result) return result;
 
   await delay(500);
@@ -238,40 +220,70 @@ async function fetchEthiopiaCholera(currentDate: string): Promise<Found | null> 
   return tryReliefWebEthiopiaCholera(currentDate);
 }
 
-async function tryWHOAFROBulletins(currentDate: string): Promise<Found | null> {
-  // Build a list of month slugs from the month after currentDate up to today
-  const slugs: string[] = [];
-  const start = new Date(currentDate);
-  start.setMonth(start.getMonth() + 1); // start one month after current DB date
-  const now = new Date();
+interface CholeraUpdateRef { url: string; title: string; publicationDate: string }
 
-  while (start <= now && slugs.length < 14) {
-    const month = start.toLocaleString("en-US", { month: "long" }).toLowerCase();
-    const year  = start.getFullYear();
-    slugs.push(`${month}-${year}`);
-    start.setMonth(start.getMonth() + 1);
+// WHO's public OData API (same family as the WHO DON API in lib/who-api.ts) —
+// found by inspecting the real network requests the update's own landing
+// page makes. Only `contains()` on Title is accepted here as a $filter (the
+// sibling "newsitems" entity set rejects any Title filter at all).
+async function findLatestCholeraUpdate(): Promise<CholeraUpdateRef | null> {
+  const params = new URLSearchParams({
+    sf_culture: "en",
+    "$top":     "10",
+    "$orderby": "PublicationDate desc",
+    "$select":  "Title,ItemDefaultUrl,PublicationDate",
+    "$filter":  "contains(Title,'outbreak of cholera')",
+    "$format":  "json",
+  });
+  const json = await fetchHtml(`https://www.who.int/api/news/meetingreports?${params}`);
+  if (!json) return null;
+
+  try {
+    const data = JSON.parse(json) as {
+      value?: Array<{ Title?: string; ItemDefaultUrl?: string; PublicationDate?: string }>;
+    };
+    for (const item of data.value ?? []) {
+      if (!item.Title || !item.ItemDefaultUrl || !item.PublicationDate) continue;
+      if (!/epidemiological update/i.test(item.Title)) continue;
+      const url = item.ItemDefaultUrl.startsWith("http")
+        ? item.ItemDefaultUrl
+        : `https://www.who.int${item.ItemDefaultUrl}`;
+      return { url, title: item.Title, publicationDate: item.PublicationDate };
+    }
+  } catch (e) {
+    console.log("[endemic] cholera update list parse error:", errorMessage(e));
   }
-  // Try most recent first
-  slugs.reverse();
-
-  for (const slug of slugs) {
-    const url = `https://www.afro.who.int/publications/monthly-regional-cholera-bulletin-${slug}`;
-    await delay(400);
-    const html = await fetchHtml(url);
-    if (!html) continue;
-
-    // Find the PDF bitstream URL for iris.who.int (to store as source)
-    const pdfMatch = html.match(/href="(https:\/\/iris\.who\.int\/bitstream[^"]+\.pdf[^"]*)"/i);
-    const pdfUrl = pdfMatch?.[1] ?? url;
-
-    const text = htmlToText(html);
-
-    // Look for Ethiopia-specific figures in the page summary text
-    const found = parseEthiopiaCholera(text, pdfUrl, currentDate);
-    if (found) return found;
-  }
-
   return null;
+}
+
+async function tryWHOGlobalCholeraUpdate(currentDate: string): Promise<Found | null> {
+  const ref = await findLatestCholeraUpdate();
+  if (!ref) return null;
+
+  const updateNum = ref.title.match(/epidemiological update\s*#?\s*(\d+)/i)?.[1];
+  const pubDate = new Date(ref.publicationDate);
+  if (!updateNum || isNaN(pubDate.getTime())) return null;
+
+  // The PDF filename embeds the publish date — confirmed by reconstructing
+  // and fetching it for updates #37 and #38 from their real PublicationDate.
+  const yyyymmdd = pubDate.toISOString().slice(0, 10).replace(/-/g, "");
+  const pdfUrl = `https://cdn.who.int/media/docs/default-source/documents/emergencies/situation-reports/${yyyymmdd}_multi-country_outbreak-of-cholera_epidemiological_update_${updateNum}.pdf`;
+
+  let pdfText = "";
+  try {
+    const res = await fetch(pdfUrl, { headers: FETCH_HEADERS, signal: AbortSignal.timeout(20_000) });
+    if (res.ok) {
+      const pdfParse = (await import("pdf-parse/lib/pdf-parse.js" as string)).default as
+        (buf: Buffer, opts?: object) => Promise<{ text: string }>;
+      const { text } = await pdfParse(Buffer.from(await res.arrayBuffer()), { max: 20 });
+      pdfText = text;
+    }
+  } catch (e) {
+    console.log("[endemic] cholera PDF fetch/parse error:", errorMessage(e));
+  }
+  if (!pdfText) return null;
+
+  return parseEthiopiaCholeraTable(pdfText, ref.url, currentDate);
 }
 
 async function tryReliefWebEthiopiaCholera(_currentDate: string): Promise<Found | null> {
@@ -284,51 +296,29 @@ async function tryReliefWebEthiopiaCholera(_currentDate: string): Promise<Found 
   return null;
 }
 
-function parseEthiopiaCholera(text: string, source: string, currentDate: string): Found | null {
-  // Extract an Ethiopia-specific block from the text
-  // WHO AFRO text typically says "Ethiopia reported X cases and Y deaths as of DATE"
+// "Table 1" in each update lists every affected country by WHO region, with
+// 2 column groups: year-to-date cumulative (cases, deaths, CFR%, cases per
+// 100k) and last-28-days (same 4 columns, often "-" when no recent activity).
+// Ethiopia's row never wraps across lines (short name), so it reliably reads
+// "Ethiopia <cases> <deaths> <CFR%> <per-100k> ..." on one line — verified on
+// updates #37 ("Ethiopia 53 1 1.9 0 ...") and #38 ("Ethiopia 50 2 4.0 0 ...").
+// Uses the cumulative pair, consistent with how this file's other target
+// (Philippines dengue) tracks a running annual total rather than a snapshot.
+function parseEthiopiaCholeraTable(text: string, source: string, currentDate: string): Found | null {
+  // The table caption ("Table 1 ... as of DD Month YYYY") carries the real
+  // data cutoff — WHO publishes ~1 month after the period it covers, so this
+  // is earlier than the report's own publish date.
+  const dateM = text.match(/as\s+of\s+(\d{1,2})\s+([A-Za-z]+)\s+(\d{4})/i);
+  if (!dateM) return null;
+  const mo = MONTH_MAP[dateM[2].toLowerCase()];
+  if (!mo) return null;
+  const date = `${dateM[3]}-${mo}-${dateM[1].padStart(2, "0")}`;
+  if (date <= currentDate) return null;
 
-  // Find the sentence/paragraph containing "Ethiopia" + numbers
-  const ETH_BLOCK_RE = /ethiopia[^.]{0,400}/gi;
-  let ethBlock = "";
-  let m: RegExpExecArray | null;
-  while ((m = ETH_BLOCK_RE.exec(text)) !== null) {
-    if (/\d[\d,]+[^.]*?cases/i.test(m[0])) {
-      ethBlock = m[0];
-      break;
-    }
-  }
-  if (!ethBlock) return null;
-
-  // Extract cumulative cases from Ethiopia block
-  const CASES_RE = /(\d[\d,]+)\s+(?:cumulative\s+)?cases/i;
-  const DEATHS_RE = /(\d[\d,]+)\s+(?:cumulative\s+)?deaths/i;
-  const DATE_RE   = /as\s+of\s+(\d{1,2}\s+[A-Z][a-z]+\s+\d{4})|([A-Z][a-z]+\s+\d{1,2},?\s*\d{4})/i;
-
-  const cm = CASES_RE.exec(ethBlock);
-  if (!cm) return null;
-  const cases = parseInt(cm[1].replace(/,/g, ""), 10);
-  if (cases < 100) return null;
-
-  const dm = DEATHS_RE.exec(ethBlock);
-  const deaths = dm ? parseInt(dm[1].replace(/,/g, ""), 10) : 0;
-
-  // Try to get date from block, fall back to full text
-  const dtm = DATE_RE.exec(ethBlock) ?? DATE_RE.exec(text);
-  let date = "";
-  if (dtm) {
-    const raw = (dtm[1] ?? dtm[2]).trim();
-    // Handle "31 May 2025" format
-    const dd = raw.match(/^(\d{1,2})\s+([A-Za-z]+)\s+(\d{4})$/);
-    if (dd) {
-      const mo = MONTH_MAP[dd[2].toLowerCase()];
-      date = mo ? `${dd[3]}-${mo}-${dd[1].padStart(2, "0")}` : "";
-    } else {
-      date = parseEnglishDate(raw) ?? "";
-    }
-  }
-
-  if (!date || date <= currentDate) return null;
+  const rowM = text.match(/Ethiopia\s+(\d[\d,]*)\s+(\d[\d,]*)\s+[\d.]+\s+\d+/);
+  if (!rowM) return null;
+  const cases  = parseInt(rowM[1].replace(/,/g, ""), 10);
+  const deaths = parseInt(rowM[2].replace(/,/g, ""), 10);
   if (cases <= 0 || deaths > cases) return null;
 
   return {
@@ -336,7 +326,7 @@ function parseEthiopiaCholera(text: string, source: string, currentDate: string)
     deaths,
     date,
     source,
-    note: `Ethiopia cholera via ${new URL(source).hostname}`,
+    note: "Ethiopia cholera via WHO global multi-country cholera update",
   };
 }
 
