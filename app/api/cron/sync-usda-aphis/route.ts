@@ -387,7 +387,7 @@ export async function GET(req: NextRequest) {
 
   // ── 3. Upsert one record per state ───────────────────────────────────────
   const today = new Date().toISOString().substring(0, 10);
-  const results = { dataFormat, rows: rows.length, states: byState.length, inserted: 0, updated: 0, skipped: 0, errors: 0 };
+  const results = { dataFormat, rows: rows.length, states: byState.length, inserted: 0, updated: 0, skipped: 0, errors: 0, deactivated: 0 };
   const log: Array<{ state: string; status: string; detail?: string }> = [];
 
   for (const sd of byState) {
@@ -459,6 +459,46 @@ export async function GET(req: NextRequest) {
       } else {
         log.push({ state: sd.state, status: "inserted", detail: `${sd.herds} herds (${safeDate})` });
         results.inserted++;
+      }
+    }
+  }
+
+  // ── 4. Deactivate states with no confirmed detection in a long time ───────
+  // USDA's crosstab is a cumulative historical record (every premises ever
+  // confirmed since 2024), not a "currently active" list — a state whose most
+  // recent detection is older than DEACTIVATE_AFTER_DAYS isn't an ongoing
+  // outbreak anymore, it's history, and shouldn't render as an active dot on
+  // the public map. 730d matches the SEED_FRESH_DAYS_REF precedent already
+  // used in data-quality/route.ts for "old enough to not be current".
+  // Reactivation is automatic: if a state gets a genuinely new detection, the
+  // update branch above sets active:true again on its own — nothing extra
+  // needed here for that direction.
+  const DEACTIVATE_AFTER_DAYS = 730;
+  const deactivateThreshold = new Date(Date.now() - DEACTIVATE_AFTER_DAYS * 86_400_000)
+    .toISOString()
+    .substring(0, 10);
+
+  const { data: staleActive, error: staleErr } = await supabase
+    .from("outbreaks")
+    .select("id, admin1, date")
+    .like("source", `${SOURCE_PREFIX}%`)
+    .eq("active", true)
+    .lte("date", deactivateThreshold);
+
+  if (staleErr) {
+    log.push({ state: "-", status: "error", detail: `deactivation query: ${staleErr.message}` });
+  } else if (staleActive && staleActive.length > 0) {
+    const { error: deactivateErr } = await supabase
+      .from("outbreaks")
+      .update({ active: false })
+      .in("id", staleActive.map((r) => r.id));
+
+    if (deactivateErr) {
+      log.push({ state: "-", status: "error", detail: `deactivation update: ${deactivateErr.message}` });
+    } else {
+      results.deactivated = staleActive.length;
+      for (const r of staleActive) {
+        log.push({ state: r.admin1 ?? "?", status: "deactivated", detail: `no detection since ${r.date}` });
       }
     }
   }
