@@ -6,6 +6,7 @@ import { parseRSSFeed, buildOutbreakFromRSSItem } from "@/lib/outbreak-parser";
 import { fetchWHODONList, parseWHODONItems } from "@/lib/who-api";
 import type { ParsedOutbreak } from "@/lib/outbreak-parser";
 import { errorMessage } from "@/lib/error";
+import { translateDescription } from "@/lib/translate";
 
 export const dynamic = "force-dynamic";
 
@@ -15,53 +16,6 @@ const clean = (v: string | undefined) => (v || "").replace(new RegExp("^" + BOM)
 const SUPABASE_URL        = clean(process.env.NEXT_PUBLIC_SUPABASE_URL);
 const SUPABASE_SERVICE_KEY = clean(process.env.SUPABASE_SERVICE_ROLE_KEY);
 const CRON_SECRET          = clean(process.env.CRON_SECRET);
-const MYMEMORY_EMAIL = clean(process.env.MYMEMORY_EMAIL); // optional — free registration at mymemory.translated.net gives 10k words/day
-
-// ── MyMemory translation (100% gratuit, sans CB) ──────────────────────────────
-// API publique : 1 000 mots/jour sans compte, 10 000/jour avec un email gratuit.
-// Pour enregistrer : https://mymemory.translated.net/register.php
-async function translateDescription(text: string): Promise<{
-  fr: string | null; es: string | null; ar: string | null; id: string | null;
-}> {
-  const empty = { fr: null, es: null, ar: null, id: null };
-  if (!text?.trim()) return empty;
-
-  const base = "https://api.mymemory.translated.net/get";
-  const pairs = [
-    { key: "fr" as const, langpair: "en|fr" },
-    { key: "es" as const, langpair: "en|es" },
-    { key: "ar" as const, langpair: "en|ar" },
-    { key: "id" as const, langpair: "en|id" },
-  ];
-
-  const results: { fr: string | null; es: string | null; ar: string | null; id: string | null } = { ...empty };
-
-  try {
-    const calls = pairs.map(({ langpair }) => {
-      const url = new URL(base);
-      url.searchParams.set("q", text);
-      url.searchParams.set("langpair", langpair);
-      if (MYMEMORY_EMAIL) url.searchParams.set("de", MYMEMORY_EMAIL);
-      return fetch(url.toString()).then((r) => r.ok ? r.json() : null);
-    });
-
-    const responses = await Promise.all(calls);
-    for (let i = 0; i < pairs.length; i++) {
-      // MyMemory returns HTTP 200 with an in-body error (e.g. responseStatus 403
-      // "QUERY LENGTH LIMIT EXCEEDED. MAX ALLOWED QUERY : 500 CHARS") whose
-      // translatedText is the error message itself, not a translation — reject
-      // anything that isn't an explicit 200 before trusting translatedText.
-      if (Number(responses[i]?.responseStatus) !== 200) continue;
-      const t = responses[i]?.responseData?.translatedText ?? null;
-      // MyMemory returns the original text when it can't translate — discard those
-      if (t && t !== text) results[pairs[i].key] = t;
-    }
-  } catch (e: unknown) {
-    console.warn("[sync] MyMemory translation error:", errorMessage(e));
-  }
-
-  return results;
-}
 
 const STALE_DAYS = 60;
 

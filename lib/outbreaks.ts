@@ -169,8 +169,10 @@ export function getLocalizedDisease(outbreak: LocalizedDiseaseFields, locale: st
 
 // ── Description localization ──────────────────────────────────────────────────
 // Returns the translated description if available in DB, otherwise falls back
-// to the English description (source: WHO DON article).
-// Translations are populated by the sync cron via DeepL API.
+// to the English description.
+// Translations are populated per-source by each sync cron via MyMemory
+// (see lib/translate.ts), with sync-outbreaks also running a table-wide
+// backfill sweep as a safety net for any row a source cron missed.
 export function getLocalizedDescription(outbreak: Outbreak, locale: string): string {
   if (locale === "fr" && outbreak.description_fr) return outbreak.description_fr;
   if (locale === "es" && outbreak.description_es) return outbreak.description_es;

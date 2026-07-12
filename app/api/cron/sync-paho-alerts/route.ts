@@ -14,6 +14,7 @@ import { COUNTRIES, findCountry } from "@/lib/geo-data";
 import { extractNumbers, assessRisk } from "@/lib/outbreak-parser";
 import { extractAdmin1, geocodeAdmin1 } from "@/lib/geo-extract";
 import { errorMessage } from "@/lib/error";
+import { translateDescription } from "@/lib/translate";
 
 export const dynamic     = "force-dynamic";
 export const maxDuration = 60;
@@ -488,6 +489,10 @@ export async function GET(req: NextRequest) {
           results.updated++;
         }
       } else {
+        // Translate inline so this cron owns its own localization rather than
+        // relying on sync-outbreaks' unrelated backfill sweep to catch it later.
+        const t = await translateDescription(item.description);
+
         const { error } = await supabase.from("outbreaks").insert({
           disease:     diseaseInfo.name_fr,
           disease_en:  diseaseInfo.name_en,
@@ -503,7 +508,11 @@ export async function GET(req: NextRequest) {
           risk_level:  riskLevel,
           date:        item.date,
           source:      item.source,
-          description: item.description,
+          description:    item.description,
+          description_fr: t.fr,
+          description_es: t.es,
+          description_ar: t.ar,
+          description_id: t.id,
           active:       true,
           is_seed:      false,
           source_priority: 5,
