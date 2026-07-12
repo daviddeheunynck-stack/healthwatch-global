@@ -96,6 +96,28 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: profileErr.message }, { status: 500 });
   }
 
+  // Default-enroll into regional alerts (opt-out, not opt-in) — same as the
+  // standard activate-trial and pilot-request paths. Without this, an admin-invited
+  // pilot user gets Pro access but no alert ever fires. Best-effort: a failure here
+  // must not fail the invite.
+  const { error: alertsErr } = await admin
+    .from("user_alert_regions")
+    .upsert(
+      ["africa", "asia", "americas", "europe", "oceania"].map((region) => ({
+        user_id: userId,
+        region,
+        min_risk: "medium",
+      })),
+      { onConflict: "user_id,region", ignoreDuplicates: true }
+    );
+  if (alertsErr) {
+    console.error("[admin/invite] default alert enrollment failed:", alertsErr);
+    Sentry.captureException(
+      new Error(`[admin/invite] alert enrollment failed: ${alertsErr.message}`),
+      { tags: { user_id: userId } }
+    );
+  }
+
   // 3. Generate a magic link
   const siteUrl = clean(process.env.NEXT_PUBLIC_SITE_URL) || "https://healthwatch-global.com";
   const { data: linkData, error: linkErr } = await admin.auth.admin.generateLink({
