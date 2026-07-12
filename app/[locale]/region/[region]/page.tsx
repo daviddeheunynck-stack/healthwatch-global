@@ -8,7 +8,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { getLocalizedDisease, getLocalizedCountry, isDisplayActive } from "@/lib/outbreaks";
 import { diseaseToSlug, normalizeDisease } from "@/lib/disease-data";
-import { getOutbreakTrendsBulk } from "@/lib/outbreak-trend";
+import { getOutbreakTrendsBulkCached } from "@/lib/outbreak-trend";
 import type { Outbreak } from "@/lib/outbreaks";
 import EmailCapture from "@/components/EmailCapture";
 
@@ -215,12 +215,8 @@ export default async function RegionPage({
   const numLocale   = l === "ar" ? "ar-SA" : l;
   const countriesSet = new Set(allOutbreaks.map((o) => o.country_en || o.country).filter(Boolean));
 
-  const supabase = createClient(
-    clean(process.env.NEXT_PUBLIC_SUPABASE_URL),
-    clean(process.env.SUPABASE_SERVICE_ROLE_KEY)
-  );
   const trendsMap = active.length > 0
-    ? await getOutbreakTrendsBulk(supabase, active.map((o) => o.id))
+    ? new Map(Object.entries(await getOutbreakTrendsBulkCached(active.map((o) => o.id))))
     : new Map();
 
   const jsonLd = [

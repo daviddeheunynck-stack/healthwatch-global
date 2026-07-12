@@ -10,7 +10,7 @@ import { slugToDisease, diseaseToSlug, allDiseases, normalizeDisease, getContagi
 import { countryToSlug } from "@/lib/country-utils";
 import type { PathogenType, TransmissionMode, VaccineStatus, TreatmentStatus, ContagiosityLevel } from "@/lib/disease-data";
 import { getLocalizedDisease, getLocalizedCountry, isDisplayActive } from "@/lib/outbreaks";
-import { getOutbreakTrendsBulk } from "@/lib/outbreak-trend";
+import { getOutbreakTrendsBulkCached } from "@/lib/outbreak-trend";
 import type { Outbreak } from "@/lib/outbreaks";
 import EmailCapture from "@/components/EmailCapture";
 import DiseaseAlertNudge from "@/components/DiseaseAlertNudge";
@@ -380,12 +380,8 @@ export default async function DiseasePage({
   const affectedCountries = [...affectedCountryMap.values()]
     .sort((a, b) => (b.hasActive ? 1 : 0) - (a.hasActive ? 1 : 0) || a.country_en.localeCompare(b.country_en));
 
-  const supabase = createClient(
-    clean(process.env.NEXT_PUBLIC_SUPABASE_URL),
-    clean(process.env.SUPABASE_SERVICE_ROLE_KEY)
-  );
   const trendsMap = active.length > 0
-    ? await getOutbreakTrendsBulk(supabase, active.map((o) => o.id)).catch(() => new Map())
+    ? new Map(Object.entries(await getOutbreakTrendsBulkCached(active.map((o) => o.id))))
     : new Map();
 
   const diseaseName = getLocalizedDisease(

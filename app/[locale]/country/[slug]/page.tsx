@@ -11,7 +11,7 @@ import { getLocalizedDisease, getLocalizedCountry, isDisplayActive } from "@/lib
 import { allDiseases, diseaseToSlug } from "@/lib/disease-data";
 import type { DiseaseInfo, AppRegion } from "@/lib/disease-data";
 import type { Outbreak } from "@/lib/outbreaks";
-import { getOutbreakTrendsBulk } from "@/lib/outbreak-trend";
+import { getOutbreakTrendsBulkCached } from "@/lib/outbreak-trend";
 import ShareOutbreakButton from "@/components/ShareOutbreakButton";
 import WatchButton from "@/components/WatchButton";
 import EmailCapture from "@/components/EmailCapture";
@@ -281,12 +281,8 @@ export default async function CountryPage({
   const active    = outbreaks.filter(isDisplayActive);
   const historical = outbreaks.filter((o) => !isDisplayActive(o));
 
-  const supabase = createClient(
-    clean(process.env.NEXT_PUBLIC_SUPABASE_URL),
-    clean(process.env.SUPABASE_SERVICE_ROLE_KEY)
-  );
   const trendsMap = active.length > 0
-    ? await getOutbreakTrendsBulk(supabase, active.map((o) => o.id)).catch(() => new Map())
+    ? new Map(Object.entries(await getOutbreakTrendsBulkCached(active.map((o) => o.id))))
     : new Map<string, import("@/lib/outbreak-trend").OutbreakTrend>();
 
   const totalCases  = outbreaks.reduce((s, o) => s + (o.cases  ?? 0), 0);
