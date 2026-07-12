@@ -398,6 +398,25 @@ export function findCountry(name: string): CountryGeo | null {
   return null;
 }
 
+// Exact-match-only check (deliberately no partial/substring matching, unlike
+// findCountry() above) — used to reject admin1 extraction results that are
+// themselves a country name rather than a genuine sub-national location.
+// Regional bulletins naming several countries (e.g. a PAHO "Measles in the
+// Americas Region" alert covering Mexico, Guatemala, the US...) can confuse
+// an extractor into returning a neighboring country's name as if it were a
+// province of the target country. A real admin1 name (e.g. "Niger State")
+// won't exact-match a country key, so this stays safe for legitimate values.
+export function isCountryName(name: string): boolean {
+  if (!name) return false;
+  const lower = name.trim().toLowerCase();
+  if (COUNTRIES[name]) return true;
+  if (COUNTRY_ALIASES[lower]) return true;
+  for (const [key, val] of Object.entries(COUNTRIES)) {
+    if (key.toLowerCase() === lower || val.name_en.toLowerCase() === lower) return true;
+  }
+  return false;
+}
+
 // ISO 3166-1 alpha-2 → HealthWatch region
 // Used to geo-detect the visitor's region from the Vercel x-vercel-ip-country header.
 export const ISO_REGION: Record<string, "africa" | "asia" | "americas" | "europe" | "oceania"> = {

@@ -11,6 +11,7 @@
  */
 
 import { extractAdmin1LLM } from "./geo-extract-llm";
+import { isCountryName } from "./geo-data";
 
 // Match admin1-level location names from WHO DON bulletin prose.
 // Ordered from most specific to most generic — first match wins.
@@ -49,9 +50,13 @@ export async function extractAdmin1(text: string, countryEn?: string): Promise<s
 
   // LLM path: Claude Haiku gives ~65% hit rate vs ~8% for regex alone
   const llmResult = await extractAdmin1LLM(text, countryEn);
-  if (llmResult) return llmResult;
+  // Regional bulletins naming several countries can make the LLM (or the
+  // regex fallback below) return a neighboring country's name instead of a
+  // real sub-national location — reject rather than store a country as if
+  // it were a province (see lib/geo-data.ts isCountryName).
+  if (llmResult && !isCountryName(llmResult)) return llmResult;
 
-  // Regex fallback (no API key, or Haiku returned null)
+  // Regex fallback (no API key, or Haiku returned null/a country name)
   for (const pattern of ADMIN1_PATTERNS) {
     const m = text.match(pattern);
     if (m?.[1]) {
@@ -59,6 +64,7 @@ export async function extractAdmin1(text: string, countryEn?: string): Promise<s
       const lower = raw.toLowerCase();
       if (NOISE_TERMS.has(lower)) continue;
       if (raw.length < 4 || raw.length > 60) continue;
+      if (isCountryName(raw)) continue;
       return raw;
     }
   }
