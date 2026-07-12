@@ -12,7 +12,7 @@ import OutbreakStatsGrid from "@/components/OutbreakStatsGrid";
 import ShareOutbreakButton from "@/components/ShareOutbreakButton";
 import OutbreakCasesChart from "@/components/OutbreakCasesChart";
 import { getLocalizedDisease, getLocalizedCountry, getLocalizedDescription, sourceStatus, sourceName, staleOutbreakDays } from "@/lib/outbreaks";
-import { diseaseToSlug, normalizeDisease } from "@/lib/disease-data";
+import { diseaseToSlug, matchDisease } from "@/lib/disease-data";
 import { countryToSlug } from "@/lib/country-utils";
 import type { Outbreak } from "@/lib/outbreaks";
 import { getResponseGuidance, RESPONSE_ACTIONS } from "@/lib/response-guidance";
@@ -302,7 +302,8 @@ export default async function OutbreakPage({
   const donRef  = o.source ? DON_PATTERN.exec(o.source)?.[1] : null;
   const status  = sourceStatus(o);
 
-  const diseaseSlug  = diseaseToSlug(normalizeDisease(o.disease_en || o.disease).name_en);
+  const diseaseMatch = matchDisease(o.disease_en || o.disease);
+  const diseaseSlug  = diseaseToSlug(diseaseMatch.info.name_en);
   const countrySlug  = o.country_en ? countryToSlug(o.country_en) : null;
 
   const diseaseCtaTitle =
@@ -337,7 +338,7 @@ export default async function OutbreakPage({
       about: {
         "@type": "InfectiousDisease",
         name: o.disease_en ?? o.disease,
-        url: `${BASE_URL}/${locale}/disease/${diseaseSlug}`,
+        ...(diseaseMatch.matched && { url: `${BASE_URL}/${locale}/disease/${diseaseSlug}` }),
       },
       ...(donRef && { url: o.source }),
     },
@@ -347,8 +348,8 @@ export default async function OutbreakPage({
       itemListElement: [
         { "@type": "ListItem", position: 1, name: "HealthWatch Global", item: `${BASE_URL}/${locale}` },
         { "@type": "ListItem", position: 2, name: diseasesLabel[locale] ?? "Diseases", item: `${BASE_URL}/${locale}/diseases` },
-        { "@type": "ListItem", position: 3, name: disease, item: `${BASE_URL}/${locale}/disease/${diseaseSlug}` },
-        { "@type": "ListItem", position: 4, name: `${disease} — ${country}`, item: `${BASE_URL}/${locale}/outbreak/${id}` },
+        ...(diseaseMatch.matched ? [{ "@type": "ListItem", position: 3, name: disease, item: `${BASE_URL}/${locale}/disease/${diseaseSlug}` }] : []),
+        { "@type": "ListItem", position: diseaseMatch.matched ? 4 : 3, name: `${disease} — ${country}`, item: `${BASE_URL}/${locale}/outbreak/${id}` },
       ],
     },
   ];
@@ -429,12 +430,14 @@ export default async function OutbreakPage({
         </div>
         <h1 className="text-3xl font-bold text-white">{disease}</h1>
         <p className="text-xl text-gray-400 mt-1">📍 {country}</p>
-        <Link
-          href={`/${locale}/disease/${diseaseToSlug(normalizeDisease(o.disease_en || o.disease).name_en)}`}
-          className="inline-block mt-2 text-sm text-red-400/70 hover:text-red-400 transition-colors"
-        >
-          {{ fr: `Voir tous les foyers — ${disease}`, en: `All ${disease} outbreaks`, es: `Todos los brotes — ${disease}`, ar: `جميع تفشيات ${disease} ←`, id: `Semua wabah ${disease}` }[locale] ?? `All ${disease} outbreaks`} →
-        </Link>
+        {diseaseMatch.matched && (
+          <Link
+            href={`/${locale}/disease/${diseaseSlug}`}
+            className="inline-block mt-2 text-sm text-red-400/70 hover:text-red-400 transition-colors"
+          >
+            {{ fr: `Voir tous les foyers — ${disease}`, en: `All ${disease} outbreaks`, es: `Todos los brotes — ${disease}`, ar: `جميع تفشيات ${disease} ←`, id: `Semua wabah ${disease}` }[locale] ?? `All ${disease} outbreaks`} →
+          </Link>
+        )}
         {o.is_pheic && (
           <p className="mt-2 text-xs text-purple-400 font-semibold tracking-wide">{l.pheic}</p>
         )}
