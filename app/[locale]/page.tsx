@@ -4,7 +4,7 @@ import Link from "next/link";
 import { Activity, Globe, AlertTriangle } from "lucide-react";
 import { getOutbreaks, getStats, getLastSync, getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 import { ISO_REGION } from "@/lib/geo-data";
-import { getOutbreakTrendsBulk, type OutbreakTrend } from "@/lib/outbreak-trend";
+import { getOutbreakTrendsBulkCached } from "@/lib/outbreak-trend";
 import { createClient } from "@/lib/supabase-server";
 import { createClient as createService } from "@supabase/supabase-js";
 import StatsCard from "@/components/StatsCard";
@@ -173,7 +173,6 @@ const VALID_REGIONS = new Set(["all","africa","asia","americas","europe","oceani
 const VALID_RISKS   = new Set(["all","high","medium","low"]);
 
 async function DashboardContent({ demo = false, urlRegion, urlRisk }: { demo?: boolean; urlRegion?: string; urlRisk?: string }) {
-  const __tStart = performance.now();
   const locale = await getLocale();
   const t = await getTranslations("dashboard");
   const tRisk = await getTranslations("risk");
@@ -260,10 +259,7 @@ async function DashboardContent({ demo = false, urlRegion, urlRisk }: { demo?: b
 
   const isPaid = plan === "starter" || plan === "pro" || plan === "team" || plan === "enterprise" || orgMemberAccess;
 
-  const __t0 = performance.now();
   const [outbreaks, lastSync] = await Promise.all([getOutbreaks(), getLastSync()]);
-  const __t1 = performance.now();
-  console.log(`[perf] demo=${demo} auth-block=${(__t0 - __tStart).toFixed(0)}ms outbreaks-fetch=${(__t1 - __t0).toFixed(0)}ms outbreaks.length=${outbreaks.length}`);
   const stats = getStats(outbreaks);
 
   // 7-day directional signal (▲/▼/→) — infrastructure has been live since 2026-06-05;
@@ -272,18 +268,10 @@ async function DashboardContent({ demo = false, urlRegion, urlRisk }: { demo?: b
   // data matures (~7 days of daily snapshots, i.e. around 2026-06-12).
   //
   // outbreak_snapshots has RLS enabled with NO public policies — "no direct public
-  // access — only service role (cron) writes" (migration 20240109000000). The
-  // anon/cookie-based `supabase` client above would silently get [] back forever,
-  // so this needs the elevated client, same as app/api/watchlist/route.ts and
-  // app/api/alert-diseases/route.ts.
-  const trendsService = createService(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!
-  );
-  const trendsMap = await getOutbreakTrendsBulk(trendsService, outbreaks.map((o) => o.id));
-  const trends: Record<string, OutbreakTrend> = Object.fromEntries(trendsMap);
-  const __t2 = performance.now();
-  console.log(`[perf] demo=${demo} trends-fetch=${(__t2 - __t1).toFixed(0)}ms total-so-far=${(__t2 - __tStart).toFixed(0)}ms`);
+  // access — only service role (cron) writes" (migration 20240109000000). Cached
+  // (5 min) the same way getOutbreaks()/getLastSync() are — see
+  // getOutbreakTrendsBulkCached's own comment for why this matters here specifically.
+  const trends = await getOutbreakTrendsBulkCached(outbreaks.map((o) => o.id));
 
   const popupLabels = {
     cases: t("cases"),
@@ -355,8 +343,6 @@ async function DashboardContent({ demo = false, urlRegion, urlRisk }: { demo?: b
         .slice(0, 3)
     : [];
   const missedAlerts = missedAlertOutbreaks.length;
-
-  console.log(`[perf] demo=${demo} function-total-before-jsx=${(performance.now() - __tStart).toFixed(0)}ms`);
 
   return (
     <>
