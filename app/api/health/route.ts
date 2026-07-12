@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { fetchSentryIssues } from "@/lib/sentry-issues";
+import { getDataSourceStatus } from "@/lib/data-status";
 
 export const dynamic = "force-dynamic";
 
@@ -146,6 +147,50 @@ export async function GET(req: Request) {
     checks.sentry = "error";
   }
 
+  // ── Source coverage (deep only) ──────────────────────────────────────────
+  // A source's cron can log "ok" indefinitely while never actually keeping a
+  // single row — e.g. the 2026-07-12 bug where PAHO/Africa CDC inserts never
+  // set source_priority, so WHO DON's hourly sync silently reclaimed every
+  // row the moment it matched the same disease+country. Both showed 0 active
+  // outbreaks in perpetuity without a single cron ever logging an error, and
+  // `data_freshness` above stayed green throughout — it only checks that
+  // *some* source updated a row recently, and WHO DON's hourly cadence
+  // always satisfies that, masking a source stuck at zero indefinitely.
+  // A same-day zero is often legitimate (Africa CDC can genuinely have
+  // nothing new — verified 2026-07-12), so this only flags a source once
+  // it's been at zero for a full week: `site_config` persists a
+  // "first seen at zero" timestamp per source, cleared as soon as the count
+  // recovers above zero.
+  const sourceCoverage: { stale: string[] } = { stale: [] };
+  if (deep) {
+    try {
+      const supabase3 = createClient(
+        clean(process.env.NEXT_PUBLIC_SUPABASE_URL),
+        clean(process.env.SUPABASE_SERVICE_ROLE_KEY)
+      );
+      const ZERO_SINCE_DAYS = 7;
+      const { sources } = await getDataSourceStatus();
+      for (const s of sources) {
+        const key = `source_coverage:zero_since:${s.name}`;
+        if (s.count > 0) {
+          await supabase3.from("site_config").delete().eq("key", key);
+          continue;
+        }
+        const { data: existing } = await supabase3
+          .from("site_config").select("value").eq("key", key).maybeSingle();
+        if (!existing) {
+          await supabase3.from("site_config").upsert({ key, value: new Date().toISOString() }, { onConflict: "key" });
+          continue;
+        }
+        const days = Math.floor((Date.now() - new Date(existing.value).getTime()) / 86_400_000);
+        if (days >= ZERO_SINCE_DAYS) sourceCoverage.stale.push(`${s.name} (0 foyer actif depuis ${days}j)`);
+      }
+      checks.source_coverage = sourceCoverage.stale.length > 0 ? "error" : "ok";
+    } catch {
+      checks.source_coverage = "error";
+    }
+  }
+
   const criticalChecks = deep ? ["supabase", "stripe", "stripe_prices"] : ["supabase", "stripe"];
   const allCriticalOk  = criticalChecks.every((k) => checks[k] === "ok");
   const anyError       = Object.values(checks).some((v) => v === "error");
@@ -158,6 +203,7 @@ export async function GET(req: Request) {
       checks,
       ...(Object.keys(priceDetail).length ? { stripe_prices_detail: priceDetail } : {}),
       ...(checks.sentry && checks.sentry !== "unconfigured" ? { sentry_issues: sentrySummary } : {}),
+      ...(sourceCoverage.stale.length ? { source_coverage_detail: sourceCoverage } : {}),
       timestamp: new Date().toISOString(),
     },
     { status: status === "ok" ? 200 : 503 }
