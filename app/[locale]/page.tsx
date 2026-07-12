@@ -173,6 +173,7 @@ const VALID_REGIONS = new Set(["all","africa","asia","americas","europe","oceani
 const VALID_RISKS   = new Set(["all","high","medium","low"]);
 
 async function DashboardContent({ demo = false, urlRegion, urlRisk }: { demo?: boolean; urlRegion?: string; urlRisk?: string }) {
+  const __tStart = performance.now();
   const locale = await getLocale();
   const t = await getTranslations("dashboard");
   const tRisk = await getTranslations("risk");
@@ -259,7 +260,10 @@ async function DashboardContent({ demo = false, urlRegion, urlRisk }: { demo?: b
 
   const isPaid = plan === "starter" || plan === "pro" || plan === "team" || plan === "enterprise" || orgMemberAccess;
 
+  const __t0 = performance.now();
   const [outbreaks, lastSync] = await Promise.all([getOutbreaks(), getLastSync()]);
+  const __t1 = performance.now();
+  console.log(`[perf] demo=${demo} auth-block=${(__t0 - __tStart).toFixed(0)}ms outbreaks-fetch=${(__t1 - __t0).toFixed(0)}ms outbreaks.length=${outbreaks.length}`);
   const stats = getStats(outbreaks);
 
   // 7-day directional signal (▲/▼/→) — infrastructure has been live since 2026-06-05;
@@ -278,6 +282,8 @@ async function DashboardContent({ demo = false, urlRegion, urlRisk }: { demo?: b
   );
   const trendsMap = await getOutbreakTrendsBulk(trendsService, outbreaks.map((o) => o.id));
   const trends: Record<string, OutbreakTrend> = Object.fromEntries(trendsMap);
+  const __t2 = performance.now();
+  console.log(`[perf] demo=${demo} trends-fetch=${(__t2 - __t1).toFixed(0)}ms total-so-far=${(__t2 - __tStart).toFixed(0)}ms`);
 
   const popupLabels = {
     cases: t("cases"),
@@ -349,6 +355,8 @@ async function DashboardContent({ demo = false, urlRegion, urlRisk }: { demo?: b
         .slice(0, 3)
     : [];
   const missedAlerts = missedAlertOutbreaks.length;
+
+  console.log(`[perf] demo=${demo} function-total-before-jsx=${(performance.now() - __tStart).toFixed(0)}ms`);
 
   return (
     <>
