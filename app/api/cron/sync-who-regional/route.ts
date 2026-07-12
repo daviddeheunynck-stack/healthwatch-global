@@ -1,14 +1,17 @@
 // Endemic / high-burden disease surveillance not systematically covered by WHO DON.
-// 66 disease × country targets across 5 disease categories:
-//   Dengue (9), Cholera (12), Measles (9), Meningitis (6), Polio (2), Typhoid (1),
-//   MERS-CoV (1), Hepatitis E (3), Diphtheria (2), Leishmaniasis (2), Lassa (4),
-//   CCHF (3), Nipah (2), Rift Valley fever (1), Mpox (1), Yellow Fever (2), Dengue-Myanmar (1)
-// Sources:
-//   - Brazil dengue: InfoDengue / Fiocruz / PROCC (open JSON API, no auth)
-//   - All others:    ReliefWeb API v2 (UN OCHA) — requires registered appname
-//     → Register at https://apidoc.reliefweb.int/ ; update RELIEFWEB_APPNAME below
+// 120 disease × country targets; 31 have a working fetcher (see below). The rest
+// have none and fall through to queryReliefWeb(), which is HARD-DISABLED for legal
+// reasons (reliefWebOk = false) — those entries are retained only as a record of
+// desired coverage, not as working code.
+// Fetchers:
+//   - Malaria / Measles / Polio / Yellow Fever / Leishmaniasis / Diphtheria: WHO GHO
+//     OData API (ghoapi.azureedge.net)
+//   - Dengue (all countries except Brazil, Philippines): WHO Global Dengue
+//     Surveillance API (xmart-api-public.who.int) — see fetchDengueGlobalSurveillance
+//   - Dengue/Brazil: MANUAL, see note below — never auto-fetch
+//   - Dengue/Philippines: no fetcher yet, absent from the WHO dataset above
 // Schedule: 0 8 * * 2,5  (Tuesday and Friday 08:00 UTC)
-// maxDuration: 150s (Vercel Pro cron; ~66 targets × 2s avg, many skipped early)
+// maxDuration: 300s (Vercel Pro cron; ~120 targets, many skipped early on no-fetcher)
 //
 // Never overwrites rows whose source URL is from who.int/emergencies
 // (those are owned by the WHO DON daily sync).
@@ -337,6 +340,103 @@ function fetchDiphtheriaGHO(country_en: string): () => Promise<Found | null> {
   };
 }
 
+// ── WHO Global Dengue Surveillance fetcher ────────────────────────────────────
+// WHO's public xmart API (ARBOV/V_DENGUE_GLOBAL_VALIDATED_PUBLIC) — same OData
+// family as GHO, documented with a public curl example on WHO's own "Global
+// dengue surveillance" dashboard (worldhealthorg.shinyapps.io/dengue_global).
+// Reports weekly/monthly case counts per country; this sums every non-null
+// period within the current calendar year into a cumulative year-to-date total
+// (cross-checked against the WHO SEARO Epidemiological Bulletin: summing India's
+// Jan-Apr 2026 monthly rows gives 12,566, matching the bulletin's stated figure
+// for the same period exactly).
+// Philippines has no rows in this dataset at all; Brazil is deliberately excluded
+// (MANUAL, see note above) — neither gets an entry in DENGUE_ISO3.
+
+const DENGUE_ISO3: Record<string, string> = {
+  "India":      "IND",
+  "Bangladesh": "BGD",
+  "Colombia":   "COL",
+  "Indonesia":  "IDN",
+  "Vietnam":    "VNM",
+  "Thailand":   "THA",
+  "Malaysia":   "MYS",
+  "Peru":       "PER",
+  "Myanmar":    "MMR",
+  "Argentina":  "ARG",
+  "Ecuador":    "ECU",
+  "Bolivia":    "BOL",
+  "Paraguay":   "PRY",
+  "Venezuela":  "VEN",
+  "Cambodia":   "KHM",
+  "Laos":       "LAO",
+  "Sri Lanka":  "LKA",
+  "Mexico":     "MEX",
+  "Cuba":       "CUB",
+  "Haiti":      "HTI",
+  "Nicaragua":  "NIC",
+  "Guatemala":  "GTM",
+};
+
+function fetchDengueGlobalSurveillance(country_en: string): () => Promise<Found | null> {
+  return async () => {
+    const iso3 = DENGUE_ISO3[country_en];
+    if (!iso3) return null;
+
+    const ua   = "HealthWatch-Global/1.0 (health surveillance; contact@healthwatch-global.com)";
+    const base = "https://xmart-api-public.who.int/ARBOV/V_DENGUE_GLOBAL_VALIDATED_PUBLIC";
+    type Rec = { START_DATE: string; CASES: number | null; DEATHS: number | null; YEAR?: number };
+
+    async function sumYear(year: number): Promise<Found | null> {
+      const url =
+        `${base}?%24filter=ISO3%20eq%20'${iso3}'%20and%20YEAR%20eq%20${year}%20and%20CASES%20ne%20null` +
+        `&%24orderby=START_DATE%20asc&%24top=100&excludeSysColumns=0`;
+      const res = await fetch(url, { headers: { "User-Agent": ua }, signal: AbortSignal.timeout(10_000) });
+      if (!res.ok) return null;
+      const json = await res.json() as { value: Rec[] };
+      const rows = json.value ?? [];
+      if (rows.length === 0) return null;
+
+      let cases = 0, deaths = 0, latestDate = "";
+      for (const r of rows) {
+        cases  += r.CASES  ?? 0;
+        deaths += r.DEATHS ?? 0;
+        if (r.START_DATE > latestDate) latestDate = r.START_DATE;
+      }
+      if (cases <= 0 || !latestDate) return null;
+
+      return {
+        cases,
+        deaths,
+        date:   latestDate,
+        source: "https://worldhealthorg.shinyapps.io/dengue_global/",
+        description: `Dengue in ${country_en} — WHO reported ${cases.toLocaleString("en")} cumulative case${cases > 1 ? "s" : ""}${deaths > 0 ? ` and ${deaths.toLocaleString("en")} death${deaths > 1 ? "s" : ""}` : ""} in ${year} as of the period starting ${latestDate}. Source: WHO Global Dengue Surveillance.`,
+      };
+    }
+
+    try {
+      const current = await sumYear(new Date().getFullYear());
+      if (current) return current;
+
+      // No data yet for the current year — reporting lag into this WHO dataset
+      // varies a lot by country (some are over a year behind). Fall back to the
+      // most recent year with any data at all, so the row still reflects a real
+      // (if dated) WHO figure instead of silently reporting nothing; the resulting
+      // old `date` correctly surfaces via data-quality's staleness check rather
+      // than hiding the gap.
+      const latestUrl =
+        `${base}?%24filter=ISO3%20eq%20'${iso3}'%20and%20CASES%20ne%20null` +
+        `&%24orderby=START_DATE%20desc&%24top=1&excludeSysColumns=0`;
+      const latestRes = await fetch(latestUrl, { headers: { "User-Agent": ua }, signal: AbortSignal.timeout(10_000) });
+      if (!latestRes.ok) return null;
+      const latestJson = await latestRes.json() as { value: Rec[] };
+      const lastYear = latestJson.value?.[0]?.YEAR;
+      return lastYear ? await sumYear(lastYear) : null;
+    } catch {
+      return null;
+    }
+  };
+}
+
 // ── ReliefWeb query ───────────────────────────────────────────────────────────
 
 interface Target {
@@ -424,14 +524,14 @@ const TARGETS: Target[] = [
   // ── Dengue — Brazil is maintained MANUALLY (MoH Painel de Arboviroses, not
   //    machine-readable). Do NOT add a Brazil auto-fetcher here (see note above).
   //    Others via ReliefWeb.
-  { disease_en: "Dengue",        country_en: "India",                            minCases: 50_000 },
-  { disease_en: "Dengue",        country_en: "Bangladesh",                       minCases: 1_000  },
-  { disease_en: "Dengue",        country_en: "Colombia",                         minCases: 5_000  },
-  { disease_en: "Dengue",        country_en: "Indonesia",                        minCases: 10_000 },
-  { disease_en: "Dengue",        country_en: "Vietnam",                          minCases: 5_000  },
-  { disease_en: "Dengue",        country_en: "Thailand",                         minCases: 5_000  },
-  { disease_en: "Dengue",        country_en: "Malaysia",                         minCases: 1_000  },
-  { disease_en: "Dengue",        country_en: "Peru",                             minCases: 1_000  },
+  { disease_en: "Dengue", country_en: "India",      minCases: 100, fetcher: fetchDengueGlobalSurveillance("India") },
+  { disease_en: "Dengue", country_en: "Bangladesh", minCases: 100, fetcher: fetchDengueGlobalSurveillance("Bangladesh") },
+  { disease_en: "Dengue", country_en: "Colombia",   minCases: 100, fetcher: fetchDengueGlobalSurveillance("Colombia") },
+  { disease_en: "Dengue", country_en: "Indonesia",  minCases: 100, fetcher: fetchDengueGlobalSurveillance("Indonesia") },
+  { disease_en: "Dengue", country_en: "Vietnam",    minCases: 100, fetcher: fetchDengueGlobalSurveillance("Vietnam") },
+  { disease_en: "Dengue", country_en: "Thailand",   minCases: 100, fetcher: fetchDengueGlobalSurveillance("Thailand") },
+  { disease_en: "Dengue", country_en: "Malaysia",   minCases: 100, fetcher: fetchDengueGlobalSurveillance("Malaysia") },
+  { disease_en: "Dengue", country_en: "Peru",       minCases: 100, fetcher: fetchDengueGlobalSurveillance("Peru") },
   // ── Cholera — endemic in fragile/conflict states ──────────────────────────────
   { disease_en: "Cholera",       country_en: "Democratic Republic of the Congo", minCases: 100    },
   { disease_en: "Cholera",       country_en: "Haiti",                            minCases: 100    },
@@ -500,7 +600,7 @@ const TARGETS: Target[] = [
   { disease_en: "Measles", country_en: "South Sudan", minCases: 100, fetcher: fetchMeaslesGHO("South Sudan") },
   { disease_en: "Measles", country_en: "Myanmar",     minCases: 100, fetcher: fetchMeaslesGHO("Myanmar")    },
   // ── Dengue — Myanmar (rising burden, conflict-affected surveillance) ──────────
-  { disease_en: "Dengue",        country_en: "Myanmar",                           minCases: 1_000  },
+  { disease_en: "Dengue", country_en: "Myanmar", minCases: 100, fetcher: fetchDengueGlobalSurveillance("Myanmar") },
   // ── Meningitis — extended belt into the Sahel ────────────────────────────────
   { disease_en: "Meningitis",    country_en: "Burkina Faso",                      minCases:  10    },
   { disease_en: "Meningitis",    country_en: "South Sudan",                       minCases:  10    },
@@ -521,13 +621,13 @@ const TARGETS: Target[] = [
 
   // ── South America — dengue & malaria (previously under-covered) ──────────────
   // Argentina: solid national surveillance (SIVILA); 2024 epidemic ~330k cases documented on PAHO/ReliefWeb
-  { disease_en: "Dengue",        country_en: "Argentina",                         minCases: 10_000 },
+  { disease_en: "Dengue", country_en: "Argentina", minCases: 100, fetcher: fetchDengueGlobalSurveillance("Argentina") },
   // Ecuador, Bolivia, Paraguay: seasonal dengue well documented in PAHO sitreps on ReliefWeb
-  { disease_en: "Dengue",        country_en: "Ecuador",                           minCases:  1_000 },
-  { disease_en: "Dengue",        country_en: "Bolivia",                           minCases:  1_000 },
-  { disease_en: "Dengue",        country_en: "Paraguay",                          minCases:  1_000 },
-  // Venezuela: national surveillance has collapsed; figures are PAHO extrapolations — treat as approximate
-  { disease_en: "Dengue",        country_en: "Venezuela",                         minCases:  5_000 },
+  { disease_en: "Dengue", country_en: "Ecuador",  minCases: 100, fetcher: fetchDengueGlobalSurveillance("Ecuador") },
+  { disease_en: "Dengue", country_en: "Bolivia",  minCases: 100, fetcher: fetchDengueGlobalSurveillance("Bolivia") },
+  { disease_en: "Dengue", country_en: "Paraguay", minCases: 100, fetcher: fetchDengueGlobalSurveillance("Paraguay") },
+  // Venezuela: national surveillance has collapsed; figures are WHO extrapolations — treat as approximate
+  { disease_en: "Dengue", country_en: "Venezuela", minCases: 100, fetcher: fetchDengueGlobalSurveillance("Venezuela") },
   { disease_en: "Malaria",       country_en: "Venezuela",                         minCases:    100 },
   // Colombia: significant endemic malaria burden beyond the dengue row already present
   { disease_en: "Malaria",       country_en: "Colombia",                          minCases:  5_000 },
@@ -537,9 +637,9 @@ const TARGETS: Target[] = [
   { disease_en: "Dengue",        country_en: "Philippines",                       minCases: 10_000 },
   { disease_en: "Measles", country_en: "Philippines", minCases: 100, fetcher: fetchMeaslesGHO("Philippines") },
   // Cambodia, Laos, Sri Lanka: present on ReliefWeb via WPRO/SEARO — conservative thresholds
-  { disease_en: "Dengue",        country_en: "Cambodia",                          minCases:  1_000 },
-  { disease_en: "Dengue",        country_en: "Laos",                              minCases:    500 },
-  { disease_en: "Dengue",        country_en: "Sri Lanka",                         minCases:  1_000 },
+  { disease_en: "Dengue", country_en: "Cambodia",  minCases: 100, fetcher: fetchDengueGlobalSurveillance("Cambodia") },
+  { disease_en: "Dengue", country_en: "Laos",      minCases: 100, fetcher: fetchDengueGlobalSurveillance("Laos") },
+  { disease_en: "Dengue", country_en: "Sri Lanka", minCases: 100, fetcher: fetchDengueGlobalSurveillance("Sri Lanka") },
   // Bangladesh cholera: WHO SEARO publishes; ReliefWeb has good coverage
   { disease_en: "Cholera",       country_en: "Bangladesh",                        minCases:    100 },
   // Nepal cholera: monsoon-seasonal, well documented in ReliefWeb SEARO reports
@@ -604,11 +704,11 @@ const TARGETS: Target[] = [
   { disease_en: "Cholera", country_en: "Zambia",                                  minCases:     50 },
 
   // ── Dengue — Americas gap-fill (PAHO sitreps published on ReliefWeb) ─────────
-  { disease_en: "Dengue", country_en: "Mexico",                                   minCases:  5_000 },
-  { disease_en: "Dengue", country_en: "Cuba",                                     minCases:    500 },
-  { disease_en: "Dengue", country_en: "Haiti",                                    minCases:    100 },
-  { disease_en: "Dengue", country_en: "Nicaragua",                                minCases:  1_000 },
-  { disease_en: "Dengue", country_en: "Guatemala",                                minCases:  1_000 },
+  { disease_en: "Dengue", country_en: "Mexico",    minCases: 100, fetcher: fetchDengueGlobalSurveillance("Mexico") },
+  { disease_en: "Dengue", country_en: "Cuba",      minCases: 100, fetcher: fetchDengueGlobalSurveillance("Cuba") },
+  { disease_en: "Dengue", country_en: "Haiti",     minCases: 100, fetcher: fetchDengueGlobalSurveillance("Haiti") },
+  { disease_en: "Dengue", country_en: "Nicaragua", minCases: 100, fetcher: fetchDengueGlobalSurveillance("Nicaragua") },
+  { disease_en: "Dengue", country_en: "Guatemala", minCases: 100, fetcher: fetchDengueGlobalSurveillance("Guatemala") },
 
   // ── Typhoid — XDR/resistant strain spread beyond Pakistan ─────────────────────
   // India: high burden of typhoid; WHO SEARO + OCHA publish on ReliefWeb
@@ -716,16 +816,20 @@ export async function GET(req: NextRequest) {
       continue;
     }
 
-    // Annual GHO reference data (custom fetcher + date > 60 days old) is endemic
-    // reference — an annual estimate with a placeholder AAAA-01-01 date, NOT a
-    // time-limited outbreak event. It is ingested INACTIVE so it never shows on the
-    // "active outbreaks" map (misleading for an epidemiologist audience, and it was
-    // the source of a recurring cleanup loop — see project_is_seed_design_conflict).
-    // It is still refreshed + kept is_seed so sync-outbreaks' stale-deactivation
-    // (.neq is_seed true) leaves it alone and no duplicates are created.
+    // Annual GHO reference data (custom fetcher with a placeholder AAAA-01-01 date)
+    // is endemic reference — an annual estimate, NOT a time-limited outbreak event.
+    // It is ingested INACTIVE so it never shows on the "active outbreaks" map
+    // (misleading for an epidemiologist audience, and it was the source of a
+    // recurring cleanup loop — see project_is_seed_design_conflict). It is still
+    // refreshed + kept is_seed so sync-outbreaks' stale-deactivation (.neq is_seed
+    // true) leaves it alone and no duplicates are created.
+    // Detected by the placeholder date itself (Jan 1st), not by age — every GHO
+    // annual fetcher above always produces a "${year}-01-01" date, while periodic
+    // fetchers (e.g. fetchDengueGlobalSurveillance's real weekly/monthly dates)
+    // almost never land exactly on Jan 1st, so they correctly stay active even
+    // when the underlying source has some real reporting lag.
     // ReliefWeb-sourced rows (recent sitreps: dengue/cholera/…) stay active as before.
-    const SIXTY_DAYS_AGO = new Date(Date.now() - 60 * 86_400_000).toISOString().substring(0, 10);
-    const isAnnualRef = !!target.fetcher && found.date < SIXTY_DAYS_AGO;
+    const isAnnualRef = !!target.fetcher && /-01-01$/.test(found.date);
     const activeFlag  = !isAnnualRef;
 
     if (existingRow) {
