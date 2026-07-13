@@ -1207,7 +1207,8 @@ export async function GET(req: NextRequest) {
           .update({ cases: found.cases, deaths: found.deaths, date: found.date,
                     source: found.source, description: found.description,
                     active: activeFlag, is_seed: isAnnualRef,
-                    risk_level: assessRisk(target.disease_en, found.description, found.cases, found.deaths) })
+                    risk_level: assessRisk(target.disease_en, found.description, found.cases, found.deaths),
+                    source_priority: 5 })
           .eq("id", directCheck.id)
           .lte("source_priority", 5);
         if (error) {
@@ -1238,6 +1239,7 @@ export async function GET(req: NextRequest) {
         description: found.description,
         active:      activeFlag,
         is_seed:     isAnnualRef,
+        source_priority: 5,
       });
 
       if (error) {
