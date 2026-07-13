@@ -297,7 +297,7 @@ export async function GET(req: NextRequest) {
   // ── 2. Load existing outbreaks for dedup ──────────────────────────────────
   const { data: existing, error: fetchErr } = await supabase
     .from("outbreaks")
-    .select("id, disease_en, country_en, cases, deaths, date, source, active")
+    .select("id, disease_en, country_en, cases, deaths, date, source, active, description")
     .or("active.eq.true,date.gte." + new Date(Date.now() - 90 * 86400_000).toISOString().substring(0, 10));
 
   if (fetchErr) {
@@ -382,18 +382,29 @@ export async function GET(req: NextRequest) {
           continue;
         }
 
+        const updatePayload: Record<string, unknown> = {
+          cases:           item.cases,
+          deaths:          item.deaths,
+          date:            item.date,
+          source:          item.source,
+          description:     item.description,
+          risk_level:      riskLevel,
+          active:          true,
+          source_priority: 5,
+        };
+        // English description just changed — existing FR/ES/AR/ID translations
+        // (if any) now describe stale figures. Null them so sync-outbreaks'
+        // backfill sweep re-translates from the fresh text (it only fires when
+        // description_fr IS NULL — see project_sync_outbreaks_paho_translation_drift_fixed).
+        if (existRow.description !== item.description) {
+          updatePayload.description_fr = null;
+          updatePayload.description_es = null;
+          updatePayload.description_ar = null;
+          updatePayload.description_id = null;
+        }
         const { error } = await supabase
           .from("outbreaks")
-          .update({
-            cases:           item.cases,
-            deaths:          item.deaths,
-            date:            item.date,
-            source:          item.source,
-            description:     item.description,
-            risk_level:      riskLevel,
-            active:          true,
-            source_priority: 5,
-          })
+          .update(updatePayload)
           .eq("id", existRow.id)
           .lte("source_priority", 5);
 

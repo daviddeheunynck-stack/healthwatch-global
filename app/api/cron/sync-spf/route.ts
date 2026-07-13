@@ -267,7 +267,7 @@ export async function GET(req: NextRequest) {
   // ── 2. Load existing for dedup ────────────────────────────────────────────
   const { data: existing, error: fetchErr } = await supabase
     .from("outbreaks")
-    .select("id, disease_en, country_en, cases, deaths, date, source, active")
+    .select("id, disease_en, country_en, cases, deaths, date, source, active, description")
     .or("active.eq.true,date.gte." + new Date(Date.now() - 90 * 86400_000).toISOString().substring(0, 10));
   if (fetchErr) return NextResponse.json({ error: fetchErr.message }, { status: 500 });
 
@@ -361,10 +361,22 @@ export async function GET(req: NextRequest) {
         results.skipped++;
         continue;
       }
-      const { error } = await supabase.from("outbreaks").update({
+      const updatePayload: Record<string, unknown> = {
         cases, deaths, date: item.date, source: item.url,
         description, risk_level: riskLevel, active: true, source_priority: 5,
-      }).eq("id", existingRow.id).lte("source_priority", 5);
+      };
+      // English description just changed — existing FR/ES/AR/ID translations
+      // (if any) now describe stale figures. Null them so sync-outbreaks'
+      // backfill sweep re-translates from the fresh text (it only fires when
+      // description_fr IS NULL — see project_sync_outbreaks_paho_translation_drift_fixed).
+      if (existingRow.description !== description) {
+        updatePayload.description_fr = null;
+        updatePayload.description_es = null;
+        updatePayload.description_ar = null;
+        updatePayload.description_id = null;
+      }
+      const { error } = await supabase.from("outbreaks").update(updatePayload)
+        .eq("id", existingRow.id).lte("source_priority", 5);
       if (error) { log.push({ label, status: "error", detail: error.message }); results.errors++; }
       else { log.push({ label, status: "updated" }); results.updated++; }
     } else {

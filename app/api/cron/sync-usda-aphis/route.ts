@@ -369,7 +369,7 @@ export async function GET(req: NextRequest) {
   // ── 2. Load existing USDA records for dedup ───────────────────────────────
   const { data: existingRows, error: fetchErr } = await supabase
     .from("outbreaks")
-    .select("id, admin1, cases, date, source, source_priority")
+    .select("id, admin1, cases, date, source, source_priority, description")
     .eq("disease_en", diseaseInfo.name_en)
     .eq("country_en", "United States")
     .like("source", `${SOURCE_PREFIX}%`);
@@ -410,15 +410,26 @@ export async function GET(req: NextRequest) {
         continue;
       }
 
+      const updatePayload: Record<string, unknown> = {
+        cases:           sd.herds,
+        date:            safeDate,
+        description,
+        active:          true,
+        source_priority: SOURCE_PRIORITY,
+      };
+      // English description just changed — existing FR/ES/AR/ID translations
+      // (if any) now describe stale figures. Null them so sync-outbreaks'
+      // backfill sweep re-translates from the fresh text (it only fires when
+      // description_fr IS NULL — see project_sync_outbreaks_paho_translation_drift_fixed).
+      if (existing.description !== description) {
+        updatePayload.description_fr = null;
+        updatePayload.description_es = null;
+        updatePayload.description_ar = null;
+        updatePayload.description_id = null;
+      }
       const { error } = await supabase
         .from("outbreaks")
-        .update({
-          cases:           sd.herds,
-          date:            safeDate,
-          description,
-          active:          true,
-          source_priority: SOURCE_PRIORITY,
-        })
+        .update(updatePayload)
         .eq("id", existing.id);
 
       if (error) {

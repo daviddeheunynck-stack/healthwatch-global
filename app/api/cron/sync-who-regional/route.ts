@@ -1064,7 +1064,7 @@ export async function GET(req: NextRequest) {
   // Load existing outbreaks (active + recently deactivated to avoid ghost dups)
   const { data: existing, error: fetchErr } = await supabase
     .from("outbreaks")
-    .select("id, disease_en, country_en, cases, deaths, date, source, active")
+    .select("id, disease_en, country_en, cases, deaths, date, source, active, description")
     .or("active.eq.true,date.gte." + new Date(Date.now() - 90 * 86400_000).toISOString().substring(0, 10));
 
   if (fetchErr) {
@@ -1151,19 +1151,30 @@ export async function GET(req: NextRequest) {
         continue;
       }
 
+      const updatePayload: Record<string, unknown> = {
+        cases:           found.cases,
+        deaths:          found.deaths,
+        date:            found.date,
+        source:          found.source,
+        description:     found.description,
+        risk_level:      assessRisk(target.disease_en, found.description, found.cases, found.deaths),
+        active:          activeFlag,
+        is_seed:         isAnnualRef,
+        source_priority: 5,
+      };
+      // English description just changed — existing FR/ES/AR/ID translations
+      // (if any) now describe stale figures. Null them so sync-outbreaks'
+      // backfill sweep re-translates from the fresh text (it only fires when
+      // description_fr IS NULL — see project_sync_outbreaks_paho_translation_drift_fixed).
+      if (existingRow.description !== found.description) {
+        updatePayload.description_fr = null;
+        updatePayload.description_es = null;
+        updatePayload.description_ar = null;
+        updatePayload.description_id = null;
+      }
       const { error } = await supabase
         .from("outbreaks")
-        .update({
-          cases:           found.cases,
-          deaths:          found.deaths,
-          date:            found.date,
-          source:          found.source,
-          description:     found.description,
-          risk_level:      assessRisk(target.disease_en, found.description, found.cases, found.deaths),
-          active:          activeFlag,
-          is_seed:         isAnnualRef,
-          source_priority: 5,
-        })
+        .update(updatePayload)
         .eq("id", existingRow.id)
         .lte("source_priority", 5);
 
@@ -1190,7 +1201,7 @@ export async function GET(req: NextRequest) {
       // most recently created row.
       const { data: directCheck } = await supabase
         .from("outbreaks")
-        .select("id, cases, deaths, date, active")
+        .select("id, cases, deaths, date, active, description")
         .eq("disease_en", diseaseInfo.name_en)
         .eq("country_en", countryInfo.name_en)
         .order("is_seed", { ascending: false })
@@ -1202,13 +1213,22 @@ export async function GET(req: NextRequest) {
 
       if (directCheck) {
         // Row already exists (likely deactivated + old) — reactivate and update
+        const reactivatePayload: Record<string, unknown> = {
+          cases: found.cases, deaths: found.deaths, date: found.date,
+          source: found.source, description: found.description,
+          active: activeFlag, is_seed: isAnnualRef,
+          risk_level: assessRisk(target.disease_en, found.description, found.cases, found.deaths),
+          source_priority: 5,
+        };
+        if (directCheck.description !== found.description) {
+          reactivatePayload.description_fr = null;
+          reactivatePayload.description_es = null;
+          reactivatePayload.description_ar = null;
+          reactivatePayload.description_id = null;
+        }
         const { error } = await supabase
           .from("outbreaks")
-          .update({ cases: found.cases, deaths: found.deaths, date: found.date,
-                    source: found.source, description: found.description,
-                    active: activeFlag, is_seed: isAnnualRef,
-                    risk_level: assessRisk(target.disease_en, found.description, found.cases, found.deaths),
-                    source_priority: 5 })
+          .update(reactivatePayload)
           .eq("id", directCheck.id)
           .lte("source_priority", 5);
         if (error) {

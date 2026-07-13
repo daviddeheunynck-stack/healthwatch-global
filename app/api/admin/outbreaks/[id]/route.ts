@@ -74,6 +74,16 @@ export async function PATCH(
 
   const safe = pick(body);
   const svc = getService();
+  // Editing the English description by hand invalidates the existing
+  // FR/ES/AR/ID translations (if any) — null them so sync-outbreaks'
+  // backfill sweep re-translates from the new text instead of leaving
+  // them frozen on whatever was there before this edit.
+  if ("description" in safe) {
+    (safe as Record<string, unknown>).description_fr = null;
+    (safe as Record<string, unknown>).description_es = null;
+    (safe as Record<string, unknown>).description_ar = null;
+    (safe as Record<string, unknown>).description_id = null;
+  }
   const { error } = await svc
     .from("outbreaks")
     .update(safe)
