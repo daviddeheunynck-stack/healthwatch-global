@@ -13,6 +13,7 @@ import AdminSyncButton from "@/components/AdminSyncButton";
 import AdminQCFixButton from "@/components/AdminQCFixButton";
 import AdminPilotInviteForm from "@/components/AdminPilotInviteForm";
 import AdminExtendTrialButton from "@/components/AdminExtendTrialButton";
+import DataStatusWidget from "@/components/DataStatusWidget";
 import type { Outbreak } from "@/lib/outbreaks";
 import type { Metadata } from "next";
 
@@ -405,6 +406,9 @@ export default async function AdminPage({
         </p>
         <AdminSyncButton />
       </div>
+
+      {/* ── Data source status ──────────────────────────────────────────────── */}
+      <DataStatusWidget locale={locale} />
 
       {/* ── QC Fixes ────────────────────────────────────────────────────────── */}
       <div className="bg-gray-900 border border-amber-800/30 rounded-xl p-5 space-y-3">

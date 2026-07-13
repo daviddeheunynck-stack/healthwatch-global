@@ -17,7 +17,6 @@ import NewThisWeekWidget from "@/components/NewThisWeekWidget";
 import PushNotificationBanner from "@/components/PushNotificationBanner";
 import CsvExportButton from "@/components/CsvExportButton";
 import SignalsFeed from "@/components/SignalsFeed";
-import DataStatusWidget from "@/components/DataStatusWidget";
 import OnboardingTour from "@/components/OnboardingTour";
 import FreePlanBanner from "@/components/FreePlanBanner";
 import DemoBanner from "@/components/DemoBanner";
@@ -574,9 +573,6 @@ async function DashboardContent({ demo = false, urlRegion, urlRisk }: { demo?: b
           </Link>
         </p>
       </div>
-
-      {/* Public trust signal — freshness must be visible before a prospect pays, not after */}
-      <DataStatusWidget locale={locale} />
 
       {isPaid && <CountryScorecardTab locale={locale} />}
       {isPaid && <ResolvedOutbreaksWidget locale={locale} />}

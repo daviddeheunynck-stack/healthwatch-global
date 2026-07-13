@@ -47,7 +47,7 @@ export default function DataStatusWidget({ locale }: { locale: string }) {
   async function load() {
     setLoading(true);
     try {
-      const res  = await fetch("/api/data-status");
+      const res  = await fetch("/api/admin/data-status");
       const data = await res.json() as { sources: SourceStatus[]; checked_at: string };
       setSources(data.sources ?? []);
       setCheckedAt(data.checked_at ?? null);
