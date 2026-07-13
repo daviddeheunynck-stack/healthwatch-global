@@ -346,6 +346,16 @@ export async function GET(req: NextRequest) {
     const description = `SPF — ${item.title}. ${item.description}`.substring(0, 600);
     const label       = `${diseaseInfo.name_en}/${geo.name_en}`;
 
+    // Skip 0/0 entries — SPF's news feed mixes real outbreak/incident reports
+    // with general prevention guidance that mentions a disease/country but
+    // reports no current case count. Same guard as sync-africa-cdc /
+    // sync-paho-alerts / sync-ukhsa.
+    if (cases === 0 && deaths === 0) {
+      log.push({ label, status: "skip", detail: "0 cases and 0 deaths — likely a guidance article, not an outbreak report" });
+      results.skipped++;
+      continue;
+    }
+
     const dcKey      = `${diseaseInfo.name_en.toLowerCase()}|${geo.name_en.toLowerCase()}`;
     const existingRow = byDC.get(dcKey);
 

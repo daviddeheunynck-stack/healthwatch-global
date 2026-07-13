@@ -291,6 +291,16 @@ export async function GET(req: NextRequest) {
     const description       = `CDC HAN — ${stripHANPrefix(entry.title)}. ${entry.description}`.substring(0, 600);
     const label             = `${diseaseInfo.name_en}/${geo.name_en}`;
 
+    // Skip 0/0 entries — CDC HAN alerts mix real incident/outbreak reports
+    // with general clinical guidance updates that mention a disease/country
+    // but report no current case count. Same guard as sync-africa-cdc /
+    // sync-paho-alerts / sync-ukhsa.
+    if (cases === 0 && deaths === 0) {
+      log.push({ label, status: "skip", detail: "0 cases and 0 deaths — likely a guidance update, not an outbreak report" });
+      results.skipped++;
+      continue;
+    }
+
     if (entry.date > today) {
       log.push({ label, status: "skip", detail: `future date: ${entry.date}` });
       results.skipped++;
