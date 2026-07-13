@@ -91,6 +91,7 @@ export async function GET(req: NextRequest) {
   const sendEmail = async (to: string, subject: string, html: string) => {
     const res = await fetch("https://api.brevo.com/v3/smtp/email", {
       method: "POST",
+      signal: AbortSignal.timeout(10_000),
       headers: { "api-key": brevoKey, "Content-Type": "application/json" },
       body: JSON.stringify({
         sender: { name: "HealthWatch Global", email: "digest@healthwatch-global.com" },

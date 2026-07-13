@@ -19,6 +19,7 @@ async function sendEmail(to: string | string[], subject: string, html: string) {
   const toArr = Array.isArray(to) ? to.map((e) => ({ email: e })) : [{ email: to }];
   const res = await fetch("https://api.brevo.com/v3/smtp/email", {
     method: "POST",
+    signal: AbortSignal.timeout(10_000),
     headers: { "api-key": BREVO_KEY, "Content-Type": "application/json" },
     body: JSON.stringify({
       sender:      { name: "HealthWatch Global", email: "alerts@healthwatch-global.com" },

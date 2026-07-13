@@ -36,6 +36,7 @@ async function sendEmail(to: string, subject: string, html: string) {
   if (!BREVO_API_KEY) throw new Error("BREVO_API_KEY not set");
   const res = await fetch("https://api.brevo.com/v3/smtp/email", {
     method: "POST",
+    signal: AbortSignal.timeout(10_000),
     headers: {
       "api-key":     BREVO_API_KEY,
       "Content-Type": "application/json",
