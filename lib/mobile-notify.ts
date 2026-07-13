@@ -29,7 +29,10 @@ export async function notifyMobile(supabase: SupabaseClient, userId: string, pay
     const result = await sendExpoPushToMany(tokens, {
       title: payload.title,
       body: payload.body,
-      data: { outbreak_id: payload.outbreak_id ?? null },
+      // `url` (not a raw outbreak_id) so the client's notification-tap handler
+      // can router.push() it directly — same convention as lib/push.ts's Web
+      // Push payload.
+      data: { url: payload.outbreak_id ? `/outbreak/${payload.outbreak_id}` : undefined },
     });
 
     if (result.expiredIds.length) {
