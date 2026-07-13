@@ -267,6 +267,16 @@ export async function GET(req: NextRequest) {
     const description = `UKHSA — ${entry.title}. ${entry.summary}`.substring(0, 600);
     const label       = `${diseaseInfo.name_en}/${geo.name_en}`;
 
+    // Skip 0/0 entries — UKHSA's ATOM feed mixes real incident reports with
+    // general reference guidance ("Diphtheria: migrant health guide" etc.)
+    // that mention a disease name but report no current case count. Same
+    // guard as sync-africa-cdc / sync-paho-alerts.
+    if (cases === 0 && deaths === 0) {
+      log.push({ label, status: "skip", detail: "0 cases and 0 deaths — likely a guidance document, not an outbreak report" });
+      results.skipped++;
+      continue;
+    }
+
     const dcKey      = `${diseaseInfo.name_en.toLowerCase()}|${geo.name_en.toLowerCase()}`;
     const existingRow = byDC.get(dcKey);
 
