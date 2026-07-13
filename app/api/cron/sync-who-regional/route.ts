@@ -579,6 +579,172 @@ function fetchCholeraGlobalSurveillance(country_en: string): () => Promise<Found
   };
 }
 
+// ── WHO AFRO Meningitis Bulletin fetcher ──────────────────────────────────────
+// WHO AFRO's weekly meningitis-belt bulletin has NO reliable "latest edition"
+// index: editions are published under inconsistent CDN folder paths (at least
+// 3 different ones confirmed within 2026 alone), so there's no way to construct
+// next week's URL from a fixed pattern the way the other fetchers above can.
+// This searches a bounded window of recent ISO weeks across the known folder
+// patterns, and only trusts a parsed table if its country rows sum to EXACTLY
+// the bulletin's own printed regional Total — this is the real safety net (not
+// the HTTP status), since a URL guess that happens to 200 but serves an
+// unrelated or differently-shaped document would just fail the checksum and
+// get skipped rather than silently feeding wrong numbers into `outbreaks`.
+// Table layout: bilingual FR/EN, columns are Country | Cases | Deaths | CFR% |
+// Districts-in-Alert | Districts-in-Epidemic | Weeks-reported | Completeness%.
+// A country's name and its numbers sometimes print on the same PDF text line,
+// sometimes 1-3 points of Y apart (WHO's own layout, not a scan artifact) —
+// recovered by clustering text items within a small Y tolerance rather than
+// assuming one fixed label/data offset.
+
+const MENINGITIS_FOLDERS = [
+  "default-source/documents/emergencies/health-topics---meningitis",
+  "default-source/_sage-{year}",
+  "default-source/documents/health-topics/meningitis",
+];
+
+const MENINGITIS_LABELS: Record<string, string> = {
+  "Nigeria":      "Nigeria",
+  "Tchad":        "Chad",
+  "Burkina Faso": "Burkina Faso",
+  "South Sudan":  "South Sudan",
+};
+
+function isoWeekEndDate(year: number, week: number): string {
+  const jan4      = new Date(Date.UTC(year, 0, 4));
+  const jan4Day   = (jan4.getUTCDay() + 6) % 7; // 0=Mon..6=Sun
+  const week1Mon  = new Date(jan4);
+  week1Mon.setUTCDate(jan4.getUTCDate() - jan4Day);
+  const sunday = new Date(week1Mon);
+  sunday.setUTCDate(week1Mon.getUTCDate() + (week - 1) * 7 + 6);
+  return sunday.toISOString().substring(0, 10);
+}
+
+function currentIsoWeek(): { year: number; week: number } {
+  const now = new Date();
+  const d   = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
+  const dayNum = (d.getUTCDay() + 6) % 7;
+  d.setUTCDate(d.getUTCDate() - dayNum + 3);
+  const firstThursday = new Date(Date.UTC(d.getUTCFullYear(), 0, 4));
+  const week = 1 + Math.round(((d.getTime() - firstThursday.getTime()) / 86_400_000 - 3 + (firstThursday.getUTCDay() + 6) % 7) / 7);
+  return { year: d.getUTCFullYear(), week };
+}
+
+interface MeningitisTextItem { str: string; x: number; y: number }
+type PdfPageLike = {
+  pageIndex: number;
+  getTextContent: (opts: object) => Promise<{ items: Array<{ str: string; transform: number[] }> }>;
+};
+
+async function extractMeningitisTable(buf: Buffer): Promise<Map<string, { cases: number; deaths: number }> | null> {
+  const pages: MeningitisTextItem[][] = [];
+  const pdfParse = (await import("pdf-parse/lib/pdf-parse.js" as string)).default as
+    (buf: Buffer, opts?: {
+      max?: number;
+      pagerender?: (pageData: PdfPageLike) => Promise<string>;
+    }) => Promise<{ text: string }>;
+
+  await pdfParse(buf, {
+    max: 25,
+    pagerender: async (pageData: PdfPageLike) => {
+      const tc = await pageData.getTextContent({ normalizeWhitespace: false, disableCombineTextItems: false });
+      pages[pageData.pageIndex] = tc.items.map((i) => ({ str: i.str, x: i.transform[4], y: i.transform[5] }));
+      return "";
+    },
+  });
+
+  // "CountryName  1449  61  4.2  4  0  01-25  93.3" or "CountryName  -  -  -  -  -  -  -"
+  // All 8 columns (through the week-range field) are required — the bulletin
+  // ALSO contains a separate weekly-only table with just 6 columns and no
+  // week-range field, which has its own internally-consistent Total and would
+  // otherwise checksum-verify just as "successfully" as the real cumulative
+  // table, silently returning the wrong (much smaller) numbers.
+  const rowRe = /^([A-Za-zÀ-ÿ'’. ]+?)\s+(-|\d[\d,]*)\s+(-|\d[\d,]*)\s+(-|[\d.]+)\s+(-|\d+)\s+(-|\d+)\s+(-|\d{1,2}-\d{1,2})\s+(-|[\d.]+)\s*$/;
+
+  for (const items of pages) {
+    if (!items || items.length === 0) continue;
+
+    const sorted = [...items].sort((a, b) => b.y - a.y);
+    const clusters: MeningitisTextItem[][] = [];
+    for (const it of sorted) {
+      const last = clusters[clusters.length - 1];
+      // Compare to the most recently added item, not the cluster's first item —
+      // a country's label and its numbers are sometimes bridged by an empty
+      // blank-line text item in between; anchoring to the cluster's first Y
+      // would let that blank "use up" the tolerance and wrongly split the
+      // label from its own data row.
+      if (last && Math.abs(last[last.length - 1].y - it.y) <= 4) last.push(it);
+      else clusters.push([it]);
+    }
+
+    const results = new Map<string, { cases: number; deaths: number }>();
+    let total: { cases: number; deaths: number } | null = null;
+
+    for (const cluster of clusters) {
+      const text = cluster.sort((a, b) => a.x - b.x).map((i) => i.str).join("").replace(/\s+/g, " ").trim();
+      const m = rowRe.exec(text);
+      if (!m) continue;
+      const country = m[1].trim();
+      if (m[2] === "-" || m[3] === "-") continue;
+      const cases  = parseInt(m[2].replace(/,/g, ""), 10);
+      const deaths = parseInt(m[3].replace(/,/g, ""), 10);
+      if (isNaN(cases) || isNaN(deaths)) continue;
+      if (/^total$/i.test(country)) { total = { cases, deaths }; continue; }
+      results.set(country, { cases, deaths });
+    }
+
+    if (!total || results.size === 0) continue;
+    let sumCases = 0, sumDeaths = 0;
+    for (const r of results.values()) { sumCases += r.cases; sumDeaths += r.deaths; }
+    if (sumCases === total.cases && sumDeaths === total.deaths) return results; // checksum passed — this is the table
+  }
+  return null;
+}
+
+function fetchMeningitisAFRO(country_en: string): () => Promise<Found | null> {
+  return async () => {
+    const label = Object.entries(MENINGITIS_LABELS).find(([, en]) => en === country_en)?.[0];
+    if (!label) return null;
+
+    const ua = "HealthWatch-Global/1.0 (health surveillance; contact@healthwatch-global.com)";
+    const { year: curYear, week: curWeek } = currentIsoWeek();
+    const LOOKBACK = 6;
+
+    const candidates: Array<{ year: number; week: number }> = [];
+    for (let w = curWeek; w > Math.max(0, curWeek - LOOKBACK); w--) candidates.push({ year: curYear, week: w });
+    // Meningitis-belt season spans Nov-Jun across the year boundary — early in
+    // a new year, the latest real edition may still be numbered in the 40s-50s
+    // of the previous year.
+    if (curWeek <= 8) for (let w = 53; w >= 44; w--) candidates.push({ year: curYear - 1, week: w });
+
+    for (const { year, week } of candidates) {
+      const wk = String(week).padStart(2, "0");
+      for (const folderTpl of MENINGITIS_FOLDERS) {
+        const folder = folderTpl.replace("{year}", String(year));
+        const url = `https://cdn.who.int/media/docs/${folder}/meningitis_bulletin_${year}_week_${wk}.pdf`;
+        try {
+          const res = await fetch(url, { headers: { "User-Agent": ua }, signal: AbortSignal.timeout(15_000) });
+          if (!res.ok) continue;
+          const table = await extractMeningitisTable(Buffer.from(await res.arrayBuffer()));
+          if (!table) continue;
+          const row = table.get(label);
+          if (!row || row.cases <= 0) return null; // verified table, but no data for this country this edition
+          return {
+            cases:  row.cases,
+            deaths: row.deaths,
+            date:   isoWeekEndDate(year, week),
+            source: url,
+            description: `Meningitis in ${country_en} — WHO AFRO reported ${row.cases.toLocaleString("en")} cumulative case${row.cases > 1 ? "s" : ""}${row.deaths > 0 ? ` and ${row.deaths.toLocaleString("en")} death${row.deaths > 1 ? "s" : ""}` : ""}, weeks 1-${week} of ${year}. Source: WHO AFRO Meningitis Weekly Bulletin (cross-checked against the bulletin's own printed regional total).`,
+          };
+        } catch {
+          continue;
+        }
+      }
+    }
+    return null;
+  };
+}
+
 // ── ReliefWeb query ───────────────────────────────────────────────────────────
 
 interface Target {
@@ -700,8 +866,8 @@ const TARGETS: Target[] = [
   { disease_en: "Yellow Fever", country_en: "Cameroon", minCases: 1, fetcher: fetchYellowFeverGHO("Cameroon") },
   // ── Meningitis — meningitis belt extended coverage ────────────────────────────
   { disease_en: "Meningitis",    country_en: "Niger",                            minCases:  10    },
-  { disease_en: "Meningitis",    country_en: "Nigeria",                          minCases:  10    },
-  { disease_en: "Meningitis",    country_en: "Chad",                             minCases:  10    },
+  { disease_en: "Meningitis", country_en: "Nigeria", minCases: 10, fetcher: fetchMeningitisAFRO("Nigeria") },
+  { disease_en: "Meningitis", country_en: "Chad", minCases: 10, fetcher: fetchMeningitisAFRO("Chad") },
   { disease_en: "Meningitis",    country_en: "Ethiopia",                         minCases:  10    },
   // ── MERS-CoV — sporadic but ongoing; any case is significant ──────────────────
   { disease_en: "MERS-CoV",     country_en: "Saudi Arabia",                      minCases:   1    },
@@ -744,8 +910,8 @@ const TARGETS: Target[] = [
   // ── Dengue — Myanmar (rising burden, conflict-affected surveillance) ──────────
   { disease_en: "Dengue", country_en: "Myanmar", minCases: 100, fetcher: fetchDengueGlobalSurveillance("Myanmar") },
   // ── Meningitis — extended belt into the Sahel ────────────────────────────────
-  { disease_en: "Meningitis",    country_en: "Burkina Faso",                      minCases:  10    },
-  { disease_en: "Meningitis",    country_en: "South Sudan",                       minCases:  10    },
+  { disease_en: "Meningitis", country_en: "Burkina Faso", minCases: 10, fetcher: fetchMeningitisAFRO("Burkina Faso") },
+  { disease_en: "Meningitis", country_en: "South Sudan", minCases: 10, fetcher: fetchMeningitisAFRO("South Sudan") },
   // ── Mpox — DRC clade I ongoing (WHO DON dedup guard handles overlap) ──────────
   { disease_en: "Mpox",         country_en: "Democratic Republic of the Congo",  minCases: 100    },
 
