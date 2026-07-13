@@ -3,6 +3,7 @@ import { createClient } from "@supabase/supabase-js";
 import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 import * as Sentry from "@sentry/nextjs";
 import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
+import { notifyMobile } from "@/lib/mobile-notify";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 300;
@@ -147,13 +148,17 @@ export async function GET(req: NextRequest) {
         .update({ last_fired_at: new Date().toISOString() })
         .eq("id", alert.id);
 
+      const inAppBody = `${localDisease} · ${localCountry} · ${level}`;
+
       await supabase.from("alert_notifications").insert({
         user_id: alert.user_id,
         type: "country_risk",
         title: subject,
-        body: `${localDisease} · ${localCountry} · ${level}`,
+        body: inAppBody,
         outbreak_id: top.id,
       }).then(() => {}, () => {});
+
+      await notifyMobile(supabase, alert.user_id, { title: subject, body: inAppBody, outbreak_id: top.id });
 
       if (isRealProduction) await sendEmail(alert.email, subject, html);
       fired++;

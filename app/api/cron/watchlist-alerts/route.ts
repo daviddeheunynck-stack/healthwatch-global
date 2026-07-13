@@ -9,6 +9,7 @@ import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 import { errorMessage } from "@/lib/error";
 import * as Sentry from "@sentry/nextjs";
 import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
+import { notifyMobile } from "@/lib/mobile-notify";
 
 export const dynamic = "force-dynamic";
 
@@ -164,13 +165,17 @@ export async function GET(req: NextRequest) {
       }
       sent++;
 
+      const inAppBody = `${alertOutbreak.disease} · ${alertOutbreak.country} · ${outbreak.cases.toLocaleString(locale === "ar" ? "ar-SA" : locale)}`;
+
       await supabase.from("alert_notifications").insert({
         user_id:     entry.user_id,
         type:        "watchlist",
         title:       subject,
-        body:        `${alertOutbreak.disease} · ${alertOutbreak.country} · ${outbreak.cases.toLocaleString(locale === "ar" ? "ar-SA" : locale)}`,
+        body:        inAppBody,
         outbreak_id: outbreak.id,
       }).then(() => {}, () => {});
+
+      await notifyMobile(supabase, entry.user_id, { title: subject, body: inAppBody, outbreak_id: outbreak.id });
 
       await new Promise((r) => setTimeout(r, 150));
     } catch (err: unknown) {

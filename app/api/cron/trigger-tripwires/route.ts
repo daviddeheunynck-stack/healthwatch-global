@@ -14,6 +14,7 @@ import { createClient } from "@supabase/supabase-js";
 import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 import * as Sentry from "@sentry/nextjs";
 import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
+import { notifyMobile } from "@/lib/mobile-notify";
 
 export const dynamic = "force-dynamic";
 
@@ -196,13 +197,18 @@ export async function GET(req: NextRequest) {
     const deepLink     = `${APP_URL}/${locale}/outbreak/${o.id}`;
 
     try {
+      const inAppTitle = lc.inAppTitle(disease, country, casesStr);
+      const inAppBody  = lc.inAppBody(casesStr, thresholdStr, lc.riskValues[o.risk_level] ?? o.risk_level.toUpperCase());
+
       await supabase.from("alert_notifications").insert({
         user_id:     tw.user_id,
         type:        "tripwire",
-        title:       lc.inAppTitle(disease, country, casesStr),
-        body:        lc.inAppBody(casesStr, thresholdStr, lc.riskValues[o.risk_level] ?? o.risk_level.toUpperCase()),
+        title:       inAppTitle,
+        body:        inAppBody,
         outbreak_id: o.id,
       }).then(() => {}, () => {});
+
+      await notifyMobile(supabase, tw.user_id, { title: inAppTitle, body: inAppBody, outbreak_id: o.id });
 
       if (isRealProduction) {
         await sendEmail(tw.email, `[HealthWatch] Tripwire : ${disease} — ${country} (${casesStr})`, `

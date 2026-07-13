@@ -3,6 +3,7 @@ import { createClient } from "@supabase/supabase-js";
 import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 import * as Sentry from "@sentry/nextjs";
 import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
+import { notifyMobile } from "@/lib/mobile-notify";
 
 export const dynamic    = "force-dynamic";
 export const maxDuration = 300;
@@ -195,18 +196,23 @@ export async function GET(req: NextRequest) {
 </div>`;
 
     try {
+      const inAppBody = `${regionLabel} · ${regional.length} ${lc.active}`;
+
       // Insert dedup record BEFORE sending — prevents re-send on cron retry
       const { error: insertErr } = await supabase.from("alert_notifications").insert({
         user_id:     user.id,
         type:        "regional_digest",
         title:       subject,
-        body:        `${regionLabel} · ${regional.length} ${lc.active}`,
+        body:        inAppBody,
         outbreak_id: regional[0]?.id ?? null,
       });
       if (insertErr) {
         console.warn(`[trigger-regional-digest] dedup insert failed for ${user.id}: ${insertErr.message}`);
         continue;
       }
+
+      await notifyMobile(supabase, user.id, { title: subject, body: inAppBody, outbreak_id: regional[0]?.id ?? null });
+
       if (isRealProduction) {
         await sendEmail(user.email, subject, html);
       }

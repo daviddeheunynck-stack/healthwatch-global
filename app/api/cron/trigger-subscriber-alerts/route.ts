@@ -3,6 +3,7 @@ import { createClient } from "@supabase/supabase-js";
 import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 import * as Sentry from "@sentry/nextjs";
 import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
+import { notifyMobile } from "@/lib/mobile-notify";
 
 export const dynamic = "force-dynamic";
 
@@ -153,13 +154,17 @@ export async function GET(req: NextRequest) {
       if (isRealProduction) await sendEmail(sub.emails, subject, html);
       sent++;
 
+      const inAppBody = `${disease} · ${country} · ${risk}`;
+
       await supabase.from("alert_notifications").insert({
         user_id:     sub.user_id,
         type:        "subscriber",
         title:       subject,
-        body:        `${disease} · ${country} · ${risk}`,
+        body:        inAppBody,
         outbreak_id: o.id,
       }).then(() => {}, () => {});
+
+      await notifyMobile(supabase, sub.user_id, { title: subject, body: inAppBody, outbreak_id: o.id });
     } catch (err) {
       console.error(`[trigger-subscriber-alerts] Failed for sub ${sub.id}:`, err);
       Sentry.captureException(err, { tags: { cron: "trigger-subscriber-alerts", sub_id: sub.id, user_id: sub.user_id } });

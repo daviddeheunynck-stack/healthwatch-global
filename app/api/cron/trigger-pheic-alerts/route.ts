@@ -3,6 +3,7 @@ import { createClient } from "@supabase/supabase-js";
 import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 import * as Sentry from "@sentry/nextjs";
 import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
+import { notifyMobile } from "@/lib/mobile-notify";
 
 export const dynamic    = "force-dynamic";
 export const maxDuration = 300;
@@ -213,17 +214,20 @@ export async function GET(req: NextRequest) {
 </div>`;
 
       try {
+        const inAppBody = `${disease} · ${countries} · PHEIC`;
         const { error: insertErr } = await supabase.from("alert_notifications").insert({
           user_id:     user.id,
           type:        "pheic",
           title:       subject,
-          body:        `${disease} · ${countries} · PHEIC`,
+          body:        inAppBody,
           outbreak_id: primary.id,
         });
         if (insertErr) {
           console.warn(`[trigger-pheic-alerts] Insert skipped for ${user.id}::${primary.id}: ${insertErr.message}`);
           continue;
         }
+
+        await notifyMobile(supabase, user.id, { title: subject, body: inAppBody, outbreak_id: primary.id });
 
         if (isRealProduction) await sendEmail(user.email, subject, html);
         // Add all outbreak ids for this disease group so the check above

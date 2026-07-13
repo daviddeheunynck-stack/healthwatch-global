@@ -10,6 +10,7 @@ import { diseaseToSlug } from "@/lib/disease-data";
 import { errorMessage } from "@/lib/error";
 import * as Sentry from "@sentry/nextjs";
 import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
+import { notifyMobile } from "@/lib/mobile-notify";
 
 export const dynamic = "force-dynamic";
 
@@ -170,14 +171,19 @@ export async function GET(req: NextRequest) {
         }
         sent++;
 
+        const inAppTitle = `${alertOutbreak.disease} — ${alertOutbreak.country}`;
+        const inAppBody  = buildDiseaseInAppBody(alertOutbreak.cases, alertOutbreak.risk_level, locale);
+
         // Mirror in alert_notifications for in-app display (non-fatal)
         await supabase.from("alert_notifications").insert({
           user_id:     userId,
           type:        "disease_alert",
-          title:       `${alertOutbreak.disease} — ${alertOutbreak.country}`,
-          body:        buildDiseaseInAppBody(alertOutbreak.cases, alertOutbreak.risk_level, locale),
+          title:       inAppTitle,
+          body:        inAppBody,
           outbreak_id: outbreak.id,
         }).then(() => {}, () => {});
+
+        await notifyMobile(supabase, userId, { title: inAppTitle, body: inAppBody, outbreak_id: outbreak.id });
 
         await new Promise((r) => setTimeout(r, 150)); // rate-limit friendly
       } catch (err: unknown) {

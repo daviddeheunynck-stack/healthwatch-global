@@ -4,6 +4,7 @@ import { getDiseaseCategory, CATEGORY_LABELS } from "@/lib/disease-category";
 import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 import * as Sentry from "@sentry/nextjs";
 import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
+import { notifyMobile } from "@/lib/mobile-notify";
 
 export const dynamic = "force-dynamic";
 
@@ -177,13 +178,18 @@ export async function GET(req: NextRequest) {
         .update({ last_fired_at: new Date().toISOString() })
         .eq("id", alert.id);
 
+      const inAppTitle = lc.inAppTitle(catLabel, matches.length, minStr);
+      const inAppBody  = matches.slice(0, 3).map((o) => lc.inAppBody(getLocalizedDisease(o, locale), getLocalizedCountry(o, locale), o.cases.toLocaleString(numLocale))).join(" · ");
+
       await supabase.from("alert_notifications").insert({
         user_id: alert.user_id,
         type:    "category_alert",
-        title:   lc.inAppTitle(catLabel, matches.length, minStr),
-        body:    matches.slice(0, 3).map((o) => lc.inAppBody(getLocalizedDisease(o, locale), getLocalizedCountry(o, locale), o.cases.toLocaleString(numLocale))).join(" · "),
+        title:   inAppTitle,
+        body:    inAppBody,
         outbreak_id: matches[0]?.id ?? null,
       }).then(() => {}, () => {});
+
+      await notifyMobile(supabase, alert.user_id, { title: inAppTitle, body: inAppBody, outbreak_id: matches[0]?.id ?? null });
 
       if (isRealProduction) await sendEmail(alert.email, lc.subject(catLabel, minStr), `
 <div dir="${isRtl ? "rtl" : "ltr"}" style="font-family:sans-serif;max-width:520px;margin:0 auto;padding:24px;background:#0f172a;color:#e2e8f0;border-radius:12px;direction:${isRtl ? "rtl" : "ltr"};text-align:${isRtl ? "right" : "left"}">
