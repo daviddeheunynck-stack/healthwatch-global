@@ -135,7 +135,7 @@ export async function GET(req: NextRequest) {
   // ── 2. Load existing outbreaks ────────────────────────────────
   const { data: existing, error: fetchErr } = await supabase
     .from("outbreaks")
-    .select("id, disease_en, country_en, source, date, cases, deaths, active, who_don_published_at");
+    .select("id, disease_en, country_en, source, date, cases, deaths, active, who_don_published_at, description");
 
   if (fetchErr) return NextResponse.json({ error: fetchErr.message }, { status: 500 });
 
@@ -234,6 +234,16 @@ export async function GET(req: NextRequest) {
             risk_level: outbreak.risk_level, source: outbreak.source,
             active: true,
           };
+          // The English description just changed — the existing FR/ES/AR/ID
+          // translations (if any) now describe the old figures. Null them so
+          // step 4's backfill sweep re-translates from the fresh text, instead
+          // of leaving them frozen forever (backfill only fires when NULL).
+          if (existingRow.description !== outbreak.description) {
+            updatePayload.description_fr = null;
+            updatePayload.description_es = null;
+            updatePayload.description_ar = null;
+            updatePayload.description_id = null;
+          }
           if (outbreak.recovered > 0) updatePayload.recovered = outbreak.recovered;
           // Always update admin1 when we have fresh extraction (can be null → clears stale data)
           if (outbreak.admin1 !== undefined) {

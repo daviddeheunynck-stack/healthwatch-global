@@ -489,18 +489,33 @@ export async function GET(req: NextRequest) {
           continue;
         }
 
+        // Re-translate inline on update too — same reasoning as the insert
+        // branch below: this cron owns its own localization, and an English
+        // description update without a matching FR/ES/AR/ID refresh leaves
+        // those columns frozen on the old figures forever (no other cron
+        // revisits a non-NULL description_fr).
+        const t = await translateDescription(item.description);
+        const updatePayload: Record<string, unknown> = {
+          cases:           item.cases,
+          deaths:          item.deaths,
+          date:            item.date,
+          source:          item.source,
+          description:     item.description,
+          risk_level:      riskLevel,
+          active:          true,
+          source_priority: 5,
+        };
+        // Only overwrite a locale column when the translation actually
+        // succeeded — MyMemory returns null on failure/echo, and writing
+        // that would blank out a still-valid prior translation.
+        if (t.fr) updatePayload.description_fr = t.fr;
+        if (t.es) updatePayload.description_es = t.es;
+        if (t.ar) updatePayload.description_ar = t.ar;
+        if (t.id) updatePayload.description_id = t.id;
+
         const { error } = await supabase
           .from("outbreaks")
-          .update({
-            cases:           item.cases,
-            deaths:          item.deaths,
-            date:            item.date,
-            source:          item.source,
-            description:     item.description,
-            risk_level:      riskLevel,
-            active:          true,
-            source_priority: 5,
-          })
+          .update(updatePayload)
           .eq("id", existing.id)
           .lte("source_priority", 5);
 
