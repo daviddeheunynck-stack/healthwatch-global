@@ -389,6 +389,12 @@ export async function GET(req: NextRequest) {
     // CDC explicitly states "0 confirmed deaths from measles in 2026" (measles_hosp.json) —
     // verified live 2026-07-10, see project_measles_us_description_drift_fixed memory.
     "measles|united states",
+    // Cross-checked 2026-07-14 against the live WHO ArcGIS cholera feed
+    // (cholera_adm0_week_view) that actually feeds this row — 151 cases / 0 deaths
+    // over the only 2 reporting weeks Somalia has in 2026 (through 2026-01-12).
+    // The field is a structured API value, not a text-parsing gap: WHO itself
+    // reports zero, so NULL would be less accurate than 0 here.
+    "cholera|somalia",
   ]);
 
   for (const row of rows ?? []) {

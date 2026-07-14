@@ -553,7 +553,9 @@ function fetchCholeraGlobalSurveillance(country_en: string): () => Promise<Found
         cases,
         deaths,
         date,
-        source: "https://www.who.int/emergencies/situations/multi-country-outbreak-of-cholera",
+        // Old URL (emergencies/situations/multi-country-outbreak-of-cholera) 404s as of
+        // 2026-07-14 — WHO restructured the page. This one was live-verified same day.
+        source: "https://www.who.int/emergencies/surveillance/cholera-cases-and-deaths",
         description: `Cholera in ${country_en} — WHO reported ${cases.toLocaleString("en")} cumulative case${cases > 1 ? "s" : ""}${deaths > 0 ? ` and ${deaths.toLocaleString("en")} death${deaths > 1 ? "s" : ""}` : ""} in ${year} as of the week starting ${date}. Source: WHO Global Cholera Surveillance.`,
       };
     }
