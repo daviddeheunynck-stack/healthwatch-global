@@ -260,12 +260,30 @@ async function extractItemData(item: RSSItem, dbg?: { reason?: string }): Promis
   });
   const isEUMultiCountry = isEuropeArticle && euCountries.length >= 2;
 
+  // Non-EU countries named in the article (e.g. "Ebola disease outbreak in
+  // DRC and Uganda" names both). Previously only countries[0] was ever
+  // processed — for this exact title, that's always DRC (the " drc "
+  // TEXT_ALIASES check runs before the general country-name loop, so DRC
+  // wins the ordering regardless of which country the title actually
+  // mentions first), and Uganda was silently dropped with no skip log at
+  // all. Each one now goes through the same per-country pipeline as a
+  // single-country article — the WHO-DON-ownership skip and the
+  // spike/collapse guards below already protect an existing row from a
+  // wrongly-attributed shared figure, so a country legitimately owned
+  // elsewhere is explicitly skipped instead of never being attempted.
+  const nonEuCountries = countries.filter((c) => {
+    const g = findCountry(c);
+    return g && g.region !== "europe";
+  });
+
   // For EU-wide overview articles the extracted case count is an EU aggregate —
   // not attributable to individual countries. Use a single EU/EEA entry rather
   // than duplicating the total across every mentioned member state.
   const targetCountries = isEUMultiCountry
     ? ["EU/EEA"]
-    : [countries[0]];
+    : nonEuCountries.length > 0
+      ? nonEuCountries
+      : [countries[0]];
 
   const results: BriefData[] = [];
   const descBase = `ECDC — ${item.title}. ${item.description}`.substring(0, 600);
@@ -428,6 +446,18 @@ export async function GET(req: NextRequest) {
       if (UMBRELLA_COUNTRY_LABELS.has(item.country_en.toLowerCase()) &&
           donOwnedUmbrellaDiseases.has(item.disease_en.toLowerCase())) {
         log.push({ label, status: "skip", detail: "multi-country event owned by WHO DON (umbrella match)" });
+        results.skipped++;
+        continue;
+      }
+
+      // Ambiguous attribution: this article named 2+ non-EU countries (see
+      // nonEuCountries in extractItemData) and the extracted cases/deaths is
+      // one combined figure with no structural anchor saying which country
+      // it actually belongs to. Safe to UPDATE an existing row — the
+      // ownership/spike/collapse guards already protect against a wildly
+      // wrong number — but never silently INSERT a brand-new row on a guess.
+      if (!existing && briefItems.length > 1) {
+        log.push({ label, status: "skip", detail: `multi-country article (${briefItems.length} countries named) — no existing row, ambiguous attribution, refusing to guess-insert` });
         results.skipped++;
         continue;
       }
