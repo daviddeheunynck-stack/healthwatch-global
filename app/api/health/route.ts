@@ -193,7 +193,9 @@ export async function GET(req: Request) {
 
   const criticalChecks = deep ? ["supabase", "stripe", "stripe_prices"] : ["supabase", "stripe"];
   const allCriticalOk  = criticalChecks.every((k) => checks[k] === "ok");
-  const anyError       = Object.values(checks).some((v) => v === "error");
+  // Sentry is an observability signal, not a dependency — an unresolved issue
+  // shouldn't flip the whole liveness probe to 503 (it stays visible in the body).
+  const anyError       = Object.entries(checks).some(([k, v]) => v === "error" && k !== "sentry");
 
   const status = !allCriticalOk ? "degraded" : anyError ? "degraded" : "ok";
 

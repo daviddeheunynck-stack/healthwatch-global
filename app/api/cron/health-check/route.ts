@@ -176,13 +176,17 @@ async function runHealthCheck(_req: NextRequest, supabase: any) {
     );
   }
 
-  await logCronRun(supabase, "health-check", hasOverdue || sentryAlert ? "error" : "ok", overdue.length + sentryIssues.length);
+  // The check-in reflects whether this cron itself ran successfully, not whether
+  // Sentry has unrelated issues — otherwise flagging sentryAlert here creates a
+  // check-in failure, which creates a new Sentry issue, which triggers sentryAlert
+  // on the next run: a self-sustaining loop that never resolves on its own.
+  await logCronRun(supabase, "health-check", hasOverdue ? "error" : "ok", overdue.length + sentryIssues.length);
 
   if (isRealProduction) {
     Sentry.captureCheckIn({
       checkInId,
       monitorSlug: "health-check",
-      status: hasOverdue || sentryAlert ? "error" : "ok",
+      status: hasOverdue ? "error" : "ok",
     });
   }
 
