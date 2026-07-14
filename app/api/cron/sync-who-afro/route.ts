@@ -37,8 +37,40 @@ const FETCH_HEADERS = {
 
 const COUNTRY_NAMES = Object.keys(COUNTRIES).sort((a, b) => b.length - a.length);
 
+// Overall wall-clock budget for the per-article fetch loop, well under maxDuration=120s
+// to leave room for the list fetch + Supabase reads/writes + response serialization.
+// Without this, a slow afro.who.int response (each article fetch has its own 12s
+// AbortSignal.timeout) can cascade past the Vercel function limit with zero rows
+// persisted — seen in Sentry as a bare TimeoutError with no upsert log (2026-07-09, 2026-07-13).
+const ARTICLE_LOOP_BUDGET_MS = 85_000;
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
+
+// afro.who.int's general RSS feed (used as the fast-path source list) is NOT
+// scoped to outbreaks — it mixes in newsletters, vacancy notices, conference
+// calls, mentorship programme announcements, etc. Confirmed 2026-07-14: 8 of
+// 10 items in a live pull were non-outbreak content. Applying the same
+// relevance filter as the HTML fallback (extractOutbreakLinks) avoids wasting
+// a full page fetch + 400ms delay on each irrelevant item before isKnownDisease
+// rejects it downstream anyway.
+function isRelevantOutbreakTitle(text: string): boolean {
+  const lower = text.toLowerCase();
+  return (
+    lower.includes("outbreak") ||
+    lower.includes("disease") ||
+    lower.includes("emergency") ||
+    lower.includes("ebola") ||
+    lower.includes("marburg") ||
+    lower.includes("cholera") ||
+    lower.includes("mpox") ||
+    lower.includes("plague") ||
+    lower.includes("yellow fever") ||
+    lower.includes("lassa") ||
+    lower.includes("dengue") ||
+    lower.includes("meningitis") ||
+    lower.includes("polio")
+  );
+}
 
 function isKnownDisease(rawName: string): boolean {
   const info = normalizeDisease(rawName);
@@ -133,24 +165,9 @@ function extractOutbreakLinks(html: string): PageEntry[] {
     const text  = htmlToText(m[2]).trim();
     if (text.length < 15 || seen.has(href)) continue;
 
+    if (!isRelevantOutbreakTitle(text)) continue;
+
     const lower = text.toLowerCase();
-    const isRelevant =
-      lower.includes("outbreak") ||
-      lower.includes("disease") ||
-      lower.includes("emergency") ||
-      lower.includes("ebola") ||
-      lower.includes("marburg") ||
-      lower.includes("cholera") ||
-      lower.includes("mpox") ||
-      lower.includes("plague") ||
-      lower.includes("yellow fever") ||
-      lower.includes("lassa") ||
-      lower.includes("dengue") ||
-      lower.includes("meningitis") ||
-      lower.includes("polio");
-
-    if (!isRelevant) continue;
-
     // Reject nav links, footers, generic headings
     if (
       lower === "read more" ||
@@ -194,6 +211,7 @@ function parseRSSFeed(xml: string, cutoff: Date): PageEntry[] {
     if (!pub) continue;
     const d = new Date(pub);
     if (isNaN(d.getTime()) || d < cutoff) continue;
+    if (!isRelevantOutbreakTitle(title)) continue;
     items.push({ url: link, title, dateHint: d.toISOString().substring(0, 10) });
   }
   return items;
@@ -265,8 +283,17 @@ export async function GET(req: NextRequest) {
   const results = { articles: pageEntries.length, inserted: 0, updated: 0, skipped: 0, errors: 0 };
   type Log = { label: string; status: string; detail?: string };
   const log: Log[] = [];
+  const loopStart = Date.now();
 
   for (const entry of pageEntries) {
+    // Bail out before the Vercel maxDuration kills the function outright — a partial
+    // run that still logs/upserts what it processed beats a hard timeout with nothing
+    // persisted. Remaining entries are picked up on the next scheduled run.
+    if (Date.now() - loopStart > ARTICLE_LOOP_BUDGET_MS) {
+      log.push({ label: "budget", status: "skip", detail: `time budget exceeded, ${pageEntries.length - results.skipped - results.inserted - results.updated - results.errors} article(s) left unprocessed` });
+      break;
+    }
+
     if (bySource.has(entry.url)) {
       log.push({ label: entry.url, status: "skip", detail: "URL in DB" });
       results.skipped++;
