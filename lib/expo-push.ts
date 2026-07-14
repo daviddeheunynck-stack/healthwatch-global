@@ -41,10 +41,12 @@ export async function sendExpoPushToMany<T extends ExpoPushTokenRow & { id: stri
   let sent = 0;
   let failed = 0;
   const expiredIds: string[] = [];
+  let offset = 0;
 
   const chunks = expo.chunkPushNotifications(messages);
   for (const chunk of chunks) {
-    const chunkTokens = valid.slice(sent + failed, sent + failed + chunk.length);
+    const chunkTokens = valid.slice(offset, offset + chunk.length);
+    offset += chunk.length;
     try {
       const tickets = await expo.sendPushNotificationsAsync(chunk);
       tickets.forEach((ticket, i) => {
