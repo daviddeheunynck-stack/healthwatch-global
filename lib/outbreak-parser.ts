@@ -129,6 +129,27 @@ export function parseTitle(title: string): { disease: string; country: string } 
 
 // ─── Number extraction from free text ─────────────────────────
 
+// Small counts (typically ≤20) in WHO/ECDC prose are often spelled out in words
+// rather than digits — e.g. a DON reporting a large country in digits ("452
+// deaths") but a small satellite country in the same article as "including
+// two deaths, as well as one probable case who has died" (DON612, Uganda).
+// The case/death patterns that sit directly next to the count (not the
+// "total of N" aggregate-total patterns, which are effectively always
+// digit-form) accept both so a small figure isn't silently read as zero.
+const NUMBER_WORDS: Record<string, number> = {
+  zero: 0, one: 1, two: 2, three: 3, four: 4, five: 5, six: 6, seven: 7, eight: 8,
+  nine: 9, ten: 10, eleven: 11, twelve: 12, thirteen: 13, fourteen: 14, fifteen: 15,
+  sixteen: 16, seventeen: 17, eighteen: 18, nineteen: 19, twenty: 20,
+};
+const NUM_WORD_ALT = Object.keys(NUMBER_WORDS).join("|");
+const NUM = `(?:\\d[\\d,]*|${NUM_WORD_ALT})`;
+
+function parseCount(raw: string): number {
+  const digits = raw.replace(/,/g, "");
+  if (/^\d+$/.test(digits)) return parseInt(digits, 10);
+  return NUMBER_WORDS[raw.toLowerCase().trim()] ?? 0;
+}
+
 export function extractNumbers(text: string): { cases: number; deaths: number; recovered: number } {
   const clean = text
     .replace(/\n/g, " ")
@@ -154,7 +175,8 @@ export function extractNumbers(text: string): { cases: number; deaths: number; r
     // of" so a grounded topline is preferred over an ungrounded match below.
     /\btotal\s+of\s+(\d[\d,]*)\s+(?:[\w-]+\s+){0,6}cases?/i,
     // "746 suspected/confirmed/probable/etc cases [have been reported]"
-    new RegExp(`(\\d[\\d,]*)\\s+${QUALIFIERS}cases?(?:\\s+(?:have\\s+been|were|are)\\s+reported)?`, "i"),
+    // (also matches word-form small counts: "twenty confirmed cases")
+    new RegExp(`(${NUM})\\s+${QUALIFIERS}cases?(?:\\s+(?:have\\s+been|were|are)\\s+reported)?`, "i"),
     // "cases: 746" / "cases reported: 746"
     /cases?(?:\s+reported)?[:\s]+(\d[\d,]*)/i,
     // ECDC uses "infections" instead of "cases": "more than 2 300 infections", "2 300 reported infections"
@@ -165,8 +187,8 @@ export function extractNumbers(text: string): { cases: number; deaths: number; r
   ];
 
   const deathPatterns = [
-    // "176 deaths [among ...]"
-    /(\d[\d,]*)\s+deaths?\b/i,
+    // "176 deaths [among ...]" — also matches word-form ("including two deaths")
+    new RegExp(`(${NUM})\\s+deaths?\\b`, "i"),
     // "X people have died" / "X died"
     /(\d[\d,]*)\s+(?:people\s+)?(?:have\s+)?died/i,
     // "X fatalities"
@@ -198,13 +220,13 @@ export function extractNumbers(text: string): { cases: number; deaths: number; r
   let cases = 0;
   for (const p of casePatterns) {
     const m = clean.match(p);
-    if (m) { cases = parseInt(m[1].replace(/,/g, ""), 10); break; }
+    if (m) { cases = parseCount(m[1]); break; }
   }
 
   let deaths = 0;
   for (const p of deathPatterns) {
     const m = clean.match(p);
-    if (m) { deaths = parseInt(m[1].replace(/,/g, ""), 10); break; }
+    if (m) { deaths = parseCount(m[1]); break; }
   }
 
   let recovered = 0;
@@ -245,30 +267,36 @@ export function extractNumbersForCountry(
   };
 
   // Tier 1: "a total of N ... cases, with/including M deaths" — the most
-  // common WHO phrasing for a single country's headline figure.
+  // common WHO phrasing for a single country's headline figure. The deaths
+  // half accepts word-form counts too ("a total of 20 cases, including two
+  // deaths") — small satellite-country figures are often spelled out even
+  // when the cases half of the same sentence is digit-form.
   const pairPattern = new RegExp(
-    `total\\s+of\\s+(\\d[\\d,]*)\\s+${QUALIFIERS}cases?,?\\s+(?:with|including)\\s+(\\d[\\d,]*)\\s+deaths?`,
+    `total\\s+of\\s+(\\d[\\d,]*)\\s+${QUALIFIERS}cases?,?\\s+(?:with|including)\\s+(${NUM})\\s+deaths?`,
     "gi"
   );
   for (const m of clean.matchAll(pairPattern)) {
     if (nearCountry(m.index ?? 0, m[0].length)) {
       return {
-        cases:     parseInt(m[1].replace(/,/g, ""), 10),
-        deaths:    parseInt(m[2].replace(/,/g, ""), 10),
+        cases:     parseCount(m[1]),
+        deaths:    parseCount(m[2]),
         recovered: 0,
       };
     }
   }
 
   // Tier 2: cases and deaths mentioned in separate sentences, each
-  // individually anchored near the country name.
-  const casePattern = new RegExp(`(\\d[\\d,]*)\\s+${QUALIFIERS}cases?`, "gi");
-  const deathPattern = /(\d[\d,]*)\s+deaths?\b/gi;
+  // individually anchored near the country name. Both accept word-form
+  // counts (see NUM) — e.g. DON612's "Uganda has reported 20 confirmed
+  // cases including two deaths" has no "total of" anchor for Tier 1 to
+  // match, so this tier is what actually resolves Uganda's figures.
+  const casePattern = new RegExp(`(${NUM})\\s+${QUALIFIERS}cases?`, "gi");
+  const deathPattern = new RegExp(`(${NUM})\\s+deaths?\\b`, "gi");
 
   let cases: number | null = null;
   for (const m of clean.matchAll(casePattern)) {
     if (nearCountry(m.index ?? 0, m[0].length)) {
-      cases = parseInt(m[1].replace(/,/g, ""), 10);
+      cases = parseCount(m[1]);
       break;
     }
   }
@@ -276,7 +304,7 @@ export function extractNumbersForCountry(
   let deaths: number | null = null;
   for (const m of clean.matchAll(deathPattern)) {
     if (nearCountry(m.index ?? 0, m[0].length)) {
-      deaths = parseInt(m[1].replace(/,/g, ""), 10);
+      deaths = parseCount(m[1]);
       break;
     }
   }
