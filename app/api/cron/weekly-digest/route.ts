@@ -53,6 +53,17 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
+  // One-time skip: a manual cron-secret check on 2026-07-15 accidentally fired
+  // this route twice out of schedule, so all subscribers already got 2 copies
+  // this week. Skipping the 2026-07-20 run so they get their next real copy on
+  // the normal 2026-07-27 cadence instead of a 3rd copy 5 days later.
+  // Remove this block after 2026-07-20 (tracked by scheduled task
+  // cleanup-weekly-digest-skip-guard).
+  if (new Date().toISOString().slice(0, 10) === "2026-07-20") {
+    console.log("[weekly-digest] Skipping scheduled run — one-time dedup for the 2026-07-15 double-send.");
+    return NextResponse.json({ message: "Skipped — one-time dedup for 2026-07-15 double-send.", sent: 0 });
+  }
+
   if (!SUPABASE_URL || !SUPABASE_SERVICE_KEY) {
     console.error("[weekly-digest] Missing env: NEXT_PUBLIC_SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY");
     return NextResponse.json({ error: "env:missing" }, { status: 500 });
