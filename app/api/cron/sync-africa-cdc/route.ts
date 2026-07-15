@@ -79,29 +79,37 @@ const AFRICA_TEXT_ALIASES: Record<string, string> = {
   " dr congo": "Democratic Republic of the Congo",
 };
 
+// Returns countries ordered by earliest position of first occurrence in the
+// text, not by iteration order over AFRICA_TEXT_ALIASES/AFRICA_COUNTRIES —
+// callers take the first entry as "the primary country", which needs to mean
+// "mentioned first in the article", not "whichever name happens to be
+// declared first". Found 2026-07-15 (same class of bug already fixed in
+// sync-ecdc-threats). Identity/seen semantics unchanged — only ordering.
 function findMentionedAfricanCountries(text: string): string[] {
   const lower  = ` ${text.toLowerCase()} `;
-  const found: string[] = [];
-  const seen   = new Set<string>();
+  const positions = new Map<string, number>();   // output string -> earliest index
+  const seenKey    = new Map<string, string>();  // canonical name_en -> output string already recorded
+
+  const record = (outputStr: string, canonicalKey: string, idx: number) => {
+    if (idx === -1) return;
+    if (!seenKey.has(canonicalKey)) seenKey.set(canonicalKey, outputStr);
+    const key = seenKey.get(canonicalKey)!;
+    const prev = positions.get(key);
+    if (prev === undefined || idx < prev) positions.set(key, idx);
+  };
 
   // Abbreviation aliases first
   for (const [abbr, canonical] of Object.entries(AFRICA_TEXT_ALIASES)) {
-    if (lower.includes(abbr) && !seen.has(canonical)) {
-      found.push(canonical);
-      seen.add(COUNTRIES[canonical]?.name_en ?? canonical);
-    }
+    record(canonical, COUNTRIES[canonical]?.name_en ?? canonical, lower.indexOf(abbr));
   }
 
   for (const name of AFRICA_COUNTRIES) {
     const geo = COUNTRIES[name];
     if (!geo) continue;
-    if (seen.has(geo.name_en)) continue;
-    if (lower.includes(name.toLowerCase())) {
-      found.push(name);
-      seen.add(geo.name_en);
-    }
+    if (seenKey.has(geo.name_en)) continue;
+    record(name, geo.name_en, lower.indexOf(name.toLowerCase()));
   }
-  return found;
+  return [...positions.keys()].sort((a, b) => positions.get(a)! - positions.get(b)!);
 }
 
 // Extract disease name from an Africa CDC outbreak title.

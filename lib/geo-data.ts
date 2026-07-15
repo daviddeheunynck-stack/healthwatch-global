@@ -276,27 +276,44 @@ const TEXT_ALIASES: Record<string, string> = {
 // report actually names — e.g. distinguishing the 5 countries a WHO DON gives
 // their own case/death figures to from the 26 others only folded into a
 // regional roll-up total.
+//
+// Results are ordered by earliest position of first occurrence in the text —
+// NOT by the longest-key-first order used to decide matches below. Callers
+// that take countries[0] as "the primary country" (several sync-* crons) need
+// this to actually mean "mentioned first in the article", not "whichever
+// country name happens to sort first in COUNTRY_KEYS_BY_LENGTH" — e.g. a
+// Rwanda-led article that name-drops Burundi in passing was previously prone
+// to returning Burundi first purely because of dictionary ordering. The
+// longest-key-first iteration itself is preserved for the matching pass (it
+// prevents a short alias like "Congo" from being recorded over the more
+// specific "Democratic Republic of the Congo" when both could match) — only
+// the final output order changes.
 export function findMentionedCountries(text: string): CountryGeo[] {
   const lower = ` ${text.toLowerCase()} `;
-  const found: CountryGeo[] = [];
-  const seen = new Set<string>();
+  const positions = new Map<string, number>();
+  const geos = new Map<string, CountryGeo>();
 
-  const addIfNew = (geo: CountryGeo | undefined | null) => {
-    if (geo && !isAggregateCountry(geo) && !seen.has(geo.name_en)) {
-      found.push(geo);
-      seen.add(geo.name_en);
-    }
+  const record = (geo: CountryGeo | undefined | null, idx: number) => {
+    if (!geo || isAggregateCountry(geo) || idx === -1) return;
+    const prevIdx = positions.get(geo.name_en);
+    if (prevIdx === undefined || idx < prevIdx) positions.set(geo.name_en, idx);
+    geos.set(geo.name_en, geo);
   };
 
   for (const [alias, canonicalKey] of Object.entries(TEXT_ALIASES)) {
-    if (lower.includes(alias)) addIfNew(COUNTRIES[canonicalKey]);
+    record(COUNTRIES[canonicalKey], lower.indexOf(alias));
   }
   for (const key of COUNTRY_KEYS_BY_LENGTH) {
-    if (lower.includes(` ${key.toLowerCase()} `) || lower.includes(` ${key.toLowerCase()},`)) {
-      addIfNew(COUNTRIES[key]);
-    }
+    const lowerKey = key.toLowerCase();
+    const idxSpace = lower.indexOf(` ${lowerKey} `);
+    const idxComma = lower.indexOf(` ${lowerKey},`);
+    const idx = idxSpace === -1 ? idxComma : idxComma === -1 ? idxSpace : Math.min(idxSpace, idxComma);
+    record(COUNTRIES[key], idx);
   }
-  return found;
+
+  return [...geos.keys()]
+    .sort((a, b) => (positions.get(a) ?? 0) - (positions.get(b) ?? 0))
+    .map((name) => geos.get(name)!);
 }
 
 // Matches WHO's "Name (N), Name (N), and Name (N)" list format (seen in some
