@@ -101,6 +101,17 @@ interface Found {
   note:   string;
 }
 
+// Rebuilds the English description from the freshly fetched figures — without
+// this, a weekly cases/deaths/date update left the description narrating
+// whatever the seed data said, drifting further out of sync every week. See
+// project_sync_outbreaks_paho_translation_drift_fixed for the same fix applied
+// to the other outbreaks-writing crons.
+function buildEndemicDescription(diseaseEn: string, countryEn: string, found: Found): string {
+  const casesStr  = found.cases.toLocaleString("en");
+  const deathsStr = found.deaths > 0 ? ` and ${found.deaths.toLocaleString("en")} death${found.deaths > 1 ? "s" : ""}` : "";
+  return `${diseaseEn} in ${countryEn} — ${casesStr} cumulative case${found.cases > 1 ? "s" : ""}${deathsStr} reported as of ${found.date}.`;
+}
+
 // ══════════════════════════════════════════════════════════════════════════════
 // TARGET 1 — Philippines / Dengue
 // Source: GMA Network RSS feeds (server-rendered, real <item> entries)
@@ -523,7 +534,7 @@ export async function GET(req: NextRequest) {
   // ── Load the 3 target rows ───────────────────────────────────────────────
   const { data: rows, error } = await supabase
     .from("outbreaks")
-    .select("id, disease, country, cases, deaths, date, source")
+    .select("id, disease, disease_en, country, country_en, cases, deaths, date, source, description")
     .or(
       "and(disease.eq.Dengue,country.eq.Philippines)," +
       "and(disease.eq.Choléra,country.eq.Éthiopie)," +
@@ -608,21 +619,39 @@ export async function GET(req: NextRequest) {
       continue;
     }
 
-    // Update DB
-    const { error: upErr } = await supabase
+    // Update DB — description is rebuilt from the fresh figures every time
+    // (see buildEndemicDescription); FR/ES/AR/ID are nulled when the English
+    // text changed so sync-outbreaks' backfill sweep re-translates it.
+    const newDescription = buildEndemicDescription(row.disease_en ?? target.disease, row.country_en ?? target.country, found);
+    const updatePayload: Record<string, unknown> = {
+      cases:           found.cases,
+      deaths:          found.deaths,
+      date:            found.date,
+      source:          found.source,
+      description:     newDescription,
+      source_priority: 5,
+    };
+    if (row.description !== newDescription) {
+      updatePayload.description_fr = null;
+      updatePayload.description_es = null;
+      updatePayload.description_ar = null;
+      updatePayload.description_id = null;
+    }
+    // .select("id") so a source_priority guard that blocks the write (row now
+    // owned by a higher-priority source) is visible as 0 affected rows —
+    // without it, a blocked update still returns error: null and was reported
+    // as a success. Found 2026-07-15.
+    const { data: updatedRows, error: upErr } = await supabase
       .from("outbreaks")
-      .update({
-        cases:           found.cases,
-        deaths:          found.deaths,
-        date:            found.date,
-        source:          found.source,
-        source_priority: 5,
-      })
-      .eq("id", row.id).lte("source_priority", 5);
+      .update(updatePayload)
+      .eq("id", row.id).lte("source_priority", 5)
+      .select("id");
 
     if (upErr) {
       console.error(`[endemic] DB update ${target.label}:`, upErr.message);
       skipped.push({ label: target.label, reason: `DB update error: ${upErr.message}` });
+    } else if (!updatedRows || updatedRows.length === 0) {
+      skipped.push({ label: target.label, reason: "blocked by source_priority guard — row owned by a higher-priority source" });
     } else {
       updates.push({
         label:  target.label,
