@@ -33,6 +33,7 @@ export async function POST(req: NextRequest) {
     date?: string;
     source?: string;
     active?: boolean;
+    description?: string;
   };
   try {
     body = await req.json();
@@ -71,14 +72,28 @@ export async function POST(req: NextRequest) {
 
   const row = rows[0];
   const patch: Record<string, unknown> = {};
-  if (body.cases   !== undefined) patch.cases   = body.cases;
-  if (body.deaths  !== undefined) patch.deaths  = body.deaths;
-  if (body.date    !== undefined) patch.date    = body.date;
-  if (body.source  !== undefined) patch.source  = body.source;
-  if (body.active  !== undefined) patch.active  = body.active;
+  if (body.cases       !== undefined) patch.cases       = body.cases;
+  if (body.deaths      !== undefined) patch.deaths      = body.deaths;
+  if (body.date        !== undefined) patch.date        = body.date;
+  if (body.source      !== undefined) patch.source      = body.source;
+  if (body.active      !== undefined) patch.active      = body.active;
+  if (body.description !== undefined) patch.description = body.description;
 
   if (Object.keys(patch).length === 0) {
     return NextResponse.json({ error: "Nothing to patch" }, { status: 400 });
+  }
+
+  // Editing the English description invalidates existing FR/ES/AR/ID
+  // translations — null them so sync-outbreaks' backfill sweep re-translates
+  // from the new text (same pattern as admin/outbreaks/[id]). This endpoint
+  // previously had no way to touch description at all, so a cases/deaths
+  // correction here always left the old description text stale — pass
+  // `description` explicitly alongside cases/deaths when it needs updating too.
+  if ("description" in patch) {
+    patch.description_fr = null;
+    patch.description_es = null;
+    patch.description_ar = null;
+    patch.description_id = null;
   }
 
   try {
