@@ -65,13 +65,18 @@ const OUTBREAKS_REVALIDATE = 300; // seconds — must be a statically-analyzable
 const getLastSyncCached = unstable_cache(
   async (): Promise<string | null> => {
     const supabase = getServerClient();
-    const { data, error } = await supabase
-      .from("outbreaks")
-      .select("updated_at")
-      .eq("active", true)
-      .order("updated_at", { ascending: false })
-      .limit(1)
-      .single();
+    const query = () =>
+      supabase
+        .from("outbreaks")
+        .select("updated_at")
+        .eq("active", true)
+        .order("updated_at", { ascending: false })
+        .limit(1)
+        .single();
+    // One retry — absorbs transient fetch/socket errors against Supabase
+    // (rare but seen in prod, see getOutbreaksCached below for detail).
+    let { data, error } = await query();
+    if (error) ({ data, error } = await query());
     if (error) throw error; // propagate — don't let a transient failure cache as "no sync"
     return data?.updated_at ?? null;
   },
@@ -92,11 +97,20 @@ const getOutbreaksCached = unstable_cache(
     const supabase = getServerClient();
 
     const sixtyDaysAgo = new Date(Date.now() - 60 * 86_400_000).toISOString().split("T")[0];
-    const { data, error } = await supabase
-      .from("outbreaks")
-      .select("*")
-      .or(`active.eq.true,and(source_priority.gte.3,updated_at.gte.${sixtyDaysAgo})`)
-      .order("date", { ascending: false });
+    const query = () =>
+      supabase
+        .from("outbreaks")
+        .select("*")
+        .or(`active.eq.true,and(source_priority.gte.3,updated_at.gte.${sixtyDaysAgo})`)
+        .order("date", { ascending: false });
+
+    // One retry — absorbs transient fetch/socket errors against Supabase
+    // ("TypeError: terminated" from a keep-alive connection reused across
+    // serverless invocations); seen twice in prod, Sentry JAVASCRIPT-NEXTJS-1H
+    // (2026-07-13/14), each time silently degrading the homepage to 0 outbreaks
+    // for whichever request hit it.
+    let { data, error } = await query();
+    if (error) ({ data, error } = await query());
 
     if (error) {
       Sentry.captureException(error, { tags: { lib: "outbreaks", fn: "getOutbreaks" } });
