@@ -285,9 +285,17 @@ export async function GET(req: NextRequest) {
         // Same source_priority guard as the main update path below (line ~338) —
         // a low-priority travel advisory shouldn't be able to deactivate a row
         // owned by a higher-priority source just because this notice itself
-        // parsed to 0/0.
-        await supabase.from("outbreaks").update({ active: false }).eq("id", existRow.id).lte("source_priority", 5);
-        log.push({ label, status: "deactivated", detail: "0/0 cases — endemic advisory" });
+        // parsed to 0/0. .select("id") so a blocked update (0 rows affected) is
+        // visible instead of silently falling through to "deactivated". Found 2026-07-15.
+        const { data: deactivatedRows, error: deactivateErr } = await supabase
+          .from("outbreaks").update({ active: false }).eq("id", existRow.id).lte("source_priority", 5).select("id");
+        if (deactivateErr) {
+          log.push({ label, status: "error", detail: deactivateErr.message });
+        } else if (!deactivatedRows || deactivatedRows.length === 0) {
+          log.push({ label, status: "skip", detail: "blocked by source_priority guard — row owned by a higher-priority source" });
+        } else {
+          log.push({ label, status: "deactivated", detail: "0/0 cases — endemic advisory" });
+        }
       } else {
         log.push({ label, status: "skip", detail: "0/0 cases — endemic advisory, not inserted" });
       }
@@ -336,14 +344,22 @@ export async function GET(req: NextRequest) {
         updatePayload.description_ar = null;
         updatePayload.description_id = null;
       }
-      const { error } = await supabase
+      // .select("id") so a source_priority guard that blocks the write (row now
+      // owned by a higher-priority source) is visible as 0 affected rows —
+      // without it, a blocked update still returns error: null and was
+      // reported as "updated" even though nothing changed. Found 2026-07-15.
+      const { data: updatedRows, error } = await supabase
         .from("outbreaks")
         .update(updatePayload)
-        .eq("id", existRow.id).lte("source_priority", 5);
+        .eq("id", existRow.id).lte("source_priority", 5)
+        .select("id");
 
       if (error) {
         log.push({ label, status: "error", detail: error.message });
         results.errors++;
+      } else if (!updatedRows || updatedRows.length === 0) {
+        log.push({ label, status: "skip", detail: "blocked by source_priority guard — row owned by a higher-priority source" });
+        results.skipped++;
       } else {
         log.push({ label, status: "updated", detail: date });
         results.updated++;

@@ -226,14 +226,21 @@ export async function GET(req: NextRequest) {
           results.skipped++;
           continue;
         }
-        const { error } = await supabase.from("outbreaks").update({
+        // .select("id") so a source_priority guard that blocks the write (row now
+        // owned by a higher-priority source) is visible as 0 affected rows —
+        // without it, a blocked update still returns error: null and was
+        // reported as "updated" even though nothing changed. Found 2026-07-15.
+        const { data: updatedRows, error } = await supabase.from("outbreaks").update({
           cases: ex.confirmed, deaths: ex.deaths, date: sit.date, source: sit.pdfUrl,
           description: desc.en, description_fr: desc.fr, description_es: desc.es,
           description_ar: desc.ar, description_id: desc.id,
           risk_level: riskLevel, active: true, source_priority: 5,
-        }).eq("id", existingRow.id).lte("source_priority", 5);
+        }).eq("id", existingRow.id).lte("source_priority", 5).select("id");
         if (error) { log.push({ label, status: "error", detail: error.message }); results.errors++; }
-        else { log.push({ label, status: "updated", detail: `${ex.confirmed}/${ex.deaths} (${sit.date})` }); results.updated++; }
+        else if (!updatedRows || updatedRows.length === 0) {
+          log.push({ label, status: "skip", detail: "blocked by source_priority guard — row owned by a higher-priority source" });
+          results.skipped++;
+        } else { log.push({ label, status: "updated", detail: `${ex.confirmed}/${ex.deaths} (${sit.date})` }); results.updated++; }
       } else {
         const { error } = await supabase.from("outbreaks").insert({
           disease: diseaseInfo.name_fr, disease_en: diseaseInfo.name_en, disease_ar: diseaseInfo.name_ar,

@@ -1174,15 +1174,23 @@ export async function GET(req: NextRequest) {
         updatePayload.description_ar = null;
         updatePayload.description_id = null;
       }
-      const { error } = await supabase
+      // .select("id") so a source_priority guard that blocks the write (row now
+      // owned by a higher-priority source) is visible as 0 affected rows —
+      // without it, a blocked update still returns error: null and was
+      // reported as "updated" even though nothing changed. Found 2026-07-15.
+      const { data: updatedRows, error } = await supabase
         .from("outbreaks")
         .update(updatePayload)
         .eq("id", existingRow.id)
-        .lte("source_priority", 5);
+        .lte("source_priority", 5)
+        .select("id");
 
       if (error) {
         log.push({ label: `${target.disease_en}/${target.country_en}`, status: "error", detail: error.message });
         results.errors++;
+      } else if (!updatedRows || updatedRows.length === 0) {
+        log.push({ label: `${target.disease_en}/${target.country_en}`, status: "skip", detail: "blocked by source_priority guard — row owned by a higher-priority source" });
+        results.skipped++;
       } else {
         log.push({ label: `${target.disease_en}/${target.country_en}`, status: "updated", detail: `${found.cases} cases / ${found.deaths} deaths (${found.date})` });
         results.updated++;
@@ -1228,14 +1236,22 @@ export async function GET(req: NextRequest) {
           reactivatePayload.description_ar = null;
           reactivatePayload.description_id = null;
         }
-        const { error } = await supabase
+        // .select("id") so a source_priority guard that blocks the write (row now
+        // owned by a higher-priority source) is visible as 0 affected rows —
+        // without it, a blocked update still returns error: null and was
+        // reported as "updated" even though nothing changed. Found 2026-07-15.
+        const { data: updatedRows, error } = await supabase
           .from("outbreaks")
           .update(reactivatePayload)
           .eq("id", directCheck.id)
-          .lte("source_priority", 5);
+          .lte("source_priority", 5)
+          .select("id");
         if (error) {
           log.push({ label: `${target.disease_en}/${target.country_en}`, status: "error", detail: error.message });
           results.errors++;
+        } else if (!updatedRows || updatedRows.length === 0) {
+          log.push({ label: `${target.disease_en}/${target.country_en}`, status: "skip", detail: "blocked by source_priority guard — row owned by a higher-priority source" });
+          results.skipped++;
         } else {
           log.push({ label: `${target.disease_en}/${target.country_en}`, status: "updated", detail: isAnnualRef ? `refreshed (endemic ref, inactive)` : `reactivated (was missed by cache)` });
           results.updated++;

@@ -269,15 +269,22 @@ export async function GET(req: NextRequest) {
             updatePayload.admin1_lat = outbreak.admin1_lat;
             updatePayload.admin1_lng = outbreak.admin1_lng;
           }
-          const { error } = await supabase
+          // .select("id") so a source_priority guard that blocks the write (row now
+          // owned by a higher-priority source) is visible as 0 affected rows —
+          // without it, a blocked update still returns error: null and was
+          // reported as "updated" even though nothing changed. Found 2026-07-15.
+          const { data: updatedRows, error } = await supabase
             .from("outbreaks")
             .update({ ...updatePayload, source_priority: 3 })
             .eq("id", existingRow.id)
-            .lte("source_priority", 3); // never overwrite higher-priority sources (sitrep=10, regional=5)
+            .lte("source_priority", 3) // never overwrite higher-priority sources (sitrep=10, regional=5)
+            .select("id");
           if (error) {
             console.error("[sync] update:", error);
             errorLog.push(`UPDATE ${outbreak.disease_en}/${outbreak.country_en}: ${error.message}`);
             results.errors++;
+          } else if (!updatedRows || updatedRows.length === 0) {
+            results.skipped++;
           } else results.updated++;
         } else {
           results.skipped++;
