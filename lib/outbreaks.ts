@@ -464,15 +464,27 @@ export function isNewOutbreak(outbreak: Outbreak): boolean {
 // display — prevents endemic diseases (Dengue, Cholera, H5N1) from falling into
 // "history" after the data-quality cron closes resolved WHO DON events.
 const SIXTY_DAYS_MS = 60 * 86_400_000;
-export function isDisplayActive(o: Pick<Outbreak, "active" | "source_priority" | "updated_at">): boolean {
+export function isDisplayActive(o: Pick<Outbreak, "active" | "source_priority" | "updated_at" | "is_seed">): boolean {
   if (o.active) return true;
+  // is_seed rows (WHO GHO annual burden estimates for endemic diseases, or a historical
+  // outbreak flagged as seed data) are reference/background data, not a live tracked
+  // event — the recency fallback below exists to keep a DYNAMICALLY-tracked endemic
+  // disease from vanishing when its row closes before a fresh bulletin arrives, not to
+  // resurrect a static annual estimate just because a routine batch touch (e.g. the
+  // translation backfill) bumped its updated_at. Found 2026-07-15: 32 such rows, Malaria
+  // GHO estimates dominant, summed to 170M+ phantom "active" cases sitewide (Nigeria
+  // 68M, DR Congo 35M, Uganda 13M...) — the Malaria disease page showed "170,144,635
+  // cases / 10 foyers actifs". Never affects is_seed rows that are genuinely active=true
+  // (the protected DON-linked clusters — Chikungunya, MERS-CoV, Cholera, Polio PHEIC,
+  // Cereulide — already return true above via the plain `active` check).
+  if (o.is_seed) return false;
   if ((o.source_priority ?? 0) >= 3 && o.updated_at) {
     return new Date(o.updated_at).getTime() >= Date.now() - SIXTY_DAYS_MS;
   }
   return false;
 }
 
-type DisplayActiveRow = Pick<Outbreak, "active" | "source_priority" | "updated_at" | "disease_en" | "disease" | "country_en" | "country">;
+type DisplayActiveRow = Pick<Outbreak, "active" | "source_priority" | "updated_at" | "disease_en" | "disease" | "country_en" | "country" | "is_seed">;
 
 // Sibling-aware wrapper around isDisplayActive(): the 60-day recency fallback exists so an
 // endemic disease doesn't vanish from display when its ONLY row goes inactive before a fresh

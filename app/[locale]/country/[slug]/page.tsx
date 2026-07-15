@@ -176,7 +176,7 @@ async function getAllCountryEn(): Promise<string[]> {
 async function getCountryOutbreaks(countryEn: string): Promise<Outbreak[]> {
   const { data } = await db()
     .from("outbreaks")
-    .select("id, disease, disease_en, disease_ar, country, country_en, country_ar, region, cases, deaths, risk_level, date, is_pheic, active, source_priority, updated_at")
+    .select("id, disease, disease_en, disease_ar, country, country_en, country_ar, region, cases, deaths, risk_level, date, is_pheic, active, is_seed, source_priority, updated_at")
     .eq("country_en", countryEn)
     .order("date", { ascending: false });
   return (data ?? []) as Outbreak[];
@@ -286,8 +286,12 @@ export default async function CountryPage({
     ? new Map(Object.entries(await getOutbreakTrendsBulkCached(active.map((o) => o.id))))
     : new Map<string, import("@/lib/outbreak-trend").OutbreakTrend>();
 
-  const totalCases  = outbreaks.reduce((s, o) => s + (o.cases  ?? 0), 0);
-  const totalDeaths = outbreaks.reduce((s, o) => s + (o.deaths ?? 0), 0);
+  // Scoped to `active` (display-active), not the full outbreaks history — same fix already
+  // applied to the disease page (see b4044e5): summing every historical row inflates these
+  // far beyond the current situation (found 2026-07-15: DR Congo showed 35M+ cases, dominated
+  // by a Malaria GHO annual estimate and superseded Ebola snapshots — see filterDisplayActive).
+  const totalCases  = active.reduce((s, o) => s + (o.cases  ?? 0), 0);
+  const totalDeaths = active.reduce((s, o) => s + (o.deaths ?? 0), 0);
   const numLocale   = l === "ar" ? "ar-SA" : l;
   const latestUpdate = outbreaks.reduce<string | null>((latest, o) => {
     const t = (o as { updated_at?: string }).updated_at ?? o.date ?? null;

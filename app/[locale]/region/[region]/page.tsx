@@ -120,7 +120,7 @@ async function fetchRegionOutbreaks(region: string): Promise<Outbreak[]> {
   );
   const { data } = await supabase
     .from("outbreaks")
-    .select("id, disease, disease_en, disease_ar, country, country_en, country_ar, cases, deaths, risk_level, date, is_pheic, active, source_priority, updated_at")
+    .select("id, disease, disease_en, disease_ar, country, country_en, country_ar, cases, deaths, risk_level, date, is_pheic, active, is_seed, source_priority, updated_at")
     .eq("region", region)
     .order("date", { ascending: false });
   return (data ?? []) as Outbreak[];
@@ -211,10 +211,16 @@ export default async function RegionPage({
   const activeIds = new Set(active.map((o) => o.id));
   const history   = allOutbreaks.filter((o) => !activeIds.has(o.id));
 
-  const totalCases  = allOutbreaks.reduce((s, o) => s + (o.cases || 0), 0);
-  const totalDeaths = allOutbreaks.reduce((s, o) => s + (o.deaths || 0), 0);
+  // Scoped to `active` (display-active), not allOutbreaks — same fix already applied to
+  // the disease page (see b4044e5): summing every historical row inflates these far beyond
+  // the current situation (found 2026-07-15: Africa region showed 169M cases, dominated by
+  // Malaria GHO annual estimates and superseded outbreak snapshots — see filterDisplayActive).
+  const totalCases  = active.reduce((s, o) => s + (o.cases || 0), 0);
+  const totalDeaths = active.reduce((s, o) => s + (o.deaths || 0), 0);
   const numLocale   = l === "ar" ? "ar-SA" : l;
-  const countriesSet = new Set(allOutbreaks.map((o) => o.country_en || o.country).filter(Boolean));
+  // Active countries only — consistent with cases/deaths above. Historical countries are
+  // still visible in the history section below.
+  const countriesSet = new Set(active.map((o) => o.country_en || o.country).filter(Boolean));
 
   const trendsMap = active.length > 0
     ? new Map(Object.entries(await getOutbreakTrendsBulkCached(active.map((o) => o.id))))
