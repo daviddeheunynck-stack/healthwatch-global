@@ -44,6 +44,7 @@ next-env.d.ts
 .vercel
 .env*.local
 test-results/
+playwright-report/
 *.log
 
 # Sentry Config File
@@ -53,3 +54,5 @@ test-results/
 
 # Supabase CLI local state
 supabase/.temp/
+
+.vercel
