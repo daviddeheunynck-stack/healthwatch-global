@@ -37,6 +37,13 @@ type LocaleCopy = {
   subject:     (d: string, c: string) => string;
   intro:       (d: string, c: string) => string;
   title:       string;
+  // "Ongoing" variants — used instead of the above when the PHEIC was already
+  // active before this user could have been notified (pre-existing subscriber
+  // base already got the real declaration email; a newly-eligible user gets a
+  // calmer status notice instead of a false "WHO has just declared" framing).
+  subjectOngoing: (d: string, c: string) => string;
+  introOngoing:   (d: string, c: string) => string;
+  titleOngoing:   string;
   cases:       string;
   reported:    string;
   risk:        string;
@@ -50,6 +57,9 @@ const LOCALE_COPY: Record<string, LocaleCopy> = {
     subject:    (d, c) => `[HealthWatch] Déclaration PHEIC : ${d} — ${c}`,
     intro:      (d, c) => `L'OMS a déclaré une Urgence de Santé Publique de Portée Internationale (PHEIC) pour <strong>${d}</strong> en <strong>${c}</strong>.`,
     title:      "HealthWatch Global — Déclaration PHEIC",
+    subjectOngoing: (d, c) => `[HealthWatch] PHEIC en cours : ${d} — ${c}`,
+    introOngoing:   (d, c) => `L'OMS maintient une Urgence de Santé Publique de Portée Internationale (PHEIC) en cours pour <strong>${d}</strong> en <strong>${c}</strong>.`,
+    titleOngoing:   "HealthWatch Global — PHEIC en cours",
     cases:      "Cas :",
     reported:   "Signalé le :",
     risk:       "Risque :",
@@ -61,6 +71,9 @@ const LOCALE_COPY: Record<string, LocaleCopy> = {
     subject:    (d, c) => `[HealthWatch] Declaración PHEIC: ${d} — ${c}`,
     intro:      (d, c) => `La OMS ha declarado una Emergencia de Salud Pública de Importancia Internacional (PHEIC) por <strong>${d}</strong> en <strong>${c}</strong>.`,
     title:      "HealthWatch Global — Declaración PHEIC",
+    subjectOngoing: (d, c) => `[HealthWatch] PHEIC en curso: ${d} — ${c}`,
+    introOngoing:   (d, c) => `La OMS mantiene una Emergencia de Salud Pública de Importancia Internacional (PHEIC) en curso por <strong>${d}</strong> en <strong>${c}</strong>.`,
+    titleOngoing:   "HealthWatch Global — PHEIC en curso",
     cases:      "Casos:",
     reported:   "Reportado:",
     risk:       "Riesgo:",
@@ -72,6 +85,9 @@ const LOCALE_COPY: Record<string, LocaleCopy> = {
     subject:    (d, c) => `[HealthWatch] إعلان PHEIC: ${d} — ${c}`,
     intro:      (d, c) => `أعلنت منظمة الصحة العالمية حالة طوارئ صحية عامة دولية (PHEIC) بشأن <strong>${d}</strong> في <strong>${c}</strong>.`,
     title:      "HealthWatch Global — إعلان PHEIC",
+    subjectOngoing: (d, c) => `[HealthWatch] حالة PHEIC مستمرة: ${d} — ${c}`,
+    introOngoing:   (d, c) => `لا تزال منظمة الصحة العالمية تصنّف <strong>${d}</strong> في <strong>${c}</strong> كحالة طوارئ صحية عامة دولية (PHEIC) مستمرة.`,
+    titleOngoing:   "HealthWatch Global — حالة PHEIC مستمرة",
     cases:      "الحالات:",
     reported:   "تاريخ الإبلاغ:",
     risk:       "مستوى الخطر:",
@@ -83,6 +99,9 @@ const LOCALE_COPY: Record<string, LocaleCopy> = {
     subject:    (d, c) => `[HealthWatch] Deklarasi PHEIC: ${d} — ${c}`,
     intro:      (d, c) => `WHO telah menyatakan Kedaruratan Kesehatan Masyarakat yang Meresahkan Dunia (PHEIC) untuk <strong>${d}</strong> di <strong>${c}</strong>.`,
     title:      "HealthWatch Global — Deklarasi PHEIC",
+    subjectOngoing: (d, c) => `[HealthWatch] PHEIC berlangsung: ${d} — ${c}`,
+    introOngoing:   (d, c) => `WHO tetap menetapkan status Kedaruratan Kesehatan Masyarakat yang Meresahkan Dunia (PHEIC) yang sedang berlangsung untuk <strong>${d}</strong> di <strong>${c}</strong>.`,
+    titleOngoing:   "HealthWatch Global — PHEIC berlangsung",
     cases:      "Kasus:",
     reported:   "Dilaporkan:",
     risk:       "Risiko:",
@@ -94,6 +113,9 @@ const LOCALE_COPY: Record<string, LocaleCopy> = {
     subject:    (d, c) => `[HealthWatch] PHEIC Declaration: ${d} — ${c}`,
     intro:      (d, c) => `WHO has declared a Public Health Emergency of International Concern (PHEIC) for <strong>${d}</strong> in <strong>${c}</strong>.`,
     title:      "HealthWatch Global — PHEIC Declaration",
+    subjectOngoing: (d, c) => `[HealthWatch] Ongoing PHEIC: ${d} — ${c}`,
+    introOngoing:   (d, c) => `WHO maintains an ongoing Public Health Emergency of International Concern (PHEIC) for <strong>${d}</strong> in <strong>${c}</strong>.`,
+    titleOngoing:   "HealthWatch Global — Ongoing PHEIC",
     cases:      "Cases:",
     reported:   "Reported:",
     risk:       "Risk:",
@@ -146,6 +168,11 @@ export async function GET(req: NextRequest) {
     .in("outbreak_id", outbreakIds);
 
   const notifiedSet = new Set((existing ?? []).map((n) => `${n.user_id}::${n.outbreak_id}`));
+  // Outbreak ids that have ALREADY generated a real notification for someone,
+  // regardless of user — signals this PHEIC predates the current cron run
+  // (e.g. a subscriber who upgrades to Pro next month), so newly-eligible
+  // users get the calmer "ongoing" framing instead of a false "just declared".
+  const alertedOutbreakIds = new Set((existing ?? []).map((n) => n.outbreak_id));
 
   // Group by disease — one email per PHEIC event listing all affected countries.
   // Without grouping, each country row (DRC, Uganda, France…) triggers a separate
@@ -177,6 +204,12 @@ export async function GET(req: NextRequest) {
       primary.risk_level ?? "high",
     );
 
+    // Was ANY row in this disease group already notified to someone before this
+    // run started? If so, every recipient in this run is newly-eligible for an
+    // already-active PHEIC (upgraded to Pro, just enabled pheic_alerts…) rather
+    // than a first-ever declaration — use the "ongoing" copy variant for all of them.
+    const isOngoing = outbreaks.some((o) => alertedOutbreakIds.has(o.id));
+
     for (const user of proUsers as Array<{ id: string; email: string; alert_locale?: string | null }>) {
       // Dedup: skip if user was already notified for ANY outbreak in this disease group.
       // This covers both old per-country records (e.g. user::uganda_id, user::france_id)
@@ -191,13 +224,14 @@ export async function GET(req: NextRequest) {
       const lc      = LOCALE_COPY[locale] ?? LOCALE_COPY.en;
       const disease  = getLocalizedDisease(primary, locale);
       const countries = outbreaks.map((o) => getLocalizedCountry(o, locale)).join(sep);
-      const subject = lc.subject(disease, countries);
-      const intro   = lc.intro(esc(disease), esc(countries));
+      const subject = isOngoing ? lc.subjectOngoing(disease, countries) : lc.subject(disease, countries);
+      const intro   = isOngoing ? lc.introOngoing(esc(disease), esc(countries)) : lc.intro(esc(disease), esc(countries));
+      const title   = isOngoing ? lc.titleOngoing : lc.title;
       const dashUrl = `${APP_URL}/${locale}/outbreak/${primary.id}`;
 
       const html = `
 <div dir="${isRtl ? "rtl" : "ltr"}" style="font-family:sans-serif;max-width:520px;margin:0 auto;padding:24px;background:#0f172a;color:#e2e8f0;border-radius:12px;direction:${isRtl ? "rtl" : "ltr"};text-align:${isRtl ? "right" : "left"}">
-  <p style="color:#f87171;font-size:17px;font-weight:700;margin:0 0 4px">${lc.title}</p>
+  <p style="color:#f87171;font-size:17px;font-weight:700;margin:0 0 4px">${title}</p>
   <p style="font-size:12px;color:#64748b;margin:0 0 16px">${new Date().toISOString().split("T")[0]}</p>
   <hr style="border:none;border-top:1px solid #334155;margin:0 0 16px"/>
   <p style="font-size:14px;margin:0 0 12px">${intro}</p>
