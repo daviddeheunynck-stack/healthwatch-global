@@ -102,13 +102,17 @@ export async function GET(req: NextRequest) {
     const numLocale = locale === "ar" ? "ar-SA" : locale;
     const isRtl     = locale === "ar";
     const plural   = matches.length > 1;
+    // alert.label is free-form user input (up to 64 chars, no HTML filtering at
+    // input) and lands in HTML email bodies and the in-app notification title —
+    // escape it here once, same as disease/country below (esc() at line 36).
+    const safeLabel = esc(alert.label);
     const emailSubject = {
-      fr: `[HealthWatch] Alerte zone : ${matches.length} foyer${plural ? "s" : ""} près de ${alert.label}`,
-      es: `[HealthWatch] Alerta de zona: ${matches.length} brote${plural ? "s" : ""} cerca de ${alert.label}`,
-      ar: `[HealthWatch] تنبيه المنطقة: ${matches.length} تفشٍّ بالقرب من ${alert.label}`,
-      id: `[HealthWatch] Peringatan zona: ${matches.length} wabah dekat ${alert.label}`,
-      en: `[HealthWatch] Geofence alert: ${matches.length} outbreak${plural ? "s" : ""} near ${alert.label}`,
-    }[locale] ?? `[HealthWatch] Geofence alert: ${matches.length} outbreak${plural ? "s" : ""} near ${alert.label}`;
+      fr: `[HealthWatch] Alerte zone : ${matches.length} foyer${plural ? "s" : ""} près de ${safeLabel}`,
+      es: `[HealthWatch] Alerta de zona: ${matches.length} brote${plural ? "s" : ""} cerca de ${safeLabel}`,
+      ar: `[HealthWatch] تنبيه المنطقة: ${matches.length} تفشٍّ بالقرب من ${safeLabel}`,
+      id: `[HealthWatch] Peringatan zona: ${matches.length} wabah dekat ${safeLabel}`,
+      en: `[HealthWatch] Geofence alert: ${matches.length} outbreak${plural ? "s" : ""} near ${safeLabel}`,
+    }[locale] ?? `[HealthWatch] Geofence alert: ${matches.length} outbreak${plural ? "s" : ""} near ${safeLabel}`;
     const emailHeader = {
       fr: "HealthWatch Global — Alerte de zone",
       es: "HealthWatch Global — Alerta de zona",
@@ -117,12 +121,12 @@ export async function GET(req: NextRequest) {
       en: "HealthWatch Global — Geofence Alert",
     }[locale] ?? "HealthWatch Global — Geofence Alert";
     const emailIntro = {
-      fr: `📍 <strong style="color:#fff">${alert.label}</strong> — ${matches.length} foyer${plural ? "s" : ""} actif${plural ? "s" : ""} dans un rayon de <strong>${alert.radius_km} km</strong>`,
-      es: `📍 <strong style="color:#fff">${alert.label}</strong> — ${matches.length} brote${plural ? "s" : ""} activo${plural ? "s" : ""} en un radio de <strong>${alert.radius_km} km</strong>`,
-      ar: `📍 <strong style="color:#fff">${alert.label}</strong> — ${matches.length} تفشٍّ نشط في نطاق <strong>${alert.radius_km} كم</strong>`,
-      id: `📍 <strong style="color:#fff">${alert.label}</strong> — ${matches.length} wabah aktif dalam radius <strong>${alert.radius_km} km</strong>`,
-      en: `📍 <strong style="color:#fff">${alert.label}</strong> — ${matches.length} active outbreak${plural ? "s" : ""} within <strong>${alert.radius_km} km</strong>`,
-    }[locale] ?? `📍 <strong style="color:#fff">${alert.label}</strong> — ${matches.length} active outbreak${plural ? "s" : ""} within <strong>${alert.radius_km} km</strong>`;
+      fr: `📍 <strong style="color:#fff">${safeLabel}</strong> — ${matches.length} foyer${plural ? "s" : ""} actif${plural ? "s" : ""} dans un rayon de <strong>${alert.radius_km} km</strong>`,
+      es: `📍 <strong style="color:#fff">${safeLabel}</strong> — ${matches.length} brote${plural ? "s" : ""} activo${plural ? "s" : ""} en un radio de <strong>${alert.radius_km} km</strong>`,
+      ar: `📍 <strong style="color:#fff">${safeLabel}</strong> — ${matches.length} تفشٍّ نشط في نطاق <strong>${alert.radius_km} كم</strong>`,
+      id: `📍 <strong style="color:#fff">${safeLabel}</strong> — ${matches.length} wabah aktif dalam radius <strong>${alert.radius_km} km</strong>`,
+      en: `📍 <strong style="color:#fff">${safeLabel}</strong> — ${matches.length} active outbreak${plural ? "s" : ""} within <strong>${alert.radius_km} km</strong>`,
+    }[locale] ?? `📍 <strong style="color:#fff">${safeLabel}</strong> — ${matches.length} active outbreak${plural ? "s" : ""} within <strong>${alert.radius_km} km</strong>`;
 
     const colH = ({
       fr: ["Maladie", "Pays", "Cas", "Risque"],
@@ -133,12 +137,12 @@ export async function GET(req: NextRequest) {
     } as Record<string, string[]>)[locale] ?? ["Disease", "Country", "Cases", "Risk"];
 
     const inAppTitleStr = ({
-      fr: `📍 ${alert.label} — ${matches.length} foyer${plural ? "s" : ""} dans un rayon de ${alert.radius_km}km`,
-      es: `📍 ${alert.label} — ${matches.length} brote${plural ? "s" : ""} a ${alert.radius_km}km`,
-      ar: `📍 ${alert.label} — ${matches.length} تفشٍّ في نطاق ${alert.radius_km}كم`,
-      id: `📍 ${alert.label} — ${matches.length} wabah dalam radius ${alert.radius_km}km`,
-      en: `📍 ${alert.label} — ${matches.length} outbreak${plural ? "s" : ""} within ${alert.radius_km}km`,
-    } as Record<string, string>)[locale] ?? `📍 ${alert.label} — ${matches.length} outbreak${plural ? "s" : ""} within ${alert.radius_km}km`;
+      fr: `📍 ${safeLabel} — ${matches.length} foyer${plural ? "s" : ""} dans un rayon de ${alert.radius_km}km`,
+      es: `📍 ${safeLabel} — ${matches.length} brote${plural ? "s" : ""} a ${alert.radius_km}km`,
+      ar: `📍 ${safeLabel} — ${matches.length} تفشٍّ في نطاق ${alert.radius_km}كم`,
+      id: `📍 ${safeLabel} — ${matches.length} wabah dalam radius ${alert.radius_km}km`,
+      en: `📍 ${safeLabel} — ${matches.length} outbreak${plural ? "s" : ""} within ${alert.radius_km}km`,
+    } as Record<string, string>)[locale] ?? `📍 ${safeLabel} — ${matches.length} outbreak${plural ? "s" : ""} within ${alert.radius_km}km`;
 
     const viewBtn = ({
       fr: "Voir le tableau de bord →",
