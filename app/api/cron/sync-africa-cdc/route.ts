@@ -10,7 +10,7 @@ import * as Sentry from "@sentry/nextjs";
 import { logCronRun } from "@/lib/cron-monitor";
 import { createClient } from "@supabase/supabase-js";
 import { normalizeDisease } from "@/lib/disease-data";
-import { COUNTRIES, findCountry } from "@/lib/geo-data";
+import { COUNTRIES, findCountry, isAggregateCountry } from "@/lib/geo-data";
 import { extractNumbers, assessRisk } from "@/lib/outbreak-parser";
 import { extractAdmin1, geocodeAdmin1 } from "@/lib/geo-extract";
 import { errorMessage } from "@/lib/error";
@@ -235,7 +235,12 @@ async function extractItemData(item: RSSItem): Promise<PostData[]> {
 
   if (!primaryCountry) return [];
   const geo = findCountry(primaryCountry);
-  if (!geo) return [];
+  // Reject aggregate pseudo-countries ("Global", "Multiple countries", ...): unlike
+  // who-api.ts/sync-paho-alerts, this cron had no such guard, so free-text mentions
+  // of "global public health emergency" etc. (adjective, not a place) matched the
+  // "Global" alias and produced a bogus per-country row that double-counts on top
+  // of the real DRC/Uganda rows on disease detail pages (found 2026-07-15).
+  if (!geo || isAggregateCountry(geo)) return [];
 
   const fullText = `${item.description} ${articleText}`.trim();
   const { cases, deaths } = extractNumbers(fullText.substring(0, 3000));
@@ -360,8 +365,8 @@ export async function GET(req: NextRequest) {
       }
 
       const geo = findCountry(item.country_en);
-      if (!geo) {
-        log.push({ label, status: "skip", detail: "country not in geo-data" });
+      if (!geo || isAggregateCountry(geo)) {
+        log.push({ label, status: "skip", detail: "country not in geo-data or aggregate pseudo-country" });
         results.skipped++;
         continue;
       }
