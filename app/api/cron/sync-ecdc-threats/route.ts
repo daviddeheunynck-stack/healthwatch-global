@@ -10,7 +10,7 @@ import * as Sentry from "@sentry/nextjs";
 import { logCronRun } from "@/lib/cron-monitor";
 import { createClient } from "@supabase/supabase-js";
 import { normalizeDisease } from "@/lib/disease-data";
-import { COUNTRIES, findCountry } from "@/lib/geo-data";
+import { COUNTRIES, findCountry, isAggregateCountry } from "@/lib/geo-data";
 import { extractNumbers, assessRisk, UMBRELLA_COUNTRY_LABELS } from "@/lib/outbreak-parser";
 import { extractAdmin1, geocodeAdmin1 } from "@/lib/geo-extract";
 import { errorMessage } from "@/lib/error";
@@ -338,7 +338,7 @@ async function extractItemData(item: RSSItem, today: string, dbg?: { reason?: st
 
   for (const countryName of targetCountries) {
     const geo = findCountry(countryName);
-    if (!geo) continue;
+    if (!geo || isAggregateCountry(geo)) continue;
 
     const admin1 = isEUMultiCountry
       ? null  // skip admin1 geocoding for bulk EU processing (performance)
@@ -426,6 +426,22 @@ export async function GET(req: NextRequest) {
     if (!prev || (row.active && !prev.active)) byDC.set(k, row);
   }
 
+  // Defensive index: (normalized disease + country) → an ACTIVE row already
+  // exists, even if its raw disease_en/country_en text differs from what a
+  // fresh parse produces. byDC above matches on raw text, which is fragile to
+  // any label drift (a relabel, a species-suffix change, another cron's own
+  // canonicalization) — found 2026-07-15 when exactly this happened on the
+  // DR Congo/Uganda Ebola rows. Update below forces active:true unconditionally
+  // and is only gated on source_priority (never on .active); insert has no
+  // collision guard at all — so a label mismatch here can silently create a
+  // second active row for a disease+country that already has one.
+  const activeByNormalizedDC = new Set<string>();
+  for (const row of existing ?? []) {
+    if (!row.active) continue;
+    const normDisease = normalizeDisease(row.disease_en ?? "").name_en.toLowerCase();
+    activeByNormalizedDC.add(`${normDisease}|${(row.country_en ?? "").toLowerCase()}`);
+  }
+
   // Diseases that already have a WHO DON-owned row under an umbrella label. An
   // umbrella item (e.g. "EU/EEA") for such a disease is the same multi-country event
   // the DON sync owns — defer to WHO instead of re-inserting a parallel active row
@@ -473,14 +489,24 @@ export async function GET(req: NextRequest) {
       }
 
       const geo = findCountry(item.country_en);
-      if (!geo) {
-        log.push({ label, status: "skip", detail: "country not in geo-data" });
+      if (!geo || isAggregateCountry(geo)) {
+        log.push({ label, status: "skip", detail: "country not in geo-data or aggregate pseudo-country" });
         results.skipped++;
         continue;
       }
 
       const dcKey      = `${item.disease_en.toLowerCase()}|${item.country_en.toLowerCase()}`;
       const existing   = byDC.get(dcKey);
+
+      // Don't resurrect a retired row, nor insert a duplicate, when an active
+      // sibling already covers this disease+country under different raw text
+      // (see activeByNormalizedDC comment above).
+      const normDcKey = `${normalizeDisease(item.disease_en).name_en.toLowerCase()}|${item.country_en.toLowerCase()}`;
+      if (activeByNormalizedDC.has(normDcKey) && (!existing || !existing.active)) {
+        log.push({ label, status: "skip", detail: "active sibling already covers this disease+country under different text" });
+        results.skipped++;
+        continue;
+      }
 
       // Never overwrite WHO DON-owned rows
       if (existing?.source?.includes("who.int/emergencies/disease-outbreak-news")) {
