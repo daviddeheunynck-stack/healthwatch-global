@@ -6,7 +6,7 @@ import { createClient } from "@supabase/supabase-js";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
-import { getLocalizedDisease, getLocalizedCountry, isDisplayActive } from "@/lib/outbreaks";
+import { getLocalizedDisease, getLocalizedCountry, filterDisplayActive } from "@/lib/outbreaks";
 import { diseaseToSlug, normalizeDisease } from "@/lib/disease-data";
 import { getOutbreakTrendsBulkCached } from "@/lib/outbreak-trend";
 import type { Outbreak } from "@/lib/outbreaks";
@@ -207,8 +207,9 @@ export default async function RegionPage({
   const allOutbreaks = await fetchRegionOutbreaks(region);
   if (allOutbreaks.length === 0) notFound();
 
-  const active  = allOutbreaks.filter(isDisplayActive);
-  const history = allOutbreaks.filter((o) => !isDisplayActive(o));
+  const active    = filterDisplayActive(allOutbreaks);
+  const activeIds = new Set(active.map((o) => o.id));
+  const history   = allOutbreaks.filter((o) => !activeIds.has(o.id));
 
   const totalCases  = allOutbreaks.reduce((s, o) => s + (o.cases || 0), 0);
   const totalDeaths = allOutbreaks.reduce((s, o) => s + (o.deaths || 0), 0);

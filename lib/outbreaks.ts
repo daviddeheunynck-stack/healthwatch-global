@@ -472,6 +472,34 @@ export function isDisplayActive(o: Pick<Outbreak, "active" | "source_priority" |
   return false;
 }
 
+type DisplayActiveRow = Pick<Outbreak, "active" | "source_priority" | "updated_at" | "disease_en" | "disease" | "country_en" | "country">;
+
+// Sibling-aware wrapper around isDisplayActive(): the 60-day recency fallback exists so an
+// endemic disease doesn't vanish from display when its ONLY row goes inactive before a fresh
+// bulletin arrives — it was never meant to also resurrect an older, superseded row for a
+// disease+country pair that already has a genuinely active=true representative. A routine
+// batch touch (e.g. the translation backfill) bumping updated_at on a long-closed row is
+// enough to keep it inside the 60-day window indefinitely, double-counting it on top of the
+// current figure. Found 2026-07-15: the Ebola DRC disease page summed 3 superseded case-count
+// snapshots (including one the current active row explicitly replaced) alongside the current
+// 1,963/719, inflating displayed totals by ~76%/69% — 13 such rows across 6 disease+country
+// pairs sitewide. Doesn't touch active=true rows, so it can't affect cases like avian flu/US
+// where many distinct active rows legitimately coexist (one per state) under the same key.
+export function filterDisplayActive<T extends DisplayActiveRow>(rows: T[]): T[] {
+  const activeKeys = new Set<string>();
+  for (const o of rows) {
+    if (o.active) {
+      activeKeys.add(`${(o.disease_en || o.disease || "").toLowerCase()}|${(o.country_en || o.country || "").toLowerCase()}`);
+    }
+  }
+  return rows.filter((o) => {
+    if (o.active) return true;
+    const key = `${(o.disease_en || o.disease || "").toLowerCase()}|${(o.country_en || o.country || "").toLowerCase()}`;
+    if (activeKeys.has(key)) return false;
+    return isDisplayActive(o);
+  });
+}
+
 const STALE_DAYS = 60;
 
 /**

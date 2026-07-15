@@ -9,7 +9,7 @@ import type { Metadata } from "next";
 import { slugToDisease, diseaseToSlug, allDiseases, normalizeDisease, getContagiosityLevel } from "@/lib/disease-data";
 import { countryToSlug } from "@/lib/country-utils";
 import type { PathogenType, TransmissionMode, VaccineStatus, TreatmentStatus, ContagiosityLevel } from "@/lib/disease-data";
-import { getLocalizedDisease, getLocalizedCountry, isDisplayActive } from "@/lib/outbreaks";
+import { getLocalizedDisease, getLocalizedCountry, filterDisplayActive } from "@/lib/outbreaks";
 import { getOutbreakTrendsBulkCached } from "@/lib/outbreak-trend";
 import type { Outbreak } from "@/lib/outbreaks";
 import EmailCapture from "@/components/EmailCapture";
@@ -343,8 +343,9 @@ export default async function DiseasePage({
 
   const allOutbreaks = await fetchDiseaseOutbreaks(info.name_en);
 
-  const active  = allOutbreaks.filter(isDisplayActive);
-  const history = allOutbreaks.filter((o) => !isDisplayActive(o));
+  const active    = filterDisplayActive(allOutbreaks);
+  const activeIds = new Set(active.map((o) => o.id));
+  const history   = allOutbreaks.filter((o) => !activeIds.has(o.id));
 
   // Strain-specific vaccine override: if any active outbreak is a strain not covered by the
   // listed vaccine (e.g. Bundibugyo Ebola vs Ervebo which covers Zaïre strain only), downgrade badge.

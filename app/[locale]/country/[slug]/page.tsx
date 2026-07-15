@@ -7,7 +7,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { countryToSlug, slugToCountryEn } from "@/lib/country-utils";
-import { getLocalizedDisease, getLocalizedCountry, isDisplayActive } from "@/lib/outbreaks";
+import { getLocalizedDisease, getLocalizedCountry, filterDisplayActive } from "@/lib/outbreaks";
 import { allDiseases, diseaseToSlug } from "@/lib/disease-data";
 import type { DiseaseInfo, AppRegion } from "@/lib/disease-data";
 import type { Outbreak } from "@/lib/outbreaks";
@@ -212,7 +212,7 @@ export async function generateMetadata({
   if (!countryEn) return { title: "Country not found" };
 
   const outbreaks = await getCountryOutbreaks(countryEn);
-  const active    = outbreaks.filter(isDisplayActive);
+  const active    = filterDisplayActive(outbreaks);
 
   const TITLE_TPL: Record<Locale, string> = {
     en: `${countryEn} — Disease Outbreaks`,
@@ -277,9 +277,10 @@ export default async function CountryPage({
   const countryEn = slugToCountryEn(slug, countries);
   if (!countryEn) notFound();
 
-  const outbreaks = await getCountryOutbreaks(countryEn);
-  const active    = outbreaks.filter(isDisplayActive);
-  const historical = outbreaks.filter((o) => !isDisplayActive(o));
+  const outbreaks  = await getCountryOutbreaks(countryEn);
+  const active     = filterDisplayActive(outbreaks);
+  const activeIds  = new Set(active.map((o) => o.id));
+  const historical = outbreaks.filter((o) => !activeIds.has(o.id));
 
   const trendsMap = active.length > 0
     ? new Map(Object.entries(await getOutbreakTrendsBulkCached(active.map((o) => o.id))))
