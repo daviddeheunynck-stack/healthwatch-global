@@ -282,7 +282,11 @@ export async function GET(req: NextRequest) {
     // not reportable outbreak events. Only Level 3 (Warning) is inserted without counts.
     if (cases === 0 && deaths === 0 && notice.level !== "level3") {
       if (existRow?.active) {
-        await supabase.from("outbreaks").update({ active: false }).eq("id", existRow.id);
+        // Same source_priority guard as the main update path below (line ~338) —
+        // a low-priority travel advisory shouldn't be able to deactivate a row
+        // owned by a higher-priority source just because this notice itself
+        // parsed to 0/0.
+        await supabase.from("outbreaks").update({ active: false }).eq("id", existRow.id).lte("source_priority", 5);
         log.push({ label, status: "deactivated", detail: "0/0 cases — endemic advisory" });
       } else {
         log.push({ label, status: "skip", detail: "0/0 cases — endemic advisory, not inserted" });
