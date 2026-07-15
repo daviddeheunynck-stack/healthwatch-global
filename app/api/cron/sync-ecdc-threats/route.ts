@@ -1,4 +1,4 @@
-// ECDC Epidemiological Update scraper — runs every Friday at 09:00 UTC.
+// ECDC Epidemiological Update scraper — runs daily at 09:00 UTC (see vercel.json).
 // Reads the ECDC "Epidemiological update" RSS feed (taxonomy/term/1310), fetches
 // each article page for case numbers and country mentions, and upserts to outbreaks.
 // Replaces the old Threat Assessment Brief HTML scraper (that URL is now 404).
@@ -61,6 +61,50 @@ function extractECDCBody(html: string): string {
   if (idx < 0) return html;
   const tagEnd = html.indexOf(">", idx) + 1;
   return html.slice(tagEnd, tagEnd + 8000);
+}
+
+// ECDC "living" topic pages (e.g. the Ebola DRC/Uganda page) are rewritten in
+// place as new data arrives — the RSS <pubDate> for such an item is when the
+// page was first published, not the age of the figures currently on it (seen
+// 2026-07-15: pubDate stuck at 6 July while the page's own text reported
+// "data up until 12 July"). Prefer the page's own as-of statement when
+// present; falls back to the RSS pubDate for one-off dated articles that
+// don't carry this phrasing.
+const MONTHS: Record<string, number> = {
+  january: 0, february: 1, march: 2, april: 3, may: 4, june: 5,
+  july: 6, august: 7, september: 8, october: 9, november: 10, december: 11,
+};
+
+function extractAsOfDate(text: string, fallback: string, today: string): string {
+  const m =
+    text.match(/data\s+up\s+until\s+(\d{1,2})\s+(\w+)(?:\s+(\d{4}))?/i) ??
+    text.match(/(?:as\s+of|last\s+updated)\s+(\d{1,2})\s+(\w+)(?:\s+(\d{4}))?/i);
+  if (!m) return fallback;
+
+  const day   = parseInt(m[1], 10);
+  const month = MONTHS[m[2].toLowerCase()];
+  if (month === undefined) return fallback;
+
+  // No explicit year in the text — anchor on the current year (far more
+  // reliable than the RSS pubDate's year, which can be stale by months on a
+  // "living" page). If that guess lands in the future, the article is
+  // describing a date from the previous year (e.g. "as of 31 December" read
+  // in early January).
+  let year = m[3] ? parseInt(m[3], 10) : parseInt(today.substring(0, 4), 10);
+  let d = new Date(Date.UTC(year, month, day));
+  if (!m[3] && d.toISOString().substring(0, 10) > today) {
+    year -= 1;
+    d = new Date(Date.UTC(year, month, day));
+  }
+  if (isNaN(d.getTime())) return fallback;
+
+  const iso = d.toISOString().substring(0, 10);
+  // Sanity bounds: this phrasing only appears on "living" pages describing
+  // their own current data, not historical retrospectives — never in the
+  // future, and not implausibly old (a misparsed unrelated number).
+  if (iso > today) return fallback;
+  if ((Date.parse(today) - Date.parse(iso)) / 86_400_000 > 120) return fallback;
+  return iso;
 }
 
 // Detect if a disease term maps to a known entry in our disease map
@@ -179,7 +223,7 @@ interface BriefData {
   admin1_lng:  number | null;
 }
 
-async function extractItemData(item: RSSItem, dbg?: { reason?: string }): Promise<BriefData[]> {
+async function extractItemData(item: RSSItem, today: string, dbg?: { reason?: string }): Promise<BriefData[]> {
   const titleCore = extractECDCDisease(item.title);
   if (!titleCore || !isKnownDisease(titleCore)) {
     if (dbg) dbg.reason = `unknown disease: titleCore="${titleCore}"`;
@@ -195,6 +239,10 @@ async function extractItemData(item: RSSItem, dbg?: { reason?: string }): Promis
   } catch (e) {
     console.warn("[ecdc] fetch article:", errorMessage(e));
   }
+
+  // Prefer the page's own as-of statement over the RSS pubDate — see
+  // extractAsOfDate() for why (ECDC "living" topic pages).
+  const asOfDate = extractAsOfDate(articleText, item.date, today);
 
   // Combine RSS description + article intro for extraction.
   // Use 8 000 chars — ECDC "worldwide overview" pages have heavy nav before the article body.
@@ -310,7 +358,7 @@ async function extractItemData(item: RSSItem, dbg?: { reason?: string }): Promis
       deaths,
       source:      item.url,
       description: descBase,
-      date:        item.date,
+      date:        asOfDate,
       admin1,
       admin1_lat,
       admin1_lng,
@@ -400,7 +448,7 @@ export async function GET(req: NextRequest) {
     let briefItems: BriefData[] = [];
     const dbg: { reason?: string } = {};
     try {
-      briefItems = await extractItemData(entry, dbg);
+      briefItems = await extractItemData(entry, today, dbg);
     } catch (e) {
       log.push({ label: entry.title, status: "error", detail: errorMessage(e) });
       Sentry.captureException(e, { tags: { cron: "sync-ecdc-threats" } });
@@ -493,6 +541,19 @@ export async function GET(req: NextRequest) {
         // Spike guard: >3× jump is almost certainly a parsing anomaly.
         if (item.cases > 0 && existing.cases > 0 && item.cases > existing.cases * 3) {
           log.push({ label, status: "skip", detail: `spike: ${item.cases} vs existing ${existing.cases} (>3×)` });
+          results.skipped++;
+          continue;
+        }
+
+        // Cumulative-deaths guard: a running death toll in an ongoing
+        // outbreak never decreases. A drop is almost always a parsing
+        // anomaly — e.g. grabbing a daily increment instead of the running
+        // total (found 2026-07-15 on ECDC's Ebola DRC page: 719 cumulative
+        // vs 10 same-day increment, see extractNumbers' pairedPattern) —
+        // rather than a real downward revision, which is rare enough to
+        // apply by hand instead of risking a silent overwrite.
+        if (item.deaths > 0 && existing.deaths > 0 && item.deaths < existing.deaths) {
+          log.push({ label, status: "skip", detail: `deaths decreased: ${item.deaths} vs existing ${existing.deaths} — refusing to overwrite` });
           results.skipped++;
           continue;
         }

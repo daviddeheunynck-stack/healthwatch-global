@@ -189,9 +189,31 @@ export function extractNumbers(text: string): { cases: number; deaths: number; r
     /(\d[\d,]*)\s+notified\b/i,
   ];
 
+  // Qualifier words that can appear between a number and "deaths" — e.g. ECDC's
+  // "including 719 related deaths". Without this, that count fails to match
+  // (the base pattern requires the number directly adjacent to "deaths") and
+  // the scan falls through to a later, unrelated "deaths" mention elsewhere
+  // in the same page — e.g. an ECDC "living" topic page's day-over-day delta
+  // sentence ("an increase of 31 new confirmed cases and 10 deaths since the
+  // previous report"), silently swapping the cumulative total for a daily
+  // increment. Found 2026-07-15 (Ebola DRC: read 10 deaths instead of 719).
+  const DEATH_QUALIFIERS = "(?:(?:related|associated|confirmed|reported|probable|suspected|additional)\\s+)*";
+
+  // "total of N ... cases, with/including M ... deaths" — anchors deaths to
+  // the same cumulative sentence as cases, rather than scanning the whole
+  // text for the first bare "N deaths" match. This is what actually fixes
+  // the bug above for cases like ECDC's phrasing, where the cumulative
+  // deaths figure is qualified ("related deaths") but a later, unqualified,
+  // unrelated death count also appears in the page.
+  const pairedPattern = new RegExp(
+    `total\\s+of\\s+(\\d[\\d,]*)\\s+${QUALIFIERS}cases?,?\\s+(?:with|including)\\s+(${NUM})\\s+${DEATH_QUALIFIERS}deaths?`,
+    "i"
+  );
+
   const deathPatterns = [
     // "176 deaths [among ...]" — also matches word-form ("including two deaths")
-    new RegExp(`(${NUM})\\s+deaths?\\b`, "i"),
+    // and an intercalated qualifier ("719 related deaths").
+    new RegExp(`(${NUM})\\s+${DEATH_QUALIFIERS}deaths?\\b`, "i"),
     // "X people have died" / "X died"
     /(\d[\d,]*)\s+(?:people\s+)?(?:have\s+)?died/i,
     // "X fatalities"
@@ -221,15 +243,21 @@ export function extractNumbers(text: string): { cases: number; deaths: number; r
   ];
 
   let cases = 0;
-  for (const p of casePatterns) {
-    const m = clean.match(p);
-    if (m) { cases = parseCount(m[1]); break; }
-  }
-
   let deaths = 0;
-  for (const p of deathPatterns) {
-    const m = clean.match(p);
-    if (m) { deaths = parseCount(m[1]); break; }
+
+  const paired = clean.match(pairedPattern);
+  if (paired) {
+    cases  = parseCount(paired[1]);
+    deaths = parseCount(paired[2]);
+  } else {
+    for (const p of casePatterns) {
+      const m = clean.match(p);
+      if (m) { cases = parseCount(m[1]); break; }
+    }
+    for (const p of deathPatterns) {
+      const m = clean.match(p);
+      if (m) { deaths = parseCount(m[1]); break; }
+    }
   }
 
   let recovered = 0;
@@ -260,6 +288,9 @@ export function extractNumbersForCountry(
 ): { cases: number; deaths: number; recovered: number } | null {
   const clean = text.replace(/\n/g, " ");
   const QUALIFIERS = "(?:(?:suspected|probable|confirmed|laboratory[- ]confirmed|human|new|reported|additional)\\s+(?:and\\s+)?)*";
+  // See extractNumbers() for why this exists — allows an intercalated
+  // qualifier between a death count and "deaths" (e.g. "719 related deaths").
+  const DEATH_QUALIFIERS = "(?:(?:related|associated|confirmed|reported|probable|suspected|additional)\\s+)*";
   const aliasPattern = new RegExp(countryAliases.map(escapeRegExp).join("|"), "i");
   const WINDOW = 200;
 
@@ -275,7 +306,7 @@ export function extractNumbersForCountry(
   // deaths") — small satellite-country figures are often spelled out even
   // when the cases half of the same sentence is digit-form.
   const pairPattern = new RegExp(
-    `total\\s+of\\s+(\\d[\\d,]*)\\s+${QUALIFIERS}cases?,?\\s+(?:with|including)\\s+(${NUM})\\s+deaths?`,
+    `total\\s+of\\s+(\\d[\\d,]*)\\s+${QUALIFIERS}cases?,?\\s+(?:with|including)\\s+(${NUM})\\s+${DEATH_QUALIFIERS}deaths?`,
     "gi"
   );
   for (const m of clean.matchAll(pairPattern)) {
@@ -294,7 +325,7 @@ export function extractNumbersForCountry(
   // cases including two deaths" has no "total of" anchor for Tier 1 to
   // match, so this tier is what actually resolves Uganda's figures.
   const casePattern = new RegExp(`(${NUM})\\s+${QUALIFIERS}cases?`, "gi");
-  const deathPattern = new RegExp(`(${NUM})\\s+deaths?\\b`, "gi");
+  const deathPattern = new RegExp(`(${NUM})\\s+${DEATH_QUALIFIERS}deaths?\\b`, "gi");
 
   let cases: number | null = null;
   for (const m of clean.matchAll(casePattern)) {
