@@ -142,7 +142,10 @@ const NUMBER_WORDS: Record<string, number> = {
   sixteen: 16, seventeen: 17, eighteen: 18, nineteen: 19, twenty: 20,
 };
 const NUM_WORD_ALT = Object.keys(NUMBER_WORDS).join("|");
-const NUM = `(?:\\d[\\d,]*|${NUM_WORD_ALT})`;
+// \b around the word-form branch: without it, a number word embedded inside a
+// longer word matches (e.g. "Sierra Leone" ends in "one" -> cases/deaths = 1,
+// "often deaths" -> deaths = 10). Found 2026-07-15 security audit.
+const NUM = `(?:\\d[\\d,]*|\\b(?:${NUM_WORD_ALT})\\b)`;
 
 function parseCount(raw: string): number {
   const digits = raw.replace(/,/g, "");
