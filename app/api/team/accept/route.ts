@@ -127,10 +127,16 @@ export async function GET(req: NextRequest) {
     .single();
   const priorPlan = currentProfile?.plan ?? "free";
   const shouldUpgradePlan = !["team", "enterprise"].includes(priorPlan);
-  if (shouldUpgradePlan) {
-    await service.from("profiles").update({ plan: "team", team_id: team.id, pre_team_plan: priorPlan }).eq("id", user.id);
-  } else {
-    await service.from("profiles").update({ team_id: team.id }).eq("id", user.id);
+  const { error: planErr } = shouldUpgradePlan
+    ? await service.from("profiles").update({ plan: "team", team_id: team.id, pre_team_plan: priorPlan }).eq("id", user.id)
+    : await service.from("profiles").update({ team_id: team.id }).eq("id", user.id);
+
+  if (planErr) {
+    // Membership row above is already committed, so don't tell the user this failed —
+    // but surface it: if pre_team_plan isn't a real column yet (migration not applied),
+    // this update rejects entirely and the invitee silently keeps team_id unset.
+    console.error("[team/accept] plan update:", planErr);
+    Sentry.captureException(new Error(`[team/accept] plan update: ${planErr.message}`), { tags: { route: "team-accept" } });
   }
 
   // Mark invite accepted
