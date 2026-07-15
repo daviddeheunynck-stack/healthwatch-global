@@ -117,16 +117,22 @@ export async function DELETE(req: NextRequest) {
     return NextResponse.json({ error: "Failed to remove member" }, { status: 500 });
   }
 
-  // Reset removed member's plan — preserve if they have an active individual Stripe subscription
+  // Reset removed member's plan — preserve if they have an active individual Stripe
+  // subscription. removedProfile.plan reads "team" here (team/accept overwrote it on
+  // join), so it can't be used as the restore target for a paying individual plan —
+  // pre_team_plan holds the value from before that overwrite. Falls back to the old
+  // (buggy) behavior only for rows predating this column.
   const { data: removedProfile } = await service
     .from("profiles")
-    .select("plan, stripe_subscription_id")
+    .select("plan, pre_team_plan, stripe_subscription_id")
     .eq("id", body.userId)
     .single();
-  const restoredPlan = removedProfile?.stripe_subscription_id ? removedProfile.plan : "free";
+  const restoredPlan = removedProfile?.stripe_subscription_id
+    ? (removedProfile.pre_team_plan ?? removedProfile.plan)
+    : "free";
   await service
     .from("profiles")
-    .update({ plan: restoredPlan, team_id: null })
+    .update({ plan: restoredPlan, team_id: null, pre_team_plan: null })
     .eq("id", body.userId);
 
   return NextResponse.json({ ok: true });

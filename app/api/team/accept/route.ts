@@ -116,15 +116,19 @@ export async function GET(req: NextRequest) {
     return NextResponse.redirect(`${BASE_URL}/${locale}/account/team?error=server_error`);
   }
 
-  // Upgrade invitee to team plan — preserve higher plans (enterprise) unchanged
+  // Upgrade invitee to team plan — preserve higher plans (enterprise) unchanged.
+  // pre_team_plan records what to restore on removal (see team/members DELETE) —
+  // without it, a paying individual plan (e.g. "pro") gets overwritten here and
+  // is unrecoverable later, since by then profiles.plan already reads "team".
   const { data: currentProfile } = await service
     .from("profiles")
     .select("plan")
     .eq("id", user.id)
     .single();
-  const shouldUpgradePlan = !["team", "enterprise"].includes(currentProfile?.plan ?? "free");
+  const priorPlan = currentProfile?.plan ?? "free";
+  const shouldUpgradePlan = !["team", "enterprise"].includes(priorPlan);
   if (shouldUpgradePlan) {
-    await service.from("profiles").update({ plan: "team", team_id: team.id }).eq("id", user.id);
+    await service.from("profiles").update({ plan: "team", team_id: team.id, pre_team_plan: priorPlan }).eq("id", user.id);
   } else {
     await service.from("profiles").update({ team_id: team.id }).eq("id", user.id);
   }
