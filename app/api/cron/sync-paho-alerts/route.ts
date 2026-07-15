@@ -1,23 +1,39 @@
-// PAHO Epidemiological Alerts scraper — runs every Tuesday at 09:30 UTC.
-// Fetches recent epidemiological alerts and updates from PAHO (Pan American
-// Health Organization), extracts disease / country / cases from alert pages,
-// and upserts to outbreaks. Covers Americas-specific threats not systematically
+// PAHO scraper — runs every Tuesday at 09:30 UTC. Two independent sources:
+//
+//   1. Epidemiological alerts and updates (/en/epidemiological-alerts-and-updates)
+//   2. Measles situation reports (/en/situation-reports)
+//
+// Both feed outbreaks. Covers Americas-specific threats not systematically
 // captured by WHO DON or ReliefWeb.
-// Never overwrites rows owned by the WHO DON daily sync.
+//
+// The two listings share no links: an alert is never republished as a sitrep and
+// vice versa. Scraping only the alerts page (the behaviour until 2026-07-15)
+// meant no PAHO situation report was ever ingested, so the Americas measles
+// picture was limited to the countries that happen to get their own alert —
+// Guatemala (the region's heaviest death toll) and Peru (its only accelerating
+// outbreak) appear ONLY in the sitrep table and were absent from the DB
+// entirely, while Mexico silently froze on the 29 May alert between sitreps.
+//
+// Alert rows never overwrite rows owned by the WHO DON daily sync; sitrep rows
+// may, but only when the sitrep is at least as recent (see upsertItems).
 
 import { NextRequest, NextResponse } from "next/server";
 import * as Sentry from "@sentry/nextjs";
 import { logCronRun } from "@/lib/cron-monitor";
-import { createClient } from "@supabase/supabase-js";
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { normalizeDisease } from "@/lib/disease-data";
-import { COUNTRIES, findCountry } from "@/lib/geo-data";
+import { COUNTRIES, findCountry, isAggregateCountry } from "@/lib/geo-data";
 import { extractNumbers, assessRisk } from "@/lib/outbreak-parser";
 import { extractAdmin1, geocodeAdmin1 } from "@/lib/geo-extract";
 import { errorMessage } from "@/lib/error";
 import { translateDescription } from "@/lib/translate";
 
-export const dynamic     = "force-dynamic";
-export const maxDuration = 60;
+export const dynamic = "force-dynamic";
+// Alerts + a 14-page sitrep PDF, then up to 6 countries × (4 translation calls
+// + Haiku admin1 extraction + rate-limited geocoding). The 60s this route used
+// to declare no longer covers that, and the route's own export beats the 300
+// in vercel.json — a stale value here is a 504, not a fallback.
+export const maxDuration = 300;
 
 const BOM   = String.fromCharCode(65279);
 const clean = (v: string | undefined) => (v ?? "").replace(new RegExp("^" + BOM), "").trim();
@@ -26,9 +42,13 @@ const SUPABASE_URL         = clean(process.env.NEXT_PUBLIC_SUPABASE_URL);
 const SUPABASE_SERVICE_KEY = clean(process.env.SUPABASE_SERVICE_ROLE_KEY);
 const CRON_SECRET          = clean(process.env.CRON_SECRET);
 
-const PAHO_BASE      = "https://www.paho.org";
-const PAHO_ALERT_URL = "https://www.paho.org/en/epidemiological-alerts-and-updates";
-const MAX_AGE_DAYS   = 45;
+const PAHO_BASE       = "https://www.paho.org";
+const PAHO_ALERT_URL  = "https://www.paho.org/en/epidemiological-alerts-and-updates";
+const PAHO_SITREP_URL = "https://www.paho.org/en/situation-reports";
+const MAX_AGE_DAYS    = 45;
+// Sitreps run fortnightly. 90 days tolerates a few skipped editions while still
+// refusing to resurrect a long-abandoned report as if it were current.
+const SITREP_MAX_AGE_DAYS = 90;
 
 const FETCH_HEADERS = {
   "User-Agent":      "HealthWatch-Global/1.0 (health surveillance; contact@healthwatch-global.com)",
@@ -177,6 +197,206 @@ function extractCountryFigures(text: string): CountryFigure[] {
   return results.sort((a, b) => b.cases - a.cases);
 }
 
+// ── Measles situation reports ─────────────────────────────────────────────────
+// The fortnightly "Situation Report: Measles in the Americas Region" carries a
+// per-country table (cases, deaths, trend, classification, notes) plus a
+// model-based Rt table. It is the only place PAHO publishes figures for
+// countries that never get their own alert, so it — not the alerts page — is
+// what keeps the regional measles picture complete and current.
+
+// Same as AMERICAS_COUNTRIES but without the aggregate pseudo-entries ("Region
+// of the Americas" → "Americas (regional)"). A sitrep is a regional document
+// whose every page reads "Measles in the Americas Region", so leaving the
+// aggregate in would invite a phantom region-wide row that no table row backs.
+const AMERICAS_SITREP_KEYS = Object.entries(COUNTRIES)
+  .filter(([, geo]) => geo.region === "americas" && !isAggregateCountry(geo))
+  .map(([key]) => key)
+  .sort((a, b) => b.length - a.length);
+
+// Anchor on the heading TEXT, never the table number: the cases table is
+// Table 2 in sitreps #3–#4 and Table 3 from #5 on, and "Table 3." also occurs
+// mid-sentence in #4's prose. The heading also carries the "as of EW N" that
+// dates the figures.
+const SITREP_CASES_HEAD = /Table\s*\d+\s*\.\s*Measles\s+cases\s+in\s+the\s+Region\s+of\s+the\s+Americas\s+by\s+country\s*,?\s*as\s+of\s+EW\s*(\d+)\s*,?\s*(\d{4})/i;
+const SITREP_RT_HEAD    = /Table\s*\d+\s*\.\s*Model-?based\s+estimates/i;
+const SITREP_BLOCK_END  = [/Table\s*\d+\s*\.\s*Model-?based/i, /\*\s*Countries\s+with\s+active\s+outbreaks/i];
+
+// The classification column has a closed vocabulary, which makes it a reliable
+// separator between the trend cell and the free-text notes cell.
+const SITREP_CLASSIFICATION = /(Sustained\s+elimination(?:\s+with\s+major\s+concerns)?|Endemic)/i;
+const SITREP_TREND_WORD     = /^(declining|increasing|stabilizing|plateau|stable)$/i;
+
+// Page furniture and footnotes that trail a country's notes cell once the table
+// is linearized into a single text run.
+const SITREP_NOTE_CUT = [
+  /PAHO\/WHO\s+Regional\s+Situation\s+Report/i,
+  /www\.paho\.org/i,
+  /Trends\s+in\s+\w+\s+should\s+be\s+interpreted/i,
+  /Probable\s+case\s+definition/i,
+  /Other\s*\(/i,
+  /Country\s+Cases\s+\d{4}/i,
+  /\*\s*Countries\s+with\s+active\s+outbreaks/i,
+];
+
+function tidyCell(s: string): string {
+  return s
+    .replace(/\s+/g, " ")
+    .replace(/([a-z])-\s+([a-z])/g, "$1-$2")   // rejoin PDF line-break hyphenation
+    .replace(/([.)])\s*\d{1,2}\s*$/, "$1")     // drop a trailing footnote marker
+    .replace(/^[\s—–\-↓↑~≈*.,;]+/, "")
+    .replace(/\s+([.,])/g, "$1")
+    .trim();
+}
+
+interface SitrepCells { trend: string; classification: string; notes: string }
+
+function splitSitrepCells(raw: string): SitrepCells {
+  let s = raw;
+  for (const re of SITREP_NOTE_CUT) {
+    const m = re.exec(s);
+    if (m) s = s.slice(0, m.index);
+  }
+  const c = SITREP_CLASSIFICATION.exec(s);
+  if (!c) return { trend: "", classification: "", notes: tidyCell(s) };
+  return {
+    trend:          tidyCell(s.slice(0, c.index)),
+    classification: tidyCell(c[0]).replace(/\s+/g, " "),
+    notes:          tidyCell(s.slice(c.index + c[0].length)),
+  };
+}
+
+// PAHO/WHO epidemiological weeks run Sunday–Saturday, with EW 1 the week
+// containing 4 January. The table reports "as of EW N", so the figures date to
+// that week's Saturday — NOT the report's publication date, which lags by
+// several days and would overstate freshness against other sources.
+// Verified: EW 25 2026 → 2026-06-27, matching the figures PAHO labels EW 25.
+function epiWeekEndDate(year: number, ew: number): string {
+  const jan4     = new Date(Date.UTC(year, 0, 4));
+  const firstSat = new Date(jan4);
+  firstSat.setUTCDate(jan4.getUTCDate() + (6 - jan4.getUTCDay()));
+  const end = new Date(firstSat);
+  end.setUTCDate(firstSat.getUTCDate() + (ew - 1) * 7);
+  return end.toISOString().substring(0, 10);
+}
+
+interface SitrepRow extends SitrepCells {
+  country: string;
+  active:  boolean;  // PAHO's own "*" = outbreak running 12+ weeks
+  cases:   number;
+  deaths:  number;
+  at:      number;
+  endAt:   number;
+}
+
+interface SitrepTable { ew: number; year: number; date: string; rows: SitrepRow[] }
+
+function parseSitrepCases(text: string): SitrepTable | null {
+  const h = SITREP_CASES_HEAD.exec(text);
+  if (!h) return null;
+
+  const start = h.index + h[0].length;
+  let end = text.length;
+  for (const re of SITREP_BLOCK_END) {
+    const m = re.exec(text.slice(start));
+    if (m) end = Math.min(end, start + m.index);
+  }
+  const block = text.slice(start, end).replace(/\s+/g, " ");
+
+  const rows: SitrepRow[] = [];
+  const seen = new Set<string>();
+  for (const name of AMERICAS_SITREP_KEYS) {
+    const geo = COUNTRIES[name];
+    if (!geo || seen.has(geo.name_en)) continue;
+    // "Mexico* 11,820 16" — name, optional active marker, optional footnote
+    // marker, cases, deaths. The footnote group is optional-and-greedy: it only
+    // survives when three numbers follow, so a plain "Costa Rica 5 0" still
+    // backtracks to cases=5/deaths=0 rather than eating the 5 as a marker.
+    const re = new RegExp(
+      escapeRegExp(name).replace(/\s+/g, "\\s+") + "\\s*(\\*?)\\s*(?:\\d{1,2}\\s+)?([\\d,]+)\\s+(\\d+)(?![\\d,])",
+      "i",
+    );
+    const m = re.exec(block);
+    if (!m) continue;
+    const cases = parseInt(m[2].replace(/,/g, ""), 10);
+    if (isNaN(cases)) continue;
+    rows.push({
+      country: name, active: m[1] === "*", cases, deaths: parseInt(m[3], 10),
+      at: m.index, endAt: m.index + m[0].length,
+      trend: "", classification: "", notes: "",
+    });
+    seen.add(geo.name_en);
+  }
+
+  rows.sort((a, b) => a.at - b.at);
+  // A country's cells run from its own match to the next country's match.
+  for (let i = 0; i < rows.length; i++) {
+    const slice = block.slice(rows[i].endAt, i + 1 < rows.length ? rows[i + 1].at : undefined);
+    Object.assign(rows[i], splitSitrepCells(slice.slice(0, 450)));
+  }
+  return { ew: parseInt(h[1], 10), year: parseInt(h[2], 10), date: epiWeekEndDate(+h[2], +h[1]), rows };
+}
+
+interface RtEstimate { rt: string; lo: string; hi: string; trend: string }
+
+function parseSitrepRt(text: string): Map<string, RtEstimate> {
+  const out = new Map<string, RtEstimate>();
+  const h = SITREP_RT_HEAD.exec(text);
+  if (!h) return out;
+  const block = text.slice(h.index).replace(/\s+/g, " ");
+  for (const name of AMERICAS_SITREP_KEYS) {
+    // "Peru 6 1.35 [1.23 – 1.47] ↑ increasing" — the optional digit is a
+    // footnote marker (present on Peru in sitrep #5); Rt always carries a
+    // decimal point, so the two can't be confused.
+    const re = new RegExp(
+      escapeRegExp(name).replace(/\s+/g, "\\s+") +
+        "\\s*(?:\\d{1,2}\\s+)?(\\d\\.\\d{1,2})\\s*\\[\\s*(\\d\\.\\d{1,2})\\s*[–\\-]\\s*(\\d\\.\\d{1,2})\\s*\\]\\s*[↑↓~≈]?\\s*(increasing|declining|stabilizing)?",
+      "i",
+    );
+    const m = re.exec(block);
+    if (m) out.set(name, { rt: m[1], lo: m[2], hi: m[3], trend: (m[4] ?? "").toLowerCase() });
+  }
+  return out;
+}
+
+// MyMemory refuses any query over 500 characters — it answers HTTP 200 with an
+// in-body 403, which translateDescription correctly discards, leaving
+// description_fr/es/ar/id NULL. A 600-char description therefore ships
+// untranslated in all four locales: the very drift this cron is meant to own.
+// Cut to the last sentence that fits instead.
+const SITREP_DESC_MAX = 490;
+
+function fitForTranslation(s: string): string {
+  if (s.length <= SITREP_DESC_MAX) return s;
+  const cut  = s.slice(0, SITREP_DESC_MAX);
+  const stop = cut.lastIndexOf(". ");
+  if (stop > 200) return cut.slice(0, stop + 1);
+  const space = cut.lastIndexOf(" ");
+  return (space > 200 ? cut.slice(0, space) : cut).trim() + "…";
+}
+
+function buildSitrepDescription(num: number, t: SitrepTable, row: SitrepRow, rt: RtEstimate | undefined): string {
+  const parts = [
+    // "EW 25" spelled out: MyMemory reorders the bare abbreviation into
+    // "25 EW 2026" in French.
+    `PAHO Situation Report #${num}: Measles in the Americas Region (data as of epidemiological week ${t.ew}, ${t.year}).`,
+    `${row.country}: ${row.cases.toLocaleString("en-US")} cases, ${row.deaths} deaths.`,
+  ];
+  if (row.classification) parts.push(`PAHO classification: ${row.classification}.`);
+  const isTrend = SITREP_TREND_WORD.test(row.trend);
+  if (isTrend) parts.push(`Observed 4-week trend: ${row.trend.toLowerCase()}.`);
+  // Keep the observed trend and the model estimate explicitly attributed: they
+  // legitimately disagree (Peru, sitrep #6: observed counts declining, Rt 1.35
+  // increasing once nowcasting corrects for reporting delay). Stating them
+  // unlabelled and side by side would read as a contradiction.
+  if (rt) parts.push(`Model-based Rt ${rt.rt} (95% CrI ${rt.lo}–${rt.hi})${rt.trend ? `, ${rt.trend}` : ""}.`);
+  // A trend cell that isn't one of the standard words is descriptive prose
+  // (Bolivia's "drop by drop transmission", Guatemala's lab-confirmed-only
+  // caveat) — keep it with the notes rather than labelling it a trend.
+  const tail = [isTrend ? "" : row.trend, row.notes].filter(Boolean).join(". ");
+  if (tail) parts.push(tail.replace(/\.\s*\./g, "."));
+  return fitForTranslation(parts.join(" ").trim());
+}
+
 // ── Listing page parser ───────────────────────────────────────────────────────
 
 interface AlertEntry {
@@ -228,6 +448,9 @@ interface AlertData {
   admin1:      string | null;
   admin1_lat:  number | null;
   admin1_lng:  number | null;
+  // Set for rows built from a situation report's per-country table. These get
+  // two rules the one-off alert pages don't earn — see upsertItems().
+  fromSitrep?: boolean;
 }
 
 async function extractAlertData(entry: AlertEntry): Promise<AlertData[]> {
@@ -360,6 +583,358 @@ async function extractAlertData(entry: AlertEntry): Promise<AlertData[]> {
   return results;
 }
 
+// ── Shared upsert ─────────────────────────────────────────────────────────────
+
+type LogEntry = { label: string; status: string; detail?: string };
+
+interface SyncResults {
+  alerts: number; sitrepRows: number;
+  inserted: number; updated: number; skipped: number; errors: number;
+}
+
+interface ExistingRow {
+  id: string;
+  disease_en: string | null;
+  country_en: string | null;
+  cases: number;
+  deaths: number;
+  date: string;
+  source: string | null;
+  active: boolean;
+}
+
+const WHO_DON_SOURCE = "who.int/emergencies/disease-outbreak-news";
+
+const dcKey = (disease: string | null, country: string | null) =>
+  `${(disease ?? "").toLowerCase()}|${(country ?? "").toLowerCase()}`;
+
+function indexRow(byDC: Map<string, ExistingRow>, row: ExistingRow): void {
+  const k    = dcKey(row.disease_en, row.country_en);
+  const prev = byDC.get(k);
+  if (!prev || (row.active && !prev.active)) byDC.set(k, row);
+}
+
+// The dedup snapshot in GET loads active rows plus anything dated within 90
+// days. A row that fell inactive BEFORE that window is invisible to it, and an
+// unseen row is upserted as an insert — a duplicate, not an update. Canada's
+// measles row is exactly that: inactive and frozen at 2026-03-01, so the first
+// sitrep run created a second Canada row alongside the stale one. Look the
+// targeted rows up explicitly before writing them.
+async function loadExistingForItems(
+  supabase: SupabaseClient,
+  byDC: Map<string, ExistingRow>,
+  items: AlertData[],
+): Promise<void> {
+  const missing = items.filter((i) => !byDC.has(dcKey(i.disease_en, i.country_en)));
+  if (missing.length === 0) return;
+
+  const { data, error } = await supabase
+    .from("outbreaks")
+    .select("id, disease_en, country_en, cases, deaths, date, source, active")
+    .in("disease_en",  [...new Set(missing.map((i) => i.disease_en))])
+    .in("country_en", [...new Set(missing.map((i) => i.country_en))]);
+
+  if (error) {
+    console.warn("[paho] dedup lookup:", error.message);
+    return;
+  }
+  for (const row of (data ?? []) as ExistingRow[]) indexRow(byDC, row);
+}
+
+async function upsertItems(
+  supabase: SupabaseClient,
+  byDC: Map<string, ExistingRow>,
+  items: AlertData[],
+  today: string,
+  results: SyncResults,
+  log: LogEntry[],
+): Promise<void> {
+  for (const item of items) {
+    const label = `${item.disease_en}/${item.country_en}`;
+
+    if (item.date > today) {
+      log.push({ label, status: "skip", detail: `future date: ${item.date}` });
+      results.skipped++;
+      continue;
+    }
+
+    // Skip 0/0 entries — routine surveillance bulletins (e.g. flu positivity-rate
+    // updates) report percentages, not case counts, and would otherwise insert an
+    // empty "outbreak" row. Same guard as sync-africa-cdc.
+    if (item.cases === 0 && item.deaths === 0) {
+      log.push({ label, status: "skip", detail: "0 cases and 0 deaths — likely a surveillance bulletin without a countable figure" });
+      results.skipped++;
+      continue;
+    }
+
+    const geo = findCountry(item.country_en);
+    if (!geo) {
+      log.push({ label, status: "skip", detail: "country not in geo-data" });
+      results.skipped++;
+      continue;
+    }
+
+    const existing = byDC.get(dcKey(item.disease_en, item.country_en));
+
+    // A sitrep must never move a row backwards in time. The US measles row is
+    // the live case: CDC data at 2,231 (9 July) against the sitrep's 2,134
+    // (EW 25, 27 June) — both correct for their own cut-off, but writing the
+    // sitrep's would silently downgrade a fresher figure. Whichever source is
+    // most recent wins; from sitrep #7 on the sitrep leads and takes the row
+    // over, which is what makes it self-maintaining instead of hand-patched.
+    if (item.fromSitrep && existing && item.date < existing.date) {
+      log.push({ label, status: "skip", detail: `sitrep ${item.date} older than existing row ${existing.date} — keeping fresher source` });
+      results.skipped++;
+      continue;
+    }
+
+    // Alert pages never take a row off the WHO DON sync. A sitrep may, but only
+    // when it's at least as recent: the fortnightly regional table is the
+    // authority on Americas measles, and Canada was pinned at a stale DON
+    // (6,332 cumulative since the 2024 outbreak, frozen at 1 March) while PAHO
+    // reported 1,079 for 2026 — the same year-to-date basis every sibling row
+    // uses. Once written at priority 5, sync-outbreaks (priority 3) can't
+    // revert it, so ownership transfers cleanly rather than ping-ponging.
+    if (existing?.source?.includes(WHO_DON_SOURCE) && !item.fromSitrep) {
+      log.push({ label, status: "skip", detail: "owned by WHO DON sync" });
+      results.skipped++;
+      continue;
+    }
+
+    const diseaseInfo = normalizeDisease(item.disease_en);
+    const riskLevel   = assessRisk(item.disease_en, item.description, item.cases, item.deaths);
+
+    if (existing) {
+      const isNewer    = item.date > existing.date;
+      const casesDiff  = item.cases  !== existing.cases;
+      const deathsDiff = item.deaths !== existing.deaths;
+
+      if (!isNewer && !casesDiff && !deathsDiff) {
+        log.push({ label, status: "skip", detail: "data unchanged" });
+        results.skipped++;
+        continue;
+      }
+
+      // Re-translate inline on update too — same reasoning as the insert
+      // branch below: this cron owns its own localization, and an English
+      // description update without a matching FR/ES/AR/ID refresh leaves
+      // those columns frozen on the old figures forever (no other cron
+      // revisits a non-NULL description_fr).
+      const t = await translateDescription(item.description);
+      const updatePayload: Record<string, unknown> = {
+        cases:           item.cases,
+        deaths:          item.deaths,
+        date:            item.date,
+        source:          item.source,
+        description:     item.description,
+        risk_level:      riskLevel,
+        active:          true,
+        source_priority: 5,
+      };
+      // Only overwrite a locale column when the translation actually
+      // succeeded — MyMemory returns null on failure/echo, and writing
+      // that would blank out a still-valid prior translation.
+      if (t.fr) updatePayload.description_fr = t.fr;
+      if (t.es) updatePayload.description_es = t.es;
+      if (t.ar) updatePayload.description_ar = t.ar;
+      if (t.id) updatePayload.description_id = t.id;
+      if (item.admin1) {
+        updatePayload.admin1     = item.admin1;
+        updatePayload.admin1_lat = item.admin1_lat;
+        updatePayload.admin1_lng = item.admin1_lng;
+      }
+
+      const { error } = await supabase
+        .from("outbreaks")
+        .update(updatePayload)
+        .eq("id", existing.id)
+        .lte("source_priority", 5);
+
+      if (error) {
+        log.push({ label, status: "error", detail: error.message });
+        results.errors++;
+      } else {
+        log.push({ label, status: "updated", detail: `${existing.cases}/${existing.deaths} → ${item.cases} cases / ${item.deaths} deaths (${item.date})` });
+        results.updated++;
+      }
+    } else {
+      // Translate inline so this cron owns its own localization rather than
+      // relying on sync-outbreaks' unrelated backfill sweep to catch it later.
+      const t = await translateDescription(item.description);
+
+      const { error } = await supabase.from("outbreaks").insert({
+        disease:     diseaseInfo.name_fr,
+        disease_en:  diseaseInfo.name_en,
+        disease_ar:  diseaseInfo.name_ar,
+        country:     geo.name_fr,
+        country_en:  geo.name_en,
+        country_ar:  geo.name_ar,
+        region:      geo.region,
+        lat:         geo.lat,
+        lng:         geo.lng,
+        cases:       item.cases,
+        deaths:      item.deaths,
+        risk_level:  riskLevel,
+        date:        item.date,
+        source:      item.source,
+        description:    item.description,
+        description_fr: t.fr,
+        description_es: t.es,
+        description_ar: t.ar,
+        description_id: t.id,
+        active:       true,
+        is_seed:      false,
+        source_priority: 5,
+        admin1:       item.admin1 ?? null,
+        admin1_lat:   item.admin1_lat ?? null,
+        admin1_lng:   item.admin1_lng ?? null,
+        first_seen_at: item.date,
+      });
+
+      if (error) {
+        log.push({ label, status: "error", detail: error.message });
+        results.errors++;
+      } else {
+        log.push({ label, status: "inserted", detail: `${item.cases} cases / ${item.deaths} deaths (${item.date})` });
+        results.inserted++;
+      }
+    }
+
+    await new Promise((r) => setTimeout(r, 200));
+  }
+}
+
+// ── Sitrep collection ─────────────────────────────────────────────────────────
+
+interface SitrepEntry { url: string; title: string; num: number; created: string | null }
+
+// Picks the highest-numbered measles sitrep on the listing. Numbering is the
+// reliable ordering key — the listing's "created" timestamp is when the node
+// was published, which can trail the report itself.
+function parseSitrepListing(html: string): SitrepEntry | null {
+  const linkRe = /<a\s+href="(\/en\/documents\/[^"]*situation-report[^"]*measles[^"]*americas[^"]*)"[^>]*>([^<]+)<\/a>/gi;
+  let m: RegExpExecArray | null;
+  let best: SitrepEntry | null = null;
+
+  while ((m = linkRe.exec(html)) !== null) {
+    const relPath = m[1];
+    const title   = m[2].trim();
+    const num = parseInt(
+      /situation-report-(?:no\.?)?(\d+)/i.exec(relPath)?.[1] ?? /#\s*(\d+)|No\.?\s*(\d+)/i.exec(title)?.slice(1).find(Boolean) ?? "",
+      10,
+    );
+    if (isNaN(num)) continue;
+
+    // Nearest <time> before the title link is this row's publication date; the
+    // listing renders it in the same views-field group.
+    const before  = html.slice(Math.max(0, m.index - 800), m.index);
+    const created = [...before.matchAll(/<time[^>]*datetime="(\d{4}-\d{2}-\d{2})/g)].pop()?.[1] ?? null;
+
+    if (!best || num > best.num) best = { url: PAHO_BASE + relPath, title, num, created };
+  }
+  return best;
+}
+
+// The PDF filename follows no stable pattern across editions
+// (paho-measles-sitrep4.pdf, pahomeaslessitrep5eng.pdf,
+// measles-sitrep6-2july-2026.pdf), so it has to be read off the document page
+// rather than constructed.
+async function fetchSitrepPdfText(docUrl: string): Promise<string> {
+  const res = await fetch(docUrl, { headers: FETCH_HEADERS, signal: AbortSignal.timeout(15_000) });
+  if (!res.ok) throw new Error(`sitrep doc page HTTP ${res.status}`);
+  const pdfHref = (await res.text()).match(/href="([^"]+\.pdf)"/i)?.[1];
+  if (!pdfHref) throw new Error("no PDF link on sitrep document page");
+
+  const pdfUrl = pdfHref.startsWith("http") ? pdfHref : PAHO_BASE + pdfHref;
+  const pdfRes = await fetch(pdfUrl, { headers: FETCH_HEADERS, signal: AbortSignal.timeout(30_000) });
+  if (!pdfRes.ok) throw new Error(`sitrep PDF HTTP ${pdfRes.status}`);
+
+  const pdfParse = (await import("pdf-parse/lib/pdf-parse.js" as string)).default as
+    (buf: Buffer, opts?: object) => Promise<{ text: string }>;
+  // No page cap: the country table sits around page 8 of ~14.
+  const { text } = await pdfParse(Buffer.from(await pdfRes.arrayBuffer()));
+  return text;
+}
+
+async function collectSitrepItems(log: LogEntry[]): Promise<AlertData[]> {
+  const listRes = await fetch(PAHO_SITREP_URL, { headers: FETCH_HEADERS, signal: AbortSignal.timeout(15_000) });
+  if (!listRes.ok) throw new Error(`sitrep listing HTTP ${listRes.status}`);
+
+  const entry = parseSitrepListing(await listRes.text());
+  if (!entry) {
+    log.push({ label: "measles sitrep", status: "skip", detail: "no measles sitrep on listing" });
+    return [];
+  }
+
+  if (entry.created) {
+    const ageDays = (Date.now() - new Date(entry.created).getTime()) / 86400_000;
+    if (ageDays > SITREP_MAX_AGE_DAYS) {
+      log.push({ label: entry.title, status: "skip", detail: `sitrep older than ${SITREP_MAX_AGE_DAYS}d (${entry.created})` });
+      return [];
+    }
+  }
+
+  const text  = await fetchSitrepPdfText(entry.url);
+  const table = parseSitrepCases(text);
+  // Sitrep #3 and earlier had no deaths column, so nothing matches the
+  // cases+deaths shape. Writing nothing is the correct outcome for a layout we
+  // don't recognise — better a visible coverage gap than invented figures.
+  if (!table || table.rows.length === 0) {
+    log.push({ label: entry.title, status: "skip", detail: "country table not found or unrecognised layout" });
+    return [];
+  }
+
+  const rt    = parseSitrepRt(text);
+  const items: AlertData[] = [];
+
+  // Only countries PAHO itself marks with "*" — "measles cases reported for a
+  // period of 12 weeks or longer", i.e. an actual outbreak, and exactly the set
+  // it bothers to model in the Rt table. The unmarked rows are sporadic
+  // importations (5–18 cases, "last case on EW 15") that would land as
+  // permanently-active low-risk noise.
+  const active = table.rows.filter((r) => r.active);
+  const passed = table.rows.filter((r) => !r.active).map((r) => `${r.country}=${r.cases}`);
+  log.push({
+    label:  entry.title,
+    status: "parsed",
+    detail: `EW ${table.ew} ${table.year} (${table.date}) — ${active.length} active outbreak(s); sporadic importations not ingested: ${passed.join(", ") || "none"}`,
+  });
+
+  for (const row of active) {
+    const geo = findCountry(row.country);
+    if (!geo || isAggregateCountry(geo)) continue;
+
+    const description = buildSitrepDescription(entry.num, table, row, rt.get(row.country));
+
+    // The notes cell names the actual foci ("concentrated in Puno (603)"),
+    // which is a far better admin1 signal than the alert prose this normally
+    // runs on.
+    const admin1 = await extractAdmin1(`${row.country}. ${row.notes}`, geo.name_en);
+    let admin1_lat: number | null = null;
+    let admin1_lng: number | null = null;
+    if (admin1) {
+      const coords = await geocodeAdmin1(admin1, geo.name_en);
+      if (coords) { admin1_lat = coords.lat; admin1_lng = coords.lng; }
+      await new Promise((r) => setTimeout(r, 1100));
+    }
+
+    items.push({
+      disease_en: "Measles",
+      country_en: geo.name_en,
+      cases:      row.cases,
+      deaths:     row.deaths,
+      source:     entry.url,
+      description,
+      date:       table.date,
+      admin1,
+      admin1_lat,
+      admin1_lng,
+      fromSitrep: true,
+    });
+  }
+  return items;
+}
+
 // ── Main handler ──────────────────────────────────────────────────────────────
 
 export async function GET(req: NextRequest) {
@@ -394,10 +969,9 @@ export async function GET(req: NextRequest) {
   const entries = parseListing(listingHtml);
   console.log(`[paho] Found ${entries.length} recent alert(s) within ${MAX_AGE_DAYS} days`);
 
-  if (entries.length === 0) {
-    await logCronRun(supabase, "sync-paho-alerts", "no_data", 0);
-    return NextResponse.json({ success: true, alerts: 0, inserted: 0, updated: 0, skipped: 0 });
-  }
+  // No early return on an empty alert listing: the measles sitrep is published
+  // on a separate page and is the more important of the two sources. Bailing
+  // here would skip it on every quiet alert week.
 
   // ── 2. Load existing outbreaks for dedup ──────────────────────────────────
   const { data: existing, error: fetchErr } = await supabase
@@ -410,17 +984,11 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: fetchErr.message }, { status: 500 });
   }
 
-  type Row = NonNullable<typeof existing>[number];
-  const byDC = new Map<string, Row>();
-  for (const row of existing ?? []) {
-    const k    = `${(row.disease_en ?? "").toLowerCase()}|${(row.country_en ?? "").toLowerCase()}`;
-    const prev = byDC.get(k);
-    if (!prev || (row.active && !prev.active)) byDC.set(k, row);
-  }
+  const byDC = new Map<string, ExistingRow>();
+  for (const row of (existing ?? []) as ExistingRow[]) indexRow(byDC, row);
 
   // ── 3. Process each alert ─────────────────────────────────────────────────
-  const results = { alerts: entries.length, inserted: 0, updated: 0, skipped: 0, errors: 0 };
-  type LogEntry = { label: string; status: string; detail?: string };
+  const results: SyncResults = { alerts: entries.length, sitrepRows: 0, inserted: 0, updated: 0, skipped: 0, errors: 0 };
   const log: LogEntry[] = [];
 
   for (const entry of entries) {
@@ -440,140 +1008,36 @@ export async function GET(req: NextRequest) {
       continue;
     }
 
-    for (const item of alertItems) {
-      const label = `${item.disease_en}/${item.country_en}`;
+    await upsertItems(supabase, byDC, alertItems, today, results, log);
+  }
 
-      if (item.date > today) {
-        log.push({ label, status: "skip", detail: `future date: ${item.date}` });
-        results.skipped++;
-        continue;
-      }
-
-      // Skip 0/0 entries — routine surveillance bulletins (e.g. flu positivity-rate
-      // updates) report percentages, not case counts, and would otherwise insert an
-      // empty "outbreak" row. Same guard as sync-africa-cdc.
-      if (item.cases === 0 && item.deaths === 0) {
-        log.push({ label, status: "skip", detail: "0 cases and 0 deaths — likely a surveillance bulletin without a countable figure" });
-        results.skipped++;
-        continue;
-      }
-
-      const geo = findCountry(item.country_en);
-      if (!geo) {
-        log.push({ label, status: "skip", detail: "country not in geo-data" });
-        results.skipped++;
-        continue;
-      }
-
-      const dcKey    = `${item.disease_en.toLowerCase()}|${item.country_en.toLowerCase()}`;
-      const existing = byDC.get(dcKey);
-
-      // Never overwrite WHO DON-owned rows
-      if (existing?.source?.includes("who.int/emergencies/disease-outbreak-news")) {
-        log.push({ label, status: "skip", detail: "owned by WHO DON sync" });
-        results.skipped++;
-        continue;
-      }
-
-      const diseaseInfo = normalizeDisease(item.disease_en);
-      const riskLevel   = assessRisk(item.disease_en, item.description, item.cases, item.deaths);
-
-      if (existing) {
-        const isNewer    = item.date > existing.date;
-        const casesDiff  = item.cases  !== existing.cases;
-        const deathsDiff = item.deaths !== existing.deaths;
-
-        if (!isNewer && !casesDiff && !deathsDiff) {
-          log.push({ label, status: "skip", detail: "data unchanged" });
-          results.skipped++;
-          continue;
-        }
-
-        // Re-translate inline on update too — same reasoning as the insert
-        // branch below: this cron owns its own localization, and an English
-        // description update without a matching FR/ES/AR/ID refresh leaves
-        // those columns frozen on the old figures forever (no other cron
-        // revisits a non-NULL description_fr).
-        const t = await translateDescription(item.description);
-        const updatePayload: Record<string, unknown> = {
-          cases:           item.cases,
-          deaths:          item.deaths,
-          date:            item.date,
-          source:          item.source,
-          description:     item.description,
-          risk_level:      riskLevel,
-          active:          true,
-          source_priority: 5,
-        };
-        // Only overwrite a locale column when the translation actually
-        // succeeded — MyMemory returns null on failure/echo, and writing
-        // that would blank out a still-valid prior translation.
-        if (t.fr) updatePayload.description_fr = t.fr;
-        if (t.es) updatePayload.description_es = t.es;
-        if (t.ar) updatePayload.description_ar = t.ar;
-        if (t.id) updatePayload.description_id = t.id;
-
-        const { error } = await supabase
-          .from("outbreaks")
-          .update(updatePayload)
-          .eq("id", existing.id)
-          .lte("source_priority", 5);
-
-        if (error) {
-          log.push({ label, status: "error", detail: error.message });
-          results.errors++;
-        } else {
-          log.push({ label, status: "updated", detail: `${item.cases} cases / ${item.deaths} deaths (${item.date})` });
-          results.updated++;
-        }
-      } else {
-        // Translate inline so this cron owns its own localization rather than
-        // relying on sync-outbreaks' unrelated backfill sweep to catch it later.
-        const t = await translateDescription(item.description);
-
-        const { error } = await supabase.from("outbreaks").insert({
-          disease:     diseaseInfo.name_fr,
-          disease_en:  diseaseInfo.name_en,
-          disease_ar:  diseaseInfo.name_ar,
-          country:     geo.name_fr,
-          country_en:  geo.name_en,
-          country_ar:  geo.name_ar,
-          region:      geo.region,
-          lat:         geo.lat,
-          lng:         geo.lng,
-          cases:       item.cases,
-          deaths:      item.deaths,
-          risk_level:  riskLevel,
-          date:        item.date,
-          source:      item.source,
-          description:    item.description,
-          description_fr: t.fr,
-          description_es: t.es,
-          description_ar: t.ar,
-          description_id: t.id,
-          active:       true,
-          is_seed:      false,
-          source_priority: 5,
-          admin1:       item.admin1 ?? null,
-          admin1_lat:   item.admin1_lat ?? null,
-          admin1_lng:   item.admin1_lng ?? null,
-          first_seen_at: item.date,
-        });
-
-        if (error) {
-          log.push({ label, status: "error", detail: error.message });
-          results.errors++;
-        } else {
-          log.push({ label, status: "inserted", detail: `${item.cases} cases / ${item.deaths} deaths (${item.date})` });
-          results.inserted++;
-        }
-      }
-
-      await new Promise((r) => setTimeout(r, 200));
-    }
+  // ── 4. Measles situation report ───────────────────────────────────────────
+  // Independent of the alerts above: a sitrep failure must not lose the alert
+  // work already committed, and vice versa.
+  let sitrepError: string | null = null;
+  try {
+    const sitrepItems = await collectSitrepItems(log);
+    results.sitrepRows = sitrepItems.length;
+    await loadExistingForItems(supabase, byDC, sitrepItems);
+    await upsertItems(supabase, byDC, sitrepItems, today, results, log);
+  } catch (e) {
+    sitrepError = errorMessage(e);
+    console.error("[paho] sitrep:", sitrepError);
+    Sentry.captureException(e, { tags: { cron: "sync-paho-alerts", stage: "sitrep" } });
+    log.push({ label: "measles sitrep", status: "error", detail: sitrepError });
+    results.errors++;
   }
 
   console.log("[paho] Done:", results, log);
-  await logCronRun(supabase, "sync-paho-alerts", "ok", results.inserted ?? 0);
+  // Report a sitrep-stage failure as an error rather than a green run: a silent
+  // "ok" here is exactly how the missing sitrep ingestion stayed invisible.
+  // Alert-path errors keep their existing per-entry logging.
+  await logCronRun(
+    supabase,
+    "sync-paho-alerts",
+    sitrepError ? "error" : "ok",
+    results.inserted ?? 0,
+    sitrepError ?? undefined,
+  );
   return NextResponse.json({ success: true, timestamp: new Date().toISOString(), ...results, log });
 }
