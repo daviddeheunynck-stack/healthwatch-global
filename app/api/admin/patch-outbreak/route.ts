@@ -47,14 +47,20 @@ export async function POST(req: NextRequest) {
 
   const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
 
+  // Strip characters significant to PostgREST's .or() filter syntax (same as
+  // the public search endpoint, app/api/outbreaks/route.ts) so a value like
+  // "x%,active.eq.true" can't inject an extra filter clause.
+  const safeDisease = disease_en.replace(/[,()]/g, "");
+  const safeCountry = country_en.replace(/[,()]/g, "");
+
   // Find the matching row (active OR recently active).
   // Search both disease_en/country_en (English) and disease/country (French)
   // because some rows are inserted with only the French columns populated.
   const { data: rows, error: fetchErr } = await supabase
     .from("outbreaks")
     .select("id, disease_en, country_en, cases, deaths, date, active")
-    .or(`disease_en.ilike.%${disease_en}%,disease.ilike.%${disease_en}%`)
-    .or(`country_en.ilike.%${country_en}%,country.ilike.%${country_en}%`)
+    .or(`disease_en.ilike.%${safeDisease}%,disease.ilike.%${safeDisease}%`)
+    .or(`country_en.ilike.%${safeCountry}%,country.ilike.%${safeCountry}%`)
     .order("active", { ascending: false })
     .limit(1);
 
