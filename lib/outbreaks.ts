@@ -485,17 +485,25 @@ type DisplayActiveRow = Pick<Outbreak, "active" | "source_priority" | "updated_a
 // 1,963/719, inflating displayed totals by ~76%/69% — 13 such rows across 6 disease+country
 // pairs sitewide. Doesn't touch active=true rows, so it can't affect cases like avian flu/US
 // where many distinct active rows legitimately coexist (one per state) under the same key.
+// Keyed via normalizeDisease() rather than the raw disease_en string — mirrors
+// getOutbreaksCached()'s own dedup key. Without it, e.g. an inactive "Sudan virus
+// disease"/Uganda row and an active "Ebola virus disease"/Uganda row (both
+// Bundibugyo-family, both normalizing to the same canonical "Ebola virus disease")
+// aren't recognized as siblings, and the inactive one keeps resurrecting.
+function displayActiveKey(o: DisplayActiveRow): string {
+  const diseaseKey = normalizeDisease(o.disease_en || o.disease).name_en.toLowerCase();
+  const countryKey = (o.country_en || o.country || "").toLowerCase();
+  return `${diseaseKey}|${countryKey}`;
+}
+
 export function filterDisplayActive<T extends DisplayActiveRow>(rows: T[]): T[] {
   const activeKeys = new Set<string>();
   for (const o of rows) {
-    if (o.active) {
-      activeKeys.add(`${(o.disease_en || o.disease || "").toLowerCase()}|${(o.country_en || o.country || "").toLowerCase()}`);
-    }
+    if (o.active) activeKeys.add(displayActiveKey(o));
   }
   return rows.filter((o) => {
     if (o.active) return true;
-    const key = `${(o.disease_en || o.disease || "").toLowerCase()}|${(o.country_en || o.country || "").toLowerCase()}`;
-    if (activeKeys.has(key)) return false;
+    if (activeKeys.has(displayActiveKey(o))) return false;
     return isDisplayActive(o);
   });
 }
