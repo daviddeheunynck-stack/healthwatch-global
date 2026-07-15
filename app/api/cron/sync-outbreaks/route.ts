@@ -217,6 +217,24 @@ export async function GET(req: NextRequest) {
           continue;
         }
 
+        // Supersession guard: matchViaSource pins directly to whatever row already
+        // carries this exact source+country URL, bypassing byDiseaseCountry's own
+        // "prefer the active row" tie-break. If that pinned row was deliberately
+        // retired (active=false — e.g. a WHO DON snapshot superseded by a fresher,
+        // higher-priority ECDC/PAHO tracker for the same disease+country) and a
+        // different sibling row is the one actively representing this outbreak,
+        // don't silently resurrect it: that re-creates two active rows for the same
+        // disease+country and double-counts on the disease detail page (found
+        // 2026-07-15 — DR Congo/Ebola DON612 snapshot resurrected ~3.5h after being
+        // retired, re-inflating the disease-page total by ~76%/69%).
+        const sibling = byDiseaseCountry.get(dcKey);
+        if (!existingRow.active && sibling && sibling.id !== existingRow.id && sibling.active) {
+          console.warn(`[sync] guard:superseded — ${outbreak.disease_en}/${outbreak.country_en} — active sibling ${sibling.id} already covers this, not resurrecting ${existingRow.id}`);
+          if (debug) debugLog.push(`⚠️ Superseded, not resurrected: ${outbreak.disease_en}/${outbreak.country_en} — sibling ${sibling.id} is active`);
+          results.skipped++;
+          continue;
+        }
+
         const needsUpdate =
           !isOlderArticle &&
           (existingRow.cases !== outbreak.cases ||
