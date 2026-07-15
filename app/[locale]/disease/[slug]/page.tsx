@@ -245,7 +245,7 @@ async function fetchDiseaseOutbreaks(diseaseNameEn: string): Promise<Outbreak[]>
 
   const { data } = await supabase
     .from("outbreaks")
-    .select("id, disease, disease_en, country, country_en, country_ar, cases, deaths, risk_level, date, active, source_priority, updated_at")
+    .select("id, disease, disease_en, description, country, country_en, country_ar, cases, deaths, risk_level, date, active, source_priority, updated_at")
     .order("date", { ascending: false });
 
   if (!data) return [];
@@ -348,10 +348,12 @@ export default async function DiseasePage({
 
   // Strain-specific vaccine override: if any active outbreak is a strain not covered by the
   // listed vaccine (e.g. Bundibugyo Ebola vs Ervebo which covers Zaïre strain only), downgrade badge.
+  // disease_en/disease are kept canonical (no species suffix) so outbreak rows stay matchable
+  // by the sync crons' disease+country key — the strain marker lives in description instead.
   const vaccineStrainOverride =
     info.vaccine === "yes" &&
     /za[ïi]re/i.test(info.vaccineName ?? "") &&
-    active.some((o) => /bundibugyo/i.test(o.disease_en || o.disease || ""));
+    active.some((o) => /bundibugyo/i.test(`${o.disease_en || o.disease || ""} ${o.description || ""}`));
 
   const totalCases  = active.reduce((s, o) => s + (o.cases || 0), 0);
   const totalDeaths = active.reduce((s, o) => s + (o.deaths || 0), 0);
