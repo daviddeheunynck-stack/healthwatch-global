@@ -13,7 +13,7 @@ import * as Sentry from "@sentry/nextjs";
 import { createClient } from "@supabase/supabase-js";
 import { logCronRun } from "@/lib/cron-monitor";
 import { normalizeDisease } from "@/lib/disease-data";
-import { findCountry } from "@/lib/geo-data";
+import { findCountry, isAggregateCountry } from "@/lib/geo-data";
 import { extractNumbers, assessRisk } from "@/lib/outbreak-parser";
 import { extractAdmin1, geocodeAdmin1 } from "@/lib/geo-extract";
 import { errorMessage } from "@/lib/error";
@@ -232,8 +232,8 @@ export async function GET(req: NextRequest) {
     }
 
     const geo = findCountry(parsed.country);
-    if (!geo) {
-      log.push({ label: notice.title, status: "skip", detail: `country not found: ${parsed.country}` });
+    if (!geo || isAggregateCountry(geo)) {
+      log.push({ label: notice.title, status: "skip", detail: `country not found or aggregate: ${parsed.country}` });
       results.skipped++;
       continue;
     }

@@ -10,7 +10,7 @@ import { logCronRun } from "@/lib/cron-monitor";
 import * as Sentry from "@sentry/nextjs";
 import { createClient } from "@supabase/supabase-js";
 import { normalizeDisease } from "@/lib/disease-data";
-import { COUNTRIES, findCountry } from "@/lib/geo-data";
+import { COUNTRIES, findCountry, isAggregateCountry } from "@/lib/geo-data";
 import { extractNumbers, assessRisk } from "@/lib/outbreak-parser";
 import { errorMessage } from "@/lib/error";
 
@@ -255,8 +255,8 @@ export async function GET(req: NextRequest) {
     }
 
     const geo = findCountry(countries[0]);
-    if (!geo) {
-      log.push({ label: entry.title, status: "skip", detail: `geo miss: ${countries[0]}` });
+    if (!geo || isAggregateCountry(geo)) {
+      log.push({ label: entry.title, status: "skip", detail: `geo miss or aggregate: ${countries[0]}` });
       results.skipped++;
       continue;
     }
