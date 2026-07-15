@@ -162,7 +162,7 @@ export async function GET(req: NextRequest) {
   // 1. Load all "~" rows (need enrichment)
   const { data: targets, error: tErr } = await supabase
     .from("outbreaks")
-    .select("id, disease_en, country_en")
+    .select("id, disease_en, country_en, date")
     .eq("admin1", "~");
 
   if (tErr) {
@@ -177,7 +177,7 @@ export async function GET(req: NextRequest) {
   // 2. Load all rows that have a confirmed admin1
   const { data: sources, error: sErr } = await supabase
     .from("outbreaks")
-    .select("disease_en, country_en, admin1, admin1_lat, admin1_lng")
+    .select("disease_en, country_en, admin1, admin1_lat, admin1_lng, date")
     .not("admin1", "is", null)
     .neq("admin1", "")
     .neq("admin1", "~");
@@ -187,19 +187,38 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: sErr.message }, { status: 500 });
   }
 
-  // Build cross-source map: disease|country → best known admin1
-  type Admin1Data = { admin1: string; admin1_lat: number | null; admin1_lng: number | null };
-  const crossMap = new Map<string, Admin1Data>();
+  // Build cross-source map: disease|country → ALL known admin1 candidates (with
+  // their own event date). Previously this kept only the first row found per
+  // key and copied it onto every "~" row sharing that disease+country — two
+  // distinct outbreak waves of the same disease in the same country (different
+  // years, different provinces) would silently contaminate each other. Each
+  // target row below picks the candidate closest in time to its own date
+  // instead, and only within a plausible window (see CROSS_SOURCE_MAX_DAYS).
+  type Admin1Data = { admin1: string; admin1_lat: number | null; admin1_lng: number | null; date: string };
+  const crossMap = new Map<string, Admin1Data[]>();
   for (const src of sources ?? []) {
-    if (!src.disease_en || !src.country_en || !src.admin1) continue;
+    if (!src.disease_en || !src.country_en || !src.admin1 || !src.date) continue;
     const k = `${src.disease_en}|${src.country_en}`;
-    if (!crossMap.has(k)) {
-      crossMap.set(k, {
-        admin1:     src.admin1,
-        admin1_lat: src.admin1_lat ?? null,
-        admin1_lng: src.admin1_lng ?? null,
-      });
+    const arr = crossMap.get(k) ?? [];
+    arr.push({ admin1: src.admin1, admin1_lat: src.admin1_lat ?? null, admin1_lng: src.admin1_lng ?? null, date: src.date });
+    crossMap.set(k, arr);
+  }
+
+  // Beyond this, two rows sharing a disease+country are more likely distinct
+  // events (different outbreak wave) than the same one reported at different
+  // times — fall through to the endemic default instead of guessing.
+  const CROSS_SOURCE_MAX_DAYS = 180;
+  function closestWithinWindow(candidates: Admin1Data[], targetDate: string | null): Admin1Data | null {
+    if (!targetDate) return null;
+    const targetMs = new Date(targetDate).getTime();
+    if (Number.isNaN(targetMs)) return null;
+    let best: Admin1Data | null = null;
+    let bestDiff = Infinity;
+    for (const c of candidates) {
+      const diff = Math.abs(new Date(c.date).getTime() - targetMs);
+      if (diff < bestDiff) { bestDiff = diff; best = c; }
     }
+    return best && bestDiff <= CROSS_SOURCE_MAX_DAYS * 86_400_000 ? best : null;
   }
 
   const stats = { total: targets.length, cross_source: 0, endemic_default: 0, unchanged: 0, errors: 0 };
@@ -210,7 +229,7 @@ export async function GET(req: NextRequest) {
     const k = `${row.disease_en}|${row.country_en}`;
 
     // ── Pass 1: cross-source ─────────────────────────────────────────────────
-    const crossHit = crossMap.get(k);
+    const crossHit = closestWithinWindow(crossMap.get(k) ?? [], row.date);
     if (crossHit) {
       const { error } = await supabase
         .from("outbreaks")
