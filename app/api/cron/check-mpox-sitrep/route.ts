@@ -279,9 +279,12 @@ function buildDrcDescriptions(num: number, cases: number, deaths: number, date: 
 
 // ── 5. Email helpers ──────────────────────────────────────────────────────────
 
-async function sendEmail(to: string, subject: string, html: string) {
-  if (!BREVO_API_KEY || !to) return;
-  await fetch("https://api.brevo.com/v3/smtp/email", {
+// Returns whether the email actually sent — the caller's final JSON response
+// used to report emailSent: !!adminEmail regardless of whether this ran at
+// all, which lies whenever BREVO_API_KEY is missing or the Brevo call fails.
+async function sendEmail(to: string, subject: string, html: string): Promise<boolean> {
+  if (!BREVO_API_KEY || !to) return false;
+  const res = await fetch("https://api.brevo.com/v3/smtp/email", {
     method: "POST",
     signal: AbortSignal.timeout(10_000),
     headers: { "api-key": BREVO_API_KEY, "Content-Type": "application/json" },
@@ -294,7 +297,9 @@ async function sendEmail(to: string, subject: string, html: string) {
   }).catch((e) => {
     console.error("[mpox] email:", errorMessage(e));
     Sentry.captureException(e, { tags: { cron: "check-mpox-sitrep" } });
+    return null;
   });
+  return !!res?.ok;
 }
 
 function emailAutoUpdated(sitrep: { num: number; url: string }, data: SitrepData) {
@@ -373,6 +378,7 @@ export async function GET(req: NextRequest) {
 
   const supabase   = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
   const adminEmail = ADMIN_EMAILS?.split(",")[0]?.trim();
+  let emailSent    = false;
 
   // Load last known sitrep URL
   const { data: configRow } = await supabase
@@ -410,7 +416,11 @@ export async function GET(req: NextRequest) {
   // Step 4a: auto-update DB if extraction succeeded
   if (data) {
     const desc = buildGlobalDescriptions(latest.num, data.cases, data.deaths, data.date);
-    const { error } = await supabase
+    // .select("id") so a source_priority guard that blocks the write (row now
+    // owned by a higher-priority source) is visible as 0 affected rows —
+    // without it, a blocked update still returns error: null and was logged
+    // as a success. Found 2026-07-15.
+    const { data: updatedRows, error } = await supabase
       .from("outbreaks")
       .update({
         cases:           data.cases,
@@ -427,26 +437,29 @@ export async function GET(req: NextRequest) {
         source_priority: 5,
       })
       .eq("id", MPOX_MONDIAL_ID)
-      .lte("source_priority", 5);
+      .lte("source_priority", 5)
+      .select("id");
 
     if (error) {
       console.error("[mpox] DB update global error:", error.message);
+    } else if (!updatedRows || updatedRows.length === 0) {
+      console.error("[mpox] Global update blocked by source_priority guard — row owned by a higher-priority source");
     } else {
       console.log(`[mpox] ✅ Global updated: ${data.cases} cas / ${data.deaths} décès / ${data.date}`);
       const { subject, html } = emailAutoUpdated(latest, data);
-      if (adminEmail && isRealProduction) await sendEmail(adminEmail, subject, html);
+      if (adminEmail && isRealProduction) emailSent = await sendEmail(adminEmail, subject, html);
     }
   } else {
     // Step 4b: fallback — manual notification
     console.log("[mpox] PDF extraction failed — sending manual notification.");
     const { subject, html } = emailManualNeeded(latest);
-    if (adminEmail && isRealProduction) await sendEmail(adminEmail, subject, html);
+    if (adminEmail && isRealProduction) emailSent = await sendEmail(adminEmail, subject, html);
   }
 
   // Step 4c: also update DRC PHEIC row if DRC data extracted
   if (drcData) {
     const drcDesc = buildDrcDescriptions(latest.num, drcData.cases, drcData.deaths, drcData.date);
-    const { error: drcErr } = await supabase
+    const { data: drcUpdatedRows, error: drcErr } = await supabase
       .from("outbreaks")
       .update({
         cases:           drcData.cases,
@@ -463,9 +476,11 @@ export async function GET(req: NextRequest) {
         source_priority: 5,
       })
       .eq("id", MPOX_DRC_ID)
-      .lte("source_priority", 5);
+      .lte("source_priority", 5)
+      .select("id");
 
     if (drcErr) console.error("[mpox] DB update DRC error:", drcErr.message);
+    else if (!drcUpdatedRows || drcUpdatedRows.length === 0) console.error("[mpox] DRC update blocked by source_priority guard — row owned by a higher-priority source");
     else console.log(`[mpox] ✅ DRC updated: ${drcData.cases} cas / ${drcData.deaths} décès / ${drcData.date}`);
   }
 
@@ -475,7 +490,11 @@ export async function GET(req: NextRequest) {
     value:      latest.url,
     updated_at: new Date().toISOString(),
   });
-  await logCronRun(supabase, "check-mpox-sitrep", "ok", (data ? 1 : 0) + (drcData ? 1 : 0));
+  // A new sitrep was still found/processed either way — but flag the run as
+  // errored if the admin notification itself didn't go out, so a missing
+  // BREVO_API_KEY doesn't read identically to a clean "ok" run.
+  const emailExpected = !!adminEmail && isRealProduction;
+  await logCronRun(supabase, "check-mpox-sitrep", emailExpected && !emailSent ? "error" : "ok", (data ? 1 : 0) + (drcData ? 1 : 0));
 
   return NextResponse.json({
     status:      data ? "auto_updated" : "manual_needed",
@@ -484,6 +503,6 @@ export async function GET(req: NextRequest) {
     pdfUrl:      pdfUrl ?? null,
     extracted:   data,
     drc:         drcData,
-    emailSent:   !!adminEmail,
+    emailSent,
   });
 }
