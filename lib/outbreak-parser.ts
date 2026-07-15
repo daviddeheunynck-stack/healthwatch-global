@@ -210,6 +210,41 @@ export function extractNumbers(text: string): { cases: number; deaths: number; r
     "i"
   );
 
+  // WHO AFRO's "Weekly External Situation Report" bulletins state BOTH a
+  // week-over-week delta ("a total of 229 new confirmed cases, including 53
+  // new confirmed deaths, have been reported") AND the real absolute total,
+  // qualified with the word "cumulative" ("a cumulative total of 550
+  // laboratory-confirmed cases, including 101 confirmed deaths"), earlier and
+  // later in the same paragraph respectively. The plain pairedPattern above
+  // only lands on the right (second) sentence by the accident of "new" not
+  // being in DEATH_QUALIFIERS, which happens to break its match on the delta
+  // sentence — not a real safeguard. This anchors on the literal word
+  // "cumulative" so the real total is found on purpose. Found 2026-07-15.
+  const cumulativePairedPattern = new RegExp(
+    `cumulative(?:ly)?\\s+total\\s+of\\s+(\\d[\\d,]*)\\s+${QUALIFIERS}cases?,?\\s+(?:with|including)\\s+(${NUM})\\s+${DEATH_QUALIFIERS}deaths?`,
+    "i"
+  );
+  const cumulativeCasePattern  = new RegExp(`cumulative(?:ly)?\\s+total\\s+of\\s+(\\d[\\d,]*)\\s+${QUALIFIERS}cases?`, "i");
+  const cumulativeDeathPattern = new RegExp(`cumulative(?:ly)?\\s+total\\s+of\\s+(?:\\d[\\d,]*)\\s+${QUALIFIERS}cases?[^.]*?(${NUM})\\s+${DEATH_QUALIFIERS}deaths?`, "i");
+
+  // Some AFRO bulletins (e.g. Ebola/DRC Situation Report #8) state ONLY the
+  // delta, with no "cumulative"/"total of" figure anywhere in the article —
+  // the absolute count apparently lives solely in a table/infographic image.
+  // "An additional 317 confirmed cases and 144 confirmed deaths have been
+  // reported" then silently satisfies the generic casePatterns/deathPatterns
+  // below, misreporting the week's delta as the outbreak's absolute total
+  // (confirmed 2026-07-15 — zero "total of" occurrences on the live page).
+  // When this delta framing is present and no cumulative anchor was found
+  // above, there is no trustworthy count to extract: return 0/0 so the
+  // caller's existing 0/0 guard skips the write instead of corrupting a row
+  // with a delta (this is what produced the 259 cases / 0 deaths incident —
+  // an earlier week's "...and zero confirmed deaths have been reported").
+  const DELTA_ONLY_MARKER = new RegExp(
+    `\\ban?\\s+additional\\s+${NUM}\\s+${QUALIFIERS}(?:cases?|deaths?)\\b` +
+    `|\\b${NUM}\\s+additional\\s+${QUALIFIERS}(?:cases?|deaths?)\\b`,
+    "i"
+  );
+
   const deathPatterns = [
     // "176 deaths [among ...]" — also matches word-form ("including two deaths")
     // and an intercalated qualifier ("719 related deaths").
@@ -244,19 +279,42 @@ export function extractNumbers(text: string): { cases: number; deaths: number; r
 
   let cases = 0;
   let deaths = 0;
+  let foundCumulative = false;
 
-  const paired = clean.match(pairedPattern);
-  if (paired) {
-    cases  = parseCount(paired[1]);
-    deaths = parseCount(paired[2]);
+  const cumulativePaired = clean.match(cumulativePairedPattern);
+  if (cumulativePaired) {
+    cases  = parseCount(cumulativePaired[1]);
+    deaths = parseCount(cumulativePaired[2]);
+    foundCumulative = true;
   } else {
-    for (const p of casePatterns) {
-      const m = clean.match(p);
-      if (m) { cases = parseCount(m[1]); break; }
+    const cCase  = clean.match(cumulativeCasePattern);
+    const cDeath = clean.match(cumulativeDeathPattern);
+    if (cCase || cDeath) {
+      if (cCase)  cases  = parseCount(cCase[1]);
+      if (cDeath) deaths = parseCount(cDeath[1]);
+      foundCumulative = true;
     }
-    for (const p of deathPatterns) {
-      const m = clean.match(p);
-      if (m) { deaths = parseCount(m[1]); break; }
+  }
+
+  if (!foundCumulative) {
+    if (DELTA_ONLY_MARKER.test(clean)) {
+      cases  = 0;
+      deaths = 0;
+    } else {
+      const paired = clean.match(pairedPattern);
+      if (paired) {
+        cases  = parseCount(paired[1]);
+        deaths = parseCount(paired[2]);
+      } else {
+        for (const p of casePatterns) {
+          const m = clean.match(p);
+          if (m) { cases = parseCount(m[1]); break; }
+        }
+        for (const p of deathPatterns) {
+          const m = clean.match(p);
+          if (m) { deaths = parseCount(m[1]); break; }
+        }
+      }
     }
   }
 
