@@ -285,14 +285,23 @@ async function updateSatelliteCountry(supabase: any, countryEn: string, cases: n
     console.log(`[drc-sitrep] ${countryEn}: already up to date (${cases}/${deaths})`);
     return false;
   }
-  const { error } = await supabase
+  // .select("id") so a source_priority guard that blocks the write (row now
+  // owned by a higher-priority source) is visible as 0 affected rows —
+  // without it, a blocked update still returns error: null and this function
+  // would return true (success) even though nothing changed. Found 2026-07-15.
+  const { data: updatedRows, error } = await supabase
     .from("outbreaks")
     .update({ cases, deaths, date, source, updated_at: new Date().toISOString(), source_priority: 5 })
     .eq("id", row.id)
-    .lte("source_priority", 5);
+    .lte("source_priority", 5)
+    .select("id");
 
   if (error) {
     console.error(`[drc-sitrep] ${countryEn} DB error:`, error.message);
+    return false;
+  }
+  if (!updatedRows || updatedRows.length === 0) {
+    console.error(`[drc-sitrep] ${countryEn} update blocked by source_priority guard — row owned by a higher-priority source`);
     return false;
   }
   console.log(`[drc-sitrep] ✅ ${countryEn}: ${cases} cas / ${deaths} décès / ${date}`);
