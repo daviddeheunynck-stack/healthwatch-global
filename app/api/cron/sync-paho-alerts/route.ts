@@ -451,6 +451,11 @@ interface AlertData {
   // Set for rows built from a situation report's per-country table. These get
   // two rules the one-off alert pages don't earn — see upsertItems().
   fromSitrep?: boolean;
+  // Set when this row's cases/deaths is a shared document-level figure split
+  // across multiple mentioned countries with no per-country structural anchor
+  // (tier 3 in extractAlertData below) — upsertItems() refuses to INSERT a
+  // brand-new row on this kind of guess, same guard as sync-ecdc-threats.
+  ambiguous?: boolean;
 }
 
 async function extractAlertData(entry: AlertEntry): Promise<AlertData[]> {
@@ -508,45 +513,56 @@ async function extractAlertData(entry: AlertEntry): Promise<AlertData[]> {
   // further down.
   if (pdfText.trim().length <= 200 && looksLikePahoChrome(bodyText)) return [];
 
-  let { cases, deaths } = extractNumbers(bodyText);
+  const { cases: docCases, deaths: docDeaths } = extractNumbers(bodyText);
 
-  // Primary country: look in the ORIGINAL title for "in [the] Country" pattern.
+  // Countries to write, each carrying its own cases/deaths. Tier 2 (structured
+  // per-country breakdown) gives every country a real, individual figure —
+  // previously only the most-affected country (figures[0]) was kept and the
+  // rest silently dropped even though extractCountryFigures had already
+  // individualized them (e.g. a diphtheria alert naming Brazil/Haiti/Peru only
+  // ever produced a row for Haiti). Tiers 1 and 3 have at most one real figure
+  // for the whole document, so every country in those tiers necessarily shares
+  // it — tier 3's `ambiguous` flag tells upsertItems() not to blind-insert on
+  // that shared, unanchored figure.
+  interface CountryTarget { country: string; cases: number; deaths: number; ambiguous: boolean }
+  let targets: CountryTarget[] = [];
+
+  // Tier 1: look in the ORIGINAL title for "in [the] Country" pattern.
   // Optional "the" handles "in the Democratic Republic of the Congo and Uganda".
-  let primaryCountries: string[] = [];
   const titleInMatch = entry.title.match(/\bin\s+(?:the\s+)?([A-Z][a-zA-Z\s,]+?)(?:\s*[-–—]|$)/i);
   if (titleInMatch) {
     const candidate = titleInMatch[1].replace(/\s+(and|or)\s+.+$/i, "").trim();
     // exclude generic phrases
     if (!/(region|americas|caribbean|paho)/i.test(candidate)) {
       const geo = findCountry(candidate);
-      if (geo) primaryCountries = [candidate];
+      if (geo) targets = [{ country: candidate, cases: docCases, deaths: docDeaths, ambiguous: false }];
     }
   }
 
-  // Regional alerts ("Diphtheria in the Americas Region"): parse the
-  // per-country "(n= X cases[, including Y deaths])" breakdown and take the
-  // most-affected country with its own figures — see extractCountryFigures().
-  if (primaryCountries.length === 0) {
+  // Tier 2: regional alerts ("Diphtheria in the Americas Region") — parse the
+  // per-country "(n= X cases[, including Y deaths])" breakdown. Each entry
+  // already has its own anchored figure, so all of them are kept.
+  if (targets.length === 0) {
     const figures = extractCountryFigures(bodyText);
     if (figures.length > 0) {
-      primaryCountries = [figures[0].country];
-      cases  = figures[0].cases;
-      deaths = figures[0].deaths;
+      targets = figures.map((f) => ({ country: f.country, cases: f.cases, deaths: f.deaths, ambiguous: false }));
     }
   }
 
-  // Last-resort fallback: any Americas country name in the first 2500 chars,
-  // paired with the document-wide totals (used only if the structured
-  // per-country breakdown above isn't present in this alert's text).
-  if (primaryCountries.length === 0) {
-    const intro  = bodyText.substring(0, 2500);
-    primaryCountries = findMentionedAmericasCountries(intro).slice(0, 3);
+  // Tier 3: last-resort fallback — any Americas country name in the first
+  // 2500 chars, paired with the document-wide totals (used only if the
+  // structured per-country breakdown above isn't present). No structural
+  // anchor ties a specific figure to a specific country here, so mark these
+  // ambiguous when more than one country is found.
+  if (targets.length === 0) {
+    const intro     = bodyText.substring(0, 2500);
+    const names     = findMentionedAmericasCountries(intro).slice(0, 3);
+    const ambiguous = names.length > 1;
+    targets = names.map((n) => ({ country: n, cases: docCases, deaths: docDeaths, ambiguous }));
   }
 
-  if (primaryCountries.length === 0) return [];
+  if (targets.length === 0) return [];
 
-  // Use the single primary country (or first if multiple mentioned)
-  const targetCountries = [primaryCountries[0]];
   // PDF text starts with a "Suggested citation: ..." boilerplate block before
   // the actual situation summary — skip past it so the stored description is
   // the substantive text, not a citation line.
@@ -554,8 +570,8 @@ async function extractAlertData(entry: AlertEntry): Promise<AlertData[]> {
     .substring(0, 500).trim();
 
   const results: AlertData[] = [];
-  for (const countryKey of targetCountries) {
-    const geo = findCountry(countryKey);
+  for (const target of targets) {
+    const geo = findCountry(target.country);
     if (!geo) continue;
 
     const admin1 = await extractAdmin1(bodyText.substring(0, 3000), geo.name_en);
@@ -570,14 +586,15 @@ async function extractAlertData(entry: AlertEntry): Promise<AlertData[]> {
     results.push({
       disease_en:  diseaseInfo.name_en,
       country_en:  geo.name_en,
-      cases,
-      deaths,
+      cases:       target.cases,
+      deaths:      target.deaths,
       source:      entry.url,
       description: `PAHO ${entry.title}. ${description}`.substring(0, 600),
       date:        entry.date,
       admin1,
       admin1_lat,
       admin1_lng,
+      ambiguous:   target.ambiguous,
     });
   }
   return results;
@@ -676,6 +693,18 @@ async function upsertItems(
 
     const existing = byDC.get(dcKey(item.disease_en, item.country_en));
 
+    // Ambiguous attribution: this alert named 2+ countries with no structural
+    // anchor saying which country the extracted cases/deaths actually belongs
+    // to (see the `ambiguous` tier in extractAlertData). Safe to UPDATE an
+    // existing row — the staleness/ownership guards elsewhere already protect
+    // against a wildly wrong number — but never silently INSERT a brand-new
+    // row on a guess, same guard as sync-ecdc-threats.
+    if (item.ambiguous && !existing) {
+      log.push({ label, status: "skip", detail: "ambiguous attribution — no existing row, refusing to guess-insert" });
+      results.skipped++;
+      continue;
+    }
+
     // A sitrep must never move a row backwards in time. The US measles row is
     // the live case: CDC data at 2,231 (9 July) against the sitrep's 2,134
     // (EW 25, 27 June) — both correct for their own cut-off, but writing the
@@ -744,15 +773,23 @@ async function upsertItems(
         updatePayload.admin1_lng = item.admin1_lng;
       }
 
-      const { error } = await supabase
+      // .select("id") so a source_priority guard that blocks the write (row now
+      // owned by a higher-priority source) is visible as 0 affected rows —
+      // without it, a blocked update still returns error: null and was
+      // reported as "updated" even though nothing changed. Found 2026-07-15.
+      const { data: updated, error } = await supabase
         .from("outbreaks")
         .update(updatePayload)
         .eq("id", existing.id)
-        .lte("source_priority", 5);
+        .lte("source_priority", 5)
+        .select("id");
 
       if (error) {
         log.push({ label, status: "error", detail: error.message });
         results.errors++;
+      } else if (!updated || updated.length === 0) {
+        log.push({ label, status: "skip", detail: "blocked by source_priority guard — row owned by a higher-priority source" });
+        results.skipped++;
       } else {
         log.push({ label, status: "updated", detail: `${existing.cases}/${existing.deaths} → ${item.cases} cases / ${item.deaths} deaths (${item.date})` });
         results.updated++;
