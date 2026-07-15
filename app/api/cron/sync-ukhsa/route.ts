@@ -96,25 +96,32 @@ function extractUKHSADisease(title: string): string {
     .trim();
 }
 
+// Returns countries ordered by earliest position of first occurrence in the
+// text, not by iteration order over TEXT_ALIASES/COUNTRY_NAMES — callers take
+// countries[0] as "the primary country", which needs to mean "mentioned
+// first in the article", not "whichever name happens to be declared first".
+// Found 2026-07-15 (same class of bug already fixed in sync-ecdc-threats).
 function findMentionedCountries(text: string): string[] {
   const lower = ` ${text.toLowerCase()} `;
-  const found: string[] = [];
-  const seen  = new Set<string>();
+  const positions = new Map<string, number>();
+
+  const record = (canonical: string, idx: number) => {
+    if (idx === -1) return;
+    const prev = positions.get(canonical);
+    if (prev === undefined || idx < prev) positions.set(canonical, idx);
+  };
 
   for (const [abbr, canonical] of Object.entries(TEXT_ALIASES)) {
-    if (lower.includes(abbr) && !seen.has(canonical)) {
-      found.push(canonical);
-      seen.add(canonical);
-    }
+    record(canonical, lower.indexOf(abbr));
   }
   for (const name of COUNTRY_NAMES) {
-    if (seen.has(name)) continue;
-    if (lower.includes(` ${name.toLowerCase()} `) || lower.includes(` ${name.toLowerCase()},`)) {
-      found.push(name);
-      seen.add(name);
-    }
+    if (positions.has(name)) continue;
+    const lowerName = name.toLowerCase();
+    const idxSpace = lower.indexOf(` ${lowerName} `);
+    const idxComma = lower.indexOf(` ${lowerName},`);
+    record(name, idxSpace === -1 ? idxComma : idxComma === -1 ? idxSpace : Math.min(idxSpace, idxComma));
   }
-  return found;
+  return [...positions.keys()].sort((a, b) => positions.get(a)! - positions.get(b)!);
 }
 
 // ── ATOM parser ───────────────────────────────────────────────────────────────
@@ -316,7 +323,7 @@ export async function GET(req: NextRequest) {
         country: geo.name_fr, country_en: geo.name_en, country_ar: geo.name_ar,
         region: geo.region, lat: geo.lat, lng: geo.lng,
         cases, deaths, risk_level: riskLevel, date: entry.date,
-        source: entry.url, description, active: true, is_seed: false,
+        source: entry.url, description, active: true, is_seed: false, source_priority: 5,
         admin1: null, admin1_lat: null, admin1_lng: null,
       });
       if (error) { log.push({ label, status: "error", detail: error.message }); results.errors++; }
