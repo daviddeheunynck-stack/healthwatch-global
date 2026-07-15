@@ -33,8 +33,12 @@ function esc(s: string): string {
     .replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 }
 
-async function sendEmail(to: string, subject: string, html: string) {
-  if (!BREVO_API_KEY || !to) return;
+// Returns whether the email actually sent — callers previously assumed
+// success from the fact that this was called at all (see weekly-digest for
+// the same class of bug: BREVO_API_KEY missing was indistinguishable from a
+// successful send).
+async function sendEmail(to: string, subject: string, html: string): Promise<boolean> {
+  if (!BREVO_API_KEY || !to) return false;
   try {
     const res = await fetch("https://api.brevo.com/v3/smtp/email", {
       method: "POST",
@@ -50,10 +54,13 @@ async function sendEmail(to: string, subject: string, html: string) {
     if (!res.ok) {
       const errText = await res.text();
       Sentry.captureMessage(`[check-new-don] Brevo ${res.status}: ${errText}`, "error");
+      return false;
     }
+    return true;
   } catch (e: unknown) {
     console.error("[check-new-don] email:", errorMessage(e));
     Sentry.captureException(e, { tags: { cron: "check-new-don" } });
+    return false;
   }
 }
 
@@ -192,12 +199,17 @@ export async function GET(req: NextRequest) {
 
   // ── 5. Alert ─────────────────────────────────────────────────────────────
   const adminEmail = ADMIN_EMAILS?.split(",")[0]?.trim();
+  let emailSent = false;
   if (adminEmail && isRealProduction) {
     const { subject, html } = buildEmail(summaries);
-    await sendEmail(adminEmail, subject, html);
+    emailSent = await sendEmail(adminEmail, subject, html);
   }
 
-  await logCronRun(supabase, "check-new-don", "ok", summaries.length);
+  // New DONs were found either way (the JSON response below still reports them),
+  // but flag the run as errored if the admin alert email itself didn't go out —
+  // otherwise a missing BREVO_API_KEY looks identical to "nothing to report".
+  const emailExpected = !!adminEmail && isRealProduction;
+  await logCronRun(supabase, "check-new-don", emailExpected && !emailSent ? "error" : "ok", summaries.length);
 
-  return NextResponse.json({ status: "new_don_found", count: summaries.length, summaries });
+  return NextResponse.json({ status: "new_don_found", count: summaries.length, emailSent, summaries });
 }

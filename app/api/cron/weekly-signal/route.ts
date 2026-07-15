@@ -136,10 +136,12 @@ function buildHtml(
 </html>`;
 }
 
-async function sendEmail(to: string, subject: string, html: string) {
+// Returns whether the email was actually sent (see weekly-digest for the
+// same fix — sent++ used to run unconditionally even when the key was missing).
+async function sendEmail(to: string, subject: string, html: string): Promise<boolean> {
   if (!BREVO_API_KEY) {
     console.warn("[weekly-signal] BREVO_API_KEY not set — skipping");
-    return;
+    return false;
   }
   const res = await fetch("https://api.brevo.com/v3/smtp/email", {
     method: "POST",
@@ -153,6 +155,7 @@ async function sendEmail(to: string, subject: string, html: string) {
     }),
   });
   if (!res.ok) throw new Error(`Brevo: ${await res.text()}`);
+  return true;
 }
 
 export async function GET(req: NextRequest) {
@@ -194,8 +197,9 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ skipped: "no free users" });
   }
 
-  let sent = 0;
-  let failed = 0;
+  let sent         = 0;
+  let failed       = 0;
+  let skippedNoKey = 0;
 
   for (const user of users) {
     if (!user.email) continue;
@@ -213,9 +217,11 @@ export async function GET(req: NextRequest) {
     );
     try {
       if (isRealProduction) {
-        await sendEmail(user.email, SUBJECTS[locale] ?? SUBJECTS.en, html);
+        const ok = await sendEmail(user.email, SUBJECTS[locale] ?? SUBJECTS.en, html);
+        if (ok) sent++; else skippedNoKey++;
+      } else {
+        sent++;
       }
-      sent++;
     } catch (e) {
       console.error(`[weekly-signal] ${user.email}:`, e);
       Sentry.captureException(e, { tags: { cron: "weekly-signal", user_id: user.id } });
@@ -223,6 +229,6 @@ export async function GET(req: NextRequest) {
     }
   }
 
-  await logCronRun(supabase, "weekly-signal", "ok", sent);
-  return NextResponse.json({ sent, failed, outbreaks: outbreaks.length });
+  await logCronRun(supabase, "weekly-signal", skippedNoKey > 0 ? "error" : "ok", sent);
+  return NextResponse.json({ sent, failed, skippedNoKey, outbreaks: outbreaks.length });
 }

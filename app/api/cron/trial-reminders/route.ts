@@ -14,10 +14,12 @@ const BREVO_KEY        = clean(process.env.BREVO_API_KEY);
 const SUPABASE_URL     = clean(process.env.NEXT_PUBLIC_SUPABASE_URL);
 const SUPABASE_SERVICE = clean(process.env.SUPABASE_SERVICE_ROLE_KEY);
 
-async function sendEmail(to: string, subject: string, html: string) {
+// Returns whether the email was actually sent (see weekly-digest for the
+// same fix — sent++ used to run unconditionally even when the key was missing).
+async function sendEmail(to: string, subject: string, html: string): Promise<boolean> {
   if (!BREVO_KEY) {
     console.warn("[trial-reminders] BREVO_API_KEY not set — skipping send");
-    return;
+    return false;
   }
   const res = await fetch("https://api.brevo.com/v3/smtp/email", {
     method: "POST",
@@ -34,6 +36,7 @@ async function sendEmail(to: string, subject: string, html: string) {
     const err = await res.text();
     throw new Error(`Brevo error for ${to}: ${err}`);
   }
+  return true;
 }
 
 export async function GET(req: NextRequest) {
@@ -102,8 +105,9 @@ export async function GET(req: NextRequest) {
 
   console.log(`[trial-reminders] ${profiles.length} trial(s) ending soon (J-3 or J-1)`);
 
-  let sent   = 0;
-  let failed = 0;
+  let sent         = 0;
+  let failed       = 0;
+  let skippedNoKey = 0;
 
   for (const profile of profiles) {
     if (!profile.email) continue;
@@ -124,9 +128,11 @@ export async function GET(req: NextRequest) {
       const { subject, html } = buildTrialEndingEmail(plan, locale, profile.trial_ends_at, !!profile.stripe_subscription_id, regionalContext);
 
       if (isRealProduction) {
-        await sendEmail(profile.email, subject, html);
+        const ok = await sendEmail(profile.email, subject, html);
+        if (ok) sent++; else skippedNoKey++;
+      } else {
+        sent++;
       }
-      sent++;
     } catch (err) {
       console.error(`[trial-reminders] Failed for ${profile.email}:`, err);
       Sentry.captureException(err, { tags: { cron: "trial-reminders", user_id: profile.id } });
@@ -140,7 +146,7 @@ export async function GET(req: NextRequest) {
   const hb = process.env.BETTERSTACK_HB_TRIAL_REMINDERS;
   if (hb) fetch(hb).catch(() => {});
 
-  await logCronRun(supabase, "trial-reminders", "ok", sent);
-  console.log(`[trial-reminders] Done — ${sent} sent, ${failed} failed.`);
-  return NextResponse.json({ sent, failed, total: profiles.length });
+  await logCronRun(supabase, "trial-reminders", skippedNoKey > 0 ? "error" : "ok", sent);
+  console.log(`[trial-reminders] Done — ${sent} sent, ${failed} failed, ${skippedNoKey} skipped (no key).`);
+  return NextResponse.json({ sent, failed, skippedNoKey, total: profiles.length });
 }

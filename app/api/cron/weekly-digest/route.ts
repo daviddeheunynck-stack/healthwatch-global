@@ -16,10 +16,13 @@ const BREVO_API_KEY      = clean(process.env.BREVO_API_KEY);
 const SUPABASE_URL       = clean(process.env.NEXT_PUBLIC_SUPABASE_URL);
 const SUPABASE_SERVICE_KEY = clean(process.env.SUPABASE_SERVICE_ROLE_KEY);
 
-async function sendEmail(to: string, subject: string, html: string) {
+// Returns whether the email was actually sent, so callers don't count a
+// skipped-for-missing-key send as a real one (found 2026-07-15 audit: sent++
+// used to run unconditionally after this call regardless of the outcome).
+async function sendEmail(to: string, subject: string, html: string): Promise<boolean> {
   if (!BREVO_API_KEY) {
     console.warn("[weekly-digest] BREVO_API_KEY not set — skipping send");
-    return;
+    return false;
   }
   const res = await fetch("https://api.brevo.com/v3/smtp/email", {
     method: "POST",
@@ -39,6 +42,7 @@ async function sendEmail(to: string, subject: string, html: string) {
     const err = await res.text();
     throw new Error(`Brevo error for ${to}: ${err}`);
   }
+  return true;
 }
 
 export async function GET(req: NextRequest) {
@@ -93,8 +97,9 @@ export async function GET(req: NextRequest) {
   console.log(`[weekly-digest] ${allOutbreaks.length} high-risk outbreaks in the past 7 days`);
 
   // ── Send loop ──────────────────────────────────────────────────────────────
-  let sent   = 0;
-  let failed = 0;
+  let sent        = 0;
+  let failed      = 0;
+  let skippedNoKey = 0;
 
   for (const sub of subscribers) {
     try {
@@ -111,9 +116,11 @@ export async function GET(req: NextRequest) {
 
       const { subject, html } = buildDigestEmail(topOutbreaks, region, locale, sub.id);
       if (isRealProduction) {
-        await sendEmail(sub.email, subject, html);
+        const ok = await sendEmail(sub.email, subject, html);
+        if (ok) sent++; else skippedNoKey++;
+      } else {
+        sent++;
       }
-      sent++;
     } catch (err) {
       console.error(`[weekly-digest] Failed to send to ${sub.email}:`, err);
       Sentry.captureException(err, { tags: { cron: "weekly-digest", sub_id: sub.id } });
@@ -124,7 +131,7 @@ export async function GET(req: NextRequest) {
     await new Promise((r) => setTimeout(r, 150));
   }
 
-  await logCronRun(supabase, "weekly-digest", "ok", sent);
-  console.log(`[weekly-digest] Done — ${sent} sent, ${failed} failed, ${subscribers.length} total.`);
-  return NextResponse.json({ sent, failed, total: subscribers.length });
+  await logCronRun(supabase, "weekly-digest", skippedNoKey > 0 ? "error" : "ok", sent);
+  console.log(`[weekly-digest] Done — ${sent} sent, ${failed} failed, ${skippedNoKey} skipped (no key), ${subscribers.length} total.`);
+  return NextResponse.json({ sent, failed, skippedNoKey, total: subscribers.length });
 }
