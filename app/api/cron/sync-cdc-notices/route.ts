@@ -85,11 +85,16 @@ function htmlToText(html: string): string {
 // through id="leftNav" (confirmed stable across level1/2/3 notices). Everything
 // outside that window is page chrome — skip links, masthead, the "outdated
 // browser" banner, footer — which must never leak into a scraped description.
-// Falls back to the full HTML if CDC changes their template, so callers degrade
-// rather than throw.
+// Returns "" if CDC changes their template rather than falling back to the full
+// HTML: the full page's chrome (nav, footer, other-notice links) would otherwise
+// feed extractNumbers/parseCDCDate/admin1 extraction wrong data instead of the
+// empty-string 0/0 the caller already treats as a visible skip. Found 2026-07-16.
 function extractNoticeContent(html: string): string {
   const start = html.indexOf('<div class="notice">');
-  if (start < 0) return html;
+  if (start < 0) {
+    console.warn("[cdc-notices] notice-content selector no longer matches — skipping notice");
+    return "";
+  }
   const end = html.indexOf('id="leftNav"', start);
   return end > start ? html.slice(start, end) : html.slice(start, start + 8000);
 }
@@ -259,14 +264,28 @@ export async function GET(req: NextRequest) {
 
     // Fetch the individual notice page
     let pageText = "";
+    let pageFetchFailed = false;
     try {
       const res = await fetch(CDC_BASE + notice.path, {
         headers: FETCH_HEADERS,
         signal:  AbortSignal.timeout(12_000),
       });
       if (res.ok) pageText = htmlToText(extractNoticeContent(await res.text()));
+      else pageFetchFailed = true;
     } catch (e) {
+      pageFetchFailed = true;
       console.warn("[cdc-notices] fetch page:", errorMessage(e));
+    }
+
+    // A transient fetch failure (timeout, 5xx) must not be treated the same as a
+    // page that was read and genuinely says 0 cases/deaths — extractNumbers("")
+    // also returns 0/0, which previously let a dead network request silently
+    // deactivate an active row below (guard:0/0 path) even though no notice
+    // content was ever read. Found 2026-07-16.
+    if (pageFetchFailed) {
+      log.push({ label, status: "skip", detail: "notice page unreachable — not evaluated" });
+      results.skipped++;
+      continue;
     }
 
     const { cases, deaths } = extractNumbers(pageText);
@@ -291,15 +310,18 @@ export async function GET(req: NextRequest) {
           .from("outbreaks").update({ active: false }).eq("id", existRow.id).lte("source_priority", 5).select("id");
         if (deactivateErr) {
           log.push({ label, status: "error", detail: deactivateErr.message });
+          results.errors++;
         } else if (!deactivatedRows || deactivatedRows.length === 0) {
           log.push({ label, status: "skip", detail: "blocked by source_priority guard — row owned by a higher-priority source" });
+          results.skipped++;
         } else {
           log.push({ label, status: "deactivated", detail: "0/0 cases — endemic advisory" });
+          results.skipped++;
         }
       } else {
         log.push({ label, status: "skip", detail: "0/0 cases — endemic advisory, not inserted" });
+        results.skipped++;
       }
-      results.skipped++;
       continue;
     }
 
@@ -322,6 +344,34 @@ export async function GET(req: NextRequest) {
 
       if (!isNewer && !casesDiff) {
         log.push({ label, status: "skip", detail: "data unchanged" });
+        results.skipped++;
+        continue;
+      }
+      // An older-dated notice with different numbers was previously NOT skipped
+      // here (only the "unchanged" case above was) — so a stale re-fetch with
+      // different (often worse) extracted numbers could still overwrite a more
+      // recent, more authoritative row. Same guard family as sync-outbreaks.
+      if (date < existRow.date) {
+        log.push({ label, status: "skip", detail: `older notice (${date}) than existing (${existRow.date})` });
+        results.skipped++;
+        continue;
+      }
+      // A Level 3 notice with no extractable case data (common — travel notices
+      // are prose, not case-count bulletins) must not blank out real numbers an
+      // authoritative source already established. Found 2026-07-16: a Level 3
+      // DRC Ebola notice with 0/0 parsed overwrote 1963/719 from ECDC this way.
+      if (cases === 0 && deaths === 0 && existRow.cases > 0) {
+        log.push({ label, status: "skip", detail: `guard:zero-count — notice has no case data, preserving existing ${existRow.cases}/${existRow.deaths}` });
+        results.skipped++;
+        continue;
+      }
+      if (existRow.cases > 100 && cases > 0 && cases < existRow.cases * 0.3) {
+        log.push({ label, status: "skip", detail: `guard:collapse — parsed ${cases} vs existing ${existRow.cases} (<30%)` });
+        results.skipped++;
+        continue;
+      }
+      if (deaths === 0 && existRow.deaths > 0) {
+        log.push({ label, status: "skip", detail: `guard:zero-death — parsed 0 vs existing ${existRow.deaths} deaths` });
         results.skipped++;
         continue;
       }
@@ -383,6 +433,7 @@ export async function GET(req: NextRequest) {
         description,
         active:      true,
         is_seed:     false,
+        source_priority: 5,
         admin1:      admin1 ?? null,
         admin1_lat:  admin1_lat ?? null,
         admin1_lng:  admin1_lng ?? null,
