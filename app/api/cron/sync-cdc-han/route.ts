@@ -55,8 +55,15 @@ const FETCH_HEADERS = {
   "Accept-Language": "en-US,en;q=0.9",
 };
 
-// Country names sorted longest-first to avoid short matches before full names
-const COUNTRY_NAMES = Object.keys(COUNTRIES).sort((a, b) => b.length - a.length);
+// Country names sorted longest-first to avoid short matches before full names.
+// Excludes aggregate pseudo-countries ("Global", "Multi-country", "African Region"...):
+// left in, boilerplate like "the global health security" would match the "Global"
+// alias and become countries[0] whenever it's mentioned before the real country,
+// causing the aggregate-rejection guard below to discard the whole article instead
+// of finding the real one. Found 2026-07-16 (same class as sync-africa-cdc).
+const COUNTRY_NAMES = Object.keys(COUNTRIES)
+  .filter((name) => !isAggregateCountry(COUNTRIES[name]))
+  .sort((a, b) => b.length - a.length);
 
 const TEXT_ALIASES: Record<string, string> = {
   " drc ":    "Democratic Republic of the Congo",

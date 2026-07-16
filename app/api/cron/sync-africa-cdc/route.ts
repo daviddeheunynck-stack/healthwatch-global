@@ -34,9 +34,15 @@ const FETCH_HEADERS = {
   "Accept-Language": "en-US,en;q=0.9",
 };
 
-// African country names sorted longest-first
+// African country names sorted longest-first. Excludes aggregate pseudo-countries
+// ("Global", "Multi-country", "African Region"...) — they're tagged region:"africa"
+// as a placeholder, not a real regional assignment, so left in they'd match
+// boilerplate like "the global response to the Ebola outbreak" and become
+// primaryCountry whenever mentioned before the real country, causing the
+// aggregate-rejection guard below to discard the whole article instead of
+// finding the real one. Found 2026-07-16.
 const AFRICA_COUNTRIES = Object.entries(COUNTRIES)
-  .filter(([, geo]) => geo.region === "africa")
+  .filter(([, geo]) => geo.region === "africa" && !isAggregateCountry(geo))
   .map(([key]) => key)
   .sort((a, b) => b.length - a.length);
 

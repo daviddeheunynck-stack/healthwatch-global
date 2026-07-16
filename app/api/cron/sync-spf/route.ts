@@ -40,7 +40,14 @@ const FETCH_HEADERS = {
   "Accept-Language": "fr-FR,fr;q=0.9,en;q=0.8",
 };
 
-const COUNTRY_NAMES = Object.keys(COUNTRIES).sort((a, b) => b.length - a.length);
+// Excludes aggregate pseudo-countries ("Global", "Multi-country", "African Region"...):
+// left in, boilerplate like "la situation mondiale" would match the "Global" alias
+// and become countries[0] whenever it's mentioned before the real country, causing
+// the aggregate-rejection guard below to discard the whole article instead of
+// finding the real one. Found 2026-07-16 (same class as sync-africa-cdc).
+const COUNTRY_NAMES = Object.keys(COUNTRIES)
+  .filter((name) => !isAggregateCountry(COUNTRIES[name]))
+  .sort((a, b) => b.length - a.length);
 
 // French country name fragments → canonical English key
 const FR_ALIASES: Record<string, string> = {

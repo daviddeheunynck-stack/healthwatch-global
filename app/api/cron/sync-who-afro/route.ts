@@ -35,7 +35,14 @@ const FETCH_HEADERS = {
   "Accept-Language": "en-US,en;q=0.9",
 };
 
-const COUNTRY_NAMES = Object.keys(COUNTRIES).sort((a, b) => b.length - a.length);
+// Excludes aggregate pseudo-countries ("Global", "Multi-country", "African Region"...):
+// left in, boilerplate like "the global situation" would match the "Global" alias
+// and become countries[0] whenever it's mentioned before the real country, causing
+// the aggregate-rejection guard below to discard the whole article instead of
+// finding the real one. Found 2026-07-16 (same class as sync-africa-cdc).
+const COUNTRY_NAMES = Object.keys(COUNTRIES)
+  .filter((name) => !isAggregateCountry(COUNTRIES[name]))
+  .sort((a, b) => b.length - a.length);
 
 // Overall wall-clock budget for the per-article fetch loop, well under maxDuration=120s
 // to leave room for the list fetch + Supabase reads/writes + response serialization.
@@ -396,8 +403,25 @@ export async function GET(req: NextRequest) {
         results.skipped++;
         continue;
       }
+      // Spike guard: >3x jump is almost certainly a parsing anomaly.
+      if (cases > 0 && existingRow.cases > 0 && cases > existingRow.cases * 3) {
+        log.push({ label, status: "skip", detail: `guard:spike — parsed ${cases} vs existing ${existingRow.cases} (>3x)` });
+        results.skipped++;
+        continue;
+      }
       if (existingRow.cases > 100 && cases > 0 && cases < existingRow.cases * 0.3) {
         log.push({ label, status: "skip", detail: `guard:collapse — parsed ${cases} vs existing ${existingRow.cases} (<30%)` });
+        results.skipped++;
+        continue;
+      }
+      // Zero-case guard: never let a parser-miss zero overwrite a real count —
+      // the same class of bug the zero-death guard below already covers, but for
+      // cases (found 2026-07-16: an AFRO bulletin stating only a death count,
+      // e.g. "12 people have died since the last update", parses to cases=0
+      // while deaths>0, so neither the 0/0 skip above nor the zero-death guard
+      // below catches it).
+      if (cases === 0 && existingRow.cases > 0) {
+        log.push({ label, status: "skip", detail: `guard:zero-case — parsed 0 vs existing ${existingRow.cases}` });
         results.skipped++;
         continue;
       }
