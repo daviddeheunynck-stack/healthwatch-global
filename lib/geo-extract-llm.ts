@@ -1,5 +1,6 @@
 import Anthropic from "@anthropic-ai/sdk";
 import { createClient } from "@supabase/supabase-js";
+import * as Sentry from "@sentry/nextjs";
 
 // Module-level cache so Supabase isn't hit on every call within one function invocation
 let _cachedKey: string | null = null;
@@ -101,10 +102,21 @@ export async function extractAdmin1LLM(
 
     return raw;
   } catch (err) {
-    console.warn(
-      "[geo-extract-llm] Haiku API error:",
-      err instanceof Error ? err.message : String(err)
-    );
+    const message = err instanceof Error ? err.message : String(err);
+    console.warn("[geo-extract-llm] Haiku API error:", message);
+    // This call degrades gracefully (admin1 falls back to a ~8% hit-rate regex, callers
+    // never see the failure), which is exactly why it went unnoticed for a full day
+    // (found 2026-07-16 by reading raw Vercel logs, not any alert). The billing case is
+    // the one that needs a human, not just a retry, so surface it via the existing
+    // Sentry -> daily health-check email pipeline instead of adding a new alert channel.
+    // Same message string each time so Sentry groups repeats into one issue (with an
+    // incrementing count), rather than paging once per failed extraction.
+    if (/credit balance is too low/i.test(message)) {
+      Sentry.captureMessage(
+        "[geo-extract-llm] Anthropic API credit balance too low — top up at console.anthropic.com (Settings > Billing)",
+        "error",
+      );
+    }
     return null;
   }
 }
