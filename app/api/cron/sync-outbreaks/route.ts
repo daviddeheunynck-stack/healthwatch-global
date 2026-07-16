@@ -353,10 +353,15 @@ export async function GET(req: NextRequest) {
     .eq("active", true);
 
   if (activeOutbreaks && activeOutbreaks.length > 0) {
+    // outbreak_snapshots.cases/deaths are NOT NULL DEFAULT 0, but outbreaks.cases/deaths
+    // are nullable — a single active row with a null count (e.g. a WHO bulletin with no
+    // death toll) fails the whole batch upsert, silently freezing trend history for every
+    // other active outbreak too (found 2026-07-16: Yellow fever/Global's null deaths had
+    // blocked every snapshot since 2026-06-30).
     const snapshots = activeOutbreaks.map((o) => ({
       outbreak_id: o.id,
-      cases:       o.cases,
-      deaths:      o.deaths,
+      cases:       o.cases  ?? 0,
+      deaths:      o.deaths ?? 0,
       snapped_at:  today,
     }));
     const { error: snapErr } = await supabase
