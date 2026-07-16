@@ -199,6 +199,13 @@ async function runHealthCheck(_req: NextRequest, supabase: any) {
       monitorSlug: "health-check",
       status: "ok",
     });
+    // captureCheckIn is fire-and-forget — without an explicit flush, a manual
+    // curl trigger against this route showed the check-in still queued when
+    // the serverless function returned, and Sentry recorded it as "timeout"
+    // instead of "ok" once maxRuntime elapsed. A bounded flush here (capped
+    // so a slow/unreachable Sentry endpoint can't hang the response) fixes
+    // that without changing anything else. Found 2026-07-16.
+    await Sentry.flush(2000);
   }
 
   return Response.json({
