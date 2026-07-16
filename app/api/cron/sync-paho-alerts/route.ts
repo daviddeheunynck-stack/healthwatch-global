@@ -1,4 +1,6 @@
-// PAHO scraper — runs every Tuesday at 09:30 UTC. Two independent sources:
+// PAHO scraper — runs daily at 09:30 UTC (see vercel.json: "30 9 * * *"; the
+// old "every Tuesday" comment here predated this file and was stale). Two
+// independent sources:
 //
 //   1. Epidemiological alerts and updates (/en/epidemiological-alerts-and-updates)
 //   2. Measles situation reports (/en/situation-reports)
