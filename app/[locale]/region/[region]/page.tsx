@@ -6,7 +6,7 @@ import { createClient } from "@supabase/supabase-js";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
-import { getLocalizedDisease, getLocalizedCountry, filterDisplayActive } from "@/lib/outbreaks";
+import { getLocalizedDisease, getLocalizedCountry, filterDisplayActive, isAggregateOutbreakRow } from "@/lib/outbreaks";
 import { diseaseToSlug, normalizeDisease } from "@/lib/disease-data";
 import { getOutbreakTrendsBulkCached } from "@/lib/outbreak-trend";
 import type { Outbreak } from "@/lib/outbreaks";
@@ -215,12 +215,37 @@ export default async function RegionPage({
   // the disease page (see b4044e5): summing every historical row inflates these far beyond
   // the current situation (found 2026-07-15: Africa region showed 169M cases, dominated by
   // Malaria GHO annual estimates and superseded outbreak snapshots — see filterDisplayActive).
-  const totalCases  = active.reduce((s, o) => s + (o.cases || 0), 0);
-  const totalDeaths = active.reduce((s, o) => s + (o.deaths || 0), 0);
+  //
+  // Within `active`, a disease can also have both a "Global"/regional roll-up row (a WHO/ECDC
+  // bulletin that already cumulates every country) and per-country rows tracked separately for
+  // the same outbreak — summing every row double-counts the aggregate on top of its own
+  // components (same root cause as the disease page fix, a4ad386; found 2026-07-16 via Mpox's
+  // "Global" row inflating this page's Africa total by ~24% on top of Kenya/Uganda/Rwanda/
+  // Burundi). Unlike the disease page, this page mixes every disease active in the region into
+  // one total, so the country/aggregate split has to happen per disease first — country rows
+  // win when any exist for that disease in this region, falling back to the aggregate row(s)
+  // only when a disease has no country-level row here at all (e.g. MERS-CoV and Yellow fever
+  // in Africa, tracked only via a "Global" WHO bulletin with no country breakdown).
+  const activeByDisease = new Map<string, Outbreak[]>();
+  for (const o of active) {
+    const diseaseKey = normalizeDisease(o.disease_en || o.disease).name_en.toLowerCase();
+    const bucket = activeByDisease.get(diseaseKey);
+    if (bucket) bucket.push(o); else activeByDisease.set(diseaseKey, [o]);
+  }
+  const totalsSource: Outbreak[] = [];
+  for (const rows of activeByDisease.values()) {
+    const countryRows = rows.filter((o) => !isAggregateOutbreakRow(o));
+    totalsSource.push(...(countryRows.length > 0 ? countryRows : rows));
+  }
+
+  const totalCases  = totalsSource.reduce((s, o) => s + (o.cases || 0), 0);
+  const totalDeaths = totalsSource.reduce((s, o) => s + (o.deaths || 0), 0);
   const numLocale   = l === "ar" ? "ar-SA" : l;
-  // Active countries only — consistent with cases/deaths above. Historical countries are
-  // still visible in the history section below.
-  const countriesSet = new Set(active.map((o) => o.country_en || o.country).filter(Boolean));
+  // Active real countries only — never the "Global"/regional aggregate itself (it's not a
+  // place). Historical countries are still visible in the history section below.
+  const countriesSet = new Set(
+    active.filter((o) => !isAggregateOutbreakRow(o)).map((o) => o.country_en || o.country).filter(Boolean)
+  );
 
   const trendsMap = active.length > 0
     ? new Map(Object.entries(await getOutbreakTrendsBulkCached(active.map((o) => o.id))))
