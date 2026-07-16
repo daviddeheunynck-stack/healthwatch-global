@@ -387,6 +387,26 @@ export async function GET(req: NextRequest) {
         results.skipped++;
         continue;
       }
+
+      // Same data-quality guards as sync-outbreaks (missing here until now — a
+      // gap that let a mis-parsed weekly delta-only AFRO bulletin overwrite the
+      // DR Congo/Ebola row with 259/0 in place of 1963/719, found 2026-07-16).
+      if (date < existingRow.date) {
+        log.push({ label, status: "skip", detail: `older report (${date}) than existing (${existingRow.date})` });
+        results.skipped++;
+        continue;
+      }
+      if (existingRow.cases > 100 && cases > 0 && cases < existingRow.cases * 0.3) {
+        log.push({ label, status: "skip", detail: `guard:collapse — parsed ${cases} vs existing ${existingRow.cases} (<30%)` });
+        results.skipped++;
+        continue;
+      }
+      if (deaths === 0 && existingRow.deaths > 0) {
+        log.push({ label, status: "skip", detail: `guard:zero-death — parsed 0 vs existing ${existingRow.deaths} deaths` });
+        results.skipped++;
+        continue;
+      }
+
       const updatePayload: Record<string, unknown> = {
         cases, deaths, date, source: entry.url,
         description, risk_level: riskLevel, active: true, source_priority: 5,
