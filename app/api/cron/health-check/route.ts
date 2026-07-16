@@ -176,17 +176,28 @@ async function runHealthCheck(_req: NextRequest, supabase: any) {
     );
   }
 
-  // The check-in reflects whether this cron itself ran successfully, not whether
-  // Sentry has unrelated issues — otherwise flagging sentryAlert here creates a
-  // check-in failure, which creates a new Sentry issue, which triggers sentryAlert
-  // on the next run: a self-sustaining loop that never resolves on its own.
+  // logCronRun's status mirrors hasOverdue — read by this same route's own
+  // cronMap/CRON_WINDOWS check next run, and by the email table below, to
+  // color health-check's row. Independent of the Sentry Crons check-in below.
   await logCronRun(supabase, "health-check", hasOverdue ? "error" : "ok", overdue.length + sentryIssues.length);
 
   if (isRealProduction) {
+    // The check-in only reflects whether this cron itself completed without
+    // throwing — not hasOverdue (already reported separately above via
+    // captureMessage) or sentryAlert (removed 2026-07-14, see git history:
+    // that one created a real self-sustaining loop). Tying the check-in to
+    // hasOverdue didn't loop, but still made the Sentry Crons issue "Cron
+    // failure: health-check" look like this job was crashing, when it was
+    // actually completing fine every day and honestly reporting an unrelated
+    // cron running late (12 occurrences since 2026-06-30, none an actual
+    // health-check failure). A genuine crash before this line still surfaces
+    // correctly: the "in_progress" check-in opened above (checkInId) is left
+    // dangling, and Sentry Crons reports a missed/timed-out check-in instead
+    // of a misleading "ok". Found 2026-07-16.
     Sentry.captureCheckIn({
       checkInId,
       monitorSlug: "health-check",
-      status: hasOverdue ? "error" : "ok",
+      status: "ok",
     });
   }
 
