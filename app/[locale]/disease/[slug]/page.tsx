@@ -9,7 +9,7 @@ import type { Metadata } from "next";
 import { slugToDisease, diseaseToSlug, allDiseases, normalizeDisease, getContagiosityLevel } from "@/lib/disease-data";
 import { countryToSlug } from "@/lib/country-utils";
 import type { PathogenType, TransmissionMode, VaccineStatus, TreatmentStatus, ContagiosityLevel } from "@/lib/disease-data";
-import { getLocalizedDisease, getLocalizedCountry, filterDisplayActive } from "@/lib/outbreaks";
+import { getLocalizedDisease, getLocalizedCountry, filterDisplayActive, isAggregateOutbreakRow } from "@/lib/outbreaks";
 import { getOutbreakTrendsBulkCached } from "@/lib/outbreak-trend";
 import type { Outbreak } from "@/lib/outbreaks";
 import EmailCapture from "@/components/EmailCapture";
@@ -347,6 +347,23 @@ export default async function DiseasePage({
   const activeIds = new Set(active.map((o) => o.id));
   const history   = allOutbreaks.filter((o) => !activeIds.has(o.id));
 
+  // A disease can have both a "Global"/regional roll-up row (a WHO/ECDC bulletin that already
+  // cumulates every country, e.g. Mpox's "Multi-country outbreak of mpox, external situation
+  // report #67") and per-country rows tracked separately for the same outbreak (Kenya, Burundi,
+  // Rwanda, Uganda for the clade Ib cluster). Summing every active row double-counts the
+  // aggregate on top of its own components. Country-level rows are HealthWatch's timelier,
+  // more granular signal, so prefer them for the total; fall back to the aggregate row(s) only
+  // when they're the sole source for this disease (e.g. Yellow fever has no country breakdown).
+  // The aggregate row is still shown in the "Active outbreaks" list below — this only affects
+  // the summed stats, not what's visible.
+  const activeCountryRows = active.filter((o) => !isAggregateOutbreakRow(o));
+  const activeAggregateRows = active.filter((o) => isAggregateOutbreakRow(o));
+  const totalsSource = activeCountryRows.length > 0 ? activeCountryRows : activeAggregateRows;
+  // For the share card's single "country" line — prefer a real place over "Global" so the
+  // share text doesn't read as "cases in Global"; falls back to whatever's first when the
+  // disease has no country-level row at all (e.g. Yellow fever).
+  const shareRepresentative = activeCountryRows[0] ?? active[0];
+
   // Strain-specific vaccine override: if any active outbreak is a strain not covered by the
   // listed vaccine (e.g. Bundibugyo Ebola vs Ervebo which covers Zaïre strain only), downgrade badge.
   // disease_en/disease are kept canonical (no species suffix) so outbreak rows stay matchable
@@ -356,13 +373,13 @@ export default async function DiseasePage({
     /za[ïi]re/i.test(info.vaccineName ?? "") &&
     active.some((o) => /bundibugyo/i.test(`${o.disease_en || o.disease || ""} ${o.description || ""}`));
 
-  const totalCases  = active.reduce((s, o) => s + (o.cases || 0), 0);
-  const totalDeaths = active.reduce((s, o) => s + (o.deaths || 0), 0);
+  const totalCases  = totalsSource.reduce((s, o) => s + (o.cases || 0), 0);
+  const totalDeaths = totalsSource.reduce((s, o) => s + (o.deaths || 0), 0);
   const numLocale   = l === "ar" ? "ar-SA" : l;
   const cfr         = totalCases > 0 ? ((totalDeaths / totalCases) * 100).toFixed(1) : null;
-  // Active countries only — consistent with cases/deaths which also use `active`.
-  // Historical countries are still visible in the country pills section below.
-  const countriesSet = new Set(active.map((o) => o.country_en || o.country).filter(Boolean));
+  // Active real countries only — never the "Global"/regional aggregate itself (it's not a
+  // place). Historical countries are still visible in the country pills section below.
+  const countriesSet = new Set(activeCountryRows.map((o) => o.country_en || o.country).filter(Boolean));
 
   // Most recent update across active outbreaks — used as "data as of" timestamp
   const latestUpdate = active.reduce<string | null>((latest, o) => {
@@ -372,8 +389,11 @@ export default async function DiseasePage({
   }, null);
 
   // Unique countries with active-status for the "Countries affected" chips
+  // (excludes "Global"/regional aggregate rows for the same reason as countriesSet above —
+  // they aren't a place, and would otherwise render a chip linking to a nonsensical country page)
   const affectedCountryMap = new Map<string, { country_en: string; hasActive: boolean }>();
   for (const o of allOutbreaks) {
+    if (isAggregateOutbreakRow(o)) continue;
     const key = o.country_en || o.country;
     if (!key) continue;
     const existing = affectedCountryMap.get(key);
@@ -443,7 +463,7 @@ export default async function DiseasePage({
         </Link>
         <ShareOutbreakButton
           disease={diseaseName}
-          country={active[0] ? (active[0].country_en ?? active[0].country) : ""}
+          country={shareRepresentative ? (shareRepresentative.country_en ?? shareRepresentative.country) : ""}
           cases={totalCases}
           riskLevel={active.some((o) => o.risk_level === "high") ? "high" : active.some((o) => o.risk_level === "medium") ? "medium" : "low"}
           locale={l}

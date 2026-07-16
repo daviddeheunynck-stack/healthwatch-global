@@ -2,6 +2,7 @@ import { createClient } from "@supabase/supabase-js";
 import { unstable_cache } from "next/cache";
 import * as Sentry from "@sentry/nextjs";
 import { normalizeDisease, matchEventNameTranslation } from "./disease-data";
+import { findCountry, isAggregateCountry } from "./geo-data";
 import type { OutbreakTrend } from "./outbreak-trend";
 
 const BOM   = String.fromCharCode(65279);
@@ -532,6 +533,20 @@ export function filterDisplayActive<T extends DisplayActiveRow>(rows: T[]): T[] 
     if (activeKeys.has(displayActiveKey(o))) return false;
     return isDisplayActive(o);
   });
+}
+
+// True when a row's "country" is actually a WHO/ECDC roll-up ("Global", "Multi-country",
+// "Africa (regional)"...) rather than a real place — see isAggregateCountry() in geo-data.ts.
+// Pages that sum cases/deaths per disease across rows must exclude these when real
+// country-level rows exist for the same disease, otherwise a "Global situation report"
+// figure (which already cumulates every country) gets added on top of its own components.
+// Found 2026-07-16: Mpox summed Global (61,061) + Kenya/Burundi/Rwanda/Uganda on top,
+// showing 75,587 — ~24% inflated. Same family as the Ebola/DRC fix (see
+// project_ebola_drc_display_inflation_fixed_2026_07_15), different root cause: that one was
+// duplicate/superseded rows, this one is a legitimate aggregate counted alongside its own detail.
+export function isAggregateOutbreakRow(o: Pick<Outbreak, "country_en" | "country">): boolean {
+  const geo = findCountry(o.country_en || o.country);
+  return !!geo && isAggregateCountry(geo);
 }
 
 const STALE_DAYS = 60;
