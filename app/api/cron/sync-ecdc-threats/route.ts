@@ -231,6 +231,20 @@ async function extractItemData(item: RSSItem, today: string, dbg?: { reason?: st
   }
   const diseaseInfo = normalizeDisease(titleCore);
 
+  // "X worldwide overview" is ECDC's own naming convention (see extractECDCDisease
+  // above) for a global cumulative rollup with no single-country focus. Any country
+  // name the fallback body-scan below might pick up from such a page (nav, "related
+  // topics" sidebar, etc.) is incidental page chrome, not the bulletin's actual
+  // subject. Found 2026-06-28, patched then by deactivating the resulting row
+  // (20260628000000_deactivate_bad_ecdc_rows.sql) without fixing this root cause —
+  // the row still existed and resurfaced via isDisplayActive()'s 60-day recency
+  // fallback (found again 2026-07-16, MERS-CoV worldwide overview misattributed to
+  // "DR Congo"). Skip these entirely rather than guess.
+  if (/\bworldwide\s+overview\b/i.test(item.title)) {
+    if (dbg) dbg.reason = "worldwide-scope overview — not attributable to a single country";
+    return [];
+  }
+
   // Fetch article page for full case numbers and country context
   let articleText = "";
   try {
