@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { jsonLdHtml } from "@/lib/json-ld";
 
 const LOCALES = ["en", "fr", "es", "ar", "id"] as const;
 const OG_LOCALE: Record<string, string> = {
@@ -110,7 +111,7 @@ export default async function PilotLayout({
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+        dangerouslySetInnerHTML={{ __html: jsonLdHtml(schema) }}
       />
       {children}
     </>

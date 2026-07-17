@@ -13,6 +13,7 @@ import ShareOutbreakButton from "@/components/ShareOutbreakButton";
 import OutbreakCasesChart from "@/components/OutbreakCasesChart";
 import { getLocalizedDisease, getLocalizedCountry, getLocalizedDescription, sourceStatus, sourceName, staleOutbreakDays } from "@/lib/outbreaks";
 import { diseaseToSlug, matchDisease } from "@/lib/disease-data";
+import { jsonLdHtml } from "@/lib/json-ld";
 import { countryToSlug } from "@/lib/country-utils";
 import type { Outbreak } from "@/lib/outbreaks";
 import { getResponseGuidance, RESPONSE_ACTIONS } from "@/lib/response-guidance";
@@ -357,7 +358,7 @@ export default async function OutbreakPage({
   return (
     <div className={`max-w-3xl mx-auto${isRtl ? " text-right" : ""}`}>
       {jsonLd.map((s, i) => (
-        <script key={i} type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(s) }} />
+        <script key={i} type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdHtml(s) }} />
       ))}
 
       {/* Breadcrumb row */}

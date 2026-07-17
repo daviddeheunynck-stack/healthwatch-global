@@ -8,6 +8,7 @@ import type { Metadata } from "next";
 import { countryToSlug, getLocalizedCountryName } from "@/lib/country-utils";
 import type { Outbreak } from "@/lib/outbreaks";
 import EmailCapture from "@/components/EmailCapture";
+import { jsonLdHtml } from "@/lib/json-ld";
 
 export const revalidate = 3600;
 
@@ -255,7 +256,7 @@ export default async function CountriesPage({
   return (
     <div className="max-w-5xl mx-auto py-4 space-y-10" dir={isRtl ? "rtl" : "ltr"}>
       {jsonLd.map((s, i) => (
-        <script key={i} type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(s) }} />
+        <script key={i} type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdHtml(s) }} />
       ))}
 
       {/* Header */}

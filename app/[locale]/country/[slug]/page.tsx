@@ -13,6 +13,7 @@ import type { DiseaseInfo, AppRegion } from "@/lib/disease-data";
 import type { Outbreak } from "@/lib/outbreaks";
 import { getOutbreakTrendsBulkCached } from "@/lib/outbreak-trend";
 import ShareOutbreakButton from "@/components/ShareOutbreakButton";
+import { jsonLdHtml } from "@/lib/json-ld";
 import WatchButton from "@/components/WatchButton";
 import EmailCapture from "@/components/EmailCapture";
 import CountryAlertNudge from "@/components/CountryAlertNudge";
@@ -365,7 +366,7 @@ export default async function CountryPage({
   return (
     <div className="max-w-4xl mx-auto py-4 space-y-10" dir={isRtl ? "rtl" : "ltr"}>
       {jsonLd.map((s, i) => (
-        <script key={i} type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(s) }} />
+        <script key={i} type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdHtml(s) }} />
       ))}
 
       {/* Breadcrumb */}

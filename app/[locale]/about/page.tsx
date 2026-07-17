@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Activity, Globe, Database, Zap, Users, User, ArrowLeft, ShieldCheck, Mail, ArrowRight } from "lucide-react";
 import type { Metadata } from "next";
+import { jsonLdHtml } from "@/lib/json-ld";
 
 const ABOUT_META: Record<string, { title: string; description: string }> = {
   en: {
@@ -319,7 +320,7 @@ export default async function AboutPage({
 
   return (
     <>
-    <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(orgSchema) }} />
+    <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdHtml(orgSchema) }} />
     <div className="max-w-3xl mx-auto space-y-12 py-4" dir={isRtl ? "rtl" : undefined}>
 
       {/* Back */}

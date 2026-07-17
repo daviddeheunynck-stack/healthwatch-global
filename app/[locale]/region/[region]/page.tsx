@@ -11,6 +11,7 @@ import { diseaseToSlug, normalizeDisease } from "@/lib/disease-data";
 import { getOutbreakTrendsBulkCached } from "@/lib/outbreak-trend";
 import type { Outbreak } from "@/lib/outbreaks";
 import EmailCapture from "@/components/EmailCapture";
+import { jsonLdHtml } from "@/lib/json-ld";
 
 export const revalidate = 3600;
 
@@ -276,7 +277,7 @@ export default async function RegionPage({
   return (
     <div className="max-w-4xl mx-auto px-4 py-8 space-y-10" dir={isRtl ? "rtl" : undefined}>
       {jsonLd.map((s, i) => (
-        <script key={i} type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(s) }} />
+        <script key={i} type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdHtml(s) }} />
       ))}
 
       <nav className="flex items-center gap-2 text-sm text-gray-500">

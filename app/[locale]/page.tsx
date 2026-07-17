@@ -13,6 +13,7 @@ import LandingPage from "@/components/LandingPage";
 import CampaignRefTracker from "@/components/CampaignRefTracker";
 import OutbreakTable from "@/components/OutbreakTable";
 import FreshnessBadge from "@/components/FreshnessBadge";
+import { jsonLdHtml } from "@/lib/json-ld";
 import NewThisWeekWidget from "@/components/NewThisWeekWidget";
 import PushNotificationBanner from "@/components/PushNotificationBanner";
 import CsvExportButton from "@/components/CsvExportButton";
@@ -657,7 +658,7 @@ export default async function DashboardPage({
     return (
       <>
         {schemas.map((s, i) => (
-          <script key={i} type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(s) }} />
+          <script key={i} type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdHtml(s) }} />
         ))}
         <LandingPage locale={locale} />
         <CampaignRefTracker />

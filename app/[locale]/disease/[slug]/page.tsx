@@ -13,6 +13,7 @@ import { getLocalizedDisease, getLocalizedCountry, filterDisplayActive, isAggreg
 import { getOutbreakTrendsBulkCached } from "@/lib/outbreak-trend";
 import type { Outbreak } from "@/lib/outbreaks";
 import EmailCapture from "@/components/EmailCapture";
+import { jsonLdHtml } from "@/lib/json-ld";
 import DiseaseAlertNudge from "@/components/DiseaseAlertNudge";
 import ShareOutbreakButton from "@/components/ShareOutbreakButton";
 import WatchButton from "@/components/WatchButton";
@@ -453,7 +454,7 @@ export default async function DiseasePage({
   return (
     <div className="max-w-4xl mx-auto px-4 py-8 space-y-10" dir={isRtl ? "rtl" : undefined}>
       {jsonLd.map((s, i) => (
-        <script key={i} type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(s) }} />
+        <script key={i} type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdHtml(s) }} />
       ))}
 
       {/* Back link */}

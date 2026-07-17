@@ -3,6 +3,7 @@ import { Check, Gift, ArrowRight, Star, Clock, Shield, Mail, Users, Globe, Build
 import PricingCards from "@/components/PricingCards";
 import Link from "next/link";
 import type { Metadata } from "next";
+import { jsonLdHtml } from "@/lib/json-ld";
 
 export const revalidate = 3600;
 
@@ -255,11 +256,11 @@ export default async function PricingPage({ params }: { params: Promise<{ locale
     <>
     <script
       type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(pricingSchema) }}
+      dangerouslySetInnerHTML={{ __html: jsonLdHtml(pricingSchema) }}
     />
     <script
       type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+      dangerouslySetInnerHTML={{ __html: jsonLdHtml(faqSchema) }}
     />
     <div className="space-y-20" dir={isRtl ? "rtl" : undefined}>
 

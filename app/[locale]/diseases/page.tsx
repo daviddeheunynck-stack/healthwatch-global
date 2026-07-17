@@ -10,6 +10,7 @@ import { getLocalizedDisease } from "@/lib/outbreaks";
 import type { Outbreak } from "@/lib/outbreaks";
 import EmailCapture from "@/components/EmailCapture";
 import DiseasesGrid from "./DiseasesGrid";
+import { jsonLdHtml } from "@/lib/json-ld";
 
 const DISEASE_COUNT = allDiseases().length;
 
@@ -217,7 +218,7 @@ export default async function DiseasesPage({
   return (
     <div className="max-w-5xl mx-auto px-4 py-8 space-y-8" dir={isRtl ? "rtl" : undefined}>
       {jsonLd.map((s, i) => (
-        <script key={i} type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(s) }} />
+        <script key={i} type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdHtml(s) }} />
       ))}
 
       {/* Back */}
