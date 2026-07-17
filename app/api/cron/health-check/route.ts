@@ -65,7 +65,15 @@ async function runHealthCheck(_req: NextRequest, supabase: any) {
       fetchSentryIssues(),
     ]);
 
-  const sentryIssues = sentryCheck.issues;
+  // David decided 2026-07-17 not to top up the Anthropic billing that backs
+  // extractAdmin1LLM — it degrades gracefully to the regex fallback (see
+  // lib/geo-extract-llm.ts), so this is now a known, accepted state rather
+  // than something to action daily. Keep it out of this digest specifically;
+  // /api/health's deep Sentry check is untouched, since that one is pulled
+  // on demand for a genuine audit, not pushed unprompted every morning.
+  const sentryIssues = sentryCheck.issues.filter(
+    (i) => !i.title.startsWith("[geo-extract-llm] Anthropic API credit balance too low"),
+  );
   const sentryBroken = !sentryCheck.ok;
   const sentryAlert  = sentryBroken || sentryIssues.length > 0;
 
