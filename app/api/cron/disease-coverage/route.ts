@@ -15,7 +15,7 @@
 // Schedule: 30 * * * *  (every hour at :30)
 
 import { NextRequest, NextResponse } from "next/server";
-import { createClient } from "@supabase/supabase-js";
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import * as Sentry from "@sentry/nextjs";
 import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
 import { matchDisease } from "@/lib/disease-data";
@@ -71,7 +71,20 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: "env:missing" }, { status: 500 });
   }
 
+  // Defensive wrapper: catch any uncaught exception so logCronRun is always called.
   const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
+  try {
+    return await runDiseaseCoverage(req, supabase);
+  } catch (err) {
+    console.error("[disease-coverage] uncaught exception:", err);
+    Sentry.captureException(err, { tags: { cron: "disease-coverage" } });
+    await logCronRun(supabase, "disease-coverage", "error", 0,
+      err instanceof Error ? err.message : String(err));
+    return NextResponse.json({ ok: false, error: String(err) }, { status: 500 });
+  }
+}
+
+async function runDiseaseCoverage(_req: NextRequest, supabase: SupabaseClient) {
   const adminEmail = ADMIN_EMAILS?.split(",")[0]?.trim();
 
   // ── 1. Outbreaks inserted in the last 90 minutes (covers all sync routes) ─

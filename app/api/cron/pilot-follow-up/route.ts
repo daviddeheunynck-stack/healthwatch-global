@@ -8,7 +8,7 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
-import { createClient } from "@supabase/supabase-js";
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import * as Sentry from "@sentry/nextjs";
 import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
 import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
@@ -204,6 +204,18 @@ export async function GET(req: NextRequest) {
   }
   const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE);
 
+  try {
+    return await runPilotFollowUp(req, supabase);
+  } catch (err) {
+    console.error("[pilot-follow-up] uncaught exception:", err);
+    Sentry.captureException(err, { tags: { cron: "pilot-follow-up" } });
+    await logCronRun(supabase, "pilot-follow-up", "error", 0,
+      err instanceof Error ? err.message : String(err));
+    return NextResponse.json({ ok: false, error: String(err) }, { status: 500 });
+  }
+}
+
+async function runPilotFollowUp(_req: NextRequest, supabase: SupabaseClient) {
   // ── 1. Find Pro users activated 7.5–8.5 days ago ─────────────────────────
   const now        = Date.now();
   const windowStart = new Date(now - 8.5 * 86_400_000).toISOString();

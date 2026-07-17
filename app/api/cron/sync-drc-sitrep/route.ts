@@ -8,7 +8,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
-import { createClient } from "@supabase/supabase-js";
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { errorMessage } from "@/lib/error";
 import * as Sentry from "@sentry/nextjs";
 
@@ -394,7 +394,21 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const supabase    = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
+  const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
+
+  // Defensive wrapper: catch any uncaught exception so logCronRun is always called.
+  try {
+    return await runSyncDrcSitrep(req, supabase);
+  } catch (err) {
+    console.error("[sync-drc-sitrep] uncaught exception:", err);
+    Sentry.captureException(err, { tags: { cron: "sync-drc-sitrep" } });
+    await logCronRun(supabase, "sync-drc-sitrep", "error", 0,
+      err instanceof Error ? err.message : String(err));
+    return NextResponse.json({ ok: false, error: String(err) }, { status: 500 });
+  }
+}
+
+async function runSyncDrcSitrep(_req: NextRequest, supabase: SupabaseClient) {
   const adminEmail  = ADMIN_EMAILS?.split(",")[0]?.trim();
 
   // Load last known sitrep number, and find the Ebola DRC outbreak row — unrelated

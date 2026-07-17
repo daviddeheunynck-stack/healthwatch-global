@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createClient } from "@supabase/supabase-js";
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { extractNumbers } from "@/lib/outbreak-parser";
 import { errorMessage } from "@/lib/error";
 import * as Sentry from "@sentry/nextjs";
@@ -113,6 +113,20 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: "env:missing" }, { status: 500 });
   }
   const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
+
+  // Defensive wrapper: catch any uncaught exception so logCronRun is always called.
+  try {
+    return await runDataQuality(req, supabase);
+  } catch (err) {
+    console.error("[data-quality] uncaught exception:", err);
+    Sentry.captureException(err, { tags: { cron: "data-quality" } });
+    await logCronRun(supabase, "data-quality", "error", 0,
+      err instanceof Error ? err.message : String(err));
+    return NextResponse.json({ ok: false, error: String(err) }, { status: 500 });
+  }
+}
+
+async function runDataQuality(_req: NextRequest, supabase: SupabaseClient) {
   const today    = new Date().toISOString().split("T")[0];
   const yesterday = new Date(Date.now() - 86_400_000).toISOString().split("T")[0];
   const adminEmail = ADMIN_EMAILS?.split(",")[0]?.trim();

@@ -4,7 +4,7 @@
 // marks the outbreak as notified so it is never re-sent.
 
 import { NextRequest, NextResponse } from "next/server";
-import { createClient } from "@supabase/supabase-js";
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { sendPushToMany } from "@/lib/push";
 import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 import { errorMessage } from "@/lib/error";
@@ -40,6 +40,19 @@ export async function GET(req: NextRequest) {
     clean(process.env.SUPABASE_SERVICE_ROLE_KEY)
   );
 
+  // Defensive wrapper: catch any uncaught exception so logCronRun is always called.
+  try {
+    return await runPushAlerts(req, supabase);
+  } catch (err) {
+    console.error("[push-alerts] uncaught exception:", err);
+    Sentry.captureException(err, { tags: { cron: "push-alerts" } });
+    await logCronRun(supabase, "push-alerts", "error", 0,
+      err instanceof Error ? err.message : String(err));
+    return NextResponse.json({ ok: false, error: String(err) }, { status: 500 });
+  }
+}
+
+async function runPushAlerts(_req: NextRequest, supabase: SupabaseClient) {
   // 1. New outbreaks — inserted in the last 25 h, not yet push-notified.
   //    The 25 h window prevents backfilling historical rows that predate this
   //    column being added (they all have push_notified_at = NULL but were

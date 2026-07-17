@@ -3,7 +3,7 @@
 // outbreak appears that hasn't been notified yet.
 
 import { NextRequest, NextResponse } from "next/server";
-import { createClient } from "@supabase/supabase-js";
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { buildDiseaseAlertEmail } from "@/lib/disease-alert-email";
 import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 import { diseaseToSlug } from "@/lib/disease-data";
@@ -63,6 +63,19 @@ export async function GET(req: NextRequest) {
     clean(process.env.SUPABASE_SERVICE_ROLE_KEY)
   );
 
+  // Defensive wrapper: catch any uncaught exception so logCronRun is always called.
+  try {
+    return await runDiseaseAlerts(req, supabase);
+  } catch (err) {
+    console.error("[disease-alerts] uncaught exception:", err);
+    Sentry.captureException(err, { tags: { cron: "disease-alerts" } });
+    await logCronRun(supabase, "disease-alerts", "error", 0,
+      err instanceof Error ? err.message : String(err));
+    return NextResponse.json({ ok: false, error: String(err) }, { status: 500 });
+  }
+}
+
+async function runDiseaseAlerts(_req: NextRequest, supabase: SupabaseClient) {
   // 1. Get all disease subscriptions grouped by user
   const { data: subs } = await supabase
     .from("user_alert_diseases")

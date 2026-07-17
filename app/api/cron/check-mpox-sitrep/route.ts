@@ -3,7 +3,7 @@
 // Falls back to a manual-notification email if PDF parsing fails.
 
 import { NextRequest, NextResponse } from "next/server";
-import { createClient } from "@supabase/supabase-js";
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
 import { errorMessage } from "@/lib/error";
 import * as Sentry from "@sentry/nextjs";
@@ -376,7 +376,19 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const supabase   = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
+  const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
+  try {
+    return await runCheckMpoxSitrep(req, supabase);
+  } catch (err) {
+    console.error("[check-mpox-sitrep] uncaught exception:", err);
+    Sentry.captureException(err, { tags: { cron: "check-mpox-sitrep" } });
+    await logCronRun(supabase, "check-mpox-sitrep", "error", 0,
+      err instanceof Error ? err.message : String(err));
+    return NextResponse.json({ ok: false, error: String(err) }, { status: 500 });
+  }
+}
+
+async function runCheckMpoxSitrep(_req: NextRequest, supabase: SupabaseClient) {
   const adminEmail = ADMIN_EMAILS?.split(",")[0]?.trim();
   let emailSent    = false;
 

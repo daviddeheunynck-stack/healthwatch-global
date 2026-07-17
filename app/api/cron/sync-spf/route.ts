@@ -297,7 +297,19 @@ export async function GET(req: NextRequest) {
   }
 
   const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
-  const today    = new Date().toISOString().substring(0, 10);
+  try {
+    return await runSyncSpf(req, supabase);
+  } catch (err) {
+    console.error("[sync-spf] uncaught exception:", err);
+    Sentry.captureException(err, { tags: { cron: "sync-spf" } });
+    await logCronRun(supabase, "sync-spf", "error", 0,
+      err instanceof Error ? err.message : String(err));
+    return NextResponse.json({ ok: false, error: String(err) }, { status: 500 });
+  }
+}
+
+async function runSyncSpf(_req: NextRequest, supabase: SupabaseClient) {
+  const today = new Date().toISOString().substring(0, 10);
 
   // ── 1. Fetch SPF feed (try RSS, fall back to HTML) ────────────────────────
   let items: RSSItem[] = [];

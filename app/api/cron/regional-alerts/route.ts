@@ -10,7 +10,7 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
-import { createClient } from "@supabase/supabase-js";
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { buildOutbreakAlertEmail } from "@/lib/alert-emails";
 import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 import * as Sentry from "@sentry/nextjs";
@@ -88,6 +88,18 @@ export async function GET(req: NextRequest) {
   }
   const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE);
 
+  try {
+    return await runRegionalAlerts(req, supabase);
+  } catch (err) {
+    console.error("[regional-alerts] uncaught exception:", err);
+    Sentry.captureException(err, { tags: { cron: "regional-alerts" } });
+    await logCronRun(supabase, "regional-alerts", "error", 0,
+      err instanceof Error ? err.message : String(err));
+    return NextResponse.json({ ok: false, error: String(err) }, { status: 500 });
+  }
+}
+
+async function runRegionalAlerts(_req: NextRequest, supabase: SupabaseClient) {
   // ── 1. Find outbreaks added in the last 25 hours ──────────────────────────
   const since = new Date(Date.now() - 25 * 3600_000).toISOString();
 

@@ -302,7 +302,20 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: "env:missing" }, { status: 500 });
   }
 
+  // Defensive wrapper: catch any uncaught exception so logCronRun is always called.
   const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
+  try {
+    return await runSyncWhoAfro(req, supabase);
+  } catch (err) {
+    console.error("[sync-who-afro] uncaught exception:", err);
+    Sentry.captureException(err, { tags: { cron: "sync-who-afro" } });
+    await logCronRun(supabase, "sync-who-afro", "error", 0,
+      err instanceof Error ? err.message : String(err));
+    return NextResponse.json({ ok: false, error: String(err) }, { status: 500 });
+  }
+}
+
+async function runSyncWhoAfro(_req: NextRequest, supabase: SupabaseClient) {
   const today    = new Date().toISOString().substring(0, 10);
   const cutoff   = new Date();
   cutoff.setDate(cutoff.getDate() - MAX_AGE_DAYS);

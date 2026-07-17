@@ -18,7 +18,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { logCronRun } from "@/lib/cron-monitor";
-import { createClient } from "@supabase/supabase-js";
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { normalizeDisease } from "@/lib/disease-data";
 import { findCountry } from "@/lib/geo-data";
 import { extractNumbers, assessRisk } from "@/lib/outbreak-parser";
@@ -1046,7 +1046,21 @@ export async function GET(req: NextRequest) {
   }
 
   const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
-  const today    = new Date().toISOString().substring(0, 10);
+
+  // Defensive wrapper: catch any uncaught exception so logCronRun is always called.
+  try {
+    return await runSyncWhoRegional(req, supabase);
+  } catch (err) {
+    console.error("[sync-who-regional] uncaught exception:", err);
+    Sentry.captureException(err, { tags: { cron: "sync-who-regional" } });
+    await logCronRun(supabase, "sync-who-regional", "error", 0,
+      err instanceof Error ? err.message : String(err));
+    return NextResponse.json({ ok: false, error: String(err) }, { status: 500 });
+  }
+}
+
+async function runSyncWhoRegional(_req: NextRequest, supabase: SupabaseClient) {
+  const today = new Date().toISOString().substring(0, 10);
 
   // ── ReliefWeb HARD-DISABLED — legal (non-commercial terms) ─────────────────────
   // ReliefWeb's terms of use grant reuse for "personal, non-commercial use" only,

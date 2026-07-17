@@ -7,7 +7,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import * as Sentry from "@sentry/nextjs";
 import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
-import { createClient } from "@supabase/supabase-js";
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { extractNumbers } from "@/lib/outbreak-parser";
 import { errorMessage } from "@/lib/error";
 
@@ -527,7 +527,20 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const supabase   = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
+  // Defensive wrapper: catch any uncaught exception so logCronRun is always called.
+  const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
+  try {
+    return await runSyncEndemicData(req, supabase);
+  } catch (err) {
+    console.error("[sync-endemic-data] uncaught exception:", err);
+    Sentry.captureException(err, { tags: { cron: "sync-endemic-data" } });
+    await logCronRun(supabase, "sync-endemic-data", "error", 0,
+      err instanceof Error ? err.message : String(err));
+    return NextResponse.json({ ok: false, error: String(err) }, { status: 500 });
+  }
+}
+
+async function runSyncEndemicData(_req: NextRequest, supabase: SupabaseClient) {
   const today      = todayYMD();
   const adminEmail = ADMIN_EMAILS?.split(",")[0]?.trim();
 

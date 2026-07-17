@@ -18,7 +18,8 @@
  */
 import { NextRequest, NextResponse } from "next/server";
 import { logCronRun } from "@/lib/cron-monitor";
-import { createClient } from "@supabase/supabase-js";
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
+import * as Sentry from "@sentry/nextjs";
 
 export const dynamic = "force-dynamic";
 
@@ -35,8 +36,21 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
+  // Defensive wrapper: catch any uncaught exception so logCronRun is always called.
+  const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+  try {
+    return await runSyncSignals(req, supabase);
+  } catch (err) {
+    console.error("[sync-signals] uncaught exception:", err);
+    Sentry.captureException(err, { tags: { cron: "sync-signals" } });
+    await logCronRun(supabase, "sync-signals", "error", 0,
+      err instanceof Error ? err.message : String(err));
+    return NextResponse.json({ ok: false, error: String(err) }, { status: 500 });
+  }
+}
+
+async function runSyncSignals(_req: NextRequest, supabase: SupabaseClient) {
   if (SUPABASE_URL && SUPABASE_KEY) {
-    const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
     await logCronRun(supabase, "sync-signals", "ok", 0, "disabled: ReliefWeb non-commercial ToS");
   }
 

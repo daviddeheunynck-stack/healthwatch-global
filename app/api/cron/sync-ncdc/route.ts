@@ -202,6 +202,20 @@ export async function GET(req: NextRequest) {
   }
 
   const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
+
+  // Defensive wrapper: catch any uncaught exception so logCronRun is always called.
+  try {
+    return await runSyncNcdc(req, supabase);
+  } catch (err) {
+    console.error("[sync-ncdc] uncaught exception:", err);
+    Sentry.captureException(err, { tags: { cron: "sync-ncdc" } });
+    await logCronRun(supabase, "sync-ncdc", "error", 0,
+      err instanceof Error ? err.message : String(err));
+    return NextResponse.json({ ok: false, error: String(err) }, { status: 500 });
+  }
+}
+
+async function runSyncNcdc(_req: NextRequest, supabase: SupabaseClient) {
   const today    = new Date().toISOString().substring(0, 10);
   const year     = new Date().getUTCFullYear();
   const freshCutoff = new Date(Date.now() - FRESH_DAYS * 86_400_000).toISOString().substring(0, 10);

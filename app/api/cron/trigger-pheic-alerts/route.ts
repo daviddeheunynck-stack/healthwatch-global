@@ -1,5 +1,5 @@
 import { NextRequest } from "next/server";
-import { createClient } from "@supabase/supabase-js";
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 import * as Sentry from "@sentry/nextjs";
 import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
@@ -134,6 +134,18 @@ export async function GET(req: NextRequest) {
 
   const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
+  try {
+    return await runTriggerPheicAlerts(req, supabase);
+  } catch (err) {
+    console.error("[trigger-pheic-alerts] uncaught exception:", err);
+    Sentry.captureException(err, { tags: { cron: "trigger-pheic-alerts" } });
+    await logCronRun(supabase, "trigger-pheic-alerts", "error", 0,
+      err instanceof Error ? err.message : String(err));
+    return Response.json({ ok: false, error: String(err) }, { status: 500 });
+  }
+}
+
+async function runTriggerPheicAlerts(_req: NextRequest, supabase: SupabaseClient) {
   // 1. Active PHEIC outbreaks
   const { data: pheicOutbreaks } = await supabase
     .from("outbreaks")
