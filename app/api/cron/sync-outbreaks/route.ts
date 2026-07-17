@@ -3,7 +3,7 @@ import * as Sentry from "@sentry/nextjs";
 import { logCronRun } from "@/lib/cron-monitor";
 import { createClient } from "@supabase/supabase-js";
 import { parseRSSFeed, buildOutbreakFromRSSItem } from "@/lib/outbreak-parser";
-import { fetchWHODONList, parseWHODONItems } from "@/lib/who-api";
+import { fetchWHODONList, parseWHODONItems, donArticleUrl } from "@/lib/who-api";
 import type { ParsedOutbreak } from "@/lib/outbreak-parser";
 import { errorMessage } from "@/lib/error";
 import { translateDescription } from "@/lib/translate";
@@ -65,17 +65,42 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: "env:missing" }, { status: 500 });
   }
   const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
-  const results = { inserted: 0, updated: 0, skipped: 0, errors: 0, staleDeactivated: 0 };
+  const results = { inserted: 0, updated: 0, skipped: 0, errors: 0, staleDeactivated: 0, whoAlreadySeen: 0 };
 
   // ── 1. Fetch outbreak data — WHO Disease Outbreak News ────────────
   let outbreaks: ParsedOutbreak[] = [];
   let usedSource = "";
+  // True once the WHO OData call itself returns ≥1 item — independent of how
+  // many turn out to be new. Gates the RSS-fallback/502 path below, which must
+  // only fire on a real fetch failure, not on a normal "nothing new this hour" run.
+  let whoODataReturnedItems = false;
+
+  // Each WHO DON URL is a fixed, separately-numbered article (WHO publishes a
+  // new DonId for every update rather than editing an existing one in place),
+  // so a source URL already stored will always re-parse to the same result.
+  // fetchWHODONList(40) returns mostly the same 40 URLs run over run — WHO
+  // publishes roughly 1-3 new DONs/week, not 40/hour — so without this check
+  // the same handful of bulletins were being re-fetched and re-run through the
+  // geo-extraction LLM 24×/day for nothing (found 2026-07-17 costing out the
+  // Anthropic billing alert — see console.anthropic.com usage). Skipping them
+  // here means we never re-fetch the article body or re-call extractAdmin1LLM
+  // for content that hasn't changed.
+  const { data: seenWhoDonRows } = await supabase
+    .from("outbreaks")
+    .select("source")
+    .like("source", "https://www.who.int/emergencies/disease-outbreak-news/item/%");
+  const seenWhoDonSources = new Set((seenWhoDonRows || []).map((r) => r.source));
 
   // Primary: WHO OData API
   try {
     const whoItems = await fetchWHODONList(40);
+    whoODataReturnedItems = whoItems.length > 0;
     const parsed: ParsedOutbreak[] = [];
     for (const item of whoItems) {
+      if (seenWhoDonSources.has(donArticleUrl(item))) {
+        results.whoAlreadySeen++;
+        continue;
+      }
       // parseWHODONItems() already fetches the full article body itself
       // whenever Summary-only extraction comes up empty, and fans a single
       // multi-country DON out into one row per country it names its own
@@ -87,18 +112,18 @@ export async function GET(req: NextRequest) {
       }
       parsed.push(...items);
     }
-    if (parsed.length > 0) {
-      outbreaks  = parsed;
-      usedSource = "WHO OData API";
-      console.log(`[sync] WHO OData: ${outbreaks.length} parsed`);
-    }
+    outbreaks  = parsed;
+    usedSource = "WHO OData API";
+    console.log(`[sync] WHO OData: ${whoItems.length} fetched, ${results.whoAlreadySeen} already-seen, ${outbreaks.length} new/changed`);
   } catch (e: unknown) {
     console.warn("[sync] WHO OData failed:", errorMessage(e));
     if (debug) debugLog.push(`WHO OData error: ${errorMessage(e)}`);
   }
 
-  // Fallback: WHO RSS feeds (only if OData yields nothing)
-  if (outbreaks.length === 0) {
+  // Fallback: WHO RSS feeds (only if OData itself failed or returned nothing at
+  // all — not just because every fetched item was already stored, which is a
+  // normal "nothing new this hour" outcome and must not trigger a fallback).
+  if (!whoODataReturnedItems) {
     const rss = await fetchRSSFallback();
     if (rss) {
       outbreaks  = rss.items;
@@ -107,7 +132,7 @@ export async function GET(req: NextRequest) {
     }
   }
 
-  if (outbreaks.length === 0) {
+  if (!whoODataReturnedItems && outbreaks.length === 0) {
     return NextResponse.json({
       error: "All WHO sources failed — OData + RSS fallbacks returned 0 usable items",
       debug: debug ? debugLog : undefined,
