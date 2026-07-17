@@ -17,7 +17,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { logCronRun } from "@/lib/cron-monitor";
 import * as Sentry from "@sentry/nextjs";
-import { createClient } from "@supabase/supabase-js";
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { normalizeDisease } from "@/lib/disease-data";
 import { findCountry } from "@/lib/geo-data";
 import { assessRisk } from "@/lib/outbreak-parser";
@@ -140,6 +140,56 @@ async function latestSitrep(cat: number): Promise<Sitrep | null> {
   return { pdfUrl: BASE + pdf, pageUrl, date };
 }
 
+// ── Shared dedup lookup ───────────────────────────────────────────────────────
+
+interface ExistingRow {
+  id: string;
+  disease_en: string | null;
+  country_en: string | null;
+  cases: number;
+  deaths: number;
+  date: string;
+  source: string | null;
+  active: boolean;
+}
+
+const dcKey = (disease: string | null, country: string | null) =>
+  `${(disease ?? "").toLowerCase()}|${(country ?? "").toLowerCase()}`;
+
+function indexRow(byDC: Map<string, ExistingRow>, row: ExistingRow): void {
+  const k    = dcKey(row.disease_en, row.country_en);
+  const prev = byDC.get(k);
+  if (!prev || (row.active && !prev.active)) byDC.set(k, row);
+}
+
+// The dedup snapshot in GET loads active rows plus anything dated within 90
+// days. A row that fell inactive BEFORE that window is invisible to it, and an
+// unseen row is upserted as an insert — a duplicate, not an update. Look the
+// targeted row up explicitly before writing it (single-country cron, so this
+// is scoped to Nigeria rather than a batched country list). Same fix as
+// sync-paho-alerts (found 2026-07-15, applied here 2026-07-17).
+async function loadExistingForDiseases(
+  supabase: SupabaseClient,
+  byDC: Map<string, ExistingRow>,
+  countryEn: string,
+  diseaseEnList: string[],
+): Promise<void> {
+  const missing = diseaseEnList.filter((d) => !byDC.has(dcKey(d, countryEn)));
+  if (missing.length === 0) return;
+
+  const { data, error } = await supabase
+    .from("outbreaks")
+    .select("id, disease_en, country_en, cases, deaths, date, source, active")
+    .in("disease_en", [...new Set(missing)])
+    .eq("country_en", countryEn);
+
+  if (error) {
+    console.warn("[ncdc] dedup lookup:", error.message);
+    return;
+  }
+  for (const row of (data ?? []) as ExistingRow[]) indexRow(byDC, row);
+}
+
 // ── Main handler ──────────────────────────────────────────────────────────────
 
 export async function GET(req: NextRequest) {
@@ -171,13 +221,8 @@ export async function GET(req: NextRequest) {
     await logCronRun(supabase, "sync-ncdc", "error", 0, fetchErr.message);
     return NextResponse.json({ error: fetchErr.message }, { status: 500 });
   }
-  type Row = NonNullable<typeof existing>[number];
-  const byDC = new Map<string, Row>();
-  for (const row of existing ?? []) {
-    const k = `${(row.disease_en ?? "").toLowerCase()}|${(row.country_en ?? "").toLowerCase()}`;
-    const prev = byDC.get(k);
-    if (!prev || (row.active && !prev.active)) byDC.set(k, row);
-  }
+  const byDC = new Map<string, ExistingRow>();
+  for (const row of (existing ?? []) as ExistingRow[]) indexRow(byDC, row);
 
   const pdfParse = (await import("pdf-parse/lib/pdf-parse.js" as string)).default as
     (buf: Buffer, opts?: object) => Promise<{ text: string }>;
@@ -210,8 +255,8 @@ export async function GET(req: NextRequest) {
       const desc = buildDescriptions(diseaseInfo, sit.date, ex.confirmed, ex.deaths, ex.cfr, year);
       const riskLevel = assessRisk(diseaseInfo.name_en, desc.en, ex.confirmed, ex.deaths);
 
-      const dcKey       = `${diseaseInfo.name_en.toLowerCase()}|nigeria`;
-      const existingRow = byDC.get(dcKey);
+      await loadExistingForDiseases(supabase, byDC, nigeria.name_en, [diseaseInfo.name_en]);
+      const existingRow = byDC.get(dcKey(diseaseInfo.name_en, nigeria.name_en));
 
       // Never overwrite rows owned by the WHO DON daily sync.
       if (existingRow?.source?.includes("who.int/emergencies/disease-outbreak-news")) {

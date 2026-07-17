@@ -8,7 +8,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { logCronRun } from "@/lib/cron-monitor";
 import * as Sentry from "@sentry/nextjs";
-import { createClient } from "@supabase/supabase-js";
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { normalizeDisease } from "@/lib/disease-data";
 import { COUNTRIES, findCountry, isAggregateCountry } from "@/lib/geo-data";
 import { extractNumbers, assessRisk } from "@/lib/outbreak-parser";
@@ -102,7 +102,15 @@ function htmlToText(html: string): string {
 // extraction window before any real content is reached.
 function extractSPFBody(html: string): string {
   const idx = html.indexOf('id="main-content-main"');
-  if (idx < 0) return html;
+  // If SPF changes their template, this selector stops matching — returning the
+  // full page (A-Z disease directory repeated 2-3x + top nav) instead of "" would
+  // feed page chrome into extractNumbers/findMentionedCountries (wrong case
+  // counts, wrong country) rather than the empty-string 0/0 those functions
+  // already handle as a visible skip. Found 2026-07-16.
+  if (idx < 0) {
+    console.warn("[spf] body selector no longer matches — skipping article");
+    return "";
+  }
   const tagEnd = html.indexOf(">", idx) + 1;
   return html.slice(tagEnd, tagEnd + 12000);
 }
@@ -228,6 +236,55 @@ function parseHTMLItems(html: string): RSSItem[] {
   return items;
 }
 
+// ── Shared dedup lookup ───────────────────────────────────────────────────────
+
+interface ExistingRow {
+  id: string;
+  disease_en: string | null;
+  country_en: string | null;
+  cases: number;
+  deaths: number;
+  date: string;
+  source: string | null;
+  active: boolean;
+  description: string | null;
+}
+
+const dcKey = (disease: string | null, country: string | null) =>
+  `${(disease ?? "").toLowerCase()}|${(country ?? "").toLowerCase()}`;
+
+function indexRow(byDC: Map<string, ExistingRow>, row: ExistingRow): void {
+  const k    = dcKey(row.disease_en, row.country_en);
+  const prev = byDC.get(k);
+  if (!prev || (row.active && !prev.active)) byDC.set(k, row);
+}
+
+// The dedup snapshot in GET loads active rows plus anything dated within 90
+// days. A row that fell inactive BEFORE that window is invisible to it, and an
+// unseen row is upserted as an insert — a duplicate, not an update. Look the
+// targeted rows up explicitly before writing them. Same fix as sync-paho-alerts
+// (found 2026-07-15, applied here 2026-07-17).
+async function loadExistingForItems(
+  supabase: SupabaseClient,
+  byDC: Map<string, ExistingRow>,
+  items: { disease_en: string; country_en: string }[],
+): Promise<void> {
+  const missing = items.filter((i) => !byDC.has(dcKey(i.disease_en, i.country_en)));
+  if (missing.length === 0) return;
+
+  const { data, error } = await supabase
+    .from("outbreaks")
+    .select("id, disease_en, country_en, cases, deaths, date, source, active, description")
+    .in("disease_en", [...new Set(missing.map((i) => i.disease_en))])
+    .in("country_en", [...new Set(missing.map((i) => i.country_en))]);
+
+  if (error) {
+    console.warn("[spf] dedup lookup:", error.message);
+    return;
+  }
+  for (const row of (data ?? []) as ExistingRow[]) indexRow(byDC, row);
+}
+
 // ── Main handler ──────────────────────────────────────────────────────────────
 
 export async function GET(req: NextRequest) {
@@ -286,14 +343,11 @@ export async function GET(req: NextRequest) {
     .or("active.eq.true,date.gte." + new Date(Date.now() - 90 * 86400_000).toISOString().substring(0, 10));
   if (fetchErr) return NextResponse.json({ error: fetchErr.message }, { status: 500 });
 
-  type Row = NonNullable<typeof existing>[number];
-  const bySource = new Map<string, Row>();
-  const byDC     = new Map<string, Row>();
-  for (const row of existing ?? []) {
+  const bySource = new Map<string, ExistingRow>();
+  const byDC     = new Map<string, ExistingRow>();
+  for (const row of (existing ?? []) as ExistingRow[]) {
     if (row.source) bySource.set(row.source, row);
-    const k    = `${(row.disease_en ?? "").toLowerCase()}|${(row.country_en ?? "").toLowerCase()}`;
-    const prev = byDC.get(k);
-    if (!prev || (row.active && !prev.active)) byDC.set(k, row);
+    indexRow(byDC, row);
   }
 
   // ── 3. Process items ──────────────────────────────────────────────────────
@@ -371,8 +425,8 @@ export async function GET(req: NextRequest) {
       continue;
     }
 
-    const dcKey      = `${diseaseInfo.name_en.toLowerCase()}|${geo.name_en.toLowerCase()}`;
-    const existingRow = byDC.get(dcKey);
+    await loadExistingForItems(supabase, byDC, [{ disease_en: diseaseInfo.name_en, country_en: geo.name_en }]);
+    const existingRow = byDC.get(dcKey(diseaseInfo.name_en, geo.name_en));
 
     if (existingRow?.source?.includes("who.int/emergencies/disease-outbreak-news")) {
       log.push({ label, status: "skip", detail: "owned by WHO DON" });
@@ -418,7 +472,7 @@ export async function GET(req: NextRequest) {
         country: geo.name_fr, country_en: geo.name_en, country_ar: geo.name_ar,
         region: geo.region, lat: geo.lat, lng: geo.lng,
         cases, deaths, risk_level: riskLevel, date: item.date,
-        source: item.url, description, active: true, is_seed: false,
+        source: item.url, description, active: true, is_seed: false, source_priority: 5,
         admin1: null, admin1_lat: null, admin1_lng: null,
       });
       if (error) { log.push({ label, status: "error", detail: error.message }); results.errors++; }

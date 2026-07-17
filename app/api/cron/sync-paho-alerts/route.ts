@@ -1125,6 +1125,7 @@ export async function GET(req: NextRequest) {
       continue;
     }
 
+    await loadExistingForItems(supabase, byDC, alertItems);
     await upsertItems(supabase, byDC, alertItems, today, results, log);
   }
 

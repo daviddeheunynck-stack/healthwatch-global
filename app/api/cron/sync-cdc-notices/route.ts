@@ -10,7 +10,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import * as Sentry from "@sentry/nextjs";
-import { createClient } from "@supabase/supabase-js";
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { logCronRun } from "@/lib/cron-monitor";
 import { normalizeDisease } from "@/lib/disease-data";
 import { findCountry, isAggregateCountry } from "@/lib/geo-data";
@@ -128,6 +128,56 @@ function parseNoticeTitle(title: string): { disease: string; country: string } |
   return { disease, country };
 }
 
+// ── Shared dedup lookup ───────────────────────────────────────────────────────
+
+interface ExistingRow {
+  id: string;
+  disease_en: string | null;
+  country_en: string | null;
+  cases: number;
+  deaths: number;
+  date: string;
+  source: string | null;
+  active: boolean;
+  description: string | null;
+}
+
+const dcKey = (disease: string | null, country: string | null) =>
+  `${(disease ?? "").toLowerCase()}|${(country ?? "").toLowerCase()}`;
+
+function indexRow(byDC: Map<string, ExistingRow>, row: ExistingRow): void {
+  const k    = dcKey(row.disease_en, row.country_en);
+  const prev = byDC.get(k);
+  if (!prev || (row.active && !prev.active)) byDC.set(k, row);
+}
+
+// The two dedup snapshots in GET (CDC-sourced rows by URL, plus active/90-day
+// rows from all sources) still miss a row that is BOTH non-CDC-sourced AND
+// inactive AND older than 90 days — invisible to either query, so an unseen
+// row is upserted as an insert (a duplicate) instead of an update. Look the
+// targeted row up explicitly before writing it. Same fix as sync-paho-alerts
+// (found 2026-07-15, applied here 2026-07-17).
+async function loadExistingForItems(
+  supabase: SupabaseClient,
+  byDC: Map<string, ExistingRow>,
+  items: { disease_en: string; country_en: string }[],
+): Promise<void> {
+  const missing = items.filter((i) => !byDC.has(dcKey(i.disease_en, i.country_en)));
+  if (missing.length === 0) return;
+
+  const { data, error } = await supabase
+    .from("outbreaks")
+    .select("id, disease_en, country_en, cases, deaths, date, source, active, description")
+    .in("disease_en", [...new Set(missing.map((i) => i.disease_en))])
+    .in("country_en", [...new Set(missing.map((i) => i.country_en))]);
+
+  if (error) {
+    console.warn("[cdc-notices] dedup lookup:", error.message);
+    return;
+  }
+  for (const row of (data ?? []) as ExistingRow[]) indexRow(byDC, row);
+}
+
 // ── Main handler ──────────────────────────────────────────────────────────────
 
 export async function GET(req: NextRequest) {
@@ -201,20 +251,14 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: recentErr.message }, { status: 500 });
   }
 
-  type Row = NonNullable<typeof cdcRows>[number];
-
   // URL-based dedup: set of existing CDC source paths
   const existingSources = new Set<string>(
     (cdcRows ?? []).map((r) => (r.source ?? "").replace(/^https?:\/\/[^/]+/, ""))
   );
 
   // Disease+country dedup (for cross-source ownership checks)
-  const byDC = new Map<string, Row>();
-  for (const row of [...(cdcRows ?? []), ...(recentRows ?? [])]) {
-    const k    = `${(row.disease_en ?? "").toLowerCase()}|${(row.country_en ?? "").toLowerCase()}`;
-    const prev = byDC.get(k);
-    if (!prev || (row.active && !prev.active)) byDC.set(k, row);
-  }
+  const byDC = new Map<string, ExistingRow>();
+  for (const row of [...(cdcRows ?? []), ...(recentRows ?? [])] as ExistingRow[]) indexRow(byDC, row);
 
   // ── 4. Process each notice ────────────────────────────────────────────────
   const results = { notices: notices.length, inserted: 0, updated: 0, skipped: 0, errors: 0 };
@@ -252,8 +296,8 @@ export async function GET(req: NextRequest) {
       continue;
     }
 
-    const dcKey = `${diseaseInfo.name_en.toLowerCase()}|${geo.name_en.toLowerCase()}`;
-    const existRow = byDC.get(dcKey);
+    await loadExistingForItems(supabase, byDC, [{ disease_en: diseaseInfo.name_en, country_en: geo.name_en }]);
+    const existRow = byDC.get(dcKey(diseaseInfo.name_en, geo.name_en));
 
     // Never overwrite WHO DON-owned rows
     if (existRow?.source?.includes("who.int/emergencies/disease-outbreak-news")) {

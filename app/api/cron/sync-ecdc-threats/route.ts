@@ -8,7 +8,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import * as Sentry from "@sentry/nextjs";
 import { logCronRun } from "@/lib/cron-monitor";
-import { createClient } from "@supabase/supabase-js";
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { normalizeDisease } from "@/lib/disease-data";
 import { COUNTRIES, findCountry, isAggregateCountry } from "@/lib/geo-data";
 import { extractNumbers, assessRisk, UMBRELLA_COUNTRY_LABELS } from "@/lib/outbreak-parser";
@@ -58,7 +58,15 @@ function htmlToText(html: string): string {
 // role="main" scopes past it reliably (verified stable on both).
 function extractECDCBody(html: string): string {
   const idx = html.indexOf('role="main"');
-  if (idx < 0) return html;
+  // If ECDC changes their template, this selector stops matching — returning the
+  // full page (nav mega-menu) instead of "" would feed page chrome into
+  // extractNumbers/findMentionedCountries (wrong case counts, wrong country)
+  // rather than the empty-string 0/0 those functions already handle as a
+  // visible skip. Found 2026-07-16.
+  if (idx < 0) {
+    console.warn("[ecdc-threats] body selector no longer matches — skipping article");
+    return "";
+  }
   const tagEnd = html.indexOf(">", idx) + 1;
   return html.slice(tagEnd, tagEnd + 8000);
 }
@@ -382,6 +390,55 @@ async function extractItemData(item: RSSItem, today: string, dbg?: { reason?: st
   return results;
 }
 
+// ── Shared dedup lookup ───────────────────────────────────────────────────────
+
+interface ExistingRow {
+  id: string;
+  disease_en: string | null;
+  country_en: string | null;
+  cases: number;
+  deaths: number;
+  date: string;
+  source: string | null;
+  active: boolean;
+  description: string | null;
+}
+
+const dcKeyOf = (disease: string | null, country: string | null) =>
+  `${(disease ?? "").toLowerCase()}|${(country ?? "").toLowerCase()}`;
+
+function indexRow(byDC: Map<string, ExistingRow>, row: ExistingRow): void {
+  const k    = dcKeyOf(row.disease_en, row.country_en);
+  const prev = byDC.get(k);
+  if (!prev || (row.active && !prev.active)) byDC.set(k, row);
+}
+
+// The dedup snapshot in GET loads active rows plus anything dated within 90
+// days. A row that fell inactive BEFORE that window is invisible to it, and an
+// unseen row is upserted as an insert — a duplicate, not an update. Look the
+// targeted rows up explicitly before writing them. Same fix as sync-paho-alerts
+// (found 2026-07-15, applied here 2026-07-17).
+async function loadExistingForItems(
+  supabase: SupabaseClient,
+  byDC: Map<string, ExistingRow>,
+  items: { disease_en: string; country_en: string }[],
+): Promise<void> {
+  const missing = items.filter((i) => !byDC.has(dcKeyOf(i.disease_en, i.country_en)));
+  if (missing.length === 0) return;
+
+  const { data, error } = await supabase
+    .from("outbreaks")
+    .select("id, disease_en, country_en, cases, deaths, date, source, active, description")
+    .in("disease_en", [...new Set(missing.map((i) => i.disease_en))])
+    .in("country_en", [...new Set(missing.map((i) => i.country_en))]);
+
+  if (error) {
+    console.warn("[ecdc] dedup lookup:", error.message);
+    return;
+  }
+  for (const row of (data ?? []) as ExistingRow[]) indexRow(byDC, row);
+}
+
 // ── Main handler ──────────────────────────────────────────────────────────────
 
 export async function GET(req: NextRequest) {
@@ -432,13 +489,8 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: fetchErr.message }, { status: 500 });
   }
 
-  type Row = NonNullable<typeof existing>[number];
-  const byDC = new Map<string, Row>();
-  for (const row of existing ?? []) {
-    const k    = `${(row.disease_en ?? "").toLowerCase()}|${(row.country_en ?? "").toLowerCase()}`;
-    const prev = byDC.get(k);
-    if (!prev || (row.active && !prev.active)) byDC.set(k, row);
-  }
+  const byDC = new Map<string, ExistingRow>();
+  for (const row of (existing ?? []) as ExistingRow[]) indexRow(byDC, row);
 
   // Defensive index: (normalized disease + country) → an ACTIVE row already
   // exists, even if its raw disease_en/country_en text differs from what a
@@ -453,7 +505,11 @@ export async function GET(req: NextRequest) {
   for (const row of existing ?? []) {
     if (!row.active) continue;
     const normDisease = normalizeDisease(row.disease_en ?? "").name_en.toLowerCase();
-    activeByNormalizedDC.add(`${normDisease}|${(row.country_en ?? "").toLowerCase()}`);
+    // Normalize country too, not just disease — a raw country_en comparison is just as
+    // fragile to label drift ("DR Congo" vs "Democratic Republic of the Congo") as the
+    // raw disease_en comparison this guard was built to route around. Found 2026-07-16.
+    const normCountry = (findCountry(row.country_en ?? "")?.name_en ?? row.country_en ?? "").toLowerCase();
+    activeByNormalizedDC.add(`${normDisease}|${normCountry}`);
   }
 
   // Diseases that already have a WHO DON-owned row under an umbrella label. An
@@ -492,6 +548,8 @@ export async function GET(req: NextRequest) {
       continue;
     }
 
+    await loadExistingForItems(supabase, byDC, briefItems);
+
     for (const item of briefItems) {
       const label = `${item.disease_en}/${item.country_en}`;
 
@@ -514,8 +572,10 @@ export async function GET(req: NextRequest) {
 
       // Don't resurrect a retired row, nor insert a duplicate, when an active
       // sibling already covers this disease+country under different raw text
-      // (see activeByNormalizedDC comment above).
-      const normDcKey = `${normalizeDisease(item.disease_en).name_en.toLowerCase()}|${item.country_en.toLowerCase()}`;
+      // (see activeByNormalizedDC comment above). geo.name_en (already resolved
+      // above) is the canonical country form, matching the normalized country
+      // side of activeByNormalizedDC.
+      const normDcKey = `${normalizeDisease(item.disease_en).name_en.toLowerCase()}|${geo.name_en.toLowerCase()}`;
       if (activeByNormalizedDC.has(normDcKey) && (!existing || !existing.active)) {
         log.push({ label, status: "skip", detail: "active sibling already covers this disease+country under different text" });
         results.skipped++;
@@ -658,6 +718,7 @@ export async function GET(req: NextRequest) {
           description: item.description,
           active:       true,
           is_seed:      false,
+          source_priority: 5,
           admin1:       item.admin1 ?? null,
           admin1_lat:   item.admin1_lat ?? null,
           admin1_lng:   item.admin1_lng ?? null,
