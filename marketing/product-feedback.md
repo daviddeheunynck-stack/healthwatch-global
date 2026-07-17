@@ -64,3 +64,26 @@ Motif commun : HWG est structurellement un agrégateur de bulletins déjà publi
 **Piste produit (distincte de l'angle Simon, plus théorique) :** un canal léger de « signal de terrain » permettant à un contact de confiance de signaler « il se passe quelque chose ici » avant confirmation formelle — sans données patient (déjà cadré par la politique RGPD, cf. cas Awulachew/line list), avec un accusé de réception rapide. Rashi souligne explicitement que c'est ce retour rapide qui entretient la volonté de continuer à signaler.
 
 **Statut :** MVP construit et testé le 7 juillet 2026 (non annoncé publiquement). Canal `/field-signal` (5 langues) + route `/api/field-signal` : formulaire nom/organisation/email/localisation/message, notification David tagée `[SIGNAL 🟢]` + accusé de réception automatique immédiat au déclarant (le point central du retour de Rashi). Page volontairement non liée dans nav/footer et `noindex` — à partager en direct avec des contacts de confiance (Rashi, Awulachew...) pour tester l'usage réel avant toute promotion publique. Aucune table DB créée, aucune modération construite : tout part par email vers la boîte de David pour triage manuel. Testé en conditions réelles (soumission → deux emails Brevo reçus, FR/EN vérifiés visuellement).
+
+## 10 juillet 2026 — Eva Kamau (Clinician & Clinical Researcher, spécialisée AMR, Kenya)
+
+**Contexte :** contact issu d'un DM d'activation envoyé le 9 juillet (voir linkedin-contacts.md), a répondu en détaillant son profil (pratique clinique, recherche clinique, surveillance des maladies infectieuses au Kenya, réponse COVID-19) et son intérêt de long terme pour l'antibiorésistance (AMR).
+
+**Retour — Absence de volet AMR dans la plateforme**
+Eva a explicitement demandé à voir comment HWG soutient la surveillance sous un angle AMR. Vérification du code (agent Explore, 10 juillet) : **aucune fonctionnalité AMR n'existe aujourd'hui** — le schéma `DiseaseInfo` ne porte aucun champ de résistance, aucune intégration GLASS (WHO Global Antimicrobial Resistance Surveillance System), aucun tag de souche résistante exposé à l'utilisateur. Seul indice trouvé : un commentaire dans un fichier de config de seuils d'alerte mentionnant les souches de typhoïde XDR (Inde/Zimbabwe) pour justifier un seuil plus bas — un réglage interne du pipeline de comptage de cas existant, pas une donnée AMR exploitable.
+
+**Piste d'amélioration à évaluer :**
+1. **Version légère (peu coûteuse)** : exposer/tagger les mentions de résistance déjà présentes dans les SitReps/bulletins sources ingérés (ex. typhoïde XDR, tuberculose multirésistante) comme un filtre ou badge sur les foyers existants, sans nouvelle source de données.
+2. **Version complète (scope plus large)** : intégrer WHO GLASS comme source additionnelle, avec ses propres séries de résistance par pathogène/région — mais c'est un type de donnée différent (antibiogrammes longitudinaux, pas des comptages de cas d'un foyer), donc un chantier distinct du modèle actuel, pas une extension triviale.
+Signal de demande : au moins 2 profils épidémio/santé publique croisés en juillet (Eva Kamau + les profils "One Health/AMR" comme Abasse Zombra, Dr. Hassan SANA) montrent un intérêt pour cet angle, sans que ce soit encore un pattern fort.
+
+**Statut :** réponse honnête envoyée à Eva le 10 juillet (pas de survente, clarifié que HWG n'a pas ce volet aujourd'hui), pas encore priorisé côté développement.
+
+**Suite (10 juillet, 14:28) — piste plus précise qu'un simple "ajoutez l'AMR" :**
+Eva a répondu positivement à la clarification (« thank you for being upfront ») et confirme rester intéressée par l'accès Pro. Elle propose un angle concret et distinct des deux pistes ci-dessus : **croiser les périodes de foyers actifs avec les pics de mésusage/surprescription d'antibiotiques**, l'idée étant que les épidémies elles-mêmes déclenchent des pics de résistance (AMR) via l'usage antibiotique inapproprié pendant la crise. Citation : « Tracking how these outbreaks trigger spikes in antimicrobial resistance over time would be a fascinating layer to look into. »
+
+**Différence avec les pistes 1/2 précédentes :** ce n'est pas une demande de données AMR statiques (type GLASS) mais une **corrélation temporelle outbreak → usage antibiotique → résistance**, exploitable en théorie avec les données déjà présentes (dates/durées des foyers) croisées à une source antibiotique/AMR à identifier — reste un chantier de données externes non trivial (aucune source de ce type actuellement ingérée), mais l'angle en lui-même est plus original et actionnable qu'un simple ajout de badge.
+
+**Statut :** en attente, accès Pro à activer pour Eva (mentionné par David dans son message du 10 juillet, pas encore fait). Toujours pas priorisé côté développement.
+
+**DM envoyé à Eva (15:46, validé par David « oui »)** : réponse honnête sur la piste "outbreak → mésusage antibiotique → pic AMR", expliquant le vrai blocage (trous de couverture GLASS dans les zones où HWG a le plus de foyers actifs), sans promettre de feature. Reformulée en question ouverte sur son propre intérêt pour cet axe de recherche plutôt qu'en engagement produit de HWG.

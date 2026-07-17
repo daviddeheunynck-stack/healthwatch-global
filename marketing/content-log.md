@@ -6,7 +6,105 @@ Archive de tout le contenu crÃ©Ã©. Mise Ã  jour Ã  chaque session.
 
 ## X / Twitter
 
-### Thread MWF — 15 juillet 2026 (mercredi) — Ebola RDC, dérive du CFR brut — **PUBLIÉ ✅**
+### Veille x-hwg-monitoring — 2026-07-16 (reprise après vérification prod, 2e passage)
+
+**Reply n°2 POSTÉE ✅ — @RwenzoriMarathn (marathon international autorisé, angle travel-risk/duty-of-care)**
+
+Cible : https://x.com/RwenzoriMarathn/status/2077682010554765514 (Tusker Lite Rwenzori Marathon, vérifié, posté 11:09 AM 16/07, 357 vues / 16 likes au moment de la reply, réponses ouvertes, cadence libre — jamais engagé). Post cible : « #BreakingNews: UGX 3.7B from the Government of Uganda to the #TuskerLiteRwenzoriMarathon. Ministry of Health also confirms the race is cleared to go ahead — last Ebola patient discharged, zero active cases. Uganda is safe. Uganda is open. 22 Aug, Kasese. »
+
+**Pourquoi une 2e reply sur le même événement de base sans redondance** : le fait sous-jacent (dernier patient sorti, 0 cas actif) est le même que la reply @GalaxyFMUg du matin, mais l'angle est entièrement différent : pas la mécanique CFR/traçage, mais l'implication concrète pour les équipes travel-risk/duty-of-care (segment cible HWG « Corporate risk & global mobility », « Travel medicine doctors »). Preuve tangible et non triviale plutôt que déclarative.
+
+**Reply postée (259 car.) :**
+> For travel-risk teams: 22 Aug falls 5 days before Uganda's WHO 42-day clearance window closes (from today's discharge). The race runs on the zero-active-cases assessment, not the formal WHO Ebola-free declaration, a narrower bar for duty-of-care policies.
+
+**Confirmation :** toast « Votre post a été publié », reply visible sous HealthWatchGlobal @HWatchGlobal · 4s, compteur de réponses du post passé de 2 à 3.
+
+**Double-check :**
+- Arithmétique vérifiée en session : 16 juillet + 42 jours = 27 août (juillet a 31 jours, 15 jours restants en juillet + 27 jours en août = 42). Marathon le 22 août = **5 jours avant** l'expiration du délai, calcul exact.
+- « zero active cases » / « last Ebola patient discharged » : repris du post source (organisateur officiel citant le Ministère de la Santé), déjà vérifiés indépendamment ce matin (Arab News + TRT World + ECDC) pour la reply @GalaxyFMUg — pas revérifiés une 2e fois inutilement, mêmes faits sous-jacents.
+- Distinction « évaluation opérationnelle 0-cas-actif » vs « déclaration OMS formelle Ebola-free » : fondée sur la règle OMS des 42 jours déjà établie, pas un fait supplémentaire à sourcer.
+- Pas de CTA/lien/hashtag, pas de tiret cadratin (virgule à la place), ton analytique décideur, cadence libre.
+- Note : la réponse notifie aussi les comptes tagués dans la photo du post original (Amos Wekesa + 6 autres) — mécanisme X standard pour une réponse à un post avec tags, pas un choix éditorial ; le contenu de la reply reste neutre et ne s'adresse à aucun d'eux spécifiquement.
+
+**Reply n°3 POSTÉE ✅ — @TravelGov (restriction DHS vols commerciaux RDC, angle incubation 21j vs clôture 42j)**
+
+Cible : https://x.com/TravelGov/status/2077549941522825328 (compte officiel du Département d'État américain, vérifié, carte « ALERT — Democratic Republic of the Congo » avec logo State Dept + STEP, posté 2:24 AM 16/07, 16,9k vues / 92 likes au moment de la reply, réponses ouvertes, cadence libre — jamais engagé). Repéré via une recherche RDC/Soudan élargie ; un relais géopolitique généraliste (@Osint613, déjà écarté en mémoire le 10/07 comme peu fiable) reprenait le même fait sans lien source — **source officielle @TravelGov trouvée et utilisée à la place**, jamais le relais.
+
+Post cible (texte intégral lu) : « Democratic Republic of the Congo: Due to the Ebola outbreak in the Democratic Republic of the Congo (DRC), the Department of Homeland Security has implemented new restrictions under Title 49 of the U.S. Code which prevent U.S. citizens and nationals who have been in the DRC within a 21-day period from entering the United States via commercial aviation. [...] All U.S. citizens and U.S. nationals who have been in the DRC should plan to remain outside the DRC for 21 days before entering the United States. »
+
+**Pourquoi un 3e sujet distinct** : fait nouveau (mesure DHS), pays différent (RDC, pas Ouganda), et un angle analytique qui relie les deux seuils temporels utilisés séparément dans les 2 replies précédentes du jour (21 j et 42 j), sans répéter aucune des deux.
+
+**Reply postée (273 car.) :**
+> The 21-day travel restriction mirrors Ebola's maximum incubation period, clearing individual exposure risk. WHO's 42-day threshold for declaring the outbreak over is exactly double: one cycle isn't enough at population scale, since a single missed contact resets the clock.
+
+**Confirmation :** toast « Votre post a été publié », reply visible sous HealthWatchGlobal @HWatchGlobal · 5s.
+
+**Double-check :**
+- Fait source (restriction 21 jours, Title 49, DHS) : lu mot pour mot depuis le post officiel @TravelGov, pas déduit ni approximé.
+- Période d'incubation Ebola (2–21 jours, borne haute 21 j) : fait épidémiologique de base déjà établi et utilisé implicitement dans la reply @GalaxyFMUg du matin (règle OMS des « deux périodes d'incubation » = 42 j) ; 21×2=42 est une arithmétique simple, pas une nouvelle affirmation à sourcer.
+- « single missed contact resets the clock » : reflète la méthodologie OMS standard (le compte à rebours de 42 j repart de zéro si un nouveau cas apparaît), cohérent avec le sitrep du jour, pas inventé.
+- Pas de CTA/lien/hashtag, pas de tiret cadratin (deux-points + virgule), ton analytique décideur (audience travel-risk/biosécurité). Cadence libre.
+- Post « Trump - JFK Jr » vu juste en dessous dans le fil (désinformation Ebola/biolabs Ukraine) : écarté, pas engagé, aucune interaction.
+
+**Quota du jour final : replies 3/3, follows 5/5.**
+
+
+
+**Reply n°1 POSTÉE ✅ — @GalaxyFMUg (Ouganda sort son dernier patient Ebola)**
+
+Cible : https://x.com/GalaxyFMUg/status/2077663392454631502 (100.2 Galaxy FM Zzina!, vérifié, « Uganda's Number One Radio Station », posté 9:55 AM 16/07, 5 583 vues / 116 likes au moment de la reply, réponses ouvertes, cadence libre — jamais engagé). Post cible : « UPDATE: Uganda discharges its last confirmed Ebola patient, leaving the country with no active confirmed cases of Ebola virus disease. #ZzinaUpdates » (vidéo du Ministre Chris Baryomunsi à Mulago National Referral Isolation Unit).
+
+**Contexte / sujet du jour :** l'événement épidémiologique frais dominant de la journée = l'Ouganda sort aujourd'hui (jeudi 16/07) son dernier patient Ebola confirmé (souche Bundibugyo) de Mulago (Kampala), atteignant **0 cas actif** et déclenchant le compte à rebours OMS de 42 jours vers le statut « Ebola-free ». Confirmé par de multiples médias ougandais vérifiés (Galaxy FM, NBS TV @nbstv, Galaxy TV @GalaxyTVUg, NilePost, NTV). La recherche structurée du jour était quasi entièrement dominée par cet unique événement.
+
+**Reply postée (275 car.) :**
+> The discharge starts a 42-day countdown: WHO declares a country Ebola-free after two incubation periods with no new case, running into late August. Uganda's outbreak stayed contained at 20 cases; the residual risk is re-importation from DRC's still-growing epidemic next door.
+
+**Confirmation :** reply visible dans le fil sous HealthWatchGlobal @HWatchGlobal · 5s, texte intégral sans troncature, compteur de réponses du post passé de 6 à 7.
+
+**Double-check (fait avant publication) :**
+- **Faits vérifiés contre sources faisant autorité** (pas depuis les posts ougandais seuls) : recherche web en session → Arab News et TRT World confirment « Uganda to discharge last Ebola patient, starts countdown to virus-free status », dernier patient sorti de Mulago National Referral Hospital, portail MoH Ouganda = 17 guéris + 1 en isolement + 2 décès (= 20 cas au total), **aucun nouveau cas depuis le 5 juin 2026**, règle OMS des 42 jours (2 périodes d'incubation) pour déclarer un pays Ebola-free, souche Bundibugyo, 3e pire flambée BDBV selon l'OMS. Sources : [Arab News](https://www.arabnews.com/node/2651099/world), [TRT World](https://www.trtworld.com/article/cc3bc6ad8a61).
+- Arithmétique du compte à rebours : 16/07 + 42 j = 27 août → « running into late August » exact.
+- Ouganda « contained at 20 cases » : 17 guéris + 1 sorti aujourd'hui + 2 décès = 20 (les 2 décès omis par contrainte de longueur, non faussé).
+- RDC « still-growing epidemic next door » : 2 011 cas / 754 décès (sitrep 13/07), 5 provinces — cohérent avec le thread MWF du 15/07.
+- Angle épidémio : la fin de la transmission locale déplace le risque résiduel vers la **ré-importation transfrontalière** (corridor Ituri, d'où venaient les cas ougandais importés), pas une circulation locale non détectée. Angle décideur, non trivial, jamais utilisé.
+- Pas de CTA/lien/hashtag, pas de tiret cadratin (deux-points + point-virgule), pas de ProMED, ton analytique. Cadence @GalaxyFMUg libre.
+
+**🟢 Ajout produit (MAJ DB prod) — ligne Ouganda/Ebola `recovered` 16 → 18 (cas actifs → 0)**
+
+- **Ligne concernée** : `63ba952c-1965-473a-999f-705921159e87` (Ebola/Ouganda live, `active=true`, source ECDC, `source_priority=5`). NB : il existe une 2e ligne Ouganda dormante `e8c1e624…` (19 cas/0 décès, DON608, `active=false`) — superseded, non touchée.
+- **Avant/après** : cases=20, deaths=2 inchangés ; **recovered 16 → 18** → cas actifs calculés = 20−2−18 = **0**.
+- **Source primaire** : ECDC (page Ebola DRC/Uganda, données au 14/07 : Ouganda 20 cas / 2 décès / **17 guéris / 1 actif**) + sortie du **dernier patient actif** de Mulago National Referral Hospital le 16/07 (jeudi), confirmée par Arab News + TRT World (compte à rebours OMS de 42 j vers statut Ebola-free) et par plusieurs médias ougandais vérifiés. 17 (ECDC pré-sortie) + 1 (sortie du jour) = 18 guéris, 0 actif. Recoupé, pas repris d'un post seul.
+- **Pourquoi ce seul champ** : le cron `sync-ecdc-threats` auto-alimente cases/deaths/date/description/active (gate `source_priority ≤ 5`) et re-traduit les 5 langues, mais **n'écrit jamais `recovered`** (absent de son updatePayload, vérifié dans le code). Éditer la description à la main aurait été écrasé par le cron ; `recovered` est le seul champ manuel-owned, donc bump sûr et sans conflit de double-écriture. Écriture guardée (abort si la ligne avait changé depuis la lecture). Environnement = `.env.local.live` (prod, host tqznwmpkokdzrszysbcm). Scripts jetables supprimés.
+- **`response_phase` : `active_response` → `contained`** (mis à jour à la demande de David, même session). Rendu app vérifié dans le code avant écriture (`components/OutbreakTable.tsx`, `lib/why-it-matters.ts`) : `contained` = badge teal « CONTENU / propagation limitée par les mesures de contrôle », valeur valide de l'enum (`monitoring | investigating | active_response | contained`), et score de tri -1 (dé-priorise correctement un foyer en clôture). Choix `contained` plutôt que `monitoring` : `monitoring` n'affiche aucun badge (perte de signal) et désigne une surveillance de routine précoce, pas une fin de réponse ; `contained` est exact (0 cas actif, transmission stoppée) et aligné sur le précédent France du 16/07. Écriture guardée (abort si l'état avait changé). La date et la description restent gérées par l'auto-feed ECDC (elles disent encore « as of 13/14 July »).
+
+**Follows exécutés (4/5) — recherche active**
+
+Repérés via les suggestions de la recherche Ebola du jour et une chaîne de suggestions de profil, tous vérifiés (bio/activité/cohérence/réseau) avant de suivre, confirmés bouton « Abonné » par zoom. Détail complet dans x-watchlist.md (tableau « Comptes à suivre »).
+1. **@IMC_Worldwide** (International Medical Corps) — ONG médicale humanitaire, engagée dans la réponse Ebola RDC (taguée par @julienmh). Cœur de cible.
+2. **@DrAbdiMahamud** (Dr Abdi R Mahamud, WHO Health Emergencies, Genève) — décideur senior OMS, même profil que @Chikwe_I.
+3. **@WHOatAUECA** (WHO Liaison Office to the African Union and UNECA, vérifié) — couche de coordination continentale OMS/UA.
+4. **@OMS_Mauritanie** (bureau pays OMS, vérifié) — agence, pertinence ligne diphtérie DON588.
+
+Quota clos à **4/5 volontairement** : 4 candidats de qualité, 1 slot laissé pour un éventuel follow-back de la routine 16h (quota partagé). Pas de 5e au niveau de pertinence requis (seul restant = @nbstv, news généraliste adjacent). Aucun candidat écarté après vérification cette session (les 4 évalués étaient tous légitimes).
+
+**Point DMs**
+
+Boîte de réception X (nouvelle UI `x.com/i/chat`) ouverte **sans code de chiffrement** (le blocage du 14/07 reste absent, comme le 15/07). **Boîte « Tous » vide**, onglets « Priorité » et « Masqué » des demandes de message tous les deux vides. **Aucun message reçu depuis la dernière vérification → 0 répondu, 0 noté pour David.** Rien à archiver en « Messages reçus ».
+
+**Notifications parcourues en entier (onglet Tous)**
+
+Que des posts recommandés + un seul like reçu = @julienmh sur notre reply Tshopo du 13/07, **déjà catalogué le 15/07** (pas neuf). **Aucun nouvel abonné, aucun repost frais** dans la fenêtre. 0 follow-back à faire.
+
+**Replies : 1/3, quota clos en connaissance de cause.** Le jour est dominé par un événement unique (sortie du dernier patient Ebola en Ouganda), déjà traité par la reply @GalaxyFMUg. Méthodes épuisées avant de conclure : recherche Ebola structurée (min_faves:15), recherche élargie 8 maladies (min_faves abaissé à 8), notifications, comptes prioritaires. Une 2e reply aurait été soit redondante (même événement, autre média ougandais), soit sur un post à teinte politique (@USEmbassyUganda, défense de l'aide étrangère US) — écartées par les garde-fous no-redondance / no-politique.
+
+**Posts notables (sans reply) — voir aussi x-watchlist.md**
+- **@MinofHealthUG (officiel, vérifié, 15 min)** confirme la sortie : « Today, Uganda has discharged the last Ebola patient, **a Congolese national** who has successfully recovered... We now begin the 42-day countdown... ». Source primaire officielle qui valide exactement la reply postée ; détail « Congolese national » renforce le cadrage transfrontalier RDC. Cadence-bloqué (reply 10/07) donc pas de reply possible dessus.
+- **@USEmbassyUganda (vérifié, suivi, 30 min)** : le PHEOC ougandais (National Public Health Emergency Operations Center, créé 2013 avec appui @CDCgov) « at the heart of the current Ebola response ». Angle infrastructure/santé-sécurité à garder pour l'**événement PHEOC du 17 juillet** (demain) et un futur contenu. Non engagé (teinte politique + recoupe l'angle Ouganda/RDC déjà utilisé).
+- **@ALIMA_ORG (2h)** : patients Dieudonné et Mariam sortis guéris du Nizi Ebola Treatment Centre (RDC). Angle issue positive côté RDC ; ALIMA cadence-bloqué (reply 15/07).
+
+**Archivage vérifié (étape 9)** : reply @GalaxyFMUg, les 4 follows, la MAJ DB Ouganda, le point DMs et les posts notables figurent tous ci-dessus et dans x-watchlist.md (ledger + tableau follows + posts notables). **Aucune PushNotification** (session exécutée en entier, navigateur récupéré au 2e essai après 1 timeout initial). **Aucun cas « s'arrêter et demander David » déclenché** au-delà du flag `response_phase` (non bloquant).
+
+
 
 **Publié le 15/07 à 11h53** sur demande explicite de David (« publie le thread toi même sur X »), avec confirmation préalable après rappel de la règle habituelle (contenu de marque = publication manuelle par David, voir [[feedback_no_self_publishing]]). Exception ponctuelle, pas un changement de règle durable.
 
@@ -2935,3 +3033,31 @@ David a redémarré Chrome (sans effet : la fenêtre est revenue repliée à l'i
 ### ⚠️ Re-blocage navigateur en fin de session 16/07 — minimisation OS
 
 Après avoir posté le commentaire INRB et envoyé 2 réponses (Ingride, Maham) grâce au correctif `window.resizeTo()`, la fenêtre s'est **re-repliée puis minimisée au niveau OS** au fil des navigations. À ce stade `resizeTo` ne récupère plus la main (Chrome ne dé-minimise pas en JS). **Restées non exécutées pour cette seule raison :** message de bienvenue à SEKOU SANO (hook déjà préparé, voir linkedin-contacts.md), invitations reçues à traiter (Firmin Kra à accepter, Djamous à arbitrer), connexions (Dirk Engels) et suivis. Nécessite que David restaure physiquement la fenêtre. Voir [[feedback_chrome_window_collapse_blocks_typing]] (distinction repli récupérable vs minimisation OS).
+
+### ✅ Commentaire posté 2/3 — Tambe Elvis Akem, MD (16/07, après restauration de fenêtre)
+
+**Post ciblé :** analyse WUENIC 2025 (couverture vaccinale mondiale), pays en zone rouge (RDC, Yémen, Nigéria) vs rebond (Soudan, Éthiopie), enfants zéro-dose. URN `urn:li:activity:7483436137227911170`.
+
+**Commentaire publié (confirmé : texte retrouvé dans le DOM après clic sur "Commenter") :**
+> Global averages hiding country-level signal is exactly the pattern this data keeps repeating. DRC, Yemen and Nigeria staying stuck while Sudan and Ethiopia rebound isn't noise, it's the same immunity gap that shows up again a few months later as a measles cluster.
+>
+> Zero-dose isn't just a vaccination metric, it's often the earliest visible marker of where the surveillance chain itself is weakest.
+
+Double-check : EN (post en EN, langue alignée volontairement plutôt que FR par défaut, cohérence avec l'audience internationale du post), 2 paragraphes, 401 caractères, pas de tiret cadratin, pas de lien, relie directement au post rougeole de David (gap d'immunité = signal précoce). Aucune règle 1 commentaire/profil/semaine violée (vérifié : aucun commentaire antérieur sur les posts de Tambe, seulement des DM).
+
+**⚠️ Incident évité en cours de rédaction :** une bulle de chat flottante (SEKOU SANO, restée ouverte d'une action précédente) recouvrait le vrai champ de commentaire et a capté une première tentative de saisie — repérée via `document.activeElement` (classe `msg-s-event-listitem__message-bubble`), **aucun texte perdu ni envoyé par erreur**. Bulle fermée avant de recliquer dans le bon champ. Leçon : vérifier `activeElement` après un clic sur un champ de saisie quand une bulle de chat LinkedIn est susceptible d'être ouverte en arrière-plan.
+
+### Veille — session linkedin-hwg-followup-check 16/07 (16h), lecture seule (écriture bloquée)
+
+Retombées des commentaires du matin et signaux repérés pour de futurs posts (détail complet des DMs dans linkedin-contacts.md) :
+
+- **Traction sur le commentaire Tambe WUENIC (du matin)** : Chinua Imarogbe + 1 ont réagi ; **Tambe a répondu publiquement** en développant l'angle « les moyennes mondiales masquent le signal pays, les inéquités persistantes touchent surtout les enfants zéro-dose et les contextes fragiles/conflits ». Confirme que l'angle **zéro-dose = marqueur précoce de faiblesse de la chaîne de surveillance** génère de la discussion. Angle de marque à réexploiter.
+- **WHO — media briefing en direct sur #Ebola et autres enjeux de santé mondiale** (avec Dr [Tedros ?]) : événement institutionnel notable. Pas de données plus fraîches que le sitrep COUSP quotidien déjà en base. Angle possible : la cadence de communication OMS vs la cadence réelle de la donnée terrain.
+- **Dr. Hassan SANA** — post « #Antibiorésistance : un troisième #enjeu souvent oublié » (le recours au diagnostic). AMR, adjacent au cœur surveillance de HWG.
+- **Ioannis (Yannis) Hodges-Mameletzis** engage sous le post WHO EMRO/ECDC LLM-surveillance (même fil qu'Enrique Delgado) en demandant si le webinaire a été enregistré. Signal d'un écosystème actif autour de « LLM appliqués à la surveillance en production » — thème directement aligné HWG, à considérer pour un futur post.
+
+**Performance des posts de marque (relevé 16/07 16h) :**
+
+| Post | Statut |
+|---|---|
+| « Pendant que l'attention se concentre sur Ebola... ceinture africaine de la méningite / Sahel » | 42 impressions (en diffusion) |
