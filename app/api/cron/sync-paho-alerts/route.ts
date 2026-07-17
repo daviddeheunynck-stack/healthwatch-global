@@ -608,7 +608,7 @@ type LogEntry = { label: string; status: string; detail?: string };
 
 interface SyncResults {
   alerts: number; sitrepRows: number;
-  inserted: number; updated: number; skipped: number; errors: number;
+  inserted: number; updated: number; skipped: number; errors: number; deactivated: number;
 }
 
 interface ExistingRow {
@@ -895,21 +895,97 @@ async function fetchSitrepPdfText(docUrl: string): Promise<string> {
   return text;
 }
 
-async function collectSitrepItems(log: LogEntry[]): Promise<AlertData[]> {
+// A country drops off the asterisked set when PAHO judges its outbreak over —
+// the deactivation pass below turns that into active=false on the matching
+// row. A truncated PDF parse (bad page break, PAHO changing the table layout
+// mid-report) would otherwise read as "every unmentioned country's outbreak
+// just ended" and mass-deactivate rows with real, ongoing outbreaks. Sitreps
+// #4/#5 parsed 10 country rows and #6 parsed 11; anything short of that is
+// treated as a suspect parse and the deactivation pass is skipped entirely
+// (the insert/update pass above is unaffected — it only ever touches rows
+// for countries it actually found this edition).
+const SITREP_MIN_SANE_ROWS = 8;
+const SITREP_SOURCE_LIKE = "%paho.org%situation-report%";
+
+interface DeactivationCandidate { id: string; country_en: string; cases: number; deaths: number }
+
+async function deactivateDroppedSitrepCountries(
+  supabase: SupabaseClient,
+  entry: SitrepEntry,
+  table: SitrepTable,
+  log: LogEntry[],
+): Promise<number> {
+  if (table.rows.length < SITREP_MIN_SANE_ROWS) {
+    log.push({
+      label:  entry.title,
+      status: "skip",
+      detail: `deactivation pass skipped — parse yielded only ${table.rows.length} country row(s) (< ${SITREP_MIN_SANE_ROWS}), too few to trust as a complete table`,
+    });
+    return 0;
+  }
+
+  const stillActive = new Set(
+    table.rows
+      .filter((r) => r.active)
+      .map((r) => findCountry(r.country)?.name_en)
+      .filter((n): n is string => !!n),
+  );
+
+  const { data, error } = await supabase
+    .from("outbreaks")
+    .select("id, country_en, cases, deaths")
+    .eq("disease_en", "Measles")
+    .eq("region", "americas")
+    .eq("active", true)
+    .like("source", SITREP_SOURCE_LIKE);
+
+  if (error) {
+    log.push({ label: entry.title, status: "error", detail: `deactivation lookup: ${error.message}` });
+    return 0;
+  }
+
+  let count = 0;
+  for (const row of (data ?? []) as DeactivationCandidate[]) {
+    if (stillActive.has(row.country_en)) continue;
+
+    const { error: updErr } = await supabase
+      .from("outbreaks")
+      .update({ active: false })
+      .eq("id", row.id)
+      .eq("active", true);
+
+    if (updErr) {
+      log.push({ label: `Measles/${row.country_en}`, status: "error", detail: `deactivation failed: ${updErr.message}` });
+      continue;
+    }
+    log.push({
+      label:  `Measles/${row.country_en}`,
+      status: "deactivated",
+      detail: `no longer in sitrep #${entry.num}'s asterisked set (EW ${table.ew} ${table.year}) — was ${row.cases} cases / ${row.deaths} deaths, outbreak treated as over`,
+    });
+    count++;
+  }
+  return count;
+}
+
+async function collectSitrepItems(
+  supabase: SupabaseClient,
+  log: LogEntry[],
+): Promise<{ items: AlertData[]; deactivated: number }> {
   const listRes = await fetch(PAHO_SITREP_URL, { headers: FETCH_HEADERS, signal: AbortSignal.timeout(15_000) });
   if (!listRes.ok) throw new Error(`sitrep listing HTTP ${listRes.status}`);
 
   const entry = parseSitrepListing(await listRes.text());
   if (!entry) {
     log.push({ label: "measles sitrep", status: "skip", detail: "no measles sitrep on listing" });
-    return [];
+    return { items: [], deactivated: 0 };
   }
 
   if (entry.created) {
     const ageDays = (Date.now() - new Date(entry.created).getTime()) / 86400_000;
     if (ageDays > SITREP_MAX_AGE_DAYS) {
       log.push({ label: entry.title, status: "skip", detail: `sitrep older than ${SITREP_MAX_AGE_DAYS}d (${entry.created})` });
-      return [];
+      return { items: [], deactivated: 0 };
     }
   }
 
@@ -920,7 +996,7 @@ async function collectSitrepItems(log: LogEntry[]): Promise<AlertData[]> {
   // don't recognise — better a visible coverage gap than invented figures.
   if (!table || table.rows.length === 0) {
     log.push({ label: entry.title, status: "skip", detail: "country table not found or unrecognised layout" });
-    return [];
+    return { items: [], deactivated: 0 };
   }
 
   const rt    = parseSitrepRt(text);
@@ -971,7 +1047,9 @@ async function collectSitrepItems(log: LogEntry[]): Promise<AlertData[]> {
       fromSitrep: true,
     });
   }
-  return items;
+
+  const deactivated = await deactivateDroppedSitrepCountries(supabase, entry, table, log);
+  return { items, deactivated };
 }
 
 // ── Main handler ──────────────────────────────────────────────────────────────
@@ -1027,7 +1105,7 @@ export async function GET(req: NextRequest) {
   for (const row of (existing ?? []) as ExistingRow[]) indexRow(byDC, row);
 
   // ── 3. Process each alert ─────────────────────────────────────────────────
-  const results: SyncResults = { alerts: entries.length, sitrepRows: 0, inserted: 0, updated: 0, skipped: 0, errors: 0 };
+  const results: SyncResults = { alerts: entries.length, sitrepRows: 0, inserted: 0, updated: 0, skipped: 0, errors: 0, deactivated: 0 };
   const log: LogEntry[] = [];
 
   for (const entry of entries) {
@@ -1055,8 +1133,9 @@ export async function GET(req: NextRequest) {
   // work already committed, and vice versa.
   let sitrepError: string | null = null;
   try {
-    const sitrepItems = await collectSitrepItems(log);
-    results.sitrepRows = sitrepItems.length;
+    const { items: sitrepItems, deactivated } = await collectSitrepItems(supabase, log);
+    results.sitrepRows   = sitrepItems.length;
+    results.deactivated  = deactivated;
     await loadExistingForItems(supabase, byDC, sitrepItems);
     await upsertItems(supabase, byDC, sitrepItems, today, results, log);
   } catch (e) {
