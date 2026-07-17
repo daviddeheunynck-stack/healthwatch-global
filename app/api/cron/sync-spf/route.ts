@@ -15,7 +15,11 @@ import { extractNumbers, assessRisk } from "@/lib/outbreak-parser";
 import { errorMessage } from "@/lib/error";
 
 export const dynamic     = "force-dynamic";
-export const maxDuration = 90;
+// 300s (was 90): the per-article page fetches (12s timeout each) pushed real
+// runs to ~85-105s, at the ceiling — sync-spf silently timed out and skipped
+// two consecutive ticks (2026-07-16 15:00 + 2026-07-17 07:00 UTC). Matches the
+// vercel.json app/api/cron/** default of 300, which the route export overrides.
+export const maxDuration = 300;
 
 const BOM   = String.fromCharCode(65279);
 const clean = (v: string | undefined) => (v ?? "").replace(new RegExp("^" + BOM), "").trim();
