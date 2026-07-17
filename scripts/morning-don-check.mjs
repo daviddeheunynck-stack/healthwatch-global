@@ -23,12 +23,18 @@ const SUSPICIOUS_DATE_EXCLUDE_IDS = new Set([
   "ab4cd321-0aa6-4598-86ac-b0a04d346465", // Polio Pakistan
   "b0f473be-a367-464e-ab32-3cdc43aa7815", // Polio Afghanistan
 ]);
-// Table de référence des clusters de seeds légitimes (mise à jour 2026-07-14, total=41).
+// Table de référence des clusters de seeds légitimes (mise à jour 2026-07-17, total=25).
 // Sert à diffier "le compte a-t-il changé" plutôt qu'à re-justifier ligne par ligne chaque matin.
+// Comptes = seeds ACTIFS attendus par cluster. Baissés le 2026-07-17 après les
+// audits source_priority=3 : les lignes retirées ont été désactivées (pas
+// supprimées), elles gardent is_seed=true et ne comptent plus ici.
+//   Chikungunya 21→7  : 14 pays clôturés (RRA v2 + NY State Global Health Update)
+//   MERS-CoV     2→1  : France désactivée (aucun cas depuis le cluster déc. 2025)
+//   Choléra      5→4  : Tchad désactivé (absent de la Table 1 de l'Epi Update #38)
 const KNOWN_SEED_CLUSTERS = [
-  { label: "Chikungunya (DON581, multi-pays)", diseaseMatch: /chikungunya/i, expectedCount: 21 },
-  { label: "MERS-CoV (DON591)", diseaseMatch: /mers-cov/i, expectedCount: 2 },
-  { label: "Choléra (DON579, multi-pays)", diseaseMatch: /cholera/i, expectedCount: 5 },
+  { label: "Chikungunya (DON581, multi-pays)", diseaseMatch: /chikungunya/i, expectedCount: 7 },
+  { label: "MERS-CoV (DON591)", diseaseMatch: /mers-cov/i, expectedCount: 1 },
+  { label: "Choléra (DON579, multi-pays)", diseaseMatch: /cholera/i, expectedCount: 4 },
   { label: "Polio PHEIC (Afghanistan/Pakistan/Palestine)", diseaseMatch: /polio/i, expectedCount: 3 },
   { label: "Cereulide / lait infantile (DON596, multi-pays)", diseaseMatch: /cereulide/i, expectedCount: 10 },
 ];
@@ -75,7 +81,8 @@ for (const o of active) {
 
 // --- 4a. is_seed=true AND active=true, comparé à la table de référence ---
 const seeds = active.filter((o) => o.is_seed);
-console.log(`\n=== is_seed=true AND active=true: ${seeds.length} (référence: 41) ===`);
+const expectedSeedTotal = KNOWN_SEED_CLUSTERS.reduce((n, c) => n + c.expectedCount, 0);
+console.log(`\n=== is_seed=true AND active=true: ${seeds.length} (référence: ${expectedSeedTotal}) ===`);
 const unclassified = [...seeds];
 for (const cluster of KNOWN_SEED_CLUSTERS) {
   const matched = seeds.filter((o) => cluster.diseaseMatch.test(o.disease_en || o.disease || ""));
