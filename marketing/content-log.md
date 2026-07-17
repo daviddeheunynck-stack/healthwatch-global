@@ -6,6 +6,120 @@ Archive de tout le contenu crÃ©Ã©. Mise Ã  jour Ã  chaque session.
 
 ## X / Twitter
 
+### Thread MWF — vendredi 17 juillet 2026 — ✅ VALIDÉ par David (« on valide ») le 2026-07-17, EN ATTENTE DE PUBLICATION PAR DAVID
+
+**Étape 0 :** aucun brouillon validé en attente. Le thread CFR du 15/07 a bien été **publié** le 15/07 à 11h53 (https://x.com/HWatchGlobal/status/2077330781203022047) ; la mention « toujours non publié » dans la section veille du 15/07 datait de 10h50 et est antérieure à la publication. Le brouillon Ebola 3 pays du 13/07 reste obsolète (chiffres périmés). Le post Rougeole/Mexique en attente est un brouillon **LinkedIn**, hors périmètre de cette routine.
+
+**Sujet choisi :** la létalité de la flambée RDC éclatée par province — 35,9 % en Ituri, 58,7 % au Nord-Kivu, 92,9 % au Haut-Uélé. Angle décideurs : ce gradient mesure la maturité de la détection, pas la virulence. Angle repéré le 15/07 par `linkedin-hwg-followup-check` (point 4 de sa veille) et jamais utilisé.
+
+**Pourquoi cet angle plutôt qu'un autre :**
+- L'Ouganda (0 cas actif, compte à rebours 42 j) a déjà été traité en 3 replies le 16/07 ; le CFR national dans le temps (30,9 % → 37,5 %) est le thread déjà publié le 15/07 ; le cas France guéri (signalé le 16/07) a 13 jours et n'a pas de chiffre neuf.
+- Le gradient **géographique** n'a jamais été publié nulle part, et la ventilation par province n'existait pas dans notre contenu.
+
+**Source primaire (une seule, vérifiée en session le 17/07) :** [ECDC, « Ebola disease outbreak in the DRC and Uganda »](https://www.ecdc.europa.eu/en/ebola-outbreak-democratic-republic-congo-and-uganda), page mise à jour le **16/07 à 14h15, données arrêtées au 14/07** : 2 073 cas confirmés / 796 décès, 377 guéris, 737 hospitalisés en isolement. Ventilation : **Ituri 1 863 cas / 668 décès** (26 zones de santé sur 36), **Nord-Kivu 189 / 111** (11 sur 34), **Sud-Kivu 3 / 1** (1 sur 34), **Haut-Uélé 14 / 13** (4 sur 13), **Tshopo 4 / 3** (3 sur 23).
+
+**Contrôle d'intégrité de la source :** la somme des 5 provinces boucle **exactement** sur les deux totaux annoncés (1 863+189+3+14+4 = 2 073 cas ; 668+111+1+13+3 = 796 décès). Double checksum concordant = extraction fidèle, pas une approximation.
+
+**Arithmétique recalculée en session :** 796/2 073 = 38,40 % ; 668/1 863 = 35,86 % → 35,9 % ; 111/189 = 58,73 % → 58,7 % ; 13/14 = 92,86 % → 92,9 % ; 3/4 (Tshopo) = 75 % ; 1/3 (Sud-Kivu) = 33,3 %. Écart Ituri↔Haut-Uélé = 57,0 points exactement. Part de l'Ituri = 1 863/2 073 = 89,9 % (le chiffre exact « 1 863 of 2 073 » est utilisé plutôt que « 90 % », plus précis et non arrondi).
+
+**Fraîcheur — limite assumée et explicitée dans le tweet 1 :** les chiffres sont attribués à l'ECDC et **datés « through 14 July »**, jamais présentés comme l'état du jour. Le sitrep national INSP est structurellement en avance (quotidien), mais `insp.cd` est **juridiquement fermé** (exclusion nominale ClaudeBot + réserve de droits art. 4 DSM, voir [[legal_insp_cd_and_inrb_mirror_restrictions]]) et ReliefWeb, qui héberge les sitreps, est interdit d'usage ([[legal_reliefweb_noncommercial]]). Recherche faite en session : aucun sitrep national public plus récent que le 13/07 trouvé. L'ECDC est donc la source la plus fraîche **légalement citable** qui publie la ventilation par province, et c'est déjà la source de la ligne DB prod.
+
+**X (EN) — thread 4 tweets**
+
+1/
+> DR Congo's Ebola outbreak (Bundibugyo) stands at 2,073 confirmed cases and 796 deaths through 14 July, a crude CFR of 38.4%. Broken out by province (ECDC): Ituri 35.9%, North Kivu 58.7%, Haut-Uele 92.9%. One strain, one outbreak, one country, 57 points between them.
+
+2/
+> The gradient tracks detection, not severity. A newly affected province surfaces its deaths first: a fatal community case is what triggers the alert, and the milder cases are found later, if at all. Haut-Uele's 92.9% is 13 deaths in 14 cases, across four health zones.
+
+3/
+> Fourteen cases is a very small denominator, and late presentation in a new area pushes the same way. Two further provinces hold seven cases between them, too few to read at all. An early provincial CFR tracks how long surveillance has run there, not how the virus behaves.
+
+4/
+> For planning, the national 38.4% is mostly an Ituri figure: 1,863 of 2,073 cases sit there. On the frontier, watch the direction of travel. A provincial CFR falling toward Ituri's means detection is catching up, not that the virus is weakening. healthwatch-global.com
+
+**Double-check effectué :**
+- **Longueurs (règles de comptage réelles de X, URL = 23 caractères fixes)** : 266 / 267 / 272 / 268. Toutes sous 280, marges 14 / 13 / 8 / 12. Aucun caractère non-ASCII (donc pas de comptage à poids double), 0 hashtag, 0 tiret cadratin, lien unique en fin de thread (convention), pas de CTA appuyé.
+- **Chaque chiffre confronté à l'ECDC** ligne par ligne, aucun repris d'un post tiers, d'un DM ou d'une mémoire ancienne. Les valeurs de la veille du 15/07 (34,9 % Ituri, 58,2 % Nord-Kivu) ont **bougé** entre-temps et n'ont **pas** été réutilisées : re-vérifiées et remplacées par 35,9 % / 58,7 %. Seul le 92,9 % du Haut-Uélé est inchangé.
+- **Cherry-picking évité (correction apportée en cours de rédaction)** : la 1re version ne citait que 3 provinces sur 5. Le Sud-Kivu (3 cas, CFR 33,3 %, **plus bas** que l'Ituri) affaiblit une lecture naïve « frontière = CFR élevé » — le passer sous silence aurait été un tri sélectif. Le tweet 3 rend donc compte des **5 provinces** (« two further provinces hold seven cases between them, too few to read at all »), ce qui traite l'objection au lieu de la masquer.
+- **Surclaim évité** : la formule d'origine de la veille (« une létalité de 92,9 % ne mesure pas la virulence, elle mesure le fait qu'on ne détecte que les morts ») est trop absolue. Le biais de détection n'est pas la seule cause possible : petit dénominateur (14 cas, intervalle de confiance très large) et présentation tardive jouent aussi. Le tweet 3 nomme les trois plutôt que d'asserter la seule détection, et le tweet 2 dit « tracks detection », pas « is caused only by ».
+- **Fait non vérifiable écarté** : « 6 des 7 premiers cas du Haut-Uélé décédés dans la communauté » (veille du 15/07) — provenance non citable, **non utilisé**. De même, les explications de terrain recueillies en DM (insécurité, grèves) restent hors contenu.
+- **Pas de contradiction avec le thread publié le 15/07**, au contraire : il annonçait un CFR nationale « still rising » à 37,5 % ; l'ECDC le donne à 38,40 % au 14/07. La trajectoire se confirme. Le nouveau thread ne rejoue pas la dérive temporelle, il ouvre l'axe géographique.
+- **Adjacence signalée en toute transparence** : le tweet 4 du thread publié disait que « 37,5 % rests on partial detection » sans dire où ni dans quel sens. Le nouveau thread est l'extension géographique de ce point. C'est une extension réelle (la ventilation par province est inédite, et la conclusion « CFR provincial = indicateur de maturité de la surveillance » est neuve), mais la famille d'idées est la même — c'est le seul reproche possible et il est assumé.
+- Pas de ProMED. Pas de faux témoignage. Ton analytique décideur (ministry focal points, ops teams), pas promotionnel.
+
+**⚠️ Anomalie repérée en passant, NON utilisée dans le thread (à signaler) :** l'ECDC donne le suivi des contacts à **76,6 %** (données au 14/07) alors que le sitrep national du 13/07 donnait **67,4 %**, et que notre reply @AP du 15/07 décrivait une **chute** (81,6 % le 4/07 → 78,1 % le 11/07 → 67,4 % le 13/07). Un rebond de 9 points en un jour est peu plausible en l'état : dénominateurs probablement différents entre les deux sources. **Écarté du thread par prudence**, à éclaircir avant toute réutilisation de la série « traçage » dans un contenu futur.
+
+**Restent non utilisés et disponibles :** la réconciliation du SitRep N°060 (6 cas reclassés de Nia-Nia/Ituri vers Wamba/Haut-Uélé, les cumuls provinciaux bougent sans une seule infection nouvelle — angle fort mais dépendant d'une source non citable), le contraste Ouganda 20 cas/10 % vs RDC, et l'anniversaire des 2 mois de la flambée.
+
+---
+
+### Veille x-hwg-monitoring — 2026-07-17 (10h, reprise après blocage navigateur résolu par David)
+
+**Contexte session** : navigateur bloqué en début de session (2 tentatives en timeout complet 300s, voir x-watchlist.md) ; David a ouvert manuellement un nouvel onglet, ce qui a débloqué immédiatement la navigation. Monitoring effectué ensuite normalement.
+
+**Point DMs : boîte de réception VIDE.** Vérifiée dans les trois vues (Tous, Priorité, Masqué via « Demandes de message ») : aucun message, aucune demande. 0 reçu, 0 répondu, 0 noté pour David.
+
+**Reply n°1 POSTÉE ✅ — @HelenBranswell (silence de l'Ouganda sur le foyer de Marburg)**
+
+Cible : https://x.com/HelenBranswell/status/2077799186498535496 (journaliste STAT News, vérifiée, déjà suivie, posté 16/07 18:55, ~4 890 vues, réponses ouvertes, cadence libre — jamais engagée). Post cible : « Remember that #Marburg outbreak in Uganda that only came to light in late June because the US embassy there issued a health alert? #WHO has been asking for information, but has been getting none. » (relaie [STAT News](https://www.statnews.com/2026/07/16/world-health-organization-wants-marburg-virus-update-from-uganda/)).
+
+**Vérification de l'article source complet (WebFetch/WebSearch, pas seulement le tweet)** : Chikwe Ihekweazu (OMS Health Emergencies, déjà suivi) confirme plusieurs demandes d'information envoyées à l'Ouganda restées sans réponse. Le foyer, révélé fin juin via une alerte santé de l'ambassade US, a été confirmé par le ministère de la santé ougandais comme un cas chez un bébé vivant dans un camp de déplacés. Une source de STAT affirme qu'un **second cas** avait été confirmé au début du foyer, mais **jamais reconfirmé publiquement par Kampala depuis**.
+
+**Vérification base HWG avant reply** : ligne existante `b17d4fda…` (Ouganda/Marburg, active=true, 1 cas/1 mort, source CIDRAP 2/07) — cohérente avec l'article. **Le 2e cas rapporté par STAT n'a PAS été ajouté en base** : source anonyme non citable selon les propres termes de STAT, donc non vérifiable contre une source primaire (voir [[feedback_verify_against_primary_source]]) — laissé de côté par prudence, pas oublié.
+
+**Reply postée :**
+> The silence has an operational cost beyond communications optics: WHO's regional Health Emergencies team is already stretched coordinating the Ebola response across Ituri and Sud-Kivu, and an unverifiable Marburg investigation next door draws on that same bandwidth without WHO able to confirm case counts, contact tracing, or containment measures. The confirmed count has stood at one case and one death (a child, per Uganda's Ministry of Health) since early July; a second case reportedly identified at the outbreak's start was never confirmed by Kampala, so it remains unverifiable rather than resolved. That gap matters given Marburg's case fatality rate has ranged from 24% to 88% in past outbreaks, and Uganda is simultaneously managing cross-border Ebola Bundibugyo spillover, meaning any undercount compounds two live VHF responses at once.
+
+**Confirmation :** texte relu intégralement via `get_page_text`/screenshot avant envoi (aucune troncature, un seul paragraphe dense conforme au style habituel), publié, reply visible dans le fil sous HealthWatchGlobal @HWatchGlobal, compteur de réponses du post passé de 4 à 5.
+
+**Double-check :**
+- Décompte confirmé Ouganda (1 cas/1 mort, enfant, MoH Ouganda) : recoupé avec la ligne DB HWG existante, pas juste repris de l'article.
+- 2e cas STAT : présenté explicitement comme non confirmé (« reportedly », « never confirmed »), pas affirmé comme fait — cohérent avec le fil de réponses où Helen Branswell elle-même répond « Where did that claim come from ? » à un lecteur qui affirmait l'inverse (« the two cases were unrelated »), confirmant que rien n'est tranché publiquement.
+- CFR Marburg 24-88 % : fourchette historique généralement citée (fiches OMS), pas un chiffre inventé pour l'occasion.
+- Bande passante OMS Ituri/Sud-Kivu : contexte déjà établi dans nos replies précédentes (Tedros, Chikwe Ihekweazu), pas une nouvelle affirmation à sourcer isolément.
+- Pas de CTA/lien/hashtag, pas de tiret cadratin (deux-points + point-virgule), ton analytique décideur. Cadence @HelenBranswell libre.
+
+**🟢 Donnée épi vérifiée mais NON ajoutée en base — 2e cas Marburg Ouganda (STAT)** : voir ci-dessus, source anonyme non citable, décision explicite de ne pas l'ajouter.
+
+**🟢 Ajout produit (nouvelle ligne DB prod) — Fièvre de West Nile / France, 1er cas autochtone 2026**
+
+- **Repéré** : notification post récent @SantePubliqueFr (4h), infographie officielle citée intégralement.
+- **Vérifié contre le bulletin officiel complet** (WebFetch sur le lien réel derrière le t.co, pas seulement le texte du tweet) : [Bulletin Santé publique France du 16 juillet 2026](https://www.santepubliquefrance.fr/maladies-a-transmission-vectorielle/chikungunya/bulletin-national/chikungunya-dengue-zika-et-16) — 1 cas autochtone d'infection à virus West Nile identifié en Pyrénées-Orientales (Occitanie), première détection de circulation du virus chez l'homme en France en 2026.
+- **Vérifié en base avant écriture** : aucune ligne France/West Nile existante (`disease ilike *nil*` vide) — donnée réellement nouvelle, pas une mise à jour.
+- **Ligne créée** : `906bf26a-8867-4a9c-ad7c-976e4e2c5bab` — disease "Fièvre de West Nile" (FR) / "West Nile fever" (EN), country France, region europe, cases=1, deaths=0, risk_level=low, active=true, date=2026-07-16, source=bulletin SPF ci-dessus, source_priority=10, is_seed=false. Description bilingue (EN principal + FR) rédigée en session, pas copiée du tweet.
+- **risk_level "low"** : cas unique, détection de routine de la surveillance saisonnière renforcée (pas de cluster, pas de signe de propagation), cohérent avec le profil de sévérité du virus West Nile (majorité de formes asymptomatiques/bénignes).
+- Vérification affichage prod (dashboard) non effectuée : navigation directe vers healthwatch-global.com bloquée par l'extension (permission domaine), la confirmation s'appuie sur la représentation complète retournée par l'insert Supabase (`return=representation`), qui montre les valeurs exactes écrites.
+
+**Reply n°2 POSTÉE ✅ — @SantePubliqueFr (contexte historique du 1er cas West Nile Pyrénées-Orientales)**
+
+Cible : https://x.com/SantePubliqueFr/status/2077783025824202893 (compte officiel de Santé publique France, vérifié, jamais engagé, cadence libre) — même post que celui ayant motivé l'ajout DB ci-dessus.
+
+**Angle** : le post source annonce seulement « premier cas autochtone » sans contexte. Vérifié par recherche web dédiée (pas depuis la mémoire) que le département des Pyrénées-Orientales avait déjà eu des cas **équins** de virus West Nile fin septembre 2006, dans le même cycle écologique Camargue-périphérie (oiseaux réservoirs, moustiques Culex vecteurs) qui a produit les précédents clusters humains français : Var 2003 (7 cas humains, 4 équins) et une résurgence plus large en 2015. Sources : [HAL/INRAE](https://hal.inrae.fr/hal-02656308v1), [CDC EID 2004](https://wwwnc.cdc.gov/eid/article/10/10/03-1021_article).
+
+**Reply postée :**
+> Worth flagging: this is the first human case in Pyrénées-Orientales, but not the department's first WNV activity. It recorded equine cases there back in September 2006, part of the same Camargue-periphery bird-mosquito cycle that produced France's earlier human clusters (Var, 2003: 7 cases; a broader resurgence in 2015). Human cases are typically a lagging signal: birds are the reservoir and Culex mosquitoes the vector, so by the time a symptomatic case surfaces, the virus has usually been circulating silently in the local avian-mosquito cycle for weeks.
+
+**Confirmation :** texte relu intégralement avant envoi (aucune troncature), toast « Votre post a été publié », reply visible sous HealthWatchGlobal @HWatchGlobal · 6s.
+
+**Double-check :**
+- Cas équins Pyrénées-Orientales 2006, cluster Var 2003 (7 cas humains), résurgence 2015 : recherche web dédiée en session, pas une reprise du tweet source ni d'une mémoire ancienne — voir [[feedback_verify_against_primary_source]].
+- Écologie de transmission (oiseaux réservoir, Culex vecteur, cas humain = signal retardé) : fait épidémiologique de base, cohérent avec la littérature citée.
+- Pas de CTA/lien/hashtag, pas de tiret cadratin (deux-points + point-virgule), ton analytique. Cadence @SantePubliqueFr libre (jamais engagé).
+- Post hors-sujet/xénophobe repéré dans le même fil (« Dame Flo Paname », 20h) : non engagé, aucune interaction.
+
+**Recherche 3e reply : non trouvée ce passage, quota clos à 2/3 en connaissance de cause.** Notifications (Tous + Mentions) entièrement parcourues, recherche structurée par mots-clés élargie tentée (Ebola/mpox/Marburg/cholera/Nile, min_faves:15) — dominée par du bruit (contenu historique, memes, hors-sujet), comptes prioritaires @AfricaCDC et @Dr_JeanKaseya vérifiés directement (bilan Ebola RDC/Ouganda au 14/07 déjà connu, discours Kaseya au Groupe des partenaires internationaux sans chiffre nouveau, et cadence-bloqué de toute façon jusqu'au 18/07). **Repris en priorité au prochain passage (16h)** plutôt que forcé.
+
+**Follows : 5/5 exécutés**
+- **benny Immah** (@benny_Immah) et **Sam Man** (@SamManbn3k), nouveaux abonnés : 0 post chacun, aucune bio, aucune affiliation. **Écartés** (légitimité non établie).
+- **stue** (@stuartelimu) revu en suggestion (22h) : déjà refusé le 16/07 (hors domaine santé publique), non re-proposé.
+- **5 follows exécutés (recherche active, repérés en marge des profils écartés ci-dessus)** : @ASTMH (American Society of Tropical Medicine and Hygiene, 20,7k abonnés, suivi par Chikwe Ihekweazu + 17 autres comptes HWG), @ISNTD_Press (International Society for Neglected Tropical Diseases, 14,9k abonnés, suivi par Dr Jean Kaseya + 13 autres), @LSHTM_malaria (London School of Hygiene & Tropical Medicine, 8,6k abonnés, suivi par Dr Jean Kaseya + 11 autres), @PWB_Global (Parasites Without Borders, vérifié, 6,7k abonnés, suivi par Dr Jean Kaseya + 3 autres), @MalariaJournal (revue BioMedCentral, 7,9k abonnés, suivi par Parasites Without Borders + 10 autres). Tous vérifiés (bio/site officiel/réseau) avant de suivre, confirmés bouton « Abonné » par zoom. Détail complet dans x-watchlist.md.
+- **Traction notée (pas un follow)** : Shamiso Zinzombe, PhD (@ShamiRt2Health, déjà suivie) a aimé la reply @TravelGov du 16/07.
+
+**Quota du jour à l'issue de ce passage : replies 2/3, follows 5/5.**
+
+---
+
 ### Veille x-hwg-monitoring — 2026-07-16 (reprise après vérification prod, 2e passage)
 
 **Reply n°2 POSTÉE ✅ — @RwenzoriMarathn (marathon international autorisé, angle travel-risk/duty-of-care)**
@@ -637,6 +751,73 @@ If you work in global health, outbreak response, or international crisis managem
 ---
 
 ## LinkedIn
+
+### Post — 17 juillet 2026 (vendredi) — Ebola Ouganda/RDC, ce que le compte à rebours de 42 jours ne mesure pas — **PUBLIÉ ✅ (David : « publie », publié par l'agent sur override explicite, cf. précédent du 13/07)**
+
+**Vérification post-publication :** contenu affiché dans le fil vérifié mot pour mot par zoom avant clic sur "Publier" (aucun écart avec le brouillon ci-dessous) ; toast « Le post a bien été publié » ; post visible en tête du fil de David Deheunynck, horodaté "maintenant", avec aperçu de lien healthwatch-global.com généré automatiquement par LinkedIn.
+
+**Étape 0 :** aucun brouillon LinkedIn en attente au 17/07. Le post Guatemala du 15/07 est publié ; le brouillon Ebola du 13/07 est marqué OBSOLÈTE (chiffres périmés) et n'est pas repris ici, ce post est une rédaction entièrement neuve sur des chiffres du 16/07.
+
+**Sujet choisi :** l'Ouganda a sorti son dernier patient Ebola le 16/07 et lancé le compte à rebours OMS de 42 jours, pendant que la RDC franchit 2 073 cas / 796 décès et continue de croître. Angle : le compte à rebours de 42 jours est un indicateur national qui ne dit rien du risque régional ; fin août, une déclaration de fin d'épidémie en Ouganda sera exacte et coexistera avec une épidémie toujours active en RDC.
+
+**Pourquoi cet angle est neuf :** jamais couvert côté LinkedIn (le post Ebola du 24/06 portait sur le vaccin Ervebo ; le brouillon du 13/07, jamais publié, portait sur l'écart de létalité RDC/Ouganda). Côté X, les 3 replies du 16/07 mentionnaient la règle des 42 jours, mais comme réponses courtes à des posts tiers, et aucune ne développait le point « indicateur national vs risque régional » ni ne citait les 737 patients en isolement. Le fil « la fin annoncée n'est pas la fin de l'événement » est neuf. **Hook structurel volontairement daté en absolu (« On 16 July »), pas relatif (« yesterday »/« this week ») :** le post reste exact s'il est publié lundi, conformément à la règle tirée de l'échec du post Rougeole/Mexique.
+
+**Source des données (vérifiée mot pour mot ce 17/07 contre la source primaire, pas contre la DB ni une mémoire) :** ECDC, « Ebola disease outbreak in the Democratic Republic of the Congo and Uganda », page lue directement, « last updated 16 July at 14:15 ».
+- « On 15 July 2026, the Democratic Republic of the Congo (DRC) reported a total of 2 073 confirmed cases, including 796 related deaths (from data up until 14 July). »
+- « Among the individuals that tested positive for Bundibugyo virus, 377 have recovered. »
+- « A total of 737 patients are hospitalised in isolation. »
+- Ouganda : « Up until 14 July 2026, a total of 20 confirmed cases, including two deaths » ; « On 16 July, Uganda discharged the last Ebola patient... Uganda's Ministry of Health announced the start of the 42-day countdown ».
+- ⚠️ **L'URL ECDC stockée en DB (`.../ebola-outbreak-democratic-republic-congo`) renvoie un 404** ; la page vivante est `.../ebola-outbreak-democratic-republic-congo-and-uganda`. Signalé à David, non corrigé en base (hors périmètre de cette routine contenu).
+- Delta 62 cas / 42 décès : différence entre la version ECDC du 15/07 (2 011 / 754, données au 13/07, lue via cache de recherche ECDC) et la version du 16/07 (2 073 / 796, données au 14/07, lue en direct). **C'est le maillon le moins directement vérifié du post** (une des deux bornes vient d'un cache, corroborée indépendamment par [[project_ebola_drc_priority10_frozen_no_autofeed_2026_07_16]] qui enregistre 2 011/754 comme chiffre ECDC publié le 15/07). Le post nuance explicitement ce delta comme non-taux-d'incidence pour cette raison.
+
+**Prérequis CTA vérifié :** les deux pays cités existent en base avec ces chiffres exacts (`RD Congo` 2 073/796 et `Ouganda` 20/2, tous deux `is_seed:false`), et `healthwatch-global.com/disease/ebola` affiche bien 2 073/796 + 20/2, total 2 094/798 sur 3 pays (2073+20+1=2094, 796+2+0=798, pas de double comptage d'agrégat). Le CTA tient. Aucune ligne `is_seed:true` n'est citée.
+
+**LinkedIn (EN)** — anglais par défaut ([[feedback_linkedin_brand_posts_in_english]]) : audience santé publique internationale, source anglophone, sujet non francophone.
+> On 16 July, Uganda discharged its last Ebola patient and started the 42-day countdown to declaring its outbreak over, running into late August.
+>
+> That is a real achievement, and it is worth being precise about what it certifies.
+>
+> Uganda's outbreak, from first case to last discharge: 20 confirmed cases, 2 deaths, and now zero active cases.
+>
+> The same event, same Bundibugyo strain, across the border in DR Congo: 2,073 confirmed cases and 796 deaths, on data running to 14 July. 377 people have recovered. 737 patients are still hospitalised in isolation.
+>
+> Between ECDC's 13 July and 14 July data points, DR Congo added 62 confirmed cases and 42 deaths. Single-day deltas there carry reporting catch-up and are not an incidence rate. The direction of travel is not in doubt.
+>
+> DR Congo accounts for roughly 99% of the confirmed cases in this outbreak.
+>
+> The 42-day clock is a national indicator. It measures one thing: whether a surveillance system can go two incubation periods without finding a new case, inside one set of borders. It is not a regional risk assessment, and it does not travel across the frontier.
+>
+> The practical consequence lands in late August. An end-of-outbreak declaration in Uganda will be accurate, and on the current trajectory it will land while DR Congo is still counting. A country can exit an outbreak that is still growing.
+>
+> For teams tracking exposure, the indicator to watch after August is not Uganda's declaration. It is DR Congo's curve.
+>
+> Source: ECDC, Ebola disease outbreak in the Democratic Republic of the Congo and Uganda, page updated 16 July 2026.
+>
+> Full data, updated continuously: healthwatch-global.com
+
+**Double-check :** chaque chiffre du post énuméré par regex et confronté un à un à la page ECDC (16, 42, 20, 2, 2 073, 796, 14, 377, 737, 13, 14, 62, 42, 99%) ; **1 644 caractères** (limite 3 000) ; **11 paragraphes** séparés par des sauts de ligne ; **zéro tiret cadratin vérifié par regex** ; pas de ProMED ; pas de faux témoignage ; lien en corps, pas de CTA agressif. Arithmétique vérifiée en script : 2073−2011=62 ; 796−754=42 ; 2073/2094=99,00 % (98,90 % si l'on inclut les 2 cas évacués en Allemagne recensés par l'ECDC, « roughly 99 % » tient dans les deux cas) ; 16 juillet + 42 jours = **27 août**, donc « late August » exact. **Pièges d'exactitude évités :** (1) ne compare jamais les 737 hospitalisés en isolement aux 20 cas confirmés ougandais, catégories non comparables (ce serait l'erreur méthodologique que dénonçait le post Guatemala du 15/07) ; (2) ne prédit pas la trajectoire d'août, formulé « on the current trajectory » ; (3) le delta d'un jour est explicitement désamorcé comme non-taux dans le corps du post ; (4) « 17 recoveries » (ECDC, au 14/07) volontairement écarté au profit de « zero active cases », car 20−2−17=1 aurait semblé contredire la sortie du dernier patient le 16/07.
+
+**✅ Trou de couverture comblé le 17/07 sur demande explicite de David (« ajoute la ligne Allemagne ») :** ligne `Allemagne` insérée en prod (`id 5f87a5bb-93f9-4c6b-a1f6-b731936df1c3`), rejoignant le cluster `event_id c5374409-17f6-4b2c-9f9d-8c5fa7ce1125` (RD Congo/Ouganda/France).
+- **Données (vérifiées mot pour mot contre ECDC, 2 fetchs indépendants concordants) :** 2 cas importés, 0 décès signalé, `date: 2026-07-13` (évacuation la plus récente). Cas 1 : citoyen américain évacué vers l'Allemagne en mai 2026. Cas 2 : humanitaire américain en RDC, testé positif le 10/07/2026, évacué le 13/07/2026. **Aucune issue clinique (guérison/décès/hospitalisation) rapportée par l'ECDC pour les deux patients** — `recovered:0` par défaut, non affirmé dans la description.
+- `risk_level: high` via la règle `assessRisk()` (« ebola » toujours high), pas choisi à la main. `region/lat/lng` = valeurs `Germany` de `lib/geo-data.ts` (51.2, 10.5, europe), pas de coordonnées inventées.
+- **Traductions MyMemory (même piège que Guatemala/Pérou du 15/07, nouvelle occurrence) :** la version arabe a mistraduit « Source: ECDC » en « المصدر: التعاون الاقتصادي فيما بين البلدان النامية » (« Coopération économique entre pays en développement » — aucun rapport). Corrigé manuellement en gardant l'acronyme « ECDC » tel quel, comme les 3 autres langues. Les 4 langues relues une à une avant insertion.
+- **`created_at` et `push_notified_at` volontairement datés au 2026-07-13** (date de l'évacuation la plus récente), pas à aujourd'hui — même raisonnement que Guatemala/Pérou : `regional-alerts` et `push-alerts` liraient un `created_at` du jour comme un foyer nouveau, alors que ces cas sont documentés par l'ECDC depuis le 16/07 (et le premier remonte à mai). `source_priority: 10`, comme la ligne France, pour figer une donnée narrative ponctuelle qu'aucun cron ne réalimente. `is_pheic: false`, comme France (cas importé, pas le foyer source du PHEIC).
+- **Vérification post-insertion :** `healthwatch-global.com/disease/ebola` affiche bien Allemagne 2/0, total 2 096 cas / 798 décès / 4 pays (2073+20+2+1=2096, 796+2+0+0=798) — pas de double comptage, CTA cohérent pour un futur post sur ce sujet.
+
+**⚠️ Correction : il n'y a jamais eu d'URL cassée en base.** En rouvrant le dossier sur demande de David (« corrige aussi l'url ECDC »), vérification faite : aucune trace, avant ou après, d'une écriture sur le champ `source` de cette ligne — ni par un cron (aucun code trouvé qui le ferait), ni par la ligne d'audit disponible. Le 404 rencontré plus tôt dans ma propre session venait d'une URL que **j'avais reconstituée moi-même à partir d'une valeur tronquée à 60 caractères** dans un script de log, sans jamais relire la valeur complète stockée en base. La vraie URL (`.../ebola-outbreak-democratic-republic-congo-and-uganda`, 200 OK) était très probablement déjà celle en base depuis le départ. Correction de mon compte-rendu précédent, qui attribuait à tort un « fix tiers » à un problème qui n'existait pas.
+
+**🔴 En revanche, l'anomalie `active=false` sur la ligne phare RD Congo (`bd1c3a46`, 2073/796, désactivée à 10:00:31 UTC) est réelle et son origine est maintenant identifiée avec certitude — pas par une session concurrente inconnue, mais par un cron précis.** Investigation confirmée indépendamment (lecture du code par la session `Healthwatch ecdc fix check`, 10:43 UTC, puis reconfirmée par moi-même sur `app/api/cron/sync-cdc-notices/route.ts:346-364`) :
+- **Coupable : `sync-cdc-notices`** (10:00 UTC quotidien), pas `sync-ecdc-threats`.
+- Le CDC Travel Notice #807, « Ebola Bundibugyo Virus Disease in the DRC and Uganda », est classé **Level 2** et ne contient **aucun chiffre** de cas/décès dans son texte.
+- Le code (l.346) : `if (cases === 0 && deaths === 0 && notice.level !== "level3")` désactive toute ligne existante via `.update({active:false}).eq("id", existRow.id).lte("source_priority", 5)` — garde `<=5`, qui **inclut** cette ligne, pile à `source_priority=5`.
+- **Même mécanique simultanée sur Diphtérie/Haïti** (10:00:33 UTC) — un avis Level 1 à 0/0 a refermé une ligne qu'une autre session avait activée le jour même.
+- C'est un cron qui a fonctionné exactement comme codé, pas une intervention manuelle ni un bug de concurrence : un avis de voyage sans aucun chiffre est interprété comme un signal de clôture d'un foyer suivi par une source totalement différente (ECDC), à égalité de priorité.
+- **Le site n'a pas été cassé entretemps** : `filterDisplayActive()` (`lib/outbreaks.ts:526`) a un filet de rattrapage de 60 jours pour les lignes `source_priority≥3` récemment mises à jour, donc 2073/796 est resté affiché tout du long (vérifié par fetch direct). Mais tant que `active=false`, `sync-ecdc-threats` (qui charge `.eq("active", true)`) ne peut plus la réalimenter.
+- **Corrigé : `active` remis à `true`.** ⚠️ **Non résolu à la racine : demain 10:00 UTC, si l'avis CDC #807 est toujours Level 2/0-0, le même mécanisme redésactivera la ligne.** Arbitrage de conception nécessaire (déjà posé à David par l'autre session, toujours en attente) : exclure les Level 2 de la désactivation, baisser le garde à `<5`, ou exiger que l'avis porte des chiffres avant de fermer une ligne.
+
+**🐛 Bug de traduction supplémentaire trouvé au passage sur cette même ligne :** `description_ar` traduisait « via ECDC » par « عبر مركز التعاون الاقتصادي والتنمية » (littéralement « via l'OCDE », aucun rapport) — même famille de piège MyMemory que celui déjà corrigé sur la ligne Allemagne aujourd'hui et sur Guatemala/Pérou le 15/07 (l'acronyme ECDC semble systématiquement mal géré par cette API). **Corrigé** en remplaçant par « ECDC » tel quel, cohérent avec les 3 autres lignes du cluster (Ouganda et Allemagne l'ont correctement en `ECDC`). Aucune autre ligne active du cluster ne porte ce défaut (Ouganda vérifiée saine).
+
+---
 
 ### Post — 15 juillet 2026 (mercredi) — rougeole Guatemala / artefact de surveillance — PUBLIÉ ✅ (par David, confirmé « c'est posté »)
 
@@ -2978,6 +3159,52 @@ Suivi des contacts au 13/07 : **62,0 % en Ituri, 92,0 % au Nord-Kivu, 55,5 % au 
 Post rougeole/Guatemala : 55 impressions, **+2 abonnés générés**, réactions de Kumud Deepali Rudraraju + 1. Post « Deux épidémies sont actives en ce moment » : 99 impressions. Deux des trois commentaires postés ce matin ont été likés (Waylon Elliot + 2 autres sur le commentaire « transmission communautaire non détectée » sous le post d'Oussama Bouhentala, qui totalise 201 réactions et 14 commentaires ; Waylon Elliot également sur le commentaire « one hour at a time / plafond réel d'un CTE »). Aucune réponse écrite sous les commentaires.
 
 ---
+
+## ✅ EXÉCUTÉ le 17/07/2026 (après-midi, David a redémarré Chrome en direct — saisie débloquée)
+
+### Commentaire 1/3 — Dr. Jean Kaseya (Director General @AfricaCDC)
+Post : allocution au Groupe des partenaires internationaux sur l'épidémie Ebola Bundibugyo (16h au moment du commentaire, 51 réactions). Publié et confirmé (le commentaire de David apparaît dans le DOM, horodaté "1 s") :
+> Absent a licensed vaccine or treatment, the entire response rests on how fast a community-level signal reaches someone who can validate and act on it. That validation step rarely shows up in any bulletin, yet it is often the real determinant of whether early detection turns into contained transmission or a wider outbreak.
+
+Double-check : EN (post en EN), 1 paragraphe analytique, pas de CTA, pas de tiret cadratin. Note : Oussama Wail Bouhentala commente déjà ce même post (avec un lien vers sa propre analyse) — candidat suivant naturel.
+
+### Commentaire 2/3 — Oussama Wail Bouhentala (1er degré, suivi ce jour)
+Post (1j) : analyse structurée des facteurs bloquant le contrôle de l'épidémie Ebola RDC/Ouganda (reconnaissance tardive, pas de vaccin homologué contre Bundibugyo, contact tracing incomplet, décès communautaires, transmission nosocomiale...). Publié et confirmé (comment visible dans le DOM, champ vidé) :
+> None of these barriers show up directly in a case-count bulletin. Declining contact-tracing performance, delayed recognition, incomplete follow-up, they are all upstream of the numbers everyone tracks, and only become visible once the outbreak has outpaced them. The Ituri vs North Kivu gap in this same DRC outbreak is a good example: 62% vs 92% contact tracing coverage in the July sitreps, and the case counts alone never explain why.
+
+Double-check : EN (post en EN), chiffres réutilisés depuis une vérification déjà faite avec Ingride Siemeni le 16/07 (sitrep COUSP N°060, cohérents), pas de CTA, pas de tiret cadratin.
+
+### Commentaire 3/3 — Médecins Sans Frontières (MSF) Eastern Africa — QUOTA REMPLI
+Post (1j) : appel à un scale-up urgent de la réponse Ebola RDC (2 000+ cas / 750 décès au 12/07, triplement en moins de 5 semaines, 3e plus grande épidémie Ebola jamais enregistrée). Publié et confirmé (comment visible dans le DOM, champ vidé) :
+> A caseload that triples in under five weeks does not just outpace treatment capacity, it outpaces the surveillance footprint mapped for the outbreak's earlier geography. By the time a scale-up reaches a newly affected area, the response is often still calibrated to where the epidemic was, not where it already is. That lag between geographic spread and surveillance reach rarely shows up in the case counts themselves.
+
+Double-check : EN (post en EN), 1 paragraphe analytique, angle distinct des 2 commentaires précédents (lag surveillance/géographie plutôt que validation/process), pas de chiffre inventé (uniquement le "triples in under five weeks" cité par le post lui-même), pas de CTA, pas de tiret cadratin.
+
+## 🔎 Veille LinkedIn — 17/07/2026 (linkedin-hwg-monitoring, récupération partielle : suivis OK, écritures texte bloquées)
+
+**Contexte : 0 commentaire posté** (blocage navigateur cas 2 après ~20 min de blocage total cas 3 — détail technique complet dans `linkedin-contacts.md`, section 17/07). 5 suivis exécutés, mais toute saisie de texte impossible. Posts ci-dessous = **veille + file d'attente commentaires pré-chargée** pour la prochaine session.
+
+### Candidats commentaire FRAIS repérés (fenêtre 48h à revérifier le jour J)
+
+- **Dr. Jean Kaseya (Director General @AfricaCDC)** — post ~16h : allocution au Groupe des partenaires internationaux sur l'épidémie Ebola Bundibugyo. « Early detection, strong surveillance, community engagement and coordinated action remain our most effective tools » (pas de vaccin/traitement Bundibugyo homologué). 51 réactions. **Meilleur candidat commentaire** (DG Africa CDC, sommet de priorité). Angle : les leviers non-pharmaceutiques comme seule ligne de front, à relier à la vitesse de remontée de la donnée.
+
+- **Médecins Sans Frontières (MSF) Eastern Africa** — post 1j, Ebola RDC : « more than 2,000 confirmed cases and 750 deaths as of 12 July », cas triplés en 5 semaines (650 → 2 000+), décès ×5 (130 → 700+), **3e plus grande épidémie Ebola et la plus rapide jamais enregistrée**. Appel à un scale-up urgent (community engagement, surveillance, testing, prise en charge). Angle : dynamique de propagation vs surveillance débordée. Chiffres cohérents avec la base HWG (2 011/754 au 13/07), ne pas régresser.
+
+- **Oussama Wail Bouhentala** (1er degré, suivi ce jour) — post 15h, perspective épidémiologique sur les facteurs sostenant la crise Ebola (chaînes de transmission cachées, décès communautaires, insécurité, mobilité, infections associées aux soins, défiance, lacunes de capacité de riposte). **Appelle explicitement aux retours professionnels.** Candidat commentaire naturel (jamais commenté → règle hebdo OK).
+
+- **Natasha Azzopardi Muscat (WHO)** — post « Some days work is truly uplifting » : personnel/institutionnel, pas d'angle données. Reste candidate CONNEXION (WHO, déjà en file), pas un candidat commentaire.
+
+- **WHO African Region** (en tendance) — « Building a health workforce fit for Africa ». Institutionnel, angle workforce santé, périphérique.
+
+### Performance des posts de marque (statistiques relevées au 17/07)
+
+| Post | Statut au 17/07 (vs 16/07) |
+|---|---|
+| « Measles is the disease that comes back first » | **176 impressions** (63 le 16/07, forte progression) |
+| « Une même épidémie d'Ebola... » | **77 impressions** |
+| Compteurs profil | **112 vues de profil, 496 impressions de posts** |
+
+**Lecture :** le post rougeole continue de diffuser fortement (×2,8 en 24h). Toujours pas de commentaire de tiers repéré sur les posts de David cette session (mais engagement lecture-seule limité, non exhaustif).
 
 ## 🔎 Veille LinkedIn — 16/07/2026 (linkedin-hwg-monitoring, session en lecture seule)
 

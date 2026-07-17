@@ -342,30 +342,20 @@ export async function GET(req: NextRequest) {
     }
 
     // Level 1/2 notices with no case data are travel advisories for endemic risk,
-    // not reportable outbreak events. Only Level 3 (Warning) is inserted without counts.
+    // not reportable outbreak events — and never grounds to close an existing row.
+    // A travel notice that says nothing about case counts isn't authoritative enough
+    // to declare another source's tracked outbreak over; only Level 3 (Warning) is
+    // inserted without counts, and Level 3 never deactivates either (see the
+    // guard:zero-count skip further below). Previously this branch deactivated any
+    // active row at source_priority<=5 whenever a Level 1/2 notice parsed to 0/0.
+    // Found 2026-07-17: a Level 2 "Ebola ... DRC and Uganda" notice with no figures
+    // closed the ECDC-sourced flagship DRC row (2,073 cases/796 deaths), and a Level 1
+    // notice did the same to Diphtheria/Haiti minutes later — see
+    // project_ebola_drc_priority10_frozen_no_autofeed memory. Deactivation removed;
+    // this is now purely informational.
     if (cases === 0 && deaths === 0 && notice.level !== "level3") {
-      if (existRow?.active) {
-        // Same source_priority guard as the main update path below (line ~338) —
-        // a low-priority travel advisory shouldn't be able to deactivate a row
-        // owned by a higher-priority source just because this notice itself
-        // parsed to 0/0. .select("id") so a blocked update (0 rows affected) is
-        // visible instead of silently falling through to "deactivated". Found 2026-07-15.
-        const { data: deactivatedRows, error: deactivateErr } = await supabase
-          .from("outbreaks").update({ active: false }).eq("id", existRow.id).lte("source_priority", 5).select("id");
-        if (deactivateErr) {
-          log.push({ label, status: "error", detail: deactivateErr.message });
-          results.errors++;
-        } else if (!deactivatedRows || deactivatedRows.length === 0) {
-          log.push({ label, status: "skip", detail: "blocked by source_priority guard — row owned by a higher-priority source" });
-          results.skipped++;
-        } else {
-          log.push({ label, status: "deactivated", detail: "0/0 cases — endemic advisory" });
-          results.skipped++;
-        }
-      } else {
-        log.push({ label, status: "skip", detail: "0/0 cases — endemic advisory, not inserted" });
-        results.skipped++;
-      }
+      log.push({ label, status: "skip", detail: "0/0 cases — endemic advisory, not reportable" });
+      results.skipped++;
       continue;
     }
 
