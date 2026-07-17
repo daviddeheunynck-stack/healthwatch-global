@@ -343,12 +343,22 @@ async function runSyncSpf(_req: NextRequest, supabase: SupabaseClient) {
     } catch (e) {
       console.error("[spf] HTML fallback failed:", errorMessage(e));
       Sentry.captureException(e, { tags: { cron: "sync-spf" } });
+      // This is a `return`, not a `throw` — GET()'s try/catch wrapper never sees
+      // it, so without an explicit log here this failure was as silent as a
+      // missed tick to the monitoring dashboard. Found 2026-07-17.
+      await logCronRun(supabase, "sync-spf", "error", 0, "SPF unreachable (RSS + HTML fallback both failed)");
       return NextResponse.json({ error: "SPF unreachable" }, { status: 502 });
     }
   }
 
   console.log(`[spf] ${items.length} items via ${feedSource}`);
   if (items.length === 0) {
+    // Same class of gap as above: a genuinely successful run (feed reachable,
+    // nothing new to report) returned early without ever calling logCronRun,
+    // so cron-monitor's "last successful run" heartbeat froze at whatever the
+    // last non-empty run happened to be — misreported as the cron being stuck
+    // or overdue for every day it legitimately found 0 new items in a row.
+    await logCronRun(supabase, "sync-spf", "ok", 0);
     return NextResponse.json({ success: true, items: 0, inserted: 0, updated: 0, skipped: 0 });
   }
 
