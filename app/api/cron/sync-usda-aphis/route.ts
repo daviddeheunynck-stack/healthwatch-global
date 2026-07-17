@@ -427,14 +427,24 @@ export async function GET(req: NextRequest) {
         updatePayload.description_ar = null;
         updatePayload.description_id = null;
       }
-      const { error } = await supabase
+      // .select("id") so a blocked write (row now owned by a higher-priority
+      // source — e.g. manually locked) is visible as 0 affected rows instead
+      // of being silently counted as "updated". Same fix already applied
+      // across every other sync-* cron; this one had no priority guard at
+      // all until now. Found 2026-07-17.
+      const { data: updatedRows, error } = await supabase
         .from("outbreaks")
         .update(updatePayload)
-        .eq("id", existing.id);
+        .eq("id", existing.id)
+        .lte("source_priority", SOURCE_PRIORITY)
+        .select("id");
 
       if (error) {
         log.push({ state: sd.state, status: "error", detail: error.message });
         results.errors++;
+      } else if (!updatedRows || updatedRows.length === 0) {
+        log.push({ state: sd.state, status: "skip", detail: "blocked by source_priority guard — row owned by a higher-priority source" });
+        results.skipped++;
       } else {
         log.push({ state: sd.state, status: "updated", detail: `${sd.herds} herds (${safeDate})` });
         results.updated++;
