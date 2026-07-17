@@ -424,6 +424,14 @@ async function runDataQuality(_req: NextRequest, supabase: SupabaseClient) {
     // The field is a structured API value, not a text-parsing gap: WHO itself
     // reports zero, so NULL would be less accurate than 0 here.
     "cholera|somalia",
+    // PAHO Situation Report #6 (2 July 2026), Table 3 — "Canada 1,079 0 — Endemic",
+    // a positively-filled deaths column (not a dash/omission), itself sourced from
+    // PHAC's own EW24 weekly report (cited as reference #19 in the sitrep). Cross-
+    // checked against an independent source (Yale VMOC, 17 May 2026): this outbreak's
+    // only 2 deaths occurred in 2025, outside the 2026 reporting window this row
+    // covers. Verified 2026-07-15/17, see project_qc_2026_07_15_stale_items_verified
+    // memory — the CFR-floor heuristic below is a false positive on this specific row.
+    "measles|canada",
   ]);
 
   for (const row of rows ?? []) {
