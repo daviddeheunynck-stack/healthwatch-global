@@ -221,19 +221,29 @@ async function runPilotFollowUp(_req: NextRequest, supabase: SupabaseClient) {
   const windowStart = new Date(now - 8.5 * 86_400_000).toISOString();
   const windowEnd   = new Date(now - 7.5 * 86_400_000).toISOString();
 
-  const { data: pilots, error: pErr } = await supabase
-    .from("profiles")
-    .select("id, email, locale, display_filters, trial_ends_at, stripe_subscription_id")
-    .in("plan", ["pro", "starter", "team"])
-    .not("email", "is", null)
-    .gte("created_at", windowStart)
-    .lt("created_at",  windowEnd);
+  const queryPilots = () =>
+    supabase
+      .from("profiles")
+      .select("id, email, locale, display_filters, trial_ends_at, stripe_subscription_id")
+      .in("plan", ["pro", "starter", "team"])
+      .not("email", "is", null)
+      .gte("created_at", windowStart)
+      .lt("created_at",  windowEnd);
+
+  // One retry — absorbs transient fetch/socket errors against Supabase
+  // ("TypeError: terminated"), same fix as lib/outbreaks.ts getOutbreaks().
+  let { data: pilots, error: pErr } = await queryPilots();
+  if (pErr) ({ data: pilots, error: pErr } = await queryPilots());
 
   if (pErr) {
     console.error("[pilot-follow-up] profiles query error:", pErr);
     Sentry.captureException(new Error(`[pilot-follow-up] profiles query failed: ${pErr.message}`), {
       tags: { cron: "pilot-follow-up" },
     });
+    // This is a `return`, not a `throw` — GET()'s try/catch wrapper never sees
+    // it, so a genuine query failure was as silent to cron-monitor as a missed
+    // tick. Found 2026-07-18, same class of gap as sync-spf (2026-07-17).
+    await logCronRun(supabase, "pilot-follow-up", "error", 0, pErr.message);
     return NextResponse.json({ error: pErr.message }, { status: 500 });
   }
 
