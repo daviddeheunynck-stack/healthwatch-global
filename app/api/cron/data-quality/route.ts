@@ -134,7 +134,7 @@ async function runDataQuality(_req: NextRequest, supabase: SupabaseClient) {
   // ── 1. Load active rows ───────────────────────────────────────────────────
   const { data: rows, error: rowsErr } = await supabase
     .from("outbreaks")
-    .select("id, disease, disease_en, country, country_en, cases, deaths, date, source, is_seed, is_pheic")
+    .select("id, disease, disease_en, country, country_en, cases, deaths, date, source, is_seed, is_pheic, source_priority")
     .eq("active", true);
 
   if (rowsErr) return NextResponse.json({ error: rowsErr.message }, { status: 500 });
@@ -192,6 +192,20 @@ async function runDataQuality(_req: NextRequest, supabase: SupabaseClient) {
   for (const a of anomalies) {
     const { row, type, snap } = a;
     const label = `${row.disease} / ${row.country}`;
+
+    // A row locked at source_priority=10 has an explicit human decision behind
+    // it (verified against a primary source, often specifically BECAUSE its
+    // automated source is unreliable) — this cron's auto-fixes must never
+    // silently override that. Found 2026-07-17: this cron had zero awareness
+    // of the locking convention used throughout 2026-07-15/16/17 (DR Congo/
+    // Ebola, Uganda, Tanzania, Somalia rows), so a "spike"/"large_drop" false
+    // positive against yesterday's snapshot could have blindly reverted a
+    // deliberate correction the same day it was made.
+    if ((row.source_priority ?? 0) >= 10) {
+      needsReview.push({ label, detail: `${a.detail} — ligne verrouillée (source_priority=10), non auto-corrigée, vérifier manuellement` });
+      continue;
+    }
+
     const don = await verifyFromDON(row.source);
 
     if (type === "deaths_gt_cases") {
@@ -327,6 +341,7 @@ async function runDataQuality(_req: NextRequest, supabase: SupabaseClient) {
     if (!DON_RE.test(row.source ?? "")) continue;
     if (anomalyIds.has(row.id)) continue;
     const label = `${row.disease} / ${row.country}`;
+    if ((row.source_priority ?? 0) >= 10) continue; // locked row — never auto-deactivate, see 4. above
     const don = await verifyFromDON(row.source);
     if (don?.resolved) {
       await supabase.from("outbreaks").update({ active: false }).eq("id", row.id);
