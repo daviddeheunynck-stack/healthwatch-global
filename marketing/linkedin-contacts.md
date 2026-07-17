@@ -146,6 +146,32 @@ Commentaire HWG postÃ©. 5 demandes de connexion envoyÃ©es.
 
 ---
 
+### ✅ Réponse envoyée — Qadeer Ahsan (17/07 après-midi, sur demande explicite de David, hors quota DM)
+
+David a explicitement demandé de vérifier le contexte et de répondre (message du matin laissé de côté par la routine par prudence, cf. politique commune §3 sur les sujets personnels/délicats). Contexte vérifié avant réponse : le post de crédit promis le 4/07 (framework Prevent/Detect/Respond + idée du log d'escalade) **a bien été publié le 6/07** par David, Qadeer a réagi chaleureusement en commentaire public, boucle déjà fermée proprement (voir section "Conversations actives — Qadeer Ahsan" ci-dessous). Message du jour = nouveau check-in personnel dans la continuité du 2/07 et du 5/07 (recherche d'emploi active, aucune opportunité concrète encore trouvée par David pour lui).
+
+Envoyé, confirmé (champ vidé après clic Envoyer) :
+> Hi Qadeer, good to hear from you.
+>
+> Still moving on our end, first users in, and the escalation-log idea from our conversation is still shaping how the decision-support layer gets built, not live yet though.
+>
+> Sorry nothing's landed yet on your side, I know that's frustrating given your track record. Nothing new has crossed my network that's a fit, but you're still on my radar if that changes.
+
+Double-check : EN (fil en EN), 3 paragraphes, aucune donnée ni avancée produit inventée (statut "not live yet" reste honnête, cohérent avec le dernier point du 6/07 "will keep you posted as the escalation-log feature takes shape"), aucune opportunité fabriquée, ton chaleureux mais pas d'engagement nouveau pris en son nom.
+
+## ⚠️ Conversations actives — Florie Postis (message envoyé par MOI-MÊME plus tôt dans cette session, oublié avant résumé de contexte)
+
+**Profil :** Florie Postis — Travel Security Manager, Paris. Connectée le **2026-06-20** dans le cadre d'une campagne "Corporate Risk segment" (voir [[healthwatch_global_linkedin_engagement]]), aux côtés de Clémentine Monsallier, Yekoyesew Mekuria, Coleen Essengue.
+
+**Message envoyé le 17/07 13:49 — par cette même session, pas par une source externe.** J'ai mené une enquête inutile (freelance-income-routine, autres sessions actives, recherche transcripts) en pensant l'action inexpliquée ; David a confirmé le 17/07 que c'est moi qui l'ai envoyé, probablement lors d'une phase de découverte active de profils plus tôt dans la session, avant un résumé de contexte qui en a fait disparaître la trace de ma mémoire de travail. **Leçon : ne pas conclure trop vite à une session tierce sans avoir d'abord envisagé l'oubli par compression de contexte.**
+
+**✅ CORRIGÉ le 17/07 14:xx** — message original (avec tiret cadratin) supprimé via le menu d'options (« ... » au survol → Supprimer → confirmé), LinkedIn affiche « Ce message a été supprimé » à sa place. Version corrigée envoyée et confirmée (champ vidé) :
+> Bonjour Florie, la gestion de crise en contexte sanitaire m'intéresse. Je me demande si vous intégrez les signaux épidémiques dans vos évaluations de risque voyage avant ou après les alertes gouvernementales. Ce serait intéressant d'échanger sur votre approche.
+
+Double-check : FR, contenu identique à l'original sauf le tiret remplacé par un point, pas de doublon.
+
+**À faire à la prochaine session :** vérifier si Florie a répondu ; si oui, traiter comme un fil actif classique (lecture intégrale + relance sur le fond, hors quota DM comme les autres réponses reçues).
+
 ## Conversations actives — Qadeer Ahsan
 
 **Profil :** Qadeer Ahsan — Global Public Health Sector Specialist (UNOPS, retainer)
@@ -1901,3 +1927,213 @@ Double-check : EN (fil en EN), 1 message, pas de tiret cadratin, aucun lien (ema
 - **Dr. Hassan SANA** — post « #Antibiorésistance : un troisième #enjeu souvent oublié » (recours au diagnostic). AMR, adjacent au cœur HWG.
 - **Tambe WUENIC** — sa relance publique développe l'angle « moyennes mondiales masquant le signal pays / zéro-dose en contextes fragiles » : angle de marque solide, déjà amorcé côté HWG.
 - **Post de marque David « ceinture africaine de la méningite / Sahel »** (« Pendant que l'attention se concentre sur Ebola... ») : 42 impressions (en diffusion).
+
+## 📅 Session linkedin-hwg-monitoring — 17/07/2026 (matin) : blocage total ~20 min PUIS récupération partielle — 5 suivis exécutés + veille complète, écritures texte bloquées
+
+### ✅ MISE À JOUR EN COURS DE SESSION — Chrome a redémarré, blocage passé de « total » (cas 3) à « minimisé OS » (cas 2)
+
+Après la notification push (voir ci-dessous), un `navigate` a renvoyé « Tab no longer exists » : **Chrome avait redémarré** (nouveau tabGroupId, onglets neufs). La navigation, le JS et `get_page_text` sont redevenus fonctionnels. Diagnostic : `outerWidth: 0` → `window.resizeTo(1400,900)` **restaure la fenêtre** (cas 1/2, pas cas 3). **Mais** la fenêtre se **re-minimise en une fraction de seconde** entre le resize et toute saisie (testé 2×, y compris resize+clic+type groupés en `browser_batch` : `activeElement` retombe sur BODY, champ vide, `ow` repasse à 0). **Verdict : cas 2 confirmé — aucune saisie de texte possible, mais lecture + clics `element.click()` sur boutons d'état simple OK.**
+
+**Ce qui a donc pu être fait cette session (réévalué à la hausse vs le constat initial de blocage total) :**
+- ✅ **Veille passive COMPLÈTE** : messagerie, invitations reçues, abonnés, notifications, fil d'actualité — tout lisible.
+- ✅ **5/5 suivis exécutés et confirmés** via `element.click()` (voir détail plus bas).
+- ❌ **Toutes les écritures texte restent bloquées** : commentaires, DM, notes de connexion → reportés (file d'attente plus bas).
+
+### ✅ SUIVIS EXÉCUTÉS — 5/5, quota du jour REMPLI (tous confirmés bouton « Suivi »)
+
+Méthode : `element.click()` en JS sur le bouton « Suivre » (section Activité du profil), état vérifié après chaque clic (§7). Fonctionne en cas 2, contrairement à la saisie.
+1. **Yerdieou Alphonse** — WatHab Operation Manager, 20+ ans WASH. **Follow-back** (nouvel abonné, 119e). Pertinence : WASH directement lié à la couverture choléra HWG (« suivre seulement », champ opérationnel adjacent).
+2. **Jonathan KONKO MAKENGO** — Épidémiologiste | Surveillance intégrée & One Health, Bruxelles. **9 mutuels** dont Marie Roseline Belizaire + Tambe Elvis Akem. Découverte active (recherche URL « field epidemiologist outbreak surveillance »). Cœur HWG.
+3. **Nassoro Mwanyalu** — Field Epidemiologist | One Health | Outbreak response | Disease surveillance, Kenya. Mutuel : Eva Kamau. Cœur HWG.
+4. **Miranda Rodrigues, MPH** — Epidemiologist | Surveillance, Outbreak Analysis & Biostatistics, U. Toronto/Canada. Mutuel : Eva Kamau. Identité vérifiée sur profil avant suivi (slug générique). Cœur HWG.
+5. **Sabah Mathew** — Veterinarian | Field Epidemiologist | Infectious Disease Surveillance | One Health. Cœur HWG (angle vétérinaire/One Health).
+
+**Note méthode pour sessions futures en cas 2 :** la recherche par mots-clés est possible **malgré la saisie bloquée**, en passant la requête directement dans l'URL (`/search/results/people/?keywords=...`) plutôt que dans la barre de recherche. Les suivis 2-5 ont été trouvés ainsi.
+
+### 🔬 Données épidémiologiques — aucune mise à jour DB requise (1 vérification)
+- **Post MSF Eastern Africa (Ebola RDC, 1j)** cite « more than 2,000 confirmed cases and 750 deaths as of 12 July », triplement des cas en 5 semaines (650 → 2 000+), 3e plus grande épidémie Ebola. **Cohérent avec la base HWG (2 011/754 au 13/07, sitrep COUSP/INSP N°060) et légèrement en retard** → aucune correction. Le post Kaseya (Africa CDC) ne cite aucun chiffre nouveau.
+
+### 🎯 FILE D'ATTENTE COMMENTAIRES pré-chargée pour la prochaine session (fil scanné aujourd'hui, hooks prêts)
+Catégorie commentaires **VIDE aujourd'hui** (INRB + Tambe bloqués par la règle hebdo jusqu'au ~23/07, posts précédents expirés) — mais 3 candidats FRAIS repérés sur le fil ce matin, à commenter dès déblocage de la saisie (vérifier fenêtre 48h le jour J) :
+1. **Dr. Jean Kaseya (DG Africa CDC)** — post 16h : allocution au Groupe des partenaires internationaux sur Ebola Bundibugyo. Angle : détection précoce + surveillance + engagement communautaire comme seuls leviers en l'absence de vaccin/traitement homologué. Figure au sommet de la priorité (DG Africa CDC). **Meilleur candidat.**
+2. **MSF Eastern Africa** — post Ebola RDC riche en données (triplement en 5 semaines, dynamique la plus rapide jamais enregistrée). Angle : vitesse de propagation vs capacité de surveillance débordée.
+3. **Oussama Wail Bouhentala** (1er degré, déjà suivi) — analyse épidémiologique des facteurs de non-contrôle (chaînes de transmission cachées, décès communautaires, mobilité, IAS, défiance). **Appelle explicitement aux retours professionnels** → commentaire d'autant plus naturel. ⚠️ 1 commentaire/profil/semaine : Oussama jamais commenté, OK.
+
+### ✅ Réponse envoyée — Calixte Oswald Assogba (17/07 13:07, fil actif, HORS quota DM)
+
+David a redémarré Chrome en direct (2e fois de la session), et après un test de saisie confirmant le déblocage, la file d'attente a pu être vidée. Fil relu en entier avant envoi. ⚠️ Incident en cours de frappe : premier essai avec doublon de texte entrelacé (bug de saisie CDP), champ vidé (`ctrl+a` + `Delete`) et retapé proprement, vérifié `\n` par `\n` avant chaque étape. Un `Debugger not attached` puis un timeout `Input.dispatchKeyEvent` sont survenus en cours de frappe mais le texte est passé correctement malgré tout (vérifié après coup, pas de perte ni doublon). Premier rendu du saut de paragraphe insuffisant (pas de ligne vide visible au zoom) : corrigé en ajoutant un `shift+Return` supplémentaire avant envoi.
+
+Envoyé, confirmé (fil : nouveau message de David à 13:07, champ vidé) :
+> Ça résonne fort. L'appropriation, c'est justement ce qui ne se mesure nulle part dans les données que je récupère : on voit le résultat d'une politique, jamais si les équipes de terrain se la sont vraiment appropriée.
+>
+> Dans votre expérience au Bénin, qu'est-ce qui a le mieux créé cette appropriation quand elle manquait au départ : associer les acteurs terrain dès la conception, ou des mécanismes plus formels comme la formation et la redevabilité ?
+
+Double-check : FR (fil en FR), 2 paragraphes bien séparés (vérifié par zoom visuel avant envoi), pas de tiret cadratin, pas de CTA/lien, relance sur le fond avec question précise.
+
+### ✅ Réponse envoyée — Dr. Mohamedou Hmeied Maham (17/07, fil actif, HORS quota DM)
+
+Fil relu en entier avant envoi. Même piège d'espacement rencontré (1 seul `shift+Return` ne rend visuellement aucune ligne vide sur cet éditeur LinkedIn — il en faut 2) : corrigé de la même façon, vérifié par zoom avant envoi.
+
+Envoyé, confirmé (champ vidé après clic Envoyer) :
+> C'est ce que je craignais. L'antitoxine (DAT) est le goulot le plus frustrant parce qu'il ne dépend pas de vous : même avec une détection parfaite et un labo rapide, sans DAT disponible le pronostic ne bouge pas.
+>
+> Est-ce que vous arrivez à vous approvisionner via les stocks régionaux ou l'OMS, ou est-ce que la disponibilité reste imprévisible d'une semaine à l'autre ? C'est le type de rupture qui n'apparaît jamais dans les bulletins, alors qu'elle décide de la létalité.
+
+Double-check : FR (fil en FR), 2 paragraphes bien séparés, pas de tiret cadratin, pas de CTA/lien, relance sur le fond.
+
+### ✅ Réponse envoyée — Dr. Mohamedou Hmeied Maham, 2e relance (17/07 13:xx, fil actif, HORS quota DM)
+
+Il a répondu à 13:25 par un simple « Tout-à-fait », sans répondre à la question précise posée (stocks régionaux, OMS, ou imprévisible). Relance courte adaptée à la brièveté de sa réponse plutôt qu'une nouvelle relance à 2 paragraphes.
+
+Envoyé, confirmé (champ vidé après clic Envoyer) :
+> Good to hear it lines up. If you ever get a moment: when DAT does come through, is it more often the regional stockpile or the WHO channel?
+
+Double-check : EN utilisé par erreur de continuité de frappe — **⚠️ à corriger si ça se reproduit : le fil est en FR, ce message aurait dû être en français.** Contenu correct et sans doublon, mais incohérence de langue non repérée avant l'envoi cette fois.
+
+### ✅ Réponse envoyée — Dr. Mohamedou Hmeied Maham, 3e relance (17/07 14:xx, fil actif, HORS quota DM)
+
+Il a répondu à 14:06 : « OMS et le pays achet aussi » — révèle un double approvisionnement (canal OMS + achat direct national), pas seulement les stocks régionaux envisagés au départ. Fait opérationnel concret, jamais visible dans un bulletin de situation.
+
+Envoyé, confirmé (champ vidé après clic Envoyer) :
+> Intéressant que les deux se combinent. Quand il faut agir vite, l'achat direct par le pays est-il plus rapide que le canal OMS, ou les délais restent comparables quelle que soit la voie ?
+
+Double-check : FR (cohérent avec le fil, leçon de la relance précédente appliquée), pas de doublon, pas de tiret cadratin.
+
+**✅ CORRIGÉ le 17/07 13:58** — David a demandé explicitement de supprimer le mauvais message et d'envoyer un correctif en FR. Message anglais supprimé via le menu d'options du message (« ... » au survol → Supprimer) ; LinkedIn affiche « Ce message a été supprimé » côté expéditeur (pas de suppression silencieuse invisible pour Mohamedou, il verra la trace). Correctif envoyé et confirmé :
+> Content que ça se confirme. Si vous avez un moment : quand le DAT arrive, est-ce plus souvent via les stocks régionaux ou le circuit OMS ?
+
+Double-check : FR cette fois (cohérent avec le fil), même question de fond que la version anglaise supprimée, pas de doublon.
+
+**⚠️ Note technique consolidée (2 occurrences ce jour) :** sur l'éditeur de messagerie LinkedIn, **1 seul `shift+Return` ne produit PAS de ligne vide visible** (les deux paragraphes s'enchaînent) — il en faut **2** pour obtenir l'espacement attendu. Le comptage `\n` en JS (`innerText`) n'est pas fiable pour juger du rendu (valeurs vues : 2, 3, 5 `\n` pour un nombre de `shift+Return` différent) : **seule une vérification visuelle (zoom) fait foi**, conformément à [[feedback_verify_message_formatting]].
+
+### ✅ Réponse envoyée — INGRIDE SIEMENI (17/07, fil actif, HORS quota DM)
+
+Fil relu en entier depuis le tout premier message (13/07). Sa dernière réponse (16/07 19:10) confirme que les métriques de process (alert-to-validation) ne sont pas standardisées, même dans les AAR rétrospectifs — seulement mentionnées qualitativement. Relance appliquant d'emblée la leçon d'espacement (2× `shift+Return` dès le premier essai, vérifié par zoom avant envoi, aucun doublon).
+
+Envoyé, confirmé (champ vidé après clic Envoyer) :
+> That's the answer I was circling, even if not the one I wanted. If it stays qualitative even in AARs, then there is no dataset anywhere that lets you compare validation speed across outbreaks or countries, only individual narratives.
+>
+> Which raises a different question. Is there value in someone external systematically re-reading AARs and JEE reports just to extract and standardize that one number, even imperfectly, or does the qualitative framing exist because the underlying delays are too context-specific to reduce to a single comparable metric?
+
+Double-check : EN (fil en EN), 2 paragraphes bien séparés, pas de tiret cadratin, pas de CTA/lien, relance sur le fond. **Aucun engagement produit pris** (question ouverte, pas de promesse de développement) malgré l'angle produit fort déjà identifié le 16/07.
+
+### ⚠️ NOUVEAU BLOCAGE PLATEFORME — notes de connexion personnalisées épuisées (compte gratuit)
+
+À la tentative de connexion avec Natasha Azzopardi Muscat puis Dirk Engels, LinkedIn affiche systématiquement (2 profils différents, message identique) : **« Envoyez un nombre illimité d'invitations personnalisées avec Premium — Vos messages d'invitation personnalisés gratuits sont épuisés »**. Aucun envoi n'avait eu lieu avant ce blocage (0 connexion tentée avant Natasha ce jour). **Ce n'est pas un quota qui se réinitialise chaque jour comme documenté** ([[feedback_linkedin_invitation_quota_daily]]) — au contraire, épuisé dès la 1ère tentative du jour, ce qui suggère un plafond mensuel réel côté LinkedIn gratuit, pas journalier. David consulté en direct : **a autorisé explicitement à envoyer sans note** pour continuer le quota du jour plutôt que de tout arrêter. Réactivation Premium écartée (décision financière hors périmètre autonome).
+
+**Conséquence pour les prochaines sessions :** tant que ce blocage persiste, les 3 notes de connexion quotidiennes seront envoyées **sans note personnalisée** (juste « Se connecter » → « Envoyer sans note »), moins qualitatif que la pratique habituelle. Vérifier à chaque session si le blocage a disparu (le mois a peut-être tourné, ou David a pu changer de plan) avant de conclure automatiquement à l'indisponibilité des notes.
+
+### ✅ 3/3 connexions envoyées SANS NOTE (blocage plateforme ci-dessus) — QUOTA REMPLI
+David consulté en direct, a autorisé l'envoi sans note pour ne pas bloquer le quota du jour.
+1. **Dirk Engels** — Global Health, Neglected Tropical Diseases, Global Health Governance, Suisse. Mutuels : Dr. Belem, Tambe +2. Envoyé et confirmé (« Invitation envoyée à Dirk », bouton → En attente).
+2. **Natasha Azzopardi Muscat** — Director of the Division of Health Systems, WHO Regional Office for Europe. Profil senior WHO, 12+ relations en commun, déjà suivi. Envoyé et confirmé (« Invitation envoyée à Natasha », bouton → En attente).
+3. **Ioannis (Yannis) Hodges-Mameletzis** — HIV/PrEP advisor, WHO Ukraine Country Office. Repéré le 16/07 (a mentionné David sous le post WHO EMRO/ECDC d'Enrique Delgado sur les LLM en surveillance). Envoyé et confirmé (« Invitation envoyée à Ioannis (Yannis) », bouton → En attente).
+
+**Note pour la prochaine session :** candidat frais repéré dans « Profils semblables à Ioannis » — **Mohamed Malainine Ahmed Meska**, Public Health and Field Epidemiology (FETP) Professional, mutuels Marie Roseline Darnycka Belizaire +5. Non traité (quota déjà rempli), à évaluer à la prochaine session.
+
+### Blocage initial (première ~20 min de session) — type NOUVEAU, cas 3 : même la LECTURE était impossible
+
+Contrairement aux 3 sessions précédentes (fenêtre repliée/minimisée → écriture bloquée mais **lecture pleinement fonctionnelle**, ce qui permettait de mener toute la veille passive), cette fois **toutes les opérations au niveau page expirent après 300s** :
+- `navigate` (onglet existant) → timeout 300s
+- `navigate` (nouvel onglet) → timeout 300s
+- `javascript_tool` → timeout 300s
+- `computer{action:screenshot}` → timeout 300s
+
+**Ce qui répond encore normalement (niveau extension, pas page) :** `select_browser`, `tabs_context_mcp`, `tabs_create_mcp`, `list_connected_browsers`. L'extension est donc vivante ; c'est la couche CDP/page qui est morte.
+
+**Conséquence : impossible de diagnostiquer l'état de la fenêtre.** Le réflexe habituel (mesurer `outerWidth` en JS puis `window.resizeTo(1400,900)`, cf. [[feedback_chrome_window_collapse_blocks_typing]]) **n'est pas applicable** : le JS lui-même ne s'exécute plus. On ne sait donc pas si la fenêtre est repliée, minimisée OS, ou si le renderer est gelé.
+
+**Procédure de récupération épuisée, sans succès :** `select_browser` même deviceId (2x) → « Connected » mais sans effet sur les timeouts ; `tabs_create_mcp` nouvel onglet → hérite du même blocage.
+
+### ⚠️ Deux navigateurs connectés — PAS de bascule (garde-fou §7 respecté)
+
+`list_connected_browsers` renvoie **2 navigateurs locaux** :
+- `23c7ecdd-26d7-4d25-b39b-1889eb0fa3bd` — **le navigateur habituel de David**, désormais affiché **« Browser 2 »** (et non plus « Browser 1 » comme le note la mémoire : **le nom d'affichage est un simple label de slot, seul le deviceId fait foi**). C'est celui qui est sélectionné et injoignable.
+- `a466bc2e-9ff7-4aca-97b7-194739dce133` — **« Browser 1 », nouveau, connecté ~10h plus tard**. Jamais vu en session auparavant.
+
+**Aucune bascule tentée**, conformément à la politique commune §7 (« demander confirmation à David plutôt que de basculer vers un autre navigateur connecté sans validation »). Risque concret évité : agir depuis un profil Chrome inconnu = publier des commentaires/DM HWG depuis potentiellement le mauvais compte LinkedIn. **À arbitrer par David : ce 2e navigateur est-il le sien ?** Si oui, autoriser explicitement son deviceId pour les prochaines sessions.
+
+### Piste de récupération explorée puis écartée (nouvelle, à retenir)
+
+La mémoire affirme que seule « une interaction physique de David » restaure une fenêtre minimisée OS. **Le MCP `computer-use` pourrait théoriquement le faire** (`open_application` est autorisé à tous les tiers, y compris pour un navigateur). **Écarté :** `list_granted_applications` renvoie une allowlist **vide** → `request_access` exigerait l'approbation de David, absent. Et s'il était présent pour approuver, il restaurerait la fenêtre lui-même. **Piste sans valeur en run autonome, mais utile si David est joignable.**
+
+**Notification David : envoyée** (`PushNotification`). Retour identique aux 2 fois précédentes : « Mobile push not sent (Remote Control inactive) » → **desktop uniquement**. **3e occurrence** : le garde-fou push reste à moitié inopérant tant que Remote Control est inactif.
+
+### 📊 Quotas 17/07 (bilan final, après récupération partielle en cours de session)
+
+**⚠️ MISE À JOUR FINALE (après-midi, David a redémarré Chrome puis autorisé l'envoi sans note) — QUOTAS DU JOUR TOUS REMPLIS :**
+**✅ 3/3 commentaires** (Dr. Jean Kaseya/Africa CDC, Oussama Wail Bouhentala, MSF Eastern Africa — voir content-log.md) · **✅ 3/3 connexions** (Dirk Engels, Natasha Azzopardi Muscat, Ioannis Hodges-Mameletzis — sans note, blocage plateforme, David a autorisé) · **✅ 3 DM envoyés** (Calixte, Mohamedou, Ingride — tous fils actifs, hors quota à froid ; 0/3 DM à froid consommé, aucun candidat froid en file aujourd'hui) · **✅ 5/5 suivis EXÉCUTÉS** · **0 invitation traitée** (seule Djamous, laissée §10) · **veille passive COMPLÈTE** (messagerie/réseau/notifs/fil tous lus).
+
+### 🎯 FILE D'ATTENTE ÉCRITURES TEXTE — reportée (saisie bloquée cas 2 ; hooks prêts, ne pas re-chercher)
+
+**Réseau — état au 17/07 :** abonnés **119** (+1 vs 16/07 : Yerdieou, suivi en retour). Invitation reçue : seule **Djamous Moussa Nangtoudjou** (« Ma personnalité »), toujours ni acceptée ni ignorée (§10). ZABRE : **toujours pas de réponse avec son email** (fil inchangé, dernier message = celui de David). Ingride SIEMENI : **a re-répondu le 16/07** (fil actif, hors quota) — réponse de fond, à traiter.
+
+**Fils actifs avec brouillon déjà rédigé et double-check contenu FAIT (hors quota DM) — à envoyer en priorité absolue dès déblocage :**
+1. **Calixte Oswald Assogba** — brouillon FR prêt (appropriation par les acteurs de mise en œuvre), en attente depuis le 16/07 16h. Texte exact : voir section du 16/07 (16h) ci-dessus.
+2. **Dr. Mohamedou Hmeied Maham** — brouillon FR prêt (antitoxine DAT = goulot), en attente depuis le 16/07 16h. Texte exact : voir section du 16/07 (16h) ci-dessus.
+3. **DR-IFTIKHAR AHMAD** — relance légère, priorité basse, brouillon non figé.
+4. **Dr R Hyacinthe ZABRE** — ⚠️ **hors périmètre marketing, pour David** : en attente de son adresse email pour provisionner l'accès Pro (`app/api/admin/invite/route.ts`). **Vérifier s'il a répondu depuis le 16/07** dès que la messagerie est de nouveau lisible. Cf. [[project_hwg_access_offers_accepted_pending_provisioning]].
+
+**Commentaires (0/3) :** ⚠️ **INRB et Tambe Elvis Akem sont désormais BLOQUÉS jusqu'au ~23/07** (règle 1 commentaire/profil/semaine : commentés le 16/07 matin). Le post INRB (Pr Steve Ahuka-Mundeke) est de toute façon **expiré** (fenêtre 48h dépassée). Restent : **Marie Roseline Darnycka BELIZAIRE** (post 15/07, **probablement expiré aussi**), **Dav Mulamba** (jugé trop périphérique 2x). **→ File de commentaires réellement VIDE : prochaine session, repartir d'une recherche neuve sur le fil + profils prioritaires.**
+
+**Connexions (0/3) :** **Dirk Engels** (Global Health/MTN, 4 relations communes, hook à construire depuis son activité récente) · **Aba Mahamat** · **Ramdhane Mohamed** (angle One Health) · **Nasser Dine Haylaji** · **Natasha Azzopardi Muscat** (WHO). **+ Ioannis (Yannis) Hodges-Mameletzis** (repéré 16/07 16h, écosystème LLM/surveillance comme Enrique, a mentionné David sous le post WHO EMRO/ECDC — hook réel disponible).
+
+**Suivis (0/5) :** **Tom Muyunga-Mukasa** (périphérique, à confirmer en ouvrant le profil) · **Oussama Wail Bouhentala** (Medical Doctor/Epidemiologist, **cœur HWG**) — ⚠️ **mais invitation sortante de David déjà en attente vers lui : privilégier l'acceptation plutôt qu'un follow redondant**. **Chinua Imarogbe** : périphérique, écarté.
+
+**Invitations reçues :** **Djamous Moussa Nangtoudjou** (« Ma personnalité ») — toujours ni acceptée ni ignorée depuis le 15/07, légitimité/pertinence HWG invérifiables. Reste signalée à David (§10).
+
+**Relance publique disponible (hors quota) :** **Tambe Elvis Akem** a répondu publiquement sous son propre post au commentaire WUENIC du 16/07 (angle zéro-dose en contextes fragiles). Répondre dans ce fil public reste possible malgré la règle hebdo ? **Non : la règle « 1 commentaire/profil/semaine » s'applique. Reporté au ~23/07.**
+
+---
+
+## 📅 Session linkedin-hwg-followup-check — 17/07/2026 (16h) : ⚠️ NON EXÉCUTÉE — navigation refusée (blocage type NOUVEAU, cas 4 : autorisation de domaine)
+
+> Run planifié autonome (David non présent). **Aucune des 4 sections de la routine n'a pu être exécutée** (suivi actions du matin / DMs / follow-back / veille notifications). Aucune action posée sur LinkedIn, aucun quota consommé.
+
+### Nature du blocage — DISTINCT des cas 1/2/3 déjà documentés
+
+`navigate` renvoie **immédiatement** « **Navigation to this domain is not allowed** » — ce n'est **ni un timeout 300s (cas 3), ni une fenêtre repliée/minimisée (cas 1/2)**. La réponse est instantanée : c'est un **refus au niveau de la couche d'autorisation par domaine de l'extension**, pas une couche CDP/page morte.
+
+**Testé et confirmé global, pas spécifique à LinkedIn :**
+- `linkedin.com/messaging/` → refusé · `linkedin.com/feed/` → refusé (3×, 2 onglets distincts)
+- `healthwatch-global.com` → **refusé aussi** → donc **aucune autorisation d'origine active**, ce n'est pas un blocage ciblé LinkedIn.
+
+**Ce qui répond normalement (niveau extension) :** `select_browser` (« Connected to browser Browser 2 »), `tabs_context_mcp`, `tabs_create_mcp`, `list_connected_browsers`, `computer{wait}`. **L'extension est pleinement vivante** — seule la navigation est refusée.
+
+**Procédure de récupération §7 épuisée :** re-sélection du deviceId (2× ; 2 tentatives supplémentaires ont échoué sur une indisponibilité temporaire du classificateur de sécurité, transitoire et sans rapport) + nouvel onglet dédié + 5 tentatives de navigation espacées sur ~1 min → refus constant et identique.
+
+### ⚠️ Diagnostic initial CI-DESSUS INVALIDÉ — David en conversation, voir suite ci-dessous
+
+~~Diagnostic : friction attendue, correspond à [[feedback_browser_preauth_by_david]], David doit ré-autoriser `linkedin.com`.~~ **Invalidé après échange en direct avec David.** David a repris la conversation après cette clôture prématurée, a redémarré le navigateur en direct, et le blocage a **persisté à l'identique** — ce qui exclut une autorisation de domaine manquante. Capture d'écran du menu extensions Chrome fournie par David : seules **Adblock Plus** et **Claude** sont installées, aucune extension tierce (donc l'hypothèse intermédiaire d'une page de nouvel onglet DuckDuckGo bloquante, explorée puis écartée en session, était également fausse). Diagnostic final retenu : probable **panne du classificateur de sécurité interne qui approuve chaque `navigate`** (deux erreurs `claude-opus-4-8 temporarily unavailable, cannot determine the safety of navigate` observées en tout début de session), indépendante de Chrome/l'extension/l'autorisation de domaine. **Non résolu à la clôture réelle de cette session.** Détail complet dans la mémoire [[feedback_navigate_classifier_block_2026_07_17]] — s'y référer en priorité si ce symptôme (échec instantané, y compris sur un domaine neutre comme google.com, alors que `select_browser`/`tabs_context_mcp` fonctionnent) réapparaît, plutôt que de re-dérouler les hypothèses Chrome ci-dessus.
+
+### ⚠️ Garde-fou §7 respecté — pas de bascule de navigateur
+
+`list_connected_browsers` renvoie toujours les **2 navigateurs locaux** (`23c7ecdd-26d7-4d25-b39b-1889eb0fa3bd` = habituel, affiché « Browser 2 », sélectionné ; `a466bc2e-9ff7-4aca-97b7-194739dce133` = « Browser 1 », toujours non arbitré). **Aucune bascule tentée**, conformément à l'arbitrage explicite de David du 17/07 (rester sur `23c7ecdd…` quel que soit le nom affiché). Le retour de l'outil demandait de faire choisir David entre les 2 navigateurs : **non applicable en run autonome (David absent) et déjà tranché par lui**.
+
+**Notification David : envoyée** (`PushNotification`). Retour : « **Mobile push not sent (Remote Control inactive)** » → **desktop uniquement. 4e occurrence consécutive** : le garde-fou push reste à moitié inopérant tant que Remote Control est inactif.
+
+### 📊 Impact réel : FAIBLE — les quotas du jour étaient déjà tous remplis ce matin
+
+Rien de critique perdu (cf. bilan du matin) : **commentaires 3/3**, **connexions 3/3**, **suivis 5/5** étaient **déjà pleins**, donc **aucun follow-back n'était de toute façon possible** aujourd'hui (section 3 de la routine sans objet). **3 DM à froid restaient disponibles (0/3 consommés)** — seul créneau réellement perdu.
+
+### 📌 CARRY-OVER pour la prochaine session (18/07 matin) — purement observationnel, rien à re-chercher
+
+1. **Retombées des 3 commentaires du matin** (Dr. Jean Kaseya/Africa CDC, Oussama Wail Bouhentala, MSF Eastern Africa) : réponses/réactions non vérifiées.
+2. **3 connexions envoyées ce matin sans note** (Dirk Engels, Natasha Azzopardi Muscat, Ioannis Hodges-Mameletzis) : **acceptation non vérifiée** → si acceptées, message de bienvenue dû ([[feedback_linkedin_check_accepted_connections_send_welcome]], quota DM à froid).
+3. **Réponses aux DM du matin non vérifiées** : Calixte Oswald Assogba, Dr. Mohamedou Hmeied Maham (3e relance envoyée 14:xx, il répondait vite), INGRIDE SIEMENI, Qadeer Ahsan, Florie Postis.
+4. **⚠️ Priorité hors marketing — Dr R Hyacinthe ZABRE** : toujours en attente de son adresse email pour provisionner l'accès Pro. **Non vérifié aujourd'hui.** Cf. [[project_hwg_access_offers_accepted_pending_provisioning]].
+5. **Djamous Moussa Nangtoudjou** : invitation reçue toujours ni acceptée ni ignorée (§10, laissée à David).
+6. **Candidat suivi frais, non traité** : Mohamed Malainine Ahmed Meska (FETP, mutuels Belizaire +5), repéré ce matin dans « Profils semblables à Ioannis ».
+
+### 🔧 MISE À JOUR FINALE — investigation de ~2h30 en direct avec David, cause réelle non identifiée
+
+Après la clôture prématurée ci-dessus, David est revenu en conversation et l'investigation a repris en direct, bien plus loin que ce qui est décrit plus haut. Résumé complet dans la mémoire [[feedback_navigate_classifier_block_2026_07_17]] et dans un rapport de bug prêt à poster (scratchpad de session, à transmettre par David sur https://github.com/anthropics/claude-code/issues). Points clés :
+
+- **Deux blocages distincts empilés**, pas un seul : (A) `navigate` refusait tout onglet neuf car il charge en fait `duckduckgo.com/chrome_newtab` (cause de CE sous-point non identifiée : ni extension DuckDuckGo — liste complète vérifiée, ni moteur de recherche par défaut — vérifié Google) ; (B) même quand David tapait l'URL LinkedIn lui-même (contournant A), tout outil de lecture/interaction renvoyait « Permission denied » malgré une permission Chrome de l'extension déjà au maximum.
+- **Le blocage (B) a survécu à un redémarrage complet de Chrome PUIS à un redémarrage complet du système** par David en cours de session. Cause réelle non identifiée à la clôture.
+- **Cause structurelle corrigée pour l'avenir** : `x-hwg-followup-check` et cette routine tournaient sur exactement le même cron (16h00) — décalée à 16h20 (`mcp__scheduled-tasks__update_scheduled_task`). N'explique cependant pas la persistance du blocage après le redémarrage complet.
+- **`codeur-quote-routine`** est restée marquée active une bonne partie de la session (piste de contention non confirmée, non explicative à elle seule).
+
+**Aucune action LinkedIn exécutée de toute la session (~16h-18h30).** Le carry-over ci-dessus reste entièrement valide pour la session du 18/07 matin, à traiter en priorité si le navigateur fonctionne à nouveau.
+
+**Session close.**
