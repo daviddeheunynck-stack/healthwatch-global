@@ -37,6 +37,7 @@ const EXCLUDED_EMAILS = new Set([
   "clarence_skye@yahoo.fr",
   "r.endangrukmanams@gmail.com",
   "elyan.delaunay@proton.me",
+  "mobile-nox-test@healthwatch-global.com",
 ]);
 
 const authRes = await fetch(`${SUPABASE_URL}/auth/v1/admin/users?per_page=200`, { headers });
