@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase-server";
 import { isAdmin } from "@/lib/admin";
-import { createClient as createServiceClient } from "@supabase/supabase-js";
+import { createClient as createServiceClient, type SupabaseClient, type User } from "@supabase/supabase-js";
 import {
   Shield, Users, Activity, RefreshCw,
   TrendingUp, DollarSign, Zap, Bell, Link2,
@@ -34,6 +34,28 @@ const PLAN_MRR: Record<string, number> = {
   enterprise: 299,
   free:       0,
 };
+
+// listUsers returns one page at a time (default/max 1000 users per page). Reading
+// only page 1 silently drops every user past the first 1000 from the name lookup
+// below — a coverage gap that grows invisibly with the user base. Page through
+// until a short page signals the end. Names live only in auth user_metadata
+// (profiles has no name column), so this stays the right source; we just stop
+// truncating it.
+async function fetchAllAuthUsers(admin: SupabaseClient): Promise<User[]> {
+  const perPage = 1000;
+  const all: User[] = [];
+  for (let page = 1; ; page++) {
+    const { data, error } = await admin.auth.admin.listUsers({ page, perPage });
+    if (error) {
+      console.warn("[admin] listUsers page", page, ":", error.message);
+      break;
+    }
+    const users = data?.users ?? [];
+    all.push(...users);
+    if (users.length < perPage) break;
+  }
+  return all;
+}
 
 // ─── Mini stat card ───────────────────────────────────────────────────────────
 
@@ -139,14 +161,14 @@ export default async function AdminPage({
     { data: profiles },
     { data: alertRegions },
     { data: slackUsers },
-    { data: { users: authUsers } },
+    authUsers,
   ] = await Promise.all([
     admin.from("outbreaks").select("*").order("date", { ascending: false }),
     admin.from("subscriptions").select("*").order("created_at", { ascending: false }),
     admin.from("profiles").select("id, email, plan, created_at, trial_ends_at, stripe_subscription_id").order("created_at", { ascending: false }),
     admin.from("user_alert_regions").select("user_id"),
     admin.from("profiles").select("id").not("slack_webhook_url", "is", null),
-    admin.auth.admin.listUsers({ page: 1, perPage: 1000 }),
+    fetchAllAuthUsers(admin),
   ]);
 
   const nameByEmail: Record<string, string> = {};
