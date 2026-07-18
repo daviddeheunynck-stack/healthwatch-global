@@ -105,4 +105,11 @@ export const CRON_WINDOWS: Record<string, number> = {
   "trigger-regional-digest":  200,   // weekly Mon
   // ── Admin crons ──────────────────────────────────────────────────────────────
   "enrich-admin1":             2,    // hourly at :15
+  // ── Monitoring ───────────────────────────────────────────────────────────────
+  // health-check watches every other cron above; without an entry here, nothing
+  // watches health-check itself. This only catches a *later* successful run
+  // noticing its own previous run went stale — if the route stops being invoked
+  // or fails hard enough to skip even the outer try/catch, no run remains to
+  // report it. Still strictly better than zero self-monitoring. Added 2026-07-18.
+  "health-check":              26,   // daily 07:05
 };
