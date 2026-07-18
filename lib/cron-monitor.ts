@@ -63,8 +63,8 @@ export const CRON_WINDOWS: Record<string, number> = {
   "check-new-don":     2,    // hourly at :20 — new WHO DON detector
   "sync-signals":      9,    // every 6h
   "sync-cdc-han":      7,    // every 4h
-  "sync-ukhsa":        14,   // twice daily
-  "sync-spf":          14,   // twice daily
+  "sync-ukhsa":        24,   // twice daily (06:00/14:00 → 16h overnight gap; 24h ≈ 1.5× to avoid 07:05 false-overdue)
+  "sync-spf":          24,   // twice daily (07:00/15:00 → 16h overnight gap; 24h ≈ 1.5× to avoid 07:05 false-overdue)
   "sync-cdc-notices":  26,   // daily
   "sync-drc-sitrep":   26,   // daily — PHEIC cadence
   "sync-who-afro":     26,   // daily
