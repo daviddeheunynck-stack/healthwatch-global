@@ -760,6 +760,7 @@ async function upsertItems(
         description:     item.description,
         risk_level:      riskLevel,
         active:          true,
+        is_seed:         false,
         source_priority: 5,
       };
       // Only overwrite a locale column when the translation actually

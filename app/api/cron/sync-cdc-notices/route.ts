@@ -306,6 +306,17 @@ export async function GET(req: NextRequest) {
       continue;
     }
 
+    // Never overwrite PAHO alert/sitrep-owned rows — a travel notice is never
+    // more authoritative than PAHO's own regional bulletin. Same collision
+    // family as sync-who-regional vs sync-paho-alerts, latent here (not yet
+    // observed in prod) but closed defensively at the same time.
+    // See project_diphtheria_haiti_source_priority_collision memory (2026-07-19).
+    if (existRow?.source?.includes("paho.org")) {
+      log.push({ label, status: "skip", detail: "owned by PAHO alert sync" });
+      results.skipped++;
+      continue;
+    }
+
     // Fetch the individual notice page
     let pageText = "";
     let pageFetchFailed = false;

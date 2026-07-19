@@ -10,7 +10,8 @@
 //     Surveillance API (xmart-api-public.who.int) — see fetchDengueGlobalSurveillance
 //   - Dengue/Brazil: MANUAL, see note below — never auto-fetch
 //   - Dengue/Philippines: no fetcher yet, absent from the WHO dataset above
-// Schedule: 0 8 * * 2,5  (Tuesday and Friday 08:00 UTC)
+// Schedule: 0 8 * * *  (daily 08:00 UTC — see vercel.json; this comment
+// previously said "Tuesday and Friday", stale since at least 2026-07-19)
 // maxDuration: 300s (Vercel Pro cron; ~120 targets, many skipped early on no-fetcher)
 //
 // Never overwrites rows whose source URL is from who.int/emergencies
@@ -1118,6 +1119,19 @@ async function runSyncWhoRegional(_req: NextRequest, supabase: SupabaseClient) {
     // Never overwrite rows managed by the WHO DON daily sync
     if (existingRow?.source?.includes("who.int/emergencies/disease-outbreak-news")) {
       log.push({ label: `${target.disease_en}/${target.country_en}`, status: "skip", detail: "owned by WHO DON sync" });
+      results.skipped++;
+      continue;
+    }
+
+    // Never overwrite rows managed by PAHO's alert/sitrep sync. GHO annual
+    // reference figures (this cron) are always coarser than a PAHO
+    // Epidemiological Alert — without this, sync-who-regional and
+    // sync-paho-alerts fight over the same row daily, since both write at
+    // source_priority=5 and neither treated the other as authoritative.
+    // Found 2026-07-19 on Diphtheria/Haiti — see
+    // project_diphtheria_haiti_source_priority_collision memory.
+    if (existingRow?.source?.includes("paho.org")) {
+      log.push({ label: `${target.disease_en}/${target.country_en}`, status: "skip", detail: "owned by PAHO alert sync" });
       results.skipped++;
       continue;
     }
