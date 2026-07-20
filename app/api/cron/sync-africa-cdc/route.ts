@@ -454,6 +454,15 @@ export async function GET(req: NextRequest) {
           continue;
         }
 
+        // An older-dated item with different numbers was not skipped above (only
+        // the "unchanged" case was) — a stale re-fetch could still overwrite a
+        // more recent row. Same guard family as sync-cdc-notices.
+        if (item.date < existRow.date) {
+          log.push({ label, status: "skip", detail: `older item (${item.date}) than existing (${existRow.date})` });
+          results.skipped++;
+          continue;
+        }
+
         const updatePayload: Record<string, unknown> = {
           cases:           item.cases,
           deaths:          item.deaths,

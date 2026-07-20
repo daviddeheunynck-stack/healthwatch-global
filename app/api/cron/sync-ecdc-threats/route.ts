@@ -638,6 +638,15 @@ export async function GET(req: NextRequest) {
           continue;
         }
 
+        // An older-dated item with different numbers was not skipped above (only
+        // the "unchanged" case was) — a stale re-fetch could still overwrite a
+        // more recent row. Same guard family as sync-cdc-notices.
+        if (item.date < existing.date) {
+          log.push({ label, status: "skip", detail: `older item (${item.date}) than existing (${existing.date})` });
+          results.skipped++;
+          continue;
+        }
+
         // Spike guard: >3× jump is almost certainly a parsing anomaly.
         if (item.cases > 0 && existing.cases > 0 && item.cases > existing.cases * 3) {
           log.push({ label, status: "skip", detail: `spike: ${item.cases} vs existing ${existing.cases} (>3×)` });

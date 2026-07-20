@@ -746,6 +746,15 @@ async function upsertItems(
         continue;
       }
 
+      // An older-dated item with different numbers was not skipped above (only
+      // the "unchanged" case was) — a stale re-fetch could still overwrite a
+      // more recent row. Same guard family as sync-cdc-notices.
+      if (item.date < existing.date) {
+        log.push({ label, status: "skip", detail: `older item (${item.date}) than existing (${existing.date})` });
+        results.skipped++;
+        continue;
+      }
+
       // Re-translate inline on update too — same reasoning as the insert
       // branch below: this cron owns its own localization, and an English
       // description update without a matching FR/ES/AR/ID refresh leaves

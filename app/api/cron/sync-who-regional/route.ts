@@ -1181,6 +1181,21 @@ async function runSyncWhoRegional(_req: NextRequest, supabase: SupabaseClient) {
         continue;
       }
 
+      // A fetch dated before what's already stored is a regression, not an
+      // update — e.g. the meningitis multi-week fallback landing on an older
+      // week because the latest week's PDF failed table validation (found
+      // 2026-07-20: self-regressed weeks 26→25, since casesDiff alone was
+      // enough to pass the check above). Refuse rather than silently walking
+      // case counts backward. Same root cause as the WHO-regional/PAHO Haiti
+      // collision guarded by source ownership above — here it's the same
+      // fetcher regressing against itself, so ownership can't help; a date
+      // floor can.
+      if (found.date < existingRow.date) {
+        log.push({ label: `${target.disease_en}/${target.country_en}`, status: "skip", detail: `stale fetch (${found.date} older than stored ${existingRow.date}) — refusing to regress` });
+        results.skipped++;
+        continue;
+      }
+
       const updatePayload: Record<string, unknown> = {
         cases:           found.cases,
         deaths:          found.deaths,
