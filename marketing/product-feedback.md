@@ -87,3 +87,29 @@ Eva a répondu positivement à la clarification (« thank you for being upfront 
 **Statut :** en attente, accès Pro à activer pour Eva (mentionné par David dans son message du 10 juillet, pas encore fait). Toujours pas priorisé côté développement.
 
 **DM envoyé à Eva (15:46, validé par David « oui »)** : réponse honnête sur la piste "outbreak → mésusage antibiotique → pic AMR", expliquant le vrai blocage (trous de couverture GLASS dans les zones où HWG a le plus de foyers actifs), sans promettre de feature. Reformulée en question ouverte sur son propre intérêt pour cet axe de recherche plutôt qu'en engagement produit de HWG.
+
+---
+
+## Métriques de process (alert-to-validation) comme dataset standardisé — échange INGRIDE SIEMENI (20/07/2026)
+
+**Source :** fil DM LinkedIn de plusieurs jours avec Ingride Siemeni (Master PH Epidemiology), poursuivi le 20/07.
+
+**Idée produit émergée (distincte du volet AMR) :** les indicateurs opérationnels de surveillance (temps alerte→validation, temps→investigation, temps→réponse) sont un angle mort quasi systématique. WHO/Africa CDC/ECDC publient les outputs épidémio (cas, décès, couverture contact tracing) mais **jamais** ces métriques de process, qui restent internes aux IMS/EOC. Ingride confirme qu'elles n'apparaissent même pas de façon standardisée dans les AAR/JEE (au mieux qualitatif).
+
+**Piste concrète pour HWG :** un acteur externe (type HWG) pourrait **re-lire systématiquement les AAR et rapports JEE pour en extraire et standardiser la rapidité de validation**, même imparfaitement. Consensus dans l'échange : ne pas forcer une fausse précision (nombre de jours) que la source qualitative ne supporte pas, mais **coder en buckets ordinaux** (timely / moderately delayed / significantly delayed) avec critères transparents et métadonnées de contexte. Référence réelle citée comme la plus proche : le cadre **7-1-7** (Resolve to Save Lives/WHO), qui convertit un timeline en pass/miss borné par étape (détecter 7j / notifier 1j / répondre 7j).
+
+**Intérêt pour HWG :** aujourd'hui HWG n'affiche que l'output du "queue" de validation (une flambée apparaît le jour où un bulletin la publie). Une couche "métrique de process / timeliness ordinale" serait un différenciateur fort et cohérent avec le positionnement (voir la couverture des trous de validation). Chantier data non trivial (extraction depuis AAR/JEE, sources hétérogènes), à évaluer côté faisabilité.
+
+**Statut :** idée capturée, non priorisée. À recouper avec un éventuel intérêt récurrent (plusieurs contacts terrain — INGRIDE, Oussama, Anoop, Nassoro, ZABRE — tournent tous autour du même problème "détection vs validation vs réponse").
+
+**Tentative d'implémentation (20/07/2026) — ABANDONNÉE en l'état, chantier repensé en incrémental :**
+Reformulation validée avec David au moment de coder : plutôt que relire des AAR/JEE réels (subjectif, lent, sensible sur la performance de pays réels), dériver un **délai observable depuis les données déjà ingérées par HWG** (`date` du foyer vs `created_at` = 1ère insertion HWG), affiché en Pro (exports CSV/JSON + rapports PDF par région). Implémenté (`lib/reporting-lag.ts` + branchement dans `app/api/export` et `app/api/report/[region]`), testé contre la vraie base dev avant tout commit.
+
+**Le test a invalidé la prémisse :** plusieurs foyers affichaient un "retard" de 200 à 831 jours (ex. Avian Influenza/USA) qui n'étaient PAS de vrais retards de pipeline mais des **backfills historiques en lot** (toutes les lignes concernées partagent le même `created_at` à la milliseconde près, provenance USDA APHIS — import ponctuel de cas anciens avec leur vraie date passée). Rien dans le schéma `outbreaks` actuel ne distingue une insertion "live" (signal frais détecté à sa date) d'une insertion "backfill" (archive historique importée d'un coup) — les deux produisent exactement le même écart `date`/`created_at`. Livrer la métrique en l'état aurait affiché des alertes "Retardé" trompeuses sur des données d'archive légitimes, dans un rapport payant.
+
+**Décision (20/07/2026) :** ne pas abandonner l'idée, mais la construire par étapes, un peu chaque jour, plutôt que d'un coup — et ne rendre la fonctionnalité visible sur le site qu'une fois complète. Prérequis avant de retenter le calcul de délai :
+1. Ajouter une vraie distinction en base entre insertion "live" (cron régulier détectant un signal frais) et "backfill" (import historique volontaire) — probablement une colonne booléenne sur `outbreaks` (ou déduite proprement, pas par heuristique fragile sur le nom de la source).
+2. Peupler cette distinction correctement à travers les ~15 crons `sync-*` existants (chacun sait déjà s'il fait un backfill ponctuel ou un poll régulier — c'est le bon endroit pour le marquer, pas après-coup).
+3. Une fois cette base fiable, refaire le calcul de délai (restreint aux lignes jamais mises à jour depuis l'insertion, ET non marquées backfill) et re-tester contre des données réelles avant tout affichage.
+
+Code de la tentative (lib/reporting-lag.ts + branchements export/report) entièrement retiré du repo le 20/07 après le test (rien commité, aucun résidu). Rien à re-coder tant que l'étape 1 n'est pas faite.
