@@ -4,7 +4,70 @@ Archive de tout le contenu crÃ©Ã©. Mise Ã  jour Ã  chaque session.
 
 ---
 
+## Technique — 20 juillet 2026 — ✅ Régression Méningite corrigée + garde anti-régression porté sur 5 crons
+
+**Déclencheur** : contrôle qualité quotidien du 20/07 (27 lignes "à vérifier manuellement"). Les 4 lignes Méningite (Burkina Faso/Tchad/Nigéria/Soudan du Sud), corrigées la veille (19/07) vers les valeurs de la semaine 26 OMS AFRO, étaient repassées aux valeurs de la semaine 25 — repéré via la section "Mouvements du jour" du rapport, qui montrait l'inversion exacte du fix de la veille.
+
+**Cause racine** : `sync-who-regional` (fetcher méningite) retombe sur une semaine antérieure quand la semaine la plus récente échoue son contrôle interne (total imprimé vs somme extraite du PDF — la semaine 26 échouait ce contrôle à cause d'un pays hors des 4 suivis, sans lien avec les données HWG). Le garde d'écriture qui décide d'appliquer le résultat en base n'exigeait qu'un écart de cas/décès, sans jamais vérifier que la nouvelle date était plus récente que celle déjà stockée — une donnée plus vieille pouvait donc écraser une donnée plus fraîche.
+
+**Portée** : même faille copiée-collée dans 6 crons sync. Un seul (`sync-cdc-notices`) avait déjà été corrigé le 16/07 (incident distinct). Le même garde a été porté vers les 5 autres : `sync-who-regional`, `sync-paho-alerts`, `sync-ecdc-threats`, `sync-cdc-han`, `sync-africa-cdc`.
+
+**Correctifs appliqués** :
+- Données : les 4 lignes Méningite restaurées aux valeurs semaine 26 (1495/64 Burkina Faso, 986/70 Tchad, 1390/85 Nigéria, 94/7 Soudan du Sud)
+- Code : garde `date < date déjà stockée → skip` ajouté dans les 5 fichiers cron — commit [`2bff5eb`](https://github.com/daviddeheunynck-stack/healthwatch-global/commit/2bff5eb), poussé sur master, déployé (Vercel Ready confirmé)
+- Bonus : Ebola/Ouganda enrichie (dernier patient sorti le 16/07, compte à rebours de 42 jours avant fin d'épidémie déclarée — ECDC), chiffres inchangés (20 cas/2 décès)
+- Autres lignes stale du rapport (Lassa Nigéria, Fièvre jaune, Nipah, Diphtérie Haïti) vérifiées contre source primaire — toutes légitimes, aucune action
+
+Détail complet : mémoire `project_sync_cron_date_regression_guard_fixed_2026_07_20`. Vérification du premier run réel des 5 crons corrigés programmée le 21/07 ~11h50 (tâche planifiée `sync-crons-regression-guard-verify-21juillet`).
+
+---
+
 ## X / Twitter
+
+### Thread MWF — lundi 20 juillet 2026 — ✅ PUBLIÉ EN AUTONOMIE par l'agent (x-hwg-content-proposal) le 2026-07-20 à 09h17 — Rougeole Amériques, le bond à 43 559 cas est un artefact de reporting
+
+**Publié par l'agent sans validation préalable** (autonomie contenu de marque X depuis le 17/07, voir [[project_x_content_autonomy_2026_07_17]]). **Fil racine :** https://x.com/HWatchGlobal/status/2079103473820254442 (4 tweets, horodatés 9:17 AM · 20 juil. 2026, vérifiés dans l'ordre sur le profil après publication, texte identique au brouillon ci-dessous, carte de lien healthwatch-global.com rendue correctement sur le tweet 4).
+
+**Contexte session** : navigateur habituel de David (`23c7ecdd…`, affiché « Browser 2 » cette session) de nouveau EN LIGNE après l'arrêt d'automatisation locale du 18-19/07 (David a redémarré Chrome + extension à son retour ~19/07 19h). `list_connected_browsers` renvoyait 2 instances (`a466bc2e…` = « Browser 1 » inconnu, non sélectionné ; `23c7ecdd…` sélectionné directement, deviceId habituel reconnu). Un `Page.captureScreenshot` en timeout 30s juste après le clic « Tout poster », résolu au 2e appel après re-`select_browser` (pattern connu). Publication menée en entier.
+
+**Étape 0 :** aucun brouillon X validé/rédigé en attente. Le dernier thread X (Ebola RDC CFR par province du 17/07) est publié. Rien rédigé les 18-19/07 (automatisation locale à l'arrêt, et hors jours MWF). Le post rougeole Guatemala du 20/07 en attente est un brouillon **LinkedIn** (`linkedin-hwg-content-proposal`), hors périmètre de cette routine.
+
+**Sujet choisi + pourquoi :** rougeole Amériques, PAHO SitRep #7 (17/07), la donnée la plus fraîche et vérifiable du jour (source datée à 3 jours). Non-Ebola volontairement, pour éviter une 3e couverture Ebola RDC d'affilée (15/07 CFR temporel, 17/07 CFR géographique) = sur-couverture. **Le canal X n'avait jamais couvert la rougeole Amériques au niveau régional** (seul thread rougeole X antérieur = États-Unis seuls, 2 170 cas, angle différent). L'angle « artefact de reporting » est aussi porté par le brouillon LinkedIn du jour, mais : (a) canal et audience différents, (b) cadrage X distinct (décideur/opérationnel : stock vs flux, deux courbes divergentes), (c) le 15/07 les deux canaux avaient déjà tourné sur des sujets différents le même jour, ici l'événement est assez majeur pour porter les deux avec des cadrages propres. Angle diphtérie Afrique écarté (données datées fév-mars 2026, pas frais) ; angle génomique clade Bundibugyo (Sabiiti) reporté (vérification sources primaires The Lancet/JIDC plus lourde, à garder pour un futur thread).
+
+**Source primaire (une seule, vérifiée mot pour mot en session le 20/07) :** [PAHO/WHO Regional Situation Report No. 7, Measles in the Americas](https://www.paho.org/en/documents/situation-report-7-measles-americas-region-17-july-2026) (PDF `measles-sitrep7-17july-2026.pdf`, téléchargé et parsé via pdf-parse ; WebFetch échoue à rendre le PDF). Période EW1–27 2026 (4 jan → 11 juil). Ce n'est PAS une reprise des chiffres DB à l'aveugle : chaque chiffre du thread a été confronté au texte du PDF (voir double-check).
+
+**Chiffres vérifiés dans le PDF (extraits littéraux) :** 43 559 cas confirmés, 17 pays/territoires, « 3.8 fold increase compared to the same period in 2025 » ; « Guatemala (27,145), Mexico (12,052), the United States (2,231) and Canada (1,097) accounted for the majority (98%) » ; 44 décès, CFR 0,10 % ; « retrospective update from Guatemala, which added 20,078 cases. Guatemala's reported total increased from 7,067 to 27,145 cases following the inclusion of cases confirmed by epidemiological linkage and clinical criteria, in addition to laboratory-confirmed » ; EW25-26 = 1 818 nouveaux cas « across eight countries and territories, representing a 38.4% decrease compared with the previous two-week period (EW 23-24; 2,949 new cases) ».
+
+**X (EN) — thread 4 tweets (texte publié)**
+
+1/
+> The Americas measles count hit 43,559 cases for 2026 in PAHO's 17 July report, a 3.8-fold rise on the same period in 2025. Taken as transmission, that jump looks alarming. Most of it is a reporting artifact, and the operational read is the opposite of the headline.
+
+2/
+> Nearly all of it is one country. Guatemala went from 7,067 to 27,145, adding 20,078, which PAHO attributes to a retrospective reclassification: cases now counted by epidemiological linkage and clinical criteria, not lab only. The infections existed; the counting rule changed.
+
+3/
+> The real-time signal points the other way. New confirmed cases fell 38.4% in the latest two-week window (EW25-26 vs EW23-24), across eight reporting countries. Recent weeks revise up as late confirmations land, so read the decline as provisional, not the leap as new spread.
+
+4/
+> For planning, separate stock from flow. The 43,559 cumulative now mixes counting rules across countries; two-week incidence shows where transmission is live. Guatemala, Mexico, the US and Canada hold 98% of cases, CFR 0.10%. Country breakdown: healthwatch-global.com
+
+**Double-check effectué :**
+- **Longueurs (comptage réel X, URL = 23 caractères)** : 259 / 276 / 274 / 266. Toutes sous 280, marges 21 / 4 / 6 / 14. Zéro caractère non-ASCII, 0 hashtag, 0 tiret cadratin (deux-points + point-virgule), lien unique en fin de thread, pas de CTA appuyé.
+- **Chaque chiffre confronté au PDF PAHO** ligne par ligne (voir extraits ci-dessus), aucun repris d'un post tiers ni d'une mémoire ancienne. Le 22 974 « il y a deux semaines » utilisé par le brouillon LinkedIn n'a **pas** été réutilisé côté X (il vient du SitRep #6, non re-vérifié en session ici) : le thread X évite ce chiffre et ne cite que des valeurs vérifiées dans le SitRep #7.
+- **Overclaim évité sur le -38,4 %** : la baisse n'est pas présentée comme une chute de transmission pure. Tweet 3 pose explicitement le caveat de révision à la hausse des semaines récentes (« Recent weeks revise up as late confirmations land, so read the decline as provisional »). Note interne : le PDF signale que le dénominateur EW23-24 a lui-même été révisé par la reclassification Guatemala, donc la comparaison est sur base reclassifiée cohérente — le -38,4 % est attribué à PAHO, pas asserté comme fait de terrain.
+- **Cherry-picking évité** : les 44 décès et le CFR 0,10 % sont inclus (tweet 4), pas masqués ; le CFR bas est un fait, pas un adoucissement. La divergence des deux courbes (cumul qui bondit / incidence qui baisse) est traitée des deux côtés, pas triée.
+- **CTA solide, pas de pays fantôme** : Guatemala, Mexique, États-Unis, Canada tous présents et actifs en DB HWG (vérifié par requête prod avant rédaction), carte de lien healthwatch-global.com rendue et fonctionnelle sur le tweet 4 (« 106 active outbreaks tracked »).
+- Pas de ProMED. Pas de CDC Australie (source juridiquement restreinte, ligne diphtérie/Australie écartée). Pas de faux témoignage. Ton analytique décideur (ministry focal points, ops teams, risk managers), pas promotionnel.
+
+**Incidents techniques en cours de composition (aucune conséquence, rien publié en trop) :**
+- **Tweet 3 non enregistré au 1er essai** : le 1er clic sur le 3e champ vide « Ajoutez un autre post » (situé en bord bas de modale) n'a pas focalisé le champ, la frappe est partie dans le vide (bouton « Tout poster » resté grisé = 3e tweet vide détecté). **Repéré par vérification avant post** (relecture du champ montrant encore le placeholder), champ recliqué au centre puis frappe re-saisie et vérifiée. Confirme la consigne : toujours relire chaque champ avant de passer au suivant, ne pas se fier au retour « Typed … ».
+- **Sélecteur d'audience ouvert par erreur** : un scroll a effleuré « Tout le monde peut répondre » et ouvert le menu « Qui peut répondre ? ». « Tout le monde » était déjà coché ; menu refermé sans rien changer (Escape sans effet, puis clic sur « Tout le monde » pour confirmer/fermer). Audience du fil = Tout le monde, inchangée.
+- Conforme au protocole 17/07 : après chaque « + », scroll manuel par coordonnées (pas de `find`/ref sur les champs dynamiques), clic direct sur le champ repéré à l'écran, capture de vérification après chaque frappe.
+
+**Vérification post-publication** : les 4 tweets relus dans l'ordre sur `x.com/HWatchGlobal` (tweet 1 racine à 9:17 AM 20 juil., chaîne d'auto-réponses 2→3→4 horodatée « 1-2 min »), texte mot pour mot identique au brouillon, carte de lien fonctionnelle. Notification David envoyée après publication.
+
+---
 
 ### Thread MWF — vendredi 17 juillet 2026 — ✅ VALIDÉ par David (« on valide ») puis PUBLIÉ sur demande explicite (« publie les ») le 2026-07-17 à 15h35
 
@@ -61,6 +124,92 @@ Archive de tout le contenu crÃ©Ã©. Mise Ã  jour Ã  chaque session.
 **⚠️ Anomalie repérée en passant, NON utilisée dans le thread (à signaler) :** l'ECDC donne le suivi des contacts à **76,6 %** (données au 14/07) alors que le sitrep national du 13/07 donnait **67,4 %**, et que notre reply @AP du 15/07 décrivait une **chute** (81,6 % le 4/07 → 78,1 % le 11/07 → 67,4 % le 13/07). Un rebond de 9 points en un jour est peu plausible en l'état : dénominateurs probablement différents entre les deux sources. **Écarté du thread par prudence**, à éclaircir avant toute réutilisation de la série « traçage » dans un contenu futur.
 
 **Restent non utilisés et disponibles :** la réconciliation du SitRep N°060 (6 cas reclassés de Nia-Nia/Ituri vers Wamba/Haut-Uélé, les cumuls provinciaux bougent sans une seule infection nouvelle — angle fort mais dépendant d'une source non citable), le contraste Ouganda 20 cas/10 % vs RDC, et l'anniversaire des 2 mois de la flambée.
+
+---
+
+### Veille x-hwg-monitoring — 2026-07-20 (10h, session autonome, David absent)
+
+**Contexte session** : navigateur habituel de David (`23c7ecdd…`, affiché « Browser 2 » cette session) DE NOUVEAU EN LIGNE après l'arrêt d'automatisation locale du 18-19/07 (les deux sessions X de ces jours-là étaient bloquées, navigateur hors ligne). `list_connected_browsers` renvoyait 2 instances (`a466bc2e…` = « Browser 1 » non sélectionné ; `23c7ecdd…` sélectionné directement, deviceId habituel). Session menée sans blocage, **aucune PushNotification envoyée**. Quotas en début de session : 0/3 replies, 0/5 follows (seul le thread de marque du jour, publié 9h17 par `x-hwg-content-proposal`, était loggé — hors périmètre de cette routine).
+
+**Point DMs : boîte de réception VIDE.** Vérifiée dans les trois vues (Tous, Priorité, Masqué via « Demandes de message ») : aucun message, aucune demande. **0 reçu, 0 répondu, 0 noté pour David.** Rien à archiver en « Messages reçus ». Aucune demande de contact hors plateforme à signaler.
+
+**Notifications** : onglet « Tous » = uniquement des recommandations de posts de comptes suivis (aucun nouvel abonné, aucun like/repost reçu non traité). Onglet « Mentions » : la plus récente reste Barry Hunt (9 juil.), déjà traitée. **0 nouvel abonné, 0 mention nouvelle, 0 follow-back.**
+
+**Reply n°1 POSTÉE ✅ — @Reuters (Canada bar entry / Ebola, angle mesures de frontière)**
+
+Cible : https://x.com/Reuters/status/2078998327857713441 (Reuters, vérifié, réponses ouvertes vérifiées avant rédaction, libre de cadence — purgé du ledger, dernier engagement 5 juil.). Posté 20/07 2:20 AM, 43,4k vues, 48 likes / 21 reposts. Post cible : « The Canadian government said it would deny entry to any foreigner who has been to Congo within the past 21 days as part of new, temporary border measures to combat the spread of Ebola. »
+
+Texte publié : « The 21-day window matches Ebola's maximum incubation. But entry bans act as a tripwire for self-monitoring, not interdiction: the virus isn't transmissible before symptoms. Exported risk tracks detection at source, where two-thirds of DRC deaths still occur in the community. »
+
+**Double-check** : ~275 caractères (compteur X à 5 restants, sous 280) ; anglais (fil EN) ; 0 tiret cadratin (deux-points + points), 0 hashtag, 0 CTA, 0 lien ; rendu relu dans le champ avant envoi (apostrophes OK, pas de troncature). Faits vérifiés : 21 j = incubation max Ebola (2-21 j) ; non-transmissibilité pré-symptomatique = doctrine OMS ; « two-thirds of deaths in communities » = @DrTedros 17/07 (déjà vérifié en session antérieure). Angle décideur non-dit : distinction tripwire d'auto-surveillance vs interdiction, et renvoi au vrai déterminant (détection à la source). **Distinct de la reply @TravelGov du 16/07** (qui portait uniquement sur « 21 j = moitié du délai OMS de 42 j ») : ici le cœur est le mécanisme de transmissibilité + le lien à la détection à la source, pas la comparaison 21/42 j. Confirmé publié (toast « Votre post a été publié », reply visible sous le post, compteur réponses 2→3).
+
+**Reply n°2 POSTÉE ✅ — @julienmh (femmes surreprésentées dans les cas/décès Ebola, angle lacune de surveillance)**
+
+Cible : https://x.com/julienmh/status/2078894089710260634 (Julien Harneis, UN Senior Ebola Coordinator, vérifié, déjà suivi, libre de cadence — dernier engagement 13/07, purgé du ledger ce jour). Posté 19/07 19:25, 467 vues, réponses ouvertes vérifiées avant rédaction. Post cible (quote de @vanyaradzayi, ASG/Dep. Exec. Dir. UN Women) : « Yes ASG Nyaradzayi, and women make up the greatest number of the confirmed cases and deaths, as they care for the children and elders when they fall sick. »
+
+Texte publié : « Women's overrepresentation is a recurring Ebola pattern that maps onto the surveillance gap: caregiving and body preparation are high-exposure roles outside formal contact lists. Case-finding built on named contacts alone misses the households where transmission concentrates. »
+
+**Double-check** : 276 caractères (compteur X à 4 restants, sous 280 — 1re version à ~281 raccourcie après l'avertissement « seuls les 280 premiers caractères seront visibles », re-vérifiée) ; anglais (fil EN) ; 0 tiret cadratin (deux-points + points), 0 hashtag, 0 CTA, 0 lien ; rendu relu dans le champ avant envoi (apostrophes OK, pas de troncature). Faits : la surreprésentation des femmes est un motif documenté des flambées Ebola (soins + préparation des corps = rôles à forte exposition), affirmation faite au conditionnel de « pattern récurrent » sans avancer de pourcentage non citable ; renvoie à la lacune de surveillance (case-finding centré sur les contacts nommés) = fil narratif HWG déjà établi. Angle non-dit ajouté au post de Julien : le lien mécanistique entre le skew de genre et l'angle mort du traçage. Confirmé publié (toast « Votre post a été publié », reply visible sous le post, compteur réponses 0→1).
+
+**Follow n°1 EXÉCUTÉ ✅ — @anne_anciiaWHO (Dre anne Ancia)** : médecin OMS déployée en Ituri sur la riposte Ebola, citée nommément par le compte officiel @OMSRDCONGO (terrain à Sota/Ituri), suivie par OMS RDC + Chikwe Ihekweazu. Cœur de cible exact (répondeuse OMS terrain). Repérée via suggestions des notifications. Légitimité confirmée par le quote officiel OMS RDC. Suivi confirmé (bouton « Abonné » par zoom). Détail dans x-watchlist.md.
+
+**Donnée épi notée (non intégrée en base)** : @Hiroshi Yasuda (notifications, 10h) relaie 16 cas COVID-19 / 4 décès en 3 semaines en Andhra Pradesh (Inde), variant Omicron RF.5 — hors cœur de couverture HWG (pas un foyer suivi), non vérifié contre source primaire, noté pour mémoire seulement.
+
+**Bilan quotas & effort — replies 2/3, follows 1/5 (arrêt volontaire, pas de remplissage forcé)** :
+- **Reply n°3 non postée** malgré un effort actif multi-méthodes (2 recherches structurées mots-clés `À la une` + `Récent` min_faves 20 puis 10 ; timelines @WHOAFRO et @AfricaCDC). Le champ non-Ebola du jour est saturé de conspirationnisme anti-vaccin (Bill Gates/mRNA, « tetanus scam », « vaccines are a myth ») ; les agences postent du contenu campagne (#SelfCareMonth, Africa PGI génomique) sans datapoint outbreak frais réutilisable ; @julienmh (meilleure source fraîche) est bloqué par la règle 1 reply/compte/semaine (déjà utilisé aujourd'hui), @DrTedros bloqué par cadence (18/07). La 3e opportunité n'existait pas à un niveau non-répétitif/non-médiocre → arrêt à 2, conforme à « ne jamais forcer une reply médiocre » (règle 14/07).
+- **Follows : 1 seul candidat fort du jour** (@anne_anciiaWHO, suivi). Méthodes épuisées : suggestions notifications (stue/Powassan déjà refusés ; marathon/éducation/EU hors cœur), « Vous pourriez aimer » @anne_anciiaWHO (orgs malaria adjacentes = remplissage, cf. refus @RBM_VCWG 17/07), recherche Personnes « Ebola DRC Ituri » (0 résultat), « Vous pourriez aimer » @OMSRDCONGO (Denis Mukwege / MONUSCO / Vital Kamerhe = figures politiques congolaises, garde-fou politique + hors épidémio). Barre de pertinence tenue, pas de padding.
+- **Archivage vérifié (étape 9)** : les 2 replies (@Reuters, @julienmh) et le follow (@anne_anciiaWHO) figurent bien dans content-log.md (cette entrée) ET x-watchlist.md (ledger de cadence + tableau « Comptes à suivre », statut suivi). Ledger purgé (lignes ≤ 13/07, comptes libérés @julienmh/@WHOSudan/@Chikwe_I).
+- **Aucun cas garde-fou/anti-injection/RGPD/hors-plateforme** ce passage. **Aucune PushNotification** (session menée en entier, navigateur habituel de nouveau en ligne).
+
+---
+
+### Veille x-hwg-monitoring — 2026-07-18 (10h, session autonome, David absent)
+
+**Contexte session** : navigateur habituel (`23c7ecdd…`, affiché « Browser 1 ») sélectionné directement, nouveau groupe d'onglets. Quelques timeouts CDP `Page.captureScreenshot` 30s en cours de session, tous résolus au 2e appel après re-`select_browser` (pattern connu, pas de blocage définitif). **Aucune PushNotification envoyée** (session menée en entier). Quotas en début de session : 0/3 replies, 0/5 follows (aucune entrée 18/07 préexistante dans le content-log).
+
+**Point DMs : boîte de réception VIDE.** Vérifiée dans les trois vues (Tous, Priorité, Masqué via « Demandes de message ») : aucun message, aucune demande. **0 reçu, 0 répondu, 0 noté pour David.** Rien à archiver en « Messages reçus ». Aucune demande de contact hors plateforme à signaler.
+
+**Reply n°1 POSTÉE ✅ — @DrTedros (Ebola RDC : les 2/3 de décès en communauté, angle épidémiologique)**
+
+Cible : https://x.com/DrTedros/status/2078135154741064075 (Directeur général de l'OMS, vérifié, déjà suivi, cadence libre — jamais engagé). Posté 17/07 17:10, ~38k vues, 21 réponses / 132 reposts / 202 likes, **réponses ouvertes** (vérifié avant rédaction). Post cible : « Two months into the #Ebola outbreak in the #DRC, intense transmission in Ituri province is our primary concern. More than 2,000 cases and almost 800 deaths have been reported. Most new cases are being detected outside known contact lists, and two-thirds of deaths are occurring in communities. @WHO, @AfricaCDC and partners are supporting @MinSanteRDC to rapidly expand treatment, laboratories, contact tracing and community engagement. But armed conflict is obstructing access... Yesterday, an Ebola treatment centre in Bunia was attacked. Health interventions alone will not stop this outbreak. Urgent political action is needed... Even a temporary ceasefire would help. »
+
+**Garde-fou politique appliqué** : le post touche au conflit armé et appelle à un cessez-le-feu (dimension politique). Reply rédigée **strictement sur le mécanisme épidémiologique** (décès communautaires = nœuds d'amplification par enterrement non sécurisé, détection hors listes de contacts, conséquence opérationnelle de l'attaque de l'ETC sur le recours aux soins), **sans commenter la politique** ni le conflit — reste dans le périmètre HWG. Les réponses existantes du fil viraient au politique (ex. « African politicians... most corrupt »), ce qui renforçait l'intérêt de se démarquer par un angle purement épidémio.
+
+**Reply postée :**
+> Two-thirds of deaths in communities rather than treatment centres is the sharpest sign transmission is outrunning surveillance: a community death is a potential unsafe-burial amplification node, not an endpoint. Paired with case detection happening mostly off contact lists, it mirrors the contact follow-up drop from 81.6% (4 Jul) to 67.4% (13 Jul). Anything pushing care-seeking further from ETCs, including the Bunia attack, deepens precisely that dynamic.
+
+**Confirmation :** texte relu intégralement via screenshot avant envoi (aucune troncature, un seul paragraphe dense, pas de caractère parasite), publié, reply visible dans le fil sous HealthWatchGlobal @HWatchGlobal · 9s (coche vérifiée).
+
+**Double-check :**
+- 2/3 des décès en communauté + détection hors listes : repris tels quels du post @DrTedros (source primaire = DG OMS).
+- Mécanisme enterrement non sécurisé (décès communautaire = nœud d'amplification) : épidémiologie Ebola établie, pas un chiffre inventé.
+- Chute suivi des contacts 81,6 % (4/07) → 67,4 % (13/07) : figures propres à HWG déjà publiées et sourcées (reply @AP du 15/07), présentées explicitement comme une série datée (pas une affirmation sur aujourd'hui). ⚠️ NB interne : l'ECDC donnait 76,6 % au 14/07 (anomalie déjà notée dans le thread du 17/07, dénominateurs probablement différents) — c'est pourquoi je m'en tiens strictement à la série sitrep national datée, sans extrapoler.
+- Attaque de l'ETC de Bunia : mentionnée uniquement pour sa conséquence opérationnelle (éloignement du recours aux soins), pas pour désigner un responsable — apolitique.
+- Pas de CTA/lien/hashtag, pas de tiret cadratin (deux-points + point-virgule), anglais (langue du post source), ton analytique décideur.
+
+**⚠️ ÉCART DE CADENCE DÉTECTÉ APRÈS PUBLICATION (à signaler à David) :** la dernière reply à @DrTedros datait du **12 juillet** (voir plus bas dans ce fichier, section « Replies engagement — 12 juillet »). 12→18 juil = **6 jours, donc dans la fenêtre de 7 jours** (règle « pas plus de 1 reply/compte/semaine »). Cause : la reply du 12/07 **n'avait jamais été ajoutée au ledger de cadence** de x-watchlist.md (lacune d'archivage du 12/07) ; mon contrôle pré-reply s'est appuyé sur le ledger (où @DrTedros était absent) sans recouper le content-log pour ce compte précis. **Résultat : la reply du jour dépasse la cadence de 1 jour.** Décision : **reply NON supprimée** (suppression = action sortante irréversible, non prise en autonomie ; contenu de haute qualité, sur un post distinct et frais du DG OMS, écart marginal de 1 jour). David peut demander le retrait a posteriori s'il préfère. **Correctif appliqué** : @DrTedros est désormais inscrit au ledger (18/07), bloquant toute nouvelle reply jusqu'au 25/07. **Leçon** : pour un compte marquee, recouper content-log en plus du ledger avant d'engager, tant que le ledger peut avoir des trous historiques.
+
+**Aucune donnée épi chiffrée nouvelle à intégrer en base** ce passage : les chiffres du post (>2000 cas / ~800 morts) sont cohérents avec le suivi HWG existant de l'Ebola RDC (2 011/754 au 13/07, tendance connue), pas une nouvelle zone/foyer. Rien à écrire dans `outbreaks`.
+
+**Recherche 2e/3e reply (élargissement actif, plusieurs méthodes avant de conclure)** :
+- @HelenBranswell a un post rougeole frais (12 min, CDC 29 cas confirmés de plus, cumul 2026 à 2260) mais **cadence bloquée** (déjà engagée le 17/07, règle 1 reply/compte/semaine) → écartée. Abraar Karan (2h) ne faisait que citer ce même post @DrTedros (pas de post original distinct à engager).
+- Notifications (Tous + Mentions) entièrement parcourues : rien d'autre de frais/pertinent hors sujets déjà couverts (Uganda 42j, West Nile France).
+- **Recherche structurée par mots-clés** `(Ebola OR mpox OR Marburg OR cholera OR Nipah) lang:en min_faves:15 -filter:replies -filter:nativeretweets` (onglets À la une + Récent, scrollés) : dominée par le bruit comme prévu (blague idiomatique « Cholera, I suspect » ; tourisme gorilles Bwindi/Nkuringo Ouganda utilisant « Ebola » en messaging « safe/open » ; BBC World human-interest ; controverse politique kenyane « Laikipia Ebola project »/biolab US = à éviter). Aucune cible solide et apolitique.
+- **Compte prioritaire visité directement** : @AfricaCDC (l'événement PHEOC du 17/07 n'avait pas pu être surveillé hier). Post le plus récent = recrutement cours leadership santé mentale (hors outbreak) ; post Ebola RDC (10h) = citation @Dr_JeanKaseya sur une contribution d'urgence de 2,5 M$ de la Chine → **angle diplomatie/financement géopolitique (solidarité Chine-Afrique), trop politiquement chargé pour une reply HWG factuelle** (garde-fou politique), d'autant que j'ai déjà une reply forte et apolitique sur la même épidémie ce jour (@DrTedros). Non engagé.
+- **Conclusion : quota clos à 1/3** en connaissance de cause, méthodes épuisées, plutôt que forcer une reply médiocre ou politiquement risquée. Aucune opportunité en file pour demain (rougeole US = adjacent + cadence bloquée ; post financement Chine = politique).
+
+**Follows : 3/5 exécutés**
+- **@SabiitiwWilber** (Wilber Sabiiti, vérifié, microbiologiste moléculaire St Andrews/Ouganda) : candidat reporté du 17/07 par quota, profil re-confirmé sans ambiguïté (cœur de cible génomique/terrain Ebola Bundibugyo), suivi, confirmé « Abonné » par zoom.
+- **@icddr_b** (icddr,b, vérifié, 23,1k abonnés) : International Centre for Diarrhoeal Disease Research Bangladesh, institut de référence mondial choléra/ORS, pertinence directe couverture choléra HWG. Repéré via suggestions du profil @SabiitiwWilber. Suivi, confirmé « Abonné » par zoom.
+- **@jwgale** (Jason Gale, Senior editor Bloomberg @business, santé mondiale, 6,9k abonnés) : tier journaliste santé spécialisé (CIDRAP/Branswell/BNO), auteur d'un livre sur les impacts sanitaires du Covid. Repéré via suggestions des notifications. Suivi, confirmé « Abonné » par zoom.
+- **@Anas_NGA** (Anas Isah Ismail 🇳🇬, nouvel abonné, coche Premium) : **écarté** (bio purement patriotique nigériane, catégorie « Médias et actualités » auto-assignée, aucune affiliation santé publique/épidémiologie, même profil que benny_Immah/stuartelimu). Pas de follow-back, pas de DM de bienvenue.
+- **Marge restante 2/5, non comblée volontairement (barre de pertinence maintenue).** Candidats supplémentaires évalués activement et **écartés** :
+  - **@DrNeenaJha** (Neena Jha, NHS GP/Breast Physician, 44k abonnés) : bio à forte coloration **militante politique** (« Free Palestine | Free Congo | Free Sudan »), 51,6k posts. Suivre = signal public associant HWG à des positions clivantes (garde-fou politique). Profil clinicien-militant, pas surveillance/épidémio. Refusé.
+  - **@RBM_VCWG** (RBM Vector Control Working Group, Genève, 1 258 abonnés, suivi par Dr Jean Kaseya + Malaria Journal) : légitime mais **niche/technique, peu actif (325 posts), adjacent malaria déjà largement couvert le 17/07** → suivre serait du remplissage. Refusé.
+  - Autres suggestions malaria/NTD croisées non retenues (même raison de sur-couverture) : @MedsforMalaria, @MESAmalaria, @bugbittentweets, @MalariaWorld, @invectorcontrol.
+- Quota follows partagé avec la routine 16h (`x-hwg-followup-check`) : marge 2 restante à réévaluer au passage de 16h.
+
+**Quota du jour à l'issue de ce passage : replies 1/3, follows 3/5.**
 
 ---
 
@@ -761,6 +910,69 @@ If you work in global health, outbreak response, or international crisis managem
 ---
 
 ## LinkedIn
+
+### Post MWF — 20 juillet 2026 (lundi) — Rougeole Amériques, le bond de +20 078 cas du Guatemala n'est pas une explosion — **PUBLIÉ ✅ le 20/07/2026** (confirmé par David)
+
+**Étape 0 :** aucun brouillon LinkedIn de marque en attente au 20/07. Le post Ebola Ouganda/RDC du 17/07 est publié ; le post rougeole Guatemala du 15/07 (Mexique-centré) est publié ; ce post est une rédaction neuve sur la donnée PAHO SitRep #7 (période de reporting jusqu'au 11/07). Le thread Ebola CFR par province du 17/07 est côté X, hors périmètre.
+
+**Langue : EN** (défaut posts de marque LinkedIn, audience santé publique internationale — voir [[feedback_linkedin_brand_posts_in_english]]).
+
+**Source des données :** DB HWG (ligne Rougeole/Guatemala 27 145 cas / 4 décès, `updated_at` 2026-07-18, non `is_seed`) **confirmée mot pour mot contre la source primaire** : [PAHO/WHO Regional Situation Report No. 7, Measles in the Americas](https://www.paho.org/en/documents/situation-report-7-measles-americas-region-17-july-2026) (PDF : https://www.paho.org/sites/default/files/2026/07/measles-sitrep7-17july-2026.pdf), période de reporting EW1–27 (4 jan → 11 juil 2026).
+
+**Angle :** le cumul Guatemala passe de 7 067 à 27 145 (+20 078), MAIS la source dit explicitement que c'est un **update rétroactif de méthode** (inclusion des cas confirmés par lien épidémiologique et critères cliniques, plus seulement labo), pas une flambée de nouvelles infections. En parallèle, les nouveaux cas régionaux **baissent de 38,4 %** sur la dernière fenêtre de 2 semaines. Le cumul bondit pendant que l'incidence recule. Angle structurel (définition de cas), ne périme pas. Corrige un piège de lecture et sert directement le positionnement HWG « ce que le chiffre veut vraiment dire ». Distinct des posts rougeole précédents (Mexique-centrés, « la maladie qui revient en premier »).
+
+**Faits vérifiés contre le SitRep #7 (citations exactes du PDF) :**
+- Cumul régional : **43 559 cas confirmés, 44 décès, CFR 0,10 %, 17 pays** (EW1–27, jusqu'au 11/07). Guatemala 27 145 / Mexique 12 052 / États-Unis 2 231 / Canada 1 097 = 98 % des cas.
+- « The substantial increase [...] is primarily attributable to a retrospective update from Guatemala, which added 20,078 cases. Guatemala's reported total increased from 7,067 to 27,145 cases following the inclusion of cases confirmed by epidemiological linkage and clinical criteria, in addition to laboratory-confirmed cases. »
+- Dernières 2 semaines (EW25–26) : +1 818 nouveaux cas, **-38,4 %** vs EW23–24, « driven mainly by fewer cases reported in Guatemala, Mexico, Peru, and the United States ».
+- SitRep #6 (2/07) : 22 974 cas cumulés / 39 décès (through EW25) — sert de point de comparaison « two weeks earlier », vérifié via recherche web.
+- Guatemala, Mexique, États-Unis, Canada tous présents en DB HWG → CTA healthwatch-global.com solide (pas de pays fantôme, piège du 15/07 évité).
+
+**Texte final (prêt à copier-coller) :**
+
+> Guatemala's 2026 measles count just rose by 20,078 cases in a single report. Almost none of them are new infections.
+>
+> PAHO's latest situation report puts the Americas at 43,559 confirmed cases for 2026, up from 22,974 two weeks earlier. Guatemala alone moved from 7,067 to 27,145, overtaking Mexico (12,052) as the region's largest outbreak.
+>
+> Read fast, that looks like an explosion. It isn't.
+>
+> The jump is a retrospective reporting change. Guatemala now counts cases confirmed by epidemiological linkage and clinical criteria, not only laboratory-confirmed ones. The infections were already there. What changed is the definition of what gets counted.
+>
+> The real-time signal points the other way. New cases across the region fell 38.4% in the last two-week window, with fewer cases in Guatemala, Mexico, Peru and the United States. The cumulative curve leapt while the incidence curve declined.
+>
+> This is why a case count is never just a number. Broaden the case definition and a system posts a surge that reads like accelerating transmission. Narrow it and a real one can hide. The figure moves with the method, not only with the virus.
+>
+> If you are tracking this outbreak, watch new cases per week, not the cumulative total, and read the footnote before the headline.
+>
+> Country-level breakdown for the Americas measles outbreak: healthwatch-global.com
+>
+> Source: PAHO/WHO Regional Situation Report No. 7, Measles in the Americas (reporting period through 11 July 2026).
+
+**Double-check effectué :** EN ; chaque chiffre confronté ligne par ligne au PDF SitRep #7 (aucun repris d'un post tiers ou d'une mémoire ancienne) ; hook non événementiel (structurel, ne périme pas) ; paragraphes courts et aérés ; pas de tiret cadratin (uniquement des traits d'union dans les adjectifs composés) ; lien unique dans le corps, pas de CTA agressif ni de pitch commercial ; source primaire citée en pied ; pas de ProMED, pas de faux témoignage. Nuance de rigueur intégrée : le +20 078 est présenté comme un artefact de reporting, jamais comme des contaminations nouvelles, et le -38,4 % (comparaison like-for-like, EW23–24 restated selon la note de bas de page 2 du SitRep) montre la tendance réelle.
+
+**Statut :** PRÊT — en attente de la validation explicite de David avant qu'il ne publie lui-même (règle de non-publication autonome du contenu de marque LinkedIn, [[feedback_no_self_publishing]]).
+
+### Commentaire — 18 juillet 2026 (samedi) — repost de Nathan Lo (Stanford) par Abraar Karan — PLOS Medicine, ré-émergence des maladies évitables par vaccination — ✅ POSTÉ
+
+**Contexte trouvé via** page d'activité individuelle d'Abraar Karan (profil prioritaire, feed algorithmique indisponible ce jour en fenêtre navigateur minimisée — voir linkedin-contacts.md session 18/07). Repost de 16h (dans la fenêtre 48h), aucun des deux profils (Nathan Lo auteur, Abraar Karan qui republie) commenté cette semaine.
+
+**Post source :** Nathan Lo (Stanford Physician Scientist, Infectious Diseases), article Perspective PLOS Medicine sur la ré-émergence des maladies évitables par vaccination en ère post-élimination, mené par Chirag Kumar (Stanford). Lien https://lnkd.in/g-3vYxsQ.
+
+**Commentaire posté (confirmé : compteur 2→3 commentaires, éditeur vidé) :**
+> Post-elimination re-emergence is the pattern I keep seeing across the DON feeds too, not just measles. Coverage looks adequate in the aggregate national number, but elimination status was earned with a coverage distribution that later becomes uneven, and the aggregate hides exactly where it slipped. By the time a cluster shows up in a bulletin, the gap has usually existed for a while.
+
+Double-check : EN (post en EN), 4 lignes analytiques, une idée forte (agrégat national masque la distribution de couverture), pas de CTA/lien, connecte à la couverture rougeole DRC/HWG sans pitch commercial.
+
+### Commentaire — 18 juillet 2026 (samedi) — Krutika K. (Infectious Diseases Physician) — flambée Cyclospora Michigan (~4 000 cas) — ✅ POSTÉ
+
+**Contexte trouvé via** page d'activité individuelle (profil prioritaire, mutuels dont Belizaire). Post original (pas repost) de 20h, dans la fenêtre 48h, jamais commenté cette semaine.
+
+**Post source :** interview ABC News sur la flambée de cyclosporiase (parasite, diarrhée aqueuse prolongée) dans le Michigan, ~4 000 cas, souligne que le diagnostic nécessite un test spécifique (pas une culture de selles standard).
+
+**Commentaire posté (confirmé visible dans le fil) :**
+> The testing gap is what strikes me here: Cyclospora needs a specific request, not a routine stool culture, so a chunk of that near-4,000 count is presumably cases that only got captured because a clinician thought to ask for it. Makes me wonder how much of the true burden in an outbreak like this stays invisible simply because the diagnostic step was never triggered.
+
+Double-check : EN, 2 phrases analytiques, hook vérifié mot pour mot contre son post (« requires specific testing »), pas de CTA/lien, pas de fausse affirmation sur la couverture HWG (sujet hors périmètre géographique HWG — angle surveillance générale, sans mention HWG).
 
 ### Post — 17 juillet 2026 (vendredi) — Ebola Ouganda/RDC, ce que le compte à rebours de 42 jours ne mesure pas — **PUBLIÉ ✅ (David : « publie », publié par l'agent sur override explicite, cf. précédent du 13/07)**
 
