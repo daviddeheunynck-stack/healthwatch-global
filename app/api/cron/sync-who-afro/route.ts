@@ -532,6 +532,7 @@ async function runSyncWhoAfro(_req: NextRequest, supabase: SupabaseClient) {
         region: geo.region, lat: geo.lat, lng: geo.lng,
         cases, deaths, risk_level: riskLevel, date,
         source: entry.url, description, active: true, is_seed: false,
+        is_backfill: false,
         source_priority: 5,
         admin1: null, admin1_lat: null, admin1_lng: null,
       });

@@ -367,7 +367,7 @@ export async function GET(req: NextRequest) {
         country: geo.name_fr, country_en: geo.name_en, country_ar: geo.name_ar,
         region: geo.region, lat: geo.lat, lng: geo.lng,
         cases, deaths, risk_level: riskLevel, date,
-        source: entry.url, description, active: true, is_seed: false, source_priority: 5,
+        source: entry.url, description, active: true, is_seed: false, is_backfill: false, source_priority: 5,
         admin1: null, admin1_lat: null, admin1_lng: null,
       });
       if (error) { log.push({ label, status: "error", detail: error.message }); results.errors++; }

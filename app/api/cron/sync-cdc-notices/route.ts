@@ -478,6 +478,7 @@ export async function GET(req: NextRequest) {
         description,
         active:      true,
         is_seed:     false,
+        is_backfill: false,
         source_priority: 5,
         admin1:      admin1 ?? null,
         admin1_lat:  admin1_lat ?? null,

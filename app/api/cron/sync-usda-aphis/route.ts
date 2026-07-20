@@ -468,6 +468,10 @@ export async function GET(req: NextRequest) {
         description,
         active:          true,
         is_seed:         false,
+        // USDA's crosstab is a cumulative historical record (every premises
+        // ever confirmed since 2024), not a live "what's happening now" feed
+        // — every first-insert here is onboarding archive data, unconditionally.
+        is_backfill:     true,
         admin1:          sd.state,
         admin1_lat:      coords.lat,
         admin1_lng:      coords.lng,

@@ -315,7 +315,7 @@ export async function GET(req: NextRequest) {
           results.skipped++;
         }
       } else {
-        const { error } = await supabase.from("outbreaks").insert(outbreak);
+        const { error } = await supabase.from("outbreaks").insert({ ...outbreak, is_backfill: false });
         if (error) {
           console.error("[sync] insert:", error, outbreak);
           errorLog.push(`INSERT ${outbreak.disease_en}/${outbreak.country_en}: ${error.message}`);

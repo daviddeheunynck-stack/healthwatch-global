@@ -1305,6 +1305,7 @@ async function runSyncWhoRegional(_req: NextRequest, supabase: SupabaseClient) {
         description: found.description,
         active:      activeFlag,
         is_seed:     isAnnualRef,
+        is_backfill: isAnnualRef,
         source_priority: 5,
       });
 

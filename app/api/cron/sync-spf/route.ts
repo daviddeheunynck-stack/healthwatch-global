@@ -498,7 +498,7 @@ async function runSyncSpf(_req: NextRequest, supabase: SupabaseClient) {
         country: geo.name_fr, country_en: geo.name_en, country_ar: geo.name_ar,
         region: geo.region, lat: geo.lat, lng: geo.lng,
         cases, deaths, risk_level: riskLevel, date: item.date,
-        source: item.url, description, active: true, is_seed: false, source_priority: 5,
+        source: item.url, description, active: true, is_seed: false, is_backfill: false, source_priority: 5,
         admin1: null, admin1_lat: null, admin1_lng: null,
       });
       if (error) { log.push({ label, status: "error", detail: error.message }); results.errors++; }

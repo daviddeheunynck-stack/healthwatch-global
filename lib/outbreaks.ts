@@ -43,6 +43,7 @@ export interface Outbreak {
   admin1_lat: number | null;
   admin1_lng: number | null;
   is_pheic:      boolean;       // Public Health Emergency of International Concern
+  is_backfill:   boolean;       // source is itself a historical/cumulative archive, not a live signal — set by the owning cron at insert time
   updated_at:    string | null; // last sync timestamp
   created_at:    string | null; // first insertion timestamp
   event_id:      string | null; // multi-country cluster linkage

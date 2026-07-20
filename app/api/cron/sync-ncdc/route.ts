@@ -308,7 +308,7 @@ async function runSyncNcdc(_req: NextRequest, supabase: SupabaseClient) {
           cases: ex.confirmed, deaths: ex.deaths, risk_level: riskLevel, date: sit.date,
           source: sit.pdfUrl, description: desc.en, description_fr: desc.fr, description_es: desc.es,
           description_ar: desc.ar, description_id: desc.id,
-          active: true, is_seed: false, source_priority: 5,
+          active: true, is_seed: false, is_backfill: false, source_priority: 5,
           admin1: null, admin1_lat: null, admin1_lng: null,
         });
         if (error) { log.push({ label, status: "error", detail: error.message }); results.errors++; }
