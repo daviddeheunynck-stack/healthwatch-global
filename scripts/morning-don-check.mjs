@@ -23,7 +23,7 @@ const SUSPICIOUS_DATE_EXCLUDE_IDS = new Set([
   "ab4cd321-0aa6-4598-86ac-b0a04d346465", // Polio Pakistan
   "b0f473be-a367-464e-ab32-3cdc43aa7815", // Polio Afghanistan
 ]);
-// Table de référence des clusters de seeds légitimes (mise à jour 2026-07-17, total=25).
+// Table de référence des clusters de seeds légitimes (mise à jour 2026-07-20, total=25).
 // Sert à diffier "le compte a-t-il changé" plutôt qu'à re-justifier ligne par ligne chaque matin.
 // Comptes = seeds ACTIFS attendus par cluster. Baissés le 2026-07-17 après les
 // audits source_priority=3 : les lignes retirées ont été désactivées (pas
@@ -31,6 +31,11 @@ const SUSPICIOUS_DATE_EXCLUDE_IDS = new Set([
 //   Chikungunya 21→7  : 14 pays clôturés (RRA v2 + NY State Global Health Update)
 //   MERS-CoV     2→1  : France désactivée (aucun cas depuis le cluster déc. 2025)
 //   Choléra      5→4  : Tchad désactivé (absent de la Table 1 de l'Epi Update #38)
+//   Diphtérie   1→0  : cluster retiré le 2026-07-20. Le fix c3a1d4d (19/07) a
+//     délibérément remis is_seed=FALSE sur Diphtérie/Haïti (le true était le
+//     résidu de la collision GHO/PAHO, pas une protection voulue). La ligne
+//     Haïti reste active, sourcée PAHO, mise à jour par sync-paho-alerts —
+//     ce n'est plus un seed. Voir project_diphtheria_haiti_source_priority_collision.
 const KNOWN_SEED_CLUSTERS = [
   { label: "Chikungunya (DON581, multi-pays)", diseaseMatch: /chikungunya/i, expectedCount: 7 },
   { label: "MERS-CoV (DON591)", diseaseMatch: /mers-cov/i, expectedCount: 1 },
