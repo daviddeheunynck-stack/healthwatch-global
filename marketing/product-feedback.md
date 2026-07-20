@@ -113,3 +113,13 @@ Reformulation validée avec David au moment de coder : plutôt que relire des AA
 3. Une fois cette base fiable, refaire le calcul de délai (restreint aux lignes jamais mises à jour depuis l'insertion, ET non marquées backfill) et re-tester contre des données réelles avant tout affichage.
 
 Code de la tentative (lib/reporting-lag.ts + branchements export/report) entièrement retiré du repo le 20/07 après le test (rien commité, aucun résidu). Rien à re-coder tant que l'étape 1 n'est pas faite.
+
+**✅ Étape 1 FAITE (20/07/2026, commit f13818d) — colonne `is_backfill` ajoutée et peuplée.**
+Audité (via 13 agents Explore en parallèle) les 13 crons `sync-*` qui insèrent réellement dans `outbreaks` (2 autres — `sync-drc-sitrep`, `sync-endemic-data` — ne font que des `.update()` sur des lignes existantes, hors périmètre ; `sync-signals` ne touche pas `outbreaks`). Résultat :
+- **12 crons confirmés LIVE** (chacun s'auto-limite déjà à une fenêtre de fraîcheur, 30-120 jours selon la source, via un filtre `MAX_AGE_DAYS` propre au flux) → `is_backfill: false` codé en dur à l'insertion.
+- **sync-usda-aphis** : source = tableau croisé cumulatif par nature ("every premises ever confirmed since 2024, not a currently-active list", commenté dans le fichier) → `is_backfill: true` codé en dur.
+- **sync-who-regional** : point d'insertion unique mais réellement mixte, réutilise la variable déjà en place `isAnnualRef` (vrai pour les 6 indicateurs GHO annuels — malaria/measles/polio/yellow-fever/leishmaniasis/diphtheria — dont la date est toujours `YYYY-01-01`, faux pour les flux Dengue/Mpox/Choléra/Méningite réellement courants) → `is_backfill: isAnnualRef`.
+
+Migration `20260720120000_add_outbreaks_is_backfill.sql` : colonne `NOT NULL DEFAULT FALSE` + rétro-backfill des lignes existantes matchant les mêmes critères. Découverte en testant : les lignes GHO annuelles existantes n'avaient PAS `is_seed=true` de façon fiable (60/91 à `is_seed=false` sur dev) — `is_backfill` ne peut donc pas être déduit après coup de `is_seed`, d'où l'intérêt réel de la nouvelle colonne. Appliqué et vérifié sur dev (111 lignes `is_backfill=true` : 20 USDA + 91 GHO) et sur la vraie prod (52 lignes : 20 USDA + 32 GHO, écart normal entre environnements). Typecheck + lint propres.
+
+**Prochaine étape (2) :** refaire le calcul de délai de reporting en excluant `is_seed=true` OU `is_backfill=true`, restreint aux lignes jamais mises à jour depuis l'insertion (`created_at ≈ updated_at`), et re-tester contre données réelles (dev puis prod) avant tout affichage — voir méthodologie complète dans la mémoire Claude `project_reporting_lag_feature_incremental_build_2026_07_20`. Rien à afficher sur le site tant que cette étape 2 n'est pas faite et re-vérifiée.
