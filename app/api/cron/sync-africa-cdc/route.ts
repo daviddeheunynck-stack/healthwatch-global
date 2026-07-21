@@ -10,7 +10,8 @@ import * as Sentry from "@sentry/nextjs";
 import { logCronRun } from "@/lib/cron-monitor";
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { normalizeDisease } from "@/lib/disease-data";
-import { COUNTRIES, findCountry, isAggregateCountry } from "@/lib/geo-data";
+import { findCountry, isAggregateCountry } from "@/lib/geo-data";
+import { findMentionedAfricanCountries } from "@/lib/africa-cdc-countries";
 import { extractNumbers, assessRisk } from "@/lib/outbreak-parser";
 import { extractAdmin1, geocodeAdmin1 } from "@/lib/geo-extract";
 import { errorMessage } from "@/lib/error";
@@ -33,18 +34,6 @@ const FETCH_HEADERS = {
   "Accept":          "application/rss+xml,text/html,*/*",
   "Accept-Language": "en-US,en;q=0.9",
 };
-
-// African country names sorted longest-first. Excludes aggregate pseudo-countries
-// ("Global", "Multi-country", "African Region"...) — they're tagged region:"africa"
-// as a placeholder, not a real regional assignment, so left in they'd match
-// boilerplate like "the global response to the Ebola outbreak" and become
-// primaryCountry whenever mentioned before the real country, causing the
-// aggregate-rejection guard below to discard the whole article instead of
-// finding the real one. Found 2026-07-16.
-const AFRICA_COUNTRIES = Object.entries(COUNTRIES)
-  .filter(([, geo]) => geo.region === "africa" && !isAggregateCountry(geo))
-  .map(([key]) => key)
-  .sort((a, b) => b.length - a.length);
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -83,47 +72,6 @@ function extractAfricaCdcBody(html: string): string {
 function isKnownDisease(rawName: string): boolean {
   const info = normalizeDisease(rawName);
   return !!(info.family || info.cfr_ref || info.r0_ref || info.incubationMin);
-}
-
-// Abbreviations in Africa CDC RSS text → canonical country key
-const AFRICA_TEXT_ALIASES: Record<string, string> = {
-  " drc ":    "Democratic Republic of the Congo",
-  "(drc)":    "Democratic Republic of the Congo",
-  " rdc ":    "Democratic Republic of the Congo",
-  " dr congo": "Democratic Republic of the Congo",
-};
-
-// Returns countries ordered by earliest position of first occurrence in the
-// text, not by iteration order over AFRICA_TEXT_ALIASES/AFRICA_COUNTRIES —
-// callers take the first entry as "the primary country", which needs to mean
-// "mentioned first in the article", not "whichever name happens to be
-// declared first". Found 2026-07-15 (same class of bug already fixed in
-// sync-ecdc-threats). Identity/seen semantics unchanged — only ordering.
-function findMentionedAfricanCountries(text: string): string[] {
-  const lower  = ` ${text.toLowerCase()} `;
-  const positions = new Map<string, number>();   // output string -> earliest index
-  const seenKey    = new Map<string, string>();  // canonical name_en -> output string already recorded
-
-  const record = (outputStr: string, canonicalKey: string, idx: number) => {
-    if (idx === -1) return;
-    if (!seenKey.has(canonicalKey)) seenKey.set(canonicalKey, outputStr);
-    const key = seenKey.get(canonicalKey)!;
-    const prev = positions.get(key);
-    if (prev === undefined || idx < prev) positions.set(key, idx);
-  };
-
-  // Abbreviation aliases first
-  for (const [abbr, canonical] of Object.entries(AFRICA_TEXT_ALIASES)) {
-    record(canonical, COUNTRIES[canonical]?.name_en ?? canonical, lower.indexOf(abbr));
-  }
-
-  for (const name of AFRICA_COUNTRIES) {
-    const geo = COUNTRIES[name];
-    if (!geo) continue;
-    if (seenKey.has(geo.name_en)) continue;
-    record(name, geo.name_en, lower.indexOf(name.toLowerCase()));
-  }
-  return [...positions.keys()].sort((a, b) => positions.get(a)! - positions.get(b)!);
 }
 
 // Extract disease name from an Africa CDC outbreak title.
