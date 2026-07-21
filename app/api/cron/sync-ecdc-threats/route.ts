@@ -35,7 +35,9 @@ const FETCH_HEADERS = {
   "Accept-Language": "en-US,en;q=0.9",
 };
 
-// Country names sorted longest-first to avoid "Congo" matching before "Democratic Republic of the Congo"
+// Country names sorted longest-first. Load-bearing for the span-masking in
+// findMentionedCountries below: a longer country name must be searched (and its
+// span blanked) before any shorter name that is a substring of it.
 const COUNTRY_NAMES = Object.keys(COUNTRIES).sort((a, b) => b.length - a.length);
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
@@ -129,28 +131,52 @@ const TEXT_ALIASES: Record<string, string> = {
   " dr congo": "Democratic Republic of the Congo",
 };
 
-// Find countries mentioned in the text (returns canonical country keys from COUNTRIES)
+// Find countries mentioned in the text (returns canonical country keys from COUNTRIES).
+//
+// Matching walks a MASKED copy of the text: every matched span is blanked
+// (spaces of equal length, offsets preserved) before shorter terms are searched.
+// Because aliases and country names are searched longest-first, a longer country
+// name's span is consumed before any shorter name that is a substring of it can
+// match inside it. This stops "Republic of the Congo" (name_en "Congo", RoC)
+// from matching inside "Democratic Republic of the Congo" and mis-attributing a
+// DRC-only article to RoC — the fan-out at the call site would otherwise create a
+// phantom active Ebola/Congo row double-counting DRC on aggregate pages (the same
+// 2026-07-21 phantom fixed in sync-africa-cdc, commit b39e44c; ECDC is the ECDC
+// source of the same row, missed by that fix because it only patched africa-cdc).
+// Longest-first ordering alone did NOT prevent it: the RoC substring got its own
+// indexOf position independent of the DRC hit and was recorded as a separate key.
+// The same guard also blocks Niger⊂Nigeria, Sudan⊂South Sudan, Guinea⊂Equatorial
+// Guinea. ALL occurrences of each term are blanked (not just the first) so a body
+// that repeats "Democratic Republic of the Congo" can't leak RoC from a later
+// mention. Output order is unchanged: aliases first, then names longest-first.
 function findMentionedCountries(text: string): string[] {
-  const lower = ` ${text.toLowerCase()} `;
+  let masked = ` ${text.toLowerCase()} `;
   const found: string[] = [];
   const seen  = new Set<string>();
 
-  // Check abbreviation aliases first
-  for (const [abbr, canonical] of Object.entries(TEXT_ALIASES)) {
-    if (lower.includes(abbr) && !seen.has(canonical)) {
-      found.push(canonical);
-      seen.add(canonical);
+  const consume = (search: string, output: string): void => {
+    let idx = masked.indexOf(search);
+    if (idx === -1) return;
+    if (!seen.has(output)) {
+      found.push(output);
+      seen.add(output);
     }
-  }
+    // Blank every occurrence of this term so no shorter substring can re-match
+    // inside it — even when the country was already recorded via an alias.
+    while (idx !== -1) {
+      masked = masked.slice(0, idx) + " ".repeat(search.length) + masked.slice(idx + search.length);
+      idx = masked.indexOf(search, idx + search.length);
+    }
+  };
 
+  // Abbreviation aliases first (map to a canonical COUNTRIES key)...
+  for (const [abbr, canonical] of Object.entries(TEXT_ALIASES)) {
+    consume(abbr, canonical);
+  }
+  // ...then full country names, longest-first (see COUNTRY_NAMES).
   for (const name of COUNTRY_NAMES) {
-    const geo = COUNTRIES[name];
-    if (!geo) continue;
-    if (seen.has(name)) continue;
-    if (lower.includes(name.toLowerCase())) {
-      found.push(name);
-      seen.add(name);
-    }
+    if (!COUNTRIES[name]) continue;
+    consume(name.toLowerCase(), name);
   }
   return found;
 }
