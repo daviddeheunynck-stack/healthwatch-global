@@ -263,7 +263,12 @@ export async function POST(req: NextRequest) {
       const trialEndsAt = new Date(Date.now() + 35 * 86_400_000).toISOString();
       await supabase
         .from("profiles")
-        .update({ plan: "pro", trial_ends_at: trialEndsAt })
+        .update({
+          plan: "pro",
+          trial_ends_at: trialEndsAt,
+          is_pilot: true,
+          pilot_organization: organization || null,
+        })
         .eq("id", profile.id);
 
       // Default-enroll into regional alerts (opt-out, not opt-in) — same as the

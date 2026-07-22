@@ -78,7 +78,7 @@ export async function GET(req: NextRequest) {
   const [{ data: profiles, error }, { data: recentOutbreaks }] = await Promise.all([
     supabase
       .from("profiles")
-      .select("id, email, plan, trial_ends_at, locale, stripe_subscription_id, display_filters")
+      .select("id, email, plan, trial_ends_at, locale, stripe_subscription_id, display_filters, is_pilot, pilot_organization")
       .in("plan", ["starter", "pro"])
       .not("trial_ends_at", "is", null)
       .is("stripe_subscription_id", null)
@@ -125,7 +125,10 @@ export async function GET(req: NextRequest) {
         ? { count: regionalOutbreaks.length, diseases: [...new Set(regionalOutbreaks.map(o => getLocalizedDisease(o, locale)))].slice(0, 3) }
         : null;
 
-      const { subject, html } = buildTrialEndingEmail(plan, locale, profile.trial_ends_at, !!profile.stripe_subscription_id, regionalContext);
+      const { subject, html } = buildTrialEndingEmail(plan, locale, profile.trial_ends_at, !!profile.stripe_subscription_id, regionalContext, {
+        isPilot: !!profile.is_pilot,
+        organization: (profile.pilot_organization as string | null) ?? null,
+      });
 
       if (isRealProduction) {
         const ok = await sendEmail(profile.email, subject, html);

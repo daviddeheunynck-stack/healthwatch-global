@@ -165,6 +165,10 @@
       "schedule": "0 8 * * *"
     },
     {
+      "path": "/api/cron/pilot-closing-reminder",
+      "schedule": "0 8 * * *"
+    },
+    {
       "path": "/api/cron/disease-coverage",
       "schedule": "30 * * * *"
     },

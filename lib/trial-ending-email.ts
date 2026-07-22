@@ -219,6 +219,68 @@ const PLAN_STYLE = {
   pro:     { bg: "#78350f", color: "#fcd34d", label: { fr: "Pro",     en: "Pro",     es: "Pro",     ar: "Pro",     id: "Pro"     } },
 };
 
+// ─── Copy for institutional pilot users (is_pilot=true) ────────────────────────
+// The /pilot page promises a 45-min closing session ending in a concrete paid
+// proposal (Team plan or custom) — this is the backstop email if that session
+// hasn't happened yet by J-3/J-1. It must never look like the generic €29/month
+// self-serve pitch: different plan (Team), different CTA (reply to talk, not
+// silently auto-activate a subscription), and it names their organization.
+const PILOT_COPY: Record<string, {
+  subject: (org: string) => string;
+  subject1: (org: string) => string;
+  headline: string;
+  intro: (d: string, org: string) => string;
+  ctaLabel: string;
+  reassurance: string;
+  closing: string;
+}> = {
+  fr: {
+    subject:  (org) => `Le pilote HealthWatch de ${org} se termine dans 3 jours`,
+    subject1: (org) => `Le pilote HealthWatch de ${org} se termine demain`,
+    headline: "Votre pilote institutionnel se termine dans 3 jours.",
+    intro:    (d, org) => `L'accès Pro de ${esc(org)} expire le <strong>${d}</strong> et repassera automatiquement en gratuit sans action de votre part. Si votre équipe souhaite continuer, répondez à cet email — on prend 15 minutes pour caler un tarif Team adapté à votre organisation (à partir de 149€/mois pour 5 sièges, ajustable).`,
+    ctaLabel: "Répondre pour en discuter →",
+    reassurance: "Pas de renouvellement automatique, pas de carte bancaire enregistrée pendant le pilote.",
+    closing:  "À bientôt,\nDavid — HealthWatch Global",
+  },
+  en: {
+    subject:  (org) => `${org}'s HealthWatch pilot ends in 3 days`,
+    subject1: (org) => `${org}'s HealthWatch pilot ends tomorrow`,
+    headline: "Your institutional pilot ends in 3 days.",
+    intro:    (d, org) => `${esc(org)}'s Pro access expires on <strong>${d}</strong> and will automatically revert to Free — no action needed on your end. If your team wants to continue, just reply to this email — we'll set up a Team plan that fits your organization (from €149/month for 5 seats, adjustable).`,
+    ctaLabel: "Reply to discuss →",
+    reassurance: "No auto-renewal, no card on file during the pilot.",
+    closing:  "Talk soon,\nDavid — HealthWatch Global",
+  },
+  es: {
+    subject:  (org) => `El piloto de ${org} en HealthWatch termina en 3 días`,
+    subject1: (org) => `El piloto de ${org} en HealthWatch termina mañana`,
+    headline: "Su piloto institucional termina en 3 días.",
+    intro:    (d, org) => `El acceso Pro de ${esc(org)} expira el <strong>${d}</strong> y volverá automáticamente al plan gratuito. Si su equipo desea continuar, responda a este email — buscamos juntos un plan Team adaptado (desde 149€/mes para 5 puestos).`,
+    ctaLabel: "Responder para hablar →",
+    reassurance: "Sin renovación automática, sin tarjeta registrada durante el piloto.",
+    closing:  "Hasta pronto,\nDavid — HealthWatch Global",
+  },
+  ar: {
+    subject:  (org) => `ينتهي برنامج ${org} التجريبي خلال 3 أيام`,
+    subject1: (org) => `ينتهي برنامج ${org} التجريبي غداً`,
+    headline: "ينتهي برنامجكم التجريبي المؤسسي خلال 3 أيام.",
+    intro:    (d, org) => `ينتهي وصول ${esc(org)} في <strong>${d}</strong> وسيعود تلقائياً إلى الخطة المجانية. إذا رغب فريقكم بالاستمرار، فقط ردوا على هذا البريد.`,
+    ctaLabel: "← الرد للمناقشة",
+    reassurance: "لا تجديد تلقائي، لا بطاقة مسجلة خلال التجربة.",
+    closing:  "إلى اللقاء،\nDavid — HealthWatch Global",
+  },
+  id: {
+    subject:  (org) => `Pilot HealthWatch ${org} berakhir dalam 3 hari`,
+    subject1: (org) => `Pilot HealthWatch ${org} berakhir besok`,
+    headline: "Pilot institusional Anda berakhir dalam 3 hari.",
+    intro:    (d, org) => `Akses Pro ${esc(org)} berakhir pada <strong>${d}</strong> dan akan otomatis kembali ke Free. Jika tim Anda ingin melanjutkan, balas email ini saja.`,
+    ctaLabel: "Balas untuk berdiskusi →",
+    reassurance: "Tanpa perpanjangan otomatis, tanpa kartu selama pilot.",
+    closing:  "Sampai jumpa,\nDavid — HealthWatch Global",
+  },
+};
+
 // ─── Copy for users who already have a payment method (Stripe webhook path) ────
 
 const RENEW_COPY: Record<string, { intro: (d: string) => string; ctaLabel: string; reassurance: string }> = {
@@ -266,7 +328,8 @@ export function buildTrialEndingEmail(
   locale: string,
   trialEndsAt: string,
   hasPaymentMethod = false,
-  regionalContext: RegionalContext | null = null
+  regionalContext: RegionalContext | null = null,
+  pilot: { isPilot: boolean; organization: string | null } | null = null
 ): { subject: string; html: string } {
   const safeLocale = COPY[locale] ? locale : "en";
   // "starter" no longer exists — redirect to pro template
@@ -275,15 +338,37 @@ export function buildTrialEndingEmail(
   const rc    = RENEW_COPY[safeLocale] ?? RENEW_COPY.en;
   const ps    = PLAN_STYLE[effectivePlan];
   const isRtl = safeLocale === "ar";
-  const ctaUrl = `${APP_URL}/${safeLocale}/account`;
   const dateStr = formatTrialEnd(trialEndsAt, safeLocale);
   const daysLeft = Math.round((new Date(trialEndsAt).getTime() - Date.now()) / 86_400_000);
 
+  // Pilot users who haven't converted yet (no Stripe sub) get the institutional
+  // copy — different plan framing (Team, not €29/mo Pro) and a human CTA
+  // (reply to talk) instead of a silent self-serve "activate my subscription"
+  // link. A pilot who already has a payment method converted on their own
+  // initiative, which takes priority over this branch.
+  const isPilotPending = !!pilot?.isPilot && !hasPaymentMethod;
+  const pc = PILOT_COPY[safeLocale] ?? PILOT_COPY.en;
+  const org = pilot?.organization || (safeLocale === "fr" ? "votre organisation" : "your organization");
+
+  const ctaUrl = isPilotPending
+    ? "mailto:david.deheunynck@gmail.com?subject=" + encodeURIComponent(safeLocale === "fr" ? `Suite du pilote — ${org}` : `Following up on our pilot — ${org}`)
+    : `${APP_URL}/${safeLocale}/account`;
+
   // Override copy for users who already have a payment method
-  const intro      = hasPaymentMethod ? rc.intro(dateStr)  : c.intro(dateStr);
-  const ctaLabel   = hasPaymentMethod ? rc.ctaLabel        : c.ctaLabel;
-  const reassurance = hasPaymentMethod ? rc.reassurance    : c.reassurance;
-  const subject    = daysLeft <= 1 ? (c.subject1 ?? c.subject) : c.subject;
+  const intro = isPilotPending
+    ? pc.intro(dateStr, org)
+    : (hasPaymentMethod ? rc.intro(dateStr) : c.intro(dateStr));
+  const ctaLabel = isPilotPending
+    ? pc.ctaLabel
+    : (hasPaymentMethod ? rc.ctaLabel : c.ctaLabel);
+  const reassurance = isPilotPending
+    ? pc.reassurance
+    : (hasPaymentMethod ? rc.reassurance : c.reassurance);
+  const headline = isPilotPending ? pc.headline : c.headline;
+  const closing  = isPilotPending ? pc.closing : c.closing;
+  const subject  = isPilotPending
+    ? (daysLeft <= 1 ? pc.subject1(org) : pc.subject(org))
+    : (daysLeft <= 1 ? (c.subject1 ?? c.subject) : c.subject);
 
   const bulletItems = c.highlights
     .map(
@@ -314,7 +399,7 @@ export function buildTrialEndingEmail(
       </div>
 
       <h1 style="color:#ffffff;font-size:20px;font-weight:700;margin:0 0 14px;line-height:1.3">
-        ${c.headline}
+        ${headline}
       </h1>
 
       <p style="color:#9ca3af;font-size:14px;margin:0 0 24px;line-height:1.7">
@@ -348,7 +433,7 @@ export function buildTrialEndingEmail(
 
     <!-- Closing -->
     <p style="color:#4b5563;font-size:12px;line-height:1.6;text-align:center;white-space:pre-line;margin:0">
-      ${c.closing}
+      ${closing}
     </p>
 
   </div>
