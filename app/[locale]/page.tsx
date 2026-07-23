@@ -197,6 +197,8 @@ async function DashboardContent({ demo = false, urlRegion, urlRisk }: { demo?: b
   let hasDiseaseAlerts = false;
   let hasWatchlist = false;
   let currentUserId: string | null = null;
+  let isPilot = false;
+  let pilotOrganization: string | null = null;
   if (!demo) {
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
@@ -204,11 +206,13 @@ async function DashboardContent({ demo = false, urlRegion, urlRisk }: { demo?: b
       currentUserId = user.id;
       const { data: profile } = await supabase
         .from("profiles")
-        .select("plan, trial_ends_at, stripe_subscription_id, display_filters, disease_watchlist")
+        .select("plan, trial_ends_at, stripe_subscription_id, display_filters, disease_watchlist, is_pilot, pilot_organization")
         .eq("id", user.id)
         .single();
       plan = profile?.plan || "free";
       trialEndsAt = profile?.trial_ends_at ?? null;
+      isPilot = !!profile?.is_pilot;
+      pilotOrganization = (profile?.pilot_organization as string | null) ?? null;
 
       // Server-side trial expiry guard: covers two cases —
       // (a) expire-trials cron hasn't run yet: plan=pro, trial_ends_at < now
@@ -361,6 +365,8 @@ async function DashboardContent({ demo = false, urlRegion, urlRisk }: { demo?: b
             country: getLocalizedCountry(o, locale),
             delta24h: trends[o.id]?.delta24h ?? null,
           }))}
+          isPilot={isPilot}
+          pilotOrganization={pilotOrganization}
         />
       )}
 

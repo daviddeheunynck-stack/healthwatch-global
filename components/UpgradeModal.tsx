@@ -30,6 +30,8 @@ const COPY: Record<string, {
   trialExpired: string;
   budgetNote: string;
   budgetLink: string;
+  pilotCta: string;
+  pilotDesc: (org: string) => string;
 }> = {
   fr: {
     pdf:      { title: "Rapports PDF régionaux",      desc: "Téléchargez des rapports épidémiologiques prêts à partager avec vos équipes ou bailleurs.",   plan: "Disponible — Pro" },
@@ -51,6 +53,8 @@ const COPY: Record<string, {
     trialExpired: `À partir de ${PRICE_DISPLAY.fr.proMonthly}/mois ou ${PRICE_DISPLAY.fr.proAnnual}/an`,
     budgetNote:  "Budget limité (ONG, pays à revenu faible ou moyen) ?",
     budgetLink:  "Nous écrire →",
+    pilotCta:    "Répondre pour en discuter →",
+    pilotDesc:   (org) => `Pour continuer au-delà du pilote pour ${org}, répondez à l'email reçu — on cale un tarif Team adapté.`,
   },
   en: {
     pdf:      { title: "Regional PDF reports",     desc: "Download shareable epidemiological reports ready for your teams or donors.",             plan: "Available — Pro" },
@@ -72,6 +76,8 @@ const COPY: Record<string, {
     trialExpired: `From ${PRICE_DISPLAY.en_eur.proMonthly}/month or ${PRICE_DISPLAY.en_eur.proAnnual}/year`,
     budgetNote:  "Limited budget (NGO, low or middle-income country)?",
     budgetLink:  "Get in touch →",
+    pilotCta:    "Reply to discuss →",
+    pilotDesc:   (org) => `To continue beyond the pilot for ${org}, just reply to the email you received — we'll set up a Team plan that fits.`,
   },
   es: {
     pdf:      { title: "Informes PDF regionales",     desc: "Descargue informes epidemiológicos listos para compartir con su equipo o financiadores.",    plan: "Disponible — Pro" },
@@ -93,6 +99,8 @@ const COPY: Record<string, {
     trialExpired: `Desde ${PRICE_DISPLAY.es.proMonthly}/mes o ${PRICE_DISPLAY.es.proAnnual}/año`,
     budgetNote:  "¿Presupuesto limitado (ONG, país de renta baja o media)?",
     budgetLink:  "Escríbanos →",
+    pilotCta:    "Responder para hablar →",
+    pilotDesc:   (org) => `Para continuar más allá del piloto para ${org}, responda al email recibido.`,
   },
   ar: {
     pdf:      { title: "تقارير PDF إقليمية",           desc: "حمّل تقارير وبائية جاهزة للمشاركة مع فرقك أو المموّلين بنقرة واحدة.",            plan: "متاح — Pro" },
@@ -114,6 +122,8 @@ const COPY: Record<string, {
     trialExpired: `من ${PRICE_DISPLAY.ar.proMonthly}/شهر أو ${PRICE_DISPLAY.ar.proAnnual}/سنة`,
     budgetNote:  "ميزانية محدودة (منظمة غير حكومية، دولة منخفضة أو متوسطة الدخل)؟",
     budgetLink:  "← راسلنا",
+    pilotCta:    "← الرد للمناقشة",
+    pilotDesc:   (org) => `للاستمرار بعد التجربة لـ ${org}، فقط ردوا على البريد الذي تلقيتموه.`,
   },
   id: {
     pdf:      { title: "Laporan PDF regional",        desc: "Unduh laporan epidemiologi siap dibagikan ke tim atau donor Anda.",                      plan: "Tersedia — Pro" },
@@ -135,6 +145,8 @@ const COPY: Record<string, {
     trialExpired: `Mulai ${PRICE_DISPLAY.id.proMonthly}/bulan atau ${PRICE_DISPLAY.id.proAnnual}/tahun`,
     budgetNote:  "Anggaran terbatas (LSM, negara berpenghasilan rendah atau menengah)?",
     budgetLink:  "Hubungi kami →",
+    pilotCta:    "Balas untuk berdiskusi →",
+    pilotDesc:   (org) => `Untuk melanjutkan setelah pilot untuk ${org}, balas email yang Anda terima.`,
   },
 };
 
@@ -170,14 +182,21 @@ export default function UpgradeModal({ feature, onClose }: Props) {
 
   const [trialExpired, setTrialExpired] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(true); // optimistic
+  const [pilotInfo, setPilotInfo] = useState<{ isPilot: boolean; organization: string | null } | null>(null);
   useEffect(() => {
     const supabase = createClient();
     supabase.auth.getUser().then(({ data: { user } }) => {
       if (!user) { setIsAuthenticated(false); return; }
-      supabase.from("profiles").select("plan, trial_ends_at, stripe_subscription_id").eq("id", user.id).single()
+      supabase.from("profiles").select("plan, trial_ends_at, stripe_subscription_id, is_pilot, pilot_organization").eq("id", user.id).single()
         .then(({ data }) => {
           if (data?.trial_ends_at && new Date(data.trial_ends_at).getTime() < Date.now() && !data?.stripe_subscription_id) {
             setTrialExpired(true);
+          }
+          // Institutional pilots without billing set up yet should see the same
+          // "reply to discuss a Team plan" framing as the trial-ending/nudge
+          // emails and the other upgrade surfaces, not a self-serve Pro checkout.
+          if (data?.is_pilot && !data?.stripe_subscription_id) {
+            setPilotInfo({ isPilot: true, organization: (data.pilot_organization as string | null) ?? null });
           }
         });
     });
@@ -252,7 +271,24 @@ export default function UpgradeModal({ feature, onClose }: Props) {
         </ul>
 
         {/* CTA — direct checkout for logged-in users; signup link for demo visitors */}
-        {isAuthenticated ? (
+        {isAuthenticated && pilotInfo?.isPilot ? (
+          <>
+            <a
+              href={"mailto:david.deheunynck@gmail.com?subject=" + encodeURIComponent(
+                locale === "fr"
+                  ? `Suite du pilote — ${pilotInfo.organization || "votre organisation"}`
+                  : `Following up on our pilot — ${pilotInfo.organization || "your organization"}`
+              )}
+              onClick={() => { track("upgrade_modal_cta", { feature, locale, is_pilot: true }); onClose(); }}
+              className="block w-full text-center bg-red-600 hover:bg-red-500 text-white font-bold py-3.5 rounded-xl transition-all shadow-lg shadow-red-900/30 text-sm"
+            >
+              {c.pilotCta}
+            </a>
+            <p className="text-center text-xs text-gray-600 mt-2">
+              {c.pilotDesc(pilotInfo.organization || (locale === "fr" ? "votre organisation" : "your organization"))}
+            </p>
+          </>
+        ) : isAuthenticated ? (
           <>
             <div onClick={() => { track("upgrade_modal_cta", { feature, locale }); onClose(); }}>
               <CheckoutButton

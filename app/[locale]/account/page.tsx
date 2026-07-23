@@ -421,7 +421,7 @@ export default async function AccountPage({
 
   const { data: profile } = await supabase
     .from("profiles")
-    .select("plan, stripe_customer_id, stripe_subscription_id, created_at, slack_webhook_url, trial_ends_at")
+    .select("plan, stripe_customer_id, stripe_subscription_id, created_at, slack_webhook_url, trial_ends_at, is_pilot, pilot_organization")
     .eq("id", user.id)
     .single();
 
@@ -443,6 +443,32 @@ export default async function AccountPage({
   const planIcon = PLAN_ICONS[meta.iconName] ?? PLAN_ICONS.gift;
   const hasBilling = !!profile?.stripe_customer_id;
   const isPaid = plan !== "free";
+
+  // Institutional pilots (is_pilot=true) are meant to close as a human
+  // conversation about a Team plan, not a self-serve $29/mo Pro checkout —
+  // lib/trial-ending-email.ts and lib/trial-value-nudge-email.ts already
+  // frame it that way. Without this, a pilot logging into their own account
+  // saw the same generic "Add payment method" self-serve button as everyone
+  // else, contradicting every email they'd received. Once they actually have
+  // billing set up (hasBilling), they're a real paying customer either way —
+  // show the normal billing management panel like anyone else.
+  const isPilotPending = !!profile?.is_pilot && !hasBilling;
+  const pilotOrg = (profile?.pilot_organization as string | null) || (locale === "fr" ? "votre organisation" : "your organization");
+  const pilotMailtoHref = "mailto:david.deheunynck@gmail.com?subject=" + encodeURIComponent(
+    locale === "fr" ? `Suite du pilote — ${pilotOrg}` : `Following up on our pilot — ${pilotOrg}`
+  );
+  const pilotCtaLabel =
+    locale === "fr" ? "Répondre pour en discuter →" :
+    locale === "es" ? "Responder para hablar →" :
+    locale === "ar" ? "← الرد للمناقشة" :
+    locale === "id" ? "Balas untuk berdiskusi →" :
+    "Reply to discuss →";
+  const pilotBodyText = (org: string) =>
+    locale === "fr" ? `Votre équipe a un accès pilote actif pour ${org}. Pour continuer au-delà du pilote, répondez à cet email — on cale un tarif Team adapté (à partir de 149€/mois pour 5 sièges).` :
+    locale === "es" ? `Su equipo tiene un acceso piloto activo para ${org}. Para continuar más allá del piloto, responda a este email.` :
+    locale === "ar" ? `يملك فريقكم وصولاً تجريبياً نشطاً لـ ${org}. للاستمرار بعد التجربة، ردوا على هذا البريد.` :
+    locale === "id" ? `Tim Anda memiliki akses pilot aktif untuk ${org}. Untuk melanjutkan setelah pilot, balas email ini saja.` :
+    `Your team has an active pilot access for ${org}. To continue beyond the pilot, just reply to this email — we'll set up a Team plan that fits (from €149/month for 5 seats).`;
 
   // Fetch subscribed alert regions
   const { data: alertRegionsData } = await supabase
@@ -529,6 +555,17 @@ export default async function AccountPage({
             <p className="text-sm text-gray-400">{l.manageDesc}</p>
             <BillingPortalButton locale={locale} label={l.manageBilling} />
           </div>
+        ) : isPaid && !hasBilling && isPilotPending ? (
+          /* Institutional pilot, no billing set up yet — human conversation, not self-serve checkout */
+          <div className="pt-2 border-t border-gray-800 space-y-3">
+            <p className="text-sm text-gray-400">{pilotBodyText(pilotOrg)}</p>
+            <a
+              href={pilotMailtoHref}
+              className="inline-flex items-center gap-2 bg-red-600 hover:bg-red-500 text-white font-semibold px-5 py-2.5 rounded-lg transition-colors text-sm"
+            >
+              {pilotCtaLabel}
+            </a>
+          </div>
         ) : isPaid && !hasBilling ? (
           /* Trial activated via Supabase (no Stripe checkout yet) — guide them to add a payment method */
           <div className="pt-2 border-t border-gray-800 space-y-3">
@@ -551,6 +588,18 @@ export default async function AccountPage({
               }
               className="inline-flex items-center gap-2 bg-red-600 hover:bg-red-500 text-white font-semibold px-5 py-2.5 rounded-lg transition-colors text-sm"
             />
+          </div>
+        ) : !isPaid && isPilotPending ? (
+          /* Pilot trial expired (downgraded to free) without ever setting up billing —
+             still a human conversation, not a self-serve resubscribe. */
+          <div className="pt-2 border-t border-gray-800 space-y-3">
+            <p className="text-sm text-gray-400">{pilotBodyText(pilotOrg)}</p>
+            <a
+              href={pilotMailtoHref}
+              className="inline-flex items-center gap-2 bg-red-600 hover:bg-red-500 text-white font-semibold px-5 py-2.5 rounded-lg transition-colors text-sm"
+            >
+              {pilotCtaLabel}
+            </a>
           </div>
         ) : !isPaid ? (
           <div className="pt-2 border-t border-gray-800 space-y-3">

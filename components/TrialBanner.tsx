@@ -18,6 +18,8 @@ const COPY: Record<string, {
   pilotLink: string;
   budgetNudge: string;
   budgetLink: string;
+  pilotCta: string;
+  pilotDesc: (org: string) => string;
 }> = {
   fr: {
     title: (d) => d <= 0 ? "Votre essai Pro se termine aujourd'hui" : d === 1 ? "Il reste 1 jour sur votre essai Pro" : `Il reste ${d} jours sur votre essai Pro`,
@@ -28,6 +30,8 @@ const COPY: Record<string, {
     pilotLink: "Programme pilote gratuit →",
     budgetNudge: "Budget limité (ONG, pays à revenu faible ou moyen) ?",
     budgetLink: "Nous écrire →",
+    pilotCta: "Répondre pour en discuter →",
+    pilotDesc: (org) => `Pour continuer au-delà du pilote pour ${org}, répondez à cet email — on cale un tarif Team adapté.`,
   },
   en: {
     title: (d) => d <= 0 ? "Your Pro trial ends today" : d === 1 ? "1 day left on your Pro trial" : `${d} days left on your Pro trial`,
@@ -38,6 +42,8 @@ const COPY: Record<string, {
     pilotLink: "Free institutional pilot →",
     budgetNudge: "Limited budget (NGO, low or middle-income country)?",
     budgetLink: "Get in touch →",
+    pilotCta: "Reply to discuss →",
+    pilotDesc: (org) => `To continue beyond the pilot for ${org}, just reply to this email — we'll set up a Team plan that fits.`,
   },
   es: {
     title: (d) => d <= 0 ? "Su prueba Pro termina hoy" : d === 1 ? "Queda 1 día en su prueba Pro" : `Quedan ${d} días en su prueba Pro`,
@@ -48,6 +54,8 @@ const COPY: Record<string, {
     pilotLink: "Piloto institucional gratuito →",
     budgetNudge: "¿Presupuesto limitado (ONG, país de renta baja o media)?",
     budgetLink: "Escríbanos →",
+    pilotCta: "Responder para hablar →",
+    pilotDesc: (org) => `Para continuar más allá del piloto para ${org}, responda a este email.`,
   },
   ar: {
     title: (d) => d <= 0 ? "تجربتك Pro تنتهي اليوم" : d === 1 ? "يوم واحد متبقٍّ في تجربة Pro" : `${d} أيام متبقية في تجربة Pro`,
@@ -58,6 +66,8 @@ const COPY: Record<string, {
     pilotLink: "← برنامج تجريبي مؤسسي مجاني",
     budgetNudge: "ميزانية محدودة (منظمة غير حكومية، دولة منخفضة أو متوسطة الدخل)؟",
     budgetLink: "← راسلنا",
+    pilotCta: "← الرد للمناقشة",
+    pilotDesc: (org) => `للاستمرار بعد التجربة لـ ${org}، فقط ردوا على هذا البريد.`,
   },
   id: {
     title: (d) => d <= 0 ? "Uji coba Pro Anda berakhir hari ini" : d === 1 ? "Sisa 1 hari uji coba Pro Anda" : `Sisa ${d} hari uji coba Pro Anda`,
@@ -68,6 +78,8 @@ const COPY: Record<string, {
     pilotLink: "Program pilot institusional gratis →",
     budgetNudge: "Anggaran terbatas (LSM, negara berpenghasilan rendah atau menengah)?",
     budgetLink: "Hubungi kami →",
+    pilotCta: "Balas untuk berdiskusi →",
+    pilotDesc: (org) => `Untuk melanjutkan setelah pilot untuk ${org}, balas email ini saja.`,
   },
 };
 
@@ -77,9 +89,11 @@ interface Props {
   trialEndsAt: string;   // ISO timestamp
   locale: string;
   hasBilling: boolean;   // true = has Stripe customer_id (billing portal works)
+  isPilot?: boolean;
+  pilotOrganization?: string | null;
 }
 
-export default function TrialBanner({ trialEndsAt, locale, hasBilling }: Props) {
+export default function TrialBanner({ trialEndsAt, locale, hasBilling, isPilot = false, pilotOrganization = null }: Props) {
   // BUG FIX: this used to be `useMemo(..., [trialEndsAt])`. Since trialEndsAt
   // is a fixed timestamp that never changes during a trial, that memo computed
   // Date.now() exactly ONCE on mount and then froze forever — a banner opened
@@ -109,6 +123,10 @@ export default function TrialBanner({ trialEndsAt, locale, hasBilling }: Props) 
     : { border: "border-blue-700/40",   bg: "from-blue-950/50 via-blue-900/20",  icon: "text-blue-400",   dot: "bg-blue-400" };
 
   const Icon = isCritical ? AlertTriangle : Zap;
+  const pilotOrg = pilotOrganization || (locale === "fr" ? "votre organisation" : "your organization");
+  const pilotMailtoHref = "mailto:david.deheunynck@gmail.com?subject=" + encodeURIComponent(
+    locale === "fr" ? `Suite du pilote — ${pilotOrg}` : `Following up on our pilot — ${pilotOrg}`
+  );
 
   return (
     <div
@@ -135,9 +153,19 @@ export default function TrialBanner({ trialEndsAt, locale, hasBilling }: Props) 
 
         {/* CTA — billing portal for Stripe customers, checkout for trial-only users */}
         <div className="shrink-0 flex flex-col items-end gap-1.5">
-          <div onClick={() => track("trial_banner_cta", { days_left: daysLeft, has_billing: hasBilling, locale })}>
+          <div onClick={() => track("trial_banner_cta", { days_left: daysLeft, has_billing: hasBilling, is_pilot: isPilot, locale })}>
             {hasBilling ? (
               <BillingPortalButton locale={locale} label={c.cta} />
+            ) : isPilot ? (
+              // Institutional pilot — human conversation about a Team plan,
+              // not a self-serve individual Pro checkout (matches the framing
+              // already used in the trial-ending / trial-value-nudge emails).
+              <a
+                href={pilotMailtoHref}
+                className="flex items-center gap-2 bg-red-600 hover:bg-red-500 text-white font-semibold px-5 py-2.5 rounded-lg transition-colors text-sm"
+              >
+                {c.pilotCta}
+              </a>
             ) : (
               <CheckoutButton
                 plan="pro"
@@ -147,7 +175,12 @@ export default function TrialBanner({ trialEndsAt, locale, hasBilling }: Props) 
               />
             )}
           </div>
-          {!isCritical && (
+          {isPilot && !isCritical && (
+            <p className="text-xs text-gray-600 max-w-[220px] text-right">
+              {c.pilotDesc(pilotOrg)}
+            </p>
+          )}
+          {!isPilot && !isCritical && (
             <>
               <p className="text-xs text-gray-600">
                 {c.pilotNudge}{" "}

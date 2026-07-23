@@ -10,6 +10,8 @@ const SKIP_PATHS = ["/login", "/signup", "/success", "/reset-password", "/forgot
 interface TrialData {
   trialEndsAt: string;
   hasBilling: boolean;
+  isPilot: boolean;
+  pilotOrganization: string | null;
 }
 
 export default function TrialBannerLoader({ locale }: { locale: string }) {
@@ -25,7 +27,7 @@ export default function TrialBannerLoader({ locale }: { locale: string }) {
       if (!session) return;
       const { data: profile } = await supabase
         .from("profiles")
-        .select("plan, trial_ends_at, stripe_subscription_id")
+        .select("plan, trial_ends_at, stripe_subscription_id, is_pilot, pilot_organization")
         .eq("id", session.user.id)
         .single();
 
@@ -37,10 +39,23 @@ export default function TrialBannerLoader({ locale }: { locale: string }) {
       if (!isPaid || !trialEndsAt || hasSubscription) return;
       if (new Date(trialEndsAt).getTime() <= Date.now()) return;
 
-      setTrial({ trialEndsAt, hasBilling: false });
+      setTrial({
+        trialEndsAt,
+        hasBilling: false,
+        isPilot: !!profile?.is_pilot,
+        pilotOrganization: (profile?.pilot_organization as string | null) ?? null,
+      });
     });
   }, []);
 
   if (!trial || skipBanner) return null;
-  return <TrialBanner trialEndsAt={trial.trialEndsAt} locale={locale} hasBilling={trial.hasBilling} />;
+  return (
+    <TrialBanner
+      trialEndsAt={trial.trialEndsAt}
+      locale={locale}
+      hasBilling={trial.hasBilling}
+      isPilot={trial.isPilot}
+      pilotOrganization={trial.pilotOrganization}
+    />
+  );
 }

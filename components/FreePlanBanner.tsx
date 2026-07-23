@@ -11,6 +11,8 @@ const COPY: Record<string, {
   titleExpired: string; ctaExpired: string; trialExpired: string;
   missed: (n: number) => string;
   missedNames: (names: string) => string;
+  pilotCta: string;
+  pilotDesc: (org: string) => string;
 }> = {
   fr: {
     title: "Passez à Pro — essai 14 jours gratuit",
@@ -22,6 +24,8 @@ const COPY: Record<string, {
     titleExpired: "Votre essai est terminé — passez à Pro",
     ctaExpired: "S'abonner à Pro →",
     trialExpired: `À partir de ${PRICE_DISPLAY.fr.proMonthly}/mois ou ${PRICE_DISPLAY.fr.proAnnual}/an`,
+    pilotCta: "Répondre pour en discuter →",
+    pilotDesc: (org) => `Pour continuer au-delà du pilote pour ${org}, répondez à l'email reçu.`,
   },
   en: {
     title: "Upgrade to Pro — 14-day free trial",
@@ -33,6 +37,8 @@ const COPY: Record<string, {
     titleExpired: "Your trial ended — subscribe to keep Pro access",
     ctaExpired: "Subscribe to Pro →",
     trialExpired: `From ${PRICE_DISPLAY.en_eur.proMonthly}/month or ${PRICE_DISPLAY.en_eur.proAnnual}/year`,
+    pilotCta: "Reply to discuss →",
+    pilotDesc: (org) => `To continue beyond the pilot for ${org}, just reply to the email you received.`,
   },
   es: {
     title: "Pasa a Pro — 14 días de prueba gratis",
@@ -44,6 +50,8 @@ const COPY: Record<string, {
     titleExpired: "Tu prueba ha terminado — suscríbete a Pro",
     ctaExpired: "Suscribirse a Pro →",
     trialExpired: `Desde ${PRICE_DISPLAY.es.proMonthly}/mes o ${PRICE_DISPLAY.es.proAnnual}/año`,
+    pilotCta: "Responder para hablar →",
+    pilotDesc: (org) => `Para continuar más allá del piloto para ${org}, responda al email recibido.`,
   },
   ar: {
     title: "انتقل إلى Pro — تجربة 14 يوماً مجاناً",
@@ -55,6 +63,8 @@ const COPY: Record<string, {
     titleExpired: "انتهت تجربتك — اشترك في Pro للاستمرار",
     ctaExpired: "← الاشتراك في Pro",
     trialExpired: `ابتداءً من ${PRICE_DISPLAY.ar.proMonthly} شهرياً أو ${PRICE_DISPLAY.ar.proAnnual} سنوياً`,
+    pilotCta: "← الرد للمناقشة",
+    pilotDesc: (org) => `للاستمرار بعد التجربة لـ ${org}، فقط ردوا على البريد الذي تلقيتموه.`,
   },
   id: {
     title: "Upgrade ke Pro — uji coba 14 hari gratis",
@@ -66,6 +76,8 @@ const COPY: Record<string, {
     titleExpired: "Uji coba Anda berakhir — langganan Pro untuk melanjutkan",
     ctaExpired: "Berlangganan Pro →",
     trialExpired: `Mulai ${PRICE_DISPLAY.id.proMonthly}/bulan atau ${PRICE_DISPLAY.id.proAnnual}/tahun`,
+    pilotCta: "Balas untuk berdiskusi →",
+    pilotDesc: (org) => `Untuk melanjutkan setelah pilot untuk ${org}, balas email yang Anda terima.`,
   },
 };
 
@@ -79,11 +91,15 @@ export default function FreePlanBanner({
   trialExpired = false,
   missedAlerts = 0,
   missedAlertNames = [],
+  isPilot = false,
+  pilotOrganization = null,
 }: {
   locale: string;
   trialExpired?: boolean;
   missedAlerts?: number;
   missedAlertNames?: MissedAlertName[];
+  isPilot?: boolean;
+  pilotOrganization?: string | null;
 }) {
   const [dismissed, setDismissed] = useState(true);
   useEffect(() => {
@@ -110,6 +126,10 @@ export default function FreePlanBanner({
   const title = trialExpired ? c.titleExpired : c.title;
   const cta   = trialExpired ? c.ctaExpired   : c.cta;
   const note  = trialExpired ? c.trialExpired  : c.trial;
+  const pilotOrg = pilotOrganization || (locale === "fr" ? "votre organisation" : "your organization");
+  const pilotMailtoHref = "mailto:david.deheunynck@gmail.com?subject=" + encodeURIComponent(
+    locale === "fr" ? `Suite du pilote — ${pilotOrg}` : `Following up on our pilot — ${pilotOrg}`
+  );
 
   return (
     <div
@@ -135,14 +155,28 @@ export default function FreePlanBanner({
           ) : null}
         </div>
         <div className="flex items-center gap-3 shrink-0">
-          <div onClick={() => track("free_banner_cta", { locale, trialExpired })}>
-            <CheckoutButton
-              plan="pro"
-              locale={locale}
-              label={cta}
-              className="text-xs bg-red-600 hover:bg-red-500 text-white font-semibold px-4 py-2 rounded-lg transition-colors whitespace-nowrap"
-            />
-            <p className="text-center text-xs text-gray-600 mt-1">{note}</p>
+          <div onClick={() => track("free_banner_cta", { locale, trialExpired, is_pilot: isPilot })}>
+            {isPilot ? (
+              <>
+                <a
+                  href={pilotMailtoHref}
+                  className="text-xs bg-red-600 hover:bg-red-500 text-white font-semibold px-4 py-2 rounded-lg transition-colors whitespace-nowrap"
+                >
+                  {c.pilotCta}
+                </a>
+                <p className="text-center text-xs text-gray-600 mt-1 max-w-[180px]">{c.pilotDesc(pilotOrg)}</p>
+              </>
+            ) : (
+              <>
+                <CheckoutButton
+                  plan="pro"
+                  locale={locale}
+                  label={cta}
+                  className="text-xs bg-red-600 hover:bg-red-500 text-white font-semibold px-4 py-2 rounded-lg transition-colors whitespace-nowrap"
+                />
+                <p className="text-center text-xs text-gray-600 mt-1">{note}</p>
+              </>
+            )}
           </div>
           <button
             onClick={dismiss}
