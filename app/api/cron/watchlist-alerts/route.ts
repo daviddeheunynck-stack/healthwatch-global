@@ -10,6 +10,7 @@ import { errorMessage } from "@/lib/error";
 import * as Sentry from "@sentry/nextjs";
 import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
 import { notifyMobile } from "@/lib/mobile-notify";
+import { resolvedPlan } from "@/lib/resolved-plan";
 
 export const dynamic = "force-dynamic";
 
@@ -107,13 +108,13 @@ export async function GET(req: NextRequest) {
     const profile = profileMap.get(entry.user_id);
     if (!profile?.email) { unchanged++; continue; }
 
-    // Only Pro+ users with an active subscription (not expired-trial)
+    // Only Pro+ users with an active subscription (not expired-trial). The old
+    // isExpiredTrial check only ever fired for plan==="pro" — a starter/team/
+    // enterprise trial that expired without payment kept getting watchlist
+    // alerts forever, the same paid-feature leak fixed today in the other
+    // alert crons. resolvedPlan() covers every plan value uniformly.
     if (!["starter", "pro", "team", "enterprise"].includes(profile.plan)) { unchanged++; continue; }
-    const isExpiredTrial = profile.plan === "pro"
-      && !profile.stripe_subscription_id
-      && !!profile.trial_ends_at
-      && new Date(profile.trial_ends_at) < new Date();
-    if (isExpiredTrial) { unchanged++; continue; }
+    if (resolvedPlan(profile) === "free") { unchanged++; continue; }
 
     const logKey = `${entry.user_id}:${entry.outbreak_id}`;
     const prevLog = logMap.get(logKey);
