@@ -110,7 +110,7 @@ export async function GET(req: NextRequest) {
     // ── J+32 : Pilot conversion — 3 days left → upgrade to Team ─────────────
     supabase
       .from("profiles")
-      .select("id, email, plan, locale, trial_ends_at, display_filters")
+      .select("id, email, plan, locale, trial_ends_at, display_filters, pilot_organization")
       .eq("plan", "pro")
       .not("trial_ends_at", "is", null)
       .lt("trial_ends_at", j32WindowEnd)
@@ -237,7 +237,7 @@ export async function GET(req: NextRequest) {
     if (!user.email || hasOptedOut(user)) continue;
     try {
       const locale = user.locale || "en";
-      const { subject, html } = buildPilotConversionEmail(locale, user.id);
+      const { subject, html } = buildPilotConversionEmail(locale, user.id, (user.pilot_organization as string | null) ?? null);
       if (isRealProduction) {
         await sendEmail(user.email, subject, html);
       }

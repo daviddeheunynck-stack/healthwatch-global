@@ -706,7 +706,7 @@ const PILOT_CONVERSION_CONTENT: Record<string, {
     banner: "⏳ Programme Pilot — 3 jours restants",
     subject: "Votre accès Pilot expire dans 3 jours — passez à l'offre Team",
     headline: "Votre programme Pilot touche à sa fin.",
-    intro: "Vous avez bénéficié d'un accès complet pendant 32 jours. Dans 72 heures, votre compte sera limité au plan gratuit si vous ne souscrivez pas.",
+    intro: "Vous avez bénéficié d'un accès complet pendant 32 jours. Dans 72 heures, votre compte sera limité au plan gratuit si vous ne souscrivez pas. Répondez à cet email pour continuer — on cale un tarif Team adapté (à partir de 149€/mois pour 5 sièges).",
     loseTitle: "Ce que votre équipe perd à l'expiration",
     loseItems: [
       "📊 Chiffres exacts — cas confirmés et décès (retour au floutage)",
@@ -716,7 +716,7 @@ const PILOT_CONVERSION_CONTENT: Record<string, {
       "🔗 Intégrations Slack et Teams",
       "🪝 Webhooks et API outbreaks",
     ],
-    ctaLabel: `Passer à l'offre Team — 149 €/mois →`,
+    ctaLabel: `Répondre pour continuer →`,
     altText: "Tarif institutionnel, ONG ou gouvernemental disponible.",
     altLink: "Contactez-nous pour un devis →",
     invoiceText: "Pas de procurement requis — facturation sur devis disponible.",
@@ -728,7 +728,7 @@ const PILOT_CONVERSION_CONTENT: Record<string, {
     banner: "⏳ Pilot Programme — 3 days remaining",
     subject: "Your Pilot access expires in 3 days — continue with Team",
     headline: "Your Pilot programme is ending.",
-    intro: "You've had full access for 32 days. In 72 hours, your account will be limited to the free plan unless you subscribe.",
+    intro: "You've had full access for 32 days. In 72 hours, your account will be limited to the free plan unless you subscribe. Reply to this email to continue — we'll set up a Team plan that fits (from €149/month for 5 seats).",
     loseTitle: "What your team loses at expiry",
     loseItems: [
       "📊 Exact figures — confirmed cases and deaths (back to blurred data)",
@@ -738,7 +738,7 @@ const PILOT_CONVERSION_CONTENT: Record<string, {
       "🔗 Slack and Teams integrations",
       "🪝 Webhooks and outbreak API",
     ],
-    ctaLabel: `Continue with Team — €149/month →`,
+    ctaLabel: `Reply to continue →`,
     altText: "Institutional, NGO or government pricing available.",
     altLink: "Contact us for a quote →",
     invoiceText: "No procurement process required — invoice-based billing available.",
@@ -750,7 +750,7 @@ const PILOT_CONVERSION_CONTENT: Record<string, {
     banner: "⏳ Programa Pilot — 3 días restantes",
     subject: "Su acceso Pilot expira en 3 días — continúe con Team",
     headline: "Su programa Pilot está llegando a su fin.",
-    intro: "Ha tenido acceso completo durante 32 días. En 72 horas, su cuenta se limitará al plan gratuito si no se suscribe.",
+    intro: "Ha tenido acceso completo durante 32 días. En 72 horas, su cuenta se limitará al plan gratuito si no se suscribe. Responda a este email para continuar — buscamos juntos un plan Team adaptado (desde 149€/mes para 5 puestos).",
     loseTitle: "Lo que su equipo pierde al vencer",
     loseItems: [
       "📊 Cifras exactas — casos confirmados y fallecidos (vuelta a datos borrosos)",
@@ -760,7 +760,7 @@ const PILOT_CONVERSION_CONTENT: Record<string, {
       "🔗 Integraciones Slack y Teams",
       "🪝 Webhooks y API de brotes",
     ],
-    ctaLabel: `Continuar con Team — €149/mes →`,
+    ctaLabel: `Responder para continuar →`,
     altText: "Precios institucionales, ONG o gubernamentales disponibles.",
     altLink: "Contáctenos para un presupuesto →",
     invoiceText: "Sin proceso de compras — facturación bajo demanda disponible.",
@@ -772,7 +772,7 @@ const PILOT_CONVERSION_CONTENT: Record<string, {
     banner: "⏳ البرنامج التجريبي — 3 أيام متبقية",
     subject: "وصولك التجريبي ينتهي خلال 3 أيام — استمر مع خطة Team",
     headline: "يقترب برنامجك التجريبي من نهايته.",
-    intro: "تمتّعت بوصول كامل لمدة 32 يوماً. خلال 72 ساعة، سيُقيَّد حسابك بالخطة المجانية إذا لم تشترك.",
+    intro: "تمتّعت بوصول كامل لمدة 32 يوماً. خلال 72 ساعة، سيُقيَّد حسابك بالخطة المجانية إذا لم تشترك. ردّ على هذا البريد للاستمرار — سنحدد معاً خطة Team مناسبة (ابتداءً من 149€/شهر لـ 5 مقاعد).",
     loseTitle: "ما الذي سيفقده فريقك عند الانتهاء",
     loseItems: [
       "📊 الأرقام الدقيقة للحالات والوفيات (عودة إلى البيانات المطموسة)",
@@ -782,7 +782,7 @@ const PILOT_CONVERSION_CONTENT: Record<string, {
       "🔗 تكاملات Slack وTeams",
       "🪝 Webhooks وواجهة برمجة التفشيات",
     ],
-    ctaLabel: `← الاستمرار مع Team — €149/شهر`,
+    ctaLabel: `← الرد للاستمرار`,
     altText: "أسعار مؤسسية ومنظمات غير حكومية وحكومية متاحة.",
     altLink: "← اتصل بنا للحصول على عرض",
     invoiceText: "لا إجراءات شراء مطلوبة — الفوترة بالفاتورة متاحة.",
@@ -794,7 +794,7 @@ const PILOT_CONVERSION_CONTENT: Record<string, {
     banner: "⏳ Program Pilot — 3 hari tersisa",
     subject: "Akses Pilot Anda berakhir dalam 3 hari — lanjutkan dengan Team",
     headline: "Program Pilot Anda hampir berakhir.",
-    intro: "Anda telah memiliki akses penuh selama 32 hari. Dalam 72 jam, akun Anda akan dibatasi ke paket gratis jika tidak berlangganan.",
+    intro: "Anda telah memiliki akses penuh selama 32 hari. Dalam 72 jam, akun Anda akan dibatasi ke paket gratis jika tidak berlangganan. Balas email ini untuk melanjutkan — kami akan menyiapkan paket Team yang sesuai (mulai €149/bulan untuk 5 kursi).",
     loseTitle: "Yang akan hilang dari tim Anda saat berakhir",
     loseItems: [
       "📊 Angka tepat — kasus terkonfirmasi dan kematian (kembali ke data dikaburkan)",
@@ -804,7 +804,7 @@ const PILOT_CONVERSION_CONTENT: Record<string, {
       "🔗 Integrasi Slack dan Teams",
       "🪝 Webhook dan API wabah",
     ],
-    ctaLabel: `Lanjutkan dengan Team — €149/bulan →`,
+    ctaLabel: `Balas untuk melanjutkan →`,
     altText: "Harga institusional, LSM, atau pemerintah tersedia.",
     altLink: "Hubungi kami untuk penawaran →",
     invoiceText: "Tidak perlu proses pengadaan — penagihan berbasis faktur tersedia.",
@@ -814,9 +814,19 @@ const PILOT_CONVERSION_CONTENT: Record<string, {
   },
 };
 
-export function buildPilotConversionEmail(locale: string, userId: string): { subject: string; html: string } {
+export function buildPilotConversionEmail(locale: string, userId: string, organization: string | null = null): { subject: string; html: string } {
   const c = PILOT_CONVERSION_CONTENT[locale] ?? PILOT_CONVERSION_CONTENT.en;
-  const pricingUrl = `https://healthwatch-global.com/${locale}/pricing`;
+  const org = organization || (locale === "fr" ? "votre organisation" : "your organization");
+  // Every recipient of this email is, by construction (the J+32 cohort query
+  // in app/api/cron/onboarding-sequence/route.ts only matches genuine pilot
+  // trials), an actual institutional pilot — so the primary CTA goes straight
+  // to a human conversation, not through /pricing. Routing through /pricing
+  // would now hit the same is_pilot branch as every other upgrade surface
+  // (see PricingCards.tsx) and just redirect them back to this same mailto
+  // conversation, one confusing hop later.
+  const ctaMailtoHref = "mailto:david.deheunynck@gmail.com?subject=" + encodeURIComponent(
+    locale === "fr" ? `Suite du pilote — ${org}` : `Following up on our pilot — ${org}`
+  );
   const contactUrl = `https://healthwatch-global.com/${locale}/contact`;
   const unsubUrl   = `https://healthwatch-global.com/api/unsubscribe-signal?id=${encodeURIComponent(userId)}&token=${signUnsubscribeToken(userId)}&locale=${locale}`;
 
@@ -838,7 +848,7 @@ export function buildPilotConversionEmail(locale: string, userId: string): { sub
       </div>
 
       <div style="text-align:center;margin-bottom:16px;">
-        <a href="${pricingUrl}"
+        <a href="${ctaMailtoHref}"
            style="display:inline-block;background:#dc2626;color:white;text-decoration:none;
                   padding:14px 36px;border-radius:8px;font-weight:700;font-size:15px;">
           ${c.ctaLabel}
