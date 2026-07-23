@@ -123,3 +123,57 @@ Audité (via 13 agents Explore en parallèle) les 13 crons `sync-*` qui insèren
 Migration `20260720120000_add_outbreaks_is_backfill.sql` : colonne `NOT NULL DEFAULT FALSE` + rétro-backfill des lignes existantes matchant les mêmes critères. Découverte en testant : les lignes GHO annuelles existantes n'avaient PAS `is_seed=true` de façon fiable (60/91 à `is_seed=false` sur dev) — `is_backfill` ne peut donc pas être déduit après coup de `is_seed`, d'où l'intérêt réel de la nouvelle colonne. Appliqué et vérifié sur dev (111 lignes `is_backfill=true` : 20 USDA + 91 GHO) et sur la vraie prod (52 lignes : 20 USDA + 32 GHO, écart normal entre environnements). Typecheck + lint propres.
 
 **Prochaine étape (2) :** refaire le calcul de délai de reporting en excluant `is_seed=true` OU `is_backfill=true`, restreint aux lignes jamais mises à jour depuis l'insertion (`created_at ≈ updated_at`), et re-tester contre données réelles (dev puis prod) avant tout affichage — voir méthodologie complète dans la mémoire Claude `project_reporting_lag_feature_incremental_build_2026_07_20`. Rien à afficher sur le site tant que cette étape 2 n'est pas faite et re-vérifiée.
+
+---
+
+## 2026-07-22 — Angle mort de couverture signalé par une contact OMS Tchad : choléra/Tchad absent du site (CORRIGÉ le jour même)
+
+**Source du feedback :** Oumaima Mahamat Djarma (infectiologue/épidémiologiste, OMS bureau Tchad, N'Djamena), en DM LinkedIn le 21/07 à 17:31, dans le fil ouvert par la routine `linkedin-hwg-monitoring` :
+> « Pour les remontées des données il ya un canal de reporting standardisé j ai impeu visité le site de healthwatch global aujourd'hui peut etre je n ai pas fait attention mais je n ai pas vue l épidémie de choléra actuel au Tchad »
+
+**Elle avait raison.** Première fois qu'un contact terrain teste réellement la couverture du produit sur son propre pays et remonte un trou. Feedback de très haute valeur : ce n'est pas une idée de fonctionnalité, c'est une vérification externe de l'exactitude des données.
+
+**Diagnostic.** La ligne `Choléra / Tchad` (`06541c4a-6b67-4c2c-a44e-818ba7621d76`) existait mais était `active=false`, figée sur les chiffres du WHO DON579 du 29/08/2025 (776 cas / 53 décès). Elle avait été désactivée le 17/07 (cf. `project_cholera_don579_stale_rows_fixed_2026_07_17`) parce que le Tchad ne figure pas dans la Table 1 du WHO Multi-country Cholera Epidemiological Update #38 (30/06/2026, données au 31/05/2026), donc aucun chiffre récent n'était disponible côté OMS. Cause structurelle : le Tchad n'est pas dans la map `CHOLERA_ISO3` de `sync-who-regional`, donc **aucun cron ne l'alimente** ; la ligne ne pouvait pas se corriger toute seule.
+
+**Ce que ça révèle sur le produit :** quand l'OMS cesse de lister un pays dans son bulletin multi-pays, HWG conclut « plus de données » et désactive, alors que l'épidémie est bien en cours et suivie quotidiennement au niveau national (réunions COUSP). Le produit est aveugle aux foyers suivis uniquement par les autorités nationales quand ils sortent du radar des agrégateurs régionaux. C'est exactement le décalage que les contacts terrain décrivent depuis plusieurs semaines dans les DM, mesuré ici sur un cas réel.
+
+**Correction appliquée le 22/07** (script `scripts/fix-cholera-chad-2026-07-22.mjs`, prod `.env.local.live`) :
+| champ | avant | après |
+|---|---|---|
+| cases | 776 | **129** |
+| deaths | 53 | **4** |
+| date | 2025-08-29 | **2026-07-01** |
+| active | false | **true** |
+| risk_level | high | medium |
+| verification_status | suspected | confirmed |
+| response_phase | monitoring | active_response |
+| source_priority | 3 | 10 (verrou justifié : aucun cron n'alimente le Tchad) |
+| is_seed | true | false |
+| source | WHO DON579 (2025) | Tchadinfos 02/07/2026 (relais ministère/COUSP) |
+
+Source primaire retenue et vérifiée mot pour mot : point épidémiologique de la réunion quotidienne de riposte du **mercredi 1er juillet 2026**, présidée par la secrétaire d'État à la Santé publique et à la Prévention (Dr Mbaïdedji Dekandji Francine), COUSP présenté par Ali Abdraman Abdoulaye : **9 nouveaux cas, cumul 129 cas, 4 décès (2 communautaires, 2 hospitaliers), létalité 3,10 %**, district sanitaire de Karal, province du Hadjer-Lamis. Épidémie confirmée en juin 2026 après détection de *Vibrio cholerae* O1 sérotype Ogawa (16 cas / 1 décès au 16/06). Aucun bilan plus récent publié à la date du 22/07 (vérifié sur l'ensemble des articles choléra 2026 du média).
+https://tchadinfos.com/2026/07/02/cholera-dans-le-district-sanitaire-de-karal-129-cas-et-4-deces-les-autorites-renforcent-la-riposte/
+
+**Vérifié bout en bout** : la page publique `/fr/disease/cholera` affiche désormais « Tchad 129 cas · 4 décès · 1 juil. 2026 (21j) RISQUE MODÉRÉ » en tête des foyers en cours. Champs `description_fr/es/ar/id` remis à `null` pour re-traduction (ils contenaient encore le texte générique du DON579, sans rapport avec la description anglaise).
+
+**⚠️ Gap de couverture découvert au passage, NON traité (décision de scope à prendre par David) :** la **République centrafricaine n'a aucune ligne choléra en base** alors qu'une épidémie y a été officiellement déclarée fin juin 2026 dans les districts de Bimbo et Mbaïki (197 cas / 24 décès notifiés au 28/06/2026, via Tchadinfos citant les autorités centrafricaines). La RCA est pourtant DANS la map `CHOLERA_ISO3` de `sync-who-regional`, donc c'est potentiellement un bug de fetcher et pas seulement un trou de couverture. À investiguer séparément.
+
+**Piste produit de fond :** ajouter Tchad, Congo, RDC, Soudan du Sud et Soudan (les 5 pays du lot verrouillé à prio 10) à un flux d'alimentation, ou accepter que ces lignes soient maintenues à la main et prévoir une alerte de fraîcheur dédiée. Aujourd'hui elles ne vieillissent sous l'œil de personne.
+
+---
+
+## 2026-07-22 — Ebola/RDC affichait 4 jours et 139 décès de retard (CORRIGÉ), effet de bord du fix « phantom Congo » du 21/07
+
+**Déclencheur** : post LinkedIn du **Dr Jean Kaseya, DG d'Africa CDC** (21/07, Extraordinary Summit on Health) : « we have now recorded 900 deaths. Sixty-five days into this outbreak, we already have more than 2,400 confirmed cases ». Ces chiffres étaient nettement au-dessus de ce que HWG affichait, ce qui a déclenché une vérification (politique sociale HWG §8).
+
+**Écart constaté** : ligne `Maladie à virus Ebola / RD Congo` (`bd1c3a46-…`) à **2 124 cas / 828 décès / 390 guéris, date 2026-07-15**, `updated_at` figé au 17/07 21:38. Or la page ECDC de l'épidémie (mise à jour le **21 juillet à 17:00**) donne pour la RDC au **19 juillet 2026** : **2 423 cas confirmés, 967 décès, 469 guéris, 734 hospitalisés en isolement**. Soit **299 cas et 139 décès manquants** sur le foyer phare du produit.
+
+**Cause racine identifiée** : ce n'est ni une session concurrente ni une nouvelle régression de code. Le dernier run de `sync-ecdc-threats` date du **21/07 à 09:01:31 UTC** (vérifié dans `site_config`), soit **avant le déploiement du fix de matcher `95e2db0`** (Ready ~10h00 UTC, cf. `project_ebola_congo_roc_phantom_substring_fixed_2026_07_21`). À ce run, le matcher encore buggé a donc envoyé les chiffres ECDC du 18/07 (2 344/930) sur la **ligne fantôme Congo/RoC** au lieu de la vraie ligne RDC. La ligne fantôme a bien été re-désactivée dans la foulée, mais **personne n'a rattrapé la vraie ligne RDC, restée figée**. Le cron n'a pas tourné depuis, donc l'écart a persisté 4 jours. Le fix de code est correct : le prochain run alimentera la bonne ligne. C'est le rattrapage de l'écart accumulé qui manquait.
+
+**Correction appliquée** (`scripts/fix-ebola-drc-2026-07-22.mjs`, prod) : `cases 2124 → 2423`, `deaths 828 → 967`, `recovered 390 → 469`, `date 2026-07-15 → 2026-07-19`, source basculée du WHO DON613 vers la page ECDC, description réécrite, traductions remises à `null`. **`source_priority` laissé à 5, PAS remonté à 10** : conforme à l'arbitrage explicite de David du 16/07 (`project_ebola_drc_priority10_frozen_no_autofeed_2026_07_16`, « ne pas re-verrouiller à 10 pour protéger : à 10 la ligne ne s'alimente plus du tout, c'est pire »). Le script embarque une garde anti-régression refusant d'écrire des chiffres inférieurs à ceux en base. Écriture confirmée par `.select()` (1 ligne affectée, donc non bloquée par la garde de priorité).
+
+**Vérifié bout en bout** : `/fr/disease/ebola` affiche désormais « RD Congo 2 423 cas · 967 décès · 19 juil. 2026 (3j) RISQUE ÉLEVÉ ».
+
+**⚠️ Leçon générale, à retenir pour les prochains fix de crons** : corriger le code d'un cron ne rattrape pas les données déjà mal écrites entre le bug et le déploiement. Après un fix de matcher/parseur, il faut **explicitement re-vérifier les lignes que le cron aurait dû alimenter pendant la fenêtre de bug**, et pas seulement constater que la ligne fautive a disparu. Ici la ligne fantôme avait bien été neutralisée, ce qui donnait l'impression que l'incident était clos.
+
+**⚠️ Résidu d'affichage non corrigé** : la ligne fantôme `Congo` (2 344 cas, inactive, prio 0) continue d'apparaître dans la section « Historique des épidémies » de `/fr/disease/ebola` et dans « Pays touchés », alors qu'elle ne correspond à aucun foyer réel en République du Congo. La mémoire dit de ne pas la re-signaler comme écart tant qu'elle reste inactive, mais l'historique et la liste des pays sont une surface différente de la carte des foyers actifs. **Décision de suppression laissée à David** (précédent de suppression pure existant : le doublon « Democratic Republic of Congo » du 17/07).
