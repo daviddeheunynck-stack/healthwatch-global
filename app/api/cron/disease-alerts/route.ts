@@ -19,6 +19,14 @@ const clean  = (v: string | undefined) => (v || "").replace(new RegExp("^" + BOM
 const CRON_SECRET  = clean(process.env.CRON_SECRET);
 const BREVO_API_KEY = clean(process.env.BREVO_API_KEY);
 
+// Same reasoning as app/api/cron/regional-alerts/route.ts: a plain "have we
+// ever alerted this user for this outbreak" dedup means a subscriber never
+// hears about that outbreak again even if it escalates or surges later.
+// Re-fire on a real risk_level increase or a >=20% case jump since the last
+// alert we sent this user, instead of going silent forever after one email.
+const RISK_RANK: Record<string, number> = { high: 3, medium: 2, low: 1 };
+const CASE_SURGE_THRESHOLD = 0.20;
+
 function buildDiseaseInAppBody(cases: number | null, riskLevel: string | null, locale: string): string {
   const RISK: Record<string, Record<string, string>> = {
     en: { high: "HIGH risk",     medium: "MEDIUM risk",  low: "LOW risk" },
@@ -125,14 +133,14 @@ async function runDiseaseAlerts(_req: NextRequest, supabase: SupabaseClient) {
     })
   );
 
-  // 4. Fetch already-sent log to avoid duplicates
-  const { data: alreadySent } = await supabase
+  // 4. Fetch prior alert state to detect duplicates vs. real escalations
+  const { data: priorAlerts } = await supabase
     .from("disease_alert_log")
-    .select("user_id, outbreak_id")
+    .select("user_id, outbreak_id, risk_level, cases_at_alert")
     .in("user_id", userIds);
 
-  const sentSet = new Set(
-    (alreadySent ?? []).map((r) => `${r.user_id}:${r.outbreak_id}`)
+  const priorLogMap = new Map(
+    (priorAlerts ?? []).map((r) => [`${r.user_id}:${r.outbreak_id}`, r])
   );
 
   // 5. Send alerts
@@ -143,8 +151,21 @@ async function runDiseaseAlerts(_req: NextRequest, supabase: SupabaseClient) {
     const interestedUsers = diseaseUsers.get(outbreak.disease_en ?? "") ?? [];
 
     for (const userId of interestedUsers) {
-      const logKey = `${userId}:${outbreak.id}`;
-      if (sentSet.has(logKey)) { skipped++; continue; }
+      const logKey    = `${userId}:${outbreak.id}`;
+      const priorLog  = priorLogMap.get(logKey);
+
+      if (priorLog) {
+        const priorRank    = RISK_RANK[priorLog.risk_level ?? ""] ?? 0;
+        const currentRank  = RISK_RANK[outbreak.risk_level ?? ""] ?? 0;
+        const priorCases   = priorLog.cases_at_alert;
+        const currentCases = outbreak.cases;
+        const escalated = currentRank > priorRank;
+        const surged =
+          typeof priorCases === "number" && priorCases > 0 &&
+          typeof currentCases === "number" &&
+          (currentCases - priorCases) / priorCases >= CASE_SURGE_THRESHOLD;
+        if (!escalated && !surged) { skipped++; continue; }
+      }
 
       const profile = profileMap.get(userId);
       if (!profile?.email) { skipped++; continue; }
@@ -170,7 +191,16 @@ async function runDiseaseAlerts(_req: NextRequest, supabase: SupabaseClient) {
         // Log BEFORE sending — prevents duplicate alert if email succeeds but a later batch upsert fails
         const { error: logErr } = await supabase
           .from("disease_alert_log")
-          .upsert([{ user_id: userId, outbreak_id: outbreak.id }], { onConflict: "user_id,outbreak_id" });
+          .upsert(
+            [{
+              user_id:        userId,
+              outbreak_id:    outbreak.id,
+              risk_level:     outbreak.risk_level,
+              cases_at_alert: outbreak.cases ?? null,
+              sent_at:        new Date().toISOString(),
+            }],
+            { onConflict: "user_id,outbreak_id" }
+          );
         if (logErr) {
           console.error(`[disease-alerts] log insert failed for ${userId}/${outbreak.id}:`, errorMessage(logErr));
           skipped++;
