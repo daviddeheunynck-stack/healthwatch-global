@@ -285,6 +285,14 @@ async function runSyncNcdc(_req: NextRequest, supabase: SupabaseClient) {
           results.skipped++;
           continue;
         }
+        // A sitrep dated earlier than the stored row with different numbers was not
+        // caught above (only "unchanged" was) — without this floor a stale re-fetch
+        // could still overwrite a more recent row. Same guard family as sync-who-afro.
+        if (sit.date < existingRow.date) {
+          log.push({ label, status: "skip", detail: `older sitrep (${sit.date}) than existing (${existingRow.date})` });
+          results.skipped++;
+          continue;
+        }
         // .select("id") so a source_priority guard that blocks the write (row now
         // owned by a higher-priority source) is visible as 0 affected rows —
         // without it, a blocked update still returns error: null and was

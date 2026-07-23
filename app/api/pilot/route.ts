@@ -186,10 +186,12 @@ function buildDavidNotification(
   role: string,
   teamSize: string,
   useCase: string,
-  activated: boolean
+  status: "activated" | "no-account" | "already-higher-plan"
 ): string {
-  const statusBadge = activated
+  const statusBadge = status === "activated"
     ? `<div style="display:inline-block;background:#14532d;border:1px solid #16a34a;padding:4px 12px;margin-bottom:20px;"><p style="margin:0;font-size:11px;font-weight:700;color:#86efac;text-transform:uppercase;letter-spacing:.1em;">✅ Accès activé automatiquement</p></div>`
+    : status === "already-higher-plan"
+    ? `<div style="display:inline-block;background:#78350f;border:1px solid #f59e0b;padding:4px 12px;margin-bottom:20px;"><p style="margin:0;font-size:11px;font-weight:700;color:#fcd34d;text-transform:uppercase;letter-spacing:.1em;">⚠️ Compte a déjà un plan payant/team — non modifié, vérifier manuellement</p></div>`
     : `<div style="display:inline-block;background:#7f1d1d;border:1px solid #dc2626;padding:4px 12px;margin-bottom:20px;"><p style="margin:0;font-size:11px;font-weight:700;color:#fca5a5;text-transform:uppercase;letter-spacing:.1em;">⚠️ Compte introuvable — activation manuelle requise</p></div>`;
 
   return `<!DOCTYPE html>
@@ -238,11 +240,13 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const { name, organization, email, role, teamSize, useCase, locale } = await req.json();
+    const { name, organization: rawOrganization, email, role, teamSize, useCase, locale } = await req.json();
 
     if (!name || !email) {
       return NextResponse.json({ error: "Missing fields" }, { status: 400 });
     }
+    // Unauthenticated form — never trust type/length of free-text fields before persisting.
+    const organization = typeof rawOrganization === "string" ? rawOrganization.trim().slice(0, 120) : "";
 
     const supabase = createClient(
       clean(process.env.NEXT_PUBLIC_SUPABASE_URL),
@@ -252,13 +256,19 @@ export async function POST(req: NextRequest) {
     // Look up profile by email
     const { data: profile } = await supabase
       .from("profiles")
-      .select("id, locale")
+      .select("id, locale, plan, stripe_subscription_id")
       .eq("email", email)
       .maybeSingle();
 
     let activated = false;
+    // This form is unauthenticated — anyone who knows a registered user's email can
+    // reach this branch. Never let it downgrade an existing paying customer: a team/
+    // enterprise plan, or any plan backed by an active Stripe subscription, must be
+    // left untouched. Only a free-tier account (no active subscription) is eligible
+    // for the 35-day Pro pilot trial.
+    const higherPlan = profile?.stripe_subscription_id || profile?.plan === "team" || profile?.plan === "enterprise";
 
-    if (profile) {
+    if (profile && !higherPlan) {
       // Activate 35-day Pro trial
       const trialEndsAt = new Date(Date.now() + 35 * 86_400_000).toISOString();
       await supabase
@@ -308,7 +318,7 @@ export async function POST(req: NextRequest) {
         buildConfirmationEmail(name, userLocale)
       );
       activated = true;
-    } else {
+    } else if (!profile) {
       // No account — prompt signup
       const userLocale = (locale as string) || "en";
       const signupSubject: Record<string, string> = {
@@ -325,13 +335,19 @@ export async function POST(req: NextRequest) {
         buildSignupPromptEmail(name, userLocale)
       );
     }
+    // else: profile exists but is already on a paying/team/enterprise plan — leave
+    // it untouched and skip any auto-reply to the applicant; David reviews manually
+    // via the notification below.
 
     // Always notify David
     await sendEmail(
       "david.deheunynck@gmail.com",
       "David Deheunynck",
       `[PILOT 🔴] ${name} — ${organization || email}`,
-      buildDavidNotification(name, organization, email, role, teamSize, useCase, activated),
+      buildDavidNotification(
+        name, organization, email, role, teamSize, useCase,
+        activated ? "activated" : !profile ? "no-account" : "already-higher-plan"
+      ),
       { email, name }
     );
 

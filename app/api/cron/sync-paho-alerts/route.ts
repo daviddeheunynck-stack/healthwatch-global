@@ -63,9 +63,12 @@ const MONTHS: Record<string, string> = {
   jul:"07", aug:"08", sep:"09", oct:"10", nov:"11", dec:"12",
 };
 
-// Americas country names sorted longest-first to avoid prefix collisions
+// Americas country names sorted longest-first to avoid prefix collisions.
+// Excludes aggregate pseudo-countries ("Americas region" etc.) for the same reason
+// AMERICAS_SITREP_KEYS below does: a PAHO alert mentioning the region as an adjective
+// (not a place) must not spawn a phantom "Americas (regional)" outbreak row.
 const AMERICAS_COUNTRIES = Object.entries(COUNTRIES)
-  .filter(([, geo]) => geo.region === "americas")
+  .filter(([, geo]) => geo.region === "americas" && !isAggregateCountry(geo))
   .map(([key]) => key)
   .sort((a, b) => b.length - a.length);
 

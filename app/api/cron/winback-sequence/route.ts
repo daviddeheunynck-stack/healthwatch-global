@@ -7,6 +7,7 @@ import { createClient } from "@supabase/supabase-js";
 import { PRICE_DISPLAY } from "@/lib/pricing";
 import * as Sentry from "@sentry/nextjs";
 import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
+import { signUnsubscribeToken } from "@/lib/unsubscribe-token";
 
 export const dynamic = "force-dynamic";
 
@@ -275,7 +276,7 @@ const COPY_J7: Record<string, {
 function buildEmailJ7(locale: string, userId: string): { subject: string; html: string } {
   const c = COPY_J7[locale] ?? COPY_J7.en;
   const pricingUrl = `https://healthwatch-global.com/${locale}/pricing`;
-  const unsubUrl   = `https://healthwatch-global.com/api/unsubscribe-signal?id=${encodeURIComponent(userId)}&locale=${locale}`;
+  const unsubUrl   = `https://healthwatch-global.com/api/unsubscribe-signal?id=${encodeURIComponent(userId)}&token=${signUnsubscribeToken(userId)}&locale=${locale}`;
 
   const body = `
     <div style="padding:36px 32px;">
@@ -317,7 +318,7 @@ function buildEmail(locale: string, userId: string): { subject: string; html: st
   const c = COPY[locale] ?? COPY.en;
   const pricingUrl = `https://healthwatch-global.com/${locale}/pricing`;
   const pilotUrl   = `https://healthwatch-global.com/${locale}/pilot`;
-  const unsubUrl   = `https://healthwatch-global.com/api/unsubscribe-signal?id=${encodeURIComponent(userId)}&locale=${locale}`;
+  const unsubUrl   = `https://healthwatch-global.com/api/unsubscribe-signal?id=${encodeURIComponent(userId)}&token=${signUnsubscribeToken(userId)}&locale=${locale}`;
 
   const body = `
     <div style="padding:36px 32px;">

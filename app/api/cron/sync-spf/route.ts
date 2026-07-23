@@ -466,6 +466,14 @@ async function runSyncSpf(_req: NextRequest, supabase: SupabaseClient) {
         results.skipped++;
         continue;
       }
+      // An older-dated item with different numbers was not caught above (only
+      // "unchanged" was) — without this floor a stale re-fetch could still
+      // overwrite a more recent row. Same guard family as sync-who-afro/sync-cdc-han.
+      if (item.date < existingRow.date) {
+        log.push({ label, status: "skip", detail: `older report (${item.date}) than existing (${existingRow.date})` });
+        results.skipped++;
+        continue;
+      }
       const updatePayload: Record<string, unknown> = {
         cases, deaths, date: item.date, source: item.url,
         description, risk_level: riskLevel, active: true, source_priority: 5,

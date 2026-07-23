@@ -229,6 +229,7 @@ const PILOT_COPY: Record<string, {
   subject: (org: string) => string;
   subject1: (org: string) => string;
   headline: string;
+  headline1: string;
   intro: (d: string, org: string) => string;
   ctaLabel: string;
   reassurance: string;
@@ -238,6 +239,7 @@ const PILOT_COPY: Record<string, {
     subject:  (org) => `Le pilote HealthWatch de ${org} se termine dans 3 jours`,
     subject1: (org) => `Le pilote HealthWatch de ${org} se termine demain`,
     headline: "Votre pilote institutionnel se termine dans 3 jours.",
+    headline1: "Votre pilote institutionnel se termine demain.",
     intro:    (d, org) => `L'accès Pro de ${esc(org)} expire le <strong>${d}</strong> et repassera automatiquement en gratuit sans action de votre part. Si votre équipe souhaite continuer, répondez à cet email — on prend 15 minutes pour caler un tarif Team adapté à votre organisation (à partir de 149€/mois pour 5 sièges, ajustable).`,
     ctaLabel: "Répondre pour en discuter →",
     reassurance: "Pas de renouvellement automatique, pas de carte bancaire enregistrée pendant le pilote.",
@@ -247,6 +249,7 @@ const PILOT_COPY: Record<string, {
     subject:  (org) => `${org}'s HealthWatch pilot ends in 3 days`,
     subject1: (org) => `${org}'s HealthWatch pilot ends tomorrow`,
     headline: "Your institutional pilot ends in 3 days.",
+    headline1: "Your institutional pilot ends tomorrow.",
     intro:    (d, org) => `${esc(org)}'s Pro access expires on <strong>${d}</strong> and will automatically revert to Free — no action needed on your end. If your team wants to continue, just reply to this email — we'll set up a Team plan that fits your organization (from €149/month for 5 seats, adjustable).`,
     ctaLabel: "Reply to discuss →",
     reassurance: "No auto-renewal, no card on file during the pilot.",
@@ -256,6 +259,7 @@ const PILOT_COPY: Record<string, {
     subject:  (org) => `El piloto de ${org} en HealthWatch termina en 3 días`,
     subject1: (org) => `El piloto de ${org} en HealthWatch termina mañana`,
     headline: "Su piloto institucional termina en 3 días.",
+    headline1: "Su piloto institucional termina mañana.",
     intro:    (d, org) => `El acceso Pro de ${esc(org)} expira el <strong>${d}</strong> y volverá automáticamente al plan gratuito. Si su equipo desea continuar, responda a este email — buscamos juntos un plan Team adaptado (desde 149€/mes para 5 puestos).`,
     ctaLabel: "Responder para hablar →",
     reassurance: "Sin renovación automática, sin tarjeta registrada durante el piloto.",
@@ -265,6 +269,7 @@ const PILOT_COPY: Record<string, {
     subject:  (org) => `ينتهي برنامج ${org} التجريبي خلال 3 أيام`,
     subject1: (org) => `ينتهي برنامج ${org} التجريبي غداً`,
     headline: "ينتهي برنامجكم التجريبي المؤسسي خلال 3 أيام.",
+    headline1: "ينتهي برنامجكم التجريبي المؤسسي غداً.",
     intro:    (d, org) => `ينتهي وصول ${esc(org)} في <strong>${d}</strong> وسيعود تلقائياً إلى الخطة المجانية. إذا رغب فريقكم بالاستمرار، فقط ردوا على هذا البريد.`,
     ctaLabel: "← الرد للمناقشة",
     reassurance: "لا تجديد تلقائي، لا بطاقة مسجلة خلال التجربة.",
@@ -274,6 +279,7 @@ const PILOT_COPY: Record<string, {
     subject:  (org) => `Pilot HealthWatch ${org} berakhir dalam 3 hari`,
     subject1: (org) => `Pilot HealthWatch ${org} berakhir besok`,
     headline: "Pilot institusional Anda berakhir dalam 3 hari.",
+    headline1: "Pilot institusional Anda berakhir besok.",
     intro:    (d, org) => `Akses Pro ${esc(org)} berakhir pada <strong>${d}</strong> dan akan otomatis kembali ke Free. Jika tim Anda ingin melanjutkan, balas email ini saja.`,
     ctaLabel: "Balas untuk berdiskusi →",
     reassurance: "Tanpa perpanjangan otomatis, tanpa kartu selama pilot.",
@@ -364,7 +370,9 @@ export function buildTrialEndingEmail(
   const reassurance = isPilotPending
     ? pc.reassurance
     : (hasPaymentMethod ? rc.reassurance : c.reassurance);
-  const headline = isPilotPending ? pc.headline : c.headline;
+  const headline = isPilotPending
+    ? (daysLeft <= 1 ? pc.headline1 : pc.headline)
+    : c.headline;
   const closing  = isPilotPending ? pc.closing : c.closing;
   const subject  = isPilotPending
     ? (daysLeft <= 1 ? pc.subject1(org) : pc.subject(org))

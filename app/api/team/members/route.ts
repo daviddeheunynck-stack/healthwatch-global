@@ -105,16 +105,25 @@ export async function DELETE(req: NextRequest) {
     return NextResponse.json({ error: "Only the team owner can remove members" }, { status: 403 });
   }
 
-  const { error: removeErr } = await service
+  const { data: removedRows, error: removeErr } = await service
     .from("team_members")
     .delete()
     .eq("team_id", callerProfile.team_id)
-    .eq("user_id", body.userId);
+    .eq("user_id", body.userId)
+    .select("id");
 
   if (removeErr) {
     console.error("[team/members] remove error:", errorMessage(removeErr));
     Sentry.captureException(removeErr, { tags: { route: "team-members" } });
     return NextResponse.json({ error: "Failed to remove member" }, { status: 500 });
+  }
+
+  // A Supabase delete with no matching row is not an error — it just returns an
+  // empty array. Without this check, an owner supplying a userId that isn't
+  // actually on their team would fall through to the unscoped profile update
+  // below and reset an arbitrary account's plan.
+  if (!removedRows || removedRows.length === 0) {
+    return NextResponse.json({ error: "Member not found on this team" }, { status: 404 });
   }
 
   // Reset removed member's plan — preserve if they have an active individual Stripe

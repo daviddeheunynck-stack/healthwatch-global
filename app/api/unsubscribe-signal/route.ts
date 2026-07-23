@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import { verifyUnsubscribeToken } from "@/lib/unsubscribe-token";
 
 export const dynamic = "force-dynamic";
 
@@ -71,11 +72,20 @@ function html(content: string, status: number) {
 
 export async function GET(req: NextRequest) {
   const rawId     = req.nextUrl.searchParams.get("id") ?? "";
+  const token     = req.nextUrl.searchParams.get("token") ?? "";
   const rawLocale = req.nextUrl.searchParams.get("locale") ?? "en";
   const locale    = VALID_LOCALES.has(rawLocale) ? rawLocale : "en";
 
   if (!UUID_RE.test(rawId)) {
     return html(htmlPage(locale, false), 400);
+  }
+  // The id alone used to be treated as a valid credential — anyone who learned
+  // another user's UUID (exposed elsewhere by /api/team/members, /api/org/activity)
+  // could silently flip their display_filters. A handful of links already sent
+  // before this fix will 403 once; every email template generating this URL now
+  // includes the matching token.
+  if (!verifyUnsubscribeToken(rawId, token)) {
+    return html(htmlPage(locale, false), 403);
   }
 
   const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);

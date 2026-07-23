@@ -65,7 +65,12 @@ async function verifyFromDON(url: string): Promise<DONResult | null> {
     const bodyMatch = html.match(
       /(?:sf-content-block|article-content|content-block-article|don-content)([\s\S]{0,8000})/i,
     );
-    const rawText = (bodyMatch ? bodyMatch[1] : html)
+    // Fail closed like the sync-* extractors: if the selector no longer matches,
+    // feeding the full page (nav/header chrome) into extractNumbers would produce
+    // wrong case/death counts instead of the null this function already returns
+    // for "no usable data".
+    if (!bodyMatch) return null;
+    const rawText = bodyMatch[1]
       .replace(/<[^>]+>/g, " ")
       .replace(/\s+/g, " ")
       .trim();
@@ -78,6 +83,15 @@ async function verifyFromDON(url: string): Promise<DONResult | null> {
   } catch {
     return null;
   }
+}
+
+// Rebuilds the English description from the corrected figures — same fix as
+// buildEndemicDescription in sync-endemic-data: a cases/deaths update that leaves
+// description untouched narrates stale numbers in prod indefinitely.
+function buildDataQualityDescription(diseaseEn: string, countryEn: string, cases: number, deaths: number, date: string): string {
+  const casesStr  = cases.toLocaleString("en");
+  const deathsStr = deaths > 0 ? ` and ${deaths.toLocaleString("en")} death${deaths > 1 ? "s" : ""}` : "";
+  return `${diseaseEn} in ${countryEn} — ${casesStr} cumulative case${cases > 1 ? "s" : ""}${deathsStr} reported as of ${date}.`;
 }
 
 // ── Send Brevo email ──────────────────────────────────────────────────────────
@@ -126,6 +140,42 @@ export async function GET(req: NextRequest) {
   }
 }
 
+interface OutbreakRowForFix {
+  id: string;
+  disease: string;
+  disease_en: string | null;
+  country: string;
+  country_en: string | null;
+  date: string;
+  description: string | null;
+}
+
+// Applies a cases/deaths correction with description recompute (+ translation
+// invalidation) in the same write, and reports whether the write actually landed —
+// a source_priority guard blocking the write, or a genuine DB error, must never be
+// silently counted as an applied fix in the admin report.
+async function applyCaseUpdate(
+  supabase: SupabaseClient,
+  row: OutbreakRowForFix,
+  newCases: number,
+  newDeaths: number
+): Promise<{ ok: boolean; error?: string }> {
+  const description = buildDataQualityDescription(
+    row.disease_en ?? row.disease, row.country_en ?? row.country, newCases, newDeaths, row.date
+  );
+  const payload: Record<string, unknown> = { cases: newCases, deaths: newDeaths, description };
+  if (row.description !== description) {
+    payload.description_fr = null;
+    payload.description_es = null;
+    payload.description_ar = null;
+    payload.description_id = null;
+  }
+  const { data, error } = await supabase.from("outbreaks").update(payload).eq("id", row.id).select("id");
+  if (error) return { ok: false, error: error.message };
+  if (!data || data.length === 0) return { ok: false, error: "update blocked (0 lignes affectées)" };
+  return { ok: true };
+}
+
 async function runDataQuality(_req: NextRequest, supabase: SupabaseClient) {
   const today    = new Date().toISOString().split("T")[0];
   const yesterday = new Date(Date.now() - 86_400_000).toISOString().split("T")[0];
@@ -134,7 +184,7 @@ async function runDataQuality(_req: NextRequest, supabase: SupabaseClient) {
   // ── 1. Load active rows ───────────────────────────────────────────────────
   const { data: rows, error: rowsErr } = await supabase
     .from("outbreaks")
-    .select("id, disease, disease_en, country, country_en, cases, deaths, date, source, is_seed, is_pheic, source_priority")
+    .select("id, disease, disease_en, country, country_en, cases, deaths, date, source, is_seed, is_pheic, source_priority, description")
     .eq("active", true);
 
   if (rowsErr) return NextResponse.json({ error: rowsErr.message }, { status: 500 });
@@ -210,27 +260,31 @@ async function runDataQuality(_req: NextRequest, supabase: SupabaseClient) {
 
     if (type === "deaths_gt_cases") {
       if (don && don.cases > 0 && don.deaths <= don.cases) {
-        await supabase.from("outbreaks").update({ cases: don.cases, deaths: don.deaths }).eq("id", row.id);
-        fixes.push({ label, before: `${row.cases}c/${row.deaths}d`, after: `${don.cases}c/${don.deaths}d` });
+        const r = await applyCaseUpdate(supabase, row, don.cases, don.deaths);
+        if (r.ok) fixes.push({ label, before: `${row.cases}c/${row.deaths}d`, after: `${don.cases}c/${don.deaths}d` });
+        else needsReview.push({ label, detail: `${a.detail} — échec DB (${r.error})` });
       } else if (!don) {
         // No DON to verify — conservative fix: cap deaths at cases value
-        await supabase.from("outbreaks").update({ deaths: row.cases }).eq("id", row.id);
-        fixes.push({ label, before: `${row.cases}c/${row.deaths}d`, after: `${row.cases}c/${row.cases}d (décès plafonnés, DON inaccessible)` });
+        const r = await applyCaseUpdate(supabase, row, row.cases, row.cases);
+        if (r.ok) fixes.push({ label, before: `${row.cases}c/${row.deaths}d`, after: `${row.cases}c/${row.cases}d (décès plafonnés, DON inaccessible)` });
+        else needsReview.push({ label, detail: `${a.detail} — échec DB (${r.error})` });
       } else {
         needsReview.push({ label, detail: `${a.detail} — DON ambigu (${don.cases}c/${don.deaths}d)` });
       }
     } else if (type === "zero_data") {
       if (don && don.cases > 0) {
-        await supabase.from("outbreaks").update({ cases: don.cases, deaths: don.deaths }).eq("id", row.id);
-        fixes.push({ label, before: "0c/0d", after: `${don.cases}c/${don.deaths}d` });
+        const r = await applyCaseUpdate(supabase, row, don.cases, don.deaths);
+        if (r.ok) fixes.push({ label, before: "0c/0d", after: `${don.cases}c/${don.deaths}d` });
+        else needsReview.push({ label, detail: `0/0 — échec DB (${r.error})` });
       } else {
         needsReview.push({ label, detail: `0/0 — DON ${don ? "ne confirme pas de chiffres" : "inaccessible"}` });
       }
     } else if (type === "large_drop") {
       if (don && snap && don.cases >= snap.cases * 0.7) {
         // DON confirms the old level — today's sync parsed wrong
-        await supabase.from("outbreaks").update({ cases: don.cases, deaths: don.deaths }).eq("id", row.id);
-        fixes.push({ label, before: `${row.cases}c (chute)`, after: `${don.cases}c (DON confirme)` });
+        const r = await applyCaseUpdate(supabase, row, don.cases, don.deaths);
+        if (r.ok) fixes.push({ label, before: `${row.cases}c (chute)`, after: `${don.cases}c (DON confirme)` });
+        else needsReview.push({ label, detail: `${a.detail} — échec DB (${r.error})` });
       } else if (don && don.cases <= row.cases * 1.2) {
         // DON confirms the new lower value — legitimate decline
         needsReview.push({ label, detail: `${a.detail} — DON confirme le nouveau chiffre, baisse réelle ?` });
@@ -240,8 +294,9 @@ async function runDataQuality(_req: NextRequest, supabase: SupabaseClient) {
     } else if (type === "spike") {
       if (don && snap && don.cases <= snap.cases * 2) {
         // DON doesn't support the spike — parsing error, revert to snapshot
-        await supabase.from("outbreaks").update({ cases: snap.cases, deaths: snap.deaths }).eq("id", row.id);
-        fixes.push({ label, before: `${row.cases}c (spike)`, after: `${snap.cases}c (restauré depuis snapshot)` });
+        const r = await applyCaseUpdate(supabase, row, snap.cases, snap.deaths);
+        if (r.ok) fixes.push({ label, before: `${row.cases}c (spike)`, after: `${snap.cases}c (restauré depuis snapshot)` });
+        else needsReview.push({ label, detail: `${a.detail} — échec DB (${r.error})` });
       } else {
         needsReview.push({ label, detail: `${a.detail} — ${don ? "DON ambigu" : "DON inaccessible"}` });
       }

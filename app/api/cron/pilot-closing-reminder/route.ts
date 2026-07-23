@@ -153,6 +153,7 @@ async function runPilotClosingReminder(supabase: SupabaseClient) {
 
   const eligible = pilots.filter(p => !!p.email && !!p.trial_ends_at);
   let sent = 0;
+  let skippedNoKey = 0;
 
   if (eligible.length > 0) {
     const html = buildReminderEmail(eligible.map(p => ({
@@ -164,9 +165,12 @@ async function runPilotClosingReminder(supabase: SupabaseClient) {
 
     try {
       if (isRealProduction) {
-        await sendEmail("david.deheunynck@gmail.com", subject, html);
+        const ok = await sendEmail("david.deheunynck@gmail.com", subject, html);
+        if (ok) sent = eligible.length;
+        else skippedNoKey = eligible.length;
+      } else {
+        sent = eligible.length;
       }
-      sent = eligible.length;
     } catch (err) {
       console.error("[pilot-closing-reminder] send failed:", err);
       Sentry.captureException(err, { tags: { cron: "pilot-closing-reminder" } });
@@ -176,6 +180,6 @@ async function runPilotClosingReminder(supabase: SupabaseClient) {
     }
   }
 
-  await logCronRun(supabase, "pilot-closing-reminder", "ok", sent);
+  await logCronRun(supabase, "pilot-closing-reminder", skippedNoKey > 0 ? "error" : "ok", sent);
   return NextResponse.json({ sent, total: pilots.length });
 }

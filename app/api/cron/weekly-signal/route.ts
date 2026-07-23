@@ -3,6 +3,7 @@ import { createClient } from "@supabase/supabase-js";
 import * as Sentry from "@sentry/nextjs";
 import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
 import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
+import { signUnsubscribeToken } from "@/lib/unsubscribe-token";
 
 export const dynamic = "force-dynamic";
 
@@ -207,7 +208,7 @@ export async function GET(req: NextRequest) {
     if (filters?.no_weekly_signal) continue;
 
     const locale = user.locale ?? "en";
-    const unsubUrl = `https://healthwatch-global.com/api/unsubscribe-signal?id=${encodeURIComponent(user.id)}&locale=${locale}`;
+    const unsubUrl = `https://healthwatch-global.com/api/unsubscribe-signal?id=${encodeURIComponent(user.id)}&token=${signUnsubscribeToken(user.id)}&locale=${locale}`;
     const html = buildHtml(
       outbreaks,
       locale,

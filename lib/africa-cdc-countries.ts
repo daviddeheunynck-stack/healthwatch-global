@@ -74,7 +74,7 @@ export function findMentionedAfricanCountries(text: string): string[] {
   const seenKey   = new Map<string, string>();  // canonical name_en -> output string already recorded
 
   for (const term of AFRICA_COUNTRY_TERMS) {
-    const idx = masked.indexOf(term.search);
+    let idx = masked.indexOf(term.search);
     if (idx === -1) continue;
 
     if (!seenKey.has(term.canonical)) seenKey.set(term.canonical, term.output);
@@ -82,8 +82,14 @@ export function findMentionedAfricanCountries(text: string): string[] {
     const prev = positions.get(key);
     if (prev === undefined || idx < prev) positions.set(key, idx);
 
-    // Blank the matched span so shorter substrings can't re-match inside it.
-    masked = masked.slice(0, idx) + " ".repeat(term.search.length) + masked.slice(idx + term.search.length);
+    // Blank EVERY occurrence of this term, not just the first — otherwise a
+    // repeated mention (e.g. "Democratic Republic of the Congo" named twice)
+    // leaves the second instance unmasked, letting a shorter substring term
+    // ("Congo" / Republic of Congo) re-match inside it later in the loop.
+    while (idx !== -1) {
+      masked = masked.slice(0, idx) + " ".repeat(term.search.length) + masked.slice(idx + term.search.length);
+      idx = masked.indexOf(term.search, idx + term.search.length);
+    }
   }
 
   return [...positions.keys()].sort((a, b) => positions.get(a)! - positions.get(b)!);

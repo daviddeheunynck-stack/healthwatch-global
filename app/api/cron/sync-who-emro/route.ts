@@ -335,6 +335,14 @@ export async function GET(req: NextRequest) {
         results.skipped++;
         continue;
       }
+      // An older-dated entry with different numbers was not caught above (only
+      // "unchanged" was) — without this floor a stale re-fetch could still
+      // overwrite a more recent row. Same guard family as sync-who-afro/sync-cdc-han.
+      if (date < existingRow.date) {
+        log.push({ label, status: "skip", detail: `older entry (${date}) than existing (${existingRow.date})` });
+        results.skipped++;
+        continue;
+      }
       const updatePayload: Record<string, unknown> = {
         cases, deaths, date, source: entry.url,
         description, risk_level: riskLevel, active: true, source_priority: 5,

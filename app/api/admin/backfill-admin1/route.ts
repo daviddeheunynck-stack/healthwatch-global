@@ -39,7 +39,11 @@ async function fetchFullText(url: string): Promise<string> {
     const bodyMatch = html.match(
       /(?:sf-content-block|article-content|content-block-article|don-content)([\s\S]{0,8000})/i
     );
-    return (bodyMatch ? bodyMatch[1] : html)
+    // Fail closed: if the selector no longer matches, feeding the full page
+    // (nav/header chrome) into extractAdmin1 would produce a wrong province/
+    // lat/lng instead of the "" this function already treats as "no data".
+    if (!bodyMatch) return "";
+    return bodyMatch[1]
       .replace(/<[^>]+>/g, " ")
       .replace(/\s+/g, " ")
       .trim();
