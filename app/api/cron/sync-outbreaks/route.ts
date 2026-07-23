@@ -345,11 +345,16 @@ export async function GET(req: NextRequest) {
     // result is discarded and description_fr stays null forever) re-occupy
     // the whole 10-row daily budget run after run, starving every legitimate
     // English row queued behind them. Oldest-first would only make that worse.
+    // Catch any of the 4 languages missing, not just French — a row can have
+    // description_fr set by hand (a session translating manually, bypassing
+    // this shared sweep) while description_es/ar/id stay null forever, since
+    // the old .is("description_fr", null) gate never re-fires once fr exists.
+    // Found 2026-07-23: 7 active rows stuck this way (Ebola/Uganda among them).
     const { data: needsTranslation } = await supabase
       .from("outbreaks")
-      .select("id, description")
+      .select("id, description, description_fr, description_es, description_ar, description_id")
       .eq("active", true)
-      .is("description_fr", null)
+      .or("description_fr.is.null,description_es.is.null,description_ar.is.null,description_id.is.null")
       .not("description", "is", null)
       .neq("description", "")
       .order("created_at", { ascending: false })
@@ -359,11 +364,16 @@ export async function GET(req: NextRequest) {
       console.log(`[sync] Translating ${needsTranslation.length} descriptions via MyMemory…`);
       for (const row of needsTranslation) {
         const t = await translateDescription(row.description);
-        if (t.fr || t.es || t.ar || t.id) {
-          await supabase
-            .from("outbreaks")
-            .update({ description_fr: t.fr, description_es: t.es, description_ar: t.ar, description_id: t.id })
-            .eq("id", row.id);
+        // Only fill fields that are actually missing — a row can reach here with
+        // description_fr already hand-written (see gate comment above); never
+        // clobber it with a lower-quality MyMemory retranslation.
+        const patch: Record<string, string> = {};
+        if (row.description_fr === null && t.fr) patch.description_fr = t.fr;
+        if (row.description_es === null && t.es) patch.description_es = t.es;
+        if (row.description_ar === null && t.ar) patch.description_ar = t.ar;
+        if (row.description_id === null && t.id) patch.description_id = t.id;
+        if (Object.keys(patch).length > 0) {
+          await supabase.from("outbreaks").update(patch).eq("id", row.id);
         }
         await new Promise((r) => setTimeout(r, 300)); // polite delay between MyMemory calls
       }
