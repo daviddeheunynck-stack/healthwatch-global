@@ -1,6 +1,7 @@
 ﻿import { getTranslations } from "next-intl/server";
 import { Check, Gift, ArrowRight, Star, Clock, Shield, Mail, Users, Globe, Building2, HeartHandshake, Microscope, Stethoscope, Landmark, RefreshCw } from "lucide-react";
 import PricingCards from "@/components/PricingCards";
+import TrackPageView from "@/components/TrackPageView";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { jsonLdHtml } from "@/lib/json-ld";
@@ -263,6 +264,7 @@ export default async function PricingPage({ params }: { params: Promise<{ locale
       dangerouslySetInnerHTML={{ __html: jsonLdHtml(faqSchema) }}
     />
     <div className="space-y-20" dir={isRtl ? "rtl" : undefined}>
+      <TrackPageView action="pricing_page_view" metadata={{ locale }} />
 
       {/* ── Hero ─────────────────────────────────────────────────────────── */}
       <div className="text-center space-y-6 max-w-3xl mx-auto pt-4">
@@ -295,6 +297,33 @@ export default async function PricingPage({ params }: { params: Promise<{ locale
           <h2 className="font-bold text-white text-lg">{c.roiTitle}</h2>
         </div>
         <p className="text-gray-400 text-sm leading-relaxed">{c.roiText}</p>
+      </div>
+
+      {/* ── Institutional pilot banner ────────────────────────────────────── */}
+      {/* Moved above the self-serve cards (2026-07-23): self-serve has never
+          converted a single paying customer, while every real engaged lead
+          has been institutional-shaped (public health professionals). This
+          path should be the second thing a visitor sees, not the ninth. */}
+      <div className="bg-gradient-to-r from-red-950/50 via-red-900/20 to-transparent border border-red-700/30 rounded-2xl p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 max-w-4xl mx-auto w-full">
+        <div className="flex items-start gap-4">
+          <div className="w-10 h-10 rounded-lg bg-red-500/10 border border-red-500/20 flex items-center justify-center shrink-0">
+            <Building2 className="w-5 h-5 text-red-400" />
+          </div>
+          <div>
+            <p className="text-red-300 font-semibold text-sm">
+              {locale === "fr" ? "Programme pilote institutionnel — 35 jours gratuits" : locale === "es" ? "Programa piloto institucional — 35 días gratis" : locale === "ar" ? "البرنامج التجريبي المؤسسي — 35 يوماً مجاناً" : locale === "id" ? "Program pilot institusional — 35 hari gratis" : "Institutional pilot program — 35 days free"}
+            </p>
+            <p className="text-gray-400 text-xs mt-0.5">
+              {locale === "fr" ? "5 accès Pro offerts pour votre équipe (ONG, agence ONU, ministère). En échange : votre retour terrain structuré." : locale === "es" ? "5 accesos Pro para su equipo (ONG, agencia ONU, ministerio). A cambio: su retroalimentación estructurada." : locale === "ar" ? "5 مقاعد Pro لفريقك (منظمة غير حكومية، وكالة أممية، وزارة). في المقابل: ملاحظاتكم الميدانية المنظمة." : locale === "id" ? "5 akses Pro untuk tim Anda (LSM, badan PBB, kementerian). Sebagai gantinya: umpan balik lapangan terstruktur Anda." : "5 Pro seats for your team (NGO, UN agency, ministry). In exchange: your structured field feedback."}
+            </p>
+          </div>
+        </div>
+        <Link
+          href={`/${locale}/pilot`}
+          className="shrink-0 text-xs bg-red-700 hover:bg-red-600 text-white font-semibold px-4 py-2 rounded-lg transition-colors whitespace-nowrap"
+        >
+          {locale === "fr" ? "Candidater au pilote →" : locale === "es" ? "Solicitar piloto →" : locale === "ar" ? "← التقدم للبرنامج" : locale === "id" ? "Daftar pilot →" : "Apply for the pilot →"}
+        </Link>
       </div>
 
       {/* ── Free tier ────────────────────────────────────────────────────── */}
@@ -451,29 +480,6 @@ export default async function PricingPage({ params }: { params: Promise<{ locale
           ? "Unit kesehatan publik di negara berpenghasilan rendah atau menengah? Hubungi kami — kami memiliki kebijakan harga bebas untuk tim dengan anggaran terbatas."
           : "Public health unit in a low- or middle-income country? Write to us — we have a pay-what-you-can policy for teams whose budget doesn't allow the standard rate."}
       </p>
-
-      {/* ── Institutional pilot banner ────────────────────────────────────── */}
-      <div className="bg-gradient-to-r from-red-950/50 via-red-900/20 to-transparent border border-red-700/30 rounded-2xl p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 max-w-4xl mx-auto w-full">
-        <div className="flex items-start gap-4">
-          <div className="w-10 h-10 rounded-lg bg-red-500/10 border border-red-500/20 flex items-center justify-center shrink-0">
-            <Building2 className="w-5 h-5 text-red-400" />
-          </div>
-          <div>
-            <p className="text-red-300 font-semibold text-sm">
-              {locale === "fr" ? "Programme pilote institutionnel — 35 jours gratuits" : locale === "es" ? "Programa piloto institucional — 35 días gratis" : locale === "ar" ? "البرنامج التجريبي المؤسسي — 35 يوماً مجاناً" : locale === "id" ? "Program pilot institusional — 35 hari gratis" : "Institutional pilot program — 35 days free"}
-            </p>
-            <p className="text-gray-400 text-xs mt-0.5">
-              {locale === "fr" ? "5 accès Pro offerts pour votre équipe (ONG, agence ONU, ministère). En échange : votre retour terrain structuré." : locale === "es" ? "5 accesos Pro para su equipo (ONG, agencia ONU, ministerio). A cambio: su retroalimentación estructurada." : locale === "ar" ? "5 مقاعد Pro لفريقك (منظمة غير حكومية، وكالة أممية، وزارة). في المقابل: ملاحظاتكم الميدانية المنظمة." : locale === "id" ? "5 akses Pro untuk tim Anda (LSM, badan PBB, kementerian). Sebagai gantinya: umpan balik lapangan terstruktur Anda." : "5 Pro seats for your team (NGO, UN agency, ministry). In exchange: your structured field feedback."}
-            </p>
-          </div>
-        </div>
-        <Link
-          href={`/${locale}/pilot`}
-          className="shrink-0 text-xs bg-red-700 hover:bg-red-600 text-white font-semibold px-4 py-2 rounded-lg transition-colors whitespace-nowrap"
-        >
-          {locale === "fr" ? "Candidater au pilote →" : locale === "es" ? "Solicitar piloto →" : locale === "ar" ? "← التقدم للبرنامج" : locale === "id" ? "Daftar pilot →" : "Apply for the pilot →"}
-        </Link>
-      </div>
 
       {/* ── Institutional procurement ─────────────────────────────────────── */}
       <div className="bg-gray-900/40 border border-gray-700/50 rounded-2xl p-6 flex flex-col sm:flex-row items-start gap-5 max-w-4xl mx-auto w-full">
