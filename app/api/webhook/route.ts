@@ -362,6 +362,28 @@ export async function POST(req: NextRequest) {
             }
           }
 
+          // If team/enterprise plan cancelled, also clean up any owned
+          // "organization" — a separate investigation-sharing feature (see
+          // supabase/migrations/20260621230000_organizations.sql) that isn't
+          // tied to profiles.plan the way "teams" is, so nothing else revokes
+          // member access to shared investigations once the subscription
+          // funding it ends. Covers enterprise too (MAX_SEATS in app/api/org/
+          // route.ts allows both), unlike the "teams" system above which is
+          // team-plan only.
+          if (["team", "enterprise"].includes(cancelledPlan)) {
+            const { data: ownedOrg } = await supabase
+              .from("organizations")
+              .select("id")
+              .eq("owner_id", userId)
+              .maybeSingle();
+
+            if (ownedOrg) {
+              // Deleting the org cascades to organization_members and org_activity_log
+              await supabase.from("organizations").delete().eq("id", ownedOrg.id);
+              console.log(`[webhook] Organization ${ownedOrg.id} deleted — owner's ${cancelledPlan} subscription cancelled`);
+            }
+          }
+
           // Send churn email (fire-and-forget)
           if (userEmail && ["starter", "pro", "team", "enterprise"].includes(cancelledPlan)) {
             const churnProfile = await getUserProfile(userId);
