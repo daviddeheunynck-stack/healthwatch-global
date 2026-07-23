@@ -21,6 +21,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { buildOutbreakAlertEmail } from "@/lib/alert-emails";
+import { buildTrialValueNudgeEmail } from "@/lib/trial-value-nudge-email";
 import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 import * as Sentry from "@sentry/nextjs";
 import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
@@ -154,6 +155,7 @@ async function runRegionalAlerts(_req: NextRequest, supabase: SupabaseClient) {
   let sent = 0;
   let skipped = 0;
   let failed = 0;
+  let trialNudgesSent = 0;
   const sentByReason: Record<AlertReason, number> = { new: 0, escalated: 0, surge: 0 };
 
   // ── 3. For each region with new outbreaks ─────────────────────────────────
@@ -174,7 +176,7 @@ async function runRegionalAlerts(_req: NextRequest, supabase: SupabaseClient) {
     // Get their email, locale, and Slack webhook (from profiles)
     const { data: rawProfiles } = await supabase
       .from("profiles")
-      .select("id, email, plan, trial_ends_at, stripe_subscription_id, alert_locale, slack_webhook_url")
+      .select("id, email, plan, trial_ends_at, stripe_subscription_id, alert_locale, slack_webhook_url, is_pilot, pilot_organization, trial_value_email_sent_at")
       .in("id", userIds)
       .in("plan", ["starter", "pro", "team", "enterprise"]);
 
@@ -189,8 +191,10 @@ async function runRegionalAlerts(_req: NextRequest, supabase: SupabaseClient) {
     if (profiles.length === 0) continue;
 
     const localeMap = new Map<string, string>();
+    const profileMap = new Map<string, (typeof profiles)[number]>();
     for (const p of profiles) {
       localeMap.set(p.id, (p.alert_locale as string | null) ?? "en");
+      profileMap.set(p.id, p);
     }
 
     for (const profile of profiles) {
@@ -332,6 +336,39 @@ async function runRegionalAlerts(_req: NextRequest, supabase: SupabaseClient) {
 
           sent++;
           sentByReason[reason]++;
+
+          // ── Usage-triggered trial value nudge ──────────────────────────
+          // Fires once, on this user's first-ever "new" alert, instead of
+          // only ever prompting on the fixed J-3/J-1 calendar reminder
+          // (trial-reminders cron) unrelated to whether they've seen the
+          // product actually work. Self-serve trials only (no Stripe sub
+          // yet, still within trial_ends_at) — pilots get the org-specific
+          // Team-plan framing via buildTrialValueNudgeEmail's isPilot branch.
+          const isActiveTrial =
+            !profile.stripe_subscription_id &&
+            !!profile.trial_ends_at &&
+            new Date(profile.trial_ends_at).getTime() > now;
+          if (reason === "new" && isActiveTrial && !profile.trial_value_email_sent_at) {
+            try {
+              const { subject: nudgeSubject, html: nudgeHtml } = buildTrialValueNudgeEmail(
+                locale,
+                { disease, country, riskLevel: (outbreak.risk_level ?? "medium") as "high" | "medium" | "low" },
+                { isPilot: !!profile.is_pilot, organization: (profile.pilot_organization as string | null) ?? null }
+              );
+              if (isRealProduction) {
+                await sendEmail(profile.email, nudgeSubject, nudgeHtml);
+              }
+              const nowIso = new Date().toISOString();
+              await supabase.from("profiles").update({ trial_value_email_sent_at: nowIso }).eq("id", profile.id);
+              // Prevent a 2nd send this same run if this user matches another
+              // outbreak later in the loop (profile is shared by reference).
+              profile.trial_value_email_sent_at = nowIso;
+              trialNudgesSent++;
+            } catch (nudgeErr) {
+              console.error(`[regional-alerts] trial value nudge failed for ${profile.email}:`, nudgeErr);
+              Sentry.captureException(nudgeErr, { tags: { cron: "regional-alerts", user_id: profile.id, part: "trial-value-nudge" } });
+            }
+          }
         } catch (err) {
           console.error(`[regional-alerts] failed to send to ${profile.email}:`, err);
           Sentry.captureException(err, { tags: { cron: "regional-alerts", user_id: profile.id, outbreak_id: String(outbreak.id) } });
@@ -349,6 +386,7 @@ async function runRegionalAlerts(_req: NextRequest, supabase: SupabaseClient) {
     candidateOutbreaks: candidateOutbreaks.length,
     sent,
     sentByReason,
+    trialNudgesSent,
     skipped,
     failed,
   });
