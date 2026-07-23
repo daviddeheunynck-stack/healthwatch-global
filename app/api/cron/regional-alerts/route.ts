@@ -2,11 +2,20 @@
  * Cron: /api/cron/regional-alerts
  * Schedule: 30 minutes after the sync-outbreaks cron (06:30 UTC daily).
  *
- * For every outbreak added in the last 25 hours:
+ * For every outbreak created OR updated in the last 25 hours:
  *   1. Find paid users who subscribed to that region
- *   2. Skip users who already received an alert for that outbreak (log table)
- *   3. Send a localized email
- *   4. Write to outbreak_alert_log
+ *   2. Skip users already alerted at this outbreak's current risk_level with
+ *      no case surge since (outbreak_alert_log tracks the state we last
+ *      alerted each user at, not just whether we ever alerted them)
+ *   3. Send a localized email — "new outbreak" copy on first contact,
+ *      "update" copy on a later escalation/surge
+ *   4. Upsert outbreak_alert_log with the new state
+ *
+ * Before 2026-07-23 this only looked at created_at, so an outbreak sitting
+ * active and getting worse day after day (Ebola/Uganda-DRC, cholera/Chad,
+ * etc.) never re-notified anyone past the first email — the exact gap that
+ * left two provisioned trial users with nothing but a day-one PHEIC backfill
+ * for their whole 35-day trial.
  */
 
 import { NextRequest, NextResponse } from "next/server";
@@ -33,12 +42,23 @@ function riskMeetsThreshold(risk: string, minRisk: string): boolean {
   return (RISK_RANK[risk] ?? 0) >= (RISK_RANK[minRisk] ?? 0);
 }
 
-const SLACK_COPY: Record<string, { newOutbreak: string; risk: string; date: string; cases: string; viewBtn: string }> = {
-  fr: { newOutbreak: "Nouveau foyer",     risk: "Risque",  date: "Date",   cases: "Cas",   viewBtn: "Voir le foyer →" },
-  en: { newOutbreak: "New outbreak",      risk: "Risk",    date: "Date",   cases: "Cases", viewBtn: "View outbreak →" },
-  es: { newOutbreak: "Nuevo brote",       risk: "Riesgo",  date: "Fecha",  cases: "Casos", viewBtn: "Ver brote →" },
-  ar: { newOutbreak: "تفشٍّ جديد",         risk: "الخطر",   date: "التاريخ", cases: "الحالات", viewBtn: "← عرض التفشي" },
-  id: { newOutbreak: "Wabah baru",        risk: "Risiko",  date: "Tanggal", cases: "Kasus", viewBtn: "Lihat wabah →" },
+// How much a case count has to jump (relative to the count we last alerted
+// this user at) to re-fire a "surge" email on its own, without a risk_level
+// change. Set higher than the dashboard trend arrow's 5% (lib/outbreak-trend.ts)
+// because email is a higher-friction, inbox-interrupting channel and the
+// baseline here can be as recent as yesterday's alert — a 5% day-to-day
+// wobble would just recreate the alert-fatigue problem the min_risk
+// threshold was built to fix.
+const CASE_SURGE_THRESHOLD = 0.20;
+
+type AlertReason = "new" | "escalated" | "surge";
+
+const SLACK_COPY: Record<string, { newOutbreak: string; update: string; risk: string; date: string; cases: string; viewBtn: string }> = {
+  fr: { newOutbreak: "Nouveau foyer",     update: "Foyer aggravé",   risk: "Risque",  date: "Date",   cases: "Cas",   viewBtn: "Voir le foyer →" },
+  en: { newOutbreak: "New outbreak",      update: "Outbreak update", risk: "Risk",    date: "Date",   cases: "Cases", viewBtn: "View outbreak →" },
+  es: { newOutbreak: "Nuevo brote",       update: "Brote agravado",  risk: "Riesgo",  date: "Fecha",  cases: "Casos", viewBtn: "Ver brote →" },
+  ar: { newOutbreak: "تفشٍّ جديد",         update: "تحديث التفشي",    risk: "الخطر",   date: "التاريخ", cases: "الحالات", viewBtn: "← عرض التفشي" },
+  id: { newOutbreak: "Wabah baru",        update: "Pembaruan wabah", risk: "Risiko",  date: "Tanggal", cases: "Kasus", viewBtn: "Lihat wabah →" },
 };
 
 const REGION_LABELS: Record<string, Record<string, string>> = {
@@ -100,14 +120,17 @@ export async function GET(req: NextRequest) {
 }
 
 async function runRegionalAlerts(_req: NextRequest, supabase: SupabaseClient) {
-  // ── 1. Find outbreaks added in the last 25 hours ──────────────────────────
+  // ── 1. Find outbreaks created OR updated in the last 25 hours ─────────────
+  // updated_at catches existing active outbreaks the daily sync just bumped
+  // (new cases/deaths, an escalated risk_level) — created_at alone only ever
+  // covers the day an outbreak first appears.
   const since = new Date(Date.now() - 25 * 3600_000).toISOString();
 
-  const { data: newOutbreaks, error: oErr } = await supabase
+  const { data: candidateOutbreaks, error: oErr } = await supabase
     .from("outbreaks")
-    .select("id, region, disease, disease_en, disease_ar, country, country_en, country_ar, risk_level, date, cases, deaths")
+    .select("id, region, disease, disease_en, disease_ar, country, country_en, country_ar, risk_level, date, cases, deaths, created_at")
     .eq("active", true)
-    .gte("created_at", since);
+    .or(`created_at.gte.${since},updated_at.gte.${since}`);
 
   if (oErr) {
     console.error("[regional-alerts] outbreaks query error:", oErr);
@@ -115,14 +138,14 @@ async function runRegionalAlerts(_req: NextRequest, supabase: SupabaseClient) {
     return NextResponse.json({ error: oErr.message }, { status: 500 });
   }
 
-  if (!newOutbreaks || newOutbreaks.length === 0) {
+  if (!candidateOutbreaks || candidateOutbreaks.length === 0) {
     await logCronRun(supabase, "regional-alerts", "ok", 0);
-    return NextResponse.json({ message: "No new outbreaks", sent: 0, skipped: 0 });
+    return NextResponse.json({ message: "No candidate outbreaks", sent: 0, skipped: 0 });
   }
 
   // ── 2. Group outbreak IDs by region ──────────────────────────────────────
-  const byRegion = new Map<string, typeof newOutbreaks>();
-  for (const o of newOutbreaks) {
+  const byRegion = new Map<string, typeof candidateOutbreaks>();
+  for (const o of candidateOutbreaks) {
     const arr = byRegion.get(o.region) ?? [];
     arr.push(o);
     byRegion.set(o.region, arr);
@@ -131,6 +154,7 @@ async function runRegionalAlerts(_req: NextRequest, supabase: SupabaseClient) {
   let sent = 0;
   let skipped = 0;
   let failed = 0;
+  const sentByReason: Record<AlertReason, number> = { new: 0, escalated: 0, surge: 0 };
 
   // ── 3. For each region with new outbreaks ─────────────────────────────────
   for (const [region, outbreaks] of byRegion) {
@@ -177,15 +201,37 @@ async function runRegionalAlerts(_req: NextRequest, supabase: SupabaseClient) {
         // outbreak in the region, which was the main driver of alert fatigue.
         if (!riskMeetsThreshold(outbreak.risk_level ?? "", minRisk)) continue;
 
-        // Check alert log to avoid duplicates
-        const { data: alreadySent } = await supabase
+        // Check alert log: has this user already been alerted for this
+        // outbreak, and if so, at what risk_level/case count? Only re-fire
+        // on a genuine escalation or case surge since that alert — not on
+        // every cron tick the outbreak happens to still be "recently updated".
+        const { data: priorLog } = await supabase
           .from("outbreak_alert_log")
-          .select("user_id")
+          .select("risk_level, cases_at_alert")
           .eq("user_id", profile.id)
           .eq("outbreak_id", String(outbreak.id))
           .maybeSingle();
 
-        if (alreadySent) {
+        let reason: AlertReason | null = null;
+        if (!priorLog) {
+          reason = "new";
+        } else {
+          const priorRank   = RISK_RANK[priorLog.risk_level ?? ""] ?? 0;
+          const currentRank = RISK_RANK[outbreak.risk_level ?? ""] ?? 0;
+          const priorCases  = priorLog.cases_at_alert;
+          const currentCases = outbreak.cases;
+          if (currentRank > priorRank) {
+            reason = "escalated";
+          } else if (
+            typeof priorCases === "number" && priorCases > 0 &&
+            typeof currentCases === "number" &&
+            (currentCases - priorCases) / priorCases >= CASE_SURGE_THRESHOLD
+          ) {
+            reason = "surge";
+          }
+        }
+
+        if (!reason) {
           skipped++;
           continue;
         }
@@ -205,12 +251,21 @@ async function runRegionalAlerts(_req: NextRequest, supabase: SupabaseClient) {
 
         try {
           // ── Log first — prevents duplicate alerts if log insert fails later ─
-          const { error: logErr } = await supabase.from("outbreak_alert_log").insert({
-            user_id:     profile.id,
-            outbreak_id: String(outbreak.id),
-          });
+          // Upsert (not insert): the same (user_id, outbreak_id) row gets its
+          // risk_level/cases_at_alert overwritten each time we re-alert, since
+          // the primary key only allows one row per user+outbreak.
+          const { error: logErr } = await supabase.from("outbreak_alert_log").upsert(
+            {
+              user_id:        profile.id,
+              outbreak_id:    String(outbreak.id),
+              risk_level:     outbreak.risk_level,
+              cases_at_alert: outbreak.cases ?? null,
+              sent_at:        new Date().toISOString(),
+            },
+            { onConflict: "user_id,outbreak_id" }
+          );
           if (logErr) {
-            console.error(`[regional-alerts] log insert failed for ${profile.id}/${outbreak.id}:`, logErr.message);
+            console.error(`[regional-alerts] log upsert failed for ${profile.id}/${outbreak.id}:`, logErr.message);
             failed++;
             continue;
           }
@@ -229,7 +284,8 @@ async function runRegionalAlerts(_req: NextRequest, supabase: SupabaseClient) {
             },
             dashboardUrl,
             outbreakUrl,
-            unsubUrl
+            unsubUrl,
+            reason === "new" ? "new" : "update"
           );
           if (isRealProduction) {
             await sendEmail(profile.email, subject, html);
@@ -245,7 +301,7 @@ async function runRegionalAlerts(_req: NextRequest, supabase: SupabaseClient) {
                   type: "section",
                   text: {
                     type: "mrkdwn",
-                    text: `${riskEmoji} *${sc.newOutbreak} — ${regionLabel}*\n*${disease}* · ${country}`,
+                    text: `${riskEmoji} *${reason === "new" ? sc.newOutbreak : sc.update} — ${regionLabel}*\n*${disease}* · ${country}`,
                   },
                 },
                 {
@@ -275,6 +331,7 @@ async function runRegionalAlerts(_req: NextRequest, supabase: SupabaseClient) {
           }
 
           sent++;
+          sentByReason[reason]++;
         } catch (err) {
           console.error(`[regional-alerts] failed to send to ${profile.email}:`, err);
           Sentry.captureException(err, { tags: { cron: "regional-alerts", user_id: profile.id, outbreak_id: String(outbreak.id) } });
@@ -289,8 +346,9 @@ async function runRegionalAlerts(_req: NextRequest, supabase: SupabaseClient) {
 
   await logCronRun(supabase, "regional-alerts", "ok", sent);
   return NextResponse.json({
-    newOutbreaks: newOutbreaks.length,
+    candidateOutbreaks: candidateOutbreaks.length,
     sent,
+    sentByReason,
     skipped,
     failed,
   });

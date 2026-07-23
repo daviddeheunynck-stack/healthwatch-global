@@ -17,6 +17,8 @@ interface OutbreakData {
 const CONTENT: Record<string, {
   subject: (region: string, disease: string) => string;
   headline: (region: string) => string;
+  subjectUpdate: (region: string, disease: string) => string;
+  headlineUpdate: (region: string) => string;
   intro: string;
   riskLabel: string;
   dateLabel: string;
@@ -32,6 +34,10 @@ const CONTENT: Record<string, {
       `🚨 Nouveau foyer détecté en ${region} — ${disease}`,
     headline: (region) =>
       `Un nouveau foyer épidémique vient d'être signalé en ${region}.`,
+    subjectUpdate: (region, disease) =>
+      `⚠️ Mise à jour : ${disease} s'aggrave en ${region}`,
+    headlineUpdate: (region) =>
+      `Un foyer que vous suivez en ${region} vient de s'aggraver.`,
     intro: "Voici les informations disponibles à ce stade :",
     riskLabel: "Niveau de risque",
     dateLabel: "Date",
@@ -48,6 +54,10 @@ const CONTENT: Record<string, {
       `🚨 New outbreak detected in ${region} — ${disease}`,
     headline: (region) =>
       `A new disease outbreak has just been reported in ${region}.`,
+    subjectUpdate: (region, disease) =>
+      `⚠️ Update: ${disease} is worsening in ${region}`,
+    headlineUpdate: (region) =>
+      `An outbreak you're tracking in ${region} has just gotten worse.`,
     intro: "Here is the information available at this stage:",
     riskLabel: "Risk level",
     dateLabel: "Date",
@@ -64,6 +74,10 @@ const CONTENT: Record<string, {
       `🚨 Nuevo brote detectado en ${region} — ${disease}`,
     headline: (region) =>
       `Se acaba de notificar un nuevo brote de enfermedad en ${region}.`,
+    subjectUpdate: (region, disease) =>
+      `⚠️ Actualización: ${disease} empeora en ${region}`,
+    headlineUpdate: (region) =>
+      `Un brote que estás siguiendo en ${region} acaba de empeorar.`,
     intro: "Esta es la información disponible en este momento:",
     riskLabel: "Nivel de riesgo",
     dateLabel: "Fecha",
@@ -80,6 +94,10 @@ const CONTENT: Record<string, {
       `🚨 تفشٍّ جديد رُصد في ${region} — ${disease}`,
     headline: (region) =>
       `تم الإبلاغ للتو عن تفشٍّ جديد في ${region}.`,
+    subjectUpdate: (region, disease) =>
+      `⚠️ تحديث: تفاقم ${disease} في ${region}`,
+    headlineUpdate: (region) =>
+      `تفشٍّ تتابعه في ${region} تفاقم للتو.`,
     intro: "فيما يلي المعلومات المتاحة في هذه المرحلة:",
     riskLabel: "مستوى الخطر",
     dateLabel: "التاريخ",
@@ -96,6 +114,10 @@ const CONTENT: Record<string, {
       `🚨 Wabah baru terdeteksi di ${region} — ${disease}`,
     headline: (region) =>
       `Wabah penyakit baru baru saja dilaporkan di ${region}.`,
+    subjectUpdate: (region, disease) =>
+      `⚠️ Pembaruan: ${disease} memburuk di ${region}`,
+    headlineUpdate: (region) =>
+      `Wabah yang Anda pantau di ${region} baru saja memburuk.`,
     intro: "Berikut informasi yang tersedia saat ini:",
     riskLabel: "Tingkat risiko",
     dateLabel: "Tanggal",
@@ -117,7 +139,8 @@ export function buildOutbreakAlertEmail(
   outbreak: OutbreakData,
   dashboardUrl: string,
   outbreakUrl?: string,
-  unsubUrl?: string
+  unsubUrl?: string,
+  kind: "new" | "update" = "new"
 ): { subject: string; html: string } {
   const c = CONTENT[locale] ?? CONTENT.en;
   const numLocale = locale === "ar" ? "ar-SA" : (locale || "en");
@@ -157,7 +180,7 @@ export function buildOutbreakAlertEmail(
         <span style="color:#9ca3af;font-size:13px;font-weight:600;letter-spacing:.05em;text-transform:uppercase">HealthWatch Global</span>
       </div>
 
-      <h1 style="color:#ffffff;font-size:20px;font-weight:700;margin:0 0 8px">${c.headline(regionLabel)}</h1>
+      <h1 style="color:#ffffff;font-size:20px;font-weight:700;margin:0 0 8px">${kind === "new" ? c.headline(regionLabel) : c.headlineUpdate(regionLabel)}</h1>
       <p style="color:#6b7280;font-size:14px;margin:0 0 24px">${c.intro}</p>
 
       <!-- Outbreak card -->
@@ -185,7 +208,7 @@ export function buildOutbreakAlertEmail(
 </html>`;
 
   return {
-    subject: c.subject(regionLabel, outbreak.disease),
+    subject: kind === "new" ? c.subject(regionLabel, outbreak.disease) : c.subjectUpdate(regionLabel, outbreak.disease),
     html,
   };
 }
