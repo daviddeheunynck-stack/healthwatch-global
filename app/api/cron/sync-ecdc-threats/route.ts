@@ -317,6 +317,16 @@ async function extractItemData(item: RSSItem, today: string, dbg?: { reason?: st
     const g = findCountry(c);
     return g && g.region !== "europe";
   });
+  // A European country the TITLE itself names (e.g. a future dedicated article
+  // "Ebola disease outbreak — France") is a standalone update: that article's
+  // extracted cases/deaths describe France specifically, not another country's
+  // aggregate. Kept separate from titleNonEU so it can be added back into
+  // targetCountries below even when a non-EU country is also present (the
+  // outbreak's country of origin, named in body context) — see targetCountries.
+  const titleEU = titleCountries.filter((c) => {
+    const g = findCountry(c);
+    return g && g.region === "europe";
+  });
 
   // Prefer the curated RSS description over the full scraped page: the page
   // scrape includes nav/sidebar/"related topics" text that can name countries
@@ -332,9 +342,10 @@ async function extractItemData(item: RSSItem, today: string, dbg?: { reason?: st
   // Merge: title-found non-EU countries first (outbreak source), then body countries.
   // This prevents a European country mentioned in the risk section from overriding
   // the actual outbreak country (e.g. Germany appearing before DRC in the body).
-  const seenMerge = new Set(titleNonEU.map((c) => c.toLowerCase()));
+  const seenMerge = new Set([...titleNonEU, ...titleEU].map((c) => c.toLowerCase()));
   const countries = [
     ...titleNonEU,
+    ...titleEU,
     ...bodyCountries.filter((c) => !seenMerge.has(c.toLowerCase())),
   ];
 
@@ -375,10 +386,20 @@ async function extractItemData(item: RSSItem, today: string, dbg?: { reason?: st
   // For EU-wide overview articles the extracted case count is an EU aggregate —
   // not attributable to individual countries. Use a single EU/EEA entry rather
   // than duplicating the total across every mentioned member state.
+  // A European country only ever found in the BODY (e.g. "two cases were
+  // exported to Germany" inside the DRC/Uganda living page) stays excluded
+  // here: the article's single extracted case/death count is scoped to the
+  // whole page (the non-EU outbreak total), and would misattribute that
+  // aggregate to the exported-case country. A European country the TITLE
+  // names (titleEU) is a dedicated update instead — include it alongside any
+  // non-EU countries rather than dropping it wholesale.
+  const titleEUNotInNonEU = titleEU.filter(
+    (c) => !nonEuCountries.some((n) => n.toLowerCase() === c.toLowerCase())
+  );
   const targetCountries = isEUMultiCountry
     ? ["EU/EEA"]
     : nonEuCountries.length > 0
-      ? nonEuCountries
+      ? [...nonEuCountries, ...titleEUNotInNonEU]
       : [countries[0]];
 
   const results: BriefData[] = [];
