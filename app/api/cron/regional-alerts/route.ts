@@ -25,6 +25,7 @@ import { buildTrialValueNudgeEmail } from "@/lib/trial-value-nudge-email";
 import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 import * as Sentry from "@sentry/nextjs";
 import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
+import { resolvedPlan } from "@/lib/resolved-plan";
 
 export const dynamic = "force-dynamic";
 
@@ -182,11 +183,7 @@ async function runRegionalAlerts(_req: NextRequest, supabase: SupabaseClient) {
 
     // Apply trial expiry guard: skip users whose trial has ended and have no active Stripe sub
     const now = Date.now();
-    const profiles = (rawProfiles ?? []).filter((p) => {
-      if (p.plan === "free") return false;
-      if (p.trial_ends_at && new Date(p.trial_ends_at).getTime() < now && !p.stripe_subscription_id) return false;
-      return true;
-    });
+    const profiles = (rawProfiles ?? []).filter((p) => resolvedPlan(p) !== "free");
 
     if (profiles.length === 0) continue;
 

@@ -2,6 +2,7 @@ import { getTranslations, getLocale } from "next-intl/server";
 import { FileText, Lock } from "lucide-react";
 import { getOutbreaks, getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 import { createClient } from "@/lib/supabase-server";
+import { resolvedPlan } from "@/lib/resolved-plan";
 import { Suspense } from "react";
 import ReportDownloadButton from "@/components/ReportDownloadButton";
 import LockedUpgradeButton from "@/components/LockedUpgradeButton";
@@ -128,15 +129,8 @@ async function ReportsContent() {
       .select("plan, trial_ends_at, stripe_subscription_id")
       .eq("id", user.id)
       .single();
-    plan = profile?.plan ?? "free";
-    if (
-      profile?.trial_ends_at &&
-      new Date(profile.trial_ends_at).getTime() < Date.now() &&
-      !profile?.stripe_subscription_id
-    ) {
-      plan = "free";
-      trialExpired = true;
-    }
+    plan = resolvedPlan(profile);
+    trialExpired = (profile?.plan ?? "free") !== "free" && plan === "free";
   }
 
   const isPaid = plan === "starter" || plan === "pro" || plan === "team" || plan === "enterprise";

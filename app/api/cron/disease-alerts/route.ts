@@ -11,6 +11,7 @@ import { errorMessage } from "@/lib/error";
 import * as Sentry from "@sentry/nextjs";
 import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
 import { notifyMobile } from "@/lib/mobile-notify";
+import { resolvedPlan } from "@/lib/resolved-plan";
 
 export const dynamic = "force-dynamic";
 
@@ -121,14 +122,9 @@ async function runDiseaseAlerts(_req: NextRequest, supabase: SupabaseClient) {
     .select("id, email, alert_locale, plan, trial_ends_at, stripe_subscription_id")
     .in("id", userIds);
 
-  const now = Date.now();
   const profileMap = new Map(
     (profiles ?? []).map((p) => {
-      let plan = p.plan ?? "free";
-      // Apply trial expiry guard
-      if (plan !== "free" && p.trial_ends_at && new Date(p.trial_ends_at).getTime() < now && !p.stripe_subscription_id) {
-        plan = "free";
-      }
+      const plan = resolvedPlan(p);
       return [p.id, { email: p.email, locale: (p.alert_locale as string | null) ?? "en", plan }];
     })
   );

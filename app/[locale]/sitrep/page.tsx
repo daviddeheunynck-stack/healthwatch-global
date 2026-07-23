@@ -2,6 +2,7 @@ import { getOutbreaks, getStats, getLocalizedDisease, getLocalizedCountry, sourc
 import { createClient } from "@/lib/supabase-server";
 import { redirect } from "next/navigation";
 import { wilsonCI } from "@/lib/cfr-ci";
+import { resolvedPlan } from "@/lib/resolved-plan";
 import Link from "next/link";
 import SitrepPrintButton from "@/components/SitrepPrintButton";
 import type { Metadata } from "next";
@@ -240,13 +241,8 @@ export default async function SitrepPage({
     .eq("id", user.id)
     .single();
 
-  let plan = profile?.plan ?? "free";
-  const trialExpired =
-    plan !== "free" &&
-    !!profile?.trial_ends_at &&
-    new Date(profile.trial_ends_at).getTime() < Date.now() &&
-    !profile?.stripe_subscription_id;
-  if (trialExpired) plan = "free";
+  const plan = resolvedPlan(profile);
+  const trialExpired = (profile?.plan ?? "free") !== "free" && plan === "free";
 
   const isPaid = ["starter", "pro", "team", "enterprise"].includes(plan);
   if (!isPaid && !trialExpired) redirect(`/${locale}`);

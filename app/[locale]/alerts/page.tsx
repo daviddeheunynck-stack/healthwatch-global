@@ -7,6 +7,7 @@ import RealtimeAlertFeed from "@/components/RealtimeAlertFeed";
 import CheckoutButton from "@/components/CheckoutButton";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase-browser";
+import { resolvedPlan } from "@/lib/resolved-plan";
 import { PRICE_DISPLAY } from "@/lib/pricing";
 
 const PRO_ALERT_LINK: Record<string, { label: string; sub: string; btn: string }> = {
@@ -127,11 +128,8 @@ export default function AlertsPage() {
       if (!user) { setPlan("free"); return; }
       supabase.from("profiles").select("plan, trial_ends_at, stripe_subscription_id").eq("id", user.id).single()
         .then(({ data }) => {
-          let p = data?.plan || "free";
-          if (p !== "free" && data?.trial_ends_at && new Date(data.trial_ends_at).getTime() < Date.now() && !data?.stripe_subscription_id) {
-            p = "free";
-            setTrialExpired(true);
-          }
+          const p = resolvedPlan(data);
+          if ((data?.plan ?? "free") !== "free" && p === "free") setTrialExpired(true);
           setPlan(p);
         });
     });

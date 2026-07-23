@@ -21,6 +21,7 @@ import { createClient } from "@supabase/supabase-js";
 import { createHash } from "crypto";
 import { getDiseaseCategory, type DiseaseCategory } from "@/lib/disease-category";
 import { hasRealAdmin1 } from "@/lib/outbreaks";
+import { resolvedPlan } from "@/lib/resolved-plan";
 
 export const dynamic = "force-dynamic";
 
@@ -88,15 +89,7 @@ export async function GET(req: NextRequest) {
     .eq("id", apiKey.user_id)
     .single();
 
-  let activePlan = profile?.plan ?? "";
-  if (
-    activePlan !== "free" && activePlan !== "" &&
-    profile?.trial_ends_at &&
-    new Date(profile.trial_ends_at).getTime() < Date.now() &&
-    !profile?.stripe_subscription_id
-  ) activePlan = "free";
-
-  if (!["pro", "team", "enterprise"].includes(activePlan)) {
+  if (!["pro", "team", "enterprise"].includes(resolvedPlan(profile))) {
     return NextResponse.json(
       { error: "API access requires an active Pro, Team, or Enterprise subscription." },
       { status: 403 }

@@ -5,6 +5,7 @@ import { useLocale } from "next-intl";
 import { createClient } from "@/lib/supabase-browser";
 import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 import { getIncidenceRate } from "@/lib/population-data";
+import { resolvedPlan } from "@/lib/resolved-plan";
 import RiskBadge from "@/components/RiskBadge";
 import LockedUpgradeButton from "@/components/LockedUpgradeButton";
 import { useUpgradeModal } from "@/lib/upgrade-modal-context";
@@ -78,13 +79,7 @@ export default function ComparePage() {
     supabase.auth.getUser().then(({ data: { user } }) => {
       if (!user) { setPlan("guest"); return; }
       supabase.from("profiles").select("plan, trial_ends_at, stripe_subscription_id").eq("id", user.id).single()
-        .then(({ data }) => {
-          let p = data?.plan || "free";
-          if (p !== "free" && data?.trial_ends_at && new Date(data.trial_ends_at).getTime() < Date.now() && !data?.stripe_subscription_id) {
-            p = "free";
-          }
-          setPlan(p);
-        });
+        .then(({ data }) => setPlan(resolvedPlan(data)));
     });
   }, []);
 

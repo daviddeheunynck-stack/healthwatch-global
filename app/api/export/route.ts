@@ -5,6 +5,7 @@ import { getOutbreaks } from "@/lib/outbreaks";
 import { rateLimit, getClientIp } from "@/lib/rate-limit";
 import { createHash } from "crypto";
 import { trackEvent } from "@/lib/track-event";
+import { resolvedPlan } from "@/lib/resolved-plan";
 
 export const dynamic = "force-dynamic";
 
@@ -34,15 +35,7 @@ export async function GET(request: NextRequest) {
       .eq("id", apiKey.user_id)
       .single();
 
-    let kPlan = kProfile?.plan ?? "free";
-    if (
-      kPlan !== "free" &&
-      kProfile?.trial_ends_at &&
-      new Date(kProfile.trial_ends_at).getTime() < Date.now() &&
-      !kProfile?.stripe_subscription_id
-    ) kPlan = "free";
-
-    if (!["pro", "team", "enterprise"].includes(kPlan)) {
+    if (!["pro", "team", "enterprise"].includes(resolvedPlan(kProfile))) {
       return new NextResponse("Pro plan required for API access", { status: 403 });
     }
 
@@ -79,16 +72,7 @@ export async function GET(request: NextRequest) {
     .eq("id", user.id)
     .single();
 
-  let plan = profile?.plan ?? "free";
-  if (
-    plan !== "free" &&
-    profile?.trial_ends_at &&
-    new Date(profile.trial_ends_at).getTime() < Date.now() &&
-    !profile?.stripe_subscription_id
-  ) {
-    plan = "free";
-  }
-  const isPaid = plan === "starter" || plan === "pro" || plan === "team" || plan === "enterprise";
+  const isPaid = ["starter", "pro", "team", "enterprise"].includes(resolvedPlan(profile));
 
   if (!isPaid) {
     return new NextResponse("Upgrade to Pro to export data", { status: 403 });

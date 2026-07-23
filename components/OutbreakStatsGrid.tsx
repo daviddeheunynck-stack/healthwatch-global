@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase-browser";
+import { resolvedPlan } from "@/lib/resolved-plan";
 import Link from "next/link";
 import CheckoutButton from "@/components/CheckoutButton";
 
@@ -49,13 +50,8 @@ export default function OutbreakStatsGrid({ cases, deaths, cfr, labels, locale }
         .eq("id", user.id)
         .single()
         .then(({ data }) => {
-          let p = data?.plan || "free";
-          const trialExpired =
-            p !== "free" &&
-            !!data?.trial_ends_at &&
-            new Date(data.trial_ends_at).getTime() < Date.now() &&
-            !data?.stripe_subscription_id;
-          if (trialExpired) p = "free";
+          const p = resolvedPlan(data);
+          const trialExpired = (data?.plan || "free") !== "free" && p === "free";
           const isPaid = ["starter", "pro", "team", "enterprise"].includes(p);
           if (isPaid) setStatus("paid");
           else if (trialExpired) setStatus("expired");

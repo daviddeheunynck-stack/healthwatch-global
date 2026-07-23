@@ -8,6 +8,7 @@ import { notFound, redirect } from "next/navigation";
 import { getLocalizedDisease, getLocalizedCountry, getLocalizedDescription } from "@/lib/outbreaks";
 import { getResponseGuidance, RESPONSE_ACTIONS } from "@/lib/response-guidance";
 import { getIncidenceRate, getPopulationThousands } from "@/lib/population-data";
+import { resolvedPlan } from "@/lib/resolved-plan";
 import type { Metadata } from "next";
 
 const BOM   = String.fromCharCode(65279);
@@ -128,15 +129,7 @@ export default async function PrintPage({
   const { data: { user } } = await authClient.auth.getUser();
   if (!user) redirect(`/${locale}/login?next=/${locale}/outbreak/${id}/print`);
   const { data: profile } = await authClient.from("profiles").select("plan, trial_ends_at, stripe_subscription_id").eq("id", user.id).single();
-  let plan = profile?.plan ?? "free";
-  if (
-    profile?.trial_ends_at &&
-    new Date(profile.trial_ends_at).getTime() < Date.now() &&
-    !profile?.stripe_subscription_id
-  ) {
-    plan = "free";
-  }
-  if (plan === "free") redirect(`/${locale}/pricing`);
+  if (resolvedPlan(profile) === "free") redirect(`/${locale}/pricing`);
 
   const supabase = createClient(
     clean(process.env.NEXT_PUBLIC_SUPABASE_URL),

@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase-server";
 import { createClient as createService } from "@supabase/supabase-js";
 import { createHash } from "crypto";
 import { hasRealAdmin1 } from "@/lib/outbreaks";
+import { resolvedPlan } from "@/lib/resolved-plan";
 
 const sha256 = (s: string) => createHash("sha256").update(s).digest("hex");
 
@@ -29,9 +30,7 @@ export async function GET(req: NextRequest) {
 
   if (user) {
     const { data: p } = await supabase.from("profiles").select("plan, trial_ends_at, stripe_subscription_id").eq("id", user.id).single();
-    let plan = p?.plan ?? null;
-    if (plan !== "free" && plan !== null && p?.trial_ends_at && new Date(p.trial_ends_at).getTime() < Date.now() && !p?.stripe_subscription_id) plan = "free";
-    profilePlan = plan;
+    profilePlan = resolvedPlan(p);
   } else {
     const keyParam = req.headers.get("x-api-key");
     if (keyParam?.startsWith("hwg_")) {
@@ -39,9 +38,7 @@ export async function GET(req: NextRequest) {
       const { data: apiKey } = await service.from("api_keys").select("user_id").eq("key_hash", keyHash).maybeSingle();
       if (apiKey?.user_id) {
         const { data: p } = await service.from("profiles").select("plan, trial_ends_at, stripe_subscription_id").eq("id", apiKey.user_id).single();
-        let plan = p?.plan ?? null;
-        if (plan !== "free" && plan !== null && p?.trial_ends_at && new Date(p.trial_ends_at).getTime() < Date.now() && !p?.stripe_subscription_id) plan = "free";
-        profilePlan = plan;
+        profilePlan = resolvedPlan(p);
       }
     }
   }

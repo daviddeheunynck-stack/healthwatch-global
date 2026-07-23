@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase-server";
 import { getOutbreaks, getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 import { trackEvent } from "@/lib/track-event";
+import { resolvedPlan } from "@/lib/resolved-plan";
 
 function esc(s: string): string {
   return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
@@ -71,16 +72,8 @@ export async function GET(
     .eq("id", user.id)
     .single();
 
-  let plan = profile?.plan ?? "free";
-  if (
-    plan !== "free" &&
-    profile?.trial_ends_at &&
-    new Date(profile.trial_ends_at).getTime() < Date.now() &&
-    !profile?.stripe_subscription_id
-  ) {
-    plan = "free";
-  }
-  const isPaid = plan === "starter" || plan === "pro" || plan === "team" || plan === "enterprise";
+  const plan = resolvedPlan(profile);
+  const isPaid = ["starter", "pro", "team", "enterprise"].includes(plan);
 
   if (!isPaid) {
     return new NextResponse(

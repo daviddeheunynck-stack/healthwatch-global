@@ -4,6 +4,7 @@ import { createClient as createService } from "@supabase/supabase-js";
 import Link from "next/link";
 import { Users } from "lucide-react";
 import TeamActions from "@/components/TeamActions";
+import { resolvedPlan } from "@/lib/resolved-plan";
 import type { Metadata } from "next";
 
 const BOM   = String.fromCharCode(65279);
@@ -105,13 +106,7 @@ export default async function TeamPage({
     .eq("id", user.id)
     .single();
 
-  let   plan   = profile?.plan || "free";
-  const trialExpired =
-    plan !== "free" &&
-    !!profile?.trial_ends_at &&
-    new Date(profile.trial_ends_at).getTime() < Date.now() &&
-    !profile?.stripe_subscription_id;
-  if (trialExpired) plan = "free";
+  const plan = resolvedPlan(profile);
 
   let   teamId = profile?.team_id as string | null | undefined;
 

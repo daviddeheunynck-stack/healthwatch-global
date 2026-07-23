@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase-server";
 import { redirect } from "next/navigation";
 import AlertsPageClient from "@/components/AlertsPageClient";
+import { resolvedPlan } from "@/lib/resolved-plan";
 import type { Metadata } from "next";
 
 export const dynamic = "force-dynamic";
@@ -43,13 +44,7 @@ export default async function NotificationsPage({ params }: { params: Promise<{ 
   const initialHasMore = all.length > PAGE_SIZE;
   const initialNotifications = all.slice(0, PAGE_SIZE);
 
-  const plan = profile?.plan ?? "free";
-  const trialExpired =
-    plan !== "free" &&
-    !!profile?.trial_ends_at &&
-    new Date(profile.trial_ends_at).getTime() < Date.now() &&
-    !profile?.stripe_subscription_id;
-  const isPaid = ["starter", "pro", "team", "enterprise"].includes(plan) && !trialExpired;
+  const isPaid = ["starter", "pro", "team", "enterprise"].includes(resolvedPlan(profile));
 
   return <AlertsPageClient locale={locale} initialNotifications={initialNotifications} initialHasMore={initialHasMore} isPaid={isPaid} />;
 }

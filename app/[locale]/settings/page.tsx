@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { Settings } from "lucide-react";
 import { createClient } from "@/lib/supabase-server";
+import { resolvedPlan } from "@/lib/resolved-plan";
 import SettingsTabs from "@/components/SettingsTabs";
 
 const PAGE_TITLE: Record<string, string> = {
@@ -36,17 +37,7 @@ export default async function SettingsPage({
     .eq("id", user.id)
     .single();
 
-  let plan = profile?.plan ?? "free";
-  if (
-    plan !== "free" &&
-    profile?.trial_ends_at &&
-    new Date(profile.trial_ends_at).getTime() < Date.now() &&
-    !profile?.stripe_subscription_id
-  ) {
-    plan = "free";
-  }
-  const isPaid = plan !== "free";
-  if (!isPaid) redirect(`/${locale}/pricing`);
+  if (resolvedPlan(profile) === "free") redirect(`/${locale}/pricing`);
 
   const diseaseWatchlist = (profile?.disease_watchlist as string[] | null) ?? [];
 

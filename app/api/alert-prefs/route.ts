@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase-server";
+import { resolvedPlan } from "@/lib/resolved-plan";
 import { NextResponse } from "next/server";
 
 export const dynamic = "force-dynamic";
@@ -37,16 +38,7 @@ export async function PUT(req: Request) {
     .select("plan, trial_ends_at, stripe_subscription_id")
     .eq("id", user.id)
     .single();
-  let plan = profile?.plan ?? "free";
-  if (
-    plan !== "free" &&
-    profile?.trial_ends_at &&
-    new Date(profile.trial_ends_at).getTime() < Date.now() &&
-    !profile?.stripe_subscription_id
-  ) {
-    plan = "free";
-  }
-  if (plan === "free") {
+  if (resolvedPlan(profile) === "free") {
     return NextResponse.json({ error: "Upgrade required" }, { status: 403 });
   }
 

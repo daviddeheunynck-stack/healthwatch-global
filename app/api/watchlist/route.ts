@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase-server";
 import { createClient as createService } from "@supabase/supabase-js";
+import { resolvedPlan } from "@/lib/resolved-plan";
 
 export const dynamic = "force-dynamic";
 
@@ -21,16 +22,7 @@ async function getUserAndPlan(svc: ReturnType<typeof service>, userId: string) {
     .eq("id", userId)
     .single();
 
-  let plan = profile?.plan ?? "free";
-  if (
-    plan !== "free" &&
-    profile?.trial_ends_at &&
-    new Date(profile.trial_ends_at).getTime() < Date.now() &&
-    !profile.stripe_subscription_id
-  ) {
-    plan = "free";
-  }
-  return plan as string;
+  return resolvedPlan(profile);
 }
 
 // GET — return user's watchlist outbreak IDs
