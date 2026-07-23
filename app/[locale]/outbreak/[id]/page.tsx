@@ -7,6 +7,7 @@ import { createClient } from "@supabase/supabase-js";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import OutbreakBottomCta from "@/components/OutbreakBottomCta";
+import TrackPageView from "@/components/TrackPageView";
 import CitationBlock from "@/components/CitationBlock";
 import OutbreakStatsGrid from "@/components/OutbreakStatsGrid";
 import ShareOutbreakButton from "@/components/ShareOutbreakButton";
@@ -357,6 +358,7 @@ export default async function OutbreakPage({
 
   return (
     <div className={`max-w-3xl mx-auto${isRtl ? " text-right" : ""}`}>
+      <TrackPageView action="outbreak_detail_view" metadata={{ outbreak_id: o.id, locale }} />
       {jsonLd.map((s, i) => (
         <script key={i} type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdHtml(s) }} />
       ))}

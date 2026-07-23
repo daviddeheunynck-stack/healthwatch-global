@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase-server";
 import { getOutbreaks, getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
+import { trackEvent } from "@/lib/track-event";
 
 function esc(s: string): string {
   return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
@@ -92,6 +93,7 @@ export async function GET(
   const VALID_LOCALES = ["en", "fr", "es", "ar", "id"] as const;
   const rawLocale = request.nextUrl.searchParams.get("locale") ?? "en";
   const locale = VALID_LOCALES.includes(rawLocale as (typeof VALID_LOCALES)[number]) ? rawLocale : "en";
+  trackEvent(user.id, "pdf_report_download", { region, locale });
   const rl = REPORT_LABELS[locale] ?? REPORT_LABELS.en;
   const numLocale = locale === "ar" ? "ar-SA" : locale;
   const outbreaks = await getOutbreaks();

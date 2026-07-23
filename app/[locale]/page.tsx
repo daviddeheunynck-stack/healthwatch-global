@@ -7,6 +7,7 @@ import { ISO_REGION } from "@/lib/geo-data";
 import { getOutbreakTrendsBulkCached } from "@/lib/outbreak-trend";
 import { createClient } from "@/lib/supabase-server";
 import { createClient as createService } from "@supabase/supabase-js";
+import { trackEvent } from "@/lib/track-event";
 import StatsCard from "@/components/StatsCard";
 import WorldMap from "@/components/WorldMap";
 import LandingPage from "@/components/LandingPage";
@@ -603,6 +604,7 @@ export default async function DashboardPage({
 
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
+  if (user) trackEvent(user.id, "dashboard_view", { locale, demo: isDemo });
 
   if (!user && !isDemo) {
     const schemas = [

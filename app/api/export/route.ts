@@ -4,6 +4,7 @@ import { createClient as createService } from "@supabase/supabase-js";
 import { getOutbreaks } from "@/lib/outbreaks";
 import { rateLimit, getClientIp } from "@/lib/rate-limit";
 import { createHash } from "crypto";
+import { trackEvent } from "@/lib/track-event";
 
 export const dynamic = "force-dynamic";
 
@@ -48,7 +49,7 @@ export async function GET(request: NextRequest) {
     svc.from("api_keys").update({ last_used_at: new Date().toISOString() })
       .eq("key_hash", keyHash).then(() => {});
 
-    return buildExportResponse(request);
+    return buildExportResponse(request, apiKey.user_id);
   }
 
   // ── Rate limit: 20 exports / IP / hour ──────────────────────────────────────
@@ -93,10 +94,10 @@ export async function GET(request: NextRequest) {
     return new NextResponse("Upgrade to Pro to export data", { status: 403 });
   }
 
-  return buildExportResponse(request);
+  return buildExportResponse(request, user.id);
 }
 
-async function buildExportResponse(request: NextRequest) {
+async function buildExportResponse(request: NextRequest, userId?: string) {
 
   // ── Build response ───────────────────────────────────────────────────────────
   const { getIncidenceRate } = await import("@/lib/population-data");
@@ -104,6 +105,7 @@ async function buildExportResponse(request: NextRequest) {
   const outbreaks = await getOutbreaks();
   const format = new URL(request.url).searchParams.get("format");
   const date = new Date().toISOString().split("T")[0];
+  if (userId) trackEvent(userId, "csv_export", { format: format ?? "csv" });
 
   const records = outbreaks.map((o) => {
     const cfr       = o.cases > 0 && o.deaths !== null ? parseFloat((o.deaths / o.cases * 100).toFixed(1)) : null;
