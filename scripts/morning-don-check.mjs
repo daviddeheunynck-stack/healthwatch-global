@@ -1,6 +1,7 @@
 // Routine matinale HealthWatch Global — voir .claude/scheduled-tasks/morning-don-check/SKILL.md pour la procédure complète.
-// Ce script couvre les étapes 1-4 (fetch DON, pull DB, scan doublons/périmé). La vérification contre
-// la source primaire (WebFetch/WebSearch), les corrections ciblées et le récap restent pilotés par l'agent.
+// Ce script couvre les étapes 1-5 (fetch DON, pull DB, scan doublons/périmé/gel/traductions,
+// cadence hebdo des lignes manuelles). La vérification contre la source primaire (WebFetch/WebSearch),
+// les corrections ciblées et le récap restent pilotés par l'agent.
 import { readFileSync } from "fs";
 
 const env = readFileSync(".env.local.live", "utf-8");
@@ -137,6 +138,43 @@ if (suspicious.length) {
   );
 } else {
   console.log("Aucune (hors faux positifs connus : seeds polio PK/AF).");
+}
+
+// --- 4d. Lignes gelées à source_priority=10 et non couvertes par un cluster de seeds connu ---
+// prio=10 bloque toute écriture de cron (guards `.lte(source_priority, N)` partout) — légitime
+// pour les seeds de clusters (déjà suivis en 4a), mais un résidu is_seed=false à prio=10 signifie
+// qu'une ligne s'est figée sans que personne ne le sache (vécu : Ebola/RDC 16-17/07, Ebola/France
+// et Ebola/Allemagne jusqu'au 23/07). Signal seulement — ne jamais déverrouiller sans vérifier
+// pourquoi la ligne a été mise à ce niveau.
+console.log("\n=== Lignes actives à source_priority=10, hors clusters de seeds connus (à surveiller) ===");
+const frozenNonSeed = active.filter((o) => o.source_priority === 10 && !o.is_seed);
+if (frozenNonSeed.length) {
+  frozenNonSeed.forEach((o) =>
+    console.log(`[${o.id}] ${o.disease_en || o.disease} | ${o.country_en || o.country} | date=${(o.date || "").slice(0, 10)} | upd=${(o.updated_at || "").slice(0, 10)} | src=${(o.source || "").slice(0, 50)}`)
+  );
+} else {
+  console.log("Aucune.");
+}
+
+// --- 4e. Traductions partielles (description_fr/es/ar/id incohérents) ---
+// sync-outbreaks ne backfillait que sur description_fr IS NULL — un fr écrit à la main sans les
+// 3 autres langues restait invisible pour toujours à ce gate (corrigé le 2026-07-23, commit
+// ca8e30c). Ce signal reste utile si un autre chemin d'écriture recrée le même trou.
+const partialTranslationRows = await fetchJson(
+  `${SUPABASE_URL}/rest/v1/outbreaks?active=eq.true&description=not.is.null&description=neq.&select=id,disease_en,country_en,description_fr,description_es,description_ar,description_id`,
+  { headers: h }
+);
+const partial = partialTranslationRows.filter((o) => {
+  const flags = [o.description_fr, o.description_es, o.description_ar, o.description_id].map((v) => !!v);
+  return flags.some(Boolean) && flags.some((v) => !v);
+});
+console.log("\n=== Traductions partielles (au moins une langue remplie, au moins une manquante) ===");
+if (partial.length) {
+  partial.forEach((o) =>
+    console.log(`[${o.id}] ${o.disease_en} | ${o.country_en} | fr=${o.description_fr ? "OK" : "NULL"} es=${o.description_es ? "OK" : "NULL"} ar=${o.description_ar ? "OK" : "NULL"} id=${o.description_id ? "OK" : "NULL"}`)
+  );
+} else {
+  console.log("Aucune.");
 }
 
 // --- 5. Lignes manuelles (section 5 du SKILL.md) dues pour vérif hebdo (>7j) ---
