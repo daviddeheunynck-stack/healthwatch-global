@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { rateLimit, getClientIp } from "@/lib/rate-limit";
 import { errorMessage } from "@/lib/error";
+import { isRealProduction } from "@/lib/cron-monitor";
 import * as Sentry from "@sentry/nextjs";
 
 export const dynamic = "force-dynamic";
@@ -202,7 +203,7 @@ export async function POST(req: NextRequest) {
 
     // Send confirmation email only for NEW subscriptions
     const brevoKey = clean(process.env.BREVO_API_KEY);
-    if (!isDuplicate && brevoKey && subscriptionId) {
+    if (!isDuplicate && brevoKey && subscriptionId && isRealProduction) {
       const { subject, html } = buildConfirmationEmail(email, normalizedRegion, safeLocale, subscriptionId);
       await fetch("https://api.brevo.com/v3/smtp/email", {
         method: "POST",

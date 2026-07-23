@@ -3,6 +3,7 @@ import { createClient as createServiceClient } from "@supabase/supabase-js";
 import { buildResetPasswordEmail } from "@/lib/reset-password-email";
 import { errorMessage } from "@/lib/error";
 import { rateLimit, getClientIp } from "@/lib/rate-limit";
+import { isRealProduction } from "@/lib/cron-monitor";
 import * as Sentry from "@sentry/nextjs";
 
 export const dynamic = "force-dynamic";
@@ -61,9 +62,11 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ success: true });
     }
 
-    if (!BREVO_API_KEY) {
-      console.warn("[reset-password] BREVO_API_KEY not set — skipping send");
-      Sentry.captureException(new Error("[reset-password] BREVO_API_KEY not set"), { tags: { route: "reset-password" } });
+    if (!BREVO_API_KEY || !isRealProduction) {
+      if (!BREVO_API_KEY) {
+        console.warn("[reset-password] BREVO_API_KEY not set — skipping send");
+        Sentry.captureException(new Error("[reset-password] BREVO_API_KEY not set"), { tags: { route: "reset-password" } });
+      }
       return NextResponse.json({ success: true });
     }
 

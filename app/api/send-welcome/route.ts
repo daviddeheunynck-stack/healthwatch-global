@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { buildWelcomeEmail } from "@/lib/welcome-email";
 import { errorMessage } from "@/lib/error";
 import { rateLimit, getClientIp } from "@/lib/rate-limit";
+import { isRealProduction } from "@/lib/cron-monitor";
 import * as Sentry from "@sentry/nextjs";
 
 export const dynamic = "force-dynamic";
@@ -34,8 +35,8 @@ export async function POST(req: NextRequest) {
 
     const locale = VALID_LOCALES.includes(rawLocale) ? rawLocale : "en";
 
-    if (!BREVO_API_KEY) {
-      console.warn("[send-welcome] BREVO_API_KEY not set — skipping");
+    if (!BREVO_API_KEY || !isRealProduction) {
+      console.warn("[send-welcome] BREVO_API_KEY not set or not production — skipping");
       return NextResponse.json({ skipped: true });
     }
 

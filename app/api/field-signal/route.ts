@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { rateLimit, getClientIp } from "@/lib/rate-limit";
+import { isRealProduction } from "@/lib/cron-monitor";
 import * as Sentry from "@sentry/nextjs";
 
 export const dynamic = "force-dynamic";
@@ -17,6 +18,7 @@ async function sendEmail(
   html: string,
   replyTo?: { email: string; name: string }
 ) {
+  if (!isRealProduction) return;
   const BREVO_API_KEY = clean(process.env.BREVO_API_KEY);
   if (!BREVO_API_KEY) throw new Error("BREVO_API_KEY not set");
   const body: Record<string, unknown> = {

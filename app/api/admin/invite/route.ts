@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase-server";
 import { createClient as createServiceClient } from "@supabase/supabase-js";
 import { isAdmin } from "@/lib/admin";
+import { isRealProduction } from "@/lib/cron-monitor";
 import * as Sentry from "@sentry/nextjs";
 
 export const dynamic = "force-dynamic";
@@ -169,16 +170,18 @@ export async function POST(req: NextRequest) {
     </div>
   `;
 
-  const brevoRes = await fetch("https://api.brevo.com/v3/smtp/email", {
-    method: "POST",
-    headers: { "api-key": BREVO_API_KEY, "Content-Type": "application/json" },
-    body: JSON.stringify({
-      sender:  { name: "HealthWatch Global", email: "alerts@healthwatch-global.com" },
-      to:      [{ email, name }],
-      subject: l.subject,
-      htmlContent,
-    }),
-  });
+  const brevoRes = isRealProduction
+    ? await fetch("https://api.brevo.com/v3/smtp/email", {
+        method: "POST",
+        headers: { "api-key": BREVO_API_KEY, "Content-Type": "application/json" },
+        body: JSON.stringify({
+          sender:  { name: "HealthWatch Global", email: "alerts@healthwatch-global.com" },
+          to:      [{ email, name }],
+          subject: l.subject,
+          htmlContent,
+        }),
+      })
+    : new Response(null, { status: 200 });
 
   if (!brevoRes.ok) {
     const err = await brevoRes.text();

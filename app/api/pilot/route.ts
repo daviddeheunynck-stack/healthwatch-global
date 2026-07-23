@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { rateLimit, getClientIp } from "@/lib/rate-limit";
+import { isRealProduction } from "@/lib/cron-monitor";
 import * as Sentry from "@sentry/nextjs";
 
 export const dynamic = "force-dynamic";
@@ -20,6 +21,7 @@ async function sendEmail(
   html: string,
   replyTo?: { email: string; name: string }
 ) {
+  if (!isRealProduction) return;
   const BREVO_API_KEY = clean(process.env.BREVO_API_KEY);
   if (!BREVO_API_KEY) throw new Error("BREVO_API_KEY not set");
   const body: Record<string, unknown> = {
@@ -311,13 +313,22 @@ export async function POST(req: NextRequest) {
         ar: "HealthWatch Global — تم تفعيل وصولك للبرنامج التجريبي",
         id: "HealthWatch Global — Akses Pilot Anda sudah aktif",
       };
-      await sendEmail(
-        email,
-        name,
-        confirmSubject[userLocale] ?? confirmSubject.en,
-        buildConfirmationEmail(name, userLocale)
-      );
+      // The Pro trial activation above (profile upsert + alert enrollment) has
+      // already committed by this point — a Brevo hiccup sending the
+      // confirmation email must not turn a real, successful activation into
+      // a 500 that tells the applicant their submission failed.
       activated = true;
+      try {
+        await sendEmail(
+          email,
+          name,
+          confirmSubject[userLocale] ?? confirmSubject.en,
+          buildConfirmationEmail(name, userLocale)
+        );
+      } catch (emailErr) {
+        console.error("[pilot] confirmation email failed:", emailErr);
+        Sentry.captureException(emailErr, { tags: { route: "pilot", part: "confirmation-email" } });
+      }
     } else if (!profile) {
       // No account — prompt signup
       const userLocale = (locale as string) || "en";
@@ -328,28 +339,40 @@ export async function POST(req: NextRequest) {
         ar: "HealthWatch Global — أنشئ حسابك لتفعيل وصول البرنامج التجريبي",
         id: "HealthWatch Global — Buat akun untuk mengaktifkan akses Pilot",
       };
-      await sendEmail(
-        email,
-        name,
-        signupSubject[userLocale] ?? signupSubject.en,
-        buildSignupPromptEmail(name, userLocale)
-      );
+      try {
+        await sendEmail(
+          email,
+          name,
+          signupSubject[userLocale] ?? signupSubject.en,
+          buildSignupPromptEmail(name, userLocale)
+        );
+      } catch (emailErr) {
+        console.error("[pilot] signup-prompt email failed:", emailErr);
+        Sentry.captureException(emailErr, { tags: { route: "pilot", part: "signup-prompt-email" } });
+      }
     }
     // else: profile exists but is already on a paying/team/enterprise plan — leave
     // it untouched and skip any auto-reply to the applicant; David reviews manually
     // via the notification below.
 
-    // Always notify David
-    await sendEmail(
-      "david.deheunynck@gmail.com",
-      "David Deheunynck",
-      `[PILOT 🔴] ${name} — ${organization || email}`,
-      buildDavidNotification(
-        name, organization, email, role, teamSize, useCase,
-        activated ? "activated" : !profile ? "no-account" : "already-higher-plan"
-      ),
-      { email, name }
-    );
+    // Always notify David (best-effort — the applicant-facing outcome above is
+    // already final by this point, a failed internal notification shouldn't
+    // turn a successful submission into a 500 for the applicant).
+    try {
+      await sendEmail(
+        "david.deheunynck@gmail.com",
+        "David Deheunynck",
+        `[PILOT 🔴] ${name} — ${organization || email}`,
+        buildDavidNotification(
+          name, organization, email, role, teamSize, useCase,
+          activated ? "activated" : !profile ? "no-account" : "already-higher-plan"
+        ),
+        { email, name }
+      );
+    } catch (emailErr) {
+      console.error("[pilot] David notification email failed:", emailErr);
+      Sentry.captureException(emailErr, { tags: { route: "pilot", part: "david-notification-email" } });
+    }
 
     return NextResponse.json({ success: true, activated });
   } catch (err: unknown) {

@@ -5,6 +5,7 @@ import { buildTeamInviteEmail } from "@/lib/team-invite-email";
 import { rateLimit, getClientIp } from "@/lib/rate-limit";
 import { errorMessage } from "@/lib/error";
 import { resolvedPlan } from "@/lib/resolved-plan";
+import { isRealProduction } from "@/lib/cron-monitor";
 import * as Sentry from "@sentry/nextjs";
 
 export const dynamic = "force-dynamic";
@@ -144,7 +145,7 @@ export async function POST(req: NextRequest) {
 
   try {
     const { subject, html } = buildTeamInviteEmail(inviterEmail, team.name, acceptUrl, locale);
-    await sendInviteEmail(email, subject, html);
+    if (isRealProduction) await sendInviteEmail(email, subject, html);
   } catch (err) {
     // Non-fatal — invite exists even if email fails
     console.error("[team/invite] email error:", errorMessage(err));

@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase-server";
 import { resolvedPlan } from "@/lib/resolved-plan";
 import { randomBytes } from "crypto";
+import { isRealProduction } from "@/lib/cron-monitor";
 import * as Sentry from "@sentry/nextjs";
 
 export const dynamic = "force-dynamic";
@@ -104,7 +105,7 @@ export async function POST(req: Request) {
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
 
   // Send invite email
-  if (BREVO_KEY) {
+  if (BREVO_KEY && isRealProduction) {
     try {
       const res = await fetch("https://api.brevo.com/v3/smtp/email", {
         method: "POST",
