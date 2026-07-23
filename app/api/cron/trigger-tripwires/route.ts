@@ -15,6 +15,7 @@ import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 import * as Sentry from "@sentry/nextjs";
 import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
 import { notifyMobile } from "@/lib/mobile-notify";
+import { resolvedPlan } from "@/lib/resolved-plan";
 
 export const dynamic = "force-dynamic";
 
@@ -149,12 +150,18 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ ok: true, fired: 0 });
   }
 
-  // Fetch user locales in bulk
+  // Fetch user locales + plan-gating fields in bulk. Tripwires are a paid
+  // feature (creation is gated by resolvedPlan() in app/api/tripwires/route.ts),
+  // but this cron never re-checked it — a tripwire created during a trial kept
+  // firing forever even after the trial expired without payment.
   const userIds = [...new Set((tripwires as Tripwire[]).map((t) => t.user_id))];
-  const { data: profileLocales } = await supabase
-    .from("profiles").select("id, alert_locale").in("id", userIds);
+  const { data: profileRows } = await supabase
+    .from("profiles").select("id, alert_locale, plan, trial_ends_at, stripe_subscription_id").in("id", userIds);
   const localeMap: Record<string, string> = Object.fromEntries(
-    (profileLocales ?? []).map((p: { id: string; alert_locale?: string | null }) => [p.id, p.alert_locale ?? "en"])
+    (profileRows ?? []).map((p: { id: string; alert_locale?: string | null }) => [p.id, p.alert_locale ?? "en"])
+  );
+  const freeUserIds = new Set(
+    (profileRows ?? []).filter((p) => resolvedPlan(p) === "free").map((p) => p.id)
   );
 
   const outbreakIds = [...new Set((tripwires as Tripwire[]).map((t) => t.outbreak_id))];
@@ -185,6 +192,7 @@ export async function GET(req: NextRequest) {
       .eq("id", tw.id);
 
     if (!crossed) continue;
+    if (freeUserIds.has(tw.user_id)) continue;
 
     const locale       = localeMap[tw.user_id] ?? "en";
     const numLocale    = locale === "ar" ? "ar-SA" : locale;

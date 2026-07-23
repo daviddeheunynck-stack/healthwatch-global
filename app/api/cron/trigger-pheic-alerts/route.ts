@@ -4,6 +4,7 @@ import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 import * as Sentry from "@sentry/nextjs";
 import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
 import { notifyMobile } from "@/lib/mobile-notify";
+import { resolvedPlan } from "@/lib/resolved-plan";
 
 export const dynamic    = "force-dynamic";
 export const maxDuration = 300;
@@ -158,13 +159,18 @@ async function runTriggerPheicAlerts(_req: NextRequest, supabase: SupabaseClient
     return Response.json({ fired: 0 });
   }
 
-  // 2. Pro users who want PHEIC alerts
-  const { data: proUsers } = await supabase
+  // 2. Pro users who want PHEIC alerts. The plan filter alone doesn't catch an
+  // expired trial (plan column stays "pro" until expire-trials runs) — filter
+  // again with resolvedPlan() so an expired-trial-no-payment user stops
+  // getting PHEIC alerts instead of receiving them indefinitely for free.
+  const { data: rawProUsers } = await supabase
     .from("profiles")
-    .select("id, email, alert_locale")
+    .select("id, email, alert_locale, plan, trial_ends_at, stripe_subscription_id")
     .in("plan", ["pro", "team", "enterprise"])
     .eq("pheic_alerts", true)
     .not("email", "is", null);
+
+  const proUsers = (rawProUsers ?? []).filter((p) => resolvedPlan(p) !== "free");
 
   if (!proUsers?.length) {
     await logCronRun(supabase, "trigger-pheic-alerts", "ok", 0);

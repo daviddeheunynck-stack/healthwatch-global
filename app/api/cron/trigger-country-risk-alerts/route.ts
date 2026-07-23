@@ -4,6 +4,7 @@ import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 import * as Sentry from "@sentry/nextjs";
 import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
 import { notifyMobile } from "@/lib/mobile-notify";
+import { resolvedPlan } from "@/lib/resolved-plan";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 300;
@@ -64,11 +65,18 @@ export async function GET(req: NextRequest) {
     return Response.json({ fired: 0 });
   }
 
+  // Country risk alerts are a paid feature (creation gated by resolvedPlan()
+  // in app/api/country-risk-alerts/route.ts), but this cron never re-checked
+  // it — a rule created during a trial kept firing forever even after the
+  // trial expired without payment.
   const alertUserIds = [...new Set(alerts.map((a) => a.user_id as string))];
-  const { data: profileLocales } = await supabase
-    .from("profiles").select("id, alert_locale").in("id", alertUserIds);
+  const { data: profileRows } = await supabase
+    .from("profiles").select("id, alert_locale, plan, trial_ends_at, stripe_subscription_id").in("id", alertUserIds);
   const localeMap: Record<string, string> = Object.fromEntries(
-    (profileLocales ?? []).map((p: { id: string; alert_locale?: string | null }) => [p.id, p.alert_locale ?? "en"])
+    (profileRows ?? []).map((p: { id: string; alert_locale?: string | null }) => [p.id, p.alert_locale ?? "en"])
+  );
+  const freeUserIds = new Set(
+    (profileRows ?? []).filter((p) => resolvedPlan(p) === "free").map((p) => p.id)
   );
 
   const cooldownCutoff = new Date(Date.now() - COOLDOWN_H * 3_600_000).toISOString();
@@ -87,6 +95,7 @@ export async function GET(req: NextRequest) {
       riskMeetsThreshold(o.risk_level ?? "", alert.min_risk ?? "high")
     );
     if (!matches.length) continue;
+    if (freeUserIds.has(alert.user_id)) continue;
 
     const locale    = localeMap[alert.user_id] ?? "en";
     const numLocale = locale === "ar" ? "ar-SA" : locale;

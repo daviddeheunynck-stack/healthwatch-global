@@ -4,6 +4,7 @@ import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 import * as Sentry from "@sentry/nextjs";
 import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
 import { notifyMobile } from "@/lib/mobile-notify";
+import { resolvedPlan } from "@/lib/resolved-plan";
 
 export const dynamic = "force-dynamic";
 
@@ -99,12 +100,24 @@ export async function GET(req: NextRequest) {
   const oMap = new Map<string, Outbreak>();
   for (const o of (outbreaks ?? []) as Outbreak[]) oMap.set(o.id, o);
 
+  // Outbreak subscriptions are a paid feature (creation gated by
+  // resolvedPlan() in app/api/outbreak-subscribers/route.ts), but this cron
+  // never checked it at all — a subscription created during a trial kept
+  // firing forever even after the trial expired without payment.
+  const subUserIds = [...new Set((subscribers as Subscriber[]).map((s) => s.user_id))];
+  const { data: profileRows } = await supabase
+    .from("profiles").select("id, plan, trial_ends_at, stripe_subscription_id").in("id", subUserIds);
+  const freeUserIds = new Set(
+    (profileRows ?? []).filter((p) => resolvedPlan(p) === "free").map((p) => p.id)
+  );
+
   const COOLDOWN_H = 24;
   let sent = 0;
 
   for (const sub of subscribers as Subscriber[]) {
     const o = oMap.get(sub.outbreak_id);
     if (!o || !sub.emails.length) continue;
+    if (freeUserIds.has(sub.user_id)) continue;
 
     // Respect 24-hour cooldown
     if (sub.last_sent_at) {
