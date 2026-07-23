@@ -200,6 +200,7 @@ export default function PricingCards({ locale }: { locale: string }) {
   const [trialDaysLeft, setTrialDaysLeft] = useState<number | null>(null);
   const [trialExpired, setTrialExpired] = useState(false);
   const [currentPlan, setCurrentPlan] = useState<string | null>(null);
+  const [pilotInfo, setPilotInfo] = useState<{ isPilot: boolean; organization: string | null } | null>(null);
   const c = COPY[locale] ?? COPY.en;
   const p = PRICES[locale] ?? PRICES.en;
   const tc = TRIAL_COPY[locale] ?? TRIAL_COPY.en;
@@ -211,7 +212,7 @@ export default function PricingCards({ locale }: { locale: string }) {
       if (!user) return;
       supabase
         .from("profiles")
-        .select("plan, trial_ends_at, stripe_subscription_id")
+        .select("plan, trial_ends_at, stripe_subscription_id, is_pilot, pilot_organization")
         .eq("id", user.id)
         .single()
         .then(({ data }) => {
@@ -226,12 +227,29 @@ export default function PricingCards({ locale }: { locale: string }) {
             if (daysLeft > 0) setTrialDaysLeft(daysLeft);
             else setTrialExpired(true);
           }
+          // Institutional pilot without billing yet — same "reply to discuss
+          // Team plan" framing as the account page / TrialBanner / UpgradeModal
+          // / FreePlanBanner, instead of a self-serve checkout on either card.
+          if (data?.is_pilot) {
+            setPilotInfo({ isPilot: true, organization: (data.pilot_organization as string | null) ?? null });
+          }
         });
     });
   }, []);
 
   const isProSubscribed  = currentPlan === "pro";
   const isTeamSubscribed = currentPlan === "team";
+  const isPilotPending   = !!pilotInfo?.isPilot;
+  const pilotOrg = pilotInfo?.organization || (locale === "fr" ? "votre organisation" : "your organization");
+  const pilotMailtoHref = "mailto:david.deheunynck@gmail.com?subject=" + encodeURIComponent(
+    locale === "fr" ? `Suite du pilote — ${pilotOrg}` : `Following up on our pilot — ${pilotOrg}`
+  );
+  const pilotCtaLabel =
+    locale === "fr" ? "Répondre pour en discuter →" :
+    locale === "es" ? "Responder para hablar →" :
+    locale === "ar" ? "← الرد للمناقشة" :
+    locale === "id" ? "Balas untuk berdiskusi →" :
+    "Reply to discuss →";
 
   return (
     <div className="space-y-6">
@@ -358,6 +376,13 @@ export default function PricingCards({ locale }: { locale: string }) {
               <Check className="w-4 h-4" />
               {tc.subscribed}
             </div>
+          ) : isPilotPending ? (
+            <a
+              href={pilotMailtoHref}
+              className="w-full flex items-center justify-center bg-red-600 hover:bg-red-500 text-white font-semibold py-2.5 rounded-lg transition-colors"
+            >
+              {pilotCtaLabel}
+            </a>
           ) : (
             <CheckoutButton
               plan="pro"
@@ -421,6 +446,13 @@ export default function PricingCards({ locale }: { locale: string }) {
               <Check className="w-4 h-4" />
               {tc.subscribed}
             </div>
+          ) : isPilotPending ? (
+            <a
+              href={pilotMailtoHref}
+              className="w-full flex items-center justify-center bg-amber-700 hover:bg-amber-600 text-white font-semibold py-2.5 rounded-lg transition-colors"
+            >
+              {pilotCtaLabel}
+            </a>
           ) : (
             <CheckoutButton
               plan="team"
