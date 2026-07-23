@@ -83,13 +83,22 @@ export async function POST(req: NextRequest) {
   }
 
   // 2. Set Pro plan for 35 days
+  // This route's own email copy (PILOT_EMAIL above) always brands the invite
+  // as "pilot access" — every invite sent through here is conceptually a
+  // pilot, yet the profile never recorded is_pilot/pilot_organization. That
+  // gap meant hand-invited leads (e.g. ZABRE, Mulamba) got the generic
+  // self-serve framing in lib/trial-ending-email.ts / lib/trial-value-nudge-
+  // email.ts instead of the institutional Team-plan framing both already
+  // branch on via is_pilot.
   const trialEnd = new Date(Date.now() + 35 * 86_400_000).toISOString();
   const { error: profileErr } = await admin.from("profiles").upsert({
-    id:            userId,
+    id:                 userId,
     email,
-    plan:          "pro",
-    trial_ends_at: trialEnd,
-    locale:        locale === "fr" ? "fr" : "en",
+    plan:               "pro",
+    trial_ends_at:      trialEnd,
+    locale:             locale === "fr" ? "fr" : "en",
+    is_pilot:           true,
+    pilot_organization: organization,
   }, { onConflict: "id" });
 
   if (profileErr) {
