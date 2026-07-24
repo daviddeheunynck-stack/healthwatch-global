@@ -222,7 +222,7 @@ async function runPilotFollowUp(_req: NextRequest, supabase: SupabaseClient) {
   const windowEnd   = new Date(now - 7.5 * 86_400_000).toISOString();
 
   const queryPilots = () =>
-    supabase
+    createClient(SUPABASE_URL, SUPABASE_SERVICE)
       .from("profiles")
       .select("id, email, locale, display_filters, trial_ends_at, stripe_subscription_id")
       .in("plan", ["pro", "starter", "team"])
@@ -230,9 +230,13 @@ async function runPilotFollowUp(_req: NextRequest, supabase: SupabaseClient) {
       .gte("created_at", windowStart)
       .lt("created_at",  windowEnd);
 
-  // One retry — absorbs transient fetch/socket errors against Supabase
-  // ("TypeError: terminated"), same fix as lib/outbreaks.ts getOutbreaks().
+  // Retries with a fresh client per attempt (up to 3) — absorbs transient
+  // fetch/socket errors against Supabase ("TypeError: terminated" from a
+  // stale keep-alive connection reused across serverless invocations). A
+  // single retry reusing the same client could land on the same dead socket
+  // — same fix as lib/outbreaks.ts queryWithRetry() (2026-07-24).
   let { data: pilots, error: pErr } = await queryPilots();
+  if (pErr) ({ data: pilots, error: pErr } = await queryPilots());
   if (pErr) ({ data: pilots, error: pErr } = await queryPilots());
 
   if (pErr) {
