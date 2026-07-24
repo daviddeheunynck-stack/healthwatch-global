@@ -15,6 +15,23 @@ function getServerClient() {
   );
 }
 
+// Retries transient fetch/socket errors against Supabase ("TypeError: terminated"
+// from a keep-alive connection reused across serverless invocations — Sentry
+// JAVASCRIPT-NEXTJS-1H, recurring 2026-07-13 through 07-23 despite an earlier
+// single-retry fix that reused the same client/connection across attempts).
+// Builds a fresh client per attempt so a retry can't land on the same dead socket.
+async function queryWithRetry<T>(
+  buildQuery: (supabase: ReturnType<typeof getServerClient>) => PromiseLike<{ data: T; error: unknown }>,
+  attempts = 3,
+): Promise<{ data: T; error: unknown }> {
+  let result: { data: T; error: unknown } | undefined;
+  for (let i = 0; i < attempts; i++) {
+    result = await buildQuery(getServerClient());
+    if (!result.error) return result;
+  }
+  return result!;
+}
+
 export interface Outbreak {
   id: string;
   disease: string;
@@ -66,19 +83,15 @@ const OUTBREAKS_REVALIDATE = 300; // seconds — must be a statically-analyzable
 
 const getLastSyncCached = unstable_cache(
   async (): Promise<string | null> => {
-    const supabase = getServerClient();
-    const query = () =>
+    const { data, error } = await queryWithRetry((supabase) =>
       supabase
         .from("outbreaks")
         .select("updated_at")
         .eq("active", true)
         .order("updated_at", { ascending: false })
         .limit(1)
-        .single();
-    // One retry — absorbs transient fetch/socket errors against Supabase
-    // (rare but seen in prod, see getOutbreaksCached below for detail).
-    let { data, error } = await query();
-    if (error) ({ data, error } = await query());
+        .single(),
+    );
     if (error) throw error; // propagate — don't let a transient failure cache as "no sync"
     return data?.updated_at ?? null;
   },
@@ -96,23 +109,15 @@ export async function getLastSync(): Promise<string | null> {
 
 const getOutbreaksCached = unstable_cache(
   async (): Promise<Outbreak[]> => {
-    const supabase = getServerClient();
-
     const sixtyDaysAgo = new Date(Date.now() - 60 * 86_400_000).toISOString().split("T")[0];
-    const query = () =>
+
+    const { data, error } = await queryWithRetry((supabase) =>
       supabase
         .from("outbreaks")
         .select("*")
         .or(`active.eq.true,and(source_priority.gte.3,updated_at.gte.${sixtyDaysAgo})`)
-        .order("date", { ascending: false });
-
-    // One retry — absorbs transient fetch/socket errors against Supabase
-    // ("TypeError: terminated" from a keep-alive connection reused across
-    // serverless invocations); seen twice in prod, Sentry JAVASCRIPT-NEXTJS-1H
-    // (2026-07-13/14), each time silently degrading the homepage to 0 outbreaks
-    // for whichever request hit it.
-    let { data, error } = await query();
-    if (error) ({ data, error } = await query());
+        .order("date", { ascending: false }),
+    );
 
     if (error) {
       Sentry.captureException(error, { tags: { lib: "outbreaks", fn: "getOutbreaks" } });
