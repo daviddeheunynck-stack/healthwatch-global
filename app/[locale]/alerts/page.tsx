@@ -47,7 +47,7 @@ const PRO_COPY: Record<string, {
   fr: {
     badge: "Pro",
     title: "Alertes régionales quotidiennes · Toutes les régions",
-    sub: "Recevez un résumé quotidien dès qu'un nouveau foyer est signalé par l'OMS, l'ECDC, l'OPAS ou l'Africa CDC — pour chaque région du monde.",
+    sub: "Recevez un résumé quotidien dès qu'un nouveau foyer est signalé ou qu'un foyer existant s'aggrave, d'après l'OMS, l'ECDC, l'OPAS ou l'Africa CDC — pour chaque région du monde.",
     items: ["Alertes email quotidiennes (toutes régions)", "Rapports PDF automatiques", "Intégration Slack / Teams"],
     cta: "Commencer l'essai gratuit →",
     ctaExpired: "S'abonner à Pro →",
@@ -59,7 +59,7 @@ const PRO_COPY: Record<string, {
   en: {
     badge: "Pro",
     title: "Daily regional alerts · All regions",
-    sub: "Get a daily summary as soon as a new outbreak is reported by WHO, ECDC, PAHO or Africa CDC — for every region on earth.",
+    sub: "Get a daily summary as soon as a new outbreak is reported or an existing one escalates, sourced from WHO, ECDC, PAHO or Africa CDC — for every region on earth.",
     items: ["Daily email alerts (all regions)", "Automatic PDF reports", "Slack / Teams integration"],
     cta: "Start free trial →",
     ctaExpired: "Subscribe to Pro →",
@@ -71,7 +71,7 @@ const PRO_COPY: Record<string, {
   es: {
     badge: "Pro",
     title: "Alertas regionales diarias · Todas las regiones",
-    sub: "Reciba un resumen diario en cuanto la OMS, ECDC, PAHO o Africa CDC reporten un nuevo brote — en cualquier región del mundo.",
+    sub: "Reciba un resumen diario en cuanto se reporte un nuevo brote o uno existente se agrave, según la OMS, ECDC, PAHO o Africa CDC — en cualquier región del mundo.",
     items: ["Alertas email diarias (todas las regiones)", "Informes PDF automáticos", "Integración Slack / Teams"],
     cta: "Iniciar prueba gratuita →",
     ctaExpired: "Suscribirse a Pro →",
@@ -83,7 +83,7 @@ const PRO_COPY: Record<string, {
   ar: {
     badge: "Pro",
     title: "تنبيهات إقليمية يومية · جميع المناطق",
-    sub: "احصل على ملخص يومي بمجرد الإبلاغ عن تفشٍّ جديد من WHO أو ECDC أو PAHO أو Africa CDC — في كل منطقة في العالم.",
+    sub: "احصل على ملخص يومي بمجرد الإبلاغ عن تفشٍّ جديد أو تفاقم تفشٍّ قائم، من WHO أو ECDC أو PAHO أو Africa CDC — في كل منطقة في العالم.",
     items: ["تنبيهات بريد إلكتروني يومية (جميع المناطق)", "تقارير PDF تلقائية", "تكامل Slack / Teams"],
     cta: "← ابدأ التجربة المجانية",
     ctaExpired: "← الاشتراك في Pro",
@@ -95,7 +95,7 @@ const PRO_COPY: Record<string, {
   id: {
     badge: "Pro",
     title: "Peringatan regional harian · Semua wilayah",
-    sub: "Dapatkan ringkasan harian segera setelah WHO, ECDC, PAHO atau Africa CDC melaporkan wabah baru — di setiap wilayah di bumi.",
+    sub: "Dapatkan ringkasan harian segera setelah wabah baru dilaporkan atau wabah yang ada memburuk, oleh WHO, ECDC, PAHO atau Africa CDC — di setiap wilayah di bumi.",
     items: ["Peringatan email harian (semua wilayah)", "Laporan PDF otomatis", "Integrasi Slack / Teams"],
     cta: "Mulai uji coba gratis →",
     ctaExpired: "Berlangganan Pro →",
