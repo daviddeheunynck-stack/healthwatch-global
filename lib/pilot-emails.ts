@@ -8,6 +8,21 @@ const esc = (s: string) =>
 
 export const APP_URL = "https://healthwatch-global.com";
 
+export const VALID_LOCALES = ["en", "fr", "es", "ar", "id"];
+
+// Every builder below interpolates `locale` raw into `lang="…"` / `dir="…"` and
+// into the CTA URLs, and looks copy up with COPY[locale]. Both are unsafe on an
+// arbitrary string: POST /api/pilot takes `locale` straight from an
+// unauthenticated request body and will email ANY address (the no-account
+// branch), so a crafted locale could inject attacker-controlled HTML — a link,
+// say — into a DMARC-passing email from alerts@healthwatch-global.com. A
+// non-whitelisted key like "constructor" also resolves to a truthy Object
+// member, defeating the `?? COPY.en` fallback and rendering "undefined" copy.
+// Normalising here rather than only at the callers makes every future caller
+// safe by construction.
+const normalizeLocale = (locale: string) =>
+  VALID_LOCALES.includes(locale) ? locale : "en";
+
 export async function sendEmail(
   to: string,
   toName: string,
@@ -67,6 +82,7 @@ export function buildConfirmationEmail(name: string, locale: string): string {
     },
   };
 
+  locale = normalizeLocale(locale);
   const c = COPY[locale] ?? COPY.en;
   const isRtl = locale === "ar";
   const dashUrl = `${APP_URL}/${locale}`;
@@ -138,6 +154,7 @@ export function buildConfirmRequestEmail(name: string, locale: string, confirmUr
     },
   };
 
+  locale = normalizeLocale(locale);
   const c = COPY[locale] ?? COPY.en;
   const isRtl = locale === "ar";
 
@@ -208,6 +225,7 @@ export function buildSignupPromptEmail(name: string, locale: string): string {
     },
   };
 
+  locale = normalizeLocale(locale);
   const c = COPY[locale] ?? COPY.en;
   const isRtl = locale === "ar";
   const signupUrl = `${APP_URL}/${locale}/signup`;

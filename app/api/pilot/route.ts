@@ -4,6 +4,7 @@ import { rateLimit, getClientIp } from "@/lib/rate-limit";
 import { buildPilotConfirmToken } from "@/lib/pilot-token";
 import {
   APP_URL,
+  VALID_LOCALES,
   sendEmail,
   buildConfirmRequestEmail,
   buildSignupPromptEmail,
@@ -12,6 +13,14 @@ import {
 import * as Sentry from "@sentry/nextjs";
 
 export const dynamic = "force-dynamic";
+
+// `locale` arrives from an unauthenticated request body and reaches both a
+// COPY[locale] lookup and a raw `lang="…"` / URL interpolation in the email
+// templates, on a route that will email an arbitrary address (the no-account
+// branch). Whitelist it here as well as in lib/pilot-emails.ts — same pattern
+// as /api/pilot/confirm, /api/team/accept and /auth/callback.
+const pickLocale = (v: unknown): string | null =>
+  typeof v === "string" && VALID_LOCALES.includes(v) ? v : null;
 
 const BOM = String.fromCharCode(65279);
 const clean = (val: string | undefined) =>
@@ -33,13 +42,21 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const { name, organization: rawOrganization, email, role, teamSize, useCase, locale } = await req.json();
+    const body = await req.json();
+
+    // Unauthenticated form — never trust type/length of free-text fields before
+    // persisting them, interpolating them into an email, or filtering on them.
+    const str = (v: unknown, max = 120) => (typeof v === "string" ? v.trim().slice(0, max) : "");
+    const name         = str(body?.name);
+    const email        = str(body?.email, 254);
+    const organization = str(body?.organization);
+    const role         = str(body?.role);
+    const teamSize     = str(body?.teamSize, 40);
+    const useCase      = str(body?.useCase, 2000);
 
     if (!name || !email) {
       return NextResponse.json({ error: "Missing fields" }, { status: 400 });
     }
-    // Unauthenticated form — never trust type/length of free-text fields before persisting.
-    const organization = typeof rawOrganization === "string" ? rawOrganization.trim().slice(0, 120) : "";
 
     const supabase = createClient(
       clean(process.env.NEXT_PUBLIC_SUPABASE_URL),
@@ -68,7 +85,7 @@ export async function POST(req: NextRequest) {
       // activation happens in /api/pilot/confirm, only reachable by whoever
       // controls that inbox.
       const { token, expiresAt } = buildPilotConfirmToken(profile.id);
-      const userLocale = (locale as string) || profile.locale || "en";
+      const userLocale = pickLocale(body?.locale) ?? pickLocale(profile.locale) ?? "en";
       const confirmUrl =
         `${APP_URL}/api/pilot/confirm?id=${encodeURIComponent(profile.id)}` +
         `&exp=${expiresAt}&token=${token}` +
@@ -96,7 +113,7 @@ export async function POST(req: NextRequest) {
       }
     } else if (!profile) {
       // No account — prompt signup
-      const userLocale = (locale as string) || "en";
+      const userLocale = pickLocale(body?.locale) ?? "en";
       const signupSubject: Record<string, string> = {
         fr: "HealthWatch Global — Créez votre compte pour activer votre accès Pilot",
         en: "HealthWatch Global — Create your account to activate Pilot access",
