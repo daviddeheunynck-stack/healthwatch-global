@@ -30,13 +30,19 @@ export async function GET(req: NextRequest) {
   const rawLocale = searchParams.get("locale") ?? "en";
   const locale = VALID_LOCALES.includes(rawLocale) ? rawLocale : "en";
   const organization = (searchParams.get("org") ?? "").trim().slice(0, 120);
-  const name = (searchParams.get("name") ?? "").trim().slice(0, 120) || "there";
+  // Verified against the exact string the token signs — trimmed/capped the same
+  // way POST /api/pilot did before signing, but not yet defaulted to "there".
+  // Applying the display fallback before verification would make a genuinely
+  // empty name fail against a signature computed over "".
+  const rawName = (searchParams.get("name") ?? "").trim().slice(0, 120);
 
-  if (!profileId || !verifyPilotToken(profileId, expiresAt, token)) {
+  if (!profileId || !verifyPilotToken(profileId, expiresAt, organization, rawName, token)) {
     // Expired, tampered, or already-used-past-window link — send back to the
     // application page rather than a bare error; the applicant can reapply.
     return NextResponse.redirect(`${APP_URL}/${locale}/pilot?expired=1`);
   }
+
+  const name = rawName || "there";
 
   const supabase = createClient(
     clean(process.env.NEXT_PUBLIC_SUPABASE_URL),

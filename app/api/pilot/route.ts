@@ -84,7 +84,7 @@ export async function POST(req: NextRequest) {
       // confirmation link instead (see lib/pilot-token.ts); the actual trial
       // activation happens in /api/pilot/confirm, only reachable by whoever
       // controls that inbox.
-      const { token, expiresAt } = buildPilotConfirmToken(profile.id);
+      const { token, expiresAt } = buildPilotConfirmToken(profile.id, organization, name);
       const userLocale = pickLocale(body?.locale) ?? pickLocale(profile.locale) ?? "en";
       const confirmUrl =
         `${APP_URL}/api/pilot/confirm?id=${encodeURIComponent(profile.id)}` +
