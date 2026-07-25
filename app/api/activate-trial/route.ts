@@ -74,21 +74,33 @@ export async function POST(_req: NextRequest) {
   // fired for anyone. "medium" balances enough signal to prove value during the
   // 14-day trial against flooding a brand-new inbox. Best-effort: a failure here
   // shouldn't fail trial activation itself.
-  const { error: alertsErr } = await admin
+  const alertRows = ["africa", "asia", "americas", "europe", "oceania"].map((region) => ({
+    user_id: user.id,
+    region,
+    min_risk: "medium",
+  }));
+  let { error: alertsErr } = await admin
     .from("user_alert_regions")
-    .upsert(
-      ["africa", "asia", "americas", "europe", "oceania"].map((region) => ({
-        user_id: user.id,
-        region,
-        min_risk: "medium",
-      })),
-      { onConflict: "user_id,region", ignoreDuplicates: true }
-    );
+    .upsert(alertRows, { onConflict: "user_id,region", ignoreDuplicates: true });
+
+  // One retry on transient failure (e.g. a momentary auth/network hiccup) before
+  // giving up — found 2026-07-25: a real signup silently ended up with 0 alert
+  // regions for their whole trial with no Sentry trace, because the original
+  // captureException below fired without a flush and never reached Sentry in
+  // this serverless function before it exited.
   if (alertsErr) {
-    console.error("[activate-trial] default alert enrollment failed:", alertsErr);
+    console.error("[activate-trial] alert enrollment failed, retrying once:", alertsErr.message);
+    ({ error: alertsErr } = await admin
+      .from("user_alert_regions")
+      .upsert(alertRows, { onConflict: "user_id,region", ignoreDuplicates: true }));
+  }
+
+  if (alertsErr) {
+    console.error("[activate-trial] default alert enrollment failed after retry:", alertsErr);
     Sentry.captureException(new Error(`[activate-trial] alert enrollment failed: ${alertsErr.message}`), {
       tags: { user_id: user.id },
     });
+    await Sentry.flush(2000);
   }
 
   console.log(`[activate-trial] Trial activated until ${trialEndsAt}`);
