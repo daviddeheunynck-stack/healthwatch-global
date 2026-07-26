@@ -197,6 +197,37 @@ if (partial.length) {
   console.log("Aucune.");
 }
 
+// --- 4f. Nulls silencieux : pays câblés dans une map de source mais absents de la base ---
+// Trouvé le 2026-07-27 en creusant le trou Tchad/choléra du 21-22/07 : la République
+// centrafricaine est câblée dans CHOLERA_ISO3 (app/api/cron/sync-who-regional/route.ts)
+// mais n'a JAMAIS produit de ligne — indistinguable en l'état d'un simple "pas de cas
+// actuel" (le cas documenté de Cameroun/Syrie/Liban/Népal, cf. commentaire du fetcher).
+// Scope volontairement restreint à CHOLERA_ISO3 pour l'instant (le cas confirmé) — étendre
+// à d'autres maps pays de crons (Mpox, Dengue...) seulement si ce scan s'avère utile.
+// Garder CHOLERA_ISO3_COUNTRIES synchronisé avec la vraie const du fetcher si elle change.
+const CHOLERA_ISO3_COUNTRIES = [
+  "Somalia", "Zimbabwe", "Afghanistan", "Mozambique", "Kenya", "Cameroon", "Syria",
+  "Malawi", "Lebanon", "Central African Republic", "Nepal", "Nigeria", "Tanzania", "Zambia",
+];
+// Nulls documentés comme attendus (commentaire du fetcher, sync-who-regional/route.ts) —
+// pas de cas actuel dans le flux ArcGIS, pas un bug. Ne pas re-signaler ces 4.
+const CHOLERA_EXPECTED_NULLS = ["Cameroon", "Syria", "Lebanon", "Nepal"];
+
+const choleraRows = await fetchJson(
+  `${SUPABASE_URL}/rest/v1/outbreaks?disease_en=eq.Cholera&select=country_en`,
+  { headers: h }
+);
+const choleraCountriesPresent = new Set(choleraRows.map((o) => o.country_en));
+console.log("\n=== Choléra — pays câblés dans CHOLERA_ISO3 mais aucune ligne en base (hors nulls attendus) ===");
+const silentNulls = CHOLERA_ISO3_COUNTRIES.filter(
+  (c) => !choleraCountriesPresent.has(c) && !CHOLERA_EXPECTED_NULLS.includes(c)
+);
+if (silentNulls.length) {
+  silentNulls.forEach((c) => console.log(`[${c}] À VÉRIFIER — câblé dans CHOLERA_ISO3, zéro ligne Choléra en base`));
+} else {
+  console.log("Aucun (hors nulls attendus : Cameroun, Syrie, Liban, Népal).");
+}
+
 // --- 5. Lignes manuelles (section 5 du SKILL.md) dues pour vérif hebdo (>7j) ---
 const MANUAL_ROWS = {
   "e856b352-747b-4db0-b0d1-c9e55f6c53aa": "Diphtérie/Australie",
