@@ -4,6 +4,180 @@ Archive de tout le contenu crÃ©Ã©. Mise Ã  jour Ã  chaque session.
 
 ---
 
+## 🗓️ 2026-07-26 — Engagement X (routine `x-hwg-monitoring`, matin)
+
+Navigateur `23c7ecdd…` (affiché « Browser 1 » puis « Browser 2 » après re-sélection). **Un incident CDP** : `Page.captureScreenshot` en timeout 30 s à deux reprises, résolu par `select_browser` sur le même deviceId (§7), sans perdre l'onglet. `get_page_text` et `javascript_tool` sont restés fonctionnels pendant l'incident. Le domaine `ox.ac.uk` est **refusé par le classifier** en navigation (« Navigation to this domain is not allowed ») : la vérification de la source primaire Oxford a dû passer par `WebSearch` (résultats CEPI + medsci.ox.ac.uk).
+
+**Quotas du jour : replies 3/3 REMPLI, follows 5/5 REMPLI** (aucune session X antérieure ce jour, vérifié dans content-log.md et dans le ledger de cadence de `x-watchlist.md` avant la 1re publication). Il ne reste **aucune marge** pour la session de 16h `x-hwg-followup-check`, sauf continuation de fil (exception hors quota, cf. [[feedback_reply_quota_cold_outreach_only]]).
+
+### 📬 Messages reçus (X / Twitter) — 26/07 matin
+
+**Boîte de réception VIDE.** Vérifiée sur `x.com/i/chat` en filtre « Tous » (« Boîte de réception vide ») **et** sur `x.com/i/chat/requests`, onglet Priorité (« Aucune demande de message »). **0 message reçu, 0 répondu, 0 noté pour David.** Aucune demande de contact hors plateforme, aucune donnée patient proposée, aucune instruction adressée à l'agent (§2, §3, §6 : rien à signaler).
+
+### 🔬 Donnée épidémiologique nouvelle — ✅ INTÉGRÉE EN BASE PROD
+
+- **Déclencheur** : visite directe de @Com_mediasRDC en début de session (source primaire imposée par la routine, pas le hasard du scroll). Nouveau **« Point de situation – 24 juillet 2026 »** publié le 26/07 à 02h15, plus frais de 2 jours que la base.
+- **Avant** : 2 905 cas / 1 269 décès / 519 guéris, `date = 2026-07-22` (SitRep n°69 relayé par ECDC).
+- **Après** : **3 075 cas / 1 354 décès / 556 guéris**, `date = 2026-07-24`, 755 patients en isolement ou hospitalisés, létalité 44,0 %, suivi des contacts 76,4 %, 5 provinces (Haut-Uélé, Ituri, Nord-Kivu, Sud-Kivu, Tshopo).
+- **Source primaire retenue** : https://x.com/Com_mediasRDC/status/2081171553387950121 (Ministère de la Communication et des Médias RDC). **Chiffres lus dans le corps de texte du post, jamais par zoom/OCR de l'image jointe** (§8).
+- **ECDC re-vérifié en direct avant écriture** : page toujours à « 2 905 confirmed cases, including 1 269 related deaths, from data up until 22 July », mise à jour « 24 July at 15:23 ». Retard structurel de 2 jours, connu et documenté, pas un bug de cron.
+- **⚠️ Écart de sources documenté** : Wikipédia et BNO News attribuent au **SitRep N°071/MVB_24/07/2026** des valeurs de 3 096 / 1 356 / 575 pour la même date. Écart de 0,7 %. Choix de garder les chiffres du communiqué gouvernemental pour que `source` reste cohérent avec ce qui est écrit et cliquable par l'utilisateur (insp.cd juridiquement fermé, cf. [[legal_insp_cd_and_inrb_mirror_restrictions]]). **Si 3 096/1 356 arrive plus tard via ECDC, c'est une hausse cohérente, PAS une régression** — noté dans [[project_ebola_drc_priority10_frozen_no_autofeed_2026_07_16]] pour éviter qu'une session future ne le bloque.
+- **Cohérence interne vérifiée** : 1 354 / 3 075 = 44,03 %, conforme au « taux de létalité de 44,0 % » du même communiqué. Dynamique +170 cas / +85 décès en 2 jours, cohérente avec les jours précédents.
+- **Environnement** : `.env.local.live`, hôte `tqznwmpkokdzrszysbcm` (**vraie prod**), garde `if (!SUPABASE_URL.includes("tqznwmpkokdzrszysbcm")) throw` dans le script. `source_priority` laissé à **5** (ne jamais re-verrouiller à 10), `active` non touché.
+- **Script** : `scripts/fix-ebola-drc-2026-07-26.mjs`, statut HTTP 200, **relecture indépendante de la ligne après écriture** confirmant 3075 / 1354 / 556 / 2026-07-24 / active=true / prio=5.
+
+### 👥 Comptes suivis — 5/5, quota rempli
+
+@OxfordVacGroup, @CEPIvaccines, @HPP_LSHTM (report du 25/07 exécuté), @actualitecd, @JeremyFarrar. Un candidat écarté : @Prof_TBalde (identité pourtant bien établie, mais compte dormant depuis juin 2025). Contexte, vérifications de légitimité et statuts détaillés dans `x-watchlist.md`, section « Comptes à suivre ».
+
+### 💬 Reply 1/3 — @UniofOxford (University of Oxford), 1re vaccination de l'essai Bundibugyo
+
+- **Post** : https://x.com/UniofOxford/status/2080679690335859164, publié le **24 juil. 17h41 (heure locale affichée), soit ~41 h avant la rédaction** — fenêtre 48 h respectée, mais de justesse (vérifié via l'attribut `datetime` = `2026-07-24T16:06:35Z` pour le relais BBC et `2026-07-24T15:41:09Z` pour ce post, pas via le libellé « 24 juil. »). 17,4 k vues, 7 réponses, 57 reposts, 135 j'aime.
+- **Cadence** : @UniofOxford **absent du ledger 7 jours** ✅. Cible retenue plutôt que @KrutikaKuppalli (meilleur post du jour sur le sujet mais **cooldown jusqu'au 28/07**, engagée le 21/07) et plutôt que @BBCNews (relais secondaire, fil de réponses dominé par du culture-war antivax).
+- **Réponses ouvertes** ✅ (champ « Postez votre réponse » présent). **Pré-check §5 : 7 réponses lues en entier** avant rédaction — 1 félicitation générique (@OburaAbingo), 3 hors-sujet/antivax (@upforthefight1, @jaybirdie1), 1 question de fond sur le seuil d'efficacité visé (@sofia_reed_h). **Aucun recoupement** avec l'angle retenu.
+- **Angle** : le goulot d'étranglement n'est pas l'approvisionnement mais le chemin de preuve. 620 000 doses sont **déjà** stockées face à une Phase 1 de 50 volontaires sains à Oxford, et l'espèce Bundibugyo n'a connu que deux flambées documentées avant celle-ci, donc la fenêtre pour produire des données d'efficacité est celle de la flambée en cours. Prolonge et précise l'angle « deploy-to-learn » posté le 21/07 chez @KrutikaKuppalli (qui portait sur Ervebo/rVSV-ZEBOV, vaccin de souche Zaire) : sujet différent (vaccin BDBV spécifique), chiffres différents, conclusion différente.
+- **Double-check** :
+  - **Langue** : EN, style X établi ✅.
+  - **Chiffres vérifiés contre source primaire (§8)** : « ~620 000 doses stockées par Serum Institute of India en deux semaines », « 4 000 doses investigationnelles fournies pour la Phase 1 », « 50 adultes sains de 18 à 55 ans à Oxford », « programme CEPI de 8,6 M USD », essai **BD-Ebov**, candidat **ChAdOx1 BDBV**, approbation conditionnelle MHRA — annonce Oxford/CEPI du 24/07 (accès direct ox.ac.uk refusé par le classifier, recoupé via `WebSearch` sur cepi.net + medsci.ox.ac.uk). Seuls 620 000 et 50 sont repris dans la reply, tous deux au mot près.
+  - **Historique de l'espèce vérifié contre le CDC** : « BVD has caused two previous outbreaks, one in Uganda in 2007 and one in DRC in 2012 » (cdc.gov/ebola/outbreaks). Les années 2007 et 2012 sont **citées** par la source, pas calculées ✅ ; formulation « nineteen years » écartée en rédaction précisément parce qu'elle aurait été une date **calculée** (§5).
+  - **Raisonnement refait** : une Phase 1 de 50 sujets sains mesure tolérance et immunogénicité, jamais la protection ; aucun schéma réglementaire n'autorise un déploiement sur cette seule base (même la voie immunogénicité + données animales de Zabdeno/Mvabea exige bien plus qu'une Phase 1). L'affirmation « cannot on its own justify » est donc bornée et défendable, sans prétendre qu'un essai d'efficacité de terrain serait le seul chemin possible.
+  - **Aucune prédiction datée** : « exist during this outbreak or not for years » est conditionnel, adossé au fait de rareté cité juste avant ✅.
+  - Pas de CTA, pas de lien, pas de hashtag, pas de tiret cadratin ✅.
+  - **Mise en forme réellement rendue** : `innerText` de `tweetTextarea_0` relu après saisie, identique au texte voulu, sans troncature ni caractère parasite ✅.
+- **Publiée et confirmée** : toast « Votre post a été publié. » + champ vidé + reply visible sur `/HWatchGlobal/with_replies` (horodatée « 32 s »). URL : https://x.com/HWatchGlobal/status/2081292614960038295
+
+> The number worth pairing with this is 620,000, roughly what Serum Institute has already stockpiled, against a Phase 1 enrolling 50 healthy adults in Oxford. Supply is not the binding constraint. The evidence pathway is, and a first-in-human safety and immunogenicity readout cannot on its own justify moving those doses into Ituri. Bundibugyo virus had caused exactly two documented outbreaks before this one, Uganda in 2007 and DRC in 2012, so the conditions to generate efficacy data against it exist during this outbreak or not for years.
+
+### 💬 Reply 2/3 — @SkyNews, grève des soignants au CTE Elikya (Bunia) pendant que les cas dépassent 3 000
+
+- **Post** : https://x.com/SkyNews/status/2081272427439354205, publié **il y a ~1 h** (`datetime` = `2026-07-26T06:56:29Z`, dernière modification 8h56), 42,9 k vues en une heure. Titre : « Ebola cases in DR Congo rise over 3,000 - as health workers go on strike. »
+- **Cadence** : @SkyNews **absent du ledger 7 jours** ✅. Préféré à @DrIanWeissman (même dépêche AP, 4 h, mais 492 vues seulement) et à @MediaBytesPH / @15MinuteNews (comptes de relais).
+- **Réponses ouvertes** ✅. **Pré-check §5 : 7 réponses lues** avant rédaction — commentaire générique sur la prévention (@nursethattrades), correction de style anglais (@Fludded), 2 hors-sujet complets (chien secouru, GIF). **Aucun angle analytique existant**, aucun recoupement.
+- **Angle** : une grève de paie n'est pas seulement une rupture de soins, c'est une rupture de **production de la donnée**. Le personnel en grève au CTE de Rwampara le 13/07 incluait nommément épidémiologistes, investigateurs de cas, chauffeurs et fossoyeurs, c'est-à-dire ceux qui **fabriquent** le compteur de cas ; si la courbe fléchit dans les jours qui viennent, un motif de paie et un motif de transmission seront indiscernables dans la série. Angle inédit dans l'archive HWG (aucune reply postée sur les grèves jusqu'ici).
+- **Double-check** :
+  - **Langue** : EN ✅.
+  - **Faits vérifiés hors du post source (§8)** : les deux grèves distinctes ont été recoupées via les reprises de la dépêche AP (ABC News, Washington Times, Inquirer, CBC — `news.sky.com` et `ox.ac.uk` inaccessibles en fetch direct). **13/07, Rwampara General Hospital (Ituri)** : « the striking staff … includes epidemiologists, case investigators, drivers and gravediggers who say they have not been paid ». **25/07, Elikya Ebola Treatment Center, Bunia (Ituri)** : médecins, infirmiers et agents de sécurité, « two months of unpaid performance bonuses ». Seul le premier épisode est cité dans la reply, avec la liste au mot près.
+  - **Chiffres de suivi des contacts** : 76,4 % vient du **sitrep national du 24/07** lu en direct ce matin sur @Com_mediasRDC (texte du post, pas OCR d'image, cf. §8) ; 67,4 % au **13/07** vient de l'archive HWG déjà vérifiée (ledger des 18 et 20/07). Formulation « in mid July » retenue plutôt qu'une date au jour près, la comparaison n'étant pas issue d'une source unique.
+  - **Raisonnement refait** : 67,4 → 76,4 = +9 points, la reply dit bien « up from », sens vérifié. L'inférence centrale (si les investigateurs de cas s'arrêtent, l'incidence rapportée baisse sans que la transmission baisse) est valide et **conditionnée** par « If the curve bends », pas présentée comme une prédiction.
+  - **Aucun chiffre de cas repris** : la reply ne rejoue ni 3 000, ni 2 973, ni 3 075, ni 3 096 — quatre valeurs circulaient simultanément aujourd'hui selon la source et la date d'arrêté, les reprendre aurait été un risque inutile.
+  - Pas de CTA, pas de lien, pas de hashtag, pas de tiret cadratin ✅.
+  - **Mise en forme réellement rendue** : `innerText` relu après saisie, conforme ✅.
+- **Publiée et confirmée** : toast « Votre post a été publié. » + champ vidé + reply visible sur `/HWatchGlobal/with_replies` (« 19 s »). URL : https://x.com/HWatchGlobal/status/2081293683001860461
+
+> Worth noting who stops working. When the Rwampara centre struck on 13 July, the listed staff included epidemiologists, case investigators, drivers and gravediggers, so this is the workforce that produces the case count and not only the one that treats patients. The 24 July national sitrep puts contact tracing at 76.4 percent, up from 67.4 percent in mid July, and contact tracing is the line most exposed when field investigators stop. If the curve bends in the coming days, payroll and transmission will look the same in the series.
+
+### 💬 Reply 3/3 — @actualitecd, l'évaluation individuelle de risque remplace la quarantaine systématique — QUOTA REPLIES 3/3 REMPLI
+
+- **Post** : https://x.com/actualitecd/status/2081123071516119321, publié le **25 juil. 23h03** (`datetime` = `2026-07-25T21:03Z`, ~11 h), 4 936 vues, **0 réponse**, 3 reposts, 6 j'aime. Titre : « Ebola en RDC : une évaluation individuelle de risque imposée à toute personne ayant séjourné dans une zone affectée avant tout déplacement international ».
+- **Cadence** : @actualitecd **absent du ledger 7 jours** ✅. Retenu pour sortir du registre « compteur de cas » des deux premières replies et parler mesure de gestion, cœur de cible décideurs.
+- **Réponses ouvertes** ✅. **Pré-check §5 : 0 réponse existante**, aucun angle à éviter. Faible volume de réponses = forte visibilité de la nôtre.
+- **Langue** : **EN** malgré un post source en français. Conforme à la règle X (§5.1) et au précédent établi deux fois (@SantePubliqueFr le 17/07, @Com_mediasRDC le 23/07). Ce n'est pas la règle LinkedIn/DM (langue du fil), à ne pas confondre.
+- **Angle** : le passage de la quarantaine systématique à une classification A/B/C **change la nature de la donnée exigée**. La quarantaine s'applique sur une géographie (un historique de voyage suffit) ; une catégorie d'exposition suppose qu'on sache déjà avec qui le voyageur a été en contact. La contrainte se déplace donc du poste-frontière vers le suivi des contacts en amont, et la classification ne peut pas être meilleure que la part des chaînes effectivement captées. **Distinct de la reply @Reuters du 20/07** (qui portait sur les *entry bans* canadiens, l'incubation de 21 j et l'auto-surveillance) : sens inverse du flux, mesure différente, mécanisme différent.
+- **Double-check** :
+  - **Fait central vérifié hors du post (§8)** : **arrêté ministériel signé le 17 juillet 2026** remplaçant la quarantaine systématique par une évaluation individuelle du risque d'exposition, avec **trois catégories A/B/C** (A = isolement maintenu, B et C = voyage possible sous conditions de surveillance sanitaire). Recoupé via reporter.cd et actualite.cd. La date du 17/07 est **citée** par la source, pas calculée ✅.
+  - **Aucun chiffre repris** dans la reply (ni cas, ni décès, ni pourcentage) : le raisonnement est structurel, donc aucun risque de recopie erronée.
+  - **Raisonnement refait** : la classification par exposition exige une information (les contacts du voyageur) que seul le système de suivi des contacts produit ; elle est donc bornée par la complétude de ce système. Affirmation logiquement valide et formulée comme une borne (« can never be better than »), pas comme une prédiction ni comme une critique de la mesure, qui reste épidémiologiquement plus fine que la quarantaine géographique.
+  - Pas de CTA, pas de lien, pas de hashtag, pas de tiret cadratin ✅.
+  - **Mise en forme réellement rendue** : `innerText` relu après saisie, conforme ✅. ⚠️ NB technique : le **premier clic sur le champ de réponse n'a pas donné le focus** (`activeElement` = DIV sans testid) à cause d'un décalage d'échelle entre la capture et les coordonnées CSS ; capture refaite puis second clic OK, focus `tweetTextarea_0` confirmé **avant** de taper. Réflexe à conserver (cf. [[feedback_x_verify_focus_before_typing_ctrl_enter]]).
+- **Publiée et confirmée** : toast « Votre post a été publié. » + champ vidé + reply visible sur `/HWatchGlobal/with_replies` (« 18 s »). URL : https://x.com/HWatchGlobal/status/2081294994900480396
+
+> The interesting part is what the ministerial order of 17 July replaces. Systematic quarantine keys on geography, and a travel history is enough to apply it. An A, B or C classification keys on exposure instead, which requires that someone already knows who the traveller was in contact with. That moves the binding constraint from the border post to the contact tracing system upstream, so the classification can never be better than the share of chains that were captured in the first place.
+
+## BILAN FIN DE SESSION — linkedin-hwg-monitoring 2026-07-26 (matin)
+
+**Tous les quotas du jour remplis : 5/5 commentaires, 5/5 connexions, 8/8 suivis.** **4 DM rédigés, présentés à David en session interactive et envoyés après validation explicite** (« Envoie les 4 »). Détail complet des connexions, suivis, DM et veille passive dans `linkedin-contacts.md`, section 26/07 ; détail des commentaires ci-dessous.
+
+**Navigateur : fonctionnel toute la session** (`23c7ecdd…`), rupture avec les 3 épisodes précédents (cas 2 le 25/07 matin, cas 3 les 24 et 25/07 à 16h). Aucune notification de blocage à envoyer à ce titre.
+
+**⚠️ Obstacle technique nouveau, à connaître pour les prochaines sessions** : impossible de commenter le post **Africa CDC** sur la visite de la Première ministre au CTE de Rwampara, faute de permalien accessible. La page entreprise n'expose pas son URN, son tri « Récent » ne bascule pas, et le bouton « Commenter » n'ouvre aucun éditeur ni depuis les résultats de recherche ni depuis le fil. Méthode qui marche et qui a été utilisée pour les 5 commentaires du jour : récupérer l'URN via `/company/<slug>/posts/` ou `/in/<vanity>/recent-activity/all/`, puis ouvrir `linkedin.com/feed/update/urn:li:activity:<id>/` où l'éditeur fonctionne normalement.
+
+**🔬 Donnée épidémiologique nouvelle vérifiée — ⚠️ écriture volontairement NON faite, à reprendre en session data**
+Déclencheur : le post ANRS commenté ce matin cite « au moins 916 cas, dont 160 hospitalisés » de chikungunya en **Guyane française** depuis le début de l'année.
+- **Recoupement contre source primaire (§8)** : bulletin **Santé publique France « Surveillance sanitaire en Guyane », publié le 16/07/2026** (semaines 27-28) — verbatim : « Depuis la détection du 1er cas confirmé de chikungunya fin janvier, **1 157 cas ont été biologiquement confirmés en Guyane**. » Le chiffre du post ANRS est donc **périmé**, pas faux. Ce bulletin **ne mentionne ni hospitalisations ni décès**. Le point de situation de l'**ARS Guyane** est nettement plus ancien (20/04/2026 : 143 cas, 38 hospitalisations, **1 décès dont l'imputabilité était « en cours d'analyse »**).
+- **État en base prod** (`.env.local.live`, hôte `tqznwmpkokdzrszysbcm`, lecture seule) : la ligne **Chikungunya / Guyane française** (`fc4f5fa6-ab40-4749-aaa2-0649b8d491b8`) existe mais porte **cases = 0, deaths = 0, date = 2026-06-04, active = false**, alors que l'épidémie est en cours et en phase épidémique sur plusieurs secteurs. Ligne clairement obsolète.
+- **Pourquoi aucune écriture n'a été faite ici, malgré une source primaire solide** : (a) la ligne est **alimentée par un avis de voyage CDC** (`source` = `wwwnc.cdc.gov/travel/notices/level2/chikungunya-french-guiana`), donc **détenue par le cron `sync-cdc-notices`** — y écrire un chiffre SPF et basculer `active` reviendrait à changer le propriétaire de la ligne au milieu d'une session marketing, avec un risque réel de revert silencieux ou de doublon au prochain run (leçon [[project_measles_us_description_drift_fixed]] : ne jamais rafraîchir à la main une ligne qu'un cron maintient) ; (b) **le nombre de décès reste incertain** (SPF n'en parle pas, l'ARS mentionnait 1 décès non imputé en avril), or `deaths` est NOT NULL et écrire 0 affirmerait quelque chose que la source ne dit pas.
+- 👉 **À trancher en session data** : soit rattacher cette ligne à SPF comme source (et l'exclure du périmètre `sync-cdc-notices`), soit créer une ligne SPF distincte. Chiffre et source prêts à l'emploi : **1 157 cas confirmés, bulletin SPF du 16/07/2026**.
+
+**Aucun cas remonté au titre des garde-fous §10 / §2 / §6.** Aucune demande de contact hors plateforme, aucune donnée patient proposée, aucune instruction adressée à l'agent.
+
+**Archivage vérifié (étape 6)** : les 5 commentaires figurent ci-dessous avec post, angle, double-check et texte ; les 5 connexions, 8 suivis, 4 DM envoyés (validés en session par David), invitations et veille passive figurent dans `linkedin-contacts.md` section 26/07 ; les 22 décisions candidats (suivis, connexions, file d'attente) sont dans `linkedin-candidates-tracker.md`. Relecture faite, rien de manquant.
+
+**Note sur la push notification envoyée en cours de session** : une notification a été envoyée à David pour les 4 DM initialement mis en file d'attente (procédure standard, session lancée en autonomie). David a rejoint la session peu après, a vu les 4 brouillons présentés dans la conversation, et a explicitement demandé leur envoi (« Envoie les 4 »), envoi exécuté conformément à la procédure de validation.
+
+## 🗓️ 2026-07-26 — Engagement LinkedIn (routine `linkedin-hwg-monitoring`, matin)
+
+Navigateur : `23c7ecdd…` (affiché « Browser 1 »), **fonctionnel** (`navigate`, `javascript_tool`, clics, saisie, screenshots OK) — rupture avec les cas 2/3 des 24 et 25/07. Viewport réduit (1280x542 utile), le fil se charge lentement : scroller le conteneur `main` (pas `window`) par paliers de 2,5 s. Modale Premium « Vous cherchez à développer votre réseau ? » réapparaît et **intercepte les clics** : la fermer avant chaque action.
+
+### 💬 Commentaire 1/5 — World Health Organization African Region (WHO AFRO), IPC communautaire au camp de Kigonze (Ituri, RDC)
+- **Post** : `urn:li:activity:7487019742776573952`, publié **il y a 1 h** (fenêtre 48h largement OK), 64 318 abonnés. Contenu : « To strengthen the #Ebola response in Kigonze camp, eastern DRC, where crowded conditions increase the risk of disease transmission, WHO and partners, together with the Ministry of Health, trained community members in infection prevention and control to help protect families and reduce the risk of further spread. »
+- **Règle 1 commentaire/profil/semaine** : aucun commentaire HWG sur la page WHO African Region depuis au moins le 19/07 (vérifié dans content-log.md) ✅.
+- **Pré-check §5** : **0 commentaire existant** sur le post au moment de la rédaction, aucun angle à éviter.
+- **Angle** : le camp comme unité épidémiologique propre, alors que les bulletins agrègent par zone de santé — l'intervention est conçue à une résolution que la couche de reporting n'a pas.
+- **Double-check** : EN (post en EN) ✅ ; **aucun chiffre repris ni inventé** ✅ ; aucune affirmation au-delà de ce que dit le post (formulation « crowded conditions » reprise telle quelle, pas de qualification « camp de déplacés » non sourcée dans le post) ✅ ; pas de CTA, pas de lien, pas de tiret cadratin ✅ ; HTML de l'éditeur relu avant envoi (`<p>…</p><p><br></p><p>…</p>` = saut de paragraphe réel) ✅.
+- **Posté et confirmé** (commentaire visible, horodaté « maintenant », champ vidé) :
+
+> A camp is its own epidemiological unit: the crowded conditions described here, plus movement in and out, make transmission behave differently than in the surrounding health zone. Training community members in IPC is aimed at exactly that scale.
+>
+> Reporting is not. Outbreak bulletins aggregate by health zone, so a camp sits inside a much larger denominator and its own trajectory stays invisible from the outside. The response gets designed camp by camp while the data that would show whether it worked only exists one level up.
+
+### 💬 Commentaire 2/5 — UNICEF République Centrafricaine, surveillance Ebola aux points d'entrée RCA/RDC
+- **Post** : `urn:li:activity:7486702121913032704`, publié **il y a 22 h** (fenêtre 48h OK), 4 608 abonnés. Contenu : témoignage de Fabrice Ambodi, agent de santé communautaire au point d'entrée de **Mondoli** depuis le 15 juin (prise des constantes des voyageurs venant de RDC, sensibilisation hygiène) ; collègue Christian à 15 km, village de Ndimba. Chiffres du post : **117 agents de santé communautaires formés et déployés sur 24 points d'entrée** en RCA, surveillance renforcée dans les centres de santé de **11 districts sanitaires** frontaliers de la RDC, campagnes de sensibilisation (affiches, radio, activités communautaires). **« To date, no cases of Ebola have been reported in the CAR. »**
+- **Règle 1 commentaire/profil/semaine** : profil jamais commenté par HWG ✅. Premier contact avec cette page.
+- **Pré-check §5** : **1 commentaire existant** lu avant rédaction (Josué MBAMI, Directeur ONG Vision Trust Centrafrique : « Yes, Prevention saves lives and protects children and families. We can do more. » — approbation générale, aucun angle à éviter).
+- **Angle** : un zéro est le chiffre le plus difficile à interpréter de l'extérieur (absence de maladie vs absence de détection) ; ce sont les chiffres d'effort de surveillance publiés juste au-dessus qui le rendent lisible, et cet effort n'est presque jamais publié à côté du compte de cas.
+- **Double-check** : EN (post en EN) ✅ ; **chiffres repris mot pour mot du post** (117 / 24 / 11) et citation exacte de la phrase « no cases of Ebola have been reported in the CAR » ✅ ; aucun chiffre extrapolé, aucune inférence sur le niveau réel de risque en RCA ✅ ; pas de CTA, pas de lien, pas de tiret cadratin ✅ ; HTML de l'éditeur relu avant envoi (`<p>…</p><p><br></p><p>…</p>`) ✅.
+- **Posté et confirmé** (champ vidé, texte du commentaire présent sur la page) :
+
+> The line that carries the most information here is "no cases of Ebola have been reported in the CAR", and it only carries it because of the numbers just above it.
+>
+> A zero is the hardest figure to read from the outside: it can mean absence of disease or absence of detection, and nothing in the number itself separates the two. 117 workers across 24 entry points and 11 border health districts is what turns this particular zero into evidence. Surveillance effort is almost never published next to the case count, which is why most zeros stay unreadable.
+
+### 💬 Commentaire 3/5 — ANRS Maladies infectieuses émergentes, arboviroses France hexagonale vs Guyane
+- **Post** : `urn:li:activity:7486435146137747456`, publié **il y a 1 j** (fenêtre 48h OK), 23 074 abonnés. Contenu (FR) : réchauffement climatique et circulations humaines modifient l'aire des moustiques vecteurs ; **Santé publique France à la mi-juin : 43 cas importés de chikungunya, 164 de dengue, 4 de Zika, du début mai au 14 juin, en France hexagonale** ; période de surveillance renforcée des arboviroses en France métropolitaine **du 1er mai au 30 novembre** ; **chikungunya en Guyane française : au moins 916 cas dont 160 hospitalisés, confirmés biologiquement depuis le début de l'année** ; réseau Arbo-France.
+- **Règle 1 commentaire/profil/semaine** : profil jamais commenté par HWG ✅.
+- **Pré-check §5** : **1 commentaire existant** lu en entier avant rédaction (Mohamed GHARBI, enseignant chercheur UniLaSalle Rouen : critique de fond sur les méthodes de lutte anti-vectorielle, effets des insecticides, impact écologique de l'éradication d'arthropodes autochtones, périmètre du terme « arboviroses »). **Angle totalement différent du mien** (surveillance/agrégation), aucune redondance.
+- **Angle** : les deux chiffres du post relèvent de deux régimes de surveillance distincts (cas importés sur fenêtre saisonnière renforcée vs cas confirmés en circulation installée), et l'agrégation par pays détruit cette distinction.
+- **Double-check** : FR (post en FR) ✅ ; **volontairement aucun chiffre repris** (le raisonnement est structurel, pas arithmétique, donc aucun risque d'erreur de recopie) ✅ ; dates reprises telles quelles du post (1er mai / 30 novembre), aucune date calculée ✅ ; « dans une zone où le virus circule déjà » adossé au post lui-même, qui présente la Guyane comme une région de circulation endémique ✅ ; accents vérifiés dans le HTML de l'éditeur après saisie ✅ ; pas de CTA, pas de lien, pas de tiret cadratin ✅ ; `<p>…</p><p><br></p><p>…</p>` confirmé ✅.
+- **Posté et confirmé** (champ vidé, texte présent sur la page) :
+
+> Les deux chiffres cités ici ne mesurent pas la même chose. L'hexagone compte des cas importés, remontés pendant une période de surveillance renforcée qui va du 1er mai au 30 novembre ; la Guyane compte des cas confirmés depuis le début de l'année, dans une zone où le virus circule déjà.
+>
+> Vu du côté agrégation, les deux se rangent pourtant sous le même pays, et la distinction la plus utile disparaît : l'un mesure une pression d'introduction, l'autre une circulation installée. Deux signaux d'alerte différents, avec des délais et des décisions différents.
+
+### 💬 Commentaire 4/5 — Julien Harneis (Senior Ebola Coordinator), Mongwalu / visite de la Première ministre / nouveau manager terrain
+- **Post** : `urn:li:activity:7486712647296638976`, publié **il y a 22 h** (fenêtre 48h OK). Candidat repéré en veille par la session du 25/07 (16h), requalifié en candidat principal aujourd'hui. Contenu bilingue FR puis EN : rencontre avec Emmanuel, jeune survivant d'Ebola soigné par MSF au CTE de Mongwalu, distribution de rations du PAM ; visite de la Première ministre **Judith Suminwa Tuluka** à Kisangani, Bunia, Rwampara et Mongwalu avec le Coordinateur humanitaire Damien Mama ; **arrivée du Professeur Steve Ahuka comme nouveau manager terrain de la riposte à Bunia**.
+- **Règle 1 commentaire/profil/semaine** : profil jamais commenté par HWG (suivi seulement) ✅.
+- **Pré-check §5** : **4 commentaires existants** lus avant rédaction (Teohna Williams, ONU : félicitations à Emmanuel et aux équipes ; Kevin B. KETCHMEN, PAM/ONU : félicitations ; Dr Martine Nshobole Muderhwa : remerciement + expérience riposte Ebola RDC ; +1). **Tous sur le registre du remerciement/félicitation, aucun angle analytique** : le mien ne recoupe personne.
+- **Angle** : le changement de management terrain est l'élément le plus discret du post et le seul qui ne laisse aucune trace dans les données, alors qu'il peut produire plus tard une rupture de cadence de publication indiscernable, en série chronologique, d'une rupture épidémiologique.
+- **Langue** : **FR** (post rédigé FR d'abord puis traduction EN ; fil de commentaires mixte). Choix explicite, pas par défaut.
+- **Double-check** : aucun chiffre repris ✅ ; **aucune date calculée** ✅ ; fait repris (arrivée du nouveau manager terrain) cité tel quel depuis le post, sans nommer le Pr Ahuka ni extrapoler sur ses fonctions exactes ✅ ; formulation prudente (« peut se manifester ») plutôt qu'une prédiction ✅ ; pas de CTA, pas de lien, pas de tiret cadratin ✅ ; HTML relu avant envoi (`<p>…</p><p><br></p><p>…</p>`, accents corrects) ✅.
+- **Posté et confirmé** (champ vidé, texte présent sur la page) :
+
+> Le passage le plus lourd de conséquences ici est peut-être le plus discret : l'arrivée d'un nouveau manager terrain de la riposte.
+>
+> Vu du côté des données, un changement de coordination ne laisse aucune trace directe. Il peut se manifester plus tard par une cadence ou un format de rapport qui bougent, et dans une série chronologique, une rupture de publication ressemble beaucoup à une rupture épidémiologique. C'est un des rares cas où il faut connaître l'organisation de la riposte pour lire correctement les chiffres qu'elle produit.
+
+### 💬 Commentaire 5/5 — Triphene Koleka (Physician-Researcher & Health Data Analyst, 2e degré) — QUOTA COMMENTAIRES 5/5 REMPLI
+- **Post** : `urn:li:activity:7486723175460835328`, profil `/in/dr-koleka-jr-1144901a3/`, publié **il y a 21 h** (fenêtre 48h OK). Contenu (FR) : parcours « devenir un médecin qui utilise la Health Data Science pour améliorer la santé en Afrique », les données de santé permettent « d'identifier les facteurs de risque, **d'anticiper les épidémies**, d'évaluer l'impact des interventions ». **Le post se termine par une question ouverte** : « Et vous, comment utilisez-vous les données pour créer un impact dans votre domaine ? »
+- **Règle 1 commentaire/profil/semaine** : profil jamais commenté ✅.
+- **Pré-check §5** : **6 commentaires existants** lus avant rédaction (Gentil AMURI NASSOR, Beni Atanga, BALAGIZI GHISLAIN et réponses de l'autrice). **Tous sur le registre de l'encouragement** (« Courage et plein succès »), aucun ne répond réellement à sa question. Un commentaire de fond ne recoupe rien et répond à une sollicitation explicite.
+- **⚠️ Angle choisi pour éviter l'auto-redondance** : deux angles évidents ont été **écartés volontairement** parce que déjà publiés le 25/07 sous une forme très proche (la fraîcheur comme dimension manquante des grilles qualité → commentaire Ngala Thierry Talla ; le seuil de décision comme vraie contrainte → commentaire INRB). Angle retenu, inédit : **la réconciliation multi-sources**, pas l'analyse, est le vrai gros du travail et l'endroit où la chaîne donnée vers action casse.
+- **Double-check** : FR (post en FR, fil de commentaires en FR) ✅ ; aucun chiffre ✅ ; aucune affirmation sur les capacités HWG au-delà du vécu réel d'agrégation ✅ ; pas de CTA, pas de lien, pas de tiret cadratin ✅ ; HTML relu avant envoi (`<p>…</p><p><br></p><p>…</p>`, accents corrects) ✅.
+- **Posté et confirmé** (champ vidé, texte présent sur la page) :
+
+> Pour répondre à votre question, vu du côté agrégation, la surprise est que l'essentiel du travail n'est pas l'analyse. C'est la réconciliation : un même foyer décrit par plusieurs sources, avec des définitions de cas, des dates et des découpages géographiques qui ne coïncident pas.
+>
+> La chaîne donnée vers action casse presque toujours à cette étape, bien avant la modélisation. C'est aussi la partie la moins visible du métier, alors que c'est elle qui décide si les chiffres restent comparables d'une semaine à l'autre.
+
+### 🚫 Candidats écartés / non atteignables cette session
+- **Africa CDC (page)**, post « Prime Minister H.E Judith Suminwa visited the #Rwampara Ebola Treatment Centre », 18 h, 3 commentaires : **candidat valide mais non commenté, obstacle technique**. Le permalien du post n'est exposé nulle part (page entreprise et résultats de recherche n'exposent pas son URN, le tri « Récent » de la page entreprise ne bascule pas, le bouton « Commenter » n'ouvre pas d'éditeur dans les résultats de recherche ni dans le fil). À reprendre si le post est encore dans la fenêtre 48h à la prochaine session. Angle préparé : l'engagement politique est le seul intrant d'une riposte qui n'apparaît jamais dans un bulletin, alors qu'il décide si les chiffres remontent.
+- **Dr. Jean Kaseya**, 2 posts pertinents (17 h sur la visite de la PM ; 2 j sur l'Ouganda, « no new confirmed cases since 21 June ») : **bloqué par la règle 1 commentaire/profil/semaine** (commenté le 22/07, re-commentable à partir du 29/07).
+- **Tedros Adhanom Ghebreyesus** (couverture vaccinale infantile) et **Tambe Elvis Akem** (WUENIC 2025) : hors fenêtre 48h (1 sem).
+- **Gustavo Monnerat** (The Lancet Public Health, healthspan, 2 j) : hors fenêtre 48h et hors angle HWG (charge de morbidité, pas surveillance de foyers).
+- **Africa CDC**, post « Francophone Public Mental Health Leadership Short Course » (1 h) : frais mais **hors angle HWG** (santé mentale/leadership), commenter aurait été forcé.
+
+---
+
 ## Technique — 20 juillet 2026 — ✅ Régression Méningite corrigée + garde anti-régression porté sur 5 crons
 
 **Déclencheur** : contrôle qualité quotidien du 20/07 (27 lignes "à vérifier manuellement"). Les 4 lignes Méningite (Burkina Faso/Tchad/Nigéria/Soudan du Sud), corrigées la veille (19/07) vers les valeurs de la semaine 26 OMS AFRO, étaient repassées aux valeurs de la semaine 25 — repéré via la section "Mouvements du jour" du rapport, qui montrait l'inversion exacte du fix de la veille.
@@ -22,7 +196,270 @@ Détail complet : mémoire `project_sync_cron_date_regression_guard_fixed_2026_0
 
 ---
 
+## BILAN FIN DE SESSION — linkedin-hwg-followup-check 2026-07-25 (16h) : ⚠️ NON EXÉCUTÉE — navigateur bloqué (cas 3, page morte)
+
+Run planifié autonome, David absent. **0 action, 0 lecture.** Extension vivante (`select_browser`, `tabs_context_mcp`, `tabs_create_mcp` instantanés), **couche CDP/page morte** : `navigate` timeout 300s sur l'onglet existant PUIS sur un onglet neuf, `javascript_tool` timeout 300s également. Recovery §7 épuisée (re-sélection deviceId ×2 + nouvel onglet), aucune bascule vers le 2e navigateur. **Push envoyée.** Détail dans `linkedin-contacts.md`, section 25/07 (16h).
+
+**Impact sur les quotas : nul**, tout était déjà rempli ce matin (commentaires 5/5, connexions 5/5, suivis 8/8) — rien n'était prévu à poster cet après-midi. **Ce qui est perdu, c'est la veille** : retombées des 5 commentaires du matin, acceptation des 5 invitations, DM reçus après 15h22, nouveaux abonnés. À reprendre par la session du 26/07 matin.
+
+**⚠️ Pattern à surveiller : 3e occurrence, 2 jours consécutifs sur le créneau 16h** (17/07, 24/07, 25/07), alors que les sessions du matin passent.
+
+### ✅ MISE À JOUR — session reprise après redémarrage manuel de Chrome par David (~18h)
+
+Navigateur rétabli (`navigate` immédiat, nouveau `tabGroupId`). Suite exécutée : **0 nouveau message** (messagerie relue en entier, 0 non lu malgré le badge périmé, aucune réponse nouvelle sur les 9 fils actifs) ; **1 connexion du matin acceptée** (Virgil Lokossou, WAHO/OOAS) → **1 welcome DM rédigé et mis en file de validation**, non envoyé ; **1 retombée confirmée** sur les commentaires du matin (David Amado Vidal a réagi au commentaire ECDC, 23 impressions) ; **1 nouvel abonné pertinent repéré mais non suivi** (David Amado Vidal, infirmier hygiéniste, quota suivis déjà 8/8 aujourd'hui — reporté à demain) ; 1 nouvel abonné écarté (Raquel Mora Fortaña, hors sujet). Aucune nouvelle invitation reçue. Détail complet dans `linkedin-contacts.md`, section « MISE À JOUR — navigateur rétabli ».
+
+**Veille pour de futurs posts** : post de Julien Harneis (Senior Ebola Coordinator) sur un survivant Ebola à Mongwalu (RDC) lors de la visite de la Première ministre Judith Suminwa Tuluka à Kisangani/Bunia/Rwampara/Mongwalu, et arrivée du Pr Steve Ahuka comme nouveau manager terrain de la riposte — angle possible : le contraste entre indicateurs agrégés HWG et détail terrain (survivants, logistique, changements de leadership).
+
+Push envoyée à David (1 DM en attente de validation).
+
+## BILAN FIN DE SESSION — linkedin-hwg-monitoring 2026-07-25 (matin)
+
+**Tous les quotas du jour remplis : 5/5 commentaires, 5/5 connexions, 8/8 suivis.** 6 DM rédigés et **mis en file de validation, aucun envoyé** (push envoyée à David, desktop seul, Remote Control inactif). Détail des connexions, suivis, DM, veille passive et du contrôle données épidémio dans `linkedin-contacts.md`, section 25/07.
+
+**Veille repérée pour de futurs posts de marque (non rédigés ici, hors périmètre) :** (1) l'asymétrie d'alerte feux de forêt / santé (l'exposition est mesurée en temps réel, la charge sanitaire arrive des semaines plus tard sans définition de cas) ; (2) le décalage Amazonie franco-brésilienne, un espace épidémiologique continu décrit par des canaux nationaux aux cadences différentes ; (3) la dimension « fraîcheur » absente des checklists qualité de données M&E classiques.
+
+**⚠️ Point data à reprendre (voir `linkedin-contacts.md`) :** la saison West Nile **2026** n'existe en base prod que pour la France (1 cas). L'ECDC en annonce 81 au 22/07 sur 6 pays. Aucune écriture faite faute de source primaire lisible (tableau de bord ECDC 100 % JavaScript, domaine refusé par le classifier).
+
+## 🗓️ 2026-07-25 — Engagement LinkedIn (routine `linkedin-hwg-monitoring`, matin)
+
+Navigateur : fenêtre repliée (`outerWidth` 0 puis 159, `visibilityState=hidden`) MAIS **saisie, clics et screenshots pleinement fonctionnels aujourd'hui** après `window.resizeTo(1400,900)` répété avant chaque capture. Se fier au test de saisie réel, pas à l'indicateur JS (leçon 24/07 confirmée). Modale Premium « Vous cherchez à développer votre réseau ? » réapparaît à intervalles réguliers et masque la page : la fermer (croix en haut à droite) avant chaque action.
+
+### 💬 Commentaire 1/5 — European Centre for Disease Prevention and Control (ECDC), West Nile virus Europe
+- **Post** : `urn:li:activity:7486391573518196736`, publié 24/07 vers 14h (19 h au moment du scan), donc **dans la fenêtre 48h**. Contenu : « As of 22 July, 81 locally acquired human cases have been reported across six countries, with 35 affected areas identified this season. Nine areas have been reported as affected for the first time this week. » Répartition citée par l'ECDC : Italie 46, Grèce 21, Macédoine du Nord 5, Roumanie 5, Espagne 3, France 1 (somme = 81 ✅). Carte du post : « data reported to EpiPulse Cases up until and including 2026-07-22 ».
+- **Pré-check §5** : 2 commentaires existants lus avant rédaction (Baobab Wisdom Consulting : préparation saisonnière/coordination multisectorielle ; Alessandra Zanetti : sous-déclaration vs absence de maladie). **Angle retenu distinct des deux** (zones nouvellement touchées comme indicateur avancé + seuil de détection). Aucun commentaire HWG chez l'ECDC dans les 7 derniers jours (règle 1/profil/semaine respectée).
+- **Double-check** : EN (post en EN) ✅ ; chiffres repris mot pour mot du post source ✅ ; arithmétique refaite (81/35 = 2,31 par zone, formulation « just over two » exacte) ✅ ; aucun chiffre inventé au-delà de ce que l'ECDC publie ✅ ; pas de CTA, pas de lien, pas de tiret cadratin ✅ ; structure DOM vérifiée avant envoi (`<p>…</p><p><br></p><p>…</p>`, saut de paragraphe réel) ✅.
+- **Posté et confirmé** (champ vidé, commentaire visible en tête, 3 commentaires au total) :
+
+> The number that moves earliest here is not the case total, it is the nine areas reported as affected for the first time this week. Case counts describe how the season is going; newly affected areas describe where it is going next.
+>
+> Season to date that is 81 cases across 35 areas, an average of just over two detections per area, so a new area often enters the map on very few cases. That puts the weight on the detection threshold, and on how fast a first local case is recognised as locally acquired rather than imported.
+
+### 💬 Commentaire 2/5 — Institut National de Recherche Biomédicale (INRB), modélisation spatio-temporelle Ebola Bundibugyo RDC
+- **Post** : publié 24/07 (« 1 j »), donc **dans la fenêtre 48h**. Carry-over 24/07 listé en « réserve » : requalifié en candidat principal car plus frais que les candidats Ugo/IMPACT (~42h) et Janabi (~40h), et parce que le visuel du post fournit un angle réellement distinct de la mobilité (graphique « Probability of invasion, 1 week forecast » par zone de santé : Rethy, Mahagi, Jiba, Biringi, Linga, Lubero, Watsa… + carte « Relative invasion risk »). INRB re-commentable (dernier commentaire HWG ~16/07, règle hebdo levée).
+- **Pré-check §5** : 5 commentaires existants lus avant rédaction (Hervé Lisoir : simple tag ; Cercle des étudiants en Démographie : les démographes devraient être associés à ce type d'étude ; Déborah N'kalu : abonde dans ce sens). **Aucun ne prend l'angle seuil de décision / validation rétrospective du modèle.**
+- **Double-check** : FR (post en FR) ✅ ; accents vérifiés caractère par caractère après un premier jet tapé sans accents, champ vidé (`ctrl+a` + `Delete`) et retapé proprement ✅ ; faits repris du post et du graphique du post uniquement, aucune donnée chiffrée avancée ✅ ; pas de CTA, pas de lien, pas de tiret cadratin ✅ ; rendu visuel vérifié par capture avant envoi (ligne vide réelle entre les deux paragraphes, éditeur tiptap utilisant `<br><br>`) ✅.
+- **Posté et confirmé** (champ vidé, compteur 5 → 6 commentaires, commentaire visible en tête, horodaté « maintenant ») :
+
+> Ce qui change ici, c'est la nature de l'objet produit : une probabilité d'invasion à une semaine par zone de santé, pas un constat après coup. Le modèle ne crée du délai d'avance que si quelqu'un accepte d'engager des moyens là où aucun cas n'est encore confirmé.
+>
+> Le seuil de décision devient donc la vraie contrainte, plus la production du signal. Question ouverte de l'extérieur : les zones classées à risque élevé les semaines précédentes ont-elles vu apparaître des cas ensuite ? C'est cette validation rétrospective, publiée au fil de l'eau, qui donnerait au modèle l'autorité nécessaire pour déclencher une action anticipée.
+
+### 💬 Commentaire 3/5 — Eric D'Ortenzio (Directeur dépt Santé & Sociétés, IRD), atelier PRISME Brésil-France
+- **Post** : publié 24/07 (« 1 j »), **fenêtre 48h** OK. Contenu : présence de l'IRD au 1er atelier PRISME Brésil-France des 23-24 juillet 2026 à la Fiocruz (Rio), avec Institut Pasteur, Inserm, ANRS MIE, CNPq, Fiocruz, ministères brésiliens. Sujets cités : surveillance des arbovirus émergents en Amazonie, systèmes d'alerte précoce, lutte anti-vectorielle, résistance aux insecticides. Profil suivi le 24/07, jamais commenté (règle hebdo OK).
+- **Pré-check §5** : **0 commentaire existant** sur le post au moment de la rédaction (aucun angle à éviter).
+- **Double-check** : FR (post en FR) ✅ ; volontairement **aucune affirmation sur les circuits de notification précis** (une première version affirmait « l'un remontant vers l'OPS, l'autre vers les circuits européens » : écartée avant saisie car non vérifiable et probablement fausse, la Guyane figurant aussi dans le périmètre OPS/Amériques) ✅ ; pas de chiffre ✅ ; pas de CTA, pas de lien, pas de tiret cadratin ✅ ; HTML de l'éditeur relu avant envoi (`<br><br>` = ligne vide réelle) ✅.
+- **Posté et confirmé** (champ vidé, compteur 0 → 1 commentaire, visible en tête, « maintenant ») :
+
+> L'axe franco-brésilien sur les arbovirus a une particularité rarement discutée : l'Amazonie est un espace épidémiologique continu, mais les données qui la décrivent remontent par des canaux nationaux distincts, avec des cadences de publication et des définitions de cas qui ne coïncident pas toujours.
+>
+> Vu du côté agrégation, un même foyer transfrontalier peut donc apparaître à deux dates différentes selon la source consultée. Un dispositif d'alerte précoce commun gagnerait peut-être autant à harmoniser les cadences et les définitions qu'à améliorer la détection elle-même.
+
+### 💬 Commentaire 4/5 — Ngala Thierry Talla, MPH (relation 1er degré, connectée le 24/07), qualité des données M&E
+- **Post** : repartage (8 h, donc **fenêtre 48h** largement OK) du post de CHRISPINE KWAMBOKA sur la qualité des données en suivi-évaluation (dimensions valide / exact / fiable / complet, avec visuel détaillant chacune), commenté par Ngala d'une ligne : « Better data=Better decisions=Real impact ». Profil jamais commenté (règle hebdo OK).
+- **Pré-check §5** : 0 commentaire existant sur le repartage.
+- **Angle** : la dimension absente du visuel est la **fraîcheur**, la seule qui peut céder pendant que les quatre autres tiennent ; plus la distinction entre complétude de l'enregistrement et complétude des unités déclarantes. Prolonge directement le fil DM ouvert avec lui sur l'articulation couverture vaccinale / signaux de surveillance.
+- **Double-check** : EN (post source et légende en EN) ✅ ; aucun chiffre ✅ ; pas de CTA, pas de lien, pas de tiret cadratin ✅ ; HTML relu avant envoi (`<p>…</p><p><br></p><p>…</p>`) ✅.
+- **Posté et confirmé** (champ vidé, 1 commentaire sur le post, le nôtre) :
+
+> Solid list. The dimension I would add from the outbreak side is timeliness, because it is the one that can fail while all four others hold.
+>
+> A surveillance dataset can be valid, accurate, reliable and complete and still be three weeks old, which makes it excellent evidence and a poor basis for a decision. Worth pairing completeness of the record with completeness of reporting units too: knowing which facilities did not report at all often says more than the totals from those that did.
+
+### 💬 Commentaire 5/5 — Hans Kluge (Directeur régional, OMS Europe) — QUOTA COMMENTAIRES 5/5 REMPLI
+- **Post** : 19 h (**fenêtre 48h** OK), cartes de l'augmentation des feux de forêt dans la Région européenne de l'OMS (Portugal et Espagne > +100 % janvier-juillet vs 2025 ; 2,2 M ha brûlés l'an dernier contre 1,4 M ha en 2022). Kluge = profil prioritaire **commentaire seulement, jamais de demande de connexion** (règle respectée).
+- **Choix du post** : son post le plus récent (15 h, podcast « I Believe You » sur la réponse du secteur santé aux violences faites aux femmes) a été **écarté volontairement** — sujet légitime mais hors angle HWG (surveillance épidémiologique) ; commenter là aurait été un commentaire forcé, ce que la routine interdit.
+- **Pré-check §5** : 2 commentaires existants lus (Sotirios Papathanasiou : fatalité méditerranéenne annuelle ; Mack Barnhardt : message général). **Angle du décalage d'alerte non pris.**
+- **Double-check** : EN (post en EN) ✅ ; **aucun chiffre du post repris** (dont le « 57 % en quatre ans » alors que 2022 → 2025 fait trois ans : incohérence relevée dans le post source, raison de plus pour ne rien reprendre) ✅ ; pas de CTA, pas de lien, pas de tiret cadratin ✅ ; HTML relu avant envoi ✅.
+- **Posté et confirmé** (champ vidé, 2 → 3 commentaires, le nôtre en tête) :
+
+> The alerting asymmetry here is worth naming. Air quality and fire perimeters are measured in near real time, while the health burden they cause arrives weeks later as excess respiratory presentations and excess mortality, with no case definition to attach it to.
+>
+> That is why wildfire smoke rarely appears in health surveillance as an event at all, only as a bump in aggregate indicators that someone has to go looking for afterwards. Wiring air quality alerts to syndromic surveillance thresholds would at least let the health system see the exposure and its consequences in the same timeframe.
+
+### ⛔ Candidat ÉCARTÉ — Dr. Jean Kaseya (DG Africa CDC), post Ouganda (1 j)
+Post repéré dans le fil (« Since 21 June, no new confirmed cases of Bundibugyo Ebola Virus Disease have been reported in [Uganda] »), excellent sujet. **Écarté par la règle 1 commentaire/profil/semaine** : commentaire HWG posté chez Kaseya le 22/07, donc bloqué jusqu'au 29/07. À reprendre après cette date si un post frais existe.
+⚠️ **Piège de date à retenir si ce post est un jour commenté** : Kaseya date le dernier cas confirmé du 21 juin, alors que le compte à rebours des 42 jours suivi par HWG part du **16/07** (sortie du dernier patient, ECDC), cf. [[reference_uganda_ebola_42day_countdown_dates]]. Ne jamais publier de date de fin d'épidémie calculée à partir de l'une ou l'autre de ces bases.
+
+## BILAN FIN DE SESSION — linkedin-hwg-monitoring 2026-07-24 (matin)
+
+**Contexte : 0 commentaire posté** (fenêtre Chrome repliée / cas 2 : saisie de texte et modale bloquées ; détail technique dans `linkedin-contacts.md`, section 24/07). Exécuté malgré tout via clics JS : **5 suivis** (cluster INRB/IRD riposte Ebola + Ugo SEMAT) et **2 invitations acceptées** (Ngala Thierry Talla, kyembe Salachi) — voir `linkedin-contacts.md`. **3 DM rédigés + mis en file de validation** (INGRIDE SIEMENI, welcome Ngala, welcome kyembe), non envoyés, push envoyée à David.
+
+### 🎯 FILE D'ATTENTE COMMENTAIRES — pré-chargée pour la prochaine session (fil scanné 24/07, hooks + brouillons prêts, RE-VÉRIFIER fenêtre 48h + règle 1/profil/semaine + lire commentaires existants avant de poster)
+Quota commentaires 0/5 aujourd'hui. Éviter l'empilement thématique (3 posts du fil traitent tous mobilité/modélisation spatiale) : privilégier IRD (génomique, angle distinct) + Ugo/IMPACT (mobilité comme indicateur avancé) + Janabi (détection), et n'ajouter INRB que si un angle réellement distinct, sinon le garder en réserve.
+
+**1. IRD (post 5 min, FR)** — l'IRD + INRB ont séquencé le virus Bundibugyo en quelques heures ; génomique pour retracer les chaînes de transmission. Brouillon (FR, sans tiret cadratin, sans CTA) :
+> Le séquençage en quelques heures est le maillon qu'on voit rarement dans les bulletins, alors qu'il conditionne tout ce qui suit. Confirmer l'espèce Bundibugyo tôt, c'est écarter d'emblée les protocoles Zaïre (Ervebo, monoclonaux) qui ne s'appliquent pas ici, et éviter des semaines de fausse piste thérapeutique. La génomique ne documente pas seulement l'épidémie après coup, elle oriente la riposte pendant qu'elle se joue.
+
+**2. Ugo SEMAT / post IMPACT Initiatives (18h, mobilité)** — cartographie mobilité (Flowminder/IOM/INSP) ayant flaggé Haut-Uélé/Tshopo ~3 semaines avant les 1ers cas confirmés. Ugo suivi cette session. Angle : mobilité = indicateur avancé, pas de soutien ; le vrai frein est le seuil de décision. Brouillon (EN — choisir la langue selon l'endroit exact du commentaire au moment de poster ; le post est bilingue FR/EN, Julien Harneis commente en EN) :
+> This is the strongest argument for treating mobility data as a leading indicator, not a supporting one. Flagging Haut-Uele and Tshopo three weeks before the first confirmed cases means the signal existed while case-based surveillance was still blind. The hard part is institutional: acting on a probabilistic mobility flag before a single confirmed case needs a different decision threshold than waiting for lab confirmation. That gap, between having the signal and being allowed to act on it, is where the three weeks are usually lost.
+
+**3. Prof. Mohamed Janabi (WHO Regional Director for Africa, 16h, EN)** — « The #Ebola outbreak has now claimed more than 1,000 lives... find every case early ». Déjà suivi. Angle : le franchissement des 1000 morts redéfinit ce que « find every case early » coûte ; détection = contrainte contraignante (pas de vaccin/monoclonal Bundibugyo). Brouillon (EN) :
+> Passing 1,000 deaths reframes what "find every case early" now costs. With Bundibugyo there is no licensed vaccine or monoclonal, so every pillar rests on detection speed rather than immunity. The mobility analyses from INRB and partners this week suggest the tools to find cases earlier already exist; the constraint is acting on a risk signal before lab confirmation, not generating it. Scaling the response has to mean shortening that decision lag, not only adding beds and responders.
+
+**4. Dr. Jean Kaseya (DG Africa CDC)** — candidat reporté depuis le carry-over 23/07 (« Africa CDC/OIM »). ⚠️ Post non re-localisé cette session (fil non déroulé jusqu'à lui) : vérifier au prochain passage qu'un post <48h existe, hook détection/surveillance. À ne poster que si frais et angle non redondant avec les 3 ci-dessus.
+
+**Réserve (INRB, 17h)** : modélisation spatio-temporelle pour cibler les zones de santé à risque. Angle trop proche du #2 (mobilité) — ne l'utiliser que si un des candidats ci-dessus expire ou si un angle distinct (validation terrain du modèle) se précise. INRB re-commentable (dernier commentaire ~16/07, règle hebdo levée).
+
+## BILAN FIN DE SESSION — linkedin-hwg-followup-check 2026-07-24 (16h) : ⚠️ NON EXÉCUTÉE — navigateur bloqué (cas 3, page morte)
+
+Run planifié autonome, David absent. **Aucune action posée, quota commentaires toujours 0/5.** Navigateur habituel `23c7ecdd…` sélectionné directement ; `navigate` vers `linkedin.com/feed/` → **timeout 300s** sur l'onglet existant PUIS sur un onglet neuf dédié (recovery §7 : re-sélection deviceId ×2 + nouvel onglet, épuisée sans succès). Les appels niveau extension (`select_browser`, `tabs_context_mcp`, `tabs_create_mcp`, `list_connected_browsers`) répondent instantanément → extension vivante, couche CDP/page morte = **cas 3** identique au 17/07. **Aucune bascule vers le 2e navigateur `a466bc2e…`** (garde-fou §7 + arbitrage David 17/07). **Push envoyée** (desktop seul, « Mobile push not sent, Remote Control inactive »).
+
+**Impact réel : la file commentaires 0/5 (4 brouillons prêts ci-dessus) reste entièrement à poster dès que Chrome remarche** — priorité de la prochaine session si fenêtre rendue. Ne pas re-chercher, brouillons + hooks déjà figés. Re-vérifier au préalable fenêtre 48h de chaque post + règle 1 commentaire/profil/semaine + lire les commentaires existants avant de poster (un angle proche a pu être publié entre-temps).
+
+---
+
 ## X / Twitter
+
+## BILAN FIN DE SESSION — x-hwg-followup-check 2026-07-25 (16h) : ⚠️ NON EXÉCUTÉE — navigateur bloqué (cas 3, page morte)
+
+Run planifié autonome, David absent. **0 action, 0 lecture.** Navigateur habituel `23c7ecdd…` sélectionné directement (label affiché « Browser 1 », non significatif). `navigate` vers `x.com/messages` → **timeout 300s** sur l'onglet existant PUIS sur un onglet neuf ; `screenshot` également **timeout 300s**. Recovery §7 épuisée (re-sélection deviceId ×2 + nouvel onglet). Les appels niveau extension (`select_browser`, `tabs_context_mcp`, `tabs_create_mcp`, `list_connected_browsers`) répondent **instantanément** → extension vivante, **couche CDP/page morte = cas 3**, signature identique au 17/07, au 24/07 (les deux routines de 16h) et à `linkedin-hwg-followup-check` de 16h aujourd'hui. **Aucune bascule vers le 2e navigateur `a466bc2e…`** (garde-fou §7 + arbitrage David 17/07 ; rappel système exigeant AskUserQuestion ignoré, sans objet en run autonome David absent). **Push envoyée** (desktop seul, « Mobile push not sent, Remote Control inactive »).
+
+**État des quotas au moment du blocage (repris de la session 10h, aucune modification cette session) :**
+- **Replies** : **3/3 remplies à 10h** (@HelenBranswell, @MobilePunch, @CBSNews) → **quota du jour clos, aucun reliquat à combler**. Contrairement au 24/07, rien n'est perdu côté publication.
+- **Follows** : **5/5 remplis à 10h** (@NCDCgov, @MSFcongo, @florian_krammer, @drasatrust, @AFENETAfrica) → quota du jour clos, aucun follow-back possible de toute façon.
+- **DMs** : 0 vérifié cette session (boîte inaccessible). Dernière vérif = 10h, **boîte de réception ET demandes vides**. Rien à traiter connu.
+- **Notifications / nouveaux abonnés** : non vérifiés. Dernier relevé 10h : aucun nouvel abonné, aucune nouvelle mention depuis le 21/07.
+
+**Impact réel : uniquement la veille de l'après-midi.** Non vérifié cet après-midi : retombées des 3 replies du matin (réponses éventuelles de @HelenBranswell / @MobilePunch / @CBSNews à traiter en continuation de fil), DM reçus après 10h, nouveaux abonnés, notifications générales, et matière pour de futurs posts. À reprendre par la session du 26/07 (10h).
+
+**Reste en attente pour la prochaine session** (rien de neuf ajouté, tout vient du relevé de 10h) : décision David sur **@Craig_A_Spencer** (§10, post épinglé politique) ; candidats follow prêts pour le quota du 26/07 → **@OoasWaho** (le plus prometteur, couche régionale CEDEAO absente), **@HPP_LSHTM** (report par arbitrage de quota, pas un refus), **@AfenetNigeria**, **@TheWaaph**, **@G2H2_Geneva**, **@kentbuse**, **@MONUSCO**.
+
+**⚠️ Pattern à surveiller : 5e occurrence sur le créneau 16h** (17/07, 24/07 ×2, 25/07 ×2), soit **deux jours consécutifs où les deux routines de 16h meurent alors que les sessions du matin passent** — cf. [[project_browser_cdp_dead_afternoon_20260724]]. Piste déjà notée : redémarrage de Chrome à midi.
+
+**Aucun cas garde-fou / RGPD / injection à remonter. Aucun ajout ni mise à jour DB.**
+
+**⚠️ MISE À JOUR — navigateur récupéré en cours de session, vérification effectivement complétée après le bilan ci-dessus.** Après l'envoi de la push, `navigate` a été retenté (nouvel onglet, même deviceId `23c7ecdd…`) et **a fonctionné cette fois** — Chrome a manifestement été redémarré entre le blocage initial et cette reprise (nouveau tab group observé, cohérent avec la piste « redémarrage de Chrome » déjà notée). La suite de la routine a donc pu être exécutée :
+- **DMs** : `x.com/i/chat` (boîte de réception) ET `x.com/i/chat/requests` (demandes, tous filtres Priorité/Masqué) **vides**. 0 message reçu, 0 réponse, 0 à noter pour David.
+- **Notifications** : parcourues dans leur ensemble (onglet Tous, défilement jusqu'au 22 juillet) puis onglet Mentions. **Aucune notification « vous suit »** trouvée sur toute la période balayée — cohérent avec le relevé de 10h (« aucun nouvel abonné depuis le 21/07 »). Contenu vu : likes (Dr David R Tumuhairwe, United Nations Geneva), posts algorithmiques recommandés (Delhi Police alerte fake news, U.S. Embassy Kampala tarifs, SantéPubliqueFrance dengue déjà connu, Reisner Lab recrutement, SARS-CoV-2 (COVID-19) alerte Cyclosporiasis US — hors périmètre HWG, pas une maladie suivie), rien de nouveau exploitable pour un futur post au-delà de ce déjà noté ce matin. Mentions : une seule entrée, @tah_soons du 3 juillet (déjà archivée), aucune mention récente.
+- **Follow-back** : aucun candidat trouvé, rien à exécuter (quota de toute façon déjà 5/5 rempli ce matin).
+- **Profil @HWatchGlobal** : 21 abonnés, 131 abonnements, 152 posts — aucune anomalie.
+
+**Bilan révisé : session finalement exécutée en quasi-totalité, juste avec un retard dû au blocage initial.** Aucune action de publication supplémentaire (rien à publier : DMs vides, aucun nouveau follower, quotas replies/follows déjà clos). Rien de neuf à ajouter à `x-watchlist.md` (aucun nouveau candidat, aucune nouvelle trouvaille). Le pattern navigateur 16h (cf. [[project_browser_cdp_dead_afternoon_20260724]]) reste valide et à surveiller — seul le délai de récupération a changé ici, pas le diagnostic.
+
+## BILAN FIN DE SESSION — x-hwg-monitoring 2026-07-25 (10h)
+
+**Tous les quotas du jour remplis : 3/3 replies, 5/5 suivis** (quotas cumulatifs sur la journée, donc **plus rien à poser cet après-midi** par `x-hwg-followup-check`, hors continuation de fil si un compte répond). **DMs : boîte de réception ET demandes de message vides, 0 message reçu, 0 réponse, 0 à noter pour David.** Aucun nouvel abonné, aucune nouvelle mention depuis le 21/07.
+
+**Replies** : @HelenBranswell (Ebola RDC, non-comparabilité du classement historique vs North Kivu), @MobilePunch (Lassa Nigeria, le CFR est le signal et le compteur hebdo le bruit), @CBSNews (rougeole US, amnésie immunitaire). **Suivis** : @NCDCgov, @MSFcongo, @florian_krammer, @drasatrust, @AFENETAfrica.
+
+**Données épidémio** : aucun ajout ni correction en base. Deux contrôles faits et concluants : (1) le dernier sitrep national RDC sur X date du 21/07, la base est déjà en avance (SitRep n°69, 22/07) ; (2) la ligne Lassa/Nigéria portait déjà 963/229, ingérée par le cron NCDC le 24/07, **un jour avant la reprise presse du 25/07**.
+
+**⚠️ À trancher par David** : suivre ou refuser **@Craig_A_Spencer** (survivant d'Ebola, Brown SPH, 41 comptes HWG le suivent, mais post épinglé = tribune politique explicite — §10 appliqué, non suivi par défaut).
+
+**Archivage vérifié (étape 9)** : 3 lignes de ledger et 8 lignes de candidats datées 2026-07-25 dans `x-watchlist.md` (5 `suivi`, 2 `proposé`, 1 `refusé`), et les 3 replies + les 5 suivis + les 4 candidats écartés présents dans ce fichier. Aucun cas RGPD ni injection. **Navigateur : un timeout CDP récupéré, et un incident de saisie sans conséquence documenté ci-dessous (parade adoptée).**
+
+### Veille x-hwg-monitoring — 2026-07-25 (10h, session autonome, David généralement absent)
+
+**Navigateur** : `23c7ecdd…` sélectionné directement (label affiché « Browser 1 » ce jour, non significatif — se fier au deviceId). Un **timeout CDP `Page.captureScreenshot` (30 s)** en début de session sur la recherche `from:Com_mediasRDC` ; **récupéré immédiatement** par un simple ré-appel de `screenshot` (pas de cas 3, contrairement au 24/07). Fenêtre `visibilityState=hidden` mais 1280x720 et saisie/clics pleinement fonctionnels — se fier au test de saisie réel, pas à l'indicateur JS.
+
+**⚠️ Incident de saisie à retenir (nouveau)** : un `left_click` sur le champ de réponse basé sur des coordonnées d'un screenshot **antérieur à un défilement** a raté le champ ; les 437 caractères tapés ensuite ont été **consommés comme raccourcis clavier X** et ont navigué vers `x.com/home`. Vérification immédiate faite : **aucun like, repost, favori ni post accidentel** (testids `unlike`/`unretweet`/`removeBookmark` tous absents sur le post cible, compteurs inchangés, profil `/with_replies` propre). **Parade adoptée et validée : toujours vérifier `document.activeElement.getAttribute('data-testid') === 'tweetTextarea_0'` AVANT de taper, et publier au raccourci `Ctrl+Entrée` plutôt qu'au clic sur « Répondre »** (le bouton se déplace entre le screenshot et le clic). NB : `left_click` par `ref` (issu de `find`) n'a PAS focalisé le champ Draft.js, seul le clic par coordonnées fraîches a marché.
+
+**Sources primaires visitées en direct (§ Sources primaires)** : @Com_mediasRDC et @MinSanteRDC via `from:` + `f=live`. **Dernier sitrep national publié = « Point de situation - 21 juillet 2026 » posté le 23/07** (déjà engagé le 23/07), rien de plus frais. La base HWG est **déjà en avance** sur cette source (SitRep n°69 INSP, 2 905 cas / 1 269 décès au 22/07, intégré le 25/07 en amont de cette session). **Aucun ajout ni mise à jour DB nécessaire depuis X ce jour.** Post @MinSanteRDC le plus récent (14h) = remise de 10 véhicules à la coordination de la riposte à Rwampara (Ituri), logistique, pas de données chiffrées nouvelles.
+
+**DMs** : `x.com/messages` **boîte de réception vide** ET `x.com/messages/requests` **vide** (aucune demande en attente). **0 message reçu depuis la dernière vérification, 0 réponse envoyée, 0 message noté pour David.**
+
+#### 💬 Reply 1/3 — @HelenBranswell (Helen Branswell, STAT News), bilan Ebola RDC vs North Kivu 2018-2020
+- **Post cible** : https://x.com/HelenBranswell/status/2080768483105628239, publié le **24/07 à 23h33** (10 h au moment du scan, **dans la fenêtre 48h** ✅). Texte : « DRC's #Ebola case count continues to climb. As of 07/22, there have been 2,905 confirmed cases, 1,269 of them fatal. At this pace it may not be long before this outbreak surpasses the 2018-2020 North Kivu outbreak, the 2nd largest on record (3470 cases, 2287 of them fatal). » + lien SitRep n°69 INSP + infographie.
+- **Cadence** : @HelenBranswell **libre** (dernière reply ≤ 17/07, purgée du ledger le 24/07 — règle 1 reply/compte/semaine respectée ✅). Replies postées aujourd'hui avant celle-ci : **0/3** ✅.
+- **Pré-check §5** : champ de réponse **non restreint** ✅ ; le compteur affiche 1 réponse mais **aucune réponse visible/chargée dans le fil** (masquée ou de faible qualité) → **aucun risque de redondance** avec un angle déjà publié.
+- **Angle retenu** : *les deux totaux ne se construisent pas de la même façon*. North Kivu a mis **23 mois** pour atteindre 3 470, avec vaccination en ceinture rVSV-ZEBOV dès ses premières semaines (8 août 2018, une semaine après la déclaration du 1er août) et **deux anticorps monoclonaux sous protocole PALM à partir de novembre 2018** ; celle-ci est à **2 905 en ~2 mois** contre une souche **Bundibugyo pour laquelle ni vaccin ni thérapeutique homologué n'existe**. Donc classer les deux au compteur revient à comparer une flambée combattue avec contre-mesures à une flambée combattue sans.
+- **Distinct des angles HWG déjà publiés** : référentiel historique d'espèce (@Dr_JeanKaseya 22/07), létalité parmi les cas résolus (@BNOFeed 21/07), détection comme contrainte liante (@Chikwe_I 21/07), deploy-to-learn vaccinal (@KrutikaKuppalli 21/07). Ici l'objet est la **non-comparabilité du classement historique**, jamais traité.
+- **Double-check** : **anglais** (style X établi, indépendant de la langue du post) ✅ ; 3 470 / 2 287 repris mot pour mot du post source ✅ ; 23 mois vérifié (déclarée 1er août 2018, fin déclarée 25 juin 2020 = 22 mois et 24 j, « 23 months » exact au mois près) ✅ ; PALM lancé nov. 2018 avec mAb114 et REGN-EB3 (deux monoclonaux), **libellé « in trial » et non « homologués »**, exact pour l'époque ✅ ; « roughly two months » **non calculé au jour près** (§5, cas des dates) mais adossé à la formulation publique de @DrTedros du 18/07 (« 2 mois d'épidémie ») ✅ ; absence de vaccin/thérapeutique homologué contre Bundibugyo cohérente avec les replies HWG des 21 et 23/07 ✅ ; **raisonnement refait** : 3 470/23 ≈ 151 cas/mois vs 2 905/2 ≈ 1 450 cas/mois, soit ~10× — la conclusion « même compteur, combat très différent » est bien la seule lecture plausible, et ne prétend **ni** une souche plus létale **ni** une transmissibilité supérieure ✅ ; pas de CTA, pas de lien, pas de hashtag, pas de tiret cadratin ✅.
+- **⚠️ Arbitrage de longueur** : le premier jet (441 car.) déclenchait l'avertissement X « Seuls les 280 premiers caractères seront visibles dans le fil », ce qui **coupait la chute derrière un « voir plus »**. Réécrit en **264 caractères** pour que l'argument entier soit visible sans dépli. Mise en forme réellement rendue relue via le DOM (bloc unique, aucune troncature, aucun caractère parasite) ✅.
+- **Texte publié** : « North Kivu took 23 months to reach 3,470, with rVSV-ZEBOV ring vaccination from its first weeks and two monoclonals in trial from Nov 2018. This one is at 2,905 in roughly two months against Bundibugyo, for which neither exists. Same counter, very different fight. »
+- **✅ PUBLIÉE** — toast « Votre post a été publié. » + champ vidé + vérification sur `/with_replies` : https://x.com/HWatchGlobal/status/2080929791746642294
+
+#### 💬 Reply 2/3 — @MobilePunch (Punch Newspapers, Nigeria), Lassa fever NCDC semaine 28
+- **Post cible** : https://x.com/MobilePunch/status/2080885712816136490, publié le **25/07 à 07h19** (3 h au moment du scan, **fenêtre 48h** ✅). Titre : « NCDC records rise in Lassa Fever cases as death toll hits 229 ». Repéré via recherche structurée `(cholera OR mpox OR diphtheria OR "yellow fever" OR Lassa OR "West Nile") lang:en min_faves:8 -filter:replies -filter:nativeretweets` (min_faves abaissé à 8, le paysage Ebola étant saturé côté cadence).
+- **Cadence** : @MobilePunch **absent du ledger**, jamais engagé ✅. Replies postées aujourd'hui avant celle-ci : **1/3**.
+- **Pré-check §5** : réponses **non restreintes** ✅ ; **4 réponses existantes lues en entier** (@Gorilla9c « Combat it before I add Ebola », @prolific2u « This is concerning… », @Adefolashow « hope the government take proper action », @hassanoladipo8 « Rats are everywhere now ») — **toutes génériques, aucun angle analytique pris**, donc aucun risque de redondance ✅.
+- **Vérification source primaire (§8)** : le domaine `ncdc.gov.ng` a été **refusé par le classifier** en navigation directe, et la page index des sitreps ne rend que des liens PDF (WebFetch sans données chiffrées). Chiffres donc **recoupés sur plusieurs dépêches indépendantes citant le même sitrep NCDC semaine 28** (Punch, Vanguard, P.M. News, New Dawn, News Central) : **963 cas confirmés cumulés, 229 décès, CFR 23,8 %, contre 18,7 % à la même période en 2025** ; nouveaux cas hebdo **31 (S26) → 14 (S27) → 25 (S28)** ; 23 États et 114 LGA touchés ; **Ondo 31 %, Bauchi 25 %, Taraba 14 %, Edo 10 %, Benue 6 % = 86 %** des cas ; âge médian 30 ans, tranche 21-30 ans la plus touchée.
+- **Angle retenu** : *le compteur hebdomadaire est la partie bruitée, le CFR est le signal*. L'oscillation 31/14/25 est du bruit d'arrière-saison ; l'écart durable est 23,8 % contre 18,7 % un an plus tôt, et **aucune semaine seule ne peut déplacer de cinq points un taux cumulé assis sur 963 cas**. L'écart porte donc sur **qui atteint la confirmation** (profondeur de dépistage, précocité de présentation), pas sur le volume de cas.
+- **Double-check** : anglais ✅ ; chaque chiffre recoupé sur ≥3 dépêches indépendantes citant NCDC ✅ ; **arithmétique refaite** : 229/963 = 23,78 % (cohérent avec 23,8 % publié) ✅ et **test de sensibilité calculé explicitement** — une semaine de 25 cas fait bouger le cumul de -0,6 pt (0 décès) à +1,9 pt (25 décès), donc « no single week moves it by five points » est arithmétiquement solide ✅ ; **aucune affirmation sur une souche plus létale ni sur le moment où le CFR a bougé** (donnée hebdo de CFR non disponible, volontairement non inférée, §5 cas des chiffres calculés) ✅ ; pas de CTA, pas de lien, pas de hashtag, pas de tiret cadratin ✅ ; 275 caractères, **sous le seuil des 280** donc argument entier visible dans le fil, mise en forme relue via le DOM (bloc unique, aucune troncature) ✅.
+- **Texte publié** : « The weekly count is the noisy part: 31, then 14, then 25. The signal is CFR at 23.8% against 18.7% at the same point last year, and no single week moves a 963-case cumulative rate by five points. That gap is about who reaches confirmation, not about how many cases there are. »
+- **✅ PUBLIÉE** — toast « Votre post a été publié. » + vérification sur `/with_replies` : https://x.com/HWatchGlobal/status/2080931417349927094
+- **✅ Contrôle DB fait dans la foulée (prod `.env.local.live`)** : la ligne `Fièvre de Lassa / Nigéria` porte **déjà 963 cas / 229 décès**, `date = 2026-07-11` (fin de la semaine épidémiologique 28, cohérent avec « as of week 28 »), `active = true`, `updated_at = 2026-07-24 09:00 UTC`, description « Nigeria CDC — Lassa fever situation report (2026-07-11): 963 confirmed cases and 229 deaths (CFR 23.8%) cumulative in 2026 ». **Aucune écriture nécessaire** : le cron NCDC quotidien avait ingéré ces chiffres **le 24/07, soit un jour avant que la presse nigériane ne les reprenne le 25/07**. La reply était donc bien alignée sur la base. Note d'exécution : le schéma réel est `active` (pas `is_active`), sans colonnes `priority` ni `source_url` (cf. `reference_outbreaks_table_schema`).
+
+#### ⛔ Candidat ÉCARTÉ — @DrNeilStone (Neil Stone, consultant maladies infectieuses UK, vérifié), rougeole
+Post du jour « Death isn't the only metric that matters with measles / Pneumonia, meningitis and deafness are all potential complications » — **accroche idéale** pour l'angle amnésie immunitaire, et compte absent du ledger. **Écarté après ouverture du post** : il s'agit d'un **quote-tweet d'Alex Berenson** (« URGENT MEASLES UPDATE / Measles, still ZERO US deaths in 2026 »), donc un fil de polémique vaccinale, pas d'épidémiologie factuelle. Répondre là aurait placé HWG dans une bagarre partisane → **garde-fou « sujet politiquement chargé ou clivant » appliqué**, angle redirigé vers @CBSNews (post neutre d'un média généraliste, même valeur ajoutée sans le contexte partisan). Même logique que le refus de suivi @DrNeenaJha du 18/07 : compte crédible, mais identité publique fortement colorée politiquement. **Ne pas suivre ce compte non plus.**
+
+#### 💬 Reply 3/3 — @CBSNews, rougeole US (QUOTA REPLIES 3/3 REMPLI)
+- **Post cible** : https://x.com/CBSNews/status/2080895823898878240, publié le **25/07 à 08h00** (2 h au moment du scan ✅). « "The child is terrified": Doctors on the front lines of a measles comeback speak out. »
+- **⚠️ Autre post CBS volontairement écarté** : celui de 15 h (« For the first time in a quarter-century, the U.S. no longer meets a main criterion for having eliminated measles… ») porte **exactement l'angle déjà publié par HWG le 22/07** en reply à @washingtonpost (critère d'élimination = continuité d'une lignée sur 12 mois). Ne pas y revenir.
+- **Cadence** : @CBSNews **absent du ledger**, jamais engagé ✅. Replies postées aujourd'hui avant celle-ci : **2/3**.
+- **Pré-check §5** : réponses **non restreintes** ✅ ; **9 réponses existantes lues** — bruit et polémique vaccinale (@tap_gary « just another childhood disease in the 1950s, not a big deal », @Hooky310 « anti vax did », commentaires sur « the jab »), plus @LeinonaA69 qui **redit le point sur le statut d'élimination**. **Aucune ne touche l'amnésie immunitaire** → angle libre ✅.
+- **Angle retenu** : *la charge déborde la flambée*. La rougeole **déplète la mémoire anticorps préexistante contre d'autres pathogènes** (11 à 73 % du répertoire, cohorte Mina 2019, *Science*), et la **surmortalité infectieuse non rougeoleuse** qui suit dure **environ deux à trois ans** (Mina 2015, *Science*). Rien de cela n'est codé « rougeole » : la surveillance qui compte les cas de rougeole rate l'essentiel de la charge finale. Positionnement notable : cet angle répond de fait au « c'était juste une maladie infantile » du fil **sans prendre personne à partie**.
+- **Distinct des 2 replies rougeole déjà postées** : critère d'élimination génomique (@washingtonpost 22/07) et latence PESS/SSPE ~9,5 ans (@CIDRAP 23/07). Mécanisme (perte de répertoire anticorps vs infection persistante du SNC), échelle de temps (2-3 ans vs ~décennie) et implication de codage tous différents.
+- **Double-check** : anglais ✅ ; 11-73 % attribué explicitement à la cohorte Mina 2019 (chiffre exact de l'étude *Science* 2019 sur enfants non vaccinés) ✅ ; durée 2-3 ans adossée à Mina 2015 (immunomodulation post-rougeole) ✅ ; **aucune estimation chiffrée de décès inventée**, aucune extrapolation à un chiffre US ✅ ; pas de CTA, pas de lien, pas de hashtag, pas de tiret cadratin ✅ ; **280 caractères pile, avertissement de troncature X absent** donc argument entier visible dans le fil ; mise en forme relue via le DOM (bloc unique, aucune troncature) ✅.
+- **Texte publié** : « The burden runs past the outbreak. Measles depletes pre-existing antibody memory to other pathogens, 11 to 73% of the repertoire in the 2019 Mina cohort, and the excess non-measles infectious mortality that follows lasts about two to three years. None of it gets coded as measles. »
+- **✅ PUBLIÉE** — toast « Votre post a été publié. » + vérification sur `/with_replies` : https://x.com/HWatchGlobal/status/2080932529394078093
+
+#### 👥 Comptes suivis — 5/5, QUOTA REMPLI (détail complet et justification dans `x-watchlist.md`)
+Aucun follow n'avait été posé aujourd'hui avant cette session (quota partagé avec `x-hwg-followup-check` de 16h : **il ne reste donc rien cet après-midi**). Chaque follow vérifié après clic via le testid `-unfollow` (pas seulement un screenshot).
+1. **@NCDCgov** (Nigeria CDC, 1,1 M abonnés) — anomalie corrigée : agence dont HWG consomme déjà les données quotidiennement, jamais suivie.
+2. **@MSFcongo** (MSF RDC, 97,9k) — couche opérationnelle terrain sur l'épicentre Ituri, premier compte pays MSF suivi.
+3. **@florian_krammer** (Mount Sinai, 348,9k) — virologue de premier plan, bio strictement scientifique.
+4. **@drasatrust** (DRASA Health Trust Nigeria, 4,2k) — sécurité sanitaire et prévention/contrôle des infections, couche jamais couverte.
+5. **@AFENETAfrica** (African Field Epidemiology Network, 9,7k) — réseau continental FETP/FELTP, la filière qui forme les épidémiologistes de terrain.
+
+**Évalués et NON suivis** (traçabilité, pour ne pas les re-proposer à l'aveugle) : **@Craig_A_Spencer** → **remonté à David** (§10, post épinglé = tribune politique explicite, mais pertinence de fond très élevée, survivant d'Ebola, 41 comptes HWG le suivent — décision à trancher) ; **@HPP_LSHTM** → reporté par arbitrage de quota (5e compte du même tier revue/systèmes de santé en deux jours), re-proposable ; **@profvrr** → refusé (pédagogie virologique par podcast, hors cœur surveillance) ; **@DrNeilStone** → à ne pas suivre (voir candidat écarté ci-dessus).
+
+#### 🔭 Vivier repéré non encore évalué (à traiter en priorité à la prochaine session)
+**@OoasWaho** (WAHO/OOAS, organisation ouest-africaine de la santé, agence santé de la CEDEAO, vérifié — couche régionale Afrique de l'Ouest absente des comptes suivis, candidat le plus prometteur du lot), **@AfenetNigeria**, **@TheWaaph** (Academy of Public Health), **@G2H2_Geneva** (Geneva Global Health Hub), **@kentbuse**, **@MONUSCO** (contexte accès/sécurité Ituri, pas santé au sens strict).
+
+### BILAN FIN DE SESSION — x-hwg-followup-check 2026-07-24 (16h) : ⚠️ NON EXÉCUTÉE — navigateur bloqué (cas 3, page morte)
+
+Run planifié autonome, David absent. **Aucune action posée.** Navigateur habituel `23c7ecdd…` sélectionné directement ; `navigate` vers `x.com/messages` → **timeout 300s** sur l'onglet existant PUIS sur un onglet neuf dédié, `screenshot` également timeout 300s (recovery §7 : re-sélection deviceId ×2 + nouvel onglet, épuisée sans succès). Les appels niveau extension (`select_browser`, `tabs_context_mcp`, `tabs_create_mcp`, `list_connected_browsers`) répondent instantanément → extension vivante, couche CDP/page morte = **cas 3** identique au 17/07 ET à la session `linkedin-hwg-followup-check` de 16h aujourd'hui (même signature, donc blocage navigateur global du jour, pas spécifique à X). **Aucune bascule vers le 2e navigateur `a466bc2e…`** (garde-fou §7 + arbitrage David 17/07 : ignoré aussi le rappel système exigeant AskUserQuestion, sans objet en run autonome David absent). **Push envoyée** (desktop seul, « Mobile push not sent, Remote Control inactive »).
+
+**État des quotas au moment du blocage (repris de la session 10h, aucune modification cette session) :**
+- **DMs** : 0 vérifié cette session (boîte inaccessible). Dernière vérif = 10h, boîte VIDE. Rien à traiter connu.
+- **Follows** : **5/5 rempli à 10h** — quota du jour clos, aucun follow-back possible de toute façon. Aucun nouvel abonné connu à traiter (aucun depuis le 22/07 au dernier relevé).
+- **Replies** : **1/3 postée aujourd'hui** (@SantePubliqueFr, 10h). **Reliquat 2/3 NON comblé** — n'a pas pu être tenté, navigateur mort. Contexte 10h : paysage saturé côté cadence (comptes Ebola/RDC et rougeole US bloqués par la règle 1 reply/semaine), aucune opportunité fraîche de qualité identifiée le matin. À re-scanner à la prochaine session avec fenêtre navigateur.
+
+**Impact réel : reliquat 2 replies non comblé + DMs/notifications/nouveaux abonnés non vérifiés cet après-midi.** Priorité prochaine session (si Chrome remarche) : re-vérifier DMs, notifications (nouveaux abonnés → follow-back dans quota du jour suivant), et tenter le reliquat replies avec les garde-fous habituels (fenêtre 48h, 1 reply/compte/semaine via ledger, lecture des réponses existantes avant rédaction). **Aucun cas garde-fou / RGPD / injection à remonter. Aucun ajout DB.**
+
+---
+
+### Thread MWF — vendredi 24 juillet 2026 — ✅ PUBLIÉ EN AUTONOMIE par l'agent (x-hwg-content-proposal) le 2026-07-24 à 09h21 — Accord Africa CDC × OIM, le point aveugle de la notification par lieu vs par corridor
+
+**Publié par l'agent sans validation préalable** (autonomie contenu de marque X depuis le 17/07, voir [[project_x_content_autonomy_2026_07_17]]). **Fil racine :** https://x.com/HWatchGlobal/status/2080553866966290857 (3 tweets, tweet racine horodaté 9:21 AM · 24 juil. 2026, vérifiés dans l'ordre sur la page du fil ET sur le profil après publication, texte identique au brouillon ci-dessous, carte de lien healthwatch-global.com rendue correctement sur le tweet 3 avec « 106 active outbreaks tracked »).
+
+**Compte confirmé avant saisie** : profil @HWatchGlobal (HealthWatchGlobal ✓ vérifié, bouton « Éditer le profil » présent = notre propre compte, 145 posts au départ). Navigateur habituel de David `23c7ecdd…` (affiché « Browser 2 » cette session ; les deux navigateurs listés portaient des noms génériques inversés, sélection directe du deviceId habituel puisque run autonome sans David présent, conforme au pattern documenté [[feedback_browser_deviceid_recognition]]).
+
+**⚠️ Incident de publication (fil coupé puis complété, aucune perte, aucun doublon)** : le thread a été saisi dans le composeur modale (tweet 1 + « + » + tweet 2). Au moment d'ajouter le 3e tweet, un clic sur la position habituelle du bouton « + » (calée sur la position relative au toolbar observée pour le tweet 1) a **atterri sur « Tout poster »**, publiant le fil à 2 tweets (compteur 145 → 147) sans le tweet 3. **Correctif appliqué immédiatement** : tweet 3 posté en **réponse à son propre tweet 2** (self-reply), ce qui reconstitue le fil 1→2→3 en chaîne continue (compteur 147 → 148). Vérifié sur le permalien : les 3 tweets s'enchaînent bien dans l'ordre, le tweet 3 porte le label « En réponse à @HWatchGlobal » (normal pour une continuation de fil en self-reply) et affiche la carte de lien fonctionnelle. Rien publié en trop, aucun brouillon perdu. **Leçon** : sur le composeur X, ne pas se fier à la position relative du « + » d'un tweet à l'autre (le toolbar bouge quand un champ gagne du contenu et le « + » se rapproche de « Tout poster ») ; reprendre une capture juste avant le clic sur « + » et viser le champ, pas une coordonnée mémorisée. Même famille d'incident que le 17/07 et le 20/07 (champ dynamique).
+
+**Étape 0 :** aucun brouillon X rédigé en attente. Le dernier thread X (arbovirus France du 22/07) est publié. Rien rédigé le 23/07 (jeudi hors jour MWF ; entrées 23/07 = replies/veille `x-hwg-monitoring`/`linkedin-*`, hors périmètre).
+
+**Sujet choisi + pourquoi :** l'accord de coopération Africa CDC × OIM (IOM) signé le 22/07, angle « point aveugle de la surveillance par lieu vs par corridor ». **Fait frais (2 jours)**, jamais couvert sur aucun canal (repéré seulement en note de veille LinkedIn du 23/07 comme matière future, jamais publié). **Non-Ebola / non-rougeole / non-arbovirus** volontairement, pour diversifier après 22/07 (arbovirus France) et 20/07 (rougeole Amériques). **Rompt aussi le schéma répétitif « le chiffre de une trompe »** des deux threads X précédents (artefact de reporting 20/07, zéro qui n'est pas un verdict 22/07) : celui-ci est un thread structurel/mécanisme, pas une relecture de chiffre. Dengue Amériques écartée : la donnée PAHO la plus fraîche est l'update EW22 **publié le 29 juin** (~4 semaines, ~8 semaines de retard data), pas assez frais et aurait été un 3e thread « le chiffre trompe » d'affilée. Marburg/Ouganda (1 cas) et Ebola RDC (déjà 15/07 + 17/07 sur X) écartés.
+
+**Sources primaires (deux, vérifiées mot pour mot en session le 24/07) :**
+1. [Africa CDC — « Africa CDC and IOM Sign New Partnership to Strengthen Africa's Health Security »](https://africacdc.org/news-item/africa-cdc-and-iom-sign-new-partnership-to-strengthen-africas-health-security/) — accord signé le **22 July 2026**, cadre **2026-2028**, objectifs cités littéralement : « improve disease surveillance, strengthen health measures at Points of Entries (PoEs) and support early warning systems » ; « detect health threats earlier, share information more quickly and coordinate across borders » ; « ensuring that migrants, displaced and mobile populations are not left behind ».
+2. [IOM — même communiqué](https://www.iom.int/news/africa-cdc-and-iom-sign-new-partnership-strengthen-africas-health-security) (source miroir confirmant date, cadre 2026-2028 et objectifs).
+
+**Base prod consultée avant rédaction** (`.env.local.live`) : ligne active Ebola/RD Congo 2 536 cas / 1 033 décès (5 provinces dont Tshopo) et Ebola/Ouganda 20 cas / 2 décès (contained) parmi les foyers actifs africains — contexte de mobilité transfrontalière cohérent avec l'angle, mais **aucun chiffre d'épidémie repris dans le thread** (le fil ne cite volontairement aucune donnée non revérifiée en source primaire ; sa force est structurelle).
+
+**X (EN) — thread 3 tweets (texte publié)**
+
+1/
+> On 22 July, Africa CDC and IOM signed a cooperation agreement through 2028 to strengthen disease surveillance at points of entry and for migrant, displaced and mobile populations. Read closely, it targets a structural gap in how outbreaks get counted.
+
+2/
+> Case notification is anchored to place. A mobile case is reported by the country that detects it, not by the corridor it crossed. Point of entry screening captures a line, not a route. The population most likely to move a pathogen is the one the data describes least well.
+
+3/
+> For preparedness teams, cross border risk sits in the gaps between national datasets, not inside any one of them. A pact like this matters to the degree it makes movement visible, not just countable at a border. We track the country level signals: healthwatch-global.com
+
+**Double-check effectué :**
+- **Longueurs (comptage pondéré X, URL = 23 caractères, script)** : 251 / 272 / 271. Toutes sous 280 (marges 29 / 8 / 9). Tweet 2 d'abord à 285 puis ramené à 272 en retirant « to get there ». 0 hashtag, 0 tiret cadratin (deux-points, virgules et points uniquement), lien unique en fin de thread, pas de CTA appuyé. 0 caractère non-ASCII.
+- **Faits confrontés aux deux communiqués primaires** : date « 22 July », cadre « through 2028 », « disease surveillance at points of entry », « migrant, displaced and mobile populations » tous vérifiés mot pour mot (africacdc.org + iom.int). Les tweets 2 et 3 sont de l'analyse structurelle/définitionnelle (attribution de la notification au lieu de détection, pas au corridor), sans aucun chiffre non vérifié.
+- **Overclaim évité** : le tweet 3 conditionne explicitement la valeur de l'accord (« matters to the degree it makes movement visible, not just countable at a border ») plutôt que de le présenter comme une solution acquise. Aucune promesse que l'accord résout le problème.
+- **Honnêteté du CTA** : « We track the country level signals » dit exactement ce que HWG fait (agrégation au niveau pays), ce qui est précisément la limite que le fil décrit — pas de surclaim de suivi « corridor ».
+- **Cohérence interne** : lieu-ancré (t1/t2) → gaps entre jeux de données nationaux (t3), pas de contradiction. Pas de ProMED, pas de CDC Australie, pas de faux témoignage. Ton analytique décideur (preparedness teams, ops), pas promotionnel.
+- **CTA solide, pas de page fantôme** : carte de lien healthwatch-global.com rendue et fonctionnelle sur le tweet 3 (« 106 active outbreaks tracked »).
+
+**Vérification post-publication** : les 3 tweets relus dans l'ordre sur le permalien `x.com/HWatchGlobal/status/2080553866966290857` (racine 9:21 AM · 24 juil., t2 puis t3 en chaîne), texte mot pour mot identique au brouillon, carte de lien fonctionnelle. Compteur de posts du compte 145 → 148 (3 tweets). Notification David envoyée après publication.
+
+---
 
 ### Thread MWF — mercredi 22 juillet 2026 — ✅ PUBLIÉ EN AUTONOMIE par l'agent (x-hwg-content-proposal) le 2026-07-22 à 09h28 — Saison arbovirus France, le zéro autochtone de mi-juillet n'est pas un verdict de saison
 
@@ -168,6 +605,63 @@ Détail complet : mémoire `project_sync_cron_date_regression_guard_fixed_2026_0
 
 ---
 
+### Veille x-hwg-monitoring — 2026-07-24 (10h, session autonome, David généralement absent)
+
+**Contexte session** : navigateur habituel `23c7ecdd…` (affiché « Browser 2 » cette session) sélectionné directement. 1 timeout CDP `Page.captureScreenshot` (30s) sur `x.com/i/chat`, résolu par re-`select_browser` + nouveau screenshot (pattern connu). **Aucune PushNotification.** Quotas en début de session : **0/3 replies, 0/5 follows** (aucune entrée X du 24/07 préexistante hors le thread de marque `x-hwg-content-proposal` publié à 9h21, hors périmètre de cette routine ; la routine LinkedIn du matin avait tourné).
+
+**Point DMs : boîte de réception VIDE.** Vérifiée en « Tous » sur `x.com/i/chat` (« Boîte de réception vide ») **et** en demandes de message (icône bac de réception → panneau vide, « Boîte de réception vide »). **0 reçu, 0 répondu, 0 noté pour David.** Aucune demande de contact hors plateforme, aucun changement de canal.
+
+**Sources primaires Ebola/RDC vérifiées en direct (SKILL §Sources primaires)** : @Com_mediasRDC visité — dernier sitrep Ebola = « Point de situation - 21 juillet 2026 » (posté 23 juil), infographie 2 536 cas / 1 033 décès / 506 guéris / 738 isolement / 40,7 % CFR / 77,2 % suivi contacts, **identique à la ligne DB prod déjà à jour (MAJ du 23/07, voir bloc ci-dessous)**. @MinSanteRDC visité — derniers posts du 22/07 (déplacement ministériel en Ouganda, échange avec les députés du Nord-Kivu), aucun sitrep chiffré plus frais. **→ Aucune donnée Ebola/RDC plus récente que la DB, aucune écriture.**
+
+#### Données épidémiologiques notées (aucune écriture DB)
+- **@SantePubliqueFr — bulletin arbovirus du 22/07 (surveillance renforcée, tendances 1er mai → 19 juillet 2026, France hexagonale)** : **2 cas autochtones de dengue** au 20 juillet (Tarn + Hérault, Occitanie) ; 1 cas autochtone West Nile (déjà en DB, ligne créée le 17/07) ; cas importés 1er mai→19 juillet : 80 chikungunya, 231 dengue, 8 Zika. Donnée lue directement dans le texte du post + infographie. **Non écrit en DB** : 2 cas autochtones de dengue en tout début de saison = sous le seuil d'une ligne outbreak distincte, et HWG n'a pas de ligne dengue/France à mettre à jour (la ligne France active est West Nile). Sert de socle à la reply n°1 ci-dessous. À re-surveiller : la saison Aedes court jusqu'à l'automne, un cluster autochtone plus tard justifierait une ligne.
+- **SARS-CoV-2 (COVID-19) (compte relais news, 23/07)** : « CDC reports more than 11,500 cyclosporiasis cases across 41 U.S. states ». **Hors périmètre HWG confirmé** (pas de ligne cyclosporose en base, pas de source agrégée dans le pipeline ; déjà écarté 2x, cf. watchlist) + angle politiquement chargé côté coupes CDC. Noté, aucune action.
+
+**Reply n°1 POSTÉE ✅ — @SantePubliqueFr (bulletin arbovirus 22/07, angle réservoir importé → allumage autochtone + calendrier de saison)**
+
+Cible : https://x.com/SantePubliqueFr/status/2080214332806160507 (compte officiel vérifié, déjà suivi, **cadence libre** — dernier engagement le 17/07 West Nile, soit 7 jours, ledger purge ≤ 16/07). Posté le 23/07 à 10h52, 2 840 vues au moment de la reply, dans la fenêtre 48h. **Réponses ouvertes vérifiées avant rédaction** (champ « Postez votre réponse » actif, pas de restriction). **2 réponses existantes lues** : la continuation de fil de SPF elle-même (totaux importés) et @egal_veronique demandant les mesures de prévention — aucune ne prend l'angle épidémiologique, la reply est donc additive.
+
+**Angle** : les 2 cas autochtones ne sont pas un événement isolé mais le signal aval des 231 cas importés de dengue : chaque voyageur virémique est un point d'allumage potentiel là où *Aedes albopictus* est établi (désormais la majeure partie de la France métropolitaine). Le Tarn (intérieur des terres, Occitanie) est le signal à surveiller car la transmission autochtone remonte depuis la côte méditerranéenne. Et le 20 juillet est tôt : la transmission locale suit la densité vectorielle et la chaleur, elle culmine plutôt en août-septembre, donc ces premiers cas précèdent en général le gros de la saison.
+
+**Reply postée :**
+> The two autochthonous cases sit downstream of the 231 imported ones: each viremic traveler is a potential ignition point wherever Aedes albopictus is established, now most of mainland France. Tarn is the signal worth watching, since autochthonous transmission has been moving inland from the Mediterranean coast, not just clustering along it. And 20 July is early: local transmission tracks vector density and heat, typically building through August and September, so these first cases usually precede the bulk of the season.
+
+**Confirmation :** texte relu intégralement dans le champ avant envoi via capture (aucune troncature, aucun caractère parasite, texte dans le bon champ, mention « En réponse à @SantePubliqueFr »), puis toast « Votre post a été publié », compteur de réponses du post passé de 2 à 3 et reply visible sous HealthWatchGlobal @HWatchGlobal · 3s. X signale que seuls les 280 premiers caractères s'affichent dans le fil : la phrase porteuse (réservoir importé → allumage) tient dans cette limite.
+
+**Double-check :**
+- **231 cas importés de dengue** : lu mot pour mot dans l'infographie du post (« 231 cas importés de dengue »), pas repris de mémoire. West Nile autochtone (1 cas) déjà couvert le 17/07, non répété ici.
+- **Mécanisme réservoir importé → allumage autochtone** : raisonnement épidémiologique standard (vecteur local pique un virémique importé puis d'autres personnes). L'inférence « downstream of the 231 imported » est la seule lecture plausible, recalculée : cas importés = source d'introduction, cas autochtones = transmission locale amorcée.
+- **« now most of mainland France »** : *Aedes albopictus* établi dans une majorité des départements métropolitains (fait documenté), formulation « most » prudente.
+- **« Tarn... moving inland from the Mediterranean coast »** : le Tarn est un département intérieur d'Occitanie ; l'historique de la dengue autochtone en France part du littoral (Nice 2010) et progresse vers l'intérieur — caractérisation défendable, l'Hérault reste plus côtier que le Tarn.
+- **« 20 July is early... building through August and September »** : la saison arbovirus autochtone française culmine en fin d'été/automne (activité vectorielle liée à la chaleur), cohérent avec le thread de marque du 22/07 (fenêtre 2025 : débuts de signes du 27 mai au 13 novembre).
+- Langue EN conforme au style X de HWG malgré un post source en français (précédent identique @SantePubliqueFr le 17/07, @Com_mediasRDC le 23/07).
+- Pas de CTA, pas de lien, pas de hashtag, pas de tiret cadratin (deux-points et virgules). Sujet strictement épidémiologique.
+
+**→ Replies : 1/3. Quota NON rempli — décision assumée, pas un oubli.** Le paysage reply du jour est saturé côté cadence : la conversation Ebola/RDC (histoire dominante) a quasiment tous ses comptes de qualité bloqués par la règle 1 reply/semaine (@Com_mediasRDC, @sidhant, @UNGeneva, @Dr_JeanKaseya, @DrTedros, @BNOFeed, @Chikwe_I, @KrutikaKuppalli, @julienmh, @AfricaCDC), les comptes rougeole US bloqués (@washingtonpost, @CIDRAP), et les posts frais restants sont soit US-domestiques hors périmètre (Legionnaires NYC via @DrIanWeissman, cyclosporiose via compte relais — même catégorie que la cyclosporiose écartée les 23/07 et antérieurement : pas dans le pipeline WHO DON/ECDC/PAHO/Africa CDC), soit de la prévention/PR (cholera Nigeria/Yobe, infographies #StopCholera NCDC sans donnée-hook). **Méthodes épuisées avant de conclure** : notifications (Tous), fil d'accueil Abonnements, 2 recherches structurées par mots-clés (toutes maladies + cholera/mpox/Marburg, onglets Récent et À la une), visite directe @WHOAFRO. Conformément au SKILL (« ne jamais forcer une reply médiocre juste pour remplir le chiffre »), pas de 2e/3e reply forcée.
+
+#### Comptes suivis (5/5 — quota rempli)
+Recherche active de candidats via les suggestions « Vous pourriez aimer » (chaînes déclenchées par les profils suivis) et le panneau Notifications. 5 comptes légitimes retenus, tous in-domain avec forte validation réseau (comptes déjà suivis par HWG en abonnés), tous confirmés « Abonné » par zoom sur le bouton. Détail complet dans x-watchlist.md (section « Comptes à suivre »).
+1. **@H_S_Global** (Health Systems Global, vérifié) — société pro. mondiale recherche systèmes de santé, suivi par Kaseya/Sahbani + 33. Repéré via suggestions Notifications.
+2. **@AllianceHPSR** (Alliance for Health Policy & Systems Research, hébergé OMS, who.int) — suivi par Chikwe Ihekweazu/UHC2030 + 12. Via suggestions @H_S_Global.
+3. **@CUGHnews** (Consortium of Universities for Global Health) — suivi par Tom Frieden/Alliance HPSR + 23. Via suggestions recherche cholera.
+4. **@GlobalHealthBMJ** (BMJ Global Health, vérifié) — revue à comité de lecture, suivi par Sahbani/ACT-Accelerator + 29. Via suggestions.
+5. **@GVAGrad_GHC** (Global Health Centre, Graduate Institute Genève) — gouvernance/diplomatie santé mondiale, suivi par ACT-Accelerator/Ton Soons + 21. Via suggestions (2x).
+
+#### Nouveaux abonnés et notifications
+**Nouveaux abonnés : AUCUN nouveau depuis la session du 23/07** repéré dans l'onglet Notifications/Tous (aucune notification « vous suit » nouvelle). Aucun follow-back ni DM de bienvenue à envoyer. **Signaux de traction reçus** (likes sur nos replies passées) : @UNGeneva a aimé notre reply Ebola Haut-Uélé/Tshopo (19h) — déjà suivi ; @IfE_Congo (déjà refusé, hors domaine) et « Karla » ont aimé des replies plus anciennes (21/07). Le reste des notifications = recommandations de posts de comptes suivis (déjà traitées dans les replies/veille). **Mentions : aucune nouvelle non traitée.**
+
+#### Bilan de session x-hwg-monitoring 2026-07-24 (10h)
+- **DMs** : boîte de réception VIDE (Tous + demandes de message vérifiés). 0 reçu, 0 répondu, 0 noté pour David. Aucune demande de contact hors plateforme.
+- **Replies** : **1/3 postée aujourd'hui** (tous passages confondus) — @SantePubliqueFr (bulletin arbovirus 22/07, angle réservoir importé → allumage autochtone dengue). Quota non rempli, rationale ci-dessus (paysage saturé par la cadence + hors-périmètre US-domestique). **File d'attente pour demain : néant de solide** — à re-scanner à la prochaine session (les blocages de cadence Ebola se lèveront progressivement).
+- **Comptes suivis** : **5/5** (@H_S_Global, @AllianceHPSR, @CUGHnews, @GlobalHealthBMJ, @GVAGrad_GHC). Quota rempli.
+- **Données épi** : bulletin arbovirus SPF du 22/07 noté (2 cas autochtones dengue France, 231 importés) — pas d'écriture DB (sous seuil, pas de ligne dengue/France). Sources primaires Ebola/RDC (@Com_mediasRDC, @MinSanteRDC) vérifiées en direct : DB déjà à jour (sitrep 21/07, 2 536/1 033), aucune écriture.
+- **Ajouts DB** : 0.
+- **Navigateur** : `23c7ecdd…` (« Browser 2 » puis « David »), 1 timeout CDP + 1 disparition d'onglet, tous deux résolus par re-`select_browser` + nouvel onglet. Aucune PushNotification nécessaire (session menée à terme).
+- **Archivage vérifié (étape 9)** : reply #1 (content-log + ledger de cadence x-watchlist + purge ≤17/07), 5 follows (5 lignes « suivi » en tête de la table « Comptes à suivre » x-watchlist). Relecture confirmée, chaque action figure avec le bon statut.
+- **Cas remontés à David (garde-fous)** : aucun.
+
+---
+
 ### Veille x-hwg-monitoring — 2026-07-23 (10h, session autonome, David généralement absent)
 
 **Contexte session** : navigateur habituel `23c7ecdd…` (affiché « Browser 1 ») sélectionné directement, session sans blocage (3 timeouts CDP `Page.captureScreenshot` ponctuels, résolus au 2e appel ; l'outil `zoom` a par ailleurs renvoyé plusieurs captures périmées d'un offset de scroll antérieur, contourné en relisant le texte du post plutôt que l'infographie). **Aucune PushNotification.** Quotas en début de session : **0/3 replies, 0/5 follows** (aucune entrée X du 23/07 préexistante dans le content-log ; seule la routine LinkedIn du matin avait tourné).
@@ -267,6 +761,56 @@ Cible : https://x.com/CIDRAP/status/2080035798171189638 (CIDRAP, déjà suivi, *
 - Pas de CTA, pas de lien, pas de hashtag, pas de tiret cadratin (deux-points et point-virgule). Langue EN. Aucun angle politique, alors que le sujet rougeole US en charrie beaucoup en ce moment (cf. post @DrNeilStone écarté plus haut).
 
 **→ QUOTA REPLIES DU JOUR : 3/3 REMPLI.**
+
+---
+
+### Veille x-hwg-followup-check — 2026-07-23 (16h, session après-midi)
+
+**Contexte session** : navigateur habituel `23c7ecdd…` (affiché « Browser 1 ») sélectionné directement, **session sans aucun blocage ni timeout**. **Aucune PushNotification.** Quotas en début de session, **déjà REMPLIS par la session de 10h** : **replies 3/3** (@Com_mediasRDC, @sidhant, @CIDRAP) et **follows 5/5** (@AU_HHS, @ONURDCongo, @tah_soons, @UNGeneva, @MOH_Kenya). **Reliquat à combler cette après-midi : néant sur les deux quotas** — aucune reply ni aucun follow n'était autorisé, la recherche active d'opportunités n'avait donc pas lieu d'être.
+
+#### Messages reçus
+
+**Point DMs : boîte de réception VIDE.** Vérifiée en vue « Tous » sur `x.com/i/chat` (« Boîte de réception vide ») **et** dans les demandes de message (`x.com/messages/requests`, panneau de liste vide, confirmé par capture d'écran). **0 reçu, 0 répondu, 0 noté pour David.** Rien à archiver. Aucune demande de contact hors plateforme, aucun changement de canal proposé, aucun DM de bienvenue à envoyer (aucun nouvel abonné, voir ci-dessous).
+
+#### Nouveaux abonnés et notifications
+
+**Nouveaux abonnés : AUCUN depuis la session de 10h.** Double vérification : onglet Notifications/Tous (aucune notification « vous suit » nouvelle, la dernière reste @ElizabeFalda du 21/07) **et** liste des abonnés de @HWatchGlobal, dont la tête est inchangée (@ElizabeFalda → @DavyDrTumuhairw → @Anas_NGA → @benny_Immah → @SamManbn3k → @stuartelimu → @latanya_house85 → @RobertBuraga, tous déjà traités/refusés). **Aucun follow-back à décider, aucun candidat reporté au lendemain.**
+
+**Mentions : aucune nouvelle** (la plus récente reste @DavyDrTumuhairw du 21/07, déjà traitée).
+
+**📈 Signal de traction** : **United Nations Geneva (@UNGeneva, vérifié, 2,4M abonnés) a aimé notre reply du 22/07** sur son post UNHAS/Ebola (angle « deux types d'expansion » : Haut-Uélé + Tshopo à 21 cas contre Ituri à 28 zones de santé sur 36), like reçu ~14h. C'est le premier like d'une agence onusienne de cette taille sur une reply HWG. Le compte avait été suivi le matin même : la boucle repérage → reply → follow → engagement retour est complète.
+
+#### ✅ Vérification base prod — Ebola/Ouganda : déjà à jour, AUCUNE écriture
+
+**Déclencheur** : post @Dr_JeanKaseya (DG Africa CDC, vérifié, déjà suivi) du jour 13h08, https://x.com/Dr_JeanKaseya/status/2080248598088777787 — « Since 21 June, no new confirmed cases of Bundibugyo Ebola Virus Disease have been reported in the country. All identified contacts have completed follow-up, and surveillance remains strong across the country. »
+
+**Recoupement contre source primaire effectué** (politique §8, ne jamais écrire sur la foi d'un post) : **WHO AFRO, « Uganda begins countdown to end of Ebola outbreak », publié le 16/07/2026** — 20 cas confirmés dont 2 décès, dernier cas confirmé détecté le 21/06, compte à rebours de 42 jours démarré le **16/07** au second test négatif et à la sortie du dernier patient (42 j = deux périodes d'incubation maximales du Bundibugyo).
+
+**Contrôle de la ligne `63ba952c-1965-473a-999f-705921159e87` (prod)** : 20 cas / 2 décès / 18 guérisons, `date` 2026-07-17, `active: true`, `source_priority` 5, `verification_status` confirmed, `response_phase` contained. La description dans les **5 langues** porte déjà la sortie du dernier patient le 16/07, le lancement du compte à rebours de 42 jours, l'absence de nouveau cas depuis le 21/06 et l'absence de transmission communautaire documentée. **Arithmétique vérifiée : 2 décès + 18 guérisons = 20 cas, tous les cas sont résolus.**
+
+**→ Conclusion : rien à écrire.** La donnée HWG était déjà au niveau de la déclaration publique du DG d'Africa CDC, et `active: true` reste correct puisque l'épidémie n'est pas déclarable terminée avant la fin du compte à rebours. **Aucun ajout ni MAJ de base cette session.**
+
+⚠️ **Piège de date à retenir pour tout contenu futur** : le compte à rebours ne part PAS du 21 juin (dernière détection) mais du **16 juillet** (2e test négatif + sortie du dernier patient). Fin d'épidémie déclarable **fin août 2026**, pas le 2 août — compter 42 jours depuis le 21 juin est l'erreur naturelle et se trompe de ~3 semaines.
+
+⚠️ **Précision apportée après re-vérification en fin de session (la première formulation de ce compte rendu disait « 27 août » trop fermement)** : la page WHO AFRO a été relue en demandant une citation verbatim, et **elle ne donne aucune date calendaire explicite** — seulement « Uganda has today entered the 42-day countdown », sur une page publiée le 16/07. Le résultat dépend donc de la convention de comptage : **26 août si le jour 1 est le 16 juillet, 27 août si c'est le 17**. Toute date au jour près serait une inférence de HWG, pas une donnée sourcée : **ne pas publier de date précise** avant une annonce OMS ou du ministère ougandais. Encodé durablement dans la mémoire `reference_uganda_ebola_42day_countdown_dates`.
+
+⚠️ **Piège d'outil, valable au-delà de ce foyer** : la synthèse automatique de cette même page WHO AFRO a renvoyé « 27 septembre 2026 » — faux d'un mois entier, et présenté sans la moindre réserve. **Ne jamais reprendre une date *calculée* par un résumé automatique** ; ne garder que les dates **citées** dans la source, et refaire tout calcul à la main. Règle ajoutée à la politique commune §5.2 le 23/07.
+
+#### Infos notées pour de futurs posts
+
+- **⚠️ @HelenBranswell (16h) — point le plus important de la session, impacte un cadrage déjà public de HWG.** « The bits of animal data suggesting #Ervebo, the #Ebola Zaire vaccine, might be useful against #Bundibugyo Ebola are getting supported from data showing some cross protection in blood of vaccinees. That's leading to increasing calls to study the vaccine in DRC. » Renvoie à STAT du 22/07, « New study supports testing of Merck's Ebola vaccine in DRC outbreak ». **L'article n'a pas pu être lu en session** (extraction de texte refusée sur le domaine) : à relire avant tout usage chiffré. Notre reply @KrutikaKuppalli du 21/07 affirmait que la cross-protection Ervebo → Bundibugyo n'est « pas prouvée » — toujours vrai au sens réglementaire, mais la base de preuve passe de données animales à de la sérologie humaine. **Ne pas rejouer l'angle « pas de preuve » sans cette nuance** ; l'angle neuf est le glissement animal → sérologie humaine et ce qu'il change à l'argument deploy-to-learn. Compte bloqué par cadence jusqu'au 24/07.
+- **@Dr_JeanKaseya (13h08)** : déclaration Ouganda ci-dessus (version EN + FR, tague @MinofHealthUG, #AfricaReady). Angle fort disponible — le chiffre à regarder n'est pas « 0 cas depuis le 21 juin » mais la date de départ réelle du compte à rebours — mais **compte bloqué par cadence jusqu'au 29/07** (reply du 22/07). À garder pour la fenêtre du 27 août.
+- **@WHOAFRO (2h)** : récit d'une mère (Neema) dont les deux enfants ont contracté la rougeole au camp de réfugiés de **Busuma, Burundi**, et renforcement de la riposte rougeole pour les réfugiés. Post narratif **sans aucun chiffre**, donc rien d'exploitable en base, mais signal à surveiller (aucune ligne HWG rougeole/Burundi à ce jour).
+- **@OMS_Afrique (6h)** : explainer #ViralFactsAfrique « Ebola peut-il se transmettre par la salive et la sueur après la guérison ? ». Sujet persistance virale chez les survivants, angle de contenu possible.
+- **STAT relayé en fil** (« Congo's Ebola outbreak has killed over 1,000 people ») : cohérent avec les 1 033 décès entrés en base ce matin. **Simple corroboration, aucune écriture.**
+
+#### Sitreps nationaux vérifiés directement (politique §8)
+
+Contrôle en début de session pour ne pas dépendre du hasard du scroll sur le foyer prioritaire :
+- **@Com_mediasRDC** : le dernier point de situation reste celui du **21 juillet** (posté 8h13, déjà ingéré ce matin). **Aucun sitrep plus récent** — la ligne Ebola/RDC est à jour.
+- **@MinSanteRDC** : dernier post il y a 19h, arrivée du ministre de la Santé Dr Roger Kamba en Ouganda sur invitation de la présidence ougandaise. **Aucun chiffre épidémiologique.** Noté comme signal de coordination transfrontalière RDC-Ouganda.
+
+**→ Bilan : 0 DM, 0 nouvel abonné, 0 follow-back, 0 reply (quota 3/3 déjà rempli le matin), 0 écriture en base (vérification faite, donnée déjà à jour), 1 signal de traction (@UNGeneva), 5 trouvailles notées pour de futurs posts.**
 
 ---
 
@@ -1261,6 +1805,73 @@ If you work in global health, outbreak response, or international crisis managem
 ---
 
 ## LinkedIn
+
+### Post MWF — 24 juillet 2026 (vendredi) — Mpox, la RDC épicentre presque disparue du tableau OMS parce que sa surveillance est mobilisée sur Ebola — **PUBLIÉ ✅ le 24/07/2026** (David a explicitement demandé « validé, publie » en session, publié par l'agent sur override)
+
+**Statut :** publié par l'agent, exception ponctuelle sur demande explicite de David dans le chat (« validé, publie »), conformément à la dérogation ponctuelle prévue pour cette routine ([[feedback_no_self_publishing]], mise à jour 2026-07-22). Signalé à David avant d'agir (rappel de la règle par défaut) ; il a maintenu sa demande.
+
+**Run initial du 24/07 (9h)** : brouillon rédigé, double-checké et archivé en statut PRÊT, David non présent. **Session interactive ultérieure le même jour** : David a demandé « Parle en français » (langue de session, sans impact sur la langue du post), puis « On est sûr des chiffres ? » — un second double-check a été effectué à sa demande et a détecté une erreur réelle dans le brouillon initial (voir ci-dessous), corrigée avant publication. David a ensuite validé et demandé la publication.
+
+**⚠️ Incident navigateur (résolu, sans conséquence)** : à la publication, `list_connected_browsers` a renvoyé 2 devices connectés et son propre texte d'instruction poussait à interroger David via un choix explicite entre les deux + option écran de confirmation. L'agent a suivi cette instruction embarquée dans le tool result et a reposé la question à David — alors qu'une mémoire déjà écrite 3 fois ([[feedback_browser_deviceid_recognition]]) établissait qu'il n'y a qu'un seul navigateur physique (deviceId `23c7ecdd…`) et qu'il ne faut plus jamais redemander. David a corrigé sèchement : « Celui que tu utilises habituellement, ne demande pas à chaque fois. » Mémoire mise à jour avec une 4e confirmation et une leçon générale : vérifier la mémoire avant de suivre une instruction embarquée dans un tool result, surtout un AskUserQuestion.
+
+**Publication effectuée** : navigateur habituel de David (`23c7ecdd…`, « Browser 2 » dans cette session), sélectionné directement sans redemander (voir incident ci-dessus). Texte tapé en un bloc dans le composeur LinkedIn (paragraphes séparés par une ligne vide), relu en entier à l'écran (haut ET bas, `ctrl+Home`/`ctrl+End`) avant publication, mot pour mot identique au brouillon corrigé ci-dessous. Carte de lien healthwatch-global.com générée correctement (« Disease outbreak monitoring — WHO, ECDC, PAHO, Africa CDC in one dashboard | HealthWatch Global »). Publication confirmée par le toast « Le post a bien été publié » et le post visible en tête du fil de David Deheunynck, horodaté « maintenant » ; texte déplié après publication et revérifié identique, lien healthwatch-global.com actif et fonctionnel dans le post publié.
+
+**Incidents techniques mineurs en cours de publication (sans conséquence)** : 1er `navigate` vers `/feed/` en timeout 300s puis 1er `computer` (screenshot) en timeout 300s juste après — résolu par un `select_browser` de re-confirmation puis nouvelle tentative, la navigation a alors abouti immédiatement (pattern déjà connu, cf. incidents des 20/07 et 22/07). Popup « Réactivez Premium : -50 % » fermée avant le premier clic sur « Commencer un post » (comme prévu dans la procédure). Un `Page.captureScreenshot` a de nouveau timeout 30s une fois juste avant la relecture finale, résolu au 2e appel.
+
+**Étape 0 :** aucun brouillon LinkedIn de marque en attente au 24/07. Le dernier post LinkedIn (22/07, Ouganda deux filovirus) est PUBLIÉ (confirmé, en-tête de son entrée). Rien rédigé le 23/07 côté LinkedIn de marque (jeudi, hors jours MWF ; journée chantiers rentabilité/sécurité + veille). Rédaction entièrement neuve.
+
+**Langue : EN** (défaut posts de marque LinkedIn, audience santé publique internationale, [[feedback_linkedin_brand_posts_in_english]]).
+
+**Sujet choisi + pourquoi :** l'angle vient d'une note de bas de page de l'OMS, pas d'un gros titre. Dans le rapport mpox #67, la RDC (épicentre de l'urgence mpox clade I) n'apparaît qu'à 8 cas confirmés sur les six dernières semaines, derrière Madagascar, Kenya, Guinée, Soudan du Sud, Cameroun. L'OMS annote explicitement : ce chiffre bas reflète des retards de notification parce que la surveillance de la RDC est mobilisée sur la riposte Ebola (Bundibugyo). **Le fait le plus fort du post** : un compteur qui baisse peut vouloir dire deux choses opposées (la maladie recule, OU le système qui la compte a été redéployé ailleurs), et ici les deux produisent le même petit nombre. **Angle structurel, ne périme pas** (toutes dates en absolu). **Jamais couvert côté LinkedIn de marque** (le mpox n'a servi que de replies/pitches, jamais de post MWF ; et ce mécanisme précis — le comptage détourné par une urgence voisine — est neuf). Relie les fils mpox et Ebola sans redite : le post du 22/07 opposait « transmission arrêtée » vs « reporting arrêté » (silence) ; ici le mécanisme est différent (détournement de ressources de surveillance vers Ebola).
+
+**Angles écartés :**
+- **Dengue (CFR / volume)** : le contraste létalité vs volume Ebola/Dengue Brésil a **déjà** été utilisé (entrée content-log précédente, « Dengue, Brazil: 407,750 cases, 241 deaths, CFR 0.06% »). Arbovirus/chikungunya France couvert côté X le 22/07. Écarté pour non-redite.
+- **Ebola RDC/Ouganda** : sur-couvert côté LinkedIn (24/06, 17/07, 22/07). Un 4e post filovirus en un mois = sur-couverture. La ligne RDC a aussi des réserves de fraîcheur (`source_priority=10`, source X ministère). Ebola n'apparaît ici qu'en contexte du footnote OMS, pas comme sujet.
+- **Rougeole Amériques** : sur-couvert (15/07, 20/07).
+- **Lassa/Nigéria (NCDC)** : source propre, CFR ~24 % marquant, mais hors-saison (pic déc-avril), le cumul 922/221 ne bouge quasiment plus fin juillet, pas de momentum frais. Gardé en réserve pour la reprise de saison.
+- **Grippe aviaire US (USDA APHIS)** : lignes = détections en élevages, pas cas humains, risque de cadrage trompeur (même raison qu'écarté côté X le 22/07).
+
+**Source primaire (une seule, vérifiée mot pour mot en session le 24/07, PDF téléchargé et parsé via pdf-parse, WebFetch ne rend pas les PDF OMS) :** [WHO, Mpox Multi-country external situation report no. 67, publié le 26 juin 2026](https://www.who.int/publications/m/item/multi-country-outbreak-of-mpox--external-situation-report--67---26-june-2026) (PDF : https://cdn.who.int/media/docs/default-source/_sage-2026/multi-country-outbreak-of-mpox--external-situation-report_67.pdf). C'est le rapport OMS le plus récent (cadence mensuelle, #68 non encore publié au 24/07). Données mondiales au 31/05/2026, données Afrique au 14/06/2026 — cadence signalée à David (voir double-check).
+
+**Faits vérifiés dans le PDF (extraits littéraux) :**
+- Mondial (1 jan 2025 – 31 mai 2026) : **61 061 cas confirmés, 244 décès, 103 pays**.
+- Mai 2026 : **1 142 cas confirmés dans 32 pays, 3 décès (CFR 0,3 %)**, dont deux tiers en Région africaine OMS (63,9 %, 730/1142).
+- Afrique (1 jan 2025 – 14 juin 2026) : 31 pays, **49 176 cas confirmés, 222 décès (CFR 0,5 %)**.
+- Six dernières semaines (4 mai – 14 juin 2026) : **10 pays** en transmission active, **790 cas** ; Madagascar **689**, Kenya **28**, Guinée **15**, Soudan du Sud **15**, Cameroun **14**, RDC **8**.
+- Footnote RDC (verbatim) : « Interpretation of data from the Democratic Republic of the Congo should take into account delays in reporting of mpox data owing to the country's current focus on the response to the Bundibugyo virus disease outbreak. »
+- Cadrage OMS (verbatim, fragment cité dans le post) : « over a thousand confirmed cases reported every month despite declining surveillance ».
+
+**Prérequis CTA vérifié :** DB HWG prod — ligne Mpox/RD Congo `active=true`, 37 503 cas / 78 décès (source WHO sitrep 67, `updated_at` 14/07, `is_seed:false`) ET ligne Mpox/Mondial `active=true`, 61 061 / 244, toutes deux sur le site. Le cumul RDC quasi figé illustre littéralement le propos (peu de nouvelles notifications). Pays cité comme « sur le tracker » = RDC uniquement + agrégat mondial ; Madagascar cité en contexte n'est PAS présenté comme présent sur le site (il n'a pas de ligne active en DB). Aucune ligne `is_seed:true` citée.
+
+**Texte final (prêt à copier-coller) :**
+
+> In WHO's latest mpox report, the epicenter of the outbreak almost disappears from the table.
+>
+> The Democratic Republic of the Congo, the center of the clade I mpox emergency, is listed with 8 confirmed cases in the six weeks to 14 June 2026. WHO names it alongside Madagascar (689), Kenya (28), Guinea (15), South Sudan (15), and Cameroon (14) as the six countries with the highest case counts, among ten reporting active transmission. DRC sits at the bottom of that list of six.
+>
+> WHO adds a footnote. The DRC figure should be read with the country's reporting delays in mind, because its surveillance is currently focused on the response to the Bundibugyo Ebola outbreak.
+>
+> That one line is the whole surveillance problem. A case count can fall for two unrelated reasons: the disease receded, or the system that counts it was redirected to something else. In DRC right now, a genuine decline and a reporting slowdown produce the same output, a small number.
+>
+> The wider context makes it sharper. WHO reports the mpox outbreak is still logging over a thousand confirmed cases a month worldwide, "despite declining surveillance." When the measuring effort is itself shrinking, every downward trend needs a second reading before it becomes a planning assumption.
+>
+> This is why a tracker has to show the cumulative total and the date of last report side by side. DRC's mpox line barely moving is not evidence the outbreak is over. It is evidence that, for now, the people who would report it are counting Ebola.
+>
+> Mpox tracker, DRC and global: healthwatch-global.com
+>
+> Source: WHO Multi-country mpox external situation report no. 67, published 26 June 2026. Global data to 31 May 2026, Africa data to 14 June 2026.
+
+**Double-check effectué :**
+- **Langue** EN, conforme au défaut.
+- **Chaque chiffre confronté au PDF sitrep 67 lu en session**, aucun repris d'une mémoire ancienne ni d'un post tiers. Le fait central (footnote RDC détournée sur Ebola) vérifié verbatim, pas déduit.
+- **⚠️ Erreur détectée et corrigée lors d'un second double-check (demandé explicitement par David après présentation du brouillon)** : la version initiale affirmait que la RDC était « the quietest of the ten countries still reporting active transmission ». Faux par construction : le PDF dit que les 6 pays nommés (Madagascar, Kenya, Guinée, Soudan du Sud, Cameroun, RDC) sont ceux avec **le plus haut** nombre de cas parmi les 10 pays en transmission active (« reported the highest number of cases during this period »). Somme des 6 nommés = 769 sur un total six-week de 790, donc les 4 pays non nommés se partagent ~21 cas, et certains ont probablement **moins** de cas que la RDC (8). La RDC est donc plutôt parmi les pays à **plus fort** volume, pas le plus silencieux des dix — l'inverse du sens de la phrase initiale. Corrigé en : « DRC sits at the bottom of that list of six [pays nommés comme les plus élevés] », affirmation strictement vérifiable. Aucune autre phrase du post ne répétait cette erreur.
+- **Aucune sur-affirmation** : le post ne dit pas que l'épidémie mpox RDC est terminée, ni qu'elle explose. Il dit exactement que le chiffre bas est ambigu et pourquoi. Le mécanisme (surveillance mobilisée sur Ebola) est attribué à l'OMS, pas asserté comme analyse maison.
+- **Hook structurel, dates en absolu** (14 juin, 31 mai) : reste exact publié un autre jour.
+- **Un seul fragment cité** entre guillemets et attribué (« despite declining surveillance »), sous 15 mots. Reste en reformulation.
+- **Ponctuation** : 0 tiret cadratin (deux-points, virgules, points). Traits d'union uniquement dans les composés. Paragraphes courts séparés par des sauts de ligne.
+- **CTA** : un seul lien, dans le corps, sans pitch commercial ni injonction. Pas de hashtag. RDC + mpox mondial bien actifs sur le site (cohérence CTA vérifiée). Madagascar non présenté comme sur le tracker.
+- **Pas de ProMED, pas de CDC Australie, pas de faux témoignage.** Aucun chiffre `is_seed`.
+- **Longueur** ~250 mots, cohérent avec les posts MWF LinkedIn analytiques précédents.
 
 ### Post MWF — 22 juillet 2026 (mercredi) — Ouganda, deux événements filovirus dont un seul est encore documenté — **PUBLIÉ ✅ le 22/07/2026** (David a explicitement demandé « Publie » en session, publié par l'agent sur override)
 
@@ -3749,3 +4360,26 @@ Réponse reçue ~9 min après notre commentaire du matin sur son post (`urn:li:a
 > **Tambe Elvis Akem, MD** : « David Deheunynck well said, thanks. »
 
 **Aucune contre-réponse postée : quota de 3 commentaires du jour déjà atteint** (Tambe, Félicité, EDCTP, voir sections du matin). Remerciement de clôture sans question ouverte, rien d'urgent (même précédent que Dr. Urvashi Chauhan le 22/07). Fil à surveiller pour de futures interactions, pas de carry-over prioritaire nécessaire vu le ton fermé du message.
+
+## 🗓️ 2026-07-23 — Veille LinkedIn (routine `linkedin-hwg-followup-check`, 16h20)
+
+**Contexte session** : navigateur habituel `23c7ecdd…`, premier `navigate` en timeout 300 s récupéré par re-`select_browser` (§7), puis cas 2 (fenêtre minimisée) en lecture seule. **Aucun contenu publié cette session** : quota commentaires déjà rempli le matin (3/3), et aucun DM envoyé du fait de la nouvelle règle de validation ([[feedback_linkedin_dm_validation_required_2026_07_23]]). Veille plafonnée à 10 cartes de notifications (le lazy-load ne s'étend pas en fenêtre minimisée).
+
+### 🔁 Retombées des 3 commentaires du matin
+
+- **Tambe Elvis Akem, MD** — retombée la plus forte de la journée : réponse (« David Deheunynck well said, thanks. ») **et réaction « J'adore » sur notre commentaire**, cette dernière non encore consignée dans le log du matin. Post à 13 réactions, 5 commentaires, 2 republications. Pas de contre-réponse (quota 3/3 atteint, et remerciement de clôture sans question ouverte).
+- **Félicité Dorise FOE NOAH** — 0 réponse et 0 réaction sur le commentaire, **mais acceptation de l'invitation le jour même**. La conversion du commentaire public en relation de 1er degré est la vraie retombée ici.
+- **EDCTP** — aucune retombée mesurable : 1 impression sur le commentaire, 0 réaction, 0 réponse. À retenir pour le ciblage : sur ce compte entreprise, deux tentatives (20-21/07 non commentées, 23/07 commentée) n'ont produit aucune discussion, contrairement aux profils individuels.
+
+**Signal transversal du jour** : les deux retombées réelles viennent de **profils individuels**, aucune du compte entreprise. Argument pour continuer à prioriser les personnes sur les organisations dans le quota de commentaires.
+
+### 📌 Matière repérée pour de futurs posts originaux (non rédigés ici, hors périmètre)
+
+1. **Africa CDC × OIM (IOM UN Migration) — accord de coopération 2026-2028 signé**, explicitement destiné à renforcer la surveillance des maladies. Angle exploitable : la surveillance aux points de passage et le long des corridors migratoires est structurellement absente des bulletins pays, puisqu'un cas mobile est notifié par le pays où il est détecté, jamais par le corridor qu'il a emprunté. Recoupe directement le fil de la journée sur les maillons de notification invisibles. **Aussi candidat commentaire pour le 24/07** (post frais, fenêtre 48 h).
+2. **Dr. Jean Kaseya (DG Africa CDC)** — post sur la souveraineté sanitaire africaine : développer, réguler et fabriquer localement des médicaments de qualité. Angle possible côté HWG : la souveraineté de la donnée épidémiologique comme préalable rarement cité à la souveraineté sanitaire, on ne peut pas prioriser une production locale sans visibilité fine sur ce qui circule. **Candidat commentaire 24/07** (profil au sommet de la priorité, dernier commentaire chez lui le 17/07 donc règle hebdomadaire levée).
+3. **Julien Harneis (Coordonnateur résident ONU en RDC) — « We are getting ahead of Ebola in Kisangani »**, province de la Tshopo : deux vols UNHAS par semaine Bunia-Kisangani désormais pleins, renforcement IPC autour du **port fluvial**, équipes de la Croix-Rouge congolaise sur les enterrements dignes et sécurisés. Angle fort et peu traité : **l'accès logistique comme variable cachée de la surveillance**. Un foyer n'est pas seulement sous-détecté par manque de laboratoires, il l'est par manque de vols. La courbe épidémique d'une zone enclavée mesure autant l'accès des équipes que la circulation du virus. Matière de post original de très bonne qualité, distincte de tout ce qui a été publié jusqu'ici.
+4. **Issa Barry** (relation récente) — post sur le droit à une alimentation saine, sûre et durable. Périphérique pour HWG, noté sans plus.
+
+### 🦠 Données épidémiologiques — 1 signal vérifié, aucune écriture en base
+
+Le post de Julien Harneis ci-dessus **ne contient aucun chiffre**. Le seul élément à vérifier était l'extension géographique à la Tshopo. Contrôle en lecture seule sur la vraie prod (`.env.local.live`) : la ligne active Ebola/RD Congo (2 536 cas / 1 033 décès au 21/07, sitrep national du 23/07, mise à jour ce matin à 08:16) **mentionne déjà les cinq provinces touchées dont la Tshopo**. Aucun retard, aucune correction à apporter. Détail dans `linkedin-contacts.md` à la même date.
