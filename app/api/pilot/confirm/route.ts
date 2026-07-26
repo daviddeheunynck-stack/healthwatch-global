@@ -85,22 +85,34 @@ export async function GET(req: NextRequest) {
     // a Pilot user gets Pro access but no alert ever fires, so re-engagement
     // emails never reach them and they never come back. Best-effort: a
     // failure here must not block activation itself.
-    const { error: alertsErr } = await supabase
+    const alertRows = ["africa", "asia", "americas", "europe", "oceania"].map((region) => ({
+      user_id: profile.id,
+      region,
+      min_risk: "medium",
+    }));
+    let { error: alertsErr } = await supabase
       .from("user_alert_regions")
-      .upsert(
-        ["africa", "asia", "americas", "europe", "oceania"].map((region) => ({
-          user_id: profile.id,
-          region,
-          min_risk: "medium",
-        })),
-        { onConflict: "user_id,region", ignoreDuplicates: true }
-      );
+      .upsert(alertRows, { onConflict: "user_id,region", ignoreDuplicates: true });
+
+    // Same retry + flush as /api/activate-trial (see the incident described
+    // there, 2026-07-25): a transient failure here leaves a Pilot user with 0
+    // alert regions for their whole 35-day trial, and the captureException
+    // below never reaches Sentry because this function redirects and exits
+    // immediately after.
     if (alertsErr) {
-      console.error("[pilot/confirm] default alert enrollment failed:", alertsErr);
+      console.error("[pilot/confirm] alert enrollment failed, retrying once:", alertsErr.message);
+      ({ error: alertsErr } = await supabase
+        .from("user_alert_regions")
+        .upsert(alertRows, { onConflict: "user_id,region", ignoreDuplicates: true }));
+    }
+
+    if (alertsErr) {
+      console.error("[pilot/confirm] default alert enrollment failed after retry:", alertsErr);
       Sentry.captureException(
         new Error(`[pilot/confirm] alert enrollment failed: ${alertsErr.message}`),
         { tags: { user_id: profile.id } }
       );
+      await Sentry.flush(2000);
     }
 
     // Activation has already committed above — a Brevo hiccup here must not
