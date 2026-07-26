@@ -20,6 +20,9 @@ Journal quotidien (17h, routine `daily-product-ideas-healthwatch`) des idées d'
 
 **Non re-proposées aujourd'hui** (déjà capturées dans `product-feedback.md`, sans angle neuf à ajouter) : le volet AMR léger (Eva Kamau, 10/07) et le signal de « ralentissement critique » / variance (Simon Ruegg, 6-7/07) restent ouverts et non priorisés, mais rien de nouveau à en dire aujourd'hui.
 
-**Statut :** PROPOSÉE — en attente de retour de David.
+**Statut :** David a validé les deux le jour même (« Les deux, par ordre de priorité »). Les deux construites et déployées le 2026-07-26 :
+
+- **Idée 2 (fraîcheur prio=10) — ✅ FAIT, commit `663a8b8`.** Vérification en direct sur prod avant de coder : la vraie portée était plus large que le pitch initial. 4 lignes hors cluster (Choléra/Tanzanie, Choléra/Somalie, Choléra/Tchad, Fièvre West Nile/France) et 12 lignes de cluster jamais vérifiées pour fraîcheur d'édition (Choléra ×4 dont RDC à 28 567 cas — le plus gros foyer du produit, MERS-CoV, Chikungunya ×7). `scripts/morning-don-check.mjs` scanne désormais toutes les lignes actives à `source_priority=10` avec cadence 7j (hors cluster) / 14j (cluster, bulletins mensuels), signal seulement — jamais de correction automatique. SKILL.md de `morning-don-check` mis à jour (section "4 bis") avec la procédure. Testé contre la prod réelle (Tanzanie/Somalie correctement flaggées à 9j, Tchad/France correctement skip car <7j).
+- **Idée 1 (vue usage) — ✅ FAIT, commit `5fd1931`.** Section "Activité produit" ajoutée à `/admin` (stats 30j + flux des 25 événements les plus récents, email résolu par jointure profiles). Requête testée en direct contre la prod : 17 événements réels déjà capturés, 3 utilisateurs distincts, tous résolus vers un email. Typecheck + lint propres. Déployé (Vercel Ready). **Non vérifié visuellement** : la page est protégée par le login de David, je n'ai pas ses identifiants — à confirmer par lui à l'œil au prochain passage sur `/admin`.
 
 ---
