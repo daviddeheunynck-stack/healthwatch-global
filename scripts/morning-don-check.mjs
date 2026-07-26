@@ -228,6 +228,43 @@ if (silentNulls.length) {
   console.log("Aucun (hors nulls attendus : Cameroun, Syrie, Liban, Népal).");
 }
 
+// --- 4g. Incidents de rattrapage : lignes ingérées très longtemps après leur date signalée ---
+// Signal interne uniquement (David, 27/07 : trop rare pour justifier une surface Pro — voir
+// marketing/product-ideas-log.md item 3 du 27/07). Utile pour repérer une ligne mal étiquetée
+// (is_seed/is_backfill oubliés) avant que ça ne fausse un audit — c'est l'usage qui a fait
+// naître ce calcul (lib/reporting-lag.ts, jamais branché côté client). Duplique volontairement
+// la logique de lib/reporting-lag.ts ici (ce script est du JS brut, pas de build TS) — garder
+// les deux synchronisés si l'un change.
+const catchupRows = await fetchJson(
+  `${SUPABASE_URL}/rest/v1/outbreaks?select=id,disease_en,country_en,date,created_at,updated_at,is_seed,is_backfill`,
+  { headers: h }
+);
+const CATCHUP_UPDATE_TOLERANCE_MS = 60_000;
+const CATCHUP_THRESHOLD_DAYS = 7;
+function computeCatchupDays(o) {
+  if (o.is_seed || o.is_backfill || !o.date || !o.created_at) return null;
+  const createdMs = new Date(o.created_at).getTime();
+  if (o.updated_at) {
+    const updatedMs = new Date(o.updated_at).getTime();
+    if (!Number.isNaN(createdMs) && !Number.isNaN(updatedMs) && updatedMs - createdMs > CATCHUP_UPDATE_TOLERANCE_MS) return null;
+  }
+  const reported = new Date(`${o.date}T00:00:00Z`).getTime();
+  if (Number.isNaN(reported) || Number.isNaN(createdMs)) return null;
+  const days = Math.round((createdMs - reported) / 86_400_000);
+  return days >= 0 ? days : null;
+}
+console.log("\n=== Incidents de rattrapage (ingérées >7j après leur date signalée — signal interne, jamais client) ===");
+const catchupIncidents = catchupRows
+  .map((o) => ({ ...o, days: computeCatchupDays(o) }))
+  .filter((o) => o.days !== null && o.days > CATCHUP_THRESHOLD_DAYS);
+if (catchupIncidents.length) {
+  catchupIncidents.forEach((o) =>
+    console.log(`[${o.id}] ${o.disease_en} | ${o.country_en} | ${o.days}j après la date signalée | is_seed=${o.is_seed} is_backfill=${o.is_backfill}`)
+  );
+} else {
+  console.log("Aucun.");
+}
+
 // --- 5. Lignes manuelles (section 5 du SKILL.md) dues pour vérif hebdo (>7j) ---
 const MANUAL_ROWS = {
   "e856b352-747b-4db0-b0d1-c9e55f6c53aa": "Diphtérie/Australie",

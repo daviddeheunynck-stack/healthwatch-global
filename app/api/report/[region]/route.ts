@@ -3,7 +3,6 @@ import { createClient } from "@/lib/supabase-server";
 import { getOutbreaks, getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 import { trackEvent } from "@/lib/track-event";
 import { resolvedPlan } from "@/lib/resolved-plan";
-import { computeCatchupIncidentDays, catchupIncidentDisclosure } from "@/lib/reporting-lag";
 
 function esc(s: string): string {
   return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
@@ -30,13 +29,12 @@ const REPORT_LABELS: Record<string, {
   riskHigh: string;
   riskMedium: string;
   riskLow: string;
-  catchupHeading: string;
 }> = {
-  en: { subtitle: "Epidemiological Report", activeOutbreaks: "Active outbreaks", totalCases: "Total reported cases", highRisk: "High risk alerts", outbreakDetail: "Outbreak Detail", disease: "Disease", country: "Country", cases: "Cases", deaths: "Deaths", risk: "Risk", noOutbreaks: "No active outbreaks reported for this region.", generated: "Generated", riskHigh: "High", riskMedium: "Medium", riskLow: "Low", catchupHeading: "Data disclosure" },
-  fr: { subtitle: "Rapport épidémiologique", activeOutbreaks: "Foyers actifs", totalCases: "Cas signalés au total", highRisk: "Alertes haut risque", outbreakDetail: "Détail des foyers", disease: "Maladie", country: "Pays", cases: "Cas", deaths: "Décès", risk: "Risque", noOutbreaks: "Aucun foyer épidémique actif signalé pour cette région.", generated: "Généré le", riskHigh: "Élevé", riskMedium: "Modéré", riskLow: "Faible", catchupHeading: "Transparence des données" },
-  es: { subtitle: "Informe epidemiológico", activeOutbreaks: "Brotes activos", totalCases: "Casos totales notificados", highRisk: "Alertas de alto riesgo", outbreakDetail: "Detalle de brotes", disease: "Enfermedad", country: "País", cases: "Casos", deaths: "Fallecidos", risk: "Riesgo", noOutbreaks: "No se han notificado brotes activos en esta región.", generated: "Generado el", riskHigh: "Alto", riskMedium: "Moderado", riskLow: "Bajo", catchupHeading: "Transparencia de datos" },
-  ar: { subtitle: "تقرير وبائي", activeOutbreaks: "التفشيات النشطة", totalCases: "إجمالي الحالات المُبلَّغ عنها", highRisk: "تنبيهات الخطر العالي", outbreakDetail: "تفاصيل التفشي", disease: "المرض", country: "الدولة", cases: "الحالات", deaths: "الوفيات", risk: "الخطر", noOutbreaks: "لا توجد تفشيات نشطة مُبلَّغ عنها لهذه المنطقة.", generated: "تاريخ الإصدار", riskHigh: "مرتفع", riskMedium: "متوسط", riskLow: "منخفض", catchupHeading: "شفافية البيانات" },
-  id: { subtitle: "Laporan Epidemiologi", activeOutbreaks: "Wabah aktif", totalCases: "Total kasus dilaporkan", highRisk: "Peringatan risiko tinggi", outbreakDetail: "Detail Wabah", disease: "Penyakit", country: "Negara", cases: "Kasus", deaths: "Kematian", risk: "Risiko", noOutbreaks: "Tidak ada wabah aktif yang dilaporkan untuk wilayah ini.", generated: "Dibuat pada", riskHigh: "Tinggi", riskMedium: "Sedang", riskLow: "Rendah", catchupHeading: "Transparansi data" },
+  en: { subtitle: "Epidemiological Report", activeOutbreaks: "Active outbreaks", totalCases: "Total reported cases", highRisk: "High risk alerts", outbreakDetail: "Outbreak Detail", disease: "Disease", country: "Country", cases: "Cases", deaths: "Deaths", risk: "Risk", noOutbreaks: "No active outbreaks reported for this region.", generated: "Generated", riskHigh: "High", riskMedium: "Medium", riskLow: "Low" },
+  fr: { subtitle: "Rapport épidémiologique", activeOutbreaks: "Foyers actifs", totalCases: "Cas signalés au total", highRisk: "Alertes haut risque", outbreakDetail: "Détail des foyers", disease: "Maladie", country: "Pays", cases: "Cas", deaths: "Décès", risk: "Risque", noOutbreaks: "Aucun foyer épidémique actif signalé pour cette région.", generated: "Généré le", riskHigh: "Élevé", riskMedium: "Modéré", riskLow: "Faible" },
+  es: { subtitle: "Informe epidemiológico", activeOutbreaks: "Brotes activos", totalCases: "Casos totales notificados", highRisk: "Alertas de alto riesgo", outbreakDetail: "Detalle de brotes", disease: "Enfermedad", country: "País", cases: "Casos", deaths: "Fallecidos", risk: "Riesgo", noOutbreaks: "No se han notificado brotes activos en esta región.", generated: "Generado el", riskHigh: "Alto", riskMedium: "Moderado", riskLow: "Bajo" },
+  ar: { subtitle: "تقرير وبائي", activeOutbreaks: "التفشيات النشطة", totalCases: "إجمالي الحالات المُبلَّغ عنها", highRisk: "تنبيهات الخطر العالي", outbreakDetail: "تفاصيل التفشي", disease: "المرض", country: "الدولة", cases: "الحالات", deaths: "الوفيات", risk: "الخطر", noOutbreaks: "لا توجد تفشيات نشطة مُبلَّغ عنها لهذه المنطقة.", generated: "تاريخ الإصدار", riskHigh: "مرتفع", riskMedium: "متوسط", riskLow: "منخفض" },
+  id: { subtitle: "Laporan Epidemiologi", activeOutbreaks: "Wabah aktif", totalCases: "Total kasus dilaporkan", highRisk: "Peringatan risiko tinggi", outbreakDetail: "Detail Wabah", disease: "Penyakit", country: "Negara", cases: "Kasus", deaths: "Kematian", risk: "Risiko", noOutbreaks: "Tidak ada wabah aktif yang dilaporkan untuk wilayah ini.", generated: "Dibuat pada", riskHigh: "Tinggi", riskMedium: "Sedang", riskLow: "Rendah" },
 };
 
 const REGION_LABELS: Record<string, Record<string, string>> = {
@@ -114,20 +112,6 @@ export async function GET(
       deaths: o.deaths,
       risk: o.risk_level,
     }));
-
-  // Catch-up incidents: rare, disclosed cases where HWG's own pipeline ingested
-  // an event long after its reported date (backfilled/late-discovered record,
-  // not a live-time miss) — see lib/reporting-lag.ts. Only rendered when at
-  // least one exists in this region; nothing shown otherwise.
-  const catchupIncidents = regionOutbreaks
-    .map((o) => ({
-      name: getLocalizedDisease(o, locale),
-      country: getLocalizedCountry(o, locale),
-      days: computeCatchupIncidentDays(o.date, o.created_at, o.updated_at, o.is_seed, o.is_backfill),
-    }))
-    .filter((o) => o.days !== null)
-    .map((o) => ({ ...o, disclosure: catchupIncidentDisclosure(o.days, locale) }))
-    .filter((o): o is typeof o & { disclosure: string } => o.disclosure !== null);
 
   const html = `<!DOCTYPE html>
 <html lang="${locale}" dir="${locale === "ar" ? "rtl" : "ltr"}">
@@ -232,21 +216,6 @@ export async function GET(
     </tbody>
   </table>`
       : `<p style='color:#9ca3af;font-size:13px;margin-top:8px'>${rl.noOutbreaks}</p>`
-  }
-
-  ${
-    catchupIncidents.length > 0
-      ? `<div style="margin-top:24px;padding-top:16px;border-top:1px solid #e5e7eb">
-    <h2>${rl.catchupHeading}</h2>
-    <ul style="list-style:none;padding:0;margin:0">
-      ${catchupIncidents
-        .map(
-          (c) => `<li style="font-size:11px;color:#6b7280;padding:4px 0"><strong style="color:#374151">${esc(c.name)} — ${esc(c.country)}:</strong> ${esc(c.disclosure)}</li>`
-        )
-        .join("\n      ")}
-    </ul>
-  </div>`
-      : ""
   }
 
   <footer>
