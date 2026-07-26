@@ -3,12 +3,33 @@ import { createServerClient } from "@supabase/ssr";
 import { createClient } from "@supabase/supabase-js";
 import { cookies } from "next/headers";
 import * as Sentry from "@sentry/nextjs";
+import { buildSignupDigestEmail } from "@/lib/signup-digest-email";
+import { isRealProduction } from "@/lib/cron-monitor";
 
 export const dynamic = "force-dynamic";
 
 const TRIAL_DAYS = 14;
 const BOM = String.fromCharCode(65279);
 const clean = (v: string | undefined) => (v || "").replace(new RegExp("^" + BOM), "").trim();
+
+const BREVO_API_KEY = clean(process.env.BREVO_API_KEY);
+const APP_URL = clean(process.env.NEXT_PUBLIC_APP_URL || "https://healthwatch-global.com");
+const RISK_RANK: Record<string, number> = { high: 3, medium: 2, low: 1 };
+
+async function sendEmail(to: string, subject: string, html: string) {
+  const res = await fetch("https://api.brevo.com/v3/smtp/email", {
+    method: "POST",
+    signal: AbortSignal.timeout(10_000),
+    headers: { "api-key": BREVO_API_KEY, "Content-Type": "application/json" },
+    body: JSON.stringify({
+      sender: { name: "HealthWatch Global", email: "alerts@healthwatch-global.com" },
+      to: [{ email: to }],
+      subject,
+      htmlContent: html,
+    }),
+  });
+  if (!res.ok) throw new Error(`Brevo error: ${await res.text()}`);
+}
 
 export async function POST(_req: NextRequest) {
   // Identify the caller from their session cookie — never trust client-supplied userId
@@ -38,7 +59,7 @@ export async function POST(_req: NextRequest) {
 
   const { data: profile, error: fetchErr } = await admin
     .from("profiles")
-    .select("plan, trial_ends_at")
+    .select("plan, trial_ends_at, alert_locale")
     .eq("id", user.id)
     .single();
 
@@ -101,6 +122,74 @@ export async function POST(_req: NextRequest) {
       tags: { user_id: user.id },
     });
     await Sentry.flush(2000);
+  } else {
+    // One-time "state of play" digest of outbreaks already active in the
+    // user's regions at signup. The regular per-event alert emails
+    // (regional-alerts cron) only fire on outbreaks created/updated after
+    // enrollment, so without this a foyer that's already active and stable
+    // never reaches the user at all — audited 2026-07-26, new trials were
+    // seeing as little as 9% of the outbreaks genuinely live in their
+    // regions. Best-effort, same as the enrollment above: never fail
+    // activation over this.
+    try {
+      const minRiskByRegion = new Map(alertRows.map((r) => [r.region, r.min_risk]));
+
+      const { data: activeOutbreaks, error: obErr } = await admin
+        .from("outbreaks")
+        .select("id, region, disease, disease_en, disease_ar, country, country_en, country_ar, risk_level, cases")
+        .eq("active", true)
+        .in("region", alertRows.map((r) => r.region))
+        .limit(1000);
+
+      if (obErr) throw new Error(`outbreaks query failed: ${obErr.message}`);
+
+      const qualifying = (activeOutbreaks ?? []).filter((o) => {
+        const minRisk = minRiskByRegion.get(o.region);
+        if (!minRisk) return false;
+        return (RISK_RANK[o.risk_level ?? ""] ?? 0) >= (RISK_RANK[minRisk] ?? 0);
+      });
+
+      if (qualifying.length > 0) {
+        // Log every qualifying outbreak at its current state — not just the
+        // ones shown in the email — so the next regional-alerts cron run
+        // only re-fires on a genuine escalation/surge from here, instead of
+        // treating all of them as "new" and sending one email per outbreak.
+        const sentAt = new Date().toISOString();
+        const { error: logErr } = await admin.from("outbreak_alert_log").upsert(
+          qualifying.map((o) => ({
+            user_id: user.id,
+            outbreak_id: String(o.id),
+            risk_level: o.risk_level,
+            cases_at_alert: o.cases ?? null,
+            sent_at: sentAt,
+          })),
+          { onConflict: "user_id,outbreak_id" }
+        );
+        if (logErr) throw new Error(`outbreak_alert_log upsert failed: ${logErr.message}`);
+
+        const locale = (profile.alert_locale as string | null) ?? "en";
+        const DIGEST_DISPLAY_CAP = 10;
+        const topOutbreaks = [...qualifying]
+          .sort((a, b) => (RISK_RANK[b.risk_level ?? ""] ?? 0) - (RISK_RANK[a.risk_level ?? ""] ?? 0))
+          .slice(0, DIGEST_DISPLAY_CAP);
+
+        const { subject, html } = buildSignupDigestEmail(
+          locale,
+          topOutbreaks,
+          qualifying.length,
+          `${APP_URL}/${locale}`,
+          `${APP_URL}/${locale}/account#regional-alerts`
+        );
+
+        if (BREVO_API_KEY && isRealProduction && user.email) {
+          await sendEmail(user.email, subject, html);
+        }
+      }
+    } catch (digestErr) {
+      console.error("[activate-trial] signup digest failed:", digestErr);
+      Sentry.captureException(digestErr, { tags: { user_id: user.id, part: "signup-digest" } });
+      await Sentry.flush(2000);
+    }
   }
 
   console.log(`[activate-trial] Trial activated until ${trialEndsAt}`);
