@@ -5,7 +5,7 @@ import { createClient as createServiceClient, type SupabaseClient, type User } f
 import {
   Shield, Users, Activity, RefreshCw,
   TrendingUp, DollarSign, Zap, Bell, Link2,
-  CheckCircle, XCircle, BarChart2, AlertTriangle, ExternalLink,
+  CheckCircle, XCircle, BarChart2, AlertTriangle, ExternalLink, Clock,
 } from "lucide-react";
 import Link from "next/link";
 import AdminOutbreakTable from "@/components/AdminOutbreakTable";
@@ -162,6 +162,7 @@ export default async function AdminPage({
     { data: alertRegions },
     { data: slackUsers },
     authUsers,
+    { data: productEvents },
   ] = await Promise.all([
     admin.from("outbreaks").select("*").order("date", { ascending: false }),
     admin.from("subscriptions").select("*").order("created_at", { ascending: false }),
@@ -169,6 +170,10 @@ export default async function AdminPage({
     admin.from("user_alert_regions").select("user_id"),
     admin.from("profiles").select("id").not("slack_webhook_url", "is", null),
     fetchAllAuthUsers(admin),
+    // Capture-only since 2026-07-23 (migration 20260723160000_product_events.sql) — first
+    // read path. Capped at 200 most recent rows: enough for the 30j aggregate + a recent
+    // feed without an unbounded query as volume grows.
+    admin.from("product_events").select("id, user_id, action, metadata, created_at").gte("created_at", ago30).order("created_at", { ascending: false }).limit(200),
   ]);
 
   const nameByEmail: Record<string, string> = {};
@@ -247,6 +252,42 @@ export default async function AdminPage({
     if (!u.last_sign_in_at || !u.created_at) return true;
     return new Date(u.last_sign_in_at).getTime() - new Date(u.created_at).getTime() < 60_000;
   });
+
+  // ── Product usage events (product_events, capture-only since 2026-07-23) ──
+  const emailById: Record<string, string> = {};
+  for (const p of profiles ?? []) if (p.email) emailById[p.id] = p.email;
+
+  const ACTION_LABELS: Record<string, string> = {
+    dashboard_view: "Vue dashboard",
+    pricing_page_view: "Vue pricing",
+    outbreak_detail_view: "Détail foyer",
+    csv_export: "Export CSV",
+    pdf_report_download: "Rapport PDF",
+  };
+
+  function eventDetail(action: string, metadata: Record<string, unknown> | null): string {
+    if (!metadata) return "—";
+    if (action === "outbreak_detail_view" && metadata.outbreak_id) return `${String(metadata.outbreak_id).slice(0, 8)}…`;
+    if (action === "csv_export" && metadata.format) return String(metadata.format);
+    if (action === "pdf_report_download" && metadata.region) return String(metadata.region);
+    if (metadata.locale) return String(metadata.locale);
+    return "—";
+  }
+
+  function relativeTime(iso: string): string {
+    const mins = Math.floor((now.getTime() - new Date(iso).getTime()) / 60_000);
+    if (mins < 60) return `il y a ${mins} min`;
+    const hours = Math.floor(mins / 60);
+    if (hours < 24) return `il y a ${hours}h`;
+    return `il y a ${Math.floor(hours / 24)}j`;
+  }
+
+  const productEventsList = productEvents ?? [];
+  const eventUserCount = new Set(productEventsList.map((e) => e.user_id)).size;
+  const actionCounts: Record<string, number> = {};
+  for (const e of productEventsList) actionCounts[e.action] = (actionCounts[e.action] ?? 0) + 1;
+  const topAction = Object.entries(actionCounts).sort((a, b) => b[1] - a[1])[0];
+  const recentEvents = productEventsList.slice(0, 25);
 
   // J+30 Go/No-Go checklist
   // "Réponse institutionnelle" (email) reste affichée plus bas pour info mais n'est plus
@@ -342,6 +383,68 @@ export default async function AdminPage({
             icon={<Activity className="w-4 h-4" />}
             accent="text-orange-400"
           />
+        </div>
+      </div>
+
+      {/* ── Product usage (product_events) ─────────────────────────────────── */}
+      <div className="space-y-4">
+        <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-widest flex items-center gap-2">
+          <Clock className="w-3.5 h-3.5" />
+          Activité produit (30 derniers jours)
+        </h2>
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+          <StatCard
+            label="Événements"
+            value={productEventsList.length}
+            sub={productEventsList.length >= 200 ? "200+ (limite d'affichage)" : "product_events"}
+            icon={<Zap className="w-4 h-4" />}
+            accent="text-blue-400"
+          />
+          <StatCard
+            label="Utilisateurs actifs"
+            value={eventUserCount}
+            sub="au moins 1 événement"
+            icon={<Users className="w-4 h-4" />}
+            accent="text-green-400"
+          />
+          <StatCard
+            label="Action la plus fréquente"
+            value={topAction ? (ACTION_LABELS[topAction[0]] ?? topAction[0]) : "—"}
+            sub={topAction ? `${topAction[1]} fois` : "aucun événement"}
+            icon={<Activity className="w-4 h-4" />}
+            accent="text-purple-400"
+          />
+        </div>
+
+        <div className="bg-gray-900 border border-gray-800 rounded-xl overflow-hidden overflow-x-auto">
+          <table className="w-full text-sm min-w-[500px]">
+            <thead>
+              <tr className="bg-gray-900 text-gray-400 text-xs uppercase tracking-wide border-b border-gray-800">
+                <th className="px-4 py-3 text-left">Utilisateur</th>
+                <th className="px-4 py-3 text-left">Action</th>
+                <th className="px-4 py-3 text-left">Détail</th>
+                <th className="px-4 py-3 text-left">Quand</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-800">
+              {recentEvents.length === 0 ? (
+                <tr>
+                  <td colSpan={4} className="px-4 py-6 text-center text-gray-500 text-sm">
+                    Aucun événement sur cette période.
+                  </td>
+                </tr>
+              ) : (
+                recentEvents.map((e) => (
+                  <tr key={e.id} className="hover:bg-gray-800/50 transition-colors">
+                    <td className="px-4 py-3 text-white">{emailById[e.user_id] ?? `${e.user_id.slice(0, 8)}…`}</td>
+                    <td className="px-4 py-3 text-gray-300">{ACTION_LABELS[e.action] ?? e.action}</td>
+                    <td className="px-4 py-3 text-gray-400">{eventDetail(e.action, e.metadata as Record<string, unknown> | null)}</td>
+                    <td className="px-4 py-3 text-gray-500 text-xs">{relativeTime(e.created_at)}</td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
         </div>
       </div>
 
