@@ -144,14 +144,34 @@ if (suspicious.length) {
 // prio=10 bloque toute écriture de cron (guards `.lte(source_priority, N)` partout) — légitime
 // pour les seeds de clusters (déjà suivis en 4a), mais un résidu is_seed=false à prio=10 signifie
 // qu'une ligne s'est figée sans que personne ne le sache (vécu : Ebola/RDC 16-17/07, Ebola/France
-// et Ebola/Allemagne jusqu'au 23/07). Signal seulement — ne jamais déverrouiller sans vérifier
-// pourquoi la ligne a été mise à ce niveau.
-console.log("\n=== Lignes actives à source_priority=10, hors clusters de seeds connus (à surveiller) ===");
+// et Ebola/Allemagne jusqu'au 23/07, Choléra/Tchad jusqu'au 22/07). Cadence hebdo (>7j) comme la
+// section 5 : ne jamais déverrouiller sans vérifier pourquoi la ligne a été mise à ce niveau, voir
+// SKILL.md section "5 bis" pour la procédure (pas de fetch pré-construit, recherche au cas par cas).
+console.log("\n=== Lignes actives à source_priority=10, hors clusters de seeds connus (>7j = à vérifier) ===");
 const frozenNonSeed = active.filter((o) => o.source_priority === 10 && !o.is_seed);
 if (frozenNonSeed.length) {
-  frozenNonSeed.forEach((o) =>
-    console.log(`[${o.id}] ${o.disease_en || o.disease} | ${o.country_en || o.country} | date=${(o.date || "").slice(0, 10)} | upd=${(o.updated_at || "").slice(0, 10)} | src=${(o.source || "").slice(0, 50)}`)
-  );
+  frozenNonSeed.forEach((o) => {
+    const ageDays = Math.round((Date.now() - new Date(o.updated_at).getTime()) / 864e5);
+    const status = ageDays > 7 ? "À VÉRIFIER" : "skip (vérifiée récemment)";
+    console.log(`[${o.id}] ${o.disease_en || o.disease} | ${o.country_en || o.country} | ${ageDays}j — ${status} | date=${(o.date || "").slice(0, 10)} | src=${(o.source || "").slice(0, 50)}`);
+  });
+} else {
+  console.log("Aucune.");
+}
+
+// --- 4d-bis. Lignes gelées à source_priority=10 DANS un cluster de seeds connu ---
+// Contrairement à 4d, ces lignes sont suivies en 4a pour la cohérence de classification (le
+// compte du cluster est-il toujours correct), mais rien ne vérifie qu'une édition plus récente
+// du bulletin multi-pays cité en `source` n'est pas parue depuis. Cadence 14j (bulletins
+// typiquement mensuels, pas hebdo) — voir SKILL.md section "5 bis".
+console.log("\n=== Lignes actives à source_priority=10, DANS un cluster de seeds (>14j = vérifier édition plus récente) ===");
+const frozenSeed = active.filter((o) => o.source_priority === 10 && o.is_seed);
+if (frozenSeed.length) {
+  frozenSeed.forEach((o) => {
+    const ageDays = Math.round((Date.now() - new Date(o.updated_at).getTime()) / 864e5);
+    const status = ageDays > 14 ? "À VÉRIFIER (édition plus récente ?)" : "skip (vérifiée récemment)";
+    console.log(`[${o.id}] ${o.disease_en || o.disease} | ${o.country_en || o.country} | ${ageDays}j — ${status} | src=${(o.source || "").slice(0, 60)}`);
+  });
 } else {
   console.log("Aucune.");
 }
