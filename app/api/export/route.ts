@@ -6,6 +6,7 @@ import { rateLimit, getClientIp } from "@/lib/rate-limit";
 import { createHash } from "crypto";
 import { trackEvent } from "@/lib/track-event";
 import { resolvedPlan } from "@/lib/resolved-plan";
+import { computeCatchupIncidentDays, isCatchupIncident } from "@/lib/reporting-lag";
 
 export const dynamic = "force-dynamic";
 
@@ -95,6 +96,7 @@ async function buildExportResponse(request: NextRequest, userId?: string) {
     const cfr       = o.cases > 0 && o.deaths !== null ? parseFloat((o.deaths / o.cases * 100).toFixed(1)) : null;
     const ci        = wilsonCI(o.deaths, o.cases);
     const incidence = getIncidenceRate(o.cases, o.country_en);
+    const catchupDays = computeCatchupIncidentDays(o.date, o.created_at, o.updated_at, o.is_seed, o.is_backfill);
     return {
       id:                 o.id,
       disease:            o.disease_en || o.disease,
@@ -114,6 +116,7 @@ async function buildExportResponse(request: NextRequest, userId?: string) {
       description:        o.description ?? null,
       pheic:              o.is_pheic,
       updated_at:         o.updated_at ?? null,
+      catchup_incident_days: isCatchupIncident(catchupDays) ? catchupDays : null,
     };
   });
 
