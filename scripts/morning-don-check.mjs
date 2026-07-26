@@ -182,7 +182,10 @@ const MANUAL_ROWS = {
   "e856b352-747b-4db0-b0d1-c9e55f6c53aa": "Diphtérie/Australie",
   "5ffa5759-37c6-438f-b7dc-ddaa1bbddd77": "Dengue/Brésil",
   "b17d4fda-c38c-41c0-9b26-e60a54c1851b": "Marburg/Ouganda",
-  "7d519ce6-c281-4945-a2ef-ebead0600b67": "Rougeole/États-Unis",
+  // Rougeole/États-Unis (7d519ce6-…) retirée le 2026-07-26 : plus orpheline, la
+  // ligne est maintenue par sync-paho-alerts (SitRep OPS bimensuel, priority=5).
+  // Ne pas la remettre ici, et surtout ne pas la rafraîchir avec les chiffres
+  // CDC — cadrage différent, cf. section 5 du SKILL.md.
   "8a4072ab-c0be-4567-8ba4-cdcedeccced8": "Polio/Palestine",
 };
 console.log("\n=== Lignes manuelles (section 5) — dues pour vérif hebdo (updated_at > 7j) ===");
