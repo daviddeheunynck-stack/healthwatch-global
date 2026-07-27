@@ -2,6 +2,7 @@ import { findCountry, isAggregateCountry } from "./geo-data";
 import { normalizeDisease } from "./disease-data";
 import type { ParsedOutbreak } from "./outbreak-parser";
 import { extractNumbers, assessRisk } from "./outbreak-parser";
+import { truncateAtSentence } from "./truncate-text";
 
 export interface ReliefWebItem {
   id: string;
@@ -94,7 +95,7 @@ export function parseReliefWebItem(item: ReliefWebItem): ParsedOutbreak | null {
     : new Date().toISOString().split("T")[0];
 
   // ── Description ────────────────────────────────────────────────
-  const description = plainText.trim().slice(0, 400);
+  const description = truncateAtSentence(plainText.trim(), 400);
 
 
   return {

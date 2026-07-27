@@ -1,6 +1,7 @@
 import { findCountry, COUNTRIES } from "./geo-data";
 import { normalizeDisease } from "./disease-data";
 import type { CountryGeo } from "./geo-data";
+import { truncateAtSentence } from "./truncate-text";
 
 // Umbrella country labels used for multi-country events. A WHO DON multi-country event
 // is stored as "Multiple countries" by the DON sync; ECDC-wide articles are aggregated
@@ -559,11 +560,13 @@ export function buildOutbreakFromRSSItem(item: RSSItem): ParsedOutbreak | null {
   const date = parsePubDate(item.pubDate);
 
   // Strip HTML from description, truncate
-  const descClean = item.description
-    .replace(/<[^>]+>/g, " ")
-    .replace(/\s+/g, " ")
-    .trim()
-    .slice(0, 400);
+  const descClean = truncateAtSentence(
+    item.description
+      .replace(/<[^>]+>/g, " ")
+      .replace(/\s+/g, " ")
+      .trim(),
+    400
+  );
 
   return {
     disease: disease.name_fr,

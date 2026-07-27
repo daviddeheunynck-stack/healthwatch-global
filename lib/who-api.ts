@@ -7,6 +7,7 @@ import {
 import type { ParsedOutbreak } from "./outbreak-parser";
 import type { CountryGeo } from "./geo-data";
 import { extractAdmin1, geocodeAdmin1 } from "./geo-extract";
+import { truncateAtSentence } from "./truncate-text";
 
 const WHO_DON_API = "https://www.who.int/api/news/diseaseoutbreaknews";
 
@@ -104,7 +105,7 @@ async function fetchArticleNumbers(
   const rawText = htmlToPlainText(extractDonBody(html));
 
   const nums = (countryAliases && extractNumbersForCountry(rawText, countryAliases)) || extractNumbers(rawText);
-  const description = rawText.slice(0, 400);
+  const description = truncateAtSentence(rawText, 400);
   return { cases: nums.cases, deaths: nums.deaths, recovered: nums.recovered ?? 0, description, fullText: rawText };
 }
 
@@ -170,7 +171,7 @@ async function parseSingleCountryDON(
     cases       = nums.cases     ?? 0;
     deaths      = nums.deaths    ?? 0;
     recovered   = nums.recovered ?? 0;
-    description = plain.slice(0, 400);
+    description = truncateAtSentence(plain, 400);
   }
 
   // Always fetch the full article body — we need the complete text for:
@@ -322,7 +323,7 @@ async function parseMultiCountryDON(
   // all) — deliberately not content-isolated the way the single-country path
   // isolates it, since that isolation's fixed 8000-char cap is exactly what
   // kept per-country sections deep in a long article out of reach.
-  const description = (plainSummary || plainAll).slice(0, 400);
+  const description = truncateAtSentence(plainSummary || plainAll, 400);
   const active = !isOutbreakEnded(plainAll);
 
   if (rows.length === 0) {
