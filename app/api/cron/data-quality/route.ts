@@ -553,7 +553,7 @@ async function runDataQuality(_req: NextRequest, supabase: SupabaseClient) {
     if (admin1.length < 3 || row.is_seed) continue;
     const desc = (row.description ?? "").toLowerCase();
     if (!desc) continue;
-    const parts = admin1.split(/,|\s+and\s+/i).map((p: string) => p.trim().toLowerCase()).filter(Boolean);
+    const parts = admin1.split(/,|&|\s+and\s+/i).map((p: string) => p.trim().toLowerCase()).filter(Boolean);
     if (!parts.some((p: string) => desc.includes(p))) {
       needsReview.push({
         label: `[ADMIN1?] ${row.disease_en ?? row.disease} / ${row.country_en ?? row.country}`,
