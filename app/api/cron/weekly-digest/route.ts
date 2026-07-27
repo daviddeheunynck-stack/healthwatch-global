@@ -76,15 +76,22 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ message: "No active subscribers.", sent: 0 });
   }
 
-  // ── High-risk outbreaks from the past 7 days ───────────────────────────────
-  const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
-
+  // ── High-risk active outbreaks ──────────────────────────────────────────────
+  // No recency window: HWG's real sources update on wildly different cadences
+  // (WHO DON vs monthly cholera bulletins vs static risk assessments), so a
+  // 7-day cutoff let through only whichever single outbreak happened to get a
+  // source refresh that week, starving the digest to ~1 item per send.
+  // is_seed/is_backfill rows are excluded because they aren't live signals —
+  // manually-curated baselines or cumulative archives (USDA APHIS's HPAI
+  // crosstab, WHO GHO annual indicators) — same exclusion rule as
+  // lib/reporting-lag.ts, applied here for the same reason.
   const { data: outbreaks, error: outbreakError } = await supabase
     .from("outbreaks")
     .select("*")
     .eq("active", true)
     .eq("risk_level", "high")
-    .gte("date", sevenDaysAgo)
+    .eq("is_seed", false)
+    .eq("is_backfill", false)
     .order("date", { ascending: false })
     .limit(50); // safety cap before per-subscriber filtering
 
@@ -94,7 +101,7 @@ export async function GET(req: NextRequest) {
   }
 
   const allOutbreaks: Outbreak[] = outbreaks ?? [];
-  console.log(`[weekly-digest] ${allOutbreaks.length} high-risk outbreaks in the past 7 days`);
+  console.log(`[weekly-digest] ${allOutbreaks.length} high-risk active outbreaks`);
 
   // ── Send loop ──────────────────────────────────────────────────────────────
   let sent        = 0;
