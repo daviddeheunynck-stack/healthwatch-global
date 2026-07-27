@@ -28,8 +28,10 @@ const csp = [
     "va.vercel-scripts.com",
     "api.brevo.com",
   ].join(" "),
-  // Workers: Supabase JS client spawns an internal worker from a blob URL
-  "worker-src blob:",
+  // Workers: Supabase JS client spawns an internal worker from a blob URL;
+  // 'self' is required to register the Web Push service worker (public/sw.js,
+  // registered from PushNotificationToggle/Banner via serviceWorker.register)
+  "worker-src 'self' blob:",
   // Frames: Stripe Checkout opens in a redirect, not iframe — block all
   "frame-src 'none'",
   // No plugins ever
