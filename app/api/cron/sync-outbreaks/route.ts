@@ -378,6 +378,44 @@ export async function GET(req: NextRequest) {
         await new Promise((r) => setTimeout(r, 300)); // polite delay between MyMemory calls
       }
     }
+
+    // ── 4bis. Same sweep for archived rows, small separate budget ──────
+    // The block above is scoped to active rows only, so a row that goes
+    // inactive before picking up all 4 languages stays untranslated forever —
+    // it never falls active again to re-enter that query. Found 2026-07-27:
+    // 29 archived rows missing every translation, still rendered in English
+    // (getLocalizedDescription() falls back to EN) on public disease-history
+    // pages and direct /outbreak/[id] links. Kept on its own small budget so
+    // a backlog of old rows never competes with fresh active rows for the
+    // day's MyMemory quota.
+    const archivedBudget = Math.max(0, 5 - (needsTranslation?.length ?? 0));
+    if (archivedBudget > 0) {
+      const { data: archivedNeedsTranslation } = await supabase
+        .from("outbreaks")
+        .select("id, description, description_fr, description_es, description_ar, description_id")
+        .eq("active", false)
+        .or("description_fr.is.null,description_es.is.null,description_ar.is.null,description_id.is.null")
+        .not("description", "is", null)
+        .neq("description", "")
+        .order("created_at", { ascending: false })
+        .limit(archivedBudget);
+
+      if (archivedNeedsTranslation && archivedNeedsTranslation.length > 0) {
+        console.log(`[sync] Translating ${archivedNeedsTranslation.length} archived descriptions via MyMemory…`);
+        for (const row of archivedNeedsTranslation) {
+          const t = await translateDescription(row.description);
+          const patch: Record<string, string> = {};
+          if (row.description_fr === null && t.fr) patch.description_fr = t.fr;
+          if (row.description_es === null && t.es) patch.description_es = t.es;
+          if (row.description_ar === null && t.ar) patch.description_ar = t.ar;
+          if (row.description_id === null && t.id) patch.description_id = t.id;
+          if (Object.keys(patch).length > 0) {
+            await supabase.from("outbreaks").update(patch).eq("id", row.id);
+          }
+          await new Promise((r) => setTimeout(r, 300));
+        }
+      }
+    }
   }
 
   // ── 5. Daily snapshot — upsert cases/deaths for trend tracking ──

@@ -76,14 +76,50 @@ const VALUE_PROPS: Record<string, { trial: string; items: string[]; noCard: stri
 
 const ICONS = [BarChart2, Bell, FileDown];
 
+// Same 5-region taxonomy as AlertRegionToggles/account page. Optional — an
+// empty selection ("") means "all regions", the pre-2026-07-27 default and
+// still the fallback for anyone who skips this. Picking one region instead
+// targets the trial's regional-alert enrollment (see activate-trial/route.ts)
+// so the first email a new trial gets is about the place they said they
+// care about, not about five continents at once.
+const REGION_PICKER: Record<string, { label: string; all: string; options: Record<string, string> }> = {
+  en: {
+    label: "Which region matters most to you? (optional)",
+    all: "All regions",
+    options: { africa: "Africa", asia: "Asia", americas: "Americas", europe: "Europe", oceania: "Oceania" },
+  },
+  fr: {
+    label: "Quelle région vous intéresse en priorité ? (facultatif)",
+    all: "Toutes les régions",
+    options: { africa: "Afrique", asia: "Asie", americas: "Amériques", europe: "Europe", oceania: "Océanie" },
+  },
+  es: {
+    label: "¿Qué región le interesa prioritariamente? (opcional)",
+    all: "Todas las regiones",
+    options: { africa: "África", asia: "Asia", americas: "Américas", europe: "Europa", oceania: "Oceanía" },
+  },
+  ar: {
+    label: "ما المنطقة الأهم بالنسبة لك؟ (اختياري)",
+    all: "كل المناطق",
+    options: { africa: "أفريقيا", asia: "آسيا", americas: "الأمريكتين", europe: "أوروبا", oceania: "أوقيانوسيا" },
+  },
+  id: {
+    label: "Wilayah mana yang paling penting bagi Anda? (opsional)",
+    all: "Semua wilayah",
+    options: { africa: "Afrika", asia: "Asia", americas: "Amerika", europe: "Eropa", oceania: "Oseania" },
+  },
+};
+
 export default function SignupPage() {
   const t = useTranslations("auth");
   const locale = useLocale();
   const vp = VALUE_PROPS[locale] ?? VALUE_PROPS.en;
+  const rp = REGION_PICKER[locale] ?? REGION_PICKER.en;
   const isRtl = locale === "ar";
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [priorityRegion, setPriorityRegion] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -131,7 +167,11 @@ export default function SignupPage() {
       let activated = false;
       for (let attempt = 0; attempt < 2 && !activated; attempt++) {
         if (attempt > 0) await new Promise((r) => setTimeout(r, 600));
-        const res = await fetch("/api/activate-trial", { method: "POST" }).catch(() => null);
+        const res = await fetch("/api/activate-trial", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(priorityRegion ? { priorityRegion } : {}),
+        }).catch(() => null);
         activated = !!res?.ok;
       }
       if (!activated) track("activate_trial_failed", { method: "email", locale });
@@ -258,6 +298,20 @@ export default function SignupPage() {
                       placeholder="••••••••"
                     />
                     <p className="text-xs text-gray-600 mt-1">{t("passwordHint")}</p>
+                  </div>
+                  <div>
+                    <label className="block text-sm text-gray-400 mb-1.5">{rp.label}</label>
+                    <select
+                      value={priorityRegion}
+                      onChange={(e) => setPriorityRegion(e.target.value)}
+                      disabled={loading}
+                      className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-red-500 transition-colors disabled:opacity-50"
+                    >
+                      <option value="">{rp.all}</option>
+                      {Object.entries(rp.options).map(([value, label]) => (
+                        <option key={value} value={value}>{label}</option>
+                      ))}
+                    </select>
                   </div>
 
                   {error && (

@@ -18,8 +18,30 @@ interface CronRun {
   ts:     string;
   status: string;
   rows:   number;
+  lastNonZero?: string;
   error?: string;
 }
+
+// Delivery crons mapped to the table that holds their audience — one row per
+// user (per region/disease/etc. for the ones with multiple prefs each).
+// Used to tell "nobody to send to" apart from "somebody's there but nothing
+// went out", the distinction `logCronRun`'s plain ok/error status can't make
+// on its own. Found 2026-07-27: 15 of 18 delivery crons were logging
+// "ok, rows=0" on this same morning, including push-alerts after 49 silent
+// days — a flat "rows=0 is fine" reading would have missed that too.
+const DELIVERY_AUDIENCE: Record<string, string> = {
+  "push-alerts":                 "push_subscriptions",
+  "regional-alerts":             "user_alert_regions",
+  "disease-alerts":              "user_alert_diseases",
+  "watchlist-alerts":            "user_watchlist",
+  "trigger-country-risk-alerts": "country_risk_alerts",
+  "trigger-geofence-alerts":     "geofence_alerts",
+  "trigger-category-alerts":     "category_alerts",
+  "trigger-tripwires":           "outbreak_tripwires",
+  "trigger-subscriber-alerts":   "outbreak_subscribers",
+  "weekly-digest":               "subscriptions",
+  "weekly-signal":               "subscriptions",
+};
 
 export async function GET(req: NextRequest) {
   const cronSecret = clean(process.env.CRON_SECRET);
@@ -54,7 +76,9 @@ async function runHealthCheck(_req: NextRequest, supabase: any) {
 
   const brevoKey = clean(process.env.BREVO_API_KEY);
 
-  const [[{ count: total }, { count: high }, { count: pheic }, { data: configRows }], sentryCheck] =
+  const AUDIENCE_TABLES = Array.from(new Set(Object.values(DELIVERY_AUDIENCE)));
+
+  const [[{ count: total }, { count: high }, { count: pheic }, { data: configRows }], sentryCheck, audienceCounts] =
     await Promise.all([
       Promise.all([
         supabase.from("outbreaks").select("*", { count: "exact", head: true }).eq("active", true),
@@ -63,7 +87,18 @@ async function runHealthCheck(_req: NextRequest, supabase: any) {
         supabase.from("site_config").select("key,value").like("key", "cron:run:%"),
       ]),
       fetchSentryIssues(),
+      // "subscriptions" (weekly-digest/weekly-signal) only counts active=true —
+      // matches what those two crons themselves query as their send list.
+      // Every other audience table here has no active/status flag of its own.
+      Promise.all(AUDIENCE_TABLES.map((table) =>
+        table === "subscriptions"
+          ? supabase.from(table).select("*", { count: "exact", head: true }).eq("active", true)
+          : supabase.from(table).select("*", { count: "exact", head: true }),
+      )),
     ]);
+
+  const audienceMap: Record<string, number> = {};
+  AUDIENCE_TABLES.forEach((table, i) => { audienceMap[table] = audienceCounts[i]?.count ?? 0; });
 
   // David decided 2026-07-17 not to top up the Anthropic billing that backs
   // extractAdmin1LLM — it degrades gracefully to the regex fallback (see
@@ -103,7 +138,42 @@ async function runHealthCheck(_req: NextRequest, supabase: any) {
   });
 
   const hasOverdue = overdue.length > 0;
-  const emoji      = hasOverdue || sentryAlert || (pheic ?? 0) > 0 ? "⚠️" : "✅";
+
+  // ── Delivery visibility: "nobody to send to" vs. "somebody's there and
+  // nothing went out" ─────────────────────────────────────────────────────
+  // A delivery cron logging "ok, rows=0" is indistinguishable from a stalled
+  // one under the age-only check above — rows=0 is the correct, expected
+  // state whenever its audience table is empty. Only flag a table that
+  // actually has subscribers. "never" (no lastNonZero ever recorded) is the
+  // worse case — exactly the push-alerts shape found 2026-07-27 (49 silent
+  // days). "stalled" uses a per-cron threshold (3× its own expected window,
+  // floored at 3 days) rather than one fixed number, since a weekly cron
+  // going quiet for 4 days is normal but a 30-min trigger cron going quiet
+  // for 4 days is not.
+  const deliveryIssues: { name: string; audience: number; kind: "never" | "stalled" }[] = [];
+  for (const [name, table] of Object.entries(DELIVERY_AUDIENCE)) {
+    const audience = audienceMap[table] ?? 0;
+    if (audience === 0) continue;
+    const run = cronMap[name];
+    if (!run?.lastNonZero) {
+      // lastNonZero is new (added 2026-07-27) — a pre-existing site_config
+      // entry won't have it yet even though its last logged run genuinely
+      // delivered (rows > 0). Only "never" when that's also not the case,
+      // so this doesn't false-positive on every delivery cron the first
+      // time health-check runs after this field was introduced.
+      if (!run || (run.rows ?? 0) === 0) deliveryIssues.push({ name, audience, kind: "never" });
+      continue;
+    }
+    const daysSinceDelivery = (Date.now() - new Date(run.lastNonZero).getTime()) / 86_400_000;
+    const windowH = CRON_WINDOWS[name] ?? 26;
+    const stallThresholdDays = Math.max(3, (windowH / 24) * 3);
+    if (daysSinceDelivery > stallThresholdDays) {
+      deliveryIssues.push({ name, audience, kind: "stalled" });
+    }
+  }
+  const deliveryAlert = deliveryIssues.length > 0;
+
+  const emoji = hasOverdue || sentryAlert || deliveryAlert || (pheic ?? 0) > 0 ? "⚠️" : "✅";
 
   const cronTableRows = cronStatuses
     .map(({ name, label, windowH, ok }) => {
@@ -126,6 +196,14 @@ async function runHealthCheck(_req: NextRequest, supabase: any) {
     )
     .join("");
 
+  const deliveryIssueRows = deliveryIssues
+    .map(({ name, audience, kind }) => `<tr>
+      <td style="padding:3px 8px 3px 0;color:#94a3b8;font-size:12px">${name}</td>
+      <td style="padding:3px 8px;font-size:12px;color:#94a3b8">${audience} abonné(s)</td>
+      <td style="padding:3px 0;font-size:12px;color:${kind === "never" ? "#f87171" : "#fbbf24"};font-weight:700">${kind === "never" ? "jamais livré" : "en panne"}</td>
+    </tr>`)
+    .join("");
+
   const html = `
 <div style="font-family:sans-serif;max-width:580px;margin:0 auto;padding:24px;background:#0f172a;color:#e2e8f0;border-radius:12px">
   <p style="font-size:16px;font-weight:700;color:#60a5fa;margin:0 0 16px">HealthWatch — Health Check ${emoji}</p>
@@ -145,10 +223,13 @@ async function runHealthCheck(_req: NextRequest, supabase: any) {
   ${sentryIssueRows ? `
   <p style="font-size:12px;color:#f87171;margin:16px 0 8px;font-weight:600">Détail erreurs Sentry</p>
   <table style="width:100%;border-collapse:collapse">${sentryIssueRows}</table>` : ""}
+  ${deliveryIssueRows ? `
+  <p style="font-size:12px;color:#f87171;margin:16px 0 8px;font-weight:600">⚠️ Livraison en panne (des abonnés existent, rien envoyé récemment)</p>
+  <table style="width:100%;border-collapse:collapse">${deliveryIssueRows}</table>` : ""}
   <p style="margin-top:16px;font-size:11px;color:#475569">${new Date().toISOString()}</p>
 </div>`;
 
-  const subject = `${emoji} HealthWatch — ${total ?? "?"} foyers${hasOverdue ? ` · ${overdue.length} cron(s) en retard` : ""}${sentryIssues.length > 0 ? ` · ${sentryIssues.length} erreur(s) Sentry` : ""} · ${new Date().toLocaleDateString("fr-FR")}`;
+  const subject = `${emoji} HealthWatch — ${total ?? "?"} foyers${hasOverdue ? ` · ${overdue.length} cron(s) en retard` : ""}${sentryIssues.length > 0 ? ` · ${sentryIssues.length} erreur(s) Sentry` : ""}${deliveryAlert ? ` · ${deliveryIssues.length} canal(aux) en panne` : ""} · ${new Date().toLocaleDateString("fr-FR")}`;
 
   if (!isRealProduction) {
     console.log("[health-check] non-production run — skipping Brevo email and Sentry check-in/alerts");
@@ -180,6 +261,17 @@ async function runHealthCheck(_req: NextRequest, supabase: any) {
   if (hasOverdue && isRealProduction) {
     Sentry.captureMessage(
       `[health-check] ${overdue.length} cron(s) overdue: ${overdue.join(", ")}`,
+      "warning",
+    );
+  }
+
+  // Same treatment as hasOverdue above, kept separate from logCronRun's own
+  // status for the same reason sentryAlert is (see the check-in comment
+  // below): this route completed fine either way, it's reporting on other
+  // crons, not on itself.
+  if (deliveryAlert && isRealProduction) {
+    Sentry.captureMessage(
+      `[health-check] ${deliveryIssues.length} delivery channel(s) stalled or never delivered: ${deliveryIssues.map((d) => `${d.name}(${d.kind})`).join(", ")}`,
       "warning",
     );
   }
@@ -217,8 +309,9 @@ async function runHealthCheck(_req: NextRequest, supabase: any) {
   }
 
   return Response.json({
-    ok: !hasOverdue && !sentryAlert,
+    ok: !hasOverdue && !sentryAlert && !deliveryAlert,
     total, high, pheic, overdue, cronStatuses, isRealProduction,
     sentry: { ok: sentryCheck.ok, issueCount: sentryIssues.length, error: sentryCheck.error },
+    delivery: deliveryIssues,
   });
 }

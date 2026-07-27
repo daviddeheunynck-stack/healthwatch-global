@@ -36,7 +36,21 @@ async function sendEmail(to: string, subject: string, html: string) {
   if (!res.ok) throw new Error(`Brevo error: ${await res.text()}`);
 }
 
-export async function POST(_req: NextRequest) {
+const ALL_REGIONS = ["africa", "asia", "americas", "europe", "oceania"] as const;
+
+export async function POST(req: NextRequest) {
+  // Optional single-region preference from the signup form (see
+  // app/[locale]/signup/page.tsx). Anything missing, invalid, or "all"
+  // (the explicit "every region" choice) falls back to the full 5-region
+  // enrollment below — same behavior as before this field existed.
+  let priorityRegion: (typeof ALL_REGIONS)[number] | null = null;
+  try {
+    const body = await req.json();
+    if (typeof body?.priorityRegion === "string" && (ALL_REGIONS as readonly string[]).includes(body.priorityRegion)) {
+      priorityRegion = body.priorityRegion as (typeof ALL_REGIONS)[number];
+    }
+  } catch { /* no/invalid JSON body — treat as "all regions", the prior default */ }
+
   // Identify the caller from their session cookie — never trust client-supplied userId
   const cookieStore = await cookies();
   const supabase = createServerClient(
@@ -100,7 +114,18 @@ export async function POST(_req: NextRequest) {
   // fired for anyone. "medium" balances enough signal to prove value during the
   // 14-day trial against flooding a brand-new inbox. Best-effort: a failure here
   // shouldn't fail trial activation itself.
-  const alertRows = ["africa", "asia", "americas", "europe", "oceania"].map((region) => ({
+  //
+  // Targeted by default when the signup form collected a priority region
+  // (2026-07-27): enrolling in all 5 regions unconditionally meant every
+  // other alert-preference surface in the product (per-disease, watchlist,
+  // tripwires, geofence, country-risk, per-outbreak subscribe) stayed at 0
+  // users across the board — nobody has a reason to narrow something they
+  // never noticed was broad in the first place. A weekly email about one
+  // country you asked about is a product; one about five continents reads
+  // like a newsletter. "All regions" stays one click away and is still the
+  // fallback for anyone who skips the question.
+  const regionsToEnroll = priorityRegion ? [priorityRegion] : ALL_REGIONS;
+  const alertRows = regionsToEnroll.map((region) => ({
     user_id: user.id,
     region,
     min_risk: "medium",

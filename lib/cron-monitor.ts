@@ -25,6 +25,13 @@ export interface CronRun {
   ts: string;
   status: CronStatus;
   rows: number;
+  // ISO timestamp of the most recent run of this cron where rows > 0. Carried
+  // forward across runs (see logCronRun) so a delivery cron that keeps logging
+  // "ok, rows=0" can be told apart from one that's never actually delivered —
+  // site_config only ever holds the latest run, so without this a stalled
+  // channel and a legitimately-empty one look identical. Found 2026-07-27:
+  // push-alerts logged "ok" every day for 49 days with 0 subscribers.
+  lastNonZero?: string;
   error?: string;
 }
 
@@ -39,10 +46,21 @@ export async function logCronRun(
   rowsUpdated = 0,
   errorMsg?: string,
 ): Promise<void> {
+  const { data: prevRow } = await supabase
+    .from("site_config")
+    .select("value")
+    .eq("key", `cron:run:${cronName}`)
+    .maybeSingle();
+  let prevLastNonZero: string | undefined;
+  if (prevRow?.value) {
+    try { prevLastNonZero = (JSON.parse(prevRow.value) as CronRun).lastNonZero; } catch { /* malformed, ignore */ }
+  }
+
   const value: CronRun = {
     ts: new Date().toISOString(),
     status,
     rows: rowsUpdated,
+    ...(rowsUpdated > 0 ? { lastNonZero: new Date().toISOString() } : prevLastNonZero ? { lastNonZero: prevLastNonZero } : {}),
     ...(errorMsg ? { error: errorMsg.slice(0, 500) } : {}),
   };
   await supabase
