@@ -11,6 +11,7 @@ import { normalizeDisease } from "@/lib/disease-data";
 import { findCountry } from "@/lib/geo-data";
 import { errorMessage } from "@/lib/error";
 import { scrapeAphisTableauCsv, parseCrosstabCsv, aggregateCrosstabByState } from "@/lib/aphis-tableau-scraper";
+import { truncateAtSentence } from "@/lib/truncate-text";
 
 export const dynamic     = "force-dynamic";
 // Tableau fallback launches a real headless browser (cold Lambda start +
@@ -395,11 +396,12 @@ export async function GET(req: NextRequest) {
     const sourceUrl = `${SOURCE_PREFIX}${sd.state.toLowerCase().replace(/\s+/g, "-")}`;
     const safeDate  = sd.latestDate > today ? today : sd.latestDate;
     const herdLabel = sd.herdTypes.size > 0 ? [...sd.herdTypes].join(", ") : "dairy cattle";
-    const description = (
+    const description = truncateAtSentence(
       `USDA APHIS — H5N1 HPAI confirmed in ${sd.herds} ${herdLabel} herd${sd.herds !== 1 ? "s" : ""} in ${sd.state}` +
       (sd.cattle > 0 ? ` (~${sd.cattle.toLocaleString()} animals)` : "") +
-      `. Latest detection: ${safeDate}. Source: ${APHIS_PAGE_URL}`
-    ).substring(0, 600);
+      `. Latest detection: ${safeDate}. Source: ${APHIS_PAGE_URL}`,
+      600
+    );
 
     const existing = bySource.get(sourceUrl);
 

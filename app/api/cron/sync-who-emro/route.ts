@@ -13,6 +13,7 @@ import { findMentionedCountries } from "@/lib/geo-data";
 import { extractNumbers, assessRisk } from "@/lib/outbreak-parser";
 import { logCronRun } from "@/lib/cron-monitor";
 import { errorMessage } from "@/lib/error";
+import { truncateAtSentence } from "@/lib/truncate-text";
 
 export const dynamic     = "force-dynamic";
 export const maxDuration = 120;
@@ -307,7 +308,7 @@ export async function GET(req: NextRequest) {
     const diseaseInfo  = normalizeDisease(rawDisease);
     const { cases, deaths } = extractNumbers(pageText.substring(0, 3000));
     const riskLevel    = assessRisk(diseaseInfo.name_en, pageText, cases, deaths);
-    const description  = `WHO EMRO — ${entry.title}`.substring(0, 600);
+    const description  = truncateAtSentence(`WHO EMRO — ${entry.title}`, 600);
     const label        = `${diseaseInfo.name_en}/${geo.name_en}`;
 
     // Skip 0/0 entries — WHO EMRO's news listing mixes real outbreak reports

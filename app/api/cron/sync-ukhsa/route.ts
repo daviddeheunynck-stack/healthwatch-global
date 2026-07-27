@@ -13,6 +13,7 @@ import { normalizeDisease } from "@/lib/disease-data";
 import { COUNTRIES, findCountry, isAggregateCountry } from "@/lib/geo-data";
 import { extractNumbers, assessRisk } from "@/lib/outbreak-parser";
 import { errorMessage } from "@/lib/error";
+import { truncateAtSentence } from "@/lib/truncate-text";
 
 export const dynamic     = "force-dynamic";
 // 300s (was 90): same twice-daily scraper profile as sync-spf, which silently
@@ -337,7 +338,7 @@ export async function GET(req: NextRequest) {
     const diseaseInfo = normalizeDisease(rawDisease);
     const { cases, deaths } = extractNumbers(pageText.substring(0, 3000));
     const riskLevel   = assessRisk(diseaseInfo.name_en, pageText, cases, deaths);
-    const description = `UKHSA — ${entry.title}. ${entry.summary}`.substring(0, 600);
+    const description = truncateAtSentence(`UKHSA — ${entry.title}. ${entry.summary}`, 600);
     const label       = `${diseaseInfo.name_en}/${geo.name_en}`;
 
     // Skip 0/0 entries — UKHSA's ATOM feed mixes real incident reports with

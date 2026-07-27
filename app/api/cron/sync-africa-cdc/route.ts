@@ -15,6 +15,7 @@ import { findMentionedAfricanCountries } from "@/lib/africa-cdc-countries";
 import { extractNumbers, assessRisk } from "@/lib/outbreak-parser";
 import { extractAdmin1, geocodeAdmin1 } from "@/lib/geo-extract";
 import { errorMessage } from "@/lib/error";
+import { truncateAtSentence } from "@/lib/truncate-text";
 
 export const dynamic     = "force-dynamic";
 export const maxDuration = 60;
@@ -222,7 +223,7 @@ async function extractItemData(item: RSSItem): Promise<PostData[]> {
     cases,
     deaths,
     source:      item.url,
-    description: `Africa CDC — ${item.title}. ${item.description}`.substring(0, 600),
+    description: truncateAtSentence(`Africa CDC — ${item.title}. ${item.description}`, 600),
     date:        item.date,
     admin1,
     admin1_lat,

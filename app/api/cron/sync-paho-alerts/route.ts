@@ -29,6 +29,7 @@ import { extractNumbers, assessRisk } from "@/lib/outbreak-parser";
 import { extractAdmin1, geocodeAdmin1 } from "@/lib/geo-extract";
 import { errorMessage } from "@/lib/error";
 import { translateDescription } from "@/lib/translate";
+import { truncateAtSentence } from "@/lib/truncate-text";
 
 export const dynamic = "force-dynamic";
 // Alerts + a 14-page sitrep PDF, then up to 6 countries × (4 translation calls
@@ -571,8 +572,10 @@ async function extractAlertData(entry: AlertEntry): Promise<AlertData[]> {
   // PDF text starts with a "Suggested citation: ..." boilerplate block before
   // the actual situation summary — skip past it so the stored description is
   // the substantive text, not a citation line.
-  const description = (pdfText.trim().length > 200 ? currentYearBlock(bodyText) : bodyText)
-    .substring(0, 500).trim();
+  const description = truncateAtSentence(
+    (pdfText.trim().length > 200 ? currentYearBlock(bodyText) : bodyText).trim(),
+    500
+  );
 
   const results: AlertData[] = [];
   for (const target of targets) {
@@ -594,7 +597,7 @@ async function extractAlertData(entry: AlertEntry): Promise<AlertData[]> {
       cases:       target.cases,
       deaths:      target.deaths,
       source:      entry.url,
-      description: `PAHO ${entry.title}. ${description}`.substring(0, 600),
+      description: truncateAtSentence(`PAHO ${entry.title}. ${description}`, 600),
       date:        entry.date,
       admin1,
       admin1_lat,

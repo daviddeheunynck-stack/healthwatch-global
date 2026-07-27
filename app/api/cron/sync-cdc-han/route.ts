@@ -18,6 +18,7 @@ import { logCronRun } from "@/lib/cron-monitor";
 import { COUNTRIES, findCountry, isAggregateCountry } from "@/lib/geo-data";
 import { extractNumbers, assessRisk } from "@/lib/outbreak-parser";
 import { errorMessage } from "@/lib/error";
+import { truncateAtSentence } from "@/lib/truncate-text";
 
 export const dynamic     = "force-dynamic";
 export const maxDuration = 120;
@@ -356,7 +357,7 @@ export async function GET(req: NextRequest) {
 
     const { cases, deaths } = extractNumbers(pageText.substring(0, 3000));
     const riskLevel         = assessRisk(diseaseInfo.name_en, pageText, cases, deaths);
-    const description       = `CDC HAN — ${stripHANPrefix(entry.title)}. ${entry.description}`.substring(0, 600);
+    const description       = truncateAtSentence(`CDC HAN — ${stripHANPrefix(entry.title)}. ${entry.description}`, 600);
     const label             = `${diseaseInfo.name_en}/${geo.name_en}`;
 
     // Skip 0/0 entries — CDC HAN alerts mix real incident/outbreak reports

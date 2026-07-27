@@ -13,6 +13,7 @@ import { normalizeDisease } from "@/lib/disease-data";
 import { COUNTRIES, findCountry, isAggregateCountry } from "@/lib/geo-data";
 import { extractNumbers, assessRisk } from "@/lib/outbreak-parser";
 import { errorMessage } from "@/lib/error";
+import { truncateAtSentence } from "@/lib/truncate-text";
 
 export const dynamic     = "force-dynamic";
 // 300s (was 90): the per-article page fetches (12s timeout each) pushed real
@@ -438,7 +439,7 @@ async function runSyncSpf(_req: NextRequest, supabase: SupabaseClient) {
     const diseaseInfo = normalizeDisease(rawDisease);
     const { cases, deaths } = extractNumbers(searchText);
     const riskLevel   = assessRisk(diseaseInfo.name_en, searchText, cases, deaths);
-    const description = `SPF — ${item.title}. ${item.description}`.substring(0, 600);
+    const description = truncateAtSentence(`SPF — ${item.title}. ${item.description}`, 600);
     const label       = `${diseaseInfo.name_en}/${geo.name_en}`;
 
     // Skip 0/0 entries — SPF's news feed mixes real outbreak/incident reports

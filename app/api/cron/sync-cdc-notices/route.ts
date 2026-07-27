@@ -17,6 +17,7 @@ import { findCountry, isAggregateCountry } from "@/lib/geo-data";
 import { extractNumbers, assessRisk } from "@/lib/outbreak-parser";
 import { extractAdmin1, geocodeAdmin1 } from "@/lib/geo-extract";
 import { errorMessage } from "@/lib/error";
+import { truncateAtSentence } from "@/lib/truncate-text";
 
 export const dynamic     = "force-dynamic";
 export const maxDuration = 120; // up to ~25 notices × ~3s each
@@ -371,7 +372,7 @@ export async function GET(req: NextRequest) {
     }
 
     const riskLevel  = LEVEL_TO_RISK[notice.level] ?? assessRisk(diseaseInfo.name_en, pageText, cases, deaths);
-    const description = `CDC Travel Notice (${notice.level.replace("level", "Level ")}) — ${notice.title}. ${pageText.substring(0, 380)}`.substring(0, 600);
+    const description = truncateAtSentence(`CDC Travel Notice (${notice.level.replace("level", "Level ")}) — ${notice.title}. ${truncateAtSentence(pageText, 380)}`, 600);
 
     // LLM admin1 extraction from full page text
     const admin1 = await extractAdmin1(pageText.substring(0, 3000), geo.name_en);

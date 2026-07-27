@@ -25,6 +25,7 @@ import { findCountry } from "@/lib/geo-data";
 import { extractNumbers, assessRisk } from "@/lib/outbreak-parser";
 import { errorMessage } from "@/lib/error";
 import * as Sentry from "@sentry/nextjs";
+import { truncateAtSentence } from "@/lib/truncate-text";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 300; // ~100 targets × ~2s each; Vercel Pro allows 300s for crons
@@ -818,7 +819,7 @@ async function queryReliefWeb(target: Target): Promise<Found | null> {
 
       const date        = f.date?.created?.substring(0, 10) ?? new Date().toISOString().substring(0, 10);
       const source      = f.url ?? url.toString();
-      const description = text.substring(0, 500).trim();
+      const description = truncateAtSentence(text.trim(), 500);
 
       return { cases, deaths, date, source, description };
     }

@@ -13,6 +13,7 @@ import { normalizeDisease } from "@/lib/disease-data";
 import { COUNTRIES, findCountry, isAggregateCountry } from "@/lib/geo-data";
 import { extractNumbers, assessRisk } from "@/lib/outbreak-parser";
 import { errorMessage } from "@/lib/error";
+import { truncateAtSentence } from "@/lib/truncate-text";
 
 export const dynamic     = "force-dynamic";
 export const maxDuration = 120;
@@ -433,7 +434,7 @@ async function runSyncWhoAfro(_req: NextRequest, supabase: SupabaseClient) {
     const diseaseInfo  = normalizeDisease(rawDisease);
     const { cases, deaths } = extractNumbers(pageText.substring(0, 3000));
     const riskLevel    = assessRisk(diseaseInfo.name_en, pageText, cases, deaths);
-    const description  = `WHO AFRO — ${entry.title}`.substring(0, 600);
+    const description  = truncateAtSentence(`WHO AFRO — ${entry.title}`, 600);
     const label        = `${diseaseInfo.name_en}/${geo.name_en}`;
 
     // Skip 0/0 entries — WHO AFRO's news listing mixes real outbreak reports
