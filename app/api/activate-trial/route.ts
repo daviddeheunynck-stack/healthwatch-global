@@ -17,6 +17,11 @@ const APP_URL = clean(process.env.NEXT_PUBLIC_APP_URL || "https://healthwatch-gl
 const RISK_RANK: Record<string, number> = { high: 3, medium: 2, low: 1 };
 
 async function sendEmail(to: string, subject: string, html: string) {
+  // Throw rather than return silently: this is a user-facing alert email whose
+  // outbreak_alert_log rows are already written by the time we get here, so a
+  // silent skip would permanently suppress those outbreaks for the user without
+  // ever delivering the digest. Same choice as lib/../cron/regional-alerts.
+  if (!BREVO_API_KEY) throw new Error("BREVO_API_KEY not set");
   const res = await fetch("https://api.brevo.com/v3/smtp/email", {
     method: "POST",
     signal: AbortSignal.timeout(10_000),
@@ -181,7 +186,17 @@ export async function POST(_req: NextRequest) {
           `${APP_URL}/${locale}/account#regional-alerts`
         );
 
-        if (BREVO_API_KEY && isRealProduction && user.email) {
+        // Only a non-production environment is a legitimate reason not to send.
+        // A missing BREVO_API_KEY or a profile with no email address is a real
+        // failure and must surface in Sentry via the catch below — the alert log
+        // above has already marked these outbreaks as "seen" for this user, so
+        // swallowing the error here would cost them the digest AND every future
+        // regional alert on those same outbreaks, with no trace anywhere.
+        if (!isRealProduction) {
+          console.log("[activate-trial] signup digest skipped: not a production environment");
+        } else if (!user.email) {
+          throw new Error("signup digest: user has no email address");
+        } else {
           await sendEmail(user.email, subject, html);
         }
       }
