@@ -184,7 +184,7 @@ async function runDataQuality(_req: NextRequest, supabase: SupabaseClient) {
   // ── 1. Load active rows ───────────────────────────────────────────────────
   const { data: rows, error: rowsErr } = await supabase
     .from("outbreaks")
-    .select("id, disease, disease_en, country, country_en, cases, deaths, date, source, is_seed, is_pheic, source_priority, description")
+    .select("id, disease, disease_en, country, country_en, cases, deaths, date, source, is_seed, is_pheic, source_priority, description, admin1")
     .eq("active", true);
 
   if (rowsErr) return NextResponse.json({ error: rowsErr.message }, { status: 500 });
@@ -536,6 +536,30 @@ async function runDataQuality(_req: NextRequest, supabase: SupabaseClient) {
       label: `[SEED ACTIF] ${strayEndemic.length} statistique(s) GHO annuelle(s) active(s)`,
       detail: `Devraient être inactives (référence endémique, pas un foyer en cours) : ${sample}${strayEndemic.length > 8 ? "…" : ""}. Régression d'ingestion — vérifier sync-who-regional (doit ingérer active=false) et les scripts de seed. Désactiver via id=eq.<uuid>.`,
     });
+  }
+
+  // ── 4i. Admin1 groundedness vs. description ──────────────────────────────────
+  // Catches admin1 values that don't actually appear anywhere in the row's own
+  // description — the exact signature of a confirmed hallucination bug (2026-07-27,
+  // see project_truncated_descriptions_audit_2026_07_27): an Avian Influenza/US row
+  // stored admin1="Utah" while its description was entirely about Washington State,
+  // and "Utah" appeared nowhere in either the description or the source DON. Multi-
+  // part admin1 values ("South Kivu, North Kivu") are checked part by part, flagging
+  // only if NONE of the parts appear. Does not catch the "real place, wrong
+  // paragraph" failure mode (e.g. a bulletin's historical-background sentence naming
+  // a different province than the current case) — only a total mismatch.
+  for (const row of rows ?? []) {
+    const admin1 = (row.admin1 ?? "").trim();
+    if (admin1.length < 3 || row.is_seed) continue;
+    const desc = (row.description ?? "").toLowerCase();
+    if (!desc) continue;
+    const parts = admin1.split(/,|\s+and\s+/i).map((p: string) => p.trim().toLowerCase()).filter(Boolean);
+    if (!parts.some((p: string) => desc.includes(p))) {
+      needsReview.push({
+        label: `[ADMIN1?] ${row.disease_en ?? row.disease} / ${row.country_en ?? row.country}`,
+        detail: `admin1="${row.admin1}" n'apparaît nulle part dans la description — vérifier une éventuelle erreur d'extraction géographique (cf. bug Utah/Washington du 27/07).`,
+      });
+    }
   }
 
   // ── 5. Notable movements (top 5 largest absolute change, no anomaly) ──────

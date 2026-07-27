@@ -54,7 +54,23 @@ export async function extractAdmin1(text: string, countryEn?: string): Promise<s
   // regex fallback below) return a neighboring country's name instead of a
   // real sub-national location — reject rather than store a country as if
   // it were a province (see lib/geo-data.ts isCountryName).
-  if (llmResult && !isCountryName(llmResult)) return llmResult;
+  if (llmResult && !isCountryName(llmResult)) {
+    // Groundedness check: reject a result that doesn't actually appear
+    // anywhere in the source text. Confirmed real bug (2026-07-27, see
+    // project_truncated_descriptions_audit_2026_07_27 memory): an
+    // Avian Influenza/US row was stored with admin1="Utah" even though the
+    // source WHO DON never mentions Utah at all — the case was in
+    // Washington State. Haiku produced a plausible-sounding US state name
+    // ungrounded in its own input rather than returning "none". This check
+    // does not catch the "real place, wrong paragraph" failure mode (e.g. a
+    // bulletin's historical-background sentence naming a different
+    // province than the current case) — only pure hallucination, where the
+    // returned string has zero textual support.
+    if (text.toLowerCase().includes(llmResult.toLowerCase())) {
+      return llmResult;
+    }
+    console.warn(`[geo-extract] Rejected ungrounded admin1 "${llmResult}" — not found in source text`);
+  }
 
   // Regex fallback (no API key, or Haiku returned null/a country name)
   for (const pattern of ADMIN1_PATTERNS) {

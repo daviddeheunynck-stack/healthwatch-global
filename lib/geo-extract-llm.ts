@@ -78,8 +78,13 @@ export async function extractAdmin1LLM(
     `Extract the single most specific sub-national location (province, state, region, district, or health zone)` +
     ` WHERE THE OUTBREAK IS OCCURRING${countryClause} from this WHO disease outbreak bulletin text.` +
     ` If the outbreak spans multiple provinces, return only the PRIMARY or FIRST one mentioned.` +
+    ` Only return the location of the CURRENT case(s) or outbreak being reported — ignore any location` +
+    ` mentioned only as historical background, past unrelated outbreaks, or comparison (e.g. "outbreaks` +
+    ` occurred in X in 2001 and 2007, and in Y regularly since 2018" describing the CURRENT situation` +
+    ` should return Y, not X).` +
     ` Return ONLY the location name (e.g. 'North Kivu Province', 'Lagos State', 'Aden Governorate')` +
-    ` or the word 'none' if no specific sub-national location is mentioned.` +
+    ` or the word 'none' if no specific sub-national location is mentioned, or if you are not confident` +
+    ` which location the current case is in. Never guess or invent a location that is not stated in the text.` +
     ` Do not include the country name. Do not list multiple locations. Do not explain. One line only.`;
 
   try {
