@@ -1,4 +1,4 @@
-import { findCountry } from "./geo-data";
+import { findCountry, isAggregateCountry } from "./geo-data";
 import { normalizeDisease } from "./disease-data";
 import type { ParsedOutbreak } from "./outbreak-parser";
 import { extractNumbers, assessRisk } from "./outbreak-parser";
@@ -52,10 +52,15 @@ export function parseReliefWebItem(item: ReliefWebItem): ParsedOutbreak | null {
   // ReliefWeb gives us the country directly — huge advantage over RSS parsing
   const countryNames = (country || []).map((c) => c.name);
 
+  // Reject aggregate pseudo-countries (e.g. "Africa", "Global", "the Americas")
+  // at both the tag and title-fallback stages — see motif 20 in
+  // daily-security-audit-healthwatch: an unfiltered match here would create a
+  // double-counted phantom row on the disease pages instead of skipping to the
+  // next real candidate.
   let geo = null;
   for (const name of countryNames) {
-    geo = findCountry(name);
-    if (geo) break;
+    const g = findCountry(name);
+    if (g && !isAggregateCountry(g)) { geo = g; break; }
   }
 
   // Fallback: try to extract country from title
@@ -63,8 +68,8 @@ export function parseReliefWebItem(item: ReliefWebItem): ParsedOutbreak | null {
     const titleParts = title.split(/\s*[-–—]\s*/);
     if (titleParts.length >= 2) {
       for (let i = titleParts.length - 1; i >= 1; i--) {
-        geo = findCountry(titleParts[i].replace(/:\s*.*/i, "").trim());
-        if (geo) break;
+        const g = findCountry(titleParts[i].replace(/:\s*.*/i, "").trim());
+        if (g && !isAggregateCountry(g)) { geo = g; break; }
       }
     }
   }
