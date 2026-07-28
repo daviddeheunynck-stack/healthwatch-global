@@ -43,6 +43,35 @@ const DELIVERY_AUDIENCE: Record<string, string> = {
   "weekly-signal":               "subscriptions",
 };
 
+// Independent per-delivery evidence, where a real log table already exists —
+// more trustworthy than site_config's lastNonZero for a cron whose entry
+// predates 2026-07-27 (that field only gets set going forward, on its own
+// next rows>0 run). Found the same day lastNonZero shipped: a dry run of
+// regional-alerts' own send logic showed every one of its 7 real paid
+// subscribers had a genuine outbreak_alert_log row sent within the last 24h
+// (some within the last hour) — the cron was never broken, it just hadn't
+// had a rows>0 run yet since the field was introduced, so it read as "never"
+// on day one. See project_health_check_delivery_false_positive_2026_07_27.
+const REAL_EVIDENCE: Record<string, { table: string; column: string }> = {
+  "regional-alerts": { table: "outbreak_alert_log", column: "sent_at" },
+  "disease-alerts":  { table: "outbreak_alert_log", column: "sent_at" },
+  "push-alerts":     { table: "outbreaks", column: "push_notified_at" },
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+async function lastRealDelivery(supabase: any, cronName: string): Promise<string | null> {
+  const ev = REAL_EVIDENCE[cronName];
+  if (!ev) return null;
+  const { data } = await supabase
+    .from(ev.table)
+    .select(ev.column)
+    .not(ev.column, "is", null)
+    .order(ev.column, { ascending: false })
+    .limit(1)
+    .maybeSingle();
+  return (data?.[ev.column] as string | undefined) ?? null;
+}
+
 export async function GET(req: NextRequest) {
   const cronSecret = clean(process.env.CRON_SECRET);
   if (!cronSecret || req.headers.get("authorization") !== `Bearer ${cronSecret}`)
@@ -155,16 +184,19 @@ async function runHealthCheck(_req: NextRequest, supabase: any) {
     const audience = audienceMap[table] ?? 0;
     if (audience === 0) continue;
     const run = cronMap[name];
-    if (!run?.lastNonZero) {
-      // lastNonZero is new (added 2026-07-27) — a pre-existing site_config
-      // entry won't have it yet even though its last logged run genuinely
-      // delivered (rows > 0). Only "never" when that's also not the case,
-      // so this doesn't false-positive on every delivery cron the first
-      // time health-check runs after this field was introduced.
+    // lastNonZero is new (added 2026-07-27) — a pre-existing site_config entry
+    // won't have it yet even though its last logged run genuinely delivered
+    // (rows > 0). Fall back to a real per-delivery log where one exists
+    // (REAL_EVIDENCE) before concluding "never" — confirmed necessary the
+    // same day: regional-alerts read as "never" purely because this exact
+    // run was its first with rows=0 since the field shipped, while
+    // outbreak_alert_log showed real sends within the last hour.
+    const effectiveLastNonZero = run?.lastNonZero ?? (await lastRealDelivery(supabase, name));
+    if (!effectiveLastNonZero) {
       if (!run || (run.rows ?? 0) === 0) deliveryIssues.push({ name, audience, kind: "never" });
       continue;
     }
-    const daysSinceDelivery = (Date.now() - new Date(run.lastNonZero).getTime()) / 86_400_000;
+    const daysSinceDelivery = (Date.now() - new Date(effectiveLastNonZero).getTime()) / 86_400_000;
     const windowH = CRON_WINDOWS[name] ?? 26;
     const stallThresholdDays = Math.max(3, (windowH / 24) * 3);
     if (daysSinceDelivery > stallThresholdDays) {
