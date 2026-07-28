@@ -379,6 +379,20 @@ const DENGUE_ISO3: Record<string, string> = {
   "Guatemala":  "GTM",
 };
 
+// Ceiling on how old the best-available data point is allowed to be before this
+// fetcher gives up and returns null instead of a stale "Found". Without this,
+// a country whose WHO xmart data has gone silent for years (found 2026-07-28:
+// Haiti, zero real CASES rows since 2022) kept getting upserted `active: true`
+// with the same multi-year-old figure on every run — this write path sets
+// `active` unconditionally (see `activeFlag` below), so returning the stale
+// data here doesn't just leave a row unrefreshed, it actively reactivates one
+// a human just deactivated, or inserts a fresh duplicate (the existing-row
+// lookup a few hundred lines up only covers `active=true OR date within 90
+// days`, which an old, just-deactivated row fails on both counts). Matches
+// data-quality's own DASHBOARD_SOURCES ceiling for this same source, so the
+// two systems agree on what counts as too stale to show.
+const DENGUE_STALE_CEILING_DAYS = 180;
+
 function fetchDengueGlobalSurveillance(country_en: string): () => Promise<Found | null> {
   return async () => {
     const iso3 = DENGUE_ISO3[country_en];
@@ -415,16 +429,23 @@ function fetchDengueGlobalSurveillance(country_en: string): () => Promise<Found 
       };
     }
 
+    const withinCeiling = (found: Found | null): Found | null => {
+      if (!found) return null;
+      const daysSince = Math.round((Date.now() - new Date(found.date).getTime()) / 86_400_000);
+      return daysSince <= DENGUE_STALE_CEILING_DAYS ? found : null;
+    };
+
     try {
       const current = await sumYear(new Date().getFullYear());
-      if (current) return current;
+      if (current) return current; // this year's own data is never stale enough to hit the ceiling
 
       // No data yet for the current year — reporting lag into this WHO dataset
       // varies a lot by country (some are over a year behind). Fall back to the
       // most recent year with any data at all, so the row still reflects a real
-      // (if dated) WHO figure instead of silently reporting nothing; the resulting
-      // old `date` correctly surfaces via data-quality's staleness check rather
-      // than hiding the gap.
+      // WHO figure instead of silently reporting nothing — but only up to
+      // DENGUE_STALE_CEILING_DAYS old; past that, WHO has effectively stopped
+      // covering this country in this dataset and returning null (no write at
+      // all) is more honest than reactivating a multi-year-old figure.
       const latestUrl =
         `${base}?%24filter=ISO3%20eq%20'${iso3}'%20and%20CASES%20ne%20null` +
         `&%24orderby=START_DATE%20desc&%24top=1&excludeSysColumns=0`;
@@ -432,7 +453,7 @@ function fetchDengueGlobalSurveillance(country_en: string): () => Promise<Found 
       if (!latestRes.ok) return null;
       const latestJson = await latestRes.json() as { value: Rec[] };
       const lastYear = latestJson.value?.[0]?.YEAR;
-      return lastYear ? await sumYear(lastYear) : null;
+      return withinCeiling(lastYear ? await sumYear(lastYear) : null);
     } catch {
       return null;
     }
@@ -475,6 +496,15 @@ function fetchMpoxGlobalSurveillance(country_en: string): () => Promise<Found | 
       const cases  = (rec.TOTAL_CONF_CASES ?? 0) + (rec.TOTAL_PROB_CASES ?? 0);
       const deaths = rec.TOTAL_CONF_DEATHS ?? 0;
       if (cases <= 0) return null;
+
+      // Same ceiling as fetchDengueGlobalSurveillance's DENGUE_STALE_CEILING_DAYS,
+      // same reasoning: this always takes WHO's single latest datapoint regardless
+      // of age, and the write path below sets `active: true` unconditionally — no
+      // live incident found here today (all 4 Mpox rows were within ~4 months as
+      // of 2026-07-28), but the exact same silent-reactivation risk exists if this
+      // WHO feed ever goes quiet for a country the way the Dengue one did for Haiti.
+      const daysSince = Math.round((Date.now() - new Date(rec.DATE).getTime()) / 86_400_000);
+      if (daysSince > DENGUE_STALE_CEILING_DAYS) return null;
 
       return {
         cases,

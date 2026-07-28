@@ -321,13 +321,35 @@ async function runDataQuality(_req: NextRequest, supabase: SupabaseClient) {
     "ecdc.europa.eu/en/news-events",        // ECDC epidemiological updates — quarterly cadence, 90d+ staleness expected
     "aphis.usda.gov/hpai-h5n1",             // USDA APHIS per-state HPAI livestock — date = last confirmed detection in that state, not a sync timestamp; many states legitimately go months/years without a new one
   ];
+  // A dashboard/tracker source is skipped by the tight 7/21-day rule above because
+  // it doesn't publish per-article dates — but an unconditional skip left rows
+  // with NO staleness net at all. Found 2026-07-28: Dengue/Haiti (source
+  // shinyapps.io/dengue_global) sat at "active" showing 2022 case figures for
+  // 1,493 days — verified live against WHO's own xmart dataset, which has zero
+  // real (non-null CASES) rows for Haiti in 2023, 2024, 2025, or 2026, so the
+  // fetcher's documented fallback-to-last-real-year behavior was working exactly
+  // as designed and still produced a 4-year-stale "active" row with nothing to
+  // catch it. 180 days is generous enough to absorb the quarterly/monthly
+  // cadences noted above without false-positiving on routine gaps, while still
+  // catching genuine multi-year drift like this one. Signal only, same as the
+  // rest of this check — never auto-deactivated.
+  const STALE_DAYS_DASHBOARD = 180;
+  const dashboardStaleThreshold = new Date(Date.now() - STALE_DAYS_DASHBOARD * 86_400_000).toISOString().split("T")[0];
 
   for (const row of rows ?? []) {
     if (row.is_seed || !row.date || anomalies.some((a) => a.row.id === row.id)) continue;
-    if (DASHBOARD_SOURCES.some((d) => (row.source ?? "").includes(d))) continue;
+    const daysSince = Math.round((Date.now() - new Date(row.date).getTime()) / 86_400_000);
+    if (DASHBOARD_SOURCES.some((d) => (row.source ?? "").includes(d))) {
+      if (row.date <= dashboardStaleThreshold) {
+        needsReview.push({
+          label: `${row.disease} / ${row.country}`,
+          detail: `Source dashboard/tracker sans donnée plus récente depuis ${daysSince}j (${row.date}, seuil ${STALE_DAYS_DASHBOARD}j) — vérifier si une source plus fraîche existe ou si la ligne doit être désactivée : ${row.source ?? "N/A"}`,
+        });
+      }
+      continue;
+    }
     const threshold = row.is_pheic ? pheicThreshold : staleThreshold;
     if (row.date <= threshold) {
-      const daysSince = Math.round((Date.now() - new Date(row.date).getTime()) / 86_400_000);
       needsReview.push({
         label: `${row.disease} / ${row.country}`,
         detail: `Stale — dernière donnée il y a ${daysSince}j (${row.date}) — vérifier source : ${row.source ?? "N/A"}`,
