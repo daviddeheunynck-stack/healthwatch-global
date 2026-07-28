@@ -399,8 +399,26 @@ async function runDataQuality(_req: NextRequest, supabase: SupabaseClient) {
     if ((row.source_priority ?? 0) >= 10) continue; // locked row — never auto-deactivate, see 4. above
     const don = await verifyFromDON(row.source);
     if (don?.resolved) {
-      await supabase.from("outbreaks").update({ active: false }).eq("id", row.id);
-      fixes.push({ label, before: "active", after: "inactive — fin d'épidémie déclarée (WHO DON)" });
+      // Same contract as applyCaseUpdate above: guard at the DB level too (the
+      // source_priority check at the top of this loop reads a snapshot loaded
+      // minutes earlier, before the per-row DON fetches — another cron can lock
+      // the row in between), and verify the write actually landed before
+      // reporting it as an applied fix. Without the .select("id") check a
+      // blocked or failed deactivation was reported to David as "épidémie
+      // désactivée" while the row stayed active in prod.
+      const { data: deact, error: deactErr } = await supabase
+        .from("outbreaks")
+        .update({ active: false })
+        .eq("id", row.id)
+        .lte("source_priority", 9)
+        .select("id");
+      if (deactErr) {
+        needsReview.push({ label, detail: `Fin d'épidémie déclarée (WHO DON) mais échec DB de la désactivation (${deactErr.message}) — vérifier manuellement : ${row.source}` });
+      } else if (!deact || deact.length === 0) {
+        needsReview.push({ label, detail: `Fin d'épidémie déclarée (WHO DON) mais désactivation bloquée (ligne verrouillée, 0 ligne affectée) — vérifier manuellement : ${row.source}` });
+      } else {
+        fixes.push({ label, before: "active", after: "inactive — fin d'épidémie déclarée (WHO DON)" });
+      }
     } else if (don?.contained) {
       needsReview.push({
         label,
