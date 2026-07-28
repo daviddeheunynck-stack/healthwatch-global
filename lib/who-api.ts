@@ -39,7 +39,7 @@ export async function fetchWHODONList(top = 25): Promise<WHONewsItem[]> {
 
   const res = await fetch(`${WHO_DON_API}?${params}`, {
     headers: FETCH_HEADERS,
-    signal: AbortSignal.timeout(10000),
+    signal: AbortSignal.timeout(15000),
   });
 
   if (!res.ok) throw new Error(`WHO OData API → HTTP ${res.status}`);
