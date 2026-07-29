@@ -440,8 +440,19 @@ export async function GET(req: NextRequest) {
     const { error: snapErr } = await supabase
       .from("outbreak_snapshots")
       .upsert(snapshots, { onConflict: "outbreak_id,snapped_at" });
-    if (snapErr) console.error("[sync] snapshot upsert:", snapErr.message);
-    else console.log(`[sync] Snapshotted ${snapshots.length} outbreaks for ${today}`);
+    // A failed snapshot write used to be console.error only, which meant it
+    // reached nobody: this cron still logs "ok", health-check only watches that
+    // the cron RAN, and data-quality's drop/spike detection just quietly finds
+    // no snapshot to compare against and skips every row. That is exactly how
+    // the 2026-06-30 → 2026-07-16 blackout above went unnoticed for 16 days.
+    // Sentry is the only channel that surfaces this without the cron failing.
+    if (snapErr) {
+      console.error("[sync] snapshot upsert:", snapErr.message);
+      Sentry.captureMessage(
+        `[sync-outbreaks] snapshot upsert failed (${snapshots.length} rows, ${today}): ${snapErr.message}`,
+        "error",
+      );
+    } else console.log(`[sync] Snapshotted ${snapshots.length} outbreaks for ${today}`);
   }
 
   // ── 6. Deactivate stale entries (never touch seed rows or high-priority) ──────

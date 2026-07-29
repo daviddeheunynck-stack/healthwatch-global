@@ -239,6 +239,31 @@ async function runDataQuality(_req: NextRequest, supabase: SupabaseClient) {
   const fixes: Fix[] = [];
   const needsReview: NeedsReview[] = [];
 
+  // Section 3's drop/spike detection only runs for rows that HAVE a snapshot to
+  // compare against (`if (snap && ...)`), so a missing snapshot doesn't fail the
+  // check — it silently removes the row from it. If the whole snapshot write
+  // breaks, this cron keeps reporting "0 anomalies" while detecting nothing at
+  // all. That is not hypothetical: a null death count blocked the entire batch
+  // upsert from 2026-06-30 to 2026-07-16 and nobody noticed for 16 days
+  // (see the comment in sync-outbreaks/route.ts, now also reported to Sentry).
+  // Report the blindness itself rather than passing quietly. A few rows
+  // legitimately have no snapshot the day they are created, hence a coverage
+  // floor rather than "any row missing". Replayed against that real incident:
+  // it fires every day of it (29/06 at 9%, 30/06 at 39%, then a flat 0% from
+  // 02/07 through 15/07, recovering 16/07) and stays silent on every healthy
+  // day since, including today's 5 newly-created West Nile rows.
+  const SNAPSHOT_COVERAGE_FLOOR = 0.5;
+  const activeCount = (rows ?? []).length;
+  if (activeCount > 0) {
+    const coverage = snapMap.size / activeCount;
+    if (coverage < SNAPSHOT_COVERAGE_FLOOR) {
+      needsReview.push({
+        label: "[SNAPSHOTS] Détection chute/pic aveugle",
+        detail: `Seulement ${snapMap.size} instantané(s) pour ${activeCount} lignes actives (${Math.round(coverage * 100)}%, plancher ${SNAPSHOT_COVERAGE_FLOOR * 100}%) au ${yesterday} — la détection de chutes et de pics n'a comparé presque aucune ligne. Vérifier l'upsert outbreak_snapshots dans sync-outbreaks (un seul compteur null peut bloquer tout le lot).`,
+      });
+    }
+  }
+
   for (const a of anomalies) {
     const { row, type, snap } = a;
     const label = `${row.disease} / ${row.country}`;
