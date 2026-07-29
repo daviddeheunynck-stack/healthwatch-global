@@ -7,7 +7,7 @@ import { ISO_REGION } from "@/lib/geo-data";
 import { getOutbreakTrendsBulkCached } from "@/lib/outbreak-trend";
 import { createClient } from "@/lib/supabase-server";
 import { createClient as createService } from "@supabase/supabase-js";
-import { trackEvent } from "@/lib/track-event";
+import TrackPageView from "@/components/TrackPageView";
 import StatsCard from "@/components/StatsCard";
 import WorldMap from "@/components/WorldMap";
 import LandingPage from "@/components/LandingPage";
@@ -610,7 +610,6 @@ export default async function DashboardPage({
 
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
-  if (user) trackEvent(user.id, "dashboard_view", { locale, demo: isDemo });
 
   if (!user && !isDemo) {
     const schemas = [
@@ -678,6 +677,13 @@ export default async function DashboardPage({
 
   return (
     <div className="space-y-8">
+      {/* Pageview must be client-side, not a trackEvent() in the server body:
+          this page reads `region`/`risk` from searchParams, so every filter
+          change re-runs the server component and re-fired the event. Measured
+          2026-07-29: 18 raw dashboard_view rows for ~6 real sessions (x3
+          overall, x10 on a single 51-second visit). Same pattern already used
+          by pricing_page_view and outbreak_detail_view. */}
+      {user && <TrackPageView action="dashboard_view" metadata={{ locale, demo: isDemo }} />}
       {/* Track campaign ref (?ref=producthunt etc.) for demo visitors too */}
       {isDemo && !user && <CampaignRefTracker />}
       <div>
