@@ -277,6 +277,13 @@ const MANUAL_ROWS = {
   // Ne pas la remettre ici, et surtout ne pas la rafraîchir avec les chiffres
   // CDC — cadrage différent, cf. section 5 du SKILL.md.
   "8a4072ab-c0be-4567-8ba4-cdcedeccced8": "Polio/Palestine",
+  // Ajoutées le 2026-07-29 : contrairement à Polio/Palestine (statut PHEIC),
+  // ces deux lignes portent un vrai compte de cas WPV1 hebdomadaire (GPEI) et
+  // avaient dérivé silencieusement (AFG: 11 en base vs 15 chez GPEI) parce que
+  // data-quality.4f les classait par erreur dans le palier annuel 730j au lieu
+  // du palier hebdo 30j (corrigé le même jour, commit b995b27).
+  "b0f473be-a367-464e-ab32-3cdc43aa7815": "Polio/Afghanistan",
+  "ab4cd321-0aa6-4598-86ac-b0a04d346465": "Polio/Pakistan",
 };
 console.log("\n=== Lignes manuelles (section 5) — dues pour vérif hebdo (updated_at > 7j) ===");
 const now = Date.now();
