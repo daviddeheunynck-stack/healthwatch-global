@@ -155,6 +155,63 @@ Sur les 7 derniers jours, l'agrégat du compte Brevo affiche **191 requêtes d'e
 
 **Contexte funnel mesuré au passage** (utile au bilan de lundi, pas une idée en soi) : 21 comptes, 8 essais Pro en cours dont les fins tombent aux **29/07, 01/08, 07/08, 15/08, 17/08, 22/08, 24/08 et 13/09** — donc **3 seulement expirent avant la date de décision du 21/08, et aucun des 4 leads institutionnels**. `product_events` : 19 événements en tout, **aucun d'un vrai utilisateur depuis le 24/07**, zéro `pricing_page_view`, zéro export, zéro rapport PDF sur toute la fenêtre d'instrumentation. Le dashboard est en `force-dynamic`, donc cette absence n'est pas un artefact de cache.
 
+**Statut :** PROPOSÉE — en attente de retour de David. **Idée 2 (désabonnements Brevo invisibles) construite le 29/07** (`8934c64` : synchronisation de la blocklist Brevo vers `profiles.email_blocked_at` + gating de `regional-alerts` ; `f59c166` : gating étendu aux 18 autres crons d'envoi). Idées 1 (magic link / OTP de repli pour ZABRE) et 3 (comptes existants encore à 5 régions) toujours ouvertes, non traitées à ce jour.
+
+---
+
+## 2026-07-29 — Proposition du jour
+
+Angle nouveau : la **couverture géographique** et la **qualité du référentiel maladies**, mesurées en direct sur la prod (deux scripts de lecture seule, aucune écriture, supprimés après usage). Déclencheur : le premier retour jamais reçu d'une équipe de surveillance **hors sphère OMS**, arrivé aujourd'hui.
+
+### 1. La page Méthodologie annonce 4 sources et aucune couverture Asie-Pacifique — au moment où un contact du Taiwan CDC explique précisément pourquoi il doit compenser à la main
+
+**Signal — feedback reçu aujourd'hui (29/07), le seul retour du jour et le premier de ce type :** Hao-Kai TSENG, Epidemic Intelligence Center du **Taiwan CDC**, en DM LinkedIn (`product-feedback.md`, entrée du 29/07). Taïwan n'étant pas État membre de l'OMS, son équipe ne peut pas s'appuyer sur les canaux WHO/ECDC/PAHO/Africa CDC et compense par une veille manuelle sur les sites nationaux voisins et des plateformes tierces (Beacon, CIDRAP, Outbreak News Today). Ce n'est pas une demande de fonctionnalité — c'est un professionnel qui décrit l'angle mort exact de HWG, sans savoir qu'il le décrit.
+
+**Mesuré sur la prod aujourd'hui (260 lignes, 108 actives) :**
+
+| région | lignes actives | pays actifs |
+|---|---|---|
+| Afrique | 38 | 27 |
+| Amériques | 37 | 15 |
+| **Asie** | **17** | 16 |
+| Europe | 15 | 12 |
+| **Océanie** | **1** | 1 |
+
+Les 17 lignes « Asie » se décomposent en **11 Dengue** issues d'une seule et même source (`worldhealthorg.shinyapps.io`, le fetcher xMart construit le 12/07), 2 Polio (Afghanistan, Pakistan), 1 MERS-CoV (Arabie saoudite), 1 Choléra (Afghanistan) et 2 lignes parasites (voir idée 2). **Taïwan, le Japon et la Corée du Sud n'ont jamais eu la moindre ligne, toutes maladies et tous statuts confondus** ; la Chine n'a qu'une ligne Chikungunya inactive de 2025. L'Océanie tient entière dans une ligne Diphtérie/Australie. Autrement dit : sur tout le Pacifique occidental, HWG affiche de la dengue et rien d'autre.
+
+**Le point vraiment actionnable n'est pas le trou lui-même, c'est qu'il est invisible et que la page qui devrait le dire dit autre chose.** `app/[locale]/methodology/page.tsx` — la page qu'un évaluateur institutionnel lit avant de décider s'il fait confiance aux données — liste **exactement 4 sources** : WHO DON (couverture annoncée « Global »), ECDC (Europe), PAHO (Amériques), Africa CDC (Afrique). Deux écarts vérifiés aujourd'hui, dans les deux sens :
+- **elle sous-déclare le pipeline réel** — 13 crons `sync-*` insèrent réellement dans `outbreaks`, et les lignes actives portent aujourd'hui des sources qu'aucun visiteur ne peut deviner depuis cette page : `aphis.usda.gov` (13 lignes), `globalhealthreports.health.ny.gov` (4), WHO AFRO, WHO EMRO, `ncdc.gov.ng`, `cdc.gov.au`, `santepubliquefrance.fr`, `gov.br`, `endpolio.com.pk`, `polioeradication.org`, `cidrap.umn.edu`, `tchadinfos.com` ;
+- **elle sur-déclare la couverture géographique** — le tableau a une ligne par région pour l'Europe, les Amériques et l'Afrique, et **aucune pour l'Asie ni le Pacifique**, qui reposent donc uniquement sur « WHO DON, Global ». Un blanc sur la carte au-dessus de Taipei se lit « rien ne se passe » alors qu'il veut dire « aucune source ne regarde ». C'est exactement le mécanisme de l'incident Tchad du 22/07, transposé d'un pays à une région entière — et cette fois avec un professionnel de la région déjà dans les contacts.
+
+**Ce que je propose (et ce que je ne propose pas) :** pas d'intégrer une source Asie-Pacifique aujourd'hui — le garde-fou du `ROADMAP.md` (« Do NOT integrate until a prospect explicitly asks ») tient, Hao-Kai n'a rien demandé. Ce qui est cheap et honnête : **rendre la couverture explicite plutôt que muette**. Mettre le tableau des sources de `/methodology` à jour avec le pipeline réel, y ajouter une ligne par région disant franchement laquelle a un bureau régional câblé et laquelle repose sur le seul WHO DON, et afficher la même information sur les pages région/pays (« sources alimentant cette région, dernière livraison le … »). La donnée existe déjà : `source` par ligne, plus le journal de runs des crons.
+
+**Effort estimé :** petit pour le volet Méthodologie (contenu statique, 5 langues, aucune logique). Moyen si on va jusqu'à l'indicateur par région/pays alimenté par les données réelles — c'est la même mécanique que le scan de « nulls silencieux » déjà construit dans `morning-don-check` le 27/07 (`b079811`), réutilisée côté affichage au lieu du monitoring interne.
+
+**Risque/inconnue :** (a) dire publiquement « l'Asie-Pacifique repose sur le seul WHO DON » est un aveu de faiblesse autant qu'un gage d'honnêteté — je pense que c'est le bon arbitrage face à des épidémiologistes, qui repèrent le trou de toute façon et pardonnent moins le silence que la lacune, mais c'est un choix de positionnement qui appartient à David ; (b) le volet « long terme » associé, et clairement étiqueté comme tel, est d'ouvrir un flux WHO WPRO / SEARO — à ne pas lancer avant qu'un prospect le demande, mais à noter que le premier signal en ce sens vient d'arriver ; (c) je n'ai pas vérifié les ToS de Beacon / CIDRAP / Outbreak News Today (une ligne CIDRAP existe déjà en base comme source d'une ligne active, ce qui mérite une vérification en soi vu le précédent ProMED).
+
+### 2. Dix lignes actives sur 108 ne sont pas des maladies — et le produit leur invente un mode de transmission
+
+**Signal (mesuré sur la prod aujourd'hui, en rejouant la logique de `matchDisease` contre les 69 motifs de `DISEASE_MAP`) :** **12 lignes sur 260 ont un `disease_en` qu'aucun motif ne reconnaît, dont 10 sont ACTIVES** — soit **9,3 % des lignes actives affichées**. Les 10 portent toutes exactement la même valeur, qui est un titre de bulletin WHO DON stocké dans le champ « maladie » :
+
+> `International food safety event: Infant formula and products containing arachidonic acid oil contaminated with cereulide toxin`
+
+Réparties sur 10 pays et 4 régions (Autriche, Belgique, Brésil, Espagne, France, Hong Kong SAR, Italie, Royaume-Uni, Singapour, Tchéquie), toutes datées du **13/03/2026**, donc actives et affichées depuis **4 mois et demi**. La 12e valeur non reconnue, `Ciguatera Fish Poisoning`, est inactive.
+
+**Le défaut n'est pas le nom moche, c'est ce que le code fabrique derrière.** `matchDisease` (`lib/disease-data.ts:733`) retombe sur un objet par défaut codé en dur : `pathogenType: "virus_rna"`, `transmission: ["contact"]`. Ces deux valeurs sont ensuite **rendues telles quelles** sur `/[locale]/disease/[slug]` (lignes 529 et 592 : libellé du type de pathogène, puces des modes de transmission) et servent de **critère de filtre** dans `DiseasesGrid.tsx:156`. Concrètement, HWG affiche aujourd'hui à des épidémiologistes qu'une contamination chimique de lait infantile (la céréulide est une toxine thermostable de *Bacillus cereus*, ni virale ni transmissible) est un **virus à ARN transmis par contact**, et la fait apparaître dans le filtre « transmission par contact ». Ce n'est pas une donnée manquante, c'est une donnée inventée — la catégorie d'erreur la plus coûteuse pour ce public, et exactement celle contre laquelle le garde-fou anti-hallucination du 27/07 avait été posé côté géo (`project_geo_extract_hallucination_fix_2026_07_27`).
+
+**Pourquoi personne ne l'a vu :** le filet existe pourtant — le cron `disease-coverage` a pour mission n°1 déclarée « unknown diseases … that do not match any pattern in DISEASE_MAP » — mais il ne regarde que les lignes **insérées dans les 90 dernières minutes** (`app/api/cron/disease-coverage/route.ts`, en-tête). Une ligne qui passe entre les mailles au moment de son insertion devient définitivement invisible pour lui : il n'existe aucun balayage du stock. C'est le même motif de défaillance que les six trous corrigés aujourd'hui dans l'audit « mode ouvert » (`d970f56` / `7818abc` / `f139f67` / `2fa7cac`) — un contrôle qui ne peut structurellement pas voir un backlog rapporte vert pendant des mois.
+
+**Effort estimé :** petit, en deux temps indépendants. (a) Traiter les 10 lignes : soit un motif `DISEASE_MAP` « intoxication alimentaire / toxine » avec les bons attributs, soit la désactivation si un événement de sécurité alimentaire n'a pas sa place dans un produit de surveillance épidémique — c'est un arbitrage de périmètre pour David, pas une question technique. (b) Élargir `disease-coverage` d'un balayage périodique du stock actif en plus de sa fenêtre de 90 minutes — quelques lignes, la requête et l'e-mail existent déjà.
+
+**Risque/inconnue :** le vrai point à trancher, et je ne le tranche pas ici, est **le repli lui-même** : renvoyer `virus_rna` + `contact` pour tout ce qui n'est pas reconnu est un défaut qui ment silencieusement. Le remplacer par un type « inconnu » explicite est plus honnête mais touche l'affichage de toutes les pages maladie et demande une valeur d'affichage propre en 5 langues — donc plus qu'un correctif de données, un petit chantier d'UI. À faire, mais à ne pas confondre avec le nettoyage des 10 lignes, qui lui est immédiat.
+
+**Non re-proposé aujourd'hui :** le volet AMR (Eva Kamau, 10/07) et le signal de variance / « ralentissement critique » (Simon Ruegg, 6-7/07), toujours ouverts sans angle neuf. Rien sur l'engagement produit ni sur la personnalisation : les idées du 28/07 sur ces sujets (magic link/OTP, comptes existants à 5 régions) restent ouvertes et non traitées, ce serait du bruit de les redire. Deux idées seulement aujourd'hui, volontairement — je n'ai pas de troisième ancrage qui tienne le même niveau de preuve.
+
+**Contexte mesuré au passage** (pas des idées, mais utile au bilan de lundi) :
+- **`product_events` : 20 événements en tout, aucun d'un utilisateur autre que David depuis le 24/07.** Et ce chiffre était encore surévalué jusqu'à aujourd'hui : le correctif `feab722` a montré que `dashboard_view` comptait des rendus serveur, pas des visites — l'usage réel avant le 29/07 se lit divisé par ~3.
+- **Un essai Pro expire aujourd'hui** (`iinnerre@gmail.com`, créé le 29/06), le suivant le 01/08 (`r.endangrukmanams@gmail.com`). Ce sont les deux premiers des 8 essais en cours à arriver à échéance ; aucun des 4 leads institutionnels n'est concerné avant la date de décision du 21/08.
+- **Deadline egress Supabase au 04/08, dans 6 jours**, et le relevé Usage n'a pas été reconsulté depuis le 05/07 alors que tous les correctifs de cache sont livrés depuis le 06/07 — à recouper avec l'accélération de `TypeError: terminated` sur `/en` constatée ce matin ([[project_outbreaks_terminated_error_acceleration_2026_07_29]]). Signalé ici parce que c'est la surface d'acquisition publique qui est en jeu, pas proposé comme idée : c'est une vérification, pas une amélioration produit.
+
 **Statut :** PROPOSÉE — en attente de retour de David.
 
 ---
