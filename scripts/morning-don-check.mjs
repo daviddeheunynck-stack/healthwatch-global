@@ -40,7 +40,13 @@ const SUSPICIOUS_DATE_EXCLUDE_IDS = new Set([
 const KNOWN_SEED_CLUSTERS = [
   // 2026-07-28 : Réunion désactivée (épidémie 2025 déclarée terminée le 24/06/2025, SpF ne
   // compte que 48 cas cumulés 2026) — cluster 7 -> 6. Cf. audit fraîcheur du 28/07.
-  { label: "Chikungunya (DON581, multi-pays)", diseaseMatch: /chikungunya/i, expectedCount: 6 },
+  // 2026-07-29 : Singapour désactivée — 6 -> 5. Oubliée par le ménage du 17/07 ET par
+  // l'audit du 28/07 : sa donnée est un compteur 2025 (33 cas au 06/12/2025) alors que
+  // ses 15 pairs datés 2025 étaient déjà clôturés. La même RRA OMS ne donne que 5 cas en
+  // 2026, liés au voyage, sans transmission locale soutenue. Les 5 restants (Bolivie,
+  // Brésil, Cuba, Maurice, Mayotte) sont tous datés 2026. Invisible au QC quotidien car
+  // le contrôle de fraîcheur saute les lignes is_seed — d'où l'intérêt de ce compte ici.
+  { label: "Chikungunya (DON581, multi-pays)", diseaseMatch: /chikungunya/i, expectedCount: 5 },
   { label: "MERS-CoV (DON591)", diseaseMatch: /mers-cov/i, expectedCount: 1 },
   { label: "Choléra (DON579, multi-pays)", diseaseMatch: /cholera/i, expectedCount: 4 },
   { label: "Polio PHEIC (Afghanistan/Pakistan/Palestine)", diseaseMatch: /polio/i, expectedCount: 3 },
