@@ -102,6 +102,12 @@ export const CRON_WINDOWS: Record<string, number> = {
   "push-alerts":       26,   // daily 06:45
   "disease-alerts":    26,   // daily 06:50
   "pilot-follow-up":   26,   // daily 08:00
+  // Was scheduled in vercel.json and logging runs (including "error" statuses)
+  // since creation, but never registered here — so health-check never looked at
+  // it and an outage would have been invisible. Found 2026-07-29 by diffing the
+  // cron:run:* keys in site_config against this table; health-check now reports
+  // that mismatch itself instead of relying on someone thinking to check.
+  "pilot-closing-reminder": 26,  // daily 08:00
   "data-quality":      26,   // daily 10:00
   // ── Billing & retention crons ────────────────────────────────────────────────
   "expire-trials":       26,  // daily — monetization critical
