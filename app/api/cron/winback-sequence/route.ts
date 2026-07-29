@@ -416,6 +416,7 @@ export async function GET(req: NextRequest) {
     .eq("plan", "free")
     .not("trial_ends_at", "is", null)
     .is("stripe_subscription_id", null)
+    .is("email_blocked_at", null)
     .gte("trial_ends_at", j3Start)
     .lt("trial_ends_at", j3End);
 
@@ -436,6 +437,7 @@ export async function GET(req: NextRequest) {
     .eq("plan", "free")
     .not("trial_ends_at", "is", null)
     .is("stripe_subscription_id", null)
+    .is("email_blocked_at", null)
     .gte("trial_ends_at", j7Start)
     .lt("trial_ends_at", j7End);
 

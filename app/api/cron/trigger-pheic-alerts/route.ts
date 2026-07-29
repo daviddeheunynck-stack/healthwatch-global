@@ -165,12 +165,15 @@ async function runTriggerPheicAlerts(_req: NextRequest, supabase: SupabaseClient
   // getting PHEIC alerts instead of receiving them indefinitely for free.
   const { data: rawProUsers } = await supabase
     .from("profiles")
-    .select("id, email, alert_locale, plan, trial_ends_at, stripe_subscription_id")
+    .select("id, email, alert_locale, plan, trial_ends_at, stripe_subscription_id, email_blocked_at")
     .in("plan", ["pro", "team", "enterprise"])
     .eq("pheic_alerts", true)
     .not("email", "is", null);
 
-  const proUsers = (rawProUsers ?? []).filter((p) => resolvedPlan(p) !== "free");
+  // Brevo-blocked addresses fail silently on Brevo's end — skip them before
+  // the alert_notifications insert below rather than record a false "sent"
+  // state. See lib/brevo-blocklist.ts.
+  const proUsers = (rawProUsers ?? []).filter((p) => resolvedPlan(p) !== "free" && !p.email_blocked_at);
 
   if (!proUsers?.length) {
     await logCronRun(supabase, "trigger-pheic-alerts", "ok", 0);

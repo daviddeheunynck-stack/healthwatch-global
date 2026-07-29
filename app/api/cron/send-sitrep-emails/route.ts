@@ -11,6 +11,7 @@ import { createClient } from "@supabase/supabase-js";
 import * as Sentry from "@sentry/nextjs";
 import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
 import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
+import { getBlockedEmailSet } from "@/lib/brevo-blocklist";
 
 export const dynamic = "force-dynamic";
 
@@ -175,7 +176,12 @@ export async function GET(req: NextRequest) {
 
   const today = new Date().toISOString().split("T")[0];
   let totalSent = 0;
+  let blockedSkipped = 0;
   const now = new Date().toISOString();
+
+  // report.recipients is a free-text list (not always a profiles row) —
+  // matched against the full Brevo blocklist cache. See lib/brevo-blocklist.ts.
+  const blockedEmails = await getBlockedEmailSet(supabase);
 
   for (const report of reports) {
     // Check user plan
@@ -185,8 +191,10 @@ export async function GET(req: NextRequest) {
     if (!PAID_PLANS.includes(plan)) continue;
 
     const maxRecipients = PLAN_LIMITS[plan] ?? 1;
-    const recipients = (report.recipients as string[]).slice(0, maxRecipients);
-    if (recipients.length === 0) continue;
+    const recipients = (report.recipients as string[])
+      .filter((e) => !blockedEmails.has(e.toLowerCase()))
+      .slice(0, maxRecipients);
+    if (recipients.length === 0) { blockedSkipped++; continue; }
 
     const locale: string = report.locale || "en";
     const html    = buildEmailHtml(sorted, locale, today);
@@ -220,5 +228,5 @@ export async function GET(req: NextRequest) {
   }
 
   await logCronRun(supabase, "send-sitrep-emails", "ok", totalSent);
-  return NextResponse.json({ ok: true, sent: totalSent });
+  return NextResponse.json({ ok: true, sent: totalSent, blockedSkipped });
 }

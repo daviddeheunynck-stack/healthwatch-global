@@ -119,13 +119,13 @@ async function runDiseaseAlerts(_req: NextRequest, supabase: SupabaseClient) {
   const userIds = [...new Set(subs.map((s) => s.user_id))];
   const { data: profiles } = await supabase
     .from("profiles")
-    .select("id, email, alert_locale, plan, trial_ends_at, stripe_subscription_id")
+    .select("id, email, alert_locale, plan, trial_ends_at, stripe_subscription_id, email_blocked_at")
     .in("id", userIds);
 
   const profileMap = new Map(
     (profiles ?? []).map((p) => {
       const plan = resolvedPlan(p);
-      return [p.id, { email: p.email, locale: (p.alert_locale as string | null) ?? "en", plan }];
+      return [p.id, { email: p.email, locale: (p.alert_locale as string | null) ?? "en", plan, blocked: !!p.email_blocked_at }];
     })
   );
 
@@ -142,6 +142,7 @@ async function runDiseaseAlerts(_req: NextRequest, supabase: SupabaseClient) {
   // 5. Send alerts
   let sent = 0;
   let skipped = 0;
+  let blockedSkipped = 0;
 
   for (const outbreak of outbreaks) {
     const interestedUsers = diseaseUsers.get(outbreak.disease_en ?? "") ?? [];
@@ -168,6 +169,11 @@ async function runDiseaseAlerts(_req: NextRequest, supabase: SupabaseClient) {
 
       // Only Pro+ users get disease alerts
       if (!["starter", "pro", "team", "enterprise"].includes(profile.plan)) { skipped++; continue; }
+
+      // Brevo-blocked address: the send would fail silently on Brevo's end,
+      // so skip before the log upsert below rather than record a false
+      // "sent" state. See lib/brevo-blocklist.ts.
+      if (profile.blocked) { blockedSkipped++; continue; }
 
       try {
         const locale = profile.locale;
@@ -233,6 +239,6 @@ async function runDiseaseAlerts(_req: NextRequest, supabase: SupabaseClient) {
   }
 
   await logCronRun(supabase, "disease-alerts", "ok", sent);
-  console.log(`[disease-alerts] Done — sent: ${sent}, skipped: ${skipped}`);
-  return NextResponse.json({ sent, skipped });
+  console.log(`[disease-alerts] Done — sent: ${sent}, skipped: ${skipped}, blockedSkipped: ${blockedSkipped}`);
+  return NextResponse.json({ sent, skipped, blockedSkipped });
 }

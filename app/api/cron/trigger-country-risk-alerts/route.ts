@@ -5,6 +5,7 @@ import * as Sentry from "@sentry/nextjs";
 import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
 import { notifyMobile } from "@/lib/mobile-notify";
 import { resolvedPlan } from "@/lib/resolved-plan";
+import { getBlockedEmailSet } from "@/lib/brevo-blocklist";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 300;
@@ -79,11 +80,17 @@ export async function GET(req: NextRequest) {
     (profileRows ?? []).filter((p) => resolvedPlan(p) === "free").map((p) => p.id)
   );
 
+  // alert.email is a stored address, not always joinable to a profiles row —
+  // matched against the full Brevo blocklist cache. See lib/brevo-blocklist.ts.
+  const blockedEmails = await getBlockedEmailSet(supabase);
+
   const cooldownCutoff = new Date(Date.now() - COOLDOWN_H * 3_600_000).toISOString();
   let fired = 0;
+  let blockedSkipped = 0;
 
   for (const alert of alerts) {
     if (alert.last_fired_at && alert.last_fired_at > cooldownCutoff) continue;
+    if (blockedEmails.has((alert.email ?? "").toLowerCase())) { blockedSkipped++; continue; }
 
     const { data: outbreaks } = await supabase
       .from("outbreaks")
@@ -178,5 +185,5 @@ export async function GET(req: NextRequest) {
   }
 
   await logCronRun(supabase, "trigger-country-risk-alerts", "ok", fired);
-  return Response.json({ fired });
+  return Response.json({ fired, blockedSkipped });
 }

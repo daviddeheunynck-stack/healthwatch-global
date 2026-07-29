@@ -82,6 +82,7 @@ export async function GET(req: NextRequest) {
       .in("plan", ["starter", "pro"])
       .not("trial_ends_at", "is", null)
       .is("stripe_subscription_id", null)
+      .is("email_blocked_at", null)
       .or(`and(trial_ends_at.gte.${j3Start},trial_ends_at.lt.${j3End}),and(trial_ends_at.gte.${j1Start},trial_ends_at.lt.${j1End})`),
     // Active HIGH/MEDIUM outbreaks fetched once for all users — filter per region below
     supabase

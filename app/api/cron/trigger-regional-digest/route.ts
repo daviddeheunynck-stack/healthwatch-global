@@ -107,10 +107,11 @@ export async function GET(req: NextRequest) {
   // Pro users with a specific region preference
   const { data: users } = await supabase
     .from("profiles")
-    .select("id, email, alert_locale, digest_region, display_filters")
+    .select("id, email, alert_locale, digest_region, display_filters, email_blocked_at")
     .in("plan", ["pro", "team", "enterprise"])
     .not("digest_region", "eq", "all")
-    .not("email", "is", null);
+    .not("email", "is", null)
+    .is("email_blocked_at", null);
 
   if (!users?.length) {
     await logCronRun(supabase, "trigger-regional-digest", "ok", 0);

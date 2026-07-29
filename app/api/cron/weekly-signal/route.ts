@@ -191,6 +191,7 @@ export async function GET(req: NextRequest) {
     .select("id, email, locale, display_filters")
     .eq("plan", "free")
     .not("email", "is", null)
+    .is("email_blocked_at", null)
     .lt("created_at", new Date(Date.now() - 86_400_000).toISOString());
 
   if (userErr || !users?.length) {

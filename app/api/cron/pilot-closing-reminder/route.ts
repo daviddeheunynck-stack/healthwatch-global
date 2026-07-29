@@ -131,6 +131,7 @@ async function runPilotClosingReminder(supabase: SupabaseClient) {
       .eq("is_pilot", true)
       .eq("plan", "pro")
       .is("stripe_subscription_id", null) // already converted → not a closing candidate
+      .is("email_blocked_at", null)
       .gte("trial_ends_at", windowStart)
       .lt("trial_ends_at", windowEnd);
 

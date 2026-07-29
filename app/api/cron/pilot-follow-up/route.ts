@@ -227,6 +227,7 @@ async function runPilotFollowUp(_req: NextRequest, supabase: SupabaseClient) {
       .select("id, email, locale, display_filters, trial_ends_at, stripe_subscription_id")
       .in("plan", ["pro", "starter", "team"])
       .not("email", "is", null)
+      .is("email_blocked_at", null)
       .gte("created_at", windowStart)
       .lt("created_at",  windowEnd);
 

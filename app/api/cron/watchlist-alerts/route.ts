@@ -77,7 +77,7 @@ export async function GET(req: NextRequest) {
       .in("outbreak_id", outbreakIds),
     supabase
       .from("profiles")
-      .select("id, email, alert_locale, plan, trial_ends_at, stripe_subscription_id")
+      .select("id, email, alert_locale, plan, trial_ends_at, stripe_subscription_id, email_blocked_at")
       .in("id", userIds),
   ]);
 
@@ -94,12 +94,14 @@ export async function GET(req: NextRequest) {
       plan: p.plan ?? "free",
       trial_ends_at: p.trial_ends_at as string | null,
       stripe_subscription_id: p.stripe_subscription_id as string | null,
+      blocked: !!p.email_blocked_at,
     }])
   );
 
   // 5. Process each watchlist entry
   let sent = 0;
   let unchanged = 0;
+  let blockedSkipped = 0;
 
   for (const entry of entries) {
     const outbreak = outbreakMap.get(entry.outbreak_id);
@@ -115,6 +117,10 @@ export async function GET(req: NextRequest) {
     // alert crons. resolvedPlan() covers every plan value uniformly.
     if (!["starter", "pro", "team", "enterprise"].includes(profile.plan)) { unchanged++; continue; }
     if (resolvedPlan(profile) === "free") { unchanged++; continue; }
+
+    // Brevo-blocked address: skip before the log upsert below rather than
+    // record a false "sent" state. See lib/brevo-blocklist.ts.
+    if (profile.blocked) { blockedSkipped++; continue; }
 
     const logKey = `${entry.user_id}:${entry.outbreak_id}`;
     const prevLog = logMap.get(logKey);
@@ -186,6 +192,6 @@ export async function GET(req: NextRequest) {
   }
 
   await logCronRun(supabase, "watchlist-alerts", "ok", sent);
-  console.log(`[watchlist-alerts] Done — sent: ${sent}, unchanged: ${unchanged}`);
-  return NextResponse.json({ sent, unchanged });
+  console.log(`[watchlist-alerts] Done — sent: ${sent}, unchanged: ${unchanged}, blockedSkipped: ${blockedSkipped}`);
+  return NextResponse.json({ sent, unchanged, blockedSkipped });
 }

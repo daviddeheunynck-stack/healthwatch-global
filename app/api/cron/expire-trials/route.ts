@@ -48,7 +48,7 @@ export async function GET(req: NextRequest) {
   // Find non-free users whose trial has expired and who have no Stripe subscription
   const { data: expired, error: fetchErr } = await supabase
     .from("profiles")
-    .select("id, email, plan, trial_ends_at, locale, display_filters")
+    .select("id, email, plan, trial_ends_at, locale, display_filters, email_blocked_at")
     .not("plan", "eq", "free")
     .not("trial_ends_at", "is", null)
     .lt("trial_ends_at", now)
@@ -100,6 +100,10 @@ export async function GET(req: NextRequest) {
   for (const user of expired) {
     const df = user.display_filters as Record<string, unknown> | null;
     if (df?.no_onboarding_emails) continue;
+    // Blocked address: the plan downgrade above still applies to everyone
+    // (billing/access state, unrelated to email deliverability) — only the
+    // send is skipped here. See lib/brevo-blocklist.ts.
+    if (user.email_blocked_at) continue;
     try {
       const { subject, html } = buildTrialExpiredEmail(user.locale ?? "en", user.id);
       if (isRealProduction) {

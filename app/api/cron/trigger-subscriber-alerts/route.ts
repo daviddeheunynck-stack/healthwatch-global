@@ -5,6 +5,7 @@ import * as Sentry from "@sentry/nextjs";
 import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
 import { notifyMobile } from "@/lib/mobile-notify";
 import { resolvedPlan } from "@/lib/resolved-plan";
+import { getBlockedEmailSet } from "@/lib/brevo-blocklist";
 
 export const dynamic = "force-dynamic";
 
@@ -111,13 +112,22 @@ export async function GET(req: NextRequest) {
     (profileRows ?? []).filter((p) => resolvedPlan(p) === "free").map((p) => p.id)
   );
 
+  // outbreak_subscribers.emails is a free-text list (not always a profiles
+  // row), so blocked addresses are matched against the full Brevo blocklist
+  // cache rather than a profiles column. See lib/brevo-blocklist.ts.
+  const blockedEmails = await getBlockedEmailSet(supabase);
+
   const COOLDOWN_H = 24;
   let sent = 0;
+  let blockedSkipped = 0;
 
   for (const sub of subscribers as Subscriber[]) {
     const o = oMap.get(sub.outbreak_id);
     if (!o || !sub.emails.length) continue;
     if (freeUserIds.has(sub.user_id)) continue;
+
+    const deliverableEmails = sub.emails.filter((e) => !blockedEmails.has(e.toLowerCase()));
+    if (deliverableEmails.length === 0) { blockedSkipped++; continue; }
 
     // Respect 24-hour cooldown
     if (sub.last_sent_at) {
@@ -164,7 +174,7 @@ export async function GET(req: NextRequest) {
         .update({ last_sent_at: new Date().toISOString() })
         .eq("id", sub.id);
 
-      if (isRealProduction) await sendEmail(sub.emails, subject, html);
+      if (isRealProduction) await sendEmail(deliverableEmails, subject, html);
       sent++;
 
       const inAppBody = `${disease} · ${country} · ${risk}`;
@@ -185,5 +195,5 @@ export async function GET(req: NextRequest) {
   }
 
   await logCronRun(supabase, "trigger-subscriber-alerts", "ok", sent);
-  return NextResponse.json({ ok: true, sent });
+  return NextResponse.json({ ok: true, sent, blockedSkipped });
 }

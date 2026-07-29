@@ -6,6 +6,7 @@ import * as Sentry from "@sentry/nextjs";
 import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
 import { notifyMobile } from "@/lib/mobile-notify";
 import { resolvedPlan } from "@/lib/resolved-plan";
+import { getBlockedEmailSet } from "@/lib/brevo-blocklist";
 
 export const dynamic = "force-dynamic";
 
@@ -149,7 +150,13 @@ export async function GET(req: NextRequest) {
     .eq("active", true);
 
   const active = (outbreaks ?? []) as Outbreak[];
+
+  // alert.email is a stored address, not always joinable to a profiles row —
+  // matched against the full Brevo blocklist cache. See lib/brevo-blocklist.ts.
+  const blockedEmails = await getBlockedEmailSet(supabase);
+
   let fired = 0;
+  let blockedSkipped = 0;
 
   for (const alert of alerts as CategoryAlert[]) {
     // Cooldown check
@@ -157,6 +164,7 @@ export async function GET(req: NextRequest) {
       const h = (Date.now() - new Date(alert.last_fired_at).getTime()) / 3600000;
       if (h < COOLDOWN_H) continue;
     }
+    if (blockedEmails.has((alert.email ?? "").toLowerCase())) { blockedSkipped++; continue; }
 
     // Find matching outbreaks
     const matches = active.filter((o) => {
@@ -233,5 +241,5 @@ export async function GET(req: NextRequest) {
   }
 
   await logCronRun(supabase, "trigger-category-alerts", "ok", fired);
-  return NextResponse.json({ ok: true, fired });
+  return NextResponse.json({ ok: true, fired, blockedSkipped });
 }

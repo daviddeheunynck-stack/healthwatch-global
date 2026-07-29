@@ -77,6 +77,7 @@ export async function GET(req: NextRequest) {
       .eq("plan", "pro")
       .not("trial_ends_at", "is", null)
       .is("stripe_subscription_id", null)
+      .is("email_blocked_at", null)
       .filter("created_at", "gte", new Date(Date.now() - 1.5 * 86400_000).toISOString())
       .filter("created_at", "lt",  new Date(Date.now() - 0.5 * 86400_000).toISOString()),
     // ── J+3 : Discover Pro features ─────────────────────────────────────────
@@ -86,6 +87,7 @@ export async function GET(req: NextRequest) {
       .eq("plan", "pro")
       .not("trial_ends_at", "is", null)
       .is("stripe_subscription_id", null)
+      .is("email_blocked_at", null)
       .filter("created_at", "gte", new Date(Date.now() - 3.5 * 86400_000).toISOString())
       .filter("created_at", "lt",  new Date(Date.now() - 2.5 * 86400_000).toISOString()),
     // ── J+7 : Mid-trial check-in — PDF report spotlight ─────────────────────
@@ -95,6 +97,7 @@ export async function GET(req: NextRequest) {
       .eq("plan", "pro")
       .not("trial_ends_at", "is", null)
       .is("stripe_subscription_id", null)
+      .is("email_blocked_at", null)
       .filter("created_at", "gte", new Date(Date.now() - 7.5 * 86400_000).toISOString())
       .filter("created_at", "lt",  new Date(Date.now() - 6.5 * 86400_000).toISOString()),
     // ── J+12 : 2 days left — subscribe now ──────────────────────────────────
@@ -105,6 +108,7 @@ export async function GET(req: NextRequest) {
       .not("trial_ends_at", "is", null)
       .lt("trial_ends_at", j12WindowEnd)
       .is("stripe_subscription_id", null)
+      .is("email_blocked_at", null)
       .filter("created_at", "gte", new Date(Date.now() - 12.5 * 86400_000).toISOString())
       .filter("created_at", "lt",  new Date(Date.now() - 11.5 * 86400_000).toISOString()),
     // ── J+32 : Pilot conversion — 3 days left → upgrade to Team ─────────────
@@ -116,6 +120,7 @@ export async function GET(req: NextRequest) {
       .lt("trial_ends_at", j32WindowEnd)
       .gt("trial_ends_at", new Date().toISOString())
       .is("stripe_subscription_id", null)
+      .is("email_blocked_at", null)
       .filter("created_at", "gte", new Date(Date.now() - 32.5 * 86400_000).toISOString())
       .filter("created_at", "lt",  new Date(Date.now() - 31.5 * 86400_000).toISOString()),
   ]);

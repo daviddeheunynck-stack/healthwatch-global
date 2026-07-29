@@ -4,6 +4,7 @@ import { buildDigestEmail } from "@/lib/digest-email";
 import type { Outbreak } from "@/lib/outbreaks";
 import * as Sentry from "@sentry/nextjs";
 import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
+import { getBlockedEmailSet } from "@/lib/brevo-blocklist";
 
 export const dynamic = "force-dynamic";
 
@@ -103,12 +104,18 @@ export async function GET(req: NextRequest) {
   const allOutbreaks: Outbreak[] = outbreaks ?? [];
   console.log(`[weekly-digest] ${allOutbreaks.length} high-risk active outbreaks`);
 
+  // subscriptions.email is a free-text newsletter address, not a profiles row —
+  // matched against the full Brevo blocklist cache. See lib/brevo-blocklist.ts.
+  const blockedEmails = await getBlockedEmailSet(supabase);
+
   // ── Send loop ──────────────────────────────────────────────────────────────
   let sent        = 0;
   let failed      = 0;
   let skippedNoKey = 0;
+  let blockedSkipped = 0;
 
   for (const sub of subscribers) {
+    if (blockedEmails.has((sub.email ?? "").toLowerCase())) { blockedSkipped++; continue; }
     try {
       const locale = sub.locale || "en";
       const region = sub.region || "allRegions";
@@ -139,6 +146,6 @@ export async function GET(req: NextRequest) {
   }
 
   await logCronRun(supabase, "weekly-digest", skippedNoKey > 0 ? "error" : "ok", sent);
-  console.log(`[weekly-digest] Done — ${sent} sent, ${failed} failed, ${skippedNoKey} skipped (no key), ${subscribers.length} total.`);
-  return NextResponse.json({ sent, failed, skippedNoKey, total: subscribers.length });
+  console.log(`[weekly-digest] Done — ${sent} sent, ${failed} failed, ${skippedNoKey} skipped (no key), ${blockedSkipped} blocked, ${subscribers.length} total.`);
+  return NextResponse.json({ sent, failed, skippedNoKey, blockedSkipped, total: subscribers.length });
 }

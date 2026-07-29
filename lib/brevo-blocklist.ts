@@ -14,6 +14,8 @@ interface BrevoBlockedContact {
 const BOM = String.fromCharCode(65279);
 const clean = (v: string | undefined) => (v || "").replace(new RegExp("^" + BOM), "").trim();
 
+const BLOCKED_EMAILS_CACHE_KEY = "brevo:blocked_emails";
+
 async function fetchAllBlockedContacts(apiKey: string): Promise<BrevoBlockedContact[]> {
   const all: BrevoBlockedContact[] = [];
   const limit = 50;
@@ -57,6 +59,19 @@ export async function syncBrevoBlocklist(
     blocked.map((c) => [c.email.toLowerCase(), c])
   );
 
+  // Cache the full blocked-email list independent of profiles — some crons
+  // (e.g. trigger-subscriber-alerts) send to free-text addresses that were
+  // never a profiles row, so a profiles-derived set would miss them.
+  await supabase
+    .from("site_config")
+    .upsert(
+      { key: BLOCKED_EMAILS_CACHE_KEY, value: JSON.stringify([...blockedByEmail.keys()]) },
+      { onConflict: "key" }
+    )
+    .then(({ error: cacheErr }) => {
+      if (cacheErr) console.error("[brevo-blocklist] failed to cache blocked emails:", cacheErr.message);
+    });
+
   const { data: profiles, error } = await supabase
     .from("profiles")
     .select("id, email, email_blocked_at");
@@ -97,4 +112,32 @@ export async function syncBrevoBlocklist(
   }
 
   return { blockedTotal: blocked.length, newlyBlocked, unblocked };
+}
+
+/**
+ * Lowercased set of every email Brevo currently has blocked, as of the last
+ * sync-brevo-blocklist run. Backed by the site_config cache written in
+ * syncBrevoBlocklist (not derived from profiles), so it also covers
+ * recipients that were never a profiles row — e.g. the free-text addresses
+ * in outbreak_subscribers.emails. Returns an empty set (never throws) if the
+ * cache is missing or malformed — a sending cron should degrade to "treat
+ * nobody as blocked" rather than fail outright over this side channel.
+ */
+export async function getBlockedEmailSet(supabase: SupabaseClient): Promise<Set<string>> {
+  const { data, error } = await supabase
+    .from("site_config")
+    .select("value")
+    .eq("key", BLOCKED_EMAILS_CACHE_KEY)
+    .maybeSingle();
+  if (error || !data?.value) {
+    if (error) console.error("[brevo-blocklist] blocked emails cache read failed:", error.message);
+    return new Set();
+  }
+  try {
+    const emails = JSON.parse(data.value) as string[];
+    return new Set(emails);
+  } catch {
+    console.error("[brevo-blocklist] blocked emails cache is malformed JSON");
+    return new Set();
+  }
 }
