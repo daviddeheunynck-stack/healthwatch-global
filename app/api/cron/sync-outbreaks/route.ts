@@ -473,7 +473,19 @@ export async function GET(req: NextRequest) {
   if (hb) fetch(hb).catch(() => {});
 
   console.log("[sync] Done:", results, "source:", usedSource);
-  await logCronRun(supabase, "sync-outbreaks", "ok", outbreaks.length);
+  // Status was hardcoded "ok" even when inserts/updates had failed: errorLog is
+  // only returned on ?debug and results.errors went nowhere, so a WHO DON row
+  // that failed to insert was simply lost while health-check stayed green — the
+  // worst possible shape for a surveillance product. Report the failures the
+  // loop already counted (same conditional-status pattern as
+  // pilot-closing-reminder), so an ingestion problem surfaces the next morning.
+  await logCronRun(
+    supabase,
+    "sync-outbreaks",
+    results.errors > 0 ? "error" : "ok",
+    outbreaks.length,
+    results.errors > 0 ? `${results.errors} écriture(s) en échec : ${errorLog.slice(0, 5).join(" | ")}` : undefined,
+  );
   return NextResponse.json({
     success: true,
     timestamp: new Date().toISOString(),

@@ -140,12 +140,20 @@ async function runPushAlerts(_req: NextRequest, supabase: SupabaseClient) {
   }
 
   // 4. Mark as notified — idempotent even if the cron fires twice.
+  // A failure here is not cosmetic: step 1 selects on `push_notified_at IS NULL`,
+  // so if the mark does not land, the next run re-sends the exact same
+  // notifications to real devices. It used to be console.error only, with the
+  // run still logging "ok" — duplicate pushes with nothing to explain them.
+  let markError: string | null = null;
   if (notifiedIds.length > 0) {
     const { error: markErr } = await supabase
       .from("outbreaks")
       .update({ push_notified_at: new Date().toISOString() })
       .in("id", notifiedIds);
-    if (markErr) console.error("[push-alerts] mark notified:", markErr.message);
+    if (markErr) {
+      markError = markErr.message;
+      console.error("[push-alerts] mark notified:", markErr.message);
+    }
   }
 
   // 5. Sweep dead endpoints so they don't inflate subscriber counts.
@@ -154,7 +162,13 @@ async function runPushAlerts(_req: NextRequest, supabase: SupabaseClient) {
     console.log(`[push-alerts] Swept ${allExpiredIds.length} expired subscription(s)`);
   }
 
-  await logCronRun(supabase, "push-alerts", "ok", totalSent);
+  await logCronRun(
+    supabase,
+    "push-alerts",
+    markError ? "error" : "ok",
+    totalSent,
+    markError ? `marquage push_notified_at en échec sur ${notifiedIds.length} foyer(s) — risque de notifications en double au prochain passage : ${markError}` : undefined,
+  );
   console.log(`[push-alerts] Done — outbreaks: ${notifiedIds.length}, sent: ${totalSent}, expired: ${allExpiredIds.length}`);
   return NextResponse.json({ outbreaks: notifiedIds.length, sent: totalSent, expired: allExpiredIds.length });
 }

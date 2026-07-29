@@ -202,6 +202,17 @@ async function runHealthCheck(_req: NextRequest, supabase: any) {
   const hasOverdue    = overdue.length > 0;
   const hasUnmonitored = unmonitored.length > 0;
 
+  // `ok` above is purely age-based, and run.status was carried into the table
+  // row but never alerted on — so a cron that runs perfectly on schedule and
+  // fails every single time showed up green. logCronRun has always recorded the
+  // failure; nothing read it. "no_data" is a legitimate idle state (nothing to
+  // send/ingest this run) and stays quiet; only "error" is surfaced.
+  const erroring = Object.entries(cronMap)
+    .filter(([name, run]) => name in CRON_WINDOWS && run.status === "error")
+    .map(([name, run]) => ({ name, error: run.error ?? "(sans message)" }))
+    .sort((a, b) => a.name.localeCompare(b.name));
+  const hasErroring = erroring.length > 0;
+
   // ── Delivery visibility: "nobody to send to" vs. "somebody's there and
   // nothing went out" ─────────────────────────────────────────────────────
   // A delivery cron logging "ok, rows=0" is indistinguishable from a stalled
@@ -239,7 +250,7 @@ async function runHealthCheck(_req: NextRequest, supabase: any) {
   }
   const deliveryAlert = deliveryIssues.length > 0;
 
-  const emoji = hasOverdue || hasUnmonitored || audienceErrors.length > 0 || sentryAlert || deliveryAlert || (pheic ?? 0) > 0 ? "⚠️" : "✅";
+  const emoji = hasOverdue || hasUnmonitored || hasErroring || audienceErrors.length > 0 || sentryAlert || deliveryAlert || (pheic ?? 0) > 0 ? "⚠️" : "✅";
 
   const cronTableRows = cronStatuses
     .map(({ name, label, windowH, ok }) => {
@@ -280,6 +291,7 @@ async function runHealthCheck(_req: NextRequest, supabase: any) {
     ${hasOverdue ? `<tr><td colspan="2" style="padding:8px 0;color:#f87171;font-weight:700">⚠️ ${overdue.length} cron(s) en retard : ${overdue.join(", ")}</td></tr>` : ""}
     ${hasUnmonitored ? `<tr><td colspan="2" style="padding:8px 0;color:#fbbf24;font-weight:700">⚠️ ${unmonitored.length} cron(s) NON surveillé(s) — écrivent un statut mais absents de CRON_WINDOWS, donc jamais vérifiés : ${esc(unmonitored.join(", "))}</td></tr>` : ""}
     ${audienceErrors.length > 0 ? `<tr><td colspan="2" style="padding:8px 0;color:#fbbf24;font-weight:700">⚠️ Contrôle de livraison partiellement aveugle — comptage d'abonnés en échec : ${esc(audienceErrors.join(", "))}</td></tr>` : ""}
+    ${hasErroring ? `<tr><td colspan="2" style="padding:8px 0;color:#f87171;font-weight:700">⚠️ ${erroring.length} cron(s) à l'heure mais EN ERREUR au dernier passage : ${erroring.map((e) => `${esc(e.name)} (${esc(e.error.slice(0, 120))})`).join(" · ")}</td></tr>` : ""}
     ${sentryBroken
       ? `<tr><td colspan="2" style="padding:8px 0;color:#fbbf24;font-weight:700">🔧 Sentry non vérifiable : ${esc(sentryCheck.error ?? "")}</td></tr>`
       : sentryIssues.length > 0
@@ -377,8 +389,9 @@ async function runHealthCheck(_req: NextRequest, supabase: any) {
   }
 
   return Response.json({
-    ok: !hasOverdue && !hasUnmonitored && !sentryAlert && !deliveryAlert,
+    ok: !hasOverdue && !hasUnmonitored && !hasErroring && !sentryAlert && !deliveryAlert,
     unmonitored,
+    erroring,
     total, high, pheic, overdue, cronStatuses, isRealProduction,
     sentry: { ok: sentryCheck.ok, issueCount: sentryIssues.length, error: sentryCheck.error },
     delivery: deliveryIssues,
