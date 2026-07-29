@@ -38,7 +38,9 @@ const SUSPICIOUS_DATE_EXCLUDE_IDS = new Set([
 //     Haïti reste active, sourcée PAHO, mise à jour par sync-paho-alerts —
 //     ce n'est plus un seed. Voir project_diphtheria_haiti_source_priority_collision.
 const KNOWN_SEED_CLUSTERS = [
-  { label: "Chikungunya (DON581, multi-pays)", diseaseMatch: /chikungunya/i, expectedCount: 7 },
+  // 2026-07-28 : Réunion désactivée (épidémie 2025 déclarée terminée le 24/06/2025, SpF ne
+  // compte que 48 cas cumulés 2026) — cluster 7 -> 6. Cf. audit fraîcheur du 28/07.
+  { label: "Chikungunya (DON581, multi-pays)", diseaseMatch: /chikungunya/i, expectedCount: 6 },
   { label: "MERS-CoV (DON591)", diseaseMatch: /mers-cov/i, expectedCount: 1 },
   { label: "Choléra (DON579, multi-pays)", diseaseMatch: /cholera/i, expectedCount: 4 },
   { label: "Polio PHEIC (Afghanistan/Pakistan/Palestine)", diseaseMatch: /polio/i, expectedCount: 3 },
