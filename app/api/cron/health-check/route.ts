@@ -52,9 +52,22 @@ const DELIVERY_AUDIENCE: Record<string, string> = {
 // (some within the last hour) — the cron was never broken, it just hadn't
 // had a rows>0 run yet since the field was introduced, so it read as "never"
 // on day one. See project_health_check_delivery_false_positive_2026_07_27.
+//
+// Each entry MUST point at a log that only this cron's own delivery path
+// writes — otherwise a healthy sibling cron's rows answer for a dead one and
+// the check silently reports it as fine forever. Found 2026-07-29 security
+// audit: `disease-alerts` was pointed at `outbreak_alert_log`, which it never
+// writes (it logs to `disease_alert_log`, see its route line ~189). Because a
+// broken delivery cron never gets a rows>0 run, its `lastNonZero` would stay
+// unset permanently, so this fallback — not the site_config field — would be
+// the only thing answering for it, and it was reading regional-alerts' fresh
+// sends. A total disease-alerts outage would have reported "✅" indefinitely.
 const REAL_EVIDENCE: Record<string, { table: string; column: string }> = {
+  // outbreak_alert_log is also seeded by app/api/activate-trial (~line 187),
+  // but that path writes those rows precisely because it just sent the user
+  // the same regional digest email, so they are genuine deliveries here.
   "regional-alerts": { table: "outbreak_alert_log", column: "sent_at" },
-  "disease-alerts":  { table: "outbreak_alert_log", column: "sent_at" },
+  "disease-alerts":  { table: "disease_alert_log",  column: "sent_at" },
   "push-alerts":     { table: "outbreaks", column: "push_notified_at" },
 };
 
