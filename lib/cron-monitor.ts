@@ -96,6 +96,7 @@ export const CRON_WINDOWS: Record<string, number> = {
   "sync-endemic-data": 26,   // daily
   "sync-usda-aphis":   26,   // daily
   // ── Alert delivery crons ─────────────────────────────────────────────────────
+  "sync-brevo-blocklist": 26, // daily 06:00 — feeds profiles.email_blocked_at before the 06:xx sends below
   "regional-alerts":   26,   // daily 06:30
   "watchlist-alerts":  26,   // daily 06:40
   "push-alerts":       26,   // daily 06:45

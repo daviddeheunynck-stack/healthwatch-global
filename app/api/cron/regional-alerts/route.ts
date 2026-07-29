@@ -16,6 +16,13 @@
  * etc.) never re-notified anyone past the first email — the exact gap that
  * left two provisioned trial users with nothing but a day-one PHEIC backfill
  * for their whole 35-day trial.
+ *
+ * Since 2026-07-29: skips (and does not log) any profile with
+ * email_blocked_at set — Brevo blocks a contact silently (hard bounce, or
+ * its own List-Unsubscribe) and the send just fails, but outbreak_alert_log
+ * was still being upserted first, so two blocked trial users had 100+ rows
+ * claiming delivery that never happened. See lib/brevo-blocklist.ts and the
+ * sync-brevo-blocklist cron, which populates the flag 30min before this runs.
  */
 
 import { NextRequest, NextResponse } from "next/server";
@@ -156,6 +163,7 @@ async function runRegionalAlerts(_req: NextRequest, supabase: SupabaseClient) {
   let sent = 0;
   let skipped = 0;
   let failed = 0;
+  let blockedSkipped = 0;
   let trialNudgesSent = 0;
   const sentByReason: Record<AlertReason, number> = { new: 0, escalated: 0, surge: 0 };
 
@@ -177,13 +185,20 @@ async function runRegionalAlerts(_req: NextRequest, supabase: SupabaseClient) {
     // Get their email, locale, and Slack webhook (from profiles)
     const { data: rawProfiles } = await supabase
       .from("profiles")
-      .select("id, email, plan, trial_ends_at, stripe_subscription_id, alert_locale, slack_webhook_url, is_pilot, pilot_organization, trial_value_email_sent_at")
+      .select("id, email, plan, trial_ends_at, stripe_subscription_id, alert_locale, slack_webhook_url, is_pilot, pilot_organization, trial_value_email_sent_at, email_blocked_at")
       .in("id", userIds)
       .in("plan", ["starter", "pro", "team", "enterprise"]);
 
     // Apply trial expiry guard: skip users whose trial has ended and have no active Stripe sub
     const now = Date.now();
-    const profiles = (rawProfiles ?? []).filter((p) => resolvedPlan(p) !== "free");
+    const nonFreeProfiles = (rawProfiles ?? []).filter((p) => resolvedPlan(p) !== "free");
+
+    // Brevo-blocked addresses (hard bounce, or their own List-Unsubscribe) —
+    // sending to them fails silently on Brevo's end, so skip entirely rather
+    // than upsert outbreak_alert_log as if the alert had gone out. Populated
+    // by the sync-brevo-blocklist cron. See lib/brevo-blocklist.ts.
+    const profiles = nonFreeProfiles.filter((p) => !p.email_blocked_at);
+    blockedSkipped += nonFreeProfiles.length - profiles.length;
 
     if (profiles.length === 0) continue;
 
@@ -385,6 +400,7 @@ async function runRegionalAlerts(_req: NextRequest, supabase: SupabaseClient) {
     sentByReason,
     trialNudgesSent,
     skipped,
+    blockedSkipped,
     failed,
   });
 }
