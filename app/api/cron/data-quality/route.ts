@@ -184,7 +184,7 @@ async function runDataQuality(_req: NextRequest, supabase: SupabaseClient) {
   // ── 1. Load active rows ───────────────────────────────────────────────────
   const { data: rows, error: rowsErr } = await supabase
     .from("outbreaks")
-    .select("id, disease, disease_en, country, country_en, cases, deaths, date, source, is_seed, is_pheic, source_priority, description, admin1")
+    .select("id, disease, disease_en, country, country_en, cases, deaths, date, source, is_seed, is_pheic, source_priority, description, admin1, is_backfill")
     .eq("active", true);
 
   if (rowsErr) return NextResponse.json({ error: rowsErr.message }, { status: 500 });
@@ -340,7 +340,17 @@ async function runDataQuality(_req: NextRequest, supabase: SupabaseClient) {
     if (row.is_seed || !row.date || anomalies.some((a) => a.row.id === row.id)) continue;
     const daysSince = Math.round((Date.now() - new Date(row.date).getTime()) / 86_400_000);
     if (DASHBOARD_SOURCES.some((d) => (row.source ?? "").includes(d))) {
-      if (row.date <= dashboardStaleThreshold) {
+      // `is_backfill` rows are exempt from the ceiling: their source is itself a
+      // historical/cumulative archive, so an old `date` is the reported fact, not
+      // drift. On the USDA APHIS crosstab the date is "last confirmed detection
+      // in that state" — Oregon's 2024-10-30 is simply when Oregon last had one,
+      // and no fresher figure exists to find. Without this, the ceiling asked an
+      // unanswerable question about the same 10 per-state rows every single day
+      // (measured 2026-07-29: 10 of the 11 rows it flagged), drowning the one it
+      // was actually built for. Verified the split is clean: all 10 USDA rows are
+      // is_backfill=true, while Dengue/Cuba — and Dengue/Haiti, the 1,493-day row
+      // that motivated this check — are is_backfill=false and still caught.
+      if (row.date <= dashboardStaleThreshold && !row.is_backfill) {
         needsReview.push({
           label: `${row.disease} / ${row.country}`,
           detail: `Source dashboard/tracker sans donnée plus récente depuis ${daysSince}j (${row.date}, seuil ${STALE_DAYS_DASHBOARD}j) — vérifier si une source plus fraîche existe ou si la ligne doit être désactivée : ${row.source ?? "N/A"}`,
