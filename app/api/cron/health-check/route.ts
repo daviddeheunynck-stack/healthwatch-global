@@ -139,8 +139,19 @@ async function runHealthCheck(_req: NextRequest, supabase: any) {
       )),
     ]);
 
+  // `?? 0` on a FAILED count would read as "this channel has no subscribers",
+  // and the delivery loop below skips an audience of 0 — so a transient error
+  // on one of these tables silently disables that channel's delivery check for
+  // the day instead of reporting anything. Same shape as the snapshot
+  // dependency in data-quality: keep the errors and say so rather than
+  // degrading quietly into a green report.
   const audienceMap: Record<string, number> = {};
-  AUDIENCE_TABLES.forEach((table, i) => { audienceMap[table] = audienceCounts[i]?.count ?? 0; });
+  const audienceErrors: string[] = [];
+  AUDIENCE_TABLES.forEach((table, i) => {
+    const res = audienceCounts[i];
+    if (res?.error) audienceErrors.push(`${table} (${res.error.message})`);
+    audienceMap[table] = res?.count ?? 0;
+  });
 
   // David decided 2026-07-17 not to top up the Anthropic billing that backs
   // extractAdmin1LLM — it degrades gracefully to the regex fallback (see
@@ -228,7 +239,7 @@ async function runHealthCheck(_req: NextRequest, supabase: any) {
   }
   const deliveryAlert = deliveryIssues.length > 0;
 
-  const emoji = hasOverdue || hasUnmonitored || sentryAlert || deliveryAlert || (pheic ?? 0) > 0 ? "⚠️" : "✅";
+  const emoji = hasOverdue || hasUnmonitored || audienceErrors.length > 0 || sentryAlert || deliveryAlert || (pheic ?? 0) > 0 ? "⚠️" : "✅";
 
   const cronTableRows = cronStatuses
     .map(({ name, label, windowH, ok }) => {
@@ -268,6 +279,7 @@ async function runHealthCheck(_req: NextRequest, supabase: any) {
     <tr><td style="padding:6px 0;color:#94a3b8">PHEIC actifs</td><td style="padding:6px 0;font-weight:600;color:#c084fc">${pheic ?? "?"}${(pheic ?? 0) > 0 ? " ⚠️" : ""}</td></tr>
     ${hasOverdue ? `<tr><td colspan="2" style="padding:8px 0;color:#f87171;font-weight:700">⚠️ ${overdue.length} cron(s) en retard : ${overdue.join(", ")}</td></tr>` : ""}
     ${hasUnmonitored ? `<tr><td colspan="2" style="padding:8px 0;color:#fbbf24;font-weight:700">⚠️ ${unmonitored.length} cron(s) NON surveillé(s) — écrivent un statut mais absents de CRON_WINDOWS, donc jamais vérifiés : ${esc(unmonitored.join(", "))}</td></tr>` : ""}
+    ${audienceErrors.length > 0 ? `<tr><td colspan="2" style="padding:8px 0;color:#fbbf24;font-weight:700">⚠️ Contrôle de livraison partiellement aveugle — comptage d'abonnés en échec : ${esc(audienceErrors.join(", "))}</td></tr>` : ""}
     ${sentryBroken
       ? `<tr><td colspan="2" style="padding:8px 0;color:#fbbf24;font-weight:700">🔧 Sentry non vérifiable : ${esc(sentryCheck.error ?? "")}</td></tr>`
       : sentryIssues.length > 0
