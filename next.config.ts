@@ -175,8 +175,15 @@ export default sentryConfigured
       // Delete .js.map files after uploading to Sentry so they are never
       // served to browsers (prevents source code exposure).
       sourcemaps: { disable: false, deleteSourcemapsAfterUpload: true },
-      // Proxy Sentry events through /api/monitoring to bypass adblockers
-      tunnelRoute:   "/monitoring",
+      // Proxy Sentry events through /api/monitoring to bypass adblockers.
+      // Must live under /api — proxy.ts's next-intl middleware matcher excludes
+      // "api" but has no exception for a bare "/monitoring", so a tunnel route
+      // outside /api gets intercepted by locale negotiation: an unprefixed POST
+      // to /monitoring is 307-redirected to /<locale>/monitoring (which doesn't
+      // exist as a page) instead of being rewritten straight to Sentry's ingest
+      // endpoint. Confirmed in prod logs 2026-07-29: POST /monitoring -> 307 ->
+      // POST /{en,fr,es,ar,id}/monitoring -> 404, on every locale.
+      tunnelRoute:   "/api/monitoring",
       telemetry:     false,
     })
   : withNextIntl(nextConfig);
