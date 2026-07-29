@@ -1,16 +1,27 @@
-// Hourly check for two classes of data gaps in the disease reference layer,
+// Hourly check for three classes of data gaps in the disease reference layer,
 // triggered 30 minutes after every ingestion cycle (sync-outbreaks runs at :00,
 // sync-africa-cdc / sync-ecdc-threats / sync-paho-alerts run at various times).
 //
-//   1. Unknown diseases — disease_en values inserted in the last 90 minutes that
-//      do not match any pattern in DISEASE_MAP.  New/renamed pathogens that need
-//      a DISEASE_MAP entry (transmission, travelerRisk, factsheet…).
+//   1. Unknown diseases (fresh) — disease_en values inserted in the last 90
+//      minutes that do not match any pattern in DISEASE_MAP.  New/renamed
+//      pathogens that need a DISEASE_MAP entry (transmission, travelerRisk,
+//      factsheet…).
 //
 //   2. travelerRisk gaps — newly inserted active outbreaks where the matched
 //      disease has no travelerRisk entry for the outbreak's region.
 //
-// Both classes fire a Sentry warning immediately + a batched admin email when
-// issues are found.
+//   3. Unknown diseases (stock sweep) — same check as (1), but run against
+//      every currently ACTIVE row regardless of insertion time. (1) alone has
+//      a blind spot: a row that slips through unmatched at insertion stays
+//      invisible forever once it's outside the 90-minute window (e.g. backfills,
+//      manual script inserts, or a match that later regresses). Rows already
+//      covered by EVENT_NAME_TRANSLATIONS (known non-disease events — food
+//      safety recalls, toxin contaminations — deliberately kept out of
+//      DISEASE_MAP, see that const's comment) are excluded: those are a
+//      documented decision, not a gap.
+//
+// All three classes fire a Sentry warning immediately + a batched admin email
+// when issues are found.
 //
 // Schedule: 30 * * * *  (every hour at :30)
 
@@ -18,7 +29,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import * as Sentry from "@sentry/nextjs";
 import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
-import { matchDisease } from "@/lib/disease-data";
+import { matchDisease, matchEventNameTranslation } from "@/lib/disease-data";
 import type { AppRegion } from "@/lib/disease-data";
 import { errorMessage } from "@/lib/error";
 
@@ -100,7 +111,8 @@ async function runDiseaseCoverage(_req: NextRequest, supabase: SupabaseClient) {
   }
 
   // ── 2. Deduplicate and classify ───────────────────────────────────────────
-  // unknown: disease_en not matched in DISEASE_MAP
+  // unknown: disease_en not matched in DISEASE_MAP (and not a known non-disease
+  // event covered by EVENT_NAME_TRANSLATIONS)
   const unknownSeen   = new Set<string>();
   const unknownList: string[] = [];
 
@@ -110,24 +122,27 @@ async function runDiseaseCoverage(_req: NextRequest, supabase: SupabaseClient) {
   const gapSeen = new Set<string>();
   const gapList: Gap[] = [];
 
+  function checkUnknown(rawName: string) {
+    if (unknownSeen.has(rawName)) return;
+    unknownSeen.add(rawName);
+    unknownList.push(rawName);
+    if (isRealProduction) {
+      Sentry.captureMessage(`[disease-coverage] Unknown disease: "${rawName}"`, {
+        level: "warning",
+        tags: { component: "disease-coverage", type: "unknown_disease" },
+        extra: { rawName },
+      });
+    }
+  }
+
   for (const row of (rows ?? [])) {
     const rawName = (row.disease_en || row.disease || "").trim();
     if (!rawName) continue;
 
     const { info, matched } = matchDisease(rawName);
 
-    // 2a. Unknown disease
-    if (!matched && !unknownSeen.has(rawName)) {
-      unknownSeen.add(rawName);
-      unknownList.push(rawName);
-      if (isRealProduction) {
-        Sentry.captureMessage(`[disease-coverage] Unknown disease: "${rawName}"`, {
-          level: "warning",
-          tags: { component: "disease-coverage", type: "unknown_disease" },
-          extra: { rawName },
-        });
-      }
-    }
+    // 2a. Unknown disease (fresh — inserted in the last 90 minutes)
+    if (!matched && !matchEventNameTranslation(rawName)) checkUnknown(rawName);
 
     // 2b. travelerRisk gap (active outbreaks only)
     if (matched && row.active) {
@@ -149,6 +164,25 @@ async function runDiseaseCoverage(_req: NextRequest, supabase: SupabaseClient) {
           }
         }
       }
+    }
+  }
+
+  // ── 2c. Unknown disease (stock sweep) ─────────────────────────────────────
+  // Every currently active row, no time window — catches anything that slipped
+  // through (1) outside its 90-minute lookback (see header comment).
+  const { data: activeRows, error: activeError } = await supabase
+    .from("outbreaks")
+    .select("disease_en, disease")
+    .eq("active", true);
+
+  if (activeError) {
+    console.error("[disease-coverage] active-stock query error:", activeError.message);
+  } else {
+    for (const row of activeRows ?? []) {
+      const rawName = (row.disease_en || row.disease || "").trim();
+      if (!rawName) continue;
+      const { matched } = matchDisease(rawName);
+      if (!matched && !matchEventNameTranslation(rawName)) checkUnknown(rawName);
     }
   }
 

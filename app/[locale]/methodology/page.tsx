@@ -47,6 +47,10 @@ const COPY: Record<Locale, {
   updatedLabel: string;
   sourcesTitle: string;
   sources: { name: string; type: string; coverage: string; freq: string; url: string }[];
+  sourcesFootnote: string;
+  regionalTitle: string;
+  regionalIntro: string;
+  regionalCoverage: { region: string; regionalFeed: string; note: string }[];
   pipelineTitle: string;
   pipelineSteps: { title: string; desc: string }[];
   qualityTitle: string;
@@ -83,6 +87,16 @@ const COPY: Record<Locale, {
       { name: "ECDC CDTR", type: "Communicable Disease Threats Report", coverage: "Europe / global risk assessment", freq: "Weekly + ad hoc", url: "https://www.ecdc.europa.eu/en/threats-and-outbreaks" },
       { name: "PAHO", type: "Pan American Health Organization alerts", coverage: "Americas", freq: "Per event", url: "https://www.paho.org/en/epidemiological-alerts-and-updates" },
       { name: "Africa CDC", type: "Africa Centres for Disease Control", coverage: "Africa", freq: "Per event + weekly sitrep", url: "https://africacdc.org/outbreaks-events" },
+    ],
+    sourcesFootnote: "Beyond these four, national and multilateral sources (e.g. USDA APHIS, France's Santé publique, Nigeria CDC, WHO AFRO/EMRO regional bulletins) fill specific country or disease gaps. Coverage completeness varies significantly by region — see below.",
+    regionalTitle: "Regional coverage",
+    regionalIntro: "Not every region is covered equally. The table below states plainly which regions have a dedicated regional feed today, and which rely solely on WHO's global bulletin — an absence of active outbreaks in a region can mean \"nothing is happening\" or \"no source is watching it\".",
+    regionalCoverage: [
+      { region: "Africa", regionalFeed: "Africa CDC (per event + weekly sitrep) + WHO AFRO bulletins", note: "Broadest regional coverage — a dedicated feed plus WHO's own regional office." },
+      { region: "Americas", regionalFeed: "PAHO (per event)", note: "Dedicated regional feed." },
+      { region: "Europe", regionalFeed: "ECDC (weekly CDTR + weekly West Nile virus bulletin)", note: "Dedicated regional feed." },
+      { region: "Asia", regionalFeed: "None — WHO DON only", note: "No dedicated regional bulletin integrated yet (WHO SEARO / WPRO). Coverage today leans on WHO's global dengue reporting tool plus a small number of national sources; outbreaks below WHO DON's global reporting threshold may be under-covered." },
+      { region: "Oceania", regionalFeed: "None — WHO DON only", note: "Same gap as Asia. Coverage today is limited to a small number of national government sources, added case by case." },
     ],
     pipelineTitle: "Data pipeline",
     pipelineSteps: [
@@ -165,6 +179,16 @@ const COPY: Record<Locale, {
       { name: "OPAS/PAHO", type: "Organisation panaméricaine de la santé", coverage: "Amériques", freq: "Par événement", url: "https://www.paho.org/en/epidemiological-alerts-and-updates" },
       { name: "Africa CDC", type: "Centres africains de contrôle des maladies", coverage: "Afrique", freq: "Par événement + sitrep hebdomadaire", url: "https://africacdc.org/outbreaks-events" },
     ],
+    sourcesFootnote: "Au-delà de ces quatre sources, des sources nationales et multilatérales (ex. USDA APHIS, Santé publique France, NCDC Nigeria, bulletins régionaux OMS AFRO/EMRO) comblent des lacunes ponctuelles par pays ou par maladie. La complétude de la couverture varie fortement selon la région — voir ci-dessous.",
+    regionalTitle: "Couverture régionale",
+    regionalIntro: "Toutes les régions ne sont pas couvertes de façon égale. Le tableau ci-dessous indique franchement quelles régions disposent aujourd'hui d'un flux régional dédié, et lesquelles reposent uniquement sur le bulletin mondial de l'OMS — l'absence de foyer actif dans une région peut signifier « rien ne se passe » ou « aucune source ne la surveille ».",
+    regionalCoverage: [
+      { region: "Afrique", regionalFeed: "Africa CDC (par événement + sitrep hebdomadaire) + bulletins OMS AFRO", note: "Couverture régionale la plus large — flux dédié et bureau régional de l'OMS." },
+      { region: "Amériques", regionalFeed: "OPAS/PAHO (par événement)", note: "Flux régional dédié." },
+      { region: "Europe", regionalFeed: "ECDC (CDTR hebdomadaire + bulletin hebdomadaire fièvre du Nil occidental)", note: "Flux régional dédié." },
+      { region: "Asie", regionalFeed: "Aucun — OMS DON uniquement", note: "Aucun bulletin régional dédié intégré à ce jour (OMS SEARO / WPRO). La couverture actuelle s'appuie sur l'outil mondial de suivi de la dengue de l'OMS et un nombre limité de sources nationales ; les foyers sous le seuil mondial du DON peuvent être sous-couverts." },
+      { region: "Océanie", regionalFeed: "Aucun — OMS DON uniquement", note: "Même lacune que l'Asie. La couverture actuelle se limite à un nombre restreint de sources gouvernementales nationales, ajoutées au cas par cas." },
+    ],
     pipelineTitle: "Pipeline de données",
     pipelineSteps: [
       { title: "Synchronisation automatique — OMS : toutes les heures | ECDC, OPAS & Africa CDC : hebdomadaire", desc: "Des jobs cron planifiés récupèrent les dernières publications de chaque source. L'OMS DON est vérifiée toutes les heures. L'ECDC, l'OPAS et l'Africa CDC sont vérifiés chaque semaine. Les nouveaux foyers OMS sont intégrés dans l'heure, les autres dans la semaine suivant la publication." },
@@ -246,6 +270,16 @@ const COPY: Record<Locale, {
       { name: "OPS/PAHO", type: "Organización Panamericana de la Salud", coverage: "Américas", freq: "Por evento", url: "https://www.paho.org/en/epidemiological-alerts-and-updates" },
       { name: "Africa CDC", type: "Centros Africanos para el Control de Enfermedades", coverage: "África", freq: "Por evento + sitrep semanal", url: "https://africacdc.org/outbreaks-events" },
     ],
+    sourcesFootnote: "Además de estas cuatro, fuentes nacionales y multilaterales (p. ej. USDA APHIS, Santé publique France, NCDC Nigeria, boletines regionales OMS AFRO/EMRO) cubren brechas puntuales por país o enfermedad. La integridad de la cobertura varía significativamente según la región — ver más abajo.",
+    regionalTitle: "Cobertura regional",
+    regionalIntro: "No todas las regiones están cubiertas por igual. La siguiente tabla indica claramente qué regiones cuentan hoy con un feed regional dedicado y cuáles dependen únicamente del boletín global de la OMS — la ausencia de brotes activos en una región puede significar \"no está pasando nada\" o \"ninguna fuente la está observando\".",
+    regionalCoverage: [
+      { region: "África", regionalFeed: "Africa CDC (por evento + sitrep semanal) + boletines OMS AFRO", note: "Cobertura regional más amplia — feed dedicado más la oficina regional de la OMS." },
+      { region: "Américas", regionalFeed: "PAHO (por evento)", note: "Feed regional dedicado." },
+      { region: "Europa", regionalFeed: "ECDC (CDTR semanal + boletín semanal de fiebre del Nilo Occidental)", note: "Feed regional dedicado." },
+      { region: "Asia", regionalFeed: "Ninguno — solo OMS DON", note: "Aún no se ha integrado un boletín regional dedicado (OMS SEARO / WPRO). La cobertura actual se apoya en la herramienta global de dengue de la OMS y un número reducido de fuentes nacionales; los brotes por debajo del umbral global del DON pueden estar subcubiertos." },
+      { region: "Oceanía", regionalFeed: "Ninguno — solo OMS DON", note: "Misma brecha que Asia. La cobertura actual se limita a un número reducido de fuentes gubernamentales nacionales, añadidas caso por caso." },
+    ],
     pipelineTitle: "Flujo de datos",
     pipelineSteps: [
       { title: "Sincronización automática — OMS: cada hora | ECDC, OPS & Africa CDC: semanal", desc: "Trabajos cron programados obtienen las últimas publicaciones de cada fuente. OMS DON se verifica cada hora. ECDC, OPS y Africa CDC se verifican semanalmente. Los nuevos brotes OMS se integran en 1 hora; los demás, en la misma semana de publicación." },
@@ -311,6 +345,16 @@ const COPY: Record<Locale, {
       { name: "PAHO", type: "منظمة الصحة للبلدان الأمريكية", coverage: "الأمريكتان", freq: "لكل حدث", url: "https://www.paho.org/en/epidemiological-alerts-and-updates" },
       { name: "Africa CDC", type: "المراكز الأفريقية لمكافحة الأمراض", coverage: "أفريقيا", freq: "لكل حدث + تقرير أسبوعي", url: "https://africacdc.org/outbreaks-events" },
     ],
+    sourcesFootnote: "بالإضافة إلى هذه المصادر الأربعة، تسد مصادر وطنية ومتعددة الأطراف (مثل USDA APHIS، وSanté publique France، وNCDC نيجيريا، ونشرات WHO AFRO/EMRO الإقليمية) ثغرات محددة حسب البلد أو المرض. تتفاوت شمولية التغطية بشكل كبير حسب المنطقة — انظر أدناه.",
+    regionalTitle: "التغطية الإقليمية",
+    regionalIntro: "لا تُغطى جميع المناطق بالتساوي. يوضح الجدول أدناه بصراحة أي المناطق لديها اليوم مصدر إقليمي مخصص، وأيها تعتمد فقط على نشرة منظمة الصحة العالمية العالمية — قد يعني غياب تفشٍّ نشط في منطقة ما «لا يحدث شيء» أو «لا يوجد مصدر يراقبها».",
+    regionalCoverage: [
+      { region: "أفريقيا", regionalFeed: "Africa CDC (لكل حدث + تقرير أسبوعي) + نشرات WHO AFRO", note: "أوسع تغطية إقليمية — مصدر مخصص إضافة إلى المكتب الإقليمي لمنظمة الصحة العالمية." },
+      { region: "الأمريكتان", regionalFeed: "PAHO (لكل حدث)", note: "مصدر إقليمي مخصص." },
+      { region: "أوروبا", regionalFeed: "ECDC (تقرير CDTR أسبوعي + نشرة أسبوعية لحمى غرب النيل)", note: "مصدر إقليمي مخصص." },
+      { region: "آسيا", regionalFeed: "لا يوجد — WHO DON فقط", note: "لم يُدمَج بعد أي نشرة إقليمية مخصصة (WHO SEARO / WPRO). تعتمد التغطية الحالية على أداة منظمة الصحة العالمية العالمية لمتابعة حمى الضنك وعدد محدود من المصادر الوطنية؛ قد تكون التفشيات دون العتبة العالمية لـ WHO DON غير مغطاة بالكامل." },
+      { region: "أوقيانوسيا", regionalFeed: "لا يوجد — WHO DON فقط", note: "نفس الثغرة الموجودة في آسيا. تقتصر التغطية الحالية على عدد محدود من المصادر الحكومية الوطنية، حالة بحالة." },
+    ],
     pipelineTitle: "خط أنابيب البيانات",
     pipelineSteps: [
       { title: "مزامنة تلقائية — WHO: كل ساعة | ECDC وPAHO وAfrica CDC: أسبوعياً", desc: "تجلب مهام cron منتظمة أحدث المنشورات من كل مصدر. يُفحص WHO DON كل ساعة. أما ECDC وPAHO وAfrica CDC فتُفحص أسبوعياً. تُدرج تفشيات WHO في غضون ساعة، وتفشيات المصادر الأخرى خلال نفس الأسبوع." },
@@ -375,6 +419,16 @@ const COPY: Record<Locale, {
       { name: "ECDC CDTR", type: "Communicable Disease Threats Report", coverage: "Eropa / penilaian global", freq: "Mingguan + ad hoc", url: "https://www.ecdc.europa.eu/en/threats-and-outbreaks" },
       { name: "PAHO", type: "Pan American Health Organization", coverage: "Amerika", freq: "Per kejadian", url: "https://www.paho.org/en/epidemiological-alerts-and-updates" },
       { name: "Africa CDC", type: "Africa Centres for Disease Control", coverage: "Afrika", freq: "Per kejadian + sitrep mingguan", url: "https://africacdc.org/outbreaks-events" },
+    ],
+    sourcesFootnote: "Selain keempat sumber ini, sumber nasional dan multilateral (mis. USDA APHIS, Santé publique France, NCDC Nigeria, buletin regional WHO AFRO/EMRO) mengisi celah spesifik per negara atau penyakit. Kelengkapan cakupan sangat bervariasi menurut wilayah — lihat di bawah.",
+    regionalTitle: "Cakupan regional",
+    regionalIntro: "Tidak semua wilayah tercakup secara merata. Tabel di bawah menyatakan dengan jelas wilayah mana yang memiliki umpan regional khusus saat ini, dan mana yang hanya mengandalkan buletin global WHO — tidak adanya wabah aktif di suatu wilayah bisa berarti \"tidak ada yang terjadi\" atau \"tidak ada sumber yang mengawasi\".",
+    regionalCoverage: [
+      { region: "Afrika", regionalFeed: "Africa CDC (per kejadian + sitrep mingguan) + buletin WHO AFRO", note: "Cakupan regional terluas — umpan khusus ditambah kantor regional WHO." },
+      { region: "Amerika", regionalFeed: "PAHO (per kejadian)", note: "Umpan regional khusus." },
+      { region: "Eropa", regionalFeed: "ECDC (CDTR mingguan + buletin mingguan demam West Nile)", note: "Umpan regional khusus." },
+      { region: "Asia", regionalFeed: "Tidak ada — hanya WHO DON", note: "Belum ada buletin regional khusus yang terintegrasi (WHO SEARO / WPRO). Cakupan saat ini mengandalkan alat pelaporan dengue global WHO dan sejumlah kecil sumber nasional; wabah di bawah ambang pelaporan global WHO DON mungkin kurang tercakup." },
+      { region: "Oseania", regionalFeed: "Tidak ada — hanya WHO DON", note: "Celah yang sama seperti Asia. Cakupan saat ini terbatas pada sejumlah kecil sumber pemerintah nasional, ditambahkan kasus per kasus." },
     ],
     pipelineTitle: "Alur data",
     pipelineSteps: [
@@ -519,6 +573,26 @@ export default async function MethodologyPage({
               </a>
             </div>
           ))}
+        </div>
+        <p className="text-xs text-gray-500 leading-relaxed">{c.sourcesFootnote}</p>
+      </section>
+
+      {/* Regional coverage */}
+      <section className="space-y-4">
+        <h2 className="text-xl font-bold text-white border-b border-gray-800 pb-3">{c.regionalTitle}</h2>
+        <p className="text-gray-400 text-sm leading-relaxed">{c.regionalIntro}</p>
+        <div className="overflow-x-auto rounded-xl border border-gray-800">
+          <table className="w-full text-sm min-w-[640px]">
+            <tbody className="divide-y divide-gray-800/60">
+              {c.regionalCoverage.map((r, i) => (
+                <tr key={r.region} className={i % 2 === 0 ? "bg-gray-900/20" : ""}>
+                  <td className="px-4 py-3 font-semibold text-white align-top">{r.region}</td>
+                  <td className="px-4 py-3 text-gray-300 align-top">{r.regionalFeed}</td>
+                  <td className="px-4 py-3 text-gray-500 align-top leading-relaxed">{r.note}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       </section>
 
