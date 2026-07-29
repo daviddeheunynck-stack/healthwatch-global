@@ -463,12 +463,26 @@ async function runDataQuality(_req: NextRequest, supabase: SupabaseClient) {
   // ── 4f. Seed data freshness check ────────────────────────────────────────────
   // Seeds managed by sync-who-regional / sync-endemic-data must stay current.
   // Two tiers:
-  //   - High-frequency (InfoDengue, PAHO): flag if > 30 days without update
-  //   - Annual reference (WHO GHO, etc.):  flag if > 730 days (data > 2 years old)
+  //   - High-frequency (InfoDengue, PAHO, manual weekly): flag if > 30 days
+  //   - Everything else (DON/RRA-linked event clusters):  flag if > 180 days
   // This catches bugs like the InfoDengue newest-first ordering bug (dengue Brazil
   // stuck at Jan 4) before they silently persist for months.
-  const SEED_FRESH_DAYS_HIGH = 30;
-  const SEED_FRESH_DAYS_REF  = 730;
+  //
+  // The default tier was 730 days until 2026-07-29, which made this check fail
+  // OPEN: any seed source not explicitly listed as high-frequency could rot for
+  // two years unnoticed. It bit twice in one day — the WPV1 Afghanistan row sat
+  // 4 cases behind GPEI (fixed in b995b27 by moving those sources to the 30-day
+  // tier), and Chikungunya/Singapore sat 235 days on a 2025 case count, missed
+  // by two separate cluster cleanups, because nothing watches is_seed rows: 4b's
+  // staleness check skips them outright, so this section is their only net.
+  // 180 rather than something tighter is measured, not guessed: at 120 days it
+  // would flag 11 rows today, 10 of them the same DON596 cereulide event already
+  // tracked by morning-don-check's cluster count — the exact duplicate-noise
+  // pattern removed from the dashboard ceiling earlier today. At 180 it flags 0
+  // today while still catching a Singapore-shaped row, and reuses the same
+  // number as that ceiling instead of adding another arbitrary constant.
+  const SEED_FRESH_DAYS_HIGH    = 30;
+  const SEED_FRESH_DAYS_DEFAULT = 180;
   // Weekly-cadence sources with NO ingestion cron — refreshed by hand. They were
   // falling through to the 730-day reference tier, so the WPV1 Afghanistan row sat
   // 4 cases behind GPEI (11 vs 15) with nothing flagging it (found 2026-07-29).
@@ -479,22 +493,29 @@ async function runDataQuality(_req: NextRequest, supabase: SupabaseClient) {
   // WHO GHO publishes data 1–2 years late, so the date is always "old" by design.
   // Staleness on GHO sources cannot be detected via the date field — skip them.
   const GHO_ANNUAL_SOURCES = ["who.int/data/gho", "who.int/data/global-health-estimates"];
-  const seedFreshHigh = new Date(Date.now() - SEED_FRESH_DAYS_HIGH * 86_400_000).toISOString().split("T")[0];
-  const seedFreshRef  = new Date(Date.now() - SEED_FRESH_DAYS_REF  * 86_400_000).toISOString().split("T")[0];
+  const seedFreshHigh    = new Date(Date.now() - SEED_FRESH_DAYS_HIGH    * 86_400_000).toISOString().split("T")[0];
+  const seedFreshDefault = new Date(Date.now() - SEED_FRESH_DAYS_DEFAULT * 86_400_000).toISOString().split("T")[0];
 
   for (const row of rows ?? []) {
     if (!row.is_seed || !row.date) continue;
     const src = (row.source ?? "").toLowerCase();
     if (GHO_ANNUAL_SOURCES.some(s => src.includes(s))) continue;
     const isHighFreq = HIGH_FREQ_SOURCES.some(s => src.includes(s));
-    const threshold  = isHighFreq ? seedFreshHigh : seedFreshRef;
+    const threshold  = isHighFreq ? seedFreshHigh : seedFreshDefault;
     if (row.date <= threshold) {
       const daysSince = Math.round((Date.now() - new Date(row.date).getTime()) / 86_400_000);
-      const cadence   = isHighFreq ? `attendu toutes les ${SEED_FRESH_DAYS_HIGH}j` : `donnée de référence annuelle`;
+      const cadence   = isHighFreq ? `attendu toutes les ${SEED_FRESH_DAYS_HIGH}j` : `seuil ${SEED_FRESH_DAYS_DEFAULT}j`;
       const isManual  = MANUAL_WEEKLY_SOURCES.some(s => src.includes(s));
+      // Only the high-frequency tier is actually cron-fed, so pointing at
+      // sync-who-regional for a DON/RRA cluster row sends the reader chasing a
+      // cron that never touches it. For those, the real question is whether the
+      // event is over (the row should be deactivated, like the 15 Chikungunya
+      // countries closed on 17/07 and 28/07) or whether a newer bulletin exists.
       const action    = isManual
         ? `Ligne manuelle, aucun cron ne l'alimente : rafraîchir à la main depuis la source.`
-        : `Vérifier que le cron sync-who-regional tourne correctement.`;
+        : isHighFreq
+        ? `Vérifier que le cron sync-who-regional tourne correctement.`
+        : `Cluster DON/RRA sans cron : vérifier si l'événement est terminé (désactiver) ou s'il existe un bulletin plus récent. Comparer aussi aux autres lignes du même cluster.`;
       needsReview.push({
         label: `[SEED] ${row.disease} / ${row.country}`,
         detail: `Donnée périmée — ${daysSince}j sans mise à jour (date: ${row.date}, ${cadence}). ${action}`,
