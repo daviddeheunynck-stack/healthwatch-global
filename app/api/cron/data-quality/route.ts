@@ -459,7 +459,12 @@ async function runDataQuality(_req: NextRequest, supabase: SupabaseClient) {
   // stuck at Jan 4) before they silently persist for months.
   const SEED_FRESH_DAYS_HIGH = 30;
   const SEED_FRESH_DAYS_REF  = 730;
-  const HIGH_FREQ_SOURCES = ["info.dengue", "paho.org", "reliefweb.int"];
+  // Weekly-cadence sources with NO ingestion cron — refreshed by hand. They were
+  // falling through to the 730-day reference tier, so the WPV1 Afghanistan row sat
+  // 4 cases behind GPEI (11 vs 15) with nothing flagging it (found 2026-07-29).
+  // Any source listed here is expected to be re-checked manually within 30 days.
+  const MANUAL_WEEKLY_SOURCES = ["polioeradication.org", "endpolio.com.pk"];
+  const HIGH_FREQ_SOURCES = ["info.dengue", "paho.org", "reliefweb.int", ...MANUAL_WEEKLY_SOURCES];
   // GHO annual indicators store the epidemiological year as date (e.g. 2024-01-01).
   // WHO GHO publishes data 1–2 years late, so the date is always "old" by design.
   // Staleness on GHO sources cannot be detected via the date field — skip them.
@@ -476,9 +481,13 @@ async function runDataQuality(_req: NextRequest, supabase: SupabaseClient) {
     if (row.date <= threshold) {
       const daysSince = Math.round((Date.now() - new Date(row.date).getTime()) / 86_400_000);
       const cadence   = isHighFreq ? `attendu toutes les ${SEED_FRESH_DAYS_HIGH}j` : `donnée de référence annuelle`;
+      const isManual  = MANUAL_WEEKLY_SOURCES.some(s => src.includes(s));
+      const action    = isManual
+        ? `Ligne manuelle, aucun cron ne l'alimente : rafraîchir à la main depuis la source.`
+        : `Vérifier que le cron sync-who-regional tourne correctement.`;
       needsReview.push({
         label: `[SEED] ${row.disease} / ${row.country}`,
-        detail: `Donnée périmée — ${daysSince}j sans mise à jour (date: ${row.date}, ${cadence}). Vérifier que le cron sync-who-regional tourne correctement.`,
+        detail: `Donnée périmée — ${daysSince}j sans mise à jour (date: ${row.date}, ${cadence}). ${action}`,
       });
     }
   }
