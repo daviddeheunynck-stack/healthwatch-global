@@ -20,16 +20,26 @@ function getServerClient() {
 // JAVASCRIPT-NEXTJS-1H, recurring 2026-07-13 through 07-23 despite an earlier
 // single-retry fix that reused the same client/connection across attempts).
 // Builds a fresh client per attempt so a retry can't land on the same dead socket.
+// Short backoff between attempts (2026-07-29): a bare loop retried 3x within
+// milliseconds, barely better than one attempt, against an upstream that had
+// just dropped the connection — this issue's count started climbing 7x its
+// historical rate that day with the loop still empty-handed.
+const RETRY_BACKOFF_MS = [150, 600];
+
 async function queryWithRetry<T>(
   buildQuery: (supabase: ReturnType<typeof getServerClient>) => PromiseLike<{ data: T; error: unknown }>,
   attempts = 3,
-): Promise<{ data: T; error: unknown }> {
+): Promise<{ data: T; error: unknown; attempts: number }> {
   let result: { data: T; error: unknown } | undefined;
   for (let i = 0; i < attempts; i++) {
+    if (i > 0) {
+      const delay = RETRY_BACKOFF_MS[i - 1] ?? RETRY_BACKOFF_MS[RETRY_BACKOFF_MS.length - 1];
+      await new Promise((resolve) => setTimeout(resolve, delay));
+    }
     result = await buildQuery(getServerClient());
-    if (!result.error) return result;
+    if (!result.error) return { ...result, attempts: i + 1 };
   }
-  return result!;
+  return { ...result!, attempts };
 }
 
 export interface Outbreak {
@@ -111,7 +121,7 @@ const getOutbreaksCached = unstable_cache(
   async (): Promise<Outbreak[]> => {
     const sixtyDaysAgo = new Date(Date.now() - 60 * 86_400_000).toISOString().split("T")[0];
 
-    const { data, error } = await queryWithRetry((supabase) =>
+    const { data, error, attempts } = await queryWithRetry((supabase) =>
       supabase
         .from("outbreaks")
         .select("*")
@@ -120,7 +130,10 @@ const getOutbreaksCached = unstable_cache(
     );
 
     if (error) {
-      Sentry.captureException(error, { tags: { lib: "outbreaks", fn: "getOutbreaks" } });
+      Sentry.captureException(error, {
+        tags: { lib: "outbreaks", fn: "getOutbreaks" },
+        extra: { attempts },
+      });
       throw error; // propagate so unstable_cache does NOT cache an empty result
     }
 
