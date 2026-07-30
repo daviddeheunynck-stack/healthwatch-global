@@ -168,7 +168,7 @@ export function buildDigestEmail(
             <tr style="border-bottom:${showAction ? "none" : "1px solid #1e293b"};">
               <td style="padding:12px 8px;color:#f1f5f9;font-weight:600;">${esc(disease)}</td>
               <td style="padding:12px 8px;color:#94a3b8;">${esc(country)}</td>
-              <td style="padding:12px 8px;color:#e2e8f0;">${o.cases.toLocaleString(numLocale)}</td>
+              <td style="padding:12px 8px;color:#e2e8f0;">${o.cases != null ? o.cases.toLocaleString(numLocale) : "—"}</td>
               <td style="padding:12px 8px;color:#fca5a5;">${o.deaths !== null ? o.deaths.toLocaleString(numLocale) : "—"}</td>
               <td style="padding:12px 8px;">
                 <span style="background:${color}22;color:${color};border:1px solid ${color}44;padding:2px 8px;border-radius:20px;font-size:12px;font-weight:600;">${riskLabel}</span><br/>

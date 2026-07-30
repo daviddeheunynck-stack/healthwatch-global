@@ -266,27 +266,14 @@ async function runRegionalAlerts(_req: NextRequest, supabase: SupabaseClient) {
         const unsubUrl     = `${APP_URL}/${locale}/account#regional-alerts`;
 
         try {
-          // ── Log first — prevents duplicate alerts if log insert fails later ─
-          // Upsert (not insert): the same (user_id, outbreak_id) row gets its
-          // risk_level/cases_at_alert overwritten each time we re-alert, since
-          // the primary key only allows one row per user+outbreak.
-          const { error: logErr } = await supabase.from("outbreak_alert_log").upsert(
-            {
-              user_id:        profile.id,
-              outbreak_id:    String(outbreak.id),
-              risk_level:     outbreak.risk_level,
-              cases_at_alert: outbreak.cases ?? null,
-              sent_at:        new Date().toISOString(),
-            },
-            { onConflict: "user_id,outbreak_id" }
-          );
-          if (logErr) {
-            console.error(`[regional-alerts] log upsert failed for ${profile.id}/${outbreak.id}:`, logErr.message);
-            failed++;
-            continue;
-          }
-
           // ── Email ───────────────────────────────────────────────────────
+          // Build + send BEFORE writing the log. If either throws (e.g. a
+          // template bug on unexpected null data), we must not upsert
+          // outbreak_alert_log — that row is what suppresses future re-alerts
+          // for this user+outbreak, so logging a send that never went out
+          // would silently and permanently swallow the alert. Letting the
+          // exception propagate to the catch below leaves no log row, so the
+          // next run retries this outbreak as "new" instead of losing it.
           const { subject, html } = buildOutbreakAlertEmail(
             locale,
             regionLabel,
@@ -305,6 +292,25 @@ async function runRegionalAlerts(_req: NextRequest, supabase: SupabaseClient) {
           );
           if (isRealProduction) {
             await sendEmail(profile.email, subject, html);
+          }
+
+          // Upsert (not insert): the same (user_id, outbreak_id) row gets its
+          // risk_level/cases_at_alert overwritten each time we re-alert, since
+          // the primary key only allows one row per user+outbreak.
+          const { error: logErr } = await supabase.from("outbreak_alert_log").upsert(
+            {
+              user_id:        profile.id,
+              outbreak_id:    String(outbreak.id),
+              risk_level:     outbreak.risk_level,
+              cases_at_alert: outbreak.cases ?? null,
+              sent_at:        new Date().toISOString(),
+            },
+            { onConflict: "user_id,outbreak_id" }
+          );
+          if (logErr) {
+            console.error(`[regional-alerts] log upsert failed for ${profile.id}/${outbreak.id}:`, logErr.message);
+            failed++;
+            continue;
           }
 
           // ── Slack / Teams (fire-and-forget, non-blocking) ───────────────

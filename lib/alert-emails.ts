@@ -10,8 +10,8 @@ interface OutbreakData {
   country: string;
   risk_level: "high" | "medium" | "low";
   date: string;
-  cases?: number;
-  deaths?: number;
+  cases?: number | null;
+  deaths?: number | null;
 }
 
 const CONTENT: Record<string, {
@@ -157,11 +157,11 @@ export function buildOutbreakAlertEmail(
      <td style="color:${riskColor};font-weight:600">${c.riskLabels[outbreak.risk_level]}</td></tr>`,
     `<tr><td style="color:#9ca3af;padding:6px 0">${c.dateLabel}</td>
      <td style="color:#e5e7eb">${outbreak.date}</td></tr>`,
-    ...(outbreak.cases !== undefined
+    ...(outbreak.cases != null
       ? [`<tr><td style="color:#9ca3af;padding:6px 0">${c.casesLabel}</td>
          <td style="color:#e5e7eb">${outbreak.cases.toLocaleString(numLocale)}</td></tr>`]
       : []),
-    ...(outbreak.deaths !== undefined
+    ...(outbreak.deaths != null
       ? [`<tr><td style="color:#9ca3af;padding:6px 0">${c.deathsLabel}</td>
          <td style="color:#e5e7eb">${outbreak.deaths.toLocaleString(numLocale)}</td></tr>`]
       : []),
