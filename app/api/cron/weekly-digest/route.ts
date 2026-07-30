@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createClient } from "@supabase/supabase-js";
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { buildDigestEmail } from "@/lib/digest-email";
 import type { Outbreak } from "@/lib/outbreaks";
 import * as Sentry from "@sentry/nextjs";
@@ -60,6 +60,23 @@ export async function GET(req: NextRequest) {
   }
   const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
 
+  // Defensive wrapper: an uncaught exception anywhere before or between the
+  // fetches/loop below (only the per-subscriber send has a local try/catch)
+  // used to propagate straight out — bare 500, no Sentry event, logCronRun
+  // never reached. Same root cause as the sync-outbreaks incident of
+  // 2026-07-29.
+  try {
+    return await runWeeklyDigest(req, supabase);
+  } catch (err) {
+    console.error("[weekly-digest] uncaught exception:", err);
+    Sentry.captureException(err, { tags: { cron: "weekly-digest" } });
+    await logCronRun(supabase, "weekly-digest", "error", 0,
+      err instanceof Error ? err.message : String(err));
+    return NextResponse.json({ error: String(err) }, { status: 500 });
+  }
+}
+
+async function runWeeklyDigest(_req: NextRequest, supabase: SupabaseClient) {
   // ── Active subscribers only ────────────────────────────────────────────────
   const { data: subscribers, error: subError } = await supabase
     .from("subscriptions")
@@ -68,6 +85,8 @@ export async function GET(req: NextRequest) {
 
   if (subError) {
     console.error("[weekly-digest] Failed to fetch subscribers:", subError);
+    Sentry.captureException(subError, { tags: { cron: "weekly-digest" } });
+    await logCronRun(supabase, "weekly-digest", "error", 0, subError.message);
     return NextResponse.json({ error: subError.message }, { status: 500 });
   }
 
@@ -98,6 +117,8 @@ export async function GET(req: NextRequest) {
 
   if (outbreakError) {
     console.error("[weekly-digest] Failed to fetch outbreaks:", outbreakError);
+    Sentry.captureException(outbreakError, { tags: { cron: "weekly-digest" } });
+    await logCronRun(supabase, "weekly-digest", "error", 0, outbreakError.message);
     return NextResponse.json({ error: outbreakError.message }, { status: 500 });
   }
 
@@ -145,7 +166,11 @@ export async function GET(req: NextRequest) {
     await new Promise((r) => setTimeout(r, 150));
   }
 
-  await logCronRun(supabase, "weekly-digest", skippedNoKey > 0 ? "error" : "ok", sent);
+  // Was only checking skippedNoKey — `failed`, incremented per-subscriber in
+  // the catch above, was tracked but never consulted here, so a genuine send
+  // failure still logged "ok".
+  await logCronRun(supabase, "weekly-digest", skippedNoKey > 0 || failed > 0 ? "error" : "ok", sent,
+    failed > 0 ? `${failed} envoi(s) en échec` : undefined);
   console.log(`[weekly-digest] Done — ${sent} sent, ${failed} failed, ${skippedNoKey} skipped (no key), ${blockedSkipped} blocked, ${subscribers.length} total.`);
   return NextResponse.json({ sent, failed, skippedNoKey, blockedSkipped, total: subscribers.length });
 }

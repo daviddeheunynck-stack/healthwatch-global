@@ -251,7 +251,24 @@ export async function GET(req: NextRequest) {
   }
 
   const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
-  const today    = new Date().toISOString().substring(0, 10);
+
+  // Defensive wrapper: the per-entry processing loop below runs outside any
+  // enclosing try/catch. An uncaught exception there propagated straight out:
+  // bare 500, no Sentry event, logCronRun never reached — same root cause as
+  // the sync-outbreaks incident of 2026-07-29.
+  try {
+    return await runUkhsa(req, supabase);
+  } catch (err) {
+    console.error("[ukhsa] uncaught exception:", err);
+    Sentry.captureException(err, { tags: { cron: "sync-ukhsa" } });
+    await logCronRun(supabase, "sync-ukhsa", "error", 0,
+      err instanceof Error ? err.message : String(err));
+    return NextResponse.json({ error: String(err) }, { status: 500 });
+  }
+}
+
+async function runUkhsa(_req: NextRequest, supabase: SupabaseClient) {
+  const today = new Date().toISOString().substring(0, 10);
 
   // ── 1. Fetch UKHSA ATOM ───────────────────────────────────────────────────
   let atomXml: string;
@@ -417,6 +434,10 @@ export async function GET(req: NextRequest) {
   }
 
   console.log("[ukhsa] Done:", results, log);
-  await logCronRun(supabase, "sync-ukhsa", "ok", (results.inserted ?? 0) + (results.updated ?? 0));
+  // Was hardcoded "ok" regardless of results.errors — same bug as
+  // sync-outbreaks (2026-07-29).
+  await logCronRun(supabase, "sync-ukhsa", results.errors > 0 ? "error" : "ok",
+    (results.inserted ?? 0) + (results.updated ?? 0),
+    results.errors > 0 ? `${results.errors} écriture(s) en échec` : undefined);
   return NextResponse.json({ success: true, timestamp: new Date().toISOString(), ...results, log });
 }

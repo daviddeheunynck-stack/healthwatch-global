@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createClient } from "@supabase/supabase-js";
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import * as Sentry from "@sentry/nextjs";
 import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
 import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
@@ -171,6 +171,22 @@ export async function GET(req: NextRequest) {
   }
   const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE);
 
+  // Defensive wrapper: an uncaught exception anywhere before or between the
+  // fetches/loop below (only the per-user send has a local try/catch) used to
+  // propagate straight out — bare 500, no Sentry event, logCronRun never
+  // reached. Same root cause as the sync-outbreaks incident of 2026-07-29.
+  try {
+    return await runWeeklySignal(req, supabase);
+  } catch (err) {
+    console.error("[weekly-signal] uncaught exception:", err);
+    Sentry.captureException(err, { tags: { cron: "weekly-signal" } });
+    await logCronRun(supabase, "weekly-signal", "error", 0,
+      err instanceof Error ? err.message : String(err));
+    return NextResponse.json({ error: String(err) }, { status: 500 });
+  }
+}
+
+async function runWeeklySignal(_req: NextRequest, supabase: SupabaseClient) {
   // Top HIGH active outbreaks (max 3, ordered by cases desc)
   const { data: outbreaks, error: outErr } = await supabase
     .from("outbreaks")
@@ -180,7 +196,15 @@ export async function GET(req: NextRequest) {
     .order("cases", { ascending: false })
     .limit(3);
 
-  if (outErr || !outbreaks?.length) {
+  // outErr and "legitimately 0 HIGH outbreaks this week" used to both log "ok"
+  // — a real query error was indistinguishable from nothing-to-send.
+  if (outErr) {
+    console.error("[weekly-signal] outbreaks query:", outErr.message);
+    Sentry.captureException(outErr, { tags: { cron: "weekly-signal" } });
+    await logCronRun(supabase, "weekly-signal", "error", 0, outErr.message);
+    return NextResponse.json({ error: outErr.message }, { status: 500 });
+  }
+  if (!outbreaks?.length) {
     await logCronRun(supabase, "weekly-signal", "ok", 0);
     return NextResponse.json({ skipped: "no HIGH outbreaks" });
   }
@@ -194,7 +218,13 @@ export async function GET(req: NextRequest) {
     .is("email_blocked_at", null)
     .lt("created_at", new Date(Date.now() - 86_400_000).toISOString());
 
-  if (userErr || !users?.length) {
+  if (userErr) {
+    console.error("[weekly-signal] profiles query:", userErr.message);
+    Sentry.captureException(userErr, { tags: { cron: "weekly-signal" } });
+    await logCronRun(supabase, "weekly-signal", "error", 0, userErr.message);
+    return NextResponse.json({ error: userErr.message }, { status: 500 });
+  }
+  if (!users?.length) {
     await logCronRun(supabase, "weekly-signal", "ok", 0);
     return NextResponse.json({ skipped: "no free users" });
   }
@@ -231,6 +261,9 @@ export async function GET(req: NextRequest) {
     }
   }
 
-  await logCronRun(supabase, "weekly-signal", skippedNoKey > 0 ? "error" : "ok", sent);
+  // Was only checking skippedNoKey — `failed`, incremented per-user in the
+  // catch above, was tracked but never consulted here.
+  await logCronRun(supabase, "weekly-signal", skippedNoKey > 0 || failed > 0 ? "error" : "ok", sent,
+    failed > 0 ? `${failed} envoi(s) en échec` : undefined);
   return NextResponse.json({ sent, failed, skippedNoKey, outbreaks: outbreaks.length });
 }

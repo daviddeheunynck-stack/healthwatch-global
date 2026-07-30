@@ -1081,7 +1081,26 @@ export async function GET(req: NextRequest) {
   }
 
   const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
-  const today    = new Date().toISOString().substring(0, 10);
+
+  // Defensive wrapper: sections 1/2/4 below already handle their own errors
+  // locally, but section 3's loadExistingForItems/upsertItems calls (per-alert
+  // loop) sit outside the try/catch that only covers extractAlertData. An
+  // uncaught exception there propagated straight out: bare 500, no Sentry
+  // event, logCronRun never reached — same root cause as the sync-outbreaks
+  // incident of 2026-07-29.
+  try {
+    return await runPahoAlerts(req, supabase);
+  } catch (err) {
+    console.error("[paho] uncaught exception:", err);
+    Sentry.captureException(err, { tags: { cron: "sync-paho-alerts" } });
+    await logCronRun(supabase, "sync-paho-alerts", "error", 0,
+      err instanceof Error ? err.message : String(err));
+    return NextResponse.json({ error: String(err) }, { status: 500 });
+  }
+}
+
+async function runPahoAlerts(_req: NextRequest, supabase: SupabaseClient) {
+  const today = new Date().toISOString().substring(0, 10);
 
   // ── 1. Fetch PAHO alert listing ───────────────────────────────────────────
   let listingHtml: string;
@@ -1167,13 +1186,15 @@ export async function GET(req: NextRequest) {
   console.log("[paho] Done:", results, log);
   // Report a sitrep-stage failure as an error rather than a green run: a silent
   // "ok" here is exactly how the missing sitrep ingestion stayed invisible.
-  // Alert-path errors keep their existing per-entry logging.
+  // Also checks results.errors now — it was ignored here, so a failed alert
+  // insert/update alongside a successful sitrep still logged "ok" (same bug
+  // class as sync-outbreaks, 2026-07-29).
   await logCronRun(
     supabase,
     "sync-paho-alerts",
-    sitrepError ? "error" : "ok",
+    sitrepError || results.errors > 0 ? "error" : "ok",
     results.inserted ?? 0,
-    sitrepError ?? undefined,
+    sitrepError ?? (results.errors > 0 ? `${results.errors} écriture(s) en échec` : undefined),
   );
   return NextResponse.json({ success: true, timestamp: new Date().toISOString(), ...results, log });
 }

@@ -11,7 +11,7 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
-import { createClient } from "@supabase/supabase-js";
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { createHmac } from "crypto";
 import * as Sentry from "@sentry/nextjs";
 import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
@@ -98,6 +98,24 @@ export async function GET(req: NextRequest) {
 
   const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE);
 
+  // Defensive wrapper: this cron runs every 30 minutes. Only the actual webhook
+  // POST (below) had a local try/catch — the webhooks/outbreaks/snapshots
+  // fetches and the per-webhook last_triggered_at update all sat outside it, so
+  // an uncaught exception there propagated straight out: bare 500, no Sentry
+  // event, logCronRun never reached. Same root cause as the sync-outbreaks
+  // incident of 2026-07-29, at the same 30-min cadence as trigger-tripwires.
+  try {
+    return await runTriggerWebhooks(req, supabase);
+  } catch (err) {
+    console.error("[trigger-webhooks] uncaught exception:", err);
+    Sentry.captureException(err, { tags: { cron: "trigger-webhooks" } });
+    await logCronRun(supabase, "trigger-webhooks", "error", 0,
+      err instanceof Error ? err.message : String(err));
+    return NextResponse.json({ error: String(err) }, { status: 500 });
+  }
+}
+
+async function runTriggerWebhooks(_req: NextRequest, supabase: SupabaseClient) {
   const { data: webhooks, error: wErr } = await supabase
     .from("webhooks")
     .select("id, url, secret, filters, last_triggered_at, last_fired_cases, created_at")
@@ -109,6 +127,7 @@ export async function GET(req: NextRequest) {
   }
 
   let totalFired = 0;
+  let errors = 0;
   const now = new Date().toISOString();
 
   for (const webhook of webhooks as Webhook[]) {
@@ -248,6 +267,7 @@ export async function GET(req: NextRequest) {
         totalFired++;
       } catch (err) {
         lastStatus = 0;
+        errors++;
         Sentry.captureException(err, { tags: { cron: "trigger-webhooks", webhook_id: webhook.id, outbreak_id: outbreak.id } });
       }
     }
@@ -263,6 +283,7 @@ export async function GET(req: NextRequest) {
       .eq("id", webhook.id);
   }
 
-  await logCronRun(supabase, "trigger-webhooks", "ok", totalFired);
-  return NextResponse.json({ ok: true, fired: totalFired });
+  await logCronRun(supabase, "trigger-webhooks", errors > 0 ? "error" : "ok", totalFired,
+    errors > 0 ? `${errors} envoi(s) de webhook en échec` : undefined);
+  return NextResponse.json({ ok: true, fired: totalFired, errors });
 }

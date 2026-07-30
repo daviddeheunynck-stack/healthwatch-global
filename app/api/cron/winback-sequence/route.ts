@@ -3,7 +3,7 @@
 // This is the last automated touch after the trial-expired email sent on day 14.
 
 import { NextRequest, NextResponse } from "next/server";
-import { createClient } from "@supabase/supabase-js";
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { PRICE_DISPLAY } from "@/lib/pricing";
 import * as Sentry from "@sentry/nextjs";
 import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
@@ -379,6 +379,23 @@ export async function GET(req: NextRequest) {
   }
   const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE);
 
+  // Defensive wrapper: the two send loops below (only each per-user email has
+  // a local try/catch) and everything connecting them ran outside any
+  // enclosing try/catch. An uncaught exception there propagated straight out —
+  // bare 500, no Sentry event, logCronRun never reached. Same root cause as
+  // the sync-outbreaks incident of 2026-07-29.
+  try {
+    return await runWinbackSequence(req, supabase);
+  } catch (err) {
+    console.error("[winback-sequence] uncaught exception:", err);
+    Sentry.captureException(err, { tags: { cron: "winback-sequence" } });
+    await logCronRun(supabase, "winback-sequence", "error", 0,
+      err instanceof Error ? err.message : String(err));
+    return NextResponse.json({ error: String(err) }, { status: 500 });
+  }
+}
+
+async function runWinbackSequence(_req: NextRequest, supabase: SupabaseClient) {
   const isEligible = (p: { email: string | null; display_filters: unknown; trial_ends_at: string | null; created_at: string | null }) => {
     if (!p.email) return false;
     const filters = p.display_filters as Record<string, unknown> | null;
@@ -488,7 +505,10 @@ export async function GET(req: NextRequest) {
   }
 
   const totalSent = j3Sent + j7Sent;
-  await logCronRun(supabase, "winback-sequence", "ok", totalSent);
+  const totalFailed = j3Failed + j7Failed;
+  // Was hardcoded "ok" — j3Failed/j7Failed were tracked but never consulted.
+  await logCronRun(supabase, "winback-sequence", totalFailed > 0 ? "error" : "ok", totalSent,
+    totalFailed > 0 ? `${totalFailed} email(s) en échec` : undefined);
   console.log(`[winback] J+3: ${j3Sent}/${j3Failed} | J+7: ${j7Sent}/${j7Failed}`);
   return NextResponse.json({
     j3: { sent: j3Sent, failed: j3Failed, total: (j3Profiles ?? []).length },

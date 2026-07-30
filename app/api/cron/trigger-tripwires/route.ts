@@ -10,7 +10,7 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
-import { createClient } from "@supabase/supabase-js";
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 import * as Sentry from "@sentry/nextjs";
 import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
@@ -142,6 +142,25 @@ export async function GET(req: NextRequest) {
 
   const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE);
 
+  // Defensive wrapper: this cron runs every 30 minutes and its outbreak_tripwires
+  // update (below) fires unconditionally for every tripwire on every tick, well
+  // outside the one local try/catch (which only covers the notify/email step).
+  // An uncaught exception anywhere before that — the tripwires/profiles/outbreaks
+  // fetches, getBlockedEmailSet — used to propagate straight out: bare 500, no
+  // Sentry event, logCronRun never reached. Same root cause as the sync-outbreaks
+  // incident of 2026-07-29, applied here at 30-min cadence instead of hourly.
+  try {
+    return await runTripwires(req, supabase);
+  } catch (err) {
+    console.error("[trigger-tripwires] uncaught exception:", err);
+    Sentry.captureException(err, { tags: { cron: "trigger-tripwires" } });
+    await logCronRun(supabase, "trigger-tripwires", "error", 0,
+      err instanceof Error ? err.message : String(err));
+    return NextResponse.json({ error: String(err) }, { status: 500 });
+  }
+}
+
+async function runTripwires(_req: NextRequest, supabase: SupabaseClient) {
   const { data: tripwires } = await supabase
     .from("outbreak_tripwires")
     .select("id, user_id, outbreak_id, threshold_cases, email, last_checked_cases");
@@ -181,6 +200,7 @@ export async function GET(req: NextRequest) {
 
   let fired = 0;
   let blockedSkipped = 0;
+  let errors = 0;
 
   for (const tw of tripwires as Tripwire[]) {
     const o = oMap.get(tw.outbreak_id);
@@ -252,11 +272,13 @@ export async function GET(req: NextRequest) {
       }
       fired++;
     } catch (err) {
+      errors++;
       console.error(`[trigger-tripwires] Failed for tripwire ${tw.id}:`, err);
       Sentry.captureException(err, { tags: { cron: "trigger-tripwires", tripwire_id: tw.id, user_id: tw.user_id } });
     }
   }
 
-  await logCronRun(supabase, "trigger-tripwires", "ok", fired);
-  return NextResponse.json({ ok: true, fired, blockedSkipped });
+  await logCronRun(supabase, "trigger-tripwires", errors > 0 ? "error" : "ok", fired,
+    errors > 0 ? `${errors} tripwire(s) en échec` : undefined);
+  return NextResponse.json({ ok: true, fired, blockedSkipped, errors });
 }

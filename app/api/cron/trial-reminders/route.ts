@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createClient } from "@supabase/supabase-js";
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { buildTrialEndingEmail } from "@/lib/trial-ending-email";
 import * as Sentry from "@sentry/nextjs";
 import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
@@ -53,6 +53,22 @@ export async function GET(req: NextRequest) {
   }
   const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE);
 
+  // Defensive wrapper: an uncaught exception anywhere before or between the
+  // fetch/loop below (only the per-user email has a local try/catch) used to
+  // propagate straight out — bare 500, no Sentry event, logCronRun never
+  // reached. Same root cause as the sync-outbreaks incident of 2026-07-29.
+  try {
+    return await runTrialReminders(req, supabase);
+  } catch (err) {
+    console.error("[trial-reminders] uncaught exception:", err);
+    Sentry.captureException(err, { tags: { cron: "trial-reminders" } });
+    await logCronRun(supabase, "trial-reminders", "error", 0,
+      err instanceof Error ? err.message : String(err));
+    return NextResponse.json({ error: String(err) }, { status: 500 });
+  }
+}
+
+async function runTrialReminders(_req: NextRequest, supabase: SupabaseClient) {
   // ── Target windows ──────────────────────────────────────────────────────────
   // J-3 window: trial_ends_at in [now + 2.5d, now + 3.5d)
   // J-1 window: trial_ends_at in [now + 0.5d, now + 1.5d)
@@ -95,6 +111,8 @@ export async function GET(req: NextRequest) {
 
   if (error) {
     console.error("[trial-reminders] DB query error:", error);
+    Sentry.captureException(error, { tags: { cron: "trial-reminders" } });
+    await logCronRun(supabase, "trial-reminders", "error", 0, error.message);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 
@@ -150,7 +168,11 @@ export async function GET(req: NextRequest) {
   const hb = process.env.BETTERSTACK_HB_TRIAL_REMINDERS;
   if (hb) fetch(hb).catch(() => {});
 
-  await logCronRun(supabase, "trial-reminders", skippedNoKey > 0 ? "error" : "ok", sent);
+  // Was only checking skippedNoKey (a single global "no Brevo key" condition) —
+  // `failed`, incremented per-user in the catch above, was tracked but never
+  // consulted here, so a genuine per-user send failure still logged "ok".
+  await logCronRun(supabase, "trial-reminders", skippedNoKey > 0 || failed > 0 ? "error" : "ok", sent,
+    failed > 0 ? `${failed} rappel(s) en échec` : undefined);
   console.log(`[trial-reminders] Done — ${sent} sent, ${failed} failed, ${skippedNoKey} skipped (no key).`);
   return NextResponse.json({ sent, failed, skippedNoKey, total: profiles.length });
 }

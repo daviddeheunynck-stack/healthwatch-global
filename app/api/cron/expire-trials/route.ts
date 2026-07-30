@@ -4,7 +4,7 @@
 // Users with a Stripe subscription are managed exclusively by the Stripe webhook.
 
 import { NextRequest, NextResponse } from "next/server";
-import { createClient } from "@supabase/supabase-js";
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { buildTrialExpiredEmail } from "@/lib/onboarding-emails";
 import * as Sentry from "@sentry/nextjs";
 import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
@@ -26,6 +26,23 @@ export async function GET(req: NextRequest) {
     clean(process.env.SUPABASE_SERVICE_ROLE_KEY)
   );
 
+  // Defensive wrapper: the webhook/scheduled-report deactivation below and the
+  // per-user email loop's setup run outside any enclosing try/catch. An
+  // uncaught exception there propagated straight out: bare 500, no Sentry
+  // event, logCronRun never reached. Same root cause as the sync-outbreaks
+  // incident of 2026-07-29.
+  try {
+    return await runExpireTrials(req, supabase);
+  } catch (err) {
+    console.error("[expire-trials] uncaught exception:", err);
+    Sentry.captureException(err, { tags: { cron: "expire-trials" } });
+    await logCronRun(supabase, "expire-trials", "error", 0,
+      err instanceof Error ? err.message : String(err));
+    return NextResponse.json({ error: String(err) }, { status: 500 });
+  }
+}
+
+async function runExpireTrials(_req: NextRequest, supabase: SupabaseClient) {
   const now = new Date().toISOString();
 
   const BREVO_API_KEY = clean(process.env.BREVO_API_KEY);
@@ -97,6 +114,7 @@ export async function GET(req: NextRequest) {
   console.log(`[expire-trials] Downgraded ${ids.length} user(s): ${ids.join(", ")}`);
 
   // Send trial-expired email to each downgraded user (skip if opted out)
+  let emailErrors = 0;
   for (const user of expired) {
     const df = user.display_filters as Record<string, unknown> | null;
     if (df?.no_onboarding_emails) continue;
@@ -110,6 +128,7 @@ export async function GET(req: NextRequest) {
         await sendEmail(user.email, subject, html);
       }
     } catch (err) {
+      emailErrors++;
       console.error(`[expire-trials] Email failed for ${user.email}:`, err);
       Sentry.captureException(err, { tags: { cron: "expire-trials", user_id: user.id } });
     }
@@ -119,6 +138,10 @@ export async function GET(req: NextRequest) {
   const hb = process.env.BETTERSTACK_HB_EXPIRE_TRIALS;
   if (hb) fetch(hb).catch(() => {});
 
-  await logCronRun(supabase, "expire-trials", "ok", ids.length);
-  return NextResponse.json({ downgraded: ids.length, users: expired.map((p) => p.email) });
+  // The downgrade itself already succeeded by this point (ids.length reflects
+  // that) — emailErrors only affects the notification, not billing state — but
+  // it was previously untracked, so a Brevo outage here was invisible.
+  await logCronRun(supabase, "expire-trials", emailErrors > 0 ? "error" : "ok", ids.length,
+    emailErrors > 0 ? `${emailErrors} email(s) d'expiration en échec` : undefined);
+  return NextResponse.json({ downgraded: ids.length, users: expired.map((p) => p.email), emailErrors });
 }

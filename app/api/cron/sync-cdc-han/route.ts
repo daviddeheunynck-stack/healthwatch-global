@@ -267,7 +267,26 @@ export async function GET(req: NextRequest) {
   }
 
   const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
-  const today    = new Date().toISOString().substring(0, 10);
+
+  // Defensive wrapper: section 3 below (per-alert processing loop) runs
+  // entirely outside any enclosing try/catch — only the page-text fetch has
+  // its own local one. An uncaught exception in the synchronous parsing (geo
+  // matching, number extraction, string processing on untrusted HTML) would
+  // propagate straight out: bare 500, no Sentry event, logCronRun never
+  // reached. Same root cause as the sync-outbreaks incident of 2026-07-29.
+  try {
+    return await runCdcHan(req, supabase);
+  } catch (err) {
+    console.error("[cdc-han] uncaught exception:", err);
+    Sentry.captureException(err, { tags: { cron: "sync-cdc-han" } });
+    await logCronRun(supabase, "sync-cdc-han", "error", 0,
+      err instanceof Error ? err.message : String(err));
+    return NextResponse.json({ error: String(err) }, { status: 500 });
+  }
+}
+
+async function runCdcHan(_req: NextRequest, supabase: SupabaseClient) {
+  const today = new Date().toISOString().substring(0, 10);
 
   // ── 1. Fetch HAN notice list from CDC's WCMS search API ──────────────────
   let searchJson: string;
@@ -484,6 +503,10 @@ export async function GET(req: NextRequest) {
   }
 
   console.log("[cdc-han] Done:", results, log);
-  await logCronRun(supabase, "sync-cdc-han", "ok", results.inserted ?? 0);
+  // Was hardcoded "ok" regardless of results.errors — a failed insert/update
+  // was silently lost while the report stayed green. Same bug as
+  // sync-outbreaks/sync-who-emro (2026-07-29/30).
+  await logCronRun(supabase, "sync-cdc-han", results.errors > 0 ? "error" : "ok", results.inserted ?? 0,
+    results.errors > 0 ? `${results.errors} écriture(s) en échec` : undefined);
   return NextResponse.json({ success: true, timestamp: new Date().toISOString(), ...results, log });
 }

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createClient } from "@supabase/supabase-js";
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { getDiseaseCategory, CATEGORY_LABELS } from "@/lib/disease-category";
 import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 import * as Sentry from "@sentry/nextjs";
@@ -122,6 +122,22 @@ export async function GET(req: NextRequest) {
 
   const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE);
 
+  // Defensive wrapper: an uncaught exception anywhere before or between the
+  // fetches below (only the send/notify step has a local try/catch) used to
+  // propagate straight out — bare 500, no Sentry event, logCronRun never
+  // reached. Same root cause as the sync-outbreaks incident of 2026-07-29.
+  try {
+    return await runCategoryAlerts(req, supabase);
+  } catch (err) {
+    console.error("[trigger-category-alerts] uncaught exception:", err);
+    Sentry.captureException(err, { tags: { cron: "trigger-category-alerts" } });
+    await logCronRun(supabase, "trigger-category-alerts", "error", 0,
+      err instanceof Error ? err.message : String(err));
+    return NextResponse.json({ error: String(err) }, { status: 500 });
+  }
+}
+
+async function runCategoryAlerts(_req: NextRequest, supabase: SupabaseClient) {
   const { data: alerts } = await supabase
     .from("category_alerts")
     .select("id, user_id, disease_category, region, min_cases, email, last_fired_at");
@@ -157,6 +173,7 @@ export async function GET(req: NextRequest) {
 
   let fired = 0;
   let blockedSkipped = 0;
+  let errors = 0;
 
   for (const alert of alerts as CategoryAlert[]) {
     // Cooldown check
@@ -235,11 +252,13 @@ export async function GET(req: NextRequest) {
 
       fired++;
     } catch (err) {
+      errors++;
       console.error(`[trigger-category-alerts] Failed for alert ${alert.id}:`, err);
       Sentry.captureException(err, { tags: { cron: "trigger-category-alerts", alert_id: alert.id } });
     }
   }
 
-  await logCronRun(supabase, "trigger-category-alerts", "ok", fired);
-  return NextResponse.json({ ok: true, fired, blockedSkipped });
+  await logCronRun(supabase, "trigger-category-alerts", errors > 0 ? "error" : "ok", fired,
+    errors > 0 ? `${errors} alerte(s) en échec` : undefined);
+  return NextResponse.json({ ok: true, fired, blockedSkipped, errors });
 }

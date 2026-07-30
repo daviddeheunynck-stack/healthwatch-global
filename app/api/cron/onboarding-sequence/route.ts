@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createClient } from "@supabase/supabase-js";
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { buildJ1Email, buildJ3Email, buildJ7Email, buildJ12Email, buildPilotConversionEmail } from "@/lib/onboarding-emails";
 import * as Sentry from "@sentry/nextjs";
 import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
@@ -50,6 +50,23 @@ export async function GET(req: NextRequest) {
   }
   const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE);
 
+  // Defensive wrapper: the five send loops below (only each per-user email has
+  // a local try/catch) and everything connecting them ran outside any
+  // enclosing try/catch. An uncaught exception there propagated straight out —
+  // bare 500, no Sentry event, logCronRun never reached. Same root cause as
+  // the sync-outbreaks incident of 2026-07-29.
+  try {
+    return await runOnboardingSequence(req, supabase);
+  } catch (err) {
+    console.error("[onboarding-sequence] uncaught exception:", err);
+    Sentry.captureException(err, { tags: { cron: "onboarding-sequence" } });
+    await logCronRun(supabase, "onboarding-sequence", "error", 0,
+      err instanceof Error ? err.message : String(err));
+    return NextResponse.json({ error: String(err) }, { status: 500 });
+  }
+}
+
+async function runOnboardingSequence(_req: NextRequest, supabase: SupabaseClient) {
   // Five cohort queries (J+1/J+3/J+7/J+12/J+32) — same table, different date-window
   // filters, none depends on another's result — fetched concurrently instead of
   // one after another. Error checks below preserve the original fail-fast order
@@ -259,7 +276,12 @@ export async function GET(req: NextRequest) {
   if (hb) fetch(hb).catch(() => {});
 
   const totalSent = j1Sent + j3Sent + j7Sent + j12Sent + j32Sent;
-  await logCronRun(supabase, "onboarding-sequence", "ok", totalSent);
+  const totalFailed = j1Failed + j3Failed + j7Failed + j12Failed + j32Failed;
+  // Was hardcoded "ok" — each step's Failed counter was tracked but never
+  // consulted, so a genuine send failure in any of the five stages still
+  // logged "ok".
+  await logCronRun(supabase, "onboarding-sequence", totalFailed > 0 ? "error" : "ok", totalSent,
+    totalFailed > 0 ? `${totalFailed} email(s) en échec` : undefined);
   console.log(`[onboarding] J+1: ${j1Sent}/${j1Failed} | J+3: ${j3Sent}/${j3Failed} | J+7: ${j7Sent}/${j7Failed} | J+12: ${j12Sent}/${j12Failed} | J+32: ${j32Sent}/${j32Failed}`);
 
   return NextResponse.json({

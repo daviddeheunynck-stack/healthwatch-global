@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createClient } from "@supabase/supabase-js";
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { haversineKm } from "@/lib/haversine";
 import { getCountryCoords } from "@/lib/country-coords";
 import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
@@ -62,6 +62,22 @@ export async function GET(req: NextRequest) {
 
   const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE);
 
+  // Defensive wrapper: an uncaught exception anywhere before or between the
+  // fetches below (only the send/notify step has a local try/catch) used to
+  // propagate straight out — bare 500, no Sentry event, logCronRun never
+  // reached. Same root cause as the sync-outbreaks incident of 2026-07-29.
+  try {
+    return await runGeofenceAlerts(req, supabase);
+  } catch (err) {
+    console.error("[trigger-geofence-alerts] uncaught exception:", err);
+    Sentry.captureException(err, { tags: { cron: "trigger-geofence-alerts" } });
+    await logCronRun(supabase, "trigger-geofence-alerts", "error", 0,
+      err instanceof Error ? err.message : String(err));
+    return NextResponse.json({ error: String(err) }, { status: 500 });
+  }
+}
+
+async function runGeofenceAlerts(_req: NextRequest, supabase: SupabaseClient) {
   const { data: alerts } = await supabase
     .from("geofence_alerts")
     .select("id, user_id, label, lat, lng, radius_km, email, last_fired_at");
@@ -96,6 +112,7 @@ export async function GET(req: NextRequest) {
 
   let fired = 0;
   let blockedSkipped = 0;
+  let errors = 0;
 
   for (const alert of alerts as GeofenceAlert[]) {
     if (alert.last_fired_at) {
@@ -228,11 +245,13 @@ export async function GET(req: NextRequest) {
 
       fired++;
     } catch (err) {
+      errors++;
       console.error(`[trigger-geofence-alerts] Failed for alert ${alert.id}:`, err);
       Sentry.captureException(err, { tags: { cron: "trigger-geofence-alerts", alert_id: alert.id } });
     }
   }
 
-  await logCronRun(supabase, "trigger-geofence-alerts", "ok", fired);
-  return NextResponse.json({ ok: true, fired, blockedSkipped });
+  await logCronRun(supabase, "trigger-geofence-alerts", errors > 0 ? "error" : "ok", fired,
+    errors > 0 ? `${errors} alerte(s) en échec` : undefined);
+  return NextResponse.json({ ok: true, fired, blockedSkipped, errors });
 }

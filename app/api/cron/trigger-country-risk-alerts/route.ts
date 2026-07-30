@@ -1,5 +1,5 @@
 import { NextRequest } from "next/server";
-import { createClient } from "@supabase/supabase-js";
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 import * as Sentry from "@sentry/nextjs";
 import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
@@ -38,6 +38,22 @@ export async function GET(req: NextRequest) {
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.SUPABASE_SERVICE_ROLE_KEY!
   );
+  // Defensive wrapper: an uncaught exception anywhere before or between the
+  // fetches below (only the send/notify step has a local try/catch) used to
+  // propagate straight out — bare 500, no Sentry event, logCronRun never
+  // reached. Same root cause as the sync-outbreaks incident of 2026-07-29.
+  try {
+    return await runCountryRiskAlerts(supabase);
+  } catch (err) {
+    console.error("[trigger-country-risk-alerts] uncaught exception:", err);
+    Sentry.captureException(err, { tags: { cron: "trigger-country-risk-alerts" } });
+    await logCronRun(supabase, "trigger-country-risk-alerts", "error", 0,
+      err instanceof Error ? err.message : String(err));
+    return Response.json({ error: String(err) }, { status: 500 });
+  }
+}
+
+async function runCountryRiskAlerts(supabase: SupabaseClient) {
   const brevoKey = (process.env.BREVO_API_KEY ?? "").replace(/^﻿/, "").trim();
   if (!brevoKey) {
     await logCronRun(supabase, "trigger-country-risk-alerts", "ok", 0);
@@ -87,6 +103,7 @@ export async function GET(req: NextRequest) {
   const cooldownCutoff = new Date(Date.now() - COOLDOWN_H * 3_600_000).toISOString();
   let fired = 0;
   let blockedSkipped = 0;
+  let errors = 0;
 
   for (const alert of alerts) {
     if (alert.last_fired_at && alert.last_fired_at > cooldownCutoff) continue;
@@ -179,11 +196,13 @@ export async function GET(req: NextRequest) {
       if (isRealProduction) await sendEmail(alert.email, subject, html);
       fired++;
     } catch (err) {
+      errors++;
       console.error(`[trigger-country-risk-alerts] Failed for alert ${alert.id}:`, err);
       Sentry.captureException(err, { tags: { cron: "trigger-country-risk-alerts", alert_id: alert.id, user_id: alert.user_id } });
     }
   }
 
-  await logCronRun(supabase, "trigger-country-risk-alerts", "ok", fired);
-  return Response.json({ fired, blockedSkipped });
+  await logCronRun(supabase, "trigger-country-risk-alerts", errors > 0 ? "error" : "ok", fired,
+    errors > 0 ? `${errors} alerte(s) en échec` : undefined);
+  return Response.json({ fired, blockedSkipped, errors });
 }

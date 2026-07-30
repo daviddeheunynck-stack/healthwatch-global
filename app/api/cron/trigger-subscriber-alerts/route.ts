@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createClient } from "@supabase/supabase-js";
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 import * as Sentry from "@sentry/nextjs";
 import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
@@ -82,6 +82,22 @@ export async function GET(req: NextRequest) {
 
   const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE);
 
+  // Defensive wrapper: an uncaught exception anywhere before or between the
+  // fetches below (only the send/notify step has a local try/catch) used to
+  // propagate straight out — bare 500, no Sentry event, logCronRun never
+  // reached. Same root cause as the sync-outbreaks incident of 2026-07-29.
+  try {
+    return await runSubscriberAlerts(req, supabase);
+  } catch (err) {
+    console.error("[trigger-subscriber-alerts] uncaught exception:", err);
+    Sentry.captureException(err, { tags: { cron: "trigger-subscriber-alerts" } });
+    await logCronRun(supabase, "trigger-subscriber-alerts", "error", 0,
+      err instanceof Error ? err.message : String(err));
+    return NextResponse.json({ error: String(err) }, { status: 500 });
+  }
+}
+
+async function runSubscriberAlerts(_req: NextRequest, supabase: SupabaseClient) {
   const { data: subscribers } = await supabase
     .from("outbreak_subscribers")
     .select("id, user_id, outbreak_id, emails, locale, last_sent_at");
@@ -120,6 +136,7 @@ export async function GET(req: NextRequest) {
   const COOLDOWN_H = 24;
   let sent = 0;
   let blockedSkipped = 0;
+  let errors = 0;
 
   for (const sub of subscribers as Subscriber[]) {
     const o = oMap.get(sub.outbreak_id);
@@ -189,11 +206,13 @@ export async function GET(req: NextRequest) {
 
       await notifyMobile(supabase, sub.user_id, { title: subject, body: inAppBody, outbreak_id: o.id });
     } catch (err) {
+      errors++;
       console.error(`[trigger-subscriber-alerts] Failed for sub ${sub.id}:`, err);
       Sentry.captureException(err, { tags: { cron: "trigger-subscriber-alerts", sub_id: sub.id, user_id: sub.user_id } });
     }
   }
 
-  await logCronRun(supabase, "trigger-subscriber-alerts", "ok", sent);
-  return NextResponse.json({ ok: true, sent, blockedSkipped });
+  await logCronRun(supabase, "trigger-subscriber-alerts", errors > 0 ? "error" : "ok", sent,
+    errors > 0 ? `${errors} envoi(s) en échec` : undefined);
+  return NextResponse.json({ ok: true, sent, blockedSkipped, errors });
 }

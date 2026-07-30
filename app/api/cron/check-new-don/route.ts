@@ -5,7 +5,7 @@
 // reviewed/verified (and possibly posted about) instead of quietly appearing.
 
 import { NextRequest, NextResponse } from "next/server";
-import { createClient } from "@supabase/supabase-js";
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import * as Sentry from "@sentry/nextjs";
 import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
 import { fetchWHODONList, parseWHODONItems, donArticleUrl } from "@/lib/who-api";
@@ -119,6 +119,23 @@ export async function GET(req: NextRequest) {
   }
   const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
 
+  // Defensive wrapper: section 2 already handles its own fetch failure, but
+  // sections 3-5 below (seen-set persistence, per-DON parse/dedup loop, admin
+  // email) run outside any enclosing try/catch. An uncaught exception there
+  // propagated straight out: bare 500, no Sentry event, logCronRun never
+  // reached. Same root cause as the sync-outbreaks incident of 2026-07-29.
+  try {
+    return await runCheckNewDon(req, supabase);
+  } catch (err) {
+    console.error("[check-new-don] uncaught exception:", err);
+    Sentry.captureException(err, { tags: { cron: "check-new-don" } });
+    await logCronRun(supabase, "check-new-don", "error", 0,
+      err instanceof Error ? err.message : String(err));
+    return NextResponse.json({ error: String(err) }, { status: 500 });
+  }
+}
+
+async function runCheckNewDon(_req: NextRequest, supabase: SupabaseClient) {
   // ── 1. Load previously-seen DON article URLs ──────────────────────────
   const { data: configRow } = await supabase
     .from("site_config").select("value").eq("key", SEEN_KEY).maybeSingle();

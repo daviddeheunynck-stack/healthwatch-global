@@ -1,5 +1,5 @@
 import { NextRequest } from "next/server";
-import { createClient } from "@supabase/supabase-js";
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 import * as Sentry from "@sentry/nextjs";
 import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
@@ -86,8 +86,29 @@ export async function GET(req: NextRequest) {
   if (!cronSecret || authHeader !== `Bearer ${cronSecret}`)
     return new Response("Unauthorized", { status: 401 });
 
+  const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+  // Defensive wrapper: an uncaught exception anywhere before or between the
+  // fetches/loop below (only the send/notify step has a local try/catch) used
+  // to propagate straight out — bare 500, no Sentry event, logCronRun never
+  // reached. Same root cause as the sync-outbreaks incident of 2026-07-29.
+  try {
+    return await runRegionalDigest(supabase);
+  } catch (err) {
+    console.error("[trigger-regional-digest] uncaught exception:", err);
+    Sentry.captureException(err, { tags: { cron: "trigger-regional-digest" } });
+    await logCronRun(supabase, "trigger-regional-digest", "error", 0,
+      err instanceof Error ? err.message : String(err));
+    return Response.json({ error: String(err) }, { status: 500 });
+  }
+}
+
+async function runRegionalDigest(supabase: SupabaseClient) {
   const brevoKey = (process.env.BREVO_API_KEY ?? "").replace(/^﻿/, "").trim();
-  if (!brevoKey) return new Response(JSON.stringify({ ok: true, skipped: "BREVO_API_KEY not configured" }), { status: 200 });
+  if (!brevoKey) {
+    await logCronRun(supabase, "trigger-regional-digest", "ok", 0);
+    return new Response(JSON.stringify({ ok: true, skipped: "BREVO_API_KEY not configured" }), { status: 200 });
+  }
 
   const sendEmail = async (to: string, subject: string, html: string) => {
     const res = await fetch("https://api.brevo.com/v3/smtp/email", {
@@ -101,8 +122,6 @@ export async function GET(req: NextRequest) {
     });
     if (!res.ok) throw new Error(`Brevo error ${res.status}: ${await res.text()}`);
   };
-
-  const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
   // Pro users with a specific region preference
   const { data: users } = await supabase
@@ -138,6 +157,7 @@ export async function GET(req: NextRequest) {
 
   const active = outbreaks ?? [];
   let fired = 0;
+  let errors = 0;
 
   for (const user of users as Array<{ id: string; email: string; alert_locale?: string | null; digest_region: string; display_filters: unknown }>) {
     const df = user.display_filters as Record<string, unknown> | null;
@@ -209,6 +229,7 @@ export async function GET(req: NextRequest) {
       });
       if (insertErr) {
         console.warn(`[trigger-regional-digest] dedup insert failed for ${user.id}: ${insertErr.message}`);
+        errors++;
         continue;
       }
 
@@ -219,11 +240,13 @@ export async function GET(req: NextRequest) {
       }
       fired++;
     } catch (err) {
+      errors++;
       console.error(`[trigger-regional-digest] Failed for ${user.email}:`, err);
       Sentry.captureException(err, { tags: { cron: "trigger-regional-digest", user_id: user.id } });
     }
   }
 
-  await logCronRun(supabase, "trigger-regional-digest", "ok", fired);
-  return Response.json({ fired });
+  await logCronRun(supabase, "trigger-regional-digest", errors > 0 ? "error" : "ok", fired,
+    errors > 0 ? `${errors} envoi(s) en échec` : undefined);
+  return Response.json({ fired, errors });
 }

@@ -3,7 +3,7 @@
 // the last notified values. Sends an email if anything changed.
 
 import { NextRequest, NextResponse } from "next/server";
-import { createClient } from "@supabase/supabase-js";
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { buildWatchlistAlertEmail } from "@/lib/watchlist-alert-email";
 import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 import { errorMessage } from "@/lib/error";
@@ -49,6 +49,22 @@ export async function GET(req: NextRequest) {
     clean(process.env.SUPABASE_SERVICE_ROLE_KEY)
   );
 
+  // Defensive wrapper: an uncaught exception anywhere before or between the
+  // fetches/loop below (only the per-entry send has a local try/catch) used to
+  // propagate straight out — bare 500, no Sentry event, logCronRun never
+  // reached. Same root cause as the sync-outbreaks incident of 2026-07-29.
+  try {
+    return await runWatchlistAlerts(req, supabase);
+  } catch (err) {
+    console.error("[watchlist-alerts] uncaught exception:", err);
+    Sentry.captureException(err, { tags: { cron: "watchlist-alerts" } });
+    await logCronRun(supabase, "watchlist-alerts", "error", 0,
+      err instanceof Error ? err.message : String(err));
+    return NextResponse.json({ error: String(err) }, { status: 500 });
+  }
+}
+
+async function runWatchlistAlerts(_req: NextRequest, supabase: SupabaseClient) {
   // 1. Get all watchlist entries with user profiles
   const { data: entries } = await supabase
     .from("user_watchlist")
@@ -102,6 +118,7 @@ export async function GET(req: NextRequest) {
   let sent = 0;
   let unchanged = 0;
   let blockedSkipped = 0;
+  let errors = 0;
 
   for (const entry of entries) {
     const outbreak = outbreakMap.get(entry.outbreak_id);
@@ -162,7 +179,7 @@ export async function GET(req: NextRequest) {
         );
       if (logErr) {
         console.error(`[watchlist-alerts] log insert failed for ${entry.user_id}/${entry.outbreak_id}:`, errorMessage(logErr));
-        unchanged++;
+        errors++;
         continue;
       }
 
@@ -186,12 +203,14 @@ export async function GET(req: NextRequest) {
 
       await new Promise((r) => setTimeout(r, 150));
     } catch (err: unknown) {
+      errors++;
       console.error(`[watchlist-alerts] Failed for ${profile.email}:`, errorMessage(err));
       Sentry.captureException(err, { tags: { cron: "watchlist-alerts", user_id: entry.user_id, outbreak_id: entry.outbreak_id } });
     }
   }
 
-  await logCronRun(supabase, "watchlist-alerts", "ok", sent);
-  console.log(`[watchlist-alerts] Done — sent: ${sent}, unchanged: ${unchanged}, blockedSkipped: ${blockedSkipped}`);
-  return NextResponse.json({ sent, unchanged, blockedSkipped });
+  await logCronRun(supabase, "watchlist-alerts", errors > 0 ? "error" : "ok", sent,
+    errors > 0 ? `${errors} alerte(s) en échec` : undefined);
+  console.log(`[watchlist-alerts] Done — sent: ${sent}, unchanged: ${unchanged}, blockedSkipped: ${blockedSkipped}, errors: ${errors}`);
+  return NextResponse.json({ sent, unchanged, blockedSkipped, errors });
 }

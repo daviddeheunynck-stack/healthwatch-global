@@ -7,7 +7,7 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
-import { createClient } from "@supabase/supabase-js";
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import * as Sentry from "@sentry/nextjs";
 import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
 import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
@@ -151,6 +151,22 @@ export async function GET(req: NextRequest) {
 
   const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE);
 
+  // Defensive wrapper: an uncaught exception anywhere before or between the
+  // fetches/loop below (only the send itself has a local try/catch) used to
+  // propagate straight out — bare 500, no Sentry event, logCronRun never
+  // reached. Same root cause as the sync-outbreaks incident of 2026-07-29.
+  try {
+    return await runSendSitrepEmails(req, supabase);
+  } catch (err) {
+    console.error("[send-sitrep-emails] uncaught exception:", err);
+    Sentry.captureException(err, { tags: { cron: "send-sitrep-emails" } });
+    await logCronRun(supabase, "send-sitrep-emails", "error", 0,
+      err instanceof Error ? err.message : String(err));
+    return NextResponse.json({ error: String(err) }, { status: 500 });
+  }
+}
+
+async function runSendSitrepEmails(_req: NextRequest, supabase: SupabaseClient) {
   // Fetch all active scheduled reports
   const { data: reports } = await supabase
     .from("scheduled_reports")
@@ -177,6 +193,7 @@ export async function GET(req: NextRequest) {
   const today = new Date().toISOString().split("T")[0];
   let totalSent = 0;
   let blockedSkipped = 0;
+  let errors = 0;
   const now = new Date().toISOString();
 
   // report.recipients is a free-text list (not always a profiles row) —
@@ -222,11 +239,13 @@ export async function GET(req: NextRequest) {
         .update({ last_sent_at: now })
         .eq("id", report.id);
     } catch (err) {
+      errors++;
       console.error(`[send-sitrep-emails] Failed for report ${report.id}:`, err);
       Sentry.captureException(err, { tags: { cron: "send-sitrep-emails", report_id: report.id, user_id: report.user_id } });
     }
   }
 
-  await logCronRun(supabase, "send-sitrep-emails", "ok", totalSent);
-  return NextResponse.json({ ok: true, sent: totalSent, blockedSkipped });
+  await logCronRun(supabase, "send-sitrep-emails", errors > 0 ? "error" : "ok", totalSent,
+    errors > 0 ? `${errors} rapport(s) en échec` : undefined);
+  return NextResponse.json({ ok: true, sent: totalSent, blockedSkipped, errors });
 }

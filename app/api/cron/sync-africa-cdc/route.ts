@@ -292,7 +292,24 @@ export async function GET(req: NextRequest) {
   }
 
   const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
-  const today    = new Date().toISOString().substring(0, 10);
+
+  // Defensive wrapper: the per-item processing loop (section 3 below) runs
+  // outside any enclosing try/catch. An uncaught exception there propagated
+  // straight out: bare 500, no Sentry event, logCronRun never reached — same
+  // root cause as the sync-outbreaks incident of 2026-07-29.
+  try {
+    return await runAfricaCdc(req, supabase);
+  } catch (err) {
+    console.error("[africa-cdc] uncaught exception:", err);
+    Sentry.captureException(err, { tags: { cron: "sync-africa-cdc" } });
+    await logCronRun(supabase, "sync-africa-cdc", "error", 0,
+      err instanceof Error ? err.message : String(err));
+    return NextResponse.json({ error: String(err) }, { status: 500 });
+  }
+}
+
+async function runAfricaCdc(_req: NextRequest, supabase: SupabaseClient) {
+  const today = new Date().toISOString().substring(0, 10);
 
   // ── 1. Fetch Africa CDC RSS feed ─────────────────────────────────────────
   let rssXml: string;
@@ -493,6 +510,9 @@ export async function GET(req: NextRequest) {
   }
 
   console.log("[africa-cdc] Done:", results, log);
-  await logCronRun(supabase, "sync-africa-cdc", "ok", results.inserted ?? 0);
+  // Was hardcoded "ok" regardless of results.errors — same bug as
+  // sync-outbreaks (2026-07-29).
+  await logCronRun(supabase, "sync-africa-cdc", results.errors > 0 ? "error" : "ok", results.inserted ?? 0,
+    results.errors > 0 ? `${results.errors} écriture(s) en échec` : undefined);
   return NextResponse.json({ success: true, timestamp: new Date().toISOString(), ...results, log });
 }

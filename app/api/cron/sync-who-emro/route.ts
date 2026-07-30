@@ -7,6 +7,7 @@
 // Never overwrites rows owned by the WHO DON daily sync.
 
 import { NextRequest, NextResponse } from "next/server";
+import * as Sentry from "@sentry/nextjs";
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { normalizeDisease } from "@/lib/disease-data";
 import { findMentionedCountries } from "@/lib/geo-data";
@@ -217,7 +218,24 @@ export async function GET(req: NextRequest) {
   }
 
   const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
-  const today    = new Date().toISOString().substring(0, 10);
+
+  // Defensive wrapper: section 3 below (per-article processing loop) runs
+  // entirely outside any enclosing try/catch. An uncaught exception there
+  // propagated straight out: bare 500, no Sentry event, logCronRun never
+  // reached — exactly what happened to sync-outbreaks on 2026-07-29.
+  try {
+    return await runWhoEmro(req, supabase);
+  } catch (err) {
+    console.error("[who-emro] uncaught exception:", err);
+    Sentry.captureException(err, { tags: { cron: "sync-who-emro" } });
+    await logCronRun(supabase, "sync-who-emro", "error", 0,
+      err instanceof Error ? err.message : String(err));
+    return NextResponse.json({ error: String(err) }, { status: 500 });
+  }
+}
+
+async function runWhoEmro(_req: NextRequest, supabase: SupabaseClient) {
+  const today = new Date().toISOString().substring(0, 10);
 
   // ── 1. Fetch EMRO list (HTML) ──────────────────────────────────────────────
   let pageEntries: PageEntry[] = [];
@@ -387,6 +405,11 @@ export async function GET(req: NextRequest) {
   }
 
   console.log("[who-emro] Done:", results, log);
-  await logCronRun(supabase, "sync-who-emro", "ok", (results.inserted ?? 0) + (results.updated ?? 0));
+  // Was hardcoded "ok" regardless of results.errors — a failed insert/update
+  // was silently lost while the report stayed green. Same bug as
+  // sync-outbreaks (2026-07-29).
+  await logCronRun(supabase, "sync-who-emro", results.errors > 0 ? "error" : "ok",
+    (results.inserted ?? 0) + (results.updated ?? 0),
+    results.errors > 0 ? `${results.errors} écriture(s) en échec` : undefined);
   return NextResponse.json({ success: true, timestamp: new Date().toISOString(), ...results, log });
 }

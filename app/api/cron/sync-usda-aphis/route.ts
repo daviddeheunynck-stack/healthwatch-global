@@ -5,7 +5,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import * as Sentry from "@sentry/nextjs";
-import { createClient } from "@supabase/supabase-js";
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
 import { normalizeDisease } from "@/lib/disease-data";
 import { findCountry } from "@/lib/geo-data";
@@ -270,7 +270,24 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: "env:missing" }, { status: 500 });
   }
 
-  const supabase    = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
+  const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
+
+  // Defensive wrapper: the fetch stage below is already well try/catch-guarded,
+  // but the row-processing/write loop after it is not. An uncaught exception
+  // there propagated straight out: bare 500, no Sentry event, logCronRun never
+  // reached — same root cause as the sync-outbreaks incident of 2026-07-29.
+  try {
+    return await runUsdaAphis(req, supabase);
+  } catch (err) {
+    console.error("[usda-aphis] uncaught exception:", err);
+    Sentry.captureException(err, { tags: { cron: "sync-usda-aphis" } });
+    await logCronRun(supabase, "sync-usda-aphis", "error", 0,
+      err instanceof Error ? err.message : String(err));
+    return NextResponse.json({ error: String(err) }, { status: 500 });
+  }
+}
+
+async function runUsdaAphis(_req: NextRequest, supabase: SupabaseClient) {
   const diseaseInfo = normalizeDisease("avian influenza");
   const countryGeo  = findCountry("United States");
 
@@ -522,6 +539,7 @@ export async function GET(req: NextRequest) {
 
     if (deactivateErr) {
       log.push({ state: "-", status: "error", detail: `deactivation update: ${deactivateErr.message}` });
+      results.errors++;
     } else {
       results.deactivated = staleActive.length;
       for (const r of staleActive) {
@@ -531,6 +549,9 @@ export async function GET(req: NextRequest) {
   }
 
   console.log("[usda-aphis] Done:", results, log);
-  await logCronRun(supabase, "sync-usda-aphis", "ok", results.inserted ?? 0);
+  // Was hardcoded "ok" regardless of results.errors — same bug as
+  // sync-outbreaks (2026-07-29).
+  await logCronRun(supabase, "sync-usda-aphis", results.errors > 0 ? "error" : "ok", results.inserted ?? 0,
+    results.errors > 0 ? `${results.errors} écriture(s) en échec` : undefined);
   return NextResponse.json({ success: true, timestamp: new Date().toISOString(), ...results, log });
 }
