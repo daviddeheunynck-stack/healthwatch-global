@@ -345,6 +345,13 @@ async function runDataQuality(_req: NextRequest, supabase: SupabaseClient) {
     "who.int/publications/m/item",          // WHO monthly situation reports (Mpox, etc.) — monthly cadence, 28d staleness expected
     "ecdc.europa.eu/en/news-events",        // ECDC epidemiological updates — quarterly cadence, 90d+ staleness expected
     "aphis.usda.gov/hpai-h5n1",             // USDA APHIS per-state HPAI livestock — date = last confirmed detection in that state, not a sync timestamp; many states legitimately go months/years without a new one
+    "who.int/emergencies/surveillance/cholera-cases-and-deaths", // WHO cholera dashboard — explicitly annual reporting by member states, not operational (see reference_who_cholera_operational_source)
+    "cdn.who.int/media/docs/default-source/_sage-2026",          // WHO SAGE-hosted versioned risk assessments (e.g. diphtheria African region v.1/v.2) — new version, not periodic refresh; confirmed 2026-07-30 no v.3 exists beyond the currently-cited v.2
+    "paho.org/en/documents/epidemiological-alert",               // PAHO epidemiological alerts — event-driven, not on a fixed schedule; confirmed 2026-07-30 no newer alert supersedes the 11 June 2026 diphtheria one
+    "afro.who.int/countries",                                    // WHO AFRO country-specific news posts — one-off articles, not a periodic series
+    "multi-country_outbreak-of-cholera_epidemiological_update",  // WHO's numbered cholera epi-update series stopped at #38 (30 June 2026); no #39 exists and the announced WER migration hadn't appeared as of 2026-07-30 (see reference_who_cholera_epi_update_moves_to_wer_2026_07_30)
+    "ecdc.europa.eu/en/all-topics-z/cholera/surveillance-and-disease-data", // ECDC cholera-monthly page — confirmed 2026-07-30 live page matches DB exactly, monthly cadence
+    "health-topics---meningitis/meningitis_bulletin",            // WHO AFRO meningitis bulletin — surveillance season ended at week 26/2026, no bulletin published again until the next season (see meningitis_season_end_week26_2026)
   ];
   // A dashboard/tracker source is skipped by the tight 7/21-day rule above because
   // it doesn't publish per-article dates — but an unconditional skip left rows
