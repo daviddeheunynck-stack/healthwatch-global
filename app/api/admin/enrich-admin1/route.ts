@@ -13,7 +13,8 @@
  * Protected by CRON_SECRET.
  */
 import { NextRequest, NextResponse } from "next/server";
-import { createClient } from "@supabase/supabase-js";
+import * as Sentry from "@sentry/nextjs";
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { geocodeAdmin1 } from "@/lib/geo-extract";
 import { logCronRun } from "@/lib/cron-monitor";
 
@@ -159,6 +160,24 @@ export async function GET(req: NextRequest) {
 
   const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
 
+  // Defensive wrapper: this route is cron-triggered hourly (vercel.json, outside
+  // the app/api/cron/ convention — easy to miss in a directory-scoped audit) but
+  // had no top-level try/catch and no Sentry import at all. The per-row loop
+  // below calls geocodeAdmin1() — an external Nominatim request — with nothing
+  // catching a throw from it: bare 500, no Sentry event, logCronRun never
+  // reached. Same root cause as the sync-outbreaks incident of 2026-07-29.
+  try {
+    return await runEnrichAdmin1(req, supabase);
+  } catch (err) {
+    console.error("[enrich-admin1] uncaught exception:", err);
+    Sentry.captureException(err, { tags: { cron: "enrich-admin1" } });
+    await logCronRun(supabase, "enrich-admin1", "error", 0,
+      err instanceof Error ? err.message : String(err));
+    return NextResponse.json({ error: String(err) }, { status: 500 });
+  }
+}
+
+async function runEnrichAdmin1(_req: NextRequest, supabase: SupabaseClient) {
   // 1. Load all "~" rows (need enrichment)
   const { data: targets, error: tErr } = await supabase
     .from("outbreaks")
@@ -166,6 +185,7 @@ export async function GET(req: NextRequest) {
     .eq("admin1", "~");
 
   if (tErr) {
+    Sentry.captureException(tErr, { tags: { cron: "enrich-admin1" } });
     await logCronRun(supabase, "enrich-admin1", "error", 0, tErr.message);
     return NextResponse.json({ error: tErr.message }, { status: 500 });
   }
@@ -183,6 +203,7 @@ export async function GET(req: NextRequest) {
     .neq("admin1", "~");
 
   if (sErr) {
+    Sentry.captureException(sErr, { tags: { cron: "enrich-admin1" } });
     await logCronRun(supabase, "enrich-admin1", "error", 0, sErr.message);
     return NextResponse.json({ error: sErr.message }, { status: 500 });
   }
@@ -282,6 +303,11 @@ export async function GET(req: NextRequest) {
   }
 
   console.log("[enrich-admin1] Done:", stats);
-  await logCronRun(supabase, "enrich-admin1", "ok", stats.cross_source + stats.endemic_default);
+  // Was hardcoded "ok" regardless of stats.errors — same bug as sync-outbreaks
+  // (2026-07-29): a failed update was silently lost while the report stayed
+  // green.
+  await logCronRun(supabase, "enrich-admin1", stats.errors > 0 ? "error" : "ok",
+    stats.cross_source + stats.endemic_default,
+    stats.errors > 0 ? `${stats.errors} mise(s) à jour en échec` : undefined);
   return NextResponse.json({ success: true, ...stats, log });
 }
