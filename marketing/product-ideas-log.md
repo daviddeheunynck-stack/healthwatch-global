@@ -277,6 +277,6 @@ Or en base, `last_sign_in_at` vaut **13/07 12:59 pour Bankunda** et **24/07 14:0
 
 **Contexte mesuré au passage** (utile au bilan de lundi, pas des idées) : 21 comptes, 7 essais Pro en cours après l'expiration de `iinnerre@gmail.com` le 29/07 (`expire-trials` a bien tourné, `rows=1`) ; prochaine échéance `r.endangrukmanams@gmail.com` le 01/08. Les 4 leads institutionnels expirent tous **après** la date de décision (Kamau 15/08, Bankunda 17/08, ZABRE 22/08, Mulamba 24/08). Toutes les tables de personnalisation restent à **0 ligne** sauf `user_alert_regions` (45) et `push_subscriptions` (1). `alert_notifications` : toujours **83 lignes, 100 % `pheic`**, la plus récente le 24/07 — la cloche in-app n'a toujours jamais affiché une notification personnalisée.
 
-**Statut :** PROPOSÉE — en attente de retour de David.
+**Statut :** David a validé les deux (« On applique les deux idées »). Construction déléguée à deux sessions dédiées (`task_b8a6884d`, `task_04edea2c`) plutôt que faite dans cette session, conformément à la consigne de scope de `daily-product-ideas-healthwatch` (« ne jamais coder ou implémenter une idée toi-même dans cette session »). Statut à mettre à jour par ces sessions une fois le code livré.
 
 ---
