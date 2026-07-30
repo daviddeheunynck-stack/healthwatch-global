@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase-server";
 import { resolvedPlan } from "@/lib/resolved-plan";
 import { NextResponse } from "next/server";
+import * as Sentry from "@sentry/nextjs";
 
 export const dynamic = "force-dynamic";
 
@@ -14,10 +15,19 @@ export async function GET() {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const { data } = await supabase
+  const { data, error } = await supabase
     .from("user_alert_regions")
     .select("region, min_risk")
     .eq("user_id", user.id);
+
+  // A failed read used to fall through as "0 regions subscribed" — the
+  // settings page itself couldn't reveal a query failure, only genuinely
+  // "you're not subscribed to anything."
+  if (error) {
+    console.error("[alert-prefs] fetch failed:", error.message);
+    Sentry.captureException(new Error(`[alert-prefs] fetch failed: ${error.message}`), { tags: { route: "alert-prefs", user_id: user.id } });
+    return NextResponse.json({ error: "Failed to load preferences" }, { status: 500 });
+  }
 
   return NextResponse.json({
     regions: (data ?? []).map((r: { region: string }) => r.region),
@@ -54,24 +64,44 @@ export async function PUT(req: Request) {
     if (!minRisk || !VALID_MIN_RISK.has(minRisk)) {
       return NextResponse.json({ error: "enabled (boolean) or minRisk required" }, { status: 400 });
     }
-    await supabase
+    const { error } = await supabase
       .from("user_alert_regions")
       .update({ min_risk: minRisk })
       .eq("user_id", user.id)
       .eq("region", region);
+    if (error) {
+      console.error("[alert-prefs] minRisk update failed:", error.message);
+      Sentry.captureException(new Error(`[alert-prefs] minRisk update failed: ${error.message}`), { tags: { route: "alert-prefs", user_id: user.id } });
+      return NextResponse.json({ error: "Failed to save" }, { status: 500 });
+    }
     return NextResponse.json({ ok: true });
   }
 
+  // A failed write here was previously indistinguishable from success: the
+  // user toggles a region on, believes they're now covered, but no row lands
+  // and they silently never get a regional alert — the same shape as the
+  // West Nile incident (2026-07-30), just one step earlier in the pipeline
+  // (the subscription itself, not the send).
   if (enabled) {
-    await supabase
+    const { error } = await supabase
       .from("user_alert_regions")
       .upsert({ user_id: user.id, region, min_risk: minRisk && VALID_MIN_RISK.has(minRisk) ? minRisk : "low" });
+    if (error) {
+      console.error("[alert-prefs] region enable failed:", error.message);
+      Sentry.captureException(new Error(`[alert-prefs] region enable failed: ${error.message}`), { tags: { route: "alert-prefs", user_id: user.id } });
+      return NextResponse.json({ error: "Failed to save" }, { status: 500 });
+    }
   } else {
-    await supabase
+    const { error } = await supabase
       .from("user_alert_regions")
       .delete()
       .eq("user_id", user.id)
       .eq("region", region);
+    if (error) {
+      console.error("[alert-prefs] region disable failed:", error.message);
+      Sentry.captureException(new Error(`[alert-prefs] region disable failed: ${error.message}`), { tags: { route: "alert-prefs", user_id: user.id } });
+      return NextResponse.json({ error: "Failed to save" }, { status: 500 });
+    }
   }
 
   return NextResponse.json({ ok: true });

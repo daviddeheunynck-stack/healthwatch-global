@@ -119,6 +119,22 @@ export default function Navbar() {
   }, []);
 
   const handleLogout = async () => {
+    // Best-effort: release this device's push subscription before signing
+    // out — see the same comment in SignOutButton.tsx. Without it, a shared
+    // device's next user silently takes over this user's push subscription.
+    try {
+      const reg = await navigator.serviceWorker?.getRegistration();
+      const sub = await reg?.pushManager.getSubscription();
+      if (sub) {
+        await fetch("/api/push/unsubscribe", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ endpoint: sub.endpoint }),
+        }).catch(() => {});
+        await sub.unsubscribe().catch(() => {});
+      }
+    } catch { /* best-effort only */ }
+
     const supabase = createClient();
     await supabase.auth.signOut();
     setMobileOpen(false);

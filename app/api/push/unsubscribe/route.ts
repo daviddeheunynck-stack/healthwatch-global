@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase-server";
 import { createClient as createService } from "@supabase/supabase-js";
+import * as Sentry from "@sentry/nextjs";
 
 export const dynamic = "force-dynamic";
 
@@ -24,11 +25,20 @@ export async function POST(req: NextRequest) {
   const { endpoint } = await req.json().catch(() => ({ endpoint: undefined }));
   if (!endpoint) return NextResponse.json({ error: "endpoint required" }, { status: 400 });
 
-  await service()
+  // Previously unchecked: a failed delete told the browser "unsubscribed"
+  // while the row survived, so an explicit opt-out silently didn't take —
+  // the user keeps getting push notifications they asked to stop.
+  const { error } = await service()
     .from("push_subscriptions")
     .delete()
     .eq("user_id", user.id)
     .eq("endpoint", endpoint);
+
+  if (error) {
+    console.error("[push/unsubscribe] delete failed:", error.message);
+    Sentry.captureException(new Error(`[push/unsubscribe] delete failed: ${error.message}`), { tags: { route: "push-unsubscribe", user_id: user.id } });
+    return NextResponse.json({ error: "Failed to unsubscribe" }, { status: 500 });
+  }
 
   return NextResponse.json({ success: true });
 }
