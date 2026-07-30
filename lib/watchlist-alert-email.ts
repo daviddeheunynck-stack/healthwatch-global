@@ -101,7 +101,7 @@ export interface WatchlistOutbreak {
   country_en: string;
   country: string;
   cases: number;
-  deaths: number;
+  deaths: number | null;
   risk_level: string;
   date: string;
   source: string;
@@ -121,7 +121,7 @@ export function buildWatchlistAlertEmail(
   const numLocale = locale === "ar" ? "ar-SA" : (locale || "en");
 
   const hasData    = outbreak.cases > 0;
-  const cfr        = hasData ? (outbreak.deaths / outbreak.cases * 100).toFixed(1) + "%" : c.noData;
+  const cfr        = hasData && outbreak.deaths !== null ? (outbreak.deaths / outbreak.cases * 100).toFixed(1) + "%" : c.noData;
   const dashUrl    = `${APP_URL}/${locale}`;
 
   const RISK_COLOR: Record<string, string> = {
@@ -131,7 +131,7 @@ export function buildWatchlistAlertEmail(
 
   // Delta indicators
   const caseDelta  = outbreak.cases  - outbreak.prevCases;
-  const deathDelta = outbreak.deaths - outbreak.prevDeaths;
+  const deathDelta = outbreak.deaths !== null ? outbreak.deaths - outbreak.prevDeaths : 0;
   const caseSign   = caseDelta  > 0 ? "+" : "";
   const deathSign  = deathDelta > 0 ? "+" : "";
 
@@ -188,7 +188,7 @@ export function buildWatchlistAlertEmail(
         <td width="33%" style="background:#0f172a;border-radius:8px;padding:14px;text-align:center;">
           <div style="color:#f87171;font-size:11px;margin-bottom:6px;">${c.newDeaths}</div>
           <div style="color:#f87171;font-size:22px;font-weight:800;">
-            ${hasData ? outbreak.deaths.toLocaleString(numLocale) : c.noData}
+            ${hasData && outbreak.deaths !== null ? outbreak.deaths.toLocaleString(numLocale) : c.noData}
           </div>
           ${deathDelta !== 0 ? `<div style="color:${deathDelta > 0 ? "#f87171" : "#4ade80"};font-size:12px;margin-top:4px;">${deathSign}${deathDelta.toLocaleString(numLocale)}</div>` : ""}
         </td>

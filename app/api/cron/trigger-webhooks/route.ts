@@ -55,7 +55,7 @@ interface Outbreak {
   region: string;
   risk_level: string;
   cases: number;
-  deaths: number;
+  deaths: number | null;
   date: string;
   is_pheic: boolean;
   lat: number | null;
@@ -195,7 +195,7 @@ async function runTriggerWebhooks(_req: NextRequest, supabase: SupabaseClient) {
     let lastStatus = 200;
 
     for (const outbreak of matches) {
-      const cfr = outbreak.cases > 0
+      const cfr = outbreak.cases > 0 && outbreak.deaths !== null
         ? parseFloat((outbreak.deaths / outbreak.cases * 100).toFixed(1))
         : null;
 

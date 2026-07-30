@@ -127,7 +127,7 @@ export interface DiseaseAlertOutbreak {
   country_en:   string;
   country:      string;
   cases:        number;
-  deaths:       number;
+  deaths:       number | null;
   risk_level:   string;
   date:         string;
   source:       string;
@@ -148,9 +148,9 @@ export function buildDiseaseAlertEmail(
   const country  = esc(outbreak.country  || outbreak.country_en  || "");
 
   const hasData  = outbreak.cases > 0;
-  const cfr      = hasData ? (outbreak.deaths / outbreak.cases * 100).toFixed(1) + "%" : c.noData;
+  const cfr      = hasData && outbreak.deaths !== null ? (outbreak.deaths / outbreak.cases * 100).toFixed(1) + "%" : c.noData;
   const casesStr = hasData ? outbreak.cases.toLocaleString(numLocale)  : c.noData;
-  const deathStr = hasData ? outbreak.deaths.toLocaleString(numLocale) : c.noData;
+  const deathStr = hasData && outbreak.deaths !== null ? outbreak.deaths.toLocaleString(numLocale) : c.noData;
 
   const daysAgo    = outbreak.date
     ? Math.floor((Date.now() - new Date(outbreak.date).getTime()) / 86_400_000)

@@ -54,7 +54,7 @@ export async function GET(
   const riskLabel = (RISK_LABEL[o.risk_level] ?? RISK_LABEL.low)[labelLocale] ?? RISK_LABEL.low.en;
   const numLocale = locale === "ar" ? "ar-SA" : locale;
   const hasData  = o.cases > 0;
-  const cfr      = hasData ? (o.deaths / o.cases * 100).toFixed(1) + "%" : "—";
+  const cfr      = hasData && o.deaths !== null ? (o.deaths / o.cases * 100).toFixed(1) + "%" : "—";
 
   const casesLabel  = { fr: "Cas", en: "Cases", es: "Casos", id: "Kasus" }[labelLocale] ?? "Cases";
   const deathsLabel = { fr: "Décès", en: "Deaths", es: "Fallecidos", id: "Kematian" }[labelLocale] ?? "Deaths";
@@ -116,7 +116,7 @@ export async function GET(
           <div style={{ display: "flex", gap: 24 }}>
             {[
               { label: casesLabel,  value: hasData ? o.cases.toLocaleString(numLocale) : "—", color: "#60a5fa" },
-              { label: deathsLabel, value: hasData ? o.deaths.toLocaleString(numLocale) : "—", color: "#f87171" },
+              { label: deathsLabel, value: hasData && o.deaths !== null ? o.deaths.toLocaleString(numLocale) : "—", color: "#f87171" },
               { label: cfrLabel,    value: cfr,                                        color: "#fbbf24" },
             ].map(({ label, value, color: c }) => (
               <div key={label} style={{

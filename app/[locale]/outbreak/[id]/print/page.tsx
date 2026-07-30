@@ -147,7 +147,7 @@ export default async function PrintPage({
   const disease    = getLocalizedDisease(o, locale) ?? o.disease_en ?? o.disease;
   const country    = getLocalizedCountry(o, locale) ?? o.country_en ?? o.country;
   const hasData    = o.cases > 0;
-  const cfr        = hasData ? (o.deaths / o.cases * 100).toFixed(1) + "%" : l.noData;
+  const cfr        = hasData && o.deaths !== null ? (o.deaths / o.cases * 100).toFixed(1) + "%" : l.noData;
   const incidence  = getIncidenceRate(o.cases, o.country_en);
   const riskColor  = RISK_COLOR[o.risk_level] ?? "#6b7280";
   const riskLabel  = (RISK_LABEL[o.risk_level] ?? RISK_LABEL.low)[locale] ?? "RISK";
@@ -234,7 +234,7 @@ export default async function PrintPage({
             </div>
             <div className="stat-card">
               <div className="stat-label">{l.deaths}</div>
-              <div className="stat-value red">{hasData ? o.deaths.toLocaleString(locale === "ar" ? "ar-SA" : locale) : l.noData}</div>
+              <div className="stat-value red">{hasData && o.deaths !== null ? o.deaths.toLocaleString(locale === "ar" ? "ar-SA" : locale) : l.noData}</div>
             </div>
             <div className="stat-card">
               <div className="stat-label">{l.cfr}</div>
