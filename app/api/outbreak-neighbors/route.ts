@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { haversineKm } from "@/lib/haversine";
 import { getCountryCoords } from "@/lib/country-coords";
+import * as Sentry from "@sentry/nextjs";
 
 export const dynamic = "force-dynamic";
 
@@ -28,11 +29,19 @@ export async function GET(req: Request) {
 
   const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE);
 
-  const { data: outbreaks } = await supabase
+  const { data: outbreaks, error } = await supabase
     .from("outbreaks")
     .select("id, disease, disease_en, disease_ar, country, country_en, country_ar, cases, deaths, risk_level, date, lat, lng")
     .eq("active", true)
     .neq("country_en", countryEn);
+
+  // Public + cached 1h like travel-risk/outbreak-history-by-country — same
+  // fix: a failed query must not render as "no nearby outbreaks" for an hour.
+  if (error) {
+    console.error("[outbreak-neighbors] query failed:", error.message);
+    Sentry.captureException(new Error(`[outbreak-neighbors] query failed: ${error.message}`), { tags: { route: "outbreak-neighbors", country: countryEn } });
+    return NextResponse.json({ error: "Failed to load nearby outbreaks" }, { status: 503, headers: { "Cache-Control": "no-store" } });
+  }
 
   if (!outbreaks?.length) return NextResponse.json({ neighbors: [] });
 

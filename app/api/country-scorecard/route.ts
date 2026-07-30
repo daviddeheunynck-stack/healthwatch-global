@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase-server";
+import * as Sentry from "@sentry/nextjs";
 
 export const dynamic = "force-dynamic";
 
@@ -25,10 +26,19 @@ export async function GET() {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const { data: outbreaks } = await supabase
+  const { data: outbreaks, error } = await supabase
     .from("outbreaks")
     .select("country_en, country, country_ar, region, cases, is_pheic, risk_level, updated_at, disease_en, disease, disease_ar")
     .eq("active", true);
+
+  // A failed query used to read identically to "no active outbreaks" — the
+  // authenticated main scorecard view going silently blank on a transient
+  // error, with no error surfaced anywhere.
+  if (error) {
+    console.error("[country-scorecard] query failed:", error.message);
+    Sentry.captureException(new Error(`[country-scorecard] query failed: ${error.message}`), { tags: { route: "country-scorecard" } });
+    return NextResponse.json({ error: "Failed to load scorecard" }, { status: 500 });
+  }
 
   if (!outbreaks?.length) return NextResponse.json({ countries: [] });
 

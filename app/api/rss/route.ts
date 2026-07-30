@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase-server";
 import { createClient as createService } from "@supabase/supabase-js";
 import { createHash } from "crypto";
 import { resolvedPlan } from "@/lib/resolved-plan";
+import * as Sentry from "@sentry/nextjs";
 
 function sha256(input: string): string {
   return createHash("sha256").update(input).digest("hex");
@@ -69,7 +70,18 @@ export async function GET(req: NextRequest) {
   if (region) query = query.eq("region", region);
   if (risk)   query = query.eq("risk_level", risk);
 
-  const { data: outbreaks } = await query;
+  const { data: outbreaks, error } = await query;
+
+  // This is the paid Pro+ feed (distinct from the public /api/feed, which
+  // already checks its own error). A failed query used to fall through
+  // silently into a validly-formed, empty RSS document — indistinguishable
+  // to any subscriber's automated reader/pipeline from "nothing new right
+  // now," with no error surfaced anywhere.
+  if (error) {
+    console.error("[rss] outbreaks query failed:", error.message);
+    Sentry.captureException(new Error(`[rss] query failed: ${error.message}`), { tags: { route: "rss" } });
+    return new Response("Temporarily unavailable", { status: 503, headers: { "Cache-Control": "no-store" } });
+  }
 
   const items = (outbreaks ?? []).map((o) => {
     const pheicNote = o.is_pheic ? " [PHEIC]" : "";

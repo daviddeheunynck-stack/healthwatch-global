@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import * as Sentry from "@sentry/nextjs";
 
 export const dynamic = "force-dynamic";
 
@@ -17,10 +18,21 @@ export async function GET(req: Request) {
 
   const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE);
 
-  const { data } = await supabase
+  const { data, error } = await supabase
     .from("outbreaks")
     .select("date, risk_level")
     .eq("country_en", countryEn);
+
+  // Public + cached `public, s-maxage=3600` like travel-risk — a failed query
+  // used to fall through as "no history," broadcasting an empty chart to
+  // every visitor for the same country for up to an hour. Lower stakes than
+  // travel-risk (a trend chart, not a safety claim) but the same caching
+  // amplification, so fixed the same way: fail loudly, never cache the error.
+  if (error) {
+    console.error("[outbreak-history-by-country] query failed:", error.message);
+    Sentry.captureException(new Error(`[outbreak-history-by-country] query failed: ${error.message}`), { tags: { route: "outbreak-history-by-country", country: countryEn } });
+    return NextResponse.json({ error: "Failed to load history" }, { status: 503, headers: { "Cache-Control": "no-store" } });
+  }
 
   if (!data?.length) return NextResponse.json({ history: [] });
 

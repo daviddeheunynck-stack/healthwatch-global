@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase-server";
 import { createClient as createService } from "@supabase/supabase-js";
 import { resolvedPlan } from "@/lib/resolved-plan";
+import * as Sentry from "@sentry/nextjs";
 
 export async function GET(req: Request) {
   const supabase = await createClient();
@@ -49,6 +50,16 @@ export async function GET(req: Request) {
           .limit(5)
       : Promise.resolve({ data: [] }),
   ]);
+
+  // Neither leg's error was checked — a failed query silently rendered as
+  // "no trend data," indistinguishable from a genuinely new outbreak with no
+  // history yet.
+  if (snapshotsRes.error || ("error" in pastRes && pastRes.error)) {
+    const err = snapshotsRes.error ?? ("error" in pastRes ? pastRes.error : null);
+    console.error("[outbreak-history] query failed:", err);
+    Sentry.captureException(new Error(`[outbreak-history] query failed: ${err?.message}`), { tags: { route: "outbreak-history" } });
+    return NextResponse.json({ error: "Failed to load history" }, { status: 500 });
+  }
 
   return NextResponse.json({
     snapshots:     snapshotsRes.data ?? [],

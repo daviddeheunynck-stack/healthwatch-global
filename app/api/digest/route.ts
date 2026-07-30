@@ -2,6 +2,7 @@ import { NextRequest } from "next/server";
 import { createClient } from "@/lib/supabase-server";
 import { createClient as createService } from "@supabase/supabase-js";
 import { resolvedPlan } from "@/lib/resolved-plan";
+import * as Sentry from "@sentry/nextjs";
 
 const PAID_PLANS = ["pro", "team", "enterprise"];
 const REGION_ORDER = ["africa", "asia", "americas", "europe", "oceania"] as const;
@@ -27,7 +28,7 @@ export async function GET(req: NextRequest) {
 
   const cutoff = new Date(Date.now() - days * 86_400_000).toISOString();
 
-  const [{ data: all }, { data: newOnes }] = await Promise.all([
+  const [{ data: all, error: allErr }, { data: newOnes, error: newErr }] = await Promise.all([
     service
       .from("outbreaks")
       .select("id, disease_en, country_en, cases, deaths, risk_level, date, region, is_pheic")
@@ -40,6 +41,16 @@ export async function GET(req: NextRequest) {
       .gte("created_at", cutoff)
       .order("cases", { ascending: false }),
   ]);
+
+  // Neither leg was checked — a failed query rendered as a Pro-tier
+  // "SITUATION DIGEST" claiming 0 active outbreaks, no PHEIC section: a false
+  // all-clear in a document literally named for situational awareness.
+  if (allErr || newErr) {
+    const err = allErr ?? newErr;
+    console.error("[digest] query failed:", err);
+    Sentry.captureException(new Error(`[digest] query failed: ${err?.message}`), { tags: { route: "digest" } });
+    return Response.json({ error: "Failed to generate digest" }, { status: 500 });
+  }
 
   const outbreaks = all ?? [];
   const fresh     = newOnes ?? [];
