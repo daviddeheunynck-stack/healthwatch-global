@@ -9,6 +9,26 @@ export const dynamic = "force-dynamic";
 // becoming an open write oracle for junk events / metadata bloat.
 const ALLOWED_ACTIONS = new Set(["pricing_page_view", "outbreak_detail_view", "dashboard_view"]);
 
+// The action name is allowlisted but `metadata` was not bounded in any way, and
+// it lands verbatim in product_events.metadata (jsonb). Any signed-in account —
+// a free self-serve trial is enough — could POST megabyte-sized objects in a
+// loop and grow that table without limit. Real callers send a handful of short
+// scalars (locale, demo, outbreak id), so cap the serialized size and drop
+// nested structures rather than trying to validate per-action shapes. Matters
+// more than usual while the Supabase quota is the binding constraint.
+const MAX_METADATA_BYTES = 1024;
+
+function sanitizeMetadata(raw: unknown): Record<string, unknown> | undefined {
+  if (typeof raw !== "object" || raw === null || Array.isArray(raw)) return undefined;
+  const out: Record<string, unknown> = {};
+  for (const [k, v] of Object.entries(raw as Record<string, unknown>)) {
+    if (v === null || ["string", "number", "boolean"].includes(typeof v)) {
+      out[k] = typeof v === "string" ? v.slice(0, 200) : v;
+    }
+  }
+  return JSON.stringify(out).length > MAX_METADATA_BYTES ? undefined : out;
+}
+
 export async function POST(req: NextRequest) {
   const body = await req.json().catch(() => null) as { action?: unknown; metadata?: unknown } | null;
   const action = body?.action;
@@ -22,8 +42,7 @@ export async function POST(req: NextRequest) {
   // Anonymous visitors are intentionally not recorded — this table only
   // exists to be joinable against profiles by user_id.
   if (user) {
-    const metadata = body?.metadata;
-    trackEvent(user.id, action, typeof metadata === "object" && metadata !== null ? metadata as Record<string, unknown> : undefined);
+    trackEvent(user.id, action, sanitizeMetadata(body?.metadata));
   }
 
   return NextResponse.json({ ok: true });

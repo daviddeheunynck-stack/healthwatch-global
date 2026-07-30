@@ -192,7 +192,40 @@ async function runDiseaseCoverage(_req: NextRequest, supabase: SupabaseClient) {
   );
 
   // ── 3. Admin email if issues found ────────────────────────────────────────
+  // Throttled on the exact reported set. Section 2c's stock sweep has no time
+  // window, so an unmatched active row nobody has added to DISEASE_MAP yet
+  // re-reports on every run — and this cron runs hourly, which meant 24
+  // identical admin emails a day for as long as the gap stayed open. The
+  // fresh-90-minute check that preceded 2c self-cleared, so the noise was
+  // bounded and no throttle was needed; 2c removed that bound without
+  // replacing it. Same duplicate-noise pattern already stripped out of
+  // data-quality's dashboard ceiling and seed-freshness tiers on 2026-07-29 —
+  // an alert channel that repeats an unactionable item every hour is a channel
+  // that stops being read. Keyed on the finding set itself, so a genuinely new
+  // unknown disease or travelerRisk gap still emails on the very next run.
+  const NOTIFY_SIG_KEY = "disease-coverage:last_notified_signature";
+  const signature = JSON.stringify({
+    unknown: [...unknownList].sort(),
+    gaps: gapList.map((g) => `${g.disease}::${g.region}`).sort(),
+  });
+  let emailThrottled = false;
+
   if (hasIssues && adminEmail && isRealProduction) {
+    const { data: sigRow, error: sigReadErr } = await supabase
+      .from("site_config")
+      .select("value")
+      .eq("key", NOTIFY_SIG_KEY)
+      .maybeSingle();
+    // A failed read must not suppress the email — fall through and send, at
+    // worst a duplicate. Silence is the worse failure mode here.
+    if (sigReadErr) {
+      console.error("[disease-coverage] notify-signature read failed:", sigReadErr.message);
+    } else if (sigRow?.value === signature) {
+      emailThrottled = true;
+    }
+  }
+
+  if (hasIssues && adminEmail && isRealProduction && !emailThrottled) {
     const unknownHtml = unknownList.length > 0
       ? `<h3 style="color:#ef4444">Maladies non-reconnues (${unknownList.length})</h3>
          <p style="color:#9ca3af;font-size:13px">Ajouter un pattern + données dans <code>lib/disease-data.ts</code>.</p>
@@ -223,6 +256,27 @@ async function runDiseaseCoverage(_req: NextRequest, supabase: SupabaseClient) {
       `[HealthWatch] Disease coverage — ${unknownList.length} inconnu(es), ${gapList.length} gap(s)`,
       html
     );
+
+    const { error: sigWriteErr } = await supabase
+      .from("site_config")
+      .upsert({ key: NOTIFY_SIG_KEY, value: signature }, { onConflict: "key" });
+    // Failing to store it only costs a duplicate email next hour, but say so
+    // rather than leaving the throttle silently non-functional.
+    if (sigWriteErr) {
+      console.error("[disease-coverage] notify-signature write failed:", sigWriteErr.message);
+    }
+  }
+
+  // Everything resolved — drop the throttle key so the next occurrence emails
+  // immediately instead of being matched against a stale signature.
+  if (!hasIssues) {
+    const { error: sigClearErr } = await supabase
+      .from("site_config")
+      .delete()
+      .eq("key", NOTIFY_SIG_KEY);
+    if (sigClearErr) {
+      console.error("[disease-coverage] notify-signature clear failed:", sigClearErr.message);
+    }
   }
 
   await logCronRun(supabase, "disease-coverage", "ok", unknownList.length + gapList.length);
@@ -230,6 +284,7 @@ async function runDiseaseCoverage(_req: NextRequest, supabase: SupabaseClient) {
     ok: true,
     unknown: unknownList,
     travelerRiskGaps: gapList,
+    emailThrottled,
     checkedAt: new Date().toISOString(),
   });
 }
