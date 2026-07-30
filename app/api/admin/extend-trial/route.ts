@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase-server";
 import { createClient as createServiceClient } from "@supabase/supabase-js";
 import Stripe from "stripe";
+import * as Sentry from "@sentry/nextjs";
 import { isAdmin } from "@/lib/admin";
 
 export const dynamic = "force-dynamic";
@@ -52,8 +53,16 @@ export async function POST(req: NextRequest) {
     let sub: Stripe.Subscription;
     try {
       sub = await getStripe().subscriptions.retrieve(profile.stripe_subscription_id);
-    } catch {
-      sub = { status: "canceled" } as Stripe.Subscription;
+    } catch (err) {
+      // A transient Stripe error (timeout, rate limit) was previously
+      // silently treated as "canceled", which nulls stripe_subscription_id
+      // in the DB below even if the subscription is genuinely still
+      // active/trialing in Stripe — desyncing DB state from a real, possibly
+      // paying subscription, with the admin told "done" regardless. Report
+      // and refuse rather than guess on an unknown state.
+      console.error("[extend-trial] Stripe retrieve failed:", err);
+      Sentry.captureException(err, { tags: { route: "admin-extend-trial", user_id: profile.id } });
+      return NextResponse.json({ error: "Could not verify Stripe subscription status — try again" }, { status: 502 });
     }
 
     if (sub.status === "active") {
@@ -62,20 +71,35 @@ export async function POST(req: NextRequest) {
 
     if (sub.status === "trialing") {
       await getStripe().subscriptions.update(profile.stripe_subscription_id, { trial_end: trialEndUnix });
-      await admin.from("profiles").update({ plan: "pro", trial_ends_at: newEndsAt }).eq("id", profile.id);
+      const { error: updateErr } = await admin.from("profiles").update({ plan: "pro", trial_ends_at: newEndsAt }).eq("id", profile.id);
+      if (updateErr) {
+        console.error("[extend-trial] DB update failed (stripe path):", updateErr);
+        Sentry.captureException(new Error(`[extend-trial] DB update failed: ${updateErr.message}`), { tags: { route: "admin-extend-trial", user_id: profile.id } });
+        return NextResponse.json({ error: "Stripe updated but DB write failed — check Sentry" }, { status: 500 });
+      }
       return NextResponse.json({ ok: true, trial_ends_at: newEndsAt, via: "stripe" });
     }
 
     // Canceled / past_due — manage in DB only, clear stale sub ID
-    await admin.from("profiles").update({
+    const { error: updateErr } = await admin.from("profiles").update({
       plan: "pro",
       trial_ends_at: newEndsAt,
       stripe_subscription_id: null,
     }).eq("id", profile.id);
+    if (updateErr) {
+      console.error("[extend-trial] DB update failed (canceled path):", updateErr);
+      Sentry.captureException(new Error(`[extend-trial] DB update failed: ${updateErr.message}`), { tags: { route: "admin-extend-trial", user_id: profile.id } });
+      return NextResponse.json({ error: "DB write failed — check Sentry" }, { status: 500 });
+    }
     return NextResponse.json({ ok: true, trial_ends_at: newEndsAt, via: "db" });
   }
 
   // No Stripe subscription — DB only
-  await admin.from("profiles").update({ plan: "pro", trial_ends_at: newEndsAt }).eq("id", profile.id);
+  const { error: updateErr } = await admin.from("profiles").update({ plan: "pro", trial_ends_at: newEndsAt }).eq("id", profile.id);
+  if (updateErr) {
+    console.error("[extend-trial] DB update failed (no-sub path):", updateErr);
+    Sentry.captureException(new Error(`[extend-trial] DB update failed: ${updateErr.message}`), { tags: { route: "admin-extend-trial", user_id: profile.id } });
+    return NextResponse.json({ error: "DB write failed — check Sentry" }, { status: 500 });
+  }
   return NextResponse.json({ ok: true, trial_ends_at: newEndsAt, via: "db" });
 }

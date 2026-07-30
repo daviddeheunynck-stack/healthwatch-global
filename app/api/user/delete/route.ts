@@ -36,11 +36,26 @@ export async function DELETE(_req: NextRequest) {
   );
 
   // Fetch profile to check for active Stripe subscription
-  const { data: profile } = await admin
+  const { data: profile, error: profileErr } = await admin
     .from("profiles")
     .select("stripe_subscription_id")
     .eq("id", user.id)
     .single();
+
+  // deleteUser() below cascades and destroys this row (and
+  // stripe_subscription_id with it) via FK. A failed read here used to leave
+  // `profile` undefined, so `profile?.stripe_subscription_id` silently took
+  // the "no subscription" branch — not even reaching the Stripe try/catch, so
+  // no Sentry event either — and deletion proceeded anyway. A paying
+  // customer could delete their account while Stripe keeps billing them
+  // indefinitely, with the only record connecting them to that subscription
+  // gone. Fail closed instead: don't guess "no subscription" from an unknown
+  // state on an irreversible action.
+  if (profileErr) {
+    console.error("[delete-account] profile lookup failed:", profileErr);
+    Sentry.captureException(new Error(`[user/delete] profile lookup failed: ${profileErr.message}`), { tags: { route: "user-delete", user_id: user.id } });
+    return NextResponse.json({ error: "Deletion temporarily unavailable — please try again" }, { status: 503 });
+  }
 
   // Cancel active Stripe subscription so billing stops immediately
   if (profile?.stripe_subscription_id) {

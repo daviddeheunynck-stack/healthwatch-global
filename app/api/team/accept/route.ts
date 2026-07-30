@@ -139,11 +139,17 @@ export async function GET(req: NextRequest) {
     Sentry.captureException(new Error(`[team/accept] plan update: ${planErr.message}`), { tags: { route: "team-accept" } });
   }
 
-  // Mark invite accepted
-  await service
+  // Mark invite accepted — bookkeeping only (the "already a member?" check
+  // above already prevents double-processing on a repeat click regardless of
+  // whether this timestamp lands), so report but don't block the redirect.
+  const { error: acceptErr } = await service
     .from("team_invites")
     .update({ accepted_at: new Date().toISOString() })
     .eq("id", invite.id);
+  if (acceptErr) {
+    console.error("[team/accept] mark accepted:", acceptErr);
+    Sentry.captureException(new Error(`[team/accept] mark accepted: ${acceptErr.message}`), { tags: { route: "team-accept" } });
+  }
 
   return NextResponse.redirect(`${BASE_URL}/${locale}/account/team`);
 }

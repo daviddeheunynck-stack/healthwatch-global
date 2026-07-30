@@ -139,10 +139,21 @@ export async function DELETE(req: NextRequest) {
   const restoredPlan = removedProfile?.stripe_subscription_id
     ? (removedProfile.pre_team_plan ?? removedProfile.plan)
     : "free";
-  await service
+  const { error: restoreErr } = await service
     .from("profiles")
     .update({ plan: restoredPlan, team_id: null, pre_team_plan: null })
     .eq("id", body.userId);
+
+  // team_members removal above already happened and isn't being undone here —
+  // re-adding them just because this second write failed would override the
+  // owner's actual intent. But an unchecked failure here previously meant a
+  // removed member could keep unpaid "team" access, or fail to have a real
+  // paid individual plan restored, while the owner was told plain success.
+  if (restoreErr) {
+    console.error("[team/members] plan restore failed:", errorMessage(restoreErr));
+    Sentry.captureException(restoreErr, { tags: { route: "team-members", user_id: body.userId } });
+    return NextResponse.json({ ok: true, planRestoreFailed: true });
+  }
 
   return NextResponse.json({ ok: true });
 }
