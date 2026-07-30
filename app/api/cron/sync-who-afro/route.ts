@@ -545,6 +545,9 @@ async function runSyncWhoAfro(_req: NextRequest, supabase: SupabaseClient) {
   }
 
   console.log("[who-afro] Done:", results, log);
-  await logCronRun(supabase, "sync-who-afro", "ok", (results.inserted ?? 0) + (results.updated ?? 0));
+  // Was hardcoded "ok" regardless of results.errors — same bug as
+  // sync-outbreaks (2026-07-29).
+  await logCronRun(supabase, "sync-who-afro", results.errors > 0 ? "error" : "ok", (results.inserted ?? 0) + (results.updated ?? 0),
+    results.errors > 0 ? `${results.errors} écriture(s) en échec` : undefined);
   return NextResponse.json({ success: true, timestamp: new Date().toISOString(), ...results, log });
 }

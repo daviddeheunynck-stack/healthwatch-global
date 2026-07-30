@@ -175,7 +175,12 @@ async function runCountryRiskAlerts(supabase: SupabaseClient) {
 </div>`;
 
     try {
-      // Update dedup marker BEFORE sending — prevents re-send on cron retry
+      // Send BEFORE writing the dedup marker — same reordering as
+      // regional-alerts/disease-alerts/trigger-category-alerts (2026-07-30).
+      // If sendEmail throws, last_fired_at must stay untouched so this alert
+      // isn't silently suppressed for the cooldown window.
+      if (isRealProduction) await sendEmail(alert.email, subject, html);
+
       await supabase
         .from("country_risk_alerts")
         .update({ last_fired_at: new Date().toISOString() })
@@ -193,7 +198,6 @@ async function runCountryRiskAlerts(supabase: SupabaseClient) {
 
       await notifyMobile(supabase, alert.user_id, { title: subject, body: inAppBody, outbreak_id: top.id });
 
-      if (isRealProduction) await sendEmail(alert.email, subject, html);
       fired++;
     } catch (err) {
       errors++;

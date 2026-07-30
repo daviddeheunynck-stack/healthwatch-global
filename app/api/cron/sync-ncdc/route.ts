@@ -330,6 +330,9 @@ async function runSyncNcdc(_req: NextRequest, supabase: SupabaseClient) {
   }
 
   console.log("[ncdc] Done:", results, log);
-  await logCronRun(supabase, "sync-ncdc", "ok", results.inserted + results.updated);
+  // Was hardcoded "ok" regardless of results.errors — same bug as
+  // sync-outbreaks (2026-07-29).
+  await logCronRun(supabase, "sync-ncdc", results.errors > 0 ? "error" : "ok", results.inserted + results.updated,
+    results.errors > 0 ? `${results.errors} écriture(s) en échec` : undefined);
   return NextResponse.json({ success: true, timestamp: new Date().toISOString(), ...results, log });
 }

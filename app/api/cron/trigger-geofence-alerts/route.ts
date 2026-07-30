@@ -198,24 +198,10 @@ async function runGeofenceAlerts(_req: NextRequest, supabase: SupabaseClient) {
     ).join("");
 
     try {
-      // Update last_fired_at BEFORE sending — prevents re-send on cron retry
-      await supabase
-        .from("geofence_alerts")
-        .update({ last_fired_at: new Date().toISOString() })
-        .eq("id", alert.id);
-
-      const inAppBody = matches.slice(0, 3).map((o) => `${getLocalizedDisease(o, locale)} (${getLocalizedCountry(o, locale)}): ${o.cases.toLocaleString(numLocale)}`).join(" · ");
-
-      await supabase.from("alert_notifications").insert({
-        user_id:     alert.user_id,
-        type:        "geofence",
-        title:       inAppTitleStr,
-        body:        inAppBody,
-        outbreak_id: matches[0]?.id ?? null,
-      }).then(() => {}, () => {});
-
-      await notifyMobile(supabase, alert.user_id, { title: inAppTitleStr, body: inAppBody, outbreak_id: matches[0]?.id ?? null });
-
+      // Send BEFORE writing last_fired_at — same reordering as
+      // regional-alerts/disease-alerts/trigger-category-alerts (2026-07-30).
+      // If sendEmail throws, the marker must stay untouched so this alert
+      // isn't silently suppressed for the cooldown window.
       if (isRealProduction) await sendEmail(alert.email, emailSubject, `
 <div dir="${isRtl ? "rtl" : "ltr"}" style="font-family:sans-serif;max-width:520px;margin:0 auto;padding:24px;background:#0f172a;color:#e2e8f0;border-radius:12px;direction:${isRtl ? "rtl" : "ltr"};text-align:${isRtl ? "right" : "left"}">
   <p style="color:#60a5fa;font-size:17px;font-weight:700;margin:0 0 4px">${emailHeader}</p>
@@ -242,6 +228,23 @@ async function runGeofenceAlerts(_req: NextRequest, supabase: SupabaseClient) {
     ${footerText}
   </p>
 </div>`);
+
+      await supabase
+        .from("geofence_alerts")
+        .update({ last_fired_at: new Date().toISOString() })
+        .eq("id", alert.id);
+
+      const inAppBody = matches.slice(0, 3).map((o) => `${getLocalizedDisease(o, locale)} (${getLocalizedCountry(o, locale)}): ${o.cases.toLocaleString(numLocale)}`).join(" · ");
+
+      await supabase.from("alert_notifications").insert({
+        user_id:     alert.user_id,
+        type:        "geofence",
+        title:       inAppTitleStr,
+        body:        inAppBody,
+        outbreak_id: matches[0]?.id ?? null,
+      }).then(() => {}, () => {});
+
+      await notifyMobile(supabase, alert.user_id, { title: inAppTitleStr, body: inAppBody, outbreak_id: matches[0]?.id ?? null });
 
       fired++;
     } catch (err) {

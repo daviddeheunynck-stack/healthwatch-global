@@ -185,13 +185,17 @@ async function runSubscriberAlerts(_req: NextRequest, supabase: SupabaseClient) 
 </div>`;
 
     try {
-      // Update dedup marker BEFORE sending — prevents re-send on cron retry
+      // Send BEFORE writing the dedup marker — same reordering as
+      // regional-alerts/disease-alerts/trigger-category-alerts (2026-07-30).
+      // If sendEmail throws, last_sent_at must stay untouched so this
+      // subscriber isn't silently suppressed for the cooldown window.
+      if (isRealProduction) await sendEmail(deliverableEmails, subject, html);
+
       await supabase
         .from("outbreak_subscribers")
         .update({ last_sent_at: new Date().toISOString() })
         .eq("id", sub.id);
 
-      if (isRealProduction) await sendEmail(deliverableEmails, subject, html);
       sent++;
 
       const inAppBody = `${disease} · ${country} · ${risk}`;

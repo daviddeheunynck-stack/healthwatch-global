@@ -170,7 +170,18 @@ async function runWatchlistAlerts(_req: NextRequest, supabase: SupabaseClient) {
         prevDeaths:   Math.max(prevDeaths, 0),
       };
 
-      // Log BEFORE sending — prevents duplicate alert if email succeeds but a later batch upsert fails
+      // Send BEFORE writing the log. If build/send throws, we must not
+      // upsert watchlist_alert_log — that row is what suppresses future
+      // re-alerts for this user+outbreak (compared against cases_at_alert/
+      // deaths_at_alert on the next run), so logging a send that never went
+      // out would silently and permanently swallow the alert. Same fix as
+      // regional-alerts/disease-alerts (2026-07-30) — this cron had the
+      // identical log-before-send ordering.
+      const { subject, html } = buildWatchlistAlertEmail(alertOutbreak, locale, entry.user_id);
+      if (isRealProduction) {
+        await sendEmail(profile.email, subject, html);
+      }
+
       const { error: logErr } = await supabase
         .from("watchlist_alert_log")
         .upsert(
@@ -181,11 +192,6 @@ async function runWatchlistAlerts(_req: NextRequest, supabase: SupabaseClient) {
         console.error(`[watchlist-alerts] log insert failed for ${entry.user_id}/${entry.outbreak_id}:`, errorMessage(logErr));
         errors++;
         continue;
-      }
-
-      const { subject, html } = buildWatchlistAlertEmail(alertOutbreak, locale, entry.user_id);
-      if (isRealProduction) {
-        await sendEmail(profile.email, subject, html);
       }
       sent++;
 

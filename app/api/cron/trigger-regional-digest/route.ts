@@ -219,7 +219,15 @@ async function runRegionalDigest(supabase: SupabaseClient) {
     try {
       const inAppBody = `${regionLabel} · ${regional.length} ${lc.active}`;
 
-      // Insert dedup record BEFORE sending — prevents re-send on cron retry
+      // Send BEFORE inserting the dedup record — same reordering as
+      // regional-alerts/disease-alerts/trigger-category-alerts (2026-07-30).
+      // This insert is what the cooldown query above checks, so if sendEmail
+      // throws, it must not be written — otherwise a failed send is
+      // indistinguishable from a delivered one for the next COOLDOWN days.
+      if (isRealProduction) {
+        await sendEmail(user.email, subject, html);
+      }
+
       const { error: insertErr } = await supabase.from("alert_notifications").insert({
         user_id:     user.id,
         type:        "regional_digest",
@@ -235,9 +243,6 @@ async function runRegionalDigest(supabase: SupabaseClient) {
 
       await notifyMobile(supabase, user.id, { title: subject, body: inAppBody, outbreak_id: regional[0]?.id ?? null });
 
-      if (isRealProduction) {
-        await sendEmail(user.email, subject, html);
-      }
       fired++;
     } catch (err) {
       errors++;

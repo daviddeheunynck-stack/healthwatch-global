@@ -1366,7 +1366,10 @@ async function runSyncWhoRegional(_req: NextRequest, supabase: SupabaseClient) {
   }
 
   console.log("[regional] Done:", results, log);
-  await logCronRun(supabase, "sync-who-regional", "ok", results.inserted ?? 0);
+  // Was hardcoded "ok" regardless of results.errors — same bug as
+  // sync-outbreaks (2026-07-29).
+  await logCronRun(supabase, "sync-who-regional", results.errors > 0 ? "error" : "ok", results.inserted ?? 0,
+    results.errors > 0 ? `${results.errors} écriture(s) en échec` : undefined);
 
   return NextResponse.json({
     success: true,

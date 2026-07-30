@@ -205,25 +205,14 @@ async function runCategoryAlerts(_req: NextRequest, supabase: SupabaseClient) {
     ).join("");
 
     try {
-      // Update dedup marker BEFORE sending — prevents re-send on cron retry
-      await supabase
-        .from("category_alerts")
-        .update({ last_fired_at: new Date().toISOString() })
-        .eq("id", alert.id);
-
-      const inAppTitle = lc.inAppTitle(catLabel, matches.length, minStr);
-      const inAppBody  = matches.slice(0, 3).map((o) => lc.inAppBody(getLocalizedDisease(o, locale), getLocalizedCountry(o, locale), o.cases.toLocaleString(numLocale))).join(" · ");
-
-      await supabase.from("alert_notifications").insert({
-        user_id: alert.user_id,
-        type:    "category_alert",
-        title:   inAppTitle,
-        body:    inAppBody,
-        outbreak_id: matches[0]?.id ?? null,
-      }).then(() => {}, () => {});
-
-      await notifyMobile(supabase, alert.user_id, { title: inAppTitle, body: inAppBody, outbreak_id: matches[0]?.id ?? null });
-
+      // Send BEFORE writing the dedup marker. If sendEmail throws, we must
+      // not update last_fired_at — that's what suppresses this alert for the
+      // next COOLDOWN_H hours, so marking a send that never went out would
+      // silently swallow it for that whole window (and every window after,
+      // if the throw is caused by something persistent about this alert
+      // rather than a one-off blip). Same fix as regional-alerts/
+      // disease-alerts (2026-07-30) — this cron had the identical
+      // log/marker-before-send ordering.
       if (isRealProduction) await sendEmail(alert.email, lc.subject(catLabel, minStr), `
 <div dir="${isRtl ? "rtl" : "ltr"}" style="font-family:sans-serif;max-width:520px;margin:0 auto;padding:24px;background:#0f172a;color:#e2e8f0;border-radius:12px;direction:${isRtl ? "rtl" : "ltr"};text-align:${isRtl ? "right" : "left"}">
   <p style="color:#60a5fa;font-size:17px;font-weight:700;margin:0 0 4px">${lc.header}</p>
@@ -249,6 +238,24 @@ async function runCategoryAlerts(_req: NextRequest, supabase: SupabaseClient) {
   </a>
   <p style="margin-top:20px;font-size:11px;color:#475569">${lc.footer(COOLDOWN_H)}</p>
 </div>`);
+
+      await supabase
+        .from("category_alerts")
+        .update({ last_fired_at: new Date().toISOString() })
+        .eq("id", alert.id);
+
+      const inAppTitle = lc.inAppTitle(catLabel, matches.length, minStr);
+      const inAppBody  = matches.slice(0, 3).map((o) => lc.inAppBody(getLocalizedDisease(o, locale), getLocalizedCountry(o, locale), o.cases.toLocaleString(numLocale))).join(" · ");
+
+      await supabase.from("alert_notifications").insert({
+        user_id: alert.user_id,
+        type:    "category_alert",
+        title:   inAppTitle,
+        body:    inAppBody,
+        outbreak_id: matches[0]?.id ?? null,
+      }).then(() => {}, () => {});
+
+      await notifyMobile(supabase, alert.user_id, { title: inAppTitle, body: inAppBody, outbreak_id: matches[0]?.id ?? null });
 
       fired++;
     } catch (err) {

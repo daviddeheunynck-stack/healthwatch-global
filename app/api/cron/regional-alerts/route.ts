@@ -399,7 +399,12 @@ async function runRegionalAlerts(_req: NextRequest, supabase: SupabaseClient) {
     }
   }
 
-  await logCronRun(supabase, "regional-alerts", "ok", sent);
+  // Was hardcoded "ok" — `failed` (log-upsert failures, send failures) was
+  // tracked throughout the loop above but never consulted here, so a genuine
+  // delivery failure still logged "ok". Same bug fixed across ~20 other crons
+  // today (sync-outbreaks et al., 2026-07-29/30).
+  await logCronRun(supabase, "regional-alerts", failed > 0 ? "error" : "ok", sent,
+    failed > 0 ? `${failed} alerte(s) en échec` : undefined);
   return NextResponse.json({
     candidateOutbreaks: candidateOutbreaks.length,
     sent,

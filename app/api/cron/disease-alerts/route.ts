@@ -143,6 +143,7 @@ async function runDiseaseAlerts(_req: NextRequest, supabase: SupabaseClient) {
   let sent = 0;
   let skipped = 0;
   let blockedSkipped = 0;
+  let failed = 0;
 
   for (const outbreak of outbreaks) {
     const interestedUsers = diseaseUsers.get(outbreak.disease_en ?? "") ?? [];
@@ -190,7 +191,20 @@ async function runDiseaseAlerts(_req: NextRequest, supabase: SupabaseClient) {
           source:       outbreak.source,
         };
 
-        // Log BEFORE sending — prevents duplicate alert if email succeeds but a later batch upsert fails
+        const diseaseSlug = diseaseToSlug(alertOutbreak.disease_en);
+        const { subject, html } = buildDiseaseAlertEmail(alertOutbreak, locale, userId, diseaseSlug);
+        if (isRealProduction) {
+          await sendEmail(profile.email, subject, html);
+        }
+
+        // Build + send BEFORE writing the log. If either throws, we must not
+        // upsert disease_alert_log — that row is what suppresses future
+        // re-alerts for this user+outbreak, so logging a send that never
+        // went out would silently and permanently swallow the alert. Letting
+        // the exception propagate to the catch below leaves no log row, so
+        // the next run retries this outbreak as "new" instead of losing it.
+        // Same fix as regional-alerts (2026-07-30, commit 8b70438) — this
+        // cron had the identical log-before-send ordering.
         const { error: logErr } = await supabase
           .from("disease_alert_log")
           .upsert(
@@ -205,14 +219,8 @@ async function runDiseaseAlerts(_req: NextRequest, supabase: SupabaseClient) {
           );
         if (logErr) {
           console.error(`[disease-alerts] log insert failed for ${userId}/${outbreak.id}:`, errorMessage(logErr));
-          skipped++;
+          failed++;
           continue;
-        }
-
-        const diseaseSlug = diseaseToSlug(alertOutbreak.disease_en);
-        const { subject, html } = buildDiseaseAlertEmail(alertOutbreak, locale, userId, diseaseSlug);
-        if (isRealProduction) {
-          await sendEmail(profile.email, subject, html);
         }
         sent++;
 
@@ -232,13 +240,17 @@ async function runDiseaseAlerts(_req: NextRequest, supabase: SupabaseClient) {
 
         await new Promise((r) => setTimeout(r, 150)); // rate-limit friendly
       } catch (err: unknown) {
+        failed++;
         console.error(`[disease-alerts] Failed for ${profile.email}:`, errorMessage(err));
         Sentry.captureException(err, { tags: { cron: "disease-alerts", user_id: userId, outbreak_id: outbreak.id } });
       }
     }
   }
 
-  await logCronRun(supabase, "disease-alerts", "ok", sent);
+  // Was hardcoded "ok" with no failure counter at all — a genuine send
+  // failure was invisible both in the response and in cron status.
+  await logCronRun(supabase, "disease-alerts", failed > 0 ? "error" : "ok", sent,
+    failed > 0 ? `${failed} alerte(s) en échec` : undefined);
   console.log(`[disease-alerts] Done — sent: ${sent}, skipped: ${skipped}, blockedSkipped: ${blockedSkipped}`);
   return NextResponse.json({ sent, skipped, blockedSkipped });
 }
