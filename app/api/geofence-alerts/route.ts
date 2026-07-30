@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase-server";
 import { resolvedPlan } from "@/lib/resolved-plan";
+import * as Sentry from "@sentry/nextjs";
 
 export const dynamic = "force-dynamic";
 
@@ -68,6 +69,11 @@ export async function DELETE(req: NextRequest) {
   const { user, supabase } = ctx;
   const id = new URL(req.url).searchParams.get("id");
   if (!id) return NextResponse.json({ error: "Missing id" }, { status: 400 });
-  await supabase.from("geofence_alerts").delete().eq("id", id).eq("user_id", user.id);
+  const { error } = await supabase.from("geofence_alerts").delete().eq("id", id).eq("user_id", user.id);
+  if (error) {
+    console.error("[geofence-alerts] delete failed:", error.message);
+    Sentry.captureException(new Error(`[geofence-alerts] delete failed: ${error.message}`), { tags: { route: "geofence-alerts", user_id: user.id } });
+    return NextResponse.json({ error: "Failed to delete" }, { status: 500 });
+  }
   return NextResponse.json({ ok: true });
 }

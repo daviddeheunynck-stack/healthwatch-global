@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase-server";
 import { createClient as createService } from "@supabase/supabase-js";
 import { resolvedPlan } from "@/lib/resolved-plan";
+import * as Sentry from "@sentry/nextjs";
 
 export const dynamic = "force-dynamic";
 
@@ -114,11 +115,20 @@ export async function DELETE(req: NextRequest) {
   if (!disease_en || typeof disease_en !== "string") return NextResponse.json({ error: "disease_en required" }, { status: 400 });
 
   const service = getServiceClient();
-  await service
+  const { error } = await service
     .from("user_alert_diseases")
     .delete()
     .eq("user_id", user.id)
     .eq("disease_en", disease_en);
+
+  // A user explicitly opting out who keeps getting that disease's alerts
+  // because this failed silently is the opt-out direction of the same
+  // West Nile-shaped bug: told "done", not actually done.
+  if (error) {
+    console.error("[alert-diseases] delete failed:", error.message);
+    Sentry.captureException(new Error(`[alert-diseases] delete failed: ${error.message}`), { tags: { route: "alert-diseases", user_id: user.id } });
+    return NextResponse.json({ error: "Failed to unsubscribe" }, { status: 500 });
+  }
 
   return NextResponse.json({ success: true });
 }

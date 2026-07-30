@@ -1,6 +1,7 @@
 // Disease-specific alert email — sent when a tracked pathogen is detected anywhere
 
 import { getResponseGuidance, RESPONSE_ACTIONS } from "./response-guidance";
+import { signUnsubscribeToken } from "./unsubscribe-token";
 
 const APP_URL = "https://healthwatch-global.com";
 
@@ -135,7 +136,7 @@ export interface DiseaseAlertOutbreak {
 export function buildDiseaseAlertEmail(
   outbreak: DiseaseAlertOutbreak,
   locale: string,
-  subscriptionId: string,
+  userId: string,
   diseaseSlug: string
 ): { subject: string; html: string } {
   const c        = COPY[locale] ?? COPY.en;
@@ -157,7 +158,13 @@ export function buildDiseaseAlertEmail(
   const ageLabel   = daysAgo === null ? "" : daysAgo === 0 ? c.daysAgoToday : daysAgo === 1 ? c.daysAgoYesterday : c.daysAgoN(daysAgo);
   const ageColor   = daysAgo === null ? "#94a3b8" : daysAgo <= 7 ? "#16a34a" : daysAgo <= 21 ? "#b45309" : "#dc2626";
 
-  const unsubUrl   = `${APP_URL}/api/unsubscribe?id=${encodeURIComponent(subscriptionId)}&locale=${locale}`;
+  // Was previously named `subscriptionId` and pointed at /api/unsubscribe,
+  // which operates on the unrelated `subscriptions` table (the free
+  // newsletter list) — this is a profiles.id, and disease-specific alerts are
+  // gated by `user_alert_diseases`, so that link matched zero rows every
+  // time: the button showed a friendly "unsubscribed" page while doing
+  // nothing. Fixed 2026-07-30 (see /api/unsubscribe-disease).
+  const unsubUrl   = `${APP_URL}/api/unsubscribe-disease?id=${encodeURIComponent(userId)}&token=${signUnsubscribeToken(userId)}&disease=${encodeURIComponent(outbreak.disease_en || outbreak.disease)}&locale=${locale}`;
   const diseaseUrl = `${APP_URL}/${locale}/disease/${diseaseSlug}`;
 
   const rs         = RISK_STYLE[outbreak.risk_level] ?? RISK_STYLE.medium;

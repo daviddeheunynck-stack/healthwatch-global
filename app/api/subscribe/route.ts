@@ -4,6 +4,7 @@ import { rateLimit, getClientIp } from "@/lib/rate-limit";
 import { errorMessage } from "@/lib/error";
 import { isRealProduction } from "@/lib/cron-monitor";
 import * as Sentry from "@sentry/nextjs";
+import { signUnsubscribeToken } from "@/lib/unsubscribe-token";
 
 export const dynamic = "force-dynamic";
 
@@ -91,7 +92,9 @@ function buildConfirmationEmail(
   const l = EMAIL_COPY[locale] ?? EMAIL_COPY.en;
   const regions = REGION_LABELS[locale] ?? REGION_LABELS.en;
   const regionLabel = regions[region] ?? region;
-  const unsubUrl = `${BASE_URL}/api/unsubscribe?id=${encodeURIComponent(subscriptionId)}&locale=${locale}`;
+  // Same fix as digest-email.ts (2026-07-30): sign the id so the link itself
+  // is the credential, not a learnable UUID.
+  const unsubUrl = `${BASE_URL}/api/unsubscribe?id=${encodeURIComponent(subscriptionId)}&token=${signUnsubscribeToken(subscriptionId)}&locale=${locale}`;
   const isRtl = locale === "ar";
 
   const html = `<!DOCTYPE html>

@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase-server";
 import { resolvedPlan } from "@/lib/resolved-plan";
 import { NextResponse } from "next/server";
+import * as Sentry from "@sentry/nextjs";
 
 export const dynamic = "force-dynamic";
 
@@ -61,10 +62,15 @@ export async function PUT(req: Request) {
 
   // Empty string = delete the webhook
   if (!url) {
-    await supabase
+    const { error } = await supabase
       .from("profiles")
       .update({ slack_webhook_url: null })
       .eq("id", user.id);
+    if (error) {
+      console.error("[slack-webhook] delete failed:", error.message);
+      Sentry.captureException(new Error(`[slack-webhook] delete failed: ${error.message}`), { tags: { route: "slack-webhook", user_id: user.id } });
+      return NextResponse.json({ error: "Failed to remove webhook" }, { status: 500 });
+    }
     return NextResponse.json({ ok: true, configured: false });
   }
 
@@ -87,10 +93,19 @@ export async function PUT(req: Request) {
     );
   }
 
-  await supabase
+  const { error: saveErr } = await supabase
     .from("profiles")
     .update({ slack_webhook_url: url })
     .eq("id", user.id);
+
+  // The webhook was already test-fired successfully above — a failure here
+  // would tell the user "connected" while the alert cron reading
+  // slack_webhook_url finds nothing to send to.
+  if (saveErr) {
+    console.error("[slack-webhook] save failed:", saveErr.message);
+    Sentry.captureException(new Error(`[slack-webhook] save failed: ${saveErr.message}`), { tags: { route: "slack-webhook", user_id: user.id } });
+    return NextResponse.json({ error: "Webhook verified but could not be saved — try again" }, { status: 500 });
+  }
 
   return NextResponse.json({ ok: true, configured: true });
 }

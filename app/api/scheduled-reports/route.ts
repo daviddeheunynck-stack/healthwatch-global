@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase-server";
 import { resolvedPlan } from "@/lib/resolved-plan";
+import * as Sentry from "@sentry/nextjs";
 
 export const dynamic = "force-dynamic";
 
@@ -87,6 +88,11 @@ export async function DELETE() {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  await supabase.from("scheduled_reports").delete().eq("user_id", user.id);
+  const { error } = await supabase.from("scheduled_reports").delete().eq("user_id", user.id);
+  if (error) {
+    console.error("[scheduled-reports] delete failed:", error.message);
+    Sentry.captureException(new Error(`[scheduled-reports] delete failed: ${error.message}`), { tags: { route: "scheduled-reports", user_id: user.id } });
+    return NextResponse.json({ error: "Failed to delete" }, { status: 500 });
+  }
   return NextResponse.json({ ok: true });
 }

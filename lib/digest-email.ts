@@ -1,6 +1,7 @@
 import type { Outbreak } from "./outbreaks";
 import { getLocalizedDisease, getLocalizedCountry } from "./outbreaks";
 import { getResponseGuidance, RESPONSE_ACTIONS } from "./response-guidance";
+import { signUnsubscribeToken } from "./unsubscribe-token";
 
 function esc(s: string): string {
   return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
@@ -144,8 +145,11 @@ export function buildDigestEmail(
   const dir = locale === "ar" ? "rtl" : "ltr";
   const numLocale = locale === "ar" ? "ar-SA" : (locale || "en");
   const weekStr = new Date().toLocaleDateString(numLocale, { day: "numeric", month: "long", year: "numeric" });
+  // The bare id used to be trusted as the only credential — same fix as
+  // unsubscribe-signal (2026-07-30): sign it so the link itself is the
+  // credential, not a learnable UUID.
   const unsubUrl = subscriptionId
-    ? `https://healthwatch-global.com/api/unsubscribe?id=${encodeURIComponent(subscriptionId)}&locale=${locale}`
+    ? `https://healthwatch-global.com/api/unsubscribe?id=${encodeURIComponent(subscriptionId)}&token=${signUnsubscribeToken(subscriptionId)}&locale=${locale}`
     : null;
 
   const outbreakRows = outbreaks.length === 0
