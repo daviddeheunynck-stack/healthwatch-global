@@ -211,7 +211,9 @@ export default function TravelRiskFullPage({ locale }: { locale: string }) {
     try {
       const res  = await fetch(`/api/travel-risk?country_en=${encodeURIComponent(country)}&locale=${locale}`);
       const data = await res.json() as TravelResult & { error?: string };
-      if (data.error) { setError(data.error); return; }
+      // Same fix as TravelRiskWidget.tsx (2026-07-30): a non-ok status must
+      // not fall through to rendering `data` as a real result.
+      if (!res.ok || data.error) { setError(res.ok ? data.error! : c.networkError); return; }
       setResult(data);
     } catch { setError(c.networkError); }
     finally { setLoading(false); }

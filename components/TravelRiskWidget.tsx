@@ -51,7 +51,11 @@ export default function TravelRiskWidget({ locale }: { locale: string }) {
     try {
       const res  = await fetch(`/api/travel-risk?country_en=${encodeURIComponent(country)}&locale=${locale}`);
       const data = await res.json() as TravelResult & { error?: string };
-      if (data.error) { setError(data.error); return; }
+      // A non-ok status (e.g. the API's own query failed) must not fall
+      // through to rendering `data` as a legitimate result — there is none.
+      // Show the same networkError copy rather than the raw machine-readable
+      // error code the API returns for this case.
+      if (!res.ok || data.error) { setError(res.ok ? data.error! : c.networkError); return; }
       setResult(data);
     } catch { setError(c.networkError); } finally { setLoading(false); }
   }

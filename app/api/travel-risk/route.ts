@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import * as Sentry from "@sentry/nextjs";
 import { fetchFcdoAdvisory, getGovLinks } from "@/lib/travel-advisory";
 
 export const dynamic = "force-dynamic";
@@ -58,7 +59,7 @@ export async function GET(req: Request) {
 
   const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE);
 
-  const [{ data: outbreaks }, fcdo] = await Promise.all([
+  const [{ data: outbreaks, error }, fcdo] = await Promise.all([
     supabase
       .from("outbreaks")
       .select("id, disease, disease_en, disease_ar, cases, deaths, risk_level, date, is_pheic")
@@ -67,6 +68,25 @@ export async function GET(req: Request) {
       .order("risk_level", { ascending: true }),
     fetchFcdoAdvisory(countryEn),
   ]);
+
+  // A failed query previously fell through `outbreaks ?? []` into
+  // aggregateRisk([]) === "none", so a transient Supabase error (including
+  // the recurring "TypeError: terminated" egress errors already seen in
+  // production) produced a real "No active outbreaks detected — standard
+  // precautions apply" travel advisory, cached `public`/`s-maxage=3600` —
+  // broadcasting a false all-clear to every visitor checking that country
+  // for up to an hour. This is a health/safety decision surface, not just a
+  // data widget: fail loudly instead, and never cache the failure.
+  if (error) {
+    console.error(`[travel-risk] outbreaks query failed for ${countryEn}:`, error.message);
+    Sentry.captureException(new Error(`[travel-risk] query failed: ${error.message}`), {
+      tags: { route: "travel-risk", country: countryEn },
+    });
+    return NextResponse.json(
+      { error: "temporarily_unavailable" },
+      { status: 503, headers: { "Cache-Control": "no-store" } },
+    );
+  }
 
   const active = (outbreaks ?? []) as ActiveOutbreak[];
   const risk   = aggregateRisk(active);
