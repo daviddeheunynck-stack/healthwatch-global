@@ -14,8 +14,8 @@ const SUPABASE_SERVICE = clean(process.env.SUPABASE_SERVICE_ROLE_KEY);
 interface ActiveOutbreak {
   id: string;
   disease: string; disease_en: string | null; disease_ar: string | null;
-  cases: number;
-  deaths: number;
+  cases: number | null;
+  deaths: number | null;
   risk_level: string;
   date: string;
   is_pheic: boolean;
