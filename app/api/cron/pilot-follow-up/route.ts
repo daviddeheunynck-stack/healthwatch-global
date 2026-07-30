@@ -294,7 +294,17 @@ async function runPilotFollowUp(_req: NextRequest, supabase: SupabaseClient) {
 
     const { data: outbreaks, error: oErr } = await query;
 
-    if (oErr || !outbreaks || outbreaks.length === 0) {
+    // A genuine query error was indistinguishable from "no outbreaks in this
+    // region right now" — both just incremented skipped with no report at
+    // all, not even to failed. Same shape as weekly-signal's outErr/userErr
+    // conflation (fixed 2026-07-30).
+    if (oErr) {
+      console.error(`[pilot-follow-up] outbreaks query failed for ${pilot.email}:`, oErr.message);
+      Sentry.captureException(oErr, { tags: { cron: "pilot-follow-up", user_id: pilot.id } });
+      failed++;
+      continue;
+    }
+    if (!outbreaks || outbreaks.length === 0) {
       // No outbreaks to report — skip this user rather than send an empty email
       skipped++;
       continue;
@@ -327,6 +337,10 @@ async function runPilotFollowUp(_req: NextRequest, supabase: SupabaseClient) {
     await new Promise((r) => setTimeout(r, 150));
   }
 
-  await logCronRun(supabase, "pilot-follow-up", "ok", sent);
+  // Was hardcoded "ok" — `failed` was tracked per-user but never consulted,
+  // so a genuine send (or now query) failure still logged "ok". Same bug
+  // fixed across ~15 other crons today (sync-outbreaks et al., 2026-07-29/30).
+  await logCronRun(supabase, "pilot-follow-up", failed > 0 ? "error" : "ok", sent,
+    failed > 0 ? `${failed} email(s)/requête(s) en échec` : undefined);
   return NextResponse.json({ sent, skipped, failed, total: pilots.length });
 }
