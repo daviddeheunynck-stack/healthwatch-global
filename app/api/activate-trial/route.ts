@@ -180,6 +180,41 @@ export async function POST(req: NextRequest) {
       });
 
       if (qualifying.length > 0) {
+        const locale = (profile.alert_locale as string | null) ?? "en";
+        const DIGEST_DISPLAY_CAP = 10;
+        const topOutbreaks = [...qualifying]
+          .sort((a, b) => (RISK_RANK[b.risk_level ?? ""] ?? 0) - (RISK_RANK[a.risk_level ?? ""] ?? 0))
+          .slice(0, DIGEST_DISPLAY_CAP);
+
+        const { subject, html } = buildSignupDigestEmail(
+          locale,
+          topOutbreaks,
+          qualifying.length,
+          `${APP_URL}/${locale}`,
+          `${APP_URL}/${locale}/account#regional-alerts`
+        );
+
+        // Send BEFORE writing outbreak_alert_log. If sendEmail throws, the
+        // log must stay unwritten: that table is exactly what regional-alerts
+        // compares future case counts/risk against, so marking these
+        // outbreaks "seen" without a real send would silently exclude this
+        // user from every future regional alert on them too, not just this
+        // digest. Same reordering as regional-alerts/disease-alerts
+        // (2026-07-30) — this route had the identical log-before-send
+        // ordering, just with the error already thrown into Sentry via the
+        // catch below rather than swallowed outright.
+        //
+        // Only a non-production environment is a legitimate reason not to
+        // send. A missing BREVO_API_KEY or a profile with no email address
+        // is a real failure and must surface in Sentry via the catch below.
+        if (!isRealProduction) {
+          console.log("[activate-trial] signup digest skipped: not a production environment");
+        } else if (!user.email) {
+          throw new Error("signup digest: user has no email address");
+        } else {
+          await sendEmail(user.email, subject, html);
+        }
+
         // Log every qualifying outbreak at its current state — not just the
         // ones shown in the email — so the next regional-alerts cron run
         // only re-fires on a genuine escalation/surge from here, instead of
@@ -196,34 +231,6 @@ export async function POST(req: NextRequest) {
           { onConflict: "user_id,outbreak_id" }
         );
         if (logErr) throw new Error(`outbreak_alert_log upsert failed: ${logErr.message}`);
-
-        const locale = (profile.alert_locale as string | null) ?? "en";
-        const DIGEST_DISPLAY_CAP = 10;
-        const topOutbreaks = [...qualifying]
-          .sort((a, b) => (RISK_RANK[b.risk_level ?? ""] ?? 0) - (RISK_RANK[a.risk_level ?? ""] ?? 0))
-          .slice(0, DIGEST_DISPLAY_CAP);
-
-        const { subject, html } = buildSignupDigestEmail(
-          locale,
-          topOutbreaks,
-          qualifying.length,
-          `${APP_URL}/${locale}`,
-          `${APP_URL}/${locale}/account#regional-alerts`
-        );
-
-        // Only a non-production environment is a legitimate reason not to send.
-        // A missing BREVO_API_KEY or a profile with no email address is a real
-        // failure and must surface in Sentry via the catch below — the alert log
-        // above has already marked these outbreaks as "seen" for this user, so
-        // swallowing the error here would cost them the digest AND every future
-        // regional alert on those same outbreaks, with no trace anywhere.
-        if (!isRealProduction) {
-          console.log("[activate-trial] signup digest skipped: not a production environment");
-        } else if (!user.email) {
-          throw new Error("signup digest: user has no email address");
-        } else {
-          await sendEmail(user.email, subject, html);
-        }
       }
     } catch (digestErr) {
       console.error("[activate-trial] signup digest failed:", digestErr);
