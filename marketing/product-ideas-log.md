@@ -218,3 +218,65 @@ Réparties sur 10 pays et 4 régions (Autriche, Belgique, Brésil, Espagne, Fran
 - **Idée 2 (mode de transmission inventé) — RECADRÉE avant construction, puis le vrai chantier livré.** Vérification du code avant de coder : le diagnostic initial était inexact sur un point. Le flag `matched` de `matchDisease()` bloque déjà tout lien vers `/disease/[slug]` dans `OutbreakTable`/`OutbreakDetailModal` — le repli fabriqué (`virus_rna`/`contact`) n'atteint donc **jamais** une page rendue pour les lignes non reconnues. `EVENT_NAME_TRANSLATIONS` (mécanisme déjà construit le 2026-07-05, exactement pour ce cas cereulide/lait infantile) gère la traduction du libellé sans jamais forcer ces événements dans `DISEASE_MAP`. Le vrai trou vérifié et corrigé : `disease-coverage` ne balayait que les insertions des 90 dernières minutes — un nom non reconnu entré hors de cette fenêtre restait invisible pour toujours. Ajouté un balayage du stock actif complet (`app/api/cron/disease-coverage/route.ts`), qui exclut les événements déjà couverts par `EVENT_NAME_TRANSLATIONS` pour ne pas re-signaler une décision déjà prise. Vérifié en lecture seule contre la prod : les 10 lignes food-safety ne déclenchent aucun faux positif ; un nom fictif de test est correctement détecté.
 
 ---
+
+## 2026-07-30 — Proposition du jour
+
+Angle nouveau : **le parcours d'accès des comptes et la mesure de la rétention**, croisés en direct sur la prod (5 scripts de lecture seule, aucune écriture, supprimés après usage). Aucun nouveau feedback reçu depuis le 29/07 — les deux idées ci-dessous sortent donc de la mesure, pas du déclaratif. Toutes deux touchent directement la décision de viabilité du 21/08.
+
+**Deux idées seulement, volontairement.** Je n'ai pas de troisième ancrage au même niveau de preuve, et la journée a déjà livré 3 audits de fond (78 routes non-cron, alertes West Nile, crash travel-risk).
+
+### 1. 🔴 Le lien magique d'invitation n'a JAMAIS ouvert une session — 0 sur 3 — et les comptes créés par invitation n'ont pas de mot de passe
+
+**Nouvelle preuve pour l'idée 1 du 28/07** (« ZABRE a cliqué son lien d'accès à T+61 min »), restée ouverte et non traitée depuis. Je la remonte parce que la preuve a changé de nature : le 28/07, l'hypothèse était l'expiration du lien pour **un** utilisateur, déduite d'un horodatage Brevo. Mesurée aujourd'hui sur les 21 comptes de la prod, ce n'est pas un incident individuel, c'est un **taux de réussite de 0 %** sur un chemin d'accès entier.
+
+**Ce qui est vérifié en base (`auth.users`, prod, 30/07) :**
+
+| compte | providers | 1ère session après création |
+|---|---|---|
+| 9 inscriptions self-serve (shinta, dogflu, analin, davy, clarence, zakramdane, mayeul, saeed, guyanoel) | email ou google | **0 min** (session ouverte automatiquement à l'inscription) |
+| Kamau (lead) | email+**github** | 1 926 min (32 h plus tard, **via GitHub**) |
+| Bankunda (lead) | email+**google** | 77 min (**via Google**) |
+| **ouedraogodaouda2408** | email seul | **JAMAIS** (créé le 15/06) |
+| **ZABRE** (lead) | email seul | **JAMAIS** (créé le 18/07) |
+| **Mulamba** (lead) | email seul | **JAMAIS** (créé le 20/07) |
+
+**La cause est dans le code, pas dans le comportement des gens.** `app/api/admin/invite/route.ts:75` crée le compte avec `createUser({ email, email_confirm: true })` — **aucun mot de passe n'est jamais défini**. Puis la ligne 144 génère un `generateLink({ type: "magiclink" })`, et l'email d'invitation (lignes 163-183) ne contient **qu'un seul bouton : ce lien**. Rien d'autre. Or la page de connexion (`app/[locale]/login/page.tsx`) n'offre que deux entrées : un formulaire **mot de passe** (`signInWithPassword`, ligne 57) et **Google**. Un lead invité n'a donc littéralement aucun moyen d'entrer avec le formulaire — il n'a pas de mot de passe et n'en a jamais reçu — et son unique jeton est à usage unique et expirant.
+
+Les deux « succès » institutionnels n'en sont pas : Kamau et Bankunda ont **contourné** le lien magique en se connectant par GitHub et Google. Le lien lui-même est à **0 sur 3**. Et le cas ouedraogodaouda (15/06) prouve que ce n'est pas une régression de juillet mais un trou structurel vieux de six semaines, jamais vu parce que personne ne mesurait ce chemin.
+
+**Le détail qui referme le dossier :** `Zrhyacinthe2@gmail.com`, `davmulambamangole@gmail.com` et `ouedraogodaouda2408@gmail.com` sont **tous les trois des adresses Gmail**. Le bouton « Google » de la page de connexion les aurait fait entrer immédiatement, exactement comme Bankunda. Personne ne le leur a jamais dit : l'email d'invitation ne mentionne pas cette option. Le « pasword needed? » envoyé par ZABRE sur LinkedIn le 20/07 est mot pour mot ce qu'écrit quelqu'un sans mot de passe devant un formulaire qui en demande un.
+
+**Pourquoi maintenant :** sur les 4 leads institutionnels dont dépend la décision du 21/08, **deux n'ont jamais vu le produit une seule seconde**, et leurs essais courent jusqu'aux 22/08 et 24/08. ZABRE est le meilleur fit du portefeuille (projet PREIS). Décider « le produit n'intéresse pas les institutionnels » le 21/08 alors que la moitié d'entre eux n'ont jamais pu ouvrir la porte serait une conclusion tirée d'un test qui n'a pas eu lieu.
+
+**Effort estimé :** petit, et immédiatement rattrapable en trois gestes indépendants. (a) Ajouter dans l'email d'invitation une deuxième voie explicite — « ou connectez-vous avec Google avec cette même adresse » — une ligne de HTML, qui débloque les 3 comptes concernés sans rien redéployer côté auth. (b) Définir un mot de passe temporaire à la création (ou envoyer un code OTP à 6 chiffres, natif Supabase), pour que le formulaire de connexion cesse d'être un mur. (c) Allonger l'expiration des liens de provisioning côté Supabase. Le (a) seul règle les 3 cas ouverts aujourd'hui.
+
+**Risque/inconnue :** allonger la durée de vie d'un lien d'authentification élargit la fenêtre d'exposition en cas de fuite de l'email — d'où l'ordre proposé, (a) puis (b), le code OTP étant le compromis propre. Inconnue résiduelle assumée : je démontre qu'aucune session n'a jamais été ouverte et que le compte n'a pas de mot de passe, mais je n'ai pas lu les logs d'authentification Supabase, donc je ne prouve pas *quelle* erreur précise ZABRE a vue à l'écran. Ça ne change pas le correctif. Ne relancer ni Mulamba (consigne d'attente passive, [[project_hwg_access_offers_accepted_pending_provisioning]]) ni Kamau (désabonnée le 21/07) — corriger le chemin d'abord, la relance est une décision de David.
+
+### 2. Les métriques de rétention sont calculées sur `last_sign_in_at`, aveugle aux sessions persistantes — la lead la plus active du produit y est comptée « jamais revenue »
+
+**Signal mesuré aujourd'hui :** `product_events` montre **de la vraie activité aujourd'hui même**, de deux utilisateurs réels autres que David :
+
+| horodatage | action | utilisateur |
+|---|---|---|
+| **30/07 14:02** | `outbreak_detail_view` | **paulabankunda@gmail.com** (lead institutionnel, RDC) |
+| **30/07 10:43** | `outbreak_detail_view` | **paulabankunda@gmail.com** |
+| 30/07 06:46 | `outbreak_detail_view` | david.deheunynck@gmail.com |
+| **30/07 06:36** | `outbreak_detail_view` | **guyanoel22@gmail.com** |
+
+Or en base, `last_sign_in_at` vaut **13/07 12:59 pour Bankunda** et **24/07 14:03 pour guyanoel22** : leurs sessions Supabase n'ont simplement jamais expiré, ils reviennent sans se reconnecter. Et `app/[locale]/admin/page.tsx:241-254` calcule les trois indicateurs de rétention **uniquement** sur ce champ : `returnedUsers` (écart > 2 j), `active30`, et `neverReturned` (écart < 60 s). Bankunda, écart de 77 minutes, tombe dans `returnedUsers` mais **pas** dans `active30` — le dashboard la donne inactive depuis 17 jours alors qu'elle était sur le produit il y a trois heures. guyanoel22, écart de 0 s, est classé **`neverReturned`** alors qu'il est revenu ce matin, six jours après son inscription. Sur les 3 comptes ayant une activité réelle mesurée, la métrique se trompe sur 2.
+
+**Pourquoi maintenant :** la décision du 21/08 se prend sur « est-ce que quelqu'un revient ». `product_events` est propre depuis le 29/07 (`feab722` a supprimé le gonflement x3 des rendus serveur) et le tracking est désormais client-side sur les 3 surfaces (`app/api/track/route.ts:10`) — la donnée juste existe déjà, elle n'est simplement pas celle qu'on lit. Sous-estimer la rétention au moment précis où on décide d'arrêter ou de continuer est l'erreur la plus coûteuse possible, et elle penche dans le mauvais sens : la mesure actuelle fait paraître le produit **plus mort qu'il n'est**.
+
+**Effort estimé :** petit — la section « Activité produit » de `/admin` lit déjà `product_events` (construite le 26/07, idée 1). Il s'agit de brancher les 3 compteurs de rétention sur cette table plutôt que sur `last_sign_in_at`, et de reprendre la même définition dans le bilan hebdo de viabilité.
+
+**Risque/inconnue :** (a) `product_events` ne remonte qu'au 24/07 et ne couvre que 3 surfaces (dashboard, détail foyer, pricing) — il ne peut donc pas reconstituer l'historique de juin, et la bonne lecture est « union des deux signaux », pas « remplacement pur » ; (b) l'échantillon reste minuscule (3 utilisateurs actifs mesurés), donc corriger la métrique ne transforme pas un mauvais chiffre en bon chiffre — ça évite seulement de décider sur un chiffre faux.
+
+**Observation liée, notée mais pas proposée comme idée** (elle relève de l'attribution, pas d'un correctif) : les deux vues de Bankunda portent sur la **même** ligne (Fièvre West Nile / Espagne, `74dae095`), sans aucun `dashboard_view` — signature d'une arrivée directe par lien, pas d'une navigation. Le cron `regional-alerts` a tourné à **10:02 avec `rows=20`** (les 20 alertes West Nile rattrapées ce matin après le correctif `8b70438`), et elle est sur la page à **10:43**, 41 minutes plus tard. Sous réserve que la corrélation soit causale — aucun lien n'est tracé aujourd'hui, donc c'est une inférence d'horodatage, pas une preuve — l'email d'alerte serait le seul canal qui amène réellement quelqu'un sur le produit. Ce qui donnerait au bug des `deaths` null, resté 2 mois, un coût bien supérieur à 20 emails perdus : 2 mois d'activation. À confirmer en traçant le lien de l'email d'alerte avant d'en tirer quoi que ce soit.
+
+**Non re-proposé aujourd'hui :** l'idée 3 du 28/07 (les 9 comptes existants toujours à 5 régions — vérifié aujourd'hui, **toujours vrai, 9 utilisateurs × 5 régions**, seule Kamau ayant bougé un réglage) reste ouverte sans preuve nouvelle. Idem pour le volet AMR (Eva Kamau, 10/07) et le signal de variance (Simon Ruegg, 6-7/07). Rien sur la qualité de données ni sur les crons : la journée en a déjà livré trois lots.
+
+**Contexte mesuré au passage** (utile au bilan de lundi, pas des idées) : 21 comptes, 7 essais Pro en cours après l'expiration de `iinnerre@gmail.com` le 29/07 (`expire-trials` a bien tourné, `rows=1`) ; prochaine échéance `r.endangrukmanams@gmail.com` le 01/08. Les 4 leads institutionnels expirent tous **après** la date de décision (Kamau 15/08, Bankunda 17/08, ZABRE 22/08, Mulamba 24/08). Toutes les tables de personnalisation restent à **0 ligne** sauf `user_alert_regions` (45) et `push_subscriptions` (1). `alert_notifications` : toujours **83 lignes, 100 % `pheic`**, la plus récente le 24/07 — la cloche in-app n'a toujours jamais affiché une notification personnalisée.
+
+**Statut :** PROPOSÉE — en attente de retour de David.
+
+---
