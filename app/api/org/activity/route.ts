@@ -59,12 +59,13 @@ export async function POST(req: Request) {
   };
 
   const svc = createService(SUPABASE_URL, SUPABASE_SERVICE);
-  await svc.from("org_activity_log").insert({
+  const { error } = await svc.from("org_activity_log").insert({
     org_id:  membership.org_id,
     user_id: user.id,
     action,
     metadata,
   });
+  if (error) console.error("[org/activity] insert failed:", error.message);
 
   return NextResponse.json({ ok: true });
 }

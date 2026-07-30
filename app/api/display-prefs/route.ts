@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase-server";
+import * as Sentry from "@sentry/nextjs";
 
 import { resolvedPlan } from "@/lib/resolved-plan";
 
@@ -56,10 +57,19 @@ export async function PUT(req: Request) {
 
   const filters = Object.keys(merged).length > 0 ? merged : null;
 
-  await supabase
+  const { error } = await supabase
     .from("profiles")
     .update({ display_filters: filters })
     .eq("id", user.id);
+
+  // display_filters.region also feeds email content selection elsewhere
+  // (e.g. pilot-follow-up reads it to pick which region's outbreaks to
+  // include) — a silently-failed save here isn't just a dashboard cosmetic.
+  if (error) {
+    console.error("[display-prefs] update failed:", error.message);
+    Sentry.captureException(new Error(`[display-prefs] update failed: ${error.message}`), { tags: { route: "display-prefs", user_id: user.id } });
+    return NextResponse.json({ error: "Failed to save" }, { status: 500 });
+  }
 
   return NextResponse.json({ ok: true, filters });
 }

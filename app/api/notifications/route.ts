@@ -37,20 +37,20 @@ export async function PATCH(req: NextRequest) {
   const id = req.nextUrl.searchParams.get("id");
   const now = new Date().toISOString();
 
-  if (id) {
-    await supabase
-      .from("alert_notifications")
-      .update({ read_at: now })
-      .eq("id", id)
-      .eq("user_id", user.id)
-      .is("read_at", null);
-  } else {
-    await supabase
-      .from("alert_notifications")
-      .update({ read_at: now })
-      .eq("user_id", user.id)
-      .is("read_at", null);
-  }
+  const { error } = id
+    ? await supabase
+        .from("alert_notifications")
+        .update({ read_at: now })
+        .eq("id", id)
+        .eq("user_id", user.id)
+        .is("read_at", null)
+    : await supabase
+        .from("alert_notifications")
+        .update({ read_at: now })
+        .eq("user_id", user.id)
+        .is("read_at", null);
+
+  if (error) console.error("[notifications] mark-read failed:", error.message);
 
   return NextResponse.json({ ok: true });
 }
@@ -63,11 +63,13 @@ export async function DELETE(req: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  await supabase
+  const { error } = await supabase
     .from("alert_notifications")
     .delete()
     .eq("id", id)
     .eq("user_id", user.id);
+
+  if (error) console.error("[notifications] delete failed:", error.message);
 
   return NextResponse.json({ ok: true });
 }

@@ -36,6 +36,10 @@ export async function PATCH(req: NextRequest) {
   if (!VALID_REGIONS.includes(body.digest_region as typeof VALID_REGIONS[number]))
     return Response.json({ error: "Invalid region" }, { status: 400 });
 
-  await supabase.from("profiles").update({ digest_region: body.digest_region }).eq("id", user.id);
+  const { error } = await supabase.from("profiles").update({ digest_region: body.digest_region }).eq("id", user.id);
+  if (error) {
+    console.error("[user/digest-region] update failed:", error.message);
+    return Response.json({ error: "Failed to save" }, { status: 500 });
+  }
   return Response.json({ digest_region: body.digest_region });
 }

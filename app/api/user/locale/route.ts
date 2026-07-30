@@ -36,10 +36,14 @@ export async function PATCH(req: NextRequest) {
   if (!VALID_LOCALES.includes(body.alert_locale as typeof VALID_LOCALES[number]))
     return Response.json({ error: "Invalid locale" }, { status: 400 });
 
-  await supabase
+  const { error } = await supabase
     .from("profiles")
     .update({ alert_locale: body.alert_locale })
     .eq("id", user.id);
+  if (error) {
+    console.error("[user/locale] update failed:", error.message);
+    return Response.json({ error: "Failed to save" }, { status: 500 });
+  }
 
   return Response.json({ alert_locale: body.alert_locale });
 }
