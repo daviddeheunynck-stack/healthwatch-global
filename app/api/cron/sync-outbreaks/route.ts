@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import * as Sentry from "@sentry/nextjs";
 import { logCronRun } from "@/lib/cron-monitor";
-import { createClient } from "@supabase/supabase-js";
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { parseRSSFeed, buildOutbreakFromRSSItem } from "@/lib/outbreak-parser";
 import { fetchWHODONList, parseWHODONItems, donArticleUrl } from "@/lib/who-api";
 import type { ParsedOutbreak } from "@/lib/outbreak-parser";
@@ -56,15 +56,36 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const debug = req.nextUrl.searchParams.get("debug") === "1";
-  const debugLog: string[] = [];
-  const errorLog: string[] = [];
-
   if (!SUPABASE_URL || !SUPABASE_SERVICE_KEY) {
     console.error("[sync-outbreaks] Missing env: NEXT_PUBLIC_SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY");
     return NextResponse.json({ error: "env:missing" }, { status: 500 });
   }
   const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
+
+  // Defensive wrapper: without it, an exception thrown outside the try/catch
+  // blocks below propagates uncaught — Next.js returns a bare 500, logCronRun
+  // is never reached, and no Sentry event fires either. That is exactly what
+  // happened twice on 2026-07-29 (22:44 and 23:49 UTC, self-recovered by
+  // 01:09): GitHub Actions' curl -f caught the HTTP failure, but there was no
+  // server-side trace of why, anywhere — not Sentry, not site_config.
+  // push-alerts already had this wrapper (added 2026-07-27) — sync-outbreaks
+  // is the more important of the two to carry it, being the hourly ingestion
+  // path everything else depends on.
+  try {
+    return await runSync(req, supabase);
+  } catch (err) {
+    console.error("[sync-outbreaks] uncaught exception:", err);
+    Sentry.captureException(err, { tags: { cron: "sync-outbreaks" } });
+    await logCronRun(supabase, "sync-outbreaks", "error", 0,
+      err instanceof Error ? err.message : String(err));
+    return NextResponse.json({ error: String(err) }, { status: 500 });
+  }
+}
+
+async function runSync(req: NextRequest, supabase: SupabaseClient) {
+  const debug = req.nextUrl.searchParams.get("debug") === "1";
+  const debugLog: string[] = [];
+  const errorLog: string[] = [];
   const results = { inserted: 0, updated: 0, skipped: 0, errors: 0, staleDeactivated: 0, whoAlreadySeen: 0 };
 
   // ── 1. Fetch outbreak data — WHO Disease Outbreak News ────────────
