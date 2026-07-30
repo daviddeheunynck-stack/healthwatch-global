@@ -147,7 +147,13 @@
     "passwordUpdatedText": "Vous pouvez maintenant vous connecter avec votre nouveau mot de passe.",
     "tokenInvalid": "Ce lien a expiré ou est invalide. Veuillez en demander un nouveau.",
     "backToLogin": "Retour à la connexion",
-    "passwordHint": "8 caractères minimum"
+    "passwordHint": "8 caractères minimum",
+    "otpToggle": "Utiliser un code à la place",
+    "otpBackToPassword": "Utiliser un mot de passe à la place",
+    "otpCodeLabel": "Code à 6 chiffres",
+    "otpSubmit": "Vérifier le code",
+    "otpInvalid": "Code invalide ou expiré.",
+    "otpHint": "Consultez l'email d'invitation pour votre code."
   },
   "contact": {
     "title": "Nous contacter",

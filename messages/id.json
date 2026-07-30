@@ -147,7 +147,13 @@
     "passwordUpdatedText": "Anda sekarang dapat masuk dengan kata sandi baru.",
     "tokenInvalid": "Tautan ini telah kedaluwarsa atau tidak valid. Minta yang baru.",
     "backToLogin": "Kembali ke halaman masuk",
-    "passwordHint": "Minimal 8 karakter"
+    "passwordHint": "Minimal 8 karakter",
+    "otpToggle": "Gunakan kode sebagai gantinya",
+    "otpBackToPassword": "Gunakan kata sandi sebagai gantinya",
+    "otpCodeLabel": "Kode 6 digit",
+    "otpSubmit": "Verifikasi kode",
+    "otpInvalid": "Kode tidak valid atau kedaluwarsa.",
+    "otpHint": "Periksa email undangan untuk kode Anda."
   },
   "contact": {
     "title": "Hubungi Kami",

@@ -147,7 +147,13 @@
     "passwordUpdatedText": "Ya puedes iniciar sesión con tu nueva contraseña.",
     "tokenInvalid": "Este enlace ha expirado o no es válido. Solicita uno nuevo.",
     "backToLogin": "Volver a iniciar sesión",
-    "passwordHint": "Mínimo 8 caracteres"
+    "passwordHint": "Mínimo 8 caracteres",
+    "otpToggle": "Usar un código en su lugar",
+    "otpBackToPassword": "Usar una contraseña en su lugar",
+    "otpCodeLabel": "Código de 6 dígitos",
+    "otpSubmit": "Verificar código",
+    "otpInvalid": "Código inválido o expirado.",
+    "otpHint": "Consulta el email de invitación para tu código."
   },
   "contact": {
     "title": "Contáctenos",
