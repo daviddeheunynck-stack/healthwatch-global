@@ -238,19 +238,42 @@ export default async function AdminPage({
     });
 
   // ── Retention metrics (from already-fetched authUsers) ────────────────────
-  // "Returned" = last_sign_in_at more than 2 days after created_at (not just signup ping)
+  // "Last known activity" = max(last_sign_in_at, latest product_events.created_at for that
+  // user). last_sign_in_at only moves on re-authentication — a still-valid session/JWT never
+  // updates it even if the user is actively browsing. product_events is an OR on top of it, not
+  // a replacement: it only captures dashboard_view / outbreak_detail_view / pricing_page_view
+  // since 2026-07-23/24, so a user with no tracked event (e.g. signed up before tracking, or
+  // only used untracked surfaces) still falls back to last_sign_in_at alone.
+  const latestEventByUser: Record<string, number> = {};
+  for (const e of productEvents ?? []) {
+    if (!e.user_id || !e.created_at) continue;
+    const t = new Date(e.created_at).getTime();
+    if (!latestEventByUser[e.user_id] || t > latestEventByUser[e.user_id]) latestEventByUser[e.user_id] = t;
+  }
+  const lastActivity = (u: { id: string; last_sign_in_at?: string | null }): number | null => {
+    const signIn = u.last_sign_in_at ? new Date(u.last_sign_in_at).getTime() : null;
+    const event   = latestEventByUser[u.id] ?? null;
+    if (signIn === null && event === null) return null;
+    return Math.max(signIn ?? -Infinity, event ?? -Infinity);
+  };
+  // "Returned" = last known activity more than 2 days after created_at (not just signup ping)
   const returnedUsers = (authUsers ?? []).filter((u) => {
-    if (!u.last_sign_in_at || !u.created_at) return false;
-    return new Date(u.last_sign_in_at).getTime() - new Date(u.created_at).getTime() > 2 * 86_400_000;
+    if (!u.created_at) return false;
+    const activity = lastActivity(u);
+    if (activity === null) return false;
+    return activity - new Date(u.created_at).getTime() > 2 * 86_400_000;
   });
   // Active in last 30 days
-  const active30 = (authUsers ?? []).filter((u) =>
-    u.last_sign_in_at && new Date(u.last_sign_in_at).getTime() > now.getTime() - 30 * 86_400_000
-  );
-  // Never returned (signed in only at signup)
+  const active30 = (authUsers ?? []).filter((u) => {
+    const activity = lastActivity(u);
+    return activity !== null && activity > now.getTime() - 30 * 86_400_000;
+  });
+  // Never returned (last known activity only at signup)
   const neverReturned = (authUsers ?? []).filter((u) => {
-    if (!u.last_sign_in_at || !u.created_at) return true;
-    return new Date(u.last_sign_in_at).getTime() - new Date(u.created_at).getTime() < 60_000;
+    if (!u.created_at) return true;
+    const activity = lastActivity(u);
+    if (activity === null) return true;
+    return activity - new Date(u.created_at).getTime() < 60_000;
   });
 
   // ── Product usage events (product_events, capture-only since 2026-07-23) ──
