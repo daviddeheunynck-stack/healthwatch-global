@@ -390,7 +390,8 @@ export async function GET(req: NextRequest) {
 
 async function runCheckMpoxSitrep(_req: NextRequest, supabase: SupabaseClient) {
   const adminEmail = ADMIN_EMAILS?.split(",")[0]?.trim();
-  let emailSent    = false;
+  let emailSent      = false;
+  let dbUpdateFailed = false;
 
   // Load last known sitrep URL
   const { data: configRow } = await supabase
@@ -454,6 +455,8 @@ async function runCheckMpoxSitrep(_req: NextRequest, supabase: SupabaseClient) {
 
     if (error) {
       console.error("[mpox] DB update global error:", error.message);
+      Sentry.captureException(new Error(`[mpox] global update failed: ${error.message}`), { tags: { cron: "check-mpox-sitrep" } });
+      dbUpdateFailed = true;
     } else if (!updatedRows || updatedRows.length === 0) {
       console.error("[mpox] Global update blocked by source_priority guard — row owned by a higher-priority source");
     } else {
@@ -491,7 +494,11 @@ async function runCheckMpoxSitrep(_req: NextRequest, supabase: SupabaseClient) {
       .lte("source_priority", 5)
       .select("id");
 
-    if (drcErr) console.error("[mpox] DB update DRC error:", drcErr.message);
+    if (drcErr) {
+      console.error("[mpox] DB update DRC error:", drcErr.message);
+      Sentry.captureException(new Error(`[mpox] DRC update failed: ${drcErr.message}`), { tags: { cron: "check-mpox-sitrep" } });
+      dbUpdateFailed = true;
+    }
     else if (!drcUpdatedRows || drcUpdatedRows.length === 0) console.error("[mpox] DRC update blocked by source_priority guard — row owned by a higher-priority source");
     else console.log(`[mpox] ✅ DRC updated: ${drcData.cases} cas / ${drcData.deaths} décès / ${drcData.date}`);
   }
@@ -504,9 +511,19 @@ async function runCheckMpoxSitrep(_req: NextRequest, supabase: SupabaseClient) {
   });
   // A new sitrep was still found/processed either way — but flag the run as
   // errored if the admin notification itself didn't go out, so a missing
-  // BREVO_API_KEY doesn't read identically to a clean "ok" run.
+  // BREVO_API_KEY doesn't read identically to a clean "ok" run. Also flag on
+  // dbUpdateFailed: the two outbreaks.update() calls above (the global and
+  // DRC PHEIC rows — the most-watched rows in the whole dataset) previously
+  // only reached console.error on failure, invisible to both Sentry and cron
+  // status.
   const emailExpected = !!adminEmail && isRealProduction;
-  await logCronRun(supabase, "check-mpox-sitrep", emailExpected && !emailSent ? "error" : "ok", (data ? 1 : 0) + (drcData ? 1 : 0));
+  await logCronRun(
+    supabase,
+    "check-mpox-sitrep",
+    (emailExpected && !emailSent) || dbUpdateFailed ? "error" : "ok",
+    (data ? 1 : 0) + (drcData ? 1 : 0),
+    dbUpdateFailed ? "mpox/DRC PHEIC row update failed — see Sentry" : undefined,
+  );
 
   return NextResponse.json({
     status:      data ? "auto_updated" : "manual_needed",

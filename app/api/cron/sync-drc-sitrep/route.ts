@@ -466,6 +466,8 @@ async function runSyncDrcSitrep(_req: NextRequest, supabase: SupabaseClient) {
   const pdfText   = extracted.text;
   console.log(`[drc-sitrep] Extracted:`, data);
 
+  let dbUpdateFailed = false;
+
   if (data) {
     // Step 4a: auto-update DB at source_priority 10
     const { error } = await supabase
@@ -485,6 +487,7 @@ async function runSyncDrcSitrep(_req: NextRequest, supabase: SupabaseClient) {
     if (error) {
       console.error("[drc-sitrep] DB update error:", error.message);
       Sentry.captureException(new Error(error.message), { tags: { cron: "sync-drc-sitrep" } });
+      dbUpdateFailed = true;
     } else {
       console.log(`[drc-sitrep] ✅ Updated: ${data.cases} cas / ${data.deaths} décès / ${data.date}`);
       const { subject, html } = emailAutoUpdated(data);
@@ -517,7 +520,12 @@ async function runSyncDrcSitrep(_req: NextRequest, supabase: SupabaseClient) {
     value:      String(latest.num),
     updated_at: new Date().toISOString(),
   });
-  await logCronRun(supabase, "sync-drc-sitrep", "ok", (data ? 1 : 0) + satelliteUpdated);
+  // Was hardcoded "ok" — the update error above already reached Sentry, but
+  // not cron status, so health-check's daily digest (which only reads
+  // logCronRun, not Sentry) never flagged a failed write to this priority-10
+  // Ebola DRC PHEIC row, the most-watched row in the dataset.
+  await logCronRun(supabase, "sync-drc-sitrep", dbUpdateFailed ? "error" : "ok", (data ? 1 : 0) + satelliteUpdated,
+    dbUpdateFailed ? "Ebola DRC row update failed — see Sentry" : undefined);
 
   return NextResponse.json({
     status:     data ? "auto_updated" : "manual_needed",

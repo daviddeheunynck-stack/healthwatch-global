@@ -205,7 +205,8 @@ async function runTriggerPheicAlerts(_req: NextRequest, supabase: SupabaseClient
     diseaseMap.get(key)!.push(o);
   }
 
-  let fired = 0;
+  let fired  = 0;
+  let failed = 0;
 
   for (const [, outbreaks] of diseaseMap) {
     // Primary row = largest case count (main source country)
@@ -269,6 +270,14 @@ async function runTriggerPheicAlerts(_req: NextRequest, supabase: SupabaseClient
 </div>`;
 
       try {
+        // Send BEFORE inserting the alert_notifications dedup row. This is
+        // the highest-stakes case of this pattern found today: PHEIC alerts
+        // have no cooldown to fall back on — notifiedSet is a one-shot,
+        // forever marker, so if sendEmail throws after the insert, this user
+        // never gets told about this PHEIC again, ever. Same fix as
+        // regional-alerts/disease-alerts/watchlist-alerts (2026-07-30).
+        if (isRealProduction) await sendEmail(user.email, subject, html);
+
         const inAppBody = `${disease} · ${countries} · PHEIC`;
         const { error: insertErr } = await supabase.from("alert_notifications").insert({
           user_id:     user.id,
@@ -279,23 +288,26 @@ async function runTriggerPheicAlerts(_req: NextRequest, supabase: SupabaseClient
         });
         if (insertErr) {
           console.warn(`[trigger-pheic-alerts] Insert skipped for ${user.id}::${primary.id}: ${insertErr.message}`);
+          failed++;
           continue;
         }
 
         await notifyMobile(supabase, user.id, { title: subject, body: inAppBody, outbreak_id: primary.id });
 
-        if (isRealProduction) await sendEmail(user.email, subject, html);
         // Add all outbreak ids for this disease group so the check above
         // catches them on the next cron run without a DB re-query.
         outbreaks.forEach((o) => notifiedSet.add(`${user.id}::${o.id}`));
         fired++;
       } catch (err) {
+        failed++;
         console.error(`[trigger-pheic-alerts] Failed for user ${user.id} / outbreak ${primary.id}:`, err);
         Sentry.captureException(err, { tags: { cron: "trigger-pheic-alerts", user_id: user.id, outbreak_id: primary.id } });
       }
     }
   }
 
-  await logCronRun(supabase, "trigger-pheic-alerts", "ok", fired);
-  return Response.json({ fired });
+  // Was hardcoded "ok" with no failure counter at all.
+  await logCronRun(supabase, "trigger-pheic-alerts", failed > 0 ? "error" : "ok", fired,
+    failed > 0 ? `${failed} alerte(s) PHEIC en échec` : undefined);
+  return Response.json({ fired, failed });
 }

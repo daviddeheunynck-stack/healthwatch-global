@@ -662,6 +662,7 @@ async function runSyncEndemicData(_req: NextRequest, supabase: SupabaseClient) {
 
     if (upErr) {
       console.error(`[endemic] DB update ${target.label}:`, upErr.message);
+      Sentry.captureException(new Error(`[endemic] ${target.label} update failed: ${upErr.message}`), { tags: { cron: "sync-endemic-data" } });
       skipped.push({ label: target.label, reason: `DB update error: ${upErr.message}` });
     } else if (!updatedRows || updatedRows.length === 0) {
       skipped.push({ label: target.label, reason: "blocked by source_priority guard — row owned by a higher-priority source" });
@@ -723,7 +724,11 @@ async function runSyncEndemicData(_req: NextRequest, supabase: SupabaseClient) {
   if (adminEmail && isRealProduction && (updates.length > 0 || realErrors.length > 0)) {
     await sendEmail(adminEmail, subject, html);
   }
-  await logCronRun(supabase, "sync-endemic-data", "ok", updates.length);
+  // Was hardcoded "ok" — realErrors (a real DB/fetch error, as opposed to the
+  // routine "no newer data" skip) was already computed above to decide
+  // whether to email, but never fed into cron status.
+  await logCronRun(supabase, "sync-endemic-data", realErrors.length > 0 ? "error" : "ok", updates.length,
+    realErrors.length > 0 ? `${realErrors.length} erreur(s) réelle(s)` : undefined);
 
   return NextResponse.json({
     success: true,
