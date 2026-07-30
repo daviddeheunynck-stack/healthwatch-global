@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { rateLimit, getClientIp } from "@/lib/rate-limit";
+import * as Sentry from "@sentry/nextjs";
 
 export const dynamic = "force-dynamic";
 
@@ -119,6 +120,10 @@ export async function POST(req: NextRequest) {
     if (!res.ok) {
       const err = await res.text();
       console.error("Brevo contact error:", err);
+      // This form also receives pilot applications ([PILOT 🔴] prefix) — a
+      // lost send here was previously invisible everywhere except Vercel
+      // logs, unlike every other Brevo call site in the app.
+      Sentry.captureException(new Error(`[contact] Brevo error: ${err}`), { tags: { route: "contact", isPilot: String(isPilot) } });
       return NextResponse.json({ error: "Failed to send email" }, { status: 500 });
     }
 
@@ -126,6 +131,7 @@ export async function POST(req: NextRequest) {
   } catch (err: unknown) {
     // Logging `err` itself (not just .message) preserves the stack trace for Error objects
     console.error("Contact route error:", err);
+    Sentry.captureException(err, { tags: { route: "contact" } });
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

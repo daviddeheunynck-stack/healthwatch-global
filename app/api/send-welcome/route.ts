@@ -78,7 +78,10 @@ export async function POST(req: NextRequest) {
             <p><strong>Langue :</strong> ${esc(locale || "fr")}</p>
             <p><strong>Date :</strong> ${new Date().toLocaleString("fr-FR", { timeZone: "Europe/Paris" })}</p>`,
         }),
-      }).catch((e) => console.error("[send-welcome] founder notification failed:", e));
+      }).catch((e) => {
+        console.error("[send-welcome] founder notification failed:", e);
+        Sentry.captureException(e, { tags: { route: "send-welcome", part: "founder-notification" } });
+      });
     }
 
     return NextResponse.json({ sent: true });
