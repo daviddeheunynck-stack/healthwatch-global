@@ -188,7 +188,7 @@ const DISEASE_MAP: Array<{ patterns: string[]; info: DiseaseInfo }> = [
       vaccine: "yes", vaccineName: "Dengvaxia, Qdenga",
       treatment: "supportive",
       whoFactsheet: "https://www.who.int/news-room/fact-sheets/detail/dengue-and-severe-dengue",
-      travelerRisk: { africa: "moderate", asia: "high", americas: "high", oceania: "moderate" },
+      travelerRisk: { africa: "moderate", asia: "high", americas: "high", oceania: "moderate", europe: "low" },
     },
   },
   {
