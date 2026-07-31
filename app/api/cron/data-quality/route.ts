@@ -352,6 +352,7 @@ async function runDataQuality(_req: NextRequest, supabase: SupabaseClient) {
     "multi-country_outbreak-of-cholera_epidemiological_update",  // WHO's numbered cholera epi-update series stopped at #38 (30 June 2026); no #39 exists and the announced WER migration hadn't appeared as of 2026-07-30 (see reference_who_cholera_epi_update_moves_to_wer_2026_07_30)
     "ecdc.europa.eu/en/all-topics-z/cholera/surveillance-and-disease-data", // ECDC cholera-monthly page — confirmed 2026-07-30 live page matches DB exactly, monthly cadence
     "health-topics---meningitis/meningitis_bulletin",            // WHO AFRO meningitis bulletin — surveillance season ended at week 26/2026, no bulletin published again until the next season (see meningitis_season_end_week26_2026)
+    "ecdc.europa.eu/en/middle-east-respiratory-syndrome-coronavirus-mers-cov-situation-update", // ECDC MERS-CoV dashboard — updated in place, not republished; confirmed 2026-07-30 live page identical to DB (case detection at its lowest since 2014)
   ];
   // A dashboard/tracker source is skipped by the tight 7/21-day rule above because
   // it doesn't publish per-article dates — but an unconditional skip left rows
