@@ -129,7 +129,7 @@ export async function GET(req: Request) {
   // Coarse ok/error is public like `stripe`/`brevo` above (Sentry's own coarse
   // ping); issue titles/permalinks are sensitive detail, so — like
   // `stripe_prices_detail` — only returned in `deep` (authenticated) mode.
-  const sentrySummary: { count: number; sample?: { title: string; count: string; permalink: string }[] } = { count: 0 };
+  const sentrySummary: { count: number; sample?: { title: string; count: string; permalink: string; shortId: string }[] } = { count: 0 };
   try {
     const sentryCheck = await fetchSentryIssues();
     if (!sentryCheck.ok) {
@@ -140,7 +140,7 @@ export async function GET(req: Request) {
       if (deep) {
         sentrySummary.sample = sentryCheck.issues
           .slice(0, 5)
-          .map((i) => ({ title: i.title, count: i.count, permalink: i.permalink }));
+          .map((i) => ({ title: i.title, count: i.count, permalink: i.permalink, shortId: i.shortId }));
       }
     }
   } catch {
