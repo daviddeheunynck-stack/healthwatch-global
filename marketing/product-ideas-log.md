@@ -293,3 +293,66 @@ Vérifié en lecture seule contre la prod réelle (`.env.local.live`, projet `tq
 - **Correction annexe :** le texte de l'email annonçait à tort un lien valable « 24 heures » alors que le défaut Supabase est ~1h — corrigé en fr/en pour ne pas induire l'utilisateur en erreur sur la fenêtre réelle.
 
 ---
+
+## 2026-07-31 — Proposition du jour
+
+Angle nouveau : **croiser le journal de clics Brevo avec `product_events`, événement par événement, à la seconde**. Le 28/07 avait ouvert le journal Brevo (blocages, désabonnements) ; personne n'avait encore aligné les **clics** sur les **visites réelles**. C'est ce croisement qui donne les deux premières idées. Aucun nouveau feedback reçu depuis le 29/07 (Taiwan CDC) — tout ce qui suit vient de la mesure. Trois scripts de lecture seule, aucune écriture, supprimés après usage.
+
+### 1. 🔴 L'email d'alerte n'est pas *un* canal d'acquisition, c'est **le seul** — 4 visites réelles sur 4 sont des clics d'email, à 8-10 secondes près
+
+**Le 30/07 j'avais posé l'hypothèse et refusé d'en tirer quoi que ce soit** (« sous réserve que la corrélation soit causale — aucun lien n'est tracé aujourd'hui, donc c'est une inférence d'horodatage, pas une preuve… à confirmer en traçant le lien de l'email d'alerte »). Confirmation obtenue aujourd'hui, et sans rien construire : Brevo enregistre déjà **l'URL exacte cliquée**. L'alignement est intégral sur toute la fenêtre d'instrumentation (24/07 → 31/07) :
+
+| clic Brevo (UTC) | email | URL cliquée | `product_events` | écart |
+|---|---|---|---|---|
+| 24/07 09:00:46 | 🚨 New outbreak — Marburg | `/en/outbreak/b17d4fda` | 09:00:54 `outbreak_detail_view` **b17d4fda** (Bankunda) | **8 s** |
+| 24/07 15:39:25 | Ongoing PHEIC: Polio | `/en/outbreak/ab4cd321` | 15:39:35 `outbreak_detail_view` **ab4cd321** (guyanoel22) | **10 s** |
+| 30/07 06:36:46 | ⚠️ Cholera is worsening in Africa | `/en/outbreak/06541c4a` | 06:36:55 `outbreak_detail_view` **06541c4a** (guyanoel22) | **9 s** |
+| 30/07 10:43:14 | 🚨 New outbreak — West Nile | `/en/outbreak/74dae095` | 10:43:22 `outbreak_detail_view` **74dae095** (Bankunda) | **8 s** |
+
+Même utilisateur, même identifiant de foyer, huit à dix secondes. Ce n'est plus une inférence d'horodatage, c'est une chaîne complète. Et le corollaire est le vrai fait de la journée : **`product_events` contient 26 événements en tout ; les 4 seuls `outbreak_detail_view` d'utilisateurs réels (hors David) sont ces 4 clics.** Les `dashboard_view` qui suivent (Bankunda, 09:01:10 → 09:01:45 le 24/07) sont la continuation de la même session. **Aucune arrivée directe, aucun retour spontané, aucun signet, aucun trafic organique connecté sur toute la fenêtre.** Personne ne « va sur » HealthWatch : on y atterrit depuis un email, ou on n'y va pas.
+
+**Ce que ça change pour la décision du 21/08.** Le bilan hebdo raisonne en « est-ce que quelqu'un revient sur le produit ». La mesure dit que la question n'a pas de sens telle quelle : le produit n'est pas une destination, c'est la page d'atterrissage d'un canal email. Trois conséquences directes :
+- **Le levier d'usage le mieux démontré est l'envoi d'alertes pertinentes, pas le dashboard.** Le correctif des `deaths` null (`8b70438`, 20 alertes West Nile rattrapées le 30/07 à 10:02) a produit **41 minutes plus tard** une des 4 visites. Deux mois de bug sur ce champ n'ont pas coûté 20 emails, ils ont coûté deux mois d'activation.
+- **La surface d'atterrissage n'est pas le dashboard, c'est `/[locale]/outbreak/[id]`** — une fiche unique, atteinte de l'extérieur, sans navigation préalable. C'est cette page qui doit porter la suite du parcours (voir aussi ce qu'elle propose à un essai Pro), pas la page d'accueil.
+- **La bonne métrique d'activation est le ratio clic → visite**, disponible sans instrumentation nouvelle : Brevo côté clic, `product_events` côté visite. Sur 14 jours : **286 envois, 230 délivrés, 18 clics, 13 clics uniques**. C'est un chiffre honnête et lisible, à mettre à côté des compteurs de rétention de `/admin` corrigés hier.
+
+**Effort estimé :** petit pour la mesure — `sync-brevo-blocklist` appelle déjà l'API Brevo quotidiennement avec la clé en prod ; lire `smtp/statistics/events?event=clicks` est le même appel avec un autre paramètre, et l'agrégat peut aller dans le bloc « livraison » du health-check construit le 27/07. Moyen si on va jusqu'à retravailler ce que propose la fiche foyer à quelqu'un qui arrive d'un email.
+
+**Risque/inconnue :** (a) l'échantillon est de **4 événements / 2 utilisateurs** — la preuve du mécanisme est solide (8-10 s, même id de foyer, aucune exception), la mesure de son ampleur ne l'est pas ; (b) biais de population à ne pas oublier : seuls ceux qui reçoivent des alertes peuvent arriver par email, donc ceci prouve que **personne n'arrive autrement aujourd'hui**, pas qu'il serait impossible d'arriver autrement ; (c) `product_events` ne couvre que 3 surfaces depuis le 24/07 — une visite sur une page publique non instrumentée n'apparaîtrait pas, donc « zéro arrivée directe » vaut pour dashboard/fiche foyer/pricing, pas pour tout le site.
+
+### 2. 🔴 Une agence des Nations unies s'est abonnée aujourd'hui à 13h32 — rien ni personne ne l'a signalé
+
+**Signal (prod + Brevo, mesuré vers 17h) :** `iqakhtar@iom.int` — **IOM / OIM, Organisation internationale pour les migrations, agence des Nations unies** — a rempli le formulaire d'abonnement public aujourd'hui **31/07 à 11:32 UTC** (`subscriptions`, région « allRegions », locale `en`). L'email de confirmation est parti et a été délivré à 11:32:54. Puis **deux clics à 14:40:40 et 14:40:58 UTC** sur le bouton « Go to dashboard » → `https://healthwatch-global.com/en`. Quelqu'un de l'OIM a donc lu la confirmation et est allé voir le site, il y a environ trois heures.
+
+**Personne ne le sait.** Vérifié dans le code : `app/api/subscribe/route.ts` insère la ligne, envoie la confirmation, et **n'avertit personne** — pas de notification, pas de ligne dans l'email de health-check quotidien, pas d'entrée dans le bilan hebdo. La seule façon de le découvrir est d'ouvrir `/admin` ou d'interroger la base à la main, ce que je viens de faire par hasard en cherchant autre chose.
+
+**Le contexte rend le chiffre parlant.** La table `subscriptions` compte **13 lignes depuis le 22/05, dont 6 sont des artefacts de test** (`stripe@example.com`, `test-webhook@`, `e2e@`, `test-e2e-*@healthwatch-test.dev`, `stripe-payment-test-…`). Restent 7 vraies personnes, dont 5 ont par ailleurs un compte, et 2 seulement sont des adresses institutionnelles : `jalal.nourlil@pasteur.ma` (Institut Pasteur du Maroc, 12/06 — qui a *aussi* ouvert un compte Pro derrière) et **celle de l'OIM aujourd'hui**. Autrement dit : ce formulaire produit une adresse institutionnelle tous les six ou sept semaines, et il vient d'en produire une.
+
+**Ce qui l'attend aujourd'hui :** rien avant **lundi 03/08**, date du prochain `weekly-digest` (dernier run 27/07, 12 envois). Ce digest porte bien un CTA Pro (« 14-day free trial — no credit card → » vers `/pricing`, `lib/digest-email.ts:66`), donc le chemin abonné → essai **existe** — il est simplement passif, hebdomadaire, et laisse trois jours à un intérêt chaud pour refroidir. Aucune séquence d'accueil, aucune proposition de pilote institutionnel (alors que `/pilot` existe et que c'est exactement le profil visé), aucun signalement à David.
+
+**Pourquoi maintenant :** le portefeuille institutionnel est de 4 leads, dont 2 n'ont jamais ouvert le produit et 1 s'est désabonnée. À trois semaines de la décision du 21/08, une entrée spontanée d'agence onusienne est l'événement business le plus significatif de la semaine, et il est arrivé par le seul canal que personne ne regarde.
+
+**Effort estimé :** petit. (a) Signaler à David tout abonnement sur un domaine non grand-public — une dizaine de lignes dans `app/api/subscribe/route.ts` ou une ligne dans l'email de health-check quotidien, qui existe déjà comme véhicule. (b) Optionnel et distinct : un email unique d'accueil pour un abonné sans compte, proposant l'essai (ou le pilote pour un domaine institutionnel), au lieu d'attendre le lundi.
+
+**Risque/inconnue :** (a) **une adresse n'est pas une tendance** — l'objet de l'idée est la visibilité, surtout pas de construire un « scoring de leads » sur un événement tous les deux mois ; (b) **s'abonner à une veille n'est pas consentir à être prospecté** : la notification est un signal interne, la décision de contacter quelqu'un reste à David et à son jugement, cette routine ne doit rien envoyer ; (c) l'heuristique « domaine non grand-public » a des faux positifs (adresse perso sur petit domaine) — acceptable pour une notification informative, pas pour un envoi automatique ; (d) je ne sais pas qui est cette personne à l'OIM ni ce qu'elle cherchait, et je ne l'ai pas cherché — c'est une donnée d'inscription, pas une invitation à enquêter.
+
+### 3. `alert_locale` retombe silencieusement sur l'anglais — 3 comptes francophones sur 21 reçoivent leurs alertes en anglais, dont le 2e utilisateur le plus actif du produit
+
+**Signal :** trois comptes ont `locale='fr'` mais `alert_locale='en'` — `guyanoel22@gmail.com`, `r.endangrukmanams@gmail.com`, `iinnerre@gmail.com`. Les 18 autres sont cohérents. Ça paraît mineur, sauf que **guyanoel22 est l'un des 3 seuls comptes ayant une activité produit réellement mesurée** (idée 1), et que son unique visite du 30/07 est un clic sur une alerte **« ⚠️ Update: Cholera is worsening in Africa »** l'amenant sur `/en/outbreak/06541c4a` — la fiche **Choléra / Tchad**, un foyer francophone, servie en anglais à un utilisateur français. C'est le seul canal qui fait entrer quelqu'un dans le produit (idée 1), et sur ce canal la langue est fausse dans 1 cas sur 7.
+
+**Cause vérifiée dans le code :** `app/[locale]/signup/page.tsx:150` écrit bien `{ locale, alert_locale: locale }`, et `app/auth/callback/route.ts:84-86` fait de même pour les comptes OAuth **quand `profile.locale` est encore vide**. Mais `app/api/admin/invite/route.ts:106` écrit `locale` **et jamais `alert_locale`** — un pilote invité en français reçoit donc ses alertes en anglais — et aucun chemin ne re-synchronise `alert_locale` si `locale` change plus tard. La migration `20260625010000_backfill_alert_locale.sql` a rattrapé le stock **une fois**, le 25/06 ; tout écart créé depuis reste.
+
+**Effort estimé :** petit, voire trivial — ajouter `alert_locale` à l'écriture de la route d'invitation, et décider si les 3 comptes existants sont réalignés (script ponctuel) ou laissés tels quels.
+
+**Risque/inconnue :** le seul vrai point d'attention est de **ne pas écraser un choix délibéré** : `AlertLocalePanel` permet à un utilisateur de choisir explicitement une langue d'alerte différente de sa langue d'interface, et c'est un réglage légitime (un francophone qui préfère la terminologie épidémiologique anglaise). La migration du 25/06 avait déjà pris cette précaution (`AND alert_locale = 'en'`, pour ne toucher que le défaut jamais modifié) — même règle à reprendre. Priorité honnêtement inférieure aux idées 1 et 2 : c'est de la finition, mais sur le seul canal qui fonctionne, et pour trois lignes de code.
+
+**Non re-proposé aujourd'hui :** l'idée 3 du 28/07 (les 9 comptes existants toujours à 5 régions — **toujours vrai, 45 lignes / 9 utilisateurs**, revérifié aujourd'hui) reste ouverte sans preuve nouvelle. Idem pour le volet AMR (Eva Kamau, 10/07) et le signal de variance (Simon Ruegg, 6-7/07). Rien sur la qualité de données : la journée a déjà livré le gap Dengue/Europe et le double-check du health-check.
+
+**Contexte mesuré au passage** (utile au bilan de lundi, pas des idées) :
+- **Brevo sur 14 j : 286 envois demandés, 230 délivrés, 54 bloqués, 2 désabonnements, 18 clics / 13 uniques, 99 `loadedByProxy`.** Le taux de blocage reste élevé (19 %) mais c'est la conséquence attendue des blocklists Kamau/Mulamba, désormais gatées en base depuis `8934c64`/`f59c166`.
+- `subscriptions` : **6 des 13 lignes sont des adresses de test** jamais nettoyées (`stripe@example.com`, `e2e@`, `test-webhook@`, `test-e2e-*`, `stripe-payment-test-…`). Elles reçoivent le digest hebdomadaire pour rien et gonflent de ~85 % le compteur d'abonnés lu par `/admin` et le health-check. Nettoyage à faire un jour, pas une idée produit.
+- `regional-alerts` a tourné ce matin à 06:31 avec `rows=4` ; `weekly-signal` 12 envois le 29/07 ; `weekly-digest` 12 envois le 27/07.
+
+**Statut :** PROPOSÉE — en attente de retour de David.
+
+---
