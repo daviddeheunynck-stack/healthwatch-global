@@ -470,7 +470,13 @@ async function runSyncDrcSitrep(_req: NextRequest, supabase: SupabaseClient) {
 
   if (data) {
     // Step 4a: auto-update DB at source_priority 10
-    const { error } = await supabase
+    // .select("id") for the same reason as updateSatelliteCountry() above: a write
+    // blocked by the source_priority guard still returns error: null, so without it
+    // a blocked update was counted as a success — cron status stayed "ok" and the
+    // "✅ auto-updated" admin email went out quoting figures that were never written.
+    // The satellite path got this treatment on 2026-07-15; this one, the priority-10
+    // Ebola DRC PHEIC row itself, was missed at the time.
+    const { data: updatedRows, error } = await supabase
       .from("outbreaks")
       .update({
         cases:           data.cases,
@@ -482,11 +488,19 @@ async function runSyncDrcSitrep(_req: NextRequest, supabase: SupabaseClient) {
         source_priority: 10,
       })
       .eq("id", outbreakRow.id)
-      .lte("source_priority", 10);
+      .lte("source_priority", 10)
+      .select("id");
 
     if (error) {
       console.error("[drc-sitrep] DB update error:", error.message);
       Sentry.captureException(new Error(error.message), { tags: { cron: "sync-drc-sitrep" } });
+      dbUpdateFailed = true;
+    } else if (!updatedRows || updatedRows.length === 0) {
+      console.error("[drc-sitrep] update blocked by source_priority guard — Ebola DRC row owned by a higher-priority source");
+      Sentry.captureException(
+        new Error("[drc-sitrep] Ebola DRC update blocked by source_priority guard — row locked above priority 10"),
+        { tags: { cron: "sync-drc-sitrep" } },
+      );
       dbUpdateFailed = true;
     } else {
       console.log(`[drc-sitrep] ✅ Updated: ${data.cases} cas / ${data.deaths} décès / ${data.date}`);
