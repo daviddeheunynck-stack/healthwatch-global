@@ -56,3 +56,11 @@ playwright-report/
 supabase/.temp/
 
 .vercel
+
+# One-off prod data-fix scripts (fix-*/check-*/scan-*/add-*/update-*/backfill-*
+# ending in a YYYY-MM-DD date). These are throwaway tools for a single prod data
+# correction, not product code — deleted once the fix is confirmed applied
+# (see feedback_oneoff_scripts_cleanup memory). Ignored so a broad `git add -A`
+# from an interactive session can't re-track one before it's cleaned up, the
+# way it did on 2026-08-01 (commit 735fe46 re-added two already-deleted ones).
+scripts/*-20[0-9][0-9]-[0-9][0-9]-[0-9][0-9].mjs
