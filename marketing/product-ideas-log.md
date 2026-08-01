@@ -427,6 +427,6 @@ Les 9 e-mails de `r.endangrukmanams@` sont uniquement des envois de séquence (o
 - **Enrôlement aux alertes : 10 comptes sur 22 ont 5 régions, 12 en ont zéro** — dont 11 comptes antérieurs au passage en opt-out et `r.endangrukmanams@` (bug OAuth). Aucun compte n'a jamais choisi autre chose que 5 régions.
 - `winback-sequence` et `pilot-closing-reminder` : toujours aucun `lastNonZero` depuis le 27/07. `pilot-follow-up` a livré ce matin (`rows=1`).
 
-**Statut :** PROPOSÉE — en attente de retour de David.
+**Statut :** David a validé les trois (« On applique les 3 idées »). Construction déléguée à une session dédiée (conformément à la consigne de scope de `daily-product-ideas-healthwatch` : cette routine idée et propose uniquement, ne code jamais elle-même). Statut à mettre à jour par cette session une fois le code livré.
 
 ---
