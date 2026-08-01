@@ -25,27 +25,10 @@ const PILOT_TOKEN_TTL_MS = 72 * 3600_000;
 //
 // JSON.stringify quote-delimits each field, so an embedded ':' (or any other
 // character) in organization/name can never shift the org/name boundary —
-// unlike the plain ':'-joined scheme this replaced (see signLegacy below).
+// unlike the plain ':'-joined scheme this replaced on 2026-07-29.
 function sign(profileId: string, expiresAt: number, organization: string, name: string): string {
   return createHmac("sha256", SECRET)
     .update(JSON.stringify([profileId, expiresAt, organization, name]))
-    .digest("hex")
-    .slice(0, 32);
-}
-
-// Pre-2026-07-29 signing scheme: fields joined with bare ':', no escaping. If
-// organization contains ':', the org/name boundary is ambiguous — org="Acme:Corp"
-// name="Bob" and org="Acme" name="Corp:Bob" hash identically, so a confirm link's
-// own org/name query params could be resegmented (between the applicant's own two
-// fields only) and still validate. Real impact was always near-zero, but left
-// unfixed for a few days to avoid invalidating in-flight links (TTL 72h) — see
-// memory lib/pilot-token.ts::crypto::hmac-delimiter-ambiguity. Kept ONLY so links
-// already emailed before this fix still verify; every pre-fix token expires by
-// 2026-08-01 (72h past this deploy). Delete this function and the fallback branch
-// in verifyPilotToken once that date has passed — dead code after then.
-function signLegacy(profileId: string, expiresAt: number, organization: string, name: string): string {
-  return createHmac("sha256", SECRET)
-    .update(`${profileId}:${expiresAt}:${organization}:${name}`)
     .digest("hex")
     .slice(0, 32);
 }
@@ -74,7 +57,5 @@ export function verifyPilotToken(
 ): boolean {
   if (!token || !expiresAt || !Number.isFinite(expiresAt)) return false;
   if (Date.now() > expiresAt) return false;
-  if (timingSafeEqualStr(sign(profileId, expiresAt, organization, name), token)) return true;
-  // Fallback for links emailed before 2026-07-29 — see signLegacy above.
-  return timingSafeEqualStr(signLegacy(profileId, expiresAt, organization, name), token);
+  return timingSafeEqualStr(sign(profileId, expiresAt, organization, name), token);
 }
