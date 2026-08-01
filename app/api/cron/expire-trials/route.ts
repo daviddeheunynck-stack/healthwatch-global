@@ -7,7 +7,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { buildTrialExpiredEmail } from "@/lib/onboarding-emails";
 import * as Sentry from "@sentry/nextjs";
-import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
+import { logCronRun, isRealProduction, isLiveCronInvocation } from "@/lib/cron-monitor";
 
 export const dynamic = "force-dynamic";
 
@@ -42,7 +42,13 @@ export async function GET(req: NextRequest) {
   }
 }
 
-async function runExpireTrials(_req: NextRequest, supabase: SupabaseClient) {
+async function runExpireTrials(req: NextRequest, supabase: SupabaseClient) {
+  // See lib/cron-monitor.ts for what this does and does not guarantee. Only
+  // gates the trial-expired email below, not the plan downgrade above it —
+  // the downgrade is idempotent (setting plan=free twice is harmless) and
+  // billing-critical, so it stays unconditional rather than risk it silently
+  // not firing on a real scheduled run due to a header-detection bug.
+  const isLive = isLiveCronInvocation(req);
   const now = new Date().toISOString();
 
   const BREVO_API_KEY = clean(process.env.BREVO_API_KEY);
@@ -115,6 +121,9 @@ async function runExpireTrials(_req: NextRequest, supabase: SupabaseClient) {
 
   // Send trial-expired email to each downgraded user (skip if opted out)
   let emailErrors = 0;
+  // Eligible recipients not actually emailed because this invocation wasn't
+  // recognized as live (see isLiveCronInvocation) — reported for visibility.
+  const dryRunRecipients: string[] = [];
   for (const user of expired) {
     const df = user.display_filters as Record<string, unknown> | null;
     if (df?.no_onboarding_emails) continue;
@@ -124,8 +133,10 @@ async function runExpireTrials(_req: NextRequest, supabase: SupabaseClient) {
     if (user.email_blocked_at) continue;
     try {
       const { subject, html } = buildTrialExpiredEmail(user.locale ?? "en", user.id);
-      if (isRealProduction) {
+      if (isRealProduction && isLive) {
         await sendEmail(user.email, subject, html);
+      } else if (isRealProduction) {
+        dryRunRecipients.push(user.email);
       }
     } catch (err) {
       emailErrors++;
@@ -133,6 +144,10 @@ async function runExpireTrials(_req: NextRequest, supabase: SupabaseClient) {
       Sentry.captureException(err, { tags: { cron: "expire-trials", user_id: user.id } });
     }
     await new Promise((r) => setTimeout(r, 150));
+  }
+
+  if (dryRunRecipients.length > 0) {
+    console.log(`[expire-trials] dry run (not a recognized live invocation) — would have sent: ${dryRunRecipients.join(", ")}`);
   }
 
   const hb = process.env.BETTERSTACK_HB_EXPIRE_TRIALS;
@@ -143,5 +158,9 @@ async function runExpireTrials(_req: NextRequest, supabase: SupabaseClient) {
   // it was previously untracked, so a Brevo outage here was invisible.
   await logCronRun(supabase, "expire-trials", emailErrors > 0 ? "error" : "ok", ids.length,
     emailErrors > 0 ? `${emailErrors} email(s) d'expiration en échec` : undefined);
-  return NextResponse.json({ downgraded: ids.length, users: expired.map((p) => p.email), emailErrors });
+  return NextResponse.json({
+    downgraded: ids.length, users: expired.map((p) => p.email), emailErrors,
+    live: isLive,
+    dryRunRecipients: dryRunRecipients.length > 0 ? dryRunRecipients : undefined,
+  });
 }

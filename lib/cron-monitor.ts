@@ -8,6 +8,7 @@
  */
 
 import type { SupabaseClient } from "@supabase/supabase-js";
+import type { NextRequest } from "next/server";
 
 /**
  * True only on the real Vercel production deployment. Unset for `next dev`
@@ -18,6 +19,35 @@ import type { SupabaseClient } from "@supabase/supabase-js";
  * fine unguarded: they land in whichever Supabase project is configured.
  */
 export const isRealProduction = process.env.VERCEL_ENV === "production";
+
+/**
+ * True when this invocation is either a genuine Vercel Cron trigger or an
+ * explicit manual "?live=1" test override.
+ *
+ * Vercel adds an `x-vercel-cron-schedule` header to every scheduled cron
+ * invocation (see https://vercel.com/docs/cron-jobs/manage-cron-jobs#reading-the-cron-schedule-header).
+ * Vercel's own docs do not document this header (or the `vercel-cron/1.0`
+ * user-agent) as cryptographically unspoofable — `CRON_SECRET`, checked
+ * separately by each route, remains the only real authentication. So this is
+ * a practical safeguard against *accidental* replay of a cron URL (a browser
+ * tab, an ad-hoc curl during a debugging session — none of which set this
+ * header or the query param by default), not a hardened defense against
+ * someone who already holds CRON_SECRET and deliberately spoofs the header.
+ * That threat model match is intentional: the incident this guards against
+ * (saeed.mohamood@ receiving the same trial-ending email 3× in one hour on
+ * 2026-07-15) was exactly an accidental manual replay, not an attack.
+ *
+ * Gate only the outbound send (Brevo call) behind this, not DB state
+ * changes — those (e.g. expire-trials' plan downgrade) are already
+ * idempotent and re-running them harmlessly is preferable to risking the
+ * billing-critical downgrade silently not firing on a real scheduled run
+ * because of a header-detection bug.
+ */
+export function isLiveCronInvocation(req: NextRequest): boolean {
+  const isVercelCron = req.headers.get("x-vercel-cron-schedule") !== null;
+  const liveParam = req.nextUrl.searchParams.get("live") === "1";
+  return isVercelCron || liveParam;
+}
 
 export type CronStatus = "ok" | "error" | "no_data";
 

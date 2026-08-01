@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { buildJ1Email, buildJ3Email, buildJ7Email, buildJ12Email, buildPilotConversionEmail } from "@/lib/onboarding-emails";
 import * as Sentry from "@sentry/nextjs";
-import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
+import { logCronRun, isRealProduction, isLiveCronInvocation } from "@/lib/cron-monitor";
 
 export const dynamic = "force-dynamic";
 
@@ -66,7 +66,10 @@ export async function GET(req: NextRequest) {
   }
 }
 
-async function runOnboardingSequence(_req: NextRequest, supabase: SupabaseClient) {
+async function runOnboardingSequence(req: NextRequest, supabase: SupabaseClient) {
+  // See lib/cron-monitor.ts for what this does and does not guarantee.
+  const isLive = isLiveCronInvocation(req);
+
   // Five cohort queries (J+1/J+3/J+7/J+12/J+32) — same table, different date-window
   // filters, none depends on another's result — fetched concurrently instead of
   // one after another. Error checks below preserve the original fail-fast order
@@ -178,6 +181,9 @@ async function runOnboardingSequence(_req: NextRequest, supabase: SupabaseClient
   let j7Sent = 0, j7Failed = 0;
   let j12Sent = 0, j12Failed = 0;
   let j32Sent = 0, j32Failed = 0;
+  // Eligible recipients not actually emailed because this invocation wasn't
+  // recognized as live (see isLiveCronInvocation) — reported for visibility.
+  const dryRunRecipients: string[] = [];
 
   const hasOptedOut = (u: { display_filters: unknown }) =>
     !!(u.display_filters as Record<string, unknown> | null)?.no_onboarding_emails;
@@ -188,10 +194,14 @@ async function runOnboardingSequence(_req: NextRequest, supabase: SupabaseClient
     try {
       const locale = user.locale || "en";
       const { subject, html } = buildJ1Email(locale, user.id);
-      if (isRealProduction) {
+      if (isRealProduction && isLive) {
         await sendEmail(user.email, subject, html);
+        j1Sent++;
+      } else if (isRealProduction) {
+        dryRunRecipients.push(`j1:${user.email}`);
+      } else {
+        j1Sent++;
       }
-      j1Sent++;
       await new Promise((r) => setTimeout(r, 150));
     } catch (err) {
       console.error(`[onboarding] J+1 failed for ${user.email}:`, err);
@@ -206,10 +216,14 @@ async function runOnboardingSequence(_req: NextRequest, supabase: SupabaseClient
     try {
       const locale = user.locale || "en";
       const { subject, html } = buildJ3Email(locale, user.id);
-      if (isRealProduction) {
+      if (isRealProduction && isLive) {
         await sendEmail(user.email, subject, html);
+        j3Sent++;
+      } else if (isRealProduction) {
+        dryRunRecipients.push(`j3:${user.email}`);
+      } else {
+        j3Sent++;
       }
-      j3Sent++;
       await new Promise((r) => setTimeout(r, 150));
     } catch (err) {
       console.error(`[onboarding] J+3 failed for ${user.email}:`, err);
@@ -224,10 +238,14 @@ async function runOnboardingSequence(_req: NextRequest, supabase: SupabaseClient
     try {
       const locale = user.locale || "en";
       const { subject, html } = buildJ7Email(locale, user.id);
-      if (isRealProduction) {
+      if (isRealProduction && isLive) {
         await sendEmail(user.email, subject, html);
+        j7Sent++;
+      } else if (isRealProduction) {
+        dryRunRecipients.push(`j7:${user.email}`);
+      } else {
+        j7Sent++;
       }
-      j7Sent++;
       await new Promise((r) => setTimeout(r, 150));
     } catch (err) {
       console.error(`[onboarding] J+7 failed for ${user.email}:`, err);
@@ -242,10 +260,14 @@ async function runOnboardingSequence(_req: NextRequest, supabase: SupabaseClient
     try {
       const locale = user.locale || "en";
       const { subject, html } = buildJ12Email(locale, user.id);
-      if (isRealProduction) {
+      if (isRealProduction && isLive) {
         await sendEmail(user.email, subject, html);
+        j12Sent++;
+      } else if (isRealProduction) {
+        dryRunRecipients.push(`j12:${user.email}`);
+      } else {
+        j12Sent++;
       }
-      j12Sent++;
       await new Promise((r) => setTimeout(r, 150));
     } catch (err) {
       console.error(`[onboarding] J+12 failed for ${user.email}:`, err);
@@ -260,10 +282,14 @@ async function runOnboardingSequence(_req: NextRequest, supabase: SupabaseClient
     try {
       const locale = user.locale || "en";
       const { subject, html } = buildPilotConversionEmail(locale, user.id, (user.pilot_organization as string | null) ?? null);
-      if (isRealProduction) {
+      if (isRealProduction && isLive) {
         await sendEmail(user.email, subject, html);
+        j32Sent++;
+      } else if (isRealProduction) {
+        dryRunRecipients.push(`j32:${user.email}`);
+      } else {
+        j32Sent++;
       }
-      j32Sent++;
       await new Promise((r) => setTimeout(r, 150));
     } catch (err) {
       console.error(`[onboarding] J+32 failed for ${user.email}:`, err);
@@ -274,6 +300,10 @@ async function runOnboardingSequence(_req: NextRequest, supabase: SupabaseClient
 
   const hb = process.env.BETTERSTACK_HB_ONBOARDING;
   if (hb) fetch(hb).catch(() => {});
+
+  if (dryRunRecipients.length > 0) {
+    console.log(`[onboarding] dry run (not a recognized live invocation) — would have sent: ${dryRunRecipients.join(", ")}`);
+  }
 
   const totalSent = j1Sent + j3Sent + j7Sent + j12Sent + j32Sent;
   const totalFailed = j1Failed + j3Failed + j7Failed + j12Failed + j32Failed;
@@ -290,5 +320,7 @@ async function runOnboardingSequence(_req: NextRequest, supabase: SupabaseClient
     j7:  { sent: j7Sent,  failed: j7Failed,  total: (j7Users  ?? []).length },
     j12: { sent: j12Sent, failed: j12Failed, total: (j12Users ?? []).length },
     j32: { sent: j32Sent, failed: j32Failed, total: (j32Users ?? []).length },
+    live: isLive,
+    dryRunRecipients: dryRunRecipients.length > 0 ? dryRunRecipients : undefined,
   });
 }

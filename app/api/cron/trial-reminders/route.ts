@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { buildTrialEndingEmail } from "@/lib/trial-ending-email";
 import * as Sentry from "@sentry/nextjs";
-import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
+import { logCronRun, isRealProduction, isLiveCronInvocation } from "@/lib/cron-monitor";
 import { getLocalizedDisease } from "@/lib/outbreaks";
 
 export const dynamic = "force-dynamic";
@@ -68,7 +68,10 @@ export async function GET(req: NextRequest) {
   }
 }
 
-async function runTrialReminders(_req: NextRequest, supabase: SupabaseClient) {
+async function runTrialReminders(req: NextRequest, supabase: SupabaseClient) {
+  // See lib/cron-monitor.ts for what this does and does not guarantee.
+  const isLive = isLiveCronInvocation(req);
+
   // ── Target windows ──────────────────────────────────────────────────────────
   // J-3 window: trial_ends_at in [now + 2.5d, now + 3.5d)
   // J-1 window: trial_ends_at in [now + 0.5d, now + 1.5d)
@@ -127,6 +130,9 @@ async function runTrialReminders(_req: NextRequest, supabase: SupabaseClient) {
   let sent         = 0;
   let failed       = 0;
   let skippedNoKey = 0;
+  // Eligible recipients not actually emailed because this invocation wasn't
+  // recognized as live (see isLiveCronInvocation) — reported for visibility.
+  const dryRunRecipients: string[] = [];
 
   for (const profile of profiles) {
     if (!profile.email) continue;
@@ -149,9 +155,11 @@ async function runTrialReminders(_req: NextRequest, supabase: SupabaseClient) {
         organization: (profile.pilot_organization as string | null) ?? null,
       });
 
-      if (isRealProduction) {
+      if (isRealProduction && isLive) {
         const ok = await sendEmail(profile.email, subject, html);
         if (ok) sent++; else skippedNoKey++;
+      } else if (isRealProduction) {
+        dryRunRecipients.push(profile.email);
       } else {
         sent++;
       }
@@ -168,11 +176,19 @@ async function runTrialReminders(_req: NextRequest, supabase: SupabaseClient) {
   const hb = process.env.BETTERSTACK_HB_TRIAL_REMINDERS;
   if (hb) fetch(hb).catch(() => {});
 
+  if (dryRunRecipients.length > 0) {
+    console.log(`[trial-reminders] dry run (not a recognized live invocation) — would have sent: ${dryRunRecipients.join(", ")}`);
+  }
+
   // Was only checking skippedNoKey (a single global "no Brevo key" condition) —
   // `failed`, incremented per-user in the catch above, was tracked but never
   // consulted here, so a genuine per-user send failure still logged "ok".
   await logCronRun(supabase, "trial-reminders", skippedNoKey > 0 || failed > 0 ? "error" : "ok", sent,
     failed > 0 ? `${failed} rappel(s) en échec` : undefined);
   console.log(`[trial-reminders] Done — ${sent} sent, ${failed} failed, ${skippedNoKey} skipped (no key).`);
-  return NextResponse.json({ sent, failed, skippedNoKey, total: profiles.length });
+  return NextResponse.json({
+    sent, failed, skippedNoKey, total: profiles.length,
+    live: isLive,
+    dryRunRecipients: dryRunRecipients.length > 0 ? dryRunRecipients : undefined,
+  });
 }
