@@ -314,11 +314,22 @@ function parseSitrepCases(text: string): SitrepTable | null {
     const geo = COUNTRIES[name];
     if (!geo || seen.has(geo.name_en)) continue;
     // "Mexico* 11,820 16" — name, optional active marker, optional footnote
-    // marker, cases, deaths. The footnote group is optional-and-greedy: it only
-    // survives when three numbers follow, so a plain "Costa Rica 5 0" still
-    // backtracks to cases=5/deaths=0 rather than eating the 5 as a marker.
+    // marker, cases, deaths. Both footnote groups are optional-and-greedy: each
+    // only survives when the numbers that follow still add up, so a plain
+    // "Costa Rica 5 0" backtracks to cases=5/deaths=0 rather than eating either
+    // 5 as a marker.
+    // The second (post-cases) footnote group exists because a footnote can also
+    // attach to the CASES figure itself — sitrep #7's Table 3 renders
+    // Guatemala's case-definition footnote as "27,145 4 26" once pdf-parse
+    // linearizes the superscript "⁴" into its own space-separated digit. Without
+    // this group, deaths captured that stray "4" instead of the real "26" (found
+    // 2026-08-01, live for 3+ weeks — Guatemala is HWG's highest-death-toll
+    // measles row, undercounted 26→4, a ~6.5x miss). Mexico/Bolivia/etc. have no
+    // footnote here, so this group simply doesn't match for them and the deaths
+    // capture falls through to the real number unchanged — verified for all 6
+    // countries in sitrep #7 before this shipped.
     const re = new RegExp(
-      escapeRegExp(name).replace(/\s+/g, "\\s+") + "\\s*(\\*?)\\s*(?:\\d{1,2}\\s+)?([\\d,]+)\\s+(\\d+)(?![\\d,])",
+      escapeRegExp(name).replace(/\s+/g, "\\s+") + "\\s*(\\*?)\\s*(?:\\d{1,2}\\s+)?([\\d,]+)\\s+(?:\\d{1,2}\\s+)?(\\d+)(?![\\d,])",
       "i",
     );
     const m = re.exec(block);
