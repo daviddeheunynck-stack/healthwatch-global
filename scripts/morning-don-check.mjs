@@ -46,7 +46,14 @@ const KNOWN_SEED_CLUSTERS = [
   // 2026, liés au voyage, sans transmission locale soutenue. Les 5 restants (Bolivie,
   // Brésil, Cuba, Maurice, Mayotte) sont tous datés 2026. Invisible au QC quotidien car
   // le contrôle de fraîcheur saute les lignes is_seed — d'où l'intérêt de ce compte ici.
-  { label: "Chikungunya (DON581, multi-pays)", diseaseMatch: /chikungunya/i, expectedCount: 5 },
+  // 2026-08-01 : cluster élargi 5 -> 8. Le refresh du 01/08 (PAHO/NY DOH 30/07) a mis à
+  // jour Brésil/Bolivie/Maurice/Mayotte et découvert que l'Argentine (11 986 cas) n'avait
+  // aucune ligne, tandis que Suriname (7 484) et Guyane française (1 053) existaient mais
+  // inactives à cases=0 (créées depuis des pages CDC Travel Notice génériques sans
+  // chiffre réel) — les trois dépassaient pourtant Cuba (1 457), suivie comme active.
+  // Réactivées/insérées avec is_seed=true + source_priority=10, alignées sur le reste du
+  // cluster. Cf. fix-chikungunya-argentina-suriname-frenchguiana-2026-08-01.mjs.
+  { label: "Chikungunya (DON581, multi-pays)", diseaseMatch: /chikungunya/i, expectedCount: 8 },
   { label: "MERS-CoV (DON591)", diseaseMatch: /mers-cov/i, expectedCount: 1 },
   { label: "Choléra (DON579, multi-pays)", diseaseMatch: /cholera/i, expectedCount: 4 },
   { label: "Polio PHEIC (Afghanistan/Pakistan/Palestine)", diseaseMatch: /polio/i, expectedCount: 3 },
