@@ -532,18 +532,34 @@ async function runUsdaAphis(_req: NextRequest, supabase: SupabaseClient) {
   if (staleErr) {
     log.push({ state: "-", status: "error", detail: `deactivation query: ${staleErr.message}` });
   } else if (staleActive && staleActive.length > 0) {
-    const { error: deactivateErr } = await supabase
+    // Restricting the lookup to this cron's own SOURCE_PREFIX keeps the sweep on
+    // rows it owns, but a row it owns can still have been locked at
+    // source_priority=10 by a human (the convention used for DR Congo/Ebola,
+    // Uganda, Tanzania, Somalia) — without the .lte() the 730-day sweep would
+    // silently revert that decision. Same contract as the deactivation in
+    // data-quality/route.ts: guard at the DB level, and count only the rows the
+    // write actually returned instead of assuming every candidate landed —
+    // results.deactivated used staleActive.length, so once the guard blocks a
+    // row the report would have overstated the sweep.
+    const { data: deactivated, error: deactivateErr } = await supabase
       .from("outbreaks")
       .update({ active: false })
-      .in("id", staleActive.map((r) => r.id));
+      .in("id", staleActive.map((r) => r.id))
+      .lte("source_priority", SOURCE_PRIORITY)
+      .select("id");
 
     if (deactivateErr) {
       log.push({ state: "-", status: "error", detail: `deactivation update: ${deactivateErr.message}` });
       results.errors++;
     } else {
-      results.deactivated = staleActive.length;
+      const landed = new Set((deactivated ?? []).map((r) => r.id as string));
+      results.deactivated = landed.size;
       for (const r of staleActive) {
-        log.push({ state: r.admin1 ?? "?", status: "deactivated", detail: `no detection since ${r.date}` });
+        if (landed.has(r.id)) {
+          log.push({ state: r.admin1 ?? "?", status: "deactivated", detail: `no detection since ${r.date}` });
+        } else {
+          log.push({ state: r.admin1 ?? "?", status: "skip", detail: `deactivation blocked by source_priority guard — row locked or owned by a higher-priority source (last detection ${r.date})` });
+        }
       }
     }
   }

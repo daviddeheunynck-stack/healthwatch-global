@@ -170,9 +170,21 @@ async function applyCaseUpdate(
     payload.description_ar = null;
     payload.description_id = null;
   }
-  const { data, error } = await supabase.from("outbreaks").update(payload).eq("id", row.id).select("id");
+  // The .lte() belongs here and not only in the caller: the loop's
+  // `source_priority >= 10` check reads a snapshot loaded minutes earlier, then
+  // awaits a per-row verifyFromDON() network fetch before reaching this write —
+  // exactly the window the deactivation below (see "Same contract as
+  // applyCaseUpdate above") already guards against at the DB level. Without it
+  // this function was the one auto-fix path that could still overwrite a row
+  // locked between the snapshot read and the write.
+  const { data, error } = await supabase
+    .from("outbreaks")
+    .update(payload)
+    .eq("id", row.id)
+    .lte("source_priority", 9)
+    .select("id");
   if (error) return { ok: false, error: error.message };
-  if (!data || data.length === 0) return { ok: false, error: "update blocked (0 lignes affectées)" };
+  if (!data || data.length === 0) return { ok: false, error: "update bloqué (ligne verrouillée, 0 ligne affectée)" };
   return { ok: true };
 }
 

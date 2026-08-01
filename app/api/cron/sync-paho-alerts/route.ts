@@ -965,14 +965,29 @@ async function deactivateDroppedSitrepCountries(
   for (const row of (data ?? []) as DeactivationCandidate[]) {
     if (stillActive.has(row.country_en)) continue;
 
-    const { error: updErr } = await supabase
+    // Scoping the lookup above to this sitrep's own `source` keeps the sweep on
+    // rows this cron owns, but that alone never protected a row a human locked
+    // at source_priority=10 (the convention used for DR Congo/Ebola, Uganda,
+    // Tanzania, Somalia): the lock lives in a column the sweep didn't read, so
+    // a deliberate "keep this active" decision could be reverted by a sitrep
+    // that simply stopped asterisking the country. Same contract as the
+    // deactivation in data-quality/route.ts: guard at the DB level, and verify
+    // via .select("id") that the write actually landed before reporting it as
+    // deactivated — a blocked write must read as "skip", never as a success.
+    const { data: deact, error: updErr } = await supabase
       .from("outbreaks")
       .update({ active: false })
       .eq("id", row.id)
-      .eq("active", true);
+      .eq("active", true)
+      .lte("source_priority", 5)
+      .select("id");
 
     if (updErr) {
       log.push({ label: `Measles/${row.country_en}`, status: "error", detail: `deactivation failed: ${updErr.message}` });
+      continue;
+    }
+    if (!deact || deact.length === 0) {
+      log.push({ label: `Measles/${row.country_en}`, status: "skip", detail: "deactivation blocked by source_priority guard — row locked or owned by a higher-priority source" });
       continue;
     }
     log.push({
