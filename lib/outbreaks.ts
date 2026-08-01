@@ -121,11 +121,20 @@ const getOutbreaksCached = unstable_cache(
   async (): Promise<Outbreak[]> => {
     const sixtyDaysAgo = new Date(Date.now() - 60 * 86_400_000).toISOString().split("T")[0];
 
+    // `date.gte.sixtyDaysAgo` guards the recency fallback below: without it, a row
+    // whose own reported date is years stale can be resurrected as "active" just
+    // because something touched updated_at (e.g. a documentation/translation edit)
+    // long after the row was deliberately archived. Found 2026-08-01: Dengue/Haiti
+    // (date 2022-06-26, active=false) showed as a live "Foyer en cours" on the
+    // public site after its description was edited 2026-07-28 — the fallback is
+    // meant for a row that JUST went inactive before a fresh bulletin, not one
+    // whose underlying event is over four years old. See isDisplayActive() below,
+    // which mirrors this same guard for the disease/country/region detail pages.
     const { data, error, attempts } = await queryWithRetry((supabase) =>
       supabase
         .from("outbreaks")
         .select("*")
-        .or(`active.eq.true,and(source_priority.gte.3,updated_at.gte.${sixtyDaysAgo})`)
+        .or(`active.eq.true,and(source_priority.gte.3,updated_at.gte.${sixtyDaysAgo},date.gte.${sixtyDaysAgo})`)
         .order("date", { ascending: false }),
     );
 
@@ -498,7 +507,7 @@ export function isNewOutbreak(outbreak: Outbreak): boolean {
 // display — prevents endemic diseases (Dengue, Cholera, H5N1) from falling into
 // "history" after the data-quality cron closes resolved WHO DON events.
 const SIXTY_DAYS_MS = 60 * 86_400_000;
-export function isDisplayActive(o: Pick<Outbreak, "active" | "source_priority" | "updated_at" | "is_seed">): boolean {
+export function isDisplayActive(o: Pick<Outbreak, "active" | "source_priority" | "updated_at" | "is_seed" | "date">): boolean {
   if (o.active) return true;
   // is_seed rows (WHO GHO annual burden estimates for endemic diseases, or a historical
   // outbreak flagged as seed data) are reference/background data, not a live tracked
@@ -512,13 +521,25 @@ export function isDisplayActive(o: Pick<Outbreak, "active" | "source_priority" |
   // (the protected DON-linked clusters — Chikungunya, MERS-CoV, Cholera, Polio PHEIC,
   // Cereulide — already return true above via the plain `active` check).
   if (o.is_seed) return false;
-  if ((o.source_priority ?? 0) >= 3 && o.updated_at) {
-    return new Date(o.updated_at).getTime() >= Date.now() - SIXTY_DAYS_MS;
+  // Also require the row's own reported `date` to be recent, not just `updated_at` —
+  // otherwise a row deliberately archived years ago gets resurrected as "active" the
+  // moment anything touches its updated_at (a description edit, a translation
+  // backfill), regardless of how stale the actual event is. Found 2026-08-01:
+  // Dengue/Haiti (date 2022-06-26, active=false, explicitly archived as no-longer-
+  // current) displayed as a live "Foyer en cours" after its description was edited
+  // 2026-07-28 bumped updated_at into the 60-day window. Mirrors the same guard
+  // added to getOutbreaksCached()'s DB query in lib/outbreaks.ts.
+  if ((o.source_priority ?? 0) >= 3 && o.updated_at && o.date) {
+    const now = Date.now();
+    return (
+      new Date(o.updated_at).getTime() >= now - SIXTY_DAYS_MS &&
+      new Date(o.date).getTime() >= now - SIXTY_DAYS_MS
+    );
   }
   return false;
 }
 
-type DisplayActiveRow = Pick<Outbreak, "active" | "source_priority" | "updated_at" | "disease_en" | "disease" | "country_en" | "country" | "is_seed">;
+type DisplayActiveRow = Pick<Outbreak, "active" | "source_priority" | "updated_at" | "disease_en" | "disease" | "country_en" | "country" | "is_seed" | "date">;
 
 // Sibling-aware wrapper around isDisplayActive(): the 60-day recency fallback exists so an
 // endemic disease doesn't vanish from display when its ONLY row goes inactive before a fresh
