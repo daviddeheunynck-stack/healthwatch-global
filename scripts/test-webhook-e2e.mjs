@@ -37,7 +37,7 @@ function parseEnv(filename) {
 }
 
 const BOM = "﻿";
-const clean = (s) => (s || "").replace(BOM, "").trim();
+const clean = (s) => (s || "").replace(BOM, "").trim().replace(/^"(.*)"$/, "$1");
 
 const vars = parseEnv(".env.local");
 

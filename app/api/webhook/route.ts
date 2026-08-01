@@ -6,6 +6,7 @@ import { buildUpgradeEmail }        from "@/lib/upgrade-email";
 import { buildChurnEmail }          from "@/lib/churn-email";
 import { buildPaymentFailedEmail }  from "@/lib/payment-failed-email";
 import { buildTrialEndingEmail }    from "@/lib/trial-ending-email";
+import { enrollAlertRegions } from "@/lib/activate-trial";
 import { errorMessage } from "@/lib/error";
 
 export const dynamic = "force-dynamic";
@@ -237,6 +238,16 @@ export async function POST(req: NextRequest) {
             });
           } else {
             console.log(`[webhook] Plan set to ${plan} for user ${userId} (trial_ends_at: ${trialEndsAt})`);
+
+            // Default-enroll into regional alerts (opt-out, not opt-in) — same helper
+            // as the trial/pilot activation paths (lib/activate-trial.ts). Found
+            // 2026-08-01: a customer paying directly through Stripe Checkout without
+            // ever going through a trial (signup, OAuth, or pilot invite) never hit
+            // any of the paths that enroll regions, so they'd have Pro access with 0
+            // alerts indefinitely. Upsert is idempotent — a no-op for anyone who
+            // already has regions from an earlier trial. Best-effort: a failure here
+            // must not affect the paid activation itself.
+            await enrollAlertRegions(supabase, userId, "webhook/checkout");
           }
         }
 
