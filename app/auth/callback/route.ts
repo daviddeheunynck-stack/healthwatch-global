@@ -2,8 +2,9 @@ import { NextRequest, NextResponse } from "next/server";
 import { createServerClient } from "@supabase/ssr";
 import { createClient } from "@supabase/supabase-js";
 import { cookies } from "next/headers";
+import * as Sentry from "@sentry/nextjs";
+import { activateTrial } from "@/lib/activate-trial";
 
-const TRIAL_DAYS = 14;
 const VALID_LOCALES = ["en", "fr", "es", "ar", "id"];
 
 function localeFromNext(next: string): string | null {
@@ -63,38 +64,43 @@ export async function GET(req: NextRequest) {
         );
         const { data: profile } = await admin
           .from("profiles")
-          .select("plan, trial_ends_at, locale")
+          .select("locale")
           .eq("id", user.id)
           .single();
 
-        const updates: Record<string, unknown> = {};
-        let isNewSignup = false;
-
-        // Activate 14-day Pro trial for users who never had one
-        if (profile?.plan === "free" && !profile.trial_ends_at) {
-          updates.plan = "pro";
-          updates.trial_ends_at = new Date(
-            Date.now() + TRIAL_DAYS * 24 * 60 * 60 * 1000
-          ).toISOString();
-          isNewSignup = true;
-        }
-
         // Save locale for OAuth users (Google/GitHub) who bypass signup/page.tsx
         const inferredLocale = localeFromNext(next);
+        const localeUpdates: Record<string, unknown> = {};
         if (!profile?.locale && inferredLocale) {
-          updates.locale = inferredLocale;
-          updates.alert_locale = inferredLocale;
+          localeUpdates.locale = inferredLocale;
+          localeUpdates.alert_locale = inferredLocale;
         }
 
-        if (Object.keys(updates).length > 0) {
-          await admin.from("profiles").update(updates).eq("id", user.id);
+        if (Object.keys(localeUpdates).length > 0) {
+          await admin.from("profiles").update(localeUpdates).eq("id", user.id);
+        }
+
+        // Activate 14-day Pro trial for users who never had one — routed through
+        // the same helper as /api/activate-trial (see lib/activate-trial.ts) so
+        // OAuth signups get the same regional-alert enrollment + signup digest as
+        // email signups. Before 2026-08-01 this set plan/trial_ends_at inline
+        // without enrolling, which also permanently blocked enrollment afterwards
+        // (activate-trial's idempotence guard treats any trial_ends_at as already handled).
+        let isNewSignup = false;
+        try {
+          const result = await activateTrial(admin, user);
+          isNewSignup = result.activated;
+        } catch (err) {
+          console.error("[auth/callback] trial activation failed:", err);
+          Sentry.captureException(err, { tags: { user_id: user.id } });
+          await Sentry.flush(2000);
         }
 
         // Send welcome email only for OAuth signups — email/password users already
         // receive it from signup/page.tsx immediately after form submission.
         const isOAuth = user.app_metadata?.provider !== "email";
         if (isNewSignup && isOAuth && user.email) {
-          const emailLocale = (updates.locale as string | undefined) ?? profile?.locale ?? inferredLocale ?? "en";
+          const emailLocale = (localeUpdates.locale as string | undefined) ?? profile?.locale ?? inferredLocale ?? "en";
           fetch(`${origin}/api/send-welcome`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
