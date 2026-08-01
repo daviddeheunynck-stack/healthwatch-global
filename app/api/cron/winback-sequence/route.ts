@@ -6,7 +6,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { PRICE_DISPLAY } from "@/lib/pricing";
 import * as Sentry from "@sentry/nextjs";
-import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
+import { logCronRun, isRealProduction, isLiveCronInvocation } from "@/lib/cron-monitor";
 import { signUnsubscribeToken } from "@/lib/unsubscribe-token";
 
 export const dynamic = "force-dynamic";
@@ -395,17 +395,23 @@ export async function GET(req: NextRequest) {
   }
 }
 
-async function runWinbackSequence(_req: NextRequest, supabase: SupabaseClient) {
-  const isEligible = (p: { email: string | null; display_filters: unknown; trial_ends_at: string | null; created_at: string | null }) => {
+async function runWinbackSequence(req: NextRequest, supabase: SupabaseClient) {
+  // See lib/cron-monitor.ts for what this does and does not guarantee.
+  const isLive = isLiveCronInvocation(req);
+
+  const isEligible = (p: { email: string | null; display_filters: unknown; is_pilot: boolean | null }) => {
     if (!p.email) return false;
     const filters = p.display_filters as Record<string, unknown> | null;
     // Respect both onboarding opt-out and weekly-signal opt-out.
     if (filters?.no_onboarding_emails || filters?.no_weekly_signal) return false;
-    // Skip pilot users (35-day trials) — followed up personally via J+32 conversion email.
-    const trialDays = p.trial_ends_at && p.created_at
-      ? (new Date(p.trial_ends_at).getTime() - new Date(p.created_at).getTime()) / 86_400_000
-      : 14;
-    return trialDays <= 20;
+    // Skip pilot users — followed up personally via J+32 conversion email.
+    // is_pilot is exact in prod (true only on the 4 institutional pilots,
+    // false everywhere else). Replaces the previous trialDays>20 heuristic,
+    // which misclassified any standard 14-day trial that got a bulk
+    // trial_ends_at extension (5 accounts share one extension timestamp to
+    // the millisecond) as a 22-31 day "pilot" and silently excluded it from
+    // winback. See marketing/product-ideas-log.md, 2026-08-01, idea 1.
+    return p.is_pilot !== true;
   };
 
   const sendBrevo = async (email: string, subject: string, html: string) => {
@@ -429,7 +435,7 @@ async function runWinbackSequence(_req: NextRequest, supabase: SupabaseClient) {
 
   const { data: j3Profiles, error: j3Err } = await supabase
     .from("profiles")
-    .select("id, email, locale, trial_ends_at, created_at, display_filters")
+    .select("id, email, locale, trial_ends_at, created_at, display_filters, is_pilot")
     .eq("plan", "free")
     .not("trial_ends_at", "is", null)
     .is("stripe_subscription_id", null)
@@ -450,7 +456,7 @@ async function runWinbackSequence(_req: NextRequest, supabase: SupabaseClient) {
 
   const { data: j7Profiles, error: j7Err } = await supabase
     .from("profiles")
-    .select("id, email, locale, trial_ends_at, created_at, display_filters")
+    .select("id, email, locale, trial_ends_at, created_at, display_filters, is_pilot")
     .eq("plan", "free")
     .not("trial_ends_at", "is", null)
     .is("stripe_subscription_id", null)
@@ -467,6 +473,10 @@ async function runWinbackSequence(_req: NextRequest, supabase: SupabaseClient) {
 
   let j3Sent = 0, j3Failed = 0;
   let j7Sent = 0, j7Failed = 0;
+  // Recipients that were eligible but not actually emailed because this
+  // invocation wasn't recognized as live (see isLiveCronInvocation) —
+  // reported back for visibility instead of silently dropped.
+  const dryRunRecipients: string[] = [];
 
   // ── Send J+3 emails ────────────────────────────────────────────────────────
   for (const profile of j3Profiles ?? []) {
@@ -474,10 +484,14 @@ async function runWinbackSequence(_req: NextRequest, supabase: SupabaseClient) {
     try {
       const locale = profile.locale ?? "en";
       const { subject, html } = buildEmail(locale, profile.id);
-      if (isRealProduction) {
+      if (isRealProduction && isLive) {
         await sendBrevo(profile.email!, subject, html);
+        j3Sent++;
+      } else if (isRealProduction) {
+        dryRunRecipients.push(`j3:${profile.email}`);
+      } else {
+        j3Sent++;
       }
-      j3Sent++;
     } catch (err) {
       console.error(`[winback] J+3 failed for ${profile.email}:`, err);
       Sentry.captureException(err, { tags: { cron: "winback-sequence", step: "j3", user_id: profile.id } });
@@ -492,10 +506,14 @@ async function runWinbackSequence(_req: NextRequest, supabase: SupabaseClient) {
     try {
       const locale = profile.locale ?? "en";
       const { subject, html } = buildEmailJ7(locale, profile.id);
-      if (isRealProduction) {
+      if (isRealProduction && isLive) {
         await sendBrevo(profile.email!, subject, html);
+        j7Sent++;
+      } else if (isRealProduction) {
+        dryRunRecipients.push(`j7:${profile.email}`);
+      } else {
+        j7Sent++;
       }
-      j7Sent++;
     } catch (err) {
       console.error(`[winback] J+7 failed for ${profile.email}:`, err);
       Sentry.captureException(err, { tags: { cron: "winback-sequence", step: "j7", user_id: profile.id } });
@@ -506,11 +524,16 @@ async function runWinbackSequence(_req: NextRequest, supabase: SupabaseClient) {
 
   const totalSent = j3Sent + j7Sent;
   const totalFailed = j3Failed + j7Failed;
+  if (dryRunRecipients.length > 0) {
+    console.log(`[winback] dry run (not a recognized live invocation) — would have sent: ${dryRunRecipients.join(", ")}`);
+  }
   // Was hardcoded "ok" — j3Failed/j7Failed were tracked but never consulted.
   await logCronRun(supabase, "winback-sequence", totalFailed > 0 ? "error" : "ok", totalSent,
     totalFailed > 0 ? `${totalFailed} email(s) en échec` : undefined);
   console.log(`[winback] J+3: ${j3Sent}/${j3Failed} | J+7: ${j7Sent}/${j7Failed}`);
   return NextResponse.json({
+    live: isLive,
+    dryRunRecipients: dryRunRecipients.length > 0 ? dryRunRecipients : undefined,
     j3: { sent: j3Sent, failed: j3Failed, total: (j3Profiles ?? []).length },
     j7: { sent: j7Sent, failed: j7Failed, total: (j7Profiles ?? []).length },
   });
