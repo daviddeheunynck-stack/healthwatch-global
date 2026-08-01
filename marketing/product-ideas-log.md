@@ -356,3 +356,77 @@ Même utilisateur, même identifiant de foyer, huit à dix secondes. Ce n'est pl
 **Statut :** PROPOSÉE — en attente de retour de David.
 
 ---
+
+## 2026-08-01 — Proposition du jour
+
+Angle nouveau : **le cycle de vie de l'essai**, de son premier jour à sa relance post-expiration — jamais audité de bout en bout jusqu'ici. Les passages précédents ont couvert la qualité des données (26-27/07), la personnalisation (27-28/07), l'accès (30/07) et le canal d'entrée (31/07) ; personne n'avait encore vérifié que la mécanique de conversion elle-même s'exécute réellement sur chaque compte. Aucun nouveau feedback reçu depuis le 29/07 (Taiwan CDC) — tout ce qui suit vient de la mesure : 7 sondes en lecture seule sur la prod (base + journal d'envoi Brevo, destinataire par destinataire), aucune écriture, scripts supprimés après usage.
+
+**Deux faits de contexte mesurés en ouverture :** un 22e compte est né aujourd'hui (`codyleereed@gmail.com`, essai Pro jusqu'au 15/08) et il est **correctement enrôlé sur 5 régions** — le correctif OAuth du jour (`906af61` / `d34363c`) fonctionne sur son premier vrai cas. Et un essai a expiré ce matin (`r.endangrukmanams@gmail.com`, `expire-trials` 10:00, `rows=1`).
+
+### 1. 🔴 La séquence de reconquête post-essai saute 7 essais sur 13 — elle devine « pilote » à partir d'une durée calculée, alors que la colonne `is_pilot` existe et est juste
+
+**Signal (croisement base prod × journal d'envoi Brevo, destinataire par destinataire) :** `winback-sequence` est la **seule** tentative de conversion automatisée après la fin d'un essai (J+3 « Vous pensez encore à HealthWatch ? », J+7 « 7 jours sans surveillance active »). Elle tourne tous les jours en `status=ok` et n'a **aucun `lastNonZero`** enregistré depuis l'ajout du champ le 27/07. Vérifiée destinataire par destinataire, elle marche pour les uns et pas pour les autres :
+
+| compte | essai calculé | expiré le | e-mail « essai expiré » | J+3 | J+7 |
+|---|---|---|---|---|---|
+| `mayeul.peltier@` | 14,0 j | 06/07 | ✅ 07/07 | ✅ 09/07 | ✅ 13/07 |
+| `saeed.mohamood@` | 14,0 j | 16/07 | ✅ 17/07 | ✅ 19/07 | ✅ 23/07 |
+| **`anakeseemmanuel8@`** | **30,8 j** | 20/07 | ✅ 20/07 | ❌ **rien** | ❌ **rien** |
+| **`iinnerre@`** | **30,1 j** | 29/07 | ✅ 30/07 | ❌ (échéance 02/08) | ❌ |
+| **`r.endangrukmanams@`** | **29,8 j** | 01/08 | ✅ 01/08 | ❌ (échéance 04/08) | ❌ |
+
+**Cause exacte, lue dans le code :** `app/api/cron/winback-sequence/route.ts:399-409`, fonction `isEligible` — commentaire « Skip pilot users (35-day trials) » — calcule `trialDays = (trial_ends_at − created_at)` et écarte tout compte au-dessus de **20 jours**. Les fenêtres J+3/J+7 sont pourtant correctes : `anakeseemmanuel8@` tombait bien dans la fenêtre du 23/07 (plan `free`, pas d'abonnement Stripe, pas de blocage Brevo, aucun opt-out dans `display_filters`). Il n'a été écarté que par cette heuristique.
+
+**Et l'heuristique ne mesure pas ce qu'elle croit mesurer.** Sur les 22 comptes de la prod, la durée calculée ne reflète pas le *type* d'essai mais l'historique d'administration : **cinq comptes partagent exactement le même `trial_ends_at` à la milliseconde près** (`2026-06-29T07:35:21.675Z` — dogfluvet, analin1309, cgodwe2000, davy_skye, clarence_skye), signature d'une modification groupée passée en base. Résultat : des essais standards de 14 jours prolongés une fois affichent 22 à 31 jours calculés et deviennent invisibles pour la relance. **7 comptes non-pilotes sur 13 dépassent le seuil de 20 jours.** Pendant ce temps, la colonne `is_pilot` existe en base et est **exactement juste** : `true` pour les 4 pilotes institutionnels (Kamau, Bankunda, ZABRE, Mulamba, tous à 35,0 j) et `false` partout ailleurs. L'heuristique date du 16/06 (`49530c0`, création du cron) et la colonne a été fiabilisée après (`d8039ef`, 22/07) — c'est un contournement devenu inutile, pas une erreur de conception.
+
+**Pourquoi maintenant :** zéro client payant à trois semaines de la décision du 21/08, et le seul mécanisme automatisé qui redemande la vente après un essai ne s'exécute pas sur la moitié du parc. Deux occasions concrètes sont encore devant nous, pas derrière : `iinnerre@` (86 e-mails reçus pendant son essai, donc un vrai usage du canal) attend son J+3 **demain 02/08**, et `r.endangrukmanams@` le **04/08**. Un correctif poussé aujourd'hui les rattrape toutes les deux. Corollaire important : remplacer la durée par `is_pilot` **préserve exactement** l'exclusion voulue des 4 pilotes (suivis personnellement par l'e-mail de conversion J+32), qui expirent tous entre le 15 et le 24/08.
+
+**Effort estimé :** petit — remplacer le calcul de durée par la lecture de `is_pilot` dans `isEligible`, et ajouter `is_pilot` aux deux `select()` J+3 et J+7. Quelques lignes, aucune migration.
+
+**Risque/inconnue :** (a) élargir l'éligibilité fait entrer dans la relance des comptes de test ou de proches (shinta, davy_skye, clarence_skye) — sans conséquence, mais à savoir avant de regarder les compteurs ; (b) `clarence_skye@` est sur la blocklist Brevo, donc déjà gaté en amont depuis `8934c64` ; (c) je constate l'absence d'envoi et j'identifie le filtre qui l'explique, mais je n'ai pas rejoué le cron en conditions réelles — la vérification définitive est un run à blanc listant les destinataires retenus avant/après, à faire dans la session qui construira.
+
+### 2. 🔴 Un essai entier peut se dérouler sans qu'une seule alerte parte, et rien ne le voit — cas mesuré : 30 jours, 9 e-mails, 0 alerte, expiré ce matin
+
+**Signal :** `r.endangrukmanams@gmail.com` et `saeed.mohamood@gmail.com` se sont inscrits **le même jour** (02/07). Journal Brevo sur les 29 derniers jours :
+
+| compte | e-mails reçus | alertes foyer | régions d'alerte |
+|---|---|---|---|
+| `saeed.mohamood@` | **80** | ~65 | 5 |
+| `r.endangrukmanams@` | **9** | **0** | **0** |
+
+Les 9 e-mails de `r.endangrukmanams@` sont uniquement des envois de séquence (onboarding J+1/J+3/J+7, rappels de fin d'essai, 2 PHEIC, 1 signal hebdo). **Aucune alerte foyer, sur 30 jours.** La cause racine est connue et a été corrigée **aujourd'hui même** (`906af61` : les inscriptions OAuth court-circuitaient l'enrôlement aux régions ; 3 comptes historiques non réparables) — je ne la re-propose pas. Ce que je propose est le filet manquant : **rien, dans tout le produit, ne remarque qu'un essai ne reçoit rien.** Ce compte a traversé l'onboarding J+1 « configurez vos régions d'alerte », J+3, J+7, les rappels J-3 et J-1, puis l'e-mail d'expiration de ce matin — six e-mails envoyés à quelqu'un qui n'avait, en base, aucun canal actif. Croisé avec le fait établi hier (31/07, idée 1 : **l'e-mail d'alerte est le seul canal qui amène quelqu'un sur le produit**), un essai sans alerte est un essai qui n'a mathématiquement aucune chance de produire une visite. Celui-ci a consommé 30 jours de fenêtre de viabilité pour un résultat connu d'avance.
+
+**Pourquoi le bloc « livraison » du health-check ne le couvre pas :** construit le 27/07 (idée 2), il raisonne **par cron** — il compare une audience globale (`user_alert_regions`, 45 lignes) au fait que le cron a livré quelque chose. `regional-alerts` livre bien, tous les jours, à 9 utilisateurs sur 22 : le tableau reste vert pendant qu'un essai précis ne reçoit rien. Le trou est au niveau **du compte**, pas du canal — même motif de défaillance que les six contrôles « mode ouvert » du 29/07 et que la fenêtre de 90 minutes de `disease-coverage`.
+
+**Effort estimé :** petit, et le véhicule existe déjà. Le cron `onboarding-sequence` sélectionne **déjà** chaque essai à J+1 pour lui envoyer « configurez vos régions d'alerte » : il suffit d'y compter les lignes d'enrôlement du compte et, si le total est à zéro, soit d'enrôler par défaut (le chemin `enrollAlertRegions()` vient d'être consolidé aujourd'hui, `d34363c`), soit de le signaler dans l'e-mail de health-check quotidien. Un contrôle J+7 « 0 alerte reçue depuis l'inscription » est la version renforcée, pour le même coût.
+
+**Risque/inconnue :** (a) ne pas en faire une réparation automatique aveugle — un compte à 0 région parce que l'utilisateur a **décoché** ses régions est un choix légitime, à distinguer d'un compte jamais enrôlé (l'enrôlement initial écrit toujours 5 lignes, donc « 0 ligne à J+1 » vaut aujourd'hui « jamais enrôlé » ; ça cessera d'être vrai le jour où quelqu'un se désinscrira de tout, d'où la préférence pour le signalement plutôt que l'écriture) ; (b) l'échantillon est de 1 compte sur 22, mais le coût unitaire est un essai entier perdu, et la même mécanique a déjà frappé 3 comptes selon l'audit de périmètre du jour ; (c) c'est un contrôle interne, pas une fonctionnalité visible — à ne pas confondre avec un levier de conversion.
+
+### 3. Aucun garde-fou d'idempotence sur les e-mails d'essai : un utilisateur a reçu trois fois le même rappel en une heure
+
+**Signal :** `saeed.mohamood@gmail.com` a reçu **trois exemplaires identiques** de « Your HealthWatch Pro trial ends tomorrow » le 15/07, horodatés à la seconde côté Brevo :
+
+| heure (UTC) | messageId |
+|---|---|
+| 09:30:16 | `202607150930.75299991966@` |
+| **10:37:00** | `202607150937.55068085925@` |
+| **10:38:44** | `202607151038.80189280571@` |
+
+`vercel.json` planifie `trial-reminders` à **09:30 UTC** — le premier envoi est le run normal. Les deux suivants, une heure plus tard puis 104 secondes après, sont des invocations hors planification, signature d'un déclenchement manuel (test ou débogage) pendant une session. Vérifié dans le code : `trial-reminders`, `winback-sequence`, `onboarding-sequence` et `expire-trials` **ne gardent aucune trace de ce qu'ils ont déjà envoyé à qui** ; ils resélectionnent une fenêtre de dates et envoient. Rien n'empêche un second appel de reposter le même e-mail au même destinataire. C'est exactement l'avertissement déjà consigné pour `data-quality` (« tester `data-quality` redéclenche un email »), mais généralisé à toute la chaîne de conversion — et cette fois payé par un vrai prospect, en pleine séquence de fin d'essai.
+
+**Pourquoi maintenant :** ces routes sont testées à la main de plus en plus souvent (les audits de crons de la semaine dernière en ont appelé plusieurs), et c'est le seul canal qui produit de l'usage. Trois fois le même rappel de fin d'essai en une heure, c'est le registre du désabonnement — précisément ce qui est arrivé à Kamau le 21/07 après une rafale d'alertes.
+
+**Effort estimé :** petit à moyen. Le minimum honnête est une trace `(user_id, template, date)` consultée avant envoi sur les 4 crons de cycle de vie ; la version paresseuse est un mode « à blanc » (`?dry=1`) qui liste les destinataires sans envoyer, pour rendre le test sûr par défaut plutôt que dangereux par défaut. Les deux se cumulent bien.
+
+**Risque/inconnue :** priorité honnêtement inférieure aux idées 1 et 2 — l'incident est unique, vieux de deux semaines, et sans conséquence mesurable sur `saeed@` (essai déjà expiré, aucun désabonnement constaté). Je le remonte parce qu'il est bon marché et que le mode de défaillance est structurel, pas parce qu'il brûle. Inconnue assumée : je déduis le caractère manuel des deux envois de leur horaire hors planification, je n'ai pas de journal d'invocation Vercel pour le prouver.
+
+**Non re-proposé aujourd'hui :** les trois idées du 31/07 (mesure clic→visite, notification d'inbound institutionnel, `alert_locale` figé sur l'anglais) restent **PROPOSÉES et non traitées**, sans preuve nouvelle à ajouter — le compte `codyleereed@` créé aujourd'hui a d'ailleurs `locale=fr` / `alert_locale=en`, soit un **4e cas** du même écart, mais ça ne change pas le diagnostic. Idem pour l'idée 3 du 28/07 (comptes existants toujours à 5 régions, toujours vrai), le volet AMR (Eva Kamau, 10/07) et le signal de variance (Simon Ruegg, 6-7/07). Rien sur la qualité des données : la journée a déjà livré le sous-comptage Rougeole/Guatemala, la résurrection de lignes archivées et le cluster Chikungunya.
+
+**Contexte mesuré au passage** (utile au bilan de lundi, pas des idées) :
+- **22 comptes** (+1 aujourd'hui), **6 essais Pro en cours** après l'expiration de `r.endangrukmanams@` ce matin. Prochaines échéances : `guyanoel22@` le 07/08, `codyleereed@` et Kamau le 15/08, Bankunda 17/08, ZABRE 22/08, Mulamba 24/08. **Un seul essai non institutionnel expire avant la date de décision du 21/08.**
+- **Enrôlement aux alertes : 10 comptes sur 22 ont 5 régions, 12 en ont zéro** — dont 11 comptes antérieurs au passage en opt-out et `r.endangrukmanams@` (bug OAuth). Aucun compte n'a jamais choisi autre chose que 5 régions.
+- `winback-sequence` et `pilot-closing-reminder` : toujours aucun `lastNonZero` depuis le 27/07. `pilot-follow-up` a livré ce matin (`rows=1`).
+
+**Statut :** PROPOSÉE — en attente de retour de David.
+
+---
