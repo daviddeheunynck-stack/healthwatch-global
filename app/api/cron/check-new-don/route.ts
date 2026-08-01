@@ -65,13 +65,14 @@ async function sendEmail(to: string, subject: string, html: string): Promise<boo
 }
 
 interface NewDonSummary {
-  title:     string;
-  url:       string;
-  diseaseEn: string | null;
-  countryEn: string | null;
-  cases:     number | null;
-  deaths:    number | null;
-  inDb:      boolean;
+  title:            string;
+  url:              string;
+  diseaseEn:        string | null;
+  countryEn:        string | null;
+  cases:            number | null;
+  deaths:           number | null;
+  inDb:             boolean;
+  trackedElsewhere: boolean;
 }
 
 function buildEmail(items: NewDonSummary[]): { subject: string; html: string } {
@@ -84,8 +85,12 @@ function buildEmail(items: NewDonSummary[]): { subject: string; html: string } {
           ${d.cases  !== null ? ` · ${d.cases.toLocaleString("fr-FR")} cas` : ""}
           ${d.deaths !== null ? ` · ${d.deaths.toLocaleString("fr-FR")} décès` : ""}
         </span><br>
-        <span style="font-size:11px;color:${d.inDb ? "#34d399" : "#fbbf24"}">
-          ${d.inDb ? "✅ déjà en base (sync-outbreaks)" : "⏳ pas encore en base — vérifier manuellement"}
+        <span style="font-size:11px;color:${d.inDb ? "#34d399" : d.trackedElsewhere ? "#60a5fa" : "#fbbf24"}">
+          ${d.inDb
+            ? "✅ déjà en base (sync-outbreaks)"
+            : d.trackedElsewhere
+              ? "🔵 foyer déjà suivi via une autre source — vérifier la concordance des chiffres"
+              : "⏳ pas encore en base — vérifier manuellement"}
         </span>
       </td>
     </tr>`).join("");
@@ -193,9 +198,10 @@ async function runCheckNewDon(_req: NextRequest, supabase: SupabaseClient) {
     let countryEn: string | null = null;
     let cases:  number | null = null;
     let deaths: number | null = null;
+    let parsed: Awaited<ReturnType<typeof parseWHODONItems>> = [];
 
     try {
-      const parsed = await parseWHODONItems(item);
+      parsed = await parseWHODONItems(item);
       if (parsed.length > 0) {
         diseaseEn = parsed[0].disease_en;
         countryEn = parsed.length > 1 ? `${parsed.length} pays` : parsed[0].country_en;
@@ -210,8 +216,33 @@ async function runCheckNewDon(_req: NextRequest, supabase: SupabaseClient) {
       .from("outbreaks")
       .select("id", { count: "exact", head: true })
       .eq("source", url);
+    const inDb = (count ?? 0) > 0;
 
-    summaries.push({ title: item.Title, url, diseaseEn, countryEn, cases, deaths, inDb: (count ?? 0) > 0 });
+    // A DON's own URL never becoming a row's `source` doesn't mean the
+    // outbreak itself is missing — some rows (e.g. the flagship Ebola/DRC
+    // line) are deliberately kept on a different primary source (ECDC) that
+    // updates more continuously than WHO's periodic DON series, per David's
+    // 2026-07-16 call (see project_ebola_drc_priority10_frozen_no_autofeed).
+    // Every new DON about that same outbreak was flagging "not yet in
+    // database" despite the data already being current — found 2026-08-01
+    // when DON614 (3605/1587) exactly matched the already-current ECDC-
+    // sourced row. Check each parsed disease+country pair against ANY active
+    // row (regardless of its source) before concluding the outbreak itself
+    // is absent, not just this specific URL.
+    let trackedElsewhere = false;
+    if (!inDb && parsed.length > 0) {
+      for (const p of parsed) {
+        const { count: elsewhereCount } = await supabase
+          .from("outbreaks")
+          .select("id", { count: "exact", head: true })
+          .eq("disease_en", p.disease_en)
+          .eq("country_en", p.country_en)
+          .eq("active", true);
+        if ((elsewhereCount ?? 0) > 0) { trackedElsewhere = true; break; }
+      }
+    }
+
+    summaries.push({ title: item.Title, url, diseaseEn, countryEn, cases, deaths, inDb, trackedElsewhere });
   }
 
   // ── 5. Alert ─────────────────────────────────────────────────────────────
