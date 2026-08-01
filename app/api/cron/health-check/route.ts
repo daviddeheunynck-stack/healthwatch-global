@@ -85,6 +85,50 @@ async function lastRealDelivery(supabase: any, cronName: string): Promise<string
   return (data?.[ev.column] as string | undefined) ?? null;
 }
 
+interface ZeroRegionTrial { email: string; trialEndsAt: string }
+
+// A trial with zero rows in user_alert_regions never receives an alert, and
+// nothing else in the product notices — DELIVERY_AUDIENCE/deliveryIssues
+// above only sees "somebody's there and rows>0 stalled", never a single
+// account that was never enrolled at all. Found 2026-08-01:
+// r.endangrukmanams@gmail.com ran its full 30-day trial (9 sequence emails,
+// 0 alerts) after an OAuth enrollment bug (fixed same day, 906af61/d34363c)
+// left it with no regions from day one. Signal only — this never enrolls
+// anyone. A 0-region account could one day legitimately mean "opted out of
+// everything" rather than "never enrolled"; that distinction doesn't exist
+// yet (initial enrollment always writes 5 rows today), but a silent
+// auto-fix here would break the moment it does. See
+// marketing/product-ideas-log.md, 2026-08-01, idea 2.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+async function checkZeroRegionTrials(supabase: any): Promise<{ trials: ZeroRegionTrial[]; error: string | null }> {
+  const { data: trialProfiles, error: profilesErr } = await supabase
+    .from("profiles")
+    .select("id, email, trial_ends_at")
+    .in("plan", ["starter", "pro"])
+    .not("trial_ends_at", "is", null)
+    .is("stripe_subscription_id", null);
+  if (profilesErr) return { trials: [], error: profilesErr.message };
+  if (!trialProfiles || trialProfiles.length === 0) return { trials: [], error: null };
+
+  const ids = trialProfiles.map((p: { id: string }) => p.id);
+  const { data: regionRows, error: regionErr } = await supabase
+    .from("user_alert_regions")
+    .select("user_id")
+    .in("user_id", ids);
+  if (regionErr) return { trials: [], error: regionErr.message };
+
+  const enrolledIds = new Set((regionRows ?? []).map((r: { user_id: string }) => r.user_id));
+  const now = Date.now();
+  // Only actively-running trials are listed — an expired trial with 0
+  // regions is no longer actionable (see r.endangrukmanams@, expired
+  // 2026-08-01, deliberately excluded here rather than force-included).
+  const trials: ZeroRegionTrial[] = trialProfiles
+    .filter((p: { id: string; email: string | null; trial_ends_at: string | null }) =>
+      !!p.email && !!p.trial_ends_at && !enrolledIds.has(p.id) && new Date(p.trial_ends_at).getTime() > now)
+    .map((p: { email: string; trial_ends_at: string }) => ({ email: p.email, trialEndsAt: p.trial_ends_at }));
+  return { trials, error: null };
+}
+
 export async function GET(req: NextRequest) {
   const cronSecret = clean(process.env.CRON_SECRET);
   if (!cronSecret || req.headers.get("authorization") !== `Bearer ${cronSecret}`)
@@ -120,7 +164,7 @@ async function runHealthCheck(_req: NextRequest, supabase: any) {
 
   const AUDIENCE_TABLES = Array.from(new Set(Object.values(DELIVERY_AUDIENCE)));
 
-  const [[{ count: total }, { count: high }, { count: pheic }, { data: configRows }], sentryCheck, audienceCounts] =
+  const [[{ count: total }, { count: high }, { count: pheic }, { data: configRows }], sentryCheck, audienceCounts, zeroRegionResult] =
     await Promise.all([
       Promise.all([
         supabase.from("outbreaks").select("*", { count: "exact", head: true }).eq("active", true),
@@ -137,7 +181,12 @@ async function runHealthCheck(_req: NextRequest, supabase: any) {
           ? supabase.from(table).select("*", { count: "exact", head: true }).eq("active", true)
           : supabase.from(table).select("*", { count: "exact", head: true }),
       )),
+      checkZeroRegionTrials(supabase),
     ]);
+
+  const zeroRegionTrials    = zeroRegionResult.trials;
+  const zeroRegionError     = zeroRegionResult.error;
+  const hasZeroRegionTrials = zeroRegionTrials.length > 0;
 
   // `?? 0` on a FAILED count would read as "this channel has no subscribers",
   // and the delivery loop below skips an audience of 0 — so a transient error
@@ -250,7 +299,7 @@ async function runHealthCheck(_req: NextRequest, supabase: any) {
   }
   const deliveryAlert = deliveryIssues.length > 0;
 
-  const emoji = hasOverdue || hasUnmonitored || hasErroring || audienceErrors.length > 0 || sentryAlert || deliveryAlert || (pheic ?? 0) > 0 ? "⚠️" : "✅";
+  const emoji = hasOverdue || hasUnmonitored || hasErroring || audienceErrors.length > 0 || sentryAlert || deliveryAlert || hasZeroRegionTrials || (pheic ?? 0) > 0 ? "⚠️" : "✅";
 
   const cronTableRows = cronStatuses
     .map(({ name, label, windowH, ok }) => {
@@ -281,6 +330,13 @@ async function runHealthCheck(_req: NextRequest, supabase: any) {
     </tr>`)
     .join("");
 
+  const zeroRegionRows = zeroRegionTrials
+    .map(({ email, trialEndsAt }) => `<tr>
+      <td style="padding:3px 8px 3px 0;color:#94a3b8;font-size:12px">${esc(email)}</td>
+      <td style="padding:3px 0;font-size:12px;color:#f87171;font-weight:700">0 région — essai jusqu'au ${esc(new Date(trialEndsAt).toLocaleDateString("fr-FR"))}</td>
+    </tr>`)
+    .join("");
+
   const html = `
 <div style="font-family:sans-serif;max-width:580px;margin:0 auto;padding:24px;background:#0f172a;color:#e2e8f0;border-radius:12px">
   <p style="font-size:16px;font-weight:700;color:#60a5fa;margin:0 0 16px">HealthWatch — Health Check ${emoji}</p>
@@ -292,6 +348,8 @@ async function runHealthCheck(_req: NextRequest, supabase: any) {
     ${hasUnmonitored ? `<tr><td colspan="2" style="padding:8px 0;color:#fbbf24;font-weight:700">⚠️ ${unmonitored.length} cron(s) NON surveillé(s) — écrivent un statut mais absents de CRON_WINDOWS, donc jamais vérifiés : ${esc(unmonitored.join(", "))}</td></tr>` : ""}
     ${audienceErrors.length > 0 ? `<tr><td colspan="2" style="padding:8px 0;color:#fbbf24;font-weight:700">⚠️ Contrôle de livraison partiellement aveugle — comptage d'abonnés en échec : ${esc(audienceErrors.join(", "))}</td></tr>` : ""}
     ${hasErroring ? `<tr><td colspan="2" style="padding:8px 0;color:#f87171;font-weight:700">⚠️ ${erroring.length} cron(s) à l'heure mais EN ERREUR au dernier passage : ${erroring.map((e) => `${esc(e.name)} (${esc(e.error.slice(0, 120))})`).join(" · ")}</td></tr>` : ""}
+    ${zeroRegionError ? `<tr><td colspan="2" style="padding:8px 0;color:#fbbf24;font-weight:700">🔧 Contrôle « essai sans région d'alerte » impossible : ${esc(zeroRegionError)}</td></tr>` : ""}
+    ${hasZeroRegionTrials ? `<tr><td colspan="2" style="padding:8px 0;color:#f87171;font-weight:700">⚠️ ${zeroRegionTrials.length} essai(s) actif(s) SANS AUCUNE région d'alerte configurée</td></tr>` : ""}
     ${sentryBroken
       ? `<tr><td colspan="2" style="padding:8px 0;color:#fbbf24;font-weight:700">🔧 Sentry non vérifiable : ${esc(sentryCheck.error ?? "")}</td></tr>`
       : sentryIssues.length > 0
@@ -306,10 +364,13 @@ async function runHealthCheck(_req: NextRequest, supabase: any) {
   ${deliveryIssueRows ? `
   <p style="font-size:12px;color:#f87171;margin:16px 0 8px;font-weight:600">⚠️ Livraison en panne (des abonnés existent, rien envoyé récemment)</p>
   <table style="width:100%;border-collapse:collapse">${deliveryIssueRows}</table>` : ""}
+  ${zeroRegionRows ? `
+  <p style="font-size:12px;color:#f87171;margin:16px 0 8px;font-weight:600">⚠️ Essais actifs sans aucune région d'alerte (signal seul, aucun enrôlement automatique)</p>
+  <table style="width:100%;border-collapse:collapse">${zeroRegionRows}</table>` : ""}
   <p style="margin-top:16px;font-size:11px;color:#475569">${new Date().toISOString()}</p>
 </div>`;
 
-  const subject = `${emoji} HealthWatch — ${total ?? "?"} foyers${hasOverdue ? ` · ${overdue.length} cron(s) en retard` : ""}${sentryIssues.length > 0 ? ` · ${sentryIssues.length} erreur(s) Sentry` : ""}${deliveryAlert ? ` · ${deliveryIssues.length} canal(aux) en panne` : ""} · ${new Date().toLocaleDateString("fr-FR")}`;
+  const subject = `${emoji} HealthWatch — ${total ?? "?"} foyers${hasOverdue ? ` · ${overdue.length} cron(s) en retard` : ""}${sentryIssues.length > 0 ? ` · ${sentryIssues.length} erreur(s) Sentry` : ""}${deliveryAlert ? ` · ${deliveryIssues.length} canal(aux) en panne` : ""}${hasZeroRegionTrials ? ` · ${zeroRegionTrials.length} essai(s) sans région` : ""} · ${new Date().toLocaleDateString("fr-FR")}`;
 
   if (!isRealProduction) {
     console.log("[health-check] non-production run — skipping Brevo email and Sentry check-in/alerts");
@@ -389,11 +450,12 @@ async function runHealthCheck(_req: NextRequest, supabase: any) {
   }
 
   return Response.json({
-    ok: !hasOverdue && !hasUnmonitored && !hasErroring && !sentryAlert && !deliveryAlert,
+    ok: !hasOverdue && !hasUnmonitored && !hasErroring && !sentryAlert && !deliveryAlert && !hasZeroRegionTrials,
     unmonitored,
     erroring,
     total, high, pheic, overdue, cronStatuses, isRealProduction,
     sentry: { ok: sentryCheck.ok, issueCount: sentryIssues.length, error: sentryCheck.error },
     delivery: deliveryIssues,
+    zeroRegionTrials: { count: zeroRegionTrials.length, trials: zeroRegionTrials, error: zeroRegionError },
   });
 }
