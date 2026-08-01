@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase-server";
 import { createClient as createServiceClient } from "@supabase/supabase-js";
 import { isAdmin } from "@/lib/admin";
 import { isRealProduction } from "@/lib/cron-monitor";
+import { enrollAlertRegions } from "@/lib/activate-trial";
 import * as Sentry from "@sentry/nextjs";
 
 export const dynamic = "force-dynamic";
@@ -112,38 +113,11 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: profileErr.message }, { status: 500 });
   }
 
-  // Default-enroll into regional alerts (opt-out, not opt-in) — same as the
-  // standard activate-trial and pilot-request paths. Without this, an admin-invited
-  // pilot user gets Pro access but no alert ever fires. Best-effort: a failure here
-  // must not fail the invite.
-  const alertRows = ["africa", "asia", "americas", "europe", "oceania"].map((region) => ({
-    user_id: userId,
-    region,
-    min_risk: "medium",
-  }));
-  let { error: alertsErr } = await admin
-    .from("user_alert_regions")
-    .upsert(alertRows, { onConflict: "user_id,region", ignoreDuplicates: true });
-
-  // Same retry + flush as /api/activate-trial (see the incident described
-  // there, 2026-07-25): without it a transient failure silently leaves an
-  // invited pilot user with 0 alert regions, and the captureException below
-  // can be lost when the serverless function exits.
-  if (alertsErr) {
-    console.error("[admin/invite] alert enrollment failed, retrying once:", alertsErr.message);
-    ({ error: alertsErr } = await admin
-      .from("user_alert_regions")
-      .upsert(alertRows, { onConflict: "user_id,region", ignoreDuplicates: true }));
-  }
-
-  if (alertsErr) {
-    console.error("[admin/invite] default alert enrollment failed after retry:", alertsErr);
-    Sentry.captureException(
-      new Error(`[admin/invite] alert enrollment failed: ${alertsErr.message}`),
-      { tags: { user_id: userId } }
-    );
-    await Sentry.flush(2000);
-  }
+  // Default-enroll into regional alerts (opt-out, not opt-in) — same helper as the
+  // standard activate-trial and pilot-confirm paths (lib/activate-trial.ts). Without
+  // this, an admin-invited pilot user gets Pro access but no alert ever fires.
+  // Best-effort: a failure here must not fail the invite.
+  await enrollAlertRegions(admin, userId, "admin/invite");
 
   // 3. Generate a magic link
   const siteUrl = clean(process.env.NEXT_PUBLIC_SITE_URL) || "https://healthwatch-global.com";

@@ -3,6 +3,7 @@ import { createClient } from "@supabase/supabase-js";
 import { rateLimit, getClientIp } from "@/lib/rate-limit";
 import { verifyPilotToken } from "@/lib/pilot-token";
 import { APP_URL, sendEmail, buildConfirmationEmail } from "@/lib/pilot-emails";
+import { enrollAlertRegions } from "@/lib/activate-trial";
 import * as Sentry from "@sentry/nextjs";
 
 export const dynamic = "force-dynamic";
@@ -81,39 +82,12 @@ export async function GET(req: NextRequest) {
       })
       .eq("id", profile.id);
 
-    // Default-enroll into regional alerts (opt-out, not opt-in) — without this
-    // a Pilot user gets Pro access but no alert ever fires, so re-engagement
-    // emails never reach them and they never come back. Best-effort: a
-    // failure here must not block activation itself.
-    const alertRows = ["africa", "asia", "americas", "europe", "oceania"].map((region) => ({
-      user_id: profile.id,
-      region,
-      min_risk: "medium",
-    }));
-    let { error: alertsErr } = await supabase
-      .from("user_alert_regions")
-      .upsert(alertRows, { onConflict: "user_id,region", ignoreDuplicates: true });
-
-    // Same retry + flush as /api/activate-trial (see the incident described
-    // there, 2026-07-25): a transient failure here leaves a Pilot user with 0
-    // alert regions for their whole 35-day trial, and the captureException
-    // below never reaches Sentry because this function redirects and exits
-    // immediately after.
-    if (alertsErr) {
-      console.error("[pilot/confirm] alert enrollment failed, retrying once:", alertsErr.message);
-      ({ error: alertsErr } = await supabase
-        .from("user_alert_regions")
-        .upsert(alertRows, { onConflict: "user_id,region", ignoreDuplicates: true }));
-    }
-
-    if (alertsErr) {
-      console.error("[pilot/confirm] default alert enrollment failed after retry:", alertsErr);
-      Sentry.captureException(
-        new Error(`[pilot/confirm] alert enrollment failed: ${alertsErr.message}`),
-        { tags: { user_id: profile.id } }
-      );
-      await Sentry.flush(2000);
-    }
+    // Default-enroll into regional alerts (opt-out, not opt-in) — same helper as
+    // the standard activate-trial and admin-invite paths (lib/activate-trial.ts).
+    // Without this a Pilot user gets Pro access but no alert ever fires, so
+    // re-engagement emails never reach them and they never come back.
+    // Best-effort: a failure here must not block activation itself.
+    await enrollAlertRegions(supabase, profile.id, "pilot/confirm");
 
     // Activation has already committed above — a Brevo hiccup here must not
     // turn a real, successful activation into a broken redirect for the user.

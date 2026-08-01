@@ -35,6 +35,46 @@ interface ActivateTrialResult {
   trial_ends_at?: string;
 }
 
+// Shared by every path that can grant Pro access (standard 14-day trial via
+// activateTrial() below, admin-invited pilots, self-serve pilot confirmation).
+// One retry on transient failure before giving up — found 2026-07-25: a real
+// signup silently ended up with 0 alert regions for their whole trial with no
+// Sentry trace, because the captureException below used to fire without a
+// flush and never reached Sentry in the serverless function before it exited.
+// Previously reimplemented separately in admin/invite and pilot/confirm
+// (2026-08-01 consolidation) — a fix to the retry/reporting logic used to
+// require updating three copies in lockstep.
+export async function enrollAlertRegions(
+  admin: SupabaseClient,
+  userId: string,
+  source: string,
+  regions: readonly string[] = ALL_REGIONS
+): Promise<boolean> {
+  const alertRows = regions.map((region) => ({ user_id: userId, region, min_risk: "medium" }));
+
+  let { error } = await admin
+    .from("user_alert_regions")
+    .upsert(alertRows, { onConflict: "user_id,region", ignoreDuplicates: true });
+
+  if (error) {
+    console.error(`[${source}] alert enrollment failed, retrying once:`, error.message);
+    ({ error } = await admin
+      .from("user_alert_regions")
+      .upsert(alertRows, { onConflict: "user_id,region", ignoreDuplicates: true }));
+  }
+
+  if (error) {
+    console.error(`[${source}] default alert enrollment failed after retry:`, error);
+    Sentry.captureException(new Error(`[${source}] alert enrollment failed: ${error.message}`), {
+      tags: { user_id: userId },
+    });
+    await Sentry.flush(2000);
+    return false;
+  }
+
+  return true;
+}
+
 // Shared by every path that can grant a new trial (signup form → /api/activate-trial,
 // and Google/GitHub OAuth → auth/callback). Found 2026-08-01: auth/callback used to
 // set plan/trial_ends_at itself without calling this, which both skipped the alert
@@ -99,29 +139,9 @@ export async function activateTrial(
     region,
     min_risk: "medium",
   }));
-  let { error: alertsErr } = await admin
-    .from("user_alert_regions")
-    .upsert(alertRows, { onConflict: "user_id,region", ignoreDuplicates: true });
+  const enrolled = await enrollAlertRegions(admin, user.id, "activate-trial", regionsToEnroll);
 
-  // One retry on transient failure (e.g. a momentary auth/network hiccup) before
-  // giving up — found 2026-07-25: a real signup silently ended up with 0 alert
-  // regions for their whole trial with no Sentry trace, because the original
-  // captureException below fired without a flush and never reached Sentry in
-  // this serverless function before it exited.
-  if (alertsErr) {
-    console.error("[activate-trial] alert enrollment failed, retrying once:", alertsErr.message);
-    ({ error: alertsErr } = await admin
-      .from("user_alert_regions")
-      .upsert(alertRows, { onConflict: "user_id,region", ignoreDuplicates: true }));
-  }
-
-  if (alertsErr) {
-    console.error("[activate-trial] default alert enrollment failed after retry:", alertsErr);
-    Sentry.captureException(new Error(`[activate-trial] alert enrollment failed: ${alertsErr.message}`), {
-      tags: { user_id: user.id },
-    });
-    await Sentry.flush(2000);
-  } else {
+  if (enrolled) {
     // One-time "state of play" digest of outbreaks already active in the
     // user's regions at signup. The regular per-event alert emails
     // (regional-alerts cron) only fire on outbreaks created/updated after
