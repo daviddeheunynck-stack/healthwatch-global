@@ -15,6 +15,7 @@ import { extractNumbers, assessRisk } from "@/lib/outbreak-parser";
 import { logCronRun } from "@/lib/cron-monitor";
 import { errorMessage } from "@/lib/error";
 import { truncateAtSentence } from "@/lib/truncate-text";
+import { dateFloorGuard, spikeGuard, collapseGuard, zeroCaseGuard, zeroDeathGuard } from "@/lib/outbreak-guards";
 
 export const dynamic     = "force-dynamic";
 export const maxDuration = 120;
@@ -354,11 +355,17 @@ async function runWhoEmro(_req: NextRequest, supabase: SupabaseClient) {
         results.skipped++;
         continue;
       }
-      // An older-dated entry with different numbers was not caught above (only
-      // "unchanged" was) — without this floor a stale re-fetch could still
-      // overwrite a more recent row. Same guard family as sync-who-afro/sync-cdc-han.
-      if (date < existingRow.date) {
-        log.push({ label, status: "skip", detail: `older entry (${date}) than existing (${existingRow.date})` });
+      // Only a date-floor guard existed here — spike/collapse/zero protection
+      // was added 2026-08-02, same guard family as sync-who-afro/sync-cdc-notices,
+      // shared via lib/outbreak-guards.ts.
+      const guardReason =
+        dateFloorGuard({ cases, deaths, date }, existingRow) ??
+        spikeGuard({ cases, deaths, date }, existingRow) ??
+        collapseGuard({ cases, deaths, date }, existingRow) ??
+        zeroCaseGuard({ cases, deaths, date }, existingRow) ??
+        zeroDeathGuard({ cases, deaths, date }, existingRow);
+      if (guardReason) {
+        log.push({ label, status: "skip", detail: guardReason });
         results.skipped++;
         continue;
       }

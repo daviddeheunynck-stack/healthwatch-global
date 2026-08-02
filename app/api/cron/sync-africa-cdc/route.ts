@@ -16,6 +16,7 @@ import { extractNumbers, assessRisk } from "@/lib/outbreak-parser";
 import { extractAdmin1, geocodeAdmin1 } from "@/lib/geo-extract";
 import { errorMessage } from "@/lib/error";
 import { truncateAtSentence } from "@/lib/truncate-text";
+import { dateFloorGuard, spikeGuard, collapseGuard, zeroCaseGuard, zeroDeathGuard } from "@/lib/outbreak-guards";
 
 export const dynamic     = "force-dynamic";
 export const maxDuration = 60;
@@ -420,11 +421,18 @@ async function runAfricaCdc(_req: NextRequest, supabase: SupabaseClient) {
           continue;
         }
 
-        // An older-dated item with different numbers was not skipped above (only
-        // the "unchanged" case was) — a stale re-fetch could still overwrite a
-        // more recent row. Same guard family as sync-cdc-notices.
-        if (item.date < existRow.date) {
-          log.push({ label, status: "skip", detail: `older item (${item.date}) than existing (${existRow.date})` });
+        // Only a date-floor guard existed here — spike/collapse/zero protection
+        // was added 2026-08-02, same guard family as sync-who-afro/sync-cdc-notices,
+        // shared via lib/outbreak-guards.ts. Africa CDC pages are HTML bulletins
+        // parsed the same fragile way as those two sources.
+        const guardReason =
+          dateFloorGuard(item, existRow) ??
+          spikeGuard(item, existRow) ??
+          collapseGuard(item, existRow) ??
+          zeroCaseGuard(item, existRow) ??
+          zeroDeathGuard(item, existRow);
+        if (guardReason) {
+          log.push({ label, status: "skip", detail: guardReason });
           results.skipped++;
           continue;
         }

@@ -26,6 +26,7 @@ import { extractNumbers, assessRisk } from "@/lib/outbreak-parser";
 import { errorMessage } from "@/lib/error";
 import * as Sentry from "@sentry/nextjs";
 import { truncateAtSentence } from "@/lib/truncate-text";
+import { dateFloorGuard, spikeGuard, collapseGuard, zeroCaseGuard, zeroDeathGuard } from "@/lib/outbreak-guards";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 300; // ~100 targets × ~2s each; Vercel Pro allows 300s for crons
@@ -1221,8 +1222,18 @@ async function runSyncWhoRegional(_req: NextRequest, supabase: SupabaseClient) {
       // collision guarded by source ownership above — here it's the same
       // fetcher regressing against itself, so ownership can't help; a date
       // floor can.
-      if (found.date < existingRow.date) {
-        log.push({ label: `${target.disease_en}/${target.country_en}`, status: "skip", detail: `stale fetch (${found.date} older than stored ${existingRow.date}) — refusing to regress` });
+      //
+      // Spike/collapse/zero protection added 2026-08-02, same guard family as
+      // sync-who-afro/sync-cdc-notices, shared via lib/outbreak-guards.ts —
+      // only the date floor above existed until now.
+      const guardReason =
+        dateFloorGuard(found, existingRow) ??
+        spikeGuard(found, existingRow) ??
+        collapseGuard(found, existingRow) ??
+        zeroCaseGuard(found, existingRow) ??
+        zeroDeathGuard(found, existingRow);
+      if (guardReason) {
+        log.push({ label: `${target.disease_en}/${target.country_en}`, status: "skip", detail: guardReason });
         results.skipped++;
         continue;
       }
@@ -1296,7 +1307,21 @@ async function runSyncWhoRegional(_req: NextRequest, supabase: SupabaseClient) {
         .maybeSingle();
 
       if (directCheck) {
-        // Row already exists (likely deactivated + old) — reactivate and update
+        // Row already exists (likely deactivated + old) — reactivate and update.
+        // Had no anti-regression guard at all until 2026-08-02 (not even a date
+        // floor) — same guard family as the main existingRow branch above.
+        const reactivateGuardReason =
+          dateFloorGuard(found, directCheck) ??
+          spikeGuard(found, directCheck) ??
+          collapseGuard(found, directCheck) ??
+          zeroCaseGuard(found, directCheck) ??
+          zeroDeathGuard(found, directCheck);
+        if (reactivateGuardReason) {
+          log.push({ label: `${target.disease_en}/${target.country_en}`, status: "skip", detail: reactivateGuardReason });
+          results.skipped++;
+          continue;
+        }
+
         const reactivatePayload: Record<string, unknown> = {
           cases: found.cases, deaths: found.deaths, date: found.date,
           source: found.source, description: found.description,

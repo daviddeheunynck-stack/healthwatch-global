@@ -14,6 +14,7 @@ import { COUNTRIES, findCountry, isAggregateCountry } from "@/lib/geo-data";
 import { extractNumbers, assessRisk } from "@/lib/outbreak-parser";
 import { errorMessage } from "@/lib/error";
 import { truncateAtSentence } from "@/lib/truncate-text";
+import { dateFloorGuard, spikeGuard, collapseGuard, zeroCaseGuard, zeroDeathGuard } from "@/lib/outbreak-guards";
 
 export const dynamic     = "force-dynamic";
 // 300s (was 90): the per-article page fetches (12s timeout each) pushed real
@@ -467,11 +468,17 @@ async function runSyncSpf(_req: NextRequest, supabase: SupabaseClient) {
         results.skipped++;
         continue;
       }
-      // An older-dated item with different numbers was not caught above (only
-      // "unchanged" was) — without this floor a stale re-fetch could still
-      // overwrite a more recent row. Same guard family as sync-who-afro/sync-cdc-han.
-      if (item.date < existingRow.date) {
-        log.push({ label, status: "skip", detail: `older report (${item.date}) than existing (${existingRow.date})` });
+      // Only a date-floor guard existed here — spike/collapse/zero protection
+      // was added 2026-08-02, same guard family as sync-who-afro/sync-cdc-notices,
+      // shared via lib/outbreak-guards.ts.
+      const guardReason =
+        dateFloorGuard({ cases, deaths, date: item.date }, existingRow) ??
+        spikeGuard({ cases, deaths, date: item.date }, existingRow) ??
+        collapseGuard({ cases, deaths, date: item.date }, existingRow) ??
+        zeroCaseGuard({ cases, deaths, date: item.date }, existingRow) ??
+        zeroDeathGuard({ cases, deaths, date: item.date }, existingRow);
+      if (guardReason) {
+        log.push({ label, status: "skip", detail: guardReason });
         results.skipped++;
         continue;
       }
