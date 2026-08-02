@@ -63,11 +63,11 @@ const CASE_SURGE_THRESHOLD = 0.20;
 type AlertReason = "new" | "escalated" | "surge";
 
 const SLACK_COPY: Record<string, { newOutbreak: string; update: string; risk: string; date: string; cases: string; viewBtn: string }> = {
-  fr: { newOutbreak: "Nouveau foyer",     update: "Foyer aggravé",   risk: "Risque",  date: "Date",   cases: "Cas",   viewBtn: "Voir le foyer →" },
-  en: { newOutbreak: "New outbreak",      update: "Outbreak update", risk: "Risk",    date: "Date",   cases: "Cases", viewBtn: "View outbreak →" },
-  es: { newOutbreak: "Nuevo brote",       update: "Brote agravado",  risk: "Riesgo",  date: "Fecha",  cases: "Casos", viewBtn: "Ver brote →" },
-  ar: { newOutbreak: "تفشٍّ جديد",         update: "تحديث التفشي",    risk: "الخطر",   date: "التاريخ", cases: "الحالات", viewBtn: "← عرض التفشي" },
-  id: { newOutbreak: "Wabah baru",        update: "Pembaruan wabah", risk: "Risiko",  date: "Tanggal", cases: "Kasus", viewBtn: "Lihat wabah →" },
+  fr: { newOutbreak: "Foyer actif",       update: "Foyer aggravé",   risk: "Risque",  date: "Date",   cases: "Cas",   viewBtn: "Voir le foyer →" },
+  en: { newOutbreak: "Outbreak alert",    update: "Outbreak update", risk: "Risk",    date: "Date",   cases: "Cases", viewBtn: "View outbreak →" },
+  es: { newOutbreak: "Alerta de brote",   update: "Brote agravado",  risk: "Riesgo",  date: "Fecha",  cases: "Casos", viewBtn: "Ver brote →" },
+  ar: { newOutbreak: "تنبيه تفشٍّ",        update: "تحديث التفشي",    risk: "الخطر",   date: "التاريخ", cases: "الحالات", viewBtn: "← عرض التفشي" },
+  id: { newOutbreak: "Peringatan wabah",  update: "Pembaruan wabah", risk: "Risiko",  date: "Tanggal", cases: "Kasus", viewBtn: "Lihat wabah →" },
 };
 
 const REGION_LABELS: Record<string, Record<string, string>> = {

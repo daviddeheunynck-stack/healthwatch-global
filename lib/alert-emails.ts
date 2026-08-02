@@ -31,9 +31,9 @@ const CONTENT: Record<string, {
 }> = {
   fr: {
     subject: (region, disease) =>
-      `🚨 Nouveau foyer détecté en ${region} — ${disease}`,
+      `🚨 Foyer épidémique en ${region} — ${disease}`,
     headline: (region) =>
-      `Un nouveau foyer épidémique vient d'être signalé en ${region}.`,
+      `Un foyer épidémique a été signalé en ${region}.`,
     subjectUpdate: (region, disease) =>
       `⚠️ Mise à jour : ${disease} s'aggrave en ${region}`,
     headlineUpdate: (region) =>
@@ -51,9 +51,9 @@ const CONTENT: Record<string, {
   },
   en: {
     subject: (region, disease) =>
-      `🚨 New outbreak detected in ${region} — ${disease}`,
+      `🚨 Outbreak alert in ${region} — ${disease}`,
     headline: (region) =>
-      `A new disease outbreak has just been reported in ${region}.`,
+      `A disease outbreak has been reported in ${region}.`,
     subjectUpdate: (region, disease) =>
       `⚠️ Update: ${disease} is worsening in ${region}`,
     headlineUpdate: (region) =>
@@ -71,9 +71,9 @@ const CONTENT: Record<string, {
   },
   es: {
     subject: (region, disease) =>
-      `🚨 Nuevo brote detectado en ${region} — ${disease}`,
+      `🚨 Alerta de brote en ${region} — ${disease}`,
     headline: (region) =>
-      `Se acaba de notificar un nuevo brote de enfermedad en ${region}.`,
+      `Se ha notificado un brote de enfermedad en ${region}.`,
     subjectUpdate: (region, disease) =>
       `⚠️ Actualización: ${disease} empeora en ${region}`,
     headlineUpdate: (region) =>
@@ -91,9 +91,9 @@ const CONTENT: Record<string, {
   },
   ar: {
     subject: (region, disease) =>
-      `🚨 تفشٍّ جديد رُصد في ${region} — ${disease}`,
+      `🚨 تنبيه تفشٍّ في ${region} — ${disease}`,
     headline: (region) =>
-      `تم الإبلاغ للتو عن تفشٍّ جديد في ${region}.`,
+      `تم الإبلاغ عن تفشٍّ في ${region}.`,
     subjectUpdate: (region, disease) =>
       `⚠️ تحديث: تفاقم ${disease} في ${region}`,
     headlineUpdate: (region) =>
@@ -111,9 +111,9 @@ const CONTENT: Record<string, {
   },
   id: {
     subject: (region, disease) =>
-      `🚨 Wabah baru terdeteksi di ${region} — ${disease}`,
+      `🚨 Peringatan wabah di ${region} — ${disease}`,
     headline: (region) =>
-      `Wabah penyakit baru baru saja dilaporkan di ${region}.`,
+      `Wabah penyakit telah dilaporkan di ${region}.`,
     subjectUpdate: (region, disease) =>
       `⚠️ Pembaruan: ${disease} memburuk di ${region}`,
     headlineUpdate: (region) =>
