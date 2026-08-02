@@ -230,7 +230,10 @@ export function getLocalizedDescription(outbreak: Outbreak, locale: string): str
 // English country names — plus the DB aliases (DRC, DR Congo, Ivory Coast,
 // Türkiye, Viet Nam, EU/EEA, Global…) that appear verbatim in outbreak rows
 // but aren't canonical ISO names.
-const COUNTRY_FR: Record<string, string> = {
+// Exported so callers that only have a plain country_en string (not a full
+// outbreak row) — e.g. the travel-risk country picker — can look up a
+// translation directly, via getLocalizedCountryNameFromEn() below.
+export const COUNTRY_FR: Record<string, string> = {
   "Afghanistan": "Afghanistan", "Albania": "Albanie", "Algeria": "Algérie",
   "Andorra": "Andorre", "Angola": "Angola", "Antigua and Barbuda": "Antigua-et-Barbuda",
   "Argentina": "Argentine", "Armenia": "Arménie", "Australia": "Australie",
@@ -304,7 +307,7 @@ const COUNTRY_FR: Record<string, string> = {
   "Zambia": "Zambie", "Zimbabwe": "Zimbabwe",
 };
 
-const COUNTRY_ES: Record<string, string> = {
+export const COUNTRY_ES: Record<string, string> = {
   "Afghanistan": "Afganistán", "Albania": "Albania", "Algeria": "Argelia",
   "Andorra": "Andorra", "Angola": "Angola", "Antigua and Barbuda": "Antigua y Barbuda",
   "Argentina": "Argentina", "Armenia": "Armenia", "Australia": "Australia",
@@ -380,7 +383,7 @@ const COUNTRY_ES: Record<string, string> = {
   "Yemen": "Yemen", "Zambia": "Zambia", "Zimbabwe": "Zimbabue",
 };
 
-const COUNTRY_ID: Record<string, string> = {
+export const COUNTRY_ID: Record<string, string> = {
   "Afghanistan": "Afghanistan", "Albania": "Albania", "Algeria": "Aljazair",
   "Andorra": "Andorra", "Angola": "Angola", "Antigua and Barbuda": "Antigua dan Barbuda",
   "Argentina": "Argentina", "Armenia": "Armenia", "Australia": "Australia",

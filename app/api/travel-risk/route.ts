@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import * as Sentry from "@sentry/nextjs";
 import { fetchFcdoAdvisory, getGovLinks } from "@/lib/travel-advisory";
+import { findCountry } from "@/lib/geo-data";
 
 export const dynamic = "force-dynamic";
 
@@ -57,6 +58,21 @@ export async function GET(req: Request) {
   const countryEn = searchParams.get("country_en") ?? "";
   if (!countryEn) return NextResponse.json({ error: "country_en required" }, { status: 400 });
 
+  // The country picker (and free-text input) work with canonical ISO English
+  // names (e.g. "Democratic Republic of the Congo"), but outbreak rows store
+  // the shorter WHO-DON-style alias in country_en (e.g. "DR Congo"). Without
+  // resolving through the same alias table the ingestion pipeline already
+  // uses (lib/geo-data.ts findCountry — DRC, Ivory Coast, Türkiye, Viet Nam…),
+  // an exact-match query against the raw picker value silently returns zero
+  // rows for any aliased country, producing a false "no active outbreaks"
+  // reassurance on a health/safety decision surface. Found 2026-08-02: picking
+  // "Democratic Republic of the Congo" returned risk="none" while the DB's
+  // "DR Congo" row was an active Ebola PHEIC with 3,605 cases.
+  // Scoped to the outbreaks query only — fetchFcdoAdvisory/getGovLinks below
+  // key their own lookup tables by the canonical ISO name (and "DRC"), not by
+  // this DB alias, so they keep receiving the original `countryEn` untouched.
+  const dbCountryEn = findCountry(countryEn)?.name_en ?? countryEn;
+
   const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE);
 
   const [{ data: outbreaks, error }, fcdo] = await Promise.all([
@@ -64,7 +80,7 @@ export async function GET(req: Request) {
       .from("outbreaks")
       .select("id, disease, disease_en, disease_ar, cases, deaths, risk_level, date, is_pheic")
       .eq("active", true)
-      .eq("country_en", countryEn)
+      .eq("country_en", dbCountryEn)
       .order("risk_level", { ascending: true }),
     fetchFcdoAdvisory(countryEn),
   ]);

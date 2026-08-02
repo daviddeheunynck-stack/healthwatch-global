@@ -8,7 +8,22 @@ import {
   Plane, AlertTriangle, CheckCircle, ShieldAlert, ShieldOff,
   Search, Shield, ExternalLink, MapPin, ChevronRight, ChevronDown,
 } from "lucide-react";
-import { getLocalizedDisease } from "@/lib/outbreaks";
+import { getLocalizedDisease, COUNTRY_FR, COUNTRY_ES, COUNTRY_ID } from "@/lib/outbreaks";
+import { findCountry } from "@/lib/geo-data";
+
+// WORLD_COUNTRIES holds canonical ISO English names only — the picker and
+// result header showed them unlocalized on every non-English locale, even
+// though the FR/ES/ID translation tables (used elsewhere for outbreak rows)
+// already accept these same canonical names as keys. AR has no static table
+// (country_ar is only ever populated per outbreak row), so it falls back to
+// findCountry()'s name_ar, same alias-resolution the API route now uses.
+function localizedCountryLabel(countryEn: string, locale: string): string {
+  if (locale === "fr") return COUNTRY_FR[countryEn] ?? countryEn;
+  if (locale === "es") return COUNTRY_ES[countryEn] ?? countryEn;
+  if (locale === "id") return COUNTRY_ID[countryEn] ?? countryEn;
+  if (locale === "ar") return findCountry(countryEn)?.name_ar ?? countryEn;
+  return countryEn;
+}
 
 type Risk = "none" | "low" | "medium" | "high" | "critical";
 
@@ -198,8 +213,14 @@ export default function TravelRiskFullPage({ locale }: { locale: string }) {
     return () => document.removeEventListener("mousedown", handleOutside);
   }, []);
 
+  // Match against both the English canonical name and its localized label —
+  // a French user should be able to type "Congo" or "République" and still
+  // find "Democratic Republic of the Congo" in the list.
   const filtered = query.trim().length > 0
-    ? WORLD_COUNTRIES.filter((country) => country.toLowerCase().includes(query.toLowerCase()))
+    ? WORLD_COUNTRIES.filter((country) => {
+        const q = query.toLowerCase();
+        return country.toLowerCase().includes(q) || localizedCountryLabel(country, locale).toLowerCase().includes(q);
+      })
     : WORLD_COUNTRIES;
 
   async function check(country = query.trim()) {
@@ -279,7 +300,7 @@ export default function TravelRiskFullPage({ locale }: { locale: string }) {
                       onMouseDown={(e) => { e.preventDefault(); select(country); }}
                       className="w-full text-left px-4 py-2.5 text-sm text-gray-200 hover:bg-gray-700 hover:text-white transition-colors"
                     >
-                      {country}
+                      {localizedCountryLabel(country, locale)}
                     </button>
                   </li>
                 ))}
@@ -315,7 +336,7 @@ export default function TravelRiskFullPage({ locale }: { locale: string }) {
                       <span className="text-xs bg-red-800/50 text-red-300 border border-red-700/40 px-2 py-0.5 rounded-full font-bold">PHEIC</span>
                     )}
                   </div>
-                  <p className="text-xl font-semibold text-white mt-0.5">{result.country_en}</p>
+                  <p className="text-xl font-semibold text-white mt-0.5">{localizedCountryLabel(result.country_en, locale)}</p>
                   <p className="text-xs text-gray-500 mt-1">{c.checkedAt} {new Date(result.checked_at).toLocaleString(locale === "ar" ? "ar-SA" : locale, { dateStyle: "short", timeStyle: "short" })}</p>
                 </div>
               </div>

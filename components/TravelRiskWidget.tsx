@@ -2,7 +2,18 @@
 
 import { useState } from "react";
 import { Plane, AlertTriangle, CheckCircle, ShieldAlert, ShieldOff } from "lucide-react";
-import { getLocalizedDisease } from "@/lib/outbreaks";
+import { getLocalizedDisease, COUNTRY_FR, COUNTRY_ES, COUNTRY_ID } from "@/lib/outbreaks";
+import { findCountry } from "@/lib/geo-data";
+
+// Same fix as TravelRiskFullPage.tsx (2026-08-02): result.country_en is the
+// canonical English name, shown unlocalized on every non-English locale.
+function localizedCountryLabel(countryEn: string, locale: string): string {
+  if (locale === "fr") return COUNTRY_FR[countryEn] ?? countryEn;
+  if (locale === "es") return COUNTRY_ES[countryEn] ?? countryEn;
+  if (locale === "id") return COUNTRY_ID[countryEn] ?? countryEn;
+  if (locale === "ar") return findCountry(countryEn)?.name_ar ?? countryEn;
+  return countryEn;
+}
 
 type Risk = "none" | "low" | "medium" | "high" | "critical";
 
@@ -97,7 +108,7 @@ export default function TravelRiskWidget({ locale }: { locale: string }) {
             <span className={`text-sm font-bold ${rs.text}`}>
               {rs.label[locale] ?? rs.label.en}
             </span>
-            <span className="text-xs text-gray-500">— {result.country_en}</span>
+            <span className="text-xs text-gray-500">— {localizedCountryLabel(result.country_en, locale)}</span>
           </div>
 
           <p className="text-xs text-gray-400 leading-relaxed">{result.recommendation}</p>
