@@ -113,6 +113,13 @@ async function buildExportResponse(request: NextRequest, userId?: string) {
       source:             o.source,
       description:        o.description ?? null,
       pheic:              o.is_pheic,
+      // getOutbreaks() also returns recently-closed rows (60-day display grace
+      // period) with no other field in this export to identify them as such —
+      // without `active`, a customer counting "active outbreaks" from their own
+      // export gets the same inflated count the UI bugs fixed in beb50f9 had,
+      // with no column available to self-correct. Found 2026-08-02 during the
+      // same audit.
+      active:             o.active,
       updated_at:         o.updated_at ?? null,
     };
   });

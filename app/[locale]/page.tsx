@@ -265,7 +265,16 @@ async function DashboardContent({ demo = false, urlRegion, urlRisk }: { demo?: b
   const isPaid = plan === "starter" || plan === "pro" || plan === "team" || plan === "enterprise" || orgMemberAccess;
 
   const [outbreaks, lastSync] = await Promise.all([getOutbreaks(), getLastSync()]);
-  const stats = getStats(outbreaks);
+  // getOutbreaks() also returns recently-closed rows (60-day display grace period
+  // for the full dashboard table/map) — wrong here: `stats` feeds StatsCard's
+  // "active outbreaks" count and the PHEIC bar below, both labeled as currently
+  // live. Same bug as the one fixed across LandingPage/sitrep/briefing/reports in
+  // beb50f9, missed there because that audit covered the logged-out marketing
+  // pages, not this authenticated dashboard. `outbreaks` (raw) stays as-is for
+  // WorldMap/OutbreakTable/RegionalPulseSummary, which intentionally keep showing
+  // recently-closed rows for continuity.
+  const activeOutbreaks = outbreaks.filter((o) => o.active);
+  const stats = getStats(activeOutbreaks);
 
   // 7-day directional signal (▲/▼/→) — infrastructure has been live since 2026-06-05;
   // getOutbreakTrend returns "unknown" until outbreak_snapshots holds enough history,
@@ -491,11 +500,11 @@ async function DashboardContent({ demo = false, urlRegion, urlRisk }: { demo?: b
       </div>
 
       {/* Active PHEIC bar — names the specific PHEICs, visible to all, drives clicks */}
-      {outbreaks.filter(o => o.is_pheic).length > 0 && (
+      {activeOutbreaks.filter(o => o.is_pheic).length > 0 && (
         <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-purple-300/80">
           <span className="text-purple-400 font-bold shrink-0">🚨 PHEIC</span>
           <span className="text-gray-700">·</span>
-          {outbreaks.filter(o => o.is_pheic).map((o, i, arr) => (
+          {activeOutbreaks.filter(o => o.is_pheic).map((o, i, arr) => (
             <span key={o.id} className="inline-flex items-center gap-1">
               <span className="font-medium text-purple-200">{getLocalizedDisease(o, locale)}</span>
               <span className="text-gray-600">{getLocalizedCountry(o, locale)}</span>
