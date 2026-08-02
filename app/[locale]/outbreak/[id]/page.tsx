@@ -564,7 +564,7 @@ export default async function OutbreakPage({
       {o.updated_at && (
         <div className="mb-6 text-xs text-gray-500 flex items-center gap-1">
           <span>🔄</span>
-          <span>{l.lastSynced} : {l.syncedAgo(Math.round((Date.now() - new Date(o.updated_at!).getTime()) / 60_000))}</span>
+          <span suppressHydrationWarning>{l.lastSynced} : {l.syncedAgo(Math.round((Date.now() - new Date(o.updated_at!).getTime()) / 60_000))}</span>
         </div>
       )}
 
