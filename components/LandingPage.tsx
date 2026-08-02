@@ -524,7 +524,15 @@ export default async function LandingPage({ locale }: { locale: string }) {
 
   const outbreaks = await getOutbreaks();
   const stats = getStats(outbreaks);
-  const topOutbreaks = outbreaks
+  // getOutbreaks() also returns recently-closed rows (60-day display grace period,
+  // see the OR clause in getOutbreaksCached()) — right for the full dashboard table,
+  // wrong here: this preview table and "new this week" are public marketing copy
+  // ("What your teams will see" / "newly reported by WHO"), so a closed outbreak
+  // must not appear as if still live. Found 2026-08-02: Ebola/Germany and
+  // Ebola/Uganda, both closed, still showed up as "2 cases"/"20 cases" live rows
+  // and as new-this-week entries on both /en and /fr.
+  const activeOutbreaks = outbreaks.filter((o) => o.active);
+  const topOutbreaks = activeOutbreaks
     .sort((a, b) => ({ high: 0, medium: 1, low: 2 }[a.risk_level] - { high: 0, medium: 1, low: 2 }[b.risk_level]))
     .slice(0, 5);
 
@@ -681,7 +689,7 @@ export default async function LandingPage({ locale }: { locale: string }) {
       {/* ── New this week ────────────────────────────────────────────────── */}
       {(() => {
         const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
-        const newThis = outbreaks.filter((o) => o.date >= sevenDaysAgo).slice(0, 5);
+        const newThis = activeOutbreaks.filter((o) => o.date >= sevenDaysAgo).slice(0, 5);
         if (newThis.length === 0) return null;
 
         const NTW: Record<string, { title: string; sub: string; viewAll: string }> = {
