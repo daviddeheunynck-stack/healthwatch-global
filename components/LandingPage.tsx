@@ -523,15 +523,16 @@ export default async function LandingPage({ locale }: { locale: string }) {
   const isRtl = locale === "ar";
 
   const outbreaks = await getOutbreaks();
-  const stats = getStats(outbreaks);
   // getOutbreaks() also returns recently-closed rows (60-day display grace period,
   // see the OR clause in getOutbreaksCached()) — right for the full dashboard table,
-  // wrong here: this preview table and "new this week" are public marketing copy
-  // ("What your teams will see" / "newly reported by WHO"), so a closed outbreak
-  // must not appear as if still live. Found 2026-08-02: Ebola/Germany and
-  // Ebola/Uganda, both closed, still showed up as "2 cases"/"20 cases" live rows
-  // and as new-this-week entries on both /en and /fr.
+  // wrong here: every section on this page is public marketing copy claiming "active
+  // outbreaks tracked right now", "What your teams will see" or "newly reported by
+  // WHO", so a closed outbreak must not appear as if still live. Found 2026-08-02:
+  // Ebola/Germany and Ebola/Uganda, both closed, still showed up as "2 cases"/"20
+  // cases" live rows, as new-this-week entries, AND inflated the hero's active count
+  // (this last one was missed in the first pass at this fix) on both /en and /fr.
   const activeOutbreaks = outbreaks.filter((o) => o.active);
+  const stats = getStats(activeOutbreaks);
   const topOutbreaks = activeOutbreaks
     .sort((a, b) => ({ high: 0, medium: 1, low: 2 }[a.risk_level] - { high: 0, medium: 1, low: 2 }[b.risk_level]))
     .slice(0, 5);

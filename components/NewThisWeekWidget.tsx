@@ -31,7 +31,13 @@ export default function NewThisWeekWidget({ outbreaks, locale, trends, isPaid }:
   const isRtl = locale === "ar";
   const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
 
+  // getOutbreaks() also returns recently-closed rows (60-day display grace period for
+  // the full dashboard table) — wrong here: this widget's badges ("NEW", "WORSENING",
+  // "RESPONSE") all assert the outbreak is currently live, so a closed outbreak must be
+  // excluded even if its created_at/response_phase would otherwise still match. Found
+  // 2026-08-02 alongside the identical bug in LandingPage.tsx.
   const relevant = outbreaks
+    .filter((o) => o.active)
     .map((o) => {
       const trend = trends[o.id];
       const isNew = o.created_at ? new Date(o.created_at) >= sevenDaysAgo : false;

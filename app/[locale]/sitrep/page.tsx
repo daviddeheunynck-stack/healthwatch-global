@@ -95,17 +95,23 @@ export default async function SitrepPage({
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) {
     const outbreaks = await getOutbreaks();
-    const stats     = getStats(outbreaks);
+    // getOutbreaks() also returns recently-closed rows (60-day display grace period
+    // for the full dashboard table) — wrong here: this report's stats/table are
+    // labeled "Active outbreaks"/"New this week", so a closed outbreak must not
+    // count or appear as if still live. Found 2026-08-02 alongside the identical
+    // bug in LandingPage.tsx.
+    const activeOutbreaks = outbreaks.filter((o) => o.active);
+    const stats     = getStats(activeOutbreaks);
     const c         = COPY[locale] ?? COPY.en;
     const isRtl     = locale === "ar";
     const now       = new Date();
     const weekAgo   = new Date(now.getTime() - 7 * 86_400_000).toISOString().split("T")[0];
-    const newWeek   = outbreaks.filter((o) => o.date >= weekAgo).length;
+    const newWeek   = activeOutbreaks.filter((o) => o.date >= weekAgo).length;
     const genDate   = now.toLocaleDateString(
       locale === "fr" ? "fr-FR" : locale === "es" ? "es-ES" : locale === "ar" ? "ar-SA" : locale === "id" ? "id-ID" : "en-GB",
       { weekday: "long", year: "numeric", month: "long", day: "numeric" }
     );
-    const preview = [...outbreaks]
+    const preview = [...activeOutbreaks]
       .sort((a, b) => {
         if (a.is_pheic && !b.is_pheic) return -1;
         if (!a.is_pheic && b.is_pheic) return 1;
@@ -249,17 +255,23 @@ export default async function SitrepPage({
 
   if (!isPaid && trialExpired) {
     const outbreaks = await getOutbreaks();
-    const stats     = getStats(outbreaks);
+    // getOutbreaks() also returns recently-closed rows (60-day display grace period
+    // for the full dashboard table) — wrong here: this report's stats/table are
+    // labeled "Active outbreaks"/"New this week", so a closed outbreak must not
+    // count or appear as if still live. Found 2026-08-02 alongside the identical
+    // bug in LandingPage.tsx.
+    const activeOutbreaks = outbreaks.filter((o) => o.active);
+    const stats     = getStats(activeOutbreaks);
     const c         = COPY[locale] ?? COPY.en;
     const isRtl     = locale === "ar";
     const now       = new Date();
     const weekAgo   = new Date(now.getTime() - 7 * 86_400_000).toISOString().split("T")[0];
-    const newWeek   = outbreaks.filter((o) => o.date >= weekAgo).length;
+    const newWeek   = activeOutbreaks.filter((o) => o.date >= weekAgo).length;
     const genDate   = now.toLocaleDateString(
       locale === "fr" ? "fr-FR" : locale === "es" ? "es-ES" : locale === "ar" ? "ar-SA" : locale === "id" ? "id-ID" : "en-GB",
       { weekday: "long", year: "numeric", month: "long", day: "numeric" }
     );
-    const preview = [...outbreaks]
+    const preview = [...activeOutbreaks]
       .sort((a, b) => {
         if (a.is_pheic && !b.is_pheic) return -1;
         if (!a.is_pheic && b.is_pheic) return 1;
@@ -378,19 +390,21 @@ export default async function SitrepPage({
   }
 
   const outbreaks = await getOutbreaks();
-  const stats     = getStats(outbreaks);
+  // See the identical closed-outbreak-leak note in the two branches above.
+  const activeOutbreaks = outbreaks.filter((o) => o.active);
+  const stats     = getStats(activeOutbreaks);
   const c         = COPY[locale] ?? COPY.en;
 
   const now      = new Date();
   const weekAgo  = new Date(now.getTime() - 7 * 86_400_000).toISOString().split("T")[0];
-  const newWeek  = outbreaks.filter((o) => o.date >= weekAgo).length;
+  const newWeek  = activeOutbreaks.filter((o) => o.date >= weekAgo).length;
   const isRtl    = locale === "ar";
   const genDate  = now.toLocaleDateString(
     locale === "fr" ? "fr-FR" : locale === "es" ? "es-ES" : locale === "ar" ? "ar-SA" : locale === "id" ? "id-ID" : "en-GB",
     { weekday: "long", year: "numeric", month: "long", day: "numeric" }
   );
 
-  const sorted = [...outbreaks].sort((a, b) => {
+  const sorted = [...activeOutbreaks].sort((a, b) => {
     if (a.is_pheic && !b.is_pheic) return -1;
     if (!a.is_pheic && b.is_pheic) return 1;
     const r: Record<string, number> = { high: 0, medium: 1, low: 2 };

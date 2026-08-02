@@ -171,7 +171,11 @@ async function ReportsContent() {
       {/* Report cards grid */}
       <div className="grid md:grid-cols-2 gap-4">
         {REGIONS.map((region) => {
-          const regionOutbreaks = outbreaks.filter((o) => o.region === region);
+          // getOutbreaks() also returns recently-closed rows (60-day display grace
+          // period for the full dashboard table) — wrong here: `activeOutbreaks`
+          // below is rendered as-is under "Active outbreaks". Found 2026-08-02
+          // alongside the identical bug in LandingPage.tsx.
+          const regionOutbreaks = outbreaks.filter((o) => o.active && o.region === region);
           const totalCases = regionOutbreaks.reduce((sum, o) => sum + o.cases, 0);
           const highRisk = regionOutbreaks.filter((o) => o.risk_level === "high").length;
           const regionLabel = tAlerts(region);

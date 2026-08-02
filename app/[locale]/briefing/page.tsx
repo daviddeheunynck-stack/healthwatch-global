@@ -201,7 +201,12 @@ export default async function BriefingPage({ params }: { params: Promise<{ local
   }
 
   const allOutbreaks = await getOutbreaks();
-  const sorted = [...allOutbreaks]
+  // getOutbreaks() also returns recently-closed rows (60-day display grace period
+  // for the full dashboard table) — wrong here: this feeds the paid Executive
+  // Briefing's "Top active threats" section. Found 2026-08-02 alongside the
+  // identical bug in LandingPage.tsx.
+  const activeOutbreaks = allOutbreaks.filter((o) => o.active);
+  const sorted = [...activeOutbreaks]
     .sort((a, b) => (RISK_ORDER[a.risk_level] ?? 3) - (RISK_ORDER[b.risk_level] ?? 3) || b.cases - a.cases)
     .slice(0, 5);
 

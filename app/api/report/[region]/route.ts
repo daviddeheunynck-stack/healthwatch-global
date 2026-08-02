@@ -90,7 +90,11 @@ export async function GET(
   const rl = REPORT_LABELS[locale] ?? REPORT_LABELS.en;
   const numLocale = locale === "ar" ? "ar-SA" : locale;
   const outbreaks = await getOutbreaks();
-  const regionOutbreaks = outbreaks.filter((o) => o.region === region);
+  // getOutbreaks() also returns recently-closed rows (60-day display grace period
+  // for the full dashboard table) — wrong here: this generates the downloadable
+  // "Active outbreaks" PDF/HTML report a paying customer keeps and shares. Found
+  // 2026-08-02 alongside the identical bug in LandingPage.tsx.
+  const regionOutbreaks = outbreaks.filter((o) => o.active && o.region === region);
   const totalCases = regionOutbreaks.reduce((sum, o) => sum + o.cases, 0);
   const highRisk = regionOutbreaks.filter((o) => o.risk_level === "high").length;
   const regionLabel =
