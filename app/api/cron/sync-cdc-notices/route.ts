@@ -18,6 +18,7 @@ import { extractNumbers, assessRisk } from "@/lib/outbreak-parser";
 import { extractAdmin1, geocodeAdmin1 } from "@/lib/geo-extract";
 import { errorMessage } from "@/lib/error";
 import { truncateAtSentence } from "@/lib/truncate-text";
+import { dateFloorGuard, bothZeroGuard, collapseGuard, zeroDeathGuard } from "@/lib/outbreak-guards";
 
 export const dynamic     = "force-dynamic";
 export const maxDuration = 120; // up to ~25 notices × ~3s each
@@ -393,31 +394,19 @@ export async function GET(req: NextRequest) {
         results.skipped++;
         continue;
       }
-      // An older-dated notice with different numbers was previously NOT skipped
-      // here (only the "unchanged" case above was) — so a stale re-fetch with
-      // different (often worse) extracted numbers could still overwrite a more
-      // recent, more authoritative row. Same guard family as sync-outbreaks.
-      if (date < existRow.date) {
-        log.push({ label, status: "skip", detail: `older notice (${date}) than existing (${existRow.date})` });
-        results.skipped++;
-        continue;
-      }
-      // A Level 3 notice with no extractable case data (common — travel notices
-      // are prose, not case-count bulletins) must not blank out real numbers an
+      // Same guard family as sync-outbreaks, shared via lib/outbreak-guards.ts
+      // (2026-08-02). bothZeroGuard is the cdc-notices-specific one: a Level 3
+      // notice with no extractable case data (common — travel notices are prose,
+      // not case-count bulletins) must not blank out real numbers an
       // authoritative source already established. Found 2026-07-16: a Level 3
       // DRC Ebola notice with 0/0 parsed overwrote 1963/719 from ECDC this way.
-      if (cases === 0 && deaths === 0 && existRow.cases > 0) {
-        log.push({ label, status: "skip", detail: `guard:zero-count — notice has no case data, preserving existing ${existRow.cases}/${existRow.deaths}` });
-        results.skipped++;
-        continue;
-      }
-      if (existRow.cases > 100 && cases > 0 && cases < existRow.cases * 0.3) {
-        log.push({ label, status: "skip", detail: `guard:collapse — parsed ${cases} vs existing ${existRow.cases} (<30%)` });
-        results.skipped++;
-        continue;
-      }
-      if (deaths === 0 && existRow.deaths > 0) {
-        log.push({ label, status: "skip", detail: `guard:zero-death — parsed 0 vs existing ${existRow.deaths} deaths` });
+      const guardReason =
+        dateFloorGuard({ cases, deaths, date }, existRow) ??
+        bothZeroGuard({ cases, deaths, date }, existRow) ??
+        collapseGuard({ cases, deaths, date }, existRow) ??
+        zeroDeathGuard({ cases, deaths, date }, existRow);
+      if (guardReason) {
+        log.push({ label, status: "skip", detail: guardReason });
         results.skipped++;
         continue;
       }

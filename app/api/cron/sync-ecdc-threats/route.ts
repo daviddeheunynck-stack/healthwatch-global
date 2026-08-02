@@ -14,6 +14,7 @@ import { COUNTRIES, findCountry, isAggregateCountry } from "@/lib/geo-data";
 import { extractNumbers, assessRisk, UMBRELLA_COUNTRY_LABELS } from "@/lib/outbreak-parser";
 import { extractAdmin1, geocodeAdmin1 } from "@/lib/geo-extract";
 import { errorMessage } from "@/lib/error";
+import { dateFloorGuard, spikeGuard, deathsNeverDecreaseGuard, implausibleDeathsGuard } from "@/lib/outbreak-guards";
 
 export const dynamic     = "force-dynamic";
 export const maxDuration = 60;
@@ -682,8 +683,9 @@ async function runEcdcThreats(_req: NextRequest, supabase: SupabaseClient) {
         results.skipped++;
         continue;
       }
-      if (item.deaths > item.cases && item.cases > 0) {
-        log.push({ label, status: "skip", detail: `deaths (${item.deaths}) > cases (${item.cases})` });
+      const implausibleReason = implausibleDeathsGuard(item);
+      if (implausibleReason) {
+        log.push({ label, status: "skip", detail: implausibleReason });
         results.skipped++;
         continue;
       }
@@ -702,31 +704,24 @@ async function runEcdcThreats(_req: NextRequest, supabase: SupabaseClient) {
           continue;
         }
 
-        // An older-dated item with different numbers was not skipped above (only
-        // the "unchanged" case was) — a stale re-fetch could still overwrite a
-        // more recent row. Same guard family as sync-cdc-notices.
-        if (item.date < existing.date) {
-          log.push({ label, status: "skip", detail: `older item (${item.date}) than existing (${existing.date})` });
-          results.skipped++;
-          continue;
-        }
-
-        // Spike guard: >3× jump is almost certainly a parsing anomaly.
-        if (item.cases > 0 && existing.cases > 0 && item.cases > existing.cases * 3) {
-          log.push({ label, status: "skip", detail: `spike: ${item.cases} vs existing ${existing.cases} (>3×)` });
-          results.skipped++;
-          continue;
-        }
-
-        // Cumulative-deaths guard: a running death toll in an ongoing
-        // outbreak never decreases. A drop is almost always a parsing
-        // anomaly — e.g. grabbing a daily increment instead of the running
-        // total (found 2026-07-15 on ECDC's Ebola DRC page: 719 cumulative
-        // vs 10 same-day increment, see extractNumbers' pairedPattern) —
-        // rather than a real downward revision, which is rare enough to
-        // apply by hand instead of risking a silent overwrite.
-        if (item.deaths > 0 && existing.deaths > 0 && item.deaths < existing.deaths) {
-          log.push({ label, status: "skip", detail: `deaths decreased: ${item.deaths} vs existing ${existing.deaths} — refusing to overwrite` });
+        // Same guard family as sync-cdc-notices, shared via
+        // lib/outbreak-guards.ts (2026-08-02). deathsNeverDecreaseGuard is the
+        // ecdc-threats-specific one: a running death toll in an ongoing
+        // outbreak never decreases, so any drop (not just a fall to zero) is
+        // refused — stricter than the plain zero-death guard the other crons
+        // use. A drop is almost always a parsing anomaly — e.g. grabbing a
+        // daily increment instead of the running total (found 2026-07-15 on
+        // ECDC's Ebola DRC page: 719 cumulative vs 10 same-day increment, see
+        // extractNumbers' pairedPattern) — rather than a real downward
+        // revision, which is rare enough to apply by hand instead of risking a
+        // silent overwrite. No collapse or zero-case guard here — deliberately
+        // absent before this migration, left that way.
+        const guardReason =
+          dateFloorGuard(item, existing) ??
+          spikeGuard(item, existing) ??
+          deathsNeverDecreaseGuard(item, existing);
+        if (guardReason) {
+          log.push({ label, status: "skip", detail: guardReason });
           results.skipped++;
           continue;
         }

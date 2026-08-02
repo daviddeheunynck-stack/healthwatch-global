@@ -14,6 +14,7 @@ import { COUNTRIES, findCountry, isAggregateCountry } from "@/lib/geo-data";
 import { extractNumbers, assessRisk } from "@/lib/outbreak-parser";
 import { errorMessage } from "@/lib/error";
 import { truncateAtSentence } from "@/lib/truncate-text";
+import { dateFloorGuard, spikeGuard, collapseGuard, zeroCaseGuard, zeroDeathGuard } from "@/lib/outbreak-guards";
 
 export const dynamic     = "force-dynamic";
 export const maxDuration = 120;
@@ -466,35 +467,16 @@ async function runSyncWhoAfro(_req: NextRequest, supabase: SupabaseClient) {
       // Same data-quality guards as sync-outbreaks (missing here until now — a
       // gap that let a mis-parsed weekly delta-only AFRO bulletin overwrite the
       // DR Congo/Ebola row with 259/0 in place of 1963/719, found 2026-07-16).
-      if (date < existingRow.date) {
-        log.push({ label, status: "skip", detail: `older report (${date}) than existing (${existingRow.date})` });
-        results.skipped++;
-        continue;
-      }
-      // Spike guard: >3x jump is almost certainly a parsing anomaly.
-      if (cases > 0 && existingRow.cases > 0 && cases > existingRow.cases * 3) {
-        log.push({ label, status: "skip", detail: `guard:spike — parsed ${cases} vs existing ${existingRow.cases} (>3x)` });
-        results.skipped++;
-        continue;
-      }
-      if (existingRow.cases > 100 && cases > 0 && cases < existingRow.cases * 0.3) {
-        log.push({ label, status: "skip", detail: `guard:collapse — parsed ${cases} vs existing ${existingRow.cases} (<30%)` });
-        results.skipped++;
-        continue;
-      }
-      // Zero-case guard: never let a parser-miss zero overwrite a real count —
-      // the same class of bug the zero-death guard below already covers, but for
-      // cases (found 2026-07-16: an AFRO bulletin stating only a death count,
-      // e.g. "12 people have died since the last update", parses to cases=0
-      // while deaths>0, so neither the 0/0 skip above nor the zero-death guard
-      // below catches it).
-      if (cases === 0 && existingRow.cases > 0) {
-        log.push({ label, status: "skip", detail: `guard:zero-case — parsed 0 vs existing ${existingRow.cases}` });
-        results.skipped++;
-        continue;
-      }
-      if (deaths === 0 && existingRow.deaths > 0) {
-        log.push({ label, status: "skip", detail: `guard:zero-death — parsed 0 vs existing ${existingRow.deaths} deaths` });
+      // Shared with the other sync crons via lib/outbreak-guards.ts (2026-08-02) —
+      // see that file for why cases and deaths each get their own zero guard.
+      const guardReason =
+        dateFloorGuard({ cases, deaths, date }, existingRow) ??
+        spikeGuard({ cases, deaths, date }, existingRow) ??
+        collapseGuard({ cases, deaths, date }, existingRow) ??
+        zeroCaseGuard({ cases, deaths, date }, existingRow) ??
+        zeroDeathGuard({ cases, deaths, date }, existingRow);
+      if (guardReason) {
+        log.push({ label, status: "skip", detail: guardReason });
         results.skipped++;
         continue;
       }

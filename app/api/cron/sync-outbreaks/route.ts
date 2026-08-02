@@ -7,6 +7,7 @@ import { fetchWHODONList, parseWHODONItems, donArticleUrl } from "@/lib/who-api"
 import type { ParsedOutbreak } from "@/lib/outbreak-parser";
 import { errorMessage } from "@/lib/error";
 import { translateDescription } from "@/lib/translate";
+import { dateFloorGuard, spikeGuard, collapseGuard, zeroCaseGuard, zeroDeathGuard, implausibleDeathsGuard } from "@/lib/outbreak-guards";
 
 export const dynamic = "force-dynamic";
 
@@ -234,8 +235,10 @@ async function runSync(req: NextRequest, supabase: SupabaseClient) {
 
       // ── Pre-upsert sanity guards ─────────────────────────────────
       // Reject impossible or suspicious data before touching the DB.
-      if (outbreak.deaths > outbreak.cases && outbreak.cases > 0) {
-        console.warn(`[sync] guard:deaths>cases — ${outbreak.disease_en}/${outbreak.country_en} (${outbreak.deaths}d > ${outbreak.cases}c) — skipping`);
+      // Shared with the other sync crons via lib/outbreak-guards.ts (2026-08-02).
+      const implausibleReason = implausibleDeathsGuard(outbreak);
+      if (implausibleReason) {
+        console.warn(`[sync] ${implausibleReason} — ${outbreak.disease_en}/${outbreak.country_en} — skipping`);
         results.skipped++;
         continue;
       }
@@ -243,21 +246,23 @@ async function runSync(req: NextRequest, supabase: SupabaseClient) {
       if (existingRow) {
         // Never let an older-dated WHO article overwrite a row that already
         // reflects a more recent one (e.g. byDiseaseCountry matched the
-        // current row, but this article predates it).
-        const isOlderArticle = outbreak.date < existingRow.date;
+        // current row, but this article predates it). Shared dateFloorGuard
+        // from lib/outbreak-guards.ts (2026-08-02) — same check, kept as a
+        // boolean here since it feeds needsUpdate below rather than an
+        // early-continue.
+        const isOlderArticle = !!dateFloorGuard(outbreak, existingRow);
         const existingRecovered = (existingRow as Record<string, unknown>).recovered as number | null ?? 0;
 
-        // Spike guard: >3× jump is almost certainly a parsing anomaly.
-        if (outbreak.cases > 0 && existingRow.cases > 0 && outbreak.cases > existingRow.cases * 3) {
-          console.warn(`[sync] guard:spike — ${outbreak.disease_en}/${outbreak.country_en} — parsed ${outbreak.cases} vs existing ${existingRow.cases} (>3×) — skipping`);
+        const spikeReason = spikeGuard(outbreak, existingRow);
+        if (spikeReason) {
+          console.warn(`[sync] ${spikeReason} — ${outbreak.disease_en}/${outbreak.country_en} — skipping`);
           if (debug) debugLog.push(`⚠️ Spike rejected: ${outbreak.disease_en}/${outbreak.country_en} — ${outbreak.cases} vs ${existingRow.cases}`);
           results.skipped++;
           continue;
         }
-        // Collapse guard: a >70% reduction in an active outbreak is also suspect
-        // (e.g. WHO DON article only covers one region but DB has global total).
-        if (existingRow.cases > 100 && outbreak.cases > 0 && outbreak.cases < existingRow.cases * 0.3) {
-          console.warn(`[sync] guard:collapse — ${outbreak.disease_en}/${outbreak.country_en} — parsed ${outbreak.cases} vs existing ${existingRow.cases} (<30%) — skipping`);
+        const collapseReason = collapseGuard(outbreak, existingRow);
+        if (collapseReason) {
+          console.warn(`[sync] ${collapseReason} — ${outbreak.disease_en}/${outbreak.country_en} — skipping`);
           if (debug) debugLog.push(`⚠️ Collapse rejected: ${outbreak.disease_en}/${outbreak.country_en} — ${outbreak.cases} vs ${existingRow.cases}`);
           results.skipped++;
           continue;
@@ -281,15 +286,16 @@ async function runSync(req: NextRequest, supabase: SupabaseClient) {
           continue;
         }
 
+        // Never overwrite a real case/death count with a parser-miss zero —
+        // shared zeroCaseGuard/zeroDeathGuard from lib/outbreak-guards.ts.
         const needsUpdate =
           !isOlderArticle &&
           (existingRow.cases !== outbreak.cases ||
             existingRow.deaths !== outbreak.deaths ||
             existingRow.date !== outbreak.date ||
             (outbreak.recovered > 0 && outbreak.recovered !== existingRecovered)) &&
-          // Never overwrite a real case/death count with a parser-miss zero
-          !(outbreak.cases === 0 && existingRow.cases > 0) &&
-          !(outbreak.deaths === 0 && existingRow.deaths > 0);
+          !zeroCaseGuard(outbreak, existingRow) &&
+          !zeroDeathGuard(outbreak, existingRow);
 
         if (needsUpdate) {
           const updatePayload: Record<string, unknown> = {
