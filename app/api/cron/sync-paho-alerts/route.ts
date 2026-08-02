@@ -392,7 +392,7 @@ function fitForTranslation(s: string): string {
   return (space > 200 ? cut.slice(0, space) : cut).trim() + "…";
 }
 
-function buildSitrepDescription(num: number, t: SitrepTable, row: SitrepRow, rt: RtEstimate | undefined): string {
+function buildSitrepDescription(num: number, t: SitrepTable, row: SitrepRow, rt: RtEstimate | undefined, admin1: string | null): string {
   const parts = [
     // "EW 25" spelled out: MyMemory reorders the bare abbreviation into
     // "25 EW 2026" in French.
@@ -412,7 +412,21 @@ function buildSitrepDescription(num: number, t: SitrepTable, row: SitrepRow, rt:
   // caveat) — keep it with the notes rather than labelling it a trend.
   const tail = [isTrend ? "" : row.trend, row.notes].filter(Boolean).join(". ");
   if (tail) parts.push(tail.replace(/\.\s*\./g, "."));
-  return fitForTranslation(parts.join(" ").trim());
+  const fitted = fitForTranslation(parts.join(" ").trim());
+  // extractAdmin1 (call site) runs against the untruncated row.notes, so for a
+  // country whose notes cell is long enough that the geographic-detail sentence
+  // arrives late, the 490-char cap above can truncate it out of `fitted` even
+  // though it's what grounded admin1 in the first place — e.g. Guatemala sitrep
+  // #8: "...all 22 departments." survived the cut, but the following sentence
+  // naming Izabal as the highest-incidence department didn't, leaving a
+  // correctly-extracted admin1 looking ungrounded to anyone just reading the
+  // stored description (and to data-quality's [ADMIN1?] check). Append a short
+  // clause rather than reworking the cap, so the two fields stay consistent.
+  // Found 2026-08-02.
+  if (admin1 && !fitted.toLowerCase().includes(admin1.toLowerCase())) {
+    return `${fitted} Highest-burden area: ${admin1}.`;
+  }
+  return fitted;
 }
 
 // ── Listing page parser ───────────────────────────────────────────────────────
@@ -1076,12 +1090,13 @@ async function collectSitrepItems(
     const geo = findCountry(row.country);
     if (!geo || isAggregateCountry(geo)) continue;
 
-    const description = buildSitrepDescription(entry.num, table, row, rt.get(row.country));
-
     // The notes cell names the actual foci ("concentrated in Puno (603)"),
     // which is a far better admin1 signal than the alert prose this normally
-    // runs on.
+    // runs on. Extracted before the description so a long notes cell that gets
+    // truncated below can still have its grounding admin1 appended back in.
     const admin1 = await extractAdmin1(`${row.country}. ${row.notes}`, geo.name_en);
+    const description = buildSitrepDescription(entry.num, table, row, rt.get(row.country), admin1);
+
     let admin1_lat: number | null = null;
     let admin1_lng: number | null = null;
     if (admin1) {
