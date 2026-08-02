@@ -103,6 +103,16 @@ export default function GlobalSearch() {
       }));
 
     // Supabase: countries + outbreaks
+    // `,`/`(`/`)` stripped before the raw .or() template string below — those are
+    // the PostgREST filter-DSL's own structural characters (condition separator,
+    // and(...) grouping), so leaving them in would let a crafted search string
+    // add filter conditions beyond the 3 intended here. Same sanitization already
+    // used for the same reason in app/api/outbreaks/route.ts and
+    // app/api/admin/patch-outbreak/route.ts — this client-side call (anon key)
+    // was the one place with this exact pattern that hadn't picked it up.
+    // The plain .ilike() call below needs no such stripping — supabase-js
+    // parameterizes that one properly regardless of the value's contents.
+    const safeTrimmed = trimmed.replace(/[,()]/g, "");
     const supabase = createClient();
     const [{ data: cData }, { data: oData }] = await Promise.all([
       supabase
@@ -114,7 +124,7 @@ export default function GlobalSearch() {
       supabase
         .from("outbreaks")
         .select("id, disease, disease_en, disease_ar, country, country_en, country_ar, active, date")
-        .or(`disease_en.ilike.%${trimmed}%,disease.ilike.%${trimmed}%,country_en.ilike.%${trimmed}%`)
+        .or(`disease_en.ilike.%${safeTrimmed}%,disease.ilike.%${safeTrimmed}%,country_en.ilike.%${safeTrimmed}%`)
         .order("date", { ascending: false })
         .limit(5),
     ]);
