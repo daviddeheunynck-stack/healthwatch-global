@@ -179,13 +179,38 @@ if (frozenNonSeed.length) {
 // compte du cluster est-il toujours correct), mais rien ne vérifie qu'une édition plus récente
 // du bulletin multi-pays cité en `source` n'est pas parue depuis. Cadence 14j (bulletins
 // typiquement mensuels, pas hebdo) — voir SKILL.md section "5 bis".
-console.log("\n=== Lignes actives à source_priority=10, DANS un cluster de seeds (>14j = vérifier édition plus récente) ===");
+// ⚠️ La cadence se calcule sur CLUSTER_EDITION_CHECKED, pas sur `updated_at` de la ligne :
+// une écriture cosmétique (rattrapage des traductions du 02/08, correction d'une coquille)
+// rafraîchit `updated_at` sans que personne n'ait cherché une édition plus récente, et
+// masquerait alors le cluster entier pendant 14 jours. Bumper la date du cluster ci-dessous
+// UNIQUEMENT après avoir réellement fait la recherche d'édition.
+const CLUSTER_EDITION_CHECKED = {
+  // Choléra : Epi Update #38 (30/06/2026) toujours la dernière au 02/08. Série numérotée
+  // arrêtée — la suite passe dans le Weekly Epidemiological Record (WER 101-30 le 02/08 ne
+  // couvre pas le choléra). Chercher les deux à chaque vérification.
+  Cholera: "2026-08-02",
+  // MERS-CoV : DON591 toujours le dernier ; ECDC (au 02/07/2026) confirme 2 cas / 1 décès.
+  "MERS-CoV": "2026-08-02",
+  // Chikungunya : NY State DOH Global Health Update du 30/07/2026 (données PAHO au 30/07).
+  Chikungunya: "2026-08-02",
+};
+console.log("\n=== Lignes actives à source_priority=10, DANS un cluster de seeds (>14j depuis la dernière recherche d'édition) ===");
 const frozenSeed = active.filter((o) => o.source_priority === 10 && o.is_seed);
 if (frozenSeed.length) {
+  const seenClusters = new Set();
   frozenSeed.forEach((o) => {
-    const ageDays = Math.round((Date.now() - new Date(o.updated_at).getTime()) / 864e5);
-    const status = ageDays > 14 ? "À VÉRIFIER (édition plus récente ?)" : "skip (vérifiée récemment)";
-    console.log(`[${o.id}] ${o.disease_en || o.disease} | ${o.country_en || o.country} | ${ageDays}j — ${status} | src=${(o.source || "").slice(0, 60)}`);
+    const disease = o.disease_en || o.disease || "";
+    const checked = CLUSTER_EDITION_CHECKED[disease];
+    if (!checked) {
+      console.log(`[${o.id}] ${disease} | ${o.country_en || o.country} | ⚠️ cluster absent de CLUSTER_EDITION_CHECKED — ajouter une entrée`);
+      return;
+    }
+    if (seenClusters.has(disease)) return; // un seul verdict par cluster, pas une ligne par pays
+    seenClusters.add(disease);
+    const ageDays = Math.round((Date.now() - new Date(checked).getTime()) / 864e5);
+    const status = ageDays > 14 ? "À VÉRIFIER (édition plus récente ?)" : "skip (édition vérifiée récemment)";
+    const countries = frozenSeed.filter((r) => (r.disease_en || r.disease) === disease).length;
+    console.log(`${disease} (${countries} pays) | dernière recherche d'édition ${checked} (${ageDays}j) — ${status}`);
   });
 } else {
   console.log("Aucune.");
@@ -196,7 +221,7 @@ if (frozenSeed.length) {
 // 3 autres langues restait invisible pour toujours à ce gate (corrigé le 2026-07-23, commit
 // ca8e30c). Ce signal reste utile si un autre chemin d'écriture recrée le même trou.
 const partialTranslationRows = await fetchJson(
-  `${SUPABASE_URL}/rest/v1/outbreaks?active=eq.true&description=not.is.null&description=neq.&select=id,disease_en,country_en,description_fr,description_es,description_ar,description_id`,
+  `${SUPABASE_URL}/rest/v1/outbreaks?active=eq.true&description=not.is.null&description=neq.&select=id,disease_en,country_en,description,description_fr,description_es,description_ar,description_id`,
   { headers: h }
 );
 const partial = partialTranslationRows.filter((o) => {
@@ -207,6 +232,47 @@ console.log("\n=== Traductions partielles (au moins une langue remplie, au moins
 if (partial.length) {
   partial.forEach((o) =>
     console.log(`[${o.id}] ${o.disease_en} | ${o.country_en} | fr=${o.description_fr ? "OK" : "NULL"} es=${o.description_es ? "OK" : "NULL"} ar=${o.description_ar ? "OK" : "NULL"} id=${o.description_id ? "OK" : "NULL"}`)
+  );
+} else {
+  console.log("Aucune.");
+}
+
+// --- 4e-bis. Traductions périmées : remplies mais désynchronisées de la description EN ---
+// Angle mort trouvé le 2026-08-02 : les crons appellent translateDescription() à l'insertion,
+// mais les scripts de correction manuelle écrivaient `description` seule — les 4 colonnes
+// traduites gardaient alors le texte d'une version antérieure de la ligne, jamais NULL, donc
+// invisibles au check 4e ci-dessus. 11 lignes actives étaient dans ce cas (dont Choléra/RDC,
+// le plus gros foyer du produit, dont le FR affichait encore un texte générique 2025 à
+// 409 222 cas). Heuristique : comparer les nombres >= 100 cités par l'EN et par le FR, en
+// neutralisant les séparateurs de milliers (1,457 / 1 457 / 1.457). On ne signale que si
+// chaque version cite un nombre absent de l'autre — une simple omission ne suffit pas.
+function bigNumbers(t) {
+  if (!t) return null;
+  let norm = t;
+  for (let i = 0; i < 2; i++) norm = norm.replace(/(\d)[\s  .,](\d{3})\b/g, "$1$2");
+  const out = new Set();
+  for (const m of norm.matchAll(/\d{3,}/g)) out.add(m[0]);
+  // Faux positif connu : le dénominateur d'incidence "pour 100 000 habitants" est écrit
+  // "per 100,000" en EN (normalisé en 100000) et "pour 100 000" en FR (idem), mais certaines
+  // formulations n'en gardent qu'une moitié — jamais un chiffre de cas, on l'ignore des 2 côtés.
+  out.delete("100");
+  out.delete("100000");
+  return out;
+}
+const desynced = partialTranslationRows
+  .map((o) => {
+    const en = bigNumbers(o.description);
+    const fr = bigNumbers(o.description_fr);
+    if (!en || !fr) return null;
+    const missing = [...en].filter((n) => !fr.has(n));
+    const extra = [...fr].filter((n) => !en.has(n));
+    return missing.length && extra.length ? { o, missing, extra } : null;
+  })
+  .filter(Boolean);
+console.log("\n=== Traductions périmées (chiffres FR incompatibles avec la description EN) ===");
+if (desynced.length) {
+  desynced.forEach(({ o, missing, extra }) =>
+    console.log(`[${o.id}] ${o.disease_en} | ${o.country_en} | EN cite ${missing.join(", ")} — FR cite ${extra.join(", ")}`)
   );
 } else {
   console.log("Aucune.");
