@@ -4,6 +4,7 @@ import { extractNumbers } from "@/lib/outbreak-parser";
 import { errorMessage } from "@/lib/error";
 import * as Sentry from "@sentry/nextjs";
 import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
+import { isCollapse, isSpike, deathsExceedCases, isZeroData } from "@/lib/outbreak-guards";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 120;
@@ -223,22 +224,28 @@ async function runDataQuality(_req: NextRequest, supabase: SupabaseClient) {
   for (const row of rows ?? []) {
     const snap = snapMap.get(row.id);
 
-    if (row.deaths > row.cases) {
+    // Same guard-family arithmetic as the sync crons (dateFloorGuard etc.),
+    // shared via lib/outbreak-guards.ts (2026-08-02) as raw threshold-
+    // parameterized predicates rather than the write-time guard functions
+    // themselves — this cron compares a row against YESTERDAY's snapshot at
+    // its own, deliberately different thresholds (see that file's top
+    // comment), not an incoming report against the current row.
+    if (deathsExceedCases(row.deaths, row.cases)) {
       anomalies.push({ row, type: "deaths_gt_cases", detail: `${row.deaths} décès > ${row.cases} cas`, snap });
       continue;
     }
-    if (row.cases === 0 && row.deaths === 0 && !row.is_seed) {
+    if (isZeroData(row.cases, row.deaths) && !row.is_seed) {
       anomalies.push({ row, type: "zero_data", detail: "0 cas et 0 décès (ligne pipeline)", snap });
       continue;
     }
     if (snap && snap.cases > 100) {
       const drop = (snap.cases - row.cases) / snap.cases;
-      if (drop > 0.6) {
+      if (isCollapse(row.cases, snap.cases, { minPreviousCases: 100, ratio: 0.4 })) {
         anomalies.push({ row, type: "large_drop", detail: `${snap.cases} → ${row.cases} cas (−${Math.round(drop * 100)}%)`, snap });
         continue;
       }
       const spike = (row.cases - snap.cases) / snap.cases;
-      if (spike > 9 && row.cases > 5000) {
+      if (isSpike(row.cases, snap.cases, { ratio: 10, minCurrentCases: 5000 })) {
         anomalies.push({ row, type: "spike", detail: `${snap.cases} → ${row.cases} cas (+${Math.round(spike * 100)}%)`, snap });
       }
     }

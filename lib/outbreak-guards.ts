@@ -25,6 +25,19 @@
  * The `source_priority` ownership guard is deliberately NOT part of this: it
  * belongs on the `.update()` chain itself (`.lte("source_priority", N)` +
  * `.select("id")`), where the DB enforces it atomically.
+ *
+ * Below the guard functions sit four raw, threshold-parameterized predicates
+ * (isCollapse, isSpike, deathsExceedCases, isZeroData) — the arithmetic each
+ * guard wraps. Added 2026-08-02 so `data-quality`'s daily self-audit could
+ * stop duplicating the same four checks a fifth time: it compares an active
+ * row against YESTERDAY's snapshot rather than an incoming report against the
+ * current row, and at deliberately different thresholds (e.g. collapse at
+ * <40% instead of <30%, spike at >10× with a 5000-case floor instead of >3×)
+ * tuned for a same-day self-check rather than cross-source validation at
+ * ingest time. Sharing only the arithmetic — not the thresholds, and not the
+ * write-time-specific exclusions like "never flag cases=0 as a collapse,
+ * that's zeroCaseGuard's job" — keeps data-quality's actual sensitivity
+ * unchanged while still removing the duplicated formulas.
  */
 
 export interface GuardedRow {
@@ -46,6 +59,26 @@ const COLLAPSE_MIN_CASES = 100;
 const COLLAPSE_RATIO     = 0.3;
 const SPIKE_RATIO        = 3;
 
+/** Raw "did cases drop by more than (1-ratio) on an already-substantial row" check — no exclusions, no message. Threshold is caller-supplied so write-time guards and data-quality's self-audit can each use their own. */
+export function isCollapse(currentCases: number, previousCases: number, opts: { minPreviousCases: number; ratio: number }): boolean {
+  return previousCases > opts.minPreviousCases && currentCases < previousCases * opts.ratio;
+}
+
+/** Raw "did cases jump by more than ratio×" check, with an optional floor on the new value. Threshold is caller-supplied — see isCollapse. */
+export function isSpike(currentCases: number, previousCases: number, opts: { ratio: number; minCurrentCases?: number }): boolean {
+  return previousCases > 0 && currentCases > previousCases * opts.ratio && currentCases > (opts.minCurrentCases ?? 0);
+}
+
+/** Raw "deaths exceed cases" check — no `cases > 0` exclusion (see implausibleDeathsGuard, which adds one for write-time use). */
+export function deathsExceedCases(deaths: number, cases: number): boolean {
+  return deaths > cases;
+}
+
+/** Raw "both figures are zero" check. */
+export function isZeroData(cases: number, deaths: number): boolean {
+  return cases === 0 && deaths === 0;
+}
+
 /**
  * Never let a stale re-fetch overwrite a row that already reflects a more
  * recent report. Only applied when both sides carry a date; a missing date on
@@ -62,16 +95,23 @@ export function dateFloorGuard(incoming: GuardedIncoming, existing: GuardedRow):
 /** A >3× jump is almost certainly a parsing anomaly, not a real surge. */
 export function spikeGuard(incoming: GuardedIncoming, existing: GuardedRow): string | null {
   const exCases = existing.cases ?? 0;
-  if (incoming.cases > 0 && exCases > 0 && incoming.cases > exCases * SPIKE_RATIO) {
+  if (isSpike(incoming.cases, exCases, { ratio: SPIKE_RATIO })) {
     return `guard:spike — parsed ${incoming.cases} vs existing ${exCases} (>${SPIKE_RATIO}x)`;
   }
   return null;
 }
 
-/** A >70% drop on an already-substantial row — e.g. a source article covering only one region while the DB holds the global total. */
+/**
+ * A >70% drop on an already-substantial row — e.g. a source article covering
+ * only one region while the DB holds the global total. Requires
+ * `incoming.cases > 0` on top of the raw isCollapse() check: a drop to
+ * exactly 0 is zeroCaseGuard's job (it produces a more specific message), not
+ * this one's — unlike data-quality's equivalent check, which has no such
+ * exclusion (see isCollapse's own doc comment).
+ */
 export function collapseGuard(incoming: GuardedIncoming, existing: GuardedRow): string | null {
   const exCases = existing.cases ?? 0;
-  if (exCases > COLLAPSE_MIN_CASES && incoming.cases > 0 && incoming.cases < exCases * COLLAPSE_RATIO) {
+  if (incoming.cases > 0 && isCollapse(incoming.cases, exCases, { minPreviousCases: COLLAPSE_MIN_CASES, ratio: COLLAPSE_RATIO })) {
     return `guard:collapse — parsed ${incoming.cases} vs existing ${exCases} (<30%)`;
   }
   return null;
@@ -112,7 +152,7 @@ export function zeroDeathGuard(incoming: GuardedIncoming, existing: GuardedRow):
  */
 export function bothZeroGuard(incoming: GuardedIncoming, existing: GuardedRow): string | null {
   const exCases = existing.cases ?? 0;
-  if (incoming.cases === 0 && incoming.deaths === 0 && exCases > 0) {
+  if (isZeroData(incoming.cases, incoming.deaths) && exCases > 0) {
     return `guard:zero-count — notice has no case data, preserving existing ${exCases}/${existing.deaths ?? 0}`;
   }
   return null;
@@ -141,7 +181,7 @@ export function deathsNeverDecreaseGuard(incoming: GuardedIncoming, existing: Gu
  * anomaly (mismatched table columns, a rate mistaken for a count, etc).
  */
 export function implausibleDeathsGuard(incoming: GuardedIncoming): string | null {
-  if (incoming.deaths > incoming.cases && incoming.cases > 0) {
+  if (incoming.cases > 0 && deathsExceedCases(incoming.deaths, incoming.cases)) {
     return `guard:deaths>cases — ${incoming.deaths}d > ${incoming.cases}c`;
   }
   return null;
