@@ -6,6 +6,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
 import { errorMessage } from "@/lib/error";
+import { regressionGuard } from "@/lib/outbreak-guards";
 import * as Sentry from "@sentry/nextjs";
 
 export const dynamic     = "force-dynamic";
@@ -426,8 +427,41 @@ async function runCheckMpoxSitrep(_req: NextRequest, supabase: SupabaseClient) {
   const drcData = result?.drc    ?? null;
   console.log(`[mpox] Extracted global:`, data, "DRC:", drcData);
 
+  // Read the two target rows before writing. This cron updates them by
+  // hardcoded id and never looked at their current figures, so it had NO
+  // anti-regression guard at all — not even a date floor: whatever the sitrep
+  // PDF parser returned was written straight onto the global Mpox row and the
+  // DRC PHEIC row. Both are public-facing PHEIC rows, and the parser class is
+  // the one that mis-read a footnote as Guatemala's death toll on 2026-08-01
+  // (sync-paho-alerts, 26 → 4). Guards from lib/outbreak-guards.ts below.
+  const { data: guardRows, error: guardFetchErr } = await supabase
+    .from("outbreaks")
+    .select("id, cases, deaths, date")
+    .in("id", [MPOX_MONDIAL_ID, MPOX_DRC_ID]);
+  if (guardFetchErr) {
+    console.error("[mpox] guard pre-read failed:", guardFetchErr.message);
+    Sentry.captureException(new Error(`[mpox] guard pre-read failed: ${guardFetchErr.message}`), { tags: { cron: "check-mpox-sitrep" } });
+  }
+  // A failed pre-read must not silently disable the guards — treat an
+  // unreadable row as unguardable and refuse the write rather than fall open.
+  type MpoxGuardRow = { id: string; cases: number | null; deaths: number | null; date: string | null };
+  const rowById = new Map<string, MpoxGuardRow>(
+    ((guardRows ?? []) as MpoxGuardRow[]).map((r) => [String(r.id), r]),
+  );
+  const globalRow = rowById.get(String(MPOX_MONDIAL_ID)) ?? null;
+  const drcRow    = rowById.get(String(MPOX_DRC_ID)) ?? null;
+
+  const globalGuard = data
+    ? (globalRow ? regressionGuard(data, globalRow) : "guard:row-unreadable — refusing to write blind")
+    : null;
+  const drcGuard = drcData
+    ? (drcRow ? regressionGuard(drcData, drcRow) : "guard:row-unreadable — refusing to write blind")
+    : null;
+  if (globalGuard) console.warn(`[mpox] global: ${globalGuard} — skipping update`);
+  if (drcGuard)    console.warn(`[mpox] DRC: ${drcGuard} — skipping update`);
+
   // Step 4a: auto-update DB if extraction succeeded
-  if (data) {
+  if (data && !globalGuard) {
     const desc = buildGlobalDescriptions(latest.num, data.cases, data.deaths, data.date);
     // .select("id") so a source_priority guard that blocks the write (row now
     // owned by a higher-priority source) is visible as 0 affected rows —
@@ -465,14 +499,19 @@ async function runCheckMpoxSitrep(_req: NextRequest, supabase: SupabaseClient) {
       if (adminEmail && isRealProduction) emailSent = await sendEmail(adminEmail, subject, html);
     }
   } else {
-    // Step 4b: fallback — manual notification
-    console.log("[mpox] PDF extraction failed — sending manual notification.");
+    // Step 4b: fallback — manual notification. Reached both when extraction
+    // failed outright and when it succeeded but the anti-regression guard
+    // refused the figures; either way the row needs a human look, which is
+    // exactly what this email asks for.
+    console.log(globalGuard
+      ? `[mpox] extraction blocked by guard (${globalGuard}) — sending manual notification.`
+      : "[mpox] PDF extraction failed — sending manual notification.");
     const { subject, html } = emailManualNeeded(latest);
     if (adminEmail && isRealProduction) emailSent = await sendEmail(adminEmail, subject, html);
   }
 
   // Step 4c: also update DRC PHEIC row if DRC data extracted
-  if (drcData) {
+  if (drcData && !drcGuard) {
     const drcDesc = buildDrcDescriptions(latest.num, drcData.cases, drcData.deaths, drcData.date);
     const { data: drcUpdatedRows, error: drcErr } = await supabase
       .from("outbreaks")
@@ -516,17 +555,32 @@ async function runCheckMpoxSitrep(_req: NextRequest, supabase: SupabaseClient) {
   // DRC PHEIC rows — the most-watched rows in the whole dataset) previously
   // only reached console.error on failure, invisible to both Sentry and cron
   // status.
+  // A guard block must not pass as a clean run: mpox_last_sitrep_url is
+  // upserted just above whatever happened, so this sitrep will never be
+  // reprocessed — a silently-blocked write would freeze the row on the old
+  // figures with nothing to show for it. Surface it as an erroring cron so it
+  // reaches the daily health-check, and in Sentry.
+  const guardBlocked = [globalGuard, drcGuard].filter(Boolean) as string[];
+  if (guardBlocked.length > 0) {
+    Sentry.captureMessage(
+      `[mpox] sitrep N°${latest.num} blocked by anti-regression guard: ${guardBlocked.join(" | ")}`,
+      "warning",
+    );
+  }
   const emailExpected = !!adminEmail && isRealProduction;
   await logCronRun(
     supabase,
     "check-mpox-sitrep",
-    (emailExpected && !emailSent) || dbUpdateFailed ? "error" : "ok",
-    (data ? 1 : 0) + (drcData ? 1 : 0),
-    dbUpdateFailed ? "mpox/DRC PHEIC row update failed — see Sentry" : undefined,
+    (emailExpected && !emailSent) || dbUpdateFailed || guardBlocked.length > 0 ? "error" : "ok",
+    (data && !globalGuard ? 1 : 0) + (drcData && !drcGuard ? 1 : 0),
+    guardBlocked.length > 0
+      ? `écriture bloquée par le garde anti-régression : ${guardBlocked.join(" | ")}`
+      : dbUpdateFailed ? "mpox/DRC PHEIC row update failed — see Sentry" : undefined,
   );
 
   return NextResponse.json({
-    status:      data ? "auto_updated" : "manual_needed",
+    status:      guardBlocked.length > 0 ? "blocked_by_guard" : data ? "auto_updated" : "manual_needed",
+    guardBlocked: guardBlocked.length > 0 ? guardBlocked : undefined,
     sitrep:      latest.num,
     url:         latest.url,
     pdfUrl:      pdfUrl ?? null,

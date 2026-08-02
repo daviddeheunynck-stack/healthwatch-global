@@ -22,6 +22,7 @@ import { normalizeDisease } from "@/lib/disease-data";
 import { findCountry } from "@/lib/geo-data";
 import { assessRisk } from "@/lib/outbreak-parser";
 import { errorMessage } from "@/lib/error";
+import { regressionGuard } from "@/lib/outbreak-guards";
 
 export const dynamic     = "force-dynamic";
 export const maxDuration = 120;
@@ -290,6 +291,17 @@ async function runSyncNcdc(_req: NextRequest, supabase: SupabaseClient) {
         // could still overwrite a more recent row. Same guard family as sync-who-afro.
         if (sit.date < existingRow.date) {
           log.push({ label, status: "skip", detail: `older sitrep (${sit.date}) than existing (${existingRow.date})` });
+          results.skipped++;
+          continue;
+        }
+        // Collapse / zero-over-real guards (lib/outbreak-guards.ts) — the date
+        // floor above was the only regression guard on this PDF sitrep parser.
+        const guardReason = regressionGuard(
+          { cases: ex.confirmed, deaths: ex.deaths, date: sit.date },
+          existingRow,
+        );
+        if (guardReason) {
+          log.push({ label, status: "skip", detail: guardReason });
           results.skipped++;
           continue;
         }

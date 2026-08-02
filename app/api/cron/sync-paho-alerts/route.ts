@@ -29,6 +29,7 @@ import { extractNumbers, assessRisk } from "@/lib/outbreak-parser";
 import { extractAdmin1, geocodeAdmin1 } from "@/lib/geo-extract";
 import { errorMessage } from "@/lib/error";
 import { translateDescription } from "@/lib/translate";
+import { regressionGuard } from "@/lib/outbreak-guards";
 import { truncateAtSentence } from "@/lib/truncate-text";
 
 export const dynamic = "force-dynamic";
@@ -768,6 +769,19 @@ async function upsertItems(
       // more recent row. Same guard family as sync-cdc-notices.
       if (item.date < existing.date) {
         log.push({ label, status: "skip", detail: `older item (${item.date}) than existing (${existing.date})` });
+        results.skipped++;
+        continue;
+      }
+
+      // Collapse / zero-over-real guards (lib/outbreak-guards.ts). This cron
+      // reads linearized PDF sitrep tables, the most parse-fragile source in
+      // the repo — on 2026-08-01 a footnote digit was captured as Guatemala's
+      // death toll (26 → 4) and stood for 3+ weeks. The date floor above was
+      // the only regression guard here; sync-who-afro/sync-cdc-notices have
+      // had the full set since 2026-07-16.
+      const guardReason = regressionGuard(item, existing);
+      if (guardReason) {
+        log.push({ label, status: "skip", detail: guardReason });
         results.skipped++;
         continue;
       }

@@ -10,6 +10,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { errorMessage } from "@/lib/error";
+import { regressionGuard } from "@/lib/outbreak-guards";
 import * as Sentry from "@sentry/nextjs";
 
 export const dynamic     = "force-dynamic";
@@ -285,6 +286,16 @@ async function updateSatelliteCountry(supabase: any, countryEn: string, cases: n
     console.log(`[drc-sitrep] ${countryEn}: already up to date (${cases}/${deaths})`);
     return false;
   }
+  // Date floor + collapse / zero-over-real guards (lib/outbreak-guards.ts).
+  // This updater had none of them: it wrote whatever the sitrep PDF parser
+  // produced straight onto the satellite country rows, with only the
+  // source_priority ownership check on the chain below. Those are the very
+  // rows behind the three real Ebola/DRC overwrites of 2026-07-15.
+  const guardReason = regressionGuard({ cases, deaths, date }, row);
+  if (guardReason) {
+    console.warn(`[drc-sitrep] ${countryEn}: ${guardReason} — skipping`);
+    return false;
+  }
   // .select("id") so a source_priority guard that blocks the write (row now
   // owned by a higher-priority source) is visible as 0 affected rows —
   // without it, a blocked update still returns error: null and this function
@@ -467,6 +478,21 @@ async function runSyncDrcSitrep(_req: NextRequest, supabase: SupabaseClient) {
   console.log(`[drc-sitrep] Extracted:`, data);
 
   let dbUpdateFailed = false;
+
+  // Same anti-regression guards as updateSatelliteCountry() above — this is the
+  // priority-10 Ebola/DRC PHEIC row, the single most-overwritten row in the repo.
+  const mainGuardReason = data ? regressionGuard(data, outbreakRow) : null;
+  if (mainGuardReason) {
+    console.warn(`[drc-sitrep] main row: ${mainGuardReason} — skipping update`);
+    Sentry.captureMessage(`[drc-sitrep] sitrep N°${latest.num} blocked: ${mainGuardReason}`, "warning");
+    // Logged as "error", not "ok": returning here skips the
+    // ebola_drc_last_sitrep_num bookkeeping below, so this sitrep is retried on
+    // every subsequent run. A persistently-bad parse would otherwise loop
+    // forever while the cron kept reporting healthy — this way the daily
+    // health-check surfaces it.
+    await logCronRun(supabase, "sync-drc-sitrep", "error", 0, mainGuardReason);
+    return NextResponse.json({ status: "blocked_by_guard", reason: mainGuardReason, sitrep: latest.num });
+  }
 
   if (data) {
     // Step 4a: auto-update DB at source_priority 10
