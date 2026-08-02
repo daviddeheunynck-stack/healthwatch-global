@@ -7,9 +7,19 @@
  *   2. Skip users already alerted at this outbreak's current risk_level with
  *      no case surge since (outbreak_alert_log tracks the state we last
  *      alerted each user at, not just whether we ever alerted them)
- *   3. Send a localized email — "new outbreak" copy on first contact,
- *      "update" copy on a later escalation/surge
- *   4. Upsert outbreak_alert_log with the new state
+ *   3. Collect every qualifying outbreak per user across all their regions,
+ *      then send ONE localized email per user — a single-outbreak email if
+ *      only one qualifies, otherwise a digest listing all of them ("new" vs
+ *      "update" badge per item)
+ *   4. Upsert outbreak_alert_log with the new state, one row per outbreak
+ *
+ * Since 2026-08-02: batches into one email per user per run instead of one
+ * email per (user, outbreak) pair. A single new signup used to match every
+ * outbreak the daily sync had just touched across all 5 regions — up to 97
+ * separate emails in one run for one inbox — which correlates with the only
+ * two real trial users who unsubscribed (one within 36h of provisioning,
+ * before ever logging in). See project_alert_onboarding_batch_flood_2026_08_02
+ * in memory.
  *
  * Before 2026-07-23 this only looked at created_at, so an outbreak sitting
  * active and getting worse day after day (Ebola/Uganda-DRC, cholera/Chad,
@@ -27,7 +37,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
-import { buildOutbreakAlertEmail } from "@/lib/alert-emails";
+import { buildOutbreakAlertEmail, buildOutbreakDigestEmail, type DigestItem } from "@/lib/alert-emails";
 import { buildTrialValueNudgeEmail } from "@/lib/trial-value-nudge-email";
 import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 import * as Sentry from "@sentry/nextjs";
@@ -165,9 +175,33 @@ async function runRegionalAlerts(_req: NextRequest, supabase: SupabaseClient) {
   let failed = 0;
   let blockedSkipped = 0;
   let trialNudgesSent = 0;
+  let digestEmailsSent = 0;
   const sentByReason: Record<AlertReason, number> = { new: 0, escalated: 0, surge: 0 };
+  const now = Date.now();
 
-  // ── 3. For each region with new outbreaks ─────────────────────────────────
+  type OutbreakRow = (typeof candidateOutbreaks)[number];
+  type ProfileRow = {
+    id: string;
+    email: string;
+    plan: string;
+    trial_ends_at: string | null;
+    stripe_subscription_id: string | null;
+    alert_locale: string | null;
+    slack_webhook_url: string | null;
+    is_pilot: boolean | null;
+    pilot_organization: string | null;
+    trial_value_email_sent_at: string | null;
+    email_blocked_at: string | null;
+  };
+  type MatchedItem = { outbreak: OutbreakRow; region: string; reason: AlertReason };
+
+  // ── 3. For each region, find every qualifying (user, outbreak) match ──────
+  // Collected here instead of sent immediately, so a user subscribed across
+  // multiple regions — or matching many outbreaks in one region — gets ONE
+  // email for the whole run rather than one per outbreak (see file header).
+  const userProfiles = new Map<string, ProfileRow>();
+  const userItems = new Map<string, MatchedItem[]>();
+
   for (const [region, outbreaks] of byRegion) {
     // Find paid users subscribed to this region, with their severity threshold
     const { data: subscribers } = await supabase
@@ -190,7 +224,6 @@ async function runRegionalAlerts(_req: NextRequest, supabase: SupabaseClient) {
       .in("plan", ["starter", "pro", "team", "enterprise"]);
 
     // Apply trial expiry guard: skip users whose trial has ended and have no active Stripe sub
-    const now = Date.now();
     const nonFreeProfiles = (rawProfiles ?? []).filter((p) => resolvedPlan(p) !== "free");
 
     // Brevo-blocked addresses (hard bounce, or their own List-Unsubscribe) —
@@ -202,14 +235,7 @@ async function runRegionalAlerts(_req: NextRequest, supabase: SupabaseClient) {
 
     if (profiles.length === 0) continue;
 
-    const localeMap = new Map<string, string>();
-    const profileMap = new Map<string, (typeof profiles)[number]>();
-    for (const p of profiles) {
-      localeMap.set(p.id, (p.alert_locale as string | null) ?? "en");
-      profileMap.set(p.id, p);
-    }
-
-    for (const profile of profiles) {
+    for (const profile of profiles as ProfileRow[]) {
       const minRisk = minRiskByUser.get(profile.id) ?? "low";
       for (const outbreak of outbreaks) {
         // Skip outbreaks below this user's configured severity threshold —
@@ -252,151 +278,172 @@ async function runRegionalAlerts(_req: NextRequest, supabase: SupabaseClient) {
           continue;
         }
 
-        const locale = localeMap.get(profile.id) ?? "en";
-        const rl     = REGION_LABELS[locale] ?? REGION_LABELS.en;
-
-        // Resolve localized disease / country names
-        const disease = getLocalizedDisease(outbreak, locale);
-        const country = getLocalizedCountry(outbreak, locale);
-
-        const regionLabel  = rl[region] ?? region;
-        const riskEmoji    = outbreak.risk_level === "high" ? "🔴" : outbreak.risk_level === "medium" ? "🟡" : "🟢";
-        const dashboardUrl = `${APP_URL}/${locale}`;
-        const outbreakUrl  = `${APP_URL}/${locale}/outbreak/${outbreak.id}`;
-        const unsubUrl     = `${APP_URL}/${locale}/account#regional-alerts`;
-
-        try {
-          // ── Email ───────────────────────────────────────────────────────
-          // Build + send BEFORE writing the log. If either throws (e.g. a
-          // template bug on unexpected null data), we must not upsert
-          // outbreak_alert_log — that row is what suppresses future re-alerts
-          // for this user+outbreak, so logging a send that never went out
-          // would silently and permanently swallow the alert. Letting the
-          // exception propagate to the catch below leaves no log row, so the
-          // next run retries this outbreak as "new" instead of losing it.
-          const { subject, html } = buildOutbreakAlertEmail(
-            locale,
-            regionLabel,
-            {
-              disease,
-              country,
-              risk_level: outbreak.risk_level,
-              date:       outbreak.date,
-              cases:      outbreak.cases,
-              deaths:     outbreak.deaths,
-            },
-            dashboardUrl,
-            outbreakUrl,
-            unsubUrl,
-            reason === "new" ? "new" : "update"
-          );
-          if (isRealProduction) {
-            await sendEmail(profile.email, subject, html);
-          }
-
-          // Upsert (not insert): the same (user_id, outbreak_id) row gets its
-          // risk_level/cases_at_alert overwritten each time we re-alert, since
-          // the primary key only allows one row per user+outbreak.
-          const { error: logErr } = await supabase.from("outbreak_alert_log").upsert(
-            {
-              user_id:        profile.id,
-              outbreak_id:    String(outbreak.id),
-              risk_level:     outbreak.risk_level,
-              cases_at_alert: outbreak.cases ?? null,
-              sent_at:        new Date().toISOString(),
-            },
-            { onConflict: "user_id,outbreak_id" }
-          );
-          if (logErr) {
-            console.error(`[regional-alerts] log upsert failed for ${profile.id}/${outbreak.id}:`, logErr.message);
-            failed++;
-            continue;
-          }
-
-          // ── Slack / Teams (fire-and-forget, non-blocking) ───────────────
-          const slackUrl: string | null = profile.slack_webhook_url ?? null;
-          if (slackUrl && isRealProduction) {
-            const sc = SLACK_COPY[locale] ?? SLACK_COPY.en;
-            const slackBody = {
-              blocks: [
-                {
-                  type: "section",
-                  text: {
-                    type: "mrkdwn",
-                    text: `${riskEmoji} *${reason === "new" ? sc.newOutbreak : sc.update} — ${regionLabel}*\n*${disease}* · ${country}`,
-                  },
-                },
-                {
-                  type: "context",
-                  elements: [
-                    { type: "mrkdwn", text: `${sc.risk}: *${outbreak.risk_level}* · ${sc.date}: ${outbreak.date}${outbreak.cases ? ` · ${sc.cases}: ${outbreak.cases.toLocaleString("en")}` : ""}` },
-                  ],
-                },
-                {
-                  type: "actions",
-                  elements: [
-                    {
-                      type: "button",
-                      text: { type: "plain_text", text: sc.viewBtn },
-                      url: outbreakUrl,
-                      style: "danger",
-                    },
-                  ],
-                },
-              ],
-            };
-            fetch(slackUrl, {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify(slackBody),
-            }).catch((e) => console.error("[regional-alerts] Slack post failed:", e));
-          }
-
-          sent++;
-          sentByReason[reason]++;
-
-          // ── Usage-triggered trial value nudge ──────────────────────────
-          // Fires once, on this user's first-ever "new" alert, instead of
-          // only ever prompting on the fixed J-3/J-1 calendar reminder
-          // (trial-reminders cron) unrelated to whether they've seen the
-          // product actually work. Self-serve trials only (no Stripe sub
-          // yet, still within trial_ends_at) — pilots get the org-specific
-          // Team-plan framing via buildTrialValueNudgeEmail's isPilot branch.
-          const isActiveTrial =
-            !profile.stripe_subscription_id &&
-            !!profile.trial_ends_at &&
-            new Date(profile.trial_ends_at).getTime() > now;
-          if (reason === "new" && isActiveTrial && !profile.trial_value_email_sent_at) {
-            try {
-              const { subject: nudgeSubject, html: nudgeHtml } = buildTrialValueNudgeEmail(
-                locale,
-                { disease, country, riskLevel: (outbreak.risk_level ?? "medium") as "high" | "medium" | "low" },
-                { isPilot: !!profile.is_pilot, organization: (profile.pilot_organization as string | null) ?? null }
-              );
-              if (isRealProduction) {
-                await sendEmail(profile.email, nudgeSubject, nudgeHtml);
-              }
-              const nowIso = new Date().toISOString();
-              await supabase.from("profiles").update({ trial_value_email_sent_at: nowIso }).eq("id", profile.id);
-              // Prevent a 2nd send this same run if this user matches another
-              // outbreak later in the loop (profile is shared by reference).
-              profile.trial_value_email_sent_at = nowIso;
-              trialNudgesSent++;
-            } catch (nudgeErr) {
-              console.error(`[regional-alerts] trial value nudge failed for ${profile.email}:`, nudgeErr);
-              Sentry.captureException(nudgeErr, { tags: { cron: "regional-alerts", user_id: profile.id, part: "trial-value-nudge" } });
-            }
-          }
-        } catch (err) {
-          console.error(`[regional-alerts] failed to send to ${profile.email}:`, err);
-          Sentry.captureException(err, { tags: { cron: "regional-alerts", user_id: profile.id, outbreak_id: String(outbreak.id) } });
-          failed++;
-        }
-
-        // Respect Brevo rate limit
-        await new Promise((r) => setTimeout(r, 150));
+        userProfiles.set(profile.id, profile);
+        const items = userItems.get(profile.id) ?? [];
+        items.push({ outbreak, region, reason });
+        userItems.set(profile.id, items);
       }
     }
+  }
+
+  // ── 4. One email per user: single-outbreak template if only one item,
+  //       digest template otherwise ─────────────────────────────────────────
+  for (const [userId, items] of userItems) {
+    const profile = userProfiles.get(userId)!;
+    const locale  = (profile.alert_locale as string | null) ?? "en";
+    const rl      = REGION_LABELS[locale] ?? REGION_LABELS.en;
+
+    const dashboardUrl = `${APP_URL}/${locale}`;
+    const unsubUrl      = `${APP_URL}/${locale}/account#regional-alerts`;
+
+    const enriched: (DigestItem & { outbreak: OutbreakRow; region: string })[] = items.map(
+      ({ outbreak, region, reason }) => ({
+        outbreak,
+        region,
+        regionLabel: rl[region] ?? region,
+        disease:     getLocalizedDisease(outbreak, locale),
+        country:     getLocalizedCountry(outbreak, locale),
+        risk_level:  outbreak.risk_level,
+        date:        outbreak.date,
+        cases:       outbreak.cases,
+        deaths:      outbreak.deaths,
+        outbreakUrl: `${APP_URL}/${locale}/outbreak/${outbreak.id}`,
+        reason,
+      })
+    );
+
+    try {
+      // ── Email ─────────────────────────────────────────────────────────
+      // Build + send BEFORE writing any log rows. If either throws (e.g. a
+      // template bug on unexpected null data), we must not upsert
+      // outbreak_alert_log — those rows are what suppress future re-alerts
+      // for this user+outbreak, so logging a send that never went out would
+      // silently and permanently swallow the alert. Letting the exception
+      // propagate to the catch below leaves no log rows, so the next run
+      // retries every item in this batch as "new" instead of losing them.
+      let subject: string, html: string;
+      if (enriched.length === 1) {
+        const only = enriched[0];
+        ({ subject, html } = buildOutbreakAlertEmail(
+          locale,
+          only.regionLabel,
+          { disease: only.disease, country: only.country, risk_level: only.risk_level, date: only.date, cases: only.cases, deaths: only.deaths },
+          dashboardUrl,
+          only.outbreakUrl,
+          unsubUrl,
+          only.reason === "new" ? "new" : "update"
+        ));
+      } else {
+        ({ subject, html } = buildOutbreakDigestEmail(locale, enriched, dashboardUrl, unsubUrl));
+        digestEmailsSent++;
+      }
+      if (isRealProduction) {
+        await sendEmail(profile.email, subject, html);
+      }
+
+      // Upsert (not insert) one row per outbreak in this batch: the same
+      // (user_id, outbreak_id) row gets its risk_level/cases_at_alert
+      // overwritten each time we re-alert, since the primary key only
+      // allows one row per user+outbreak.
+      for (const item of enriched) {
+        const { error: logErr } = await supabase.from("outbreak_alert_log").upsert(
+          {
+            user_id:        profile.id,
+            outbreak_id:    String(item.outbreak.id),
+            risk_level:     item.outbreak.risk_level,
+            cases_at_alert: item.outbreak.cases ?? null,
+            sent_at:        new Date().toISOString(),
+          },
+          { onConflict: "user_id,outbreak_id" }
+        );
+        if (logErr) {
+          console.error(`[regional-alerts] log upsert failed for ${profile.id}/${item.outbreak.id}:`, logErr.message);
+          failed++;
+          continue;
+        }
+
+        // ── Slack / Teams (fire-and-forget, non-blocking) ─────────────────
+        const slackUrl: string | null = profile.slack_webhook_url ?? null;
+        if (slackUrl && isRealProduction) {
+          const sc = SLACK_COPY[locale] ?? SLACK_COPY.en;
+          const riskEmoji = item.risk_level === "high" ? "🔴" : item.risk_level === "medium" ? "🟡" : "🟢";
+          const slackBody = {
+            blocks: [
+              {
+                type: "section",
+                text: {
+                  type: "mrkdwn",
+                  text: `${riskEmoji} *${item.reason === "new" ? sc.newOutbreak : sc.update} — ${item.regionLabel}*\n*${item.disease}* · ${item.country}`,
+                },
+              },
+              {
+                type: "context",
+                elements: [
+                  { type: "mrkdwn", text: `${sc.risk}: *${item.risk_level}* · ${sc.date}: ${item.date}${item.cases ? ` · ${sc.cases}: ${item.cases.toLocaleString("en")}` : ""}` },
+                ],
+              },
+              {
+                type: "actions",
+                elements: [
+                  {
+                    type: "button",
+                    text: { type: "plain_text", text: sc.viewBtn },
+                    url: item.outbreakUrl,
+                    style: "danger",
+                  },
+                ],
+              },
+            ],
+          };
+          fetch(slackUrl, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(slackBody),
+          }).catch((e) => console.error("[regional-alerts] Slack post failed:", e));
+        }
+
+        sent++;
+        sentByReason[item.reason]++;
+      }
+
+      // ── Usage-triggered trial value nudge ────────────────────────────────
+      // Fires once, on this user's first-ever "new" alert in this batch,
+      // instead of only ever prompting on the fixed J-3/J-1 calendar
+      // reminder (trial-reminders cron) unrelated to whether they've seen
+      // the product actually work. Self-serve trials only (no Stripe sub
+      // yet, still within trial_ends_at) — pilots get the org-specific
+      // Team-plan framing via buildTrialValueNudgeEmail's isPilot branch.
+      const isActiveTrial =
+        !profile.stripe_subscription_id &&
+        !!profile.trial_ends_at &&
+        new Date(profile.trial_ends_at).getTime() > now;
+      const firstNew = enriched.find((item) => item.reason === "new");
+      if (firstNew && isActiveTrial && !profile.trial_value_email_sent_at) {
+        try {
+          const { subject: nudgeSubject, html: nudgeHtml } = buildTrialValueNudgeEmail(
+            locale,
+            { disease: firstNew.disease, country: firstNew.country, riskLevel: (firstNew.risk_level ?? "medium") as "high" | "medium" | "low" },
+            { isPilot: !!profile.is_pilot, organization: (profile.pilot_organization as string | null) ?? null }
+          );
+          if (isRealProduction) {
+            await sendEmail(profile.email, nudgeSubject, nudgeHtml);
+          }
+          const nowIso = new Date().toISOString();
+          await supabase.from("profiles").update({ trial_value_email_sent_at: nowIso }).eq("id", profile.id);
+          trialNudgesSent++;
+        } catch (nudgeErr) {
+          console.error(`[regional-alerts] trial value nudge failed for ${profile.email}:`, nudgeErr);
+          Sentry.captureException(nudgeErr, { tags: { cron: "regional-alerts", user_id: profile.id, part: "trial-value-nudge" } });
+        }
+      }
+    } catch (err) {
+      console.error(`[regional-alerts] failed to send to ${profile.email}:`, err);
+      Sentry.captureException(err, { tags: { cron: "regional-alerts", user_id: profile.id } });
+      failed += enriched.length;
+    }
+
+    // Respect Brevo rate limit
+    await new Promise((r) => setTimeout(r, 150));
   }
 
   // Was hardcoded "ok" — `failed` (log-upsert failures, send failures) was
@@ -407,6 +454,8 @@ async function runRegionalAlerts(_req: NextRequest, supabase: SupabaseClient) {
     failed > 0 ? `${failed} alerte(s) en échec` : undefined);
   return NextResponse.json({
     candidateOutbreaks: candidateOutbreaks.length,
+    emailsSent: userItems.size,
+    digestEmailsSent,
     sent,
     sentByReason,
     trialNudgesSent,
