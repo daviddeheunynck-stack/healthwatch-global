@@ -4,6 +4,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import * as Sentry from "@sentry/nextjs";
 import { getLocalizedDisease, getLocalizedCountry, getLocalizedDescription } from "@/lib/outbreaks";
 import type { Outbreak } from "@/lib/outbreaks";
 
@@ -62,12 +63,24 @@ export async function GET(
     clean(process.env.SUPABASE_SERVICE_ROLE_KEY)
   );
 
-  const { data } = await supabase
+  const { data, error } = await supabase
     .from("outbreaks")
     .select("id, disease, disease_en, disease_ar, country, country_en, country_ar, risk_level, date, cases, deaths, description, description_fr, description_es, description_ar, description_id")
     .eq("active", true)
     .order("date", { ascending: false })
     .limit(30);
+
+  // A failed query used to fall through silently into a validly-formed, empty
+  // RSS document — indistinguishable from "no active outbreaks right now" to
+  // any subscriber's reader/pipeline, then cached and served for an hour to
+  // every locale visitor. Same pattern already fixed in app/api/rss/route.ts
+  // (commit 772edef) — missed there because that audit was scoped to app/api/*
+  // and this route lives under app/[locale]/feed instead. Found 2026-08-02.
+  if (error) {
+    console.error("[locale-feed] outbreaks query failed:", error.message);
+    Sentry.captureException(new Error(`[locale-feed] query failed: ${error.message}`), { tags: { route: "locale-feed" } });
+    return new NextResponse("Temporarily unavailable", { status: 503, headers: { "Cache-Control": "no-store" } });
+  }
 
   const outbreaks = (data ?? []) as Outbreak[];
 
