@@ -31,8 +31,14 @@ export async function fetchSentryIssues(): Promise<SentryCheck> {
   }
   try {
     const query = encodeURIComponent("is:unresolved lastSeen:-24h");
+    // environment=production keeps local `next dev` servers out of the health
+    // check: sentry.server.config.ts tags them `development`, but without this
+    // filter their crashes land in the same feed as real prod errors and are
+    // indistinguishable without inspecting metadata.filename on the Sentry API.
+    // Preview deployments (VERCEL_ENV=preview) are excluded too, by design —
+    // this endpoint watches the deployment behind the prod alias.
     const res = await fetch(
-      `${baseUrl}api/0/projects/${org}/${project}/issues/?query=${query}&statsPeriod=24h&limit=25`,
+      `${baseUrl}api/0/projects/${org}/${project}/issues/?query=${query}&statsPeriod=24h&environment=production&limit=25`,
       { headers: { Authorization: `Bearer ${token}` } },
     );
     if (!res.ok) {
