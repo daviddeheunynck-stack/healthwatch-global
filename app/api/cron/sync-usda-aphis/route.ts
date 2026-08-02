@@ -12,6 +12,7 @@ import { findCountry } from "@/lib/geo-data";
 import { errorMessage } from "@/lib/error";
 import { scrapeAphisTableauCsv, parseCrosstabCsv, aggregateCrosstabByState } from "@/lib/aphis-tableau-scraper";
 import { truncateAtSentence } from "@/lib/truncate-text";
+import { dateFloorGuard, spikeGuard, collapseGuard, zeroCaseGuard } from "@/lib/outbreak-guards";
 
 export const dynamic     = "force-dynamic";
 // Tableau fallback launches a real headless browser (cold Lambda start +
@@ -425,6 +426,23 @@ async function runUsdaAphis(_req: NextRequest, supabase: SupabaseClient) {
     if (existing) {
       if (sd.herds === existing.cases && safeDate <= existing.date) {
         log.push({ state: sd.state, status: "skip", detail: "unchanged" });
+        results.skipped++;
+        continue;
+      }
+
+      // Had no anti-regression guard of any kind until 2026-08-02, not even a
+      // date floor. `cases` here is a herd count, not a human case count, so
+      // there is no deaths field to guard — date-floor/spike/collapse/zero-case
+      // only, from lib/outbreak-guards.ts.
+      const guardIncoming = { cases: sd.herds, deaths: 0, date: safeDate };
+      const guardExisting = { cases: existing.cases, deaths: null, date: existing.date };
+      const guardReason =
+        dateFloorGuard(guardIncoming, guardExisting) ??
+        spikeGuard(guardIncoming, guardExisting) ??
+        collapseGuard(guardIncoming, guardExisting) ??
+        zeroCaseGuard(guardIncoming, guardExisting);
+      if (guardReason) {
+        log.push({ state: sd.state, status: "skip", detail: guardReason });
         results.skipped++;
         continue;
       }

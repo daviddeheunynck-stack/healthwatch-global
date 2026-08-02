@@ -10,6 +10,7 @@ import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { extractNumbers } from "@/lib/outbreak-parser";
 import { errorMessage } from "@/lib/error";
+import { dateFloorGuard, spikeGuard, collapseGuard, zeroDeathGuard } from "@/lib/outbreak-guards";
 
 export const dynamic   = "force-dynamic";
 export const maxDuration = 60;
@@ -629,6 +630,23 @@ async function runSyncEndemicData(_req: NextRequest, supabase: SupabaseClient) {
     // Guard: refuse if new cases are ≤0 or new date is in the future
     if (found.cases <= 0 || found.date > today) {
       skipped.push({ label: target.label, reason: `implausible result (${found.cases}c, date ${found.date})` });
+      continue;
+    }
+
+    // Had no protection against the current row's own figures at all until
+    // 2026-08-02 — the check above only sanity-checks the fetch result in
+    // isolation, never compares it to what's already stored. Standard
+    // date-floor/spike/collapse/zero-death guard set from
+    // lib/outbreak-guards.ts, same as every other sync cron. No zeroCaseGuard:
+    // `found.cases <= 0` is already excluded by the check above, so it could
+    // never fire here.
+    const guardReason =
+      dateFloorGuard(found, row) ??
+      spikeGuard(found, row) ??
+      collapseGuard(found, row) ??
+      zeroDeathGuard(found, row);
+    if (guardReason) {
+      skipped.push({ label: target.label, reason: guardReason });
       continue;
     }
 
