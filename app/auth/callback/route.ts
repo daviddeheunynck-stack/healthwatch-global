@@ -68,18 +68,6 @@ export async function GET(req: NextRequest) {
           .eq("id", user.id)
           .single();
 
-        // Save locale for OAuth users (Google/GitHub) who bypass signup/page.tsx
-        const inferredLocale = localeFromNext(next);
-        const localeUpdates: Record<string, unknown> = {};
-        if (!profile?.locale && inferredLocale) {
-          localeUpdates.locale = inferredLocale;
-          localeUpdates.alert_locale = inferredLocale;
-        }
-
-        if (Object.keys(localeUpdates).length > 0) {
-          await admin.from("profiles").update(localeUpdates).eq("id", user.id);
-        }
-
         // Activate 14-day Pro trial for users who never had one — routed through
         // the same helper as /api/activate-trial (see lib/activate-trial.ts) so
         // OAuth signups get the same regional-alert enrollment + signup digest as
@@ -94,6 +82,26 @@ export async function GET(req: NextRequest) {
           console.error("[auth/callback] trial activation failed:", err);
           Sentry.captureException(err, { tags: { user_id: user.id } });
           await Sentry.flush(2000);
+        }
+
+        // Save locale for signups that bypass (or lose the race with) the
+        // client-side write in signup/page.tsx: OAuth users, and email/password
+        // users whose confirmation link lands here before any session ever
+        // existed for that first write to pass RLS. Gated on isNewSignup, not
+        // `!profile?.locale` (the old check) — profiles.locale has carried a
+        // DEFAULT 'fr' since migration 20240108000000, so a freshly-created
+        // profile already reads as non-null here and that guard never actually
+        // fired, silently leaving alert_locale stuck on its own DEFAULT 'en'
+        // regardless of the account's real signup locale.
+        const inferredLocale = localeFromNext(next);
+        const localeUpdates: Record<string, unknown> = {};
+        if (isNewSignup && inferredLocale) {
+          localeUpdates.locale = inferredLocale;
+          localeUpdates.alert_locale = inferredLocale;
+        }
+
+        if (Object.keys(localeUpdates).length > 0) {
+          await admin.from("profiles").update(localeUpdates).eq("id", user.id);
         }
 
         // Send welcome email only for OAuth signups — email/password users already

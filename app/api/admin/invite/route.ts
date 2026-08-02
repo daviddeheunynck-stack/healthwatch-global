@@ -105,6 +105,7 @@ export async function POST(req: NextRequest) {
     plan:               "pro",
     trial_ends_at:      trialEnd,
     locale:             locale === "fr" ? "fr" : "en",
+    alert_locale:       locale === "fr" ? "fr" : "en",
     is_pilot:           true,
     pilot_organization: organization,
   }, { onConflict: "id" });
