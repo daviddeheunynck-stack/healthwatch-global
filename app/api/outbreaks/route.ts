@@ -56,16 +56,24 @@ export async function GET(req: NextRequest) {
 
   let query = service
     .from("outbreaks")
-    .select("id, disease_en, disease, country_en, country, region, cases, deaths, is_seed, risk_level, is_pheic, date, updated_at, source, ihr_event_id, event_id, admin1, lat, lng")
+    .select("id, disease_en, disease, country_en, country, region, cases, deaths, is_seed, risk_level, is_pheic, active, date, updated_at, source, ihr_event_id, event_id, admin1, lat, lng")
     .order("cases", { ascending: false })
     .limit(limit);
 
   if (activeRaw === "false") {
     query = query.eq("active", false);
+  } else if (activeRaw === "true") {
+    // Strict — an explicit ?active=true must return only active===true rows, not
+    // the broadened default set below. Previously fell into the same `else`
+    // branch as "no param at all," so a caller asking specifically for active
+    // outbreaks silently got recently-closed ones mixed in too (with no `active`
+    // field in the response to filter them back out). Found 2026-08-02.
+    query = query.eq("active", true);
   } else {
-    // Show active outbreaks OR recent high-priority ones (prio >= 3, updated < 60 days)
-    // Avoids empty map when data-quality cron deactivates resolved DON events while
-    // underlying diseases (Dengue, Cholera, H5N1...) remain epidemiologically relevant.
+    // No `active` param: show active outbreaks OR recent high-priority ones
+    // (prio >= 3, updated < 60 days). Avoids empty map when data-quality cron
+    // deactivates resolved DON events while underlying diseases (Dengue,
+    // Cholera, H5N1...) remain epidemiologically relevant.
     const sixtyDaysAgo = new Date(Date.now() - 60 * 86_400_000).toISOString().split("T")[0];
     query = query.or(`active.eq.true,and(source_priority.gte.3,updated_at.gte.${sixtyDaysAgo})`);
   }
