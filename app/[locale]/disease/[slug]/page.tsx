@@ -658,7 +658,7 @@ export default async function DiseasePage({
                           </span>
                         )}
                         {daysAgo !== null && (
-                          <span className={`ml-1 text-xs font-medium ${ageColor}`}>
+                          <span suppressHydrationWarning className={`ml-1 text-xs font-medium ${ageColor}`}>
                             ({lb.daysAgo(daysAgo)})
                           </span>
                         )}
