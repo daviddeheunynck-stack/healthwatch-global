@@ -42,6 +42,11 @@ const COPY: Record<string, {
   daysAgoToday:    string;
   daysAgoYesterday: string;
   daysAgoN:        (n: number) => string;
+  digestSubject:   (count: number) => string;
+  digestHeadline:  (count: number) => string;
+  digestUnsubNote: string;
+  itemLinkLabel:   string;
+  overflowNote:    (count: number) => string;
 }> = {
   fr: {
     subject:         (d) => `🔴 Alerte maladie : ${d} détecté`,
@@ -57,6 +62,11 @@ const COPY: Record<string, {
     daysAgoToday:    "aujourd'hui",
     daysAgoYesterday: "hier",
     daysAgoN:        (n) => `il y a ${n}j`,
+    digestSubject:   (n) => `🔴 ${n} alertes maladies détectées`,
+    digestHeadline:  (n) => `${n} maladies que vous surveillez ont un foyer actif :`,
+    digestUnsubNote: "Vous recevez cet email car vous surveillez ces maladies sur healthwatch-global.com. Gérez vos alertes dans votre compte.",
+    itemLinkLabel:   "Détails →",
+    overflowNote:    (n) => `+ ${n} autres alertes maladies — consultez le tableau de bord complet.`,
   },
   en: {
     subject:         (d) => `🔴 Disease alert: ${d} detected`,
@@ -72,6 +82,11 @@ const COPY: Record<string, {
     daysAgoToday:    "today",
     daysAgoYesterday: "yesterday",
     daysAgoN:        (n) => `${n}d ago`,
+    digestSubject:   (n) => `🔴 ${n} disease alerts detected`,
+    digestHeadline:  (n) => `${n} diseases you're monitoring have an active outbreak:`,
+    digestUnsubNote: "You receive this email because you're monitoring these diseases on healthwatch-global.com. Manage your alerts from your account.",
+    itemLinkLabel:   "Details →",
+    overflowNote:    (n) => `+ ${n} more disease alerts — see the full dashboard.`,
   },
   es: {
     subject:         (d) => `🔴 Alerta de enfermedad: ${d} detectado`,
@@ -87,6 +102,11 @@ const COPY: Record<string, {
     daysAgoToday:    "hoy",
     daysAgoYesterday: "ayer",
     daysAgoN:        (n) => `hace ${n}d`,
+    digestSubject:   (n) => `🔴 ${n} alertas de enfermedades detectadas`,
+    digestHeadline:  (n) => `${n} enfermedades que monitoreas tienen un brote activo:`,
+    digestUnsubNote: "Recibe este correo porque monitorea estas enfermedades en healthwatch-global.com. Gestiona tus alertas desde tu cuenta.",
+    itemLinkLabel:   "Detalles →",
+    overflowNote:    (n) => `+ ${n} alertas de enfermedades más — consulta el panel completo.`,
   },
   ar: {
     subject:         (d) => `🔴 تنبيه مرض: تم اكتشاف ${d}`,
@@ -102,6 +122,11 @@ const COPY: Record<string, {
     daysAgoToday:    "اليوم",
     daysAgoYesterday: "أمس",
     daysAgoN:        (n) => `منذ ${n} أيام`,
+    digestSubject:   (n) => `🔴 ${n} تنبيهات أمراض تم اكتشافها`,
+    digestHeadline:  (n) => `${n} أمراض تراقبها لديها تفشٍّ نشط:`,
+    digestUnsubNote: "تتلقى هذا البريد لأنك تراقب هذه الأمراض على healthwatch-global.com. أدر تنبيهاتك من حسابك.",
+    itemLinkLabel:   "← التفاصيل",
+    overflowNote:    (n) => `+ ${n} تنبيهات أمراض أخرى — راجع لوحة التحكم الكاملة.`,
   },
   id: {
     subject:         (d) => `🔴 Peringatan penyakit: ${d} terdeteksi`,
@@ -117,6 +142,11 @@ const COPY: Record<string, {
     daysAgoToday:    "hari ini",
     daysAgoYesterday: "kemarin",
     daysAgoN:        (n) => `${n}h lalu`,
+    digestSubject:   (n) => `🔴 ${n} peringatan penyakit terdeteksi`,
+    digestHeadline:  (n) => `${n} penyakit yang Anda pantau memiliki wabah aktif:`,
+    digestUnsubNote: "Anda menerima email ini karena memantau penyakit-penyakit ini di healthwatch-global.com. Kelola peringatan Anda dari akun Anda.",
+    itemLinkLabel:   "Detail →",
+    overflowNote:    (n) => `+ ${n} peringatan penyakit lainnya — lihat dasbor lengkap.`,
   },
 };
 
@@ -274,4 +304,116 @@ export function buildDiseaseAlertEmail(
 </html>`;
 
   return { subject, html };
+}
+
+// ─── Digest email (multiple disease alerts in one send) ───────────────────────
+// Sent instead of buildDiseaseAlertEmail whenever more than one outbreak
+// qualifies for the same user's disease subscriptions in the same cron run —
+// same fix and same reasoning as buildOutbreakDigestEmail in lib/alert-emails.ts
+// for regional-alerts (2026-08-02). One email per user per run; capped at
+// MAX_DIGEST_ITEMS_PER_EMAIL (see app/api/cron/disease-alerts/route.ts) with
+// the rest summarized rather than dropped.
+//
+// Unlike the single-outbreak email, this has no one-click unsubscribe link:
+// buildDiseaseAlertEmail's token unsubscribes from ONE disease, but a digest
+// spans however many diseases matched this run — pointing that link at any
+// single one of them would silently unsubscribe the user from diseases they
+// didn't ask to stop tracking. Points to the account page instead.
+
+export interface DiseaseDigestItem {
+  disease: string;
+  country: string;
+  risk_level: string;
+  cases: number;
+  deaths: number | null;
+  date: string;
+  diseaseUrl: string;
+}
+
+export function buildDiseaseAlertDigestEmail(
+  locale: string,
+  items: DiseaseDigestItem[],
+  accountUrl: string,
+  overflowCount = 0
+): { subject: string; html: string } {
+  const c = COPY[locale] ?? COPY.en;
+  const isRtl = locale === "ar";
+  const dir = isRtl ? "rtl" : "ltr";
+  const numLocale = locale === "ar" ? "ar-SA" : (locale || "en");
+  const totalCount = items.length + overflowCount;
+
+  const rows = items
+    .map((item) => {
+      const rs = RISK_STYLE[item.risk_level] ?? RISK_STYLE.medium;
+      const hasData = item.cases > 0;
+      const casesStr = hasData ? item.cases.toLocaleString(numLocale) : c.noData;
+      const deathStr = hasData && item.deaths !== null ? item.deaths.toLocaleString(numLocale) : c.noData;
+      return `<tr>
+        <td style="padding:14px 0;border-bottom:1px solid #f1f5f9;font-family:Arial,Helvetica,sans-serif;">
+          <table width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+              <td style="font-size:15px;font-weight:700;color:#0f172a;font-family:Arial,Helvetica,sans-serif;">${esc(item.disease)}</td>
+              <td align="right"><span style="background:${rs.bg};border:1px solid ${rs.border};color:${rs.color};font-size:10px;font-weight:700;text-transform:uppercase;padding:3px 8px;font-family:Arial,Helvetica,sans-serif;">${esc(item.risk_level.toUpperCase())}</span></td>
+            </tr>
+          </table>
+          <p style="margin:2px 0 6px;font-size:13px;color:#64748b;font-family:Arial,Helvetica,sans-serif;">${esc(item.country)}</p>
+          <p style="margin:0 0 6px;font-size:12px;color:#475569;font-family:Arial,Helvetica,sans-serif;">${c.cases}: ${casesStr} · ${c.deaths}: ${deathStr} · ${esc(item.date)}</p>
+          <a href="${item.diseaseUrl}" style="color:#dc2626;font-size:13px;font-weight:600;text-decoration:none;font-family:Arial,Helvetica,sans-serif;">${c.itemLinkLabel}</a>
+        </td>
+      </tr>`;
+    })
+    .join("");
+
+  const html = `<!DOCTYPE html>
+<html lang="${locale}" dir="${dir}">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${c.digestSubject(totalCount)}</title>
+</head>
+<body style="margin:0;padding:0;background:#f1f5f9;font-family:Arial,Helvetica,sans-serif;">
+
+<table width="100%" cellpadding="0" cellspacing="0" style="background:#f1f5f9;padding:28px 16px;">
+<tr><td align="center">
+<table width="560" cellpadding="0" cellspacing="0" style="max-width:560px;width:100%;">
+
+  <!-- Header -->
+  <tr><td style="background:#dc2626;padding:16px 24px;">
+    <table width="100%" cellpadding="0" cellspacing="0"><tr>
+      <td style="color:#ffffff;font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;font-family:Arial,Helvetica,sans-serif;">HealthWatch Global</td>
+      <td align="right" style="color:#fca5a5;font-size:11px;font-weight:600;letter-spacing:0.5px;text-transform:uppercase;font-family:Arial,Helvetica,sans-serif;">Disease Alert</td>
+    </tr></table>
+  </td></tr>
+
+  <!-- Body -->
+  <tr><td style="background:#ffffff;padding:28px 24px;border:1px solid #e2e8f0;border-top:0;">
+
+    <p style="margin:0 0 16px;font-size:17px;font-weight:700;color:#0f172a;line-height:1.3;font-family:Arial,Helvetica,sans-serif;">${c.digestHeadline(totalCount)}</p>
+
+    <table width="100%" cellpadding="0" cellspacing="0">${rows}</table>
+
+    ${overflowCount > 0
+      ? `<p style="margin:14px 0 0;font-size:12px;color:#94a3b8;font-family:Arial,Helvetica,sans-serif;">${c.overflowNote(overflowCount)}</p>`
+      : ""}
+
+    <table cellpadding="0" cellspacing="0" style="margin-top:20px;">
+      <tr><td style="background:#dc2626;padding:12px 28px;">
+        <a href="${accountUrl}" style="color:#ffffff;font-size:14px;font-weight:700;text-decoration:none;font-family:Arial,Helvetica,sans-serif;">${c.cta}</a>
+      </td></tr>
+    </table>
+
+  </td></tr>
+
+  <!-- Footer -->
+  <tr><td style="padding:16px 0;text-align:center;">
+    <p style="color:#94a3b8;font-size:11px;margin:0;font-family:Arial,Helvetica,sans-serif;">${c.digestUnsubNote}</p>
+  </td></tr>
+
+</table>
+</td></tr>
+</table>
+</body>
+</html>`;
+
+  return { subject: c.digestSubject(totalCount), html };
 }

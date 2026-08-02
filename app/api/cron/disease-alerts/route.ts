@@ -4,7 +4,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
-import { buildDiseaseAlertEmail } from "@/lib/disease-alert-email";
+import { buildDiseaseAlertEmail, buildDiseaseAlertDigestEmail, type DiseaseDigestItem } from "@/lib/disease-alert-email";
 import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 import { diseaseToSlug } from "@/lib/disease-data";
 import { errorMessage } from "@/lib/error";
@@ -19,6 +19,7 @@ const BOM    = String.fromCharCode(65279);
 const clean  = (v: string | undefined) => (v || "").replace(new RegExp("^" + BOM), "").trim();
 const CRON_SECRET  = clean(process.env.CRON_SECRET);
 const BREVO_API_KEY = clean(process.env.BREVO_API_KEY);
+const APP_URL       = clean(process.env.NEXT_PUBLIC_APP_URL) || "https://healthwatch-global.com";
 
 // Same reasoning as app/api/cron/regional-alerts/route.ts: a plain "have we
 // ever alerted this user for this outbreak" dedup means a subscriber never
@@ -27,6 +28,14 @@ const BREVO_API_KEY = clean(process.env.BREVO_API_KEY);
 // alert we sent this user, instead of going silent forever after one email.
 const RISK_RANK: Record<string, number> = { high: 3, medium: 2, low: 1 };
 const CASE_SURGE_THRESHOLD = 0.20;
+
+// Same fix and same cap as regional-alerts (2026-08-02, see
+// project_alert_onboarding_batch_flood_2026_08_02 in memory): a user
+// subscribed to several diseases could otherwise get one email per matching
+// outbreak in a single run. Batches into one email per user, digest template
+// beyond one item, capped at MAX_DIGEST_ITEMS_PER_EMAIL with the rest
+// summarized as "+N more".
+const MAX_DIGEST_ITEMS_PER_EMAIL = 10;
 
 function buildDiseaseInAppBody(cases: number | null, riskLevel: string | null, locale: string): string {
   const RISK: Record<string, Record<string, string>> = {
@@ -139,11 +148,15 @@ async function runDiseaseAlerts(_req: NextRequest, supabase: SupabaseClient) {
     (priorAlerts ?? []).map((r) => [`${r.user_id}:${r.outbreak_id}`, r])
   );
 
-  // 5. Send alerts
-  let sent = 0;
+  // 5. Collect every qualifying (user, outbreak) match first — batched into
+  // one email per user below instead of sent immediately, so a user
+  // subscribed to several diseases that all match in the same run gets ONE
+  // email instead of one per outbreak.
   let skipped = 0;
   let blockedSkipped = 0;
-  let failed = 0;
+
+  type OutbreakRow = (typeof outbreaks)[number];
+  const userItems = new Map<string, OutbreakRow[]>();
 
   for (const outbreak of outbreaks) {
     const interestedUsers = diseaseUsers.get(outbreak.disease_en ?? "") ?? [];
@@ -176,35 +189,82 @@ async function runDiseaseAlerts(_req: NextRequest, supabase: SupabaseClient) {
       // "sent" state. See lib/brevo-blocklist.ts.
       if (profile.blocked) { blockedSkipped++; continue; }
 
-      try {
-        const locale = profile.locale;
-        const alertOutbreak = {
-          id:           outbreak.id,
-          disease_en:   outbreak.disease_en ?? outbreak.disease,
-          disease:      getLocalizedDisease(outbreak, locale) ?? outbreak.disease,
-          country_en:   outbreak.country_en ?? outbreak.country,
-          country:      getLocalizedCountry(outbreak, locale) ?? outbreak.country,
-          cases:        outbreak.cases,
-          deaths:       outbreak.deaths,
-          risk_level:   outbreak.risk_level,
-          date:         outbreak.date,
-          source:       outbreak.source,
-        };
+      const items = userItems.get(userId) ?? [];
+      items.push(outbreak);
+      userItems.set(userId, items);
+    }
+  }
 
-        const diseaseSlug = diseaseToSlug(alertOutbreak.disease_en);
-        const { subject, html } = buildDiseaseAlertEmail(alertOutbreak, locale, userId, diseaseSlug);
-        if (isRealProduction) {
-          await sendEmail(profile.email, subject, html);
+  // 6. One email per user: single-outbreak template if only one item, digest
+  // template otherwise (capped at MAX_DIGEST_ITEMS_PER_EMAIL, sorted most
+  // urgent first — see lib/disease-alert-email.ts).
+  let sent = 0;
+  let failed = 0;
+  let digestEmailsSent = 0;
+  let digestItemsCapped = 0;
+
+  for (const [userId, items] of userItems) {
+    const profile = profileMap.get(userId)!;
+    const locale  = profile.locale;
+
+    const alertOutbreaks = items.map((outbreak) => ({
+      id:         outbreak.id,
+      disease_en: outbreak.disease_en ?? outbreak.disease,
+      disease:    getLocalizedDisease(outbreak, locale) ?? outbreak.disease,
+      country_en: outbreak.country_en ?? outbreak.country,
+      country:    getLocalizedCountry(outbreak, locale) ?? outbreak.country,
+      cases:      outbreak.cases,
+      deaths:     outbreak.deaths,
+      risk_level: outbreak.risk_level,
+      date:       outbreak.date,
+      source:     outbreak.source,
+    }));
+
+    try {
+      // Build + send BEFORE writing any log rows. If either throws, we must
+      // not upsert disease_alert_log — those rows are what suppress future
+      // re-alerts for this user+outbreak, so logging a send that never went
+      // out would silently and permanently swallow the alert. Letting the
+      // exception propagate to the catch below leaves no log rows, so the
+      // next run retries every item in this batch as "new" instead of
+      // losing them.
+      let subject: string, html: string;
+      if (alertOutbreaks.length === 1) {
+        const only = alertOutbreaks[0];
+        const diseaseSlug = diseaseToSlug(only.disease_en);
+        ({ subject, html } = buildDiseaseAlertEmail(only, locale, userId, diseaseSlug));
+      } else {
+        // Most urgent first (risk, then case count) so the items cut by the
+        // cap are the least urgent ones.
+        const sorted = [...alertOutbreaks].sort((a, b) => {
+          const riskDiff = (RISK_RANK[b.risk_level ?? ""] ?? 0) - (RISK_RANK[a.risk_level ?? ""] ?? 0);
+          if (riskDiff !== 0) return riskDiff;
+          return (b.cases ?? 0) - (a.cases ?? 0);
+        });
+        const shown: DiseaseDigestItem[] = sorted.slice(0, MAX_DIGEST_ITEMS_PER_EMAIL).map((o) => ({
+          disease:    o.disease,
+          country:    o.country,
+          risk_level: o.risk_level ?? "medium",
+          cases:      o.cases,
+          deaths:     o.deaths,
+          date:       o.date,
+          diseaseUrl: `${APP_URL}/${locale}/disease/${diseaseToSlug(o.disease_en)}`,
+        }));
+        const overflowCount = sorted.length - shown.length;
+        if (overflowCount > 0) {
+          console.log(`[disease-alerts] digest for ${profile.email} capped: ${shown.length} shown, ${overflowCount} summarized`);
+          digestItemsCapped += overflowCount;
         }
+        ({ subject, html } = buildDiseaseAlertDigestEmail(locale, shown, `${APP_URL}/${locale}/account#disease-alerts`, overflowCount));
+        digestEmailsSent++;
+      }
+      if (isRealProduction) {
+        await sendEmail(profile.email, subject, html);
+      }
 
-        // Build + send BEFORE writing the log. If either throws, we must not
-        // upsert disease_alert_log — that row is what suppresses future
-        // re-alerts for this user+outbreak, so logging a send that never
-        // went out would silently and permanently swallow the alert. Letting
-        // the exception propagate to the catch below leaves no log row, so
-        // the next run retries this outbreak as "new" instead of losing it.
-        // Same fix as regional-alerts (2026-07-30, commit 8b70438) — this
-        // cron had the identical log-before-send ordering.
+      // Upsert (not insert) one row per outbreak in this batch — same
+      // reasoning as regional-alerts (2026-07-30, commit 8b70438).
+      for (const outbreak of alertOutbreaks) {
         const { error: logErr } = await supabase
           .from("disease_alert_log")
           .upsert(
@@ -224,8 +284,8 @@ async function runDiseaseAlerts(_req: NextRequest, supabase: SupabaseClient) {
         }
         sent++;
 
-        const inAppTitle = `${alertOutbreak.disease} — ${alertOutbreak.country}`;
-        const inAppBody  = buildDiseaseInAppBody(alertOutbreak.cases, alertOutbreak.risk_level, locale);
+        const inAppTitle = `${outbreak.disease} — ${outbreak.country}`;
+        const inAppBody  = buildDiseaseInAppBody(outbreak.cases, outbreak.risk_level, locale);
 
         // Mirror in alert_notifications for in-app display (non-fatal)
         await supabase.from("alert_notifications").insert({
@@ -237,20 +297,20 @@ async function runDiseaseAlerts(_req: NextRequest, supabase: SupabaseClient) {
         }).then(() => {}, () => {});
 
         await notifyMobile(supabase, userId, { title: inAppTitle, body: inAppBody, outbreak_id: outbreak.id });
-
-        await new Promise((r) => setTimeout(r, 150)); // rate-limit friendly
-      } catch (err: unknown) {
-        failed++;
-        console.error(`[disease-alerts] Failed for ${profile.email}:`, errorMessage(err));
-        Sentry.captureException(err, { tags: { cron: "disease-alerts", user_id: userId, outbreak_id: outbreak.id } });
       }
+    } catch (err: unknown) {
+      failed += alertOutbreaks.length;
+      console.error(`[disease-alerts] Failed for ${profile.email}:`, errorMessage(err));
+      Sentry.captureException(err, { tags: { cron: "disease-alerts", user_id: userId } });
     }
+
+    await new Promise((r) => setTimeout(r, 150)); // rate-limit friendly
   }
 
   // Was hardcoded "ok" with no failure counter at all — a genuine send
   // failure was invisible both in the response and in cron status.
   await logCronRun(supabase, "disease-alerts", failed > 0 ? "error" : "ok", sent,
     failed > 0 ? `${failed} alerte(s) en échec` : undefined);
-  console.log(`[disease-alerts] Done — sent: ${sent}, skipped: ${skipped}, blockedSkipped: ${blockedSkipped}`);
-  return NextResponse.json({ sent, skipped, blockedSkipped });
+  console.log(`[disease-alerts] Done — sent: ${sent}, skipped: ${skipped}, blockedSkipped: ${blockedSkipped}, digestEmailsSent: ${digestEmailsSent}, digestItemsCapped: ${digestItemsCapped}`);
+  return NextResponse.json({ sent, skipped, blockedSkipped, emailsSent: userItems.size, digestEmailsSent, digestItemsCapped, failed });
 }
