@@ -85,6 +85,105 @@ async function lastRealDelivery(supabase: any, cronName: string): Promise<string
   return (data?.[ev.column] as string | undefined) ?? null;
 }
 
+// Consumer webmail + known test/dev domains — excluded so the institutional-
+// subscription check below doesn't flag the six test rows already known
+// (marketing/product-ideas-log.md, 2026-07-31) or the routine flow of real
+// people subscribing from a personal address. Not exhaustive by design: a
+// false negative here just means one institutional signup goes unflagged,
+// same acceptable trade-off as the heuristic's own risk note (2026-07-31,
+// idea 2) — visibility only, never a scored/automated outreach trigger.
+const CONSUMER_EMAIL_DOMAINS = new Set([
+  "gmail.com", "yahoo.com", "yahoo.fr", "hotmail.com", "hotmail.fr",
+  "outlook.com", "outlook.fr", "icloud.com", "live.com", "live.fr",
+  "aol.com", "protonmail.com", "proton.me", "gmx.com", "gmx.de",
+  "mail.com", "yandex.com", "qq.com", "163.com",
+  "healthwatch-global.com", "healthwatch-test.dev", "example.com",
+]);
+
+interface InstitutionalSubscription { email: string; region: string; createdAt: string }
+
+// The public /subscribe form produces a non-consumer-domain address roughly
+// once every six or seven weeks (2026-07-31 measurement: 2 in ~10 weeks,
+// jalal.nourlil@pasteur.ma and iqakhtar@iom.int) — the IOM one sat unnoticed
+// for hours because nothing surfaces it anywhere, discovered by chance while
+// looking for something else. This never scores or ranks anything: seeing an
+// address is not consent to be prospected, and the decision to reach out
+// stays David's. See marketing/product-ideas-log.md, 2026-07-31, idea 2.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+async function checkInstitutionalSubscriptions(supabase: any): Promise<{ rows: InstitutionalSubscription[]; error: string | null }> {
+  const since = new Date(Date.now() - 26 * 3_600_000).toISOString(); // 26h: daily cadence + cron-jitter buffer
+  const { data, error } = await supabase
+    .from("subscriptions")
+    .select("email, region, created_at")
+    .gte("created_at", since);
+  if (error) return { rows: [], error: error.message };
+  const rows: InstitutionalSubscription[] = (data ?? [])
+    .filter((r: { email: string | null }) => {
+      const domain = r.email?.split("@")[1]?.toLowerCase();
+      return !!domain && !CONSUMER_EMAIL_DOMAINS.has(domain);
+    })
+    .map((r: { email: string; region: string; created_at: string }) => ({ email: r.email, region: r.region, createdAt: r.created_at }));
+  return { rows, error: null };
+}
+
+interface StuckInvite { email: string; organization: string | null; daysSinceInvite: number }
+
+// The path-not-the-stock lesson (2026-08-02): three July fixes each only
+// applied to accounts created afterward, so ZABRE/Mulamba/ouedraogodaouda2408
+// sat with a broken invite link for weeks before anyone noticed. Rather than
+// a hand-maintained "did we fix the stock" checklist, which rots the moment
+// it's written (that was the actual objection raised the same day), this
+// re-runs the ZABRE-shaped check live every day: any admin-invited pilot,
+// invited more than 3 days ago (grace period for a fresh invite), who has
+// never once signed in. Catches the *next* stuck invite before it becomes a
+// multi-week saga, instead of auditing the last one.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+async function checkStuckPilotInvites(supabase: any): Promise<{ invites: StuckInvite[]; error: string | null }> {
+  const { data: pilots, error } = await supabase
+    .from("profiles")
+    .select("id, email, pilot_organization, created_at")
+    .eq("is_pilot", true)
+    .is("stripe_subscription_id", null);
+  if (error) return { invites: [], error: error.message };
+  if (!pilots || pilots.length === 0) return { invites: [], error: null };
+
+  const threeDaysAgo = Date.now() - 3 * 86_400_000;
+  const candidates = pilots.filter((p: { created_at: string }) => new Date(p.created_at).getTime() < threeDaysAgo);
+
+  const invites: StuckInvite[] = [];
+  for (const p of candidates as { id: string; email: string; pilot_organization: string | null; created_at: string }[]) {
+    const { data: userRes, error: userErr } = await supabase.auth.admin.getUserById(p.id);
+    if (userErr) continue; // best-effort — a lookup failure here shouldn't hide the others
+    if (!userRes?.user?.last_sign_in_at) {
+      invites.push({
+        email: p.email,
+        organization: p.pilot_organization,
+        daysSinceInvite: Math.floor((Date.now() - new Date(p.created_at).getTime()) / 86_400_000),
+      });
+    }
+  }
+  return { invites, error: null };
+}
+
+// Confirms the click→visit chain measured 2026-07-31 (Brevo click timestamp
+// to product_events row, 8-10s apart, 4/4 real visits on the window) is still
+// the shape of things — informational only, no target/threshold exists yet
+// to alert against. Same Brevo call shape as lib/brevo-blocklist.ts.
+async function fetchClickVisitRatio(apiKey: string): Promise<{ clicks: number | null; visits: number | null }> {
+  let clicks: number | null = null;
+  try {
+    const res = await fetch(
+      "https://api.brevo.com/v3/smtp/statistics/events?event=clicks&days=7&limit=500",
+      { headers: { "api-key": apiKey }, signal: AbortSignal.timeout(10_000) },
+    );
+    if (res.ok) {
+      const body = (await res.json()) as { events?: unknown[] };
+      clicks = (body.events ?? []).length;
+    }
+  } catch { /* best-effort — a Brevo hiccup shouldn't fail the whole report */ }
+  return { clicks, visits: null };
+}
+
 interface ZeroRegionTrial { email: string; trialEndsAt: string }
 
 // A trial with zero rows in user_alert_regions never receives an alert, and
@@ -164,8 +263,19 @@ async function runHealthCheck(_req: NextRequest, supabase: any) {
 
   const AUDIENCE_TABLES = Array.from(new Set(Object.values(DELIVERY_AUDIENCE)));
 
-  const [[{ count: total }, { count: high }, { count: pheic }, { data: configRows }], sentryCheck, audienceCounts, zeroRegionResult] =
-    await Promise.all([
+  const sevenDaysAgo = new Date(Date.now() - 7 * 86_400_000).toISOString();
+
+  const [
+    [{ count: total }, { count: high }, { count: pheic }, { data: configRows }],
+    sentryCheck,
+    audienceCounts,
+    zeroRegionResult,
+    institutionalResult,
+    stuckInviteResult,
+    alertLocaleDriftResult,
+    clickVisitResult,
+    { count: visits7d },
+  ] = await Promise.all([
       Promise.all([
         supabase.from("outbreaks").select("*", { count: "exact", head: true }).eq("active", true),
         supabase.from("outbreaks").select("*", { count: "exact", head: true }).eq("active", true).eq("risk_level", "high"),
@@ -182,11 +292,34 @@ async function runHealthCheck(_req: NextRequest, supabase: any) {
           : supabase.from(table).select("*", { count: "exact", head: true }),
       )),
       checkZeroRegionTrials(supabase),
+      checkInstitutionalSubscriptions(supabase),
+      checkStuckPilotInvites(supabase),
+      // Regression guard for the 2026-08-02 fix (22c0fb1): any row still (or
+      // again) drifted — locale set but alert_locale stuck on its own DEFAULT
+      // 'en' — means the fix regressed or a new write path skipped it, not
+      // that the one-off backfill missed something (that part's done).
+      supabase.from("profiles").select("email, locale, alert_locale").neq("locale", "en").eq("alert_locale", "en"),
+      brevoKey ? fetchClickVisitRatio(brevoKey) : Promise.resolve({ clicks: null, visits: null }),
+      supabase.from("product_events").select("*", { count: "exact", head: true }).gte("created_at", sevenDaysAgo),
     ]);
 
   const zeroRegionTrials    = zeroRegionResult.trials;
   const zeroRegionError     = zeroRegionResult.error;
   const hasZeroRegionTrials = zeroRegionTrials.length > 0;
+
+  const institutionalSubs  = institutionalResult.rows;
+  const institutionalError = institutionalResult.error;
+  const hasInstitutionalSubs = institutionalSubs.length > 0;
+
+  const stuckInvites    = stuckInviteResult.invites;
+  const stuckInviteError = stuckInviteResult.error;
+  const hasStuckInvites  = stuckInvites.length > 0;
+
+  const alertLocaleDrift    = alertLocaleDriftResult.data ?? [];
+  const alertLocaleDriftErr = alertLocaleDriftResult.error?.message ?? null;
+  const hasAlertLocaleDrift = alertLocaleDrift.length > 0;
+
+  const clickVisitRatio = { clicks: clickVisitResult.clicks, visits: visits7d ?? null };
 
   // `?? 0` on a FAILED count would read as "this channel has no subscribers",
   // and the delivery loop below skips an audience of 0 — so a transient error
@@ -299,7 +432,11 @@ async function runHealthCheck(_req: NextRequest, supabase: any) {
   }
   const deliveryAlert = deliveryIssues.length > 0;
 
-  const emoji = hasOverdue || hasUnmonitored || hasErroring || audienceErrors.length > 0 || sentryAlert || deliveryAlert || hasZeroRegionTrials || (pheic ?? 0) > 0 ? "⚠️" : "✅";
+  // institutionalSubs/hasInstitutionalSubs deliberately excluded — a real
+  // institutional signup is good news, not a fault, and shouldn't turn the
+  // report red. hasStuckInvites/hasAlertLocaleDrift are regression guards on
+  // real past bugs and do count toward the alert state.
+  const emoji = hasOverdue || hasUnmonitored || hasErroring || audienceErrors.length > 0 || sentryAlert || deliveryAlert || hasZeroRegionTrials || hasStuckInvites || hasAlertLocaleDrift || (pheic ?? 0) > 0 ? "⚠️" : "✅";
 
   const cronTableRows = cronStatuses
     .map(({ name, label, windowH, ok }) => {
@@ -337,6 +474,28 @@ async function runHealthCheck(_req: NextRequest, supabase: any) {
     </tr>`)
     .join("");
 
+  const stuckInviteRows = stuckInvites
+    .map(({ email, organization, daysSinceInvite }) => `<tr>
+      <td style="padding:3px 8px 3px 0;color:#94a3b8;font-size:12px">${esc(email)}${organization ? ` (${esc(organization)})` : ""}</td>
+      <td style="padding:3px 0;font-size:12px;color:#f87171;font-weight:700">jamais connecté — invité il y a ${daysSinceInvite}j</td>
+    </tr>`)
+    .join("");
+
+  const alertLocaleDriftRows = alertLocaleDrift
+    .map(({ email, locale, alert_locale }: { email: string; locale: string; alert_locale: string }) => `<tr>
+      <td style="padding:3px 8px 3px 0;color:#94a3b8;font-size:12px">${esc(email)}</td>
+      <td style="padding:3px 0;font-size:12px;color:#f87171;font-weight:700">locale=${esc(locale)} / alert_locale=${esc(alert_locale)}</td>
+    </tr>`)
+    .join("");
+
+  const institutionalSubRows = institutionalSubs
+    .map(({ email, region, createdAt }) => `<tr>
+      <td style="padding:3px 8px 3px 0;color:#94a3b8;font-size:12px">${esc(email)}</td>
+      <td style="padding:3px 8px;font-size:12px;color:#94a3b8">${esc(region)}</td>
+      <td style="padding:3px 0;font-size:12px;color:#64748b">${esc(new Date(createdAt).toLocaleString("fr-FR"))}</td>
+    </tr>`)
+    .join("");
+
   const html = `
 <div style="font-family:sans-serif;max-width:580px;margin:0 auto;padding:24px;background:#0f172a;color:#e2e8f0;border-radius:12px">
   <p style="font-size:16px;font-weight:700;color:#60a5fa;margin:0 0 16px">HealthWatch — Health Check ${emoji}</p>
@@ -344,6 +503,10 @@ async function runHealthCheck(_req: NextRequest, supabase: any) {
     <tr><td style="padding:6px 0;color:#94a3b8">Foyers actifs</td><td style="padding:6px 0;font-weight:600">${total ?? "?"}</td></tr>
     <tr><td style="padding:6px 0;color:#94a3b8">Risque HIGH</td><td style="padding:6px 0;font-weight:600;color:#f87171">${high ?? "?"}</td></tr>
     <tr><td style="padding:6px 0;color:#94a3b8">PHEIC actifs</td><td style="padding:6px 0;font-weight:600;color:#c084fc">${pheic ?? "?"}${(pheic ?? 0) > 0 ? " ⚠️" : ""}</td></tr>
+    <tr><td style="padding:6px 0;color:#94a3b8">Clics email → visites (7j)</td><td style="padding:6px 0;font-weight:600">${clickVisitRatio.clicks ?? "?"} → ${clickVisitRatio.visits ?? "?"}</td></tr>
+    ${hasStuckInvites ? `<tr><td colspan="2" style="padding:8px 0;color:#f87171;font-weight:700">⚠️ ${stuckInvites.length} pilote(s) invité(s) jamais connecté(s) — même trou que ZABRE/Mulamba/ouedraogodaouda2408</td></tr>` : ""}
+    ${alertLocaleDriftErr ? `<tr><td colspan="2" style="padding:8px 0;color:#fbbf24;font-weight:700">🔧 Contrôle « dérive alert_locale » impossible : ${esc(alertLocaleDriftErr)}</td></tr>` : ""}
+    ${hasAlertLocaleDrift ? `<tr><td colspan="2" style="padding:8px 0;color:#f87171;font-weight:700">⚠️ ${alertLocaleDrift.length} compte(s) avec alert_locale de nouveau désynchronisé — régression possible du fix du 02/08</td></tr>` : ""}
     ${hasOverdue ? `<tr><td colspan="2" style="padding:8px 0;color:#f87171;font-weight:700">⚠️ ${overdue.length} cron(s) en retard : ${overdue.join(", ")}</td></tr>` : ""}
     ${hasUnmonitored ? `<tr><td colspan="2" style="padding:8px 0;color:#fbbf24;font-weight:700">⚠️ ${unmonitored.length} cron(s) NON surveillé(s) — écrivent un statut mais absents de CRON_WINDOWS, donc jamais vérifiés : ${esc(unmonitored.join(", "))}</td></tr>` : ""}
     ${audienceErrors.length > 0 ? `<tr><td colspan="2" style="padding:8px 0;color:#fbbf24;font-weight:700">⚠️ Contrôle de livraison partiellement aveugle — comptage d'abonnés en échec : ${esc(audienceErrors.join(", "))}</td></tr>` : ""}
@@ -367,10 +530,21 @@ async function runHealthCheck(_req: NextRequest, supabase: any) {
   ${zeroRegionRows ? `
   <p style="font-size:12px;color:#f87171;margin:16px 0 8px;font-weight:600">⚠️ Essais actifs sans aucune région d'alerte (signal seul, aucun enrôlement automatique)</p>
   <table style="width:100%;border-collapse:collapse">${zeroRegionRows}</table>` : ""}
+  ${stuckInviteRows ? `
+  <p style="font-size:12px;color:#f87171;margin:16px 0 8px;font-weight:600">⚠️ Invitations pilote jamais ouvertes</p>
+  <table style="width:100%;border-collapse:collapse">${stuckInviteRows}</table>` : ""}
+  ${alertLocaleDriftRows ? `
+  <p style="font-size:12px;color:#f87171;margin:16px 0 8px;font-weight:600">⚠️ Comptes alert_locale désynchronisé</p>
+  <table style="width:100%;border-collapse:collapse">${alertLocaleDriftRows}</table>` : ""}
+  ${institutionalError ? `
+  <p style="font-size:12px;color:#fbbf24;margin:16px 0 8px;font-weight:600">🔧 Contrôle « abonnement institutionnel » impossible : ${esc(institutionalError)}</p>` : ""}
+  ${institutionalSubRows ? `
+  <p style="font-size:12px;color:#60a5fa;margin:16px 0 8px;font-weight:600">🔔 Abonnement(s) sur domaine non grand public (24h) — visibilité seule, aucune action automatique</p>
+  <table style="width:100%;border-collapse:collapse">${institutionalSubRows}</table>` : ""}
   <p style="margin-top:16px;font-size:11px;color:#475569">${new Date().toISOString()}</p>
 </div>`;
 
-  const subject = `${emoji} HealthWatch — ${total ?? "?"} foyers${hasOverdue ? ` · ${overdue.length} cron(s) en retard` : ""}${sentryIssues.length > 0 ? ` · ${sentryIssues.length} erreur(s) Sentry` : ""}${deliveryAlert ? ` · ${deliveryIssues.length} canal(aux) en panne` : ""}${hasZeroRegionTrials ? ` · ${zeroRegionTrials.length} essai(s) sans région` : ""} · ${new Date().toLocaleDateString("fr-FR")}`;
+  const subject = `${emoji} HealthWatch — ${total ?? "?"} foyers${hasOverdue ? ` · ${overdue.length} cron(s) en retard` : ""}${sentryIssues.length > 0 ? ` · ${sentryIssues.length} erreur(s) Sentry` : ""}${deliveryAlert ? ` · ${deliveryIssues.length} canal(aux) en panne` : ""}${hasZeroRegionTrials ? ` · ${zeroRegionTrials.length} essai(s) sans région` : ""}${hasStuckInvites ? ` · ${stuckInvites.length} invite(s) bloquée(s)` : ""}${hasInstitutionalSubs ? ` · 🔔 ${institutionalSubs.length} abonnement(s) institutionnel(s)` : ""} · ${new Date().toLocaleDateString("fr-FR")}`;
 
   if (!isRealProduction) {
     console.log("[health-check] non-production run — skipping Brevo email and Sentry check-in/alerts");
@@ -450,12 +624,16 @@ async function runHealthCheck(_req: NextRequest, supabase: any) {
   }
 
   return Response.json({
-    ok: !hasOverdue && !hasUnmonitored && !hasErroring && !sentryAlert && !deliveryAlert && !hasZeroRegionTrials,
+    ok: !hasOverdue && !hasUnmonitored && !hasErroring && !sentryAlert && !deliveryAlert && !hasZeroRegionTrials && !hasStuckInvites && !hasAlertLocaleDrift,
     unmonitored,
     erroring,
     total, high, pheic, overdue, cronStatuses, isRealProduction,
     sentry: { ok: sentryCheck.ok, issueCount: sentryIssues.length, error: sentryCheck.error },
     delivery: deliveryIssues,
     zeroRegionTrials: { count: zeroRegionTrials.length, trials: zeroRegionTrials, error: zeroRegionError },
+    stuckPilotInvites: { count: stuckInvites.length, invites: stuckInvites, error: stuckInviteError },
+    alertLocaleDrift: { count: alertLocaleDrift.length, rows: alertLocaleDrift, error: alertLocaleDriftErr },
+    institutionalSubscriptions: { count: institutionalSubs.length, rows: institutionalSubs, error: institutionalError },
+    clickVisitRatio,
   });
 }
