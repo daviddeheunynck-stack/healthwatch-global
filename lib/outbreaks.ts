@@ -507,8 +507,18 @@ export function isNewOutbreak(outbreak: Outbreak): boolean {
 // display — prevents endemic diseases (Dengue, Cholera, H5N1) from falling into
 // "history" after the data-quality cron closes resolved WHO DON events.
 const SIXTY_DAYS_MS = 60 * 86_400_000;
-export function isDisplayActive(o: Pick<Outbreak, "active" | "source_priority" | "updated_at" | "is_seed" | "date">): boolean {
+export function isDisplayActive(o: Pick<Outbreak, "active" | "source_priority" | "updated_at" | "is_seed" | "date" | "response_phase">): boolean {
   if (o.active) return true;
+  // `response_phase === "contained"` is an explicit closure signal (the responsible
+  // authority declared the event over — e.g. a discharged medevac patient, an
+  // outbreak declared ended after its incubation-period monitoring window), unlike
+  // the generic "just hasn't had a fresh bulletin yet" case the 60-day fallback below
+  // exists for. Found 2026-08-02: Ebola/Germany, Ebola/Uganda, Ebola/France and
+  // Nipah/India — all closed and explicitly marked `contained` — still showed up
+  // under "Active outbreaks" on their country/disease pages for up to 60 days after
+  // closing. Checked before the fallback so a genuinely-contained one-off event goes
+  // straight to history instead of lingering as "active".
+  if (o.response_phase === "contained") return false;
   // is_seed rows (WHO GHO annual burden estimates for endemic diseases, or a historical
   // outbreak flagged as seed data) are reference/background data, not a live tracked
   // event — the recency fallback below exists to keep a DYNAMICALLY-tracked endemic
@@ -539,7 +549,7 @@ export function isDisplayActive(o: Pick<Outbreak, "active" | "source_priority" |
   return false;
 }
 
-type DisplayActiveRow = Pick<Outbreak, "active" | "source_priority" | "updated_at" | "disease_en" | "disease" | "country_en" | "country" | "is_seed" | "date">;
+type DisplayActiveRow = Pick<Outbreak, "active" | "source_priority" | "updated_at" | "disease_en" | "disease" | "country_en" | "country" | "is_seed" | "date" | "response_phase">;
 
 // Sibling-aware wrapper around isDisplayActive(): the 60-day recency fallback exists so an
 // endemic disease doesn't vanish from display when its ONLY row goes inactive before a fresh
