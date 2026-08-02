@@ -177,7 +177,7 @@ async function getAllCountryEn(): Promise<string[]> {
 async function getCountryOutbreaks(countryEn: string): Promise<Outbreak[]> {
   const { data } = await db()
     .from("outbreaks")
-    .select("id, disease, disease_en, disease_ar, country, country_en, country_ar, region, cases, deaths, risk_level, date, is_pheic, active, is_seed, source_priority, updated_at")
+    .select("id, disease, disease_en, disease_ar, country, country_en, country_ar, region, cases, deaths, risk_level, date, is_pheic, active, is_seed, source_priority, updated_at, response_phase")
     .eq("country_en", countryEn)
     .order("date", { ascending: false });
   return (data ?? []) as Outbreak[];
