@@ -61,6 +61,19 @@ function riskMeetsThreshold(risk: string, minRisk: string): boolean {
   return (RISK_RANK[risk] ?? 0) >= (RISK_RANK[minRisk] ?? 0);
 }
 
+// Cap how many outbreaks get itemized in a single user's digest email. Not a
+// cap on how many get logged/counted as delivered — every matched outbreak
+// still gets an outbreak_alert_log row and a Slack ping (if configured); this
+// only bounds what's readable in one email, with the excess summarized as
+// "+N more, see dashboard" instead of listed. Without this, the 97-outbreak
+// batch measured on 2026-07-26 would just become a 97-item email instead of
+// 97 separate ones — still unreadable, still the kind of send that likely
+// drove the only two real unsubscribes HWG has seen. See
+// project_alert_onboarding_batch_flood_2026_08_02 in memory for the
+// measurement behind this number; 10 is a starting guess, not tuned data.
+const MAX_DIGEST_ITEMS_PER_EMAIL = 10;
+const REASON_RANK: Record<AlertReason, number> = { new: 3, escalated: 2, surge: 1 };
+
 // How much a case count has to jump (relative to the count we last alerted
 // this user at) to re-fire a "surge" email on its own, without a risk_level
 // change. Set higher than the dashboard trend arrow's 5% (lib/outbreak-trend.ts)
@@ -176,6 +189,7 @@ async function runRegionalAlerts(_req: NextRequest, supabase: SupabaseClient) {
   let blockedSkipped = 0;
   let trialNudgesSent = 0;
   let digestEmailsSent = 0;
+  let digestItemsCapped = 0;
   const sentByReason: Record<AlertReason, number> = { new: 0, escalated: 0, surge: 0 };
   const now = Date.now();
 
@@ -334,7 +348,24 @@ async function runRegionalAlerts(_req: NextRequest, supabase: SupabaseClient) {
           only.reason === "new" ? "new" : "update"
         ));
       } else {
-        ({ subject, html } = buildOutbreakDigestEmail(locale, enriched, dashboardUrl, unsubUrl));
+        // Most urgent first (risk, then reason, then case count) so the
+        // items that get cut by MAX_DIGEST_ITEMS_PER_EMAIL are the least
+        // urgent ones — every item still gets logged/Slacked below
+        // regardless of whether it made the cut for the email body.
+        const sorted = [...enriched].sort((a, b) => {
+          const riskDiff = (RISK_RANK[b.risk_level] ?? 0) - (RISK_RANK[a.risk_level] ?? 0);
+          if (riskDiff !== 0) return riskDiff;
+          const reasonDiff = (REASON_RANK[b.reason] ?? 0) - (REASON_RANK[a.reason] ?? 0);
+          if (reasonDiff !== 0) return reasonDiff;
+          return (b.cases ?? 0) - (a.cases ?? 0);
+        });
+        const shown = sorted.slice(0, MAX_DIGEST_ITEMS_PER_EMAIL);
+        const overflowCount = sorted.length - shown.length;
+        if (overflowCount > 0) {
+          console.log(`[regional-alerts] digest for ${profile.email} capped: ${shown.length} shown, ${overflowCount} summarized`);
+          digestItemsCapped += overflowCount;
+        }
+        ({ subject, html } = buildOutbreakDigestEmail(locale, shown, dashboardUrl, unsubUrl, overflowCount));
         digestEmailsSent++;
       }
       if (isRealProduction) {
@@ -456,6 +487,7 @@ async function runRegionalAlerts(_req: NextRequest, supabase: SupabaseClient) {
     candidateOutbreaks: candidateOutbreaks.length,
     emailsSent: userItems.size,
     digestEmailsSent,
+    digestItemsCapped,
     sent,
     sentByReason,
     trialNudgesSent,

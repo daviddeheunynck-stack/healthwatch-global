@@ -33,6 +33,7 @@ const CONTENT: Record<string, {
   newBadge: string;
   updateBadge: string;
   itemLinkLabel: string;
+  overflowNote: (count: number) => string;
 }> = {
   fr: {
     subject: (region, disease) =>
@@ -58,6 +59,7 @@ const CONTENT: Record<string, {
     newBadge: "Nouveau",
     updateBadge: "Mise à jour",
     itemLinkLabel: "Détails →",
+    overflowNote: (count) => `+ ${count} autres foyers actifs — consultez le tableau de bord complet.`,
   },
   en: {
     subject: (region, disease) =>
@@ -83,6 +85,7 @@ const CONTENT: Record<string, {
     newBadge: "New",
     updateBadge: "Update",
     itemLinkLabel: "Details →",
+    overflowNote: (count) => `+ ${count} more active outbreaks — see the full dashboard.`,
   },
   es: {
     subject: (region, disease) =>
@@ -108,6 +111,7 @@ const CONTENT: Record<string, {
     newBadge: "Nuevo",
     updateBadge: "Actualización",
     itemLinkLabel: "Detalles →",
+    overflowNote: (count) => `+ ${count} brotes activos más — consulta el panel completo.`,
   },
   ar: {
     subject: (region, disease) =>
@@ -133,6 +137,7 @@ const CONTENT: Record<string, {
     newBadge: "جديد",
     updateBadge: "تحديث",
     itemLinkLabel: "← التفاصيل",
+    overflowNote: (count) => `+ ${count} حالات تفشٍّ نشطة أخرى — راجع لوحة التحكم الكاملة.`,
   },
   id: {
     subject: (region, disease) =>
@@ -158,6 +163,7 @@ const CONTENT: Record<string, {
     newBadge: "Baru",
     updateBadge: "Pembaruan",
     itemLinkLabel: "Detail →",
+    overflowNote: (count) => `+ ${count} wabah aktif lainnya — lihat dasbor lengkap.`,
   },
 };
 
@@ -268,10 +274,12 @@ export function buildOutbreakDigestEmail(
   locale: string,
   items: DigestItem[],
   dashboardUrl: string,
-  unsubUrl?: string
+  unsubUrl?: string,
+  overflowCount = 0
 ): { subject: string; html: string } {
   const c = CONTENT[locale] ?? CONTENT.en;
   const numLocale = locale === "ar" ? "ar-SA" : (locale || "en");
+  const totalCount = items.length + overflowCount;
 
   const cards = items
     .map((item) => {
@@ -311,9 +319,13 @@ export function buildOutbreakDigestEmail(
         <span style="color:#9ca3af;font-size:13px;font-weight:600;letter-spacing:.05em;text-transform:uppercase">HealthWatch Global</span>
       </div>
 
-      <h1 style="color:#ffffff;font-size:20px;font-weight:700;margin:0 0 24px">${c.digestHeadline(items.length)}</h1>
+      <h1 style="color:#ffffff;font-size:20px;font-weight:700;margin:0 0 24px">${c.digestHeadline(totalCount)}</h1>
 
       ${cards}
+
+      ${overflowCount > 0
+        ? `<p style="color:#9ca3af;font-size:13px;margin:0 0 20px">${c.overflowNote(overflowCount)}</p>`
+        : ""}
 
       <!-- CTA -->
       <a href="${dashboardUrl}"
@@ -330,5 +342,5 @@ export function buildOutbreakDigestEmail(
 </body>
 </html>`;
 
-  return { subject: c.digestSubject(items.length), html };
+  return { subject: c.digestSubject(totalCount), html };
 }
