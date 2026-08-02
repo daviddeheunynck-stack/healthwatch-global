@@ -45,7 +45,7 @@ const COPY: Record<string, {
 }> = {
   fr: {
     subject:         (d) => `🔴 Alerte maladie : ${d} détecté`,
-    preheader:       (d, c) => `Nouveau foyer actif — ${d} · ${c}`,
+    preheader:       (d, c) => `Foyer actif — ${d} · ${c}`,
     cases:           "Cas confirmés",
     deaths:          "Décès",
     cfr:             "Létalité",
