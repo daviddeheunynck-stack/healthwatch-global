@@ -28,7 +28,7 @@ export default function CitationBlock({ citation, label, copyLabel, copiedLabel 
   return (
     <div className="mb-6 p-4 rounded-lg border border-gray-700/40 bg-gray-800/20">
       <p className="text-[11px] font-medium text-gray-400 uppercase tracking-wide mb-2">{label}</p>
-      <p className="text-[11px] text-gray-500 leading-relaxed font-mono break-all">{full}</p>
+      <p suppressHydrationWarning className="text-[11px] text-gray-500 leading-relaxed font-mono break-all">{full}</p>
       <button
         onClick={copy}
         className="mt-2 inline-flex items-center gap-1.5 text-[11px] text-gray-500 hover:text-gray-300 transition-colors"
