@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { buildTrialEndingEmail } from "@/lib/trial-ending-email";
 import * as Sentry from "@sentry/nextjs";
-import { logCronRun, isRealProduction, isLiveCronInvocation, claimEmailSend } from "@/lib/cron-monitor";
+import { logCronRun, isRealProduction, isLiveCronInvocation, claimEmailSend, pingHeartbeatIfHealthy } from "@/lib/cron-monitor";
 import { getLocalizedDisease } from "@/lib/outbreaks";
 
 export const dynamic = "force-dynamic";
@@ -185,8 +185,7 @@ async function runTrialReminders(req: NextRequest, supabase: SupabaseClient) {
     await new Promise((r) => setTimeout(r, 150));
   }
 
-  const hb = process.env.BETTERSTACK_HB_TRIAL_REMINDERS;
-  if (hb) fetch(hb).catch(() => {});
+  pingHeartbeatIfHealthy(process.env.BETTERSTACK_HB_TRIAL_REMINDERS, failed, sent + failed);
 
   if (dryRunRecipients.length > 0) {
     console.log(`[trial-reminders] dry run (not a recognized live invocation) — would have sent: ${dryRunRecipients.join(", ")}`);

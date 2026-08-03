@@ -103,6 +103,33 @@ export async function claimEmailSend(
   return (data?.length ?? 0) > 0;
 }
 
+/**
+ * Ping a Better Stack heartbeat URL, but only when this run's failure rate
+ * stayed under a tolerable threshold — so Better Stack's uptime score means
+ * "this cron did its job", not just "the route responded". Before this,
+ * every one of the 4 heartbeat-monitored crons (sync-outbreaks,
+ * trial-reminders, expire-trials, onboarding-sequence) pinged unconditionally
+ * regardless of `failed`/`results.errors`, so a systemic ingestion or send
+ * failure could show 100% Better Stack uptime while silently losing real
+ * data — the same shape of gap as the sync-outbreaks status-hardcoding bug
+ * fixed earlier (see the logCronRun call site there), just for the external
+ * signal instead of the internal one. Found 2026-08-03, David's call: a
+ * threshold rather than "always ping" (pure reachability, catches nothing
+ * business-level) or "ping only on zero errors" (flags Better Stack as down
+ * for a single one-off per-item failure that Sentry already captured with
+ * more context).
+ *
+ * `attempted === 0` (nothing to do this run) still pings — an empty run
+ * isn't a failure.
+ */
+const HEARTBEAT_ERROR_RATE_THRESHOLD = 0.2;
+
+export function pingHeartbeatIfHealthy(url: string | undefined, failed: number, attempted: number): void {
+  if (!url) return;
+  if (attempted > 0 && failed / attempted > HEARTBEAT_ERROR_RATE_THRESHOLD) return;
+  fetch(url).catch(() => {});
+}
+
 export type CronStatus = "ok" | "error" | "no_data";
 
 export interface CronRun {

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import * as Sentry from "@sentry/nextjs";
-import { logCronRun } from "@/lib/cron-monitor";
+import { logCronRun, pingHeartbeatIfHealthy } from "@/lib/cron-monitor";
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { parseRSSFeed, buildOutbreakFromRSSItem } from "@/lib/outbreak-parser";
 import { fetchWHODONList, parseWHODONItems, donArticleUrl } from "@/lib/who-api";
@@ -496,8 +496,11 @@ async function runSync(req: NextRequest, supabase: SupabaseClient) {
 
   results.staleDeactivated = count ?? 0;
 
-  const hb = process.env.BETTERSTACK_HB_SYNC_OUTBREAKS;
-  if (hb) fetch(hb).catch(() => {});
+  pingHeartbeatIfHealthy(
+    process.env.BETTERSTACK_HB_SYNC_OUTBREAKS,
+    results.errors,
+    results.inserted + results.updated + results.errors,
+  );
 
   console.log("[sync] Done:", results, "source:", usedSource);
   // Status was hardcoded "ok" even when inserts/updates had failed: errorLog is

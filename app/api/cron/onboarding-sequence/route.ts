@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { buildJ1Email, buildJ3Email, buildJ7Email, buildJ12Email, buildPilotConversionEmail } from "@/lib/onboarding-emails";
 import * as Sentry from "@sentry/nextjs";
-import { logCronRun, isRealProduction, isLiveCronInvocation, claimEmailSend } from "@/lib/cron-monitor";
+import { logCronRun, isRealProduction, isLiveCronInvocation, claimEmailSend, pingHeartbeatIfHealthy } from "@/lib/cron-monitor";
 
 export const dynamic = "force-dynamic";
 
@@ -321,8 +321,9 @@ async function runOnboardingSequence(req: NextRequest, supabase: SupabaseClient)
     }
   }
 
-  const hb = process.env.BETTERSTACK_HB_ONBOARDING;
-  if (hb) fetch(hb).catch(() => {});
+  const onboardingSent   = j1Sent + j3Sent + j7Sent + j12Sent + j32Sent;
+  const onboardingFailed = j1Failed + j3Failed + j7Failed + j12Failed + j32Failed;
+  pingHeartbeatIfHealthy(process.env.BETTERSTACK_HB_ONBOARDING, onboardingFailed, onboardingSent + onboardingFailed);
 
   if (dryRunRecipients.length > 0) {
     console.log(`[onboarding] dry run (not a recognized live invocation) — would have sent: ${dryRunRecipients.join(", ")}`);

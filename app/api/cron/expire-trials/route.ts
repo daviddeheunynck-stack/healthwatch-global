@@ -7,7 +7,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { buildTrialExpiredEmail } from "@/lib/onboarding-emails";
 import * as Sentry from "@sentry/nextjs";
-import { logCronRun, isRealProduction, isLiveCronInvocation, claimEmailSend } from "@/lib/cron-monitor";
+import { logCronRun, isRealProduction, isLiveCronInvocation, claimEmailSend, pingHeartbeatIfHealthy } from "@/lib/cron-monitor";
 
 export const dynamic = "force-dynamic";
 
@@ -158,8 +158,7 @@ async function runExpireTrials(req: NextRequest, supabase: SupabaseClient) {
     console.log(`[expire-trials] dry run (not a recognized live invocation) — would have sent: ${dryRunRecipients.join(", ")}`);
   }
 
-  const hb = process.env.BETTERSTACK_HB_EXPIRE_TRIALS;
-  if (hb) fetch(hb).catch(() => {});
+  pingHeartbeatIfHealthy(process.env.BETTERSTACK_HB_EXPIRE_TRIALS, emailErrors, expired.length);
 
   // The downgrade itself already succeeded by this point (ids.length reflects
   // that) — emailErrors only affects the notification, not billing state — but
