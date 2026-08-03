@@ -19,9 +19,9 @@ const supabase = createClient(
 );
 
 async function run() {
-  // Delete existing user if present
-  const { data: list } = await supabase.auth.admin.listUsers();
-  const existing = list?.users?.find((u) => u.email === EMAIL);
+  // Delete existing user if present — profiles lookup instead of
+  // auth.admin.listUsers() to avoid its unpaginated 1000-user limit.
+  const { data: existing } = await supabase.from("profiles").select("id").eq("email", EMAIL).maybeSingle();
   if (existing) {
     await supabase.auth.admin.deleteUser(existing.id);
     console.log("Deleted existing user");

@@ -32,9 +32,9 @@ const admin = createClient(SUPABASE_URL, SERVICE_ROLE_KEY, {
 const action = process.argv[2];
 
 if (action === "create") {
-  // Try to delete existing first (idempotent setup)
-  const { data: existing } = await admin.auth.admin.listUsers();
-  const found = existing?.users?.find((u) => u.email === TEST_EMAIL);
+  // Try to delete existing first (idempotent setup) — profiles lookup
+  // instead of auth.admin.listUsers() to avoid its unpaginated 1000-user limit.
+  const { data: found } = await admin.from("profiles").select("id").eq("email", TEST_EMAIL).maybeSingle();
   if (found) {
     await admin.auth.admin.deleteUser(found.id);
   }
@@ -62,8 +62,7 @@ if (action === "create") {
   console.log(`TEST_USER_ID=${data.user.id}`);
 
 } else if (action === "delete") {
-  const { data: existing } = await admin.auth.admin.listUsers();
-  const found = existing?.users?.find((u) => u.email === TEST_EMAIL);
+  const { data: found } = await admin.from("profiles").select("id").eq("email", TEST_EMAIL).maybeSingle();
   if (found) {
     await admin.auth.admin.deleteUser(found.id);
     console.log("Test user deleted.");

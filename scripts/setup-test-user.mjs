@@ -26,9 +26,9 @@ const supabase = createClient(
 const TEST_EMAIL    = "e2e@healthwatch-global.com";
 const TEST_PASSWORD = "HWGtest2026!";
 
-// 1. Supprimer l'ancien compte si existant
-const { data: existing } = await supabase.auth.admin.listUsers();
-const old = existing?.users?.find(u => u.email === TEST_EMAIL);
+// 1. Supprimer l'ancien compte si existant — recherche via la table profiles
+// plutôt que auth.admin.listUsers() (limite non paginée de 1000 comptes).
+const { data: old } = await supabase.from("profiles").select("id").eq("email", TEST_EMAIL).maybeSingle();
 if (old) {
   await supabase.auth.admin.deleteUser(old.id);
   console.log(`🗑  Ancien compte supprimé : ${old.id}`);
