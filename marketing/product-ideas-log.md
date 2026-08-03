@@ -609,4 +609,10 @@ Et l'inversion vaut d'être dite telle quelle : **la liste d'abonnés du produit
 
 Typecheck + lint propres sur tout le dépôt à chaque étape. Poussé sur `master` : `9ec3c1e`.
 
+**Suite, même jour — AMR et signal de variance tranchés par la mesure, pas par le code.** David a demandé de « régler » les deux ; plutôt que de deviner une implémentation sans spec, mesuré en direct sur la prod (lecture seule, scripts jetables) :
+- **AMR (Eva Kamau, 10/07)** — la piste « peu coûteuse » (tagger les mentions de résistance déjà dans les descriptions ingérées) n'a pas de matière : **1 seul foyer actif sur 114** mentionne une résistance (Shigellosis/UE-EEE), 2 sur 266 au total. Les deux autres pistes (intégration WHO GLASS, corrélation outbreak→antibiotique proposée par Eva) demandent une source de données non identifiée — heurtent le garde-fou `ROADMAP.md` (pas de nouvelle source sans demande explicite d'un prospect). **Verdict : rien à construire, faute de matière première dans les données déjà ingérées.**
+- **Signal de variance / ralentissement critique (Simon Ruegg, 6-7/07)** — question de faisabilité posée par Simon lui-même en juillet, jamais vérifiée. Mesuré sur `outbreak_snapshots` : 205 foyers ont ≥1 instantané, **6 seulement en ont ≥14, aucun n'en a ≥30**. Le foyer le mieux couvert (29 instantanés) montre une série en escalier (plat 3 semaines, saut, plat, trou de 16 jours) — pas une série continue exploitable pour un signal de variance. **Verdict : non calculable sur les données HWG actuelles**, construire quand même produirait un signal statistiquement creux — même erreur que `reporting-lag` (20/07), déjà commise et annulée une fois pour la même raison (prémisse non vérifiée avant de coder).
+
+Aucun code écrit pour ces deux items — la mesure elle-même est la réponse. Les deux ne seront plus remontés au backlog quotidien sans signal ou preuve de faisabilité nouveaux.
+
 ---
