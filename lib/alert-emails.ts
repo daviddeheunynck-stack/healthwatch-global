@@ -289,7 +289,7 @@ export function buildOutbreakDigestEmail(
       const badgeColor = item.reason === "new" ? "#dc2626" : "#f59e0b";
       const meta = [
         `${c.riskLabel}: ${c.riskLabels[item.risk_level]}`,
-        `${c.dateLabel}: ${item.date}`,
+        `${c.dateLabel}: ${esc(item.date)}`,
         ...(item.cases != null ? [`${c.casesLabel}: ${item.cases.toLocaleString(numLocale)}`] : []),
         ...(item.deaths != null ? [`${c.deathsLabel}: ${item.deaths.toLocaleString(numLocale)}`] : []),
       ].join(" · ");

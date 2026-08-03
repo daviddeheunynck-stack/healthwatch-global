@@ -44,6 +44,15 @@ const COPY: Record<string, {
   daysAgoN:        (n: number) => string;
   digestSubject:   (count: number) => string;
   digestHeadline:  (count: number) => string;
+  // Separate from `cta` on purpose: the digest's button points at
+  // /{locale}/account#disease-alerts, not at an outbreak page, and covers N
+  // diseases rather than one. Reusing `cta` there labelled that button "View
+  // outbreak →" / "Ver brote →" / "Lihat wabah →" / "← عرض التفشي" — singular,
+  // and promising a page it doesn't open. It's also the digest's ONLY link out
+  // (see the no-token-unsubscribe note above buildDiseaseAlertDigestEmail), so a
+  // mislabelled one leaves a reader with no obvious way to manage their alerts.
+  // Found 2026-08-03.
+  digestCta:       string;
   digestUnsubNote: string;
   itemLinkLabel:   string;
   overflowNote:    (count: number) => string;
@@ -64,6 +73,7 @@ const COPY: Record<string, {
     daysAgoN:        (n) => `il y a ${n}j`,
     digestSubject:   (n) => `🔴 ${n} alertes maladies détectées`,
     digestHeadline:  (n) => `${n} maladies que vous surveillez ont un foyer actif :`,
+    digestCta:       "Gérer mes alertes →",
     digestUnsubNote: "Vous recevez cet email car vous surveillez ces maladies sur healthwatch-global.com. Gérez vos alertes dans votre compte.",
     itemLinkLabel:   "Détails →",
     overflowNote:    (n) => `+ ${n} autres alertes maladies — consultez le tableau de bord complet.`,
@@ -84,6 +94,7 @@ const COPY: Record<string, {
     daysAgoN:        (n) => `${n}d ago`,
     digestSubject:   (n) => `🔴 ${n} disease alerts detected`,
     digestHeadline:  (n) => `${n} diseases you're monitoring have an active outbreak:`,
+    digestCta:       "Manage my alerts →",
     digestUnsubNote: "You receive this email because you're monitoring these diseases on healthwatch-global.com. Manage your alerts from your account.",
     itemLinkLabel:   "Details →",
     overflowNote:    (n) => `+ ${n} more disease alerts — see the full dashboard.`,
@@ -104,6 +115,7 @@ const COPY: Record<string, {
     daysAgoN:        (n) => `hace ${n}d`,
     digestSubject:   (n) => `🔴 ${n} alertas de enfermedades detectadas`,
     digestHeadline:  (n) => `${n} enfermedades que monitoreas tienen un brote activo:`,
+    digestCta:       "Gestionar mis alertas →",
     digestUnsubNote: "Recibe este correo porque monitorea estas enfermedades en healthwatch-global.com. Gestiona tus alertas desde tu cuenta.",
     itemLinkLabel:   "Detalles →",
     overflowNote:    (n) => `+ ${n} alertas de enfermedades más — consulta el panel completo.`,
@@ -124,6 +136,7 @@ const COPY: Record<string, {
     daysAgoN:        (n) => `منذ ${n} أيام`,
     digestSubject:   (n) => `🔴 ${n} تنبيهات أمراض تم اكتشافها`,
     digestHeadline:  (n) => `${n} أمراض تراقبها لديها تفشٍّ نشط:`,
+    digestCta:       "← إدارة تنبيهاتي",
     digestUnsubNote: "تتلقى هذا البريد لأنك تراقب هذه الأمراض على healthwatch-global.com. أدر تنبيهاتك من حسابك.",
     itemLinkLabel:   "← التفاصيل",
     overflowNote:    (n) => `+ ${n} تنبيهات أمراض أخرى — راجع لوحة التحكم الكاملة.`,
@@ -144,6 +157,7 @@ const COPY: Record<string, {
     daysAgoN:        (n) => `${n}h lalu`,
     digestSubject:   (n) => `🔴 ${n} peringatan penyakit terdeteksi`,
     digestHeadline:  (n) => `${n} penyakit yang Anda pantau memiliki wabah aktif:`,
+    digestCta:       "Kelola peringatan saya →",
     digestUnsubNote: "Anda menerima email ini karena memantau penyakit-penyakit ini di healthwatch-global.com. Kelola peringatan Anda dari akun Anda.",
     itemLinkLabel:   "Detail →",
     overflowNote:    (n) => `+ ${n} peringatan penyakit lainnya — lihat dasbor lengkap.`,
@@ -398,7 +412,7 @@ export function buildDiseaseAlertDigestEmail(
 
     <table cellpadding="0" cellspacing="0" style="margin-top:20px;">
       <tr><td style="background:#dc2626;padding:12px 28px;">
-        <a href="${accountUrl}" style="color:#ffffff;font-size:14px;font-weight:700;text-decoration:none;font-family:Arial,Helvetica,sans-serif;">${c.cta}</a>
+        <a href="${accountUrl}" style="color:#ffffff;font-size:14px;font-weight:700;text-decoration:none;font-family:Arial,Helvetica,sans-serif;">${c.digestCta}</a>
       </td></tr>
     </table>
 
