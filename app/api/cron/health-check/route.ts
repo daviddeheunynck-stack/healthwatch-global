@@ -295,6 +295,16 @@ async function checkZeroRegionTrials(supabase: any): Promise<{ trials: ZeroRegio
 // future bug) past this date is invisible to the same three mechanisms.
 const VIABILITY_DECISION_DATE = "2026-08-21";
 
+// David declined to act on the Institut Pasteur case (is_pilot=true vs.
+// contact outside the product) — 2026-08-03, "oublie Pasteur" then "ça
+// disparait" when it kept showing up here. Same shape as
+// STUCK_INVITE_KNOWN_WAITING below: a decided, not-actionable case excluded
+// so daily re-surfacing doesn't nag about something already settled. If this
+// address is ever re-enrolled in another trial or Pasteur trial_ends_at
+// changes, it re-evaluates on its own — this is a one-off dismissal, not a
+// standing "ignore this account" rule.
+const DECISION_HORIZON_DISMISSED = new Set(["jalal.nourlil@pasteur.ma"]);
+
 interface DecisionHorizonTrial { email: string; trialEndsAt: string; isPilot: boolean }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -307,7 +317,7 @@ async function checkDecisionHorizonTrials(supabase: any): Promise<{ trials: Deci
     .gt("trial_ends_at", VIABILITY_DECISION_DATE);
   if (error) return { trials: [], error: error.message };
   const trials: DecisionHorizonTrial[] = (data ?? [])
-    .filter((p: { email: string | null }) => !!p.email)
+    .filter((p: { email: string | null }) => !!p.email && !DECISION_HORIZON_DISMISSED.has(p.email.toLowerCase()))
     .map((p: { email: string; trial_ends_at: string; is_pilot: boolean | null }) =>
       ({ email: p.email, trialEndsAt: p.trial_ends_at, isPilot: !!p.is_pilot }));
   return { trials, error: null };
