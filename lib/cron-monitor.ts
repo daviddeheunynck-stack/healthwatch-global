@@ -207,11 +207,11 @@ export const CRON_WINDOWS: Record<string, number> = {
   "sync-endemic-data": 26,   // daily
   "sync-usda-aphis":   26,   // daily
   // ── Alert delivery crons ─────────────────────────────────────────────────────
-  "sync-brevo-blocklist": 26, // daily 06:00 — feeds profiles.email_blocked_at before the 06:xx sends below
-  "regional-alerts":   26,   // daily 06:30
-  "watchlist-alerts":  26,   // daily 06:40
-  "push-alerts":       26,   // daily 06:45
-  "disease-alerts":    26,   // daily 06:50
+  "sync-brevo-blocklist": 26, // daily 06:00 — feeds profiles.email_blocked_at before the 10:xx sends below
+  "regional-alerts":   26,   // daily 10:30 (moved from 06:30 on 2026-08-03, was firing ~22h ahead of same-day sync data)
+  "watchlist-alerts":  26,   // daily 10:40 (moved from 06:40 on 2026-08-03)
+  "push-alerts":       26,   // daily 10:45 (moved from 06:45 on 2026-08-03)
+  "disease-alerts":    26,   // daily 10:50 (moved from 06:50 on 2026-08-03)
   "pilot-follow-up":   26,   // daily 08:00
   // Was scheduled in vercel.json and logging runs (including "error" statuses)
   // since creation, but never registered here — so health-check never looked at

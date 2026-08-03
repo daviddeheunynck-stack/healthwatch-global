@@ -22,19 +22,19 @@
     },
     {
       "path": "/api/cron/regional-alerts",
-      "schedule": "30 6 * * *"
+      "schedule": "30 10 * * *"
     },
     {
       "path": "/api/cron/watchlist-alerts",
-      "schedule": "40 6 * * *"
+      "schedule": "40 10 * * *"
     },
     {
       "path": "/api/cron/push-alerts",
-      "schedule": "45 6 * * *"
+      "schedule": "45 10 * * *"
     },
     {
       "path": "/api/cron/disease-alerts",
-      "schedule": "50 6 * * *"
+      "schedule": "50 10 * * *"
     },
     {
       "path": "/api/cron/onboarding-sequence",

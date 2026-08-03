@@ -1,6 +1,9 @@
 /**
  * Cron: /api/cron/regional-alerts
- * Schedule: 30 minutes after the sync-outbreaks cron (06:30 UTC daily).
+ * Schedule: 10:30 UTC daily — after the 08:00-10:00 UTC sync crons that
+ * populate outbreaks, not before them (moved from 06:30 on 2026-08-03; the
+ * pre-move schedule ran alerts ~22h ahead of same-day sync data, see
+ * project_alert_crons_run_before_syncs_2026_08_03 in memory).
  *
  * For every outbreak created OR updated in the last 25 hours:
  *   1. Find paid users who subscribed to that region

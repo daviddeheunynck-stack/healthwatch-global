@@ -1,5 +1,8 @@
-// Daily, 30min before regional-alerts (06:30) and the other 06:xx sending
-// crons: pulls Brevo's blockedContacts list onto profiles.email_blocked_at /
+// Daily at 06:00, hours ahead of regional-alerts and the other 10:xx sending
+// crons (moved from 06:xx to 10:3x on 2026-08-03, see
+// project_alert_crons_run_before_syncs_2026_08_03 in memory — this cron's own
+// time didn't need to move, it already ran well before either window):
+// pulls Brevo's blockedContacts list onto profiles.email_blocked_at /
 // email_blocked_reason. Brevo blocks a contact (hard bounce, or its own
 // List-Unsubscribe "unsubscribedViaEmail") with zero trace in our DB — found
 // 2026-07-29 via two trial users whose alerts kept getting logged as sent in
