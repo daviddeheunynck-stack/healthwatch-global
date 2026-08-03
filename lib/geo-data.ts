@@ -71,6 +71,7 @@ export const COUNTRIES: Record<string, CountryGeo> = {
   "Malaysia": { lat: 4.2, lng: 101.9, region: "asia", name_en: "Malaysia", name_fr: "Malaisie", name_ar: "ماليزيا" },
   "Singapore": { lat: 1.35, lng: 103.8, region: "asia", name_en: "Singapore", name_fr: "Singapour", name_ar: "سنغافورة" },
   "Hong Kong SAR": { lat: 22.3, lng: 114.2, region: "asia", name_en: "Hong Kong SAR", name_fr: "Hong Kong (Chine)", name_ar: "هونغ كونغ" },
+  "Taiwan": { lat: 23.7, lng: 121.0, region: "asia", name_en: "Taiwan", name_fr: "Taïwan", name_ar: "تايوان" },
   "Laos": { lat: 19.9, lng: 102.5, region: "asia", name_en: "Laos", name_fr: "Laos", name_ar: "لاوس" },
   "Lao People's Democratic Republic": { lat: 19.9, lng: 102.5, region: "asia", name_en: "Laos", name_fr: "Laos", name_ar: "لاوس" },
   "Nepal": { lat: 28.4, lng: 84.1, region: "asia", name_en: "Nepal", name_fr: "Népal", name_ar: "نيبال" },
