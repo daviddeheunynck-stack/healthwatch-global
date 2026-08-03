@@ -166,6 +166,23 @@ function TrendBar({ trend }: { trend?: OutbreakTrend }) {
   );
 }
 
+// Client-only: staleDays comes from Date.now(), which can differ between the
+// SSR pass (possibly served stale by ISR) and hydration. Deferring it to an
+// effect keeps the server and first client render both at "null" (no badge),
+// avoiding a server/client markup mismatch — same pattern as FreshnessBadge.
+function StaleDaysBadge({ referenceIso, locale }: { referenceIso: string; locale: string }) {
+  const [staleDays, setStaleDays] = useState<number | null>(null);
+
+  useEffect(() => {
+    setStaleDays(Math.floor((Date.now() - new Date(referenceIso).getTime()) / 86_400_000));
+  }, [referenceIso]);
+
+  if (staleDays === null || staleDays < 3) return null;
+  const cls = staleDays < 7 ? "text-amber-400" : "text-orange-500";
+  const tip = ({ fr: `Dernière mise à jour il y a ${staleDays}j`, en: `Last updated ${staleDays}d ago`, es: `Última actualización hace ${staleDays}d`, ar: `آخر تحديث: ${staleDays} أيام`, id: `Terakhir diperbarui ${staleDays} hari lalu` }[locale]) ?? `${staleDays}d ago`;
+  return <span title={tip} className={`text-[10px] cursor-help shrink-0 ${cls}`}>⏰{staleDays}d</span>;
+}
+
 // ─── Component ────────────────────────────────────────────────────────────────
 
 interface DefaultFilters {
@@ -1371,14 +1388,9 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
                           return locale === "fr" ? `au ${formatted}` : locale === "ar" ? `بتاريخ ${formatted}` : formatted;
                         })()}
                       </span>
-                      {!ageMode && !epiWeekMode && (() => {
-                        const ref = outbreak.updated_at ?? outbreak.date;
-                        const staleDays = Math.floor((Date.now() - new Date(ref).getTime()) / 86_400_000);
-                        if (staleDays < 3) return null;
-                        const cls = staleDays < 7 ? "text-amber-400" : "text-orange-500";
-                        const tip = ({ fr: `Dernière mise à jour il y a ${staleDays}j`, en: `Last updated ${staleDays}d ago`, es: `Última actualización hace ${staleDays}d`, ar: `آخر تحديث: ${staleDays} أيام`, id: `Terakhir diperbarui ${staleDays} hari lalu` }[locale]) ?? `${staleDays}d ago`;
-                        return <span title={tip} className={`text-[10px] cursor-help shrink-0 ${cls}`}>⏰{staleDays}d</span>;
-                      })()}
+                      {!ageMode && !epiWeekMode && (
+                        <StaleDaysBadge referenceIso={outbreak.updated_at ?? outbreak.date} locale={locale} />
+                      )}
                     </div>
                   </td>
                   <td className="px-2 py-3">
