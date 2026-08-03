@@ -185,6 +185,10 @@
       "schedule": "15 8 * * 1"
     },
     {
+      "path": "/api/cron/sync-wpro-dengue-update",
+      "schedule": "20 8 * * 1"
+    },
+    {
       "path": "/api/cron/sync-taiwan-cdc",
       "schedule": "0 5 * * *"
     }
