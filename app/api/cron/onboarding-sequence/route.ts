@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { buildJ1Email, buildJ3Email, buildJ7Email, buildJ12Email, buildPilotConversionEmail } from "@/lib/onboarding-emails";
 import * as Sentry from "@sentry/nextjs";
-import { logCronRun, isRealProduction, isLiveCronInvocation } from "@/lib/cron-monitor";
+import { logCronRun, isRealProduction, isLiveCronInvocation, claimEmailSend } from "@/lib/cron-monitor";
 
 export const dynamic = "force-dynamic";
 
@@ -181,6 +181,9 @@ async function runOnboardingSequence(req: NextRequest, supabase: SupabaseClient)
   let j7Sent = 0, j7Failed = 0;
   let j12Sent = 0, j12Failed = 0;
   let j32Sent = 0, j32Failed = 0;
+  // Claimed-but-already-sent, i.e. a duplicate Vercel invocation of this same
+  // scheduled run — see claimEmailSend() in lib/cron-monitor.ts.
+  let deduped = 0;
   // Eligible recipients not actually emailed because this invocation wasn't
   // recognized as live (see isLiveCronInvocation) — reported for visibility.
   const dryRunRecipients: string[] = [];
@@ -195,8 +198,12 @@ async function runOnboardingSequence(req: NextRequest, supabase: SupabaseClient)
       const locale = user.locale || "en";
       const { subject, html } = buildJ1Email(locale, user.id);
       if (isRealProduction && isLive) {
-        await sendEmail(user.email, subject, html);
-        j1Sent++;
+        if (await claimEmailSend(supabase, user.id, "onboarding-sequence", "j1")) {
+          await sendEmail(user.email, subject, html);
+          j1Sent++;
+        } else {
+          deduped++;
+        }
       } else if (isRealProduction) {
         dryRunRecipients.push(`j1:${user.email}`);
       } else {
@@ -217,8 +224,12 @@ async function runOnboardingSequence(req: NextRequest, supabase: SupabaseClient)
       const locale = user.locale || "en";
       const { subject, html } = buildJ3Email(locale, user.id);
       if (isRealProduction && isLive) {
-        await sendEmail(user.email, subject, html);
-        j3Sent++;
+        if (await claimEmailSend(supabase, user.id, "onboarding-sequence", "j3")) {
+          await sendEmail(user.email, subject, html);
+          j3Sent++;
+        } else {
+          deduped++;
+        }
       } else if (isRealProduction) {
         dryRunRecipients.push(`j3:${user.email}`);
       } else {
@@ -239,8 +250,12 @@ async function runOnboardingSequence(req: NextRequest, supabase: SupabaseClient)
       const locale = user.locale || "en";
       const { subject, html } = buildJ7Email(locale, user.id);
       if (isRealProduction && isLive) {
-        await sendEmail(user.email, subject, html);
-        j7Sent++;
+        if (await claimEmailSend(supabase, user.id, "onboarding-sequence", "j7")) {
+          await sendEmail(user.email, subject, html);
+          j7Sent++;
+        } else {
+          deduped++;
+        }
       } else if (isRealProduction) {
         dryRunRecipients.push(`j7:${user.email}`);
       } else {
@@ -261,8 +276,12 @@ async function runOnboardingSequence(req: NextRequest, supabase: SupabaseClient)
       const locale = user.locale || "en";
       const { subject, html } = buildJ12Email(locale, user.id);
       if (isRealProduction && isLive) {
-        await sendEmail(user.email, subject, html);
-        j12Sent++;
+        if (await claimEmailSend(supabase, user.id, "onboarding-sequence", "j12")) {
+          await sendEmail(user.email, subject, html);
+          j12Sent++;
+        } else {
+          deduped++;
+        }
       } else if (isRealProduction) {
         dryRunRecipients.push(`j12:${user.email}`);
       } else {
@@ -283,8 +302,12 @@ async function runOnboardingSequence(req: NextRequest, supabase: SupabaseClient)
       const locale = user.locale || "en";
       const { subject, html } = buildPilotConversionEmail(locale, user.id, (user.pilot_organization as string | null) ?? null);
       if (isRealProduction && isLive) {
-        await sendEmail(user.email, subject, html);
-        j32Sent++;
+        if (await claimEmailSend(supabase, user.id, "onboarding-sequence", "j32")) {
+          await sendEmail(user.email, subject, html);
+          j32Sent++;
+        } else {
+          deduped++;
+        }
       } else if (isRealProduction) {
         dryRunRecipients.push(`j32:${user.email}`);
       } else {
@@ -320,6 +343,7 @@ async function runOnboardingSequence(req: NextRequest, supabase: SupabaseClient)
     j7:  { sent: j7Sent,  failed: j7Failed,  total: (j7Users  ?? []).length },
     j12: { sent: j12Sent, failed: j12Failed, total: (j12Users ?? []).length },
     j32: { sent: j32Sent, failed: j32Failed, total: (j32Users ?? []).length },
+    deduped,
     live: isLive,
     dryRunRecipients: dryRunRecipients.length > 0 ? dryRunRecipients : undefined,
   });

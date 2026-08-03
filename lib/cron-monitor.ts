@@ -42,11 +42,65 @@ export const isRealProduction = process.env.VERCEL_ENV === "production";
  * idempotent and re-running them harmlessly is preferable to risking the
  * billing-critical downgrade silently not firing on a real scheduled run
  * because of a header-detection bug.
+ *
+ * Does NOT cover Vercel occasionally invoking the same scheduled run more
+ * than once — Vercel's own cron docs call this out as possible, and both
+ * invocations would carry this same header, so this check alone can't tell
+ * them apart. For crons whose eligibility query is a pure time window with
+ * no state-changing write to naturally exclude a user on a second pass
+ * (onboarding-sequence, trial-reminders, winback-sequence — unlike
+ * expire-trials' plan downgrade, or regional-alerts/disease-alerts'
+ * outbreak_alert_log/disease_alert_log), pair this with claimEmailSend()
+ * below to close that gap. See known-findings.json entry
+ * "isLiveCronInvocation-does-not-cover-vercel-duplicate-delivery" for the
+ * finding this addresses.
  */
 export function isLiveCronInvocation(req: NextRequest): boolean {
   const isVercelCron = req.headers.get("x-vercel-cron-schedule") !== null;
   const liveParam = req.nextUrl.searchParams.get("live") === "1";
   return isVercelCron || liveParam;
+}
+
+/**
+ * Atomically claims a one-time-per-user lifecycle email send, so two
+ * near-simultaneous invocations of the same cron (see isLiveCronInvocation's
+ * doc above) can't both send the same email to the same user. Call this
+ * immediately before the actual send — NOT after, unlike
+ * outbreak_alert_log/disease_alert_log's send-then-log ordering, which
+ * exists to survive a crash between send and log on a SINGLE invocation.
+ * That ordering is the wrong one here: two concurrent invocations both
+ * checking "not yet logged" before either logs would both pass and both
+ * send. Claiming first via INSERT ... ON CONFLICT DO NOTHING means only one
+ * of two racing invocations gets the row, so only one sends.
+ *
+ * `step` identifies the specific lifecycle touch (e.g. "j1", "j3",
+ * "trial_expired") — a user can be claimed once per (cron, step) for the
+ * life of their account, not once per day; these are one-shot lifecycle
+ * emails, not recurring digests.
+ *
+ * Fails open (returns true, i.e. "go ahead and send") on any unexpected DB
+ * error, including the table not existing yet — a missing migration should
+ * degrade to today's un-deduped behavior, not silently stop these
+ * revenue-critical emails from sending at all.
+ */
+export async function claimEmailSend(
+  supabase: SupabaseClient,
+  userId: string,
+  cronName: string,
+  step: string,
+): Promise<boolean> {
+  const { data, error } = await supabase
+    .from("lifecycle_email_log")
+    .upsert(
+      { user_id: userId, cron_name: cronName, step },
+      { onConflict: "user_id,cron_name,step", ignoreDuplicates: true },
+    )
+    .select("user_id");
+  if (error) {
+    console.error(`[cron-monitor] claimEmailSend failed for ${cronName}/${step}/${userId}, sending anyway:`, error.message);
+    return true;
+  }
+  return (data?.length ?? 0) > 0;
 }
 
 export type CronStatus = "ok" | "error" | "no_data";

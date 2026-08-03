@@ -7,7 +7,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { buildTrialExpiredEmail } from "@/lib/onboarding-emails";
 import * as Sentry from "@sentry/nextjs";
-import { logCronRun, isRealProduction, isLiveCronInvocation } from "@/lib/cron-monitor";
+import { logCronRun, isRealProduction, isLiveCronInvocation, claimEmailSend } from "@/lib/cron-monitor";
 
 export const dynamic = "force-dynamic";
 
@@ -121,6 +121,7 @@ async function runExpireTrials(req: NextRequest, supabase: SupabaseClient) {
 
   // Send trial-expired email to each downgraded user (skip if opted out)
   let emailErrors = 0;
+  let deduped = 0;
   // Eligible recipients not actually emailed because this invocation wasn't
   // recognized as live (see isLiveCronInvocation) — reported for visibility.
   const dryRunRecipients: string[] = [];
@@ -134,7 +135,14 @@ async function runExpireTrials(req: NextRequest, supabase: SupabaseClient) {
     try {
       const { subject, html } = buildTrialExpiredEmail(user.locale ?? "en", user.id);
       if (isRealProduction && isLive) {
-        await sendEmail(user.email, subject, html);
+        // Claim before send — closes the Vercel duplicate-delivery gap
+        // isLiveCronInvocation alone can't (see lib/cron-monitor.ts).
+        if (await claimEmailSend(supabase, user.id, "expire-trials", "trial_expired")) {
+          await sendEmail(user.email, subject, html);
+        } else {
+          deduped++;
+          console.log(`[expire-trials] skipped ${user.email}: already sent (duplicate cron invocation)`);
+        }
       } else if (isRealProduction) {
         dryRunRecipients.push(user.email);
       }
@@ -159,7 +167,7 @@ async function runExpireTrials(req: NextRequest, supabase: SupabaseClient) {
   await logCronRun(supabase, "expire-trials", emailErrors > 0 ? "error" : "ok", ids.length,
     emailErrors > 0 ? `${emailErrors} email(s) d'expiration en échec` : undefined);
   return NextResponse.json({
-    downgraded: ids.length, users: expired.map((p) => p.email), emailErrors,
+    downgraded: ids.length, users: expired.map((p) => p.email), emailErrors, deduped,
     live: isLive,
     dryRunRecipients: dryRunRecipients.length > 0 ? dryRunRecipients : undefined,
   });

@@ -6,7 +6,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { PRICE_DISPLAY } from "@/lib/pricing";
 import * as Sentry from "@sentry/nextjs";
-import { logCronRun, isRealProduction, isLiveCronInvocation } from "@/lib/cron-monitor";
+import { logCronRun, isRealProduction, isLiveCronInvocation, claimEmailSend } from "@/lib/cron-monitor";
 import { signUnsubscribeToken } from "@/lib/unsubscribe-token";
 
 export const dynamic = "force-dynamic";
@@ -473,6 +473,9 @@ async function runWinbackSequence(req: NextRequest, supabase: SupabaseClient) {
 
   let j3Sent = 0, j3Failed = 0;
   let j7Sent = 0, j7Failed = 0;
+  // Claimed-but-already-sent, i.e. a duplicate Vercel invocation of this same
+  // scheduled run — see claimEmailSend() in lib/cron-monitor.ts.
+  let deduped = 0;
   // Recipients that were eligible but not actually emailed because this
   // invocation wasn't recognized as live (see isLiveCronInvocation) —
   // reported back for visibility instead of silently dropped.
@@ -485,8 +488,12 @@ async function runWinbackSequence(req: NextRequest, supabase: SupabaseClient) {
       const locale = profile.locale ?? "en";
       const { subject, html } = buildEmail(locale, profile.id);
       if (isRealProduction && isLive) {
-        await sendBrevo(profile.email!, subject, html);
-        j3Sent++;
+        if (await claimEmailSend(supabase, profile.id, "winback-sequence", "j3")) {
+          await sendBrevo(profile.email!, subject, html);
+          j3Sent++;
+        } else {
+          deduped++;
+        }
       } else if (isRealProduction) {
         dryRunRecipients.push(`j3:${profile.email}`);
       } else {
@@ -507,8 +514,12 @@ async function runWinbackSequence(req: NextRequest, supabase: SupabaseClient) {
       const locale = profile.locale ?? "en";
       const { subject, html } = buildEmailJ7(locale, profile.id);
       if (isRealProduction && isLive) {
-        await sendBrevo(profile.email!, subject, html);
-        j7Sent++;
+        if (await claimEmailSend(supabase, profile.id, "winback-sequence", "j7")) {
+          await sendBrevo(profile.email!, subject, html);
+          j7Sent++;
+        } else {
+          deduped++;
+        }
       } else if (isRealProduction) {
         dryRunRecipients.push(`j7:${profile.email}`);
       } else {
@@ -536,5 +547,6 @@ async function runWinbackSequence(req: NextRequest, supabase: SupabaseClient) {
     dryRunRecipients: dryRunRecipients.length > 0 ? dryRunRecipients : undefined,
     j3: { sent: j3Sent, failed: j3Failed, total: (j3Profiles ?? []).length },
     j7: { sent: j7Sent, failed: j7Failed, total: (j7Profiles ?? []).length },
+    deduped,
   });
 }

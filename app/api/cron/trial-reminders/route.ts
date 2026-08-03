@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { buildTrialEndingEmail } from "@/lib/trial-ending-email";
 import * as Sentry from "@sentry/nextjs";
-import { logCronRun, isRealProduction, isLiveCronInvocation } from "@/lib/cron-monitor";
+import { logCronRun, isRealProduction, isLiveCronInvocation, claimEmailSend } from "@/lib/cron-monitor";
 import { getLocalizedDisease } from "@/lib/outbreaks";
 
 export const dynamic = "force-dynamic";
@@ -130,6 +130,9 @@ async function runTrialReminders(req: NextRequest, supabase: SupabaseClient) {
   let sent         = 0;
   let failed       = 0;
   let skippedNoKey = 0;
+  // Claimed-but-already-sent, i.e. a duplicate Vercel invocation of this same
+  // scheduled run — see claimEmailSend() in lib/cron-monitor.ts.
+  let deduped      = 0;
   // Eligible recipients not actually emailed because this invocation wasn't
   // recognized as live (see isLiveCronInvocation) — reported for visibility.
   const dryRunRecipients: string[] = [];
@@ -156,8 +159,17 @@ async function runTrialReminders(req: NextRequest, supabase: SupabaseClient) {
       });
 
       if (isRealProduction && isLive) {
-        const ok = await sendEmail(profile.email, subject, html);
-        if (ok) sent++; else skippedNoKey++;
+        // The query above OR-matches two disjoint windows (J-3, J-1) into one
+        // list with no separate tag — derive which one this profile matched
+        // so the two milestones claim independent dedup slots (a user must
+        // still get both, days apart, just not either one twice).
+        const step = new Date(profile.trial_ends_at).getTime() < new Date(j1End).getTime() ? "j1" : "j3";
+        if (await claimEmailSend(supabase, profile.id, "trial-reminders", step)) {
+          const ok = await sendEmail(profile.email, subject, html);
+          if (ok) sent++; else skippedNoKey++;
+        } else {
+          deduped++;
+        }
       } else if (isRealProduction) {
         dryRunRecipients.push(profile.email);
       } else {
@@ -187,7 +199,7 @@ async function runTrialReminders(req: NextRequest, supabase: SupabaseClient) {
     failed > 0 ? `${failed} rappel(s) en échec` : undefined);
   console.log(`[trial-reminders] Done — ${sent} sent, ${failed} failed, ${skippedNoKey} skipped (no key).`);
   return NextResponse.json({
-    sent, failed, skippedNoKey, total: profiles.length,
+    sent, failed, skippedNoKey, deduped, total: profiles.length,
     live: isLive,
     dryRunRecipients: dryRunRecipients.length > 0 ? dryRunRecipients : undefined,
   });
