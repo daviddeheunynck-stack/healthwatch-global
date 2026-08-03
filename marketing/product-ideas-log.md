@@ -155,7 +155,7 @@ Sur les 7 derniers jours, l'agrégat du compte Brevo affiche **191 requêtes d'e
 
 **Contexte funnel mesuré au passage** (utile au bilan de lundi, pas une idée en soi) : 21 comptes, 8 essais Pro en cours dont les fins tombent aux **29/07, 01/08, 07/08, 15/08, 17/08, 22/08, 24/08 et 13/09** — donc **3 seulement expirent avant la date de décision du 21/08, et aucun des 4 leads institutionnels**. `product_events` : 19 événements en tout, **aucun d'un vrai utilisateur depuis le 24/07**, zéro `pricing_page_view`, zéro export, zéro rapport PDF sur toute la fenêtre d'instrumentation. Le dashboard est en `force-dynamic`, donc cette absence n'est pas un artefact de cache.
 
-**Statut :** PROPOSÉE — en attente de retour de David. **Idée 2 (désabonnements Brevo invisibles) construite le 29/07** (`8934c64` : synchronisation de la blocklist Brevo vers `profiles.email_blocked_at` + gating de `regional-alerts` ; `f59c166` : gating étendu aux 18 autres crons d'envoi). Idées 1 (magic link / OTP de repli pour ZABRE) et 3 (comptes existants encore à 5 régions) toujours ouvertes, non traitées à ce jour.
+**Statut :** **Idée 2 (désabonnements Brevo invisibles) construite le 29/07** (`8934c64` : synchronisation de la blocklist Brevo vers `profiles.email_blocked_at` + gating de `regional-alerts` ; `f59c166` : gating étendu aux 18 autres crons d'envoi). **Idée 1 (magic link / OTP de repli pour ZABRE) construite le 30/07** (voir entrée du 30/07, idée 1). **Idée 3 (comptes existants encore à 5 régions)** : distribution confirmée inchangée le 03/08 (12 comptes à 0, 10 à 5, toujours aucun entre les deux) ; un indicateur de visibilité ajouté au health-check ce jour-là (`9ec3c1e`), mais aucune correction de fond appliquée — le risque de flot (97 e-mails/run) qui motivait initialement cette idée est déjà mitigé depuis le 02/08 par le regroupement en un e-mail par utilisateur et le plafond `MAX_DIGEST_ITEMS_PER_EMAIL` ; réduire le périmètre des comptes existants resterait un arbitrage de David, non fait.
 
 ---
 
@@ -353,7 +353,7 @@ Même utilisateur, même identifiant de foyer, huit à dix secondes. Ce n'est pl
 - `subscriptions` : **6 des 13 lignes sont des adresses de test** jamais nettoyées (`stripe@example.com`, `e2e@`, `test-webhook@`, `test-e2e-*`, `stripe-payment-test-…`). Elles reçoivent le digest hebdomadaire pour rien et gonflent de ~85 % le compteur d'abonnés lu par `/admin` et le health-check. Nettoyage à faire un jour, pas une idée produit.
 - `regional-alerts` a tourné ce matin à 06:31 avec `rows=4` ; `weekly-signal` 12 envois le 29/07 ; `weekly-digest` 12 envois le 27/07.
 
-**Statut :** PROPOSÉE — en attente de retour de David.
+**Statut :** Idée 1 (ratio clic→visite) construite le 03/08 (`9ec3c1e`, session « on gère tout aujourd'hui ») — `fetchClickVisitRatio` exclut désormais les rafales de clics (≥2 liens distincts sur un même `messageId` en moins de 2 s, signature d'un préchargement de passerelle de sécurité) plutôt que de les compter comme de l'engagement humain ; découvert le jour même sur le cas réel de l'OIM (3 liens en 98 ms). Vérifié en direct sur la prod : 5 clics réels / 3 exclus sur 8 bruts, correspond exactement à l'incident du matin. Idées 2 (notification d'inbound institutionnel) et 3 (subscriptions de test à nettoyer, faite le 03/08 dans un autre lot — voir idée 3 du 03/08) : la 2 reste ouverte, sans nouvel angle.
 
 ---
 
@@ -509,7 +509,7 @@ Le cas ZABRE chiffre le coût du motif : **48 e-mails délivrés du 18/07 à auj
 - `weekly-digest`, `trigger-regional-digest` et `send-sitrep-emails` : dernier run le 27/07 (lot hebdomadaire du lundi), prochain attendu demain 03/08 — rien d'anormal.
 - **Piège technique à retenir pour toute sonde Brevo future :** le filtre `email` de `GET /v3/smtp/statistics/events` est **sensible à la casse**. `Zrhyacinthe2@gmail.com` (la casse exacte stockée en base) renvoie **0 événement** ; `zrhyacinthe2@gmail.com` en renvoie 48. Une session qui ne repasse pas l'adresse en minuscules conclura à tort qu'un contact ne reçoit plus rien. Vérifié au passage que `lib/brevo-blocklist.ts` fait bien le `toLowerCase()` des deux côtés — la synchronisation des désabonnements n'est donc pas affectée par ce piège.
 
-**Statut :** PROPOSÉE — en attente de retour de David.
+**Statut :** Idée 1 (copy CTA essai actif) **déjà construite le jour même** (`813c5e7`, avant ce log — repérée en relisant `git log` le 03/08, non recensée à l'époque). Idée 2 (Institut Pasteur / essais hors mécanisme de conversion) : le filet général construit le 03/08 (`9ec3c1e`) — `checkDecisionHorizonTrials` signale désormais tout essai dont l'échéance dépasse le 21/08 (aujourd'hui : ZABRE, Mulamba, Pasteur), vérifié en direct sur la prod. Le cas Pasteur précis (basculer `is_pilot=true` ou le contacter hors produit) reste un arbitrage de David, non tranché — proposition faite en session le 03/08, en attente. Idée 3 (réconciliation du stock) : le volet `alert_locale` a son propre garde-fou depuis le 02/08 ; le volet régions (10 comptes à 5, 12 à 0) a désormais un indicateur de visibilité (`fetchRegionEnrollmentStock`, `9ec3c1e`) — signal seulement, aucune correction automatique ; le volet invitations jamais rattrapées reste couvert seulement pour les pilotes (`checkStuckPilotInvites`), `ouedraogodaouda2408@gmail.com` (non-pilote, invité avant que `is_pilot` soit toujours posé sur `/api/admin/invite`) reste un angle mort connu, non traité — cas historique isolé, jugé trop risqué à généraliser sans signal fiable « admin-invité » sur les comptes anciens.
 
 ---
 
@@ -597,5 +597,16 @@ Et l'inversion vaut d'être dite telle quelle : **la liste d'abonnés du produit
 - **Idée 3 (artefacts de test en prod) — ✅ FAIT.** Les 5 comptes `hwg-diag-rl-*` supprimés après vérification préalable de zéro donnée associée (`auth.users`, cascade `ON DELETE CASCADE` sur `profiles` et tables liées). Les 6 abonnements de test désactivés (`active=false`, même convention que le désabonnement). Garde-fou `alert_locale` du health-check étendu pour exclure les domaines de test (`TEST_EMAIL_DOMAINS`), vérifié qu'il ne signale plus rien en direct sur la prod. Profils passés de 27 à 22.
 
 **Limite assumée :** pas de test end-to-end du flux `POST` complet (clic réel sur le bouton de confirmation) — tentative de serveur dev isolé sur Windows abandonnée après un échec de résolution de `node_modules` par lien symbolique (le vrai `node_modules` du dépôt principal vérifié intact après coup, aucun dégât). Compensé par une revue de code ligne à ligne (échappement HTML, validation de jeton HMAC) et des vérifications en lecture/écriture ciblée contre la prod réelle.
+
+**Suite en session, même jour (« on gère tout aujourd'hui ») — traitement du backlog ouvert.** David a demandé de traiter en une fois l'idée 1 du 31/07, les idées 1-3 du 02/08 et l'idée 3 du 28/07, en plus des trois idées du jour. Revue de l'état réel avant de coder (git log + sondes prod) plutôt que de partir du diagnostic écrit : deux items étaient déjà résolus par des sessions précédentes non recensées dans ce log. Statut détaillé mis à jour directement dans chaque entrée d'origine (28/07, 02/08, 31/07) plutôt que dupliqué ici. Récapitulatif :
+
+- **31/07 idée 1 (ratio clic→visite)** — ✅ construite (`9ec3c1e`) : exclusion des rafales de clics scanner.
+- **02/08 idée 1 (copy CTA essai actif)** — déjà faite le 02/08 même (`813c5e7`), non recensée à l'époque.
+- **02/08 idée 2 (Institut Pasteur)** — ✅ filet général construit (`9ec3c1e`, `checkDecisionHorizonTrials`) ; le cas Pasteur précis reste **en attente d'arbitrage de David** (`is_pilot=true` ou contact hors produit) — non tranché.
+- **02/08 idée 3 (réconciliation du stock)** — ✅ volet régions : indicateur de visibilité ajouté (`9ec3c1e`) ; volet `alert_locale` déjà couvert (02/08) ; volet invitations : angle mort connu et assumé sur `ouedraogodaouda2408@gmail.com` (non-pilote, cas historique isolé), pas de détection générale construite — risque de faux positifs sur les comptes gratuits jamais reconnectés jugé trop élevé sans signal fiable.
+- **28/07 idée 3 (comptes à 5 régions)** — ✅ même indicateur de visibilité que ci-dessus ; pas de correction de fond, le risque de flot qui motivait l'idée est déjà mitigé depuis le 02/08.
+- **AMR (10/07) et signal de variance (Simon Ruegg, 6-7/07)** — non traités : aucune spec ni signal frais depuis des semaines, construire à partir de rien irait contre la consigne « mesurer avant de coder ». Proposé à David de cadrer ces deux-là avant de les construire, plutôt que de deviner une implémentation.
+
+Typecheck + lint propres sur tout le dépôt à chaque étape. Poussé sur `master` : `9ec3c1e`.
 
 ---
