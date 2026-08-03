@@ -4,9 +4,24 @@ import { useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { createClient } from "@/lib/supabase-browser";
 import { track } from "@vercel/analytics/react";
+import * as Sentry from "@sentry/nextjs";
 import { Activity, Loader2, CheckCircle, BarChart2, Bell, FileDown, Lock, Sparkles } from "lucide-react";
 import Link from "next/link";
 import OAuthButtons from "@/components/OAuthButtons";
+
+// Shown when supabase.auth.signUp() throws instead of resolving with
+// {error} — see handleSignup below for why that happens and why it must
+// never be left to just hang. Deliberately generic (not error.message):
+// an uncaught exception here isn't a recognized AuthError, so its message
+// is whatever a browser/crypto/storage API happened to throw, not
+// something meant for an end user.
+const UNEXPECTED_ERROR: Record<string, string> = {
+  en: "Something went wrong creating your account. Please try again, or email contact@healthwatch-global.com if it persists.",
+  fr: "Une erreur est survenue lors de la création de votre compte. Réessayez, ou écrivez à contact@healthwatch-global.com si le problème persiste.",
+  es: "Ocurrió un error al crear su cuenta. Inténtelo de nuevo, o escriba a contact@healthwatch-global.com si persiste.",
+  ar: "حدث خطأ أثناء إنشاء حسابك. يرجى المحاولة مرة أخرى، أو مراسلة contact@healthwatch-global.com إذا استمرت المشكلة.",
+  id: "Terjadi kesalahan saat membuat akun Anda. Coba lagi, atau kirim email ke contact@healthwatch-global.com jika masalah berlanjut.",
+};
 
 const TRIAL_START_NOTE: Record<string, string> = {
   en: "Your 14-day Pro trial starts as soon as you confirm your email.",
@@ -131,59 +146,76 @@ export default function SignupPage() {
     track("signup_attempt", { method: "email", locale });
 
     const supabase = createClient();
-    const { data: signUpData, error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: { emailRedirectTo: `${window.location.origin}/auth/callback?next=/${locale}` },
-    });
+    // supabase-js's signUp() only catches errors it recognizes as its own
+    // AuthError types and returns those as `{error}` — anything else (a
+    // storage/crypto API blocked by a locked-down corporate browser, an
+    // unrecognized network failure) is re-thrown instead of resolved. Without
+    // this try/catch that left the button spinning forever with no error
+    // shown, no Sentry event, and no DB row — invisible everywhere except to
+    // the person stuck looking at a dead form. Found 2026-08-03 after a WHO
+    // epidemiologist reported "I wasn't able to create an account" with
+    // nothing else to go on — the exact shape a bug in this class produces.
+    try {
+      const { data: signUpData, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: { emailRedirectTo: `${window.location.origin}/auth/callback?next=/${locale}` },
+      });
 
-    if (error) {
-      setError(error.message);
-      setLoading(false);
-      return;
-    }
-
-    const userId = signUpData.user?.id;
-
-    // Save locale to profile so all transactional emails use the right language
-    if (userId) {
-      supabase.from("profiles").update({ locale, alert_locale: locale }).eq("id", userId).then(() => {});
-    }
-
-    // Fire welcome email — non-blocking
-    fetch("/api/send-welcome", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, locale }),
-    }).catch(() => {});
-
-    // When mailer_autoconfirm is ON, Supabase returns a session immediately —
-    // the /auth/callback route is never called, so the trial must be activated here.
-    // Redirect straight to the dashboard so the user doesn't see "check your email".
-    if (signUpData.session && userId) {
-      track("signup_success", { method: "email", locale, autoconfirm: true });
-      // activate-trial reads the session from cookies, which can lag a beat right
-      // after signUp() — retry once so a losing race doesn't silently skip the trial.
-      let activated = false;
-      for (let attempt = 0; attempt < 2 && !activated; attempt++) {
-        if (attempt > 0) await new Promise((r) => setTimeout(r, 600));
-        const res = await fetch("/api/activate-trial", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(priorityRegion ? { priorityRegion } : {}),
-        }).catch(() => null);
-        activated = !!res?.ok;
+      if (error) {
+        setError(error.message);
+        setLoading(false);
+        return;
       }
-      if (!activated) track("activate_trial_failed", { method: "email", locale });
-      // Hard redirect (not router.push) so the Navbar remounts and reads the
-      // updated plan from Supabase — client-side nav keeps the old "free" state.
-      window.location.assign(`/${locale}`);
-      return;
-    }
 
-    track("signup_success", { method: "email", locale, autoconfirm: false });
-    setSuccess(true);
-    setLoading(false);
+      const userId = signUpData.user?.id;
+
+      // Save locale to profile so all transactional emails use the right language
+      if (userId) {
+        supabase.from("profiles").update({ locale, alert_locale: locale }).eq("id", userId).then(() => {});
+      }
+
+      // Fire welcome email — non-blocking
+      fetch("/api/send-welcome", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, locale }),
+      }).catch(() => {});
+
+      // When mailer_autoconfirm is ON, Supabase returns a session immediately —
+      // the /auth/callback route is never called, so the trial must be activated here.
+      // Redirect straight to the dashboard so the user doesn't see "check your email".
+      if (signUpData.session && userId) {
+        track("signup_success", { method: "email", locale, autoconfirm: true });
+        // activate-trial reads the session from cookies, which can lag a beat right
+        // after signUp() — retry once so a losing race doesn't silently skip the trial.
+        let activated = false;
+        for (let attempt = 0; attempt < 2 && !activated; attempt++) {
+          if (attempt > 0) await new Promise((r) => setTimeout(r, 600));
+          const res = await fetch("/api/activate-trial", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(priorityRegion ? { priorityRegion } : {}),
+          }).catch(() => null);
+          activated = !!res?.ok;
+        }
+        if (!activated) track("activate_trial_failed", { method: "email", locale });
+        // Hard redirect (not router.push) so the Navbar remounts and reads the
+        // updated plan from Supabase — client-side nav keeps the old "free" state.
+        window.location.assign(`/${locale}`);
+        return;
+      }
+
+      track("signup_success", { method: "email", locale, autoconfirm: false });
+      setSuccess(true);
+      setLoading(false);
+    } catch (err) {
+      console.error("[signup] unexpected exception:", err);
+      Sentry.captureException(err, { tags: { flow: "signup", method: "email", locale } });
+      track("signup_unexpected_error", { method: "email", locale });
+      setError(UNEXPECTED_ERROR[locale] ?? UNEXPECTED_ERROR.en);
+      setLoading(false);
+    }
   };
 
   return (

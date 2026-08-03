@@ -46,7 +46,29 @@ export async function GET(req: NextRequest) {
       }
     );
 
-    const { data: { user }, error } = await supabase.auth.exchangeCodeForSession(code);
+    // exchangeCodeForSession reads the PKCE code_verifier from a cookie
+    // BEFORE its own try/catch even starts (see @supabase/auth-js
+    // GoTrueClient#_exchangeCodeForSession) — a cookie-storage failure there
+    // throws past that internal handling instead of resolving with {error},
+    // and would otherwise propagate straight to Next.js's generic 500 instead
+    // of the friendly login-with-reason redirect every other failure on this
+    // route gets. Same defensive-wrapper reasoning as the client-side signup
+    // fix this accompanies (2026-08-03) — different auth-js entry point, same
+    // "not all failures come back as {error}" gap.
+    let exchangeResult;
+    try {
+      exchangeResult = await supabase.auth.exchangeCodeForSession(code);
+    } catch (err) {
+      console.error("[auth/callback] exchangeCodeForSession threw:", err);
+      Sentry.captureException(err, { tags: { flow: "oauth-callback" } });
+      const nextParam2 = searchParams.get("next") ?? "";
+      const errLocale = nextParam2.split("/").filter(Boolean)[0] ?? "en";
+      const safeErrLocale = VALID_LOCALES.includes(errLocale) ? errLocale : "en";
+      return NextResponse.redirect(
+        `${origin}/${safeErrLocale}/login?error=oauth&reason=${encodeURIComponent("unexpected_error")}`
+      );
+    }
+    const { data: { user }, error } = exchangeResult;
     if (error) {
       console.error("[auth/callback] exchangeCodeForSession failed:", error.message, error.status);
       const nextParam2 = searchParams.get("next") ?? "";

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { createClient } from "@/lib/supabase-browser";
 import { track } from "@vercel/analytics/react";
+import * as Sentry from "@sentry/nextjs";
 import { Loader2 } from "lucide-react";
 
 const GoogleIcon = () => (
@@ -49,17 +50,33 @@ export default function OAuthButtons({ locale, redirectTo, context = "signup" }:
     track(`${context}_oauth_click`, { provider, locale });
     const supabase = createClient();
     const next = redirectTo ?? `/${locale}`;
-    const result = await supabase.auth.signInWithOAuth({
-      provider,
-      options: {
-        redirectTo: `${window.location.origin}/auth/callback?next=${encodeURIComponent(next)}`,
-      },
-    });
-    if (result.error) {
-      setOauthError(`${ERROR_LABELS[locale] ?? ERROR_LABELS.en} (${result.error.message})`);
+    // signInWithOAuth (unlike most other auth-js methods) has no internal
+    // try/catch at all — building the authorize URL includes PKCE code-
+    // challenge generation via the Web Crypto API and a storage write, both
+    // of which can throw in a locked-down/managed corporate browser instead
+    // of resolving with {error}. Without this try/catch that left the button
+    // spinning forever with no error shown and no Sentry event — same class
+    // of silent failure as the email path in signup/page.tsx (see its
+    // comment for the report that surfaced this, 2026-08-03).
+    try {
+      const result = await supabase.auth.signInWithOAuth({
+        provider,
+        options: {
+          redirectTo: `${window.location.origin}/auth/callback?next=${encodeURIComponent(next)}`,
+        },
+      });
+      if (result.error) {
+        setOauthError(`${ERROR_LABELS[locale] ?? ERROR_LABELS.en} (${result.error.message})`);
+        setLoading(null);
+      }
+      // On success: browser redirects — no need to reset loading
+    } catch (err) {
+      console.error("[oauth] unexpected exception:", err);
+      Sentry.captureException(err, { tags: { flow: context, provider, locale } });
+      track(`${context}_oauth_unexpected_error`, { provider, locale });
+      setOauthError(ERROR_LABELS[locale] ?? ERROR_LABELS.en);
       setLoading(null);
     }
-    // On success: browser redirects — no need to reset loading
   };
 
   return (
