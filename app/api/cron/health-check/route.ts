@@ -191,19 +191,53 @@ async function checkStuckPilotInvites(supabase: any): Promise<{ invites: StuckIn
 // to product_events row, 8-10s apart, 4/4 real visits on the window) is still
 // the shape of things — informational only, no target/threshold exists yet
 // to alert against. Same Brevo call shape as lib/brevo-blocklist.ts.
-async function fetchClickVisitRatio(apiKey: string): Promise<{ clicks: number | null; visits: number | null }> {
-  let clicks: number | null = null;
+//
+// Found 2026-08-03: a corporate email security gateway prefetches every link
+// in a message to scan it, GET-only, all at once — the IOM's own gateway hit
+// 3 distinct links (dashboard, pricing, unsubscribe) on the same messageId
+// within 98ms and, unfiltered, that reads as the best buying signal ever
+// recorded (a "pricing" click that had never once happened before). Real
+// clicks in the 24/07-31/07 sample were 8-10s apart; a rafale — ≥2 distinct
+// links on one messageId inside RAFALE_WINDOW_MS — is the bot signature, not
+// a fast human. The whole messageId's clicks are dropped from the count
+// rather than guessing which ones were "real", since the gateway can also
+// prefetch a single link with no human follow-up at all.
+const RAFALE_WINDOW_MS = 2_000;
+
+async function fetchClickVisitRatio(apiKey: string): Promise<{ clicks: number | null; visits: number | null; botClicksExcluded: number | null }> {
   try {
     const res = await fetch(
       "https://api.brevo.com/v3/smtp/statistics/events?event=clicks&days=7&limit=500",
       { headers: { "api-key": apiKey }, signal: AbortSignal.timeout(10_000) },
     );
-    if (res.ok) {
-      const body = (await res.json()) as { events?: unknown[] };
-      clicks = (body.events ?? []).length;
+    if (!res.ok) return { clicks: null, visits: null, botClicksExcluded: null };
+    const body = (await res.json()) as { events?: { messageId?: string; link?: string; date?: string }[] };
+    const events = body.events ?? [];
+
+    const byMessage = new Map<string, { link?: string; ts: number }[]>();
+    for (const e of events) {
+      if (!e.messageId || !e.date) continue;
+      const list = byMessage.get(e.messageId) ?? [];
+      list.push({ link: e.link, ts: new Date(e.date).getTime() });
+      byMessage.set(e.messageId, list);
     }
-  } catch { /* best-effort — a Brevo hiccup shouldn't fail the whole report */ }
-  return { clicks, visits: null };
+
+    let botClicksExcluded = 0;
+    let clicks = 0;
+    for (const list of byMessage.values()) {
+      list.sort((a, b) => a.ts - b.ts);
+      const distinctLinks = new Set(list.map((c) => c.link)).size;
+      const span = list[list.length - 1].ts - list[0].ts;
+      const isRafale = distinctLinks >= 2 && span < RAFALE_WINDOW_MS;
+      if (isRafale) botClicksExcluded += list.length;
+      else clicks += list.length;
+    }
+
+    return { clicks, visits: null, botClicksExcluded };
+  } catch {
+    // best-effort — a Brevo hiccup shouldn't fail the whole report
+    return { clicks: null, visits: null, botClicksExcluded: null };
+  }
 }
 
 interface ZeroRegionTrial { email: string; trialEndsAt: string }
@@ -250,6 +284,64 @@ async function checkZeroRegionTrials(supabase: any): Promise<{ trials: ZeroRegio
   return { trials, error: null };
 }
 
+// The viability go/no-go decision date — see [[project_hwg_viability_decision_window_2026_07_24]].
+// A trial ending after this date will never get its conversion ask before
+// the decision is made from whatever data exists on that day. Found
+// 2026-08-02: Institut Pasteur (jalal.nourlil@pasteur.ma, trial_ends_at
+// 2026-09-13, is_pilot=false) sits outside every automated conversion path
+// — pilot-closing-reminder filters on is_pilot, trial-reminders/winback fire
+// off trial_ends_at itself, all three weeks after the decision. General
+// case, not a Pasteur-specific fix: any trial extended (manually or by a
+// future bug) past this date is invisible to the same three mechanisms.
+const VIABILITY_DECISION_DATE = "2026-08-21";
+
+interface DecisionHorizonTrial { email: string; trialEndsAt: string; isPilot: boolean }
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+async function checkDecisionHorizonTrials(supabase: any): Promise<{ trials: DecisionHorizonTrial[]; error: string | null }> {
+  const { data, error } = await supabase
+    .from("profiles")
+    .select("email, trial_ends_at, is_pilot")
+    .in("plan", ["starter", "pro", "team", "enterprise"])
+    .is("stripe_subscription_id", null)
+    .gt("trial_ends_at", VIABILITY_DECISION_DATE);
+  if (error) return { trials: [], error: error.message };
+  const trials: DecisionHorizonTrial[] = (data ?? [])
+    .filter((p: { email: string | null }) => !!p.email)
+    .map((p: { email: string; trial_ends_at: string; is_pilot: boolean | null }) =>
+      ({ email: p.email, trialEndsAt: p.trial_ends_at, isPilot: !!p.is_pilot }));
+  return { trials, error: null };
+}
+
+// Informational only — this table is genuinely bimodal today (0 regions or
+// all 5, nothing between), which is either "personalization nobody uses" or
+// "the flood risk from 2026-07-27/28" depending on how you read it. No
+// threshold to alert on; just keeps the shape visible without a hand-run
+// query. See marketing/product-ideas-log.md, 2026-07-28 idea 1 and 2026-08-02
+// idea 3 — the flood risk itself is already mitigated (regional-alerts
+// batches to one email/user/run and caps at MAX_DIGEST_ITEMS_PER_EMAIL, see
+// 8641ba1/e7f78f2), so this is pure visibility, not a call to action.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+async function fetchRegionEnrollmentStock(supabase: any): Promise<{ zero: number; partial: number; full: number; error: string | null }> {
+  const { data: allProfiles, error: profErr } = await supabase.from("profiles").select("id");
+  if (profErr) return { zero: 0, partial: 0, full: 0, error: profErr.message };
+  const { data: regionRows, error: regionErr } = await supabase.from("user_alert_regions").select("user_id");
+  if (regionErr) return { zero: 0, partial: 0, full: 0, error: regionErr.message };
+
+  const countByUser = new Map<string, number>();
+  for (const r of (regionRows ?? []) as { user_id: string }[]) {
+    countByUser.set(r.user_id, (countByUser.get(r.user_id) ?? 0) + 1);
+  }
+  let zero = 0, partial = 0, full = 0;
+  for (const p of (allProfiles ?? []) as { id: string }[]) {
+    const n = countByUser.get(p.id) ?? 0;
+    if (n === 0) zero++;
+    else if (n >= 5) full++;
+    else partial++;
+  }
+  return { zero, partial, full, error: null };
+}
+
 export async function GET(req: NextRequest) {
   const cronSecret = clean(process.env.CRON_SECRET);
   if (!cronSecret || req.headers.get("authorization") !== `Bearer ${cronSecret}`)
@@ -294,6 +386,8 @@ async function runHealthCheck(_req: NextRequest, supabase: any) {
     zeroRegionResult,
     institutionalResult,
     stuckInviteResult,
+    decisionHorizonResult,
+    regionEnrollmentStock,
     alertLocaleDriftResult,
     clickVisitResult,
     { count: visits7d },
@@ -316,12 +410,14 @@ async function runHealthCheck(_req: NextRequest, supabase: any) {
       checkZeroRegionTrials(supabase),
       checkInstitutionalSubscriptions(supabase),
       checkStuckPilotInvites(supabase),
+      checkDecisionHorizonTrials(supabase),
+      fetchRegionEnrollmentStock(supabase),
       // Regression guard for the 2026-08-02 fix (22c0fb1): any row still (or
       // again) drifted — locale set but alert_locale stuck on its own DEFAULT
       // 'en' — means the fix regressed or a new write path skipped it, not
       // that the one-off backfill missed something (that part's done).
       supabase.from("profiles").select("email, locale, alert_locale").neq("locale", "en").eq("alert_locale", "en"),
-      brevoKey ? fetchClickVisitRatio(brevoKey) : Promise.resolve({ clicks: null, visits: null }),
+      brevoKey ? fetchClickVisitRatio(brevoKey) : Promise.resolve({ clicks: null, visits: null, botClicksExcluded: null }),
       supabase.from("product_events").select("*", { count: "exact", head: true }).gte("created_at", sevenDaysAgo),
     ]);
 
@@ -337,6 +433,10 @@ async function runHealthCheck(_req: NextRequest, supabase: any) {
   const stuckInviteError = stuckInviteResult.error;
   const hasStuckInvites  = stuckInvites.length > 0;
 
+  const decisionHorizonTrials    = decisionHorizonResult.trials;
+  const decisionHorizonError     = decisionHorizonResult.error;
+  const hasDecisionHorizonTrials = decisionHorizonTrials.length > 0;
+
   // Excludes healthwatch-test.dev and other known test/dev domains — a
   // verification script for this very guard wrote 5 disposable accounts to
   // prod on 2026-08-03 and, unfiltered, they'd have made this alert cry
@@ -348,7 +448,11 @@ async function runHealthCheck(_req: NextRequest, supabase: any) {
   const alertLocaleDriftErr = alertLocaleDriftResult.error?.message ?? null;
   const hasAlertLocaleDrift = alertLocaleDrift.length > 0;
 
-  const clickVisitRatio = { clicks: clickVisitResult.clicks, visits: visits7d ?? null };
+  const clickVisitRatio = {
+    clicks: clickVisitResult.clicks,
+    visits: visits7d ?? null,
+    botClicksExcluded: clickVisitResult.botClicksExcluded,
+  };
 
   // `?? 0` on a FAILED count would read as "this channel has no subscribers",
   // and the delivery loop below skips an audience of 0 — so a transient error
@@ -532,8 +636,13 @@ async function runHealthCheck(_req: NextRequest, supabase: any) {
     <tr><td style="padding:6px 0;color:#94a3b8">Foyers actifs</td><td style="padding:6px 0;font-weight:600">${total ?? "?"}</td></tr>
     <tr><td style="padding:6px 0;color:#94a3b8">Risque HIGH</td><td style="padding:6px 0;font-weight:600;color:#f87171">${high ?? "?"}</td></tr>
     <tr><td style="padding:6px 0;color:#94a3b8">PHEIC actifs</td><td style="padding:6px 0;font-weight:600;color:#c084fc">${pheic ?? "?"}${(pheic ?? 0) > 0 ? " ⚠️" : ""}</td></tr>
-    <tr><td style="padding:6px 0;color:#94a3b8">Clics email → visites (7j)</td><td style="padding:6px 0;font-weight:600">${clickVisitRatio.clicks ?? "?"} → ${clickVisitRatio.visits ?? "?"}</td></tr>
+    <tr><td style="padding:6px 0;color:#94a3b8">Clics email → visites (7j)</td><td style="padding:6px 0;font-weight:600">${clickVisitRatio.clicks ?? "?"} → ${clickVisitRatio.visits ?? "?"}${clickVisitRatio.botClicksExcluded ? ` <span style="color:#64748b;font-weight:400">(${clickVisitRatio.botClicksExcluded} clic(s) scanner exclu(s))</span>` : ""}</td></tr>
+    ${regionEnrollmentStock.error
+      ? `<tr><td colspan="2" style="padding:8px 0;color:#fbbf24;font-weight:700">🔧 Contrôle « répartition régions d'alerte » impossible : ${esc(regionEnrollmentStock.error)}</td></tr>`
+      : `<tr><td style="padding:6px 0;color:#94a3b8">Régions d'alerte (comptes)</td><td style="padding:6px 0;font-weight:600">${regionEnrollmentStock.zero} à 0 · ${regionEnrollmentStock.partial} entre les deux · ${regionEnrollmentStock.full} à 5</td></tr>`}
     ${hasStuckInvites ? `<tr><td colspan="2" style="padding:8px 0;color:#f87171;font-weight:700">⚠️ ${stuckInvites.length} pilote(s) invité(s) jamais connecté(s) — même trou que ZABRE/Mulamba/ouedraogodaouda2408</td></tr>` : ""}
+    ${decisionHorizonError ? `<tr><td colspan="2" style="padding:8px 0;color:#fbbf24;font-weight:700">🔧 Contrôle « essais après l'horizon de décision » impossible : ${esc(decisionHorizonError)}</td></tr>` : ""}
+    ${hasDecisionHorizonTrials ? `<tr><td colspan="2" style="padding:8px 0;color:#fbbf24;font-weight:700">🔔 ${decisionHorizonTrials.length} essai(s) dont l'échéance dépasse le ${VIABILITY_DECISION_DATE} — aucun mécanisme automatisé (trial-reminders/winback/pilot-closing) ne les touche avant la décision : ${esc(decisionHorizonTrials.map((t) => `${t.email}${t.isPilot ? " (pilote)" : ""} (${t.trialEndsAt.slice(0, 10)})`).join(", "))}</td></tr>` : ""}
     ${alertLocaleDriftErr ? `<tr><td colspan="2" style="padding:8px 0;color:#fbbf24;font-weight:700">🔧 Contrôle « dérive alert_locale » impossible : ${esc(alertLocaleDriftErr)}</td></tr>` : ""}
     ${hasAlertLocaleDrift ? `<tr><td colspan="2" style="padding:8px 0;color:#f87171;font-weight:700">⚠️ ${alertLocaleDrift.length} compte(s) avec alert_locale de nouveau désynchronisé — régression possible du fix du 02/08</td></tr>` : ""}
     ${hasOverdue ? `<tr><td colspan="2" style="padding:8px 0;color:#f87171;font-weight:700">⚠️ ${overdue.length} cron(s) en retard : ${overdue.join(", ")}</td></tr>` : ""}
@@ -573,7 +682,7 @@ async function runHealthCheck(_req: NextRequest, supabase: any) {
   <p style="margin-top:16px;font-size:11px;color:#475569">${new Date().toISOString()}</p>
 </div>`;
 
-  const subject = `${emoji} HealthWatch — ${total ?? "?"} foyers${hasOverdue ? ` · ${overdue.length} cron(s) en retard` : ""}${sentryIssues.length > 0 ? ` · ${sentryIssues.length} erreur(s) Sentry` : ""}${deliveryAlert ? ` · ${deliveryIssues.length} canal(aux) en panne` : ""}${hasZeroRegionTrials ? ` · ${zeroRegionTrials.length} essai(s) sans région` : ""}${hasStuckInvites ? ` · ${stuckInvites.length} invite(s) bloquée(s)` : ""}${hasInstitutionalSubs ? ` · 🔔 ${institutionalSubs.length} abonnement(s) institutionnel(s)` : ""} · ${new Date().toLocaleDateString("fr-FR")}`;
+  const subject = `${emoji} HealthWatch — ${total ?? "?"} foyers${hasOverdue ? ` · ${overdue.length} cron(s) en retard` : ""}${sentryIssues.length > 0 ? ` · ${sentryIssues.length} erreur(s) Sentry` : ""}${deliveryAlert ? ` · ${deliveryIssues.length} canal(aux) en panne` : ""}${hasZeroRegionTrials ? ` · ${zeroRegionTrials.length} essai(s) sans région` : ""}${hasStuckInvites ? ` · ${stuckInvites.length} invite(s) bloquée(s)` : ""}${hasInstitutionalSubs ? ` · 🔔 ${institutionalSubs.length} abonnement(s) institutionnel(s)` : ""}${hasDecisionHorizonTrials ? ` · 🔔 ${decisionHorizonTrials.length} essai(s) après le ${VIABILITY_DECISION_DATE}` : ""} · ${new Date().toLocaleDateString("fr-FR")}`;
 
   if (!isRealProduction) {
     console.log("[health-check] non-production run — skipping Brevo email and Sentry check-in/alerts");
@@ -663,6 +772,8 @@ async function runHealthCheck(_req: NextRequest, supabase: any) {
     stuckPilotInvites: { count: stuckInvites.length, invites: stuckInvites, error: stuckInviteError },
     alertLocaleDrift: { count: alertLocaleDrift.length, rows: alertLocaleDrift, error: alertLocaleDriftErr },
     institutionalSubscriptions: { count: institutionalSubs.length, rows: institutionalSubs, error: institutionalError },
+    decisionHorizonTrials: { count: decisionHorizonTrials.length, trials: decisionHorizonTrials, error: decisionHorizonError, horizon: VIABILITY_DECISION_DATE },
+    regionEnrollmentStock,
     clickVisitRatio,
   });
 }
