@@ -43,22 +43,25 @@ const ERROR_MESSAGES: Record<string, { title: string; body: string }> = {
   id: { title: "Tautan tidak valid", body: "Tautan ini tidak valid atau sudah digunakan." },
 };
 
+const CONFIRM: Record<string, { title: string; body: (d: string) => string; cta: string; cancel: string }> = {
+  fr: { title: "Confirmer le désabonnement", body: (d) => `Vous ne recevrez plus d'alertes pour : ${d}. Confirmer ?`, cta: "Me désabonner", cancel: "Annuler" },
+  en: { title: "Confirm unsubscribe", body: (d) => `You will no longer receive alerts for: ${d}. Confirm?`, cta: "Unsubscribe me", cancel: "Cancel" },
+  es: { title: "Confirmar cancelación", body: (d) => `Ya no recibirá alertas para: ${d}. ¿Confirmar?`, cta: "Cancelar suscripción", cancel: "Cancelar" },
+  ar: { title: "تأكيد إلغاء الاشتراك", body: (d) => `لن تتلقى بعد الآن تنبيهات بخصوص: ${d}. تأكيد؟`, cta: "إلغاء اشتراكي", cancel: "إلغاء" },
+  id: { title: "Konfirmasi berhenti berlangganan", body: (d) => `Anda tidak akan lagi menerima peringatan untuk: ${d}. Konfirmasi?`, cta: "Berhenti berlangganan", cancel: "Batal" },
+};
+
 function esc(s: string): string {
   return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 }
 
-function htmlPage(locale: string, success: boolean, disease: string): string {
-  const safeLocale = VALID_LOCALES.has(locale) ? locale : "en";
-  const m   = MESSAGES[safeLocale];
-  const err = ERROR_MESSAGES[safeLocale];
-  const dir = safeLocale === "ar" ? "rtl" : "ltr";
-
+function pageShell(safeLocale: string, dir: string, title: string, bodyHtml: string): string {
   return `<!DOCTYPE html>
 <html lang="${safeLocale}" dir="${dir}">
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>${success ? m.title : err.title} — HealthWatch Global</title>
+  <title>${title} — HealthWatch Global</title>
   <style>
     *,*::before,*::after{box-sizing:border-box}
     body{font-family:system-ui,-apple-system,sans-serif;background:#111827;color:#e5e7eb;
@@ -68,20 +71,53 @@ function htmlPage(locale: string, success: boolean, disease: string): string {
     .icon{font-size:44px;margin-bottom:20px}
     h1{color:#f9fafb;font-size:20px;font-weight:700;margin:0 0 12px}
     p{color:#9ca3af;font-size:14px;line-height:1.7;margin:0 0 28px}
-    a{display:inline-block;color:#9ca3af;text-decoration:none;font-size:13px;
-      border:1px solid #374151;border-radius:8px;padding:8px 18px}
-    a:hover{color:#f9fafb;border-color:#6b7280}
+    a,button{display:inline-block;color:#9ca3af;text-decoration:none;font-size:13px;font-family:inherit;
+      background:transparent;cursor:pointer;border:1px solid #374151;border-radius:8px;padding:8px 18px}
+    a:hover,button:hover{color:#f9fafb;border-color:#6b7280}
+    button.primary{background:#dc2626;border-color:#dc2626;color:#ffffff;font-weight:700;margin-bottom:10px}
+    button.primary:hover{background:#b91c1c;border-color:#b91c1c;color:#ffffff}
+    .row{display:flex;flex-direction:column;gap:10px}
   </style>
 </head>
 <body>
-  <div class="card">
-    <div class="icon">${success ? "✅" : "⚠️"}</div>
-    <h1>${success ? m.title : err.title}</h1>
-    <p>${success ? m.body(esc(disease)) : err.body}</p>
-    <a href="https://healthwatch-global.com/${safeLocale}">${m.back}</a>
-  </div>
+  <div class="card">${bodyHtml}</div>
 </body>
 </html>`;
+}
+
+// GET only shows a confirmation page — no write — so a security-gateway link
+// prefetch (a GET) can't unsubscribe someone who never clicked. See lib/brevo-send.ts.
+function confirmPage(locale: string, rawId: string, token: string, disease: string): string {
+  const safeLocale = VALID_LOCALES.has(locale) ? locale : "en";
+  const c   = CONFIRM[safeLocale];
+  const dir = safeLocale === "ar" ? "rtl" : "ltr";
+  const body = `
+    <div class="icon">❓</div>
+    <h1>${c.title}</h1>
+    <p>${c.body(esc(disease))}</p>
+    <form method="POST" class="row">
+      <input type="hidden" name="id" value="${rawId}"/>
+      <input type="hidden" name="token" value="${token}"/>
+      <input type="hidden" name="disease" value="${esc(disease)}"/>
+      <input type="hidden" name="locale" value="${safeLocale}"/>
+      <button type="submit" class="primary">${c.cta}</button>
+      <a href="https://healthwatch-global.com/${safeLocale}">${c.cancel}</a>
+    </form>`;
+  return pageShell(safeLocale, dir, c.title, body);
+}
+
+function resultPage(locale: string, success: boolean, disease: string): string {
+  const safeLocale = VALID_LOCALES.has(locale) ? locale : "en";
+  const m   = MESSAGES[safeLocale];
+  const err = ERROR_MESSAGES[safeLocale];
+  const dir = safeLocale === "ar" ? "rtl" : "ltr";
+  const title = success ? m.title : err.title;
+  const body = `
+    <div class="icon">${success ? "✅" : "⚠️"}</div>
+    <h1>${title}</h1>
+    <p>${success ? m.body(esc(disease)) : err.body}</p>
+    <a href="https://healthwatch-global.com/${safeLocale}">${m.back}</a>`;
+  return pageShell(safeLocale, dir, title, body);
 }
 
 function html(content: string, status: number) {
@@ -96,10 +132,28 @@ export async function GET(req: NextRequest) {
   const locale    = VALID_LOCALES.has(rawLocale) ? rawLocale : "en";
 
   if (!UUID_RE.test(rawId) || !disease) {
-    return html(htmlPage(locale, false, disease), 400);
+    return html(resultPage(locale, false, disease), 400);
   }
   if (!verifyUnsubscribeToken(rawId, token)) {
-    return html(htmlPage(locale, false, disease), 403);
+    return html(resultPage(locale, false, disease), 403);
+  }
+
+  return html(confirmPage(locale, rawId, token, disease), 200);
+}
+
+export async function POST(req: NextRequest) {
+  const form = await req.formData().catch(() => null);
+  const rawId     = form?.get("id")?.toString()      ?? req.nextUrl.searchParams.get("id") ?? "";
+  const token     = form?.get("token")?.toString()   ?? req.nextUrl.searchParams.get("token") ?? "";
+  const disease   = form?.get("disease")?.toString() ?? req.nextUrl.searchParams.get("disease") ?? "";
+  const rawLocale = form?.get("locale")?.toString()  ?? req.nextUrl.searchParams.get("locale") ?? "en";
+  const locale    = VALID_LOCALES.has(rawLocale) ? rawLocale : "en";
+
+  if (!UUID_RE.test(rawId) || !disease) {
+    return html(resultPage(locale, false, disease), 400);
+  }
+  if (!verifyUnsubscribeToken(rawId, token)) {
+    return html(resultPage(locale, false, disease), 403);
   }
 
   const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
@@ -112,8 +166,8 @@ export async function GET(req: NextRequest) {
 
   if (error) {
     console.error("[unsubscribe-disease] delete error:", error);
-    return html(htmlPage(locale, false, disease), 500);
+    return html(resultPage(locale, false, disease), 500);
   }
 
-  return html(htmlPage(locale, true, disease), 200);
+  return html(resultPage(locale, true, disease), 200);
 }

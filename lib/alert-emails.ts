@@ -34,6 +34,13 @@ const CONTENT: Record<string, {
   updateBadge: string;
   itemLinkLabel: string;
   overflowNote: (count: number) => string;
+  // "s'aggrave"/"is worsening" used to promise a change and never show it —
+  // regional-alerts already computes exactly what changed (risk_level moved
+  // a tier, or cases surged ≥20% — see CASE_SURGE_THRESHOLD) before deciding
+  // to send at all, then discarded it by collapsing reason into "update".
+  // These render that discarded number instead of a bare "s'aggrave".
+  escalatedLabel: (from: string, to: string) => string;
+  surgeLabel: (casesStr: string, deltaStr: string, pct: number) => string;
 }> = {
   fr: {
     subject: (region, disease) =>
@@ -60,6 +67,8 @@ const CONTENT: Record<string, {
     updateBadge: "Mise à jour",
     itemLinkLabel: "Détails →",
     overflowNote: (count) => `+ ${count} autres foyers actifs — consultez le tableau de bord complet.`,
+    escalatedLabel: (from, to) => `Risque relevé de ${from} à ${to} depuis votre dernière alerte`,
+    surgeLabel: (casesStr, deltaStr, pct) => `${casesStr} cas (${deltaStr} depuis votre dernière alerte, +${pct}%)`,
   },
   en: {
     subject: (region, disease) =>
@@ -86,6 +95,8 @@ const CONTENT: Record<string, {
     updateBadge: "Update",
     itemLinkLabel: "Details →",
     overflowNote: (count) => `+ ${count} more active outbreaks — see the full dashboard.`,
+    escalatedLabel: (from, to) => `Risk raised from ${from} to ${to} since your last alert`,
+    surgeLabel: (casesStr, deltaStr, pct) => `${casesStr} cases (${deltaStr} since your last alert, +${pct}%)`,
   },
   es: {
     subject: (region, disease) =>
@@ -112,6 +123,8 @@ const CONTENT: Record<string, {
     updateBadge: "Actualización",
     itemLinkLabel: "Detalles →",
     overflowNote: (count) => `+ ${count} brotes activos más — consulta el panel completo.`,
+    escalatedLabel: (from, to) => `Riesgo elevado de ${from} a ${to} desde tu última alerta`,
+    surgeLabel: (casesStr, deltaStr, pct) => `${casesStr} casos (${deltaStr} desde tu última alerta, +${pct}%)`,
   },
   ar: {
     subject: (region, disease) =>
@@ -138,6 +151,8 @@ const CONTENT: Record<string, {
     updateBadge: "تحديث",
     itemLinkLabel: "← التفاصيل",
     overflowNote: (count) => `+ ${count} حالات تفشٍّ نشطة أخرى — راجع لوحة التحكم الكاملة.`,
+    escalatedLabel: (from, to) => `رُفع مستوى الخطر من ${from} إلى ${to} منذ آخر تنبيه`,
+    surgeLabel: (casesStr, deltaStr, pct) => `${casesStr} حالة (${deltaStr} منذ آخر تنبيه، +${pct}%)`,
   },
   id: {
     subject: (region, disease) =>
@@ -164,8 +179,42 @@ const CONTENT: Record<string, {
     updateBadge: "Pembaruan",
     itemLinkLabel: "Detail →",
     overflowNote: (count) => `+ ${count} wabah aktif lainnya — lihat dasbor lengkap.`,
+    escalatedLabel: (from, to) => `Risiko dinaikkan dari ${from} ke ${to} sejak peringatan terakhir Anda`,
+    surgeLabel: (casesStr, deltaStr, pct) => `${casesStr} kasus (${deltaStr} sejak peringatan terakhir Anda, +${pct}%)`,
   },
 };
+
+// Renders what actually changed since the user's last alert for this
+// outbreak — "escalated" (risk_level moved a tier) or "surge" (cases rose
+// ≥ CASE_SURGE_THRESHOLD, computed by the caller). Both numbers already
+// exist in outbreak_alert_log by the time an "update" email is sent; this
+// just stops discarding them. Returns null for "new" (nothing to compare
+// against) or when the prior value needed for the phrase is missing.
+function changeText(
+  c: (typeof CONTENT)[string],
+  numLocale: string,
+  reason: "new" | "escalated" | "surge" | undefined,
+  riskLabels: Record<string, string>,
+  priorRiskLevel: string | null | undefined,
+  currentRiskLevel: string,
+  priorCases: number | null | undefined,
+  currentCases: number | null | undefined
+): string | null {
+  if (reason === "escalated" && priorRiskLevel && riskLabels[priorRiskLevel] && riskLabels[currentRiskLevel]) {
+    return c.escalatedLabel(riskLabels[priorRiskLevel], riskLabels[currentRiskLevel]);
+  }
+  if (
+    reason === "surge" &&
+    typeof priorCases === "number" && priorCases > 0 &&
+    typeof currentCases === "number"
+  ) {
+    const delta = currentCases - priorCases;
+    const pct = Math.round((delta / priorCases) * 100);
+    const deltaStr = `${delta >= 0 ? "+" : ""}${delta.toLocaleString(numLocale)}`;
+    return c.surgeLabel(currentCases.toLocaleString(numLocale), deltaStr, pct);
+  }
+  return null;
+}
 
 // ─── HTML builder ─────────────────────────────────────────────────────────────
 
@@ -176,7 +225,8 @@ export function buildOutbreakAlertEmail(
   dashboardUrl: string,
   outbreakUrl?: string,
   unsubUrl?: string,
-  kind: "new" | "update" = "new"
+  kind: "new" | "update" = "new",
+  change?: { reason?: "escalated" | "surge"; priorRiskLevel?: string | null; priorCases?: number | null }
 ): { subject: string; html: string } {
   const c = CONTENT[locale] ?? CONTENT.en;
   const numLocale = locale === "ar" ? "ar-SA" : (locale || "en");
@@ -187,6 +237,10 @@ export function buildOutbreakAlertEmail(
       : outbreak.risk_level === "medium"
       ? "#f59e0b"
       : "#22c55e";
+
+  const change_text = kind === "update"
+    ? changeText(c, numLocale, change?.reason, c.riskLabels, change?.priorRiskLevel, outbreak.risk_level, change?.priorCases, outbreak.cases)
+    : null;
 
   const rows = [
     `<tr><td style="color:#9ca3af;padding:6px 0;width:160px">${c.riskLabel}</td>
@@ -218,6 +272,8 @@ export function buildOutbreakAlertEmail(
 
       <h1 style="color:#ffffff;font-size:20px;font-weight:700;margin:0 0 8px">${kind === "new" ? c.headline(regionLabel) : c.headlineUpdate(regionLabel)}</h1>
       <p style="color:#6b7280;font-size:14px;margin:0 0 24px">${c.intro}</p>
+
+      ${change_text ? `<p style="color:#fca5a5;font-size:14px;font-weight:600;margin:-12px 0 24px">${esc(change_text)}</p>` : ""}
 
       <!-- Outbreak card -->
       <div style="background:#111827;border:1px solid #374151;border-radius:12px;padding:20px;margin-bottom:24px">
@@ -268,6 +324,8 @@ export interface DigestItem {
   deaths?: number | null;
   outbreakUrl: string;
   reason: "new" | "escalated" | "surge";
+  priorRiskLevel?: string | null;
+  priorCases?: number | null;
 }
 
 export function buildOutbreakDigestEmail(
@@ -293,6 +351,10 @@ export function buildOutbreakDigestEmail(
         ...(item.cases != null ? [`${c.casesLabel}: ${item.cases.toLocaleString(numLocale)}`] : []),
         ...(item.deaths != null ? [`${c.deathsLabel}: ${item.deaths.toLocaleString(numLocale)}`] : []),
       ].join(" · ");
+      const itemChangeText = changeText(
+        c, numLocale, item.reason === "new" ? undefined : item.reason, c.riskLabels,
+        item.priorRiskLevel, item.risk_level, item.priorCases, item.cases
+      );
 
       return `<div style="background:#111827;border:1px solid #374151;border-radius:12px;padding:16px 20px;margin-bottom:12px">
         <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:4px">
@@ -300,6 +362,7 @@ export function buildOutbreakDigestEmail(
           <span style="color:${badgeColor};font-size:11px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;white-space:nowrap">${badgeLabel}</span>
         </div>
         <p style="color:#9ca3af;font-size:13px;margin:0 0 8px">${esc(item.country)} · ${esc(item.regionLabel)}</p>
+        ${itemChangeText ? `<p style="color:#fca5a5;font-size:12px;font-weight:600;margin:0 0 8px">${esc(itemChangeText)}</p>` : ""}
         <p style="color:${riskColor};font-size:12px;margin:0 0 10px">${meta}</p>
         <a href="${item.outbreakUrl}" style="color:#f87171;font-size:13px;font-weight:600;text-decoration:none">${c.itemLinkLabel}</a>
       </div>`;

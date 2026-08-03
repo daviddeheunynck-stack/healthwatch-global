@@ -139,7 +139,7 @@ export function buildDigestEmail(
   region: string,
   locale: string,
   subscriptionId?: string
-): { subject: string; html: string } {
+): { subject: string; html: string; unsubUrl?: string } {
   const l = LABELS[locale] || LABELS.fr;
   const regionLabel = REGION_LABELS[locale]?.[region] || region;
   const dir = locale === "ar" ? "rtl" : "ltr";
@@ -264,5 +264,5 @@ export function buildDigestEmail(
 </body>
 </html>`;
 
-  return { subject: l.subject as string, html };
+  return { subject: l.subject as string, html, unsubUrl: unsubUrl ?? undefined };
 }

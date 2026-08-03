@@ -550,7 +550,7 @@ function emailShell(locale: string, body: string): string {
 </html>`;
 }
 
-export function buildJ3Email(locale: string, userId: string): { subject: string; html: string } {
+export function buildJ3Email(locale: string, userId: string): { subject: string; html: string; unsubUrl: string } {
   const c = J3_CONTENT[locale] ?? J3_CONTENT.en;
   const dashboardUrl = `https://healthwatch-global.com/${locale}`;
   const unsubUrl = `https://healthwatch-global.com/api/unsubscribe-signal?id=${encodeURIComponent(userId)}&token=${signUnsubscribeToken(userId)}&locale=${locale}`;
@@ -585,10 +585,10 @@ export function buildJ3Email(locale: string, userId: string): { subject: string;
       <p style="margin:0;font-size:11px;color:#475569;">${c.unsubNote} <a href="${unsubUrl}" style="color:#475569;text-decoration:underline;">Unsubscribe</a></p>
     </div>`;
 
-  return { subject: c.subject, html: emailShell(locale, body) };
+  return { subject: c.subject, html: emailShell(locale, body), unsubUrl };
 }
 
-export function buildJ7Email(locale: string, userId: string): { subject: string; html: string } {
+export function buildJ7Email(locale: string, userId: string): { subject: string; html: string; unsubUrl: string } {
   const c = J7_CONTENT[locale] ?? J7_CONTENT.en;
   const reportsUrl   = `https://healthwatch-global.com/${locale}/reports`;
   const dashboardUrl = `https://healthwatch-global.com/${locale}`;
@@ -631,10 +631,10 @@ export function buildJ7Email(locale: string, userId: string): { subject: string;
       <p style="margin:0;font-size:11px;color:#475569;">${c.unsubNote} <a href="${unsubUrl}" style="color:#475569;text-decoration:underline;">Unsubscribe</a></p>
     </div>`;
 
-  return { subject: c.subject, html: emailShell(locale, body) };
+  return { subject: c.subject, html: emailShell(locale, body), unsubUrl };
 }
 
-export function buildJ12Email(locale: string, userId: string): { subject: string; html: string } {
+export function buildJ12Email(locale: string, userId: string): { subject: string; html: string; unsubUrl: string } {
   const c = J12_CONTENT[locale] ?? J12_CONTENT.en;
   const pricingUrl = `https://healthwatch-global.com/${locale}/pricing`;
   const unsubUrl = `https://healthwatch-global.com/api/unsubscribe-signal?id=${encodeURIComponent(userId)}&token=${signUnsubscribeToken(userId)}&locale=${locale}`;
@@ -680,7 +680,7 @@ export function buildJ12Email(locale: string, userId: string): { subject: string
       <p style="margin:0;font-size:11px;color:#475569;">${c.unsubNote} <a href="${unsubUrl}" style="color:#475569;text-decoration:underline;">Unsubscribe</a></p>
     </div>`;
 
-  return { subject: c.subject, html: emailShell(locale, body) };
+  return { subject: c.subject, html: emailShell(locale, body), unsubUrl };
 }
 
 // ─── Pilot J+32 : 3 days left → upgrade to Team ──────────────────────────────
@@ -814,7 +814,7 @@ const PILOT_CONVERSION_CONTENT: Record<string, {
   },
 };
 
-export function buildPilotConversionEmail(locale: string, userId: string, organization: string | null = null): { subject: string; html: string } {
+export function buildPilotConversionEmail(locale: string, userId: string, organization: string | null = null): { subject: string; html: string; unsubUrl: string } {
   const c = PILOT_CONVERSION_CONTENT[locale] ?? PILOT_CONVERSION_CONTENT.en;
   const org = organization || (locale === "fr" ? "votre organisation" : "your organization");
   // Every recipient of this email is, by construction (the J+32 cohort query
@@ -867,10 +867,10 @@ export function buildPilotConversionEmail(locale: string, userId: string, organi
       <p style="margin:0;font-size:11px;color:#475569;">${c.unsubNote} <a href="${unsubUrl}" style="color:#475569;text-decoration:underline;">Unsubscribe</a></p>
     </div>`;
 
-  return { subject: c.subject, html: emailShell(locale, body) };
+  return { subject: c.subject, html: emailShell(locale, body), unsubUrl };
 }
 
-export function buildTrialExpiredEmail(locale: string, userId: string): { subject: string; html: string } {
+export function buildTrialExpiredEmail(locale: string, userId: string): { subject: string; html: string; unsubUrl: string } {
   const c = TRIAL_EXPIRED_CONTENT[locale] ?? TRIAL_EXPIRED_CONTENT.en;
   const pricingUrl = `https://healthwatch-global.com/${locale}/pricing`;
   const unsubUrl = `https://healthwatch-global.com/api/unsubscribe-signal?id=${encodeURIComponent(userId)}&token=${signUnsubscribeToken(userId)}&locale=${locale}`;
@@ -917,10 +917,10 @@ export function buildTrialExpiredEmail(locale: string, userId: string): { subjec
       <p style="margin:0;font-size:11px;color:#475569;">${c.unsubNote} <a href="${unsubUrl}" style="color:#475569;text-decoration:underline;">Unsubscribe</a></p>
     </div>`;
 
-  return { subject: c.subject, html: emailShell(locale, body) };
+  return { subject: c.subject, html: emailShell(locale, body), unsubUrl };
 }
 
-export function buildJ1Email(locale: string, userId: string): { subject: string; html: string } {
+export function buildJ1Email(locale: string, userId: string): { subject: string; html: string; unsubUrl: string } {
   const c = J1_CONTENT[locale] ?? J1_CONTENT.en;
   const alertsUrl = `https://healthwatch-global.com/${locale}/account#regional-alerts`;
   const dashUrl   = `https://healthwatch-global.com/${locale}`;
@@ -951,5 +951,5 @@ export function buildJ1Email(locale: string, userId: string): { subject: string;
       <p style="margin:0;font-size:11px;color:#475569;">${c.unsubNote} <a href="${unsubUrl}" style="color:#475569;text-decoration:underline;">Unsubscribe</a></p>
     </div>`;
 
-  return { subject: c.subject, html: emailShell(locale, body) };
+  return { subject: c.subject, html: emailShell(locale, body), unsubUrl };
 }

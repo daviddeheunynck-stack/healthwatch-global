@@ -210,7 +210,13 @@ async function runRegionalAlerts(_req: NextRequest, supabase: SupabaseClient) {
     trial_value_email_sent_at: string | null;
     email_blocked_at: string | null;
   };
-  type MatchedItem = { outbreak: OutbreakRow; region: string; reason: AlertReason };
+  type MatchedItem = {
+    outbreak: OutbreakRow;
+    region: string;
+    reason: AlertReason;
+    priorRiskLevel: string | null;
+    priorCases: number | null;
+  };
 
   // ── 3. For each region, find every qualifying (user, outbreak) match ──────
   // Collected here instead of sent immediately, so a user subscribed across
@@ -297,7 +303,14 @@ async function runRegionalAlerts(_req: NextRequest, supabase: SupabaseClient) {
 
         userProfiles.set(profile.id, profile);
         const items = userItems.get(profile.id) ?? [];
-        items.push({ outbreak, region, reason });
+        // Carry the prior state forward so the email can say what changed
+        // ("risk raised from medium to high", "+34 cases, +36%") instead of
+        // a bare "is worsening" — see marketing/product-ideas-log.md, 2026-08-03, idea 2.
+        items.push({
+          outbreak, region, reason,
+          priorRiskLevel: priorLog?.risk_level ?? null,
+          priorCases: priorLog?.cases_at_alert ?? null,
+        });
         userItems.set(profile.id, items);
       }
     }
@@ -314,7 +327,7 @@ async function runRegionalAlerts(_req: NextRequest, supabase: SupabaseClient) {
     const unsubUrl      = `${APP_URL}/${locale}/account#regional-alerts`;
 
     const enriched: (DigestItem & { outbreak: OutbreakRow; region: string })[] = items.map(
-      ({ outbreak, region, reason }) => ({
+      ({ outbreak, region, reason, priorRiskLevel, priorCases }) => ({
         outbreak,
         region,
         regionLabel: rl[region] ?? region,
@@ -326,6 +339,8 @@ async function runRegionalAlerts(_req: NextRequest, supabase: SupabaseClient) {
         deaths:      outbreak.deaths,
         outbreakUrl: `${APP_URL}/${locale}/outbreak/${outbreak.id}`,
         reason,
+        priorRiskLevel,
+        priorCases,
       })
     );
 
@@ -348,7 +363,8 @@ async function runRegionalAlerts(_req: NextRequest, supabase: SupabaseClient) {
           dashboardUrl,
           only.outbreakUrl,
           unsubUrl,
-          only.reason === "new" ? "new" : "update"
+          only.reason === "new" ? "new" : "update",
+          only.reason === "new" ? undefined : { reason: only.reason, priorRiskLevel: only.priorRiskLevel, priorCases: only.priorCases }
         ));
       } else {
         // Most urgent first (risk, then reason, then case count) so the

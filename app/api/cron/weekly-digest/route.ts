@@ -5,6 +5,7 @@ import type { Outbreak } from "@/lib/outbreaks";
 import * as Sentry from "@sentry/nextjs";
 import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
 import { getBlockedEmailSet } from "@/lib/brevo-blocklist";
+import { sendBrevoEmail } from "@/lib/brevo-send";
 
 export const dynamic = "force-dynamic";
 
@@ -20,29 +21,12 @@ const SUPABASE_SERVICE_KEY = clean(process.env.SUPABASE_SERVICE_ROLE_KEY);
 // Returns whether the email was actually sent, so callers don't count a
 // skipped-for-missing-key send as a real one (found 2026-07-15 audit: sent++
 // used to run unconditionally after this call regardless of the outcome).
-async function sendEmail(to: string, subject: string, html: string): Promise<boolean> {
+async function sendEmail(to: string, subject: string, html: string, unsubscribeUrl?: string): Promise<boolean> {
   if (!BREVO_API_KEY) {
     console.warn("[weekly-digest] BREVO_API_KEY not set — skipping send");
     return false;
   }
-  const res = await fetch("https://api.brevo.com/v3/smtp/email", {
-    method: "POST",
-    signal: AbortSignal.timeout(10_000),
-    headers: {
-      "api-key": BREVO_API_KEY,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      sender: { name: "HealthWatch Global", email: "alerts@healthwatch-global.com" },
-      to: [{ email: to }],
-      subject,
-      htmlContent: html,
-    }),
-  });
-  if (!res.ok) {
-    const err = await res.text();
-    throw new Error(`Brevo error for ${to}: ${err}`);
-  }
+  await sendBrevoEmail({ to, subject, html, apiKey: BREVO_API_KEY, unsubscribeUrl });
   return true;
 }
 
@@ -149,9 +133,9 @@ async function runWeeklyDigest(_req: NextRequest, supabase: SupabaseClient) {
       // Cap at 8 outbreaks per email — keeps the email scannable
       const topOutbreaks = regionOutbreaks.slice(0, 8);
 
-      const { subject, html } = buildDigestEmail(topOutbreaks, region, locale, sub.id);
+      const { subject, html, unsubUrl } = buildDigestEmail(topOutbreaks, region, locale, sub.id);
       if (isRealProduction) {
-        const ok = await sendEmail(sub.email, subject, html);
+        const ok = await sendEmail(sub.email, subject, html, unsubUrl);
         if (ok) sent++; else skippedNoKey++;
       } else {
         sent++;

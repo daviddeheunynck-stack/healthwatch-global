@@ -8,6 +8,7 @@ import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { buildTrialExpiredEmail } from "@/lib/onboarding-emails";
 import * as Sentry from "@sentry/nextjs";
 import { logCronRun, isRealProduction, isLiveCronInvocation, claimEmailSend, pingHeartbeatIfHealthy } from "@/lib/cron-monitor";
+import { sendBrevoEmail } from "@/lib/brevo-send";
 
 export const dynamic = "force-dynamic";
 
@@ -53,19 +54,9 @@ async function runExpireTrials(req: NextRequest, supabase: SupabaseClient) {
 
   const BREVO_API_KEY = clean(process.env.BREVO_API_KEY);
 
-  async function sendEmail(to: string, subject: string, html: string) {
+  async function sendEmail(to: string, subject: string, html: string, unsubscribeUrl?: string) {
     if (!BREVO_API_KEY) return;
-    await fetch("https://api.brevo.com/v3/smtp/email", {
-      method: "POST",
-      signal: AbortSignal.timeout(10_000),
-      headers: { "api-key": BREVO_API_KEY, "Content-Type": "application/json" },
-      body: JSON.stringify({
-        sender: { name: "HealthWatch Global", email: "alerts@healthwatch-global.com" },
-        to: [{ email: to }],
-        subject,
-        htmlContent: html,
-      }),
-    });
+    await sendBrevoEmail({ to, subject, html, apiKey: BREVO_API_KEY, unsubscribeUrl });
   }
 
   // Find non-free users whose trial has expired and who have no Stripe subscription
@@ -133,12 +124,12 @@ async function runExpireTrials(req: NextRequest, supabase: SupabaseClient) {
     // send is skipped here. See lib/brevo-blocklist.ts.
     if (user.email_blocked_at) continue;
     try {
-      const { subject, html } = buildTrialExpiredEmail(user.locale ?? "en", user.id);
+      const { subject, html, unsubUrl } = buildTrialExpiredEmail(user.locale ?? "en", user.id);
       if (isRealProduction && isLive) {
         // Claim before send — closes the Vercel duplicate-delivery gap
         // isLiveCronInvocation alone can't (see lib/cron-monitor.ts).
         if (await claimEmailSend(supabase, user.id, "expire-trials", "trial_expired")) {
-          await sendEmail(user.email, subject, html);
+          await sendEmail(user.email, subject, html, unsubUrl);
         } else {
           deduped++;
           console.log(`[expire-trials] skipped ${user.email}: already sent (duplicate cron invocation)`);

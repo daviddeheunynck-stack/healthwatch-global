@@ -10,6 +10,7 @@ import { diseaseToSlug } from "@/lib/disease-data";
 import { errorMessage } from "@/lib/error";
 import * as Sentry from "@sentry/nextjs";
 import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
+import { sendBrevoEmail } from "@/lib/brevo-send";
 import { notifyMobile } from "@/lib/mobile-notify";
 import { resolvedPlan } from "@/lib/resolved-plan";
 
@@ -51,23 +52,8 @@ function buildDiseaseInAppBody(cases: number | null, riskLevel: string | null, l
   return [casesLabel, riskLabel].filter(Boolean).join(" · ") || "Active outbreak";
 }
 
-async function sendEmail(to: string, subject: string, html: string) {
-  if (!BREVO_API_KEY) throw new Error("BREVO_API_KEY not set");
-  const res = await fetch("https://api.brevo.com/v3/smtp/email", {
-    method: "POST",
-    signal: AbortSignal.timeout(10_000),
-    headers: {
-      "api-key":     BREVO_API_KEY,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      sender:  { name: "HealthWatch Global", email: "alerts@healthwatch-global.com" },
-      to:      [{ email: to }],
-      subject,
-      htmlContent: html,
-    }),
-  });
-  if (!res.ok) throw new Error(`Brevo ${res.status}: ${await res.text()}`);
+async function sendEmail(to: string, subject: string, html: string, unsubscribeUrl?: string) {
+  await sendBrevoEmail({ to, subject, html, apiKey: BREVO_API_KEY, unsubscribeUrl });
 }
 
 export async function GET(req: NextRequest) {
@@ -228,11 +214,11 @@ async function runDiseaseAlerts(_req: NextRequest, supabase: SupabaseClient) {
       // exception propagate to the catch below leaves no log rows, so the
       // next run retries every item in this batch as "new" instead of
       // losing them.
-      let subject: string, html: string;
+      let subject: string, html: string, unsubUrl: string | undefined;
       if (alertOutbreaks.length === 1) {
         const only = alertOutbreaks[0];
         const diseaseSlug = diseaseToSlug(only.disease_en);
-        ({ subject, html } = buildDiseaseAlertEmail(only, locale, userId, diseaseSlug));
+        ({ subject, html, unsubUrl } = buildDiseaseAlertEmail(only, locale, userId, diseaseSlug));
       } else {
         // Most urgent first (risk, then case count) so the items cut by the
         // cap are the least urgent ones.
@@ -259,7 +245,7 @@ async function runDiseaseAlerts(_req: NextRequest, supabase: SupabaseClient) {
         digestEmailsSent++;
       }
       if (isRealProduction) {
-        await sendEmail(profile.email, subject, html);
+        await sendEmail(profile.email, subject, html, unsubUrl);
       }
 
       // Upsert (not insert) one row per outbreak in this batch — same

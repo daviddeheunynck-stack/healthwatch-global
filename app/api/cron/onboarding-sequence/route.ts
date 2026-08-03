@@ -3,6 +3,7 @@ import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { buildJ1Email, buildJ3Email, buildJ7Email, buildJ12Email, buildPilotConversionEmail } from "@/lib/onboarding-emails";
 import * as Sentry from "@sentry/nextjs";
 import { logCronRun, isRealProduction, isLiveCronInvocation, claimEmailSend, pingHeartbeatIfHealthy } from "@/lib/cron-monitor";
+import { sendBrevoEmail } from "@/lib/brevo-send";
 
 export const dynamic = "force-dynamic";
 
@@ -13,23 +14,8 @@ const BREVO_API_KEY    = clean(process.env.BREVO_API_KEY);
 const SUPABASE_URL     = clean(process.env.NEXT_PUBLIC_SUPABASE_URL);
 const SUPABASE_SERVICE = clean(process.env.SUPABASE_SERVICE_ROLE_KEY);
 
-async function sendEmail(to: string, subject: string, html: string) {
-  if (!BREVO_API_KEY) throw new Error("BREVO_API_KEY not set");
-  const res = await fetch("https://api.brevo.com/v3/smtp/email", {
-    method: "POST",
-    signal: AbortSignal.timeout(10_000),
-    headers: { "api-key": BREVO_API_KEY, "Content-Type": "application/json" },
-    body: JSON.stringify({
-      sender: { name: "HealthWatch Global", email: "alerts@healthwatch-global.com" },
-      to: [{ email: to }],
-      subject,
-      htmlContent: html,
-    }),
-  });
-  if (!res.ok) {
-    const err = await res.text();
-    throw new Error(`Brevo error: ${err}`);
-  }
+async function sendEmail(to: string, subject: string, html: string, unsubscribeUrl?: string) {
+  await sendBrevoEmail({ to, subject, html, apiKey: BREVO_API_KEY, unsubscribeUrl });
 }
 
 export async function GET(req: NextRequest) {
@@ -196,10 +182,10 @@ async function runOnboardingSequence(req: NextRequest, supabase: SupabaseClient)
     if (!user.email || hasOptedOut(user)) continue;
     try {
       const locale = user.locale || "en";
-      const { subject, html } = buildJ1Email(locale, user.id);
+      const { subject, html, unsubUrl } = buildJ1Email(locale, user.id);
       if (isRealProduction && isLive) {
         if (await claimEmailSend(supabase, user.id, "onboarding-sequence", "j1")) {
-          await sendEmail(user.email, subject, html);
+          await sendEmail(user.email, subject, html, unsubUrl);
           j1Sent++;
         } else {
           deduped++;
@@ -222,10 +208,10 @@ async function runOnboardingSequence(req: NextRequest, supabase: SupabaseClient)
     if (!user.email || hasOptedOut(user)) continue;
     try {
       const locale = user.locale || "en";
-      const { subject, html } = buildJ3Email(locale, user.id);
+      const { subject, html, unsubUrl } = buildJ3Email(locale, user.id);
       if (isRealProduction && isLive) {
         if (await claimEmailSend(supabase, user.id, "onboarding-sequence", "j3")) {
-          await sendEmail(user.email, subject, html);
+          await sendEmail(user.email, subject, html, unsubUrl);
           j3Sent++;
         } else {
           deduped++;
@@ -248,10 +234,10 @@ async function runOnboardingSequence(req: NextRequest, supabase: SupabaseClient)
     if (!user.email || hasOptedOut(user)) continue;
     try {
       const locale = user.locale || "en";
-      const { subject, html } = buildJ7Email(locale, user.id);
+      const { subject, html, unsubUrl } = buildJ7Email(locale, user.id);
       if (isRealProduction && isLive) {
         if (await claimEmailSend(supabase, user.id, "onboarding-sequence", "j7")) {
-          await sendEmail(user.email, subject, html);
+          await sendEmail(user.email, subject, html, unsubUrl);
           j7Sent++;
         } else {
           deduped++;
@@ -274,10 +260,10 @@ async function runOnboardingSequence(req: NextRequest, supabase: SupabaseClient)
     if (!user.email || hasOptedOut(user)) continue;
     try {
       const locale = user.locale || "en";
-      const { subject, html } = buildJ12Email(locale, user.id);
+      const { subject, html, unsubUrl } = buildJ12Email(locale, user.id);
       if (isRealProduction && isLive) {
         if (await claimEmailSend(supabase, user.id, "onboarding-sequence", "j12")) {
-          await sendEmail(user.email, subject, html);
+          await sendEmail(user.email, subject, html, unsubUrl);
           j12Sent++;
         } else {
           deduped++;
@@ -300,10 +286,10 @@ async function runOnboardingSequence(req: NextRequest, supabase: SupabaseClient)
     if (!user.email || hasOptedOut(user)) continue;
     try {
       const locale = user.locale || "en";
-      const { subject, html } = buildPilotConversionEmail(locale, user.id, (user.pilot_organization as string | null) ?? null);
+      const { subject, html, unsubUrl } = buildPilotConversionEmail(locale, user.id, (user.pilot_organization as string | null) ?? null);
       if (isRealProduction && isLive) {
         if (await claimEmailSend(supabase, user.id, "onboarding-sequence", "j32")) {
-          await sendEmail(user.email, subject, html);
+          await sendEmail(user.email, subject, html, unsubUrl);
           j32Sent++;
         } else {
           deduped++;

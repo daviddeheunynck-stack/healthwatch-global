@@ -8,6 +8,7 @@ import { PRICE_DISPLAY } from "@/lib/pricing";
 import * as Sentry from "@sentry/nextjs";
 import { logCronRun, isRealProduction, isLiveCronInvocation, claimEmailSend } from "@/lib/cron-monitor";
 import { signUnsubscribeToken } from "@/lib/unsubscribe-token";
+import { sendBrevoEmail } from "@/lib/brevo-send";
 
 export const dynamic = "force-dynamic";
 
@@ -273,7 +274,7 @@ const COPY_J7: Record<string, {
   },
 };
 
-function buildEmailJ7(locale: string, userId: string): { subject: string; html: string } {
+function buildEmailJ7(locale: string, userId: string): { subject: string; html: string; unsubUrl: string } {
   const c = COPY_J7[locale] ?? COPY_J7.en;
   const pricingUrl = `https://healthwatch-global.com/${locale}/pricing`;
   const unsubUrl   = `https://healthwatch-global.com/api/unsubscribe-signal?id=${encodeURIComponent(userId)}&token=${signUnsubscribeToken(userId)}&locale=${locale}`;
@@ -309,12 +310,12 @@ function buildEmailJ7(locale: string, userId: string): { subject: string; html: 
       <p style="margin:0;font-size:11px;color:#475569;">${c.unsubNote} <a href="${unsubUrl}" style="color:#475569;text-decoration:underline;">Unsubscribe</a></p>
     </div>`;
 
-  return { subject: c.subject, html: emailShell(locale, body) };
+  return { subject: c.subject, html: emailShell(locale, body), unsubUrl };
 }
 
 // ── J+3 builder (original) ─────────────────────────────────────────────────────
 
-function buildEmail(locale: string, userId: string): { subject: string; html: string } {
+function buildEmail(locale: string, userId: string): { subject: string; html: string; unsubUrl: string } {
   const c = COPY[locale] ?? COPY.en;
   const pricingUrl = `https://healthwatch-global.com/${locale}/pricing`;
   const pilotUrl   = `https://healthwatch-global.com/${locale}/pilot`;
@@ -357,7 +358,7 @@ function buildEmail(locale: string, userId: string): { subject: string; html: st
       <p style="margin:0;font-size:11px;color:#475569;">${c.unsubNote} <a href="${unsubUrl}" style="color:#475569;text-decoration:underline;">Unsubscribe</a></p>
     </div>`;
 
-  return { subject: c.subject, html: emailShell(locale, body) };
+  return { subject: c.subject, html: emailShell(locale, body), unsubUrl };
 }
 
 // ── Cron handler ───────────────────────────────────────────────────────────────
@@ -414,19 +415,8 @@ async function runWinbackSequence(req: NextRequest, supabase: SupabaseClient) {
     return p.is_pilot !== true;
   };
 
-  const sendBrevo = async (email: string, subject: string, html: string) => {
-    const res = await fetch("https://api.brevo.com/v3/smtp/email", {
-      method: "POST",
-      signal: AbortSignal.timeout(10_000),
-      headers: { "api-key": BREVO_KEY!, "Content-Type": "application/json" },
-      body: JSON.stringify({
-        sender:      { name: "HealthWatch Global", email: "alerts@healthwatch-global.com" },
-        to:          [{ email }],
-        subject,
-        htmlContent: html,
-      }),
-    });
-    if (!res.ok) throw new Error(await res.text());
+  const sendBrevo = async (email: string, subject: string, html: string, unsubscribeUrl?: string) => {
+    await sendBrevoEmail({ to: email, subject, html, apiKey: BREVO_KEY!, unsubscribeUrl });
   };
 
   // ── J+3 query: trial expired 3 days ago ───────────────────────────────────
@@ -486,10 +476,10 @@ async function runWinbackSequence(req: NextRequest, supabase: SupabaseClient) {
     if (!isEligible(profile)) continue;
     try {
       const locale = profile.locale ?? "en";
-      const { subject, html } = buildEmail(locale, profile.id);
+      const { subject, html, unsubUrl } = buildEmail(locale, profile.id);
       if (isRealProduction && isLive) {
         if (await claimEmailSend(supabase, profile.id, "winback-sequence", "j3")) {
-          await sendBrevo(profile.email!, subject, html);
+          await sendBrevo(profile.email!, subject, html, unsubUrl);
           j3Sent++;
         } else {
           deduped++;
@@ -512,10 +502,10 @@ async function runWinbackSequence(req: NextRequest, supabase: SupabaseClient) {
     if (!isEligible(profile)) continue;
     try {
       const locale = profile.locale ?? "en";
-      const { subject, html } = buildEmailJ7(locale, profile.id);
+      const { subject, html, unsubUrl } = buildEmailJ7(locale, profile.id);
       if (isRealProduction && isLive) {
         if (await claimEmailSend(supabase, profile.id, "winback-sequence", "j7")) {
-          await sendBrevo(profile.email!, subject, html);
+          await sendBrevo(profile.email!, subject, html, unsubUrl);
           j7Sent++;
         } else {
           deduped++;

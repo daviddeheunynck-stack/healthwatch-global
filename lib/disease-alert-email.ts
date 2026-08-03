@@ -182,7 +182,7 @@ export function buildDiseaseAlertEmail(
   locale: string,
   userId: string,
   diseaseSlug: string
-): { subject: string; html: string } {
+): { subject: string; html: string; unsubUrl: string } {
   const c        = COPY[locale] ?? COPY.en;
   const isRtl    = locale === "ar";
   const dir      = isRtl ? "rtl" : "ltr";
@@ -317,7 +317,7 @@ export function buildDiseaseAlertEmail(
 </body>
 </html>`;
 
-  return { subject, html };
+  return { subject, html, unsubUrl };
 }
 
 // ─── Digest email (multiple disease alerts in one send) ───────────────────────

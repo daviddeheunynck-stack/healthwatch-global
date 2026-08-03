@@ -4,6 +4,7 @@ import * as Sentry from "@sentry/nextjs";
 import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
 import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 import { signUnsubscribeToken } from "@/lib/unsubscribe-token";
+import { sendBrevoEmail } from "@/lib/brevo-send";
 
 export const dynamic = "force-dynamic";
 
@@ -139,23 +140,12 @@ function buildHtml(
 
 // Returns whether the email was actually sent (see weekly-digest for the
 // same fix — sent++ used to run unconditionally even when the key was missing).
-async function sendEmail(to: string, subject: string, html: string): Promise<boolean> {
+async function sendEmail(to: string, subject: string, html: string, unsubscribeUrl?: string): Promise<boolean> {
   if (!BREVO_API_KEY) {
     console.warn("[weekly-signal] BREVO_API_KEY not set — skipping");
     return false;
   }
-  const res = await fetch("https://api.brevo.com/v3/smtp/email", {
-    method: "POST",
-    signal: AbortSignal.timeout(10_000),
-    headers: { "api-key": BREVO_API_KEY, "Content-Type": "application/json" },
-    body: JSON.stringify({
-      sender: { name: "HealthWatch Global", email: "alerts@healthwatch-global.com" },
-      to: [{ email: to }],
-      subject,
-      htmlContent: html,
-    }),
-  });
-  if (!res.ok) throw new Error(`Brevo: ${await res.text()}`);
+  await sendBrevoEmail({ to, subject, html, apiKey: BREVO_API_KEY, unsubscribeUrl });
   return true;
 }
 
@@ -249,7 +239,7 @@ async function runWeeklySignal(_req: NextRequest, supabase: SupabaseClient) {
     );
     try {
       if (isRealProduction) {
-        const ok = await sendEmail(user.email, SUBJECTS[locale] ?? SUBJECTS.en, html);
+        const ok = await sendEmail(user.email, SUBJECTS[locale] ?? SUBJECTS.en, html, unsubUrl);
         if (ok) sent++; else skippedNoKey++;
       } else {
         sent++;

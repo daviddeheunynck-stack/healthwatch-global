@@ -100,6 +100,13 @@ const CONSUMER_EMAIL_DOMAINS = new Set([
   "healthwatch-global.com", "healthwatch-test.dev", "example.com",
 ]);
 
+// Just the test/dev domains, not the full consumer-webmail list above — used
+// to filter out disposable prod accounts (e2e/test scripts, diagnostic
+// probes) from guards where a real gmail.com/yahoo.fr user is exactly what
+// must NOT be filtered (unlike the institutional check, most of the real
+// user base is on consumer domains). See alert_locale drift guard below.
+const TEST_EMAIL_DOMAINS = new Set(["healthwatch-global.com", "healthwatch-test.dev", "example.com"]);
+
 interface InstitutionalSubscription { email: string; region: string; createdAt: string }
 
 // The public /subscribe form produces a non-consumer-domain address roughly
@@ -330,7 +337,14 @@ async function runHealthCheck(_req: NextRequest, supabase: any) {
   const stuckInviteError = stuckInviteResult.error;
   const hasStuckInvites  = stuckInvites.length > 0;
 
-  const alertLocaleDrift    = alertLocaleDriftResult.data ?? [];
+  // Excludes healthwatch-test.dev and other known test/dev domains — a
+  // verification script for this very guard wrote 5 disposable accounts to
+  // prod on 2026-08-03 and, unfiltered, they'd have made this alert cry
+  // "regression" every morning even though the real drift it exists to
+  // catch was already fixed. See marketing/product-ideas-log.md, 2026-08-03, idea 3.
+  const alertLocaleDrift    = (alertLocaleDriftResult.data ?? []).filter(
+    (r: { email: string }) => !TEST_EMAIL_DOMAINS.has((r.email.split("@")[1] ?? "").toLowerCase())
+  );
   const alertLocaleDriftErr = alertLocaleDriftResult.error?.message ?? null;
   const hasAlertLocaleDrift = alertLocaleDrift.length > 0;
 
