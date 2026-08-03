@@ -128,6 +128,20 @@ async function checkInstitutionalSubscriptions(supabase: any): Promise<{ rows: I
 
 interface StuckInvite { email: string; organization: string | null; daysSinceInvite: number }
 
+// ZABRE and Mulamba are the two original stuck invites that motivated this
+// check (see the comment below) — David has repeatedly, explicitly decided
+// (2026-07-23, reaffirmed since) to wait passively for them to reach back out
+// themselves: no re-sent magic links, no follow-up, and not to be surfaced as
+// "needs unblocking". This check's daily re-flagging of the same two known,
+// already-decided cases was exactly that, so they're excluded here — found
+// 2026-08-03. Anyone else stuck is a genuinely new case and still gets
+// flagged; if either of these two ever signs in, they drop out of the
+// underlying query on their own and this list stops matching anything.
+const STUCK_INVITE_KNOWN_WAITING = new Set([
+  "zrhyacinthe2@gmail.com",
+  "davmulambamangole@gmail.com",
+]);
+
 // The path-not-the-stock lesson (2026-08-02): three July fixes each only
 // applied to accounts created afterward, so ZABRE/Mulamba/ouedraogodaouda2408
 // sat with a broken invite link for weeks before anyone noticed. Rather than
@@ -152,6 +166,7 @@ async function checkStuckPilotInvites(supabase: any): Promise<{ invites: StuckIn
 
   const invites: StuckInvite[] = [];
   for (const p of candidates as { id: string; email: string; pilot_organization: string | null; created_at: string }[]) {
+    if (STUCK_INVITE_KNOWN_WAITING.has(p.email.toLowerCase())) continue;
     const { data: userRes, error: userErr } = await supabase.auth.admin.getUserById(p.id);
     if (userErr) continue; // best-effort — a lookup failure here shouldn't hide the others
     if (!userRes?.user?.last_sign_in_at) {
