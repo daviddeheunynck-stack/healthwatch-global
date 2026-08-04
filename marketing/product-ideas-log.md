@@ -679,6 +679,6 @@ Un canari quotidien aurait crié le 03/08 **et** le 04/08, avant que la personne
 - **`RESEND_API_KEY` est toujours configurée en prod** (43 jours) alors que tous les envois passent par Brevo. Secret dormant sans usage, à révoquer un jour ; signalé pour mémoire, ce n'est pas une idée produit.
 - Les deux clés Supabase affichent une date de création de ce matin sur Vercel (4h et 5h), trace de la rotation ; la date d'origine de la variable fautive n'est donc plus lisible, seule `NEXT_PUBLIC_SUPABASE_URL` (50 jours) situe encore la fenêtre.
 
-**Statut : PROPOSÉE, en attente de retour de David.**
+**Statut :** David a validé les trois (« On applique les 3 idées »). Construction déléguée à une session dédiée (conformément à la consigne de scope de `daily-product-ideas-healthwatch` : cette routine idée et propose uniquement, ne code jamais elle-même). Statut à mettre à jour par cette session une fois le code livré.
 
 ---
