@@ -2,7 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { buildWelcomeEmail } from "@/lib/welcome-email";
 import { errorMessage } from "@/lib/error";
 import { rateLimit, getClientIp } from "@/lib/rate-limit";
-import { isRealProduction } from "@/lib/cron-monitor";
+import { isRealProduction, claimEmailSend } from "@/lib/cron-monitor";
+import { getServiceClient } from "@/lib/supabase-service";
 import * as Sentry from "@sentry/nextjs";
 
 export const dynamic = "force-dynamic";
@@ -36,8 +37,31 @@ export async function POST(req: NextRequest) {
     const locale = VALID_LOCALES.includes(rawLocale) ? rawLocale : "en";
 
     if (!BREVO_API_KEY || !isRealProduction) {
-      console.warn("[send-welcome] BREVO_API_KEY not set or not production — skipping");
+      console.warn("[send-welcome] BREVO_API_KEY not set or not production, skipping");
       return NextResponse.json({ skipped: true });
+    }
+
+    // No dedup was possible before this: both real callers (signup/page.tsx
+    // right after signUp(), auth/callback/route.ts for OAuth signups) always
+    // have a real profiles row by the time they call this, created
+    // synchronously by the on_auth_user_created trigger, so this lookup
+    // should always resolve. Claimed the same way as the other one-shot
+    // lifecycle emails (claimEmailSend, lifecycle_email_log) rather than a
+    // new table, since this genuinely is a once-per-account send. If no
+    // profile matches (a request outside the two real call sites), proceed
+    // without dedup rather than silently dropping a legitimate welcome
+    // email over an identity-lookup miss.
+    const { data: profile } = await getServiceClient()
+      .from("profiles")
+      .select("id")
+      .ilike("email", email)
+      .maybeSingle();
+    if (profile) {
+      const claimed = await claimEmailSend(getServiceClient(), profile.id, "send-welcome", "welcome");
+      if (!claimed) {
+        console.log("[send-welcome] already sent for", email, "skipping duplicate");
+        return NextResponse.json({ skipped: true, reason: "already-sent" });
+      }
     }
 
     const { subject, html } = buildWelcomeEmail(locale || "en");

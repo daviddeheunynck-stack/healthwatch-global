@@ -104,6 +104,53 @@ export async function claimEmailSend(
 }
 
 /**
+ * Same atomic claim-before-send pattern as claimEmailSend, but keyed on a
+ * subscriptions row instead of an auth.users id. weekly-digest's audience
+ * (`subscriptions.email`) is a standalone newsletter address, not always
+ * tied to a real account, so it can't use lifecycle_email_log's user_id FK.
+ * One claim per (subscription, calendar week) rather than per lifecycle
+ * step, since this digest is meant to repeat every week for the life of the
+ * subscription rather than fire once ever. Found 2026-08-04: weekly-digest
+ * had no dedup at all, so a manual re-invocation (or a genuine duplicate
+ * Vercel Cron trigger) resent the same week's digest to every subscriber.
+ * Fails open (returns true) on any DB error, same trade-off as
+ * claimEmailSend: a missing/broken table degrades to today's unguarded
+ * behavior rather than silently blocking the weekly send.
+ */
+export async function claimWeeklyDigestSend(
+  supabase: SupabaseClient,
+  subscriptionId: string,
+  weekOf: string,
+): Promise<boolean> {
+  const { data, error } = await supabase
+    .from("weekly_digest_log")
+    .upsert(
+      { subscription_id: subscriptionId, week_of: weekOf },
+      { onConflict: "subscription_id,week_of", ignoreDuplicates: true },
+    )
+    .select("subscription_id");
+  if (error) {
+    console.error(`[cron-monitor] claimWeeklyDigestSend failed for ${subscriptionId}/${weekOf}, sending anyway:`, error.message);
+    return true;
+  }
+  return (data?.length ?? 0) > 0;
+}
+
+/**
+ * Monday (UTC) of the current calendar week, as "YYYY-MM-DD": the dedup key
+ * for claimWeeklyDigestSend. Deliberately computed from wall-clock "now"
+ * rather than passed in: a real Monday 07:00 UTC trigger and a same-day
+ * manual re-invocation both land in the same week and must collide.
+ */
+export function currentWeekOf(): string {
+  const now = new Date();
+  const dayOfWeek = now.getUTCDay(); // 0=Sun..6=Sat
+  const daysSinceMonday = (dayOfWeek + 6) % 7;
+  const monday = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() - daysSinceMonday));
+  return monday.toISOString().slice(0, 10);
+}
+
+/**
  * Ping a Better Stack heartbeat URL, but only when this run's failure rate
  * stayed under a tolerable threshold — so Better Stack's uptime score means
  * "this cron did its job", not just "the route responded". Before this,
