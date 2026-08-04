@@ -207,6 +207,13 @@ export const CRON_WINDOWS: Record<string, number> = {
   "sync-endemic-data": 26,   // daily
   "sync-usda-aphis":   26,   // daily
   "sync-taiwan-cdc":   26,   // daily 05:00 — NIDSS dengue coverage
+  // ── Funnel canary ────────────────────────────────────────────────────────────
+  // Runs the real public email/password signup once a day and deletes the
+  // account immediately after: see app/api/cron/signup-canary/route.ts and
+  // marketing/product-ideas-log.md, 2026-08-04, idea 2. An "error" status here
+  // (surfaced by the generic `erroring` check in health-check, no bespoke
+  // block needed) is the whole point: nothing else exercises this path.
+  "signup-canary":     26,   // daily 05:10
   // ── Alert delivery crons ─────────────────────────────────────────────────────
   "sync-brevo-blocklist": 26, // daily 06:00 — feeds profiles.email_blocked_at before the 10:xx sends below
   "regional-alerts":   26,   // daily 10:30 (moved from 06:30 on 2026-08-03, was firing ~22h ahead of same-day sync data)

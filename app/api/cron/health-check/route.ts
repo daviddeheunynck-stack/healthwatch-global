@@ -363,6 +363,79 @@ async function fetchRegionEnrollmentStock(supabase: any): Promise<{ zero: number
   return { zero, partial, full, error: null };
 }
 
+interface AuthFailureSummary { flow: string; method: string; errorCode: string; count: number }
+
+// Reads what app/[locale]/signup/page.tsx and app/[locale]/login/page.tsx
+// started writing on 2026-08-04 (see auth_failures migration and
+// track-auth-failure/route.ts). Only is_system rows count: a wrong
+// password or an already-registered email is the person, not the product,
+// and counting those would make this cry wolf within days, same lesson as
+// the alert_locale drift guard above. No "zero success" comparison: at 1-2
+// real email signups a month, any system-classified failure is itself worth
+// seeing, so a plain count replaces a threshold. See
+// marketing/product-ideas-log.md, 2026-08-04, idea 1.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+async function checkAuthFailures(supabase: any): Promise<{ failures: AuthFailureSummary[]; error: string | null }> {
+  const since = new Date(Date.now() - 24 * 3_600_000).toISOString();
+  const { data, error } = await supabase
+    .from("auth_failures")
+    .select("flow, method, error_code")
+    .eq("is_system", true)
+    .gte("created_at", since);
+  if (error) return { failures: [], error: error.message };
+
+  const counts = new Map<string, AuthFailureSummary>();
+  for (const r of (data ?? []) as { flow: string; method: string; error_code: string }[]) {
+    const key = `${r.flow}:${r.method}:${r.error_code}`;
+    const existing = counts.get(key);
+    if (existing) existing.count += 1;
+    else counts.set(key, { flow: r.flow, method: r.method, errorCode: r.error_code, count: 1 });
+  }
+  return { failures: Array.from(counts.values()).sort((a, b) => b.count - a.count), error: null };
+}
+
+const BUNDLE_SECRET_PATTERNS = ["sb_secret_", "service_role", "sk_live_", "rk_live_", "whsec_", "xkeysib-", "sntrys_"];
+const BUNDLE_SCAN_PAGES = ["/en", "/en/signup", "/en/pricing", "/en/account"];
+const APP_URL = (process.env.NEXT_PUBLIC_APP_URL || "https://healthwatch-global.com").trim();
+
+interface BundleSecretMatch { page: string; chunk: string; pattern: string }
+
+// The 2026-08-04 leak (a Supabase secret key inlined into
+// NEXT_PUBLIC_SUPABASE_ANON_KEY on Vercel) was never in the repo or its git
+// history: daily-security-audit's grep is structurally blind to it, since
+// the defect was in an env var's *value*, not its name or any line of code.
+// Only checking what's actually served can catch this class of leak. Best-
+// effort and intentionally narrow: only chunks referenced by these four
+// pages are scanned, so a secret inlined into a rarely-hit route would slip
+// through: a net, not a proof of absence. See
+// marketing/product-ideas-log.md, 2026-08-04, idea 3.
+async function scanDeployedBundleForSecrets(): Promise<{ matches: BundleSecretMatch[]; error: string | null }> {
+  try {
+    const matches: BundleSecretMatch[] = [];
+    const seenChunks = new Set<string>();
+    for (const page of BUNDLE_SCAN_PAGES) {
+      const res = await fetch(`${APP_URL}${page}`, { signal: AbortSignal.timeout(10_000) });
+      if (!res.ok) continue;
+      const html = await res.text();
+      const srcs = [...html.matchAll(/<script[^>]+src="([^"]+\.js[^"]*)"/g)].map((m) => m[1]);
+      for (const src of srcs) {
+        const chunkUrl = src.startsWith("http") ? src : `${APP_URL}${src}`;
+        if (seenChunks.has(chunkUrl)) continue;
+        seenChunks.add(chunkUrl);
+        const chunkRes = await fetch(chunkUrl, { signal: AbortSignal.timeout(10_000) }).catch(() => null);
+        if (!chunkRes?.ok) continue;
+        const js = await chunkRes.text();
+        for (const pattern of BUNDLE_SECRET_PATTERNS) {
+          if (js.includes(pattern)) matches.push({ page, chunk: chunkUrl, pattern });
+        }
+      }
+    }
+    return { matches, error: null };
+  } catch (err) {
+    return { matches: [], error: err instanceof Error ? err.message : String(err) };
+  }
+}
+
 export async function GET(req: NextRequest) {
   const cronSecret = clean(process.env.CRON_SECRET);
   if (!cronSecret || req.headers.get("authorization") !== `Bearer ${cronSecret}`)
@@ -412,6 +485,8 @@ async function runHealthCheck(_req: NextRequest, supabase: any) {
     alertLocaleDriftResult,
     clickVisitResult,
     { count: visits7d },
+    authFailureResult,
+    bundleSecretResult,
   ] = await Promise.all([
       Promise.all([
         supabase.from("outbreaks").select("*", { count: "exact", head: true }).eq("active", true),
@@ -440,6 +515,8 @@ async function runHealthCheck(_req: NextRequest, supabase: any) {
       supabase.from("profiles").select("email, locale, alert_locale").neq("locale", "en").eq("alert_locale", "en"),
       brevoKey ? fetchClickVisitRatio(brevoKey) : Promise.resolve({ clicks: null, visits: null, botClicksExcluded: null }),
       supabase.from("product_events").select("*", { count: "exact", head: true }).gte("created_at", sevenDaysAgo),
+      checkAuthFailures(supabase),
+      scanDeployedBundleForSecrets(),
     ]);
 
   const zeroRegionTrials    = zeroRegionResult.trials;
@@ -474,6 +551,14 @@ async function runHealthCheck(_req: NextRequest, supabase: any) {
     visits: visits7d ?? null,
     botClicksExcluded: clickVisitResult.botClicksExcluded,
   };
+
+  const authFailures      = authFailureResult.failures;
+  const authFailureError  = authFailureResult.error;
+  const hasAuthFailures   = authFailures.length > 0;
+
+  const bundleSecretMatches = bundleSecretResult.matches;
+  const bundleSecretError   = bundleSecretResult.error;
+  const hasBundleSecrets    = bundleSecretMatches.length > 0;
 
   // `?? 0` on a FAILED count would read as "this channel has no subscribers",
   // and the delivery loop below skips an audience of 0 — so a transient error
@@ -590,7 +675,7 @@ async function runHealthCheck(_req: NextRequest, supabase: any) {
   // institutional signup is good news, not a fault, and shouldn't turn the
   // report red. hasStuckInvites/hasAlertLocaleDrift are regression guards on
   // real past bugs and do count toward the alert state.
-  const emoji = hasOverdue || hasUnmonitored || hasErroring || audienceErrors.length > 0 || sentryAlert || deliveryAlert || hasZeroRegionTrials || hasStuckInvites || hasAlertLocaleDrift || (pheic ?? 0) > 0 ? "⚠️" : "✅";
+  const emoji = hasOverdue || hasUnmonitored || hasErroring || audienceErrors.length > 0 || sentryAlert || deliveryAlert || hasZeroRegionTrials || hasStuckInvites || hasAlertLocaleDrift || hasAuthFailures || hasBundleSecrets || (pheic ?? 0) > 0 ? "⚠️" : "✅";
 
   const cronTableRows = cronStatuses
     .map(({ name, label, windowH, ok }) => {
@@ -642,6 +727,22 @@ async function runHealthCheck(_req: NextRequest, supabase: any) {
     </tr>`)
     .join("");
 
+  const authFailureRows = authFailures
+    .map(({ flow, method, errorCode, count }) => `<tr>
+      <td style="padding:3px 8px 3px 0;color:#94a3b8;font-size:12px">${esc(flow)}/${esc(method)}</td>
+      <td style="padding:3px 8px;font-size:12px;color:#94a3b8">${esc(errorCode)}</td>
+      <td style="padding:3px 0;font-size:12px;color:#f87171;font-weight:700">${count}×</td>
+    </tr>`)
+    .join("");
+
+  const bundleSecretRows = bundleSecretMatches
+    .map(({ page, chunk, pattern }) => `<tr>
+      <td style="padding:3px 8px 3px 0;color:#94a3b8;font-size:12px">${esc(page)}</td>
+      <td style="padding:3px 8px;font-size:12px;color:#f87171;font-weight:700">${esc(pattern)}</td>
+      <td style="padding:3px 0;font-size:12px;color:#64748b;word-break:break-all">${esc(chunk)}</td>
+    </tr>`)
+    .join("");
+
   const institutionalSubRows = institutionalSubs
     .map(({ email, region, createdAt }) => `<tr>
       <td style="padding:3px 8px 3px 0;color:#94a3b8;font-size:12px">${esc(email)}</td>
@@ -658,6 +759,10 @@ async function runHealthCheck(_req: NextRequest, supabase: any) {
     <tr><td style="padding:6px 0;color:#94a3b8">Risque HIGH</td><td style="padding:6px 0;font-weight:600;color:#f87171">${high ?? "?"}</td></tr>
     <tr><td style="padding:6px 0;color:#94a3b8">PHEIC actifs</td><td style="padding:6px 0;font-weight:600;color:#c084fc">${pheic ?? "?"}${(pheic ?? 0) > 0 ? " ⚠️" : ""}</td></tr>
     <tr><td style="padding:6px 0;color:#94a3b8">Clics email → visites (7j)</td><td style="padding:6px 0;font-weight:600">${clickVisitRatio.clicks ?? "?"} → ${clickVisitRatio.visits ?? "?"}${clickVisitRatio.botClicksExcluded ? ` <span style="color:#64748b;font-weight:400">(${clickVisitRatio.botClicksExcluded} clic(s) scanner exclu(s))</span>` : ""}</td></tr>
+    ${bundleSecretError ? `<tr><td colspan="2" style="padding:8px 0;color:#fbbf24;font-weight:700">🔧 Balayage secrets du bundle déployé impossible : ${esc(bundleSecretError)}</td></tr>` : ""}
+    ${hasBundleSecrets ? `<tr><td colspan="2" style="padding:8px 0;color:#f87171;font-weight:700">🔴 SECRET EXPOSÉ dans le bundle JS déployé, ${bundleSecretMatches.length} occurrence(s), voir détail ci-dessous</td></tr>` : ""}
+    ${authFailureError ? `<tr><td colspan="2" style="padding:8px 0;color:#fbbf24;font-weight:700">🔧 Contrôle « échecs auth système » impossible : ${esc(authFailureError)}</td></tr>` : ""}
+    ${hasAuthFailures ? `<tr><td colspan="2" style="padding:8px 0;color:#f87171;font-weight:700">⚠️ ${authFailures.reduce((n, f) => n + f.count, 0)} échec(s) d'inscription/connexion de type système (24h)</td></tr>` : ""}
     ${regionEnrollmentStock.error
       ? `<tr><td colspan="2" style="padding:8px 0;color:#fbbf24;font-weight:700">🔧 Contrôle « répartition régions d'alerte » impossible : ${esc(regionEnrollmentStock.error)}</td></tr>`
       : `<tr><td style="padding:6px 0;color:#94a3b8">Régions d'alerte (comptes)</td><td style="padding:6px 0;font-weight:600">${regionEnrollmentStock.zero} à 0 · ${regionEnrollmentStock.partial} entre les deux · ${regionEnrollmentStock.full} à 5</td></tr>`}
@@ -695,6 +800,12 @@ async function runHealthCheck(_req: NextRequest, supabase: any) {
   ${alertLocaleDriftRows ? `
   <p style="font-size:12px;color:#f87171;margin:16px 0 8px;font-weight:600">⚠️ Comptes alert_locale désynchronisé</p>
   <table style="width:100%;border-collapse:collapse">${alertLocaleDriftRows}</table>` : ""}
+  ${bundleSecretRows ? `
+  <p style="font-size:12px;color:#f87171;margin:16px 0 8px;font-weight:600">🔴 Secret(s) détecté(s) dans le bundle JS servi publiquement</p>
+  <table style="width:100%;border-collapse:collapse">${bundleSecretRows}</table>` : ""}
+  ${authFailureRows ? `
+  <p style="font-size:12px;color:#f87171;margin:16px 0 8px;font-weight:600">⚠️ Échecs d'inscription/connexion système (24h)</p>
+  <table style="width:100%;border-collapse:collapse">${authFailureRows}</table>` : ""}
   ${institutionalError ? `
   <p style="font-size:12px;color:#fbbf24;margin:16px 0 8px;font-weight:600">🔧 Contrôle « abonnement institutionnel » impossible : ${esc(institutionalError)}</p>` : ""}
   ${institutionalSubRows ? `
@@ -703,7 +814,7 @@ async function runHealthCheck(_req: NextRequest, supabase: any) {
   <p style="margin-top:16px;font-size:11px;color:#475569">${new Date().toISOString()}</p>
 </div>`;
 
-  const subject = `${emoji} HealthWatch — ${total ?? "?"} foyers${hasOverdue ? ` · ${overdue.length} cron(s) en retard` : ""}${sentryIssues.length > 0 ? ` · ${sentryIssues.length} erreur(s) Sentry` : ""}${deliveryAlert ? ` · ${deliveryIssues.length} canal(aux) en panne` : ""}${hasZeroRegionTrials ? ` · ${zeroRegionTrials.length} essai(s) sans région` : ""}${hasStuckInvites ? ` · ${stuckInvites.length} invite(s) bloquée(s)` : ""}${hasInstitutionalSubs ? ` · 🔔 ${institutionalSubs.length} abonnement(s) institutionnel(s)` : ""}${hasDecisionHorizonTrials ? ` · 🔔 ${decisionHorizonTrials.length} essai(s) après le ${VIABILITY_DECISION_DATE}` : ""} · ${new Date().toLocaleDateString("fr-FR")}`;
+  const subject = `${emoji}${hasBundleSecrets ? " 🔴 SECRET EXPOSÉ" : ""} HealthWatch — ${total ?? "?"} foyers${hasOverdue ? ` · ${overdue.length} cron(s) en retard` : ""}${sentryIssues.length > 0 ? ` · ${sentryIssues.length} erreur(s) Sentry` : ""}${deliveryAlert ? ` · ${deliveryIssues.length} canal(aux) en panne` : ""}${hasZeroRegionTrials ? ` · ${zeroRegionTrials.length} essai(s) sans région` : ""}${hasStuckInvites ? ` · ${stuckInvites.length} invite(s) bloquée(s)` : ""}${hasAuthFailures ? ` · ${authFailures.reduce((n, f) => n + f.count, 0)} échec(s) auth système` : ""}${hasInstitutionalSubs ? ` · 🔔 ${institutionalSubs.length} abonnement(s) institutionnel(s)` : ""}${hasDecisionHorizonTrials ? ` · 🔔 ${decisionHorizonTrials.length} essai(s) après le ${VIABILITY_DECISION_DATE}` : ""} · ${new Date().toLocaleDateString("fr-FR")}`;
 
   if (!isRealProduction) {
     console.log("[health-check] non-production run — skipping Brevo email and Sentry check-in/alerts");
@@ -750,6 +861,24 @@ async function runHealthCheck(_req: NextRequest, supabase: any) {
     );
   }
 
+  // Highest severity of anything this route checks: a live, publicly
+  // exposed secret, not just a stalled cron. "error" level (not "warning"
+  // like the two above) so it doesn't get lost among routine overdue-cron
+  // noise. See marketing/product-ideas-log.md, 2026-08-04, idea 3.
+  if (hasBundleSecrets && isRealProduction) {
+    Sentry.captureMessage(
+      `[health-check] SECRET EXPOSED in deployed JS bundle: ${bundleSecretMatches.map((m) => `${m.pattern}@${m.page}`).join(", ")}`,
+      "error",
+    );
+  }
+
+  if (hasAuthFailures && isRealProduction) {
+    Sentry.captureMessage(
+      `[health-check] ${authFailures.reduce((n, f) => n + f.count, 0)} system-classified signup/login failure(s) in 24h: ${authFailures.map((f) => `${f.flow}/${f.method}:${f.errorCode}(${f.count})`).join(", ")}`,
+      "warning",
+    );
+  }
+
   // logCronRun's status mirrors hasOverdue — read by this same route's own
   // cronMap/CRON_WINDOWS check next run, and by the email table below, to
   // color health-check's row. Independent of the Sentry Crons check-in below.
@@ -783,7 +912,7 @@ async function runHealthCheck(_req: NextRequest, supabase: any) {
   }
 
   return Response.json({
-    ok: !hasOverdue && !hasUnmonitored && !hasErroring && !sentryAlert && !deliveryAlert && !hasZeroRegionTrials && !hasStuckInvites && !hasAlertLocaleDrift,
+    ok: !hasOverdue && !hasUnmonitored && !hasErroring && !sentryAlert && !deliveryAlert && !hasZeroRegionTrials && !hasStuckInvites && !hasAlertLocaleDrift && !hasAuthFailures && !hasBundleSecrets,
     unmonitored,
     erroring,
     total, high, pheic, overdue, cronStatuses, isRealProduction,
@@ -796,5 +925,7 @@ async function runHealthCheck(_req: NextRequest, supabase: any) {
     decisionHorizonTrials: { count: decisionHorizonTrials.length, trials: decisionHorizonTrials, error: decisionHorizonError, horizon: VIABILITY_DECISION_DATE },
     regionEnrollmentStock,
     clickVisitRatio,
+    authFailures: { count: authFailures.reduce((n, f) => n + f.count, 0), breakdown: authFailures, error: authFailureError },
+    bundleSecrets: { count: bundleSecretMatches.length, matches: bundleSecretMatches, error: bundleSecretError },
   });
 }

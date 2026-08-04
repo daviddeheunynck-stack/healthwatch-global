@@ -163,6 +163,22 @@ export default function SignupPage() {
       });
 
       if (error) {
+        // Nothing else records this: the branch below is the only trace a
+        // failed signup ever leaves. Found 2026-08-04: a leaked secret key
+        // rejected every signup for weeks and this exact spot stayed silent
+        // the whole time. Domain only, never the full address (nobody here
+        // has an account yet). Fire-and-forget: a tracking hiccup must
+        // never block the error the person is already looking at.
+        fetch("/api/track-auth-failure", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            flow: "signup",
+            method: "email",
+            errorCode: error.code ?? "unknown",
+            emailDomain: email.split("@")[1]?.toLowerCase() ?? null,
+          }),
+        }).catch(() => {});
         setError(error.message);
         setLoading(false);
         return;

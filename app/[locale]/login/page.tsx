@@ -74,6 +74,19 @@ export default function LoginPage() {
     const { error } = await supabase.auth.signInWithPassword({ email, password });
 
     if (error) {
+      // Same gap as signup (see app/[locale]/signup/page.tsx): before this,
+      // login_attempt/login_success were tracked but no failure ever was.
+      // Domain only, never the full address.
+      fetch("/api/track-auth-failure", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          flow: "login",
+          method: "password",
+          errorCode: error.code ?? "unknown",
+          emailDomain: email.split("@")[1]?.toLowerCase() ?? null,
+        }),
+      }).catch(() => {});
       setError(t("errorInvalid"));
       setLoading(false);
       return;
@@ -102,6 +115,16 @@ export default function LoginPage() {
     const { error } = await supabase.auth.verifyOtp({ email, token: otpCode, type: "email" });
 
     if (error) {
+      fetch("/api/track-auth-failure", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          flow: "login",
+          method: "otp",
+          errorCode: error.code ?? "unknown",
+          emailDomain: email.split("@")[1]?.toLowerCase() ?? null,
+        }),
+      }).catch(() => {});
       setError(t("otpInvalid"));
       setLoading(false);
       return;
