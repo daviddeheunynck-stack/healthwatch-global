@@ -303,7 +303,18 @@ const VIABILITY_DECISION_DATE = "2026-08-21";
 // address is ever re-enrolled in another trial or Pasteur trial_ends_at
 // changes, it re-evaluates on its own — this is a one-off dismissal, not a
 // standing "ignore this account" rule.
-const DECISION_HORIZON_DISMISSED = new Set(["jalal.nourlil@pasteur.ma"]);
+//
+// ZABRE/Mulamba added the same day for the identical reason — see
+// STUCK_INVITE_KNOWN_WAITING's comment for the full "wait passively, don't
+// touch" history. That set excludes them from the *login* check; this one is
+// a different check (trial_ends_at past the decision horizon) that happens
+// to also catch them, so it needs its own entry rather than inheriting the
+// other set's exclusion.
+const DECISION_HORIZON_DISMISSED = new Set([
+  "jalal.nourlil@pasteur.ma",
+  "zrhyacinthe2@gmail.com",
+  "davmulambamangole@gmail.com",
+]);
 
 interface DecisionHorizonTrial { email: string; trialEndsAt: string; isPilot: boolean }
 

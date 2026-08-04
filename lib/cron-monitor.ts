@@ -206,6 +206,7 @@ export const CRON_WINDOWS: Record<string, number> = {
   "sync-ecdc-threats": 26,   // daily
   "sync-endemic-data": 26,   // daily
   "sync-usda-aphis":   26,   // daily
+  "sync-taiwan-cdc":   26,   // daily 05:00 — NIDSS dengue coverage
   // ── Alert delivery crons ─────────────────────────────────────────────────────
   "sync-brevo-blocklist": 26, // daily 06:00 — feeds profiles.email_blocked_at before the 10:xx sends below
   "regional-alerts":   26,   // daily 10:30 (moved from 06:30 on 2026-08-03, was firing ~22h ahead of same-day sync data)
@@ -228,6 +229,14 @@ export const CRON_WINDOWS: Record<string, number> = {
   "weekly-digest":      200,  // weekly Mon
   "send-sitrep-emails": 200,  // weekly Mon
   "weekly-signal":      200,  // weekly Mon (free-user newsletter)
+  // Both added 2026-08-03 alongside the Oceania coverage-gap fix (see
+  // lib/geo-extract.ts callers / sync-wpro-dengue-update route for context) —
+  // registered here the same day so they don't sit unmonitored like
+  // pilot-closing-reminder did for weeks before anyone noticed (see the
+  // unmonitored-crons comment above). Both weekly Mon, same 1.5x-interval
+  // rationale as the other three above.
+  "sync-pacific-surveillance": 200, // weekly Mon 08:15 — PSSS signal, never writes to outbreaks
+  "sync-wpro-dengue-update":   200, // weekly Mon 08:20 — Dengue Situation Update, writes at source_priority=6
   // ── Enterprise & infra crons ──────────────────────────────────────────────────
   "trigger-webhooks":          2,    // every 30min — enterprise webhook delivery
   // ── Trigger & coverage crons ──────────────────────────────────────────────────
