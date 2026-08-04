@@ -18,6 +18,20 @@ Sentry.init({
   replaysOnErrorSampleRate: 1.0,
   sendDefaultPii: false,
   ignoreErrors: ["NEXT_NOT_FOUND", "NEXT_REDIRECT"],
+  // ignoreErrors above matches on error message/name — Next.js's internal
+  // not-found/redirect control-flow signals carry their real type in
+  // error.digest instead, which doesn't reliably appear in the message. Ported
+  // from the now-deleted sentry.client.config.ts (a pre-instrumentation-client.ts
+  // leftover — @sentry/nextjs 10 + Next's instrumentation-client.ts convention
+  // means this file is the only client init that actually runs; the old one
+  // sat dead alongside it since whenever that migration happened, silently not
+  // applying this filter).
+  beforeSend(event, hint) {
+    const err = hint.originalException as { digest?: string } | null;
+    if (err?.digest === "NEXT_NOT_FOUND") return null;
+    if (err?.digest?.startsWith("NEXT_REDIRECT")) return null;
+    return event;
+  },
 });
 
 export const onRouterTransitionStart = Sentry.captureRouterTransitionStart;
