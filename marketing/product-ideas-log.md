@@ -618,3 +618,67 @@ Typecheck + lint propres sur tout le dépôt à chaque étape. Poussé sur `mast
 Aucun code écrit pour ces deux items — la mesure elle-même est la réponse. Les deux ne seront plus remontés au backlog quotidien sans signal ou preuve de faisabilité nouveaux.
 
 ---
+
+## 2026-08-04 : Proposition du jour
+
+Angle nouveau : **l'entonnoir d'acquisition lui-même, c'est-à-dire le seul chemin qu'aucun contrôle du produit n'exerce jamais.** Les passages précédents ont couvert la qualité des données (26-27/07), la personnalisation (27-28/07), l'accès des comptes invités (30/07), le canal d'entrée (31/07), le cycle d'essai (01/08), la demande de conversion (02/08) et les machines qui lisent nos e-mails (03/08). Personne n'avait encore regardé ce qui se passe quand l'inscription échoue. Déclencheur : **deux pannes d'inscription en deux jours**, le 03/08 (`6396d5c`, exception relancée par auth-js laissant le bouton tourner sans erreur) et le 04/08 (clé secrète Supabase servie au navigateur, exposée 49 jours, corrigée et tournée ce matin). **Les deux ont été découvertes par la même personne**, Omobolanle Adelekun, épidémiologiste OMS, qui l'a écrit en DM LinkedIn. Aucune des deux par la supervision. Mesures du jour : sondes en lecture seule sur la prod (base + `vercel env ls` + balayage du bundle JS déployé), aucune écriture, scripts jetables supprimés après usage.
+
+**Fait de cadrage mesuré en ouverture :** 26 profils ce soir contre 22 hier, **aucune inscription réelle** (voir idée 2). Toujours zéro client payant. Le bundle déployé est propre à 17h : 22 chunks JS servis par `/en`, zéro occurrence de `sb_secret_`, un seul chunk portant la clé publishable. Le correctif de ce matin tient.
+
+### 1. 🔴 Un échec d'inscription ne laisse aucune trace nulle part, et la seule branche instrumentée est celle qui n'a pas servi
+
+**Signal (code lu ligne à ligne aujourd'hui, croisé avec les deux incidents).** Le correctif du 03/08 a entouré `supabase.auth.signUp()` d'un `try/catch` avec `Sentry.captureException` et `track("signup_unexpected_error")`, exactement pour rendre visible une panne invisible. Mais la panne du 04/08 n'est pas passée par là : Supabase Auth a **renvoyé** une erreur propre (« Forbidden use of secret API key in browser »), donc le code est entré dans la branche `if (error)` de `app/[locale]/signup/page.tsx:165-169`, qui fait exactement ceci :
+
+```
+setError(error.message);
+setLoading(false);
+return;
+```
+
+Pas de `Sentry.captureException`, pas de `track()`, aucune ligne en base. Le message s'affiche à l'écran de la personne, et **il n'existe nulle part ailleurs**. Même chose côté connexion : `app/[locale]/login/page.tsx` émet `login_attempt` et `login_success` sur les deux chemins (mot de passe et code OTP) et **aucun événement d'échec**, ni pour l'un ni pour l'autre. L'entonnoir mesure donc les tentatives et les réussites, jamais les pertes.
+
+**La conséquence n'est pas théorique : on ne sait toujours pas, ce soir, ce que la panne a coûté.** Timeline complète des 26 comptes `auth.users` mesurée aujourd'hui : la dernière inscription self-serve par e-mail/mot de passe date du **02/07** (`r.endangrukmanams@`, `saeed.mohamood@`). Depuis, **33 jours**, les seules inscriptions réelles sont passées par **Google** (`guyanoel22@` le 24/07, `codyleereed@` le 01/08) ; les trois comptes e-mail créés entre-temps (ZABRE 18/07, Mulamba 20/07) viennent de `/api/admin/invite`, pas du formulaire. Autrement dit : le seul chemin cassé est aussi le seul qui n'a produit aucun compte depuis un mois, et le chemin épargné est le seul qui en a produit. C'est cohérent avec la panne, **ce n'est pas une preuve** : rien ne permet de distinguer « tout le monde a échoué » de « personne n'a essayé », et c'est précisément le trou. Nuance utile au dossier d'incident : la fenêtre d'exposition de la clé (49 jours, soit depuis ~le 16/06) et la fenêtre de panne ne coïncident pas, puisque deux inscriptions par e-mail ont abouti le 02/07 ; le déclencheur est donc probablement un durcissement côté Supabase (rejet des clés de niveau secret depuis un navigateur) survenu après cette date, pas la pose de la variable elle-même.
+
+**Effort estimé :** petit. Écrire l'échec côté serveur au lieu de le laisser à l'écran : un appel à `/api/track` (route déjà en place, table `product_events` déjà lue par `/admin`) sur la branche `if (error)` de l'inscription et sur les deux branches d'échec de la connexion, avec le code d'erreur. Puis une règle dans l'e-mail de health-check quotidien, même forme que `checkZeroRegionTrials` (01/08) : « N échecs et zéro succès sur 24 h », ou « même code d'erreur système trois fois d'affilée ».
+
+**Risque/inconnue :** (a) **arbitrage de minimisation à trancher par David** : enregistrer le code d'erreur et le domaine rend la panne visible, enregistrer l'adresse permet en plus de rattraper la personne, mais c'est stocker la donnée de quelqu'un qui n'a pas de compte et n'a rien accepté ; les deux options sont défendables, elles n'ont pas la même finalité ; (b) il faut séparer les échecs légitimes (mot de passe trop court, adresse déjà utilisée) des échecs système, sinon l'alerte crie tous les jours et finira ignorée, exactement comme le garde-fou `alert_locale` du 03/08 ; (c) à deux inscriptions par mois, un seuil absolu réagit lentement : c'est un filet à l'échelle actuelle du produit, pas une métrique d'activation.
+
+### 2. 🔴 Rien n'exerce jamais l'inscription : le seul test de bout en bout de l'entonnoir, c'est un vrai prospect qui écrit sur LinkedIn
+
+**Signal (vérifié fichier par fichier aujourd'hui).** Le parcours qui fabrique les clients n'est couvert par aucun contrôle automatique :
+
+| ce qui existe | ce que ça couvre réellement |
+|---|---|
+| `e2e/auth.spec.ts` | la page d'inscription **s'affiche** (`h1` contient « Créer un compte ») ; un mauvais mot de passe affiche une erreur. **Le formulaire d'inscription n'est jamais soumis.** |
+| `playwright.config.ts` | `baseURL = http://localhost:3000` + `webServer: npm run dev`. Les tests n'ont jamais visé la prod. |
+| `.github/workflows/` | **un seul** workflow, `sync-outbreaks-hourly.yml`. Les e2e ne tournent nulle part automatiquement ; `package.json` n'expose que `test:e2e`, lancé à la main. |
+| `health-check` quotidien | crons en retard, erreurs Sentry, audiences, livraison, essais à zéro région, horizon de décision. **Rien sur l'acquisition.** |
+
+Un canari quotidien aurait crié le 03/08 **et** le 04/08, avant que la personne concernée n'ait à le signaler. Et il règle au passage un problème d'hygiène qui vient de se reproduire un jour après avoir été traité : **quatre comptes `claude-repro-*` / `claude-verify-*@healthwatch-test.dev` ont été créés en prod aujourd'hui** pendant le débogage de l'incident (08:24, 10:39, 11:01, 11:03), et ils y sont toujours ; les profils sont passés de 22 à 26 sans une seule inscription réelle. La parade retenue ce midi (`c450c0a`) a été de les **filtrer par motif** dans `daily-marketing-check`, pas de les supprimer. C'est exactement le motif signalé le 03/08 (idée 3, les 5 comptes `hwg-diag-rl-*`, supprimés hier soir), reproduit le lendemain : faute d'environnement de vérification, la prod sert de banc d'essai et le nettoyage dépend de la mémoire de chaque session. Un canari a l'avantage inverse : son cycle de vie est écrit une fois (créer, vérifier, supprimer, échouer bruyamment s'il n'arrive pas à se supprimer) au lieu d'être réinventé à chaque session de débogage.
+
+**Effort estimé :** moyen, le plus gros des trois. Une route cron dédiée (ou une action planifiée) qui exécute le vrai chemin public avec la clé publishable : inscription d'une adresse jetable sur le domaine réservé, vérification de la réponse et de la ligne en base, puis suppression admin. Le chemin déclenche `activate-trial` et l'e-mail de bienvenue, donc il faut le sortir explicitement des envois.
+
+**Risque/inconnue :** (a) **un canari mal cadré pollue les envois autant que les compteurs** : le 03/08 a montré que les adresses de test consomment de vrais envois Brevo et produisent des rejets (« Unable to find MX of domain healthwatch-test.dev », le 03/08 à 09:04), ce qui abîme la réputation d'expéditeur ; l'exclusion doit porter sur l'envoi, pas seulement sur les rapports ; (b) il couvre l'inscription par e-mail, pas Google OAuth (qui demanderait un compte Google dédié) : c'est acceptable puisque c'est le chemin e-mail qui a cassé deux fois, mais il faut le dire plutôt que croire l'entonnoir couvert ; (c) écrire en prod pour se surveiller reste un compromis ; la version minimale sans écriture (vérifier que la page répond et que le bundle sert bien une clé publishable, cf. idée 3) attrape la panne du 04/08 mais **pas** celle du 03/08, qui ne se voyait qu'à la soumission.
+
+### 3. L'audit sécurité quotidien ne regarde jamais ce qui est réellement déployé, et la fuite de 49 jours n'était pas dans le code
+
+**Signal.** La clé secrète Supabase n'a jamais été présente dans le dépôt : elle était dans la **valeur** de `NEXT_PUBLIC_SUPABASE_ANON_KEY` sur Vercel, donc inlinée en clair dans le bundle servi au navigateur. Or le SKILL de `daily-security-audit-healthwatch` cherche les secrets par grep sur le dépôt et sur l'historique git (§5, « priorité absolue chaque jour »), et **exclut explicitement `.next/`** depuis le 31/07 pour cause de bruit. Aussi rigoureux soit-il, il est structurellement aveugle à ce mode de panne : il n'y avait rien à trouver côté code.
+
+**Et un audit par nom de variable n'aurait rien attrapé non plus.** Vérifié aujourd'hui avec `vercel env ls production` : le projet n'a que quatre variables `NEXT_PUBLIC_*` (URL Supabase, DSN Sentry, VAPID public, clé publishable Stripe), **toutes légitimement publiques par leur nom**. Le défaut était dans la valeur, pas dans la nomenclature. Seul un contrôle de ce qui est réellement servi peut le voir.
+
+**Ce contrôle coûte quelques secondes, mesuré à l'instant :** récupérer `/en`, extraire les `<script src>`, chercher les motifs dans chaque chunk. Résultat de ce soir : 22 chunks, **zéro** `sb_secret_`, un chunk contenant la clé publishable. Quinze lignes de script, exécutées en moins de dix secondes, qui prouvent en direct que le correctif du matin tient et qui auraient crié pendant 49 jours.
+
+**Effort estimé :** petit, et c'est le moins cher des trois. Ajouter le balayage du bundle déployé au `daily-security-audit` (ou au health-check quotidien) sur quelques pages représentatives (`/en`, `/en/signup`, `/en/pricing`, `/en/account`), avec les motifs `sb_secret_`, `service_role`, `sk_live_`, `rk_live_`, `whsec_`, `xkeysib-`, `sntrys_`, et alerte immédiate sur toute occurrence.
+
+**Risque/inconnue :** (a) le balayage ne voit que les chunks référencés par les pages testées, un secret inliné dans une route rare passerait à travers : c'est un filet, pas une preuve d'absence ; (b) motifs à borner précisément pour éviter les faux positifs (une chaîne quelconque ressemblant à un JWT), sinon même sort que les alarmes bruyantes déjà vues ; (c) priorité business honnêtement inférieure aux idées 1 et 2, mais c'est le seul des trois qui protège contre la répétition d'un incident dont la fenêtre d'exposition a duré sept semaines, et il ne referme pas la question ouverte laissée par l'incident (aucun audit des journaux Supabase historiques n'a été fait pour vérifier si la clé a été utilisée pendant la fenêtre, ce qui reste un arbitrage de David, pas un correctif).
+
+**Non re-proposé aujourd'hui :** l'idée 2 du 31/07 (notification d'un abonnement institutionnel entrant) reste PROPOSÉE et non traitée, sans preuve nouvelle. L'idée 3 du 02/08 (réconciliation du stock après correctif) reste partiellement ouverte, volet invitations. Le volet AMR (Eva Kamau) et le signal de variance (Simon Ruegg) ont été **fermés par la mesure le 03/08** et ne reviendront pas au backlog sans faisabilité nouvelle. La piste « version de définition de cas » d'Omobolanle Adelekun (03/08) reste ouverte, décision de priorisation à David, sans angle neuf aujourd'hui. Rien sur la qualité des données ni sur les crons : la journée a déjà livré la résurrection Taïwan, l'enregistrement des trois crons manquants dans `CRON_WINDOWS` et le nettoyage de la config Sentry.
+
+**Contexte mesuré au passage** (pas des idées) :
+- **26 comptes `auth.users`, dont 4 créés aujourd'hui par des sessions de débogage** et 1 compte e2e historique (`e2e@healthwatch-global.com`, 16/06). Le parc réel reste à 21 comptes humains.
+- **`RESEND_API_KEY` est toujours configurée en prod** (43 jours) alors que tous les envois passent par Brevo. Secret dormant sans usage, à révoquer un jour ; signalé pour mémoire, ce n'est pas une idée produit.
+- Les deux clés Supabase affichent une date de création de ce matin sur Vercel (4h et 5h), trace de la rotation ; la date d'origine de la variable fautive n'est donc plus lisible, seule `NEXT_PUBLIC_SUPABASE_URL` (50 jours) situe encore la fenêtre.
+
+**Statut : PROPOSÉE, en attente de retour de David.**
+
+---
