@@ -10,7 +10,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import * as Sentry from "@sentry/nextjs";
-import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
+import { logCronRun, isRealProduction, claimEmailSend } from "@/lib/cron-monitor";
 import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 
 export const dynamic = "force-dynamic";
@@ -258,9 +258,10 @@ async function runPilotFollowUp(_req: NextRequest, supabase: SupabaseClient) {
   }
 
   // ── 2. For each pilot, get their region and query outbreaks ───────────────
-  let sent   = 0;
-  let skipped = 0;
-  let failed  = 0;
+  let sent       = 0;
+  let skipped    = 0;
+  let failed     = 0;
+  let alreadySent = 0;
 
   const hasOptedOut = (u: { display_filters: unknown }) =>
     !!(u.display_filters as Record<string, unknown> | null)?.no_weekly_signal;
@@ -273,6 +274,16 @@ async function runPilotFollowUp(_req: NextRequest, supabase: SupabaseClient) {
       skipped++;
       continue;
     }
+
+    // One-shot lifecycle email (fires once ever, around day 8) -- claim
+    // before send via the same lifecycle_email_log used by
+    // onboarding-sequence/trial-reminders/winback-sequence, rather than
+    // relying solely on the ~24h created_at window above. Found 2026-08-04:
+    // this route had no dedup at all, so a manual re-invocation (or a
+    // genuine duplicate Vercel Cron trigger, still inside the same window)
+    // resent the same email to every pilot in range.
+    const claimed = await claimEmailSend(supabase, pilot.id, "pilot-follow-up", "day8");
+    if (!claimed) { alreadySent++; continue; }
 
     const locale = (pilot.locale as string) ?? "en";
     const filters = pilot.display_filters as { region?: string } | null;
@@ -342,5 +353,5 @@ async function runPilotFollowUp(_req: NextRequest, supabase: SupabaseClient) {
   // fixed across ~15 other crons today (sync-outbreaks et al., 2026-07-29/30).
   await logCronRun(supabase, "pilot-follow-up", failed > 0 ? "error" : "ok", sent,
     failed > 0 ? `${failed} email(s)/requête(s) en échec` : undefined);
-  return NextResponse.json({ sent, skipped, failed, total: pilots.length });
+  return NextResponse.json({ sent, skipped, failed, alreadySent, total: pilots.length });
 }

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import * as Sentry from "@sentry/nextjs";
-import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
+import { logCronRun, isRealProduction, claimEmailSend, currentWeekOf } from "@/lib/cron-monitor";
 import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 import { signUnsubscribeToken } from "@/lib/unsubscribe-token";
 import { sendBrevoEmail } from "@/lib/brevo-send";
@@ -222,11 +222,25 @@ async function runWeeklySignal(_req: NextRequest, supabase: SupabaseClient) {
   let sent         = 0;
   let failed       = 0;
   let skippedNoKey = 0;
+  let alreadySent  = 0;
+
+  // Real profiles rows (unlike weekly-digest's standalone subscriptions), so
+  // this reuses lifecycle_email_log/claimEmailSend directly, keyed on the
+  // ISO week rather than a fixed one-shot step: this digest is meant to
+  // repeat every week, not fire once ever. Found 2026-08-04: this route sent
+  // unconditionally on every invocation, so a manual re-invocation resent
+  // the same week's signal to every free user.
+  const weekOf = currentWeekOf();
 
   for (const user of users) {
     if (!user.email) continue;
     const filters = user.display_filters as Record<string, unknown> | null;
     if (filters?.no_weekly_signal) continue;
+
+    // Claim before send: a second invocation racing this one must see the
+    // claim already taken, not an empty log it can still win.
+    const claimed = await claimEmailSend(supabase, user.id, "weekly-signal", weekOf);
+    if (!claimed) { alreadySent++; continue; }
 
     const locale = user.locale ?? "en";
     const unsubUrl = `https://healthwatch-global.com/api/unsubscribe-signal?id=${encodeURIComponent(user.id)}&token=${signUnsubscribeToken(user.id)}&locale=${locale}`;
@@ -255,5 +269,5 @@ async function runWeeklySignal(_req: NextRequest, supabase: SupabaseClient) {
   // catch above, was tracked but never consulted here.
   await logCronRun(supabase, "weekly-signal", skippedNoKey > 0 || failed > 0 ? "error" : "ok", sent,
     failed > 0 ? `${failed} envoi(s) en échec` : undefined);
-  return NextResponse.json({ sent, failed, skippedNoKey, outbreaks: outbreaks.length });
+  return NextResponse.json({ sent, failed, skippedNoKey, alreadySent, outbreaks: outbreaks.length });
 }

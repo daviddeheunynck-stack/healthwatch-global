@@ -9,7 +9,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import * as Sentry from "@sentry/nextjs";
-import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
+import { logCronRun, isRealProduction, currentWeekOf } from "@/lib/cron-monitor";
 import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 import { getBlockedEmailSet } from "@/lib/brevo-blocklist";
 
@@ -193,8 +193,16 @@ async function runSendSitrepEmails(_req: NextRequest, supabase: SupabaseClient) 
   const today = new Date().toISOString().split("T")[0];
   let totalSent = 0;
   let blockedSkipped = 0;
+  let alreadySent = 0;
   let errors = 0;
   const now = new Date().toISOString();
+  // scheduled_reports.last_sent_at already existed but was only ever written
+  // after a send, never checked before one -- a manual re-invocation (or a
+  // genuine duplicate Vercel Cron trigger) resent the same week's sitrep to
+  // every recipient. Found 2026-08-04. weekOfIso is this week's Monday
+  // 00:00 UTC: a report last sent before that boundary is eligible again,
+  // one at or after it is not.
+  const weekOfIso = `${currentWeekOf()}T00:00:00.000Z`;
 
   // report.recipients is a free-text list (not always a profiles row) —
   // matched against the full Brevo blocklist cache. See lib/brevo-blocklist.ts.
@@ -212,6 +220,24 @@ async function runSendSitrepEmails(_req: NextRequest, supabase: SupabaseClient) 
       .filter((e) => !blockedEmails.has(e.toLowerCase()))
       .slice(0, maxRecipients);
     if (recipients.length === 0) { blockedSkipped++; continue; }
+
+    // Claim before send, atomically: only succeeds if this report hasn't
+    // already been marked sent since this week's Monday. A concurrent or
+    // repeat invocation racing this one gets an empty `claimRows` and skips
+    // rather than re-sending. Fails open (proceeds to send) on a claim
+    // error, same trade-off as claimEmailSend/claimWeeklyDigestSend.
+    const { data: claimRows, error: claimErr } = await supabase
+      .from("scheduled_reports")
+      .update({ last_sent_at: now })
+      .eq("id", report.id)
+      .or(`last_sent_at.is.null,last_sent_at.lt.${weekOfIso}`)
+      .select("id");
+    if (claimErr) {
+      console.error(`[send-sitrep-emails] dedup claim failed for report ${report.id}, sending anyway:`, claimErr.message);
+    } else if (!claimRows || claimRows.length === 0) {
+      alreadySent++;
+      continue;
+    }
 
     const locale: string = report.locale || "en";
     const html    = buildEmailHtml(sorted, locale, today);
@@ -233,11 +259,6 @@ async function runSendSitrepEmails(_req: NextRequest, supabase: SupabaseClient) 
         if (!res.ok) throw new Error(`Brevo ${res.status}: ${await res.text()}`);
       }
       totalSent += recipients.length;
-
-      await supabase
-        .from("scheduled_reports")
-        .update({ last_sent_at: now })
-        .eq("id", report.id);
     } catch (err) {
       errors++;
       console.error(`[send-sitrep-emails] Failed for report ${report.id}:`, err);
@@ -247,5 +268,5 @@ async function runSendSitrepEmails(_req: NextRequest, supabase: SupabaseClient) 
 
   await logCronRun(supabase, "send-sitrep-emails", errors > 0 ? "error" : "ok", totalSent,
     errors > 0 ? `${errors} rapport(s) en échec` : undefined);
-  return NextResponse.json({ ok: true, sent: totalSent, blockedSkipped, errors });
+  return NextResponse.json({ ok: true, sent: totalSent, blockedSkipped, alreadySent, errors });
 }
