@@ -135,16 +135,43 @@ async function runSyncTaiwanCdc(supabase: SupabaseClient) {
   const desc = buildDescriptions(ex.date, ex.cases, ex.deaths, ex.year);
   const riskLevel = assessRisk(diseaseInfo.name_en, desc.en, ex.cases, ex.deaths);
 
+  // Ordered so an ACTIVE row always wins over an archived one, then the
+  // highest-priority / most recent among those — taking a bare [0] out of an
+  // unordered result let Postgres pick arbitrarily, so a stale archived row
+  // could be updated with this year's figures while the real active row went
+  // untouched. Same "prefer the active row" rule as sync-ecdc-threats' byDC
+  // map (`row.active && !prev.active`) and sync-wpro-dengue-update's ordered
+  // lookup.
   const { data: existingRows, error: fetchErr } = await supabase
     .from("outbreaks")
     .select("id, cases, deaths, date, source, source_priority, active")
     .eq("country_en", taiwan.name_en)
-    .eq("disease_en", diseaseInfo.name_en);
+    .eq("disease_en", diseaseInfo.name_en)
+    .order("active", { ascending: false })
+    .order("source_priority", { ascending: false })
+    .order("date", { ascending: false });
   if (fetchErr) {
     await logCronRun(supabase, "sync-taiwan-cdc", "error", 0, fetchErr.message);
     return NextResponse.json({ error: fetchErr.message }, { status: 500 });
   }
   const existingRow = (existingRows ?? [])[0];
+
+  // The update payload below sets active:true unconditionally. With the
+  // ordering above, reaching this branch on an INACTIVE row means every row
+  // for Taiwan/Dengue is archived — i.e. someone deliberately retired the
+  // outbreak — so writing to it would silently resurrect it on the next NIDSS
+  // refresh. Deactivation is a human decision; re-opening it is too. Same
+  // scope call as sync-wpro-dengue-update ("no active row found — not
+  // inserting ... it needs a human decision, not a silent re-insert from a
+  // narrow-purpose cron") and the anti-resurrection skip in sync-ecdc-threats.
+  if (existingRow && !existingRow.active) {
+    await logCronRun(supabase, "sync-taiwan-cdc", "ok", 0, "row deactivated — not resurrecting");
+    return NextResponse.json({
+      ok: true,
+      status: "skip: row deactivated — not resurrecting (needs a human decision)",
+      incoming: ex,
+    });
+  }
 
   if (existingRow) {
     if (ex.date === existingRow.date && ex.cases === existingRow.cases && ex.deaths === (existingRow.deaths ?? -1)) {
