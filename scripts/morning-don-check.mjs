@@ -363,6 +363,12 @@ const MANUAL_ROWS = {
   // du palier hebdo 30j (corrigé le même jour, commit b995b27).
   "b0f473be-a367-464e-ab32-3cdc43aa7815": "Polio/Afghanistan",
   "ab4cd321-0aa6-4598-86ac-b0a04d346465": "Polio/Pakistan",
+  // Ajoutées le 2026-08-03 en comblant le trou de couverture Océanie
+  // ([[project_oceania_coverage_gap_dengue_pacific_2026_08_03]]) : source WHO WPRO
+  // "Dengue Situation Update" (série biweekly numérotée, #749 du 09/07 = la plus
+  // récente au 03/08). Aucun cron ne couvre cette série.
+  "74561cc3-216f-4ee1-988a-ee82e362155d": "Dengue/Nouvelle-Calédonie",
+  "4f95242c-e512-488e-ba52-38298a3e9ec3": "Dengue/Polynésie française",
 };
 console.log("\n=== Lignes manuelles (section 5) — dues pour vérif hebdo (updated_at > 7j) ===");
 const now = Date.now();
