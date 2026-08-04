@@ -32,6 +32,14 @@ const EXCLUDED_EMAILS = new Set([
   "mobile-nox-test@healthwatch-global.com",
 ]);
 
+// Ad hoc debug/repro accounts created directly in prod (no staging env) use this
+// domain or these prefixes by convention — excluded by pattern so a forgotten
+// cleanup after a debugging session can't surface as a false "0 région" regression.
+const EXCLUDED_PATTERNS = [/@healthwatch-test\.dev$/i, /^claude-(repro|verify)-/i];
+function isExcludedEmail(email) {
+  return EXCLUDED_EMAILS.has(email) || EXCLUDED_PATTERNS.some((re) => re.test(email));
+}
+
 const authRes = await fetch(`${SUPABASE_URL}/auth/v1/admin/users?per_page=200`, { headers });
 if (!authRes.ok) throw new Error(`auth admin users failed: ${authRes.status} ${await authRes.text()}`);
 const { users: authUsers } = await authRes.json();
@@ -47,7 +55,7 @@ console.log(`\nTotal profiles: ${profiles.length}, total auth users: ${authUsers
 const real = [];
 for (const p of profiles) {
   const email = emailById.get(p.id) ?? "?";
-  if (EXCLUDED_EMAILS.has(email)) continue;
+  if (isExcludedEmail(email)) continue;
   const created = createdAtAuthById.get(p.id) ?? p.created_at;
   const lastSignIn = lastSignInById.get(p.id) ?? null;
   real.push({ id: p.id, email, plan: p.plan, trial_ends_at: p.trial_ends_at, stripe_sub: p.stripe_subscription_id, stripe_cust: p.stripe_customer_id, created, lastSignIn });
