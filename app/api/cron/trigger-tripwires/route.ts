@@ -3,7 +3,7 @@
  *
  * For each active tripwire, checks whether the outbreak's current case count
  * has crossed the threshold since the last check. If so, sends a single email
- * via Resend and records the trigger. Re-triggers if cases drop below threshold
+ * via Brevo and records the trigger. Re-triggers if cases drop below threshold
  * then rise again (detected via last_checked_cases).
  *
  * Runs every 30 minutes via Vercel Cron.
