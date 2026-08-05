@@ -40,6 +40,48 @@ const APHIS_PAGE_URL = APHIS_HTML_URL; // used in descriptions
 const SOURCE_PREFIX   = "https://www.aphis.usda.gov/hpai-h5n1#";
 const SOURCE_PRIORITY = 6;
 
+// A state row is "active" only while its most recent CONFIRMED detection is
+// within this window. APHIS's crosstab is a cumulative register of every
+// premises ever confirmed since March 2024, so `cases` is a running total that
+// never decreases — a state whose total stopped moving 8 months ago has no
+// ongoing outbreak, it has a frozen counter.
+//
+// 60 days, for three reasons:
+//  1. USDA's own National Milk Testing Strategy drops a state out of "Affected"
+//     status when no new case has been confirmed in the last 30 days. 60 is
+//     deliberately twice the primary authority's own threshold.
+//  2. It's already this codebase's single "no longer current" constant —
+//     STALE_DAYS / SIXTY_DAYS_MS in lib/outbreaks.ts.
+//  3. It lines up exactly with the display-side recency fallback
+//     (`date.gte.sixtyDaysAgo` in getOutbreaksCached(), mirrored in
+//     isDisplayActive()). A row is deactivated at the precise moment its own
+//     date leaves that window, so there is no band in which the DB says
+//     inactive and the public site still renders it as a live "foyer en cours"
+//     — the 2026-08-01 Dengue/Haiti resurrection class of bug is structurally
+//     impossible here rather than merely avoided.
+//
+// Was 730 days until 2026-08-05, which is longer than this dataset has existed
+// and never fired in practice: 9 states sat active with detections 235–722 days
+// old (California's 773-herd cumulative total among them, quarantines all
+// released Feb 2026), inflating the active-outbreak count and poisoning any
+// freshness-ordered view.
+//
+// Deactivation is NOT terminal: a state that goes quiet and later gets a new
+// confirmed detection is set active again by the update branch below. That
+// round trip matters — Utah went 574 days between detections, Texas 270, Idaho
+// 185, and all three are genuinely active today. Verified 2026-08-05 that the
+// return leg is silent: push-alerts gates on created_at (unchanged by
+// reactivation), disease-alerts dedups per subscriber for the row's lifetime,
+// and trigger-subscriber-alerts is a 24h-cooldown digest. No alert burst.
+const ACTIVE_WINDOW_DAYS = 60;
+
+/** ISO date (YYYY-MM-DD) before which a detection no longer counts as ongoing. */
+function activeSinceThreshold(): string {
+  return new Date(Date.now() - ACTIVE_WINDOW_DAYS * 86_400_000)
+    .toISOString()
+    .substring(0, 10);
+}
+
 const FETCH_HEADERS = {
   "User-Agent":      "Mozilla/5.0 (compatible; HealthWatch-Global/1.0; +https://healthwatch-global.com)",
   "Accept":          "text/html,application/xhtml+xml,text/csv,text/plain,*/*;q=0.9",
@@ -406,6 +448,7 @@ async function runUsdaAphis(_req: NextRequest, supabase: SupabaseClient) {
 
   // ── 3. Upsert one record per state ───────────────────────────────────────
   const today = new Date().toISOString().substring(0, 10);
+  const activeSince = activeSinceThreshold();
   const results = { dataFormat, rows: rows.length, states: byState.length, inserted: 0, updated: 0, skipped: 0, errors: 0, deactivated: 0 };
   const log: Array<{ state: string; status: string; detail?: string }> = [];
 
@@ -447,11 +490,20 @@ async function runUsdaAphis(_req: NextRequest, supabase: SupabaseClient) {
         continue;
       }
 
+      // Derived from the detection date, never hardcoded to true: this branch
+      // also fires for cosmetic changes (a new herd-type label, a description
+      // rewrite) on a state whose counter is long frozen. Forcing active:true
+      // there resurrected the row until the step-4 sweep undid it later in the
+      // same run — a pointless write that also nulled the FR/ES/AR/ID
+      // translations below on every pass. Setting it correctly at write time
+      // makes the sweep a safety net rather than the only line of defence.
+      const isOngoing = safeDate >= activeSince;
+
       const updatePayload: Record<string, unknown> = {
         cases:           sd.herds,
         date:            safeDate,
         description,
-        active:          true,
+        active:          isOngoing,
         source_priority: SOURCE_PRIORITY,
       };
       // English description just changed — existing FR/ES/AR/ID translations
@@ -503,7 +555,10 @@ async function runUsdaAphis(_req: NextRequest, supabase: SupabaseClient) {
         date:            safeDate,
         source:          sourceUrl,
         description,
-        active:          true,
+        // Same rule as the update branch — a state first seen through a
+        // backfill of the cumulative register (its detections already years
+        // old) must not land as an active foyer just because it's new to us.
+        active:          safeDate >= activeSince,
         is_seed:         false,
         // USDA's crosstab is a cumulative historical record (every premises
         // ever confirmed since 2024), not a live "what's happening now" feed
@@ -525,27 +580,19 @@ async function runUsdaAphis(_req: NextRequest, supabase: SupabaseClient) {
     }
   }
 
-  // ── 4. Deactivate states with no confirmed detection in a long time ───────
-  // USDA's crosstab is a cumulative historical record (every premises ever
-  // confirmed since 2024), not a "currently active" list — a state whose most
-  // recent detection is older than DEACTIVATE_AFTER_DAYS isn't an ongoing
-  // outbreak anymore, it's history, and shouldn't render as an active dot on
-  // the public map. 730d matches the SEED_FRESH_DAYS_REF precedent already
-  // used in data-quality/route.ts for "old enough to not be current".
-  // Reactivation is automatic: if a state gets a genuinely new detection, the
-  // update branch above sets active:true again on its own — nothing extra
-  // needed here for that direction.
-  const DEACTIVATE_AFTER_DAYS = 730;
-  const deactivateThreshold = new Date(Date.now() - DEACTIVATE_AFTER_DAYS * 86_400_000)
-    .toISOString()
-    .substring(0, 10);
-
+  // ── 4. Deactivate states whose counter has stopped moving ────────────────
+  // Still required even though step 3 now writes `active` correctly: a state
+  // with a frozen counter matches the "unchanged" skip at the top of the loop
+  // and never reaches a write at all, so this sweep is the only thing that ever
+  // flips it. It also catches states that dropped out of the feed entirely
+  // (byState no longer lists them), which step 3 by construction cannot see.
+  // See ACTIVE_WINDOW_DAYS above for why the window is 60 days.
   const { data: staleActive, error: staleErr } = await supabase
     .from("outbreaks")
     .select("id, admin1, date")
     .like("source", `${SOURCE_PREFIX}%`)
     .eq("active", true)
-    .lte("date", deactivateThreshold);
+    .lt("date", activeSince);
 
   if (staleErr) {
     log.push({ state: "-", status: "error", detail: `deactivation query: ${staleErr.message}` });
@@ -553,7 +600,7 @@ async function runUsdaAphis(_req: NextRequest, supabase: SupabaseClient) {
     // Restricting the lookup to this cron's own SOURCE_PREFIX keeps the sweep on
     // rows it owns, but a row it owns can still have been locked at
     // source_priority=10 by a human (the convention used for DR Congo/Ebola,
-    // Uganda, Tanzania, Somalia) — without the .lte() the 730-day sweep would
+    // Uganda, Tanzania, Somalia) — without the .lte() the staleness sweep would
     // silently revert that decision. Same contract as the deactivation in
     // data-quality/route.ts: guard at the DB level, and count only the rows the
     // write actually returned instead of assuming every candidate landed —
