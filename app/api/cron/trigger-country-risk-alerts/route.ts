@@ -6,6 +6,8 @@ import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
 import { notifyMobile } from "@/lib/mobile-notify";
 import { resolvedPlan } from "@/lib/resolved-plan";
 import { getBlockedEmailSet } from "@/lib/brevo-blocklist";
+import { sendBrevoEmail } from "@/lib/brevo-send";
+import { buildUnsubscribeAlertUrl } from "@/lib/unsubscribe-token";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 300;
@@ -69,19 +71,6 @@ async function runCountryRiskAlerts(supabase: SupabaseClient) {
     await logCronRun(supabase, "trigger-country-risk-alerts", "ok", 0);
     return Response.json({ ok: true, skipped: "BREVO_API_KEY not configured" });
   }
-
-  const sendEmail = async (to: string, subject: string, html: string) => {
-    const res = await fetch("https://api.brevo.com/v3/smtp/email", {
-      method: "POST",
-      signal: AbortSignal.timeout(10_000),
-      headers: { "api-key": brevoKey, "Content-Type": "application/json" },
-      body: JSON.stringify({
-        sender: { name: "HealthWatch Global", email: "alerts@healthwatch-global.com" },
-        to: [{ email: to }], subject, htmlContent: html,
-      }),
-    });
-    if (!res.ok) throw new Error(`Brevo error ${res.status}: ${await res.text()}`);
-  };
 
   const { data: alerts } = await supabase
     .from("country_risk_alerts")
@@ -165,9 +154,11 @@ async function runCountryRiskAlerts(supabase: SupabaseClient) {
     const lb = LABELS[locale] ?? LABELS.en;
     const intro = INTRO[locale] ?? INTRO.en;
     const dashUrl = `https://healthwatch-global.com/${locale}/outbreak/${top.id}`;
+    const unsubUrl = buildUnsubscribeAlertUrl("country_risk", alert.id, locale);
 
     const moreStr = ({ fr: `+${matches.length - 1} autre(s) foyer(s) dans ce pays`, es: `+${matches.length - 1} brote(s) más en este país`, ar: `+${matches.length - 1} تفشٍّ آخر في هذا البلد`, id: `+${matches.length - 1} wabah lain di negara ini`, en: `+${matches.length - 1} other outbreak(s) in this country` } as Record<string, string>)[locale] ?? `+${matches.length - 1} other outbreak(s) in this country`;
     const manageStr = ({ fr: "HealthWatch Global · Gérez vos alertes dans le tableau de bord", es: "HealthWatch Global · Gestione sus alertas en el panel", ar: "HealthWatch Global · أدر تنبيهاتك من لوحة المعلومات", id: "HealthWatch Global · Kelola peringatan di dasbor Anda", en: "HealthWatch Global · Manage alerts in your dashboard" } as Record<string, string>)[locale] ?? "HealthWatch Global · Manage alerts in your dashboard";
+    const unsubStr = ({ fr: "Se désabonner de cette alerte", es: "Cancelar esta alerta", ar: "إلغاء الاشتراك في هذا التنبيه", id: "Berhenti dari peringatan ini", en: "Unsubscribe from this alert" } as Record<string, string>)[locale] ?? "Unsubscribe from this alert";
 
     const html = `
 <div dir="${isRtl ? "rtl" : "ltr"}" style="font-family:sans-serif;max-width:520px;margin:0 auto;direction:${isRtl ? "rtl" : "ltr"};text-align:${isRtl ? "right" : "left"}">
@@ -181,15 +172,15 @@ async function runCountryRiskAlerts(supabase: SupabaseClient) {
 </ul>
 <p><a href="${dashUrl}">${lb[4]}</a></p>
 <hr/>
-<p style="color:#666;font-size:12px">${manageStr}</p>
+<p style="color:#666;font-size:12px">${manageStr} · <a href="${unsubUrl}" style="color:#666">${unsubStr}</a></p>
 </div>`;
 
     try {
       // Send BEFORE writing the dedup marker — same reordering as
       // regional-alerts/disease-alerts/trigger-category-alerts (2026-07-30).
-      // If sendEmail throws, last_fired_at must stay untouched so this alert
-      // isn't silently suppressed for the cooldown window.
-      if (isRealProduction) await sendEmail(alert.email, subject, html);
+      // If sendBrevoEmail throws, last_fired_at must stay untouched so this
+      // alert isn't silently suppressed for the cooldown window.
+      if (isRealProduction) await sendBrevoEmail({ to: alert.email, subject, html, apiKey: brevoKey, unsubscribeUrl: unsubUrl });
 
       await supabase
         .from("country_risk_alerts")

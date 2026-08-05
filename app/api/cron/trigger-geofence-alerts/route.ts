@@ -8,6 +8,8 @@ import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
 import { notifyMobile } from "@/lib/mobile-notify";
 import { resolvedPlan } from "@/lib/resolved-plan";
 import { getBlockedEmailSet } from "@/lib/brevo-blocklist";
+import { sendBrevoEmail } from "@/lib/brevo-send";
+import { buildUnsubscribeAlertUrl } from "@/lib/unsubscribe-token";
 
 export const dynamic = "force-dynamic";
 
@@ -19,21 +21,6 @@ const SUPABASE_SERVICE = clean(process.env.SUPABASE_SERVICE_ROLE_KEY);
 const CRON_SECRET      = clean(process.env.CRON_SECRET);
 const BREVO_KEY        = clean(process.env.BREVO_API_KEY);
 const APP_URL          = clean(process.env.NEXT_PUBLIC_APP_URL) || "https://healthwatch-global.com";
-
-async function sendEmail(to: string, subject: string, html: string) {
-  const res = await fetch("https://api.brevo.com/v3/smtp/email", {
-    method: "POST",
-    signal: AbortSignal.timeout(10_000),
-    headers: { "api-key": BREVO_KEY, "Content-Type": "application/json" },
-    body: JSON.stringify({
-      sender:      { name: "HealthWatch Global", email: "alerts@healthwatch-global.com" },
-      to:          [{ email: to }],
-      subject,
-      htmlContent: html,
-    }),
-  });
-  if (!res.ok) throw new Error(`Brevo error ${res.status}: ${await res.text()}`);
-}
 
 function esc(s: string): string {
   return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
@@ -192,6 +179,8 @@ async function runGeofenceAlerts(_req: NextRequest, supabase: SupabaseClient) {
       id: `Peringatan ini aktif setiap ${COOLDOWN_H} jam saat wabah ada dalam zona Anda. Kelola peringatan di dasbor Anda.`,
       en: `This alert fires every ${COOLDOWN_H}h when outbreaks exist within your zone radius. Manage geofence alerts on your dashboard.`,
     } as Record<string, string>)[locale] ?? `This alert fires every ${COOLDOWN_H}h when outbreaks exist within your zone radius. Manage geofence alerts on your dashboard.`;
+    const unsubUrl = buildUnsubscribeAlertUrl("geofence", alert.id, locale);
+    const unsubStr = ({ fr: "Se désabonner de cette alerte", es: "Cancelar esta alerta", ar: "إلغاء الاشتراك في هذا التنبيه", id: "Berhenti dari peringatan ini", en: "Unsubscribe from this alert" } as Record<string, string>)[locale] ?? "Unsubscribe from this alert";
 
     const rows = matches.slice(0, 8).map((o) =>
       `<tr><td style="padding:4px 8px">${esc(getLocalizedDisease(o, locale))}</td><td style="padding:4px 8px">${esc(getLocalizedCountry(o, locale))}</td><td style="padding:4px 8px;text-align:right">${o.cases.toLocaleString(numLocale)}</td><td style="padding:4px 8px;text-transform:uppercase;font-size:11px;font-weight:700;color:${o.risk_level === "high" ? "#f87171" : o.risk_level === "medium" ? "#fbbf24" : "#4ade80"}">${o.risk_level}</td></tr>`
@@ -200,9 +189,9 @@ async function runGeofenceAlerts(_req: NextRequest, supabase: SupabaseClient) {
     try {
       // Send BEFORE writing last_fired_at — same reordering as
       // regional-alerts/disease-alerts/trigger-category-alerts (2026-07-30).
-      // If sendEmail throws, the marker must stay untouched so this alert
-      // isn't silently suppressed for the cooldown window.
-      if (isRealProduction) await sendEmail(alert.email, emailSubject, `
+      // If sendBrevoEmail throws, the marker must stay untouched so this
+      // alert isn't silently suppressed for the cooldown window.
+      const geofenceHtml = `
 <div dir="${isRtl ? "rtl" : "ltr"}" style="font-family:sans-serif;max-width:520px;margin:0 auto;padding:24px;background:#0f172a;color:#e2e8f0;border-radius:12px;direction:${isRtl ? "rtl" : "ltr"};text-align:${isRtl ? "right" : "left"}">
   <p style="color:#60a5fa;font-size:17px;font-weight:700;margin:0 0 4px">${emailHeader}</p>
   <p style="font-size:12px;color:#64748b;margin:0 0 16px">${new Date().toISOString().split("T")[0]}</p>
@@ -225,9 +214,10 @@ async function runGeofenceAlerts(_req: NextRequest, supabase: SupabaseClient) {
     ${viewBtn}
   </a>
   <p style="margin-top:20px;font-size:11px;color:#475569">
-    ${footerText}
+    ${footerText} · <a href="${unsubUrl}" style="color:#475569">${unsubStr}</a>
   </p>
-</div>`);
+</div>`;
+      if (isRealProduction) await sendBrevoEmail({ to: alert.email, subject: emailSubject, html: geofenceHtml, apiKey: BREVO_KEY, unsubscribeUrl: unsubUrl });
 
       await supabase
         .from("geofence_alerts")

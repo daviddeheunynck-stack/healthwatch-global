@@ -25,3 +25,25 @@ export function verifyUnsubscribeToken(userId: string, token: string): boolean {
   const b = Buffer.from(token);
   return a.length === b.length && timingSafeEqual(a, b);
 }
+
+// Used by app/api/unsubscribe-alert/route.ts and the 3 crons that email an
+// address the account owner typed in freely (country_risk_alerts,
+// geofence_alerts, category_alerts). Composing kind+id into the signed
+// subject means a token minted for one table's row can never verify against
+// another table's row of the same id, even in principle — the 3 tables are
+// separate UUID spaces, so this costs nothing and removes any doubt.
+export type UnsubscribeAlertKind = "country_risk" | "geofence" | "category";
+
+// `kind` is untyped `string` here (not UnsubscribeAlertKind): the verifying
+// side (app/api/unsubscribe-alert/route.ts) parses it from an untrusted URL
+// query param, so there's no literal to narrow to yet at that call site.
+// buildUnsubscribeAlertUrl below keeps the literal type, since its callers
+// (the 3 trigger-*-alerts crons) know their kind at compile time.
+export function unsubscribeAlertTokenSubject(kind: string, id: string): string {
+  return `${kind}:${id}`;
+}
+
+export function buildUnsubscribeAlertUrl(kind: UnsubscribeAlertKind, id: string, locale: string): string {
+  const token = signUnsubscribeToken(unsubscribeAlertTokenSubject(kind, id));
+  return `https://healthwatch-global.com/api/unsubscribe-alert?kind=${kind}&id=${id}&token=${token}&locale=${locale}`;
+}

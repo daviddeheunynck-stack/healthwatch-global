@@ -7,6 +7,8 @@ import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
 import { notifyMobile } from "@/lib/mobile-notify";
 import { resolvedPlan } from "@/lib/resolved-plan";
 import { getBlockedEmailSet } from "@/lib/brevo-blocklist";
+import { sendBrevoEmail } from "@/lib/brevo-send";
+import { buildUnsubscribeAlertUrl } from "@/lib/unsubscribe-token";
 
 export const dynamic = "force-dynamic";
 
@@ -18,21 +20,6 @@ const SUPABASE_SERVICE = clean(process.env.SUPABASE_SERVICE_ROLE_KEY);
 const CRON_SECRET      = clean(process.env.CRON_SECRET);
 const BREVO_KEY        = clean(process.env.BREVO_API_KEY);
 const APP_URL          = clean(process.env.NEXT_PUBLIC_APP_URL) || "https://healthwatch-global.com";
-
-async function sendEmail(to: string, subject: string, html: string) {
-  const res = await fetch("https://api.brevo.com/v3/smtp/email", {
-    method: "POST",
-    signal: AbortSignal.timeout(10_000),
-    headers: { "api-key": BREVO_KEY, "Content-Type": "application/json" },
-    body: JSON.stringify({
-      sender:      { name: "HealthWatch Global", email: "alerts@healthwatch-global.com" },
-      to:          [{ email: to }],
-      subject,
-      htmlContent: html,
-    }),
-  });
-  if (!res.ok) throw new Error(`Brevo error ${res.status}: ${await res.text()}`);
-}
 
 function esc(s: string): string {
   return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
@@ -47,6 +34,7 @@ const COPY: Record<string, {
   found:   (n: number) => string;
   view:    string;
   footer:  (h: number) => string;
+  unsub:   string;
   inAppTitle: (catLabel: string, n: number, minCases: string) => string;
   inAppBody:  (disease: string, country: string, cases: string) => string;
 }> = {
@@ -57,6 +45,7 @@ const COPY: Record<string, {
     found:   (n) => `${n} foyer${n > 1 ? "s" : ""} correspondant${n > 1 ? "s" : ""} trouvé${n > 1 ? "s" : ""}`,
     view:    "Voir le tableau de bord →",
     footer:  (h) => `Cette alerte se déclenche toutes les ${h}h quand des foyers correspondants existent. Gérez vos alertes dans le tableau de bord.`,
+    unsub:   "Se désabonner de cette alerte",
     inAppTitle: (cat, n, min) => `Alerte ${cat} — ${n} foyer${n > 1 ? "s" : ""} ≥ ${min} cas`,
     inAppBody:  (d, c, n) => `${d} (${c}) : ${n} cas`,
   },
@@ -67,6 +56,7 @@ const COPY: Record<string, {
     found:   (n) => `${n} matching outbreak${n > 1 ? "s" : ""} found`,
     view:    "View dashboard →",
     footer:  (h) => `This alert fires every ${h}h when matching outbreaks exist. Manage alerts on your dashboard.`,
+    unsub:   "Unsubscribe from this alert",
     inAppTitle: (cat, n, min) => `${cat} alert — ${n} outbreak${n > 1 ? "s" : ""} ≥ ${min} cases`,
     inAppBody:  (d, c, n) => `${d} (${c}): ${n} cases`,
   },
@@ -77,6 +67,7 @@ const COPY: Record<string, {
     found:   (n) => `${n} brote${n > 1 ? "s" : ""} coincidente${n > 1 ? "s" : ""} encontrado${n > 1 ? "s" : ""}`,
     view:    "Ver panel →",
     footer:  (h) => `Esta alerta se activa cada ${h}h cuando existen brotes coincidentes. Gestione sus alertas en el panel.`,
+    unsub:   "Cancelar esta alerta",
     inAppTitle: (cat, n, min) => `Alerta ${cat} — ${n} brote${n > 1 ? "s" : ""} ≥ ${min} casos`,
     inAppBody:  (d, c, n) => `${d} (${c}): ${n} casos`,
   },
@@ -87,6 +78,7 @@ const COPY: Record<string, {
     found:   (n) => `تم العثور على ${n} تفشٍّ مطابق`,
     view:    "← عرض لوحة المعلومات",
     footer:  (h) => `يُطلَق هذا التنبيه كل ${h} ساعة عند وجود تفشيات مطابقة. أدر تنبيهاتك من لوحة المعلومات.`,
+    unsub:   "إلغاء الاشتراك في هذا التنبيه",
     inAppTitle: (cat, n, min) => `تنبيه ${cat} — ${n} تفشٍّ ≥ ${min} حالة`,
     inAppBody:  (d, c, n) => `${d} (${c}): ${n} حالة`,
   },
@@ -97,6 +89,7 @@ const COPY: Record<string, {
     found:   (n) => `${n} wabah yang cocok ditemukan`,
     view:    "Lihat dasbor →",
     footer:  (h) => `Peringatan ini aktif setiap ${h} jam saat wabah yang cocok ada. Kelola peringatan di dasbor Anda.`,
+    unsub:   "Berhenti dari peringatan ini",
     inAppTitle: (cat, n, min) => `Peringatan ${cat} — ${n} wabah ≥ ${min} kasus`,
     inAppBody:  (d, c, n) => `${d} (${c}): ${n} kasus`,
   },
@@ -203,17 +196,18 @@ async function runCategoryAlerts(_req: NextRequest, supabase: SupabaseClient) {
     const rows = matches.slice(0, 8).map((o) =>
       `<tr><td style="padding:4px 8px">${esc(getLocalizedDisease(o, locale))}</td><td style="padding:4px 8px">${esc(getLocalizedCountry(o, locale))}</td><td style="padding:4px 8px;text-align:right">${o.cases.toLocaleString(numLocale)}</td></tr>`
     ).join("");
+    const unsubUrl = buildUnsubscribeAlertUrl("category", alert.id, locale);
 
     try {
-      // Send BEFORE writing the dedup marker. If sendEmail throws, we must
-      // not update last_fired_at — that's what suppresses this alert for the
-      // next COOLDOWN_H hours, so marking a send that never went out would
-      // silently swallow it for that whole window (and every window after,
-      // if the throw is caused by something persistent about this alert
-      // rather than a one-off blip). Same fix as regional-alerts/
+      // Send BEFORE writing the dedup marker. If sendBrevoEmail throws, we
+      // must not update last_fired_at — that's what suppresses this alert
+      // for the next COOLDOWN_H hours, so marking a send that never went out
+      // would silently swallow it for that whole window (and every window
+      // after, if the throw is caused by something persistent about this
+      // alert rather than a one-off blip). Same fix as regional-alerts/
       // disease-alerts (2026-07-30) — this cron had the identical
       // log/marker-before-send ordering.
-      if (isRealProduction) await sendEmail(alert.email, lc.subject(catLabel, minStr), `
+      const categoryHtml = `
 <div dir="${isRtl ? "rtl" : "ltr"}" style="font-family:sans-serif;max-width:520px;margin:0 auto;padding:24px;background:#0f172a;color:#e2e8f0;border-radius:12px;direction:${isRtl ? "rtl" : "ltr"};text-align:${isRtl ? "right" : "left"}">
   <p style="color:#60a5fa;font-size:17px;font-weight:700;margin:0 0 4px">${lc.header}</p>
   <p style="font-size:12px;color:#64748b;margin:0 0 16px">${new Date().toISOString().split("T")[0]}</p>
@@ -236,8 +230,9 @@ async function runCategoryAlerts(_req: NextRequest, supabase: SupabaseClient) {
   <a href="${APP_URL}/${locale}" style="display:inline-block;padding:10px 20px;background:#1d4ed8;color:#fff;text-decoration:none;border-radius:8px;font-size:14px;font-weight:600">
     ${lc.view}
   </a>
-  <p style="margin-top:20px;font-size:11px;color:#475569">${lc.footer(COOLDOWN_H)}</p>
-</div>`);
+  <p style="margin-top:20px;font-size:11px;color:#475569">${lc.footer(COOLDOWN_H)} · <a href="${unsubUrl}" style="color:#475569">${lc.unsub}</a></p>
+</div>`;
+      if (isRealProduction) await sendBrevoEmail({ to: alert.email, subject: lc.subject(catLabel, minStr), html: categoryHtml, apiKey: BREVO_KEY, unsubscribeUrl: unsubUrl });
 
       await supabase
         .from("category_alerts")
