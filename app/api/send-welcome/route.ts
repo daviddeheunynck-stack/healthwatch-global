@@ -30,7 +30,11 @@ export async function POST(req: NextRequest) {
   try {
     const { email, locale: rawLocale } = await req.json();
 
-    if (!email || typeof email !== "string") {
+    // Format-validated like every other public route that triggers a send
+    // (subscribe, team/invite, org/invite, country-risk-alerts, ...): this
+    // one only checked "non-empty string", so any string at all reached both
+    // the profiles lookup below and Brevo's `to:` field.
+    if (!email || typeof email !== "string" || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       return NextResponse.json({ error: "Missing email" }, { status: 400 });
     }
 
@@ -51,10 +55,19 @@ export async function POST(req: NextRequest) {
     // profile matches (a request outside the two real call sites), proceed
     // without dedup rather than silently dropping a legitimate welcome
     // email over an identity-lookup miss.
+    // `%` and `_` are LIKE wildcards, not literals: passing an unescaped
+    // caller-supplied string to .ilike() let an unauthenticated request match
+    // a profile whose address it doesn't know (e.g. "d%@example.com") and burn
+    // that person's one-shot "welcome" claim below, so their real signup would
+    // never send them a welcome email. Escaped rather than switched to .eq()
+    // to keep the case-insensitive match this lookup needs — and `_` is a
+    // legitimate character in real addresses (john_doe@...), so escaping is
+    // required even setting abuse aside.
+    const emailPattern = email.replace(/[\\%_]/g, "\\$&");
     const { data: profile } = await getServiceClient()
       .from("profiles")
       .select("id")
-      .ilike("email", email)
+      .ilike("email", emailPattern)
       .maybeSingle();
     if (profile) {
       const claimed = await claimEmailSend(getServiceClient(), profile.id, "send-welcome", "welcome");
