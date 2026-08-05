@@ -145,7 +145,7 @@ export function buildTrialValueNudgeEmail(
 
   const ctaUrl = isPilot
     ? "mailto:david.deheunynck@gmail.com?subject=" + encodeURIComponent(safeLocale === "fr" ? `Suite du pilote — ${org}` : `Following up on our pilot — ${org}`)
-    : `${APP_URL}/${safeLocale}/pricing`;
+    : `${APP_URL}/${safeLocale}/account`;
 
   const subject = c.subject(alert.disease);
   const headline = c.headline;
