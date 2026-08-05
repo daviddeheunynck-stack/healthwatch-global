@@ -492,6 +492,22 @@ const MANUAL_ROWS = {
   // récente au 03/08). Aucun cron ne couvre cette série.
   "74561cc3-216f-4ee1-988a-ee82e362155d": "Dengue/Nouvelle-Calédonie",
   "4f95242c-e512-488e-ba52-38298a3e9ec3": "Dengue/Polynésie française",
+  // Ajoutées le 2026-08-05, en même temps que leur passage en source_priority=6
+  // (décision de David). Le 6 les protège de sync-who-regional, qui écrit en 5 et
+  // réimposerait le chiffre du mart xmart de l'OMS — plus laggard que la source
+  // nationale désormais citée (au 05/08 : 33 872 au 01/05 pour le Sri Lanka contre
+  // 79 016 au 22/07 en base, 33 697 au 07/06 pour la Malaisie contre 45 101 au 14/07,
+  // 33 207 au 21/06 pour le Pérou contre 34 820 au 28/06).
+  // Contrepartie à ne pas perdre de vue : AUCUN cron n'écrit au-dessus de 5 sur ces
+  // trois pays (sync-wpro-dengue-update, seul writer en 6, ne cible pas ces pays —
+  // ils ne sont pas narrés dans le bulletin WPRO), donc elles ne se rafraîchissent
+  // plus toutes seules. Le détecteur de gel (section 4d) ne regarde que priority=10
+  // et ne les verrait pas ; c'est cette liste-ci qui les rattrape, en cadence hebdo.
+  // Le Sri Lanka publie un PDF quotidien (dengue.health.gov.lk), la Malaisie et le
+  // Pérou des tableaux de bord vivants — la fraîcheur ne tient donc plus qu'à ce check.
+  "2c0f291c-e09b-4b96-afaf-7d7cb3e5251c": "Dengue/Sri Lanka",
+  "4159390e-5e96-4217-a7cd-32eebbd149d9": "Dengue/Malaisie",
+  "b7813f6c-d98f-43d1-aff9-7b385ee44384": "Dengue/Pérou",
 };
 console.log("\n=== Lignes manuelles (section 5) — dues pour vérif hebdo (updated_at > 7j) ===");
 const now = Date.now();
