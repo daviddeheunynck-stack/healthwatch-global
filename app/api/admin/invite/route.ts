@@ -61,6 +61,12 @@ export async function POST(req: NextRequest) {
   if (!email || !name || !organization) {
     return NextResponse.json({ error: "Missing fields" }, { status: 400 });
   }
+  // Only checked non-empty before — aligned with the regex every other
+  // email-accepting route in the repo already uses (subscribe, team/invite,
+  // org/invite, country-risk-alerts, etc).
+  if (typeof email !== "string" || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    return NextResponse.json({ error: "Invalid email" }, { status: 400 });
+  }
 
   const admin = createServiceClient(
     clean(process.env.NEXT_PUBLIC_SUPABASE_URL),
