@@ -254,6 +254,7 @@ export const CRON_WINDOWS: Record<string, number> = {
   "sync-endemic-data": 26,   // daily
   "sync-usda-aphis":   26,   // daily
   "sync-taiwan-cdc":   26,   // daily 05:00 — NIDSS dengue coverage
+  "sync-malaysia-dengue": 26, // daily 06:00 — iDengue dashboard, replaces a dead one-off manual insert (2026-08-05)
   // ── Funnel canary ────────────────────────────────────────────────────────────
   // Runs the real public email/password signup once a day and deletes the
   // account immediately after: see app/api/cron/signup-canary/route.ts and

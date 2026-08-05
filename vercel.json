@@ -193,6 +193,10 @@
       "schedule": "0 5 * * *"
     },
     {
+      "path": "/api/cron/sync-malaysia-dengue",
+      "schedule": "0 6 * * *"
+    },
+    {
       "path": "/api/cron/signup-canary",
       "schedule": "10 5 * * *"
     }
