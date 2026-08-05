@@ -24,11 +24,19 @@ function getServerClient() {
 // milliseconds, barely better than one attempt, against an upstream that had
 // just dropped the connection — this issue's count started climbing 7x its
 // historical rate that day with the loop still empty-handed.
-const RETRY_BACKOFF_MS = [150, 600];
+// Widened backoff + a 4th attempt (2026-08-05): the first real `extra.attempts`
+// event landed (issue recurred under a new shortId after a rebuild renamed the
+// minified function — same signature, see reference_sentry_minified_function_
+// name_changes_issue_shortid) and showed all 3 attempts exhausted on
+// `read ECONNRESET` — a transient TLS drop that clears in seconds, not the
+// ~750ms the old backoff gave it. Worst case now ~4.5s, only paid when Supabase
+// is already flaking; the alternative is getOutbreaks() falling back to an
+// empty outbreak list for that visitor (see its try/catch below).
+const RETRY_BACKOFF_MS = [300, 1200, 3000];
 
 async function queryWithRetry<T>(
   buildQuery: (supabase: ReturnType<typeof getServerClient>) => PromiseLike<{ data: T; error: unknown }>,
-  attempts = 3,
+  attempts = 4,
 ): Promise<{ data: T; error: unknown; attempts: number }> {
   let result: { data: T; error: unknown } | undefined;
   for (let i = 0; i < attempts; i++) {
