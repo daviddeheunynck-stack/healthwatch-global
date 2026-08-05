@@ -28,6 +28,16 @@ function riskMeetsThreshold(risk: string, minRisk: string): boolean {
   return (RISK_RANK[risk] ?? 0) >= (RISK_RANK[minRisk] ?? 0);
 }
 
+// `%`/`_` are LIKE wildcards, not literals. country_en is free text a Pro
+// user typed at creation (app/api/country-risk-alerts/route.ts only checks
+// non-empty), so a stored "%" would match every country with a single
+// alert, bypassing the one-alert-per-country model and MAX_ALERTS cap. Same
+// class as the send-welcome fix (2026-08-05, 39cf3fb): escaping here, at
+// read time, covers rows already in the table too, not just new ones.
+function escapeLikePattern(s: string): string {
+  return s.replace(/[\\%_]/g, "\\$&");
+}
+
 export async function GET(req: NextRequest) {
   const cronSecret = (process.env.CRON_SECRET ?? "").replace(/^﻿/, "").trim();
   const authHeader = req.headers.get("authorization");
@@ -113,7 +123,7 @@ async function runCountryRiskAlerts(supabase: SupabaseClient) {
       .from("outbreaks")
       .select("id, disease, disease_en, disease_ar, country, country_en, country_ar, risk_level, cases, deaths, is_pheic, date")
       .eq("active", true)
-      .ilike("country_en", alert.country_en);
+      .ilike("country_en", escapeLikePattern(alert.country_en));
 
     const matches = (outbreaks ?? []).filter((o) =>
       riskMeetsThreshold(o.risk_level ?? "", alert.min_risk ?? "high")
