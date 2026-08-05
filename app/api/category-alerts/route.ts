@@ -44,7 +44,9 @@ export async function POST(req: Request) {
   const min_cases = typeof body.min_cases === "number" && body.min_cases > 0 ? Math.round(body.min_cases) : 0;
   const email     = typeof body.email === "string" ? body.email.trim().slice(0, 320) : user.email ?? "";
 
-  if (!disease_category || min_cases <= 0 || !email)
+  // Previously only checked non-empty — no "@" or format required at all.
+  // Aligned with the regex already used by country-risk-alerts/geofence-alerts/subscribe/etc.
+  if (!disease_category || min_cases <= 0 || !email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
     return NextResponse.json({ error: "Invalid parameters" }, { status: 400 });
 
   const { data, error } = await supabase

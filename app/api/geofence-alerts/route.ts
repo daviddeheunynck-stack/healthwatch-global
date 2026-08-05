@@ -50,7 +50,9 @@ export async function POST(req: NextRequest) {
   const radius_km = Math.min(5000, Math.max(1, Math.round(Number(body.radius_km ?? 500))));
   const email     = String(body.email ?? "").trim();
 
-  if (!email || !email.includes("@")) return NextResponse.json({ error: "Valid email required" }, { status: 400 });
+  // `.includes("@")` accepted anything with an "@" anywhere in it. Aligned with
+  // the regex already used by country-risk-alerts/category-alerts/subscribe/etc.
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return NextResponse.json({ error: "Valid email required" }, { status: 400 });
   if (isNaN(lat) || lat < -90 || lat > 90) return NextResponse.json({ error: "Invalid latitude" }, { status: 400 });
   if (isNaN(lng) || lng < -180 || lng > 180) return NextResponse.json({ error: "Invalid longitude" }, { status: 400 });
 
