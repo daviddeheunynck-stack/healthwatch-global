@@ -221,7 +221,7 @@ if (frozenSeed.length) {
 // 3 autres langues restait invisible pour toujours à ce gate (corrigé le 2026-07-23, commit
 // ca8e30c). Ce signal reste utile si un autre chemin d'écriture recrée le même trou.
 const partialTranslationRows = await fetchJson(
-  `${SUPABASE_URL}/rest/v1/outbreaks?active=eq.true&description=not.is.null&description=neq.&select=id,disease_en,country_en,description,description_fr,description_es,description_ar,description_id`,
+  `${SUPABASE_URL}/rest/v1/outbreaks?active=eq.true&description=not.is.null&description=neq.&select=id,disease_en,country_en,cases,description,description_fr,description_es,description_ar,description_id`,
   { headers: h }
 );
 const partial = partialTranslationRows.filter((o) => {
@@ -273,6 +273,42 @@ console.log("\n=== Traductions périmées (chiffres FR incompatibles avec la des
 if (desynced.length) {
   desynced.forEach(({ o, missing, extra }) =>
     console.log(`[${o.id}] ${o.disease_en} | ${o.country_en} | EN cite ${missing.join(", ")} — FR cite ${extra.join(", ")}`)
+  );
+} else {
+  console.log("Aucune.");
+}
+
+// --- 4e-ter. Traductions périmées, second filet : le compteur `cases` cité en EN, absent ailleurs ---
+// Angle mort du 4e-bis trouvé le 2026-08-05 sur Choléra/Tanzanie : les 4 traductions portaient
+// encore « 54 cas » alors que l'EN et la colonne `cases` disaient 113. Le 4e-bis ne l'a pas vu
+// parce qu'il ne compare que les nombres >= 3 chiffres — 54 en fait 2, donc le FR ne citait
+// aucun nombre « en trop » et la condition « missing && extra » n'était pas remplie.
+// Règle complémentaire, volontairement étroite pour rester sans bruit : si la description EN
+// cite littéralement la valeur de `cases` (>= 2 chiffres) et qu'une traduction ne la cite pas,
+// cette traduction date d'une version antérieure de la ligne. Mesuré à 0 faux positif sur les
+// 115 lignes actives du 2026-08-05 (seul hit = le vrai bug Tanzanie). Contrairement au 4e-bis,
+// ce filet couvre les 4 langues, pas seulement le FR.
+function citesCases(text, cases) {
+  if (!text) return false;
+  let norm = text;
+  for (let i = 0; i < 2; i++) norm = norm.replace(/(\d)[\s  .,](\d{3})\b/g, "$1$2");
+  return new RegExp(`(?<!\\d)${cases}(?!\\d)`).test(norm);
+}
+const staleVsCases = partialTranslationRows
+  .map((o) => {
+    if (o.cases == null || String(o.cases).length < 2) return null;
+    if (!citesCases(o.description, o.cases)) return null;
+    const langs = ["fr", "es", "ar", "id"].filter((l) => {
+      const t = o[`description_${l}`];
+      return t && !citesCases(t, o.cases);
+    });
+    return langs.length ? { o, langs } : null;
+  })
+  .filter(Boolean);
+console.log("\n=== Traductions périmées (compteur `cases` cité en EN, absent d'une traduction) ===");
+if (staleVsCases.length) {
+  staleVsCases.forEach(({ o, langs }) =>
+    console.log(`[${o.id}] ${o.disease_en} | ${o.country_en} | cases=${o.cases} cité en EN mais absent de : ${langs.join(", ")}`)
   );
 } else {
   console.log("Aucune.");
