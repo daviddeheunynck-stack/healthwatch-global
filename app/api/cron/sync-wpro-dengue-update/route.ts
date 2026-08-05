@@ -1,5 +1,5 @@
 // Weekly poll of WHO WPRO's biweekly "Dengue Situation Update" bulletin, for
-// the three places whose cumulative case counts are only extractable from
+// the four places whose cumulative case counts are only extractable from
 // this report's free-text narrative (no other cron covers them, or covers
 // them from a laggier source):
 //
@@ -21,8 +21,19 @@
 //     higher source_priority (6 vs sync-who-regional's hardcoded 5) so it
 //     wins going forward — see the priority-guard comment on the Cambodia
 //     write below.
+//   - Viet Nam: added 2026-08-05. Same shape as Cambodia — sync-who-regional's
+//     global xmart dataset has NO 2026 Viet Nam rows at all, so that cron
+//     writes nothing and the row was being maintained by hand off this very
+//     bulletin. Hand-maintenance is what produced the bug this entry fixes:
+//     the row carried #748's figures with sync-who-regional's inherited
+//     `source` URL (the global dashboard), so its citation pointed at a page
+//     that has never held the number displayed. Wiring it here makes the
+//     figure and its `source` move together, by construction. Also caught
+//     that the row was two editions stale — WHO revised its own Jan–May
+//     "over 50 000 / five deaths" (#748) down to a precise Jan–June "41 684 /
+//     eight deaths" from #749 on.
 //
-// Every other country in this bulletin (Cambodia aside) is either narrated
+// Every other country in this bulletin (Cambodia and Viet Nam aside) is either narrated
 // only as an unlabelled chart (most PICs) or already covered by a more
 // authoritative per-country source elsewhere (India/Brazil/etc via other
 // fetchers, PAHO members via sync-paho-alerts) — deliberately not extending
@@ -46,7 +57,12 @@
 //
 // Per-country extraction was written against, and verified word-for-word on,
 // edition #750 (23 July 2026), then re-verified against #749 (9 July 2026) to
-// catch phrasing that #750 alone didn't exercise — French Polynesia's
+// catch phrasing that #750 alone didn't exercise. Viet Nam (added 2026-08-05)
+// was instead written against #745 through #750, because its phrasing turns
+// over far faster than the others' — see its own comment in TARGETS. Verified
+// on all six: #750/#749 41 684/8 (2026-06-30), #748 50 000/5 (2026-05-31),
+// #747 44 965/5 (2026-04-18), #746/#745 35 986/4 (2026-04-12). Original note
+// on the other three follows — French Polynesia's
 // "cumulative total" sentence survives even when the rest of its paragraph
 // says "There was no update ... in this reporting period" and gives no date
 // range at all, which #749 does and #750 doesn't. See extractCumulativeTotal
@@ -108,6 +124,24 @@ const MONTHS: Record<string, string> = {
   july: "07", august: "08", september: "09", october: "10", november: "11", december: "12",
 };
 
+// Deaths are sometimes spelled out rather than written as a numeral —
+// "including eight deaths" (#749, #750), "including five deaths" (#748, #747),
+// "and four deaths" (#746). Only Viet Nam's paragraph does this among the
+// targets below; Cambodia's always uses digits. Range stops at twenty: past
+// that WHO's own copy switches to numerals, and a bigger table would just be
+// dead code pretending to be coverage.
+const WORD_NUMBERS: Record<string, number> = {
+  zero: 0, one: 1, two: 2, three: 3, four: 4, five: 5, six: 6, seven: 7,
+  eight: 8, nine: 9, ten: 10, eleven: 11, twelve: 12, thirteen: 13,
+  fourteen: 14, fifteen: 15, sixteen: 16, seventeen: 17, eighteen: 18,
+  nineteen: 19, twenty: 20,
+};
+
+function parseDeathCount(s: string): number {
+  const word = s.trim().toLowerCase();
+  return word in WORD_NUMBERS ? WORD_NUMBERS[word] : parseGroupedNumber(s);
+}
+
 // "19 July 2026" -> "2026-07-19"
 function parseBulletinDate(s: string): string | null {
   const m = s.trim().match(/^(\d{1,2})\s+([A-Za-z]+)\s+(\d{4})$/);
@@ -115,6 +149,26 @@ function parseBulletinDate(s: string): string | null {
   const month = MONTHS[m[2].toLowerCase()];
   if (!month) return null;
   return `${m[3]}-${month}-${m[1].padStart(2, "0")}`;
+}
+
+// Viet Nam's paragraph often gives a month-granular range rather than a
+// specific day ("From January to June 2026, a cumulative total of ...") —
+// resolved to the last day of the closing month, which is what the figure
+// actually covers. Using the bulletin masthead date instead would overstate
+// how current the count is by up to several weeks (#750, published 23 July,
+// still carries June data).
+const LAST_DAY_OF_MONTH: Record<string, string> = {
+  "01": "31", "02": "28", "03": "31", "04": "30", "05": "31", "06": "30",
+  "07": "31", "08": "31", "09": "30", "10": "31", "11": "30", "12": "31",
+};
+
+function monthEndDate(monthName: string, year: string): string | null {
+  const month = MONTHS[monthName.toLowerCase()];
+  if (!month) return null;
+  const y = Number(year);
+  const leap = y % 4 === 0 && (y % 100 !== 0 || y % 400 === 0);
+  const day = month === "02" && leap ? "29" : LAST_DAY_OF_MONTH[month];
+  return `${year}-${month}-${day}`;
 }
 
 // The report's own masthead date ("Dengue Situation Update 750 23 July
@@ -138,6 +192,24 @@ function section(text: string, start: string, end: string | null): string | null
   const from = s + start.length;
   const e = end ? text.indexOf(end, from) : -1;
   return text.slice(from, e === -1 ? text.length : e);
+}
+
+// Same idea as section(), but anchored from the END of the region rather than
+// the start. Needed for Viet Nam and nothing else: unlike the other three
+// targets, "Viet Nam" also appears in the report's opening methodology note
+// ("... except for Indonesia, Lao People's Democratic Republic, Malaysia, and
+// Viet Nam, where data are provided by the WHO Country Offices"), which sits
+// ~400 characters into every edition — section()'s forward indexOf would lock
+// onto that sentence and never reach the country paragraph. Viet Nam is the
+// last country of the Northern Hemisphere block, so taking the LAST occurrence
+// before the "Southern Hemisphere" heading lands on the real paragraph in
+// every edition checked (#745 through #750).
+function sectionBefore(text: string, start: string, end: string): string | null {
+  const endIdx = text.indexOf(end);
+  const scope  = endIdx === -1 ? text : text.slice(0, endIdx);
+  const s = scope.lastIndexOf(start);
+  if (s === -1) return null;
+  return scope.slice(s + start.length);
 }
 
 // New Caledonia and French Polynesia share one phrasing family for their
@@ -196,6 +268,48 @@ const TARGETS: Target[] = [
       const noDate = sec.match(/a total of\s*([\d\s]+?)\s*dengue cases,\s*including\s*(\d+)\s*deaths/i);
       if (!noDate) return null;
       return { isoDate: bulletinDate(text), cases: parseGroupedNumber(noDate[1]), deaths: parseInt(noDate[2], 10) };
+    },
+  },
+  {
+    disease_en: "Dengue fever",
+    // "Vietnam" is this project's spelling (geo-data / the existing row);
+    // the bulletin writes "Viet Nam", which is what the extractor matches on.
+    country_en: "Vietnam",
+    // Viet Nam's paragraph is the least stable of the four targets — WHO has
+    // used three distinct phrasings across the six editions checked on
+    // 2026-08-05, so all three are matched in order rather than assuming the
+    // current one holds:
+    //   A (#748-#750) "From January to June 2026, a cumulative total of
+    //     41 684 cases, including eight deaths, were reported nationwide."
+    //     — month-granular range, resolved via monthEndDate(). #748 uses the
+    //     same shape with "over 50 000 dengue cases" instead of "a cumulative
+    //     total of", hence the optional lead-in alternation.
+    //   B (#747) "From 14 December 2025 to 18 April 2026, a total of 44,965
+    //     cases including five deaths were recorded nationwide." — explicit
+    //     end date, and note the comma thousands separator (the other
+    //     editions use a space) plus the missing comma before "including".
+    //   C (#745, #746) "As of 12 April 2026, 35 986 cases and four deaths
+    //     were reported nationwide."
+    // Deliberately NO masthead-date fallback here, unlike the other three
+    // targets: every phrasing seen carries its own date, and Viet Nam's
+    // paragraph frequently opens with "There was no update in this reporting
+    // period" while still restating an older cumulative total — dating that
+    // to the masthead would silently present stale figures as current, which
+    // is a worse failure than skipping the row for one edition.
+    extract: (text) => {
+      const sec = sectionBefore(text, "Viet Nam", "Southern Hemisphere");
+      if (!sec) return null;
+      let m;
+      if ((m = sec.match(/From\s+[A-Za-z]+\s+to\s+([A-Za-z]+)\s+(\d{4}),\s*(?:a\s+cumulative\s+total\s+of|a\s+total\s+of|over)?\s*([\d\s,]+?)\s*(?:dengue\s+)?cases,?\s*including\s*([a-z]+|[\d\s,]+)\s*deaths/i))) {
+        return { isoDate: monthEndDate(m[1], m[2]), cases: parseGroupedNumber(m[3]), deaths: parseDeathCount(m[4]) };
+      }
+      if ((m = sec.match(/From\s+\d{1,2}\s+[A-Za-z]+\s+\d{4}\s+to\s+(\d{1,2}\s+[A-Za-z]+\s+\d{4}),\s*(?:a\s+total\s+of\s*)?([\d\s,]+?)\s*(?:dengue\s+)?cases,?\s*including\s*([a-z]+|[\d\s,]+)\s*deaths/i))) {
+        return { isoDate: parseBulletinDate(m[1]), cases: parseGroupedNumber(m[2]), deaths: parseDeathCount(m[3]) };
+      }
+      if ((m = sec.match(/As of (\d{1,2}\s+[A-Za-z]+\s+\d{4}),\s*([\d\s,]+?)\s*(?:dengue\s+)?cases\s*and\s*([a-z]+|[\d\s,]+)\s*deaths/i))) {
+        return { isoDate: parseBulletinDate(m[1]), cases: parseGroupedNumber(m[2]), deaths: parseDeathCount(m[3]) };
+      }
+      return null;
     },
   },
 ];

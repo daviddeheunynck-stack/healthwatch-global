@@ -314,6 +314,93 @@ if (staleVsCases.length) {
   console.log("Aucune.");
 }
 
+// --- 4h. `source` incohérent avec la source réellement citée dans la description ---
+// Trouvé le 2026-08-05 : 5 lignes dengue actives (Sri Lanka, Malaisie, Pérou, Nicaragua,
+// Viêt Nam) portaient `source = worldhealthorg.shinyapps.io/dengue_global/` alors que leur
+// description citait une source NATIONALE différente (National Dengue Control Unit, MINSA,
+// CDC Perú, Ministry of Health...). Chiffres corrects, citation fausse : un abonné qui clique
+// le lien ne retrouve pas le nombre affiché — le mart OMS donnait par exemple 33 872 pour le
+// Sri Lanka au 01/05 contre 79 016 au 22/07 en base. Cause : un script de correction ponctuel
+// (refresh dengue du 25/07, jamais commité) a réécrit `description` + les chiffres depuis une
+// source nationale sans toucher `source`, qui est resté l'URL héritée de sync-who-regional.
+// Exactement le même angle mort que les traductions périmées du 02/08 (4e-bis) : une écriture
+// manuelle partielle laisse une colonne désynchronisée des autres, sans jamais produire de NULL.
+//
+// Deux filets complémentaires, mesurés le 2026-08-05 sur les 106 lignes actives :
+//   4h-a : la description attribue les chiffres à une autorité NATIONALE mais `source` pointe
+//          vers un agrégateur supranational (OMS/OPS/ECDC/Africa CDC), sans que la description
+//          dise que c'est cet agrégateur qui publie. 4 hits = les 4 vrais bugs, 0 faux positif.
+//   4h-b : la description se termine par une clause « Source: <document> » dont AUCUN mot
+//          significatif ne se retrouve dans l'URL. Les mots qui ne désignent que l'organisation
+//          (who, paho, cdc, afro...) sont retirés avant comparaison : l'hôte de l'URL les
+//          satisfait déjà et ils ne disent rien du DOCUMENT cité — c'est précisément ce qui
+//          distingue Choléra/Kenya (cite « WHO AFRO Kenya weekly situation report », pointe
+//          vers le tableau de bord choléra global) d'une ligne saine. 1 hit = ce vrai bug.
+// Limite connue et assumée : ni l'un ni l'autre n'attrape Viêt Nam, dont la description citait
+// « WHO Dengue Situation Update 748 » avec l'URL du tableau de bord OMS — même organisation,
+// et « dengue » se recoupe. Ce cas-là est traité structurellement, pas par heuristique : la
+// ligne est désormais écrite par sync-wpro-dengue-update, qui pose `source` et `description`
+// dans le même payload (cf. son en-tête).
+const AGGREGATOR_HOST = /(^|\.)who\.int$|worldhealthorg\.shinyapps\.io$|(^|\.)paho\.org$|(^|\.)ecdc\.europa\.eu$|(^|\.)africacdc\.org$/;
+const NATIONAL_AUTHORITY =
+  /\b(Ministry of Health|Ministério da Saúde|Ministerio de Salud|minist[èe]re de la Sant[ée]|MINSA|CDC Per[uú]|National Dengue Control Unit|National (?:Public Health|Dengue|Malaria|Disease)[A-Za-z ]*(?:Institute|Unit|Programme|Program|Centre|Center|Surveillance System)|Sant[ée] publique France|Robert Koch|NIDSS)\b/;
+// « ... Source: WHO Global Cholera Surveillance. » — la description dit elle-même que c'est
+// l'agrégateur qui publie, une URL who.int/paho.org est alors la bonne citation, pas un écart.
+const AGGREGATOR_PUBLICATION = /Sources?\s*:\s*[^\n]*\b(WHO|OMS|PAHO|OPS|ECDC|Africa CDC)\b/i;
+
+function sourceHost(u) {
+  try { return new URL(u).host.replace(/^www\./, ""); } catch { return null; }
+}
+
+console.log("\n=== `source` incohérent avec l'autorité citée dans la description (attribution nationale, URL supranationale) ===");
+let attributionFound = false;
+for (const o of active) {
+  const host = sourceHost(o.source);
+  if (!host || !AGGREGATOR_HOST.test(host)) continue;
+  const cited = (o.description || "").match(NATIONAL_AUTHORITY);
+  if (!cited || AGGREGATOR_PUBLICATION.test(o.description || "")) continue;
+  attributionFound = true;
+  console.log(`[${o.id}] ${o.disease_en || o.disease} | ${o.country_en || o.country} | cite « ${cited[0]} » mais src=${o.source}`);
+}
+if (!attributionFound) console.log("Aucune.");
+
+// Mots qui n'identifient QUE l'organisation : déjà établis par l'hôte de l'URL.
+const SOURCE_ORG_WORDS = new Set(["who", "oms", "paho", "ops", "ecdc", "cdc", "afro", "wpro", "searo", "emro", "euro", "amro"]);
+const SOURCE_STOPWORDS = new Set(["source", "sources", "the", "of", "and", "in", "for", "on", "de", "du", "la", "le", "les", "des", "as", "at", "from", "via", "data", "report", "reports", "citing"]);
+// Le mart OMS s'appelle « mpx », la description dit « Mpox » — sans cet alias, les 4 lignes
+// Mpox saines (worldhealthorg.shinyapps.io/mpx_global/) ressortiraient tous les matins.
+const SOURCE_TOKEN_ALIAS = { mpox: ["mpx", "monkeypox"], nam: ["vietnam"], viet: ["vietnam"] };
+// Gentilé -> ccTLD de l'hôte. Sans ça, Diphtérie/Australie (« Australian CDC NNDSS report »
+// pointant vers cdc.gov.au) est un faux positif : le pays est dans le domaine, pas dans le chemin.
+const SOURCE_DEMONYM_TLD = {
+  australian: "au", malaysian: "my", peruvian: "pe", nicaraguan: "ni", kenyan: "ke",
+  vietnamese: "vn", indian: "in", brazilian: "br", nigerian: "ng", taiwanese: "tw",
+};
+function sourceTokens(s) {
+  return [...new Set((s.toLowerCase().match(/[a-z]{3,}/g) ?? []).filter((t) => !SOURCE_STOPWORDS.has(t) && !SOURCE_ORG_WORDS.has(t)))];
+}
+console.log("\n=== Clause « Source: » dont aucun mot ne se retrouve dans l'URL `source` ===");
+let citationFound = false;
+for (const o of active) {
+  const m = (o.description || "").match(/(?:^|[.\s])Sources?\s*:\s*([^\n]{3,200})$/i);
+  if (!m) continue;
+  const tokens = sourceTokens(m[1]);
+  if (!tokens.length) continue;
+  const url = (o.source || "").toLowerCase();
+  const host = sourceHost(o.source) || "";
+  const matched = tokens.some(
+    (t) =>
+      url.includes(t) ||
+      (SOURCE_TOKEN_ALIAS[t] ?? []).some((a) => url.includes(a)) ||
+      (SOURCE_DEMONYM_TLD[t] && host.endsWith(`.${SOURCE_DEMONYM_TLD[t]}`))
+  );
+  if (!matched) {
+    citationFound = true;
+    console.log(`[${o.id}] ${o.disease_en || o.disease} | ${o.country_en || o.country} | cite « ${m[1].trim()} » mais src=${o.source}`);
+  }
+}
+if (!citationFound) console.log("Aucune.");
+
 // --- 4f. Nulls silencieux : pays câblés dans une map de source mais absents de la base ---
 // Trouvé le 2026-07-27 en creusant le trou Tchad/choléra du 21-22/07 : la République
 // centrafricaine est câblée dans CHOLERA_ISO3 (app/api/cron/sync-who-regional/route.ts)
