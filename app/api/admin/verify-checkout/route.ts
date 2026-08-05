@@ -32,6 +32,12 @@ export async function GET(req: NextRequest) {
   if (!userId && !email) {
     return NextResponse.json({ error: "Provide ?user_id= or ?email=" }, { status: 400 });
   }
+  // email is optional (userId is the alternative lookup key) but wasn't
+  // format-checked when present — aligned with the regex every other
+  // email-accepting route in the repo already uses.
+  if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    return NextResponse.json({ error: "Invalid email" }, { status: 400 });
+  }
 
   const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
 

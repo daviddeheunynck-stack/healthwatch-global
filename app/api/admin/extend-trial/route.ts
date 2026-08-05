@@ -25,7 +25,14 @@ export async function POST(req: NextRequest) {
   }
 
   const { email, days = 14 } = await req.json() as { email: string; days?: number };
-  if (!email) return NextResponse.json({ error: "email required" }, { status: 400 });
+  // Only checked non-empty before — aligned with the regex every other
+  // email-accepting route in the repo already uses (subscribe, team/invite,
+  // admin/invite, etc). A malformed value here just 404s on the .eq() lookup
+  // below rather than doing anything unsafe, but there's no reason for this
+  // one route to be the odd one out.
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    return NextResponse.json({ error: "Valid email required" }, { status: 400 });
+  }
 
   const admin = createServiceClient(
     clean(process.env.NEXT_PUBLIC_SUPABASE_URL),
