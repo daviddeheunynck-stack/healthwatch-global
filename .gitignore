@@ -64,3 +64,5 @@ supabase/.temp/
 # from an interactive session can't re-track one before it's cleaned up, the
 # way it did on 2026-08-01 (commit 735fe46 re-added two already-deleted ones).
 scripts/*-20[0-9][0-9]-[0-9][0-9]-[0-9][0-9].mjs
+
+.vercel

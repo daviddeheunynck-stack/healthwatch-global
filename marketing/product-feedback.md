@@ -177,3 +177,34 @@ https://tchadinfos.com/2026/07/02/cholera-dans-le-district-sanitaire-de-karal-12
 **⚠️ Leçon générale, à retenir pour les prochains fix de crons** : corriger le code d'un cron ne rattrape pas les données déjà mal écrites entre le bug et le déploiement. Après un fix de matcher/parseur, il faut **explicitement re-vérifier les lignes que le cron aurait dû alimenter pendant la fenêtre de bug**, et pas seulement constater que la ligne fautive a disparu. Ici la ligne fantôme avait bien été neutralisée, ce qui donnait l'impression que l'incident était clos.
 
 **⚠️ Résidu d'affichage non corrigé** : la ligne fantôme `Congo` (2 344 cas, inactive, prio 0) continue d'apparaître dans la section « Historique des épidémies » de `/fr/disease/ebola` et dans « Pays touchés », alors qu'elle ne correspond à aucun foyer réel en République du Congo. La mémoire dit de ne pas la re-signaler comme écart tant qu'elle reste inactive, mais l'historique et la liste des pays sont une surface différente de la carte des foyers actifs. **Décision de suppression laissée à David** (précédent de suppression pure existant : le doublon « Democratic Republic of Congo » du 17/07).
+
+---
+
+## 29 juillet 2026 — Hao-Kai TSENG (Epidemic Intelligence Center, Taiwan CDC)
+
+**Contexte :** welcome DM échangé le 29/07 (voir linkedin-contacts.md pour l'historique complet). Hao-Kai fait de la veille épidémique internationale au Taiwan CDC ; Taïwan n'étant pas État membre de l'OMS, son équipe ne peut pas s'appuyer sur les canaux WHO/ECDC/PAHO/Africa CDC que HWG agrège et compense par une veille manuelle sur des plateformes spécialisées.
+
+**Retour — trois sources tierces citées comme consultées quotidiennement par une équipe de surveillance professionnelle**
+> « The source of our information comes mostly from the big institution that you said, along with neighboring countries' national websites or media sources. Beacon, cidrap, outbreak news today, and many bio surveillance platform are also frequently visited on a daily basis. »
+
+Trois candidats nommés explicitement, à évaluer comme sources additionnelles potentielles pour HWG :
+1. **Beacon** — plateforme de bio-surveillance (nom générique, à identifier précisément : plusieurs outils portent ce nom, vérifier lequel avant toute intégration).
+2. **CIDRAP** (Center for Infectious Disease Research and Policy, University of Minnesota) — site d'actualité épidémiologique reconnu, distinct de ProMED (aucune restriction connue à ce jour, à vérifier ToS avant tout usage automatisé, cf. `feedback_check_tos_before_scraping_bot_protected_sources`).
+3. **Outbreak News Today** — site d'actualité spécialisé foyers épidémiques, distinct de ProMED également.
+
+**Statut :** reçu, non évalué techniquement. Aucune vérification ToS/faisabilité de fetcher effectuée. Piste de sources à évaluer, pas une demande de fonctionnalité produit au sens strict — plutôt un signal sur les angles morts géographiques de HWG (pas de membre OMS = pas de couverture par les 4 bulletins actuels).
+
+---
+
+## 3 août 2026 — Omobolanle (Esther) Adelekun (Public Health Specialist & Epidemiologist | Disease Surveillance • Outbreak Response, OMS)
+
+**Contexte :** commentaire HWG posté le 03/08 sur son post « Outbreak Systems Intelligence: Why Case Definitions Matter », invitation envoyée le même jour et acceptée dans l'heure. Premier message reçu à 11:33, verbatim intégral en cf. linkedin-contacts.md.
+
+**Retour — idée d'outil versionnant les données de surveillance avec les métadonnées de définition de cas**
+> « I've started wondering whether there's an opportunity to build a tool that links surveillance data with case definition versions and other metadata to make outbreak trends easier to interpret. »
+
+**Faisabilité évaluée le jour même, sur demande de David** : vérification du code (`lib/outbreaks.ts`, aucun champ de version de définition de cas dans le schéma `Outbreak` ; crons de sync — parsing déterministe/regex, pas d'extraction sémantique LLM) et requête directe sur la prod Supabase live (`tqznwmpkokdzrszysbcm`) : 6 lignes mises à jour + 3 nouvelles lignes/24h sur 114 foyers actifs.
+
+**Conclusion** : l'outil versionné complet qu'elle décrit **n'est pas constructible en système général** — les sources (OMS DON, ECDC, Africa CDC, sitreps nationaux) ne publient quasiment jamais cette métadonnée de façon structurée, il n'y a donc rien à lier la plupart du temps. **Piste réduite jugée réaliste** : un flag manuel booléen (« ce bulletin annonce-t-il explicitement un changement de définition de cas ? »), même patron que les colonnes `is_pheic`/`is_backfill` déjà en place, vérifié à même la relecture quotidienne déjà faite par `morning-don-check` (volume compatible, ~9 lignes touchées/jour). Limites explicites : ne recrée pas l'historique des lignes déjà en base, rate tout changement que la source ne déclare pas noir sur blanc.
+
+**Statut :** idée présentée à Omobolanle dans la réponse envoyée le 03/08 (voir linkedin-contacts.md, DM 4), avec l'invitation à échanger davantage. **Non implémentée côté développement** — décision de priorisation laissée à David.
