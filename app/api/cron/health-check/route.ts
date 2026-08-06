@@ -85,6 +85,25 @@ async function lastRealDelivery(supabase: any, cronName: string): Promise<string
   return (data?.[ev.column] as string | undefined) ?? null;
 }
 
+// Companion to lastRealDelivery above — answers "has anyone in this audience
+// actually had a chance to be delivered to yet", so a brand-new subscriber
+// doesn't read as a broken cron just because the daily run hasn't come
+// around since they signed up. Best-effort: a table without its own
+// created_at column (user_alert_regions, at least as of 2026-08-06) or any
+// query error returns false ("don't suppress") so a lookup failure never
+// hides a real outage.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+async function allSubscribersJoinedAfter(supabase: any, table: string, runTs: string): Promise<boolean> {
+  const { data, error } = await supabase
+    .from(table)
+    .select("created_at")
+    .order("created_at", { ascending: true })
+    .limit(1)
+    .maybeSingle();
+  if (error || !data?.created_at) return false;
+  return new Date(data.created_at).getTime() > new Date(runTs).getTime();
+}
+
 // Consumer webmail + known test/dev domains — excluded so the institutional-
 // subscription check below doesn't flag the six test rows already known
 // (marketing/product-ideas-log.md, 2026-07-31) or the routine flow of real
@@ -659,7 +678,19 @@ async function runHealthCheck(_req: NextRequest, supabase: any) {
     // outbreak_alert_log showed real sends within the last hour.
     const effectiveLastNonZero = run?.lastNonZero ?? (await lastRealDelivery(supabase, name));
     if (!effectiveLastNonZero) {
-      if (!run || (run.rows ?? 0) === 0) deliveryIssues.push({ name, audience, kind: "never" });
+      if (!run || (run.rows ?? 0) === 0) {
+        // Don't cry wolf for a subscriber who joined after the cron's own
+        // last logged run — they haven't had a single opportunity to be
+        // delivered to yet. Found 2026-08-06: joanne.mcgovern@yale.edu
+        // subscribed to disease-alerts/watchlist-alerts at 23:2x UTC on
+        // 2026-08-05; both crons had last run 10:4x/10:5x UTC that same day
+        // (before she signed up), and this check read them as broken. Only
+        // suppress when the run actually happened AND every current
+        // subscriber postdates it — anyone who predates the last run and
+        // still got nothing is a real issue and still gets flagged.
+        const tooNewForDelivery = run?.ts ? await allSubscribersJoinedAfter(supabase, table, run.ts) : false;
+        if (!tooNewForDelivery) deliveryIssues.push({ name, audience, kind: "never" });
+      }
       continue;
     }
     const daysSinceDelivery = (Date.now() - new Date(effectiveLastNonZero).getTime()) / 86_400_000;
