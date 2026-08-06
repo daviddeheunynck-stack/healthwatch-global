@@ -60,7 +60,7 @@ const MONTHS: Record<string, number> = {
   jul: 7, aug: 8, sep: 9, oct: 10, nov: 11, dec: 12,
 };
 
-interface Extracted { date: string; cases: number; }
+interface Extracted { date: string; year: number; cases: number; }
 
 function extract(html: string): Extracted | null {
   // "...TERKUMPUL <br>DARI <span id='txt'>31 DEC 2023</span> HINGGA
@@ -79,18 +79,22 @@ function extract(html: string): Extracted | null {
   const casesM = html.match(/MALAYSIA<\/strong>[\s\S]{0,80}?<strong>(\d+)<\/strong>[\s\S]{0,250}?kumulatip[\s\S]{0,80}?<strong>(\d+)<\/strong>/i);
   if (!casesM) return null;
 
-  return { date, cases: parseInt(casesM[2], 10) };
+  return { date, year: parseInt(dateM[3], 10), cases: parseInt(casesM[2], 10) };
 }
 
 interface Descriptions { en: string; fr: string; es: string; ar: string; id: string; }
 
-function buildDescriptions(date: string, cases: number): Descriptions {
+// `year` is taken from the HINGGA ("until") date parsed above, never hardcoded
+// — same signature as sync-taiwan-cdc's buildDescriptions(), for the same
+// reason: this figure is a year-to-date cumulative count, so a literal year in
+// the text silently becomes a lie the first time the counter rolls over.
+function buildDescriptions(date: string, cases: number, year: number): Descriptions {
   return {
-    en: `Malaysia — dengue surveillance (iDengue dashboard, data as of ${date}): ${cases.toLocaleString("en")} cumulative cases in 2026, per the Ministry of Health (National Crisis Preparedness and Response Centre). Source: iDengue, Ministry of Health Malaysia.`,
-    fr: `Malaisie — surveillance de la dengue (tableau de bord iDengue, données au ${date}) : ${cases.toLocaleString("fr")} cas cumulés en 2026, selon le ministère de la Santé (Centre national de préparation et de réponse aux crises). Source : iDengue, ministère de la Santé de Malaisie.`,
-    es: `Malasia — vigilancia del dengue (panel iDengue, datos al ${date}): ${cases.toLocaleString("es")} casos acumulados en 2026, según el Ministerio de Salud (Centro Nacional de Preparación y Respuesta ante Crisis). Fuente: iDengue, Ministerio de Salud de Malasia.`,
-    ar: `ماليزيا — ترصد حمى الضنك (لوحة بيانات iDengue، حتى ${date}): ${cases.toLocaleString("en")} حالة تراكمية في عام 2026، وفقًا لوزارة الصحة (المركز الوطني للتأهب والاستجابة للأزمات). المصدر: iDengue، وزارة الصحة الماليزية.`,
-    id: `Malaysia — surveilans demam berdarah (dasbor iDengue, data per ${date}): ${cases.toLocaleString("en")} kasus kumulatif pada 2026, menurut Kementerian Kesehatan (Pusat Kesiapsiagaan dan Respons Krisis Nasional). Sumber: iDengue, Kementerian Kesehatan Malaysia.`,
+    en: `Malaysia — dengue surveillance (iDengue dashboard, data as of ${date}): ${cases.toLocaleString("en")} cumulative cases in ${year}, per the Ministry of Health (National Crisis Preparedness and Response Centre). Source: iDengue, Ministry of Health Malaysia.`,
+    fr: `Malaisie — surveillance de la dengue (tableau de bord iDengue, données au ${date}) : ${cases.toLocaleString("fr")} cas cumulés en ${year}, selon le ministère de la Santé (Centre national de préparation et de réponse aux crises). Source : iDengue, ministère de la Santé de Malaisie.`,
+    es: `Malasia — vigilancia del dengue (panel iDengue, datos al ${date}): ${cases.toLocaleString("es")} casos acumulados en ${year}, según el Ministerio de Salud (Centro Nacional de Preparación y Respuesta ante Crisis). Fuente: iDengue, Ministerio de Salud de Malasia.`,
+    ar: `ماليزيا — ترصد حمى الضنك (لوحة بيانات iDengue، حتى ${date}): ${cases.toLocaleString("en")} حالة تراكمية في عام ${year}، وفقًا لوزارة الصحة (المركز الوطني للتأهب والاستجابة للأزمات). المصدر: iDengue، وزارة الصحة الماليزية.`,
+    id: `Malaysia — surveilans demam berdarah (dasbor iDengue, data per ${date}): ${cases.toLocaleString("en")} kasus kumulatif pada ${year}, menurut Kementerian Kesehatan (Pusat Kesiapsiagaan dan Respons Krisis Nasional). Sumber: iDengue, Kementerian Kesehatan Malaysia.`,
   };
 }
 
@@ -166,7 +170,7 @@ async function runSyncMalaysiaDengue(supabase: SupabaseClient) {
   }
 
   const knownDeaths = existingRow?.deaths ?? null;
-  const desc = buildDescriptions(ex.date, ex.cases);
+  const desc = buildDescriptions(ex.date, ex.cases, ex.year);
   const riskLevel = assessRisk(diseaseInfo.name_en, desc.en, ex.cases, knownDeaths ?? 0);
 
   if (existingRow) {
