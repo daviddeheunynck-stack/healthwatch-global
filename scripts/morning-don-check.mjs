@@ -406,18 +406,43 @@ const MANUAL_ROWS = {
   "74561cc3-216f-4ee1-988a-ee82e362155d": "Dengue/Nouvelle-Calédonie",
   "4f95242c-e512-488e-ba52-38298a3e9ec3": "Dengue/Polynésie française",
 };
-console.log("\n=== Lignes manuelles (section 5) — dues pour vérif hebdo (updated_at > 7j) ===");
+// Vérification faite, source inchangée → aucune écriture, donc `updated_at` ne bouge pas et la
+// ligne se re-signale tous les matins indéfiniment (vécu le 06/08 avec les deux lignes polio :
+// GPEI confirmait les mêmes totaux qu'au 22/07, rien à écrire, mais la ligne restait "8j — À
+// VÉRIFIER"). Même problème et même remède que CLUSTER_EDITION_CHECKED plus haut : on note ici la
+// date de la dernière vérification RÉELLE, et la cadence part du plus récent des deux signaux.
+// ⚠️ Ne bumper une date ci-dessous qu'après avoir effectivement consulté la source primaire —
+// jamais pour faire taire une ligne.
+const MANUAL_ROW_CHECKED = {
+  // Polio/Afghanistan : « Polio This Week » du 29/07/2026 ne comporte aucune section Afghanistan
+  // (donc aucun nouveau cas) ; total 2026 toujours 15 WPV1, confirmé par la semaine close au
+  // 02/08 (15 AFG + 3 PAK = 18 dans le monde). Rien à écrire.
+  "b0f473be-a367-464e-ab32-3cdc43aa7815": "2026-08-06",
+  // Polio/Pakistan : « Polio This Week » du 29/07/2026 — « No WPV1 cases were reported this week »,
+  // total 2026 toujours 3 (cas le plus récent 07/04/2026). Deux échantillons environnementaux
+  // positifs au Sindh cette semaine-là, sans effet sur le compte de cas. Rien à écrire.
+  "ab4cd321-0aa6-4598-86ac-b0a04d346465": "2026-08-06",
+};
+console.log("\n=== Lignes manuelles (section 5) — dues pour vérif hebdo (>7j) ===");
 const now = Date.now();
 let anyDue = false;
 for (const o of active) {
   const label = MANUAL_ROWS[o.id];
   if (!label) continue;
-  const ageDays = Math.round((now - new Date(o.updated_at).getTime()) / 864e5);
+  const checked = MANUAL_ROW_CHECKED[o.id];
+  const lastSeen = Math.max(
+    new Date(o.updated_at).getTime(),
+    checked ? new Date(checked).getTime() : 0
+  );
+  const ageDays = Math.round((now - lastSeen) / 864e5);
+  const via = checked && new Date(checked).getTime() > new Date(o.updated_at).getTime()
+    ? " (dernière vérif sans changement)"
+    : "";
   if (ageDays > 7) {
     anyDue = true;
-    console.log(`${label} [${o.id}] : ${ageDays}j — À VÉRIFIER (cases=${o.cases} deaths=${o.deaths} date=${(o.date || "").slice(0, 10)})`);
+    console.log(`${label} [${o.id}] : ${ageDays}j${via} — À VÉRIFIER (cases=${o.cases} deaths=${o.deaths} date=${(o.date || "").slice(0, 10)})`);
   } else {
-    console.log(`${label} [${o.id}] : ${ageDays}j — skip (vérifiée récemment)`);
+    console.log(`${label} [${o.id}] : ${ageDays}j${via} — skip (vérifiée récemment)`);
   }
 }
 if (!anyDue) console.log("(aucune ligne due cette semaine)");

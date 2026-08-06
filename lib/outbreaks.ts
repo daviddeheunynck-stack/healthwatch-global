@@ -651,10 +651,33 @@ const REAL_WHO_DON_SOURCE = /^https:\/\/www\.who\.int\/emergencies\/disease-outb
 // Fake seed DON URLs look like /item/dengue-cotedivoire-2024 — no year-DONnumber pattern.
 const FAKE_SEED_DON = /\/disease-outbreak-news\/item\/(?!\d{4}-DON)/i;
 
+// sourceStatus() normally requires https:// — plain http:// is treated as unverified because
+// it's trivially spoofable and most sources here (WHO, ECDC, national MoH sites) serve https.
+// A few legitimate press domains we actually cite don't: their https:// certs fail (verified by
+// hand, not a network fluke — see e.g. french.china.org.cn, Choléra/Tchad fix 2026-08-06, TLS
+// error confirmed via both WebFetch and the Browser pane) while http:// serves the same content.
+// Allowlisted by exact hostname (not substring — a domain here must not accidentally match an
+// unrelated host) so 'official' status still means "a real, named, verified outlet", not "any
+// http:// URL". Add a domain here only after confirming its https:// genuinely doesn't work,
+// not as a shortcut around fixing a URL.
+const KNOWN_PRESS_DOMAINS_HTTP_OK = new Set<string>([
+  "french.china.org.cn", // Xinhua's French service — https cert fails, http is the live site
+]);
+
+function isKnownPressHttpUrl(src: string): boolean {
+  if (!src.startsWith("http://")) return false;
+  try {
+    return KNOWN_PRESS_DOMAINS_HTTP_OK.has(new URL(src).hostname.toLowerCase());
+  } catch {
+    return false;
+  }
+}
+
 /**
  * Three-tier source verification:
  *   'don'        — real WHO DON article (fully citable, citation button shown)
- *   'official'   — real https URL from WHO sitrep / ECDC / national MoH, but no DON id
+ *   'official'   — real https URL from WHO sitrep / ECDC / national MoH (or a known press
+ *                  domain whose https:// is broken, see KNOWN_PRESS_DOMAINS_HTTP_OK), no DON id
  *   'unverified' — placeholder source ("OMS", "PAHO", fake seed URL, etc.)
  */
 export type SourceStatus = 'don' | 'official' | 'unverified';
@@ -662,7 +685,9 @@ export type SourceStatus = 'don' | 'official' | 'unverified';
 export function sourceStatus(outbreak: Pick<Outbreak, "source">): SourceStatus {
   const src = outbreak.source || "";
   if (REAL_WHO_DON_SOURCE.test(src)) return 'don';
-  if (src.startsWith("https://") && !FAKE_SEED_DON.test(src)) return 'official';
+  if (FAKE_SEED_DON.test(src)) return 'unverified';
+  if (src.startsWith("https://")) return 'official';
+  if (isKnownPressHttpUrl(src)) return 'official';
   return 'unverified';
 }
 
@@ -740,6 +765,7 @@ export function sourceName(source: string | null | undefined): string {
   if (src.includes("reliefweb.int"))     return "ReliefWeb";
   if (src.includes("doh.gov.ph"))        return "PH DOH";
   if (src.includes("moph.go.th"))        return "Thailand MOPH";
+  if (src.includes("french.china.org.cn")) return "Xinhua";
   if (src.includes("who.int"))           return "WHO";
   return "Official";
 }
