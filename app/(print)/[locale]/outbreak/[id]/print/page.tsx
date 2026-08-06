@@ -1,6 +1,23 @@
 // Print-optimized outbreak one-pager
 // Opens in a new tab → user prints/saves as PDF via browser
 // URL: /fr/outbreak/{id}/print
+//
+// Lives in its own (print) route group, sibling to app/[locale]/, so it can
+// render its own <html>/<body> without nesting inside app/[locale]/layout.tsx's
+// <html>/<body> (which every other route under app/[locale]/ shares). Nested
+// <html> tags are invalid HTML; browsers silently reparent them during
+// parsing, which no longer matches what React expects to reconcile — that
+// mismatch is what Sentry reports as "Hydration Error" (occurrence type 5003).
+// Found 2026-08-06: a real Pro-trial user (yale.edu) hit this on this exact
+// route the day after signing up, watchlisting the very outbreak she then
+// opened the print report for. The route previously lived directly under
+// app/[locale]/outbreak/[id]/print/ and was double-wrapped in <html>/<body> —
+// its own (this file, unchanged below) plus the ancestor layout's. Moving the
+// file here (URL unchanged, robots.ts's `/*/outbreak/*/print` disallow rule
+// and both Link hrefs pointing here are plain strings, unaffected by file
+// location) removes the ancestor layout from this route's tree entirely, so
+// this file's <html>/<body> is the only one — no code change needed beyond
+// the move itself.
 
 import { createClient } from "@supabase/supabase-js";
 import { createClient as createServerClient } from "@/lib/supabase-server";
