@@ -113,6 +113,19 @@ export async function getOutbreakTrendsBulk(
   twoDaysAgo.setDate(twoDaysAgo.getDate() - 3); // 3-day window handles cron gaps
   const twoDaysAgoStr = twoDaysAgo.toISOString().split("T")[0];
 
+  // Lower bound for the "latest" query below — only the single most recent
+  // row per outbreak is ever used (deduped in JS after the order-by), but
+  // without a floor this scanned the outbreak_snapshots table's ENTIRE
+  // history for every id in the list: with one row/outbreak/day accumulating
+  // since the daily snapshot cron started, the table (2026-08-07: ~3,000 rows,
+  // growing ~200/day) was being re-fetched close to in full on every cache
+  // miss — the dominant driver of Supabase egress quota consumption
+  // (project_supabase_egress_quota). 10 days gives 3x the 3-day cron-gap
+  // tolerance used below, so a slow/skipped cron still resolves correctly.
+  const latestFloor = new Date();
+  latestFloor.setDate(latestFloor.getDate() - 10);
+  const latestFloorStr = latestFloor.toISOString().split("T")[0];
+
   // The 3 lookups below are independent (different date windows on the same
   // table) — run them concurrently instead of sequentially. Measured against
   // prod: ~100ms each but ~300-1300ms end-to-end when awaited one at a time,
@@ -121,11 +134,12 @@ export async function getOutbreakTrendsBulk(
   // getOutbreakTrendsBulkCached below), so the 3x wait was pure latency
   // multiplied by however slow the slowest of the three happened to be.
   const [{ data: latestRaw }, { data: oldestRaw }, { data: yesterdayRaw }] = await Promise.all([
-    // Latest snapshot per outbreak
+    // Latest snapshot per outbreak — bounded, see latestFloorStr above.
     supabase
       .from("outbreak_snapshots")
       .select("outbreak_id, cases, snapped_at")
       .in("outbreak_id", outbreakIds)
+      .gte("snapped_at", latestFloorStr)
       .order("snapped_at", { ascending: false }),
     // Most recent snapshot at or before DAYS_BACK ago (for 7-day trend)
     // Narrow window [2×DAYS_BACK, DAYS_BACK] avoids scanning full history
