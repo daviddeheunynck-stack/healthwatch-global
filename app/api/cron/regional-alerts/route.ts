@@ -5,7 +5,8 @@
  * pre-move schedule ran alerts ~22h ahead of same-day sync data, see
  * project_alert_crons_run_before_syncs_2026_08_03 in memory).
  *
- * For every outbreak created OR updated in the last 25 hours:
+ * For every active outbreak (no time-window pre-filter — see note at the
+ * candidate query below):
  *   1. Find paid users who subscribed to that region
  *   2. Skip users already alerted at this outbreak's current risk_level with
  *      no case surge since (outbreak_alert_log tracks the state we last
@@ -155,17 +156,26 @@ export async function GET(req: NextRequest) {
 }
 
 async function runRegionalAlerts(_req: NextRequest, supabase: SupabaseClient) {
-  // ── 1. Find outbreaks created OR updated in the last 25 hours ─────────────
-  // updated_at catches existing active outbreaks the daily sync just bumped
-  // (new cases/deaths, an escalated risk_level) — created_at alone only ever
-  // covers the day an outbreak first appears.
-  const since = new Date(Date.now() - 25 * 3600_000).toISOString();
-
+  // ── 1. Every active outbreak is a candidate ────────────────────────────
+  // Same shape as disease-alerts/watchlist-alerts, which never had a
+  // time-window pre-filter: dedup happens per (user, outbreak) via
+  // outbreak_alert_log below, not via recency. Removed the prior
+  // "created_at/updated_at within the last 25h" filter on 2026-08-07 — it
+  // had a same-day blind spot. outbreaks.updated_at is bumped by a DB
+  // trigger on every UPDATE, so a value that changes once then goes quiet
+  // stays fresh only until the next run; if that single change landed early
+  // enough in a UTC day relative to this cron's ~10:30 UTC slot, the
+  // following day's 25h lookback could just miss it — and once the value
+  // stopped moving, it never re-entered the window. Confirmed the same day
+  // on Cholera/Nigeria: cases went 8,994 -> 35,500 -> 50,057 with no re-alert
+  // for 12+ days despite qualifying for the surge rule below, silently
+  // missing real institutional/pilot subscribers (Institut Pasteur among
+  // them). At HWG's current scale (~100 active outbreaks) this is the same
+  // cost shape disease-alerts already runs daily without issue.
   const { data: candidateOutbreaks, error: oErr } = await supabase
     .from("outbreaks")
     .select("id, region, disease, disease_en, disease_ar, country, country_en, country_ar, risk_level, date, cases, deaths, created_at")
-    .eq("active", true)
-    .or(`created_at.gte.${since},updated_at.gte.${since}`);
+    .eq("active", true);
 
   if (oErr) {
     console.error("[regional-alerts] outbreaks query error:", oErr);
