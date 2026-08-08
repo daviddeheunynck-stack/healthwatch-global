@@ -63,9 +63,21 @@ export async function GET(
     clean(process.env.SUPABASE_SERVICE_ROLE_KEY)
   );
 
+  // getLocalizedDescription(o, l) below only ever reads `description` (EN,
+  // its fallback) plus the ONE locale-specific column matching this route's
+  // own `l` — the other 3 description_* columns were selected but never
+  // read. Narrowed to just those two: this route is revalidate=3600 +
+  // CDN-cached per locale, so the waste was 3 unused description columns x
+  // 30 rows on every origin refetch, x5 locales.
+  // Typed as `string` (not inferred as a literal) so supabase-js's select()
+  // overload falls back to a loose return type instead of trying to
+  // statically parse this dynamic template literal — it otherwise resolves
+  // to a ParserError type at compile time.
+  const localeDescCol: string = l !== "en" ? `, description_${l}` : "";
+  const selectCols: string = `id, disease, disease_en, disease_ar, country, country_en, country_ar, risk_level, date, cases, deaths, description${localeDescCol}`;
   const { data, error } = await supabase
     .from("outbreaks")
-    .select("id, disease, disease_en, disease_ar, country, country_en, country_ar, risk_level, date, cases, deaths, description, description_fr, description_es, description_ar, description_id")
+    .select(selectCols)
     .eq("active", true)
     .order("date", { ascending: false })
     .limit(30);
@@ -82,7 +94,7 @@ export async function GET(
     return new NextResponse("Temporarily unavailable", { status: 503, headers: { "Cache-Control": "no-store" } });
   }
 
-  const outbreaks = (data ?? []) as Outbreak[];
+  const outbreaks = (data ?? []) as unknown as Outbreak[];
 
   const items = outbreaks.map((o) => {
     const disease     = esc(getLocalizedDisease(o, l));

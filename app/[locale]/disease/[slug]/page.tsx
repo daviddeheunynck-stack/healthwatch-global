@@ -244,16 +244,35 @@ async function fetchDiseaseOutbreaks(diseaseNameEn: string): Promise<Outbreak[]>
     clean(process.env.SUPABASE_SERVICE_ROLE_KEY)
   );
 
+  // Two-pass instead of one full-table fetch: normalizeDisease() aliasing
+  // ("Dengue" / "Dengue fever" -> the same canonical name) can't be expressed
+  // as a SQL WHERE, so matching requires inspecting every row's disease/
+  // disease_en columns — but nothing else. The single query this replaced
+  // selected every column below (description especially, by far the heaviest
+  // field on this table) for EVERY outbreak in the database, on every cache
+  // miss, just to filter down to the handful of rows that actually match —
+  // repeated per disease (~50) x per locale (5) x hourly revalidation. This
+  // was the largest identified driver of Supabase egress quota usage outside
+  // outbreak_snapshots (see project_supabase_egress_quota); country/[slug]
+  // and region/[region] never had this problem since country_en/region are
+  // plain equality columns and were already filtered in SQL.
+  const { data: index } = await supabase
+    .from("outbreaks")
+    .select("id, disease, disease_en");
+  if (!index) return [];
+
+  const matchingIds = (index as { id: string; disease: string; disease_en: string | null }[])
+    .filter((o) => normalizeDisease(o.disease_en || o.disease).name_en === diseaseNameEn)
+    .map((o) => o.id);
+  if (matchingIds.length === 0) return [];
+
   const { data } = await supabase
     .from("outbreaks")
     .select("id, disease, disease_en, description, country, country_en, country_ar, cases, deaths, risk_level, date, active, is_seed, source_priority, updated_at, response_phase")
+    .in("id", matchingIds)
     .order("date", { ascending: false });
 
-  if (!data) return [];
-
-  return (data as Outbreak[]).filter(
-    (o) => normalizeDisease(o.disease_en || o.disease).name_en === diseaseNameEn
-  );
+  return (data ?? []) as Outbreak[];
 }
 
 // ── Static params ─────────────────────────────────────────────────────────────
