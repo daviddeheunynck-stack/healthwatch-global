@@ -422,6 +422,14 @@ const MANUAL_ROW_CHECKED = {
   // total 2026 toujours 3 (cas le plus récent 07/04/2026). Deux échantillons environnementaux
   // positifs au Sindh cette semaine-là, sans effet sur le compte de cas. Rien à écrire.
   "ab4cd321-0aa6-4598-86ac-b0a04d346465": "2026-08-06",
+  // Marburg/Ouganda : vérifié le 08/08 — WebSearch « Marburg Uganda cases August 2026 » et page
+  // pays WHO AFRO (afro.who.int/countries/uganda, aucune mention Marburg, uniquement Ebola
+  // Bundibugyo). Toujours 1 cas / 1 décès (enfant de 18 mois, Kyegegwa, notifié à l'OMS le
+  // 30/06/2026), aucun contact devenu symptomatique, aucun cas supplémentaire depuis. Aucune
+  // source plus autoritaire que CIDRAP n'existe à ce jour (ni DON, ni item AFRO). Rien à écrire.
+  // ⚠️ Fin de la fenêtre de 42 j vers le 11-12/08/2026 : rechercher à ce moment-là une
+  // déclaration de fin d'épidémie ougandaise, qui justifierait de passer la ligne à active=false.
+  "b17d4fda-c38c-41c0-9b26-e60a54c1851b": "2026-08-08",
 };
 console.log("\n=== Lignes manuelles (section 5) — dues pour vérif hebdo (>7j) ===");
 const now = Date.now();
@@ -446,3 +454,22 @@ for (const o of active) {
   }
 }
 if (!anyDue) console.log("(aucune ligne due cette semaine)");
+
+// Watch ponctuel, distinct de la cadence hebdo ci-dessus : la fenêtre de surveillance des 42j
+// post-dernier-cas (calquée sur la règle OMS utilisée pour la clôture Ebola/Ouganda le 28/07)
+// se termine vers le 11-12/08/2026 pour Marburg/Ouganda (cas unique notifié le 30/06/2026, voir
+// commentaire MANUAL_ROW_CHECKED ci-dessus). Demande explicite de David le 08/08 : rechercher une
+// déclaration de fin d'épidémie ougandaise à ce moment-là, indépendamment du cycle de 7j normal.
+// Supprimer ce bloc une fois la clôture confirmée (ou la ligne passée à active=false).
+const MARBURG_UGANDA_ID = "b17d4fda-c38c-41c0-9b26-e60a54c1851b";
+const MARBURG_CLOSURE_WATCH_FROM = "2026-08-11";
+console.log("\n=== Watch ponctuel : fenêtre de clôture Marburg/Ouganda (42j depuis notification 30/06) ===");
+const marburgRow = active.find((o) => o.id === MARBURG_UGANDA_ID);
+if (!marburgRow) {
+  console.log("Ligne déjà inactive ou introuvable en base — watch obsolète, à retirer du script.");
+} else if (now >= new Date(MARBURG_CLOSURE_WATCH_FROM).getTime()) {
+  console.log(`⚠️ Fenêtre des 42j atteinte (dès le ${MARBURG_CLOSURE_WATCH_FROM}) — WebSearch/WebFetch une déclaration de fin d'épidémie ougandaise (who.int/afro.who.int news, gov.uk guidance) avant de conclure. Ligne toujours active en DB (cases=${marburgRow.cases} deaths=${marburgRow.deaths}).`);
+} else {
+  const daysLeft = Math.ceil((new Date(MARBURG_CLOSURE_WATCH_FROM).getTime() - now) / 864e5);
+  console.log(`Pas encore dû — ${daysLeft}j avant le ${MARBURG_CLOSURE_WATCH_FROM}.`);
+}
