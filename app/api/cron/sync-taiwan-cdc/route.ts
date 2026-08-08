@@ -44,7 +44,7 @@ import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { normalizeDisease } from "@/lib/disease-data";
 import { findCountry } from "@/lib/geo-data";
 import { assessRisk } from "@/lib/outbreak-parser";
-import { regressionGuard } from "@/lib/outbreak-guards";
+import { dateFloorGuard, collapseGuard, zeroCaseGuard, zeroDeathGuard, isYearRollover } from "@/lib/outbreak-guards";
 
 export const dynamic     = "force-dynamic";
 export const maxDuration = 30;
@@ -182,10 +182,19 @@ async function runSyncTaiwanCdc(supabase: SupabaseClient) {
       await logCronRun(supabase, "sync-taiwan-cdc", "ok", 0);
       return NextResponse.json({ ok: true, status: "skip: older than existing row", incoming: ex, existing: existingRow });
     }
-    const guardReason = regressionGuard(
-      { cases: ex.cases, deaths: ex.deaths, date: ex.date },
-      { cases: existingRow.cases, deaths: existingRow.deaths, date: existingRow.date },
-    );
+    const incoming = { cases: ex.cases, deaths: ex.deaths, date: ex.date };
+    const existing = { cases: existingRow.cases, deaths: existingRow.deaths, date: existingRow.date };
+    // NIDSS's "this-year cumulative" cases/deaths both reset every 1 January —
+    // a rollover year skips collapse/zero-case/zero-death (a real drop to
+    // near-zero, not a parsing accident), but dateFloorGuard still applies
+    // unconditionally. Same reasoning as sync-malaysia-dengue; see
+    // lib/outbreak-guards.ts's isYearRollover doc. Composed manually here
+    // (not regressionGuard()) so the bypass can be scoped per-guard.
+    const rollover = isYearRollover(incoming, existing);
+    const guardReason = dateFloorGuard(incoming, existing)
+      ?? (rollover ? null : collapseGuard(incoming, existing))
+      ?? (rollover ? null : zeroCaseGuard(incoming, existing))
+      ?? (rollover ? null : zeroDeathGuard(incoming, existing));
     if (guardReason) {
       await logCronRun(supabase, "sync-taiwan-cdc", "ok", 0, guardReason);
       return NextResponse.json({ ok: true, status: `skip: ${guardReason}` });
@@ -206,8 +215,8 @@ async function runSyncTaiwanCdc(supabase: SupabaseClient) {
       await logCronRun(supabase, "sync-taiwan-cdc", "ok", 0, "blocked by source_priority guard");
       return NextResponse.json({ ok: true, status: "blocked by source_priority guard" });
     }
-    await logCronRun(supabase, "sync-taiwan-cdc", "ok", 1);
-    return NextResponse.json({ ok: true, status: "updated", ...ex });
+    await logCronRun(supabase, "sync-taiwan-cdc", "ok", 1, rollover ? `year rollover: ${existingRow.cases}/${existingRow.deaths} (${existingRow.date}) → ${ex.cases}/${ex.deaths} (${ex.date})` : undefined);
+    return NextResponse.json({ ok: true, status: "updated", rollover, ...ex });
   }
 
   const { error: insertErr } = await supabase.from("outbreaks").insert({

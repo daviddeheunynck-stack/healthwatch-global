@@ -297,7 +297,7 @@ interface SitrepRow extends SitrepCells {
 
 interface SitrepTable { ew: number; year: number; date: string; rows: SitrepRow[] }
 
-function parseSitrepCases(text: string): SitrepTable | null {
+function parseSitrepCases(text: string, log?: LogEntry[]): SitrepTable | null {
   const h = SITREP_CASES_HEAD.exec(text);
   if (!h) return null;
 
@@ -329,16 +329,36 @@ function parseSitrepCases(text: string): SitrepTable | null {
     // footnote here, so this group simply doesn't match for them and the deaths
     // capture falls through to the real number unchanged — verified for all 6
     // countries in sitrep #7 before this shipped.
+    //
+    // Both footnote groups are now CAPTURING (not just optional) so a leading
+    // one can be detected below. A row with a leading footnote digit is
+    // structurally ambiguous whenever the table has exactly 2 real data
+    // columns and 3 raw numbers appear (footnote+cases+deaths vs. some other
+    // reading) — there is no way to tell which from the text alone without
+    // the document's own footnote legend, and guessing differently here would
+    // only trade the verified-correct Guatemala case for an unverified one
+    // (see known-findings.json,
+    // sync-paho-alerts::parsing::regex-ambiguity-on-three-number-rows).
+    // Rather than silently pick a reading, log it so a human checks the raw
+    // row — turning a silent wrong number into a visible one, same principle
+    // as every guard in lib/outbreak-guards.ts.
     const re = new RegExp(
-      escapeRegExp(name).replace(/\s+/g, "\\s+") + "\\s*(\\*?)\\s*(?:\\d{1,2}\\s+)?([\\d,]+)\\s+(?:\\d{1,2}\\s+)?(\\d+)(?![\\d,])",
+      escapeRegExp(name).replace(/\s+/g, "\\s+") + "\\s*(\\*?)\\s*(\\d{1,2}\\s+)?([\\d,]+)\\s+(?:\\d{1,2}\\s+)?(\\d+)(?![\\d,])",
       "i",
     );
     const m = re.exec(block);
     if (!m) continue;
-    const cases = parseInt(m[2].replace(/,/g, ""), 10);
+    const cases = parseInt(m[3].replace(/,/g, ""), 10);
     if (isNaN(cases)) continue;
+    if (m[2] && log) {
+      log.push({
+        label:  `Measles/${name}`,
+        status: "warn",
+        detail: `leading footnote digit "${m[2].trim()}" consumed before cases=${cases} — ambiguous 3-number row, verify against the source PDF: "${m[0].trim()}"`,
+      });
+    }
     rows.push({
-      country: name, active: m[1] === "*", cases, deaths: parseInt(m[3], 10),
+      country: name, active: m[1] === "*", cases, deaths: parseInt(m[4], 10),
       at: m.index, endAt: m.index + m[0].length,
       trend: "", classification: "", notes: "",
     });
@@ -1061,7 +1081,7 @@ async function collectSitrepItems(
   }
 
   const text  = await fetchSitrepPdfText(entry.url);
-  const table = parseSitrepCases(text);
+  const table = parseSitrepCases(text, log);
   // Sitrep #3 and earlier had no deaths column, so nothing matches the
   // cases+deaths shape. Writing nothing is the correct outcome for a layout we
   // don't recognise — better a visible coverage gap than invented figures.

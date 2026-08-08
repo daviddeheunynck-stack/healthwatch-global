@@ -188,6 +188,32 @@ export function implausibleDeathsGuard(incoming: GuardedIncoming): string | null
 }
 
 /**
+ * True when incoming's report year is strictly after existing's — i.e. the
+ * source tracks a year-to-date cumulative counter that just reset at 1
+ * January, not a real collapse. Both dates are required (a missing date on
+ * either side can't prove a rollover, so this returns false rather than risk
+ * a false permit).
+ *
+ * Deliberately NOT folded into regressionGuard()/collapseGuard() themselves,
+ * and not applied automatically anywhere: every other cron tracks a
+ * cumulative-since-outbreak-started count (never a calendar-year one) and
+ * still needs collapseGuard/zeroCaseGuard/zeroDeathGuard applied
+ * unconditionally. Callers that DO track an annual counter
+ * (sync-malaysia-dengue, sync-taiwan-cdc) compose this explicitly around
+ * those three guards, keeping dateFloorGuard active regardless — a rollover
+ * incoming date is always later than existing's, so dateFloorGuard never
+ * false-triggers on a real rollover, and it must still catch a genuinely
+ * stale re-fetch. See known-findings.json,
+ * ytd-counter-crons::guards::collapse-guard-blocks-annual-reset (found
+ * 2026-08-06): without this, the Malaysia/Taiwan dengue rows would freeze on
+ * their prior-year total every 1 January and silently stop updating.
+ */
+export function isYearRollover(incoming: GuardedIncoming, existing: GuardedRow): boolean {
+  if (!incoming.date || !existing.date) return false;
+  return incoming.date.slice(0, 4) > existing.date.slice(0, 4);
+}
+
+/**
  * Composite of the four guards every PDF-sitrep parser needs: date floor,
  * collapse, zero-case, zero-death — in that order. Used as-is by
  * sync-paho-alerts, sync-ncdc, sync-drc-sitrep and check-mpox-sitrep (added

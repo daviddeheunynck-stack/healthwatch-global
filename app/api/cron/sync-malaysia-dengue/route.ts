@@ -35,7 +35,7 @@ import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { normalizeDisease } from "@/lib/disease-data";
 import { findCountry } from "@/lib/geo-data";
 import { assessRisk } from "@/lib/outbreak-parser";
-import { dateFloorGuard, collapseGuard, zeroCaseGuard } from "@/lib/outbreak-guards";
+import { dateFloorGuard, collapseGuard, zeroCaseGuard, isYearRollover } from "@/lib/outbreak-guards";
 
 export const dynamic     = "force-dynamic";
 export const maxDuration = 30;
@@ -183,7 +183,16 @@ async function runSyncMalaysiaDengue(supabase: SupabaseClient) {
     // deaths comparisons in these guards no-ops rather than fabricating one.
     const incoming = { cases: ex.cases, deaths: knownDeaths ?? 0, date: ex.date };
     const existing = { cases: existingRow.cases, deaths: existingRow.deaths, date: existingRow.date };
-    const guardReason = dateFloorGuard(incoming, existing) ?? collapseGuard(incoming, existing) ?? zeroCaseGuard(incoming, existing);
+    // iDengue's cumulative resets every 1 January — a rollover year skips
+    // collapseGuard/zeroCaseGuard (a real drop to near-zero, not a parsing
+    // accident), but dateFloorGuard still applies unconditionally: a rollover
+    // incoming date is always later than existing's, so it never
+    // false-triggers on a real rollover, and it must still catch a genuinely
+    // stale re-fetch. See lib/outbreak-guards.ts's isYearRollover doc.
+    const rollover = isYearRollover(incoming, existing);
+    const guardReason = dateFloorGuard(incoming, existing)
+      ?? (rollover ? null : collapseGuard(incoming, existing))
+      ?? (rollover ? null : zeroCaseGuard(incoming, existing));
     if (guardReason) {
       await logCronRun(supabase, "sync-malaysia-dengue", "ok", 0, guardReason);
       return NextResponse.json({ ok: true, status: `skip: ${guardReason}` });
@@ -204,8 +213,8 @@ async function runSyncMalaysiaDengue(supabase: SupabaseClient) {
       await logCronRun(supabase, "sync-malaysia-dengue", "ok", 0, "blocked by source_priority guard");
       return NextResponse.json({ ok: true, status: "blocked by source_priority guard" });
     }
-    await logCronRun(supabase, "sync-malaysia-dengue", "ok", 1);
-    return NextResponse.json({ ok: true, status: "updated", ...ex });
+    await logCronRun(supabase, "sync-malaysia-dengue", "ok", 1, rollover ? `year rollover: ${existingRow.cases} (${existingRow.date}) → ${ex.cases} (${ex.date})` : undefined);
+    return NextResponse.json({ ok: true, status: "updated", rollover, ...ex });
   }
 
   const { error: insertErr } = await supabase.from("outbreaks").insert({
