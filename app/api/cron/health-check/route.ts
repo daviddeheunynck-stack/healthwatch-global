@@ -43,6 +43,26 @@ const DELIVERY_AUDIENCE: Record<string, string> = {
   "weekly-signal":               "subscriptions",
 };
 
+// Per-channel override for the "stalled" threshold below — most delivery
+// channels' natural cadence tracks their own run frequency (CRON_WINDOWS), so
+// deriving the threshold from that is a reasonable default. push-alerts is
+// the exception: unlike disease-alerts/watchlist-alerts/regional-alerts (which
+// fire on any case-count change to an EXISTING outbreak, so several days of
+// silence really is suspicious), push-alerts only fires when a genuinely NEW
+// outbreak row is first created (see app/api/cron/push-alerts/route.ts) —
+// decoupled from how often the cron itself runs. New-outbreak creation
+// happens on the order of days-to-weeks, not the ~3.25-day generic formula
+// this cron's own daily 26h window would otherwise derive. Confirmed
+// 2026-08-08 (again — same root cause diagnosed 2026-08-06 by the
+// daily-health-check routine but never actually shipped): last real outbreak
+// creation was 2026-08-04, so push-alerts correctly had nothing to send,
+// and the generic threshold flagged it anyway. 14 days is generous enough to
+// absorb a normal quiet stretch while still catching a genuine regression
+// like the original 49-silent-day incident that motivated this whole check.
+const STALL_THRESHOLD_OVERRIDE_DAYS: Record<string, number> = {
+  "push-alerts": 14,
+};
+
 // Independent per-delivery evidence, where a real log table already exists —
 // more trustworthy than site_config's lastNonZero for a cron whose entry
 // predates 2026-07-27 (that field only gets set going forward, on its own
@@ -703,7 +723,7 @@ async function runHealthCheck(_req: NextRequest, supabase: any) {
     }
     const daysSinceDelivery = (Date.now() - new Date(effectiveLastNonZero).getTime()) / 86_400_000;
     const windowH = CRON_WINDOWS[name] ?? 26;
-    const stallThresholdDays = Math.max(3, (windowH / 24) * 3);
+    const stallThresholdDays = STALL_THRESHOLD_OVERRIDE_DAYS[name] ?? Math.max(3, (windowH / 24) * 3);
     if (daysSinceDelivery > stallThresholdDays) {
       deliveryIssues.push({ name, audience, kind: "stalled" });
     }
