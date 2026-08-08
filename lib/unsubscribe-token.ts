@@ -47,3 +47,19 @@ export function buildUnsubscribeAlertUrl(kind: UnsubscribeAlertKind, id: string,
   const token = signUnsubscribeToken(unsubscribeAlertTokenSubject(kind, id));
   return `https://healthwatch-global.com/api/unsubscribe-alert?kind=${kind}&id=${id}&token=${token}&locale=${locale}`;
 }
+
+// Same signed-link trust model as the unsubscribe link above, for the
+// opposite direction: proving the typed-in email address is real before the
+// 3 trigger-*-alerts crons ever send to it (see the 2026-08-08 migration
+// adding confirmed_at to all 3 tables). `confirm:` prefixes the subject so a
+// token minted for one purpose can never verify against the other — without
+// it, HMAC(kind+id) would be identical for both, and an unsubscribe link
+// leaked/forwarded would double as a valid confirm link for the same row.
+export function alertConfirmTokenSubject(kind: string, id: string): string {
+  return `confirm:${kind}:${id}`;
+}
+
+export function buildAlertConfirmUrl(kind: UnsubscribeAlertKind, id: string, locale: string): string {
+  const token = signUnsubscribeToken(alertConfirmTokenSubject(kind, id));
+  return `https://healthwatch-global.com/api/confirm-alert?kind=${kind}&id=${id}&token=${token}&locale=${locale}`;
+}

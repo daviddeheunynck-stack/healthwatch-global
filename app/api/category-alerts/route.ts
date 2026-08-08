@@ -2,8 +2,14 @@ import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase-server";
 import { DISEASE_CATEGORIES, type DiseaseCategory } from "@/lib/disease-category";
 import { resolvedPlan } from "@/lib/resolved-plan";
+import { buildAlertConfirmUrl } from "@/lib/unsubscribe-token";
+import { sendAlertConfirmationEmail } from "@/lib/alert-confirm-email";
+import * as Sentry from "@sentry/nextjs";
 
 export const dynamic = "force-dynamic";
+
+const BOM = String.fromCharCode(65279);
+const BREVO_API_KEY = (process.env.BREVO_API_KEY ?? "").replace(new RegExp("^" + BOM), "").trim();
 
 const PAID_PLANS = ["starter", "pro", "team", "enterprise"];
 const REGIONS    = ["all", "africa", "asia", "europe", "americas", "oceania"];
@@ -28,7 +34,7 @@ export async function POST(req: Request) {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const { data: profile } = await supabase.from("profiles").select("plan, trial_ends_at, stripe_subscription_id").eq("id", user.id).single();
+  const { data: profile } = await supabase.from("profiles").select("plan, trial_ends_at, stripe_subscription_id, alert_locale").eq("id", user.id).single();
   if (!PAID_PLANS.includes(resolvedPlan(profile)))
     return NextResponse.json({ error: "Pro plan required" }, { status: 403 });
 
@@ -56,6 +62,20 @@ export async function POST(req: Request) {
     .single();
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+
+  // See app/api/country-risk-alerts/route.ts for why: `email` defaults to the
+  // account owner's own address but can be overridden freely, so nothing
+  // recurring goes out until whoever controls that inbox confirms via the
+  // signed link.
+  try {
+    const locale = (profile?.alert_locale as string | null) ?? "en";
+    const confirmUrl = buildAlertConfirmUrl("category", data.id, locale);
+    await sendAlertConfirmationEmail(email, "category", confirmUrl, locale, BREVO_API_KEY);
+  } catch (emailErr) {
+    console.error("[category-alerts] confirmation email failed:", emailErr);
+    Sentry.captureException(emailErr, { tags: { route: "category-alerts", part: "confirmation-email" }, extra: { alert_id: data.id } });
+  }
+
   return NextResponse.json({ alert: data }, { status: 201 });
 }
 

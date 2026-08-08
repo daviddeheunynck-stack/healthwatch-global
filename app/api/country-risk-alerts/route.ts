@@ -1,7 +1,12 @@
 import { NextRequest } from "next/server";
 import { createClient } from "@/lib/supabase-server";
 import { resolvedPlan } from "@/lib/resolved-plan";
+import { buildAlertConfirmUrl } from "@/lib/unsubscribe-token";
+import { sendAlertConfirmationEmail } from "@/lib/alert-confirm-email";
 import * as Sentry from "@sentry/nextjs";
+
+const BOM = String.fromCharCode(65279);
+const BREVO_API_KEY = (process.env.BREVO_API_KEY ?? "").replace(new RegExp("^" + BOM), "").trim();
 
 const PAID_PLANS = ["pro", "team", "enterprise"];
 const MAX_ALERTS = 30;
@@ -31,7 +36,7 @@ export async function POST(req: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return Response.json({ error: "Unauthorized" }, { status: 401 });
 
-  const { data: profile } = await supabase.from("profiles").select("plan, trial_ends_at, stripe_subscription_id").eq("id", user.id).single();
+  const { data: profile } = await supabase.from("profiles").select("plan, trial_ends_at, stripe_subscription_id, alert_locale").eq("id", user.id).single();
   if (!PAID_PLANS.includes(resolvedPlan(profile)))
     return Response.json({ error: "Pro plan required" }, { status: 403 });
 
@@ -59,6 +64,23 @@ export async function POST(req: NextRequest) {
     .single();
 
   if (error) return Response.json({ error: error.message }, { status: 500 });
+
+  // Row is committed above with confirmed_at NULL — trigger-country-risk-alerts
+  // only fires for confirmed rows (see the 2026-08-08 migration). `email` is
+  // free text the account owner typed in, not necessarily their own address
+  // (see the finding this closes), so nothing recurring goes out until
+  // whoever controls that inbox proves it by clicking the link. A send
+  // failure here must not fail the creation itself — the alert still exists,
+  // just permanently pending until manually re-triggered or recreated.
+  try {
+    const locale = (profile?.alert_locale as string | null) ?? "en";
+    const confirmUrl = buildAlertConfirmUrl("country_risk", data.id, locale);
+    await sendAlertConfirmationEmail(email, "country_risk", confirmUrl, locale, BREVO_API_KEY);
+  } catch (emailErr) {
+    console.error("[country-risk-alerts] confirmation email failed:", emailErr);
+    Sentry.captureException(emailErr, { tags: { route: "country-risk-alerts", part: "confirmation-email" }, extra: { alert_id: data.id } });
+  }
+
   return Response.json({ alert: data }, { status: 201 });
 }
 

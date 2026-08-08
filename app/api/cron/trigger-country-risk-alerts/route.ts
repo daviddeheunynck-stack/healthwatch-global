@@ -72,9 +72,15 @@ async function runCountryRiskAlerts(supabase: SupabaseClient) {
     return Response.json({ ok: true, skipped: "BREVO_API_KEY not configured" });
   }
 
+  // confirmed_at IS NOT NULL: unconfirmed rows (email typed in but never
+  // proven — see app/api/country-risk-alerts/route.ts and the 2026-08-08
+  // migration) must never fire. Pre-migration rows are all NULL by default,
+  // so this is a strict subset of what used to fire, not a behavior change
+  // for anyone who's already clicked through.
   const { data: alerts } = await supabase
     .from("country_risk_alerts")
-    .select("id, user_id, country_en, min_risk, email, last_fired_at");
+    .select("id, user_id, country_en, min_risk, email, last_fired_at")
+    .not("confirmed_at", "is", null);
 
   if (!alerts?.length) {
     await logCronRun(supabase, "trigger-country-risk-alerts", "ok", 0);

@@ -516,10 +516,18 @@ async function runHealthCheck(_req: NextRequest, supabase: any) {
       fetchSentryIssues(),
       // "subscriptions" (weekly-digest/weekly-signal) only counts active=true —
       // matches what those two crons themselves query as their send list.
-      // Every other audience table here has no active/status flag of its own.
+      // country_risk_alerts/geofence_alerts/category_alerts only count
+      // confirmed_at IS NOT NULL (added 2026-08-08, double opt-in on the
+      // free-text email field) — an unconfirmed row can never fire by
+      // design, so counting it as "audience" would eventually make the
+      // never-delivered check below flag a row that's correctly, permanently
+      // pending as a false delivery outage. Every other audience table here
+      // has no such flag of its own.
       Promise.all(AUDIENCE_TABLES.map((table) =>
         table === "subscriptions"
           ? supabase.from(table).select("*", { count: "exact", head: true }).eq("active", true)
+          : ["country_risk_alerts", "geofence_alerts", "category_alerts"].includes(table)
+          ? supabase.from(table).select("*", { count: "exact", head: true }).not("confirmed_at", "is", null)
           : supabase.from(table).select("*", { count: "exact", head: true }),
       )),
       checkZeroRegionTrials(supabase),

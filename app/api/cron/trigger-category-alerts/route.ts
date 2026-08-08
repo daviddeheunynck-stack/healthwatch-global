@@ -131,9 +131,12 @@ export async function GET(req: NextRequest) {
 }
 
 async function runCategoryAlerts(_req: NextRequest, supabase: SupabaseClient) {
+  // confirmed_at IS NOT NULL: unconfirmed rows must never fire — see
+  // app/api/category-alerts/route.ts and the 2026-08-08 migration.
   const { data: alerts } = await supabase
     .from("category_alerts")
-    .select("id, user_id, disease_category, region, min_cases, email, last_fired_at");
+    .select("id, user_id, disease_category, region, min_cases, email, last_fired_at")
+    .not("confirmed_at", "is", null);
   if (!alerts?.length) {
     await logCronRun(supabase, "trigger-category-alerts", "ok", 0);
     return NextResponse.json({ ok: true, fired: 0 });
