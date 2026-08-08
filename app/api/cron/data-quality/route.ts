@@ -619,6 +619,10 @@ async function runDataQuality(_req: NextRequest, supabase: SupabaseClient) {
     // covers. Verified 2026-07-15/17, see project_qc_2026_07_15_stale_items_verified
     // memory — the CFR-floor heuristic below is a false positive on this specific row.
     "measles|canada",
+    // PAHO Situation Report #8, Measles in the Americas Region (31 July 2026), the
+    // row's own source: "Peru: 1,139 cases, 0 deaths" — a positively-filled deaths
+    // column like the Canada row above, not a parsing gap. Verified 2026-08-08.
+    "measles|peru",
   ]);
 
   for (const row of rows ?? []) {
