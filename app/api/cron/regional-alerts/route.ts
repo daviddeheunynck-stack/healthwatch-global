@@ -268,6 +268,27 @@ async function runRegionalAlerts(_req: NextRequest, supabase: SupabaseClient) {
 
     if (profiles.length === 0) continue;
 
+    // Prior alert state for every (user, outbreak) pair in this region, in ONE
+    // query — same shape as disease-alerts' priorLogMap. This used to be a
+    // .maybeSingle() inside the nested loop below, i.e. one Supabase
+    // round-trip per (user, outbreak) pair. That was survivable only while the
+    // candidate set was bounded by the 25h time-window pre-filter; removing
+    // that filter on 2026-08-07 (4d6e2ec) turned it into
+    // subscribers × active-outbreaks sequential round-trips per run, which
+    // grows with both the user base and the outbreak count — and pulls against
+    // the Supabase egress work done the same day in 9dfc774.
+    const { data: priorAlerts } = await supabase
+      .from("outbreak_alert_log")
+      .select("user_id, outbreak_id, risk_level, cases_at_alert")
+      .in("user_id", profiles.map((p) => p.id))
+      .in("outbreak_id", outbreaks.map((o) => String(o.id)));
+
+    const priorLogMap = new Map(
+      (priorAlerts ?? []).map((r: { user_id: string; outbreak_id: string; risk_level: string | null; cases_at_alert: number | null }) =>
+        [`${r.user_id}:${r.outbreak_id}`, r] as const
+      )
+    );
+
     for (const profile of profiles as ProfileRow[]) {
       const minRisk = minRiskByUser.get(profile.id) ?? "low";
       for (const outbreak of outbreaks) {
@@ -280,12 +301,7 @@ async function runRegionalAlerts(_req: NextRequest, supabase: SupabaseClient) {
         // outbreak, and if so, at what risk_level/case count? Only re-fire
         // on a genuine escalation or case surge since that alert — not on
         // every cron tick the outbreak happens to still be "recently updated".
-        const { data: priorLog } = await supabase
-          .from("outbreak_alert_log")
-          .select("risk_level, cases_at_alert")
-          .eq("user_id", profile.id)
-          .eq("outbreak_id", String(outbreak.id))
-          .maybeSingle();
+        const priorLog = priorLogMap.get(`${profile.id}:${String(outbreak.id)}`);
 
         let reason: AlertReason | null = null;
         if (!priorLog) {
