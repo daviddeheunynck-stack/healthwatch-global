@@ -361,7 +361,7 @@ async function runDataQuality(_req: NextRequest, supabase: SupabaseClient) {
   const DASHBOARD_SOURCES = [
     "shinyapps.io",
     "ecdc.europa.eu/en/mpox/surveillance",
-    "who.int/publications/m/item",          // WHO monthly situation reports (Mpox, etc.) — monthly cadence, 28d staleness expected
+    "publications/m/item",                  // WHO monthly situation reports (Mpox, dengue, etc.) — monthly cadence, 28d staleness expected. Domain-only, no "who.int/" prefix: regional sub-portals (e.g. who.int/westernpacific/publications/m/item/...) use the same series under a different path and were falling through to the standard 21-day threshold — confirmed 2026-08-08, 4 dengue rows (Cambodia/Vietnam/French Polynesia/New Caledonia) all cite the identical westernpacific dengue-situation-update page.
     "ecdc.europa.eu/en/news-events",        // ECDC epidemiological updates — quarterly cadence, 90d+ staleness expected
     "aphis.usda.gov/hpai-h5n1",             // USDA APHIS per-state HPAI livestock — date = last confirmed detection in that state, not a sync timestamp; many states legitimately go months/years without a new one
     "who.int/emergencies/surveillance/cholera-cases-and-deaths", // WHO cholera dashboard — explicitly annual reporting by member states, not operational (see reference_who_cholera_operational_source)
