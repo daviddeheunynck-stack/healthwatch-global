@@ -55,9 +55,14 @@ export async function POST(req: Request) {
   if (!disease_category || min_cases <= 0 || !email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
     return NextResponse.json({ error: "Invalid parameters" }, { status: 400 });
 
+  // See app/api/country-risk-alerts/route.ts for why: an address already
+  // proven at signup skips the confirmation round-trip, since there's no
+  // consent question to resolve when the owner mails themselves.
+  const isOwnEmail = email.trim().toLowerCase() === (user.email ?? "").trim().toLowerCase();
+
   const { data, error } = await supabase
     .from("category_alerts")
-    .insert({ user_id: user.id, disease_category, region, min_cases, email })
+    .insert({ user_id: user.id, disease_category, region, min_cases, email, confirmed_at: isOwnEmail ? new Date().toISOString() : null })
     .select("id, disease_category, region, min_cases, email, last_fired_at, created_at")
     .single();
 
@@ -67,13 +72,15 @@ export async function POST(req: Request) {
   // account owner's own address but can be overridden freely, so nothing
   // recurring goes out until whoever controls that inbox confirms via the
   // signed link.
-  try {
-    const locale = (profile?.alert_locale as string | null) ?? "en";
-    const confirmUrl = buildAlertConfirmUrl("category", data.id, locale);
-    await sendAlertConfirmationEmail(email, "category", confirmUrl, locale, BREVO_API_KEY, { id: user.id, email: user.email });
-  } catch (emailErr) {
-    console.error("[category-alerts] confirmation email failed:", emailErr);
-    Sentry.captureException(emailErr, { tags: { route: "category-alerts", part: "confirmation-email" }, extra: { alert_id: data.id } });
+  if (!isOwnEmail) {
+    try {
+      const locale = (profile?.alert_locale as string | null) ?? "en";
+      const confirmUrl = buildAlertConfirmUrl("category", data.id, locale);
+      await sendAlertConfirmationEmail(email, "category", confirmUrl, locale, BREVO_API_KEY, { id: user.id, email: user.email });
+    } catch (emailErr) {
+      console.error("[category-alerts] confirmation email failed:", emailErr);
+      Sentry.captureException(emailErr, { tags: { route: "category-alerts", part: "confirmation-email" }, extra: { alert_id: data.id } });
+    }
   }
 
   return NextResponse.json({ alert: data }, { status: 201 });

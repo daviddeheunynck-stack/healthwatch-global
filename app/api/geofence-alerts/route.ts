@@ -61,9 +61,14 @@ export async function POST(req: NextRequest) {
   if (isNaN(lat) || lat < -90 || lat > 90) return NextResponse.json({ error: "Invalid latitude" }, { status: 400 });
   if (isNaN(lng) || lng < -180 || lng > 180) return NextResponse.json({ error: "Invalid longitude" }, { status: 400 });
 
+  // See app/api/country-risk-alerts/route.ts for why: an address already
+  // proven at signup skips the confirmation round-trip, since there's no
+  // consent question to resolve when the owner mails themselves.
+  const isOwnEmail = email.trim().toLowerCase() === (user.email ?? "").trim().toLowerCase();
+
   const { data, error } = await supabase
     .from("geofence_alerts")
-    .insert({ user_id: user.id, label, lat, lng, radius_km, email })
+    .insert({ user_id: user.id, label, lat, lng, radius_km, email, confirmed_at: isOwnEmail ? new Date().toISOString() : null })
     .select("id, label, lat, lng, radius_km, email, last_fired_at, created_at")
     .single();
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
@@ -71,13 +76,15 @@ export async function POST(req: NextRequest) {
   // See app/api/country-risk-alerts/route.ts for why: `email` is free text,
   // not necessarily the account owner's own address, so nothing recurring
   // goes out until whoever controls that inbox confirms via the signed link.
-  try {
-    const locale = (profile?.alert_locale as string | null) ?? "en";
-    const confirmUrl = buildAlertConfirmUrl("geofence", data.id, locale);
-    await sendAlertConfirmationEmail(email, "geofence", confirmUrl, locale, BREVO_API_KEY, { id: user.id, email: user.email });
-  } catch (emailErr) {
-    console.error("[geofence-alerts] confirmation email failed:", emailErr);
-    Sentry.captureException(emailErr, { tags: { route: "geofence-alerts", part: "confirmation-email" }, extra: { alert_id: data.id } });
+  if (!isOwnEmail) {
+    try {
+      const locale = (profile?.alert_locale as string | null) ?? "en";
+      const confirmUrl = buildAlertConfirmUrl("geofence", data.id, locale);
+      await sendAlertConfirmationEmail(email, "geofence", confirmUrl, locale, BREVO_API_KEY, { id: user.id, email: user.email });
+    } catch (emailErr) {
+      console.error("[geofence-alerts] confirmation email failed:", emailErr);
+      Sentry.captureException(emailErr, { tags: { route: "geofence-alerts", part: "confirmation-email" }, extra: { alert_id: data.id } });
+    }
   }
 
   return NextResponse.json({ alert: data });

@@ -57,28 +57,39 @@ export async function POST(req: NextRequest) {
   if ((count ?? 0) >= MAX_ALERTS)
     return Response.json({ error: `Max ${MAX_ALERTS} alerts per account` }, { status: 400 });
 
+  // Self-addressed alerts skip the confirmation round-trip entirely: this
+  // address is already proven (Supabase confirmed it at signup), so making
+  // the owner click a link to confirm mail to themselves only risks a
+  // silently-dead alert if they miss the email — no consent question to
+  // resolve, since they can already mail themselves. Third-party addresses
+  // (the case the migration exists for) still start unconfirmed.
+  const isOwnEmail = email.trim().toLowerCase() === (user.email ?? "").trim().toLowerCase();
+
   const { data, error } = await supabase
     .from("country_risk_alerts")
-    .insert({ user_id: user.id, country_en: country_en.trim(), min_risk, email })
+    .insert({ user_id: user.id, country_en: country_en.trim(), min_risk, email, confirmed_at: isOwnEmail ? new Date().toISOString() : null })
     .select()
     .single();
 
   if (error) return Response.json({ error: error.message }, { status: 500 });
 
-  // Row is committed above with confirmed_at NULL — trigger-country-risk-alerts
-  // only fires for confirmed rows (see the 2026-08-08 migration). `email` is
-  // free text the account owner typed in, not necessarily their own address
-  // (see the finding this closes), so nothing recurring goes out until
-  // whoever controls that inbox proves it by clicking the link. A send
-  // failure here must not fail the creation itself — the alert still exists,
-  // just permanently pending until manually re-triggered or recreated.
-  try {
-    const locale = (profile?.alert_locale as string | null) ?? "en";
-    const confirmUrl = buildAlertConfirmUrl("country_risk", data.id, locale);
-    await sendAlertConfirmationEmail(email, "country_risk", confirmUrl, locale, BREVO_API_KEY, { id: user.id, email: user.email });
-  } catch (emailErr) {
-    console.error("[country-risk-alerts] confirmation email failed:", emailErr);
-    Sentry.captureException(emailErr, { tags: { route: "country-risk-alerts", part: "confirmation-email" }, extra: { alert_id: data.id } });
+  // Row is committed above with confirmed_at NULL for a third-party address —
+  // trigger-country-risk-alerts only fires for confirmed rows (see the
+  // 2026-08-08 migration). `email` is free text the account owner typed in,
+  // not necessarily their own address (see the finding this closes), so
+  // nothing recurring goes out until whoever controls that inbox proves it
+  // by clicking the link. A send failure here must not fail the creation
+  // itself — the alert still exists, just permanently pending until
+  // manually re-triggered or recreated.
+  if (!isOwnEmail) {
+    try {
+      const locale = (profile?.alert_locale as string | null) ?? "en";
+      const confirmUrl = buildAlertConfirmUrl("country_risk", data.id, locale);
+      await sendAlertConfirmationEmail(email, "country_risk", confirmUrl, locale, BREVO_API_KEY, { id: user.id, email: user.email });
+    } catch (emailErr) {
+      console.error("[country-risk-alerts] confirmation email failed:", emailErr);
+      Sentry.captureException(emailErr, { tags: { route: "country-risk-alerts", part: "confirmation-email" }, extra: { alert_id: data.id } });
+    }
   }
 
   return Response.json({ alert: data }, { status: 201 });
