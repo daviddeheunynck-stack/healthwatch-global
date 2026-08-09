@@ -70,7 +70,7 @@ export async function POST(req: Request) {
   try {
     const locale = (profile?.alert_locale as string | null) ?? "en";
     const confirmUrl = buildAlertConfirmUrl("category", data.id, locale);
-    await sendAlertConfirmationEmail(email, "category", confirmUrl, locale, BREVO_API_KEY);
+    await sendAlertConfirmationEmail(email, "category", confirmUrl, locale, BREVO_API_KEY, { id: user.id, email: user.email });
   } catch (emailErr) {
     console.error("[category-alerts] confirmation email failed:", emailErr);
     Sentry.captureException(emailErr, { tags: { route: "category-alerts", part: "confirmation-email" }, extra: { alert_id: data.id } });

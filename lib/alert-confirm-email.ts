@@ -6,7 +6,9 @@
 // lib/pilot-emails.ts (a different feature's confirmation flow entirely).
 import { sendBrevoEmail } from "@/lib/brevo-send";
 import { isRealProduction } from "@/lib/cron-monitor";
+import { rateLimit } from "@/lib/rate-limit";
 import type { UnsubscribeAlertKind } from "@/lib/unsubscribe-token";
+import * as Sentry from "@sentry/nextjs";
 
 function esc(s: string): string {
   return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
@@ -56,12 +58,53 @@ const COPY: Record<string, { subject: (l: string) => string; heading: string; bo
   },
 };
 
+const HOUR_MS = 60 * 60 * 1000;
+
+/**
+ * Confirmation emails go to an address the account owner typed in freely, so
+ * this route is the one place where an authenticated user can cause mail to
+ * be sent to an arbitrary third party. The double opt-in above stops the
+ * RECURRING alerts, but nothing stopped the confirmation request itself from
+ * being replayed: MAX_ALERTS caps rows held at once, not rows created over
+ * time, and all 3 routes expose DELETE — so create/delete/create in a loop
+ * was an unbounded mail generator pointed at any address, sent from
+ * alerts@healthwatch-global.com (deliverability + abuse exposure on our own
+ * sending domain).
+ *
+ * Only THIRD-PARTY addresses are limited. `to === ownerEmail` is the common
+ * case by far (the account owner alerting themselves, and category-alerts
+ * even defaults `email` to `user.email`), it is already a proven address —
+ * Supabase confirmed it at signup — and a legitimate bulk setup can
+ * legitimately create up to MAX_ALERTS rows in one sitting across the 3
+ * features. Rate-limiting that case would break real use to no benefit,
+ * since the owner can already mail themselves.
+ *
+ * Two counters, both must pass: per recipient (one address can't be buried)
+ * and per user (one account can't spray many addresses). In-memory and
+ * per-process like every other rate limit in this repo (see lib/rate-limit.ts
+ * — a Redis store is the documented upgrade path); on serverless that makes
+ * it a speed bump rather than a hard cap, but it turns a free unbounded
+ * loop into one that visibly reports itself to Sentry.
+ */
+function thirdPartySendAllowed(to: string, ownerEmail: string | null | undefined, userId: string): string | null {
+  const norm  = to.trim().toLowerCase();
+  const owner = (ownerEmail ?? "").trim().toLowerCase();
+  if (owner && norm === owner) return null;
+
+  if (!rateLimit(`alert-confirm:user:${userId}`, { limit: 10, windowMs: HOUR_MS }).allowed)
+    return "per-user limit (10/h to third-party addresses)";
+  if (!rateLimit(`alert-confirm:to:${norm}`, { limit: 3, windowMs: HOUR_MS }).allowed)
+    return "per-recipient limit (3/h)";
+  return null;
+}
+
 export async function sendAlertConfirmationEmail(
   to: string,
   kind: UnsubscribeAlertKind,
   confirmUrl: string,
   locale: string,
-  apiKey: string
+  apiKey: string,
+  owner?: { id: string; email: string | null | undefined }
 ): Promise<void> {
   const c = COPY[locale] ?? COPY.en;
   const isRtl = locale === "ar";
@@ -79,5 +122,22 @@ export async function sendAlertConfirmationEmail(
   // (see call sites) — a Brevo hiccup here must not turn a successful
   // creation into a failed API response. Callers catch and log to Sentry.
   if (!isRealProduction) return;
+
+  // Blocked = the row simply stays pending, exactly as it does when Brevo
+  // itself fails (see the call sites' comment). Not thrown: a rate-limited
+  // send is an expected outcome, not an error the caller should surface.
+  if (owner) {
+    const blocked = thirdPartySendAllowed(to, owner.email, owner.id);
+    if (blocked) {
+      console.warn(`[alert-confirm-email] ${kind} confirmation to a third-party address suppressed — ${blocked}`);
+      Sentry.captureMessage("alert confirmation email rate-limited", {
+        level: "warning",
+        tags: { part: "alert-confirmation-email", kind },
+        extra: { reason: blocked, user_id: owner.id },
+      });
+      return;
+    }
+  }
+
   await sendBrevoEmail({ to, subject: c.subject(label), html, apiKey });
 }
