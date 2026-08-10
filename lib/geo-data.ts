@@ -155,6 +155,14 @@ export const COUNTRIES: Record<string, CountryGeo> = {
   "Fiji": { lat: -17.7, lng: 178.1, region: "oceania", name_en: "Fiji", name_fr: "Fidji", name_ar: "فiجي" },
   "Solomon Islands": { lat: -9.6, lng: 160.2, region: "oceania", name_en: "Solomon Islands", name_fr: "Îles Salomon", name_ar: "جزر سليمان" },
   "New Zealand": { lat: -40.9, lng: 174.9, region: "oceania", name_en: "New Zealand", name_fr: "Nouvelle-Zélande", name_ar: "نيوزيلندا" },
+  // Missing until 2026-08-10 despite already being in world-countries.ts,
+  // country-coords.ts and population-data.ts — this is the one file that
+  // gates findCountry() matching, so any sync scraper that ever mentioned
+  // Samoa would have silently skipped it (isAggregateCountry/geo-miss path).
+  // Found via the Pacific syndromic surveillance DLI-without-a-Dengue-row
+  // check: Samoa has had a real, ongoing, WHO/MoH-documented dengue outbreak
+  // since January 2025 with zero HWG coverage the entire time.
+  "Samoa": { lat: -13.7590, lng: -172.1046, region: "oceania", name_en: "Samoa", name_fr: "Samoa", name_ar: "ساموا" },
 
   // ── MIDDLE EAST (additional) ──────────────────────────────────
   "Kuwait": { lat: 29.3, lng: 47.5, region: "asia", name_en: "Kuwait", name_fr: "Koweït", name_ar: "الكويت" },
