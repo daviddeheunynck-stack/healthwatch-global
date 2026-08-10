@@ -39,7 +39,7 @@ async function sendInviteEmail(to: string, subject: string, html: string) {
 // POST /api/team/invite — create and send an invite
 export async function POST(req: NextRequest) {
   const ip = getClientIp(req);
-  const rl = rateLimit(`team-invite:${ip}`, { limit: 20, windowMs: 60 * 60 * 1000 });
+  const rl = await rateLimit(`team-invite:${ip}`, { limit: 20, windowMs: 60 * 60 * 1000 });
   if (!rl.allowed) return NextResponse.json({ error: "Rate limit exceeded." }, { status: 429 });
 
   const supabase = await createClient();

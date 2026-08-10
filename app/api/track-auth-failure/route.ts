@@ -19,7 +19,7 @@ const MAX_FIELD_LEN = 100;
 
 export async function POST(req: NextRequest) {
   const ip = getClientIp(req);
-  const rl = rateLimit(`track-auth-failure:${ip}`, RATE_LIMIT);
+  const rl = await rateLimit(`track-auth-failure:${ip}`, RATE_LIMIT);
   if (!rl.allowed) {
     return NextResponse.json({ ok: false }, { status: 429 });
   }

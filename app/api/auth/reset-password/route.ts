@@ -24,7 +24,7 @@ const VALID_LOCALES = ["en", "fr", "es", "ar", "id"];
 // app (send-welcome, admin/invite, etc).
 export async function POST(req: NextRequest) {
   const ip = getClientIp(req);
-  const rl = rateLimit(`reset-password:${ip}`, { limit: 5, windowMs: 60 * 60 * 1000 });
+  const rl = await rateLimit(`reset-password:${ip}`, { limit: 5, windowMs: 60 * 60 * 1000 });
   if (!rl.allowed) {
     return NextResponse.json({ error: "Too many requests" }, { status: 429 });
   }

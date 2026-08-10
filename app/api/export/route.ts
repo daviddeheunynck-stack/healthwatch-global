@@ -47,7 +47,7 @@ export async function GET(request: NextRequest) {
 
   // ── Rate limit: 20 exports / IP / hour ──────────────────────────────────────
   const ip = getClientIp(request);
-  const rl = rateLimit(`export:${ip}`, { limit: 20, windowMs: 60 * 60 * 1000 });
+  const rl = await rateLimit(`export:${ip}`, { limit: 20, windowMs: 60 * 60 * 1000 });
   if (!rl.allowed) {
     return new NextResponse("Too Many Requests", {
       status: 429,

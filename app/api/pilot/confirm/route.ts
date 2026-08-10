@@ -19,7 +19,7 @@ const VALID_LOCALES = ["en", "fr", "es", "ar", "id"];
 // unauthenticated POST handler.
 export async function GET(req: NextRequest) {
   const ip = getClientIp(req);
-  const rl = rateLimit(`pilot-confirm:${ip}`, { limit: 20, windowMs: 10 * 60 * 1000 });
+  const rl = await rateLimit(`pilot-confirm:${ip}`, { limit: 20, windowMs: 10 * 60 * 1000 });
   if (!rl.allowed) {
     return NextResponse.json({ error: "Too many requests" }, { status: 429 });
   }

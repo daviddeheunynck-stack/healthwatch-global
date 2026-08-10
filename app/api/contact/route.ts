@@ -13,7 +13,7 @@ const esc = (s: string) =>
 export async function POST(req: NextRequest) {
   // ── Rate limiting: 3 messages per IP per 10 minutes ─────────────────────────
   const ip = getClientIp(req);
-  const rl = rateLimit(`contact:${ip}`, { limit: 3, windowMs: 10 * 60 * 1000 });
+  const rl = await rateLimit(`contact:${ip}`, { limit: 3, windowMs: 10 * 60 * 1000 });
   if (!rl.allowed) {
     return NextResponse.json(
       { error: "Too many requests — please wait a few minutes before trying again." },

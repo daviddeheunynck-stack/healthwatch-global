@@ -22,7 +22,7 @@ function esc(s: string): string {
 export async function POST(req: NextRequest) {
   // Rate limit: 10 welcome emails per IP per hour (prevents spam-by-proxy abuse)
   const ip = getClientIp(req);
-  const rl = rateLimit(`send-welcome:${ip}`, { limit: 10, windowMs: 60 * 60 * 1000 });
+  const rl = await rateLimit(`send-welcome:${ip}`, { limit: 10, windowMs: 60 * 60 * 1000 });
   if (!rl.allowed) {
     return NextResponse.json({ error: "Too many requests" }, { status: 429 });
   }

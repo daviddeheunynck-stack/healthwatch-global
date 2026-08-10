@@ -80,20 +80,19 @@ const HOUR_MS = 60 * 60 * 1000;
  * since the owner can already mail themselves.
  *
  * Two counters, both must pass: per recipient (one address can't be buried)
- * and per user (one account can't spray many addresses). In-memory and
- * per-process like every other rate limit in this repo (see lib/rate-limit.ts
- * — a Redis store is the documented upgrade path); on serverless that makes
- * it a speed bump rather than a hard cap, but it turns a free unbounded
- * loop into one that visibly reports itself to Sentry.
+ * and per user (one account can't spray many addresses). Backed by Upstash
+ * Redis when configured (see lib/rate-limit.ts) — shared across serverless
+ * instances, so it turns a free unbounded loop into one that's actually
+ * capped, not just slowed down and reported to Sentry.
  */
-function thirdPartySendAllowed(to: string, ownerEmail: string | null | undefined, userId: string): string | null {
+async function thirdPartySendAllowed(to: string, ownerEmail: string | null | undefined, userId: string): Promise<string | null> {
   const norm  = to.trim().toLowerCase();
   const owner = (ownerEmail ?? "").trim().toLowerCase();
   if (owner && norm === owner) return null;
 
-  if (!rateLimit(`alert-confirm:user:${userId}`, { limit: 10, windowMs: HOUR_MS }).allowed)
+  if (!(await rateLimit(`alert-confirm:user:${userId}`, { limit: 10, windowMs: HOUR_MS })).allowed)
     return "per-user limit (10/h to third-party addresses)";
-  if (!rateLimit(`alert-confirm:to:${norm}`, { limit: 3, windowMs: HOUR_MS }).allowed)
+  if (!(await rateLimit(`alert-confirm:to:${norm}`, { limit: 3, windowMs: HOUR_MS })).allowed)
     return "per-recipient limit (3/h)";
   return null;
 }
@@ -127,7 +126,7 @@ export async function sendAlertConfirmationEmail(
   // itself fails (see the call sites' comment). Not thrown: a rate-limited
   // send is an expected outcome, not an error the caller should surface.
   if (owner) {
-    const blocked = thirdPartySendAllowed(to, owner.email, owner.id);
+    const blocked = await thirdPartySendAllowed(to, owner.email, owner.id);
     if (blocked) {
       console.warn(`[alert-confirm-email] ${kind} confirmation to a third-party address suppressed — ${blocked}`);
       Sentry.captureMessage("alert confirmation email rate-limited", {

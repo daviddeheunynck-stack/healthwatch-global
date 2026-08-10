@@ -141,7 +141,7 @@ function buildConfirmationEmail(
 export async function POST(req: NextRequest) {
   // ── Rate limiting: 5 subscriptions per IP per hour ───────────────────────────
   const ip = getClientIp(req);
-  const rl = rateLimit(`subscribe:${ip}`, { limit: 5, windowMs: 60 * 60 * 1000 });
+  const rl = await rateLimit(`subscribe:${ip}`, { limit: 5, windowMs: 60 * 60 * 1000 });
   if (!rl.allowed) {
     return NextResponse.json(
       { error: "Too many requests — please wait before trying again." },

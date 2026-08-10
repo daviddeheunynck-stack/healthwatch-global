@@ -41,7 +41,7 @@ const STRIPE_LOCALES: Record<string, string> = {
 export async function POST(req: NextRequest) {
   // ── Rate limiting: 10 checkout attempts per IP per hour ─────────────────────
   const ip = getClientIp(req);
-  const rl = rateLimit(`checkout:${ip}`, { limit: 10, windowMs: 60 * 60 * 1000 });
+  const rl = await rateLimit(`checkout:${ip}`, { limit: 10, windowMs: 60 * 60 * 1000 });
   if (!rl.allowed) {
     return NextResponse.json(
       { error: "Too many requests — please try again later." },

@@ -128,7 +128,7 @@ function buildDavidNotification(
 
 export async function POST(req: NextRequest) {
   const ip = getClientIp(req);
-  const rl = rateLimit(`field-signal:${ip}`, { limit: 3, windowMs: 10 * 60 * 1000 });
+  const rl = await rateLimit(`field-signal:${ip}`, { limit: 3, windowMs: 10 * 60 * 1000 });
   if (!rl.allowed) {
     return NextResponse.json(
       { error: "Too many requests" },

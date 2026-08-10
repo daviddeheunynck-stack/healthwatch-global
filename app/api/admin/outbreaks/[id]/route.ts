@@ -16,7 +16,7 @@ function getService() {
 
 function adminRateLimit(req: NextRequest) {
   const ip = getClientIp(req);
-  return rateLimit(`admin:${ip}`, { limit: 30, windowMs: 10 * 60 * 1000 });
+  return rateLimit(`admin:${ip}`, { limit: 30, windowMs: 10 * 60 * 1000 }); // Promise<Result> — callers must await
 }
 
 export const dynamic = "force-dynamic";
@@ -57,7 +57,7 @@ export async function PATCH(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const rl = adminRateLimit(req);
+  const rl = await adminRateLimit(req);
   if (!rl.allowed) return NextResponse.json({ error: "Too many requests" }, { status: 429 });
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
@@ -108,7 +108,7 @@ export async function DELETE(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const rl = adminRateLimit(req);
+  const rl = await adminRateLimit(req);
   if (!rl.allowed) return NextResponse.json({ error: "Too many requests" }, { status: 429 });
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();

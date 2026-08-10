@@ -12,7 +12,7 @@ const clean = (v: string | undefined) => (v || "").replace(new RegExp("^" + BOM)
 // Sync is expensive — max 5 manual triggers per IP per hour
 export async function POST(req: NextRequest) {
   const ip = getClientIp(req);
-  const rl = rateLimit(`admin-sync:${ip}`, { limit: 5, windowMs: 60 * 60 * 1000 });
+  const rl = await rateLimit(`admin-sync:${ip}`, { limit: 5, windowMs: 60 * 60 * 1000 });
   if (!rl.allowed) return NextResponse.json({ error: "Too many sync requests — wait before retrying" }, { status: 429 });
 
   const supabase = await createClient();
