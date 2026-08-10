@@ -61,6 +61,20 @@ const DELIVERY_AUDIENCE: Record<string, string> = {
 // like the original 49-silent-day incident that motivated this whole check.
 const STALL_THRESHOLD_OVERRIDE_DAYS: Record<string, number> = {
   "push-alerts": 14,
+  // Same root cause, different shape: disease-alerts/watchlist-alerts dedup
+  // per (user, outbreak/disease) against each subscriber's OWN last-alerted
+  // state, and re-fire only on a real escalation (>=20% case surge or a
+  // risk_level increase) for THAT subscriber's specific tracked items — not
+  // "any change anywhere". With a small subscriber base, one person's tracked
+  // items can legitimately sit flat for a while even as the product overall
+  // stays healthy. Confirmed 2026-08-10: joanne.mcgovern@yale.edu (currently
+  // the sole subscriber to both channels) had 0 rows sent 3 days running —
+  // dry-run against live data showed every one of her 6 tracked Measles
+  // outbreaks moved between -2.5% and +1.1% since her 2026-08-06 alert, and
+  // her watchlisted Peru outbreak hadn't moved at all — genuinely nothing to
+  // send her, not a broken pipeline.
+  "disease-alerts": 14,
+  "watchlist-alerts": 14,
 };
 
 // Independent per-delivery evidence, where a real log table already exists —
