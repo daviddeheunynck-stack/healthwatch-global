@@ -184,11 +184,22 @@ if (frozenNonSeed.length) {
 // rafraîchit `updated_at` sans que personne n'ait cherché une édition plus récente, et
 // masquerait alors le cluster entier pendant 14 jours. Bumper la date du cluster ci-dessous
 // UNIQUEMENT après avoir réellement fait la recherche d'édition.
+// Une édition plus récente TROUVÉE mais pas encore appliquée ne doit pas être masquée par la
+// cadence de 14j : un rafraîchissement de cluster touche plusieurs pays d'un coup et se signale
+// à David au lieu de s'appliquer en autonomie (SKILL.md section 4 bis). Tant qu'une entrée est
+// listée ici, le cluster ressort à chaque run, quelle que soit CLUSTER_EDITION_CHECKED.
+// Retirer l'entrée une fois la mise à jour appliquée (ou explicitement écartée par David).
+const CLUSTER_EDITION_PENDING = {
+  // (vide) — WER 101-31 appliqué le 10/08 sur ordre de David, voir
+  // scripts/fix-cholera-don579-cluster-wer101-31-2026-08-10.mjs.
+};
+
 const CLUSTER_EDITION_CHECKED = {
-  // Choléra : Epi Update #38 (30/06/2026) toujours la dernière au 02/08. Série numérotée
-  // arrêtée — la suite passe dans le Weekly Epidemiological Record (WER 101-30 le 02/08 ne
-  // couvre pas le choléra). Chercher les deux à chaque vérification.
-  Cholera: "2026-08-02",
+  // Choléra : la série numérotée s'arrête au #38 (30/06/2026) ; la suite est bien passée dans le
+  // Weekly Epidemiological Record. WER 101-31 (données au 28/06/2026) appliqué le 10/08 aux 4
+  // pays du cluster (Congo 651/34→767/49, RD Congo 28567/815→32193/908, Soudan du Sud
+  // 7712/84→10526/111, Soudan 527/61→847/117). Chercher désormais le WER en priorité.
+  Cholera: "2026-08-10",
   // MERS-CoV : DON591 toujours le dernier ; ECDC (au 02/07/2026) confirme 2 cas / 1 décès.
   "MERS-CoV": "2026-08-02",
   // Chikungunya : NY State DOH Global Health Update du 30/07/2026 (données PAHO au 30/07).
@@ -207,6 +218,12 @@ if (frozenSeed.length) {
     }
     if (seenClusters.has(disease)) return; // un seul verdict par cluster, pas une ligne par pays
     seenClusters.add(disease);
+    const pending = CLUSTER_EDITION_PENDING[disease];
+    if (pending) {
+      const countries = frozenSeed.filter((r) => (r.disease_en || r.disease) === disease).length;
+      console.log(`${disease} (${countries} pays) | ⏳ ÉDITION PLUS RÉCENTE EN ATTENTE D'ARBITRAGE — ${pending}`);
+      return;
+    }
     const ageDays = Math.round((Date.now() - new Date(checked).getTime()) / 864e5);
     const status = ageDays > 14 ? "À VÉRIFIER (édition plus récente ?)" : "skip (édition vérifiée récemment)";
     const countries = frozenSeed.filter((r) => (r.disease_en || r.disease) === disease).length;
