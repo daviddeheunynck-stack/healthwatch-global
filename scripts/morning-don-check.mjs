@@ -422,6 +422,15 @@ const MANUAL_ROWS = {
   // récente au 03/08). Aucun cron ne couvre cette série.
   "74561cc3-216f-4ee1-988a-ee82e362155d": "Dengue/Nouvelle-Calédonie",
   "4f95242c-e512-488e-ba52-38298a3e9ec3": "Dengue/Polynésie française",
+  // Ajoutée le 2026-08-11 : deuxième volet du même trou Océanie. Épidémie déclarée par
+  // l'Agence de santé de Wallis-et-Futuna à la mi-mai 2026, zéro couverture HWG jusque-là
+  // parce que « Wallis and Futuna » manquait à COUNTRIES dans lib/geo-data.ts (même angle
+  // mort que Samoa la veille) — findCountry() ne pouvait pas le matcher, tout scraper le
+  // mentionnant l'abandonnait silencieusement. Entrée geo ajoutée le même jour.
+  // Source : mesvaccins.net (point de situation Pacifique), qui cite l'Agence de santé —
+  // pas de série OMS numérotée donnant un compte confirmé pour ce territoire, donc aucun
+  // cron possible en l'état. Détail dans scripts/add-wallis-futuna-dengue-2026-08-11.mjs.
+  "2e91ffe2-25aa-4268-b5ef-3c591f369956": "Dengue/Wallis-et-Futuna",
 };
 // Vérification faite, source inchangée → aucune écriture, donc `updated_at` ne bouge pas et la
 // ligne se re-signale tous les matins indéfiniment (vécu le 06/08 avec les deux lignes polio :
@@ -446,7 +455,12 @@ const MANUAL_ROW_CHECKED = {
   // source plus autoritaire que CIDRAP n'existe à ce jour (ni DON, ni item AFRO). Rien à écrire.
   // ⚠️ Fin de la fenêtre de 42 j vers le 11-12/08/2026 : rechercher à ce moment-là une
   // déclaration de fin d'épidémie ougandaise, qui justifierait de passer la ligne à active=false.
-  "b17d4fda-c38c-41c0-9b26-e60a54c1851b": "2026-08-08",
+  // Revérifié le 11/08 (jour d'ouverture de la fenêtre) : la page de référence gov.uk « Ebola and
+  // Marburg haemorrhagic fevers: outbreaks and case locations », mise à jour la veille (10/08/2026),
+  // décrit toujours la notification du 30/06 sans aucune mention de clôture ; WebSearch d'une
+  // déclaration ougandaise ne remonte que la clôture Ebola du 28/07 (événement distinct). Toujours
+  // 1 cas / 1 décès, rien à écrire, ligne laissée active.
+  "b17d4fda-c38c-41c0-9b26-e60a54c1851b": "2026-08-11",
 };
 console.log("\n=== Lignes manuelles (section 5) — dues pour vérif hebdo (>7j) ===");
 const now = Date.now();
@@ -478,14 +492,26 @@ if (!anyDue) console.log("(aucune ligne due cette semaine)");
 // commentaire MANUAL_ROW_CHECKED ci-dessus). Demande explicite de David le 08/08 : rechercher une
 // déclaration de fin d'épidémie ougandaise à ce moment-là, indépendamment du cycle de 7j normal.
 // Supprimer ce bloc une fois la clôture confirmée (ou la ligne passée à active=false).
+// Une fois la fenêtre ouverte, la recherche de clôture est refaite tous les 3 jours et non tous
+// les matins : une déclaration de fin d'épidémie peut tomber n'importe quel jour (donc pas de
+// cadence hebdo), mais sans cette date de dernière vérification le bloc réémettait la même alerte
+// indéfiniment — même travers que MANUAL_ROW_CHECKED / CLUSTER_EDITION_CHECKED ci-dessus.
+// ⚠️ Ne bumper cette date qu'après avoir réellement cherché la déclaration.
 const MARBURG_UGANDA_ID = "b17d4fda-c38c-41c0-9b26-e60a54c1851b";
 const MARBURG_CLOSURE_WATCH_FROM = "2026-08-11";
+const MARBURG_CLOSURE_LAST_CHECK = "2026-08-11"; // gov.uk (maj 10/08) : aucune clôture annoncée
+const MARBURG_CLOSURE_RECHECK_DAYS = 3;
 console.log("\n=== Watch ponctuel : fenêtre de clôture Marburg/Ouganda (42j depuis notification 30/06) ===");
 const marburgRow = active.find((o) => o.id === MARBURG_UGANDA_ID);
+const marburgCheckAge = Math.round((now - new Date(MARBURG_CLOSURE_LAST_CHECK).getTime()) / 864e5);
 if (!marburgRow) {
   console.log("Ligne déjà inactive ou introuvable en base — watch obsolète, à retirer du script.");
 } else if (now >= new Date(MARBURG_CLOSURE_WATCH_FROM).getTime()) {
-  console.log(`⚠️ Fenêtre des 42j atteinte (dès le ${MARBURG_CLOSURE_WATCH_FROM}) — WebSearch/WebFetch une déclaration de fin d'épidémie ougandaise (who.int/afro.who.int news, gov.uk guidance) avant de conclure. Ligne toujours active en DB (cases=${marburgRow.cases} deaths=${marburgRow.deaths}).`);
+  if (marburgCheckAge < MARBURG_CLOSURE_RECHECK_DAYS) {
+    console.log(`Fenêtre des 42j ouverte, dernière recherche de clôture il y a ${marburgCheckAge}j — skip (recheck tous les ${MARBURG_CLOSURE_RECHECK_DAYS}j).`);
+  } else {
+    console.log(`⚠️ Fenêtre des 42j atteinte (dès le ${MARBURG_CLOSURE_WATCH_FROM}), dernière recherche il y a ${marburgCheckAge}j — WebSearch/WebFetch une déclaration de fin d'épidémie ougandaise (who.int/afro.who.int news, gov.uk guidance) avant de conclure. Ligne toujours active en DB (cases=${marburgRow.cases} deaths=${marburgRow.deaths}).`);
+  }
 } else {
   const daysLeft = Math.ceil((new Date(MARBURG_CLOSURE_WATCH_FROM).getTime() - now) / 864e5);
   console.log(`Pas encore dû — ${daysLeft}j avant le ${MARBURG_CLOSURE_WATCH_FROM}.`);

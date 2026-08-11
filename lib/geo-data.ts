@@ -216,6 +216,16 @@ export const COUNTRIES: Record<string, CountryGeo> = {
   "Mayotte": { lat: -12.8, lng: 45.2, region: "africa", name_en: "Mayotte", name_fr: "Mayotte", name_ar: "مايوت" },
   "French Polynesia": { lat: -17.7, lng: -149.4, region: "oceania", name_en: "French Polynesia", name_fr: "Polynésie française", name_ar: "بولينيزيا الفرنسية" },
   "New Caledonia": { lat: -20.9, lng: 165.6, region: "oceania", name_en: "New Caledonia", name_fr: "Nouvelle-Calédonie", name_ar: "كاليدونيا الجديدة" },
+  // Same blind spot as Samoa (added 2026-08-10 above): absent from COUNTRIES, so
+  // findCountry() could never match it and every scraper mentioning the territory
+  // silently took the isAggregateCountry/geo-miss skip path. Found 2026-08-11 while
+  // following up the DLI increase flagged for Wallis & Futuna in WHO WPRO Dengue
+  // Situation Update 751 — the Agence de santé has had a declared dengue epidemic
+  // running there since mid-May 2026 with zero HWG coverage. Like French Polynesia
+  // and New Caledonia (and unlike Samoa), it is a territory rather than a sovereign
+  // state, so it belongs in COUNTRIES only — world-countries.ts, country-coords.ts
+  // and population-data.ts deliberately list states.
+  "Wallis and Futuna": { lat: -13.3, lng: -176.2, region: "oceania", name_en: "Wallis and Futuna", name_fr: "Wallis-et-Futuna", name_ar: "واليس وفوتونا" },
 
   // ── MULTI-COUNTRY / GLOBAL ────────────────────────────────────
   "EU/EEA": { lat: 50.85, lng: 4.35, region: "europe", name_en: "EU/EEA", name_fr: "UE/EEE", name_ar: "الاتحاد الأوروبي" },
