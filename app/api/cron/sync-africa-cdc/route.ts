@@ -71,6 +71,27 @@ function extractAfricaCdcBody(html: string): string {
   return html.slice(tagEnd, tagEnd + 8000);
 }
 
+// Africa CDC press releases open with a wire-service dateline ("ADDIS ABABA,
+// ETHIOPIA — The Africa Centres for Disease Control..."), and Africa CDC is
+// itself headquartered in Addis Ababa — so nearly every article mentions
+// Ethiopia first, regardless of which country the story is actually about.
+// findMentionedAfricanCountries() takes the earliest-position match as the
+// primary country (correct in general — see its own comment for the DRC/RoC
+// substring class of bug that ordering already guards against), so an
+// unstripped dateline silently wins over the real subject every time. Found
+// 2026-08-11: a DRC Bundibugyo Ebola update (4,120 cases / 1,887 deaths,
+// title literally says "DRC Government") got filed under Ethiopia, the only
+// country the RSS <description> field mentioned before this fix — the real
+// country (DRC) was never even reached, since country detection only falls
+// back to the article body when the description yields nothing at all, not
+// when it yields something suboptimal. Strip the dateline before country
+// detection, not just Ethiopia specifically: the "CITY, COUNTRY — " wire
+// format isn't unique to Addis Ababa, and any Africa CDC affiliate office
+// datelining a release the same way would reproduce this exact bug.
+function stripDateline(text: string): string {
+  return text.replace(/^\s*[A-Z][A-Za-z.\s]{1,40},\s*[A-Z][A-Za-z.\s]{1,40}\s*[-–—]\s*/, "");
+}
+
 function isKnownDisease(rawName: string): boolean {
   const info = normalizeDisease(rawName);
   return !!(info.family || info.cfr_ref || info.r0_ref || info.incubationMin);
@@ -179,7 +200,8 @@ async function extractItemData(item: RSSItem): Promise<PostData[]> {
 
   // Country detection — RSS description has compact text with key country mentions.
   // e.g. "...Ebola outbreak...in the Democratic Republic of the Congo and Uganda..."
-  const descCountries = findMentionedAfricanCountries(item.description);
+  // Dateline stripped first — see stripDateline() above.
+  const descCountries = findMentionedAfricanCountries(stripDateline(item.description));
   let primaryCountry: string | null = descCountries.length > 0 ? descCountries[0] : null;
 
   // Fetch article page: needed for case/death numbers and country fallback.
@@ -193,7 +215,7 @@ async function extractItemData(item: RSSItem): Promise<PostData[]> {
 
   // Fallback country detection from article body (first 1500 chars)
   if (!primaryCountry && articleText) {
-    const bodyMentions = findMentionedAfricanCountries(articleText.substring(0, 1500));
+    const bodyMentions = findMentionedAfricanCountries(stripDateline(articleText.substring(0, 1500)));
     if (bodyMentions.length > 0) primaryCountry = bodyMentions[0];
   }
 
