@@ -641,8 +641,18 @@ async function runHealthCheck(_req: NextRequest, supabase: any) {
   // than something to action daily. Keep it out of this digest specifically;
   // /api/health's deep Sentry check is untouched, since that one is pulled
   // on demand for a genuine audit, not pushed unprompted every morning.
+  //
+  // Exclude level:"info" too (found 2026-08-11): fetchSentryIssues()'s query
+  // ("is:unresolved lastSeen:-24h") has no level filter by design — it hands
+  // back everything so callers can decide — but this section labels whatever
+  // it gets as "erreur(s) Sentry", which is simply wrong for an intentional
+  // informational signal (e.g. "[sync-pacific-surveillance] N DLI signal(s)
+  // uncovered", captureMessage'd at "info" on purpose, not a bug). Counting
+  // it here inflated the headline error count and put a by-design signal
+  // under a "Détail erreurs Sentry" heading it doesn't belong in.
   const sentryIssues = sentryCheck.issues.filter(
-    (i) => !i.title.startsWith("[geo-extract-llm] Anthropic API credit balance too low"),
+    (i) => !i.title.startsWith("[geo-extract-llm] Anthropic API credit balance too low")
+        && i.level !== "info",
   );
   const sentryBroken = !sentryCheck.ok;
   const sentryAlert  = sentryBroken || sentryIssues.length > 0;
