@@ -163,6 +163,31 @@ export const COUNTRIES: Record<string, CountryGeo> = {
   // check: Samoa has had a real, ongoing, WHO/MoH-documented dengue outbreak
   // since January 2025 with zero HWG coverage the entire time.
   "Samoa": { lat: -13.7590, lng: -172.1046, region: "oceania", name_en: "Samoa", name_fr: "Samoa", name_ar: "ساموا" },
+  // Same blind spot as Samoa/Wallis and Futuna above: absent from COUNTRIES,
+  // findCountry() could never match them. All 14 are wired into KNOWN_PICTS
+  // in sync-pacific-surveillance/route.ts but were dropped by the geo-miss
+  // skip path before ever reaching `outbreaks`. Added 2026-08-11 auditing the
+  // remaining PICTs after the Samoa/Wallis and Futuna fixes. American Samoa,
+  // Cook Islands, Guam, Niue, Northern Mariana Islands and Pitcairn Islands
+  // are territories (like French Polynesia/New Caledonia) so they belong in
+  // COUNTRIES only; Kiribati, Marshall Islands, Micronesia, Nauru, Palau,
+  // Tonga and Tuvalu are sovereign states also added to world-countries.ts,
+  // country-coords.ts and population-data.ts where missing there.
+  "American Samoa": { lat: -14.2781, lng: -170.7025, region: "oceania", name_en: "American Samoa", name_fr: "Samoa américaines", name_ar: "ساموا الأمريكية" },
+  "Cook Islands": { lat: -21.2367, lng: -159.7777, region: "oceania", name_en: "Cook Islands", name_fr: "Îles Cook", name_ar: "جزر كوك" },
+  "Guam": { lat: 13.4443, lng: 144.7937, region: "oceania", name_en: "Guam", name_fr: "Guam", name_ar: "غوام" },
+  "Kiribati": { lat: 1.3290, lng: 172.9790, region: "oceania", name_en: "Kiribati", name_fr: "Kiribati", name_ar: "كيريباتي" },
+  "Marshall Islands": { lat: 7.1164, lng: 171.1858, region: "oceania", name_en: "Marshall Islands", name_fr: "Îles Marshall", name_ar: "جزر مارشال" },
+  "Federated States of Micronesia": { lat: 6.9248, lng: 158.1611, region: "oceania", name_en: "Micronesia", name_fr: "États fédérés de Micronésie", name_ar: "ولايات ميكرونيزيا المتحدة" },
+  "Micronesia": { lat: 6.9248, lng: 158.1611, region: "oceania", name_en: "Micronesia", name_fr: "États fédérés de Micronésie", name_ar: "ولايات ميكرونيزيا المتحدة" },
+  "Nauru": { lat: -0.5477, lng: 166.9209, region: "oceania", name_en: "Nauru", name_fr: "Nauru", name_ar: "ناورو" },
+  "Niue": { lat: -19.0544, lng: -169.9187, region: "oceania", name_en: "Niue", name_fr: "Niue", name_ar: "نييوي" },
+  "Northern Mariana Islands": { lat: 15.1780, lng: 145.7508, region: "oceania", name_en: "Northern Mariana Islands", name_fr: "Îles Mariannes du Nord", name_ar: "جزر ماريانا الشمالية" },
+  "Palau": { lat: 7.5006, lng: 134.6242, region: "oceania", name_en: "Palau", name_fr: "Palaos", name_ar: "بالاو" },
+  "Pitcairn Islands": { lat: -25.0660, lng: -130.1015, region: "oceania", name_en: "Pitcairn Islands", name_fr: "Îles Pitcairn", name_ar: "جزر بيتكيرن" },
+  "Tokelau": { lat: -9.2002, lng: -171.8484, region: "oceania", name_en: "Tokelau", name_fr: "Tokelau", name_ar: "توكيلاو" },
+  "Tonga": { lat: -21.1789, lng: -175.1982, region: "oceania", name_en: "Tonga", name_fr: "Tonga", name_ar: "تونغا" },
+  "Tuvalu": { lat: -8.5211, lng: 179.1983, region: "oceania", name_en: "Tuvalu", name_fr: "Tuvalu", name_ar: "توفالو" },
 
   // ── MIDDLE EAST (additional) ──────────────────────────────────
   "Kuwait": { lat: 29.3, lng: 47.5, region: "asia", name_en: "Kuwait", name_fr: "Koweït", name_ar: "الكويت" },

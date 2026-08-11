@@ -431,6 +431,16 @@ const MANUAL_ROWS = {
   // pas de série OMS numérotée donnant un compte confirmé pour ce territoire, donc aucun
   // cron possible en l'état. Détail dans scripts/add-wallis-futuna-dengue-2026-08-11.mjs.
   "2e91ffe2-25aa-4268-b5ef-3c591f369956": "Dengue/Wallis-et-Futuna",
+  // Ajoutée le 2026-08-11, même passage que Wallis-et-Futuna : audit des 14 PICT restants
+  // absents de COUNTRIES a aussi trouvé American Samoa — urgence de santé publique
+  // déclarée par le territoire le 08/07/2025, 782 cas confirmés au 17/02/2026 (DOH,
+  // épidémiologiste Adam Konrote, via Samoa News), toujours active au 11/06/2026 selon
+  // le décompte régional (1 des 6 PICT en épidémie active). N'apparaît pas dans le flux
+  // PSSS du WHO Division of Pacific Technical Support (vérifié absente des Dengue
+  // Situation Update #740 et #750) — remonte ses propres chiffres via son DOH/CDC, pas
+  // via cette série OMS, donc pas de cron possible en l'état. Détail dans
+  // scripts/add-american-samoa-dengue-2026-08-11.mjs.
+  "43c4c769-17e6-45c4-9f83-5c8d30104ff1": "Dengue/American Samoa",
 };
 // Vérification faite, source inchangée → aucune écriture, donc `updated_at` ne bouge pas et la
 // ligne se re-signale tous les matins indéfiniment (vécu le 06/08 avec les deux lignes polio :

@@ -159,8 +159,15 @@ const POPULATION_THOUSANDS: Record<string, number> = {
   "New Zealand":            5_123,
   "Fiji":                     930,
   "Solomon Islands":          741,
+  "Tonga":                    107,
   "Vanuatu":                  335,
   "Samoa":                    223,
+  "Kiribati":                 134,
+  "Micronesia":               113,
+  "Marshall Islands":          42,
+  "Palau":                     18,
+  "Nauru":                     13,
+  "Tuvalu":                    11,
 
   // ── Middle East ─────────────────────────────────────────────────────────────
   "Iran":                  87_923,

@@ -138,11 +138,17 @@ const COUNTRY_COORDS: Record<string, [number, number]> = {
   // Oceania
   "Australia": [-25.2744, 133.7751],
   "Fiji": [-17.7134, 178.0650],
+  "Kiribati": [1.3290, 172.9790],
+  "Marshall Islands": [7.1164, 171.1858],
+  "Micronesia": [6.9248, 158.1611],
+  "Nauru": [-0.5477, 166.9209],
   "New Zealand": [-40.9006, 174.8860],
+  "Palau": [7.5006, 134.6242],
   "Papua New Guinea": [-6.3149, 143.9555],
   "Samoa": [-13.7590, -172.1046],
   "Solomon Islands": [-9.6457, 160.1562],
   "Tonga": [-21.1789, -175.1982],
+  "Tuvalu": [-8.5211, 179.1983],
   "Vanuatu": [-15.3767, 166.9592],
 };
 
