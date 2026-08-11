@@ -208,3 +208,29 @@ Trois candidats nommés explicitement, à évaluer comme sources additionnelles 
 **Conclusion** : l'outil versionné complet qu'elle décrit **n'est pas constructible en système général** — les sources (OMS DON, ECDC, Africa CDC, sitreps nationaux) ne publient quasiment jamais cette métadonnée de façon structurée, il n'y a donc rien à lier la plupart du temps. **Piste réduite jugée réaliste** : un flag manuel booléen (« ce bulletin annonce-t-il explicitement un changement de définition de cas ? »), même patron que les colonnes `is_pheic`/`is_backfill` déjà en place, vérifié à même la relecture quotidienne déjà faite par `morning-don-check` (volume compatible, ~9 lignes touchées/jour). Limites explicites : ne recrée pas l'historique des lignes déjà en base, rate tout changement que la source ne déclare pas noir sur blanc.
 
 **Statut :** idée présentée à Omobolanle dans la réponse envoyée le 03/08 (voir linkedin-contacts.md, DM 4), avec l'invitation à échanger davantage. **Non implémentée côté développement** — décision de priorisation laissée à David.
+
+---
+
+## 7 août 2026 (document lu le 08/08) — Andrea Bernasconi (Senior Medical Epidemiologist, Public Health Specialist)
+
+**Contexte :** welcome DM échangé le 07/08 (voir linkedin-contacts.md pour l'historique complet). Répondant à la question de David sur ce que la surveillance de routine voit de la confiance communautaire, Andrea a identifié un manque et joint un document, `comm engagment indicators.docx` (17 Ko), proposant de le formaliser en article de recherche via une méthode Delphi.
+
+**Retour — proposition de 18 indicateurs indirects de confiance communautaire, répartis en 10 domaines**
+Verbatim d'introduction du document : « *This is actually an underdeveloped research area. Trust itself is difficult to measure, but surveillance-sensitive proxy indicators could provide an early signal that community engagement is weakening. Here are some ideas.* »
+
+| Domaine | Indicateurs proposés |
+|---|---|
+| Recours aux soins | Délai médian symptômes → 1er contact soignant ; part des cas détectés par signalement communautaire vs auto-présentation |
+| Détection des cas | % de cas déjà décédés à la notification ; % de cas sévères à la présentation |
+| Contact tracing | % de contacts listés ; % suivis 21 jours ; délai confirmation → listage |
+| Vaccination | Taux d'acceptation de la vaccination en anneau ; taux de refus |
+| Enterrements sécurisés | % de décès avec enterrement sécurisé et digne ; nombre d'enterrements communautaires hors surveillance |
+| Laboratoire | % de cas suspects acceptant le test diagnostique |
+| Signalement communautaire | Nombre d'alertes / 10 000 hab. ; % d'alertes confirmées après investigation |
+| Rumeurs/désinformation | Nombre de rumeurs vérifiées/semaine ; indice de désinformation sur réseaux sociaux |
+| Services de santé | Fréquentation des services de santé de routine pendant les épidémies |
+| Participation communautaire | Présence aux réunions d'engagement ; nombre d'agents de santé communautaires actifs |
+
+**Faisabilité côté HWG, à évaluer** : aucun de ces 18 indicateurs n'est publié de façon structurée par les sources agrégées (WHO DON/AFRO/EMRO, ECDC, Africa CDC, PAHO, sitreps nationaux) — ce sont des données de terrain (ring vaccination, contact tracing, rumeurs) qui n'apparaissent quasiment jamais dans un bulletin public. Contrairement au retour d'Omobolanle Adelekun (03/08, ci-dessus), il ne s'agit pas d'un flag à extraire d'un texte de bulletin existant : la quasi-totalité de ces indicateurs supposerait une source de données que HWG n'a pas et que le modèle d'agrégation de bulletins publics ne peut pas obtenir. Piste de recherche/plaidoyer plus que fonctionnalité produit à court terme.
+
+**Statut :** document téléchargé et lu le 08/08 (pièce jointe LinkedIn, bloquée par Chrome sous extension `.tmp`, renommée pour lecture). **Non évalué techniquement au-delà de ce constat de faisabilité générale.** **Décision prise par David le 08/08 (session interactive) : coécriture déclinée** (message envoyé, voir linkedin-contacts.md), **coordonnées personnelles non échangées en retour, neutralité politique sur le point USAID/CDC soulevé dans le même fil**. La piste des 18 indicateurs reste valable comme signal produit/recherche pour référence future, indépendamment de la décision sur la coécriture.
