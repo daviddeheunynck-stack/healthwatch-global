@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { extractNumbers } from "@/lib/outbreak-parser";
-import { errorMessage } from "@/lib/error";
 import * as Sentry from "@sentry/nextjs";
 import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
 import { isCollapse, isSpike, deathsExceedCases, isZeroData } from "@/lib/outbreak-guards";
@@ -99,7 +98,7 @@ function buildDataQualityDescription(diseaseEn: string, countryEn: string, cases
 
 async function sendEmail(to: string, subject: string, html: string) {
   if (!BREVO_API_KEY || !to) return;
-  await fetch("https://api.brevo.com/v3/smtp/email", {
+  const res = await fetch("https://api.brevo.com/v3/smtp/email", {
     method: "POST",
     signal: AbortSignal.timeout(10_000),
     headers: { "api-key": BREVO_API_KEY, "Content-Type": "application/json" },
@@ -109,10 +108,16 @@ async function sendEmail(to: string, subject: string, html: string) {
       subject,
       htmlContent: html,
     }),
-  }).catch((e) => {
-    console.error("[data-quality] email send failed:", errorMessage(e));
-    Sentry.captureException(e, { tags: { cron: "data-quality" } });
   });
+  // Was previously a bare .catch() that only saw network-level exceptions — a
+  // non-2xx Brevo response resolved normally and was silently discarded, so
+  // logCronRun still recorded "ok" even though no email went out. Throwing
+  // here lets the route's own defensive wrapper below log a real "error"
+  // status instead (found 2026-08-11, same pattern in sync-pacific-surveillance).
+  if (!res.ok) {
+    const body = await res.text().catch(() => "");
+    throw new Error(`Brevo error ${res.status}: ${body.slice(0, 500)}`);
+  }
 }
 
 // ── Main handler ──────────────────────────────────────────────────────────────

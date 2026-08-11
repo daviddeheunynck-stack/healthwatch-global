@@ -57,7 +57,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import * as Sentry from "@sentry/nextjs";
 import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
-import { errorMessage } from "@/lib/error";
 
 export const dynamic     = "force-dynamic";
 export const maxDuration = 60;
@@ -131,7 +130,7 @@ interface PdfPageData { getTextContent: () => Promise<{ items: PdfTextItem[] }>;
 
 async function sendEmail(to: string, subject: string, html: string) {
   if (!BREVO_API_KEY || !to) return;
-  await fetch("https://api.brevo.com/v3/smtp/email", {
+  const res = await fetch("https://api.brevo.com/v3/smtp/email", {
     method: "POST",
     signal: AbortSignal.timeout(10_000),
     headers: {
@@ -144,7 +143,18 @@ async function sendEmail(to: string, subject: string, html: string) {
       subject,
       htmlContent: html,
     }),
-  }).catch((e) => console.error("[sync-pacific-surveillance] email send failed:", errorMessage(e)));
+  });
+  // Was previously a bare .catch() that only saw network-level exceptions:
+  // a non-2xx Brevo response (or a fetch that simply never landed) resolved
+  // normally and was silently discarded. logCronRun below still recorded
+  // "ok" even though the alert never reached Brevo — found 2026-08-11 while
+  // investigating a week with 5 DLI signals logged but no email received.
+  // Throwing here lets the route's own try/catch (GET, above) log a real
+  // "error" status instead.
+  if (!res.ok) {
+    const body = await res.text().catch(() => "");
+    throw new Error(`Brevo error ${res.status}: ${body.slice(0, 500)}`);
+  }
 }
 
 function esc(s: string) {

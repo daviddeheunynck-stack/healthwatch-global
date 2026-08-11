@@ -31,7 +31,6 @@ import * as Sentry from "@sentry/nextjs";
 import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
 import { matchDisease, matchEventNameTranslation } from "@/lib/disease-data";
 import type { AppRegion } from "@/lib/disease-data";
-import { errorMessage } from "@/lib/error";
 
 export const dynamic     = "force-dynamic";
 export const maxDuration = 60;
@@ -51,7 +50,7 @@ const KNOWN_REGIONS = new Set<AppRegion>(["africa", "asia", "americas", "europe"
 
 async function sendEmail(to: string, subject: string, html: string) {
   if (!BREVO_API_KEY || !to) return;
-  await fetch("https://api.brevo.com/v3/smtp/email", {
+  const res = await fetch("https://api.brevo.com/v3/smtp/email", {
     method: "POST",
     signal: AbortSignal.timeout(10_000),
     headers: {
@@ -64,7 +63,16 @@ async function sendEmail(to: string, subject: string, html: string) {
       subject,
       htmlContent: html,
     }),
-  }).catch((e) => console.error("[disease-coverage] email send failed:", errorMessage(e)));
+  });
+  // Was previously a bare .catch() that only saw network-level exceptions — a
+  // non-2xx Brevo response resolved normally and was silently discarded, so
+  // logCronRun still recorded "ok" even though no email went out. Throwing
+  // here lets the route's own try/catch log a real "error" status instead
+  // (found 2026-08-11 auditing the same pattern in sync-pacific-surveillance).
+  if (!res.ok) {
+    const body = await res.text().catch(() => "");
+    throw new Error(`Brevo error ${res.status}: ${body.slice(0, 500)}`);
+  }
 }
 
 function esc(s: string) {
