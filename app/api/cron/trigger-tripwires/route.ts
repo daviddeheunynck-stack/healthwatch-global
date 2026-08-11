@@ -208,16 +208,25 @@ async function runTripwires(_req: NextRequest, supabase: SupabaseClient) {
 
     const crossed = o.cases >= tw.threshold_cases && tw.last_checked_cases < tw.threshold_cases;
 
-    // Always update last_checked_cases
-    await supabase
-      .from("outbreak_tripwires")
-      .update({
-        last_checked_cases: o.cases,
-        ...(crossed ? { triggered_at: new Date().toISOString() } : {}),
-      })
-      .eq("id", tw.id);
+    // Nothing to send: just record the count we observed, so a later rise
+    // past the threshold still reads as a fresh crossing.
+    if (!crossed) {
+      await supabase
+        .from("outbreak_tripwires")
+        .update({ last_checked_cases: o.cases })
+        .eq("id", tw.id);
+      continue;
+    }
 
-    if (!crossed) continue;
+    // Past this point the tripwire HAS crossed, so last_checked_cases is the
+    // dedup marker: once it is bumped past threshold_cases, `crossed` can
+    // never be true again for this row. Writing it before the send — as this
+    // cron used to — meant a single failed send silently destroyed the alert
+    // for good, not just for a cooldown window like the sister crons. Same
+    // reordering as regional-alerts/disease-alerts (2026-07-30) and
+    // category/geofence/country-risk: send first, mark after. The skips below
+    // therefore leave the marker untouched, exactly like those crons, so an
+    // upgrade or an unblocked address still gets the alert.
     if (freeUserIds.has(tw.user_id)) continue;
     if (blockedEmails.has((tw.email ?? "").toLowerCase())) { blockedSkipped++; continue; }
 
@@ -270,6 +279,15 @@ async function runTripwires(_req: NextRequest, supabase: SupabaseClient) {
   </p>
 </div>`);
       }
+
+      // Marker written only once the send actually went out (see above).
+      // triggered_at is user-visible via /api/tripwires, so it must not claim
+      // a firing that never happened either.
+      await supabase
+        .from("outbreak_tripwires")
+        .update({ last_checked_cases: o.cases, triggered_at: new Date().toISOString() })
+        .eq("id", tw.id);
+
       fired++;
     } catch (err) {
       errors++;
