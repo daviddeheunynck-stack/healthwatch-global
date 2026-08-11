@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node -e \"const d=JSON.parse(require('fs').readFileSync(0,'utf8'));const raw=(d.tool_input&&d.tool_input.command)||'';const isGitWrite=/^\\s*git\\s+(add|commit)\\b/.test(raw);if(!isGitWrite){process.exit(0);}const stripped=raw.replace(/(-m|--message)\\s+\\x22[^\\x22]*\\x22/g,'').replace(/(-m|--message)\\s+\\x27[^\\x27]*\\x27/g,'');const envTokens=(stripped.match(/[^\\s\\x22\\x27]*\\.env[^\\s\\x22\\x27]*/g)||[]);const risky=envTokens.some(t=>!/\\.env\\.example$/.test(t));if(risky){console.log(JSON.stringify({hookSpecificOutput:{hookEventName:'PreToolUse',permissionDecision:'deny',permissionDecisionReason:'Blocked: this git command references a .env file ('+envTokens.join(', ')+'). Never commit .env*/secrets — see CLAUDE.md.'}}));}\"",
+            "timeout": 10,
+            "statusMessage": "Checking for .env in git command..."
+          }
+        ]
+      }
+    ]
+  }
+}
