@@ -1254,6 +1254,16 @@ async function runSyncWhoRegional(_req: NextRequest, supabase: SupabaseClient) {
         active:          activeFlag,
         is_seed:         isAnnualRef,
         source_priority: 5,
+        // `Found` (above) has no admin1 field — no fetcher in this file has ever
+        // populated one, since they're all national/regional aggregates, not
+        // sub-national. Any admin1 already on the row is therefore guaranteed to
+        // be a leftover from a *different* source that no longer backs it (e.g.
+        // Nigeria/Cholera carried admin1="Borno" from an earlier DON-based entry
+        // after this cron switched it to the country-level-only WHO ArcGIS feed,
+        // "cholera_adm0_week_view" — "adm0" = admin level 0 = country). Clearing
+        // it here keeps every row this cron writes internally consistent with
+        // data-quality's 4i admin1-groundedness check (found 2026-08-12).
+        admin1:          null,
       };
       // English description just changed — existing FR/ES/AR/ID translations
       // (if any) now describe stale figures. Null them so sync-outbreaks'
