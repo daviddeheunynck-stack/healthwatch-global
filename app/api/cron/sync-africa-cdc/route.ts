@@ -92,6 +92,23 @@ function stripDateline(text: string): string {
   return text.replace(/^\s*[A-Z][A-Za-z.\s]{1,40},\s*[A-Z][A-Za-z.\s]{1,40}\s*[-–—]\s*/, "");
 }
 
+// The dateline pattern above is "Capitalised, Capitalised — ", which a wire
+// dateline matches but so does the "Disease, Country — summary" heading style
+// Africa CDC also publishes ("Mpox, Democratic Republic of the Congo — situation
+// update as of 5 August 2026"; "Lassa fever, Nigeria - weekly epidemiological
+// summary" — both verified to strip, 2026-08-12). There the country lives *only*
+// in the prefix, so stripping first and asking questions later throws away the
+// one mention there was, and detection silently drops to the article body — the
+// same "a country mentioned elsewhere wins" failure the dateline strip exists to
+// prevent, just displaced one step. So: prefer the stripped reading, and fall
+// back to the raw text only when stripping left nothing to go on. The Addis
+// Ababa case is unaffected — its stripped text still names the real country, so
+// the stripped reading wins exactly as intended.
+function countriesIgnoringDateline(text: string): string[] {
+  const stripped = findMentionedAfricanCountries(stripDateline(text));
+  return stripped.length > 0 ? stripped : findMentionedAfricanCountries(text);
+}
+
 function isKnownDisease(rawName: string): boolean {
   const info = normalizeDisease(rawName);
   return !!(info.family || info.cfr_ref || info.r0_ref || info.incubationMin);
@@ -200,8 +217,8 @@ async function extractItemData(item: RSSItem): Promise<PostData[]> {
 
   // Country detection — RSS description has compact text with key country mentions.
   // e.g. "...Ebola outbreak...in the Democratic Republic of the Congo and Uganda..."
-  // Dateline stripped first — see stripDateline() above.
-  const descCountries = findMentionedAfricanCountries(stripDateline(item.description));
+  // Dateline stripped first — see countriesIgnoringDateline() above.
+  const descCountries = countriesIgnoringDateline(item.description);
   let primaryCountry: string | null = descCountries.length > 0 ? descCountries[0] : null;
 
   // Fetch article page: needed for case/death numbers and country fallback.
@@ -215,7 +232,7 @@ async function extractItemData(item: RSSItem): Promise<PostData[]> {
 
   // Fallback country detection from article body (first 1500 chars)
   if (!primaryCountry && articleText) {
-    const bodyMentions = findMentionedAfricanCountries(stripDateline(articleText.substring(0, 1500)));
+    const bodyMentions = countriesIgnoringDateline(articleText.substring(0, 1500));
     if (bodyMentions.length > 0) primaryCountry = bodyMentions[0];
   }
 
