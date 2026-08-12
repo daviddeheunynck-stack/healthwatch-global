@@ -48,7 +48,7 @@ WHO published mpox situation report 68 on 31 July. One sentence in it does more 
 
 "In the last week, Madagascar reported 128 confirmed cases, with a test positivity of 74%, indicating ongoing transmission and insufficiently sensitive surveillance."
 
-Seventy four percent positivity means roughly three of every four people tested came back positive. At that rate the testing is not sampling the outbreak, it is saturated by it. The 128 is bounded by how many tests Madagascar could run that week, not by how many people had mpox.
+Seventy-four percent positivity means roughly three of every four people tested came back positive. At that rate the testing is not sampling the outbreak, it is saturated by it. The 128 is bounded by how many tests Madagascar could run that week, not by how many people had mpox.
 
 Madagascar reported 546 confirmed cases in June 2026, more than any other country in the world, and roughly half of the 1,128 reported globally by 33 countries that month. Cumulatively it stands at 2,921 confirmed cases and 18 deaths as of 19 July.
 
