@@ -374,6 +374,19 @@ export default async function DocsPage({ params }: { params: Promise<{ locale: s
               Use for internal monitoring; cite the linked source page directly in publications.
             </p>
           </div>
+          {/* Press */}
+          <div className="rounded-xl border border-violet-700/40 bg-violet-900/10 p-4 space-y-1">
+            <div className="flex items-center gap-2">
+              <span className="inline-flex items-center text-[11px] font-bold px-1.5 py-0.5 rounded bg-violet-900/30 border border-violet-700/50 text-violet-400">PRESS</span>
+              <span className="text-sm font-semibold text-white">Named news outlet, not a health authority</span>
+            </div>
+            <p className="text-sm text-gray-400">
+              The figures were reported by a general-interest news outlet (e.g. a national broadcaster or wire
+              service) rather than published in an agency bulletin. The source link is public and readable, and the
+              outlet is named on the row, but the data has no authority behind it: cross-check before operational use.
+              HealthWatch re-sources these rows upstream as soon as an agency bulletin covers the same event.
+            </p>
+          </div>
           {/* Unverified */}
           <div className="rounded-xl border border-gray-700/40 bg-gray-800/20 p-4 space-y-1">
             <div className="flex items-center gap-2">
@@ -388,12 +401,16 @@ export default async function DocsPage({ params }: { params: Promise<{ locale: s
           </div>
         </div>
         <p className="text-sm text-gray-500">
-          To filter by tier in the API, check whether the <code className="text-purple-300 font-mono">source</code> URL contains{" "}
-          <code className="text-purple-300 font-mono">disease-outbreak-news/item/</code> (WHO DON),{" "}
+          To filter by tier in the API, read the host of the <code className="text-purple-300 font-mono">source</code> URL.
+          A <code className="text-purple-300 font-mono">disease-outbreak-news/item/</code> path with a{" "}
+          <code className="text-purple-300 font-mono">YYYY-DONnnn</code> reference is WHO DON; a host belonging to a
+          health agency or ministry (<code className="text-purple-300 font-mono">who.int</code>,{" "}
           <code className="text-purple-300 font-mono">ecdc.europa.eu</code>,{" "}
-          <code className="text-purple-300 font-mono">paho.org</code>, or{" "}
-          <code className="text-purple-300 font-mono">africacdc.org</code> (official),
-          or is empty / a placeholder (unverified).
+          <code className="text-purple-300 font-mono">paho.org</code>,{" "}
+          <code className="text-purple-300 font-mono">africacdc.org</code>, a national CDC or MoH domain…) is official;
+          a news-outlet host is press; anything else — placeholder text, social media, blogs, an empty field — is
+          unverified. The tier is never inferred from the URL scheme alone: an <code className="text-purple-300 font-mono">https://</code>{" "}
+          link to a social-media post is unverified, not official.
         </p>
       </Section>
 

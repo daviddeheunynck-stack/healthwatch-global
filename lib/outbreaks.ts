@@ -3,6 +3,7 @@ import { unstable_cache } from "next/cache";
 import * as Sentry from "@sentry/nextjs";
 import { normalizeDisease, matchEventNameTranslation } from "./disease-data";
 import { findCountry, isAggregateCountry } from "./geo-data";
+import { sourceStatusOf, type SourceStatus } from "./source-trust";
 import type { OutbreakTrend } from "./outbreak-trend";
 
 const BOM   = String.fromCharCode(65279);
@@ -643,52 +644,15 @@ export function freshOutbreakHours(outbreak: Outbreak): number | null {
   return hours;
 }
 
-// A real, citable WHO Disease Outbreak News article, e.g.
-// "https://www.who.int/emergencies/disease-outbreak-news/item/2026-DON606".
-// Same pattern as scripts/cleanup-fictional-outbreaks.mjs's REAL_DON check.
-const REAL_WHO_DON_SOURCE = /^https:\/\/www\.who\.int\/emergencies\/disease-outbreak-news\/item\/\d{4}-DON\d+$/i;
-
-// Fake seed DON URLs look like /item/dengue-cotedivoire-2024 — no year-DONnumber pattern.
-const FAKE_SEED_DON = /\/disease-outbreak-news\/item\/(?!\d{4}-DON)/i;
-
-// sourceStatus() normally requires https:// — plain http:// is treated as unverified because
-// it's trivially spoofable and most sources here (WHO, ECDC, national MoH sites) serve https.
-// A few legitimate press domains we actually cite don't: their https:// certs fail (verified by
-// hand, not a network fluke — see e.g. french.china.org.cn, Choléra/Tchad fix 2026-08-06, TLS
-// error confirmed via both WebFetch and the Browser pane) while http:// serves the same content.
-// Allowlisted by exact hostname (not substring — a domain here must not accidentally match an
-// unrelated host) so 'official' status still means "a real, named, verified outlet", not "any
-// http:// URL". Add a domain here only after confirming its https:// genuinely doesn't work,
-// not as a shortcut around fixing a URL.
-const KNOWN_PRESS_DOMAINS_HTTP_OK = new Set<string>([
-  "french.china.org.cn", // Xinhua's French service — https cert fails, http is the live site
-]);
-
-function isKnownPressHttpUrl(src: string): boolean {
-  if (!src.startsWith("http://")) return false;
-  try {
-    return KNOWN_PRESS_DOMAINS_HTTP_OK.has(new URL(src).hostname.toLowerCase());
-  } catch {
-    return false;
-  }
-}
-
-/**
- * Three-tier source verification:
- *   'don'        — real WHO DON article (fully citable, citation button shown)
- *   'official'   — real https URL from WHO sitrep / ECDC / national MoH (or a known press
- *                  domain whose https:// is broken, see KNOWN_PRESS_DOMAINS_HTTP_OK), no DON id
- *   'unverified' — placeholder source ("OMS", "PAHO", fake seed URL, etc.)
- */
-export type SourceStatus = 'don' | 'official' | 'unverified';
+// Source trust classification (which publisher, and how much the badges may claim) lives
+// in lib/source-trust.ts — dependency-free so scripts/check-source-trust.mjs can replay the
+// live table through it. Re-exported here because every consumer imports it from
+// "@/lib/outbreaks".
+export type { SourceStatus };
+export { sourceName } from "./source-trust";
 
 export function sourceStatus(outbreak: Pick<Outbreak, "source">): SourceStatus {
-  const src = outbreak.source || "";
-  if (REAL_WHO_DON_SOURCE.test(src)) return 'don';
-  if (FAKE_SEED_DON.test(src)) return 'unverified';
-  if (src.startsWith("https://")) return 'official';
-  if (isKnownPressHttpUrl(src)) return 'official';
-  return 'unverified';
+  return sourceStatusOf(outbreak.source);
 }
 
 /** Backward-compatible alias: true when source is not a confirmed WHO DON article. */
@@ -734,38 +698,3 @@ export function computeRiskScore(
   return Math.round(Math.min(10, Math.max(1, score)));
 }
 
-/**
- * Human-readable name for the organisation that published the source URL.
- * Used for source attribution badges in the UI.
- */
-export function sourceName(source: string | null | undefined): string {
-  const src = source ?? "";
-  // WHO — most specific first: DON article, then regional offices, then generic who.int.
-  if (src.includes("who.int/emergencies/disease-outbreak-news")) return "WHO DON";
-  if (src.includes("emro.who.int"))      return "WHO EMRO";
-  if (src.includes("afro.who.int"))      return "WHO AFRO";
-  // National / regional public-health agencies.
-  // ORDER MATTERS: "ncdc.gov.ng" and "cdc.gov.au" both contain the substring "cdc.gov", so
-  // Nigeria CDC, Africa CDC and Australia CDC must be checked BEFORE the US CDC ("cdc.gov")
-  // catch-all below, otherwise their rows would be mislabelled "US CDC".
-  if (src.includes("ncdc.gov.ng"))       return "Nigeria CDC";
-  if (src.includes("africacdc.org"))     return "Africa CDC";
-  if (src.includes("cdc.gov.au"))        return "Australian CDC";
-  if (src.includes("cdc.gov"))           return "US CDC";          // cdc.gov + wwwnc.cdc.gov (Travel Notices / EID)
-  if (src.includes("ecdc.europa.eu"))    return "ECDC";
-  if (src.includes("efsa.europa.eu"))    return "EFSA";
-  if (src.includes("paho.org"))          return "PAHO";
-  if (src.includes("santepubliquefrance.fr")) return "Santé publique France";
-  if (src.includes("gov.uk"))            return "UKHSA";
-  if (src.includes("aphis.usda.gov"))    return "USDA APHIS";
-  if (src.includes("mohfw.gov.in"))      return "India MoHFW";
-  if (src.includes("gov.br"))            return "Brazil MoH";
-  if (src.includes("cidrap.umn.edu"))    return "CIDRAP";
-  if (src.includes("info.dengue.mat.br")) return "InfoDengue";
-  if (src.includes("reliefweb.int"))     return "ReliefWeb";
-  if (src.includes("doh.gov.ph"))        return "PH DOH";
-  if (src.includes("moph.go.th"))        return "Thailand MOPH";
-  if (src.includes("french.china.org.cn")) return "Xinhua";
-  if (src.includes("who.int"))           return "WHO";
-  return "Official";
-}
