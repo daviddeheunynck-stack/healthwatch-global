@@ -2,6 +2,7 @@ import { NextRequest } from "next/server";
 import { createClient } from "@/lib/supabase-server";
 import { createClient as createService } from "@supabase/supabase-js";
 import { resolvedPlan } from "@/lib/resolved-plan";
+import { dedupeAggregateOutbreakRows } from "@/lib/outbreaks";
 import * as Sentry from "@sentry/nextjs";
 
 const PAID_PLANS = ["pro", "team", "enterprise"];
@@ -31,12 +32,12 @@ export async function GET(req: NextRequest) {
   const [{ data: all, error: allErr }, { data: newOnes, error: newErr }] = await Promise.all([
     service
       .from("outbreaks")
-      .select("id, disease_en, country_en, cases, deaths, risk_level, date, region, is_pheic")
+      .select("id, disease, disease_en, country, country_en, cases, deaths, risk_level, date, region, is_pheic")
       .eq("active", true)
       .order("cases", { ascending: false }),
     service
       .from("outbreaks")
-      .select("id, disease_en, country_en, cases, deaths, risk_level, date, region, is_pheic")
+      .select("id, disease, disease_en, country, country_en, cases, deaths, risk_level, date, region, is_pheic")
       .eq("active", true)
       .gte("created_at", cutoff)
       .order("cases", { ascending: false }),
@@ -59,12 +60,20 @@ export async function GET(req: NextRequest) {
   const highAll = outbreaks.filter((o) => o.risk_level === "high");
   const top5    = outbreaks.slice(0, 5);
 
+  // Dedupe "Global" roll-up rows (Mpox, MERS-CoV...) against their own country-level rows
+  // per region before summing cases — otherwise a global figure gets added on top of the
+  // very country rows it already includes. Found 2026-08-12, see dedupeAggregateOutbreakRows
+  // in lib/outbreaks.ts. Row counts stay un-deduped (still real rows to report on).
   const regionCounts: Record<string, { count: number; cases: number }> = {};
+  const casesByRegion: Record<string, typeof outbreaks> = {};
   for (const o of outbreaks) {
     const r = o.region ?? "unknown";
-    if (!regionCounts[r]) regionCounts[r] = { count: 0, cases: 0 };
+    if (!regionCounts[r]) { regionCounts[r] = { count: 0, cases: 0 }; casesByRegion[r] = []; }
     regionCounts[r].count++;
-    regionCounts[r].cases += o.cases ?? 0;
+    casesByRegion[r].push(o);
+  }
+  for (const r of Object.keys(regionCounts)) {
+    regionCounts[r].cases = dedupeAggregateOutbreakRows(casesByRegion[r]).reduce((s, o) => s + (o.cases ?? 0), 0);
   }
 
   const date = new Date().toISOString().split("T")[0];

@@ -1,6 +1,6 @@
 import { getTranslations, getLocale } from "next-intl/server";
 import { FileText, Lock } from "lucide-react";
-import { getOutbreaks, getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
+import { getOutbreaks, getLocalizedDisease, getLocalizedCountry, dedupeAggregateOutbreakRows } from "@/lib/outbreaks";
 import { createClient } from "@/lib/supabase-server";
 import { resolvedPlan } from "@/lib/resolved-plan";
 import { Suspense } from "react";
@@ -176,7 +176,10 @@ async function ReportsContent() {
           // below is rendered as-is under "Active outbreaks". Found 2026-08-02
           // alongside the identical bug in LandingPage.tsx.
           const regionOutbreaks = outbreaks.filter((o) => o.active && o.region === region);
-          const totalCases = regionOutbreaks.reduce((sum, o) => sum + o.cases, 0);
+          // Same dedup as the report route this card links to — otherwise a "Global" roll-up
+          // row (Mpox, MERS-CoV...) inflates totalCases on top of its own country-level rows.
+          // Found 2026-08-12, see dedupeAggregateOutbreakRows in lib/outbreaks.ts.
+          const totalCases = dedupeAggregateOutbreakRows(regionOutbreaks).reduce((sum, o) => sum + o.cases, 0);
           const highRisk = regionOutbreaks.filter((o) => o.risk_level === "high").length;
           const regionLabel = tAlerts(region);
 

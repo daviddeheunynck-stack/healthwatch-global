@@ -610,6 +610,34 @@ export function isAggregateOutbreakRow(o: Pick<Outbreak, "country_en" | "country
   return !!geo && isAggregateCountry(geo);
 }
 
+// Applies the isAggregateOutbreakRow rule above per disease: country-level rows win over
+// their own aggregate when any exist, and the aggregate is kept only as a fallback when a
+// disease has no country-level row at all in the given row set (e.g. MERS-CoV and Yellow
+// fever, tracked in Africa only via a "Global" WHO bulletin with no country breakdown).
+// A blanket "always drop aggregates" filter would silently zero those diseases out instead
+// of just deduplicating them — this is why the fallback branch exists.
+//
+// Extracted 2026-08-12 from region/[region]/page.tsx (the only caller applying this rule
+// correctly at the time) after the same un-deduped sum was found inflating region totals in
+// the paid PDF/HTML report, the Pro situation digest, the Pro regional digest email, and the
+// dashboard's regional-pulse widget — one inline copy would have meant five, drifting apart.
+export function dedupeAggregateOutbreakRows<
+  T extends Pick<Outbreak, "country_en" | "country" | "disease_en" | "disease">
+>(rows: T[]): T[] {
+  const byDisease = new Map<string, T[]>();
+  for (const o of rows) {
+    const key = normalizeDisease(o.disease_en || o.disease).name_en.toLowerCase();
+    const bucket = byDisease.get(key);
+    if (bucket) bucket.push(o); else byDisease.set(key, [o]);
+  }
+  const result: T[] = [];
+  for (const bucket of byDisease.values()) {
+    const countryRows = bucket.filter((o) => !isAggregateOutbreakRow(o));
+    result.push(...(countryRows.length > 0 ? countryRows : bucket));
+  }
+  return result;
+}
+
 const STALE_DAYS = 60;
 
 /**

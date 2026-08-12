@@ -6,7 +6,7 @@ import { createClient } from "@supabase/supabase-js";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
-import { getLocalizedDisease, getLocalizedCountry, filterDisplayActive, isAggregateOutbreakRow } from "@/lib/outbreaks";
+import { getLocalizedDisease, getLocalizedCountry, filterDisplayActive, isAggregateOutbreakRow, dedupeAggregateOutbreakRows } from "@/lib/outbreaks";
 import { diseaseToSlug, normalizeDisease } from "@/lib/disease-data";
 import { getOutbreakTrendsBulkCached } from "@/lib/outbreak-trend";
 import type { Outbreak } from "@/lib/outbreaks";
@@ -227,17 +227,7 @@ export default async function RegionPage({
   // win when any exist for that disease in this region, falling back to the aggregate row(s)
   // only when a disease has no country-level row here at all (e.g. MERS-CoV and Yellow fever
   // in Africa, tracked only via a "Global" WHO bulletin with no country breakdown).
-  const activeByDisease = new Map<string, Outbreak[]>();
-  for (const o of active) {
-    const diseaseKey = normalizeDisease(o.disease_en || o.disease).name_en.toLowerCase();
-    const bucket = activeByDisease.get(diseaseKey);
-    if (bucket) bucket.push(o); else activeByDisease.set(diseaseKey, [o]);
-  }
-  const totalsSource: Outbreak[] = [];
-  for (const rows of activeByDisease.values()) {
-    const countryRows = rows.filter((o) => !isAggregateOutbreakRow(o));
-    totalsSource.push(...(countryRows.length > 0 ? countryRows : rows));
-  }
+  const totalsSource = dedupeAggregateOutbreakRows(active);
 
   const totalCases  = totalsSource.reduce((s, o) => s + (o.cases || 0), 0);
   const totalDeaths = totalsSource.reduce((s, o) => s + (o.deaths || 0), 0);

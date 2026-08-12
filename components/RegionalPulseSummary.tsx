@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import type { Outbreak } from "@/lib/outbreaks";
+import { dedupeAggregateOutbreakRows } from "@/lib/outbreaks";
 import { ChevronDown, ChevronUp } from "lucide-react";
 
 const REGION_LABELS: Record<string, Record<string, string>> = {
@@ -33,11 +34,15 @@ export default function RegionalPulseSummary({ outbreaks, locale }: Props) {
     if (regional.length === 0) continue;
     const highOnes = regional.filter((o) => o.risk_level === "high");
     const distinctHighDiseases = new Set(highOnes.map((o) => o.disease_en)).size;
+    // Dedupe "Global" roll-up rows (Mpox, MERS-CoV...) against their own country-level rows
+    // before summing cases — otherwise a global figure gets added on top of the very country
+    // rows it already includes. Found 2026-08-12, see dedupeAggregateOutbreakRows in lib/outbreaks.ts.
+    const totalCases = dedupeAggregateOutbreakRows(regional).reduce((s, o) => s + o.cases, 0);
     stats.push({
       region,
       label:       rl[region] ?? region,
       count:       regional.length,
-      totalCases:  regional.reduce((s, o) => s + o.cases, 0),
+      totalCases,
       highCount:   highOnes.length,
       medCount:    regional.filter((o) => o.risk_level === "medium").length,
       multiThreat: distinctHighDiseases >= 3,

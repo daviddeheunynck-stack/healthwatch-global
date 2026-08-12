@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase-server";
-import { getOutbreaks, getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
+import { getOutbreaks, getLocalizedDisease, getLocalizedCountry, dedupeAggregateOutbreakRows } from "@/lib/outbreaks";
 import { trackEvent } from "@/lib/track-event";
 import { resolvedPlan } from "@/lib/resolved-plan";
 
@@ -95,7 +95,12 @@ export async function GET(
   // "Active outbreaks" PDF/HTML report a paying customer keeps and shares. Found
   // 2026-08-02 alongside the identical bug in LandingPage.tsx.
   const regionOutbreaks = outbreaks.filter((o) => o.active && o.region === region);
-  const totalCases = regionOutbreaks.reduce((sum, o) => sum + o.cases, 0);
+  // Dedupe "Global"/regional roll-up rows (Mpox, MERS-CoV...) against their own country-level
+  // detail before summing — a raw sum over regionOutbreaks double counts a global figure on
+  // top of the very country rows it already includes. Found 2026-08-12, same bug family as
+  // the region hub page fix on 2026-07-16 (see dedupeAggregateOutbreakRows in lib/outbreaks.ts).
+  const totalsSource = dedupeAggregateOutbreakRows(regionOutbreaks);
+  const totalCases = totalsSource.reduce((sum, o) => sum + o.cases, 0);
   const highRisk = regionOutbreaks.filter((o) => o.risk_level === "high").length;
   const regionLabel =
     REGION_LABELS[region]?.[locale] ?? REGION_LABELS[region]?.en ?? region;

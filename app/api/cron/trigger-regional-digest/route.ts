@@ -1,6 +1,6 @@
 import { NextRequest } from "next/server";
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
-import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
+import { getLocalizedDisease, getLocalizedCountry, dedupeAggregateOutbreakRows } from "@/lib/outbreaks";
 import * as Sentry from "@sentry/nextjs";
 import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
 import { notifyMobile } from "@/lib/mobile-notify";
@@ -169,7 +169,14 @@ async function runRegionalDigest(supabase: SupabaseClient) {
     const lc           = COPY[locale] ?? COPY.en;
     const regionLabel  = REGION_LABELS[digestRegion]?.[locale] ?? digestRegion;
 
-    const regional = active.filter((o) => o.region === digestRegion).slice(0, 10);
+    // Dedupe "Global" roll-up rows (Mpox, MERS-CoV...) against their own country-level rows
+    // before ranking by case count — otherwise a huge global figure (mistagged into this
+    // region, see lib/geo-data.ts "Global" entry) crowds real regional outbreaks out of the
+    // top 10 a Pro subscriber actually receives. Found 2026-08-12, see
+    // dedupeAggregateOutbreakRows in lib/outbreaks.ts.
+    const regional = dedupeAggregateOutbreakRows(active.filter((o) => o.region === digestRegion))
+      .sort((a, b) => b.cases - a.cases)
+      .slice(0, 10);
     if (!regional.length) continue;
     if (digestedUsers.has(user.id)) continue;
 
