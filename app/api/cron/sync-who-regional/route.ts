@@ -470,10 +470,11 @@ function fetchDengueGlobalSurveillance(country_en: string): () => Promise<Found 
 // snapshot as of DATE — no summing across periods needed, just take the latest.
 
 const MPOX_ISO3: Record<string, string> = {
-  "Rwanda":  "RWA",
-  "Uganda":  "UGA",
-  "Burundi": "BDI",
-  "Kenya":   "KEN",
+  "Rwanda":     "RWA",
+  "Uganda":     "UGA",
+  "Burundi":    "BDI",
+  "Kenya":      "KEN",
+  "Madagascar": "MDG",
 };
 
 function fetchMpoxGlobalSurveillance(country_en: string): () => Promise<Found | null> {
@@ -1023,6 +1024,11 @@ const TARGETS: Target[] = [
   { disease_en: "Mpox", country_en: "Burundi", minCases: 5, fetcher: fetchMpoxGlobalSurveillance("Burundi") },
   // Kenya: imported cases; WHO DON dedup guard handles official DON; ReliefWeb catches sub-threshold
   { disease_en: "Mpox", country_en: "Kenya", minCases: 1, fetcher: fetchMpoxGlobalSurveillance("Kenya") },
+  // Madagascar: top mpox-reporting country worldwide since 2026 (546 cases in June 2026 alone,
+  // ~48% of the global monthly total per WHO situation report 68) — missing from this list
+  // entirely until 2026-08-12, a pure allowlist omission (WHO's own MPX/V_MPX_VALIDATED_DAILY
+  // mart already covers it, same as the other 4 countries below).
+  { disease_en: "Mpox", country_en: "Madagascar", minCases: 1, fetcher: fetchMpoxGlobalSurveillance("Madagascar") },
 
   // ── Rift Valley Fever — expansion beyond Kenya ────────────────────────────────
   // Rwanda: large RVF outbreak in livestock and humans 2024–2025; WHO AFRO + OCHA on ReliefWeb
