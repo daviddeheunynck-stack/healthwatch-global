@@ -32,6 +32,24 @@ function OAuthErrorBanner({ locale }: { locale: string }) {
   );
 }
 
+// A leading "/" is not enough to prove a redirect target is internal. The WHATWG
+// URL parser treats "\" as "/" in special schemes, so "/\evil.com" passes a
+// startsWith("/") && !startsWith("//") check yet resolves to https://evil.com —
+// verified 2026-08-12 against Node's parser, which is the same spec browsers
+// implement. Resolve against the real origin instead and keep the target only if
+// the result is still same-origin. Call this from event handlers only: it reads
+// window.location, which does not exist while this client component prerenders.
+function safeInternalPath(raw: string | null): string | null {
+  if (!raw || !raw.startsWith("/")) return null;
+  try {
+    const url = new URL(raw, window.location.origin);
+    if (url.origin !== window.location.origin) return null;
+    return url.pathname + url.search + url.hash;
+  } catch {
+    return null;
+  }
+}
+
 function OAuthButtonsWithNext({ locale }: { locale: string }) {
   const searchParams = useSearchParams();
   const next = searchParams.get("next") ?? searchParams.get("redirect");
@@ -94,9 +112,9 @@ export default function LoginPage() {
 
     track("login_success", { method: "email", locale });
     const sp = new URLSearchParams(window.location.search);
-    const redirectTo = sp.get("next") ?? sp.get("redirect");
-    // Only follow relative redirects — reject external and protocol-relative URLs
-    if (redirectTo && redirectTo.startsWith("/") && !redirectTo.startsWith("//")) {
+    // Only follow same-origin redirects — see safeInternalPath() above
+    const redirectTo = safeInternalPath(sp.get("next") ?? sp.get("redirect"));
+    if (redirectTo) {
       // API routes (e.g. team invite accept) need a full page load, not client nav
       window.location.href = redirectTo;
     } else {
@@ -132,8 +150,9 @@ export default function LoginPage() {
 
     track("login_success", { method: "otp", locale });
     const sp = new URLSearchParams(window.location.search);
-    const redirectTo = sp.get("next") ?? sp.get("redirect");
-    if (redirectTo && redirectTo.startsWith("/") && !redirectTo.startsWith("//")) {
+    // Only follow same-origin redirects — see safeInternalPath() above
+    const redirectTo = safeInternalPath(sp.get("next") ?? sp.get("redirect"));
+    if (redirectTo) {
       window.location.href = redirectTo;
     } else {
       router.push(`/${locale}`);
