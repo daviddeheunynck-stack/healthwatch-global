@@ -189,6 +189,10 @@
       "schedule": "20 8 * * 1"
     },
     {
+      "path": "/api/cron/sync-samoa-dengue",
+      "schedule": "25 8 * * 1"
+    },
+    {
       "path": "/api/cron/sync-taiwan-cdc",
       "schedule": "0 5 * * *"
     },

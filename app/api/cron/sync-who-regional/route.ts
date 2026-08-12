@@ -615,6 +615,102 @@ function fetchCholeraGlobalSurveillance(country_en: string): () => Promise<Found
   };
 }
 
+// ── ECDC West Nile virus weekly surveillance ──────────────────────────────────
+// The weekly WNV page (wnv-weekly.ecdc.europa.eu) looks JS-rendered at first
+// glance — a plain fetch through data-quality's own DON verifier-style logic
+// returns junk (EXIF/XML-looking noise) when run through a markdown-conversion
+// tool — but it's actually a static R/Quarto-generated page: the full per-area
+// data table is embedded as JSON inside a single `<script type="application/
+// json">` tag (a serialized DT::datatable htmlwidget, COLUMN-major: one array
+// per column — country/NUTS code/area/first-reported/probable/confirmed/total —
+// not one array per row, confirmed by inspecting a live fetch 2026-08-12: the
+// country column repeats "Italy" 36 times in a row before switching to the next
+// country, matching Italy's 36 affected areas exactly). No headless browser
+// needed despite puppeteer-core/@sparticuz/chromium being available as deps.
+// Season total + per-country breakdown verified 2026-08-12 against the live
+// rendered page (browser tool, JS executed): Italy 139/36 areas, Greece 61/9,
+// Spain 17/2, North Macedonia 13/3, Romania 6/6, France 4/2, Germany 1/1 —
+// exact match against this fetcher's plain-fetch parse of the raw HTML.
+const ECDC_MONTHS: Record<string, string> = {
+  january: "01", february: "02", march: "03", april: "04", may: "05", june: "06",
+  july: "07", august: "08", september: "09", october: "10", november: "11", december: "12",
+};
+function parseEcdcDate(s: string): string | null {
+  const m = s.match(/(\d{1,2})\s+(\w+)\s+(\d{4})/);
+  if (!m) return null;
+  const mm = ECDC_MONTHS[m[2].toLowerCase()];
+  if (!mm) return null;
+  return `${m[3]}-${mm}-${m[1].padStart(2, "0")}`;
+}
+
+function fetchWNVEcdc(countryEn: string): () => Promise<Found | null> {
+  return async () => {
+    const res = await fetch("https://wnv-weekly.ecdc.europa.eu/", {
+      headers: {
+        "User-Agent": "HealthWatch-Global/1.0 (health surveillance; contact@healthwatch-global.com)",
+        "Accept":     "text/html,*/*",
+      },
+      signal: AbortSignal.timeout(15_000),
+    });
+    if (!res.ok) return null;
+    const html = await res.text();
+
+    // "Week 32, 2026" / "Produced on 7 August 2026 at 10:00, based on data
+    // submitted up until and including 5 August 2026." The exact data-cutoff
+    // date (the second one) didn't survive a plain regex reliably — some markup
+    // splits that specific phrase — so `date` uses the produced-on date
+    // instead, which is always present and only ever 1-2 days later.
+    const weekMatch     = html.match(/Week\s+(\d+),\s*(\d{4})/);
+    const producedMatch = html.match(/Produced on\s+(\d{1,2}\s+\w+\s+\d{4})/);
+    if (!weekMatch || !producedMatch) return null;
+    const date = parseEcdcDate(producedMatch[1]);
+    if (!date) return null;
+
+    const jsonMatch = html.match(/<script type="application\/json"[^>]*>([\s\S]*?)<\/script>/);
+    if (!jsonMatch) return null;
+    let data: unknown;
+    try { data = (JSON.parse(jsonMatch[1]) as { x?: { data?: unknown } })?.x?.data; } catch { return null; }
+    if (!Array.isArray(data) || data.length < 7) return null;
+    const countries = data[0] as unknown[];
+    const totals    = data[6] as unknown[];
+    if (!Array.isArray(countries) || !Array.isArray(totals) || countries.length !== totals.length) return null;
+
+    const byCountry = new Map<string, { cases: number; areas: number }>();
+    for (let i = 0; i < countries.length; i++) {
+      const c = countries[i];
+      if (typeof c !== "string" || typeof totals[i] !== "number") continue;
+      const cur = byCountry.get(c) ?? { cases: 0, areas: 0 };
+      cur.cases += totals[i] as number;
+      cur.areas += 1;
+      byCountry.set(c, cur);
+    }
+    const target = byCountry.get(countryEn);
+    // Country absent from this week's table (season not started yet there, or
+    // over) — return null and let the row hold its last real value rather than
+    // guess; this source has no "outbreak declared over" signal to auto-
+    // deactivate on, unlike the WHO DON pages section 4e of data-quality reads.
+    if (!target || target.cases <= 0) return null;
+
+    const sorted = [...byCountry.entries()].sort((a, b) => b[1].cases - a[1].cases);
+    let totalCases = 0, totalAreas = 0;
+    for (const [, v] of sorted) { totalCases += v.cases; totalAreas += v.areas; }
+    const countryList = sorted.map(([c, v]) => `${c} ${v.cases}`).join(", ");
+
+    return {
+      cases:  target.cases,
+      // Not tracked by this source at all (no deaths column or mention
+      // anywhere on the page) — 0 means "unreported", same convention as every
+      // other fetcher here that only has a case figure. zeroDeathGuard still
+      // protects a real future death count from being overwritten by this
+      // permanently-0 value.
+      deaths: 0,
+      date,
+      source: "https://wnv-weekly.ecdc.europa.eu/",
+      description: `West Nile virus, ${weekMatch[2]} European transmission season: ${target.cases} locally acquired human cases reported in ${countryEn} as at ${producedMatch[1]}, across ${target.areas} affected area${target.areas === 1 ? "" : "s"}. Season total across ${sorted.length} European countries: ${totalCases} cases in ${totalAreas} affected areas (${countryList}). Source: ECDC, Surveillance of West Nile Virus infections in humans in Europe, weekly report, week ${weekMatch[1]}, produced ${producedMatch[1]}.`,
+    };
+  };
+}
+
 // ── WHO AFRO Meningitis Bulletin fetcher ──────────────────────────────────────
 // WHO AFRO's weekly meningitis-belt bulletin has NO reliable "latest edition"
 // index: editions are published under inconsistent CDN folder paths (at least
@@ -958,10 +1054,21 @@ const TARGETS: Target[] = [
   // France, Italy: periodic sub-national outbreaks documented in WHO/ECDC ReliefWeb reports
   { disease_en: "Measles", country_en: "France",  minCases: 50, fetcher: fetchMeaslesGHO("France") },
   { disease_en: "Measles", country_en: "Italy",   minCases: 50, fetcher: fetchMeaslesGHO("Italy")  },
-  // West Nile: already in disease-data.ts; ECDC RSS is primary source; ReliefWeb as fallback
-  { disease_en: "West Nile fever", country_en: "Italy",                            minCases:  10    },
-  { disease_en: "West Nile fever", country_en: "Greece",                           minCases:   5    },
-  { disease_en: "West Nile fever", country_en: "Romania",                          minCases:   5    },
+  // West Nile: already in disease-data.ts. These 7 had no working fetcher at all
+  // until 2026-08-12 (Italy/Greece/Romania listed here with no `fetcher`, so they
+  // silently fell through to ReliefWeb; Spain/North Macedonia weren't even
+  // listed) — data-quality flagged Spain/N.Macedonia/Romania/Greece as 3-week
+  // stale, and it turned out there was no cron keeping any of them current, just
+  // one-off manual inserts. fetchWNVEcdc (above) now covers the current season's
+  // full country set — see that function's own comment for how it reads ECDC's
+  // page. If a new country appears in a future season, add it here the same way.
+  { disease_en: "West Nile fever", country_en: "Italy",           minCases: 10, fetcher: fetchWNVEcdc("Italy") },
+  { disease_en: "West Nile fever", country_en: "Greece",          minCases:  5, fetcher: fetchWNVEcdc("Greece") },
+  { disease_en: "West Nile fever", country_en: "Romania",         minCases:  5, fetcher: fetchWNVEcdc("Romania") },
+  { disease_en: "West Nile fever", country_en: "Spain",           minCases:  1, fetcher: fetchWNVEcdc("Spain") },
+  { disease_en: "West Nile fever", country_en: "North Macedonia", minCases:  1, fetcher: fetchWNVEcdc("North Macedonia") },
+  { disease_en: "West Nile fever", country_en: "France",          minCases:  1, fetcher: fetchWNVEcdc("France") },
+  { disease_en: "West Nile fever", country_en: "Germany",         minCases:  1, fetcher: fetchWNVEcdc("Germany") },
 
   // ── South America — dengue & malaria (previously under-covered) ──────────────
   // Argentina: solid national surveillance (SIVILA); 2024 epidemic ~330k cases documented on PAHO/ReliefWeb
@@ -1344,6 +1451,7 @@ async function runSyncWhoRegional(_req: NextRequest, supabase: SupabaseClient) {
           active: activeFlag, is_seed: isAnnualRef,
           risk_level: assessRisk(target.disease_en, found.description, found.cases, found.deaths),
           source_priority: 5,
+          admin1: null, // same reasoning as the main update branch above — see its comment
         };
         if (directCheck.description !== found.description) {
           reactivatePayload.description_fr = null;
