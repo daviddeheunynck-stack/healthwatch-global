@@ -132,6 +132,7 @@
     },
     "or": "o",
     "forgotPassword": "¿Olvidaste tu contraseña?",
+    "noPasswordHint": "¿Cuenta creada sin contraseña? Usa «¿Olvidaste tu contraseña?» para crear una.",
     "forgotPasswordTitle": "Restablecer contraseña",
     "forgotPasswordSubtitle": "Introduce tu email y te enviaremos un enlace de restablecimiento.",
     "sendResetLink": "Enviar enlace",

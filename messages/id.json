@@ -132,6 +132,7 @@
     },
     "or": "atau",
     "forgotPassword": "Lupa kata sandi?",
+    "noPasswordHint": "Akun dibuat tanpa kata sandi? Gunakan \"Lupa kata sandi?\" untuk membuatnya.",
     "forgotPasswordTitle": "Reset kata sandi",
     "forgotPasswordSubtitle": "Masukkan email Anda dan kami akan mengirimkan tautan reset.",
     "sendResetLink": "Kirim tautan reset",

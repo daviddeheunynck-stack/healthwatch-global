@@ -132,6 +132,7 @@
     },
     "or": "or",
     "forgotPassword": "Forgot your password?",
+    "noPasswordHint": "Account created without a password? Use \"Forgot your password?\" to set one.",
     "forgotPasswordTitle": "Reset your password",
     "forgotPasswordSubtitle": "Enter your email and we will send you a reset link.",
     "sendResetLink": "Send reset link",
