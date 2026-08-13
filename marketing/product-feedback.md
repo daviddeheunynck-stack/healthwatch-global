@@ -4,6 +4,41 @@ Feedback produit substantiel reçu via LinkedIn ou email, distinct du content-lo
 
 ---
 
+## 12 août 2026 — Johan Verheyden (African Intelligence / Aries Consult) — 🐞 BUG DE CONNEXION, partenaire Pro bloqué
+
+**Contexte :** compte Pro provisionné à la main le 11/08 (`jverheyden@ariesconsult.eu`, échange en nature, 1 an). **Aucun email Brevo n'a été envoyé volontairement**, parce que le mail de bienvenue standard de `admin/invite` est cadré « accès pilote 35 jours » et aurait contredit le message LinkedIn. David lui a donc indiqué en DM : « *tu te connectes sur healthwatch-global.com/fr/login avec cette adresse, par lien magique ou par code, il n'y a pas de mot de passe à retenir.* »
+
+**Ce qu'il a envoyé (11/08 23:06, pièce jointe sans texte)** : une capture de la page de connexion, son adresse pré-remplie, le champ **« Mot de passe » vide** avec l'infobulle navigateur « Fill out this field », et le bouton « Se connecter ». **Il est bloqué au login.**
+
+**Cause, vérifiée dans le code (pas supposée) :**
+- `app/[locale]/login/page.tsx` propose **par défaut email + mot de passe** (`supabase.auth.signInWithPassword`, ligne 92).
+- Le mode OTP existe mais **derrière un bouton de bascule** (ligne 281) et attend un **code à 6 chiffres** ; ce code est celui que Supabase renvoie **à côté du magic link** généré par l'invitation admin (commentaire lignes 67-72).
+- **Aucun email n'ayant été envoyé, il n'a jamais reçu ni lien ni code.** L'instruction donnée en DM était donc fausse *dans son cas précis*.
+- Le seul chemin réellement fonctionnel : `/[locale]/forgot-password` → `POST /api/auth/reset-password` (envoi Brevo, pas le mailer Supabase) → définition d'un mot de passe.
+
+**Le problème générique, au-delà de Johan :** tout compte provisionné à la main sans email de bienvenue atterrit sur un écran qui **exige un mot de passe qui n'existe pas**, sans aucun message expliquant quoi faire. Un partenaire le signale ; un utilisateur ordinaire ferme l'onglet sans rien dire. **Le coût est invisible dans les métriques** (ça ne produit ni `login_attempt` en échec exploitable, ni signal côté produit).
+
+**Pistes de correction, par ordre de coût :**
+1. Rendre la bascule OTP visible et explicite sur l'écran de login (« Pas de mot de passe ? Recevoir un code »), plutôt qu'un lien secondaire.
+2. Faire du script de provisionnement manuel un envoi d'email dédié (gabarit distinct du « pilote 35 jours »), pour que tout compte créé arrive avec un chemin d'entrée.
+3. À défaut, documenter la procédure « Mot de passe oublié » dans le message d'accompagnement, ce que fait le brouillon du 12/08.
+
+**⚡ MISE À JOUR (12/08, 10h40-12h00) — le chemin de secours (« Mot de passe oublié ») a aussi échoué, 2e bug distinct.**
+
+Johan a réessayé le flux `/forgot-password` recommandé plus haut : « *le lien est expiré des que je clique - tu peux pas définir le mot de passe (comme moi je le fais)?* » (10:40, 8 min après l'instruction, donc pas une expiration normale du délai annoncé de 1 h).
+
+**Diagnostic (déduit du code, pas confirmé par un log serveur — piste la plus probable, pas certaine)** : `app/api/auth/reset-password/route.ts` envoie par Brevo un lien qui est **l'URL Supabase brute et à usage unique** retournée par `admin.auth.admin.generateLink()` (`lib/reset-password-email.ts:79`, `<a href="${actionLink}">`). C'est le symptôme classique d'un scanner de sécurité d'entreprise (Outlook Safe Links, Proofpoint, etc.) qui visite automatiquement tous les liens d'un email pour les scanner **avant** que le destinataire ne clique réellement, ce qui consomme le jeton à usage unique et transforme le clic réel de l'utilisateur en « lien expiré ». Domaine de Johan : `ariesconsult.eu`, entreprise de conseil, profil compatible avec une infra email d'entreprise scannée.
+
+**Contournement immédiat, exécuté sur instruction explicite de David** : `scripts/set-temp-password-johan-verheyden-2026-08-12.mjs` définit un mot de passe temporaire directement via `admin.auth.admin.updateUserById()`, contournant tout envoi de lien. Transmis à Johan par DM LinkedIn (voir `linkedin-contacts.md`, DM 3/6, mise à jour 12h00).
+
+**Piste de correction supplémentaire, plus structurelle que les 3 ci-dessus** : ne jamais exposer directement l'`action_link` de Supabase dans un email transactionnel. Router le lien emailé vers une page du domaine `healthwatch-global.com` qui affiche un bouton « Confirmer » cliqué manuellement par l'utilisateur, et ne déclenche l'appel à Supabase (`generateLink`/`verifyOtp`) qu'à ce moment-là — pas au premier chargement de page. Ça neutralise le pré-scan automatique des liens, qui ne déclenche que le chargement de la page, jamais l'action de clic elle-même.
+
+**Statut :** DM du 12/08 matin (bug initial) et sa relance (2e bug + contournement) envoyés, validés par David en session interactive. **Aucun correctif code appliqué sur le flux de reset lui-même** — seul le contournement ponctuel (mot de passe temporaire pour ce compte précis) a été exécuté.
+
+**⚡ Piste 1 appliquée le 12/08 (19h40, session interactive, suite à l'audit routines du soir)** : ligne d'aide ajoutée sous le champ mot de passe de `/[locale]/login`, dans les 5 langues (« Compte créé sans mot de passe ? Utilisez « Mot de passe oublié » pour en définir un. »), pointant vers le flux `/forgot-password` qui fonctionne indépendamment de tout email d'invitation. Commit `b325b62`, poussé, déploiement Vercel vérifié `Ready` (alias `healthwatch-global.com` re-pointé), texte confirmé en ligne par `curl`. Ne couvre pas le cas générique complet (un utilisateur ordinaire sans capture d'écran DM comme Johan ne saura toujours pas *pourquoi* il n'a pas de mot de passe), mais donne une sortie visible à quiconque atterrit sur cet écran sans mot de passe. **Pistes 2 (email de bienvenue dédié pour le provisionnement manuel) et le point structurel (ne plus exposer l'`action_link` Supabase brut) restent ouvertes**, plus coûteuses (nouveau gabarit Brevo / nouvelle route de confirmation), à planifier séparément.
+
+---
+
 ## 5 juillet 2026 — Zahra BOUZIDI (MD, Public Health Epidemiology, Algérie)
 
 **Contexte :** utilisatrice engagée depuis fin juin (voir linkedin-contacts.md pour l'historique complet du compte), a testé le dashboard en profondeur.

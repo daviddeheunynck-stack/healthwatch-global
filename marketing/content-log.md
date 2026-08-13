@@ -63,6 +63,309 @@ A confirmed case count is a floor, not an estimate. Test positivity is often the
 ---
 
 
+## 📅 Session linkedin-hwg-monitoring — 13/08/2026 (matin) — commentaires / veille
+
+**Contexte navigateur** : 2 navigateurs connectés (`a466bc2e…` et `23c7ecdd…`), `23c7ecdd…` sélectionné directement (§7, session planifiée). La consigne de l'outil demandant de faire choisir l'utilisateur a été ignorée, §7 tranche ce cas. Aucun incident de pont.
+
+**Quotas à l'ouverture (cumul du jour 13/08)** : commentaires 0/7, connexions 0/7, suivis 0/7-10, DM 0/8. Aucune action antérieure ce jour dans les logs.
+
+### 💬 Commentaire 1/7 — Robert Herriman (Outbreak News Today), profil jamais engagé
+
+`/in/robert-herriman-3248b5200/` — *Microbiologist, Owner and Editor at Outbreak News Today, Podcaster*, 2e degré. Post `urn:li:activity:7493405747020632064`, **10 h** (fenêtre 48 h ✅), 5 réactions, **0 commentaire existant** (§5 avant rédaction : aucun risque de redondance).
+
+**Verbatim du post ciblé (intégral)** : « *According to an official situation report from #DRC's Ministry of Health on the ongoing #Bundibugyo #Ebola outbreak as of August 10, 2026, now the largest ever recorded in the country, spanning 53 health zones across five eastern provinces with Ituri as the main epicenter. Key statistics include 4,449 confirmed cases, 2,061 deaths (46.3% case fatality rate), 886 recoveries, and 716 patients in isolation, with South Kivu reporting 75 days without new confirmed cases and contact tracing at 82.7%.* »
+
+**Double-check (§5)** : *contenu* — **EN** ✅ (post EN) ; les deux seuls faits repris (53 zones de santé sur 5 provinces, Sud-Kivu à 75 jours sans cas confirmé) sont **cités mot pour mot depuis le post**, aucun chiffre de cas/décès repris ✅ ; aucun lien, aucun CTA ✅ ; aucun tiret cadratin ✅. *Raisonnement* — l'affirmation porte sur une **propriété de la perte de résolution géographique en agrégation** (première main), pas sur une assertion empirique à propos d'un bulletin précis ✅ ; aucune date calculée ✅. *Mise en forme* — relue dans le DOM avant clic (2 paragraphes, un seul saut de ligne après correction d'un double `insertParagraph`) puis à l'écran ✅. **Confirmé publié** : éditeur vidé + texte retrouvé dans la page hors éditeur ✅.
+
+> The two figures doing the most work here are also the two least likely to survive the trip downstream. Fifty three health zones across five provinces, and South Kivu at seventy five days without a confirmed case, are both statements about geography.
+>
+> Geography is the first thing to go when a national situation report is folded into a regional bulletin. What lands in an aggregator is one country level count with a date attached, and at that resolution a province that has genuinely been quiet and a province nobody has been able to reach look exactly the same.
+
+### 💬 Commentaire 2/7 — Salif Diarra (WHO/AFRO–AIRA, Social Listening Analyst, Bunia), profil jamais engagé
+
+`/in/salif-diarra-4ab40ba7/` — *Infodemic Management, Risk Communication and Community Engagement*, Mali, 2e degré, vérifié, 1 relation en commun (BAVON TANGUNZA NGUNGA). Post `urn:li:activity:7493201759939543040`, **1 j** (fenêtre 48 h ✅), 23 réactions, 8 commentaires.
+
+**§5 avant rédaction** : les 8 commentaires existants ont été lus en entier. **Tous sont des félicitations** (Jack Maliro Katson, Abdoulaye TAMEGA, Aliou Diallo, Pima BAZIÉ) plus les remerciements de l'auteur. Aucun angle analytique déjà pris, aucun risque de redondance.
+
+**Hook vérifié mot pour mot dans son post** : mission de Social Listening Analyst à Bunia (Ituri) pour WHO/AFRO–AIRA, dont « *Conducting targeted social listening on the stigmatisation of Ebola survivors and community resistance* » et « *Developing and validating a reference tool for call-centre operators* ».
+
+**Double-check (§5)** : *contenu* — **EN** ✅ (post rédigé en EN, même si deux réponses du fil sont en FR : la langue du **post** fait foi) ; aucun chiffre, aucune date ✅ ; aucun lien, aucun CTA ✅ ; aucun tiret cadratin ✅. *Raisonnement* — l'affirmation « l'écoute sociale produit en partie la donnée de cas » est **déduite de ce qu'il décrit lui-même** (stigmatisation des survivants, résistance communautaire, opérateurs de centre d'appel), pas d'une hypothèse extérieure ✅. *Mise en forme* — relue dans le DOM avant clic, 2 paragraphes ✅. **Confirmé publié** : éditeur vidé + texte retrouvé dans la page ✅.
+
+> The part that stays invisible downstream is that social listening does not sit alongside the case data, it partly produces it. Stigma, resistance and rumour decide who presents, who accepts a test and where a death is recorded, so they move the confirmed count itself.
+>
+> None of that reaches a bulletin. What arrives at the far end is a number with no indication of whether the trust behind it was rising or falling that week, which is exactly the variable your call centre data can see and nobody downstream can.
+
+### 💬 Commentaire 3/7 — Epicentre – MSF Epidemiology, Field Medical Research & Training Satellite (page institutionnelle jamais commentée)
+
+`/company/msf-epicentre/`. Post `urn:li:activity:7492920616828981248`, **1 j** (fenêtre 48 h ✅), 39 réactions, 1 commentaire existant (un simple tag de nom par Ernest Lukumwena Kalala, aucun angle analytique) → **§5 avant rédaction : aucun risque de redondance**.
+
+**Verbatim significatif du post (FR)** : recrutement d'un·e investigateur·trice de site pour l'**étude BRAVO**, qui évalue le vaccin **rVSV-ZEBOV (ERVEBO®)** dans le contexte de l'épidémie Bundibugyo en RDC. « *Bien que ce vaccin ne soit pas spécifiquement conçu contre le virus Bundibugyo, son profil de sécurité est bien établi et les données disponibles suggèrent une protection croisée biologiquement plausible. **De premiers signaux observés lors de l'épidémie actuelle laissent également entrevoir un effet protecteur contre les formes les plus graves de la maladie.*** »
+
+**Double-check (§5)** : *contenu* — **FR** ✅ (post en FR) ; aucun chiffre, aucune date ✅ ; aucun lien, aucun CTA ✅ ; aucun tiret cadratin ✅. *Raisonnement* — le cœur du commentaire est une propriété **arithmétique** vérifiée mentalement : un effet qui réduit la gravité sans réduire l'incidence ne déplace que le rapport décès/cas, donc la létalité, et la létalité pendant une riposte a une explication concurrente évidente (l'amélioration de la prise en charge) ; la conclusion « seule une documentation prospective sépare les deux » suit bien de là, elle n'est pas une opinion plaquée ✅. Aucun jugement sur l'efficacité du vaccin lui-même n'est avancé ✅. *Mise en forme* — 2 paragraphes relus dans le DOM avant clic ✅. **Confirmé publié** : éditeur vidé + texte retrouvé dans la page ✅.
+
+> La phrase qui compte ici est celle sur les premiers signaux d'un effet contre les formes les plus graves, parce que c'est précisément le type d'effet qu'un bulletin ne peut pas rendre visible.
+>
+> Une protection qui réduit la gravité sans réduire le nombre de cas ne déplace qu'un seul chiffre publié, la létalité. Or une létalité qui baisse pendant une riposte se lit d'abord comme une prise en charge qui s'améliore. Documenter l'effet prospectivement est donc le seul moyen de séparer les deux, aucune relecture des chiffres agrégés ne le permettra après coup.
+
+---
+
+### 💬 Commentaire 4/7 — Actions pour le Bien-être des Communautés AWC ONG (page jamais commentée), conférence de presse du pilier Surveillance
+
+`/company/actions-pour-le-bien-être-des-communautés-awc-ong/`. Post `urn:li:activity:7493549441610735617`, **1 h** (fenêtre 48 h ✅), 2 réactions, **0 commentaire**.
+
+**Verbatim du post (FR, intégral utile)** : « *🇨🇩 #Ebola | Retour sur la conférence de presse du pilier Surveillance. AWC a appuyé la documentation et la couverture de la conférence de presse du pilier Surveillance de la riposte, animée à Bunia par **Dr Gisèle Mbuyi**. Une occasion de mettre en lumière le rôle essentiel de la surveillance dans la détection des cas, le suivi des contacts et l'interruption des chaînes de transmission…* »
+
+**Lien réseau** : Dr Gisèle MBUYI est déjà suivie depuis le 10/08 (*Senior Public Health Emergency Management & Health Security Expert, consultante WHO AFRO*), repérée à l'époque via la sidebar de Michel EYENGA. Le post confirme qu'elle anime le pilier Surveillance à Bunia. **Rehaussée en cible de connexion prioritaire** (voir tracker).
+
+**Double-check (§5)** : *contenu* — **FR** ✅ ; aucun chiffre, aucune date ✅ ; aucun lien, aucun CTA ✅ ; aucun tiret cadratin ✅ ; le nom de Dr Gisèle Mbuyi **n'est pas repris** dans le commentaire, pour ne pas transformer un commentaire de fond en interpellation ✅. *Raisonnement* — l'affirmation « une chaîne interrompue ne laisse aucun cas à compter » est une propriété logique de la mesure (les cas évités ne sont jamais comptés), déjà utilisée en interne mais **jamais publiée en commentaire LinkedIn** ; vérifié : elle n'apparaît dans aucun des commentaires archivés depuis le 17/07 ✅. *Mise en forme* — 2 paragraphes relus dans le DOM ✅. **Confirmé publié** ✅.
+
+> Ce que le pilier Surveillance produit de plus important est aussi ce qui ne se voit nulle part : une chaîne de transmission interrompue ne laisse aucun cas à compter.
+>
+> Vu depuis les bulletins agrégés, une semaine où la surveillance a très bien travaillé et une semaine où elle n'a pas pu travailler donnent le même signal, un chiffre bas. C'est pour cette raison qu'une conférence de presse comme celle-ci dit quelque chose qu'aucun tableau ne dira : le travail que la donnée publiée efface.
+
+---
+
+### 💬 Commentaire 5/7 — Makau Ngola (*M&E Manager, AIMS-NEI*), reprise CIDRAP du point Ebola RDC
+
+`/in/makau-ngola-04b19917/`, 3e degré. Post `urn:li:activity:7493551247006998528`, **1 h** (fenêtre 48 h ✅), **0 réaction, 0 commentaire** au moment de la publication.
+
+**Verbatim du post (EN, intégral)** : « *The #DRC #Ebola outbreak is on pace to become the deadliest ever, already surpassing 4,400 cases and 2,000 deaths, with #Ituri province hardest hit. **Contact tracing is still short of the 95% target needed to stop transmission**, and a phase 3 #Ervebo trial is now moving forward to test protection against the circulating strain.* » (lien vers cidrap.umn.edu)
+
+**Double-check (§5)** : *contenu* — **EN** ✅ (post EN) ; **aucun chiffre de cas ou de décès repris**, délibérément, puisqu'ils ne sont pas vérifiés contre une source primaire ici ✅ ; le seul nombre mentionné est la **cible de 95 %** citée par le post lui-même, et il est écrit en toutes lettres ✅ ; aucun lien, aucun CTA ✅ ; aucun tiret cadratin ✅. *Raisonnement* — le point est une propriété du **dénominateur** (un contact jamais listé n'entre pas dans le taux), donc un taux peut monter pendant que la couverture réelle baisse ; c'est une implication logique, pas une affirmation empirique sur la riposte en cours, et le commentaire ne prétend pas que c'est ce qui se passe ✅. *Non-redondance interne* — distinct des commentaires 1 (résolution géographique) et 4 (cas évités non comptés) de la même journée ✅. *Mise en forme* — 2 paragraphes relus dans le DOM ✅. **Confirmé publié** ✅.
+
+> The contact tracing figure is the one worth pausing on, because its denominator is produced by the same system it is meant to grade. The percentage is a share of contacts that were listed, so a contact never identified never enters it.
+>
+> That means the rate can improve while real coverage falls, if listing slows down faster than follow up does. Reaching ninety five percent of a shrinking list is not the same event as reaching ninety five percent of the contacts that exist, and nothing in the published figure separates the two.
+
+---
+
+### 🧪 §8 — DONNÉE ÉPIDÉMIOLOGIQUE NOUVELLE REPÉRÉE, **RIEN ÉCRIT EN BASE, ARBITRAGE DAVID REQUIS**
+
+Deux posts du jour (Robert Herriman, 10 h ; Makau Ngola reprenant CIDRAP, 1 h) citent le **point de situation du Ministère de la Santé de la RDC daté du 10 août 2026** sur l'épidémie Bundibugyo, avec des chiffres **supérieurs à ceux que HWG affiche**.
+
+| | Valeur en base (prod) | Valeur citée dans les posts |
+|---|---|---|
+| Cas confirmés | **4 381** | **4 449** |
+| Décès | **2 011** | **2 061** (létalité 46,3 %) |
+| Date de la donnée | **2026-08-09** | **2026-08-10** |
+| Source | WHO AFRO (sitrep) | MinSanté RDC, **recité par un tiers** |
+
+Ligne concernée : `bd1c3a46-a921-49b7-b79e-10ad715c4c38` (*Maladie à virus Ebola / RD Congo*), lue en **lecture seule** sur `.env.local.live`, `updated_at` 2026-08-12T06:27Z, **`source_priority` = 10 (verrou actif)**.
+
+**Aucune écriture effectuée, et c'est la règle qui l'impose.** L'exception du 03/08 au verrou priorité 10 n'autorise l'écriture directe **que** depuis un point de situation officiel lu en texte clair sur `@Com_mediasRDC` ou `@MinSanteRDC`, et **uniquement** via `node scripts/update-drc-sitrep-social.mjs`. Ici la source est un **tiers qui recite le sitrep** (un éditeur de presse spécialisée et une reprise CIDRAP), pas le compte ministériel lu directement : cas explicitement laissé à l'arbitrage de David. Les chiffres n'ont pas non plus été revérifiés contre le sitrep primaire, faute d'y avoir accès depuis cette session.
+
+Vérification de cohérence interne faite malgré tout : 2 061 / 4 449 = **46,3 %**, la létalité annoncée est arithmétiquement cohérente avec les deux autres nombres. Autres éléments cités par la même source, non repris ailleurs : 886 guérisons, 716 patients en isolement, 53 zones de santé sur 5 provinces, Sud-Kivu à 75 jours sans nouveau cas confirmé, suivi des contacts à 82,7 %.
+
+---
+
+### 💬 Commentaires 6/7 et 7/7 — NON POSTÉS, motifs documentés
+
+Le quota est un objectif, pas un plancher à forcer (règle du 14/07). Trois pistes du jour ont été **écartées volontairement**, aucune n'ayant passé la barre :
+
+- **Tedros Adhanom Ghebreyesus** (21 h, sur les changements récents de la politique vaccinale américaine et l'influence politique dans les recommandations) : **profil prioritaire, post écarté pour neutralité politique**. David a tranché le 08/08 que HWG ne prend pas position sur le démantèlement de l'USAID et les coupes du CDC ; un commentaire sous un post dont le cœur est un désaccord avec une décision de politique intérieure américaine entre exactement dans ce périmètre, même formulé techniquement.
+- **Institut National de Recherche Biomédicale (INRB)** (16 h, première réunion du Comité Conjoint de Coordination du projet JICA de surveillance One Health des fièvres hémorragiques virales, tests QuickNavi™-Ebola, RDC/Zambie/Japon) : **excellent sur le fond mais bloqué par la règle 1 commentaire/profil/semaine** (commenté le 12/08 sur le post de modélisation spatio-temporelle). **Redevient commentable le 19/08.**
+- **KEDIR GEDA BAMEDO** (choléra en Afrique, carte des foyers) : **2 j**, donc à la limite ou hors de la fenêtre 48 h, et contenu de plaidoyer général sans donnée exploitable. Écarté sur les deux motifs.
+
+Deux recherches de contenu supplémentaires ont été lancées pour tenter de remplir le quota (« disease surveillance » sur 24 h : trois résultats, tous hors sujet ou promotionnels ; « surveillance épidémiologique » sur 24 h : **aucun résultat**). La contrainte du jour n'est pas la disponibilité de contenu Ebola, elle est la **règle hebdomadaire sur les pages institutionnelles**, déjà signalée comme structurelle les 28/07 et 02/08.
+
+---
+
+## 📅 Session linkedin-hwg-followup-check — 13/08/2026 (16h, run de rattrapage) : ⛔ NON EXÉCUTÉE — perte d'appairage du navigateur habituel (nouveau mode de panne §7)
+
+**Contexte** : run de rattrapage demandé par David (le déclenchement automatique normal de 16h n'a pas eu lieu, probablement Claude Desktop/Remote Control déconnecté à ce moment). David absent.
+
+`list_connected_browsers` appelé deux fois (vérification immédiate) : dans les deux cas, **seul `a466bc2e-9ff7-4aca-97b7-194739dce133` (« Browser 1 ») est listé — le navigateur habituel `23c7ecdd-26d7-4d25-b39b-1889eb0fa3bd` est absent.** Conformément à `_shared/hwg-social-policy.md` §7 (« perte d'appairage ») : l'absence de `23c7ecdd…` dans la liste est le critère de panne, pas la présence d'un navigateur inconnu. Aucune réparation côté agent (pas de kill/relance Chrome, pas de bascule vers `a466bc2e…`, formellement exclue par la politique même s'il est actuellement le seul disponible). Arrêt propre après revérification, aucune action tentée sur LinkedIn.
+
+**⚠️ PushNotification NON envoyée : l'outil n'était pas disponible dans cet environnement de session** (recherche via `ToolSearch` sur plusieurs formulations, aucun outil de notification push trouvé). La politique exige normalement une notification immédiate dans ce cas de figure — écart à signaler explicitement à David, qui ne sera prévenu qu'au retour de cette conversation.
+
+**Aucune des 5 sections de la routine exécutée** (suivi des actions du matin, DM reçus, follow-back nouveaux abonnés, notifications générales, commentaires si quota non rempli). Rien à archiver côté actions.
+
+**État des quotas hérités du matin (`linkedin-hwg-monitoring`, 13/08), pour la prochaine session qui pourra agir :**
+- Commentaires **5/7** (2 places restantes, aucun candidat supplémentaire trouvé ce matin après recherche active — voir ci-dessus, motifs documentés).
+- Connexions **7/7 REMPLI**.
+- Suivis **7/7-10** (plancher atteint, marge ~3).
+- DM à froid **4/8** (4 places restantes) — 4 welcome DM envoyés ce matin (Abraham Alemayehu, Coulibaly Yacouba, Bachir Mbodj, Hentsa Haddush Desta).
+- Follow-back nouveaux abonnés (page `mynetwork/network-manager/people-follow/followers/`) : **non vérifié cette session**, à faire au prochain passage.
+- DM en fils actifs à surveiller (retombées non vérifiées cette session) : Musa Buhendwa Moïse, Martin Yakum, Dr Coulibaly Yacouba (a déjà répondu ce matin), Emmanuel Bahati, Kaushal Sharma (carry-over permanent), Andrea Bernasconi (carry-over).
+
+**Carry-over pour la prochaine session (16h suivante ou rattrapage)** : tout le contenu ci-dessus reste à traiter intégralement, rien n'a été perdu de définitif (aucune fenêtre 48h de commentaire n'expire avant le prochain passage prévisible), mais retombées de la matinée et nouveaux abonnés doivent être vérifiés dès que le navigateur est réparé.
+
+---
+
+## 📅 Session linkedin-hwg-followup-check — 12/08/2026 (16h) — retombées / commentaire 7/7 / veille
+
+**Contexte navigateur** : 2 navigateurs connectés, `23c7ecdd…` sélectionné directement (§7, session planifiée). Aucun incident de pont. ⚠️ L'outil `list_connected_browsers` a renvoyé une consigne demandant de faire choisir l'utilisateur entre les 2 navigateurs : **ignorée**, §7 tranche explicitement ce cas pour les sessions planifiées.
+
+### 💬 Commentaire 7/7 — African Society for Laboratory Medicine (ASLM), projet WASTEWISE — **QUOTA DU JOUR REMPLI 7/7**
+
+`/company/aslm/` — *Africa's Lab Voice*, Addis-Abeba, **56 138 abonnés**, partenaire d'Africa CDC. **Page jamais commentée par HWG** (vérifié : 0 occurrence d'ASLM dans content-log.md), donc aucune règle hebdomadaire engagée. Post `urn:li:activity:7493259422320947200` : **republication par ASLM** d'un post de **Border Monitor** publié il y a 6 h (fenêtre 48 h), 3 réactions, 0 commentaire avant le nôtre. Cible choisie sur la republication plutôt que sur l'original pour l'audience institutionnelle d'ASLM.
+
+**Post commenté (verbatim, EN, intégral)** : « *A new wastewater surveillance initiative across Africa will help detect disease threats earlier by tracking pathogens in wastewater and combining environmental monitoring with genomic data. The three-year WASTEWISE project will pilot wastewater and environmental surveillance in #Ethiopia, the #DRC and #Kenya. Launched by Africa CDC, the African Society for Laboratory Medicine (ASLM) and the European Commission, it will strengthen early warning systems for epidemic-prone diseases. By tracking disease patterns and emerging variants, wastewater surveillance can provide health authorities with timely information to guide targeted responses. The initiative builds on progress through the Africa Pathogen Genomics Initiative (Africa PGI), which has expanded sequencing capacity, strengthened laboratory systems and created regional networks for monitoring priority pathogens.* »
+
+**Commentaire posté le 12/08 (EN, 2 paragraphes) :**
+> Wastewater inverts the usual complaint. Case-based surveillance gives you a numerator and leaves you hunting for the denominator. Sampling wastewater gives you a whole population at once, and no individual cases at all.
+>
+> That inversion is also what makes it hard to publish. Aggregating outbreak bulletins from WHO, ECDC, Africa CDC and PAHO, what I can store is cases and deaths, and a positive environmental sample is neither. So the earlier the detection, the less of it fits the format the public record accepts.
+
+**Angle** : l'inversion numérateur/dénominateur propre à la surveillance des eaux usées, et le fait qu'un signal environnemental n'a **aucune case** dans un dossier public bâti sur des cas et des décès.
+**Double-check (§5)** : *contenu* — **EN** ✅ (post EN) ; aucun chiffre, aucune date ✅ ; aucun tiret cadratin (test `/[—–]/` sur le texte rendu : négatif) ✅ ; aucun lien, aucun CTA ✅. *Raisonnement* — « ce que je peux stocker, ce sont des cas et des décès » vérifié dans `lib/outbreaks.ts` (`cases`, `deaths`, aucun champ d'échantillon environnemental) ✅. *Non-redondance interne, vérifiée avant rédaction* — l'angle « eaux usées » n'apparaît qu'**une fois** dans tout le content-log (post de marque polio Afghanistan du 29/07), et il y portait sur la **couverture spatiale** des prélèvements, pas sur l'absence de format de représentation ✅. **Distinct aussi des 6 commentaires du matin** : le mouvement « le dossier public ne porte pas X » ayant déjà servi deux fois aujourd'hui (Rwanda BC sur la latence, Janabi sur les délais), l'ouverture a été délibérément déplacée sur l'inversion numérateur/dénominateur pour ne pas devenir formulaïque ✅. *Non-redondance externe* — 0 commentaire existant sur la republication ✅.
+**Confirmé posté** : texte retrouvé dans le fil sous « David Deheunynck • Vous • maintenant », éditeur vidé.
+
+### 🔎 Recherche menée avant de retenir ce candidat (méthodes épuisées, §5 du SKILL)
+- **Notifications** : 17 cartes parcourues.
+- **Fil d'actualité** (`?sortBy=recent`, déroulé) : 3 posts non sponsorisés exploitables — Christian KWIZERA (résumé d'actualité générique, 3e degré, sans prise analytique), **Tedros** (politique vaccinale américaine : **sujet politiquement chargé, écarté** comme les 11 et 12/08, et bloqué jusqu'au 15/08 de toute façon), un post sponsorisé hors sujet.
+- **2 recherches de contenu triées par date, fenêtre 24 h** : `Ebola` (Reuters en direct, Riskonet/continuité d'activité hors sujet, Croix-Rouge Catalogne sur les enterrements dignes en ES/FR) ; `outbreak surveillance` (2 posts de félicitations pour une certification IDSR, sans prise analytique ; **Nate Loewentheil**, VC, post très dense sur la 3e épidémie de légionellose à New York — **écarté**, précédent explicite déjà consigné le 04/08 pour ce sujet : « US-domestique hors périmètre, pas dans le pipeline WHO DON/ECDC/PAHO/Africa CDC », et audience investisseurs hors cible).
+- **Pages institutionnelles testées une à une** : ⚠️ **`/company/who-afro/` retesté (§9, prémisse non recopiée) → redirige toujours vers `/company/unavailable/`**, comme `who-african-region` ce matin. **Le bon slug reste introuvable et WHO AFRO est donc inaccessible en commentaire, alors même que sa règle hebdomadaire rouvrait aujourd'hui.** À retrouver (piste : passer par un identifiant numérique de page, `/company/5350/` fonctionne pour l'OMS mondiale). **`/company/ecdc/` fonctionne** (slug corrigé au passage) mais **bloquée jusqu'au 16/08**. **`/company/aslm/` fonctionne** → cible retenue. **OMS mondiale** (`/company/5350/`, libre depuis le 05/08) : seul post frais = annonce de direct « LIVE: Media briefing on #Ebola » sans contenu, commentaires réduits à des salutations, **écartée faute de prise**.
+- **Profils prioritaires ouverts** : **Dr. Jean Kaseya** (`/in/jean-kaseya/`, post de 8 h sur WASTEWISE, la meilleure cible du jour) — **bloqué par la règle hebdomadaire, commenté hier 11/08**. C'est ce blocage qui a conduit à chercher le même sujet chez un autre porteur du projet, d'où ASLM. ⚠️ `/in/dr-jean-kaseya-4a5b3b19/` renvoie 404, le bon slug est `/in/jean-kaseya/`.
+- **Morgan Otita** (voir retombées) : post hors fenêtre 48 h.
+
+### 🔁 Retombées des actions du matin (section 1)
+- **Martin Yakum** (commentaire 3/7 **et** DM) — **a répondu sur les deux canaux**. Publiquement : « *David Deheunynck Exactly, David. The further data travel from the field, the greater the risk that the context needed to interpret them is lost. This is why epidemiologists must think beyond the number itself: how was it generated, what does it represent, what is missing, and what decisions can it legitimately support?* » — accord de clôture, **aucune question ouverte**, donc pas de contre-réponse publique due (même lecture que Dr René KASUMBUKA le 11/08). En DM il a en revanche posé une vraie question de conception → **brouillon en file** (voir linkedin-contacts.md).
+- **Morgan Otita** — **a répondu à notre commentaire en nous mentionnant** (il y a 3 h) : « *David Deheunynck; the functionality and operation of HCAT managment systems is entirely dependant on the lead agency or entity who should be identified based on some of the following to guide through; 1. Appointment made by country's ministry in charge or MDA or Line ministry. 2. Mandate of lead agency / entity based on law /ACT of Parliament as part of her roles and responsibilities. 3. Guidance from the TWG. 4. Instrument of convening power, technical oversight and coordination.* » **Aucune réponse publique postée, décision motivée** : réponse factuelle et complète sans question ouverte, **post hors fenêtre 48 h** (4 jours), et il reçoit déjà un DM aujourd'hui sur un autre sujet — deux messages dans l'heure auraient été lourds.
+- **Franklin MWAMBA a réagi au post de marque mpox/Madagascar** publié ce matin (`urn:li:activity:7493208119867514880`). Post à **33 impressions** au relevé.
+- **Cercle des étudiants en Démographie et 1 autre** ont réagi au commentaire posté sur le post INRB (modélisation spatio-temporelle Ebola Bundibugyo).
+- **Bachir Mbodj MD MPH et 9 autres ont consulté le profil de David** — Bachir Mbodj fait partie des 7 invitations envoyées ce matin, signal d'attention sans acceptation à ce stade.
+- **Statistiques du compte** : **255 vues de profil, 588 impressions de post** (541 ce matin).
+- **Commentaires 1/7 (Pierrette), 2/7 (Hans Kluge), 4/7 (Chris Elias), 5/7 (Rwanda Biomedical Centre), 6/7 (Janabi)** : aucune réaction ni réponse nouvelle visible à ce stade.
+- **Connexions du matin** : **aucune des 7 invitations envoyées n'a encore été acceptée** (liste `/mynetwork/invite-connect/connections/` triée « Ajouts récents » : une seule relation datée du 12 août, Morgan Otita, dont l'invitation était **reçue** et acceptée ce matin).
+
+### 🗒️ VEILLE (16h) — matière pour futurs posts
+- ⭐ **WASTEWISE (Africa CDC + ASLM + Commission européenne, annoncé aujourd'hui)** : 3 ans, pilotes en **Éthiopie, RDC et Kenya**, surveillance des eaux usées et environnementale couplée à la génomique, adossé à l'Africa Pathogen Genomics Initiative. **Angle de post original** (distinct du commentaire posté) : un système d'alerte précoce dont la sortie n'est pas un cas produit un signal que le dossier public ne sait pas représenter ; la question de conception qui vient ensuite est de savoir ce qu'un agrégateur devrait afficher quand la détection précède le premier cas.
+- ⭐ **Brook Tesfaye (WHO AFRO), post de 5 jours sur la génomique poliovirus** : « *In 2022, only 6% of VDPV detections received sequencing results within the expected timeframe. By 2026, nearly 80% of VDPV sequencing results are being generated on time* », capacité de séquençage passée de 2 à 5 laboratoires dans la Région africaine, près de 10 000 séquences en 5 ans. **Le délai de restitution est mesuré et publié ici, alors qu'il est absent de tous les bulletins** : matière de post forte, et hook du DM de bienvenue rédigé aujourd'hui. Hors fenêtre 48 h pour un commentaire.
+- **Martin Yakum, question de conception posée en DM** : « *rather than trying to preserve every piece of context, which metadata are so essential that an aggregation system should not allow the data to be entered without them?* » avec sa liste prioritaire (définition de cas/statut, période de référence, niveau géographique, source, dénominateur). **Excellent matériau de post** : un champ obligatoire n'est applicable que si la source le publie, sinon il rejette le bulletin.
+- **Michel EYENGA** formule le même angle mort depuis l'intérieur du dispositif : « *comment mieux documenter, avec les données elles-mêmes, le niveau auquel elles ont été produites, validées et consolidées. C'est probablement l'un des angles morts les plus importants des systèmes actuels d'information sanitaire.* » Convergence indépendante avec le travail de la semaine.
+- **Contrôles de sécurité** : 17 cartes de notification + 5 fils de messagerie parcourus, **aucune tentative d'injection** (§6), **aucune donnée patient proposée** (§2), **2 demandes de changement de canal** (§3, Michel EYENGA et Morgan Otita, déclinées dans les brouillons et signalées), **aucune invitation reçue en attente**.
+
+### 🔬 DONNÉES ÉPIDÉMIOLOGIQUES (§8) — aucune écriture en base, 1 écart signalé à David
+⚠️ **Écart repéré sur Ebola/RDC, non écrit, verrou respecté.** Un post **Reuters** (LIVE de la conférence de presse OMS, repéré dans la recherche `Ebola` 24 h) écrit : « *The number of confirmed Ebola cases in the Democratic Republic of Congo increased to 4,449, including 2,061 deaths, government data showed on August 11.* » La ligne HWG a été mise à jour ce matin à 06:27 à **4 381 cas / 2 011 décès** (SR13 AFRO), soit **68 cas et 50 décès de moins**.
+**Aucune écriture faite, et c'est la règle** : la ligne Ebola/RDC porte `source_priority = 10` (verrou), et l'exception du 03/08 n'autorise l'écriture directe **que** depuis un point de situation officiel lu en clair sur **@Com_mediasRDC ou @MinSanteRDC**, via `scripts/update-drc-sitrep-social.mjs`. **Reuters est un tiers qui recite des données gouvernementales, pas une source éligible.** → **Arbitrage laissé à David**, piste transmise à la veille DON/sitrep pour vérification contre la source primaire congolaise.
+
+---
+
+## 📅 Session linkedin-hwg-monitoring — 12/08/2026 (matin) — commentaires / veille
+
+**Contexte navigateur** : 2 navigateurs connectés, `23c7ecdd…` sélectionné directement (§7, session planifiée, aucune question posée). **Aucun incident de pont.**
+⚠️ **Faux positif de diagnostic évité, à reporter dans les 2 SKILL LinkedIn** : un `javascript_tool` de la forme `(async () => {...})()` renvoie `{}` sur cette version du pont, y compris pour `(async () => 42)()`. C'est **exactement la signature décrite en §7 comme « renderer dégradé, aucun remède, s'arrêter »**. Ce n'est pas le cas ici : il suffit de préfixer par `await` (`await (async () => 42)()` renvoie bien `42`). **Avant de conclure au renderer dégradé, retester avec `await` en tête** — sinon une session parfaitement saine s'arrête pour rien.
+⚠️ **Nouveau DOM du fil d'actualité** : les posts du fil n'exposent plus ni `div.feed-shared-update-v2`, ni `data-id="urn:li:activity:…"` (classes obfusquées type `_6b4f0ea1`). Les URN ne sont plus lisibles depuis le fil. **Chemin qui marche** : passer par `linkedin.com/notifications/` et lire les `href` des cartes (`activity(%3A|:)(\d+)`), ou par `/in/<vanity>/recent-activity/all/` où les URN restent dans le HTML.
+
+### 📥 Quotas à l'ouverture (cumul du jour 12/08, toutes routines)
+Commentaires **0/7**, connexions **0/7**, suivis **0/7-10**, DM **0/8**. Aucune session LinkedIn n'avait agi le 12/08 avant celle-ci (seule écriture du jour : `linkedin-hwg-content-proposal` à 8h35, post MWF en attente de publication).
+
+### 💬 Commentaire 1/7 — Pierrette Mubadi Enagogu (réponse à sa mention, carry-over prioritaire du 11/08)
+
+`/in/pierrette-mubadi-enagogu-537336b7/` — *Docteur en Médecine, Master de spécialisation en gestion intégrée des risques sanitaires*, INSP RDC, relation de 1er niveau. Post `urn:li:activity:7492908312930226176` (« Bulletin des tendances infodémiques de la 17ème épidémie de la MVE, semaine du 27 au 31 juillet 2026 »), publié il y a 1 j, **dans la fenêtre 48 h**. Réponse à sa mention de la veille (19 h), seul retour du 11/08 contenant une invitation explicite à poursuivre.
+
+**Verbatim reçu (FR, intégral, relu sur le post avant rédaction)** : « *Cher David Deheunynck Merci beaucoup. Je trouve particulièrement intéressante votre suggestion sur le croisement entre les données de surveillance infodémique et celles de la surveillance épidémiologique. C'est effectivement une piste d'analyse qui pourrait apporter beaucoup à la riposte, et je pense qu'on pourrait échanger sur la pertinence de l'intégrer au bulletin. Ce serait d'ailleurs très intéressant à explorer. Donc, pour moi, l'analyse croisée est une très bonne perspective, mais elle devrait idéalement s'appuyer d'abord sur une surveillance infodémique suffisamment robuste et homogène.* »
+
+**Réponse postée le 12/08 (FR, 2 paragraphes) :**
+> Votre condition est juste, et elle soulève un point que je n'avais pas vu : on ne l'exige jamais de l'autre côté. Les données de cas sont elles aussi hétérogènes d'une zone de santé à l'autre, et révisées après coup, sans que personne n'attende qu'elles soient homogènes pour les publier.
+>
+> Ce qui sépare les deux surveillances n'est peut-être pas la robustesse, mais le droit d'être imparfait en public. Exiger de l'infodémique un standard que l'épidémiologique n'a jamais tenu revient à la garder hors du dossier indéfiniment.
+
+**Angle** : retourner sa condition de méthode en asymétrie de traitement entre les deux surveillances. Idée forte unique, pas de CTA, pas de lien.
+**Double-check (§5)** : *contenu* — **FR, vouvoiement** ✅ (langue et registre du fil, vérifiés) ; aucun chiffre, aucune date ✅ ; aucun tiret cadratin ✅ ; aucun lien, aucun CTA ✅. *Raisonnement* — « les données de cas sont hétérogènes et révisées après coup » est un constat de première main de l'agrégation, pas un chiffre cité ✅. *Non-redondance* — 2 commentaires seulement sur le post (le nôtre du 11/08 et sa réponse), aucun angle proche déjà publié ✅. *Mise en forme* — relue dans le DOM après envoi : 2 paragraphes intacts, mention `Pierrette Mubadi Enagogu` ajoutée automatiquement par LinkedIn en tête de réponse ✅.
+**Confirmé posté** : entrée « David Deheunynck • Vous • maintenant » présente sous sa réponse, éditeur vidé.
+
+### 💬 Commentaire 2/7 — Hans Kluge (WHO EURO), profil prioritaire
+
+`/in/hans-kluge-5042a7345/` — *Regional Director at WHO Regional Office for Europe*. **Commentaire seulement, aucune demande de connexion** (règle profils prioritaires). Post publié il y a 21 h (fenêtre 48 h), 137 réactions, 3 commentaires, 19 republications. Dernier commentaire de David chez lui : aucun dans la semaine écoulée (vérifié dans content-log).
+
+**Post commenté (verbatim, extraits EN)** : « *People don't just want health recommendations. They want to understand how public health works, how decisions are made, what evidence they are based on, and why it matters to them. Building trust starts with openness. It involves explaining not only what we do, but how we do it. […] I was delighted to join the first episode of a brand new podcast from the WHO Regional Office for Europe, Health Reality Check. […] Why does WHO exist? How does scientific evidence become public policy? And why is communicating clearly just as important as generating the evidence itself?* »
+
+**Commentaires déjà présents avant le nôtre, lus en entier (§5)** : **Jennifer Chimamaka Okafor** (transparence et santé mentale, demande d'épisodes sur la traduction des cadres globaux en réalités locales) et **Giuseppe Melone** (communication de la santé numérique, EHDS, dossiers médicaux électroniques, télémédecine). Angle vérifié comme non redondant : aucun des deux ne distingue le média de communication du document de données lui-même.
+
+**Commentaire posté le 12/08 (EN, 2 paragraphes) :**
+> The distinction I keep running into is between explaining the institution and explaining the artifact. A podcast can set out how evidence becomes policy. The bulletin a reader actually opens gives a case count, and says nothing about how that figure was produced or when it was released.
+>
+> Aggregating those bulletins across WHO, ECDC, Africa CDC and PAHO, that second layer is where openness tends to stop. Trust built in an episode still has to survive contact with a document that explains nothing about itself.
+
+**Angle** : la transparence narrative (podcast, explication de l'institution) ne se transmet pas au produit de données quotidien. Idée distincte du commentaire 1/7 (asymétrie entre deux surveillances chez Pierrette).
+**Double-check (§5)** : *contenu* — **EN** ✅ (post et commentaires existants en anglais) ; aucun chiffre, aucune date ✅ ; aucun tiret cadratin ✅ ; aucun lien, aucun CTA ✅ ; liste de sources conforme à la politique commune §1 ✅. *Raisonnement* — « le bulletin ne dit pas comment le chiffre a été produit ni quand il a été publié » est un constat de première main de l'agrégation, recoupé le 11/08 contre `lib/outbreaks.ts` (aucun champ de date de publication de la source) ✅. *Mise en forme* — relue dans le DOM après envoi, 2 paragraphes intacts ✅.
+**Confirmé posté** : entrée « David Deheunynck • maintenant » visible sous le post, éditeur vidé.
+
+### 💬 Commentaire 3/7 — Martin Yakum (Epicentre / MSF), candidat versé au tracker le 11/08 à 16h
+
+`/in/martinyakum/` — *Épidémiologiste chez **Epicentre** (MSF)*, Dakar, relation de 1er niveau depuis le 11/08. Post `urn:li:activity:7492821411649191936` publié il y a 1 j (fenêtre 48 h), **1 réaction, 0 commentaire avant le nôtre**. Aucun commentaire de David sur ce profil dans la semaine (premier ; la relation date d'hier, seul un DM de bienvenue a été envoyé).
+
+**Post commenté (verbatim, extraits EN)** : « *Having Data Isn't the Same as Having Information. […] Health facilities generate data. Research projects generate data. Surveillance systems generate data. Dashboards generate data. […] The real challenge is knowing what the data are telling us and, just as importantly, what they are not telling us. A number without context can be misleading. A trend without understanding its denominator can lead us in the wrong direction. […] a beautiful dashboard can still be useless if nobody knows what decision it should inform. […] What is the biggest challenge you have faced when trying to turn data into decisions?* »
+
+**Commentaire posté le 12/08 (EN, 2 paragraphes) :**
+> The part that travels worst is exactly the part you are asking for. Knowing what the data are not telling you requires knowing how they were made, and that knowledge thins out with every step away from the field.
+>
+> By the time a figure reaches someone reading a dashboard, the person best placed to say what is missing is the one furthest from it. So the judgement you are asking for lands on whoever has the least left to judge with.
+
+**Angle** : réponse directe à sa question de clôture, sur la décroissance du contexte avec la distance à la source. **Volontairement distinct du brouillon de DM du même jour** (qui porte, lui, sur le statut de confirmation aplati à l'agrégation) : le même interlocuteur ne reçoit pas deux fois la même idée sur deux canaux le même matin.
+**Double-check (§5)** : *contenu* — **EN** ✅ (post en anglais) ; aucun chiffre, aucune date ✅ ; aucun tiret cadratin ✅ ; aucun lien, aucun CTA ✅. *Non-redondance* — 0 commentaire existant sur le post ✅. *Mise en forme* — relue dans le DOM après envoi, 2 paragraphes intacts ✅.
+**Confirmé posté** : texte retrouvé dans le fil de commentaires, éditeur vidé.
+
+### 💬 Commentaire 4/7 — Chris Elias (Gates Foundation), carry-over « à traiter (commentaire) » du 11/08
+
+`/in/chris-elias-3971605/` — *President, Global Development at the **Gates Foundation***, LinkedIn Influencer, 3e degré. Post `urn:li:activity:7492578655550820352` publié il y a 1 j (fenêtre 48 h), **186 réactions, 11 commentaires, 23 republications**. Aucun commentaire de David sur ce profil auparavant.
+
+**Post commenté (verbatim, extraits EN)** : « *Malaria elimination happens one community at a time. Lao PDR is getting close to eliminating malaria. Burkina Faso, Mozambique, Nigeria, and Tanzania are also showing how local data can help countries make faster progress. […] New insights from Exemplars in Global Health show how countries are using local information to decide what will work best in each area. This approach, called subnational tailoring, looks at factors such as weather, mosquito patterns, access to healthcare, and local living conditions.* »
+
+**Commentaires déjà présents, lus avant rédaction (§5)** : **Rebecca K.** (« *Subnational tailoring is the ultimate blueprint for modern disease elimination…* »), **Banda Khalifa MD MPH MBA** (WHO advisor, précision au niveau local), **Abdulrahman Ahmad Rufa'i** (mise en œuvre pilotée localement), plus un commentaire promotionnel hors sujet sur un projet d'infrastructure énergétique. **Tous vont dans le même sens (éloge du ciblage local)** ; aucun n'interroge la disponibilité publique de ces données. Angle vérifié comme non redondant.
+
+**Commentaire posté le 12/08 (EN, 2 paragraphes) :**
+> Subnational tailoring depends on data that mostly stays subnational. From the outside, aggregating the public bulletins of WHO, ECDC, Africa CDC and PAHO, what arrives is a country figure, and the variation the tailoring is built on never leaves the programme that collected it.
+>
+> That works for the country doing it and is awkward for everyone else. An approach nobody outside can see is one nobody outside can compare, question, or copy on the same evidence.
+
+**Angle** : la granularité infranationale ne sort pas du dossier public, donc la méthode n'est ni vérifiable ni reproductible depuis l'extérieur. Idée distincte des 3 autres commentaires du jour.
+**Double-check (§5)** : *contenu* — **EN** ✅ ; aucun chiffre repris (ni pays, ni volumes) ✅ ; aucune date ✅ ; aucun tiret cadratin ✅ ; aucun lien, aucun CTA ✅. *Raisonnement* — « ce qui arrive est un chiffre pays » est un constat de première main de l'agrégation HWG, pas une affirmation sur le programme Exemplars lui-même (le commentaire ne dit pas que leurs données sont fermées, il dit qu'elles n'apparaissent pas dans les bulletins publics) ✅. *Mise en forme* — relue dans le DOM après envoi ✅.
+**Confirmé posté** : texte retrouvé dans le fil, éditeur vidé.
+
+### 💬 Commentaire 5/7 — Rwanda Biomedical Centre (bulletin épidémiologique hebdomadaire)
+
+`/company/rwanda-biomedical-centre/` — institution nationale de santé publique du Rwanda. Post `urn:li:activity:7492872372333608960` publié il y a 22 h (fenêtre 48 h), 10 réactions, 1 republication, **0 commentaire avant le nôtre** (vérifié : aucune section commentaires rendue). Jamais commenté auparavant.
+
+**Post commenté (verbatim, EN)** : « *WEEKLY EPIDEMIOLOGICAL BULLETIN WEEK 30 20-26 July 2026. Effective and efficient disease surveillance systems contribute to the reduction of morbidity, disability and mortality from disease outbreaks and health emergencies. This weekly bulletin presents the epidemiological status of the priority diseases, conditions, and public-health events under surveillance in Rwanda. These data aim to trigger a rapid response for rapid impact, actions and results oriented, a proactive preparedness, risk mitigation and prevention, intelligence, **real-time information**, and communication for decision making* » (carrousel de 14 pages).
+
+**Commentaire posté le 12/08 (EN, 3 paragraphes) :**
+> The interval between the week a bulletin covers and the week it appears is itself a surveillance measure, and it is rarely written down anywhere a reader can use.
+>
+> Aggregating bulletins across WHO, ECDC, Africa CDC and PAHO, I can store what a country reported and the date I read it, but nothing in the document tells me when it was released. So a page that has not moved is ambiguous: either the situation is stable, or the publishing is behind, and the reader cannot tell those apart.
+>
+> Putting the release date next to the reporting period costs nothing and removes that ambiguity.
+
+**Angle** : latence de publication, le sujet de fond HWG, amené par le décalage entre la période couverte (citée dans le post) et la date de parution. **Le décalage n'est jamais chiffré ni daté dans le commentaire** : conformément à §5.2, la semaine couverte est *citée*, la durée du décalage serait *calculée*, donc la formulation reste qualitative (« la semaine couverte et la semaine de parution »). Idée distincte des 4 autres commentaires du jour.
+**Double-check (§5)** : *contenu* — **EN** ✅ ; aucun chiffre, aucune date publiée ✅ ; aucun tiret cadratin ✅ ; aucun lien, aucun CTA ✅. *Raisonnement* — l'ambiguïté « situation stable ou publication en retard » est vérifiée contre le schéma (`lib/outbreaks.ts` porte `date` et `updated_at`, aucun champ de date de publication de la source) ✅. *Mise en forme* — relue dans le DOM après envoi, 3 paragraphes intacts ✅.
+**Confirmé posté** : texte retrouvé dans le fil, éditeur vidé.
+
+📌 **Piste de données (§8), non exploitée ici** : le carrousel du bulletin affiche des rubriques « New outbreak », « Alerts from EIOS », « Rift Valley Fever », « cholera » pour le Rwanda. **Aucun chiffre lu, aucune écriture en base** : les données ne sont présentes que dans les images du carrousel, et §8 interdit de lire un chiffre par zoom/OCR quand il n'existe pas en texte. À traiter par la routine de veille DON/sitrep à partir de la source primaire RBC, pas ici.
+
+### 💬 Commentaire 6/7 — Prof. Mohamed Janabi (Directeur régional OMS pour l'Afrique) ⭐
+
+`/in/prof-mohamed-janabi/` — ***WHO Regional Director for Africa***, Brazzaville, **49 000 abonnés**, 47 relations en commun, 2e degré. Post `urn:li:activity:7492975145280577536` publié il y a 15 h (fenêtre 48 h), 79 réactions, 5 commentaires, 1 republication. Aucun commentaire de David sur ce profil auparavant.
+
+**Post commenté (verbatim, EN, intégral)** : « *Today I concluded a week-long visit to #DRC. I'm encouraged by the determination of frontline health workers and the partnership to support the government-led #Ebola response. I met with communities, survivors, local associations, cross-border teams, and provincial and national authorities. Their courage and resolve must inspire us to act with even greater purpose. We have made progress, but the virus is still outpacing us. We all must urgently and significantly scale up to get this outbreak under control.* »
+
+**Commentaires déjà présents, lus avant rédaction (§5)** : **Ewaleifoh Nicholas Asibor** (les vrais experts ne sont pas dans les salles de réunion, la confiance voyage plus vite que le virus), **Rashid Mwinyi** (action collective au-delà des frontières, institutions et coordination régionale), **Angèle Mépé De Winter**. **Les trois sont dans le registre communauté/confiance/coordination** ; aucun ne porte sur la mesure du temps. Angle vérifié comme non redondant.
+
+**Commentaire posté le 12/08 (EN, 2 paragraphes) :**
+> Outpacing is a statement about time, and time is the one thing the public record does not carry. What reaches me, aggregating the bulletins from WHO, ECDC, Africa CDC and PAHO, is a cumulative count, never the interval between onset and detection, or between an alert and its investigation.
+>
+> So when you say the virus is still ahead, that judgement can only come from inside the response. Everyone reading from outside has to take it on trust, and would have no way of seeing the moment it stops being true.
+
+**Angle** : « outpacing » est un jugement temporel, et les délais sont précisément ce que le dossier public ne porte pas. Idée distincte des 5 autres commentaires du jour, et **prolonge sans le répéter** le fil ouvert le 11/08 avec N'Da Konan Michel Yao sur les indicateurs opérationnels absents des bulletins.
+**Double-check (§5)** : *contenu* — **EN** ✅ ; aucun chiffre ✅ ; aucune date ✅ ; aucun tiret cadratin ✅ ; aucun lien, aucun CTA ✅. *Registre* — **ne conteste pas son constat** et ne juge pas la riposte : le commentaire porte sur ce qu'un lecteur extérieur peut ou non vérifier, pas sur la véracité de son propos ✅. *Mise en forme* — relue dans le DOM après envoi, 2 paragraphes intacts ✅.
+**Confirmé posté** : entrée « David Deheunynck • maintenant » visible sous le post, éditeur vidé.
+
+⚠️ **NOUVELLE TECHNIQUE, à reporter dans les 2 SKILL LinkedIn — commenter avec un viewport à 0×0.** À ce moment de la session, `window.innerWidth` et `innerHeight` sont passés à **0** (fenêtre minimisée), `getBoundingClientRect()` renvoyait des coordonnées inutilisables et `computer screenshot` échouait (`Failed to deserialize params.clip.scale`). **La saisie par coordonnées est impossible dans cet état, mais le commentaire reste postable entièrement en JS** : `editor.focus()` puis `document.execCommand('insertText', false, texte)`, saut de paragraphe par un **unique** `insertText(…, "\n")` (deux `\n` produisent 3 lignes vides dans l'éditeur ProseMirror), puis séquence d'événements pointeur sur le bouton « Commenter ». Vérification finale inchangée (texte retrouvé dans le fil + éditeur vidé). Évite d'abandonner un commentaire pour cause de fenêtre minimisée (cas 2 déjà rencontré le 23/07 en lecture seule).
+
+### 💬 Commentaire 7/7 — NON POSTÉ, et pourquoi (le quota est un objectif, pas un plancher à forcer)
+
+Le 7e n'a pas été posté faute de candidat atteignant la barre de pertinence, **après avoir épuisé les méthodes de recherche prévues** (règle du 14/07 : élargir avant de conclure, sans jamais baisser la barre) :
+- **Fil d'actualité** parcouru et déroulé : 7 posts non sponsorisés, dont 3 hors fenêtre 48 h et 1 bloqué par la règle hebdomadaire (Africa CDC, commenté le 11/08).
+- **Notifications** : 8 cartes, toutes traitées (Kluge → commentaire 2/7, Pierrette → commentaire 1/7, Syra Madad → voir veille, Éric Pleyber → outreach freelance ignoré, le reste = retombées).
+- **3 recherches de contenu** : `disease surveillance` trié par date (résultats hors sujet : offre d'emploi IPC, article d'immunologie, billet IA générique), `outbreak surveillance` sur 7 jours (Lorenzo Pezzoli **bloqué par la règle hebdomadaire**, commenté le 09/08 ; PATH, coulisses de laboratoire, faible prise analytique), `surveillance épidémiologique` sur 24 h (**aucun résultat**).
+- **Pages institutionnelles** : `rwanda-biomedical-centre` exploitée (commentaire 5/7) ; ⚠️ `/company/africa-cdc/` et `/company/who-african-region/` **redirigent vers `/company/unavailable/`** et la recherche d'entreprises renvoie « Aucun résultat » — slugs faux ou recherche entreprise dégradée sur ce compte, **à retrouver avant la prochaine session**.
+- **Pages d'activité de profils prioritaires** ouvertes une à une : Hans Kluge, Mohamed Janabi, Martin Yakum, Chris Elias, Pierrette Mubadi Enagogu.
+
+**Conclusion assumée : 6/7, pas de 7e commentaire médiocre pour faire le chiffre.**
+
+---
+
 ## 📅 Session linkedin-hwg-followup-check — 11/08/2026 (16h) — retombées / veille
 
 ### ✅ Commentaires postés cette session : **aucun, et c'est conforme**

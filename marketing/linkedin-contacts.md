@@ -34,6 +34,789 @@ Il a répondu **4 fois en 2 h** au welcome DM du matin. Le point d'attente n'est
 **⚡ MISE À JOUR 09/08 16h — nouveau message reçu (10:49), aucune nouvelle décision d'arbitrage requise.** Fil rouvert et relu en entier (§4, 7 069 caractères). Verbatim intégral : « *Dear David, We should go out for a beer one evening — I have the feeling we could talk for hours. Free thinker, free researcher. The last five years have been quite frustrating for me: running €10-million projects that sometimes felt completely disconnected from real needs, simply because they fitted political priorities. That experience is one of the reasons I created Salus Mundi (www.salusmundi.ch). For me, intellectual and professional freedom is incredibly important, even if it means I may end up poorer because of it. Research, at least the part of it I have experienced in recent years, has increasingly become the domain of a small elite that can be surprisingly dogmatic and self-important — and, frankly, not always as professional as one might expect. I am now approaching the Gates Foundation and Wellcome Trust for funding. I actually need relatively little: we have virtually no overheads and, at the moment, Salus Mundi is just four people trying to build something useful and independent. Let's definitely stay in touch. It is genuinely refreshing to talk with intelligent, independent-minded people. And I completely understand what you mean about working with just a laptop and a bulletin — I did that myself for years.* » Aucune nouvelle sollicitation directe (la recherche de bailleurs, déjà traitée le matin par accusé de réception neutre, n'est pas répétée ici), aucun sujet politique, aucune proposition de changement de canal concrète (« beer one evening » reste une formule sociale, aucune date/lieu proposé, aucune coordonnée demandée) → pas de garde-fou déclenché, réponse en autonomie de rédaction avec validation DM standard. **Brouillon ci-dessous, en file de validation.**
 
 
+## 📅 Session linkedin-hwg-monitoring — 13/08/2026 (matin)
+
+### 🖥️ État navigateur
+2 navigateurs connectés (`a466bc2e…` et `23c7ecdd…`). **`23c7ecdd…` sélectionné directement** (§7, session planifiée), consigne de l'outil demandant de faire choisir l'utilisateur ignorée comme le prévoit §7. **1 incident de pont en cours de session** (`No group with id`, après un `navigate`) : `list_connected_browsers` montrait bien `23c7ecdd…` présent, donc pas la perte d'appairage sans remède ; re-`select_browser` + `tabs_context_mcp` ont suffi, reprise immédiate. Le navigateur s'était reconnecté entre-temps sous le nom affiché « David » (le nom n'est qu'un label de slot, §7).
+
+### 📥 Quotas à l'ouverture (cumul du jour 13/08, toutes routines)
+Commentaires **0/7**, connexions **0/7**, suivis **0/7-10**, DM **0/8**. Aucune entrée du 13/08 dans les logs avant cette session.
+
+### 📨 INVITATIONS REÇUES — 3 reçues, **3 acceptées**, 0 ignorée
+Toutes les trois sont dans le périmètre HWG (épidémiologie / santé publique / One Health). Acceptation confirmée par le texte « … fait désormais partie de vos relations » relu sur `/mynetwork/invitation-manager/received/`.
+
+| Profil | Intitulé | Décision |
+|---|---|---|
+| **Dr. Abraham Alemayehu** ⭐ | *Senior Country Representative for **Africa CDC***, 13 relations en commun (dont Elvis TEMFACK) | **Acceptée** — institution prioritaire, cœur de cible |
+| **Dr COULIBALY Yacouba** | *Responsable Planification Suivi Évaluation et Recherche, **Centre National d'Immunisation (CNI)***, 13 relations en commun (dont Marie Roseline Darnycka BELIZAIRE) | **Acceptée** — suivi/évaluation d'un programme national de vaccination |
+| **Ibrahim Jimoh** | *Emerging Public Health Professional, Biosecurity, One Health through AMR advocacy, BSc Public Health (in view)*, 2 relations en commun | **Acceptée** — profil junior mais dans le périmètre One Health/biosécurité explicitement listé par la routine ; a par ailleurs consulté le profil de David |
+
+### 🔗 CONNEXIONS — **7 envoyées, quota du jour rempli 7/7**, toutes sans note
+
+⚠️ **Blocage notes personnalisées : retesté ce matin, toujours actif.** La modale « Ajouter une note à votre invitation ? » s'affiche bien, mais cliquer « Ajouter une note » ouvre la modale Premium « **Vos messages d'invitation personnalisés gratuits sont épuisés** ». Envoi **sans note** conformément à l'autorisation de David du 23/07, compté normalement dans le quota.
+
+⚠️ **Découverte du jour : 5 candidats de la file d'attente n'exposent aucune option « Se connecter »**, ni en bouton de façade ni dans le menu « Plus » (qui n'affiche que « Suivi »). Ce n'est **pas** une limite de compte (deux invitations sont parties le même matin sur d'autres profils) : c'est le réglage de confidentialité « qui peut vous envoyer des invitations » côté profil visé. Profils concernés, tous déjà suivis : **Anfumbom Jude Kfutwah**, **Mosoka Fallah**, **Marc Rondy**, **Demian Antoinette Mbailamen**, **Usman Rabi**. Ils étaient tous marqués « bon candidat connexion » dans le tracker : ce statut est **caduc**, à corriger en « connexion impossible (réglage du profil) » plutôt qu'à reproposer chaque semaine.
+
+| # | Profil | Lien | Intitulé | Statut |
+|---|---|---|---|---|
+| 1 | **Syra Madad** ⭐ | `/in/syra-madad-5b9495/` | *Chief Biopreparedness Officer, **NYC Health + Hospitals** ; Public Health Editor-at-Large, New York Academy of Sciences*, 11 335 abonnés, vérifiée, 2e | **Envoyée sans note**, « En attente » confirmé. Carry-over « à traiter, priorité haute » du 12/08, enfin traité |
+| 2 | **Robert Herriman** | `/in/robert-herriman-3248b5200/` | *Microbiologist, Owner and Editor at **Outbreak News Today**, Podcaster*, Tampa, 8 405 abonnés, 2e | **Envoyée sans note**, « En attente » confirmé. Commenté ce matin (commentaire 1/7), média spécialisé qui relaie les sitreps nationaux avant les bulletins régionaux |
+| 3 | **Elodie Ho** ⭐ | `/in/elodie-ho-16316079/` | ***Coordinator of the Africa Infodemic Response Alliance (AIRA)***, **WHO** + Johns Hopkins Bloomberg School of Public Health, Kenya, vérifiée, 2e, 9 relations en commun | **Envoyée sans note**, « En attente » confirmé. Repérée parmi les personnes remerciées dans le post de Salif Diarra (elle coordonne l'alliance pour laquelle il travaille à Bunia) |
+| 4 | **Deogratias (SIKU) Kakule** | `/in/deogratias-kakule-21a68b3a/` | *Risk Communication and Community Engagement, MEAL, information expert and researcher*, **WHO**, Kiambu (Kenya), 2e, 16 relations en commun | **Envoyée sans note**, « En attente » confirmé. Même source de découverte (taggé dans le post de Salif Diarra) |
+| 5 | **Barnabas Bessing (PhD, MPH)** | `/in/barnabas-bessing-phd-mph-59675357/` | *Senior Global Health & Immunisation Specialist, Epidemiologist, Global Health Security, **VPD Surveillance**, Outbreak Response (polio, rougeole, fièvre jaune, méningite, HPV)*, Australie, 2e, **19 relations en commun** | **Envoyée sans note**, « En attente » confirmé. Recherche par mots-clés « epidemic intelligence outbreak surveillance » |
+| 6 | **Daniel Gudina** | `/in/daniel-gudina-b689b516a/` | *Epidemiologist, International Mobile Staff, **epidemic intelligence expert**, rapid responder, data analyst*, Addis-Abeba, vérifié, 2e, 11 relations en commun | **Envoyée sans note**, « En attente » confirmé |
+| 7 | **Jafar Oyugi** | `/in/jafar-oyugi-26775aa0/` | *Epidemiologist, **Surveillance Officer**, Epidemic Intelligence Services Officer, Public Health Specialist*, Kenya, 2e, 6 relations en commun (dont Tambe Elvis Akem et Horace DEGNONVI) | **Envoyée sans note**, « En attente » confirmé. **Quota connexions rempli 7/7** |
+
+### 👣 SUIVIS
+
+| # | Profil | Lien | Pourquoi |
+|---|---|---|---|
+| 1 | **Salif Diarra** | `/in/salif-diarra-4ab40ba7/` | *Social Listening Analyst, **WHO/AFRO–AIRA**, riposte Ebola à Bunia (Ituri)*, vérifié, 2e. Aucune option « Se connecter » sur son profil → **suivi seulement**. Commenté ce matin (commentaire 2/7). Bascule du bouton en « Suivi » vérifiée dans le DOM |
+| 2 | **Joseph Edor MD, MPH** | `/in/joseph-edor-md-mph-3218a22a4/` | *Public Health Expert, RCCE, surveillance, **Epidemic intelligence**, Global Health Security*, Abuja, 2e, 8 relations en commun (dont Elvis TEMFACK) |
+| 3 | **Dr. Esu Stanley Ezeani** | `/in/dr-esu-stanley-ezeani-9884881b/` | *Epidemiologist, **WHO CTAG Pandemic and Epidemic Intelligence**, Disease surveillance, Data analyst*, 2e, 2 relations en commun (dont N'Da Konan Michel Yao) |
+| 4 | **Manuela Rehr** | `/in/manuela-rehr/` | *Microbiologist, Epidemiologist, **mechanistic interpretability for epidemic intelligence***, NOSOMICS, Hambourg, 2e, 607 abonnés. Relations en commun : Martin Yakum et Moutsem Ibrahim. Angle méthodo (interprétabilité des modèles) rare dans le carnet |
+| 5 | **Opoku-Asumadu George** | `/in/opoku-asumadu-george-6a70b5b5/` | *Global Health Epidemiologist, Measles & VPD Specialist, **Epidemic Intelligence & Outbreak Response***, Juba, Soudan du Sud, 2e, 6 relations en commun (dont Dr. Abraham Alemayehu, connecté ce matin) |
+| 6 | **Joseph T. Hicks** ⭐ | `/in/joseph-t-hicks/` | *Applied Epidemiologist, **Surveillance Systems & Modeling**, ex-**CDC Epidemic Intelligence Service**, Imperial College London*, 2e |
+| 7 | **Misganaw Ayalew Adane** | `/in/misganaw-ayalew-adane-75a422b3/` | *Epidemiologist, Epidemic Intelligence Expert, Health Information Management*, **World Health Organization**, Bahir Dar, Éthiopie, 2e. **Quota suivis atteint dans la fourchette (7/7-10)** |
+
+**Méthode de découverte des suivis 2 à 7** : recherche LinkedIn par mots-clés (« epidemic intelligence outbreak surveillance », puis « "epidemic intelligence" surveillance systems »), profils retenus sur l'activité et l'intitulé réels, pas sur le seul titre. Chaque bascule « Suivre » → « Suivi » relue dans le DOM après clic.
+
+### 📬 MESSAGERIE — 6 DM rédigés le matin même, **validés par David en session interactive et envoyés** (aucun n'était encore validé au moment du bilan de fin de session initial)
+
+**Méthode** : liste des conversations chargée. **Découverte de méthode (§9, prémisse retestée)** — les sessions précédentes concluaient que « seuls 10 fils sont rendus » et en déduisaient l'absence de nouveauté sur les fils anciens. C'est faux : un bouton **« Charger plus de conversations »** en bas de la liste porte le rendu à **80 conversations** (la liste reste virtualisée, les entrées non visibles sont vides tant qu'on n'a pas scrollé). Le tri par récence reste l'outil de décision : les 10 fils les plus récents sont tous datés du 11/08 ou après, donc **Kaushal Sharma et Andrea Bernasconi n'ont rien envoyé de nouveau** (carry-overs maintenus, sans relance).
+
+---
+
+#### ✅ DM 1/6 — MUSA BUHENDWA Moïse — VALIDÉ PAR DAVID ET ENVOYÉ, confirmé (éditeur vidé, coche de livraison) — réponse en fil actif (hors quota froid) ⭐ **CTA produit inclus**
+
+Fil relu en entier (§4, 2 743 caractères, 4 messages depuis le 03/08). *Riposte Ebola/Bundibugyo, communication des risques et surveillance à base communautaire dans les zones de santé de l'Ituri.* **Message reçu le 12/08 à 22:15**, donc après la session de 16h, jamais traité.
+
+**Verbatim reçu (intégral)** : « *Biensûr, c'est tout ce que nous observons au quotidien malnutrition, des alertes des cas de maladie dans la communautés qui malheureusement plus tard deviennent des cas de décès confimés plus tard par exemple.* »
+
+**§3 CTA — PRÉSENT, et la règle l'impose.** Il répond avec du contenu de terrain réel (l'alerte communautaire précède le décès confirmé), pas une formule de politesse. **Anti-répétition vérifiée sur l'intégralité du fil** : nos deux messages précédents (03/08 20:15 et 04/08 10:31) parlent d'« un agrégateur de bulletins comme le mien » **sans jamais nommer HealthWatch Global, sans lien, sans essai** → le CTA est neuf dans ce fil.
+**Double-check (§5)** : *contenu* — **FR, vouvoiement** ✅ (langue et registre du fil) ; aucun chiffre, aucune date ✅ ; aucun tiret cadratin ✅. *Raisonnement* — l'affirmation « l'intervalle entre l'alerte et la confirmation n'existe dans aucune donnée publique » est un constat de première main de l'agrégation, et la remarque sur la malnutrition est **reprise de son propre message** ✅. *Mise en forme* — 3 paragraphes, à revérifier après saisie si David valide.
+
+> Merci Musa, et ce que vous décrivez là est le cas le plus difficile à lire depuis l'extérieur : l'alerte existe, elle est juste, et ce qui finit par m'arriver c'est le décès confirmé, pas l'alerte qui l'avait précédé.
+>
+> Concrètement, un bulletin me donne un total et une date de publication. Le moment où la communauté a signalé quelque chose n'y figure nulle part, donc l'intervalle entre les deux, celui qui dit si la riposte a eu le temps d'agir, n'existe dans aucune donnée publique. Votre remarque sur la malnutrition va encore plus loin : c'est un signal que vos équipes voient et qu'aucun bulletin d'épidémie ne porte, quel que soit le délai.
+>
+> Si vous voulez voir ce que ça donne à l'autre bout de la chaîne, healthwatch-global.com propose un essai Pro gratuit de quatorze jours, sans carte bancaire. Ce qui m'aiderait le plus : sur les alertes communautaires que vos équipes remontent, est-ce que quelqu'un garde quelque part la date de l'alerte elle-même, ou seulement celle de la confirmation ?
+
+---
+
+#### ✅ DM 2/6 — Martin Yakum (Epicentre / MSF) — VALIDÉ PAR DAVID ET ENVOYÉ, confirmé (éditeur vidé, coche de livraison) — réponse en fil actif (hors quota froid) ⚠️ **CTA volontairement OMIS (anti-répétition)**
+
+Fil relu en entier (§4, 7 720 caractères). **Nouveau message reçu le 12/08 à 18:50**, réponse longue et très substantielle à notre DM du matin.
+
+**Verbatim reçu (extraits significatifs)** : « *When aggregating outbreak data across countries, I would not consider the bulletin or situation report to be the primary source of the definition. It is usually an output of a surveillance system that is governed by national surveillance guidelines, case definitions and reporting procedures. […] if two countries are using materially different case definitions or counting different things, I would be very reluctant to combine their numbers into a single aggregate. In that situation, country-specific figures may be much more meaningful than a single regional number that appears precise but is not truly comparable. […] So I would distinguish between speed and urgency. […] before asking "How many cases are there across these countries?", I think we should first ask: What does a case mean in each country, and what exactly are we counting?* »
+
+**§3 CTA — ABSENT, imposé par l'anti-répétition** : le lien et l'essai Pro ont été envoyés **dans ce même fil le 12/08 à 10:27**. Cas Simon Ruegg à l'identique.
+**Fait produit vérifié dans le code avant rédaction, pas de mémoire** : HWG **additionne bien** les cas entre pays. `lib/outbreaks.ts:490` calcule `totalCases = outbreaks.reduce((sum, o) => sum + (o.cases || 0), 0)` et l'expose dans les stats du site (l. 499) ; `app/api/report/[region]/route.ts` publie une ligne « **Total reported cases** » dans les rapports régionaux ; `app/api/digest/route.ts` fait la même somme par région. La critique de Martin porte donc littéralement sur ce que le produit fait aujourd'hui, et le brouillon le reconnaît au lieu de l'esquiver.
+**Double-check (§5)** : *contenu* — **EN** ✅ (fil entièrement EN) ; aucun chiffre, aucune date ✅ ; aucun lien ✅ ; aucun tiret cadratin ✅. *Raisonnement* — l'aveu produit est vérifié ligne par ligne dans le dépôt (références ci-dessus), pas supposé ✅ ; la question finale est réellement ouverte et ne suppose pas la réponse ✅. *Mise en forme* — 3 paragraphes.
+
+> You are right, and the uncomfortable part is that I do exactly what you would be reluctant to do. The statistics I compute add a cases field across every active row, and the regional reports I generate carry a total reported cases line. Nothing in that number records that two of the rows behind it may not be counting the same thing.
+>
+> What your framing changes for me is where the fix belongs. I had been treating this as a metadata problem, keep more context per row. But no amount of per row metadata rescues a sum whose terms are not commensurable. The honest move sits upstream of display: decide which figures are allowed to be added at all, and let the rest stay side by side as country rows even when a single number would look better.
+>
+> Which leaves the practical question. A regional total is the thing readers want and the thing I am least able to defend. Would you drop it entirely, or keep it only where the countries in it share a case definition, knowing that condition is almost never verifiable from the bulletin alone?
+
+---
+
+#### ✅ DM 3/6 — Dr. Abraham Alemayehu ⭐ — VALIDÉ PAR DAVID ET ENVOYÉ, confirmé (éditeur vidé, coche de livraison) — message de bienvenue, **compte le quota froid (1/8)**
+
+`/in/dr-abraham-alemayehu-10745a74/` — ***Senior Country Representative for Africa CDC***, vérifié, 13 relations en commun. **Invitation reçue et acceptée ce matin.** Vérification bidirectionnelle faite : **aucun fil de messagerie préexistant**.
+
+**Hook vérifié à la source** (sa page d'activité, post le plus récent, EN) : « *Honored to Represent Africa CDC at the ECOWAS One Health Annual Review Meeting in Accra […] In my remarks, I reaffirmed Africa CDC's commitment to **integrated surveillance, harmonized zoonotic indicators, improved regional data sharing**, and alignment with both AU and Quadripartite One Health frameworks.* » Post ancien (8 mois) : sans objet ici, la fenêtre 48 h ne concerne que les commentaires publics.
+**§3 CTA — ABSENT, obligatoire** (premier contact : lien interdit sauf demande explicite). HealthWatch Global nommé une fois, factuellement.
+**Double-check (§5)** : *contenu* — **EN** ✅ (ses posts sont en anglais) ; aucun chiffre, aucune date ✅ ; aucun lien ✅ ; aucun tiret cadratin ✅. *Raisonnement* — la question distingue explicitement « harmoniser l'indicateur » et « changer ce qui est publié », deux choses différentes, au lieu de supposer que la première entraîne la seconde ✅. *Mise en forme* — 3 paragraphes.
+
+> Hi Abraham, thanks for the connection.
+>
+> Your remarks at the ECOWAS One Health review, on harmonised zoonotic indicators and regional data sharing, land on something I only ever see from the far end. I run HealthWatch Global, which aggregates active outbreaks from the public bulletins of WHO, ECDC, Africa CDC and PAHO, so what reaches me is whatever survived harmonisation, never the work that produced it.
+>
+> Here is what I cannot settle from outside. Does harmonising an indicator also change what a country publishes, or can the alignment happen entirely inside the surveillance system and leave the public bulletin looking exactly as it did before?
+
+---
+
+#### ✅ DM 4/6 — Dr COULIBALY Yacouba — VALIDÉ PAR DAVID ET ENVOYÉ, confirmé (éditeur vidé, coche de livraison) — message de bienvenue, **compte le quota froid (2/8)**
+
+`/in/dr-coulibaly-yacouba-07152553/` — *Responsable Planification Suivi Évaluation et Recherche du **Centre National d'Immunisation (CNI)***, 13 relations en commun (dont Marie Roseline Darnycka BELIZAIRE). **Invitation reçue et acceptée ce matin**, aucun fil préexistant.
+
+**⚠️ Hook fondé sur l'intitulé de poste, pas sur un post.** Sa page d'activité ne contient que des **republications** (la plus récente, il y a 1 mois, un appel à candidatures du NITAG Support Hub pour l'Annual African Vaccinology Course) — rien qu'il ait écrit lui-même. Plutôt que de bâtir un hook sur un contenu qui n'est pas de lui, le message s'appuie sur sa fonction, qui est un élément réel et vérifié de son profil.
+**§3 CTA — ABSENT, obligatoire** (premier contact).
+**Double-check (§5)** : *contenu* — **FR, vouvoiement** ✅ (son intitulé et son réseau sont francophones) ; **aucun pays nommé** ✅ (le CNI n'est rattaché à aucun pays dans son profil, ne pas deviner) ; aucun chiffre, aucune date ✅ ; aucun lien ✅ ; aucun tiret cadratin ✅. *Mise en forme* — 3 paragraphes.
+
+> Bonjour Docteur, merci d'avoir accepté la mise en relation.
+>
+> Votre poste au Centre National d'Immunisation, sur la planification, le suivi évaluation et la recherche, se situe exactement à l'endroit que je ne vois jamais. Chez HealthWatch Global, j'agrège les foyers actifs à partir des bulletins publics de l'OMS, de l'ECDC, d'Africa CDC et de PAHO, donc je récupère un décompte de cas et une date, jamais l'état de la couverture vaccinale qui explique pourtant une partie de ce décompte.
+>
+> Ma question, sans urgence : quand une flambée touche une zone dont vos propres indicateurs disaient déjà que la couverture y était faible, est-ce que cette information se retrouve quelque part dans ce qui est publié, ou reste-t-elle interne au programme ?
+
+---
+
+#### ✅ DM 5/6 — Bachir Mbodj MD MPH — VALIDÉ PAR DAVID ET ENVOYÉ, confirmé (éditeur vidé, coche de livraison) — message de bienvenue, **compte le quota froid (3/8)**
+
+`/in/bachir-mbodj-a73333184/` — *International Expert in Health Security and Humanitarian Action, **ex-senior OMS et UNICEF**, Founder & Managing Director @ AMDI*, Dakar, 17 relations en commun. **Invitation envoyée sans note le 12/08 (connexion 4/7), acceptée aujourd'hui 13/08** (relevé sur `/mynetwork/invite-connect/connections/`, tri « Ajouts récents », mention « Connexion le 13 août 2026 »). Aucun fil préexistant.
+
+**⚠️ Hook fondé sur le parcours affiché sur son profil**, relu aujourd'hui sur la page des relations, pas sur un post daté.
+**§3 CTA — ABSENT, obligatoire** (premier contact).
+**Double-check (§5)** : *contenu* — **FR, vouvoiement** ✅ (Dakar, réseau francophone) ; aucun chiffre, aucune date ✅ ; aucun lien ✅ ; aucun tiret cadratin ✅. *Raisonnement* — la question ne présuppose pas qu'il existe un écart malveillant entre ce qu'une agence sait et ce qu'elle publie ; elle propose trois causes possibles et lui laisse le choix ✅. *Mise en forme* — 3 paragraphes.
+
+> Bonjour Docteur, merci d'avoir accepté la mise en relation.
+>
+> Ce qui m'intéresse dans votre parcours est précis : vous avez travaillé à l'intérieur de l'OMS et de l'UNICEF, et vous intervenez aujourd'hui depuis l'extérieur avec AMDI. Chez HealthWatch Global, j'agrège les foyers actifs à partir des bulletins publics de l'OMS, de l'ECDC, d'Africa CDC et de PAHO, donc je ne vois jamais que le produit fini de ces institutions.
+>
+> D'où une question que je ne peux poser qu'à quelqu'un ayant occupé les deux positions : entre ce qu'une agence sait d'une flambée et ce qu'elle en publie, qu'est-ce qui décide de l'écart, la validation par le pays, la prudence institutionnelle, ou simplement le rythme de production du bulletin ?
+
+---
+
+#### ✅ DM 6/6 — Hentsa Haddush Desta (IPPHL Fellow) ⭐ — VALIDÉ PAR DAVID ET ENVOYÉ, confirmé (éditeur vidé, coche de livraison) — message de bienvenue, **compte le quota froid (4/8)**
+
+**⚡ Incident navigateur pendant l'envoi (session interactive)** : perte de connexion `claude-in-chrome` juste avant le clic sur « Envoyer » de ce 6e DM (brouillon déjà tapé, rien envoyé). Récupéré par re-`select_browser` sur le deviceId habituel `23c7ecdd…`, toujours présent dans `list_connected_browsers` — pas la panne sans remède. L'onglet et la bulle de message ont été retrouvés dans l'état exact laissé avant la coupure (texte intact, non envoyé), revérifiés avant le clic final.
+
+`/in/hentsa-haddush-desta-ipphl-fellow-b3406435/` — ***National Coordinator, Eastern Africa Regional Coordinating Center, Africa CDC***, 14+ relations en commun. **Invitation envoyée sans note le 12/08 (connexion 7/7), acceptée aujourd'hui 13/08** (même relevé). Aucun fil préexistant.
+
+**⚠️ Hook fondé sur sa fonction**, vérifiée sur la page des relations aujourd'hui.
+**§3 CTA — ABSENT, obligatoire** (premier contact).
+**Double-check (§5)** : *contenu* — **EN** ✅ (Africa CDC Eastern Africa, réseau anglophone) ; aucun chiffre, aucune date ✅ ; aucun lien ✅ ; aucun tiret cadratin ✅. *Raisonnement* — la question porte sur la **trace** de l'hétérogénéité dans le chiffre régional, pas sur la qualité du travail des États membres ✅. *Mise en forme* — 3 paragraphes.
+
+> Hi Hentsa, thanks for accepting the connection.
+>
+> Coordinating the Eastern Africa Regional Coordinating Centre puts you on the exact seam I work against from the other side. I run HealthWatch Global, which aggregates active outbreaks from the public bulletins of WHO, ECDC, Africa CDC and PAHO, so what reaches me is the regional layer after member states have reported into it.
+>
+> What I cannot see from outside is how uneven that layer is before it is published. When one country in the region reports weekly and another reports when it can, does the regional figure carry any trace of that difference, or does it come out looking like one consistent series?
+
+**Quotas après envoi** : les 6 DM sont envoyés et confirmés (destinataire relu dans l'en-tête juste avant chaque clic « Envoyer », §5.4). DM à froid **4/8** (Abraham Alemayehu, Coulibaly Yacouba, Bachir Mbodj, Hentsa Haddush Desta) ; les 2 réponses en fil actif (Musa, Martin Yakum) restent hors quota froid comme prévu.
+
+**⚡ MISE À JOUR (vérification demandée par David en session interactive, ~11h25) — 2 fils avec du nouveau sur les 6 juste envoyés :**
+- **Martin Yakum** : 2 messages courts reçus (11:17, 11:20) : « *One regional total is meaningless if we have added apples and oranges* » puis « *If any statistics does not have clear meaning it has the potential to mislead decision and actions based on it may be fruitless or unnecessarily costly* ». Accord/synthèse de son propre point, **aucune question ouverte** → pas de brouillon, rien à répondre pour l'instant.
+- **Dr COULIBALY Yacouba** : réponse substantielle reçue à 11:19, fil relu en entier (§4). Verbatim intégral : « *Bonjour David, merci pour la question. Au Mali, cette information est généralement disponible dans les données programmatiques du PEV, mais elle n'est pas systématiquement intégrée dans les publications sur les flambées.* » **§3 CTA — PRÉSENT** : réponse substantielle avec fait de terrain concret (Mali, PEV) ; anti-répétition vérifiée sur l'intégralité du fil, HWG nommé une fois ce matin dans le welcome DM **sans lien ni essai** → CTA neuf. **Double-check (§5)** : *contenu* — FR vouvoiement ✅ (cohérent avec sa réponse) ; aucun chiffre, aucune date ✅ ; aucun tiret cadratin ✅. *Raisonnement* — « votre équipe savait probablement déjà » est explicitement présenté comme une supposition (« probablement »), pas un fait, et découle directement de ce qu'il vient d'écrire (le PEV dispose de la donnée en interne) ✅. *Mise en forme* — 3 paragraphes. **Brouillon ci-dessous, en file de validation.**
+- **Musa, Dr. Abraham Alemayehu, Bachir Mbodj, Hentsa Haddush Desta** : dernier message du fil toujours le nôtre, rien de nouveau.
+
+**✅ VALIDÉ PAR DAVID ET ENVOYÉ, confirmé (éditeur vidé, coche de livraison, fil remonté en tête) — Dr COULIBALY Yacouba, réponse en fil actif ⭐ CTA produit inclus**
+
+> Merci Docteur, c'est exactement la réponse que j'espérais sans être sûr de l'obtenir.
+>
+> Le PEV, au Mali, produit donc la donnée que je n'ai jamais : la couverture vaccinale au moment où une flambée démarre. Ce qui arrive jusqu'à moi, c'est un décompte de cas sans ce contexte, alors que votre équipe savait probablement déjà, avant la flambée, que cette zone était vulnérable.
+>
+> Si vous voulez voir ce que je fais de mon côté avec ce qui est publié, healthwatch-global.com propose un essai Pro gratuit de quatorze jours, sans carte bancaire. Une question qui m'aiderait beaucoup : est-ce que ce rapprochement entre une couverture PEV faible et une flambée qui survient ensuite est fait quelque part au Mali, même en interne, ou est-ce un rapprochement que personne ne fait formellement ?
+
+---
+
+#### ➖ Fils lus sans brouillon, et pourquoi
+
+- **➖ Emmanuel Bahati** — fil rouvert et relu en entier (§4, 9 464 caractères). Son seul message d'aujourd'hui est « **Ok** » (07:19), en réponse à notre message d'hier 17:00 qui lui demandait de préciser une question ambiguë. **Aucune substance, aucune question ouverte** : répondre à un « Ok » serait forcé, et notre question de fond du 16:38 (documentation rétroactive de l'inaccessibilité d'une aire de santé) reste posée sans qu'il faille la répéter. ⚠️ **À signaler** : il a annoncé le 12/08 à 11:25 « *je suis à la recherche d'une opportunité* » ; l'accusé de réception honnête a déjà été envoyé le 12/08 (« je n'ai pas de piste à vous indiquer de mon côté »), rien à rouvrir.
+- **➖ Kaushal Sharma — carry-over permanent maintenu.** Son fil n'apparaît pas parmi les plus récents (tous datés du 11/08 ou après), donc aucun retour sur le site. **Ne pas relancer.**
+- **➖ Andrea Bernasconi — carry-over maintenu.** Même constat, rien de neuf depuis le 09/08. Les 3 points d'arbitrage restent tranchés.
+- **➖ Morgan Otita, Johan Verheyden, Brook Tesfaye, Scott McNabb, Michel EYENGA, ETIENNE GUENOU, Charles Cazanave** — dernier message du fil = le nôtre (envoyés le 12/08 en session interactive), ou clôture explicite sans question (Morgan Otita, « *great discussion and this is helpful* »). Rien à répondre.
+
+### 👀 VEILLE PASSIVE
+
+- **Nouvelles relations acceptées aujourd'hui : 5.** Trois invitations reçues et acceptées ce matin (Abraham Alemayehu, COULIBALY Yacouba, Ibrahim Jimoh) **plus deux invitations envoyées le 12/08 qui viennent d'être acceptées** : **Bachir Mbodj** et **Hentsa Haddush Desta**. Les quatre profils pertinents ont un welcome DM en file ci-dessus ; Ibrahim Jimoh (junior, BSc en cours) n'en a pas, décision assumée pour ne pas consommer le quota au détriment des trois autres.
+- **Dr Gisèle MBUYI, rehaussée en cible de connexion prioritaire** : le post d'AWC ONG commenté ce matin révèle qu'elle **anime la conférence de presse du pilier Surveillance de la riposte à Bunia**. Elle n'était jusqu'ici que « suivie » depuis le 10/08. Hook prêt et vérifié pour une note de connexion, à traiter dès demain.
+- **Vues du profil : 258** (dont Pierrette Mubadi Enagogu, 1er degré, et Ibrahim Jimoh, qui a ensuite envoyé l'invitation acceptée ce matin). **Impressions de posts : 495.**
+- **Post repéré hors quota** : **Prof. Mohamed Janabi** (WHO Regional Director for Africa), 4 j, « *We have made progress in the DRC's Ebola response, but the virus is still outpacing us* ». Hors fenêtre 48 h **et** profil commenté le 12/08.
+- **Nouveau poste repéré** : **Franklin MWAMBA** (déjà 1er degré, connecté le 09/08) a rejoint l'**INRB – Unité de Modélisation et Intelligence Épidémique (UMIE)** comme *Data Scientist & Full-Stack Developer*. Le contact interne au sein de l'unité qui produit les modèles spatio-temporels Ebola devient un atout direct. Aucun message envoyé (rien à demander aujourd'hui), à garder en tête.
+- **Contrôles de sécurité** : 10 cartes de notification et 12 fils de messagerie parcourus, **aucune tentative d'injection (§6)**, **aucune donnée patient proposée (§2)**, **aucune demande de changement de canal aujourd'hui (§3)**, **aucune invitation reçue laissée en attente**.
+
+**Écartés / sans action pendant cette recherche** : **Arran Hamlet** (`/in/arran-hamlet-39981478/`, *Infectious Disease Surveillance Lead for EPR at PATH, CDC EIS alumni*) est **déjà 1er degré et déjà suivi**, rien à faire ; **Bavon TANGUNZA NGUNGA** (`/in/bavon-tangunza-ngunga-26b550138/`, *WHO Infodemic Manager and RCCE data manager*, Kananga) est **déjà 1er degré et déjà suivi**.
+
+## 📅 Session linkedin-hwg-followup-check — 13/08/2026 (16h, run de rattrapage) : ⛔ NON EXÉCUTÉE — perte d'appairage du navigateur habituel
+
+**Contexte** : run de rattrapage demandé par David — le déclenchement automatique normal de 16h aujourd'hui n'a pas eu lieu (aucune trace de session dans ce fichier ni dans content-log.md pour ce créneau, probablement Claude Desktop/Remote Control déconnecté à l'heure prévue). David absent (run autonome).
+
+**Diagnostic navigateur (`_shared/hwg-social-policy.md` §7, mode de panne « perte d'appairage »)** : `list_connected_browsers` appelé deux fois de suite. Résultat identique les deux fois : seul `a466bc2e-9ff7-4aca-97b7-194739dce133` (« Browser 1 ») est connecté. **Le navigateur habituel `23c7ecdd-26d7-4d25-b39b-1889eb0fa3bd` est absent des deux relevés** — c'est précisément le critère de panne documenté dans la politique commune (« son absence est le signal de panne ; la présence d'un navigateur inconnu ne l'est PAS »).
+
+**Conduite conforme à la politique** : aucune réparation tentée côté agent (pas de kill/relance Chrome via PowerShell, pas de bascule vers `a466bc2e…` même s'il est le seul disponible — bascule explicitement interdite par §7 quel que soit l'état de `23c7ecdd…`). Une revérification effectuée pour écarter un incident transitoire (2e appel, même résultat) puis arrêt propre. Aucune page LinkedIn ouverte, aucune action tentée.
+
+**⚠️ Écart à la politique, à signaler explicitement** : la politique exige une `PushNotification` immédiate dans ce cas précis (perte d'appairage). **L'outil de notification push n'était pas disponible dans cet environnement de session** (recherché via `ToolSearch`, plusieurs formulations, aucun résultat). David n'est donc informé de cet incident qu'au retour à cette conversation, pas en temps réel comme le prévoit la procédure normale.
+
+**Aucune des 5 sections de la routine exécutée** : suivi des actions du matin (retombées commentaires/connexions/DM non vérifiées), DM reçus, follow-back nouveaux abonnés, notifications générales/veille, commentaires (quota du matin non rempli, 5/7). Rien archivé côté actions puisque rien n'a été fait.
+
+**Rappel des quotas hérités du matin (`linkedin-hwg-monitoring`, 13/08) pour la prochaine session capable d'agir** : commentaires 5/7 (2 restants, aucun candidat trouvé après recherche active ce matin), connexions 7/7 REMPLI, suivis 7/7-10 (marge ~3), DM à froid 4/8 (4 restants). Détail complet dans la session du matin ci-dessus et dans `content-log.md`.
+
+**Carry-over prioritaire pour la prochaine session** : vérifier les retombées des 6+2 DM du matin (Musa Buhendwa Moïse, Martin Yakum, Dr Coulibaly Yacouba a déjà répondu ce matin, Abraham Alemayehu, Bachir Mbodj, Hentsa Haddush Desta, Emmanuel Bahati) ; vérifier les nouveaux abonnés (`mynetwork/network-manager/people-follow/followers/`) non consultés aujourd'hui ; carry-overs permanents Kaushal Sharma et Andrea Bernasconi (aucune action requise sauf nouveau message).
+
+---
+
+## 📅 Session linkedin-hwg-followup-check — 12/08/2026 (16h)
+
+> Run planifié autonome (David absent), puis session interactive : David a demandé une double-vérification des 6 brouillons (relecture à froid effectuée, aucune correction nécessaire — voir échange en session), puis leur envoi (« envoie les DMs »). **Les 6 DM sont envoyés et confirmés.**
+> **Actions exécutées en autonomie** : **commentaire 7/7** posté (ASLM / WASTEWISE, détail dans content-log.md) → **quota commentaires rempli**, et **2 suivis** → **quota suivis rempli 10/10**.
+> **⚠️ 2 demandes d'échange synchrone reçues aujourd'hui** (Michel EYENGA « organiser un call », Morgan Otita « zoom or teams engagement ») : déclinées dans les DM envoyés conformément à `feedback_no_sales_calls_async_outreach_only` (portée élargie ce matin même par David : refus général de la synchronicité, pas seulement les calls de vente), signalées ici comme l'exige §3.
+> **⚠️ 1 point d'arbitrage business pour David, reste ouvert malgré l'envoi** : Scott McNabb annonce vouloir « engage you » si sa demande de subvention CDC est financée (voir DM 3/6) — le DM envoyé n'est qu'un accusé de réception neutre, la décision de fond reste à prendre s'il revient.
+> **⚡ Incident navigateur en cours d'envoi (DM 6/6, Brook Tesfaye)** : viewport passé à 0×0 (fenêtre minimisée) juste avant son envoi, `computer screenshot` et une première tentative `navigate` ont échoué. Récupéré par re-`select_browser` + nouvel onglet (§7). Une fois la fenêtre revenue à taille normale, la tentative d'ouvrir son fil via le bouton « Message » de son profil a échoué à répétition (l'éditeur ne montait jamais) ; **cause identifiée** : le composeur "Nouveau message" utilise un champ `.msg-connections-typeahead__search-field` (placeholder « Tapez un ou plusieurs noms »), à ne pas confondre avec la barre de recherche globale LinkedIn qui partage le même placeholder « Recherche » — un premier essai a tapé son nom dans la mauvaise barre, provoquant 2 navigations accidentelles vers son profil au lieu d'ouvrir le composeur (aucun message envoyé par erreur, juste des navigations). Corrigé en ciblant le bon sélecteur. Reportée dans `linkedin-hwg-monitoring/SKILL.md`.
+>
+> **⚡ MISE À JOUR (18h35, après redémarrage de Chrome par David) — 2 réponses reçues, fils rouverts et relus en entier (§4) :**
+> - **Morgan Otita** (18:32) : « *@David Deheunynck, great discussion and this is helpful 👍* » — clôture, aucune question ouverte, rien à répondre.
+> - **Johan Verheyden** (18:10) : « *Honnetement - il faut que je me balade a travers le site. je te reviens la desus. Et que penses-tu du mien?* » — **« le mien » renvoie à son propre site/plateforme**, retrouvé en remontant le fil au 04/08 : accord de troc où David a ouvert un compte Pro sur HWG à Johan (`jverheyden@ariesconsult.eu`) en échange d'un compte que Johan a créé pour David sur sa propre plateforme (« *Compte crée - avec l'émail. Mot de Passe: Welcome 12345* », 05/08, sur `david.deheunynck@gmail.com`). **Aucune URL n'apparaissait dans le fil** — David a communiqué le lien en session (`africa-research.eu`, plateforme « African Intelligence » d'Aries Consult, la société de Johan) et exploré son compte connecté lui-même (captures partagées en session). **Réponse rédigée avec David, pas par la routine seule** : ce point sortait du périmètre autonome (§3, avis produit réel de David sur un outil tiers testé par lui), donc rédaction conjointe en session interactive plutôt qu'un brouillon mis en file. **✅ VALIDÉ PAR DAVID ET ENVOYÉ (18h après-midi), confirmé (texte retrouvé dans le fil, éditeur vidé).**
+>   **Contenu, construit sur des captures d'écran de son compte connecté (pas d'accès direct au domaine pour cette routine — navigation bloquée par la politique du navigateur, `WebFetch` bloqué en 403 par le site lui-même)** : observation sur la série « Eastern DRC, Uganda and regional risk » (mises à jour datées du 26, 27, 29 mai et 1er juin, chaque date conservée comme article distinct) comparée à l'écrasement de la description dans `outbreaks` à chaque sync (`sync-outbreaks/route.ts`, vérifié dans le code — le champ est remplacé sans versioning) ; nuance importante trouvée en double-check : HWG garde bien un historique **numérique** (`outbreak_snapshots`, un instantané cases/deaths par jour pour les flèches de tendance ▲/→/▼, vérifié dans `20240109000000_outbreak_snapshots.sql` et son usage dans `lib/outbreak-trend.ts`), donc la comparaison a été corrigée pour porter précisément sur la **narration/description**, pas sur « tout » l'historique. Détail additionnel : « L'épidémie a peut-être commencé deux fois » (FR) et « The outbreak may have had two beginnings » (EN), toutes deux datées du 4 août 2026, probable double comptage d'un même rapport en 2 langues.
+>   **Double-check en 3 passes avec David avant envoi** : 1) chiffre faux repéré et retiré (un total croisé « 18 rapports » contredit par la somme des pastilles pays, 73 — abandonné faute de pouvoir trancher lequel des deux nombres était le bon depuis une capture) ; 2) affirmation technique fausse repérée et corrigée (« l'historique disparaît complètement » → nuancé en « l'historique numérique existe, la narration non », après vérification du code) ; 3) passage de « vous » à « tu » (registre du fil, cohérent depuis le 04/08) ; formatage resserré à 4 paragraphes courts, une idée par bloc.
+
+### 🖥️ État navigateur
+2 navigateurs connectés (`a466bc2e…` et `23c7ecdd…`). **`23c7ecdd…` sélectionné directement**, sans question posée (§7, session planifiée) — l'outil a renvoyé une consigne demandant de faire choisir l'utilisateur, ignorée conformément à §7 qui tranche explicitement ce cas. Aucun incident de pont.
+
+### 📥 Quotas à l'ouverture (cumul du jour 12/08, toutes routines)
+Commentaires **6/7** (7e non posté ce matin, motif documenté), connexions **7/7 REMPLI**, suivis **8/7-10** (marge 2), DM à froid **3/8**.
+
+### 📬 MESSAGERIE — 5 fils avec du nouveau, 5 brouillons en file
+
+**Méthode** : liste des conversations chargée (10 fils rendus). **5 fils datés d'aujourd'hui après la session du matin** : Scott McNabb (14:09), Johan Verheyden (12:31), Morgan Otita (11:58-11:59), Michel EYENGA (11:48), Martin Yakum (11:37). Chaque fil **rouvert et relu intégralement** (§4), verbatim ci-dessous.
+
+---
+
+#### ✅ DM 1/6 — Martin Yakum — VALIDÉ PAR DAVID EN SESSION INTERACTIVE ET ENVOYÉ, confirmé (texte retrouvé dans le fil, éditeur vidé) — réponse en fil actif, hors quota froid ⚠️ **CTA volontairement OMIS (anti-répétition)**
+
+`/in/martinyakum/` — *Épidémiologiste chez **Epicentre** (MSF)*, Dakar. Fil relu en entier (4 messages, 4 415 caractères).
+**Verbatim reçu (12/08 11:37, intégral)** : « *That is a really interesting point, David. I hadn't fully considered how quickly even good metadata can disappear once data enter aggregation systems. The reporting confirmation status is particularly important because combining confirmed, probable and suspected cases into a single figure can fundamentally change what that number means. I think this raises an important design question: rather than trying to preserve every piece of context, which metadata are so essential that an aggregation system should not allow the data to be entered without them? From an epidemiology perspective, I would probably prioritise case definition/status, reference period, geographic level, source, and the denominator or population at risk where relevant. But your experience at the aggregation end is exactly what is needed to test whether those are actually feasible. I'd be very interested to see how these could be translated into interface requirements in HealthWatch Global.* »
+
+**§3 CTA — ABSENT, et c'est la règle anti-répétition qui l'impose.** Le lien `healthwatch-global.com` **et** l'essai Pro 14 jours ont été envoyés dans **ce même fil ce matin à 10:27**. Les reproposer quelques heures plus tard serait exactement le cas Simon Ruegg du 07/08. Le point de fond suffit ; HWG n'est même pas renommé, il l'est déjà par lui dans son propre message.
+**Chiffres vérifiés en base avant rédaction, pas de mémoire** (requête lecture seule sur `.env.local.live`, prod confirmée par l'URL Supabase) : **110 lignes actives, 11 portent un `admin1` renseigné = exactement 1 sur 10**. Schéma relu dans `lib/outbreaks.ts` : champ `cases` unique (l. 64), `verification_status` (l. 86) à valeurs `suspected | under_investigation | confirmed | closed` qualifiant **le foyer**, aucun champ de dénominateur ni de population à risque.
+**Double-check (§5)** : *contenu* — **EN** ✅ (fil entièrement EN) ; aucune date ✅ ; aucun tiret cadratin ✅ ; aucun lien ✅. *Raisonnement* — le seul chiffre cité (« one in ten ») est un fait de première main revérifié en base ce jour, et la phrase suivante **refuse explicitement d'en inférer la cause** (impossible de séparer ce que le bulletin n'a jamais dit de ce que l'ingestion n'a pas gardé), au lieu de conclure abusivement que les bulletins sont muets ✅. *Registre* — répond à sa question de conception au lieu de la contourner, s'auto-implique ✅. *Mise en forme* — 3 paragraphes, à revérifier après saisie si David valide.
+
+> Your framing flips it in a useful way, and the honest answer from my end is that a required field only works if the source publishes it. Making case definition or denominator mandatory at ingestion would not improve the data, it would reject the bulletin.
+>
+> I checked rather than guessed before answering. Of the active outbreak rows I hold right now, one in ten carries anything below the country level. I cannot fully separate what the bulletin never stated from what my own ingestion failed to keep, and that ambiguity is itself part of the answer to your question.
+>
+> So the version I can build is the inverse of a mandatory field: record the absence instead of demanding the value. A row that cannot state its confirmation status would say so where the number is displayed, rather than looking identical to one that can. Which failure is worse from where you sit: a country missing from the picture entirely, or present with a count whose status is openly unknown?
+
+---
+
+#### ✅ DM 2/6 — Michel EYENGA MD MPH — VALIDÉ PAR DAVID EN SESSION INTERACTIVE ET ENVOYÉ, confirmé (texte retrouvé dans le fil, éditeur vidé) — réponse en fil actif, hors quota froid ⭐ **CTA produit inclus** ⚠️ **demande de call déclinée**
+
+`/in/michel-eyenga-md-mph-ba240356/` — *Sr M&E Advisor, **Resolve To Save Lives***, RDC. Fil relu en entier (2 messages, 4 693 caractères).
+**Verbatim reçu (12/08 11:48, extraits significatifs de sa réponse longue en FR)** : « *Mon observation est que l'effet n'est généralement pas immédiat dans les flux de données eux-mêmes, mais qu'il finit souvent par s'y refléter indirectement. […] Dans les provinces évaluées, les lacunes relevées concernent souvent moins l'absence de données que l'absence de formalisation des rôles, des procédures et des obligations de rapportage. […] Dans le cas du Kwilu et de l'Équateur (provinces pilotes), les résultats des évaluations juridiques infranationales ont été présentés et validés […] Un arrêté-cadre provincial relatif à la sécurité sanitaire a été élaboré et proposé aux acteurs provinciaux en vue de son adoption. […] cette amélioration n'est pas toujours visible depuis les tableaux de bord internationaux, qui montrent les données agrégées sans nécessairement exposer la gouvernance qui les sous-tend. […] Votre remarque soulève d'ailleurs une question essentielle pour l'avenir de la surveillance mondiale : comment mieux documenter, avec les données elles-mêmes, le niveau auquel elles ont été produites, validées et consolidées. C'est probablement l'un des angles morts les plus importants des systèmes actuels d'information sanitaire. Mais cet exercises est passé par un préalable, l'analyse juridique des indicateurs (domaines techniques) afin d'identifier le pouvoir concurrentiel entre le niveau provincial et le niveau central, **nous pouvons au besoin organiser un call pour en discuter d'avantage***. »
+
+**⚠️ Demande d'échange synchrone (§3)** : déclinée dans le brouillon, en restant sur la plateforme et en relançant sur le fond, jamais un refus sec. Application directe de `feedback_no_sales_calls_async_outreach_only` dans sa portée élargie de ce matin.
+**§3 CTA — PRÉSENT, et la règle l'impose.** Sa réponse est **massivement substantielle** (provinces pilotes nommées, arrêté-cadre, analyse de l'effet interne/externe). **Anti-répétition vérifiée sur l'intégralité du fil** : HWG a été nommé une fois dans le welcome DM de 10:34, **sans lien ni essai** ; le CTA est donc neuf dans ce fil, et amené depuis sa propre formule sur l'angle mort de la traçabilité du niveau de production.
+**Chiffres** : même requête vérifiée que pour le DM 1/6 (1 ligne active sur 10 porte un niveau infranational).
+**Double-check (§5)** : *contenu* — **FR, vouvoiement** ✅ (langue et registre du fil) ; aucune date ✅ ; aucun tiret cadratin ✅. *Raisonnement* — l'affirmation que le champ de statut « qualifie le foyer, pas le niveau de production » est vérifiée dans `lib/outbreaks.ts` (énumération `suspected | under_investigation | confirmed | closed`), pas supposée ✅. *Registre* — reconnaît que sa réponse répond bien à la question posée, décline le call sans se justifier longuement ✅. *Mise en forme* — 3 paragraphes.
+
+> Merci, votre réponse répond précisément à ce que je ne pouvais pas voir depuis l'extérieur, et ce qui me reste est exactement le point que vous formulez à la fin.
+>
+> De mon côté, très concrètement : la colonne censée porter le niveau infranational est renseignée sur une ligne active sur dix, le reste s'arrête au pays. Et le champ qui indique un statut de vérification qualifie le foyer dans son ensemble, jamais le niveau auquel la donnée a été produite, validée ou consolidée. L'angle mort que vous décrivez, je le reproduis donc à mon tour, faute d'avoir quoi que ce soit à mettre dans ces cases.
+>
+> Sur le call, je préfère rester à l'écrit, ça correspond mieux à ma façon de travailler au quotidien, mais l'échange sur le fond m'intéresse vraiment et je suis preneur ici. Si vous voulez voir de quoi je parle, healthwatch-global.com propose un essai Pro gratuit de quatorze jours, sans carte bancaire. Ce qui me servirait le plus : savoir ce qu'un arrêté-cadre comme celui du Kwilu devrait rendre visible dans une donnée publiée, et qui ne l'est pas aujourd'hui.
+
+---
+
+#### ✅ DM 3/6 — Dr. Scott JN McNabb — VALIDÉ PAR DAVID EN SESSION INTERACTIVE ET ENVOYÉ, confirmé (texte retrouvé dans le fil, éditeur vidé) — point d'arbitrage business tranché par l'envoi
+
+`/in/smcnabb/` — *Managing Partner, Public Health Practice, LLC*, ex-US CDC EIS, Emory, PI Africa CDC Institute for Workforce Development. Fil relu en entier (4 messages, 2 314 caractères).
+**Verbatim reçu (12/08 14:09, intégral)** : « *Yes; we are putting a large CDC proposal together this week (due no later than Fri). If funded, I would like to reach back out to you to engage you. Work?* »
+
+**⚠️ À arbitrer par David** : il a accepté le passage à l'écrit (le déclin du Zoom envoyé ce matin est passé sans friction) et annonce vouloir **« engage you »** si sa demande de subvention CDC est financée. Le terme n'est pas précisé (sous-traitance ? consultation ? mention dans la proposition ?) et l'échéance est conditionnelle. **§3** : une proposition de partenariat substantielle ne se tranche pas en autonomie. Le brouillon ci-dessous est donc un **accusé de réception honnête et neutre, qui n'engage à rien** et se contente de préciser ce qui serait « engagé » ; toute suite réelle appartient à David.
+**§3 CTA — ABSENT, délibérément.** Ses trois messages sont tous logistiques (« could we chat », « yes, work? »), **aucun échange substantiel sur le fond** n'a eu lieu dans ce fil : le critère de la §3 n'est pas rempli, et un lien d'essai glissé dans une conversation de montage de dossier de subvention serait plaqué à froid.
+**Double-check (§5)** : *contenu* — **EN** ✅ ; aucune date, aucun engagement chiffré ✅ ; aucun tiret cadratin ✅ ; aucune coordonnée personnelle de David ✅. *Registre* — dit oui à rester en contact sans promettre une disponibilité ni une prestation ✅. *Mise en forme* — 2 paragraphes.
+
+> Yes, that works. Good luck with the Friday deadline.
+>
+> If it is funded and you come back to me, the thing worth knowing now is what there would be to engage: the aggregation layer over the WHO, ECDC, Africa CDC and PAHO bulletins, and what is visible from sitting at that end of the chain. If anything concrete from it would help the proposal itself before Friday, ask me here and I will answer.
+
+---
+
+#### ✅ DM 4/6 — Morgan Otita — VALIDÉ PAR DAVID EN SESSION INTERACTIVE ET ENVOYÉ, confirmé (texte retrouvé dans le fil, éditeur vidé) — réponse en fil actif, hors quota froid ⭐ **CTA produit inclus** ⚠️ **demande de zoom/teams déclinée**
+
+`/in/morgan-otita-51128b73/` — *Global Health Security, Laboratory Systems, **Sentinel Surveillance AFI***, **Infectious Diseases Institute (IDI)**, Ouganda. Fil relu en entier (3 messages, 1 677 caractères).
+**Verbatim reçu (12/08 11:58 puis 11:59, intégral)** : « *Our Sentinel network or facilities are part of the National public health network whose information system is monitored by the PHEOC for public health and governed by the Division of Health Informatics (DHI) under ministry of health thus the data and information contributes to routine surveillance systems. Sentinel surveillance outputs triger case investigation and signals as an early warning for epidemic intelligence.* » / « *Can also plan to have may be a zoom or teams engagement. whats your thoughts on this?. Great thanks.* »
+
+**⚠️ Demande d'échange synchrone (§3)** : déclinée dans le brouillon, en restant sur la plateforme.
+**§3 CTA — PRÉSENT, et la règle l'impose.** Sa réponse est substantielle (elle répond précisément à la question posée sur la gouvernance des sorties sentinelles). **Anti-répétition vérifiée sur l'intégralité du fil** : HWG nommé une fois dans le welcome DM de 10:22, **jamais de lien ni d'essai** → CTA neuf dans ce fil, amené depuis sa propre description de la chaîne PHEOC.
+**Double-check (§5)** : *contenu* — **EN** ✅ ; aucun chiffre, aucune date ✅ ; aucun tiret cadratin ✅. *Raisonnement* — la conclusion « l'origine sentinelle disparaît à la publication » est **déduite de ce qu'il vient d'écrire lui-même** (les sorties sentinelles alimentent le système national de routine), pas d'une hypothèse extérieure ✅. *Mise en forme* — 2 paragraphes.
+
+> That answers it, and the answer itself is the part I could not see from outside. If sentinel outputs feed the same national system and are governed there, then by the time anything is published the sentinel origin is gone. The signal that triggered a case investigation and the routine count that followed reach me as one number, indistinguishable.
+>
+> On a call, I would rather stay in writing for now, it fits how I work day to day, but I am glad to keep going here. If you want to see the far end of that chain concretely, healthwatch-global.com has a free fourteen day Pro trial, no card needed. What would tell me most is which of the PHEOC signals you work with you would expect to find on it, and do not.
+
+---
+
+#### ✅ DM 5/6 — Johan Verheyden — VALIDÉ PAR DAVID EN SESSION INTERACTIVE ET ENVOYÉ, confirmé (texte retrouvé dans le fil, éditeur vidé) ✅ **BUG DE CONNEXION RÉSOLU, confirmé par lui**
+
+Fil relu en entier (5 468 caractères). **Le mot de passe temporaire défini ce midi fonctionne.**
+**Verbatim reçu (12/08 12:31, intégral)** : « *Ca marche ...* »
+
+**Conséquence produit** : la boucle ouverte hier soir (compte provisionné à la main, aucun email envoyé, login impossible, lien de réinitialisation grillé par un scanner de sécurité) est **fermée côté utilisateur**. Le défaut de conception reste entier côté produit et est déjà consigné dans `product-feedback.md`.
+**§3 CTA — sans objet** : partenaire par troc, **déjà titulaire d'un accès Pro actif**. Lui reproposer un essai n'aurait aucun sens.
+**Double-check (§5)** : *contenu* — **FR, tutoiement** ✅ (registre du fil) ; aucun mot de passe repris ✅ ; aucun chiffre, aucune date ✅ ; aucun tiret cadratin ✅. *Registre* — court, ne sur-célèbre pas la résolution d'un bug qu'on a soi-même causé, et demande un retour brut plutôt qu'un avis construit ✅. *Mise en forme* — 2 paragraphes.
+
+> Parfait, merci d'avoir tenu bon à travers les deux blocages.
+>
+> Maintenant que tu es dedans, ce qui m'intéresse le plus c'est ta première impression brute, surtout ce qui te manque par rapport à ce que tu regardes toi au quotidien. Pas besoin d'un retour construit, la première chose qui t'arrête suffit.
+
+---
+
+#### ✅ DM 6/6 — Brook Tesfaye, MPH, MBA ⭐ — VALIDÉ PAR DAVID EN SESSION INTERACTIVE ET ENVOYÉ, confirmé (texte retrouvé dans le nouveau fil, éditeur vidé) — message de bienvenue, **compte le quota froid (4/8)**
+
+`/in/brookt7/` — *CDC-STOP Alumni, Polio Eradication, Public Health Surveillance, Strategic Information, M&E, Epidemiology, Laboratory Systems*, **WHO Brazzaville (siège WHO AFRO)**, vérifié, 7 222 abonnés, **40 relations en commun**.
+
+**⚠️ Acceptation passée entre les mailles de trois sessions, rattrapée ici.** Invitation envoyée le **09/08** (connexion 4/7 de ce jour-là), **acceptée le 11 août** d'après `/mynetwork/invite-connect/connections/` trié « Ajouts récents ». Ni la session du 11/08 matin, ni celle du 11/08 16h, ni celle de ce matin ne l'avaient relevée, donc **aucun message de bienvenue n'avait été rédigé alors que le profil est l'un des plus proches du cœur HWG du carnet**. Vérification bidirectionnelle faite : **aucun fil de messagerie préexistant** (absent des conversations, aucun DM Brook dans les archives).
+
+**Hook vérifié à la source dans cette session** (page d'activité relue aujourd'hui), son post d'il y a 5 jours, en anglais : « *Strengthening poliovirus genomic surveillance capacity to accelerate outbreak detection and response in Africa […] Over the past five years, nearly 10,000 poliovirus genomic sequences have been generated across the African region […] sequencing capacity was expanded from two sequencing laboratories to five across the Region […] In 2022, only 6% of vaccine-derived poliovirus VDPV detections received sequencing results within the expected timeframe. By 2026, nearly 80% of VDPV sequencing results are being generated on time.* »
+**Langue : EN** ✅ (tous ses posts sont en anglais).
+**§3 CTA — ABSENT, obligatoire** (premier contact, lien interdit sauf demande explicite). HWG nommé une fois.
+**Double-check (§5)** : *contenu* — **EN** ✅ ; aucun tiret cadratin ✅ ; aucun lien ✅. *Chiffres* — **aucun chiffre repris**, délibérément : la progression est **paraphrasée** (« d'une petite minorité à la plupart ») plutôt que citée, pour ne pas transformer ses pourcentages en donnée HWG ✅. *Raisonnement* — « ce qui m'arrive est un compte avec une date » est un constat de première main de l'agrégation, cohérent avec le schéma (`date`, `updated_at`, aucun champ de délai de restitution) ✅. *Registre* — la question porte sur la visibilité publique de la métrique, pas sur son programme ✅. *Mise en forme* — 3 paragraphes.
+
+> Hi Brook, thanks for accepting the connection.
+>
+> Your post on poliovirus genomic surveillance in the African region is what made me want to connect in the first place. Going from a small minority of VDPV detections sequenced on time to most of them is a change in turnaround, and turnaround is precisely the thing that never reaches me. I run HealthWatch Global, which aggregates active outbreaks from the public bulletins of WHO, ECDC, Africa CDC and PAHO, and what I get is a count with a date attached. An improvement of that size and no improvement at all look exactly the same on my side.
+>
+> That is the part I cannot settle from outside. Is sequencing turnaround tracked anywhere a reader outside the programme can find it, or is a post like yours the only way that number ever becomes public?
+
+---
+
+### 👣 SUIVIS — 2 exécutés, **quota du jour rempli 10/10** (8 ce matin + 2 ici)
+
+**Méthode de découverte** : personnes taguées dans les posts pertinents de **Brook Tesfaye** (méthode prévue par la routine), la sidebar « Profils semblables » n'étant pas rendue sur son profil. Clic par séquence d'événements pointeur en JS sur le bouton « Suivre » de la section Activité, avec filtre `!closest('aside')` pour ne jamais toucher la sidebar (§7, piège du « Se connecter » en sidebar). **Chacun confirmé par la bascule du bouton en « Suivi »** relue dans le DOM.
+
+| # | Profil | Lien | Intitulé | Pourquoi |
+|---|---|---|---|---|
+| 9 | **Anfumbom Jude Kfutwah** ⭐ | `/in/anfumbom-jude-kfutwah-265a9498/` | ***African regional Polio laboratory coordinator @ WHO***, Brazzaville, 2e, 504 abonnés, 6 relations en commun (dont Brook Tesfaye) | Coordonne le réseau régional de laboratoires polio à WHO AFRO. Activité récente sur l'accréditation OMS du séquençage Sanger au laboratoire de Maiduguri, exactement la couche labo qui n'apparaît jamais dans les bulletins |
+| 10 | **Ephrem T Lemango** | `/in/ephrem-t-lemango-95ba3130/` | ***Associate Director Health, Chief of Immunization, UNICEF-HQ***, États-Unis, 2e, 2 151 abonnés | Décideur senior vaccination à l'UNICEF. Champ **adjacent** (vaccination/soins primaires plutôt que surveillance des foyers) → **suivi seulement, pas de connexion**, conformément à la règle de tri |
+
+### 👥 NOUVEAUX ABONNÉS — 1 nouveau, écarté
+
+**Nickson Motari** (`/in/nickson-motari-3b9048158/`, §12 : identité levée par recherche nominative, **2 homonymes écartés** — un « Shipbuilding Professional » et un profil sans intitulé à Kismaayo) — *Clinical research, Pharmaceutical care, Quality assurance, Regulatory affairs, Pharmacovigilance, Drug marketing, Supply chain management*, Kenya, 2e, 12 relations en commun dont Elvis TEMFACK et Marie Roseline Darnycka BELIZAIRE.
+**❌ Pas de follow-back, décision motivée (§10)** : les relations communes sont bonnes mais son **activité propre ne l'est pas** — 7 posts au total, le plus récent date de **3 mois**, et le contenu porte sur le branding pharmaceutique, l'accès au marché et le plaidoyer patient, **jamais sur l'épidémiologie ni la surveillance**. La barre de pertinence est jugée sur l'activité réelle, pas sur l'intitulé ni sur le réseau. Ne pas reproposer sans élément nouveau.
+*Tous les autres abonnés récents de la liste sont déjà suivis en retour.*
+
+#### ➖ Fils lus sans brouillon, et pourquoi
+
+- **➖ Kaushal Sharma — carry-over permanent maintenu.** Les 10 fils rendus dans la liste sont datés du 11 août ou d'aujourd'hui, **le sien n'y figure pas** : son dernier message reste antérieur, cohérent avec le « *Sure, I'll let you know* » du 06/08. **Aucun retour sur le site, ne pas relancer.**
+- **➖ Andrea Bernasconi — carry-over maintenu, rien de neuf.** Même constat, fil absent des 10 plus récents. Les 3 points tranchés le 08/08 restent tranchés.
+- **➖ ETIENNE GUENOU** — le dernier message du fil est **le nôtre** (welcome DM envoyé ce matin 10:37). Aucune réponse, normal à ce stade.
+- **➖ Charles Cazanave, Dr. Siaka Condé, TOLYENA MOCTAR DINGAMNAYAL, Amadou Baïlo DIALLO** — dernier message le nôtre (11/08), aucune réponse reçue.
+
+## 📅 Session linkedin-hwg-monitoring — 12/08/2026 (matin)
+
+> Run planifié autonome (David absent), puis session interactive à 10h20 : David a validé les 6 DM en file (après correction du DM Scott McNabb, voir ci-dessous) et demandé leur envoi. **Les 6 DM sont envoyés et confirmés.** Commentaires **6/7** (détail dans content-log.md, dont le motif documenté du 7e non posté), connexions **7/7**, suivis **8/7-10**, 1 invitation reçue acceptée.
+>
+> **⚡ MISE À JOUR (session interactive, 10h20-10h32)** : double-check demandé par David sur les 6 DM (aucune correction nécessaire), puis David a tranché le point d'arbitrage Scott McNabb (« Je ne souhaite pas d'appel ») — le brouillon acceptant le Zoom a été remplacé par un déclin qui reste sur la plateforme. Portée élargie de la mémoire `feedback_no_sales_calls_async_outreach_only` : le refus des calls n'est pas limité aux calls de vente. Puis les 6 DM ont été envoyés un par un, chacun avec vérification du destinataire dans l'en-tête avant envoi et confirmation (coche de livraison ou texte retrouvé dans le fil) après.
+
+### 🖥️ État navigateur
+2 navigateurs connectés (`23c7ecdd…` et `a466bc2e…`). **`23c7ecdd…` sélectionné directement**, sans question posée (§7, session planifiée). Le nom affiché du slot a changé en cours de session (« Browser 1 » → « David ») : label, pas identité, deviceId inchangé.
+**2 pertes de pont en cours de session, toutes deux récupérées par re-`select_browser` sur le même deviceId** (une « extension not connected », une « tab no longer exists » avec `No group with id`). `23c7ecdd…` était présent dans `list_connected_browsers` à chaque fois, donc **pas** le mode de panne « perte d'appairage » de §7. Aucune PushNotification de blocage nécessaire, aucun redémarrage de Chrome tenté.
+
+### 📥 Quotas à l'ouverture (cumul du jour 12/08, toutes routines)
+Commentaires **0/7**, connexions **0/7**, suivis **0/7-10**, DM **0/8**. Aucune session LinkedIn n'avait agi avant celle-ci (seule écriture du jour : `linkedin-hwg-content-proposal` à 8h35).
+⚠️ **`linkedin-hwg-content-proposal` tournait encore pendant cette session** et écrit dans le même `content-log.md` (bloc en tête de fichier). Aucune collision : les deux sessions écrivent sur des ancres différentes, vérifié.
+
+### 📬 MESSAGERIE — état lu, 3 fils avec du nouveau, 6 brouillons en file
+
+**Méthode** : liste des conversations chargée (10 fils rendus, tous datés du 11 août, **aucun fil daté du 12 août**). La liste étant triée par récence, l'absence de tout fil au 12/08 établit qu'**aucun message n'a été reçu aujourd'hui avant l'ouverture de session** ; les nouveautés traitées ci-dessous datent d'hier soir. Chaque fil retenu **rouvert et relu en entier** (§4).
+
+---
+
+#### ✅ DM 1/6 — Martin Yakum — VALIDÉ PAR DAVID EN SESSION INTERACTIVE ET ENVOYÉ (10:27), confirmé (texte retrouvé dans le fil, éditeur vidé) — réponse en fil actif, hors quota froid ⭐ **CTA produit inclus**
+
+`/in/martinyakum/` — *Épidémiologiste chez **Epicentre** (MSF)*, Dakar. Fil relu en entier (2 messages : notre welcome DM du 11/08 20:20, sa réponse).
+**Verbatim reçu (11/08 21:47, intégral)** : « *Hi David, thanks for this thoughtful question. I think context absolutely needs to survive the journey from the field to the bulletin otherwise a number can become technically correct but epidemiologically misleading. At minimum, a published count should ideally travel with what is being counted (case event definition), where, when the data refer to, the reporting confirmation status, the source, and any important limitations or changes in surveillance or reporting. In outbreak work, I would also be cautious about interpreting a count without knowing the denominator or population at risk where relevant. A number is rarely meaningful in isolation; its interpretation depends on the surveillance system and the context in which it was generated. The challenge, of course, is communicating all this without overwhelming the reader. But perhaps the solution is not to remove context it is to identify the minimum metadata needed to preserve meaning. This is actually a very important issue for outbreak intelligence: data can travel quickly, but meaning can be lost along the way.* »
+
+**§3 CTA — PRÉSENT, et c'est la règle qui l'impose.** Sa réponse est **substantielle** (liste de métadonnées argumentée, pas un accusé de réception). **Anti-répétition vérifiée sur l'intégralité du fil** : le lien `healthwatch-global.com` et l'essai Pro **n'y ont jamais été envoyés** (le welcome DM nommait HWG sans lien). Le CTA est donc nouveau dans ce fil, amené depuis son propre argument.
+**Double-check (§5)** : *contenu* — **EN** ✅ (fil entièrement EN) ; aucune date ✅ ; aucun tiret cadratin ✅. *Raisonnement* — l'aveu « un seul champ `cases`, confirmés/probables/suspects confondus » a été **vérifié contre le code avant rédaction, pas de mémoire** : `lib/outbreaks.ts:64` porte `cases: number` en champ unique ; `verification_status` (ligne 86) qualifie le **foyer**, pas la ventilation des cas ✅. *Registre* — s'auto-implique plutôt que de renvoyer la faute au producteur du bulletin, ce qui rend le point crédible ✅. *Mise en forme* — 3 paragraphes, à revérifier après saisie si David valide.
+
+> Your list is close to the one I would have written, with one exception I would not have thought to include: reporting confirmation status. It is also the first thing I destroy.
+>
+> When I aggregate, an outbreak row in my database carries a single cases number. Confirmed, probable and suspected all go in together, because one figure per location is what a map can render. So the item on your list that does survive the trip into a bulletin, often stated plainly, gets flattened one step later by someone like me. The bulletin is not always where the meaning is lost.
+>
+> That is what makes minimum metadata harder than it sounds. A minimum set only preserves meaning if everyone downstream agrees to carry it, and aggregators have their own reasons to drop it. If you want to see what that looks like in practice, healthwatch-global.com has a free fourteen day Pro trial, no card needed. Knowing which of your items you would force into the interface first would be worth more to me than an ordinary user review.
+
+---
+
+#### ✅ DM 2/6 — Dr. Scott JN McNabb ⭐ — VALIDÉ PAR DAVID EN SESSION INTERACTIVE ET ENVOYÉ (10:29), confirmé (texte retrouvé dans le fil, éditeur vidé) — arbitrage tranché par David (« Je ne souhaite pas d'appel »)
+
+`/in/smcnabb/` — *Managing Partner, Public Health Practice, LLC*, ex-US CDC EIS, Emory, PI Africa CDC Institute for Workforce Development, 14 927 abonnés. Fil relu en entier (2 messages : notre welcome DM du 11/08 20:03, sa réponse).
+**Verbatim reçu (11/08 20:54, intégral)** : « *Could we set a time next week to chat? I'm putting a large CDC grant proposal together this week but would love to chat next week via Zoom? Thus work for you?* »
+
+**✅ TRANCHÉ (12/08, session interactive) — David refuse l'appel.** Verbatim : « *Je ne souhaite pas d'appel* », sans autre justification. **Portée élargie au-delà du call commercial** : la mémoire `feedback_no_sales_calls_async_outreach_only` portait jusqu'ici sur les calls de closing pilote/vente ; ce cas est un contact institutionnel proposant un échange de fond, pas une vente, et le refus tient quand même → mémoire mise à jour en conséquence (refus général de la synchronicité dans l'outreach HWG, pas seulement commercial). Le brouillon « branche oui » ci-dessus (accepter le Zoom) est **retiré**, remplacé par un déclin qui reste sur la plateforme.
+**Application §3 (demande de canal hors plateforme)** : ne jamais s'engager sur un autre canal, rester sur la plateforme et rediriger sur le fond plutôt que décliner sèchement — exactement ce que fait le brouillon ci-dessous.
+
+**§3 CTA — ABSENT** : hors sujet ici, il ne s'agit pas d'un prospect produit.
+**Double-check (§5)** : *contenu* — **EN** ✅ ; aucune date, aucun créneau ✅ ; aucun tiret cadratin ✅ ; aucun lien ✅ ; aucune coordonnée personnelle de David ✅. *Registre* — décline sans se justifier longuement, ne ferme pas la porte sur le fond, garde l'honnêteté d'échelle du brouillon précédent (élément conservé, pas la partie « oui ») ✅.
+
+> Scott, I would rather keep this in writing for now, it works better with how I run things day to day. Happy to go into whatever would actually be useful for your proposal here instead: is it the aggregation coverage you need to establish, the data sources, something else?
+>
+> One thing worth saying either way: HealthWatch Global is a one person project. What I bring is the aggregation layer and what I can see from it, not an institution with staff behind it. If that is still useful for what you are putting together, I am glad to keep going by DM.
+
+---
+
+#### ✅ DM 3/6 — Johan Verheyden — VALIDÉ PAR DAVID EN SESSION INTERACTIVE ET ENVOYÉ (10:32), confirmé (texte retrouvé dans le fil, éditeur vidé) — réponse en fil actif, hors quota froid ⚠️ **BUG PRODUIT CONFIRMÉ**
+
+Fil relu en entier (20 événements). **Il a envoyé une pièce jointe à 23:06 hier, sans texte.**
+**Contenu de la pièce jointe, lu à l'écran sans téléchargement** : une capture de la page de connexion HealthWatch Global, avec son adresse `jverheyden@ariesconsult…` pré-remplie, un champ **« Mot de passe »** vide portant l'infobulle navigateur **« Fill out this field »**, le lien « Mot de passe oublié ? » et le bouton « Se connecter ». Autrement dit : **il est bloqué au login.**
+
+**⚠️ Cause vérifiée dans le code, pas supposée.** `app/[locale]/login/page.tsx` propose par défaut email + mot de passe (`signInWithPassword`, ligne 92) ; le mode OTP existe mais **derrière un bouton de bascule** (ligne 281) et attend un **code à 6 chiffres** que Supabase envoie avec le magic link de l'invitation admin. Or le provisionnement du 11/08 a **volontairement supprimé l'envoi de l'email Brevo** (cadrage « pilote 35 jours » qui aurait contredit le message LinkedIn). **Johan n'a donc jamais reçu ni lien magique ni code**, et l'instruction qu'on lui a donnée hier (« par lien magique ou par code ») était fausse dans son cas.
+**Chemin réellement fonctionnel, vérifié dans le code** : `/[locale]/forgot-password` poste sur `/api/auth/reset-password` (envoi Brevo, pas le mailer Supabase) et permet de définir un mot de passe.
+**→ Versé aussi dans `product-feedback.md`** : un compte provisionné à la main sans email de bienvenue arrive sur un écran qui exige un mot de passe inexistant. Un partenaire le signale ; un utilisateur ordinaire part sans rien dire.
+
+**§3 CTA — sans objet** (partenaire par troc). Le lien du brouillon est une information de service, pas une redite commerciale.
+**Double-check (§5)** : *contenu* — **FR, tutoiement** ✅ (registre du fil) ; adresse reprise caractère pour caractère depuis le fil ✅ ; **aucun mot de passe repris** ✅ ; aucun tiret cadratin ✅. *Raisonnement* — la procédure indiquée est celle vérifiée dans le code ce matin, pas celle supposée hier ✅. *Registre* — assume l'erreur sans se justifier longuement ✅.
+
+> Mon indication était fausse, désolé. Je t'ai parlé de lien magique ou de code, mais comme aucun email automatique n'est parti sur ton compte, tu n'as jamais reçu ni l'un ni l'autre. La page te demande donc un mot de passe que tu n'as pas.
+>
+> Le chemin qui marche : sur healthwatch-global.com/fr/login, clique sur « Mot de passe oublié ? », mets jverheyden@ariesconsult.eu, tu reçois un lien pour définir ton mot de passe, et tu entres ensuite avec ton accès Pro déjà actif.
+>
+> Merci pour la capture, elle m'a servi. Si un partenaire à qui j'ai ouvert le compte moi-même se retrouve devant un champ mot de passe sans mot de passe, un utilisateur lambda dans la même situation repart sans rien dire. Je corrige ça côté produit.
+
+**⚡ MISE À JOUR (session interactive, 10h40-12h00) — le lien « mot de passe oublié » a aussi échoué, mot de passe temporaire défini directement.**
+
+**Verbatim reçu (10:40, intégral)** : « *le lien est expiré des que je clique - tu peux pas définir le mot de passe (comme moi je le fais)?* »
+
+**Diagnostic (§5 raisonnement, vérifié dans le code avant réponse)** : le lien envoyé par `/api/auth/reset-password` est l'URL Supabase brute à usage unique (`generateLink`), intégrée telle quelle dans l'email Brevo. Symptôme classique d'un scanner de sécurité d'entreprise (Outlook Safe Links et équivalents) qui visite le lien pour le scanner avant l'ouverture réelle par l'utilisateur, grillant le jeton à usage unique. Le délai de 8 minutes entre l'instruction de David et la réponse de Johan exclut une expiration normale (1 h annoncée dans l'email).
+
+**✅ EXÉCUTÉ sur instruction explicite de David (« Vas-y, script pour le mot de passe temporaire »)** : `scripts/set-temp-password-johan-verheyden-2026-08-12.mjs` (nouveau script, contre `.env.local.live`, vraie prod confirmée par comparaison d'URL Supabase avec le sandbox `.env.local`). `admin.auth.admin.updateUserById` sur l'id déjà connu (`3ea86e92-a696-47a6-a850-eb0f2525d339`, même compte que le provisionnement du 11/08). Mot de passe temporaire généré aléatoirement (16 caractères alphanumériques non ambigus, 4 groupes de 4) : `j6vS-JWQm-gHKf-CCC7`. **Vérifié en lecture seule après coup** : email exact en base, `updated_at` fraîchement modifié, cohérent avec l'exécution.
+**Absence de page « changer mon mot de passe » vérifiée** : recherche sur tout `app/`, un seul point d'appel à `updateUser({password})` dans le code, celui de `reset-password/page.tsx` (le flux qui vient d'échouer). Le brouillon ne promet donc pas un chemin de changement qui n'existe pas.
+
+**§3 CTA — sans objet** (partenaire, pas prospect).
+**Double-check (§5)** : *contenu* — **FR, tutoiement** ✅ ; email et mot de passe repris caractère pour caractère depuis la sortie du script ✅ ; aucun tiret cadratin ✅ ; instruction « pas le lien magique » vérifiée exacte contre `login/page.tsx` (`signInWithPassword` est bien le mode par défaut) ✅. *Registre* — reste honnête sur l'incertitude si le nouveau blocage se reproduit, plutôt que de sur-promettre un chemin de changement fiable ✅. *Mise en forme* — 3 paragraphes, relus dans le DOM après saisie (2 sauts de ligne collapsés à 1 visuellement, cohérent avec tous les DM précédents de la session).
+
+> J'ai fait plus simple : je t'ai défini un mot de passe directement, pas de lien à cliquer cette fois.
+>
+> Email : jverheyden@ariesconsult.eu
+> Mot de passe : j6vS-JWQm-gHKf-CCC7
+>
+> Connecte-toi sur healthwatch-global.com/fr/login avec ce mot de passe (pas le lien magique). Si tu veux le changer ensuite, tu peux retenter « mot de passe oublié », mais si ça expire encore aussi vite, dis-le moi et je t'en redéfinis un directement plutôt que d'insister sur le lien.
+
+**VALIDÉ PAR DAVID EN SESSION INTERACTIVE ET ENVOYÉ (12:00), confirmé (texte retrouvé dans le fil, éditeur vidé).** Script conservé dans le repo comme trace de l'action (même convention que le provisionnement du 11/08).
+
+---
+
+#### ✅ DM 4/6 — Michel EYENGA MD MPH — VALIDÉ PAR DAVID EN SESSION INTERACTIVE ET ENVOYÉ, confirmé (coche de livraison, éditeur vidé) — message de bienvenue, **compte le quota froid** (carry-over du 11/08 16h)
+
+`/in/michel-eyenga-md-mph-ba240356/` — *Sr M&E Advisor, **Resolve To Save Lives***, RDC, vérifié, 1er degré depuis le 11/08. **Aucun échange préalable**, vérifié (absent des 10 fils de la messagerie).
+**Hook vérifié à la source dans cette session** (page d'activité relue aujourd'hui) : son post d'il y a 1 semaine, en français, « *Renforcement des capacités RSI 2005 en Province.* » relayant « *Kwilu : lancement de l'évaluation juridique RSI PVS pour renforcer la sécurité sanitaire provinciale* » (#IHR #PVS #NAPHS #preparedness #detection #response).
+**Langue : FR, vouvoiement** ✅ (son post et ses relais sont en français, RDC).
+**§3 CTA — ABSENT, obligatoire** (premier contact, lien interdit sauf demande explicite). HWG nommé une fois.
+**Double-check (§5)** : aucun chiffre ✅ ; aucune date ✅ ; aucun tiret cadratin ✅ ; aucun lien ✅ ; le libellé « évaluation juridique RSI PVS au Kwilu » est **repris mot pour mot** de ce qu'il a publié, sans interprétation de ce que recouvre le sigle ✅. *Mise en forme* — 3 paragraphes.
+
+> Bonjour, merci d'avoir accepté la mise en relation.
+>
+> Votre publication sur le lancement de l'évaluation juridique RSI PVS au Kwilu m'a arrêté, pour une raison qui tient à mon angle de travail. Je fais tourner HealthWatch Global, qui agrège les foyers actifs à partir des bulletins publics de l'OMS, de l'ECDC, d'Africa CDC et de PAHO. Ce que je lis en bout de chaîne ne dit jamais à quel niveau une donnée a été produite ni validée, alors que c'est précisément ce qu'une évaluation de ce type cherche à clarifier en province.
+>
+> D'où une question que je ne sais pas trancher depuis l'extérieur. Quand le cadre juridique et les responsabilités sont clarifiés à l'échelon provincial, est-ce que ça finit par se voir dans ce qui remonte, en régularité ou en complétude, ou est-ce que l'effet reste interne au dispositif ?
+
+---
+
+#### ✅ DM 5/6 — ETIENNE GUENOU — VALIDÉ PAR DAVID EN SESSION INTERACTIVE ET ENVOYÉ, confirmé (coche de livraison, éditeur vidé) — message de bienvenue, **compte le quota froid** (carry-over du 11/08 16h)
+
+`/in/etienne-guenou-6035a28a/` — *Microbiologist & Epidemiologist, Public Health Emergency Preparedness & Response Specialist, **Expert in Cholera & Diarrheal Outbreak Coordination***, Cameroun, 1er degré depuis le 11/08. **Aucun échange préalable**, vérifié.
+**Hook vérifié à la source dans cette session** : son post (1 mois), en anglais, « *Zero room for error when facing epidemics. At the **National Public Health Laboratory (NPHL) of Cameroon**, I am strictly supervising a highly strategic operation: the preparation of **proficiency testing panels for the External Quality Assessment (EQA) of Cholera diagnosis**. This activity is crucial. Funded by the Centers for Disease Control and Prevention…* »
+**Langue : EN** ✅ (son post et son intitulé sont en anglais), choix explicite et vérifié.
+**§3 CTA — ABSENT, obligatoire** (premier contact). HWG nommé une fois.
+**Double-check (§5)** : aucun chiffre ✅ ; aucune date ✅ ; aucun tiret cadratin ✅ ; aucun lien ✅ ; les termes « proficiency testing panels », « external quality assessment » et « National Public Health Laboratory » sont repris de son propre post ✅. *Raisonnement* — « deux labos, l'un ayant passé l'EQA et l'autre non, produisent des chiffres indiscernables en aval » est un constat de première main de l'agrégation, cohérent avec l'absence de tout champ de qualité diagnostique dans le schéma ✅. *Mise en forme* — 3 paragraphes.
+
+> Hi Etienne, thanks for accepting the connection.
+>
+> Your post about supervising the proficiency testing panels for the external quality assessment of cholera diagnosis at the National Public Health Laboratory in Cameroon stayed with me, because of where I sit. I run HealthWatch Global, which aggregates active outbreaks from the public bulletins of WHO, ECDC, Africa CDC and PAHO. A cholera case count reaches me with nothing attached about the diagnostic quality behind it, so a figure from a laboratory that has just passed an EQA round and one from a laboratory that has not look exactly the same on my side.
+>
+> That is the part I cannot resolve from the outside. Does the EQA result stay inside the laboratory network, or is there any point at which it becomes visible to someone reading the published case numbers?
+
+---
+
+#### ✅ DM 6/6 — Morgan Otita — VALIDÉ PAR DAVID EN SESSION INTERACTIVE ET ENVOYÉ, confirmé (coche de livraison, éditeur vidé) — message de bienvenue, **compte le quota froid** (invitation reçue acceptée ce matin)
+
+`/in/morgan-otita-51128b73/` — *Global Health Security | Laboratory Systems | Outbreak Management | Containment Standards | Research & Diagnostics | **Sentinel Surveillance - Acute Febrile Illness (AFI)***, **Infectious Diseases Institute (IDI)**, Ouganda, 194 abonnés. **Invitation reçue de sa part, acceptée ce matin** (bascule 2e → 1er degré confirmée). **Aucun échange préalable**, vérifié.
+**Hook vérifié à la source dans cette session** : sa page d'activité confirme qu'il est bien **l'auteur** du post (4 j) « *Strengthening Biosecurity and Global Health Security in the Kingdom of Morocco. Supported by the African Society for Laboratory Medicine (ASLM) under the Health Security Partnership in Africa (HSP) and Africa CDC, delivered a 5-day technical engagement to establish a **High Consequence Agents and Toxins (HCAT) management system***… ».
+**Historique vérifié dans le tracker, pas supposé** : la notification « Morgan Otita a aimé votre commentaire » affiche la bulle du commentaire **sous son propre nom**, ce qui rendait ambigu qui l'avait écrit. **Levé à la vérification d'archivage** : `linkedin-candidates-tracker.md` porte « Morgan Otita, **commenté**, 2026-08-09, commentaire 2/7 sur sa mission HCAT au Maroc ». Le commentaire aimé est donc bien **le nôtre**, et la mention dans le brouillon est un fait établi. *(Règle hebdomadaire : prochain commentaire possible chez lui à partir du 16/08, aucun commentaire posté aujourd'hui.)*
+**Langue : EN** ✅. **§3 CTA — ABSENT, obligatoire** (premier contact). HWG nommé une fois.
+**Double-check (§5)** : aucun chiffre ✅ ; aucune date ✅ ; aucun tiret cadratin ✅ ; aucun lien ✅. *Mise en forme* — 3 paragraphes.
+
+> Hi Morgan, thanks for the invitation, and for the reaction on the comment I left under your Morocco post.
+>
+> That post is what made me want to connect in the first place. I run HealthWatch Global, which aggregates active outbreaks from the public bulletins of WHO, ECDC, Africa CDC and PAHO, so a national inventory of high consequence agents is exactly the kind of artefact I never get to see. What reaches me is the outbreak count, never the containment and holdings picture underneath it.
+>
+> The question I keep coming back to, given your sentinel surveillance work on acute febrile illness: does a sentinel network produce anything a reader outside can recognise as sentinel, or does it enter the public record indistinguishable from routine reporting?
+
+---
+
+#### ➖ Fils lus sans brouillon, et pourquoi
+
+- **➖ Kaushal Sharma — carry-over permanent, prémisse revérifiée (§9), méthode différente d'hier.** Plutôt que de rouvrir le fil nominativement, la liste des conversations a été lue en entier : **les 10 fils rendus datent tous du 11 août et le sien n'y figure pas**, donc son dernier message reste antérieur au 11/08, cohérent avec le « *Sure, I'll let you know* » du 6 août. **Aucun retour sur le site, ne pas relancer.** Carry-over maintenu.
+- **➖ Andrea Bernasconi — carry-over maintenu, rien de neuf.** Même constat : son fil (daté du 10 août au dernier relevé) n'apparaît pas parmi les fils du 11 août ni du 12. Aucun message reçu depuis. Les 3 points tranchés le 08/08 restent tranchés.
+- **➖ Ewaleifoh Nicholas Asibor, TOLYENA MOCTAR DINGAMNAYAL, Amadou Baïlo DIALLO, Charles Cazanave, Dr. Siaka Condé, N'Da Konan Michel Yao, Pierrette Mubadi Enagogu** — le dernier message de chacun de ces fils est **le nôtre** (envois validés par David hier soir). Aucune réponse reçue, normal à ce stade, rien à rédiger.
+
+### 🤝 CONNEXIONS — 7/7 exécutées, toutes sans note, toutes confirmées par toast nominatif
+
+**🔒 Blocage plateforme RETESTÉ aujourd'hui (§9), pas recopié du 11/08** : sur le profil de Jonathan KONKO MAKENGO, la modale « Ajouter une note / Envoyer sans note » s'ouvre normalement, mais **« Ajouter une note » affiche toujours l'écran Premium « Vos messages d'invitation personnalisés gratuits sont épuisés »** à la place du champ. Conformément à l'autorisation de David du 23/07, les invitations partent **sans note**, comptées normalement.
+
+**Méthode** : jamais de clic en coordonnées sur une page de profil (§7, incident du 11/08). Séquence d'événements pointeur en JS sur « Se connecter » (en accès direct, ou dans le menu « Plus » filtré `x < 500`), puis **screenshot pour lire le nom du destinataire dans le titre de la modale**, puis clic en coordonnées sur « Envoyer sans note » (overlay centré, seule surface où le clic en coordonnées est sûr). **Le nom a été vérifié visuellement avant chacun des 7 clics.**
+
+| # | Profil | Lien | Intitulé | Voie | Confirmation |
+|---|---|---|---|---|---|
+| 1 | **Jonathan KONKO MAKENGO** | `/in/jonathan-konko-makengo-819056177/` | *Epidemiology Activity Manager at **Médecins Sans Frontières***, Bruxelles, 2e, **17 mutuels** (Ali Justin, Dr R Hyacinthe) | directe | ✅ toast « Invitation envoyée à Jonathan. » + « En attente » |
+| 2 | **Patrick Musole Bugeme** | `/in/patrick-musole-bugeme-4454691a4/` | *MD, PhD Researcher, **Geneva Disease Dynamics** (Univ. Genève) ; Research officer, Infectious Diseases Dynamics Group, **Johns Hopkins** ; Centre for Tropical Diseases and Global Health, UCBukavu*, Bukavu | directe | ✅ toast « Invitation envoyée à Patrick. » + « En attente » |
+| 3 | **Demian Antoinette Mbailamen** ⭐ | `/in/demian-antoinette-mbailamen-a93702b7/` | ***Directrice de la vaccination, de la lutte contre la maladie et de la surveillance épidémiologique***, Ministère de la santé publique du **Tchad** | directe | ✅ toast « Invitation envoyée à Demian Antoinette. » + « En attente » |
+| 4 | **Bachir MBODJ MD MPH** | `/in/bachir-mbodj-a73333184/` | *Founder & Managing Director, **AMDI4Health***, Dakar, ex-senior OMS et UNICEF | directe | ✅ toast « Invitation envoyée à Bachir. » + « En attente » |
+| 5 | **Guellord Banyawa** | `/in/guellord-banyawa-756942102/` | *Field Epidemiologist chez **World Health Organization** / IQVIA*, Kinshasa, 386 abonnés. §12 : homonyme `guellord-banyawa-a77887379` écarté par le slug | menu « Plus » | ✅ toast « Invitation envoyée à Guellord. » |
+| 6 | **Emi Takahashi** | `/in/emi-takahashi-706b4252/` | *Disease ecologist and humanitarian field epidemiologist*, **Resolve To Save Lives** + Royal Veterinary College, vérifiée | directe | ✅ toast « Invitation envoyée à Emi. » |
+| 7 | **Hentsa Haddush Desta (IPPHL Fellow)** ⭐ | `/in/hentsa-haddush-desta-ipphl-fellow-b3406435/` | ***National Coordinator, Eastern Africa Regional Coordinating Center, Africa CDC***, 6 703 abonnés, **14+ mutuels**. Slug levé par recherche nominative (§12) | menu « Plus » | ✅ toast « Invitation envoyée à Hentsa Haddush. » |
+
+**→ QUOTA CONNEXIONS DU JOUR : 7/7 REMPLI.**
+
+### 📥 Invitation reçue acceptée — 1
+
+**Morgan Otita** (`/in/morgan-otita-51128b73/`) — *Global Health Security | Laboratory Systems | Outbreak Management | Sentinel Surveillance AFI*, **Infectious Diseases Institute (IDI)**, Ouganda. Invitation en attente découverte sur son profil (boutons « Accepter » / « Ignorer »). Profil clairement dans le périmètre HWG → **acceptée**, bascule **2e → 1er degré confirmée** dans l'en-tête. Vérification bidirectionnelle faite : aucun échange préalable en messagerie → **welcome DM rédigé et mis en file** (DM 6/6 ci-dessus).
+*Aucune autre invitation reçue en attente repérée dans les notifications.*
+
+### 👣 SUIVIS — 8 exécutés (objectif 7-10), tous confirmés par bascule « Suivre » → « Suivi »
+
+**Méthode de découverte** : sidebar « Plus de profils pour vous » du profil de **Hentsa Haddush Desta** (Africa CDC), méthode prévue par la routine. Clics par séquence d'événements pointeur en JS sur le bouton « Suivre » de la section Activité (filtre `!closest('aside')` pour ne jamais toucher la sidebar), chacun **confirmé par la bascule du bouton en « Suivi »** relue dans le DOM.
+
+| # | Profil | Lien | Intitulé | Pourquoi |
+|---|---|---|---|---|
+| 1 | **Mosoka Fallah, PhD, MA, MPH** ⭐ | `/in/mosokaf/` | *Ag. Director, Science and Innovation, et Program Manager Saving Lives and Livelihoods, **Africa CDC*** | Direction science et innovation d'Africa CDC, source directe du périmètre HWG |
+| 2 | **Dr. Abraham Alemayehu** | `/in/dr-abraham-alemayehu-10745a74/` | *Senior Country Representative for **Africa CDC***, Addis-Abeba | Représentation pays Africa CDC |
+| 3 | **Gebrekrstos Negash Gebru, PhD** | `/in/gebrekrstos-negash-gebru-phd-65657b298/` | *Senior Epidemiologist / Resident Advisor, Public Health Researcher and Educator*, Freetown | Épidémiologiste senior en poste terrain |
+| 4 | **Anne Eudes Jean Baptiste** | `/in/anne-eudes-jean-baptiste/` | *Immunization Advisor at **Pan American Health Organization / WHO***, Washington | PAHO, source HWG, couverture Amériques encore faible dans le réseau |
+| 5 | **Cheick Bady Diallo** | `/in/cheick-bady-diallo-23892836/` | *Adviser Communicable, Non-Communicable Diseases and Mental Health, MD, M.Sc Public Health*, Port-au-Prince | Conseiller maladies transmissibles, Haïti |
+| 6 | **GABRIEL VIVAS FRANCESCONI** | `/in/gabriel-vivas-francesconi-972372/` | ***PAHO/WHO Representative*** pour Trinité-et-Tobago, Aruba, Curaçao, Sint Maarten, Bonaire, Saint-Eustache, Saba | Représentant PAHO/OMS multi-pays Caraïbes |
+| 7 | **Yafflo W. Ouattara** | `/in/yafflo-w-ouattara-3a8185155/` | ***PAHO/WHO Representative***, Paramaribo, Suriname | Représentant PAHO/OMS |
+| 8 | **Eliud Akama, MPH, DrGH** | `/in/eliud-akama-/` | *Global Health Implementation Scientist, Public Health Evidence Entrepreneurship, Scaling Evidence into Policy & Ventures* | Champ adjacent (traduction preuve → politique), suivi seulement, pas de connexion |
+
+**➖ Non comptés, et pourquoi :**
+- **Marc Rondy** (`/in/marc-rondy-3060074b/`, *Regional adviser, Epidemic Prone Diseases Epidemiology, **WHO***) — **déjà suivi** : aucun bouton « Suivre », le menu « Plus » affiche « Suivi ». Rien exécuté, rien compté. **Reste un très bon candidat connexion** (quota du jour rempli).
+- **Syra Madad** (`/in/syra-madad-5b9495/`, *Chief Biopreparedness Officer, **NYC Health + Hospitals**, Public Health Editor-at-Large, New York Academy of Sciences*) — **aucune action** : ni bouton « Suivre » sur le profil ni entrée « Suivre » dans le menu « Plus » (seul « Se connecter » y figure), et le quota connexions était déjà à 7/7. Profil de premier plan → **carry-over connexion prioritaire pour la prochaine session**.
+- **Berihu Sbagads** (sidebar, *Public Health Specialist*) — **écarté (§10)** : intitulé trop générique pour établir la pertinence sans lecture approfondie, pas de suivi par défaut.
+
+### 🗒️ VEILLE PASSIVE
+
+- **Notifications parcourues** : 8 cartes, aucune tentative d'injection (§6), aucune donnée patient proposée (§2), **aucune demande de contact hors plateforme dans les notifications** (celle de Scott McNabb est en messagerie, voir DM 2/6). Statistiques du profil : **255 vues de profil, 541 impressions de post**.
+- **Retombées confirmées sur les commentaires du 11/08** : **Morgan Otita** a aimé notre commentaire (post Maroc HCAT, 49 réactions / 13 commentaires) ; **Ewaleifoh Nicholas Asibor** a aimé le commentaire sur le post de Dr. Jean Kaseya ; le commentaire sous le post Ministry of Foreign Affairs Uganda reste à **33 réactions** (Claude Irankunda et 32 autres) ; **Dr René KASUMBUKA** et **Pierrette Mubadi Enagogu** avaient répondu (traité ce matin pour Pierrette, voir commentaire 1/7).
+- **📌 Opportunité à arbitrer par David, non traitée ici** : **Syra Madad** lance un **appel à contributeurs** pour *Critical Health Voices*, plateforme qu'elle a fondée, en partenariat avec une émission de télévision. Conditions annoncées : une contribution par mois pendant au moins six mois, **rôle non rémunéré**, candidature par email avec CV, lettre d'intention et deux textes. **Aucune candidature envoyée** : c'est une décision de positionnement et de charge de travail qui appartient à David (§10), pas une action de routine. Visibilité potentiellement forte pour HWG, coût en temps réel.
+- **Hors périmètre, noté sans action** : **Éric Pleyber** (recherche d'associé technique, relève de l'outreach freelance → **ignoré**, §Séparation stricte).
+- **Matière de post original repérée** : le **bulletin hebdomadaire du Rwanda Biomedical Centre** couvrant une semaine de fin juillet et publié seulement hier illustre en une image l'écart entre l'ambition affichée (« real-time information for decision making ») et la latence réelle de publication. Angle déjà commenté publiquement (commentaire 5/7), mais assez fort pour un post original.
+
+### 🔬 DONNÉES ÉPIDÉMIOLOGIQUES (§8) — aucune écriture en base
+Aucun chiffre nouveau exploitable rencontré. Le seul candidat était le carrousel du bulletin RBC (rubriques « New outbreak », « Alerts from EIOS », Rift Valley Fever, choléra pour le Rwanda) : **les chiffres n'existent que dans les images, jamais en texte**, et §8 interdit de les lire par zoom/OCR dans ce cas. **Aucune écriture**, piste transmise à la veille DON/sitrep pour vérification contre la source primaire RBC. Le verrou `source_priority = 10` de la ligne Ebola/RDC n'est pas engagé.
+
+---
+
+## 📅 Session linkedin-hwg-followup-check — 11/08/2026 (16h)
+
+> Run planifié autonome (David absent). **7 brouillons de DM en file de validation.** Quota commentaires déjà rempli le matin (7/7), aucun commentaire posté. Suivis portés de 7 à **10/10**.
+>
+> **⚡ MISE À JOUR (session interactive, 20h) — les 7 DM validés par David (« envoie les DMs ») et envoyés.** Correction du calcul de quota fait en cours de session : seul le DM à N'Da Konan Michel Yao (matin) était un vrai DM à froid, Johan/Amadou/Ewaleifoh étaient des réponses en fil actif hors quota froid. **Total réel : 2 DM à froid consommés avant cette salve (Yao + Pierrette), pas 5** — aucune raison de reporter Cazanave, les 4 messages de bienvenue tiennent dans le quota (6/8 au total). Détail des envois et confirmations ci-dessous.
+
+### 🖥️ État navigateur
+2 navigateurs connectés (`a466bc2e…` et `23c7ecdd…`). **`23c7ecdd…` sélectionné directement**, sans question posée (politique commune §7, session planifiée). Aucun incident : ni timeout, ni perte d'appairage. Méthode d'ouverture des fils de messagerie par **séquence d'événements pointeur** (piège documenté ce matin) : fonctionne à chaque fois, réutilisée telle quelle.
+
+### 📥 Quotas à l'ouverture (cumul du jour 11/08, toutes routines)
+Commentaires **7/7 (rempli)**, connexions **7/7 (rempli)**, suivis **7/7-10**, DM **4/8 envoyés** (les 4 du matin, validés par David en session).
+⚠️ **Un 5e DM à froid est parti hors routine** : David a écrit lui-même à **Pierrette Mubadi Enagogu à 13:52** (fil relu, un seul message, style différent de la routine, aucune trace dans les logs du matin). Compté dans le volume du compte : **5 DM à froid consommés aujourd'hui, 3 places restantes**, ce qui a une conséquence directe sur la file ci-dessous.
+
+### 💬 POINT DMs — 5 fils avec du nouveau, 7 brouillons en attente de validation, 0 envoi
+
+**Méthode** : liste des conversations chargée jusqu'au 8 août (21 fils), chaque fil retenu **rouvert et relu en entier** (§4) avant rédaction.
+
+---
+
+#### ✅ DM 1/7 — Amadou Baïlo DIALLO — VALIDÉ PAR DAVID EN SESSION INTERACTIVE ET ENVOYÉ (19:56), confirmé (éditeur vidé, texte retrouvé dans le fil) — réponse en fil actif, hors quota
+
+*Medical Doctor, Master of Sciences in Epidemiology.* Fil relu en entier (20 événements). Il répond à notre message de 10:53.
+**Verbatim reçu (aujourd'hui 15:58, intégral)** : « *Merci David À mon avis il faut élaborer une note conceptuelle qui analyse la problématique de la gestion des données, se poser la question principale et formuler des objectifs tout en construisant un cadre conceptuel ou le modèle qui décrit au plan théorique ou selon les connaissances les déterminants primaires et secondaires de la gestion des données.* »
+
+**Ce qu'il fait, et ce qu'il ne fait pas** : il ne tranche pas la question fermée posée le matin (déterminants en amont à l'enregistrement, ou en aval à la consolidation), il propose une **méthode** : écrire d'abord une note conceptuelle et un modèle des déterminants.
+**⚠️ À signaler à David (§3)** : le fil dérive doucement vers une **proposition de travail commun** (il avait déjà proposé de convoquer une réunion, il propose maintenant une note conceptuelle). Le brouillon **n'engage sur rien** : aucune promesse de co-rédaction, aucune date, aucun rôle accepté. Si la demande se précise, elle relèvera de l'arbitrage de David, comme le cas Andrea Bernasconi.
+
+**§3 CTA — ABSENT, imposé par l'anti-répétition.** Constat repris de la vérification du matin, non recopié à l'aveugle : `HealthWatch` apparaît **8 fois** dans ce fil et le lien `healthwatch-global.com` **4 fois** (il avait lui-même demandé le lien). Le re-proposer serait une redite commerciale.
+
+**Double-check (§5)** : *contenu* — **FR, tutoiement** ✅ (vérifié dans le fil, pas supposé) ; aucun chiffre, aucune date ✅ ; aucun tiret cadratin ✅ ; aucun lien ✅. *Raisonnement* — l'objection « un déterminant invisible depuis les bulletins n'est pas testable avec les données publiques » est un constat de première main de l'agrégation, cohérent avec le manque de champ « méthode/complétude » vérifié hier dans `lib/outbreaks.ts` ✅. *Registre* — accepte sa méthode sans s'y enrôler, et repose une question fermée, format auquel il répond le mieux ✅. *Mise en forme* — 2 paragraphes, à revérifier après saisie.
+
+> La note conceptuelle est la bonne porte d'entrée, à une condition qui vient de mon angle : que le cadre sépare dès le départ les déterminants observables de l'extérieur de ceux qui ne le sont qu'en interne. Depuis les bulletins publics je ne vois que le produit fini, jamais l'étape qui l'a produit, donc un modèle qui mélange les deux niveaux n'est plus testable avec les données réellement disponibles.
+>
+> Sur les déterminants primaires, ta hiérarchie m'intéresse. Tu les vois d'abord structurels, ressources humaines, outils, financement de la surveillance, ou plutôt procéduraux, définition de cas, circuit de validation, règles d'arbitrage quand plusieurs sources se recouvrent ?
+
+---
+
+#### ✅ DM 2/7 — TOLYENA MOCTAR DINGAMNAYAL — VALIDÉ PAR DAVID EN SESSION INTERACTIVE ET ENVOYÉ (19:57), confirmé (éditeur vidé, texte retrouvé dans le fil) — réponse en fil actif, hors quota ⭐ **CTA produit inclus**
+
+`/in/tolyena-moctar-dingamnayal-16bba7298/` — *Médecin certifié en Épidémiologie et Gestion des Urgences Sanitaires*, N'Djaména, Tchad, projet UN-HCR Baga-Sola. Fil relu en entier : **2 messages seulement** (notre welcome DM du dimanche 09/08 à 10:39, puis sa réponse).
+**Verbatim reçu (aujourd'hui 13:53, intégral)** : « *Bonjour, merci pour votre message. Vous soulevez un point effectivement important. Sur le terrain, notamment dans les contextes de crise humanitaire, l'état nutritionnel peut fortement influencer la vulnérabilité et l'évolution des patients, mais il est rarement intégré de façon systématique aux données d'investigation épidémiologique. Les bulletins rapportent surtout les cas, décès, létalités et facteurs de risque, tandis que les données nutritionnelles proviennent souvent d'enquêtes ou de programmes parallèles. Elles restent donc parfois une connaissance de terrain qui n'est pas suffisamment intégrée à l'analyse épidémiologique. À mon sens, croiser systématiquement létalité, statut nutritionnel [...] mieux expliquer les différences entre foyers et d'éviter d'attribuer trop rapidement une létalité élevée au seul agent pathogène ou à la qualité de la riposte.* »
+
+**§3 CTA — PRÉSENT, et c'est la règle qui l'impose ici.** Sa réponse est **substantielle** (contenu réel, pas une politesse d'accusé de réception) : la condition d'ouverture du CTA est remplie. **Anti-répétition vérifiée sur l'intégralité du fil** : ni le lien `healthwatch-global.com` ni l'essai n'y ont jamais été envoyés (le welcome DM nommait HWG sans lien, conformément à la règle du premier contact). Le CTA est donc **nouveau dans ce fil**, et il est amené depuis son propre argument (la vue appauvrie des bulletins), pas plaqué en fin de message.
+
+**Double-check (§5)** : *contenu* — **FR, vouvoiement** ✅ (langue et registre du fil) ; aucun chiffre, aucune date ✅ ; aucun tiret cadratin ✅ ; affirmation sur les sources HWG conforme à la politique commune §1 ✅. *Raisonnement* — l'ajout « deux calendriers et deux découpages géographiques » **prolonge** son point sans le lui attribuer : lui dit que les données nutritionnelles viennent d'enquêtes parallèles, la conséquence sur la comparabilité spatio-temporelle est une inférence assumée comme la nôtre ✅. *Mise en forme* — 3 paragraphes, à revérifier après saisie.
+
+> Votre distinction est celle qui me manquait. Ce ne sont pas seulement deux jeux de données, ce sont deux calendriers et deux découpages géographiques. Une enquête nutritionnelle décrit une zone à un moment donné, la létalité se calcule au fil d'une flambée, et le croisement suppose que les deux se recouvrent, ce qui n'est presque jamais garanti.
+>
+> D'où une question sur votre pratique. Au moment d'une investigation, disposez-vous d'une enquête nutritionnelle assez récente et assez locale pour la zone concernée, ou est-ce que le statut nutritionnel reste une appréciation générale du contexte, sans chiffre mobilisable dans l'analyse ?
+>
+> De mon côté, HealthWatch Global agrège exactement la vue appauvrie que vous décrivez, des cas, des décès, des létalités, et rien sur la population dans laquelle elles ont été mesurées. Si vous voulez voir à quoi ça ressemble, l'essai Pro de quatorze jours sur healthwatch-global.com est gratuit et sans carte bancaire. Votre regard sur ce qui manque du côté nutrition m'intéresserait plus qu'un retour d'utilisateur classique.
+
+---
+
+#### ✅ DM 3/7 — Johan Verheyden — VALIDÉ PAR DAVID EN SESSION INTERACTIVE ET ENVOYÉ (19:59), confirmé (éditeur vidé, texte retrouvé dans le fil) — réponse en fil actif, hors quota ⚠️ **point de sécurité pour David**
+
+Fil relu en entier (20 événements). Suite directe du DM validé et envoyé ce matin à 10:50 (troc d'abonnements, provisionnement de son accès Pro exécuté).
+**Verbatim reçu (aujourd'hui 11:29 puis 11:31)** : « *Compte créé - avec l'émail. Mot de Passe: Welcome 12345* » puis un second message répétant le mot de passe.
+
+**⚠️ À REMONTER À DAVID, deux points :**
+1. **Le compte African Intelligence de David est créé**, le troc est donc exécuté des deux côtés (son accès Pro HWG a été provisionné ce matin, cf. section du matin).
+2. **Johan a transmis un mot de passe en clair dans la messagerie LinkedIn.** Aucune connexion n'a été tentée depuis cette session, et **le mot de passe n'est pas repris dans le brouillon**. Recommandation : le changer à la première connexion. Le brouillon l'annonce, ce qui suppose que David le fasse effectivement.
+
+**§3 CTA — sans objet** : partenaire par troc, pas prospect. En revanche le brouillon donne l'**information de connexion à son propre compte Pro**, qui n'avait jamais été envoyée dans le fil (le message de 10:50 annonçait l'accès sans dire comment s'y connecter) : c'est du service, pas une redite commerciale.
+
+**⚡ MISE À JOUR (session interactive, 16h) — David a lu un article du site en attendant, brouillon enrichi avec un vrai retour de fond.** David s'est connecté à African Intelligence et a lu **« The outbreak may have had two beginnings »** (`africa-research.eu/special_reports.php?slug=2-outbreaks`, 04/08/2026), une étude de modélisation **co-écrite par Johan lui-même** (avec Celestin Nzanzu Mudogo et Wolfgang Jacquet) sur l'origine de l'épidémie Bundibugyo 2026 en RDC. **Contenu relu directement à la source par l'agent avant intégration au brouillon** (pas depuis un résumé) : décès suspects autour de Mongbwalu détectés rétrospectivement des mois avant la reconnaissance officielle en mai ; le modèle donne **84,8 %** aux deux scénarios discontinus (cluster de janvier + réintroduction ultérieure) contre une chaîne continue depuis janvier, sous les hypothèses principales. Étude pas encore relue par les pairs (prépublication medRxiv).
+Le nouveau paragraphe pose une **question réelle, non résolue dans la partie gratuite de l'article** (le reste est derrière l'inscription) : le cluster de janvier reste-t-il visible dans le dossier officiel une fois l'épidémie reconnue en mai, ou la date de reconnaissance efface-t-elle rétroactivement ce qui précède ? C'est un prolongement direct de l'angle HWG (les bulletins publics ne montrent jamais ce type de reconstruction rétrospective), pas une question plaquée.
+
+**Double-check (§5) repris après l'ajout** : *contenu* — **FR, tutoiement** ✅ (registre du fil) ; adresse `jverheyden@ariesconsult.eu` reprise caractère pour caractère depuis le fil ✅ ; procédure de connexion (lien magique ou code, pas de mot de passe) conforme au provisionnement réellement effectué ce matin ✅ ; aucun mot de passe repris ✅ ; aucun tiret cadratin ✅. *Raisonnement* — le chiffre 84,8 % et le résumé du scénario privilégié sont vérifiés mot pour mot contre le texte de l'article lu en session, pas reformulés de mémoire ✅ ; aucune section payante n'est citée comme si elle avait été lue ✅. *Registre* — la réaction est celle d'un lecteur réellement intéressé par le contenu (pas un compliment vague), cohérent avec le fait que David a lui-même ouvert et lu la page avant de demander l'ajout ✅. *Mise en forme* — 3 paragraphes, à revérifier après saisie.
+
+> Reçu, merci Johan. Je change le mot de passe à la première connexion, c'est plus propre pour nous deux.
+>
+> J'ai fait un tour sur African Intelligence en attendant et je suis tombé sur « The outbreak may have had two beginnings ». Le résultat me travaille : que le modèle donne 84,8 % aux deux scénarios discontinus plutôt qu'à une chaîne ininterrompue depuis janvier, ça touche exactement à ce qui m'intéresse de l'extérieur. Une fois l'épidémie reconnue en mai, ce cluster de janvier reste-t-il visible quelque part dans le dossier officiel, ou la date de reconnaissance efface-t-elle rétroactivement tout ce qui précède ?
+>
+> De ton côté, ton accès Pro est actif sur jverheyden@ariesconsult.eu. Tu te connectes sur healthwatch-global.com/fr/login avec cette adresse, par lien magique ou par code, il n'y a pas de mot de passe à retenir. Dis-moi ce qui te manque quand tu auras regardé.
+
+---
+
+#### ✅ DM 4/7 — Dr. Scott JN McNabb ⭐ — VALIDÉ PAR DAVID EN SESSION INTERACTIVE ET ENVOYÉ (20:03), confirmé (fil créé, éditeur vidé, texte retrouvé dans le fil) — connexion acceptée aujourd'hui, compte le quota froid
+
+`/in/smcnabb/` — *Managing Partner, Public Health Practice, LLC*, vérifié, **1er degré depuis aujourd'hui**, 14 927 abonnés, 23 relations en commun (Dr. Mohamed Y., Abdou Salam). Invitation envoyée ce matin, **acceptée dans la journée** (relevé sur `mynetwork/invite-connect/connections/`, tri « Ajouts récents », « Connexion le 11 août 2026 »).
+**Vérification bidirectionnelle faite** : aucun fil à son nom dans les 21 conversations chargées → **aucun échange préalable**, message de bienvenue justifié.
+
+**Hook vérifié à la source dans cette session** (page profil + activité relues aujourd'hui, pas recopiées d'hier) : son activité récente est faite de partages, sans texte propre substantiel. Les deux publications exploitables sont **« Modernizing Global Health Security to Prevent, Detect, and Respond »** (ScienceDirect, 1 mois) et **« Understanding implementation contexts and determinants of e-learning for global health security competency-based training in LMICs »** (npj Health Systems, 1 mois). Le reste est une série de partages du podcast *Headwinds in Public Health: How AI can Help Drive Progress*, dont **le contenu n'est pas cité** faute de l'avoir écouté.
+**Ce que le brouillon s'interdit** : les faits de carrière relevés hier (US CDC EIS, direction de la *Division of Integrated Surveillance Systems and Services*, Emory, PI Africa CDC Institute for Workforce Development) **n'ont pas pu être revérifiés aujourd'hui** (la vue profil chargée n'expose pas la section Expérience). Ils ne sont donc **pas cités nommément** ; la formule reste « someone who has spent a career on the systems side », vraie et non vérifiable à charge.
+
+**§3 CTA — ABSENT, obligatoire** : message de premier contact, lien interdit sauf demande explicite. HealthWatch Global nommé une fois, factuellement.
+**Langue : EN** ✅ (profil, partages et titres tous en anglais, États-Unis).
+**Double-check (§5)** : aucun chiffre, aucune date ✅ ; aucun tiret cadratin ✅ ; aucun lien ✅ ; les deux titres d'articles sont repris **mot pour mot** de sa page ✅. *Mise en forme* — 3 paragraphes, à revérifier après saisie.
+
+> Hi Scott, thanks for connecting, and for the follow that came before it.
+>
+> I run HealthWatch Global, which aggregates active outbreaks from the public bulletins of WHO, ECDC, Africa CDC and PAHO. The two pieces you shared recently, on modernizing global health security and on competency based training in LMICs, both sit upstream of where I work, and that contrast is what struck me. Detection capacity and workforce competency are being modernized, while the layer I actually read has not moved. A bulletin still gives cases and deaths, with nothing about how the figure was produced or when it was released.
+>
+> So here is the question I would put to someone who has spent a career on the systems side. Is the published record the last thing to change because nobody owns it, or because publishing anything beyond a count invites comparisons the producer cannot control?
+
+---
+
+#### ✅ DM 5/7 — Dr. Siaka Condé ⭐ — VALIDÉ PAR DAVID EN SESSION INTERACTIVE ET ENVOYÉ (20:06), confirmé (fil créé, éditeur vidé, texte retrouvé dans le fil) — connexion acceptée aujourd'hui, compte le quota froid
+
+`/in/drconde-who-afro/` — ***Head of WHO Country Emergency Program*** | Epidemiologist | MD | MPH, Lomé, Togo, vérifié, 505 abonnés, 21 relations en commun. Invitation envoyée ce matin, **acceptée dans la journée** (même relevé). **Aucun échange préalable**, vérifié.
+
+**Hook vérifié à la source dans cette session** : sa republication (2 mois) d'OMS Togo — « *Le Togo renforce les capacités techniques de son Équipe médicale d'urgence (EMU) par une formation sur la certification internationale. Déjà déployée au Tchad et en Guinée, l'EMU Togo franchit un cap rigoureux améliorant ses capacités afin de sauver plus de vies.* » Fait repris de ce qu'il a lui-même relayé, rien d'inventé.
+**Angle volontairement écarté** : son post personnel (3 mois) sur le chômage de masse des soignants africains, sujet politiquement chargé → non repris, cohérent avec la neutralité tranchée par David le 08/08.
+**Langue : EN**, choix explicite et vérifié, pas un défaut. Ses **deux publications originales** (chômage des soignants, semaine africaine de la vaccination au Togo) sont **en anglais** ; le français des posts relayés est celui d'OMS Togo, pas le sien.
+
+**§3 CTA — ABSENT, obligatoire** (premier contact). HWG nommé une fois.
+**Double-check (§5)** : aucun chiffre ✅ ; aucune date ✅ ; aucun tiret cadratin ✅ ; aucun lien ✅ ; *raisonnement* — « la capacité de riposte n'apparaît jamais dans les bulletins » est un constat de première main de l'agrégation, pas une donnée citée ✅. *Mise en forme* — 3 paragraphes, à revérifier après saisie.
+
+> Hi Siaka, thanks for accepting the connection.
+>
+> The piece you shared about the Togo emergency medical team getting internationally certified, after having already been deployed in Chad and Guinea, stayed with me because of where I sit. I run HealthWatch Global, which aggregates active outbreaks from the public bulletins of WHO, ECDC, Africa CDC and PAHO, and response capacity is the one thing those bulletins never carry. I can see the counts a country reports, never who was standing behind them.
+>
+> That gap gets stranger with a team that crosses borders. When a certified team from one country works an outbreak in another, nothing in the published record says so, so the figures read as purely national even when the capacity behind them was not. Does that deployment history exist in writing anywhere a reader outside the response can reach, or does it stay inside internal reporting?
+
+---
+
+#### ✅ DM 6/7 — Martin Yakum — VALIDÉ PAR DAVID EN SESSION INTERACTIVE ET ENVOYÉ (20:20), confirmé (fil créé, éditeur vidé, texte retrouvé dans le fil) — connexion acceptée aujourd'hui, compte le quota froid
+
+⚠️ **Incident technique en session** : le premier onglet utilisé pour cet envoi s'est figé (`Runtime.evaluate` timeout répété) après le clic sur « Message » depuis le profil. Re-sélection du navigateur tentée sans effet, **nouvel onglet ouvert** (§7) : aucun message n'était parti depuis l'onglet bloqué (vérifié dans la messagerie avant de retenter), aucun doublon.
+
+`/in/martinyakum/` — *Épidémiologiste chez **Epicentre** (MSF)*, Dakar, 2 367 abonnés, 13 relations en commun. Connecté cet après-midi côté matin (recomplément de quota), **acceptée dans la journée**. **Aucun échange préalable**, vérifié.
+
+**Hook vérifié à la source dans cette session, et frais (8 h)** : son post publié aujourd'hui, en anglais, sur l'excès de données face au déficit d'interprétation — « *Health facilities generate data. Research projects generate data. Surveillance systems generate data. Dashboards generate data. [...] The real challenge is knowing what the data are telling us and, just as importantly, what they are not telling us. A number without context can be misleading. A trend without understanding its denominator can lead us in the wrong direction. [...] a beautiful dashboard can still be useless if nobody knows what decision it should inform.* »
+**Note pour la routine du matin** : ce post est aussi un **excellent candidat commentaire public**, encore dans la fenêtre 48 h demain matin. Non commenté aujourd'hui, quota 7/7 rempli. Versé au tracker.
+
+**§3 CTA — ABSENT, obligatoire** (premier contact). HWG nommé une fois.
+**Langue : EN** ✅ (son post et son activité sont en anglais, malgré un intitulé de poste en français).
+**Double-check (§5)** : aucun chiffre ✅ ; aucune date ✅ ; aucun tiret cadratin ✅ ; aucun lien ✅ ; *raisonnement* — la question posée est ouverte mais bornée (« un minimum qui devrait toujours voyager avec un chiffre publié »), elle ne lui prête aucune position ✅. *Mise en forme* — 3 paragraphes, à revérifier après saisie.
+
+> Hi Martin, thanks for connecting.
+>
+> Your post today, about what the data are not telling us, landed on the exact problem I work on. I run HealthWatch Global, which aggregates active outbreaks from the public bulletins of WHO, ECDC, Africa CDC and PAHO, so I sit at the far end of that chain. The number reaches me after every piece of context that produced it has been stripped away. No denominator, no case definition, nothing about when the figure was actually released.
+>
+> What I have not resolved is what a reader is entitled to do with that. From where you sit, with the fieldwork behind the figure still in view, is there a minimum set of things that should always travel with a published count for it to be interpretable at all, or is context simply something that cannot survive the trip into a bulletin?
+
+---
+
+#### ✅ DM 7/7 — Charles Cazanave ⭐ — VALIDÉ PAR DAVID EN SESSION INTERACTIVE ET ENVOYÉ (20:25), confirmé (fil créé, éditeur vidé, texte retrouvé dans le fil) — connexion acceptée aujourd'hui, compte le quota froid
+
+`/in/charles-cazanave-6063991ab/` — *Professeur en Infectiologie à l'Université de Bordeaux, Praticien hospitalier au CHU de Bordeaux, **Président du Collège des Universitaires des Maladies Infectieuses et Tropicales (CMIT)***, vérifié, 1er degré depuis aujourd'hui, 7 relations en commun (Gaetan Robert, Komlanvi).
+**Origine de la connexion** : ce n'est **pas** une invitation du jour. C'est une **invitation ancienne restée pendante** (file d'attente d'avant le 17/07, cf. archive), acceptée aujourd'hui. **Aucun échange préalable**, vérifié.
+
+**~~Recommandation initiale de séquencement (dépassée)~~** : j'avais d'abord recommandé de décaler ce message à demain sur la base d'un calcul de quota erroné (5 DM à froid supposés consommés). **Correction faite en session** : seul 1 DM du matin (Yao) était réellement à froid, ramenant le total à 2 avant cette salve. Les 4 messages de bienvenue tiennent largement dans le quota (6/8 au total) — envoyé le jour même, pas de report nécessaire.
+
+**Hook vérifié à la source dans cette session** : sa republication (6 jours) sur les feux de Saumos 2026 — « *l'accès aux soins des bénévoles, un enjeu majeur et souvent invisible. Un incendie de cette ampleur génère des risques aigus (intoxication au monoxyde de carbone, hyperthermie d'effort, traumatologie, détresse psychologique) auxquels s'ajoutent la décompensation de pathologies préexistantes et les ruptures de traitement [...] mise en place d'un poste de secours porté par les médecins généralistes et spécialistes* ». Ses autres publications récentes (conseils culturels, « pause chocolatine ») sont hors sujet et volontairement ignorées.
+**Langue : FR, vouvoiement** ✅ (profil et publications intégralement en français).
+
+**§3 CTA — ABSENT, obligatoire** (premier contact). HWG nommé une fois.
+**Double-check (§5)** : aucun chiffre ✅ ; aucune date ✅ ; aucun tiret cadratin ✅ ; aucun lien ✅ ; *raisonnement* — « rien de tout cela n'est à déclaration obligatoire » porte sur les catégories citées dans son propre post (intoxications au CO, ruptures de traitement, décompensations), pas sur une liste réglementaire précise qui n'a pas été vérifiée ici ; formulation gardée à ce niveau de généralité pour cette raison ✅. *Mise en forme* — 3 paragraphes, à revérifier après saisie.
+
+> Bonjour Professeur, merci d'avoir accepté la mise en relation.
+>
+> Le retour que vous avez partagé sur les feux de Saumos, et le poste de secours monté par les soignants du territoire évacué, m'a arrêté pour une raison qui tient à mon angle de travail. Je fais tourner HealthWatch Global, qui agrège les foyers actifs à partir des bulletins publics de l'OMS, de l'ECDC et d'Africa CDC. Un événement comme celui-là produit de la morbidité bien réelle, intoxications, ruptures de traitement, décompensations, et ne laisse presque aucune trace dans ce que je lis, parce que rien de tout cela ne relève de la déclaration obligatoire.
+>
+> D'où une question que je ne sais pas trancher depuis l'extérieur. Ce qui a été pris en charge dans ce poste de secours est-il consigné quelque part qui remonte, registre de crise, retour d'expérience, ou est-ce que ça disparaît avec la fin de l'incendie ?
+
+---
+
+#### ➖ Fils lus sans brouillon, et pourquoi
+
+- **Ewaleifoh Nicholas Asibor — AUCUN BROUILLON, volontairement.** Son message de 13:50 est **un pouce levé seul** (vérifié dans le DOM : bulle sans texte, un unique emoji U+1F44D), en réaction à notre réponse du matin. Accusé de réception sans substance, répondre ne produirait que du bruit. Son message de fond d'hier a déjà reçu une réponse ce matin.
+- **Pierrette Mubadi Enagogu — rien à faire côté DM.** Le fil ne contient qu'**un seul message, envoyé par David lui-même à 13:52** (« *Pierrette, votre post sur la visite du Centre de Traitement au Cinquantenaire est très utile. Je suis fondateur de HealthWatch Global, on suit l'épidémie Bundibugyo en temps réel depuis les données WHO Africa CDC. Votre regard terrain INSP serait précieux.* »). Elle n'a pas encore répondu en messagerie, mais **elle a répondu publiquement sous notre commentaire** (voir retombées ci-dessous). Aucune relance : moins de trois heures se sont écoulées.
+- **Andrea Bernasconi — carry-over maintenu, rien de neuf.** Son fil est en 11e position de la liste triée par récence, daté du **10 août** : aucun message reçu depuis notre réponse d'hier 14:36. Les 3 points tranchés le 08/08 restent tranchés.
+- **➖ Kaushal Sharma — carry-over permanent, prémisse revérifiée autrement qu'au matin (§9).** Plutôt que de rouvrir le fil nominativement (méthode du matin), la liste des conversations a été **déroulée jusqu'au 8 août** (21 fils chargés) : son fil n'y figure pas, donc son dernier message reste antérieur, cohérent avec le « *Sure, I'll let you know* » du 6 août. **Aucun retour sur le site, ne pas relancer.** Carry-over maintenu.
+
+### 🔁 Suivi des actions du matin (section 1) — retombées
+
+**Commentaires (7/7 postés ce matin) — 2 réponses reçues, 1 réaction notable :**
+1. **Dr René KASUMBUKA** (commentaire 5/7, campagne « FACE À EBOLA » JOUR 9) — **a répondu en nous mentionnant**. Verbatim : « *David Deheunynck Tout à fait d'accord. Sur le terrain, la fiabilité d'une information ne dépend pas uniquement de sa source, mais aussi de sa temporalité et de la qualité des données qui la sous-tendent. La traçabilité de la date, du lieu et du contexte de collecte est donc essentielle, particulièrement en surveillance épidémiologique. Une donnée fiable mais mal datée peut effectivement conduire à une mauvaise interprétation de la situation. Merci pour cette réflexion très pertinente.* » Reprise complète de notre angle, clôture par un remerciement, **aucune question ouverte**.
+2. **Pierrette Mubadi Enagogu** ⭐ (commentaire du matin sur son bulletin infodémique) — **a répondu en nous mentionnant, et ouvre explicitement la porte**. Verbatim : « *Cher David Deheunynck Merci beaucoup. Je trouve particulièrement intéressante votre suggestion sur le croisement entre les données de surveillance infodémique et celles de la surveillance épidémiologique. C'est effectivement une piste d'analyse qui pourrait apporter beaucoup à la riposte, et je pense qu'on pourrait échanger sur la pertinence de l'intégrer au bulletin. Ce serait d'ailleurs très intéressant à explorer. Donc, pour moi, l'analyse croisée est une très bonne perspective, mais elle devrait idéalement s'appuyer d'abord sur une surveillance infodémique suffisamment robuste et homogène. On peut certainement en discuter davantage.* »
+   **Rien posté en retour aujourd'hui : quota commentaires rempli 7/7** (les réponses à une mention ont été comptées comme commentaires ce matin, elles ne sont donc pas hors quota). **Carry-over prioritaire pour la session du matin du 12/08** : c'est la seule retombée du jour qui contienne une invitation explicite à poursuivre (« *on pourrait échanger* », « *en discuter davantage* »), et elle est doublée d'une connexion acceptée et d'un DM déjà envoyé par David.
+3. **Ewaleifoh Nicholas Asibor** a **aimé** notre commentaire 2/7 (post de Dr. Jean Kaseya, Africa CDC).
+4. **Commentaire sur le post Ministry Of Foreign Affairs-Uganda** : passé à **33 réactions** (Claude Irankunda et 32 autres), post à 1 950 réactions et 52 commentaires. Reste de loin le plus vu de la semaine.
+5. Aucune retombée nouvelle sur les commentaires 4/7 (Africa CDC), 6/7 (Gaddafi Bukenya) et 7/7 (Louise Nkusu Lusangu).
+
+**DM du matin (4 envoyés) — 3 retours sur 4 :** Amadou Baïlo DIALLO a répondu (brouillon 1), Ewaleifoh Nicholas Asibor a mis un pouce levé, Johan Verheyden a créé le compte et transmis ses identifiants (brouillon 3). **N'Da Konan Michel Yao (WHO) : aucune réponse** au message de bienvenue de 11:01, normal à ce stade.
+
+### 🤝 Connexions — 7 acceptations dans la journée, 2 encore en attente
+
+**Relevé sur `mynetwork/invite-connect/connections/`, tri « Ajouts récents » : 197 relations** (contre 190 ce matin, **+7**). Toutes datées « Connexion le 11 août 2026 » :
+| Profil | Origine de l'invitation | Suite donnée |
+|---|---|---|
+| **N'Da Konan Michel Yao** ⭐ | invitation du 10/08 | welcome DM déjà envoyé ce matin (11:01) |
+| **Dr. Scott JN McNabb** ⭐ | invitation de ce matin | 🔒 welcome DM en attente (n°4) |
+| **Dr. Siaka Condé** ⭐ | invitation de ce matin | 🔒 welcome DM en attente (n°5) |
+| **Martin Yakum** | invitation de ce matin | 🔒 welcome DM en attente (n°6) |
+| **Charles Cazanave** ⭐ | **invitation ancienne (avant le 17/07)**, restée pendante | 🔒 welcome DM en attente (n°7), à envoyer demain (quota) |
+| **Michel EYENGA MD MPH** | invitation de ce matin | **carry-over demain matin** : welcome DM à rédiger, quota DM du jour atteint |
+| **ETIENNE GUENOU** | invitation de ce matin | **carry-over demain matin** : welcome DM à rédiger, quota DM du jour atteint |
+| **Pierrette Mubadi Enagogu** | invitation antérieure pendante | **pas de welcome DM** : David lui a déjà écrit lui-même à 13:52 |
+
+**Toujours en attente** : **Usman Rabi** et **Bobossam Cissoko** (invitations de ce matin), plus les **7 invitations du 10/08** (Pezzoli, Rojas, SODJINOU, Nsio, NJUGUNA, Chia Julius, Mbodza).
+
+### 👣 Suivis — objectif porté de 7/7 à **10/10** (3 exécutés cette session)
+
+**Abonnés : 293** (contre 287 ce matin, **+6**). Les 6 nouveaux abonnés sont **exactement les 6 personnes qui viennent d'accepter la connexion** (l'acceptation crée l'abonnement) : Charles Cazanave, Pierrette Mubadi Enagogu, Dr. Siaka Condé, ETIENNE GUENOU, Michel EYENGA, Martin Yakum, tous déjà en « Suivi ». **Aucun follow-back à exécuter de ce côté.** Les deux abonnés écartés ce matin (**Nickson Motari**, intitulé en liste de mots-clés sans ancrage épidémio ; **Jafar Muhammad**, aucun intitulé) figurent toujours en « Suivre » : décision inchangée, §10.
+
+Le quota étant un objectif et non un plafond (règle du 14/07), la marge de 3 a été remplie par **recherche active parmi les candidats « à traiter » du tracker**, tous suivis par séquence d'événements pointeur en JS sur le bouton « Suivre » de l'en-tête de profil (filtre `!closest('aside')`), **chacun confirmé par le basculement du bouton en « Suivi »** relu dans le DOM :
+
+| # | Profil | Lien | Intitulé | Pourquoi |
+|---|---|---|---|---|
+| 8 | **Bachir MBODJ MD MPH** | `/in/bachir-mbodj-a73333184/` | *Founder & Managing Director, **Africa Millennium Development Initiative for Health (AMDI4Health)***, Dakar, LSHTM, 2e, 17 mutuels (Dr R Hyacinthe, N'Da Konan Michel Yao) | Carry-over « à traiter » du matin, identité levée par recherche nominative (7 homonymes écartés, §12) |
+| 9 | **Demian Antoinette Mbailamen** ⭐ | `/in/demian-antoinette-mbailamen-a93702b7/` | ***Directrice de la vaccination, de la lutte contre la maladie et de la surveillance épidémiologique***, Ministère de la santé publique du **Tchad**, 2e | Fonction exactement au cœur du sujet HWG, au niveau national |
+| 10 | **Guellord Banyawa** | `/in/guellord-banyawa-756942102/` | *Field Epidemiologist chez **World Health Organization** / IQVIA*, Kinshasa RDC, 385 abonnés, 2e, 6 mutuels (Elvis, Tambe) | Épidémiologiste de terrain en RDC, foyer suivi en priorité |
+
+⚠️ **§12 — un cas concret ce soir** : **deux comptes distincts portent le nom « Guellord Banyawa »** (`guellord-banyawa-756942102`, 2e, *Field Epidemiologist WHO/IQVIA*, et `guellord-banyawa-a77887379`, 3e, *Mpox IPC Consultant at Africa CDC*). Le bon a été identifié par le **slug et l'intitulé**, jamais par le nom affiché.
+
+**➖ 2 candidats du tracker retirés de la file : ils étaient déjà suivis.** **Jonathan KONKO MAKENGO** (`/in/jonathan-konko-makengo-819056177/`, *Epidemiology Activity Manager at Médecins Sans Frontières*, Bruxelles, 17 mutuels) et **Patrick Musole Bugeme** (`/in/patrick-musole-bugeme-4454691a4/`, *MD, PhD Researcher Geneva Disease Dynamics / Johns Hopkins / UCBukavu*, Bukavu) : aucun bouton « Suivre » sur leur profil, et leur menu « Plus » affiche **« Suivi »**. Rien exécuté, **rien compté**. Statut corrigé dans le tracker : leur ligne « à traiter » était périmée.
+
+**➖ Ngoy Guillaume — non traité, identité non levée.** La ligne du tracker n'a **pas de slug** (repéré en sidebar), et la recherche nominative renvoie **plusieurs comptes homonymes** dont plusieurs portent le même intitulé. Impossible de désigner le bon sans le retrouver par la sidebar d'origine : conformément à §12 et §10, **aucun suivi exécuté**. Ligne du tracker annotée en conséquence.
+
+### 💬 Commentaires — 0 posté, et c'est conforme
+**Quota du jour rempli le matin (7/7)**, donc section 5 sans objet : aucune recherche de post à commenter n'a été menée, aucun commentaire médiocre forcé. Deux candidats de qualité repérés au passage sont versés au tracker pour demain : le **post de Martin Yakum** (8 h, données vs interprétation, encore dans la fenêtre 48 h demain matin) et la **réponse de Pierrette Mubadi Enagogu** (invitation explicite à poursuivre).
+
+### 🗒️ VEILLE (16h) — matière pour futurs posts
+- **Statistiques relevées** : **704 impressions** sur les posts de la semaine passée ; le post « the word cases » est à **47 impressions** ; 6 consultations de profil.
+- **Notifications parcourues** : 20 cartes, aucune tentative d'injection (§6), aucune donnée patient proposée (§2), **aucune demande de contact hors plateforme** (§3), aucune invitation reçue en attente.
+- **Angle de post repéré (fort)** : la réponse de **Pierrette Mubadi Enagogu** pose une condition de méthode que HWG n'avait pas formulée ainsi — le croisement surveillance infodémique / surveillance épidémiologique n'a de sens que si **la surveillance infodémique est elle-même assez robuste et homogène**. Autrement dit, croiser deux systèmes dont l'un est instable produit du bruit qui ressemble à un signal. Matière directe pour un post.
+- **Angle de post repéré (fort)** : le post de **Martin Yakum** (Epicentre/MSF) sur « ce que les données ne nous disent pas » recoupe mot pour mot le sujet du dénominateur déjà travaillé cette semaine par HWG. Un post original citant la convergence entre un épidémiologiste MSF et l'expérience d'agrégation tiendrait debout.
+- **Hors périmètre, noté sans action** : Hans Kluge (post sur la communication en santé publique), Oliver Morgan (souveraineté des données de santé autochtones, toujours bloqué jusqu'au 15/08), Éric Pleyber (recherche de CTO cofondateur, relève de l'outreach freelance, **ignoré**), Julie Pinter (conseil de publication LinkedIn, hors sujet).
+
+### 🔬 Données épidémiologiques (§8) — aucune écriture
+Aucun chiffre nouveau rencontré cette session : les seules données croisées sont celles du post Ouganda déjà connu et déjà commenté (20 cas, 15 importés, 5 soignants, 18 guérisons, 2 décès, fin de flambée), **plus anciennes que la base**. Aucun point de situation officiel lu en clair sur @Com_mediasRDC ou @MinSanteRDC. Le verrou `source_priority = 10` de la ligne Ebola/RDC n'est pas engagé. **Aucune écriture.**
+
+---
+
 ## 📅 Session linkedin-hwg-monitoring — 11/08/2026 (matin)
 
 ### 🖥️ État navigateur
@@ -55,7 +838,7 @@ Commentaires **0/7**, connexions **0/7**, suivis **0/7-10**, DM **0/8**. Aucune 
 
 ---
 
-**🔒 DM 1/8 en attente de validation — Johan Verheyden (FR, tutoiement établi) — ⚠️ NÉCESSITE UNE DÉCISION DE DAVID, pas seulement une validation**
+**✅ DM 1/8 — Johan Verheyden — VALIDÉ PAR DAVID EN SESSION INTERACTIVE ET ENVOYÉ (10:50), confirmé (éditeur vidé, texte retrouvé dans le fil)**
 
 *FOUNDER AND CHIEF RESEARCHER, African Intelligence / Aries Consult, Nairobi.* Fil relu en entier (§4, 20 événements).
 **Verbatim reçu (aujourd'hui 00:12, intégral)** : « *J'attends encore ton email* ».
@@ -73,13 +856,22 @@ Commentaires **0/7**, connexions **0/7**, suivis **0/7-10**, DM **0/8**. Aucune 
 
 > Johan, tu as raison de relancer, et le retard est de mon côté, pas d'ambiguïté là-dessus. Ton accès Pro part sur jverheyden@ariesconsult.eu, un an, accès complet.
 >
-> Mon email arrive juste en dessous pour que tu ouvres le mien de ton côté.
+> Pour le mien, utilise david.deheunynck@gmail.com.
 
-**⚠️ À compléter par David avant envoi** : l'adresse email à utiliser (volontairement absente du brouillon). Et **provisionner l'accès Pro de Johan avant ou en même temps que l'envoi** : envoyer le message sans avoir provisionné reviendrait à promettre une deuxième fois.
+**✅ Adresse ajoutée sur demande explicite de David en session** (`david.deheunynck@gmail.com`, remplace le paragraphe générique « mon email arrive juste en dessous »). Ce n'est pas une initiative de la routine : §3 de la politique commune interdit de communiquer les coordonnées personnelles de David de sa propre initiative, mais n'interdit pas d'exécuter une instruction explicite donnée en session interactive — même logique que la dérogation « Publie » du CLAUDE.md.
+
+**✅ PROVISIONNEMENT FAIT — sur instruction explicite de David en session (« Provisionne l'accès de Johan d'abord »).** Exécuté via `scripts/provision-johan-verheyden-2026-08-11.mjs` (nouveau script, calqué sur le précédent ZABRE/Mulamba et sur `app/api/admin/invite/route.ts`, mais avec la durée propre à un échange payé en nature plutôt que le format 35 jours standard). Écrit dans `.env.local.live` (vraie prod, vérifié). **Confirmé en relisant la ligne en base après écriture** :
+- Compte créé : `jverheyden@ariesconsult.eu` (id `3ea86e92-a696-47a6-a850-eb0f2525d339`)
+- `plan: "pro"`, `trial_ends_at: "2027-08-04T23:59:59+00:00"` (1 an depuis la date d'acceptation du troc, pas depuis aujourd'hui)
+- `is_pilot: true`, `pilot_organization: "African Intelligence (Aries Consult)"` (cadrage institutionnel plutôt que essai gratuit générique, cohérent avec la nature de l'échange)
+- Alertes régionales activées sur les 5 régions (`min_risk: medium`), même mécanisme que `activate-trial.ts`
+- **Aucun email Brevo automatique envoyé** : le mail de bienvenue standard de `admin/invite` est cadré « accès pilote 35 jours », ce qui contredirait le message LinkedIn ci-dessous. David informe Johan directement par ce DM. Connexion sans mot de passe pour Johan : `healthwatch-global.com/fr/login` avec `jverheyden@ariesconsult.eu` (lien magique / OTP / Google).
+
+**Double-check (§5) repris après l'ajout et le provisionnement** : *contenu* — FR, tutoiement ✅ ; l'adresse est retranscrite caractère pour caractère depuis l'instruction de David, pas reformulée ✅ ; aucun tiret cadratin ✅ ; l'affirmation « Ton accès Pro part sur… » est maintenant **vraie au moment de l'envoi**, plus une promesse en attente ✅. *Mise en forme* — 2 paragraphes courts, à revérifier dans le DOM après saisie si David valide l'envoi.
 
 ---
 
-**🔒 DM 2/8 en attente de validation — Amadou Baïlo DIALLO (FR, tutoiement établi) — réponse en fil actif, AUCUN CTA (anti-répétition)**
+**✅ DM 2/8 — Amadou Baïlo DIALLO — VALIDÉ PAR DAVID EN SESSION INTERACTIVE ET ENVOYÉ (10:53), confirmé (éditeur vidé, texte retrouvé dans le fil)**
 
 *Medical Doctor, Master of Sciences in Epidemiology.* Fil relu en entier (§4, 20 événements, ~14 800 caractères).
 **Verbatim reçu (10/08 23:23, intégral)** : « *Je pense qu'en analysant les déterminants on aura automatiquement plusieurs acteurs de la gestion dez données* ».
@@ -96,7 +888,27 @@ Commentaires **0/7**, connexions **0/7**, suivis **0/7-10**, DM **0/8**. Aucune 
 
 ---
 
-**🔒 DM 3/8 en attente de validation — Ewaleifoh Nicholas Asibor (EN) — ⭐ MEILLEUR SIGNAL DU JOUR, question directe posée à David**
+**✅ DM 4/8 — N'Da Konan Michel Yao — VALIDÉ PAR DAVID EN SESSION INTERACTIVE ET ENVOYÉ (10:57), confirmé (éditeur vidé, texte retrouvé dans le fil).** ⚠️ Note technique : la bulle flottante ouverte depuis le profil n'exposait aucun élément DOM détectable (ni `contenteditable`, ni `textarea`, ni frame identifiable) malgré son rendu visuel correct — contournement : navigation directe vers `/messaging/compose/?profileUrn=…&recipient=…` (URL trouvée dans l'arbre d'accessibilité), qui expose l'éditeur standard `.msg-form__contenteditable`. À reporter dans le SKILL pour tout futur 1er message envoyé depuis un profil plutôt que depuis la liste de conversations.
+
+Contexte complet dans la section « Connexion acceptée » plus bas. **Aucun échange préalable en messagerie, vérifié nominativement.**
+
+**Hook vérifié à la source, lu sur son profil dans cette session** : son post d'il y a 6 jours (publié en **deux versions, EN et FR**, la version FR étant la plus reprise) partage, à titre de réflexion personnelle et explicitement pas comme une position officielle de l'OMS, une liste d'**indicateurs opérationnels tirés des ripostes Ebola précédentes dans l'est de la RDC** : rapidité de détection et d'isolement des cas, délai d'investigation des alertes, temps de rendu des résultats de laboratoire, performance du suivi des contacts, occupation des lits, et délai entre une alerte et son investigation sur le terrain. Il y prend soin de préciser que ce n'est **pas une critique** de la riposte en cours.
+**Pourquoi ce hook est le bon** : aucun de ces indicateurs n'existe dans le dossier public que HWG agrège. C'est exactement l'angle mort dont HWG parle, formulé par quelqu'un qui a l'autre moitié de l'information.
+
+**§3 CTA — ABSENT, obligatoire.** C'est un **message de premier contact** : le lien `healthwatch-global.com` y reste interdit sauf demande explicite de sa part. HealthWatch Global est nommé une fois, factuellement, pour qu'il sache à qui il parle.
+**Choix de langue** : **FR**. Il publie dans les deux langues ; la version française de son post est la plus engagée, il est francophone et représentant OMS au Sénégal. Choix explicite, pas un défaut.
+
+**Double-check (§5)** : *contenu* — **FR, vouvoiement** ✅ ; **aucun chiffre** ✅ ; **aucune date** ✅ ; aucun tiret cadratin ✅ ; aucun lien, aucun CTA ✅ ; les indicateurs cités sont **repris mot pour mot de son propre post**, relu sur son profil, pas de mémoire ✅. *Raisonnement* — l'affirmation « aucun de ces indicateurs n'apparaît dans les bulletins » est un constat de première main de l'agrégation, recoupée aujourd'hui par la vérification de `lib/outbreaks.ts` (aucun champ de latence dans le schéma) ✅. *Registre* — ne flatte pas, ne demande rien d'autre qu'une lecture, et pose une question fermée à deux branches plutôt qu'une question ouverte à un dirigeant très sollicité ✅. *Mise en forme* — 3 paragraphes, à revérifier après saisie.
+
+> Bonjour, merci d'avoir accepté la mise en relation.
+>
+> Votre publication sur les indicateurs opérationnels tirés des ripostes précédentes dans l'est de la RDC m'a arrêté, pour une raison qui tient à mon angle de travail. Je fais tourner HealthWatch Global, qui agrège les bulletins publics de l'OMS, de l'ECDC, d'Africa CDC et de PAHO, et aucun des indicateurs que vous listez n'apparaît jamais dans ces bulletins. Le délai entre l'alerte et l'investigation sur le terrain, le temps de rendu des résultats de laboratoire, la performance du suivi des contacts : tout cela existe dans la riposte, et rien n'en sort dans le dossier public, qui ne contient que des cas et des décès.
+>
+> Vu de l'extérieur, ça a une conséquence désagréable : deux ripostes dont les délais n'ont rien à voir peuvent publier exactement la même courbe. Ce qui m'intéresserait, c'est votre lecture du pourquoi. Est-ce que ces indicateurs restent internes parce que le format du bulletin n'a jamais prévu de place pour eux, ou parce qu'ils sont trop instables pour être publiés au fil d'une flambée ?
+
+---
+
+**✅ DM 3/8 — Ewaleifoh Nicholas Asibor — VALIDÉ PAR DAVID EN SESSION INTERACTIVE ET ENVOYÉ (10:55), confirmé (éditeur vidé, texte retrouvé dans le fil) — ⭐ MEILLEUR SIGNAL DU JOUR**
 
 Fil relu en entier (§4, 8 événements). **Message reçu hier 22:10, 3 099 caractères**, le plus substantiel de la messagerie aujourd'hui.
 
@@ -129,6 +941,110 @@ Fil relu en entier (§4, 8 événements). **Message reçu hier 22:10, 3 099 cara
 **➖ Qadeer Ahsan — AUCUN BROUILLON.** Fil rouvert : **aucun message nouveau** depuis son « *I am fine. Nothing much.* » du 10/08 11:46 (le badge non lu portait sur ce message déjà traité hier). Sa recherche de poste reste un point ouvert §3, aucune promesse faite, aucune à faire.
 
 **➖ Andrea Bernasconi — carry-over maintenu, rien de neuf.** Fil rouvert : le dernier message est toujours le nôtre (10/08 14:36, réponse sur sa revue des 12 études). Aucune réponse depuis, aucune nouvelle décision d'arbitrage. Les 3 points tranchés le 08/08 (co-écriture déclinée, coordonnées inchangées, neutralité politique) restent tranchés.
+
+### 🚨 INCIDENT — 2 invitations parties involontairement par clic en coordonnées manqué (piège sidebar, §7)
+
+**Ce qui s'est passé.** Sur la page de profil de Dr. Scott JN McNabb, le bouton « Se connecter » du bandeau « Connectez-vous si vous vous connaissez » a été visé **deux fois en coordonnées d'écran** à partir de captures fraîches. Entre la capture et le clic, **le layout a bougé** (le carrousel « Profils semblables à… » se recompose tout seul) et les deux clics ont atterri sur des boutons « Se connecter » de **cartes de sidebar**, qui envoient l'invitation **immédiatement, sans modale de note** (piège déjà documenté dans le SKILL).
+
+**Constaté, pas supposé** : vérifié dans `mynetwork/invitation-manager/sent/`, qui liste bien **« Envoyé aujourd'hui » / « Envoyé il y a 3 minutes »** pour deux profils jamais évalués au préalable :
+- **samba niang sagne** — *MD, field epidemiologist, health statistics, methods and practices in epidemiology, MPhc, coordinator of operational activities 4S network*, 8 relations en commun (Ali Justin).
+- **Daniel Yota** — *Global public health expert, MD, MPH, DBA, PhD in Public Health*, 23+ relations en commun (Gaetan Robert).
+
+**Mise à jour : retirées sur demande explicite de David** (message reçu après le bilan de fin de session). Les deux ont été retirées via `mynetwork/invitation-manager/sent/` → bouton « Retirer » → confirmation de la modale (« vous ne pourrez pas en renvoyer avant 3 semaines »). **Confirmé par toast pour chacune** : « L'invitation envoyée à samba niang a été retirée. » et « L'invitation envoyée à Daniel a été retirée. », et les deux profils ont disparu de la liste des invitations envoyées. **Ne plus les recontacter avant 3 semaines** (restriction plateforme). **Retirées du quota connexions du jour** (5/7 exécutées, pas 7/7 — voir correction du décompte plus bas).
+
+**⚠️ CORRECTIF TECHNIQUE À REPORTER DANS LES 2 SKILL LINKEDIN — ne plus jamais cliquer un bouton de profil en coordonnées.**
+- Les clics en coordonnées d'écran sur une **page de profil** sont désormais à considérer comme **interdits** pour tout bouton à effet irréversible (Se connecter, Suivre) : le carrousel de sidebar se recompose de façon asynchrone et décale le layout entre la capture et le clic, avec un bouton « envoi immédiat sans confirmation » juste à droite de la cible.
+- **Recette fiable validée en session** : (1) séquence complète d'événements pointeur en JS sur le bouton **« Plus »** de l'en-tête de profil, filtré sur `getBoundingClientRect().x < 400` pour exclure la sidagbar ; (2) même séquence sur l'entrée de menu **« Se connecter »** (filtrée `x < 500`) ; (3) **attendre 3 s pleines** puis screenshot ; (4) cliquer **« Envoyer sans note » en coordonnées** — la modale est un overlay centré, stable, et c'est la seule surface où le clic en coordonnées est sûr.
+- ⚠️ **Faux négatif à connaître** : après le clic JS sur « Se connecter », un test immédiat `querySelector('button')` sur « Envoyer sans note » renvoie **NO MODAL** alors que la modale s'ouvre bel et bien une seconde plus tard. **Ne pas recliquer** sur ce faux négatif : c'est précisément ce qui a produit les clics parasites ci-dessus. Vérifier par screenshot, pas par sondage DOM immédiat.
+
+### 🔒 BLOCAGE PLATEFORME RETESTÉ AUJOURD'HUI (§9) — notes personnalisées toujours épuisées
+Testé explicitement sur Dr. Scott JN McNabb, **pas recopié du 10/08** : la modale « Ajouter une note / Envoyer sans note » s'ouvre normalement, mais « Ajouter une note » affiche l'écran Premium « **Vos messages d'invitation personnalisés gratuits sont épuisés** » à la place du champ. Conformément à l'autorisation de David du 23/07, **les invitations du jour partent sans note**, comptées normalement, même barre de pertinence.
+
+### 🤝 CONNEXION 1/7 — Dr. Scott JN McNabb ⭐ (carry-over prioritaire du 10/08, exécuté)
+`/in/smcnabb/` — *Managing Partner, Public Health Practice, LLC*, vérifié, 2e degré, **14 927 abonnés, 22 relations en commun**. Nouvel abonné spontané du 10/08 (notification §13 déjà envoyée hier), suivi en retour hier, **connexion exécutée aujourd'hui** comme prévu au tracker.
+**Pertinence revérifiée à la source hier** : ex-**US CDC Epidemic Intelligence Service**, a dirigé la *Division of Integrated Surveillance Systems and Services* au National Center for Public Health Informatics du CDC, Adjunct Professor à **Emory**, **PI de l'Africa CDC Institute for Workforce Development**.
+**Bouton « Se connecter » en accès direct absent** : il fallait passer par le menu « Plus » du profil. **Invitation confirmée envoyée** : bouton d'en-tête basculé « Suivi » → **« En attente »** + toast **« Invitation envoyée à Dr. Scott JN. »**, et entrée « Envoyé aujourd'hui » revérifiée dans `invitation-manager/sent/`.
+
+### 🤝 CONNEXIONS — 5/7 RÉELLEMENT EXÉCUTÉES (corrigé après retrait des 2 invitations involontaires)
+Toutes **sans note** (blocage Premium retesté ci-dessus), toutes envoyées **depuis la page de profil complète**, jamais depuis une carte de sidebar, et **chacune confirmée par le toast nominatif** relu via le DOM après clic. **Le nom du destinataire a été vérifié dans le titre de la modale avant chaque clic** (« Personnalisez l'invitation que vous envoyez à … »), garde-fou ajouté après l'incident ci-dessus.
+
+**⚠️ Décompte corrigé** : les 2 lignes « samba niang sagne » et « Daniel Yota » (envois involontaires, voir incident ci-dessus) **ont été retirées sur demande de David** après le bilan de fin de session — elles ne comptent donc plus. Le quota réel du jour est **5/7 connexions**, pas 7/7 comme annoncé dans le premier bilan. Les deux profils ne peuvent pas être resollicités avant 3 semaines (restriction plateforme).
+
+| # | Profil | Lien | Intitulé | Réseau | Confirmation |
+|---|---|---|---|---|---|
+| 1 | **Dr. Scott JN McNabb** | `/in/smcnabb/` | Managing Partner, Public Health Practice, LLC ; ex-US CDC EIS ; Adjunct Prof. Emory ; PI Africa CDC Institute for Workforce Development | vérifié, 2e, 14 927 abonnés, **22 mutuels** | ✅ toast « Invitation envoyée à Dr. Scott JN. » + « En attente » |
+| 2 | **Michel EYENGA MD MPH** | `/in/michel-eyenga-md-mph-ba240356/` | *Sr M&E Advisor, Resolve To Save Lives*, RDC. 1 094 abonnés. Carry-over « bon candidat connexion » du 10/08, exécuté | vérifié, 2e, 9 mutuels | ✅ toast « Invitation envoyée à Michel. » |
+| 3 | **Usman Rabi** | `/in/usman-rabi-8737475b/` | ***Senior Technical Advisor, Health Security and Event-based Surveillance***, Resolve To Save Lives + Ahmadu Bello University/NFELTP, Abuja. Carry-over du 10/08, exécuté | 2e, 3 mutuels | ✅ toast « Invitation envoyée à Usman. » |
+| 4 | **Dr. Siaka Condé** ⭐ | `/in/drconde-who-afro/` | ***Head of WHO Country Emergency Program*** \| Epidemiologist \| MD \| MPH, Lomé, Togo. 505 abonnés | vérifié, 2e, **21 mutuels** (Ali Justin, Gaetan Robert) | ✅ toast « Invitation envoyée à Dr. Siaka. » |
+| 5 | **ETIENNE GUENOU** | `/in/etienne-guenou-6035a28a/` | *Microbiologist & Epidemiologist \| Public Health Emergency Preparedness & Response Specialist \| Global Health Security & Crisis Management \| **Expert in Cholera & Diarrheal Outbreak Coordination** \| Immunization*, Cameroun | 2e, 500+ relations | ✅ toast « Invitation envoyée à ETIENNE. » |
+
+~~2. samba niang sagne~~ — **retirée** (voir incident).
+~~3. Daniel Yota~~ — **retirée** (voir incident).
+
+### 🤝 CONNEXIONS 6/7 et 7/7 — QUOTA RECOMPLÉTÉ après le retrait des 2 involontaires
+Le quota étant un objectif à remplir et non un plafond (règle du 14/07), 2 candidats supplémentaires déjà qualifiés en session (« bon candidat connexion demain ») ont été traités immédiatement pour revenir à 7/7, sur demande explicite de David de poursuivre la routine.
+
+| # | Profil | Lien | Intitulé | Réseau | Confirmation |
+|---|---|---|---|---|---|
+| 6 | **Martin Yakum** | `/in/martinyakum/` | *Epidemiologist \| Humanitarian Health Researcher \| **Outbreak Investigation & Surveillance***, **Epicentre (MSF)**, Dakar, Sénégal, 2 367 abonnés | 2e, **13 mutuels** (Ali Justin, Dr. Hassan) | ✅ toast « Invitation envoyée à Martin. » — déjà suivi depuis le matin, connexion via le bandeau « Connectez-vous si vous vous connaissez », nom vérifié dans la modale |
+| 7 | **Bobossam Cissoko** | `/in/bobossam-cissoko-b2a79630/` | ***Surveillance officer chez World Health Organization*** \| Public Health, Cocody, Abidjan, Côte d'Ivoire, vérifié | 2e, 9 mutuels (Abdelkhader, Issa) | ✅ toast « Invitation envoyée à Bobossam. » — déjà suivi depuis le matin, nom vérifié dans la modale |
+
+**Quota connexions final du jour : 7/7**, décompte propre après correction.
+
+**Découverte** : Siaka Condé, Richard Fotsing, ETIENNE GUENOU, Dr Papa Chimère DIAW, Ousmane Souare et Dr COULIBALY Yacouba viennent tous de la sidebar « Personnes que vous connaissez peut-être » de `/mynetwork/grow/`, dont le contenu **s'était entièrement renouvelé** entre deux passages dans la même session (premier passage : Ngoy Guillaume, Bachir Mbodj MD MPH, Patrick Musole Bugeme, Demian Antoinette Mbailamen, Guellord Banyawa, Madina Thiam, INOHA ECOM ALGER). **Les non traités faute de quota sont versés au tracker en « à traiter »**, avec leur intitulé, pour ne pas les re-rechercher demain.
+
+### 🌟 CONNEXION ACCEPTÉE AUJOURD'HUI — N'Da Konan Michel Yao (WHO) ⭐
+`/in/n-da-konan-michel-yao-4b261b43/` — ***Director at World Health Organization***, Suisse, **1er degré depuis aujourd'hui**, 6 613 abonnés, **500+ relations, 33 relations en commun** (Dr. Mohamed Y., Ali Justin). Relevé sur `mynetwork/invite-connect/connections/` trié « Ajouts récents » : **190 relations** (contre 189 le 10/08), et **seule entrée datée du 11 août 2026**.
+**Vérification bidirectionnelle (règle du 14/07) faite** : aucun échange préalable en messagerie (recherche nominative dans la boîte de réception, seuls « Yao Selom Philippe ATRAH » et « Armelle Viviane NGOMBA » remontent) → **message de bienvenue justifié**, rédigé et mis en file (DM 4/8 ci-dessous).
+**§13 — pas de notification push à ce titre seul** : accepter une invitation que nous avons envoyée est une réponse à notre propre sollicitation, pas une interaction institutionnelle spontanée (barre appliquée à Scott McNabb le 10/08, qui s'était abonné de lui-même). Signalé en tête de bilan malgré tout, vu le niveau du profil.
+
+### 👣 SUIVIS 1 à 7 — objectif du jour atteint (7/7-10)
+Tous exécutés par **séquence d'événements pointeur en JS** sur le bouton « Suivre » du profil, filtré `!closest('aside')` pour exclure la sidebar, et **tous confirmés par le basculement du bouton d'en-tête en « Suivi »** relu dans le DOM après clic.
+
+| # | Profil | Lien | Intitulé | Pourquoi |
+|---|---|---|---|---|
+| 1 | **Richard Fotsing** | `/in/richard-fotsing-354b8943/` | *Health cluster coordinator chez WHO*, Cameroun, 2e, WHO + Institut de Médecine Tropicale Prince Léopold | Coordination humanitaire santé, mutuel avec N'Da Konan Michel Yao |
+| 2 | **Dr Papa Chimère DIAW** | `/in/papachimèrediaw/` | *Immunization Specialist*, **UNICEF**, Kinshasa RDC, 2e, **14 mutuels** | Vaccination RDC, cœur du foyer suivi |
+| 3 | **Ousmane Souare (MD MSc, MPH) Chevening Alumni** ⭐ | `/in/ousmane-souare-md-msc-mph-chevening-alumni-84923b129/` | ***National Coordinator, Africa CDC Brazzaville***, Guinée, 2e | Africa CDC, source d'agrégation HWG |
+| 4 | **Dr COULIBALY Yacouba** | `/in/dr-coulibaly-yacouba-07152553/` | *Responsable Planification, Suivi, Évaluation et Recherche du **Centre National d'Immunisation (CNI)*** , santé publique, 2e | Fonction suivi-évaluation dans un programme national |
+| 5 | **Emi Takahashi** | `/in/emi-takahashi-706b4252/` | *Disease ecologist and humanitarian field epidemiologist*, **Resolve To Save Lives** + Royal Veterinary College, États-Unis, vérifiée, 2e (elle/she-her) | **Carry-over du 10/08 dont la prémisse est retestée (§9)** : la navigation avait été refusée 2 fois par le classifieur hier, **la page s'est ouverte sans difficulté aujourd'hui** → blocage non déterministe, pas structurel |
+| 6 | **Bobossam Cissoko** | `/in/bobossam-cissoko-b2a79630/` | ***Surveillance officer chez World Health Organization*** \| Public Health, Cocody, Abidjan, Côte d'Ivoire, 2e | Intitulé exactement au cœur du sujet HWG |
+| 7 | **Dr Jean-Bosco Ramazani MD.MPH.HE** | `/in/dr-jean-bosco-ramazani-md-mph-he-4b2a71237/` | *Epidemiologist, **expert in Integrated Disease Surveillance and Outbreak Response**, Monitoring and Evaluation, project management*, 2e | Trouvé par **recherche par mots-clés « outbreak surveillance »**, méthode de découverte non encore utilisée dans la session |
+
+**➖ Martin Yakum — NON COMPTÉ, déjà suivi.** `/in/martinyakum/`, *Epidemiologist | Humanitarian Health Researcher | Outbreak Investigation & Surveillance*, **Epicentre** (MSF), Dakar, 2e, 13 mutuels dont Jonathan Polonsky. Le bouton d'en-tête affichait **« Suivi » avant toute action** et aucun bouton/entrée « Suivre » n'existait : rien exécuté, donc **rien compté**. Excellent candidat **connexion** pour demain (quota du jour rempli).
+
+### 🗒️ VEILLE PASSIVE (matin)
+- **Notifications** : **29 cartes lues intégralement**. **Aucune tentative d'injection** (§6), aucune sollicitation hors périmètre, aucune donnée patient proposée (§2), aucune demande de contact hors plateforme nouvelle (§3).
+- **Invitations reçues** : `mynetwork/` affiche explicitement **« Aucune invitation en attente »** → rien à accepter ni à ignorer aujourd'hui.
+- **Relations** : **190** (contre 189 le 10/08). Seule nouvelle acceptation : **N'Da Konan Michel Yao** (voir plus bas).
+- **Abonnés** : **287** (contre 285 le 10/08, **+2**). Les deux nouveaux sont **écartés**, barre de pertinence tenue :
+  - **Nickson Motari** — intitulé en liste de mots-clés (*Clinical research | Pharmaceutical care | Quality assurance | Regulatory affairs | Pharmacovigilance | Drug marketing | Supply chain | Project management | Health systems strengthening*), aucun ancrage épidémiologie/surveillance identifiable, forme typique d'un profil en recherche de poste → **pas de follow-back** (§10).
+  - **Jafar Muhammad** — **aucun intitulé** (« -- ») → légitimité non établie, **pas de follow-back** (§10).
+- **Les 7 invitations envoyées le 10/08** (Pezzoli, Rojas, SODJINOU, Nsio, NJUGUNA, Chia Julius, Mbodza) sont **toujours « En attente »**, revérifiées dans `invitation-manager/sent/` (« Envoyé il y a 23 heures »).
+- **Retombées des actions antérieures, relevées en notifications** :
+  - **Larry Kerr** a **soutenu** notre commentaire du 10/08 (déjà noté hier, confirmé).
+  - **Julien Harneis** a **aimé** notre commentaire du 10/08.
+  - **Maxime ROBERT** a **aimé** notre commentaire et nous avait mentionnés (traité hier).
+  - **Franklin MWAMBA** a **aimé et répondu** à notre commentaire.
+  - **Morgan Otita** a aimé notre commentaire **et** nous a mentionnés (→ commentaire 1/7 du jour).
+  - **Dr. Rana Jawad Asghar** a aimé notre commentaire **et** y a répondu (→ commentaire 3/7 du jour).
+  - **Frederick Shaw et 31 autres** ont aimé notre commentaire sur le post Uganda MoFA : **32 réactions, 22 946 impressions**, de loin la plus forte portée de la semaine.
+  - Statistiques de posts HWG relevées au passage : **217 impressions / +4 abonnés** (post West Nile Italie), **197 impressions / +1 abonné** (post Dengue WPRO), **36 impressions** (post « the word cases »).
+- **Posts marquants repérés hors quota ou hors périmètre** (matière à garder) :
+  - **Johan Verheyden**, nouvel article *AID & POLICY DISPATCH 26/2026* (19 h) — format newsletter, pas de donnée de foyer à commenter.
+  - **WHO African Region** était **en direct** pour un *Live press briefing on Ebola, Bunia, DRC* — page **bloquée en commentaire jusqu'au 12/08**, à rouvrir demain, source potentielle de chiffres frais.
+  - **Oliver Morgan** (*WHO Director, Public Health Intelligence*), post souveraineté des données de santé autochtones — **bloqué jusqu'au 15/08**, reste au tracker.
+  - **Madhukar Pai**, post burnout et coupes d'aide — **écarté volontairement**, sujet politiquement chargé, cohérent avec la neutralité tranchée par David le 08/08.
+  - **Chris Elias (Gates Foundation)**, ciblage infranational du paludisme (Lao PDR, Burkina Faso, Mozambique, Nigeria, Tanzanie) via données locales, republié par Rebecca K. — **angle proche du cœur HWG**, à considérer pour un commentaire demain s'il est encore dans la fenêtre.
+  - **WHO** *Health For All Newsletter* (grippe, agents de santé et surveillance) — veille.
+
+### 🔬 Données épidémiologiques (§8) — aucune écriture, et c'est volontaire
+Trois sources du jour portent des chiffres, **aucune n'apporte de donnée plus fraîche que la base** :
+- **Africa CDC** : 84 Port Health Officers formés sur 66 points d'entrée en Ouganda. Donnée de **formation**, pas de foyer : hors schéma `outbreaks`.
+- **Ministry Of Foreign Affairs-Uganda** (1 sem) : 20 cas dont 15 importés et 5 soignants, 18 guérisons, 2 décès, fin de flambée déclarée après les 42 jours. **Chiffres déjà connus et déjà commentés par HWG il y a une semaine**, donc pas nouveaux.
+- **Dr. Jean Kaseya** : aucun chiffre en texte (visuel + lien externe), rien de citable sans OCR, donc **rien repris** (§8).
+La ligne Ebola/RDC porte toujours le verrou `source_priority = 10` et aucun point de situation lu en clair sur @Com_mediasRDC ou @MinSanteRDC n'a été rencontré → **hors périmètre de l'exception du 03/08**. **Aucune écriture.**
+⚠️ **Limite assumée de cette session** : le **statut de la ligne Ouganda en base n'a pas été réaudité** (flambée déclarée terminée le 28/07). Ce n'est pas une donnée issue de cette session, et un audit de base sort du périmètre de la routine ; signalé ici pour que David ou une routine de données s'en saisisse si besoin.
 
 **➖ Kaushal Sharma — carry-over permanent, prémisse retestée directement (§9), inchangé.** Cette fois le fil a été **rouvert nommément** via la recherche dans la messagerie (et non déduit de son absence du top 10, comme les sessions précédentes) : dernier message toujours **« *Sure, I'll let you know.* » du 6 août**, aucun retour sur le site. Conforme à la consigne : **ne pas relancer**. Carry-over maintenu.
 
