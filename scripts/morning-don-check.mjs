@@ -471,6 +471,22 @@ const MANUAL_ROW_CHECKED = {
   // déclaration ougandaise ne remonte que la clôture Ebola du 28/07 (événement distinct). Toujours
   // 1 cas / 1 décès, rien à écrire, ligne laissée active.
   "b17d4fda-c38c-41c0-9b26-e60a54c1851b": "2026-08-11",
+  // Diphtérie/Australie : vérifié le 13/08 via le Browser pane. Le rapport le plus récent de la
+  // collection reste celui du 27/07/2026 (déjà en base : 475 cas confirmés / 1 décès), donc rien
+  // à écrire. ⚠️ CHANGEMENT DE CADENCE annoncé dans la « Collection description » de la page de
+  // listing : « The final weekly Diphtheria in Australia: Epidemiological Update was published on
+  // 31 July 2026. The report is now published fortnightly. » La série est donc bimensuelle depuis
+  // le 31/07 — un `updated_at` > 7j est désormais NORMAL pour cette ligne et n'est pas un signal
+  // d'alerte (même logique que les sitreps OPS pour Rougeole/États-Unis). Prochaine édition
+  // attendue à partir de la mi-août. La page de listing cite aussi désormais des tableaux de bord
+  // d'appoint (NNDSS, NT, WA, SA) si un chiffre intermédiaire devient nécessaire.
+  "e856b352-747b-4db0-b0d1-c9e55f6c53aa": "2026-08-13",
+  // Polio/Palestine : vérifié le 13/08. La page du comité (who.int/groups/poliovirus-ihr-emergency-
+  // committee) liste 44 réunions, la plus récente étant toujours la 44e du 04/03/2026 — déjà la
+  // source de la ligne. Aucune 45e déclaration publiée à ce jour (cadence ~trimestrielle, donc une
+  // 45e est attendue). La désignation PHEIC et les recommandations temporaires restent en vigueur,
+  // la Palestine n'en est pas sortie. Rien à écrire, `active`/`is_seed` inchangés.
+  "8a4072ab-c0be-4567-8ba4-cdcedeccced8": "2026-08-13",
 };
 console.log("\n=== Lignes manuelles (section 5) — dues pour vérif hebdo (>7j) ===");
 const now = Date.now();
