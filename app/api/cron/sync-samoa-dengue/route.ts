@@ -1,5 +1,5 @@
 // Weekly check for a new Samoa Ministry of Health dengue situation report
-// (health.gov.ws). This row (`disease_en="Dengue"`, `country_en="Samoa"`) had
+// (health.gov.ws). This row (`disease_en="Dengue fever"`, `country_en="Samoa"`) had
 // no automated coverage at all until 2026-08-12 — it was last manually entered
 // from Issue No. 47 (9 March 2026) and sat unrefreshed for 5 months, 21 issues
 // behind (found via the daily data-quality staleness check), because
@@ -184,7 +184,7 @@ async function runSyncSamoaDengue(supabase: SupabaseClient) {
   const { data: row, error: rowErr } = await supabase
     .from("outbreaks")
     .select("id, cases, deaths, date, source, description, source_priority")
-    .eq("disease_en", "Dengue")
+    .eq("disease_en", "Dengue fever")
     .eq("country_en", "Samoa")
     .maybeSingle();
 
