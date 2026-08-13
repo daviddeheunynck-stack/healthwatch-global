@@ -114,7 +114,22 @@ const EXTRACT_SYSTEM_PROMPT = `You are extracting structured data from a Samoa M
 
 All case/death counts must be the YEAR-TO-DATE CUMULATIVE totals from the report's "Summary of the Year to Date" section (usually a table with "Total Clinically Diagnosed Cases" / "Total Lab-Confirmed Cases" / "Reported Dengue-Related Deaths" columns) — NOT the current epi-week's new-case figures from the "Weekly Summary" section. reportDate is the "Date of report" field, converted to YYYY-MM-DD. denv1Pct/denv2Pct are the serotype percentages. upoluPct/savaiiPct are the geographic distribution percentages (there may be a third "other islands" bucket that doesn't need its own field). under15Pct is the percentage of cases in the age group most affected, only if that group is specifically "<15 years" (if a different age group is named, return null for this field). If a field genuinely cannot be found in the text, use null (issueNumber, reportDate, cumulativeClinicalCases and cumulativeDeaths should always be findable). Return ONLY the JSON object.`;
 
-async function extractSitrep(apiKey: string, text: string): Promise<SitrepExtract | null> {
+type ExtractResult = { ok: true; data: SitrepExtract } | { ok: false; reason: string };
+
+// Haiku reliably follows "return only JSON" as a soft instruction but not always
+// literally — wrapping the object in ```json fences is a common enough pattern
+// (with no structured-output/tool-use enforcement here, unlike this codebase's
+// StructuredOutput-style workflow tooling) that stripping fences defensively
+// before parsing is cheaper than fighting the model on it. Found 2026-08-13:
+// the very first live run against a real key failed extraction for exactly
+// this reason.
+function stripJsonFences(raw: string): string {
+  const fenced = raw.match(/```(?:json)?\s*([\s\S]*?)\s*```/i);
+  return (fenced ? fenced[1] : raw).trim();
+}
+
+async function extractSitrep(apiKey: string, text: string): Promise<ExtractResult> {
+  let raw = "";
   try {
     const client = new Anthropic({ apiKey });
     const response = await client.messages.create({
@@ -123,18 +138,25 @@ async function extractSitrep(apiKey: string, text: string): Promise<SitrepExtrac
       system:     EXTRACT_SYSTEM_PROMPT,
       messages:   [{ role: "user", content: text.slice(0, 8000) }],
     });
-    const raw = (response.content[0]?.type === "text" ? response.content[0].text : "").trim();
-    if (!raw) return null;
-    const parsed = JSON.parse(raw) as Partial<SitrepExtract>;
+    raw = (response.content[0]?.type === "text" ? response.content[0].text : "").trim();
+    if (!raw) return { ok: false, reason: "empty response from Haiku" };
+
+    let parsed: Partial<SitrepExtract>;
+    try {
+      parsed = JSON.parse(stripJsonFences(raw)) as Partial<SitrepExtract>;
+    } catch {
+      return { ok: false, reason: `response was not valid JSON: ${raw.slice(0, 200)}` };
+    }
+
     if (
       typeof parsed.issueNumber !== "number" ||
       typeof parsed.reportDate !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(parsed.reportDate) ||
       typeof parsed.cumulativeClinicalCases !== "number" ||
       typeof parsed.cumulativeDeaths !== "number"
     ) {
-      return null; // malformed/incomplete — treat as extraction failure, don't guess
+      return { ok: false, reason: `missing/malformed required field(s): ${JSON.stringify(parsed).slice(0, 200)}` };
     }
-    return parsed as SitrepExtract;
+    return { ok: true, data: parsed as SitrepExtract };
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
     console.warn("[sync-samoa-dengue] Haiku extraction error:", message);
@@ -144,7 +166,7 @@ async function extractSitrep(apiKey: string, text: string): Promise<SitrepExtrac
         "error",
       );
     }
-    return null;
+    return { ok: false, reason: `API error: ${message}` };
   }
 }
 
@@ -230,11 +252,12 @@ async function runSyncSamoaDengue(supabase: SupabaseClient) {
     return NextResponse.json({ ok: false, error: "no Anthropic API key configured" }, { status: 500 });
   }
 
-  const extracted = await extractSitrep(apiKey, text);
-  if (!extracted) {
-    await logCronRun(supabase, "sync-samoa-dengue", "error", 0, `extraction failed for issue ${latest.issueNumber}`);
-    return NextResponse.json({ ok: false, error: "extraction failed", issueNumber: latest.issueNumber }, { status: 502 });
+  const extractResult = await extractSitrep(apiKey, text);
+  if (!extractResult.ok) {
+    await logCronRun(supabase, "sync-samoa-dengue", "error", 0, `extraction failed for issue ${latest.issueNumber}: ${extractResult.reason}`);
+    return NextResponse.json({ ok: false, error: "extraction failed", reason: extractResult.reason, issueNumber: latest.issueNumber }, { status: 502 });
   }
+  const extracted = extractResult.data;
 
   const guardReason = regressionGuard(
     { cases: extracted.cumulativeClinicalCases, deaths: extracted.cumulativeDeaths, date: extracted.reportDate },
