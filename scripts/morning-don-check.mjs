@@ -450,14 +450,14 @@ const MANUAL_ROWS = {
 // ⚠️ Ne bumper une date ci-dessous qu'après avoir effectivement consulté la source primaire —
 // jamais pour faire taire une ligne.
 const MANUAL_ROW_CHECKED = {
-  // Polio/Afghanistan : « Polio This Week » du 29/07/2026 ne comporte aucune section Afghanistan
-  // (donc aucun nouveau cas) ; total 2026 toujours 15 WPV1, confirmé par la semaine close au
-  // 02/08 (15 AFG + 3 PAK = 18 dans le monde). Rien à écrire.
-  "b0f473be-a367-464e-ab32-3cdc43aa7815": "2026-08-06",
-  // Polio/Pakistan : « Polio This Week » du 29/07/2026 — « No WPV1 cases were reported this week »,
-  // total 2026 toujours 3 (cas le plus récent 07/04/2026). Deux échantillons environnementaux
-  // positifs au Sindh cette semaine-là, sans effet sur le compte de cas. Rien à écrire.
-  "ab4cd321-0aa6-4598-86ac-b0a04d346465": "2026-08-06",
+  // Polio/Afghanistan : « Polio This Week » du 12/08/2026 — « No WPV1 cases were reported this
+  // week », total 2026 toujours 15 (cas le plus récent 25/06/2026), 5 échantillons environnementaux
+  // positifs cette semaine sans effet sur le compte de cas. Rien à écrire.
+  "b0f473be-a367-464e-ab32-3cdc43aa7815": "2026-08-13",
+  // Polio/Pakistan : « Polio This Week » du 12/08/2026 — « No WPV1 cases were reported this week »,
+  // total 2026 toujours 3 (cas le plus récent 07/04/2026), 10 échantillons environnementaux positifs
+  // cette semaine sans effet sur le compte de cas. Rien à écrire.
+  "ab4cd321-0aa6-4598-86ac-b0a04d346465": "2026-08-13",
   // Marburg/Ouganda : vérifié le 08/08 — WebSearch « Marburg Uganda cases August 2026 » et page
   // pays WHO AFRO (afro.who.int/countries/uganda, aucune mention Marburg, uniquement Ebola
   // Bundibugyo). Toujours 1 cas / 1 décès (enfant de 18 mois, Kyegegwa, notifié à l'OMS le
@@ -525,7 +525,7 @@ if (!anyDue) console.log("(aucune ligne due cette semaine)");
 // ⚠️ Ne bumper cette date qu'après avoir réellement cherché la déclaration.
 const MARBURG_UGANDA_ID = "b17d4fda-c38c-41c0-9b26-e60a54c1851b";
 const MARBURG_CLOSURE_WATCH_FROM = "2026-08-11";
-const MARBURG_CLOSURE_LAST_CHECK = "2026-08-11"; // gov.uk (maj 10/08) : aucune clôture annoncée
+const MARBURG_CLOSURE_LAST_CHECK = "2026-08-13"; // gov.uk (maj 13/08) : toujours le seul cas du 30/06, aucune clôture annoncée
 const MARBURG_CLOSURE_RECHECK_DAYS = 3;
 console.log("\n=== Watch ponctuel : fenêtre de clôture Marburg/Ouganda (42j depuis notification 30/06) ===");
 const marburgRow = active.find((o) => o.id === MARBURG_UGANDA_ID);
