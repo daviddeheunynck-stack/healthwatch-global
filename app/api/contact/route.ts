@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { rateLimit, getClientIp } from "@/lib/rate-limit";
+import { VALID_LOCALES } from "@/lib/pilot-emails";
 import * as Sentry from "@sentry/nextjs";
 
 export const dynamic = "force-dynamic";
@@ -37,10 +38,24 @@ export async function POST(req: NextRequest) {
   };
 
   try {
-    const { name, organization, email, message, locale } = await req.json();
+    const body = await req.json();
+
+    // Unauthenticated form — the body values below are interpolated into the
+    // notification email, and `locale` lands raw inside `lang="…"` further
+    // down. Coerce/whitelist before use, same pattern as /api/pilot and
+    // /api/subscribe.
+    const str          = (v: unknown, max = 120) => (typeof v === "string" ? v.trim().slice(0, max) : "");
+    const name         = str(body?.name);
+    const organization = str(body?.organization);
+    const email        = str(body?.email, 254);
+    const message      = str(body?.message, 4000);
+    const locale       = typeof body?.locale === "string" && VALID_LOCALES.includes(body.locale) ? body.locale : "fr";
 
     if (!name || !email || !message) {
       return NextResponse.json({ error: "Missing fields" }, { status: 400 });
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      return NextResponse.json({ error: "Invalid email" }, { status: 400 });
     }
 
     const l = L[locale] ?? L.fr;

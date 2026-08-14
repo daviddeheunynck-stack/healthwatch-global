@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { rateLimit, getClientIp } from "@/lib/rate-limit";
 import { isRealProduction } from "@/lib/cron-monitor";
+import { VALID_LOCALES } from "@/lib/pilot-emails";
 import * as Sentry from "@sentry/nextjs";
 
 export const dynamic = "force-dynamic";
@@ -10,6 +11,18 @@ const clean = (val: string | undefined) =>
   (val || "").replace(new RegExp("^" + BOM), "").trim();
 const esc = (s: string) =>
   s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+
+// Unauthenticated form — never trust type/length of free-text fields before
+// interpolating them into an email. Same helpers as /api/pilot (str) and
+// /api/pilot, /api/pilot/confirm, /api/team/accept, /auth/callback (locale
+// whitelist), which this route was missing.
+const str = (v: unknown, max = 120) => (typeof v === "string" ? v.trim().slice(0, max) : "");
+// buildAckEmail interpolates the locale raw into `lang="…"`, and this route
+// mails an address supplied in the same request body — an unvalidated locale
+// would therefore let a caller compose arbitrary HTML in a message sent from
+// alerts@healthwatch-global.com to any recipient of their choosing.
+const pickLocale = (v: unknown): string =>
+  typeof v === "string" && VALID_LOCALES.includes(v) ? v : "en";
 
 async function sendEmail(
   to: string,
@@ -140,13 +153,25 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const { name, organization, email, location, message, locale } = await req.json();
+    const body = await req.json();
+
+    const name         = str(body?.name);
+    const organization = str(body?.organization);
+    const email        = str(body?.email, 254);
+    const location     = str(body?.location);
+    const message      = str(body?.message, 4000);
 
     if (!name || !email || !location || !message) {
       return NextResponse.json({ error: "Missing fields" }, { status: 400 });
     }
+    // Same regex every other email-accepting route in the repo already uses
+    // (subscribe, send-welcome, admin/invite, team/invite…). Without it this
+    // route will happily mail any string it is handed.
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      return NextResponse.json({ error: "Invalid email" }, { status: 400 });
+    }
 
-    const userLocale = (locale as string) || "en";
+    const userLocale = pickLocale(body?.locale);
 
     // David's notification goes first: even if the submitter's ack email fails
     // (bad address, transient Brevo error), the signal itself must still land.
