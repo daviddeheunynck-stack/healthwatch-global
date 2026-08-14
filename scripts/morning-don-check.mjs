@@ -487,6 +487,23 @@ const MANUAL_ROW_CHECKED = {
   // 45e est attendue). La désignation PHEIC et les recommandations temporaires restent en vigueur,
   // la Palestine n'en est pas sortie. Rien à écrire, `active`/`is_seed` inchangés.
   "8a4072ab-c0be-4567-8ba4-cdcedeccced8": "2026-08-13",
+  // Dengue/Wallis-et-Futuna : vérifié le 14/08, déclenché par le contrôle qualité quotidien
+  // (28j de péremption). WHO WPRO Dengue Situation Update #751 (06/08/2026, dernière édition —
+  // #752 pas attendue avant ~20/08) ne mentionne le territoire que dans sa section syndromique
+  // « DLI Surveillance », pas de compte confirmé/probable chiffré. La 1ère (fil dengue
+  // Wallis-et-Futuna) n'a rien de plus récent que le 18/06. mesvaccins.net, l'Agence de santé et
+  // Outremers360 n'ont rien de nouveau. Toujours 47 cas / 0 décès au 17/07, rien à écrire.
+  "2e91ffe2-25aa-4268-b5ef-3c591f369956": "2026-08-14",
+  // Dengue/American Samoa : vérifié le 14/08, même déclencheur (178j de péremption — normal,
+  // la donnée source datait déjà de ~6 mois à la création de la ligne le 11/08). Archive complète
+  // du tag dengue-fever de Samoa News passée en revue : rien de plus récent que l'article du
+  // 17/02 déjà en base. CDC (403 sur chaque tentative) et PIHOA (page statique depuis 07/2025)
+  // inexploitables. Confirmation utile trouvée : l'avis SafeTravel NZ (maj 17/06) liste toujours
+  // American Samoa parmi les 6 PICT en épidémie active de dengue au 11/06 — le statut `active`
+  // reste justifié même si le chiffre de cas ne peut pas être rafraîchi. ⚠️ Piège écarté : ne pas
+  // confondre avec Samoa (pays indépendant voisin), qui a sa propre épidémie bien plus importante
+  // et des sitreps MOH distincts. Toujours 782 cas / 0 décès au 17/02, rien à écrire.
+  "43c4c769-17e6-45c4-9f83-5c8d30104ff1": "2026-08-14",
 };
 console.log("\n=== Lignes manuelles (section 5) — dues pour vérif hebdo (>7j) ===");
 const now = Date.now();
