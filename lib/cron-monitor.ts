@@ -292,6 +292,11 @@ export const CRON_WINDOWS: Record<string, number> = {
   // rationale as the other three above.
   "sync-pacific-surveillance": 200, // weekly Mon 08:15 — PSSS signal, never writes to outbreaks
   "sync-wpro-dengue-update":   200, // weekly Mon 08:20 — Dengue Situation Update, writes at source_priority=6
+  // Same gap, same shape: created 2026-08-12 (see its route header), scheduled
+  // in vercel.json and logging runs from day one, but never added here — so
+  // health-check's unmonitored-crons diff correctly caught it 2026-08-14.
+  // Weekly Mon 08:25, same 1.5x-interval rationale as the two entries above.
+  "sync-samoa-dengue":         200,
   // ── Enterprise & infra crons ──────────────────────────────────────────────────
   "trigger-webhooks":          2,    // every 30min — enterprise webhook delivery
   // ── Trigger & coverage crons ──────────────────────────────────────────────────
