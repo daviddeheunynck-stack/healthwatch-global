@@ -309,7 +309,9 @@ Soir (19, hors Swiss TPH) : `r2033061703295529858` (INSP Côte d'Ivoire), `r-612
 
 WPRO (premier envoi) : `r-6782266388113269698`.
 
-**Total cumulé de relances envoyées ce jour (05/08 + 02/08 matin/soir) : 55 brouillons de relance + 1 premier envoi (WPRO), tous en attente de relecture et d'envoi par David.**
+**✅ ENVOYÉS par David le 2026-08-15** (36/36 confirmé en session — David a vérifié directement dans Gmail, aucun doublon constaté malgré l'instabilité de `list_drafts` pendant la préparation : les 7 recréations n'ont donc pas produit de doublon visible, probablement de simples décalages d'indexation côté outil de lecture). Aucun bounce signalé à ce stade.
+
+**Total cumulé de relances envoyées ce jour : 20 (lot du 05/08) + 35 (lot du 02/08 matin/soir) + 1 premier envoi WPRO = 56 messages**, tous partis. À surveiller : réponses et bounces dans les prochains points marketing — WPRO (`wprohii@who.int`) et CARPHA/EDCD Népal/Malteser/FKM UI/BNITM (recréés après l'incident `list_drafts`, jamais individuellement reconfirmés avant envoi) sont les candidats à vérifier en priorité si un souci apparaît.
 
 **Total cumulé de contacts institutionnels prospectés depuis le 2026-08-02 : 98** (18 + 20 + 20 + 20 + 20), **78 envoyés** (58 des runs 02-03/08, 2 bounces WPRO/ZNPHI, + 20 de ce jour) ; les 20 du 04/08 restent en attente de relecture et d'envoi.
 
