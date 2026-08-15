@@ -754,6 +754,50 @@ Objectif atteint : **10 contacts nets, aucun déjà présent dans les vagues 1-3
 
 ---
 
+## 🔁 RELANCE J+10 — 2026-08-15 (soir), run automatique `daily-relance-check-healthwatch` (1er run de la routine)
+
+**Lot traité : le run du 03/08 (20 contacts), à J+12.** Seul lot mûr non encore relancé.
+
+**Arbitrage des lots éligibles :**
+- **02/08 matin (18) et 02/08 soir (20), 05/08 (20)** — déjà relancés le 15/08 (session interactive). Règle « une seule relance, jamais deux » : exclus définitivement.
+- **03/08 (20), J+12** — ✅ retenu, jamais relancé.
+- **04/08 (20), J+11** — **reporté**, pour deux motifs cumulés : (1) le lot **n'a jamais reçu de confirmation « ✅ ENVOYÉS par David »** dans ce journal, seulement le constat indirect du 07/08 (« les 20 brouillons du 04/08 ne sont plus dans Gmail… envoyés ou supprimés ») ; (2) le traiter aujourd'hui aurait porté la file à 37 brouillons, au-delà du seuil de ~25 du frein de file. **À traiter au prochain run** (il sera à J+12), après vérification en direct de l'envoi réel via `search_threads`.
+- **06/08 (J+9) et 07/08 (J+8)** — pas encore mûrs.
+
+**🔧 Correctif de méthode majeur — `search_threads` doit être appelé avec `includeTrash: true`.** Deux découvertes ce run :
+1. `search_threads` **ne renvoie que les messages correspondant à la requête**, pas l'intégralité du fil. Une requête `to:<adresse>` ne remonte donc **jamais** les réponses reçues (qui viennent `from:` cette adresse). Vérifier l'absence de réponse impose une requête `from:<domaine>` distincte.
+2. **David déplace les réponses et les bounces en corbeille**, et `includeTrash` vaut `false` par défaut. Les vérifications faites sans ce paramètre concluent donc à tort « aucune réponse ».
+
+**✅ Cas Swiss TPH — incohérence RÉSOLUE, le journal avait raison depuis le début.** Le fil `info@swisstph.ch` existe bien : envoi du 02/08 **et** réponse humaine de refus du 03/08 à 11h23, **les deux en corbeille** (`labelIds: ["TRASH"]`). La conclusion du 15/08 matin (« aucune trace dans Gmail, écart réel entre le journal et la boîte ») venait uniquement d'une recherche sans `includeTrash`. **Le point est clos : refus explicite confirmé, contact écarté définitivement, aucune relance — décision inchangée.** Idem pour les accusés RIVM / SSI / KIT du 03/08, tous retrouvés en corbeille.
+
+**Vérification en direct des 20 du 03/08 (méthode corrigée appliquée) :** requête `to:<adresse>` **et** requête `from:<domaine>` avec `includeTrash: true`, plus un balayage global des bounces (`from:mailer-daemon`, `subject:"Delivery Status Notification"`, corbeille incluse).
+
+**3 exclusions — réponse reçue le 03/08 (toutes retrouvées en corbeille) :**
+- **RIVM** (`info@rivm.nl`) — accusé automatique M2608 0264, **et David a déjà envoyé une reformulation dans le fil** : 2 messages sortants, la règle « une seule relance » est déjà consommée.
+- **SSI** (`serum@ssi.dk`) — accusé automatique (danois/anglais).
+- **KIT** (`assist@kit.nl`) — ticket Freshservice ISSUE-1378 ouvert automatiquement ; adresse par ailleurs identifiée le 03/08 comme boîte de support informatique mal ciblée, **à ne pas réutiliser**.
+
+**17 brouillons de relance créés, aucun envoyé.** Réponses dans le fil d'origine (`replyToMessageId`), objet « Re: … » automatique. Corps de 4 phrases : rappel + reformulation en une ligne de l'accès Pro gratuit + question de clôture explicite + signature. Aucun `htmlBody`, aucune balise `<a>`, aucun domaine avec `.` littéral dans le texte nouveau. Langue reprise à l'identique : **FR** pour INSPQ, ANSS Guinée, Centre Pasteur du Cameroun, CERMEL (4) ; **EN** pour les 13 autres. Salutation nominative conservée pour l'IPK (« Hi Vivian »).
+
+**⚠️ Écart assumé par rapport au gabarit : les originaux du 03/08 n'avaient pas de question de clôture.** Ce lot est antérieur à l'enseignement RIVM (tiré le 03/08 en fin de journée, appliqué à partir du 04/08) : ses 20 mails se terminaient sur une **offre** (« I am happy to open a free Pro account »), pas sur une question. Reprendre cette clôture à l'identique aurait reproduit exactement le défaut que le RIVM a sanctionné (« les e-mails qui ne contiennent pas de question sont pris en compte à titre d'information »). **Chaque relance se termine donc par une question explicite dérivée du paragraphe de pertinence institutionnelle de l'original**, généralement « … serait-il utile à vos équipes ? Si oui, à qui dois-je ouvrir l'accès ? ». C'est le seul lot concerné : à partir du 04/08 les originaux ont déjà leur question.
+
+**Deux relances calibrées sur le contenu spécifique de l'original plutôt que sur le gabarit** : **SPC Public Health Division** (l'original demandait un retour sur ce qui manque encore dans la couverture Pacifique après l'extension dengue du 03/08 — la relance reprend cette demande de feedback, en précisant qu'une réponse critique vaut autant qu'une positive) et **Task Force for Global Health** (question de redondance explicite : « utile ou déjà couvert par ce que vous utilisez ? »).
+
+**IDs des 17 brouillons** : `r-8712218577308391258` (HPSC Irlande), `r-1433178252696258902` (INSPQ Québec), `r4223883256146394505` (NIMR Tanzanie), `r3536042390069301649` (SPC Pacifique), `r1271536054071215902` (PHIM Malawi/PHEOC), `r-5816455877468156958` (ANSS Guinée), `r-6695345094573262475` (Centre Pasteur Cameroun), `r7835215269839012396` (NMIMR Ghana), `r622727367837092012` (NEKKEN Nagasaki), `r-5961316725091208248` (CERMEL Gabon), `r300008317124298455` (IPK Cuba/Vivian Kourí), `r4293932623340817785` (ICMR-NIE Inde), `r3423823631106401924` (MENTOR Initiative), `r218387486417673202` (Task Force for Global Health), `r-8727984768709399970` (Last Mile Health), `r-5012438724784858190` (Medair), `r-1799201114132839146` (EMERGENCY).
+
+**Vérifié via `list_drafts` immédiatement après création : 17/17 présents, `threadId` de chacun correspondant au fil d'envoi du 03/08, aucun envoi accidentel.** `list_drafts` s'est montré **stable ce run** (contrairement à l'incident du 15/08 matin) : file à 0 avant création, 17 après, sur des appels répétés. **File de brouillons en attente : 17.**
+
+**⚠️ 3 bounces jamais consignés, découverts pendant le balayage de la corbeille :**
+- **ISED Sénégal (`secretariat@ised.sn`, lot du 15/08)** — « boîte de réception du destinataire pleine ». Bounce **transitoire**, même profil que l'EPHI le 12/08 : candidat à une nouvelle tentative différée plutôt qu'à un abandon.
+- **MBDS (`mbds@mbdsnet.org`, lot du 15/08)** — « adresse introuvable », réponse serveur **550 No Such User Here**. Adresse morte. **Les deux étaient précisément les domaines auto-hébergés signalés « à surveiller en priorité » dans l'entrée du 15/08** — le pronostic était juste, et le contrôle MX ne suffit donc pas : un domaine peut avoir des MX actifs et refuser la boîte visée.
+- **Colombo (`commed@med.cmb.ac.lk`, lot du 09/08)** — « adresse introuvable », **550 5.1.1**. Bounce du 09/08 jamais remonté au journal.
+
+**Bilan bounces cumulés révisé : 10** — WPRO et ZNPHI (02/08), Colombo (09/08, nouveau), AKHS (10/08), NCIPD/CORDS/EPHI (12/08), Lao TPHI (14/08), ISED et MBDS (15/08, nouveaux). **180 contacts institutionnels effectivement délivrés sur 190 envoyés.**
+
+**Total cumulé de relances : 56 envoyées le 15/08** (20 du lot 05/08 + 35 du lot 02/08 + 1 premier envoi WPRO), **+ 17 en attente de relecture et d'envoi** (lot du 03/08).
+
+---
+
 ### 2026-08-15 (2e déclenchement de la routine) — aucun contact neuf produit, run consacré aux bounces du lot du matin
 
 **Motif de la décision (choix autonome, à arbitrer par David s'il n'est pas d'accord) :** la routine s'est déclenchée une seconde fois le même jour, alors que **l'objectif quotidien de 10 contacts était déjà atteint ET envoyé** (lot du 15/08 ci-dessus, 10/10 partis), en plus des **56 relances** envoyées dans la journée. `list_drafts` renvoyait **0 brouillon**, donc le frein de file ne se déclenchait pas mécaniquement — mais produire 10 contacts de plus aurait porté la journée à **20**, exactement le volume abandonné le 05/08 parce qu'il dépassait le temps de relecture et d'envoi de David. **Aucun lot neuf n'a donc été créé.** Le run a été consacré à une vérification de l'état réel de la boîte après les 66 messages partis dans la journée — ce que le rapport du matin listait justement « à surveiller en priorité ».
