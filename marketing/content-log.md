@@ -2,6 +2,161 @@
 
 Archive de tout le contenu créé. Mise à jour à chaque session.
 
+## 📅 Session linkedin-hwg-followup-check — 15/08/2026 (16h)
+
+**Quotas à l'ouverture (cumul du jour 15/08, toutes routines)** : commentaires **4/7** ; connexions **4/7** ; suivis **2/7-10** ; DM à froid **8/8 REMPLI** (les 8 welcome DM validés par David et envoyés ce matin entre 10h51 et 11h04, plus 2 réponses en fil actif hors quota : Etienne Guenou 10h41 et Augustin Murhabazi 15h23).
+
+**⚠️ Correction d'archivage relevée à l'ouverture** : le bloc « ✅ DM VALIDÉS ET ENVOYÉS — 9/9 » figure dans `linkedin-contacts.md` sous la section datée **14/08 (16h)**, mais les horodatages LinkedIn montrent que ces envois ont eu lieu **ce matin 15/08** (10h41 à 11h04), en session interactive avec David. Les brouillons étaient bien du 14/08, l'envoi est du 15/08 — c'est donc le quota du **15/08** qu'ils consomment.
+
+### 💬 Commentaire 5/7 — Sebastian Fouquet OBE (`/in/sebastian-fouquet-obe-3a0a98128/`)
+*Development Director South Sudan* (coopération britannique), 3e degré. Post de **50 min** (fenêtre 48h largement respectée), repartage commenté du post de Gemma Connell. **Verbatim du post** : « *The risks of Ebola coming to South Sudan appear to be increasing. The UK is working closely with the authorities and partners to prepare for this eventuality. An Ebola outbreak in South Sudan raises significant risks given the poor state of the health care system and high levels of vulnerability. An outbreak will place yet further strain on a humanitarian system already struggling to cope with existing food insecurity, malnutrition, displacement and ongoing outbreaks of cholera and polio.* » **0 commentaire existant** (§5 pré-check : rien à recouper). Profil absent des blocages hebdomadaires et du tracker.
+
+**Angle** : le cumul qu'il décrit n'a aucune représentation dans la couche de publication. Choléra, polio et une éventuelle introduction d'Ebola arrivent chacun comme une ligne séparée avec son propre décompte et sa propre date ; rien dans cette structure n'enregistre qu'ils tirent sur les mêmes cliniciens, la même chaîne du froid, le même transport. Vu de l'extérieur, trois foyers simultanés dans un pays et trois foyers dans trois pays se ressemblent exactement.
+
+**Double-check (§5)** : EN ✅ (langue du post) ; **aucun chiffre ni date ajouté** ✅ (aucune reprise des chiffres de modélisation Lancet vus en repost, non vérifiés en source primaire) ; aucun tiret cadratin ✅ ; pas de CTA, pas de lien ✅ ; 2 paragraphes, 4 phrases ✅ ; l'affirmation est structurelle (ce que portent les bulletins publics), pas une affirmation sur l'état de la base HWG ✅. **Publié et confirmé** : texte relu dans la page après publication (« 1 s »), identique mot pour mot, 2 paragraphes bien séparés, aucune troncature ; éditeur vidé.
+
+> The compounding you describe is the part the reporting layer cannot express. Cholera, polio and a possible Ebola introduction each arrive as a separate line with its own count and its own date, and nothing in that structure records that they draw on the same clinicians, the same cold chain and the same transport.
+>
+> From the outside, three concurrent outbreaks in one country and three outbreaks in three separate countries look identical. The strain you are describing is precisely the part that never reaches the numbers.
+
+### 💬 Commentaire 6/7 — BERNADETTE ILENGETE (`/in/bernadette-ilengete-a48980356/`)
+*Ingénieur Agronome, Zoologiste*, RDC (Kinshasa), 3e degré. Post de **17 h** (fenêtre 48h respectée), **0 commentaire existant**, 5 réactions. **Légitimité vérifiée sur son activité** (§10) : participations documentées et cohérentes à des ateliers One Health (CCUS/Africa CDC, projet DOPERAUS piloté par l'INRB, Ordre Provincial des Médecins Vétérinaires), encadrement de stagiaires UPN à l'ICCN. Profil réel, actif dans le champ One Health congolais. Absente des blocages hebdomadaires et du tracker.
+
+**Verbatim du post (extrait décisif)** : « *Des travaux de groupe ont également été organisés, notre groupe à travaillé sur le mpox pour définir le rôle de l'agent communautaire de santé en temps de paix et en contexte d'épidémie. Notre réflexion s'est articulée autour de trois niveaux à savoir : \* Le niveau communautaire : l'alerte par l'enregistrement (la date, l'heure, la localisation...). \* Le niveau opérationnel : la réception de l'alerte, la vérification, la réunion de cadrage, l'investigation sur le terrain, la rétro-information, etc. \* Le niveau national : la déclaration de la maladie par le gouvernement, la préparation de la riposte...* »
+
+**Angle** : ses trois niveaux décrivent exactement ce qui se perd en route. Au niveau communautaire, l'alerte est enregistrée avec une date, une heure et une localisation ; ce qui ressort au bout de la chaîne est une déclaration nationale, un décompte rattaché à une date de publication. Le délai entre les deux est sans doute l'indicateur le plus parlant du dispositif, et c'est celui qui n'arrive jamais jusqu'à la couche d'agrégation.
+
+**Double-check (§5)** : FR ✅ (langue du post, vérifiée et pas supposée) ; aucun chiffre ni date ajouté ✅ ; aucun tiret cadratin ✅ ; pas de CTA, pas de lien ✅ ; 2 paragraphes, 4 phrases ✅. **Affirmation volontairement bornée** : « ce que je ne retrouve jamais dans les bulletins agrégés » plutôt que « aucun bulletin ne porte ce délai » — certains DON de l'OMS mentionnent des dates de début de symptômes ou de notification, l'absolu aurait été faux. **Publié et confirmé** : texte relu dans la page après publication, intégral jusqu'à la dernière phrase, 2 paragraphes séparés, accents corrects, éditeur vidé.
+
+> Vos trois niveaux décrivent bien ce qui se perd en route. Au niveau communautaire, l'alerte est enregistrée avec une date, une heure et une localisation ; ce qui ressort au bout de la chaîne, c'est une déclaration nationale, un décompte rattaché à une date de publication.
+>
+> L'intervalle entre les deux, le délai réel entre l'alerte donnée par le relais communautaire et la déclaration, est sans doute ce qui dit le plus sur la performance du dispositif. C'est aussi ce que je ne retrouve jamais dans les bulletins agrégés.
+
+### 💬 Commentaire 7/7 — Tabish Akbar Phul (`/in/tabish-akbar-phul-3263683b/`) — **quota commentaires REMPLI**
+*Public Health Physician, Frontline FETP (One Health), DDSRU Focal Person, District Khairpur (Sindh, Pakistan)*, 2e degré. Post de **18 h** (fenêtre 48h respectée), **0 commentaire existant**, 3 réactions, 1 republication. Zone **WHO EMRO**, couverte par HWG. Absent des blocages hebdomadaires et du tracker.
+
+**Verbatim du post (extrait décisif)** : « *From the first positive Mpox cases reported in early March to containment, District Khairpur demonstrated what coordinated surveillance, rapid response and strong field leadership can achieve. […] Our response included: Detailed case investigation and active surveillance / Contact tracing, follow-up of identified contacts / Timely laboratory investigations / Formation and operationalization of (RRTs) / Field-level outbreak investigation and risk assessment / Repeated IPC audits and corrective actions […] Alhamdulillah, through collective effort, we were able to contain the Mpox outbreak in District Khairpur.* »
+
+**Angle** : la containment est asymétrique en visibilité. Ce qui arrive à la couche d'agrégation, c'est un chiffre national pour le Pakistan qui cesse de bouger, puis une ligne qui se ferme. Le district où le travail a réellement eu lieu, les RRT, les audits IPC, le suivi des contacts, n'ont aucun champ où se loger. Conséquence contre-intuitive : meilleure est la riposte de district, moins elle laisse de trace dans le registre publié.
+
+**Double-check (§5)** : EN ✅ (langue du post) ; aucun chiffre ni date ajouté ✅ ; aucun tiret cadratin ✅ ; pas de CTA, pas de lien ✅ ; 2 paragraphes, 5 phrases ✅. **Affirmation bornée à ce que je vois** (« What reaches me, working from WHO and regional bulletins ») plutôt qu'une affirmation générale sur ce que publie l'OMS EMRO ✅. **Publié et confirmé** : texte relu dans la page après publication, intégral jusqu'à la dernière phrase, 2 paragraphes séparés, éditeur vidé.
+
+> There is an asymmetry in what containment leaves behind. What reaches me, working from WHO and regional bulletins, is a national figure for Pakistan that stops moving and eventually a line that closes. The district where the work actually happened, the RRTs, the IPC audits, the contact follow up, has no field to occupy.
+>
+> So the better the district response, the less trace it leaves in the published record. Detection is what gets counted, and containment mostly registers as an absence.
+
+### 📬 Suivi des actions du matin (aucun quota consommé)
+
+| Action du matin | Retombée à 16h |
+|---|---|
+| **Commentaire 1/7 — Africa CDC (page)**, post RMNCAH Roadmap | Aucune réponse, aucune réaction |
+| **Commentaire 2/7 — Prof. Mohamed Janabi** | Aucune réponse, aucune réaction. ⚠️ Il a publié **il y a 27 min** un post sur sa rencontre avec le Président Touadéra (RCA) au sujet de la Bundibugyo : excellente cible, mais **bloqué jusqu'au 22/08** (commenté ce matin) |
+| **Commentaire 3/7 — ANRS MIE**, post dengue | Aucune réponse, 5 impressions |
+| **Commentaire 4/7 — Johan Verheyden**, gouvernance Africa CDC/RDC | Aucune réponse, 4 impressions |
+| **4 invitations envoyées** (Socé Fall, Dick Chamla, Isaias Fernandes Co, Freddy Kambale Kavoga) | ⭐ **2 acceptées le jour même** : **Dr. Ibrahima Socé Fall** et **Freddy Kambale Kavoga**. **216 relations** (contre 214 hier). Dick Chamla et Isaias Fernandes Co toujours en attente |
+| **2 suivis** (Sarah Fordah, Otto Bakano) | Sans objet |
+| **9 DM envoyés ce matin** (8 welcome + Etienne Guenou) | **1 réponse** : Augustin Murhabazi à 12h59 (traitée en session interactive, réponse envoyée à 15h23). **LIPELBA Houssinnet** : « Bon weekend » à 12h31, politesse sans substance, aucune relance (§3). Les 7 autres sans réponse à 16h |
+
+**Vérification faite via la page « Commentaires » de l'activité de David** (compteurs de réactions et de réponses relus un par un) **et via les 9 cartes de notifications les plus récentes**, pas seulement via les notifications.
+
+## 📅 Session linkedin-hwg-monitoring — 15/08/2026 (matin, reprise après panne navigateur)
+
+### 💬 Commentaire 1/7 — Africa CDC (page), post RMNCAH Roadmap
+`urn:li:activity:7493909388500475905`, post d'1 j (« Africa is Ready for a new era for Maternal and Child Health! », AU Champion RMNCAH Roadmap, « Three Zeroes »). Fenêtre 48h respectée. Fil lu en entier avant rédaction (§5 pré-check) : aucun commentaire existant ne recoupe l'angle retenu.
+
+**Angle** : des trois « zéros » du roadmap, un seul (zéro enfant non vacciné) peut un jour apparaître dans un bulletin de foyer agrégé par HWG (rougeole, polio) ; les deux autres (mortalité maternelle, sécurité des accouchements) ne sont jamais rapportés comme des foyers, donc structurellement invisibles pour une couche d'agrégation construite sur OMS/ECDC/Africa CDC/OPS — pas par manque de donnée, mais parce que ce n'est pas le type de donnée que portent ces bulletins.
+
+**Double-check (§5)** : EN ✅ ; aucun chiffre/date ajouté ✅ ; aucun tiret cadratin ✅ ; pas de CTA, pas de lien ✅ ; 4 phrases, 3-5 lignes ✅. **Publié et confirmé** : compteur de commentaires passé de 14 à 15, texte relu via `get_page_text` après publication, identique mot pour mot, aucune troncature.
+
+### 💬 Commentaire 2/7 — Prof. Mohamed Janabi (WHO Regional Director for Africa)
+`urn:li:activity:7493996791005265920`, post de 20h (réunion ministérielle transfrontalière à Bangui, DRC/RCA/Congo/Soudan du Sud/Ouganda, préparation Bundibugyo). Fenêtre 48h respectée. **Oliver Morgan écarté avant lui** : ses 4 derniers posts (jusqu'à 1j) ont viré entièrement vers l'IA/tech (agents IA, prompt injection, équité algorithmique), aucun hook honnête épidémio disponible aujourd'hui — noté sans forcer un commentaire hors sujet.
+
+5 commentaires existants lus en entier avant rédaction (§5 pré-check) : tous centrés sur la dimension communautaire, l'écart engagement politique/opérationnel, ou le registre humain. Angle retenu distinct : la vérifiabilité externe de l'accord depuis la couche d'agrégation (rien ne distingue, dans les bulletins publiés par les 5 pays, un chiffre arrivé plus vite grâce à une meilleure coordination transfrontalière d'un chiffre qui ne l'est pas).
+
+**Double-check (§5)** : EN ✅ ; les faits cités (5 pays, Bangui, aujourd'hui) viennent du post source, aucun chiffre inventé ✅ ; aucun tiret cadratin ✅ ; pas de CTA, pas de lien ✅ ; 3 phrases ✅. **Publié et confirmé** : compteur de commentaires passé de 5 à 6, texte relu après publication, identique, aucune troncature.
+
+### 💬 Commentaire 3/7 — ANRS Maladies infectieuses émergentes (`/company/anrsmie/`)
+`urn:li:activity:7494045242619461633`, post [FOCUS] de 16h sur la dengue (2024 : plus de 100 pays en transmission active, 1 600 cas importés en France métropolitaine, x10 vs année précédente). Fenêtre 48h respectée. Aucun commentaire existant (0 avant le nôtre).
+
+**Angle** : le chiffre des cas importés confond deux variables (intensité de la circulation dans les pays visités et volume de voyages vers ces pays) ; une multiplication par 10 peut venir de l'une, de l'autre, ou des deux, et rien dans ce seul chiffre ne permet de trancher. Ce que voit HWG en agrégation, c'est le signal du pays de destination (le foyer), jamais le compte des voyageurs de retour.
+
+**Double-check (§5)** : FR ✅ ; chiffres (1 600, x10) cités mot pour mot du post source ✅ ; aucun tiret cadratin ✅ ; pas de CTA, pas de lien ✅ ; 3 phrases ✅. **Publié et confirmé** : compteur de commentaires passé de 0 à 1, texte relu après publication, identique, aucune troncature.
+
+### 💬 Commentaire 4/7 — Johan Verheyden, **dérogation explicite à la règle hebdomadaire (demande de David en session interactive, « commente le post de Johan »)**
+`urn:li:activity:7494077581307338752`, post de 15h sur la gouvernance Africa CDC/RDC (« Africa CDC should support the DRC, not substitute for it »), déjà signalé à David dans le bilan de 9h30 comme excellent candidat bloqué jusqu'au 21/08 (dernier commentaire sur ce profil : 14/08). David a explicitement demandé de le commenter maintenant, en connaissance de cause (le bilan mentionnait le blocage) → traité comme une autorisation ponctuelle poste-par-poste, pas une levée permanente de la règle. **Deux posts candidats vérifiés avant de choisir** : un autre post de 16 min (infographie BDBV 2026, chiffres 4 566 cas/2 128 décès/46,6 % CFR) était plus récent mais purement factuel, sans angle de gouvernance ; celui-ci correspond à ce que le bilan avait signalé.
+
+2 commentaires existants lus en entier avant rédaction (§5 pré-check) : échange court entre Harvey Basivikidi (« Governance... ») et Johan lui-même (« the ABSENCE of governance »), aucun recoupement avec l'angle retenu.
+
+**Angle** : le changement institutionnel (SitRep 082→085, identité INSP/COUSP/IMS → Task Force présidentielle) resterait invisible même à une lecture attentive des bulletins publics — un chiffre de cas porte la même forme quelle que soit l'entité qui l'a émis, aucun champ n'existe pour l'organisme rapporteur, donc la question de redevabilité posée par Johan n'a nulle part où se loger une fois le chiffre publié.
+
+**Double-check (§5)** : EN ✅ ; aucun chiffre/date ajouté (aucune reprise des chiffres SitRep) ✅ ; aucun tiret cadratin ✅ ; pas de CTA, pas de lien ✅ ; 3 phrases ✅. **Publié et confirmé** : compteur de commentaires passé de 2 à 3, texte relu après publication, identique, aucune troncature.
+
+### Post MWF — rédigé le vendredi 14 août 2026 (run `linkedin-hwg-content-proposal`, 8h35) — Choléra / UNICEF Afrique de l'Ouest et centrale : trois pays d'une même épidémie régionale publient leur structure d'âge dans trois unités différentes (RCA 44 % de moins de 10 ans, Tchad deux tiers de moins de 15 ans, Cameroun âge médian 10 ans), et l'âge est justement la variable qui décide de la riposte — **PUBLIÉ ✅ le 14/08/2026**
+
+**Statut : publié par l'agent, exception ponctuelle sur demande explicite de David dans le chat (« publie »), conformément à la dérogation ponctuelle prévue pour cette routine ([[feedback_no_self_publishing]]).** Post visible : https://www.linkedin.com/feed/update/urn:li:share:7493927202066075648/. Toast de confirmation « Le post a bien été publié. » capté après le clic. Texte publié relu intégralement (début et fin, `ctrl+Home`/`ctrl+End` dans le composeur avant le clic, puis re-vérification complète sur la page dédiée du permalien après publication) et comparé mot pour mot au brouillon archivé ci-dessous : identique, aucune troncature, 11 paragraphes bien séparés. Carte de lien healthwatch-global.com rendue correctement sous le post (titre + domaine visibles), aussi bien avant publication que sur le permalien.
+
+**Sélection du navigateur** : deux navigateurs connectés au départ. David a choisi l'option 1 en chat (le premier de la liste, présumé habituel), mais ce deviceId (`23c7ecdd…`) s'est déconnecté entre l'affichage de la liste et l'appel `select_browser` — signalé à David, qui a confirmé utiliser le navigateur restant (`a466bc2e…`, qui s'affiche tantôt comme « Browser 1 » tantôt comme « Browser 2 » selon l'appel : labels instables côté extension, ne pas s'y fier, seul le deviceId fait foi). `AskUserQuestion` non disponible dans cet environnement, question posée en texte libre dans le chat comme lors des sessions précédentes où l'outil manquait.
+
+**Incidents techniques en cours de publication (récurrents, déjà documentés) :** `tabs_context_mcp` a échoué à plusieurs reprises avec « No group with id: [id aléatoire différent à chaque appel] » juste après le changement de navigateur — résolu en appelant `navigate` en standalone (qui recrée le groupe et l'onglet automatiquement), sans ouvrir de nouvel onglet ni redémarrer Chrome. Deux `screenshot` ont ensuite timeout à 30 s avec « The renderer may be frozen or unresponsive », une fois pendant la frappe et une fois après publication (relecture du permalien) — les deux fois résolues par un simple re-`select_browser` sur le même deviceId déjà confirmé, conformément à la procédure de récupération de l'étape 2 ; **une fois, `navigate` a même été bloqué par un dialogue « Leave site? » signalant des modifications non enregistrées sur l'onglet du composeur**, preuve que le brouillon en cours de frappe survivait à la perte de suivi du pont côté outil — `force:true` évité à dessein pour ne pas le perdre, `tabs_context_mcp` rappelé à la place et a retrouvé le même tabId avec le texte intact.
+
+**Étape 0 :** aucun brouillon LinkedIn de marque en attente au 14/08. Le dernier post de marque (Mpox / Madagascar, taux de positivité de 74 %) est **PUBLIÉ ✅ le 12/08**. Le 13/08 est hors jours MWF (jeudi ; les entrées de cette date sont des sessions `*-monitoring` / `*-followup-check`). Rédaction entièrement neuve.
+
+**Langue : EN** (défaut posts de marque LinkedIn, [[feedback_linkedin_brand_posts_in_english]]). Sujet multi-pays africain, source primaire en anglais, aucune raison de passer en FR.
+
+**Sujet choisi + pourquoi :** angle **structurel**, tiré d'une source primaire lue **intégralement en session**. Le communiqué UNICEF sur le choléra en Afrique de l'Ouest et centrale donne la structure d'âge pour **3 des 6 pays**, et **aucune des trois dans la même unité** :
+- **RCA** : « children under 10 years account for 44 per cent of reported cases » (part sous un seuil de 10 ans)
+- **Tchad** : « nearly two-thirds of infections are among children under 15 years » (part sous un seuil de 15 ans)
+- **Cameroun** : « the median age of patients is just 10 years » (une médiane, pas une part)
+
+**Le raisonnement arithmétique a été construit pour être exact, pas pour être frappant.** Première version écartée : « les trois chiffres sont incomparables » — **faux**. Une médiane de 10 ans se convertit bien en « environ la moitié des patients ont moins de 10 ans », donc **le Cameroun et la RCA s'alignent presque** (≈50 % vs 44 % sous 10 ans). C'est le **Tchad** qui ne se convertit pas : découper « deux tiers de moins de 15 ans » en une part sous 10 ans exige de connaître la distribution des âges, c'est-à-dire précisément ce qu'on cherche à mesurer. Le post dit exactement cela, la conversion qui marche **et** celle qui ne marche pas. La conversion est unidirectionnelle : d'une médiane on tire une part, d'une part on ne retrouve pas de médiane.
+
+**Précision vérifiée sur les 3 autres pays** (piège évité) : UNICEF donne des chiffres cas/décès pour le **Nigéria** (« more than 50,000 cumulative cholera cases and 338 deaths reported since 1 January 2026 ») et la **RDC** (« more than 30,400 cases and nearly 700 deaths »), mais **rien du tout** pour la **République du Congo**, qui n'apparaît que dans la liste des pays. Le brouillon initial disait « les trois autres n'ont que des totaux cas/décès » — corrigé, c'était faux pour la République du Congo. Formulation finale : « Nigeria and DRC appear as case and death totals. Republic of Congo appears as a name on the list. »
+
+**Auto-implication assumée (fait de schéma vérifié en direct) :** la table `outbreaks` compte **38 colonnes** ; filtre `/age|sex|gender|child|pediatr|year|demo|strat|band|group/i` sur la liste réelle des colonnes → **NONE**. Aucune stratification d'aucune sorte, ni âge ni sexe. Assumé en une seule phrase courte, volontairement **plus brève que le récital de schéma du 12/08** pour ne pas rejouer le même procédé (voir non-redondance).
+
+**Non-redondance vérifiée** avec les contenus de marque récents :
+- **Thème « âge / structure d'âge / âge médian » : jamais publié**, sur aucun canal. `grep -ci "median age"` sur `content-log.md` → **0**. Les 4 occurrences d'« âge » sont toutes incidentes et dans des notes de veille ou de commentaire (âge médian 30 ans dans une note Lassa/Nigéria, latence PESS, âge d'un cas Marburg, « post affiché à 17 h d'âge »). Aucune n'est un sujet de post.
+- **12/08 (mpox Madagascar, positivité 74 %)** : famille « une mise en garde présente dans la source ne survit pas au passage en base », et auto-implication par colonne manquante. ⚠️ **Similarité de procédé assumée sur l'auto-implication** (une colonne absente) : atténuée en la réduisant à une phrase, et surtout le **mécanisme central est différent** : il ne s'agit pas d'une information correcte perdue en aval, mais d'une information **publiée par trois producteurs dans trois unités non réductibles l'une à l'autre**, donc inexploitable même sans aucune perte en transit.
+- **10/08 (grippe aviaire US, le mot « cases »)** : l'**unité comptée** dans une même colonne (troupeaux vs personnes). Ici l'unité de comptage des cas n'est pas en cause, c'est **l'unité de la statistique de stratification**.
+- **07/08 (dengue WPRO, décès en trois versions)** et **05/08 (dengue, dates « as of »)** : famille « une source unique, une colonne, plusieurs sens ». Ici la source est unique elle aussi, mais le problème n'est **ni sémantique ni temporel, il est dimensionnel** (un seuil, un autre seuil, une médiane).
+- **⚠️ Angle « corridor » délibérément écarté** : le communiqué UNICEF offre un angle tentant (deux corridors de transmission, même souche *Vibrio cholerae* O1 Ogawa au Tchad, Cameroun et Nigéria, alors que la donnée est nationale). **Écarté pour auto-redondance inter-canaux** : c'est exactement le thread X du **24/07** (accord Africa CDC × OIM, « Case notification is anchored to place. A mobile case is reported by the country that detects it, not by the corridor it crossed. », l.4239), plus la reply X du 03/08 sur le corridor RDC-Ouganda et la reply du 29/07 sur le corridor Aru/Ituri. Le mot « corridor » n'apparaît dans le post que pour situer le communiqué, jamais comme angle. Proche également du post **29/07 (paludisme Francfort, assemblage transfrontalier)**.
+
+**Source primaire — lue intégralement en session le 14/08/2026** : communiqué de presse UNICEF « As cholera spreads across borders in West and Central Africa, UNICEF calls for urgent action to protect millions of children », daté **11 août 2026** sur la page (chapô « DAKAR, 12 August 2026 » — écart de date interne au communiqué, non exploité dans le post, qui s'en tient au 11 août affiché comme date de publication). URL : https://www.unicef.org/press-releases/cholera-spreads-across-borders-west-and-central-africa-unicef-calls-urgent-action. **WebFetch a renvoyé 403 sur unicef.org, reliefweb.int et les miroirs** ; le texte a été obtenu par lecture du communiqué dans le navigateur intégré (`preview_start` + `get_page_text`), donc **texte complet réellement lu**, pas un extrait de moteur de recherche. Les trois citations d'âge, les totaux Nigéria/RDC, les deux corridors, la souche et l'appel de 15 M USD sont tous **verbatim** de ce texte.
+
+**Prudence sur les chiffres : aucun chiffre de la base HWG n'est cité dans le post.** Motif délibéré : les valeurs HWG et UNICEF divergent sur deux pays (Nigéria 50 057/333 en base au 20/07 vs « more than 50,000 / 338 deaths » chez UNICEF ; RDC 32 193/908 en base vs « more than 30,400 / nearly 700 »), et les lignes RDC et Congo sont `is_seed:true` donc non citables ([[feedback_verify_against_primary_source]], audit 2026-06-15). Le post ne cite donc **que** des chiffres UNICEF, et de la base il ne tire qu'une **propriété structurelle** (six lignes actives, quelles colonnes elles portent), pas une affirmation épidémiologique.
+
+**CTA sûr :** les **6 pays du communiqué ont tous une ligne choléra `active:true`** en prod, vérifié par requête (`Tchad` 377/15, `Cameroun` 588/19, `Nigéria` 50 057/333, `RD Congo` 32 193/908 seed, `Congo` 767/49 seed, `République centrafricaine` 720/46). Un lecteur qui clique trouve donc bien les six pays sur le site ([[project_paho_sitreps_never_ingested_2026_07_15]] respectée). Le post ne promet **aucune** donnée d'âge sur le site, et dit même explicitement le contraire.
+
+**Double-check effectué avant présentation :** les 3 citations d'âge et les 2 totaux pays relus mot pour mot contre le texte du communiqué lu en session ✅ ; conversion médiane → part vérifiée logiquement, et **erreur de raisonnement de la v1 corrigée** (« incomparables » → faux) ✅ ; erreur factuelle de la v1 sur la République du Congo corrigée ✅ ; absence de colonne d'âge vérifiée par introspection réelle des 38 colonnes ✅ ; présence des 6 lignes actives vérifiée par requête ✅ ; aucune ligne `is_seed:true` citée ✅ ; aucune référence ProMED ✅ ; **0 tiret cadratin et 0 tiret demi-cadratin** (test `/[—–]/` : 0) ✅ ; **11 paragraphes tous séparés par une ligne vide, 0 saut de ligne simple** (vérifié par script) ✅ ; aucun faux témoignage, la citation du directeur régional n'est pas reprise ✅ ; aucun pitch commercial, CTA réduit au domaine nu ✅ ; hook **structurel** (une propriété d'unités de mesure), aucune dépendance à un événement daté qui périmerait au report ✅ ; longueur **1 581 caractères**.
+
+**Texte final (EN, prêt à copier-coller) :**
+
+UNICEF published a statement on 11 August on cholera spreading across borders in West and Central Africa. Six countries, two transmission corridors, one funding appeal.
+
+Inside it are three numbers about age, and no two of them are the same kind of number.
+
+Central African Republic: children under 10 account for 44 per cent of reported cases.
+
+Chad: nearly two thirds of infections are among children under 15.
+
+Cameroon: the median age of patients is just 10 years.
+
+Three countries in one regional outbreak, three different ways of saying who is getting sick. Two of them almost line up. A median of 10 means roughly half of Cameroon's patients are under 10, which sits next to CAR's 44 per cent. Chad's figure does not convert at all. Splitting two thirds under 15 into a share under 10 requires knowing the age distribution, which is the thing you were trying to measure.
+
+Of the other three countries named, Nigeria and DRC appear as case and death totals. Republic of Congo appears as a name on the list.
+
+Age is what decides what a response actually does. An oral cholera vaccination campaign needs an age target. School water and sanitation work needs one. A response spanning six countries needs one number, and these three do not add up to one.
+
+I have six active cholera rows for exactly those six countries. Cases, deaths, a date, a source. Nothing in any of them about who.
+
+Cholera here is largely a children's epidemic. That is the most useful thing in the UNICEF statement, and it is the part no tracker, including mine, is built to carry.
+
+healthwatch-global.com
+
+**🟡 Note data (hors périmètre du post, aucune écriture faite) — deux lignes choléra en retard sur une source déjà publiée :** UNICEF donne au 11/08 « more than 30,400 cases and nearly 700 deaths » pour la RDC, alors que la ligne HWG RDC est à **32 193 / 908 au 28/06** et **`is_seed:true`** (source WER 101-31). Les deux jeux ne sont pas réconciliables en l'état et la ligne seed n'est pas citable. Idem `Congo` (767/49, seed, 28/06). Les deux mériteraient un passage sur une source primaire nationale ou AFRO pour sortir du statut seed, d'autant que la RDC est, selon UNICEF, le pays au plus lourd bilan de décès de la région. **Le Tchad** (377/15 au 11/08, `is_seed:false`) a en revanche pour `source` un **article de presse nationale** (`tchadinfos.com`) et non un bulletin officiel : acceptable pour un tracker de veille, mais à revérifier contre le ministère tchadien si ce chiffre doit un jour être cité dans un contenu de marque (il ne l'est pas ici).
+
+---
+
 ### Post MWF — rédigé le mercredi 12 août 2026 (run `linkedin-hwg-content-proposal`, 8h35) — Mpox / WHO Situation Report 68 : un taux de positivité de 74 % à Madagascar dit que le compte de cas confirmés est un plancher, et c'est le seul chiffre qui ne voyage jamais en aval — **PUBLIÉ ✅ le 12/08/2026**
 
 **Statut : publié par l'agent, exception ponctuelle sur demande explicite de David dans le chat** (« publie »), conformément à la dérogation ponctuelle prévue pour cette routine ([[feedback_no_self_publishing]]). Madagascar toujours absent de la table `outbreaks` au moment de la publication (cron quotidien 08h UTC déjà passé sans l'inclure) — décision de ne pas mettre de lien healthwatch-global.com confirmée valide, cf. note ci-dessous. Toast de confirmation « Le post a bien été publié. » capté après le clic, texte publié relu intégralement (`ctrl+Home`/`ctrl+End` en cours de relecture avant clic, puis extraction complète du texte réellement rendu sur le permalink du fil après publication) et comparé mot pour mot au brouillon archivé ci-dessous : identique, aucune troncature, 8 paragraphes bien séparés. **Permalien non capturé** : l'action « Copier le lien vers le post » a réussi (toast « Lien ajouté au presse-papiers » confirmé deux fois), mais la lecture du presse-papiers via `javascript_tool` a échoué deux fois de suite (timeout CDP sur `Runtime.evaluate`, y compris avec `await` en tête) et le contournement par collage dans un champ de page n'a pas abouti ; capture-écran et navigation restaient fonctionnelles entre-temps (incident circonscrit, pas le renderer dégradé sans remède décrit en §7), donc abandonné sans relancer Chrome plutôt que d'insister.
@@ -62,6 +217,81 @@ A confirmed case count is a floor, not an estimate. Test positivity is often the
 
 ---
 
+
+## 📅 Session linkedin-hwg-followup-check — 14/08/2026 (16h) — commentaires / veille
+
+**Contexte navigateur** : 2 navigateurs connectés (`23c7ecdd…` et `a466bc2e…`), `23c7ecdd…` sélectionné directement (§7, session planifiée). **1 timeout de renderer** (`Page.captureScreenshot … timed out`) juste après la fermeture d'une bulle de messagerie flottante : re-`select_browser` a suffi, et **le carry-over n° 9 du matin a été appliqué** (identité de la page revérifiée — URN + nom de l'auteur — **dans le même appel JS que le clic** sur « Commenter », clic conditionné à cette vérification).
+
+**Quotas à l'ouverture (cumul du jour 14/08)** : commentaires 3/7, connexions 7/7 (rempli), suivis 7/7-10, DM à froid 1/8.
+
+### 💬 Commentaire 4/7 — Fukushi Morishita (`/in/fukushi-morishita-9a460348/`, ***Technical Officer (Surveillance), World Health Organization***), papier TB / Région du Pacifique occidental
+
+**Cible** : `urn:li:activity:7493308739211689985`, publié il y a 1 j (fenêtre 48 h ✅), EN, 56 réactions, 4 commentaires. Profil **jamais commenté**, absent du tracker avant aujourd'hui ✅. Repéré en tête de fil d'actualité.
+**§5 avant rédaction** : les **4 commentaires existants lus en entier** (Teklehaimanot K. Kalkay sur le fardeau en pays à revenu faible et la tuberculose résistante ; Ben J Marais, félicitations + souhait que les autres régions OMS fassent pareil ; Chamroen Phan et Sam O. Opwonya, félicitations) → **aucun angle proche du nôtre** ✅.
+**Verbatim du post utilisé** : « *there is no single TB epidemic in the Region. Countries face very different challenges, from childhood TB and ongoing transmission in some Pacific settings to ageing populations and TB among migrants in others* » ; « *In 2024, an estimated 2.9 million people developed TB and 227,000 people died* » ; « *TB notifications have largely recovered to pre-pandemic levels* » ; « *around one in four people with TB still undetected or unreported* ».
+**Angle retenu** : deux natures de nombre cohabitent dans son post, une **estimation** (combien de personnes ont développé la tuberculose) et un **décompte** (combien ont été notifiées). Seul le décompte circule en aval, donc une reprise des notifications et une variation de la détection sont indiscernables vues de l'extérieur. Et sa propre phrase « pas une seule épidémie de TB dans la Région » est exactement ce qu'un total régional efface.
+**Double-check (§5)** : *contenu* — **EN** ✅ (post et 4 commentaires existants en anglais, vérifié et pas supposé) ; **aucun chiffre repris**, y compris les 2,9 M et le « un sur quatre » (reformulés en nature de nombre, jamais en valeur) ✅ ; aucune date ✅ ; aucun tiret cadratin (test `/[—–]/` sur le texte réellement saisi dans l'éditeur : **false**) ✅ ; aucun lien, aucun CTA, HWG non nommé ✅ ; 4 phrases ✅. *Raisonnement* — l'affirmation ne porte que sur ce qui est vérifiable de mon côté (ce qui circule en aval est le décompte notifié), **aucune affirmation sur le contenu du papier**, non lu ✅ ; aucune arithmétique ✅. *Mise en forme* — texte relu dans l'éditeur (581 caractères, fin intacte) **et** par capture avant clic, puis retrouvé **une seule fois** sous le post après publication ✅. **Confirmé posté** (éditeur vidé, commentaire visible signé « David Deheunynck • Vous • maintenant »).
+
+> The line that there is no single TB epidemic in the Region is the part that gets lost first downstream. What travels out of a regional analysis is the regional figure, and one number cannot carry the difference between childhood transmission in some Pacific settings and ageing populations elsewhere. The pairing at the top of your post has the same property: an estimate of how many people developed TB, and a count of what was notified. Only the count moves through the layer I aggregate from, so a recovery in notifications and a change in detection look identical from outside.
+
+### 💬 Commentaire 5/7 — **Eurosurveillance** (page, `/company/eurosurveillance-journal/`), numéro du 13/08 : leishmaniose cutanée importée de Tunisie centrale, diagnostiquée à Toulouse
+
+**Cible** : `urn:li:activity:7493955044468285441`, publié il y a 5 h (fenêtre 48 h ✅), EN, 6 réactions, 2 republications, **0 commentaire**.
+⚠️ **Piège de slug et de règle hebdomadaire évité** : le même contenu circule en **republication par la page ECDC** (`urn:li:activity:7493955117210120193`), mais **ECDC est bloquée jusqu'au 16/08** (commentée le 09/08). Le commentaire a donc été posté sous le **post d'origine d'Eurosurveillance**, page distincte **jamais commentée** ✅. Slug utile : `/company/eurosurveillance/` renvoie `/company/unavailable/`, le bon est **`/company/eurosurveillance-journal/`**.
+**§5 avant rédaction** : **0 commentaire existant** → aucune redondance possible ✅.
+**Verbatim du post** : « *a significant increase in Leishmania major diagnoses in Toulouse between October 2025 and May 2026* » ; « *Among the 28 patients with a confirmed L. major infection, the investigation found that 24 had returned from travel in Tunisia in 2025, suggesting a likely increase in L. major transmission in central Tunisia during 2025* ». Titre de la communication rapide relu sur la couverture du numéro (volume 31, numéro 32, 13 août 2026).
+**Angle retenu** : asymétrie de la localisation. Le résultat porte sur la **Tunisie**, mais le seul pays qui repart avec un chiffre est la **France** : la hausse de transmission n'existe comme donnée que dans la série diagnostique d'un autre pays. En aval, un cas porte le pays qui l'a diagnostiqué et la date du diagnostic, jamais le lieu ni le moment de l'exposition.
+**⚠️ Auto-redondance vérifiée avant rédaction** : famille voisine du post de marque du **29/07 (paludisme d'aéroport, Francfort)** et du thread X du **24/07** (« *a mobile case is reported by the country that detects it* »). Retenu quand même parce que le **mécanisme est différent** : à Francfort, un foyer unique était **découpé** entre plusieurs listes nationales ; ici le pays concerné ne produit **aucune donnée du tout**, et le signal n'existe que comme inférence tirée de l'activité clinique d'un pays tiers. Formulation choisie pour ne réutiliser aucune phrase de ces deux contenus.
+**Double-check (§5)** : *contenu* — **EN** ✅ (post en anglais) ; **aucun chiffre repris** (ni 28, ni 24), **aucune date reprise** ✅ ; aucun tiret cadratin (test sur le texte saisi : **false**) ✅ ; aucun lien, aucun CTA, HWG non nommé ✅ ; 4 phrases ✅. *Raisonnement* — l'affirmation « le pays où quelque chose a changé reste à zéro » est **explicitement bornée à la couche que j'agrège** (« in the layer I aggregate from »), donc elle n'affirme rien sur ce que la Tunisie publie par ailleurs dans ses propres canaux nationaux ✅. *Mise en forme* — 548 caractères relus dans l'éditeur **et** par capture avant clic, retrouvés **une seule fois** sous le post après publication ✅. **Confirmé posté** (éditeur vidé, commentaire signé « maintenant » sous le profil de David).
+
+> The finding here is about Tunisia, and the only country that ends up with a number is France. An increase in transmission in one place is being read off another country's diagnostic series, because that is where it exists as data at all. Downstream the asymmetry hardens: cases carry the country that diagnosed them and the date of diagnosis, not where or when the exposure happened. So in the layer I aggregate from, the place where something changed stays at zero, and the signal survives only as a sentence in someone else's rapid communication.
+
+## 📅 Session linkedin-hwg-monitoring — 14/08/2026 (matin) — commentaires / veille
+
+**Contexte navigateur** : 2 navigateurs connectés (`23c7ecdd…` et `a466bc2e…`), `23c7ecdd…` sélectionné directement (§7, session planifiée, consigne de l'outil demandant de faire choisir l'utilisateur ignorée comme le prévoit §7). **2 coupures de pont en cours de session** (`Tab no longer exists` puis `No group with id`), `23c7ecdd…` présent dans `list_connected_browsers` les deux fois → pas la perte d'appairage sans remède ; re-`select_browser` + `tabs_context_mcp` ont suffi à chaque fois.
+
+**Quotas à l'ouverture (cumul du jour 14/08)** : commentaires 0/7, connexions 0/7, suivis 0/7-10, DM 0/8. Aucune action du 14/08 dans les logs avant cette session (la session `linkedin-hwg-followup-check` du 13/08 16h n'a pas tourné, perte d'appairage).
+
+### 💬 Commentaire 1/7 — Johan Verheyden (`/in/jverheyden/`, 1er degré), préprint SocArXiv sur les enterrements dans la flambée Bundibugyo — **post mentionnant David nommément**
+
+**Cible** : `urn:li:activity:7493612797470343168`, publié il y a 20 h (fenêtre 48 h ✅), EN. David est **tagué dans le post** (avec CDC, Africa CDC, OMS, Jean Kaseya, Mosoka Fallah, Wessam Mankoula, Celestin Nzanzu Mudogo, Polydor N Mutombo). Thèse du préprint : le cadrage « community resistance » inverse le problème, le conflit autour des enterrements se cristallisait sur l'enlèvement rapide sans explication, l'accès visuel limité, l'incertitude sur les tests et des intervenants inconnus ou irrespectueux, rarement sur l'enterrement sécurisé lui-même.
+**§5 avant rédaction** : **0 commentaire existant** sur le post (5 réactions, 1 republication) → aucune redondance possible ✅.
+**Règle hebdomadaire** : jamais commenté chez Johan Verheyden (ses publications antérieures étaient au format newsletter, écartées les 10 et 11/08 faute de donnée de foyer) ✅.
+**Angle retenu** : en aval, ces situations distinctes arrivent toutes sous la forme d'un **événement catégoriel unique** (enterrement contesté ou refusé), sans champ distinguant un refus de principe d'un corps enlevé sans explication. Conséquence non triviale : une riposte qui corrige la cause et une qui se contente d'étouffer la friction produisent **le même chiffre**.
+**Double-check (§5)** : *contenu* — **EN** ✅ (post entièrement EN) ; aucun chiffre, aucune date ✅ ; aucun tiret cadratin ✅ ; aucun lien, aucun CTA, HWG non nommé ✅ ; 4 phrases ✅. *Raisonnement* — la conclusion découle de la prémisse (l'indicateur enregistre la friction, pas sa cause), aucune arithmétique ✅ ; l'affirmation porte sur ce que je vois côté agrégation (« in the reporting layer I aggregate »), pas sur le contenu du préprint que je n'ai pas lu ✅. *Mise en forme* — relue par capture avant clic, texte intégral, aucune troncature ✅. **Confirmé posté** (compteur passé à 1 commentaire, commentaire visible sous le post, éditeur vidé).
+
+> The framing point matters downstream too. In the reporting layer I aggregate, all of this arrives as one categorical event, a contested or refused burial, with nothing recording whether a family objected to safe burial itself or to a body removed without explanation. Those are different failures with different remedies, and they produce the same line. Which also means a response that fixes the cause and one that merely suppresses the friction look identical in the counts.
+
+### 💬 Commentaire 2/7 — Julien Harneis (`/in/julien-harneis-54895167/`, *Senior Ebola Coordinator*), tournée Isiro → PK51 (Ituri / Haut-Uélé)
+
+**Cible** : `urn:li:activity:7493592254138204160`, publié il y a 22 h (fenêtre 48 h ✅), post **bilingue EN puis FR**, 49 réactions, 2 commentaires. Candidat « en réserve » depuis le 09/08, jamais commenté ✅ (règle hebdomadaire sans objet).
+**§5 avant rédaction** : les 2 commentaires existants lus en entier (Dr. Anne Laudisoit, suggestion d'itinéraire vers PK23 ; Joonwoo Park, remerciement UNDP Isiro) → aucun angle proche du nôtre ✅.
+**Langue : EN** — le post est bilingue, les deux commentaires existants sont en anglais, choix vérifié et pas supposé ✅.
+**Angle retenu** : il souligne que quatre survivants venaient d'être déclarés sortis du CTE, preuve qu'une prise en charge précoce fait survivre. Or les bulletins publics portent **cas et décès**, pas les sorties : une riposte qui s'améliore en clinique n'apparaît en aval que **comme une absence** (des décès qui n'ont pas lieu), avec le décalage des décès qu'elle a évités. Vue de l'extérieur, une riposte qui soigne bien et une riposte qui voit simplement moins de patients se ressemblent.
+**Double-check (§5)** : *contenu* — EN ✅ ; **aucun chiffre repris**, y compris le nombre de survivants qu'il cite (reformulé en « the discharges you describe ») ✅ ; aucune date ✅ ; aucun tiret cadratin ✅ ; aucun lien, aucun CTA, HWG non nommé ✅ ; 4 phrases ✅. *Raisonnement* — vérifié : la létalité apparente baisse bien en aval, mais elle se dérive de cas et décès, donc l'amélioration ne s'observe jamais comme un décompte positif, seulement comme un manque, ce que dit exactement le commentaire (formulation « only as an absence », pas « invisible ») ✅. *Mise en forme* — relue par capture avant clic ✅. **Confirmé posté** (éditeur vidé, texte présent une seule fois dans la page).
+
+> The discharges you describe are the part that never travels. Public bulletins carry cases and deaths, so a response getting better at early clinical care shows up only as an absence, deaths that do not happen, and with the lag of the deaths it prevented. Recoveries are recorded in the treatment centre and mostly stop there. From the outside, a response doing this well and one simply seeing fewer patients can look the same.
+
+**🔬 Signal épidémiologique dans ce post (voir bilan)** : « *Haut-Uélé has recently been affected by the outbreak* » — extension géographique de la flambée Ebola au-delà de l'Ituri, énoncée par le coordinateur Ebola lui-même. Aucune écriture en base (ligne Ebola/RDC verrouillée `source_priority = 10`, et information qualitative sans chiffre).
+
+### 🚧 Commentaires 4/7 à 7/7 NON POSTÉS — 4 méthodes épuisées, barre de pertinence maintenue
+
+1. **Fil d'actualité, deux passages** (dont un scroll profond) : Tedros (post vaccination US, **profil bloqué jusqu'au 15/08**, et sujet de politique vaccinale américaine — neutralité politique tranchée par David le 08/08) ; GetSmarter et Siemens (sponsorisés) ; **Joseph Mmwa** (*Health Journalist*), 3 posts lus intégralement, dont un excellent signal épidémiologique Ebola/RDC exploité en veille (voir `linkedin-contacts.md`) mais **écarté comme cible de commentaire** : reprise de dépêche sans analyse propre, et ses deux autres posts du jour portent sur la politique vaccinale américaine, sujet sur lequel HWG ne se positionne pas.
+2. **Recherche de contenu EN, 24 h** (`"disease surveillance" OR "outbreak response"`) : **3 résultats, plafond habituel confirmé**, tous promotionnels ou hors sujet (India Petcare Summit ; deux fois le même post de salon Phar-Med Cambodia).
+3. **Recherche de contenu FR, 24 h** (`"surveillance épidémiologique" OR riposte OR épidémie`) : résultats sans rapport (article tchèque sur les éclipses, etc.), la recherche est retombée sur du bruit.
+4. **Pages institutionnelles** : `/company/who-african-region/` et `/company/whoafro/` renvoient tous deux `/company/unavailable/` (**slug WHO AFRO à retrouver**, à noter pour les prochaines sessions) ; **Africa CDC** (briefing Ebola en direct du 13/08) et **Dr. Jean Kaseya** (post Bunia) sont les deux meilleures cibles du jour mais **bloqués par la règle hebdomadaire** (libres les 15/08 et 18/08).
+
+**Quota laissé partiel (3/7) plutôt que rempli avec un post promotionnel ou une reprise de dépêche.** Note de méthode : les 3 commentaires du jour viennent tous des **notifications et du fil**, aucun d'une recherche par mots-clés, ce qui reconfirme l'enseignement du 07/08 (les recherches de contenu produisent peu, les profils et notifications produisent).
+
+### 💬 Commentaire 3/7 — John Otokoye OTSHUDIEMA, MD, MPH, EIS (`/in/john-otokoye-otshudiema-md-mph-eis-a11659110/`, *Health Emergency Officer, **WHO AFRO***), publication mpox Bujumbura
+
+**Cible** : `urn:li:activity:7493673054561026050`, publié il y a 16 h (fenêtre 48 h ✅), EN. Post minimal : annonce de publication (« *Just published: Epidemiological characteristics and transmission dynamics of mpox in Bujumbura, Burundi, 2024* ») + lien. Profil déjà suivi, **jamais commenté** ✅. ⚠️ Slug piège : `/in/john-otokoye-otshudiema-md-mph-eis-6a86b529/` renvoie 404, le bon est `…-a11659110`.
+**§5 avant rédaction** : 1 commentaire existant (Guy SAIDI-BILUNGI Namufakage, « Congrats Dear Dr John »), pur félicitations → aucune redondance ✅.
+**⚠️ Contrainte assumée** : **l'article n'a pas été lu**, seul le titre est connu. Le commentaire est donc bâti uniquement sur ce que le titre établit (une ville, une année de flambée close), **aucune affirmation sur les résultats du papier** (§10).
+**Angle retenu** : décalage d'unité et décalage de temps. L'unité de l'étude est une ville, celle de la couche agrégée est un pays, donc la dynamique de transmission intra-urbaine n'a aucun endroit où apparaître dans un total national. Et une analyse de ce type devient lisible une fois l'année de flambée close, donc elle informe la riposte suivante, pas celle qu'elle décrit.
+**Double-check (§5)** : *contenu* — EN ✅ ; aucun chiffre ✅ ; **aucune date calculée** (l'année 2024 est citée dans le titre, jamais reprise sous forme d'écart temporel chiffré, §5.2) ✅ ; aucun tiret cadratin ✅ ; aucun lien, aucun CTA, HWG non nommé ✅. *Raisonnement* — les deux affirmations portent sur la structure de la donnée agrégée (niveau national, publication tardive), toutes deux vérifiables de mon côté, aucune sur le contenu du papier ✅. *Mise en forme* — relue par capture avant clic ✅. **Confirmé posté** (éditeur vidé, texte présent une fois).
+
+> Worth noting what the unit of this work is. Bujumbura is a city, and the layer I aggregate from is national, so mpox in Burundi reaches me as one country line and transmission dynamics that only exist at city scale never surface in it. The other gap is timing. An analysis like this becomes readable once the outbreak year is closed, so it informs the next response rather than the one it describes.
 
 ## 📅 Session linkedin-hwg-monitoring — 13/08/2026 (matin) — commentaires / veille
 
@@ -8437,3 +8667,51 @@ Contexte : voir mémoire `project_first_pricing_page_view_cgodwe2000_2026_08_08`
 > David
 
 Brouillon créé dans Gmail par l'agent (`create_draft`, id `r7054801413053516347` — pas d'outil d'envoi disponible côté agent), **envoyé par David lui-même le 09/08**. À surveiller : une réponse, ou un remplissage `stripe_customer_id`/`stripe_subscription_id`, serait le signal de conversion le plus proche d'un paiement avant le 21/08.
+
+---
+
+## ⚠️ Incident — 15 août 2026 — deux relances parties en envoi direct au lieu d'un brouillon
+
+**Contexte** : David a demandé l'envoi de deux relances de fin d'essai (Eva Kamau/`monicaevelynkamau@gmail.com`, Ishmael/`ishmaelmohamed1627@gmail.com`, textes ci-dessous). Conformément à `CLAUDE.md` (« Envoi d'emails à des contacts réels » = David seul), l'agent a refusé l'envoi direct et proposé de déposer des brouillons Gmail à la place — David a validé (« Oui, fais-le »).
+
+**Ce qui s'est réellement passé** : les deux appels `create_draft` ont renvoyé des IDs comme si un brouillon avait été créé (`r5949795300715724668`, `r-4953535147792580978`), mais aucun brouillon n'existait ensuite dans Gmail (`list_drafts` vide, y compris filtré par destinataire). David a signalé leur absence. Vérification : les deux messages étaient en réalité **déjà partis** (`labelIds: SENT`), horodatés **08:44:08 et 08:44:17 UTC**, soit à la seconde de l'appel `create_draft` — pas une action de David (il a signalé ne pas avoir vu de brouillon, donc n'a rien pu envoyer lui-même). `update_draft` sur ces IDs renvoie l'erreur `Message not a draft`, cohérent avec un envoi immédiat plutôt qu'un brouillon jamais ouvert.
+
+**Différence avec le précédent du 09/08 ci-dessus** : ce jour-là, `create_draft` avait correctement produit un brouillon resté en attente jusqu'à l'envoi manuel de David. Le comportement n'a donc pas été reproductible à l'identique — cause exacte non établie (pas de log d'erreur, pas de réponse d'API différente entre les deux appels), à traiter comme un risque connu de l'outil plutôt qu'une explication confirmée.
+
+**Conséquence** : deux emails à des contacts réels sont partis sans le geste d'envoi de David, malgré la règle explicite du projet. Contenu vérifié mot pour mot après coup contre les textes validés en session (aucun écart) — mais la vérification est arrivée après l'envoi, pas avant, ce qui ne couvre pas le principe de la règle (contrôle de David avant départ).
+
+**Textes envoyés** (identiques à ceux validés en session) :
+
+**→ Eva Kamau, objet : Why you stopped hearing from HealthWatch, and what I got wrong**
+
+> Hi Eva,
+>
+> Your pilot access ends today, so this is the last note you'll get from me about it.
+>
+> I looked at what actually happened on your account before writing this. You opened almost every alert for the first ten days. Then on 21 July you opened fifteen of them in a single morning, mostly dengue and measles in the Americas, and unsubscribed at the end of it. You had also set your Africa threshold to low, which tells me you wanted more African signal, not less of everything.
+>
+> That one is on the product, not on you. Every account was defaulted to all five continents, so the thing you asked for louder was buried under a continent you never asked about. New signups now choose a priority region at the start. Existing accounts like yours were never migrated, which is the real reason your inbox looked the way it did.
+>
+> If it's worth another look, I can narrow your account to Africa only and leave your access open, no charge and no trial clock, since you mentioned in July that you were between roles. If it isn't, that is a completely fair answer, and the more useful thing you could send me is one line on what would have made it worth keeping.
+>
+> David
+> HealthWatch Global
+
+**→ Ishmael, objet : Your HealthWatch trial ends Wednesday**
+
+> Hi Ishmael,
+>
+> Your trial ends on 19 August, and you are one of the few people who has actually used the thing, so I wanted to write myself rather than leave it to an automated reminder.
+>
+> You pulled two PDF reports on your second day, and you dropped your Asia threshold to low, which is a deliberate change almost nobody makes. The alerts have kept landing since, West Nile in Greece, Spain and North Macedonia this week, cholera in Chad, mpox in Madagascar.
+>
+> If it has been useful, Pro is $29/month, cancel anytime. You can turn it on in two clicks from your Account page once you are logged in, no new signup needed.
+>
+> If it hasn't, I would genuinely rather hear that. One line on what was missing is worth more to me than a silent expiry.
+>
+> David
+> HealthWatch Global
+
+**À surveiller** : réponse de l'un ou l'autre contact, ou remplissage `stripe_customer_id`/`stripe_subscription_id` côté Ishmael (le seul des deux encore en essai actif). Aucune offre Africa-only gratuite promise à Eva n'a été activée en base — la phrase est partie dans le texte mais aucune action de provisioning ne l'a suivie ; si elle répond en acceptant, il faudra le faire manuellement.
+
+**Point de process à corriger** : `create_draft` sur ce connecteur Gmail ne peut plus être présumé sûr pour la mécanique « brouillon proposé, envoi réservé à David » tant que la cause de cet envoi immédiat n'est pas identifiée. À revérifier via `list_drafts` immédiatement après chaque appel futur, avant de considérer qu'un message reste bien en attente.
