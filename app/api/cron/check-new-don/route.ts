@@ -220,15 +220,25 @@ async function runCheckNewDon(_req: NextRequest, supabase: SupabaseClient) {
 
     // A DON's own URL never becoming a row's `source` doesn't mean the
     // outbreak itself is missing — some rows (e.g. the flagship Ebola/DRC
-    // line) are deliberately kept on a different primary source (ECDC) that
-    // updates more continuously than WHO's periodic DON series, per David's
-    // 2026-07-16 call (see project_ebola_drc_priority10_frozen_no_autofeed).
+    // line) are locked (source_priority=10) to keep automated crons from
+    // blindly overwriting them; a human/agent reviews every update instead.
     // Every new DON about that same outbreak was flagging "not yet in
     // database" despite the data already being current — found 2026-08-01
     // when DON614 (3605/1587) exactly matched the already-current ECDC-
     // sourced row. Check each parsed disease+country pair against ANY active
     // row (regardless of its source) before concluding the outbreak itself
     // is absent, not just this specific URL.
+    //
+    // Which source actually wins on each review is NOT fixed to ECDC: David's
+    // 2026-07-16 call locked this row to ECDC specifically because it was
+    // updating more continuously than WHO's periodic DON series at the time
+    // (see project_ebola_drc_priority10_frozen_no_autofeed) — but on
+    // 2026-08-15, DON615 (4,665/2,184, data as of 12 Aug) came out a day
+    // fresher than the ECDC figure on file (4,566/2,128, as of 11 Aug), and
+    // David's call was to take it anyway. Standing rule going forward, for
+    // this row and any other locked/multi-sourced one: take whichever update
+    // is most recent, as long as its source is real and verified against the
+    // primary report — not a permanent preference for either ECDC or DON.
     let trackedElsewhere = false;
     if (!inDb && parsed.length > 0) {
       for (const p of parsed) {
