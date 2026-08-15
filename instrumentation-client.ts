@@ -17,7 +17,20 @@ Sentry.init({
   replaysSessionSampleRate: 0.01,
   replaysOnErrorSampleRate: 1.0,
   sendDefaultPii: false,
-  ignoreErrors: ["NEXT_NOT_FOUND", "NEXT_REDIRECT"],
+  // "Object Not Found Matching Id:N, MethodName:update, ParamCount:4" — reported
+  // 15/08/2026 on the public outbreak page. Not our code: this exact signature
+  // (only the N varies) shows up identically across dozens of unrelated sites
+  // (open GitHub issues on totally unrelated stacks, Sentry's own community
+  // forum, a dedicated TrackJS explainer) and traces to CefSharp-based headless
+  // Chromium crawlers — most commonly Microsoft Outlook Safe Links pre-scanning
+  // a URL from an email before a human ever clicks it, whose internal JS-bridge
+  // throws this when it calls back into a binding that isn't there in that
+  // automated context. Same underlying phenomenon as the RAFALE_WINDOW_MS bot-
+  // click filter in the health-check cron (corporate email gateways prefetching
+  // links) — that one inflates a click count, this one throws in the browser;
+  // no outbreak-page code path calls `.update()` at all, confirmed before
+  // filtering.
+  ignoreErrors: ["NEXT_NOT_FOUND", "NEXT_REDIRECT", "Object Not Found Matching Id"],
   // ignoreErrors above matches on error message/name — Next.js's internal
   // not-found/redirect control-flow signals carry their real type in
   // error.digest instead, which doesn't reliably appear in the message. Ported
