@@ -441,6 +441,26 @@ const MANUAL_ROWS = {
   // via cette série OMS, donc pas de cron possible en l'état. Détail dans
   // scripts/add-american-samoa-dengue-2026-08-11.mjs.
   "43c4c769-17e6-45c4-9f83-5c8d30104ff1": "Dengue/American Samoa",
+  // Ajoutée le 2026-08-15 : trouvée par le contrôle qualité du même jour, mono-sourcée sur un
+  // hash PDF NCDC (pas de série numérotée avec URL stable) et non couverte par sync-ncdc (qui
+  // ne couvre pas le NCDC nigérian malgré le nom identique — acronyme homonyme, cf. la ligne
+  // Diphtérie/Nigéria ci-dessous). Aucun cron possible en l'état.
+  "4dee8751-4a98-43ed-85c5-51b1c74dc5c6": "Fièvre de Lassa/Nigéria",
+  // Les trois lignes suivantes ajoutées le 2026-08-15, même déclencheur : toutes les trois citent
+  // EXACTEMENT la même source (PAHO Situation Report Measles Americas Region, série numérotée
+  // biweekly, ~15j de cadence) — une seule vérification de la page de listing PAHO répond aux
+  // trois d'un coup, pas besoin de trois recherches séparées. Non couvertes par un cron
+  // (source_priority=5 mais rien n'écrit dessus en pratique).
+  "632f603c-0a7f-4bd3-82a2-e63ae4114c72": "Rougeole/Canada",
+  "32d62690-2c7b-4f3c-88c7-215f691fb116": "Rougeole/Pérou",
+  "220e23f5-34bd-47d8-b82a-f3dacb56feb1": "Rougeole/Bolivie",
+  // Ajoutée le 2026-08-15 : conséquence directe du recadrage NCDC/MSF de la veille
+  // (scripts/fix-diphtheria-nigeria-ncdc-reframe-2026-08-15.mjs) — la source est passée d'un PDF
+  // WHO SAGE (palier "dashboard" 180j dans data-quality) à un article de presse (leadership.ng),
+  // qui ne matche aucun motif de DASHBOARD_SOURCES et retombe donc sur le palier standard 21j.
+  // La ligne va se re-signaler tous les jours indéfiniment sans ce suivi hebdo — même trou que
+  // Wallis-et-Futuna/American Samoa, pas anticipé au moment du recadrage.
+  "1ca31b07-6f83-4967-9f59-b599f7574642": "Diphtérie/Nigéria",
 };
 // Vérification faite, source inchangée → aucune écriture, donc `updated_at` ne bouge pas et la
 // ligne se re-signale tous les matins indéfiniment (vécu le 06/08 avec les deux lignes polio :
@@ -504,6 +524,30 @@ const MANUAL_ROW_CHECKED = {
   // confondre avec Samoa (pays indépendant voisin), qui a sa propre épidémie bien plus importante
   // et des sitreps MOH distincts. Toujours 782 cas / 0 décès au 17/02, rien à écrire.
   "43c4c769-17e6-45c4-9f83-5c8d30104ff1": "2026-08-14",
+  // Fièvre de Lassa/Nigéria : vérifié le 15/08. Le listing NCDC filtré sur ce type de sitrep
+  // (ncdc.gov.ng/diseases/sitreps/?cat=5&name=...) confirme que "Week 30" est bien la plus
+  // récente entrée, ET que son PDF est EXACTEMENT celui déjà cité en base (même hash de fichier)
+  // — donc pas une édition manquée, la ligne cite déjà la dernière disponible. ⚠️ Piège écarté :
+  // le listing générique non filtré (ncdc.gov.ng/diseases/sitreps) affichait "Week 29" comme plus
+  // récente — page moins fiable/à jour que la version filtrée par catégorie, ne pas s'y fier pour
+  // ce type de vérification. Un article de presse (Tribune Online) citant "Week 30" avec le même
+  // cumul 1000/237 semblait d'abord contradictoire avec ses propres chiffres "227 suspects/17
+  // confirmés/6 décès" de la semaine — en réalité ces 17/6 sont déjà inclus dans le cumul 1000/237,
+  // pas un delta à ajouter par-dessus. Toujours 1 000 cas / 237 décès au 25/07, rien à écrire.
+  "4dee8751-4a98-43ed-85c5-51b1c74dc5c6": "2026-08-15",
+  // Rougeole Canada/Pérou/Bolivie : vérifié le 15/08 en une seule recherche (source commune).
+  // La page de listing PAHO (paho.org/en/measles-multi-country-outbreak-2026) confirme que le
+  // Situation Report #8 (31/07/2026) reste le plus récent — pas de #9 publié à ce jour, cadence
+  // ~15j (#6 02/07, #7 17/07, #8 31/07) donc un #9 est attendu incessamment (~14-15/08). Toujours
+  // les chiffres du #8 pour les trois pays (Canada 1 107/0, Pérou 1 139/0, Bolivie 85/1), rien à
+  // écrire pour aucun des trois.
+  "632f603c-0a7f-4bd3-82a2-e63ae4114c72": "2026-08-15",
+  "32d62690-2c7b-4f3c-88c7-215f691fb116": "2026-08-15",
+  "220e23f5-34bd-47d8-b82a-f3dacb56feb1": "2026-08-15",
+  // Diphtérie/Nigéria : ligne créée/recadrée le 14-15/08 (voir MANUAL_ROWS ci-dessus), donc
+  // rien à "vérifier" pour l'instant au sens de rechercher une édition plus récente — cette entrée
+  // existe uniquement pour que la cadence hebdo démarre à la date du recadrage plutôt qu'à zéro.
+  "1ca31b07-6f83-4967-9f59-b599f7574642": "2026-08-15",
 };
 console.log("\n=== Lignes manuelles (section 5) — dues pour vérif hebdo (>7j) ===");
 const now = Date.now();
