@@ -169,6 +169,16 @@ Relevé sur `/mynetwork/invite-connect/connections/` trié « Ajouts récents »
 8. **⚠️ Renderer — 2 timeouts de capture d'écran**, réglés à chaque fois par un simple re-`select_browser` sur `23c7ecdd-…`. **Le JS synchrone a fonctionné toute la session** ; l'asynchrone n'a pas été retesté (le contournement du matin a été appliqué d'office, sans coût). **Un appel JS refusé par le classifieur** (extraction d'`href` sur `/notifications/`, « BLOCKED: Cookie/query string data ») : contourner par les pages d'activité des profils, ne pas insister.
 9. **Quotas de clôture (cumul du jour 16/08, toutes routines)** : commentaires **6/7** ; connexions **6/7** ; suivis **7/7-10** ; **DM à froid 5/8** (inchangé, aucun envoi cette session) ; **6 DM en file de validation**.
 
+### 🔁 Double-check demandé par David (session interactive, après le run planifié) — 6/6 confirmés, aucune correction
+Revérification à froid des 6 brouillons avant validation, sur demande explicite de David :
+- **Les 3 fils actifs (Celestin, Marcel, Nadine) rouverts et relus intégralement** : aucun n'a reçu de nouveau message depuis la rédaction, les 3 verbatims cités restent identiques mot pour mot à ce qui est archivé ci-dessus, et l'absence de lien/essai antérieur dans chacun des 3 fils est reconfirmée (CTA toujours justifié comme première occurrence).
+- **Comptage des étapes de Marcel Muamba recompté sur son verbatim** : « signalement, vérification, investigation, confirmation, intégration » → bien 5 étapes, cohérent avec « vos cinq étapes » dans le brouillon.
+- **Claim factuelle du DM 5 (ABDELHAK OUMAR) revérifiée en base prod** (`outbreaks`, `.env.local.live`, pas le sandbox) : la ligne Chad/Cholera a bien `source: tchadinfos.com` (presse), `is_seed: false`, confirmant que le brouillon dit vrai (« une des lignes que je n'ai jamais réussi à rattacher à un bulletin officiel »). **Anomalie relevée en passant, sans lien avec le DM** : cette ligne porte `source_priority: 10`, la même valeur que le verrou documenté pour Ebola/RDC — à vérifier un jour si ce champ a une autre signification hors du cas Ebola/RDC ou s'il s'agit d'une valeur par défaut non intentionnelle. Aucune écriture faite, aucun DM affecté.
+- **Aucune des 3 nouvelles cibles (Justin-Bienvenu EYONG, ABDELHAK OUMAR, Ngoy Guillaume) n'apparaît dans la liste de messagerie** : confirmé, aucun fil préexistant.
+- **Recherche systématique de tirets cadratins/demi-cadratins dans les 6 textes prêts à envoyer** (le contenu réel entre les balises de citation, pas la prose d'archive autour) : **0 occurrence**.
+- **Structure des 6 messages revérifiée** : chacun ouvre bien sur le bon destinataire, aucun doublon de paragraphe, aucune troncature visible dans le texte archivé.
+**Conclusion : les 6 brouillons sont confirmés prêts à l'envoi tels quels, sans correction.**
+
 ---
 
 ## 📅 Session linkedin-hwg-monitoring — 16/08/2026 (matin)
