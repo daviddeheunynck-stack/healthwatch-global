@@ -198,7 +198,32 @@ En vérifiant la messagerie après les 6 envois, réponse substantielle reçue �
 > *« Hi David You point is so relevant. We need to connect sometime and talk about it. We are investing a lot in the health workforce development for surveillance, preparedness and response. »*
 > *« This is of we started the weekly bulletin on health emergencies in the African Region when I was Regional Emergency Director »* + un lien/document partagé (aperçu non ouvert, contenu non lu).
 
-**⚠️ Proposition implicite d'échange direct (« We need to connect sometime and talk about it »)** de la part d'un contact senior (CEO Institut Pasteur de Dakar, ancien Assistant Director-General de l'OMS) — relève de §3 (proposition de canal/échange à signaler explicitement, ne jamais s'engager de sa propre initiative). **Aucun brouillon rédigé, aucune action prise** : nécessite une lecture complète du document partagé et l'arbitrage de David avant toute réponse, hors scope de l'instruction « envoie les dms » qui portait sur les 6 brouillons déjà validés. À traiter en priorité à la prochaine session ou par David directement.
+**⚠️ Proposition implicite d'échange direct (« We need to connect sometime and talk about it »)** de la part d'un contact senior (CEO Institut Pasteur de Dakar, ancien Assistant Director-General de l'OMS) — relève de §3 (proposition de canal/échange à signaler explicitement, ne jamais s'engager de sa propre initiative).
+
+### 🔒 DM 7 — Dr. Ibrahima Socé Fall — brouillon préparé sur demande de David (« relis Ibrahima et prépare un brouillon »), NON envoyé
+**Fil relu intégralement (§4)**, 4 messages : mon welcome DM (14:02), sa réponse (17:21, « *Hi David You point is so relevant. We need to connect sometime and talk about it. We are investing a lot in the health workforce development for surveillance, preparedness and response.* »), son 2e message (17:22, « *This is of we started the weekly bulletin on health emergencies in the African Region when I was Regional Emergency Director* ») accompagné d'un **document PDF joint et ouvert en entier** : article *Emerging Infectious Diseases* (CDC), Vol. 24 No. 7, juillet 2018, p. 1394, « World Health Organization Regional Office for Africa Weekly Bulletin on Outbreaks and Other Emergencies », co-écrit par Benido Impouma, Brett N. Archer, Okot Charles Lukoya, Esther L. Hamblion, **Ibrahima Socé Fall**, DOI 10.3201/eid2407.180573.
+
+**Contenu vérifié de l'article (lu en entier à l'écran)** : bulletin lancé en mars 2017 par l'OMS AFRO, motivé par le constat que « *lack of information sharing or incompatible communication systems have remained paralyzing factors for complex emergency responses* », leçon tirée de l'épidémie Ebola 2014-2016. En 2017 : 43 éditions, 245 articles, ~2 000 abonnés directs.
+
+**⚠️ Détail de l'article volontairement omis du brouillon** : la liste des canaux de diffusion cités dans l'article inclut ProMED-mail — **interdiction totale d'utilisation ou de citation** (mise en demeure du 2026-06-06, politique commune §1). Ni le nom ni le contenu de ce passage ne sont repris.
+
+**Angle, vérifié contre le code avant rédaction** : `app/api/cron/sync-who-afro/route.ts` confirme que le cron OMS AFRO de HWG scrape `https://www.afro.who.int/health-topics/disease-outbreaks/outbreaks-and-other-emergencies-updates` — une page nommée « Outbreaks and Other Emergencies Updates ». **Formulé comme une inférence, pas une affirmation d'archives officielles** (« reads like the direct descendant », pas « is the direct descendant ») : je n'ai pas de preuve documentaire du lien institutionnel entre le PDF de 2017-2019 et cette page actuelle, seulement une coïncidence de nom forte. OMS AFRO est l'une des six sources nommées dans le positionnement HWG (WHO DON, ECDC, PAHO, Africa CDC, WHO AFRO, WHO EMRO) — fait vérifiable et déjà public, pas une donnée interne.
+
+**§3 CTA — PRÉSENT, vérifié.** Échange substantiel indiscutable (document + contexte personnel partagés). **Anti-répétition vérifiée sur l'intégralité du fil (4 messages)** : HealthWatch Global nommé dans le welcome DM (14:02), **aucun lien ni essai jamais envoyés** → CTA complet autorisé.
+
+**§3 proposition de canal — traitée sans engagement.** « We need to connect sometime and talk about it » reste ouvert et vague (pas explicitement un appel/visio). Le brouillon reste sur la plateforme, chaleureux, sans jamais proposer ni accepter un canal externe — la décision d'aller plus loin (appel, visio) reste à l'arbitrage de David, non prise par la routine.
+
+**Double-check (§5)** : *contenu* — EN ✅ (langue établie du fil) ; aucun chiffre chiffré de l'article n'est cité (43 éditions, 245 articles, ~2 000 abonnés : **volontairement omis**, aucune valeur ajoutée à les reprendre et risque de sur-longueur) ; aucun tiret cadratin ✅ ; sources HWG exactes (six sources nommées) ✅ ; ProMED totalement absent ✅. *Raisonnement* — la filiation bulletin→page web est explicitement formulée comme une supposition, jamais comme un fait établi ✅ ; aucun engagement produit ou de canal pris en son nom ✅. *Mise en forme* — 4 paragraphes courts. *Destinataire* — à relire dans l'en-tête juste avant le clic (§5.4), si validé.
+
+> Hi Ibrahima, thank you, this connects directly to what I was asking.
+>
+> The WHO AFRO source in my own pipeline pulls from a page called "Outbreaks and Other Emergencies Updates." I hadn't made the connection until now, but that reads like the direct descendant of the bulletin in your paper, evolved from a weekly PDF into a live page. Seven years on, whatever you built to close that communication gap in 2017 is still, in some form, one of six regional sources I aggregate from today.
+>
+> That is actually a partial answer to what I asked in my first message. The bulletin itself was a workforce investment, and its own durability is visible to me, since I can point at the page and see it is still running. What is not visible is everything upstream of it: whether a country's reporting got faster or more complete because that channel existed, or whether the channel just carries what was already there.
+>
+> What I aggregate is public at healthwatch-global.com, with a 14 day Pro trial with no card required, if you want to see where that page ends up on my side. And happy to keep this going here whenever suits you, there is a lot in what you shared.
+
+**🔒 NON envoyé — en attente de validation de David.**
 
 ---
 
