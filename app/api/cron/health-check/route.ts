@@ -363,10 +363,19 @@ const VIABILITY_DECISION_DATE = "2026-08-21";
 // a different check (trial_ends_at past the decision horizon) that happens
 // to also catch them, so it needs its own entry rather than inheriting the
 // other set's exclusion.
+//
+// jverheyden@ariesconsult.eu added 2026-08-16 ("Oui pour Johan," David,
+// same session that surfaced this entry) — trial_ends_at=2027-08-04 is a
+// deliberate 1-year barter-deal date (see
+// scripts/provision-johan-verheyden-2026-08-11.mjs), not a pending
+// self-serve conversion. It isn't part of the viability conversion signal
+// at all, so it doesn't belong in this check regardless of the decision
+// date.
 const DECISION_HORIZON_DISMISSED = new Set([
   "jalal.nourlil@pasteur.ma",
   "zrhyacinthe2@gmail.com",
   "davmulambamangole@gmail.com",
+  "jverheyden@ariesconsult.eu",
 ]);
 
 interface DecisionHorizonTrial { email: string; trialEndsAt: string; isPilot: boolean }
