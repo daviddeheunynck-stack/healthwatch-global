@@ -484,6 +484,16 @@ const MANUAL_ROWS = {
   // La ligne va se re-signaler tous les jours indéfiniment sans ce suivi hebdo — même trou que
   // Wallis-et-Futuna/American Samoa, pas anticipé au moment du recadrage.
   "1ca31b07-6f83-4967-9f59-b599f7574642": "Diphtérie/Nigéria",
+  // Ajoutée le 2026-08-16 : trouvée par le contrôle qualité du même jour (35j de péremption),
+  // trou pas anticipé jusqu'ici. Source = WHO Kenya "Emergency Preparedness and Response Weekly
+  // Situation Report" (série pays, hébergée sur afro.who.int, distincte du bulletin régional
+  // AFRO générique) — mono-sourcée, aucun cron ne la couvre. La page-index de la série
+  // (afro.who.int/countries/kenya/publication/kenya-weekly-situation-report-2026) liste les
+  // éditions disponibles ; vérifié le 16/08 qu'elle s'arrête à "Week 28" (semaine du 05-12/07),
+  // déjà la source citée en base — aucune Week 29-33 publiée, la cadence hebdo de cette série
+  // semble interrompue depuis mi-juillet (à surveiller, pas creusé plus loin). Mêmes 40 cas/1
+  // décès (Garissa+Nairobi) qu'au 12/07, rien à écrire.
+  "07b42f30-5446-4931-871e-a1b079b04da2": "Choléra/Kenya",
 };
 // Vérification faite, source inchangée → aucune écriture, donc `updated_at` ne bouge pas et la
 // ligne se re-signale tous les matins indéfiniment (vécu le 06/08 avec les deux lignes polio :
@@ -561,15 +571,19 @@ const MANUAL_ROW_CHECKED = {
   // confirmés/6 décès" de la semaine — en réalité ces 17/6 sont déjà inclus dans le cumul 1000/237,
   // pas un delta à ajouter par-dessus. Toujours 1 000 cas / 237 décès au 25/07, rien à écrire.
   "4dee8751-4a98-43ed-85c5-51b1c74dc5c6": "2026-08-15",
-  // Rougeole Canada/Pérou/Bolivie : vérifié le 15/08 en une seule recherche (source commune).
-  // La page de listing PAHO (paho.org/en/measles-multi-country-outbreak-2026) confirme que le
-  // Situation Report #8 (31/07/2026) reste le plus récent — pas de #9 publié à ce jour, cadence
-  // ~15j (#6 02/07, #7 17/07, #8 31/07) donc un #9 est attendu incessamment (~14-15/08). Toujours
-  // les chiffres du #8 pour les trois pays (Canada 1 107/0, Pérou 1 139/0, Bolivie 85/1), rien à
-  // écrire pour aucun des trois.
-  "632f603c-0a7f-4bd3-82a2-e63ae4114c72": "2026-08-15",
-  "32d62690-2c7b-4f3c-88c7-215f691fb116": "2026-08-15",
-  "220e23f5-34bd-47d8-b82a-f3dacb56feb1": "2026-08-15",
+  // Rougeole Canada/Pérou/Bolivie : vérifié le 15/08 puis rerevérifié le 16/08 (fenêtre "#9
+  // attendu incessamment" du 15/08 passée sans nouvelle édition). La page de listing PAHO
+  // (paho.org/en/measles-multi-country-outbreak-2026) confirme que le Situation Report #8
+  // (31/07/2026) reste le plus récent — pas de #9 publié à ce jour, cadence ~15j (#6 02/07,
+  // #7 17/07, #8 31/07). Toujours les chiffres du #8 pour les trois pays (Canada 1 107/0,
+  // Pérou 1 139/0, Bolivie 85/1), rien à écrire pour aucun des trois.
+  "632f603c-0a7f-4bd3-82a2-e63ae4114c72": "2026-08-16",
+  "32d62690-2c7b-4f3c-88c7-215f691fb116": "2026-08-16",
+  "220e23f5-34bd-47d8-b82a-f3dacb56feb1": "2026-08-16",
+  // Choléra/Kenya : voir MANUAL_ROWS ci-dessus pour le contexte complet. Vérifié le 16/08 —
+  // page-index de la série WHO Kenya Weekly Situation Report, s'arrête à Week 28 (05-12/07),
+  // aucune édition plus récente publiée. Toujours 40 cas / 1 décès au 12/07, rien à écrire.
+  "07b42f30-5446-4931-871e-a1b079b04da2": "2026-08-16",
   // Diphtérie/Nigéria : ligne créée/recadrée le 14-15/08 (voir MANUAL_ROWS ci-dessus), donc
   // rien à "vérifier" pour l'instant au sens de rechercher une édition plus récente — cette entrée
   // existe uniquement pour que la cadence hebdo démarre à la date du recadrage plutôt qu'à zéro.
