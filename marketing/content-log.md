@@ -2,6 +2,67 @@
 
 Archive de tout le contenu créé. Mise à jour à chaque session.
 
+## 📅 Session linkedin-hwg-monitoring — 16/08/2026 (matin)
+
+**Quotas à l'ouverture (nouveau jour, tout remis à zéro)** : commentaires **0/7** ; connexions **0/7** ; suivis **0/7-10** ; DM **0/8**. Dernière archive : 15/08 (16h), aucune entrée du jour → **premier déclenchement de la routine aujourd'hui**, pas de doublon.
+
+**🖥️ État navigateur** : `23c7ecdd-…` présent et sélectionné directement (§7). Le zombie `a466bc2e…` est toujours listé, ignoré. **⚠️ Renderer partiellement dégradé** : tout script `javascript_tool` **asynchrone** (y compris un `(async () => 42)()` trivial) renvoie `{}` ; le JS **synchrone** fonctionne parfaitement. Contournement appliqué toute la session : lecture/clic en JS synchrone, attentes via `computer` action `wait` externe. Aucune perte d'appairage, aucun timeout CDP.
+
+**⚠️ Note technique — la messagerie ne se navigue pas en JS.** Les `li` de la liste de conversations n'exposent **aucun `href`**, et un `.click()` sur l'élément ou son `<a>` ne change pas de fil (URL inchangée, contenu inchangé). **Seul un clic en coordonnées sur la vignette fonctionne.** À réutiliser : screenshot, puis `computer left_click` sur la ligne du fil visé.
+
+### 💬 Commentaire 1/7 — Morgan Otita (`/in/morgan-otita-51128b73/`)
+*Global Health Security | Laboratory Systems | Outbreak Management | Sentinel Surveillance AFI*, **1er degré**, 232 abonnés. Post de **39 min** (fenêtre 48h largement respectée), **0 commentaire existant** (§5 pré-check : rien à recouper), 1 réaction. **Blocage hebdomadaire levé aujourd'hui** (commentaire 2/7 chez lui le 09/08, réouverture au 16/08) : première action possible, saisie sans attendre.
+
+Repartage commenté (« *Wake-up call to Africa and Member States for a safe and healthy Africa.* ») d'un post de **Derrick Kitwe** (*PhD Biosecurity, Biorisk Management Specialist*), qui interpelle Africa CDC sur la dépendance du continent aux laboratoires étrangers et appelle à une institution vaccinale continentale. **Visuel du post vérifié à l'écran** : pipeline en 9 étapes, *pathogen detection → genomic characterization → vaccine discovery → preclinical → clinical trials → regulatory approval → manufacturing → stockpiling → rapid deployment*.
+
+**Angle** : ce pipeline en 9 étapes n'est documenté publiquement qu'à sa première étape. Les bulletins livrent des décomptes, des districts et des dates ; rien n'y dit si une contre-mesure existait, en combien de temps elle est arrivée, ni où elle a été fabriquée. La dépendance décrite est donc réelle mais structurellement invisible dans les données que tout le monde cite, ce qui explique en partie qu'elle reste facile à repousser.
+
+**Double-check (§5)** : *contenu* — EN ✅ (langue du post, vérifiée) ; **aucun chiffre ni date ajouté** ✅ ; aucun tiret cadratin ✅ ; pas de CTA, pas de lien ✅ ; 2 paragraphes, 5 phrases ✅ ; sources HWG exactes (WHO, Africa CDC, ECDC) ✅. *Raisonnement* — l'affirmation porte sur ce que contiennent les bulletins publics, vérifiable de mon côté, et **ne prétend rien sur ce que fait réellement Africa CDC** ✅. **Formulation volontairement impersonnelle** (« the pipeline set out here », « the dependency being described ») : le pipeline et l'argumentaire sont de Derrick Kitwe, pas de Morgan Otita qui republie, aucun des deux ne se voit attribuer les mots de l'autre. *Mise en forme* — relue à l'écran avant publication (2 paragraphes séparés, aucune troncature). **Publié et confirmé** : horodatage « maintenant », texte relu dans la page, éditeur vidé.
+
+> The pipeline set out here runs from detection to deployment, but the published record only ever documents the first link. Working from WHO, Africa CDC and ECDC bulletins, what reaches me is case counts, districts and dates. Nothing in that record says whether a countermeasure existed, how long it took to arrive, or where it was made.
+>
+> So the dependency being described is real but structurally invisible in the data everyone cites. It never appears as a number that moves, which is part of why it stays so easy to defer.
+
+### 💬 Commentaire 2/7 — Tambe Elvis Akem, MD (`/in/tambe-elvis-akem/`)
+*Medical Field Epidemiologist | Immunization | Outbreak Response | Humanitarian Health | AI for Public Health*, **1er degré, vérifié**, 18 000+ abonnés. Post de **1 j** (fenêtre 48h respectée), 22 réactions, 4 commentaires, 1 republication. **Blocage hebdomadaire expiré** : dernier commentaire chez lui le 04/08, réouverture au 11/08, aucun depuis.
+
+**§5 pré-check — commentaires existants lus en entier** : 2 commentaires de tiers (Larry Kerr, *Global Health and National Security Executive*, « Very thorough assessment… » ; Gebeyehu Taye, « Nice report ») et 2 remerciements de l'auteur. **Aucun angle analytique déjà publié**, aucun recoupement à craindre.
+
+**Verbatim du post (extrait décisif)** : « *Three months on, the Bundibugyo virus disease outbreak remains in an expansion phase. […] The central message is clear: interrupting transmission will require earlier detection, sustained active case search, stronger contact follow-up, reliable IPC and treatment capacity, sustained support for responders, and anticipatory action along emerging mobility corridors.* » Newsletter *Immunization for Resilience*, couverture datée **15 August 2026, data as of 11 August 2026**.
+
+**Angle** : trois des six leviers de sa conclusion (détection précoce, recherche active de cas, suivi des contacts) portent tous sur le raccourcissement d'un intervalle, et c'est précisément la dimension que la couche publiée ne porte pas. Un cas détecté à J+2 et un cas détecté à J+20 arrivent tous les deux sous la forme d'un cas confirmé de plus, rattaché à une date de publication. L'expansion géographique, elle, se voit immédiatement puisqu'elle change une carte : une riposte devenue plus rapide ressemble exactement à une riposte qui ne l'est pas devenue.
+
+**Double-check (§5)** : *contenu* — EN ✅ (langue du post) ; **aucun chiffre ni date repris** ✅ (les chiffres de la newsletter ne sont pas lisibles en texte dans le post et n'ont pas été extraits d'image, conformément à §8) ; aucun tiret cadratin ✅ ; pas de CTA, pas de lien ✅ ; 2 paragraphes, 6 phrases ✅. *Raisonnement* — **une première version disait « cinq des six », recomptée et corrigée à « trois »** : capacité IPC/traitement et soutien aux intervenants ne sont pas des variables de délai, l'inférence de départ était fausse alors que la liste était exacte (piège §5.2 exactement). *Mise en forme* — relue à l'écran avant publication. **Publié et confirmé** : horodatage « maintenant », texte relu intégralement dans la page, 2 paragraphes séparés, éditeur vidé.
+
+> Three of the things on that list, earlier detection, sustained active case search and stronger contact follow up, are all about shortening an interval. That is the one dimension the published record barely carries. A case found on day two and a case found on day twenty both reach me as one more confirmed case attached to a publication date.
+>
+> So the variable your central message turns on is the one that cannot be watched moving from the outside. Geographic expansion registers immediately, because it changes a map. A response that got faster this month looks exactly like one that did not.
+
+### 💬 Commentaire 3/7 — World Health Organization African Region (page, `/company/world-health-organization-african-region/`)
+Page institutionnelle, 19 h (fenêtre 48h respectée), 41 réactions, **2 commentaires existants lus en entier** (§5 pré-check) : un seul visible, `@strokesurvivorsfoundation` de Hayley Porter, hors sujet — **aucun angle analytique déjà publié**, aucun risque de redite. **Blocage hebdomadaire levé depuis le 12/08.**
+
+**⚠️ Slug** : `/company/who-africa/` renvoie vers `/company/unavailable/`. Le bon identifiant est `world-health-organization-african-region`, retrouvé par recherche d'entreprise (§12, identification par l'URL et non par le nom affiché).
+
+**Verbatim du post** : « *In Bangui, five countries: the Central African Republic, DRC, Republic of the Congo, South Sudan and Uganda, reaffirmed their commitment to stronger cross-border cooperation, surveillance and preparedness to tackle #BundibugyoVirusDisease and other shared health threats.* »
+
+**Angle** : le transfrontalier est le bon niveau, précisément parce que la couche de publication est l'endroit où la frontière est la plus difficile à franchir. Chacun de ces cinq pays publie à sa propre cadence et avec sa propre date d'arrêt des données. Vu de l'extérieur, une épidémie qui traverse une région n'arrive donc pas comme une épidémie : elle arrive comme cinq séries nationales qui ne se recalent jamais tout à fait dans le temps, et les aligner tient davantage de l'estimation que de la lecture. Une courbe partagée unique serait un livrable très concret pour ce type de réunion.
+
+**Double-check (§5)** : *contenu* — EN ✅ (langue du post) ; aucun chiffre ni date ajouté ✅ ; aucun tiret cadratin ✅ ; pas de CTA, pas de lien ✅ ; 2 paragraphes, 4 phrases ✅. *Raisonnement* — **une première version ajoutait « et ses propres définitions de cas », retirée avant saisie** : sur une riposte régionale BVD, les définitions de cas sont généralement harmonisées par l'OMS, l'affirmation aurait été invérifiable de mon côté. Ne subsistent que la cadence et la date d'arrêt, deux choses réellement observables en agrégeant les bulletins nationaux ✅. *Mise en forme* — relue à l'écran avant publication (2 paragraphes séparés, aucune troncature). **Publié et confirmé** : horodatage « maintenant », texte relu intégralement dans la page, éditeur vidé.
+
+> Cross-border is the right level, because the reporting layer is where the border is hardest to cross. Each of those five countries publishes on its own cadence and with its own cut-off date.
+>
+> So from the outside, one epidemic moving across a region does not arrive as one epidemic. It arrives as five national series that never quite line up in time, and lining them up is closer to guesswork than to reading. A single shared curve would be a very concrete thing to come out of a meeting like this.
+
+### 🔎 Recherche de cibles de commentaire — pourquoi le quota s'arrête à 3/7
+Trois méthodes épuisées avant de conclure (le quota est un objectif, pas un plafond — mais la barre de pertinence prime) :
+1. **Recherche de contenu filtrée sur 24 h** : « surveillance épidémiologique » → **0 résultat** ; « Ebola » → **3 résultats** (une plateforme de dons associative, un fact-check de chimiste sur une infographie virale, un appel aux dons) ; « outbreak surveillance » → **3 résultats** (Cyclospora aux États-Unis, le même fact-check, un post sur les ravageurs invasifs). Volume anormalement bas, cohérent avec un dimanche matin.
+2. **Fil d'actualité** déroulé : 5 posts non sponsorisés seulement, dont 3 sur cible mais **tous sous blocage hebdomadaire** (Africa CDC, Dr. Jean Kaseya, Julien Harneis/ALIMA).
+3. **27 notifications** dépouillées une à une pour retrouver les publications récentes des profils suivis. Les seuls comptes sur cible libres de blocage et ayant publié dans la fenêtre étaient Morgan Otita, Tambe Elvis Akem et WHO AFRO — les trois commentés.
+
+**Cible vérifiée puis abandonnée** : *Global Health Otherwise* (page), post de 15 min résumant une étude BMC Medical Research Methodology de Luisa Enria et coll. sur la cartographie participative du pouvoir et de la confiance en Sierra Leone (Moyamba, Kambia, Kailahun). Sujet réellement pertinent, mais **aucun `urn:li:activity` n'est exposé sur la page de résultats de recherche** : post **non commentable** par la méthode fiable, cas déjà rencontré avec un post Africa CDC. Non poursuivi, conformément à la consigne de ne pas s'acharner.
+
+**Écartés pour non-pertinence, blocage levé pourtant** : **Franklin MWAMBA** (blocage expiré aujourd'hui, mais sa publication du jour est un hommage `#InMemoriam` à un professeur d'université sur la notion de transaction en base de données — hors périmètre épidémiologie/santé publique, commenter aurait été déplacé), **Aïssata BARRY** (post de remerciement à Teun Bousema, sans contenu de fond).
+
 ## 📅 Session linkedin-hwg-followup-check — 15/08/2026 (16h)
 
 **Quotas à l'ouverture (cumul du jour 15/08, toutes routines)** : commentaires **4/7** ; connexions **4/7** ; suivis **2/7-10** ; DM à froid **8/8 REMPLI** (les 8 welcome DM validés par David et envoyés ce matin entre 10h51 et 11h04, plus 2 réponses en fil actif hors quota : Etienne Guenou 10h41 et Augustin Murhabazi 15h23).
