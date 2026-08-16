@@ -823,7 +823,13 @@ Objectif atteint : **10 contacts nets, aucun déjà présent dans les vagues 1-3
 
 **Aucune réponse institutionnelle reçue** sur les 66 messages partis dans la journée (10 nouveaux + 56 relances) : `in:inbox newer_than:2d` ne remonte qu'une alerte interne HealthWatch (`alerts@healthwatch-global.com`, clôture de pilote). Aucun accusé automatique, aucun refus, aucun autre bounce à cette heure — les relances peuvent encore en produire dans les heures qui suivent.
 
-**Bilan bounces cumulés depuis le 02/08 : 9** — WPRO et ZNPHI (02/08), AKHS (10/08), NCIPD/CORDS/EPHI (12/08), Lao TPHI (14/08), **MBDS et ISED (15/08)**. **181 contacts institutionnels effectivement délivrés sur 190 envoyés**, dont 1 récupérable (ISED, boîte pleine) et 8 définitivement perdus ou laissés de côté.
+~~**Bilan bounces cumulés depuis le 02/08 : 9** — WPRO et ZNPHI (02/08), AKHS (10/08), NCIPD/CORDS/EPHI (12/08), Lao TPHI (14/08), **MBDS et ISED (15/08)**. **181 contacts institutionnels effectivement délivrés sur 190 envoyés**, dont 1 récupérable (ISED, boîte pleine) et 8 définitivement perdus ou laissés de côté.~~
+
+> **Annoté le 2026-08-16 — session interactive (David).** ❌ **Ce total était faux : il manquait Colombo.** Le chiffre correct est celui de l'entrée `daily-relance-check-healthwatch` ci-dessus (l. 807) : **10 bounces cumulés**, dont **Colombo (`commed@med.cmb.ac.lk`, lot du 09/08, 550 5.1.1)**, jamais consigné à l'époque et découvert pendant le balayage de la corbeille du 15/08. **180 contacts effectivement délivrés sur 190 envoyés**, dont 1 récupérable (ISED, boîte pleine) et **9** définitivement perdus ou laissés de côté.
+>
+> **Cause — écriture concurrente, aucune des deux routines n'a fauté.** Le 15/08, `daily-institutional-prospecting-healthwatch` (2e déclenchement, session créée à 08:56:02Z) et `daily-relance-check-healthwatch` (08:56:23Z) ont tourné **en parallèle, à 21 secondes d'écart**, et ont chacune écrit un bilan « cumulé » dans ce fichier. La prospection ne pouvait pas connaître Colombo : la relance-check le découvrait au même moment. Dans l'ordre du fichier, c'est pourtant le total erroné qui était écrit en dernier, donc celui qu'une relecture du lendemain aurait repris.
+>
+> **Règle adoptée (voir SKILL des deux routines, 16/08) : le bilan cumulé de bounces a un porteur unique, `daily-relance-check-healthwatch`.** Les autres routines listent leurs bounces du jour nominativement, sans jamais retotaliser. Et tout total cumulé est **recalculé depuis la liste nominative** au moment de l'écrire, jamais reporté de mémoire d'un run à l'autre — c'est la liste qui fait foi, et c'est elle qui a permis de trancher ici.
 
 **Total cumulé inchangé au 2026-08-15 : 190 prospectés, 190 envoyés, file de brouillons vide.** Le frein de file ne s'appliquera pas au prochain run.
 
