@@ -300,9 +300,19 @@ async function updateSatelliteCountry(supabase: any, countryEn: string, cases: n
   // owned by a higher-priority source) is visible as 0 affected rows —
   // without it, a blocked update still returns error: null and this function
   // would return true (success) even though nothing changed. Found 2026-07-15.
+  const desc = buildSatelliteDescriptions(countryEn, cases, deaths, date);
   const { data: updatedRows, error } = await supabase
     .from("outbreaks")
-    .update({ cases, deaths, date, source, updated_at: new Date().toISOString(), source_priority: 5 })
+    .update({
+      cases, deaths, date, source,
+      description:     desc.en,
+      description_fr:  desc.fr,
+      description_es:  desc.es,
+      description_ar:  desc.ar,
+      description_id:  desc.id,
+      updated_at:      new Date().toISOString(),
+      source_priority: 5,
+    })
     .eq("id", row.id)
     .lte("source_priority", 5)
     .select("id");
@@ -317,6 +327,50 @@ async function updateSatelliteCountry(supabase: any, countryEn: string, cases: n
   }
   console.log(`[drc-sitrep] ✅ ${countryEn}: ${cases} cas / ${deaths} décès / ${date}`);
   return true;
+}
+
+// ── 3bis. Multi-locale descriptions ──────────────────────────────────────────
+// Generated directly (not via translation API) so description_fr/es/ar/id can
+// never freeze out of sync with `description` the way a NULL-gated translation
+// backfill can — same rationale as check-mpox-sitrep's buildGlobalDescriptions/
+// buildDrcDescriptions, and the exact defect (item 15) this route was flagged
+// for by daily-security-audit-healthwatch since 2026-08-10: both .update()
+// calls below wrote cases/deaths/date without ever touching description.
+// Currently dead code — fetchLatestSitrep() is permanently disabled (see its
+// own comment) so neither updater can run — but fixed now so the defect can't
+// resurface silently if the sitrep source is ever reactivated.
+
+interface Descriptions { en: string; fr: string; es: string; ar: string; id: string; }
+
+function buildMainDescriptions(cases: number, deaths: number, date: string): Descriptions {
+  const c   = cases.toLocaleString("en");
+  const d   = deaths.toLocaleString("en");
+  const cfr = cases > 0 ? ((deaths / cases) * 100).toFixed(1) : "0.0";
+  return {
+    en: `Ebola disease caused by Bundibugyo virus in the Democratic Republic of the Congo. WHO situation report: ${c} confirmed cases and ${d} deaths cumulative, a case fatality ratio of ${cfr}%, as of ${date}. Declared a Public Health Emergency of International Concern (PHEIC). Source: WHO Ebola DRC situation report.`,
+    fr: `Maladie à virus Ebola causée par le virus Bundibugyo en République démocratique du Congo. Rapport de situation OMS : ${c} cas confirmés et ${d} décès cumulés, soit un taux de létalité de ${cfr.replace(".", ",")} %, au ${date}. Déclarée Urgence de Santé Publique de Portée Internationale (USPPI). Source : rapport de situation OMS sur l'épidémie d'Ebola en RDC.`,
+    es: `Enfermedad del Ébola causada por el virus Bundibugyo en la República Democrática del Congo. Informe de situación de la OMS: ${c} casos confirmados y ${d} muertes acumuladas, una tasa de letalidad del ${cfr.replace(".", ",")} %, al ${date}. Declarada Emergencia de Salud Pública de Importancia Internacional (ESPII). Fuente: informe de situación de la OMS sobre el Ébola en la RDC.`,
+    ar: `مرض الإيبولا الناجم عن فيروس بونديبوغيو في جمهورية الكونغو الديمقراطية. تقرير حالة منظمة الصحة العالمية: ${c} حالة مؤكدة و${d} حالة وفاة تراكمية، بمعدل إماتة ${cfr}%، حتى ${date}. أُعلن طارئة صحية عامة تثير قلقاً دولياً. المصدر: تقرير حالة منظمة الصحة العالمية بشأن الإيبولا في جمهورية الكونغو الديمقراطية.`,
+    id: `Penyakit Ebola yang disebabkan oleh virus Bundibugyo di Republik Demokratik Kongo. Laporan situasi WHO: ${c} kasus terkonfirmasi dan ${d} kematian kumulatif, tingkat fatalitas kasus ${cfr}%, per ${date}. Dinyatakan sebagai Kedaruratan Kesehatan Masyarakat yang Meresahkan Dunia (PHEIC). Sumber: laporan situasi WHO tentang Ebola di RD Kongo.`,
+  };
+}
+
+const SATELLITE_COUNTRY_NAMES: Record<string, { fr: string; es: string; ar: string; id: string }> = {
+  Uganda: { fr: "en Ouganda",   es: "en Uganda",  ar: "في أوغندا",  id: "di Uganda" },
+  France: { fr: "en France",    es: "en Francia", ar: "في فرنسا",   id: "di Prancis" },
+};
+
+function buildSatelliteDescriptions(countryEn: string, cases: number, deaths: number, date: string): Descriptions {
+  const c     = cases.toLocaleString("en");
+  const d     = deaths.toLocaleString("en");
+  const names = SATELLITE_COUNTRY_NAMES[countryEn] ?? { fr: `en ${countryEn}`, es: `en ${countryEn}`, ar: `في ${countryEn}`, id: `di ${countryEn}` };
+  return {
+    en: `Ebola disease caused by Bundibugyo virus — cases linked to the Democratic Republic of the Congo outbreak, reported in ${countryEn}. WHO situation report: ${c} cumulative confirmed cases and ${d} deaths in ${countryEn}, as of ${date}. Source: WHO Ebola DRC situation report.`,
+    fr: `Maladie à virus Ebola (souche Bundibugyo) — cas liés à l'épidémie de République démocratique du Congo, signalés ${names.fr}. Rapport de situation OMS : ${c} cas confirmés cumulés et ${d} décès ${names.fr}, au ${date}. Source : rapport de situation OMS sur l'épidémie d'Ebola en RDC.`,
+    es: `Enfermedad del Ébola (cepa Bundibugyo) — casos vinculados al brote de la República Democrática del Congo, notificados ${names.es}. Informe de situación de la OMS: ${c} casos confirmados acumulados y ${d} muertes ${names.es}, al ${date}. Fuente: informe de situación de la OMS sobre el Ébola en la RDC.`,
+    ar: `مرض الإيبولا (سلالة بونديبوغيو) — حالات مرتبطة بتفشي جمهورية الكونغو الديمقراطية، أُبلغ عنها ${names.ar}. تقرير حالة منظمة الصحة العالمية: ${c} حالة مؤكدة تراكمية و${d} حالة وفاة ${names.ar}، حتى ${date}. المصدر: تقرير حالة منظمة الصحة العالمية بشأن الإيبولا في جمهورية الكونغو الديمقراطية.`,
+    id: `Penyakit Ebola (galur Bundibugyo) — kasus terkait wabah Republik Demokratik Kongo, dilaporkan ${names.id}. Laporan situasi WHO: ${c} kasus terkonfirmasi kumulatif dan ${d} kematian ${names.id}, per ${date}. Sumber: laporan situasi WHO tentang Ebola di RD Kongo.`,
+  };
 }
 
 // ── 4. Email helpers ──────────────────────────────────────────────────────────
@@ -508,6 +562,7 @@ async function runSyncDrcSitrep(_req: NextRequest, supabase: SupabaseClient) {
     // "✅ auto-updated" admin email went out quoting figures that were never written.
     // The satellite path got this treatment on 2026-07-15; this one, the priority-10
     // Ebola DRC PHEIC row itself, was missed at the time.
+    const desc = buildMainDescriptions(data.cases, data.deaths, data.date);
     const { data: updatedRows, error } = await supabase
       .from("outbreaks")
       .update({
@@ -515,6 +570,11 @@ async function runSyncDrcSitrep(_req: NextRequest, supabase: SupabaseClient) {
         deaths:          data.deaths,
         date:            data.date,
         source:          latest.pdfUrl ?? latest.pageUrl,
+        description:     desc.en,
+        description_fr:  desc.fr,
+        description_es:  desc.es,
+        description_ar:  desc.ar,
+        description_id:  desc.id,
         active:          true,
         updated_at:      new Date().toISOString(),
         source_priority: 10,
