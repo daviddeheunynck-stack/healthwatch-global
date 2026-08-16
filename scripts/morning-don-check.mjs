@@ -162,13 +162,36 @@ if (suspicious.length) {
 // et Ebola/Allemagne jusqu'au 23/07, Choléra/Tchad jusqu'au 22/07). Cadence hebdo (>7j) comme la
 // section 5 : ne jamais déverrouiller sans vérifier pourquoi la ligne a été mise à ce niveau, voir
 // SKILL.md section "5 bis" pour la procédure (pas de fetch pré-construit, recherche au cas par cas).
+// Vérification faite, source inchangée → aucune écriture, donc `updated_at` ne bouge pas et la
+// ligne se re-signale tous les matins indéfiniment. Exactement le même trou que celui déjà comblé
+// pour la section 5 (MANUAL_ROW_CHECKED) et les clusters (CLUSTER_EDITION_CHECKED) — il manquait
+// ici, constaté le 16/08 sur Choléra/RCA (vérifiée ce jour-là, rien de plus récent que le bilan
+// du 05/08 déjà en base, donc rien à écrire, mais la ligne serait ressortie "9j — À VÉRIFIER" le
+// lendemain). Même garde-fou que les deux autres maps : ne bumper une date qu'après avoir
+// réellement consulté la source primaire, jamais pour faire taire une ligne.
+const FROZEN_ROW_CHECKED = {
+  // Choléra/RCA : vérifié le 16/08. Le bilan le plus récent publiable reste 720 cas / 46 décès
+  // arrêté au 05/08 (Africa24, déjà cité en base). Rien de plus récent : la couverture RCA se
+  // limite à la chronologie déjà connue (197 cas / 24 décès à la déclaration du 26/06, puis
+  // 436/37 au 14/07, puis 720/46 au 05/08). Le communiqué UNICEF du 12/08 sur l'Afrique de
+  // l'Ouest/Centre ne chiffre pas la RCA (déjà écarté le 15/08 pour la même raison). Rien à écrire.
+  "d2db38cc-f638-456a-bc7b-0d48f904b408": "2026-08-16",
+};
 console.log("\n=== Lignes actives à source_priority=10, hors clusters de seeds connus (>7j = à vérifier) ===");
 const frozenNonSeed = active.filter((o) => o.source_priority === 10 && !o.is_seed);
 if (frozenNonSeed.length) {
   frozenNonSeed.forEach((o) => {
-    const ageDays = Math.round((Date.now() - new Date(o.updated_at).getTime()) / 864e5);
+    const checked = FROZEN_ROW_CHECKED[o.id];
+    const lastSeen = Math.max(
+      new Date(o.updated_at).getTime(),
+      checked ? new Date(checked).getTime() : 0
+    );
+    const ageDays = Math.round((Date.now() - lastSeen) / 864e5);
+    const via = checked && new Date(checked).getTime() > new Date(o.updated_at).getTime()
+      ? " (dernière vérif sans changement)"
+      : "";
     const status = ageDays > 7 ? "À VÉRIFIER" : "skip (vérifiée récemment)";
-    console.log(`[${o.id}] ${o.disease_en || o.disease} | ${o.country_en || o.country} | ${ageDays}j — ${status} | date=${(o.date || "").slice(0, 10)} | src=${(o.source || "").slice(0, 50)}`);
+    console.log(`[${o.id}] ${o.disease_en || o.disease} | ${o.country_en || o.country} | ${ageDays}j${via} — ${status} | date=${(o.date || "").slice(0, 10)} | src=${(o.source || "").slice(0, 50)}`);
   });
 } else {
   console.log("Aucune.");
@@ -490,7 +513,10 @@ const MANUAL_ROW_CHECKED = {
   // décrit toujours la notification du 30/06 sans aucune mention de clôture ; WebSearch d'une
   // déclaration ougandaise ne remonte que la clôture Ebola du 28/07 (événement distinct). Toujours
   // 1 cas / 1 décès, rien à écrire, ligne laissée active.
-  "b17d4fda-c38c-41c0-9b26-e60a54c1851b": "2026-08-11",
+  // Revérifié le 16/08 (même passage que le watch de clôture ci-dessous) : la page gov.uk, toujours
+  // datée du 13/08, décrit encore la seule notification du 30/06 à Kyegegwa et la classe en incident
+  // en cours, sans aucun cas supplémentaire ni déclaration de fin. Toujours 1 cas / 1 décès.
+  "b17d4fda-c38c-41c0-9b26-e60a54c1851b": "2026-08-16",
   // Diphtérie/Australie : vérifié le 13/08 via le Browser pane. Le rapport le plus récent de la
   // collection reste celui du 27/07/2026 (déjà en base : 475 cas confirmés / 1 décès), donc rien
   // à écrire. ⚠️ CHANGEMENT DE CADENCE annoncé dans la « Collection description » de la page de
@@ -586,7 +612,13 @@ if (!anyDue) console.log("(aucune ligne due cette semaine)");
 // ⚠️ Ne bumper cette date qu'après avoir réellement cherché la déclaration.
 const MARBURG_UGANDA_ID = "b17d4fda-c38c-41c0-9b26-e60a54c1851b";
 const MARBURG_CLOSURE_WATCH_FROM = "2026-08-11";
-const MARBURG_CLOSURE_LAST_CHECK = "2026-08-13"; // gov.uk (maj 13/08) : toujours le seul cas du 30/06, aucune clôture annoncée
+// ⚠️ FAUX POSITIF À NE PAS ROUVRIR (rencontré le 16/08) : une WebSearch « Uganda Marburg outbreak
+// declared over » remonte en bonne place l'article AFRO `afro.who.int/news/marburg-virus-disease-
+// outbreak-uganda-over` — il date du **8 décembre 2017** (épidémie Kween/Kapchorwa), pas de 2026.
+// Le résumé de recherche l'accompagnait d'un « 20 confirmed cases and 2 deaths » qui ne correspond
+// à AUCUNE épidémie ougandaise réelle (2017 : 3 cas ; 2025 : 14 confirmés / 2 décès ; 2026 : 1 cas).
+// Toujours vérifier la date de publication de cet article avant de conclure à une clôture.
+const MARBURG_CLOSURE_LAST_CHECK = "2026-08-16"; // gov.uk (maj 13/08, inchangée au 16/08) : toujours le seul cas du 30/06 à Kyegegwa, listé en incident en cours, aucune clôture annoncée
 const MARBURG_CLOSURE_RECHECK_DAYS = 3;
 console.log("\n=== Watch ponctuel : fenêtre de clôture Marburg/Ouganda (42j depuis notification 30/06) ===");
 const marburgRow = active.find((o) => o.id === MARBURG_UGANDA_ID);
