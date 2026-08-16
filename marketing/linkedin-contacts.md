@@ -179,6 +179,27 @@ Revérification à froid des 6 brouillons avant validation, sur demande explicit
 - **Structure des 6 messages revérifiée** : chacun ouvre bien sur le bon destinataire, aucun doublon de paragraphe, aucune troncature visible dans le texte archivé.
 **Conclusion : les 6 brouillons sont confirmés prêts à l'envoi tels quels, sans correction.**
 
+### ✅ Les 6 DM validés et envoyés (session interactive, ordre explicite « envoie les dms »)
+Envoi un par un, destinataire vérifié dans l'en-tête/chip du composeur **dans le même appel JS que le clic d'envoi** (§5.4), texte relu intégralement avant chaque envoi, éditeur vidé et confirmé après.
+
+1. **Celestin Nzanzu Mudogo** — 17:16, réponse en fil actif, CTA inclus. Envoyé du premier coup, texte identique au brouillon.
+2. **Marcel Muamba** — 17:22, réponse en fil actif, CTA inclus. **⚠️ Typo introduite en cours de frappe repérée et corrigée avant envoi** (§5.3) : « Ce qui j'agrège » au lieu de « Ce que j'agrège », puis un espace manquant après la première correction (« Ce quej'agrège », « j'agrègeest ») — deux passages de correction via double-clic + retype, texte final revérifié caractère près identique au brouillon (1526 caractères) avant le clic d'envoi.
+3. **Nadine Tamkimadji** — 17:25, réponse en fil actif, CTA inclus. Texte passé du premier coup, coche de livraison confirmée à l'écran après envoi.
+4. **Justin-Bienvenu EYONG** — 17:28, message de bienvenue, sans CTA (premier contact froid). Nouveau fil créé via composeur, aucun fil préexistant (le « 30 juin » affiché brièvement au chargement était l'écran de composeur vide, pas un ancien échange).
+5. **ABDELHAK OUMAR** — 17:31, message de bienvenue, sans CTA. Recherche typeahead a renvoyé 2 faux positifs (« Abdelhak El Oumari », « Abdelhak Oumari », tous deux 3e degré sans titre) écartés au profit du bon résultat (1er degré, titre confirmé).
+6. **Ngoy Guillaume** — 17:34, message de bienvenue, sans CTA. Recherche typeahead a renvoyé 5 faux positifs (« Guillaume Ngoy » sous plusieurs variantes, 3e degré) écartés au profit du bon résultat (1er degré, titre confirmé).
+
+**Incidents techniques récurrents pendant la frappe** : plusieurs `computer type`/`key` ont retourné un timeout CDP (« Input.dispatchKeyEvent »/« Input.insertText » … timed out ») sans que la frappe échoue réellement — à chaque occurrence, vérifié par lecture directe du contenu de l'éditeur (`javascript_tool`) après un `select_browser` de récupération, et le texte s'était bien inséré. Aucune perte de texte, aucun doublon.
+
+**Quota du jour mis à jour : DM à froid 5/8 → 8/8 REMPLI** (3 welcome DM ajoutés : Justin-Bienvenu EYONG, ABDELHAK OUMAR, Ngoy Guillaume). Les 3 réponses en fil actif restent hors quota froid.
+
+### ⚠️ Nouvelle réponse reçue en cours de session — Dr. Ibrahima Socé Fall (non traitée, hors périmètre de l'ordre d'envoi)
+En vérifiant la messagerie après les 6 envois, réponse substantielle reçue à 17:21-17:22 dans le fil déjà existant (welcome DM du 15/08, 14:02) :
+> *« Hi David You point is so relevant. We need to connect sometime and talk about it. We are investing a lot in the health workforce development for surveillance, preparedness and response. »*
+> *« This is of we started the weekly bulletin on health emergencies in the African Region when I was Regional Emergency Director »* + un lien/document partagé (aperçu non ouvert, contenu non lu).
+
+**⚠️ Proposition implicite d'échange direct (« We need to connect sometime and talk about it »)** de la part d'un contact senior (CEO Institut Pasteur de Dakar, ancien Assistant Director-General de l'OMS) — relève de §3 (proposition de canal/échange à signaler explicitement, ne jamais s'engager de sa propre initiative). **Aucun brouillon rédigé, aucune action prise** : nécessite une lecture complète du document partagé et l'arbitrage de David avant toute réponse, hors scope de l'instruction « envoie les dms » qui portait sur les 6 brouillons déjà validés. À traiter en priorité à la prochaine session ou par David directement.
+
 ---
 
 ## 📅 Session linkedin-hwg-monitoring — 16/08/2026 (matin)
