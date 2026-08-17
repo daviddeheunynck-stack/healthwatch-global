@@ -108,7 +108,12 @@
    - **Suivi confirmé** : seul bouton rattaché à son propre bloc de contexte, passé à « **Suivi** » après clic (vérification restreinte aux boutons dont le contexte le nomme, pour ne pas lire par erreur l'état d'un bouton de la sidebar Premium).
    - **⭐ Excellente cible de connexion** dès demain (quota connexions du jour rempli à 7/7), et **cible de réponse en commentaire** (voir carry-over).
 
-### 🔒 DM EN ATTENTE DE VALIDATION — 1 brouillon nouveau (réponse en fil actif, **hors quota froid**)
+### ✅ DM 4 VALIDÉ ET ENVOYÉ (session interactive, ordre explicite « envoie »)
+
+**Abou A. SOUMAH — envoyé 17:31**, réponse en fil actif, tutoiement (David : « tutoie-le s'il me tutoie »), CTA volontairement absent (déjà envoyé à 16:58, anti-répétition). Texte identique au brouillon (2 paragraphes, 557 caractères). **1 timeout CDP `Input.dispatchKeyEvent`** pendant la frappe du 1er paragraphe, vérifié par lecture directe de l'éditeur après re-`select_browser` avant de poursuivre : aucune perte, aucun doublon. Destinataire vérifié dans l'en-tête du composeur dans le même appel JS que le clic d'envoi (§5.4).
+
+<details>
+<summary>Brouillon archivé avant envoi (texte original, pour référence)</summary>
 
 #### 🔒 DM 4 — **Abou A. SOUMAH** (FR) — réponse en fil actif, nouvelle réponse reçue à 17:14
 `/in/abou-a-soumah-9911a634/` — **fil relu intégralement (§4)**, nouvelle réponse détectée après l'envoi de 16:58 (voir DM 2 ci-dessus), postérieure de 16 minutes.
@@ -128,6 +133,8 @@
 > Merci Abou, cette histoire de moment d'extraction est en fait la réponse la plus honnête possible : ça veut dire que l'écart entre ton chiffre interne et le bulletin public n'est pas une erreur de l'un ou de l'autre, juste deux instantanés pris à des heures différentes du même flux.
 >
 > Question du coup : de ton côté, ton extraction arrive-t-elle généralement avant ou après la publication du bulletin officiel ? Si tu vois les chiffres du ministère avant qu'ils ne sortent en public, ça change beaucoup ce qu'un « écart » veut dire d'un jour sur l'autre.
+
+</details>
 
 ### 💬 Messages reçus traités SANS brouillon (décision assumée)
 - **Marcel Muamba** (12h53) — « *D'accord David. Merci beaucoup😊* ». **Fil relu (8 messages)**. Formule de politesse de clôture, aucune question, aucun contenu neuf. Il s'était engagé au message précédent (11h41) à aller vérifier le circuit documentaire de l'alerte en RDC : **la balle est dans son camp**, et une réponse du type « merci à vous » n'ajouterait rien. Lien + essai Pro déjà envoyés dans ce fil (anti-répétition de toute façon active). **Aucun brouillon, aucun quota consommé.**
