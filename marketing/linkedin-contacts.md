@@ -136,7 +136,12 @@
 
 </details>
 
-### 🔒 DM EN ATTENTE DE VALIDATION — 1 nouveau brouillon (réponse en fil actif, **hors quota froid**)
+### ✅ DM 5 VALIDÉ ET ENVOYÉ (session interactive, ordre explicite « envoie »)
+
+**Abou A. SOUMAH — envoyé 17:49**, réponse en fil actif, tutoiement, CTA volontairement absent (3e message consécutif sans CTA, anti-répétition). Texte identique au brouillon corrigé (2 paragraphes, 631 caractères). **⚠️ Piège technique rencontré** : après un 1er clic dans le champ, l'éditeur restait figé à 1 caractère (`\n`, état vide normal de ce composeur, mais non détecté comme « prêt à taper » par le 1er clic) — texte parti dans le vide comme lors de l'incident du 16/08 après un scroll. **Détecté avant tout envoi** par lecture directe de l'éditeur, aucune retape à l'aveugle : re-clic dans le champ, focus vérifié (`document.activeElement`), puis nouvelle saisie réussie. **2 timeouts CDP** supplémentaires pendant la frappe des 2 paragraphes, à chaque fois vérifiés par lecture de l'éditeur après re-`select_browser` avant de poursuivre : aucune perte, aucun doublon.
+
+<details>
+<summary>Brouillon archivé avant envoi (texte original, pour référence)</summary>
 
 #### 🔒 DM 5 — **Abou A. SOUMAH** (FR, tutoiement) — réponse en fil actif, nouvelle réponse reçue à 17:36
 `/in/abou-a-soumah-9911a634/` — **fil relu intégralement (§4) : 6 messages**, remontés jusqu'au premier. Nouvelle réponse détectée lors du contrôle final de session (« check une dernière fois »), 5 minutes après l'envoi de 17:31.
@@ -156,6 +161,8 @@
 > Merci Abou, le partage de source change la question : si les deux tableaux de bord partent des mêmes listes linéaires des CTE, alors le calendrier d'extraction n'est peut-être plus le seul facteur, il y a aussi ce que chaque dashboard retient ou pas de cette même liste.
 >
 > Une clarification si tu as le temps : quand tu dis que ton sitrep est celui de « l'intersection », tu veux dire qu'il rassemble ce que plusieurs sections rapportent chacune de leur côté, ou qu'il ne retient que les cas confirmés à la fois par le terrain et par le tableau de bord central ? Les deux lectures changent beaucoup ce que représente ton chiffre.
+
+</details>
 
 ### 💬 Messages reçus traités SANS brouillon (décision assumée)
 - **Marcel Muamba** (12h53) — « *D'accord David. Merci beaucoup😊* ». **Fil relu (8 messages)**. Formule de politesse de clôture, aucune question, aucun contenu neuf. Il s'était engagé au message précédent (11h41) à aller vérifier le circuit documentaire de l'alerte en RDC : **la balle est dans son camp**, et une réponse du type « merci à vous » n'ajouterait rien. Lien + essai Pro déjà envoyés dans ce fil (anti-répétition de toute façon active). **Aucun brouillon, aucun quota consommé.**
