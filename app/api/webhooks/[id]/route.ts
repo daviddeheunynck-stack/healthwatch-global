@@ -20,15 +20,29 @@ export async function PATCH(
     return NextResponse.json({ error: "Pro plan required" }, { status: 403 });
 
   const { id } = await params;
-  const body = await req.json() as { active?: boolean };
+  // The `as { active?: boolean }` cast was a compile-time assertion only: nothing
+  // checked the runtime type. A body of `{}` serialized `active: undefined`, which
+  // JSON.stringify drops — the update became a no-op that still answered
+  // `{ ok: true }`. A non-boolean value reached Postgres and came back as a raw
+  // driver 500 instead of a 400.
+  const body = await req.json().catch(() => null) as { active?: unknown } | null;
+  if (typeof body?.active !== "boolean")
+    return NextResponse.json({ error: "active must be a boolean" }, { status: 400 });
 
-  const { error } = await supabase
+  // .select("id") so an id that doesn't exist (or belongs to another user, which
+  // the user_id filter turns into the same 0-row outcome) is visible as 0 affected
+  // rows rather than reported as a successful toggle — same pattern the outbreaks
+  // writes use for their source_priority guard.
+  const { data: updated, error } = await supabase
     .from("webhooks")
     .update({ active: body.active })
     .eq("id", id)
-    .eq("user_id", user.id);
+    .eq("user_id", user.id)
+    .select("id");
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (!updated || updated.length === 0)
+    return NextResponse.json({ error: "Not found" }, { status: 404 });
   return NextResponse.json({ ok: true });
 }
 
