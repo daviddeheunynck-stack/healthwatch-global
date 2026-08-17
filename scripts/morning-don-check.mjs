@@ -213,8 +213,25 @@ if (frozenNonSeed.length) {
 // listée ici, le cluster ressort à chaque run, quelle que soit CLUSTER_EDITION_CHECKED.
 // Retirer l'entrée une fois la mise à jour appliquée (ou explicitement écartée par David).
 const CLUSTER_EDITION_PENDING = {
-  // (vide) — WER 101-31 appliqué le 10/08 sur ordre de David, voir
+  // Choléra : (vide) — WER 101-31 appliqué le 10/08 sur ordre de David, voir
   // scripts/fix-cholera-don579-cluster-wer101-31-2026-08-10.mjs.
+  //
+  // Chikungunya : NY State DOH Global Health Update du 13/08/2026 trouvé le 17/08 (données PAHO
+  // extraites le 13/08), plus récent que l'édition du 30/07 citée par les 5 lignes du cluster
+  // sourcées à PAHO. Écarts par rapport à la base : Brésil 110 569 → 116 095 cas et **50 → 47
+  // décès** (baisse assumée par l'éditeur : « the number of deaths reported in the region was
+  // reduced by 2 (in reported counts for Brazil) » — révision PAHO à la baisse, pas une erreur
+  // de lecture), Argentine 11 986 → 12 114 cas. Bolivie (41 944/27), Cuba (1 457/2) et Suriname
+  // (7 484/0) sont inchangés. Total Amériques 180 770 cas / 69 434 confirmés / 78 décès.
+  // ⚠️ Guyane française : le tableau PAHO donne 1 414 cas quand la base porte 1 222 — mais la
+  // ligne n'est PAS sourcée à PAHO, elle l'est au bulletin régional SPF du 23/07 (cas confirmés
+  // biologiquement). Deux cadrages différents, pas un retard : ne pas écraser le chiffre SPF
+  // avec celui de PAHO sans arbitrage (même piège que Rougeole/États-Unis CDC vs OPS).
+  // Maurice (Africa CDC, arrêté 12/07) et Mayotte (SPF, bulletin du 24/07) ne sont pas couverts
+  // par cette édition : elle ne traite Mayotte que pour le paludisme, et ne cite pas Maurice.
+  // Cluster → signalé à David, pas appliqué en autonomie (SKILL.md section 4 bis).
+  Chikungunya:
+    "NY DOH Global Health Update du 13/08/2026 (PAHO au 13/08) — Brésil 110569→116095 cas et 50→47 décès, Argentine 11986→12114 cas ; Bolivie/Cuba/Suriname inchangés. Guyane française : écart 1222 (SPF) vs 1414 (PAHO), cadrages différents, à arbitrer séparément.",
 };
 
 const CLUSTER_EDITION_CHECKED = {
@@ -223,10 +240,22 @@ const CLUSTER_EDITION_CHECKED = {
   // pays du cluster (Congo 651/34→767/49, RD Congo 28567/815→32193/908, Soudan du Sud
   // 7712/84→10526/111, Soudan 527/61→847/117). Chercher désormais le WER en priorité.
   Cholera: "2026-08-10",
-  // MERS-CoV : DON591 toujours le dernier ; ECDC (au 02/07/2026) confirme 2 cas / 1 décès.
-  "MERS-CoV": "2026-08-02",
-  // Chikungunya : NY State DOH Global Health Update du 30/07/2026 (données PAHO au 30/07).
-  Chikungunya: "2026-08-02",
+  // MERS-CoV : DON591 toujours le dernier ; revérifié le 17/08 sur la page « MERS-CoV worldwide
+  // overview » de l'ECDC, dont l'arrêté est passé au 03/08/2026 — toujours 2 cas / 1 décès en
+  // Arabie saoudite depuis le 1er janvier 2026, et toujours 2 649 cas / 960 décès dans le monde
+  // depuis avril 2012. Rien à écrire, ni sur le seed Arabie saoudite ni sur la ligne Global.
+  // ⚠️ Faux positif à ne pas rouvrir : une WebSearch « MERS Saudi Arabia August 2026 » remonte un
+  // récit de cas détaillé (homme de 50-55 ans, Région de l'Est, testé positif le 4 septembre,
+  // voyage au Pakistan le 2 septembre) et un « 5 cas / 4 décès depuis le début de l'année » —
+  // aucun des deux ne concerne 2026. Vérifier l'arrêté ECDC avant de conclure à une hausse.
+  "MERS-CoV": "2026-08-17",
+  // Chikungunya : NY State DOH Global Health Update du 13/08/2026 (données PAHO au 13/08),
+  // recherché le 17/08 via la page de listing globalhealthreports.health.ny.gov, qui liste
+  // l'édition la plus récente en premier. ⚠️ Le PDF n'est pas lisible par WebFetch (flux
+  // compressés) : WebFetch l'enregistre malgré tout en local et le chemin est retourné dans le
+  // résultat — c'est ce fichier qu'il faut passer à Read, qui gère les PDF nativement.
+  // Édition plus récente que celle en base → entrée ouverte dans CLUSTER_EDITION_PENDING.
+  Chikungunya: "2026-08-17",
 };
 console.log("\n=== Lignes actives à source_priority=10, DANS un cluster de seeds (>14j depuis la dernière recherche d'édition) ===");
 const frozenSeed = active.filter((o) => o.source_priority === 10 && o.is_seed);
