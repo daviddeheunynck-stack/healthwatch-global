@@ -84,6 +84,50 @@ Lecture seule de la prod (`.env.local.live`) pour chercher un angle : 112 lignes
 
 2. **paulabankunda@gmail.com** (WHO Uganda, pilote) — objet « Your WHO Uganda pilot — closing today ». Contexte : pilote clôturant le jour même (17/08 11h42 UTC), relance du 10/08 (proposition de session 45 min) restée sans réponse, silence depuis le 23/07 (cf. linkedin-contacts.md). Ton volontairement bas — clôture sans relance insistante, offre d'extension simple sur simple demande, porte laissée ouverte sans obligation de réponse. **Carry-over : aucune relance supplémentaire prévue sauf réponse de sa part ou nouvelle instruction de David.**
 
+## 📅 Session linkedin-hwg-followup-check — 17/08/2026 (16h)
+
+**Vérification double déclenchement** : aucune entrée de cette routine datée du 17/08 avant ouverture (dernière : 16/08) → **premier déclenchement du jour**.
+
+**Quotas à l'ouverture (cumul du jour)** : commentaires **7/7 — REMPLI** ; connexions **7/7 — REMPLI** ; suivis **8/7-10** ; DM à froid **2/8**.
+
+### 💬 COMMENTAIRES — section 5 SANS OBJET, aucun commentaire posté
+Le quota de 7 commentaires a été **entièrement consommé ce matin** par `linkedin-hwg-monitoring` (commentaires 1/7 à 7/7, jusqu'à Health Policy Watch marqué « quota REMPLI »). Conformément à la section 5, **aucune recherche active de posts à commenter n'a été menée** et rien n'a été publié. Deux cibles de qualité ont malgré tout été repérées au passage et sont reportées comme carry-over ci-dessous.
+
+### 📈 RETOMBÉES DES 7 COMMENTAIRES DU MATIN
+| Commentaire du matin | Retombée constatée à 16h |
+|---|---|
+| **1/7 — Global Health EDCTP3** (fièvre de la vallée du Rift, Rwanda) | Aucune réponse, aucune réaction |
+| **2/7 — Sohail Agha** (appel de Kinshasa, SBC absent) | Aucune réponse, aucune réaction |
+| **3/7 — Mohammad Ilias Hossain** (40 j vs 235 j) | Aucune réponse, aucune réaction |
+| **4/7 — MAYTAMOU Simon Pierre** (réponse à sa question, taux de positivité) | ✅ **Il a aimé notre commentaire ET répondu en nous mentionnant** : « *David Deheunynck C'est très clair, merci pour la nuance apportée qui s'avère très édifiante. Au plaisir de vous retrouver très prochainement* ». Remerciement de clôture, **aucune question** → aucune réponse due. Son post est à 5 réactions / 5 commentaires |
+| **5/7 — Institut National de Santé Publique RDC** (les 850 cas sans catégorie d'issue) | ✅ **La retombée la plus forte du jour.** Post passé à **15 réactions / 3 commentaires / 3 republications** ; notre commentaire à **1 réaction, 1 réponse, 59 impressions**. **Morgan Otita** (1er) a aimé le commentaire **et** nous a mentionnés : « *David Deheunynck good insights.* » (éloge, pas de question). Surtout, **trésor Ndaye** (*MD, MPH(e), GEP, Ministère de la santé publique Kinshasa*) reprend **notre calcul** de lui-même : « *Je rebondis sur la même préoccupation en suivant la hiérarchisation du tableau des indicateurs : 4095 Confirmé-730 Hospit -1 040 guéris-2 325 décès d'où un écart 850 cas confirmés non catégories. Une explication pourrait nous aider à comprendre* » |
+| **6/7 — Warren Parker** (field guide, autorité vs explication) | Aucune réponse, aucune réaction |
+| **7/7 — Health Policy Watch** (3 M$ Wellcome, cadence de publication) | Aucune réponse, aucune réaction |
+
+**Retombées sur des commentaires de sessions antérieures** (notifications du jour) : **Naturinda Emmanuel + 33 autres** ont réagi au commentaire sur la ventilation des 20 cas ougandais (15 importés, 5 soignants) — **34 réactions, le commentaire le plus performant relevé à ce jour** ; **Firdaus Kharas + 2 autres** ont aimé celui sur le délai de confirmation passé de cinq heures à environ une ; **Joao Santos** a aimé celui sur le podcast OMS Europe (institution vs artefact).
+
+**Post de marque du jour** (`linkedin-hwg-content-proposal`, WHO DON Bundibugyo / contacts non vus) : **41 impressions** à l'heure de la session. Tableau de bord du profil : **290 vues de profil**, **505 impressions de post**.
+
+### 🗒️ VEILLE — angles notés pour de futurs posts (non rédigés ici, hors périmètre)
+- **⭐ L'écart arithmétique validé de l'intérieur du ministère.** Notre lecture des 850 cas confirmés sans catégorie d'issue déclarée dans le sitrep INSP-RDC a été **reprise indépendamment par un cadre du ministère de la Santé RDC** (trésor Ndaye), qui demande publiquement une explication. C'est un angle de post particulièrement solide : non pas « j'ai trouvé une incohérence », mais « la question de savoir combien de dossiers restent ouverts n'a pas de réponse publique, et l'administration elle-même la pose ». À proposer à `linkedin-hwg-content-proposal`.
+- **INSP publie les sitreps, INRB publie de la recherche.** Vérifié en séance : la page **Institut National de Recherche Biomédicale** (3 941 abonnés, Kinshasa) ne publie **pas** de points de situation ; son dernier post (4 j) est un repartage du **Pandemic Sciences Institute** sur l'essai clinique **PARTNERS**, qui a dépassé **100 participants** environ 12 semaines après l'annonce du foyer Bundibugyo. Répartition des rôles utile à connaître, et matière d'angle sur la différence entre publier de la donnée de riposte et publier de la recherche.
+  - **⚠️ Slug piège** : `/company/institut-national-de-recherche-biomedicale/` (sans accent) → `/company/unavailable/`. Le bon slug **porte l'accent** : `/company/institut-national-de-recherche-biom%C3%A9dicale/`.
+- **Catherine Linard** (notification) : publication dans *One Health Outlook* d'un travail mené par **Ines Sopbue**, « *A participatory expert-based risk assessment to inform zoonotic disease surveillance in Cameroon* ». Évaluation participative du risque pour orienter la surveillance zoonotique : voisin méthodologique direct. **Cible de commentaire pour demain.**
+- **Dav Mulamba** (notification, 1 h) : « *Un enfant peut-il être considéré comme vacciné après avoir reçu une seule dose ? Cette question paraît simple. Pourtant, elle cache une distinction importante…* ». Angle définitionnel (ce que compte un indicateur de couverture vaccinale), transposable au débat cas suspect / cas confirmé. **Cible de commentaire possible**, à vérifier dans la fenêtre 48 h.
+- **MAYTAMOU Simon Pierre** : son post de formation Ebola (Resolve to Save Lives + **INSP RDC**) détaille les mauvaises pratiques historiques de détection et de PCI, dont « *attendre la confirmation du laboratoire pour signaler un cas suspect* ». Recoupe exactement le thème du délai de confirmation traité plusieurs fois cette semaine.
+
+### 🦠 DONNÉES ÉPIDÉMIOLOGIQUES — aucune écriture en base, aucun élément neuf
+Les chiffres du sitrep INSP-RDC ont été **revérifiés en séance** sur le post original, **en texte clair ET sur l'infographie** (`urn:li:activity:7495024797437837312`) : *Situation au 15 août 2026 | Publication du 16 août 2026*, **4 945 cas confirmés, 730 en isolement/hospitalisés, 1 040 guéris, 2 325 décès, létalité 47,0 %, suivi des contacts 85,3 %, 34 guéris en 24 h, 6 provinces, 55 zones de santé**. Identiques à ce que le matin avait relevé, donc **aucune donnée nouvelle**. Arithmétique refaite à la main : 730 + 1 040 + 2 325 = 4 095 ; 4 945 − 4 095 = **850** ; 2 325 / 4 945 = **47,02 %**, cohérent avec le taux affiché.
+
+**Aucune écriture effectuée**, position du matin reconduite sans changement : ligne RDC sous verrou `source_priority: 10`, et une page **LinkedIn** reste hors du périmètre de l'exception du 03/08 (réservée à @Com_mediasRDC et @MinSanteRDC lus directement). **Reste à l'arbitrage de David.**
+
+### 📋 CARRY-OVER POUR LA PROCHAINE SESSION
+1. **⭐ Répondre à trésor Ndaye** sous le post INSP-RDC (`urn:li:activity:7495024797437837312`) : il demande une explication de l'écart de 850 cas, depuis le ministère. **Non fait aujourd'hui uniquement parce que le quota commentaires était à 7/7** ; sa demande n'était en outre pas adressée nommément à David (contrairement à MAYTAMOU le matin), donc pas de dérogation justifiée. Page INSP-RDC commentée le 17/08 → **rouvre le 24/08** au titre de la règle hebdomadaire, mais une **réponse à un commentaire** dans un fil actif suit la logique de dérogation déjà appliquée deux fois cette semaine.
+2. **⭐ Connexion à trésor Ndaye** (`/in/tr%C3%A9sor-ndaye-0ba081b3/`) — quota connexions 7/7 aujourd'hui. Hook prêt et vérifié : son propre commentaire reprenant le calcul.
+3. **Dorine Ngono** (`/in/dorine-ngono/`) — carry-over du matin **non traité**, quota connexions déjà rempli à 7/7 à l'ouverture de cette session. La modale d'invitation ne s'ouvrait pas ce matin (2 clics, aucune invitation partie). Pertinence déjà validée, ne pas re-chercher.
+4. **Cibles de commentaire repérées** : Catherine Linard (One Health Outlook, surveillance zoonotique Cameroun) et Dav Mulamba (définition de « vacciné »).
+5. **5 invitations du matin toujours en attente** : yannick kamga, Danièle Sandra Yopa, Daniel Thierry Belinga Etogo, Evouna Armel, Amabo Franck Chi.
+
 ## 📅 Session linkedin-hwg-monitoring — 17/08/2026 (matin)
 
 **Vérification double déclenchement** : aucune entrée `linkedin-hwg-monitoring` datée du 17/08 dans ce fichier ni dans `linkedin-contacts.md` à l'ouverture (la seule entrée du 17/08 est celle de `linkedin-hwg-content-proposal`, 8h35, routine distincte qui ne consomme aucun quota d'engagement) → **premier déclenchement du jour**. **Quotas à l'ouverture (nouveau jour, cumul remis à zéro)** : commentaires **0/7** ; connexions **0/7** ; suivis **0/7-10** ; DM à froid **0/8**.

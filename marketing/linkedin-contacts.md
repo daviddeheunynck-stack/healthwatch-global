@@ -1,5 +1,109 @@
 > 📦 **Archive** : le détail du 24 juin au 16 juillet 2026 a été déplacé dans [linkedin-contacts-archive-avant17juillet.md](linkedin-contacts-archive-avant17juillet.md) le 23/07 pour garder ce fichier léger.
 
+## 📅 Session linkedin-hwg-followup-check — 17/08/2026 (16h)
+
+**Vérification double déclenchement** : aucune entrée de cette routine datée du 17/08 avant ouverture (la dernière est du 16/08) → **premier déclenchement du jour**.
+
+**Quotas à l'ouverture (cumul du jour, toutes routines)** : commentaires **7/7 — REMPLI** (les 7 postés par `linkedin-hwg-monitoring` ce matin) → **section 5 sans objet, aucune recherche de commentaire menée** ; connexions **7/7 — REMPLI** ; suivis **8/7-10** (marge de 2) ; DM à froid **2/8**. **File de validation DM à l'ouverture : 0 brouillon** (les 8 DM rédigés aujourd'hui ont tous été envoyés en session interactive sur ordre explicite de David, « envoie les dms » puis « envoie les trois »).
+
+**🖥️ État navigateur** : `browser-status.md` lu avant ouverture, dernière entrée `🔴` du **15/08** (pas du jour) → pas de bridage. `23c7ecdd-…` sélectionné directement (§7). **3 timeouts CDP `Page.captureScreenshot`**, tous résolus par un simple re-`select_browser` sur le même deviceId. **⚠️ Piège de clic rencontré et documenté** : sur une carte de conversation de la messagerie, `card.querySelector('a,button,…').click()` cible le bouton **« Ouvrir la liste des options »** (menu overflow contenant « Supprimer la discussion » et « Signaler / Bloquer »), pas la conversation. Le menu s'est ouvert, refermé immédiatement par `Escape`, **aucune option destructive cliquée**. Ouvrir un fil demande un vrai `computer left_click` sur la ligne, pas un clic JS sur le premier élément cliquable de la carte.
+
+---
+
+### 🔒 DM EN ATTENTE DE VALIDATION — 2 brouillons (réponses en fil actif, **hors quota froid**)
+
+#### 🔒 DM 1 — **Johan Verheyden** (FR) — réponse en fil actif, question directe
+`/in/jverheyden/` — *Founder and Chief Researcher*, **African Intelligence / Aries Consult**, Belge basé à **Nairobi**. **Partenaire existant et utilisateur HWG Pro actif** (accès Pro 1 an offert, compte `jverheyden@ariesconsult.eu`, mot de passe défini manuellement après deux blocages de lien de réinitialisation).
+
+**Fil relu intégralement (§4) : 20 messages**, remontés jusqu'au premier. Registre **tutoiement, familier, messages courts**.
+
+**Verbatim reçu (17/08, 15h55 puis 15h56)** : « *Bonjour* » puis « *Eat ce que tu sais ce qui se passe avec les sitrep de l'inrb-insp?* » (lire « Est-ce que tu sais… »).
+
+**⚠️ Ambiguïté assumée et traitée dans le brouillon** : impossible de savoir s'il parle d'une interruption de publication, d'une divergence de chiffres, ou d'un événement précis. Plutôt que d'improviser une interprétation (§3), le brouillon répond avec ce qui est **factuellement observé et vérifié**, dit explicitement ce qu'il ne sait pas (aucune visibilité sur l'INRB), et lui rend la question. **Il est chercheur/journaliste d'un média spécialisé** : le brouillon s'en tient donc strictement à des observations sur des documents publics, **aucune spéculation sur un dysfonctionnement institutionnel** qui pourrait être publiée en le citant.
+
+**Faits vérifiés en séance avant rédaction** (page `/company/insp-rdc/`, post `urn:li:activity:7495024797437837312`, lu **en texte clair ET sur l'infographie**, pas par OCR seul) : « Point de situation – 15 août 2026 », *Situation au 15 août 2026 | Publication du 16 août 2026* → **4 945 cas confirmés, 730 en isolement/hospitalisés, 1 040 guéris, 2 325 décès, létalité 47,0 %, suivi des contacts 85,3 %, 34 guéris en 24 h, 6 provinces (Bas-Uélé, Haut-Uélé, Ituri, Nord-Kivu, Sud-Kivu, Tshopo), 55 zones de santé, Ituri épicentre**. Ligne active en base HWG : **4 665 cas / 2 184 décès, arrêtée au 12/08, WHO DON615**.
+
+**§3 CTA — VOLONTAIREMENT ABSENT.** Anti-répétition maximale : le lien `healthwatch-global.com` a été envoyé **plusieurs fois** dans ce fil, et **Johan est déjà client/utilisateur Pro actif**. Reproposer un essai à quelqu'un qui a déjà un compte payant ouvert serait absurde autant que contraire à la règle du 07/08.
+
+**Double-check (§5)** : *contenu* — FR ✅ (fil intégralement en français, tutoiement respecté) ; chaque chiffre cité est **lu dans la source**, aucun calculé présenté comme sourcé ✅ ; aucun tiret cadratin ✅. *Raisonnement (§5.2)* — arithmétique **refaite à la main** : 730 + 1 040 + 2 325 = **4 095** ; 4 945 − 4 095 = **850** ✅ ; létalité 2 325 / 4 945 = 47,02 % ✅ cohérente avec les 47,0 % affichés. L'écart de 850 est présenté comme **probablement un délai de clôture, explicitement pas une anomalie** ✅. L'antériorité du sitrep national sur le DON est une comparaison de **dates de publication**, pas un jugement sur l'OMS ✅. *Mise en forme* — 4 paragraphes, à revérifier après saisie si David valide. *Destinataire* — à relire dans l'en-tête avant le clic (§5.4).
+
+> Salut Johan. Côté INSP je vois passer quelque chose, côté INRB rien du tout, donc dis-moi si c'est bien de ça que tu parles.
+>
+> Leur point de situation est arrivé sur leur page LinkedIn aujourd'hui : situation arrêtée au 15 août, publication datée du 16. 4 945 cas confirmés, 2 325 décès, létalité 47 %, suivi des contacts à 85,3 %, six provinces et 55 zones de santé. Ce qui me frappe, c'est que ça passe devant l'OMS : le dernier DON que j'ai en base est arrêté au 12 août et donne 4 665 cas et 2 184 décès. Le sitrep national est donc la source fraîche, et le canal international suit avec plusieurs jours de retard.
+>
+> Un détail relevé en le lisant : 730 en isolement, 1 040 guéris et 2 325 décès font 4 095, sur 4 945 confirmés. Il reste environ 850 cas sans catégorie d'issue déclarée. C'est probablement le délai de clôture des dossiers cliniques plutôt qu'une anomalie, mais ce délai n'est lui-même jamais publié comme une donnée à part entière.
+>
+> Côté INRB, leur page publie de la recherche plutôt que des points de situation : leur dernier post remonte à quatre jours et porte sur l'essai PARTNERS, qui a dépassé les cent participants. Les deux instituts ne semblent donc pas jouer le même rôle dans la publication. Tu constates quoi de ton côté, une interruption, ou des chiffres qui divergent entre les deux ?
+
+**🔎 Vérification INRB ajoutée en séance (renforce le brouillon)** : la page **Institut National de Recherche Biomédicale** existe bien (3 941 abonnés, Kinshasa) et **ne publie pas de points de situation** : son dernier post (4 j) est un repartage du **Pandemic Sciences Institute** sur l'essai clinique **PARTNERS**, qui a atteint plus de 100 participants ~12 semaines après l'annonce du foyer Bundibugyo. Le paragraphe final du brouillon a été réécrit sur cette base, remplaçant un simple « je n'ai aucune visibilité » par une observation vérifiée.
+- **⚠️ Slug piège, à retenir** : `/company/institut-national-de-recherche-biomedicale/` (sans accent) **redirige vers `/company/unavailable/`**. Le bon slug **porte l'accent** : `/company/institut-national-de-recherche-biom%C3%A9dicale/`. Même famille de piège que `africa-cdc`, `who-africa` et `eurosurveillance`.
+
+#### 🔒 DM 2 — **Abou A. SOUMAH** (EN) — réponse en fil actif ⚠️ **propose un rendez-vous physique**
+`/in/abou-a-soumah-9911a634/` — *Medical Epidemiologist*, **Epicentre – MSF**, basé à **Kinshasa**. Connecté et welcome DM envoyé ce matin même (12h36).
+
+**Fil relu intégralement (§4) : 2 messages** (mon welcome 12h36, sa réponse 12h43).
+
+**Verbatim reçu (12h43, intégral)** : « *Hi David, Nice to meet you and thanks for your message. The MSF/BALI SITREPs are internal. Do you want us to meet to discuss this week? Our offices are in Utex Africa if you're in Kinshasa.* »
+
+**⚠️ SIGNALÉ À DAVID (§3, proposition de rencontre hors plateforme)** : il propose un **rendez-vous physique dans les bureaux d'Epicentre/MSF à Utex Africa, Kinshasa, cette semaine**. Conformément à §3, le brouillon **ne s'engage sur aucun autre canal et ne partage aucune coordonnée personnelle de David** ; il décline sur un motif factuel et vrai (David est en France, pas à Kinshasa) sans fermer la porte, et relance sur le fond. **La décision d'aller plus loin, si l'occasion se représente, reste à l'arbitrage de David.**
+
+**§3 CTA — PRÉSENT, vérifié.** Sa réponse est **substantielle** (elle répond factuellement à ma question : les sitreps MSF/BALI sont internes) et il propose de lui-même d'approfondir, donc échange engagé au sens de §3, pas une simple politesse. **Anti-répétition vérifiée sur l'intégralité du fil (2 messages)** : le nom HWG a été envoyé une fois ce matin, **ni le lien ni l'essai Pro n'ont jamais été envoyés dans ce fil** (welcome DM volontairement sans lien, règle du premier contact) → CTA complet autorisé, amené depuis le point déjà présent dans l'échange (interne vs ce qui survit dans le dossier public).
+
+**Double-check (§5)** : *contenu* — EN ✅ (langue établie par lui) ; aucun chiffre, aucune date ✅ ; aucun tiret cadratin ✅ ; aucune promesse de rencontre ni d'engagement ✅. *Raisonnement* — je ne prétends pas savoir si les deux comptes divergent réellement, la question est posée au conditionnel comme une hypothèse de travail ✅. *Mise en forme* — 4 paragraphes, à revérifier après saisie si David valide. *Destinataire* — à relire dans l'en-tête avant le clic (§5.4).
+
+> Thanks Abou, and that is a clear answer even if it closes the door. If the MSF/BALI sitreps stay internal, the operational detail I was asking about never becomes observable from outside at all, however well the response itself understands it.
+>
+> I am based in northern France rather than Kinshasa, so I cannot take you up on the Utex Africa offer, but I would gladly keep this going here.
+>
+> One follow up if you have time. When Epicentre's internal sitrep and the national bulletin end up with different case counts for the same week, does anyone reconcile them, or do the two figures simply coexist for different audiences?
+>
+> What I aggregate is public on healthwatch-global.com, with a fourteen day Pro trial and no card needed, if you want to see which layer actually survives into the public record.
+
+#### 🔒 DM 3 — **Mohammed Hajjam** (EN) — message de bienvenue, **carry-over du matin levé**
+`/in/mohammed-hajjam-951883311/` — slug capturé depuis la liste des relations triée « Ajouts récents » (§12, identification par le lien et non par le nom affiché). *Public Health Specialist | Epidemiologist | FETP | PhD Candidate*, 1 292 abonnés, 1er degré depuis ce matin (**invitation reçue** acceptée par `linkedin-hwg-monitoring`). Mutuels : Dr. Scott JN McNabb + 14.
+
+**✅ Carry-over du matin levé** : le matin avait laissé « fil de messagerie préexistant à vérifier avant tout welcome DM ». **Vérifié en séance** : recherche « Hajjam » dans la messagerie → « *Nous n'avons rien trouvé avec "Hajjam"* ». **Aucun fil préexistant** → message de bienvenue justifié.
+
+**Hook, vérifié sur sa page d'activité** : son propre post (4 mois) « *I am conducting research on molecular epidemiology and drug resistance patterns of tuberculosis, along with associated factors. I would like to inquire about the possibility of testing for drug-resistant genetic mutations, including performing genetic sequencing.* » Également repéré : republications cohérentes sur la surveillance (Mohamad Fawzy Elnahif, module Surveillance d'un diplôme de santé publique) et la génomique de l'antibiorésistance (Ahmad M. Alomar).
+
+**⚠️ Deux réserves signalées, aucune bloquante** : (1) **badge #OPENTOWORK** sur sa photo de profil, même vigilance que pour ABDELHAK OUMAR le 16/08 — si le fil bascule vers une demande personnelle (emploi, mise en relation), appliquer §3 (accusé de réception neutre, aucun engagement) ; (2) son activité propre est **ancienne (3 à 6 mois)** et l'un de ses partages est un contenu commercial de rédaction de thèses (« Research Rover »), de faible qualité. La légitimité reste établie par ses intitulés (FETP, épidémiologiste), ses 15 mutuels et son propre post de recherche TB, et **la décision de connexion était déjà prise ce matin** : le welcome DM est dans le périmètre.
+
+**§3 lien — ABSENT**, conforme à la règle du DM de premier contact (jamais de lien sauf demande explicite). **Anti-répétition** : n/a (premier message).
+
+**⚠️ Garde-fou factuel appliqué (§1)** : la tuberculose **ne figure pas** dans la couverture HWG annoncée (Ebola, Marburg, choléra, mpox, MERS, hantavirus, dengue et autres via WHO DON, ECDC, PAHO, Africa CDC, WHO AFRO, WHO EMRO). Le brouillon **ne prétend donc à aucun moment que HWG suit la TB** : il dit explicitement l'inverse (« sits outside what I aggregate ») et s'en sert comme angle honnête plutôt que de gonfler la couverture réelle.
+
+**Double-check (§5)** : *contenu* — EN ✅ (son profil et son post de recherche sont en anglais) ; aucun chiffre, aucune date ✅ ; aucun tiret cadratin ✅ ; aucun CTA/lien (premier contact) ✅ ; couverture HWG énoncée conformément à §1 ✅. *Raisonnement* — l'affirmation « le profil de résistance ne voyage pas avec le compte de cas » est bornée aux bulletins de flambée que j'agrège effectivement, et n'est pas présentée comme un constat sur la surveillance de la TB, dont je lui demande justement comment elle fonctionne ✅. *Mise en forme* — 2 paragraphes, à revérifier après saisie si David valide. *Destinataire* — à relire dans l'en-tête avant le clic (§5.4).
+
+> Hi Mohammed, thanks for connecting. I run HealthWatch Global, which aggregates active outbreak bulletins from WHO, ECDC, Africa CDC and PAHO.
+>
+> Your work on molecular epidemiology and drug resistance in tuberculosis sits outside what I aggregate, which is exactly why it interests me. In the outbreak bulletins I do work with, a case arrives as a number and a date, and anything about the pathogen itself, resistance profile included, never travels with it. Question, if you have time: in TB resistance surveillance, does the genotype stay attached to the individual case record all the way up to the national figures, or does it get reported separately from the case count?
+
+### 👣 FOLLOW-BACK — 1 exécuté, 1 écarté (suivis du jour portés à **9/7-10**)
+**Onglet Abonnés** (`/mynetwork/network-manager/people-follow/followers/`) : **326 abonnés** contre **321** ce matin, soit **5 nouveaux**. Sur ces 5, **3 étaient déjà « Suivi »** (Abou A. SOUMAH et Landry BEYALA BITA'A, suivis automatiquement après acceptation de connexion ce matin ; Warren Parker, suivi ce matin en découverte active). Restaient 2 à évaluer, **aucun des deux présent dans `linkedin-candidates-tracker.md`** (vérifié avant évaluation).
+
+9. **✅ Dr Delphin Katchelewa** (`/in/dr-delphin-katchelewa-5ab291b4/`) — *MD-MPH, MEDICAL HEALTH PROGRAM OFFICER / PUBLIC HEALTH ADVOCACY & INSTITUTIONAL SUPPORT MANAGER, **MOH/PNLMTN-CTP-RDC***, **Kinshasa**, 1 699 abonnés, 500+ relations, **5 mutuels** (Dr. Hassan, Ali Justin + 3), formé au **CNFRSR Maferinyah**. Programme national de lutte contre les maladies tropicales négligées du ministère de la Santé RDC, dans le pays qui est le théâtre principal du foyer suivi en priorité. Légitimité et pertinence nettes. **Suivi confirmé** : les boutons du profil sont passés de « Suivre » à « **Suivi** » après clic (vérifié par relecture, pas seulement par capture).
+   - **⚠️ Piège de clic évité, à retenir** : le profil expose **3 boutons « Suivre »** et, une fois la page pleinement chargée, **plusieurs autres appartenant aux profils de la sidebar** (« Explorer les profils Premium »). C'est exactement le piège Olga TOINON du 16/08. Chaque bouton candidat a été rattaché à son bloc de contexte et **seul celui dont le contexte nomme Dr Delphin Katchelewa ET contient le compte d'abonnés** a été cliqué, identité et clic **dans le même appel JS** (§7, règle du 15/08). Un premier essai a **abandonné de lui-même** (`aborted`) parce que le sélecteur de nom (`main h1`) renvoyait `null` : aucune action à l'aveugle n'a été tentée.
+
+**❌ Écarté — Gaston NOUGOUMBAYE** (`/in/gaston-nougoumbaye-815ab0383/`, *Doctorant*, N'Djaména, Tchad, Université Cheikh Anta Diop de Dakar, 872 abonnés, 7 mutuels). **Pas de follow-back.** Motif : son domaine réel est le **MEAL (suivi-évaluation), la nutrition et la gestion de programmes humanitaires**, sans aucun ancrage en épidémiologie ni en surveillance. Son activité propre se résume à un post de recherche d'emploi (3 j) visant des postes de M&E / coordination de programme / nutrition, et à des republications d'offres d'emploi, de contenus de coaching CV, d'appels à bourses et de contenu MEAL. Même barre que Nickson Motari (12/08) et Mbaitelbé Allaramadji (16/08) : activité propre hors périmètre. Il est en outre **#OpenToWork et cible explicitement Kinshasa et l'Afrique centrale** ; ce n'est pas le motif du refus, mais §3 s'appliquerait d'office si un fil s'ouvrait. **Ne pas reproposer sans élément nouveau.**
+
+**Découverte active pour la marge restante** (règle « quota = objectif, pas plafond ») — candidat trouvé sans recherche à froid, directement dans les retombées du matin :
+
+10. **✅ trésor Ndaye** (`/in/tr%C3%A9sor-ndaye-0ba081b3/`) — **suivi 10/7-10, fourchette REMPLIE**. *MD, MPH(e), GEP chez **Ministère de la santé publique Kinshasa***, également **INSPECTION GÉNÉRALE DE LA SANTÉ / RD CONGO**, formé à l'**EHESP** et à l'École de Santé Publique de Kinshasa, 1 059 abonnés, 500+ relations, 4 mutuels (Issa, Horace + 2).
+   - **Repéré via un commentaire sur le post INSP-RDC que nous avons commenté ce matin** : il reprend de lui-même notre calcul (« *je rebondis sur la même préoccupation… d'où un écart 850 cas confirmés non catégorisés. Une explication pourrait nous aider à comprendre* »), depuis l'intérieur du ministère. Signal d'engagement plus fort qu'un post frais.
+   - **Contenu propre vérifié** : plusieurs séries documentant des campagnes de **recherche active de cas et de sensibilisation sur la dracunculose** dans le Haut-Katanga (2018), le Haut-Uélé (2019), le Kongo Central (2020) et la DPS Buta (2016), plus une revue CSU des établissements d'appui (6 mois). C'est littéralement de la surveillance de terrain.
+   - **Réserves notées** : ses publications propres ont environ un an (la plus récente à 6 mois) et quelques republications sont hors sujet (félicitations automobile, promotion d'ouvrages). Insuffisant pour écarter, vu le poste et l'engagement du jour.
+   - **⚠️ §12 appliqué** : ne pas confondre avec **Antoine Nkuba Ndaye** (`/in/antoine-nkuba-ndaye-763a4511a/`, suivi le 09/08), homonyme partiel et profil distinct. Identification par le slug, pas par le patronyme.
+   - **⚠️ Slug piège** : le slug **porte un accent** (`tr%C3%A9sor-ndaye-0ba081b3`), même famille de piège que la page INRB ci-dessus.
+   - **Suivi confirmé** : seul bouton rattaché à son propre bloc de contexte, passé à « **Suivi** » après clic (vérification restreinte aux boutons dont le contexte le nomme, pour ne pas lire par erreur l'état d'un bouton de la sidebar Premium).
+   - **⭐ Excellente cible de connexion** dès demain (quota connexions du jour rempli à 7/7), et **cible de réponse en commentaire** (voir carry-over).
+
+### 💬 Messages reçus traités SANS brouillon (décision assumée)
+- **Marcel Muamba** (12h53) — « *D'accord David. Merci beaucoup😊* ». **Fil relu (8 messages)**. Formule de politesse de clôture, aucune question, aucun contenu neuf. Il s'était engagé au message précédent (11h41) à aller vérifier le circuit documentaire de l'alerte en RDC : **la balle est dans son camp**, et une réponse du type « merci à vous » n'ajouterait rien. Lien + essai Pro déjà envoyés dans ce fil (anti-répétition de toute façon active). **Aucun brouillon, aucun quota consommé.**
+- **OMARY SULTANI** (4 août) — « *👍* ». Réaction sans contenu, non lue depuis le 04/08. Aucune réponse due.
+- **LinkedIn (Offre Premium, 28 juillet)** — promotion plateforme, ignorée.
+
+---
+
 ## 📅 Session linkedin-hwg-monitoring — 17/08/2026 (matin)
 
 **Vérification double déclenchement** : aucune entrée `linkedin-hwg-monitoring` du 17/08 dans ce fichier ni dans `content-log.md` à l'ouverture (seule entrée du jour : `linkedin-hwg-content-proposal` 8h35, routine distincte sans quota d'engagement) → **premier déclenchement du jour**.
