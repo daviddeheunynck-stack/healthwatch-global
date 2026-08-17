@@ -216,22 +216,10 @@ const CLUSTER_EDITION_PENDING = {
   // Choléra : (vide) — WER 101-31 appliqué le 10/08 sur ordre de David, voir
   // scripts/fix-cholera-don579-cluster-wer101-31-2026-08-10.mjs.
   //
-  // Chikungunya : NY State DOH Global Health Update du 13/08/2026 trouvé le 17/08 (données PAHO
-  // extraites le 13/08), plus récent que l'édition du 30/07 citée par les 5 lignes du cluster
-  // sourcées à PAHO. Écarts par rapport à la base : Brésil 110 569 → 116 095 cas et **50 → 47
-  // décès** (baisse assumée par l'éditeur : « the number of deaths reported in the region was
-  // reduced by 2 (in reported counts for Brazil) » — révision PAHO à la baisse, pas une erreur
-  // de lecture), Argentine 11 986 → 12 114 cas. Bolivie (41 944/27), Cuba (1 457/2) et Suriname
-  // (7 484/0) sont inchangés. Total Amériques 180 770 cas / 69 434 confirmés / 78 décès.
-  // ⚠️ Guyane française : le tableau PAHO donne 1 414 cas quand la base porte 1 222 — mais la
-  // ligne n'est PAS sourcée à PAHO, elle l'est au bulletin régional SPF du 23/07 (cas confirmés
-  // biologiquement). Deux cadrages différents, pas un retard : ne pas écraser le chiffre SPF
-  // avec celui de PAHO sans arbitrage (même piège que Rougeole/États-Unis CDC vs OPS).
-  // Maurice (Africa CDC, arrêté 12/07) et Mayotte (SPF, bulletin du 24/07) ne sont pas couverts
-  // par cette édition : elle ne traite Mayotte que pour le paludisme, et ne cite pas Maurice.
-  // Cluster → signalé à David, pas appliqué en autonomie (SKILL.md section 4 bis).
-  Chikungunya:
-    "NY DOH Global Health Update du 13/08/2026 (PAHO au 13/08) — Brésil 110569→116095 cas et 50→47 décès, Argentine 11986→12114 cas ; Bolivie/Cuba/Suriname inchangés. Guyane française : écart 1222 (SPF) vs 1414 (PAHO), cadrages différents, à arbitrer séparément.",
+  // Chikungunya : (vide) — édition du 13/08 appliquée le 17/08 sur ordre de David, voir
+  // scripts/fix-chikungunya-cluster-nydoh-0813-2026-08-17.mjs (Brésil 110569/50→116095/47,
+  // Argentine 11986/2→12114/2 ; Bolivie/Cuba/Suriname inchangés, Guyane française
+  // délibérément non touchée — sourcée SPF, pas PAHO, cf. le script pour le détail).
 };
 
 const CLUSTER_EDITION_CHECKED = {
