@@ -159,7 +159,15 @@ Deux jeux de chiffres Ebola/Bundibugyo circulaient dans le fil ce matin :
 ### 🤝 SUIVIS SUPPLÉMENTAIRES — 8/7-10 (au-delà du plancher, candidats trouvés en continuant la veille)
 8. **Assefa Bekele** (`/in/assefab/`) — *Public Health | Epidemiologist | Health Data Analyst*, **Ethiopian Public Health Institute**, Hawassa. Repéré via son analyse chiffrée du foyer Bundibugyo (recherche mots-clés). Statut « Suivi » vérifié.
 
-### 🔒 DM EN ATTENTE DE VALIDATION — 3 brouillons (1 réponse en fil actif hors quota, 2 DM à froid)
+### ✅ 3 DM VALIDÉS ET ENVOYÉS (session interactive, ordre explicite « envoie les trois »)
+
+Double-check à froid effectué avant envoi (3 fils/brouillons revérifiés, aucun nouveau message reçu depuis la rédaction, textes recomptés caractère par caractère). Marcel envoyé en premier (fil déjà ouvert), puis Abou A. SOUMAH (bulle flottante en shadow DOM, destinataire reconfirmé via le texte environnant avant le clic), puis Landry (nouveau composeur, destinataire vérifié via le chip `.artdeco-pill__text` dans le même appel JS que le clic d'envoi, après un premier faux négatif dû à un sélecteur trop large incluant la sidebar).
+
+1. **Marcel Muamba** — envoyé 12h35, réponse en fil actif, CTA volontairement absent (anti-répétition). Texte identique au brouillon (1021 caractères), passé du premier coup.
+2. **Abou A. SOUMAH** — envoyé 12h36, message de bienvenue (DM à froid). Éditeur Marcel vérifié vide après l'envoi (aucune contamination croisée entre les deux bulles flottantes ouvertes simultanément).
+3. **Landry BEYALA BITA'A** — envoyé, message de bienvenue (DM à froid). Premier essai de vérification du destinataire avorté par un sélecteur trop large (incluait la sidebar affichant aussi « Abou A. SOUMAH » et « Marcel Muamba »), corrigé en ciblant le chip du composeur (`.artdeco-pill__text`), puis envoyé et confirmé.
+
+**Quota DM à froid mis à jour : 0/8 → 2/8** (Abou A. SOUMAH, Landry BEYALA BITA'A). Marcel Muamba reste hors quota (réponse en fil actif).
 
 #### 🔒 DM 6 — **Landry BEYALA BITA'A** (EN) — message de bienvenue, signal d'engagement chaud
 `/in/landry-beyala-bita-a-653b12102/` — connexion envoyée ce matin (10h30), **acceptée le jour même** (vérifié via `/mynetwork/invite-connect/connections/?sortField=RECENTLY_ADDED`, « Connexion le 17 août 2026 »), signal d'engagement au sens de la règle dédiée. **Aucun fil de messagerie préexistant** (recherche « Landry BEYALA » dans la messagerie, 0 résultat) → message de bienvenue justifié.
@@ -172,7 +180,7 @@ Deux jeux de chiffres Ebola/Bundibugyo circulaient dans le fil ce matin :
 >
 > Your work touches the one step I never see: lab confirmation. A suspected case and a confirmed case arrive at my end looking identical if the bulletin doesn't say which, just a number and a date attached. Question, if you have time: in your AVoHC work, is the delay between sample collection and confirmation itself tracked as a metric, or does only the final result count?
 
-**🔒 NON envoyé — en attente de validation de David.**
+**✅ Envoyé** (session interactive, ordre explicite « envoie les trois »). Destinataire reconfirmé via le chip `.artdeco-pill__text` dans le même appel que le clic, texte identique au brouillon (532 caractères), envoi confirmé par présence dans le DOM du fil.
 
 #### 🔒 DM 7 — **Marcel Muamba** (FR) — réponse en fil actif (nouvelle réponse reçue à 11h41)
 `/in/marcel-muamba-a42612238/` — **fil relu intégralement (§4)**, nouvelle réponse détectée pendant le double-check (11h41), postérieure à mon envoi de 10h32.
@@ -189,7 +197,7 @@ Deux jeux de chiffres Ebola/Bundibugyo circulaient dans le fil ce matin :
 >
 > Ce qui serait vraiment révélateur dans ce que vous allez vérifier, ce n'est peut-être pas seulement si un identifiant survit à l'infirmation, mais si le statut infirmé est lui-même conservé comme un état final quelque part, ou si le dossier est simplement retiré du système actif une fois classé négatif. Un identifiant qui survit mais qui pointe vers un enregistrement supprimé revient au même que pas d'identifiant du tout.
 
-**🔒 NON envoyé — en attente de validation de David.**
+**✅ Envoyé 12h35** (session interactive, ordre explicite « envoie les trois »). Destinataire vérifié dans l'en-tête du composeur (« Marcel Muamba ») dans le même appel que le clic d'envoi, texte identique au brouillon (1021 caractères), envoi confirmé.
 
 #### 🔒 DM 8 — **Abou A. SOUMAH** (EN) — message de bienvenue, signal d'engagement chaud
 `/in/abou-a-soumah-9911a634/` — connexion envoyée ce matin, **acceptée le jour même** (vérifié via `/mynetwork/invite-connect/connections/?sortField=RECENTLY_ADDED`, « Connexion le 17 août 2026 », relations passées à 224). **Aucun fil de messagerie préexistant** (recherche « SOUMAH » dans la messagerie, 0 résultat) → message de bienvenue justifié. *Medical Epidemiologist | Public Health Project Manager*, **Epicentre – MSF Epidemiology, Field Medical Research**, EHESP, **basé à Kinshasa**, 1er, 920 abonnés, 14 mutuels (Dr. Hassan, Kourouma).
@@ -204,7 +212,7 @@ Deux jeux de chiffres Ebola/Bundibugyo circulaient dans le fil ce matin :
 >
 > Being Epicentre/MSF and based in Kinshasa during this outbreak puts you close to a layer I never see: the operational detail behind a published case count. What I aggregate is a number and a date, nothing about how a case was found or how long it took to confirm. Question, if you have time: does Epicentre's own situation reporting for Bundibugyo ever get folded into the public bulletins, or does it mostly stay internal to guide the response itself?
 
-**🔒 NON envoyé — en attente de validation de David.**
+**✅ Envoyé 12h36** (session interactive, ordre explicite « envoie les trois »). Destinataire reconfirmé via le texte environnant de l'éditeur shadow DOM (« ... Abou A. SOUMAH ») dans le même appel que le clic d'envoi, texte identique au brouillon (609 caractères), éditeur Marcel vérifié vide après coup (aucune contamination croisée).
 
 ## 📅 Session linkedin-hwg-followup-check — 16/08/2026 (16h)
 
