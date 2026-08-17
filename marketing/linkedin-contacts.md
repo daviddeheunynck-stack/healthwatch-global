@@ -45,9 +45,22 @@
 
 **Non suivi, sans action nécessaire** : **Jalal NOURLIL MD.** (`/in/jalal-nourlil-md-27189226/`, *Medical Virologist & Laboratory Director, Casablanca*) — **déjà relation 1er degré et déjà suivi**, aucun bouton « Suivre » disponible sur le profil. Repéré via son commentaire technique sur le post GIGALAB (TDR multiplex respiratoire, Maroc).
 
-### 🔒 DM EN ATTENTE DE VALIDATION — 4 nouveaux brouillons (réponses en fil actif, **hors quota froid**), + 1 reconduit
+### ✅ 5 DM VALIDÉS ET ENVOYÉS (session interactive, ordre explicite « envoie les dms »)
 
-⚠️ **Aucun envoyé.** Règle du 23/07 : les DM de cette routine sont mis en file, jamais envoyés en autonomie.
+Double-check à froid effectué avant envoi (5 fils rouverts et relus intégralement, aucun nouveau message reçu depuis la rédaction, verbatims recomptés mot pour mot, 0 tiret cadratin, 0 double-espace). Envoi un par un, destinataire vérifié dans l'en-tête du composeur **dans le même appel JS que le clic d'envoi** (§5.4), texte relu intégralement avant chaque envoi, éditeur vidé et message confirmé visible dans le fil après chacun.
+
+1. **Celestin Nzanzu Mudogo** — envoyé, réponse en fil actif, CTA volontairement absent (anti-répétition). Texte identique au brouillon (861 caractères), passé du premier coup.
+2. **Marcel Muamba** — envoyé, réponse en fil actif, CTA volontairement absent (anti-répétition). **Deux timeouts CDP (`Input.dispatchKeyEvent`) pendant la frappe**, à chaque fois vérifié par lecture directe de l'éditeur après re-`select_browser` : le texte s'était bien inséré sans perte ni doublon (1227 caractères, conforme).
+3. **Augustin Murhabazi** — envoyé, réponse en fil actif, CTA volontairement absent (anti-répétition). Texte passé du premier coup (600 caractères).
+4. **Ngoy Guillaume** — envoyé, réponse en fil actif, **seul des 4 à porter le CTA complet** (lien + essai Pro), jamais envoyé avant dans ce fil. **Extension déconnectée en cours de frappe du 1er paragraphe** (« Chrome extension disconnected mid-operation ») : `list_connected_browsers` a confirmé le deviceId `23c7ecdd-…` toujours présent (reconnecté), re-`select_browser`, éditeur vérifié vide avant de retaper depuis le début — aucun texte partiel resté, aucun doublon. Texte final conforme (1129 caractères), passé au 2e essai.
+5. **Dr. Ibrahima Socé Fall** — envoyé, réponse en fil actif reconduite du 16/08, CTA complet (jamais envoyé avant). Texte passé du premier coup (1157 caractères).
+
+**Incidents techniques récurrents pendant la session (timeouts CDP, 1 déconnexion d'extension)** : dans tous les cas, la récupération standard (re-`select_browser` sur le même deviceId, vérification de l'état réel de l'éditeur avant de poursuivre) a suffi. Aucune perte de texte, aucun doublon, aucun envoi parti sur le mauvais destinataire.
+
+**Quota DM à froid inchangé** : les 5 messages envoyés sont tous des réponses en fil actif, donc **hors quota froid** (quota du jour resté à 8/8, atteint hier).
+
+<details>
+<summary>Brouillons archivés avant envoi (texte original, pour référence)</summary>
 
 #### 🔒 DM 1 — **Celestin Nzanzu Mudogo** (EN) — réponse en fil actif
 `/in/celestin-nzanzu-mudogo/` — *Professor, School of Medicine, University of Kinshasa*, RDC. **Fil relu intégralement (§4)** : 5 messages (mon welcome 16/08 13h49, sa réponse 15h03, ma réponse 17h16, ses deux messages du **17/08 à 06h21 et 06h31**).
@@ -117,8 +130,12 @@
 >
 > Ce que j'agrège est public sur healthwatch-global.com, avec un essai Pro de quatorze jours sans carte bancaire, si vous voulez voir à quoi ressemble cette couche nationale une fois empilée. Et une question si vous avez le temps : quand la DPS transmet au niveau central, la ventilation par zone de santé monte-t-elle avec, ou est-elle déjà agrégée au départ de la province ?
 
-#### 🔒 DM 5 — **Dr. Ibrahima Socé Fall** (EN) — **brouillon du 16/08 reconduit, toujours non envoyé**
-Texte, sources et double-check inchangés : voir l'entrée `linkedin-hwg-followup-check` du 16/08 ci-dessous, section « DM 7 ». **Vérifié ce matin** : son message du 16/08 est toujours le dernier du fil, rien n'a été envoyé depuis. Rappel : il propose « *We need to connect sometime and talk about it* » (§3, proposition d'échange direct laissée à l'arbitrage de David, aucun engagement pris dans le brouillon).
+#### 🔒 DM 5 — **Dr. Ibrahima Socé Fall** (EN) — brouillon du 16/08 reconduit
+Texte, sources et double-check inchangés : voir l'entrée `linkedin-hwg-followup-check` du 16/08 ci-dessous, section « DM 7 ». Vérifié en début de session : son message du 16/08 était toujours le dernier du fil avant envoi.
+
+</details>
+
+**✅ Envoyé** (session interactive, 5e des 5 DM validés par l'ordre « envoie les dms », voir section ci-dessus) : « *We need to connect sometime and talk about it* » (§3, proposition d'échange direct) reste dans le fil sans engagement pris de notre côté — la décision d'aller plus loin (appel, visio) reste à l'arbitrage de David si elle se représente.
 
 ### 🗒️ VEILLE PASSIVE
 - **Réseau** : **relations 221** (inchangé, les 7 invitations du jour sont en attente) ; **abonnés 321** (318 le 16/08, +3) ; **invitations reçues en attente : 0** après traitement de Mohammed Hajjam.
