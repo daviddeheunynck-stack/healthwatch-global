@@ -121,11 +121,13 @@
 
 **§3 CTA — VOLONTAIREMENT ABSENT, anti-répétition appliquée.** Lien + essai Pro **déjà envoyés à 16:58** dans ce même fil, et il vient de confirmer qu'il ira voir. Reproposer serait exactement le cas interdit par la règle du 07/08.
 
-**Double-check (§5)** : *contenu* — FR ✅ (langue de son dernier message) ; aucun chiffre ajouté ✅ ; aucun tiret cadratin ✅ ; aucune promesse ni engagement de canal ✅. *Raisonnement* — je ne prétends pas savoir si son extraction précède ou suit la publication officielle, la question est ouverte et honnête, pas une affirmation déguisée ✅. *Mise en forme* — 2 paragraphes, à revérifier après saisie si David valide. *Destinataire* — à relire dans l'en-tête avant le clic (§5.4).
+**Registre — tutoiement, décision explicite de David (double-check du 17/08)** : Abou a écrit « *tes questions* » dans son message du 17:14 (tutoiement), alors que le brouillon initial était resté en « vous » par convention par défaut. David a tranché en session : « tutoie-le s'il me tutoie » → brouillon **réécrit en tutoiement** pour refléter son propre registre.
 
-> Merci Abou, cette histoire de moment d'extraction est en fait la réponse la plus honnête possible : ça veut dire que l'écart entre votre chiffre interne et le bulletin public n'est pas une erreur de l'un ou de l'autre, juste deux instantanés pris à des heures différentes du même flux.
+**Double-check (§5)** : *contenu* — FR ✅ (langue de son dernier message), **tutoiement aligné sur le sien, sur instruction explicite de David** ✅ ; aucun chiffre ajouté ✅ ; aucun tiret cadratin ✅ ; aucune promesse ni engagement de canal ✅. *Raisonnement* — je ne prétends pas savoir si son extraction précède ou suit la publication officielle, la question est ouverte et honnête, pas une affirmation déguisée ✅. *Mise en forme* — 2 paragraphes, à revérifier après saisie si David valide. *Destinataire* — à relire dans l'en-tête avant le clic (§5.4).
+
+> Merci Abou, cette histoire de moment d'extraction est en fait la réponse la plus honnête possible : ça veut dire que l'écart entre ton chiffre interne et le bulletin public n'est pas une erreur de l'un ou de l'autre, juste deux instantanés pris à des heures différentes du même flux.
 >
-> Question du coup : de votre côté, votre extraction arrive-t-elle généralement avant ou après la publication du bulletin officiel ? Si vous voyez les chiffres du ministère avant qu'ils ne sortent en public, ça change beaucoup ce qu'un « écart » veut dire d'un jour sur l'autre.
+> Question du coup : de ton côté, ton extraction arrive-t-elle généralement avant ou après la publication du bulletin officiel ? Si tu vois les chiffres du ministère avant qu'ils ne sortent en public, ça change beaucoup ce qu'un « écart » veut dire d'un jour sur l'autre.
 
 ### 💬 Messages reçus traités SANS brouillon (décision assumée)
 - **Marcel Muamba** (12h53) — « *D'accord David. Merci beaucoup😊* ». **Fil relu (8 messages)**. Formule de politesse de clôture, aucune question, aucun contenu neuf. Il s'était engagé au message précédent (11h41) à aller vérifier le circuit documentaire de l'alerte en RDC : **la balle est dans son camp**, et une réponse du type « merci à vous » n'ajouterait rien. Lien + essai Pro déjà envoyés dans ce fil (anti-répétition de toute façon active). **Aucun brouillon, aucun quota consommé.**
