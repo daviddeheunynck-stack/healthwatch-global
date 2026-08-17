@@ -893,6 +893,58 @@ Objectif atteint : **10 contacts nets, aucun déjà présent dans les vagues 1-3
 
 ---
 
+## 🔁 RELANCE J+10 — 2026-08-17, run automatique `daily-relance-check-healthwatch`
+
+**Résultat : 10 relances créées, aucune envoyée. Lot traité : le run du 07/08 (10 contacts), à J+10 — 0 exclusion, les 10 sont éligibles.** C'est le premier lot depuis le 03/08 qui passe le filtre en entier.
+
+**Arbitrage des lots :**
+- **02/08 matin (18), 02/08 soir (20), 03/08 (20), 05/08 (20)** — déjà relancés le 15/08. Règle « une seule relance, jamais deux » : exclus définitivement.
+- **04/08 (20)** — lot recréé et envoyé le 15/08, donc à J+2. Pas mûr.
+- **06/08 (10)** — jamais envoyé (établi au run du 16/08, trois méthodes convergentes). Rien à relancer. **Décision toujours en attente de David** : refaire ces 10 premiers contacts, ou considérer le lot comme perdu.
+- **07/08 (10), J+10** — ✅ retenu, jamais relancé. Envoi reconfirmé en direct (horodatage 2026-08-07 13:03-13:06).
+- **08/08 (10), J+9** — pas encore mûr. **Premier lot éligible demain (18/08)**, sous réserve de vérification directe de l'envoi.
+- **09/08 et suivants** — pas mûrs.
+
+**Vérification en direct des 10 (méthode corrigée du 15/08 appliquée)** : pour chaque contact, requête combinée `to:<adresse> OR from:<domaine>` avec `includeTrash: true` — **chaque fil ne contient qu'un seul message, celui de David, `labelIds: ["SENT"]`**. Aucune réponse, aucun accusé automatique, aucun bounce. Balayage global des bounces en complément (`from:mailer-daemon`, `subject:"Delivery Status Notification"`, `subject:"Undelivered Mail"`, 12 jours, corbeille incluse) : **7 fils, tous déjà consignés** (ISED ×2, MBDS, Lao TPHI, NCIPD, CORDS, EPHI, Colombo). **Aucun bounce sur le lot du 07/08** — y compris AMDA, signalé le 07/08 comme « candidat au bounce le plus probable du lot » à cause de son domaine `@amdainternational.com` : le pronostic ne s'est pas réalisé, le message est passé.
+
+**10 brouillons de relance créés, aucun envoyé.** Réponses dans le fil d'origine (`replyToMessageId`), objet « Re: … ». Corps de 4 phrases : salutation identique à l'original + rappel + reformulation en une ligne de l'accès Pro gratuit sans engagement + **question de clôture de l'original reprise mot pour mot** + signature. Aucun `htmlBody`, aucune balise `<a>`, **aucun nom de domaine dans le texte nouveau**. Langue reprise à l'identique : **FR** pour Solthis (1) ; **EN** pour les 9 autres.
+
+**Aucun écart au gabarit générique sauf un — Seychelles** (`customerservice@health.gov.sc`) : l'original demandait la transmission à la **Disease Surveillance and Response Unit** (boîte service client, l'unité ne publiant aucune adresse). La relance reprend cette demande de redirection en 1re phrase plutôt que de répéter l'offre comme si une réponse de fond était attendue. Même traitement que MSP Uruguay / Zimbabwe MoHCC le 15/08. Les 9 autres suivent le gabarit.
+
+**Contrairement au lot du 03/08, aucune reformulation de clôture n'a été nécessaire** : le lot du 07/08 est postérieur à l'enseignement RIVM (appliqué à partir du 04/08), ses 10 originaux se terminent déjà par une question explicite. Chaque relance reprend donc la question d'origine à l'identique.
+
+**IDs des 10 brouillons** : `r-78241146143121904` (ANSP Moldavie), `r-3614143901279447549` (NCPH Kazakhstan), `r6568136336383457715` (NHRC Népal), `r-6172837962979159763` (Seychelles/DSRU), `r2745093630677150971` (AUB Liban), `r-8531910740318911637` (UNZA Zambie), `r3920838557539883963` (ESP UChile), `r-5828302032423797768` (Solthis), `r-5444452009244649945` (KNCV), `r2382744273624971434` (AMDA).
+
+**Vérifié via `list_drafts` immédiatement après création : 10/10 présents, `threadId` de chacun correspondant au fil d'envoi du 07/08, aucun envoi accidentel.** `list_drafts` s'est montré **stable ce run** (appels répétés cohérents), comme le 16/08 et contrairement à l'incident du 15/08 matin.
+
+**Frein de file** : `list_drafts` renvoyait **10 brouillons** au début du run — les 10 de la prospection du 17/08 créés le matin même (SYSU, AFROHUN, EUPHA, CIES Nicaragua, CII Chypre, AUA Arménie, DMR Myanmar, SADC, IGAD, EAC), aucun résidu institutionnel antérieur. **File après création : 20 brouillons** (10 prospection + 10 relances), sous le seuil de ~25. Le frein ne s'est pas appliqué, les 10 relances ont été créées.
+
+**🔧 Observation de format sur le lot du 07/08 — le journal était inexact.** L'entrée du 07/08 (l. 385) affirme « aucune balise `<a>`, aucun domaine avec `.` littéral (« healthwatch-global dot com ») ». **Les 10 originaux relus aujourd'hui contiennent en réalité un lien cliquable** : « Find us at healthwatch-global.com <https://healthwatch-global.com/en> » (et `/fr` pour Solthis). La convention « dot com » n'a donc pas été appliquée à ce lot, contrairement à ce qui est écrit. Sans impact rétroactif (non modifiable) et **sans impact sur les relances** — le texte nouveau n'introduit aucun domaine, seul le corps cité par Gmail porte l'ancien lien. **À retenir** : la mention « format vérifié » dans une entrée de run n'est pas une preuve, seule la relecture du corps envoyé l'est.
+
+**Cas Swiss TPH — rien à signaler.** Incohérence résolue au run du 15/08 (fil retrouvé en corbeille, refus humain du 03/08 confirmé). Contact écarté définitivement, point clos. Rappelé ici uniquement parce que le prompt de la routine demande de le signaler tant que l'incohérence persiste — **elle ne persiste plus, cette consigne peut être retirée du SKILL.md**.
+
+**Aucune réponse institutionnelle nouvelle** depuis le 16/08 : aucun accusé automatique, aucun refus, aucune réponse humaine sur l'ensemble du canal.
+
+**Bilan bounces cumulés depuis le 02/08 : 10** — inchangé, recalculé depuis la liste nominative conformément à la règle du 16/08 (porteur unique = cette routine), aucun nouveau bounce détecté ce run :
+1. WHO WPRO (02/08) — sous-domaine `wpro.who.int` invalide
+2. ZNPHI Zambie (02/08) — règle de transfert cassée côté destinataire
+3. Colombo (09/08) — 550 5.1.1, adresse introuvable
+4. AKHS (10/08) — adresse inconnue côté serveur
+5. NCIPD Bulgarie (12/08) — 550 high-probability spam
+6. CORDS (12/08) — adresse introuvable
+7. EPHI Éthiopie (12/08) — boîte pleine (transitoire)
+8. Lao TPHI (14/08) — domaine NXDOMAIN
+9. ISED Sénégal (15/08) — boîte pleine, **2 tentatives échouées**, écarté définitivement le 16/08
+10. MBDS (15/08) — 550 No Such User Here
+
+**Totaux au 2026-08-17 : 190 contacts prospectés, 180 envoyés, 170 effectivement délivrés** (180 − 10 bounces, recompté dans le même mouvement que la liste ci-dessus). **⚠️ Correction du chiffre de 169 posé le 16/08** (l. 890) : ISED y avait été soustrait deux fois — une fois comme bounce du premier envoi, une seconde fois pour l'échec de sa relance. Un même contact ne compte qu'une fois dans la liste nominative, donc **170 et non 169**.
+
+**Note de concurrence (écriture parallèle constatée)** : la prospection du 17/08 a écrit son entrée dans ce fichier pendant ce run — elle figure **après** celle-ci et porte le total de prospectés à **200** (190 + ses 10 nouveaux contacts, en brouillon). Les deux chiffres sont cohérents : **200 prospectés, 180 envoyés, 170 délivrés**. Conformément à la règle du 16/08, la prospection n'a écrit **aucun bilan cumulé de bounces** — la règle a tenu, contrairement au 15/08.
+
+**Total cumulé de relances : 73 envoyées** (56 le 15/08 + 17 du lot 03/08 envoyées le 15/08), **+ 10 en attente de relecture et d'envoi** (lot du 07/08, ce jour).
+
+---
+
 ### 2026-08-17 — 10/10 trouvés (run automatique `daily-institutional-prospecting-healthwatch`)
 
 **Frein de file vérifié avant recherche** : `list_drafts` renvoyait **0 brouillon**, **sur deux appels successifs** (consigne du 16/08 : ne jamais conclure sur un seul appel). Cohérent avec l'envoi du lot du 15/08 et l'absence de brouillon ISED en attente. Le frein ne s'applique pas, run normal à 10 contacts.
@@ -934,3 +986,11 @@ Objectif atteint : **10 contacts nets, aucun déjà présent dans les vagues 1-3
 **Total cumulé de contacts institutionnels prospectés depuis le 2026-08-02 : 200** (18 + 20 + 20 + 20 + 20 + 10 + 10 + 10 + 10 + 10 + 1 + 10 + 10 + 10 + 1 + 10 + 10), **180 envoyés** ; les **10 de ce run restent en attente de relecture et d'envoi par David**, et les 10 du 06/08 restent non envoyés (décision en suspens).
 
 **Bounces du jour : aucun.** Le bilan cumulé n'est pas retotalisé ici — porteur unique `daily-relance-check-healthwatch` (règle du 16/08).
+
+---
+
+**➕ Lot du 06/08 recréé, sur demande explicite de David (17/08, en session, « refais les brouillons du 06/08 »).** Les 10 institutions n'avaient jamais reçu de premier contact (brouillons supprimés avant envoi, établi par `daily-relance-check-healthwatch` le 16/08). Recréés en premier contact (pas de fil d'origine à répondre) avec le format en usage depuis le correctif RIVM — clôture sur une question explicite — même précédent que la recréation du lot du 04/08 le 15/08. Adresses et langues reprises à l'identique du run du 06/08.
+
+10 brouillons créés : `r783958639069858405` (HZJZ Croatie), `r-8893124650028833038` (INSP Burundi, FR), `r4782296159744335413` (INRB RDC, FR), `r-4328200789060701670` (Landlæknir Islande), `r9108467828317153027` (HKU SPH), `r-240750846121986639` (AHRI Éthiopie), `r-2663848136038330747` (IMT-USP Brésil), `r-8843062639200478685` (JHAS Jordanie), `r4927342216894693887` (SAMS), `r7578113065109711883` (Medicus Mundi). **Vérifié via `list_drafts` (vue complète) : 10/10 présents, texte simple, aucune URL, « dot com »/« point com » respecté.**
+
+**⚠️ Profondeur de file constatée au moment de la recréation : 30 brouillons.** Composition : les 10 de ce run (17/08), **10 relances J+10 pour le lot du 07/08** créées entre-temps par `daily-relance-check-healthwatch` (Solthis, ANSP Moldavie, NCPH Kazakhstan, NHRC Népal, Seychelles, AUB Liban, UNZA Zambie, ESP UChile, KNCV, AMDA — conforme à ce qui était annoncé « premier lot éligible demain » le 16/08, constat factuel, pas une action de cette routine), et les 10 recréés ci-dessus. **Dépasse le seuil habituel de ~20** qui aurait normalement suspendu la production de nouveaux contacts — mais cette recréation répond à une demande explicite de David en session, pas au run quotidien automatique, donc le frein de file ne s'y applique pas. À signaler simplement : David a maintenant 30 brouillons à relire.
