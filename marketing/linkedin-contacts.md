@@ -159,7 +159,7 @@ Deux jeux de chiffres Ebola/Bundibugyo circulaient dans le fil ce matin :
 ### 🤝 SUIVIS SUPPLÉMENTAIRES — 8/7-10 (au-delà du plancher, candidats trouvés en continuant la veille)
 8. **Assefa Bekele** (`/in/assefab/`) — *Public Health | Epidemiologist | Health Data Analyst*, **Ethiopian Public Health Institute**, Hawassa. Repéré via son analyse chiffrée du foyer Bundibugyo (recherche mots-clés). Statut « Suivi » vérifié.
 
-### 🔒 DM EN ATTENTE DE VALIDATION — 1 nouveau brouillon (DM à froid, quota du jour 0/8 avant celui-ci)
+### 🔒 DM EN ATTENTE DE VALIDATION — 3 brouillons (1 réponse en fil actif hors quota, 2 DM à froid)
 
 #### 🔒 DM 6 — **Landry BEYALA BITA'A** (EN) — message de bienvenue, signal d'engagement chaud
 `/in/landry-beyala-bita-a-653b12102/` — connexion envoyée ce matin (10h30), **acceptée le jour même** (vérifié via `/mynetwork/invite-connect/connections/?sortField=RECENTLY_ADDED`, « Connexion le 17 août 2026 »), signal d'engagement au sens de la règle dédiée. **Aucun fil de messagerie préexistant** (recherche « Landry BEYALA » dans la messagerie, 0 résultat) → message de bienvenue justifié.
@@ -171,6 +171,38 @@ Deux jeux de chiffres Ebola/Bundibugyo circulaient dans le fil ce matin :
 > Hi Landry, thanks for connecting. I run HealthWatch Global, which aggregates active outbreaks from the public bulletins of WHO, ECDC, Africa CDC and PAHO.
 >
 > Your work touches the one step I never see: lab confirmation. A suspected case and a confirmed case arrive at my end looking identical if the bulletin doesn't say which, just a number and a date attached. Question, if you have time: in your AVoHC work, is the delay between sample collection and confirmation itself tracked as a metric, or does only the final result count?
+
+**🔒 NON envoyé — en attente de validation de David.**
+
+#### 🔒 DM 7 — **Marcel Muamba** (FR) — réponse en fil actif (nouvelle réponse reçue à 11h41)
+`/in/marcel-muamba-a42612238/` — **fil relu intégralement (§4)**, nouvelle réponse détectée pendant le double-check (11h41), postérieure à mon envoi de 10h32.
+
+**Verbatim reçu (11h41, intégral)** : « *Votre raisonnement sur le dénominateur est juste. Sans connaître le nombre total d'alertes émises, dont celles finalement infirmées, on ne peut pas réellement apprécier la performance d'un système de surveillance à partir des seuls événements confirmés et publiés.* » ... « *Il faut notamment distinguer deux niveaux : l'identifiant attribué à l'alerte au moment de son signalement, et l'identifiant attribué ensuite au cas lorsqu'une investigation aboutit à une confirmation.* » ... « *Dans un système correctement conçu, l'alerte initiale devrait conserver son identifiant et son historique, même lorsqu'elle est finalement infirmée. […] signalée → investiguée → infirmée ou confirmée.* » ... « *Je vais donc regarder spécifiquement ce point dans l'organisation de la surveillance en RDC : quel est le support d'enregistrement de l'alerte initiale, quel identifiant lui est attribué, et que devient cet identifiant lorsque l'investigation est négative ?* »
+
+**§3 CTA — VOLONTAIREMENT ABSENT, anti-répétition appliquée.** Lien + essai Pro déjà envoyés le 16/08 à 17h22 dans ce même fil ; ne jamais répéter dans le même fil (règle du 07/08), même après plusieurs échanges supplémentaires.
+
+**Double-check (§5)** : *contenu* — FR ✅ ; aucun chiffre, aucune date ✅ ; aucun tiret cadratin ✅. *Raisonnement* — je ne prétends pas que la persistance d'identifiant qu'il décrit est fausse, seulement que même vraie, elle resterait invisible de l'extérieur tant qu'elle n'est pas publiée ; je propose une distinction supplémentaire (identifiant qui survit vs statut final conservé) cohérente avec ce qu'il vient de dire, sans lui prêter une affirmation qu'il n'a pas faite ✅. *Mise en forme* — relue après saisie (1021 caractères, 3 paragraphes). *Destinataire* — en-tête du composeur vérifié avant rédaction (« Marcel Muamba »), à revérifier avant le clic d'envoi (§5.4).
+
+> Merci Marcel, la distinction entre les deux identifiants est exactement le point que je n'avais pas vu.
+>
+> Ce qui m'intéresse le plus dans ce que vous proposez, c'est que même dans le système bien conçu que vous décrivez, la persistance de l'identifiant reste une propriété interne. Depuis mon siège, je ne vois jamais d'identifiant du tout, seulement un chiffre agrégé et une date. Donc même si l'alerte infirmée garde son identifiant et son historique quelque part dans le système congolais, cette persistance elle-même n'est visible de l'extérieur que si quelqu'un choisit de la publier.
+>
+> Ce qui serait vraiment révélateur dans ce que vous allez vérifier, ce n'est peut-être pas seulement si un identifiant survit à l'infirmation, mais si le statut infirmé est lui-même conservé comme un état final quelque part, ou si le dossier est simplement retiré du système actif une fois classé négatif. Un identifiant qui survit mais qui pointe vers un enregistrement supprimé revient au même que pas d'identifiant du tout.
+
+**🔒 NON envoyé — en attente de validation de David.**
+
+#### 🔒 DM 8 — **Abou A. SOUMAH** (EN) — message de bienvenue, signal d'engagement chaud
+`/in/abou-a-soumah-9911a634/` — connexion envoyée ce matin, **acceptée le jour même** (vérifié via `/mynetwork/invite-connect/connections/?sortField=RECENTLY_ADDED`, « Connexion le 17 août 2026 », relations passées à 224). **Aucun fil de messagerie préexistant** (recherche « SOUMAH » dans la messagerie, 0 résultat) → message de bienvenue justifié. *Medical Epidemiologist | Public Health Project Manager*, **Epicentre – MSF Epidemiology, Field Medical Research**, EHESP, **basé à Kinshasa**, 1er, 920 abonnés, 14 mutuels (Dr. Hassan, Kourouma).
+
+**Anti-répétition** : n/a (premier message). **§3 lien** : absent, conforme à la règle DM de premier contact.
+
+**⚠️ Piège technique rencontré et documenté** : la bulle flottante ouverte pour ce message vivait dans un **shadow DOM**, invisible à `document.querySelectorAll` standard (0 résultat pour `[contenteditable="true"]` au niveau document). Deux bulles étaient ouvertes simultanément (Marcel Muamba + ce nouveau message), risque direct du piège documenté le 09/08 (bulle réutilisée = mauvais destinataire). **Résolu en traversant le shadow root** (`node.shadowRoot`) pour localiser les deux éditeurs, puis en **confirmant par le texte environnant** (« Nouveau message ... Abou A. SOUMAH ») lequel correspondait à quel destinataire avant tout `.focus()` + saisie. Éditeur Marcel vérifié vide après la frappe (aucune contamination croisée).
+
+**Double-check (§5)** : *contenu* — EN ✅ (langue de présentation du profil) ; aucun chiffre, aucune date ✅ ; aucun tiret cadratin ✅ ; aucun CTA/lien (premier contact) ✅. *Raisonnement* — l'angle (Epicentre/MSF proche de la couche opérationnelle invisible depuis mon agrégation) est vérifiable depuis son propre profil, pas une supposition sur son travail réel ✅. *Mise en forme* — relue après saisie (609 caractères, 2 paragraphes). *Destinataire* — chip et carte de profil vérifiés avant rédaction (« Abou A. SOUMAH · 1er »), confirmé une 2e fois via le texte du shadow DOM avant la frappe.
+
+> Hi Abou, thanks for connecting. I run HealthWatch Global, which aggregates active outbreaks from the public bulletins of WHO, ECDC, Africa CDC and PAHO.
+>
+> Being Epicentre/MSF and based in Kinshasa during this outbreak puts you close to a layer I never see: the operational detail behind a published case count. What I aggregate is a number and a date, nothing about how a case was found or how long it took to confirm. Question, if you have time: does Epicentre's own situation reporting for Bundibugyo ever get folded into the public bulletins, or does it mostly stay internal to guide the response itself?
 
 **🔒 NON envoyé — en attente de validation de David.**
 
