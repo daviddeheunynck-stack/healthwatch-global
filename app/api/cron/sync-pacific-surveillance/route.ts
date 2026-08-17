@@ -301,7 +301,25 @@ async function runPacificSurveillance(supabase: SupabaseClient) {
   console.log(`[sync-pacific-surveillance] edition: ${itemUrl}`);
   console.log(`[sync-pacific-surveillance] ${rows.length} PIC rows parsed, ${signals.length} DLI signal(s) uncovered by an active Dengue row`);
 
-  if (signals.length > 0 && adminEmail && isRealProduction) {
+  // The bulletin's own cadence is nominally weekly, but WHO Division of Pacific
+  // Technical Support has gone quiet before (verified 2026-08-17: still citing
+  // "W23 2026" — 8 June — as the latest edition ten weeks later) — this is a real
+  // gap in the source, not a bug in findLatestBulletinItemUrl. Without a dedup
+  // check this cron would re-send the identical email every Monday for as long
+  // as the source stays stuck on the same edition. Same pattern as
+  // MANUAL_ROW_CHECKED/CLUSTER_EDITION_CHECKED in morning-don-check.mjs: track
+  // the last edition actually notified on, only re-notify when it changes.
+  const { data: lastNotifiedRow } = await supabase
+    .from("site_config")
+    .select("value")
+    .eq("key", "pacific_surveillance_last_notified_edition")
+    .maybeSingle();
+  const alreadyNotifiedThisEdition = lastNotifiedRow?.value === itemUrl;
+  if (alreadyNotifiedThisEdition && signals.length > 0) {
+    console.log(`[sync-pacific-surveillance] ${signals.length} signal(s) still present but already notified for this edition — skipping duplicate email.`);
+  }
+
+  if (signals.length > 0 && !alreadyNotifiedThisEdition && adminEmail && isRealProduction) {
     const tableHtml = rows
       .slice()
       .sort((a, b) => b.dli - a.dli)
@@ -337,6 +355,14 @@ async function runPacificSurveillance(supabase: SupabaseClient) {
       html
     );
 
+    // Recorded only after a successful send, not just because we saw the edition —
+    // a failed send must not be silently marked as "already notified".
+    await supabase.from("site_config").upsert({
+      key:        "pacific_surveillance_last_notified_edition",
+      value:      itemUrl,
+      updated_at: new Date().toISOString(),
+    });
+
     if (isRealProduction) {
       Sentry.captureMessage(
         `[sync-pacific-surveillance] ${signals.length} DLI signal(s) uncovered`,
@@ -355,6 +381,7 @@ async function runPacificSurveillance(supabase: SupabaseClient) {
     edition: itemUrl,
     rowsParsed: rows.length,
     signals: signals.map((s) => ({ country: s.country, dli: s.dli, ili: s.ili, pctReported: s.pctReported })),
+    emailSkippedDuplicateEdition: signals.length > 0 && alreadyNotifiedThisEdition,
     checkedAt: new Date().toISOString(),
   });
 }
