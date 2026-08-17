@@ -123,6 +123,21 @@ Post du 17/08 (10 h, fenêtre 48 h), `urn:li:activity:7494863299025616896` : rep
 >
 > Both readings are alarming, but they call for different responses, and nothing in the surveillance output separates them. Testing volume and time from onset to confirmation would, and neither travels with the case count.
 
+### 💬 Commentaire 4/7 — **MAYTAMOU Simon Pierre** (`/in/maytamou-simon-pierre/`) — **réponse à une question qui nous est adressée nommément**
+**⚠️ Dérogation assumée à la règle hebdomadaire, même motif que Morgan Otita le 16/08** : MAYTAMOU a été commenté le 16/08 (commentaire 6/7), donc bloqué jusqu'au 23/08 au titre du 1 commentaire/profil/semaine. Mais il a **répondu en mentionnant David nommément** et en posant une question technique directe : « *je serais assez curieux de savoir s'il n'existe pas d'analyses statistiques ou d'indicateurs pour lever l'équivoque* ». La règle hebdomadaire est un garde-fou anti-spam sur le **commentaire à froid** ; laisser une question publique sans réponse serait pire. **Compté dans le quota par prudence** (4/7, pas hors quota), cohérent avec l'arbitrage du 16/08.
+
+Réponse postée **en réponse à son commentaire** (fil de commentaires), pas en commentaire racine. Post `urn:li:activity:7494759540484104192`.
+
+**Double-check (§5)** : *contenu* — FR ✅ (langue du fil) ; aucun chiffre, aucune date ✅ ; aucun tiret cadratin ✅ ; **aucun CTA, aucun lien** ✅. *Raisonnement (§5.2)* — les deux indicateurs cités sont standard et correctement orientés : taux de positivité (cas ↑ + positivité ↓ = élargissement du dépistage ; les deux ↑ = transmission réelle) et part des nouveaux cas déjà sur une liste de contacts au moment de la détection (mesure si la riposte rattrape ses propres chaînes). Aucun des deux n'est présenté comme publié dans les bulletins, ce qui est justement le point de la 3e phrase ✅. *Mise en forme* — relue après saisie (641 caractères, 3 paragraphes), publication confirmée par présence dans le DOM et **les deux éditeurs vidés**.
+
+**🔧 Piège technique nouveau, à retenir** : dans un éditeur de **réponse**, la puce de mention pré-remplie (« MAYTAMOU Simon Pierre ») est suivie d'un **espace insécable ` `**, pas d'une espace normale. Un contrôle `startsWith(...)` avant clic a donc renvoyé un **faux négatif** et bloqué l'envoi une première fois, alors que le texte était parfaitement conforme. Normaliser (`replace(/ /g,' ')`) avant toute comparaison de garde.
+
+> MAYTAMOU Simon Pierre Oui, et le plus direct est le taux de positivité. Si les cas montent pendant que la positivité baisse, on teste plus large ; si les deux montent ensemble, la transmission progresse réellement.
+>
+> Le second est la part des nouveaux cas déjà inscrits sur une liste de contacts au moment de leur détection. Elle mesure exactement ce que vous décrivez : une riposte qui rattrape ses propres chaînes plutôt que de découvrir des cas au hasard.
+>
+> Le problème n'est donc pas qu'ils n'existent pas, c'est qu'ils restent en amont. Le bulletin publie le compte de cas, presque jamais le dénominateur qui permettrait de l'interpréter.
+
 ## 📅 Session linkedin-hwg-followup-check — 16/08/2026 (16h)
 
 **Vérification double déclenchement** : aucune entrée de cette routine datée du 16/08 avant ouverture → **premier déclenchement du jour**. **Quotas à l'ouverture (cumul du jour)** : commentaires **3/7** ; connexions 6/7 ; suivis 7/7-10 ; DM à froid 5/8.
