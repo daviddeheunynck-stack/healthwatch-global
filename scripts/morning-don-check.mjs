@@ -574,6 +574,11 @@ const MANUAL_ROW_CHECKED = {
   // d'ouvrir le PDF lui-même) plutôt que de répéter la même approche. Ligne laissée à 475 cas/1
   // décès (valeur du 27/07), donc potentiellement périmée d'une édition — ne pas la présenter comme
   // confirmée à jour tant que ce chiffre n'est pas obtenu.
+  // Débloqué le 17/08 (même jour) : David a ouvert le PDF dans le Browser pane et enregistré le
+  // fichier lui-même ; lu directement depuis ses Téléchargements. 475 -> 513 cas, décès inchangé (1).
+  // Voir scripts/fix-diphtheria-australia-20260810-2026-08-17.mjs. Le blocage réseau cdc.gov.au
+  // reste entier pour un futur run automatique — prévoir de redemander à David si la ligne revient
+  // périmée avant que quelqu'un ne teste une 6e méthode d'accès direct.
   "e856b352-747b-4db0-b0d1-c9e55f6c53aa": "2026-08-17",
   // Polio/Palestine : vérifié le 13/08. La page du comité (who.int/groups/poliovirus-ihr-emergency-
   // committee) liste 44 réunions, la plus récente étant toujours la 44e du 04/03/2026 — déjà la
