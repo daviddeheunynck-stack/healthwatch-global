@@ -1,5 +1,17 @@
 > 📦 **Archive** : le détail du 24 juin au 16 juillet 2026 a été déplacé dans [linkedin-contacts-archive-avant17juillet.md](linkedin-contacts-archive-avant17juillet.md) le 23/07 pour garder ce fichier léger.
 
+## 📌 Directive de ciblage — décision de David en session interactive (17/08, soir)
+
+**Contexte** : point marketing du jour révélant 0€ encaissé depuis le lancement (25 comptes réels, 0 paiement) et le go/no-go du 2026-08-21 (dans 4 jours). David a décidé d'attendre le 21 plutôt que d'arrêter maintenant, mais veut **« le max de décideurs, quitte à prospecter directement »** sur LinkedIn d'ici là.
+
+**Ce qui change concrètement** : privilégier les profils avec un vrai pouvoir de signature (Directeur/Directrice, Secrétaire général, Chief Medical Officer, responsable partenariats/achats) plutôt que chercheurs/épidémiologistes de terrain sans budget propre — même si ces derniers produisent les échanges les plus riches (cf. fils Augustin Murhabazi, Guillaume, Musa). Autorisation explicite de **prospecter directement des décideurs jamais engagés dans un fil actif**, pas seulement de réagir aux réponses entrantes ou de suivre les contacts déjà en conversation.
+
+**Ce qui ne change PAS** : la file de validation DM reste en place (rollback du 23/07, [[feedback_linkedin_dm_validation_required_2026_07_23]]) — chaque DM à un décideur reste rédigé, double-checké, puis mis en attente dans ce fichier, jamais envoyé directement même sous cette directive. Commentaires/connexions/suivis restent en pleine autonomie, inchangé.
+
+**Codeur (freelance)** : David a mentionné vouloir être « plus incisif » sur Codeur également, mais n'a pas encore précisé en quoi — à reconfirmer avec lui plutôt que d'improviser, ce terrain n'étant pas couvert par ce repo/session.
+
+---
+
 ## 📅 Session linkedin-hwg-followup-check — 17/08/2026 (16h)
 
 **Vérification double déclenchement** : aucune entrée de cette routine datée du 17/08 avant ouverture (la dernière est du 16/08) → **premier déclenchement du jour**.
