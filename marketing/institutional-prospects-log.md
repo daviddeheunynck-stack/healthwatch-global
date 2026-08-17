@@ -1002,4 +1002,57 @@ Objectif atteint : **10 contacts nets, aucun déjà présent dans les vagues 1-3
 - Aucun contact nominatif publié (le Director General, Pr Aye Aye Khin, n'a pas d'adresse individuelle trouvée).
 - **MX confirmé actif** (`mx04.mtalk.net.mm`, passerelle nationale birmane), mais un MX actif ne garantit pas que la boîte visée existe — même limite déjà posée le 15/08 (MBDS, ISED : domaine vivant, boîte morte). Profil de risque similaire à AKHS (10/08) et NIPH Kosova (14/08) : adresse `mailto:` publiée sur un site officiel, boîte non active côté serveur.
 
+---
+
+## 📌 Angle transfrontalier — décisions prises en session interactive (17/08, avec David)
+
+**Contexte** : David a demandé de préparer un angle "transfrontalier" pour la relance institutionnelle, en réaction aux retours LinkedIn répétés du type « on a déjà un dashboard ». Deux variantes rédigées et validées : **Variante A** (organisations multi-pays/régionales — met en avant la vue transfrontalière comme cœur de la proposition) et **Variante B** (ministères/instituts mono-pays — met en avant l'alerte précoce sur les pays voisins, en complément du système national existant, pas à sa place). Les deux respectent le format en usage sur ce canal : pas de tiret cadratin, pas de domaine cliquable ni de point littéral, texte court, clôture sur une question explicite spécifique à l'angle (pas une reprise mot pour mot de la question d'origine — écart assumé, l'angle est nouveau donc sa propre question de clôture est nécessaire pour le tester correctement).
+
+### 🗓️ Rendez-vous 27/08 — Variante A pour EAC / IGAD / SADC / AFROHUN / EUPHA
+
+**Ces 5 institutions ont déjà été contactées** le 17/08 au matin (07h08-07h09, envoi confirmé par David lui-même avant cette session, pitch générique d'origine — **pas** encore l'angle transfrontalier). Le cycle J+10 de relance tombe donc vers le **2026-08-27**. **Action pour la routine `daily-relance-check-healthwatch` (ou David) à cette date** : appliquer la Variante A ci-dessous en réponse dans le fil d'origine, plutôt que le gabarit générique habituel — c'est le public le mieux ajusté à cet angle (secrétariats intergouvernementaux/réseaux couvrant plusieurs pays chacun).
+
+> **EN — Variante A**
+> Following up briefly on HealthWatch Global. Most surveillance tools your member states already run show their own country's data well, but nothing they use shows what's moving across the countries in your network at once, side by side, updated as it happens.
+>
+> That gap is specifically what we built for organizations working at the regional level rather than the national one. Free Pro access is still open if useful for your team.
+>
+> Would that kind of cross-border view be something your secretariat currently has to reconstruct manually, or is there already a tool covering that layer?
+
+**Ne pas relancer avant le 27/08** (règle J+10 déjà en place). Si un bounce ou une réponse survient avant cette date sur l'un des 5 fils, traiter au cas par cas comme les autres lots (voir précédents ISED/Colombo/MBDS) plutôt que d'appliquer ce texte tel quel.
+
+### 📅 Lot du 08/08 (10 contacts) — J+10 le 2026-08-18, angle appliqué par institution
+
+**Premier lot où l'angle transfrontalier s'applique dès demain.** Classification faite par jugement sur le mandat réel de chaque institution (pas une règle mécanique) :
+
+- **Variante A** (mandat explicitement multi-pays) : **CAIHR** (Caribbean Institute for Health Research, UWI Mona — mandat régional caribéen malgré l'implantation jamaïcaine), **IVI** (International Vaccine Institute, Corée du Sud — organisation à traité, États signataires multiples).
+- **Variante B** (mandat national, comme les 8 autres) : NIH Somalie, SZÚ Tchéquie, ÚVZ SR Slovaquie, ISHP Albanie, IDI Ouganda, CSRS Côte d'Ivoire, FKM UNAIR Indonésie, Fundación Mundo Sano Argentine.
+
+**⚠️ Vérification live à refaire demain avant tout envoi** — cette classification ne remplace pas le contrôle habituel (`search_threads` + `includeTrash: true` sur les 10 adresses, confirmation qu'aucune n'a bouncé ni répondu, aucune relance déjà consommée). Le lot a été confirmé envoyé le 08/08 par David en session, mais son état à J+10 n'a pas été revérifié ici — c'est le travail du run de demain, pas de cette note.
+
+> **EN — Variante A** (CAIHR, IVI — adapter "the Caribbean" pour CAIHR / "the countries you work across" pour IVI à la place de "your member states")
+> Following up briefly on HealthWatch Global. Most surveillance tools show one country well, but nothing most teams use shows what's moving across the countries [CAIHR/IVI] works across at once, side by side, updated as it happens.
+>
+> That gap is specifically what we built for organizations working across multiple countries rather than a single one. Free Pro access is still open if useful for your team.
+>
+> Would that kind of cross-border view be something you currently have to reconstruct manually, or is there already a tool covering that layer?
+
+> **EN — Variante B** (NIH Somalie, SZÚ Tchéquie, ÚVZ SR Slovaquie, ISHP Albanie, IDI Ouganda, FKM UNAIR Indonésie, Fundación Mundo Sano Argentine)
+> One follow-up point on HealthWatch Global, specific to what a national system doesn't cover: your own surveillance shows what's happening inside your borders, but not what's approaching from neighboring countries before it crosses.
+>
+> That's the layer we add on top of what you already run, not instead of it. Free Pro access is still available if it's useful.
+>
+> Is early visibility on regional activity near your borders something your team currently tracks, or a gap right now?
+
+> **FR — Variante B** (CSRS Côte d'Ivoire — seul contact FR du lot)
+> Un point de suivi sur HealthWatch Global, précis sur ce qu'un système national ne couvre pas : votre surveillance montre ce qui se passe à l'intérieur de vos frontières, pas ce qui s'approche des pays voisins avant de les franchir.
+>
+> C'est la couche qu'on ajoute par-dessus ce que vous avez déjà, pas à la place. L'accès Pro gratuit reste disponible si utile.
+>
+> Cette visibilité précoce sur l'activité régionale près de vos frontières, est-ce déjà suivi par votre équipe, ou un vide aujourd'hui ?
+
+**Écart assumé par rapport à la règle « reprise mot pour mot » de la question de clôture** (établie le 03/08 sur le lot recréé après l'enseignement RIVM) : ce lot teste délibérément un nouvel angle, donc sa propre question de clôture plutôt que celle de l'original — cohérent avec l'objectif du test (isoler si l'angle transfrontalier change le taux de réponse), pas une régression de méthode.
+
+**Aucun brouillon Gmail créé à ce stade** — cette note prépare le contenu, la création effective (avec vérification live) revient au run du 18/08 ou à une session avec David ce jour-là.
+
 **❌ DMR Myanmar — abandonné, aucun brouillon de remplacement.** Aucune adresse institutionnelle vérifiable en dehors de celle qui a bouncé. **Le Myanmar redevient un pays sans contact retenu.** Ne pas deviner de pattern sur `dmr.gov.mm` sans nouvelle demande explicite de David. Même traitement que ZNPHI Zambie (02/08), CORDS (12/08), MBDS (15/08), ISED (16/08, 2e échec).
