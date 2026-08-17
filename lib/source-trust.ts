@@ -123,6 +123,12 @@ const GENERAL_PRESS_DOMAINS: ReadonlySet<string> = new Set([
   "franceinfo.fr",       // France Info — imported Ebola case coverage
   "samoanews.com",       // Samoa News — American Samoa dengue coverage
   "africa24tv.com",      // Africa24 — CAR cholera coverage
+  // Added 2026-08-17, at merge time: rows for these two appeared in the live table after
+  // this file's 2026-08-12 census, so the original allowlist pass never saw them. Both are
+  // real, named regional newsrooms of the same kind already admitted above (Tchadinfos,
+  // Africa24) — see scripts/check-source-trust.mjs output that caught them.
+  "leadership.ng",       // Leadership (Nigeria) — Diphtheria/Nigeria coverage
+  "237actu.com",         // 237actu (Cameroon) — Cholera/Cameroon coverage
   // Not a newsroom but not an authority either: a specialist vaccination-information site
   // run by clinicians, republishing SPC/WHO Pacific dengue figures. 'press' keeps the row
   // visible and linked without lending it the official badge; the Wallis-and-Futuna row on
@@ -233,6 +239,8 @@ export function sourceName(source: string | null | undefined): string {
   if (src.includes("franceinfo.fr"))     return "France Info";
   if (src.includes("samoanews.com"))     return "Samoa News";
   if (src.includes("africa24tv.com"))    return "Africa24";
+  if (src.includes("leadership.ng"))     return "Leadership";
+  if (src.includes("237actu.com"))       return "237actu";
   if (src.includes("mesvaccins.net"))    return "MesVaccins.net";
   // WHO's Shiny-hosted dashboards (global dengue surveillance, etc.) — the hostname carries
   // no "who.int", so without this they fell through to the generic label below.
