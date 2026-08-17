@@ -120,6 +120,24 @@
 #### 🔒 DM 5 — **Dr. Ibrahima Socé Fall** (EN) — **brouillon du 16/08 reconduit, toujours non envoyé**
 Texte, sources et double-check inchangés : voir l'entrée `linkedin-hwg-followup-check` du 16/08 ci-dessous, section « DM 7 ». **Vérifié ce matin** : son message du 16/08 est toujours le dernier du fil, rien n'a été envoyé depuis. Rappel : il propose « *We need to connect sometime and talk about it* » (§3, proposition d'échange direct laissée à l'arbitrage de David, aucun engagement pris dans le brouillon).
 
+### 🗒️ VEILLE PASSIVE
+- **Réseau** : **relations 221** (inchangé, les 7 invitations du jour sont en attente) ; **abonnés 321** (318 le 16/08, +3) ; **invitations reçues en attente : 0** après traitement de Mohammed Hajjam.
+- **Personnes ayant consulté le profil de David** : *Professeur d'université chez Université de Kinshasa* (vraisemblablement **Celestin Nzanzu Mudogo**, cohérent avec ses deux messages du matin), *une personne chez **Institut Pasteur de Dakar*** (vraisemblablement **Dr. Ibrahima Socé Fall**, dont le brouillon de réponse est justement en attente — **signal chaud, argument de plus pour valider ce DM**), *une personne ayant étudié à **Johns Hopkins Bloomberg School of Public Health***, un *Assistant médical chez AP-HP*, une personne du secteur Administration publique (région Washington DC-Baltimore). **⚠️ Identités non certifiées** : ces libellés sont ceux affichés par LinkedIn en mode non-Premium, aucun nom n'est visible — les rapprochements ci-dessus sont des hypothèses, pas des identifications (§12 : identifier par le lien, jamais par le libellé).
+- **Notifications** : une seule notification substantielle, la mention de **MAYTAMOU Simon Pierre** (traitée en commentaire 4/7). Aucune autre mention, aucune notification « X a accepté votre invitation ».
+- **§13 — aucune notification push de traction institutionnelle déclenchée.** Le signal le plus notable (une consultation de profil depuis l'Institut Pasteur de Dakar) est **anonyme côté LinkedIn** et ne peut pas être attribué avec certitude : il ne franchit pas la barre de la §13, qui demande une interaction identifiable d'un compte de référence. Reste un point de bilan.
+- **Séparation freelance respectée** : aucun fil ni post d'outreach freelance ouvert, traité ni compté.
+- **Posts retenus sans action** (hors quota ou hors fenêtre) : **World Health Organization Central African Republic** (3 j, hors fenêtre 48 h) sur la réunion transfrontalière Ebola à Bangui, 5 pays (RCA, RDC, Congo, Ouganda, Soudan du Sud) ; **karim ZAHER / GIGALAB** (2 j, limite de fenêtre) sur le premier article scientifique africain portant sur un TDR multiplex respiratoire fabriqué au Maroc, avec un commentaire technique très solide de **Jalal NOURLIL MD.**. **Africa CDC** (2 posts) et **Prof. Mohamed Janabi** étaient tous deux dans la fenêtre mais restent **bloqués jusqu'au 22/08** (règle 1 commentaire/profil/semaine).
+
+### 🦠 DONNÉES ÉPIDÉMIOLOGIQUES REPÉRÉES — vérifiées, **aucune écriture en base**
+Deux jeux de chiffres Ebola/Bundibugyo circulaient dans le fil ce matin :
+- **Mohammad Ilias Hossain**, citant le **CDC au 14/08/2026** : 4 686 cas confirmés et 2 186 décès confirmés au total (RDC + Ouganda + France), dont **RDC 4 665 cas / 2 184 décès**, Ouganda 20 cas / 2 décès, France 1 cas / 0 décès.
+- **WAZIH N. CHO** (déployé à Bunia) : « *more than 4,800 cases and 2,374 reported fatalities* », **sans source citée**.
+
+**Contrôle en base prod** (`outbreaks`, `.env.local.live`, pas le sandbox) : la ligne active RDC porte **cases 4665, deaths 2184, date 2026-08-12, source WHO DON615, `source_priority: 10`** (verrou Ebola/RDC documenté). Les lignes Ouganda (20/2) et France (1/0) correspondent également.
+
+**Conclusion : la base est déjà à jour, aucun écart avec le point CDC relayé, donc rien à écrire.** Les chiffres plus élevés de WAZIH N. CHO ne sont **pas** repris : aucune source primaire citée, et la ligne est de toute façon sous verrou `source_priority: 10` (écriture directe interdite hors du script `update-drc-sitrep-social.mjs` alimenté par @Com_mediasRDC / @MinSanteRDC). **Signalé à David pour arbitrage** : l'écart (4 800 / 2 374 contre 4 665 / 2 184) pourrait refléter un dénominateur différent (cas suspects + confirmés plutôt que confirmés seuls) plutôt qu'une donnée plus fraîche.
+
+
 ## 📅 Session linkedin-hwg-followup-check — 16/08/2026 (16h)
 
 **Vérification double déclenchement** : aucune entrée `linkedin-hwg-followup-check` du 16/08 dans ce fichier ni dans `content-log.md` à l'ouverture (dernière = `linkedin-hwg-monitoring` 16/08 matin, puis session interactive de David 13h20-14h09) → **premier déclenchement de cette routine aujourd'hui**.
@@ -348,6 +366,7 @@ En vérifiant la messagerie après les 6 envois, réponse substantielle reçue �
 ---
 
 ## 📅 Session linkedin-hwg-monitoring — 16/08/2026 (matin)
+
 
 **Premier déclenchement de la routine aujourd'hui** (vérifié : aucune entrée du 16/08 dans ce fichier ni dans `content-log.md` à l'ouverture, dernière archive = 15/08 16h). Quotas remis à zéro : commentaires **0/7**, connexions **0/7**, suivis **0/7-10**, DM **0/8**.
 
