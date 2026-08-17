@@ -10,7 +10,7 @@
 
 ---
 
-### 🔒 DM EN ATTENTE DE VALIDATION — 2 brouillons (réponses en fil actif, **hors quota froid**)
+### 🔒 DM EN ATTENTE DE VALIDATION — 3 brouillons (2 réponses en fil actif + 1 message de bienvenue, **hors quota froid**)
 
 #### 🔒 DM 1 — **Johan Verheyden** (FR) — réponse en fil actif, question directe
 `/in/jverheyden/` — *Founder and Chief Researcher*, **African Intelligence / Aries Consult**, Belge basé à **Nairobi**. **Partenaire existant et utilisateur HWG Pro actif** (accès Pro 1 an offert, compte `jverheyden@ariesconsult.eu`, mot de passe défini manuellement après deux blocages de lien de réinitialisation).
