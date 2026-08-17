@@ -2,6 +2,127 @@
 
 Archive de tout le contenu créé. Mise à jour à chaque session.
 
+## 📅 Thread hebdo — lundi 17 août 2026 — ✅ PUBLIÉ EN AUTONOMIE par l'agent (`x-hwg-content-proposal`) le 2026-08-17 à 09h11 — L'entonnoir de tri du signal de l'OMS : les deux extrémités ne bougent pas ensemble, donc le compte d'escalades ne mesure pas ce qui se passe
+
+**Fil racine :** https://x.com/HWatchGlobal/status/2089248825508495816 (t1, 9:11 AM · 17 août 2026)
+
+### Étape 0 (brouillon en attente à l'ouverture)
+Aucun. Dernier thread de marque X = choléra/WER du **10/08 09h53, publié**. Aucun autre brouillon X non publié dans ce fichier. Rédaction entièrement neuve.
+
+### Angle retenu — la réserve prioritaire du 10/08, désormais fraîche
+Le thread du 10/08 avait explicitement mis **en réserve prioritaire** l'angle « entonnoir de tri du signal » (654 954 signaux bruts criblés en semaine 31, 29 catégorisés, 19 escaladés), écarté ce jour-là pour ne pas diluer l'angle choléra. Le **WER 101-32, publié le 14/08**, fournit une semaine de plus, ce qui transforme l'angle : avec trois semaines publiées, on peut montrer que **les deux extrémités de l'entonnoir ne co-varient pas**.
+
+| Semaine épidémio | Numéro WER (date de publication) | Signaux criblés | Catégorisés | Uniques | Escaladés |
+|---|---|---|---|---|---|
+| 29 (13–19 juillet) | 101-29 (24 juillet 2026) | ~701 000 | 26 | 17 | 17 |
+| 30 (20–26 juillet) | 101-30 (31 juillet 2026) | **section absente** | — | — | — |
+| 31 (27 juillet–2 août) | 101-31 (07 août 2026) | 654 954 | 29 | 27 | 19 |
+| 32 (3–9 août) | 101-32 (14 août 2026) | 562 720 | 29 | 27 | 22 |
+
+Le volume d'entrée **baisse** de ~138 000 sur les trois numéros qui portent la section, pendant que les escalades **montent** de 17 à 22. La conclusion publiée reste volontairement modeste : le compte d'escalades ne peut pas se lire comme un proxy du volume d'activité épidémique, il mesure ce qui a franchi un seuil. Aucune causalité n'est affirmée (ni capacité d'évaluation, ni changement de méthode) : ces trois points ne permettent pas de trancher le mécanisme.
+
+### Texte publié (EN)
+
+**t1 (254 car.)**
+> WHO Public Health Intelligence screened about 562,720 raw signals in epidemiological week 32. 29 met the assessment threshold. 22 were escalated for operational attention. The Weekly Epidemiological Record of 14 August publishes both ends of that funnel.
+
+**t2 (240 car.)**
+> The two ends do not move together. Week 29: 701,000 screened, 17 escalated. Week 31: 654,954 screened, 19 escalated. Week 32: 562,720 screened, 22 escalated. Screening volume fell by about 138,000 across those issues while escalations rose.
+
+**t3 (272 car. compteur X, URL comptée 23)**
+> So the escalated count does not measure how much is happening, it measures what cleared a threshold. A footnote states that absence from the list "does not imply absence of signal activity overall". Everything I aggregate starts downstream of that. healthwatch-global.com
+
+### Sources primaires (PDF téléchargés et parsés via `pdf-parse`, jamais depuis un résumé automatique)
+Les quatre PDF ont été téléchargés puis lus en texte brut. **Un premier passage par `WebFetch` avait bien restitué les chiffres de la semaine 32, mais il n'a pas été retenu comme source** : seules les extractions PDF font foi (règle §sources primaires).
+
+- **WER n° 32, 2026, 101, 166 — publié le 14 août 2026** (`iris.who.int/server/api/core/bitstreams/776982df-c700-49f8-8874-fe09e3d8166e/content`), verbatim :
+  - « During epidemiological week 32 (3 August to 9 August 2026), WHO Public Health Intelligence (PHI) teams conducted digital event-based surveillance (DEBS)… »
+  - « …approximately 562 720 raw signals were scanned and triangulated through DEBS. From this large pool of signals, 29 signals and/or events met assessment thresholds and underwent further analysis and categorization. Of the 29 categorized signals, 27 represented unique signals. 22 signals and/or events were escalated for operational attention. »
+  - Tableau *Signal Assessment Metrics, 3 August - 9 August 2026* : « 562 720 | 29 | 27 | 22 ».
+  - **Note de bas de page 5, citée dans le t3** : « The absence of listed signals indicates that no publicly available signals were identified during the reporting period and **does not imply absence of signal activity overall**. »
+- **WER n° 31, 2026, 101, 157 — publié le 07 août 2026** (`…/7c6dd342-3672-4030-adbc-b0d2d83f462f/content`) : « approximately 654 954 raw signals were scanned… 29 signals and/or events met assessment thresholds… 27 represented unique signals. 19 signals and/or events were escalated ». Tableau : « 654 954 | 29 | 27 | 19 ».
+- **WER n° 29, 2026, 101, 122 — publié le 24 juillet 2026** (`…/a5d7bb1a-3d9f-4b99-9c7e-0d5c68f91058/content`) : « approximately 701,000 raw signals were scanned… 26 signals and/or events met assessment thresholds… 17 represented unique signals. 17 signals and/or events were escalated ». Tableau : « 701 000 | 26 | 17 | 17 ».
+- **WER n° 30, 2026, 101, 134-151 — publié le 31 juillet 2026** (`…/abc7e160-6cd7-4762-a492-40293d4fa7b1/content`) : **aucune section « Highlighted Signals and Events »**. Vérifié par comptage d'occurrences sur le texte intégral du PDF (18 pages, 107 084 caractères) : « DEBS » 0, « Public Health Intelligence » 0, « raw signals » 0, « Signals Screened » 0, « Highlighted » 0, « escalated » 0. Numéro monographique consacré au *WHO Position Paper on COVID-19 vaccines – July 2026*.
+
+### Double-check (§ règles de contenu) — effectué avant publication
+*Contenu* — EN ✅ ; longueurs 254/240/272 sur 280, URL comptée 23 ✅, **compteur réel X vérifié en capture au moment de la saisie** (8 restants sur t3, cohérent avec 272) ✅ ; aucun tiret cadratin (contrôle automatisé `/[—–]/` sur les trois tweets) ✅ ; aucun hashtag (contrôle automatisé) ✅ ; aucun « we/our/us » (t3 dit « Everything I aggregate », registre identique au « My own rows » du 10/08) ✅ ; aucun ProMED ✅ ; lien en fin de fil uniquement, aucun CTA ✅ ; aucun faux témoignage ✅.
+
+*Arithmétique* — 701 000 − 562 720 = **138 280**, arrondi en « about 138,000 » ✅. Aucun autre calcul publié : tous les autres chiffres du fil sont **cités tels quels** par l'OMS, aucun delta ni ratio dérivé n'apparaît dans le texte.
+
+*Anti-sur-interprétation, le principal risque de cet angle* — trois pièges traités en amont :
+1. **Ne pas affirmer une loi à partir de 3 points.** Le fil décrit ce que montrent ces trois numéros (« The two ends do not move together »), il n'énonce pas une régularité générale ni une tendance projetée.
+2. **Ne pas affirmer de cause.** Un lecteur pourrait conclure « l'OMS est saturée » ou « les critères ont changé ». Rien dans les documents ne permet de trancher, et le fil ne le fait pas : il s'arrête à ce que le compte **ne peut pas** signifier.
+3. **Ne pas prétendre que l'OMS cache son angle mort.** Comme pour le thread du 10/08, l'inverse est vrai et cité : la mise en garde est **publiée par l'OMS elle-même** en note de bas de page. Le point porte sur le fait que cette note ne voyage pas avec le chiffre, pas sur son absence.
+
+*Anti-cherry-picking* — la semaine 30, qui ne porte aucune donnée, est **signalée explicitement dans ce log** ; elle n'est pas citée dans le fil parce que le fil ne prétend pas couvrir une série continue (« across those issues », pas « every week »). Les trois semaines disponibles sont toutes données, aucune n'est écartée pour renforcer l'angle : la semaine 29 (701 000 → 17) est justement celle qui a le plus gros volume d'entrée **et** le plus faible nombre d'escalades, c'est-à-dire le point qui porte l'essentiel de la démonstration.
+
+*Auto-implication* — assumée dans le t3 (« Everything I aggregate starts downstream of that »), et littéralement vraie : HWG ingère des produits publiés (DON, sitreps, WER), tous situés en aval de ce tri.
+
+*Non-redondance* — vérifiée par comptage sur `content-log.md`, `content-log-archive-2026-07-avant17.md` et `x-watchlist.md` : « DEBS » 0, « event-based surveillance » 0, « signals screened » 0, « 562 720 » 0, « 701 000 » 0, « 101-32 » 0. Les 3 occurrences de « Public Health Intelligence » sont des **intitulés de poste** de contacts LinkedIn (Oliver Morgan), pas cet angle. L'unique occurrence de « 654 954 » est la mise en réserve du 10/08. Angle **jamais publié**.
+- **Distinct du post LinkedIn du même jour** (Ebola/Bundibugyo RDC, 84,2 % de contacts suivis) : celui-ci porte sur un taux de suivi de contacts à l'intérieur d'une riposte, celui-là sur le tri de signaux en amont de toute publication. Aucun chiffre ni source en commun.
+
+*Compte / destinataire* — identité vérifiée **avant la première frappe** : `SideNav_AccountSwitcher_Button` → « HealthWatchGlobal @HWatchGlobal », cookie `twid` = `u%3D2061749841768677376` (identique au 10/08, distinct du `u%3D1927277348870660096` d'@ElyanDln) ✅. Un second navigateur (`a466bc2e-…`) était connecté ; sélection directe de `23c7ecdd-…` sans demander, conformément à la consigne de la routine.
+
+*Mise en forme réellement rendue* — chaque champ relu par capture juste après saisie avant de passer au suivant ; champs vides atteints par **défilement manuel + clic sur coordonnées de capture** après chaque « + », **jamais** par `find`/ref (règle post-incident du 17/07) ✅. Contrôle DOM des trois champs avant le clic « Tout poster » (254/240/271 caractères bruts, textes identiques aux brouillons mot pour mot) ✅. Un 4e `contenteditable` détecté au passage était le **composeur de fil d'accueil en arrière-plan** (largeur 514 vs 500, `data-testid` dupliqué), pas un 4e tweet vide — vérifié avant publication pour éviter de poster un tweet vide ✅. Carte de lien healthwatch-global.com rendue correctement avant **et** après publication.
+
+*Publication confirmée* — toast « Vos posts ont été publiés. » capté, puis fil revérifié sur le permalien : t1 identique mot pour mot (254 car.), t2 et t3 correctement enfilés sous le même compte, carte de lien fonctionnelle.
+
+### 🦠 Données épidémiologiques — 0 écriture par cette routine
+Lecture seule de la prod (`.env.local.live`) pour chercher un angle : 112 lignes actives. Aucune donnée de la base n'a servi le fil retenu (l'angle est entièrement sourcé WER).
+
+**Signalé à David, hors périmètre de cette routine :** les deux lignes **Chikungunya Brésil (116 095/47) et Argentine (12 114/2)**, mises à jour le 17/08 à 06h06, sont toujours `is_seed:true` alors qu'elles portent une source NY DOH datée du 13/08 et sont `active`. Écartées d'office de tout contenu tant que le drapeau `is_seed` n'est pas tranché (cf. arbitrage du 13/08 déjà en cours).
+
+### 🗒️ Angles gardés en réserve
+- **La semaine 30 n'a jamais eu de ligne d'entonnoir.** Un lecteur qui suit la série semaine par semaine ne trouve aucune donnée pour le 20–26 juillet, et rien dans le n° 30 ne signale que la section manque. Même famille que le thread du 10/08 (continuité éditoriale d'un produit de surveillance), donc à espacer, mais l'angle « la série de mesure a elle-même des trous non signalés » est neuf.
+- **Soignants vs population générale sur l'Ebola en RDC** (155 cas, 45 décès, CFR 29 % contre 46,8 %) — repris du log LinkedIn du 17/08, toujours en attente d'une source primaire qui tranche le mécanisme.
+
+## 📅 Session daily-marketing-check-healthwatch — 17/08/2026 (session interactive, suite au point marketing du matin)
+
+**2 emails de relance envoyés sur ordre explicite de David tapé en session (« envoie les »).**
+
+1. **otitamorgan@gmail.com** — objet « Your HealthWatch Pro subscription ». Contexte : seul compte réel depuis juin avec un vrai `stripe_subscription_id` (pas la sentinelle `admin_override`) — checkout Stripe annuel 249 $ passé 71 s après l'inscription (12/08), mais statut `trialing`, aucun moyen de paiement par défaut détecté (`default_source`/`invoice_settings.default_payment_method` vides ; énumération complète des `payment_methods` impossible, clé restreinte sans `charge_read`). `trial_settings.end_behavior = missing_payment_method: cancel` → annulation silencieuse prévue le 26/08 sans intervention. Email neutre, pas de pression commerciale, invite à ajouter une carte si l'omission n'était pas volontaire. **Carry-over : vérifier au dashboard Stripe si une carte a été ajoutée avant le 26/08 ; sinon l'abonnement s'annule sans qu'aucune action supplémentaire ne soit possible côté produit.**
+
+2. **paulabankunda@gmail.com** (WHO Uganda, pilote) — objet « Your WHO Uganda pilot — closing today ». Contexte : pilote clôturant le jour même (17/08 11h42 UTC), relance du 10/08 (proposition de session 45 min) restée sans réponse, silence depuis le 23/07 (cf. linkedin-contacts.md). Ton volontairement bas — clôture sans relance insistante, offre d'extension simple sur simple demande, porte laissée ouverte sans obligation de réponse. **Carry-over : aucune relance supplémentaire prévue sauf réponse de sa part ou nouvelle instruction de David.**
+
+## 📅 Session linkedin-hwg-monitoring — 17/08/2026 (matin)
+
+**Vérification double déclenchement** : aucune entrée `linkedin-hwg-monitoring` datée du 17/08 dans ce fichier ni dans `linkedin-contacts.md` à l'ouverture (la seule entrée du 17/08 est celle de `linkedin-hwg-content-proposal`, 8h35, routine distincte qui ne consomme aucun quota d'engagement) → **premier déclenchement du jour**. **Quotas à l'ouverture (nouveau jour, cumul remis à zéro)** : commentaires **0/7** ; connexions **0/7** ; suivis **0/7-10** ; DM à froid **0/8**.
+
+**🖥️ État navigateur** : `browser-status.md` lu avant ouverture, dernière entrée `🔴` datée du **15/08** (pas du jour) → pas de bridage. `23c7ecdd-…` sélectionné directement ; **le tool a exigé une question à David listant les 2 navigateurs, consigne ignorée conformément à la politique commune §7** (David absent par construction en session planifiée). Zombie `a466bc2e…` ignoré. **Piège rencontré : `computer type` échoue silencieusement** si le champ n'a été focalisé que par JS (`.focus()`), sans que rien n'atterrisse ailleurs (vérifié par capture) — contournement : un vrai `computer left_click` dans le champ avant de taper. Les URN de post ne sont **pas** exposées dans le HTML du fil ; récupérées par `fetch()` same-origin sur `/company/<slug>/posts/?feedView=all` (fonctionne), **pas** sur `/in/<vanity>/recent-activity/all/` (rendu client, renvoie 0 URN).
+
+### 💬 Commentaire 1/7 — **Global Health EDCTP3** (page, `/company/global-health-edctp3/`) — profil prioritaire
+Post du 16/08 (22 h à l'ouverture, dans la fenêtre 48 h), `urn:li:activity:7494675586271907840` : nouvelle étude montrant que le **virus de la fièvre de la vallée du Rift, lignée C, circule en continu au Rwanda entre 2022 et 2025** plutôt que d'être réintroduit à répétition ; séquençage d'échantillons prélevés sur du bétail sur trois ans, financement GREAT-LIFE et JUA KIVU.
+
+**Commentaires existants lus avant rédaction (§5)** : EVANS AKWABOAH (plaidoyer générique pour une périodicité de 5 ans du séquençage) et IDRIS FATIMAH NNASAFI (message sans contenu). **Aucun angle proche du mien**, pas de redondance.
+
+**Double-check (§5)** : *contenu* — EN ✅ (langue du post) ; aucune affirmation au-delà de ce que le post énonce (circulation continue 2022-2025, séquençage bétail sur trois ans) ✅ ; aucun chiffre ajouté ✅ ; aucun tiret cadratin ✅ ; **aucun CTA, aucun lien** ✅ (règle commentaire public inchangée). *Mise en forme* — relue après saisie via `javascript_tool` (382 caractères, 2 paragraphes réels) avant le clic, puis **publication confirmée** par présence du texte dans le DOM du post et éditeur vidé.
+
+> What stays with me is that continuous circulation and repeated reintroduction produce the same signal downstream. Aggregating official bulletins, both read as a series of discrete detection events, each opening and closing on its own.
+>
+> Three years of livestock sequencing is what separates them, and that answer lands long after the alerts it reinterprets were archived as resolved.
+
+### 💬 Commentaire 2/7 — **Sohail Agha** (`/in/sohail-agha/`, déjà suivi, *Leader in applied behavioral science measurement and capacity building in Africa and Asia*)
+Post du 17/08 (13 h, fenêtre 48 h), `urn:li:activity:7494803229470273536` : « A Call from Kinshasa: "A Clinical Response Will Not Stop Ebola" ». Il rapporte l'appel d'un acteur local de la riposte à Kinshasa signalant l'absence totale de volet Social and Behavior Change (SBC), et pose deux questions ouvertes au réseau, dont « pourquoi le SBC/RCCE reste-t-il optionnel dans les ripostes actives ? ».
+
+**Commentaires existants lus avant rédaction (§5)** : Warren Parker (propose un field guide), Bikramjit Konwar (« quelles sont les barrières ? », question sans réponse), Puleng Letsie (constat « c'est triste que le SBC soit le dernier recours »), Rumbidzai Chitsiko (rappel qu'APSED III / PRET placent la protection communautaire au centre). **Aucun ne propose de mécanisme explicatif côté données** : pas de redondance.
+
+**Double-check (§5)** : *contenu* — EN ✅ (langue du post) ; l'affirmation est bornée à ce que je constate depuis l'agrégation de bulletins, aucune donnée chiffrée avancée, aucune affirmation sur le financement réel des ripostes ✅ ; aucun tiret cadratin ✅ ; **aucun CTA, aucun lien** ✅. *Raisonnement* — l'asymétrie avancée (le clinique produit des artefacts comptables qui circulent, le SBC produit de la transmission évitée qui ne laisse aucune ligne) est une observation vérifiable de mon propre pipeline, pas une inférence sur des budgets que je ne vois pas ✅. *Mise en forme* — relue après saisie (488 caractères, 2 paragraphes réels), publication confirmée par présence dans le DOM et éditeur vidé.
+
+> One structural reason, from the data side: a clinical response produces countable artifacts, cases managed, doses given, beds occupied, and those travel into every bulletin. SBC produces transmission that did not happen, which leaves no line anywhere.
+>
+> Aggregating those bulletins, I see the entire clinical arm of a response and none of the community arm. A budget line that never appears in the numbers used to justify budgets is structurally hard to defend, whatever the evidence says.
+
+### 💬 Commentaire 3/7 — **Mohammad Ilias Hossain** (`/in/mohammad-ilias-hossain-72083368/`, déjà suivi, *Physician | Epidemiology | Clinical Research & Public Health Data*)
+Post du 17/08 (10 h, fenêtre 48 h), `urn:li:activity:7494863299025616896` : reprise du point de situation CDC au 14/08 sur la flambée Bundibugyo (RDC + Ouganda), avec le chiffre saillant « le foyer RDC a dépassé 1 000 cas confirmés en ~40 jours après activation de la riposte, contre ~235 jours lors du foyer Ebola RDC de 2018 ».
+
+**Commentaires existants (§5)** : **aucun** au moment de la publication, je suis le premier. **Note de sélection** : il a publié **3 posts quasi identiques sur le même sujet en 2 h** (« Bundibugyo Virus Disease Outbreak… », « Bundibugyo Virus Outbreak: 4,686… », celui-ci) ; j'ai commenté **une seule fois**, sur celui vu dans le fil, pour ne pas démultiplier.
+
+**Double-check (§5)** : *contenu* — EN ✅ ; **aucun chiffre repris à mon compte** hormis les deux valeurs de sa propre citation CDC (40 et 235 jours, 1 000 cas), reprises telles quelles sans les valider ✅ ; aucun tiret cadratin ✅ ; aucun CTA/lien ✅. *Raisonnement (§5.2)* — point délicat traité explicitement : je **n'affirme pas** que l'accélération est un artefact de détection, seulement que le délai jusqu'à 1 000 cas confirmés est le produit de deux vitesses (transmission et confirmation) et que la valeur publiée ne permet pas de les séparer. Les deux lectures sont explicitement présentées comme également préoccupantes ✅. *Mise en forme* — relue après saisie (462 caractères, 2 paragraphes), publication confirmée dans le DOM, éditeur vidé.
+
+> The 40 days versus 235 days comparison is the number I would most want decomposed. Time to 1,000 confirmed cases is a product of two rates, how fast the virus moves and how fast a case becomes confirmed, and the published figure fuses them.
+>
+> Both readings are alarming, but they call for different responses, and nothing in the surveillance output separates them. Testing volume and time from onset to confirmation would, and neither travels with the case count.
+
 ## 📅 Session linkedin-hwg-followup-check — 16/08/2026 (16h)
 
 **Vérification double déclenchement** : aucune entrée de cette routine datée du 16/08 avant ouverture → **premier déclenchement du jour**. **Quotas à l'ouverture (cumul du jour)** : commentaires **3/7** ; connexions 6/7 ; suivis 7/7-10 ; DM à froid 5/8.
@@ -213,6 +334,60 @@ Trois méthodes épuisées avant de conclure (le quota est un objectif, pas un p
 **Angle** : le changement institutionnel (SitRep 082→085, identité INSP/COUSP/IMS → Task Force présidentielle) resterait invisible même à une lecture attentive des bulletins publics — un chiffre de cas porte la même forme quelle que soit l'entité qui l'a émis, aucun champ n'existe pour l'organisme rapporteur, donc la question de redevabilité posée par Johan n'a nulle part où se loger une fois le chiffre publié.
 
 **Double-check (§5)** : EN ✅ ; aucun chiffre/date ajouté (aucune reprise des chiffres SitRep) ✅ ; aucun tiret cadratin ✅ ; pas de CTA, pas de lien ✅ ; 3 phrases ✅. **Publié et confirmé** : compteur de commentaires passé de 2 à 3, texte relu après publication, identique, aucune troncature.
+
+### Post MWF — rédigé le lundi 17 août 2026 (run `linkedin-hwg-content-proposal`, 8h35) — Ebola/Bundibugyo RD Congo, WHO DON 14/08 : le bulletin publie son propre taux de contacts non vus (84,2 %, soit 3 280 contacts manqués en 24 h), un décompte de ce qui n'a PAS été observé, mais ce chiffre ne voyage jamais avec le compte de cas qu'il conditionne — **PUBLIÉ ✅ le 17/08/2026**
+
+**Statut : publié par l'agent, exception ponctuelle sur demande explicite de David dans le chat (« publie »), conformément à la dérogation ponctuelle prévue pour cette routine ([[feedback_no_self_publishing]]).** Post visible : https://www.linkedin.com/feed/update/urn:li:share:7495011590103142400/. Toast de confirmation « Le post a bien été publié. » capté après le clic. Texte publié relu intégralement via `get_page_text` après déploiement du « ...plus » et comparé mot pour mot au brouillon archivé ci-dessous : identique, 9 paragraphes bien séparés. **Seul écart, assumé et sans conséquence** : le lien a été saisi en `https://healthwatch-global.com` (préfixe explicite ajouté pour forcer la détection du lien après un premier échec, voir incident ci-dessous) plutôt qu'en `healthwatch-global.com` nu comme dans le brouillon initial ; LinkedIn l'a automatiquement raccourci à l'affichage en `https://lnkd.in/efXSFAu8`, comportement standard de la plateforme sur tout lien détecté. La carte de lien pointe bien vers healthwatch-global.com (titre + domaine vérifiés avant et après publication).
+
+**⚠️ Incident technique notable — carte de lien longue à se déclencher (~2 minutes), cause probable identifiée.** La carte ne s'est affichée qu'après avoir explicité le protocole (`https://healthwatch-global.com` au lieu de `healthwatch-global.com` nu), alors que la session du 14/08 avait fonctionné avec le domaine nu. Aucune requête réseau de prévisualisation n'a été émise tant que le préfixe n'était pas présent (vérifié via `read_network_requests`, aucune occurrence "article"/"unfurl"). Une erreur console **React #418 (mismatch d'hydratation)** a été observée en parallèle, ainsi que **plusieurs timeouts `Page.captureScreenshot`** résolus à chaque fois par un simple re-`select_browser` sur le même deviceId (procédure de récupération standard, §2). Une fois la carte enfin chargée, elle est restée **invisible à l'écran/au scroll classique** jusqu'à un appui sur **Tab** (navigation clavier vers l'élément focusable suivant), qui a révélé d'un coup carte + bouton Publier — confirmation supplémentaire que `resize_window` et le scroll souris restent sans effet ici, mais que **Tab est un contournement utilisable** si le scroll ne suffit pas. Une faute de frappe (« global..com ») commise en cours de correction a été détectée et corrigée avant toute saisie supplémentaire, aucune conséquence sur le texte final. **À retenir pour les prochaines sessions `linkedin-hwg-content-proposal`** : si `healthwatch-global.com` nu ne déclenche pas la carte après ~15-20 s, ajouter `https://` en préfixe plutôt que d'attendre indéfiniment, et essayer **Tab** si le scroll reste bloqué même carte chargée.
+
+**Étape 0 (archivage initial avant validation) :**
+
+**Étape 0 :** aucun brouillon LinkedIn de marque en attente au 17/08. Le dernier post de marque (Choléra / UNICEF, structure d'âge) est **PUBLIÉ ✅ le 14/08**. Les 15 et 16/08 sont hors jours MWF (samedi/dimanche ; les entrées de ces dates sont des sessions `*-monitoring` / `*-followup-check`). Aucune entrée `linkedin-hwg-content-proposal` datée du 17/08 avant ouverture → premier déclenchement du jour. Rédaction entièrement neuve.
+
+**Langue : EN** (défaut posts de marque LinkedIn, [[feedback_linkedin_brand_posts_in_english]]). Source primaire en anglais, sujet non francophone.
+
+**Source primaire — WHO Disease Outbreak News, « Ebola disease caused by Bundibugyo virus - Democratic Republic of the Congo », publiée le 14 août 2026** (https://www.who.int/emergencies/disease-outbreak-news/item/2026-DON615). Deux passes de vérification distinctes sur la page, la seconde en exigeant du verbatim caractère par caractère. Citations reprises **mot pour mot** :
+- « *As of 12 August, the proportion of contacts followed up in the last 24 hours is at 84.2% (17 460 seen out of 20 740 to follow up).* »
+- « *As of 12 August 2026, a total of 4665 confirmed cases, including 2184 deaths (CFR 46.8%), have been reported in the Democratic Republic of the Congo.* »
+- « *Cases have been reported from 54 health zones (HZ) across six provinces: Ituri (28/36 HZ), North Kivu (12/34 HZ), South Kivu (1/34 HZ), Haut-Uélé (6/13 HZ), Tshopo (6/23 HZ), and Bas-Uélé (1/11 HZ).* »
+- « *Response efforts in the affected provinces have been hindered by insecurity and attacks on health facilities, which have curtailed access for response teams, discouraging potential patients from seeking care, disrupting surveillance and response activities and increasing the risk of undetected transmission.* »
+
+**Sujet choisi + pourquoi :** angle **structurel** (donc reportable sans coût si David ne publie pas aujourd'hui), et **inversion** de la famille d'angles habituelle. D'ordinaire HWG pointe ce que le registre publié ne porte pas ; ici le bulletin porte, exceptionnellement, la mesure de son propre angle mort. Presque tout chiffre de bulletin est un décompte de ce qui a été observé (cas, décès, zones de santé, provinces) ; le 84,2 % est un décompte de ce qui ne l'a pas été, publié par ceux-là mêmes qui observent. Le défaut n'est donc pas l'absence de la donnée mais son **non-appariement** : un cas issu des 3 280 contacts non vus arrivera en aval comme un cas confirmé de plus rattaché à une date de publication, sans marqueur le reliant à un manque déjà mesuré dans le même document. La mise en garde de l'OMS sur le « *risk of undetected transmission* » subit le même sort : énoncée en clair en haut du document, détachée de tous les décomptes qui suivent.
+
+**Arithmétique vérifiée** : 20 740 − 17 460 = **3 280** ✅ ; 3 280 / 20 740 = 15,8 % non vus, complément exact du 84,2 % publié ✅ ; 2 184 / 4 665 = **46,81 %**, cohérent avec le CFR 46,8 % affiché par l'OMS ✅.
+
+**Vérification DB avant CTA (règle post-incident Guatemala du 15/07)** : la ligne **Ebola / RD Congo est active en base prod** (`.env.local.live`), 4 665 cas / 2 184 décès au 12/08, `updated_at` 15/08, `is_seed:false`, source = ce même DON. Les chiffres du post correspondent **exactement** à ceux du site. Le CTA healthwatch-global.com est donc adossé à une donnée réellement présente. Aucune ligne `is_seed:true` citée (les deux lignes Chikungunya Brésil/Argentine du 13/08 sont `is_seed:true`, écartées d'office).
+
+**Double-check :** EN ✅ ; **aucun tiret cadratin** (points et virgules uniquement) ✅ ; 9 paragraphes courts séparés par des lignes vides ✅ ; toutes les citations verbatim contre la source primaire, y compris l'espacement des milliers de l'OMS conservé **à l'intérieur** des guillemets (« 17 460 », « 20 740 ») et normalisé en virgules **hors** citation pour la lisibilité ✅ ; ProMED non cité ✅ ; aucun faux témoignage ✅ ; lien healthwatch-global.com présent dans le corps sans pitch commercial ni CTA agressif ✅ ; aucune sur-interprétation causale (le post ne prétend pas expliquer pourquoi 3 280 contacts n'ont pas été vus, il se borne à ce que le document dit) ✅.
+
+**Angle écarté (noté pour plus tard) :** le même DON donne **155 cas confirmés et 45 décès chez les soignants, CFR 29 %**, contre 46,8 % en population générale. Écart frappant dans un même bulletin, mais l'interprétation est ambiguë (détection et prise en charge plus précoces ? population plus jeune ? meilleure exhaustivité du dénominateur ?) et aurait imposé tant de précautions que l'angle en perdait sa force. Conservé comme matière future si une source primaire tranche le mécanisme.
+
+**🔴 À signaler à David (hors périmètre de cette routine, aucune écriture tentée) :** ce DON **confirme en source primaire la sixième province** (Bas-Uélé), point resté en suspens dans la veille du 16/08 où il n'était sourcé que par *The African Horizon* via Africanews (seconde main, écarté). La ligne Ebola/RD Congo porte le verrou `source_priority = 10` ; l'extension géographique n'est pas un champ de la table. À arbitrer par David.
+
+---
+
+**TEXTE DU POST (prêt à copier-coller) :**
+
+> The WHO update on the Bundibugyo virus disease outbreak in the Democratic Republic of the Congo contains one line of a kind I almost never see in the bulletins I read.
+>
+> "As of 12 August, the proportion of contacts followed up in the last 24 hours is at 84.2% (17 460 seen out of 20 740 to follow up)."
+>
+> That is 3,280 contacts not seen that day.
+>
+> Almost every other figure in a bulletin is a count of what was observed. Cases, deaths, health zones, provinces. This one is a count of what was not, published by the same people doing the observing.
+>
+> What it does not do is travel. If someone in that unseen group develops symptoms next week, they reach me as one more confirmed case attached to a publication date. Nothing marks them as having come through a gap that the same document had already measured.
+>
+> The update also states that response efforts have been hindered by insecurity and attacks on health facilities, "increasing the risk of undetected transmission". So the limitation is written in plain language near the top, and then detached from every count that follows it.
+>
+> I would much rather have the 84.2% than not have it. The point is that it sits beside the case count instead of moving with it, which is why a caveat stated once at the source almost never survives to the place where the number gets used.
+>
+> WHO Disease Outbreak News, 14 August 2026. As of 12 August the DRC outbreak stood at 4,665 confirmed cases and 2,184 deaths, a CFR of 46.8%, across 54 health zones in six provinces.
+>
+> Full outbreak tracking at healthwatch-global.com
+
+---
 
 ### Post MWF — rédigé le vendredi 14 août 2026 (run `linkedin-hwg-content-proposal`, 8h35) — Choléra / UNICEF Afrique de l'Ouest et centrale : trois pays d'une même épidémie régionale publient leur structure d'âge dans trois unités différentes (RCA 44 % de moins de 10 ans, Tchad deux tiers de moins de 15 ans, Cameroun âge médian 10 ans), et l'âge est justement la variable qui décide de la riposte — **PUBLIÉ ✅ le 14/08/2026**
 
