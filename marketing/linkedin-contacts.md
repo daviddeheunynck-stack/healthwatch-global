@@ -154,6 +154,25 @@ Deux jeux de chiffres Ebola/Bundibugyo circulaient dans le fil ce matin :
 
 **Conclusion : la base est déjà à jour, aucun écart avec le point CDC relayé, donc rien à écrire.** Les chiffres plus élevés de WAZIH N. CHO ne sont **pas** repris : aucune source primaire citée, et la ligne est de toute façon sous verrou `source_priority: 10` (écriture directe interdite hors du script `update-drc-sitrep-social.mjs` alimenté par @Com_mediasRDC / @MinSanteRDC). **Signalé à David pour arbitrage** : l'écart (4 800 / 2 374 contre 4 665 / 2 184) pourrait refléter un dénominateur différent (cas suspects + confirmés plutôt que confirmés seuls) plutôt qu'une donnée plus fraîche.
 
+**Second écart repéré après ce point** : voir plus haut, section « Écart de données repéré » dans `content-log.md` — **Institut National de Santé Publique RDC** (LinkedIn, sitrep officiel du 15/08) publie **4 945 cas / 2 325 décès**, plus élevé et plus récent que la ligne active. Même traitement : aucune écriture, verrou `source_priority: 10`, source hors périmètre de l'exception du 03/08 (page LinkedIn, pas @Com_mediasRDC/@MinSanteRDC), signalé à David.
+
+### 🤝 SUIVIS SUPPLÉMENTAIRES — 8/7-10 (au-delà du plancher, candidats trouvés en continuant la veille)
+8. **Assefa Bekele** (`/in/assefab/`) — *Public Health | Epidemiologist | Health Data Analyst*, **Ethiopian Public Health Institute**, Hawassa. Repéré via son analyse chiffrée du foyer Bundibugyo (recherche mots-clés). Statut « Suivi » vérifié.
+
+### 🔒 DM EN ATTENTE DE VALIDATION — 1 nouveau brouillon (DM à froid, quota du jour 0/8 avant celui-ci)
+
+#### 🔒 DM 6 — **Landry BEYALA BITA'A** (EN) — message de bienvenue, signal d'engagement chaud
+`/in/landry-beyala-bita-a-653b12102/` — connexion envoyée ce matin (10h30), **acceptée le jour même** (vérifié via `/mynetwork/invite-connect/connections/?sortField=RECENTLY_ADDED`, « Connexion le 17 août 2026 »), signal d'engagement au sens de la règle dédiée. **Aucun fil de messagerie préexistant** (recherche « Landry BEYALA » dans la messagerie, 0 résultat) → message de bienvenue justifié.
+
+**Anti-répétition** : n/a (premier message). **§3 lien** : absent, conforme à la règle DM de premier contact (jamais de lien sauf demande explicite).
+
+**Double-check (§5)** : *contenu* — EN ✅ (langue de présentation du profil, aucun élément en français chez lui) ; aucun chiffre, aucune date ✅ ; aucun tiret cadratin ✅ ; aucun CTA/lien (premier contact) ✅. *Raisonnement* — l'angle (confirmation de laboratoire comme étape invisible) est vrai pour mon propre pipeline, pas une affirmation sur le sien ✅. *Mise en forme* — relue après saisie (532 caractères, 2 paragraphes). *Destinataire* — chip et carte de profil vérifiés avant rédaction (« Landry BEYALA BITA'A · 1er »).
+
+> Hi Landry, thanks for connecting. I run HealthWatch Global, which aggregates active outbreaks from the public bulletins of WHO, ECDC, Africa CDC and PAHO.
+>
+> Your work touches the one step I never see: lab confirmation. A suspected case and a confirmed case arrive at my end looking identical if the bulletin doesn't say which, just a number and a date attached. Question, if you have time: in your AVoHC work, is the delay between sample collection and confirmation itself tracked as a metric, or does only the final result count?
+
+**🔒 NON envoyé — en attente de validation de David.**
 
 ## 📅 Session linkedin-hwg-followup-check — 16/08/2026 (16h)
 

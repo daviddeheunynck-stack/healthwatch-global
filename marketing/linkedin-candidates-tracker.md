@@ -9,7 +9,8 @@ Table volontairement compacte (une ligne par profil). Le détail complet (hook, 
 | Nom | Profil | Statut | Date | Raison / contexte court |
 |---|---|---|---|---|
 | Mohammed Hajjam | (invitation reçue) | **connecté (invitation reçue acceptée)** | 2026-08-17 | *Public Health Specialist \| Epidemiologist \| FETP \| PhD Candidate*. Mutuels : Dr. Scott JN McNabb + 14. Welcome DM non rédigé ce jour (quota), **vérifier d'abord s'il existe un fil préexistant** |
-| Landry BEYALA BITA'A | `/in/landry-beyala-bita-a-653b12102/` | **en attente (sans note)** | 2026-08-17 | *Senior Laboratory & Public Health Expert, **Africa CDC AVOHC Rapid Responder**, Infectious Disease Surveillance*, Cameroun + bassin du lac Tchad, 8 mutuels. Blocage « notes épuisées » |
+| Landry BEYALA BITA'A | `/in/landry-beyala-bita-a-653b12102/` | **connecté (sans note), accepté le jour même** | 2026-08-17 | *Senior Laboratory & Public Health Expert, **Africa CDC AVOHC Rapid Responder**, Infectious Disease Surveillance*, Cameroun + bassin du lac Tchad, 8 mutuels. Welcome DM rédigé, en file de validation |
+| Assefa Bekele | `/in/assefab/` | **suivi** | 2026-08-17 | *Public Health \| Epidemiologist \| Health Data Analyst*, **Ethiopian Public Health Institute**, Hawassa. Repéré via analyse chiffrée Bundibugyo (recherche mots-clés) |
 | yannick kamga | `/in/yannick-kamga-94478634/` | **en attente (sans note)** | 2026-08-17 | ***Country Readiness Officer, Cameroon WHO Country Office***, vérifié, 9 mutuels |
 | Abou A. SOUMAH | `/in/abou-a-soumah-9911a634/` | **en attente (sans note)** | 2026-08-17 | *Medical Epidemiologist*, **Epicentre – MSF** + EHESP, **basé à Kinshasa**, vérifié, 13 mutuels. Alignement le plus fort du lot |
 | Danièle Sandra Yopa | `/in/danièle-sandra-yopa-3426a171/` | **en attente (sans note)** | 2026-08-17 | *MD \| MPH \| Ph.D Public Health/ Epidemiology infectious diseases*, Université des Montagnes, Yaoundé, 6 mutuels |

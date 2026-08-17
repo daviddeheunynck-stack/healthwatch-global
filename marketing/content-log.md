@@ -138,6 +138,44 @@ Réponse postée **en réponse à son commentaire** (fil de commentaires), pas e
 >
 > Le problème n'est donc pas qu'ils n'existent pas, c'est qu'ils restent en amont. Le bulletin publie le compte de cas, presque jamais le dénominateur qui permettrait de l'interpréter.
 
+### 💬 Commentaire 5/7 — **Institut National de Santé Publique RDC** (page, `/company/insp-rdc/`) — nouveau candidat institutionnel de premier plan
+Post du 17/08 (1 h, fenêtre 48 h), `urn:li:activity:7495024797437837312` : point de situation Ebola officiel au 15 août 2026 (publié le 16/08), infographie « Rapport de situation Ebola » avec sceau gouvernemental RDC. **4 945 cas confirmés, 730 en isolement/hospitalisés, 1 040 guéris, 2 325 décès, létalité 47 %, suivi de contacts 85,3 % (seuil opérationnel 85 % franchi), 34 guéris en 24h.** Six provinces touchées (Bas-Uélé, Haut-Uélé, Ituri, Nord-Kivu, Sud-Kivu, Tshopo), 55 zones de santé, Ituri épicentre.
+
+**Commentaires existants (§5)** : aucun au moment de la publication, je suis le premier. **Page jamais commentée avant** (nouvelle dans le tracker), aucun blocage hebdomadaire.
+
+**Double-check (§5)** : *contenu* — FR ✅ ; aucun tiret cadratin ✅ ; aucun CTA/lien ✅. *Raisonnement, recalculé (§5.2)* — 730 + 1 040 + 2 325 = **4 095**, contre 4 945 cas confirmés annoncés → écart de **850** cas sans catégorie d'issue déclarée dans ce point de situation précis. Vérifié par calcul direct, pas seulement chiffre par chiffre : chaque valeur isolée est correcte (létalité 2325/4945 = 47,02 % ✅, cohérent avec le taux affiché), mais leur somme ne reconstitue pas le total. Angle présenté comme une observation arithmétique neutre, **pas** comme une critique de la fiabilité du rapport (formulé explicitement comme un délai normal, pas une anomalie). *Mise en forme* — relue après saisie (482 caractères, 2 paragraphes), publication confirmée dans le DOM, éditeur vidé.
+
+> 730 en isolement, 1 040 guéris, 2 325 décès : ça fait 4 095 sur les 4 945 cas confirmés. Il reste environ 850 cas sans catégorie d'issue déclarée dans ce point de situation.
+>
+> Ce n'est probablement pas une anomalie mais le délai normal entre la confirmation d'un cas et la clôture de son dossier clinique. Ce délai lui-même n'est presque jamais publié comme une donnée à part entière, alors qu'il mesure la vitesse à laquelle le système peut clore un cas, pas seulement en ouvrir un.
+
+### 🦠 Écart de données repéré — signalé à David, aucune écriture (verrou `source_priority: 10`)
+Ce sitrep INSP-RDC (**4 945 cas / 2 325 décès**, situation au 15/08) est **plus récent et plus élevé** que la ligne active en base HWG (**4 665 cas / 2 184 décès**, WHO DON615, date 2026-08-12, contrôlée ce matin). Écart : **+280 cas, +141 décès** sur 3 jours, cohérent avec la trajectoire de l'épidémie (pas une incohérence suspecte).
+
+**Aucune écriture effectuée.** La ligne RDC porte `source_priority: 10` (verrou Ebola/RDC). L'exception d'écriture directe du 03/08 ne couvre que les points de situation lus **texte-en-clair sur @Com_mediasRDC ou @MinSanteRDC (comptes X)** — ce sitrep vient d'une page **LinkedIn** (Institut National de Santé Publique RDC), donc hors du périmètre de l'exception même si la source est manifestement officielle (sceau gouvernemental, infographie institutionnelle). **Signalé à David pour arbitrage** : soit élargir l'exception à cette page LinkedIn si elle s'avère être une source répétée et fiable, soit passer par le script dédié après vérification croisée avec un sitrep X.
+
+### 💬 Commentaire 6/7 — **Warren Parker** (`/in/warren-parker-4989495/`, suivi ce matin, *Public Health and Communication Specialist*)
+Post du 17/08 (13 h, fenêtre 48 h, modifié), `urn:li:activity:7494838660635357184` : annonce d'un nouveau field guide co-écrit avec Barbra Natifu et AS-SBC, « Culturally Grounded Ebola Response: A Field Guide for DRC and Uganda » (6 principes fondamentaux, 13 zones opérationnelles), déjà mentionné brièvement par Parker en commentaire sur le post Sohail Agha ce matin.
+
+**Commentaires existants (§5)** : aucun au moment de la publication, je suis le premier. **Angle distinct** de mon commentaire du matin sur le post Sohail Agha (asymétrie de mesure clinique/SBC) : ici je pars spécifiquement de la distinction du post entre « expliquer une décision » et « avoir l'autorité de la façonner », un point que je n'avais pas encore traité aujourd'hui.
+
+**Double-check (§5)** : *contenu* — EN ✅ (langue du post) ; aucun chiffre, aucune date ✅ ; aucun tiret cadratin ✅ ; aucun CTA/lien ✅. *Raisonnement* — l'affirmation est bornée à ce qui est structurellement observable depuis mon pipeline (des chiffres biomédicaux qui voyagent contre une couche décisionnelle invisible), pas une critique du travail décrit ✅. *Mise en forme* — relue après saisie (598 caractères, 2 paragraphes), publication confirmée dans le DOM, éditeur vidé. **Incident technique** : premier essai de saisie parti dans le vide (champ non focalisé après un scroll, éditeur resté à 1 caractère) — détecté par vérification immédiate, aucun texte perdu, retapé après clic réel dans le champ.
+
+> What stays with me is the distinction between explaining a decision and having the authority to shape it. The first is easy to measure, a briefing, a meeting, a training session. The second almost never leaves an observable trace from outside: nothing distinguishes community feedback that actually changed an operational decision from feedback that was simply heard politely.
+>
+> The asymmetry is that the biomedical response produces numbers that travel, cases, deaths, doses given, while the layer that decides whether those numbers fall faster stays largely invisible in the bulletins I aggregate.
+
+### 💬 Commentaire 7/7 — **Health Policy Watch** (page, `/company/health-policy-watch/`) — **quota REMPLI**
+Trouvé via recherche mots-clés « Ebola Bundibugyo », posts des dernières 24h (recherche active, quota pas encore atteint à ce moment). Post du 17/08 (50 min, fenêtre 48 h), `urn:li:activity:7495030407948820480` : « More than 2,000 people have died in the DRC's Ebola Bundibugyo outbreak » ; le Wellcome Trust a fourni 3 millions de dollars pour renforcer le renseignement communautaire d'épidémie (« community-generated outbreak intelligence »), signé Kerry Cullinan, mentionne Tedros Adhanom Ghebreyesus, Dr Sylvie Briand.
+
+**Commentaires existants (§5)** : 1, de Kipchirchir Kigen, générique (« sobering reminder... sustained funding is critical »), aucune analyse chiffrée. **Angle délibérément distinct de mes deux commentaires précédents du jour sur le même thème SBC/communautaire (EDCTP3 excepté)** : ici je compare la **cadence de publication** (le compte de cas est réactualisé en continu, le financement communautaire n'a droit qu'à une annonce ponctuelle), pas l'invisibilité en tant que telle déjà traitée deux fois aujourd'hui.
+
+**Double-check (§5)** : *contenu* — EN ✅ (langue du post) ; le seul chiffre repris (3 millions de dollars) est **celui du post lui-même**, cité fidèlement, aucune donnée externe ajoutée ✅ ; aucun tiret cadratin ✅ ; aucun CTA/lien ✅. *Raisonnement* — l'argument ne prétend pas que le financement produira l'effet annoncé, seulement que **si** il le fait, l'écart resterait mesurable et vaudrait la peine d'être publié à la même fréquence que le compte de cas ; formulation conditionnelle explicite, pas une affirmation ✅. *Mise en forme* — relue après saisie (530 caractères, 2 paragraphes), publication confirmée dans le DOM, éditeur vidé.
+
+> What's unusual here is that a number for the community layer exists at all: three million dollars, named and dated. Case counts get a fresh number every few days. Funding for the layer meant to detect those cases earlier gets one number, in one announcement, then disappears from view until the next grant is signed.
+>
+> If that funding actually shortens the gap between a community signal and a confirmed case, that gap is measurable in days. It would be worth publishing on the same cadence as the case count it is meant to shrink.
+
 ## 📅 Session linkedin-hwg-followup-check — 16/08/2026 (16h)
 
 **Vérification double déclenchement** : aucune entrée de cette routine datée du 16/08 avant ouverture → **premier déclenchement du jour**. **Quotas à l'ouverture (cumul du jour)** : commentaires **3/7** ; connexions 6/7 ; suivis 7/7-10 ; DM à froid 5/8.
