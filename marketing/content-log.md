@@ -84,6 +84,21 @@ Lecture seule de la prod (`.env.local.live`) pour chercher un angle : 112 lignes
 
 2. **paulabankunda@gmail.com** (WHO Uganda, pilote) — objet « Your WHO Uganda pilot — closing today ». Contexte : pilote clôturant le jour même (17/08 11h42 UTC), relance du 10/08 (proposition de session 45 min) restée sans réponse, silence depuis le 23/07 (cf. linkedin-contacts.md). Ton volontairement bas — clôture sans relance insistante, offre d'extension simple sur simple demande, porte laissée ouverte sans obligation de réponse. **Carry-over : aucune relance supplémentaire prévue sauf réponse de sa part ou nouvelle instruction de David.**
 
+### 💬 Réponse hors quota — Sohail Agha, exception explicite de David (« rédige, ça vaut le coup »)
+Repérée en notification lors du contrôle final de session (« on a des notifs »), 4 min après publication. **Post `urn:li:activity:7494803229470273536`** (« A Call from Kinshasa », commenté ce matin 2/7). Sohail Agha a répondu au commentaire du matin en mentionnant David nommément, avec un contre-argument de fond (« countable isn't the same as decision-useful », son système de surveillance sentinelle pour le signal comportemental).
+
+**⚠️ Quota commentaires du jour déjà à 7/7** — situation non couverte par les précédents MAYTAMOU/Morgan Otita (ceux-ci concernaient une question directe sans réponse, restée **comptée dans le quota** ; celui-ci est un contre-argument, pas une question, et le quota est déjà épuisé). **Signalé explicitement à David plutôt que tranché seul** ; validation reçue : « rédige, ça vaut le coup ».
+
+**Fil relu intégralement avant rédaction** : post original + 4 commentaires existants (David 8h ce matin, Sohail 4 min, Warren Parker 21h + réponse Sohail 19h, Robert Kelly PhD 2h + réponse Sohail 9 min, Bikramjit Konwar 10h). **Angle distinct de tous les autres** : aucun ne traite la fiabilité des comptages eux-mêmes.
+
+**Double-check (§5)** : *contenu* — EN ✅ (langue du fil) ; l'observation sur les révisions silencieuses de chiffres est vérifiée par mon propre pipeline aujourd'hui (INSP-RDC 4665→4945, remplacé sans signal de révision publié) ✅ ; aucun tiret cadratin ✅ ; **aucun CTA** (règle commentaire public, jamais de lien) ✅. *Mise en forme* — relue après saisie (819 caractères, 2 paragraphes), publication confirmée visuellement (threading correct sous le commentaire de Sohail, mention rendue en lien cliquable).
+
+> Sohail Agha the "not meaningful to begin with" point deserves more attention than it usually gets. From where I sit aggregating published bulletins, I have no way to tell a solid count from a shaky one. Revisions and corrections happen constantly, but they never travel as their own signal, they just quietly replace the previous number, and a reader sees a single figure and reasonably treats it as fact.
+>
+> That raises a question about your sentinel system. Does the behavioral signal line, avoidance, reporting delay, trust, carry its own reliability problem, or is it actually more stable than the clinical count it is meant to be weighed against? If the case count is shakier than its prominence suggests, a decision maker needs to know how much to trust each side of the comparison, not just that both sides exist.
+
+**🔧 Piège technique nouveau, à retenir** : le bouton « Répondre » d'un commentaire individuel est une **icône sans texte** (aria-label `"Répondre"`, pas de libellé visible) — un sélecteur textuel `/^Répondre$/` sur `innerText` ne le trouve pas, il faut chercher sur `aria-label`. Plusieurs boutons « Répondre » coexistent sur la page (un par commentaire) : rattacher chacun à son bloc de contexte (auteur + horodatage + début du texte) avant de cliquer, même règle que pour les boutons « Suivre » multiples.
+
 ## 📅 Session linkedin-hwg-followup-check — 17/08/2026 (16h)
 
 **Vérification double déclenchement** : aucune entrée de cette routine datée du 17/08 avant ouverture (dernière : 16/08) → **premier déclenchement du jour**.
