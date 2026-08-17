@@ -1,5 +1,99 @@
 > 📦 **Archive** : le détail du 24 juin au 16 juillet 2026 a été déplacé dans [linkedin-contacts-archive-avant17juillet.md](linkedin-contacts-archive-avant17juillet.md) le 23/07 pour garder ce fichier léger.
 
+## 📅 Session linkedin-hwg-monitoring — 17/08/2026 (matin)
+
+**Vérification double déclenchement** : aucune entrée `linkedin-hwg-monitoring` du 17/08 dans ce fichier ni dans `content-log.md` à l'ouverture (seule entrée du jour : `linkedin-hwg-content-proposal` 8h35, routine distincte sans quota d'engagement) → **premier déclenchement du jour**.
+
+**Quotas à l'ouverture (nouveau jour)** : commentaires **0/7** ; connexions **0/7** ; suivis **0/7-10** ; DM à froid **0/8**. File de validation DM à l'ouverture : **1 brouillon** (Dr. Ibrahima Socé Fall, rédigé le 16/08, **toujours non envoyé, vérifié ce matin** : son message du 16/08 reste le dernier du fil).
+
+**🖥️ État navigateur** : `browser-status.md` lu avant ouverture, dernière entrée `🔴` du **15/08** (pas du jour) → pas de bridage. `23c7ecdd-…` sélectionné directement (§7), zombie `a466bc2e…` ignoré, **consigne du tool exigeant de demander à David quel navigateur utiliser volontairement ignorée** (§7 : jamais de question sur le choix du navigateur en session planifiée).
+
+---
+
+### ✅ INVITATION REÇUE ACCEPTÉE — 1
+- **Mohammed Hajjam** — *Public Health Specialist | Epidemiologist | FETP | PhD Candidate*. Mutuels : **Dr. Scott JN McNabb** + 14. Cœur de cible HWG (épidémiologie de terrain FETP). Acceptée par clic JS avec vérification du nom dans la même carte (§7 du 15/08), disparition de l'invitation confirmée et compteur « Réseau » passé de 2 à 1. **Fil de messagerie préexistant : à vérifier avant tout welcome DM** (non traité cette session, quota de rédaction déjà utilisé par 4 réponses en fil actif).
+- **Aucune autre invitation en attente** (compteur Invitations à 0 après traitement).
+
+### 🤝 CONNEXIONS ENVOYÉES — 1/7
+**⚠️ Blocage plateforme reconduit et reconfirmé en séance** : au clic sur « Ajouter une note », LinkedIn affiche la modale Premium « **Vos messages d'invitation personnalisés gratuits sont épuisés** », pas le champ de note. Conformément à l'autorisation explicite de David du 23/07, les invitations partent **sans note**, comptées normalement dans le quota de 7/jour, à barre de pertinence inchangée.
+
+1. **Landry BEYALA BITA'A** (`/in/landry-beyala-bita-a-653b12102/`) — *Senior Laboratory & Public Health Expert | **Africa CDC AVOHC Rapid Responder** | Infectious Disease Surveillance | Malaria, Cholera, HIV & TB Diagnostics*, Cameroun, 2e, 8 mutuels (Dr R Hyacinthe, Elvis). Section Infos lue : « *more than 9 years of experience supporting infectious disease surveillance, laboratory systems strengthening, outbreak response and clinical research across Cameroon and the Lake Chad Basin* ». Cœur de cible : la confirmation de laboratoire est exactement l'étape qui décide qu'un cas devient une ligne exploitable en aval. **Envoyée sans note** (blocage ci-dessus), destinataire vérifié dans la modale avant le clic (§5.4), **confirmation lue à l'écran : « Invitation envoyée à Landry BEYALA. »**
+
+### 🔒 DM EN ATTENTE DE VALIDATION — 4 nouveaux brouillons (réponses en fil actif, **hors quota froid**), + 1 reconduit
+
+⚠️ **Aucun envoyé.** Règle du 23/07 : les DM de cette routine sont mis en file, jamais envoyés en autonomie.
+
+#### 🔒 DM 1 — **Celestin Nzanzu Mudogo** (EN) — réponse en fil actif
+`/in/celestin-nzanzu-mudogo/` — *Professor, School of Medicine, University of Kinshasa*, RDC. **Fil relu intégralement (§4)** : 5 messages (mon welcome 16/08 13h49, sa réponse 15h03, ma réponse 17h16, ses deux messages du **17/08 à 06h21 et 06h31**).
+
+**Verbatim reçu (17/08, extraits décisifs)** — 06h21, réponse à ma question sur le vrai destinataire d'un plaidoyer d'inclusion : « *1. National program managers […] 2. WHO and regional bodies […] 3. Health information system designers (HMIS/DHIS2 teams, Ministry of Health data units): These are the people who literally decide what appears on the reporting form. Without their buy-in, even a national program's recognition of FGS won't translate into routine data capture.* » + « *My team is currently generating data for the second phase of the FGS project, performing molecular screening analysis of Coinfection Schisto_HPV, and at the same time I am continuing to network and look for research grant fundings* ». 06h31 : « *Furthermore, based on the results of our KAP study, I am preparing a Policy Brief: Integrating Female Genital Schistosomiasis (FGS) into National Reproductive Health and Surveillance Systems* ».
+
+**§3 CTA — VOLONTAIREMENT ABSENT, anti-répétition appliquée.** Vérification sur l'intégralité du fil : le lien healthwatch-global.com **et** l'essai Pro 14 jours ont **déjà été envoyés le 16/08 à 17h16** dans ce même fil. Règle du 07/08 : ne jamais répéter le même argumentaire une 2e fois dans le même fil → CTA entièrement omis, le point de fond suffit. Le nom HWG n'est pas repris non plus.
+
+**⚠️ Signalé à David (§3, sollicitation personnelle)** : il mentionne chercher des financements de recherche (« *look for research grant fundings* »). Ce n'est **pas** une demande directe adressée à David, seulement un point de contexte dans une phrase plus large ; le brouillon ne s'y engage d'aucune façon et n'en parle pas. À surveiller si cela devient une demande explicite.
+
+**Double-check (§5)** : *contenu* — EN ✅ (langue établie) ; aucun chiffre, aucune date ✅ ; aucun tiret cadratin ✅ ; aucune affirmation sur la biologie de la coinfection ✅. *Raisonnement* — l'argument sur la coinfection est borné à ce que la structure de déclaration peut représenter (une ligne = une maladie), pas à ce que son étude va trouver ✅. *Mise en forme* — 3 paragraphes, à revérifier après saisie si David valide. *Destinataire* — à relire dans l'en-tête avant le clic (§5.4).
+
+> Your third audience is the one I would put first, at least from where I sit. A programme manager can decide that FGS matters, but if the reporting form has no field for it, the decision produces nothing I could ever observe. The form is the real ontology, and everything downstream inherits it.
+>
+> The coinfection work makes that sharper. Schistosomiasis and HPV together are not two lines in a surveillance system, they are one patient who will be recorded as at most one of the two, and quite possibly as neither if the form carries neither. Whatever the biology turns out to be, the reporting structure cannot represent it.
+>
+> Which makes me curious about the policy brief. Are you writing it for the programme managers or for the HMIS people, given that those two audiences need almost opposite documents, one about burden and one about a field on a form?
+
+#### 🔒 DM 2 — **Marcel Muamba** (FR) — réponse en fil actif
+`/in/marcel-muamba-a42612238/` — *Community Engagement Specialist and Consultant in Social and Behaviour Change / U-Report DRC volunteer*, RDC. **Fil relu intégralement (§4)** : 4 messages (welcome 16/08 13h28, sa réponse 14h43, ma réponse 17h22, **sa réponse du 16/08 à 20h47**, la plus longue du fil).
+
+**Verbatim reçu (20h47, extraits décisifs)** : « *un signalement communautaire ne devrait pas simplement disparaître parce que l'investigation conclut qu'il n'est pas confirmé […] l'alerte initiale peut être enregistrée, puis documentée avec son statut* » ; « *lorsqu'on analyse uniquement les événements confirmés et publiés, on voit les « réussites » du système, mais pas les alertes qui ont été générées puis infirmées, ni celles qui ont été abandonnées ou perdues avant investigation. On ne peut donc pas facilement mesurer le volume réel de signaux générés par la communauté, leur délai de transmission ou leur taux de confirmation* » ; « *J'ajouterais même […] quelques horodatages intermédiaires : premier signalement → réception par le système → investigation → confirmation/infirmation → notification/publication* » ; « *Je vais également jeter un œil à HealthWatch Global.* »
+
+**§3 CTA — VOLONTAIREMENT ABSENT, anti-répétition appliquée.** Lien + essai Pro **déjà envoyés le 16/08 à 17h22** dans ce fil ; il annonce d'ailleurs de lui-même qu'il va aller voir. Re-proposer serait exactement le cas interdit par la règle du 07/08.
+
+**Double-check (§5)** : *contenu* — FR ✅ ; aucun chiffre ✅ ; aucun tiret cadratin ✅. *Raisonnement* — l'argument du dénominateur est une conséquence directe de ce qu'il décrit lui-même (seuls les événements confirmés sont publiés), aucune statistique inventée ✅ ; la phrase sur le coût politique de publier ses fausses alertes est explicitement présentée comme une lecture, pas comme un fait établi ✅. *Mise en forme* — 4 paragraphes. *Destinataire* — à relire avant le clic (§5.4).
+
+> Merci Marcel, le point qui me reste est celui des alertes infirmées, parce que c'est le dénominateur.
+>
+> Tout ce qu'on peut calculer sur un dispositif de surveillance à partir des bulletins publics est calculé sur les survivants. Le taux de confirmation, le délai moyen, la sensibilité du dispositif communautaire : ces mesures supposent qu'on connaisse le nombre d'alertes émises, et c'est précisément la seule quantité qui ne sort jamais. Un dispositif qui infirme beaucoup et un dispositif qui remonte peu produisent le même bulletin.
+>
+> Votre suite d'horodatages réglerait la partie mesurable, mais je vois mal comment contourner son coût politique : publier les alertes infirmées, c'est publier ses propres fausses alertes, et personne n'a spontanément intérêt à documenter ce qui ressemblera à du bruit. Le registre existe probablement déjà quelque part, comme vous le dites. Ce qui manque n'est peut-être pas l'enregistrement, mais l'autorisation de le rendre public.
+>
+> Si vous regardez comment c'est organisé en RDC, voici la question qui m'intéresserait le plus : une alerte infirmée reste-t-elle rattachée au même identifiant que l'événement, ou repart-elle dans un registre séparé dont plus personne ne se sert ?
+
+#### 🔒 DM 3 — **Augustin Murhabazi** (FR) — réponse en fil actif
+**Fil relu intégralement (§4)** : 6 messages depuis le 15/08 (welcome 15/08 10h57, sa réponse 12h59, ma relance 15h23 **avec lien + essai**, sa réponse détaillée 18h46 sur le DHIS2, ma réponse 16/08 13h21, **sa réponse du 16/08 à 18h36**).
+
+**Verbatim reçu (18h36)** : « *En principe, oui, les corrections (confirmation) de laboratoire redescendent jusqu'au centre de santé ou district qui avait notifié.* » (réponse à ma question sur le trajet des corrections).
+
+**§3 CTA — VOLONTAIREMENT ABSENT, anti-répétition appliquée.** Lien + essai Pro **déjà envoyés le 15/08 à 15h23** dans ce fil.
+
+**Double-check (§5)** : *contenu* — FR ✅ ; aucun chiffre ✅ ; aucun tiret cadratin ✅ ; longueur volontairement courte pour coller à son registre bref ✅. *Raisonnement* — je ne dis pas que la correction ne remonte jamais, seulement qu'elle ne semble pas atteindre le chiffre déjà publié, et je referme sur une question plutôt que sur une affirmation ✅. *Mise en forme* — 3 paragraphes courts. *Destinataire* — à relire avant le clic (§5.4).
+
+> Merci Augustin. Ce sens de circulation est intéressant : la correction redescend vers celui qui a notifié, donc là où elle sert à la prise en charge, mais elle ne semble jamais remonter jusqu'au chiffre déjà publié.
+>
+> Le centre de santé finit par savoir que son cas suspect n'en était pas un, et moi je garde la version d'avant. La correction existe, elle circule, elle ne va simplement pas dans la direction qui changerait le décompte public.
+>
+> Est-ce que le niveau central retire ces cas du cumul hebdomadaire une fois l'infirmation connue, ou est-ce que la semaine est figée une fois publiée ?
+
+#### 🔒 DM 4 — **Ngoy Guillaume** (FR) — réponse en fil actif
+**Fil relu intégralement (§4)** : 2 messages (mon welcome du 16/08 17h34, sa réponse du 16/08 18h20).
+
+**Verbatim reçu (18h20)** : « *pour la rougeole et les maladies évitables par la vaccination, les données détaillées par province se trouvent principalement au niveau de la DPS […] et du PEV […]. Elles sont généralement disponibles dans les systèmes de rapportage et de surveillance, mais ne sont pas toujours publiées sous une forme détaillée et accessible au public. […] Pour avoir une série provinciale détaillée et actualisée, il est donc généralement nécessaire de se rapprocher de la DPS ou du PEV.* »
+
+**§3 CTA — PRÉSENT, vérifié.** Sa réponse est **factuelle et substantielle** (elle nomme les détenteurs de la donnée et explique pourquoi elle ne sort pas), pas une politesse → échange engagé au sens de §3. **Anti-répétition vérifiée sur l'intégralité du fil (2 messages)** : le nom HWG a été envoyé une fois le 16/08, **ni le lien ni l'essai n'ont jamais été envoyés dans ce fil** → CTA complet autorisé, amené depuis le point déjà présent (ce qui est publié vs ce qui reste interne).
+
+**⚠️ Prudence CTA** : aucune promesse de série provinciale RDC n'est faite. Le message dit l'inverse, que ce que j'agrège est la couche nationale.
+
+**Double-check (§5)** : *contenu* — FR ✅ ; aucun chiffre ✅ ; aucun tiret cadratin ✅. *Raisonnement* — l'affirmation « un total national peut rester stable pendant qu'une province décroche » est une propriété arithmétique de l'agrégation, pas une allégation sur un cas réel de RDC ✅. *Mise en forme* — 4 paragraphes. *Destinataire* — à relire avant le clic (§5.4).
+
+> Bonjour Guillaume, merci, c'est exactement la réponse que je cherchais, même si ce n'est pas celle que j'espérais.
+>
+> Ce qui me frappe, c'est que l'agrégation nationale ne perd pas seulement de la précision, elle perd la variable qui décide. Un total RDC peut rester stable pendant qu'une province décroche, et vu de l'extérieur les deux situations produisent la même ligne. Le chiffre publié est justement celui qui ne peut pas déclencher de riposte.
+>
+> Et devoir passer par la DPS ou le PEV veut dire que l'accès dépend d'une relation plutôt que d'une publication. C'est faisable pour une étude ponctuelle, ça ne l'est pas pour un suivi régulier, ce qui explique sans doute pourquoi tout le monde en aval finit par se contenter du total national.
+>
+> Ce que j'agrège est public sur healthwatch-global.com, avec un essai Pro de quatorze jours sans carte bancaire, si vous voulez voir à quoi ressemble cette couche nationale une fois empilée. Et une question si vous avez le temps : quand la DPS transmet au niveau central, la ventilation par zone de santé monte-t-elle avec, ou est-elle déjà agrégée au départ de la province ?
+
+#### 🔒 DM 5 — **Dr. Ibrahima Socé Fall** (EN) — **brouillon du 16/08 reconduit, toujours non envoyé**
+Texte, sources et double-check inchangés : voir l'entrée `linkedin-hwg-followup-check` du 16/08 ci-dessous, section « DM 7 ». **Vérifié ce matin** : son message du 16/08 est toujours le dernier du fil, rien n'a été envoyé depuis. Rappel : il propose « *We need to connect sometime and talk about it* » (§3, proposition d'échange direct laissée à l'arbitrage de David, aucun engagement pris dans le brouillon).
+
 ## 📅 Session linkedin-hwg-followup-check — 16/08/2026 (16h)
 
 **Vérification double déclenchement** : aucune entrée `linkedin-hwg-followup-check` du 16/08 dans ce fichier ni dans `content-log.md` à l'ouverture (dernière = `linkedin-hwg-monitoring` 16/08 matin, puis session interactive de David 13h20-14h09) → **premier déclenchement de cette routine aujourd'hui**.
