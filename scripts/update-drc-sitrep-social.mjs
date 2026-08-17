@@ -40,6 +40,44 @@ if (!Number.isFinite(cases) || !Number.isFinite(deaths) || !/^\d{4}-\d{2}-\d{2}$
   process.exit(1);
 }
 
+// This script's whole reason to exist is a narrow, named exception to the normal source-trust
+// rules (see lib/source-trust.ts): it accepts a social-media post as a source SPECIFICALLY
+// because that post is a verbatim official "point de situation" from one of the two named DRC
+// government accounts, read directly by the routine calling this script (no backend fetcher
+// exists for X posts — see the header comment above). That exception must not be exploitable
+// as "any URL a routine hands us" — found 2026-08-12: this row's source was a LinkedIn feed
+// permalink, login-walled and unreadable for a client, carrying the sourceStatus() 'official'
+// badge purely because it was https://. sourceStatus() no longer trusts scheme alone (see the
+// same fix), but that only protects rows synced by a backend fetcher; this script writes
+// directly and never goes through sourceStatus(), so it needs its own gate. The gate is
+// deliberately narrower than "any X/Twitter post" — it must be the two accounts the exception
+// actually names, not X in general.
+const ALLOWED_SOURCE_HOSTS = new Set(["twitter.com", "x.com", "mobile.twitter.com"]);
+const ALLOWED_SOURCE_ACCOUNTS = new Set(["com_mediasrdc", "minsanterdc"]);
+
+function sourceGuardReason(url) {
+  let u;
+  try { u = new URL(url); } catch { return `guard:source-not-url — "${url}" is not a valid URL`; }
+  const host = u.hostname.toLowerCase().replace(/^www\./, "");
+  if (!ALLOWED_SOURCE_HOSTS.has(host)) {
+    return `guard:source-host — ${host} is not X/Twitter. This exception covers ONLY a point de situation read verbatim on @Com_mediasRDC or @MinSanteRDC — any other host (including a login-walled social permalink like LinkedIn) does not qualify, no matter how it was read.`;
+  }
+  const account = u.pathname.split("/").filter(Boolean)[0]?.toLowerCase();
+  if (!account || !ALLOWED_SOURCE_ACCOUNTS.has(account)) {
+    return `guard:source-account — "${u.pathname}" is not a post by @Com_mediasRDC or @MinSanteRDC. The exception names these two accounts specifically, not X/Twitter in general.`;
+  }
+  if (!/\/status\/\d+(?:[/?].*)?$/i.test(u.pathname)) {
+    return `guard:source-not-status — "${u.pathname}" is not a link to a specific post (missing /status/<id>). A profile or search URL is not a citable source.`;
+  }
+  return null;
+}
+
+const sourceReason = sourceGuardReason(sourceUrl);
+if (sourceReason) {
+  console.error(`BLOCKED — ${sourceReason} Not written. Report this for arbitration, do not retry with a different URL without confirming it is genuinely one of the two named accounts.`);
+  process.exit(2);
+}
+
 async function fetchRow() {
   const res = await fetch(
     `${SUPABASE_URL}/rest/v1/outbreaks?disease_en=ilike.*ebola*&country_en=ilike.*Congo*&select=id,cases,deaths,date,source_priority&order=source_priority.desc&limit=1`,

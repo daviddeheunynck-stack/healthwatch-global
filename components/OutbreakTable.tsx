@@ -63,6 +63,8 @@ export interface OutbreakTableLabels {
   illustrativeTooltip: string;
   officialBadge: string;
   officialTooltip: string;
+  pressBadge: string;
+  pressTooltip: string;
   donBadge: string;
   donTooltip: string;
   allSources: string;
@@ -71,12 +73,12 @@ export interface OutbreakTableLabels {
 type Region       = "all" | "africa" | "asia" | "europe" | "americas" | "oceania";
 type Risk         = "all" | "high" | "medium" | "low";
 type CfrFilter    = "all" | "critical" | "elevated" | "low" | "nodata";
-type SourceFilter = "all" | "don" | "official" | "unverified";
+type SourceFilter = "all" | "don" | "official" | "press" | "unverified";
 
 const REGIONS:        readonly Region[]       = ["all", "africa", "asia", "europe", "americas", "oceania"];
 const RISKS:          readonly Risk[]         = ["all", "high", "medium", "low"];
 const CFR_FILTERS:    readonly CfrFilter[]    = ["all", "critical", "elevated", "low", "nodata"];
-const SOURCE_FILTERS: readonly SourceFilter[] = ["all", "don", "official", "unverified"];
+const SOURCE_FILTERS: readonly SourceFilter[] = ["all", "don", "official", "press", "unverified"];
 
 // Saved filters round-trip through localStorage as loose strings — validate
 // against the known union members so stale/corrupted entries fall back to
@@ -446,7 +448,7 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
       o.cases > 0 && o.deaths !== null ? (o.deaths / o.cases * 100).toFixed(1) : "",
       esc(o.risk_level),
       esc(o.date),
-      esc(sourceStatus(o) === 'don' ? "WHO DON" : sourceStatus(o) === 'official' ? "Official" : "Unverified"),
+      esc({ don: "WHO DON", official: "Official", press: "Press", unverified: "Unverified" }[sourceStatus(o)]),
       esc(o.source),
       esc(o.description),
     ]);
@@ -915,6 +917,8 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
                 ? "border-blue-700/50 text-blue-400"
                 : sourceFilter === "official"
                 ? "border-amber-700/50 text-amber-400"
+                : sourceFilter === "press"
+                ? "border-violet-700/50 text-violet-400"
                 : sourceFilter === "unverified"
                 ? "border-gray-600 text-gray-400"
                 : "border-gray-800 text-gray-400"
@@ -923,6 +927,7 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
             <option value="all">{l.allSources}</option>
             <option value="don">{l.donBadge}</option>
             <option value="official">{l.officialBadge}</option>
+            <option value="press">{l.pressBadge}</option>
             <option value="unverified">{l.illustrativeBadge}</option>
           </select>
 
@@ -1214,6 +1219,17 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
                           </a>
                         ) : (
                           <span title={l.officialTooltip} className="inline-flex items-center text-[10px] font-bold px-1.5 py-0.5 rounded bg-amber-900/30 border border-amber-700/50 text-amber-400 shrink-0 cursor-help whitespace-nowrap">
+                            {sourceName(outbreak.source)}
+                          </span>
+                        )
+                      )}
+                      {sourceStatus(outbreak) === 'press' && (
+                        outbreak.source ? (
+                          <a href={outbreak.source} target="_blank" rel="noopener noreferrer" title={l.pressTooltip} className="inline-flex items-center text-[10px] font-bold px-1.5 py-0.5 rounded bg-violet-900/30 border border-violet-700/50 text-violet-400 shrink-0 cursor-pointer whitespace-nowrap hover:bg-violet-900/60 transition-colors">
+                            {sourceName(outbreak.source)} ↗
+                          </a>
+                        ) : (
+                          <span title={l.pressTooltip} className="inline-flex items-center text-[10px] font-bold px-1.5 py-0.5 rounded bg-violet-900/30 border border-violet-700/50 text-violet-400 shrink-0 cursor-help whitespace-nowrap">
                             {sourceName(outbreak.source)}
                           </span>
                         )
