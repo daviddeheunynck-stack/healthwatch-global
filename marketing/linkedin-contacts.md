@@ -10,7 +10,16 @@
 
 ---
 
-### 🔒 DM EN ATTENTE DE VALIDATION — 3 brouillons (2 réponses en fil actif + 1 message de bienvenue, **hors quota froid**)
+### ✅ 3 DM VALIDÉS ET ENVOYÉS (session interactive, ordre explicite « envoie les dms »)
+
+**Double-check à froid effectué avant envoi** (3 fils rouverts et relus intégralement une 2e fois sur demande explicite de David « double check les dms à envoyer », aucun nouveau message reçu depuis la rédaction, chiffre de la ligne RDC revérifié en base prod `.env.local.live` — toujours 4 665 cas / 2 184 décès, WHO DON615, inchangé). Textes identiques aux brouillons, recipient vérifié dans l'en-tête/chip du composeur **dans le même appel JS que le clic d'envoi** (§5.4).
+
+1. **Johan Verheyden** — envoyé **16:55**, réponse en fil actif, CTA volontairement absent (partenaire déjà client Pro). Texte identique au brouillon (4 paragraphes, 1 325 caractères). **3 timeouts CDP `Input.dispatchKeyEvent`** pendant la frappe, à chaque fois vérifiés par lecture directe de l'éditeur après re-`select_browser` : aucune perte, aucun doublon, texte final conforme.
+2. **Abou A. SOUMAH** — envoyé **16:58**, réponse en fil actif, CTA complet (jamais envoyé avant dans ce fil). Texte identique au brouillon (4 paragraphes, 809 caractères). **1 déconnexion d'extension** (« Claude in Chrome is not connected ») en cours de frappe : `list_connected_browsers` a confirmé `23c7ecdd-…` toujours présent, re-`select_browser`, texte vérifié intact avant l'envoi.
+3. **Mohammed Hajjam** — envoyé, message de bienvenue, aucun CTA/lien (premier contact). Texte identique au brouillon (2 paragraphes). **⚠️ Piège technique nouveau, à retenir** : le composeur « Nouveau message » ouvert depuis un profil (pas depuis un fil déjà existant) **ne réutilise pas la classe `.msg-form__contenteditable`** de l'éditeur habituel — sélecteur `[contenteditable="true"]` au niveau document introuvable directement, retrouvé via une traversée du DOM incluant les shadow roots (`el.shadowRoot`), même famille de piège que le DM Abou SOUMAH en shadow DOM du 17/08 matin. Destinataire vérifié via le chip du composeur (« Mohammed Hajja... ») avant le clic.
+
+<details>
+<summary>Brouillons archivés avant envoi (texte original, pour référence)</summary>
 
 #### 🔒 DM 1 — **Johan Verheyden** (FR) — réponse en fil actif, question directe
 `/in/jverheyden/` — *Founder and Chief Researcher*, **African Intelligence / Aries Consult**, Belge basé à **Nairobi**. **Partenaire existant et utilisateur HWG Pro actif** (accès Pro 1 an offert, compte `jverheyden@ariesconsult.eu`, mot de passe défini manuellement après deux blocages de lien de réinitialisation).
@@ -77,6 +86,8 @@
 > Hi Mohammed, thanks for connecting. I run HealthWatch Global, which aggregates active outbreak bulletins from WHO, ECDC, Africa CDC and PAHO.
 >
 > Your work on molecular epidemiology and drug resistance in tuberculosis sits outside what I aggregate, which is exactly why it interests me. In the outbreak bulletins I do work with, a case arrives as a number and a date, and anything about the pathogen itself, resistance profile included, never travels with it. Question, if you have time: in TB resistance surveillance, does the genotype stay attached to the individual case record all the way up to the national figures, or does it get reported separately from the case count?
+
+</details>
 
 ### 👣 FOLLOW-BACK — 1 exécuté, 1 écarté (suivis du jour portés à **9/7-10**)
 **Onglet Abonnés** (`/mynetwork/network-manager/people-follow/followers/`) : **326 abonnés** contre **321** ce matin, soit **5 nouveaux**. Sur ces 5, **3 étaient déjà « Suivi »** (Abou A. SOUMAH et Landry BEYALA BITA'A, suivis automatiquement après acceptation de connexion ce matin ; Warren Parker, suivi ce matin en découverte active). Restaient 2 à évaluer, **aucun des deux présent dans `linkedin-candidates-tracker.md`** (vérifié avant évaluation).
