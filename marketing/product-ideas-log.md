@@ -688,3 +688,105 @@ Un canari quotidien aurait crié le 03/08 **et** le 04/08, avant que la personne
 **Vérifications communes** : `npx tsc --noEmit` et `npm run lint` propres sur tout le dépôt (2 warnings React Hooks préexistants, sans rapport). Tous les scripts de vérification jetables supprimés après usage. Migration `auth_failures` appliquée en prod (`supabase db push`, confirmée par une lecture REST immédiate). Poussé sur `master` : `afbff6e`.
 
 ---
+
+## 2026-08-17 — Proposition du jour
+
+**Premier run depuis le 04/08** (routine suspendue du 05/08 au 17/08, priorité Codeur/freelance, réactivée aujourd'hui sur demande explicite de David). 13 jours de travail produit ont eu lieu sans passage d'idéation : couverture Pacifique, incidents de connexion, sécurité, qualité de données. **J-4 avant le go/no-go du 21/08.**
+
+Angle nouveau : **le seul acte d'achat jamais enregistré par le produit, et l'instrument qui va servir à trancher le 21/08.** Les passages précédents ont couvert la qualité des données, la personnalisation, l'accès, le canal d'entrée, le cycle d'essai, la demande de conversion, les machines qui lisent les e-mails et l'entonnoir d'inscription. Personne n'avait encore regardé **ce qui se passe quand quelqu'un dit oui**.
+
+**⚠️ Limite de méthode à lire avant les idées, elle change leur statut de preuve.** Contrairement à tous les passages précédents, **je n'ai pas pu sonder la base prod** : les trois tentatives d'exécution d'un script de lecture seule (`node`, script jetable lisant `.env.local.live`) ont été **refusées par le classifieur de permissions** de cette session automatisée. Les faits ci-dessous viennent donc de trois sources, jamais d'une requête que j'ai lancée moi-même :
+1. **le code, relu ligne à ligne aujourd'hui** — c'est la source de tout ce qui est affirmé sur le comportement du produit, et elle est solide ;
+2. **`marketing/content-log.md` l. 83, écrite aujourd'hui** par la session marketing, qui a elle-même interrogé Stripe en direct ce matin (clé restreinte, sans `charge_read`) ;
+3. **l'e-mail envoyé par David ce matin à 07:11**, lu dans Gmail.
+
+Conformément à [[feedback_verify_live_db_not_carryover_notes]] : la source 2 est une lecture live du **même jour**, pas une note de report — mais toute affirmation sur l'état actuel de la base (compteurs `/admin`, nombre d'essais) reste **dérivée de la logique du code**, pas mesurée. À revérifier d'une requête avant de s'appuyer dessus pour la décision.
+
+### 1. 🔴 Le seul vrai achat de l'histoire du produit est un abonnement sans carte, programmé pour s'annuler tout seul le 26/08 — et le produit le traite partout comme un client payant
+
+**Signal.** `otitamorgan@gmail.com` (Morgan Otita, contact LinkedIn) s'est inscrit le **12/08** et a passé un **checkout Stripe Pro annuel à 249 $ soixante-et-onze secondes plus tard**. C'est, à ce jour, **le signal d'intention le plus fort jamais enregistré par HWG** : aucun clic vers `/pricing` n'avait jamais été observé d'un humain (le premier, le 03/08, était un scanner de l'OIM). État réel de l'abonnement, lu en direct sur Stripe ce matin par la session marketing : **`trialing`, aucun moyen de paiement rattaché**, `trial_settings.end_behavior = missing_payment_method: cancel` → **annulation silencieuse le 26/08**, sans qu'un centime soit encaissé.
+
+**Ce n'est pas un accident de parcours, c'est ce que le code demande à Stripe de faire.** `app/api/checkout/route.ts:149-153` : dès qu'il reste des jours d'essai (et il en reste toujours pour un nouveau compte, `trialDaysRemaining` retombe sur 14 par défaut, l. 146), la session Checkout part avec les trois paramètres suivants ensemble :
+
+```
+subscription_data[trial_period_days]                                  = N
+subscription_data[trial_settings][end_behavior][missing_payment_method] = cancel
+payment_method_collection                                              = if_required
+```
+
+`if_required` + un essai = **Stripe ne demande pas de carte**, et `cancel` = **l'abonnement meurt à la fin de l'essai**. Autrement dit : la seule porte d'achat du produit est configurée pour ne jamais encaisser, et pour se refermer sans bruit. Ce qui suit est cohérent avec cette configuration, pas avec un bug ponctuel.
+
+**Et le produit, lui, célèbre la conversion.** `app/api/webhook/route.ts:207-273` (`checkout.session.completed`) écrit `plan`, `stripe_customer_id`, `stripe_subscription_id`, `trial_ends_at`, enrôle les régions d'alerte, puis envoie `sendUpgradeEmail()` — l'e-mail de bienvenue « passage à Pro ». La page de retour affiche `messages/en.json:48` : **« Subscription confirmed! »**. Rien, à aucun moment, ne mentionne qu'il manque une carte.
+
+**Le vrai coût est là : dans tout le produit, `stripe_subscription_id` non nul veut dire « client payant ».** Ce compte est donc désormais sorti de tous les dispositifs qui auraient pu le rattraper :
+
+| mécanisme | ce qu'il fait de ce compte | référence |
+|---|---|---|
+| Bandeau d'essai | **masqué** (`hasSubscription` vrai) | `components/TrialBannerLoader.tsx:36` |
+| Modale d'upgrade | **court-circuitée** | `components/UpgradeModal.tsx:190-198` |
+| CTA de la fiche foyer (**la seule surface d'atterrissage prouvée**) | **masqué**, état `paid` | `components/OutbreakBottomCta.tsx:108` |
+| Rappels J-3 / J-1 de fin d'essai | **exclu** par `.is("stripe_subscription_id", null)` | `app/api/cron/trial-reminders/route.ts:103` |
+| `checkZeroRegionTrials` (health-check) | **exclu**, même filtre | ajouté le 01/08 |
+| `checkDecisionHorizonTrials` (health-check) | **exclu**, même filtre — alors que son essai se résout le **26/08**, soit exactement le cas pour lequel ce contrôle a été construit | `app/api/cron/health-check/route.ts:389-390` |
+| `/admin` → « Abonnés Stripe actifs », « MRR réel », checklist go/no-go | **compté comme payant** | voir idée 2 |
+
+**Le détail qui prouve que l'intention du code était l'inverse.** Dans `trial-reminders`, à 20 lignes au-dessus du filtre qui l'exclut, le commentaire dit mot pour mot (l. 80-83) : « *Note: `stripe_subscription_id` filter is intentionally omitted — users who went through checkout with a trial but no payment method would otherwise be silently skipped.* » Le commentaire décrit exactement ce cas, annonce que le filtre a été retiré pour lui — **et le filtre est toujours là, l. 103**. Quelqu'un a vu le trou et documenté le correctif sans que le correctif existe.
+
+**Il reste un filet, et il est plus fragile qu'il n'y paraît.** `app/api/webhook/route.ts:465-493` traite `customer.subscription.trial_will_end` et, bien vu, **distingue** `hasPaymentMethod` pour choisir la bonne copie. Deux réserves : (a) son propre commentaire (l. 463) précise « *Requires "customer.subscription.trial_will_end" enabled in Stripe Dashboard* » — **aucune trace de cette configuration nulle part dans le dépôt** (zéro occurrence de `enabled_events` ou d'une doc des événements souscrits) et rien ne la surveille, donc personne ne sait si cet événement est réellement activé ; (b) il part **3 jours avant**, soit vers le **23/08** — après la décision du 21/08, et 3 jours avant l'annulation.
+
+**Pourquoi maintenant :** à J-4, ce compte est simultanément la meilleure nouvelle du produit (quelqu'un a voulu payer, spontanément, 71 secondes après son inscription) et le trou le plus coûteux (il ne paiera pas, et il disparaîtra le 26/08 sans que rien ne se déclenche). Les deux échéances encadrent la décision.
+
+**Effort estimé :** petit, en trois gestes séparables et indépendants.
+- **(a)** Distinguer les deux intentions au checkout : depuis `/pricing`, un clic sur « s'abonner » est une intention d'achat → `payment_method_collection: "always"` (Stripe ne débite toujours rien avant la fin de l'essai, la promesse commerciale tient) ; depuis le CTA de fiche foyer, qui annonce noir sur blanc « essai gratuit — **sans carte bancaire** », garder `if_required`, sinon la copie devient mensongère. Un paramètre, conditionné à la surface d'origine.
+- **(b)** Créer l'état d'interface qui manque : `trialing` **sans** moyen de paiement n'est ni `paid` ni `trial` ni `expired` aujourd'hui — un bandeau « votre abonnement s'annulera le {date} faute de carte enregistrée » avec le lien vers le portail de facturation (déjà construit, `app/api/billing-portal`).
+- **(c)** Une ligne dans le health-check quotidien : abonnements Stripe `trialing` sans moyen de paiement, même forme que `checkZeroRegionTrials`. C'est la seule des trois qui aurait fait remonter ce cas **le 12/08** au lieu du 17/08.
+- Et, indépendamment : aligner `trial-reminders` sur son propre commentaire.
+
+**Risque/inconnue :** (a) **le fait qu'exiger une carte ajoute de la friction est réel** — d'où la séparation par intention plutôt qu'un changement global : le seul funnel qui ait jamais produit un checkout ne doit pas être durci à l'aveugle ; (b) **je n'ai pas pu relire Stripe depuis cette session** (probe refusée) : une carte a peut-être été ajoutée depuis l'e-mail de David de ce matin, ce qui réglerait le cas individuel **sans rien changer au défaut structurel** ; (c) `payment_method_collection: "always"` avec un essai est supporté par Stripe mais modifie l'écran de Checkout — à vérifier en mode test avant la prod ; (d) l'énumération complète des moyens de paiement était impossible ce matin (clé restreinte sans `charge_read`), donc « aucune carte » repose sur `default_source` et `invoice_settings.default_payment_method` vides — solide, pas absolu.
+
+### 2. 🔴 La checklist go/no-go du 21/08 va passer au vert grâce à cet abonnement sans carte — et elle affiche un MRR de 29 € qui n'existe pas
+
+**Signal (code lu aujourd'hui).** La décision du 21/08 a un instrument, et il est dans le produit : `app/[locale]/admin/page.tsx:319-324`, quatre critères, avec la règle de lecture imprimée juste en dessous (l. 533-535) : **« ≥3/4 cochées → continuer sans changer de cap · <2/4 → diagnostiquer l'activation »**.
+
+| critère | code | ce qu'il vaut réellement |
+|---|---|---|
+| ≥5 utilisateurs revenus après J+2 | `returnedUsers.length >= 5` | mesuré (corrigé le 30/07 pour tenir compte des sessions persistantes) |
+| ≥3 utilisateurs actifs sur 30 j | `active30.length >= 3` | mesuré |
+| **≥1 paiement Stripe actif** | **`payingCount >= 1`** | **`payingCount` = comptes avec `stripe_subscription_id` non nul ≠ `admin_override` (l. 217-219). Morgan Otita rentre dans ce compte. Le critère passe donc au vert avec zéro euro encaissé, sur un abonnement programmé pour s'annuler 5 jours après la décision.** |
+| ≥1 pilote en discussion active | **`pipeline: false`** — **codé en dur** (l. 323) | ne peut structurellement jamais être vert |
+
+Comme le 4e est verrouillé à faux, **le maximum atteignable est 3/4 — c'est-à-dire exactement le seuil du « continuer sans changer de cap »**, et il est franchi au moment précis où le critère de paiement passe au vert. La décision la plus lourde du projet peut donc basculer sur un compte qui n'a jamais rien payé.
+
+**Le même chiffre se retrouve dans le KPI de revenus.** `realMrr` (l. 223) somme `PLAN_MRR[plan]` sur ces mêmes comptes, et `PLAN_MRR.pro = 29` (l. 30-36). La carte « **MRR réel (Stripe)** » affichera donc **29 €** — faux deux fois : l'abonnement n'encaissera rien, et s'il encaissait ce serait un **annuel à 249 $ ≈ 20,75 €/mois**, pas 29. `PLAN_MRR` ne distingue nulle part mensuel et annuel, alors que `/api/checkout` vend les deux (l. 13-19).
+
+**Et le critère retiré l'a été sur une prémisse qui n'est plus vraie.** Le commentaire l. 316-318 explique que la « réponse institutionnelle » a été sortie du scoring parce que « *le canal cold email institutionnel a été fermé, ce critère ne pourra structurellement plus jamais passer au vert* » ; l'interface l'affiche « *hors scoring, canal email fermé* » (l. 540). Or ce canal est aujourd'hui **le plus gros effort en cours du projet** : `marketing/institutional-prospects-log.md` (runs des 15, 16 et 17/08) donne **200 institutions prospectées, 180 messages envoyés, 170 effectivement délivrés, 10 bounces — et zéro réponse, de quelque nature que ce soit**, plus 20 brouillons créés aujourd'hui même. Le seul fait mesuré sur l'effort dominant des trois dernières semaines n'apparaît pas dans le panneau qui sert à décider ; il ne vit que dans un log marketing.
+
+**Pourquoi maintenant :** dans 4 jours. Un instrument qui se trompe dans le sens optimiste, sur le seul critère décisif, le jour d'un go/no-go, est plus coûteux qu'une fonctionnalité manquante — c'est le 30/07 à l'envers (ce jour-là la mesure faisait paraître le produit **plus mort** qu'il n'était ; ici elle le fera paraître **plus vivant**).
+
+**Effort estimé :** petit — les quatre critères tiennent en six lignes. Le travail réel n'est pas le code mais la définition : « paiement actif » devrait vouloir dire *abonnement avec moyen de paiement* ou *au moins une facture payée* (`invoice.payment_succeeded` est déjà traité par le webhook, l. 431), pas *colonne non nulle*. Trois compléments cheap : distinguer mensuel/annuel dans `PLAN_MRR`, remplacer `pipeline: false` par un critère mesurable ou l'assumer comme purement manuel, et remettre le canal institutionnel dans le panneau avec son chiffre réel (170 délivrés / 0 réponse) plutôt que la mention « fermé ».
+
+**Risque/inconnue :** (a) ce n'est pas un levier business, c'est l'instrument — mais c'est celui que David lira le 21/08 ; (b) un critère fondé sur les factures payées afficherait **0** aujourd'hui : c'est précisément l'intérêt, le chiffre doit être inconfortable plutôt que faux ; (c) **je n'ai pas vu le panneau** — `/admin` est derrière le login de David et ma sonde base a été refusée : les valeurs annoncées sont déduites du code et de l'état Stripe établi ce matin, pas d'une capture. La vérification coûte à David un coup d'œil sur `/admin` ; (d) le critère « ≥3/4 » lui-même est un héritage du J+30 et n'a jamais été rediscuté depuis — le remettre à plat est une décision de positionnement, pas un correctif.
+
+### 3. Un essai dont l'e-mail est indélivrable est indistinguable d'un essai simplement silencieux — sur le seul canal qui fait entrer quelqu'un dans le produit
+
+**Signal.** `profiles.email_blocked_at` fait correctement son travail en aval : il **gate les envois** de tous les crons de livraison (vérifié : `winback-sequence`, `weekly-signal`, `trial-reminders`, `onboarding-sequence` ×5 requêtes, `expire-trials`, `pilot-follow-up`, `pilot-closing-reminder`, `disease-alerts`, `watchlist-alerts`, `trigger-pheic-alerts`, `trigger-regional-digest`…). Mais **rien ne le remonte jamais** : le health-check quotidien porte aujourd'hui neuf blocs dédiés (livraison, essais à 0 région, invitations de pilotes bloquées, dérive `alert_locale`, abonnements institutionnels, horizon de décision, répartition des régions, échecs d'authentification, secrets dans le bundle) et **`email_blocked_at` n'apparaît pas une seule fois dans le fichier**. Conséquence : un essai actif bloqué chez Brevo, ou dont l'adresse n'existe pas, produit exactement la même trace qu'un essai qui n'ouvre rien — zéro. Or le fait établi le 31/07 tient toujours : **les 4 seules visites réelles jamais mesurées sont 4 clics d'e-mail**, à 8-10 secondes près. Un compte injoignable par e-mail n'a mathématiquement aucune chance de produire un signal d'usage, et il pèse pourtant dans le dénominateur du 21/08.
+
+**Précédent qui chiffre le coût :** Kamau et Mulamba, bloqués depuis le **21/07**, n'ont été découverts que le **28/07**, à la main, en lisant le journal Brevo — sept jours pendant lesquels le bilan hebdomadaire a écrit que « les 4 leads reçoivent bien leurs alertes ».
+
+**Piste concrète mais NON vérifiée, à traiter comme telle :** la mémoire du 16/08 ([[project_hwg_viability_decision_2026_08_21]]) liste parmi les essais en cours l'adresse **`emmabahati@429gmail.com`** — un domaine qui ne peut pas exister (`429gmail.com`). Si l'adresse est bien celle-là, chaque envoi part en dur bounce, le compte n'a jamais rien reçu, et il alimente le 21/08 comme un « essai qui ne s'active pas ». Mais ça peut tout aussi bien être une coquille dans la mémoire elle-même : **je n'ai pas pu le vérifier** (sonde base refusée). Une requête suffit à trancher, et elle doit précéder toute conclusion.
+
+**Effort estimé :** petit — une ligne de health-check listant les essais actifs à `email_blocked_at` non nul, même forme que `checkZeroRegionTrials`. La version renforcée (lire les `softBounces`/« Unable to find MX » du journal Brevo pour les adresses qui n'ont jamais rien reçu) réutilise l'appel Brevo déjà en place dans `sync-brevo-blocklist`.
+
+**Risque/inconnue :** (a) priorité honnêtement inférieure aux idées 1 et 2 : c'est un filet d'interprétation, pas un levier — rien ne partait dans le vide, le gating fonctionne ; (b) le coût est uniquement de lecture (un essai muet parce qu'injoignable déflate le signal d'usage sans qu'on le sache), ce qui n'est grave que les jours où l'on décide sur ce signal — c'est-à-dire dans 4 jours ; (c) une validation d'adresse à l'inscription serait le correctif amont, mais elle touche l'entonnoir qui a déjà cassé deux fois début août (03 et 04/08) : à ne pas mélanger avec ce filet-là.
+
+**Non re-proposé aujourd'hui :** l'idée 2 du 31/07 (notification d'un abonnement institutionnel entrant) est en fait **construite** — `institutionalSubscriptions` figure dans le health-check (bloc HTML l. 903-905) ; elle sort du backlog. Le volet AMR (Eva Kamau) et le signal de variance (Simon Ruegg) ont été **fermés par la mesure le 03/08**, ils ne reviennent pas. La piste « version de définition de cas » d'Omobolanle Adelekun (03/08) reste ouverte, décision de priorisation à David, sans angle neuf. Les 18 indicateurs de confiance communautaire d'Andrea Bernasconi (07-08/08) restent classés non constructibles faute de source (aucune des données n'est publiée dans un bulletin public) — signal de recherche, pas fonctionnalité. Rien sur la qualité des données : les 13 derniers jours en ont déjà livré beaucoup (Pacifique, Ebola RDC DON615, choléra Tchad/Cameroun/Kenya, dengue Brésil).
+
+**Contexte relevé au passage** (pas des idées) :
+- **Le pilote de Paula Bankunda s'est fermé aujourd'hui** (e-mail de clôture envoyé par David à 07:11). C'est l'utilisatrice la plus active de l'histoire du produit (13 `product_events` au 02/08) et la seule dont on ait jamais prouvé un parcours e-mail → fiche foyer. Sa fenêtre de conversion est donc **derrière** la décision du 21/08, pas devant.
+- **`marketing/product-feedback.md` n'a reçu aucune entrée depuis le 08/08** (Andrea Bernasconi) : neuf jours sans signal terrain entrant, dans une période où 170 messages institutionnels ont été délivrés.
+- **Prospection institutionnelle** : 200 prospectés / 180 envoyés / 170 délivrés / 10 bounces / **0 réponse**, et 30 brouillons en attente de relecture chez David au moment de ce run.
+- Rappel de contrainte : les 3 essais standards qui expirent **après** le 21/08 (25, 26 et 28/08) sont bien signalés par `checkDecisionHorizonTrials` — mais Morgan Otita, dont l'abonnement se résout le 26/08, **ne l'est pas** (idée 1).
+
+**Statut : PROPOSÉE — en attente de retour de David.** Aucun code écrit, conformément au périmètre de cette routine (idéation et proposition uniquement).
+
+---
