@@ -511,6 +511,17 @@ const MANUAL_ROWS = {
   // semble interrompue depuis mi-juillet (à surveiller, pas creusé plus loin). Mêmes 40 cas/1
   // décès (Garissa+Nairobi) qu'au 12/07, rien à écrire.
   "07b42f30-5446-4931-871e-a1b079b04da2": "Choléra/Kenya",
+  // Ajoutées le 2026-08-17 : les deux premières trouvées par le contrôle qualité du même jour
+  // (péremption 21j, source = bulletin national SPF arboviroses), la troisième (West Nile) pas
+  // flaguée par data-quality (updated_at encore sous le seuil) mais trouvée en cours de route sur
+  // la même source — même série, même trou. Toutes les trois citaient une édition en retard de 2
+  // crans (bulletin #18 ou #19, alors que le #20 du 12/08 était déjà publié) : aucun cron ne couvre
+  // cette série SPF malgré un source_priority=5 hérité (corrigé à 10 dans le même correctif, voir
+  // scripts/fix-france-arbovirus-bulletin20-2026-08-17.mjs). Vérifier désormais contre
+  // santepubliquefrance.fr/.../chikungunya-dengue-zika-et-<N> (numéro à incrémenter, cadence hebdo).
+  "99f356e8-7fc3-4f43-947e-45c9d6a34757": "Chikungunya/France",
+  "5ccc53c2-b17b-493b-aadf-233acb4b2cdf": "Dengue/France",
+  "906bf26a-8867-4a9c-ad7c-976e4e2c5bab": "West Nile/France",
 };
 // Vérification faite, source inchangée → aucune écriture, donc `updated_at` ne bouge pas et la
 // ligne se re-signale tous les matins indéfiniment (vécu le 06/08 avec les deux lignes polio :
@@ -553,7 +564,17 @@ const MANUAL_ROW_CHECKED = {
   // d'alerte (même logique que les sitreps OPS pour Rougeole/États-Unis). Prochaine édition
   // attendue à partir de la mi-août. La page de listing cite aussi désormais des tableaux de bord
   // d'appoint (NNDSS, NT, WA, SA) si un chiffre intermédiaire devient nécessaire.
-  "e856b352-747b-4db0-b0d1-c9e55f6c53aa": "2026-08-13",
+  // Revérifié le 17/08 : la prédiction s'est confirmée — la page de listing
+  // (cdc.gov.au/resources/collections/diphtheria-australia-epidemiological-updates) montre
+  // désormais une édition « 10 August 2026 » (publiée le 14/08), la première depuis le passage au
+  // bimensuel. ⚠️ Chiffres NON obtenus malgré 4 tentatives : WebFetch time-out sur la page HTML et
+  // sur le PDF direct, et le Browser pane déclenche un téléchargement de fichier plutôt qu'un rendu
+  // (bloqué, pas de lecture possible côté agent). Le domaine cdc.gov.au semble structurellement
+  // difficile à atteindre pour ces outils — à retenter avec une autre méthode (ex. demander à David
+  // d'ouvrir le PDF lui-même) plutôt que de répéter la même approche. Ligne laissée à 475 cas/1
+  // décès (valeur du 27/07), donc potentiellement périmée d'une édition — ne pas la présenter comme
+  // confirmée à jour tant que ce chiffre n'est pas obtenu.
+  "e856b352-747b-4db0-b0d1-c9e55f6c53aa": "2026-08-17",
   // Polio/Palestine : vérifié le 13/08. La page du comité (who.int/groups/poliovirus-ihr-emergency-
   // committee) liste 44 réunions, la plus récente étant toujours la 44e du 04/03/2026 — déjà la
   // source de la ligne. Aucune 45e déclaration publiée à ce jour (cadence ~trimestrielle, donc une
@@ -605,6 +626,17 @@ const MANUAL_ROW_CHECKED = {
   // rien à "vérifier" pour l'instant au sens de rechercher une édition plus récente — cette entrée
   // existe uniquement pour que la cadence hebdo démarre à la date du recadrage plutôt qu'à zéro.
   "1ca31b07-6f83-4967-9f59-b599f7574642": "2026-08-15",
+  // Chikungunya/France, Dengue/France, West Nile/France : vérifiées le 17/08, déclenchées par le
+  // contrôle qualité du même jour (péremption 21j sur Chikungunya/Dengue ; West Nile trouvée en
+  // creusant la même source, pas encore flaguée). Bulletin SPF #20 du 12/08 (données au 10/08)
+  // trouvé — deux éditions en retard (#19 du 05/08 jamais ingérée non plus). Corrections réelles
+  // appliquées, pas un simple "rien à écrire" : Chikungunya 1→15 cas (nouveau département, Gironde),
+  // West Nile 4→6 cas (2 nouveaux départements). Dengue confirmée inchangée à 2 cas. Détail dans
+  // scripts/fix-france-arbovirus-bulletin20-2026-08-17.mjs. source_priority relevé à 10 pour les
+  // deux lignes qui étaient encore à 5 (aucun cron ne couvre en réalité cette série).
+  "99f356e8-7fc3-4f43-947e-45c9d6a34757": "2026-08-17",
+  "5ccc53c2-b17b-493b-aadf-233acb4b2cdf": "2026-08-17",
+  "906bf26a-8867-4a9c-ad7c-976e4e2c5bab": "2026-08-17",
 };
 console.log("\n=== Lignes manuelles (section 5) — dues pour vérif hebdo (>7j) ===");
 const now = Date.now();
