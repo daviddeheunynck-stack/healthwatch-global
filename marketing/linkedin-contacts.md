@@ -136,6 +136,25 @@
 
 </details>
 
+### 🔒 DM EN ATTENTE DE VALIDATION — 1 nouveau brouillon (réponse en fil actif, **hors quota froid**)
+
+#### 🔒 DM 5 — **Abou A. SOUMAH** (FR, tutoiement) — réponse en fil actif, nouvelle réponse reçue à 17:36
+`/in/abou-a-soumah-9911a634/` — **fil relu intégralement (§4) : 6 messages**, remontés jusqu'au premier. Nouvelle réponse détectée lors du contrôle final de session (« check une dernière fois »), 5 minutes après l'envoi de 17:31.
+
+**Verbatim reçu (17:36, intégral)** : « *Il y a deux Dashboard (l'un de l'INSP et l'autre de Epicentre). Tous les deux sont alimentés à travers les listes linéaires utilisées dans les CTE. Du coup, les chiffres sont à priori les mêmes. Le Sitrep que je produis est celui de l'intersection, sans pour autant donner assez de détails sur les activités terrain des CTE vu que chaque section fait un sitrep interne. Et généralement, les chiffres utilisés sont ceux de l'INSP du Ministère.* »
+
+**⚠️ Ambiguïté assumée dans le brouillon (§3)** : son mot « intersection » est lu de deux façons possibles — soit son sitrep **agrège plusieurs sections CTE** entre elles, soit il **ne retient que les cas confirmés à la fois par le terrain et le tableau de bord central**. Les deux lectures changent le sens de son chiffre. Plutôt que de trancher à sa place, le brouillon **pose la question ouvertement** au lieu d'asserter une interprétation comme si elle était acquise (§5.2).
+
+**Registre — tutoiement maintenu**, cohérent avec l'échange de 17:14/17:31 (aucun nouveau marqueur tu/vous dans ce message, impersonnel).
+
+**§3 CTA — VOLONTAIREMENT ABSENT, anti-répétition appliquée.** Lien + essai Pro déjà envoyés à 16:58 dans ce même fil ; il a déjà confirmé vouloir aller voir. 3e message consécutif sans CTA, conforme à la règle du 07/08.
+
+**Double-check (§5)** : *contenu* — FR ✅ (langue établie) ; aucun chiffre inventé, la seule référence chiffrée reprend ses propres termes (« intersection », « listes linéaires », « CTE ») ✅ ; aucun tiret cadratin ✅. *Raisonnement (§5.2)* — je ne prétends pas savoir ce que « intersection » désigne exactement, je pose explicitement les deux lectures possibles comme une question, pas comme un fait établi ✅. Je ne reformule pas sa phrase sur le calendrier d'extraction comme si elle était contredite : je note simplement que la source partagée déplace la question, sans trancher ✅. *Mise en forme* — 2 paragraphes, à revérifier après saisie si David valide. *Destinataire* — à relire dans l'en-tête avant le clic (§5.4).
+
+> Merci Abou, la partie sur les listes linéaires partagées est le point le plus utile jusqu'ici : si les deux tableaux de bord partent de la même liste CTE, un écart entre eux n'est probablement pas une question de calendrier après tout.
+>
+> Une clarification si tu as le temps : quand tu dis que ton sitrep est celui de « l'intersection », tu veux dire qu'il rassemble ce que plusieurs sections rapportent chacune de leur côté, ou qu'il ne retient que les cas confirmés à la fois par le terrain et par le tableau de bord central ? Les deux lectures changent beaucoup ce que représente ton chiffre.
+
 ### 💬 Messages reçus traités SANS brouillon (décision assumée)
 - **Marcel Muamba** (12h53) — « *D'accord David. Merci beaucoup😊* ». **Fil relu (8 messages)**. Formule de politesse de clôture, aucune question, aucun contenu neuf. Il s'était engagé au message précédent (11h41) à aller vérifier le circuit documentaire de l'alerte en RDC : **la balle est dans son camp**, et une réponse du type « merci à vous » n'ajouterait rien. Lien + essai Pro déjà envoyés dans ce fil (anti-répétition de toute façon active). **Aucun brouillon, aucun quota consommé.**
 - **OMARY SULTANI** (4 août) — « *👍* ». Réaction sans contenu, non lue depuis le 04/08. Aucune réponse due.
