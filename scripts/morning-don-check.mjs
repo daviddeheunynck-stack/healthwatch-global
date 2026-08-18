@@ -542,6 +542,22 @@ const MANUAL_ROWS = {
   // rajouter ici sans revérifier d'abord si ce cron existe encore et tourne.
   "2c0f291c-e09b-4b96-afaf-7d7cb3e5251c": "Dengue/Sri Lanka",
   "b7813f6c-d98f-43d1-aff9-7b385ee44384": "Dengue/Pérou",
+  // Ajoutée le 2026-08-18 : même trou, même cause, troisième occurrence du même correctif
+  // (commit 77bab1b, 2026-08-05) jamais fusionné dans `master`. Cette ligne était le morceau
+  // "extracteur Viêt Nam pour sync-wpro-dengue-update" du commit — vérifié : ce cron ne cible
+  // que Nouvelle-Calédonie/Polynésie française/Cambodge, jamais le Viêt Nam. En
+  // source_priority=6 sans aucun cron pour la rafraîchir, figée depuis le 05/08 (12 jours).
+  // Trouvée en élargissant la vérification Sri Lanka/Pérou à l'ensemble des lignes actives à
+  // source_priority=6 (10 au total ce jour-là) — les 3 lignes grippe aviaire USDA APHIS du même
+  // palier ne sont PAS un trou similaire : couvertes par un cron quotidien (sync-usda-aphis) dont
+  // la logique anticipe explicitement de longs silences entre détections (574j déjà vu pour
+  // l'Utah), donc leur âge élevé est normal, pas un abandon.
+  // Corrigée le 18/08 (script jetable, supprimé après application) : 41 684->73 828 cas,
+  // 8->9 morts, WHO WPRO Dengue Situation Update #751 (06/08, lu directement dans le PDF page 4).
+  // Corrigé au passage : la ligne portait un encodage UTF-8 corrompu (mojibake) dans `country` et
+  // les 4 traductions depuis sa création — pas de rapport avec la péremption, mais découvert en
+  // relisant la ligne pour appliquer ce correctif. Écrites proprement cette fois.
+  "d5aa229f-0568-45db-b223-747d25014718": "Dengue/Viêt Nam",
 };
 // Vérification faite, source inchangée → aucune écriture, donc `updated_at` ne bouge pas et la
 // ligne se re-signale tous les matins indéfiniment (vécu le 06/08 avec les deux lignes polio :
@@ -671,6 +687,12 @@ const MANUAL_ROW_CHECKED = {
   // (36, daté du 28/06), ne pas le deviner. Les deux corrigées le même jour.
   "2c0f291c-e09b-4b96-afaf-7d7cb3e5251c": "2026-08-18",
   "b7813f6c-d98f-43d1-aff9-7b385ee44384": "2026-08-18",
+  // Dengue/Viêt Nam : voir MANUAL_ROWS ci-dessus pour le contexte complet. Vérifiée le 18/08,
+  // même passage que Sri Lanka/Pérou — WHO WPRO Dengue Situation Update #751 (06/08) lu
+  // directement dans le PDF, page 4 : « In July 2026, Viet Nam recorded 15,940 cases, including
+  // one death... From January to July 2026, a total of 73,828 cases, including nine deaths ».
+  // Encodage corrompu (mojibake) trouvé et corrigé au passage sur `country` et les 4 traductions.
+  "d5aa229f-0568-45db-b223-747d25014718": "2026-08-18",
 };
 console.log("\n=== Lignes manuelles (section 5) — dues pour vérif hebdo (>7j) ===");
 const now = Date.now();
