@@ -1088,3 +1088,61 @@ Segments : 4 gouvernement/institut national, 3 académique, 3 ONG. Régions OMS 
 - **EMRO — Arabie saoudite (Weqaya), Jordanie, Égypte** — trois tentatives, aucune adresse institutionnelle vérifiable trouvée (formulaires uniquement pour Weqaya ; portail jordanien injoignable, `ECONNREFUSED` ; pour l'Égypte, seules des adresses Gmail ou non confirmées). **EMRO reste la région la moins couverte du dispositif — à prioriser au prochain run.**
 
 **File de brouillons au moment du run :** 1 seul brouillon en attente avant ce run (`otitamorgan@gmail.com`, « Your HealthWatch Pro subscription » — support client, sans rapport avec la prospection). Le frein de file de l'Étape 1 (~20) n'était donc pas déclenché : le lot du 17/08 a été écoulé par David. Vérifié par deux appels `list_drafts` successifs, conformément à la consigne d'instabilité de l'outil.
+
+---
+
+## 🔁 RELANCE J+10 — 2026-08-18, run automatique `daily-relance-check-healthwatch`
+
+**Résultat : 10 relances créées, aucune envoyée. Lot traité : le run du 08/08 (10 contacts), à J+10 — 0 exclusion, les 10 sont éligibles.** Deuxième lot consécutif qui passe le filtre en entier. **C'est le premier lot relancé avec l'angle transfrontalier** validé en session le 17/08 (voir la section « 📌 Angle transfrontalier » ci-dessus).
+
+**Arbitrage des lots :**
+- **02/08 matin (18), 02/08 soir (20), 03/08 (20), 05/08 (20)** — déjà relancés le 15/08. Règle « une seule relance, jamais deux » : exclus définitivement.
+- **04/08 (20)** — lot recréé et envoyé le 15/08, donc à J+3. Pas mûr.
+- **06/08 (10)** — **⚠️ statut changé, voir ci-dessous : le lot a été envoyé le 17/08.** J+10 vers le 27/08, pas mûr.
+- **07/08 (10)** — relancé le 17/08, relances parties le jour même. Exclu.
+- **08/08 (10), J+10** — ✅ retenu, jamais relancé. Envoi reconfirmé en direct (horodatage 2026-08-08 11:54-11:57).
+- **09/08 et suivants** — pas mûrs. Prochain lot éligible : **09/08 (10), demain 19/08**.
+
+**Vérification en direct des 10 (méthode corrigée du 15/08 appliquée)** : pour chaque contact, requête combinée `to:<adresse> OR from:<domaine>` avec `includeTrash: true` — **chaque fil ne contient qu'un seul message, celui de David, `labelIds: ["SENT"]`**. Aucune réponse, aucun accusé automatique, aucun bounce. Les trois adresses signalées « à surveiller en priorité » le 08/08 (Somalie et Albanie lues en navigateur, Mundo Sano extraite du pied de page) **sont toutes passées** — le pronostic de bounce ne s'est réalisé sur aucune des trois.
+
+**Angle transfrontalier appliqué selon la classification validée le 17/08 :**
+- **Variante A** (2) : **CAIHR** (« across the Caribbean ») et **IVI** (« across the countries you work in »). Adaptations prévues par la note du 17/08 pour remplacer « your member states ». **Écart de rédaction minime sur IVI** : la formulation littérale de la note (« the countries you work across … works across ») produisait une répétition, reformulée en « the countries you work in ». Sens inchangé.
+- **Variante B** (8) : NIH Somalie, SZÚ, ÚVZ SR, ISHP, IDI, FKM UNAIR, Mundo Sano (EN) + **CSRS** (FR, seul contact francophone du lot).
+- **Tension assumée sur 3 contacts de la Variante B** : IDI (institut universitaire), FKM UNAIR (faculté) et Mundo Sano (fondation privée) ne sont pas des systèmes nationaux, et la formule « votre surveillance montre ce qui se passe à l'intérieur de vos frontières » leur va moins bien qu'à un NPHI. **Le texte validé par David les classe explicitement en B** — appliqué tel quel plutôt que réécrit unilatéralement. À arbitrer par David si le rendu le gêne.
+- **Rappel** : la question de clôture n'est **pas** celle de l'original, c'est l'écart délibéré acté le 17/08 (l'angle est nouveau, il lui faut sa propre question pour être testé).
+
+**Format** : réponses dans le fil d'origine (`replyToMessageId`), objet « Re: … » automatique. Aucun `htmlBody`, aucune balise `<a>`, **aucun nom de domaine dans le texte nouveau**. Salutation reprise de l'original (« Hi team, » ×9, « Bonjour, » pour le CSRS). Le corps cité par Gmail contient l'ancien lien cliquable des originaux du 08/08 — normal, non modifiable, sans impact.
+
+**IDs des 10 brouillons** : `r-8450924261785092930` (CAIHR, Variante A), `r-1466381275048968030` (IVI, Variante A), `r837949960779162698` (NIH Somalie), `r3053453170531017981` (SZÚ Tchéquie), `r2106311505505269803` (ÚVZ SR Slovaquie), `r3987698646338328585` (ISHP Albanie), `r8622906898791722413` (IDI Ouganda), `r-6291256281039216333` (FKM UNAIR), `r-6758354201139605813` (Mundo Sano), `r4667736284466525737` (CSRS, FR).
+
+**Vérifié via `list_drafts` immédiatement après création : 10/10 présents, `threadId` de chacun correspondant au fil d'envoi du 08/08, aucun envoi accidentel.** `list_drafts` s'est montré **stable ce run** (comme les 16/08 et 17/08).
+
+**Frein de file** : **11 brouillons** au début du run (10 de la prospection du 18/08 créés le matin même + 1 sans rapport, `otitamorgan@gmail.com`/support client). **File après création : 21 brouillons**, sous le seuil de ~25. Le frein ne s'est pas appliqué.
+
+**✅ Correction majeure — le lot du 06/08 (10 contacts) A ÉTÉ ENVOYÉ, le 17/08 au matin.** Le run du 16/08 avait établi (trois méthodes convergentes, à raison à l'époque) que ce lot n'était jamais parti, et le run du 17/08 notait la décision « toujours en attente de David ». **David a tranché en la refaisant lui-même** : le balayage `in:sent after:2026/08/16 before:2026/08/18` de ce run remonte les **10 adresses du 06/08 envoyées le 2026-08-17 entre 07:02:57 et 07:06:47** — HZJZ Croatie (`epidemiologija@hzjz.hr`), INSP Burundi, INRB RDC, Landlæknir Islande, HKU SPH, AHRI Éthiopie, IMT-USP Brésil, JHAS Jordanie, SAMS, Medicus Mundi. Fils neufs, un seul message chacun. **Le lot est donc vivant : J+10 vers le 27/08**, à traiter comme un lot normal ce jour-là. La question « refaire ou considérer comme perdu » est close.
+
+**⚠️ Nouveau bounce consigné — DMR Myanmar (17/08).** `info@dmr.gov.mm`, « Adresse introuvable », réponse serveur **550 Unknown user**, bounce à 07:09:14 le 17/08, 20 secondes après l'envoi. Le contact était **déjà acté comme abandonné** dans la note du 17/08 (« ❌ DMR Myanmar — abandonné, aucun brouillon de remplacement »), mais **l'échec n'avait jamais été porté à la liste nominative des bounces** — le run du 17/08 balayait la corbeille avant/pendant que ce bounce arrivait. C'est un contact **jamais bouncé auparavant**, il allonge donc la liste (11e entrée) et fait baisser les délivrés d'une unité, conformément à la règle du 17/08.
+
+**⚠️ EUPHA a répondu — exclu de la relance du 27/08 prévue en Variante A.** Réponse automatique d'absence reçue le 17/08 à 07:09:32 (`J.Velthuis@euphaoffice.org`, « Automatisch antwoord », retour au bureau le **31 août**). Règle de la routine : un accusé automatique compte comme réponse, donc **pas de relance**. **Nuance à arbitrer par David** : une absence de bureau n'est pas un signal d'engagement, et le retour au bureau (31/08) est postérieur à la date de relance prévue (27/08) — une relance début septembre serait défendable. **Par défaut, EUPHA sort du lot du 27/08** (qui passe donc de 5 à 4 : EAC, IGAD, SADC, AFROHUN), sauf décision contraire de David.
+
+**Aucune autre réponse institutionnelle** sur l'ensemble du canal : le balayage `in:anywhere` sur 11 jours (corbeille incluse) ne remonte, hors bounces, que l'auto-réponse EUPHA ci-dessus et des notifications sans rapport (Codeur, LinkedIn, Sentry, Supabase, newsletters).
+
+**Bilan bounces cumulés depuis le 02/08 : 11** — recalculé depuis la liste nominative, conformément à la règle du 16/08 (porteur unique = cette routine) :
+1. WHO WPRO (02/08) — sous-domaine `wpro.who.int` invalide
+2. ZNPHI Zambie (02/08) — règle de transfert cassée côté destinataire
+3. Colombo (09/08) — 550 5.1.1, adresse introuvable
+4. AKHS (10/08) — adresse inconnue côté serveur
+5. NCIPD Bulgarie (12/08) — 550 high-probability spam
+6. CORDS (12/08) — adresse introuvable
+7. EPHI Éthiopie (12/08) — boîte pleine (transitoire)
+8. Lao TPHI (14/08) — domaine NXDOMAIN
+9. ISED Sénégal (15/08) — boîte pleine, 2 tentatives échouées, écarté définitivement le 16/08
+10. MBDS (15/08) — 550 No Such User Here
+11. **DMR Myanmar (17/08) — 550 Unknown user, nouveau ce run** (échec déjà connu, entrée nominative jamais créée)
+
+**Totaux au 2026-08-18 : 210 contacts prospectés, 200 envoyés, 189 effectivement délivrés.**
+- **Prospectés 210** = 200 au 17/08 + les 10 du run de prospection de ce matin (en brouillon, pas encore envoyés).
+- **Envoyés 200** = 180 au 17/08 + **10 du lot du 17/08** (partis le 17/08, 07:06-07:09, vérifiés ce run) + **10 du lot du 06/08** (partis le 17/08, 07:02-07:06, vérifiés ce run — voir la correction ci-dessus). Le chiffre de 180 posé le 17/08 était juste à l'instant où il a été écrit, les deux lots partant pendant/après ce run.
+- **Délivrés 189** = 200 envoyés − 11 (taille de la liste nominative ci-dessus), recompté dans le même mouvement que la liste.
+
+**Total cumulé de relances : 83 envoyées** (56 le 15/08 + 17 du lot 03/08 le 15/08 + 10 du lot 07/08 le 17/08), **+ 10 en attente de relecture et d'envoi** (lot du 08/08, ce jour).
