@@ -139,6 +139,8 @@ const nextConfig: NextConfig = {
       ["cchf",       "crimean-congo-haemorrhagic-fever"],
       ["bird-flu",   "avian-influenza"],
       ["avian-flu",  "avian-influenza"],
+      ["h5n1",                 "avian-influenza"],
+      ["avian-influenza-h5n1", "avian-influenza"],
     ];
     return aliases.map(([short, canonical]) => ({
       source:      `/:locale/disease/${short}`,
