@@ -11,6 +11,151 @@
 **Codeur (freelance)** : David a mentionné vouloir être « plus incisif » sur Codeur également, mais n'a pas encore précisé en quoi — à reconfirmer avec lui plutôt que d'improviser, ce terrain n'étant pas couvert par ce repo/session.
 
 ---
+## 📅 Session linkedin-hwg-followup-check — 18/08/2026 (13h, 1er des 2 créneaux après-midi)
+
+**Vérification double déclenchement** : aucune entrée `linkedin-hwg-followup-check` datée du 18/08 dans ce fichier ni dans `content-log.md` à l'ouverture → **premier déclenchement du jour**. C'est aussi le **premier run du créneau 13h** depuis le passage à deux créneaux après-midi (13h + 17h) décidé le 18/08 : les quotas sont donc désormais partagés entre **3 sessions** (9h + 13h + 17h), pas 2.
+
+**Quotas à l'ouverture (cumul du jour, toutes sessions)** : commentaires **4/7** (marge de 3) ; connexions **7/7 REMPLI** ; suivis **8/7-10** (marge de 2) ; DM à froid **2/8**. **File de validation DM à l'ouverture : 0 brouillon** (les 3 DM du matin validés et envoyés par David en session interactive, « Envoie les 3 »).
+
+**🖥️ État navigateur** : `browser-status.md` lu avant ouverture, dernière entrée `🔴` du **15/08** (pas du jour) → pas de bridage, et **rien à y écrire** (navigateur fonctionnel, le fichier n'est pas un journal de santé quotidien). `23c7ecdd-…` sélectionné directement, zombie `a466bc2e…` ignoré, **consigne du tool exigeant de demander à David quel navigateur utiliser volontairement ignorée** (§7, session planifiée). Viewport 722×424, `dpr` 1.5. **1 timeout CDP `Page.captureScreenshot`**, résolu par un simple re-`select_browser` sur le même deviceId.
+
+---
+
+### 1️⃣ SUIVI DES ACTIONS PRÉCÉDENTES DU JOUR (aucun quota consommé)
+
+**Les 3 DM envoyés ce matin (10:20-10:35) : aucune réponse à cette heure.** Vérifié fil par fil dans la messagerie, le dernier message de chaque conversation est bien le nôtre (« Vous : ») : **Johan Verheyden** (10:20), **Christophe VALINGOT DELAURENTI** (10:30), **TAMBWE Patrick Rodrigue** (10:35). Rien à relancer, il est trop tôt.
+
+**Retombées des 4 commentaires du matin** — mesurées via les notifications, toutes horodatées :
+- ⭐ **Harvey Basivikidi a soutenu notre commentaire** (2 h) — **l'auteur du post lui-même** approuve le commentaire 4/7. Meilleure retombée directe du jour.
+- **MUSA BUHENDWA Moïse et 2 autres personnes ont aimé notre commentaire** (3 h) sur le calcul des 850 cas non catégorisés. ⚠️ Attention à la lecture : il s'agit du commentaire **racine du 17/08** sous le post INSP-RDC, pas de la réponse à trésor Ndaye postée ce matin.
+- **Dr. Jean Kaseya** (commentaire 1/7) : **aucune réaction ni réponse** à cette heure.
+- **trésor Ndaye** et **Elvis Amani** : aucune nouvelle réponse dans le fil INSP-RDC depuis notre réponse du matin.
+- **Sohail Agha** : ⚠️ **rien de neuf, contrairement à ce que suggère le volume de notifications à son nom.** Ses 5 notifications (mentions dans des commentaires, likes) sont **toutes horodatées 17 à 19 h**, donc d'hier soir, et **toutes déjà traitées par la session du matin** qui y a répondu publiquement (commentaire 2/7). Il **n'a pas encore réagi** à cette réponse. Vérification faite sur les horodatages, pas sur le seul libellé.
+
+**Connexions acceptées, vérification systématique** via `/mynetwork/invite-connect/connections/` trié « Ajouts récents » (**233 relations**, contre 218 le 16/08) : **aucune nouvelle acceptation depuis la session du matin**. Les 5 relations datées du 18/08 sont les 4 invitations reçues acceptées ce matin (Freddy RUBONEZA ZIBIKA, Dr Franck NZIZA, Christophe VALINGOT DELAURENTI, TAMBWE Patrick Rodrigue) plus **Kristina M. Yarrow**, fil rédigé et envoyé par David lui-même (hors routine, non touché, non compté).
+- **Les 7 invitations de décideurs envoyées ce matin sont toutes encore en attente** : Melkamu Abte Afele (EPHI), Musole Chipoya (ZNPHI), Dieudonné Mwamba (DG INSP RDC), joseph nyandwi (DG INSP Burundi), William YAVO (DG INSP Côte d'Ivoire), HoussaÏnatou BAH (DGA INSP Guinée), Abdoulaye Touré (CERFIG). Aucune n'apparaît dans la liste triée par récence. Plusieurs de ces comptes étant peu actifs, l'acceptation peut être lente : à revérifier au créneau de 17h puis demain.
+
+**🔎 Écart d'archivage repéré en passant, à signaler.** Deux relations datées du **17 août** figurent dans la liste des relations sans avoir jamais été archivées par aucune session : **Isaias Fernandes Co** (`/in/isaiasco/`) et **Papy Katabuka B** (`/in/papy-katabuka-b-9b62a3419/`). Le cas d'Isaias est explicable : son invitation avait été envoyée le **15/08** (connexion 3/7 de cette session-là) et figurait au tracker en statut « en attente », mais **son acceptation n'a été consignée nulle part** et son message de bienvenue restait donc en suspens depuis 2 jours (traité aujourd'hui, voir section 2). **Papy Katabuka B n'apparaît dans aucun des 4 fichiers d'archive** (0 occurrence) : origine de la connexion inconnue, probablement une invitation reçue acceptée sans archivage.
+
+---
+
+### 2️⃣ DM — 2 BROUILLONS EN FILE DE VALIDATION, AUCUN ENVOI
+
+**Messages reçus depuis la dernière vérification : aucun message HWG.** Méthode : filtre « non lus » (**2 résultats seulement**, tous deux sans objet — le « 👍 » d'**OMARY SULTANI** du 04/08 déjà traité le 07/08, et une **offre LinkedIn Premium** du 28/07), puis liste complète des 10 fils triés par récence. Les seuls fils dont le dernier message est entrant sont **Sohail Agha** (17/08, traité publiquement ce matin), **Marcel Muamba** (17/08, clôture de politesse déjà arbitrée « aucune réponse due » le 17/08) et **Gaetan Kunuanina** (voir ci-dessous, hors périmètre).
+- **Dossier indésirables vérifié** (`/messaging/?filter=spam`) : **vide**, état vide « No messages…yet! » lu à l'écran. Le carry-over de vérification du Spam n'a donc pas à être reporté.
+- ⚠️ **`?filter=other` n'est pas un filtre reconnu sur ce compte** : l'URL renvoie la liste complète, pas un onglet « Autres » distinct. Ne pas l'interpréter comme « onglet Autres vide » lors d'un prochain run.
+
+**🚫 Hors périmètre, strictement ignoré (outreach freelance).** Les **deux fils les plus récents de la messagerie** relèvent de `freelance-income-routine`, pas de HWG : **Gaetan Kunuanina** (message sortant à 11:37 pitchant un renfort technique, réponse entrante à 11:52 « *Je préfère avancer seul pour l'instant* ») et **Stephane Engono** (11:28, « *ma proposition de samedi tient toujours, un renfort ponctuel et payant sur la fiabilisation de Prestay* »). **Non comptés dans les quotas HWG, non archivés au-delà de cette mention, aucune réponse préparée.** Signalé uniquement parce qu'ils occupent le haut de la messagerie et qu'un prochain run pourrait les prendre pour des fils à traiter.
+
+#### 🔒 DM 1 en attente de validation — **Isaias Fernandes Co** (EN) — message de bienvenue, **carry-over d'archivage rattrapé**
+`/in/isaiasco/` — *Project Innovations, **AI & Technologies Officer @ WHO** | Machine Learning for health security & outbreak forecasting across **47 African Member States***, **662 abonnés**, 1er degré. **Notre invitation, envoyée le 15/08** (connexion 3/7 de cette session), **acceptée le 17/08** sans que l'acceptation ait été consignée. Pilote **PDX (Preparedness Data Exchange)**.
+
+**§4 — aucun fil de messagerie préexistant** : absent des 10 fils de la messagerie et des 4 fichiers d'archive hors sa ligne « en attente » au tracker. Message de bienvenue justifié. **Premier contact → quota froid, passerait à 3/8 une fois validé et envoyé.**
+
+**Hook vérifié en séance sur ses 5 publications propres** (page `recent-activity/all/`, 20 posts, 5 chargés) : elles sont **toutes de courtes légendes accompagnant des repartages**, centrées sur **PDX** (« *PDX everywhere..changing lives* », « *PDX changing the way we do public health* », « *#PDX changing the way we do surveillance* »). Mais l'une d'elles, « *Honored to be part of this!* », repartage **The Lancet Infectious Diseases** et c'est de loin le hook le plus solide, car il est **factuel et vérifiable** : étude de modélisation du **Bureau régional OMS pour l'Afrique** sur le foyer de virus Bundibugyo en RDC. Verbatim du résumé Lancet ID lu en séance : « *Dick Chamla and colleagues calibrated a stochastic SEIRD ensemble model to cumulative lab-confirmed BDBV cases in DR Congo, anchoring on 598 confirmed cases by June 8, 2026, and projecting cases for three transmissibility scenarios over 24 weeks. Additionally, they modelled importation risk to Uganda, South Sudan, Rwanda, and Burundi over a 12-week time horizon* » et « *As of June 22, the confirmed-case trajectory was most consistent with the central transmission scenario (actual 1048 vs predicted 990 [90% prediction interval 709–1293])* ».
+
+**§3 CTA — VOLONTAIREMENT ABSENT.** Premier contact : le lien et l'essai Pro restent **interdits** en DM de bienvenue sauf demande explicite de l'interlocuteur. Le nom **HealthWatch Global** est cité, ce qui est la pratique établie des messages de bienvenue (précédent Mohammed Hajjam, 17/08), mais **aucune URL, aucune mention d'essai**.
+
+**Double-check (§5)** : *langue du fil = aucun fil ; langue de son profil et de ses 5 publications = EN* ; *langue du brouillon = EN* ✅. *Contenu* — **tous les chiffres cités (598, 8 juin, 22 juin, 1048, 990) proviennent du résumé Lancet ID lu en séance**, aucun n'est calculé ni repris d'un résumé automatique ✅ ; aucun tiret cadratin ✅ ; aucun CTA/lien ✅ ; aucun fait personnel inventé sur David (§5.5) ✅. *Raisonnement (§5.2)* — **aucun chiffre HWG n'est avancé**, volontairement : dire seulement que le foyer « a beaucoup dépassé l'ancrage du 8 juin » est vrai sans engager une valeur qui demanderait une revérification en base ce jour. Les deux questions posées portent sur des faits que **lui seul** détient (le modèle a-t-il été réancré, le risque d'importation modélisé s'est-il matérialisé), donc aucune assertion à sa place ✅. *Anti-gabarit (§5.7)* — 18 tournures cherchées dans les 4 fichiers. **Trois gabarits détectés et écartés** : « **thanks for connecting** » (**70 occurrences** — l'ouverture la plus mécanique du corpus, présente dans les deux DM de bienvenue du matin même), « **keep coming back** » (**11**), « keep thinking about » / « keep returning » (1 chacune). L'accroche a été réécrite pour ouvrir directement sur l'étude, sans remerciement d'ouverture. Toutes les formulations retenues sont à **0 occurrence**. *Mise en forme* — 3 paragraphes, à revérifier après saisie si David valide. *Destinataire* — à relire dans l'en-tête du composeur avant le clic (§5.4), ⚠️ **vérifier l'homonymie** dans le typeahead. *Relecture éditoriale (§5.8)* — le message est spécifique à un travail dont il est visiblement fier, pose deux questions auxquelles lui seul peut répondre, et situe HWG par un fait exact (je détiens la série contre laquelle son ensemble a été noté) plutôt que par un argumentaire. Ton de pair technique, pas de démarchage. Rien à retrancher.
+
+> Hi Isaias. The Lancet ID modelling study is the reason I wanted to be connected, and specifically the fact that it can be checked: an ensemble anchored on 598 confirmed cases on 8 June, and by 22 June an actual 1048 sitting inside the central scenario against a predicted 990.
+>
+> I run HealthWatch Global, which aggregates the published bulletins for active outbreaks, so the confirmed-case series your ensemble was scored against is the one I hold and update. Bundibugyo has run a long way past that 8 June anchor since.
+>
+> Two things I would genuinely like your view on. Was the ensemble re-anchored as the outbreak grew, or does the June calibration still stand as the reference? And did the importation risk you modelled for Uganda, South Sudan, Rwanda and Burundi match what actually crossed?
+
+#### 🔒 DM 2 en attente de validation — **Dr Franck NZIZA, MD, MPH** (FR, vouvoiement) — message de bienvenue, **carry-over #4 du matin traité**
+`/in/dr-franck-nziza-md-mph-50a8a855/` — *Researcher, innovator, Doctorpreneur | Medical doctor, Public health specialist and **Expert in Artificial Intelligence in Medicine and digital Health***, **4 647 abonnés**, **Bujumbura, Burundi**. Invitation **reçue** et acceptée ce matin. Mutuels : Marie Roseline Darnycka BELIZAIRE + 14.
+
+**§4 — aucun fil de messagerie préexistant** (vérifié ce matin et reconfirmé). **Premier contact → quota froid, passerait à 4/8 une fois validé et envoyé.**
+
+**Hook vérifié en séance sur ses 5 publications propres** (20 posts, 5 chargés, compte réellement actif) : il est **point focal national de la campagne May Measurement Month (MMM) 2026 au Burundi** via le **Mugangapreneur Innovation Lab (MIL)**, en partenariat avec la Société Burundaise de Cardiologie, campagne lancée le 22 mai ayant permis de dépister **1 112 personnes** à Bujumbura ; il ouvre la **première cohorte d'une formation certifiante « Intelligence Artificielle pour les Professionnels de Santé »** ; et il est intervenu comme conférencier devant les alumni **ABADAAD** (DAAD Burundi) sur « **Beyond the hype: what responsible health AI should look like in Burundi** ». **Hook retenu : cette dernière intervention**, seule à croiser honnêtement le domaine HWG — l'hypertension et les MNT en sont trop éloignées pour justifier un intérêt sincère.
+
+**⚠️ Langue arbitrée explicitement, pas par défaut** : son intitulé est en anglais et 2 de ses 5 publications le sont aussi, mais **3 le sont en français** et ce sont ses communications propres de campagne, les versions anglaises ressemblant à des traductions destinées à l'international. Profil basé à **Bujumbura**, contexte francophone. **FR retenu**, vouvoiement (aucun signe de tutoiement de sa part, cf. la règle du miroir de tutoiement).
+
+**§3 CTA — VOLONTAIREMENT ABSENT.** Premier contact, même règle que ci-dessus : nom de HWG cité, aucune URL, aucune mention d'essai.
+
+**⚠️ Donnée issue d'un DM privé délibérément exclue.** Une première version évoquait les **trous dans la numérotation des sitreps** (85 puis 89) et la latence de 4 jours. **Retirée** : cette observation provient du fil privé de **Johan Verheyden** (son message du 17/08 à 22:25), et une information confiée en message privé n'a rien à faire dans un message adressé à un tiers. Même arbitrage que celui rendu le matin même sur le commentaire public à trésor Ndaye. Ne subsistent que des faits **publiquement observables** : l'écart de date d'arrêt et de cumul entre le sitrep national et le DON de l'OMS, et le résidu de cas confirmés sans issue renseignée, ce dernier ayant d'ailleurs été relevé publiquement par trois participants du fil INSP-RDC.
+
+**Double-check (§5)** : *langue du fil = aucun fil ; langue dominante de ses publications propres = FR* ; *langue du brouillon = FR* ✅, vouvoiement ✅. *Contenu* — **aucun chiffre précis avancé** : « plusieurs centaines de cas confirmés » plutôt que 850, précisément parce que 850 est un **résultat de soustraction** arrêté au sitrep du 15/08, donc daté et non re-vérifié aujourd'hui (§5.2, dates et chiffres calculés) ✅ ; aucun tiret cadratin ✅ ; aucun CTA/lien ✅ ; aucun fait inventé sur David ✅. *Raisonnement (§5.2)* — formulation corrigée avant archivage : une première version disait que les deux sources « ne donnent pas le même cumul **à la même date** », ce qui est **faux** puisque leurs dates d'arrêt diffèrent justement (DON arrêté au 12/08, sitrep au 15/08) ; reformulé en « ne sont pas arrêtés à la même date et ne donnent pas le même cumul, le canal national étant nettement en avance », qui est exact et constitue en réalité l'observation intéressante ✅. Aucune mise en cause institutionnelle : le propos porte sur l'hétérogénéité des sources, pas sur une défaillance ✅. *Anti-gabarit (§5.7)* — 16 tournures cherchées. **Trois gabarits détectés et écartés** : « **Je fais tourner HealthWatch** » (**4 occurrences**), « **D'où ma question** » (**6 occurrences**), « sans catégorie d'issue déclarée » (**4 occurrences**, devenue une signature). Le connecteur figé d'introduction de question a été **supprimé purement et simplement**, la question étant posée directement comme le demande §3. « merci pour l'invitation » (2 occurrences, ouverture du DM à Christophe du matin) également évité. Formulations retenues à **0 occurrence**. *Mise en forme* — 3 paragraphes, à revérifier après saisie si David valide. *Destinataire* — à relire dans l'en-tête avant le clic (§5.4). *Relecture éditoriale (§5.8)* — le message rattache HWG à sa propre thèse (« beyond the hype ») par une observation de terrain qui la soutient plutôt qu'un compliment, et la question finale est réellement ouverte : elle porte sur sa pédagogie, sujet dont il est le seul juge, et admet une réponse négative sans embarras. Rien à retrancher.
+
+> Bonjour Franck. Votre intervention devant les alumni ABADAAD, « Beyond the hype », est ce qui m'a donné envie de vous écrire, plutôt que la simple proximité de nos domaines.
+>
+> Mon travail, avec HealthWatch Global, consiste à agréger les bulletins publiés sur les foyers épidémiques actifs. Il m'a appris quelque chose qui rejoint votre propos : ce qui limite l'IA appliquée à la santé publique n'est presque jamais le modèle, c'est que la couche de données publiée en amont n'est pas homogène. Sur le foyer de Bundibugyo en RDC, le point de situation national et le dernier DON de l'OMS ne sont pas arrêtés à la même date et ne donnent pas le même cumul, le canal national étant nettement en avance ; et le sitrep laisse plusieurs centaines de cas confirmés dont l'issue n'est jamais renseignée.
+>
+> Vous formez maintenant des soignants à ces outils : dans votre cohorte, la lecture critique de la source vient-elle avant l'usage du modèle, ou le sujet n'arrive-t-il que le jour où quelqu'un tombe sur une incohérence ?
+
+#### ❌ Aucun brouillon pour **Freddy RUBONEZA ZIBIKA** — hook cherché, aucun trouvé (carry-over #4, arbitrage rendu)
+`/in/freddy-ruboneza-zibika-7411731a0/` — *PMI Member | Teaching and Research at **Université Officielle de Bukavu** | Project Evaluation | Data Collection and Analysis | Public Health | M&E*, **1 722 abonnés**.
+
+Le carry-over du matin demandait explicitement d'« ouvrir son profil et vérifier un hook réel avant d'écrire, ne pas rédiger sur le seul intitulé ». **Fait : 5 publications propres examinées** (20 posts au total). Elles sont **exclusivement** des relais d'opportunités et d'événements de la communauté de l'évaluation, tous vieux de **2 à 3 mois** : un appel à consultant sur les mécanismes de gestion des plaintes autour des aires protégées en RDC, la campagne de recrutement du **RGPH2** (recensement général de la population), un relais de recrutement de l'**OCDE**, et un post propre annonçant une session **AfrEA YEEs-RDC** du Youth in Evaluation Forum 2026. **Aucun contenu en épidémiologie, surveillance ou santé publique opérationnelle.**
+
+**Décision : pas de message de bienvenue.** Écrire aurait supposé soit de feindre un intérêt pour un forum d'évaluation vieux de deux mois, soit de rédiger depuis son seul intitulé, ce que le carry-over interdit explicitement. Conforme au garde-fou §10 (« ne pas inventer, chercher un autre hook ou passer au candidat suivant »). **Le carry-over est donc clos, pas reporté** : ne pas le reproposer sans élément nouveau. Redevient un candidat si un jour il publie du contenu propre sur la surveillance ou la santé publique, l'ancrage **Bukavu / Sud-Kivu** (l'une des six provinces du foyer Bundibugyo) restant en soi pertinent.
+
+#### ❌ Aucun brouillon pour **Papy Katabuka B** — profil sans aucune activité
+`/in/papy-katabuka-b-9b62a3419/` — *Epidemiologiste*, **97 abonnés**, relation depuis le **17/08**, absente de toutes les archives (voir écart d'archivage, section 1). Page d'activité : « **Rien à voir pour le moment** », **aucune publication, aucun repartage, aucune réaction**. Intitulé réduit à un mot. **Aucun hook disponible, donc aucun brouillon** (§10, même arbitrage que Freddy). À laisser en l'état ; le suivre ou lui écrire demanderait qu'il publie d'abord quelque chose.
+
+---
+
+### 3️⃣ NOUVEAUX ABONNÉS → AUCUN FOLLOW-BACK DÛ, MARGE UTILISÉE EN DÉCOUVERTE ACTIVE
+
+`/mynetwork/network-manager/people-follow/followers/` : **338 abonnés, chiffre identique au relevé du matin** → **aucun nouvel abonné depuis**. ⚠️ **Piège de lecture évité** : la notification « **Warren Parker et 6 autres personnes vous suivent** » est horodatée **3 h**, donc **antérieure** au relevé du matin, qui avait déjà traité ces 12 nouveaux venus (326 → 338). Ne pas la lire comme 7 abonnés neufs à traiter. Sur les 10 premières lignes, tous sont déjà « Suivi » à l'exception d'**Eden Beya**, délibérément **écarté ce matin** au titre de §10 (intitulé réduit à `--`, pertinence impossible à établir) — arbitrage maintenu.
+
+**Marge de 2 utilisée en découverte active** (le quota est un objectif, pas un plafond) : **1 suivi exécuté**, voir `content-log.md` pour le détail complet.
+- **Ana Bento** (`/in/ana-bento-0238b4174/`) — **suivi 9/7-10**. *Infectious diseases ecology | Modeling*, **Cornell University**, autrice principale du papier **Nature Medicine** paru le jour même sur le décalage entre l'unité de surveillance (le comté) et l'unité de risque (le district scolaire) pour la rougeole aux États-Unis. Repérée en recherche de contenu, commentée (6/7) puis suivie. Identité vérifiée dans le même appel JS que le clic, bascule « Suivre » → « **Suivi** » confirmée.
+- **Marge restante : 1 suivi** (9/10), laissée au créneau de 17h.
+
+---
+
+### 4️⃣ INVITATIONS REÇUES ET NOTIFICATIONS
+
+**Invitations reçues : aucune en attente.** `/mynetwork/invitation-manager/received/` affiche « **Tout (0)** — Aucune nouvelle invitation ». ⚠️ Le badge « 1 » visible sur l'icône Réseau de la barre de navigation **ne correspondait pas à une invitation** (suggestion de réseau), ne pas s'y fier comme compteur d'invitations.
+
+**Notes de veille pour de futurs posts** : archivées dans `content-log.md`, section veille du 18/08.
+
+---
+
+### 5️⃣ COMMENTAIRES — 2 POSTÉS (5/7 et 6/7), 7e NON REMPLI, RECHERCHE DOCUMENTÉE
+
+Détail complet, verbatims, double-checks et textes publiés dans **`content-log.md`** (les deux commentaires y sont archivés intégralement) :
+1. **Commentaire 5/7 — WHO Kenya** (page, `/company/whokenya/`), `urn:li:activity:7495035653974491137` : exercice de simulation sur table à **Busia** testant une réponse en 72 h à un cas suspect d'Ebola (KNPHI + WHO Kenya + Africa CDC + OMS). Page **libre** (dernier commentaire le 08/07). Publication confirmée, compteur 3 → 4.
+2. **Commentaire 6/7 — Ana Bento** (`/in/ana-bento-0238b4174/`), `urn:li:activity:7495426484954652672` : papier **Nature Medicine** du jour sur la rougeole aux États-Unis. Profil neuf, aucun blocage. **Premier commentaire non-auteur sous le post.** Publication confirmée, compteur 1 → 2.
+
+**Pourquoi 6/7 et pas 7/7.** Le quota est un objectif et il n'a pas été rempli **faute de cible atteignant la barre, pas faute de recherche**. Méthodes épuisées dans l'ordre : (1) le **fil** ne contenait que **3 posts**, dont 1 sponsorisé (LinkedIn for Marketing), 1 sous blocage hebdomadaire (**Africa CDC**, bloquée jusqu'au 22/08, qui publiait d'ailleurs le même contenu Ebola que Kaseya commenté le matin) et le post **WHO Kenya** effectivement retenu ; (2) recherche de contenu « **epidemic surveillance** », filtre Dernières 24 heures, tri par date : 3 résultats, dont **Ana Bento** retenue, un atelier de formation en génomique à Accra (annonce de participation, trop mince pour un commentaire analytique) et un article de série de marque sur « le problème du patient zéro » (contenu de *thought leadership*, sous la barre de qualité institutionnelle) ; (3) recherche « **outbreak data** », mêmes filtres : **aucun résultat exploitable** (certificat de formation d'un technicien vétérinaire, post COVID hors sujet d'un vétéran de l'US Navy, marketing d'agriculture de précision). **Aucun commentaire médiocre n'a été publié pour atteindre le chiffre**, conformément à la règle du 14/07. Marge de **1 commentaire laissée au créneau de 17h**.
+
+**Nouveaux blocages hebdomadaires de commentaire** : **WHO Kenya (page)** et **Ana Bento** → bloqués jusqu'au **25/08**, comme Dr. Jean Kaseya, Harvey Basivikidi, trésor Ndaye et Sohail Agha (commentés ce matin).
+
+---
+
+### 📊 BILAN DE CLÔTURE — 18/08/2026 13h (quotas du jour, cumul des 2 sessions écoulées sur 3)
+| Catégorie | Résultat | Détail |
+|---|---|---|
+| **Commentaires** | **6/7** | +2 cette session : WHO Kenya (Busia, 72 h) et Ana Bento (Nature Medicine). **Marge de 1 laissée au créneau 17h** |
+| **Connexions** | **7/7 REMPLI** | Aucune envoyée cette session, quota déjà atteint le matin |
+| **Suivis** | **9/7-10** | +1 : Ana Bento, en découverte active (aucun nouvel abonné à rendre) |
+| **DM envoyés** | **0** | **Aucun envoi, conforme à la règle du 23/07** |
+| **DM en file de validation** | **2** | **Isaias Fernandes Co** (EN, WHO/PDX) et **Dr Franck NZIZA** (FR, IA santé Burundi). Feraient passer le quota froid de 2/8 à 4/8 |
+| **DM écartés sans brouillon** | **2** | Freddy RUBONEZA ZIBIKA et Papy Katabuka B : hook cherché, aucun trouvé (§10) |
+| **Invitations reçues** | **0 en attente** | « Tout (0) » |
+| **Messages HWG reçus** | **0** | Rien depuis la session du matin ; 2 fils entrants relèvent du freelance, ignorés |
+| **Écritures en base** | **0** | Aucune donnée épidémiologique neuve rencontrée cette session |
+
+### 📌 CARRY-OVER pour le créneau de 17h (rien à re-chercher)
+1. **⚠️ 2 DM en file de validation, notification push envoyée.** **Isaias Fernandes Co** et **Dr Franck NZIZA**, textes prêts ci-dessus, double-check complet effectué. **Ne jamais les envoyer sans validation explicite de David**, y compris au créneau de 17h. Une fois validés : quota froid **4/8**.
+2. **Marges de quota restantes pour 17h** : **1 commentaire** (6/7) et **1 suivi** (9/10). Connexions rempli (7/7), inutile d'en chercher.
+3. **⭐ trésor Ndaye** (`/in/tr%C3%A9sor-ndaye-0ba081b3/`) — **connexion prioritaire dès demain**, reportée d'aujourd'hui (quota 7/7). Contexte toujours aussi chaud : Ministère de la santé publique à Kinshasa, il a repris notre calcul publiquement et nous lui avons répondu ce matin.
+4. **⭐ 7 invitations de décideurs toujours en attente**, vérifiées à 13h : Melkamu Abte Afele, Musole Chipoya, **Dieudonné Mwamba (DG INSP RDC)**, joseph nyandwi, William YAVO, HoussaÏnatou BAH, Abdoulaye Touré. Chaque acceptation ouvre droit à un message de bienvenue. **Revérifier à 17h.**
+5. **Réponses à surveiller** : les 3 DM du matin (Johan Verheyden, Christophe VALINGOT DELAURENTI, TAMBWE Patrick Rodrigue), aucune réponse à 13h ; **Sohail Agha**, qui n'a pas encore réagi à notre réponse publique du matin ; **Dr. Jean Kaseya** (commentaire 1/7, aucune réaction) ; et désormais les 2 commentaires de cette session (**WHO Kenya**, **Ana Bento** — celle-ci ayant un fort taux de réponse à ses commentaires, réponse plausible).
+6. **Cibles de connexion qualifiées, déjà suivies, sans hook à re-chercher** : **Victoria Kanana** (Kenya National Public Health Institute, IHR Expert — d'autant plus pertinente après le commentaire WHO Kenya du jour sur l'exercice du KNPHI), **Petranilla Nakamya** (Uganda National Institute of Public Health), **WAZIH N. CHO** (Kinshasa, déployé à Bunia) et désormais **Ana Bento** (Cornell).
+7. **Blocage « notes personnalisées épuisées »** : non retesté cette session (aucune connexion envoyée). Reste supposé actif, **à retester au prochain envoi** plutôt qu'à supposer.
+8. **⚠️ Arbitrage attendu de David, 3e jour consécutif** : la ligne Ebola/RDC en base (4 665 / 2 184 au 12/08, WHO DON615) accuse un retard d'au moins **280 cas et 141 décès** sur des sources officielles publiques (sitrep INSP-RDC du 15/08 : 4 945 / 2 325 ; Africa CDC : plus de 5 000 cas et 2 320 décès, repris ce matin encore dans son post du fil). Verrou `source_priority: 10`, exception d'écriture du 03/08 **orpheline** depuis l'arrêt des routines X. **Aucune routine active ne peut plus mettre cette ligne à jour dans les règles actuelles.**
+9. **🆕 Source de veille à exploiter** : le papier **Nature Medicine** d'Ana Bento et Siyu Chen (couverture MMR de 50 000 écoles, l'unité de surveillance n'est pas l'unité de risque, validation retrospective sur 7 foyers). Angle transposable au dispositif HWG et **décision PAHO sur le statut d'élimination de la rougeole aux États-Unis attendue en novembre**, à suivre.
+10. **Cible de veille (reconduite)** : webinaire inaugural **AI4African Health** (IME/ISfTeH avec WHO African Region, Africa CDC, HELINA, Google Cloud), panel « AI, Public Health & Disease Surveillance ».
+11. **Carry-overs permanents inchangés** : **Kaushal Sharma**, **Andrea Bernasconi**, **Barrè Onivogui** (ANSS Guinée). **Ne pas relancer.**
+12. **Carry-overs clos aujourd'hui, à ne pas reporter** : message de bienvenue **Freddy RUBONEZA ZIBIKA** (hook cherché, aucun trouvé, décision définitive sauf contenu neuf de sa part) ; **vérification du dossier indésirables** de la messagerie (fait, vide).
+
+---
+
 ## 📅 Session linkedin-hwg-monitoring — 18/08/2026 (matin)
 
 **Vérification double déclenchement** : aucune entrée `linkedin-hwg-monitoring` datée du 18/08 dans ce fichier ni dans `content-log.md` à l'ouverture → **premier déclenchement du jour**.
