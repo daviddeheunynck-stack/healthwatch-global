@@ -798,3 +798,107 @@ Comme le 4e est verrouillé à faux, **le maximum atteignable est 3/4 — c'est-
 - **Point laissé à David plutôt qu'automatisé** : durcir le checkout ajoute de la friction sur le seul funnel ayant jamais produit un achat — si la séparation par surface s'avère non implémentable proprement, la session doit le signaler au lieu de durcir les deux surfaces.
 
 ---
+
+## 2026-08-18 — Proposition du jour
+
+**J-3 avant le go/no-go du 21/08.**
+
+Angle nouveau : **l'écart entre ce que le produit affirme sur la fraîcheur de ses chiffres et ce qu'il mesure réellement.** Les passages précédents ont couvert la qualité des données elle-même (26-27/07), la personnalisation, l'accès, le canal d'entrée, le cycle d'essai, la demande de conversion, l'entonnoir d'inscription et l'acte d'achat (17/08). Le 26/07 avait construit le *détecteur* de fraîcheur des lignes verrouillées ; personne n'avait encore regardé **ce que le produit dit au visiteur** de cette fraîcheur, ni **qui a encore le droit d'écrire** sur ces lignes.
+
+**✅ Contrairement au 17/08, j'ai une mesure live cette fois.** La sonde base a été contournée par une lecture publique : `curl` sur `https://healthwatch-global.com/fr/outbreak/bd1c3a46-…` (page publique, sans identifiants, aucune écriture). Ce qui est affirmé ci-dessous sur l'état affiché de la ligne Ebola/RDC est donc **mesuré sur la prod du jour**, pas déduit. Restent non mesurés par moi et étiquetés comme tels : l'ampleur de l'écart (280 cas / 141 décès, chiffre repris de la session marketing du jour) et l'état de l'abonnement Morgan Otita (`/api/outbreaks` exige une authentification, `/admin` est derrière le login de David).
+
+### 1. 🔴 Le produit colle une pastille verte « ✓ Synchronisé avec la source officielle » sur des chiffres que plus aucune routine n'a le droit de mettre à jour
+
+**Signal, mesuré en direct sur la prod aujourd'hui.** La fiche publique du plus gros foyer du produit (Ebola/RD Congo, PHEIC, la plus grande épidémie d'Ebola jamais enregistrée dans le pays) affiche :
+
+- `4 665 cas`, `2 184 décès`, bulletin **WHO DON du 2026-08-12** (soit **6 jours**) ;
+- JSON-LD : `datePublished: 2026-08-12`, `dateModified: 2026-08-15` ;
+- et, juste au-dessus du bloc de citation Vancouver : **« 🔄 Vérifié par HealthWatch : Il y a 3j »**.
+
+**Ce « vérifié » ne vérifie rien.** `app/[locale]/outbreak/[id]/page.tsx:567` calcule ce libellé depuis **`o.updated_at`** — l'horodatage de la dernière *écriture en base sur la ligne*, quelle qu'elle soit. La ligne a été touchée le 15/08 par une passe de contrôle manuelle ; ses chiffres, eux, datent du bulletin du 12/08. N'importe quelle écriture (une description, un champ de langue, un champ de confiance de source) rafraîchit la mention sans toucher un seul chiffre.
+
+**La même confusion se retrouve sur trois autres surfaces, dont la principale**, toutes via `lib/outbreaks.ts:651-673` :
+
+| surface | ce qui est affirmé | d'où vient le chiffre |
+|---|---|---|
+| Tableau du dashboard (`components/OutbreakTable.tsx:1243-1253`) | pastille verte **« ✓ MàJ · 3j »**, infobulle **« Synchronisé il y a 3j avec la source officielle »** | `updated_at` |
+| Fiche publique (`page.tsx:567`) | « Vérifié par HealthWatch : il y a 3j » | `updated_at` |
+| Avertissement « SANS MAJ » (table + fiche + modale) | ne s'affiche qu'à partir de **60 jours** (`STALE_DAYS = 60`) | `updated_at ?? date` |
+| Score de risque (`lib/outbreaks.ts:724`) | pénalité de −0,5 levée dès qu'on touche la ligne | `updated_at` |
+
+L'infobulle du dashboard est la formulation la plus exposée : **une coche verte qui affirme une synchronisation avec la source officielle**, alors que le timestamp dont elle est tirée ne peut rien dire de la source. Sur cette ligne précise, l'affirmation est fausse.
+
+**Et le produit sait mesurer correctement — ailleurs.** Le cron `data-quality` (`route.ts:362-421`) mesure la péremption sur **`row.date`** (la date du bulletin), avec un seuil **PHEIC de 7 jours** : la même ligne, le même jour, est à 6 jours de son bulletin et sera donc signalée **demain 19/08** dans l'e-mail « à revoir » de David. Deux instruments, deux définitions : l'interne (7 j sur la date du bulletin) est **8,5× plus strict** que le public (60 j sur la date d'écriture) — et le public, au lieu d'avertir, affirme positivement.
+
+**Pourquoi c'est plus qu'un défaut d'affichage : cette ligne n'a plus de rédacteur du tout.** Trois faits de code, vérifiés aujourd'hui :
+
+1. `app/api/cron/sync-drc-sitrep/route.ts` (en-tête) annonce : « *Ebola DRC figures are kept fresh via sync-who-afro (WHO Disease Outbreak News) instead* » — sa propre détection de sitrep est **désactivée définitivement** (ToS ReliefWeb).
+2. `app/api/cron/sync-who-afro/route.ts:504` : `.lte("source_priority", 5) // never overwrite sitrep (priority 10)`. Le chemin de fraîcheur que l'en-tête ci-dessus désigne est **structurellement interdit** par le garde-fou de la routine désignée. La ligne est en priorité 10.
+3. Le seul rédacteur restant, `scripts/update-drc-sitrep-social.mjs`, est **orphelin depuis le 17/08** (documenté le jour même, commit `8c15fc1`) : ses deux seuls appelants nommés étaient `x-hwg-monitoring` et `x-hwg-followup-check`, éliminées ce jour-là. Et son garde-fou de source (l. 68-76) n'accepte que les hôtes `twitter.com`/`x.com` — **aucune routine LinkedIn ne peut donc l'utiliser**, quelle que soit la qualité de ce qu'elle a lu.
+
+Conséquence : la ligne la plus visible du produit ne peut plus être mise à jour que **par David à la main**, et l'interface affirme pendant ce temps qu'elle est synchronisée.
+
+**Le coût est déjà payé, aujourd'hui, par le marketing.** La session `linkedin-hwg-followup-check` du jour a **délibérément renoncé à citer les chiffres HWG** dans un DM à un contact professionnel, en écrivant noir sur blanc : « *Aucun chiffre de la base HWG cité volontairement : la ligne Ebola/RDC est verrouillée `source_priority: 10` et périmée* », et a reformulé pour rester vraie « quel que soit l'arbitrage en cours ». Le même fichier signale l'arbitrage en attente pour le **3e jour consécutif** : « *Aucune routine active ne peut mettre cette ligne à jour dans les règles actuelles.* » Autrement dit : **le fondateur ne peut plus citer son propre produit dans sa prospection**, 3 jours avant le go/no-go. C'est le signal le plus concret qu'un problème de données a déjà quitté le terrain technique.
+
+**Effort estimé :** petit, en trois gestes indépendants.
+- **(a)** Séparer les deux notions dans les libellés visibles : la fraîcheur revendiquée doit se calculer sur **`date`** (le bulletin), pas sur `updated_at`. `data-quality` fournit déjà la bonne définition et les bons seuils (7 j PHEIC / 21 j / 180 j dashboard) — les réutiliser plutôt qu'en inventer.
+- **(b)** Retirer la revendication de synchronisation de l'infobulle du dashboard, ou la rendre vraie en la posant sur la date du bulletin. « Bulletin du 12/08 » est une phrase courte, exacte, et plus crédible auprès d'un professionnel qu'une coche verte.
+- **(c)** Trancher le sort du rédacteur de la ligne priorité 10 (voir idée 2 pour la version générale) : soit ré-héberger l'exception d'écriture, soit assumer que ce palier est manuel — mais alors le dire dans l'interface au lieu d'afficher un « vérifié ».
+
+**Risque/inconnue :** (a) **arbitrage de positionnement, pas seulement un correctif** — passer la mesure sur `date` fera apparaître des avertissements de péremption sur des lignes qui affichent aujourd'hui une pastille verte ; c'est le but, mais c'est une décision de David sur ce que le produit montre, pas un bug à écraser. (b) Combien de lignes basculent : **non mesuré** (`/api/outbreaks` exige une authentification) ; `data-quality` le sait déjà, un coup d'œil à l'e-mail « à revoir » de demain donne le nombre exact. (c) L'ampleur de l'écart (280 cas / 141 décès) est **reprise de la session marketing du jour**, je ne l'ai pas vérifiée contre la source officielle moi-même — l'index WHO DON est rendu côté client, non lisible en `curl`. Le défaut de mécanisme, lui, ne dépend pas de ce chiffre. (d) Le score de risque changerait aussi (point 4 du tableau) : effet de bord sur le classement, à regarder avant de livrer.
+
+### 2. 🔴 Protéger une ligne d'une source laggarde la sort du rafraîchissement automatique — et la seule compensation est un dictionnaire d'UUID écrit à la main, qui a lâché 3 fois en 13 jours
+
+**Signal.** Le mécanisme est sain sur le principe : monter `source_priority` au-dessus de 5 empêche un cron OMS agrégé d'écraser une meilleure source nationale. Mais **aucun cron n'écrit au-dessus de 5**, sauf trois exceptions nommées (`sync-samoa-dengue` ≤10, `sync-drc-sitrep` ≤10 mais détection désactivée, `data-quality` ≤9, plus les crons dédiés qui plafonnent à leur propre `SOURCE_PRIORITY`). Inventaire complet relevé aujourd'hui : `grep 'lte("source_priority"' app/api/cron/*/route.ts` → 27 occurrences, **20 plafonnées à 5**. Donc **toute ligne promue au-dessus de 5 cesse de se rafraîchir seule**, immédiatement et silencieusement.
+
+La compensation existe — c'est le filet construit sur l'idée 2 du 26/07 — mais elle repose sur **deux dictionnaires codés en dur dans `scripts/morning-don-check.mjs`** : `MANUAL_ROWS` (l. ~522, quelles lignes vérifier à la main) et `MANUAL_ROW_CHECKED` (l. ~662, à quelle date chacune l'a été pour la dernière fois). Rien ne lie l'un à l'autre, et rien ne lie la promotion de priorité à l'ajout dans la liste : **c'est de la discipline humaine**.
+
+**Elle a lâché trois fois en treize jours, toutes constatées aujourd'hui :**
+
+| cas | ce qui s'est passé | trace |
+|---|---|---|
+| **Dengue/Sri Lanka + Dengue/Pérou** | promues en priorité 6 le **05/08** pour protéger leurs sources nationales ; le garde-fou hebdomadaire écrit le même jour **n'a jamais atteint `master`** (resté dans la branche `claude/zen-kare-7334b2`, commit `e3ad088`, toujours 2 commits en avance aujourd'hui). Découvert **13 jours plus tard**, les deux lignes figées depuis le 05/08 — le Sri Lanka **malgré un PDF officiel quotidien** (87 536 → 92 595 cas, 63 → 68 décès). | `a690a49` (18/08, 07:13) |
+| **Vietnam** | même classe, garde-fou « recréé » le même matin | `a86856b` |
+| **Ebola/RDC (priorité 10)** | pire cas : **plus aucun rédacteur du tout** depuis le 17/08, pas même un contrôle manuel programmé (idée 1) | `8c15fc1` |
+
+**Le mécanisme documente lui-même son propre défaut**, en commentaire juste après `MANUAL_ROWS` : « *Vérification faite, source inchangée → aucune écriture, donc `updated_at` ne bouge pas et la ligne se re-signale tous les matins indéfiniment* » (vécu le 06/08 sur les deux lignes polio). D'où le second dictionnaire de dates à tenir à la main. Deux listes manuscrites pour compenser une conséquence qui est, elle, parfaitement déterministe.
+
+**Pourquoi maintenant :** ce n'est pas une hypothèse, c'est un taux. Trois occurrences en treize jours, dont une découverte par hasard « en auditant une autre fusion de branche périmée » (message de `a690a49`), et une qui a déjà coûté au marketing sa capacité à citer le produit (idée 1). Le prochain cas se produira au prochain arbitrage de priorité, et rien dans le système ne le remarquera.
+
+**Effort estimé :** moyen — l'idée est de **déduire** le statut d'orphelin au lieu de l'énumérer. Les plafonds d'écriture des crons sont dans le code, lisibles mécaniquement (le `grep` ci-dessus les sort tous) ; le palier de chaque ligne est en base. Une ligne est orpheline si aucun cron **actif** n'a à la fois un plafond ≥ son `source_priority` et un matcher qui la cible. Deux niveaux possibles :
+- **version cheap et honnête** : une table des plafonds tenue à un seul endroit (au lieu de 27 littéraux dispersés), et un bloc de health-check quotidien qui liste les lignes actives dont le palier dépasse le plus haut plafond d'un cron actif. Ça aurait attrapé Sri Lanka/Pérou le 05/08 et Ebola/RDC le 17/08.
+- **version complète** : faire de la promotion de priorité un geste qui déclare son propre rédacteur (colonne `refresh_owner` ou équivalent) — plus juste, plus cher, et à ne pas engager à J-3.
+
+**Risque/inconnue :** (a) **le matcher est la partie dure** : savoir qu'un cron *pourrait* écrire une ligne (plafond) est trivial, savoir qu'il la *cible* (pays/maladie/regex) ne l'est pas — la version cheap ci-dessus ne prétend pas le résoudre, elle attrape seulement le cas franc « palier au-dessus de tout plafond », qui est précisément celui des trois incidents. (b) Le cas Malaisie montre que ça marche dans les deux sens : elle a été **délibérément retirée** de `MANUAL_ROWS` parce qu'elle a reçu son propre cron — une déduction automatique aurait vu ce changement sans qu'on ait à s'en souvenir. (c) Ne règle pas le problème amont, réel mais distinct : **des branches portant des correctifs ne sont pas fusionnées** (`zen-kare` 2 commits, `brave-curran` 3 commits en avance aujourd'hui) — c'est un sujet de process, pas de produit, et je ne le propose pas comme idée. (d) Priorité honnêtement inférieure à l'idée 1 côté visible : c'est un filet, pas une surface — mais c'est celui qui empêche l'idée 1 de se reproduire ailleurs.
+
+### 3. ⚠️ Re-remontée assumée : les trois idées validées le 17/08 ne sont pas construites, et il reste 3 jours
+
+**Ce n'est pas une idée neuve** — c'est l'entrée du 17/08 ci-dessus, re-signalée parce qu'une **preuve nouvelle change son évaluation** : elle a été validée (« On applique les 3 idées »), déléguée à une session dédiée (`task_7b531b68`), et **rien n'a été livré**. Vérifié aujourd'hui dans le code, pas déduit :
+
+| idée du 17/08 | état attendu | état réel aujourd'hui |
+|---|---|---|
+| 1(a) séparer les intentions au checkout | `payment_method_collection` conditionnel | `app/api/checkout/route.ts:152` — `"if_required"` inchangé |
+| 1(c) health-check sur les abonnements `trialing` sans carte | un bloc de contrôle | zéro occurrence de `trialing` / `payment_method` dans `health-check/route.ts` |
+| 1(d) aligner `trial-reminders` sur son propre commentaire | filtre retiré | `trial-reminders/route.ts` — le commentaire dit toujours « *filter is intentionally omitted* », et `.is("stripe_subscription_id", null)` est toujours 20 lignes plus bas |
+| 2 redéfinir « paiement actif » et le MRR | critère sur moyen de paiement / facture payée | `admin/page.tsx` — `paying: payingCount >= 1`, `pipeline: false`, `PLAN_MRR.pro = 29` : **identiques** |
+| 3 health-check sur `email_blocked_at` | un bloc de contrôle | **0 occurrence** de `email_blocked_at` dans `health-check/route.ts` |
+
+Rien non plus dans les branches : aucune des 4 branches non fusionnées ne contient ce travail (`git log` sur chacune, vérifié). La session déléguée n'a rien produit, ni sur `master`, ni ailleurs.
+
+**Pourquoi je le remonte plutôt que de l'attendre :** la plus urgente des trois est l'idée 2, **l'instrument du go/no-go lui-même**. Elle reste vraie mot pour mot, avec un jour de moins : le critère « ≥1 paiement Stripe actif » passera au vert grâce à un abonnement sans carte programmé pour s'annuler le 26/08, le 4e critère est codé en dur à `false` (donc « ≥3/4 » est en réalité « ≥3/3 »), et la carte « MRR réel » affichera **29 €** pour un abonnement annuel qui, s'il encaissait, vaudrait ~20,75 €/mois. **Si rien n'est fait d'ici vendredi, David décidera sur ce panneau.**
+
+**Effort estimé :** inchangé — petit pour chacune. Le brief détaillé, avec les arbitrages déjà tranchés, est déjà écrit dans l'entrée du 17/08 : il est réutilisable tel quel, il n'y a rien à re-décider.
+
+**Risque/inconnue :** (a) je ne sais pas **pourquoi** `task_7b531b68` n'a rien livré (session échouée, jamais démarrée, ou tuée) — je constate l'absence de code, je ne diagnostique pas la cause ; (b) si un seul des trois volets doit être fait avant vendredi, c'est **le critère de paiement et le MRR** (idée 2 du 17/08) : c'est le seul qui change ce que David lira le jour de la décision ; (c) le 17/08 notait déjà que l'état de l'abonnement Morgan Otita pouvait avoir changé depuis — **toujours non vérifiable depuis cette session** (`/admin` derrière le login, l'API exige une authentification), l'étape 0 du brief reste obligatoire avant de coder.
+
+**Non re-proposé aujourd'hui :** rien sur la personnalisation, l'accès, l'entonnoir d'inscription ni le cycle d'essai — déjà couverts, sans preuve nouvelle. La piste « version de définition de cas » d'Omobolanle Adelekun (03/08) reste ouverte sans angle neuf ; les 18 indicateurs de confiance communautaire d'Andrea Bernasconi (07-08/08) restent non constructibles faute de source ; les trois sources tierces de Hao-Kai TSENG (29/07) restent bloquées par le garde-fou explicite du `ROADMAP.md` (« ne pas intégrer de source tant qu'un prospect ne demande pas explicitement une détection plus rapide que l'OMS »), et aucun prospect ne l'a demandé. **Pas d'idée sur le persona « décideur »** malgré la directive de ciblage de David du 17/08 au soir : la seule surface d'atterrissage prouvée parle aujourd'hui à un point focal opérationnel (« Guide d'action — Point focal », vu en direct sur la fiche), ce qui *pourrait* être un décalage — mais **aucun décideur n'a jamais été mesuré sur cette page** (les 4 seules visites réelles de l'histoire sont des profils terrain), donc ce serait une refonte de persona sur zéro donnée. À proposer si et quand un décideur clique.
+
+**Contexte relevé au passage** (pas des idées) :
+- `marketing/product-feedback.md` : **aucune entrée depuis le 08/08**, soit **10 jours** sans signal terrain entrant. Les trois idées du jour viennent donc du code et de la prod, pas d'une demande d'utilisateur — c'est une limite à garder en tête sur leur priorisation business.
+- Prospection institutionnelle : 1 bounce enregistré aujourd'hui (MSPAS Guatemala), 10 nouveaux contacts, toujours **0 réponse** sur l'ensemble de la campagne.
+- LinkedIn : 3 + 2 DM envoyés aujourd'hui après validation de David en session, 2 nouveaux en file d'attente ; 1 commentaire, 1 suivi. **0 demande de contact hors plateforme.**
+- La ligne Ebola/RDC est en attente d'arbitrage de David pour le **3e jour consécutif** (idée 1).
+
+**Statut : PROPOSÉE — en attente de retour de David.**
+
+---
