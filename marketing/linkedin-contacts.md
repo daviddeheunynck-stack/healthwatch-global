@@ -33,10 +33,18 @@ Identité vérifiée et clic exécutés **dans le même appel JS** (§7, règle 
 
 **Aucune autre invitation en attente** : onglet « Tout (0) » après traitement.
 
-### 🔒 DM EN ATTENTE DE VALIDATION — **3 brouillons** (Johan Verheyden, Christophe VALINGOT DELAURENTI, TAMBWE Patrick Rodrigue). Un 4e, Sohail Agha, a été **retiré en cours de session** au profit d’une réponse publique (voir ci-dessous)
+### ✅ 3 DM VALIDÉS ET ENVOYÉS (session interactive, ordre explicite « Envoie les 3 »)
+
+Double-check refait avant envoi pour chacun : destinataire relu dans le composeur/chip **dans le même appel JS que le clic d'envoi** (§5.4), texte comparé caractère pour caractère au brouillon archivé avant de cliquer.
+
+1. **Johan Verheyden** — envoyé **10:20**, réponse en fil actif. **3 timeouts CDP** (`Input.dispatchKeyEvent`/`insertText`) pendant la frappe, à chaque fois vérifiés par lecture directe de l'éditeur avant de poursuivre : aucune perte, aucun doublon (660 caractères, conforme).
+2. **Christophe VALINGOT DELAURENTI** — envoyé **10:30**, message de bienvenue (**quota froid 1/8**). **1 timeout `Page.captureScreenshot`**, résolu par re-`select_browser` sur le même deviceId. **⚠️ Panne rencontrée et documentée ci-dessous** : la bulle flottante ouverte depuis le profil (« Message ») est restée dans un état de renderer dégradé (accessibility tree vide, `(async()=>42)()` renvoyant `{}`) ; **onglet abandonné, envoyé depuis un nouvel onglet** via `linkedin.com/messaging/thread/new/` + champ `.msg-connections-typeahead__search-field`, homonyme « Christophe Valingot, 3e » écarté. Texte identique au brouillon (751 caractères).
+3. **TAMBWE Patrick Rodrigue** — envoyé **10:35**, message de bienvenue (**quota froid 2/8**). **Nombreux homonymes** dans le typeahead (Patrick MUTUZA TAMBWE, Patrick Georges TAMBWe, Patrick Tambwe ×6, etc.) : sélection faite exclusivement sur la ligne « TAMBWE Patrick Rodrigue · 1er, Medical Doctor ». Texte identique au brouillon (815 caractères).
+
+**⚠️ Panne technique rencontrée et résolue, à retenir pour les prochaines sessions.** Après l'envoi à Johan (réussi dans le fil de messagerie existant), le clic « Message » depuis le **profil** de Christophe a ouvert une bulle flottante dont le renderer était dégradé : `document.body.innerText` bloqué à 14 caractères, `read_page` (accessibility tree) vide, et surtout `(async () => 42)()` renvoyant `{}` — exactement la signature « aucun remède connu » documentée dans `hwg-social-policy.md` §7. Conformément à la règle, **aucune insistance sur cet onglet** (ni retape à l'aveugle, ni nouvelle tentative de re-sélection au-delà d'un essai) : onglet fermé, **nouvel onglet ouvert**, et le contournement déjà documenté le 12/08 (`linkedin.com/messaging/thread/new/` → bouton « Nouveau message » → champ `.msg-connections-typeahead__search-field`) a fonctionné du premier coup sur le nouvel onglet, pour les deux DM restants. **Piège supplémentaire noté** : après sélection d'un destinataire dans ce flux, le composeur se ré-agence et les coordonnées de l'éditeur calculées avant la sélection ne sont plus valides — toujours recalculer `getBoundingClientRect()` **après** la sélection du destinataire, jamais avant.
 Règle du 23/07 inchangée : rédigés et double-checkés en autonomie, **jamais envoyés** par cette routine.
 
-#### 🔒 DM 1 — **Johan Verheyden** (FR, tutoiement) — réponse en fil actif, nouvelle réponse reçue le 17/08 à 22:25
+#### ✅ DM 1 — **Johan Verheyden** (FR, tutoiement) — ENVOYÉ 10:20, réponse en fil actif, nouvelle réponse reçue le 17/08 à 22:25
 `/in/jverheyden/` — *Founder and Chief Researcher*, **African Intelligence / Aries Consult**, basé à Nairobi. **Partenaire existant et utilisateur HWG Pro actif**.
 
 **Fil relu intégralement (§4) : 20 messages**, remontés jusqu'au premier. Registre **tutoiement, familier, messages courts de son côté**.
@@ -85,7 +93,7 @@ C'est la réponse directe à ma question de 16:55 (« tu constates quoi de ton c
 
 </details>
 
-#### 🔒 DM 3 — **Christophe VALINGOT DELAURENTI** (FR) — message de bienvenue, **quota froid 1/8**
+#### ✅ DM 3 — **Christophe VALINGOT DELAURENTI** (FR) — ENVOYÉ 10:30, message de bienvenue, **quota froid 1/8**
 `/in/christophe-valingot-delaurenti-4a7b642/` — *Epidemiologist / Public health advisor / **Water & sanitation engineer***, **ISPED - Bordeaux School of Public Health**, Saint-Paul (La Réunion), 1er depuis ce matin, **3 326 abonnés**, **34 relations communes** (Dr. Mohamed Y., Abdelkhader + 33, dont Johan Verheyden). **Il a envoyé l'invitation**, acceptée ce matin.
 
 **§4** — **aucun fil de messagerie préexistant** : absent des 10 fils les plus récents de la messagerie **et** de tout l'historique archivé (`linkedin-contacts.md`, tracker, archive d'avant le 17/07, 0 occurrence). Message de bienvenue justifié.
@@ -104,7 +112,7 @@ C'est la réponse directe à ma question de 16:55 (« tu constates quoi de ton c
 >
 > Vous qui êtes des deux côtés : ça se joue en temps réel sur le terrain, ou c'est surtout reconstitué après coup dans un rapport ?
 
-#### 🔒 DM 4 — **TAMBWE Patrick Rodrigue** (EN) — message de bienvenue, **quota froid 2/8**
+#### ✅ DM 4 — **TAMBWE Patrick Rodrigue** (EN) — ENVOYÉ 10:35, message de bienvenue, **quota froid 2/8**
 `/in/tambwepatrick/` — *Medical Doctor | Public Health Specialist (MPH) | Researcher | Data Analyst*, ***Division Provinciale de la Santé du Nord-Kivu / Goma***, Kampala International University, 1er depuis ce matin, 461 relations, 494 abonnés, **9 relations communes** (Otim, **Dr. Scott JN McNabb** + 8). **Il a envoyé l'invitation**, acceptée ce matin.
 
 **§4** — **aucun fil de messagerie préexistant** (même vérification que ci-dessus, 0 occurrence dans l'ensemble de l'historique). Message de bienvenue justifié.
@@ -196,13 +204,13 @@ C'est la réponse directe à ma question de 16:55 (« tu constates quoi de ton c
 | **Connexions** | **7/7 REMPLI** | 7 décideurs institutionnels, toutes sans note (blocage Premium reconduit), toutes confirmées à l'écran |
 | **Suivis** | **8/7-10 REMPLI** | 2 follow-back + 6 en découverte active, chaque bouton vérifié passé à « Suivi » |
 | **Invitations reçues** | **4/4 traitées** | Toutes acceptées, compteur à 0 |
-| **DM rédigés et mis en file** | **3** | Johan Verheyden (fil actif), Christophe VALINGOT DELAURENTI et TAMBWE Patrick Rodrigue (bienvenue, **quota froid 2/8**). **Aucun envoyé.** Un 4e brouillon (Sohail Agha) **retiré** en cours de session |
+| **DM envoyés** | **3/3** | Johan Verheyden (fil actif), Christophe VALINGOT DELAURENTI et TAMBWE Patrick Rodrigue (bienvenue, **quota froid 2/8**), **tous validés et envoyés par David en session interactive** (« Envoie les 3 »). Un 4e brouillon (Sohail Agha) **retiré** en cours de session au profit d'une réponse publique |
 | **Écritures en base** | **0** | 2 vérifications menées, 1 sans écart (Ouganda), 1 sous verrou en attente d'arbitrage (RDC) |
 
 **Pourquoi 4/7 en commentaires et pas 7/7.** Le quota est un objectif, pas un plafond, et il n'a pas été rempli faute de cibles atteignant la barre, **pas** faute de recherche. Méthodes épuisées dans l'ordre : (1) le **fil** ne contenait que 3 posts non sponsorisés, dont 2 déjà sous blocage hebdomadaire (Africa CDC, et Dr. Jean Kaseya traité) ; (2) **notifications** complètes, d'où sont sortis 2 des 4 commentaires ; (3) recherche de contenu « **Ebola Bundibugyo** » triée par date, qui n'a rendu qu'un ingénieur retraité relayant un lien RKI et un compte de marketing digital ougandais recopiant le texte de Kaseya ; (4) recherche « **disease surveillance** » sur les dernières 24 h, qui n'a rendu que des annonces de webinaires et une promotion de rapport ; (5) page **ECDC**, dont le post le plus récent a environ 4 jours, **hors fenêtre 48 h**. Aucun commentaire médiocre n'a été publié pour atteindre le chiffre, conformément à la règle du 14/07.
 
 ### 📌 CARRY-OVER pour la prochaine session (rien à re-chercher)
-1. **🔒 3 DM en attente de validation de David** — textes complets ci-dessus. Aucun ne part sans son accord explicite. **§4 à refaire au moment de l'envoi** pour chacun (un nouveau message a pu arriver depuis). **Attention au quota** : les deux messages de bienvenue compteront dans le quota froid **du jour de l'envoi réel**, pas celui d'aujourd'hui.
+1. **✅ Les 3 DM en file ont été validés et envoyés en session interactive** (10:20–10:35), sur ordre explicite de David tapé directement dans le chat (« Envoie les 3 »), conforme à `report-conventions.md`. **File de validation vidée : 0 DM en attente.** Détail dans les blocs ✅ ci-dessus. **Quota DM à froid mis à jour : 2/8** (Christophe, TAMBWE ; Johan hors quota, réponse en fil actif). Surveiller leurs réponses éventuelles.
 2. **⭐ trésor Ndaye** (`/in/tr%C3%A9sor-ndaye-0ba081b3/`) — **connexion à envoyer en priorité demain**, quota rempli à 7/7 aujourd'hui. Au **Ministère de la santé publique à Kinshasa**, il a repris notre calcul publiquement et nous venons de lui répondre : le contexte de connexion est aussi chaud qu'il peut l'être.
 3. **⭐ 7 invitations de décideurs en attente d'acceptation** — Melkamu Abte Afele (EPHI), Musole Chipoya (ZNPHI), **Dieudonné Mwamba (DG INSP RDC)**, joseph nyandwi (DG INSP Burundi), William YAVO (DG INSP Côte d'Ivoire), HoussaÏnatou BAH (DGA INSP Guinée), Abdoulaye Touré (CERFIG). **Surveiller les acceptations** : chacune ouvre droit à un message de bienvenue, et ce sont les cibles les plus alignées sur la directive du 17/08. Plusieurs ont des comptes peu actifs, donc acceptation possiblement lente.
 4. **Messages de bienvenue non rédigés** : **Dr Franck NZIZA** et **Freddy RUBONEZA ZIBIKA** (invitations acceptées ce matin, aucun fil préexistant). Ouvrir leurs profils et vérifier un hook réel avant d'écrire.
