@@ -47,7 +47,16 @@
 
 **🚫 Hors périmètre, strictement ignoré (outreach freelance).** Les **deux fils les plus récents de la messagerie** relèvent de `freelance-income-routine`, pas de HWG : **Gaetan Kunuanina** (message sortant à 11:37 pitchant un renfort technique, réponse entrante à 11:52 « *Je préfère avancer seul pour l'instant* ») et **Stephane Engono** (11:28, « *ma proposition de samedi tient toujours, un renfort ponctuel et payant sur la fiabilisation de Prestay* »). **Non comptés dans les quotas HWG, non archivés au-delà de cette mention, aucune réponse préparée.** Signalé uniquement parce qu'ils occupent le haut de la messagerie et qu'un prochain run pourrait les prendre pour des fils à traiter.
 
-#### 🔒 DM 1 en attente de validation — **Isaias Fernandes Co** (EN) — message de bienvenue, **carry-over d'archivage rattrapé**
+#### ✅ DM 1 — **Isaias Fernandes Co** (EN) — ENVOYÉ 14:02, sur ordre explicite de David en session interactive (« Envoie les 2 DM double checkés »), message de bienvenue, **carry-over d'archivage rattrapé**, **quota froid 3/8**
+Double-check à froid refait avant envoi : destinataire relu dans le chip du composeur **dans le même appel JS que le clic d'envoi** (§5.4), texte comparé caractère pour caractère au brouillon archivé (793 caractères, correspondance exacte) avant de cliquer. Confirmé dans la messagerie : « 14:02 · Vous : Hi Isaias. The Lancet ID modelling study… ».
+
+**⚠️ Incident technique rencontré et documenté pour les prochaines sessions.** Le composeur ouvert depuis le profil (bulle flottante, pas un fil existant) a présenté trois pièges distincts :
+1. **Renderer dégradé sur le premier onglet** : après plusieurs manipulations de l'éditeur, `(async()=>42)()` s'est mis à renvoyer systématiquement `{}` et `Page.captureScreenshot` a timeout — signature « aucun remède connu » de la politique commune §7. **Vérifié avant tout abandon qu'aucun envoi accidentel n'avait eu lieu** (recherche du fil dans la messagerie depuis un onglet neuf : absent). Onglet abandonné sans insister, travail repris dans un nouvel onglet.
+2. **Sauts de ligne parasites après `shift+Return`** : deux pressions ont parfois produit 5 à 6 sauts de ligne en fin de texte au lieu de 2 (éditeur TipTap/ProseMirror). **Détecté systématiquement via relecture JS de `innerText` avant tout clic d'envoi**, jamais laissé passer. Corrigé par `BackSpace` unitaires avec revérification après chaque pression (le nombre de caractères supprimés par pression n'est pas fiable, parfois 3-5 caractères pour 1 appui). **Méthode plus fiable trouvée** : insérer le saut de paragraphe via un seul caractère `\n` intégré directement dans le texte passé à `type`, qui produit de façon fiable exactement 2 sauts de ligne (un saut de paragraphe visuel), plutôt que d'enchaîner des `shift+Return` séparés.
+3. **Bouton « Envoyer » trouvé désactivé alors que le texte et le destinataire étaient corrects** : une recherche plus large a révélé **deux boutons « Envoyer »** dans le DOM, un premier invisible et désactivé (résidu d'un autre composeur/état de la page) et le vrai bouton actif (`classList` contient `msg-form__send-button`). **Cibler explicitement `msg-form__send-button`** plutôt que le premier bouton « Envoyer » trouvé.
+
+<details>
+<summary>Brouillon archivé avant envoi (texte original, pour référence)</summary>
 `/in/isaiasco/` — *Project Innovations, **AI & Technologies Officer @ WHO** | Machine Learning for health security & outbreak forecasting across **47 African Member States***, **662 abonnés**, 1er degré. **Notre invitation, envoyée le 15/08** (connexion 3/7 de cette session), **acceptée le 17/08** sans que l'acceptation ait été consignée. Pilote **PDX (Preparedness Data Exchange)**.
 
 **§4 — aucun fil de messagerie préexistant** : absent des 10 fils de la messagerie et des 4 fichiers d'archive hors sa ligne « en attente » au tracker. Message de bienvenue justifié. **Premier contact → quota froid, passerait à 3/8 une fois validé et envoyé.**
@@ -64,7 +73,13 @@
 >
 > Two things I would genuinely like your view on. Was the ensemble re-anchored as the outbreak grew, or does the June calibration still stand as the reference? And did the importation risk you modelled for Uganda, South Sudan, Rwanda and Burundi match what actually crossed?
 
-#### 🔒 DM 2 en attente de validation — **Dr Franck NZIZA, MD, MPH** (FR, vouvoiement) — message de bienvenue, **carry-over #4 du matin traité**
+</details>
+
+#### ✅ DM 2 — **Dr Franck NZIZA, MD, MPH** (FR, vouvoiement) — ENVOYÉ 14:05, sur ordre explicite de David en session interactive (« Envoie les 2 DM double checkés »), message de bienvenue, **carry-over #4 du matin traité**, **quota froid 4/8**
+Double-check à froid refait avant envoi : destinataire relu dans le chip du composeur **dans le même appel JS que le clic d'envoi** (§5.4), texte comparé caractère pour caractère au brouillon archivé (1015 caractères, correspondance exacte) avant de cliquer. Confirmé dans la messagerie : « 14:05 · Vous : Bonjour Franck. Votre intervention devant les alumni ABADAAD… ». Mêmes incidents techniques que le DM 1 ci-dessus (sauts de ligne parasites après `shift+Return`, corrigés unitairement avec relecture JS après chaque `BackSpace` ; bouton `msg-form__send-button` ciblé explicitement) — non répétés en détail, voir DM 1.
+
+<details>
+<summary>Brouillon archivé avant envoi (texte original, pour référence)</summary>
 `/in/dr-franck-nziza-md-mph-50a8a855/` — *Researcher, innovator, Doctorpreneur | Medical doctor, Public health specialist and **Expert in Artificial Intelligence in Medicine and digital Health***, **4 647 abonnés**, **Bujumbura, Burundi**. Invitation **reçue** et acceptée ce matin. Mutuels : Marie Roseline Darnycka BELIZAIRE + 14.
 
 **§4 — aucun fil de messagerie préexistant** (vérifié ce matin et reconfirmé). **Premier contact → quota froid, passerait à 4/8 une fois validé et envoyé.**
@@ -84,6 +99,8 @@
 > Mon travail, avec HealthWatch Global, consiste à agréger les bulletins publiés sur les foyers épidémiques actifs. Il m'a appris quelque chose qui rejoint votre propos : ce qui limite l'IA appliquée à la santé publique n'est presque jamais le modèle, c'est que la couche de données publiée en amont n'est pas homogène. Sur le foyer de Bundibugyo en RDC, le point de situation national et le dernier DON de l'OMS ne sont pas arrêtés à la même date et ne donnent pas le même cumul, le canal national étant nettement en avance ; et le sitrep laisse plusieurs centaines de cas confirmés dont l'issue n'est jamais renseignée.
 >
 > Vous formez maintenant des soignants à ces outils : dans votre cohorte, la lecture critique de la source vient-elle avant l'usage du modèle, ou le sujet n'arrive-t-il que le jour où quelqu'un tombe sur une incohérence ?
+
+</details>
 
 #### ❌ Aucun brouillon pour **Freddy RUBONEZA ZIBIKA** — hook cherché, aucun trouvé (carry-over #4, arbitrage rendu)
 `/in/freddy-ruboneza-zibika-7411731a0/` — *PMI Member | Teaching and Research at **Université Officielle de Bukavu** | Project Evaluation | Data Collection and Analysis | Public Health | M&E*, **1 722 abonnés**.
@@ -133,19 +150,19 @@ Détail complet, verbatims, double-checks et textes publiés dans **`content-log
 | **Commentaires** | **6/7** | +2 cette session : WHO Kenya (Busia, 72 h) et Ana Bento (Nature Medicine). **Marge de 1 laissée au créneau 17h** |
 | **Connexions** | **7/7 REMPLI** | Aucune envoyée cette session, quota déjà atteint le matin |
 | **Suivis** | **9/7-10** | +1 : Ana Bento, en découverte active (aucun nouvel abonné à rendre) |
-| **DM envoyés** | **0** | **Aucun envoi, conforme à la règle du 23/07** |
-| **DM en file de validation** | **2** | **Isaias Fernandes Co** (EN, WHO/PDX) et **Dr Franck NZIZA** (FR, IA santé Burundi). Feraient passer le quota froid de 2/8 à 4/8 |
+| **DM envoyés** | **2** | **Isaias Fernandes Co** (14:02) et **Dr Franck NZIZA** (14:05), sur ordre explicite de David tapé en session interactive (« Envoie les 2 DM double checkés »), double-check à froid refait avant envoi. **Quota froid 4/8** |
+| **DM en file de validation** | **0** | Les 2 brouillons du jour ont été validés et envoyés (voir ci-dessus) |
 | **DM écartés sans brouillon** | **2** | Freddy RUBONEZA ZIBIKA et Papy Katabuka B : hook cherché, aucun trouvé (§10) |
 | **Invitations reçues** | **0 en attente** | « Tout (0) » |
 | **Messages HWG reçus** | **0** | Rien depuis la session du matin ; 2 fils entrants relèvent du freelance, ignorés |
 | **Écritures en base** | **0** | Aucune donnée épidémiologique neuve rencontrée cette session |
 
 ### 📌 CARRY-OVER pour le créneau de 17h (rien à re-chercher)
-1. **⚠️ 2 DM en file de validation, notification push envoyée.** **Isaias Fernandes Co** et **Dr Franck NZIZA**, textes prêts ci-dessus, double-check complet effectué. **Ne jamais les envoyer sans validation explicite de David**, y compris au créneau de 17h. Une fois validés : quota froid **4/8**.
+1. **✅ Les 2 DM en file ont été validés et envoyés en session interactive** (14:02 et 14:05), sur ordre explicite de David tapé directement dans le chat (« Envoie les 2 DM double checkés »), conforme à `report-conventions.md`. **File de validation vidée : 0 DM en attente.** Détail dans les blocs ✅ ci-dessus. **Quota DM à froid mis à jour : 4/8.** Surveiller leurs réponses éventuelles.
 2. **Marges de quota restantes pour 17h** : **1 commentaire** (6/7) et **1 suivi** (9/10). Connexions rempli (7/7), inutile d'en chercher.
 3. **⭐ trésor Ndaye** (`/in/tr%C3%A9sor-ndaye-0ba081b3/`) — **connexion prioritaire dès demain**, reportée d'aujourd'hui (quota 7/7). Contexte toujours aussi chaud : Ministère de la santé publique à Kinshasa, il a repris notre calcul publiquement et nous lui avons répondu ce matin.
 4. **⭐ 7 invitations de décideurs toujours en attente**, vérifiées à 13h : Melkamu Abte Afele, Musole Chipoya, **Dieudonné Mwamba (DG INSP RDC)**, joseph nyandwi, William YAVO, HoussaÏnatou BAH, Abdoulaye Touré. Chaque acceptation ouvre droit à un message de bienvenue. **Revérifier à 17h.**
-5. **Réponses à surveiller** : les 3 DM du matin (Johan Verheyden, Christophe VALINGOT DELAURENTI, TAMBWE Patrick Rodrigue), aucune réponse à 13h ; **Sohail Agha**, qui n'a pas encore réagi à notre réponse publique du matin ; **Dr. Jean Kaseya** (commentaire 1/7, aucune réaction) ; et désormais les 2 commentaires de cette session (**WHO Kenya**, **Ana Bento** — celle-ci ayant un fort taux de réponse à ses commentaires, réponse plausible).
+5. **Réponses à surveiller** : les 3 DM du matin (Johan Verheyden, Christophe VALINGOT DELAURENTI, TAMBWE Patrick Rodrigue), aucune réponse à 13h ; **les 2 DM envoyés à 14h** (Isaias Fernandes Co, Dr Franck NZIZA) ; **Sohail Agha**, qui n'a pas encore réagi à notre réponse publique du matin ; **Dr. Jean Kaseya** (commentaire 1/7, aucune réaction) ; et désormais les 2 commentaires de cette session (**WHO Kenya**, **Ana Bento** — celle-ci ayant un fort taux de réponse à ses commentaires, réponse plausible).
 6. **Cibles de connexion qualifiées, déjà suivies, sans hook à re-chercher** : **Victoria Kanana** (Kenya National Public Health Institute, IHR Expert — d'autant plus pertinente après le commentaire WHO Kenya du jour sur l'exercice du KNPHI), **Petranilla Nakamya** (Uganda National Institute of Public Health), **WAZIH N. CHO** (Kinshasa, déployé à Bunia) et désormais **Ana Bento** (Cornell).
 7. **Blocage « notes personnalisées épuisées »** : non retesté cette session (aucune connexion envoyée). Reste supposé actif, **à retester au prochain envoi** plutôt qu'à supposer.
 8. **⚠️ Arbitrage attendu de David, 3e jour consécutif** : la ligne Ebola/RDC en base (4 665 / 2 184 au 12/08, WHO DON615) accuse un retard d'au moins **280 cas et 141 décès** sur des sources officielles publiques (sitrep INSP-RDC du 15/08 : 4 945 / 2 325 ; Africa CDC : plus de 5 000 cas et 2 320 décès, repris ce matin encore dans son post du fil). Verrou `source_priority: 10`, exception d'écriture du 03/08 **orpheline** depuis l'arrêt des routines X. **Aucune routine active ne peut plus mettre cette ligne à jour dans les règles actuelles.**
