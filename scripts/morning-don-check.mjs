@@ -24,6 +24,14 @@ const SUSPICIOUS_DATE_EXCLUDE_IDS = new Set([
   "ab4cd321-0aa6-4598-86ac-b0a04d346465", // Polio Pakistan
   "b0f473be-a367-464e-ab32-3cdc43aa7815", // Polio Afghanistan
 ]);
+// Faux positifs connus du scan "incidents de rattrapage" (section 4g) — lignes manuelles
+// fraîchement créées quelques jours après leur date "as of" source (délai normal de session,
+// pas un retard de pipeline ni un flag is_seed/is_backfill oublié). Comme le décalage
+// created_at↔date ne bouge jamais tant que la ligne n'est pas retouchée, ces lignes
+// resignaleraient indéfiniment sans cette liste.
+const CATCHUP_EXCLUDE_IDS = new Set([
+  "d9d8b75c-f7ac-4fc9-af3b-d4d41582c70c", // Dengue Vanuatu — source datée 10/08, ligne créée 18/08 (session)
+]);
 // Table de référence des clusters de seeds légitimes (mise à jour 2026-07-20, total=25).
 // Sert à diffier "le compte a-t-il changé" plutôt qu'à re-justifier ligne par ligne chaque matin.
 // Comptes = seeds ACTIFS attendus par cluster. Baissés le 2026-07-17 après les
@@ -465,6 +473,7 @@ function computeCatchupDays(o) {
 }
 console.log("\n=== Incidents de rattrapage (ingérées >7j après leur date signalée — signal interne, jamais client) ===");
 const catchupIncidents = catchupRows
+  .filter((o) => !CATCHUP_EXCLUDE_IDS.has(o.id))
   .map((o) => ({ ...o, days: computeCatchupDays(o) }))
   .filter((o) => o.days !== null && o.days > CATCHUP_THRESHOLD_DAYS);
 if (catchupIncidents.length) {
@@ -594,6 +603,19 @@ const MANUAL_ROWS = {
   // les 4 traductions depuis sa création — pas de rapport avec la péremption, mais découvert en
   // relisant la ligne pour appliquer ce correctif. Écrites proprement cette fois.
   "d5aa229f-0568-45db-b223-747d25014718": "Dengue/Viêt Nam",
+  // Ajoutée le 2026-08-18, sur ordre explicite de David : seule épidémie de dengue 2026 du
+  // Pacifique encore officiellement déclarée ET en cours (Nouvelle-Calédonie, Tonga et Îles
+  // Cook sont soit closes soit déjà couvertes). Épidémie déclarée en juin 2026 par le
+  // ministère de la Santé du Vanuatu, South Efate/province de Shefa. Source : "Dengue in the
+  // Pacific: Multicountry Situation" (OMS WPRO South Pacific + Secretariat of the Pacific
+  // Community, hebdomadaire/quasi-hebdomadaire sur reliefweb) — même famille de source que le
+  // trou Fidji/Samoa/Tonga du 03/08, mais cette série-ci donne un TABLEAU par pays (cas
+  // confirmés) en plus des highlights, contrairement au DSU WPRO qui mélange comptes
+  // confirmés (Asie) et courbes DLI syndromiques (PICT) — préférer cette source pour toute
+  // future vérification de couverture Pacifique. 76 cas confirmés / 0 décès au 10/08/2026
+  // (Epi Week 32), DENV-1, 12 hospitalisations toutes guéries. Aucun cron ne couvre cette
+  // série — vérification manuelle hebdo comme les autres lignes Pacifique de cette liste.
+  "d9d8b75c-f7ac-4fc9-af3b-d4d41582c70c": "Dengue/Vanuatu",
 };
 // Vérification faite, source inchangée → aucune écriture, donc `updated_at` ne bouge pas et la
 // ligne se re-signale tous les matins indéfiniment (vécu le 06/08 avec les deux lignes polio :
