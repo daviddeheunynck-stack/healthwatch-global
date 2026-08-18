@@ -1146,3 +1146,17 @@ Segments : 4 gouvernement/institut national, 3 académique, 3 ONG. Régions OMS 
 - **Délivrés 189** = 200 envoyés − 11 (taille de la liste nominative ci-dessus), recompté dans le même mouvement que la liste.
 
 **Total cumulé de relances : 83 envoyées** (56 le 15/08 + 17 du lot 03/08 le 15/08 + 10 du lot 07/08 le 17/08), **+ 10 en attente de relecture et d'envoi** (lot du 08/08, ce jour).
+
+**🔴 BOUNCE confirmé le 2026-08-18 — MSPAS Guatemala (`epidemiologiamspas@mspas.gob.gt`)** : « Adresse introuvable », NDR Google reçu à 10h17, quelques minutes après l'envoi du lot par David. La boîte n'existe pas. Le domaine `mspas.gob.gt` est en revanche bien réel et actif (NDR propre, et `formacionsalud@mspas.gob.gt` vérifié en direct dans le directoire institutionnel officiel).
+
+**Le risque signalé le matin même s'est matérialisé** : cette adresse était la seule des 10 marquée « vérification indirecte » (visible uniquement via l'index de recherche, masquée en `[email protected]` par la protection anti-scraping du site officiel). Les 9 autres, vérifiées par lecture directe de la page ou d'un registre officiel, ne sont pas concernées.
+
+**Aucun brouillon de remplacement créé** — décision assumée. Recherches faites après le bounce, toutes infructueuses côté adresse vérifiable :
+- `consultas@mspas.gob.gt` (MSPAS, accueil général) — écartée : provient **exactement de la même méthode** que l'adresse qui vient de bouncer (index de recherche, page officielle en 403 Cloudflare). Rejouer cette méthode reproduirait l'erreur.
+- `formacionsalud@mspas.gob.gt` — seule adresse `@mspas.gob.gt` vérifiée en direct (PDF du directoire institutionnel officiel, texte extrait). Écartée : unité **formation**, sans rapport avec la surveillance épidémiologique.
+- **CES-UVG** (Centro de Estudios en Salud, Universidad del Valle de Guatemala) — cible pourtant idéale, avec un programme actif « vigilancia de enfermedades infecciosas ». Aucune adresse publiée : page contact en erreur 500, pied de page sans email.
+- **USAC**, Escuela de Estudios de Postgrado (Facultad de Ciencias Médicas) — formulaire de contact uniquement, aucune adresse publiée.
+
+**➡️ À prioriser au prochain run :** le Guatemala reste une cible AMRO valable, mais les institutions guatémaltèques publient très peu d'adresses en clair (formulaires + masquage anti-scraping systématique). Ne pas retenter une adresse `@mspas.gob.gt` construite depuis l'index de recherche. Piste la plus prometteuse : CES-UVG, via une source alternative (publication scientifique avec auteur correspondant, ou page d'un projet conjoint CDC/UVG).
+
+**📌 Leçon de méthode (2026-08-18) — « visible dans l'index de recherche » ≠ « vérifié ».** Quand une page officielle masque ses emails (Cloudflare `[email protected]`, obfuscation JS) et que la forme complète ne vient que du snippet d'un moteur, l'adresse doit être traitée comme **non vérifiée** : pas de brouillon, ou brouillon explicitement marqué `⚠️ non vérifié`. Le fait que deux résultats de recherche concordent ne vaut pas confirmation — ils citent la même source masquée. Sources qui restent valables : lecture directe de la page, registre public officiel (ex. Charity Commission), PDF officiel dont le texte est extractible.
