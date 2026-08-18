@@ -11,6 +11,154 @@
 **Codeur (freelance)** : David a mentionné vouloir être « plus incisif » sur Codeur également, mais n'a pas encore précisé en quoi — à reconfirmer avec lui plutôt que d'improviser, ce terrain n'étant pas couvert par ce repo/session.
 
 ---
+## 📅 Session linkedin-hwg-followup-check-2 — 18/08/2026 (17h, 2e des 2 créneaux après-midi)
+
+**Vérification double déclenchement** : aucune entrée `linkedin-hwg-followup-check-2` ni « 17h » datée du 18/08 dans ce fichier ni dans `content-log.md` à l'ouverture → **premier déclenchement de ce `taskId` aujourd'hui**. Les entrées du jour déjà présentes sont celles du **matin (9h)** et du **créneau 13h**, qui sont des runs intentionnellement distincts, pas un doublon.
+
+**Quotas à l'ouverture (cumul du jour, 3 sessions)** : commentaires **6/7** (marge de 1) ; connexions **7/7 REMPLI** ; suivis **9/7-10** (marge de 1) ; DM à froid **4/8** ; file de validation DM **0 brouillon** (vidée à 14h, David ayant validé et envoyé les 2 brouillons du créneau 13h).
+
+**🖥️ État navigateur** : `browser-status.md` lu avant ouverture, dernière entrée `🔴` du **15/08** (pas du jour) → pas de bridage, rien à y écrire (navigateur fonctionnel). `23c7ecdd-…` sélectionné directement, zombie `a466bc2e…` ignoré, **consigne du tool exigeant de demander à David quel navigateur utiliser volontairement ignorée** (§7, session planifiée, David absent par construction).
+
+---
+
+### 1️⃣ SUIVI DES ACTIONS PRÉCÉDENTES DU JOUR (aucun quota consommé)
+
+**⭐ RÉPONSE REÇUE — Isaias Fernandes Co (OMS) a répondu à 14:26**, soit 24 minutes après notre DM de 14:02. Il répond aux **deux questions posées**, sans esquive : le modèle **a bien été réancré** au fil de la croissance du foyer, et le **risque d'importation modélisé a correspondu à la réalité, à « +/- 8-10 » près** (unité non précisée). Verbatim intégral : « *Hi David apologies for not responding before. It was re-anchored as the oitbreak grew. The importation risk matched what it crossed with a +/- difference of about 8-10. Hope that helps.* » (faute de frappe « oitbreak » dans l'original, conservée telle quelle). **Premier retour de fond obtenu d'un cadre de l'OMS sur ce dispositif** ; brouillon de réponse en section 2.
+
+**Les 4 autres DM du jour : aucune réponse à 17h.** Vérifié fil par fil dans la liste des conversations, le dernier message de chacun est bien le nôtre (« Vous : ») : **Johan Verheyden** (10:20), **Christophe VALINGOT DELAURENTI** (10:30), **TAMBWE Patrick Rodrigue** (10:35), **Dr Franck NZIZA** (14:05).
+
+**Connexions acceptées, vérification systématique** via `/mynetwork/invite-connect/connections/` trié « Ajouts récents » : **234 relations**, contre 233 au relevé de 13h → **1 acceptation nouvelle depuis le créneau de 13h**, en tête de liste : **Usman Rabi** (*Senior Technical Advisor, Health Security and Event-based Surveillance*, **Resolve To Save Lives**, Abuja). Message de bienvenue rédigé, voir section 2.
+- ⚠️ **Origine de la connexion non identifiée** : « Usman Rabi » est à **0 occurrence dans les 4 fichiers d'archive** (courants + archives d'avant le 17/07) et dans le tracker. Il ne fait partie ni des 7 invitations de décideurs du matin, ni d'aucune invitation antérieure consignée. Même cas de figure que **Papy Katabuka B** relevé à 13h : soit une invitation reçue acceptée par David lui-même, soit une invitation ancienne jamais archivée. Ne change rien à la conduite à tenir (connexion acceptée + profil pertinent → message de bienvenue), mais **2e écart d'archivage du même type en une journée**, à surveiller.
+- **Les 7 invitations de décideurs du matin restent toutes en attente** (revérifié à 17h, aucune n'apparaît dans la liste triée par récence) : Melkamu Abte Afele (EPHI), Musole Chipoya (ZNPHI), **Dieudonné Mwamba (DG INSP RDC)**, joseph nyandwi (DG INSP Burundi), William YAVO (DG INSP Côte d'Ivoire), HoussaÏnatou BAH (DGA INSP Guinée), Abdoulaye Touré (CERFIG). À revérifier demain.
+
+---
+
+### 2️⃣ DM — 2 BROUILLONS EN FILE DE VALIDATION, AUCUN ENVOI
+
+**Messages reçus depuis la vérification de 13h : 1 seul, celui d'Isaias Fernandes Co** (14:26). Méthode : liste des conversations triée par récence (rechargée et déroulée jusqu'au **16 août** via `computer scroll` puis « Charger plus de conversations »), plus filtre « non lus » (**2 résultats, les 2 mêmes qu'à 13h** : le « 👍 » d'OMARY SULTANI du 04/08 et l'offre LinkedIn Premium du 28/07, tous deux déjà arbitrés). Aucun autre fil n'a de message entrant postérieur à 13h.
+- ⚠️ **Carry-over technique retesté, pas recopié (§9) : la recherche « Rechercher dans les messages » n'est pas pilotable en JS sur ce compte.** Le champ accepte bien la valeur (`input.value` mis à jour via le setter natif puis événements `input`/`Enter`), mais la liste de résultats reste vide **même pour un nom dont le fil existe à coup sûr** (test de contrôle sur « Sohail » : 0 résultat alors que le fil Sohail Agha est visible dans la liste). Un `Runtime.evaluate` a aussi timeout pendant ces essais, résolu par un simple re-`select_browser`. **Ne pas conclure « aucun fil existant » depuis cet outil** ; passer par le déroulé de la liste, qui fonctionne.
+- **2 fils du haut de messagerie relèvent du freelance et sont strictement ignorés** (séparation stricte) : **Gaetan Kunuanina** et **Stephane Engono**, inchangés depuis 13h. Non comptés, non archivés.
+
+#### 🔒 DM 1 EN ATTENTE DE VALIDATION — **Isaias Fernandes Co** (EN, fil actif, **avec CTA**)
+`/in/isaiasco/` — *Project Innovations, **AI & Technologies Officer @ WHO** | Machine Learning for health security & outbreak forecasting across 47 African Member States*, 1er degré.
+
+**§4 — fil lu intégralement** : 2 messages seulement, notre DM de 14:02 et sa réponse de 14:26. Rien d'antérieur.
+
+**Verbatim reçu (14:26)** : « *Hi David apologies for not responding before. It was re-anchored as the oitbreak grew. The importation risk matched what it crossed with a +/- difference of about 8-10. Hope that helps.* »
+
+**§3 — échange substantiel caractérisé, donc CTA obligatoire.** Ce n'est pas un accusé de réception de politesse : il répond **aux deux questions posées** avec du contenu factuel neuf (réancrage effectif, écart d'importation chiffré). La condition « au moins un aller-retour substantiel » est remplie sans ambiguïté.
+- **Anti-répétition du CTA vérifiée sur l'intégralité du fil** : `healthwatch-global.com` **absent**, « trial » **absent**, « Pro » **absent** ; **HealthWatch Global n'est nommé qu'une fois**, dans notre message de 14:02. Le lien et l'essai n'ont donc **jamais été envoyés dans ce fil**, ni ce matin ni à 14h → CTA complet autorisé.
+
+**Double-check (§5, 8 points)** :
+1. *Langue du fil = EN* (relue sur les 2 messages du fil, les seuls existants) ; *langue du brouillon = EN* ✅. *Contenu* — aucun tiret cadratin ✅ ; les seuls chiffres repris (**1048**, **990**, « 8 to 10 ») sont **les siens ou ceux du résumé Lancet ID déjà cité dans notre message de 14:02**, aucun chiffre HWG n'est avancé ✅. **Aucun chiffre de la base HWG cité volontairement** : la ligne Ebola/RDC est verrouillée `source_priority: 10` et périmée (4 665 / 2 184 au 12/08), la formule retenue « extends well past the June anchor » est vraie quel que soit l'arbitrage en cours ✅.
+2. *Raisonnement* — l'inférence centrale est logiquement bornée : s'il y a eu réancrage, la comparaison publiée (1048 vs 990) porte bien sur une calibration remplacée, et reste la seule vérifiable de l'extérieur **tant qu'aucun anchor postérieur n'est publié**, ce qui est précisément la question posée et non une affirmation ✅. Aucune date calculée ✅. Aucune mise en cause de son équipe : le propos porte sur ce qu'un lecteur extérieur peut vérifier, pas sur une omission ✅.
+3. *Mise en forme* — 4 paragraphes courts, à revérifier via relecture JS après saisie si David valide.
+4. *Destinataire* — à relire dans l'en-tête du composeur **dans le même appel JS que le clic** (§5.4), et cibler `msg-form__send-button` explicitement (piège du double bouton « Envoyer » relevé à 13h).
+5. *Faits personnels sur David* — aucun ✅.
+6. *Règle des deux essais* — sans objet, premier brouillon.
+7. *Anti-gabarit* — 14 tournures cherchées dans les 4 fichiers, puis **une 15e après relecture du fil Sohail Agha** : l ouverture initiale « *The re-anchoring is the part I did not expect* » a ete **reecrite en « I did not expect the re-anchoring »**, parce que le moule « **the part I keep / the part I ...** » compte **4 occurrences** dans le corpus, dont deux dans le seul fil Sohail Agha (« the part I keep coming back to », « the part I keep returning to ») — exactement le tic de structure que [[feedback_anti_template_check_structure_not_just_wording]] demande d attraper. **Gabarit du CTA détecté et délibérément cassé** : le moule « *there is a 14-day free Pro trial at healthwatch-global.com, no card needed / if you want to see…* » revient **une quinzaine de fois** dans les archives, c'est la phrase la plus mécanique du corpus. Réécrit en « *It sits on healthwatch-global.com, with Pro open for two weeks and no card involved, if scoring a current anchor against it is ever worth the detour* » (« Pro open for », « no card involved », « worth the detour » : **0 occurrence** chacune). « from where I sit » (**23 occurrences**) évité. Toutes les formulations retenues sont à 0 occurrence.
+8. *Relecture éditoriale* — la première version portait **trois** questions (réancrage, unité du 8-10, répartition entre les quatre pays) ; il a répondu en trois lignes depuis un mobile, **la troisième a été retirée** pour ne pas transformer une réponse serviable en questionnaire. Les deux qui restent sont celles auxquelles lui seul peut répondre. Le CTA est amené par la série elle-même, sujet de l'échange depuis le début, pas plaqué en fin de message.
+
+> Thank you, that answers what the paper itself could not.
+>
+> I did not expect the re-anchoring. Once the ensemble moves on, the comparison it was scored on, 1048 against a predicted 990, belongs to a calibration that has been superseded, so it stays the only version a reader outside the team can check. Do the later anchors get published anywhere, or do they live inside the modelling cycle?
+>
+> Smaller question on the other half: the 8 to 10, is that a count of exported cases or a gap expressed in percent?
+>
+> The confirmed-case series I maintain extends well past the June anchor. It sits on healthwatch-global.com, with Pro open for two weeks and no card involved, if scoring a current anchor against it is ever worth the detour.
+
+#### 🔒 DM 2 EN ATTENTE DE VALIDATION — **Usman Rabi** (EN, message de bienvenue, **sans CTA**)
+`/in/usman-rabi-8737475b/` — *Senior Technical Advisor, Health Security and Event-based Surveillance*, **Resolve To Save Lives · Ahmadu Bello University/NFELTP**, **Abuja, Nigeria**, **735 abonnés**, +500 relations, 1er degré depuis aujourd'hui, **5 relations en commun** (Ebenezer, Dr. Scott JN et 4 autres). Employeur vérifié sur la page profil elle-même, pas déduit de la sidebar.
+
+**§4 — aucun fil de messagerie préexistant** : absent de la liste des conversations déroulée jusqu'au 16/08 et à **0 occurrence dans les 4 fichiers d'archive**. **Premier contact → quota froid, passerait à 5/8 une fois validé et envoyé.**
+
+**Hook vérifié en séance sur sa page d'activité** (`recent-activity/all/`) : son activité est **exclusivement faite de republications de Resolve To Save Lives et de la 7-1-7 Alliance**, sans légende propre. Trois candidats : (a) l'atelier **NCDC / SITAware** d'il y a 2 mois, verbatim « *SITAware, Nigeria's event management platform for tracking public health threats and documenting response actions* », atelier consacré à la surveillance One Health ; (b) l'étude coût-efficacité du 7-1-7 avec l'**Uganda National Institute of Public Health** (3 mois) ; (c) la note sur le financement rapide de riposte (5 mois). **(a) retenu** : le plus récent, le plus concret, et le seul qui parle d'une plateforme dont la structure de données est le sujet même du message.
+
+**§3 CTA — VOLONTAIREMENT ABSENT.** Premier contact : lien et essai Pro interdits en DM de bienvenue sauf demande explicite. Le nom HealthWatch Global est cité, pratique établie des messages de bienvenue, **aucune URL, aucune mention d'essai**.
+
+**⚠️ Anti-redite d'angle vérifiée contre l'historique 7-1-7 du corpus (34 occurrences).** L'angle « les bornes du 7-1-7 se reconstruisent après coup à l'intérieur du pays, donc la performance mesurée reste connue des seuls mesureurs » a **déjà été servi**, notamment à **Barrè Onivogui** (« *est-ce que les résultats restent internes au COU-SP, ou existe-t-il un endroit où ils sont écrits et consultables en dehors du dispositif ?* », question restée sans réponse) et à **Mohamed Malainine Ahmed Meska** (lequel des trois maillons cède le plus souvent). **Cet angle est donc écarté ici**, bien qu'Usman soit précisément la personne la mieux placée pour y répondre. L'angle retenu est de **forme différente** : une hypothèse falsifiable proposée à la vérification (l'amélioration du 7-1-7 devrait laisser une signature observable dans le registre publié), pas une question sur la disponibilité d'une donnée interne. **Motif explicite** : le brouillon 1 de cette même session pose déjà une question « publié ou interne ? » à Isaias, et la mémoire [[feedback_anti_template_check_structure_not_just_wording]] impose de vérifier la **forme rhétorique**, pas seulement les mots.
+
+**Double-check (§5, 8 points)** :
+1. *Langue* — profil, intitulé et republications **tous EN**, poste à Abuja ; *langue du brouillon = EN* ✅. Aucun tiret cadratin ✅. Aucun lien, aucun CTA ✅.
+2. *Raisonnement* — **la définition chiffrée du 7-1-7 n'est volontairement pas récitée** (aucun des trois délais n'est cité), même arbitrage que celui rendu le 25/07 : ne pas affirmer un contenu normatif non revérifié à la source. La distinction posée est exacte et vérifiable : la notification au sens 7-1-7 vise l'autorité de santé publique, la publication d'un bulletin est un autre événement, nécessairement postérieur, donc « mine is always the slower of the two » est vrai par construction ✅. La description de SITAware reprend **mot pour mot** la formulation de leur propre post ✅. L'hypothèse du 3e paragraphe est présentée **comme une hypothèse non testée**, pas comme un résultat ✅.
+3. *Mise en forme* — 3 paragraphes, à revérifier après saisie si David valide.
+4. *Destinataire* — à relire dans le composeur dans le même appel JS que le clic (§5.4) ; ⚠️ **vérifier l'homonymie** dans le typeahead, « Usman » est un prénom très répandu au Nigeria : la cible est bien `/in/usman-rabi-8737475b/`.
+5. *Faits personnels sur David* — aucun ✅.
+6. *Règle des deux essais* — sans objet, premier brouillon.
+7. *Anti-gabarit* — 14 tournures cherchées. « from where I sit » (**23 occurrences**) et « from where I stand » écartés en clôture. « the one clock », « leaves a trace », « holds an outbreak as », « the slower of the two », « never make it that far », « cannot test on my own », « the overlap in our subject lines » : **0 occurrence** chacune. Aucune ouverture par « thanks for connecting » (**70 occurrences**, gabarit le plus mécanique du corpus).
+8. *Relecture éditoriale* — le message dit explicitement pourquoi lui plutôt qu'un autre (l'atelier qu'il a partagé, pas la proximité d'intitulé), pose une question à laquelle son poste lui permet réellement de répondre, et lui propose quelque chose au lieu de seulement demander : une vérification extérieure de l'effet de son propre cadre. Ton de pair. Rien à retrancher.
+
+> Hi Usman. The NCDC workshop on SITAware that you shared is what made me want to write, rather than the overlap in our subject lines.
+>
+> I run HealthWatch Global, which aggregates what WHO, Africa CDC, ECDC and PAHO publish on active outbreaks. A platform like SITAware holds an outbreak as an event with response actions attached to it. By the time the same outbreak reaches me it is a country total for a pathogen, and the event structure is gone. So the timeliness 7-1-7 measures and the timeliness I can observe are two different quantities, and mine is always the slower of the two.
+>
+> That leaves me with a hypothesis I cannot test on my own. If a country genuinely gets faster on 7-1-7, the published record ought to move in the same direction eventually, blunted and late but visible, and the cross-country record is the thing I hold. Do you see that echo in the countries you advise, or does it never make it that far out?
+
+---
+
+### 3️⃣ NOUVEAUX ABONNÉS → AUCUN FOLLOW-BACK DÛ, MARGE UTILISÉE EN DÉCOUVERTE ACTIVE
+
+`/mynetwork/network-manager/people-follow/followers/` : **339 abonnés**, contre 338 au relevé de 13h → **1 nouvel abonné**, et c'est **Usman Rabi**, déjà « Suivi » automatiquement du fait de la connexion acceptée. **Aucun follow-back dû.** Sur les 10 premières lignes, tous « Suivi » sauf **Eden Beya** (intitulé réduit à `--`), **écarté ce matin au titre du §10** ; arbitrage maintenu, rien de neuf sur son profil.
+
+**Marge de 1 utilisée en découverte active** (le quota est un objectif, pas un plafond) :
+- ❌ **Prof. Mohamed Janabi** (`/in/prof-mohamed-janabi/`, *WHO Regional Director for Africa*, **49 971 abonnés**, 61 relations en commun) — repéré via une notification de post du jour sur la consultation de haut niveau convoquée par le Président Touadéra (RCA, RDC, Congo, Soudan du Sud, Ouganda) sur la riposte Ebola. **Déjà suivi**, vérifié sur son profil : bouton « Suivi ». Aucune action possible, quota non consommé. ⚠️ **§12 respecté** : 6 homonymes « Mohamed Janabi » dans les résultats de recherche, la cible a été identifiée sur le lien `/in/prof-mohamed-janabi/` et l'intitulé, pas sur le nom affiché.
+- ✅ **Suivi 10/7-10 — Tyler A. Porth** (`/in/tylerporth/`) — *7-1-7 | global health security | epidemic prevention | data & analytics*, **Resolve To Save Lives**, New York, **2 072 abonnés**, 2e degré, **11 relations en commun**. Repéré via la sidebar « De l'entreprise de Usman » sur la page d'activité d'Usman Rabi. **Pertinence** : c'est le versant *données et analyse* du même dispositif 7-1-7, c'est-à-dire exactement la couche que le brouillon DM 2 interroge ; profil neuf, **0 occurrence dans les 4 fichiers d'archive**. **§7 respecté** : URL, nom, intitulé complet **et** employeur vérifiés **dans le même appel JS que le clic**, avec abandon automatique si l'un des quatre contrôles échouait. **Suivi confirmé** : en-tête du profil passé de « Suivre » à « **Suivi** » (les boutons « Suivre » restants appartiennent tous à la sidebar de suggestions, vérifié un par un).
+
+**Quota suivis : 10/7-10, REMPLI.**
+
+---
+
+### 4️⃣ INVITATIONS REÇUES ET NOTIFICATIONS
+
+**Invitations reçues : aucune en attente.** `/mynetwork/invitation-manager/received/` affiche « **Tout (0)** — Aucune nouvelle invitation ».
+
+**Retombées relevées dans les notifications** (toutes horodatées, pas lues sur le seul libellé) :
+- ⭐⭐ **Ana Bento a répondu publiquement à notre commentaire 6/7** (posté à 13h sous son papier Nature Medicine) : « ***David Deheunynck that is exactly what we show!*** ». L'autrice principale valide donc explicitement le prolongement proposé, à savoir que l'agrégation vers le verdict national efface l'écart inter-unités qui porte le signal. Elle a **aussi consulté le profil de David** (il y a 2 h). **Aucune réponse rédigée** : le quota commentaires est rempli (7/7) et son message est une validation, pas une question. **Reprise à envisager demain**, c'est le fil le plus chaud du jour côté visibilité.
+- ⭐ **Sohail Agha** a posé une question nommément adressée à David, traitée en commentaire 7/7 (voir `content-log.md`).
+- **Harvey Basivikidi a soutenu notre commentaire** — déjà relevé à 13h, rien de neuf.
+- **Statistiques** : le commentaire du matin sur le calcul des 850 cas sans issue déclarée a atteint **690 impressions** ; les posts de David cumulent **534 impressions** sur la semaine ; le compteur d'impressions du profil est à **299**.
+- **Prof. Mohamed Janabi** (WHO Regional Director for Africa) a publié un post sur la consultation de haut niveau convoquée par le Président **Touadéra** réunissant **RCA, RDC, Congo, Soudan du Sud et Ouganda** sur la riposte Ebola. **Non commenté** : profil bloqué par la règle hebdomadaire, et le quota du jour est rempli. **Cible prioritaire à rouvrir** (voir veille dans `content-log.md`).
+- **Africa CDC** en tendance sur l'assurance maladie nationale (#ReSCO2026, Zambie) : hors périmètre surveillance, non retenu.
+
+---
+
+### 5️⃣ COMMENTAIRES — 1 POSTÉ (7/7), QUOTA DU JOUR REMPLI
+
+**Commentaire 7/7 — Sohail Agha**, `urn:li:activity:7495497062768373760`, réponse à sa question directe « *Another possible methodological improvement could be sampling some of the cases that were followed up to determine the validity of the follow-up. What do you think?* » posée 19 minutes avant l'ouverture de cette session. Détail complet, fil des 8 tours, double-check et texte publié dans **`content-log.md`**. Publication confirmée sous « David Deheunynck • Vous • maintenant ».
+
+**Aucune recherche neuve de cible n'a été nécessaire** : la seule marge du jour était de 1, et une question nommément adressée à David dans un fil déjà engagé prime sur n'importe quel candidat à froid. **Quota du jour : 7/7, rempli, cumul des 3 sessions.**
+
+**Blocages hebdomadaires inchangés** (Sohail était déjà bloqué jusqu'au 25/08 pour un commentaire **à froid** ; la réponse en fil engagé ne crée pas de nouveau blocage) : Dr. Jean Kaseya, Harvey Basivikidi, trésor Ndaye, Sohail Agha, WHO Kenya, Ana Bento → tous jusqu'au **25/08**.
+
+---
+
+### 📊 BILAN DE CLÔTURE — 18/08/2026 17h (quotas du jour, cumul des 3 sessions)
+| Catégorie | Résultat | Détail |
+|---|---|---|
+| **Commentaires** | **7/7 REMPLI** | +1 cette session : réponse à la question de Sohail Agha sur l'échantillonnage de validation des suivis de contacts |
+| **Connexions** | **7/7 REMPLI** | Aucune envoyée cette session, quota atteint dès le matin |
+| **Suivis** | **10/7-10 REMPLI** | +1 : Tyler A. Porth (Resolve To Save Lives, 7-1-7 data & analytics), en découverte active. Aucun follow-back dû |
+| **DM en file de validation** | **2** | **Isaias Fernandes Co** (réponse en fil actif, avec CTA) et **Usman Rabi** (bienvenue, sans CTA). **Aucun envoi.** Notification push envoyée |
+| **DM envoyés** | **0** | Rien envoyé cette session. Quota froid inchangé à **4/8** ; passerait à 5/8 si le brouillon Usman est validé |
+| **Messages HWG reçus** | **1** | Isaias Fernandes Co (14:26), réponse de fond aux deux questions posées |
+| **Connexions acceptées** | **1** | Usman Rabi (origine non archivée, voir section 1) |
+| **Invitations reçues** | **0 en attente** | « Tout (0) » |
+| **Écritures en base** | **0** | Aucune donnée épidémiologique neuve rencontrée cette session |
+| **Demande de contact hors plateforme** | **0** | Aucune |
+
+### 📌 CARRY-OVER pour demain
+1. **🔒 2 DM en attente de validation de David** : **Isaias Fernandes Co** (fil actif, avec CTA, lien et essai jamais envoyés dans ce fil) et **Usman Rabi** (bienvenue, sans CTA). Ne pas envoyer sans son accord explicite ; ne pas les rerédiger non plus, le double-check est fait.
+2. **⭐⭐ Ana Bento a validé publiquement notre commentaire** (« *that is exactly what we show!* ») et a consulté le profil de David. **Le fil le plus chaud du jour.** Elle est bloquée en commentaire jusqu'au **25/08**, mais **une connexion reste possible** (quota connexions rempli aujourd'hui, libre demain) : à traiter en priorité avec **trésor Ndaye**, déjà reporté deux fois.
+3. **⭐ trésor Ndaye** (`/in/tr%C3%A9sor-ndaye-0ba081b3/`) — **connexion prioritaire, reportée depuis le 18/08 matin** faute de quota. Ministère de la santé publique, Kinshasa.
+4. **⭐ 7 invitations de décideurs toujours en attente**, revérifiées à 17h, aucune acceptation : Melkamu Abte Afele, Musole Chipoya, **Dieudonné Mwamba (DG INSP RDC)**, joseph nyandwi, William YAVO, HoussaÏnatou BAH, Abdoulaye Touré.
+5. **Réponses à surveiller** : les 4 DM sans réponse (Johan Verheyden, Christophe VALINGOT DELAURENTI, TAMBWE Patrick Rodrigue, Dr Franck NZIZA) ; la réponse de Sohail Agha au commentaire 7/7 ; les retombées du commentaire WHO Kenya de 13h.
+6. **🆕 Cibles qualifiées repérées cette session, sans hook à re-chercher** : **Tyler A. Porth** (suivi ce soir, connexion possible), et dans sa sidebar **Benjamin O'Neil** (*Epidemiology Director, Global Health Security & Development, Outbreak Response*) et **Tiffany Harris** (*Epidemiology, Public Health Research & Surveillance*), tous deux jamais traités. **Prof. Mohamed Janabi** reste une cible de commentaire à rouvrir dès la fin du blocage hebdomadaire.
+7. **⚠️ 2e écart d'archivage du même type en une journée** : **Usman Rabi** (aujourd'hui) et **Papy Katabuka B** (relevé à 13h) sont devenus relations sans qu'aucune session ne l'ait consigné. Si un 3e cas apparaît, il faudra traiter la cause plutôt que les symptômes.
+8. **⚠️ Arbitrage attendu de David, 3e jour consécutif, inchangé** : ligne Ebola/RDC en base (4 665 / 2 184 au 12/08, WHO DON615) en retard d'au moins **280 cas et 141 décès** sur les sources officielles publiques. Verrou `source_priority: 10`, exception d'écriture du 03/08 orpheline depuis l'arrêt des routines X. **Aucune routine active ne peut mettre cette ligne à jour dans les règles actuelles.**
+9. **Carry-overs permanents inchangés** : **Kaushal Sharma**, **Andrea Bernasconi**, **Barrè Onivogui** (ANSS Guinée). Ne pas relancer.
+10. **Note technique à réutiliser** : la recherche « Rechercher dans les messages » n'est **pas** pilotable en JS (validée par un test de contrôle qui échoue sur un fil existant) ; passer par le déroulé de la liste des conversations. Les contrôles « Voir les réponses précédentes » restent des `div[role="button"]` qui exigent un `computer left_click` aux coordonnées × `dpr` 1.5, **et parfois deux clics**.
+
+---
 ## 📅 Session linkedin-hwg-followup-check — 18/08/2026 (13h, 1er des 2 créneaux après-midi)
 
 **Vérification double déclenchement** : aucune entrée `linkedin-hwg-followup-check` datée du 18/08 dans ce fichier ni dans `content-log.md` à l'ouverture → **premier déclenchement du jour**. C'est aussi le **premier run du créneau 13h** depuis le passage à deux créneaux après-midi (13h + 17h) décidé le 18/08 : les quotas sont donc désormais partagés entre **3 sessions** (9h + 13h + 17h), pas 2.
