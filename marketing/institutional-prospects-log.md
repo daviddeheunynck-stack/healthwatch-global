@@ -1056,3 +1056,35 @@ Objectif atteint : **10 contacts nets, aucun déjà présent dans les vagues 1-3
 **Aucun brouillon Gmail créé à ce stade** — cette note prépare le contenu, la création effective (avec vérification live) revient au run du 18/08 ou à une session avec David ce jour-là.
 
 **❌ DMR Myanmar — abandonné, aucun brouillon de remplacement.** Aucune adresse institutionnelle vérifiable en dehors de celle qui a bouncé. **Le Myanmar redevient un pays sans contact retenu.** Ne pas deviner de pattern sur `dmr.gov.mm` sans nouvelle demande explicite de David. Même traitement que ZNPHI Zambie (02/08), CORDS (12/08), MBDS (15/08), ISED (16/08, 2e échec).
+
+### 2026-08-18 — 10/10 trouvés (run automatique `daily-institutional-prospecting-healthwatch`)
+
+Segments : 4 gouvernement/institut national, 3 académique, 3 ONG. Régions OMS couvertes : EURO (Italie, Espagne), AFRO (Bénin, Nigeria), AMRO (Guatemala), WPRO (Taïwan), SEARO (Thaïlande), + 3 ONG à siège européen à portée mondiale. **EMRO non couvert ce run** — voir note en fin de section.
+
+| Institution | Pays/Région | Segment | Contact | Email | Source | Vérifié | Brouillon Gmail |
+|---|---|---|---|---|---|---|---|
+| ISS — Istituto Superiore di Sanità, **Reparto di Epidemiologia** (Dip. Malattie Infettive) | Italie | Gouvernement/Institut national | Patrizio Pezzotti (resp. unité épidémiologie) | `patrizio.pezzotti@iss.it` | iss.it/en/malattie-infettive | Oui | oui — `r4275910337781457137` |
+| CNE — Centro Nacional de Epidemiología (Instituto de Salud Carlos III) | Espagne | Gouvernement/Institut national | — (secrétariat de direction) | `cne-direccion@isciii.es` | cne.isciii.es/en/contact | Oui | oui — `r-5064414648097739403` |
+| Ministère de la Santé — Bénin | Bénin | Gouvernement | — (générique ministère) | `sante.infos@gouv.bj` | sante.gouv.bj (en-tête + pied de page) | Oui | oui — `r4878285353175935564` |
+| MSPAS — **Dirección de Epidemiología y Gestión del Riesgo / SINAVE** | Guatemala | Gouvernement | — (générique direction) | `epidemiologiamspas@mspas.gob.gt` | epidemiologia.mspas.gob.gt | Oui ⚠️ voir note | oui — `r8955542858309370002` |
+| NTU — **Institute of Epidemiology and Preventive Medicine**, College of Public Health | Taïwan | Académique | — (générique institut) | `ntuepm@ntu.edu.tw` | epm.ntu.edu.tw/web/about (pied de page) | Oui | oui — `r-1603056797943743777` |
+| Chulalongkorn University — College of Public Health Sciences (CPHS) | Thaïlande | Académique | — (générique collège) | `academic_cphs@chula.ac.th` | cphs.chula.ac.th (pied de page) | Oui | oui — `r3004176311264150570` |
+| University of Ibadan — Faculty of Public Health (Dépt. Epidemiology & Medical Statistics visé) | Nigeria | Académique | Prof. Joshua O. Akinyemi (chef de dépt., sans email publié) | `collegeinfo@com.ui.edu.ng` | com.ui.edu.ng/index.php/epidemiology-and-medical-statistics | Oui (boîte générique College of Medicine, redirection demandée) | oui — `r7065234447316995808` |
+| Concern Worldwide | Irlande/Global | ONG | — (générique siège Dublin) | `info@concern.net` | concern.net/contact-us | Oui | oui — `r-8222076039529879883` |
+| Save the Children International | Royaume-Uni/Global | ONG | — (générique siège Londres) | `info@savethechildren.org` | Charity Commission (registre officiel), charity n° 3961959 | Oui | oui — `r8468833056929385615` |
+| Malaria Consortium | Royaume-Uni/Global | ONG | — (générique siège Londres) | `info@malariaconsortium.org` | Charity Commission (registre officiel), charity n° 1099776 | Oui | oui — `r6081831143648779915` |
+
+**10 brouillons Gmail créés le 2026-08-18, aucun envoyé.** Format conforme : `body` texte simple uniquement (aucun `htmlBody`, donc aucune balise `<a>` possible), domaine écrit « healthwatch-global dot com » / « point com », objets tous ≤ 60 caractères, clôture par une question explicite avant la signature. Langue : FR pour le Bénin (ministère francophone), EN pour les 9 autres. **Vérification post-création faite via `list_drafts`** : les 10 sont bien présents en brouillon, horodatés 06:15–06:16 UTC, aucun passé en `SENT` (contrôle du bug d'envoi instantané du connecteur, incident du 15/08).
+
+**⚠️ Note de vérification — Guatemala (`epidemiologiamspas@mspas.gob.gt`) :** l'adresse est publiée sur les pages officielles `epidemiologia.mspas.gob.gt` (accueil et page SINAVE), mais le site applique une protection anti-scraping qui masque l'adresse en `[email protected]` à la relecture directe. La forme complète provient de l'index de recherche, qui la restitue de façon identique depuis deux résultats distincts pointant le domaine officiel. **Ce n'est pas une adresse devinée par pattern**, mais la vérification est indirecte — à considérer comme légèrement moins sûre que les 9 autres. En cas de bounce, cible de repli : formulaire de contact `mspas.gob.gt/institucional/contactenos`.
+
+**Cibles écartées ce run, faute d'email vérifiable (ne pas les reproposer sans élément nouveau) :**
+- **RKI (Zentrum für Internationalen Gesundheitsschutz), Allemagne** — l'institut ne publie aucune adresse email de contact, uniquement un formulaire ; la seule adresse visible sur le site est `webmaster@rki.de` (signalement d'obstacles d'accessibilité), hors sujet.
+- **CIEVS Nacional, Brésil** — la seule adresse publiée, `notifica@saude.gov.br`, est un canal d'intake de notification d'urgences sanitaires réservé aux professionnels de santé. Écartée délibérément : y adresser une prospection serait un détournement d'usage.
+- **Fiji MHMS** — seule adresse publiée : `healthfiji.media@gmail.com` (presse, et boîte Gmail personnelle), non institutionnelle.
+- **NCDC Géorgie** — site `ncdc.ge` en reconstruction, aucune adresse publiée ; seules des bases payantes (RocketReach/ZoomInfo) en proposent, exclues par les CGU.
+- **Première Urgence Internationale / Handicap International (Humanité & Inclusion)** — adresses obfusquées sur les pages contact et mentions légales, non lisibles.
+- **Project HOPE** — seule adresse publiée `donorservices@projecthope.org` (relations donateurs), sans rapport avec les équipes épidémiologiques.
+- **EMRO — Arabie saoudite (Weqaya), Jordanie, Égypte** — trois tentatives, aucune adresse institutionnelle vérifiable trouvée (formulaires uniquement pour Weqaya ; portail jordanien injoignable, `ECONNREFUSED` ; pour l'Égypte, seules des adresses Gmail ou non confirmées). **EMRO reste la région la moins couverte du dispositif — à prioriser au prochain run.**
+
+**File de brouillons au moment du run :** 1 seul brouillon en attente avant ce run (`otitamorgan@gmail.com`, « Your HealthWatch Pro subscription » — support client, sans rapport avec la prospection). Le frein de file de l'Étape 1 (~20) n'était donc pas déclenché : le lot du 17/08 a été écoulé par David. Vérifié par deux appels `list_drafts` successifs, conformément à la consigne d'instabilité de l'outil.
