@@ -10,6 +10,29 @@ const L: Record<string, { on: string; off: string; max: string }> = {
   id: { on: "Dipantau",        off: "Pantau",       max: "Batas tercapai (20)" },
 };
 
+// Both the disease page and the country page render one WatchButton per
+// outbreak (up to ~20+ on a busy page) — each used to fire its own
+// independent GET /api/watchlist on mount, so a single page load meant N
+// identical requests (all 401 for a logged-out visitor, all returning the
+// same array for a logged-in one). Module-level promise cache turns that
+// into exactly one fetch per page: the first mount starts it, every other
+// concurrent mount reuses the same in-flight promise. Invalidated after a
+// successful toggle so a later mount (e.g. after client-side navigation to
+// another page in the same session) re-fetches instead of serving stale data.
+let watchlistPromise: Promise<string[] | null> | null = null;
+function fetchWatchlistOnce(): Promise<string[] | null> {
+  if (!watchlistPromise) {
+    watchlistPromise = fetch("/api/watchlist")
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d) => d?.watchlist ?? null)
+      .catch(() => null);
+  }
+  return watchlistPromise;
+}
+function invalidateWatchlistCache() {
+  watchlistPromise = null;
+}
+
 export default function WatchButton({
   outbreakId,
   locale,
@@ -24,12 +47,9 @@ export default function WatchButton({
   const { openModal } = useUpgradeModal();
 
   useEffect(() => {
-    fetch("/api/watchlist")
-      .then((r) => (r.ok ? r.json() : null))
-      .then((d) => {
-        if (d?.watchlist) setWatched(d.watchlist.includes(outbreakId));
-      })
-      .catch(() => {});
+    fetchWatchlistOnce().then((watchlist) => {
+      if (watchlist) setWatched(watchlist.includes(outbreakId));
+    });
   }, [outbreakId]);
 
   const toggle = useCallback(
@@ -46,6 +66,7 @@ export default function WatchButton({
         });
         if (res.ok) {
           setWatched(!watched);
+          invalidateWatchlistCache();
         } else if (res.status === 403) {
           openModal("watchlist");
         } else {
