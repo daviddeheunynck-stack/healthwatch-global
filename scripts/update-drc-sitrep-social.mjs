@@ -8,6 +8,19 @@
 // session before it reaches the priority-10 row — see routine-improvement-log
 // entry of that date, point 2.
 //
+// ORPHANED as of 2026-08-17: x-hwg-monitoring and x-hwg-followup-check — this
+// script's only two named callers — were eliminated that day (see CLAUDE.md,
+// "Exception autonome : routines d'engagement"; confirmed absent from the
+// scheduled-tasks registry by daily-security-audit-healthwatch on 2026-08-18).
+// No other active routine's SKILL.md names this script or the two DRC accounts,
+// and its own source guard only accepts twitter.com/x.com hosts, which a
+// LinkedIn-only routine can't produce. Left in place (guards are sound, still
+// usable interactively — see e.g. content-log.md 2026-08-03 write), not deleted:
+// no functional code is removed without certainty it's unused, and this is a
+// product/process call for David, not something to resolve unilaterally. If an
+// X-reading routine is ever reactivated, re-point it at this script; otherwise
+// treat any future call to it as interactive/manual, not automated.
+//
 // Usage: node scripts/update-drc-sitrep-social.mjs <cases> <deaths> <YYYY-MM-DD> <sourceUrl>
 // Exits non-zero and prints the reason on any guard rejection — the caller
 // must treat that as "not written, report for arbitration as before", never
