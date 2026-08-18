@@ -39,7 +39,7 @@
 - ⚠️ **Carry-over technique retesté, pas recopié (§9) : la recherche « Rechercher dans les messages » n'est pas pilotable en JS sur ce compte.** Le champ accepte bien la valeur (`input.value` mis à jour via le setter natif puis événements `input`/`Enter`), mais la liste de résultats reste vide **même pour un nom dont le fil existe à coup sûr** (test de contrôle sur « Sohail » : 0 résultat alors que le fil Sohail Agha est visible dans la liste). Un `Runtime.evaluate` a aussi timeout pendant ces essais, résolu par un simple re-`select_browser`. **Ne pas conclure « aucun fil existant » depuis cet outil** ; passer par le déroulé de la liste, qui fonctionne.
 - **2 fils du haut de messagerie relèvent du freelance et sont strictement ignorés** (séparation stricte) : **Gaetan Kunuanina** et **Stephane Engono**, inchangés depuis 13h. Non comptés, non archivés.
 
-#### 🔒 DM 1 EN ATTENTE DE VALIDATION — **Isaias Fernandes Co** (EN, fil actif, **avec CTA**)
+#### ✅ DM 1 — **Isaias Fernandes Co** (EN, fil actif, **avec CTA**) — ENVOYÉ 20:26, sur ordre explicite de David en session interactive (« Envoie les 2 »), **quota froid 5/8**
 `/in/isaiasco/` — *Project Innovations, **AI & Technologies Officer @ WHO** | Machine Learning for health security & outbreak forecasting across 47 African Member States*, 1er degré.
 
 **§4 — fil lu intégralement** : 2 messages seulement, notre DM de 14:02 et sa réponse de 14:26. Rien d'antérieur.
@@ -67,7 +67,7 @@
 >
 > The confirmed-case series I maintain extends well past the June anchor. It sits on healthwatch-global.com, with Pro open for two weeks and no card involved, if scoring a current anchor against it is ever worth the detour.
 
-#### 🔒 DM 2 EN ATTENTE DE VALIDATION — **Usman Rabi** (EN, message de bienvenue, **sans CTA**)
+#### ✅ DM 2 — **Usman Rabi** (EN, message de bienvenue, **sans CTA**) — ENVOYÉ (via `/messaging/thread/new/`), sur ordre explicite de David en session interactive (« Envoie les 2 »), **quota froid 6/8**
 `/in/usman-rabi-8737475b/` — *Senior Technical Advisor, Health Security and Event-based Surveillance*, **Resolve To Save Lives · Ahmadu Bello University/NFELTP**, **Abuja, Nigeria**, **735 abonnés**, +500 relations, 1er degré depuis aujourd'hui, **5 relations en commun** (Ebenezer, Dr. Scott JN et 4 autres). Employeur vérifié sur la page profil elle-même, pas déduit de la sidebar.
 
 **§4 — aucun fil de messagerie préexistant** : absent de la liste des conversations déroulée jusqu'au 16/08 et à **0 occurrence dans les 4 fichiers d'archive**. **Premier contact → quota froid, passerait à 5/8 une fois validé et envoyé.**
@@ -93,6 +93,11 @@
 > I run HealthWatch Global, which aggregates what WHO, Africa CDC, ECDC and PAHO publish on active outbreaks. A platform like SITAware holds an outbreak as an event with response actions attached to it. By the time the same outbreak reaches me it is a country total for a pathogen, and the event structure is gone. So the timeliness 7-1-7 measures and the timeliness I can observe are two different quantities, and mine is always the slower of the two.
 >
 > That leaves me with a hypothesis I cannot test on my own. If a country genuinely gets faster on 7-1-7, the published record ought to move in the same direction eventually, blunted and late but visible, and the cross-country record is the thing I hold. Do you see that echo in the countries you advise, or does it never make it that far out?
+
+**⚠️ Incident technique rencontré et documenté, à retenir pour les prochaines sessions.** Envoi bien plus laborieux que prévu, deux onglets abandonnés avant le succès du 3e :
+1. **Bulle de composeur depuis le profil (1er onglet)** : le clic sur « Message » n'a jamais ouvert de bulle de saisie malgré plusieurs tentatives (bouton bien identifié, clic confirmé). Après investigation, **le renderer de l'onglet s'est révélé dégradé** : `(async()=>42)()` renvoyait systématiquement `{}` (signature connue, politique commune §7) et `Page.captureScreenshot` timeout, alors que l'évaluation JS synchrone (`1+1`) fonctionnait normalement. Onglet abandonné sans insister, après vérification qu'aucun envoi accidentel n'avait eu lieu (aucun fil Usman Rabi dans la messagerie depuis un onglet neuf).
+2. **Nouvel onglet, flux `/messaging/thread/new/` (2e onglet)** : même signature de renderer dégradé retrouvée sur ce 2e onglet également (async eval `{}`, `computer type`/`key` n'atteignant pas la page malgré un focus DOM confirmé sur le bon champ à chaque fois — testé aussi bien sur le champ destinataire que sur l'éditeur du corps du message). Abandonné après vérification similaire (aucun envoi partiel).
+3. **3e onglet, succès obtenu en contournant entièrement le clavier CDP** : le champ destinataire a été rempli par injection directe de la valeur (setter natif `HTMLInputElement.prototype.value` + événements `input`/`keyup`), la sélection du bon homonyme faite en JS (**§12 respecté** : 10 homonymes « Usman/Rabi/Rabia/Rabiu » dans la liste de suggestions, ciblage sur le nom **et** l'intitulé **et** « 1er » simultanément), puis le corps du message saisi via `document.execCommand('insertText', …)` + `insertParagraph` entre chaque paragraphe (au lieu de `computer type`), avec relecture de longueur/amorce/fin/tiret cadratin/double espace **avant** le clic, et destinataire revérifié dans la page **dans le même appel JS que le clic** sur `msg-form__send-button`. **Cette méthode devrait être le premier réflexe, pas le dernier recours, si un onglet montre la signature de renderer dégradé** (async eval retournant `{}`) : elle contourne le problème plutôt que d'attendre qu'il se résolve de lui-même.
 
 ---
 
@@ -138,8 +143,8 @@
 | **Commentaires** | **7/7 REMPLI** | +1 cette session : réponse à la question de Sohail Agha sur l'échantillonnage de validation des suivis de contacts |
 | **Connexions** | **7/7 REMPLI** | Aucune envoyée cette session, quota atteint dès le matin |
 | **Suivis** | **10/7-10 REMPLI** | +1 : Tyler A. Porth (Resolve To Save Lives, 7-1-7 data & analytics), en découverte active. Aucun follow-back dû |
-| **DM en file de validation** | **2** | **Isaias Fernandes Co** (réponse en fil actif, avec CTA) et **Usman Rabi** (bienvenue, sans CTA). **Aucun envoi.** Notification push envoyée |
-| **DM envoyés** | **0** | Rien envoyé cette session. Quota froid inchangé à **4/8** ; passerait à 5/8 si le brouillon Usman est validé |
+| **DM en file de validation** | **0** | Les 2 brouillons ont été validés par David en session interactive (« Envoie les 2 ») et envoyés, voir ci-dessous |
+| **DM envoyés** | **2** | **Isaias Fernandes Co** (réponse en fil actif, avec CTA, 20:26) et **Usman Rabi** (bienvenue, sans CTA, via `/messaging/thread/new/`), sur ordre explicite de David tapé en session interactive. **Quota froid 6/8** |
 | **Messages HWG reçus** | **1** | Isaias Fernandes Co (14:26), réponse de fond aux deux questions posées |
 | **Connexions acceptées** | **1** | Usman Rabi (origine non archivée, voir section 1) |
 | **Invitations reçues** | **0 en attente** | « Tout (0) » |
@@ -147,7 +152,7 @@
 | **Demande de contact hors plateforme** | **0** | Aucune |
 
 ### 📌 CARRY-OVER pour demain
-1. **🔒 2 DM en attente de validation de David** : **Isaias Fernandes Co** (fil actif, avec CTA, lien et essai jamais envoyés dans ce fil) et **Usman Rabi** (bienvenue, sans CTA). Ne pas envoyer sans son accord explicite ; ne pas les rerédiger non plus, le double-check est fait.
+1. **✅ Les 2 DM ont été validés et envoyés en session interactive** (« Envoie les 2 »), 20:26 pour Isaias Fernandes Co, juste après pour Usman Rabi. Surveiller les réponses éventuelles.
 2. **⭐⭐ Ana Bento a validé publiquement notre commentaire** (« *that is exactly what we show!* ») et a consulté le profil de David. **Le fil le plus chaud du jour.** Elle est bloquée en commentaire jusqu'au **25/08**, mais **une connexion reste possible** (quota connexions rempli aujourd'hui, libre demain) : à traiter en priorité avec **trésor Ndaye**, déjà reporté deux fois.
 3. **⭐ trésor Ndaye** (`/in/tr%C3%A9sor-ndaye-0ba081b3/`) — **connexion prioritaire, reportée depuis le 18/08 matin** faute de quota. Ministère de la santé publique, Kinshasa.
 4. **⭐ 7 invitations de décideurs toujours en attente**, revérifiées à 17h, aucune acceptation : Melkamu Abte Afele, Musole Chipoya, **Dieudonné Mwamba (DG INSP RDC)**, joseph nyandwi, William YAVO, HoussaÏnatou BAH, Abdoulaye Touré.
