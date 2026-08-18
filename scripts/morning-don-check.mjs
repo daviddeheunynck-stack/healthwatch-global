@@ -522,6 +522,26 @@ const MANUAL_ROWS = {
   "99f356e8-7fc3-4f43-947e-45c9d6a34757": "Chikungunya/France",
   "5ccc53c2-b17b-493b-aadf-233acb4b2cdf": "Dengue/France",
   "906bf26a-8867-4a9c-ad7c-976e4e2c5bab": "West Nile/France",
+  // Ajoutées le 2026-08-18, en reprenant le 2026-08-05 : ces deux lignes citent leur source
+  // nationale (NDCU pour le Sri Lanka, CDC Perú pour le Pérou) depuis cette date, en
+  // source_priority=6 — décision prise pour empêcher sync-who-regional (priority=5) de les
+  // réécrire avec un chiffre OMS plus laggard. Contrepartie : AUCUN cron n'écrit au-dessus de 5
+  // sur ces deux pays, elles ne se rafraîchissent donc plus toutes seules. Ce garde-fou hebdo
+  // devait être ajouté le même jour mais n'a jamais atteint `master` (resté isolé dans une
+  // branche jamais fusionnée — commit e3ad088). Trouvé le 17/08 en fusionnant une autre branche
+  // stale : Sri Lanka et Pérou étaient tous deux figés depuis le 05/08 (12 jours), le Sri Lanka
+  // ayant pourtant un PDF quotidien qui aurait dû être suivi. Corrigés le 18/08
+  // (scripts/fix-dengue-srilanka-peru-freshen-2026-08-17.mjs, supprimé après application) :
+  // 87 536->92 595 cas / 63->68 morts (Sri Lanka), 34 820->42 440 cas (Pérou, décès inchangés à
+  // 36 — le tableau officiel du dashboard national ne publie pas de compte 2026, case vide dans
+  // "Defunciones acumuladas hasta la SE 31" contrairement à 2023/2024 ; ne pas deviner ce
+  // chiffre, le laisser tel quel jusqu'à ce qu'il soit officiellement publié).
+  // ⚠️ Malaisie (même lot du 05/08) N'EST PAS ici : elle a depuis reçu son propre cron dédié
+  // (sync-malaysia-dengue, ajouté après cette date, SOURCE_PRIORITY=6, `.lte(6)` — se
+  // rafraîchit donc lui-même). Vérifié le 17/08 : `updated_at` du 16/08, fraîche. Ne pas la
+  // rajouter ici sans revérifier d'abord si ce cron existe encore et tourne.
+  "2c0f291c-e09b-4b96-afaf-7d7cb3e5251c": "Dengue/Sri Lanka",
+  "b7813f6c-d98f-43d1-aff9-7b385ee44384": "Dengue/Pérou",
 };
 // Vérification faite, source inchangée → aucune écriture, donc `updated_at` ne bouge pas et la
 // ligne se re-signale tous les matins indéfiniment (vécu le 06/08 avec les deux lignes polio :
@@ -642,6 +662,15 @@ const MANUAL_ROW_CHECKED = {
   "99f356e8-7fc3-4f43-947e-45c9d6a34757": "2026-08-17",
   "5ccc53c2-b17b-493b-aadf-233acb4b2cdf": "2026-08-17",
   "906bf26a-8867-4a9c-ad7c-976e4e2c5bab": "2026-08-17",
+  // Dengue/Sri Lanka, Dengue/Pérou : voir MANUAL_ROWS ci-dessus pour le contexte complet.
+  // Vérifiées le 18/08 (garde-fou recréé le jour même) — Sri Lanka : PDF quotidien NDCU
+  // (dengue.health.gov.lk) lu directement, 92 595 cas / 68 morts au 17/08 (CFR 0,07 %).
+  // Pérou : tableau de bord national CDC Perú (app7.dge.gob.pe), 42 440 cas cumulés, coupure
+  // semaine épidémiologique 31 (08/08). Décès 2026 non publiés à ce niveau de détail (case vide
+  // dans le tableau officiel, contrairement à 2023/2024) — dernier chiffre confirmé conservé
+  // (36, daté du 28/06), ne pas le deviner. Les deux corrigées le même jour.
+  "2c0f291c-e09b-4b96-afaf-7d7cb3e5251c": "2026-08-18",
+  "b7813f6c-d98f-43d1-aff9-7b385ee44384": "2026-08-18",
 };
 console.log("\n=== Lignes manuelles (section 5) — dues pour vérif hebdo (>7j) ===");
 const now = Date.now();
