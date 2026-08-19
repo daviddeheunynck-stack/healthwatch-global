@@ -1281,3 +1281,7 @@ Balayage complémentaire (`from:mailer-daemon`, `subject:"Delivery Status Notifi
 **Total cumulé de relances : 93 envoyées** (56 le 15/08 + 17 du lot 03/08 le 15/08 + 10 du lot 07/08 le 17/08 + **10 du lot 08/08, parties le 18/08 à 08:02-08:03**), **+ 8 en attente de relecture et d'envoi** (lot du 09/08, ce jour).
 
 **Aucune réponse institutionnelle nouvelle** hors l'accusé MSPP ci-dessus (daté du 09/08, découvert seulement aujourd'hui). Le rendez-vous du **27/08** reste posé pour EAC / IGAD / SADC / AFROHUN en Variante A (EUPHA sorti du lot le 18/08, auto-réponse d'absence).
+
+**✅ ENVOYÉS par David le 2026-08-19, 09:44:34–09:46:35 UTC** (les 10 du run du matin). Écart création→envoi ~3h28, lot entier dans l'ordre de relecture inverse (COOPI en premier, Batut en dernier) : profil « relecture humaine », pas le bug d'envoi instantané. Aucun incident.
+
+**🔴 Bounce immédiat — MHMS Îles Salomon (`pshealth@pmc.gov.sb`).** NDR « Adresse introuvable » reçue 09:45:30, 18 secondes après l'envoi. C'était le contact signalé comme le plus incertain du lot (boîte de Permanent Secretary, pas d'adresse fonctionnelle propre trouvée pour un micro-État sans NPHI séparé). Le second contact Îles Salomon, `wpslbwr@who.int` (bureau pays OMS), est passé sans erreur signalée à ce stade. Pas de brouillon de remplacement recherché dans l'immédiat — décision à revoir avec David si une piste alternative existe. Bilan cumulé de bounces non retotalisé ici (porteur unique `daily-relance-check-healthwatch`, règle du 16/08).
