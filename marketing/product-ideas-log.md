@@ -922,3 +922,84 @@ Rien non plus dans les branches : aucune des 4 branches non fusionnées ne conti
 Mémoire : [[project_source_priority_is_ownership_not_freeze_2026_08_19]].
 
 ---
+
+## 2026-08-19 (run de la routine, 19h10) — Proposition du jour
+
+**⚠️ Deuxième entrée de proposition du 19/08.** La précédente est archivée sous le titre « 2026-08-18 » — voir la correction en tête de cette entrée-là : elle a été datée d'un jour trop tôt et a en réalité tourné aujourd'hui. Ce run-ci arrive **après** les corrections de code livrées ce soir (`eb57f8e`, `d124101`, et le lot facturation `411aba0` / `45abc74` / `9611add`), donc après que la moitié du backlog des 17 et 18/08 a été construite. Les idées ci-dessous tiennent compte de cet état, pas de celui d'il y a trois heures.
+
+**J-2 avant le go/no-go du 21/08.**
+
+**État du backlog des 17 et 18/08, vérifié dans le code de `master` à l'instant** (le 18/08 remontait « rien n'a été livré » — ce n'est plus vrai) :
+
+| idée | état ce soir | preuve |
+|---|---|---|
+| 17/08 — 1(b) état d'interface `trialing` sans carte | ✅ construite | colonne `stripe_has_payment_method`, migration `20260818200000` |
+| 17/08 — 1(c) health-check abonnements sans carte | ✅ construite | `health-check/route.ts:363` `.eq("stripe_has_payment_method", false)`, ligne rouge l. 958 |
+| 17/08 — 2 « paiement actif » + MRR | ✅ construite | `isPayingCustomer` (l. 247-248), `PLAN_MRR_ANNUAL` (l. 47), `pipeline` sorti du dénominateur (l. 355-366) |
+| 17/08 — 3 health-check `email_blocked_at` | ✅ construite | `health-check/route.ts:389`, ligne rouge l. 960 |
+| 18/08 — 1 fraîcheur affichée sur `date` et non `updated_at` | ✅ construite | `5d8e1ad` |
+| 18/08 — 2 lignes orphelines de rafraîchissement | ✅ traitée au fond | `eb57f8e` + `d124101` : plafond 5→10 sur 17 crons + `lockedRowRegressionGuard` |
+| **17/08 — 1(a) séparer les intentions au checkout** | ❌ **non construite** | `app/api/checkout/route.ts:157` — `payment_method_collection: "if_required"` inchangé |
+| 17/08 — 1(d) aligner `trial-reminders` sur son commentaire | ❌ non construite | l. 86 le commentaire, l. 105 `.is("stripe_subscription_id", null)` toujours là |
+
+Les deux idées principales du jour portent précisément sur les **conséquences de ce qui a été livré ce soir** : la 1 sur ce que la redéfinition de « payant » rend visible, la 2 sur ce que le nouveau garde-fou rend invisible.
+
+### 1. 🔴 Aucun chemin du produit ne peut encaisser une carte — et depuis ce soir, le critère de paiement du go/no-go en dépend
+
+**Signal, lu dans le code ce soir, pas déduit.** `app/api/checkout/route.ts:149-158` :
+
+- `trialDaysRemaining` vaut **14 par défaut** pour un utilisateur sans essai en base (`: 14; // no DB trial → first-time user`) ;
+- si `trialDaysRemaining > 0`, la session Stripe reçoit `trial_period_days`, `trial_settings[end_behavior][missing_payment_method] = "cancel"` **et `payment_method_collection = "if_required"`**.
+
+Conséquence : **tout utilisateur qui clique « passer à Pro » pendant son essai — c'est-à-dire au moment exact où le produit le lui demande — obtient un abonnement sans carte, programmé pour s'annuler tout seul.** C'est très précisément la forme Morgan Otita. Le seul chemin qui collecte réellement une carte est celui d'un utilisateur dont l'essai en base est **déjà expiré** (`Math.max(0, …)` → 0, le bloc `if` ne s'exécute pas, Stripe retombe sur son défaut `always`). Autrement dit : le produit sait encaisser **uniquement** quelqu'un qui a laissé son essai mourir avant de revenir — pas quelqu'un qui décide d'acheter au bon moment. Et il n'y a **qu'un seul point d'entrée de checkout** dans tout le repo (`components/CheckoutButton.tsx:45` → `/api/checkout` → `api.stripe.com/v1/checkout/sessions`), donc pas de chemin alternatif qui rattraperait ça.
+
+**Ce qui est neuf ce soir, et qui rend l'arbitrage urgent.** Le critère `paying` du go/no-go a été **redéfini aujourd'hui** (`9611add`, `45abc74`) : il est passé de « ≥1 abonnement Stripe » à `payingCount = profiles.filter(isRealStripeSub && stripe_has_payment_method)` (`admin/page.tsx:247-250`, critère l. 370). C'est la bonne définition — le 17/08 l'avait demandée pour la bonne raison, et elle est maintenant en place. Mais elle crée une situation que personne n'a encore regardée en face : **le drapeau `stripe_has_payment_method` ne peut être mis à `true` par aucun parcours que le produit propose.** Le critère est donc passé, en une journée, de « toujours vert pour une mauvaise raison » à « structurellement inatteignable ». Vendredi, il affichera 0 payant — et ce sera exact.
+
+**Pourquoi ce n'est pas un simple report du 17/08 :** l'idée 1(a) du 17/08 proposait de *séparer les intentions par surface d'origine* (durcir depuis `/pricing`, garder `if_required` là où la copie promet « sans carte bancaire »). Cette formulation-là est aujourd'hui plus difficile qu'elle n'en avait l'air : la promesse « sans carte bancaire » est écrite sur **au moins 12 surfaces** (`login`, `signup`, `about`, `account`, `alerts`, `reports`, `docs`, `methodology`, `pilot`, `embed`, fiche foyer, FAQ des deux fichiers de messages). Mais ces 12 promesses portent toutes sur **l'essai à l'inscription**, pas sur le checkout — personne n'a jamais promis qu'acheter Pro se ferait sans carte. La séparation à faire n'est donc pas « par surface d'appel » mais **par intention** : créer un essai (sans carte, promesse tenue) vs souscrire (avec carte). Le checkout confond aujourd'hui les deux parce qu'il rejoue systématiquement l'essai.
+
+**Effort estimé :** petit — un `if` et un paramètre. La vraie décision est de trancher ce que doit faire le bouton « passer à Pro » vu par un utilisateur en cours d'essai : (a) collecter la carte tout de suite et laisser courir les jours d'essai restants (`payment_method_collection: "always"` + `trial_period_days` conservé — l'utilisateur n'est pas débité avant la fin, la promesse d'essai gratuit reste vraie, et l'abonnement ne s'auto-annule plus) ; ou (b) garder `if_required` et assumer que le produit ne convertit personne avant l'expiration de l'essai. L'option (a) est la seule qui rend le critère de paiement atteignable.
+
+**Risque/inconnue :** (a) **c'est de la friction ajoutée sur le seul entonnoir ayant jamais produit un acte d'achat** — le 17/08 le signalait déjà et le point reste entier : un formulaire de carte peut faire abandonner là où `if_required` laissait passer. La contrepartie est mesurée, elle : le seul passage réel a produit €0. (b) Je n'ai **pas vérifié l'état live** de l'abonnement de `otitamorgan@gmail.com` depuis cette session (`/admin` est derrière le login, l'API exige une authentification) — une carte a pu être ajoutée à la main depuis ; ça règlerait le cas individuel sans rien changer au défaut structurel décrit ici. (c) Changer ça deux jours avant le go/no-go ne produira aucune donnée avant vendredi : c'est un correctif pour *après* la décision, pas un levier sur le chiffre du 21/08 — à ne pas se raconter autrement.
+
+### 2. 🔴 Le garde-fou livré ce soir peut refuser le chiffre d'une source, définitivement, sans laisser la moindre trace — sauf dans un cron sur dix-sept
+
+**Signal.** `lockedRowRegressionGuard` (`lib/outbreak-guards.ts:171-182`) refuse toute baisse de cas ou de décès sur une ligne à `source_priority >= 10`. C'est le bon garde-fou, et il a été écrit ce soir contre un cas réel (le chiffre Africa CDC du 18/08 plus bas que la base sur Ebola/RDC). Il vient d'être posé sur **17 crons** (`eb57f8e` + `d124101`).
+
+**Ce qu'il advient d'un refus, dans 16 de ces 17 crons :** une entrée poussée dans un tableau `log` local (`log.push({ label, status: "skip", detail: guardReason })`, ex. `sync-who-afro/route.ts:490-493`), renvoyée dans le JSON de la réponse HTTP — c'est-à-dire visible uniquement par qui `curl` la route à la main. Rien n'est persisté : `logCronRun` (`lib/cron-monitor.ts:200-230`) n'écrit que `{ts, status, rows, lastNonZero, error}`, et le `status` passé par ces crons est calculé sur `results.errors > 0`, qui ne compte **que les échecs d'écriture en base**, pas les refus de garde. Un refus laisse donc un cron en `status: "ok"`, et le health-check quotidien ne voit rien.
+
+**Le code sait déjà que c'est faux — dans un seul fichier.** `check-mpox-sitrep/route.ts:565-580` fait exactement l'inverse, avec le commentaire qui explique pourquoi : « *a silently-blocked write would freeze the row on the old figures with nothing to show for it. Surface it as an erroring cron so it reaches the daily health-check, and in Sentry* » — suivi d'un `Sentry.captureMessage` et d'un `logCronRun(..., guardBlocked.length > 0 ? "error" : "ok")`. Le bon patron existe, il est écrit, il est commenté, et les 16 autres crons viennent de recevoir le même garde sans lui.
+
+**Pourquoi c'est plus grave qu'avant ce soir.** Avant, une ligne verrouillée était bloquée **au niveau de la base** (`.lte("source_priority", 5)`) : le mode d'échec était « rien n'écrit jamais », que le filet manuel (`MANUAL_ROWS`) et la péremption de `data-quality` finissaient par attraper. Maintenant le cron **atteint** la ligne, **lit** le chiffre de la source, et le **refuse**. Le mode d'échec est plus fin : sur une ligne à priorité 10 que rien d'autre n'écrit, un chiffre en base trop haut — surestimation, mauvais parsing, cumul mal lu — devient **définitivement irréversible**, puisqu'aucune source ne pourra plus jamais le faire redescendre. Et comme l'écriture est refusée, `date` ne bouge pas : la ligne finira par ressortir en « périmée » dans l'e-mail « à revoir », c'est-à-dire avec le mauvais diagnostic (« la source ne publie plus ») au lieu du vrai (« nous refusons ce que la source publie »).
+
+**Effort estimé :** petit — recopier le patron `check-mpox-sitrep` dans les 16 autres crons : compter les refus de garde dans un compteur dédié (`results.guardBlocked`), le faire remonter dans le `status` de `logCronRun` (ou, plus fin, dans un champ dédié pour ne pas noyer les vraies erreurs d'écriture), et un `Sentry.captureMessage` en `warning`. Aucune nouvelle table, aucune migration.
+
+**Risque/inconnue :** (a) **volume de bruit non mesuré** — je ne sais pas combien de refus de garde par jour ces 17 crons produisent en régime normal (les guards ordinaires `spike`/`collapse`/`zeroCase` déclenchent aussi sur des lignes non verrouillées) ; si c'est un flot quotidien, remonter tout en `status: "error"` rendrait le health-check illisible. Le périmètre prudent est donc de ne remonter que **`lockedRowRegressionGuard` sur ligne verrouillée**, pas tous les guards. (b) Effet de bord de ce périmètre : les refus des guards ordinaires restent aussi invisibles qu'aujourd'hui — ce n'est pas une régression, mais ce n'est pas non plus réglé. (c) Trouvé au passage, pas proposé comme idée : `sync-africa-cdc/route.ts:571` journalise `results.inserted ?? 0` seul là où `sync-who-afro` journalise `inserted + updated` — donc une passe de ce cron qui ne fait que rafraîchir des lignes existantes remonte `rows: 0` et n'actualise pas son `lastNonZero`, exactement le signal que `lastNonZero` a été ajouté pour porter (cf. l'incident push-alerts du 27/07).
+
+### 3. Deux professionnels de terrain en seize jours disent la même chose : le chiffre publié ne dit pas ce qu'il mesure
+
+**Signal — et c'est le premier vrai signal terrain entrant depuis le 08/08** (`product-feedback.md` n'a aucune entrée depuis cette date ; le 18/08 relevait déjà ce silence de 10 jours, il en fait 11 aujourd'hui). Il ne vient pas de ce fichier mais de `linkedin-contacts.md`, session du jour.
+
+**Darrel Ornelle ELION ASSIANA, aujourd'hui**, sur la chaîne de remontée de son laboratoire national : les sites GeneXpert transmettent mensuellement, et quand le LNRM consolide, rien de ce qui est publié ne dit si le cas est replacé à sa **semaine de confirmation** ou s'il porte sa **période de transmission**. Sa formule, citée dans le brouillon de réponse : « *en phase ascendante les deux ne dessinent pas la même courbe* ». **Omobolanle Adelekun, le 03/08** (`product-feedback.md`), pointait le même angle mort par l'autre bout : lier les données de surveillance aux **versions de définition de cas** pour rendre les tendances interprétables.
+
+**Côté HWG, l'angle mort est structurel et vérifié dans le code** : `lib/outbreaks.ts:69` — le type `Outbreak` porte **un unique champ `date: string`**, sans aucun champ décrivant ce que cette date mesure. Ni la table, ni l'interface, ni une seule surface d'affichage ne le qualifient.
+
+**Ce que je ne propose PAS :** construire le champ de métadonnée. C'est la conclusion déjà tirée le 03/08 sur le retour d'Adelekun, elle n'a pas changé — les sources agrégées ne publient quasiment jamais cette information de façon structurée, il n'y aurait donc rien à y mettre la plupart du temps, et l'inventer serait pire que l'absence.
+
+**Ce que je propose :** **afficher l'absence.** La fiche foyer porte déjà un chiffre retenu, sa source et un niveau de fiabilité à 4 paliers (`lib/source-trust.ts`) — l'arbitrage entre canaux est donc déjà visible. Il y manque une ligne, courte et vraie : *ce que cette date mesure n'est pas publié par la source*. Même geste sur `/methodology`, qui documente déjà les limites de couverture.
+
+**Pourquoi ça vaut la peine plutôt que de laisser courir :** c'est la seule chose que ces deux interlocuteurs ont apportée spontanément, sans qu'on la demande, à seize jours d'intervalle et depuis deux positions différentes (labo national, OMS). Et c'est le genre de limite qu'un professionnel de surveillance **repère de toute façon en dix minutes d'usage** : l'afficher soi-même transforme un défaut trouvé par l'utilisateur en précision revendiquée par le produit — un tableau de bord qui dit ce qu'il ne sait pas est plus crédible auprès de ce public qu'un tableau de bord qui ne dit rien.
+
+**Effort estimé :** petit sur le principe (une phrase, deux surfaces), **moyen en pratique à cause de l'i18n** — la fiche foyer est servie en 5 langues (`fr`/`en`/`es`/`ar`/`id`), donc 5 formulations à écrire, dont une en arabe.
+
+**Risque/inconnue :** (a) **c'est un arbitrage de positionnement, pas un correctif** — ajouter un avertissement de méthode réduit l'assurance apparente du produit auprès d'un lecteur non spécialiste, alors qu'elle l'augmente auprès d'un épidémiologiste. Le persona visé décide, et cet arbitrage-là appartient à David. (b) **Un précédent tout frais invite à la prudence sur le calendrier** : le 03 et le 04/08, deux modifications d'entonnoir livrées vite ont cassé l'inscription. Ce n'est pas la même surface, mais la leçon de rythme vaut, à J-2. (c) Aucun des deux contacts n'a demandé une fonctionnalité : ils ont décrit un problème de leur métier. Le lire comme une demande produit serait une sur-interprétation — c'est une opportunité de justesse, pas une commande.
+
+**Non re-proposé aujourd'hui :** 17/08 idée 1(d) (`trial-reminders`, seul autre reliquat non construit) — reste vrai, mais c'est un doublon d'e-mail potentiel, sans effet sur la décision de vendredi, et aucune preuve nouvelle ne le fait remonter. Rien sur la personnalisation, l'accès, l'entonnoir d'inscription ni le cycle d'essai. Les 18 indicateurs d'Andrea Bernasconi (07-08/08) restent non constructibles faute de source ; les trois sources tierces de Hao-Kai TSENG (29/07) restent bloquées par le garde-fou explicite du `ROADMAP.md`, et aucun prospect n'a demandé de détection plus rapide que l'OMS. Pas d'idée sur le persona « décideur » : toujours zéro décideur mesuré sur les pages d'atterrissage.
+
+**Contexte relevé au passage** (pas des idées) :
+- Une demande d'échange en attente d'arbitrage de David : **Dr Franck NZIZA** a écrit aujourd'hui « *Seriez-vous disponible pour échanger brièvement à ce sujet dans les prochains jours ?* ». Aucun canal nommé, aucun engagement pris dans la réponse. C'est le seul contact ayant jamais demandé à parler de vive voix — signal de conversion le plus chaud du moment, deux jours avant le go/no-go.
+- 3 DM en file de validation à 17h, 5 envoyés à 14h sur ordre explicite de David. Toujours **0 demande de contact hors plateforme**, hors le point ci-dessus.
+- Prospection institutionnelle : toujours **0 réponse** sur l'ensemble de la campagne.
+
+**Statut : PROPOSÉE — en attente de retour de David.**
+
+---
