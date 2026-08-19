@@ -44,7 +44,7 @@ const LABELS: Record<string, Record<string, string | string[]>> = {
     proTitle: "Passez à Pro — alertes instantanées & rapports PDF",
     proDesc: "Ce briefing vous donne les chiffres de la semaine. Avec Pro, recevez une alerte dès que l'OMS détecte un nouveau foyer dans votre région — pas la semaine prochaine, le jour même.",
     proItems: ["📬 Alertes email instantanées dès détection", "📄 Rapports PDF régionaux téléchargeables", "📊 Export CSV pour vos analyses", "🌍 Toutes les régions mondiales"],
-    proCta: "Essai gratuit 14 jours — sans carte →",
+    proCta: "Essai gratuit 14 jours — carte requise, aucun débit avant la fin →",
     proNote: "Sans engagement. Annulation en 1 clic.",
   },
   en: {
@@ -63,7 +63,7 @@ const LABELS: Record<string, Record<string, string | string[]>> = {
     proTitle: "Go Pro — instant alerts & PDF reports",
     proDesc: "This digest gives you last week's figures. With Pro, you get an alert the moment WHO detects a new outbreak in your region — not next week, the same day.",
     proItems: ["📬 Instant email alerts on detection", "📄 Downloadable regional PDF reports", "📊 CSV export for your analyses", "🌍 All global regions covered"],
-    proCta: "14-day free trial — no credit card →",
+    proCta: "14-day free trial — card required, no charge until it ends →",
     proNote: "No commitment. Cancel in 1 click.",
   },
   es: {
@@ -82,7 +82,7 @@ const LABELS: Record<string, Record<string, string | string[]>> = {
     proTitle: "Pase a Pro — alertas instantáneas e informes PDF",
     proDesc: "Este resumen le da las cifras de la semana. Con Pro, recibe una alerta en cuanto la OMS detecta un nuevo brote en su región — no la semana que viene, el mismo día.",
     proItems: ["📬 Alertas por email instantáneas al detectarse", "📄 Informes PDF regionales descargables", "📊 Exportación CSV para sus análisis", "🌍 Todas las regiones mundiales"],
-    proCta: "Prueba gratuita 14 días — sin tarjeta →",
+    proCta: "Prueba gratuita 14 días — tarjeta requerida, sin cobro hasta el final →",
     proNote: "Sin compromiso. Cancelación en 1 clic.",
   },
   ar: {
@@ -101,7 +101,7 @@ const LABELS: Record<string, Record<string, string | string[]>> = {
     proTitle: "انتقل إلى Pro — تنبيهات فورية وتقارير PDF",
     proDesc: "يمنحك هذا الملخص أرقام الأسبوع. مع Pro، تتلقى تنبيهاً فور اكتشاف منظمة الصحة العالمية تفشياً جديداً في منطقتك — ليس الأسبوع القادم، بل في نفس اليوم.",
     proItems: ["📬 تنبيهات بريدية فورية عند الاكتشاف", "📄 تقارير PDF إقليمية قابلة للتنزيل", "📊 تصدير CSV لتحليلاتك", "🌍 جميع المناطق العالمية مشمولة"],
-    proCta: "← تجربة مجانية 14 يوماً — بدون بطاقة",
+    proCta: "← تجربة مجانية 14 يوماً — البطاقة مطلوبة، لا خصم قبل انتهاء التجربة",
     proNote: "بدون التزام. الإلغاء بنقرة واحدة.",
   },
   id: {
@@ -120,7 +120,7 @@ const LABELS: Record<string, Record<string, string | string[]>> = {
     proTitle: "Upgrade ke Pro — peringatan instan & laporan PDF",
     proDesc: "Briefing ini memberi Anda angka minggu lalu. Dengan Pro, Anda mendapat peringatan begitu WHO mendeteksi wabah baru di wilayah Anda — bukan minggu depan, tapi hari yang sama.",
     proItems: ["📬 Peringatan email instan saat terdeteksi", "📄 Laporan PDF regional yang dapat diunduh", "📊 Ekspor CSV untuk analisis Anda", "🌍 Semua wilayah global tercakup"],
-    proCta: "Uji coba gratis 14 hari — tanpa kartu →",
+    proCta: "Uji coba gratis 14 hari — kartu diperlukan, tanpa tagihan sampai berakhir →",
     proNote: "Tanpa komitmen. Batalkan dalam 1 klik.",
   },
 };

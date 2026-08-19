@@ -154,7 +154,13 @@ export async function POST(req: NextRequest) {
     if (trialDaysRemaining > 0) {
       params.set("subscription_data[trial_period_days]", String(trialDaysRemaining));
       params.set("subscription_data[trial_settings][end_behavior][missing_payment_method]", "cancel");
-      params.set("payment_method_collection", "if_required");
+      // 2026-08-19: was "if_required" — with end_behavior.missing_payment_method
+      // = "cancel", that meant a mid-trial subscription auto-cancelled at trial
+      // end unless a card was added later, so this path could never produce a
+      // real paying customer (paying criterion needs stripe_has_payment_method).
+      // Always collecting the card keeps the user unbilled until trial end but
+      // makes end_behavior a harmless safety net instead of the default outcome.
+      params.set("payment_method_collection", "always");
     }
 
     // Reuse existing Stripe customer to avoid duplicate records
