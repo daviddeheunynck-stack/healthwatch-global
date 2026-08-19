@@ -616,6 +616,21 @@ const MANUAL_ROWS = {
   // (Epi Week 32), DENV-1, 12 hospitalisations toutes guéries. Aucun cron ne couvre cette
   // série — vérification manuelle hebdo comme les autres lignes Pacifique de cette liste.
   "d9d8b75c-f7ac-4fc9-af3b-d4d41582c70c": "Dengue/Vanuatu",
+  // Ajoutée le 2026-08-19 : le plus gros foyer actif du produit (PHEIC, source_priority=10,
+  // "la plus grande épidémie d'Ebola jamais enregistrée dans le pays") n'a plus AUCUN rédacteur
+  // automatisé depuis le 17/08. sync-drc-sitrep (route.ts) a sa détection de sitrep désactivée
+  // en permanence (ToS ReliefWeb) et son en-tête renvoie explicitement vers sync-who-afro à la
+  // place — mais sync-who-afro plafonne son écriture à `source_priority <= 5` (jamais 10, "never
+  // overwrite sitrep"). Le seul autre rédacteur, scripts/update-drc-sitrep-social.mjs, est
+  // orphelin depuis le 17/08 (ses deux seuls appelants, x-hwg-monitoring et
+  // x-hwg-followup-check, ont été éliminés ce jour-là) et son garde-fou de source n'accepte que
+  // les hôtes X/Twitter, donc aucune routine LinkedIn ne peut l'utiliser. Trouvé le 18/08 en
+  // curl-ant la fiche publique : bulletin WHO DON615 du 12/08, déjà 7j de péremption au moment
+  // du constat (seuil PHEIC data-quality = 7j) — la ligne n'a donc plus aucun filet, ni cron ni
+  // vérification hebdo, jusqu'à cette entrée. Voir marketing/product-ideas-log.md, 2026-08-18
+  // idée 1, pour le détail complet et la correction du badge "Vérifié par HealthWatch" livrée le
+  // 19/08 (il affichait le dernier écriture DB, pas la date du bulletin).
+  "bd1c3a46-a921-49b7-b79e-10ad715c4c38": "Ebola/RD Congo",
 };
 // Vérification faite, source inchangée → aucune écriture, donc `updated_at` ne bouge pas et la
 // ligne se re-signale tous les matins indéfiniment (vécu le 06/08 avec les deux lignes polio :
