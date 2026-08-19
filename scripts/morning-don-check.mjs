@@ -631,6 +631,12 @@ const MANUAL_ROWS = {
   // idée 1, pour le détail complet et la correction du badge "Vérifié par HealthWatch" livrée le
   // 19/08 (il affichait le dernier écriture DB, pas la date du bulletin).
   "bd1c3a46-a921-49b7-b79e-10ad715c4c38": "Ebola/RD Congo",
+  // Ajoutée le 2026-08-19 : trouvée par le contrôle qualité du même jour (22j de péremption,
+  // source = Bollettino_WND_2026_1, 28/07). L'ISS publie chaque semaine ; deux éditions manquées
+  // (_2 ~06/08, _3 13/08 — confirmé le _4 pas encore paru, 404 sur l'URL). Aucun cron ne couvre
+  // cette série. Corrigée le même jour : 84->226 cas, 2->7 décès. Voir
+  // scripts/fix-west-nile-italy-report3-2026-08-19.mjs.
+  "d0dcfdbd-b656-4d4f-91a9-ddd271025af8": "West Nile/Italie",
 };
 // Vérification faite, source inchangée → aucune écriture, donc `updated_at` ne bouge pas et la
 // ligne se re-signale tous les matins indéfiniment (vécu le 06/08 avec les deux lignes polio :
@@ -731,7 +737,13 @@ const MANUAL_ROW_CHECKED = {
   // reste justifié même si le chiffre de cas ne peut pas être rafraîchi. ⚠️ Piège écarté : ne pas
   // confondre avec Samoa (pays indépendant voisin), qui a sa propre épidémie bien plus importante
   // et des sitreps MOH distincts. Toujours 782 cas / 0 décès au 17/02, rien à écrire.
-  "43c4c769-17e6-45c4-9f83-5c8d30104ff1": "2026-08-14",
+  // Mise à jour le 19/08 (session distincte, hors de cette trace) : source basculée sur WHO/SPC
+  // « Dengue in the Pacific Multicountry Situation », 14/08/2026 (via reliefweb.int) — la même
+  // source précédemment bloquée en 403 pour une autre session le 17/08 (voir la ligne
+  // Fidji/DLI ce jour-là). 782 -> 1 036 cas au 21/07/2026 (486 en 2026 + 550 en 2025, DENV-1/
+  // DENV-2), toujours 0 décès. Constaté ici après coup, en synchronisant cette trace sur l'état
+  // réel de la ligne plutôt qu'en la revérifiant une 2e fois inutilement.
+  "43c4c769-17e6-45c4-9f83-5c8d30104ff1": "2026-08-19",
   // Fièvre de Lassa/Nigéria : vérifié le 15/08. Le listing NCDC filtré sur ce type de sitrep
   // (ncdc.gov.ng/diseases/sitreps/?cat=5&name=...) confirme que "Week 30" est bien la plus
   // récente entrée, ET que son PDF est EXACTEMENT celui déjà cité en base (même hash de fichier)
