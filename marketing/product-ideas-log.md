@@ -904,3 +904,21 @@ Rien non plus dans les branches : aucune des 4 branches non fusionnées ne conti
 **Statut : PROPOSÉE — en attente de retour de David.**
 
 ---
+
+## 2026-08-19 (soir, ~19h) — Corrections de code livrées, idées 1(c) et 2 ci-dessus
+
+**Contexte de la décision.** En session interactive, sur un point marketing où une session avait signalé « arbitrage Ebola/RDC en attente, 5e jour consécutif » (alors que la ligne avait en réalité été mise à jour le matin même par `morning-don-check`, commit `5d1c6a9`), David a tranché explicitement : **« il faut toujours garder les données les plus neuves, on doit pouvoir jongler entre les sources pour mettre HWG à jour »**, puis a demandé d'appliquer la recommandation immédiatement.
+
+**Ce qui a été livré (commit à suivre) :**
+- `lib/outbreak-guards.ts` : nouveau garde-fou `lockedRowRegressionGuard` — sur une ligne à `source_priority>=10`, refuse toute **baisse** de cas ou de décès, même une baisse que `collapseGuard` (seuil 70 %) tolérerait. C'est le garde qui aurait bloqué le chiffre Africa CDC du 18/08 (2 320 décès) contre les 2 378 déjà en base pour Ebola/RDC — cas réel rencontré le jour même.
+- `app/api/cron/sync-who-afro/route.ts` et `sync-who-emro/route.ts` : plafond d'écriture relevé de `.lte("source_priority", 5)` à `.lte("source_priority", 10)`. Ces deux crons sont les seuls choisis : sources primaires documentées (offices régionaux OMS), déjà porteurs du jeu complet de garde-fous anti-régression (`dateFloorGuard`/`spikeGuard`/`collapseGuard`/`zeroCaseGuard`/`zeroDeathGuard`), et `sync-who-afro` est textuellement désigné dans le header de `sync-drc-sitrep` comme « ce qui garde Ebola/RDC frais » — une affirmation que l'ancien plafond rendait fausse en silence. Le payload d'écriture préserve désormais `source_priority` existant (`Math.max(5, existingRow.source_priority ?? 0)`) plutôt que de le redescendre à 5 à chaque mise à jour, donc une ligne verrouillée le reste vis-à-vis des 20 autres crons.
+- `app/api/cron/sync-drc-sitrep/route.ts` : commentaire d'en-tête corrigé (affirmait encore « never overwritten by automated crons »).
+- `tsc --noEmit` et `eslint` passent sans erreur sur les 4 fichiers touchés ; le nouveau garde a été testé à la main contre le cas réel du jour (chiffre Africa CDC plus bas → bloqué ; chiffre AFRO plus récent et en hausse → accepté).
+
+**Volontairement pas fait ce soir :** les 20 autres crons agrégateurs (`sync-africa-cdc`, `check-mpox-sitrep`, `sync-ecdc-threats`, etc.) restent plafonnés à 5 — ils republient des sources de rang institutionnel moindre ou moins rigoureusement extraites qu'un office régional OMS, et étendre à 22 fichiers en une seule passe à J-2 du go/no-go aurait dépassé ce qui a été diagnostiqué. Décision ouverte, pas tranchée.
+
+**Effet attendu sur les 27 lignes actuellement à `source_priority: 10`** (dont 6 lignes Choléra figées au 28/06, 52 jours) : celles couvertes par l'Afrique (AFRO) ou le Moyen-Orient/Asie centrale (EMRO) redeviennent rafraîchissables au prochain passage du cron concerné, sous réserve qu'un article correspondant existe sur la page source. Pas une garantie de rafraîchissement immédiat — une garantie que le mécanisme n'est plus structurellement bloqué.
+
+Mémoire : [[project_source_priority_is_ownership_not_freeze_2026_08_19]].
+
+---
