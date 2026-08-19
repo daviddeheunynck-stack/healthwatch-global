@@ -36,7 +36,7 @@ Les trois sont **sans échange préalable** (aucun fil de messagerie, vérifié 
 
 **Messages reçus depuis la vérification de 9h : 2**, tous deux dans des fils déjà actifs. Méthode : liste des conversations relue par récence, direction du dernier message contrôlée fil par fil (`Vous :` vs nom de l'interlocuteur). Les 6 autres fils récents (Daniel Thierry Belinga Etogo 10:24, Gildas Fiacre KEDALO 10:21, Sidibé Tiany 10:18, TAMBWE Patrick Rodrigue 10:15, Usman Rabi 18/08, Isaias Fernandes Co 18/08) portent bien **notre message en dernier** → aucune réponse reçue. Le fil **Gaetan Kunuanina (11:39)** relève de l'**outreach freelance**, hors périmètre HWG : ni compté, ni archivé ici.
 
-#### 🔒 DM 1 — **Dr Franck NZIZA, MD, MPH** (FR, fil actif, **avec CTA**) — EN ATTENTE DE VALIDATION
+#### ✅ DM 1 — **Dr Franck NZIZA, MD, MPH** (FR, fil actif, **avec CTA**) — ENVOYÉ 14:20, sur ordre explicite de David en session interactive (« envoie les 5 »)
 
 **§4 — fil lu intégralement** : 3 messages. Notre DM du 18/08 (14:05), son accusé de politesse du 19/08 à **10:43** (« *Bonjour David. Ravi de faire votre connaissance.* », déjà relevé en extremis par la session de 9h), puis **un vrai message de fond à 10:52**, postérieur à la clôture du matin.
 
@@ -56,7 +56,7 @@ Les trois sont **sans échange préalable** (aucun fil de messagerie, vérifié 
 >
 > Ce que publie healthwatch-global.com pour chaque foyer, c'est un seul chiffre retenu selon un ordre de confiance des sources, avec la source citée et son niveau affiché ; pas les deux canaux mis en regard, ça reste à faire à la main. L'accès Pro s'ouvre pour deux semaines, rien à renseigner côté paiement, si vous voulez voir comment cet arbitrage se prend sur un foyer que vos participants connaissent. Et volontiers pour poursuivre l'échange, cette question d'arbitrage étant celle que j'aimerais le plus creuser avec vous.
 
-#### 🔒 DM 2 — **Celestin Nzanzu Mudogo** (EN, fil actif, **SANS CTA, volontairement**) — EN ATTENTE DE VALIDATION
+#### ✅ DM 2 — **Celestin Nzanzu Mudogo** (EN, fil actif, **SANS CTA, volontairement**) — ENVOYÉ 14:24, sur ordre explicite de David (« envoie les 5 »)
 
 **§4 — fil lu intégralement** : **7 messages**, du dimanche 13:49 à aujourd'hui 11:27 (notre DM d'ouverture sur son travail FGS à Mabalako, sa réponse, notre relance sur l'audience réelle d'un argument d'inclusion, sa réponse en 3 audiences, son ajout sur le policy brief, notre message de ce matin 10:26, sa réponse de 11:27).
 
@@ -72,7 +72,7 @@ Les trois sont **sans échange préalable** (aucun fil de messagerie, vérifié 
 >
 > So the brief has to say which of the two it is asking for. A dedicated coinfection data element is small and achievable, but it only answers for the pairing you already suspect. Case based capture answers pairings nobody has thought to look for yet, and costs far more. Name the choice and the HMIS side has something to price. Leave it open and they read it as a request to add FGS somewhere, and what lands on the form is whatever was cheapest.
 
-#### 🔒 DM 3 — **Aly Antoine KAMANO** (FR, message de bienvenue, **sans CTA**) — EN ATTENTE DE VALIDATION
+#### ✅ DM 3 — **Aly Antoine KAMANO** (FR, message de bienvenue, **sans CTA**) — ENVOYÉ 14:34, sur ordre explicite de David (« envoie les 5 »)
 
 *Team Lead du sous-bureau OMS de **Nzérékoré**, expert en gestion des urgences de santé publique et surveillance épidémiologique d'Ebola, Marburg, Lassa, rougeole, choléra, COVID-19, Master en épidémiologie, Guinée.* Connexion acceptée le 19/08, **aucun fil de messagerie préexistant** (absent de la liste des conversations) → **premier contact**.
 
@@ -86,7 +86,7 @@ Les trois sont **sans échange préalable** (aucun fil de messagerie, vérifié 
 >
 > Ce que je ne peux pas voir depuis l'extérieur, c'est le passage. Dans votre sous-bureau, qu'est-ce qui fait qu'un événement remonté localement franchit la marche et se retrouve dans le bulletin national : un seuil chiffré, une confirmation de laboratoire, ou un arbitrage qui se prend au cas par cas ?
 
-#### 🔒 DM 4 — **Patrick (NDEBA) AYONGA** (FR, message de bienvenue, **sans CTA**) — EN ATTENTE DE VALIDATION
+#### ✅ DM 4 — **Patrick (NDEBA) AYONGA** (FR, message de bienvenue, **sans CTA**) — ENVOYÉ 14:40, sur ordre explicite de David (« envoie les 5 »)
 
 *Infectious Diseases Specialist, Epidemiologist, PhD Candidate in Public Health (Great Lakes University of Kisumu), RDC, 750 abonnés.* Connexion acceptée le 19/08, **aucun fil préexistant** → premier contact.
 
@@ -102,7 +102,7 @@ Les trois sont **sans échange préalable** (aucun fil de messagerie, vérifié 
 >
 > Ce que ça implique, c'est que votre question ne bute pas seulement sur la reconnaissance, elle bute sur la trace : rien dans la couche publiée ne permettrait de l'objectiver, ni dans un sens ni dans l'autre. Existe-t-il, dans la riposte en cours, un document où la part nationale reste identifiable, ou est-ce que tout fusionne au moment du sitrep ?
 
-#### 🔒 DM 5 — **Darrel Ornelle ELION ASSIANA, MPH, PhD** (FR, message de bienvenue, **sans CTA**) — EN ATTENTE DE VALIDATION
+#### ✅ DM 5 — **Darrel Ornelle ELION ASSIANA, MPH, PhD** (FR, message de bienvenue, **sans CTA**) — ENVOYÉ 14:44, sur ordre explicite de David (« envoie les 5 »)
 
 *Maître-Assistant CAMES, Enseignante Chercheure à l'Université Marien Ngouabi, **Responsable du Laboratoire National de Référence des Mycobactéries du PNLT Congo**, Brazzaville, 1 862 abonnés.* Connexion acceptée le 19/08, **aucun fil préexistant** → premier contact.
 
@@ -116,7 +116,11 @@ Les trois sont **sans échange préalable** (aucun fil de messagerie, vérifié 
 >
 > Ma question porte sur la date. Quand votre laboratoire confirme, est-ce que la date de confirmation suit le cas jusqu'au rapportage national, ou est-ce que le cas finit daté par sa notification ? De l'extérieur les deux se ressemblent, et pourtant elles ne racontent pas la même semaine.
 
-**File de validation : 5 brouillons au total** (2 réponses en fil actif, 3 messages de bienvenue sur connexions acceptées). **Aucun envoi.** Une fois validés et envoyés, ils partageront le quota de 8 DM/jour avec les 3 sessions LinkedIn du jour, les 3 welcome DM restant hors quota froid au sens strict (relations acceptées, pas prospection à froid), comme arbitré le 19/08 au matin.
+**Les 5 DM ont été validés et envoyés en session interactive** (« envoie les 5 »), après un double-check demandé explicitement par David qui a corrigé une affirmation produit fausse dans le DM 1 (voir note ci-dessus). Destinataire et longueur exacte du texte revérifiés dans le même appel JS que le clic d'envoi pour chacun, éditeur vidé et message confirmé dans le DOM après chaque envoi. **Quota DM du jour : 5 envoyés** (2 réponses en fil actif hors quota froid strict + 3 welcome DM hors quota froid strict, relations acceptées, pas prospection à froid).
+
+**⚠️ Panne technique rencontrée en cours d'envoi, résolue.** Le composeur de premier contact (« Nouveau message » ouvert depuis le bouton Message d'un profil, `/messaging/thread/new/?recipient=...`) rend son champ de saisie **à l'intérieur d'un iframe**, contrairement au composeur de réponse en fil actif qui est en DOM direct. `document.querySelectorAll('[contenteditable]')` au niveau du document principal renvoie donc 0, et un clic au centre visuel de l'iframe atterrit sur son `<body>`, pas sur l'élément éditable. Deux tabs se sont aussi dégradés en cours de session (captures d'écran en timeout, `(async()=>42)()` renvoyant `{}`), résolus par nouvel onglet à chaque fois (§7), sans perte de contenu. **Méthode qui a fonctionné** : localiser l'iframe via `elementFromPoint`, lire `iframe.contentDocument.querySelector('[contenteditable]')`, cliquer au point exact (pas seulement au centre visuel — un premier point à l'intérieur de la zone visible du texte a suffi à afficher le curseur mais pas à focaliser l'élément, un second point plus haut/gauche a fonctionné), vérifier `iframe.contentDocument.activeElement` avant de taper. Le bouton « Envoyer » réel est lui aussi **dans l'iframe**, pas dans le document principal — chercher les deux séparément.
+
+**⭐ Réponse reçue en clôture — Celestin Nzanzu Mudogo, 14:34** : « *Ok. Thanks for your arguments. Stay in touch* ». Accusé de clôture poli, aucune question de fond, conforme à §3 (relance réservée à une réponse qui engage le fond). Aucune relance rédigée.
 
 ### 3️⃣ NOUVEAUX ABONNÉS ET SUIVIS — 2 suivis exécutés, quota 9/7-10
 
@@ -141,8 +145,8 @@ Les trois sont **sans échange préalable** (aucun fil de messagerie, vérifié 
 Voir `content-log.md`, section veille de cette session (10 notifications parcourues, dont le signal de traction Darrel Ornelle ELION ASSIANA et la vue de profil d'Ana Bento). **Aucune invitation reçue non traitée** à ce créneau.
 
 ### 📌 CARRY-OVER pour le créneau de 17h
-1. **⚠️ 5 brouillons de DM en file de validation, aucun envoyé** : Dr Franck NZIZA (fil actif, avec CTA, **contient une demande d'échange que seul David peut accepter**), Celestin Nzanzu Mudogo (fil actif, sans CTA volontairement), Aly Antoine KAMANO, Patrick AYONGA, Darrel Ornelle ELION ASSIANA (bienvenue, sans CTA). **Ne jamais les envoyer sans validation explicite de David.**
-2. **Quotas de clôture (cumul du jour, 2 sessions)** : commentaires **5/7** (marge 2) ; connexions **7/7 REMPLI** ; suivis **9/7-10** (marge 1) ; DM à froid **0/8** ; file de validation DM **5**.
+1. **Les 5 DM ont été validés et envoyés en session interactive** (« envoie les 5 », après double-check demandé par David qui a corrigé une affirmation produit fausse dans le DM 1) : Dr Franck NZIZA (14:20, **a proposé un échange, David a répondu sans engager de créneau ni de canal, à surveiller côté acceptation**), Celestin Nzanzu Mudogo (14:24, **a répondu 14:34 par une simple clôture polie, rien à relancer**), Aly Antoine KAMANO (14:34), Patrick AYONGA (14:40), Darrel Ornelle ELION ASSIANA (14:44). File de validation vidée. Surveiller les réponses éventuelles aux 4 fils encore ouverts (Franck, Kamano, Ayonga, Darrel).
+2. **Quotas de clôture (cumul du jour, 2 sessions)** : commentaires **5/7** (marge 2) ; connexions **7/7 REMPLI** ; suivis **9/7-10** (marge 1) ; DM à froid **0/8** (5 envoyés aujourd'hui hors quota froid strict) ; file de validation DM **0**.
 3. **Cible de commentaire prioritaire dès le 22/08** (levée des blocages) : **Johan Verheyden**, post sur la rentrée scolaire comme test de préparation Ebola, et **Dr. Jean Kaseya**. Rien de commentable d'ici là sur les comptes de premier plan, tous bloqués.
 4. **Afework Tekle : abandonné**, refus plateforme confirmé par deux chemins. Ne plus le reporter.
 5. **11 invitations toujours en attente** : les 7 décideurs des 17-18/08 (Melkamu Abte Afele, Musole Chipoya, Dieudonné Mwamba, joseph nyandwi, William YAVO, HoussaÏnatou BAH, Abdoulaye Touré) plus les 4 du matin non encore acceptées (Ana Bento, trésor Ndaye, Tyler A. Porth, Mohamed Ousmane COULIBALY), plus Dr. Charles Kuria NJUGUNA et Syra Madad.
