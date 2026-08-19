@@ -4,7 +4,14 @@
 // ReliefWeb ToS) so steps 2+ never run; only the Step-1 "Ebola DRC row missing" safety
 // check still fires. Ebola DRC figures are kept fresh via sync-who-afro (WHO Disease
 // Outbreak News) instead.
-// source_priority: 10 — highest tier, never overwritten by automated crons.
+// source_priority: 10 — highest tier. Until 2026-08-19 this was read as "never
+// overwritten by automated crons", which silently orphaned the row: sync-who-afro
+// (the cron named above as the actual freshness path) capped its own writes at
+// priority<=5, so nothing here could ever refresh it. sync-who-afro and
+// sync-who-emro can now write onto priority=10 rows (see their headers +
+// lockedRowRegressionGuard in lib/outbreak-guards.ts) — 10 means "owned by a
+// primary-tier source", not "frozen". See
+// project_source_priority_is_ownership_not_freeze_2026_08_19.
 
 import { NextRequest, NextResponse } from "next/server";
 import { logCronRun, isRealProduction } from "@/lib/cron-monitor";

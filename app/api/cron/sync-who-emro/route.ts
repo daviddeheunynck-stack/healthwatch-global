@@ -5,6 +5,14 @@
 // MERS-CoV (Saudi Arabia, UAE, Jordan), Crimean-Congo HF, cholera (Yemen, Syria),
 // and any new emerging threat before WHO DON HQ publication.
 // Never overwrites rows owned by the WHO DON daily sync.
+//
+// Can write onto rows locked at source_priority=10 (raised from a `.lte(5)`
+// ceiling 2026-08-19 — see project_source_priority_is_ownership_not_freeze_
+// 2026_08_19): source_priority is ownership by SOURCE TIER, not a freeze, and
+// a WHO regional office is a genuine primary source. lockedRowRegressionGuard
+// (below) additionally refuses to let this cron DECREASE either figure on a
+// locked row, even by an amount the ordinary collapse/spike guards would
+// tolerate. Mirrors the identical change on sync-who-afro/route.ts.
 
 import { NextRequest, NextResponse } from "next/server";
 import * as Sentry from "@sentry/nextjs";
@@ -15,7 +23,7 @@ import { extractNumbers, assessRisk } from "@/lib/outbreak-parser";
 import { logCronRun } from "@/lib/cron-monitor";
 import { errorMessage } from "@/lib/error";
 import { truncateAtSentence } from "@/lib/truncate-text";
-import { dateFloorGuard, spikeGuard, collapseGuard, zeroCaseGuard, zeroDeathGuard } from "@/lib/outbreak-guards";
+import { dateFloorGuard, spikeGuard, collapseGuard, zeroCaseGuard, zeroDeathGuard, lockedRowRegressionGuard } from "@/lib/outbreak-guards";
 
 export const dynamic     = "force-dynamic";
 export const maxDuration = 120;
@@ -170,6 +178,7 @@ interface ExistingRow {
   source: string | null;
   active: boolean;
   description: string | null;
+  source_priority: number | null;
 }
 
 const dcKey = (disease: string | null, country: string | null) =>
@@ -196,7 +205,7 @@ async function loadExistingForItems(
 
   const { data, error } = await supabase
     .from("outbreaks")
-    .select("id, disease_en, country_en, cases, deaths, date, source, active, description")
+    .select("id, disease_en, country_en, cases, deaths, date, source, active, description, source_priority")
     .in("disease_en", [...new Set(missing.map((i) => i.disease_en))])
     .in("country_en", [...new Set(missing.map((i) => i.country_en))]);
 
@@ -260,7 +269,7 @@ async function runWhoEmro(_req: NextRequest, supabase: SupabaseClient) {
   // ── 2. Load existing for dedup ────────────────────────────────────────────
   const { data: existing, error: fetchErr } = await supabase
     .from("outbreaks")
-    .select("id, disease_en, country_en, cases, deaths, date, source, active, description")
+    .select("id, disease_en, country_en, cases, deaths, date, source, active, description, source_priority")
     .or("active.eq.true,date.gte." + new Date(Date.now() - 90 * 86400_000).toISOString().substring(0, 10));
   if (fetchErr) {
     await logCronRun(supabase, "sync-who-emro", "error", 0, fetchErr.message);
@@ -363,15 +372,20 @@ async function runWhoEmro(_req: NextRequest, supabase: SupabaseClient) {
         spikeGuard({ cases, deaths, date }, existingRow) ??
         collapseGuard({ cases, deaths, date }, existingRow) ??
         zeroCaseGuard({ cases, deaths, date }, existingRow) ??
-        zeroDeathGuard({ cases, deaths, date }, existingRow);
+        zeroDeathGuard({ cases, deaths, date }, existingRow) ??
+        lockedRowRegressionGuard({ cases, deaths, date }, existingRow);
       if (guardReason) {
         log.push({ label, status: "skip", detail: guardReason });
         results.skipped++;
         continue;
       }
+      // Preserve a pre-existing lock (source_priority>=10) instead of
+      // stamping every update back down to 5 — see sync-who-afro/route.ts for
+      // the full rationale (identical fix, mirrored here).
       const updatePayload: Record<string, unknown> = {
         cases, deaths, date, source: entry.url,
-        description, risk_level: riskLevel, active: true, source_priority: 5,
+        description, risk_level: riskLevel, active: true,
+        source_priority: Math.max(5, existingRow.source_priority ?? 0),
       };
       // English description just changed — existing FR/ES/AR/ID translations
       // (if any) now describe stale figures. Null them so sync-outbreaks'
@@ -387,8 +401,9 @@ async function runWhoEmro(_req: NextRequest, supabase: SupabaseClient) {
       // owned by a higher-priority source) is visible as 0 affected rows —
       // without it, a blocked update still returns error: null and was
       // reported as "updated" even though nothing changed. Found 2026-07-15.
+      // Ceiling raised 5→10 on 2026-08-19 — see sync-who-afro/route.ts.
       const { data: updatedRows, error } = await supabase.from("outbreaks").update(updatePayload)
-        .eq("id", existingRow.id).lte("source_priority", 5)
+        .eq("id", existingRow.id).lte("source_priority", 10)
         .select("id");
       if (error) { log.push({ label, status: "error", detail: error.message }); results.errors++; }
       else if (!updatedRows || updatedRows.length === 0) {

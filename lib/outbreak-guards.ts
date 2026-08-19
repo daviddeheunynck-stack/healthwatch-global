@@ -46,6 +46,10 @@ export interface GuardedRow {
   date?:  string | null;
 }
 
+export interface GuardedLockedRow extends GuardedRow {
+  source_priority?: number | null;
+}
+
 export interface GuardedIncoming {
   cases:  number;
   deaths: number;
@@ -136,6 +140,43 @@ export function zeroDeathGuard(incoming: GuardedIncoming, existing: GuardedRow):
   const exDeaths = existing.deaths ?? 0;
   if (incoming.deaths === 0 && exDeaths > 0) {
     return `guard:zero-death — parsed 0 vs existing ${exDeaths} deaths`;
+  }
+  return null;
+}
+
+/**
+ * Extra guard for rows a human has explicitly elevated to source_priority>=10
+ * (verified against a primary source — often specifically BECAUSE the
+ * automated crons were unreliable for that row). Added 2026-08-19 when the
+ * blanket `.lte(5)` ownership ceiling on sync-who-afro/sync-who-emro was
+ * raised to `.lte(10)` so those two WHO regional-office crons — genuinely
+ * primary sources, already carrying the full spike/collapse/zero-case/
+ * zero-death/date-floor guard set above — can refresh a locked row instead of
+ * orphaning it (see project_source_priority_is_ownership_not_freeze_2026_08_19:
+ * with nothing above priority 5 ever writing, every row promoted to 10 froze
+ * silently — 27 active rows at the time, six of them 52 days stale).
+ *
+ * A source good enough to reach a locked row at all still isn't trusted to
+ * REDUCE either figure by any amount, not just avoid collapseGuard's >70%
+ * threshold: a locked row is presumed already verified, so any decrease is
+ * far more likely a different report's "as of" cutoff (see 2026-08-19 —
+ * Africa CDC's 2,320 published a day after WHO AFRO's 2,378 for the same
+ * outbreak) than a genuine downward revision, which is rare enough to apply
+ * by hand instead of risking a silent overwrite.
+ *
+ * No-op (returns null immediately) for any row below the lock threshold —
+ * ordinary rows keep relying on collapseGuard/zeroCaseGuard/zeroDeathGuard
+ * exactly as before.
+ */
+export function lockedRowRegressionGuard(incoming: GuardedIncoming, existing: GuardedLockedRow): string | null {
+  if ((existing.source_priority ?? 0) < 10) return null;
+  const exCases  = existing.cases ?? 0;
+  const exDeaths = existing.deaths ?? 0;
+  if (incoming.cases < exCases) {
+    return `guard:locked-row-cases-decreased — parsed ${incoming.cases} vs existing ${exCases} on a priority>=10 row`;
+  }
+  if (incoming.deaths < exDeaths) {
+    return `guard:locked-row-deaths-decreased — parsed ${incoming.deaths} vs existing ${exDeaths} on a priority>=10 row`;
   }
   return null;
 }
