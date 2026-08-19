@@ -4,6 +4,13 @@
 // Replaces the old Threat Assessment Brief HTML scraper (that URL is now 404).
 // Covers EU/EEA-specific threats (Ebola, MERS-CoV, Mpox, Hantavirus, etc.).
 // Never overwrites rows owned by the WHO DON daily sync.
+//
+// ECDC is the EU's own centre for disease prevention and control — a genuine
+// primary institutional source — so this cron can write onto rows locked at
+// source_priority=10 (ceiling raised 2026-08-19 alongside sync-who-afro/emro
+// — see project_source_priority_is_ownership_not_freeze_2026_08_19).
+// lockedRowRegressionGuard adds a cases-decrease check on a locked row;
+// deathsNeverDecreaseGuard below already covers deaths unconditionally.
 
 import { NextRequest, NextResponse } from "next/server";
 import * as Sentry from "@sentry/nextjs";
@@ -14,7 +21,7 @@ import { COUNTRIES, findCountry, isAggregateCountry } from "@/lib/geo-data";
 import { extractNumbers, assessRisk, UMBRELLA_COUNTRY_LABELS } from "@/lib/outbreak-parser";
 import { extractAdmin1, geocodeAdmin1 } from "@/lib/geo-extract";
 import { errorMessage } from "@/lib/error";
-import { dateFloorGuard, spikeGuard, deathsNeverDecreaseGuard, implausibleDeathsGuard } from "@/lib/outbreak-guards";
+import { dateFloorGuard, spikeGuard, deathsNeverDecreaseGuard, implausibleDeathsGuard, lockedRowRegressionGuard } from "@/lib/outbreak-guards";
 
 export const dynamic     = "force-dynamic";
 export const maxDuration = 60;
@@ -450,6 +457,7 @@ interface ExistingRow {
   source: string | null;
   active: boolean;
   description: string | null;
+  source_priority: number | null;
 }
 
 const dcKeyOf = (disease: string | null, country: string | null) =>
@@ -476,7 +484,7 @@ async function loadExistingForItems(
 
   const { data, error } = await supabase
     .from("outbreaks")
-    .select("id, disease_en, country_en, cases, deaths, date, source, active, description")
+    .select("id, disease_en, country_en, cases, deaths, date, source, active, description, source_priority")
     .in("disease_en", [...new Set(missing.map((i) => i.disease_en))])
     .in("country_en", [...new Set(missing.map((i) => i.country_en))]);
 
@@ -546,7 +554,7 @@ async function runEcdcThreats(_req: NextRequest, supabase: SupabaseClient) {
   // ── 2. Load existing outbreaks for dedup ──────────────────────────────────
   const { data: existing, error: fetchErr } = await supabase
     .from("outbreaks")
-    .select("id, disease_en, country_en, cases, deaths, date, source, active, description")
+    .select("id, disease_en, country_en, cases, deaths, date, source, active, description, source_priority")
     .or("active.eq.true,date.gte." + new Date(Date.now() - 90 * 86400_000).toISOString().substring(0, 10));
 
   if (fetchErr) {
@@ -719,7 +727,8 @@ async function runEcdcThreats(_req: NextRequest, supabase: SupabaseClient) {
         const guardReason =
           dateFloorGuard(item, existing) ??
           spikeGuard(item, existing) ??
-          deathsNeverDecreaseGuard(item, existing);
+          deathsNeverDecreaseGuard(item, existing) ??
+          lockedRowRegressionGuard(item, existing);
         if (guardReason) {
           log.push({ label, status: "skip", detail: guardReason });
           results.skipped++;
@@ -734,7 +743,7 @@ async function runEcdcThreats(_req: NextRequest, supabase: SupabaseClient) {
           description:     item.description,
           risk_level:      riskLevel,
           active:          true,
-          source_priority: 5,
+          source_priority: Math.max(5, existing.source_priority ?? 0),
         };
         // English description just changed — existing FR/ES/AR/ID translations
         // (if any) now describe stale figures. Null them so sync-outbreaks'
@@ -754,7 +763,7 @@ async function runEcdcThreats(_req: NextRequest, supabase: SupabaseClient) {
           .from("outbreaks")
           .update(updatePayload)
           .eq("id", existing.id)
-          .lte("source_priority", 5)
+          .lte("source_priority", 10)
           .select("id");
 
         if (error) {

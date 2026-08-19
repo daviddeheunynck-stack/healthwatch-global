@@ -7,6 +7,12 @@
 // (e.g. "in Ituri, Nord-Kivu, and Sud-Kivu provinces"), which the
 // LLM pipeline uses for admin1 extraction.
 // Never overwrites rows owned by the WHO DON daily sync.
+//
+// CDC is the US's own national public health agency — a genuine primary
+// government source — so this cron can write onto rows locked at
+// source_priority=10 (ceiling raised 2026-08-19 alongside sync-who-afro/emro
+// — see project_source_priority_is_ownership_not_freeze_2026_08_19).
+// lockedRowRegressionGuard refuses any decrease on a locked row.
 
 import { NextRequest, NextResponse } from "next/server";
 import * as Sentry from "@sentry/nextjs";
@@ -18,7 +24,7 @@ import { extractNumbers, assessRisk } from "@/lib/outbreak-parser";
 import { extractAdmin1, geocodeAdmin1 } from "@/lib/geo-extract";
 import { errorMessage } from "@/lib/error";
 import { truncateAtSentence } from "@/lib/truncate-text";
-import { dateFloorGuard, bothZeroGuard, collapseGuard, zeroDeathGuard } from "@/lib/outbreak-guards";
+import { dateFloorGuard, bothZeroGuard, collapseGuard, zeroDeathGuard, lockedRowRegressionGuard } from "@/lib/outbreak-guards";
 
 export const dynamic     = "force-dynamic";
 export const maxDuration = 120; // up to ~25 notices × ~3s each
@@ -142,6 +148,7 @@ interface ExistingRow {
   source: string | null;
   active: boolean;
   description: string | null;
+  source_priority: number | null;
 }
 
 const dcKey = (disease: string | null, country: string | null) =>
@@ -169,7 +176,7 @@ async function loadExistingForItems(
 
   const { data, error } = await supabase
     .from("outbreaks")
-    .select("id, disease_en, country_en, cases, deaths, date, source, active, description")
+    .select("id, disease_en, country_en, cases, deaths, date, source, active, description, source_priority")
     .in("disease_en", [...new Set(missing.map((i) => i.disease_en))])
     .in("country_en", [...new Set(missing.map((i) => i.country_en))]);
 
@@ -238,9 +245,9 @@ export async function GET(req: NextRequest) {
   // Fetch all CDC-sourced rows (to catch duplicates by URL regardless of date)
   // plus active/recent rows from all sources (to avoid overwriting WHO DON etc.)
   const [{ data: cdcRows, error: cdcErr }, { data: recentRows, error: recentErr }] = await Promise.all([
-    supabase.from("outbreaks").select("id, disease_en, country_en, cases, deaths, date, source, active, description")
+    supabase.from("outbreaks").select("id, disease_en, country_en, cases, deaths, date, source, active, description, source_priority")
       .like("source", "%wwwnc.cdc.gov%"),
-    supabase.from("outbreaks").select("id, disease_en, country_en, cases, deaths, date, source, active, description")
+    supabase.from("outbreaks").select("id, disease_en, country_en, cases, deaths, date, source, active, description, source_priority")
       .or("active.eq.true,date.gte." + new Date(Date.now() - 90 * 86400_000).toISOString().substring(0, 10)),
   ]);
 
@@ -404,7 +411,8 @@ export async function GET(req: NextRequest) {
         dateFloorGuard({ cases, deaths, date }, existRow) ??
         bothZeroGuard({ cases, deaths, date }, existRow) ??
         collapseGuard({ cases, deaths, date }, existRow) ??
-        zeroDeathGuard({ cases, deaths, date }, existRow);
+        zeroDeathGuard({ cases, deaths, date }, existRow) ??
+        lockedRowRegressionGuard({ cases, deaths, date }, existRow);
       if (guardReason) {
         log.push({ label, status: "skip", detail: guardReason });
         results.skipped++;
@@ -417,7 +425,7 @@ export async function GET(req: NextRequest) {
         description,
         risk_level:      riskLevel,
         active:          true,
-        source_priority: 5,
+        source_priority: Math.max(5, existRow.source_priority ?? 0),
       };
       // English description just changed — existing FR/ES/AR/ID translations
       // (if any) now describe stale figures. Null them so sync-outbreaks'
@@ -436,7 +444,7 @@ export async function GET(req: NextRequest) {
       const { data: updatedRows, error } = await supabase
         .from("outbreaks")
         .update(updatePayload)
-        .eq("id", existRow.id).lte("source_priority", 5)
+        .eq("id", existRow.id).lte("source_priority", 10)
         .select("id");
 
       if (error) {

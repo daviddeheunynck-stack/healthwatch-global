@@ -3,6 +3,12 @@
 //
 // Current targets: Philippines dengue, Ethiopia cholera, Thailand leptospirosis.
 // Schedule: 30 7 * * 1  (Monday 07:30 UTC — after the 6h DON sync run at 06:00)
+//
+// Reads national agencies / WHO regional offices directly — genuine primary
+// sources — so this cron can write onto rows locked at source_priority=10
+// (ceiling raised 2026-08-19 alongside sync-who-afro/emro — see
+// project_source_priority_is_ownership_not_freeze_2026_08_19).
+// lockedRowRegressionGuard refuses any decrease on a locked row.
 
 import { NextRequest, NextResponse } from "next/server";
 import * as Sentry from "@sentry/nextjs";
@@ -10,7 +16,7 @@ import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { extractNumbers } from "@/lib/outbreak-parser";
 import { errorMessage } from "@/lib/error";
-import { dateFloorGuard, spikeGuard, collapseGuard, zeroDeathGuard } from "@/lib/outbreak-guards";
+import { dateFloorGuard, spikeGuard, collapseGuard, zeroDeathGuard, lockedRowRegressionGuard } from "@/lib/outbreak-guards";
 
 export const dynamic   = "force-dynamic";
 export const maxDuration = 60;
@@ -554,7 +560,7 @@ async function runSyncEndemicData(_req: NextRequest, supabase: SupabaseClient) {
   // ── Load the 3 target rows ───────────────────────────────────────────────
   const { data: rows, error } = await supabase
     .from("outbreaks")
-    .select("id, disease, disease_en, country, country_en, cases, deaths, date, source, description")
+    .select("id, disease, disease_en, country, country_en, cases, deaths, date, source, description, source_priority")
     .or(
       "and(disease.eq.Dengue,country.eq.Philippines)," +
       "and(disease.eq.Choléra,country.eq.Éthiopie)," +
@@ -650,7 +656,8 @@ async function runSyncEndemicData(_req: NextRequest, supabase: SupabaseClient) {
       dateFloorGuard(found, row) ??
       spikeGuard(found, row) ??
       collapseGuard(found, row) ??
-      zeroDeathGuard(found, row);
+      zeroDeathGuard(found, row) ??
+      lockedRowRegressionGuard(found, row);
     if (guardReason) {
       skipped.push({ label: target.label, reason: guardReason });
       continue;
@@ -666,7 +673,7 @@ async function runSyncEndemicData(_req: NextRequest, supabase: SupabaseClient) {
       date:            found.date,
       source:          found.source,
       description:     newDescription,
-      source_priority: 5,
+      source_priority: Math.max(5, row.source_priority ?? 0),
     };
     if (row.description !== newDescription) {
       updatePayload.description_fr = null;
@@ -681,7 +688,7 @@ async function runSyncEndemicData(_req: NextRequest, supabase: SupabaseClient) {
     const { data: updatedRows, error: upErr } = await supabase
       .from("outbreaks")
       .update(updatePayload)
-      .eq("id", row.id).lte("source_priority", 5)
+      .eq("id", row.id).lte("source_priority", 10)
       .select("id");
 
     if (upErr) {

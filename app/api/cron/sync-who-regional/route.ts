@@ -16,6 +16,18 @@
 //
 // Never overwrites rows whose source URL is from who.int/emergencies
 // (those are owned by the WHO DON daily sync).
+//
+// Fetches WHO's own regional/GHO statistics APIs, so this cron can write onto
+// rows locked at source_priority=10 (ceiling raised 2026-08-19 alongside
+// sync-who-afro/emro — see project_source_priority_is_ownership_not_freeze_
+// 2026_08_19). lockedRowRegressionGuard, added below, refuses any decrease on
+// a locked row — safe here because annual-reference GHO rows (isAnnualRef)
+// are always written inactive (active:false, see below), so they're outside
+// the "27 active locked rows" this fix targets; every locked row this cron
+// can actually touch while active is a weekly/cumulative outbreak-style
+// target (e.g. the WHO ArcGIS cholera_adm0_week_view feed — the same shape
+// as the six Cholera rows found frozen at 52 days on 2026-08-19), where
+// "never decreases" is the correct model, same as everywhere else.
 
 import { NextRequest, NextResponse } from "next/server";
 import { logCronRun } from "@/lib/cron-monitor";
@@ -26,7 +38,7 @@ import { extractNumbers, assessRisk } from "@/lib/outbreak-parser";
 import { errorMessage } from "@/lib/error";
 import * as Sentry from "@sentry/nextjs";
 import { truncateAtSentence } from "@/lib/truncate-text";
-import { dateFloorGuard, spikeGuard, collapseGuard, zeroCaseGuard, zeroDeathGuard } from "@/lib/outbreak-guards";
+import { dateFloorGuard, spikeGuard, collapseGuard, zeroCaseGuard, zeroDeathGuard, lockedRowRegressionGuard } from "@/lib/outbreak-guards";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 300; // ~100 targets × ~2s each; Vercel Pro allows 300s for crons
@@ -1226,7 +1238,7 @@ async function runSyncWhoRegional(_req: NextRequest, supabase: SupabaseClient) {
   // Load existing outbreaks (active + recently deactivated to avoid ghost dups)
   const { data: existing, error: fetchErr } = await supabase
     .from("outbreaks")
-    .select("id, disease_en, country_en, cases, deaths, date, source, active, description")
+    .select("id, disease_en, country_en, cases, deaths, date, source, active, description, source_priority")
     .or("active.eq.true,date.gte." + new Date(Date.now() - 90 * 86400_000).toISOString().substring(0, 10));
 
   if (fetchErr) {
@@ -1344,7 +1356,8 @@ async function runSyncWhoRegional(_req: NextRequest, supabase: SupabaseClient) {
         spikeGuard(found, existingRow) ??
         collapseGuard(found, existingRow) ??
         zeroCaseGuard(found, existingRow) ??
-        zeroDeathGuard(found, existingRow);
+        zeroDeathGuard(found, existingRow) ??
+        lockedRowRegressionGuard(found, existingRow);
       if (guardReason) {
         log.push({ label: `${target.disease_en}/${target.country_en}`, status: "skip", detail: guardReason });
         results.skipped++;
@@ -1360,7 +1373,7 @@ async function runSyncWhoRegional(_req: NextRequest, supabase: SupabaseClient) {
         risk_level:      assessRisk(target.disease_en, found.description, found.cases, found.deaths),
         active:          activeFlag,
         is_seed:         isAnnualRef,
-        source_priority: 5,
+        source_priority: Math.max(5, existingRow.source_priority ?? 0),
         // `Found` (above) has no admin1 field — no fetcher in this file has ever
         // populated one, since they're all national/regional aggregates, not
         // sub-national. Any admin1 already on the row is therefore guaranteed to
@@ -1390,7 +1403,7 @@ async function runSyncWhoRegional(_req: NextRequest, supabase: SupabaseClient) {
         .from("outbreaks")
         .update(updatePayload)
         .eq("id", existingRow.id)
-        .lte("source_priority", 5)
+        .lte("source_priority", 10)
         .select("id");
 
       if (error) {
@@ -1419,7 +1432,7 @@ async function runSyncWhoRegional(_req: NextRequest, supabase: SupabaseClient) {
       // most recently created row.
       const { data: directCheck } = await supabase
         .from("outbreaks")
-        .select("id, cases, deaths, date, active, description")
+        .select("id, cases, deaths, date, active, description, source_priority")
         .eq("disease_en", diseaseInfo.name_en)
         .eq("country_en", countryInfo.name_en)
         .order("is_seed", { ascending: false })
@@ -1438,7 +1451,8 @@ async function runSyncWhoRegional(_req: NextRequest, supabase: SupabaseClient) {
           spikeGuard(found, directCheck) ??
           collapseGuard(found, directCheck) ??
           zeroCaseGuard(found, directCheck) ??
-          zeroDeathGuard(found, directCheck);
+          zeroDeathGuard(found, directCheck) ??
+          lockedRowRegressionGuard(found, directCheck);
         if (reactivateGuardReason) {
           log.push({ label: `${target.disease_en}/${target.country_en}`, status: "skip", detail: reactivateGuardReason });
           results.skipped++;
@@ -1450,7 +1464,7 @@ async function runSyncWhoRegional(_req: NextRequest, supabase: SupabaseClient) {
           source: found.source, description: found.description,
           active: activeFlag, is_seed: isAnnualRef,
           risk_level: assessRisk(target.disease_en, found.description, found.cases, found.deaths),
-          source_priority: 5,
+          source_priority: Math.max(5, directCheck.source_priority ?? 0),
           admin1: null, // same reasoning as the main update branch above — see its comment
         };
         if (directCheck.description !== found.description) {
@@ -1467,7 +1481,7 @@ async function runSyncWhoRegional(_req: NextRequest, supabase: SupabaseClient) {
           .from("outbreaks")
           .update(reactivatePayload)
           .eq("id", directCheck.id)
-          .lte("source_priority", 5)
+          .lte("source_priority", 10)
           .select("id");
         if (error) {
           log.push({ label: `${target.disease_en}/${target.country_en}`, status: "error", detail: error.message });

@@ -2,6 +2,16 @@
 // Fetches USDA APHIS dairy-herd CSV, aggregates confirmed H5N1 herds per US state,
 // and upserts one record per state into outbreaks.
 // Fills the gap left by WHO/CDC/ECDC feeds, which don't cover ongoing US bovine HPAI.
+//
+// USDA APHIS is the US federal agency that authoritatively reports this data
+// — a genuine primary government source — so the case-count write below can
+// touch a row locked at source_priority=10 (ceiling raised 2026-08-19
+// alongside sync-who-afro/emro — see project_source_priority_is_ownership_
+// not_freeze_2026_08_19). lockedRowRegressionGuard refuses a cases decrease
+// on a locked row. The staleness DEACTIVATION sweep further below is
+// untouched — still capped at SOURCE_PRIORITY, since automatically retiring
+// a locked row is a different and more destructive action than refreshing
+// its figures.
 
 import { NextRequest, NextResponse } from "next/server";
 import * as Sentry from "@sentry/nextjs";
@@ -12,7 +22,7 @@ import { findCountry } from "@/lib/geo-data";
 import { errorMessage } from "@/lib/error";
 import { scrapeAphisTableauCsv, parseCrosstabCsv, aggregateCrosstabByState } from "@/lib/aphis-tableau-scraper";
 import { truncateAtSentence } from "@/lib/truncate-text";
-import { dateFloorGuard, spikeGuard, collapseGuard, zeroCaseGuard } from "@/lib/outbreak-guards";
+import { dateFloorGuard, spikeGuard, collapseGuard, zeroCaseGuard, lockedRowRegressionGuard } from "@/lib/outbreak-guards";
 
 export const dynamic     = "force-dynamic";
 // Tableau fallback launches a real headless browser (cold Lambda start +
@@ -478,12 +488,13 @@ async function runUsdaAphis(_req: NextRequest, supabase: SupabaseClient) {
       // there is no deaths field to guard — date-floor/spike/collapse/zero-case
       // only, from lib/outbreak-guards.ts.
       const guardIncoming = { cases: sd.herds, deaths: 0, date: safeDate };
-      const guardExisting = { cases: existing.cases, deaths: null, date: existing.date };
+      const guardExisting = { cases: existing.cases, deaths: null, date: existing.date, source_priority: existing.source_priority };
       const guardReason =
         dateFloorGuard(guardIncoming, guardExisting) ??
         spikeGuard(guardIncoming, guardExisting) ??
         collapseGuard(guardIncoming, guardExisting) ??
-        zeroCaseGuard(guardIncoming, guardExisting);
+        zeroCaseGuard(guardIncoming, guardExisting) ??
+        lockedRowRegressionGuard(guardIncoming, guardExisting);
       if (guardReason) {
         log.push({ state: sd.state, status: "skip", detail: guardReason });
         results.skipped++;
@@ -504,7 +515,7 @@ async function runUsdaAphis(_req: NextRequest, supabase: SupabaseClient) {
         date:            safeDate,
         description,
         active:          isOngoing,
-        source_priority: SOURCE_PRIORITY,
+        source_priority: Math.max(SOURCE_PRIORITY, existing.source_priority ?? 0),
       };
       // English description just changed — existing FR/ES/AR/ID translations
       // (if any) now describe stale figures. Null them so sync-outbreaks'
@@ -525,7 +536,7 @@ async function runUsdaAphis(_req: NextRequest, supabase: SupabaseClient) {
         .from("outbreaks")
         .update(updatePayload)
         .eq("id", existing.id)
-        .lte("source_priority", SOURCE_PRIORITY)
+        .lte("source_priority", 10)
         .select("id");
 
       if (error) {

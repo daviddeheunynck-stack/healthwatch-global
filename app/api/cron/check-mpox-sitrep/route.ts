@@ -1,12 +1,18 @@
 // Twice-weekly (Wed + Sat 08:00 UTC): detects new WHO Mpox Situation Reports,
 // downloads the PDF, extracts global case/death figures, and updates the DB.
 // Falls back to a manual-notification email if PDF parsing fails.
+//
+// Reads WHO's own global sitrep PDF directly (not a scrape of a news listing),
+// so it can write onto rows locked at source_priority=10 (ceiling raised
+// 2026-08-19 alongside sync-who-afro/emro — see
+// project_source_priority_is_ownership_not_freeze_2026_08_19). Additional
+// lockedRowRegressionGuard refuses any decrease on a locked row.
 
 import { NextRequest, NextResponse } from "next/server";
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
 import { errorMessage } from "@/lib/error";
-import { regressionGuard } from "@/lib/outbreak-guards";
+import { regressionGuard, lockedRowRegressionGuard } from "@/lib/outbreak-guards";
 import * as Sentry from "@sentry/nextjs";
 
 export const dynamic     = "force-dynamic";
@@ -436,7 +442,7 @@ async function runCheckMpoxSitrep(_req: NextRequest, supabase: SupabaseClient) {
   // (sync-paho-alerts, 26 → 4). Guards from lib/outbreak-guards.ts below.
   const { data: guardRows, error: guardFetchErr } = await supabase
     .from("outbreaks")
-    .select("id, cases, deaths, date")
+    .select("id, cases, deaths, date, source_priority")
     .in("id", [MPOX_MONDIAL_ID, MPOX_DRC_ID]);
   if (guardFetchErr) {
     console.error("[mpox] guard pre-read failed:", guardFetchErr.message);
@@ -444,7 +450,7 @@ async function runCheckMpoxSitrep(_req: NextRequest, supabase: SupabaseClient) {
   }
   // A failed pre-read must not silently disable the guards — treat an
   // unreadable row as unguardable and refuse the write rather than fall open.
-  type MpoxGuardRow = { id: string; cases: number | null; deaths: number | null; date: string | null };
+  type MpoxGuardRow = { id: string; cases: number | null; deaths: number | null; date: string | null; source_priority: number | null };
   const rowById = new Map<string, MpoxGuardRow>(
     ((guardRows ?? []) as MpoxGuardRow[]).map((r) => [String(r.id), r]),
   );
@@ -452,10 +458,10 @@ async function runCheckMpoxSitrep(_req: NextRequest, supabase: SupabaseClient) {
   const drcRow    = rowById.get(String(MPOX_DRC_ID)) ?? null;
 
   const globalGuard = data
-    ? (globalRow ? regressionGuard(data, globalRow) : "guard:row-unreadable — refusing to write blind")
+    ? (globalRow ? (regressionGuard(data, globalRow) ?? lockedRowRegressionGuard(data, globalRow)) : "guard:row-unreadable — refusing to write blind")
     : null;
   const drcGuard = drcData
-    ? (drcRow ? regressionGuard(drcData, drcRow) : "guard:row-unreadable — refusing to write blind")
+    ? (drcRow ? (regressionGuard(drcData, drcRow) ?? lockedRowRegressionGuard(drcData, drcRow)) : "guard:row-unreadable — refusing to write blind")
     : null;
   if (globalGuard) console.warn(`[mpox] global: ${globalGuard} — skipping update`);
   if (drcGuard)    console.warn(`[mpox] DRC: ${drcGuard} — skipping update`);
@@ -481,10 +487,10 @@ async function runCheckMpoxSitrep(_req: NextRequest, supabase: SupabaseClient) {
         description_id:  desc.id,
         active:          true,
         updated_at:      new Date().toISOString(),
-        source_priority: 5,
+        source_priority: Math.max(5, globalRow?.source_priority ?? 0),
       })
       .eq("id", MPOX_MONDIAL_ID)
-      .lte("source_priority", 5)
+      .lte("source_priority", 10)
       .select("id");
 
     if (error) {
@@ -527,10 +533,10 @@ async function runCheckMpoxSitrep(_req: NextRequest, supabase: SupabaseClient) {
         description_id:  drcDesc.id,
         active:          true,
         updated_at:      new Date().toISOString(),
-        source_priority: 5,
+        source_priority: Math.max(5, drcRow?.source_priority ?? 0),
       })
       .eq("id", MPOX_DRC_ID)
-      .lte("source_priority", 5)
+      .lte("source_priority", 10)
       .select("id");
 
     if (drcErr) {

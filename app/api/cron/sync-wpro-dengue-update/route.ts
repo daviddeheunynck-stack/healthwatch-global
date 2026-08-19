@@ -22,6 +22,12 @@
 //     wins going forward — see the priority-guard comment on the Cambodia
 //     write below.
 //
+// WHO WPRO is WHO's own Regional Office for the Western Pacific, so this
+// cron can write onto rows locked at source_priority=10 (ceiling raised
+// 2026-08-19 alongside sync-who-afro/emro — see
+// project_source_priority_is_ownership_not_freeze_2026_08_19). Additional
+// lockedRowRegressionGuard refuses any decrease on a locked row.
+//
 // Every other country in this bulletin (Cambodia aside) is either narrated
 // only as an unlabelled chart (most PICs) or already covered by a more
 // authoritative per-country source elsewhere (India/Brazil/etc via other
@@ -63,8 +69,8 @@ import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import * as Sentry from "@sentry/nextjs";
 import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
 import {
-  dateFloorGuard, spikeGuard, collapseGuard, zeroCaseGuard, zeroDeathGuard,
-  type GuardedIncoming, type GuardedRow,
+  dateFloorGuard, spikeGuard, collapseGuard, zeroCaseGuard, zeroDeathGuard, lockedRowRegressionGuard,
+  type GuardedIncoming, type GuardedLockedRow,
 } from "@/lib/outbreak-guards";
 
 export const dynamic     = "force-dynamic";
@@ -334,14 +340,19 @@ async function runWproDengueUpdate(supabase: SupabaseClient) {
       deaths: parsed.deaths ?? 0,
       date: isoDate,
     };
-    const existing: GuardedRow = { cases: existingRow.cases, deaths: existingRow.deaths, date: existingRow.date };
+    const existing: GuardedLockedRow = { cases: existingRow.cases, deaths: existingRow.deaths, date: existingRow.date, source_priority: existingRow.source_priority };
 
+    // lockedRowRegressionGuard inspects both cases AND deaths — like
+    // zeroDeathGuard above, it must not see the deaths=0 placeholder when this
+    // target's bulletin doesn't report deaths at all, or it would misread a
+    // real existing death count as "the incoming report decreased it".
     const guardReason =
       dateFloorGuard(incoming, existing) ??
       spikeGuard(incoming, existing) ??
       collapseGuard(incoming, existing) ??
       zeroCaseGuard(incoming, existing) ??
-      (parsed.deaths !== null ? zeroDeathGuard(incoming, existing) : null);
+      (parsed.deaths !== null ? zeroDeathGuard(incoming, existing) : null) ??
+      lockedRowRegressionGuard(parsed.deaths !== null ? incoming : { ...incoming, deaths: existing.deaths ?? 0 }, existing);
     if (guardReason) {
       log.push({ label, status: "skip", detail: guardReason });
       skipped++;
@@ -369,17 +380,19 @@ async function runWproDengueUpdate(supabase: SupabaseClient) {
       description_es:  null,
       description_ar:  null,
       description_id:  null,
-      source_priority: SOURCE_PRIORITY,
+      source_priority: Math.max(SOURCE_PRIORITY, existingRow.source_priority ?? 0),
     };
 
     // .select("id") so a blocked write (row now owned by a still-higher
     // priority source) shows up as 0 affected rows rather than a false
-    // "updated" — same pattern used by sync-who-regional.
+    // "updated" — same pattern used by sync-who-regional. Ceiling raised to
+    // 10 on 2026-08-19 (see header) — lockedRowRegressionGuard above is what
+    // actually protects a locked row from a decrease now, not this number.
     const { data: updatedRows, error: updateErr } = await supabase
       .from("outbreaks")
       .update(updatePayload)
       .eq("id", existingRow.id)
-      .lte("source_priority", SOURCE_PRIORITY)
+      .lte("source_priority", 10)
       .select("id");
 
     if (updateErr) {

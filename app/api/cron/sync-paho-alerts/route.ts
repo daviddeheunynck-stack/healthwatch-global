@@ -18,6 +18,14 @@
 //
 // Alert rows never overwrite rows owned by the WHO DON daily sync; sitrep rows
 // may, but only when the sitrep is at least as recent (see upsertItems).
+//
+// PAHO is WHO's own Regional Office for the Americas, so this cron can write
+// onto rows locked at source_priority=10 (ceiling raised 2026-08-19 alongside
+// sync-who-afro/emro — see project_source_priority_is_ownership_not_freeze_
+// 2026_08_19). Additional lockedRowRegressionGuard refuses any decrease on a
+// locked row. The Measles-sitrep DEACTIVATION sweep below is untouched —
+// still capped at 5, since automatically retiring a locked row is a different
+// and more destructive action than refreshing its figures.
 
 import { NextRequest, NextResponse } from "next/server";
 import * as Sentry from "@sentry/nextjs";
@@ -29,7 +37,7 @@ import { extractNumbers, assessRisk } from "@/lib/outbreak-parser";
 import { extractAdmin1, geocodeAdmin1 } from "@/lib/geo-extract";
 import { errorMessage } from "@/lib/error";
 import { translateDescription } from "@/lib/translate";
-import { regressionGuard } from "@/lib/outbreak-guards";
+import { regressionGuard, lockedRowRegressionGuard } from "@/lib/outbreak-guards";
 import { truncateAtSentence } from "@/lib/truncate-text";
 
 export const dynamic = "force-dynamic";
@@ -672,6 +680,7 @@ interface ExistingRow {
   date: string;
   source: string | null;
   active: boolean;
+  source_priority: number | null;
 }
 
 const WHO_DON_SOURCE = "who.int/emergencies/disease-outbreak-news";
@@ -701,7 +710,7 @@ async function loadExistingForItems(
 
   const { data, error } = await supabase
     .from("outbreaks")
-    .select("id, disease_en, country_en, cases, deaths, date, source, active")
+    .select("id, disease_en, country_en, cases, deaths, date, source, active, source_priority")
     .in("disease_en",  [...new Set(missing.map((i) => i.disease_en))])
     .in("country_en", [...new Set(missing.map((i) => i.country_en))]);
 
@@ -813,7 +822,7 @@ async function upsertItems(
       // death toll (26 → 4) and stood for 3+ weeks. The date floor above was
       // the only regression guard here; sync-who-afro/sync-cdc-notices have
       // had the full set since 2026-07-16.
-      const guardReason = regressionGuard(item, existing);
+      const guardReason = regressionGuard(item, existing) ?? lockedRowRegressionGuard(item, existing);
       if (guardReason) {
         log.push({ label, status: "skip", detail: guardReason });
         results.skipped++;
@@ -835,7 +844,7 @@ async function upsertItems(
         risk_level:      riskLevel,
         active:          true,
         is_seed:         false,
-        source_priority: 5,
+        source_priority: Math.max(5, existing.source_priority ?? 0),
       };
       // Only overwrite a locale column when the translation actually
       // succeeded — MyMemory returns null on failure/echo, and writing
@@ -858,7 +867,7 @@ async function upsertItems(
         .from("outbreaks")
         .update(updatePayload)
         .eq("id", existing.id)
-        .lte("source_priority", 5)
+        .lte("source_priority", 10)
         .select("id");
 
       if (error) {
@@ -1204,7 +1213,7 @@ async function runPahoAlerts(_req: NextRequest, supabase: SupabaseClient) {
   // ── 2. Load existing outbreaks for dedup ──────────────────────────────────
   const { data: existing, error: fetchErr } = await supabase
     .from("outbreaks")
-    .select("id, disease_en, country_en, cases, deaths, date, source, active")
+    .select("id, disease_en, country_en, cases, deaths, date, source, active, source_priority")
     .or("active.eq.true,date.gte." + new Date(Date.now() - 90 * 86400_000).toISOString().substring(0, 10));
 
   if (fetchErr) {

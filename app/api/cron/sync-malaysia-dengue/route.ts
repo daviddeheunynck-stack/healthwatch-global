@@ -27,6 +27,16 @@
 //
 // Schedule: 0 6 * * * (daily) — cheap single-page fetch, same cadence as the
 // other national single-country crons here (sync-taiwan-cdc).
+//
+// Malaysia's Ministry of Health dashboard is a genuine primary government
+// source, so this cron can write onto a row locked at source_priority=10
+// (ceiling raised 2026-08-19 alongside sync-who-afro/emro — see
+// project_source_priority_is_ownership_not_freeze_2026_08_19).
+// lockedRowRegressionGuard refuses a cases decrease on a locked row, EXCEPT
+// on a genuine year rollover (isYearRollover, already used below) — same
+// reasoning as sync-taiwan-cdc. Deaths are excluded from that check entirely
+// (see the "Deaths are deliberately NOT extracted" note above — this cron
+// never has an opinion on deaths, so it can't regress them).
 
 import { NextRequest, NextResponse } from "next/server";
 import { logCronRun } from "@/lib/cron-monitor";
@@ -35,7 +45,7 @@ import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { normalizeDisease } from "@/lib/disease-data";
 import { findCountry } from "@/lib/geo-data";
 import { assessRisk } from "@/lib/outbreak-parser";
-import { dateFloorGuard, collapseGuard, zeroCaseGuard, isYearRollover } from "@/lib/outbreak-guards";
+import { dateFloorGuard, collapseGuard, zeroCaseGuard, isYearRollover, lockedRowRegressionGuard } from "@/lib/outbreak-guards";
 
 export const dynamic     = "force-dynamic";
 export const maxDuration = 30;
@@ -182,17 +192,21 @@ async function runSyncMalaysiaDengue(supabase: SupabaseClient) {
     // pass the existing death count straight through, making the (unused)
     // deaths comparisons in these guards no-ops rather than fabricating one.
     const incoming = { cases: ex.cases, deaths: knownDeaths ?? 0, date: ex.date };
-    const existing = { cases: existingRow.cases, deaths: existingRow.deaths, date: existingRow.date };
+    const existing = { cases: existingRow.cases, deaths: existingRow.deaths, date: existingRow.date, source_priority: existingRow.source_priority };
     // iDengue's cumulative resets every 1 January — a rollover year skips
     // collapseGuard/zeroCaseGuard (a real drop to near-zero, not a parsing
     // accident), but dateFloorGuard still applies unconditionally: a rollover
     // incoming date is always later than existing's, so it never
     // false-triggers on a real rollover, and it must still catch a genuinely
     // stale re-fetch. See lib/outbreak-guards.ts's isYearRollover doc.
+    // incoming.deaths mirrors existing.deaths by construction (see above), so
+    // lockedRowRegressionGuard's deaths half is already a no-op here — only
+    // its cases check does real work, same rollover bypass as the others.
     const rollover = isYearRollover(incoming, existing);
     const guardReason = dateFloorGuard(incoming, existing)
       ?? (rollover ? null : collapseGuard(incoming, existing))
-      ?? (rollover ? null : zeroCaseGuard(incoming, existing));
+      ?? (rollover ? null : zeroCaseGuard(incoming, existing))
+      ?? (rollover ? null : lockedRowRegressionGuard(incoming, existing));
     if (guardReason) {
       await logCronRun(supabase, "sync-malaysia-dengue", "ok", 0, guardReason);
       return NextResponse.json({ ok: true, status: `skip: ${guardReason}` });
@@ -202,8 +216,8 @@ async function runSyncMalaysiaDengue(supabase: SupabaseClient) {
       cases: ex.cases, date: ex.date, source: SOURCE_URL,
       description: desc.en, description_fr: desc.fr, description_es: desc.es,
       description_ar: desc.ar, description_id: desc.id,
-      risk_level: riskLevel, active: true, source_priority: SOURCE_PRIORITY,
-    }).eq("id", existingRow.id).lte("source_priority", SOURCE_PRIORITY).select("id");
+      risk_level: riskLevel, active: true, source_priority: Math.max(SOURCE_PRIORITY, existingRow.source_priority ?? 0),
+    }).eq("id", existingRow.id).lte("source_priority", 10).select("id");
 
     if (error) {
       await logCronRun(supabase, "sync-malaysia-dengue", "error", 0, error.message);
