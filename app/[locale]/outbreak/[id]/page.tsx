@@ -55,6 +55,7 @@ const LABELS = {
     tierLabels: { immediate: "IMMÉDIAT · NOTIFICATION RSI", rapid: "RÉPONSE RAPIDE", monitor: "SURVEILLANCE STANDARD" },
     firstActions: "Premières actions",
     reportingLag: "Date de rapport officiel — dans les zones enclavées, le signal de terrain précède généralement cette date de plusieurs jours à plusieurs semaines.",
+    dateSemantics: "La nature exacte de cette date (semaine de confirmation, période de transmission ou date de publication du bulletin) n'est pas précisée par la source.",
     operationalDisclaimer: "Outil de veille — pas un déclencheur opérationnel. Toute mobilisation requiert vérification OMS directe et validation par votre protocole institutionnel.",
     cumulativeAs: (date: string, source: string) => `Cas cumulés depuis le début de l'épidémie — bulletin ${source} du ${date}`,
     citeLabel: "Citer cette page (Vancouver)",
@@ -84,6 +85,7 @@ const LABELS = {
     tierLabels: { immediate: "IMMEDIATE · IHR NOTIFIABLE", rapid: "RAPID RESPONSE", monitor: "STANDARD MONITORING" },
     firstActions: "First actions",
     reportingLag: "Official report date — in isolated zones, field onset typically precedes this by days to weeks.",
+    dateSemantics: "The exact nature of this date (week of confirmation, transmission period, or bulletin publication date) is not specified by the source.",
     operationalDisclaimer: "Situational awareness tool — not an operational trigger. Any mobilization requires direct WHO verification and validation through your institutional protocol.",
     cumulativeAs: (date: string, source: string) => `Cumulative cases since outbreak start — ${source} bulletin dated ${date}`,
     citeLabel: "Cite this page (Vancouver)",
@@ -113,6 +115,7 @@ const LABELS = {
     tierLabels: { immediate: "INMEDIATO · NOTIFICABLE RSI", rapid: "RESPUESTA RÁPIDA", monitor: "VIGILANCIA ESTÁNDAR" },
     firstActions: "Primeras acciones",
     reportingLag: "Fecha del informe oficial — en zonas aisladas, el inicio en el campo suele preceder a esta fecha por días o semanas.",
+    dateSemantics: "La naturaleza exacta de esta fecha (semana de confirmación, período de transmisión o fecha de publicación del boletín) no está especificada por la fuente.",
     operationalDisclaimer: "Herramienta de vigilancia — no es un disparador operacional. Cualquier movilización requiere verificación OMS directa y validación por su protocolo institucional.",
     cumulativeAs: (date: string, source: string) => `Casos acumulados desde el inicio del brote — boletín ${source} del ${date}`,
     citeLabel: "Citar esta página (Vancouver)",
@@ -142,6 +145,7 @@ const LABELS = {
     tierLabels: { immediate: "فوري · إخطار اللوائح الصحية الدولية", rapid: "استجابة سريعة", monitor: "مراقبة قياسية" },
     firstActions: "الإجراءات الأولى",
     reportingLag: "تاريخ التقرير الرسمي — في المناطق المعزولة، يسبق ظهور المرض ميدانياً هذا التاريخ بأيام إلى أسابيع.",
+    dateSemantics: "الطبيعة الدقيقة لهذا التاريخ (أسبوع التأكيد، فترة انتقال العدوى، أو تاريخ نشر النشرة) غير محددة من قبل المصدر.",
     operationalDisclaimer: "أداة رصد فقط — ليست مُحفِّزاً تشغيلياً. أي تعبئة تستلزم التحقق المباشر من منظمة الصحة العالمية والتحقق عبر بروتوكولك المؤسسي.",
     cumulativeAs: (date: string, source: string) => `الحالات التراكمية منذ بداية التفشي — نشرة ${source} بتاريخ ${date}`,
     citeLabel: "اقتبس هذه الصفحة (فانكوفر)",
@@ -171,6 +175,7 @@ const LABELS = {
     tierLabels: { immediate: "SEGERA · WAJIB LAPOR IHR", rapid: "RESPONS CEPAT", monitor: "PEMANTAUAN STANDAR" },
     firstActions: "Tindakan pertama",
     reportingLag: "Tanggal laporan resmi — di zona terisolasi, onset di lapangan biasanya mendahului tanggal ini beberapa hari hingga minggu.",
+    dateSemantics: "Sifat pasti tanggal ini (minggu konfirmasi, periode penularan, atau tanggal penerbitan buletin) tidak dijelaskan oleh sumber.",
     operationalDisclaimer: "Alat pemantauan saja — bukan pemicu operasional. Mobilisasi apa pun memerlukan verifikasi langsung ke WHO dan validasi melalui protokol institusional Anda.",
     cumulativeAs: (date: string, source: string) => `Kasus kumulatif sejak awal wabah — buletin ${source} tanggal ${date}`,
     citeLabel: "Kutip halaman ini (Vancouver)",
@@ -178,7 +183,7 @@ const LABELS = {
     citeCopied: "Disalin!",
     staleBulletin: (d: number) => `Tidak ada buletin resmi dalam ${d} hari — mungkin sudah selesai atau tidak dilaporkan.`,
   },
-} satisfies Record<string, { cases: string; deaths: string; cfr: string; date: string; region: string; printReport: string; lastSynced: string; syncedAgo: (m: number) => string; sourceLabel: string; sourceVerified: string; sourceOfficial: string; pheic: string; archived: string; ctaTitle: string; ctaSub: string; ctaProBtn: string; ctaFree: string; back: string; compareLabel: string; chartTitle: string; noData: string; risk: Record<string, string>; fpGuidance: string; tierLabels: Record<string, string>; firstActions: string; reportingLag: string; cumulativeAs: (date: string, source: string) => string; citeLabel: string; citeCopy: string; citeCopied: string; staleBulletin: (d: number) => string; operationalDisclaimer: string }>;
+} satisfies Record<string, { cases: string; deaths: string; cfr: string; date: string; region: string; printReport: string; lastSynced: string; syncedAgo: (m: number) => string; sourceLabel: string; sourceVerified: string; sourceOfficial: string; pheic: string; archived: string; ctaTitle: string; ctaSub: string; ctaProBtn: string; ctaFree: string; back: string; compareLabel: string; chartTitle: string; noData: string; risk: Record<string, string>; fpGuidance: string; tierLabels: Record<string, string>; firstActions: string; reportingLag: string; dateSemantics: string; cumulativeAs: (date: string, source: string) => string; citeLabel: string; citeCopy: string; citeCopied: string; staleBulletin: (d: number) => string; operationalDisclaimer: string }>;
 
 const RISK_STYLE: Record<string, string> = {
   high:   "text-red-400 bg-red-500/10 border-red-500/30",
@@ -485,6 +490,7 @@ export default async function OutbreakPage({
             <span className="text-gray-400">{l.date} : </span>
             <span className="text-white font-medium">{o.date}</span>
             <p className="text-[11px] text-gray-500 mt-0.5 leading-snug">{l.reportingLag}</p>
+            <p className="text-[11px] text-gray-500 mt-0.5 leading-snug">{l.dateSemantics}</p>
           </div>
         )}
         {o.region && (
