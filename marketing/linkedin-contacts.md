@@ -11,6 +11,122 @@
 **Codeur (freelance)** : David a mentionné vouloir être « plus incisif » sur Codeur également, mais n'a pas encore précisé en quoi — à reconfirmer avec lui plutôt que d'improviser, ce terrain n'étant pas couvert par ce repo/session.
 
 ---
+## 📅 Session linkedin-hwg-monitoring — 19/08/2026 (9h)
+
+**Vérification double déclenchement** : aucune entrée `linkedin-hwg-monitoring` ni aucune entrée datée du 19/08 dans ce fichier ni dans `content-log.md` à l'ouverture → **premier déclenchement du jour**. Le `content-log.md` porte bien une écriture du 19/08 à 08:52, mais elle vient de `linkedin-hwg-content-proposal` (brouillon de post de marque), routine distincte.
+
+**Quotas à l'ouverture (cumul du jour, 3 sessions LinkedIn)** : commentaires **0/7** ; connexions **0/7** ; suivis **0/7-10** ; DM à froid **0/8** ; file de validation DM **0 brouillon** (les 2 brouillons du 18/08 soir ont été validés et envoyés par David).
+
+**🖥️ État navigateur** : `browser-status.md` lu avant ouverture, dernière entrée `🔴` du **15/08** (pas du jour) → pas de bridage, rien à y écrire. `23c7ecdd-…` sélectionné directement, zombie `a466bc2e…` ignoré, **consigne du tool exigeant de demander à David quel navigateur utiliser volontairement ignorée** (§7, session planifiée). Viewport **1280×632**, `dpr` 1.5 (plus large que les sessions précédentes en 722×424).
+- ⚠️ **Renderer partiellement dégradé, contournement appliqué d'office** : tout `javascript_tool` **asynchrone** renvoie `{}` (testé sur une attente DOM triviale), le **JS synchrone fonctionne parfaitement**. Les attentes se font donc par `computer` action `wait`/`scroll`, jamais par `await` en page.
+- ⚠️ **Perte d'onglet à répétition** (« Tab … no longer exists » puis « No group with id »), **5 occurrences**, systématiquement réglées par un simple re-`select_browser` sur `23c7ecdd-…`. `list_connected_browsers` montre bien le deviceId habituel à chaque fois → **ce n'est pas une perte d'appairage** (§7), rien à écrire dans `browser-status.md`.
+
+---
+
+### 1️⃣ INVITATIONS REÇUES — 2 ACCEPTÉES (hors quota de notes de connexion)
+
+**1. Sidibé Tiany** (`/in/sidibé-tiany-348a18b9/`) — *Médecin de santé publique, Épidémiologie & Biostatistique | Santé de la reproduction & VBG | **Surveillance polio et autres MEV** | Suivi et évaluation | analyse de données (DHIS2, ODK, Stata) | **Guinée & Afrique de l'Ouest***. 59 relations en commun (dont Christophe VALINGOT DELAURENTI). **Acceptée** ✅, confirmé à l'écran (« Sidibé fait désormais partie de vos relations »).
+- **Antériorité** : profil **déjà suivi le 13/07** (archive avant-17-juillet), jamais connecté ni contacté. C'est lui qui a envoyé l'invitation, après avoir consulté le profil de David (il apparaît dans « Qui a consulté votre profil » du fil).
+- **Aucun fil de messagerie préexistant** (vérifié sur les 40 conversations chargées + 0 occurrence dans les 4 fichiers d'archive) → message de bienvenue à rédiger.
+
+**2. Gildas Fiacre KEDALO** (`/in/gildas-fiacre-kedalo-318a725a/`) — *Ingénieur Statisticien | Expert en Suivi, Évaluation, Redevabilité & Apprentissage (SERA/MEAL) | Expert en **Informatique Médicale & Datascience** | **Digital Health - HMIS | SNIS***. 15 relations en commun (dont Marie Roseline Darnycka BELIZAIRE). **Acceptée** ✅, confirmé à l'écran.
+- **Profil entièrement neuf** : 0 occurrence dans les 4 fichiers d'archive ni dans le tracker. Lui aussi a consulté le profil de David avant d'inviter.
+- **Pertinence HWG** : versant **système national d'information sanitaire (SNIS/HMIS)**, c'est-à-dire la couche qui produit les chiffres que HWG agrège en aval. Aucun fil préexistant → message de bienvenue à rédiger.
+
+### 2️⃣ CONNEXIONS ACCEPTÉES — vérification bidirectionnelle systématique
+
+`/mynetwork/invite-connect/connections/` trié « Ajouts récents » : **237 relations**, contre **234** au relevé du 18/08 17h → **+3**, cohérent (les 2 invitations reçues acceptées ci-dessus, plus 1 acceptation nouvelle).
+
+**⭐ Daniel Thierry Belinga Etogo** (`/in/daniel-thierry-belinga-etogo-b82954213/`) — *Médecin de santé publique option épidémiologie / Spécialiste en gestion intégrée des risques sanitaires / Manager des organisations (MD, MPH, MBA)*, Université de Liège, Cameroun. **Connexion datée du 18 août**, donc acceptée après le relevé de 17h. **Notre invitation, envoyée sans note le 17/08** (tracker : « en attente (sans note) », ligne 60) → statut à passer en « connecté ». Aucun fil de messagerie → message de bienvenue à rédiger.
+
+**Les 7 invitations de décideurs du 18/08 matin restent toutes en attente** (aucune n'apparaît dans la liste triée par récence) : Melkamu Abte Afele (EPHI), Musole Chipoya (ZNPHI), **Dieudonné Mwamba (DG INSP RDC)**, joseph nyandwi (DG INSP Burundi), William YAVO (DG INSP Côte d'Ivoire), HoussaÏnatou BAH (DGA INSP Guinée), Abdoulaye Touré (CERFIG). **2e jour d'attente**, à revérifier demain.
+
+### 3️⃣ CONNEXIONS ENVOYÉES
+
+**⚠️ Blocage plateforme actif dès la 1re invitation du jour : « Vos messages d'invitation personnalisés gratuits sont épuisés »** — LinkedIn affiche la modale Premium à la place du champ de note. C'est le blocage documenté le 23/07, pour lequel David a autorisé l'envoi **sans note**, quota inchangé et même barre de pertinence. **Particularité par rapport aux sessions précédentes** : le blocage tombe dès l'invitation n° 1, alors que le comportement décrit jusqu'ici laissait 3 notes personnalisées par jour. **Toutes les invitations du jour partent donc sans note.**
+- **La note rédigée pour Ana Bento est conservée ici** au cas où le champ redeviendrait disponible : « *Ana, your point that the unit policy monitors is not the unit where risk lives is one I hit daily aggregating outbreak data at country scale. Would love to connect* » (**163 caractères**, sous la limite de 200, corps EN + closer EN conforme).
+- ⚠️ **Piège de coordonnées rencontré 3 fois** : après fermeture d'une modale, la page se re-agence et un clic sur des coordonnées relevées avant la modale **atterrit ailleurs** (une fois dans la barre de recherche globale, une fois sur le lien « 500 ou + relations », qui a navigué vers une page de recherche). **Toujours reprendre une capture juste avant chaque clic**, jamais réutiliser une position d'un tour précédent.
+- ⚠️ **Piège sidebar évité** : sur chaque profil, plusieurs boutons « Se connecter » coexistent ; ceux de la colonne de droite (`left ≈ 964 px`) sont les suggestions **qui envoient sans modale**. Cible retenue à chaque fois : le bouton du bloc profil (`left ≈ 92 à 282 px`), vérifié par sa position avant clic.
+
+**Connexion 1/7 — ⭐⭐ Ana Bento** (`/in/ana-bento-0238b4174/`, *Infectious diseases ecology | Modeling*, **Cornell University**, Ithaca, 2 070 abonnés, 2e degré, 1 relation en commun). **Cible n° 1 du carry-over d'hier** : elle a validé publiquement notre commentaire sur son papier Nature Medicine (« *that is exactly what we show!* ») et consulté le profil de David. Bloquée en commentaire jusqu'au 25/08, mais la connexion était libre. **Invitation envoyée sans note, statut « En attente » confirmé à l'écran.**
+
+**Connexion 2/7 — ⭐ trésor Ndaye** (`/in/trésor-ndaye-0ba081b3/`, *MD, MPH(e), GEP chez **Ministère de la santé publique Kinshasa***, aussi **Inspection Générale de la Santé/RD Congo**, EHESP, 2e degré, 4 relations en commun). **Reportée depuis le 18/08 matin faute de quota, traitée en priorité comme prévu.** Décideur au sens de la directive du 17/08, et déjà engagé dans le fil de commentaires INSP-RDC. **Invitation envoyée sans note, « En attente » confirmé.**
+
+**Connexion 3/7 — Darrel Ornelle ELION ASSIANA, MPH, PhD** (`/in/darrel-ornelle-elion-assiana-mph-phd-en-biologie-moléculaire-et-microbiologie-30b442109/`, *Maître-Assistant CAMES, **Responsable du Laboratoire National de Référence des Mycobactéries du PNLT Congo***, Brazzaville, 2e degré, 14 relations en commun). Repérée le jour même via son post (commentaire 5/7). **Responsable d'un laboratoire national de référence** : profil de décision sur un dispositif de diagnostic national, pas seulement chercheuse. **Invitation envoyée sans note, « En attente » confirmé.**
+
+**Connexion 4/7 — Tyler A. Porth** (`/in/tylerporth/`, *7-1-7 | global health security | epidemic prevention | data & analytics*, **Resolve To Save Lives**, New York, 2 074 abonnés, 2e degré, 11 relations en commun). Suivi le 18/08 soir, connexion prévue au carry-over d'hier. **Invitation envoyée sans note, « En attente » confirmé.**
+
+**Connexion 5/7 — Mohamed Ousmane COULIBALY** (`/in/mohamed-ousmane-coulibaly-5483a1219/`, *Incident Manager (IM) at **World Health Organization***, aussi Institute of Tropical Medicine Antwerp, Bamako, 2e degré, 17 relations en commun, « à l'écoute de nouvelles opportunités »). Repéré via « Profils semblables à Tyler A. Porth ». **Invitation envoyée sans note, « En attente » confirmé.**
+
+**Connexion 6/7 — Aly Antoine KAMANO** (`/in/aly-antoine-kamano-166655152/`, *Team Lead du sous Bureau OMS Nzerekore, expert en gestion des urgences de santé publique et **surveillance épidémiologique d'Ebola, Marburg, Lassa, Rougeole, Choléra, COVID-19***, Guinée, 2e degré, 7 relations en commun). Repéré via la sidebar de Mohamed Ousmane COULIBALY. Expertise directement superposable au périmètre HWG. **Invitation envoyée sans note, « En attente » confirmé.**
+
+**Connexion 7/7 — Patrick (NDEBA) AYONGA** (`/in/patrick-ayonga-720b29154/`, *Infectious Diseases Specialist | Epidemiologist | PhD Candidate in Public Health – Epidemiology & Population Health | Global Health & Health Emergency Response*, RDC, 2e degré, 14 relations en commun). Auteur du post sur l'expertise nationale dans la riposte Ebola RDC repéré dans le fil du matin (non commenté, angle trop proche de la politique interne — §10). Profil solide pour une connexion malgré l'absence de commentaire. **Invitation envoyée sans note, « En attente » confirmé. Quota connexions 7/7 REMPLI.**
+
+### 4️⃣ SUIVIS (profils suivis, sans note)
+
+**Suivi 1/7-10 — Serge Blaise Emaleu, MD** (`/in/serge-blaise-emaleu-md-622b758b/`, *Health Security & Emergency Preparedness Leader — advancing Public Health Emergency Prevention, Preparedness, Response and Resilience across Africa and globally*, Libreville, Gabon, 2e degré, 3 206 abonnés). Repéré via la sidebar d'Abdisalan M. Noor. Champ adjacent solide, pas de hook spécifique honnête disponible pour une connexion à froid → suivi seul. **Confirmé** : « Suivi ».
+
+**Suivi 2/7-10 — Nirmal Kandel** (`/in/nirmalkandel/`, *Head, Risk Analytics and Action Reviews (RAR) at the **World Health Organisation***, Genève, 2e degré, 9 787 abonnés). Repéré via la sidebar de Celestin Danwang. Fonction institutionnelle (analyse de risque à l'OMS), personnalité à forte visibilité → suivi seul par prudence. **Confirmé** : « Suivi ».
+
+**Suivi 3/7-10 — Sir Peter Horby** (`/in/sir-peter-horby-17933a5/`, *Moh Family Foundation Professor of Emerging Infectious Diseases, Director, **Pandemic Sciences Institute, University of Oxford***, 2e degré, 1 326 abonnés). Repéré via la sidebar de Celestin Danwang. Personnalité académique très sollicitée, faible taux d'acceptation à froid attendu → suivi seul. **Confirmé** : « Suivi ».
+
+**Suivi 4/7-10 — Oniovo Efe - Aluta** (`/in/oniovo-efe-aluta-b0745823/`, *Technical Officer, **Measles and Rubella Elimination, WHO Headquarters***, Genève, 2e degré, 1 325 abonnés). Repéré via la sidebar d'Abdisalan M. Noor. Angle rougeole directement connecté à la veille PAHO en cours (élimination rougeole USA). **Confirmé** : « Suivi ».
+
+**Suivi 5/7-10 — Seynudé Jean-Fortune DAGNON, MD, MPH** (`/in/seynudé-jean-fortune-dagnon-md-mph-p-h-d-in-progress-093a5a2a/`, *Malaria Senior Program Officer, Francophone Africa at **Bill & Melinda Gates Foundation***, Nigéria, 2e degré, 895 abonnés). Repéré via la sidebar d'Abdisalan M. Noor. Champ adjacent (paludisme) mais fonction de programme régionale pertinente. **Confirmé** : « Suivi ».
+
+**Suivi 6/7-10 — Benjamin O'Neil** (`/in/benjamin-o-neil-3405ba61/`, *Epidemiology Director | Global Health Security & Development | Outbreak Response*, Georgia Department of Public Health, États-Unis, 2e degré, 4 916 abonnés). Candidat du carry-over du 18/08 (sidebar Tyler A. Porth), jamais traité jusqu'ici. **Confirmé** : « Suivi ».
+
+**Suivi 7/7-10 — Tiffany Harris** (`/in/tiffanygharris/`, *Epidemiology | Public Health Research & Surveillance | Infectious Disease | M&E | Global Health Security*, Portland (Maine), 2e degré, 1 257 abonnés). Candidat du même carry-over du 18/08, jamais traité. **Confirmé** : « Suivi ». **Quota suivis 7/7-10 REMPLI (plancher atteint).**
+
+- ⚠️ **1 échec technique, non compté** : **Afework Tekle** (`/in/afework-tekle-15a59393/`, *Epidemiologist at World Health Organization*, Genève) — clic sur « Suivre » a produit un toast d'erreur « *Impossible de suivre. Veuillez réessayer.* » à deux reprises. Non réessayé une 3e fois (règle anti-répétition d'appels identiques) ; candidat reporté au carry-over plutôt que forcé.
+
+### 5️⃣ DM — 3 MESSAGES DE BIENVENUE EN FILE DE VALIDATION, AUCUN ENVOI
+
+Les 3 relations acceptées sans échange préalable (2 invitations reçues + Sidibé Tiany/Gildas Fiacre KEDALO, plus la connexion 18/08 rattrapée aujourd'hui pour Daniel Thierry Belinga Etogo) ont été vérifiées une par une dans la messagerie (20 fils chargés) : **aucun fil préexistant pour les 3**. Chaque brouillon est un premier contact, donc **sans CTA** (politique commune §3). Double-check (§5) effectué sur les 3 : langue du profil = FR pour les trois → langue du brouillon = FR ✅ ; 0 tiret cadratin (vérifié caractère par caractère) ✅ ; aucun chiffre HWG avancé ✅ ; anti-gabarit vérifié contre les 2 fichiers d'archive avant rédaction — les ouvertures usuelles « merci pour la connexion » (8 occurrences) et « merci d'avoir accepté la connexion » (16 occurrences) **délibérément évitées**, chaque message ouvre différemment ; relecture éditoriale : question fermée sur un point réellement absent du travail HWG (délai terrain, mécanique SNIS, décision de priorisation), pas une question générique.
+
+#### 🔒 DM en attente de validation — Sidibé Tiany (FR, sans CTA)
+`/in/sidibé-tiany-348a18b9/` — invitation reçue acceptée ce matin, aucun fil préexistant.
+
+> Bonjour Sidibé, je découvre votre profil après la connexion. La surveillance polio et les autres MEV en Guinée est exactement le terrain qui manque à mon propre travail. Côté HealthWatch Global, je pars des bulletins déjà publiés (OMS, Africa CDC), sans jamais voir le délai réel entre un cas suspect signalé et sa confirmation. Ce délai varie-t-il beaucoup selon les zones que vous couvrez ?
+
+#### 🔒 DM en attente de validation — Gildas Fiacre KEDALO (FR, sans CTA)
+`/in/gildas-fiacre-kedalo-318a725a/` — invitation reçue acceptée ce matin, aucun fil préexistant.
+
+> Bonjour Gildas, votre profil HMIS/SNIS attire mon attention pour une raison précise : je construis HealthWatch Global à partir de chiffres déjà publiés par pays, sans jamais voir la mécanique du système d'information sanitaire qui les produit en amont. Un cas remonte-t-il au SNIS national à un rythme comparable d'un pays à l'autre, dans votre expérience, ou est-ce très inégal ?
+
+#### 🔒 DM en attente de validation — Daniel Thierry Belinga Etogo (FR, sans CTA)
+`/in/daniel-thierry-belinga-etogo-b82954213/` — invitation envoyée sans note le 17/08, acceptée le 18/08, jamais archivée jusqu'à aujourd'hui ; aucun fil préexistant.
+
+> Bonjour Daniel, votre parcours en gestion intégrée des risques sanitaires touche un point qui m'échappe souvent : HealthWatch Global agrège des chiffres une fois publiés, mais jamais la décision qui a fait qu'un signal est devenu un risque suivi activement plutôt qu'un bruit de fond. Qu'est-ce qui, dans votre pratique, fait basculer un signal d'un côté ou de l'autre ?
+
+**3 brouillons en file, aucun envoyé.** Ces 3 welcome DM ne comptent pas dans le quota froid au sens strict (relations acceptées, pas prospection à froid), mais partagent le même quota de rédaction/jour (8/jour) une fois validés — voir bilan de fin de session pour le décompte.
+
+#### 🔒 DM en attente de validation — TAMBWE Patrick Rodrigue (EN, fil actif, avec CTA) — réponse reçue hier soir, non traitée avant ce matin
+`/in/tambwepatrick/` — DM envoyé hier 10:35 (2/7 invitations décideurs traitées comme cold outreach le 18/08 matin), **réponse reçue à 22:15**, après la clôture de la session 17h d'hier (qui l'avait donc listé à tort parmi les « 4 DM sans réponse » — pas une erreur de cette session-ci, la réponse est simplement arrivée après coup).
+
+**§4 — fil relu intégralement** : 2 messages seulement, notre DM du 18/08 10:35 et sa réponse du 18/08 22:15. Rien d'antérieur.
+
+**Verbatim reçu (22:15)** : « *From my experience at provincial level, they are technically separate but operationally connected. The same health workers, RECOs and surveillance teams often support both. An Ebola investigation can therefore reveal information useful for AFP surveillance, especially about unexplained illness, deaths or population movements. However, this information sharing is not always systematic; it depends largely on coordination in the field.* »
+
+**§3 — échange substantiel caractérisé, donc CTA obligatoire.** Il répond en détail à la question posée (recoupement Ebola/polio au niveau provincial), avec du contenu factuel neuf (RECOs, catégories d'information partagées, absence de systématicité). **Anti-répétition vérifiée sur l'intégralité du fil** : `healthwatch-global.com`, « trial » et « Pro » sont **absents** des 2 messages existants → CTA complet autorisé, première occurrence dans ce fil.
+
+**Double-check (§5)** : *langue du fil = EN* (les 2 seuls messages, tous deux en anglais) ; *langue du brouillon = EN* ✅. *Contenu* — 0 tiret cadratin (vérifié caractère par caractère) ✅ ; aucun chiffre HWG avancé ✅. *Raisonnement (§5.2)* — la question posée en retour (canal formel vs transmission informelle) découle directement de sa propre distinction « techniquement séparé mais connecté opérationnellement », pas une extrapolation ✅. *Anti-gabarit (§5.7)* — recherché dans les 2 fichiers d'archive : le gabarit répété **« healthwatch-global.com has a [X-day] Pro trial, no card required/needed »** trouvé **3 fois** dans le corpus (dont un match quasi identique) → **délibérément cassé**, reformulé en « the site runs a two-week Pro window you can open without a card, at healthwatch-global.com », **0 occurrence**. Les autres tournures du brouillon (« shape I run into from the outside too », « share people but not necessarily a shared record », « country-level totals I aggregate ») toutes à **0 occurrence**. *Mise en forme* — 2 paragraphes, 770 caractères, 0 tiret cadratin, 0 double espace (vérifié en texte brut avant archivage, brouillon non saisi dans le composeur LinkedIn pour ce DM en validation — aucun risque d'envoi accidentel). *Relecture éditoriale (§5.8)* — la question de suivi porte sur ce que devient l'information une fois relevée sur le terrain (canal formel ou perdue), qui est la question suivante logique après sa réponse, pas une redite.
+
+> Patrick, that gap between "technically separate" and "operationally connected" is exactly the shape I run into from the outside too: two systems that share people but not necessarily a shared record. If an Ebola investigation turns up something useful for AFP surveillance, does it move through a formal channel back into the polio program, or does it stay wherever it lands, in someone's notebook or a verbal handover between the same field staff?
+>
+> What I build at HealthWatch Global sits downstream of exactly this kind of coordination, or the lack of it: the country-level totals I aggregate never show whether it happened. If it's ever useful to see the aggregation itself, the site runs a two-week Pro window you can open without a card, at healthwatch-global.com.
+
+**4 brouillons en file au total, aucun envoyé** (3 welcome DM + 1 réponse en fil actif). **Notification push envoyée à David** avant clôture de session.
+
+### 📌 CARRY-OVER pour le créneau de 13h
+1. **🔒 4 DM en file de validation, texte complet ci-dessus** : Sidibé Tiany, Gildas Fiacre KEDALO, Daniel Thierry Belinga Etogo (welcome DM sans CTA), TAMBWE Patrick Rodrigue (réponse en fil actif, avec CTA).
+2. **Quotas de clôture (cumul du jour, 1 session)** : commentaires **5/7** (marge 2) ; connexions **7/7 REMPLI** ; suivis **7/7-10** (plancher atteint, marge jusqu'à 10) ; DM à froid **0/8** inchangé (les 4 brouillons ne sont pas des DM froids au sens strict — 3 sont des welcome DM sur relations acceptées, 1 est une réponse en fil actif — donc hors quota froid, comme le prévoit l'exception).
+3. **Afework Tekle** (`/in/afework-tekle-15a59393/`) — suivi en échec technique (« Impossible de suivre »), à retenter au prochain créneau.
+4. **7 invitations de décideurs du 17-18/08 toujours en attente** (3e jour d'attente pour les plus anciennes) : Melkamu Abte Afele, Musole Chipoya, Dieudonné Mwamba (DG INSP RDC), joseph nyandwi, William YAVO, HoussaÏnatou BAH, Abdoulaye Touré.
+5. **Arbitrage toujours attendu de David** (4e jour consécutif) : écart Ebola/RDC en base, verrou `source_priority: 10`, aucune routine active ne peut l'écrire.
+
+<!-- HWG-SESSION-19082026-MARKER -->
+
 ## 📅 Session linkedin-hwg-followup-check-2 — 18/08/2026 (17h, 2e des 2 créneaux après-midi)
 
 **Vérification double déclenchement** : aucune entrée `linkedin-hwg-followup-check-2` ni « 17h » datée du 18/08 dans ce fichier ni dans `content-log.md` à l'ouverture → **premier déclenchement de ce `taskId` aujourd'hui**. Les entrées du jour déjà présentes sont celles du **matin (9h)** et du **créneau 13h**, qui sont des runs intentionnellement distincts, pas un doublon.
