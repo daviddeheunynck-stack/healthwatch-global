@@ -1010,3 +1010,46 @@ Conséquence : **tout utilisateur qui clique « passer à Pro » pendant son ess
 - **Garde-fous rappelés** : aucun e-mail à un utilisateur réel, aucun cron d'envoi déclenché contre la prod, aucun compte de test créé en prod, typecheck + lint propres, vigilance sur les sessions concurrentes qui écrivent dans `marketing/*.md`.
 
 ---
+
+## 2026-08-19 (session de construction, ~19h30-20h30) — Statut de livraison
+
+Session dédiée à la construction des 3 idées validées par David ce soir. `tsc --noEmit` et `eslint` propres sur tous les fichiers touchés avant chaque commit. Deux sous-agents utilisés pour l'idée 2 (15 des 16 fichiers, en deux lots parallèles) après que j'aie construit et vérifié le premier (`sync-africa-cdc`) moi-même comme patron de référence ; diffs des 15 relus intégralement avant commit, aucune divergence de périmètre trouvée.
+
+### Idée 1 (checkout sans carte) — ❌ non codée, dilemme documenté pour arbitrage David
+
+**Étape 0 exécutée en premier, en lecture seule** (Supabase prod + API Stripe, aucune écriture) : au 19/08 ~17h18 UTC, `otitamorgan@gmail.com` (`cus_V3gOXomdiXkk8O` / `sub_1U3Z1I4FKShlvEcMtJOXMvid`) n'a **toujours pas** de carte enregistrée — `profiles.stripe_has_payment_method = false` en base, et côté Stripe `customer.default_source = null` et `customer.invoice_settings.default_payment_method = null`. Aucune carte n'a été ajoutée depuis le 17/08 ; le défaut structurel décrit ce matin reste entier sur ce compte précis.
+
+**En creusant l'option (a) (`payment_method_collection: "always"`), j'ai trouvé exactement le type de conflit que le brief anticipait** — je m'arrête donc ici plutôt que de trancher :
+
+- `components/PricingCards.tsx` lignes 439-442 : la carte **Team** affiche, de façon **inconditionnelle** (pas de logique d'essai en cours comme la carte Pro juste au-dessus), le badge « 14 jours gratuits · sans CB » / « 14-day free trial · no CC required » (et équivalents es/ar/id) **directement au-dessus** du `CheckoutButton` plan="team" (ligne 457) qu'un utilisateur en cours d'essai Team cliquerait pour s'abonner.
+- `app/[locale]/account/page.tsx` lignes 627-638 : pour un utilisateur `!isPaid && !trialExpired` (essai actif, pas encore payant), la légende « Essai 14 jours gratuit · sans carte bancaire » / « 14-day free trial · no credit card » s'affiche **directement sous** le `CheckoutButton` (ligne 615, label "S'abonner à Pro") que cet utilisateur cliquerait précisément pour convertir pendant son essai.
+- À l'inverse, la carte **Pro** de `PricingCards.tsx` (lignes 356-372) n'a **pas** ce problème : quand `trialDaysLeft !== null`, le badge "sans CB" est remplacé par le compte à rebours ("N jours restants"), donc rien ne contredit visuellement ce bouton précis dans cet état.
+
+Basculer `payment_method_collection` à `"always"` sur `/api/checkout` rendrait donc ces deux légendes fausses au moment exact où l'utilisateur clique sur le bouton qu'elles accompagnent — pas une promesse générale ailleurs sur le site (le cas des 12 surfaces "sans carte" déjà écarté ce matin comme portant sur l'essai à l'inscription, pas sur le checkout), mais un texte contigu au bouton lui-même, sur les deux CTA "upgrade pendant l'essai" du produit.
+
+**Ce qui reste à trancher par David** (aucune des trois options n'a été appliquée) :
+- **(a) Toujours collecter la carte** — corrige le critère `paying`, mais casse ces deux légendes ; nécessite soit de les réécrire/retirer (quel texte, sur ces 2 surfaces au minimum, 5 langues pour la page account), soit d'accepter la friction visuelle d'un formulaire de carte juste après une phrase qui dit le contraire.
+- **(b) Statu quo** — `payingCount` affichera 0 vendredi pour une raison structurelle déjà connue ; pas de changement de code.
+- **(c) Un paramètre plus fin** — par ex. ne durcir que le plan `team` (dont le badge n'a pas d'état "en cours d'essai" à préserver) et laisser `pro` en `if_required`, ou ne durcir que le point d'entrée `/pricing` (nouveaux venus, jamais engagés dans un essai visible) et laisser `/account` (utilisateurs déjà en train de lire "sans carte") — plus proche de l'effort "petit" initialement estimé, mais réintroduit la confusion par surface que le brief du matin avait explicitement écartée au profit d'une séparation par intention.
+
+Aucun code changé sur `app/api/checkout/route.ts` ce soir — le fichier reste identique à avant la session.
+
+### Idée 2 (garde-fou silencieux sur 16 crons) — ✅ livrée, commit `8a235be`
+
+Patron `check-mpox-sitrep/route.ts` recopié sur les 16 crons restants (`sync-africa-cdc`, `sync-cdc-han`, `sync-cdc-notices`, `sync-ecdc-threats`, `sync-endemic-data`, `sync-malaysia-dengue`, `sync-ncdc`, `sync-paho-alerts`, `sync-spf`, `sync-taiwan-cdc`, `sync-ukhsa`, `sync-usda-aphis`, `sync-who-afro`, `sync-who-emro`, `sync-who-regional`, `sync-wpro-dengue-update`) : détection par préfixe `"guard:locked-row-"` (composition-agnostique, aucune réécriture des chaînes de guards existantes), accumulation dans un tableau `lockedGuardBlocked`, `Sentry.captureMessage(..., "warning")` et `status: "error"` dans `logCronRun` uniquement quand ce tableau est non vide. Périmètre respecté : les autres guards (spike/collapse/zeroCase/zeroDeath/dateFloor) restent invisibles comme avant, volontairement.
+
+Cas particuliers gérés correctement par les sous-agents (vérifiés dans les diffs) : `sync-malaysia-dengue` et `sync-taiwan-cdc` (guard sous bypass de rollover annuel — logique de bypass non touchée), `sync-who-regional` (deux points d'appel du guard, un seul tableau accumulateur), `sync-paho-alerts` (le tableau est passé en paramètre à `upsertItems()`, partagée par les deux boucles alertes+sitrep), `sync-cdc-notices` (bug préexistant hors périmètre — `logCronRun` était figé en `"ok"` sans jamais regarder `results.errors` — laissé tel quel, juste OR-é avec la nouvelle condition plutôt que corrigé, cf. règle de ne pas élargir le scope).
+
+**Corollaire livré** : `sync-africa-cdc/route.ts` sommait désormais `(results.inserted ?? 0) + (results.updated ?? 0)` au lieu de `results.inserted` seul pour `logCronRun` — une passe de rafraîchissement pur remonte enfin `rows > 0` et avance `lastNonZero`, comme `sync-who-afro` le fait déjà.
+
+### Idée 3 (absence de sémantique de date) — ✅ livrée, commit `fac1413`
+
+Nouvelle clé `dateSemantics` sur `app/[locale]/outbreak/[id]/page.tsx` (affichée juste sous le `reportingLag` existant, dans le bloc méta date de la fiche foyer) et un nouveau point dans le tableau `limits` de `app/[locale]/methodology/page.tsx` (juste après le point existant sur le champ `date`), dans les 5 langues (fr/en/es/ar/id). Formulation factuelle, ni alarmiste ni technique à outrance : « la nature exacte de cette date (semaine de confirmation, période de transmission ou date de publication du bulletin) n'est pas précisée par la source » et sa version développée sur `/methodology`. **Formulation à valider par David** si le ton lui semble encore trop clinique pour un lecteur non spécialiste — c'est l'arbitrage de positionnement identifié ce matin, pas tranché unilatéralement, juste construit avec le texte le plus neutre possible en attendant son avis.
+
+### Résumé pour David
+
+- **Rien à faire d'urgent avant vendredi** — idée 1 n'aurait de toute façon produit aucun signal avant le go/no-go, idées 2 et 3 sont des corrections de fond sans lien avec le chiffre de vendredi.
+- **Une vraie décision à prendre sur idée 1** quand tu as le temps : (a), (b) ou (c) ci-dessus — je n'ai pas de préférence tranchée à formuler, chaque option a un coût différent (friction utilisateur vs. critère `paying` structurellement à 0 vs. cohérence de message par surface).
+- **Formulation idée 3 à relire** si tu veux ajuster le ton avant que ça reste en prod durablement.
+
+---
