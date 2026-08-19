@@ -149,6 +149,14 @@ export async function POST(req: NextRequest) {
   // 4. Send branded pilot welcome email via Brevo
   const l = locale === "fr" ? PILOT_EMAIL.fr : PILOT_EMAIL.en;
   const BREVO_API_KEY = clean(process.env.BREVO_API_KEY);
+  // Explicit guard (not just relying on the 401 from an empty api-key header) —
+  // same pattern as lib/pilot-emails.ts and auth/reset-password. Only enforced
+  // in real production: isRealProduction already gates the fetch below, so a
+  // missing key in dev/preview is expected and must not block the invite flow.
+  if (isRealProduction && !BREVO_API_KEY) {
+    Sentry.captureException(new Error("[admin/invite] BREVO_API_KEY not set"), { tags: { route: "admin-invite" } });
+    return NextResponse.json({ error: "Email send failed" }, { status: 500 });
+  }
 
   const esc = (s: string) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
   const featureList = l.features.map((f) => `<li style="margin:6px 0;">✓ ${f}</li>`).join("");
