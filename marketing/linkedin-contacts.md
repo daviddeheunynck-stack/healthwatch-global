@@ -87,7 +87,7 @@ Les 3 relations acceptées sans échange préalable (2 invitations reçues + Sid
 #### 🔒 DM en attente de validation — Sidibé Tiany (FR, sans CTA)
 `/in/sidibé-tiany-348a18b9/` — invitation reçue acceptée ce matin, aucun fil préexistant.
 
-> Bonjour Sidibé, je découvre votre profil après la connexion. La surveillance polio et les autres MEV en Guinée est exactement le terrain qui manque à mon propre travail. Côté HealthWatch Global, je pars des bulletins déjà publiés (OMS, Africa CDC), sans jamais voir le délai réel entre un cas suspect signalé et sa confirmation. Ce délai varie-t-il beaucoup selon les zones que vous couvrez ?
+> Bonjour Sidibé, je découvre votre profil après la connexion. La surveillance de la polio et des autres MEV en Guinée est exactement le terrain qui manque à mon propre travail. Côté HealthWatch Global, je pars des bulletins déjà publiés (OMS, Africa CDC), sans jamais voir le délai réel entre un cas suspect signalé et sa confirmation. Ce délai varie-t-il beaucoup selon les zones que vous couvrez ?
 
 #### 🔒 DM en attente de validation — Gildas Fiacre KEDALO (FR, sans CTA)
 `/in/gildas-fiacre-kedalo-318a725a/` — invitation reçue acceptée ce matin, aucun fil préexistant.
@@ -117,6 +117,12 @@ Les 3 relations acceptées sans échange préalable (2 invitations reçues + Sid
 > What I build at HealthWatch Global sits downstream of exactly this kind of coordination, or the lack of it: the country-level totals I aggregate never show whether it happened. If it's ever useful to see the aggregation itself, the site runs a two-week Pro window you can open without a card, at healthwatch-global.com.
 
 **4 brouillons en file au total, aucun envoyé** (3 welcome DM + 1 réponse en fil actif). **Notification push envoyée à David** avant clôture de session.
+
+### 🔁 Double-check demandé par David (relecture à froid des 4 brouillons)
+- **TAMBWE Patrick Rodrigue** — fil rouvert et relu intégralement : toujours 2 messages, aucun nouveau depuis l'archivage, verbatim reçu (22:15) confirmé mot pour mot identique à celui archivé. Anti-répétition du CTA reconfirmée sur le fil complet (`healthwatch-global.com`/« trial »/« Pro » toujours absents des 2 messages). Mise en forme revérifiée (770 caractères, 2 paragraphes, 0 tiret cadratin, 0 double espace) ✅ aucune correction.
+- **Sidibé Tiany, Gildas Fiacre KEDALO, Daniel Thierry Belinga Etogo** — reconfirmé qu'aucun fil de messagerie n'existe pour les 3 (20 conversations rechargées, aucun des 3 noms). Chaque claim factuel revérifié contre l'intitulé réel du profil visé (« Surveillance polio et autres MEV », « Digital Health - HMIS | SNIS », « gestion intégrée des risques sanitaires ») : les 3 correspondent mot pour mot.
+- **⚠️ 1 correction appliquée — brouillon Sidibé Tiany** : la phrase « *La surveillance polio et les autres MEV en Guinée est exactement le terrain...* » comportait une construction fautive (prépositions manquantes rendant l'accord sujet/verbe ambigu — « la surveillance polio » au lieu de « la surveillance **de la** polio », « les autres MEV » sans « **des** »). Corrigée en « *La surveillance **de la** polio et **des** autres MEV en Guinée est exactement le terrain...* », qui restaure un sujet singulier clair (« la surveillance ») accordé avec « est ». Les 2 autres welcome DM et la réponse à TAMBWE relus phrase par phrase, **aucune faute du même type trouvée**.
+**Conclusion : 4 brouillons confirmés prêts à validation, 1 correction de français appliquée (Sidibé Tiany), le texte ci-dessus intègre déjà la version corrigée.**
 
 ### 📌 CARRY-OVER pour le créneau de 13h
 1. **🔒 4 DM en file de validation, texte complet ci-dessus** : Sidibé Tiany, Gildas Fiacre KEDALO, Daniel Thierry Belinga Etogo (welcome DM sans CTA), TAMBWE Patrick Rodrigue (réponse en fil actif, avec CTA).
