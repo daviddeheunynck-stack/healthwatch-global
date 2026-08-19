@@ -282,6 +282,10 @@ async function runWproDengueUpdate(supabase: SupabaseClient) {
 
   const log: { label: string; status: string; detail: string }[] = [];
   let updated = 0, skipped = 0, errors = 0;
+  // Refusals from lockedRowRegressionGuard specifically (identified by its
+  // "guard:locked-row-…" prefix) — see the push site below for why these,
+  // and only these, need to reach the health-check.
+  const lockedGuardBlocked: string[] = [];
 
   for (const target of TARGETS) {
     const label = `${target.disease_en}/${target.country_en}`;
@@ -356,6 +360,15 @@ async function runWproDengueUpdate(supabase: SupabaseClient) {
     if (guardReason) {
       log.push({ label, status: "skip", detail: guardReason });
       skipped++;
+      // A refusal on a locked (source_priority>=10) row is not an
+      // ordinary skip: nothing else will ever write this row again, so a
+      // silently-blocked write freezes it on stale figures forever with
+      // nothing to show for it (see check-mpox-sitrep/route.ts and
+      // project_source_priority_is_ownership_not_freeze_2026_08_19). Ordinary
+      // guards (dateFloor/spike/collapse/zeroCase/zeroDeath) stay unreported
+      // here — their regular-operation volume isn't measured, so surfacing
+      // them too would risk drowning the health-check in noise.
+      if (guardReason.startsWith("guard:locked-row-")) lockedGuardBlocked.push(`${label}: ${guardReason}`);
       continue;
     }
 
@@ -417,7 +430,19 @@ async function runWproDengueUpdate(supabase: SupabaseClient) {
       extra: { log },
     });
   }
+  // A locked-row refusal must not pass as a clean run: nothing else will
+  // ever retry this row, so a silently-blocked write freezes it on stale
+  // figures with nothing to show for it. Surface it as an erroring cron (so
+  // it reaches the daily health-check) and in Sentry — same pattern as
+  // check-mpox-sitrep/route.ts (2026-08-19).
+  if (lockedGuardBlocked.length > 0) {
+    Sentry.captureMessage(
+      `[sync-wpro-dengue-update] blocked by anti-regression guard on locked row(s): ${lockedGuardBlocked.join(" | ")}`,
+      "warning",
+    );
+  }
 
-  await logCronRun(supabase, "sync-wpro-dengue-update", errors > 0 ? "error" : "ok", updated);
-  return NextResponse.json({ ok: errors === 0, edition, itemUrl, updated, skipped, errors, log });
+  await logCronRun(supabase, "sync-wpro-dengue-update", errors > 0 || lockedGuardBlocked.length > 0 ? "error" : "ok", updated,
+    lockedGuardBlocked.length > 0 ? `écriture bloquée par le garde anti-régression : ${lockedGuardBlocked.join(" | ")}` : undefined);
+  return NextResponse.json({ ok: errors === 0 && lockedGuardBlocked.length === 0, edition, itemUrl, updated, skipped, errors, guardBlocked: lockedGuardBlocked.length > 0 ? lockedGuardBlocked : undefined, log });
 }

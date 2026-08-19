@@ -728,6 +728,12 @@ async function upsertItems(
   today: string,
   results: SyncResults,
   log: LogEntry[],
+  // Refusals from lockedRowRegressionGuard specifically (identified by its
+  // "guard:locked-row-…" prefix) — accumulated across both call sites
+  // (alerts + sitrep) so the caller can report them together after both
+  // have run. See the push site below for why these, and only these, need
+  // to reach the health-check.
+  lockedGuardBlocked: string[],
 ): Promise<void> {
   for (const item of items) {
     const label = `${item.disease_en}/${item.country_en}`;
@@ -826,6 +832,15 @@ async function upsertItems(
       if (guardReason) {
         log.push({ label, status: "skip", detail: guardReason });
         results.skipped++;
+        // A refusal on a locked (source_priority>=10) row is not an
+        // ordinary skip: nothing else will ever write this row again, so a
+        // silently-blocked write freezes it on stale figures forever with
+        // nothing to show for it (see check-mpox-sitrep/route.ts and
+        // project_source_priority_is_ownership_not_freeze_2026_08_19).
+        // Ordinary guards (regressionGuard's own checks) stay unreported
+        // here — their regular-operation volume isn't measured, so
+        // surfacing them too would risk drowning the health-check in noise.
+        if (guardReason.startsWith("guard:locked-row-")) lockedGuardBlocked.push(`${label}: ${guardReason}`);
         continue;
       }
 
@@ -1227,6 +1242,10 @@ async function runPahoAlerts(_req: NextRequest, supabase: SupabaseClient) {
   // ── 3. Process each alert ─────────────────────────────────────────────────
   const results: SyncResults = { alerts: entries.length, sitrepRows: 0, inserted: 0, updated: 0, skipped: 0, errors: 0, deactivated: 0 };
   const log: LogEntry[] = [];
+  // Refusals from lockedRowRegressionGuard specifically (identified by its
+  // "guard:locked-row-…" prefix) — see the push site in upsertItems() for
+  // why these, and only these, need to reach the health-check.
+  const lockedGuardBlocked: string[] = [];
 
   for (const entry of entries) {
     let alertItems: AlertData[] = [];
@@ -1246,7 +1265,7 @@ async function runPahoAlerts(_req: NextRequest, supabase: SupabaseClient) {
     }
 
     await loadExistingForItems(supabase, byDC, alertItems);
-    await upsertItems(supabase, byDC, alertItems, today, results, log);
+    await upsertItems(supabase, byDC, alertItems, today, results, log, lockedGuardBlocked);
   }
 
   // ── 4. Measles situation report ───────────────────────────────────────────
@@ -1258,7 +1277,7 @@ async function runPahoAlerts(_req: NextRequest, supabase: SupabaseClient) {
     results.sitrepRows   = sitrepItems.length;
     results.deactivated  = deactivated;
     await loadExistingForItems(supabase, byDC, sitrepItems);
-    await upsertItems(supabase, byDC, sitrepItems, today, results, log);
+    await upsertItems(supabase, byDC, sitrepItems, today, results, log, lockedGuardBlocked);
   } catch (e) {
     sitrepError = errorMessage(e);
     console.error("[paho] sitrep:", sitrepError);
@@ -1268,6 +1287,17 @@ async function runPahoAlerts(_req: NextRequest, supabase: SupabaseClient) {
   }
 
   console.log("[paho] Done:", results, log);
+  // A locked-row refusal must not pass as a clean run: nothing else will
+  // ever retry this row, so a silently-blocked write freezes it on stale
+  // figures with nothing to show for it. Surface it as an erroring cron (so
+  // it reaches the daily health-check) and in Sentry — same pattern as
+  // check-mpox-sitrep/route.ts (2026-08-19).
+  if (lockedGuardBlocked.length > 0) {
+    Sentry.captureMessage(
+      `[paho] blocked by anti-regression guard on locked row(s): ${lockedGuardBlocked.join(" | ")}`,
+      "warning",
+    );
+  }
   // Report a sitrep-stage failure as an error rather than a green run: a silent
   // "ok" here is exactly how the missing sitrep ingestion stayed invisible.
   // Also checks results.errors now — it was ignored here, so a failed alert
@@ -1276,9 +1306,11 @@ async function runPahoAlerts(_req: NextRequest, supabase: SupabaseClient) {
   await logCronRun(
     supabase,
     "sync-paho-alerts",
-    sitrepError || results.errors > 0 ? "error" : "ok",
+    sitrepError || results.errors > 0 || lockedGuardBlocked.length > 0 ? "error" : "ok",
     results.inserted ?? 0,
-    sitrepError ?? (results.errors > 0 ? `${results.errors} écriture(s) en échec` : undefined),
+    lockedGuardBlocked.length > 0
+      ? `écriture bloquée par le garde anti-régression : ${lockedGuardBlocked.join(" | ")}`
+      : sitrepError ?? (results.errors > 0 ? `${results.errors} écriture(s) en échec` : undefined),
   );
-  return NextResponse.json({ success: true, timestamp: new Date().toISOString(), ...results, log });
+  return NextResponse.json({ success: true, timestamp: new Date().toISOString(), guardBlocked: lockedGuardBlocked.length > 0 ? lockedGuardBlocked : undefined, ...results, log });
 }

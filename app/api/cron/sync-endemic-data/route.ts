@@ -613,6 +613,10 @@ async function runSyncEndemicData(_req: NextRequest, supabase: SupabaseClient) {
 
   const updates:  UpdateRecord[] = [];
   const skipped:  SkipRecord[]   = [];
+  // Refusals from lockedRowRegressionGuard specifically (identified by its
+  // "guard:locked-row-…" prefix) — see the push site below for why these,
+  // and only these, need to reach the health-check.
+  const lockedGuardBlocked: string[] = [];
 
   for (const target of targets) {
     const row = findRow(target.disease, target.country);
@@ -660,6 +664,16 @@ async function runSyncEndemicData(_req: NextRequest, supabase: SupabaseClient) {
       lockedRowRegressionGuard(found, row);
     if (guardReason) {
       skipped.push({ label: target.label, reason: guardReason });
+      // A refusal on a locked (source_priority>=10) row is not an
+      // ordinary skip: nothing else will ever write this row again, so a
+      // silently-blocked write freezes it on stale figures forever with
+      // nothing to show for it (see check-mpox-sitrep/route.ts and
+      // project_source_priority_is_ownership_not_freeze_2026_08_19).
+      // Ordinary guards (spike/collapse/zeroDeath/dateFloor) stay
+      // unreported here — their regular-operation volume isn't measured,
+      // so surfacing them too would risk drowning the health-check in
+      // noise.
+      if (guardReason.startsWith("guard:locked-row-")) lockedGuardBlocked.push(`${target.label}: ${guardReason}`);
       continue;
     }
 
@@ -755,11 +769,24 @@ async function runSyncEndemicData(_req: NextRequest, supabase: SupabaseClient) {
   if (adminEmail && isRealProduction && (updates.length > 0 || realErrors.length > 0)) {
     await sendEmail(adminEmail, subject, html);
   }
+  // A locked-row refusal must not pass as a clean run: nothing else will
+  // ever retry this row, so a silently-blocked write freezes it on stale
+  // figures with nothing to show for it. Surface it as an erroring cron (so
+  // it reaches the daily health-check) and in Sentry — same pattern as
+  // check-mpox-sitrep/route.ts (2026-08-19).
+  if (lockedGuardBlocked.length > 0) {
+    Sentry.captureMessage(
+      `[endemic] blocked by anti-regression guard on locked row(s): ${lockedGuardBlocked.join(" | ")}`,
+      "warning",
+    );
+  }
   // Was hardcoded "ok" — realErrors (a real DB/fetch error, as opposed to the
   // routine "no newer data" skip) was already computed above to decide
   // whether to email, but never fed into cron status.
-  await logCronRun(supabase, "sync-endemic-data", realErrors.length > 0 ? "error" : "ok", updates.length,
-    realErrors.length > 0 ? `${realErrors.length} erreur(s) réelle(s)` : undefined);
+  await logCronRun(supabase, "sync-endemic-data", realErrors.length > 0 || lockedGuardBlocked.length > 0 ? "error" : "ok", updates.length,
+    lockedGuardBlocked.length > 0
+      ? `écriture bloquée par le garde anti-régression : ${lockedGuardBlocked.join(" | ")}`
+      : realErrors.length > 0 ? `${realErrors.length} erreur(s) réelle(s)` : undefined);
 
   return NextResponse.json({
     success: true,
@@ -769,6 +796,7 @@ async function runSyncEndemicData(_req: NextRequest, supabase: SupabaseClient) {
     skipped: skipped.length,
     updates: updates.map((u) => ({ label: u.label, before: u.before, after: u.after })),
     reasons: skipped,
+    guardBlocked: lockedGuardBlocked.length > 0 ? lockedGuardBlocked : undefined,
     emailSent: !!adminEmail,
   });
 }

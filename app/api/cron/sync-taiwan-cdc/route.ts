@@ -207,8 +207,28 @@ async function runSyncTaiwanCdc(supabase: SupabaseClient) {
       ?? (rollover ? null : zeroDeathGuard(incoming, existing))
       ?? (rollover ? null : lockedRowRegressionGuard(incoming, existing));
     if (guardReason) {
-      await logCronRun(supabase, "sync-taiwan-cdc", "ok", 0, guardReason);
-      return NextResponse.json({ ok: true, status: `skip: ${guardReason}` });
+      // A refusal from lockedRowRegressionGuard specifically (identified by
+      // its "guard:locked-row-…" prefix) is not an ordinary skip: nothing
+      // else will ever write this row again, so a silently-blocked write
+      // freezes it on stale figures forever with nothing to show for it (see
+      // sync-africa-cdc/route.ts and
+      // project_source_priority_is_ownership_not_freeze_2026_08_19). Ordinary
+      // guards (dateFloor/collapse/zeroCase/zeroDeath) stay unreported
+      // here — their regular-operation volume isn't measured, so surfacing
+      // them too would risk drowning the health-check in noise.
+      const lockedGuardBlocked: string[] = [];
+      if (guardReason.startsWith("guard:locked-row-")) lockedGuardBlocked.push(guardReason);
+      if (lockedGuardBlocked.length > 0) {
+        Sentry.captureMessage(
+          `[sync-taiwan-cdc] blocked by anti-regression guard on locked row(s): ${lockedGuardBlocked.join(" | ")}`,
+          "warning",
+        );
+      }
+      await logCronRun(supabase, "sync-taiwan-cdc", lockedGuardBlocked.length > 0 ? "error" : "ok", 0,
+        lockedGuardBlocked.length > 0
+          ? `écriture bloquée par le garde anti-régression : ${lockedGuardBlocked.join(" | ")}`
+          : guardReason);
+      return NextResponse.json({ ok: true, status: `skip: ${guardReason}`, guardBlocked: lockedGuardBlocked.length > 0 ? lockedGuardBlocked : undefined });
     }
 
     const { data: updated, error } = await supabase.from("outbreaks").update({

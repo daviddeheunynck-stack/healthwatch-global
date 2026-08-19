@@ -208,8 +208,30 @@ async function runSyncMalaysiaDengue(supabase: SupabaseClient) {
       ?? (rollover ? null : zeroCaseGuard(incoming, existing))
       ?? (rollover ? null : lockedRowRegressionGuard(incoming, existing));
     if (guardReason) {
-      await logCronRun(supabase, "sync-malaysia-dengue", "ok", 0, guardReason);
-      return NextResponse.json({ ok: true, status: `skip: ${guardReason}` });
+      // Refusals from lockedRowRegressionGuard specifically (identified by
+      // its "guard:locked-row-…" prefix) must reach the health-check — a
+      // refusal on a locked (source_priority>=10) row freezes it on stale
+      // figures forever, with nothing else ever retrying it (see
+      // check-mpox-sitrep/route.ts and
+      // project_source_priority_is_ownership_not_freeze_2026_08_19). Ordinary
+      // guards (dateFloor/collapse/zeroCase) stay unreported here — their
+      // regular-operation volume isn't measured, so surfacing them too would
+      // risk drowning the health-check in noise. Single-item cron (no
+      // per-row loop), so this is a 0-or-1-element array rather than one
+      // accumulated across a loop like the multi-item sync crons.
+      const lockedGuardBlocked: string[] = [];
+      if (guardReason.startsWith("guard:locked-row-")) lockedGuardBlocked.push(`Dengue/Malaysia: ${guardReason}`);
+      if (lockedGuardBlocked.length > 0) {
+        Sentry.captureMessage(
+          `[malaysia-dengue] blocked by anti-regression guard on locked row(s): ${lockedGuardBlocked.join(" | ")}`,
+          "warning",
+        );
+      }
+      await logCronRun(supabase, "sync-malaysia-dengue", lockedGuardBlocked.length > 0 ? "error" : "ok", 0,
+        lockedGuardBlocked.length > 0
+          ? `écriture bloquée par le garde anti-régression : ${lockedGuardBlocked.join(" | ")}`
+          : guardReason);
+      return NextResponse.json({ ok: true, status: `skip: ${guardReason}`, guardBlocked: lockedGuardBlocked.length > 0 ? lockedGuardBlocked : undefined });
     }
 
     const { data: updated, error } = await supabase.from("outbreaks").update({

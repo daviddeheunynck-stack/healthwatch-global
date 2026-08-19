@@ -273,6 +273,10 @@ export async function GET(req: NextRequest) {
   const results = { notices: notices.length, inserted: 0, updated: 0, skipped: 0, errors: 0 };
   type LogEntry = { label: string; status: string; detail?: string };
   const log: LogEntry[] = [];
+  // Refusals from lockedRowRegressionGuard specifically (identified by its
+  // "guard:locked-row-…" prefix) — see the push site below for why these,
+  // and only these, need to reach the health-check.
+  const lockedGuardBlocked: string[] = [];
 
   for (const notice of notices) {
     const parsed = parseNoticeTitle(notice.title);
@@ -416,6 +420,16 @@ export async function GET(req: NextRequest) {
       if (guardReason) {
         log.push({ label, status: "skip", detail: guardReason });
         results.skipped++;
+        // A refusal on a locked (source_priority>=10) row is not an
+        // ordinary skip: nothing else will ever write this row again, so a
+        // silently-blocked write freezes it on stale figures forever with
+        // nothing to show for it (see check-mpox-sitrep/route.ts and
+        // project_source_priority_is_ownership_not_freeze_2026_08_19).
+        // Ordinary guards (spike/collapse/zeroCase/dateFloor) stay
+        // unreported here — their regular-operation volume isn't measured,
+        // so surfacing them too would risk drowning the health-check in
+        // noise.
+        if (guardReason.startsWith("guard:locked-row-")) lockedGuardBlocked.push(`${label}: ${guardReason}`);
         continue;
       }
 
@@ -496,6 +510,20 @@ export async function GET(req: NextRequest) {
   }
 
   console.log("[cdc-notices] Done:", results, log);
-  await logCronRun(supabase, "sync-cdc-notices", "ok", results.inserted ?? 0);
-  return NextResponse.json({ success: true, timestamp: new Date().toISOString(), ...results, log });
+  // A locked-row refusal must not pass as a clean run: nothing else will
+  // ever retry this row, so a silently-blocked write freezes it on stale
+  // figures with nothing to show for it. Surface it as an erroring cron (so
+  // it reaches the daily health-check) and in Sentry — same pattern as
+  // check-mpox-sitrep/route.ts (2026-08-19).
+  if (lockedGuardBlocked.length > 0) {
+    Sentry.captureMessage(
+      `[cdc-notices] blocked by anti-regression guard on locked row(s): ${lockedGuardBlocked.join(" | ")}`,
+      "warning",
+    );
+  }
+  await logCronRun(supabase, "sync-cdc-notices", lockedGuardBlocked.length > 0 ? "error" : "ok", results.inserted ?? 0,
+    lockedGuardBlocked.length > 0
+      ? `écriture bloquée par le garde anti-régression : ${lockedGuardBlocked.join(" | ")}`
+      : undefined);
+  return NextResponse.json({ success: true, timestamp: new Date().toISOString(), guardBlocked: lockedGuardBlocked.length > 0 ? lockedGuardBlocked : undefined, ...results, log });
 }

@@ -461,6 +461,10 @@ async function runUsdaAphis(_req: NextRequest, supabase: SupabaseClient) {
   const activeSince = activeSinceThreshold();
   const results = { dataFormat, rows: rows.length, states: byState.length, inserted: 0, updated: 0, skipped: 0, errors: 0, deactivated: 0 };
   const log: Array<{ state: string; status: string; detail?: string }> = [];
+  // Refusals from lockedRowRegressionGuard specifically (identified by its
+  // "guard:locked-row-…" prefix) — see the push site below for why these,
+  // and only these, need to reach the health-check.
+  const lockedGuardBlocked: string[] = [];
 
   for (const sd of byState) {
     const coords    = US_STATES[sd.state]!;
@@ -498,6 +502,16 @@ async function runUsdaAphis(_req: NextRequest, supabase: SupabaseClient) {
       if (guardReason) {
         log.push({ state: sd.state, status: "skip", detail: guardReason });
         results.skipped++;
+        // A refusal on a locked (source_priority>=10) row is not an
+        // ordinary skip: nothing else will ever write this row again, so a
+        // silently-blocked write freezes it on stale figures forever with
+        // nothing to show for it (see check-mpox-sitrep/route.ts and
+        // project_source_priority_is_ownership_not_freeze_2026_08_19).
+        // Ordinary guards (dateFloor/spike/collapse/zeroCase) stay
+        // unreported here — their regular-operation volume isn't measured,
+        // so surfacing them too would risk drowning the health-check in
+        // noise.
+        if (guardReason.startsWith("guard:locked-row-")) lockedGuardBlocked.push(`${sd.state}: ${guardReason}`);
         continue;
       }
 
@@ -641,9 +655,22 @@ async function runUsdaAphis(_req: NextRequest, supabase: SupabaseClient) {
   }
 
   console.log("[usda-aphis] Done:", results, log);
+  // A locked-row refusal must not pass as a clean run: nothing else will
+  // ever retry this row, so a silently-blocked write freezes it on stale
+  // figures with nothing to show for it. Surface it as an erroring cron (so
+  // it reaches the daily health-check) and in Sentry — same pattern as
+  // check-mpox-sitrep/route.ts (2026-08-19).
+  if (lockedGuardBlocked.length > 0) {
+    Sentry.captureMessage(
+      `[usda-aphis] blocked by anti-regression guard on locked row(s): ${lockedGuardBlocked.join(" | ")}`,
+      "warning",
+    );
+  }
   // Was hardcoded "ok" regardless of results.errors — same bug as
   // sync-outbreaks (2026-07-29).
-  await logCronRun(supabase, "sync-usda-aphis", results.errors > 0 ? "error" : "ok", results.inserted ?? 0,
-    results.errors > 0 ? `${results.errors} écriture(s) en échec` : undefined);
-  return NextResponse.json({ success: true, timestamp: new Date().toISOString(), ...results, log });
+  await logCronRun(supabase, "sync-usda-aphis", results.errors > 0 || lockedGuardBlocked.length > 0 ? "error" : "ok", results.inserted ?? 0,
+    lockedGuardBlocked.length > 0
+      ? `écriture bloquée par le garde anti-régression : ${lockedGuardBlocked.join(" | ")}`
+      : results.errors > 0 ? `${results.errors} écriture(s) en échec` : undefined);
+  return NextResponse.json({ success: true, timestamp: new Date().toISOString(), guardBlocked: lockedGuardBlocked.length > 0 ? lockedGuardBlocked : undefined, ...results, log });
 }
