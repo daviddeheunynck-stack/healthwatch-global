@@ -31,6 +31,51 @@ const TRIAL_START_NOTE: Record<string, string> = {
   id: "Uji coba Pro 14 hari Anda dimulai segera setelah mengkonfirmasi email.",
 };
 
+// Catches Gmail lookalike domains at signup — added 2026-08-19 after
+// emmabahati@429gmail.com sat in the trial cohort for 12 days with 0 sessions:
+// "429gmail.com" is a real, registered catch-all domain (MX records resolve),
+// so it never hard-bounces and never trips the Brevo blocklist sync in
+// lib/brevo-blocklist.ts. Nothing else in the funnel would ever have caught it.
+// Plain Levenshtein distance alone misses this shape (inserting "429gmail" in
+// front of ".com" is 3+ edits away from "gmail.com"), so a domain that simply
+// contains "gmail.com" without being it is flagged directly.
+function levenshtein(a: string, b: string): number {
+  const dp: number[][] = Array.from({ length: a.length + 1 }, (_, i) => [i, ...Array(b.length).fill(0)]);
+  for (let j = 0; j <= b.length; j++) dp[0][j] = j;
+  for (let i = 1; i <= a.length; i++) {
+    for (let j = 1; j <= b.length; j++) {
+      dp[i][j] = a[i - 1] === b[j - 1]
+        ? dp[i - 1][j - 1]
+        : 1 + Math.min(dp[i - 1][j - 1], dp[i - 1][j], dp[i][j - 1]);
+    }
+  }
+  return dp[a.length][b.length];
+}
+
+function gmailTypoSuggestion(email: string): string | null {
+  const domain = email.split("@")[1]?.toLowerCase().trim();
+  if (!domain) return null;
+  if (domain === "gmail.com" || domain === "googlemail.com") return null;
+  const looksNearGmail = domain.includes("gmail.com") || levenshtein(domain, "gmail.com") <= 2;
+  return looksNearGmail ? "gmail.com" : null;
+}
+
+const GMAIL_TYPO_WARNING: Record<string, string> = {
+  en: "This doesn't look like a real Gmail address — did you mean",
+  fr: "Cette adresse ne ressemble pas à une vraie adresse Gmail — vouliez-vous dire",
+  es: "Esta dirección no parece una dirección de Gmail real — ¿quiso decir",
+  ar: "لا يبدو هذا عنوان Gmail حقيقياً — هل تقصد",
+  id: "Alamat ini tidak terlihat seperti alamat Gmail asli — maksud Anda",
+};
+
+const GMAIL_TYPO_KEEP: Record<string, string> = {
+  en: "No, this address is correct",
+  fr: "Non, cette adresse est correcte",
+  es: "No, esta dirección es correcta",
+  ar: "لا، هذا العنوان صحيح",
+  id: "Tidak, alamat ini sudah benar",
+};
+
 const VALUE_PROPS: Record<string, { trial: string; items: string[]; noCard: string; gdpr: string; alreadyRegistered: { text: string; signIn: string; or: string; reset: string } }> = {
   en: {
     trial: "14-day Pro trial included — no credit card",
@@ -138,9 +183,9 @@ export default function SignupPage() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [gmailTypo, setGmailTypo] = useState<string | null>(null);
 
-  const handleSignup = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const submitSignup = async () => {
     setLoading(true);
     setError("");
     track("signup_attempt", { method: "email", locale });
@@ -234,6 +279,21 @@ export default function SignupPage() {
     }
   };
 
+  // Interrupts submission once per suspicious address so the person confirms
+  // or fixes it — never a hard block, since the heuristic can misfire on a
+  // legitimate lookalike domain. Re-editing the email field (see onChange
+  // below) clears gmailTypo so a corrected address re-checks on next submit.
+  const handleSignup = (e: React.FormEvent) => {
+    e.preventDefault();
+    const suggestion = gmailTypoSuggestion(email);
+    if (suggestion) {
+      setGmailTypo(suggestion);
+      track("signup_typo_warning_shown", { locale, domain: email.split("@")[1]?.toLowerCase() ?? null });
+      return;
+    }
+    submitSignup();
+  };
+
   return (
     <div className="min-h-[70vh] flex items-center justify-center py-8 px-4">
       <div className="w-full max-w-4xl grid md:grid-cols-2 gap-8 items-center" dir={isRtl ? "rtl" : undefined}>
@@ -324,13 +384,33 @@ export default function SignupPage() {
                     <input
                       type="email"
                       value={email}
-                      onChange={(e) => setEmail(e.target.value)}
+                      onChange={(e) => { setEmail(e.target.value); setGmailTypo(null); }}
                       required
                       disabled={loading}
                       autoComplete="email"
                       className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-red-500 transition-colors disabled:opacity-50"
                       placeholder="you@organization.org"
                     />
+                    {gmailTypo && (
+                      <p className="text-xs text-amber-400 mt-1.5">
+                        {GMAIL_TYPO_WARNING[locale] ?? GMAIL_TYPO_WARNING.en}{" "}
+                        <button
+                          type="button"
+                          onClick={() => { setEmail(`${email.split("@")[0]}@${gmailTypo}`); setGmailTypo(null); }}
+                          className="underline hover:text-amber-300 font-medium"
+                        >
+                          {email.split("@")[0]}@{gmailTypo}
+                        </button>
+                        ?{" "}
+                        <button
+                          type="button"
+                          onClick={() => { setGmailTypo(null); submitSignup(); }}
+                          className="underline hover:text-amber-300"
+                        >
+                          {GMAIL_TYPO_KEEP[locale] ?? GMAIL_TYPO_KEEP.en}
+                        </button>
+                      </p>
+                    )}
                   </div>
                   <div>
                     <label className="block text-sm text-gray-400 mb-1.5">{t("password")}</label>
