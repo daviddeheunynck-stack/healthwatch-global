@@ -150,6 +150,36 @@ async function getUserProfile(userId: string): Promise<{ email: string; locale: 
   return { email: data.email, locale: data.locale ?? "en" };
 }
 
+/**
+ * Best-effort sync of profiles.stripe_has_payment_method / stripe_billing_period
+ * from a Stripe Subscription object. Added 2026-08-18 (migration
+ * 20260818200000_stripe_payment_method_tracking.sql) so "stripe_subscription_id
+ * non-null" stops being read as "paying customer" everywhere it's checked —
+ * checkout with `payment_method_collection: if_required` sets
+ * stripe_subscription_id immediately even with no card attached (see
+ * app/api/checkout/route.ts:150-152). Swallows a missing-column error rather
+ * than throwing: if this webhook deploys before the migration is applied,
+ * checkout/subscription activation must still succeed — only the new flag
+ * lags until the migration runs.
+ */
+async function syncPaymentMethodFlag(
+  supabase: ReturnType<typeof getSupabase>,
+  userId: string,
+  sub: Stripe.Subscription,
+  forcePaid = false,
+): Promise<void> {
+  const update: Record<string, unknown> = {
+    stripe_has_payment_method: forcePaid || !!sub.default_payment_method,
+  };
+  const billing = sub.metadata?.billing;
+  if (billing === "monthly" || billing === "annual") update.stripe_billing_period = billing;
+
+  const { error } = await supabase.from("profiles").update(update).eq("id", userId);
+  if (error && !error.message.includes("column")) {
+    console.warn("[webhook] syncPaymentMethodFlag failed:", error.message);
+  }
+}
+
 /** Map Stripe price id → plan name */
 function planFromPriceId(priceId: string | null | undefined): string {
   const BOM2 = String.fromCharCode(65279);
@@ -210,13 +240,14 @@ export async function POST(req: NextRequest) {
         const plan = session.metadata?.plan || "pro";
 
         if (userId) {
-          // Fetch subscription to read trial_end
+          // Fetch subscription to read trial_end (and, below, the payment-method flag)
           let trialEndsAt: string | null = null;
+          let retrievedSub: Stripe.Subscription | null = null;
           if (session.subscription) {
             try {
-              const sub = await getStripe().subscriptions.retrieve(session.subscription as string);
-              if (sub.trial_end) {
-                trialEndsAt = new Date(sub.trial_end * 1000).toISOString();
+              retrievedSub = await getStripe().subscriptions.retrieve(session.subscription as string);
+              if (retrievedSub.trial_end) {
+                trialEndsAt = new Date(retrievedSub.trial_end * 1000).toISOString();
               }
             } catch (e) {
               console.warn("[webhook] Could not retrieve subscription for trial_end:", e);
@@ -226,6 +257,8 @@ export async function POST(req: NextRequest) {
           const updateData: Record<string, unknown> = { plan, trial_ends_at: trialEndsAt };
           if (session.customer) updateData.stripe_customer_id = session.customer;
           if (session.subscription) updateData.stripe_subscription_id = session.subscription;
+
+          if (retrievedSub) await syncPaymentMethodFlag(supabase, userId, retrievedSub);
 
           const { error } = await supabase
             .from("profiles")
@@ -298,6 +331,11 @@ export async function POST(req: NextRequest) {
           } else {
             console.log(`[webhook] Subscription updated → plan ${plan} for user ${userId} (trial_ends_at: ${trialEndsAt})`);
           }
+          // Fires on any subscription change, including a payment method being
+          // attached/changed mid-trial — the one path that can flip a
+          // no-card trialing subscriber (see syncPaymentMethodFlag) into a
+          // covered one without a fresh checkout.session.completed.
+          await syncPaymentMethodFlag(supabase, userId, sub);
         } else if (status === "canceled" || status === "unpaid" || status === "past_due") {
           // Don't immediately downgrade on past_due — let invoice.payment_failed handle it
           if (status === "canceled") {
@@ -455,6 +493,19 @@ export async function POST(req: NextRequest) {
           Sentry.captureException(new Error(`[webhook] invoice.payment_succeeded renewal DB failed: ${error.message}`), { tags: { event_type: "invoice.payment_succeeded", plan, user_id: userId } });
         }
         else console.log(`[webhook] Subscription renewed → plan ${plan} for user ${userId}`);
+        // Best-effort, separate from the plan update above: a succeeded charge
+        // is itself proof of a working payment method (covers the case where
+        // default_payment_method reads empty on the Subscription object, e.g.
+        // a payment source attached at the customer level) — kept independent
+        // so a missing-column error here (migration not yet applied) can never
+        // block the renewal itself from being recorded.
+        const { error: pmError } = await supabase
+          .from("profiles")
+          .update({ stripe_has_payment_method: true })
+          .eq("id", userId);
+        if (pmError && !pmError.message.includes("column")) {
+          console.warn("[webhook] invoice.payment_succeeded payment-method flag:", pmError.message);
+        }
         break;
       }
 
@@ -482,6 +533,7 @@ export async function POST(req: NextRequest) {
         // If the subscription already has a default payment method, the user
         // is on track for automatic renewal — tell them so, not "add payment method".
         const hasPaymentMethod = !!sub.default_payment_method;
+        await syncPaymentMethodFlag(supabase, userId, sub);
 
         sendTrialEndingEmail(trialProfile.email, plan, trialProfile.locale, trialEnd, hasPaymentMethod).catch((e) => {
           console.error("[webhook] trial_ending email:", e);

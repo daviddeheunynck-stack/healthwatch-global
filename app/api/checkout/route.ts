@@ -136,6 +136,11 @@ export async function POST(req: NextRequest) {
       // if checkout.session.completed fails to link stripe_customer_id.
       "subscription_data[metadata][user_id]": userId || "",
       "subscription_data[metadata][plan]": plan ?? "",
+      // Mirrored here (not just session metadata) so customer.subscription.updated —
+      // which only ever sees the Subscription object, never the Checkout Session —
+      // can also persist stripe_billing_period. See syncPaymentMethodFlag in
+      // app/api/webhook/route.ts.
+      "subscription_data[metadata][billing]": billingPeriod,
     });
 
     // Trial period: honour remaining days from the DB trial (no credit card required).
