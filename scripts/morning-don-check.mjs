@@ -625,6 +625,20 @@ const MANUAL_ROWS = {
 // ⚠️ Ne bumper une date ci-dessous qu'après avoir effectivement consulté la source primaire —
 // jamais pour faire taire une ligne.
 const MANUAL_ROW_CHECKED = {
+  // Dengue/Polynésie française : vérifié le 19/08 contre la source primaire. Le dernier Bulletin de
+  // Surveillance Sanitaire publié par l'ARASS reste le n°25/2026, « données consolidées jusqu'à la
+  // semaine 29 (13/07/2026 au 19/07/2026) », publié le 27/07 — soit exactement l'arrêté déjà cité en
+  // base (34 cas confirmés au 19/07, via WPRO Dengue Situation Update 751). Le listing
+  // `service-public.pf/dsp/bulletin-de-surveillance-sanitaire/` ne contient aucun bulletin d'août
+  // 2026. Rien à écrire.
+  // ⚠️ Divergence relevée et volontairement NON appliquée : le Tableau 1 du rapport WHO/SPC
+  // « Dengue in the Pacific » du 14/08 donne 32 cas confirmés cumulés 2026 pour la Polynésie
+  // française (contre 34 en base) en citant un « dernier rapport national » du 11/08 qui n'existe pas
+  // publiquement. Ce 32 est en outre incohérent avec la propre colonne EW 29-32 du même tableau, qui
+  // compte 2 cas sur ces quatre semaines : 34 au 19/07 + 2 donnerait 36, pas 32. Ne pas régresser la
+  // ligne de 34 à 32 sur cette seule lecture de tableau — attendre un BSS de l'ARASS postérieur à la
+  // semaine 29, qui est la source primaire de ce territoire.
+  "4f95242c-e512-488e-ba52-38298a3e9ec3": "2026-08-19",
   // Polio/Afghanistan : « Polio This Week » du 12/08/2026 — « No WPV1 cases were reported this
   // week », total 2026 toujours 15 (cas le plus récent 25/06/2026), 5 échantillons environnementaux
   // positifs cette semaine sans effet sur le compte de cas. Rien à écrire.
@@ -648,7 +662,13 @@ const MANUAL_ROW_CHECKED = {
   // Revérifié le 16/08 (même passage que le watch de clôture ci-dessous) : la page gov.uk, toujours
   // datée du 13/08, décrit encore la seule notification du 30/06 à Kyegegwa et la classe en incident
   // en cours, sans aucun cas supplémentaire ni déclaration de fin. Toujours 1 cas / 1 décès.
-  "b17d4fda-c38c-41c0-9b26-e60a54c1851b": "2026-08-16",
+  // Revérifié le 19/08 : la page gov.uk décrit toujours la seule notification du 30/06 à Kyegegwa
+  // (1 cas confirmé), la classe en incident en cours et n'annonce aucune clôture. ⚠️ Piège écarté ce
+  // jour-là : une WebSearch « Uganda Marburg declared over » renvoie un résumé qui attribue à Marburg
+  // un décompte de 20 cas / 2 décès et un compte à rebours de 42 j démarré le 16/07 — ce sont les
+  // chiffres ougandais de l'épidémie EBOLA Bundibugyo (cf. DON615), pas Marburg. Toujours 1 cas /
+  // 1 décès, rien à écrire, ligne laissée active.
+  "b17d4fda-c38c-41c0-9b26-e60a54c1851b": "2026-08-19",
   // Diphtérie/Australie : vérifié le 13/08 via le Browser pane. Le rapport le plus récent de la
   // collection reste celui du 27/07/2026 (déjà en base : 475 cas confirmés / 1 décès), donc rien
   // à écrire. ⚠️ CHANGEMENT DE CADENCE annoncé dans la « Collection description » de la page de
@@ -801,7 +821,7 @@ const MARBURG_CLOSURE_WATCH_FROM = "2026-08-11";
 // Le résumé de recherche l'accompagnait d'un « 20 confirmed cases and 2 deaths » qui ne correspond
 // à AUCUNE épidémie ougandaise réelle (2017 : 3 cas ; 2025 : 14 confirmés / 2 décès ; 2026 : 1 cas).
 // Toujours vérifier la date de publication de cet article avant de conclure à une clôture.
-const MARBURG_CLOSURE_LAST_CHECK = "2026-08-16"; // gov.uk (maj 13/08, inchangée au 16/08) : toujours le seul cas du 30/06 à Kyegegwa, listé en incident en cours, aucune clôture annoncée
+const MARBURG_CLOSURE_LAST_CHECK = "2026-08-19"; // gov.uk (inchangée au 19/08) : toujours le seul cas du 30/06 à Kyegegwa, listé en incident en cours, aucune clôture annoncée
 const MARBURG_CLOSURE_RECHECK_DAYS = 3;
 console.log("\n=== Watch ponctuel : fenêtre de clôture Marburg/Ouganda (42j depuis notification 30/06) ===");
 const marburgRow = active.find((o) => o.id === MARBURG_UGANDA_ID);
