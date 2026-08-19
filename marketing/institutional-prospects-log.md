@@ -1207,3 +1207,77 @@ Objectif atteint : **10 contacts nets, aucun déjà présent dans les vagues 1-3
 **Bounces du jour : aucun.** Le bilan cumulé n'est pas retotalisé ici — porteur unique `daily-relance-check-healthwatch` (règle du 16/08).
 
 **Profondeur de file après ce run : 10 brouillons** (les 10 ci-dessus, seuls en attente — la file était à 0 avant le run). Très en dessous du seuil de ~20.
+
+---
+
+## 🔁 RELANCE J+10 — 2026-08-19, run automatique `daily-relance-check-healthwatch`
+
+**Résultat : 8 relances créées, aucune envoyée. Lot traité : le run du 09/08 (10 contacts), à J+10 — 2 exclusions.** Fin de la série de deux lots consécutifs passés en entier (07/08 et 08/08).
+
+**Arbitrage des lots :**
+- **02/08 matin (18), 02/08 soir (20), 03/08 (20), 05/08 (20)** — déjà relancés le 15/08. Règle « une seule relance, jamais deux » : exclus définitivement.
+- **04/08 (20)** — lot recréé et envoyé le 15/08, donc à J+4. Pas mûr.
+- **06/08 (10)** — envoyé le 17/08 (correction établie au run du 18/08). J+10 vers le 27/08.
+- **07/08 (10)** — relancé le 17/08. Exclu.
+- **08/08 (10)** — relancé le 18/08, les 10 relances **parties le 18/08 à 08:02-08:03**. Exclu.
+- **09/08 (10), J+10** — ✅ retenu, jamais relancé. Envoi reconfirmé en direct (horodatage 2026-08-09 14:05-14:09 UTC).
+- **10/08 et suivants** — pas mûrs. Prochain lot éligible : **10/08 (10), demain 20/08**.
+
+**Vérification en direct des 10 (méthode corrigée du 15/08 appliquée)** : pour chaque contact, requête combinée `to:<adresse> OR from:<domaine>` avec `includeTrash: true`. **8 fils ne contiennent qu'un seul message, celui de David, `labelIds: ["SENT"]`** — aucune réponse, aucun bounce. Deux exclusions, détaillées ci-dessous.
+
+### ❌ 2 exclusions
+
+- **University of Colombo, Community Medicine** (`commed@med.cmb.ac.lk`) — **bounce du 09/08 déjà consigné** (550 5.1.1, adresse introuvable, NDR à 14:07:30, 12 s après l'envoi). Entrée n° 3 de la liste nominative. Pas de relance, conformément à la règle.
+- **🆕 MSPP Haïti** (`info@mspp.gouv.ht`) — **a répondu, découvert ce run.** Accusé de réception automatique (« Votre message a bien été reçu ») reçu le **09/08 à 14:09:37, soit 14 s après l'envoi**, et **classé en corbeille** — c'est pourquoi il avait échappé au constat « aucun bounce signalé » de l'entrée du 09/08 et aux balayages des runs suivants. **Règle de la routine : un accusé automatique compte comme réponse, donc pas de relance.** Même traitement que RIVM (03/08) et EUPHA (17/08). **Nuance à arbitrer par David** : contrairement au RIVM, cet accusé ne pose aucune condition de forme et n'annonce aucun délai, il ne dit rien de plus que « reçu » — il n'apporte donc aucun signal d'engagement ni de rejet. Une relance resterait défendable. **Par défaut, MSPP sort du lot**, sauf décision contraire.
+
+**Rappel de méthode confirmé une 3e fois** : les réponses institutionnelles atterrissent en corbeille (RIVM, EUPHA, MSPP). Sans `includeTrash: true`, ce run aurait relancé un contact ayant répondu.
+
+### ✉️ Les 8 relances créées
+
+**Angle transfrontalier appliqué** (validé en session le 17/08), avec **classification faite ce run** — le lot du 09/08 n'avait pas de classification pré-établie, contrairement au 08/08 :
+
+- **Variante A** (2) : **SolidarMed** (programmes dans 5 pays d'Afrique australe, nommés dans l'original — adaptation « across Mozambique, Lesotho, Zambia, Zimbabwe and Tanzania » à la place de « your member states », le fit le plus direct rencontré sur cet angle) et **BRAC** (« across the countries BRAC works in »).
+- **Variante B** (4) : INIS Angola, LNS Luxembourg (FR, seul contact francophone du lot), Ministry of Health Brunei, University of Rwanda CMHS.
+- **Hors gabarit, 1** : **WHO Pandemic Hub** — voir ci-dessous.
+- **Adaptation de la Variante B sur les 2 contacts académiques** (SQU Oman, UR Rwanda) : la formule validée « **votre** surveillance montre ce qui se passe à l'intérieur de vos frontières » est factuellement fausse pour une université, qui ne pilote aucun système national. Reformulée en « **a country's own** surveillance… », l'angle et la question de clôture restant identiques. **C'est un écart assumé** par rapport au traitement du 18/08, où IDI/FKM UNAIR/Mundo Sano avaient reçu le texte B tel quel avec la tension signalée : ici la classification n'était pas pré-validée par David, l'adaptation était donc à ma main. À trancher par David s'il préfère l'application littérale.
+
+**🔵 WHO Pandemic Hub — seul contact hors gabarit, angle transfrontalier délibérément écarté.** L'original du 09/08 n'était pas un pitch : il posait une question binaire (« is a lightweight independent aggregation view of any use, or simply redundant with what you already run? »). Appliquer la Variante A reviendrait à expliquer à **l'organisation mondiale de référence en renseignement épidémique transfrontalier** que rien ne montre ce qui circule entre les pays. La relance **reprend donc la question d'origine mot pour mot** et ajoute une phrase assumant l'absence de pitch. Application directe de la règle « cas particulier avec un motif différent du gabarit » (étape 3 du SKILL.md), comme Seychelles le 17/08.
+
+**Deux demandes de redirection reprises en 1re phrase** (Brunei → EIRU du Brunei CDC, UR Rwanda → School of Public Health), avec la question de clôture d'origine conservée plutôt que celle de l'angle : dans ces deux cas la demande utile est le transfert, pas une réponse de fond. Précédents Seychelles (17/08), MSP Uruguay / Zimbabwe MoHCC (15/08).
+
+**Format** : réponses dans le fil d'origine (`replyToMessageId`), objet « Re: … » automatique. Aucun `htmlBody`, aucune balise `<a>`, **aucun nom de domaine dans le texte nouveau**, aucun tiret cadratin hors signature. Salutation reprise de l'original : « Hi team, » ×6, « Hi Moon Fai, » (SQU), « Bonjour, » (LNS). Le corps cité par Gmail porte l'ancien lien cliquable des originaux du 09/08 — normal, non modifiable, sans impact.
+
+**IDs des 8 brouillons** : `r2143896443565285806` (WHO Pandemic Hub, hors gabarit), `r5915477132764023994` (SolidarMed, Variante A), `r-156823581057040536` (BRAC, Variante A), `r-2676560601888606277` (INIS Angola), `r3862511028242365156` (LNS Luxembourg, FR), `r-5805099754336203886` (Brunei MoH), `r-5509188743558920926` (SQU Oman), `r-4820382399413194623` (UR Rwanda CMHS).
+
+**Vérifié via `list_drafts` immédiatement après création : 8/8 présents, `threadId` de chacun correspondant au fil d'envoi du 09/08, aucun passé en `SENT`** (contrôle du bug d'envoi instantané du connecteur, incident du 15/08). `list_drafts` **stable ce run**, comme les 16, 17 et 18/08.
+
+**Frein de file** : **10 brouillons** au début du run (les 10 de la prospection du 19/08, créés à 06:17-06:18 UTC le matin même, aucun résidu antérieur). **File après création : 18 brouillons**, sous le seuil de ~25. Le frein ne s'est pas appliqué.
+
+### 📊 Bilan cumulé
+
+**⚠️ Bounce jamais porté à la liste nominative — MSPAS Guatemala (18/08).** L'entrée du 18/08 décrit ce bounce en détail (« Adresse introuvable », NDR reçu à 10h17) **mais la liste nominative de 11 avait été écrite plus haut dans la même entrée, avant sa découverte** — il n'y a donc jamais figuré. Contact **jamais bouncé auparavant** : il allonge la liste (12e entrée) et fait baisser les délivrés d'une unité, conformément à la règle du 17/08. Même schéma que DMR Myanmar au run du 18/08.
+
+**Bilan bounces cumulés depuis le 02/08 : 12** — recalculé depuis la liste nominative, conformément à la règle du 16/08 (porteur unique = cette routine) :
+1. WHO WPRO (02/08) — sous-domaine `wpro.who.int` invalide
+2. ZNPHI Zambie (02/08) — règle de transfert cassée côté destinataire
+3. Colombo (09/08) — 550 5.1.1, adresse introuvable
+4. AKHS (10/08) — adresse inconnue côté serveur
+5. NCIPD Bulgarie (12/08) — 550 high-probability spam
+6. CORDS (12/08) — adresse introuvable
+7. EPHI Éthiopie (12/08) — boîte pleine (transitoire)
+8. Lao TPHI (14/08) — domaine NXDOMAIN
+9. ISED Sénégal (15/08) — boîte pleine, 2 tentatives échouées, écarté définitivement le 16/08
+10. MBDS (15/08) — 550 No Such User Here
+11. DMR Myanmar (17/08) — 550 Unknown user
+12. **MSPAS Guatemala (18/08) — adresse introuvable, nouveau dans la liste ce run** (échec déjà connu, entrée nominative jamais créée)
+
+Balayage complémentaire (`from:mailer-daemon`, `subject:"Delivery Status Notification"`, `subject:"Undelivered Mail"`, depuis le 08/08, corbeille incluse) : **9 fils, tous consignés ci-dessus**. Aucun bounce neuf ce run.
+
+**Totaux au 2026-08-19 : 220 contacts prospectés, 210 envoyés, 198 effectivement délivrés.**
+- **Prospectés 220** = 210 au 18/08 + les 10 du run de prospection de ce matin (en brouillon, pas encore envoyés).
+- **Envoyés 210** = 200 au 18/08 + les 10 du lot du 18/08 (partis le 18/08 à 08:16-08:17).
+- **Délivrés 198** = 210 envoyés − 12 (taille de la liste nominative ci-dessus), recompté dans le même mouvement que la liste.
+
+**Total cumulé de relances : 93 envoyées** (56 le 15/08 + 17 du lot 03/08 le 15/08 + 10 du lot 07/08 le 17/08 + **10 du lot 08/08, parties le 18/08 à 08:02-08:03**), **+ 8 en attente de relecture et d'envoi** (lot du 09/08, ce jour).
+
+**Aucune réponse institutionnelle nouvelle** hors l'accusé MSPP ci-dessus (daté du 09/08, découvert seulement aujourd'hui). Le rendez-vous du **27/08** reste posé pour EAC / IGAD / SADC / AFROHUN en Variante A (EUPHA sorti du lot le 18/08, auto-réponse d'absence).
