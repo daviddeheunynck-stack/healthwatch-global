@@ -1015,7 +1015,7 @@ Conséquence : **tout utilisateur qui clique « passer à Pro » pendant son ess
 
 Session dédiée à la construction des 3 idées validées par David ce soir. `tsc --noEmit` et `eslint` propres sur tous les fichiers touchés avant chaque commit. Deux sous-agents utilisés pour l'idée 2 (15 des 16 fichiers, en deux lots parallèles) après que j'aie construit et vérifié le premier (`sync-africa-cdc`) moi-même comme patron de référence ; diffs des 15 relus intégralement avant commit, aucune divergence de périmètre trouvée.
 
-### Idée 1 (checkout sans carte) — ❌ non codée, dilemme documenté pour arbitrage David
+### Idée 1 (checkout sans carte) — ✅ livrée, option (a) tranchée par David le 19/08, commit `14ad1bc`
 
 **Étape 0 exécutée en premier, en lecture seule** (Supabase prod + API Stripe, aucune écriture) : au 19/08 ~17h18 UTC, `otitamorgan@gmail.com` (`cus_V3gOXomdiXkk8O` / `sub_1U3Z1I4FKShlvEcMtJOXMvid`) n'a **toujours pas** de carte enregistrée — `profiles.stripe_has_payment_method = false` en base, et côté Stripe `customer.default_source = null` et `customer.invoice_settings.default_payment_method = null`. Aucune carte n'a été ajoutée depuis le 17/08 ; le défaut structurel décrit ce matin reste entier sur ce compte précis.
 
@@ -1032,7 +1032,24 @@ Basculer `payment_method_collection` à `"always"` sur `/api/checkout` rendrait 
 - **(b) Statu quo** — `payingCount` affichera 0 vendredi pour une raison structurelle déjà connue ; pas de changement de code.
 - **(c) Un paramètre plus fin** — par ex. ne durcir que le plan `team` (dont le badge n'a pas d'état "en cours d'essai" à préserver) et laisser `pro` en `if_required`, ou ne durcir que le point d'entrée `/pricing` (nouveaux venus, jamais engagés dans un essai visible) et laisser `/account` (utilisateurs déjà en train de lire "sans carte") — plus proche de l'effort "petit" initialement estimé, mais réintroduit la confusion par surface que le brief du matin avait explicitement écartée au profit d'une séparation par intention.
 
-Aucun code changé sur `app/api/checkout/route.ts` ce soir — le fichier reste identique à avant la session.
+**19/08, session de livraison (commit `14ad1bc`)** — David tranche pour (a) : `payment_method_collection` passe de `"if_required"` à `"always"` sur `app/api/checkout/route.ts` (`trial_period_days` et `end_behavior.missing_payment_method: "cancel"` inchangés, désormais un filet de sécurité inoffensif). L'utilisateur n'est toujours pas débité avant la fin de l'essai — seul le moment de collecte de la carte change.
+
+Les deux légendes identifiées ci-dessus ont été corrigées (`PricingCards.tsx` Team + `account/page.tsx`), avec la formulation honnête "carte requise, aucun débit avant la fin de l'essai" (5 langues), en réutilisant le mécanisme conditionnel `trialDaysLeft` déjà en place sur la carte Pro.
+
+**Trouvaille supplémentaire, hors diagnostic initial** : `CheckoutButton` (`components/CheckoutButton.tsx`) est un composant unique partagé par tout le site, sans distinction entre un premier clic ("Commencer l'essai gratuit") et un clic mid-trial ("Passer en illimité") — les deux tapent directement `/api/checkout`, qui applique toujours un essai Stripe de 14 jours par défaut (`dbTrialEndsAt` null → `trialDaysRemaining = 14`). Le diagnostic du matin n'avait donc repéré que les 2 conflits "essai déjà en cours" ; en auditant systématiquement tous les usages de `CheckoutButton` (grep + lecture de chaque fichier), 9 autres légendes "sans carte" se sont révélées tout aussi contiguës à un `CheckoutButton` plan="pro"/"team" — donc tout aussi fausses après le changement, y compris le badge par défaut Pro **et** Team de `PricingCards.tsx` (le bouton "Commencer →" lui-même, pas seulement l'état conditionnel Team déjà identifié) :
+
+- `components/PricingCards.tsx` — badge par défaut (`trialDaysLeft === null`) des cartes Pro et Team
+- `components/EmailCapture.tsx`, `FreePlanBanner.tsx`, `UpgradeModal.tsx`, `OnboardingTour.tsx` — notes/texte adjacents à un `CheckoutButton` plan="pro"
+- `app/[locale]/alerts/page.tsx` — note sous le CTA Pro
+- `app/[locale]/outbreak/[id]/page.tsx` (fiche foyer, `ctaSub` — alimente à la fois `OutbreakBottomCta` et `OutbreakStatsGrid`)
+- `lib/digest-email.ts` — CTA de l'email hebdomadaire (même chemin de clic que le site)
+- `app/[locale]/terms/page.tsx` — clause Billing en anglais (doc légale, "no credit card required" devenu inexact)
+
+Toutes corrigées avec la même formulation honnête, dans les langues concernées.
+
+**Vérifié explicitement non concerné** (aucun `CheckoutButton` dans le fichier — grep confirmé) : `signup`, `login`, `about`, `docs`, `reports`, `embed` (`DemoBanner`), `pilot`, `institutional`, `methodology`, et les emails du programme pilote (`lib/pilot-emails.ts`, `lib/trial-ending-email.ts`, `lib/trial-value-nudge-email.ts`) — ces surfaces portent soit sur le flux `/signup` réel (resté gratuit et sans carte, inchangé), soit sur le programme pilote (accès accordé directement en base via `admin/invite`, aucune session Stripe créée). Le "sans carte" y reste vrai.
+
+`tsc --noEmit` et `eslint` propres sur les 11 fichiers modifiés. Pas de démarrage du dev server possible dans cette session non supervisée (confirmation demandée, refusée automatiquement) — confiance basée sur la lecture du JSX + typecheck, pas de vérification visuelle.
 
 ### Idée 2 (garde-fou silencieux sur 16 crons) — ✅ livrée, commit `8a235be`
 
