@@ -1095,18 +1095,22 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlis
              locale === "id" ? "Kasus terkonfirmasi + probable — agregat WHO, ECDC, PAHO dan Africa CDC" :
              "Confirmed + probable cases — aggregated from WHO, ECDC, PAHO & Africa CDC"}
           </p>
-          {outbreak.updated_at && (
+          {/* Reads outbreak.date (the source bulletin's own date), not updated_at
+              (our last DB write) — see freshOutbreakHours in lib/outbreaks.ts for
+              why. Date-only formatting (no hour/minute) matches date's own
+              precision: it never carries a time-of-day. */}
+          {outbreak.date && (
             <p className="text-[10px] text-gray-600 leading-snug flex items-center gap-1">
               <Clock className="w-3 h-3 shrink-0" />
-              {locale === "fr" ? "Synchro" :
-               locale === "es" ? "Sincronizado" :
-               locale === "ar" ? "آخر مزامنة" :
-               locale === "id" ? "Sinkronisasi" :
-               "Synced"}{" "}
+              {locale === "fr" ? "Bulletin du" :
+               locale === "es" ? "Boletín del" :
+               locale === "ar" ? "نشرة" :
+               locale === "id" ? "Buletin" :
+               "Bulletin dated"}{" "}
               <span className="text-gray-500">
-                {new Date(outbreak.updated_at).toLocaleDateString(
+                {new Date(outbreak.date).toLocaleDateString(
                   locale === "fr" ? "fr-FR" : locale === "es" ? "es-ES" : locale === "ar" ? "ar-SA" : locale === "id" ? "id-ID" : "en-GB",
-                  { day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" }
+                  { day: "numeric", month: "short", year: "numeric" }
                 )}
               </span>
             </p>

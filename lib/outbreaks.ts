@@ -661,11 +661,25 @@ export function staleOutbreakDays(outbreak: Outbreak): number | null {
 // instead of only ever warning when it's old. Capped at 7 days so the badge
 // stays meaningful (matches WHO DON's hourly/daily sync cadence) rather than
 // firing for anything merely short of the 60-day stale threshold.
+//
+// Reads `outbreak.date` (the source bulletin's own date), NOT `updated_at`.
+// Until 2026-08-18 this read `updated_at` — the timestamp of the row's last
+// DATABASE WRITE, which any field touch (a QC description edit, a locale
+// backfill) refreshes regardless of whether the case/death figures changed.
+// Found live on the Ebola/RD Congo row (source_priority=10, the product's
+// largest active outbreak): the badge claimed "synced 3d ago" from a row
+// last *touched* 3 days prior, while its actual bulletin (WHO DON 615) was
+// already 6 days old — no active cron is even allowed to write that row's
+// figures (see sync-who-afro's `source_priority <= 5` ceiling), so the claim
+// was not just stale but structurally impossible to keep true. `data-quality`
+// (app/api/cron/data-quality/route.ts) already measures correctly on `date`
+// with a 7-day PHEIC threshold; this aligns the public-facing badge with the
+// same field instead of inventing a second definition of "fresh".
 const FRESH_HOURS_CAP = 7 * 24;
 
 export function freshOutbreakHours(outbreak: Outbreak): number | null {
   if (!outbreak.active) return null;
-  const ref = outbreak.updated_at;
+  const ref = outbreak.date;
   if (!ref) return null;
   const hours = Math.floor((Date.now() - new Date(ref).getTime()) / 3_600_000);
   if (hours < 0 || hours > FRESH_HOURS_CAP) return null;

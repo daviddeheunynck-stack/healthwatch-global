@@ -560,11 +560,15 @@ export default async function OutbreakPage({
           <span className="text-gray-600">↗</span>
         </div>
       )}
-      {/* Last synced timestamp */}
-      {o.updated_at && (
+      {/* Last synced timestamp — reads o.date (the source bulletin's own date), not
+          o.updated_at (our last DB write). Until 2026-08-18 this used updated_at,
+          so any incidental row touch (a QC edit, a locale backfill) reset the
+          claim without a single figure changing — see freshOutbreakHours in
+          lib/outbreaks.ts for the matching fix on the dashboard badge. */}
+      {o.date && (
         <div className="mb-6 text-xs text-gray-500 flex items-center gap-1">
           <span>🔄</span>
-          <span suppressHydrationWarning>{l.lastSynced} : {l.syncedAgo(Math.round((Date.now() - new Date(o.updated_at!).getTime()) / 60_000))}</span>
+          <span suppressHydrationWarning>{l.lastSynced} : {l.syncedAgo(Math.round((Date.now() - new Date(o.date).getTime()) / 60_000))}</span>
         </div>
       )}
 
