@@ -115,8 +115,10 @@ Post d'**1 j** (fenêtre 48 h ✅), `urn:li:activity:7495049816352321537`, **FR*
 
 **Aucune donnée épidémiologique nouvelle à intégrer en base cette session (§8)** : le chiffre ALIMA (1 468 admissions / 632 confirmés) a été utilisé comme angle de commentaire mais ne constitue pas une ligne `outbreaks` nouvelle (agrégat local d'un partenaire opérationnel, pas un bulletin national/institutionnel). L'écart Ebola/RDC (verrou `source_priority: 10`) reste non arbitré, 4e jour consécutif — aucune routine active ne peut l'écrire dans les règles actuelles (rappel déjà consigné le 18/08).
 
+**Suivi in extremis avant clôture** : **Dr Franck NZIZA a répondu à 10:43** au welcome DM du 18/08, simple accusé de politesse (« *Bonjour David. Ravi de faire votre connaissance.* »), ne répond pas à la question de fond posée hier. Aucune relance rédigée, rien de substantiel à creuser pour l'instant — voir `linkedin-contacts.md`, section 1️⃣ bis.
+
 ### ✅ Vérification archivage (étape 6)
-Relecture de `linkedin-contacts.md` et `content-log.md` : **5 commentaires**, **7 connexions envoyées** (+ 3 relations acceptées), **7 suivis** (+1 échec technique noté), **4 brouillons DM en validation** — tous archivés avec texte complet, double-check et hook. Rien manquant à ajouter.
+Relecture finale de `linkedin-contacts.md` et `content-log.md` : **5 commentaires**, **7 connexions envoyées** (+ 3 relations acceptées), **7 suivis** (+1 échec technique noté), **4 DM validés par David en session interactive (« envoie les 4 ») et envoyés** (Sidibé Tiany, Gildas Fiacre KEDALO, Daniel Thierry Belinga Etogo, TAMBWE Patrick Rodrigue), **1 réponse reçue en extremis** (Dr Franck NZIZA, sans suite requise) — tous archivés avec texte complet, double-check et hook. Rien manquant à ajouter.
 
 <!-- HWG-CL-19082026-MARKER -->
 
