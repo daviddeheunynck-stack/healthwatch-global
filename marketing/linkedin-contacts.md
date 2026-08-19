@@ -84,24 +84,24 @@
 
 Les 3 relations acceptées sans échange préalable (2 invitations reçues + Sidibé Tiany/Gildas Fiacre KEDALO, plus la connexion 18/08 rattrapée aujourd'hui pour Daniel Thierry Belinga Etogo) ont été vérifiées une par une dans la messagerie (20 fils chargés) : **aucun fil préexistant pour les 3**. Chaque brouillon est un premier contact, donc **sans CTA** (politique commune §3). Double-check (§5) effectué sur les 3 : langue du profil = FR pour les trois → langue du brouillon = FR ✅ ; 0 tiret cadratin (vérifié caractère par caractère) ✅ ; aucun chiffre HWG avancé ✅ ; anti-gabarit vérifié contre les 2 fichiers d'archive avant rédaction — les ouvertures usuelles « merci pour la connexion » (8 occurrences) et « merci d'avoir accepté la connexion » (16 occurrences) **délibérément évitées**, chaque message ouvre différemment ; relecture éditoriale : question fermée sur un point réellement absent du travail HWG (délai terrain, mécanique SNIS, décision de priorisation), pas une question générique.
 
-#### 🔒 DM en attente de validation — Sidibé Tiany (FR, sans CTA)
-`/in/sidibé-tiany-348a18b9/` — invitation reçue acceptée ce matin, aucun fil préexistant.
+#### ✅ DM 1 — Sidibé Tiany (FR, sans CTA) — ENVOYÉ 10:18, sur ordre explicite de David en session interactive (« envoie les 4 »)
+`/in/sidibé-tiany-348a18b9/` — invitation reçue acceptée ce matin, aucun fil préexistant. Destinataire (nom + intitulé) et texte revérifiés dans le même appel JS que le clic d'envoi. Éditeur vidé et texte confirmé dans le DOM après envoi.
 
 > Bonjour Sidibé, je découvre votre profil après la connexion. La surveillance de la polio et des autres MEV en Guinée est exactement le terrain qui manque à mon propre travail. Côté HealthWatch Global, je pars des bulletins déjà publiés (OMS, Africa CDC), sans jamais voir le délai réel entre un cas suspect signalé et sa confirmation. Ce délai varie-t-il beaucoup selon les zones que vous couvrez ?
 
-#### 🔒 DM en attente de validation — Gildas Fiacre KEDALO (FR, sans CTA)
-`/in/gildas-fiacre-kedalo-318a725a/` — invitation reçue acceptée ce matin, aucun fil préexistant.
+#### ✅ DM 2 — Gildas Fiacre KEDALO (FR, sans CTA) — ENVOYÉ 10:21, sur ordre explicite de David (« envoie les 4 »)
+`/in/gildas-fiacre-kedalo-318a725a/` — invitation reçue acceptée ce matin, aucun fil préexistant. Destinataire et texte revérifiés dans le même appel JS que le clic d'envoi. Éditeur vidé et texte confirmé dans le DOM après envoi.
 
 > Bonjour Gildas, votre profil HMIS/SNIS attire mon attention pour une raison précise : je construis HealthWatch Global à partir de chiffres déjà publiés par pays, sans jamais voir la mécanique du système d'information sanitaire qui les produit en amont. Un cas remonte-t-il au SNIS national à un rythme comparable d'un pays à l'autre, dans votre expérience, ou est-ce très inégal ?
 
-#### 🔒 DM en attente de validation — Daniel Thierry Belinga Etogo (FR, sans CTA)
-`/in/daniel-thierry-belinga-etogo-b82954213/` — invitation envoyée sans note le 17/08, acceptée le 18/08, jamais archivée jusqu'à aujourd'hui ; aucun fil préexistant.
+#### ✅ DM 3 — Daniel Thierry Belinga Etogo (FR, sans CTA) — ENVOYÉ 10:25, sur ordre explicite de David (« envoie les 4 »)
+`/in/daniel-thierry-belinga-etogo-b82954213/` — invitation envoyée sans note le 17/08, acceptée le 18/08, jamais archivée jusqu'à aujourd'hui ; aucun fil préexistant. Destinataire et texte revérifiés dans le même appel JS que le clic d'envoi. Éditeur vidé et texte confirmé dans le DOM après envoi.
 
 > Bonjour Daniel, votre parcours en gestion intégrée des risques sanitaires touche un point qui m'échappe souvent : HealthWatch Global agrège des chiffres une fois publiés, mais jamais la décision qui a fait qu'un signal est devenu un risque suivi activement plutôt qu'un bruit de fond. Qu'est-ce qui, dans votre pratique, fait basculer un signal d'un côté ou de l'autre ?
 
-**3 brouillons en file, aucun envoyé.** Ces 3 welcome DM ne comptent pas dans le quota froid au sens strict (relations acceptées, pas prospection à froid), mais partagent le même quota de rédaction/jour (8/jour) une fois validés — voir bilan de fin de session pour le décompte.
+**3 DM de bienvenue envoyés.** Ces 3 welcome DM ne comptent pas dans le quota froid au sens strict (relations acceptées, pas prospection à froid).
 
-#### 🔒 DM en attente de validation — TAMBWE Patrick Rodrigue (EN, fil actif, avec CTA) — réponse reçue hier soir, non traitée avant ce matin
+#### ✅ DM 4 — TAMBWE Patrick Rodrigue (EN, fil actif, avec CTA) — ENVOYÉ 10:15, sur ordre explicite de David (« envoie les 4 »), réponse reçue hier soir, non traitée avant ce matin
 `/in/tambwepatrick/` — DM envoyé hier 10:35 (2/7 invitations décideurs traitées comme cold outreach le 18/08 matin), **réponse reçue à 22:15**, après la clôture de la session 17h d'hier (qui l'avait donc listé à tort parmi les « 4 DM sans réponse » — pas une erreur de cette session-ci, la réponse est simplement arrivée après coup).
 
 **§4 — fil relu intégralement** : 2 messages seulement, notre DM du 18/08 10:35 et sa réponse du 18/08 22:15. Rien d'antérieur.
@@ -116,17 +116,17 @@ Les 3 relations acceptées sans échange préalable (2 invitations reçues + Sid
 >
 > What I build at HealthWatch Global sits downstream of exactly this kind of coordination, or the lack of it: the country-level totals I aggregate never show whether it happened. If it's ever useful to see the aggregation itself, the site runs a two-week Pro window you can open without a card, at healthwatch-global.com.
 
-**4 brouillons en file au total, aucun envoyé** (3 welcome DM + 1 réponse en fil actif). **Notification push envoyée à David** avant clôture de session.
+**Les 4 DM ont été validés et envoyés en session interactive** (« envoie les 4 »), un par un, destinataire (nom + intitulé) et texte revérifiés dans le même appel JS que le clic d'envoi, éditeur vidé et texte confirmé dans le DOM après chaque envoi. **Quota DM du jour : 4 envoyés** (3 welcome DM hors quota froid strict + 1 réponse en fil actif hors quota froid).
 
-### 🔁 Double-check demandé par David (relecture à froid des 4 brouillons)
+### 🔁 Double-check demandé par David (relecture à froid des 4 brouillons, avant validation et envoi)
 - **TAMBWE Patrick Rodrigue** — fil rouvert et relu intégralement : toujours 2 messages, aucun nouveau depuis l'archivage, verbatim reçu (22:15) confirmé mot pour mot identique à celui archivé. Anti-répétition du CTA reconfirmée sur le fil complet (`healthwatch-global.com`/« trial »/« Pro » toujours absents des 2 messages). Mise en forme revérifiée (770 caractères, 2 paragraphes, 0 tiret cadratin, 0 double espace) ✅ aucune correction.
 - **Sidibé Tiany, Gildas Fiacre KEDALO, Daniel Thierry Belinga Etogo** — reconfirmé qu'aucun fil de messagerie n'existe pour les 3 (20 conversations rechargées, aucun des 3 noms). Chaque claim factuel revérifié contre l'intitulé réel du profil visé (« Surveillance polio et autres MEV », « Digital Health - HMIS | SNIS », « gestion intégrée des risques sanitaires ») : les 3 correspondent mot pour mot.
 - **⚠️ 1 correction appliquée — brouillon Sidibé Tiany** : la phrase « *La surveillance polio et les autres MEV en Guinée est exactement le terrain...* » comportait une construction fautive (prépositions manquantes rendant l'accord sujet/verbe ambigu — « la surveillance polio » au lieu de « la surveillance **de la** polio », « les autres MEV » sans « **des** »). Corrigée en « *La surveillance **de la** polio et **des** autres MEV en Guinée est exactement le terrain...* », qui restaure un sujet singulier clair (« la surveillance ») accordé avec « est ». Les 2 autres welcome DM et la réponse à TAMBWE relus phrase par phrase, **aucune faute du même type trouvée**.
 **Conclusion : 4 brouillons confirmés prêts à validation, 1 correction de français appliquée (Sidibé Tiany), le texte ci-dessus intègre déjà la version corrigée.**
 
 ### 📌 CARRY-OVER pour le créneau de 13h
-1. **🔒 4 DM en file de validation, texte complet ci-dessus** : Sidibé Tiany, Gildas Fiacre KEDALO, Daniel Thierry Belinga Etogo (welcome DM sans CTA), TAMBWE Patrick Rodrigue (réponse en fil actif, avec CTA).
-2. **Quotas de clôture (cumul du jour, 1 session)** : commentaires **5/7** (marge 2) ; connexions **7/7 REMPLI** ; suivis **7/7-10** (plancher atteint, marge jusqu'à 10) ; DM à froid **0/8** inchangé (les 4 brouillons ne sont pas des DM froids au sens strict — 3 sont des welcome DM sur relations acceptées, 1 est une réponse en fil actif — donc hors quota froid, comme le prévoit l'exception).
+1. **Les 4 DM ont été validés et envoyés en session interactive** (« envoie les 4 ») : Sidibé Tiany (10:18), Gildas Fiacre KEDALO (10:21), Daniel Thierry Belinga Etogo (10:25), TAMBWE Patrick Rodrigue (10:15). Surveiller les réponses éventuelles.
+2. **Quotas de clôture (cumul du jour, 1 session)** : commentaires **5/7** (marge 2) ; connexions **7/7 REMPLI** ; suivis **7/7-10** (plancher atteint, marge jusqu'à 10) ; DM à froid **0/8** inchangé (les 4 DM envoyés ne sont pas des DM froids au sens strict — 3 welcome DM sur relations acceptées, 1 réponse en fil actif — donc hors quota froid, comme le prévoit l'exception) ; file de validation DM **0 brouillon** (vidée).
 3. **Afework Tekle** (`/in/afework-tekle-15a59393/`) — suivi en échec technique (« Impossible de suivre »), à retenter au prochain créneau.
 4. **7 invitations de décideurs du 17-18/08 toujours en attente** (3e jour d'attente pour les plus anciennes) : Melkamu Abte Afele, Musole Chipoya, Dieudonné Mwamba (DG INSP RDC), joseph nyandwi, William YAVO, HoussaÏnatou BAH, Abdoulaye Touré.
 5. **Arbitrage toujours attendu de David** (4e jour consécutif) : écart Ebola/RDC en base, verrou `source_priority: 10`, aucune routine active ne peut l'écrire.
