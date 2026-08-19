@@ -638,6 +638,13 @@ const MANUAL_ROWS = {
   // scripts/fix-west-nile-italy-report3-2026-08-19.mjs.
   "d0dcfdbd-b656-4d4f-91a9-ddd271025af8": "West Nile/Italie",
 };
+// Ebola/RD Congo (bd1c3a46) : chiffre débloqué le 19/08 — David a ouvert le PDF IRIS lui-même
+// (même blocage JS que le PDF diphtérie australienne), lu directement depuis ses Téléchargements.
+// WHO AFRO External Situation Report 14 (16/08) : 4 665->5 021 cas, 2 184->2 378 décès. Voir
+// scripts/fix-ebola-drc-sitrep14-2026-08-19.mjs. Le problème de fond (aucun rédacteur automatisé,
+// cf. l'entrée MANUAL_ROWS ci-dessus et product-ideas-log.md 2026-08-18 idée 2) reste entier —
+// cette ligne redeviendra périmée dans ~7j sans un nouveau geste manuel ou une vraie correction
+// de mécanisme. Ne pas la retirer du suivi hebdo pour cette raison précise.
 // Vérification faite, source inchangée → aucune écriture, donc `updated_at` ne bouge pas et la
 // ligne se re-signale tous les matins indéfiniment (vécu le 06/08 avec les deux lignes polio :
 // GPEI confirmait les mêmes totaux qu'au 22/07, rien à écrire, mais la ligne restait "8j — À
