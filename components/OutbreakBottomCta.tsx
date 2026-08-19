@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase-browser";
 import Link from "next/link";
 import CheckoutButton from "@/components/CheckoutButton";
+import BillingPortalButton from "@/components/BillingPortalButton";
 import { getMarketingPriceDisplay } from "@/lib/pricing";
 
 const CTA_CLASS = "inline-block bg-red-600 hover:bg-red-700 text-white font-semibold px-6 py-2.5 rounded-lg transition-colors";
@@ -14,6 +15,21 @@ const EXPIRED_COPY: Record<string, { btn: string; sub: string }> = {
   es: { btn: "Suscribirse a Pro →", sub: "Recupere el acceso a alertas, informes PDF y datos completos." },
   ar: { btn: "← الاشتراك في Pro", sub: "استعد الوصول إلى التنبيهات وتقارير PDF والبيانات الكاملة." },
   id: { btn: "Berlangganan Pro →", sub: "Dapatkan kembali akses ke peringatan, laporan PDF, dan data lengkap." },
+};
+
+// A Stripe subscription can exist with no payment method attached (checkout
+// sets stripe_subscription_id the instant it completes, even with
+// payment_method_collection: if_required and no card — see
+// app/api/checkout/route.ts:150-152). Sending that state through
+// CheckoutButton again would start a SECOND Stripe subscription for the same
+// customer instead of fixing the existing one — the billing portal is the
+// correct destination, same reasoning as TrialBannerLoader's hasBilling fix.
+const NEEDS_CARD_COPY: Record<string, { btn: string; sub: (daysLeft: number) => string }> = {
+  fr: { btn: "Ajouter un moyen de paiement →", sub: (d) => `Il vous reste ${d} jour${d > 1 ? "s" : ""} d'essai Pro, mais aucune carte n'est enregistrée — l'abonnement s'annulera automatiquement à la fin de l'essai.` },
+  en: { btn: "Add a payment method →", sub: (d) => `${d} day${d > 1 ? "s" : ""} left on your Pro trial, but no card is on file — the subscription will cancel automatically when the trial ends.` },
+  es: { btn: "Añadir un método de pago →", sub: (d) => `Le queda${d > 1 ? "n" : ""} ${d} día${d > 1 ? "s" : ""} de prueba Pro, pero no hay ninguna tarjeta registrada — la suscripción se cancelará automáticamente al finalizar la prueba.` },
+  ar: { btn: "← إضافة طريقة دفع", sub: (d) => `تبقّى لديك ${d} ${d === 1 ? "يوم" : "أيام"} من تجربة Pro، لكن لا توجد بطاقة مسجّلة — سيُلغى الاشتراك تلقائياً عند انتهاء التجربة.` },
+  id: { btn: "Tambahkan metode pembayaran →", sub: (d) => `${d} hari tersisa pada uji coba Pro Anda, tetapi belum ada kartu tersimpan — langganan akan dibatalkan otomatis saat uji coba berakhir.` },
 };
 
 // Shown to an already-active Pro trial instead of the default "start your free
@@ -89,8 +105,11 @@ interface TrialInfo {
 }
 
 export default function OutbreakBottomCta({ locale, ctaTitle, ctaSub, ctaProBtn, ctaFree }: Props) {
-  // null = pending, "paid" = hide, "trial" = active Pro trial, "free" | "anon" | "expired" = show default
-  const [state, setState] = useState<"pending" | "paid" | "free" | "anon" | "expired" | "trial">("pending");
+  // null = pending, "paid" = hide, "trial" = active Pro trial,
+  // "trial_needs_card" = active Stripe trial with NO payment method (add one
+  // via the billing portal, not another checkout), "free" | "anon" | "expired"
+  // = show default
+  const [state, setState] = useState<"pending" | "paid" | "free" | "anon" | "expired" | "trial" | "trial_needs_card">("pending");
   const [trialInfo, setTrialInfo] = useState<TrialInfo | null>(null);
 
   useEffect(() => {
@@ -99,16 +118,32 @@ export default function OutbreakBottomCta({ locale, ctaTitle, ctaSub, ctaProBtn,
       if (!session) { setState("anon"); return; }
       const { data: profile } = await supabase
         .from("profiles")
-        .select("plan, trial_ends_at, stripe_subscription_id, is_pilot, pilot_organization")
+        .select("plan, trial_ends_at, stripe_subscription_id, stripe_has_payment_method, is_pilot, pilot_organization")
         .eq("id", session.user.id)
         .single();
       const plan = profile?.plan ?? "free";
       const isPaidPlan = ["starter", "pro", "team", "enterprise"].includes(plan);
       const trialEndsAt = profile?.trial_ends_at ? new Date(profile.trial_ends_at).getTime() : null;
       const hasSub = !!profile?.stripe_subscription_id;
+      // Was `hasSub` alone — wrong for a no-card trialing Stripe subscriber
+      // (checkout sets stripe_subscription_id the instant checkout completes,
+      // even with payment_method_collection: if_required and no card — see
+      // app/api/checkout/route.ts:150-152). That hid this CTA entirely on the
+      // one surface with a proven purchase (otitamorgan@gmail.com, found
+      // 2026-08-17/18), instead of warning that the subscription is about to
+      // silently cancel. stripe_has_payment_method (migration
+      // 20260818200000) is the corrected "actually covered" signal.
+      const isCovered = hasSub && !!profile?.stripe_has_payment_method;
 
-      if (isPaidPlan && hasSub) {
+      if (isPaidPlan && isCovered) {
         setState("paid");
+      } else if (isPaidPlan && hasSub && trialEndsAt && trialEndsAt >= Date.now()) {
+        setTrialInfo({
+          daysLeft: Math.max(1, Math.ceil((trialEndsAt - Date.now()) / 86_400_000)),
+          isPilot: !!profile?.is_pilot,
+          pilotOrganization: (profile?.pilot_organization as string | null) ?? null,
+        });
+        setState("trial_needs_card");
       } else if (isPaidPlan && trialEndsAt && trialEndsAt < Date.now() && !hasSub) {
         setState("expired");
       } else if (isPaidPlan && trialEndsAt && trialEndsAt >= Date.now() && !hasSub) {
@@ -132,14 +167,18 @@ export default function OutbreakBottomCta({ locale, ctaTitle, ctaSub, ctaProBtn,
 
   const exp = EXPIRED_COPY[locale] ?? EXPIRED_COPY.en;
   const trial = TRIAL_COPY[locale] ?? TRIAL_COPY.en;
+  const needsCard = NEEDS_CARD_COPY[locale] ?? NEEDS_CARD_COPY.en;
 
   let subText = ctaSub;
   let cta: React.ReactNode = <CheckoutButton plan="pro" locale={locale} label={ctaProBtn} className={CTA_CLASS} />;
-  let showFreeLink = state !== "expired";
+  let showFreeLink = state !== "expired" && state !== "trial_needs_card";
 
   if (state === "expired") {
     subText = exp.sub;
     cta = <CheckoutButton plan="pro" locale={locale} label={exp.btn} className={CTA_CLASS} />;
+  } else if (state === "trial_needs_card" && trialInfo) {
+    subText = needsCard.sub(trialInfo.daysLeft);
+    cta = <BillingPortalButton locale={locale} label={needsCard.btn} />;
   } else if (state === "trial" && trialInfo?.isPilot) {
     subText = trial.pilotSub;
     const org = trialInfo.pilotOrganization || (locale === "fr" ? "votre organisation" : "your organization");

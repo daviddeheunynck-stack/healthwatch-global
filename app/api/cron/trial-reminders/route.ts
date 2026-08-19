@@ -77,10 +77,6 @@ async function runTrialReminders(req: NextRequest, supabase: SupabaseClient) {
   // J-1 window: trial_ends_at in [now + 0.5d, now + 1.5d)
   // The cron runs daily at 09:30 UTC. The ±0.5-day window ensures each user is
   // caught exactly once per reminder even if the cron drifts slightly.
-  // Note: stripe_subscription_id filter is intentionally omitted — users who
-  // went through checkout with a trial but no payment method would otherwise
-  // be silently skipped. The trial_ends_at window already excludes converted
-  // subscribers (their trial_end is in the past).
   const now = Date.now();
   const j3Start = new Date(now + 2.5 * 86_400_000).toISOString();
   const j3End   = new Date(now + 3.5 * 86_400_000).toISOString();
@@ -90,6 +86,12 @@ async function runTrialReminders(req: NextRequest, supabase: SupabaseClient) {
   // Stripe users (stripe_subscription_id set) receive `customer.subscription.trial_will_end`
   // directly from Stripe 3 days before expiry — the cron would double-email them.
   // Only manual trials (no Stripe subscription) need cron-driven reminders.
+  // This assumes that Dashboard event is actually enabled (see the comment on
+  // the trial_will_end handler in app/api/webhook/route.ts — nothing in this
+  // repo confirms it is). health-check's checkUncoveredStripeTrials (added
+  // 2026-08-18) is the safety net if it isn't: it flags any Stripe trial
+  // without a payment method regardless of which email path was supposed to
+  // reach them.
   //
   // Independent of the outbreaks fetch below (neither depends on the other's
   // result) — run both concurrently instead of one after the other.

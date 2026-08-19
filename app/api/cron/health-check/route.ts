@@ -337,6 +337,65 @@ async function checkZeroRegionTrials(supabase: any): Promise<{ trials: ZeroRegio
   return { trials, error: null };
 }
 
+interface UncoveredStripeTrial { email: string; trialEndsAt: string }
+
+// stripe_subscription_id is set the instant Stripe Checkout completes, even
+// with `payment_method_collection: if_required` and zero card on file (see
+// app/api/checkout/route.ts:150-152) — every mechanism gated on
+// "stripe_subscription_id non-null" alone used to read that as a fully
+// converted paying customer (admin's go/no-go "paying" criterion,
+// TrialBannerLoader, OutbreakBottomCta — all fixed 2026-08-18 alongside this
+// check, see stripe_has_payment_method in migration
+// 20260818200000_stripe_payment_method_tracking.sql). Found 2026-08-17/18:
+// otitamorgan@gmail.com converted 2026-08-12 in exactly this state,
+// trial_settings.end_behavior.missing_payment_method=cancel, scheduled to
+// silently cancel 2026-08-26 without a single charge. Complements
+// checkZeroRegionTrials below (a different failure mode — enrolled but
+// nobody watching the money, vs. this one: nobody watching whether the
+// trial can convert at all).
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+async function checkUncoveredStripeTrials(supabase: any): Promise<{ trials: UncoveredStripeTrial[]; error: string | null }> {
+  const { data, error } = await supabase
+    .from("profiles")
+    .select("email, trial_ends_at")
+    .not("stripe_subscription_id", "is", null)
+    .neq("stripe_subscription_id", "admin_override")
+    .eq("stripe_has_payment_method", false)
+    .not("trial_ends_at", "is", null)
+    .gt("trial_ends_at", new Date().toISOString());
+  if (error) return { trials: [], error: error.message };
+  const trials: UncoveredStripeTrial[] = (data ?? [])
+    .filter((p: { email: string | null }) => !!p.email)
+    .map((p: { email: string; trial_ends_at: string }) => ({ email: p.email, trialEndsAt: p.trial_ends_at }));
+  return { trials, error: null };
+}
+
+interface BlockedEmailTrial { email: string; trialEndsAt: string }
+
+// email_blocked_at gates every delivery cron (winback-sequence, weekly-signal,
+// trial-reminders, onboarding-sequence, expire-trials, pilot-follow-up,
+// pilot-closing-reminder, disease-alerts, watchlist-alerts,
+// trigger-pheic-alerts, trigger-regional-digest…) but nothing surfaced it
+// until now — a trial blocked at Brevo (hard bounce, spam complaint)
+// produces the exact same "0 signal" trace as a trial that simply never
+// opens anything. The one real-world precedent (Kamau/Mulamba, blocked
+// 2026-07-21) sat undiscovered for 7 days, found by hand reading the Brevo
+// journal. See marketing/product-ideas-log.md, 2026-08-18, idea 3.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+async function checkBlockedEmailActiveTrials(supabase: any): Promise<{ trials: BlockedEmailTrial[]; error: string | null }> {
+  const { data, error } = await supabase
+    .from("profiles")
+    .select("email, trial_ends_at")
+    .not("email_blocked_at", "is", null)
+    .not("trial_ends_at", "is", null)
+    .gt("trial_ends_at", new Date().toISOString());
+  if (error) return { trials: [], error: error.message };
+  const trials: BlockedEmailTrial[] = (data ?? [])
+    .filter((p: { email: string | null }) => !!p.email)
+    .map((p: { email: string; trial_ends_at: string }) => ({ email: p.email, trialEndsAt: p.trial_ends_at }));
+  return { trials, error: null };
+}
+
 // The viability go/no-go decision date — see [[project_hwg_viability_decision_window_2026_07_24]].
 // A trial ending after this date will never get its conversion ask before
 // the decision is made from whatever data exists on that day. Found
@@ -540,6 +599,8 @@ async function runHealthCheck(_req: NextRequest, supabase: any) {
     sentryCheck,
     audienceCounts,
     zeroRegionResult,
+    uncoveredStripeResult,
+    blockedEmailTrialResult,
     institutionalResult,
     stuckInviteResult,
     decisionHorizonResult,
@@ -574,6 +635,8 @@ async function runHealthCheck(_req: NextRequest, supabase: any) {
           : supabase.from(table).select("*", { count: "exact", head: true }),
       )),
       checkZeroRegionTrials(supabase),
+      checkUncoveredStripeTrials(supabase),
+      checkBlockedEmailActiveTrials(supabase),
       checkInstitutionalSubscriptions(supabase),
       checkStuckPilotInvites(supabase),
       checkDecisionHorizonTrials(supabase),
@@ -592,6 +655,14 @@ async function runHealthCheck(_req: NextRequest, supabase: any) {
   const zeroRegionTrials    = zeroRegionResult.trials;
   const zeroRegionError     = zeroRegionResult.error;
   const hasZeroRegionTrials = zeroRegionTrials.length > 0;
+
+  const uncoveredStripeTrials    = uncoveredStripeResult.trials;
+  const uncoveredStripeError     = uncoveredStripeResult.error;
+  const hasUncoveredStripeTrials = uncoveredStripeTrials.length > 0;
+
+  const blockedEmailTrials    = blockedEmailTrialResult.trials;
+  const blockedEmailTrialError = blockedEmailTrialResult.error;
+  const hasBlockedEmailTrials = blockedEmailTrials.length > 0;
 
   const institutionalSubs  = institutionalResult.rows;
   const institutionalError = institutionalResult.error;
@@ -767,7 +838,7 @@ async function runHealthCheck(_req: NextRequest, supabase: any) {
   // institutional signup is good news, not a fault, and shouldn't turn the
   // report red. hasStuckInvites/hasAlertLocaleDrift are regression guards on
   // real past bugs and do count toward the alert state.
-  const emoji = hasOverdue || hasUnmonitored || hasErroring || audienceErrors.length > 0 || sentryAlert || deliveryAlert || hasZeroRegionTrials || hasStuckInvites || hasAlertLocaleDrift || hasAuthFailures || hasBundleSecrets || (pheic ?? 0) > 0 ? "⚠️" : "✅";
+  const emoji = hasOverdue || hasUnmonitored || hasErroring || audienceErrors.length > 0 || sentryAlert || deliveryAlert || hasZeroRegionTrials || hasUncoveredStripeTrials || hasBlockedEmailTrials || hasStuckInvites || hasAlertLocaleDrift || hasAuthFailures || hasBundleSecrets || (pheic ?? 0) > 0 ? "⚠️" : "✅";
 
   const cronTableRows = cronStatuses
     .map(({ name, label, windowH, ok }) => {
@@ -802,6 +873,20 @@ async function runHealthCheck(_req: NextRequest, supabase: any) {
     .map(({ email, trialEndsAt }) => `<tr>
       <td style="padding:3px 8px 3px 0;color:#94a3b8;font-size:12px">${esc(email)}</td>
       <td style="padding:3px 0;font-size:12px;color:#f87171;font-weight:700">0 région — essai jusqu'au ${esc(new Date(trialEndsAt).toLocaleDateString("fr-FR"))}</td>
+    </tr>`)
+    .join("");
+
+  const uncoveredStripeRows = uncoveredStripeTrials
+    .map(({ email, trialEndsAt }) => `<tr>
+      <td style="padding:3px 8px 3px 0;color:#94a3b8;font-size:12px">${esc(email)}</td>
+      <td style="padding:3px 0;font-size:12px;color:#f87171;font-weight:700">sans carte — annulation programmée le ${esc(new Date(trialEndsAt).toLocaleDateString("fr-FR"))}</td>
+    </tr>`)
+    .join("");
+
+  const blockedEmailTrialRows = blockedEmailTrials
+    .map(({ email, trialEndsAt }) => `<tr>
+      <td style="padding:3px 8px 3px 0;color:#94a3b8;font-size:12px">${esc(email)}</td>
+      <td style="padding:3px 0;font-size:12px;color:#f87171;font-weight:700">e-mail bloqué — essai jusqu'au ${esc(new Date(trialEndsAt).toLocaleDateString("fr-FR"))}</td>
     </tr>`)
     .join("");
 
@@ -869,6 +954,10 @@ async function runHealthCheck(_req: NextRequest, supabase: any) {
     ${hasErroring ? `<tr><td colspan="2" style="padding:8px 0;color:#f87171;font-weight:700">⚠️ ${erroring.length} cron(s) à l'heure mais EN ERREUR au dernier passage : ${erroring.map((e) => `${esc(e.name)} (${esc(e.error.slice(0, 120))})`).join(" · ")}</td></tr>` : ""}
     ${zeroRegionError ? `<tr><td colspan="2" style="padding:8px 0;color:#fbbf24;font-weight:700">🔧 Contrôle « essai sans région d'alerte » impossible : ${esc(zeroRegionError)}</td></tr>` : ""}
     ${hasZeroRegionTrials ? `<tr><td colspan="2" style="padding:8px 0;color:#f87171;font-weight:700">⚠️ ${zeroRegionTrials.length} essai(s) actif(s) SANS AUCUNE région d'alerte configurée</td></tr>` : ""}
+    ${uncoveredStripeError ? `<tr><td colspan="2" style="padding:8px 0;color:#fbbf24;font-weight:700">🔧 Contrôle « abonnement Stripe sans carte » impossible : ${esc(uncoveredStripeError)}</td></tr>` : ""}
+    ${hasUncoveredStripeTrials ? `<tr><td colspan="2" style="padding:8px 0;color:#f87171;font-weight:700">⚠️ ${uncoveredStripeTrials.length} abonnement(s) Stripe "trialing" SANS moyen de paiement — annulation silencieuse programmée à la fin de l'essai</td></tr>` : ""}
+    ${blockedEmailTrialError ? `<tr><td colspan="2" style="padding:8px 0;color:#fbbf24;font-weight:700">🔧 Contrôle « essai actif e-mail bloqué » impossible : ${esc(blockedEmailTrialError)}</td></tr>` : ""}
+    ${hasBlockedEmailTrials ? `<tr><td colspan="2" style="padding:8px 0;color:#f87171;font-weight:700">⚠️ ${blockedEmailTrials.length} essai(s) actif(s) avec e-mail BLOQUÉ (email_blocked_at) — ne peut recevoir aucune alerte, indistinguable d'un essai simplement silencieux</td></tr>` : ""}
     ${sentryBroken
       ? `<tr><td colspan="2" style="padding:8px 0;color:#fbbf24;font-weight:700">🔧 Sentry non vérifiable : ${esc(sentryCheck.error ?? "")}</td></tr>`
       : sentryIssues.length > 0
@@ -886,6 +975,12 @@ async function runHealthCheck(_req: NextRequest, supabase: any) {
   ${zeroRegionRows ? `
   <p style="font-size:12px;color:#f87171;margin:16px 0 8px;font-weight:600">⚠️ Essais actifs sans aucune région d'alerte (signal seul, aucun enrôlement automatique)</p>
   <table style="width:100%;border-collapse:collapse">${zeroRegionRows}</table>` : ""}
+  ${uncoveredStripeRows ? `
+  <p style="font-size:12px;color:#f87171;margin:16px 0 8px;font-weight:600">⚠️ Abonnements Stripe en essai sans moyen de paiement</p>
+  <table style="width:100%;border-collapse:collapse">${uncoveredStripeRows}</table>` : ""}
+  ${blockedEmailTrialRows ? `
+  <p style="font-size:12px;color:#f87171;margin:16px 0 8px;font-weight:600">⚠️ Essais actifs avec e-mail bloqué (aucune alerte ne peut leur parvenir)</p>
+  <table style="width:100%;border-collapse:collapse">${blockedEmailTrialRows}</table>` : ""}
   ${stuckInviteRows ? `
   <p style="font-size:12px;color:#f87171;margin:16px 0 8px;font-weight:600">⚠️ Invitations pilote jamais ouvertes</p>
   <table style="width:100%;border-collapse:collapse">${stuckInviteRows}</table>` : ""}
@@ -906,7 +1001,7 @@ async function runHealthCheck(_req: NextRequest, supabase: any) {
   <p style="margin-top:16px;font-size:11px;color:#475569">${new Date().toISOString()}</p>
 </div>`;
 
-  const subject = `${emoji}${hasBundleSecrets ? " 🔴 SECRET EXPOSÉ" : ""} HealthWatch — ${total ?? "?"} foyers${hasOverdue ? ` · ${overdue.length} cron(s) en retard` : ""}${sentryIssues.length > 0 ? ` · ${sentryIssues.length} erreur(s) Sentry` : ""}${deliveryAlert ? ` · ${deliveryIssues.length} canal(aux) en panne` : ""}${hasZeroRegionTrials ? ` · ${zeroRegionTrials.length} essai(s) sans région` : ""}${hasStuckInvites ? ` · ${stuckInvites.length} invite(s) bloquée(s)` : ""}${hasAuthFailures ? ` · ${authFailures.reduce((n, f) => n + f.count, 0)} échec(s) auth système` : ""}${hasInstitutionalSubs ? ` · 🔔 ${institutionalSubs.length} abonnement(s) institutionnel(s)` : ""}${hasDecisionHorizonTrials ? ` · 🔔 ${decisionHorizonTrials.length} essai(s) après le ${VIABILITY_DECISION_DATE}` : ""} · ${new Date().toLocaleDateString("fr-FR")}`;
+  const subject = `${emoji}${hasBundleSecrets ? " 🔴 SECRET EXPOSÉ" : ""} HealthWatch — ${total ?? "?"} foyers${hasOverdue ? ` · ${overdue.length} cron(s) en retard` : ""}${sentryIssues.length > 0 ? ` · ${sentryIssues.length} erreur(s) Sentry` : ""}${deliveryAlert ? ` · ${deliveryIssues.length} canal(aux) en panne` : ""}${hasZeroRegionTrials ? ` · ${zeroRegionTrials.length} essai(s) sans région` : ""}${hasUncoveredStripeTrials ? ` · ${uncoveredStripeTrials.length} essai(s) Stripe sans carte` : ""}${hasBlockedEmailTrials ? ` · ${blockedEmailTrials.length} essai(s) e-mail bloqué` : ""}${hasStuckInvites ? ` · ${stuckInvites.length} invite(s) bloquée(s)` : ""}${hasAuthFailures ? ` · ${authFailures.reduce((n, f) => n + f.count, 0)} échec(s) auth système` : ""}${hasInstitutionalSubs ? ` · 🔔 ${institutionalSubs.length} abonnement(s) institutionnel(s)` : ""}${hasDecisionHorizonTrials ? ` · 🔔 ${decisionHorizonTrials.length} essai(s) après le ${VIABILITY_DECISION_DATE}` : ""} · ${new Date().toLocaleDateString("fr-FR")}`;
 
   if (!isRealProduction) {
     console.log("[health-check] non-production run — skipping Brevo email and Sentry check-in/alerts");
@@ -1004,13 +1099,15 @@ async function runHealthCheck(_req: NextRequest, supabase: any) {
   }
 
   return Response.json({
-    ok: !hasOverdue && !hasUnmonitored && !hasErroring && !sentryAlert && !deliveryAlert && !hasZeroRegionTrials && !hasStuckInvites && !hasAlertLocaleDrift && !hasAuthFailures && !hasBundleSecrets,
+    ok: !hasOverdue && !hasUnmonitored && !hasErroring && !sentryAlert && !deliveryAlert && !hasZeroRegionTrials && !hasUncoveredStripeTrials && !hasBlockedEmailTrials && !hasStuckInvites && !hasAlertLocaleDrift && !hasAuthFailures && !hasBundleSecrets,
     unmonitored,
     erroring,
     total, high, pheic, overdue, cronStatuses, isRealProduction,
     sentry: { ok: sentryCheck.ok, issueCount: sentryIssues.length, error: sentryCheck.error },
     delivery: deliveryIssues,
     zeroRegionTrials: { count: zeroRegionTrials.length, trials: zeroRegionTrials, error: zeroRegionError },
+    uncoveredStripeTrials: { count: uncoveredStripeTrials.length, trials: uncoveredStripeTrials, error: uncoveredStripeError },
+    blockedEmailTrials: { count: blockedEmailTrials.length, trials: blockedEmailTrials, error: blockedEmailTrialError },
     stuckPilotInvites: { count: stuckInvites.length, invites: stuckInvites, error: stuckInviteError },
     alertLocaleDrift: { count: alertLocaleDrift.length, rows: alertLocaleDrift, error: alertLocaleDriftErr },
     institutionalSubscriptions: { count: institutionalSubs.length, rows: institutionalSubs, error: institutionalError },
