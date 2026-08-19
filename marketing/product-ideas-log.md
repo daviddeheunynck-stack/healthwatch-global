@@ -801,7 +801,9 @@ Comme le 4e est verrouillé à faux, **le maximum atteignable est 3/4 — c'est-
 
 ## 2026-08-18 — Proposition du jour
 
-**J-3 avant le go/no-go du 21/08.**
+**⚠️ Correction (ajoutée en session interactive, 2026-08-19) : cette entrée a été écrite un jour trop tôt par erreur.** Le run a daté « aujourd'hui » comme le 18/08 (mémoire de conversation périmée) alors que la date réelle — confirmée a posteriori par l'horodatage des commits git — était déjà le **19/08**. Conséquences concrètes à corriger en lisant ce qui suit : c'était **J-2** avant le go/no-go du 21/08, pas J-3 ; le bulletin Ebola/RDC du 12/08 avait **7 jours** de péremption au moment du run, pas 6, ce qui l'aurait déjà fait franchir le seuil PHEIC de `data-quality` (7j) **le jour même**, pas « demain ». Les faits cités comme « aujourd'hui » sur la session `linkedin-hwg-followup-check` (DM sans chiffres HWG, arbitrage en attente) dataient en réalité de la veille, le 18/08. Rien de ce qui suit sur le fond des trois idées (fraîcheur affichée sur `updated_at`, lignes orphelines de rafraîchissement, les 3 idées du 17/08 non construites) n'est affecté par cette erreur d'un jour — seuls les décomptes de jours et les « aujourd'hui »/« demain » le sont. Les corrections de code livrées en session interactive le 19/08 sont documentées plus bas dans ce fichier.
+
+**J-2 avant le go/no-go du 21/08** *(J-3 au moment où cette entrée a été écrite par erreur — voir correction ci-dessus)*.
 
 Angle nouveau : **l'écart entre ce que le produit affirme sur la fraîcheur de ses chiffres et ce qu'il mesure réellement.** Les passages précédents ont couvert la qualité des données elle-même (26-27/07), la personnalisation, l'accès, le canal d'entrée, le cycle d'essai, la demande de conversion, l'entonnoir d'inscription et l'acte d'achat (17/08). Le 26/07 avait construit le *détecteur* de fraîcheur des lignes verrouillées ; personne n'avait encore regardé **ce que le produit dit au visiteur** de cette fraîcheur, ni **qui a encore le droit d'écrire** sur ces lignes.
 
