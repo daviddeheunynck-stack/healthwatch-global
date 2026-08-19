@@ -35,6 +35,23 @@ const PLAN_MRR: Record<string, number> = {
   free:       0,
 };
 
+// Monthly-equivalent for an annual subscription (annual price / 12), read from
+// the same figures documented in app/api/checkout/route.ts:13 (EUR: Pro €249/yr,
+// Team €1 290/yr). Added 2026-08-18: `realMrr` previously priced every paying
+// Pro account at €29/mo flat, even one that actually bought the €249/yr plan
+// (~€20.75/mo) — a ~40% overstatement of that account's true monthly value.
+// `stripe_billing_period` (profiles column, set by the webhook from checkout's
+// own subscription metadata) is null for any subscriber who converted before
+// 2026-08-18 — those fall back to the monthly figure below rather than being
+// guessed, same as PLAN_MRR itself does for an unrecognized plan key.
+const PLAN_MRR_ANNUAL: Record<string, number> = {
+  starter:    249 / 12,
+  pro:        249 / 12,
+  team:       1290 / 12,
+  enterprise: 299 * 12 / 12, // no annual Enterprise SKU exists yet — same as monthly
+  free:       0,
+};
+
 // listUsers returns one page at a time (default/max 1000 users per page). Reading
 // only page 1 silently drops every user past the first 1000 from the name lookup
 // below — a coverage gap that grows invisibly with the user base. Page through
@@ -166,7 +183,7 @@ export default async function AdminPage({
   ] = await Promise.all([
     admin.from("outbreaks").select("*").order("date", { ascending: false }),
     admin.from("subscriptions").select("*").order("created_at", { ascending: false }),
-    admin.from("profiles").select("id, email, plan, created_at, trial_ends_at, stripe_subscription_id").order("created_at", { ascending: false }),
+    admin.from("profiles").select("id, email, plan, created_at, trial_ends_at, stripe_subscription_id, stripe_has_payment_method, stripe_billing_period").order("created_at", { ascending: false }),
     admin.from("user_alert_regions").select("user_id"),
     admin.from("profiles").select("id").not("slack_webhook_url", "is", null),
     fetchAllAuthUsers(admin),
@@ -216,11 +233,33 @@ export default async function AdminPage({
   // any metric meant to reflect actual paying customers.
   const isRealStripeSub = (p: { stripe_subscription_id?: string | null }) =>
     !!p.stripe_subscription_id && p.stripe_subscription_id !== "admin_override";
-  const payingCount    = profiles?.filter(isRealStripeSub).length ?? 0;
+  // "Paying" used to mean only `isRealStripeSub` — but checkout sets
+  // stripe_subscription_id the instant checkout completes, even with
+  // `payment_method_collection: if_required` and zero card on file (see
+  // app/api/checkout/route.ts:150-152). Found 2026-08-17/18:
+  // otitamorgan@gmail.com converted 2026-08-12, `trialing`, no payment
+  // method, trial_settings.end_behavior=cancel → scheduled to silently
+  // cancel 2026-08-26 without ever being charged. Counting that as "paying"
+  // let the go/no-go payment criterion (below) go green on €0 collected.
+  // stripe_has_payment_method (migration 20260818200000) is the corrected
+  // signal — see syncPaymentMethodFlag in app/api/webhook/route.ts for how
+  // it's kept current.
+  const isPayingCustomer = (p: { stripe_subscription_id?: string | null; stripe_has_payment_method?: boolean | null }) =>
+    isRealStripeSub(p) && !!p.stripe_has_payment_method;
+  const stripeSubCount = profiles?.filter(isRealStripeSub).length ?? 0;
+  const payingCount    = profiles?.filter(isPayingCustomer).length ?? 0;
+  // Stripe subscriptions that exist but have no payment method attached —
+  // the exact Morgan Otita shape. Distinct from `trialActive` below (which
+  // only ever counted DB-only trials, `!stripe_subscription_id`) — this is
+  // the population that trialActive structurally could never see.
+  const uncoveredStripeTrials = profiles?.filter((p) => isRealStripeSub(p) && !p.stripe_has_payment_method) ?? [];
   const next7          = new Date(now.getTime() + 7 * 86400_000).toISOString();
   const trialActive    = profiles?.filter((p) => p.plan !== "free" && !p.stripe_subscription_id && p.trial_ends_at && p.trial_ends_at > now.toISOString()) ?? [];
   const trialExpiring7 = trialActive.filter((p) => p.trial_ends_at! <= next7).length;
-  const realMrr        = profiles?.filter(isRealStripeSub).reduce((sum, p) => sum + (PLAN_MRR[p.plan ?? "free"] ?? 0), 0) ?? 0;
+  const realMrr         = profiles?.filter(isPayingCustomer).reduce((sum, p) => {
+    const table = p.stripe_billing_period === "annual" ? PLAN_MRR_ANNUAL : PLAN_MRR;
+    return sum + (table[p.plan ?? "free"] ?? 0);
+  }, 0) ?? 0;
 
   // ── Duplicate outbreak detection (same disease + country, both active) ──────
   const dupMap: Record<string, { id: string; date: string | null }[]> = {};
@@ -316,12 +355,21 @@ export default async function AdminPage({
   // "Réponse institutionnelle" (email) reste affichée plus bas pour info mais n'est plus
   // comptabilisée : le canal cold email institutionnel a été fermé, ce critère ne pourra
   // structurellement plus jamais passer au vert.
+  //
+  // `pipeline` retiré du dénominateur automatisé le 2026-08-18 : il est codé
+  // en dur à `false` depuis sa création (jugement manuel de David sur une
+  // discussion pilote active, aucun signal produit ne peut l'automatiser
+  // honnêtement), ce qui rendait « ≥3/4 cochées » silencieusement équivalent
+  // à « les 3 autres, toutes vertes » — le seuil affiché mentait sur ce qu'il
+  // fallait réellement atteindre. Affiché séparément plus bas comme jugement
+  // manuel plutôt que comme un 4e critère automatisé qui ne peut jamais
+  // passer.
   const goNoGo = {
     retention:  returnedUsers.length >= 5,   // ≥5 users returned after 2+ days
     active30:   active30.length >= 3,         // ≥3 active in last 30 days
-    paying:     payingCount >= 1,             // ≥1 Stripe payment
-    pipeline:   false,                        // manual — pilot active discussion
+    paying:     payingCount >= 1,             // ≥1 Stripe subscription with a real payment method
   } as const;
+  const automatedScore = Object.values(goNoGo).filter(Boolean).length;
 
   return (
     <div className="max-w-7xl mx-auto space-y-8 py-4">
@@ -346,17 +394,21 @@ export default async function AdminPage({
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <StatCard
             label="MRR réel (Stripe)"
-            value={`€${realMrr.toLocaleString("fr")}`}
-            sub={`MRR potentiel : €${mrr.toLocaleString("fr")}`}
+            value={`€${realMrr.toFixed(realMrr % 1 === 0 ? 0 : 2)}`}
+            sub={`Compte un moyen de paiement réel · MRR potentiel (tous plans) : €${mrr.toLocaleString("fr")}`}
             icon={<DollarSign className="w-4 h-4" />}
             accent="text-green-400"
           />
           <StatCard
-            label="Abonnés Stripe actifs"
+            label="Payants (avec moyen de paiement)"
             value={payingCount}
-            sub={`${trialActive.length} en essai · ${convRate}% conv. totale`}
+            sub={
+              uncoveredStripeTrials.length > 0
+                ? `${stripeSubCount} abonné(s) Stripe au total — ${uncoveredStripeTrials.length} sans carte, à échéance`
+                : `${trialActive.length} en essai (hors Stripe) · ${convRate}% conv. totale`
+            }
             icon={<Zap className="w-4 h-4" />}
-            accent="text-yellow-400"
+            accent={uncoveredStripeTrials.length > 0 ? "text-orange-400" : "text-yellow-400"}
           />
           <StatCard
             label="Essais expirant (7j)"
@@ -515,8 +567,13 @@ export default async function AdminPage({
             {[
               { ok: goNoGo.retention, label: `≥5 utilisateurs revenus après J+2`, value: `${returnedUsers.length} actuellement` },
               { ok: goNoGo.active30,  label: `≥3 utilisateurs actifs sur 30 jours`, value: `${active30.length} actuellement` },
-              { ok: goNoGo.paying,    label: `≥1 paiement Stripe actif`, value: `${payingCount} actuellement` },
-              { ok: goNoGo.pipeline,  label: `≥1 pilot en discussion active (14 derniers jours)`, value: "à vérifier manuellement" },
+              {
+                ok: goNoGo.paying,
+                label: `≥1 abonnement Stripe avec moyen de paiement réel`,
+                value: uncoveredStripeTrials.length > 0
+                  ? `${payingCount} actuellement — ${uncoveredStripeTrials.length} de plus sans carte, ne compte pas`
+                  : `${payingCount} actuellement`,
+              },
             ].map(({ ok, label, value }) => (
               <div key={label} className="flex items-start gap-3">
                 {ok
@@ -531,13 +588,25 @@ export default async function AdminPage({
             ))}
           </div>
           <p className="text-xs text-gray-600 pt-2 border-t border-gray-800">
-            ≥3/4 cochées → continuer sans changer de cap · &lt;2/4 → diagnostiquer l&apos;activation
+            Score automatisé : {automatedScore}/3 → ≥2/3 continuer sans changer de cap · &lt;2/3 diagnostiquer l&apos;activation.
+            Le pilote actif ci-dessous est un jugement manuel, pas un 4e critère automatisé — il ne peut structurellement
+            jamais être calculé depuis les données du produit.
           </p>
           <div className="flex items-start gap-3 pt-2 border-t border-gray-800">
-            <div className="w-4 h-4 shrink-0 mt-0.5 flex items-center justify-center text-gray-600">·</div>
+            <div className="w-4 h-4 shrink-0 mt-0.5 flex items-center justify-center text-gray-500 font-bold">?</div>
             <div>
-              <p className="text-sm text-gray-500">Réponse parmi les emails institutionnels</p>
-              <p className="text-xs text-gray-600">à vérifier manuellement · hors scoring, canal email fermé</p>
+              <p className="text-sm text-gray-400">Pilote en discussion active (jugement manuel de David)</p>
+              <p className="text-xs text-gray-600">non automatisable — aucun signal produit ne distingue une vraie discussion pilote</p>
+            </div>
+          </div>
+          {/* Snapshot manuel — pas de source live dans ce repo pour la prospection institutionnelle
+              (suivie dans marketing/institutional-prospects-log.md, pas en base). À remettre à jour
+              à la main si ce panneau est relu après une nouvelle vague de relances. */}
+          <div className="flex items-start gap-3 pt-2 border-t border-gray-800">
+            <div className="w-4 h-4 shrink-0 mt-0.5 flex items-center justify-center text-gray-500">·</div>
+            <div>
+              <p className="text-sm text-gray-400">Prospection institutionnelle (hors scoring)</p>
+              <p className="text-xs text-gray-600">200 prospectés · 180 envoyés · 170 délivrés · 10 bounces · 0 réponse — chiffres au 18/08</p>
             </div>
           </div>
         </div>
