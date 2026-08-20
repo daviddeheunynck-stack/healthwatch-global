@@ -669,9 +669,13 @@ export function staleOutbreakDays(outbreak: Outbreak): number | null {
 // Found live on the Ebola/RD Congo row (source_priority=10, the product's
 // largest active outbreak): the badge claimed "synced 3d ago" from a row
 // last *touched* 3 days prior, while its actual bulletin (WHO DON 615) was
-// already 6 days old — no active cron is even allowed to write that row's
-// figures (see sync-who-afro's `source_priority <= 5` ceiling), so the claim
-// was not just stale but structurally impossible to keep true. `data-quality`
+// already 6 days old — at the time, no active cron was even allowed to write
+// that row's figures (sync-who-afro capped its writes at `source_priority
+// <= 5`), so the claim was not just stale but structurally impossible to keep
+// true. That specific ceiling was raised to 10 on 2026-08-19 (see eb57f8e and
+// project_source_priority_is_ownership_not_freeze_2026_08_19), which fixes the
+// orphaning but not the field confusion this function is about: `updated_at`
+// would still refresh on any unrelated field touch. `data-quality`
 // (app/api/cron/data-quality/route.ts) already measures correctly on `date`
 // with a 7-day PHEIC threshold; this aligns the public-facing badge with the
 // same field instead of inventing a second definition of "fresh".
