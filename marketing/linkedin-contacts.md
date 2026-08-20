@@ -41,7 +41,7 @@ Vérifié sur la direction du dernier message de chaque fil, pas sur un souvenir
 
 **Messages reçus depuis la clôture de 17h la veille : 3.** Liste des conversations relue par récence, direction du dernier message contrôlée fil par fil. Le fil **Gaetan Kunuanina** relève de l'**outreach freelance**, hors périmètre : ni compté, ni archivé ici.
 
-#### 🔒 DM en attente de validation — **Aly Antoine KAMANO** (FR, fil actif, **AVEC CTA**)
+#### ✅ DM — **Aly Antoine KAMANO** (FR, fil actif, **AVEC CTA**) — ENVOYÉ 11:59, sur ordre explicite de David en session interactive (« envoie les 8 »)
 
 *Team Lead sous-bureau OMS Nzérékoré, expert surveillance épidémiologique Ebola/Marburg/Lassa/Rougeole/Choléra/COVID-19*, Guinée. `/in/aly-antoine-kamano-166655152/`. Connecté le 19/08 (connexion 6/7 du matin).
 
@@ -67,9 +67,9 @@ Vérifié sur la direction du dernier message de chaque fil, pas sur un souvenir
 >
 > Tout ce que j'agrège finit sur healthwatch-global.com. La Guinée y tient aujourd'hui dans une seule ligne active, la diphtérie, et rien de ce que vous venez de décrire n'y transparaît. Créer un compte donne deux semaines d'accès Pro, aucune carte demandée, si jamais vous voulez juger vous-même de l'écart entre ce que vous notifiez à Nzérékoré et ce qui finit par sortir.
 
-**Statut : 🔒 en attente de validation de David. Non envoyé.** Réponse en fil actif, donc **autorisée même quota froid atteint** ([[feedback_reply_quota_cold_outreach_only]]), mais soumise à la même validation.
+**Statut : ✅ ENVOYÉ à 11:59.** Confirmé via `get_page_text` : le message apparaît intégralement sous « David Deheunynck 11:59 », sans troncature ni erreur de destinataire (en-tête du fil relu « Aly Antoine KAMANO » dans le même appel que le clic sur Envoyer).
 
-#### 🔒 DM en attente de validation — **Patrick (NDEBA) AYONGA** (FR, fil actif, **AVEC CTA**)
+#### ✅ DM — **Patrick (NDEBA) AYONGA** (FR, fil actif, **AVEC CTA**) — ENVOYÉ 12h, sur ordre explicite de David en session interactive (« envoie les 8 »)
 
 *Infectious Diseases Specialist | Epidemiologist | PhD Candidate in Public Health, Epidemiology & Population Health | Global Health & Health Emergency Response*, RDC. `/in/patrick-ayonga-720b29154/`. Connecté le 19/08 (connexion 7/7 du matin).
 
@@ -97,7 +97,7 @@ Vérifié sur la direction du dernier message de chaque fil, pas sur un souvenir
 >
 > Si vous voulez voir l'autre extrémité, c'est healthwatch-global.com : j'y remets côte à côte les foyers actifs tels que l'OMS, Africa CDC, l'ECDC et la PAHO les publient. L'inscription ouvre quinze jours en Pro, sans carte bancaire à donner. Votre SitRep y tient dans une ligne, ce qui illustre votre propos mieux que je ne saurais le faire.
 
-**Statut : 🔒 en attente de validation de David. Non envoyé.**
+**Statut : ✅ ENVOYÉ.** Confirmé via `get_page_text` : dernier message du fil = notre texte, sous « David Deheunynck ».
 
 #### ❌ Aucun brouillon — **Simon Ruegg**
 
@@ -116,7 +116,7 @@ Vérifié sur la direction du dernier message de chaque fil, pas sur un souvenir
 
 **Les 9 autres invitations envoyées restent en attente** : les 7 décideurs des 17-18/08 (Melkamu Abte Afele, Musole Chipoya, Dieudonné Mwamba, joseph nyandwi, William YAVO, HoussoÏnatou BAH, Abdoulaye Touré) en sont à leur **5e jour**, plus Ana Bento, trésor Ndaye, Mohamed Ousmane COULIBALY, Dr. Charles Kuria NJUGUNA et Syra Madad.
 
-#### 🔒 DM en attente de validation — **Dossou Vincent SODJINOU** (FR, bienvenue, **SANS CTA**)
+#### ✅ DM — **Dossou Vincent SODJINOU** (FR, bienvenue, **SANS CTA**) — ENVOYÉ 12h (nouveau fil), sur ordre explicite de David en session interactive (« envoie les 8 »)
 
 **⭐ Le profil le plus fort accepté depuis longtemps, et un décideur au sens strict de la directive du 17/08.** *Docteur en médecine, Docteur en santé publique, Expert sécurité sanitaire mondiale, **Expert choléra OMS**, gestion urgence sanitaire, vaccination, surveillance et intelligence épidémique*, Sénégal. **24 relations en commun**, plus de 500 relations.
 
@@ -138,11 +138,11 @@ Vérifié sur la direction du dernier message de chaque fil, pas sur un souvenir
 >
 > Je pose la question parce que rien de ce qui est écarté ne laisse de trace en aval. Vu d'où je suis, une épidémie commence le jour où elle est confirmée, et rien n'indique depuis combien de temps elle était déjà sur un bureau.
 
-**Statut : 🔒 en attente de validation de David. Non envoyé.**
+**Statut : ✅ ENVOYÉ.** Confirmé via `get_page_text` : en-tête « Dossou Vincent SODJINOU », dernier message du fil = notre texte intégral, sous « David Deheunynck ».
 
 **📌 À garder pour la suite de ce fil, pas exploité dans ce premier message** : HWG porte **deux lignes Choléra actives figées au 28/06** (Congo : 767 cas / 49 décès ; RD Congo : 32 193 cas / 908 décès, toutes deux `source_priority: 10`, soit **53 jours sans rafraîchissement**). Il est à la fois **Représentant Résident OMS au Congo** et **ex-point focal choléra pendant 5 ans**. C'est le meilleur interlocuteur possible sur ces deux lignes précises, mais le sujet n'a pas sa place dans un message de bienvenue : à ressortir s'il répond.
 
-#### 🔒 DM en attente de validation — **Tyler A. Porth** (EN, bienvenue, **SANS CTA**)
+#### ✅ DM — **Tyler A. Porth** (EN, bienvenue, **SANS CTA**) — ENVOYÉ 12h (nouveau fil), sur ordre explicite de David en session interactive (« envoie les 8 »)
 
 *7-1-7 | global health security | epidemic prevention | data & analytics*, **Resolve To Save Lives**, New York, compte vérifié, 2 072 abonnés. Déjà suivi le 18/08, connexion envoyée le 19/08, acceptée aujourd'hui.
 
@@ -164,7 +164,7 @@ Vérifié sur la direction du dernier message de chaque fil, pas sur un souvenir
 >
 > If it is the first, then a 7-1-7 score partly measures how well a country documents itself, not only how fast it moved. I would rather be wrong about that, which is why I am asking you and not guessing.
 
-**Statut : 🔒 en attente de validation de David. Non envoyé.**
+**Statut : ✅ ENVOYÉ.** Confirmé via `get_page_text` : en-tête « Tyler A. Porth », dernier message du fil = notre texte, sous « David Deheunynck ».
 
 **Quota DM du jour : 4 brouillons rédigés / 8.** File de validation totale : **7** = 3 hérités du 19/08 et toujours non envoyés (Rukkaiya Abdulkadir, Isaias Fernandes Co, Darrel Ornelle ELION ASSIANA) + 4 rédigés aujourd'hui (Aly Antoine KAMANO, Patrick AYONGA, Dossou Vincent SODJINOU, Tyler A. Porth).
 
@@ -173,7 +173,7 @@ Vérifié sur la direction du dernier message de chaque fil, pas sur un souvenir
 - ✅ **Steven Ault** (`/in/steven-ault-49bbb01b/`) — **ACCEPTÉE**, confirmé par `get_page_text` : « *Steven fait désormais partie de vos relations.* », et le compteur « Tout (2) » est passé à « Tout (1) ». *PAHO/WHO Senior Advisor Neglected Infectious Diseases (**retraité**) ; Public Health Consultant ; University Adjunct Lecturer.* Compte vérifié, **5 relations en commun dont Syra Madad**. **Profil ouvert et activité lue avant décision** (§10) : republication d'une étude rétrospective sur les **envenimations par morsure de serpent en Guinée** (#BeatNTDs, #WorldNTDDay), republications de Bernadette Abela (approches intégrées des risques de santé publique des populations négligées), Heather Ferguson (recommandations à l'OMS sur le contrôle et l'élimination des MTN) et Don Milton (transmission aéroportée). Activité cohérente avec l'intitulé, légitimité établie. **§7 respecté** : identité (`href` du profil) revérifiée **dans le même appel JS que le clic sur « Accepter »**, jamais dans un appel antérieur.
 - ⏸️ **OLAOLUWA PHILIP (BSc, MSc)** (`/in/olaoluwa-philip-oguntoyinbo5/`) — **déjà évalué et écarté le 19/08 à 17h** (climat, GIS, GeoDev Lab, aucun contenu de santé publique). Conformément au tracker (« écarté = ne pas reproposer sans nouvel élément »), **aucune ré-évaluation de zéro** : laissé en attente, ni accepté ni ignoré, statut inchangé.
 
-#### 🔒 DM en attente de validation — **Steven Ault** (EN, bienvenue, **SANS CTA**)
+#### ✅ DM — **Steven Ault** (EN, bienvenue, **SANS CTA**) — ENVOYÉ 12h (nouveau fil), sur ordre explicite de David en session interactive (« envoie les 8 »)
 
 **Vérification bidirectionnelle (règle du 14/07)** : aucun fil de messagerie préexistant, aucun DM antérieur dans `linkedin-contacts.md` ni dans l'archive → **premier contact**, donc **sans lien ni CTA**.
 
@@ -193,7 +193,7 @@ Vérifié sur la direction du dernier message de chaque fil, pas sur un souvenir
 >
 > You spent years on the side that decides this. When a condition ends up with an actual surveillance stream at PAHO rather than only a programme, what settles it in practice? The case definition, the laboratory capacity standing behind it, or which countries were willing to report in the first place?
 
-**Statut : 🔒 en attente de validation de David. Non envoyé.**
+**Statut : ✅ ENVOYÉ.** Confirmé via `get_page_text` : en-tête « Steven Ault, PAHO/WHO Senior Advisor Neglected Infectious Diseases (retired) », dernier message du fil = notre texte, sous « David Deheunynck ».
 
 ### 5️⃣ NOUVEAUX ABONNÉS — +3, aucun follow-back à exécuter
 
@@ -302,7 +302,7 @@ Vérifié sur la direction du dernier message de chaque fil, pas sur un souvenir
 
 **Deux messages sont toutefois arrivés en cours de session**, après ce relevé : **Isaias Fernandes Co à 17h33** et **Darrel Ornelle ELION ASSIANA à 17h40**, tous deux traités ci-dessous. Le troisième brouillon découle d'une invitation reçue acceptée (section 4️⃣), pas d'un message reçu.
 
-#### 🔒 DM en attente de validation — **Rukkaiya Abdulkadir** (EN, message de bienvenue, **sans CTA**)
+#### ✅ DM — **Rukkaiya Abdulkadir** (EN, message de bienvenue, **sans CTA**) — ENVOYÉ 12:07 (nouveau fil), sur ordre explicite de David en session interactive (« envoie les 8 »)
 
 *Head, Monitoring & Evaluation, Data Manager | Program Officer | **Neglected Tropical Diseases, Control /Elimination & Eradication Programme, North-West Zonal Office**, Federal Ministry of Health and Social Welfare, Nigéria.* `/in/rukkaiya-abdulkadir-0bb3aa143/`, 2 179 abonnés, **6 relations en commun** dont Lorenzo Subissi. **C'est elle qui a invité David** ; invitation acceptée à ce créneau (section 4️⃣). **Aucun fil de messagerie préexistant** (absente de la liste des conversations, et absente des 4 fichiers d'archive) → **premier contact**.
 
@@ -318,9 +318,9 @@ Vérifié sur la direction du dernier message de chaque fil, pas sur un souvenir
 >
 > What I would like to understand is which number actually leaves your zone. The treatment coverage from the last round, or the survey result that decides whether a district can stop treating? Outside the ministry both read the same way, as progress, so I cannot tell which of the two a national number rests on.
 
-**Statut : 🔒 en attente de validation de David. Non envoyé.** Notification push envoyée en fin de session.
+**Statut : ✅ ENVOYÉ à 12:07**, via un nouveau fil (`/messaging/thread/new/`, champ `.msg-connections-typeahead__search-field`, jamais la barre de recherche globale). Confirmé via `get_page_text` : le texte intégral apparaît sous « David Deheunynck 12:07 », en-tête du fil « Rukkaiya Abdulkadir » avec l'intitulé complet.
 
-#### 🔒 DM en attente de validation — **Isaias Fernandes Co** (EN, fil actif, **SANS CTA, volontairement**)
+#### ✅ DM — **Isaias Fernandes Co** (EN, fil actif, **SANS CTA, volontairement**) — ENVOYÉ 12h, sur ordre explicite de David en session interactive (« envoie les 8 »)
 
 **⚠️ Message reçu à 17h33, en cours de session**, après le relevé initial de la messagerie qui ne montrait aucun message entrant. Repéré grâce à la bulle de notification apparue pendant le parcours du fil d'actualité, puis revérifié dans la liste des conversations. **Le relevé d'ouverture de la messagerie ne suffit pas sur une session longue : re-contrôler la messagerie avant de clore.**
 
@@ -340,9 +340,9 @@ Vérifié sur la direction du dernier message de chaque fil, pas sur un souvenir
 >
 > On the percentages, what is the denominator? Uganda closed at 20 confirmed cases, 15 of them imported. Eight to ten percent of a count that small is a fraction of a case, so I take it you mean something wider than exported case counts.
 
-**Statut : 🔒 en attente de validation de David. Non envoyé.** Réponse en fil actif, donc **autorisée même quota froid atteint** ([[feedback_reply_quota_cold_outreach_only]]), mais soumise à la même validation.
+**Statut : ✅ ENVOYÉ.** Confirmé via `get_page_text` : dernier message du fil = notre texte, sous « David Deheunynck ».
 
-#### 🔒 DM en attente de validation — **Darrel Ornelle ELION ASSIANA, MPH, PhD** (FR, fil actif, **AVEC CTA**)
+#### ✅ DM — **Darrel Ornelle ELION ASSIANA, MPH, PhD** (FR, fil actif, **AVEC CTA**) — ENVOYÉ 12h, sur ordre explicite de David en session interactive (« envoie les 8 »)
 
 **⚠️ Message reçu à 17h40**, soit **après** le message d'Isaias et bien après le relevé d'ouverture. Repéré uniquement parce que la messagerie a été **re-contrôlée une dernière fois avant clôture**. **Deux messages entrants découverts en fin de session sur une seule journée : le contrôle final de la messagerie n'est pas une formalité, il doit rester dans le déroulé.**
 
@@ -368,7 +368,7 @@ Vérifié sur la direction du dernier message de chaque fil, pas sur un souvenir
 >
 > Cette limite, je la publie telle quelle : sur healthwatch-global.com, chaque foyer porte un chiffre retenu, sa source et son niveau de fiabilité, mais aucune définition de date, faute de source qui la fournisse. L'accès Pro est ouvert deux semaines sans engagement de paiement, si jamais vous voulez voir ce que votre chaîne devient une fois arrivée tout au bout.
 
-**Statut : 🔒 en attente de validation de David. Non envoyé.** Réponse en fil actif, donc **autorisée même quota froid atteint** ([[feedback_reply_quota_cold_outreach_only]]), mais soumise à la même validation.
+**Statut : ✅ ENVOYÉ.** Confirmé via `get_page_text` : dernier message du fil = notre texte, sous « David Deheunynck ».
 
 ### 3️⃣ NOUVEAUX ABONNÉS ET SUIVIS — 0 follow-back, quota inchangé à 9/7-10
 
