@@ -535,6 +535,8 @@ Objectif atteint : **10 contacts nets, aucun déjà présent dans les vagues 1-3
 
 **❌ AKHS (`akhs@akdn.org`) — bounce signalé par David le 2026-08-10, cause différente des bounces précédents.** NDR Office 365 : « **akhs wasn't found at akdn.org** », **adresse inconnue côté serveur** (pas un problème de règle de transfert comme ZNPHI le 02/08, ni un mauvais sous-domaine comme WPRO le 02/08) — l'adresse était pourtant publiée en `mailto:` sur la page officielle `the.akdn/about-us/support-akdn`, confirmée en DOM le jour même. **Vérifications de repli** : `akhs.org` (domaine dédié « The Aga Khan Hospitals ») répond en **erreur 522, injoignable** ; la page agence `the.akdn/.../aga-khan-health-services` ne publie **aucune adresse email**. Aucun contact nominatif AKHS trouvé non plus. **Repli retenu : `generalenquiries@akdn.org`**, seule autre boîte AKDN confirmée en `mailto:` sur la même page (siège Genève) — le mail explique le bounce et demande explicitement une transmission à AKHS, même logique que les demandes de redirection Uruguay/Zimbabwe/Seychelles/Haïti/Brunei/Rwanda. **Brouillon de remplacement créé le 10/08** : `r7071138909056798540`. **Enseignement pour les prochains runs** : une adresse `mailto:` publiée sur une page de dons/support n'est pas une garantie de boîte active côté serveur — à distinguer des pages de contact dédiées, plus fiables.
 
+**✅ ENVOYÉS par David le 2026-08-10, 11:12:50–11:15:54 UTC** (les 11 contacts du lot), **+ le brouillon de remplacement AKDN (`generalenquiries@akdn.org`) à 11:23:48**. *(Ligne ajoutée rétroactivement par le run `daily-relance-check-healthwatch` du 2026-08-20, qui a reconfirmé les 12 envois en direct via `search_threads` + `includeTrash` — l'entrée d'origine s'arrêtait à « en attente de relecture et d'envoi » et la seule trace était l'inférence indirecte du 11/08, invalidée par l'enseignement du 16/08.)*
+
 **Total cumulé de contacts institutionnels prospectés depuis le 2026-08-02 : 149** (18 + 20 + 20 + 20 + 20 + 10 + 10 + 10 + 10 + 10 + 1), **138 envoyés, 1 bounce ce jour (AKHS, brouillon de remplacement créé)** ; les **11 de ce run (10 + UP Manila) restent en attente de relecture et d'envoi par David**, plus le brouillon de remplacement AKHS.
 
 ---
@@ -1340,3 +1342,80 @@ Objectif atteint : **10 contacts nets, aucun déjà présent dans les vagues 1-3
 **Profondeur de file après ce run : 10 brouillons** (les 10 ci-dessus, seuls en attente — la file était à 0 avant le run). Très en dessous du seuil de ~20.
 
 **⚠️ Cibles à prioriser au prochain run** : **EMRO dès rétablissement de `emro.who.int`** (5e run consécutif sans aucun contact EMRO), et **AMRO**, désormais aussi bloquée — deux runs de suite sans contact latino-américain, alors que 9 pistes distinctes ont été tentées aujourd'hui. Si l'AMRO reste fermée au prochain run, la piste à tester est celle des **bureaux pays PAHO** (`paho.org`), jamais essayée, par analogie avec le vein des bureaux pays OMS qui a fonctionné trois fois ce run.
+
+---
+
+## 🔁 RELANCE J+10 — 2026-08-20, run automatique `daily-relance-check-healthwatch`
+
+**Résultat : 11 relances créées, aucune envoyée. Lot traité : le run du 10/08 (11 contacts envoyés + le brouillon de remplacement AKDN), à J+10 — 1 exclusion.** C'est le lot le plus fourni traité par cette routine depuis le 15/08.
+
+**Arbitrage des lots :**
+- **02/08 matin (18), 02/08 soir (20), 03/08 (20), 05/08 (20)** — déjà relancés le 15/08. Règle « une seule relance, jamais deux » : exclus définitivement.
+- **04/08 (20)** — lot recréé et envoyé le 15/08, donc à J+5. Pas mûr.
+- **06/08 (10)** — envoyé le 17/08. J+10 vers le 27/08.
+- **07/08 (10)** — relancé le 17/08. Exclu.
+- **08/08 (10)** — relancé le 18/08, relances parties le 18/08 à 08:02-08:03. Exclu.
+- **09/08 (10)** — relancé le 19/08, les 8 relances **parties le 19/08 à 08:16-08:17**. Exclu.
+- **10/08 (11 + AKDN), J+10** — ✅ retenu, jamais relancé.
+- **11/08 et suivants** — pas mûrs. Prochain lot éligible : **11/08 (10), demain 21/08**.
+
+**⚠️ Envoi du lot du 10/08 reconfirmé en direct, il ne reposait que sur une déduction.** L'entrée du 10/08 laisse les 11 contacts « en attente de relecture et d'envoi », et la seule trace d'envoi était l'inférence indirecte de l'entrée du 11/08 (`list_drafts` vide) — précisément le raisonnement invalidé par l'enseignement du 16/08 (« un `list_drafts` vide ne prouve pas un envoi »). **Vérification faite ce run sur les 12 adresses** (`to:<adresse> OR from:<domaine>`, `includeTrash: true`) : les 11 sont bien parties le **2026-08-10 entre 11:12:50 et 11:15:54 UTC**, plus le remplacement AKDN à **11:23:48**. Aucune n'était restée en brouillon ni supprimée. **Le lot est authentiquement envoyé** ; l'entrée du 10/08 n'avait simplement jamais reçu sa ligne « ✅ ENVOYÉS par David ».
+
+**Vérification en direct des 12** : **11 fils ne contiennent qu'un seul message, celui de David, `labelIds: ["SENT"]`** — aucune réponse, aucun accusé automatique, aucun bounce, y compris après balayage de la corbeille. Une exclusion.
+
+### ❌ 1 exclusion
+
+- **AKHS / Aga Khan Health Services** (`akhs@akdn.org`) — **bounce du 10/08 déjà consigné** (Office 365, « akhs wasn't found at akdn.org », NDR à 11:14:01, 33 s après l'envoi ; fil en corbeille). Entrée n° 4 de la liste nominative. Pas de relance sur cette adresse. **En revanche le brouillon de remplacement `generalenquiries@akdn.org`, envoyé le 10/08 à 11:23:48, est lui bien éligible et relancé ci-dessous** — c'est un envoi distinct, jamais bouncé, jamais relancé.
+
+### ✉️ Les 11 relances créées
+
+**Angle transfrontalier appliqué** (validé en session le 17/08), classification faite ce run — le lot du 10/08 n'avait pas de classification pré-établie :
+
+- **Variante A** (1) : **Health Poverty Action** — ONG britannique à programmes multi-pays, « across the countries Health Poverty Action works in » à la place de « your member states ». Le seul mandat franchement multi-pays du lot hors AKDN.
+- **Variante B** (4) : **NIPH Cambodge**, **HPA Maldives**, **IDCU Malte**, **INSP Algérie** (FR, seul contact francophone du lot). Quatre organismes de surveillance nationale, le public exact pour lequel la Variante B a été écrite.
+- **Variante B adaptée « a country's own surveillance »** (5) : **DLSPH Toronto**, **UNAM Mexique**, **PKU Chine**, **UAEU Émirats**, **UP Manila**. Application directe du précédent du 19/08 (SQU Oman, UR Rwanda) : la formule « **votre** surveillance montre ce qui se passe à l'intérieur de vos frontières » est fausse pour une université, qui ne pilote aucun système national.
+- **Hors gabarit, 1** : **AKDN general enquiries** — voir ci-dessous.
+
+**⚠️ Point à arbitrer par David — 5 contacts académiques sur 10, la part la plus forte de tous les lots traités jusqu'ici, et leurs originaux vendaient déjà la vue consolidée multi-régions.** Les originaux du 10/08 pour DLSPH, UNAM, PKU, UAEU et UP Manila disaient déjà « across the six WHO regions » / « PAHO and the rest of the world's official sources side by side » / « outside the Western Pacific ». La Variante B n'est **pas** une répétition — elle déplace le propos de la *consolidation mondiale* vers l'*alerte précoce près des frontières*, ce qui est un argument distinct — mais l'écart est plus mince que sur un institut national, où l'angle répond frontalement au « on a déjà un dashboard ». **Si le taux de réponse de ce lot déçoit, c'est un facteur à isoler avant de conclure sur l'angle lui-même.** J'ai retenu l'application de l'angle plutôt que la reprise mot pour mot des questions d'origine, par cohérence avec les runs des 18 et 19/08 ; la décision inverse était défendable.
+
+**🔵 AKDN — seul contact hors gabarit, angle transfrontalier délibérément écarté.** L'original du 10/08 n'était pas un pitch standard : c'était une **demande de redirection** après le bounce d'AKHS, et il portait *déjà* l'argument transfrontalier en toutes lettres (« three WHO regions with three separate reporting streams »). Y superposer la Variante A reviendrait à répéter l'original en changeant les mots. La relance **reprend donc la demande de transmission en 1re phrase et conserve la question de clôture d'origine** (« Would this be useful for the people coordinating your health facilities? ») : dans ce cas la demande utile est le transfert, pas une réponse de fond. Application de la règle « cas particulier avec un motif différent du gabarit » (étape 3 du SKILL.md), comme WHO Pandemic Hub (19/08) et Seychelles (17/08). Précédents de redirection : Brunei et UR Rwanda (19/08), MSP Uruguay et Zimbabwe MoHCC (15/08).
+
+**Format** : réponses dans le fil d'origine (`replyToMessageId`), objet « Re: … » automatique. Aucun `htmlBody`, aucune balise `<a>`, **aucun nom de domaine dans le texte nouveau** — y compris pour AKDN, où l'adresse qui a bouncé est désignée par périphrase (« the address the AKDN site lists for Aga Khan Health Services ») plutôt que citée. Aucun tiret cadratin hors signature. Salutation reprise de l'original : « Hi team, » ×9, « Hi Fatima, » (UAEU, seul contact nominatif du lot), « Bonjour, » (INSP).
+
+**IDs des 11 brouillons** : `r-837550031504070024` (NIPH Cambodge, B), `r-3821009794232531501` (HPA Maldives, B), `r-5842008242779966124` (IDCU Malte, B), `r841246386118857938` (INSP Algérie, B, FR), `r-85670812955404552` (Health Poverty Action, A), `r5992813405598776871` (DLSPH Toronto, B adaptée), `r2603004977927473563` (UNAM, B adaptée), `r5428966949804131437` (PKU, B adaptée), `r3442851429543622412` (UAEU, B adaptée), `r3531179437042849299` (UP Manila, B adaptée), `r-170833273951782463` (AKDN, hors gabarit).
+
+**Vérifié via `list_drafts` immédiatement après création : 11/11 présents, horodatés 10:17:34–10:18:07 UTC, `threadId` de chacun correspondant au fil d'envoi du 10/08, tous en `labelIds: ["DRAFT"]`, aucun passé en `SENT`** (contrôle du bug d'envoi instantané du connecteur, incident du 15/08). `list_drafts` **stable ce run**, comme les 16, 17, 18 et 19/08.
+
+**Frein de file** : **11 brouillons** au début du run (les 10 de la prospection du matin, créés à 10:04-10:05 UTC, plus le nudge d'essai Morgan Otita créé à 10:13 par une autre routine). **File après création : 22 brouillons**, sous le seuil de ~25 mais c'est la file la plus profonde depuis l'ouverture du canal. Le frein ne s'est pas appliqué, les 11 relances ont été créées. **Si David n'envoie pas aujourd'hui, le run du 21/08 devra réduire son volume** : 22 + 10 de prospection + les relances du lot du 11/08 dépasseraient largement le seuil.
+
+### 📊 Bilan cumulé
+
+**⚠️ Bounce jamais porté à la liste nominative — MHMS Îles Salomon (19/08).** L'entrée du 19/08 le décrit en détail (`pshealth@pmc.gov.sb`, « Adresse introuvable », NDR à 09:45:30, 18 s après l'envoi) **mais précise explicitement ne pas retotaliser** (porteur unique = cette routine). Contact **jamais bouncé auparavant** : il allonge la liste (13e entrée) et fait baisser les délivrés d'une unité, conformément à la règle du 17/08. Même schéma que DMR Myanmar (18/08) et MSPAS Guatemala (19/08).
+
+**Bilan bounces cumulés depuis le 02/08 : 13** — recalculé depuis la liste nominative, conformément à la règle du 16/08 :
+1. WHO WPRO (02/08) — sous-domaine `wpro.who.int` invalide
+2. ZNPHI Zambie (02/08) — règle de transfert cassée côté destinataire
+3. Colombo (09/08) — 550 5.1.1, adresse introuvable
+4. AKHS (10/08) — adresse inconnue côté serveur
+5. NCIPD Bulgarie (12/08) — 550 high-probability spam
+6. CORDS (12/08) — adresse introuvable
+7. EPHI Éthiopie (12/08) — boîte pleine (transitoire)
+8. Lao TPHI (14/08) — domaine NXDOMAIN
+9. ISED Sénégal (15/08) — boîte pleine, 2 tentatives échouées, écarté définitivement le 16/08
+10. MBDS (15/08) — 550 No Such User Here
+11. DMR Myanmar (17/08) — 550 Unknown user
+12. MSPAS Guatemala (18/08) — adresse introuvable
+13. **MHMS Îles Salomon (19/08) — adresse introuvable, nouveau dans la liste ce run** (échec déjà connu, entrée nominative jamais créée)
+
+Balayage complémentaire (`from:mailer-daemon`, `from:postmaster`, `subject:"Delivery Status Notification"`, `subject:"Undelivered Mail"`, `subject:Undeliverable`, sur 3 jours, corbeille incluse) : **2 fils, tous deux consignés ci-dessus** (MSPAS Guatemala 18/08, MHMS Îles Salomon 19/08). Aucun bounce neuf ce run.
+
+**Totaux au 2026-08-20 : 230 contacts prospectés, 220 envoyés, 207 effectivement délivrés.**
+- **Prospectés 230** = 220 au 19/08 + les 10 du run de prospection de ce matin (en brouillon, pas encore envoyés).
+- **Envoyés 220** = 210 au 18/08 + les 10 du lot du 19/08 (partis le 19/08 à 09:44-09:46). Les 10 de ce matin restent en brouillon.
+- **Délivrés 207** = 220 envoyés − 13 (taille de la liste nominative ci-dessus), recompté dans le même mouvement que la liste.
+
+**Total cumulé de relances : 101 envoyées** (56 le 15/08 + 17 du lot 03/08 le 15/08 + 10 du lot 07/08 le 17/08 + 10 du lot 08/08 le 18/08 + **8 du lot 09/08, parties le 19/08 à 08:16-08:17**), **+ 11 en attente de relecture et d'envoi** (lot du 10/08, ce jour).
+
+**Aucune réponse institutionnelle nouvelle ce run.** Le rendez-vous du **27/08** reste posé pour EAC / IGAD / SADC / AFROHUN en Variante A (EUPHA sorti du lot le 18/08, auto-réponse d'absence), et le lot du 06/08 tombe à J+10 le même jour.
+
+**➕ Ligne manquante ajoutée à l'entrée du 10/08 : ✅ ENVOYÉS par David le 2026-08-10, 11:12:50–11:15:54 UTC** (les 11 contacts), **+ le remplacement AKDN à 11:23:48**. Reconstitué en direct par ce run, jamais consigné à l'époque.
