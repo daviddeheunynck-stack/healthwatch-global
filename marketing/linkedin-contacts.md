@@ -78,7 +78,7 @@
 >
 > Thank you for the two sitreps. If what they carry has moved past 10 August, that gap is precisely the thing worth closing.
 
-**Statut : 🔒 EN ATTENTE DE VALIDATION DE DAVID.** Non envoyé. **Quota DM à froid inchangé à 6/8** : réponse en fil actif ouvert par l'interlocuteur, hors quota froid ([[feedback_reply_quota_cold_outreach_only]]).
+**Statut : ✅ ENVOYÉ, sur ordre explicite de David en session interactive (« envoie les 2 »), après double-check indépendant complet refait de zéro** (fil relu en direct dans le navigateur, verbatim et anti-répétition revérifiés — le message du 16/08 contient bien littéralement le CTA, confirmé en relisant ce message précis —, requête polio et Choléra Cameroun rejouées en base une 2e fois, résultats identiques, formatage recompté sur le texte brut : 0 tiret cadratin, 0 espace insécable, 0 double espace, 4 paragraphes, aucune correction nécessaire). Envoyé et confirmé : texte intégral (1019 caractères) visible dans le fil sous « David Deheunynck », éditeur vidé après clic, destinataire « ETIENNE GUENOU » revérifié dans l'en-tête au moment de l'envoi et dans le fil après. **Quota DM à froid inchangé à 6/8** : réponse en fil actif ouvert par l'interlocuteur, hors quota froid ([[feedback_reply_quota_cold_outreach_only]]).
 
 ### 3️⃣ CONNEXIONS ACCEPTÉES — 1 nouvelle, 1 message de bienvenue rédigé (file portée à 2)
 
@@ -110,7 +110,7 @@
 >
 > I can keep the two apart because I open the PDFs myself, which does not scale and is not really the point. The question I would put to you is whether the alignment work you describe is aimed at the as-of dates themselves converging, or only at the interpretation built on top of them.
 
-**Statut : 🔒 EN ATTENTE DE VALIDATION DE DAVID.** Non envoyé. **Quota DM à froid porté à 7/8** (marge 1) : message de bienvenue, il consomme le quota froid.
+**Statut : ✅ ENVOYÉ, sur ordre explicite de David en session interactive (« envoie les 2 »), après double-check indépendant complet refait de zéro** (aucun fil préexistant reconfirmé par recherche dans la messagerie, connexion 1er degré reconfirmée sur la page profil, citation de mandat OMS revérifiée mot pour mot dans l'onglet Expérience, chiffres Ebola RDC et Africa CDC rejoués en base une 2e fois — résultats identiques —, formatage recompté : 0 tiret cadratin, 0 espace insécable, 0 double espace, 4 paragraphes, aucune correction nécessaire). ⚠️ **Note technique** : le bouton « Envoyer » se trouve dans un Shadow DOM et un premier `.click()` synthétique a semblé ne rien faire (éditeur affiché non vidé sur une référence DOM devenue obsolète) ; **vérification indépendante par capture d'écran** a montré la coche de livraison et le composeur réellement vidé — confirmé ensuite par relecture du texte dans le DOM live. Destinataire revérifié à trois reprises (en-tête de la bulle, page profil, texte du message dans le fil). **Quota DM à froid porté à 7/8** (marge 1) : message de bienvenue, il consomme le quota froid.
 
 ### 3️⃣bis 📌 INVITATIONS EN ATTENTE — reconstruites depuis la source, le chiffre qui circulait était faux d'un facteur 5
 
