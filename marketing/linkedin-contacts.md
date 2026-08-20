@@ -11,6 +11,105 @@
 **Codeur (freelance)** : David a mentionné vouloir être « plus incisif » sur Codeur également, mais n'a pas encore précisé en quoi — à reconfirmer avec lui plutôt que d'improviser, ce terrain n'étant pas couvert par ce repo/session.
 
 ---
+## 📅 Session linkedin-hwg-followup-check — 20/08/2026 (13h, 1er des 2 créneaux après-midi)
+
+**Vérification double déclenchement** : aucune entrée `linkedin-hwg-followup-check` ni aucune entrée « 13h » datée du 20/08 dans ce fichier ni dans `content-log.md` à l'ouverture → **premier déclenchement de ce `taskId` aujourd'hui**. La seule entrée du 20/08 est celle de `linkedin-hwg-monitoring` (9h, run démarré 10h48), run intentionnellement distinct.
+
+**Quotas à l'ouverture (cumul du jour, 3 sessions LinkedIn)** : commentaires **1/7** (marge 6) ; connexions **7/7 REMPLI** ; suivis **8/7-10** (marge 2) ; DM à froid rédigés **5/8** (marge 3) ; **file de validation DM = 0** — les **8 brouillons en attente ont été validés et envoyés ce matin entre 11:59 et 12:26 sur ordre explicite de David en session interactive (« envoie les 8 »)**, commit `5d1bef1`. La file repart donc de zéro à ce créneau, pour la première fois depuis plusieurs jours.
+
+**🖥️ État navigateur** : `browser-status.md` lu avant ouverture, dernière entrée `🔴` du **15/08** (pas du jour) → pas de bridage, rien à y écrire. `23c7ecdd-…` sélectionné directement sans question (§7, session planifiée). Aucun incident navigateur à ce créneau.
+
+**⚠️ CTA — formulation du jour reprise telle quelle du carry-over point 3 du matin** : depuis le commit `14ad1bc` du 19/08 au soir, la carte bancaire est exigée **au checkout d'abonnement**, plus à l'inscription. Le CTA doit donc viser **explicitement la création de compte**. Revérifié en code ce créneau, pas repris de mémoire : `lib/activate-trial.ts` porte bien `TRIAL_DAYS = 14` et `app/[locale]/signup/page.tsx` affiche toujours « Essai Pro 14 jours inclus, sans carte bancaire ». Le brouillon ci-dessous dit « l'inscription », jamais « souscrire ».
+
+### 1️⃣ SUIVI DES ACTIONS PRÉCÉDENTES DU JOUR (aucun quota consommé)
+
+**Les 8 DM envoyés ce matin sont confirmés partis**, vérifiés un par un dans la liste des conversations (direction du dernier message = « Vous : » sur les 8) : Aly Antoine KAMANO 11:59, Patrick AYONGA 12:03, Rukkaiya Abdulkadir 12:07, Isaias Fernandes Co 12:10, Darrel Ornelle ELION ASSIANA 12:14, Dossou Vincent SODJINOU 12:18, Tyler A. Porth 12:21, Steven Ault 12:26.
+
+**Réponses reçues à ces 8 envois : aucune à ce stade.** Les envois ont moins d'une heure et demie au moment du relevé, ce qui n'a rien d'anormal. **Aly Antoine KAMANO** et **Darrel Ornelle ELION ASSIANA** sont affichés « en ligne » ou « joignable », **Tyler A. Porth** et **Dossou Vincent SODJINOU** aussi : les fils à revérifier en priorité au créneau de 17h.
+
+**Commentaire 1/7 du matin (page RéPIA, arboviroses France)** : vérifié, **aucune réponse ni réaction nouvelle** depuis la publication.
+
+### 2️⃣ DM — 1 MESSAGE REÇU, 1 BROUILLON EN FILE (file totale : 1)
+
+**Messages reçus depuis la clôture du créneau de 9h (12:26) : 1.** La liste des conversations a été relue par récence et le caractère lu/non lu contrôlé sur chaque élément : un seul fil porte un message entrant postérieur à 12:26.
+
+#### 🔒 DM en attente de validation — **Pericles Lepapa** (FR, fil actif, **AVEC CTA**)
+
+`/in/pericles-lepapa-9078793b3/`, *médecin régulateur, urgences pré-hospitalières, DIU santé numérique*, **Kinshasa**. Contact HWG de longue date : il avait écrit le premier le 30/07 à 00:23, et le fil sert depuis d'échange d'orientation vers la surveillance épidémiologique.
+
+**§4 — fil lu intégralement : 13 messages**, du 30/07 à aujourd'hui. Il avait clos le 31/07 sur « Merci beaucoup » après l'information sur le **DRC-FETP** (École de Santé Publique de Kinshasa) donnée par David à 12:03. **Le fil rouvre aujourd'hui à son initiative.**
+
+**Verbatim reçu (aujourd'hui 12:30, intégral)** : « *Bonjour, je vous espère bien portant. Si jamais il y a quelques opportunités dans le secteur humanitaire, vous pouvez si possible me partager. Cordialement* »
+
+**Qualification — sollicitation personnelle, conduite par défaut (§3).** Le fil bascule d'un échange technique vers une **demande personnelle adressée à David** (opportunités professionnelles pour lui). La politique commune prescrit exactement ce cas : ne pas poser de question ouverte à David sur la marche à suivre, préparer d'office un **accusé de réception honnête et neutre** qui ne promet rien et n'engage sur aucune suite, et le soumettre à validation comme n'importe quel DM. **Aucun engagement du type « je penserai à vous » n'est pris** — le brouillon dit explicitement l'inverse.
+
+**Ce que le brouillon refuse de faire** : laisser entendre que David a accès à des postes humanitaires. Il n'a ni employeur, ni réseau de recrutement, et HWG est un projet solo. Une réponse vague aurait été plus confortable et lui aurait fait perdre du temps.
+
+**✅ §3 — CTA : les deux conditions vérifiées séparément.** (1) **Échange substantiel** : le fil compte 13 messages, dont 4 réponses de fond de sa part sur la méthode d'analyse (croisement de sources, hiérarchisation d'hypothèses) — très au-delà du seuil de la simple politesse. (2) **Anti-répétition sur l'intégralité du fil** : comptage mécanique sur les 13 messages, **`healthwatch` = 0 occurrence, `healthwatch-global.com` = 0 occurrence**, aucune mention de l'essai. Le nom, le lien et l'offre n'ont **jamais** été envoyés dans ce fil malgré trois semaines d'échanges. → **première occurrence, CTA complet autorisé.**
+
+**Pourquoi le CTA n'est pas une esquive ici.** Il est ancré sur l'objectif qu'il a lui-même énoncé le 30/07 (« la surveillance épidémiologique me tente beaucoup ») : il n'a aucun accès à des données réelles pour s'exercer. C'est la seule chose concrète que David puisse réellement lui donner, et elle arrive **après** le refus franc, pas à sa place.
+
+**Double-check (§5, 8 points)** : *langue du fil = FR* (relue sur les 3 derniers messages : le sien de 12:30, le sien de 12:21, celui de David de 12:03) ; *langue du brouillon = FR* ✅. *Contenu (1)* — **0 tiret cadratin, 0 double espace, 0 espace insécable**, comptés mécaniquement sur le texte brut hors composeur ✅. *Raisonnement (2)* — **aucun chiffre de foyer, aucune date calculée** ; « fin juillet » est **lu dans le fil** (30-31/07), pas déduit ; l'affirmation produit (**inscription gratuite, 14 jours en Pro, sans carte**) est **revérifiée en code ce créneau** et non reprise de la note du matin, conformément à [[feedback_verify_live_db_not_carryover_notes]] ✅. *Mise en forme (3)* — **1 196 caractères, 4 paragraphes**, brouillon **jamais saisi dans l'éditeur LinkedIn** ✅. *Destinataire (4)* — sans objet tant que non envoyé ; en-tête du fil relu, « Pericles Lepapa », profil identifié par son lien et non par le nom affiché (§12) ✅. *Fait personnel sur David (5)* — **aucun**. ⚠️ Le premier jet ouvrait sur « *tout va bien de mon côté* », en réponse à son « *je vous espère bien portant* » : **retiré**, c'est une affirmation sur l'état de David que rien dans le fil ne permet d'écrire. L'ouverture se limite désormais au remerciement ✅. *Règle des deux essais (6)* — deux reprises, mais sur **deux défauts distincts** (l'ouverture ci-dessus, puis deux formulations-gabarit), jamais deux fois le même défaut : seuil non atteint ✅. *Anti-gabarit (7)* — grep 5-6 mots sur 30 séquences dans `linkedin-contacts.md`, `content-log.md` et les deux archives. **Deux collisions trouvées et corrigées avant mise en file** : « côte à côte les foyers actifs » (**1 occurrence, le DM Patrick AYONGA envoyé ce matin même**) et « préfère être franc » (1 occurrence). Les deux phrases ont été entièrement réécrites ; toutes les formulations retenues sont à 0. Le CTA est volontairement construit autrement que les quatre du matin ✅. *Relecture éditoriale (8)* — le message répond frontalement à ce qui est demandé au lieu de le contourner, donne trois pistes concrètes qui ne dépendent pas de David, et ne referme pas la porte. **Rien à changer.**
+
+> Bonjour Pericles, merci pour votre message.
+>
+> Autant vous le dire tout de suite : je ne suis pas dans le circuit humanitaire et je n'ai aucun poste à faire circuler. HealthWatch Global, c'est moi seul, sans employeur ni réseau de recrutement derrière. Vous répondre « je penserai à vous » serait une politesse sans suite.
+>
+> Là où les postes passent réellement, c'est ReliefWeb, le service d'annonces de l'OCHA, et les pages carrières de l'OMS et d'Africa CDC. Mais pour l'analyse de surveillance, ce qui pèsera le plus sur une candidature reste ce dont nous parlions fin juillet : le DRC-FETP à Kinshasa, ou n'importe quelle trace écrite montrant que vous savez lire une série de cas et distinguer un vrai changement d'un artefact de recueil.
+>
+> Sur ce point précis je peux vous rendre service, à défaut du reste. J'entretiens healthwatch-global.com, qui rassemble en un seul endroit l'état des épidémies en cours telles que l'OMS, l'ECDC, la PAHO et Africa CDC les rapportent. L'inscription est gratuite et ouvre quatorze jours en Pro, sans qu'aucune coordonnée bancaire soit demandée. Vous y aurez de la matière réelle pour vous exercer, plutôt que les données d'exercice qu'on trouve en formation.
+
+**Statut : 🔒 EN ATTENTE DE VALIDATION DE DAVID. Non envoyé.** Notification push envoyée en fin de session.
+
+**Quota DM à froid : inchangé à 5/8.** Cette réponse est en fil actif ouvert par l'interlocuteur, hors quota froid ([[feedback_reply_quota_cold_outreach_only]]).
+### 3️⃣ CONNEXIONS ACCEPTÉES — 1 nouvelle, 1 message de bienvenue rédigé (file totale : 2)
+
+`/mynetwork/invite-connect/connections/` trié « Ajouts récents » → **245 relations**, contre **243** au relevé de 9h. L'écart de 2 se décompose en **Steven Ault** (invitation reçue et acceptée pendant la session de 9h, déjà comptée et déjà destinataire d'un DM envoyé à 12:26) et **une seule acceptation réellement nouvelle**. Identifiée par son **lien de profil**, pas par le nom affiché (§12) :
+
+- **Mohamed Ousmane COULIBALY** (`/in/mohamed-ousmane-coulibaly-5483a1219/`, mention « Connexion le 20 août 2026 ») — invitation **envoyée le 19/08 sans note**, acceptée en moins de 24 h. Statut du tracker à mettre à jour depuis « connecté (sans note) ».
+
+**Vérification bidirectionnelle (règle du 14/07)** : il n'apparaît dans **aucune conversation** de la messagerie, et le grep sur `linkedin-contacts.md` + archive + tracker ne trouve **aucun DM antérieur** (l'invitation était sans note). → **premier contact**, donc **message de bienvenue sans lien ni CTA**, règle inchangée du premier contact (§3).
+
+#### 🔒 DM en attente de validation — **Mohamed Ousmane COULIBALY** (FR, bienvenue, **SANS CTA**)
+
+*Incident Manager (IM) at **World Health Organization***, Bamako, Mali. Aussi *Institute of Tropical Medicine Antwerp*. **303 relations, 16 relations en commun.** Mention « À l'écoute de nouvelles opportunités » sur son profil : **délibérément non exploitée comme accroche**, ce serait un hook opportuniste et hors sujet.
+
+**Parcours lu dans l'onglet Expérience, pas déduit de l'intitulé** (10 postes) : ***Polio Incident Manager*, OMS, juin 2020 - déc. 2023, 3 ans 7 mois, Kinshasa / Nouakchott / Ouagadougou** ; *Rapid Response Team Epidemiologist*, OMS AFRO Brazzaville (2019-2023) ; *Technical Officer Immunization & VPDs Surveillance*, bassin du lac Tchad, Diffa (2017-2019) et OMS Mali, Bamako et Gao (2016-2017) ; *STOP Polio Program Consultant*, OMS Niger et CDC Atlanta, Niamey (2014-2015) ; puis *Technical Advisor Immunization (AMVIRA)*, OMS AFRO Abidjan (2024-2025) et *consultant international vaccination rougeole-rubéole*, Lomé (depuis juin 2025).
+
+**Hook retenu — sa fiche de poste de 2020-2023 le place du côté de la production de ce que HWG consomme.** Elle mentionne explicitement « *produce updates of outbreak response activities (e.g., SITREPS, bulletins, and newsletters) for distribution to relevant partners* ». C'est l'élément le plus spécifique et le plus vérifiable du profil, et il évite de flatter un titre.
+
+**⚠️ Affirmation produit vérifiée en base avant rédaction** (`.env.local.live`, prod, requête faite à ce créneau et non reprise d'une note antérieure) : le brouillon affirme que la polio ne porte **aucun foyer africain**. Requête sur `outbreaks`, filtre `disease ilike *polio*` : **7 lignes au total, dont 3 actives — Afghanistan (15 cas, 22/07/2026), Pakistan (3 cas, 22/07/2026), Palestine (1 cas, 04/03/2026)**. Les 4 inactives sont Israël, Papouasie-Nouvelle-Guinée, Pakistan et Afghanistan. **Aucune ligne polio africaine, active ou non.** Affirmation exacte. Le brouillon **ne donne aucun chiffre de cas** et se limite aux trois pays, ce qui ne peut pas vieillir mal d'ici la validation.
+
+**Ce que le brouillon s'interdit** : conclure sur la cause de ce vide. Il constate le fait côté HWG et **demande** à l'intéressé laquelle des deux explications est la bonne (canal GPEI qui ne devient jamais un événement publié, ou mauvaises sources côté HWG). Une routine LinkedIn n'a pas les moyens de trancher, et faire semblant serait une inférence non soutenue.
+
+**Choix de la langue, raisonné et non supposé.** Son profil est **intégralement rédigé en anglais** (intitulé et 10 fiches de poste), ce qui est un choix de CV destiné aux recruteurs internationaux. Mais **la totalité de ses affectations est en Afrique francophone** : Bamako, Gao, Niamey, Ouagadougou, Kinshasa, Nouakchott, Abidjan, Lomé, Bobo-Dioulasso, Diffa, Brazzaville. Il est malien, le français est la langue officielle du Mali et sa langue de travail quotidienne selon toute vraisemblance. **FR retenu**, même arbitrage que Dossou Vincent SODJINOU ce matin. Aucun fil n'existe encore : cet arbitrage sera à réviser s'il répond en anglais.
+
+**Double-check (§5, 8 points)** : *langue du profil = EN mais parcours 100 % francophone* (voir encadré) ; *langue du brouillon = FR* ✅. *Contenu (1)* — **0 tiret cadratin, 0 double espace, 0 espace insécable**, comptés mécaniquement sur le texte brut ✅ ; **aucun lien, aucun CTA** ✅. *Raisonnement (2)* — **« trois ans et sept mois » est lu tel quel dans l'onglet Expérience, pas calculé** (piège des dates calculées, §5.2) ; la liste des trois pays polio est **relue en base ce créneau** ✅. *Mise en forme (3)* — **1 165 caractères, 4 paragraphes**, brouillon **jamais saisi dans l'éditeur LinkedIn** ✅. *Destinataire (4)* — sans objet tant que non envoyé ; profil identifié par son slug ✅. *Fait personnel sur David (5)* — **aucun** ✅. *Règle des deux essais (6)* — deux reprises, sur **deux défauts distincts** (formulations-gabarit, puis une phrase qui laissait entendre que HWG existait déjà pendant ses années polio, ce qui est faux) ✅. *Anti-gabarit (7)* — grep 5-6 mots sur 30 séquences. **Trois collisions trouvées et corrigées avant mise en file** : « **merci d'avoir accepté** » (**29 occurrences**, la formule d'ouverture la plus usée du dispositif, y compris dans le DM Dossou Vincent SODJINOU envoyé ce matin) → remplacée par « merci pour la mise en relation » (0) ; « que je fais tourner seul » (1 occurrence, même DM de ce matin) → « tenue par moi seul » (0) ; « ce que j'agrège » (8 occurrences) → tournure supprimée. ⚠️ *Réserve assumée* : « recherche active » ressort à 70 occurrences, mais **toutes dans la prose de gestion des routines** (« recherche active de candidats »), aucune dans un message envoyé. C'est ici le terme technique consacré de la surveillance PFA, il est conservé ✅. *Relecture éditoriale (8)* — le message part d'une ligne précise de sa fiche de poste plutôt que de son titre, énonce une limite mesurée de HWG au lieu d'un argumentaire, et pose deux questions auxquelles il est l'un des rares à pouvoir répondre. **Rien à changer.**
+
+> Bonjour Mohamed Ousmane, merci pour la mise en relation.
+>
+> Ce qui m'a fait vous inviter, ce sont vos trois ans et sept mois de coordination de la riposte polio, entre Kinshasa, Nouakchott et Ouagadougou. Votre fiche de poste mentionne la production des sitreps et des bulletins adressés aux partenaires : c'est précisément le matériau dont je vis. HealthWatch Global est une plateforme tenue par moi seul, et elle ne connaît du monde que ce qui a été publié quelque part.
+>
+> Voilà ce que ça donne pour la polio. Ma base porte aujourd'hui trois foyers actifs, l'Afghanistan, le Pakistan et la Palestine. Aucun pays africain, pas un seul. Vous avez passé ces années à piloter des ripostes en Afrique de l'Ouest et centrale, et c'est ce continent qui manque à l'appel.
+>
+> Je ne sais pas comment lire ce vide. Est-ce qu'une détection africaine circule dans les canaux GPEI sans jamais devenir un événement publié au sens des bulletins que je dépouille, ou est-ce simplement que je ne lis pas les bonnes sources ? Et sur la PFA, quand le nombre de cas notifiés monte, votre premier réflexe va-t-il vers le virus qui circule ou vers la recherche active qui s'est intensifiée ?
+
+**Statut : 🔒 EN ATTENTE DE VALIDATION DE DAVID. Non envoyé.**
+
+**Quota DM à froid : 6/8** (marge 2). Ce message de bienvenue consomme le quota froid, contrairement à la réponse Pericles Lepapa.
+
+**📌 ⚠️ Invitations en attente — nommées plutôt que comptées, parce que le total qui circule est faux.** Restent en attente : les **7 décideurs des 17-18/08, désormais à leur 6e jour** (Melkamu Abte Afele, Musole Chipoya, Dieudonné Mwamba, joseph nyandwi, William YAVO, HoussaÏnatou BAH, Abdoulaye Touré) ; **Ana Bento, trésor Ndaye, Dr. Charles Kuria NJUGUNA, Syra Madad, Veh Kesse Fabien Diomande** ; et les **7 envoyées ce matin** (Kasonde Mwinga, Richard Banda, Brian Chirombo, Humphrey Karamagi, Francis Chisaka Kasolo, Ahmadou Boly, Ambrose Talisuna). **Mohamed Ousmane COULIBALY en sort**, accepté aujourd'hui. Soit **19 personnes nommées**.
+
+⚠️ **Le chiffre « 11 » du carry-over de 9h ne correspond pas à sa propre liste**, qui nomme 13 personnes ; et le tracker porte en plus **Yap Boum II** « en attente depuis le 14/08 », absent de toutes ces listes. **Aucun total n'est donc fiable à ce stade et aucun n'est repris ici.** À reconstruire au créneau de 17h depuis `/mynetwork/invitation-manager/sent/` plutôt que par report d'un carry-over à l'autre, exactement le défaut que vise la règle du 08/08 (retester la prémisse, ne pas recopier).
+
+### 4️⃣ NOUVEAUX ABONNÉS — +1, aucun follow-back à exécuter
+
+`/mynetwork/network-manager/people-follow/followers/` → **352 personnes**, contre **351** au relevé de 9h. Le seul nouvel abonné est **Mohamed Ousmane COULIBALY**, et il s'explique intégralement par l'acceptation de connexion ci-dessus (une mise en relation entraîne le suivi). Son bouton porte déjà « Suivi » : **David le suit depuis le 19/08**, rien à exécuter.
+
+**0 follow-back. Quota suivis inchangé à 8/7-10** (marge 2). **Aucun abonné inconnu à évaluer** à ce créneau ; **Shivakoti CH** reste en 6e position de la liste, non suivi, statut « écarté » inchangé depuis le 19/08.
+
+---
+
 ## 📅 Session linkedin-hwg-monitoring — 20/08/2026 (9h, run démarré 10h48)
 
 **Vérification double déclenchement** : aucune entrée datée du 20/08 dans `linkedin-contacts.md`, `content-log.md` ni `linkedin-candidates-tracker.md` à l'ouverture (fichiers inchangés depuis le 19/08 18h19) → **premier déclenchement du jour**.
