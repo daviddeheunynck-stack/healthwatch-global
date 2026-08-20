@@ -872,3 +872,61 @@ if (!marburgRow) {
   const daysLeft = Math.ceil((new Date(MARBURG_CLOSURE_WATCH_FROM).getTime() - now) / 864e5);
   console.log(`Pas encore dû — ${daysLeft}j avant le ${MARBURG_CLOSURE_WATCH_FROM}.`);
 }
+
+// --- 4e. Lignes de cron dont la DATE D'ARRÊTÉ périme sans que rien ne le voie ---
+// Angle mort trouvé le 20/08/2026 sur MERS-CoV/Global (sp=5, alimentée par l'aperçu ECDC).
+// Les crons ne réécrivent une ligne que si les CHIFFRES changent. Quand une source publie une
+// nouvelle édition avec des totaux identiques (MERS : 2 649 cas / 960 décès inchangés entre le
+// 1er juin et le 3 août, aucun cas nouveau sur la période), le cron ne touche à rien — et la
+// ligne continue d'afficher au client une date d'arrêté vieille de deux mois alors que la source
+// confirme la donnée à une date bien plus récente. Aucun filet existant ne la voyait : 4d ne
+// couvre que source_priority=10, 4d-bis que les clusters de seeds, la section 5 que les lignes
+// sans cron du tout.
+// Le scan ne conclut rien : il liste les lignes de cron figées depuis > 45j pour qu'on aille lire
+// l'édition courante de leur source. Si les chiffres ont bougé → c'est le cron qui est en panne,
+// creuser de ce côté plutôt que de patcher à la main. S'ils sont identiques → ne corriger QUE la
+// date d'arrêté et les 5 descriptions, jamais les chiffres.
+// Seuil à 45j (et non 7j) volontairement : ces lignes SONT couvertes par un cron, on ne cherche
+// ici que les cas où la cadence de publication de la source et celle du cron ont divergé.
+// Exclusions : seeds (figés à dessein, cf. 4a), source_priority=10 (déjà en 4d/4d-bis) et les
+// lignes de MANUAL_ROWS (section 5, cadence 7j propre).
+// Même garde-fou que les autres maps : ne bumper une date qu'après avoir réellement consulté
+// l'édition courante de la source, jamais pour faire taire une ligne.
+const STALE_CRON_ROW_CHECKED = {
+  // MERS-CoV/Global : vérifié le 20/08. L'aperçu ECDC courant est arrêté au 03/08/2026 et donne
+  // exactement les mêmes totaux (2 649 / 960) — aucun cas MERS déclaré dans le monde entre le
+  // 01/06 et le 03/08. Seules la `date` et les 5 descriptions ont été alignées sur le 03/08 ;
+  // chiffres et source inchangés, ligne laissée à sp=5 (le cron fait bien son travail sur les
+  // chiffres, rien à verrouiller).
+  "3dc50804-7718-43c7-b0ce-7cdd95165b2b": "2026-08-20",
+  // Shigellosis/EU-EEE : vérifié le 20/08, rien à faire. Contrairement à MERS-CoV, la source
+  // n'est pas une série périodique mais une « epidemiological update » ECDC ponctuelle et datée
+  // (mai 2026) sur les clusters MDR/XDR de Shigella circulant depuis 2023. Il n'y a pas d'édition
+  // suivante à attendre : la ligne est un agrégat pluriannuel en phase `monitoring`, son
+  // ancienneté est structurelle et n'est pas un signal de péremption.
+  "bac370f5-bdc9-4840-98b1-5c8b0b3502f3": "2026-08-20",
+};
+const STALE_CRON_DAYS = 45;
+console.log(`\n=== Lignes de cron figées depuis > ${STALE_CRON_DAYS}j (date d'arrêté potentiellement périmée) ===`);
+const staleCronRows = active
+  .filter((o) => !o.is_seed && o.source_priority !== 10 && !MANUAL_ROWS[o.id])
+  .map((o) => {
+    const checked = STALE_CRON_ROW_CHECKED[o.id];
+    const lastSeen = Math.max(
+      new Date(o.updated_at).getTime(),
+      checked ? new Date(checked).getTime() : 0
+    );
+    return { o, checked, ageDays: Math.round((now - lastSeen) / 864e5) };
+  })
+  .filter((x) => x.ageDays > STALE_CRON_DAYS)
+  .sort((a, b) => b.ageDays - a.ageDays);
+if (staleCronRows.length) {
+  staleCronRows.forEach(({ o, checked, ageDays }) => {
+    const via = checked && new Date(checked).getTime() > new Date(o.updated_at).getTime()
+      ? " (dernière vérif sans changement)"
+      : "";
+    console.log(`[${o.id}] ${o.disease_en || o.disease} | ${o.country_en || o.country} | ${ageDays}j sans écriture${via} — LIRE L'ÉDITION COURANTE | ${o.cases}c/${o.deaths}d | date=${(o.date || "").slice(0, 10)} | sp=${o.source_priority} | src=${(o.source || "").slice(0, 60)}`);
+  });
+} else {
+  console.log("Aucune.");
+}
