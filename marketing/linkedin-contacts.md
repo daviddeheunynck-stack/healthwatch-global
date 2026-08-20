@@ -59,7 +59,7 @@
 >
 > Sur ce point précis je peux vous rendre service, à défaut du reste. J'entretiens healthwatch-global.com, qui rassemble en un seul endroit l'état des épidémies en cours telles que l'OMS, l'ECDC, la PAHO et Africa CDC les rapportent. L'inscription est gratuite et ouvre quatorze jours en Pro, sans qu'aucune coordonnée bancaire soit demandée. Vous y aurez de la matière réelle pour vous exercer, plutôt que les données d'exercice qu'on trouve en formation.
 
-**Statut : 🔒 EN ATTENTE DE VALIDATION DE DAVID. Non envoyé.** Notification push envoyée en fin de session.
+**Statut : ✅ ENVOYÉ à 14:14, sur ordre explicite de David en session interactive (« envoie les 2 »), après double-check indépendant complet (fil relu en direct, verbatim revérifié mot pour mot, requête polio refaite en base, formatage recompté depuis le fichier — 0 correction nécessaire).** Confirmé via lecture du fil complet : le texte apparaît intégralement sous « David Deheunynck 14:14 », en 4 paragraphes distincts, sans troncature ni erreur de destinataire (en-tête « Pericles Lepapa » relu dans le même appel JS que le clic sur Envoyer).
 
 **Quota DM à froid : inchangé à 5/8.** Cette réponse est en fil actif ouvert par l'interlocuteur, hors quota froid ([[feedback_reply_quota_cold_outreach_only]]).
 ### 3️⃣ CONNEXIONS ACCEPTÉES — 1 nouvelle, 1 message de bienvenue rédigé (file totale : 2)
@@ -94,7 +94,7 @@
 >
 > Je ne sais pas comment lire ce vide. Est-ce qu'une détection africaine circule dans les canaux GPEI sans jamais devenir un événement publié au sens des bulletins que je dépouille, ou est-ce simplement que je ne lis pas les bonnes sources ? Et sur la PFA, quand le nombre de cas notifiés monte, votre premier réflexe va-t-il vers le virus qui circule ou vers la recherche active qui s'est intensifiée ?
 
-**Statut : 🔒 EN ATTENTE DE VALIDATION DE DAVID. Non envoyé.**
+**Statut : ✅ ENVOYÉ, sur ordre explicite de David en session interactive (« envoie les 2 »), après double-check indépendant complet (aucun fil préexistant reconfirmé par recherche dans la messagerie, fiche de poste et citation « SITREPS, bulletins, and newsletters » relues en direct, requête polio refaite en base — 3 lignes actives, 0 en Afrique — formatage recompté, 0 correction nécessaire).** Bulle de composition ouverte depuis le profil (élément situé dans un Shadow DOM, repéré et ciblé directement) ; texte vérifié caractère pour caractère (1 165/1 165) et destinataire « Mohamed Ousmane COULIBALY » revérifiés dans le même appel JS que le clic sur Envoyer. Confirmé via capture : coche de livraison visible, texte intégral rendu sous son nom, composeur vidé après envoi.
 
 **Quota DM à froid : 6/8** (marge 2). Ce message de bienvenue consomme le quota froid, contrairement à la réponse Pericles Lepapa.
 
@@ -107,6 +107,15 @@
 `/mynetwork/network-manager/people-follow/followers/` → **352 personnes**, contre **351** au relevé de 9h. Le seul nouvel abonné est **Mohamed Ousmane COULIBALY**, et il s'explique intégralement par l'acceptation de connexion ci-dessus (une mise en relation entraîne le suivi). Son bouton porte déjà « Suivi » : **David le suit depuis le 19/08**, rien à exécuter.
 
 **0 follow-back. Quota suivis inchangé à 8/7-10** (marge 2). **Aucun abonné inconnu à évaluer** à ce créneau ; **Shivakoti CH** reste en 6e position de la liste, non suivi, statut « écarté » inchangé depuis le 19/08.
+
+### 5️⃣ POST-CLÔTURE — les 2 DM en attente envoyés sur ordre explicite de David (« envoie les 2 »)
+
+David a demandé un double-check indépendant des 2 brouillons en session interactive, puis a tapé « envoie les 2 » — validation explicite au sens de `report-conventions.md`. **Double-check refait de zéro avant envoi**, pas recopié du premier passage : fils/profils relus en direct dans le navigateur, verbatims et faits revérifiés (dont la requête polio refaite en base une 2e fois, résultat identique), formatage recompté depuis le fichier. Aucune correction nécessaire sur les deux brouillons.
+
+- **Pericles Lepapa** : ✅ envoyé et confirmé à 14:14 (détail section 2️⃣ ci-dessus).
+- **Mohamed Ousmane COULIBALY** : ✅ envoyé et confirmé (détail section 3️⃣ ci-dessus).
+
+**File de validation DM à la clôture réelle du créneau : 0.** Quota DM à froid final : **6/8**.
 
 ---
 
