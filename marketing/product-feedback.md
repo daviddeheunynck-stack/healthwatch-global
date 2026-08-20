@@ -4,6 +4,48 @@ Feedback produit substantiel reçu via LinkedIn ou email, distinct du content-lo
 
 ---
 
+## 20 août 2026 — ETIENNE GUENOU (Laboratoire National de Santé Publique, Cameroun) — 🎯 QUALITÉ DE SOURCE, audit externe vérifié et exact
+
+**Qui.** Superviseur des panels de contrôle de qualité externe (EQA) pour le diagnostic du choléra au **NPHL, Cameroun**. Connecté à David depuis le 12/08, fil actif de 5 messages sur la traçabilité de la qualité diagnostique. C'est **le premier retour produit venu d'un professionnel qui a réellement ouvert la plateforme et remonté à la provenance d'une ligne**, plutôt que d'en commenter l'apparence.
+
+**Ce qu'il a écrit (20/08, verbatim partiel) :**
+
+> *Regarding your dashboard at HealthWatch Global, you hit the nail on the head: data transparency and source selection drastically impact data quality. For instance, I noticed your platform currently pulls Cameroon data from 237actu, which is a local commercial news outlet. In public health, media reporting often introduces noise, delays, or unverified figures. To ensure maximum accuracy for Cameroon, your pipeline should plug directly into the CCOUSP (ccousp.cm) — the Center for Coordination of Public Health Emergency Operations. They are the sole official body authorized to publish validated, incontestable epidemiological data for the country. Fixing that source pipeline would immediately elevate the implicit quality signal of your Cameroon figures!*
+
+Il a enchaîné à 14:49 avec **deux sitreps officiels camerounais en pièce jointe** : `SitRep_15_Cholera_Extrême_Nord_2026.pdf` (518 Ko) et `Sitrep-National-Mpox_11.pdf` (2 Mo). ⚠️ **Non téléchargés** par la session (téléchargement soumis à autorisation) ; ils restent disponibles dans le fil LinkedIn.
+
+**Vérification en base prod (`.env.local.live`, requête faite le 20/08 à 17h, pas reprise d'une note) — il a raison.**
+
+`outbreaks` filtré sur `country ilike '%amerou%'` → **2 lignes, 1 seule active** :
+
+| Maladie | Région | Cas | Décès | Date (as-of) | `source_priority` | Source |
+|---|---|---|---|---|---|---|
+| **Choléra** | Extrême-Nord | 1 000 | 28 | **2026-08-10** | **10** | `237actu.com/extreme-nord-une-epidemie-de-cholera-fait-28-morts-la-riposte-sorganise/` |
+| Fièvre jaune | — | 36 | 0 | 2025-01-01 (inactive) | 5 | `who.int` GHO |
+
+**Contrôle élargi sur l'ensemble des lignes actives** : la très grande majorité des sources sont institutionnelles (WHO DON/AFRO/WER, ECDC, PAHO, Africa CDC, sitreps nationaux). `237actu` appartient à une **petite minorité de sources médias**, avec `tchadinfos.com`, `africa24tv.com` et `leadership.ng`.
+
+**Vérification de la source qu'il recommande, avant de l'endosser.** **CCOUSP est réel et institutionnel** : Centre de Coordination des Opérations d'Urgence de Santé Publique, créé par décret du Premier ministre camerounais du **12 mai 2020**, rattaché au ministère de la Santé publique, compétent sur choléra, rougeole, méningite et mpox. ⚠️ **`ccousp.cm` renvoie HTTP 403 aux outils automatisés** : la faisabilité d'un branchement automatique n'est donc **pas acquise**, et c'est exactement la question posée dans le brouillon de réponse plutôt que de promettre un correctif.
+
+**Ce que ça révèle au-delà du Cameroun (3 points, par ordre de gravité) :**
+
+1. **La rondeur de « 1 000 cas » est un indice de provenance en soi.** Aucun sitrep n'arrête un cumul sur un compte rond ; un titre de presse, si. La valeur est très probablement un arrondi journalistique, pas un décompte. Un contrôle automatique repérant les cumuls suspicieusement ronds sur les lignes issues de sources médias serait peu coûteux.
+2. **La ligne est à `source_priority` 10, donc plus aucun cron ne la rafraîchit** (les crons se plafonnent à `.lte("source_priority", 5)`). Elle est figée au **10/08** depuis le 15/08. Elle fait partie des **27 lignes actives à 10** identifiées le 19/08, et elle en est aujourd'hui **le cas le mieux documenté**, parce qu'un tiers extérieur compétent l'a repéré sans qu'on lui demande. Voir `product-ideas-log.md`, entrée du 19/08, idées 1 et 2.
+3. **Le niveau de source n'est pas visible côté utilisateur.** Un lecteur ne peut pas distinguer une ligne adossée à un sitrep OMS d'une ligne adossée à un article de presse : les deux s'affichent identiquement. C'est précisément l'argument que HWG développe en public depuis des semaines sur les dates d'arrêt, appliqué cette fois à HWG lui-même. **Une pastille de niveau de source, ou au minimum un tri par qualité de provenance, transformerait un défaut en argument de vente.**
+
+**Actions à prendre (aucune faite par la session, §8 : une routine sociale signale, elle n'écrit pas) :**
+
+- [ ] **Rafraîchir la ligne Choléra Cameroun** depuis le SitRep 15 reçu en pièce jointe (à ouvrir en session interactive) ou depuis CCOUSP. ⚠️ Comparer les **dates d'arrêt**, pas les dates de publication, et ne pas laisser régresser le cumul.
+- [ ] **Évaluer si CCOUSP est interrogeable automatiquement** malgré le 403 (flux RSS, page de publications, User-Agent).
+- [ ] **Rejouer le même audit sur les 3 autres lignes actives à source média** (`tchadinfos.com`, `africa24tv.com`, `leadership.ng`) : le défaut n'a aucune raison d'être limité au Cameroun.
+- [ ] **Idée produit** : exposer le niveau de source dans l'interface (institutionnel / national / presse).
+
+🔒 **Réponse rédigée et en attente de validation de David** (EN, **CTA volontairement omis** : le lien et l'essai ont déjà été envoyés dans ce même fil le 16/08, et il a de toute façon déjà utilisé la plateforme). Texte intégral et double-check dans `linkedin-contacts.md`, entrée du 20/08 (17h), section 2️⃣.
+
+⚠️ **Aucune citation publique ni attribution nominative sans son consentement écrit explicite** (règle absolue de `CLAUDE.md`). L'histoire ferait un excellent post de marque ; elle ne peut pas être racontée avec son nom tant qu'il n'a pas dit oui.
+
+---
+
 ## 12 août 2026 — Johan Verheyden (African Intelligence / Aries Consult) — 🐞 BUG DE CONNEXION, partenaire Pro bloqué
 
 **Contexte :** compte Pro provisionné à la main le 11/08 (`jverheyden@ariesconsult.eu`, échange en nature, 1 an). **Aucun email Brevo n'a été envoyé volontairement**, parce que le mail de bienvenue standard de `admin/invite` est cadré « accès pilote 35 jours » et aurait contredit le message LinkedIn. David lui a donc indiqué en DM : « *tu te connectes sur healthwatch-global.com/fr/login avec cette adresse, par lien magique ou par code, il n'y a pas de mot de passe à retenir.* »

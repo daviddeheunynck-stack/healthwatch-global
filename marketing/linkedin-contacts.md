@@ -11,6 +11,179 @@
 **Codeur (freelance)** : David a mentionné vouloir être « plus incisif » sur Codeur également, mais n'a pas encore précisé en quoi — à reconfirmer avec lui plutôt que d'improviser, ce terrain n'étant pas couvert par ce repo/session.
 
 ---
+## 📅 Session linkedin-hwg-followup-check-2 — 20/08/2026 (17h, 2e des 2 créneaux après-midi)
+
+**Vérification double déclenchement** : aucune entrée `linkedin-hwg-followup-check-2` ni aucune entrée « 17h » datée du 20/08 dans ce fichier ni dans `content-log.md` à l'ouverture → **premier déclenchement de ce `taskId` aujourd'hui**. Les deux entrées du jour (9h monitoring, 13h followup-check) sont des runs intentionnellement distincts.
+
+**Quotas à l'ouverture (cumul du jour, 3 sessions LinkedIn)** : commentaires **4/7** (marge 3) ; connexions **7/7 REMPLI** ; suivis **8/7-10** (marge 2) ; DM à froid **6/8** (marge 2) ; file de validation DM **0**.
+
+**🖥️ État navigateur** : `browser-status.md` lu avant ouverture, dernière entrée 🔴 du **15/08** (pas du jour) → pas de bridage, rien à y écrire. Un `screenshot` a timeouté une fois, résolu par re-`select_browser` sur `23c7ecdd…` ; le tool a répondu « Connected to browser "Browser 2" » alors que le deviceId demandé était bien l'habituel, **le nom affiché n'étant qu'un label de slot** (§7). **Pas une perte d'appairage.**
+
+### 1️⃣ SUIVI DES ACTIONS PRÉCÉDENTES DU JOUR (aucun quota consommé)
+
+**Les 8 DM du matin et les 2 DM de 14:14 sont confirmés partis.** Relevé des réponses au 17h :
+
+| Destinataire | Envoi | Réponse reçue |
+|---|---|---|
+| Aly Antoine KAMANO | 11:59 | ✅ « **Merci** » à **13:21** — politesse sans substance |
+| Patrick AYONGA | 12:03 | aucune |
+| Rukkaiya Abdulkadir | 12:07 | aucune |
+| Isaias Fernandes Co | 12:10 | aucune |
+| Darrel Ornelle ELION ASSIANA | 12:14 | aucune |
+| Dossou Vincent SODJINOU | 12:18 | aucune |
+| Tyler A. Porth | 12:21 | aucune |
+| Steven Ault | 12:26 | aucune |
+| Pericles Lepapa | 14:14 | ✅ « **Merci beaucoup** » à **14:23**, 9 min après |
+| Mohamed Ousmane COULIBALY | 14:18 | aucune |
+
+**Bilan : 2 réponses sur 10, toutes deux des remerciements sans substance → aucun brouillon** (§3, distinction stricte entre un accusé de réception poli et un dialogue engagé). Les 4 fils identifiés comme prioritaires par le carry-over de 13h (KAMANO, ELION ASSIANA, Porth, SODJINOU) ont donc **tous été revérifiés** : un seul a bougé, et sans substance.
+
+⚠️ **Point à retenir sur le fil Aly Antoine KAMANO** : le DM du matin lui posait une question de fond précise (quand un district rougeole franchit le seuil, le bulletin national reprend-il rétroactivement les semaines précédentes, ou le comptage démarre-t-il au franchissement ?). Il répond « Merci » et rien d'autre. **La question reste sans réponse** et il semble avoir clos. À ne pas relancer avant plusieurs jours.
+
+✅ **Point positif sur le fil Pericles Lepapa** : le message de 14:14 lui **refusait frontalement** ce qu'il demandait (des opportunités humanitaires), en disant explicitement que « je penserai à vous » serait une politesse sans suite. Il répond « Merci beaucoup » 9 minutes plus tard. **Le pari du refus franc plutôt que de la réponse vague a tenu.**
+
+**Commentaires du jour** : le commentaire 1/7 du matin (page RéPIA) a **produit une réponse d'expert** (Pierre PARNEIX, CHU de Bordeaux, traitée en section 5️⃣ et publiée en réponse, détail dans `content-log.md`). Le commentaire 3/7 de 13h (post PANDAI de Richard Maude) a été **aimé par MAYTAMOU Simon Pierre**.
+
+### 2️⃣ DM — 3 MESSAGES REÇUS, 1 BROUILLON EN FILE (file portée à 2 avec la section 3️⃣)
+
+**Messages reçus depuis la clôture du créneau de 13h : 3.** Liste des conversations relue par récence, caractère lu/non lu contrôlé sur chaque élément. Deux sont des remerciements traités en section 1️⃣ (Pericles Lepapa 14:23, Aly Antoine KAMANO 13:21). Le troisième est substantiel.
+
+#### 🔒 DM en attente de validation — **ETIENNE GUENOU** (EN, fil actif, **SANS CTA — anti-répétition**)
+
+*Laboratoire National de Santé Publique (NPHL), **Cameroun***, supervision des panels de contrôle de qualité externe (EQA) pour le diagnostic du choléra.
+
+**§4 — fil lu intégralement : 5 messages**, du 12/08 à aujourd'hui. Ouvert par David le 12/08 à 10:37 (message de bienvenue après acceptation de connexion), réponse de fond d'Etienne le vendredi 15/08 à 16:28, relance de David le samedi 16/08, puis **deux messages d'Etienne aujourd'hui**.
+
+**Verbatim reçu n°1 (aujourd'hui, intégral)** : « *Hi David, To answer your question directly: EQA is strictly cyclical and never a one-time accreditation. It operates as a continuous quality loop. Here is how it breaks down on the NPHL side: • Regular Cycles: Proficiency testing (PT) panels are sent out on a strict schedule, usually quarterly or bi-annually. • Continuous Validation: A laboratory's "certified" status is only valid for that specific round. They must pass the next cycle to maintain it. • Perishable Status: Performance can degrade due to staff turnover or reagent issues, which is why a one-time stamp does not work in biosecurity. Regarding your dashboard at HealthWatch Global, you hit the nail on the head: data transparency and source selection drastically impact data quality. **For instance, I noticed your platform currently pulls Cameroon data from 237actu, which is a local commercial news outlet. In public health, media reporting often introduces noise, delays, or unverified figures. To ensure maximum accuracy for Cameroon, your pipeline should plug directly into the CCOUSP (ccousp.cm)—the Center for Coordination of Public Health Emergency Operations. They are the sole official body authorized to publish validated, incontestable epidemiological data for the country. Fixing that source pipeline would immediately elevate the implicit quality signal of your Cameroon figures!** Best regards,* »
+
+**Verbatim reçu n°2 (14:49)** : « *Attached is the situation in Cameroon regarding cholera and monkeypox.* » + **2 pièces jointes** : `SitRep_15_Cholera_Extrême_Nord_2026.pdf` (518 Ko) et `Sitrep-National-Mpox_11.pdf` (2 Mo).
+
+**⭐⭐ Qualification — ce n'est pas un message de courtoisie, c'est un audit de source, et il est exact.** Il a **ouvert la plateforme**, remonté à la provenance d'une ligne et identifié qu'elle vient d'un média commercial plutôt que de l'autorité sanitaire de son pays.
+
+**Vérification en base prod avant toute réponse** (`.env.local.live`, requête faite à ce créneau, pas reprise d'une note) : `outbreaks` filtré sur `country ilike '%amerou%'` → **2 lignes, dont 1 seule active**. La ligne active est **Choléra / Cameroun / Extrême-Nord, 1 000 cas, 28 décès, `date` = 2026-08-10, `source_priority` = 10**, `source` = `https://237actu.com/extreme-nord-une-epidemie-de-cholera-fait-28-morts-la-riposte-sorganise/`. **Son affirmation est vérifiée mot pour mot : c'est bien 237actu.** Contrôle élargi : sur l'ensemble des lignes actives, la très grande majorité des sources sont institutionnelles (WHO, ECDC, PAHO, Africa CDC, sitreps nationaux) ; **237actu fait partie d'une petite minorité de sources médias** (avec `tchadinfos.com`, `africa24tv.com`, `leadership.ng`).
+
+**Vérification de la source qu'il recommande, avant de l'endosser dans une réponse** : **CCOUSP est réel et institutionnel** — Centre de Coordination des Opérations d'Urgence de Santé Publique, créé par décret du Premier ministre camerounais du **12 mai 2020**, rattaché au ministère de la Santé publique, compétent sur choléra, rougeole, méningite et mpox. ⚠️ **`ccousp.cm` renvoie HTTP 403 aux outils automatisés** : c'est exactement pourquoi le brouillon lui demande si les sitreps sont publiés à une adresse stable et interrogeable par une machine, plutôt que de promettre un branchement qui pourrait ne pas être réalisable.
+
+**📎 Pièces jointes — non téléchargées.** Le téléchargement d'un fichier est soumis à autorisation ; même conduite que pour le PDF de Patrick AYONGA ce matin. **Leur date d'arrêt est donc inconnue**, et aucune comparaison avec le 10/08 de la ligne en base n'est possible sans les ouvrir. Le brouillon n'affirme donc **rien** sur leur contenu, il se contente de dire ce que HWG porte aujourd'hui et d'inviter à corriger si les chiffres ont bougé. **C'est la meilleure piste de rafraîchissement de la ligne Choléra Cameroun** ; signalée en carry-over pour `morning-don-check` ou une session interactive.
+
+**🚫 §2 — CTA délibérément absent, anti-répétition sur l'intégralité du fil.** Comptage mécanique sur les 5 messages : le **message 3 (samedi 16/08) contient déjà** « *healthwatch-global.com has a free 14-day Pro trial, no card required* ». Le nom, le lien **et** l'offre d'essai ont donc **déjà été envoyés dans ce fil**. La règle est explicite : ne jamais répéter le même argumentaire commercial une 2e fois dans le même fil. **CTA entièrement omis.** Cas de référence identique à Simon Ruegg le 07/08. ⚠️ De toute façon absurde ici : **il a déjà utilisé la plateforme**, c'est tout l'objet de son message.
+
+**Double-check (§5, 8 points)** : *langue du fil = EN* (relue sur les 3 derniers messages : les siens d'aujourd'hui, celui de David du 16/08) ; *langue du brouillon = EN* ✅. *Contenu (1)* — **0 tiret cadratin, 0 double espace, 0 espace insécable**, comptés mécaniquement sur le texte brut ✅. *Raisonnement (2)* — les seuls chiffres publiés (**1 000 cas, 28 décès, arrêtés au 10 août**) sont **lus en base ce créneau**, pas calculés ni repris d'une note ; aucune date calculée ; **aucune affirmation sur le contenu des PDF non ouverts** ✅. Le brouillon note que la rondeur de « 1 000 » en dit autant sur la provenance que le nom de domaine, ce qui est une observation sur la donnée elle-même, pas une inférence épidémiologique ✅. *Mise en forme (3)* — **4 paragraphes**, brouillon **jamais saisi dans l'éditeur LinkedIn** ✅. *Destinataire (4)* — sans objet tant que non envoyé ; profil identifié par le lien du fil (`/in/ACoAABLz1uMBmqKZ8tpn-jGCm6xi5afx1gNF2Z8`), pas par le nom affiché (§12) ✅. *Fait personnel sur David (5)* — **aucun** ✅. *Règle des deux essais (6)* — une seule reprise (le comptage des sources médias, initialement chiffré « une entrée sur quatre » ; **retiré** faute d'une taxonomie défendable, remplacé par le constat vérifiable seul), seuil non atteint ✅. *Anti-gabarit (7)* — grep 5-6 mots sur 16 séquences dans `linkedin-contacts.md`, `content-log.md` et les deux archives : **16 à 0**, aucune correction nécessaire ✅. *Relecture éditoriale (8)* — le message lui donne la seule chose qu'un audit mérite, à savoir la confirmation qu'il avait raison et la vérification faite ; il n'esquive pas en promettant un correctif, il pose la question dont dépend réellement la faisabilité (403 sur `ccousp.cm`) ; il ne prétend pas avoir lu les pièces jointes. **Rien à changer.**
+
+> Etienne, you are right, and I checked rather than taking your word for it. The active Cameroon cholera entry does resolve to a 237actu article: Extrême-Nord, 1,000 cases and 28 deaths, as of 10 August. The roundness of that case figure tells you as much about its provenance as the domain name does.
+>
+> It was never a choice between 237actu and CCOUSP. What I read is WHO, ECDC, PAHO and Africa CDC, and when a national outbreak does not surface in any of them, a press report is what is left standing. Your message turns that from an excuse into something I can fix.
+>
+> One thing decides whether I can, though. Does CCOUSP put its situation reports at a stable public address that a machine can check on a schedule, or do they move through the response network and become public only when someone relays them? An official source I have to wait for second-hand would leave me roughly where I am now.
+>
+> Thank you for the two sitreps. If what they carry has moved past 10 August, that gap is precisely the thing worth closing.
+
+**Statut : 🔒 EN ATTENTE DE VALIDATION DE DAVID.** Non envoyé. **Quota DM à froid inchangé à 6/8** : réponse en fil actif ouvert par l'interlocuteur, hors quota froid ([[feedback_reply_quota_cold_outreach_only]]).
+
+### 3️⃣ CONNEXIONS ACCEPTÉES — 1 nouvelle, 1 message de bienvenue rédigé (file portée à 2)
+
+`/mynetwork/invite-connect/connections/` trié « Ajouts récents » → **246 relations**, contre **245** au relevé de 13h. La seule acceptation nouvelle, identifiée par son **lien de profil** et non par le nom affiché (§12) :
+
+- **⭐ Dr. Ambrose Talisuna, MBChB, MSc, DLSHTM, PhD** (`/in/dr-ambrose-talisuna-mbchb-msc-dlshtm-phd-23832b6/`, mention « Connexion le 20 août 2026 ») — **invitation envoyée ce matin même** (connexion 7/7 du créneau de 9h, sans note), **acceptée dans la journée**. Statut du tracker à passer de « en attente (sans note) » à « connecté (sans note) ».
+
+⚠️ **Ceci résout aussi une anomalie de comptage** : dans la liste `/sent/`, seules **6** des 7 invitations du matin apparaissent encore « il y a 5 heures ». La 7e manquante est précisément Talisuna, **sortie de la file parce qu'acceptée**. Rien d'anormal.
+
+**Vérification bidirectionnelle (règle du 14/07)** : il n'apparaît dans **aucune conversation** de la messagerie, et le grep sur `linkedin-contacts.md` + `content-log.md` + archives + tracker ne trouve **aucun DM antérieur** (l'invitation était sans note ; il est **suivi depuis le 09/08**). → **premier contact**, donc **message de bienvenue sans lien ni CTA**, règle inchangée du premier contact (§3).
+
+#### 🔒 DM en attente de validation — **Dr. Ambrose Talisuna** (EN, bienvenue, **SANS CTA**)
+
+***Chief Executive Officer, Africa Public Health Foundation (APHF)***, Sanlam Tower, Nairobi, depuis juillet 2026. Simultanément ***Senior Health Advisor-Programs, World Health Organization Liaison Office to the AU and UNECA***, Addis-Abeba, depuis mars 2023. Également fondateur et directeur de l'*Infectious Diseases Research Collaboration* (Ouganda, depuis 2000).
+
+**Hook retenu — une ligne de sa fiche de poste OMS, pas son titre.** L'onglet Expérience (lu en direct, pas déduit de l'intitulé) décrit son mandat au Bureau de liaison : « *Foster collaboration around epidemic intelligence between the WHO hubs, Africa CDC, and the WHO Berlin Hub for epidemic and pandemic intelligence.* » **C'est très exactement la couture sur laquelle HWG est assis, vue depuis l'aval.** Le hook évite de flatter le titre de CEO et s'adresse à ce qu'il fait concrètement.
+
+**⚠️ Affirmation produit vérifiée en base avant rédaction** (`.env.local.live`, prod, requête faite à ce créneau) : la ligne Ebola/RD Congo porte bien **5 021 cas / 2 378 décès, `date` = 2026-08-16, `source_priority` 10**, source `afro.who.int` (External Situation Report). Le chiffre Africa CDC du 18/08 (« plus de 5 000 cas et 2 320 décès ») est celui **lu directement dans la publication d'Africa CDC** le 19/08, pas une reprise ; l'écart de **58 décès** est recalculé à la main (2 378 − 2 320 = 58) ✅.
+
+**Ce que le brouillon s'interdit** : présenter l'écart comme une erreur d'Africa CDC. Il dit que la publication la plus récente porte le chiffre le plus bas et que **rien dans l'un ou l'autre énoncé n'indique lequel est en retard** — ce qui est le fait, et c'est précisément le problème structurel. Il ne nomme aucun fautif et ne demande pas d'arbitrage public.
+
+**Double-check (§5, 8 points)** : *langue du profil et des fiches de poste = EN*, affectations Nairobi/Addis-Abeba/Ouganda ; *langue du brouillon = EN* ✅. *Contenu (1)* — **0 tiret cadratin, 0 double espace, 0 espace insécable** ✅ ; **aucun lien, aucun CTA, aucune mention de l'essai** (premier contact) ✅. *Raisonnement (2)* — chiffres relus en base ce créneau, soustraction refaite à la main, **aucune date calculée** ✅. *Mise en forme (3)* — **4 paragraphes**, brouillon **jamais saisi dans l'éditeur LinkedIn** ✅. *Destinataire (4)* — sans objet tant que non envoyé ; profil identifié par son slug, ⚠️ rappel du 9h : **4 homonymes « Ambrose Talisuna »** existent, celui-ci est identifié par le lien seul (§12) ✅. *Fait personnel sur David (5)* — **aucun** ✅. *Règle des deux essais (6)* — deux reprises sur **deux défauts distincts** (formule d'ouverture usée, puis une clôture trop déférente), jamais deux fois le même ✅. *Anti-gabarit (7)* — grep 5-6 mots sur 16 séquences. **Deux collisions trouvées et corrigées avant mise en file** : « **thank you for connecting** » (**3 occurrences**, formule d'ouverture usée) → ouverture entièrement refondue sur le motif de l'invitation, sans remerciement de convenance ; « I would genuinely like your view » (1 occurrence) → « The question I would put to you is ». Toutes les formulations retenues sont à 0 ✅. *Relecture éditoriale (8)* — le message part d'une ligne précise de son mandat, apporte un cas daté et vérifié plutôt qu'un principe, admet sans détour que la méthode de David (ouvrir les PDF à la main) ne passe pas à l'échelle, et pose une question à laquelle il est l'un des rares au monde à pouvoir répondre. **Rien à changer.**
+
+> Dr Talisuna, I sent that invitation on the strength of one line in your Liaison Office remit rather than on your title: fostering collaboration on epidemic intelligence between the WHO hubs, Africa CDC and the Berlin hub.
+>
+> I run HealthWatch Global, a small platform that reads the published bulletins from WHO, ECDC, PAHO and Africa CDC and keeps them in one place. That puts me downstream of exactly that seam, and it is visible from outside more often than you might expect.
+>
+> This week, for instance. For the Ebola outbreak in the DRC I hold 5,021 cases and 2,378 deaths, as of 16 August, read from the WHO AFRO external situation report. Africa CDC communicated on 18 August with more than 5,000 cases and 2,320 deaths. Published two days later, lower on deaths. Nothing in either statement tells a reader which one is behind, and a pipeline that ranks by publication date would quietly drop 58 deaths.
+>
+> I can keep the two apart because I open the PDFs myself, which does not scale and is not really the point. The question I would put to you is whether the alignment work you describe is aimed at the as-of dates themselves converging, or only at the interpretation built on top of them.
+
+**Statut : 🔒 EN ATTENTE DE VALIDATION DE DAVID.** Non envoyé. **Quota DM à froid porté à 7/8** (marge 1) : message de bienvenue, il consomme le quota froid.
+
+### 3️⃣bis 📌 INVITATIONS EN ATTENTE — reconstruites depuis la source, le chiffre qui circulait était faux d'un facteur 5
+
+Le carry-over de 13h demandait de reconstruire ce total depuis `/mynetwork/invitation-manager/sent/` **plutôt que par report d'un carry-over à l'autre**. Fait.
+
+**Résultat : la page annonce « Personnes (91) », et 90 profils distincts ont été effectivement chargés** (défilement `computer` avec temporisation croissante, le défilement programmatique ne déclenchant pas le chargement paresseux). Les chiffres qui circulaient — « 11 » au carry-over de 9h, puis « 19 personnes nommées » à 13h — **ne comptaient que les invitations mémorisées par les sessions récentes**, pas le stock réel.
+
+**Répartition par ancienneté (relevé du 20/08 17h)** :
+
+| Ancienneté | Nombre |
+|---|---|
+| il y a 5 heures (ce matin) | 6 |
+| hier (19/08) | 2 |
+| 2 jours (18/08) | 7 |
+| 3 jours (17/08) | 4 |
+| 4 jours (16/08) | 4 |
+| 5 jours (15/08) | 1 |
+| 6 jours (14/08) | 5 |
+| 1 semaine | 21 |
+| 2 semaines | 5 |
+| 3 semaines | 13 |
+| 1 mois | 10 |
+| 2 mois | 12 |
+| **Total** | **90** |
+
+**61 invitations ont au moins une semaine.**
+
+✅ **Yap Boum II tranché** (`/in/yap-boum-ii-a7b6535/`) : il figure explicitement dans la liste à « **il y a 6 jours** », soit le 14/08. **Le tracker avait raison, les carry-over étaient incomplets.** Son invitation n'a ni expiré ni été retirée. **Rien à faire, surtout pas une seconde invitation.**
+
+**Décideurs santé publique confirmés en attente** (extrait, par ancienneté) : Ahmadou Boly, Francis Chisaka Kasolo, Humphrey Karamagi, Dr Brian Chirombo, Richard Banda, Kasonde Mwinga (ce matin) ; trésor Ndaye, Ana Bento (hier) ; Abdoulaye Touré, HoussaÏnatou BAH, William YAVO, joseph nyandwi, Dieudonné Mwamba, Musole Chipoya, Melkamu Abte Afele (18/08) ; Evouna Armel, Danièle Sandra Yopa, yannick kamga (17/08) ; Veh Kesse Fabien Diomande, Raoul Djinguebey, Florence Restelli, Julien Tuba (16/08) ; Dick Chamla (15/08) ; Guy Saidi Bilungi, Yenew Kebede, Mer'Awi Aragaw, Wessam Mankoula, **Yap Boum II** (14/08) ; puis à une semaine et plus : Jafar Oyugi, Deogratias Kakule, Guellord Banyawa, Demian Antoinette Mbailamen, Patrick Musole Bugeme, Bobossam Cissoko, Batsirai Mbodza, Chia Julius, Dr. Charles Kuria NJUGUNA, Justus Nsio, Diana Patricia Rojas, Lorenzo Pezzoli, Atuhaire Immaculate, Varaidzo Joyline Mukwekwe, Alex W. Barasa, Issa Makumbi, Henry Kyobe Bosa, Boniface Ambani, Abdourahmane SOW, Landry Kabego, Houssein Youssouf DARAR, Ishata Nannie Conteh, Dr Mazyanga Lucy MAZABA, George Awzenio Legge, Boris Pavlin, Anaïs Legand, Claudine nguegni, Dr Abdoulaye Bousso, Dr Lul Riek, Celestin Danwang, Nyombayire Mutagisha Julien, Karine Lacombe, Syra Madad, Hentsa Haddush Desta.
+
+⚠️ **Le stock contient aussi des profils hors périmètre HWG**, issus de campagnes anciennes ou d'une autre routine : **Olivier Brisepierre** (production/DJ), **Rachel Proyart** (assistante externalisée), **Yvain Guyon** (Naval Group, sûreté internationale), **Céline Clovis** (Olympe-IE Consulting), **Audrey Grandjean** (vétérinaire), plus plusieurs profils « Travel Risk Management ». Ils ne relèvent pas de cette routine et ne sont **pas comptés dans les quotas HWG** ; signalés pour information seulement.
+
+⚠️ **Point à arbitrer par David, remonté en carry-over** : à **7 invitations envoyées par jour** pour un stock de **90 non acceptées**, la contrainte réelle n'est plus le quota d'envoi mais le **taux d'acceptation**. Aucune décision prise ici, c'est hors périmètre d'une routine de suivi.
+
+### 4️⃣ NOUVEAUX ABONNÉS — +1, aucun follow-back à exécuter ; 1 suivi en recherche active
+
+`/mynetwork/network-manager/people-follow/followers/` → **353 personnes**, contre **352** au relevé de 13h. Le seul nouvel abonné est **Dr. Ambrose Talisuna**, et il s'explique intégralement par l'acceptation de connexion ci-dessus (une mise en relation entraîne le suivi). Son bouton porte déjà « Suivi » : **David le suit depuis le 09/08**, rien à exécuter.
+
+**0 follow-back.** La liste a été parcourue en tête : **un seul abonné n'est pas suivi en retour**, **Shivakoti CH** (*Author, Publisher, Proof Reader, Instructional Designer, LMS Admin*), **statut « écarté » inchangé depuis le 19/08** — aucun rapport avec la santé publique ou l'épidémiologie, la barre de pertinence n'est pas atteinte. Il reste le seul, désormais en 7e position (Talisuna l'ayant décalé d'un rang).
+
+**Recherche active — le quota est un objectif, pas un plafond (règle du 14/07).** Marge de 2 après traitement de tous les nouveaux abonnés. **Candidat pris dans `linkedin-candidates-tracker.md` avant toute recherche neuve**, comme la règle l'impose :
+
+#### ✅ Suivi 9/7-10 — **Richard Maude** (`/in/richardjmaude/`)
+
+*Head of Epidemiology Department, **MORU** ; Professor of Tropical Medicine and Honorary Consultant Physician, **University of Oxford***, compte vérifié, 2e degré. **Coordinateur de PANDAI** (consortium 8 M€ Horizon Europe, OMS partenaire fondateur). Statut au tracker : « à traiter (commenté) » depuis le créneau de 13h, où HWG a publié le commentaire 3/7 sous son post de lancement (487 réactions).
+
+**Pourquoi lui plutôt qu'un candidat neuf** : c'est le seul candidat réellement nouveau identifié aujourd'hui, sa pertinence est déjà validée, et HWG vient de publier un commentaire analytique sous son post le plus visible. Le suivre consolide une exposition déjà obtenue au lieu d'en ouvrir une autre.
+
+**⚠️ Exécution (§7)** : les 4 boutons « Suivre » de la page portaient tous l'`aria-label` « **Suivre Richard Maude** », écartant tout risque de suivre un profil de la barre latérale. **Vérification de l'URL, de l'`aria-label` et clic exécutés dans le même appel JS**, avec abandon automatique en cas de non-correspondance. **Suivi confirmé** : les 4 boutons sont passés de « Suivre » à « **Suivi** » après le clic.
+
+**Statut du tracker à passer de « à traiter (commenté) » à « suivi ».** Il reste bloqué en commentaire jusqu'au **27/08**. **Il sort de la liste des candidats connexion prioritaires** du carry-over : la connexion reste possible plus tard, mais il n'est plus « à traiter ».
+
+**Quota suivis porté à 9/7-10** (marge 1). **Aucune recherche neuve engagée** : la marge restante de 1 ne justifiait pas d'ouvrir une découverte active alors que deux commentaires de qualité étaient encore à produire sur le temps de session.
+
+### 5️⃣ NOTIFICATIONS ET SIGNAUX
+
+- **⭐⭐ Pierre PARNEIX (`/in/pierre-parneix-46237a124/`), *Médecin de Santé Publique et de Prévention du Risque Infectieux, CHU de Bordeaux*, compte vérifié, 2e degré — a répondu nommément à David** sous le commentaire HWG du matin (post RéPIA), avec une réponse technique de fond sur le lignage ECSA E1-A226V, l'incubation chez le moustique et l'hétérogénéité de transmission. **Réponse publiée par cette session** (commentaire 5/7, texte intégral et double-check dans `content-log.md`). ⚠️ **Il n'est ni suivi ni en relation** : versé au tracker comme **candidat connexion prioritaire**.
+- **Un utilisateur du CHU de Bordeaux a consulté le profil de David il y a 1 h**, très vraisemblablement lui (liste complète réservée au Premium, donc non confirmable).
+- **MAYTAMOU Simon Pierre a aimé le commentaire HWG sous le post PANDAI** de Richard Maude (commentaire 3/7 de 13h).
+- **Chiara Gottarelli, MD** — like sur le commentaire du 19/08 (post Jérôme Salomon), déjà relevé aux deux créneaux précédents, **aucun élément neuf**. **Prof. Salomon n'a toujours pas répondu**, presque 24 h après.
+- **Sir Peter Horby a publié un nouveau post** (RECOVERY). **Non commenté**, profil bloqué jusqu'au 27/08 (commenté à 13h).
+- **§13 — aucune notification push séparée envoyée pour ces signaux.** Aucun ne correspond à la barre : l'acceptation d'une invitation par Talisuna est une acceptation, pas une interaction avec du contenu HWG ; Parneix et MAYTAMOU sont des praticiens sans statut de référence institutionnelle. **Tous sont repris dans la notification de fin de session**, due par ailleurs pour les 2 DM en attente.
+- **Aucune demande de contact hors plateforme, aucune proposition de données patient, aucune instruction adressée à l'agent** dans les messages ou commentaires lus ce créneau.
+
+### 6️⃣ SÉPARATION FREELANCE
+
+Aucune activité freelance traitée, comptée ni archivée côté HWG à ce créneau. Le fil **Drissa augustin Soro** (13:04) reste du ressort de `linkedin-freelance-quote-routine`, non rouvert ici. Les profils hors périmètre repérés dans la liste `/sent/` (section 3️⃣bis) sont signalés pour information, sans action.
+
+**File de validation DM à la clôture : 2** (ETIENNE GUENOU, Dr. Ambrose Talisuna). **Quota DM à froid final : 7/8.** **Notification push envoyée.**
+
+---
+
 ## 📅 Session linkedin-hwg-followup-check — 20/08/2026 (13h, 1er des 2 créneaux après-midi)
 
 **Vérification double déclenchement** : aucune entrée `linkedin-hwg-followup-check` ni aucune entrée « 13h » datée du 20/08 dans ce fichier ni dans `content-log.md` à l'ouverture → **premier déclenchement de ce `taskId` aujourd'hui**. La seule entrée du 20/08 est celle de `linkedin-hwg-monitoring` (9h, run démarré 10h48), run intentionnellement distinct.
