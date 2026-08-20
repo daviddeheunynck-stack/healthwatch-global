@@ -190,6 +190,24 @@ export default function SignupPage() {
     setError("");
     track("signup_attempt", { method: "email", locale });
 
+    // Supabase itself only rejects an exact duplicate email — john+trial@gmail.com
+    // looks brand new to it even though it's the same inbox as an existing
+    // account. Checked server-side (app/api/check-email-alias) before
+    // signUp() so a blocked attempt never creates an orphaned auth user.
+    // Fails open (never blocks) on a network/lookup error.
+    const aliasCheck = await fetch("/api/check-email-alias", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email }),
+    }).then((r) => (r.ok ? r.json() : { alreadyRegistered: false })).catch(() => ({ alreadyRegistered: false }));
+
+    if (aliasCheck.alreadyRegistered) {
+      track("signup_alias_blocked", { method: "email", locale });
+      setError("User already registered");
+      setLoading(false);
+      return;
+    }
+
     const supabase = createClient();
     // supabase-js's signUp() only catches errors it recognizes as its own
     // AuthError types and returns those as `{error}` — anything else (a
