@@ -1070,3 +1070,87 @@ Nouvelle clé `dateSemantics` sur `app/[locale]/outbreak/[id]/page.tsx` (affich�
 - **Formulation idée 3 à relire** si tu veux ajuster le ton avant que ça reste en prod durablement.
 
 ---
+
+## 2026-08-20 — Proposition du jour
+
+**J-1 avant le go/no-go du 21/08.** Les trois idées ci-dessous portent toutes sur ce qui se passe *demain* et *après-demain* : ce que la décision va lire, ce que le dispositif de contrôle devient une fois la date passée, et une régression d'affichage introduite en creux par les deux correctifs livrés hier et ce matin.
+
+**Limite de méthode de ce run, dite d'emblée :** contrairement aux runs précédents, **aucune sonde en lecture seule sur la prod n'a pu être exécutée** (le classificateur d'autorisation a refusé l'exécution du script de mesure dans cette session non supervisée). Tout ce qui suit est donc établi **par lecture du code de `master`** et par recoupement avec des mesures déjà consignées (log d'idées, mémoires, messages de commit du jour), **pas par requête live**. Les affirmations chiffrées sont attribuées à leur source à chaque fois. Les trois défauts décrits sont structurels et lisibles dans le code — ils ne dépendent pas d'un chiffre de prod pour exister — mais leur **ampleur exacte** demain matin devra être vérifiée sur `/admin` avant de trancher.
+
+**Aucun signal terrain neuf aujourd'hui :** `product-feedback.md` n'a pas bougé depuis le 08/08 (Andrea Bernasconi) ; les trois sessions LinkedIn du jour (9h, 13h, 17h) ne remontent aucune remarque produit, aucune demande de fonctionnalité, aucune demande de contact hors plateforme. Les idées viennent donc de la mesure et du code, comme les runs des 31/07, 03/08 et 19/08.
+
+---
+
+### 1. 🔴 Deux des trois critères du go/no-go de demain comptent le compte de David — et le critère « payant », lui, l'exclut explicitement
+
+**Signal (code de `master`, `app/[locale]/admin/page.tsx`, vérifié ligne à ligne aujourd'hui).** Le tableau de décision repose sur trois critères automatisés (l. 367-370) :
+
+| critère | seuil | source de données | exclusion fondateur / comptes de test |
+|---|---|---|---|
+| `paying` | ≥1 | `profiles` filtrés par `isPayingCustomer` | ✅ **oui** — `isRealStripeSub` (l. 236-237) écarte nommément `stripe_subscription_id === "admin_override"`, le sentinelle qui donne Pro permanent au compte du fondateur |
+| `retention` | ≥5 revenus après J+2 | `returnedUsers` sur **tous** les `authUsers` (l. 299-305) | ❌ **aucune** |
+| `active30` | ≥3 actifs sur 30 j | `active30` sur **tous** les `authUsers` (l. 306-310) | ❌ **aucune** |
+
+Le commentaire juste au-dessus de `isRealStripeSub` (l. 231-233) dit exactement pourquoi l'exclusion existe sur le premier : « *exclude it from any metric meant to reflect actual paying customers* ». La même raison vaut mot pour mot pour les deux autres — un critère censé refléter l'engagement de **vrais utilisateurs** — et l'exclusion n'y a jamais été portée.
+
+**Pourquoi ça n'est pas théorique.** Le compte de David est, de très loin, le compte le plus actif de l'histoire du produit : ce log même relève « `product_events` : 20 événements en tout, **aucun d'un utilisateur autre que David** depuis le 24/07 » (entrée du 29/07), puis « 41 événements au total, **3 utilisateurs non-David**  » (entrée du 03/08). Et `lastActivity()` (l. 291-296) prend le **max** de `last_sign_in_at` et du dernier `product_events` : David se reconnecte et ouvre `/admin` en permanence, donc il satisfait mécaniquement **les deux** critères, tous les jours, sans exception. Sur des seuils de **5** et de **3**, un faux positif garanti représente **20 % et 33 %** de la barre.
+
+**Deuxième source de gonflement, même défaut.** `TEST_EMAIL_DOMAINS` (`{healthwatch-global.com, healthwatch-test.dev, example.com}`) existe déjà dans le code — mais **uniquement dans `health-check/route.ts` l. 161, appliqué à un seul endroit (l. 685)**. `/admin` ne l'importe pas et ne le connaît pas. Or l'entrée du 03/08 de ce log recense `e2e@healthwatch-global.com` en base **depuis le 16/06**, et note que le ménage de ce jour-là a supprimé les 5 comptes `hwg-diag-rl-*` et **désactivé** (pas supprimé) les 6 abonnements de test. Rien n'indique que `e2e@healthwatch-global.com` ait été supprimé. **À vérifier sur `/admin` demain matin** — mais s'il est encore là, il compte dans `active30`/`returnedUsers` exactement comme un prospect.
+
+**Et le gonflement est invisible sur la surface de décision.** Les l. 535-557 et 568-569 n'affichent que des **compteurs** — jamais la liste nominative des utilisateurs comptés. Impossible, en regardant le tableau demain, de voir *qui* sont les « 5 revenus » : le chiffre ne peut pas être audité à l'œil. Le taux de rétention l. 556-557 (`returnedUsers / authUsers`) porte le même biais **au numérateur et au dénominateur**.
+
+**Effort estimé :** **petit**. Le signal d'exclusion existe déjà (`admin_override` côté `profiles`, `TEST_EMAIL_DOMAINS` côté domaine) ; il s'agit de construire une fois un `Set` d'`id` à exclure et de le passer aux trois filtres, plus — le vrai gain de lisibilité — d'afficher les **noms** derrière les compteurs `returnedUsers`/`active30` plutôt que le seul nombre. Un fichier touché.
+
+**Risque/inconnue :** (a) le correctif fait **baisser** deux chiffres la veille d'une décision — c'est l'objet même de la démarche (c'est le motif Morgan Otita : un critère qui passe au vert sur quelque chose qui n'est pas réel), mais il faut le dire tel quel plutôt que de le découvrir demain ; (b) je n'ai **pas pu mesurer** de combien — si `returnedUsers` est aujourd'hui à 7, retirer David et un compte e2e le laisse au-dessus du seuil et ne change rien à la décision ; s'il est à 5 ou 6, ça la change ; (c) l'affichage nominatif du compte de David dans `/admin` ne pose aucun problème de vie privée (page admin, données déjà présentes) mais élargit très légèrement le périmètre du correctif ; (d) point mineur non bloquant aujourd'hui : `product_events` est lu avec `.limit(200)` sur 30 jours (l. 193) — au volume actuel (~41 événements début août) le plafond n'est pas atteint, mais c'est **la même forme exacte** que le bug de plafond silencieux corrigé ce matin sur `check-email-alias` (`0eadc3b`), sur les critères qui décident demain. À garder en tête, pas à corriger dans l'urgence.
+
+---
+
+### 2. 🔴 Le contrôle « essais après l'horizon de décision » devient structurellement bruyant **demain**, et il crie dans la ligne d'objet
+
+**Signal (code, `app/api/cron/health-check/route.ts`).** `checkDecisionHorizonTrials` (l. 443-452) sélectionne les profils avec `trial_ends_at > VIABILITY_DECISION_DATE`, soit `> "2026-08-21"` (l. 408), sur un plan payant et sans abonnement Stripe. La date est **codée en dur**.
+
+Le libellé qu'il produit (l. 948) : « 🔔 N essai(s) dont l'échéance dépasse le 2026-08-21 — **aucun mécanisme automatisé (trial-reminders/winback/pilot-closing) ne les touche avant la décision** ».
+
+**Ce qui se passe à partir du 22/08.** Tout nouvel inscrit reçoit un essai Pro de 14 jours (`lib/activate-trial.ts`, `TRIAL_DAYS = 14` — revérifié aujourd'hui par la session LinkedIn de 13h, qui cite le fichier). Un essai ouvert le 22/08 se termine le 05/09, donc `> 2026-08-21`. **À partir de demain, la requête matche 100 % des essais actifs, tous les jours, indéfiniment** — sous un intitulé qui parle d'une décision déjà prise. La phrase « avant la décision » n'a plus de référent.
+
+**Et ce n'est pas seulement une ligne dans le corps de l'e-mail : c'est dans l'objet** (l. 1004) — `· 🔔 N essai(s) après le 2026-08-21` sera collé au sujet du health-check quotidien en permanence. Le seul mécanisme d'atténuation prévu est `DECISION_HORIZON_DISMISSED` (l. 433-438), une liste d'adresses **écrites à la main** : il faudrait y ajouter chaque nouvel inscrit, un par un, pour faire taire l'alarme.
+
+**Preuve que la dérive a déjà commencé.** La mémoire `project_hwg_viability_decision_2026_08_21` (mise à jour ce matin sur le health-check de 09:05) relève **8 essais** au-delà de l'horizon, contre 3-4 le 16/08 — le compteur a doublé en 4 jours, et aucun des 8 ne recoupe la liste des cas déjà tranchés. C'est la trajectoire attendue d'un seuil que le temps traverse.
+
+**Le motif est déjà documenté ici.** L'entrée du 03/08 (idée 3) décrit exactement le même mécanisme sur `alert_locale` et sa conclusion tient toujours : « *l'effet d'un contrôle qui crie au loup est connu : on cesse de le lire, y compris le jour où il a raison* ». La différence est qu'ici on peut le voir venir avant qu'il ne se produise, pas après.
+
+**Effort estimé :** **petit**, mais il exige une **décision de ta part**, pas un choix technique. Trois formes possibles, très inégales :
+- **(a) horizon glissant** — remplacer la constante par « échéance au-delà de J+N » (un essai qui se termine après le prochain jalon), ce qui garde un contrôle utile sans date morte ;
+- **(b) neutralisation** — désactiver le bloc dès que `VIABILITY_DECISION_DATE` est passée (une ligne : `if (new Date() > horizon) return { trials: [], error: null }`), en assumant que le contrôle a fait son travail et n'a plus d'objet ;
+- **(c) redéfinition** — si HWG continue, une nouvelle date de jalon remplace le 21/08 et le contrôle reprend son sens tel quel.
+
+**(c) n'est possible qu'après ta décision de demain**, ce qui rend (b) le filet minimal à avoir en place au cas où la question reste ouverte quelques jours. **Je ne construis rien ici** (session de proposition), mais c'est le seul des trois points du jour qui a une **échéance à 24 h**.
+
+**Risque/inconnue :** (a) neutraliser trop tôt ferait perdre le contrôle le jour même où tu en as besoin — d'où l'intérêt de trancher demain plutôt qu'aujourd'hui ; (b) `VIABILITY_DECISION_DATE` est aussi lu par le payload JSON (l. 1114) et par la mémoire projet : le changer demande une passe de cohérence, pas juste une constante ; (c) l'option (a) transforme un contrôle *ponctuel* en contrôle *permanent* — à vérifier qu'il reste pertinent hors contexte de décision, sinon (b) est plus honnête.
+
+---
+
+### 3. Depuis hier, le produit **sous-estime** sa propre fraîcheur : une source qui reconfirme des chiffres identiques n'écrit rien, et la fiche affiche « il y a 49 j »
+
+**Signal (commit du jour, `ef5c11a`, 10:53).** Le message de commit livré ce matin établit le cas mesuré, verbatim : sur **MERS-CoV / Global**, « *the ECDC overview moved from 1 June to 3 August with the same 2 649 cases / 960 deaths (no MERS case declared worldwide in between), so the row still read 2 July* ». Et le dimensionnement du seuil donne l'ampleur : le scan a été calé à 45 jours parce que « *30d would surface **18 rows** daily and drown the report* ». **Il y a donc au moins 18 lignes actives sans écriture depuis 30 jours ou plus.**
+
+**Pourquoi c'est une idée produit et pas seulement un contrôle interne.** `ef5c11a` construit la **détection** — un scan dans le rapport interne `morning-check`, lu par toi. Il ne change rien à ce que **le client voit**. Or hier matin, `5d8e1ad` a fait lire aux badges de fraîcheur le **`date` du bulletin** au lieu de `updated_at` — correctif juste, qui a supprimé une affirmation fausse (« vérifié il y a 3 j » sur une ligne dont aucun chiffre n'avait bougé). Mais le revers apparaît maintenant : sur une ligne que la source **a bel et bien reconfirmée** sans changement de chiffres, `OutbreakTable.tsx` l. 1249-1250 affiche « **Synchronisé il y a 49 j avec la source officielle** ». C'est faux dans l'autre sens — la source a publié le 3 août.
+
+**Et l'information perdue a de la valeur en épidémiologie.** « Aucun nouveau cas confirmé depuis le 3 août » est un **signal positif**, pas un trou de données — c'est précisément ce qu'un épidémiologiste veut lire. Aujourd'hui le produit le transforme en « donnée périmée », sur la surface exacte que les prospects institutionnels jugent en premier. Le schéma n'a **aucune** notion de « reconfirmé » : `grep` sur `confirmed_at` / `last_checked` / `source_checked` dans `app`, `lib` et `supabase/migrations` ne remonte que les colonnes de double opt-in des alertes (migration du 08/08) — rien sur `outbreaks`.
+
+**Effort estimé :** **moyen**, et c'est le point à peser. Il ne s'agit pas d'un affichage à changer mais d'une **donnée à commencer à capturer** : une colonne `source_confirmed_at` sur `outbreaks`, écrite par les crons **même quand les chiffres sont identiques** (aujourd'hui ils ne réécrivent rien du tout dans ce cas — c'est la cause racine décrite par `ef5c11a`), puis un libellé distinguant « chiffres inchangés, confirmés le X » de « pas de nouvelle publication depuis X ». Le nombre de crons concernés est le même ordre de grandeur que le lot d'hier soir (16-17 fichiers), donc l'effort réel est surtout dans la propagation, pas dans la conception. **Rien de rétroactif** : la colonne partira vide et ne se remplira qu'au fil des passages.
+
+**Risque/inconnue :** (a) écrire à chaque passage même sans changement fait perdre la propriété qui rend `updated_at` lisible aujourd'hui (« quelque chose a bougé ») — il faut une **colonne séparée**, surtout pas réutiliser `updated_at`, sinon on réintroduit exactement le bug que `5d8e1ad` vient de corriger ; (b) la « reconfirmation » n'est fiable que si le cron sait vraiment que la source a republié — pour une page HTML sans date d'édition explicite, « je l'ai lue aujourd'hui » n'est pas « la source l'a confirmée aujourd'hui », et confondre les deux fabriquerait une nouvelle affirmation fausse, plus difficile à détecter que celle d'hier ; (c) le périmètre honnête est donc **les seules sources qui publient une date d'édition** (ECDC, les bulletins datés), pas les 17 crons en bloc — à cadrer avant de coder ; (d) priorité : c'est le seul des trois points du jour **sans échéance** — il ne pèse ni sur demain ni sur après-demain, et il peut attendre l'issue du go/no-go.
+
+---
+
+### Contexte mesuré au passage (pas des idées)
+
+- **Morgan Otita — délibérément pas re-proposé aujourd'hui.** L'idée 1(d) du 17/08 (retirer le filtre `.is("stripe_subscription_id", null)` de `trial-reminders`) est toujours non construite — revérifié dans le code ce soir, `trial-reminders/route.ts` l. 105. **Mais son cadrage a changé et le re-remonter serait faux :** le commentaire l. 86-94 a été réécrit le 18/08, il ne se contredit plus lui-même — il assume le filtre et désigne `checkUncoveredStripeTrials` comme filet. Le vrai reste-à-faire n'est donc pas un correctif de code mais **ta décision** sur une 3e relance, que tu as explicitement mise en pause le 20/08 (« trois relances en quatre jours ce serait trop », mémoire `project_morgan_otita_uncovered_stripe_trial`). Reposer la question aujourd'hui irait contre cet arbitrage rendu ce matin. Le repère évoqué — sans jamais être confirmé — était **~24/08 (J-2 avant l'annulation du 26/08)** ; c'est le moment naturel pour en reparler, pas maintenant.
+- **Aucun signal terrain neuf.** `product-feedback.md` inchangé depuis le 08/08. Les sessions LinkedIn du jour (9h / 13h / 17h, d'après leurs commits) : 7 connexions décideurs, 8 suivis, 6 commentaires, 10 DM envoyés sur ordre explicite (8 puis 2), file de validation alimentée à chaque créneau — **0 demande de contact hors plateforme, 0 remarque produit**. Prospection institutionnelle : 10 nouveaux contacts, 11 relances, 1 bounce (AKHS), toujours 0 réponse sur l'ensemble de la campagne.
+- **Livré aujourd'hui, hors idées de ce log** : `fdf2890` + `0eadc3b` (garde-fou anti-alias Gmail à l'inscription, puis pagination du scan pour qu'il ne puisse pas échouer en silence) et `ef5c11a` (scan 4e de `morning-check`). Le premier est un garde-fou d'abus **non exploité à ce jour** (audit du 19/08 : 34 comptes, aucune paire d'alias) — construit en prévention, pas en réaction.
+- **Idées antérieures toujours PROPOSÉES et non traitées, sans preuve nouvelle aujourd'hui** — donc non re-remontées : 02/08 idée 2 (Institut Pasteur, tranché autrement le 05/08 via `is_pilot`), 02/08 idée 3 volet invitations (angle mort assumé), 31/07 idée 1 (construite le 03/08), 03/08 idée 3 (construite le jour même). Formulation de l'idée 3 du 19/08 (`dateSemantics` sur la fiche foyer et `/methodology`) **toujours en attente de ta relecture** — elle est en prod depuis hier soir dans les 5 langues.
+
+**Statut : PROPOSÉE — en attente de retour de David.**
+
+---
