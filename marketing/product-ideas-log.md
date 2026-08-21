@@ -1154,3 +1154,90 @@ Le libellé qu'il produit (l. 948) : « 🔔 N essai(s) dont l'échéance dépas
 **Statut : PROPOSÉE — en attente de retour de David.**
 
 ---
+
+## 2026-08-21 — Proposition du jour
+
+**Jour J du go/no-go.** Le statut de la décision elle-même n'est pas confirmé dans cette session — je ne le suppose pas. Les trois idées ci-dessous ne portent pas sur l'instrument de décision (déjà couvert les 17, 18, 19 et 20/08) mais sur ce que **la journée d'aujourd'hui a produit** : deux commits de qualité de données, un signalement de terrain arrivé par LinkedIn, et un angle produit explicitement renvoyé ici par la session de 17h.
+
+**Limite de méthode, dite d'emblée (identique au 20/08) :** la sonde en lecture seule sur la prod a de nouveau été **refusée par le classificateur d'autorisation** dans cette session non supervisée. Tout ce qui suit est établi **par lecture du code de `master`, des commits du jour et des archives de session** — pas par requête live. Les trois défauts sont structurels et lisibles dans le code ; leur **ampleur en nombre de lignes** reste à confirmer sur `/admin`.
+
+**Aucun signal terrain neuf au sens strict :** `product-feedback.md` n'a pas bougé depuis le 08/08 (13 jours). Mais contrairement au 20/08, **la journée a produit du signal exploitable** : un contact LinkedIn a envoyé un lien qui a révélé 3 lignes fausses en base, et le commentaire publié à 17h porte sur un manque produit identifié en séance.
+
+---
+
+### 1. 🔴 Trois lignes France ont périmé ensemble et c'est un contact LinkedIn qui l'a vu — `sync-spf` existe, a le bon plafond, et regarde la mauvaise page du site
+
+**Signal (archive de session du 21/08 17h, `dd3bf53`).** Pierre PARNEIX envoie un lien en DM. La session ne s'en sert pas comme source mais remonte aux bulletins de Santé publique France et relit le texte brut. Écart constaté sur trois lignes actives :
+
+| Ligne HWG | En base | Date d'arrêt | Bulletin SpF du 19/08 | Date d'arrêt | Écart |
+|---|---|---|---|---|---|
+| `Chikungunya / France` | 15 cas | 10/08 | **25 cas** | 17/08 | +10 cas, 7 j |
+| `Dengue / France` | 2 cas | 10/08 | **4 cas** | 17/08 | +2 cas, 7 j |
+| `Fièvre du Nil occidental / France` | 6 cas | 14/08 | **18 cas** | 17/08 | **×3 en 3 jours** |
+
+Toutes trois sur **le même bulletin hebdomadaire**, du même émetteur, celui déjà cité par les lignes. Verbatim et URL dans `content-log.md`, section 4️⃣ du créneau de 17h.
+
+**🔴 Le diagnostic porté par la session de 17h est périmé, et c'est le cœur de l'idée.** Elle conclut : « *les trois lignes sont en `source_priority` 10, donc aucun cron ne les rafraîchira seul* », et renvoie à l'arbitrage des « 27 lignes à 10 ». **Ce n'était plus vrai au moment où elle l'écrivait.** Inventaire des plafonds d'écriture relevé ce soir (`grep 'lte("source_priority"' app/api/cron/*/route.ts`) : sur 27 occurrences, **une seule est encore à 5** dans un cron actif, et **`sync-spf` plafonne à 10** depuis `eb57f8e`/`d124101` (19/08). Son en-tête le dit mot pour mot : « *SPF is France's own national public health agency — a genuine primary government source for its own country's rows — so this cron can write onto rows locked at source_priority=10* ». Le verrou de priorité n'explique donc **rien** ici : le cron a le droit d'écrire ces trois lignes, il ne l'a pas fait.
+
+**La vraie cause, lisible dans le code.** `sync-spf/route.ts` l. 40-47 ne connaît que trois entrées, toutes des **fils d'actualité** : `…/maladies-infectieuses-d-origine-alimentaire?format=xml`, `…/les-actualites?format=xml`, et une URL de recherche. Le bulletin hebdomadaire vectoriel (« Chikungunya, dengue, Zika et West Nile — bulletin national n°21 ») n'est pas un article d'actualité : il vit dans la rubrique documents/bulletins de la maladie. `grep -i "vectoriel\|chikungunya\|west nile"` sur le fichier ne remonte **aucune** occurrence — le mot n'apparaît nulle part dans le cron. Le seul point de contact est cosmétique : `extractSPFDisease` sait retirer le préfixe « bulletin épidémiologique » d'un titre, et `extractSPFBody` déclare son sélecteur « *stable across hub pages, regional bulletins, and national bulletins* ». **Le parseur sait lire ces bulletins ; le fetcher ne va jamais les chercher.**
+
+**Pourquoi ça compte plus que trois lignes.** C'est un bulletin **hebdomadaire, daté, à cumuls croissants** — exactement le profil de source que le produit sait traiter le mieux, et sur le seul pays dont HWG parle la langue et dont les prospects institutionnels francophones sont les plus proches. Le défaut est **périodique, pas accidentel** : il se reproduira chaque semaine, sur les mêmes lignes, et la seule chose qui l'a détecté cette semaine est un contact qui a envoyé un lien. Note secondaire : la session de 17h a vérifié que la ligne `Chikungunya / France` était **toujours à 15 cas au moment d'envoyer le DM à Pierre PARNEIX** (18:44) — le produit était donc faux sur l'écran de la personne à qui on écrivait.
+
+**Effort estimé : petit à moyen.** Ajouter les pages de bulletin national vectoriel (et leur pendant régional Nouvelle-Aquitaine, qui donne le détail communal) comme entrées supplémentaires de `SPF_RSS_URLS`/pages à visiter. Tout le reste est déjà en place : extraction du corps, garde-fous complets (`dateFloorGuard`/`spikeGuard`/`collapseGuard`/`lockedRowRegressionGuard`), plafond à 10, `maxDuration` 300 s. Ce n'est pas une nouvelle source au sens du garde-fou du `ROADMAP.md` (« ne pas intégrer de source tant qu'un prospect ne le demande pas ») — **c'est la même source, déjà intégrée, dont on ne lit qu'une des surfaces**.
+
+**Risque/inconnue :** (a) le bulletin national agrège plusieurs maladies dans **un seul document** (chikungunya + dengue + Zika + West Nile), ce que le cron ne fait nulle part ailleurs — il pose un article ↔ une ligne ; c'est le vrai travail, et il faut décider si on extrait par section ou si on écrit un parseur dédié à ce format ; (b) le bulletin donne des **épisodes** (« 3 épisodes totalisant 25 cas »), donc un extracteur naïf risque de retenir 3 au lieu de 25 — le piège est visible d'avance, il faut le tester explicitement ; (c) une page de bulletin sans flux XML demande soit un scraping d'index, soit une URL construite avec un numéro de semaine, plus fragile qu'un RSS ; (d) **rien à faire côté priorité** : ne pas rejouer l'arbitrage des lignes à 10, il a été tranché le 19/08 — la carry-over n°10 de la session de 17h et sa n°3 devraient être requalifiées, elles décrivent un blocage qui n'existe plus.
+
+⚠️ **Point d'ingestion indépendant de l'idée** : les 3 lignes fausses sont **toujours en base ce soir**, aucune écriture n'a été faite (la session LinkedIn ne fait pas d'ingestion, à raison). Les valeurs vérifiées sont prêtes à l'emploi dans `content-log.md`. C'est un correctif de données à passer, pas une idée produit — mais il ne faut pas qu'il se perde derrière l'idée.
+
+---
+
+### 2. 🔴 Le badge qui rassure a été durci le 19/08, celui qui alerte est resté sur l'ancienne mesure — une ligne dont le bulletin a 152 jours n'affiche aucun avertissement
+
+**Signal (code, `lib/outbreaks.ts`).** Les deux badges de fraîcheur de `OutbreakTable.tsx` ne lisent pas le même champ :
+
+| badge | fonction | champ lu | corrigé le 19/08 ? |
+|---|---|---|---|
+| ✓ vert « MàJ · Xj » | `freshOutbreakHours` (l. 684-691) | `outbreak.date` — la date du bulletin | ✅ oui (`5d8e1ad`) |
+| ⚠ orange « SANS MAJ · Xj » | `staleOutbreakDays` (l. 651-657) | **`outbreak.updated_at ?? outbreak.date`** — l'horodatage de la dernière **écriture en base** | ❌ **non** |
+
+Le diff de `5d8e1ad` est explicite : il touche `app/[locale]/outbreak/[id]/page.tsx`, `OutbreakDetailModal.tsx` et **une seule fonction** de `lib/outbreaks.ts`. Son propre message de commit énonce pourtant le principe en général : « *any incidental touch (a QC edit, a locale backfill) reset the claim without a single number moving* ». Ce raisonnement vaut mot pour mot pour le seuil de 60 jours — il n'y a pas été porté.
+
+**Le cas est réel et vérifiable sans requête.** `scripts/fix-diphtheria-nigeria-ncdc-reframe-2026-08-15.mjs` écrit, dans le même payload, `date: "2026-03-22"` (l. 97) et `updated_at: new Date().toISOString()` (l. 104). Cette ligne a donc, depuis le 15/08 : un bulletin de **152 jours** et une écriture de **6 jours**. `STALE_DAYS = 60` (l. 642) est comparé à l'écriture → **aucun badge orange**. Et comme `freshOutbreakHours` plafonne à 7 jours de bulletin, **aucun badge vert non plus**. Le visiteur ne voit strictement rien : la ligne se présente comme une donnée ordinaire.
+
+**L'effet ne s'arrête pas au badge.** `sourceScore` (l. 742) applique `-0.5` aux lignes signalées périmées par cette même fonction. Une ligne dont l'avertissement est masqué **n'est pas non plus déclassée** dans le tri — elle remonte plus haut qu'elle ne le devrait sur la surface que les prospects institutionnels jugent en premier. Le défaut est donc à la fois d'affichage et de classement.
+
+**Et la vérification qui manquait a été faite aujourd'hui — elle est rangée au mauvais endroit.** `ea80fd4` + `c9377bf` (18h23 et 18h27) créent `VERIFIED_STALE` : **9 lignes** dont la source primaire a été ouverte une par une, sur les 20 et 21/08, pour confirmer qu'aucune édition plus récente n'existe (WHO SAGE RRA v.2 extrait localement, PAHO SitRep #8, AFRO semaine 28 recoupé avec ECDC, table district endpolio.com.pk recoupée avec GPEI). C'est, **à ce jour, la seule donnée du produit qui affirme « source confirmée la plus récente disponible, vérifiée le J »** — le champ dont l'idée 3 du 20/08 constatait l'absence totale (« *le schéma n'a aucune notion de reconfirmé* »). Elle existe maintenant. Elle sert **uniquement à taire un e-mail interne**. Sur ces mêmes lignes, le client lit soit rien, soit l'avertissement « *foyer peut-être résolu ou non rapporté* » — alors qu'on sait, document en main, que le chiffre est le bon et que le silence est celui de la source. Marburg/Ouganda est le cas limite : « *WHO's own IHR request to Uganda remains unanswered* » est une information de premier ordre pour un épidémiologiste, et le produit la rend comme un trou de données.
+
+**Effort estimé : petit pour la correction, moyen pour la valorisation.** Deux gestes distincts, à ne pas confondre :
+- **(a) aligner `staleOutbreakDays` sur `date`** — une ligne, symétrique de `5d8e1ad`, à faire dans tous les cas. ⚠️ **Elle fera apparaître des badges orange qui n'apparaissaient pas**, potentiellement en nombre : c'est l'objet même du correctif, mais il faut mesurer combien sur `/admin` avant de pousser, pas le découvrir en prod.
+- **(b) sortir `VERIFIED_STALE` du cron** vers une donnée lisible par l'interface, pour distinguer « *chiffres inchangés, source reconfirmée le J* » de « *plus aucune publication depuis le J* ». Reprise directe de l'idée 3 du 20/08, **avec la preuve qui lui manquait** : le coût de collecte, qui était l'inconnue principale, est désormais connu — 9 lignes ont été vérifiées à la main en deux jours.
+
+**Risque/inconnue :** (a) `VERIFIED_STALE` est un **Set écrit à la main dans un fichier de cron**, le troisième dictionnaire manuscrit de cette forme après `MANUAL_ROWS` et `MANUAL_ROW_CHECKED` (idée 2 du 18/08, « *a lâché 3 fois en 13 jours* ») — et il a lâché **4 minutes après avoir été écrit** : `c9377bf` rattrape Measles/Canada, vérifié la veille avec Peru et Bolivia, oublié à la transcription. Le porter en base plutôt que d'en ajouter un quatrième est la vraie décision ici ; (b) le clé-par-`date` de `VERIFIED_STALE` est une bonne propriété (l'entrée s'invalide toute seule quand la source republie) qu'il faut **conserver** dans toute migration en base, pas réinventer ; (c) exposer « reconfirmé » au client crée une affirmation nouvelle : elle n'est légitime que sur les 9 lignes réellement vérifiées à la main, jamais par défaut — le piège décrit au 20/08 (« *je l'ai lue aujourd'hui n'est pas la source l'a confirmée aujourd'hui* ») reste entier ; (d) le geste (a) seul, sans (b), aggrave l'affichage à court terme (plus d'avertissements, dont 9 qu'on sait injustifiés) — c'est un argument pour les faire ensemble, pas pour repousser (a).
+
+---
+
+### 3. Exposer l'écart entre deux sources sur un même foyer, au lieu de n'afficher que la valeur retenue — **long terme**
+
+**Signal — angle renvoyé explicitement ici par la session de 17h**, verbatim de son §3 : « *l'écart entre deux sources sur un même foyer n'est aujourd'hui **pas exposé** par HWG, qui n'affiche qu'une valeur retenue. Un affichage du type « cette ligne vient de X arrêtée au J, une autre source donne Y arrêtée au J-2 » serait exactement ce que le commentaire publié ce créneau décrit comme manquant. À verser à `product-ideas-log.md` par une session qui a la main dessus.* »
+
+**Le cas mesuré existe déjà, il est en base et il a coûté un garde-fou.** Le 19/08, Africa CDC publie sur Ebola/RDC un cumul de décès (2 320) **inférieur** à celui déjà en base venant du WHO AFRO External Situation Report 14 arrêté au 16/08 (2 378) — non pas parce qu'un chiffre est faux, mais parce que les deux **arrêtent de compter à des jours différents**. C'est ce cas qui a fait écrire `lockedRowRegressionGuard` le soir même. Le garde-fou fait exactement ce qu'il doit : il **rejette** la valeur la plus basse. Mais il la rejette **en silence** — c'est précisément le défaut décrit par l'idée 2 du 19/08 — et le produit n'en garde aucune trace visible.
+
+**Ce qui rend l'angle légitime aujourd'hui plutôt qu'en théorie.** Trois faits distincts convergent, sur trois surfaces différentes : (1) le cas Africa CDC / WHO AFRO, réel et daté ; (2) la mémoire `project_source_priority_is_ownership_not_freeze_2026_08_19` pose déjà la règle de comparaison — « *comparer les dates d'arrêt, jamais les dates de publication* » — donc **la sémantique existe, elle n'est simplement pas rendue** ; (3) c'est la thèse du commentaire publié aujourd'hui à 17h sous le compte rendu de mission de Yazdan Yazdanpanah, qui a rencontré Africa CDC **et** l'OMS dans la même semaine : « *the more recently published of the two can carry the lower cumulative death toll, so an outbreak that is still growing can read, at a distance, as one that has just been revised down.* » On a publiquement décrit un manque que le produit a et n'affiche pas.
+
+**Effort estimé : gros, et c'est pourquoi je l'étiquette long terme.** Le produit ne conserve aujourd'hui **aucune** valeur concurrente : les crons proposent, les garde-fous acceptent ou rejettent, le rejeté disparaît. Exposer un écart suppose de le **stocker** — a minima la dernière valeur rejetée avec sa source et sa date d'arrêt. C'est une écriture nouvelle sur un chemin qui n'en a pas, dans 17 crons.
+
+**Risque/inconnue :** (a) **aucune échéance et aucun prospect ne l'a demandé** — c'est une intuition de marque appuyée sur un cas, pas une demande client ; à ce titre elle est franchement moins prioritaire que les idées 1 et 2 ; (b) afficher deux chiffres qui divergent peut se lire comme un aveu d'incohérence plutôt que comme de la rigueur — la formulation fait tout, et c'est un travail éditorial autant que technique ; (c) **version cheap qui capte l'essentiel** : ne rien stocker de nouveau, et se contenter d'afficher sur la fiche la **date d'arrêt** et l'émetteur de la valeur retenue, de façon proéminente — une bonne partie du malentendu décrit vient de ce que le lecteur ignore *à quelle date* le chiffre s'arrête, ce que l'idée 3 du 19/08 (`dateSemantics`, en prod depuis le 19 au soir dans les 5 langues) a déjà commencé à traiter et dont **la relecture par David est toujours en attente** ; commencer par relire ça coûte zéro et peut rendre l'idée complète inutile.
+
+---
+
+### Contexte relevé au passage (pas des idées)
+
+- 🔴 **Re-remontée factuelle, pas une idée neuve : l'idée 2 du 20/08 (alarme codée en dur sur le `2026-08-21`) n'est pas construite, et son échéance est ce soir.** `VIABILITY_DECISION_DATE = "2026-08-21"` est toujours en dur (`health-check/route.ts:408`), toujours lu par la requête (l. 449), le corps de l'e-mail (l. 948), **la ligne d'objet** (l. 1004) et le payload JSON (l. 1114). Preuve nouvelle depuis hier : le compteur est passé de **8 à 11 essais** ce matin (`project_hwg_viability_decision_2026_08_21`, mise à jour du 21/08 — 3 nouveaux, aucun recoupant les cas déjà tranchés). À partir de demain, la requête `trial_ends_at > "2026-08-21"` matche **tous** les essais actifs, sous un intitulé qui parle d'une décision déjà passée. Les trois options (horizon glissant / neutralisation / nouvelle date de jalon) sont détaillées au 20/08 et restent valables telles quelles ; la (c) dépend de ta décision d'aujourd'hui.
+- **Livré aujourd'hui, hors idées de ce log** : `594323e` (cadence polio AF/PK/PS après vérification hebdomadaire), `ea80fd4` + `c9377bf` (`VERIFIED_STALE`, cité en idée 2).
+- **Aucun signal terrain entrant depuis 13 jours** (`product-feedback.md` inchangé depuis le 08/08). Les pistes ouvertes restent ouvertes sans angle neuf : version de définition de cas (Omobolanle Adelekun, 03/08), 18 indicateurs de confiance communautaire (Andrea Bernasconi, 07/08, non constructibles faute de source), trois sources tierces (Hao-Kai TSENG, 29/07, bloquées par le garde-fou explicite du `ROADMAP.md`).
+- **Morgan Otita — délibérément pas re-proposé**, comme hier : l'arbitrage de David du 20/08 (pas de 3e relance rapprochée) tient, et le repère naturel évoqué restait ~24/08, J-2 avant l'annulation du 26/08.
+- **Incident d'automatisation à surveiller demain** (relevé par la session de 17h, hors périmètre produit) : `linkedin-hwg-followup-check` (13h) n'a rien produit le 21/08 — trois tâches estampillées à la même seconde à 16:03 UTC, signature du défaut de déclenchement groupé déjà documenté. La tâche reste enregistrée et `enabled`, `nextRunAt` demain 13h01. Si le créneau saute une 2e fois, ce n'est plus un incident isolé.
+
+**Statut : PROPOSÉE — en attente de retour de David.**
+
+---
