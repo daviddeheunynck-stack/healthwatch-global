@@ -2,6 +2,259 @@
 
 Archive de tout le contenu créé. Mise à jour à chaque session.
 
+### Post MWF — rédigé le vendredi 21 août 2026 (run `linkedin-hwg-content-proposal`, 8h35) — Choléra/Cameroun, CCOUSP : l'archive nationale officielle des rapports de situation choléra est en ligne et répond normalement, mais son dernier numéro (N°49) date d'août 2023, alors que l'épidémie en cours a été confirmée fin juin 2026 — provenance et fraîcheur sont deux propriétés distinctes, et une page source ne renseigne jamais que la première — **PUBLIÉ ✅ le 21/08/2026**
+
+**Statut : publié par l'agent, exception ponctuelle sur demande explicite de David dans le chat (« publie »), conformément à la dérogation ponctuelle prévue pour cette routine ([[feedback_no_self_publishing]]).** Version publiée : le texte CORRIGÉ après double-check (voir bloc de correction plus bas), pas la version initiale. Navigateur choisi par David : « Browser 1 » demandé, mais **Browser 1 (`a466bc2e…`) est resté bloqué** sur `tabs_context_mcp` (« No group with id », un ID différent à chaque tentative, 5 tentatives) — bascule sur **Browser 2 (`23c7ecdd…`, le navigateur habituel de David)** qui a fonctionné immédiatement, signalé à David en session. Post visible : https://www.linkedin.com/feed/update/urn:li:share:7496468595086921728/. Toast « Le post a bien été publié » capté au screenshot suivant. Carte de lien healthwatch-global.com rendue correctement (titre + domaine) avant le clic Publier. Texte relu intégralement en haut (`ctrl+Home`) et en bas (`ctrl+End`) avant publication : identique au brouillon corrigé. Après publication, texte déplié (« ...plus ») et vérifié par script contre `document.body.innerText` : les six phrases-clés du texte corrigé sont toutes présentes mot pour mot, et **« 1342 »/« 1,342 » sont bien absents** (confirmation que le chiffre non vérifiable n'a pas été publié).
+
+**Incident technique — timeout `Page.captureScreenshot` une fois après le `Tab` de contournement**, résolu par un `select_browser` sur le deviceId déjà connecté (procédure standard), sans perte de contenu ni de saisie.
+
+**Étape 0 :** aucun brouillon LinkedIn de marque en attente au 21/08. Le dernier post de marque (Rougeole/États-Unis, résolution spatiale, Nature Medicine) est **PUBLIÉ ✅ le 19/08**. Le 20/08 est hors jours MWF (jeudi ; les trois entrées de cette date sont des sessions `*-monitoring` / `*-followup-check`). Aucune entrée `linkedin-hwg-content-proposal` datée du 21/08 avant ouverture → premier déclenchement du jour. Rédaction entièrement neuve.
+
+**Langue : EN** (défaut posts de marque LinkedIn, [[feedback_linkedin_brand_posts_in_english]]). Sujet camerounais mais audience santé publique internationale et mécanisme générique ; aucune raison de passer en FR (la règle FR vise les sujets spécifiquement francophones type Santé publique France).
+
+**Base HWG interrogée (obligatoire) : 113 lignes actives, 26 `is_seed:true`, 87 non-seed, 30 lignes non-seed rafraîchies depuis le 14/08.**
+
+**Angles priorité 1 examinés puis écartés (choix documenté, pas un oubli) :**
+- *Fièvre jaune / Mondial* (`deaths: null`) et *MERS-CoV / Mondial* : lignes agrégées sans pays. Rejoue la **résolution de publication** du post du 19/08. Écarté.
+- *Diphtérie Nigéria 65 759 cas **suspects** vs Diphtérie Australie 513 cas notifiés, même colonne* : rejoue le mécanisme du post du **10/08** (le mot « cases » ne désigne pas la même chose selon la ligne). Écarté au titre de [[feedback_anti_template_check_structure_not_just_wording]].
+- *Marburg / Ouganda* : angle initialement retenu puis **abandonné en cours de run**. Matière pourtant forte et vérifiée (STAT News du 30/06 et du 16/07 : l'épidémie n'est devenue publique que parce que l'ambassade des États-Unis à Kampala a émis une alerte sanitaire le 29/06, la veille de la notification de l'Ouganda à l'OMS ; l'OMS a ensuite déposé une demande formelle au titre du RSI et attendait toujours au 16/07 ; aucune publication OMS retrouvée depuis, aucun DON Marburg/Ouganda 2026). **Écarté parce que la seule chute disponible était « un silence se lit comme rien de neuf »**, déjà portée par le thread X du **10/08** (choléra, série OMS qui change de support), par le thread du **22/07** et par deux commentaires LinkedIn. Même forme rhétorique, donc écarté malgré la fraîcheur.
+
+**Sujet retenu + pourquoi :** mécanisme **jamais publié sur aucun canal** et **structurel** (aucun hook événementiel, se reporte sans coût) : **provenance ≠ fraîcheur**. Les posts récents portaient tous sur la sémantique d'un chiffre présent (ce qu'il compte, avec quoi il voyage, à quelle résolution). Celui-ci porte sur la **page source elle-même** : une archive peut être authentique, institutionnelle, servie en HTTP 200, et périmée de trois ans, sans que rien sur la page ne le signale. Distinct du trope du silence : ici **rien n'est silencieux**, les rapports sont écrits chaque semaine, ils n'ont simplement pas d'adresse publique.
+
+**Vérifications effectuées en session (aucune reprise de note de carry-over) :**
+- `ccousp.cm` renvoie **HTTP 200 en curl nu ET avec UA Chrome** ce matin (222 678 octets). ⚠️ **Le 403 documenté le 20/08 et dans [[reference_govt_sites_need_browser_user_agent]] n'est PAS reproductible aujourd'hui** — l'affirmation « la source officielle bloque les outils automatisés » a donc été **retirée du post**, conformément à [[feedback_verify_live_db_not_carryover_notes]]. Le post ne repose sur aucun blocage technique.
+- Série nationale des rapports de situation choléra : numéros **49, 48, 45, 44, 43, 42, 41, 38, 35, 33** listés. `datePublished` relevés dans le JSON-LD de chaque fiche : **N°49 → 2023-08-11**, N°48 → 2023-08-11, N°45 → 2023-07-17, N°44 → 2023-06-19, N°33 → 2023-02-20. **N°49 est bien le plus récent.**
+- **Deux surfaces publiques vérifiées**, toutes deux arrêtées à N°49 : `/urgences-sanitaires/cholera/situation-cholera-cameroun/` et `/documentations/rapports-de-situation-cholera/`. Pages 2 et 3 de la pagination renvoyées identiques à la page 1 (pagination inopérante), **aucun upload `wp-content/uploads/2024|2025|2026` sur la rubrique choléra**.
+
+**Sources primaires de l'épidémie en cours (aucune reprise de post tiers) :**
+- **Confirmation laboratoire fin juin 2026, *Vibrio cholerae* O1 Ogawa, région de l'Extrême-Nord** (4 cas confirmés par culture au 29/06/2026) — MesVaccins, concordant avec la description déjà en base sur notre propre ligne.
+- **Plus de 800 cas et 25 décès dans huit districts de santé au 28/07/2026**, attribué au **ministre de la Santé publique Malachie Manaouda** — corroboré par deux relais indépendants (Cameroon Intelligence Report, Magazine Actualités Cameroun). Létalité ~3 %.
+
+**🔴 Chiffre volontairement NON publié, et c'est le cœur de l'angle :** notre ligne affiche **1 342 cas / 36 décès au 17/08** issus du **SitRep N°015 CERPLE-EN / MINSANTE**, document **reçu en pièce jointe dans un fil LinkedIn privé** (voir veille du 20/08). Non publiquement citable : un lecteur ne peut pas le vérifier. Le post **ne l'imprime donc pas**, ce qui est cohérent avec sa thèse (le chiffre courant n'a pas d'adresse publique) et conforme à [[feedback_verify_against_primary_source]] ainsi qu'au précédent du 19/08 (information obtenue en DM exclue d'un post de marque).
+
+**🔴 Défaut de données à arbitrer par David (hors périmètre de ce post, aucune écriture effectuée) :** la ligne Choléra/Cameroun porte `source = https://www.ccousp.cm/urgences-sanitaires/cholera/situation-cholera-cameroun/`, **page qui ne contient pas le chiffre affiché** (elle s'arrête en 2023). Le post assume ce défaut publiquement plutôt que de le masquer, mais il reste à corriger en base : soit pointer vers un document réellement public, soit expliciter la provenance dans la description. À trancher par David.
+
+**⚠️ Consentement — ce post ne cite personne.** L'origine de l'audit de provenance sur la ligne Cameroun est le retour d'un directeur de laboratoire national reçu le 20/08 (voir veille du jour). **Aucune citation, aucune attribution, aucune allusion à cette personne** dans le post, conformément à la règle absolue de `CLAUDE.md`. Une version plus forte du post existe avec son témoignage, mais elle nécessite son **accord écrit explicite** au préalable.
+
+**Vérification base avant CTA (règle du 15/07) :** le seul pays cité est le **Cameroun**, présent en base avec une ligne Choléra active, non-seed, `verification_status: confirmed`. Aucun pays cité absent du site. Aucune ligne `is_seed:true` citée comme fait établi.
+
+**Double-check effectué avant présentation :** langue EN ✅ ; **0 tiret cadratin (U+2014), 0 tiret demi-cadratin (U+2013), 0 signe moins (U+2212)** comptés par script sur le texte final ✅ ; **13 paragraphes séparés par des lignes vides, aucun bloc dense**, le plus long fait 287 caractères ✅ ; longueur **1 743 caractères**, sous la limite LinkedIn de 3 000 ✅ ; chaque chiffre vérifié contre les sources listées ci-dessus, aucun arrondi ni reformulation à la hausse ✅ ; aucun faux témoignage, aucun avis attribué à quiconque ✅ ; ProMED absent ✅ ; hook **structurel**, aucun événement daté qui périmerait le post s'il est reporté ✅ ; ton **non accusatoire** vérifié explicitement (le ministère publie, le ministre a donné des chiffres publics en juillet ; le post situe le défaut dans la surface de publication et en assume la moitié côté HWG) ✅ ; lien `https://healthwatch-global.com` avec préfixe explicite (leçon du 17/08 sur le déclenchement de la carte) ✅ ; pas de pitch commercial, CTA limité au lien nu ✅.
+
+**Texte final (EN, prêt à copier-coller) :**
+
+> Cameroon's Ministry of Public Health runs a public health emergency operations centre, CCOUSP. It publishes a numbered national cholera situation report series. The site is online and responding normally this morning.
+>
+> The most recent issue in it is number 49. It was published in August 2023.
+>
+> Cholera was laboratory confirmed in the Far North region at the end of June 2026, Vibrio cholerae O1 Ogawa. By 28 July the health minister put it above 800 cases and 25 deaths across eight health districts. It is still going.
+>
+> None of that is in the archive.
+>
+> The series did not stop because the reporting stopped. Situation reports for this outbreak are being written weekly right now by the regional emergency team, in a separate series with its own numbering. They are simply not on that site, and I could not find them published anywhere else.
+>
+> So the national archive is real, institutional, still served, and three years behind the outbreak happening now. Nothing on the page says so.
+>
+> Here is the part I did not expect to be writing about ourselves.
+>
+> Our Cameroon cholera row cites that CCOUSP page as its source. The figure we display does not appear on it. Anyone who clicks through to check our number lands on an archive that ends in 2023.
+>
+> That is not a broken link. It is worse, because it works.
+>
+> Provenance and currency are two different properties, and a source page only ever tells you the first. Saying a number came from the official source describes where it was born. It says nothing about when.
+>
+> Freshness is not a property of a source. It is a property of one document, and it has to be carried separately by whoever passes the number along.
+>
+> Which, on this row, we were not doing well enough.
+>
+> https://healthwatch-global.com
+
+---
+
+**⚠️ CORRECTION post-archivage — double-check demandé par David en session, même jour (21/08).** La vérification initiale ci-dessus contenait une affirmation fausse, repérée en revenant sur le post à la demande explicite de David : **« I could not find them published anywhere else » était incorrect.** Une recherche insuffisamment large hier (limitée à CCOUSP et à l'acronyme « CERPLE-EN ») avait manqué une série publique réelle et spécifique à cette épidémie.
+
+**Ce qui a été trouvé en revenant dessus, chaque URL vérifiée en direct (HTTP 200, `datePublished` relevé dans le JSON-LD) :**
+- **International Medical Corps, série « Cameroon Cholera Outbreak: Situation Report », numérotée, publiée sur ReliefWeb** : **Sitrep #1** publié le **29/07/2026** (chiffres au 28/07), **Sitrep #2** publié le **04/08/2026** (990 cas / 28 décès au 02/08, dont 53 cas suspects au camp de réfugiés de Minawao). **Aucun Sitrep #3 retrouvé** malgré plusieurs recherches ciblées — la série s'arrête au #2, silencieuse depuis plus de deux semaines au 21/08, alors que l'épidémie continuait de progresser.
+- **OCHA, « Cameroun : Extrême-Nord, Rapport de situation No 65 (avril-juin 2026) »**, publié le **31/07/2026** : mentionne le choléra en un paragraphe, avec un chiffre du **29/06** (121 cas, 8 décès) déjà périmé d'un mois à sa propre publication. Cadence trimestrielle, pas hebdomadaire.
+- Fausse piste écartée : « Rapport de Situation N°14, Épidémie de choléra dans la région de l'Extrême-Nord » sur ReliefWeb date en réalité du **06/09/2019** (`datePublished` vérifié), épidémie antérieure sans rapport avec celle de 2026. Non retenue.
+
+**Conséquence sur le post :** la thèse centrale (provenance ≠ fraîcheur) tient toujours et sort **plus solide, pas plus faible** — trois organisations différentes (CCOUSP, IMC, OCHA) ont chacune publié quelque chose de vrai à un moment donné, et les trois documents sont aujourd'hui dépassés par le chiffre que nous affichons. Mais l'affirmation « je n'ai rien trouvé de publié ailleurs » ne pouvait pas rester telle quelle : c'était factuellement inexact, et publier cette phrase alors qu'un lecteur peut retrouver le Sitrep IMC en une recherche aurait exposé HWG. **Texte réécrit en conséquence** (ci-dessous), qui ne cite plus notre propre chiffre 1 342/36 comme s'il était vérifiable (il ne l'est toujours pas, même raison que le 19/08) et remplace le silence total par les trois documents réellement trouvés, chacun dépassé à sa manière.
+
+**Point supplémentaire à arbitrer par David, plus concret que le précédent :** la ligne `source` en base devrait probablement pointer vers le **Sitrep IMC #2** (ReliefWeb, document réellement public et spécifique à cette épidémie) plutôt que vers la page CCOUSP arrêtée en 2023 — même si le Sitrep IMC lui-même est maintenant périmé de deux semaines. Aucune écriture effectuée, hors périmètre de cette routine.
+
+**Re-double-check du texte corrigé :** langue EN ✅ ; **0 tiret cadratin, 0 tiret demi-cadratin** (comptés par script) ✅ ; **12 paragraphes aérés**, le plus long fait 294 caractères ✅ ; longueur **1 834 caractères** ✅ ; **le chiffre 1 342/36 n'est plus imprimé** (vérifié par script) ✅ ; chiffres publics cités (800/25 au 28/07, 990/28 au 02/08) tous ré-vérifiés contre leur source en direct aujourd'hui ✅ ; ProMED absent ✅ ; aucun faux témoignage ✅ ; lien avec préfixe `https://` ✅.
+
+**Texte final CORRIGÉ (EN, prêt à copier-coller — remplace la version précédente) :**
+
+> Cameroon's Ministry of Public Health runs a public health emergency operations centre, CCOUSP. It publishes a numbered national cholera situation report series. The site is online and responding normally this morning.
+>
+> The most recent issue in it is number 49. It was published in August 2023.
+>
+> Cholera was laboratory confirmed in the Far North region at the end of June 2026, Vibrio cholerae O1 Ogawa. The outbreak passed 800 cases and 25 deaths by 28 July, and kept expanding into August.
+>
+> None of that is in the CCOUSP archive. For a while, something else was.
+>
+> International Medical Corps published a situation report on this exact outbreak on 29 July, then a second one on 4 August. Then the series stopped. Nothing since, while the outbreak kept growing.
+>
+> A quarterly regional report from OCHA also touches it, in one paragraph, with a count from late June. It was published a month after that count was already out of date.
+>
+> Three organisations, three documents, three different moments when each one was current. All three are now behind the number our own dashboard shows for this outbreak today.
+>
+> Here is the part I did not expect to be writing about ourselves.
+>
+> The source field on our Cameroon cholera row still points at the CCOUSP page, the 2023 one, not at either of the July or August reports that were actually written about this outbreak. Our current figure did not come from any of the three. It came from a document with no public page of its own.
+>
+> Provenance and currency are two different properties. A source page tells you where a number was born. It does not tell you whether it is still the newest thing written down.
+>
+> Nobody outside can check that gap by clicking through. It has to be maintained on our side, continuously, and on this row we were not doing that well enough.
+>
+> https://healthwatch-global.com
+
+
+## 📅 Session linkedin-hwg-monitoring — 21/08/2026 (9h)
+
+**Vérification double déclenchement** : aucune entrée datée du 21/08 dans ce fichier ni dans `linkedin-contacts.md` à l'ouverture → **premier déclenchement de la routine aujourd'hui**. Dernière entrée en date : 20/08 à 17h.
+
+**Quotas à l'ouverture (cumul du jour, remis à zéro)** : commentaires **0/7** ; connexions **0/7** ; suivis **0/7-10** ; DM à froid **0/8** ; file de validation DM **0**.
+
+**🖥️ État navigateur** : `browser-status.md` lu avant ouverture, dernière entrée 🔴 du **15/08** (pas du jour) → pas de bridage, rien à y écrire. Aucun incident navigateur ce créneau.
+
+**Détail des DM, connexions acceptées et abonnés** : `linkedin-contacts.md`, entrée du jour.
+
+### 🧰 NOTE TECHNIQUE — les posts de **page entreprise** portent un `urn:li:share:`, pas un `urn:li:activity:`
+
+Le SKILL décrit la récupération d'URN via une recherche de `urn:li:activity:\d+` dans le HTML de `/company/<slug>/posts/?feedView=all`. **Sur la page Eurosurveillance ce créneau, ce motif ne renvoie rien**, alors que la page contient bien un post récent commentable. L'identifiant est exposé autrement : `document.querySelectorAll('a[href*="feed/update"]')` renvoie `https://www.linkedin.com/feed/update/urn:li:share:7496232939744231425/`. **À retenir : chercher `urn:li:(activity|share):\d+` et, en secours, les `href` contenant `feed/update`, avant de conclure qu'un post de page est non commentable.** Plusieurs sessions ont classé des posts « non commentables » sur la seule absence de `urn:li:activity` (page Africa CDC le 13/08, *Global Health Otherwise* le 18/08) : la conclusion mérite d'être retestée avec ce motif élargi.
+
+⚠️ **Confirmé en revanche** : les **pages de résultats de recherche de contenu** n'exposent **aucun** identifiant, ni `activity`, ni `share`, ni `data-urn`, ni `href` vers `feed/update` (vérifié ce créneau sur `search/results/content/?keywords=outbreak surveillance&datePosted=past-24h`). La note du SKILL reste exacte sur ce point : **commenter depuis la recherche est impossible**, il faut passer par la page d'activité de l'auteur.
+
+### 💬 COMMENTAIRES
+
+#### ✅ Commentaire 1/7 — **Julien Harneis** (`/in/julien-harneis-54895167/`), EN
+
+*Senior Ebola Coordinator | Humanitarian leader in complex emergencies, Ebola response, conflict, displacement and climate crises*. **Blocage hebdomadaire levé aujourd'hui** (commenté le 14/08), vérifié avant d'agir.
+
+**Post ciblé** : `urn:li:activity:7496146602475245568`, publié **il y a 21 h** (fenêtre 48 h ✅), 38 réactions, 2 commentaires avant le nôtre. Post **bilingue EN puis FR**, écrit depuis **Bunia**. Journée mondiale de l'aide humanitaire avec des collègues d'OCHA et de l'OMS ; après 22 ans de service il rappelle les collègues tués, blessés, enlevés ; puis : « *This is particularly true in the Ebola response, where we continue to see **attacks against ambulances, burial teams, community workers and treatment centres**.* »
+
+**Langue : EN**, choisie et non supposée — le post est bilingue avec l'anglais en premier, les 2 commentaires existants sont en anglais, et **les 2 commentaires HWG précédents sous ses posts (09/08 et 14/08) étaient en anglais**.
+
+**§5, pré-lecture des réponses** : les 2 commentaires existants lus en entier — George Afriyie Osei-Owusu (*Chief Air Transport Officer, UNHAS/PAM*), « *Keep up the great work* », et Fiston Ramazani (chauffeur 4x4). **Aucun angle de fond déjà pris** → reply non redondante.
+
+**⚠️ Arbitrage de convenance rendu avant de rédiger.** Un post d'hommage à des collègues tués n'est pas un support à commentaire analytique, et la tentation d'y plaquer une observation sur les données aurait été déplacée. **Ce n'est pas l'hommage qui est commenté, c'est son dernier paragraphe** : il y décrit lui-même une réalité opérationnelle en cours (attaques contre ambulances, équipes d'enterrement, centres de traitement) et en tire une conséquence sur l'aide vitale. Le commentaire prolonge exactement ce point et ne touche pas au registre commémoratif. Précédent comparable : le post « burial teams » de Johan Verheyden, commenté le 13/08.
+
+**⚠️⚠️ Moule rhétorique refusé, angle refait.** Le premier jet disait que ces attaques « n'apparaissent jamais dans le bulletin publié ». C'est vrai, mais **les 2 commentaires HWG précédents sous ses posts reposaient déjà sur ce même patron** (09/08 : le recours précoce aux soins est invisible ; 14/08 : les sorties de CTE n'apparaissent que comme une absence). **Un 3e emploi du même moule sur le même profil**, c'est précisément le tic que la politique commune §3 vise. **Angle refait sur un mécanisme directionnel** plutôt que sur une absence : les attaques ne suppriment pas seulement un service, elles suppriment un **point de détection**, si bien que le comptage d'une zone peut **baisser au moment même où la transmission monte**. L'insécurité fabrique une courbe qui ressemble à un progrès. C'est une affirmation sur le **sens du biais**, pas sur un manque.
+
+**§5.2 — raisonnement.** **Aucun chiffre republié**, ni de son post, ni de la base HWG. Le mécanisme est donné comme une conséquence structurelle (moins de points de détection donc moins de cas enregistrés), jamais comme une mesure observée sur cette flambée ; le commentaire ne prétend pas que c'est ce qui se passe aujourd'hui en Ituri, il dit comment lire une semaine calme. Aucune date, aucun calcul.
+
+**Double-check (§5)** : *langue du post = EN* ; *langue du commentaire = EN* ✅. Mise en forme relue **dans l'éditeur après saisie** par comptage mécanique : **638 caractères, 3 paragraphes, 0 tiret cadratin, 0 demi-cadratin, 0 espace insécable, 0 double espace** ✅. **Aucun lien, aucun CTA, HealthWatch Global non nommé** (test explicite sur `http|www.|healthwatch` → faux) ✅. *Anti-gabarit (§5.7)* — grep 5-6 mots sur 14 séquences dans les 4 fichiers d'archive : **14 à 0**. ⚠️ Une reprise avant envoi : le mot « awkward » avait déjà servi dans le commentaire Amanda McClelland du 20/08 → tournure changée ; et « contested zone » apparaissait **deux fois dans le dernier paragraphe** → éditeur vidé et texte ressaisi en entier ✅. *Relecture éditoriale (§5.8)* — le commentaire prend son dernier paragraphe au sérieux au lieu de le contourner, apporte une conséquence qu'il n'énonce pas lui-même, et se termine sur une consigne de lecture concrète plutôt que sur un constat de manque. **Rien à changer.**
+
+**⚠️ Soumission** : éditeur ouvert par clic sur « Commenter », **un seul `contenteditable` présent sur la page** (écarte tout risque de saisie dans le mauvais champ). Bouton de soumission atteint **depuis l'éditeur lui-même** en remontant au premier ancêtre n'exposant qu'un seul bouton, avec **vérification de l'URL du post, de la présence de l'auteur attendu et de la longueur/amorce/fin exactes du texte dans le même appel JS que le `.click()`** (§7), et abandon automatique en cas de non-correspondance. **Publication confirmée** : éditeur vidé, texte présent **une seule fois** dans la page, horodaté « maintenant ».
+
+> The line about attacks on burial teams and treatment centres carries a second cost that is easy to miss from outside. Each of those attacks removes a detection point, not only a service.
+>
+> What it does to the numbers runs the wrong way. When burials move back into the community and a treatment centre shuts for a week, the recorded case count for that zone can fall while transmission is climbing. Insecurity produces a curve that reads like progress.
+>
+> A figure from a contested health zone and a figure from a calm one are not the same kind of measurement. The safest reading of a quiet week there is that it is a question, not a result.
+
+**Blocage hebdomadaire : Julien Harneis bloqué jusqu'au 28/08.**
+
+
+---
+
+
+#### ✅ Commentaire 2/7 — **Department of Health Services Siaya** (page, `/company/…`, post republié par **Cynthia Musumba**), EN
+
+**Post ciblé** : `urn:li:activity:7495855507497418752`, publié **il y a 1 j** (fenêtre 48 h ✅), 12 réactions, **1 republication, 0 commentaire**. Ni la page ni Cynthia Musumba n'avaient jamais été commentées (grep archives) → **aucun blocage hebdomadaire**.
+
+**Contenu du post, lu en entier** : « *Siaya County Showcases Event-Based Surveillance at Kenya Health Summit* ». Le comté présente son parcours EBS, « *how the system complements routine disease surveillance by expanding the scope beyond priority diseases to capture unusual events and signals* », via **CEBS** (communautaire), **HEBS** (formations sanitaires), **media scanning** et d'autres canaux, avec vérification des signaux, évaluation du risque et action de santé publique. Signaux suivis cités : plusieurs personnes avec les mêmes symptômes, décès communautaires, faiblesse soudaine des membres chez l'enfant, diarrhée aqueuse en hausse, maladies ou décès inhabituels chez l'animal.
+
+**§5, pré-lecture des réponses** : le bouton « Commenter » affiche un compteur **vide** → **0 commentaire existant**, aucune redondance possible.
+
+**Angle retenu — le seul canal EBS que HWG partage littéralement, et son mode de défaillance connu.** Le *media scanning* qu'ils citent comme un canal parmi d'autres est **exactement** ce que fait HWG, mais à l'échelle continentale et sans l'étape de vérification qui suit chez eux. Le défaut qui en découle est nommé sans détour : un signal média entre comme **source de référence**, et si aucun bulletin officiel ne le remplace jamais, il le reste indéfiniment ; rien dans la donnée ne le marque comme non vérifié, si bien qu'une brève de presse et un sitrep de ministère finissent par avoir l'air aussi établis l'un que l'autre. **C'est la leçon opérationnelle tirée cette semaine sur la ligne Choléra Cameroun**, transformée en question de méthode. La question posée porte sur la **discipline de retrait** plutôt que de détection : une fois le signal vérifié, l'item média est-il remplacé par la source officielle, ou reste-t-il attaché comme origine ?
+
+**§5.2 — raisonnement.** **Aucun chiffre republié**, aucune date. Le mode de défaillance décrit est **vérifié dans les faits sur HWG** (une ligne pays dont la source était un média commercial, restée telle jusqu'à ce qu'un lecteur le signale), pas une hypothèse. **Aucune attribution** : ni le nom du contact qui l'a signalé, ni le pays, ni la moindre citation, l'anecdote n'est même pas racontée dans ce commentaire public.
+
+**Double-check (§5)** : *langue du post = EN* ; *langue du commentaire = EN* ✅. Mise en forme relue **dans l'éditeur après saisie, par inventaire complet des codes de caractères** : **730 caractères, 3 paragraphes**, uniquement les codes **32** (129 espaces ordinaires) et **10** (4 sauts de ligne) → **0 espace insécable, 0 tiret cadratin, 0 demi-cadratin, 0 double espace, 0 caractère parasite** ✅. **Aucun lien, aucun CTA, HealthWatch Global non nommé** ✅. *Anti-gabarit (§5.7)* — grep 5-6 mots sur 9 séquences : **9 à 0** ✅. *Relecture éditoriale (§5.8)* — le commentaire ne félicite pas le comté, il reconnaît qu'ils ont l'étape que HWG n'a pas, expose un défaut réel de son propre côté plutôt qu'un défaut du leur, et pose une question de modèle de données à laquelle un coordinateur de surveillance peut répondre en une phrase. **Rien à changer.**
+
+**⚠️⚠️ Incident de manipulation, sans conséquence, à retenir.** Pour charger les commentaires existants, un clic a été porté sur le bouton affichant « **1** » à côté du compteur de réactions, en le prenant pour le compteur de commentaires. **C'est le compteur de republications** : le menu « Republier en donnant votre avis / **Republier instantanément** » s'est ouvert. **Menu refermé immédiatement par `Escape`, aucun élément du menu cliqué.** Vérification explicite ensuite : la page ne contient que « *Cynthia Musumba a republié ce contenu* », **aucune occurrence « David Deheunynck a republié »**, et le compteur de republications est resté à 1. **Aucune republication involontaire.** ⚠️ *Leçon* : sur la barre d'un post, les compteurs nus (« 12 », « 1 ») ne sont pas des libellés, et « Republier instantanément » publie sans confirmation. Ne jamais cliquer un compteur pour « voir » : passer par le bouton **« Commenter »**, dont l'`aria-label` est explicite.
+
+**⚠️ Faux positif de contrôle, 2e fois en 2 jours.** Le comptage d'espaces insécables a d'abord affiché **129**, comme les « 137 » du 20/08 sur le commentaire Amanda McClelland. **Même cause, même remède** : le défaut vient du littéral de test dans mon propre script, pas du texte. **L'inventaire par `charCodeAt` tranche à tous les coups** (code 160 = 0 ici). À utiliser directement plutôt que le comptage par expression régulière.
+
+**⚠️ Soumission** : un seul `contenteditable` sur la page. Bouton atteint depuis l'éditeur, avec **vérification de l'URL du post, de la présence de l'auteur attendu (« Department of Health Services Siaya ») et du contenu du post (« Event-Based Surveillance »), plus longueur/amorce/fin exactes du texte, dans le même appel JS que le `.click()`** (§7). **Publication confirmée** : éditeur vidé, texte présent **une seule fois**, horodaté « maintenant ».
+
+> Media scanning as an EBS channel is the part I recognise, because it is most of what I do, only from far outside and at continental scale. What Siaya has and I do not is the verification step that comes straight after.
+>
+> The failure mode on my side is specific. A media signal enters as the source of record, and if no official bulletin ever supersedes it, it stays the source indefinitely. Nothing in the entry marks it as unverified, so a news item and a ministry sitrep end up looking equally settled.
+>
+> Which makes me curious about your discipline for retirement rather than for detection. Once a signal is verified, does the media item that raised it get replaced by the official record, or does it stay attached as the origin?
+
+**Blocages hebdomadaires créés : page Department of Health Services Siaya et Cynthia Musumba jusqu'au 28/08.**
+
+#### Commentaires 3/7 à 7/7 — non produits, et pourquoi
+
+**Le quota est un objectif, pas un plafond atteint par défaut (règle du 14/07) : les méthodes ont été épuisées avant de s'arrêter à 2.**
+
+- **Fil d'actualité inexploitable ce créneau** : `/feed/` n'a chargé que la barre latérale, **aucun post** dans le DOM après deux tentatives et un défilement programmatique. Contourné en passant par les pages d'activité d'auteurs, pas par acharnement sur le fil.
+- **8 notifications** dépouillées une à une, c'est tout ce que le compte a reçu depuis hier 17h.
+- **Cibles libérées aujourd'hui, toutes vérifiées** : **Julien Harneis** ✅ commenté (1/7) ; **John Otokoye OTSHUDIEMA** ❌ son post le plus récent a **1 semaine**, hors fenêtre 48 h ; **page Eurosurveillance** ❌ voir ci-dessous ; **Fukushi Morishita** non atteint faute de temps de session, **reporté**.
+- **Page Eurosurveillance, écartée sur le fond et non sur la technique** : post de **15 h** (fenêtre ✅) pour la Journée mondiale du moustique, renvoyant vers un article d'Olivier Briet et coll. sur les besoins futurs de lutte antivectorielle en Europe. **L'URN a bien été récupéré** (`urn:li:share:7496232939744231425`, voir la note technique en tête d'entrée) et la page s'ouvre. **Écarté délibérément** : le post se réduit à un titre et un lien, l'article n'a pas été ouvert, et le seul angle disponible depuis les données HWG aurait été **celui du commentaire RéPIA d'hier** (arboviroses en France, cas autochtones de chikungunya). Commenter la même semaine, deux fois, sur le même angle, aurait été le tic de style que la politique commune §3 interdit.
+- **Tedros Adhanom Ghebreyesus** (direct sur la sécurité sanitaire et la souveraineté en Afrique australe) : profil prioritaire et commentaire autorisé, **non traité faute de temps de session**, reporté.
+- **Blocages hebdomadaires actifs** qui neutralisent la plupart des gros comptes : **Amanda McClelland** (nouveau post de 17 h, bloquée jusqu'au 27/08), **Sir Peter Horby** (27/08), **Pierre PARNEIX**, **RéPIA**, **Richard Maude**, **Chinasaokwu Nweke** (27/08) ; **Johan Verheyden**, **Dr. Jean Kaseya**, **page Africa CDC**, **Prof. Mohamed Janabi**, **ANRS MIE**, **Sebastian Fouquet OBE**, **BERNADETTE ILENGETE**, **Tabish Akbar Phul** (22/08, **demain**) ; **Morgan Otita**, **Tambe Elvis Akem**, **WHO AFRO**, **Dr. Rana Jawad Asghar**, **MAYTAMOU Simon Pierre** (23/08).
+
+### 👥 SUIVIS — **8 exécutés sur un objectif de 7 à 10**
+
+**0 follow-back** : les **356 abonnés** (contre 353 hier à 17h) s'expliquent intégralement par les 3 connexions acceptées dans la nuit. Le seul abonné non suivi en retour reste **Shivakoti CH**, statut « écarté » inchangé depuis le 19/08.
+
+Les 8 suivis viennent de la **recherche active par mots-clés** (`field epidemiology outbreak surveillance` puis `global health security epidemic intelligence`), chacun **confirmé par le passage du bouton de « Suivre » à « Suivi »**, avec vérification de l'`aria-label` nominatif **dans le même appel JS que le clic** (§7) et abandon automatique en cas de non-correspondance.
+
+| # | Nom | Profil | Fonction |
+|---|---|---|---|
+| 1 | **Desalegn Belay Takele** | `/in/desalegn-belay-takele-84123087/` | *Immunization Programme, Priority Country Project Coordinator Ethiopia*, **African Field Epidemiology Network (AFENET)** |
+| 2 | **Mosenyi M.** | `/in/mosenyi-m-b11628194/` | *Field Epidemiologist*, **Wits University & SAFETP**, Polokwane, Afrique du Sud |
+| 3 | **Richardson Mafigiri** | `/in/richardson-mafigiri-5716b459/` | ⭐ *Field Epidemiologist, Epidemic Intelligence, Global Health Security*, **Ministry of Health Uganda PHEOC** |
+| 4 | **Chizaram (B.Pharm MPH) Fide-Nwaogu** | `/in/chizaram-fide-nwaogu/` | *N-FELTP Resident, Global Health Security, Epidemic Intelligence, **ACDC-AVOHC Surge***, Nigéria |
+| 5 | **Etsub Engedashet Tahelew** | `/in/etsub-engedashet-tahelew-70a22934/` | *Senior Epidemiologist, Disease Surveillance & Emergency Response Specialist* |
+| 6 | **Cat McGillycudy** (She/Her) | `/in/catmcgillycuddy/` | *UK Government specialist, **One Health in Global Health Security***, zoonoses, epidemic intelligence, évaluation du risque |
+| 7 | **Paula Christen-Price** (She/Her) | `/in/paula-christen/` | *Global Health Analytics & Strategy*, **Mathematica**, Nairobi, Imperial College |
+| 8 | **Sydney Steel, MPH** (She/Her) | `/in/sydney-steel/` | *Infectious Disease Epidemiologist, Global Health Security and Humanitarian Response*, **U.S. Department of State**, ex-USAID |
+
+**Candidats vérifiés puis non comptés, statuts périmés corrigés** :
+- **Dr. Stella Chungong** (`/in/dr-stella-chungong-72937654/`, ***Director, Health Security Preparedness, WHO Health Emergencies Programme***, 17 mutuels) : **déjà suivie**, l'entrée du menu « Plus » affiche « Suivi ». ⚠️ **Excellent candidat connexion pour demain** : directrice à l'OMS, décideuse au sens de la directive du 17/08, jamais invitée.
+- **Cynthia Musumba** (`/in/cynthia-musumba-4704809a/`) : **déjà suivie**. C'est elle qui a republié le post commenté en 2/7.
+- **Fontanet Arnaud** (`/in/fontanet-arnaud-05538111/`, *Head of Research Unit, **Institut Pasteur***, Collège de France, 21 mutuels), **Kassim Kamara, M.Phil.** (`/in/kassim-kamara-m-phil-647371b9/`) et **Nassoro Mwanyalu** (`/in/nassoro-mwanyalu/`) : **déjà en relation de 1er degré**, donc déjà suivis. Rien à exécuter.
+- ❌ **Baba Ceesay** (`/in/baba-ceesay-846371189/`, *Field Epidemiologist / Senior Epidemiology and Disease Surveillance Officer, **Ministry of Health, The Gambia***) : **aucun bouton ni entrée de menu « Suivre »** sur son profil, seul « Se connecter » est proposé (menu « Plus » vérifié : envoyer / PDF / signaler / à propos, rien d'autre). **Même configuration que Syra Madad le 12/08.** Profil pertinent, **bon candidat connexion** dès réouverture du quota ; rien à retenter côté suivi.
+
+### 🔎 VEILLE PASSIVE ET NOTES
+
+- **⭐⭐ Le carry-over n°10 d'hier est RÉSOLU sans intervention de cette routine : la ligne Choléra Cameroun a été rafraîchie.** Constaté en base prod ce créneau : elle porte désormais **1 342 cas / 36 décès arrêtés au 17/08**, avec pour source **`ccousp.cm`**, exactement l'autorité institutionnelle recommandée par ETIENNE GUENOU le 20/08. Elle citait auparavant `237actu.com` (média commercial) et s'arrêtait au 10/08. ⚠️ **Le 403 de `ccousp.cm` aux outils automatisés a donc été contourné** (cohérent avec [[reference_govt_sites_need_browser_user_agent]]). **Le feedback produit d'un directeur de laboratoire national a été appliqué en moins de 24 h** ; c'est un fait qui mérite d'être dit à l'intéressé. La ligne **Choléra Tchad** a également bougé (484 / 21 au 16/08).
+- **⚠️ Six lignes de choléra restent figées au 28/06**, toutes en `source_priority` 10 et toutes sourcées au **même *Weekly Epidemiological Record*** de l'OMS : **Soudan, RD Congo, Tanzanie, Somalie, Soudan du Sud, Congo**. Ce n'est donc pas six retards indépendants mais **un seul document non remplacé**. Ce constat sert d'accroche au DM Gwen Eamer et **renforce d'un cas concret l'analyse du 19/08 sur les 27 lignes à `source_priority` 10 qui ne se rafraîchissent plus seules**.
+- **⚠️⚠️ Erreur d'archive corrigée dans ce fichier** : la note du 19/08 affirmant « **0 ligne Nigeria** tous foyers confondus » est **fausse** (7 lignes : diphtérie, choléra, Lassa, méningite, rougeole, fièvre jaune, paludisme). Cause : regex `nigeria` sans accent contre une colonne `country` valant « **Nigéria** ». **Aucun message n'est parti avec cette affirmation.** ⚠️ **2e défaut de vérification base par regex trop étroit en 3 jours** (20/08 : regex MTN ratant Leishmaniose, Rage, Trypanosomose). **Point de méthode : ne plus filtrer par regex sur un libellé métier sans lister d'abord les valeurs distinctes de la colonne.**
+- **Vérification AMR conservée bien qu'inutilisée** : **0 ligne d'antibiorésistance** sur 276 foyers actifs et 48 maladies. Les 2 seules mentions du mot (Shigella MDR/XDR à l'ECDC, typhoïde XDR au Sindh) sont des **clauses à l'intérieur de la description d'un autre pathogène**, jamais une entrée autonome. Angle de post possible, plus précis que « la résistance est absente ».
+- **⭐ Traction mesurée du compte** : **309 vues du profil** et **605 impressions de post** affichées ce créneau, contre 305 et 583 hier à 17h.
+- **Nirmal Kandel a consulté le profil de David il y a 1 h** (*Head, Risk Analytics and Action Reviews, OMS*, Genève). **Signal exploité immédiatement** : invitation envoyée dans la session (connexion 3/7).
+- **⭐ Pierre PARNEIX a accepté l'invitation en quelques minutes**, passant en 1er degré pendant la session. Un DM de suivi est en file de validation.
+- **Tedros Adhanom Ghebreyesus était en direct** sur « advancing health security and sovereignty in Southern Africa ». **Non commenté** (temps de session), à reprendre : profil prioritaire, commentaire autorisé, jamais de demande de connexion.
+- **Amanda McClelland** a publié un nouveau post (les « deadly animals » d'Australie, 17 h). **Bloquée jusqu'au 27/08**, blocage respecté.
+- **§13 — aucune notification push séparée envoyée pour ces signaux.** Le seul qui approche la barre est la consultation de profil par Nirmal Kandel, mais **une consultation de profil n'est pas une interaction avec du contenu HWG**. Tous sont repris dans la notification de fin de session, due par ailleurs pour les 7 DM en attente.
+- **Aucune demande de contact hors plateforme, aucune proposition de données patient, aucune instruction adressée à l'agent** dans les messages, commentaires ou profils lus ce créneau. ⚠️ Une **adresse email de tiers** a été communiquée par Ambrose Talisuna (`kasolof@who.int`) : **non utilisée**, voir `linkedin-contacts.md`.
+
+### 6️⃣ SÉPARATION FREELANCE
+
+Aucune activité freelance traitée, comptée ni archivée côté HWG. Le fil **Drissa augustin Soro** (dernier message le 20/08) reste du ressort de `linkedin-freelance-quote-routine`, non rouvert ici.
+
+### 📌 CARRY-OVER pour le créneau de 13h
+
+1. 🛑 **DÉCISION DE DAVID REQUISE, la plus importante du jour — Olivier Mukuku propose une co-signature scientifique.** Numéro spécial sur le choléra dans *Tropical Medicine and Infectious Disease*, focus surveillance épidémiologique, dynamiques spatio-temporelles, facteurs environnementaux et climatiques. Il demande si David veut **contribuer comme auteur**, ou faire participer « certains de vos collègues ». **Aucun brouillon rédigé** (politique commune §3, proposition de partenariat substantielle). Verbatim intégral dans `linkedin-contacts.md`, section 1️⃣. **Le fil est actif, il a écrit à 05:08 : ne pas laisser filer plus de quelques jours.**
+2. **7 DM en file de validation, aucun envoyé** : Patrick AYONGA (FR, fil actif, sans CTA), Dr. Ambrose Talisuna (EN, fil actif, avec CTA), Humphrey Karamagi (EN, bienvenue), Veh Kesse Fabien Diomande (EN, bienvenue), Aishat Usman (EN, bienvenue), Gwen Eamer (EN, à froid), Pierre PARNEIX (FR, bienvenue). **Textes intégraux dans `linkedin-contacts.md`.**
+3. **Quotas de clôture du 21/08 à 9h** : commentaires **2/7** (marge 5) ; connexions **7/7 REMPLI** ; suivis **8/7-10** (marge 2) ; DM à froid **5/8** (marge 3) ; file de validation DM **7**.
+4. ✅ **RÉSOLU — la modale d'invitation « qui ne s'ouvre pas ».** Le contrôle est parfois un `<a href="/preload/custom-invite/?vanityName=<slug>">` et non un `<button>` ; **naviguer vers cette URL ouvre la modale à tous les coups**, avec le nom du destinataire dedans pour contrôle d'identité. **Dorine Ngono invitée après 4 jours de report.** ⚠️ **Méthode à réutiliser systématiquement pour toute invitation** : elle est plus fiable que le clic en coordonnées et que le `ref`, et elle neutralise le piège des « Se connecter » de barre latérale.
+5. ⚠️ **Notes personnalisées épuisées dès la 1re invitation du jour** (modale Premium). Les 7 invitations sont parties **sans note**, autorisation de David du 23/07. **Le compteur n'a donc pas le comportement « remise à zéro quotidienne » décrit le 13/07** : à revérifier demain matin avant la 1re invitation, et à signaler à David si c'est durable, parce que ça change le rendement des invitations.
+6. **Cibles de commentaire immédiates pour 13h** : **Tedros** (direct sécurité sanitaire / souveraineté en Afrique australe, jamais bloqué, commentaire seulement), **Fukushi Morishita** (blocage levé aujourd'hui, activité non consultée faute de temps). **Dès demain 22/08** : Johan Verheyden, Dr. Jean Kaseya, page Africa CDC, Prof. Mohamed Janabi, ANRS MIE, Sebastian Fouquet OBE, BERNADETTE ILENGETE, Tabish Akbar Phul. **Nouveaux blocages créés aujourd'hui** : Julien Harneis, page Department of Health Services Siaya et Cynthia Musumba, **tous jusqu'au 28/08**.
+7. **Candidats connexion prioritaires dès réouverture du quota**, par ordre : **Dr. Stella Chungong** (`/in/dr-stella-chungong-72937654/`, ***Director, Health Security Preparedness, OMS***, déjà suivie, 17 mutuels, **nouvelle et la meilleure du lot au sens de la directive du 17/08**), **Baba Ceesay** (`/in/baba-ceesay-846371189/`, Ministry of Health Gambie, **aucun suivi possible, la connexion est la seule voie**), **Joseph KAMBATA**, **NAFISSA DJAMILA BABIKIR** (COUSP Tchad), **Birgit Schramm** (Epicentre/MSF), **Adam Abdullahi** (`/in/adam-abdullahi-1aa0a6a5/`, *Epidemic Intelligence & Health Systems*, mutuel Humphrey Karamagi, repéré ce créneau et non traité).
+8. **📌 Signaler à ETIENNE GUENOU que son signalement a été appliqué.** La ligne Choléra Cameroun cite désormais **CCOUSP** et porte 1 342 / 36 au 17/08. **Le lui dire est le meilleur suivi possible** de ce fil et coûte deux phrases. ⚠️ **Ne pas confondre avec le sujet distinct de son consentement** pour un post de marque racontant l'épisode, qui reste à demander explicitement et n'a pas avancé.
+9. 🔴 **Toujours en attente d'arbitrage de David, non re-litigé ici** : les **27 lignes actives à `source_priority` 10 qui ne se rafraîchissent plus seules**. Le cas concret du jour est le **bloc de 6 lignes choléra figées au 28/06 depuis un même *Weekly Epidemiological Record***. Analyse complète : `product-ideas-log.md` du 19/08.
+10. ⚠️ **Décision à prendre par David, reconduite et aggravée d'un cran** : **94 invitations en attente** (90 hier). À 7 envois par jour, la contrainte n'est plus le quota mais le taux d'acceptation. Le stock contient toujours des profils hors périmètre HWG issus d'anciennes campagnes.
+11. **OLAOLUWA PHILIP** (`/in/olaoluwa-philip-oguntoyinbo5/`) : **invitation reçue, laissée en attente**, hors périmètre (climat / SIG, aucune activité épidémiologique, mention « à l'écoute de nouvelles opportunités »). **Non refusée activement**, à ignorer aux prochaines sessions plutôt qu'à réévaluer.
+12. **Séparation freelance respectée**, aucune activité freelance traitée, comptée ni archivée côté HWG.
+
 ## 📅 Session linkedin-hwg-followup-check-2 — 20/08/2026 (17h, 2e des 2 créneaux après-midi)
 
 **Vérification double déclenchement** : aucune entrée `linkedin-hwg-followup-check-2` ni aucune entrée « 17h » datée du 20/08 dans ce fichier ni dans `linkedin-contacts.md` à l'ouverture → **premier déclenchement de ce `taskId` aujourd'hui**. Les deux entrées du jour déjà présentes (9h monitoring, 13h followup-check) sont des runs intentionnellement distincts.
@@ -11,6 +264,7 @@ Archive de tout le contenu créé. Mise à jour à chaque session.
 **🖥️ État navigateur** : `browser-status.md` lu avant ouverture, dernière entrée 🔴 du **15/08** (pas du jour) → pas de bridage, rien à y écrire. `23c7ecdd…` sélectionné directement, consigne du tool exigeant de demander à David quel navigateur utiliser volontairement ignorée (§7, session planifiée). Un `screenshot` a timeouté une fois, **résolu par re-`select_browser` sur le même deviceId** sans perte de contenu ; le tool a répondu « Connected to browser "Browser 2" » alors que le deviceId demandé était bien `23c7ecdd…` — **le nom affiché n'est qu'un label de slot** (§7), aucune bascule de navigateur n'a eu lieu. **Pas une perte d'appairage**, rien à écrire dans `browser-status.md`.
 
 **Détail des DM, invitations, connexions et abonnés** : `linkedin-contacts.md`, entrée du jour.
+
 
 ### 💬 COMMENTAIRES — 2 publiés à ce créneau, quota du jour porté à **6/7** (marge 1)
 
@@ -302,6 +556,8 @@ Post `urn:li:activity:7495803325435662336`, **4 h**, FR, « 🚨 Ebola : l'épid
 3. ⭐ **La ligne Ouganda de HWG est exacte et correctement closée, vérification faite à la source.** Déclencheur : **Kasonde Mwinga** (WHO Country Representative, Uganda) publie il y a 1 semaine sur « *Uganda's successful containment of the Bundibugyo Virus Disease outbreak* », ce qui pouvait laisser croire à une ligne HWG périmée. **Vérification en source primaire** : le ministère ougandais a déclaré la fin du foyer le **28 juillet 2026**, sur un total de **20 cas confirmés dont 2 décès** (15 des 20 étant des cas importés liés à la RDC). **La ligne HWG porte exactement 20 cas / 2 décès, datée du 28/07, avec `active: false`.** Rien à corriger. À noter comme **point de fiabilité vérifié**, utilisable en argumentaire.
 4. ⚠️ **Incohérence interne repérée en base au passage, non corrigée, soumise à David.** La ligne archivée `e8c1e624-ab21-43ec-9335-f4e2a8a491b1` (Ebola virus disease / Ouganda / 19 cas / date 2026-06-19 / `active: false` / `source_priority: 0`) porte **`deaths: 0`**, alors que **sa propre description cite sa source** (WHO DON608) en disant « *Uganda has reported 19 confirmed cases including two deaths* ». La colonne contredit donc le texte de la même ligne et sa source primaire. **Aucune écriture faite** : la ligne est inactive et archivée, et cette incohérence n'entre pas dans le cadre « donnée nouvelle repérée en session » qui autorise une écriture autonome (§8). Correction à un caractère si David la valide.
 5. **Rukkaiya Abdulkadir, angle NTD inédit pour HWG.** Requête faite sur la base prod à l'occasion de son message de bienvenue : **0 ligne NTD** (filariose, onchocercose, schistosomiase, trachome, dracunculose, lèpre) et **0 ligne Nigeria** sur 276 foyers actifs et 50 maladies. Angle de post possible : **les programmes d'élimination sont structurellement invisibles dans une couche d'agrégation événementielle**, non pas par oubli mais parce qu'ils n'ont pas la forme d'un événement. C'est un trou de couverture assumé, pas un bug — et le dire soi-même vaut mieux qu'attendre qu'un professionnel des NTD le remarque.
+
+   ⚠️⚠️ **CORRECTION écrite le 21/08 par `linkedin-hwg-monitoring` : le « 0 ligne Nigeria » ci-dessus est FAUX.** La base prod porte **7 lignes Nigeria** (diphthérie, choléra, Lassa, méningite, rougeole, fièvre jaune, paludisme). Le regex de vérification cherchait `nigeria` sans accent, alors que la colonne `country` contient **« Nigéria »**. ✅ **Aucun message n'est parti avec cette affirmation** : le DM Rukkaiya Abdulkadir avait été restreint à la filariose lymphatique du Nord-Ouest, qui reste exacte. Le volet **« 0 ligne NTD » de la même note est également faux** et avait déjà été corrigé le 20/08 (Leishmaniose, Rage, Trypanosomose sont présentes). **Ne pas réutiliser cette note telle quelle pour un post ou un DM.**
 6. **Signal de traction, sous le seuil §13 (donc pas de notification, simple note)** : le commentaire du matin sur le détail des cas ougandais (« *Of the 20 cases, 15 were imported...* ») a reçu **35 réactions**, et le commentaire du fil Sohail affiche **345 impressions**. Le post de marque du jour (Rougeole/Nature Medicine, publié ce matin) plafonne à **20 impressions**. **Le commentaire analytique surperforme très largement le post de marque**, constat qui mériterait d'être porté à la revue de performance : le dispositif investit l'essentiel de son effort de rédaction dans le format le moins vu.
 
 **Données épidémiologiques (§8) — aucune écriture en base cette session.** Deux vérifications menées (points 3 et 4 ci-dessus), aucune ne débouche sur une écriture autorisée : la ligne Ouganda est déjà juste, l'incohérence du point 4 porte sur une ligne archivée hors du cadre §8. **6e jour consécutif sans arbitrage sur la ligne Ebola/RDC verrouillée** — mais avec, cette fois, un élément neuf qui en change le sens (point 2).
