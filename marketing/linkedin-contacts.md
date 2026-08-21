@@ -31,7 +31,9 @@ Liste des conversations relue par récence, caractère lu/non lu contrôlé sur 
 
 ---
 
-#### 🔒 DM en attente de validation — **Patrick AYONGA** (FR, fil actif, **SANS CTA — anti-répétition**)
+#### ✅ DM ENVOYÉ — **Patrick AYONGA** (FR, fil actif, **SANS CTA — anti-répétition**)
+
+**Statut : ✅ ENVOYÉ à 10:53, sur ordre explicite de David en session interactive (« envoie les 8 DMs »), après double-check indépendant complet refait de zéro** (fil relu en direct, aucune nouvelle réponse depuis la clôture de 9h, destinataire revérifié dans l'en-tête au moment de l'envoi et dans le fil après, formatage recompté par inventaire `charCodeAt` : 0 tiret cadratin, 0 espace insécable réel — le "190" initial était un faux positif du regex de test contre des espaces ordinaires —, 4 paragraphes, aucune correction nécessaire).
 
 *Infectious Diseases Specialist | Epidemiologist | PhD Candidate in Public Health, Epidemiology & Population Health | Global Health & Health Emergency Response*, `/in/ACoAACUvpsgBn_-6SHIz4YlCe6kjbeK2x6DfPW4`.
 
@@ -55,7 +57,9 @@ Liste des conversations relue par récence, caractère lu/non lu contrôlé sur 
 
 ---
 
-#### 🔒 DM en attente de validation — **Dr. Ambrose Talisuna** (EN, fil actif, **AVEC CTA**)
+#### ✅ DM ENVOYÉ — **Dr. Ambrose Talisuna** (EN, fil actif, **AVEC CTA**)
+
+**Statut : ✅ ENVOYÉ à 10:54, sur ordre explicite de David en session interactive (« envoie les 8 DMs »), après double-check indépendant complet refait de zéro** (fil relu en direct, aucune nouvelle réponse depuis 08:12, destinataire revérifié dans l'en-tête au moment de l'envoi et dans le fil après, formatage recompté par inventaire `charCodeAt` : 0 espace insécable, 0 tiret cadratin, 0 double espace, 5 paragraphes, aucune correction nécessaire).
 
 *CEO, Africa Public Health Foundation*, `/in/dr-ambrose-talisuna-mbchb-msc-dlshtm-phd-23832b6/`. ⚠️ §12 : **4 homonymes**, identifié par slug.
 
@@ -101,7 +105,9 @@ Liste des conversations relue par récence, caractère lu/non lu contrôlé sur 
 
 `/mynetwork/invite-connect/connections/` trié « Ajouts récents » → **249 relations**. Trois profils portent « **Connexion le 20 août 2026** » et **n'apparaissaient pas** dans le bilan de 17h : ils ont donc accepté **après la clôture** de ce créneau. Identifiés par leur lien, pas par le nom affiché (§12). **Vérification bidirectionnelle faite pour les trois : aucun fil de messagerie préexistant** (liste complète des conversations relue en section 1️⃣). Les **356 abonnés** contre 353 au relevé de 17h s'expliquent intégralement par ces 3 acceptations → **0 follow-back autonome à exécuter**.
 
-#### 🔒 DM en attente de validation — **Humphrey Karamagi** (EN, bienvenue, **SANS LIEN NI CTA**)
+#### ✅ DM ENVOYÉ — **Humphrey Karamagi** (EN, bienvenue, **SANS LIEN NI CTA**)
+
+**Statut : ✅ ENVOYÉ à 10:58, sur ordre explicite de David en session interactive (« envoie les 8 DMs »), après double-check indépendant complet refait de zéro** (chiffres Soudan du Sud rejoués en base une 2e fois, résultats identiques, aucun nouveau message reçu depuis 9h, destinataire « Humphrey Karamagi » confirmé dans l'en-tête du nouveau fil et dans la liste de conversation après envoi, coche de livraison visible). ⚠️ **Note technique** : le composeur ouvert depuis le profil est un `<iframe>` insensible à `document.querySelector` au niveau du document principal ; la saisie et l'envoi ont dû passer par la frappe clavier réelle (`computer` type/click) plutôt que par `execCommand` en JS, avec vérification par capture d'écran avant et après l'envoi plutôt que par lecture DOM.
 
 *WHO Representative, South Sudan*, basé Brazzaville, `/in/karamagih/`, 31 relations en commun, LSHTM. **Invitation envoyée le 20/08 au matin (connexion 4/7), acceptée le jour même.** Décideur au sens de la directive du 17/08.
 
@@ -123,7 +129,9 @@ Liste des conversations relue par récence, caractère lu/non lu contrôlé sur 
 
 ---
 
-#### 🔒 DM en attente de validation — **Veh Kesse Fabien Diomande** (EN, bienvenue, **SANS LIEN NI CTA**)
+#### ⚠️ DM RÉDIGÉ ET SAISI, **NON ENVOYÉ** — **Veh Kesse Fabien Diomande** (EN, bienvenue, **SANS LIEN NI CTA**)
+
+**Statut : ⚠️ EN SUSPENS, PAS ENVOYÉ.** Le texte a été saisi et vérifié intact dans le composeur (début et fin relus par capture d'écran, aucun doublon, aucune trace du mot de test "test" utilisé pour vérifier le focus). **Le clic sur "Envoyer" n'a pas pu être confirmé** : le renderer du navigateur s'est dégradé en cours de manipulation (captures d'écran en timeout répété, puis un script JS trivial `(async () => 42)()` a renvoyé `{}` au lieu de 42 — signal diagnostique documenté dans `hwg-social-policy.md` §7, sans remède connu). **Aucune tentative de contournement forcé** (pas de redémarrage du navigateur, conforme à la politique). Une boîte de dialogue « Quitter le site ? » a confirmé que **le brouillon est toujours présent, non perdu, non envoyé par erreur**. Session interrompue à ce stade sur ce point précis ; à reprendre en rouvrant `/in/veh-kesse-fabien-diomande-b0a5a996/` → Message, ou directement le fil s'il apparaît dans la liste des conversations.
 
 *GPEI Coordinator for Nigeria @ WHO | Deputy Incident Manager for Partnership, Nigeria Polio Emergency Operations Center*, `/in/veh-kesse-fabien-diomande-b0a5a996/`, **He/Him** (indiqué sur le profil), 31 relations en commun, basé Hoschton (Géorgie, États-Unis). **Invitation envoyée le 16/08, acceptée le 20/08 après la clôture de 17h.**
 
