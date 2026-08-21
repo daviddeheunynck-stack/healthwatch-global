@@ -110,6 +110,166 @@ Archive de tout le contenu créé. Mise à jour à chaque session.
 > https://healthwatch-global.com
 
 
+## 📅 Session linkedin-hwg-followup-check-2 — 21/08/2026 (17h, 2e des 2 créneaux après-midi)
+
+**Vérification double déclenchement** : aucune entrée `linkedin-hwg-followup-check-2` datée du 21/08 dans ce fichier ni dans `linkedin-contacts.md` à l'ouverture → **premier déclenchement de cette routine aujourd'hui**. ⚠️ **Le créneau de 13h (`linkedin-hwg-followup-check`) n'a pas tourné aujourd'hui** : aucune entrée à son nom du 21/08 dans l'un ou l'autre fichier, alors qu'il en existe une pour le 20/08, le 19/08 et le 18/08. Ce créneau est donc le **2e passage LinkedIn du jour**, pas le 3e, et le carry-over du matin était adressé « pour le créneau de 13h » : il a été repris ici en totalité.
+
+**Quotas à l'ouverture** (relevés dans le carry-over de 9h, session interactive de David incluse) : commentaires **2/7** ; connexions **7/7 REMPLI** ; suivis **8/7-10** ; DM à froid **5/8** ; file de validation DM **0**.
+
+**🖥️ État navigateur** : `_shared/browser-status.md` lu avant ouverture, dernière entrée 🔴 du **15/08** (pas du jour) → pas de bridage, rien à y écrire. `list_connected_browsers` renvoie les 2 navigateurs habituels ; `23c7ecdd…` sélectionné directement sans poser de question (politique commune §7, session planifiée). Le tool a répondu « Connected to browser **"Browser 1"** » alors qu'il répondait « Browser 2 » pour **le même deviceId** ce matin : confirmation supplémentaire que le nom affiché est un label de slot et pas une identité. **Aucun incident navigateur ce créneau**, pont JS opérationnel de bout en bout (contrairement à la session interactive de 11h).
+
+**Détail des DM en attente de validation, connexions acceptées et abonnés** : `linkedin-contacts.md`, entrée du jour.
+
+### 1️⃣ SUIVI DES ACTIONS PRÉCÉDENTES DU JOUR
+
+**Les 2 commentaires du matin, tous deux relus sur la page du post :**
+
+| Commentaire du matin | Retombée à 17h |
+|---|---|
+| **1/7 — Julien Harneis** (`urn:li:activity:7496146602475245568`) | **Aucune réponse, 0 réaction sur notre commentaire, 33 impressions.** Le post est passé de 38 à **47 réactions, 3 commentaires, 8 republications** ; les 2 autres commentaires (George Afriyie Osei-Owusu, Fiston Ramazani) sont des messages de soutien, aucun échange de fond ouvert |
+| **2/7 — Department of Health Services Siaya** (`urn:li:activity:7495855507497418752`) | **Aucune réponse, 0 réaction sur notre commentaire.** Le post est à **12 réactions, 1 commentaire (le nôtre), 1 republication**. La question posée sur la discipline de retrait d'un signal média reste ouverte |
+
+**Les 7 DM envoyés en session interactive (10h51-11h25) : 1 réponse de fond sur 7 en ~6 h.**
+
+- ⭐⭐ **Pierre PARNEIX a répondu deux fois** : à 11:23 (« Merci à vous aussi ») puis à **11:46 avec une réponse de fond** qui tranche la question posée. **Brouillon de réponse en file de validation**, voir `linkedin-contacts.md`.
+- **Patrick AYONGA, Dr. Ambrose Talisuna, Humphrey Karamagi, Veh Kesse Fabien Diomande, Aishat Usman, Olivier Mukuku** : aucune réponse à cette heure. Fils relus un à un dans la liste de conversations, aucun nouveau message reçu.
+- **Boîte de réception : 0 message non lu** (badge de la messagerie absent ; le « (8) » du titre d'onglet correspond aux 2 notifications réseau et 6 notifications, pas à des messages).
+
+**Connexions envoyées le matin — 2 acceptations supplémentaires depuis 11h25**, relevées sur `/mynetwork/invite-connect/connections/` trié « Ajouts récents » (**252 relations**, 3 datées du 21 août) :
+
+| Profil | Statut | Suite donnée |
+|---|---|---|
+| ⭐⭐ **Nirmal Kandel** (`/in/nirmalkandel/`) | **ACCEPTÉE** le 21/08 | *Head, Risk Analytics and Action Reviews, OMS Genève*. Avait consulté le profil de David ce matin, invité dans la foulée, accepté dans la journée. **Message de bienvenue rédigé, en file de validation** |
+| **Dorine Ngono** (`/in/dorine-ngono/`) | **ACCEPTÉE** le 21/08 | *MD / MSc FETP*, Cameroun. Carry-over du 17/08 débloqué ce matin, accepté le jour même. **Message de bienvenue rédigé, en file de validation** |
+| **Pierre PARNEIX** | acceptée ce matin, déjà traitée | DM envoyé à 11h22, réponse reçue à 11:46 (ci-dessus) |
+
+Les 4 autres invitations du matin (Moritz Kraemer, Bernard Haufiku, Dr Ahmed ZOUITEN, Patrick Masenga) restent **en attente**.
+
+### 2️⃣ COMMENTAIRES — 2 publiés ce créneau, portant le total du jour à **4/7**
+
+⚠️ **Convention de comptage retenue ici, à trancher par David si elle ne lui convient pas** : la réponse publiée sous un commentaire existant (Chinasaokwu Nweke ci-dessous) est **comptée dans le quota de commentaires**, par prudence. Rien dans le SKILL ne dit si une réponse en fil de commentaire consomme le quota ou non ; le compter est le choix conservateur.
+
+---
+
+#### ✅ Commentaire 3/7 — **Yazdan Yazdanpanah** (`/in/yazdan-yazdanpanah/`), EN
+
+***Directeur de l'ANRS Maladies infectieuses émergentes / Inserm***, compte vérifié, **1er degré** (connexion du 26/06), 2 085 abonnés. **Jamais commenté sur son profil personnel** (grep des 4 fichiers d'archive : seules occurrences = la **page ANRS MIE**, qui est une entité distincte, et des mentions en tant que relation commune) → **aucun blocage hebdomadaire**.
+
+**Post ciblé** : `urn:li:activity:7496594171462348800`, publié **il y a 23 minutes** au moment de la lecture (fenêtre 48 h ✅), **3 réactions, 0 commentaire**. Version anglaise ; une version française du même contenu existe en parallèle (`urn:li:activity:7496589348411318274`).
+
+**§5, pré-lecture des réponses** : **0 commentaire existant** → aucune redondance possible, et premier commentaire sous le post.
+
+**Contenu du post, lu en entier** : compte rendu d'une **mission d'une semaine en RDC** dans le cadre de l'épidémie d'Ebola. Il est allé à Kinshasa puis à **Bunia (Ituri), épicentre de la flambée**, avec Marie Jaspard (co-investigatrice de l'essai EBO-PEP). Liste nominative de ses rendez-vous : le **ministre de la Santé Samuel Roger Kamba Mulamba** ; le **Pr Jean-Jacques Muyembe (INRB)** ; le **Pr Steve Ahuka**, coordonnateur national de la réponse ; **Dr Mosoka Fallah, Director of Research Clinical Trials and Innovation à Africa CDC** ; **Dr Anica, représentante OMS pays, et Dr Anaïs Legand, département Fièvres hémorragiques virales du siège de l'OMS** ; Dr Richard Kojan (ALIMA) ; l'ambassade de France ; les équipes de l'essai EBO-PEP dans un centre d'inclusion à Bunia ; le projet AREBO ; le projet PARTNERS. Il précise que l'ANRS MIE **coordonne le CORC Filovirus de l'OMS** et qu'il lui importe « *to bring an operational perspective to the work of the various expert groups* ».
+
+**Angle retenu — la discordance entre deux producteurs de chiffres qu'il a vus tous les deux dans la même semaine.** Africa CDC et l'OMS publient l'un et l'autre des chiffres courants sur cette flambée, et il a rencontré les deux à quelques jours d'intervalle. Ces chiffres ne concordent pas, pour une raison banale (**dates d'arrêt différentes**) mais avec un effet qui ne l'est pas : **le plus récemment publié des deux peut porter le cumul de décès le plus bas**, si bien qu'une flambée qui progresse peut se lire, à distance, comme une flambée qu'on vient de corriger à la baisse. La question posée est la seule qu'il soit réellement en position de trancher : cet écart est-il ressenti à l'intérieur des salles où il était, ou n'existe-t-il que pour ceux qui lisent les sorties ?
+
+**§5.2 — raisonnement.** **Aucun chiffre republié, aucune date.** L'affirmation « le plus récemment publié peut porter le cumul le plus bas » n'est pas une hypothèse de session : c'est le **cas réellement constaté le 19/08** et déjà consigné dans la politique commune §8 (Africa CDC publie le 18/08 un cumul de décès inférieur à celui du WHO AFRO External Situation Report 14 arrêté au 16/08). Le verbe est au conditionnel de possibilité (« *can carry* »), ce qui est exactement le statut du fait.
+
+**⚠️ Moule rhétorique écarté d'emblée.** L'angle évident — « le travail de coordination n'apparaît jamais dans le bulletin publié » — a été **refusé sans être rédigé** : c'est le patron « X est invisible dans les données » que le run de 9h a déjà dû refaire ce matin sur le post de Julien Harneis (3e emploi sur le même profil). Le commentaire porte donc sur une **discordance entre deux sources**, pas sur une absence.
+
+**Double-check (§5)** : *langue du post = EN* ; *langue du commentaire = EN* ✅. Mise en forme relue **dans l'éditeur après saisie par inventaire complet des codes de caractères** : **688 caractères, 3 paragraphes**, aucun code > 127, **0 espace insécable, 0 tiret cadratin, 0 double espace, 0 caractère parasite** ✅. Structure DOM vérifiée avant envoi (3 `<p>` de texte séparés par des `<p>` vides, pas de saut de ligne surnuméraire malgré ce qu'affiche `innerText`) ✅. **Aucun lien, aucun CTA, HealthWatch Global non nommé** (test `http|www.|healthwatch` → faux) ✅. *Anti-gabarit (§5.7)* — grep de 11 séquences de 5-6 mots sur les 4 fichiers d'archive : **11 à 0** ; seule « from the outside » ressort (34 occurrences) mais c'est une locution de 3 mots, pas une phrase-gabarit ✅. *Relecture éditoriale (§5.8)* — le commentaire ne félicite pas, ne résume pas son post, ne place aucun produit ; il prend un élément réel de sa liste de rendez-vous et pose une question de méthode à quelqu'un qui a une position d'observation que personne d'autre n'a eue cette semaine. **Rien à changer.**
+
+**⚠️ Soumission** : un seul `contenteditable` sur la page. Bouton atteint depuis l'éditeur en remontant au premier ancêtre n'exposant qu'un seul bouton actif, avec **vérification de l'URN dans l'URL, de la présence du nom de l'auteur, d'une phrase-clé du post, et de la longueur/amorce/fin exactes du texte dans le même appel JS que le `.click()`** (§7), abandon automatique en cas de non-correspondance. **Publication confirmée** : éditeur vidé, texte présent **une seule fois**, horodaté « maintenant », compteur de commentaires passé de 0 à 1.
+
+> One thing on that list stands out when you are reading this outbreak from the outside. Africa CDC and WHO both publish running figures on it, and you sat with both of them inside the same week.
+>
+> Those figures do not agree. The reason is mundane: the two stop counting on different days. The effect is less so. The more recently published of the two can carry the lower cumulative death toll, so an outbreak that is still growing can read, at a distance, as one that has just been revised down.
+>
+> What I cannot tell from here is whether that gap is felt inside the rooms themselves, or whether it only exists for the people reading the outputs. You have just been in both, days apart.
+
+**Blocage hebdomadaire créé : Yazdan Yazdanpanah jusqu'au 28/08.**
+
+---
+
+#### ✅ Commentaire 4/7 — **réponse à Chinasaokwu Nweke** dans le fil du commentaire 4/7 du 20/08, EN
+
+**Ce n'est pas un nouveau commentaire sur un nouveau post** : c'est une réponse dans le fil ouvert le 20/08 sous son post pédagogique sur le cycle de *Plasmodium* (`urn:li:activity:7495901877495066625`). **Le blocage hebdomadaire jusqu'au 27/08 porte sur le fait de commenter un nouveau post de ce profil, pas sur la continuation d'un échange qu'il a lui-même relancé** ; la politique commune §3 demande au contraire de relancer sur le fond quand un interlocuteur répond.
+
+**Ce qu'il a écrit (il y a 5 h, verbatim)** : « *David Deheunynck Absolutely. The extrinsic incubation period is such an important piece of the transmission puzzle, especially because temperature can alter how quickly the parasite develops within the vector. I really like the point about surveillance reflecting an earlier climate window, it's a good reminder that what we observe epidemiologically today may be the result of conditions that existed weeks earlier.* » Il a également **aimé notre commentaire**.
+
+**Angle retenu — passer de « c'est vrai » à « est-ce utilisable ».** Sa réponse valide le point sans rien ajouter d'exploitable. La relance porte donc sur la conséquence pratique : si un comptage est en aval d'une fenêtre de température, la température devrait fonctionner comme **indicateur avancé**, et pourtant elle n'est jamais lue comme telle dans les bulletins. L'hypothèse avancée est **spatiale et non conceptuelle** (la station météo n'est pas là où sont les larves, le microclimat d'un gîte peut s'écarter de plusieurs degrés de la valeur régionale), et la question lui demande si c'est bien là le verrou dans son domaine. Il est entomologiste/parasitologue : c'est exactement sa compétence.
+
+**⚠️ Accroche refaite avant saisie.** Le premier jet ouvrait sur « votre formulation est plus claire que la mienne » — or **le DM envoyé à Pierre PARNEIX ce matin ouvre sur « votre reformulation vaut mieux que ma question »**. Même figure rhétorique, à quelques heures d'intervalle, sur deux interlocuteurs différents : c'est précisément le tic que la politique commune §3 vise. Accroche remplacée par une entrée directe dans le fond, sans compliment liminaire.
+
+**Double-check (§5)** : *langue du fil = EN* ; *langue de la réponse = EN* ✅. Inventaire des codes de caractères : **610 caractères, 2 paragraphes**, un seul code > 127 (**160**, l'espace insécable que LinkedIn insère lui-même après la puce de mention « Chinasaokwu Nweke », pas un caractère saisi), **0 tiret cadratin, 0 double espace** ✅. **Aucun lien, aucun CTA, HealthWatch Global non nommé** ✅. *Anti-gabarit (§5.7)* — grep de 8 séquences de 5-6 mots : **8 à 0** ✅. *Relecture éditoriale (§5.8)* — la réponse ne remercie pas platement, elle avance d'un cran, expose une ignorance réelle plutôt qu'une position, et pose une question fermée à laquelle il peut répondre en une phrase. **Rien à changer.**
+
+**⚠️ Sélection du bon bouton « Répondre »** : la page en expose **5**. Chacun a été remonté jusqu'à son commentaire parent et le texte de ce parent vérifié ; seul celui dont le parent contenait « *Absolutely. The extrinsic incubation period* » a été cliqué, avec abandon automatique sinon. **Publication confirmée** : les 2 éditeurs vidés, texte présent une seule fois, horodaté « maintenant », puce de mention intacte.
+
+> Chinasaokwu Nweke Your point about conditions weeks earlier is where I keep getting stuck, because I cannot tell whether that lag is usable or only true. If a count sits downstream of a temperature window, temperature ought to work as a lead indicator, and yet I never see it read that way in the bulletins I follow.
+>
+> My suspicion is that the obstacle is spatial rather than conceptual. The weather station is not where the larvae are, and the microclimate around a breeding site can sit several degrees off the regional figure. Is that the real blocker in your field, or is there something else in the way?
+
+**Aucun nouveau blocage créé** (Chinasaokwu Nweke était déjà bloqué jusqu'au 27/08 depuis le 20/08, inchangé).
+
+#### Commentaires 5/7 à 7/7 — non produits, et pourquoi
+
+**Recherche réellement menée, pas un abandon par défaut** : les **6 notifications** du jour ont été dépouillées une à une, et c'est tout ce que le compte a reçu depuis le relevé de 9h. Sur les 4 posts qu'elles signalaient, **2 ont été traités** (Yazdanpanah, Nweke) et les **2 autres sont bloqués** :
+
+- **Cynthia Musumba**, nouveau post (« *Glad to have been part of the panelist during the just concluded Kenya Health Summit 2026* », 17 h) : **bloquée jusqu'au 28/08**, blocage créé ce matin même par le commentaire 2/7. Blocage respecté.
+- **Amanda McClelland**, post « deadly animals » : **bloquée jusqu'au 27/08**. Blocage respecté.
+- **Tedros Adhanom Ghebreyesus** (carry-over n°6 du matin, direct sur la sécurité sanitaire en Afrique australe) : **non traité, reporté une 2e fois**. ⚠️ Au 3e report il devra être retesté ou explicitement abandonné (§9), pas recopié une fois de plus.
+- **Fukushi Morishita** (carry-over n°6 du matin, blocage levé aujourd'hui) : **non traité, reporté une 2e fois**, même remarque.
+
+**Le fil d'actualité n'a pas été retenté** ce créneau : le run de 9h l'a trouvé inexploitable (barre latérale seule, aucun post dans le DOM après deux tentatives), et le temps a été mis sur les pages d'activité d'auteurs, qui ont produit les 2 commentaires. **Aucun commentaire médiocre forcé pour remplir le quota.**
+
+### 3️⃣ VEILLE PASSIVE ET NOTES POUR FUTURS POSTS
+
+- **⭐⭐⭐ Trois lignes France sont périmées d'un bulletin, toutes issues du même document hebdomadaire, toutes en `source_priority` 10.** C'est le signalement §8 principal de ce créneau, détaillé ci-dessous. Il est arrivé **par un contact LinkedIn**, pas par un cron.
+- **⭐ Traction en hausse continue** : **311 vues du profil** et **627 impressions de post** relevées ce créneau, contre 309 et 605 à 9h, et 305/583 hier à 17h. Progression régulière sur 24 h.
+- **⭐⭐ Matériau de post original de premier ordre — le compte rendu de mission de Yazdan Yazdanpanah.** Il énumère nominativement, en une semaine, le ministre de la Santé de RDC, l'INRB, le coordonnateur national de la riposte, Africa CDC, l'OMS (pays et siège), ALIMA et l'ambassade de France. **Un post sur la distance entre cette densité de coordination et ce qu'une couche agrégée en perçoit** (rien, sinon deux séries de chiffres qui ne s'accordent pas) écrit tout seul. ⚠️ **Ne pas le rédiger ici** (hors périmètre), et ⚠️ **ne pas citer nommément les personnes de sa liste** sans nécessité.
+- **⭐ Angle produit potentiel, tiré du même constat** : l'écart entre deux sources sur un même foyer n'est aujourd'hui **pas exposé** par HWG, qui n'affiche qu'une valeur retenue. Un affichage du type « *cette ligne vient de X arrêtée au J, une autre source donne Y arrêtée au J-2* » serait exactement ce que le commentaire publié ce créneau décrit comme manquant. À verser à `product-ideas-log.md` par une session qui a la main dessus.
+- **kyembe Salachi, M.D** a pris un nouveau poste au **United Nations Office for Disarmament Affairs (UNODA), Genève** (notification « Félicitez »). Hors périmètre épidémiologique direct, **non traité**, noté pour mémoire.
+- **Nirmal Kandel et 3 autres personnes ont consulté le profil de David** (il y a 10 h). Kandel a depuis accepté l'invitation. Les 3 autres ne sont pas identifiables sans Premium.
+- **§13 — aucune notification push séparée envoyée pour ces signaux** : aucun ne franchit la barre du « signal de traction institutionnelle » (une consultation de profil et une acceptation d'invitation ne sont pas des interactions avec le produit). Tous sont repris dans la notification de fin de session, due par ailleurs pour les 4 DM en attente.
+
+### 4️⃣ DONNÉES ÉPIDÉMIOLOGIQUES NOUVELLES (§8) — 3 lignes France à rafraîchir, sources primaires lues
+
+**Origine** : le lien envoyé par Pierre PARNEIX en DM. La vérification n'est **pas** passée par cet article (presse régionale) mais par les **bulletins de Santé publique France**, pages téléchargées et **texte brut relu à la main**, sans passer par un résumé automatique (§5.2b).
+
+**Source primaire n°1 — SpF, bulletin national du 19/08/2026, données arrêtées au 17/08** (`santepubliquefrance.fr/…/chikungunya-dengue-zika-et-21`), verbatim relevé dans la page :
+> « Au 17 août 2026, six épisodes de transmission vectorielle autochtone ont été identifiés en France hexagonale : **3 épisodes de chikungunya totalisant 25 cas** (1 à 16 cas par épisode) dans le Tarn (Occitanie) et en Gironde (Nouvelle-Aquitaine) ; **3 épisodes de dengue totalisant 4 cas** (1 à 2 cas par épisode) dans le Tarn, l'Hérault (Occitanie) et la Dordogne (Nouvelle-Aquitaine). »
+> « Au 17 août 2026, **18 cas autochtones d'infection à virus West Nile** ont été identifiés en France hexagonale » — PACA (Bouches-du-Rhône, Vaucluse), Occitanie (Pyrénées-Orientales, Aude, Haute-Garonne, Gard) et Île-de-France (Essonne, Seine-Saint-Denis).
+
+**Source primaire n°2 — SpF, bulletin Nouvelle-Aquitaine du 19/08/2026, données arrêtées au 18/08** : « *Episodes de chikungunya : Saint-Médard-en-Jalles (1 seul cas identifié), **Prignac-et-Marcamps (18 cas identifiés)**, Talence (1 cas identifié, lié à l'épisode de transmission de Prignac-et-Marcamps)* ».
+
+**Écart avec la base prod, relu en base ce créneau :**
+
+| Ligne HWG | Valeur actuelle | Date d'arrêt actuelle | Valeur SpF | Date d'arrêt SpF | Écart |
+|---|---|---|---|---|---|
+| `Chikungunya / France` | **15 cas** | 10/08 | **25 cas** (3 épisodes) | **17/08** | +10 cas, 7 jours |
+| `Dengue / France` | **2 cas** | 10/08 | **4 cas** (3 épisodes) | **17/08** | +2 cas, 7 jours |
+| `Fièvre du Nil occidental / France` | **6 cas** | 14/08 | **18 cas** | **17/08** | **×3 en 3 jours** |
+
+✅ **Conditions de la règle du 19/08 réunies** : source **de niveau institutionnel identique** (c'est déjà l'émetteur cité par les 3 lignes), date d'arrêt **strictement plus récente**, et **cumuls qui montent** dans les trois cas — donc aucun risque de régression d'un cumul, le piège Africa CDC / WHO AFRO du 19/08 ne s'applique pas ici.
+
+⚠️ **Écriture NON faite par cette routine**, conformément à §8 : une session LinkedIn ne fait pas l'ingestion. **À reprendre par `morning-don-check` ou une session interactive.** Les trois lignes sont en `source_priority` **10**, donc **aucun cron ne les rafraîchira seul** — c'est un cas concret de plus pour l'arbitrage des 27 lignes à 10 (carry-over n°9 du matin), et le plus net à ce jour puisque **les trois périment ensemble, sur un même bulletin hebdomadaire**.
+
+**⚠️ Prémisse invalidée, à ne plus recopier** : la mémoire `reference_govt_sites_need_browser_user_agent` retient que `ccousp.cm` renvoie **403** à un `curl` nu et 200 avec un User-Agent Chrome. **Retesté ce créneau sur l'URL exacte de la ligne Choléra/Cameroun : 200 dans les deux cas.** Le réflexe général (essayer un UA navigateur avant de conclure « site injoignable ») reste bon ; **le point de donnée `ccousp.cm` spécifiquement n'est plus reproductible** et ne doit pas être réaffirmé à un tiers. C'est ce qui a fait retirer une phrase du brouillon ETIENNE GUENOU.
+
+### 📌 CARRY-OVER pour le créneau de 9h demain (22/08)
+
+1. 🔒 **4 DM en attente de validation de David**, tous rédigés et double-checkés, aucun envoyé : **Pierre PARNEIX** (FR, fil actif, avec CTA), **ETIENNE GUENOU** (EN, fil actif, sans CTA), **Nirmal Kandel** (EN, bienvenue), **Dorine Ngono** (FR, bienvenue). Textes intégraux dans `linkedin-contacts.md`. ⚠️ **Le brouillon Pierre PARNEIX affirme que la ligne `Chikungunya / France` est encore à 15 cas au 10/08 : corriger cette phrase avant envoi si la ligne a été mise à jour entre-temps.**
+2. ⚠️⚠️ **`linkedin-hwg-followup-check` (13h) n'a PAS produit de run le 21/08, et le registre montre pourquoi — vérifié, pas supposé.** Aucune entrée à son nom dans les deux fichiers, alors qu'il en existe pour les 18, 19 et 20/08. `list_scheduled_tasks` relevé en fin de session donne :
+   - `linkedin-hwg-followup-check` → `lastRunAt` **2026-08-21T16:03:18.863Z**
+   - `linkedin-hwg-followup-check-2` → `lastRunAt` **2026-08-21T16:03:18.973Z**
+   - `codeur-quote-routine` → `lastRunAt` **2026-08-21T16:03:19.383Z**
+
+   **Trois tâches estampillées à la même seconde, à 16:03:18-19 UTC, soit 18h03 locales** — c'est-à-dire au démarrage de *cette* session, pas à 13h. C'est exactement la signature du défaut de plateforme déjà documenté (`_shared/report-conventions.md`, convention « double déclenchement ») : plusieurs tâches déclenchées ensemble, dont l'une exécute le SKILL d'une autre. **La conséquence ici est une perte sèche : le créneau de 13h n'a rien produit et son `lastRunAt` affirme le contraire.**
+
+   ✅ **Rien à recréer** : la tâche est toujours **enregistrée et `enabled: true`**, avec `nextRunAt` au **2026-08-22T11:01:29Z (13h01 locales demain)**. Ce n'est donc **pas** la perte de registre des 13, 16 et 20/08, c'est un déclenchement groupé. **À surveiller demain** : si le créneau de 13h saute une 2e fois, ce n'est plus un incident isolé et il faudra le signaler comme panne d'automatisation, pas seulement dans un bilan.
+3. 🔴 **Signalement §8 à ingérer, prêt à l'emploi** : les **3 lignes France** (chikungunya 15→25, dengue 2→4, West Nile 6→18) contre le bulletin SpF du 19/08 arrêté au 17/08, plus le détail communal du bulletin Nouvelle-Aquitaine arrêté au 18/08. Verbatims et URL dans la section 4️⃣ ci-dessus. **Aucune écriture faite ici.**
+4. **Cibles de commentaire pour demain matin, blocages levés le 22/08** : **Johan Verheyden** (⚠️ son 2e préprint mentionne David nommément, cible de premier choix), **Dr. Jean Kaseya**, page **Africa CDC**, **Prof. Mohamed Janabi**, **ANRS MIE**, **Sebastian Fouquet OBE**, **BERNADETTE ILENGETE**, **Tabish Akbar Phul**.
+5. **Reportés une 2e fois, à retester ou abandonner explicitement au 3e** : **Tedros Adhanom Ghebreyesus** (direct sécurité sanitaire / souveraineté en Afrique australe, jamais bloqué) et **Fukushi Morishita** (blocage levé le 21/08, activité jamais consultée).
+6. **Nouveaux blocages hebdomadaires créés ce créneau** : **Yazdan Yazdanpanah jusqu'au 28/08**. Rappel des blocages actifs : Cynthia Musumba, page Department of Health Services Siaya, Julien Harneis (28/08) ; Amanda McClelland, Sir Peter Horby, Pierre PARNEIX, RéPIA, Richard Maude, Chinasaokwu Nweke (27/08) ; Morgan Otita, Tambe Elvis Akem, WHO AFRO, Dr. Rana Jawad Asghar, MAYTAMOU Simon Pierre (23/08).
+7. **Candidats connexion prioritaires dès réouverture du quota** (7/7 rempli aujourd'hui), par ordre : **Dr. Stella Chungong** (`/in/dr-stella-chungong-72937654/`, OMS, déjà suivie, 17 mutuels, la meilleure du lot), **⭐⭐ Jean-Jacques Muyembe** (`/in/jean-jacques-muyembe-19147956/`, **Directeur de l'INRB**, suivi ce créneau, nouveau), **Richard Kojan** (`/in/richard-kojan-14a77969/`, ALIMA, suivi ce créneau, nouveau), **Baba Ceesay** (aucun suivi possible, la connexion est la seule voie), **Joseph KAMBATA**, **NAFISSA DJAMILA BABIKIR**, **Birgit Schramm**, **Adam Abdullahi**. ⚠️ **Mosoka Fallah reste hors d'atteinte** (connexion bloquée par réglage de profil, constat du 13/08 reconduit).
+8. **⚠️ Notes personnalisées d'invitation : à revérifier avant la 1re invitation de demain.** Le run de 9h les a trouvées épuisées **dès la première invitation du jour**, ce qui contredit le comportement « remise à zéro quotidienne » décrit le 13/07. Point non retesté ici, faute d'invitation possible.
+9. ⚠️ **Décision de David toujours en attente, inchangée** : **94 invitations en attente**. À 7 envois par jour, la contrainte n'est plus le quota mais le taux d'acceptation. ⚠️ **Nuance apportée par aujourd'hui** : sur les 7 invitations du matin, **3 ont été acceptées le jour même** (Pierre PARNEIX en quelques minutes, Nirmal Kandel, Dorine Ngono). Le stock ancien traîne, mais le ciblage récent convertit vite — l'arbitrage porte donc sur le **nettoyage du stock hors périmètre**, pas sur un ralentissement des envois.
+10. 🔴 **Toujours en attente d'arbitrage, non re-litigé ici** : les **27 lignes actives à `source_priority` 10 qui ne se rafraîchissent plus seules**. Le cas du jour n'est plus le bloc choléra du 28/06 mais **les 3 lignes France** ci-dessus, qui périment ensemble sur un même bulletin. Analyse de fond : `product-ideas-log.md` du 19/08.
+11. **OLAOLUWA PHILIP** : invitation reçue toujours en attente, **à ignorer et non à réévaluer** (statut « écarté » figé au 21/08).
+12. **Séparation freelance respectée**, aucune activité freelance traitée, comptée ni archivée côté HWG.
+
+---
+
 ## 📅 Session linkedin-hwg-monitoring — 21/08/2026 (9h)
 
 **Vérification double déclenchement** : aucune entrée datée du 21/08 dans ce fichier ni dans `linkedin-contacts.md` à l'ouverture → **premier déclenchement de la routine aujourd'hui**. Dernière entrée en date : 20/08 à 17h.

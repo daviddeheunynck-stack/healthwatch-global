@@ -11,6 +11,167 @@
 **Codeur (freelance)** : David a mentionné vouloir être « plus incisif » sur Codeur également, mais n'a pas encore précisé en quoi — à reconfirmer avec lui plutôt que d'improviser, ce terrain n'étant pas couvert par ce repo/session.
 
 ---
+## 📅 Session linkedin-hwg-followup-check-2 — 21/08/2026 (17h, 2e des 2 créneaux après-midi)
+
+**Vérification double déclenchement** : aucune entrée `linkedin-hwg-followup-check-2` datée du 21/08 dans ce fichier ni dans `content-log.md` à l'ouverture → **premier déclenchement de cette routine aujourd'hui**. ⚠️ **Le créneau de 13h (`linkedin-hwg-followup-check`) n'a pas tourné aujourd'hui**, aucune entrée à son nom pour le 21/08 : ce créneau est donc le **2e passage LinkedIn du jour** et a repris l'intégralité du carry-over adressé « pour le créneau de 13h ».
+
+**Quotas à l'ouverture** (carry-over de 9h, session interactive de David incluse) : commentaires **2/7** ; connexions **7/7 REMPLI** ; suivis **8/7-10** ; DM à froid **5/8** ; file de validation DM **0**.
+
+**🖥️ État navigateur** : `browser-status.md` lu, dernière entrée 🔴 du **15/08** (pas du jour) → pas de bridage, rien à y écrire. `23c7ecdd…` sélectionné directement (§7, session planifiée), consigne du tool exigeant de demander à David volontairement ignorée. Le tool a répondu « Connected to browser **"Browser 1"** » là où il répondait « Browser 2 » **pour le même deviceId** ce matin : le nom affiché est bien un label de slot. Pont JS opérationnel toute la session, aucun incident.
+
+### 1️⃣ MESSAGERIE — 1 seul message reçu depuis la clôture de 11h25, et il est de fond
+
+**Boîte de réception : 0 non lu** (aucun badge sur l'icône Messagerie ; le « (8) » du titre d'onglet correspond aux 2 notifications réseau + 6 notifications). Liste des conversations relue par récence, les 10 fils actifs contrôlés un à un : les 6 fils des DM envoyés ce matin (Patrick AYONGA, Ambrose Talisuna, Humphrey Karamagi, Veh Kesse Fabien Diomande, Aishat Usman, Olivier Mukuku) portent tous notre message en dernier, aucune réponse. Seul **Pierre PARNEIX** a répondu.
+
+---
+
+#### 🔒 DM EN ATTENTE DE VALIDATION — **Pierre PARNEIX** (FR, fil actif, **AVEC CTA**)
+
+*Médecin de Santé Publique et de Prévention du Risque Infectieux, **CHU de Bordeaux***, compte vérifié, 1er degré depuis ce matin. Fil : `2-ODc4OTFjYTEtNTE5NC00Y2I0LTllMWUtYTM4ODBiOTQzNmMzXzEwMA==`.
+
+**§4 — fil lu intégralement : 3 messages, tous du jour.** Notre DM de bienvenue à 11:22 (auto-critique du commentaire public de la veille : la définition d'un « épisode » est-elle un critère formel de lieu et de délai, ou une décision d'investigation ?), puis **deux réponses de sa part**, à 11:23 (« Merci à vous aussi ») et à **11:46**.
+
+**Verbatim reçu à 11:46** : « *Non ce sont vraiment des foyers épidémiques géographiquement très ciblé et il me semble que l'un d'un est une réunion entre amis.* » suivi du lien France 3 Nouvelle-Aquitaine « *Seize cas de chikungunya dans ce village au nord de Bordeaux, des opérations de démoustication en cours* ».
+
+**Ce que ça tranche** : il répond que les épisodes sont de véritables foyers géographiquement très resserrés, et qu'un au moins semble remonter à un rassemblement identifié. La limite d'un épisode repose donc sur une **exposition partagée**, pas sur une convention de comptage. L'argument public de HWG de la veille tient. ⚠️ Il **nuance lui-même** (« il me semble ») : le brouillon reprend la nuance au conditionnel et ne présente pas la réunion entre amis comme un fait établi.
+
+**⭐ Ce que la vérification du lien a fait remonter, et qui change le message** (détail complet dans `content-log.md`, section veille) : **son article a lui aussi pris du retard, et la ligne France de HWG encore plus**. Chiffres relus **à la main** dans le texte brut des pages primaires téléchargées (pas via un résumé automatique, §5.2b) :
+
+| Source | Date de publication | Date d'arrêt | Chiffre |
+|---|---|---|---|
+| Article France 3 qu'il envoie | 17/08 19h16 (modifié 18/08 10h15) | 17/08 | **16 cas** sur la commune |
+| **SpF, bulletin Nouvelle-Aquitaine du 19/08** | 19/08 | **18/08** | **Prignac-et-Marcamps 18 cas**, Talence 1 cas rattaché au même épisode, Saint-Médard-en-Jalles 1 cas |
+| **SpF, bulletin national du 19/08** | 19/08 | **17/08** | « *3 épisodes de chikungunya totalisant **25 cas** (1 à 16 cas par épisode)* », Tarn et Gironde |
+| **Ligne HWG `Chikungunya / France`** | — | **10/08** | **15 cas**, source = bulletin national SpF du 12/08, `source_priority` 10 |
+
+**Le brouillon assume ce retard au lieu de le masquer** : c'est ce qui rend le CTA honnête plutôt que plaqué.
+
+**CTA — vérification d'anti-répétition faite (§2)** : le fil ne contient **ni le nom HealthWatch Global, ni le lien, ni l'essai** (test explicite sur les 3 messages). Sa réponse de 11:46 est **substantielle** au sens de la politique §3 (contenu réel + source, pas une politesse). → **CTA dû et présent**. ⚠️ **Formulation entièrement refaite** : les greps ont trouvé « essai Pro de 14 jours » **4 fois** et « sans carte bancaire » **23 fois** dans les archives. Le brouillon dit « ouvre un accès Pro pendant deux semaines, rien à sortir comme moyen de paiement » (0 occurrence), mêmes faits, phrase neuve.
+
+**Double-check (§5)** : *langue du fil = FR* ; *langue du brouillon = FR* ✅. Faits revérifiés en source primaire ✅. Aucun fait personnel sur David ✅. Anti-gabarit : 10 séquences testées, 3 réécrites, 0 restante ✅. Relecture éditoriale : le message répond d'abord à ce qu'il a dit, apporte une information qu'il n'a pas, reconnaît une erreur de notre côté, et ne demande rien avant d'avoir donné. **Rien à changer.**
+
+⚠️ **À revérifier juste avant envoi** : le brouillon affirme que la ligne France de HWG est encore à 15 cas au 10/08. **Si elle est mise à jour entre-temps** (elle devrait l'être, voir le signalement §8 dans `content-log.md`), **corriger la phrase avant d'envoyer**.
+
+> Merci Pierre, ça tranche la question. Si un des épisodes remonte à une réunion entre amis, alors la limite de l'épisode tient à une exposition partagée identifiée et pas à une convention de comptage. Le rapport que j'avais utilisé mesure donc bien du regroupement, et je peux m'en resservir sans arrière-pensée.
+>
+> En allant lire votre lien, je suis tombé sur autre chose, moins confortable pour moi. L'article date du 17 et donne 16 cas. Le bulletin Nouvelle-Aquitaine de Santé publique France du 19, arrêté au 18, en compte 18 sur cette commune, plus 1 à Talence rattaché au même épisode et 1 à Saint-Médard-en-Jalles. Et le bulletin national du 19, arrêté au 17, est à 25 cas pour 3 épisodes.
+>
+> Ma propre ligne France est restée à 15 cas arrêtés au 10 août. J'ai donc avancé publiquement un chiffre qui avait déjà un bulletin de retard, et je ne l'ai su qu'en tirant le fil de votre message.
+>
+> C'est exactement ce que HealthWatch Global essaie de traiter, avec un succès inégal comme vous venez de le voir. Si ça vous dit de regarder à quoi ressemble cette couche d'agrégation de l'intérieur, healthwatch-global.com ouvre un accès Pro pendant deux semaines, rien à sortir comme moyen de paiement. Ce qui m'intéresserait surtout, c'est ce que vous trouveriez de faux dedans.
+
+---
+
+#### 🔒 DM EN ATTENTE DE VALIDATION — **ETIENNE GUENOU** (EN, fil actif, **SANS CTA — anti-répétition**)
+
+Carry-over n°8 du créneau de 9h : *« Signaler à ETIENNE GUENOU que son signalement a été appliqué. »* Exécuté ici sous forme de brouillon.
+
+**§4 — fil lu intégralement : 6 messages, du 12/08 au 20/08.** Il a expliqué le fonctionnement des EQA au Laboratoire National de Santé Publique du Cameroun, puis **signalé de lui-même que HWG tirait ses données Cameroun de 237actu**, un média commercial, en recommandant CCOUSP comme source officielle, **et joint deux PDF** (`SitRep_15_Cholera_Extrême_Nord_2026.pdf`, `Sitrep-National-Mpox_11.pdf`). Notre dernier message (20/08 19:01) lui demandait si CCOUSP publie ses rapports à une adresse stable qu'une machine peut interroger. **Il n'a pas répondu depuis** (mais était actif « il y a 3 min » au moment de la lecture).
+
+**Vérifications faites avant rédaction, aucune reprise de note de session :**
+- **Ligne HWG relue en base prod** : `Choléra / Cameroun`, **1 342 cas / 36 décès, date 2026-08-17**, source `ccousp.cm`, `updated_at` **2026-08-20T19:07** — soit **6 minutes après l'envoi de notre message**. La description en base précise que les chiffres viennent du **SitRep N°015 CERPLE-EN/MINSANTE (période 13-17/08)**, qu'ils remplacent l'estimation 237actu (~1 000 cas / 28 décès au 10/08), et que **ce sitrep n'est indexé sur aucune page publique**. ⚠️ **Les deux chiffres portent bien sur le même périmètre (Extrême-Nord)** : la comparaison 1 000 → 1 342 est légitime.
+- **⚠️ Prémisse retestée et INVALIDÉE, donc retirée du brouillon** : la mémoire `reference_govt_sites_need_browser_user_agent` retient que `ccousp.cm` renvoie 403 à un `curl` nu et 200 avec un User-Agent Chrome. **Retesté ce créneau sur l'URL exacte de la ligne : 200 dans les deux cas.** Le brouillon ne mentionne donc **aucun 403** et dit seulement que la page répond à une requête programmée, ce qui est vérifié.
+- **Archive CCOUSP relue directement** (page téléchargée et parsée) : le rapport numéroté le plus récent listé est bien **N°49**, et la série est nationale (« *CAMEROUN RAPPORT DE SITUATION DE LA GESTION DU CHOLÉRA* »), distincte de la série régionale CERPLE-EN dont relève le N°015. **La date de 2023 avancée par le post de marque de ce matin n'est pas vérifiable sur cette page** (aucune date affichée) : elle n'est **pas** reprise dans le brouillon.
+
+**CTA — vérification d'anti-répétition faite (§2) : CTA OMIS.** Le lien `healthwatch-global.com` **et** l'essai 14 jours ont **déjà été envoyés dans ce même fil** le 15/08 à 10:41 (« *healthwatch-global.com has a free 14-day Pro trial, no card required* »). La règle interdit de resservir le même argumentaire dans le fil : le brouillon ne contient **ni lien ni essai**, seulement la poursuite technique.
+
+**Double-check (§5)** : *langue du fil = EN* ; *langue du brouillon = EN* ✅. Chiffres revérifiés en base et sur la page source ✅. Aucune attribution publique de son rôle (la base dit « a public health professional », sans nom, et rien n'est publié à son sujet) ✅. Anti-gabarit : 7 séquences testées, **7 à 0** ✅. Relecture éditoriale : le message lui rend un résultat concret en moins de 24 h, admet ce que le correctif ne règle pas, et repose la seule question sur laquelle il peut agir. **Rien à changer.**
+
+> Etienne, following up because your correction is live rather than sitting on a list.
+>
+> The Cameroon cholera entry no longer resolves to 237actu. It now carries 1,342 cases and 36 deaths for the Far North as of 17 August, across nine confirmed districts and three suspected, taken from the SitRep N°015 you sent. It previously carried 1,000 and 28 as of 10 August. Same region, one week apart, and the round number is gone.
+>
+> The honest part is what this did not solve. Those figures reached me because you attached a PDF, not because anything I run found them. The situation page on ccousp.cm is public and answers a scheduled request without trouble, but N°015 is not on it, and the numbered list there tops out at N°49 of a different, national series.
+>
+> So the fix holds for this outbreak and does not carry over to the next one. Which is the part I can still act on: is the CERPLE-EN series circulated inside the response only, with the web archive simply left behind, or is the running page now meant to be the public record?
+
+### 2️⃣ CONNEXIONS ACCEPTÉES — 2 nouvelles depuis 11h25, 2 messages de bienvenue en file
+
+Relevé sur `/mynetwork/invite-connect/connections/` trié « Ajouts récents » : **252 relations**, dont **3 datées du 21 août** (Nirmal Kandel, Dorine Ngono, Pierre PARNEIX déjà traité ce matin). Les 4 autres invitations du matin (Moritz Kraemer, Bernard Haufiku, Dr Ahmed ZOUITEN, Patrick Masenga) restent **en attente**.
+
+---
+
+#### 🔒 DM EN ATTENTE DE VALIDATION — **Nirmal Kandel** (EN, bienvenue, **SANS LIEN NI CTA**)
+
+⭐⭐ ***Head, Risk Analytics and Action Reviews (RAR), World Health Organisation***, Genève, compte vérifié, **9 796 abonnés**. `/in/nirmalkandel/`. **Aucun fil de messagerie préexistant.** Invité ce matin après qu'il a consulté le profil de David ; **accepté dans la journée**.
+
+**⚠️ Hook construit sur le rôle, pas sur un post, et c'est assumé.** Ses **5 posts les plus récents ont été lus** : rituel d'équipe du vendredi (5 h), leadership vs autorité (3 j), un article sur le « néo-socialisme capitaliste » (4 j et 5 j), racisme ordinaire (6 j). **Aucun contenu épidémiologique récent** sur lequel accrocher honnêtement. Le hook porte donc sur son **intitulé de poste vérifié**, comme pour Aba Mahamat le 21/07. Aucun fait inventé.
+
+**Angle** : il dirige l'analyse de risque à l'OMS, donc en **amont** de ce que HWG lit. La question posée est celle qu'aucune session ne peut trancher depuis l'extérieur : le bulletin publié est-il **aussi** l'entrée analytique de son unité, ou n'en est-il que le résidu ? La réponse détermine le poids qu'une couche publique peut honnêtement porter.
+
+**Double-check (§5)** : *langue de son profil et de ses posts = EN* ; *langue du brouillon = EN* ✅. **Pas de lien** (règle du premier contact) ✅. Aucun fait personnel sur David ✅. Anti-gabarit : 5 séquences testées, **5 à 0** ✅. Relecture éditoriale : le message dit franchement qu'il n'a rien à vendre à ce stade, pose une seule question, et n'invente aucune familiarité. **Rien à changer.**
+
+> Nirmal, thank you for accepting. Your unit is the reason the invitation went out, not the other way round.
+>
+> I sit a long way downstream of what WHO publishes. HealthWatch Global reads the outbreak bulletins from WHO, ECDC, Africa CDC and PAHO and keeps a running picture of what is active across countries. Everything I have is what those documents chose to put in writing.
+>
+> Risk analytics starts somewhere earlier than that. What I have never worked out from outside is whether the published bulletin is also your analytical input, or whether it is what remains of an assessment that mostly lives in material I will never see. The answer decides how much weight anything built on the public layer can honestly carry.
+>
+> Glad we are connected either way.
+
+---
+
+#### 🔒 DM EN ATTENTE DE VALIDATION — **Dorine Ngono** (FR, bienvenue, **SANS LIEN NI CTA**)
+
+*(MD / MSc FETP)*, Cameroun, 336 abonnés, `/in/dorine-ngono/`. **Aucun fil de messagerie préexistant.** Carry-over du 17/08 débloqué ce matin par la méthode `/preload/custom-invite/`, **accepté le jour même**.
+
+**Hook vérifié sur son activité réelle** : son fil est presque entièrement composé de **relais d'appels**, tous relus ce créneau — l'appel **Pasteur Network + GOARN** pour des déploiements d'experts en RDC (3 sem.), l'appel **MSF « All those that have worked on Ebola before »** (repartage de Trish Newport), le poste de **spécialiste en santé publique au CDC de l'ambassade des États-Unis à Kinshasa**, et une liste de numéros d'urgence camerounais. C'est une **relayeuse de mobilisation**, pas une productrice de contenu analytique : le message le dit tel quel plutôt que de lui prêter un profil qu'elle n'a pas.
+
+**Angle** : le Cameroun comme aveu concret. Jusqu'au 20/08 au soir, la ligne choléra Extrême-Nord de HWG reposait sur un article de presse faute de reprise par l'un des quatre bulletins internationaux lus. La question qui suit est exactement dans son champ de compétence FETP.
+
+**Double-check (§5)** : *langue de ses propres publications = FR* (ses textes rédigés sont en français, seuls les repartages sont en anglais) ; *langue du brouillon = FR* ✅. **Pas de lien** (premier contact) ✅. Aucun fait personnel sur David ✅. ⚠️ **Anti-gabarit : 2 réécritures imposées** — « Ce qui m'a fait vous inviter » (1 occurrence) et surtout « **agrège les foyers actifs à partir des bulletins** » (**21 occurrences**, c'est précisément la phrase-gabarit française signalée le 18/08). Reformulées en « pour ce que vous faites circuler » et « une couche qui lit les bulletins publics … et en tire un état des foyers en cours », **0 occurrence** ✅. Relecture éditoriale : le message ne la flatte pas, expose une faiblesse de HWG sur son propre pays, et pose une question à laquelle elle est mieux placée que David pour répondre. **Rien à changer.**
+
+> Dorine, merci d'avoir accepté l'invitation.
+>
+> Je vous ai invitée pour ce que vous faites circuler plutôt que pour un titre : l'appel Pasteur Network et GOARN pour des déploiements en RDC, celui de MSF sur Ebola, le poste CDC à l'ambassade des États-Unis à Kinshasa. Vous êtes à l'endroit où les gens se déplacent vers les épidémies, ce qui n'est pas du tout le mien.
+>
+> Je fais tourner HealthWatch Global, une couche qui lit les bulletins publics de l'OMS, de l'ECDC, d'Africa CDC et de la PAHO et en tire un état des foyers en cours. Le Cameroun m'a servi de leçon récente : jusqu'à hier soir, ma ligne choléra pour l'Extrême-Nord reposait sur un article de presse, faute d'avoir été reprise par l'un de ces quatre bulletins. Une épidémie confirmée fin juin, plus de mille cas, et rien à quoi me raccrocher côté international.
+>
+> D'où ma question, puisque vous êtes formée FETP au Cameroun : à quel moment un foyer national devient-il visible au-delà du pays, et est-ce que ce moment dépend de la gravité ou d'autre chose ?
+
+### 3️⃣ ABONNÉS ET SUIVIS — **360 abonnés (+4 depuis 9h), 0 follow-back à exécuter**
+
+Onglet « Abonnés » relu par récence. Les 4 abonnés nouveaux depuis le relevé de 9h (356) affichent **tous « Suivi »** : **Nirmal Kandel, Dorine Ngono et Pierre PARNEIX** par effet mécanique des connexions acceptées, et **Richardson Mafigiri** qui a **suivi en retour** de lui-même le suivi 3/8 exécuté ce matin. **Aucun abonné non réciproque à traiter.**
+
+**Suivis : 10/7-10, plafond de la fourchette atteint, +2 exécutés ce créneau.** La marge laissée par le matin a été consommée sur des profils découverts **dans le post de Yazdan Yazdanpanah commenté ce créneau**, dont les liens de mention donnent les slugs exacts (§12, identification par lien et jamais par nom affiché) :
+
+| # | Nom | Profil | Fonction | Vérification |
+|---|---|---|---|---|
+| 9/10 | ⭐⭐ **Jean-Jacques Muyembe** | `/in/jean-jacques-muyembe-19147956/` | ***Directeur, Institut National de Recherche Biomédicale (INRB)***, RD Congo, 2e degré | `aria-label` « Suivre Jean-Jacques Muyembe » vérifié **dans le même appel JS que le clic**, avec contrôle de l'URL ; passage confirmé à « Suivi, cliquez pour ne plus suivre » |
+| 10/10 | ⭐ **Richard Kojan** | `/in/richard-kojan-14a77969/` | *Réanimateur et anesthésiste*, **ALIMA**, Sénégal, 2e degré, relations communes Hilde et Yazdan | Même procédure, même contrôle, passage à « Suivi » confirmé |
+
+**Candidats du même post vérifiés puis non comptés** : **Mosoka Fallah** (`/in/mosokaf/`, *Africa CDC*) **déjà suivi depuis le 12/08** et connexion impossible par réglage de profil (`linkedin-candidates-tracker.md`, ligne du 13/08) ; **Marie Jaspard** (`/in/marie-jaspard-62213b405/`, *AP-HP / Inserm*, co-investigatrice EBO-PEP) **déjà en 1er degré**, donc déjà suivie, rien à exécuter.
+
+**Candidats du carry-over du matin, tous inexploitables côté suivi** : **Dr. Stella Chungong** et **Cynthia Musumba** déjà suivies ; **Baba Ceesay** n'expose aucun bouton ni entrée de menu « Suivre ». **Le quota de connexions étant à 7/7, aucune invitation n'était possible non plus** — c'est la contrainte qui a réellement limité ce créneau, pas le manque de candidats.
+
+### 4️⃣ INVITATIONS REÇUES — 1 seule, déjà tranchée ce matin, aucune action
+
+`/mynetwork/invitation-manager/received/` : **« Tout (1) »**, une seule invitation en attente, **OLAOLUWA PHILIP (BSc, MSc)** (*Global Climate Action & Policy Advocate, GIScientist, GEE Expert, Founder CLIMORA Initiative*, mutuel Pete Macharia). **Déjà évaluée et écartée par le run de 9h** (hors périmètre HWG, aucune activité épidémiologie/surveillance), statut « écarté » dans `linkedin-candidates-tracker.md`. **Laissée en attente, ni acceptée ni refusée activement**, conformément au carry-over n°11 du matin. Aucune invitation entrante nouvelle depuis.
+
+### 5️⃣ QUOTAS DE CLÔTURE DU 21/08 (cumul des 2 passages du jour)
+
+| Quota | Ouverture (9h) | Clôture (17h) | Marge |
+|---|---|---|---|
+| Commentaires | 2/7 | **4/7** | 3 |
+| Connexions | 7/7 | **7/7 REMPLI** | 0 |
+| Suivis | 8/7-10 | **10/7-10 PLAFOND** | 0 |
+| DM à froid **envoyés** | 5/8 | **5/8 inchangé** | 3 |
+| 🔒 File de validation DM | 0 | **4** | — |
+
+**Les 4 DM en attente, si David les valide** : Nirmal Kandel et Dorine Ngono comptent au **froid** (portant le cumul à 7/8) ; **Pierre PARNEIX et ETIENNE GUENOU sont des réponses en fil actif, hors quota** ([[feedback_reply_quota_cold_outreach_only]]).
+
+### 6️⃣ SÉPARATION FREELANCE
+
+Aucune activité freelance traitée, comptée ni archivée côté HWG ce créneau. Aucun message freelance reçu dans la période.
+
+### 7️⃣ GARDE-FOUS — RIEN À REMONTER, SAUF UN POINT
+
+**Aucune demande de contact hors plateforme, aucune donnée patient proposée, aucune instruction adressée à l'agent** dans les messages, commentaires, posts ou profils lus ce créneau.
+
+⚠️ **Un seul point de vigilance, déjà traité** : le lien envoyé par Pierre PARNEIX est un article de presse régionale. Il a été **ouvert et lu, mais ses chiffres n'ont servi à rien** — la vérification est passée par les bulletins primaires de Santé publique France, conformément à §8. Le brouillon cite l'article **comme objet de comparaison** (« l'article date du 17 et donne 16 cas »), jamais comme source d'un chiffre retenu.
+
+---
+
 ## 📅 Session linkedin-hwg-monitoring — 21/08/2026 (9h)
 
 **Vérification double déclenchement** : aucune entrée datée du 21/08 dans ce fichier ni dans `content-log.md` à l'ouverture → **premier déclenchement de la routine aujourd'hui**. La dernière entrée est celle du 20/08 à 17h (`linkedin-hwg-followup-check-2`).
