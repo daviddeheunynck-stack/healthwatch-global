@@ -256,6 +256,8 @@ Les 4 autres invitations du matin (Moritz Kraemer, Bernard Haufiku, Dr Ahmed ZOU
 
    **Trois tâches estampillées à la même seconde, à 16:03:18-19 UTC, soit 18h03 locales** — c'est-à-dire au démarrage de *cette* session, pas à 13h. C'est exactement la signature du défaut de plateforme déjà documenté (`_shared/report-conventions.md`, convention « double déclenchement ») : plusieurs tâches déclenchées ensemble, dont l'une exécute le SKILL d'une autre. **La conséquence ici est une perte sèche : le créneau de 13h n'a rien produit et son `lastRunAt` affirme le contraire.**
 
+   **Confirmation par les sessions, relevée juste après** : `list_sessions` montre une session intitulée **« Linkedin hwg followup check »** datée d'aujourd'hui, **`lastActivityAt` 2026-08-21T16:05:30Z** et `isRunning: false`. Elle a donc bien démarré vers **18h03 locales** (et non à 13h) et s'est arrêtée **environ 2 minutes plus tard, sans rien produire** : ni entrée d'archive, ni commentaire, ni brouillon. Le créneau n'a pas été « sauté » au sens où rien ne se serait déclenché, il a été **déclenché au mauvais moment et s'est éteint aussitôt**.
+
    ✅ **Rien à recréer** : la tâche est toujours **enregistrée et `enabled: true`**, avec `nextRunAt` au **2026-08-22T11:01:29Z (13h01 locales demain)**. Ce n'est donc **pas** la perte de registre des 13, 16 et 20/08, c'est un déclenchement groupé. **À surveiller demain** : si le créneau de 13h saute une 2e fois, ce n'est plus un incident isolé et il faudra le signaler comme panne d'automatisation, pas seulement dans un bilan.
 3. 🔴 **Signalement §8 à ingérer, prêt à l'emploi** : les **3 lignes France** (chikungunya 15→25, dengue 2→4, West Nile 6→18) contre le bulletin SpF du 19/08 arrêté au 17/08, plus le détail communal du bulletin Nouvelle-Aquitaine arrêté au 18/08. Verbatims et URL dans la section 4️⃣ ci-dessus. **Aucune écriture faite ici.**
 4. **Cibles de commentaire pour demain matin, blocages levés le 22/08** : **Johan Verheyden** (⚠️ son 2e préprint mentionne David nommément, cible de premier choix), **Dr. Jean Kaseya**, page **Africa CDC**, **Prof. Mohamed Janabi**, **ANRS MIE**, **Sebastian Fouquet OBE**, **BERNADETTE ILENGETE**, **Tabish Akbar Phul**.
@@ -267,6 +269,7 @@ Les 4 autres invitations du matin (Moritz Kraemer, Bernard Haufiku, Dr Ahmed ZOU
 10. 🔴 **Toujours en attente d'arbitrage, non re-litigé ici** : les **27 lignes actives à `source_priority` 10 qui ne se rafraîchissent plus seules**. Le cas du jour n'est plus le bloc choléra du 28/06 mais **les 3 lignes France** ci-dessus, qui périment ensemble sur un même bulletin. Analyse de fond : `product-ideas-log.md` du 19/08.
 11. **OLAOLUWA PHILIP** : invitation reçue toujours en attente, **à ignorer et non à réévaluer** (statut « écarté » figé au 21/08).
 12. **Séparation freelance respectée**, aucune activité freelance traitée, comptée ni archivée côté HWG.
+13. **Chrome NON redémarré en fin de session, volontairement** (politique commune §11) : `list_sessions` montre une session **`Codeur quote routine` encore en cours** (`isRunning: true`, activité à 16:34Z) au moment de clore. Redémarrer le navigateur l'aurait coupée net, exactement l'incident du 28/07. Condition non remplie, redémarrage sauté.
 
 ---
 
