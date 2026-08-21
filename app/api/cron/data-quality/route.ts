@@ -403,6 +403,9 @@ async function runDataQuality(_req: NextRequest, supabase: SupabaseClient) {
     // request to Uganda remains unanswered as of this check. Genuine
     // reporting silence, not a missed update. Verified 2026-08-20.
     "marburg virus disease|uganda|2026-07-16",
+    // PAHO Situation Report #8 (31 Jul 2026): "Canada: 1,107 cumulative
+    // confirmed cases" — matches exactly. Verified 2026-08-20.
+    "measles|canada|2026-07-25",
     // PAHO Situation Report #8 (31 Jul 2026), summary table: "Peru* 1,139 0"
     // — matches exactly. Verified 2026-08-20.
     "measles|peru|2026-07-25",
