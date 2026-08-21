@@ -89,9 +89,15 @@ Liste des conversations relue par récence, caractère lu/non lu contrôlé sur 
 
 ---
 
-#### 🛑 **OLIVIER MUKUKU — AUCUN BROUILLON, DÉCISION DE DAVID REQUISE** (§3)
+#### ✅ **OLIVIER MUKUKU — DÉCIDÉ ET ENVOYÉ EN SESSION INTERACTIVE**
 
 `/in/ACoAABIBLuYBLW-tTlqUVHulowv9Uat2gK4fTi4`. **§4 — fil lu intégralement : 9 messages** depuis le 18/08.
+
+**Décision de David (session interactive, plus tard le même jour) : décliner la co-signature.** David a tranché lui-même l'un des trois choix posés ci-dessous (accepter / proposer une contribution méthodologique / décliner en restant ouvert) : **décliner**, en précisant explicitement qu'il n'est pas épidémiologiste et « juste un passionné, sans diplôme ». Message rédigé avec David en direct, double-checké (anti-gabarit : 0 occurrence des formulations retenues en archive), **envoyé et confirmé à 10:51** (coche de livraison visible, destinataire « Olivier Mukuku » confirmé dans l'en-tête).
+
+> Bonjour Olivier, votre proposition me touche, et je l'apprécie sincèrement. Mais je dois être honnête sur qui je suis : je ne suis pas épidémiologiste, juste un passionné du sujet, sans diplôme dans le domaine. Signer comme auteur d'un article scientifique sur le choléra ne serait pas une position juste de ma part. Je n'ai pas non plus d'équipe de recherche à proposer de mon côté.
+>
+> Ce qui reste vrai, c'est que je serais curieux de continuer à échanger avec vous sur ce que la couche agrégée voit et ne voit pas d'un foyer comme celui de Goma. Si un angle de ce genre a sa place dans votre numéro, dites-le-moi, sinon je comprends très bien.
 
 **Verbatim reçu (aujourd'hui 05:08, intégral)** : « *Bonjour David, Merci beaucoup pour votre message et pour l'intérêt porté à notre étude sur la variation saisonnière du choléra à Goma. Justement, je suis en train de préparer une proposition de numéro spécial sur le choléra dans la revue Tropical Medicine and Infectious Disease, avec un focus notamment sur la surveillance épidémiologique, les dynamiques spatio-temporelles, les facteurs environnementaux et climatiques, ainsi que les stratégies de prévention et de contrôle. Compte tenu de votre expérience chez HealthWatch Global dans le suivi des épidémies en temps réel, notamment en RDC, je souhaiterais savoir si ce projet pourrait vous intéresser. **Seriez-vous éventuellement disposé à y contribuer comme auteur**, ou à envisager la participation de certains de vos collègues qui travaillent sur ces thématiques ? Je serais ravi d'échanger avec vous sur les possibilités de collaboration et les sujets qui pourraient être pertinents pour ce numéro spécial. Au plaisir d'échanger, Olivier* »
 
@@ -129,9 +135,9 @@ Liste des conversations relue par récence, caractère lu/non lu contrôlé sur 
 
 ---
 
-#### ⚠️ DM RÉDIGÉ ET SAISI, **NON ENVOYÉ** — **Veh Kesse Fabien Diomande** (EN, bienvenue, **SANS LIEN NI CTA**)
+#### ✅ DM ENVOYÉ — **Veh Kesse Fabien Diomande** (EN, bienvenue, **SANS LIEN NI CTA**)
 
-**Statut : ⚠️ EN SUSPENS, PAS ENVOYÉ.** Le texte a été saisi et vérifié intact dans le composeur (début et fin relus par capture d'écran, aucun doublon, aucune trace du mot de test "test" utilisé pour vérifier le focus). **Le clic sur "Envoyer" n'a pas pu être confirmé** : le renderer du navigateur s'est dégradé en cours de manipulation (captures d'écran en timeout répété, puis un script JS trivial `(async () => 42)()` a renvoyé `{}` au lieu de 42 — signal diagnostique documenté dans `hwg-social-policy.md` §7, sans remède connu). **Aucune tentative de contournement forcé** (pas de redémarrage du navigateur, conforme à la politique). Une boîte de dialogue « Quitter le site ? » a confirmé que **le brouillon est toujours présent, non perdu, non envoyé par erreur**. Session interrompue à ce stade sur ce point précis ; à reprendre en rouvrant `/in/veh-kesse-fabien-diomande-b0a5a996/` → Message, ou directement le fil s'il apparaît dans la liste des conversations.
+**Statut : ✅ ENVOYÉ après reprise sur un nouvel onglet.** Le premier onglet s'est révélé définitivement dégradé (pont JS cassé : un script trivial `(async () => 42)()` renvoyait `{}`, même après changement de page ; captures d'écran en timeout répété). Conformément à la politique (ne pas insister, ouvrir un nouvel onglet plutôt que forcer), un `tabs_create_mcp` a été ouvert : les captures d'écran et les clics y fonctionnaient normalement, seul le pont JS restait cassé sur l'ancien onglet. **Saisie et envoi faits par pilotage clavier/souris réel (`computer` type/click), vérification par capture d'écran avant et après plutôt que par lecture DOM.** Destinataire « Veh Kesse Fabien Diomande » confirmé dans l'en-tête, coche de livraison visible, texte intact du début à la fin, sur ordre explicite de David (« envoie les 8 DMs »).
 
 *GPEI Coordinator for Nigeria @ WHO | Deputy Incident Manager for Partnership, Nigeria Polio Emergency Operations Center*, `/in/veh-kesse-fabien-diomande-b0a5a996/`, **He/Him** (indiqué sur le profil), 31 relations en commun, basé Hoschton (Géorgie, États-Unis). **Invitation envoyée le 16/08, acceptée le 20/08 après la clôture de 17h.**
 
@@ -151,7 +157,9 @@ Liste des conversations relue par récence, caractère lu/non lu contrôlé sur 
 
 ---
 
-#### 🔒 DM en attente de validation — **Aishat Usman, MB;BS, MPH, PhD** (EN, bienvenue, **SANS LIEN NI CTA**)
+#### ✅ DM ENVOYÉ — **Aishat Usman, MB;BS, MPH, PhD** (EN, bienvenue, **SANS LIEN NI CTA**)
+
+**Statut : ✅ ENVOYÉ, sur ordre explicite de David en session interactive (« envoie les 8 DMs »), après double-check indépendant complet refait de zéro** (fait WAHO/OOAS et chiffre Lassa rejoués en base, destinataire « Aishat Usman » confirmé dans l'en-tête du nouveau fil, coche de livraison visible après envoi, aucune correction nécessaire).
 
 *Regional Public Health Leader | Field Epidemiologist | Health Security & Workforce Development Expert | Lassa Fever Vaccine Policy | One Health | Cross-Border Surveillance*, **OOAS / West African Health Organization (WAHO)**, Nigéria, `/in/aishat-usman-922a92112/`. **Invitation envoyée le 05/08, acceptée le 20/08 après la clôture de 17h**, soit 15 jours plus tard. Déjà suivie depuis le 08/08.
 
@@ -173,7 +181,9 @@ Liste des conversations relue par récence, caractère lu/non lu contrôlé sur 
 
 ### 3️⃣ DM À FROID
 
-#### 🔒 DM en attente de validation — **Gwen Eamer** (EN, à froid, **SANS LIEN NI CTA**), reporté 3 fois, rédigé ce créneau
+#### 🛑 DM RETIRÉ, NON ENVOYÉ — **Gwen Eamer** (EN, à froid), reporté 3 fois puis retiré définitivement
+
+**⚠️ Décision de David en session interactive : retirer, pas envoyer.** Au moment de l'envoi, le composeur a révélé un fil déjà existant, non détecté par le contrôle du matin (« aucun fil de messagerie existant » à la section 1️⃣ était **faux**) : un DM de bienvenue avait déjà été envoyé le **26/07/2026** (« At HealthWatch Global I aggregate outbreak signals from WHO AFRO, EMRO, Africa CDC, ECDC and PAHO bulletins... »), **resté sans réponse depuis près d'un mois**. Le brouillon du jour se présentait comme un premier contact et répétait la même auto-présentation. Signalé à David avant tout envoi (§4, lecture intégrale du fil) ; **David a choisi de retirer le brouillon plutôt que de le reformuler en relance**. **Aucun message envoyé à Gwen Eamer dans cette session.**
 
 `/in/gwen-eamer-24081a25/`, *Senior Programme Manager, Public Health Emergencies and Pandemics chez **Gavi, the Vaccine Alliance***, Genève, 1er degré, **aucun fil de messagerie existant** (vérifié en section 1️⃣). Changement de poste repéré le 20/08 au matin, **écarté trois fois faute de quota**. La règle du 08/08 imposait de le rédiger ou de le retirer explicitement à ce 4e passage : **rédigé**.
 
@@ -231,7 +241,9 @@ Le clic sur « Ajouter une note » ouvre la modale Premium « **Vos messages d'i
 
 ---
 
-#### 🔒 DM en attente de validation — **Pierre PARNEIX** (FR, bienvenue après acceptation immédiate, **SANS LIEN NI CTA**)
+#### ✅ DM ENVOYÉ — **Pierre PARNEIX** (FR, bienvenue après acceptation immédiate, **SANS LIEN NI CTA**)
+
+**Statut : ✅ ENVOYÉ, sur ordre explicite de David en session interactive (« envoie les 8 DMs »), après double-check indépendant complet refait de zéro** (toujours 1er degré au moment de l'envoi, destinataire « Pierre PARNEIX » confirmé dans l'en-tête, coche de livraison visible après envoi, aucune correction nécessaire).
 
 **Règle du signal d'engagement appliquée** (veille passive du SKILL) : une invitation acceptée en quelques minutes signale un contact actif au même moment, et justifie un DM de suivi dans la même session plutôt qu'une attente de plusieurs jours. **Aucun fil de messagerie préexistant** (liste complète des conversations relue en section 1️⃣).
 
