@@ -25,7 +25,9 @@
 
 ---
 
-#### 🔒 DM EN ATTENTE DE VALIDATION — **Pierre PARNEIX** (FR, fil actif, **AVEC CTA**)
+#### ✅ DM ENVOYÉ — **Pierre PARNEIX** (FR, fil actif, **AVEC CTA**)
+
+**Statut : ✅ ENVOYÉ à 18:44, sur ordre explicite de David en session interactive (« envoie les 4 DMs »), après double-check indépendant complet refait de zéro** (thread relu en direct — toujours 3 messages, aucune nouvelle réponse depuis 11:46 — ligne `Chikungunya/France` requêtée à nouveau en base prod, toujours 15 cas au 10/08 inchangée, donc aucune correction nécessaire au texte ; inventaire `charCodeAt` du brouillon avant saisie : 0 tiret cadratin, 0 double espace, 4 paragraphes ; en-tête du composeur revérifié « Pierre PARNEIX » avant envoi ; après envoi, thread passé à 4 messages, notre texte présent une seule fois, horodaté 18:44).
 
 *Médecin de Santé Publique et de Prévention du Risque Infectieux, **CHU de Bordeaux***, compte vérifié, 1er degré depuis ce matin. Fil : `2-ODc4OTFjYTEtNTE5NC00Y2I0LTllMWUtYTM4ODBiOTQzNmMzXzEwMA==`.
 
@@ -62,7 +64,9 @@
 
 ---
 
-#### 🔒 DM EN ATTENTE DE VALIDATION — **ETIENNE GUENOU** (EN, fil actif, **SANS CTA — anti-répétition**)
+#### ✅ DM ENVOYÉ — **ETIENNE GUENOU** (EN, fil actif, **SANS CTA — anti-répétition**)
+
+**Statut : ✅ ENVOYÉ à 18:46, sur ordre explicite de David en session interactive (« envoie les 4 DMs »), après double-check indépendant complet refait de zéro** (thread relu en direct — toujours 6 messages, aucune réponse depuis notre message d'hier 19:01 — ligne `Choléra/Cameroun` requêtée à nouveau en base prod, toujours 1 342 cas/36 décès inchangée ; inventaire `charCodeAt` : 0 tiret cadratin, 0 double espace, 4 paragraphes ; en-tête « ETIENNE GUENOU » revérifié avant envoi ; après envoi, thread passé à 7 messages, texte présent une seule fois, horodaté 18:46).
 
 Carry-over n°8 du créneau de 9h : *« Signaler à ETIENNE GUENOU que son signalement a été appliqué. »* Exécuté ici sous forme de brouillon.
 
@@ -91,7 +95,9 @@ Relevé sur `/mynetwork/invite-connect/connections/` trié « Ajouts récents »
 
 ---
 
-#### 🔒 DM EN ATTENTE DE VALIDATION — **Nirmal Kandel** (EN, bienvenue, **SANS LIEN NI CTA**)
+#### ✅ DM ENVOYÉ — **Nirmal Kandel** (EN, bienvenue, **SANS LIEN NI CTA**)
+
+**Statut : ✅ ENVOYÉ à 18:48, sur ordre explicite de David en session interactive (« envoie les 4 DMs »), après double-check indépendant complet refait de zéro** (profil revérifié — 1er degré confirmé, aucun fil préexistant — composeur ouvert depuis le profil, ⚠️ **bulle flottante insensible au DOM du document principal comme le 21/08 matin sur Karamagi/Diomande** : saisie et envoi faits par pilotage clavier/souris réel `computer`, formatage vérifié par capture d'écran défilée du début à la fin de l'éditeur plutôt que par lecture DOM ; destinataire « Nirmal Kandel · 1er » confirmé dans l'en-tête de la bulle avant envoi ; après envoi, bulle passée en fil de conversation avec coche de livraison visible, éditeur vidé).
 
 ⭐⭐ ***Head, Risk Analytics and Action Reviews (RAR), World Health Organisation***, Genève, compte vérifié, **9 796 abonnés**. `/in/nirmalkandel/`. **Aucun fil de messagerie préexistant.** Invité ce matin après qu'il a consulté le profil de David ; **accepté dans la journée**.
 
@@ -111,7 +117,9 @@ Relevé sur `/mynetwork/invite-connect/connections/` trié « Ajouts récents »
 
 ---
 
-#### 🔒 DM EN ATTENTE DE VALIDATION — **Dorine Ngono** (FR, bienvenue, **SANS LIEN NI CTA**)
+#### ✅ DM ENVOYÉ — **Dorine Ngono** (FR, bienvenue, **SANS LIEN NI CTA**)
+
+**Statut : ✅ ENVOYÉ à 18:52, sur ordre explicite de David en session interactive (« envoie les 4 DMs »), après double-check indépendant complet refait de zéro** (profil revérifié — 1er degré confirmé, aucun fil préexistant, ses posts recontrôlés sur sa page d'activité : appel Pasteur Network/GOARN, appel MSF Ebola et poste CDC/ambassade US toujours présents tels que cités — même composeur en bulle flottante, saisie et vérification par capture d'écran défilée du début à la fin ; destinataire « Dorine Ngono · 1er » confirmé avant envoi ; après envoi, bulle passée en fil de conversation avec coche de livraison, éditeur vidé).
 
 *(MD / MSc FETP)*, Cameroun, 336 abonnés, `/in/dorine-ngono/`. **Aucun fil de messagerie préexistant.** Carry-over du 17/08 débloqué ce matin par la méthode `/preload/custom-invite/`, **accepté le jour même**.
 
@@ -155,10 +163,10 @@ Onglet « Abonnés » relu par récence. Les 4 abonnés nouveaux depuis le relev
 | Commentaires | 2/7 | **4/7** | 3 |
 | Connexions | 7/7 | **7/7 REMPLI** | 0 |
 | Suivis | 8/7-10 | **10/7-10 PLAFOND** | 0 |
-| DM à froid **envoyés** | 5/8 | **5/8 inchangé** | 3 |
-| 🔒 File de validation DM | 0 | **4** | — |
+| DM à froid **envoyés** | 5/8 | **7/8** | 1 |
+| 🔒 File de validation DM | 0 | **0** | — |
 
-**Les 4 DM en attente, si David les valide** : Nirmal Kandel et Dorine Ngono comptent au **froid** (portant le cumul à 7/8) ; **Pierre PARNEIX et ETIENNE GUENOU sont des réponses en fil actif, hors quota** ([[feedback_reply_quota_cold_outreach_only]]).
+**✅ Les 4 DM ont été envoyés à 18:44-18:52, sur ordre explicite de David tapé en session interactive (« envoie les 4 DMs »)**, après un double-check indépendant complet refait de zéro pour chacun (voir statuts ci-dessus). **Nirmal Kandel et Dorine Ngono comptent au froid**, portant le cumul du jour à **7/8** ; **Pierre PARNEIX et ETIENNE GUENOU sont des réponses en fil actif, hors quota** ([[feedback_reply_quota_cold_outreach_only]]).
 
 ### 6️⃣ SÉPARATION FREELANCE
 
