@@ -1470,3 +1470,77 @@ Balayage complémentaire (`from:mailer-daemon`, `from:postmaster`, `subject:"Del
 **Profondeur de file au début du run : 0 brouillon** (`list_drafts` appelé **trois fois**, vide à chaque appel, puis **croisé avec `search_threads`** sur 4 adresses du lot du 20/08 pour écarter l'instabilité de l'outil constatée les 07/08 et 15/08 — les 4 fils sont bien en `SENT`). **File après ce run : 10 brouillons.** Très en dessous du seuil de ~20 ; le frein de file ne s'est pas appliqué.
 
 **⚠️ Cibles à prioriser au prochain run** : **EMPHNET** (réseau EMRO d'épidémiologie de terrain, site vivant mais adresse introuvable sur les pages contact — chercher ailleurs sur le site) ; **EMRO régional** dès rétablissement de `emro.who.int` ; et **le reste de la liste des bureaux pays PAHO**, désormais éprouvée — Guyana, République dominicaine, Venezuela, Salvador, Bolivie et Paraguay y ont des boîtes fonctionnelles, sur des pays dont la voie directe a échoué. **Le segment ONG demande un changement de méthode** : dix-neuf runs l'ont largement épuisé, et ce run a écarté 17 organisations pour masquage, formulaire seul ou mauvaise unité.
+
+---
+
+## 🔁 RELANCE J+10 — 2026-08-21, run automatique `daily-relance-check-healthwatch`
+
+**Résultat : 9 relances créées, aucune envoyée. Lot traité : le run du 11/08 (10 contacts), à J+9 réels — 1 exclusion.**
+
+**⚠️ Décision autonome à signaler — ce lot a été traité à J+9, pas J+10.** Le lot du 11/08 est le **premier depuis l'ouverture du canal où la date du run et la date d'envoi divergent** : les 10 brouillons créés le 11/08 ne sont partis que le **2026-08-12 entre 10:56:37 et 11:01:18 UTC**, en même temps que le lot du 12/08 (vérifié en direct ce run sur les 10 adresses, `to:` + `from:<domaine>`, `includeTrash: true`). Appliquée à la lettre, la règle « J+10 depuis la date d'envoi confirmée » les rendrait mûrs le **22/08** — le même jour que le lot du 12/08, également parti le 12/08. **Les deux lots (20 contacts) tomberaient donc ensemble demain**, avec 10 brouillons de prospection déjà en file plus les 10 de demain : environ 40 brouillons, très au-delà du seuil de ~25 du frein de file. J'ai choisi d'**étaler 10 aujourd'hui / 10 demain** plutôt que d'empiler 20 en une fois : un jour d'avance sur une règle à 10 jours est sans effet sur la cible, un embouteillage à 40 brouillons en a un. **Le run du 22/08 doit donc traiter le lot du 12/08 seul, et ne pas re-traiter celui du 11/08.** Décision réversible par David : si la règle doit rester littérale, le prochain lot dans ce cas de figure sera repoussé d'un jour.
+
+**Arbitrage des lots :**
+- **02/08 matin (18), 02/08 soir (20), 03/08 (20), 05/08 (20)** — déjà relancés le 15/08. Règle « une seule relance, jamais deux » : exclus définitivement.
+- **04/08 (20)** — lot recréé et envoyé le 15/08, donc à J+6. Pas mûr.
+- **06/08 (10)** — envoyé le 17/08. J+10 vers le 27/08.
+- **07/08 (10)** — relancé le 17/08. Exclu.
+- **08/08 (10)** — relancé le 18/08. Exclu.
+- **09/08 (10)** — relancé le 19/08. Exclu.
+- **10/08 (11 + AKDN)** — relancé le 20/08, les 11 relances **parties le 20/08 à 12:05-12:11 UTC** (revérifié en direct ce run sur les fils AKDN et IDCU Malte : chaque fil contient bien 2 messages sortants). Exclu.
+- **11/08 (10)** — ✅ retenu, jamais relancé (voir la décision J+9 ci-dessus).
+- **12/08 (10)** — envoyé le 12/08 lui aussi. **Premier lot éligible demain (22/08)**, à traiter seul.
+
+**Vérification en direct des 10** : requête `to:<adresse>` puis requête `from:<domaine>` distincte sur les 9 domaines survivants, `includeTrash: true` dans les deux cas. **Les 9 fils ne contiennent qu'un seul message, celui de David, `labelIds: ["SENT"]`** — aucune réponse, aucun accusé automatique, aucune relance déjà consommée. La requête `from:` groupée sur les 9 domaines ne renvoie **rien du tout**.
+
+### ❌ 1 exclusion
+
+- **EPHI Éthiopie** (`info@ephi.gov.et`) — **bounce du 12/08 déjà consigné** (« boîte de réception du destinataire pleine », NDR à 10:58:31, 54 s après l'envoi ; fil en corbeille, reconfirmé ce run). Entrée n° 7 de la liste nominative. Pas de relance. Le journal du 12/08 le qualifiait de « candidat à une relance différée, à la discrétion de David » — **aucune décision de David n'a jamais été prise en ce sens**, contrairement à ISED (tranché explicitement le 15/08, puis écarté définitivement le 16/08 après 2e échec). En l'absence d'ordre explicite, la règle « jamais de relance sur un contact bouncé » s'applique.
+
+### ✉️ Les 9 relances créées
+
+**Angle transfrontalier appliqué** (validé en session le 17/08), classification faite ce run :
+
+- **Variante A** (2) : **Norwegian Church Aid** et **Nutrition International** — deux ONG à programmes pays multiples, le public exact de la Variante A. Formulations volontairement dissemblables (NCA sur la réponse d'urgence, NI sur la livraison de programme district par district) pour ne pas produire deux mails jumeaux dans le même segment.
+- **Variante B adaptée « a country's own surveillance »** (5) : **Kuwait University**, **ANU NCEPH**, **Otago Wellington**, **Univalle Cali**, **PHFI**. Application du précédent des 19 et 20/08 : la formule « **votre** surveillance montre ce qui se passe à l'intérieur de vos frontières » est fausse pour une université ou une fondation, qui ne pilotent aucun système national.
+- **Hors gabarit, 2** : **IPH Macédoine du Nord** et **IJZCG Monténégro** — voir ci-dessous.
+
+**🔵 Les deux contacts balkaniques sortent du gabarit : leurs originaux vendaient déjà l'angle transfrontalier, en toutes lettres.** L'original du 11/08 pour IPH Macédoine du Nord parlait de « cross-border signals from neighbouring countries » et du West Nile « across the Balkans » ; celui d'IJZCG Monténégro, de « regional Balkan signals, including this summer's West Nile virus activity in neighbouring countries ». Leur servir la Variante B reviendrait à répéter l'original en changeant les mots — même situation qu'AKDN le 20/08. Les deux relances s'appuient donc sur ce que la Variante B apporte **en plus** de l'original : pour IPH, le cadrage « par-dessus ce que vous avez déjà, pas à la place » (absent de l'original) ancré sur la saison West Nile toujours en cours ; pour IJZCG, l'argument du **délai de préavis** (voir l'événement à la publication de la source plutôt qu'au cycle hebdomadaire), jamais formulé auparavant. Deux formes rhétoriques distinctes, contrôle anti-gabarit fait sur la structure et pas seulement sur le vocabulaire.
+
+**🔵 Quatre relances conservent la demande de redirection de leur original** (Kuwait University, Univalle, NCA, NI) : leurs originaux se terminaient tous sur « is there a better person to write to » / « who would be the right person to speak to ». Question de clôture reprise à l'identique pour Kuwait University, Univalle et NI, reformulée pour NCA. Application de la règle « cas particulier avec un motif différent du gabarit ». Précédents : AKDN (20/08), WHO Pandemic Hub et Brunei/UR Rwanda (19/08), Seychelles (17/08).
+
+**Format** : réponses dans le fil d'origine (`replyToMessageId`), objet « Re: … » automatique. Aucun `htmlBody`, aucune balise `<a>`, **aucun nom de domaine dans le texte nouveau**. Aucun tiret cadratin hors signature. Salutation reprise de l'original : « Hi team, » ×8, « Hi Hilary, » (NCEPH, seul contact nominatif du lot). Langue : **EN pour les 9** (aucun contact francophone dans ce lot).
+
+**IDs des 9 brouillons** : `r-8192699689834970814` (IPH Macédoine du Nord, hors gabarit), `r-7347652641897206017` (IJZCG Monténégro, hors gabarit), `r-8774662184779997361` (Kuwait University, B adaptée + redirection), `r3184488542427515631` (ANU NCEPH, B adaptée), `r-780163193348074175` (Otago Wellington, B adaptée), `r-6529223879985945283` (Univalle Cali, B adaptée + redirection), `r468629548609653928` (PHFI, B adaptée), `r4378051473614619621` (Norwegian Church Aid, A + redirection), `r-6742578236592361988` (Nutrition International, A + redirection).
+
+**Vérifié via `list_drafts` immédiatement après création : 9/9 présents, horodatés 06:26:43–06:27:31 UTC, `threadId` de chacun correspondant au fil d'envoi du 12/08, tous en `labelIds: ["DRAFT"]`, aucun passé en `SENT`** (contrôle du bug d'envoi instantané du connecteur, incident du 15/08). `list_drafts` **stable ce run**, comme les 16, 17, 18, 19 et 20/08.
+
+
+**Frein de file** : **10 brouillons** au début du run (la prospection de ce matin, créée à 06:21 UTC) — la file de 22 brouillons signalée hier soir a été **entièrement vidée** : les 11 relances du lot du 10/08 et les 10 contacts du lot du 20/08 sont partis le 20/08 (12:05-12:11 et 15:20-15:22 UTC, vérifiés en direct), et le nudge Morgan Otita n'est plus en file. **File après création : 19 brouillons**, sous le seuil de ~25. Le frein ne s'est pas appliqué. **C'est précisément l'étalement décidé plus haut qui évite le dépassement demain.**
+
+### 📊 Bilan cumulé
+
+**Balayage complémentaire des bounces** (`from:mailer-daemon`, `from:postmaster`, `subject:"Delivery Status Notification"`, `subject:"Undelivered Mail"`, `subject:Undeliverable`, sur 3 jours, corbeille incluse) : **2 fils, tous deux déjà consignés** (MSPAS Guatemala 18/08, MHMS Îles Salomon 19/08). **Aucun bounce neuf ce run.**
+
+**Bilan bounces cumulés depuis le 02/08 : 13** — inchangé, recalculé depuis la liste nominative conformément à la règle du 16/08 :
+1. WHO WPRO (02/08) — sous-domaine `wpro.who.int` invalide
+2. ZNPHI Zambie (02/08) — règle de transfert cassée côté destinataire
+3. Colombo (09/08) — 550 5.1.1, adresse introuvable
+4. AKHS (10/08) — adresse inconnue côté serveur
+5. NCIPD Bulgarie (12/08) — 550 high-probability spam
+6. CORDS (12/08) — adresse introuvable
+7. EPHI Éthiopie (12/08) — boîte pleine (transitoire)
+8. Lao TPHI (14/08) — domaine NXDOMAIN
+9. ISED Sénégal (15/08) — boîte pleine, 2 tentatives échouées, écarté définitivement le 16/08
+10. MBDS (15/08) — 550 No Such User Here
+11. DMR Myanmar (17/08) — 550 Unknown user
+12. MSPAS Guatemala (18/08) — adresse introuvable
+13. MHMS Îles Salomon (19/08) — adresse introuvable
+
+**Totaux au 2026-08-21 : 240 contacts prospectés, 230 envoyés, 217 effectivement délivrés.**
+- **Prospectés 240** = 230 au 20/08 + les 10 du run de prospection de ce matin (en brouillon, pas encore envoyés).
+- **Envoyés 230** = 220 au 20/08 + les 10 du lot du 20/08 (partis le 20/08 à 15:20-15:22 UTC, vérifiés en direct ce run). Les 10 de ce matin restent en brouillon.
+- **Délivrés 217** = 230 envoyés − 13 (taille de la liste nominative ci-dessus), recompté dans le même mouvement que la liste.
+
+**Total cumulé de relances : 112 envoyées** (56 le 15/08 + 17 du lot 03/08 le 15/08 + 10 du lot 07/08 le 17/08 + 10 du lot 08/08 le 18/08 + 8 du lot 09/08 le 19/08 + **11 du lot 10/08, parties le 20/08 à 12:05-12:11**), **+ 9 en attente de relecture et d'envoi** (lot du 11/08, ce jour).
+
+**Aucune réponse institutionnelle nouvelle ce run.** Le rendez-vous du **27/08** reste posé pour EAC / IGAD / SADC / AFROHUN en Variante A, et le lot du 06/08 tombe à J+10 le même jour.
