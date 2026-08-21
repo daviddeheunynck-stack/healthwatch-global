@@ -667,14 +667,18 @@ const MANUAL_ROW_CHECKED = {
   // ligne de 34 à 32 sur cette seule lecture de tableau — attendre un BSS de l'ARASS postérieur à la
   // semaine 29, qui est la source primaire de ce territoire.
   "4f95242c-e512-488e-ba52-38298a3e9ec3": "2026-08-19",
-  // Polio/Afghanistan : « Polio This Week » du 12/08/2026 — « No WPV1 cases were reported this
-  // week », total 2026 toujours 15 (cas le plus récent 25/06/2026), 5 échantillons environnementaux
-  // positifs cette semaine sans effet sur le compte de cas. Rien à écrire.
-  "b0f473be-a367-464e-ab32-3cdc43aa7815": "2026-08-13",
-  // Polio/Pakistan : « Polio This Week » du 12/08/2026 — « No WPV1 cases were reported this week »,
-  // total 2026 toujours 3 (cas le plus récent 07/04/2026), 10 échantillons environnementaux positifs
-  // cette semaine sans effet sur le compte de cas. Rien à écrire.
-  "ab4cd321-0aa6-4598-86ac-b0a04d346465": "2026-08-13",
+  // Polio/Afghanistan : « Polio This Week » du 19/08/2026 — « Four WPV1 cases were reported this
+  // week from Hirat, Kandahar and Paktika, with onset of paralysis in June and July (most recent
+  // case: 17 July 2026). The total number of cases in 2026 is 19. » Ligne corrigée le 21/08 de 15
+  // à 19 cas (scripts/fix-polio-afg-samoa-dengue-2026-08-21.mjs) ; aucun échantillon environnemental
+  // positif cette semaine, dernier positif 24/06/2026.
+  "b0f473be-a367-464e-ab32-3cdc43aa7815": "2026-08-21",
+  // Polio/Pakistan : vérifié le 21/08 sur endpolio.com.pk (source primaire de la ligne) — toujours
+  // 3 cas WPV1 en 2026, à Sujawal (Sindh), Bannu et Waziristan du Nord (Khyber Pakhtunkhwa).
+  // Corroboré par WebSearch. ⚠️ La section pays Pakistan n'apparaissait pas dans le rendu WebFetch
+  // de « Polio This Week » ce jour-là (seule l'Afghanistan en sortait) : passer par endpolio.com.pk
+  // plutôt que d'insister sur le GPEI si le cas se reproduit. Rien à écrire.
+  "ab4cd321-0aa6-4598-86ac-b0a04d346465": "2026-08-21",
   // Marburg/Ouganda : vérifié le 08/08 — WebSearch « Marburg Uganda cases August 2026 » et page
   // pays WHO AFRO (afro.who.int/countries/uganda, aucune mention Marburg, uniquement Ebola
   // Bundibugyo). Toujours 1 cas / 1 décès (enfant de 18 mois, Kyegegwa, notifié à l'OMS le
@@ -727,7 +731,11 @@ const MANUAL_ROW_CHECKED = {
   // source de la ligne. Aucune 45e déclaration publiée à ce jour (cadence ~trimestrielle, donc une
   // 45e est attendue). La désignation PHEIC et les recommandations temporaires restent en vigueur,
   // la Palestine n'en est pas sortie. Rien à écrire, `active`/`is_seed` inchangés.
-  "8a4072ab-c0be-4567-8ba4-cdcedeccced8": "2026-08-13",
+  // Revérifié le 21/08 sur la même page : toujours 44 réunions listées, la 44e du 04/03/2026 reste
+  // la plus récente (cadence observée : 40e 03/12/2024, 41e 10/04/2025, 42e 28/07/2025, 43e
+  // 11/11/2025, 44e 04/03/2026 — la 45e est donc en retard sur un rythme trimestriel, ce qui ne
+  // change rien au statut : les recommandations temporaires courent jusqu'à révision). Rien à écrire.
+  "8a4072ab-c0be-4567-8ba4-cdcedeccced8": "2026-08-21",
   // Dengue/Wallis-et-Futuna : vérifié le 14/08, déclenché par le contrôle qualité quotidien
   // (28j de péremption). WHO WPRO Dengue Situation Update #751 (06/08/2026, dernière édition —
   // #752 pas attendue avant ~20/08) ne mentionne le territoire que dans sa section syndromique
