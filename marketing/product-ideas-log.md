@@ -1177,7 +1177,7 @@ Le libellé qu'il produit (l. 948) : « 🔔 N essai(s) dont l'échéance dépas
 
 **Risque/inconnue :** (a) le parseur dépend de deux ancres éditoriales de la page (« *Summary of new polioviruses this week* » et « *Country updates as of <date>* ») — s'il échoue il rend `null` et le contrôle est **sauté en silence**, jamais un faux résultat partiel ; (b) un pays nommé différemment par le GPEI et par la base produit une fausse ligne « aucune ligne polio » — direction d'échec choisie délibérément : une question dans un e-mail, jamais une écriture ; (c) le résumé hebdomadaire ne liste que les pays à **virus nouveau cette semaine**, donc un foyer en cours mais silencieux cette semaine-là n'y figure pas — la sonde couvre le delta hebdomadaire, pas le stock.
 
-**✅ CONSTRUITE — section 4j de `app/api/cron/data-quality/route.ts`.**
+**✅ CONSTRUITE — commit `809ab47`, section 4j de `app/api/cron/data-quality/route.ts`.**
 - `parseGPEIThisWeek()` : parse en **texte**, pas par sélecteur CSS (le markup est du WordPress qui bouge à chaque thème ; les deux ancres sont la structure éditoriale du bulletin, stable depuis des années). **Testé contre la vraie page téléchargée ce soir** : 6 pays extraits (Afghanistan, Centrafrique, RDC, Niger, Nigeria, Soudan) + date d'arrêt `2026-08-19` correctement normalisée depuis « 19 August 2026 ». Testé aussi sur une page sans les ancres → rend `null` (fail closed, même règle que `verifyFromDON`).
 - Deux contrôles distincts : **(1) couverture** — tout pays du résumé sans ligne polio **active** est signalé, en distinguant « ligne inactive à réactiver » de « aucune ligne, trou de couverture » ; **(2) retard** — si la date d'arrêt du bulletin dépasse de plus de **10 j** la ligne polio la plus récente en base. Le (2) n'est pas un doublon du palier 30 j de 4f : le GPEI republie chaque semaine, donc un rafraîchissement manuel qui s'arrête devient visible en ~10 j au lieu de 30, et il est mesuré **contre ce que la source dit couvrir**, pas contre l'horloge.
 - **Ce que ça donnerait aujourd'hui : rien.** Les 13 lignes créées ce soir couvrent les 6 pays du résumé, et leur `date` (18/08) est à 1 j de la date d'arrêt du bulletin (19/08). C'est le comportement voulu — un filet, pas du bruit. La semaine dernière, la même sonde aurait sorti **5 lignes**.
@@ -1196,7 +1196,7 @@ Le libellé qu'il produit (l. 948) : « 🔔 N essai(s) dont l'échéance dépas
 
 **Risque/inconnue :** (a) le contrôle devient **plus silencieux** qu'avant (seuls les essais à plus de 30 j sont signalés) — c'est la bonne direction, mais si David voulait au contraire un jalon daté sur une nouvelle décision, **c'est un autre contrôle, pas cette constante** ; le dire plutôt que de détourner celui-ci ; (b) `DECISION_HORIZON_DISMISSED` est laissé intact — Pasteur (13/09) retombe de toute façon sous le seuil, Johan (2027) reste écarté à raison.
 
-**✅ CONSTRUITE.** `DECISION_HORIZON_DAYS = 30`, horizon calculé à chaque run, exposé dans le payload JSON (`horizon` + `horizonDays`) pour rester lisible. Corps de l'e-mail et ligne d'objet réécrits (« essai(s) à échéance lointaine »). Plus aucune occurrence de `VIABILITY_DECISION_DATE` dans le code (vérifié).
+**✅ CONSTRUITE — commit `809ab47`.** `DECISION_HORIZON_DAYS = 30`, horizon calculé à chaque run, exposé dans le payload JSON (`horizon` + `horizonDays`) pour rester lisible. Corps de l'e-mail et ligne d'objet réécrits (« essai(s) à échéance lointaine »). Plus aucune occurrence de `VIABILITY_DECISION_DATE` dans le code (vérifié).
 
 ---
 
