@@ -123,7 +123,7 @@ Tous repérés par **découverte active en sidebar** (« Plus de profils pour vo
 
 ---
 
-#### 🔒 DM EN ATTENTE DE VALIDATION — **Patrick AYONGA** (FR, fil actif, **SANS CTA, volontairement**)
+#### ✅ DM ENVOYÉ — **Patrick AYONGA** (FR, fil actif, **SANS CTA, volontairement**) — sur ordre explicite de David (« envoie les 3 DMs », en session)
 
 *Fil `2-NTQ5OWJjZDYtMmI0Mi00MmRkLThlZDEtNjVmMmM2NmU5MDNiXzEwMA==`.*
 
@@ -145,7 +145,7 @@ Tous repérés par **découverte active en sidebar** (« Plus de profils pour vo
 
 ---
 
-#### 🔒 DM EN ATTENTE DE VALIDATION — **Pierre PARNEIX** (FR, fil actif, **SANS CTA, volontairement**)
+#### ✅ DM ENVOYÉ — **Pierre PARNEIX** (FR, fil actif, **SANS CTA, volontairement**) — sur ordre explicite de David (« envoie les 3 DMs », en session)
 
 *Médecin de Santé Publique et de Prévention du Risque Infectieux, CHU de Bordeaux. Fil `2-ODc4OTFjYTEtNTE5NC00Y2I0LTllMWUtYTM4ODBiOTQzNmMzXzEwMA==`.*
 
@@ -173,7 +173,25 @@ Tous repérés par **découverte active en sidebar** (« Plus de profils pour vo
 
 ---
 
-**➡️ File de validation DM : 3 brouillons au total sur la session, 0 envoyé** (les 2 ci-dessus + le message de bienvenue à Moritz Kraemer, section suivante). Conformément à la règle du 23/07, **aucun DM n'a été envoyé par cette routine**. Quota de rédaction : **2/8**, très loin du plafond. Notification push envoyée à David.
+**✅ File de validation DM : 3 brouillons rédigés en session, les 3 ENVOYÉS** (Patrick AYONGA, Pierre PARNEIX, et le message de bienvenue à Moritz Kraemer plus bas). Envoyés sur ordre explicite de David tapé dans le chat (« envoie les 3 DMs »), après le second double-check indépendant qu'il avait lui-même demandé. Patrick et Pierre sont des **réponses en fil actif, hors quota froid**. Moritz est un message de bienvenue qui **partage le quota froid** : **DM à froid du jour : 1/8**.
+
+### ✅ LES 3 DM ONT ÉTÉ ENVOYÉS — ordre explicite de David en session interactive
+
+David a tapé « **envoie les 3 DMs** » directement dans le chat, après avoir lui-même demandé un second double-check indépendant (voir la correction anti-gabarit ci-dessus, effectuée AVANT l'envoi). Conformément à `report-conventions.md`, un ordre tapé en session vaut validation explicite au même titre qu'une décision prise ailleurs.
+
+**Procédure suivie pour chacun des 3 envois** (politique commune §5.4 et §7) :
+- Identité du destinataire relue dans l'en-tête du fil/composeur **juste avant** l'envoi, jamais supposée depuis une lecture antérieure.
+- Texte relu dans son intégralité (début ET fin) juste avant le clic, via capture d'écran zoomée là où la lecture JS du DOM était indisponible (voir incident ci-dessous).
+- Vérification post-envoi : éditeur vidé et texte visible dans le fil, pour Patrick/Pierre confirmé par script JS ; pour Moritz confirmé par capture (en-tête passé de « Nouveau message » à « Moritz Kraemer, PhD », coche de livraison visible).
+
+**⚠️ Incidents navigateur rencontrés pendant l'envoi, tous résolus sans perte ni doublon :**
+- **Onglet en viewport 0×0** au tout début (screenshot en erreur de paramètres, tous les rects d'éléments à zéro, `window.innerHeight: 0`) — même signature qu'un incident déjà documenté le 12/08. **Résolu par nouvel onglet** (ancien fermé proprement), sans tentative de réparation sur l'onglet cassé.
+- **`Input.dispatchKeyEvent` en timeout à répétition** pendant la saisie chez Patrick et Pierre : le texte atterrissait néanmoins dans le champ malgré l'erreur côté outil, vérifié à chaque fois avant de poursuivre plutôt que de retaper en double.
+- **Premier essai de séparation de paragraphes surdimensionné** (double `shift+Return` après des frappes déjà partiellement rejouées) a produit 5 sauts de ligne au lieu d'un espacement normal chez Patrick : **repris à zéro** (`ctrl+a` + `Delete`) plutôt que corrigé en place, pour éviter tout risque de doublon partiel.
+- **Chez Moritz, la fenêtre de messagerie flottante n'exposait aucun élément via `document.querySelectorAll`** (0 `[contenteditable]` trouvé alors que le texte était visible à l'écran) — signature distincte des incidents précédents, pas rencontrée ailleurs cette session. **Vérification basculée sur capture d'écran zoomée** (début et fin du texte, nom du destinataire, état du bouton Envoyer) plutôt que sur la lecture JS, conformément à la politique qui accepte les deux méthodes. Post-envoi confirmé par le même moyen.
+
+Aucune tentative de réparation hasardeuse (pas de redémarrage de Chrome, pas de bascule de deviceId) : uniquement nouvel onglet + re-vérification à chaque étape.
+
 
 ### 2️⃣ VEILLE RÉSEAU — 1 connexion acceptée, et c'est la plus significative depuis longtemps
 
@@ -195,7 +213,7 @@ Tous repérés par **découverte active en sidebar** (« Plus de profils pour vo
 
 ---
 
-#### 🔒 DM EN ATTENTE DE VALIDATION — **Moritz Kraemer, PhD** (EN, message de bienvenue, **SANS CTA**)
+#### ✅ DM ENVOYÉ — **Moritz Kraemer, PhD** (EN, message de bienvenue, **SANS CTA**) — sur ordre explicite de David (« envoie les 3 DMs », en session)
 
 **Hook cherché sur son activité réelle avant rédaction** : ses trois publications récentes sont des **republications** (offre de postdoc en phylodynamique au CERI/Stellenbosch, annonce logicielle TreeTracer de Guy Baele, relance de deadline). **Aucun post de fond récent** sur lequel accrocher honnêtement. Le hook retenu est donc **Global.health lui-même**, qui est un fait vérifiable de son profil et non une interprétation d'un post.
 
