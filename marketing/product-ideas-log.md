@@ -1189,6 +1189,8 @@ Toutes trois sur **le même bulletin hebdomadaire**, du même émetteur, celui d
 
 ⚠️ **Point d'ingestion indépendant de l'idée** : les 3 lignes fausses sont **toujours en base ce soir**, aucune écriture n'a été faite (la session LinkedIn ne fait pas d'ingestion, à raison). Les valeurs vérifiées sont prêtes à l'emploi dans `content-log.md`. C'est un correctif de données à passer, pas une idée produit — mais il ne faut pas qu'il se perde derrière l'idée.
 
+**✅ Corrigé le 22/08, sur demande de David en session interactive.** Re-vérifié moi-même par WebFetch direct sur le bulletin national #21 et le bulletin régional Nouvelle-Aquitaine (pas seulement la citation de la session du 21/08, qui s'est confirmée exacte) : Chikungunya 15→**25** cas, Dengue 2→**4** cas, West Nile 6→**18** cas (nouvelle région Île-de-France). Écrit en prod via `scripts/fix-france-arbovirus-bulletin21-2026-08-22.mjs`, `MANUAL_ROW_CHECKED` de `morning-don-check.mjs` mis à jour au 22/08. L'idée 1 elle-même (`sync-spf` ne visite jamais les pages de bulletin) reste non construite — ce correctif ne répare que le stock, pas la cause, et le même trou se reproduira au prochain bulletin hebdomadaire.
+
 ---
 
 ### 2. 🔴 Le badge qui rassure a été durci le 19/08, celui qui alerte est resté sur l'ancienne mesure — une ligne dont le bulletin a 152 jours n'affiche aucun avertissement

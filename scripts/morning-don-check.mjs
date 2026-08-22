@@ -787,17 +787,20 @@ const MANUAL_ROW_CHECKED = {
   // rien à "vérifier" pour l'instant au sens de rechercher une édition plus récente — cette entrée
   // existe uniquement pour que la cadence hebdo démarre à la date du recadrage plutôt qu'à zéro.
   "1ca31b07-6f83-4967-9f59-b599f7574642": "2026-08-15",
-  // Chikungunya/France, Dengue/France, West Nile/France : vérifiées le 17/08, déclenchées par le
-  // contrôle qualité du même jour (péremption 21j sur Chikungunya/Dengue ; West Nile trouvée en
-  // creusant la même source, pas encore flaguée). Bulletin SPF #20 du 12/08 (données au 10/08)
-  // trouvé — deux éditions en retard (#19 du 05/08 jamais ingérée non plus). Corrections réelles
-  // appliquées, pas un simple "rien à écrire" : Chikungunya 1→15 cas (nouveau département, Gironde),
-  // West Nile 4→6 cas (2 nouveaux départements). Dengue confirmée inchangée à 2 cas. Détail dans
-  // scripts/fix-france-arbovirus-bulletin20-2026-08-17.mjs. source_priority relevé à 10 pour les
-  // deux lignes qui étaient encore à 5 (aucun cron ne couvre en réalité cette série).
-  "99f356e8-7fc3-4f43-947e-45c9d6a34757": "2026-08-17",
-  "5ccc53c2-b17b-493b-aadf-233acb4b2cdf": "2026-08-17",
-  "906bf26a-8867-4a9c-ad7c-976e4e2c5bab": "2026-08-17",
+  // Chikungunya/France, Dengue/France, West Nile/France : vérifiées une 2e fois le 22/08, cette
+  // fois sur signalement d'un contact LinkedIn (Pierre PARNEIX, 21/08) plutôt que par le contrôle
+  // qualité — même défaut structurel que le 17/08 (aucun cron ne visite les pages de bulletin
+  // SPF, voir product-ideas-log.md du 21/08, idée 1). Bulletin #20 (12/08, données au 10/08)
+  // toujours en base, bulletin national #21 (19/08, données au 17/08) déjà publié depuis 3 jours
+  // au moment de la détection. Vérifié moi-même par WebFetch direct sur le national #21 ET sur le
+  // régional Nouvelle-Aquitaine du 19/08 (données au 18/08, détail communal Gironde/Dordogne),
+  // pas seulement sur la citation de session. Corrections réelles : Chikungunya 15→25 cas, Dengue
+  // 2→4 cas, West Nile 6→18 cas (nouvelle région Île-de-France). Détail dans
+  // scripts/fix-france-arbovirus-bulletin21-2026-08-22.mjs. source_priority déjà à 10 depuis le
+  // 17/08, inchangé — ce n'est pas ce qui bloquait le rafraîchissement.
+  "99f356e8-7fc3-4f43-947e-45c9d6a34757": "2026-08-22",
+  "5ccc53c2-b17b-493b-aadf-233acb4b2cdf": "2026-08-22",
+  "906bf26a-8867-4a9c-ad7c-976e4e2c5bab": "2026-08-22",
   // Dengue/Sri Lanka, Dengue/Pérou : voir MANUAL_ROWS ci-dessus pour le contexte complet.
   // Vérifiées le 18/08 (garde-fou recréé le jour même) — Sri Lanka : PDF quotidien NDCU
   // (dengue.health.gov.lk) lu directement, 92 595 cas / 68 morts au 17/08 (CFR 0,07 %).
