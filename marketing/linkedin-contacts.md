@@ -84,7 +84,7 @@ Requête faite dans la foulée sur la **vraie prod** (`.env.local.live`), table 
 >
 > Le lien est healthwatch-global.com, et il n'y a pas de carte à donner pour y entrer. Vous avez quatorze jours devant vous en Pro pour vous faire votre propre avis, et vérifier si la RDC y tient enfin la place qu'elle devrait.
 
-**Statut : 🔒 EN ATTENTE DE VALIDATION DE DAVID. Aucun envoi, aucun composeur ouvert.**
+**Statut : ✅ ENVOYÉ ET CONFIRMÉ, sur ordre explicite de David en session interactive (« envoie le dm »).** Éditeur `.msg-form__contenteditable` vidé (`selectAll`+`delete`) puis rempli en **un seul** `execCommand('insertText')` avec les `\n\n` déjà inclus dans la chaîne — la 1ère tentative, en plusieurs appels `insertText` successifs, avait produit 4 sauts de ligne entre paragraphes au lieu de 2 (chaque appel créait son propre bloc `<p>`), repéré via `.innerText` puis confirmé visuellement par capture, corrigé avant tout envoi. Destinataire (« Mohamed Ousmane COULIBALY ») et contenu de l'éditeur revérifiés dans le **même appel JS** que le clic sur Envoyer. **Confirmation de publication** : le fil passe de 2 à 3 événements, le nouveau message apparaît sous « David Deheunynck » à **18:42**, texte identique au brouillon validé, éditeur vide après envoi.
 
 <details>
 <summary>Historique — brouillon v1, jamais envoyé, remplacé ci-dessus</summary>
