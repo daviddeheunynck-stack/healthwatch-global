@@ -131,13 +131,13 @@ export default async function LegalPage() {
           <h2 className="text-lg font-semibold text-white">3. Propriété intellectuelle</h2>
           <p>
             L&apos;ensemble du contenu de ce site (textes, graphiques, logiciels, code source, marques, logos) est la propriété
-            exclusive de David Deheunynck, sous réserve des données issues de sources tierces (Organisation Mondiale de la
+            exclusive de SkyeProjects, sous réserve des données issues de sources tierces (Organisation Mondiale de la
             Santé, CDC, ECDC) qui demeurent la propriété de leurs auteurs respectifs.
           </p>
           <p>
             Toute reproduction, représentation, modification, publication ou adaptation de tout ou partie des éléments du
             site, quel que soit le moyen ou le procédé utilisé, est interdite sans l&apos;autorisation écrite préalable de
-            David Deheunynck.
+            SkyeProjects.
           </p>
         </section>
 
