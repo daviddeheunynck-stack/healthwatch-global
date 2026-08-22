@@ -311,3 +311,21 @@ Verbatim d'introduction du document : « *This is actually an underdeveloped res
 **Faisabilité côté HWG, à évaluer** : aucun de ces 18 indicateurs n'est publié de façon structurée par les sources agrégées (WHO DON/AFRO/EMRO, ECDC, Africa CDC, PAHO, sitreps nationaux) — ce sont des données de terrain (ring vaccination, contact tracing, rumeurs) qui n'apparaissent quasiment jamais dans un bulletin public. Contrairement au retour d'Omobolanle Adelekun (03/08, ci-dessus), il ne s'agit pas d'un flag à extraire d'un texte de bulletin existant : la quasi-totalité de ces indicateurs supposerait une source de données que HWG n'a pas et que le modèle d'agrégation de bulletins publics ne peut pas obtenir. Piste de recherche/plaidoyer plus que fonctionnalité produit à court terme.
 
 **Statut :** document téléchargé et lu le 08/08 (pièce jointe LinkedIn, bloquée par Chrome sous extension `.tmp`, renommée pour lecture). **Non évalué techniquement au-delà de ce constat de faisabilité générale.** **Décision prise par David le 08/08 (session interactive) : coécriture déclinée** (message envoyé, voir linkedin-contacts.md), **coordonnées personnelles non échangées en retour, neutralité politique sur le point USAID/CDC soulevé dans le même fil**. La piste des 18 indicateurs reste valable comme signal produit/recherche pour référence future, indépendamment de la décision sur la coécriture.
+
+---
+
+## 22 août 2026 — Mohamed Ousmane COULIBALY (Incident Manager, OMS — ex-Polio Incident Manager 2020-2023)
+
+**Contexte :** DM envoyé le 20/08, réponse reçue le 22/08 à 13:30 pendant la routine `linkedin-hwg-followup-check-2`. Une pièce jointe (mise à jour polio mondiale du GPEI arrêtée au 19/08) et une seule phrase.
+
+**Retour — verbatim intégral**
+> « Avez-vous parcouru cet Update ci-attaché ??? »
+
+**Ce n'est pas une demande de fonctionnalité, c'est un test de couverture — et le produit l'a raté.** Pièce jointe non ouverte (autorisation requise, David absent) ; la version publique de la même mise à jour a été lue à la place sur `polioeradication.org`. Constat, vérifié en base live le soir même : **3 lignes polio actives** (Afghanistan, Pakistan, Palestine), **aucune ligne africaine**, alors que la page GPEI listait cette semaine-là la RDC (5 cas de cVDPV2, 32 depuis janvier), le Nigeria, le Niger, la Centrafrique et le Soudan. La ligne Afghanistan **cite cette page exacte dans sa colonne `source`**.
+
+**Nature du défaut :** ni un trou de sourcing, ni une donnée périmée — un trou de **couverture**. La source était lue et citée ; seuls deux pays en étaient extraits. Un utilisateur ne pouvait pas le voir : la carte affichait « trois foyers de polio dans le monde » avec l'aplomb d'un fait, alors que c'était l'état d'un filtre.
+
+**Suites (22/08) :** 13 lignes polio africaines créées en prod sur validation explicite de David (`scripts/add-cvdpv-africa-gpei-2026-08-22.mjs`). Cause traitée le même soir par `daily-product-ideas-healthwatch` — sonde de couverture GPEI ajoutée à `data-quality` (section 4j), voir `product-ideas-log.md`, entrée du 22/08 idée 1.
+
+**Signal transversal, au-delà de la polio :** c'est le **deuxième cas en 24 h** d'une source correctement intégrée dont une partie du contenu n'est jamais extraite (l'autre : `sync-spf` et le bulletin vectoriel hebdomadaire, voir `product-ideas-log.md` du 21/08). Aucun contrôle du produit ne regardait, jusqu'à ce soir, ce qu'une source publie et que la base ne contient pas — tous les contrôles portent sur les lignes qui existent.
+

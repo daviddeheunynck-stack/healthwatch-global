@@ -1155,6 +1155,74 @@ Le libellé qu'il produit (l. 948) : « 🔔 N essai(s) dont l'échéance dépas
 
 ---
 
+## 2026-08-22 — Proposition du jour
+
+**Premier run de cette routine sous le régime d'autonomie de build** décidé par David en session interactive ce matin (« applique les idées que tu as proposées, et dorénavant, fais-le automatiquement, sans attendre mon feu vert », mémoire `feedback_product_ideas_autonomous_build_2026_08_22`). Les deux premières idées ci-dessous sont **déjà construites, typecheckées, lintées et poussées** ; la troisième ne l'est pas, et le paragraphe correspondant dit pourquoi.
+
+**⚠️ Écart de procédure assumé, dit d'emblée :** le SKILL demande d'archiver la proposition **avant** de construire, pour que la trace survive à un échec de construction. Ici proposition et construction sont commitées dans le même run. La construction ayant abouti, l'objectif de traçabilité est atteint, mais l'ordre prescrit n'a pas été respecté — à corriger au prochain run.
+
+**Signal terrain neuf, le premier depuis le 08/08 (14 jours) :** `product-feedback.md` a reçu ce soir une entrée pour la réponse de **Mohamed Ousmane COULIBALY** (Incident Manager OMS, ex-Polio Incident Manager 2020-2023), reçue à 13:30. Elle est l'ancrage direct de l'idée 1.
+
+---
+
+### 1. 🔴 Un professionnel de l'OMS a dû nous demander si nous avions lu sa source pour qu'on découvre que la base n'avait aucune ligne polio africaine — et rien dans le produit ne pouvait le détecter
+
+**Signal (DM du 22/08, verbatim intégral) :** « *Avez-vous parcouru cet Update ci-attaché ???* », avec la mise à jour polio mondiale du GPEI arrêtée au 19/08 en pièce jointe.
+
+**Ce que la vérification a donné.** Base live : **3 lignes polio actives** (Afghanistan, Pakistan, Palestine), **zéro africaine**. Page publique GPEI de la même semaine : RDC (5 cas de cVDPV2, 32 depuis janvier), Nigeria, Niger, Centrafrique, Soudan. Et le point qui fait mal : la ligne **Afghanistan cite cette page exacte** dans sa colonne `source`. La source était lue, citée, affichée — et on n'en extrayait que deux pays.
+
+**🔴 Le défaut de fond n'est pas la polio, c'est la forme du contrôle.** Le produit a neuf sections de contrôle qualité (`data-quality`, 4a→4i) plus `disease-coverage`. **Toutes partent des lignes qui existent** : périmée, dupliquée, CFR implausible, admin1 non fondé, seed active à tort. La section 4f a même un palier taillé exprès pour `polioeradication.org` (`MANUAL_WEEKLY_SOURCES`, seuil 30 j, écrit le 29/07 après que la ligne WPV1 Afghanistan eut pris 4 cas de retard). **Ce palier ne pouvait structurellement rien voir ici** : il vérifie la fraîcheur d'une ligne, et il n'y avait pas de ligne. Aucun contrôle du produit ne compare *ce qu'une source publie* à *ce que la base contient*. Un pays absent est indistinguable d'un pays sans épidémie.
+
+**Effort estimé : moyen.** Une sonde HTTP, un parseur texte, deux comparaisons. Pas de schéma, pas d'écriture.
+
+**Risque/inconnue :** (a) le parseur dépend de deux ancres éditoriales de la page (« *Summary of new polioviruses this week* » et « *Country updates as of <date>* ») — s'il échoue il rend `null` et le contrôle est **sauté en silence**, jamais un faux résultat partiel ; (b) un pays nommé différemment par le GPEI et par la base produit une fausse ligne « aucune ligne polio » — direction d'échec choisie délibérément : une question dans un e-mail, jamais une écriture ; (c) le résumé hebdomadaire ne liste que les pays à **virus nouveau cette semaine**, donc un foyer en cours mais silencieux cette semaine-là n'y figure pas — la sonde couvre le delta hebdomadaire, pas le stock.
+
+**✅ CONSTRUITE — section 4j de `app/api/cron/data-quality/route.ts`.**
+- `parseGPEIThisWeek()` : parse en **texte**, pas par sélecteur CSS (le markup est du WordPress qui bouge à chaque thème ; les deux ancres sont la structure éditoriale du bulletin, stable depuis des années). **Testé contre la vraie page téléchargée ce soir** : 6 pays extraits (Afghanistan, Centrafrique, RDC, Niger, Nigeria, Soudan) + date d'arrêt `2026-08-19` correctement normalisée depuis « 19 August 2026 ». Testé aussi sur une page sans les ancres → rend `null` (fail closed, même règle que `verifyFromDON`).
+- Deux contrôles distincts : **(1) couverture** — tout pays du résumé sans ligne polio **active** est signalé, en distinguant « ligne inactive à réactiver » de « aucune ligne, trou de couverture » ; **(2) retard** — si la date d'arrêt du bulletin dépasse de plus de **10 j** la ligne polio la plus récente en base. Le (2) n'est pas un doublon du palier 30 j de 4f : le GPEI republie chaque semaine, donc un rafraîchissement manuel qui s'arrête devient visible en ~10 j au lieu de 30, et il est mesuré **contre ce que la source dit couvrir**, pas contre l'horloge.
+- **Ce que ça donnerait aujourd'hui : rien.** Les 13 lignes créées ce soir couvrent les 6 pays du résumé, et leur `date` (18/08) est à 1 j de la date d'arrêt du bulletin (19/08). C'est le comportement voulu — un filet, pas du bruit. La semaine dernière, la même sonde aurait sorti **5 lignes**.
+
+---
+
+### 2. 🔴 Le contrôle « essais après l'horizon de décision » a expiré hier et s'est retourné : depuis ce matin, `trial_ends_at > "2026-08-21"` matche **tous** les essais actifs
+
+**Signal (code, `app/api/cron/health-check/route.ts`).** `VIABILITY_DECISION_DATE = "2026-08-21"` était en dur (l. 408), lu par la requête (l. 449), le corps de l'e-mail (l. 948), **la ligne d'objet** (l. 1004) et le payload JSON (l. 1114).
+
+**Ce qui a changé depuis le 20/08, et qui justifie de le remonter.** L'idée 2 du 20/08 décrivait ce défaut comme **à venir** (« *devient structurellement bruyant demain* »), l'entrée du 21/08 le rappelait comme **échéant ce soir-là**. Il est maintenant **passé** : la date est derrière nous, la requête ne filtre plus rien, et l'objet du mail quotidien annonce des essais « après le 2026-08-21 » à propos d'une décision déjà prise. Ce n'est plus une prévision, c'est l'état courant — c'est la preuve neuve qui autorise la re-remontée.
+
+**Effort estimé : petit.** Une constante, une requête, trois chaînes d'affichage.
+
+**Arbitrage tranché ici plutôt que renvoyé à David.** Les trois options listées le 20/08 (horizon glissant / neutralisation / nouvelle date de jalon) supposaient de connaître l'issue du go/no-go, que cette session n'a pas. L'horizon glissant est **la seule des trois qui n'en dépend pas** : il restitue à l'identique ce que le contrôle protégeait vraiment — « aucun mécanisme automatisé ne touchera ce compte avant longtemps » — sans jamais réclamer de maintenance. Une date fixe ne pouvait être juste qu'un seul jour.
+
+**Risque/inconnue :** (a) le contrôle devient **plus silencieux** qu'avant (seuls les essais à plus de 30 j sont signalés) — c'est la bonne direction, mais si David voulait au contraire un jalon daté sur une nouvelle décision, **c'est un autre contrôle, pas cette constante** ; le dire plutôt que de détourner celui-ci ; (b) `DECISION_HORIZON_DISMISSED` est laissé intact — Pasteur (13/09) retombe de toute façon sous le seuil, Johan (2027) reste écarté à raison.
+
+**✅ CONSTRUITE.** `DECISION_HORIZON_DAYS = 30`, horizon calculé à chaque run, exposé dans le payload JSON (`horizon` + `horizonDays`) pour rester lisible. Corps de l'e-mail et ligne d'objet réécrits (« essai(s) à échéance lointaine »). Plus aucune occurrence de `VIABILITY_DECISION_DATE` dans le code (vérifié).
+
+---
+
+### 3. `sync-spf` ne va jamais chercher le bulletin vectoriel hebdomadaire — ⛔ **délibérément non construite ce soir**
+
+**Re-remontée assumée de l'idée 1 du 21/08**, non construite alors (seul le stock avait été corrigé le 22/08 au matin : chikungunya 15→25, dengue 2→4, West Nile 6→18). **Angle neuf qui justifie de la reposer :** avec l'idée 1 ci-dessus, c'est le **deuxième cas en 24 h** d'une source correctement intégrée dont une partie du contenu n'est jamais extraite. Ce n'est plus un incident, c'est une classe de défaut — et la sonde 4j livrée ce soir ne couvre que l'instance polio.
+
+**Pourquoi elle n'est pas construite, avec la preuve recueillie ce soir.** Le 21/08 estimait l'effort « petit à moyen » en supposant qu'il suffisait d'ajouter des entrées à `SPF_RSS_URLS`. Deux vérifications directes ce soir démentent cette estimation : l'URL du bulletin national du 19/08 **et** la page-hub chikungunya de Santé publique France renvoient toutes deux **404** — le site a été restructuré, il n'existe ni flux XML ni motif d'URL devinable pour ces bulletins. Le travail réel est donc une **découverte d'index en direct puis un parseur multi-maladies** (chikungunya + dengue + Zika + West Nile dans un seul document, avec le piège « 3 épisodes totalisant 25 cas » déjà identifié le 21/08), et il **écrit sur des lignes de production**. Estimation révisée : **moyen à gros**.
+
+**Décision : ne pas l'écrire à l'aveugle dans une session non supervisée.** Le garde-fou 1 du SKILL exclut le gros effort ; et un parseur d'écriture prod qu'on ne peut pas confronter à la base pendant qu'on l'écrit est exactement le genre de code qui produit des chiffres faux sur la seule surface que les prospects institutionnels jugent en premier. À reprendre en session interactive, en commençant par retrouver l'index réel des bulletins vectoriels.
+
+⚠️ **Échéance à connaître :** le bulletin est hebdomadaire. Le n°22 tombe dans les jours qui viennent, et les trois lignes France repartiront en retard sans que rien ne le signale — sauf le palier de fraîcheur générique.
+
+---
+
+### Contexte relevé au passage (pas des idées)
+
+- 🔴 **Deux fichiers de cron modifiés et NON commités traînent dans l'arbre de travail depuis 15h26 aujourd'hui**, écrits par une autre session : `onboarding-sequence/route.ts` (suppression de l'e-mail J+12, qui doublonnait `trial-reminders` J-3/J-1 — trois mails « votre essai se termine » en trois jours, depuis deux crons qui s'ignorent) et `trial-reminders/route.ts` (envois restreints aux jours ouvrés, rattrapage du week-end le lundi). **Volontairement ni commités ni touchés par cette session** : le garde-fou 3 du SKILL exclut du build automatique tout ce qui touche aux e-mails clients, et ces changements-là n'ont pas été relus par moi. Ils sont cohérents à la lecture et bien commentés, mais **c'est à David de les valider et de les committer** — et tant qu'ils restent non commités, ils ne sont pas en prod. Mes propres commits de ce soir ont été faits par `git add` ciblé ; ces deux fichiers restent intacts.
+- **Pistes ouvertes sans angle neuf, non re-proposées :** version de définition de cas (Omobolanle Adelekun, 03/08), 18 indicateurs de confiance communautaire (Andrea Bernasconi, 07/08, non constructibles faute de source), trois sources tierces (Hao-Kai TSENG, 29/07, bloquées par le garde-fou explicite du `ROADMAP.md`), exposition de l'écart entre deux sources (idée 3 du 21/08, gros effort, sa version cheap étant déjà en prod).
+- **Morgan Otita** — toujours pas re-proposé, l'arbitrage de David du 20/08 tient. Repère naturel évoqué : ~24/08, J-2 avant l'annulation automatique du 26/08.
+- **Aucune sonde en lecture seule sur la prod n'a été tentée cette session** — les deux runs précédents s'étant fait refuser par le classificateur. Les deux constructions de ce soir n'en avaient pas besoin : l'une est validée contre la vraie page GPEI téléchargée, l'autre est une correction de logique entièrement lisible dans le code.
+
+**Statut : 2 idées PROPOSÉES ET CONSTRUITES, 1 idée PROPOSÉE et délibérément non construite (garde-fou 1).**
+
+---
+
 ## 2026-08-21 — Proposition du jour
 
 **Jour J du go/no-go.** Le statut de la décision elle-même n'est pas confirmé dans cette session — je ne le suppose pas. Les trois idées ci-dessous ne portent pas sur l'instrument de décision (déjà couvert les 17, 18, 19 et 20/08) mais sur ce que **la journée d'aujourd'hui a produit** : deux commits de qualité de données, un signalement de terrain arrivé par LinkedIn, et un angle produit explicitement renvoyé ici par la session de 17h.

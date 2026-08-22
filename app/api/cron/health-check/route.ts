@@ -396,16 +396,24 @@ async function checkBlockedEmailActiveTrials(supabase: any): Promise<{ trials: B
   return { trials, error: null };
 }
 
-// The viability go/no-go decision date — see [[project_hwg_viability_decision_window_2026_07_24]].
-// A trial ending after this date will never get its conversion ask before
-// the decision is made from whatever data exists on that day. Found
-// 2026-08-02: Institut Pasteur (jalal.nourlil@pasteur.ma, trial_ends_at
-// 2026-09-13, is_pilot=false) sits outside every automated conversion path
-// — pilot-closing-reminder filters on is_pilot, trial-reminders/winback fire
-// off trial_ends_at itself, all three weeks after the decision. General
-// case, not a Pasteur-specific fix: any trial extended (manually or by a
-// future bug) past this date is invisible to the same three mechanisms.
-const VIABILITY_DECISION_DATE = "2026-08-21";
+// Trials whose end date is so far out that no automated conversion path will
+// touch them for over a month. Found 2026-08-02: Institut Pasteur
+// (jalal.nourlil@pasteur.ma, trial_ends_at 2026-09-13, is_pilot=false) sits
+// outside every one of them — pilot-closing-reminder filters on is_pilot, and
+// trial-reminders/winback only fire at J-3/J-1 off trial_ends_at itself. So a
+// trial extended manually, or by a future bug, is simply invisible for as long
+// as its end date is remote, and nothing else in this file would say so.
+//
+// This was a hardcoded "2026-08-21" until 2026-08-22 — the viability go/no-go
+// date of [[project_hwg_viability_decision_window_2026_07_24]], which the check
+// was originally built around. That date passed on 21/08, at which point
+// `trial_ends_at > "2026-08-21"` matched EVERY active trial and the subject line
+// started naming a decision already made. A fixed date could only ever be right
+// on one day; the property actually worth watching — "no mechanism will touch
+// this account for a long time" — is a distance, not a date, so it is expressed
+// as one here and needs no maintenance. If a new dated milestone ever needs
+// watching, that is a different check, not this constant.
+const DECISION_HORIZON_DAYS = 30;
 
 // David declined to act on the Institut Pasteur case (is_pilot=true vs.
 // contact outside the product) — 2026-08-03, "oublie Pasteur" then "ça
@@ -440,19 +448,20 @@ const DECISION_HORIZON_DISMISSED = new Set([
 interface DecisionHorizonTrial { email: string; trialEndsAt: string; isPilot: boolean }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-async function checkDecisionHorizonTrials(supabase: any): Promise<{ trials: DecisionHorizonTrial[]; error: string | null }> {
+async function checkDecisionHorizonTrials(supabase: any): Promise<{ trials: DecisionHorizonTrial[]; error: string | null; horizon: string }> {
+  const horizonDate = new Date(Date.now() + DECISION_HORIZON_DAYS * 86_400_000).toISOString().split("T")[0];
   const { data, error } = await supabase
     .from("profiles")
     .select("email, trial_ends_at, is_pilot")
     .in("plan", ["starter", "pro", "team", "enterprise"])
     .is("stripe_subscription_id", null)
-    .gt("trial_ends_at", VIABILITY_DECISION_DATE);
-  if (error) return { trials: [], error: error.message };
+    .gt("trial_ends_at", horizonDate);
+  if (error) return { trials: [], error: error.message, horizon: horizonDate };
   const trials: DecisionHorizonTrial[] = (data ?? [])
     .filter((p: { email: string | null }) => !!p.email && !DECISION_HORIZON_DISMISSED.has(p.email.toLowerCase()))
     .map((p: { email: string; trial_ends_at: string; is_pilot: boolean | null }) =>
       ({ email: p.email, trialEndsAt: p.trial_ends_at, isPilot: !!p.is_pilot }));
-  return { trials, error: null };
+  return { trials, error: null, horizon: horizonDate };
 }
 
 // Informational only — this table is genuinely bimodal today (0 regions or
@@ -674,6 +683,7 @@ async function runHealthCheck(_req: NextRequest, supabase: any) {
 
   const decisionHorizonTrials    = decisionHorizonResult.trials;
   const decisionHorizonError     = decisionHorizonResult.error;
+  const decisionHorizon          = decisionHorizonResult.horizon;
   const hasDecisionHorizonTrials = decisionHorizonTrials.length > 0;
 
   // Excludes healthwatch-test.dev and other known test/dev domains — a
@@ -945,7 +955,7 @@ async function runHealthCheck(_req: NextRequest, supabase: any) {
       : `<tr><td style="padding:6px 0;color:#94a3b8">Régions d'alerte (comptes)</td><td style="padding:6px 0;font-weight:600">${regionEnrollmentStock.zero} à 0 · ${regionEnrollmentStock.partial} entre les deux · ${regionEnrollmentStock.full} à 5</td></tr>`}
     ${hasStuckInvites ? `<tr><td colspan="2" style="padding:8px 0;color:#f87171;font-weight:700">⚠️ ${stuckInvites.length} pilote(s) invité(s) jamais connecté(s) — même trou que ZABRE/Mulamba/ouedraogodaouda2408</td></tr>` : ""}
     ${decisionHorizonError ? `<tr><td colspan="2" style="padding:8px 0;color:#fbbf24;font-weight:700">🔧 Contrôle « essais après l'horizon de décision » impossible : ${esc(decisionHorizonError)}</td></tr>` : ""}
-    ${hasDecisionHorizonTrials ? `<tr><td colspan="2" style="padding:8px 0;color:#fbbf24;font-weight:700">🔔 ${decisionHorizonTrials.length} essai(s) dont l'échéance dépasse le ${VIABILITY_DECISION_DATE} — aucun mécanisme automatisé (trial-reminders/winback/pilot-closing) ne les touche avant la décision : ${esc(decisionHorizonTrials.map((t) => `${t.email}${t.isPilot ? " (pilote)" : ""} (${t.trialEndsAt.slice(0, 10)})`).join(", "))}</td></tr>` : ""}
+    ${hasDecisionHorizonTrials ? `<tr><td colspan="2" style="padding:8px 0;color:#fbbf24;font-weight:700">🔔 ${decisionHorizonTrials.length} essai(s) à échéance lointaine (au-delà du ${decisionHorizon}, soit ${DECISION_HORIZON_DAYS}j) — aucun mécanisme automatisé (trial-reminders/winback/pilot-closing) ne les touchera d'ici là : ${esc(decisionHorizonTrials.map((t) => `${t.email}${t.isPilot ? " (pilote)" : ""} (${t.trialEndsAt.slice(0, 10)})`).join(", "))}</td></tr>` : ""}
     ${alertLocaleDriftErr ? `<tr><td colspan="2" style="padding:8px 0;color:#fbbf24;font-weight:700">🔧 Contrôle « dérive alert_locale » impossible : ${esc(alertLocaleDriftErr)}</td></tr>` : ""}
     ${hasAlertLocaleDrift ? `<tr><td colspan="2" style="padding:8px 0;color:#f87171;font-weight:700">⚠️ ${alertLocaleDrift.length} compte(s) avec alert_locale de nouveau désynchronisé — régression possible du fix du 02/08</td></tr>` : ""}
     ${hasOverdue ? `<tr><td colspan="2" style="padding:8px 0;color:#f87171;font-weight:700">⚠️ ${overdue.length} cron(s) en retard : ${overdue.join(", ")}</td></tr>` : ""}
@@ -1001,7 +1011,7 @@ async function runHealthCheck(_req: NextRequest, supabase: any) {
   <p style="margin-top:16px;font-size:11px;color:#475569">${new Date().toISOString()}</p>
 </div>`;
 
-  const subject = `${emoji}${hasBundleSecrets ? " 🔴 SECRET EXPOSÉ" : ""} HealthWatch — ${total ?? "?"} foyers${hasOverdue ? ` · ${overdue.length} cron(s) en retard` : ""}${sentryIssues.length > 0 ? ` · ${sentryIssues.length} erreur(s) Sentry` : ""}${deliveryAlert ? ` · ${deliveryIssues.length} canal(aux) en panne` : ""}${hasZeroRegionTrials ? ` · ${zeroRegionTrials.length} essai(s) sans région` : ""}${hasUncoveredStripeTrials ? ` · ${uncoveredStripeTrials.length} essai(s) Stripe sans carte` : ""}${hasBlockedEmailTrials ? ` · ${blockedEmailTrials.length} essai(s) e-mail bloqué` : ""}${hasStuckInvites ? ` · ${stuckInvites.length} invite(s) bloquée(s)` : ""}${hasAuthFailures ? ` · ${authFailures.reduce((n, f) => n + f.count, 0)} échec(s) auth système` : ""}${hasInstitutionalSubs ? ` · 🔔 ${institutionalSubs.length} abonnement(s) institutionnel(s)` : ""}${hasDecisionHorizonTrials ? ` · 🔔 ${decisionHorizonTrials.length} essai(s) après le ${VIABILITY_DECISION_DATE}` : ""} · ${new Date().toLocaleDateString("fr-FR")}`;
+  const subject = `${emoji}${hasBundleSecrets ? " 🔴 SECRET EXPOSÉ" : ""} HealthWatch — ${total ?? "?"} foyers${hasOverdue ? ` · ${overdue.length} cron(s) en retard` : ""}${sentryIssues.length > 0 ? ` · ${sentryIssues.length} erreur(s) Sentry` : ""}${deliveryAlert ? ` · ${deliveryIssues.length} canal(aux) en panne` : ""}${hasZeroRegionTrials ? ` · ${zeroRegionTrials.length} essai(s) sans région` : ""}${hasUncoveredStripeTrials ? ` · ${uncoveredStripeTrials.length} essai(s) Stripe sans carte` : ""}${hasBlockedEmailTrials ? ` · ${blockedEmailTrials.length} essai(s) e-mail bloqué` : ""}${hasStuckInvites ? ` · ${stuckInvites.length} invite(s) bloquée(s)` : ""}${hasAuthFailures ? ` · ${authFailures.reduce((n, f) => n + f.count, 0)} échec(s) auth système` : ""}${hasInstitutionalSubs ? ` · 🔔 ${institutionalSubs.length} abonnement(s) institutionnel(s)` : ""}${hasDecisionHorizonTrials ? ` · 🔔 ${decisionHorizonTrials.length} essai(s) à échéance lointaine` : ""} · ${new Date().toLocaleDateString("fr-FR")}`;
 
   if (!isRealProduction) {
     console.log("[health-check] non-production run — skipping Brevo email and Sentry check-in/alerts");
@@ -1111,7 +1121,7 @@ async function runHealthCheck(_req: NextRequest, supabase: any) {
     stuckPilotInvites: { count: stuckInvites.length, invites: stuckInvites, error: stuckInviteError },
     alertLocaleDrift: { count: alertLocaleDrift.length, rows: alertLocaleDrift, error: alertLocaleDriftErr },
     institutionalSubscriptions: { count: institutionalSubs.length, rows: institutionalSubs, error: institutionalError },
-    decisionHorizonTrials: { count: decisionHorizonTrials.length, trials: decisionHorizonTrials, error: decisionHorizonError, horizon: VIABILITY_DECISION_DATE },
+    decisionHorizonTrials: { count: decisionHorizonTrials.length, trials: decisionHorizonTrials, error: decisionHorizonError, horizon: decisionHorizon, horizonDays: DECISION_HORIZON_DAYS },
     regionEnrollmentStock,
     clickVisitRatio,
     authFailures: { count: authFailures.reduce((n, f) => n + f.count, 0), breakdown: authFailures, error: authFailureError },
