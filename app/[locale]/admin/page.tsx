@@ -14,6 +14,7 @@ import AdminQCFixButton from "@/components/AdminQCFixButton";
 import AdminPilotInviteForm from "@/components/AdminPilotInviteForm";
 import AdminExtendTrialButton from "@/components/AdminExtendTrialButton";
 import DataStatusWidget from "@/components/DataStatusWidget";
+import { hasRealAdmin1 } from "@/lib/outbreaks";
 import type { Outbreak } from "@/lib/outbreaks";
 import type { Metadata } from "next";
 
@@ -261,19 +262,31 @@ export default async function AdminPage({
     return sum + (table[p.plan ?? "free"] ?? 0);
   }, 0) ?? 0;
 
-  // ── Duplicate outbreak detection (same disease + country, both active) ──────
+  // ── Duplicate outbreak detection (same disease + country + admin1, active) ──
+  // admin1 is part of the key because several sources are legitimately
+  // sub-national: USDA APHIS publishes one HPAI H5N1 row per state, so
+  // Avian Influenza / United States / Idaho, / Texas and / Utah are three
+  // distinct events, not one event stored three times. Keying on
+  // disease + country alone flagged them as a duplicate every day
+  // (2026-08-22), which trains the reader to dismiss this panel — and a
+  // duplicate detector nobody reads is worse than none. Rows with no admin1
+  // still collapse together under the empty string, which is the national
+  // case this check was written for — hasRealAdmin1 folds the "~" sentinel
+  // written by backfill-admin1 into that same national bucket, so a "~" row
+  // and a null row for one country still count as duplicates of each other.
   const dupMap: Record<string, { id: string; date: string | null }[]> = {};
   for (const o of outbreaks ?? []) {
     if (!o.active) continue;
-    const key = `${o.disease}||${o.country_en ?? o.country}`;
+    const zone = hasRealAdmin1(o.admin1) ? o.admin1 : "";
+    const key = `${o.disease}||${o.country_en ?? o.country}||${zone}`;
     if (!dupMap[key]) dupMap[key] = [];
     dupMap[key].push({ id: o.id, date: o.date ?? null });
   }
   const duplicates = Object.entries(dupMap)
     .filter(([, entries]) => entries.length > 1)
     .map(([key, entries]) => {
-      const [disease, country] = key.split("||");
-      return { disease, country, entries };
+      const [disease, country, admin1] = key.split("||");
+      return { disease, country, admin1, entries };
     });
 
   // ── Retention metrics (from already-fetched authUsers) ────────────────────
@@ -664,13 +677,13 @@ export default async function AdminPage({
           </h2>
         </div>
         {duplicates.length === 0 ? (
-          <p className="text-sm text-green-400">✓ Aucun doublon actif détecté (même maladie + même pays).</p>
+          <p className="text-sm text-green-400">✓ Aucun doublon actif détecté (même maladie + même pays + même zone).</p>
         ) : (
           <div className="space-y-2">
-            <p className="text-xs text-gray-500">Foyers actifs partageant la même maladie et le même pays — vérifier et désactiver le doublon dans Supabase.</p>
-            {duplicates.map(({ disease, country, entries }) => (
-              <div key={`${disease}-${country}`} className="bg-orange-950/30 border border-orange-500/20 rounded-lg px-4 py-3 flex flex-col gap-1.5">
-                <p className="text-sm font-semibold text-orange-300">{disease} — {country}</p>
+            <p className="text-xs text-gray-500">Foyers actifs partageant la même maladie, le même pays et la même zone — vérifier et désactiver le doublon dans Supabase.</p>
+            {duplicates.map(({ disease, country, admin1, entries }) => (
+              <div key={`${disease}-${country}-${admin1}`} className="bg-orange-950/30 border border-orange-500/20 rounded-lg px-4 py-3 flex flex-col gap-1.5">
+                <p className="text-sm font-semibold text-orange-300">{disease} — {country}{admin1 ? ` · ${admin1}` : ""}</p>
                 <div className="flex flex-wrap gap-2">
                   {entries.map(e => (
                     <Link
