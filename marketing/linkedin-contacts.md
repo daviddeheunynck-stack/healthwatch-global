@@ -11,6 +11,148 @@
 **Codeur (freelance)** : David a mentionné vouloir être « plus incisif » sur Codeur également, mais n'a pas encore précisé en quoi — à reconfirmer avec lui plutôt que d'improviser, ce terrain n'étant pas couvert par ce repo/session.
 
 ---
+## 📅 Session linkedin-hwg-followup-check-2 — 22/08/2026 (17h, 2e des 2 créneaux après-midi)
+
+**Vérification double déclenchement** : aucune entrée `linkedin-hwg-followup-check-2` datée du 22/08 dans ce fichier ni dans `content-log.md` à l'ouverture (les entrées du jour sont celles du créneau 13h, de la session interactive de 15h30 et du monitoring de 9h) → **premier déclenchement de cette routine aujourd'hui**.
+
+**Quotas à l'ouverture** (repris du carry-over de 15h50, après la reprise interactive avec David) : commentaires **7/7 REMPLI** (+1 hors quota chez Johan Verheyden sur instruction explicite) ; connexions **7/7 REMPLI** ; suivis **7/7-10** ; DM envoyés **5/8** ; file de validation DM **0**.
+
+**🖥️ État navigateur** : `_shared/browser-status.md` lu avant ouverture, dernière entrée 🔴 datée du **15/08** (pas du jour) → aucun bridage, rien à y écrire. `list_connected_browsers` ne renvoie **qu'un seul** navigateur, `23c7ecdd…`, sélectionné directement sans question (politique commune §7, session planifiée).
+- ✅ **L'anomalie JS de 13h ne s'est pas reproduite** : le test trivial `(async () => 42)()` renvoie bien `42` ce créneau. Le JS asynchrone fonctionne normalement, la session n'a pas eu à se brider au synchrone. Confirme que le `{}` de 13h était transitoire et non un renderer mort.
+- `mcp__ccd_session_mgmt__list_sessions` : **aucune session sœur `isRunning: true`**. La session `Linkedin hwg followup check` (qui portait la reprise interactive) est close depuis 13:55 UTC.
+
+### 1️⃣ MESSAGERIE — **1 message reçu**, et c'est une vraie réponse de fond
+
+**Méthode** : les 20 fils de la liste relus par récence, statut de lecture contrôlé par le compteur de non-lus rendu, puis fil concerné ouvert en entier depuis le tout premier message (§4).
+
+**Les 5 DM envoyés aujourd'hui restent tous sans réponse** à cette heure : Patrick AYONGA (13:03), Pierre PARNEIX (13:06), Moritz Kraemer (13:09), Richardson Mafigiri (15:12), Adam Abdullahi (15:13). Les 7 fils plus anciens (Dorine Ngono, Nirmal Kandel, ETIENNE GUENOU, Aishat Usman, Veh Kesse Fabien Diomande, Humphrey Karamagi, Dr. Ambrose Talisuna) portent tous notre message en dernier, inchangés depuis le 21/08.
+
+---
+
+#### ⭐ RÉPONSE REÇUE — **Mohamed Ousmane COULIBALY** (`/in/mohamed-ousmane-coulibaly-5483a1219/`), *Incident Manager at **World Health Organization***, ex-**Polio Incident Manager** OMS 2020-2023 (Kinshasa / Nouakchott / Ouagadougou), Bamako
+
+**Contexte du fil, relu intégralement** : invitation envoyée le 19/08 sans note, acceptée le 20/08, message de bienvenue en français rédigé par le créneau de 13h du 20/08 et envoyé le 20/08 à 14:18 sur ordre explicite de David. Ce message posait deux questions : comment lire l'absence totale de foyer polio africain dans la base HWG, et si une hausse de PFA notifiée se lit d'abord comme circulation virale ou comme intensification de la recherche active.
+
+**Verbatim reçu, aujourd'hui 22/08 à 13:30** (2 jours après notre message) :
+
+> Bonjour David,
+> Avez-vous parcouru cet Update ci-attaché ???
+>
+> *[pièce jointe]* `34_Polio_Global_update_19Aug2026.pptx` — 2 Mo
+
+**📎 Pièce jointe NON téléchargée, volontairement.** Le téléchargement d'un fichier est une action soumise à autorisation explicite de David, qui n'est pas présent en session planifiée. **Contournement légitime trouvé et utilisé** : la mise à jour GPEI **publique** du **même jour** (19 août 2026) est lisible en ligne sur `polioeradication.org/about-polio/polio-this-week/`. C'est cette version publique qui a été lue et vérifiée, et le brouillon le dit explicitement plutôt que de laisser croire que son fichier a été ouvert.
+
+**🔴 CE QUE LA VÉRIFICATION A RÉVÉLÉ — une vraie faille de couverture HWG, vérifiée en base live, pas supposée.**
+
+Source primaire lue (GPEI, *Polio This Week*, arrêté au **19 août 2026**) : la **RDC** porte **5 cas de cVDPV2** avec paralysie déclarée en juin-juillet (le plus récent le **11 juillet**), **32 cas de cVDPV2 depuis janvier 2026** ; le **Niger** un **cVDPV3** avec paralysie le **28 juin** ; la **Centrafrique** un **échantillon environnemental positif** prélevé le **15 juillet** ; le **Nigeria** un cVDPV2 (11 juillet), un échantillon positif (22 juillet) et un cVDPV3 (9 juillet) ; le **Soudan** 3 cas de cVDPV2 (avril-juin). Cinq pays africains (Burundi, Ghana, Guinée-Bissau, Congo, Ouganda) y sont par ailleurs déclarés sortis de flambée.
+
+Requête faite dans la foulée sur la **vraie prod** (`.env.local.live`), table `outbreaks`, `disease ilike '%polio%'` : **7 lignes au total, 3 actives** — Afghanistan (19 cas, `date` = **2026-08-19**), Pakistan (3 cas, 2026-07-22), Palestine (1 cas, 2026-03-04). **Zéro ligne africaine, active ou inactive.** Les 39 lignes actives de région `africa` couvrent 9 maladies (Choléra 15, Diphtérie 7, Mpox 6, Méningite 4, Chikungunya 2, FHCC 2, Lassa 1, Marburg 1, Ebola 1), **aucune polio**.
+
+**⚠️ Le point qui compte, et qui n'est pas celui qu'on croyait** : la ligne **Afghanistan** est datée du **19 août** et sa colonne `source` pointe littéralement sur **`https://polioeradication.org/about-polio/polio-thi…`**, c'est-à-dire **exactement la page dont Mohamed Ousmane nous envoie la version PowerPoint**. La chaîne HWG **lit déjà cette source** et n'en retient que l'Afghanistan et le Pakistan. Ce n'est donc **pas** un trou de sourcing (l'hypothèse du message du 20/08), c'est un **trou d'extraction** : les flambées africaines de poliovirus dérivés présentes sur la même page ne sont pas remontées en base.
+
+**➡️ Signalé au titre de §8 pour ingestion par `morning-don-check` ou une session interactive** (une routine sociale ne fait pas l'écriture elle-même) : source primaire = GPEI *Polio This Week*, **date d'arrêt 19 août 2026**, 5 pays africains concernés (RDC, Nigeria, Niger, Centrafrique, Soudan). Aucune régression de cumul à craindre, ces lignes **n'existent pas** en base, il s'agit de créations et non de mises à jour.
+
+---
+
+#### 🔒 DM en attente de validation — **Mohamed Ousmane COULIBALY** (FR, réponse en fil actif, **AVEC CTA**)
+
+**§3 CTA — PRÉSENT, la règle l'impose.** Sa réponse est un contenu réel (un document de référence plus une question directe), pas une politesse d'accusé de réception : le seuil de « échange substantiel engagé » est franchi. **Anti-répétition vérifiée sur l'intégralité du fil** : notre message du 20/08 nomme HealthWatch Global **sans lien ni essai** → le lien et l'essai sont **neufs dans ce fil**, aucune répétition d'argumentaire. Le CTA est amené par l'aveu de la faille, pas plaqué en fin de message.
+
+**Quota DM à froid : inchangé à 5/8.** Réponse en fil actif ouvert par l'interlocuteur, hors quota froid ([[feedback_reply_quota_cold_outreach_only]]).
+
+**Double-check (§5), les 8 points :**
+1. **Langue** — *langue du fil = FR* (son message du 22/08 et notre message du 20/08, relus tous les deux) ; *langue du brouillon = FR* ✅.
+2. **Faits** — chaque chiffre relu mot pour mot contre la source primaire GPEI, jamais contre un résumé : RDC 5 cas / plus récent 11 juillet / 32 depuis janvier ; Niger cVDPV3 le 28 juin ; Centrafrique échantillon prélevé le 15 juillet. **Les qualificatifs « premier de l'année » présents dans la source ont été volontairement retirés** du brouillon, leur portée (pays ou monde) n'étant pas tranchable sans ambiguïté. L'affirmation « ma ligne Afghanistan est datée du 19 août et pointe sur cette mise à jour » est vérifiée en base, pas déduite. **Aucune date calculée**, toutes citées.
+3. **Mise en forme** — 1 595 caractères, 4 paragraphes. Contrôle par script : **0 tiret cadratin, 0 demi-cadratin, 0 signe moins**, seuls caractères non ASCII = accents français (`À à ç è é ê î ô û`), 0 apostrophe courbe. ⚠️ **La relecture du champ réellement rendu reste à faire au moment de l'envoi** (le brouillon n'a pas été saisi dans un composeur, rien n'a été ouvert côté envoi).
+4. **Destinataire** — sans objet à ce stade, aucun composeur ouvert. À revérifier dans le même appel JS que le clic si David valide.
+5. **Aucun fait personnel inventé sur David** ✅ — le message ne dit de lui que ce qu'il fait réellement et ce que la base contient réellement.
+6. **Règle des deux essais** — 2 versions. La 2e ne corrige pas un défaut de ton ou d'intention répété mais des recoupements anti-gabarit ; pas de 3e essai nécessaire, seuil non atteint.
+7. **Anti-gabarit** — balayage **exhaustif** de toutes les fenêtres de 5 et 6 mots du brouillon contre les **4 fichiers d'archive** (normalisation casse/accents/ponctuation), pas un échantillon deviné. La v1 produisait 3 recoupements réels, tous retirés : « *ou est-ce que ce* » (figure de question alternative **déjà employée dans ce fil même**, notre message du 20/08 posant « *ou est-ce simplement que…* », donc tic visible pour ce destinataire précis), « *et c'est précisément ce qui* » (clôture déjà utilisée dans un DM), « *il n'y a rien à* ». **v2 : 0 recoupement.**
+8. **Relecture éditoriale** — le message répond exactement à la question posée (« *Avez-vous parcouru cet Update ?* ») sans jamais prétendre avoir ouvert son fichier ; il concède une erreur réelle et vérifiée au lieu de flatter le document ; il pose **une seule** question, à laquelle son poste de 2020-2023 lui permet de répondre mieux que quiconque ; le CTA découle de l'aveu. **Rien à changer.**
+
+**Texte prêt à envoyer :**
+
+> Bonjour Mohamed Ousmane,
+>
+> Votre fichier, non. La mise à jour publique du même jour, oui, et j'y ai trouvé pire que ce que j'imaginais. La RDC y porte cinq cas de cVDPV2 avec paralysie déclarée en juin et juillet, trente-deux depuis janvier. Le Niger un cVDPV3 le 28 juin, la Centrafrique un échantillon environnemental positif prélevé le 15 juillet, sans compter le Nigeria et le Soudan.
+>
+> J'ai ouvert ma base pendant que je vous répondais. Elle lit déjà cette page : ma ligne Afghanistan est datée du 19 août et pointe sur cette mise à jour du GPEI. Je ne suis donc pas passé à côté de la source, je passe à côté de la moitié de ce qu'elle contient. Ma chaîne a gardé l'Afghanistan et le Pakistan, et rien du continent. Le vide dont je vous parlais n'était pas dans le monde publié, il était dans ma façon de le lire, et il ne serait pas sorti tout seul.
+>
+> Reste une chose que je ne sais toujours pas interpréter, et vous avez tenu le poste qui permet d'y répondre. Ces cas sont datés par la paralysie, le 11 juillet pour la RDC, le 28 juin pour le Niger, et ils me parviennent le 19 août. À quel moment un cas comme celui du 11 juillet a-t-il déclenché quelque chose chez vous ? Au signalement du district, ou seulement à cette ligne-là ?
+>
+> Le site est healthwatch-global.com, l'inscription ouvre l'accès complet pendant deux semaines et aucun paiement n'est demandé derrière. Je vous l'envoie en sachant que la carte y est muette sur la polio africaine, ce que je corrige cette semaine. Si d'autres choses vous sautent aux yeux, dites-les moi franchement, j'en ai plus besoin que de compliments.
+
+**Statut : 🔒 EN ATTENTE DE VALIDATION DE DAVID. Aucun envoi, aucun composeur ouvert.** Notification push envoyée en fin de session.
+
+---
+
+### 2️⃣ CONNEXIONS ACCEPTÉES — **aucune**, 255 relations inchangé
+
+`/mynetwork/invite-connect/connections/` trié « Ajouts récents » : **255 relations**, exactement le relevé de 13h. Les deux entrées les plus récentes restent **Richardson Mafigiri** et **Adam Abdullahi** (« Connexion le 22 août 2026 »), tous deux déjà traités et déjà destinataires d'un DM envoyé à 15:12 et 15:13. **Aucune acceptation nouvelle depuis 13h, donc aucun message de bienvenue dû.**
+
+### 3️⃣ ABONNÉS ET SUIVIS — **363 abonnés inchangé, 0 follow-back dû, 3 suivis exécutés en découverte active (10/7-10)**
+
+Onglet « Abonnés » : **363 personnes**, chiffre identique au relevé de 13h. **Aucun nouvel abonné**, donc aucun follow-back à exécuter. Tête de liste inchangée (Adam Abdullahi, Moritz Kraemer, Zachariah G. Houdari, Richardson Mafigiri, Nirmal Kandel, Dorine Ngono, Pierre PARNEIX), tous déjà tranchés.
+- **Zachariah G. Houdari** apparaît en notification « vous suit » et reste au statut « Suivre », c'est-à-dire **non suivi** : écarté le 22/08 au matin (*Senior Licensed Life Insurance Advisor*), **décision reconduite sans ré-évaluation**.
+
+#### ✅ CARRY-OVER n°11 RETESTÉ ET TRANCHÉ — **Julia Gal : 3e refus de la plateforme, chemin du suivi abandonné**
+
+Le carry-over demandait de retenter le suivi à 17h si la marge de 3 était utilisée. **Retenté, pas recopié** (convention « un carry-over reporté deux fois se reteste »).
+
+`/in/julia-gal/` — *Scientific Program Manager, **Charité Center for Global Health** | **WHO Hub Research Fellowship in Public Health Intelligence***, Berlin, 341 abonnés, 2e degré, 3 relations en commun. **Pertinence reconfirmée et même renforcée** : elle coordonne la bourse de recherche conjointe Charité / **WHO Hub for Pandemic and Epidemic Intelligence**, et **Adam Abdullahi** (connecté ce matin) figure nommément dans ses posts de promotion de la bourse. Cœur de cible HWG.
+
+**Clic sur « Suivre » émis, identité vérifiée dans le même appel JS que le clic (§7)**. Résultat lu sur le toast rendu, pas supposé : **« Impossible de suivre Julia. Veuillez réessayer. »**, bouton resté sur « Suivre ». **3e échec consécutif** (2 le matin, 1 ici) : ce n'est pas un problème de méthode de clic, c'est une **restriction côté plateforme** sur ce profil.
+
+**➡️ Décision : chemin du suivi abandonné, ne plus le retenter.** Elle bascule en **candidat connexion prioritaire** (le bouton « Se connecter » est disponible sur son profil), à traiter dès réouverture du quota demain, celui d'aujourd'hui étant à 7/7.
+
+#### 🔎 Découverte active — 3 suivis, quota porté de 7 à **10/7-10 (plafond de la fourchette)**
+
+**Le vivier qualifié hérité des sessions précédentes est épuisé** : vérification faite dans `linkedin-candidates-tracker.md`, tous les noms du carry-over n°10 (Linda Esso, Nebiyu Dereje, Oyeronke Oyebanji, Kasonde Mwinga, Patrick Masenga, Bouh Abdi Khaireh, Antoine Nkuba Ndaye, Rebecca K., Heather Ferguson) sont **déjà suivis** ; ce sont désormais des candidats **connexion**, pas suivi. Les pistes venues des notifications du jour (**Professor Catherine Bennett**, *Infectious Disease Epidemiologist*, Melbourne ; **Dav Mulamba**, *Épidémiologiste MPH, Kinshasa*) sont toutes deux **déjà en 1er degré**, donc déjà suivies : rien à exécuter.
+
+**Recherche neuve menée** sur `polio surveillance coordinator WHO`, angle choisi délibérément d'après la faille de couverture découverte ce créneau (section 1️⃣). Les trois profils retenus ne figuraient dans **aucun** des fichiers d'archive ni dans le tracker (grep préalable).
+
+**Suivi 8/7-10 — Ayidagn G. WORKU (MPH, BSc.)** (`/in/ayidagn-worku/`, ***World Health Organization African Region***, Nairobi, 1 078 abonnés, 2e degré, 3 relations en commun). Intitulé : « *IDSR | Data, Information, Monitoring & Evaluation | GIS | Analytics and Visualization | Supporting Strategic Decision-Making, Outbreak Response, SIA quality assessment in **GPEI*** ». ⭐ **Le meilleur des trois** : il travaille à la fois sur **IDSR** (le système qui produit les bulletins que HWG dépouille) et sur **GPEI**, soit exactement les deux bouts de la faille découverte aujourd'hui, et depuis **WHO AFRO**, source directe de HWG. **Suivi confirmé** : bouton passé à « Suivi, cliquez pour ne plus suivre ».
+
+**Suivi 9/7-10 — Dr. Qaesar Nazeer** (`/in/qaesar-nazeer/`, ***World Health Organization*, bureau Pakistan**, Islamabad, 1 589 abonnés, 2e degré, **12 relations en commun**). *National Program Lead Operations - Disease Surveillance, and Outbreak Manager (Vaccine Preventable Diseases, **Poliomyelitis**)*. Directement en regard de la **ligne Pakistan** de la base HWG (3 cas, arrêtée au 22/07). **Suivi confirmé** au bouton rendu.
+
+**Suivi 10/7-10 — Marvin Ndumu Akoniwong** (`/in/marvin-ndumu-akoniwong-4b8244284/`, ***World Health Organization***, **Berlin**, 89 abonnés, 83 relations, 2e degré, 3 relations en commun). *Epidemiologist | Surveillance Systems | Health Intelligence | **Data Harmonization & Interoperability***. ⚠️ **Réserve consignée honnêtement** : réseau très restreint et **aucune activité de fond** (ses seuls commentaires visibles sont des « Congratulations! 🎉 »). Retenu quand même **en suivi et non en connexion**, comme Rebecca K. le 09/08 : l'intitulé est au cœur du problème HWG (harmonisation et interopérabilité des données de surveillance) et il est basé à Berlin, où siège le WHO Hub for Pandemic and Epidemic Intelligence. Un suivi ne coûte rien ; une invitation aurait été prématurée. **Suivi confirmé** au bouton rendu.
+
+### 4️⃣ INVITATIONS REÇUES — 1 seule, statut figé, aucune action
+
+**OLAOLUWA PHILIP (BSc, MSc)** (`/in/olaoluwa-philip-oguntoyinbo5/`, *Global Climate Action & Policy Advocate | GIScientist | Founder, CLIMORA Initiative*) : toujours en attente, ni acceptée ni refusée. Statut « écarté » **figé** par le carry-over n°11 du 21/08, reconduit le 22/08 au matin et à 13h. **Consigne respectée, le profil n'a pas été rouvert ni ré-évalué.**
+
+### 5️⃣ COMMENTAIRES — quota du jour **REMPLI**, aucun nouveau commentaire, retombées relevées
+
+**Aucune recherche de cible neuve n'a été lancée**, conformément au carry-over n°3 : le quota de 7 est rempli depuis 15h40 (Apoorva Wasnik) et le 8e commentaire (Johan Verheyden) était une exception sur instruction explicite de David, pas une réserve à réutiliser.
+
+**Retombées relevées une par une sur `/recent-activity/comments/`**, sur le compteur rendu et non sur les notifications :
+
+| Commentaire | Retombée à 17h30 | Impressions |
+|---|---|---|
+| **6/7 — Miriam Mbueshi** (corridor du fleuve Congo, 13h) | ⭐ **1 réaction : Harvey Basivikidi « a trouvé votre commentaire instructif »** (il y a 2 h) | 9 |
+| **7/7 — Apoorva Wasnik** (Point d'Entrée Hyderabad, 15h40) | **1 réponse de l'autrice** + elle a consulté le profil de David | **10**, meilleure diffusion du lot |
+| **8e hors quota — Johan Verheyden** (préprint légitimité, 15h50) | 0 réaction, 0 réponse | 1 |
+| **1/7 à 5/7 du matin** | Toujours 0 réaction, 0 réponse | 2 à 8 |
+
+**➡️ Première traction réelle de la journée**, après un constat de 13h qui était à zéro sur les cinq commentaires du matin. **Harvey Basivikidi** (acteur santé numérique / riposte RDC, déjà connu, bloqué en commentaire jusqu'au 26/08) est le premier à réagir à la production du jour, et il réagit précisément au commentaire dont l'angle était le plus risqué (le corridor comme unité sans équivalent dans les données).
+
+**Réponse d'Apoorva Wasnik, lue en entier : « *David Deheunynck interesting insight!* »** ⚠️ **Aucune réponse rédigée, décision assumée.** C'est un accusé de réception poli sans contenu, exactement le cas que §3 distingue d'un dialogue engagé. Il n'y a rien à creuser analytiquement, et répondre « merci » aurait produit un commentaire public vide sous notre propre commentaire. **Point positif à noter malgré tout** : l'autrice du post, vérifiée, a réagi **et** consulté le profil de David dans l'heure.
+
+### 6️⃣ SÉPARATION FREELANCE
+
+Aucune activité relevant de l'outreach freelance n'a été traitée, comptée ni archivée côté HWG. Aucun fil de ce type parmi les 20 conversations de la messagerie.
+
+### 7️⃣ GARDE-FOUS ET POINTS À REMONTER
+
+1. 🔴 **Faille de couverture produit découverte et vérifiée en base — le point le plus important de ce créneau.** Détail complet en section 1️⃣. En une ligne : la chaîne HWG **lit déjà** la page GPEI *Polio This Week* (la ligne Afghanistan en porte l'URL et la date du 19/08) mais n'en extrait **aucune** des flambées africaines de poliovirus dérivés qui y figurent (RDC, Nigeria, Niger, Centrafrique, Soudan). **Signalé pour ingestion, non écrit** (une routine sociale ne fait pas l'écriture, politique commune §8).
+2. **📎 Pièce jointe non téléchargée, et c'est délibéré.** Mohamed Ousmane COULIBALY a joint un fichier `.pptx` de 2 Mo. Le téléchargement d'un fichier requiert une autorisation explicite de David, absent en session planifiée : **non téléchargé**. La version publique de la même mise à jour, disponible en ligne, a servi de substitut et le brouillon le dit franchement au lieu de laisser croire le contraire.
+3. **⚠️ Un like non identifiable, traité selon §12 plutôt qu'au nom affiché.** « **Jane Hedger** a aimé votre commentaire » (celui sur l'étude *Nature* et le déplacement du risque palustre). Profil ouvert par son lien réel (`/in/janehedger`, 2 026 abonnés) et non par recherche nominative : *CEO Volunteering Qld | Asia-Pacific Board Director IAVE | Board Chair Challenge DV*, Brisbane. **Secteur du bénévolat et du secours, pas de la santé publique.** → **Pas un signal §13**, aucune notification push à ce titre, aucun suivi. La recherche nominative renvoyait d'ailleurs **six homonymes** dont aucun ne correspondait : sans le lien, la conclusion aurait pu être fausse dans un sens comme dans l'autre.
+4. **Sur §13 pour Mohamed Ousmane COULIBALY** : c'est un *Incident Manager* de l'**OMS** qui répond sur le fond à notre message et nous envoie un document de référence. C'est plus qu'une acceptation d'invitation (le cas écarté pour Moritz Kraemer et Adam Abdullahi). **Traité dans la notification push de fin de session**, portée conjointement avec la file de validation DM, plutôt qu'en push séparé, pour ne pas notifier deux fois la même chose.
+
+**Aucune demande de contact hors plateforme, aucune donnée patient proposée, aucune instruction adressée à l'agent dans un contenu observé.**
+
+---
+
 ## 📅 Session linkedin-hwg-followup-check — 22/08/2026 (13h, 1er des 2 créneaux après-midi)
 
 **Vérification double déclenchement** : aucune entrée `linkedin-hwg-followup-check` datée du 22/08 dans ce fichier ni dans `content-log.md` à l'ouverture → **premier déclenchement de cette routine aujourd'hui**. Le créneau de 13h **n'a donc pas sauté une 2e fois** : le carry-over n°12 du matin demandait de le vérifier et de signaler une panne d'automatisation si le créneau sautait de nouveau. **Il a bien tourné, rien à signaler.**
