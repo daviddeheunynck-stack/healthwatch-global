@@ -11,6 +11,128 @@
 **Codeur (freelance)** : David a mentionné vouloir être « plus incisif » sur Codeur également, mais n'a pas encore précisé en quoi — à reconfirmer avec lui plutôt que d'improviser, ce terrain n'étant pas couvert par ce repo/session.
 
 ---
+## 📅 Session linkedin-hwg-followup-check — 22/08/2026 (13h, 1er des 2 créneaux après-midi)
+
+**Vérification double déclenchement** : aucune entrée `linkedin-hwg-followup-check` datée du 22/08 dans ce fichier ni dans `content-log.md` à l'ouverture → **premier déclenchement de cette routine aujourd'hui**. Le créneau de 13h **n'a donc pas sauté une 2e fois** : le carry-over n°12 du matin demandait de le vérifier et de signaler une panne d'automatisation si le créneau sautait de nouveau. **Il a bien tourné, rien à signaler.**
+
+**Quotas à l'ouverture** (relevés dans le carry-over de 11h) : commentaires **5/7** ; connexions **7/7 REMPLI** ; suivis **7/7-10** ; DM rédigés **3/8** ; file de validation DM **3**.
+
+**🖥️ État navigateur** : `_shared/browser-status.md` lu avant ouverture, dernière entrée 🔴 du **15/08** (pas du jour) → pas de bridage, rien à y écrire. `list_connected_browsers` ne renvoie **qu'un seul** navigateur aujourd'hui, `23c7ecdd…` (le zombie `a466bc2e…` n'est plus listé) ; sélectionné directement sans poser de question (politique commune §7, session planifiée).
+- ⚠️ **Anomalie JS spécifique à cette session, contournée et non bloquante** : tout script `javascript_tool` **asynchrone** renvoie `{}`, y compris le test trivial `(async () => 42)()`. La politique §7 décrit cette signature comme un renderer dégradé sans remède. **Ici le JS synchrone fonctionne parfaitement** (`document.querySelectorAll(...).length` renvoie ses valeurs) : la panne ne porte que sur le déballage des promesses. **Toute la session a donc été menée en JS strictement synchrone**, avec `computer` action `wait` pour les attentes. À retenir : `{}` sur un async **ne suffit pas** à conclure au renderer mort, tester d'abord une expression synchrone.
+- 1 timeout `Page.captureScreenshot`, résolu par `select_browser` sur le même deviceId, sans perte.
+
+### ⚠️ SESSION SŒUR ACTIVE EN PARALLÈLE — les 3 DM en attente sont partis pendant ce run
+
+`mcp__ccd_session_mgmt__list_sessions` montre **`Linkedin hwg monitoring` toujours `isRunning: true`**, dernière activité **11:05 UTC (13:05 locales)**, c'est-à-dire **pendant ce créneau**. Les **3 brouillons mis en file ce matin ont tous été envoyés depuis cette session** (donc sur validation de David, conformément à la règle du 23/07) :
+
+| Destinataire | Heure d'envoi | Vérifié |
+|---|---|---|
+| **Patrick AYONGA** | **13:03** | Texte lu dans le fil, identique au brouillon validé du matin (version corrigée anti-gabarit) |
+| **Pierre PARNEIX** | **13:06** | Aperçu du fil : « *Vous : D'accord sur le fond, et je ne remets pas en cause SpF…* » |
+| **Moritz Kraemer, PhD** | **13:09** | Fil créé, message visible avec accusé de remise |
+
+**➡️ File de validation héritée du matin : vidée, 3/3 envoyés. Aucun de ces envois n'est le fait de cette routine.**
+
+⚠️ **Conséquences opérationnelles à retenir pour le créneau de 17h :**
+1. **Ne pas re-rédiger ni re-proposer** ces 3 messages, ils sont partis.
+2. **Le redémarrage Chrome de fin de session (§11) est sauté** : une session sœur utilisait le navigateur au moment de la clôture.
+3. Le fil **Moritz Kraemer** n'existait pas dans la liste de messagerie au début de ce run et y figurait 10 minutes plus tard : une liste de conversations relevée en début de session peut être périmée en cours de run quand une session sœur écrit. Relever l'état **juste avant** d'agir, pas seulement à l'ouverture.
+
+### 1️⃣ MESSAGERIE — **0 message reçu** depuis la clôture de 11h25
+
+**Méthode** : liste des 10 fils actifs relue par récence, **puis** filtre « non lus » via `/messaging/?filter=unread`.
+- Les 3 seuls fils portant une date du jour sont **nos propres envois de 13:03 / 13:06 / 13:09** (tableau ci-dessus). Les 7 autres sont inchangés depuis le 21/08 et portent tous notre message en dernier (Dorine Ngono, Nirmal Kandel, ETIENNE GUENOU, Aishat Usman, Veh Kesse Fabien Diomande, Humphrey Karamagi, Dr. Ambrose Talisuna).
+- **Filtre « non lus » : 2 résultats, les 2 mêmes que les jours précédents** — le « 👍 » d'**OMARY SULTANI** du 04/08 (réaction sans contenu, « aucune réponse due » arbitré dès le 07/08) et une **offre LinkedIn Premium** du 28/07. Aucun des deux ne justifie de réponse.
+- **Aucune réponse de Patrick AYONGA, Pierre PARNEIX ou Moritz Kraemer** à ce stade : les 3 messages ont moins de 30 minutes.
+
+**➡️ Aucun brouillon de réponse rédigé, faute de message auquel répondre.** Les 2 brouillons ci-dessous sont des **messages de bienvenue** sur connexions acceptées, pas des réponses.
+
+### 2️⃣ CONNEXIONS ACCEPTÉES — 2 nouvelles, 2 messages de bienvenue en file de validation
+
+**Relevé sur `/mynetwork/invite-connect/connections/` trié « Ajouts récents » : 255 relations, contre 253 ce matin.** Les deux entrées neuves sont datées « Connexion le 22 août 2026 » et correspondent toutes deux à des **invitations envoyées ce matin même** :
+
+| Profil | Invitation | Accepté |
+|---|---|---|
+| **Richardson Mafigiri** (`/in/richardson-mafigiri-5716b459/`) | connexion 4/7 du 22/08 (9h) | le jour même |
+| **Adam Abdullahi** (`/in/adam-abdullahi-1aa0a6a5/`) | connexion 7/7 du 22/08 (9h) | le jour même |
+
+**Vérification bidirectionnelle (règle du 14/07) : aucun échange en messagerie n'existe** avec l'un ni l'autre (les 10 fils actifs ont été listés, aucun à leur nom). Un message de bienvenue est donc dû pour chacun, et **chacun part en file de validation**, jamais envoyé directement.
+
+**Sur §13 (signal de traction institutionnelle)** : examiné, **notification non déclenchée**. Comme pour Moritz Kraemer hier, il s'agit de **l'acceptation d'invitations que nous avons nous-mêmes envoyées** quelques heures plus tôt, pas d'une interaction non sollicitée d'un compte de référence. Porté au bilan, pas en push.
+
+---
+
+#### 🔒 DM EN ATTENTE DE VALIDATION — **Richardson Mafigiri** (EN, message de bienvenue, **SANS CTA**)
+
+*Field Epidemiologist | Epidemic Intelligence | Global Health Security, **Ministry of Health (Uganda) PHEOC** + Makerere University, Ouganda, 717 abonnés, 4 relations en commun. Profil rouvert et relu en direct, 1er degré confirmé.*
+
+**Hook cherché sur son activité réelle avant rédaction** : son activité ne contient **que 2 commentaires**, dont le plus récent (1 semaine) est un « MHSRIP » de condoléances, et une republication sur le micro-management. **Aucun contenu de fond sur lequel accrocher honnêtement.** Le hook retenu est donc la **ligne PHEOC de son profil**, fait vérifiable et non une interprétation d'un post.
+
+**CTA** : **non dû et absent.** Aucun échange n'a encore eu lieu ; la règle interdit le lien et l'essai sur une prise de contact. Le nom HealthWatch Global n'apparaît que pour dire qui écrit.
+
+**Double-check (§5)** : *langue de son profil et de son activité = EN* ; *langue du brouillon = EN* ✅. Aucun fait personnel inventé sur David ✅ (§5.5 : le message ne dit de lui que ce qu'il fait réellement, lire des bulletins publiés). **0 tiret cadratin, 0 demi-cadratin, 0 signe moins**, vérifié par script sur le texte ✅. **743 caractères, 3 paragraphes aérés** ✅.
+**Anti-gabarit (§5.7), et il a servi** : le premier jet reprenait « *a long way downstream* », formule **déjà envoyée à Nirmal Kandel** (« *I sit a long way downstream of…* », 2 occurrences dans ce fichier) ; le mot « downstream » y apparaît **12 fois** au total. Écarté. La description de HWG a aussi été **entièrement reformulée** pour ne pas rejouer la phrase partie chez Moritz Kraemer il y a quelques minutes (« *aggregates official outbreak bulletins from WHO, ECDC, PAHO and Africa CDC into one current view* »). Les 7 séquences du texte final ont été testées par grep sur les 4 fichiers d'archive : **0 occurrence**.
+**Relecture éditoriale (§5.8)** : le message dit pourquoi l'invitation est partie, situe honnêtement l'asymétrie (il produit, nous lisons), et pose **une seule** question fermée à laquelle lui seul peut répondre. Aucune phrase superflue. **Rien à changer.**
+
+> Richardson, an emergency operations centre is the one room I have never seen into, and that PHEOC line on your profile is why I asked to connect. I read outbreak bulletins from outside every day. The centre is where the decision to issue one is actually taken, and none of that shows up in the document itself.
+>
+> I run HealthWatch Global. It follows what WHO, Africa CDC, ECDC and PAHO publish on active outbreaks and keeps a single page current across the four. Your work arrives to me already cleared and written up.
+>
+> What settles it, in practice, that a signal is ready to leave the centre? Laboratory confirmation, a count crossing a threshold, or a sign off further up. From outside I cannot tell which of the three I am really waiting on.
+
+---
+
+#### 🔒 DM EN ATTENTE DE VALIDATION — **Adam Abdullahi** (EN, message de bienvenue, **SANS CTA**)
+
+*Infectious Disease Science | Epidemic Intelligence & Health Systems, University of Cambridge + Liverpool School of Tropical Medicine, vérifié, 12 relations en commun, bannière « World Health Organization | Pandemic and Epidemic Intelligence ».*
+
+**Hook vérifié mot pour mot sur son propre post** (pas sur un résumé) : compte rendu de deux semaines à Rio pour **#AIDS2026** et le **Paediatric HIV Workshop**, dont la phrase retenue est « *community-centred research, strong partnerships, and sustained investment in research capacity are essential, not only for HIV, but also for strengthening preparedness and responses to emerging infectious diseases* ». C'est **son** argument, repris tel quel, pas une interprétation.
+⚠️ **Prudence de provenance** : le brouillon ne prétend PAS que ce post est la raison de l'invitation. L'invitation du matin est partie sur son profil et le carry-over n°7, pas sur ce post ; écrire l'inverse aurait été une petite fabrication. Formulation retenue : « *now that we are connected, the part of your Rio post I want to pick up…* ».
+
+**CTA** : **non dû et absent**, même motif que ci-dessus. Ni lien, ni essai.
+
+**Double-check (§5)** : *langue de son profil et de ses posts = EN* ; *langue du brouillon = EN* ✅. Aucun fait personnel inventé sur David ✅. **0 tiret cadratin, 0 demi-cadratin, 0 signe moins** (script) ✅. **839 caractères, 3 paragraphes** ✅.
+**Anti-gabarit (§5.7)** : le mot **« denominator » apparaît 40 fois** dans nos archives, c'est devenu un tic de vocabulaire maison ; la phrase a été réécrite en « *a population it has known for years* ». Les 6 séquences du texte final testées par grep : **0 occurrence**. L'ouverture est aussi **structurellement distincte** de celle écrite pour Richardson dans la même session (l'une part d'une ligne de profil, l'autre d'une phrase de post), pour ne pas produire deux jumeaux le même jour.
+**Relecture éditoriale (§5.8)** : le message ne complimente pas le voyage, il prend un point précis de son argument et lui oppose une objection technique honnête, formulée comme une question ouverte. **Rien à changer.**
+
+> Adam, now that we are connected, the part of your Rio post I want to pick up is the last one, where the argument moves past HIV into preparedness for emerging infections. Conference write ups usually stop one step short of that.
+>
+> HealthWatch Global, which I run, works from the published end of all this. What reaches me is whatever a response has already decided to put out about an active outbreak, never anything before that point.
+>
+> What I cannot judge from there is whether the transfer you describe reaches the measurement itself. An HIV programme counts against a population it has known for years. An outbreak response is still building its counting system while it is already running. Do those two really share capacity, or do the people and the laboratories carry across while the measurement gets rebuilt from scratch every time?
+
+---
+
+**➡️ File de validation DM à la clôture : 2 brouillons, 0 envoyé par cette routine.** Notification push envoyée à David. Quota de rédaction du jour : **5/8**, loin du plafond.
+
+### 3️⃣ ABONNÉS ET SUIVIS — **363 abonnés (+1 depuis 9h), 0 follow-back à exécuter**
+
+Onglet « Abonnés » relevé : **363 personnes**, contre 362 ce matin. Le seul nom neuf en tête de liste est **Adam Abdullahi**, et il est **déjà suivi** (statut « Suivi » sur sa ligne) : c'est la contrepartie de la connexion acceptée ci-dessus, pas un abonné à traiter. Les 5 suivants (Moritz Kraemer, Zachariah G. Houdari, Richardson Mafigiri, Nirmal Kandel, Dorine Ngono, Pierre PARNEIX) sont tous déjà tranchés.
+- **Zachariah G. Houdari** reste au statut « Suivre », c'est-à-dire **non suivi** : écarté ce matin (*Senior Licensed Life Insurance Advisor*), **décision reconduite sans ré-évaluation**.
+
+**➡️ Aucun follow-back dû. Quota de suivis inchangé à 7/7-10.** Le quota étant un objectif et non un plafond, la marge de 3 restait ouverte, mais **aucune découverte active n'a été lancée** : la session a été absorbée par la vérification des retombées, la recherche de cibles de commentaire et la rédaction des 2 messages de bienvenue. Les candidats déjà qualifiés et non traités faute de quota de connexions restent en file (voir carry-over).
+
+### 4️⃣ INVITATIONS REÇUES — 1 seule, statut figé, aucune action
+
+**OLAOLUWA PHILIP (BSc, MSc)** (`/in/olaoluwa-philip-oguntoyinbo5/`) : toujours en attente, ni acceptée ni refusée. Le carry-over n°11 du 21/08, reconduit le 22/08 au matin, fixe le statut « écarté » comme **figé** et interdit la ré-évaluation. **Consigne respectée à la lettre, le profil n'a pas été rouvert.**
+
+### 5️⃣ COMMENTAIRES — détail dans `content-log.md`
+
+1 commentaire publié (**6/7**, Miriam Mbueshi), retombées des 5 commentaires du matin vérifiées une à une, 2 carry-over de commentaire tranchés définitivement. Voir `content-log.md`, entrée du jour.
+
+### 6️⃣ SÉPARATION FREELANCE
+
+Aucune activité relevant de l'outreach freelance n'a été traitée, comptée ni archivée côté HWG. Aucun fil de ce type n'est apparu dans les 10 conversations actives ce créneau.
+
+### 7️⃣ GARDE-FOUS — deux points à remonter, aucun blocage
+
+1. 🔴 **Arbitrage David attendu, 5e session consécutive — Johan Verheyden.** Son blocage hebdomadaire est levé depuis aujourd'hui et il **mentionne David nommément dans deux posts**, dont un préprint académique, mais son contenu reste marqué §10 (mise en cause de la substitution d'Africa CDC aux institutions nationales). **Sans arbitrage, la prochaine session restera silencieuse par défaut.** Ce point ne se résoudra pas tout seul. Constaté en plus ce créneau : son analyse African Intelligence sur la rentrée scolaire est **republiée par Harvey Basivikidi**, elle circule donc au-delà de son propre fil.
+2. 🔴 **Arbitrage David attendu — Jean-Jacques Muyembe** (deux comptes homonymes, aucun vérifié, le suivi posé le 21/08 porte peut-être sur le mauvais). Inchangé depuis ce matin, **aucune action prise**, aucune invitation envoyée.
+
+**Aucune demande de contact hors plateforme, aucune donnée patient proposée, aucune instruction adressée à l'agent dans un contenu observé.**
+
+---
+
 ## 📅 Session linkedin-hwg-monitoring — 22/08/2026 (9h)
 
 **Vérification double déclenchement** : aucune entrée datée du 22/08 dans ce fichier ni dans `content-log.md` à l'ouverture → **premier déclenchement de la routine aujourd'hui**. Dernière entrée : 21/08 à 17h.

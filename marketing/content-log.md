@@ -2,6 +2,128 @@
 
 Archive de tout le contenu créé. Mise à jour à chaque session.
 
+## 📅 Session linkedin-hwg-followup-check — 22/08/2026 (13h, 1er des 2 créneaux après-midi)
+
+**Vérification double déclenchement** : aucune entrée `linkedin-hwg-followup-check` datée du 22/08 dans ce fichier ni dans `linkedin-contacts.md` à l'ouverture → **premier déclenchement de cette routine aujourd'hui**. ✅ **Le carry-over n°12 du matin est répondu : le créneau de 13h n'a pas sauté une 2e fois**, il a bien tourné à l'heure. Il n'y a donc **pas** de panne d'automatisation à signaler à David, le saut du 21/08 reste un incident isolé.
+
+**Quotas à l'ouverture** : commentaires **5/7** ; connexions **7/7 REMPLI** ; suivis **7/7-10** ; DM rédigés **3/8** ; file de validation DM **3**.
+
+**Détail messagerie, connexions acceptées, abonnés et brouillons en attente** : `linkedin-contacts.md`, entrée du jour. **Point majeur qui y figure et qui conditionne le créneau de 17h : les 3 DM mis en file ce matin ont été envoyés à 13:03, 13:06 et 13:09 depuis la session `linkedin-hwg-monitoring` restée ouverte** (donc sur validation de David). Ne pas les re-proposer.
+
+### 1️⃣ SUIVI DES ACTIONS PRÉCÉDENTES DU JOUR (aucun quota consommé)
+
+**Les 5 commentaires du matin, relus un par un** via `/in/healthwatchglobal/recent-activity/comments/`, chacun contrôlé sur son compteur de réactions et de réponses rendu, pas sur une notification :
+
+| Commentaire du matin | Retombée à 13h30 | Impressions |
+|---|---|---|
+| **1/7 — Vital Strategies** (tableau de bord public Cameroun) | 0 réaction, 0 réponse | 7 |
+| **2/7 — Africa CDC** (zones prioritaires choléra, Tchad) | 0 réaction, 0 réponse | **19**, la meilleure diffusion du lot |
+| **3/7 — Tedros** (ReSCO Afrique australe) | 0 réaction, 0 réponse | 2 |
+| **4/7 — Prof. Mohamed Janabi** (don tanzanien, détection précoce) | 0 réaction, 0 réponse | 6 |
+| **5/7 — INRB** (formation GenPad®, en français) | 0 réaction, 0 réponse | 4 |
+
+**Lecture honnête : aucune traction sur les 5, deux à quatre heures après publication.** Les 26 notifications du jour ont été dépouillées : les 5 notifications « a aimé votre commentaire » qu'elles contiennent portent toutes des horodatages de **6 h, 8 h, 16 h, 1 j et 2 j**, donc sur des commentaires **antérieurs** à ceux de ce matin (Bilisumamulifna Tefera Kefeni, Jeffrey Clayton MPH et 1 autre, Patrick AYONGA, MAYTAMOU Simon Pierre, Chiara Gottarelli MD). Rien n'est encore remonté sur la production du matin.
+
+**Les 3 DM envoyés à 13h03-13h09 : aucune réponse à ce stade**, ils ont moins de 30 minutes. À revérifier en priorité à 17h.
+
+### ✅ CARRY-OVER n°4 TRANCHÉ (1/2) — Chinasaokwu Nweke : **le fil était déjà traité, le carry-over du matin était erroné**
+
+Le carry-over demandait de reprendre ce fil par la notification « a répondu à votre commentaire », les autres chemins ayant échoué. **Chemin suivi, URN récupéré** (`urn:li:activity:7495769512928239616`, post sur le cycle de *Plasmodium*), post ouvert, sous-fil déplié via « Voir les réponses précédentes ». Résultat :
+
+- Notre commentaire de tête du 20/08 (période d'incubation extrinsèque) porte **2 réactions, 2 réponses, 40 impressions**.
+- Chinasaokwu Nweke y a répondu **il y a 1 j**.
+- **Nous lui avons déjà répondu il y a 18 h**, et cette réponse est **le dernier message du fil** : « *Your point about conditions weeks earlier is where I keep getting stuck… Is that the real blocker in your field, or is there something else in the way?* »
+
+**Vérification croisée en archive** : cette réponse est le **commentaire 4/7 de la session `linkedin-hwg-followup-check-2` du 21/08 (17h)**, archivé ligne 358 de ce fichier. **Le carry-over du matin a donc reconduit comme « non traité » un fil qui l'était depuis la veille au soir**, très probablement en relisant une notification déjà consommée. **Rien à faire : la balle est dans son camp, aucun commentaire publié, aucun quota consommé.** Leçon de méthode : une notification « a répondu à votre commentaire » non lue **ne prouve pas** que la réponse n'a pas été traitée ; croiser avec l'archive avant de la reporter en carry-over.
+
+### ✅ CARRY-OVER n°4 TRANCHÉ (2/2) — Fukushi Morishita : **abandonné explicitement, pas reporté une 3e fois**
+
+Conformément à la convention « un carry-over reporté deux fois se reteste » (reporté le 20/08 puis le 21/08), **son activité a réellement été ouverte cette fois** (`/in/fukushi-morishita-9a460348/recent-activity/all/`).
+
+**Constat qui clôt le sujet** : son **seul post original** date d'**1 semaine** et c'est **exactement le papier TB / Région du Pacifique occidental que nous avons déjà commenté le 14/08** (commentaire 4/7 de ce jour-là). Tout le reste de son activité est constitué de **republications vieilles de 4 mois** (WHO Mongolia, Rajendra-Prasad Yadav, Kazim S.). Il est donc **doublement hors jeu** : hors fenêtre 48 h, et déjà commenté sur ce post précis.
+
+**➡️ Cible abandonnée, retirée du carry-over.** À ne rouvrir que s'il publie de nouveau, pas comme cible en attente.
+
+### 💬 Commentaire 6/7 — Miriam Mbueshi, lancement de l'initiative « Fleuve Congo Sans Ebola »
+
+- **Post** : `urn:li:activity:7496231959267004418`, **en français**, 12 réactions, 6 commentaires. Compte rendu du lancement d'une initiative visant à renforcer prévention, surveillance et préparation face à Ebola **le long du corridor du fleuve Congo**, avec une **approche multisectorielle** réunissant « *les secteurs de la santé, du transport, de l'intérieur et d'autres acteurs concernés* ». Tague INOHA, Harvey Basivikidi, OMS Congo, IMS Health et Africa CDC.
+- **✅ §12 LEVÉ, et c'est la réponse au point laissé ouvert ce matin.** Le matin l'avait écartée parce que la recherche nominative renvoie **deux comptes homonymes** (`miriam-mbueshi-83b3a2199` et `miriam-mbueshi-6920b5288`) sans moyen de trancher. **Méthode qui a marché, exactement celle que le carry-over recommandait : repartir du post et non du nom.** Le lien auteur porté par le post lui-même donne `/in/miriam-mbueshi-83b3a2199/`, confirmé ensuite par son activité (le post y figure). L'autre compte n'est pas elle. Tracker mis à jour.
+- **Fenêtre 48 h vérifiée au timestamp, pas au libellé** : l'URN décodé donne une publication le **2026-08-20 à 15:49 UTC**, soit **~44 h** avant ce commentaire. Dans la fenêtre, mais de peu.
+- **Règle hebdomadaire** : profil **jamais commenté** par HWG (grep sur les 4 fichiers d'archive avant rédaction). Libre.
+- **Réponses déjà publiées lues en entier avant rédaction (§5)**, sous-fil déplié compris : **Harvey Basivikidi** ouvre sur « *L'approche Une Seule Santé au cœur des enjeux* », **Prof. Patrick Giraudoux** (professeur émérite d'écologie, Université Marie et Louis Pasteur) le **corrige** en expliquant que ce dispositif n'est pas One Health mais « *une organisation de réponse parfaitement adaptée… avec une approche épidémiologique en santé humaine, hiérarchique et stratifiée* », puis plaide pour une vraie approche One Health **dans l'intercrise**. **Aucun intervenant n'aborde la question de la mesure** : notre angle est additif, pas redondant, et il ne prend parti dans aucun des deux camps du débat One Health.
+
+**⚠️ Incident de saisie, à retenir absolument — l'action `type` a perdu 98 % du texte sur le nouvel éditeur LinkedIn.** Le premier jet a été tapé via `computer` action `type` dans l'éditeur de commentaire. Retour du tool : « Typed "…" » avec le texte complet, **succès apparent**. Relecture du champ rendu : il contenait **9 caractères**, `« éééééèééé »` — **seuls les accents avaient atterri**, tout l'ASCII avait été perdu. L'éditeur de commentaire n'est plus un `.ql-editor` Quill mais un **`.ProseMirror` (tiptap)**, qui ignore la frappe synthétique caractère par caractère.
+- **Méthode qui fonctionne, à réutiliser** : vider le champ (`Range` sur le contenu + `execCommand('delete')`), puis insérer le texte avec **`document.execCommand('insertText', false, texte)`**, que ProseMirror traite comme une vraie saisie. Les accents passent parfaitement par ce chemin. Un `\n\n` inséré de la même façon crée bien deux paragraphes distincts.
+- **Ce qui a sauvé le coup** : la relecture du champ **réellement rendu** avant clic (§5.3). Le message de succès du tool `type` est un faux ami, il confirme l'émission, pas la réception. **Ne jamais publier sur la foi du retour de `type`.**
+- Rien n'a été envoyé pendant l'incident, aucun brouillon parasite, aucun doublon.
+
+**Double-check (§5)** : *langue du post = FR* ; *langue du commentaire = FR* ✅. **0 tiret cadratin, 0 demi-cadratin, 0 signe moins** (script sur le texte final ; seuls caractères non ASCII = accents français) ✅. **862 caractères, 2 paragraphes**, relus dans l'éditeur rendu par capture avant clic ✅. Aucun CTA, aucun lien ✅. ProMED absent ✅. Aucun chiffre avancé, donc aucune inférence à revérifier ✅.
+**Prudence factuelle** : le commentaire n'affirme **rien** sur ce que l'initiative a ou n'a pas prévu. Il énonce deux faits vérifiables (une riposte se compte par zone de santé et par province ; le fleuve Congo longe une frontière) et pose la mesure comme une question ouverte, formulée en « si le dispositif se donne… ». Il ne reproche rien et ne prétend pas savoir.
+**Anti-gabarit de structure** : cinq formes déjà utilisées aujourd'hui (réglage par défaut ; durée de validité ; lecture rapprochée d'une phrase ; asymétrie du bon de livraison ; à qui s'adresse l'action). Celle-ci en est une **sixième** : **l'unité d'intervention n'a pas d'équivalent dans l'unité de mesure**. Une première version citait « le délai entre alerte et vérification », **écartée** parce qu'elle rejouait la figure du délai déjà publiée le matin même sous le post de Prof. Mohamed Janabi. 10 séquences testées par grep sur les 4 fichiers d'archive : **0 occurrence**.
+
+**Texte publié :**
+
+> Le corridor est une unité d'intervention qui n'a pas d'équivalent dans les données. Une riposte se déclare et se compte par zone de santé et par province ; un axe fluvial en traverse plusieurs, et sur le fleuve Congo il longe aussi une frontière. Coordonner santé, transport et intérieur sur cet axe produit donc des décisions dont l'effet ne se lira dans aucun tableau existant, parce qu'aucun tableau n'a le corridor pour ligne.
+>
+> C'est là que se joue une bonne part de ce type d'initiative. Si le dispositif se donne dès maintenant un relevé propre à l'axe, ne serait-ce que la liste des points d'embarquement couverts et ce qui y est réellement consigné, il sera possible de dire dans six mois si le corridor a changé quelque chose. Sinon chaque zone continuera de reporter pour elle-même, et l'apport du corridor restera une conviction plutôt qu'un résultat.
+
+**Confirmation de publication** : contrôle par script sur le texte rendu de la page, **exactement 1 occurrence** de la première phrase, éditeur vidé, commentaire attribué à « David Deheunynck » et horodaté « maintenant ». **Aucun doublon.**
+
+### 🔎 Pourquoi 6 commentaires sur 7, et non 7
+
+Le 7e n'a pas été publié **faute de cible franchissant la barre, pas faute de recherche**. Méthodes épuisées, dans l'ordre :
+
+1. **26 notifications dépouillées** après déroulé complet (« Afficher plus de résultats »). Les cibles qu'elles signalent sont **toutes bloquées** : Yazdan Yazdanpanah (28/08), Cynthia Musumba (28/08), Amanda McClelland (27/08), Sir Peter Horby (27/08), MAYTAMOU Simon Pierre (23/08), WHO AFRO (23/08).
+2. **Fil d'actualité déroulé en entier**, deux passages (le fil se réordonne entre deux chargements).
+3. **Recherche de contenu LinkedIn en français** (`surveillance épidémiologique`) : les 3 meilleurs résultats datent tous d'**1 semaine**. Hors fenêtre.
+4. **Recherche de contenu en anglais filtrée sur les 24 dernières heures** (`outbreak surveillance`) : 3 résultats. Le seul analytique (**Richard Sprenger / Highfield Food Safety Forum**, 4 h, thèse « *the failure to produce, easily accessible, timely, comprehensive reports is the major weakness of epidemiological surveillance* ») est **publié dans un groupe fermé**, commenter suppose d'y adhérer. Les 2 autres (Sangeetha Mathivanan, Anna Nakhabi) sont des check-lists pédagogiques sans prise analytique.
+5. **Activités ouvertes une par une** pour les profils encore libres.
+
+**Cibles réellement examinées puis écartées, chacune avec son motif :**
+- **Keli Gerken** (`/in/keli-gerken-71b282108/`, *Assistant Professor of Infectious Disease Epidemiology*, One Health, Afrique de l'Est) : **la meilleure cible analytique disponible**, sur la circulation **continue** du virus de la fièvre de la vallée du Rift lignée C au Rwanda entre 2022 et 2025 **plutôt que des réintroductions répétées**, avec sa propre phrase « *We must get better at measuring and tracking these infections* ». **Écartée sur un fait, pas sur une impression** : l'URN décodé donne une publication le **2026-08-19 à 15:53 UTC**, soit **~70 h**, largement hors fenêtre 48 h. Le libellé « 2 j » du fil ne permettait pas de trancher ; le timestamp, si. **À rouvrir si elle republie sur le sujet, l'angle « circulation continue vs réintroduction » est excellent pour HWG.**
+- **Dr. Jean Kaseya** : activité rouverte, **aucun post neuf depuis ce matin**, ses 4 posts dans la fenêtre portent tous sur le déplacement à Windhoek. L'écart du matin (auto-redondance avec notre commentaire sous Tedros, même sommet) **reste valable**. Blocage hebdomadaire toujours non consommé.
+- **Harvey Basivikidi** : deux posts dans la fenêtre et sur cible, mais **commenté le 19/08**, donc **bloqué jusqu'au 26/08**. Vérifié par grep avant d'aller plus loin.
+- **Flavie Goutard** (CIRAD-ASTRE, risque de transmission d'influenza aviaire H5 entre filières avicoles françaises) : **3 j**, hors fenêtre.
+- **Innovate Health Hub** (gouvernance dès la conception produit pour les fondateurs healthtech africains) : les posts de la page datent de **2 j et 3 j**, hors fenêtre.
+- **Miriam Mbueshi et Harvey Basivikidi ne pouvaient pas être commentés tous les deux** de toute façon : Harvey est tagué dans le post de Miriam et a commenté dessus, deux commentaires HWG dans ce voisinage le même jour se seraient vus.
+
+**Aucun commentaire médiocre n'a été publié pour atteindre le chiffre. Marge de 1 commentaire laissée au créneau de 17h.**
+
+### 🌍 VEILLE — données épidémiologiques et matière pour futurs posts
+
+**🔎 Aucune donnée épidémiologique nouvelle à ingérer au titre de §8.** Deux éléments chiffrés ont été rencontrés, aucun n'est ingérable :
+
+1. **Arrivée des vaccins Ebola en RDC** (page **Corridor4Health**, 13 h, relayée par Harvey Basivikidi) : « *50 120 doses sont attendues entre le 21 et le 24 août 2026. Une première cargaison de 16 520 doses a été réceptionnée ce jour à l'aéroport international de N'djili.* » Financement **Gavi**, fabrication **MSD** en Allemagne. **Ce sont des chiffres de logistique vaccinale, pas des cas ni des décès** : rien à écrire dans `outbreaks`, dont le schéma ne porte pas cette dimension. **Matière solide pour un post de marque en revanche** (l'écart entre une dose réceptionnée à Kinshasa et une dose administrée dans une zone de santé de l'Ituri est exactement le genre d'écart que HWG sait rendre visible).
+2. **⚠️ Le chiffre faux « 4 945 cas / 2 325 morts » circule toujours, et il s'étend.** Un post de **Prof. Jérôme S.** (*ancien Directeur général de la Santé français, ancien Sous-Directeur général de l'OMS*, 2 j) le reprend comme fait établi, et **Harvey Basivikidi l'a republié**. La politique commune §8 documente ce cas précis depuis le 19/08 : la lecture directe du PDF **WHO AFRO External Situation Report 14** donne **5 021 cas / 2 378 décès arrêtés au 16/08**, et **4 945 est une reprise secondaire erronée**. **Aucune de nos publications ne l'a repris, ni aujourd'hui ni avant** (vérifié). Signalé ici parce que sa diffusion s'élargit et qu'un futur run pourrait le croiser sous une signature très crédible et le prendre pour bon. **Ne pas l'utiliser, quelle que soit la notoriété de qui le republie.**
+
+**Posts retenus sans action, matière pour de futurs posts de marque :**
+- **⭐ Le débat One Health sous le post de Miriam Mbueshi** : **Prof. Patrick Giraudoux** (émérite d'écologie) recadre le dispositif « Fleuve Congo Sans Ebola » comme une organisation de réponse en santé humaine, stratifiée et hiérarchique, et **pas** comme du One Health, puis soutient que le vrai One Health se joue **dans l'intercrise**, sur une durée « *qui dépasse celle des variations de populations des hôtes sauvages d'Ebola* ». C'est un désaccord de fond entre praticiens sur ce que le label recouvre réellement, exprimé publiquement et sans agressivité. **Excellent matériau** : un label qui désigne deux choses différentes selon qu'on est en crise ou entre deux crises produit exactement le type d'ambiguïté que HWG rencontre dans les bulletins.
+- **Circulation continue vs réintroduction** (Keli Gerken / Global Health EDCTP3, fièvre de la vallée du Rift lignée C au Rwanda 2022-2025, séquençage sur trois ans de prélèvements de bétail) : si un virus circule en continu, la ligne « nouveau foyer » d'un bulletin décrit une **détection**, pas un **événement**. Angle jamais publié par HWG sur aucun canal.
+- **Johan Verheyden republié par Harvey Basivikidi** : son analyse African Intelligence sur la rentrée scolaire de septembre en RDC comme test de préparation Ebola circule maintenant hors de son propre fil. Le contenu reste marqué §10, **aucune prise de parole publique**, mais le fait qu'il se diffuse rend l'arbitrage de David plus urgent, pas moins.
+- **Appel à candidatures WHO AFRO / TDR** (Impact Grants 2026-2027 pour la recherche d'implémentation, réservé au continent africain, clôture le **15 septembre 2026**) : sans objet pour HWG directement, mais utile à connaître, plusieurs de nos contacts y sont éligibles.
+
+### 📌 CARRY-OVER pour le créneau de 17h aujourd'hui (22/08)
+
+1. **Quotas consommés à 13h45** : commentaires **6/7**, connexions **7/7 REMPLI**, suivis **7/7-10**, DM rédigés **5/8**, file de validation DM **2**.
+2. 🔒 **2 DM en attente de validation de David**, textes intégraux dans `linkedin-contacts.md` : **Richardson Mafigiri** et **Adam Abdullahi**, deux messages de bienvenue sur connexions acceptées aujourd'hui. **Aucun ne part sans son accord explicite.** Push envoyée.
+3. ⚠️ **Les 3 DM du matin sont PARTIS** (Patrick AYONGA 13:03, Pierre PARNEIX 13:06, Moritz Kraemer 13:09), envoyés depuis la session `linkedin-hwg-monitoring` restée ouverte. **Ne pas les re-rédiger. Vérifier en priorité s'ils ont répondu**, ce sont les 3 fils les plus chauds du compte.
+4. **Marge de 1 commentaire.** Cibles **toutes vérifiées et écartées à 13h**, ne pas les reprendre sans élément neuf : Keli Gerken (70 h, hors fenêtre), Kaseya (Windhoek, auto-redondance), Harvey Basivikidi (bloqué jusqu'au 26/08), Flavie Goutard (3 j), Innovate Health Hub (2-3 j). **Chercher du neuf publié après 13h30**, c'est le seul gisement restant.
+5. **Nouveau blocage hebdomadaire créé ce créneau** : **Miriam Mbueshi jusqu'au 29/08**. Blocages actifs : Vital Strategies, page Africa CDC, Tedros, Prof. Mohamed Janabi, INRB, Miriam Mbueshi (29/08) ; Yazdan Yazdanpanah, Julien Harneis, page Department of Health Services Siaya, Cynthia Musumba (28/08) ; Amanda McClelland, Sir Peter Horby, Pierre PARNEIX, RéPIA, Richard Maude, Chinasaokwu Nweke (27/08) ; Harvey Basivikidi (26/08) ; Sohail Agha, Ana Bento, Darrel (25-26/08) ; Morgan Otita, Tambe Elvis Akem, WHO AFRO, Dr. Rana Jawad Asghar, MAYTAMOU Simon Pierre (23/08). **Dr. Jean Kaseya n'est toujours PAS bloqué**, il redevient cible dès qu'il publie hors Windhoek.
+6. ✅ **Deux carry-over définitivement clos, ne pas les reconduire** : **Chinasaokwu Nweke** (fil déjà traité le 21/08 à 17h, notre réponse est le dernier message, balle dans son camp) et **Fukushi Morishita** (abandonné, son seul post original a 1 semaine et est déjà commenté).
+7. ✅ **§12 levé sur Miriam Mbueshi** : le bon compte est `/in/miriam-mbueshi-83b3a2199/`, établi depuis le lien auteur du post. Tracker mis à jour.
+8. 🔴 **Arbitrage David attendu, 5e session consécutive — Johan Verheyden.** Blocage levé, mentionne David nommément dans deux posts dont un préprint, contenu toujours §10, et **désormais republié par des tiers**. Silence par défaut maintenu.
+9. 🔴 **Arbitrage David attendu — Jean-Jacques Muyembe** : deux comptes homonymes, aucun vérifié, le suivi du 21/08 porte peut-être sur le mauvais. Inchangé.
+10. **Candidats connexion prioritaires dès réouverture du quota**, ordre inchangé : ⭐⭐ **Dr. Malachie MANAOUDA** (ministre de la Santé Publique du Cameroun, suivi le 22/08), **Linda Esso**, **Nebiyu Dereje**, **Oyeronke Oyebanji**, **Flore Estelle BALANA ESIENE** (suivi impossible, connexion seule voie), **Patrick Masenga**, **Kasonde Mwinga**, **Bouh Abdi Khaireh**, **Joseph KAMBATA** et **Birgit Schramm** (slugs non capturés).
+11. **Julia Gal** (`/in/julia-gal/`) : suivi refusé par la plateforme sur 2 tentatives le 22/08 au matin. **Non retenté ce créneau** (quota de suivis à l'objectif). À retenter à 17h si la marge de 3 est utilisée, ne pas re-chercher le profil.
+12. **OLAOLUWA PHILIP** : invitation reçue toujours en attente, statut « écarté » figé, **ne pas ré-évaluer**.
+13. 🧰 **Deux notes techniques neuves, à appliquer et non à redécouvrir :**
+    - **L'éditeur de commentaire LinkedIn est passé à ProseMirror/tiptap.** L'action `computer type` y perd la quasi-totalité du texte tout en renvoyant un message de succès. Utiliser `document.execCommand('insertText', false, texte)` après avoir vidé le champ. Détail complet dans la section du commentaire 6/7.
+    - **Le JS asynchrone renvoyait `{}` toute la session, le JS synchrone fonctionnait normalement.** Avant de conclure au renderer mort au sens de la politique §7, **tester une expression synchrone**.
+14. **Séparation freelance respectée**, aucune activité freelance traitée, comptée ni archivée côté HWG.
+15. ⚠️ **Redémarrage Chrome de fin de session sauté volontairement** (politique §11) : la session `linkedin-hwg-monitoring` était encore `isRunning: true` et utilisait le navigateur pendant ce run. Le créneau de 17h doit refaire la vérification avant de redémarrer quoi que ce soit.
+
+---
+
 ## 📅 Session linkedin-hwg-monitoring — 22/08/2026 (9h)
 
 **Vérification double déclenchement** : aucune entrée datée du 22/08 dans ce fichier ni dans `linkedin-contacts.md` à l'ouverture → **premier déclenchement de la routine aujourd'hui**. Dernière entrée en date : 21/08 à 17h (`linkedin-hwg-followup-check-2`).
