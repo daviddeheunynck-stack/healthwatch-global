@@ -483,7 +483,11 @@ async function runRegionalAlerts(_req: NextRequest, supabase: SupabaseClient) {
       }
 
       // ── Usage-triggered trial value nudge ────────────────────────────────
-      // Fires once, on this user's first-ever "new" alert in this batch,
+      // Fires once, on this user's first-ever alert in this batch, whatever
+      // the reason. "escalated" and "surge" were added to this cron on
+      // 2026-07-23 but the nudge was never rewired for them, so it stopped
+      // firing entirely during any stretch with no brand-new outbreak row
+      // (observed 2026-08-21: 0 of 7 trials nudged since 08-15),
       // instead of only ever prompting on the fixed J-3/J-1 calendar
       // reminder (trial-reminders cron) unrelated to whether they've seen
       // the product actually work. Self-serve trials only (no Stripe sub
@@ -493,12 +497,12 @@ async function runRegionalAlerts(_req: NextRequest, supabase: SupabaseClient) {
         !profile.stripe_subscription_id &&
         !!profile.trial_ends_at &&
         new Date(profile.trial_ends_at).getTime() > now;
-      const firstNew = enriched.find((item) => item.reason === "new");
-      if (firstNew && isActiveTrial && !profile.trial_value_email_sent_at) {
+      const firstAlert = enriched.find((item) => item.reason === "new") ?? enriched[0];
+      if (firstAlert && isActiveTrial && !profile.trial_value_email_sent_at) {
         try {
           const { subject: nudgeSubject, html: nudgeHtml } = buildTrialValueNudgeEmail(
             locale,
-            { disease: firstNew.disease, country: firstNew.country, riskLevel: (firstNew.risk_level ?? "medium") as "high" | "medium" | "low" },
+            { disease: firstAlert.disease, country: firstAlert.country, riskLevel: (firstAlert.risk_level ?? "medium") as "high" | "medium" | "low" },
             { isPilot: !!profile.is_pilot, organization: (profile.pilot_organization as string | null) ?? null }
           );
           if (isRealProduction) {
