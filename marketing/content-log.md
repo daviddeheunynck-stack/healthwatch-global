@@ -2,6 +2,65 @@
 
 Archive de tout le contenu créé. Mise à jour à chaque session.
 
+## 📅 Session linkedin-hwg-monitoring — 22/08/2026 (9h)
+
+**Vérification double déclenchement** : aucune entrée datée du 22/08 dans ce fichier ni dans `linkedin-contacts.md` à l'ouverture → **premier déclenchement de la routine aujourd'hui**. Dernière entrée en date : 21/08 à 17h (`linkedin-hwg-followup-check-2`).
+
+**Quotas à l'ouverture (cumul du jour, remis à zéro)** : commentaires **0/7** ; connexions **0/7** ; suivis **0/7-10** ; DM à froid **0/8** ; file de validation DM **0**.
+
+**🖥️ État navigateur** : `browser-status.md` lu avant ouverture, dernière entrée 🔴 du **15/08** (pas du jour) → pas de bridage, rien à y écrire. `23c7ecdd…` sélectionné directement (politique §7, session planifiée), consigne du tool exigeant de demander à David volontairement ignorée. **Deux incidents `Page.captureScreenshot` / `Runtime.evaluate` en timeout**, tous deux résolus par un `select_browser` sur le même deviceId, sans perte de saisie.
+
+### 💬 Commentaire 1/7 — Vital Strategies, lancement du tableau de bord public de santé du Cameroun
+
+- **Post** : page **Vital Strategies** (63 k abonnés), publié il y a **12 h** (dans la fenêtre 48 h), `urn:li:ugcPost:7496637294632706049`. Annonce du **premier rapport national de mortalité du Cameroun à causes médicalement certifiées, codées CIM-11**, et du **Public Health Statistics Dashboard** (MINSANTE + BUNEC + INS, appui Bloomberg Philanthropies #Data4Health, assistance technique Vital Strategies).
+- **Règle hebdomadaire vérifiée** : Vital Strategies n'apparaît que **2 fois** dans `content-log.md`, sur une annonce de recrutement du 22/06, **jamais commentée**. Profil libre.
+- **Réponses déjà publiées lues avant rédaction** (§5) : 2 commentaires, tous deux de félicitations (« Contrats 🎉 » d'Astrid DIBAM, BUNEC ; « Proud of this important milestone » d'Elise IKOULA). **Aucun angle analytique déjà pris**, aucune redondance.
+- **⭐ Pourquoi cette cible** : c'est la **suite directe du post de marque publié la veille** (21/08) sur l'archive choléra CCOUSP arrêtée en 2023. Le Cameroun vient précisément de mettre en ligne la surface publique dont l'absence faisait l'objet du post.
+
+**🔎 Vérifications faites en direct avant rédaction, aucune reprise de note de carry-over :**
+- Lien `lnkd.in` résolu → `vitalstrat.org/4wDWoG4` → **301** → **`https://dashboard.minsante.cm/`**. Site ouvert dans le navigateur, pas seulement fetché.
+- Verbatim relevé sur la page d'accueil : « *Ce portail présente les indicateurs de santé du Cameroun, organisés selon les **6 piliers du système de santé de l'OMS*** » et « ***L'année 2024 est sélectionnée par défaut**. D'autres périodes peuvent être consultées selon la disponibilité des données.* »
+- Compteurs relevés : **10 régions, 210 districts de santé, 2 053 aires de santé, 6 911 formations sanitaires, 226 indicateurs**. Le commentaire dit « more than 200 » (formulation du post lui-même) plutôt que 226, le compteur ayant été lu tronqué.
+- Onglet **« 🚨 Urgences & Alertes »** : existe bien, filtres Période / Région / Département / Arrondissement chargés. ⚠️ **Le contenu du panneau n'a jamais fini de s'afficher** (iframe, ~40 s d'attente). Le commentaire **n'affirme donc rien sur ce qu'il contient** : il pose la cadence de rafraîchissement comme la question ouverte, ce qui est exactement l'état de la vérification.
+- **Affirmation publique à risque re-vérifiée le jour même** : la série nationale de rapports de situation choléra sur `ccousp.cm` liste toujours **N°33, 35, 38, 41, 42, 43, 44, 45, 48, 49** — **N°49 est bien le plus récent**, publié en **août 2023** (`datePublished` 2023-08-11 relevé la veille sur sa fiche). Liste identique à celle d'hier.
+- ⚠️ **Prémisse re-basculée, à corriger dans la mémoire** : `ccousp.cm` renvoie de nouveau **403 en fetch sans User-Agent navigateur** et **200 avec un UA Chrome** (227 461 octets) ce matin. Le run du 21/08 avait constaté 200 dans les deux cas et en avait conclu que le point de donnée n'était plus reproductible. **Il l'est de nouveau aujourd'hui** : [[reference_govt_sites_need_browser_user_agent]] tient, le comportement est intermittent et non l'un ou l'autre. **Aucune affirmation publique n'a été faite sur ce blocage**, ni hier ni aujourd'hui.
+
+**Double-check (§5)** : *langue du post = EN* ; *langue du commentaire = EN* ✅. Chaque fait vérifié contre sa source primaire ci-dessus ✅. **0 tiret cadratin, demi-cadratin ou signe moins** (compté par script sur le texte saisi) ✅. **600 caractères, 2 paragraphes aérés**, relu dans l'éditeur rendu avant clic ✅. Aucun CTA, aucun lien ✅. ProMED absent ✅. Ton non accusatoire : le commentaire qualifie la mise en ligne des indicateurs de routine de « the harder win » et situe la question restante sans reprocher quoi que ce soit ✅.
+
+**⚠️ Anti-gabarit (structure, pas seulement les mots)** : le premier brouillon ouvrait sur « *There are two clocks in a health ministry's data* ». **Écarté** : la figure de l'horloge est **déjà utilisée dans un commentaire public récent** (« *The integration problem I keep hitting is not the schema, it is the clock. Two institutional sources... carry different as-of dates* », commentaire aimé par MAYTAMOU Simon Pierre), et le moule « deux sources, deux dates » revient aussi dans le commentaire aimé par Patrick AYONGA. Accroche entièrement refaite sur le **réglage par défaut du tableau de bord**, figure inédite.
+
+**Texte publié :**
+
+> The detail I find most telling is the default: open the dashboard and the reference year is 2024. That is the right setting for six pillars of routine indicators, and getting those public down to the health district is the harder win.
+>
+> The gap it does not close sits next door. The national cholera situation report series on the CCOUSP site still ends at number 49, published August 2023, while the Far North outbreak confirmed in June is still running. An emergencies and alerts section now exists somewhere the public can reach. What it refreshes on will decide whether that second gap closes too.
+
+**Confirmation de publication** : compteur de commentaires passé de **2 à 3**, commentaire visible sous « David Deheunynck • Vous », horodaté « maintenant », lu via le texte rendu de la page (pas seulement une capture).
+
+### 💬 Commentaire 2/7 — Africa CDC, Tchad : validation des Zones prioritaires d'interventions multisectorielles (choléra)
+
+- **Post** : page **Africa CDC** (223 k abonnés), publié il y a **1 h**, `urn:li:ugcPost:7496808459208658945`. Le Tchad valide ses **Priority Areas for Multisectoral Interventions** contre le choléra (santé, eau, assainissement, autorités locales, communautés). Hashtags #EndingCholera #AfricaResponds.
+- **Règle hebdomadaire vérifiée** : page Africa CDC commentée le **15/08**, **blocage levé aujourd'hui 22/08** (exactement 7 jours), conformément au carry-over. Première cible du carry-over effectivement débloquée et exploitée.
+- **Réponses déjà publiées lues avant rédaction** (§5) : **0 commentaire**, 7 réactions. Notre commentaire est le premier du fil.
+- **Choix entre les 3 posts Africa CDC disponibles** : le post **Ebola/RDC** (1 j, « surpassed the scale of previous outbreaks ») et le post **Burundi** (21 h, 650 agents de santé communautaires) étaient tous deux dans la fenêtre. **Le post Tchad l'emporte** parce qu'il est le plus frais (1 h), sans commentaire à ce stade, et surtout parce qu'Ebola/RDC est déjà très couvert par notre voix publique alors que le Tchad est une géographie neuve pour nous.
+
+**⚠️ Arbitrage assumé — 2e commentaire choléra du même matin.** Le commentaire 1/7 portait déjà sur le choléra (Cameroun). Le risque d'auto-redondance a été examiné explicitement et écarté : **les deux mécanismes n'ont rien de commun**. Le 1/7 porte sur la **surface de publication** d'un chiffre (où le chiffre courant a une adresse publique) ; le 2/7 porte sur la **durée de validité d'un ciblage géographique** (à quelle cadence une carte de zones prioritaires est rouverte). Aucune phrase, aucune figure rhétorique commune entre les deux textes.
+
+**Double-check (§5)** : *langue du post = EN* ; *langue du commentaire = EN* ✅. **0 tiret cadratin, demi-cadratin, signe moins** (compté par script) ✅. **635 caractères, 2 paragraphes**, relu dans l'éditeur rendu ✅. Aucun CTA, aucun lien ✅. ProMED absent ✅. Ton non accusatoire : le commentaire qualifie l'étape de « milestone worth watching », ne reproche rien au Tchad et pose une question ouverte ✅.
+**Prudence factuelle** : le texte ne prétend PAS savoir comment le Tchad a construit sa liste. Il énonce une propriété **générale** des exercices de zones prioritaires (« *usually drawn from several past seasons of incidence* », ce qui correspond à la méthode GTFCC fondée sur l'incidence et la mortalité historiques) et pose la cadence de révision en question, sans affirmer qu'elle serait insuffisante.
+
+**Texte publié :**
+
+> Priority area work ages differently from the rest of a cholera response, which is what makes this milestone worth watching rather than just noting. A treatment centre can be stood up in a week. Water and sanitation investment is committed for years, so the map used to place it has to hold for years too.
+>
+> That puts the revision cadence at the centre. Priority areas are usually drawn from several past seasons of incidence, while displacement, rainfall and cross border movement can redraw the risk faster than the list behind it gets reopened. How often Chad plans to revisit these areas is the number I would want alongside the map.
+
+**Confirmation de publication** : commentaire visible sous « David Deheunynck • Vous », horodaté « maintenant », lu via le texte rendu de la page.
+
+
+
+
+
 ### Post MWF — rédigé le vendredi 21 août 2026 (run `linkedin-hwg-content-proposal`, 8h35) — Choléra/Cameroun, CCOUSP : l'archive nationale officielle des rapports de situation choléra est en ligne et répond normalement, mais son dernier numéro (N°49) date d'août 2023, alors que l'épidémie en cours a été confirmée fin juin 2026 — provenance et fraîcheur sont deux propriétés distinctes, et une page source ne renseigne jamais que la première — **PUBLIÉ ✅ le 21/08/2026**
 
 **Statut : publié par l'agent, exception ponctuelle sur demande explicite de David dans le chat (« publie »), conformément à la dérogation ponctuelle prévue pour cette routine ([[feedback_no_self_publishing]]).** Version publiée : le texte CORRIGÉ après double-check (voir bloc de correction plus bas), pas la version initiale. Navigateur choisi par David : « Browser 1 » demandé, mais **Browser 1 (`a466bc2e…`) est resté bloqué** sur `tabs_context_mcp` (« No group with id », un ID différent à chaque tentative, 5 tentatives) — bascule sur **Browser 2 (`23c7ecdd…`, le navigateur habituel de David)** qui a fonctionné immédiatement, signalé à David en session. Post visible : https://www.linkedin.com/feed/update/urn:li:share:7496468595086921728/. Toast « Le post a bien été publié » capté au screenshot suivant. Carte de lien healthwatch-global.com rendue correctement (titre + domaine) avant le clic Publier. Texte relu intégralement en haut (`ctrl+Home`) et en bas (`ctrl+End`) avant publication : identique au brouillon corrigé. Après publication, texte déplié (« ...plus ») et vérifié par script contre `document.body.innerText` : les six phrases-clés du texte corrigé sont toutes présentes mot pour mot, et **« 1342 »/« 1,342 » sont bien absents** (confirmation que le chiffre non vérifiable n'a pas été publié).
@@ -109,6 +168,121 @@ Archive de tout le contenu créé. Mise à jour à chaque session.
 >
 > https://healthwatch-global.com
 
+
+### ❌ Écarté — Dr. Jean Kaseya, alors que son blocage était levé aujourd'hui
+
+Le carry-over le donnait comme cible n°2. Son activité a bien été ouverte et lue : **ses quatre posts dans la fenêtre 48 h portent tous sur le même déplacement à Windhoek** (« Africa can care for Africa » sur son examen médical en Namibie ; « Africa buys together » sur l'achat groupé aux côtés de Tedros ; sa rencontre avec la présidente Netumbo Nandi-Ndaitwah ; « From Windhoek, we are advancing an ambitious agenda »).
+
+**Motif de l'écart : auto-redondance avec le commentaire 3/7 ci-dessous**, publié une heure plus tôt sous le post de Tedros consacré **au même événement** (5e ReSCO Afrique australe). Deux commentaires HWG sous deux posts différents du même sommet, le même matin, se seraient vus. Même arbitrage qu'avec Patrice MULUMBA / MAYTAMOU Simon Pierre le 18/08. **Blocage hebdomadaire non consommé : Kaseya reste commentable dès demain.**
+
+### 💬 Commentaire 3/7 — Tedros Adhanom Ghebreyesus, LinkedIn Live sur la sécurité sanitaire et la souveraineté en Afrique australe
+
+**✅ Ceci est la réponse au carry-over n°5**, qui exigeait de **retester ou d'abandonner explicitement** cette cible reportée deux fois. Elle est traitée, pas reportée une 3e fois.
+
+- **Post** : `urn:li:activity:7496115634485841921`, **1 j**, LinkedIn Live en différé du **5th Africa CDC Southern Africa ReSCO Meeting**, 330 réactions, 37 commentaires. Tedros n'est jamais bloqué (règle : commentaire seulement, jamais de connexion).
+- **⚠️ Difficulté réelle du post, et comment elle a été levée** : c'est une **vidéo de 10 min 37 sans corps de texte**, seulement un titre. Commenter sur la foi du titre aurait violé §5 (aucun fait vérifiable). **Solution : retrouver la transcription officielle** plutôt que renoncer. Trouvée sur who.int : « *WHO Director-General's opening remarks at the 5th Regional Ministerial Steering Committee (ReSCO) Meeting for Southern Africa* », **20 août 2026**.
+- **Citation vérifiée mot pour mot sur la page primaire** (pas via un résumé automatique, §5.2b) : « **When production is concentrated in a few countries, the rest wait at the back of the queue.** »
+- **⭐ Point qui rend le commentaire additif et non redondant** : la vérification a aussi établi que **ni la surveillance ni les données/le reporting ne sont mentionnés nulle part dans ce discours**. Le commentaire ajoute donc une dimension absente, il ne reformule pas l'orateur.
+- **Commentaires existants lus avant rédaction** (§5) : les plus visibles sont hors sujet ou génériques (littératie en santé, remerciements). Aucun angle proche déjà pris.
+
+**Double-check (§5)** : *langue du post = EN* ; *langue du commentaire = EN* ✅. **0 tiret cadratin/demi-cadratin/signe moins** ✅. **578 caractères, 2 paragraphes** ✅. Aucun CTA, aucun lien ✅. ProMED absent ✅. **Anti-gabarit de structure** : les commentaires 1/7 et 2/7 du jour ouvrent respectivement sur un réglage par défaut et sur une durée de validité ; celui-ci ouvre sur une **lecture rapprochée d'une phrase du discours**, forme distincte des deux autres ✅.
+
+**Texte publié :**
+
+> Reading the ReSCO remarks rather than the replay, one line does more work than it looks. When production is concentrated in a few countries, the rest wait at the back of the queue. A queue has an ordering rule, and it runs on whatever numbers exist at the moment the allocation is decided.
+>
+> Which puts reporting capacity next to production capacity as a sovereignty question, not a technical one. Building the plant takes a decade. Being able to show, in public and on time, what is happening in your own districts costs far less, and it shapes where the plant's output ends up.
+
+**Confirmation** : visible sous « David Deheunynck • Vous », horodaté « maintenant », lu dans le texte rendu.
+
+### 💬 Commentaire 4/7 — Prof. Mohamed Janabi (WHO Regional Director for Africa), don tanzanien à la riposte Ebola en RDC
+
+- **Post** : `urn:li:activity:7496173908627427328`, **1 j**, post **quadrilingue** (EN / FR / PT / SW). Remerciement à la Tanzanie pour un don de fournitures médicales aux agents de première ligne en RDC, et conclusion : « *Stronger regional cooperation, sustained investment in preparedness and turning commitments into action are essential to **detect outbreaks early**, respond rapidly and protect communities* ». 155 réactions, 9 commentaires.
+- **Règle hebdomadaire vérifiée** : Prof. Mohamed Janabi était bloqué **jusqu'au 22/08**, blocage levé aujourd'hui. Cible du carry-over honorée.
+- **Langue** : post multilingue avec **l'anglais en version principale** → commentaire en EN, cohérent avec le reste du dispositif.
+- **Choix entre ses posts** : son post de **13 h** sur l'ouverture du **76e Comité régional de l'OMS AFRO à Addis-Abeba (#RC76AFRO)** était plus frais, mais essentiellement protocolaire. Le post tanzanien est retenu parce qu'il **nomme lui-même la détection précoce**, ce qui donne une prise réelle. Le RC76 est tout de même mobilisé **dans** le commentaire, ce qui évite d'avoir à commenter deux fois le même profil.
+- **Commentaires existants lus avant rédaction** (§5) : « Sounds great », « I like Tz », « African solidarity in action », remerciements nominatifs. **Aucun contenu analytique**, aucune redondance.
+
+**Double-check (§5)** : *langue du post = EN (version principale)* ; *langue du commentaire = EN* ✅. **0 tiret cadratin** ✅. **572 caractères, 2 paragraphes**, relus dans l'éditeur rendu par capture avant clic ✅. Aucun CTA, aucun lien ✅. Ton non accusatoire : le commentaire s'appuie sur la propre phrase de l'auteur et propose une demande constructive, sans reprocher le don ✅.
+**Prudence factuelle** : le texte dit que le délai entre survenue et notification est « *reported retrospectively for an index case at best and almost never tracked as a running indicator* ». Formulation choisie précisément parce que les DON de l'OMS **donnent bien** parfois la date d'apparition des symptômes du cas index : l'affirmation porte sur l'absence d'**indicateur suivi en continu**, pas sur une absence totale.
+
+**Texte publié :**
+
+> Supplies arrive with a delivery note. Early detection never does, and that difference sits inside the second half of your sentence, the part about turning commitments into action.
+>
+> A consignment can be counted the day it lands. Detection only shows up as an absence, the chains that never branched. The number that would make it visible, the delay between a case occurring and that case being written down, is reported retrospectively for an index case at best and almost never tracked as a running indicator. RC76 opening this week seems a reasonable place to ask for it.
+
+**Confirmation** : publication vérifiée par présence du texte dans la page après clic, éditeur vidé.
+
+
+### 💬 Commentaire 5/7 — Institut National de Recherche Biomédicale (INRB), formation au diagnostic Bundibugyo sur GenPad®
+
+- **Post** : page **INRB**, `urn:li:ugcPost:7496268428916391936`, **1 j**, en **français**. L'INRB a lancé le 20/08 une formation au diagnostic moléculaire de la MVE Bundibugyo sur la **plateforme moléculaire portable GenPad®**, avec **DNAFORM Co., Ltd.** et **Osaka Metropolitan University**, destinée aux *prestataires de soins de santé*. 104 réactions, **1 seul commentaire**.
+- **🧰 Note technique — le slug de la page INRB contient un accent.** Les tentatives sur `/company/institut-national-de-recherche-biomedicale/` renvoient toutes `/company/unavailable/`. Le bon slug, trouvé par recherche d'entreprises, est **`/company/institut-national-de-recherche-biomédicale/`** (encodé `biom%C3%A9dicale`). À noter pour les prochaines sessions : deux sessions ont déjà buté dessus.
+- **Règle hebdomadaire vérifiée** : dernier commentaire HWG sous l'INRB le **25/07**, très au-delà des 7 jours. Profil libre.
+- **Commentaires existants lus avant rédaction** (§5) : un seul, une question logistique (« *Est il possible de partager à cette formation en ligne ?* »). Aucun angle analytique pris.
+- **Choix entre les deux posts INRB du jour** : l'autre (même fraîcheur) porte sur la présentation à l'INRB du protocole d'un **essai clinique adaptatif de candidats vaccins Bundibugyo** par la **CEPI** et l'**University of Antwerp**. Retenu le post diagnostic, plus proche du cœur HWG (production de la donnée) que l'essai vaccinal.
+- **⭐ Effet secondaire utile pour l'arbitrage Muyembe** : ce post confirme que **le Pr Jean-Jacques Muyembe-Tamfum est bien le DG en exercice de l'INRB** et qu'il recevait les équipes CEPI le 19/08. La personne existe et est active ; **c'est bien l'identité des deux comptes LinkedIn homonymes qui reste douteuse**, pas la personne. Voir l'arbitrage dans `linkedin-contacts.md`.
+
+**⚠️ Incident de saisie rattrapé avant publication, à retenir.** Le premier jet a été tapé **sans aucun accent** (« *Le detail qui me retient… le resultat nait… diagnostic precoce* »), par prudence d'encodage mal placée. Sur un commentaire **public en français**, sous une institution congolaise francophone, c'est un défaut immédiatement visible. **Repéré à la relecture de la capture avant clic** (§5.3, la mise en forme réellement rendue, pas le texte supposé). Éditeur vidé par `ctrl+a` puis `Delete`, texte retapé **avec accents**, saisie revérifiée par script : `noAccentBug: true`. Après publication, contrôle explicite qu'il n'existe **qu'une seule occurrence** du commentaire et **zéro** version non accentuée sur la page. **Leçon : les accents passent parfaitement par l'action `type`, il n'y a aucune raison de les éviter.**
+
+**Double-check (§5)** : *langue du post = FR* ; *langue du commentaire = FR* ✅. **0 tiret cadratin** ✅. **712 caractères, 2 paragraphes** ✅. Aucun CTA, aucun lien ✅. Ton non accusatoire : le commentaire dit explicitement que le programme de la 2e journée « *est logique* » et formule une curiosité, pas un reproche ✅.
+**Anti-gabarit de structure** : quatre formes déjà utilisées aujourd'hui (réglage par défaut, durée de validité, lecture rapprochée d'une phrase, asymétrie du bon de livraison). Celle-ci en est une cinquième : **à qui s'adresse l'action**. Aucune reprise de moule.
+**Prudence factuelle** : le texte **n'affirme aucun délai chiffré** sur le GenPad® (aucune donnée de performance n'était disponible) et s'en tient au déplacement du lieu de production du résultat, qui est explicite dans le post.
+
+**Texte publié :**
+
+> Le détail qui me retient, c'est à qui la formation s'adresse : des prestataires de soins, pas seulement des laborantins. Déplacer un acte de laboratoire vers le point de soins déplace aussi le registre dans lequel le résultat naît.
+>
+> Un résultat produit en laboratoire remonte par la voie laboratoire, un résultat produit près du patient remonte par la voie clinique, et les deux ne se rejoignent souvent qu'à la consolidation. Le gain de diagnostic précoce se joue donc autant sur ce raccord que sur la durée de l'analyse. La deuxième journée porte sur les travaux pratiques et l'ergonomie, ce qui est logique ; je serais curieux de savoir si la saisie et la notification du résultat y trouvent aussi leur place.
+
+**Confirmation** : visible sous « David Deheunynck • Vous », horodaté « maintenant », **1 occurrence exactement**, aucune version non accentuée résiduelle.
+
+### 🔎 Pourquoi 5 commentaires sur 7, et pas 7
+
+Le quota est un objectif, et il n'a pas été atteint **faute de cible franchissant la barre, pas faute de recherche**. Méthodes épuisées dans l'ordre : (1) **notifications parcourues intégralement**, 20 items ; (2) **fil d'actualité déroulé sur 19 posts** ; (3) **activité ouverte une par une** pour les cibles débloquées aujourd'hui par le carry-over : Tedros ✅ retenu, Prof. Mohamed Janabi ✅ retenu, **Dr. Jean Kaseya écarté** (auto-redondance Windhoek), **page Africa CDC ✅ retenue**, **ANRS MIE écartée** (son post EN est le doublon exact du post FR de Yazdan Yazdanpanah que nous avons déjà commenté le 21/08, donc auto-redondance certaine) ; (4) **recherche d'entreprises** pour retrouver la page INRB, dont le slug accentué bloquait deux sessions précédentes ✅ retenue ; (5) **Vital Strategies** repérée sur le fil ✅ retenue.
+
+**Trois cibles ont été délibérément laissées de côté**, chacune pour un motif explicite et non pour un manque de temps :
+- **Johan Verheyden** : blocage hebdomadaire levé aujourd'hui, mais **son contenu reste marqué §10** (mise en cause de la substitution d'Africa CDC aux institutions nationales) et **il mentionne David nommément dans deux posts**. **4e session consécutive à le signaler sans arbitrage de David.** Le silence par défaut est maintenu.
+- **Chinasaokwu Nweke** : il a **répondu à notre commentaire du 21/08 et l'a aimé**, la continuation du fil est autorisée malgré son blocage jusqu'au 27/08. **Non traité pour une raison purement technique** : ni la page de notifications ni son activité récente (qui n'affiche que des republications) n'ont exposé l'URN du post d'origine sur le cycle de *Plasmodium*, et trois tentatives d'extraction ont échoué. **À reprendre en partant de la notification « a répondu à votre commentaire », c'est le chemin le plus court.**
+- **Fukushi Morishita** : reporté une 2e fois le 21/08, **non traité ici non plus**. Conformément à la convention « un carry-over reporté deux fois se reteste », la prochaine session doit **soit ouvrir son activité, soit l'abandonner explicitement** ; recopier « activité jamais consultée » une 3e fois n'est plus admissible.
+
+Aucun commentaire médiocre n'a été publié pour atteindre le chiffre. **Marge de 2 commentaires laissée aux créneaux de 13h et 17h.**
+
+### 🌍 VEILLE — données épidémiologiques et posts retenus sans action
+
+**✅ Le signalement §8 du 21/08 est RÉSOLU, vérifié en base et non supposé.** Le carry-over n°3 demandait d'ingérer les 3 lignes France contre le bulletin SpF du 19/08. **Requête directe sur `outbreaks` en vraie prod (`.env.local.live`) ce matin** : `Chikungunya / France = 25 cas au 2026-08-17`, `Dengue fever / France = 4 au 2026-08-17`, `West Nile fever / France = 18 au 2026-08-17`, les trois `updated_at` à **05:24 UTC ce matin**. L'ingestion a donc bien eu lieu, très probablement par `morning-don-check`. **Ne pas reconduire ce signalement.** Les trois lignes restent en `source_priority` 10, ce qui les maintient hors de portée des crons.
+
+**🔎 Aucune donnée épidémiologique nouvelle à ingérer repérée ce créneau.** Les posts parcourus ne portent pas de chiffres exploitables : le post Africa CDC/Tchad annonce une validation de zones prioritaires sans aucun cumul, le post INRB décrit une formation, le post Janabi un don de matériel, le Live de Tedros est un discours de politique régionale. **Rien à signaler au titre de §8.**
+
+**📌 Piste de source à retenir pour `morning-don-check`, pas pour cette routine — `dashboard.minsante.cm`.** Le Cameroun a mis en ligne le **Tableau de Bord Public des Statistiques de Santé** (MINSANTE + BUNEC + INS, appui Bloomberg Philanthropies #Data4Health, assistance technique Vital Strategies) : **226 indicateurs sur les 6 piliers OMS, 10 régions, 210 districts de santé, 2 053 aires de santé, 6 911 formations sanitaires**, avec une section **« 🚨 Urgences & Alertes »**. ⚠️ **Deux réserves avant de compter dessus comme source** : (1) la **période de référence par défaut est 2024**, ce qui en fait un outil de routine et non de flambée ; (2) **le panneau Urgences & Alertes n'a jamais fini de s'afficher** en une quarantaine de secondes d'attente (contenu en iframe), son contenu réel reste donc inconnu. À réévaluer plus tard, ne pas y raccrocher une ligne en l'état.
+
+**⚠️ Prémisse re-basculée, à corriger dans la mémoire** : `ccousp.cm` renvoie de nouveau **403 sans User-Agent navigateur** et **200 avec un UA Chrome** (227 461 octets) ce matin. Le run du 21/08 avait constaté 200 dans les deux cas et en avait déduit que le point de donnée n'était plus reproductible. **Il l'est de nouveau** : [[reference_govt_sites_need_browser_user_agent]] tient, le comportement est **intermittent**, ce n'est ni « toujours vrai » ni « périmé ». Aucune affirmation publique n'a été construite sur ce blocage.
+
+**Posts retenus sans action (hors quota ou hors fenêtre) :**
+- **Sir Peter Horby**, nouveau post sur RECOVERY comme modèle répliqué dans **l'essai PARTNERS de traitements contre Ebola, actuellement en recrutement** — bloqué jusqu'au 27/08.
+- **INRB, 2e post du jour** : présentation à l'INRB, le 19/08, du **protocole d'un essai clinique adaptatif de candidats vaccins contre le virus Bundibugyo**, par la **CEPI** et l'**University of Antwerp**. Non commenté (un seul commentaire par profil et par semaine, le post diagnostic a été préféré). **Excellent matériau de post de marque.**
+- **Miriam Mbueshi** : lancement de l'initiative « **Fleuve Congo Sans Ebola** », préparation multisectorielle le long du corridor du fleuve Congo. Bon sujet, **profil écarté au titre de §12** (deux comptes homonymes).
+- **Katelyn Jetelina** (2 j, limite de fenêtre), **Amanda McClelland** (post World Mosquito Day, bloquée jusqu'au 27/08), **Swiss Alliance against NTDs** (2 j, Aedes), **WHO AFRO republiant l'ONU Genève** sur l'intensification de la crise Ebola en RDC (WHO AFRO bloquée jusqu'au 23/08).
+
+### 📌 CARRY-OVER pour le créneau de 13h aujourd'hui (22/08)
+
+1. **Quotas consommés à 11h** : commentaires **5/7**, connexions **7/7 REMPLI**, suivis **7/7-10**, DM rédigés **3/8**, file de validation DM **3**.
+2. 🔒 **3 DM en attente de validation de David**, textes intégraux plus haut : **Patrick AYONGA**, **Pierre PARNEIX**, **Moritz Kraemer**. **Aucun ne part sans son accord explicite**, y compris via une session ultérieure. Push envoyée.
+3. ⚠️ **Avant d'envoyer le DM Pierre PARNEIX**, ne rien re-vérifier : la base a déjà été contrôlée ce matin et le brouillon **intègre déjà** la mise à jour à 25 cas au 17/08. Le re-modifier serait une régression.
+4. **Cibles de commentaire immédiates**, marge de 2 : **Chinasaokwu Nweke** (fil de commentaire actif, il a répondu ; passer par la notification « a répondu à votre commentaire » pour récupérer l'URN, les autres chemins ont échoué) et **Fukushi Morishita** (reporté 2 fois, **à trancher ou abandonner explicitement**, plus de 3e report).
+5. **Nouveaux blocages hebdomadaires créés ce créneau** : **Vital Strategies**, **page Africa CDC**, **Tedros**, **Prof. Mohamed Janabi**, **INRB** → tous jusqu'au **29/08**. **Dr. Jean Kaseya n'est PAS bloqué** (écarté sans commentaire), il redevient une cible dès aujourd'hui si un post hors Windhoek paraît.
+6. 🔴 **Arbitrage David attendu, 4e session consécutive — Johan Verheyden.** Blocage levé, il mentionne David nommément dans deux posts dont un préprint académique, mais le contenu reste §10. **Sans arbitrage, la prochaine session restera silencieuse par défaut.** Ce point ne se résoudra pas tout seul.
+7. 🔴 **Arbitrage David attendu, nouveau — Jean-Jacques Muyembe.** Deux comptes homonymes, aucun vérifié, **le suivi posé le 21/08 porte peut-être sur le mauvais**. Aucune invitation envoyée. Détail dans `linkedin-contacts.md`. La cible INRB a été couverte autrement, via **PLACIDE MBALA** (connexion 3/7).
+8. ✅ **Notes personnalisées d'invitation : question tranchée, ne plus la reposer.** Retestée ce matin sur la 1re invitation du jour, la modale « Ajouter une note » s'ouvre mais **débouche sur le mur Premium**. 3e jour consécutif. Appliquer directement l'envoi sans note, ne plus consommer un tour à espérer une réinitialisation quotidienne.
+9. **Candidats connexion prioritaires dès réouverture du quota**, par ordre : ⭐⭐ **Dr. Malachie MANAOUDA** (`/in/dr-malachie-manaouda-11893aa0/`, **ministre de la Santé Publique du Cameroun**, 35 mutuels, suivi ce matin), **Linda Esso** (MINSANTE Cameroun), **Nebiyu Dereje** (Africa CDC), **Oyeronke Oyebanji** (CEPI), **Flore Estelle BALANA ESIENE** (⚠️ suivi impossible, la connexion est la seule voie), **Joseph KAMBATA** et **Birgit Schramm** (slugs toujours non capturés).
+10. **Julia Gal** (`/in/julia-gal/`, WHO Hub Public Health Intelligence) : **suivi refusé par la plateforme** sur 2 tentatives alors que 6 autres suivis réussissaient. À retenter, ne pas re-chercher le profil.
+11. **OLAOLUWA PHILIP** : invitation reçue toujours en attente, statut « écarté » figé, **ne pas ré-évaluer**.
+12. ⚠️ **Le créneau de 13h avait sauté hier** (déclenchement groupé à 18h03 au lieu de 13h). Le carry-over du 21/08 demandait de surveiller : **si `linkedin-hwg-followup-check` saute une 2e fois aujourd'hui, ce n'est plus un incident isolé** et il faut le signaler à David comme une panne d'automatisation, pas seulement dans un bilan.
+13. **Séparation freelance respectée**, aucune activité freelance traitée, comptée ni archivée côté HWG.
+14. **Navigateur** : 4 incidents CDP (`Page.captureScreenshot` ×3, `Runtime.evaluate` ×1), tous résolus par `select_browser` sur `23c7ecdd…`, aucune perte d'action. **Rien écrit dans `browser-status.md`** : ce sont des incidents transitoires de run, pas une panne d'appairage partagée.
+
+---
 
 ## 📅 Session linkedin-hwg-followup-check-2 — 21/08/2026 (17h, 2e des 2 créneaux après-midi)
 
