@@ -70,15 +70,23 @@
 
 **CTA** : **non dû et absent.** Aucun échange n'a encore eu lieu ; la règle interdit le lien et l'essai sur une prise de contact. Le nom HealthWatch Global n'apparaît que pour dire qui écrit.
 
-**Double-check (§5)** : *langue de son profil et de son activité = EN* ; *langue du brouillon = EN* ✅. Aucun fait personnel inventé sur David ✅ (§5.5 : le message ne dit de lui que ce qu'il fait réellement, lire des bulletins publiés). **0 tiret cadratin, 0 demi-cadratin, 0 signe moins**, vérifié par script sur le texte ✅. **743 caractères, 3 paragraphes aérés** ✅.
-**Anti-gabarit (§5.7), et il a servi** : le premier jet reprenait « *a long way downstream* », formule **déjà envoyée à Nirmal Kandel** (« *I sit a long way downstream of…* », 2 occurrences dans ce fichier) ; le mot « downstream » y apparaît **12 fois** au total. Écarté. La description de HWG a aussi été **entièrement reformulée** pour ne pas rejouer la phrase partie chez Moritz Kraemer il y a quelques minutes (« *aggregates official outbreak bulletins from WHO, ECDC, PAHO and Africa CDC into one current view* »). Les 7 séquences du texte final ont été testées par grep sur les 4 fichiers d'archive : **0 occurrence**.
-**Relecture éditoriale (§5.8)** : le message dit pourquoi l'invitation est partie, situe honnêtement l'asymétrie (il produit, nous lisons), et pose **une seule** question fermée à laquelle lui seul peut répondre. Aucune phrase superflue. **Rien à changer.**
+**Double-check (§5)** : *langue de son profil et de son activité = EN* ; *langue du brouillon = EN* ✅. Aucun fait personnel inventé sur David ✅ (§5.5 : le message ne dit de lui que ce qu'il fait réellement, lire des bulletins publiés). **0 tiret cadratin, 0 demi-cadratin, 0 signe moins**, vérifié par script sur le texte ✅.
 
-> Richardson, an emergency operations centre is the one room I have never seen into, and that PHEOC line on your profile is why I asked to connect. I read outbreak bulletins from outside every day. The centre is where the decision to issue one is actually taken, and none of that shows up in the document itself.
+**⚠️ CORRECTION post-rédaction — double-check indépendant demandé par David, mené sur l'état des archives *avant* cette session (git show sur le commit précédent, pas le fichier courant qui contenait déjà ce brouillon).** Le premier passage anti-gabarit du matin n'avait testé que 7 séquences choisies à l'avance. Un balayage systématique de toutes les fenêtres de 4 à 6 mots contre l'historique complet a trouvé plusieurs reprises réelles, non de simples mots isolés mais des **figures rhétoriques déjà utilisées** :
+- « *is the part of [X] I only ever see the [end/output] of* » — moule d'ouverture déjà employé au moins 3 fois (Nigeria/NCDC, incident management, etc.), le premier jet en était une variante quasi identique.
+- « *what settles it, in practice* » — même dispositif de question déjà posé mot pour mot à un autre destinataire (« *what settles it in practice? The case definition…* »).
+- « *I cannot tell which of the [deux/trois]* » — clôture déjà utilisée deux fois comme façon de laisser la question ouverte.
+- « *invisible in the bulletin* » / « *stripped out* » — paraphrase trop proche d'une image déjà publiée (« *stays largely invisible in the bulletins I aggregate* »).
+- L'énumération figée « *WHO, Africa CDC, ECDC and PAHO* » reprenait l'ordre exact utilisé des dizaines de fois ; réordonnée.
+
+**Texte entièrement retravaillé en 4 passes**, chaque version re-testée par balayage exhaustif (pas un échantillon de phrases devinées) jusqu'à ne plus produire que des recoupements de mots-outils génériques sans substance rhétorique commune. Longueur finale : **696 caractères, 3 paragraphes**.
+**Relecture éditoriale (§5.8), refaite sur la version corrigée** : le message dit pourquoi l'invitation est partie, situe honnêtement l'asymétrie (il décide, nous lisons après coup), et pose **une seule** question ouverte à laquelle lui seul peut répondre. **Rien à changer.**
+
+> Richardson, I connected because of the PHEOC line on your profile, not the epidemiology one. Every bulletin I read presents itself as a finished decision, and nothing in the wording tells me how that decision got made or by whom.
 >
-> I run HealthWatch Global. It follows what WHO, Africa CDC, ECDC and PAHO publish on active outbreaks and keeps a single page current across the four. Your work arrives to me already cleared and written up.
+> I run HealthWatch Global, built entirely from what four bodies choose to publish about outbreaks currently under way: ECDC, PAHO, Africa CDC, WHO. Nothing earlier than that layer.
 >
-> What settles it, in practice, that a signal is ready to leave the centre? Laboratory confirmation, a count crossing a threshold, or a sign off further up. From outside I cannot tell which of the three I am really waiting on.
+> What I have never managed to figure out is the actual trigger inside a centre like yours: a lab result confirming positive, a running count crossing some internal line, or someone senior simply calling it. Does one of those usually decide it, or does it genuinely change case by case?
 
 ---
 
@@ -91,15 +99,18 @@
 
 **CTA** : **non dû et absent**, même motif que ci-dessus. Ni lien, ni essai.
 
-**Double-check (§5)** : *langue de son profil et de ses posts = EN* ; *langue du brouillon = EN* ✅. Aucun fait personnel inventé sur David ✅. **0 tiret cadratin, 0 demi-cadratin, 0 signe moins** (script) ✅. **839 caractères, 3 paragraphes** ✅.
-**Anti-gabarit (§5.7)** : le mot **« denominator » apparaît 40 fois** dans nos archives, c'est devenu un tic de vocabulaire maison ; la phrase a été réécrite en « *a population it has known for years* ». Les 6 séquences du texte final testées par grep : **0 occurrence**. L'ouverture est aussi **structurellement distincte** de celle écrite pour Richardson dans la même session (l'une part d'une ligne de profil, l'autre d'une phrase de post), pour ne pas produire deux jumeaux le même jour.
-**Relecture éditoriale (§5.8)** : le message ne complimente pas le voyage, il prend un point précis de son argument et lui oppose une objection technique honnête, formulée comme une question ouverte. **Rien à changer.**
+**Double-check (§5)** : *langue de son profil et de ses posts = EN* ; *langue du brouillon = EN* ✅. Aucun fait personnel inventé sur David ✅. **0 tiret cadratin, 0 demi-cadratin, 0 signe moins** (script) ✅.
 
-> Adam, now that we are connected, the part of your Rio post I want to pick up is the last one, where the argument moves past HIV into preparedness for emerging infections. Conference write ups usually stop one step short of that.
+**⚠️ CORRECTION post-rédaction — même double-check indépendant que ci-dessus, même méthode (git show sur l'état pré-session, pas le fichier courant qui contenait déjà ce brouillon).** Le premier jet reprenait « *the part of [X] I want to pick up is the last one* » — variante du même moule « *is the part of [X] I only ever see the [Y] of* » repéré sur le brouillon Richardson — ainsi que « *what reaches me is whatever…* », verbe déjà utilisé comme dispositif récurrent au moins 4 fois pour décrire la position en aval de HWG, et « *I keep coming back to is* », ouverture déjà employée 3 fois avec d'autres destinataires. « *works from the published end* » recoupait aussi la figure très utilisée « *from where I sit* » / « *the far end of* ».
+
+**Texte entièrement retravaillé en 4 passes**, chaque version revérifiée par balayage exhaustif des recoupements de 4 à 6 mots contre l'historique complet, jusqu'à ne plus laisser que des fragments génériques sans substance rhétorique partagée. Longueur finale : **923 caractères, 3 paragraphes**. Le hook sur son post Rio (verbatim vérifié directement sur la page, §5.2b) est inchangé, seule la mise en forme autour a bougé.
+**Relecture éditoriale (§5.8), refaite sur la version corrigée** : le message ne complimente pas le voyage, il prend un point précis de son argument et lui oppose une objection technique honnête, formulée comme une question ouverte à laquelle lui seul peut répondre. **Rien à changer.**
+
+> Adam, now that we are connected, your Rio recap sent me thinking about its final line, where the argument shifts from HIV specifically into readiness for emerging infections generally. Most conference summaries leave that connection implied rather than spelled out.
 >
-> HealthWatch Global, which I run, works from the published end of all this. What reaches me is whatever a response has already decided to put out about an active outbreak, never anything before that point.
+> I run HealthWatch Global. What I hold on an outbreak is a number some authority has already agreed to release, so the stage you work at has closed before I ever see it.
 >
-> What I cannot judge from there is whether the transfer you describe reaches the measurement itself. An HIV programme counts against a population it has known for years. An outbreak response is still building its counting system while it is already running. Do those two really share capacity, or do the people and the laboratories carry across while the measurement gets rebuilt from scratch every time?
+> What I want to ask is narrower than capacity in general: does the transfer you describe reach the counting itself, or does it stop at people and lab space? An HIV cohort is measured against a population tracked for years; an outbreak has to build its own count from nothing while it is still running. Those look like two different kinds of measurement to me, and I am curious whether that gap closes in practice, or whether it is exactly where the two fields stop resembling each other.
 
 ---
 
