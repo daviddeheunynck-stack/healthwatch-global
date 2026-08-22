@@ -248,6 +248,86 @@ function parseHTMLItems(html: string): RSSItem[] {
   return items;
 }
 
+// ── France arbovirus national bulletin (chikungunya/dengue/West Nile) ────────
+//
+// The RSS/HTML news feed above never surfaces this bulletin: it isn't a news
+// article, it lives at its own numbered URL and is never linked from
+// /les-actualites. Found 2026-08-21 — Chikungunya/Dengue/West Nile/France sat
+// 3 numbered editions behind (bulletin #21 already published, #20 still in
+// DB) despite this cron running twice daily and being allowed to write these
+// rows (source_priority<=10 since 2026-08-19). See product-ideas-log.md,
+// 2026-08-21 idea 1.
+//
+// One bulletin page reports all three diseases in prose, not one item per
+// disease, so it can't reuse the per-item loop below — it gets its own pass.
+// Bulletin numbers increment by ~1/week during the 1 May-30 Nov season; the
+// next number is derived from whichever of the 3 rows is furthest behind
+// (its own `source` URL already ends in "-et-<N>"), so no separate cursor
+// needs to be persisted. Probes forward a few numbers to catch up if a week
+// (or more) was missed, stopping at the first 404 — bulletins are strictly
+// sequential, so a miss means "not published yet".
+const ARBOVIRUS_BULLETIN_BASE =
+  "https://www.santepubliquefrance.fr/maladies-a-transmission-vectorielle/chikungunya/bulletin-national/chikungunya-dengue-zika-et-";
+const ARBOVIRUS_ROW_IDS: Record<"Chikungunya" | "Dengue fever" | "West Nile fever", string> = {
+  "Chikungunya":   "99f356e8-7fc3-4f43-947e-45c9d6a34757",
+  "Dengue fever":  "5ccc53c2-b17b-493b-aadf-233acb4b2cdf",
+  "West Nile fever": "906bf26a-8867-4a9c-ad7c-976e4e2c5bab",
+};
+const ARBOVIRUS_LOOKAHEAD = 6; // ~6 weeks of catch-up if runs were missed
+
+const FR_MONTHS: Record<string, string> = {
+  janvier: "01", février: "02", mars: "03", avril: "04", mai: "05", juin: "06",
+  juillet: "07", août: "08", septembre: "09", octobre: "10", novembre: "11", décembre: "12",
+};
+
+function parseFrenchDateNear(text: string, anchorIdx: number): string | null {
+  // Looks backward from a disease mention to the nearest "Au DD mois AAAA,"
+  // that opens its sentence — both the chikungunya/dengue sentence and the
+  // separate West Nile sentence follow this exact pattern in the bulletin.
+  const window = text.slice(Math.max(0, anchorIdx - 300), anchorIdx);
+  const matches = [...window.matchAll(
+    /Au\s+(\d{1,2})\s+(janvier|février|mars|avril|mai|juin|juillet|août|septembre|octobre|novembre|décembre)\s+(\d{4})/gi
+  )];
+  const m = matches[matches.length - 1];
+  if (!m) return null;
+  const mm = FR_MONTHS[m[2].toLowerCase()];
+  if (!mm) return null;
+  return `${m[3]}-${mm}-${m[1].padStart(2, "0")}`;
+}
+
+interface ArbovirusFigure { cases: number; date: string }
+
+// Returns null per-disease (rather than throwing) when a pattern doesn't
+// match, so a bulletin wording change degrades to "skip that disease this
+// run" instead of crashing the whole cron or writing garbage — the existing
+// guard stack (spike/collapse/dateFloor) is a second line of defence, not
+// the only one.
+function parseArbovirusBulletin(text: string): Record<keyof typeof ARBOVIRUS_ROW_IDS, ArbovirusFigure | null> {
+  const result: Record<keyof typeof ARBOVIRUS_ROW_IDS, ArbovirusFigure | null> = {
+    "Chikungunya": null, "Dengue fever": null, "West Nile fever": null,
+  };
+
+  const chik = text.match(/(\d+)\s+épisodes?\s+de\s+chikungunya\s+totalisant\s+(\d+)\s+cas/i);
+  if (chik) {
+    const date = parseFrenchDateNear(text, chik.index ?? 0);
+    if (date) result["Chikungunya"] = { cases: Number(chik[2]), date };
+  }
+
+  const dengue = text.match(/(\d+)\s+épisodes?\s+de\s+dengue\s+totalisant\s+(\d+)\s+cas/i);
+  if (dengue) {
+    const date = parseFrenchDateNear(text, dengue.index ?? 0);
+    if (date) result["Dengue fever"] = { cases: Number(dengue[2]), date };
+  }
+
+  const westNile = text.match(/(\d+)\s+cas\s+autochtones?\s+d['’]infection\s+à\s+virus\s+West\s+Nile/i);
+  if (westNile) {
+    const date = parseFrenchDateNear(text, westNile.index ?? 0);
+    if (date) result["West Nile fever"] = { cases: Number(westNile[1]), date };
+  }
+
+  return result;
+}
+
 // ── Shared dedup lookup ───────────────────────────────────────────────────────
 
 interface ExistingRow {
@@ -296,6 +376,123 @@ async function loadExistingForItems(
     return;
   }
   for (const row of (data ?? []) as ExistingRow[]) indexRow(byDC, row);
+}
+
+// Runs the France arbovirus national bulletin pass described above, against
+// the fixed set of 3 rows it owns (Chikungunya/Dengue fever/West Nile fever,
+// all France). Mutates `results`/`log`/`lockedGuardBlocked` in place so the
+// caller's existing reporting (logCronRun, Sentry, response body) picks this
+// pass up for free instead of needing a second reporting path.
+async function syncFranceArbovirusBulletin(
+  supabase: SupabaseClient,
+  results: { inserted: number; updated: number; skipped: number; errors: number },
+  log: { label: string; status: string; detail?: string }[],
+  lockedGuardBlocked: string[],
+): Promise<void> {
+  const ids = Object.values(ARBOVIRUS_ROW_IDS);
+  const { data, error } = await supabase
+    .from("outbreaks")
+    .select("id, disease_en, country_en, cases, deaths, date, source, active, description, source_priority")
+    .in("id", ids);
+  if (error || !data) {
+    log.push({ label: "France arbovirus bulletin", status: "error", detail: error?.message ?? "rows not found" });
+    results.errors++;
+    return;
+  }
+  const rowById = new Map((data as ExistingRow[]).map((r) => [r.id, r]));
+
+  // Base = the lowest bulletin number already cited among the 3 rows (a row
+  // can lag behind its siblings if a previous run only matched some of them,
+  // or if this pass has never run before and one row still cites an older
+  // manual-fix source that isn't a numbered bulletin at all).
+  let base = 0;
+  for (const id of ids) {
+    const src = rowById.get(id)?.source ?? "";
+    const n = Number(src.match(/-et-(\d+)$/)?.[1] ?? 0);
+    if (n > 0 && (base === 0 || n < base)) base = n;
+  }
+  if (base === 0) {
+    log.push({ label: "France arbovirus bulletin", status: "skip", detail: "no row cites a numbered bulletin yet — refusing to guess a starting point" });
+    return;
+  }
+
+  let lastApplied = 0;
+  for (let n = base + 1; n <= base + ARBOVIRUS_LOOKAHEAD; n++) {
+    const url = ARBOVIRUS_BULLETIN_BASE + n;
+    let html: string;
+    try {
+      const res = await fetch(url, { headers: FETCH_HEADERS, signal: AbortSignal.timeout(12_000) });
+      if (!res.ok) break; // sequential numbering — a miss means not published yet
+      html = await res.text();
+    } catch {
+      break;
+    }
+
+    const text = htmlToText(extractSPFBody(html));
+    const figures = parseArbovirusBulletin(text);
+    let anyMatched = false;
+
+    for (const disease of Object.keys(ARBOVIRUS_ROW_IDS) as (keyof typeof ARBOVIRUS_ROW_IDS)[]) {
+      const figure = figures[disease];
+      const id = ARBOVIRUS_ROW_IDS[disease];
+      const existingRow = rowById.get(id);
+      const label = `${disease}/France (bulletin #${n})`;
+      if (!figure || !existingRow) continue;
+      anyMatched = true;
+
+      if (figure.date <= existingRow.date && figure.cases === existingRow.cases) {
+        log.push({ label, status: "skip", detail: "unchanged" });
+        results.skipped++;
+        continue;
+      }
+      const candidate = { cases: figure.cases, deaths: existingRow.deaths, date: figure.date };
+      const guardReason =
+        dateFloorGuard(candidate, existingRow) ??
+        spikeGuard(candidate, existingRow) ??
+        collapseGuard(candidate, existingRow) ??
+        zeroCaseGuard(candidate, existingRow) ??
+        lockedRowRegressionGuard(candidate, existingRow);
+      if (guardReason) {
+        log.push({ label, status: "skip", detail: guardReason });
+        results.skipped++;
+        if (guardReason.startsWith("guard:locked-row-")) lockedGuardBlocked.push(`${label}: ${guardReason}`);
+        continue;
+      }
+
+      const description = truncateAtSentence(
+        `SPF — ${figure.cases} locally acquired ${disease.toLowerCase()} case(s) in mainland France, as at ${figure.date}, per Santé publique France's national arbovirus (chikungunya/dengue/Zika/West Nile) enhanced surveillance bulletin.`,
+        600,
+      );
+      const updatePayload: Record<string, unknown> = {
+        cases: figure.cases, date: figure.date, source: url,
+        description, risk_level: assessRisk(disease, description, figure.cases, existingRow.deaths),
+        active: true, source_priority: Math.max(5, existingRow.source_priority ?? 0),
+      };
+      if (existingRow.description !== description) {
+        updatePayload.description_fr = null;
+        updatePayload.description_es = null;
+        updatePayload.description_ar = null;
+        updatePayload.description_id = null;
+      }
+      const { data: updatedRows, error: updateErr } = await supabase.from("outbreaks").update(updatePayload)
+        .eq("id", id).lte("source_priority", 10).select("id");
+      if (updateErr) { log.push({ label, status: "error", detail: updateErr.message }); results.errors++; }
+      else if (!updatedRows || updatedRows.length === 0) {
+        log.push({ label, status: "skip", detail: "blocked by source_priority guard — row owned by a higher-priority source" });
+        results.skipped++;
+      } else {
+        log.push({ label, status: "updated", detail: `${figure.cases} cases (${figure.date})` });
+        results.updated++;
+        rowById.set(id, { ...existingRow, cases: figure.cases, date: figure.date, source: url, description, source_priority: Math.max(5, existingRow.source_priority ?? 0) });
+      }
+    }
+
+    if (anyMatched) lastApplied = n;
+  }
+
+  if (lastApplied === 0) {
+    log.push({ label: "France arbovirus bulletin", status: "skip", detail: `no new numbered edition beyond #${base}` });
+  }
 }
 
 // ── Main handler ──────────────────────────────────────────────────────────────
@@ -546,6 +743,12 @@ async function runSyncSpf(_req: NextRequest, supabase: SupabaseClient) {
 
     await new Promise((r) => setTimeout(r, 300));
   }
+
+  // Separate pass: the arbovirus national bulletin is never linked from the
+  // news feed above, so its 3 rows (Chikungunya/Dengue fever/West Nile
+  // fever, all France) would otherwise never be revisited by this cron at
+  // all. See syncFranceArbovirusBulletin for why this can't reuse the loop.
+  await syncFranceArbovirusBulletin(supabase, results, log, lockedGuardBlocked);
 
   console.log("[spf] Done:", results, log);
   // A locked-row refusal must not pass as a clean run: nothing else will

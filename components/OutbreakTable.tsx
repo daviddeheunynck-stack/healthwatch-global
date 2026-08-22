@@ -12,7 +12,7 @@ import { getEpiWeek } from "@/lib/epi-week";
 
 type SortKey = "risk" | "cases" | "deaths" | "cfr" | "date";
 type SortDir = "asc" | "desc";
-import { getLocalizedDisease, getLocalizedCountry, isNewOutbreak, staleOutbreakDays, freshOutbreakHours, sourceStatus, sourceName, computeRiskScore, hasRealAdmin1 } from "@/lib/outbreaks";
+import { getLocalizedDisease, getLocalizedCountry, isNewOutbreak, staleOutbreakDays, freshOutbreakHours, isSourceConfirmed, sourceStatus, sourceName, computeRiskScore, hasRealAdmin1 } from "@/lib/outbreaks";
 import { diseaseToSlug, matchDisease } from "@/lib/disease-data";
 import { countryToSlug } from "@/lib/country-utils";
 import type { Outbreak } from "@/lib/outbreaks";
@@ -1257,6 +1257,20 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
                       {(() => {
                         const d = staleOutbreakDays(outbreak);
                         if (!d) return null;
+                        // A row can be old AND verified: isSourceConfirmed means a human
+                        // already opened the primary source and confirmed it genuinely
+                        // stopped publishing (not a reporting gap). Until this existed,
+                        // the badge below couldn't tell the two apart — see
+                        // isSourceConfirmed (lib/outbreaks.ts) and migration 20260822120000.
+                        if (isSourceConfirmed(outbreak)) {
+                          const clabel = { fr: `SOURCE CONFIRMÉE · ${d}j`, en: `SOURCE CONFIRMED · ${d}d`, es: `FUENTE CONFIRMADA · ${d}d`, ar: `${d}د · تم تأكيد المصدر`, id: `SUMBER DIKONFIRMASI · ${d}h` }[locale] ?? `SOURCE CONFIRMED · ${d}d`;
+                          const ctip   = { fr: `Source officielle vérifiée directement — aucune édition plus récente, pas un trou de données`, en: `Primary source checked directly — no newer edition exists, not a data gap`, es: `Fuente oficial verificada directamente — no existe edición más reciente, no es una laguna de datos`, ar: `تم التحقق من المصدر الرسمي مباشرة — لا توجد نشرة أحدث، وليس فجوة بيانات`, id: `Sumber resmi diperiksa langsung — tidak ada edisi lebih baru, bukan celah data` }[locale] ?? `Primary source checked directly — no newer edition exists, not a data gap`;
+                          return (
+                            <span title={ctip} className="inline-flex items-center text-[10px] font-bold px-1.5 py-0.5 rounded bg-slate-800/50 border border-slate-600/50 text-slate-300 shrink-0 cursor-help whitespace-nowrap">
+                              ✓ {clabel}
+                            </span>
+                          );
+                        }
                         const label = { fr: `SANS MAJ · ${d}j`, en: `NO UPDATE · ${d}d`, es: `SIN ACTU. · ${d}d`, ar: `${d}د · بلا تحديث`, id: `TK ADA UPDATE · ${d}h` }[locale] ?? `NO UPDATE · ${d}d`;
                         const tip   = { fr: `Aucun bulletin officiel depuis ${d} jours — foyer peut-être résolu ou non rapporté`, en: `No official bulletin in ${d} days — may be resolved or unreported`, es: `Sin boletín oficial en ${d} días — puede estar resuelto o sin reporte`, ar: `لا يوجد نشرة رسمية منذ ${d} يوماً`, id: `Tidak ada buletin resmi dalam ${d} hari` }[locale] ?? `No official update in ${d} days`;
                         return (

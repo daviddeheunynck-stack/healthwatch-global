@@ -82,6 +82,7 @@ export interface Outbreak {
   is_backfill:   boolean;       // source is itself a historical/cumulative archive, not a live signal — set by the owning cron at insert time
   updated_at:    string | null; // last sync timestamp
   created_at:    string | null; // first insertion timestamp
+  source_confirmed_at: string | null; // primary source manually opened and confirmed to carry no newer edition than `date` — see isSourceConfirmed() below and migration 20260822120000
   event_id:      string | null; // multi-country cluster linkage
   ihr_event_id:  string | null; // WHO IHR event reference (Article 6/7)
   verification_status: string; // suspected | under_investigation | confirmed | closed
@@ -642,18 +643,46 @@ export function dedupeAggregateOutbreakRows<
 const STALE_DAYS = 60;
 
 /**
- * Returns how many days since the last official update for an active outbreak,
- * or null if the outbreak is not stale (< STALE_DAYS) or not active.
+ * Returns how many days since the source bulletin's own date for an active
+ * outbreak, or null if the outbreak is not stale (< STALE_DAYS) or not active.
  *
  * A stale active outbreak signals either resolution without a closing bulletin,
  * or a reporting gap — both meaningful for surveillance in enclosed zones.
+ *
+ * Reads `outbreak.date`, NOT `updated_at ?? date`. Until 2026-08-22 this read
+ * `updated_at` (the last DATABASE WRITE), which any field touch (a QC edit, a
+ * one-off data-fix script re-stamping updated_at) resets regardless of
+ * whether the bulletin itself is any newer — the exact bug freshOutbreakHours
+ * had until 5d8e1ad (2026-08-19) fixed it there but missed this sibling
+ * function. Found live: a diphtheria/Nigeria row reframed on 2026-08-15
+ * (scripts/fix-diphtheria-nigeria-ncdc-reframe-2026-08-15.mjs) carries a
+ * bulletin date of 2026-03-22 (152+ days old at the time) but an `updated_at`
+ * of the fix's own run — so this function returned null (not stale) and
+ * sourceScore below never applied its -0.5, on a row whose actual bulletin
+ * was five months old.
  */
 export function staleOutbreakDays(outbreak: Outbreak): number | null {
   if (!outbreak.active) return null;
-  const ref = outbreak.updated_at ?? outbreak.date;
+  const ref = outbreak.date;
   if (!ref) return null;
   const days = Math.floor((Date.now() - new Date(ref).getTime()) / 86_400_000);
   return days >= STALE_DAYS ? days : null;
+}
+
+// True when `source_confirmed_at` covers the row's CURRENT `date` — i.e. a
+// human opened the primary source and confirmed no newer edition exists, as
+// of a check made on or after this row's own bulletin date. Self-invalidating
+// on purpose: if a later cron advances `date` with a real new bulletin, this
+// stops being true automatically (see migration 20260822120000) without any
+// cron needing to clear the column itself.
+//
+// Distinguishes "reconfirmed — the source genuinely stopped publishing" from
+// an ordinary reporting gap on the same staleOutbreakDays >= STALE_DAYS
+// surface: until this existed, both looked identical to a visitor ("may be
+// resolved or unreported"), even on rows where a person had already checked.
+export function isSourceConfirmed(outbreak: Pick<Outbreak, "source_confirmed_at" | "date">): boolean {
+  if (!outbreak.source_confirmed_at) return false;
+  return new Date(outbreak.source_confirmed_at).getTime() >= new Date(outbreak.date).getTime();
 }
 
 // Positive freshness signal — mirrors staleOutbreakDays but for the other end
@@ -738,8 +767,10 @@ export function computeRiskScore(
   // Contained: spread is being limited — reduce urgency
   if (outbreak.response_phase === "contained") score -= 1;
 
-  // Stale = may be resolving
-  if (staleOutbreakDays(outbreak) !== null) score -= 0.5;
+  // Stale = may be resolving — unless a human already confirmed the source
+  // simply stopped publishing (isSourceConfirmed): that row isn't degraded,
+  // it's just old and verified, so the penalty doesn't apply to it.
+  if (staleOutbreakDays(outbreak) !== null && !isSourceConfirmed(outbreak)) score -= 0.5;
 
   return Math.round(Math.min(10, Math.max(1, score)));
 }

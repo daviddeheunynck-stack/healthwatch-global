@@ -6,7 +6,7 @@ import { X, ExternalLink, AlertTriangle, TrendingUp, Users, Skull, Calendar, Glo
 import WatchlistButton from "@/components/WatchlistButton";
 import { getIncidenceRate } from "@/lib/population-data";
 import type { Outbreak } from "@/lib/outbreaks";
-import { getLocalizedDisease, getLocalizedCountry, getLocalizedDescription, sourceStatus, sourceName, staleOutbreakDays, hasRealAdmin1 } from "@/lib/outbreaks";
+import { getLocalizedDisease, getLocalizedCountry, getLocalizedDescription, sourceStatus, sourceName, staleOutbreakDays, isSourceConfirmed, hasRealAdmin1 } from "@/lib/outbreaks";
 import { getResponseGuidance, RESPONSE_ACTIONS } from "@/lib/response-guidance";
 import { diseaseToSlug, matchDisease } from "@/lib/disease-data";
 import Link from "next/link";
@@ -508,7 +508,12 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlis
   // source link, styled per tier; 'unverified' rows (placeholder text, social media, blogs)
   // get no link and no publisher name.
 
-  const staleDays = staleOutbreakDays(outbreak);
+  // A row confirmed current (isSourceConfirmed) isn't treated as stale here:
+  // the "may be resolved or unreported" warning below would otherwise
+  // contradict the "✓ source confirmed" badge shown for the same row in
+  // OutbreakTable. See migration 20260822120000.
+  const staleDaysRaw = staleOutbreakDays(outbreak);
+  const staleDays = staleDaysRaw !== null && !isSourceConfirmed(outbreak) ? staleDaysRaw : null;
   const guidance  = getResponseGuidance(outbreak.disease_en || outbreak.disease);
   const fpActions = RESPONSE_ACTIONS[guidance.tier][locale] ?? RESPONSE_ACTIONS[guidance.tier].en;
   const whyItMattersSignals = selectWhyItMattersSignals(outbreak, trend, staleDays !== null);

@@ -12,7 +12,7 @@ import CitationBlock from "@/components/CitationBlock";
 import OutbreakStatsGrid from "@/components/OutbreakStatsGrid";
 import ShareOutbreakButton from "@/components/ShareOutbreakButton";
 import OutbreakCasesChart from "@/components/OutbreakCasesChart";
-import { getLocalizedDisease, getLocalizedCountry, getLocalizedDescription, sourceStatus, sourceName, staleOutbreakDays } from "@/lib/outbreaks";
+import { getLocalizedDisease, getLocalizedCountry, getLocalizedDescription, sourceStatus, sourceName, staleOutbreakDays, isSourceConfirmed } from "@/lib/outbreaks";
 import { diseaseToSlug, matchDisease } from "@/lib/disease-data";
 import { jsonLdHtml } from "@/lib/json-ld";
 import { countryToSlug } from "@/lib/country-utils";
@@ -319,7 +319,11 @@ export default async function OutbreakPage({
     locale === "ar" ? `تنبيهات ${disease} اليومية` :
     locale === "id" ? `Peringatan ${disease} harian` :
     `Get daily ${disease} alerts`;
-  const staleDays = staleOutbreakDays(o);
+  // See components/OutbreakDetailModal.tsx for why isSourceConfirmed gates
+  // this: a confirmed row shouldn't show "may be resolved or unreported"
+  // next to the table's "✓ source confirmed" badge for the same outbreak.
+  const staleDaysRaw = staleOutbreakDays(o);
+  const staleDays = staleDaysRaw !== null && !isSourceConfirmed(o) ? staleDaysRaw : null;
   const whyItMattersSignals = selectWhyItMattersSignals(o, trend, staleDays !== null);
   const guidance = getResponseGuidance(o.disease_en || o.disease);
   const fpActions = RESPONSE_ACTIONS[guidance.tier][locale] ?? RESPONSE_ACTIONS[guidance.tier].en;
