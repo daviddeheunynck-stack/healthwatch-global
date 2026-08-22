@@ -3,6 +3,7 @@ import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { rateLimit, getClientIp } from "@/lib/rate-limit";
 import { errorMessage } from "@/lib/error";
+import { trackEvent } from "@/lib/track-event";
 import * as Sentry from "@sentry/nextjs";
 
 export const dynamic = "force-dynamic";
@@ -193,6 +194,14 @@ export async function POST(req: NextRequest) {
         { status: response.status }
       );
     }
+
+    // Server-side, not the client-only @vercel/analytics "checkout_start" already
+    // fired in CheckoutButton — that one only shows up in the Vercel dashboard,
+    // not queryable from Supabase. This mirrors it into product_events so the
+    // conversion funnel (account_view → checkout_started → real Stripe payment)
+    // is answerable from the DB, closing the instrumentation gap flagged
+    // 2026-08-05/22 in project_trial_value_nudge_feature.
+    if (userId) trackEvent(userId, "checkout_started", { plan: plan ?? "", billing: billingPeriod, locale });
 
     return NextResponse.json({ url: data.url });
   } catch (err: unknown) {

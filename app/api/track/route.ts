@@ -7,7 +7,7 @@ export const dynamic = "force-dynamic";
 // Closed allowlist — this endpoint is reachable by any client, so the set of
 // trackable actions must stay fixed rather than arbitrary, to avoid it
 // becoming an open write oracle for junk events / metadata bloat.
-const ALLOWED_ACTIONS = new Set(["pricing_page_view", "outbreak_detail_view", "dashboard_view"]);
+const ALLOWED_ACTIONS = new Set(["pricing_page_view", "outbreak_detail_view", "dashboard_view", "account_view"]);
 
 // The action name is allowlisted but `metadata` was not bounded in any way, and
 // it lands verbatim in product_events.metadata (jsonb). Any signed-in account —

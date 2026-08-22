@@ -12,6 +12,7 @@ import DiseaseAlertPicker from "@/components/DiseaseAlertPicker";
 import AlertLocalePanel from "@/components/AlertLocalePanel";
 import SlackWebhookForm from "@/components/SlackWebhookForm";
 import ApiKeyManager from "@/components/ApiKeyManager";
+import TrackPageView from "@/components/TrackPageView";
 import { PRICE_DISPLAY } from "@/lib/pricing";
 import type { Metadata } from "next";
 
@@ -516,6 +517,7 @@ export default async function AccountPage({
 
   return (
     <div className="max-w-2xl mx-auto space-y-6 py-4">
+      <TrackPageView action="account_view" metadata={{ locale, plan }} />
 
       {/* Back link */}
       <Link href={`/${locale}`} className="text-sm text-gray-500 hover:text-gray-300 transition-colors">
