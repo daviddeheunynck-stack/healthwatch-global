@@ -202,7 +202,7 @@ async function runDataQuality(_req: NextRequest, supabase: SupabaseClient) {
   // ── 1. Load active rows ───────────────────────────────────────────────────
   const { data: rows, error: rowsErr } = await supabase
     .from("outbreaks")
-    .select("id, disease, disease_en, country, country_en, cases, deaths, date, source, is_seed, is_pheic, source_priority, description, admin1, is_backfill")
+    .select("id, disease, disease_en, country, country_en, cases, deaths, date, source, is_seed, is_pheic, source_priority, description, admin1, is_backfill, source_confirmed_at")
     .eq("active", true);
 
   if (rowsErr) return NextResponse.json({ error: rowsErr.message }, { status: 500 });
@@ -360,69 +360,32 @@ async function runDataQuality(_req: NextRequest, supabase: SupabaseClient) {
   //   - All others:   21 days (standard cron cadence)
   // Excludes: is_seed rows (manual), dashboard/tracker sources (non-article cadence)
 
-  // Verified stale: date confirmed to be the newest available from the row's
-  // primary source — without this, the same already-answered "is there a
-  // newer edition?" question gets re-asked every day forever, since a source
-  // that has genuinely stopped publishing has no reason for `date` to ever
-  // change. Shared by 4b (below, both the plain and dashboard/tracker
-  // branches) and 4f (seed freshness, further down) — the three places that
-  // ask this exact question.
+  // Verified stale: `source_confirmed_at` (outbreaks column, migration
+  // 20260822120000) confirms a human already opened the row's primary source
+  // and found no newer edition than `date` — without this, the same
+  // already-answered "is there a newer edition?" question gets re-asked
+  // every day forever, since a source that has genuinely stopped publishing
+  // has no reason for `date` to ever change. Shared by 4b (below, both the
+  // plain and dashboard/tracker branches) and 4f (seed freshness, further
+  // down) — the three places that ask this exact question.
   //
-  // Keyed disease_en|country_en|date rather than disease_en|country_en alone
-  // (unlike VERIFIED_ZERO_DEATHS further down, which verifies a fact that
-  // never becomes false) — a staleness verification is only valid for the
-  // SPECIFIC `date` it was checked against. If the row's `date` ever advances
-  // (a real new report lands), the key stops matching and the row falls
+  // Until 2026-08-22 this was a hardcoded disease_en|country_en|date Set
+  // (VERIFIED_STALE) living only in this file — invisible to the
+  // client-facing staleness badge and to sourceScore, which is why
+  // isSourceConfirmed()/lib/outbreaks.ts now reads the same column to render
+  // a "reconfirmed" state instead of a stale warning. The 9 rows the Set
+  // held are backfilled by migration 20260822130000, with the original
+  // per-row verification notes preserved there.
+  //
+  // Self-invalidating by construction: valid only while
+  // `source_confirmed_at >= date`. If the row's `date` ever advances (a real
+  // new report lands), the comparison stops holding and the row falls
   // straight back into normal flagging on its new, unverified state — no one
-  // has to remember to remove the entry. Re-verify against the primary
-  // source before adding one; never add speculatively.
-  const VERIFIED_STALE = new Set([
-    // Leadership (Nigeria)/NCDC/MSF cumulative since 2022 — David's reframe of
-    // 2026-08-15 (scripts/fix-diphtheria-nigeria-ncdc-reframe-2026-08-15.mjs).
-    // NCDC's own numbered sitrep series tracks a different (YTD-only) window
-    // and was already rejected as a substitute then, not a fresher
-    // replacement. Re-verified 2026-08-21: still no newer "since 2022"
-    // cumulative exists anywhere.
-    "diphtheria|nigeria|2026-03-22",
-    // WHO SAGE RRA v.2 (16 Mar 2026), summary table: "Guinea 795 151 (19%)" —
-    // matches exactly. No v.3 exists (confirmed 2026-07-30, re-confirmed
-    // 2026-08-21 by extracting the PDF text directly — WebFetch can't decode
-    // this PDF, same as the Nigeria one; downloaded + parsed locally).
-    "diphtheria|guinea|2026-02-22",
-    // SPC/WHO Pacific multi-country dengue report, 14 Aug 2026 edition —
-    // American Samoa's own country-update section is itself still dated 21
-    // Jul in that newer edition; no fresher country-specific figure has been
-    // published. Verified 2026-08-21.
-    "dengue fever|american samoa|2026-07-21",
-    // WHO AFRO Week 28 bulletin remains the newest in the series (no Week
-    // 29+ found despite direct URL attempts); cross-checked against ECDC's
-    // cholera monthly (refreshed 27 Jul), showing identical Kenya figures —
-    // genuinely no new cases since, not a reporting gap. Verified 2026-08-20.
-    "cholera|kenya|2026-07-12",
-    // No WHO DON was ever issued for this event; WHO's own IHR information
-    // request to Uganda remains unanswered as of this check. Genuine
-    // reporting silence, not a missed update. Verified 2026-08-20.
-    "marburg virus disease|uganda|2026-07-16",
-    // PAHO Situation Report #8 (31 Jul 2026): "Canada: 1,107 cumulative
-    // confirmed cases" — matches exactly. Verified 2026-08-20.
-    "measles|canada|2026-07-25",
-    // PAHO Situation Report #8 (31 Jul 2026), summary table: "Peru* 1,139 0"
-    // — matches exactly. Verified 2026-08-20.
-    "measles|peru|2026-07-25",
-    // PAHO Situation Report #8 (31 Jul 2026), summary table: "Bolivia* 85 1"
-    // — matches exactly. Verified 2026-08-20.
-    "measles|bolivia|2026-07-25",
-    // endpolio.com.pk district-wise page (the row's own cited source): 3
-    // confirmed WPV1 cases (Bannu, North Waziristan, Sujawal) — matches
-    // exactly. Cross-checked against GPEI's own weekly "polio this week"
-    // page, which added no new Pakistan case that week either. Verified
-    // 2026-08-21.
-    "polio|pakistan|2026-07-22",
-  ]);
-  function isVerifiedStale(row: { disease: string | null; disease_en: string | null; country: string | null; country_en: string | null; date: string | null }): boolean {
-    const d = (row.disease_en ?? row.disease ?? "").toLowerCase();
-    const c = (row.country_en ?? row.country ?? "").toLowerCase();
-    return VERIFIED_STALE.has(`${d}|${c}|${row.date}`);
+  // has to remember to clear the column. Verify against the primary source
+  // directly before writing it; never set speculatively.
+  function isVerifiedStale(row: { date: string | null; source_confirmed_at: string | null }): boolean {
+    if (!row.source_confirmed_at || !row.date) return false;
+    return new Date(row.source_confirmed_at).getTime() >= new Date(row.date).getTime();
   }
 
   const STALE_DAYS_PHEIC = 7;
