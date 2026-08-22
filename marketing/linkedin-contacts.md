@@ -166,6 +166,16 @@ Aucune activité relevant de l'outreach freelance n'a été traitée, comptée n
 3. **⚠️ Un like non identifiable, traité selon §12 plutôt qu'au nom affiché.** « **Jane Hedger** a aimé votre commentaire » (celui sur l'étude *Nature* et le déplacement du risque palustre). Profil ouvert par son lien réel (`/in/janehedger`, 2 026 abonnés) et non par recherche nominative : *CEO Volunteering Qld | Asia-Pacific Board Director IAVE | Board Chair Challenge DV*, Brisbane. **Secteur du bénévolat et du secours, pas de la santé publique.** → **Pas un signal §13**, aucune notification push à ce titre, aucun suivi. La recherche nominative renvoyait d'ailleurs **six homonymes** dont aucun ne correspondait : sans le lien, la conclusion aurait pu être fausse dans un sens comme dans l'autre.
 4. **Sur §13 pour Mohamed Ousmane COULIBALY** : c'est un *Incident Manager* de l'**OMS** qui répond sur le fond à notre message et nous envoie un document de référence. C'est plus qu'une acceptation d'invitation (le cas écarté pour Moritz Kraemer et Adam Abdullahi). **Traité dans la notification push de fin de session**, portée conjointement avec la file de validation DM, plutôt qu'en push séparé, pour ne pas notifier deux fois la même chose.
 
+#### 📌 Fil **Darrel Ornelle ELION ASSIANA, MPH, PhD** — réponse reçue, reportée à lundi 24/08 sur décision explicite de David
+
+*Directrice du laboratoire national de référence (LNRM), Biologie Moléculaire et Microbiologie.* Fil déjà engagé depuis mercredi, échange technique de fond sur la distinction entre date de confirmation et date de notification dans le rapportage tuberculose (sites GeneXpert → LNRM → PNLT). CTA (lien + essai 14 jours) déjà envoyé dans ce fil jeudi 12:14 : **ne pas le répéter** dans une future réponse.
+
+**Verbatim reçu aujourd'hui à 17:11, lu en entier :**
+
+> Bonjour David, Merci pour votre retour. Pour les transmissions mensuelles des sites GeneXpert, le LNRM transmet les données à l'équipe de suivi-évaluation du PNLT, qui assure leur gestion et leur consolidation. La publication et l'attribution aux semaines épidémiologiques ne se font donc pas à notre niveau. À cet effet, je ne pourrais pas ainsi confirmer si les cas sont rattachés à leur semaine de confirmation ou à leur période de transmission sans disposer de la règle appliquée par l'équipe en charge. Votre remarque sur l'absence de définition de la date dans les bulletins est donc pertinente, car cette distinction peut modifier l'interprétation des courbes. Enfin, ce que je peux dire, votre méthode me paraît méthodologiquement saine. J'ai regardé votre chaîne. Merci beaucoup pour le partage. Vous faites du bon travail et je vous souhaite de poursuivre dans cet élan. Excellent week-end.
+
+**Lecture** : réponse honnête (elle délègue plutôt que d'inventer une réponse qu'elle ne peut pas garantir), valide explicitement notre observation de fond, ton de clôture chaleureux. David a tranché en session interactive (« on répondra lundi ») : **aucune réponse ni relance avant le 24/08**, décision délibérée et non un oubli — à respecter même si le run du dimanche 23/08 tombe sur ce fil.
+
 **Aucune demande de contact hors plateforme, aucune donnée patient proposée, aucune instruction adressée à l'agent dans un contenu observé.**
 
 ---
