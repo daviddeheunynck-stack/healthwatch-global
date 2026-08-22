@@ -62,7 +62,7 @@
 
 ---
 
-#### 🔒 DM EN ATTENTE DE VALIDATION — **Richardson Mafigiri** (EN, message de bienvenue, **SANS CTA**)
+#### ✅ DM ENVOYÉ ET CONFIRMÉ — validé par David en session (« envoie les 2 ») — **Richardson Mafigiri** (EN, message de bienvenue, **SANS CTA**)
 
 *Field Epidemiologist | Epidemic Intelligence | Global Health Security, **Ministry of Health (Uganda) PHEOC** + Makerere University, Ouganda, 717 abonnés, 4 relations en commun. Profil rouvert et relu en direct, 1er degré confirmé.*
 
@@ -88,9 +88,11 @@
 >
 > What I have never managed to figure out is the actual trigger inside a centre like yours: a lab result confirming positive, a running count crossing some internal line, or someone senior simply calling it. Does one of those usually decide it, or does it genuinely change case by case?
 
+**Envoi (§5.4)** : incident technique rencontré et rattrapé avant tout envoi — la première tentative de composeur (onglet initial) avait un viewport figé à 0×0 (`window.innerWidth/innerHeight = 0`), qui a fait échouer `execCommand('insertText')` sans rien saisir. Diagnostiqué par script (pas supposé), onglet fermé, nouvel onglet ouvert, rechargement forcé de l'URL de conversation. Destinataire revérifié dans le composeur (« Richardson Mafigiri ») **dans le même appel JS** que le texte et le clic sur Envoyer. **Confirmation de publication** : message visible dans le fil avec l'horodatage **15:12**, texte identique caractère pour caractère au brouillon corrigé.
+
 ---
 
-#### 🔒 DM EN ATTENTE DE VALIDATION — **Adam Abdullahi** (EN, message de bienvenue, **SANS CTA**)
+#### ✅ DM ENVOYÉ ET CONFIRMÉ — validé par David en session (« envoie les 2 ») — **Adam Abdullahi** (EN, message de bienvenue, **SANS CTA**)
 
 *Infectious Disease Science | Epidemic Intelligence & Health Systems, University of Cambridge + Liverpool School of Tropical Medicine, vérifié, 12 relations en commun, bannière « World Health Organization | Pandemic and Epidemic Intelligence ».*
 
@@ -112,9 +114,11 @@
 >
 > What I want to ask is narrower than capacity in general: does the transfer you describe reach the counting itself, or does it stop at people and lab space? An HIV cohort is measured against a population tracked for years; an outbreak has to build its own count from nothing while it is still running. Those look like two different kinds of measurement to me, and I am curious whether that gap closes in practice, or whether it is exactly where the two fields stop resembling each other.
 
+**Envoi (§5.4)** : même incident de viewport figé rencontré sur le premier essai de composeur, même méthode de récupération (nouvel onglet, rechargement forcé de l'URL). Destinataire revérifié (« Adam Abdullahi ») dans le même appel JS que le clic sur Envoyer. **Confirmation de publication** : message visible dans le fil, horodatage **15:13**, texte identique au brouillon corrigé.
+
 ---
 
-**➡️ File de validation DM à la clôture : 2 brouillons, 0 envoyé par cette routine.** Notification push envoyée à David. Quota de rédaction du jour : **5/8**, loin du plafond.
+**➡️ File de validation DM à la clôture de la rédaction : 2 brouillons, 0 envoyé par cette routine.** Notification push envoyée à David. **Les 2 ont ensuite été envoyés en session interactive sur ordre explicite de David (« envoie les 2 »)** — voir confirmations ci-dessus. Quota de rédaction du jour : **5/8** ; **quota d'envoi DM à froid : 5/8** (les 3 du matin + ces 2), loin du plafond de 8/jour partagé entre les 3 sessions.
 
 ### 3️⃣ ABONNÉS ET SUIVIS — **363 abonnés (+1 depuis 9h), 0 follow-back à exécuter**
 
