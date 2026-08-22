@@ -54,23 +54,40 @@ Requête faite dans la foulée sur la **vraie prod** (`.env.local.live`), table 
 
 ---
 
-#### 🔒 DM en attente de validation — **Mohamed Ousmane COULIBALY** (FR, réponse en fil actif, **AVEC CTA**)
+#### 🔒 DM en attente de validation — **Mohamed Ousmane COULIBALY** (FR, réponse en fil actif, **AVEC CTA**) — v2, remplace le brouillon initial
 
-**§3 CTA — PRÉSENT, la règle l'impose.** Sa réponse est un contenu réel (un document de référence plus une question directe), pas une politesse d'accusé de réception : le seuil de « échange substantiel engagé » est franchi. **Anti-répétition vérifiée sur l'intégralité du fil** : notre message du 20/08 nomme HealthWatch Global **sans lien ni essai** → le lien et l'essai sont **neufs dans ce fil**, aucune répétition d'argumentaire. Le CTA est amené par l'aveu de la faille, pas plaqué en fin de message.
+**⚠️ Brouillon initial (ci-dessous en historique) jamais envoyé, remplacé par une v2 rédigée après que David a explicitement demandé le téléchargement de la pièce jointe (« télécharge et regarde le doc », puis « Intègre-les en base maintenant », session interactive du 22/08 ~18h).** Entre les deux versions : la pièce jointe réelle a été ouverte (et non plus seulement la page publique), les chiffres exacts du tableau complet ont remplacé les chiffres partiels de la section « nouveaux positifs de la semaine », et surtout **les 13 lignes ont été effectivement créées en base** — la v2 l'annonce au lieu de simplement diagnostiquer le trou.
+
+**§3 CTA — PRÉSENT, la règle l'impose.** Sa réponse est un contenu réel, pas une politesse. **Anti-répétition revérifiée sur l'intégralité du fil** pour la v2 comme pour la v1 : le lien et l'essai restent neufs dans ce fil, aucune version n'a encore été envoyée.
 
 **Quota DM à froid : inchangé à 5/8.** Réponse en fil actif ouvert par l'interlocuteur, hors quota froid ([[feedback_reply_quota_cold_outreach_only]]).
 
-**Double-check (§5), les 8 points :**
-1. **Langue** — *langue du fil = FR* (son message du 22/08 et notre message du 20/08, relus tous les deux) ; *langue du brouillon = FR* ✅.
-2. **Faits** — chaque chiffre relu mot pour mot contre la source primaire GPEI, jamais contre un résumé : RDC 5 cas / plus récent 11 juillet / 32 depuis janvier ; Niger cVDPV3 le 28 juin ; Centrafrique échantillon prélevé le 15 juillet. **Les qualificatifs « premier de l'année » présents dans la source ont été volontairement retirés** du brouillon, leur portée (pays ou monde) n'étant pas tranchable sans ambiguïté. L'affirmation « ma ligne Afghanistan est datée du 19 août et pointe sur cette mise à jour » est vérifiée en base, pas déduite. **Aucune date calculée**, toutes citées.
-3. **Mise en forme** — 1 595 caractères, 4 paragraphes. Contrôle par script : **0 tiret cadratin, 0 demi-cadratin, 0 signe moins**, seuls caractères non ASCII = accents français (`À à ç è é ê î ô û`), 0 apostrophe courbe. ⚠️ **La relecture du champ réellement rendu reste à faire au moment de l'envoi** (le brouillon n'a pas été saisi dans un composeur, rien n'a été ouvert côté envoi).
-4. **Destinataire** — sans objet à ce stade, aucun composeur ouvert. À revérifier dans le même appel JS que le clic si David valide.
-5. **Aucun fait personnel inventé sur David** ✅ — le message ne dit de lui que ce qu'il fait réellement et ce que la base contient réellement.
-6. **Règle des deux essais** — 2 versions. La 2e ne corrige pas un défaut de ton ou d'intention répété mais des recoupements anti-gabarit ; pas de 3e essai nécessaire, seuil non atteint.
-7. **Anti-gabarit** — balayage **exhaustif** de toutes les fenêtres de 5 et 6 mots du brouillon contre les **4 fichiers d'archive** (normalisation casse/accents/ponctuation), pas un échantillon deviné. La v1 produisait 3 recoupements réels, tous retirés : « *ou est-ce que ce* » (figure de question alternative **déjà employée dans ce fil même**, notre message du 20/08 posant « *ou est-ce simplement que…* », donc tic visible pour ce destinataire précis), « *et c'est précisément ce qui* » (clôture déjà utilisée dans un DM), « *il n'y a rien à* ». **v2 : 0 recoupement.**
-8. **Relecture éditoriale** — le message répond exactement à la question posée (« *Avez-vous parcouru cet Update ?* ») sans jamais prétendre avoir ouvert son fichier ; il concède une erreur réelle et vérifiée au lieu de flatter le document ; il pose **une seule** question, à laquelle son poste de 2020-2023 lui permet de répondre mieux que quiconque ; le CTA découle de l'aveu. **Rien à changer.**
+**Double-check (§5), les 8 points, refait intégralement sur la v2 :**
+1. **Langue** — *langue du fil = FR* ; *langue du brouillon = FR* ✅.
+2. **Faits** — chaque chiffre revérifié contre le tableau complet du deck (`Global Circulating Vaccine-derived Poliovirus`, diapo 5), pas contre le tableau partiel « nouveaux positifs » utilisé en v1 : RDC 32 cas cVDPV2 depuis janvier (2026) ; Nigeria 32 cVDPV2 + 9 cVDPV3 = 41 ; Éthiopie 9 cVDPV1 ; Soudan du Sud 9 cVDPV1 ; Tchad 8 (7+1) ; Somalie 6 ; Soudan 4 ; Centrafrique 4 ; 5 autres pays (Togo, Madagascar, Angola, Mali, Niger) à 1-2 cas chacun. **13 pays, 120 cas — recompté deux fois, la première tentative de la v2 disait « six autres pays » (erreur arithmétique réelle : 8 pays nommés + 5 restants = 13, pas 14), corrigée avant archivage.** Le total 120 est revérifié contre la requête SQL exécutée après écriture en base (§8, `content-log.md`). Aucune date calculée, toutes citées depuis le tableau.
+3. **Mise en forme** — 1 385 caractères, 4 paragraphes. Contrôle par script : **0 tiret cadratin, 0 demi-cadratin, 0 signe moins**, seuls caractères non ASCII = accents français (`É à é ê î ô`), 0 apostrophe courbe. ⚠️ **La relecture du champ réellement rendu reste à faire au moment de l'envoi**, rien n'a encore été saisi dans un composeur.
+4. **Destinataire** — sans objet à ce stade. À revérifier dans le même appel JS que le clic si David valide.
+5. **Aucun fait personnel inventé sur David** ✅. **Un faux pas de voix repéré et corrigé avant archivage** : un premier jet de la v2 écrivait « Cette fois j'ai ouvert votre fichier, avec l'accord de David » — incohérent, puisque c'est David lui-même qui écrit en premier personne sur ce compte (Mohamed Ousmane s'adresse déjà à « Bonjour David » dans son propre message). Phrase corrigée pour rester à la première personne sans référence à un tiers.
+6. **Règle des deux essais** — la v2 est une réécriture complète, pas une 3e correction du même défaut sur la v1 (qui n'a jamais été envoyée et n'a donc subi aucune correction en session) : le compteur repart à zéro pour cette nouvelle version.
+7. **Anti-gabarit** — balayage exhaustif 5-6 mots contre les 4 fichiers d'archive. Deux moules réels trouvés et retirés : la clôture CTA initiale (« *Le site est healthwatch-global.com, si vous voulez voir à quoi ça ressemble… l'essai Pro de quatorze jours… sans carte bancaire* ») recoupait au moins 4 formulations déjà utilisées presque mot pour mot ; la figure de question « *est-ce que ça se X, ou est-ce que ça se Y* » était déjà employée 3 fois ailleurs. Les deux ont été entièrement restructurés (CTA en 2 phrases séparées plutôt qu'une clause empilée ; question reformulée en alternative directe sans le gabarit « est-ce que »). **0 recoupement restant après réécriture**, hors termes factuels obligés (noms de pays, sigle cVDPV2).
+8. **Relecture éditoriale** — le message annonce un résultat concret (13 lignes ajoutées ce soir) plutôt qu'un simple aveu de trou comme la v1 ; il pose une question technique précise que seul son poste d'ex-Incident Manager permet de trancher (chaîne de transmission unique vs plusieurs chaînes agrégées par le total) ; le CTA découle naturellement de l'annonce (voir la RDC dans la base). **Rien à changer.**
 
-**Texte prêt à envoyer :**
+**Texte prêt à envoyer (v2) :**
+
+> Bonjour Mohamed Ousmane,
+>
+> Cette fois j'ai ouvert votre fichier. Le tableau complet change l'échelle de ce que je vous disais l'autre jour. La RDC n'est pas un foyer secondaire du continent, elle est à trente-deux cas de cVDPV2 depuis janvier, exactement au niveau du Nigeria (trente-deux aussi, plus neuf en cVDPV3). Autour, l'Éthiopie et le Soudan du Sud à neuf chacun en cVDPV1, le Tchad à huit, la Somalie à six, le Soudan et la Centrafrique à quatre, et cinq autres pays avec un ou deux cas. Treize pays au total, cent vingt cas.
+>
+> Je les ai ajoutés à ma base ce soir, un par un, sourcés sur votre tableau. Elle ne racontait jusqu'ici que l'Afghanistan et le Pakistan pour la polio. Ce n'était pas faux, c'était juste la moitié de ce que la même page publiait.
+>
+> Une chose me travaille encore, et elle porte sur ce tableau précis plutôt que sur un principe général. Trente-deux cas cumulés en RDC depuis janvier : une seule chaîne de transmission qui dure, ou plusieurs chaînes distinctes que le sérotype fait apparaître comme un bloc unique ? Le total à lui seul ne dit pas lequel des deux, et c'est une lecture qu'aucun tableau ne fera jamais à ma place.
+>
+> Le lien est healthwatch-global.com, et il n'y a pas de carte à donner pour y entrer. Vous avez quatorze jours devant vous en Pro pour vous faire votre propre avis, et vérifier si la RDC y tient enfin la place qu'elle devrait.
+
+**Statut : 🔒 EN ATTENTE DE VALIDATION DE DAVID. Aucun envoi, aucun composeur ouvert.**
+
+<details>
+<summary>Historique — brouillon v1, jamais envoyé, remplacé ci-dessus</summary>
 
 > Bonjour Mohamed Ousmane,
 >
@@ -82,7 +99,7 @@ Requête faite dans la foulée sur la **vraie prod** (`.env.local.live`), table 
 >
 > Le site est healthwatch-global.com, l'inscription ouvre l'accès complet pendant deux semaines et aucun paiement n'est demandé derrière. Je vous l'envoie en sachant que la carte y est muette sur la polio africaine, ce que je corrige cette semaine. Si d'autres choses vous sautent aux yeux, dites-les moi franchement, j'en ai plus besoin que de compliments.
 
-**Statut : 🔒 EN ATTENTE DE VALIDATION DE DAVID. Aucun envoi, aucun composeur ouvert.** Notification push envoyée en fin de session.
+</details>
 
 ---
 
