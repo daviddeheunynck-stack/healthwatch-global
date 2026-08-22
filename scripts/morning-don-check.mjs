@@ -866,7 +866,12 @@ const MARBURG_CLOSURE_WATCH_FROM = "2026-08-11";
 // Le résumé de recherche l'accompagnait d'un « 20 confirmed cases and 2 deaths » qui ne correspond
 // à AUCUNE épidémie ougandaise réelle (2017 : 3 cas ; 2025 : 14 confirmés / 2 décès ; 2026 : 1 cas).
 // Toujours vérifier la date de publication de cet article avant de conclure à une clôture.
-const MARBURG_CLOSURE_LAST_CHECK = "2026-08-19"; // gov.uk (inchangée au 19/08) : toujours le seul cas du 30/06 à Kyegegwa, listé en incident en cours, aucune clôture annoncée
+const MARBURG_CLOSURE_LAST_CHECK = "2026-08-22"; // gov.uk (mise à jour du 20/08, lue le 22/08) : toujours le seul cas du 30/06 à Kyegegwa, listé en incident en cours, aucune clôture annoncée, aucun chiffre publié depuis.
+// ⚠️ TROISIÈME FAUX POSITIF DE CLÔTURE, rencontré le 22/08 — distinct des deux ci-dessus : la guidance
+// gov.uk ET le DON615 mentionnent tous deux une « fenêtre de 42 jours » ougandaise qui « cesse le
+// 27/08 ». C'est celle de l'EBOLA Bundibugyo (dernier cas importé de RDC sorti de soins le 16/07),
+// PAS celle de Marburg (cas notifié le 30/06, fenêtre théorique échue depuis le 11/08). Ne pas lire
+// cette date du 27/08 comme une clôture Marburg à venir, et ne pas la mettre dans ce watch.
 const MARBURG_CLOSURE_RECHECK_DAYS = 3;
 console.log("\n=== Watch ponctuel : fenêtre de clôture Marburg/Ouganda (42j depuis notification 30/06) ===");
 const marburgRow = active.find((o) => o.id === MARBURG_UGANDA_ID);
