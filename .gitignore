@@ -65,4 +65,9 @@ supabase/.temp/
 # way it did on 2026-08-01 (commit 735fe46 re-added two already-deleted ones).
 scripts/*-20[0-9][0-9]-[0-9][0-9]-[0-9][0-9].mjs
 
+# One-off check script, no date suffix so it doesn't match the pattern above —
+# ignored explicitly instead of renaming it (flagged in the 2026-08-23 security
+# audit as untracked-but-not-ignored, so a broad `git add -A` would catch it).
+scripts/check-prospect-conversions.mjs
+
 .vercel
