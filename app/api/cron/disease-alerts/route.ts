@@ -1,4 +1,7 @@
-// Disease-specific alert cron — runs daily at 06:50 UTC (after sync-outbreaks at 06:00).
+// Disease-specific alert cron — runs daily at 10:50 UTC, after the 08:00-10:00
+// UTC sync crons that populate outbreaks (moved from 06:50 on 2026-08-03; see
+// regional-alerts' header for why the pre-move schedule ran alerts ahead of
+// same-day sync data).
 // For each user's disease subscriptions, sends an alert when a matching
 // outbreak appears that hasn't been notified yet.
 

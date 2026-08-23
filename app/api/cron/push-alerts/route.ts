@@ -1,4 +1,6 @@
-// Push-alert cron — runs daily at 06:45 UTC, right after sync-outbreaks (06:00).
+// Push-alert cron — runs daily at 10:45 UTC, after the 08:00-10:00 UTC sync
+// crons (moved from 06:45 on 2026-08-03; see regional-alerts' header for why
+// the pre-move schedule ran alerts ahead of same-day sync data).
 // For every outbreak inserted since the last run (push_notified_at IS NULL +
 // created_at within 25 h), sends a localised Web Push to every subscriber and
 // marks the outbreak as notified so it is never re-sent.
