@@ -61,9 +61,11 @@ Même méthode que ci-dessus (compose principal, pas le bouton profil), efficace
 >
 > Sur healthwatch-global.com, un foyer choléra n'existe que par ce que l'OMS ou Africa CDC en publient, donc l'aval des deux remontées dont vous parlez, jamais leur croisement. L'essai Pro tient sur deux semaines et ne demande aucune carte, si ça vous intéresse de voir à quoi ressemble ce que je tiens réellement.
 
-**Statut : 🔒 EN ATTENTE DE VALIDATION DE DAVID.** Réponse en fil actif ; comptera hors quota froid comme les autres réponses en fil actif du jour, une fois envoyé.
+**Statut : ✅ ENVOYÉ ET CONFIRMÉ**, sur ordre explicite de David en session (« valide le DM Christophe »). Réponse en fil actif, **hors quota froid**.
 
 ✅ **Double-check refait intégralement, à la demande de David.** Fil rouvert : rien de neuf depuis 18:49, toujours 4 messages uniques. Anti-gabarit rejoué contre le bon parent de commit (`11d252d~1`, l'état du fichier avant que ce brouillon soit écrit) : « essai Pro de quatorze jours sans carte bancaire » confirmé à 1 occurrence hors session (justifiant l'écart), « tient sur deux semaines et ne demande aucune carte » confirmé à 0. Un faux positif examiné et écarté : « dans des sens opposés » remonte à 1 occurrence dans `content-log.md`, mais dans un contexte hépatite B sans rapport (incidence/mortalité), pas un moule réutilisé. Rien à changer.
+
+**Envoi.** Destinataire (« Christophe VALINGOT DELAURENTI ») revérifié dans le même appel JS que le clic sur Envoyer. Texte inséré en un seul `execCommand('insertText')`, `\n\n` entre paragraphes → 5 balises `<p>` (3 texte + 2 blancs), rendu relu avant envoi, identique au brouillon validé. Confirmation : éditeur vidé et message visible en fin de fil à **20:23**.
 
 ⚠️ **Incident système sans rapport avec ce brouillon** : le disque temporaire de la machine (`C:\Users\david\AppData\Local\Temp`) était plein (0 Mo libres sur 477 Go) pendant une partie de cette vérification, faisant échouer plusieurs commandes shell. Signalé à David séparément ; n'affecte pas le contenu de ce brouillon, vérifié par d'autres moyens.
 
