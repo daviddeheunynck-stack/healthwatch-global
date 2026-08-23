@@ -1,7 +1,11 @@
 import { NextRequest } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import * as Sentry from "@sentry/nextjs";
-import { CRON_WINDOWS, logCronRun, isRealProduction } from "@/lib/cron-monitor";
+// captureSelfReport : les deux alertes plus bas (crons en retard, canaux de
+// livraison muets) sont des CONSTATS de sonde, pas des exceptions — elles ne
+// doivent plus faire passer /api/health au rouge. Le secret exposé dans le
+// bundle reste un captureMessage "error" direct : c'est une vraie faille.
+import { CRON_WINDOWS, logCronRun, isRealProduction, captureSelfReport } from "@/lib/cron-monitor";
 import { fetchSentryIssues } from "@/lib/sentry-issues";
 
 export const dynamic = "force-dynamic";
@@ -740,6 +744,11 @@ async function runHealthCheck(_req: NextRequest, supabase: any) {
   // uncovered", captureMessage'd at "info" on purpose, not a bug). Counting
   // it here inflated the headline error count and put a by-design signal
   // under a "Détail erreurs Sentry" heading it doesn't belong in.
+  // 2026-08-23 : fetchSentryIssues() écarte désormais les constats à la source
+  // (tag `self_report`, voir captureSelfReport dans lib/cron-monitor.ts), donc
+  // `sentryCheck.issues` n'en contient déjà plus. Le filtre `level !== "info"`
+  // ci-dessous reste comme filet pour les incidents antérieurs au tag, qui ne
+  // le porteront jamais rétroactivement.
   const sentryIssues = sentryCheck.issues.filter(
     (i) => !i.title.startsWith("[geo-extract-llm] Anthropic API credit balance too low")
         && i.level !== "info",
@@ -1041,9 +1050,9 @@ async function runHealthCheck(_req: NextRequest, supabase: any) {
 
   // Alert Sentry directly if crons are overdue (independent of email delivery)
   if (hasOverdue && isRealProduction) {
-    Sentry.captureMessage(
+    captureSelfReport(
       `[health-check] ${overdue.length} cron(s) overdue: ${overdue.join(", ")}`,
-      "warning",
+      { source: "health-check", level: "warning", tags: { probe: "overdue-crons" } },
     );
   }
 
@@ -1052,9 +1061,9 @@ async function runHealthCheck(_req: NextRequest, supabase: any) {
   // below): this route completed fine either way, it's reporting on other
   // crons, not on itself.
   if (deliveryAlert && isRealProduction) {
-    Sentry.captureMessage(
+    captureSelfReport(
       `[health-check] ${deliveryIssues.length} delivery channel(s) stalled or never delivered: ${deliveryIssues.map((d) => `${d.name}(${d.kind})`).join(", ")}`,
-      "warning",
+      { source: "health-check", level: "warning", tags: { probe: "delivery-channels" } },
     );
   }
 

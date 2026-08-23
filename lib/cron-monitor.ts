@@ -9,6 +9,38 @@
 
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { NextRequest } from "next/server";
+import * as Sentry from "@sentry/nextjs";
+
+/**
+ * Un CONSTAT, pas une exception.
+ *
+ * Distinction posée le 2026-08-23. Sentry contenait six incidents ouverts dont
+ * trois n'étaient pas des erreurs : la garde anti-régression de
+ * sync-who-regional signalant qu'elle avait BLOQUÉ une écriture — donc un
+ * succès —, et deux rapports de sondes (`health-check` sur les canaux de
+ * livraison, `sync-pacific-surveillance` sur la couverture DLI). Rien n'avait
+ * planté.
+ *
+ * Le coût n'est pas le désordre : `/api/health` bascule `sentry: "error"` dès
+ * qu'un incident non résolu existe, donc une garde qui fait son travail faisait
+ * passer la santé au rouge. Une boîte d'alertes qui crie pour des succès finit
+ * par être ignorée, et c'est la vraie exception qui se perd dedans.
+ *
+ * Les constats restent envoyés — ils ont de la valeur, et Sentry sait les
+ * grouper et les dater mieux qu'un log. Ils portent simplement le tag
+ * `self_report`, que lib/sentry-issues.ts exclut du calcul de santé et compte
+ * à part. Garder `captureException` / `captureMessage` direct pour ce qui a
+ * réellement échoué.
+ */
+export function captureSelfReport(
+  message: string,
+  opts: { source: string; level?: "info" | "warning"; tags?: Record<string, string> },
+): void {
+  Sentry.captureMessage(message, {
+    level: opts.level ?? "info",
+    tags: { ...opts.tags, self_report: "true", self_report_source: opts.source },
+  });
+}
 
 /**
  * True only on the real Vercel production deployment. Unset for `next dev`

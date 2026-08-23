@@ -129,7 +129,19 @@ export async function GET(req: Request) {
   // Coarse ok/error is public like `stripe`/`brevo` above (Sentry's own coarse
   // ping); issue titles/permalinks are sensitive detail, so — like
   // `stripe_prices_detail` — only returned in `deep` (authenticated) mode.
-  const sentrySummary: { count: number; sample?: { title: string; count: string; permalink: string; shortId: string }[] } = { count: 0 };
+  // `self_reports` est compté à part et ne pèse JAMAIS sur `checks.sentry` :
+  // ce sont des constats du système sur lui-même (garde déclenchée, sonde de
+  // couverture), pas des pannes. Avant le 2026-08-23 tout était mélangé, si
+  // bien qu'une garde anti-régression ayant correctement bloqué une écriture
+  // faisait passer ce contrôle au rouge. Voir captureSelfReport() dans
+  // lib/cron-monitor.ts.
+  type IssueBrief = { title: string; count: string; permalink: string; shortId: string };
+  const sentrySummary: {
+    count: number;
+    self_reports: number;
+    sample?: IssueBrief[];
+    self_reports_sample?: IssueBrief[];
+  } = { count: 0, self_reports: 0 };
   try {
     const sentryCheck = await fetchSentryIssues();
     if (!sentryCheck.ok) {
@@ -137,10 +149,12 @@ export async function GET(req: Request) {
     } else {
       checks.sentry = sentryCheck.issues.length > 0 ? "error" : "ok";
       sentrySummary.count = sentryCheck.issues.length;
+      sentrySummary.self_reports = sentryCheck.selfReports.length;
       if (deep) {
-        sentrySummary.sample = sentryCheck.issues
-          .slice(0, 5)
-          .map((i) => ({ title: i.title, count: i.count, permalink: i.permalink, shortId: i.shortId }));
+        const brief = (i: IssueBrief): IssueBrief =>
+          ({ title: i.title, count: i.count, permalink: i.permalink, shortId: i.shortId });
+        sentrySummary.sample             = sentryCheck.issues.slice(0, 5).map(brief);
+        sentrySummary.self_reports_sample = sentryCheck.selfReports.slice(0, 5).map(brief);
       }
     }
   } catch {
