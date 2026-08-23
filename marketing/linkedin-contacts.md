@@ -11,6 +11,222 @@
 **Codeur (freelance)** : David a mentionné vouloir être « plus incisif » sur Codeur également, mais n'a pas encore précisé en quoi — à reconfirmer avec lui plutôt que d'improviser, ce terrain n'étant pas couvert par ce repo/session.
 
 ---
+## 📅 Session linkedin-hwg-followup-check-2 — 23/08/2026 (17h, 2e des 2 créneaux après-midi)
+
+**Vérification double déclenchement** : aucune entrée `linkedin-hwg-followup-check-2` datée du 23/08 dans ce fichier ni dans `content-log.md` à l'ouverture → **premier déclenchement de cette routine aujourd'hui**. Les entrées du jour déjà présentes (9h monitoring, reprise interactive, 13h) sont des runs distincts, pas des doublons.
+
+**Quotas à l'ouverture** : commentaires **7/7 REMPLI** ; connexions **7/7 REMPLI** ; suivis **10/7-10, plafond haut atteint** ; DM à froid **1/8** (Pezzoli, envoyé à 14:34 sur ordre de David) ; file de validation DM **0**.
+**Quotas à la clôture** : commentaires **7/7 inchangé** (la réponse publique rédigée ce créneau est hors quota froid, et elle n'a pas pu être publiée, voir §3) ; connexions, suivis, DM à froid **inchangés** ; **file de validation DM : 3**.
+
+**🖥️ Navigateur** : `_shared/browser-status.md` lu avant ouverture, dernière entrée 🔴 datée du **15/08**, pas du jour → aucun bridage, rien à y écrire. **Deux navigateurs listés** (`23c7ecdd…` et le zombie `a466bc2e…`) : `23c7ecdd…` sélectionné directement sans poser de question, conformément à la politique commune §7 qui tranche ce cas pour les sessions planifiées.
+
+⚠️ **Anomalie JS asynchrone : le motif horaire « spécifique au créneau 13h » est RÉFUTÉ.** Le carry-over n°9 du 13h demandait de trancher dans un sens ou dans l'autre : `(async () => 42)()` renvoie **`{}` à 17h aussi**. Ce n'est donc pas propre au créneau de 13h, mais à l'après-midi en général (absent à 9h les 22 et 23/08). Session menée en JS strictement synchrone, qui fonctionne normalement.
+
+⚠️ **Filtre de sortie sur `javascript_tool`, reconfirmé** : `[BLOCKED: Cookie/query string data]` sur toute page dont le texte brut contient des URL paramétrées (gestionnaire d'invitations, page Abonnés, activité d'un profil). Contournement du 13h appliqué d'emblée et efficace : n'extraire que des valeurs déjà réduites, filtrées caractère par caractère côté page.
+
+🔴 **BLOCAGE DE SESSION, nouveau et à connaître — le classifieur de sécurité d'auto mode a coupé `javascript_tool` en cours de run.** Au moment de cliquer « Répondre » pour publier la réponse à Gittan Gröndahl (§3), l'appel a été refusé avec « *auto mode could not evaluate this action… it reacts to earlier conversation content, not to the action itself, and it will keep firing for the rest of this conversation* ». Le refus s'est ensuite étendu à **tout** appel `javascript_tool`, y compris en lecture seule. Consigne du refus explicitement respectée : **aucune tentative de contournement** (pas de repli sur un clic à coordonnées `computer` pour publier). `get_page_text`, `computer` (scroll, capture) et la navigation sont restés fonctionnels, ce qui a permis de terminer le relevé. **Conséquence : la réponse publique est rédigée, double-checkée et saisie dans l'éditeur, mais non publiée.**
+
+### 1️⃣ SUIVI DES ACTIONS PRÉCÉDENTES DU JOUR (aucun quota consommé)
+
+**Relevé des 7 commentaires refait à 17h** (carry-over n°10 du 13h). Les deux commentaires absents de `/recent-activity/comments/` ont été relevés en ouvrant leur post, comme le 13h l'avait recommandé : le défaut de cette page est **reconduit à l'identique**, elle n'a toujours listé que 5 des 7.
+
+| Commentaire | Impressions 13h | Impressions 17h | Réactions | Réponses |
+|---|---|---|---|---|
+| 1/7 Melvin Sanicas | 10 | **19** | 0 | 0 |
+| 2/7 Robert Herriman | 6 | **9** | 0 | 0 |
+| 3/7 Patrick AYONGA (FR, article J100) | 14 | **23** | 0 | 0 |
+| 4/7 Ifedayo Adetifa | 9 | **10** | 0 | 0 |
+| 5/7 page ECDC | 4 | **19** | 0 | **1 ⭐** |
+| 6/7 Oliver Morgan | 3 | **7** | 0 | 0 |
+| 7/7 Dr Fabrice KHADDY | 4 | **17** | 0 | 0 |
+| **Total** | **50** | **104** | **0** | **1** |
+
+**Lecture : les impressions ont doublé en quatre heures, et la première retombée réelle de la journée est arrivée.** Le constat pessimiste de 13h (« zéro partout ») était bien prématuré, comme la session elle-même l'avait supposé. À noter que le classement a bougé : ECDC et KHADDY, les deux plus faibles à 13h, sont montés le plus fort. **L'exposition ne suit donc pas seulement la taille d'audience du profil commenté** ; c'est une nuance à apporter à la conclusion de 13h.
+
+**Les 4 DM envoyés aujourd'hui** : Patrick AYONGA (10:53) et Sidibé Tiany (10:55) restent **sans réponse**, la balle est dans leur camp, aucune relance. Lorenzo Pezzoli (14:34) sans réponse, normal à trois heures. **Johan Verheyden (14:29) a répondu neuf minutes plus tard**, voir §2.
+
+### 2️⃣ 🔒 DM EN ATTENTE DE VALIDATION n°1 — **Johan Verheyden** (FR, tutoiement, fil actif, **SANS CTA**, hors quota froid)
+
+**Fil relu intégralement (§4)**. Johan a envoyé **cinq messages entre 14:34 et 14:38**, en réaction directe au message parti à 14:29. Verbatim, dans l'ordre :
+
+> **14:34** — « Je pense qu'ils amalgament- et ne séparent plus par jour »
+> « Mais tous mes ecritures ont des "preuves" et se reposent sur des sources vérifiées et vérifiables »
+> « Toute cette riposte est un "cluster fuck" gigantesque »
+> **14:37** — « Et depuis debut juin nous avons proposé de la recherche et analyse (socio-comportementale)… mais personne ne veut financer »
+> **14:38** — « Je réfléchis de plus en plus de ne plus ecrire sur leur épidémie »
+
+**Trois choses s'y passent en même temps**, et le brouillon les traite séparément. (a) Il **répond réellement** à la question des numéros de sitrep restée ouverte depuis plusieurs jours : ils amalgament, ils ne séparent plus par jour. (b) Il **se défend** sur un point que notre message de 14:29 n'avait pas voulu dire : « croire sur parole » portait sur ce qu'un lecteur peut refaire seul, pas sur la qualité de ses sources. C'est un malentendu réel, créé par notre formulation, et le lever est la chose la plus utile à faire. (c) Il **exprime un découragement** professionnel, dont une part est un grief de financement.
+
+**🔴 §10 respecté, deux fois.** Le « cluster fuck » sur la riposte et le grief de financement relèvent tous deux du terrain politique interne RDC. **Le brouillon ne valide, ne conteste et ne commente ni l'un ni l'autre.** Le silence sur le financement est **délibéré et non un oubli** : commenter reviendrait soit à endosser le grief, soit à le balayer, et la ligne « personne ne veut financer » pourrait par ailleurs s'entendre comme une ouverture, ce qui est une décision qui appartient à David (voir §7).
+
+**Aucun engagement pris, instruction du 23/08 maintenue.** David a tranché en session cet après-midi : « on ne s'engage pas pour Johan ». Le brouillon ne propose aucun travail, aucune recherche, aucune suite.
+**Pas de relance sur le fait d'arrêter d'écrire** : ni encouragement à continuer, ni approbation. Le dernier paragraphe le dit explicitement (« C'est un constat, pas un argument pour continuer ») pour que la phrase précédente ne puisse pas se lire comme une pression déguisée.
+
+**§3 CTA — ABSENT, et c'est la règle qui l'impose.** Lien et essai déjà envoyés dans ce fil, et **il a déjà un compte Pro actif** depuis le 11/08. Répéter l'argumentaire serait interdit autant qu'absurde.
+
+**Double-check (§5), 8 points :**
+1. **Langue** — `langue du fil = FR`, tutoiement, relue sur les 5 derniers messages reçus ; `langue du brouillon = FR`, tutoiement ✅.
+2. **Faits** — aucun chiffre, aucune date, aucune date calculée. La seule inférence (« un numéro qui saute n'est pas une donnée perdue mais une fenêtre qui s'élargit ») est posée **conditionnellement** sur ce qu'il vient lui-même d'affirmer (« S'ils amalgament… »), pas assénée ✅. ⚠️ Aucun cumul cité, donc **rien ne réactive le chiffre erroné 4 945 / 2 325** présent dans un vieux message de ce fil.
+3. **Mise en forme** — **853 caractères, 3 paragraphes**. Contrôle par script : **0 tiret cadratin, 0 demi-cadratin, 0 signe moins, 0 apostrophe courbe** ; seuls caractères non ASCII = accents français (à ç è é ê) ✅. Relecture du rendu à faire au moment de l'envoi.
+4. **Destinataire** — à revérifier dans le **même appel JS** que le clic. ⚠️ Rouvrir le fil depuis la messagerie complète, ne pas réutiliser une bulle flottante (§5.4).
+5. **Aucun fait personnel inventé sur David** ✅. La seule phrase le concernant (« peu de ce que je lis sur cette épidémie ne sort pas d'un communiqué ») décrit ce que HWG agrège réellement, et dit **« peu »**, pas « rien d'autre » : formulation choisie précisément parce que la version absolue aurait été fausse (l'article de Patrick AYONGA, entre autres, n'est pas un communiqué).
+6. **Règle des deux essais** — sans objet, première version.
+7. **Anti-gabarit** — un moule réel repéré et corrigé : « **ne se voit nulle part** », **4 occurrences** dans les archives dont un DM parti ce matin même, remplacé par « rien dans le document ne le signale » (0 occurrence). Vérifiées à **0** : « me suis mal fait comprendre », « pas de conseil », « C'était tout », « C'est un constat », « une fenêtre qui s'élargit », « refaire seul », « sans rien te demander », « rester invérifiable », « l'annonce vient d'ailleurs », « ta réponse me suffit », « sort pas d'un communiqué », « un fait peut être » ✅. Deux quasi-recoupements examinés et conservés : « sans le dire » (2 occurrences, **toutes deux dans des notes de double-check, aucune dans un message envoyé**) et « n'est pas la même chose » (2, construction française ordinaire, pas un moule).
+8. **Relecture éditoriale** — le brouillon fait trois choses et une seule par paragraphe : il **prend sa réponse au sérieux** en en tirant la conséquence plutôt qu'en accusant réception, il **lève le malentendu sans se rétracter** sur le fond (le point des grèves reste valable, c'est sa portée qui est précisée), et il **refuse de peser** sur sa décision d'arrêter. **Une correction issue de cette relecture** : une version intermédiaire disait « à peu près la seule chose que je lis qui ne vienne pas d'un communiqué », affirmation invérifiable et flatteuse à l'excès ; ramenée à « peu de ce que je lis », qui est défendable. **Aucune question n'est posée** — choix délibéré, contraire à l'habitude de relancer sur le fond : il vient de dire qu'il envisage d'arrêter, lui poser une nouvelle question dans le même message aurait été extractif.
+
+**Texte prêt à envoyer :**
+
+> Sur les numéros, ta réponse me suffit. S'ils amalgament et ne séparent plus par jour, un numéro qui saute n'est pas une donnée perdue mais une fenêtre qui s'élargit sans le dire. C'est plus gênant pour lire une courbe, et rien dans le document ne le signale.
+>
+> Je me suis mal fait comprendre sur l'autre point. Je ne doutais pas de tes sources. Je parlais de ce qu'un lecteur peut refaire seul, sans rien te demander, et c'est autre chose qu'être sourcé. Un fait peut être solide et rester invérifiable pour qui n'a pas accès aux mêmes documents. Les grèves échappent à ça parce que l'annonce vient d'ailleurs. C'était tout.
+>
+> Sur le fait d'arrêter d'écrire dessus, je n'ai pas de conseil à te donner. Peu de ce que je lis sur cette épidémie ne sort pas d'un communiqué, et ce que tu écris en fait partie. C'est un constat, pas un argument pour continuer.
+
+**Statut : 🔒 EN ATTENTE DE VALIDATION DE DAVID.** Réponse en fil actif, donc **hors quota froid** une fois envoyée.
+
+### 3️⃣ ⭐ RÉPONSE PUBLIQUE RÉDIGÉE ET NON PUBLIÉE — **Gittan Gröndahl** sous le post ECDC (EN)
+
+**Première retombée réelle de la journée sur les 7 commentaires.** Gittan Gröndahl (`/in/…`, *Veterinary Scientist, Communicator and Educator, State Veterinarian*, compte **vérifié**, 3e degré) a répondu à notre commentaire 5/7 à **16h50 environ**, en nous nommant.
+
+**Verbatim reçu :**
+
+> David Deheunynck The additional risk factor here was that this event attracted a lot of people from the non-vaccinating community, and they stayed for days. So the normally high herd immunity to measles in Sweden was greatly reduced in the festival, with a lot of unvaccinated children brought together closely and for an extended time.
+
+**Ce n'est pas une politesse, c'est une correction, et elle est juste.** Notre commentaire concluait que le cluster suédois « montre le peu de susceptibilité résiduelle qu'un seul événement a besoin de trouver ». Elle montre que la susceptibilité n'était pas *résiduelle* mais **concentrée par auto-sélection** : le rassemblement a attiré la communauté non vaccinante et l'a gardée plusieurs jours. Laisser une correction factuelle sans réponse sous un post d'une page à **108 125 abonnés** aurait été le pire choix disponible.
+
+**Arbitrage de quota, assumé et documenté.** Le quota de commentaires est à **7/7** depuis ce matin. Cette réponse a néanmoins été rédigée **hors quota froid**, sur la même logique que l'exception déjà écrite pour les DM ([[feedback_reply_quota_cold_outreach_only]] : le quota borne le **démarchage à froid**, pas la réponse à quelqu'un qui vient de nous répondre) et que les dérogations assumées des 16/08 (Morgan Otita) et du fil MAYTAMOU. **Différence honnête avec ces précédents** : eux disposaient encore de marge dans le quota du jour et l'ont comptée par prudence ; ici il n'y en a pas, donc le classement hors quota est le seul possible. À trancher par David s'il préfère la règle inverse.
+
+**Double-check (§5) fait avant saisie :** langue du fil = EN, langue du brouillon = EN ✅ ; aucun chiffre avancé, aucune donnée ajoutée hors de ce qu'elle et le post ECDC affirment ✅ ; **497 caractères, 100 % ASCII, 0 tiret cadratin** ✅ ; **aucun CTA, aucun lien** (règle absolue sur un commentaire public) ✅ ; anti-gabarit vérifié à 0 sur « rather than residual », « close to meaningless », « the useful unit », « see it coming », « my reading was wrong », « as a denominator », « sit at high coverage », « concentrated rather than » ✅ ; relecture éditoriale — le message **concède l'erreur franchement** au lieu de la noyer, puis ajoute un point que sa correction rend possible et qu'elle n'a pas dit elle-même (l'unité pertinente est l'événement, pas le pays), ce qui en fait une contribution et non un simple accusé de réception ✅.
+
+**Texte saisi dans l'éditeur, rendu vérifié par capture d'écran** (mention « Gittan Gröndahl » en gras suivie du texte intégral, aucune troncature, aucun caractère parasite) :
+
+> That is the piece I was missing, thank you. If the gathering drew the non-vaccinating community to it and held them for days, then susceptibility was concentrated rather than residual, and my reading of it was wrong. It also makes the national figure a poor denominator here, since a country can sit at high coverage and still host a fully susceptible population for a week. The unit that matters is the event rather than the country, and routine reporting is not built to see one of those coming.
+
+🔴 **Statut : RÉDIGÉE, SAISIE, NON PUBLIÉE.** Le clic sur « Répondre » a été refusé par le classifieur de sécurité d'auto mode (voir l'encadré navigateur en tête d'entrée). Le refus précisant qu'il ne faut pas le contourner, **aucun repli sur un clic à coordonnées n'a été tenté**. Le texte est resté saisi dans l'éditeur de la page ; il ne partira pas tout seul. **Pour le publier : rouvrir le post ECDC, la réponse à Gittan Gröndahl, et cliquer « Répondre »** — ou relancer cette action hors auto mode.
+
+### 4️⃣ 🔒 DM EN ATTENTE DE VALIDATION n°2 — **Ifedayo Adetifa** (EN, message de bienvenue, **SANS lien ni CTA**)
+
+⭐ **Connexion acceptée aujourd'hui après 13h. C'est la cible décideur n°1 de la directive du 17/08.**
+
+**Vérification systématique via `mynetwork/invite-connect/connections/` trié « Ajouts récents »** : **259 relations** contre 257 à 13h, et **trois** entrées datées du 23 août contre une seule à 13h. Les deux neuves sont Adetifa et Elnahif (§5), toutes deux invitées ce matin.
+- **Identité confirmée par le lien, pas par le nom (§12)** : slug `ifedayo-adetifa-7237a926`, exactement le profil invité ce matin. L'homonyme `ifedayo-adetifa-599325a2`, explicitement écarté au moment de l'invitation, n'est pas concerné.
+- **Profil** : *Outgoing Chief Executive Officer, FIND | Global Health & Epidemiologist | Health Security | Lancet Commissioner | **Former Director-General, Nigeria Centre for Disease Control & Prevention***. Vérifié, 6 251 abonnés.
+- **Aucun échange privé n'a jamais eu lieu** ; le commentaire 4/7 posté ce matin sous son post est public et ne compte pas comme échange. Cas exactement prévu par la section 1 du SKILL → message de bienvenue.
+
+**Hook : son post d'hier sur l'article varicelle du Kilifi, PAS le post diagnostic déjà commenté ce matin.** Choix délibéré : reprendre en privé l'angle déjà servi publiquement aurait été une répétition, et le post varicelle est à la fois plus personnel (travaux de **son ancien groupe de séroépidémiologie au KEMRI-Wellcome Trust de Kilifi**) et plus proche du point aveugle réel de HWG. Faits repris et **vérifiés mot pour mot contre son post** : séroprévalence de **13 % à 0-4 ans montant à 61 % à 10-14 ans**, **près de 40 % d'adultes encore susceptibles**, échantillons **archivés** issus des sérosondages du Kilifi HDSS. ⚠️ **Un fait a été volontairement retiré** : une version intermédiaire affirmait que la varicelle « n'est pas à déclaration obligatoire » au Kenya. **Son post ne dit pas ça** (il dit que le vaccin n'est pas au calendrier vaccinal). Remplacé par un constat portant sur ce que HWG voit, qui est vérifiable de notre côté.
+
+**§3 CTA — ABSENT, imposé par la règle** : en DM de premier contact, le lien reste interdit sauf demande explicite. Le nom HealthWatch Global est donné, ni lien, ni essai Pro, ni invitation à s'inscrire.
+
+**Double-check (§5), 8 points :** langue du fil = EN (fil vide, référence prise sur ses posts, tous en anglais), langue du brouillon = EN ✅ — **821 caractères, 4 paragraphes, 100 % ASCII, 0 tiret cadratin** ✅ — destinataire à revérifier dans le même appel JS que le clic ; ⚠️ **le piège de l'iframe documenté à 13h s'applique**, c'est un premier contact sans fil existant — aucun fait personnel inventé sur David ✅ — première version, règle des deux essais sans objet — **anti-gabarit, trois moules écartés** : « **Thanks for connecting** » (**72 occurrences**, le plus usé du dispositif), « **Thanks for the connection** » (3, dont le DM Pezzoli parti ce matin) et « **I run HealthWatch Global** » (66) ; écartés aussi « stayed with me » (10), « keep coming back to » (18), « the one I keep » (5) ; formulations retenues vérifiées à **0** : « some background », « went out without a note », « caught me », « already declared », « built for something else », « carry it on its own », « routine system », « onto a national schedule » ✅ — relecture éditoriale : le message **ne raconte pas HWG**, il expose un angle mort précis et pose une question que son parcours particulier lui permet de trancher ; formulation de son parcours **calquée sur ce que son intitulé affiche** (« vous avez dirigé le NCDC, vous terminez à FIND ») et non déduite, conformément à la correction déjà faite le 20/08 sur « you have stood at both ends of it » ✅.
+
+**Texte prêt à envoyer :**
+
+> Ifedayo, some background so this is not a blank ping, since the invitation went out without a note.
+>
+> HealthWatch Global is a project of mine. It aggregates outbreak reporting from WHO, ECDC, PAHO and Africa CDC, so it only ever holds what a country has already declared.
+>
+> Which is why the Kilifi varicella paper caught me. None of that would ever reach me: not the climb from 13 to 61 percent across childhood, not the close to 40 percent of adults still susceptible. It came out of archived samples from a system built for something else, and on my side Kenya has no varicella at all.
+>
+> You have run NCDC, and you are just finishing at FIND. What actually moves a burden like that onto a national schedule? Does serology carry it on its own, or does it first have to become something the routine system is asked to count?
+
+**Statut : 🔒 EN ATTENTE DE VALIDATION DE DAVID.** Comptera dans le quota de 8 DM à froid une fois envoyé (2/8).
+
+### 5️⃣ 🔒 DM EN ATTENTE DE VALIDATION n°3 — **Mohamad Fawzy Elnahif** (EN, message de bienvenue, **SANS lien ni CTA**)
+
+**Connexion acceptée aujourd'hui après 13h**, invitée ce matin. **Identité confirmée par le lien (§12)** : slug `mohamad-fawzy-elnahif`, identique à la fiche du matin.
+
+- **Profil** : *Epidemiologist, Surveillance Officer and Public Health Intelligence Expert*. Son post d'il y a une semaine, lu en entier et vérifié mot pour mot, annonce qu'il **a rejoint le ministère de la Santé et de la Population égyptien comme Head of the Public Health Intelligence (PHI) Department**, département qu'il **avait lui-même fondé**. Il y décrit la rédaction en cours des **SOP**, des ToR d'équipe et des politiques d'échange de données, l'extension d'un **Incident Management System**, et rattache le tout à son parcours en **epidemic intelligence, dont l'initiative EIOS (Epidemic Intelligence from Open Sources) et la PHI à l'OMS EMRO**.
+- **Pourquoi ce hook** : EIOS est la version institutionnelle exacte de ce que HWG fait depuis l'extérieur, et **EMRO est une des sources de HWG**. La couture entre les deux est réelle, pas rhétorique.
+
+**§3 CTA — ABSENT**, même règle que ci-dessus (premier contact).
+
+**Double-check (§5), 8 points :** langue du fil = EN, langue du brouillon = EN ✅ — aucun chiffre, aucune date ✅ — **778 caractères, 4 paragraphes, 100 % ASCII, 0 tiret cadratin** ✅ — destinataire à revérifier dans le même appel JS que le clic, piège de l'iframe applicable — aucun fait personnel inventé sur David ✅ — première version — **anti-gabarit : un piège de session évité, à retenir.** La première rédaction de ce message et celle d'Adetifa partageaient **9 séquences de 5 mots identiques**, toutes dans la phrase de présentation de HWG (« HealthWatch Global is a project of mine. It aggregates outbreak reporting from WHO, ECDC, PAHO and Africa CDC »). **Deux destinataires servis par le même moule dans la même session, c'est exactement ce que §3 interdit** — et le contrôle ne l'aurait pas vu, puisqu'il compare aux archives et pas aux autres brouillons du run en cours. Phrase entièrement réécrite pour Elnahif ; **contrôle refait, recoupement ramené à 0 séquence de 5 mots ET 0 de 4 mots** entre les deux ✅. Vérifiées à 0 par ailleurs : « carried no note », « a word on who », « pulls together », « survived verification », « decision to publish », « that filter took out », « leave any record », « reports outward », « acts on internally », « where does the line » ✅ — relecture éditoriale : la question porte sur le **seuil** qui fait passer un signal du traitement interne à la déclaration externe, c'est-à-dire précisément ce qu'il est en train d'écrire dans ses SOP ; le message le dit (« you are drafting those SOPs right now, which is why I am asking rather than guessing ») pour que la question ne paraisse ni abstraite ni flatteuse ✅.
+
+**Texte prêt à envoyer :**
+
+> Mohamad, the invitation carried no note, so a word on who sent it.
+>
+> I built HealthWatch Global on my own. It reads the bulletins that WHO, ECDC, PAHO, Africa CDC and EMRO put out, and stops there. What I hold is the published end of the chain and nothing that came before it.
+>
+> Your EIOS work sits upstream of all of that. By the time an event reaches me it has already survived verification and a decision to publish, and I have no way of knowing what that filter took out.
+>
+> You are drafting those SOPs right now, which is why I am asking rather than guessing. Where does the line actually fall between a signal your department acts on internally and one the country reports outward? And does a discarded signal leave any record behind, or does only the confirmed event survive?
+
+**Statut : 🔒 EN ATTENTE DE VALIDATION DE DAVID.** Comptera dans le quota de 8 DM à froid une fois envoyé (3/8).
+
+**⚠️ Les 5 autres invitations du matin restent en attente** (Ihekweazu, AL Azebi, SAIDOUNI, Nebiyu Dereje, Linda Esso) : aucune ne figure au 23 août dans la liste des relations. **2 acceptations sur 7 en une journée**, ce qui est un bon rendement pour des invitations sans note.
+
+### 6️⃣ MESSAGERIE — les autres fils, aucun brouillon dû
+
+- **Mohamed Ousmane COULIBALY** (OMS) — **carry-over du 13h respecté sans réévaluation** : aucun nouveau message depuis son « Okay / Link well and I will go through » du 22/08. Consigne inchangée, ne pas relancer tant qu'il n'a pas donné de retour sur le site. ⚠️ **Signal neuf mais mineur** : il figure dans la notification « a consulté votre profil » (il y a 18 h). Il a donc regardé le profil, ce qui n'est pas le site. **Ne change rien à la consigne**, noté pour mémoire.
+- **Darrel Ornelle ELION ASSIANA** — **gelé jusqu'au 24/08 sur décision explicite de David, respecté.** Aucun brouillon, aucune relecture d'arbitrage. Rappel pour la session de demain : **le CTA a déjà été envoyé dans ce fil jeudi à 12:14, ne pas le répéter.**
+- **OMARY SULTANI** : statut inchangé depuis le 13h (réaction `👍` sans substance, §3 exclut ce cas). Rien à faire.
+- **Les autres fils** (Sidibé Tiany, Patrick AYONGA, Lorenzo Pezzoli, Adam Abdullahi, Richardson Mafigiri, Moritz Kraemer, Pierre PARNEIX, Dorine Ngono) portent tous **notre message en dernier**. Rien à faire.
+- **`LinkedIn / Offre LinkedIn`** : promotionnel, ignoré.
+
+### 7️⃣ ABONNÉS — 369 (+3 depuis 13h), **0 follow-back dû**, quota de suivis au plafond
+
+Onglet « Abonnés » relevé : **369** contre 366 à 13h et 364 à 9h. Les trois noms neufs :
+
+- **Ifedayo Adetifa** — bouton déjà sur « **Suivi** » (le suivi vient avec la connexion acceptée). **Rien à exécuter** ; l'événement est son acceptation, traitée en §4.
+- **Mohamad Fawzy Elnahif** — idem, déjà « **Suivi** ». Traité en §5.
+- **Michelle Jones** — *Supply Chain Manager Import | Export Procurement at Entrepreneur*. **Hors périmètre sans ambiguïté** (achats/logistique, aucun lien santé publique ou surveillance). **Non suivie, décision ferme et non un report** — ne pas la reproposer.
+
+Quota de suivis à **10/7-10, plafond haut atteint depuis ce matin** → aucune découverte active lancée, conformément à la règle de comptage sur les 3 sessions du jour.
+
+### 8️⃣ INVITATIONS REÇUES — 1 seule, **7e passage**, et la boucle mérite d'être fermée
+
+**OLAOLUWA PHILIP (BSc, MSc)** (`/in/olaoluwa-philip-oguntoyinbo5/`, *Global Climate Action & Policy Advocate | GIScientist | Founder, CLIMORA Initiative*, 1 relation commune : Pete Macharia, PhD) : toujours en attente, seule invitation reçue. Statut « écarté » figé par le carry-over n°11 du 21/08, reconduit les 22/08 (9h, 13h, 17h), ce matin et à 13h.
+
+**Application de la convention « un carry-over reporté deux fois se reteste, il ne se recopie pas ».** Le motif d'origine n'est donc pas recopié. **Constat réel de ce créneau** : le profil ne passe la barre de pertinence sur **aucun** critère du dispositif (plaidoyer climat et SIG, aucune activité de santé publique ou de surveillance épidémiologique), et il n'y a **rien à retester** — ce n'est pas un blocage technique, c'est une décision qui n'a jamais été prise. Le seul geste manquant est un clic sur « Ignorer », qui la sortirait définitivement de la file. **Il n'a pas été fait ici parce que le gel du 21/08 porte sur le statut et que le lever appartient à David**, mais c'est une ligne de réponse de sa part, pas un arbitrage.
+
+### 9️⃣ NOTIFICATIONS — 1 signal neuf, 2 déjà traités, rien de nouveau à noter pour un futur post
+
+- 🆕 **Gittan Gröndahl vous mentionne dans un commentaire** : traité en §3.
+- ✅ **Apoorva Wasnik** et ✅ **Harvey Basivikidi** : les deux mêmes notifications déjà traitées le 22/08 à 17h puis revérifiées à 13h aujourd'hui. **Aucun doublon.** Elles restent en tête de liste sans qu'aucune réponse soit due, exactement le piège documenté ce matin.
+- **Africa CDC était en direct** — *Africa High Level Ministerial Committee (AHLMC)*, 23 août : **déjà signalé à 13h**, non répété comme s'il était neuf. Reste une source probable de chiffres frais pour `morning-don-check`.
+- **Mohamed Ousmane COULIBALY et 1 autre personne ont consulté votre profil** (18 h) : voir §6.
+- Le reste est constitué d'annonces de posts de profils suivis (Komlanvi DZENYO, Metadel Adane, Oliver Morgan, Gaetan Kunuanina), **aucune sollicitation, aucune réponse due**.
+
+**Aucun élément neuf à verser à la veille pour un futur post ce créneau.** Les deux signaux du jour (post Johan Verheyden sur Bundibugyo, post Lorenzo Pezzoli sur le méningitis belt) sont déjà archivés dans `content-log.md` par la session de 13h et **ne sont pas répétés ici**.
+
+### 🔟 §8 — AUCUNE DONNÉE ÉPIDÉMIOLOGIQUE NOUVELLE CE CRÉNEAU
+
+Le post de Melvin Sanicas rouvert pour le relevé porte l'infographie **5 290 cas / 2 516 décès, 30 à 40 % de cas détectés, moins de 10 % des nouveaux cas liés à un contact connu, environ 16 % des contacts attendus identifiés, 97 % des décès survenus en communauté, 56 zones de santé sur 6 provinces** (source affichée : Africa CDC et autorités sanitaires RDC, août 2026). **Rien de neuf** : ces valeurs sont **déjà en base** (`Maladie à virus Ebola` / `RD Congo`, 5 290 / 2 516, `date` = 2026-08-19, `source_priority` = 10, SitRep INSP 97), relevées ce matin. **Aucune écriture, aucune régression tentée.**
+
+Les deux signaux ouverts par la session de 9h restent valables et **ne sont pas répétés comme s'ils étaient neufs** : Ebola/RDC à J-3 sur un chiffre non sourcé primairement (article AYONGA, 5 375 / 2 557 au 22/08, à confirmer par un SitRep INSP n°98 ou postérieur) et Choléra/RDC dont la ligne nationale est arrêtée au 28/06.
+
+### 1️⃣1️⃣ SÉPARATION FREELANCE
+
+Un seul item du flux en relevait, **ignoré sans exception** : le post de **Dav Mulamba** sur son activité de formateur. Non compté, non archivé côté HWG. Aucun fil de ce type en messagerie.
+
+### 1️⃣2️⃣ GARDE-FOUS ET POINTS À REMONTER À DAVID
+
+1. 🔴 **`javascript_tool` coupé en cours de session par le classifieur de sécurité d'auto mode**, au moment précis de publier la réponse à Gittan Gröndahl. **La réponse est rédigée, double-checkée, saisie et vérifiée à l'écran, mais non publiée** ; aucun contournement tenté, conformément au message de refus. C'est la seule action prévue de ce run qui n'a pas abouti.
+2. 🔒 **3 DM en attente de validation** : **Johan Verheyden** (FR, fil actif, hors quota froid), **Ifedayo Adetifa** (EN, bienvenue, 2/8 une fois envoyé) et **Mohamad Fawzy Elnahif** (EN, bienvenue, 3/8 une fois envoyé). Aucun n'a été envoyé.
+3. 🟡 **Johan Verheyden, deux points qui appartiennent à David.** (a) « **personne ne veut financer** » sa recherche socio-comportementale peut s'entendre comme une ouverture ; le brouillon n'y répond pas, délibérément. (b) Il dit **envisager d'arrêter d'écrire sur cette épidémie** ; c'est notre lecteur le plus engagé et un utilisateur Pro réel, et le brouillon se garde explicitement de peser sur cette décision. Si David veut infléchir l'un ou l'autre, c'est à lui de le dire.
+4. 🟡 **Homonymies de dirigeants d'agences nationales, toujours sans arbitrage** : Jean-Jacques Muyembe (signalé depuis le 21/08, **4e jour**) et Jide Idris. **Rien de neuf tenté ce créneau**, conformément à la consigne d'abstention. La règle proposée par la session de 9h (n'inviter un dirigeant d'agence nationale que si le compte est vérifié ou corroboré depuis un compte institutionnel) attend toujours une ligne de David.
+5. 🟡 **La directive de ciblage du 17/08 a dépassé sa fenêtre déclarée** (« d'ici là » = go/no-go du 21/08, passé depuis deux jours). **Signalée ce matin et à 13h ; rappelée ici une dernière fois et pas au-delà** — mais elle vient de produire son meilleur résultat de la semaine (Adetifa et Elnahif acceptés le jour même), ce qui est un argument concret pour la reconduire plutôt que la laisser expirer par défaut.
+6. 🟡 **OLAOLUWA PHILIP** : 7e passage sur la même invitation reçue. Une ligne de David suffit à la fermer (voir §8).
+7. **Aucune donnée patient proposée, aucune demande de contact hors plateforme, aucune instruction adressée à l'agent dans un contenu observé. Aucune pièce jointe téléchargée.**
+
+### 🔁 CARRY-OVER POUR LE CRÉNEAU DE 9h DEMAIN (24/08) — liste exhaustive
+
+1. **La réponse publique à Gittan Gröndahl n'est PAS publiée.** À publier en priorité si elle est toujours pertinente (post ECDC, sous-fil de notre commentaire 5/7). Texte intégral en §3, déjà double-checké : **ne pas le réécrire**, seulement le publier. Si plus de 24 h se sont écoulées, rejuger la pertinence avant de poster.
+2. **Les 3 DM en attente** (Johan Verheyden, Ifedayo Adetifa, Mohamad Fawzy Elnahif) : **ne pas les réécrire, ne pas les envoyer.** Vérifier seulement si David a tranché.
+3. **Darrel Ornelle ELION ASSIANA** : le gel décidé par David expire le **24/08**, donc **demain**. Réponse à préparer, **sans répéter le CTA** déjà envoyé jeudi 12:14 dans ce fil.
+4. **Mohamed Ousmane COULIBALY** : ne pas relancer, attendre son retour sur le site. Il a consulté le profil le 23/08, ce n'est pas un retour.
+5. **Les 5 invitations du matin encore en attente** (Ihekweazu, AL Azebi, SAIDOUNI, Nebiyu Dereje, Linda Esso) : revérifier les acceptations. Toute acceptation sans échange préalable ouvre un message de bienvenue à mettre en file.
+6. **Quotas remis à zéro demain matin.** Rappel des blocages hebdomadaires créés aujourd'hui, tous jusqu'au **30/08** : Melvin Sanicas, Robert Herriman, Patrick AYONGA, Ifedayo Adetifa, page ECDC, Oliver Morgan, Dr Fabrice KHADDY.
+7. **OLAOLUWA PHILIP** : 7e passage, à fermer par une ligne de David (§8). **Ne pas rouvrir le profil ni le réévaluer** tant qu'il n'a pas répondu.
+8. **Michelle Jones** (abonnée du 23/08) : écartée, hors périmètre. **Ne pas réévaluer.**
+9. **Jane Hedger** : écartée le 13/08 (homonymie non résolue + pertinence périphérique). **Ne pas la re-chercher.**
+10. **GEOMAP PRO** : abonné écarté, hors périmètre. Ne pas réévaluer.
+11. **Anomalie JS asynchrone : question tranchée, ne plus la reposer.** Présente à 13h ET à 17h, absente à 9h les deux jours : ce n'est pas un motif propre au créneau de 13h, c'est un motif d'après-midi. **Ne pas rouvrir l'enquête horaire** ; se contenter de travailler en JS synchrone l'après-midi.
+12. **Défaut de la page `/recent-activity/comments/`** : reconduit à l'identique aujourd'hui (5 des 7 commentaires listés, Sanicas et Herriman absents des deux relevés). **Aller directement sur le post** pour tout commentaire manquant, ne pas conclure « commentaire disparu ».
+
+---
+
 ## 📅 Session linkedin-hwg-followup-check — 23/08/2026 (13h, 1er des 2 créneaux après-midi)
 
 **Vérification double déclenchement** : aucune entrée `linkedin-hwg-followup-check` datée du 23/08 dans ce fichier ni dans `content-log.md` à l'ouverture → **premier déclenchement de cette routine aujourd'hui**.
@@ -66,6 +282,8 @@ Vérification systématique via `mynetwork/invite-connect/connections/` trié «
 
 ✅ **Double-check refait intégralement le 23/08 après-midi, à la demande de David** (« double check et corrige les DM »), sur les 8 points. **Rien n'a bougé sur ce brouillon-là** : il ne contenait aucun engagement à retirer (balayage « I will », « I can », « happy to » → seule occurrence = « I **cannot** separate a real rise… », qui est une limite avouée et non une promesse), aucun lien, aucun CTA. Contrôles matériels refaits : 817 caractères, 4 paragraphes, **100 % ASCII**, 0 tiret cadratin. Anti-gabarit rejoué **contre l'état des archives d'avant cette session** (`git show HEAD~1`, pour ne pas se compter soi-même) : toutes les formules retenues restent à **0 occurrence**, et « **I run HealthWatch Global** » reste bien à **64 occurrences**, ce qui confirme que sa mise à l'écart était justifiée. Faits reverifiés mot pour mot contre son post : « Pneumococcal outbreaks, once relatively atypical, are now detected more regularly across the belt », repris sans altération.
 
+**Statut : ✅ ENVOYÉ ET CONFIRMÉ**, sur ordre explicite de David en session (« envoie les 2 DM »). ⚠️ **Incident de rendu rencontré et résolu, à documenter pour les prochaines sessions.** Après clic sur « Message » depuis son profil (aucun fil préexistant, premier contact), la page de composition (`messaging/thread/new/?recipient=...`) s'est chargée avec `document.hidden = true` en continu et **aucun `[contenteditable]` accessible depuis le document principal**, alors que le `screenshot` montrait le composeur visuellement présent et fonctionnel. **Cause identifiée** : l'éditeur de composition d'un nouveau message vit dans un **iframe pleine page, même origine mais sans id/class/title**, distinct de l'iframe publicitaire (qui a `title="publicité"`). Un clic à coordonnées sur la zone visible atterrit sur cet iframe (`document.activeElement` devient `IFRAME`) sans jamais atteindre l'éditeur du document principal. **Méthode qui a marché** : `document.querySelectorAll('iframe')[1].contentDocument` est accessible (même origine) et contient le vrai `[contenteditable="true"]` ; saisie faite via `execCommand` **dans le document de l'iframe**, avec `iframe.contentWindow.getSelection()` pour positionner le curseur avant insertion. **À retenir : ce piège ne concerne que le composeur « Nouveau message » depuis un profil sans fil existant** ; les fils déjà ouverts (cas Johan Verheyden ce même run) utilisent l'éditeur du document principal sans iframe, comme d'habitude. Destinataire (« Lorenzo Pezzoli », lu via `.artdeco-pill__text` dans l'iframe) revalidé dans le même appel JS que le clic sur Envoyer. Après clic, l'URL a basculé de `thread/new/?recipient=...` vers un `thread/2-...` réel : confirmation que le fil a été créé. Capture d'écran de confirmation : fil **Lorenzo Pezzoli** en tête de boite de réception à **14:34**, coche de lecture visible, texte se terminant par la dernière phrase du brouillon validé.
+
 ### 4️⃣ 🔒 DM EN ATTENTE DE VALIDATION n°2 — **Johan Verheyden** (FR, tutoiement, fil actif, **SANS CTA**, hors quota froid)
 
 *FOUNDER AND CHIEF RESEARCHER, 1er degré. Utilisateur HWG réel : compte Pro d'un an ouvert le 11/08 sur `jverheyden@ariesconsult.eu`, créé après deux blocages techniques rattrapés en fil.*
@@ -99,7 +317,7 @@ Vérification systématique via `mynetwork/invite-connect/connections/` trié «
 >
 > Ça rejoint ma question de l'autre jour sur les numéros de sitrep qui sautent. Une interruption dans la numérotation serait une autre trace datée, et celle-là viendrait des documents eux-mêmes. D'où l'intérêt de savoir s'ils reviennent avec leur numéro ou s'ils restent perdus.
 
-**Statut : 🔒 EN ATTENTE DE VALIDATION DE DAVID.** Réponse en fil actif, donc **hors quota froid** une fois envoyée.
+**Statut : ✅ ENVOYÉ ET CONFIRMÉ**, sur ordre explicite de David en session (« envoie les 2 DM »), après correction (retrait de l'engagement, voir plus haut) et double-check refait. Récupération navigateur nécessaire avant l'envoi : le fil s'est ouvert avec un rendu dégradé (`innerWidth/innerHeight = 0`, `visibilityState = hidden`, `computer` screenshot en erreur) persistant après re-sélection du deviceId habituel — résolu par un nouvel onglet, conformément à la politique commune §7. Fil relu une dernière fois avant saisie (rien de neuf depuis 12:49). Texte inséré en un seul `execCommand('insertText')`, `\n\n` entre paragraphes → 7 balises `<p>` (4 texte + 3 blancs), conforme. Rendu relu via les `<p>` réellement injectés avant clic. **Destinataire (« Johan Verheyden ») revalidé dans le même appel JS que le clic sur Envoyer.** Confirmation : éditeur vidé (`innerText.length = 1`) et texte visible en toute fin du fil, identique au brouillon jusqu'à la dernière phrase. Envoyé à **14:29**. Réponse en fil actif, **hors quota froid**.
 
 #### ✅ CORRECTION APPLIQUÉE — **aucun engagement pris pour Johan** (instruction explicite de David, 23/08 en session)
 
@@ -145,7 +363,7 @@ Un seul item du flux en relevait, **ignoré sans exception** : le post de **Dav 
 
 ### 🔟 GARDE-FOUS ET POINTS À REMONTER À DAVID
 
-1. 🔒 **2 DM en attente de validation** : **Lorenzo Pezzoli** (OMS, bienvenue après acceptation, EN, sans lien) et **Johan Verheyden** (FR, fil actif, sans CTA, **corrigé en session pour n'engager David à rien**). Notification push envoyée. **Les deux ont été re-double-checkés intégralement après la correction**, à la demande de David.
+1. ✅ **2 DM envoyés et confirmés, sur ordre explicite de David en session** : **Lorenzo Pezzoli** (OMS, bienvenue après acceptation, EN, sans lien, 14:34) et **Johan Verheyden** (FR, fil actif, sans CTA, corrigé en session pour n'engager David à rien, 14:29). Les deux avaient été re-double-checkés intégralement avant l'ordre d'envoi. **Quota DM à froid : 1/8** (Pezzoli ; Johan est hors quota, réponse en fil actif). File de validation DM revenue à **0**.
 2. 🔴 **Contenu politique reçu en DM, traité par abstention (§10).** Le post que Johan Verheyden a partagé est un réquisitoire de gouvernance sur la riposte RDC, avec mentions nominatives de Jean Kaseya, Muyembe et Roger Kamba. Le brouillon **ne le commente pas**. Si David souhaite que HWG puisse discuter ce registre en privé avec un interlocuteur de confiance, c'est une décision qui lui revient et qui n'est écrite nulle part aujourd'hui.
 3. 🟡 **Homonymies de dirigeants d'agences nationales, toujours sans arbitrage** : **Jean-Jacques Muyembe** est signalé depuis le **21/08** (3e jour), **Jide Idris** s'y est ajouté ce matin, et la session de 9h propose une règle générale (n'inviter un dirigeant d'agence nationale que si le compte est vérifié ou corroboré depuis un compte institutionnel). **Rien de neuf n'a été tenté ce créneau**, conformément à la consigne d'abstention.
 4. 🟡 **La directive de ciblage du 17/08 a dépassé sa fenêtre déclarée** (« d'ici là » = go/no-go du 21/08, passé). Point déjà remonté ce matin, **rappelé une fois et pas davantage** : elle oriente la totalité du quota de connexions, David devrait dire s'il la reconduit, la durcit ou la lève.
