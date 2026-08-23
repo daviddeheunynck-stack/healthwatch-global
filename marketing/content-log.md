@@ -113,7 +113,32 @@ Même vérification pour **Pierre PARNEIX** (notification « vous mentionne dans
 
 **3. 🟡 Le sous-fil de réponses d'un post ne se charge qu'au vrai défilement souris.** Ni `window.scrollBy` en JS, ni un bouton « Charger plus de commentaires » (absent du DOM), ni la bascule du tri sur « Les plus récents » ne suffisent. Seul `computer` action `scroll` par paliers de 10 crans déclenche le chargement paresseux. À faire d'emblée.
 
-### ✅ Pourquoi 5/7 et pas 7/7 — le quota n'a pas été rempli faute de cible, jamais faute de recherche
+
+
+### 💬 Commentaire 6/7 — Oliver Morgan (WHO Director, Public Health Intelligence), profil suivi mais jamais commenté depuis le 03/08
+
+**Session reprise en interactif après l'envoi des 2 DM (David présent).** Notifications revérifiées : rien de neuf hormis ce post.
+
+- **Profil** : `/in/oliver-morgan-globalhealth`, *Global Health Executive | WHO Director | Strategic Innovator | Public Health Intelligence Leader*. **Dernier commentaire chez lui le 03/08**, largement hors blocage hebdomadaire.
+- **Post** : `urn:li:activity:7497201607764418560`, **1 h**, 2 réactions, **0 commentaire**. Argument : les données de santé publique sont détenues « en confiance » (obligations légales, pas des actifs d'entreprise) ; quand la couche de données d'un système d'information de santé loge chez un prestataire commercial IA, le contrat fournisseur devient de facto une pièce de la gouvernance nationale de l'information sanitaire. Il transpose la distinction du droit international (RSI contraignant / recommandations OMS persuasives) aux principes IA des fournisseurs (droit souple) vs l'avenant de traitement des données (instrument contraignant).
+- **Angle retenu** : la distinction tient encore mieux un cran plus bas, sur la **mise à jour** plutôt que le contrat initial. Un avenant de traitement des données se négocie une fois, mais le modèle d'IA qu'il encadre est réentraîné et redéployé selon un calendrier que l'avenant précise rarement. Différence entre une licence (signée une fois) et une obligation permanente (à vérifier en continu) — la plupart des accords fournisseurs sont écrits comme le premier alors que le système sous-jacent se comporte comme le second.
+- **Double-check (§5)** : langue EN/EN ✅. Argument construit sur sa propre distinction, aucun fait ajouté ✅. **518 caractères, 0 tiret cadratin, 0 demi-cadratin, 0 signe moins** ✅. Aucun CTA, aucun lien ✅. Anti-gabarit : grep sur « binding instrument », « soft law », « vendor contract », « data processing addendum », « actually relying on » → 0 occurrence dans les 4 fichiers d'archive ✅.
+- **Publication confirmée** : texte visible sous « David Deheunynck », horodatage « maintenant ».
+
+> The distinction holds even better one layer down, on the update rather than the initial contract. A data-processing addendum is negotiated once, but an AI model behind it gets retrained and redeployed on a schedule the addendum rarely specifies. Health data governance has a name for a rule that must be checked continuously rather than signed once: it is the difference between a licence and a standing obligation. Most vendor agreements are written like the former when the underlying system behaves like the latter.
+
+### 💬 Commentaire 7/7 — Dr Fabrice KHADDY, Field Coordinator MVE17, Ministère de la Santé RDC — **QUOTA REMPLI**
+
+- **Profil** : `/in/dr-fabrice-khaddy-8b805527a/`, vérifié, **2e degré**, *Field Coordinator Ebola Outbreak MVE17 at Ministry of Health DRC* — poste tout juste pris (post « Commence un nouveau poste » publié 1 h avant celui-ci). **Jamais engagé** (grep : 0 occurrence). Repéré via recherche « field epidemiology », dernières 24 h.
+- **Post retenu** : `urn:li:activity:7497190219352268800`, **1 h**, 3 réactions, **0 commentaire**. Compte rendu d'un briefing avec le gouverneur et les autorités provinciales du **Haut-Uélé** sur la 17e épidémie d'Ebola de RDC (MVE17), portant sur le renforcement du leadership provincial, la coordination multisectorielle, la surveillance, l'investigation rapide des alertes, la capacité de laboratoire, l'engagement communautaire et le soutien opérationnel aux zones de santé touchées.
+- **Second post du même profil écarté** : l'annonce de prise de poste (2 h), contenu auto-généré sans substance analytique.
+- **Angle retenu** : ce que je lis chaque jour s'arrête à la province — le Haut-Uélé est une ligne parmi six sur le tableau des foyers, avec un seul chiffre de cas. Son briefing situe les **zones de santé** comme le niveau où se répartissent réellement surveillance, investigation des alertes et soutien opérationnel, un niveau plus fin que tout ce qui est publié. Question posée : quand une province est déclarée touchée, les ressources suivent-elles la province dans son ensemble, ou faut-il encore les négocier zone par zone une fois le leadership provincial aligné ?
+- **Double-check (§5)** : langue EN/EN ✅. Aucun chiffre avancé, la question porte sur un mécanisme opérationnel qu'il est seul à connaître ✅. **516 caractères, 0 tiret cadratin, 0 demi-cadratin, 0 signe moins** ✅. Aucun CTA, aucun lien ✅. Anti-gabarit : grep sur « zone by zone » (1 occurrence trouvée, formulation différente : « worth watching zone by zone, not just as a national total » — angle distinct, gardé) ; « province level », « health zone » (present dans les archives mais dans des contextes factuels différents, pas de figure rhétorique partagée) → écart suffisant ✅.
+- **Publication confirmée** : texte visible sous « David Deheunynck », horodatage « maintenant ».
+
+> What I read every day stops at the province: Haut-Uele is one line among six on the outbreak table, with a single case count attached to it. Your briefing lists affected health zones as the level where surveillance, alert investigation and operational support actually get allocated, which is a layer finer than anything published reaches. When a province is declared affected, does resourcing follow the province as a whole, or does it still have to be argued zone by zone once the provincial leadership is aligned?
+
+### ✅ Pourquoi 5/7 et pas 7/7 à ce stade (9h) — le quota n'a pas été rempli faute de cible, jamais faute de recherche
 
 Conformément à la règle du 14/07, aucun commentaire médiocre n'a été publié pour atteindre le chiffre. **Méthodes épuisées, dans l'ordre :**
 1. **Fil d'actualité** : 5 posts réels seulement (dimanche), dont 2 sponsorisés. Les 3 exploitables ont tous été traités (Sanicas, Herriman, AYONGA). L'INRB et la republication WHO AFRO / UN Genève étaient à 2 j et l'INRB est bloquée jusqu'au 29/08.
@@ -123,6 +148,8 @@ Conformément à la règle du 14/07, aucun commentaire médiocre n'a été publi
 5. **Dr. Jean Kaseya**, seul grand compte non bloqué : son post le plus récent est à **2 j** et reprend le récit personnel de Windhoek, déjà écarté pour auto-redondance le 22/08. Écarté de nouveau.
 
 **Marge de 2 commentaires laissée aux créneaux de 13h et 17h.**
+
+**Mise à jour : marge consommée en session interactive (David présent).** David a repris la session après l'envoi des 2 DM et demandé de continuer. Vérification des notifications (rien de neuf hormis un post d'Oliver Morgan) puis recherche « field epidemiology » dernières 24h ont fourni 2 cibles fraîches et jamais engagées : **Oliver Morgan** (6/7) et **Dr Fabrice KHADDY** (7/7). **Quota du jour REMPLI à 7/7**, détail des deux commentaires ci-dessous.
 
 ### 🗒️ Veille — signaux retenus sans action
 

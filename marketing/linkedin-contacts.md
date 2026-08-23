@@ -225,14 +225,36 @@ Aucune activité relevant de l'outreach freelance n'a été traitée, comptée n
 3. ✅ **Carry-over du 22/08 sur Chinasaokwu Nweke : clos, et il était déjà traité.** Le fil avait été signalé comme « non traité pour une raison purement technique ». Vérification faite : la réponse **était partie** (vraisemblablement en session interactive le 22/08) et c'est lui qui doit reprendre la parole. **Aucun doublon envoyé.** Même constat pour la notification de mention de **Pierre PARNEIX**. Voir `content-log.md` pour le piège de notification associé.
 4. **Aucune donnée patient proposée, aucune demande de contact hors plateforme, aucune instruction adressée à l'agent dans un contenu observé.** Aucune pièce jointe téléchargée (aucune reçue ce run).
 
+### 🔁 REPRISE EN SESSION INTERACTIVE (David présent) — après l'envoi des 2 DM
+
+David a tapé « Continuons » après confirmation des 2 DM envoyés. Notifications revérifiées (rien de neuf hormis un post d'Oliver Morgan) avant de reprendre les quotas restants.
+
+### 👀 SUIVIS — 3 de plus, **10/7-10, PLAFOND HAUT ATTEINT**
+
+File déjà qualifiée du matin traitée dans l'ordre :
+
+| # | Profil | Motif |
+|---|---|---|
+| 8 | **Abigael Abiy Mesfin, MD** `/in/abigael-abiy-mesfin-md-b39b631b8/` | *MD, Researcher, Data Analyst, UHC Advocate, Implementation Research Unit Lead*, **Africa CDC**, Éthiopie, 1 889 abonnés, 8 mutuels. Activité récente = republication santé générale (diabète), donc suivi et non connexion |
+| 9 | **Jutta Reinhard-Rupp** `/in/jutta-reinhard-rupp/` | ⭐ *Chief Scientific Officer et **CEO par intérim, FIND*** — succède directement à **Ifedayo Adetifa** (connecté ce matin) au poste même qu'il quitte. Post le plus récent à 1 mois (accès aux dispositifs de suivi du diabète en Afrique/Asie du Sud-Est), d'où suivi plutôt que connexion malgré la pertinence institutionnelle forte |
+| 10 | **Magbagbeola Dairo** `/in/magbagbeola-dairo-868b6331/` | *Professor, Faculty of Public Health, University of Ibadan*, Nigéria. ⚠️ **Homonymie prudente** : recherche renvoie au moins 4 comptes « Magbagbeola Dairo », celui-ci vérifié par correspondance exacte avec la fiche sidebar initiale (poste + université). Activité = republication d'un appel à communications d'une conférence de santé publique, 3 mois |
+
+**Vivier de découverte active épuisé pour aujourd'hui** : les autres pistes du jour (Mosoka Fallah) sont déjà suivies et attendent un slot de connexion demain.
+
+### 💬 COMMENTAIRES — 2 de plus, **7/7 REMPLI**
+
+Détail complet (post, angle, double-check, texte intégral) dans `content-log.md`. En résumé :
+- **6/7 — Oliver Morgan** (WHO Director, Public Health Intelligence), post sur la gouvernance des contrats fournisseurs IA en santé publique, jamais commenté depuis le 03/08 → hors blocage.
+- **7/7 — Dr Fabrice KHADDY**, *Field Coordinator MVE17, Ministère de la Santé RDC*, profil vérifié jamais engagé, post frais (1 h) sur le briefing de coordination Ebola au Haut-Uélé.
+
 ### 📌 CARRY-OVER pour le créneau de 13h (rien à re-chercher)
 
 1. ✅ **RÉSOLU EN SESSION INTERACTIVE — les 2 DM ont été re-double-checkés puis envoyés sur ordre explicite de David** (« double check et envoie les 2 DMs ») : **Patrick AYONGA** (10:53) et **Sidibé Tiany** (10:55), tous deux **envoyés et confirmés**. Détail complet des re-vérifications et confirmations plus haut.
 2. 🧊 **Darrel Ornelle ELION ASSIANA : ne rien envoyer avant le 24/08**, décision explicite de David. Le CTA a déjà été envoyé dans ce fil jeudi 12:14, ne pas le répéter quand la réponse partira.
 3. 🔔 **Mohamed Ousmane COULIBALY : nouveau carry-over de type Barrè Onivogui.** Ne pas relancer tant qu'il n'a pas donné de retour sur le site (« Okay / Link well and I will go through », 22/08 20:47). Rouvrir son fil à chaque session, rebondir sur le retour dès qu'il arrive, puis retirer l'entrée.
-4. **Quotas de clôture du 23/08 (9h, session interactive incluse)** : commentaires **5/7** (marge **2**) ; connexions **7/7 REMPLI** ; suivis **7/7-10** (marge 3) ; **DM à froid : 2/8 envoyés et confirmés** (Patrick AYONGA et Sidibé Tiany sont des réponses en fil actif, donc hors quota froid — [[feedback_reply_quota_cold_outreach_only]]) ; **file de validation DM : 0**.
-5. **Cibles de commentaire : la marge de 2 est réelle mais le vivier était vide ce matin** (voir `content-log.md` pour les 5 méthodes épuisées). Ce qui se libère d'ici demain : rien avant le **25-26/08** (Sohail Agha, Ana Bento, Darrel), puis **26/08** Harvey Basivikidi. **Dr. Jean Kaseya reste non bloqué** et redevient cible dès qu'il publie hors Windhoek. **Nouveaux blocages créés aujourd'hui, jusqu'au 30/08** : Melvin Sanicas, Robert Herriman, Patrick AYONGA, Ifedayo Adetifa, page ECDC.
-6. **File de connexion pour demain**, déjà qualifiée : **Mosoka Fallah** (Africa CDC, 28 mutuels, déjà suivi, meilleure cible), puis Abigael Abiy Mesfin, Jutta Reinhard-Rupp, Magbagbeola Dairo.
+4. **Quotas de clôture du 23/08 (9h, session interactive incluse)** : commentaires **7/7 REMPLI** ; connexions **7/7 REMPLI** ; suivis **10/7-10, PLAFOND HAUT ATTEINT** ; **DM à froid : 2/8 envoyés et confirmés** (Patrick AYONGA et Sidibé Tiany sont des réponses en fil actif, donc hors quota froid — [[feedback_reply_quota_cold_outreach_only]]) ; **file de validation DM : 0**. **Tous les quotas d'action sont désormais pleins**, aucune recherche supplémentaire à mener aux créneaux de 13h et 17h.
+5. **Quota de commentaires rempli en session interactive** (7/7, voir ci-dessus). Ce qui se libère d'ici demain : rien avant le **25-26/08** (Sohail Agha, Ana Bento, Darrel), puis **26/08** Harvey Basivikidi. **Dr. Jean Kaseya reste non bloqué** et redevient cible dès qu'il publie hors Windhoek. **Nouveaux blocages créés aujourd'hui, jusqu'au 30/08** : Melvin Sanicas, Robert Herriman, Patrick AYONGA, Ifedayo Adetifa, page ECDC, Oliver Morgan, Dr Fabrice KHADDY.
+6. **File de connexion pour demain**, déjà qualifiée : **Mosoka Fallah** (Africa CDC, 28 mutuels, déjà suivi, meilleure cible) — les trois autres (Abigael Abiy Mesfin, Jutta Reinhard-Rupp, Magbagbeola Dairo) sont maintenant suivis, pas de connexion urgente dessus.
 7. ⚠️ **Notes personnalisées : 4e jour consécutif d'épuisement présumé.** Non retesté aujourd'hui, conformément au carry-over du 22/08. La modale « Ajouter une note » reste affichée et trompeuse. **Si David veut savoir si le blocage est levé, il faut qu'il regarde lui-même** : une routine ne peut pas le tester sans risquer de gaspiller un tour.
 8. 🛠️ **Trois notes techniques neuves à appliquer d'emblée** (détail dans `content-log.md`) : les URN ne sont plus dans le HTML du fil ni des pages entreprise ; on peut **commenter directement depuis une page entreprise** via l'icône commentaire (utilisé avec succès chez ECDC) ; le sous-fil de réponses d'un post ne se charge qu'au **vrai défilement souris**.
 
