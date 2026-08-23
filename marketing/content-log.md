@@ -2,6 +2,57 @@
 
 Archive de tout le contenu créé. Mise à jour à chaque session.
 
+## 📅 Session linkedin-hwg-followup-check — 23/08/2026 (13h, 1er des 2 créneaux après-midi)
+
+**Vérification double déclenchement** : aucune entrée `linkedin-hwg-followup-check` datée du 23/08 dans ce fichier ni dans `linkedin-contacts.md` à l'ouverture → **premier déclenchement de cette routine aujourd'hui**. Les entrées du jour déjà présentes sont celles du monitoring de 9h et de sa reprise en session interactive, qui sont des runs distincts et non des doublons.
+
+**Quotas à l'ouverture** (carry-over de la reprise interactive du matin) : commentaires **7/7 REMPLI** ; connexions **7/7 REMPLI** ; suivis **10/7-10, plafond haut atteint** ; DM à froid **0/8** ; file de validation DM **0**.
+**Quotas à la clôture** : **tous inchangés** ; **file de validation DM : 2**.
+
+**🖥️ Navigateur** : `_shared/browser-status.md` lu avant ouverture, dernière entrée 🔴 datée du **15/08**, pas du jour → aucun bridage, rien à y écrire. Un seul navigateur listé, `23c7ecdd…`, sélectionné sans question (§7). Aucune session sœur `isRunning: true`.
+
+⚠️ **Anomalie JS asynchrone présente toute la session, contournée sans perte** : `(async () => 42)()` renvoie `{}` de façon systématique, c'est la signature « renderer dégradé » de la politique §7. **Mais tout le reste fonctionne** : JS **synchrone** (`document.body.innerText.length` → valeur correcte), `computer` (scroll, clic, capture), `get_page_text`, navigation. La session a donc tourné **en JS strictement synchrone**, avec `computer` action `wait` pour les attentes. **Même anomalie que le créneau 13h du 22/08** (absente à 9h les deux jours) : c'est le 2e 13h consécutif touché, ça commence à ressembler à un motif horaire plutôt qu'à un incident. À revérifier au prochain 13h avant d'en faire une règle.
+
+⚠️ **Filtre de sortie déclenché 4 fois sur `javascript_tool`** : tout retour contenant une URL avec paramètres de requête (les liens `lnkd.in`/`utm_` des posts LinkedIn) est renvoyé comme `[BLOCKED: Cookie/query string data]`, y compris quand on tente de les masquer par `replace()` **après** coup. Contournement retenu : ne jamais renvoyer de gros blocs de texte de page bruts, mais **extraire des valeurs déjà réduites** (compteurs, index, booléens) côté page. À appliquer d'emblée la prochaine fois.
+
+### 1️⃣ RETOMBÉES DES 7 COMMENTAIRES DU JOUR — **zéro réaction, zéro réponse**
+
+Relevés au compteur rendu sur `/in/healthwatchglobal/recent-activity/comments/`, puis en ouvrant les posts pour les deux que cette page n'affichait pas.
+
+| Commentaire (9h sauf mention) | Réactions | Réponses | Impressions |
+|---|---|---|---|
+| 1/7 Melvin Sanicas | 0 | 0 | **10** |
+| 2/7 Robert Herriman | 0 | 0 | 6 |
+| 3/7 Patrick AYONGA (FR, article J100) | 0 | 0 | **14** |
+| 4/7 Ifedayo Adetifa | 0 | 0 | 9 |
+| 5/7 page ECDC | 0 | 0 | 4 |
+| 6/7 Oliver Morgan (interactif) | 0 | 0 | 3 |
+| 7/7 Dr Fabrice KHADDY (interactif) | 0 | 0 | 4 |
+
+**Lecture honnête : c'est en dessous de l'après-midi d'hier**, où deux des trois commentaires publiés avaient produit quelque chose dès 17h. Ici rien, quatre heures après les derniers. Le seul écart notable est l'exposition : **AYONGA 14 et Sanicas 10 contre 3 à 4** pour les autres, ce qui suit la taille d'audience du profil commenté et pas la qualité de l'angle. **Aucune conclusion à tirer à 13h un dimanche** ; le vrai relevé est celui de 17h.
+
+⚠️ **Défaut de la page « Commentaires » à connaître, constaté aujourd'hui.** `/recent-activity/comments/` n'a jamais listé que **8 commentaires**, dont **5 des 7 du jour** : Melvin Sanicas et Robert Herriman en étaient **absents**, alors que les deux existent bien et sont visibles sur leur post. Deux clics sur « Afficher plus de résultats » n'ont rien ajouté (le compteur reste bloqué à 8) et la liste remontait directement au 20-21/08 (Siaya, Julien Harneis, Amanda McClelland). **Ne pas conclure « commentaire disparu » depuis cette page** : vérifier sur le post lui-même. C'est ce qui a été fait ici, et les deux étaient intacts.
+
+⚠️ **Note technique complémentaire** : `linkedin.com/feed/update/urn:li:activity:.../` reste parfois **bloqué en squelette de chargement** (`body.innerText.length` autour de 2 600, aucun contenu) même après rechargement et 4 à 5 s d'attente. Le contenu **existe pourtant dans le DOM** : c'est le rendu visuel qui ne se termine pas. Extraire directement les compteurs en JS synchrone (`/(\d+)\s+impression/`) donne le résultat sans attendre le rendu, ce qui a débloqué le cas Herriman.
+
+### 2️⃣ AUCUN COMMENTAIRE PUBLIÉ CE CRÉNEAU — quota déjà rempli, et aucune recherche lancée
+
+Le quota de 7 est rempli depuis la reprise interactive de ce matin. **Aucune recherche de cible neuve n'a été lancée**, conformément à la règle : le quota est un objectif, pas une réserve à dépasser. Le temps a été reporté sur la messagerie et la vérification des connexions.
+
+**Aucun nouveau blocage hebdomadaire créé.** Blocages actifs inchangés depuis 9h, avec l'ajout des **7 profils commentés aujourd'hui, bloqués jusqu'au 30/08** : Melvin Sanicas, Robert Herriman, Patrick AYONGA, Ifedayo Adetifa, page ECDC, Oliver Morgan, Dr Fabrice KHADDY.
+
+### 3️⃣ VEILLE — signaux notés, aucun post rédigé (hors périmètre)
+
+- **⭐ Post de Johan Verheyden reçu en DM (12:49), publié 1 h plus tôt** : *« Three Months In: The Bundibugyo Outbreak Was Never Really a Diagnostics Problem »*. Éléments factuels réutilisables : **GeneXpert ne détecte pas Bundibugyo**, **échantillons transportés sur plus de 1 700 km** pour confirmation, décentralisation des tests tardive. Le reste de son analyse est un réquisitoire de gouvernance (réorganisation du commandement en pleine urgence, concentration de l'autorité, grèves de personnel pour salaires impayés, capacité IPC faible), avec mentions nominatives de Jean Kaseya, Muyembe et Roger Kamba. ⚠️ **§10 : cette partie n'est ni reprise, ni commentée, ni utilisée comme matière de post.** Seuls les deux faits diagnostiques ci-dessus sont exploitables.
+- **Africa CDC — événement vidéo en direct aujourd'hui** : *Africa High Level Ministerial Committee (AHLMC)*, 23 août, signalé en notifications. **Source probable de chiffres frais**, dans la même famille que le RC76AFRO déjà signalé ce matin. À surveiller par `morning-don-check`.
+- **Post de Lorenzo Pezzoli (OMS, 3 j), non commenté** : les épidémies méningococciques du méningitis belt reculent depuis le vaccin conjugué A (2010) puis le pentavalent ACWYX, tandis que **les foyers pneumococciques y sont désormais détectés plus régulièrement**, avec pneumonies et sepsis « que la surveillance de la méningite n'a jamais été conçue pour compter ». Sa question ouverte, *« how do we get the full picture, rather than the fraction of it our systems happen to detect? »*, est le hook du message de bienvenue mis en file de validation (voir `linkedin-contacts.md`). **Aucun chiffre à ingérer, c'est un signal de couverture, pas une donnée.**
+
+### 4️⃣ §8 — AUCUNE DONNÉE ÉPIDÉMIOLOGIQUE NOUVELLE CE CRÉNEAU
+
+Rien de chiffré et de sourçable n'est passé dans les messages, les notifications ou les profils lus. Les deux signaux ouverts par la session de 9h restent valables et **ne sont pas répétés ici comme s'ils étaient neufs** : Ebola/RDC à J-3 sur un chiffre non sourcé primairement (article AYONGA, 5 375 / 2 557 au 22/08, à confirmer par un SitRep INSP n°98 ou postérieur) et Choléra/RDC dont la ligne nationale est arrêtée au 28/06.
+
+---
+
 ## 📅 Session linkedin-hwg-monitoring — 23/08/2026 (9h) — commentaires / veille
 
 **Vérification double déclenchement** : aucune entrée datée du 23/08 dans ce fichier ni dans `linkedin-contacts.md` à l'ouverture. Dernière entrée : 22/08 à 17h. → **premier déclenchement de la routine aujourd'hui.**
