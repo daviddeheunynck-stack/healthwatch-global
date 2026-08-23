@@ -900,6 +900,106 @@ async function runDataQuality(_req: NextRequest, supabase: SupabaseClient) {
     }
   }
 
+  // ── 4k. Multi-day regression watermark on locked / PHEIC rows ─────────────
+  // Section 3 only ever compares against YESTERDAY's snapshot (`.eq("snapped_at",
+  // yesterday)` above), and sync-outbreaks rewrites the current day's snapshot
+  // every hour (`upsert` on `outbreak_id,snapped_at`), so a day's snapshot ends
+  // up holding that day's LAST value. A bad write at 08:13 is therefore baked
+  // into today's snapshot by the 09:00 sync: today's data-quality run still sees
+  // it (it compares against yesterday), and every run after that compares the
+  // wrong figure against itself. The detection window is exactly one run.
+  //
+  // Real case, 2026-08-22: the flagship Ebola/DR Congo row (source_priority=10,
+  // is_pheic, on the public map) went from 5,021 to 534 cases and 2,378 to 93
+  // deaths through a write outside the tracked cron system. The root cause was
+  // never found, so nothing rules out a repeat — and the same incident exposes
+  // two further blind spots:
+  //   - deaths have NO regression detection at any horizon (section 3 tests
+  //     deathsExceedCases, isZeroData, then drop/spike on `cases` only; 4d
+  //     covers three diseases and only the exact `deaths === 0` case), so the
+  //     −96% death collapse was only ever visible by riding along with cases;
+  //   - a slow bleed (−30%/day for four days, −76% overall) never trips the
+  //     40%-against-yesterday threshold on any single day.
+  //
+  // Answer: a high-water mark. For the small set of rows whose every figure has
+  // a human decision behind it, compare against the MAXIMUM of the last
+  // WATERMARK_DAYS days rather than against yesterday alone. Reports only,
+  // never auto-fixes — same rule and same reason as the source_priority >= 10
+  // branch in section 4 above. Scope is deliberately narrow: the false-positive
+  // rate on all ~114 active rows can't be measured from here, and a locked row
+  // that loses 60% of its cases is worth being told about twice.
+  const WATERMARK_DAYS = 14;
+  const watched = (rows ?? []).filter(
+    (r) => !r.is_seed && ((r.source_priority ?? 0) >= 10 || r.is_pheic) && !anomalyIds.has(r.id),
+  );
+  if (watched.length > 0) {
+    const since = new Date(Date.now() - WATERMARK_DAYS * 86_400_000).toISOString().split("T")[0];
+    const { data: hist, error: histErr } = await supabase
+      .from("outbreak_snapshots")
+      .select("outbreak_id, cases, deaths, snapped_at")
+      .in("outbreak_id", watched.map((r) => r.id))
+      .gte("snapped_at", since)
+      .lt("snapped_at", today);
+
+    if (histErr) {
+      // Fail loud, not closed: this check exists precisely because the row it
+      // watches can be wrong without anything else noticing.
+      needsReview.push({
+        label: "[WATERMARK] Contrôle de régression indisponible",
+        detail: `Lecture de outbreak_snapshots impossible (${histErr.message}) — la régression multi-jours des ${watched.length} ligne(s) verrouillée(s)/PHEIC n'a été vérifiée sur aucun horizon aujourd'hui.`,
+      });
+    } else {
+      const highs = new Map<string, { cases: number; casesAt: string; deaths: number; deathsAt: string }>();
+      for (const s of hist ?? []) {
+        const hi = highs.get(s.outbreak_id);
+        if (!hi) {
+          highs.set(s.outbreak_id, { cases: s.cases, casesAt: s.snapped_at, deaths: s.deaths, deathsAt: s.snapped_at });
+          continue;
+        }
+        if (s.cases  > hi.cases)  { hi.cases  = s.cases;  hi.casesAt  = s.snapped_at; }
+        if (s.deaths > hi.deaths) { hi.deaths = s.deaths; hi.deathsAt = s.snapped_at; }
+      }
+
+      if (highs.size === 0) {
+        // Distinct from section 3's coverage floor, which only looks at
+        // yesterday: here the whole WATERMARK_DAYS window is empty for every
+        // watched row, so this check silently compares against nothing.
+        needsReview.push({
+          label: "[WATERMARK] Aucun historique sur les lignes verrouillées",
+          detail: `Aucun instantané entre le ${since} et hier pour les ${watched.length} ligne(s) verrouillée(s)/PHEIC — la détection de régression multi-jours ne compare à rien. Vérifier l'upsert outbreak_snapshots dans sync-outbreaks.`,
+        });
+      }
+
+      for (const row of watched) {
+        const hi = highs.get(row.id);
+        if (!hi) continue;
+        const label = `${row.disease} / ${row.country}`;
+        const lock = (row.source_priority ?? 0) >= 10 ? "verrouillée" : "PHEIC";
+
+        // Same thresholds as section 3's day-1 drop check, so nothing new to
+        // tune: only the comparison basis changes (14-day high, not yesterday).
+        if (isCollapse(row.cases ?? 0, hi.cases, { minPreviousCases: 100, ratio: 0.4 })) {
+          const pct = Math.round((hi.cases - (row.cases ?? 0)) / hi.cases * 100);
+          needsReview.push({
+            label,
+            detail: `Régression sur ${WATERMARK_DAYS}j : ${hi.cases.toLocaleString("fr-FR")} cas au ${hi.casesAt} → ${(row.cases ?? 0).toLocaleString("fr-FR")} aujourd'hui (−${pct}%). Ligne ${lock} : la chute n'a pas été signalée le jour même, ou l'a été et n'a pas été corrigée. Vérifier contre la source primaire (${row.source ?? "source absente"}) avant toute écriture — aucune correction automatique n'est appliquée sur ces lignes.`,
+          });
+        }
+
+        // Deaths are cumulative on these rows too, and until now nothing
+        // watched them: a write that keeps `cases` and slashes `deaths` passes
+        // every existing check (the CFR floor in 4d only fires on exactly 0).
+        if (isCollapse(row.deaths ?? 0, hi.deaths, { minPreviousCases: 20, ratio: 0.4 })) {
+          const pct = Math.round((hi.deaths - (row.deaths ?? 0)) / hi.deaths * 100);
+          needsReview.push({
+            label,
+            detail: `Régression des décès sur ${WATERMARK_DAYS}j : ${hi.deaths.toLocaleString("fr-FR")} décès au ${hi.deathsAt} → ${(row.deaths ?? 0).toLocaleString("fr-FR")} aujourd'hui (−${pct}%), à ${(row.cases ?? 0).toLocaleString("fr-FR")} cas. Ligne ${lock} : vérifier contre la source primaire (${row.source ?? "source absente"}).`,
+          });
+        }
+      }
+    }
+  }
+
   // ── 5. Notable movements (top 5 largest absolute change, no anomaly) ──────
   type Movement = { label: string; before: number; after: number; delta: number };
   const movements: Movement[] = [];
