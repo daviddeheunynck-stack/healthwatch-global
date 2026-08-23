@@ -1321,3 +1321,64 @@ Le diff de `5d8e1ad` est explicite : il touche `app/[locale]/outbreak/[id]/page.
 **Statut : PROPOSÉE — en attente de retour de David.**
 
 ---
+
+## 2026-08-23 — Proposition du jour
+
+**Deuxième run sous le régime d'autonomie de build.** Contrairement au 22/08, la proposition ci-dessous est **archivée et poussée avant toute ligne de code**, comme le prescrit l'étape 4 du SKILL — l'écart de procédure signalé la veille est corrigé.
+
+**Aucun signal terrain neuf :** `product-feedback.md` n'a pas bougé depuis l'entrée Coulibaly du 22/08, déjà exploitée. Les trois runs LinkedIn du jour (9h, 13h, 17h) n'ont produit aucun retour produit — Coulibaly a consulté le profil, ce qui n'est pas un retour, et la seule décision du jour est de ne pas relancer.
+
+**Méthode, en application directe de la leçon du 22/08 :** les deux défauts ci-dessous ont été **relus dans le code réel de `master` au moment de l'écriture** (commit `36b0820`), pas déduits d'un log de la veille. Numéros de ligne cités à l'appui.
+
+---
+
+### 1. 🔴 Une régression sur une ligne verrouillée n'est détectable que pendant **un seul run** — passé ce délai, le mauvais chiffre devient la référence, en silence
+
+**Signal.** La mémoire `project_ebola_drc_regression_2026_08_22` : le 22/08 à 08:13 UTC, la ligne phare Ebola/RDC (`source_priority=10`, `is_pheic`, PHEIC en vitrine) est passée de **5 021 à 534 cas** et de **2 378 à 93 décès** par une écriture hors du système de crons tracé. L'enquête a écarté un par un tous les chemins automatisés ; **la cause n'a jamais été trouvée**. Rien ne garantit donc que le mécanisme ne se reproduise pas, et le seul filet aujourd'hui est un contrôle dont la fenêtre est d'un jour.
+
+**Ce que la relecture du code établit.**
+- `data-quality` charge les instantanés avec `.eq("snapped_at", yesterday)` (l. 310-313) — **c'est la seule base de comparaison** de toute la détection de chute.
+- `sync-outbreaks` écrit l'instantané du jour **toutes les heures** (`0 * * * *`), en `upsert` sur `onConflict: "outbreak_id,snapped_at"` (l. 466-469) : l'instantané d'une journée finit donc par contenir la **dernière** valeur de cette journée, pas la première.
+- Conséquence arithmétique : une écriture fausse à 08:13 est gravée dans l'instantané du jour dès le passage de 09:00. Le run de `data-quality` de 10:05 le même jour compare encore à la veille (bonne valeur) et signale. **Dès le lendemain, il compare 534 à 534 et ne voit plus rien.** La fenêtre de détection vaut exactement un run — à condition que ce run ait lieu et que son rapport soit lu.
+
+**Deux angles morts de plus, visibles sur ce même cas.**
+- 🔴 **Les décès n'ont aucune détection de régression, à aucun horizon.** La section 3 ne teste que `deathsExceedCases`, `isZeroData`, puis chute et pic **sur `cases` uniquement** (l. 335-356). La perte de 2 378 → 93 décès (−96 %) n'a été vue par aucun contrôle : elle n'est passée que parce que les cas chutaient dans le même mouvement. La section 4d ne rattrape rien ici — elle ne couvre que trois maladies et seulement le cas `deaths === 0` exactement.
+- Une **baisse lente** (−30 %/jour pendant 4 jours, soit −76 % au total) ne franchit jamais le seuil de 40 % contre la veille, et reste donc invisible du début à la fin.
+
+**Réponse retenue : une ligne de haute eau.** Pour le petit ensemble des lignes verrouillées ou PHEIC — celles dont chaque chiffre a une décision humaine derrière lui — comparer la valeur courante au **maximum des 14 derniers jours**, sur les cas **et** sur les décès, plutôt qu'à la seule veille.
+
+**Effort estimé : petit à moyen.** Une requête supplémentaire sur `outbreak_snapshots` (l'index `(outbreak_id, snapped_at DESC)` existe depuis la migration `20240109000000`, et aucun cron ne purge cette table — l'historique est là), réutilisation de `isCollapse` aux seuils déjà en place, aucun schéma, aucune écriture.
+
+**Risque/inconnue :** (a) **répétition** — une baisse légitime décidée à la main sur une ligne verrouillée sera resignalée jusqu'à ce que le pic sorte de la fenêtre ; c'est précisément pourquoi la fenêtre est courte (14 j) plutôt que le maximum absolu, et pourquoi le périmètre est restreint ; (b) le taux de faux positifs **n'est pas mesurable dans cette session** (aucune sonde live sur la prod), d'où la restriction aux lignes verrouillées/PHEIC plutôt qu'aux ~114 lignes actives — l'étendre demandera une passe de mesure sur `/admin` ; (c) le contrôle **signale seulement, ne corrige jamais** — même règle que la branche `source_priority >= 10` de la section 4 (l. 401-405), pour la même raison : au-dessus de ce seuil, il y a un humain et une source primaire derrière le chiffre.
+
+---
+
+### 2. 🔴 La fiche foyer colle une pastille **rouge « Rapport ancien »** sur une ligne dont un humain a vérifié la source — pendant que le tableau affiche « ✓ SOURCE CONFIRMÉE » pour la même ligne
+
+**Signal.** La migration `20260822120000` et `isSourceConfirmed()` (`lib/outbreaks.ts:683`) ont été écrites le 22/08 pour une raison précise, dite dans leur propre commentaire : distinguer « la source a réellement cessé de publier » d'« il y a un trou de données ». Ce travail a été câblé sur **deux** des **trois** surfaces qui affichent la fraîcheur.
+
+**Ce que la relecture du code établit.**
+- `OutbreakTable.tsx:1265` : câblé. Une ligne confirmée porte un badge neutre « ✓ SOURCE CONFIRMÉE · N j », avec l'infobulle « *Source officielle vérifiée directement — aucune édition plus récente, pas un trou de données* ».
+- `OutbreakDetailModal.tsx:516` : câblé. L'avertissement ambre « *Aucun bulletin officiel depuis N jours — foyer peut-être résolu ou non rapporté* » est correctement supprimé sur une ligne confirmée, avec un commentaire qui dit explicitement vouloir éviter de contredire le badge du tableau.
+- `OutbreakDetailModal.tsx:497-499` : **pas câblé.** `isStale = daysSince > 30` se calcule directement depuis `outbreak.date`, sans jamais consulter `isSourceConfirmed`. Le rendu se fait l. 1057-1062.
+
+**Le résultat concret, pour toute ligne confirmée dont le bulletin a 60 jours ou plus** (`STALE_DAYS = 60`, le seuil qui déclenche le badge du tableau) : le visiteur voit dans le tableau un badge neutre « ✓ SOURCE CONFIRMÉE · 152 j », clique dessus, et la fiche qui s'ouvre affiche en haut à droite une **pastille rouge « Rapport ancien »** — vingt lignes au-dessus d'un emplacement où l'avertissement correspondant a justement été retiré parce que la source est confirmée. **La fiche contredit le tableau, et se contredit elle-même.**
+
+**Pourquoi maintenant.** C'est la surface qu'un prospect institutionnel juge en premier, et c'est exactement la confusion que le chantier du 22/08 a été écrit pour supprimer — il n'a simplement pas atteint le troisième affichage. Coût de l'oubli : une ligne dont on a **vérifié à la main** qu'elle est à jour se présente en rouge comme une donnée périmée.
+
+**Effort estimé : petit.** Une condition, un état d'affichage neutre supplémentaire, une chaîne à ajouter dans les 5 langues.
+
+**Risque/inconnue :** (a) il ne faut surtout **pas** faire passer la pastille au vert « Données récentes » — une ligne confirmée reste ancienne, le rendu juste est un **troisième état neutre**, pas une promesse de fraîcheur ; (b) 5 locales à servir (fr/en/es/ar/id), en reprenant le vocabulaire déjà retenu par le badge du tableau pour que les deux surfaces disent le même mot.
+
+---
+
+### Contexte relevé au passage (pas des idées)
+
+- **Le chantier e-mails de David tourne en parallèle dans l'arbre de travail partagé.** `fix/emails-lot-2` a été fusionnée dans `master` (`36b0820`) **pendant ce run**, et 7 fichiers de crons d'envoi restent modifiés et non commités, plus `lib/mail-suppression.ts` non suivi. **Rien n'a été touché** : garde-fou 3 du SKILL (e-mails clients) et règle de périmètre d'`AGENTS.md`. Pour éviter toute interférence, cette session a travaillé dans un **worktree git séparé** basé sur `origin/master` — l'arbre de travail principal n'a été ni modifié, ni stagé, ni stashé.
+- **Morgan Otita** — toujours pas re-proposé ; l'arbitrage de David du 20/08 tient. Annulation automatique le 26/08, J-3.
+- **Pistes ouvertes sans angle neuf, non re-proposées :** version de définition de cas (Omobolanle Adelekun, 03/08), 18 indicateurs de confiance communautaire (Andrea Bernasconi, 07/08, non constructibles faute de source), trois sources tierces (Hao-Kai TSENG, 29/07, bloquées par le garde-fou du `ROADMAP.md`), exposition de l'écart entre deux sources (idée 3 du 21/08 — **écartée par David le 23/08** : « pas maintenant, pas de prospect », mémoire `project_source_divergence_display_shelved_2026_08_23` ; ne pas la reposer sans signal neuf).
+- **Aucune sonde en lecture seule sur la prod n'a été tentée**, comme aux trois runs précédents. Les deux idées ci-dessus sont entièrement établies par lecture de code ; leur **ampleur en nombre de lignes concernées** reste à confirmer sur `/admin`.
+
+**Statut : 2 idées PROPOSÉES — construction engagée dans ce même run, statut mis à jour ci-dessous en fin de session.**
+
+---
