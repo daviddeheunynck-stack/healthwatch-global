@@ -1735,3 +1735,85 @@ Objectif atteint : **10 contacts nets, aucun déjà présent dans les vagues 1-3
 1. **Les adresses déjà vérifiées mais écartées, utilisables sans nouvelle recherche** : **`info@dahw.de`** (DAHW Allemagne, écartée sur la géographie ce run) et **`tephinet@taskforce.org`** (TEPHINET, écartée comme doublon de domaine avec le Task Force for Global Health — **arbitrage à trancher par David**). Restent aussi les bureaux pays PAHO repérés le 22/08 : **Pérou `per@paho.org`**, **République dominicaine `domcomunicaciones@paho.org`**, **Salvador `comunicacionesslv@paho.org`**, **Venezuela `comunicacionespwrven@paho.org`**, **Panama `pane-mail@paho.org`**, **Nicaragua `nic-email@paho.org`** (réserve déjà posée le 21/08 sur les quatre boîtes « comunicaciones », plus faibles).
 2. **Poursuivre le vein des sociétés savantes**, qui a produit 5 des 10 entrées de ce run. Jamais tentées : sociétés nationales d'épidémiologie/santé publique en **Inde, Nigeria, Afrique du Sud, Indonésie, Philippines, Mexique, Argentine, Pologne, Pays-Bas**, et les fédérations régionales (**ALAESP** pour l'Amérique latine — `alaesp.org/contacto/` en 404 ce run, à retrouver par un autre chemin).
 3. **EMRO régional : abandonner l'URL `entity/contacts`** (page supprimée, cf. ci-dessus) et reprendre la région par les pages pays ou par une unité nommée du bureau régional.
+
+---
+
+## 🔁 RELANCE J+10 — 2026-08-23, run automatique `daily-relance-check-healthwatch`
+
+**Résultat : 0 relance créée. Aucun lot n'atteint J+10 aujourd'hui** — conforme à l'annonce du run d'hier, et **revérifié en direct** plutôt que repris du journal. Le run a servi à trois contrôles : la confirmation du trou du 13/08, le recalage du calendrier des prochains lots, et un balayage de bounces. **Il remonte par ailleurs un incident sérieux sur le lot de prospection du 22/08 — 4 doublons de contact sur 10 (voir plus bas), avec conséquences directes sur les relances des 25 et 27/08.**
+
+**Arbitrage des lots :**
+- **02/08 matin (18), 02/08 soir (20), 03/08 (20), 05/08 (20)** — relancés le 15/08. Exclus définitivement (« une seule relance, jamais deux »).
+- **07/08, 08/08, 09/08, 10/08, 11/08** — relancés les 17, 18, 19, 20 et 21/08. Exclus.
+- **12/08 (10)** — relancé hier. Exclu. **Les 8 relances sont parties le 22/08 entre 06:31:49 et 06:32:15 UTC** (vérifié en direct ce run, les 8 fils portent 2 messages sortants en `SENT`).
+- **04/08 recréé (20), 14/08 (10 + Kosovo), 15/08 (10)** — **tous les trois envoyés le 15/08**, donc à **J+8**. Pas mûrs. Voir le recalage ci-dessous.
+- **06/08 recréé (10)** — envoyé le 17/08. J+10 le **27/08**.
+- **17/08 et suivants** — pas mûrs.
+
+**Le trou du 13/08 est réel, vérifié en direct.** Le journal n'a aucune entrée au 13/08 (l. 639). Contrôle indépendant par balayage de fenêtre plutôt que par relecture du journal : `in:sent after:2026/08/12 before:2026/08/15`, `includeTrash: true` — **24 fils, tous datés du 12/08**, aucun envoi le 13 ni le 14. Rien à relancer aujourd'hui.
+
+### 📅 Recalage du calendrier — le lot du 14/08 est parti le 15/08, pas le 14
+
+Le run d'hier annonçait « prochain lot éligible : le 14/08, le 24/08 ». **Vérification en direct des dates d'envoi réelles** (`to:contact@apacph.org OR to:ikshpk@rks-gov.net`, `includeTrash: true`) : les fils portent **2026-08-15, 04:25:51 et 04:26:09 UTC**. Le lot du 14/08 a été créé le 14 et envoyé le 15 au petit matin — la routine compte les jours depuis la **date d'envoi confirmée**, donc son J+10 tombe le **25/08**, pas le 24/08.
+
+**Conséquence : trois lots arrivent à échéance le même jour, le 25/08** — le 04/08 recréé (20), le 14/08 (11 avec Kosovo) et le 15/08 (10, moins les bounces ISED et MBDS, soit 8). **Soit ~39 relances en une journée, très au-dessus du seuil de frein de file de ~25.**
+
+**Étalement proposé** (application du précédent du lot du 11/08, relancé à J+9 le 21/08 pour la même raison) — décision laissée à David, la routine appliquera ce plan par défaut faute d'instruction contraire :
+- **24/08** → lot du 14/08 (11 contacts, J+9)
+- **25/08** → lot du 04/08 recréé (20 contacts, J+10)
+- **26/08** → lot du 15/08 (8 contacts après bounces, J+11)
+- **27/08** → lot du 06/08 recréé (10) + lot du 17/08 (10, rendez-vous Variante A EAC / IGAD / SADC / AFROHUN / EUPHA) = 20, sous le seuil.
+
+### 🚨 Incident — 4 doublons de contact sur les 10 du lot de prospection du 22/08
+
+L'entrée du 22/08 affirme « 10 contacts nets, aucun déjà présent dans les vagues 1-3 ni dans les vingt runs précédents ». **La vérification en direct des 10 adresses contredit cette affirmation sur 4 d'entre elles.** Toutes les quatre sont **déjà parties** (envoi du lot le 22/08 à 06:33–06:35), il ne s'agit donc pas de brouillons rattrapables.
+
+| Institution | Adresse du 22/08 | Contact antérieur | Relance déjà consommée ? |
+|---|---|---|---|
+| **AUB — Faculty of Health Sciences** (Liban) | `fhs@aub.edu.lb` | **07/08** (`r-6867395204619219002`), fil `19fdbbe5a20d1973` | **Oui, le 17/08** — 2 messages sortants dans le fil d'origine |
+| **ISHP** (Albanie) | `ishp@shendetesia.gov.al` | **08/08**, fil `19fe0e6405ad14bb` | **Oui, le 18/08** — 2 messages sortants |
+| **IEA** (global) | `secretariat@ieaweb.org` | **15/08** (lot du 14/08), fil `19fff194917e1499` | Non — relance prévue au 25/08 |
+| **HZJZ** (Croatie) | `ravnateljstvo@hzjz.hr` | **17/08** sur `epidemiologija@hzjz.hr` (lot du 06/08 recréé) | Non — relance prévue au 27/08 |
+
+**Adresse identique pour les trois premières** — le doublon était détectable par une simple recherche `to:<adresse>` avant création. Le quatrième est un doublon d'institution sur une boîte différente : le HZJZ avait été approché le 06/08 sur `epidemiologija@` (« unité opérationnelle nommée plutôt que boîte de direction », l. 352), et le 22/08 sur `ravnateljstvo@` — soit précisément la boîte de direction que la consigne du 06/08 avait écartée. La note du 22/08 discute les trois boîtes `hzjz.hr` sans voir que l'institut était déjà contacté.
+
+**AUB et ISHP sont les deux cas les plus dommageables** : chacune a reçu une ouverture à froid (« I'm David Deheunynck, founder of… ») **4 et 5 jours après sa relance**, dans un fil neuf, comme si aucun échange n'avait eu lieu.
+
+**Exclusions à verrouiller dès maintenant, pour que les runs futurs ne les manquent pas :**
+- **Les fils du 22/08 d'AUB (`1a0281dedbf76a9a`) et d'ISHP (`1a0281de2286f12c`) ne doivent JAMAIS être relancés.** Leur J+10 tomberait le 01/09 et rien dans ces fils neufs ne signale qu'une relance a déjà été consommée ailleurs. Les deux institutions ont épuisé leur unique relance sur leur fil d'origine (17 et 18/08). **Une relance sur le fil du 22/08 serait la 3e sollicitation.**
+- **IEA doit être retirée du lot du 14/08 pour la relance du 25/08.** Le contact a reçu un 2e message le 22/08 ; le relancer 3 jours après en composerait un 3e. Une seule sollicitation ouverte suffit.
+- **HZJZ doit être retiré du lot du 06/08 pour la relance du 27/08**, même raisonnement : relancer `epidemiologija@` alors que `ravnateljstvo@` vient d'être sollicité le 22/08 ferait 3 messages à un même institut en dix jours, sur deux boîtes.
+
+**Ces trois exclusions sont appliquées par défaut par cette routine sauf instruction contraire de David.** Elles réduisent le lot du 14/08 à **10 relances** (au lieu de 11) et celui du 06/08 à **9** (au lieu de 10).
+
+**Portée du contrôle :** les 10 adresses du lot du 22/08 ont été vérifiées, ainsi que **les 10 brouillons du run de prospection de ce matin** (23/08) — requête `to:` groupée sur les dix, `includeTrash: true` : **résultat vide, aucun doublon d'adresse dans le lot du jour**, qui est encore en brouillon. **Les lots antérieurs au 22/08 n'ont pas été re-balayés** : ce contrôle n'a pas été fait par les runs précédents, d'autres doublons peuvent donc dormir plus haut dans le journal. Un balayage rétrospectif complet serait à faire, hors périmètre de ce run.
+
+### 📊 Bilan cumulé
+
+**Balayage des bounces** (`from:mailer-daemon`, `from:postmaster`, `subject:"Delivery Status Notification"`, `subject:"Undelivered Mail"`, `subject:Undeliverable`, sur 4 jours, corbeille incluse) : **1 seul fil, déjà consigné** (MHMS Îles Salomon, 19/08). **Aucun bounce neuf ce run**, y compris sur le lot du 22/08 et sur les 8 relances parties hier matin.
+
+**Bilan bounces cumulés depuis le 02/08 : 13** — inchangé, recalculé depuis la liste nominative conformément à la règle du 16/08 :
+1. WHO WPRO (02/08) — sous-domaine `wpro.who.int` invalide
+2. ZNPHI Zambie (02/08) — règle de transfert cassée côté destinataire
+3. Colombo (09/08) — 550 5.1.1, adresse introuvable
+4. AKHS (10/08) — adresse inconnue côté serveur
+5. NCIPD Bulgarie (12/08) — 550 high-probability spam
+6. CORDS (12/08) — adresse introuvable
+7. EPHI Éthiopie (12/08) — boîte pleine (transitoire)
+8. Lao TPHI (14/08) — domaine NXDOMAIN
+9. ISED Sénégal (15/08) — boîte pleine, 2 tentatives échouées, écarté définitivement le 16/08
+10. MBDS (15/08) — 550 No Such User Here
+11. DMR Myanmar (17/08) — 550 Unknown user
+12. MSPAS Guatemala (18/08) — adresse introuvable
+13. MHMS Îles Salomon (19/08) — adresse introuvable
+
+**Totaux au 2026-08-23 : 260 contacts prospectés, 250 envoyés, 237 effectivement délivrés.**
+- **Prospectés 260** et **envoyés 250** : repris de l'entrée de prospection de ce matin (les 10 du jour restent en brouillon). Cette routine n'en produit aucun.
+- **Délivrés 237** = 250 envoyés − 13 (taille de la liste nominative ci-dessus), recompté dans le même mouvement que la liste.
+- **⚠️ Réserve sur ces totaux** : les 250 envoyés comptent **4 envois vers des institutions déjà contactées** (voir l'incident ci-dessus). Le nombre d'**institutions distinctes** atteintes est donc de **246**, pas 250. Les totaux ci-dessus ne sont pas réécrits — ils comptent des messages, pas des organisations — mais l'écart est consigné ici pour qu'une lecture future ne confonde pas les deux.
+
+**Total cumulé de relances : 129 envoyées** (121 au 22/08 + **les 8 du lot du 12/08, parties le 22/08 à 06:31:49–06:32:15 UTC**, vérifiées en direct ce run), **0 en attente**. *(Écart création → envoi sur ces 8 : environ 7 minutes, en ordre de relecture sur 26 secondes. Plus court que les écarts habituels — 3 h 28 le 19/08, 5 h 15 le 20/08, 16 min le 22/08 côté prospection — mais **ce n'est pas la signature du bug d'envoi instantané du connecteur, qui se signe à la même seconde que la création**. Profil « relecture humaine » rapide. Aucune alerte.)*
+
+**Frein de file** : **17 brouillons** au moment du contrôle (10 de la prospection de ce matin + 7 créés à 05:11–05:16 UTC hors de cette routine, adresses nominatives). Sous le seuil de ~25. `list_drafts` **stable ce run** (un seul appel, résultat cohérent avec `search_threads`), comme depuis le 16/08. Aucune relance créée, le frein est sans objet aujourd'hui.
+
+**Aucune réponse institutionnelle nouvelle ce run** (balayage `-in:sent -in:draft newer_than:3d` : uniquement des notifications GitHub / Vercel / Stripe / LinkedIn / Codeur et des newsletters). **Prochain lot : le 14/08, demain 24/08 à J+9**, IEA retirée — **10 relances**.
