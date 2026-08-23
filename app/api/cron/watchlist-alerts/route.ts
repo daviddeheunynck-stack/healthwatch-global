@@ -218,8 +218,12 @@ async function runWatchlistAlerts(_req: NextRequest, supabase: SupabaseClient) {
     }
   }
 
+  // evaluatedAt: same reasoning as disease-alerts — outbreaks.length > 0
+  // proves this run compared real watchlisted outbreaks against each
+  // subscriber's last-alerted state, distinct from whether `sent` stayed 0.
   await logCronRun(supabase, "watchlist-alerts", errors > 0 ? "error" : "ok", sent,
-    errors > 0 ? `${errors} alerte(s) en échec` : undefined);
+    errors > 0 ? `${errors} alerte(s) en échec` : undefined,
+    (outbreaks ?? []).length > 0 ? new Date().toISOString() : undefined);
   console.log(`[watchlist-alerts] Done — sent: ${sent}, unchanged: ${unchanged}, blockedSkipped: ${blockedSkipped}, errors: ${errors}`);
   return NextResponse.json({ sent, unchanged, blockedSkipped, errors });
 }

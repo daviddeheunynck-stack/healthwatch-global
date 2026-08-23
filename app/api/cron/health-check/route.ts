@@ -23,6 +23,12 @@ interface CronRun {
   status: string;
   rows:   number;
   lastNonZero?: string;
+  // See lib/cron-monitor.ts CronRun — proof the cron's core comparison logic
+  // ran against real candidate data this run (or a carried-forward past run),
+  // independent of lastNonZero. Used below alongside REAL_EVIDENCE so a
+  // correctly-quiet small-audience cron (disease-alerts/watchlist-alerts)
+  // doesn't read as stalled.
+  evaluatedAt?: string;
   error?: string;
 }
 
@@ -827,7 +833,17 @@ async function runHealthCheck(_req: NextRequest, supabase: any) {
     // same day: regional-alerts read as "never" purely because this exact
     // run was its first with rows=0 since the field shipped, while
     // outbreak_alert_log showed real sends within the last hour.
-    const effectiveLastNonZero = run?.lastNonZero ?? (await lastRealDelivery(supabase, name));
+    // Take the most recent of three signals, not just the first that exists:
+    // an actual send (lastNonZero), proof the comparison logic ran against
+    // real candidates even if nothing qualified (evaluatedAt), or the
+    // REAL_EVIDENCE table lookup — any one of the three can be the freshest
+    // depending on a channel's history, and only evaluatedAt tells "checked,
+    // correctly quiet" apart from "broken" for disease-alerts/watchlist-alerts.
+    const candidates = [run?.lastNonZero, run?.evaluatedAt, await lastRealDelivery(supabase, name)]
+      .filter((ts): ts is string => !!ts);
+    const effectiveLastNonZero = candidates.length > 0
+      ? candidates.reduce((latest, ts) => (ts > latest ? ts : latest))
+      : null;
     if (!effectiveLastNonZero) {
       if (!run || (run.rows ?? 0) === 0) {
         // Don't cry wolf for a subscriber who joined after the cron's own

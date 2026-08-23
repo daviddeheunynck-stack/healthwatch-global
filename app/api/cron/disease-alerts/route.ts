@@ -298,8 +298,14 @@ async function runDiseaseAlerts(_req: NextRequest, supabase: SupabaseClient) {
 
   // Was hardcoded "ok" with no failure counter at all — a genuine send
   // failure was invisible both in the response and in cron status.
+  // evaluatedAt: outbreaks.length > 0 proves the escalation-comparison loop
+  // above ran against real candidate data this run, distinct from `sent` —
+  // health-check's delivery-stall check needs this to tell "checked, nothing
+  // qualified" from "broken", since with one subscriber `sent` can correctly
+  // stay 0 for weeks.
   await logCronRun(supabase, "disease-alerts", failed > 0 ? "error" : "ok", sent,
-    failed > 0 ? `${failed} alerte(s) en échec` : undefined);
+    failed > 0 ? `${failed} alerte(s) en échec` : undefined,
+    outbreaks.length > 0 ? new Date().toISOString() : undefined);
   console.log(`[disease-alerts] Done — sent: ${sent}, skipped: ${skipped}, blockedSkipped: ${blockedSkipped}, digestEmailsSent: ${digestEmailsSent}, digestItemsCapped: ${digestItemsCapped}`);
   return NextResponse.json({ sent, skipped, blockedSkipped, emailsSent: userItems.size, digestEmailsSent, digestItemsCapped, failed });
 }

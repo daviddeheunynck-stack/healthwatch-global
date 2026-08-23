@@ -223,6 +223,17 @@ export interface CronRun {
   // push-alerts logged "ok" every day for 49 days with 0 subscribers.
   lastNonZero?: string;
   error?: string;
+  // ISO timestamp of the most recent run where the cron's core comparison
+  // logic executed against real candidate data (e.g. disease-alerts found
+  // active outbreaks matching a subscription and walked its escalation check
+  // against them), regardless of whether anything crossed the alert
+  // threshold. `lastNonZero` alone can't distinguish "genuinely nothing to
+  // send" from "broken" for a small-audience delivery cron — that was exactly
+  // the disease-alerts/watchlist-alerts shape found 2026-08-10 (single
+  // subscriber, real escalation logic, legitimately quiet for weeks) that
+  // motivated STALL_THRESHOLD_OVERRIDE_DAYS in health-check.ts. Carried
+  // forward like lastNonZero when a run has nothing to evaluate this time.
+  evaluatedAt?: string;
 }
 
 /**
@@ -235,6 +246,7 @@ export async function logCronRun(
   status: CronStatus,
   rowsUpdated = 0,
   errorMsg?: string,
+  evaluatedAt?: string,
 ): Promise<void> {
   const { data: prevRow } = await supabase
     .from("site_config")
@@ -242,8 +254,13 @@ export async function logCronRun(
     .eq("key", `cron:run:${cronName}`)
     .maybeSingle();
   let prevLastNonZero: string | undefined;
+  let prevEvaluatedAt: string | undefined;
   if (prevRow?.value) {
-    try { prevLastNonZero = (JSON.parse(prevRow.value) as CronRun).lastNonZero; } catch { /* malformed, ignore */ }
+    try {
+      const prev = JSON.parse(prevRow.value) as CronRun;
+      prevLastNonZero = prev.lastNonZero;
+      prevEvaluatedAt = prev.evaluatedAt;
+    } catch { /* malformed, ignore */ }
   }
 
   const value: CronRun = {
@@ -252,6 +269,7 @@ export async function logCronRun(
     rows: rowsUpdated,
     ...(rowsUpdated > 0 ? { lastNonZero: new Date().toISOString() } : prevLastNonZero ? { lastNonZero: prevLastNonZero } : {}),
     ...(errorMsg ? { error: errorMsg.slice(0, 500) } : {}),
+    ...(evaluatedAt ? { evaluatedAt } : prevEvaluatedAt ? { evaluatedAt: prevEvaluatedAt } : {}),
   };
   await supabase
     .from("site_config")
