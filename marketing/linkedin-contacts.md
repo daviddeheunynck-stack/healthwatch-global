@@ -11,6 +11,59 @@
 **Codeur (freelance)** : David a mentionné vouloir être « plus incisif » sur Codeur également, mais n'a pas encore précisé en quoi — à reconfirmer avec lui plutôt que d'improviser, ce terrain n'étant pas couvert par ce repo/session.
 
 ---
+## 📅 Session interactive — 23/08/2026, ~20h : les 3 DM validés et envoyés, 1 nouveau message traité
+
+**David, en session interactive, après relecture du double-check refait à sa demande** (« double check les 3 DMs ») : « envoie les 3 DM et traite Christophe en faisant le brouillon ». Instruction directe en session = validation explicite ([[feedback_linkedin_dm_validation_required_2026_07_23]]).
+
+### ✅ ENVOYÉ ET CONFIRMÉ — Johan Verheyden (20:03)
+
+Fil rouvert, rien de neuf depuis 14:38, texte identique au brouillon validé. Destinataire revérifié dans le même appel JS que le clic sur Envoyer. Confirmation : éditeur vidé, message visible en fin de fil. **Réponse en fil actif, hors quota froid.**
+
+⚠️ **Il a déjà répondu, à 20:08** : « Mais 99% des chiffres que j'utilise sont basés sur les sitreps ». Non traité ici (hors du périmètre de cette instruction) — à lire et éventuellement répondre à la prochaine session.
+
+### ✅ ENVOYÉ ET CONFIRMÉ — Ifedayo Adetifa (20:09)
+
+🔴 **Incident de rendu rencontré et résolu, nouveau cas du même piège que Pezzoli le 23/08 après-midi.** Après clic sur « Message » depuis son profil, la page de composition (`thread/new/?recipient=...`) s'est chargée avec `document.hidden = true`, `innerWidth/innerHeight/outerWidth = 0` — éditeur présent dans le DOM d'un iframe mais avec `getBoundingClientRect()` à largeur/hauteur nulles, donc non interactif (`execCommand` s'exécute sans erreur mais n'insère rien). **Un nouvel onglet n'a pas suffi à lui seul** (même symptôme reproduit sur l'onglet neuf en visitant à nouveau le profil). **Ce qui a fonctionné** : passer par `/messaging/` → bouton « Rédiger un nouveau message » → recherche du destinataire par nom dans le champ de saisie du document principal, plutôt que par le bouton « Message » du profil qui route vers l'éditeur en iframe. Cette méthode est restée dans le document principal du navigateur, sans iframe, et a fonctionné du premier coup. **À utiliser en priorité la prochaine fois** pour tout premier contact, plutôt que le bouton « Message » du profil.
+⚠️ **Homonyme présent dans les résultats de recherche** (`Ifedayo Adetifa • 3e et +`, sans intitulé) : écarté, sélection faite sur l'option `• 1er` avec l'intitulé complet vérifié (FIND, ex-NCDC).
+Texte identique au brouillon validé, inséré et relu (7 balises `<p>`, 4 paragraphes + 3 vides), destinataire (« Ifedayo Adetifa », pill unique) revérifié dans le même appel JS que le clic. Confirmation : URL basculée vers un fil réel, éditeur vidé, message visible dans la liste des conversations à 20:09.
+
+### ✅ ENVOYÉ ET CONFIRMÉ — Mohamad Fawzy Elnahif (20:10)
+
+Même méthode que ci-dessus (compose principal, pas le bouton profil), efficace du premier coup. Un seul résultat de recherche, 1er degré, intitulé conforme. Texte identique au brouillon validé, destinataire revérifié dans le même appel JS que le clic. Confirmation : éditeur vidé, message visible dans la liste des conversations à 20:10.
+
+**Quota DM à froid : 3/8** (Adetifa, Elnahif ; Pezzoli envoyé plus tôt dans l'après-midi = 1/8 déjà compté ce jour). Johan reste hors quota (réponse en fil actif). **File de validation DM revenue à 0.**
+
+### 🔒 DM EN ATTENTE DE VALIDATION — Christophe VALINGOT DELAURENTI (FR, vouvoiement, fil actif, **AVEC CTA**)
+
+*Traité sur instruction explicite de David : « traite Christophe en faisant le brouillon » — brouillon uniquement, pas d'envoi.*
+
+**Fil relu intégralement (§4), depuis le tout premier message.** David lui avait écrit mardi à 10:30 (épidémiologiste et ingénieur eau/assainissement, message d'accueil après connexion) : « Sur le choléra, je n'ai jamais bien compris à quel moment, pendant une riposte réelle, les données terrain sur l'eau et l'assainissement remontent jusqu'aux équipes qui suivent la courbe épidémique, si elles remontent au bon moment. » Christophe a répondu aujourd'hui à 18:49 :
+
+> Bonjour David ! Sujet intéressant ! Mais souvent ces données remontent, mais pas vers la surveillance - plutôt vers l equipe de management de la reponse. De même que les données de surveillance ne sont pas partagées avec les acteurs WASH... c'est un peu frustrant - mais ça fait partie des joies du système humanitaire !
+
+**C'est une réponse substantielle, pas une politesse** : il répond précisément à la question posée, avec un fait que David ne connaissait pas (les données terrain vont au management de la réponse, pas à la surveillance), et en ajoute un second de son propre chef (la réciproque n'est pas vraie non plus : la surveillance ne redescend pas vers le WASH). **§3 s'applique : au moins un aller-retour substantiel a eu lieu → CTA autorisé**, à condition de l'amener depuis un point déjà présent dans l'échange.
+
+**Double-check (§5), 8 points :**
+1. **Langue** — `langue du fil = FR`, vouvoiement (établi par le message d'ouverture de David) ; `langue du brouillon = FR`, vouvoiement ✅.
+2. **Faits** — aucun chiffre, aucune date. Le brouillon reformule les deux points de Christophe sans les déformer : « le terrain remonte vers la réponse et pas vers la surveillance » et « la surveillance ne redescend pas vers le WASH » sont ses affirmations, pas des inférences ajoutées ✅.
+3. **Mise en forme** — 945 caractères, 3 paragraphes, 0 tiret cadratin, seuls caractères non ASCII = accents français ✅. Relecture du rendu à faire au moment de l'envoi (non fait, brouillon non saisi dans le composeur sur instruction de David).
+4. **Destinataire** — à revérifier dans le même appel JS que le clic, le jour où il sera validé.
+5. **Aucun fait personnel inventé sur David** ✅.
+6. **Règle des deux essais** — sans objet, première version.
+7. **Anti-gabarit** — un moule réel repéré et corrigé : la clôture envisagée en premier, « essai Pro de quatorze jours sans carte bancaire », **existe déjà mot pour mot** dans un brouillon antérieur du même jour (fil non identifié dans ce grep rapide, ligne 3378 du fichier). Remplacée par « L'essai Pro tient sur deux semaines et ne demande aucune carte » (0 occurrence). Vérifiées à 0 par ailleurs : « c'est exactement la pièce qui me manquait », « reconnectés, si jamais ils le sont », « ça se voit comment », « le rapport de fin de mission », « jamais leur croisement », « l'aval des deux remontées », « ce que je tiens réellement » ✅.
+8. **Relecture éditoriale** — le brouillon ne se contente pas d'accuser réception : il reformule la réponse de Christophe pour en faire ressortir la structure (deux blocages, pas un), pose une question de suivi concrète et vérifiable (est-ce qu'un progrès WASH se voit dans la courbe, ou seulement dans un rapport a posteriori), et amène le CTA depuis le point exact que Christophe vient de soulever (HWG ne voit que l'aval publié des deux remontées qu'il décrit). **Aucune affirmation sur les intentions ou compétences de Christophe**, seulement des questions ✅.
+
+**Texte prêt à envoyer :**
+
+> Merci, c'est exactement la pièce qui me manquait, et ce n'est pas un seul manque mais deux, dans des sens opposés. Le terrain remonte vers la réponse et pas vers la surveillance, la surveillance ne redescend pas vers le WASH. Ce que j'agrège ne voit ni l'un ni l'autre, seulement ce qui finit par sortir en bulletin une fois les deux mondes reconnectés, si jamais ils le sont.
+>
+> Ça soulève une question plus précise. Quand une riposte WASH avance bien, ça se voit comment du côté de la courbe épidémique ? Un ralentissement des cas qu'on peut lui attribuer, ou rien de visible tant que le rapport de fin de mission n'est pas écrit ?
+>
+> Sur healthwatch-global.com, un foyer choléra n'existe que par ce que l'OMS ou Africa CDC en publient, donc l'aval des deux remontées dont vous parlez, jamais leur croisement. L'essai Pro tient sur deux semaines et ne demande aucune carte, si ça vous intéresse de voir à quoi ressemble ce que je tiens réellement.
+
+**Statut : 🔒 EN ATTENTE DE VALIDATION DE DAVID.** Réponse en fil actif ; comptera hors quota froid comme les autres réponses en fil actif du jour, une fois envoyé.
+
+---
 ## 📅 Session linkedin-hwg-followup-check-2 — 23/08/2026 (17h, 2e des 2 créneaux après-midi)
 
 **Vérification double déclenchement** : aucune entrée `linkedin-hwg-followup-check-2` datée du 23/08 dans ce fichier ni dans `content-log.md` à l'ouverture → **premier déclenchement de cette routine aujourd'hui**. Les entrées du jour déjà présentes (9h monitoring, reprise interactive, 13h) sont des runs distincts, pas des doublons.
