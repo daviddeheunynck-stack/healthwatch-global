@@ -180,9 +180,20 @@ export async function claimWeeklyDigestSend(
  *
  * Call this IN ADDITION to the cron's own row-keyed claim, after it
  * succeeds — both must pass before sending. Schedule order in vercel.json
- * matters: whichever weekly cron runs first wins the address for the week;
- * weekly-digest is scheduled first (explicit opt-in beats an ambient
- * free-plan nudge), see vercel.json for the reasoning.
+ * matters: whichever weekly cron runs first wins the address for the week.
+ *
+ * L'ordre a change le 2026-08-23 au soir, quand ce verrou est passe de 2 a 4
+ * mailers. Il etait : weekly-digest, weekly-signal, trigger-regional-digest,
+ * send-sitrep-emails — un ordre concu quand seuls les deux premiers
+ * verrouillaient, et ou l'argument tenait entre eux (un opt-in explicite bat
+ * une relance ambiante servie a tous les comptes gratuits).
+ *
+ * Etendu aux quatre, ce meme ordre faisait perdre a un client payant le
+ * rapport qu'il a demande au profit d'une newsletter gratuite. L'ordre est
+ * desormais : send-sitrep-emails (06:50), trigger-regional-digest (07:00),
+ * weekly-digest (07:05), weekly-signal (07:20) — du plus explicitement
+ * demande au plus ambiant, ce qui preserve l'argument d'origine entre digest
+ * et signal tout en placant le payant devant.
  *
  * Fails open (true) on any DB error, same trade-off as its siblings: a
  * missing/broken table degrades to today's un-deduped-across-crons
@@ -204,6 +215,22 @@ export async function claimWeeklyEmailAddress(
     .select("email");
   if (error) {
     console.error(`[cron-monitor] claimWeeklyEmailAddress failed for ${source}/${normalized}/${weekOf}, sending anyway:`, error.message);
+    // Remonte a Sentry en plus du console.error (2026-08-23 au soir).
+    //
+    // Echouer ouvert est le bon choix — un blip DB ne doit pas annuler
+    // l'envoi hebdomadaire de tout le monde. Mais l'appelant ne peut pas
+    // distinguer un verrou ACCORDE d'un verrou INEVALUABLE : les deux
+    // renvoient true. La course se journalise donc "ok" alors que la
+    // protection inter-crons est absente sur ce passage, et les quatre
+    // mailers du lundi peuvent partir non dedupliques sans que rien ne
+    // vire au rouge.
+    //
+    // Sentry ferme cet angle mort au moindre cout : pas de changement de
+    // signature, pas de changement d'appelant, pas de changement de
+    // comportement. Le monitoring reste vert, mais quelqu'un est prevenu.
+    Sentry.captureException(new Error(error.message), {
+      tags: { helper: "claimWeeklyEmailAddress", source },
+    });
     return true;
   }
   return (data?.length ?? 0) > 0;
