@@ -50,7 +50,7 @@
     },
     {
       "path": "/api/cron/sync-endemic-data",
-      "schedule": "30 7 * * *"
+      "schedule": "30 7 * * 1"
     },
     {
       "path": "/api/cron/sync-who-regional",
