@@ -14,7 +14,7 @@
     },
     {
       "path": "/api/cron/data-quality",
-      "schedule": "0 10 * * *"
+      "schedule": "5 10 * * *"
     },
     {
       "path": "/api/cron/sync-brevo-blocklist",
@@ -54,11 +54,11 @@
     },
     {
       "path": "/api/cron/sync-who-regional",
-      "schedule": "0 8 * * *"
+      "schedule": "5 8 * * *"
     },
     {
       "path": "/api/cron/check-mpox-sitrep",
-      "schedule": "0 8 * * *"
+      "schedule": "10 8 * * *"
     },
     {
       "path": "/api/cron/sync-drc-sitrep",
@@ -74,23 +74,23 @@
     },
     {
       "path": "/api/cron/sync-ecdc-threats",
-      "schedule": "0 9 * * *"
+      "schedule": "5 9 * * *"
     },
     {
       "path": "/api/cron/sync-paho-alerts",
-      "schedule": "30 9 * * *"
+      "schedule": "35 9 * * *"
     },
     {
       "path": "/api/cron/sync-africa-cdc",
-      "schedule": "0 9 * * *"
+      "schedule": "10 9 * * *"
     },
     {
       "path": "/api/cron/sync-cdc-notices",
-      "schedule": "0 10 * * *"
+      "schedule": "10 10 * * *"
     },
     {
       "path": "/api/cron/sync-ncdc",
-      "schedule": "0 9 * * *"
+      "schedule": "15 9 * * *"
     },
     {
       "path": "/api/cron/sync-cdc-han",
@@ -110,7 +110,7 @@
     },
     {
       "path": "/api/cron/sync-who-emro",
-      "schedule": "0 9 * * *"
+      "schedule": "20 9 * * *"
     },
     {
       "path": "/api/admin/enrich-admin1",
@@ -130,7 +130,7 @@
     },
     {
       "path": "/api/cron/trigger-tripwires",
-      "schedule": "0,30 * * * *"
+      "schedule": "5,35 * * * *"
     },
     {
       "path": "/api/cron/trigger-subscriber-alerts",
@@ -142,7 +142,7 @@
     },
     {
       "path": "/api/cron/trigger-geofence-alerts",
-      "schedule": "0 */6 * * *"
+      "schedule": "10 */6 * * *"
     },
     {
       "path": "/api/cron/trigger-country-risk-alerts",
@@ -150,7 +150,7 @@
     },
     {
       "path": "/api/cron/trigger-pheic-alerts",
-      "schedule": "0,30 * * * *"
+      "schedule": "20,50 * * * *"
     },
     {
       "path": "/api/cron/trigger-regional-digest",
@@ -166,11 +166,11 @@
     },
     {
       "path": "/api/cron/pilot-follow-up",
-      "schedule": "0 8 * * *"
+      "schedule": "30 8 * * *"
     },
     {
       "path": "/api/cron/pilot-closing-reminder",
-      "schedule": "0 8 * * *"
+      "schedule": "35 8 * * *"
     },
     {
       "path": "/api/cron/disease-coverage",
@@ -198,7 +198,7 @@
     },
     {
       "path": "/api/cron/sync-malaysia-dengue",
-      "schedule": "0 6 * * *"
+      "schedule": "5 6 * * *"
     },
     {
       "path": "/api/cron/signup-canary",

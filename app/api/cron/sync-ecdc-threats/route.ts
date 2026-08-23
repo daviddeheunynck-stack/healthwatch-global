@@ -1,4 +1,4 @@
-// ECDC Epidemiological Update scraper — runs daily at 09:00 UTC (see vercel.json).
+// ECDC Epidemiological Update scraper — runs daily at 09:05 UTC (see vercel.json).
 // Reads the ECDC "Epidemiological update" RSS feed (taxonomy/term/1310), fetches
 // each article page for case numbers and country mentions, and upserts to outbreaks.
 // Replaces the old Threat Assessment Brief HTML scraper (that URL is now 404).

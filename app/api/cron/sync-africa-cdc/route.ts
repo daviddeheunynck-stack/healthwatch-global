@@ -1,4 +1,4 @@
-// Africa CDC News scraper — runs Wed + Sat at 09:00 UTC.
+// Africa CDC News scraper — runs Wed + Sat at 09:10 UTC.
 // Fetches recent news posts from africacdc.org/news-item/ (previously /disease-outbreak-news/),
 // extracts disease / country / cases, and upserts to outbreaks. Covers sub-Saharan
 // African outbreaks (Guinea, Sierra Leone, Burkina Faso, etc.) that may not

@@ -1,4 +1,4 @@
-// Twice-weekly (Wed + Sat 08:00 UTC): detects new WHO Mpox Situation Reports,
+// Twice-weekly (Wed + Sat 08:10 UTC): detects new WHO Mpox Situation Reports,
 // downloads the PDF, extracts global case/death figures, and updates the DB.
 // Falls back to a manual-notification email if PDF parsing fails.
 //

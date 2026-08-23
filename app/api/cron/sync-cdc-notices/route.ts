@@ -1,4 +1,4 @@
-// CDC Travel Health Notices scraper — runs daily at 10:00 UTC.
+// CDC Travel Health Notices scraper — runs daily at 10:10 UTC.
 // Fetches all active CDC Travel Health Notices (Level 1/2/3), extracts
 // disease/country/date from notice pages, and upserts to outbreaks.
 // Covers diseases and countries often absent from WHO DON:

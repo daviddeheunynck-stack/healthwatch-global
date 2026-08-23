@@ -345,7 +345,7 @@ export const CRON_WINDOWS: Record<string, number> = {
   "sync-endemic-data": 26,   // daily
   "sync-usda-aphis":   26,   // daily
   "sync-taiwan-cdc":   26,   // daily 05:00 — NIDSS dengue coverage
-  "sync-malaysia-dengue": 26, // daily 06:00 — iDengue dashboard, replaces a dead one-off manual insert (2026-08-05)
+  "sync-malaysia-dengue": 26, // daily 06:05 — iDengue dashboard, replaces a dead one-off manual insert (2026-08-05)
   // ── Funnel canary ────────────────────────────────────────────────────────────
   // Runs the real public email/password signup once a day and deletes the
   // account immediately after: see app/api/cron/signup-canary/route.ts and
@@ -359,14 +359,14 @@ export const CRON_WINDOWS: Record<string, number> = {
   "watchlist-alerts":  26,   // daily 10:40 (moved from 06:40 on 2026-08-03)
   "push-alerts":       26,   // daily 10:45 (moved from 06:45 on 2026-08-03)
   "disease-alerts":    26,   // daily 10:50 (moved from 06:50 on 2026-08-03)
-  "pilot-follow-up":   26,   // daily 08:00
+  "pilot-follow-up":   26,   // daily 08:30
   // Was scheduled in vercel.json and logging runs (including "error" statuses)
   // since creation, but never registered here — so health-check never looked at
   // it and an outage would have been invisible. Found 2026-07-29 by diffing the
   // cron:run:* keys in site_config against this table; health-check now reports
   // that mismatch itself instead of relying on someone thinking to check.
-  "pilot-closing-reminder": 26,  // daily 08:00
-  "data-quality":      26,   // daily 10:00
+  "pilot-closing-reminder": 26,  // daily 08:35
+  "data-quality":      26,   // daily 10:05
   // ── Billing & retention crons ────────────────────────────────────────────────
   "expire-trials":       26,  // daily — monetization critical
   "onboarding-sequence": 26,  // daily — trial email sequence

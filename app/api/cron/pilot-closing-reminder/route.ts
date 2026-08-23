@@ -1,6 +1,6 @@
 /**
  * Cron: /api/cron/pilot-closing-reminder
- * Schedule: 0 8 * * * (daily 08:00 UTC)
+ * Schedule: 35 8 * * * (daily 08:35 UTC)
  *
  * The /pilot page promises institutional applicants a "45-min closing feedback
  * session" ending in a concrete paid proposal. Nothing previously delivered on

@@ -10,7 +10,7 @@
 //     Surveillance API (xmart-api-public.who.int) — see fetchDengueGlobalSurveillance
 //   - Dengue/Brazil: MANUAL, see note below — never auto-fetch
 //   - Dengue/Philippines: no fetcher yet, absent from the WHO dataset above
-// Schedule: 0 8 * * *  (daily 08:00 UTC — see vercel.json; this comment
+// Schedule: 5 8 * * *  (daily 08:05 UTC — see vercel.json; this comment
 // previously said "Tuesday and Friday", stale since at least 2026-07-19)
 // maxDuration: 300s (Vercel Pro cron; ~120 targets, many skipped early on no-fetcher)
 //
