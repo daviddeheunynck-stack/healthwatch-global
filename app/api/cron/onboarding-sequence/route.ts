@@ -185,8 +185,22 @@ async function runOnboardingSequence(req: NextRequest, supabase: SupabaseClient)
   // recognized as live (see isLiveCronInvocation) — reported for visibility.
   const dryRunRecipients: string[] = [];
 
-  const hasOptedOut = (u: { display_filters: unknown }) =>
-    !!(u.display_filters as Record<string, unknown> | null)?.no_onboarding_emails;
+  // Lit les DEUX drapeaux, pas seulement `no_onboarding_emails` (2026-08-23 au soir).
+  //
+  // Motif : aucune des deux routes de desabonnement n'ecrit `no_onboarding_emails`.
+  // /api/unsubscribe pose `subscriptions.active = false` + `no_weekly_signal` ;
+  // /api/unsubscribe-signal pose `no_weekly_signal` + desactive la ligne
+  // newsletter. Le drapeau que cette route lisait n'etait donc ecrit par
+  // personne : quelqu'un qui s'inscrivait et cliquait « se desinscrire » au
+  // jour 1 recevait quand meme le J+3 et le J+7, tous les jours a 09:16.
+  //
+  // Traiter les deux comme equivalents est le bon choix ici : personne n'a
+  // jamais voulu dire « arrete les emails d'accueil mais continue le signal
+  // hebdomadaire ». Les distinguer etait un accident d'implementation.
+  const hasOptedOut = (u: { display_filters: unknown }) => {
+    const df = u.display_filters as Record<string, unknown> | null;
+    return !!(df?.no_onboarding_emails || df?.no_weekly_signal);
+  };
 
   // ── Send J+1 emails ───────────────────────────────────────────────────────
   for (const user of j1Users ?? []) {
