@@ -1,0 +1,48 @@
+#!/bin/sh
+# Empêche une routine documentaire d'emporter du code applicatif dans son commit.
+#
+# Motif visé, et un seul : un message en docs(...) ou chore(...) — la signature
+# des routines planifiées qui tiennent les journaux marketing — qui stage en même
+# temps des fichiers de app/, components/ ou lib/. C'est ce qui s'est produit le
+# 2026-08-20 (commit 94531b1, "docs(prospecting): run 20/08", contenant en
+# réalité des modifications du bouton de correctifs QC).
+#
+# Volontairement étroit : un commit feat/fix qui touche du code ET sa doc passe
+# sans rien dire. Seul le mélange journal-documentaire + code est refusé, parce
+# que c'est le seul qui publie du code que personne n'a relu.
+#
+# Installation (une fois, par machine) :
+#   git config core.hooksPath .githooks
+#
+# Contournement ponctuel, si le mélange est réellement voulu :
+#   git commit --no-verify
+
+msg_file="$1"
+first_line=$(head -n 1 "$msg_file")
+
+case "$first_line" in
+  docs\(*|chore\(*|docs:*|chore:*) ;;
+  *) exit 0 ;;
+esac
+
+code=$(git diff --cached --name-only | grep -E '^(app|components|lib)/' || true)
+
+[ -z "$code" ] && exit 0
+
+echo "" >&2
+echo "COMMIT REFUSÉ — message documentaire, contenu applicatif." >&2
+echo "" >&2
+echo "  Message : $first_line" >&2
+echo "" >&2
+echo "  Fichiers de code stagés :" >&2
+echo "$code" | sed 's/^/    /' >&2
+echo "" >&2
+echo "  Ces fichiers appartiennent à une autre routine ou à une session en cours," >&2
+echo "  et attendent peut-être une relecture. Voir AGENTS.md, section Commits." >&2
+echo "" >&2
+echo "  Pour continuer sans eux :" >&2
+echo "    git restore --staged $(echo "$code" | tr '\n' ' ')" >&2
+echo "" >&2
+echo "  Si le mélange est voulu : git commit --no-verify" >&2
+echo "" >&2
+exit 1
