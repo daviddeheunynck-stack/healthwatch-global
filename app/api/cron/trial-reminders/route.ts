@@ -137,9 +137,16 @@ async function runTrialReminders(req: NextRequest, supabase: SupabaseClient) {
   // Stripe users (stripe_subscription_id set) receive `customer.subscription.trial_will_end`
   // directly from Stripe 3 days before expiry — the cron would double-email them.
   // Only manual trials (no Stripe subscription) need cron-driven reminders.
-  // This assumes that Dashboard event is actually enabled (see the comment on
-  // the trial_will_end handler in app/api/webhook/route.ts — nothing in this
-  // repo confirms it is). health-check's checkUncoveredStripeTrials (added
+  // VÉRIFIÉ le 2026-08-23 dans le Dashboard Stripe : la destination
+  // "HealthWatch Global Production" (endpoint /api/webhook) écoute six
+  // événements, dont customer.subscription.trial_will_end, aux côtés de
+  // checkout.session.completed, subscription.updated, subscription.deleted,
+  // invoice.payment_succeeded et invoice.payment_failed — soit exactement les
+  // six handlers du webhook. L'hypothèse ci-dessus n'en est donc plus une.
+  // À revérifier si quelqu'un touche à la configuration de l'endpoint : rien
+  // dans le dépôt ne la contraint, et l'exclusion des abonnés Stripe juste
+  // au-dessus en dépend entièrement.
+  // health-check's checkUncoveredStripeTrials (added
   // 2026-08-18) is the safety net if it isn't: it flags any Stripe trial
   // without a payment method regardless of which email path was supposed to
   // reach them.
