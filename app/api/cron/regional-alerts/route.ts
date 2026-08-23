@@ -45,6 +45,7 @@ import { buildOutbreakAlertEmail, buildOutbreakDigestEmail, type DigestItem } fr
 import { buildTrialValueNudgeEmail } from "@/lib/trial-value-nudge-email";
 import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 import * as Sentry from "@sentry/nextjs";
+import { isMailSuppressed } from "@/lib/mail-suppression";
 import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
 import { resolvedPlan } from "@/lib/resolved-plan";
 
@@ -252,7 +253,7 @@ async function runRegionalAlerts(_req: NextRequest, supabase: SupabaseClient) {
     // Get their email, locale, and Slack webhook (from profiles)
     const { data: rawProfiles } = await supabase
       .from("profiles")
-      .select("id, email, plan, trial_ends_at, stripe_subscription_id, alert_locale, slack_webhook_url, is_pilot, pilot_organization, trial_value_email_sent_at, email_blocked_at")
+      .select("id, email, plan, trial_ends_at, stripe_subscription_id, alert_locale, slack_webhook_url, is_pilot, pilot_organization, trial_value_email_sent_at, email_blocked_at, display_filters")
       .in("id", userIds)
       .in("plan", ["starter", "pro", "team", "enterprise"]);
 
@@ -498,7 +499,14 @@ async function runRegionalAlerts(_req: NextRequest, supabase: SupabaseClient) {
         !!profile.trial_ends_at &&
         new Date(profile.trial_ends_at).getTime() > now;
       const firstAlert = enriched.find((item) => item.reason === "new") ?? enriched[0];
-      if (firstAlert && isActiveTrial && !profile.trial_value_email_sent_at) {
+      // Le nudge est un email COMMERCIAL greffe sur une alerte : la personne
+      // s'est abonnee aux alertes de sa region, pas a une relance d'essai. Il
+      // ne consultait aucun drapeau d'opt-out — quelqu'un qui s'etait desinscrit
+      // le recevait quand meme, et il ne porte lui-meme aucun lien de
+      // desabonnement. Classe "marketing" comme le reste : voir
+      // lib/mail-suppression.ts.
+      if (firstAlert && isActiveTrial && !profile.trial_value_email_sent_at
+          && !isMailSuppressed(profile, "marketing")) {
         try {
           const { subject: nudgeSubject, html: nudgeHtml } = buildTrialValueNudgeEmail(
             locale,

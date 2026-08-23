@@ -2,7 +2,8 @@ import { NextRequest } from "next/server";
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { getLocalizedDisease, getLocalizedCountry, dedupeAggregateOutbreakRows } from "@/lib/outbreaks";
 import * as Sentry from "@sentry/nextjs";
-import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
+import { logCronRun, isRealProduction, claimWeeklyEmailAddress, currentWeekOf } from "@/lib/cron-monitor";
+import { getWeeklySuppressionSet } from "@/lib/mail-suppression";
 import { notifyMobile } from "@/lib/mobile-notify";
 
 export const dynamic    = "force-dynamic";
@@ -158,10 +159,21 @@ async function runRegionalDigest(supabase: SupabaseClient) {
   const active = outbreaks ?? [];
   let fired = 0;
   let errors = 0;
+  let suppressed = 0;
+  let claimedElsewhere = 0;
+
+  // Second of the four Monday mailers (07:00). Loses to send-sitrep-emails at
+  // 06:50, wins over weekly-digest and weekly-signal.
+  const weekOf = currentWeekOf();
+  const { emails: suppressionSet, degraded: suppressionDegraded } =
+    await getWeeklySuppressionSet(supabase);
 
   for (const user of users as Array<{ id: string; email: string; alert_locale?: string | null; digest_region: string; display_filters: unknown }>) {
-    const df = user.display_filters as Record<string, unknown> | null;
-    if (df?.no_weekly_signal) continue;
+    // Single suppression source for all four Monday mailers — replaces the
+    // local display_filters.no_weekly_signal check, which this route happened
+    // to share with weekly-signal while weekly-digest ignored it entirely.
+    // See lib/weekly-mail-suppression.ts.
+    if (suppressionSet.has((user.email ?? "").trim().toLowerCase())) { suppressed++; continue; }
     const locale       = user.alert_locale ?? "en";
     const numLocale    = locale === "ar" ? "ar-SA" : locale;
     const isRtl        = locale === "ar";
@@ -179,6 +191,14 @@ async function runRegionalDigest(supabase: SupabaseClient) {
       .slice(0, 10);
     if (!regional.length) continue;
     if (digestedUsers.has(user.id)) continue;
+
+    // Claim the address only once this user is genuinely about to be mailed —
+    // after the empty-region and cooldown skips above. Claiming any earlier
+    // would reserve addresses for users this route then decides not to mail,
+    // silently blocking weekly-digest and weekly-signal for no reason.
+    if (!await claimWeeklyEmailAddress(supabase, user.email, weekOf, "trigger-regional-digest")) {
+      claimedElsewhere++; continue;
+    }
 
     const highCount = regional.filter((o) => o.risk_level === "high").length;
     const pheicList = regional.filter((o) => o.is_pheic);
@@ -258,7 +278,16 @@ async function runRegionalDigest(supabase: SupabaseClient) {
     }
   }
 
-  await logCronRun(supabase, "trigger-regional-digest", errors > 0 ? "error" : "ok", fired,
-    errors > 0 ? `${errors} envoi(s) en échec` : undefined);
-  return Response.json({ fired, errors });
+  const degradedNote = [
+    suppressionDegraded ? "liste de suppression incomplète (une source en échec)" : null,
+    errors > 0 ? `${errors} envoi(s) en échec` : null,
+  ].filter(Boolean).join(" · ");
+  await logCronRun(
+    supabase,
+    "trigger-regional-digest",
+    errors > 0 || suppressionDegraded ? "error" : "ok",
+    fired,
+    degradedNote || undefined,
+  );
+  return Response.json({ fired, errors, suppressed, claimedElsewhere });
 }

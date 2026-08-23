@@ -42,7 +42,7 @@
     },
     {
       "path": "/api/cron/weekly-digest",
-      "schedule": "50 6 * * 1"
+      "schedule": "5 7 * * 1"
     },
     {
       "path": "/api/cron/trial-reminders",
@@ -126,7 +126,7 @@
     },
     {
       "path": "/api/cron/send-sitrep-emails",
-      "schedule": "20 7 * * 1"
+      "schedule": "50 6 * * 1"
     },
     {
       "path": "/api/cron/trigger-tripwires",
@@ -154,7 +154,7 @@
     },
     {
       "path": "/api/cron/trigger-regional-digest",
-      "schedule": "5 7 * * 1"
+      "schedule": "0 7 * * 1"
     },
     {
       "path": "/api/cron/health-check",
@@ -162,7 +162,7 @@
     },
     {
       "path": "/api/cron/weekly-signal",
-      "schedule": "0 7 * * 1"
+      "schedule": "20 7 * * 1"
     },
     {
       "path": "/api/cron/pilot-follow-up",

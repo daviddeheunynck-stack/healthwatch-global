@@ -1,9 +1,12 @@
 // Push-alert cron — runs daily at 10:45 UTC, after the 08:00-10:00 UTC sync
 // crons (moved from 06:45 on 2026-08-03; see regional-alerts' header for why
 // the pre-move schedule ran alerts ahead of same-day sync data).
-// For every outbreak inserted since the last run (push_notified_at IS NULL +
-// created_at within 25 h), sends a localised Web Push to every subscriber and
-// marks the outbreak as notified so it is never re-sent.
+// For every outbreak inserted recently (push_notified_at IS NULL + created_at
+// within 7 days), sends a localised Web Push to every subscriber and marks the
+// outbreak as notified so it is never re-sent.
+// Deliberate scope: one push per outbreak, on first appearance only. An
+// escalation of an already-notified outbreak does NOT re-push — that is what
+// regional-alerts / watchlist-alerts / disease-alerts cover, by email.
 
 import { NextRequest, NextResponse } from "next/server";
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
@@ -55,11 +58,17 @@ export async function GET(req: NextRequest) {
 }
 
 async function runPushAlerts(_req: NextRequest, supabase: SupabaseClient) {
-  // 1. New outbreaks — inserted in the last 25 h, not yet push-notified.
-  //    The 25 h window prevents backfilling historical rows that predate this
-  //    column being added (they all have push_notified_at = NULL but were
-  //    created long ago).
-  const cutoff = new Date(Date.now() - 25 * 60 * 60 * 1000).toISOString();
+  // 1. New outbreaks — inserted recently, not yet push-notified.
+  //    The window prevents backfilling historical rows that predate this column
+  //    being added (they all have push_notified_at = NULL but were created long
+  //    ago). It was 25 h, which made the window exactly one run wide: a single
+  //    failed or skipped run left those rows at push_notified_at = NULL while
+  //    created_at kept ageing, so they fell out for good and no device was ever
+  //    notified — silently, since nothing re-checks them. Widened to 7 days on
+  //    2026-08-23: same backfill protection (the column predates that by far),
+  //    but six consecutive missed runs can now be recovered instead of lost.
+  const PUSH_BACKFILL_WINDOW_MS = 7 * 24 * 60 * 60 * 1000;
+  const cutoff = new Date(Date.now() - PUSH_BACKFILL_WINDOW_MS).toISOString();
   const { data: newOutbreaks, error: obErr } = await supabase
     .from("outbreaks")
     .select("id, disease, disease_en, disease_ar, country, country_en, country_ar, cases, risk_level")
@@ -67,8 +76,15 @@ async function runPushAlerts(_req: NextRequest, supabase: SupabaseClient) {
     .is("push_notified_at", null)
     .gte("created_at", cutoff);
 
+  // A failure here returned 500 without ever calling logCronRun, so the run left
+  // no trace at all: the monitor showed neither "ok" nor "error", just nothing —
+  // indistinguishable from a cron that never fired. Every other exit in this file
+  // logs; this one did not.
   if (obErr) {
     console.error("[push-alerts] fetch outbreaks:", obErr.message);
+    Sentry.captureException(new Error(obErr.message), { tags: { cron: "push-alerts" } });
+    await logCronRun(supabase, "push-alerts", "error", 0,
+      `lecture des foyers en échec : ${obErr.message}`);
     return NextResponse.json({ error: obErr.message }, { status: 500 });
   }
 
@@ -83,8 +99,12 @@ async function runPushAlerts(_req: NextRequest, supabase: SupabaseClient) {
     .from("push_subscriptions")
     .select("id, endpoint, p256dh, auth, locale");
 
+  // Same silent-exit problem as the outbreaks fetch above.
   if (subsErr) {
     console.error("[push-alerts] fetch subscriptions:", subsErr.message);
+    Sentry.captureException(new Error(subsErr.message), { tags: { cron: "push-alerts" } });
+    await logCronRun(supabase, "push-alerts", "error", 0,
+      `lecture des abonnements push en échec : ${subsErr.message}`);
     return NextResponse.json({ error: subsErr.message }, { status: 500 });
   }
 
