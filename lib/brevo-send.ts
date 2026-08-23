@@ -18,8 +18,15 @@ export async function sendBrevoEmail(opts: {
   html: string;
   apiKey: string;
   unsubscribeUrl?: string;
+  // Defaults to the long-standing alerts@ identity every caller used before
+  // this param existed. onboarding-sequence is the only caller that overrides
+  // it (2026-08-23) — see its header comment: healthwatch-global.com is fully
+  // domain-authenticated in Brevo (SPF/DKIM via DNS), so any @healthwatch-
+  // global.com local part sends without extra per-address setup.
+  senderEmail?: string;
+  senderName?: string;
 }): Promise<void> {
-  const { to, subject, html, apiKey, unsubscribeUrl } = opts;
+  const { to, subject, html, apiKey, unsubscribeUrl, senderEmail, senderName } = opts;
   if (!apiKey) throw new Error("BREVO_API_KEY not set");
 
   const headers: Record<string, string> = {};
@@ -33,7 +40,7 @@ export async function sendBrevoEmail(opts: {
     signal: AbortSignal.timeout(10_000),
     headers: { "api-key": apiKey, "Content-Type": "application/json" },
     body: JSON.stringify({
-      sender: { name: "HealthWatch Global", email: "alerts@healthwatch-global.com" },
+      sender: { name: senderName ?? "HealthWatch Global", email: senderEmail ?? "alerts@healthwatch-global.com" },
       to: [{ email: to }],
       subject,
       htmlContent: html,

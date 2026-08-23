@@ -14,8 +14,28 @@ const BREVO_API_KEY    = clean(process.env.BREVO_API_KEY);
 const SUPABASE_URL     = clean(process.env.NEXT_PUBLIC_SUPABASE_URL);
 const SUPABASE_SERVICE = clean(process.env.SUPABASE_SERVICE_ROLE_KEY);
 
+// Distinct sender identity for this cron only (2026-08-23) — 3 of the 6 real
+// unsubscribes in the product's history clicked the mail client's native
+// one-click "Unsubscribe" button on an onboarding email within 0-2 days of
+// signup, and because every Brevo-sent email shared alerts@healthwatch-
+// global.com, that single click also silently killed disease-alerts/
+// watchlist-alerts/regional-alerts delivery for the rest of the trial —
+// invisible until a manual audit (see marketing/product-ideas-log.md,
+// 2026-08-23). Brevo blocks at the (recipient, sender) pair, so a different
+// sender for the lifecycle sequence keeps a reflexive click here from
+// touching the alerts a paying customer actually cares about.
+// healthwatch-global.com is domain-authenticated in Brevo (DNS/SPF/DKIM), so
+// this local part needs no separate per-address verification.
+const ONBOARDING_SENDER_EMAIL = "hello@healthwatch-global.com";
+const ONBOARDING_SENDER_NAME  = "HealthWatch Global";
+
 async function sendEmail(to: string, subject: string, html: string, unsubscribeUrl?: string) {
-  await sendBrevoEmail({ to, subject, html, apiKey: BREVO_API_KEY, unsubscribeUrl });
+  await sendBrevoEmail({
+    to, subject, html, unsubscribeUrl,
+    apiKey: BREVO_API_KEY,
+    senderEmail: ONBOARDING_SENDER_EMAIL,
+    senderName: ONBOARDING_SENDER_NAME,
+  });
 }
 
 export async function GET(req: NextRequest) {
@@ -173,10 +193,18 @@ async function runOnboardingSequence(req: NextRequest, supabase: SupabaseClient)
     if (!user.email || hasOptedOut(user)) continue;
     try {
       const locale = user.locale || "en";
-      const { subject, html, unsubUrl } = buildJ1Email(locale, user.id);
+      // unsubUrl deliberately NOT passed to sendEmail below: no List-Unsubscribe
+      // header on this specific email (2026-08-23). J+1 is the earliest, most
+      // disposable-feeling touch and the one every real one-click unsubscribe
+      // in this product's history has landed on — the in-body "Unsubscribe"
+      // link buildJ1Email already renders (same unsubUrl) still works for
+      // anyone who deliberately wants out, just without the mail client's
+      // native one-click button offering it reflexively. J+3/J+7/J+32 keep
+      // the header as before.
+      const { subject, html } = buildJ1Email(locale, user.id);
       if (isRealProduction && isLive) {
         if (await claimEmailSend(supabase, user.id, "onboarding-sequence", "j1")) {
-          await sendEmail(user.email, subject, html, unsubUrl);
+          await sendEmail(user.email, subject, html);
           j1Sent++;
         } else {
           deduped++;

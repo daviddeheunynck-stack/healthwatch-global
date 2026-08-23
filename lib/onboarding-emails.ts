@@ -553,7 +553,7 @@ function emailShell(locale: string, body: string): string {
 export function buildJ3Email(locale: string, userId: string): { subject: string; html: string; unsubUrl: string } {
   const c = J3_CONTENT[locale] ?? J3_CONTENT.en;
   const dashboardUrl = `https://healthwatch-global.com/${locale}`;
-  const unsubUrl = `https://healthwatch-global.com/api/unsubscribe-signal?id=${encodeURIComponent(userId)}&token=${signUnsubscribeToken(userId)}&locale=${locale}`;
+  const unsubUrl = `https://healthwatch-global.com/api/unsubscribe-onboarding?id=${encodeURIComponent(userId)}&token=${signUnsubscribeToken(userId)}&locale=${locale}`;
 
   const body = `
     <div style="padding:36px 32px;">
@@ -592,7 +592,7 @@ export function buildJ7Email(locale: string, userId: string): { subject: string;
   const c = J7_CONTENT[locale] ?? J7_CONTENT.en;
   const reportsUrl   = `https://healthwatch-global.com/${locale}/reports`;
   const dashboardUrl = `https://healthwatch-global.com/${locale}`;
-  const unsubUrl = `https://healthwatch-global.com/api/unsubscribe-signal?id=${encodeURIComponent(userId)}&token=${signUnsubscribeToken(userId)}&locale=${locale}`;
+  const unsubUrl = `https://healthwatch-global.com/api/unsubscribe-onboarding?id=${encodeURIComponent(userId)}&token=${signUnsubscribeToken(userId)}&locale=${locale}`;
 
   const body = `
     <div style="padding:36px 32px;">
@@ -637,7 +637,7 @@ export function buildJ7Email(locale: string, userId: string): { subject: string;
 export function buildJ12Email(locale: string, userId: string): { subject: string; html: string; unsubUrl: string } {
   const c = J12_CONTENT[locale] ?? J12_CONTENT.en;
   const pricingUrl = `https://healthwatch-global.com/${locale}/pricing`;
-  const unsubUrl = `https://healthwatch-global.com/api/unsubscribe-signal?id=${encodeURIComponent(userId)}&token=${signUnsubscribeToken(userId)}&locale=${locale}`;
+  const unsubUrl = `https://healthwatch-global.com/api/unsubscribe-onboarding?id=${encodeURIComponent(userId)}&token=${signUnsubscribeToken(userId)}&locale=${locale}`;
   const contactUrl = `https://healthwatch-global.com/${locale}/contact`;
   const pilotUrl   = `https://healthwatch-global.com/${locale}/pilot`;
 
@@ -828,7 +828,7 @@ export function buildPilotConversionEmail(locale: string, userId: string, organi
     locale === "fr" ? `Suite du pilote — ${org}` : `Following up on our pilot — ${org}`
   );
   const contactUrl = `https://healthwatch-global.com/${locale}/contact`;
-  const unsubUrl   = `https://healthwatch-global.com/api/unsubscribe-signal?id=${encodeURIComponent(userId)}&token=${signUnsubscribeToken(userId)}&locale=${locale}`;
+  const unsubUrl   = `https://healthwatch-global.com/api/unsubscribe-onboarding?id=${encodeURIComponent(userId)}&token=${signUnsubscribeToken(userId)}&locale=${locale}`;
 
   const body = `
     <div style="padding:36px 32px;">
@@ -873,7 +873,7 @@ export function buildPilotConversionEmail(locale: string, userId: string, organi
 export function buildTrialExpiredEmail(locale: string, userId: string): { subject: string; html: string; unsubUrl: string } {
   const c = TRIAL_EXPIRED_CONTENT[locale] ?? TRIAL_EXPIRED_CONTENT.en;
   const pricingUrl = `https://healthwatch-global.com/${locale}/pricing`;
-  const unsubUrl = `https://healthwatch-global.com/api/unsubscribe-signal?id=${encodeURIComponent(userId)}&token=${signUnsubscribeToken(userId)}&locale=${locale}`;
+  const unsubUrl = `https://healthwatch-global.com/api/unsubscribe-onboarding?id=${encodeURIComponent(userId)}&token=${signUnsubscribeToken(userId)}&locale=${locale}`;
   const contactUrl = `https://healthwatch-global.com/${locale}/contact`;
   const pilotUrl   = `https://healthwatch-global.com/${locale}/pilot`;
 
@@ -924,7 +924,7 @@ export function buildJ1Email(locale: string, userId: string): { subject: string;
   const c = J1_CONTENT[locale] ?? J1_CONTENT.en;
   const alertsUrl = `https://healthwatch-global.com/${locale}/account#regional-alerts`;
   const dashUrl   = `https://healthwatch-global.com/${locale}`;
-  const unsubUrl  = `https://healthwatch-global.com/api/unsubscribe-signal?id=${encodeURIComponent(userId)}&token=${signUnsubscribeToken(userId)}&locale=${locale}`;
+  const unsubUrl  = `https://healthwatch-global.com/api/unsubscribe-onboarding?id=${encodeURIComponent(userId)}&token=${signUnsubscribeToken(userId)}&locale=${locale}`;
 
   const body = `
     <div style="padding:36px 32px;">
