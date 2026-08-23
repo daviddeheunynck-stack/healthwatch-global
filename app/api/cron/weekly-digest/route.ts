@@ -3,7 +3,7 @@ import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { buildDigestEmail } from "@/lib/digest-email";
 import type { Outbreak } from "@/lib/outbreaks";
 import * as Sentry from "@sentry/nextjs";
-import { logCronRun, isRealProduction, claimWeeklyDigestSend, currentWeekOf } from "@/lib/cron-monitor";
+import { logCronRun, isRealProduction, claimWeeklyDigestSend, claimWeeklyEmailAddress, currentWeekOf } from "@/lib/cron-monitor";
 import { getBlockedEmailSet } from "@/lib/brevo-blocklist";
 import { sendBrevoEmail } from "@/lib/brevo-send";
 
@@ -119,6 +119,7 @@ async function runWeeklyDigest(_req: NextRequest, supabase: SupabaseClient) {
   let skippedNoKey = 0;
   let blockedSkipped = 0;
   let alreadySent  = 0;
+  let crossSentSkipped = 0;
 
   // One claim per (subscriber, calendar week): see claimWeeklyDigestSend's
   // doc in lib/cron-monitor.ts. Computed once per run so every subscriber in
@@ -131,6 +132,11 @@ async function runWeeklyDigest(_req: NextRequest, supabase: SupabaseClient) {
     // must see the claim already taken, not an empty log it can still win.
     const claimed = await claimWeeklyDigestSend(supabase, sub.id, weekOf);
     if (!claimed) { alreadySent++; continue; }
+    // Cross-cron: this address may also be a weekly-signal profile. Scheduled
+    // first in vercel.json specifically so this claim normally wins it — see
+    // claimWeeklyEmailAddress's doc in lib/cron-monitor.ts.
+    const emailClaimed = await claimWeeklyEmailAddress(supabase, sub.email, weekOf, "weekly-digest");
+    if (!emailClaimed) { crossSentSkipped++; continue; }
     try {
       const locale = sub.locale || "en";
       const region = sub.region || "allRegions";
@@ -165,6 +171,6 @@ async function runWeeklyDigest(_req: NextRequest, supabase: SupabaseClient) {
   // failure still logged "ok".
   await logCronRun(supabase, "weekly-digest", skippedNoKey > 0 || failed > 0 ? "error" : "ok", sent,
     failed > 0 ? `${failed} envoi(s) en échec` : undefined);
-  console.log(`[weekly-digest] Done, ${sent} sent, ${failed} failed, ${skippedNoKey} skipped (no key), ${blockedSkipped} blocked, ${alreadySent} already sent this week, ${subscribers.length} total.`);
-  return NextResponse.json({ sent, failed, skippedNoKey, blockedSkipped, alreadySent, total: subscribers.length });
+  console.log(`[weekly-digest] Done, ${sent} sent, ${failed} failed, ${skippedNoKey} skipped (no key), ${blockedSkipped} blocked, ${alreadySent} already sent this week, ${crossSentSkipped} already sent via weekly-signal, ${subscribers.length} total.`);
+  return NextResponse.json({ sent, failed, skippedNoKey, blockedSkipped, alreadySent, crossSentSkipped, total: subscribers.length });
 }

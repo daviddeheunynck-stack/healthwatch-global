@@ -1,4 +1,5 @@
-// Twice-weekly (Wed + Sat 08:00 UTC): detects new WHO Mpox Situation Reports,
+// Schedule: 10 8 * * *  (fires daily via Vercel; the handler below no-ops except Wed/Sat)
+// Twice-weekly (Wed + Sat 08:10 UTC): detects new WHO Mpox Situation Reports,
 // downloads the PDF, extracts global case/death figures, and updates the DB.
 // Falls back to a manual-notification email if PDF parsing fails.
 //

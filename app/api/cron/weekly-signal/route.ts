@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import * as Sentry from "@sentry/nextjs";
-import { logCronRun, isRealProduction, claimEmailSend, currentWeekOf } from "@/lib/cron-monitor";
+import { logCronRun, isRealProduction, claimEmailSend, claimWeeklyEmailAddress, currentWeekOf } from "@/lib/cron-monitor";
 import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 import { signUnsubscribeToken } from "@/lib/unsubscribe-token";
 import { sendBrevoEmail } from "@/lib/brevo-send";
@@ -223,6 +223,7 @@ async function runWeeklySignal(_req: NextRequest, supabase: SupabaseClient) {
   let failed       = 0;
   let skippedNoKey = 0;
   let alreadySent  = 0;
+  let crossSentSkipped = 0;
 
   // Real profiles rows (unlike weekly-digest's standalone subscriptions), so
   // this reuses lifecycle_email_log/claimEmailSend directly, keyed on the
@@ -241,6 +242,11 @@ async function runWeeklySignal(_req: NextRequest, supabase: SupabaseClient) {
     // claim already taken, not an empty log it can still win.
     const claimed = await claimEmailSend(supabase, user.id, "weekly-signal", weekOf);
     if (!claimed) { alreadySent++; continue; }
+    // Cross-cron: this address may also be a weekly-digest subscriber, which
+    // runs first in vercel.json and normally wins the claim for the week —
+    // see claimWeeklyEmailAddress's doc in lib/cron-monitor.ts.
+    const emailClaimed = await claimWeeklyEmailAddress(supabase, user.email, weekOf, "weekly-signal");
+    if (!emailClaimed) { crossSentSkipped++; continue; }
 
     const locale = user.locale ?? "en";
     const unsubUrl = `https://healthwatch-global.com/api/unsubscribe-signal?id=${encodeURIComponent(user.id)}&token=${signUnsubscribeToken(user.id)}&locale=${locale}`;
@@ -269,5 +275,5 @@ async function runWeeklySignal(_req: NextRequest, supabase: SupabaseClient) {
   // catch above, was tracked but never consulted here.
   await logCronRun(supabase, "weekly-signal", skippedNoKey > 0 || failed > 0 ? "error" : "ok", sent,
     failed > 0 ? `${failed} envoi(s) en échec` : undefined);
-  return NextResponse.json({ sent, failed, skippedNoKey, alreadySent, outbreaks: outbreaks.length });
+  return NextResponse.json({ sent, failed, skippedNoKey, alreadySent, crossSentSkipped, outbreaks: outbreaks.length });
 }

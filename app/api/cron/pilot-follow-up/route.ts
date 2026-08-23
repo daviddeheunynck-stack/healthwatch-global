@@ -1,6 +1,6 @@
 /**
  * Cron: /api/cron/pilot-follow-up
- * Schedule: 0 8 * * * (daily 08:00 UTC)
+ * Schedule: 30 8 * * * (daily 08:30 UTC)
  *
  * Targets Pro users whose account was activated 7.5–8.5 days ago.
  * Sends a personalized weekly signal email filtered to their saved region.

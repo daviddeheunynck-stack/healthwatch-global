@@ -1,4 +1,5 @@
-// PAHO scraper — runs daily at 09:30 UTC (see vercel.json: "30 9 * * *"; the
+// Schedule: 35 9 * * *
+// PAHO scraper — runs daily at 09:35 UTC (see vercel.json: "35 9 * * *"; the
 // old "every Tuesday" comment here predated this file and was stale). Two
 // independent sources:
 //

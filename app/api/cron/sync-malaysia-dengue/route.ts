@@ -25,7 +25,7 @@
 // number we know is wrong, this cron only ever touches `cases`/`date`, leaving
 // `deaths` at its last manually-confirmed value.
 //
-// Schedule: 0 6 * * * (daily) — cheap single-page fetch, same cadence as the
+// Schedule: 5 6 * * * (daily) — cheap single-page fetch, same cadence as the
 // other national single-country crons here (sync-taiwan-cdc).
 //
 // Malaysia's Ministry of Health dashboard is a genuine primary government

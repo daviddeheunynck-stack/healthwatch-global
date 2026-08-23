@@ -1,0 +1,33 @@
+#!/bin/sh
+# Empêche vercel.json et un commentaire "Schedule: <cron-expr>" de diverger
+# silencieusement.
+#
+# Trouvé deux fois le même jour (2026-08-23) : fix(crons) 313117a corrige des
+# horaires en-tête devenus faux après un changement de vercel.json, puis
+# David redemande explicitement un "registre canonique" plutôt qu'un
+# troisième passage à la main. Le script scripts/check-cron-schedule.mjs
+# rapproche chaque commentaire "Schedule: X" (route files + CRON_WINDOWS
+# dans lib/cron-monitor.ts) de la vraie valeur dans vercel.json — la seule
+# source que Vercel lit réellement pour enregistrer les Cron Jobs.
+#
+# Ne bloque que si ce commit touche réellement vercel.json ou un fichier
+# potentiellement taggé — pas un frein systématique sur tout le reste.
+#
+# Contournement ponctuel, si le mélange est réellement voulu :
+#   git commit --no-verify
+
+staged=$(git diff --cached --name-only)
+
+echo "$staged" | grep -qE '^(vercel\.json|app/api/(cron|admin)/.*/route\.ts|lib/cron-monitor\.ts)$' || exit 0
+
+node scripts/check-cron-schedule.mjs
+status=$?
+
+if [ "$status" -ne 0 ]; then
+  echo "" >&2
+  echo "COMMIT REFUSÉ — voir le détail ci-dessus. Corrige le commentaire (ou vercel.json)," >&2
+  echo "ou force avec : git commit --no-verify" >&2
+  echo "" >&2
+fi
+
+exit $status

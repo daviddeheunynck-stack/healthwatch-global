@@ -169,6 +169,47 @@ export async function claimWeeklyDigestSend(
 }
 
 /**
+ * Cross-cron sibling of claimWeeklyDigestSend/claimEmailSend: claims a
+ * (lowercased email, calendar week) pair shared across ALL weekly sends, not
+ * just one cron's own rows. weekly-digest (subscriptions.email, explicit
+ * opt-in newsletter) and weekly-signal (profiles.email, every free-plan
+ * account) draw from two separate tables with no shared row id, so the same
+ * address can be present in both — each cron's own row-keyed claim can't see
+ * that, only that its own row hasn't been claimed yet. Found 2026-08-23: an
+ * address in both tables got both emails, ~10 minutes apart, every Monday.
+ *
+ * Call this IN ADDITION to the cron's own row-keyed claim, after it
+ * succeeds — both must pass before sending. Schedule order in vercel.json
+ * matters: whichever weekly cron runs first wins the address for the week;
+ * weekly-digest is scheduled first (explicit opt-in beats an ambient
+ * free-plan nudge), see vercel.json for the reasoning.
+ *
+ * Fails open (true) on any DB error, same trade-off as its siblings: a
+ * missing/broken table degrades to today's un-deduped-across-crons
+ * behavior, not to silently blocking the weekly send.
+ */
+export async function claimWeeklyEmailAddress(
+  supabase: SupabaseClient,
+  email: string,
+  weekOf: string,
+  source: string,
+): Promise<boolean> {
+  const normalized = email.trim().toLowerCase();
+  const { data, error } = await supabase
+    .from("weekly_email_send_log")
+    .upsert(
+      { email: normalized, week_of: weekOf, source },
+      { onConflict: "email,week_of", ignoreDuplicates: true },
+    )
+    .select("email");
+  if (error) {
+    console.error(`[cron-monitor] claimWeeklyEmailAddress failed for ${source}/${normalized}/${weekOf}, sending anyway:`, error.message);
+    return true;
+  }
+  return (data?.length ?? 0) > 0;
+}
+
+/**
  * Monday (UTC) of the current calendar week, as "YYYY-MM-DD": the dedup key
  * for claimWeeklyDigestSend. Deliberately computed from wall-clock "now"
  * rather than passed in: a real Monday 07:00 UTC trigger and a same-day
@@ -301,10 +342,16 @@ export const CRON_WINDOWS: Record<string, number> = {
   "check-mpox-sitrep": 26,   // daily
   "sync-paho-alerts":  26,   // daily
   "sync-ecdc-threats": 26,   // daily
-  "sync-endemic-data": 26,   // daily
+  // Window raised from 26 (daily-shaped) to 200 (weekly-shaped) 2026-08-23: the route's own
+  // header says "Weekly sync" / "Monday 07:30 UTC", matching its slow-moving national-bulletin
+  // siblings below (sync-pacific-surveillance/wpro-dengue/samoa-dengue), but vercel.json had it
+  // firing daily — 7x more than intended against 3 national government sources. Found by
+  // scripts/check-cron-schedule.mjs's first run; fixed in vercel.json, not here, since the
+  // comment's stated intent looks right and vercel.json looks like the thing that drifted.
+  "sync-endemic-data": 200,  // Schedule: 30 7 * * 1
   "sync-usda-aphis":   26,   // daily
   "sync-taiwan-cdc":   26,   // daily 05:00 — NIDSS dengue coverage
-  "sync-malaysia-dengue": 26, // daily 06:00 — iDengue dashboard, replaces a dead one-off manual insert (2026-08-05)
+  "sync-malaysia-dengue": 26, // Schedule: 5 6 * * * — iDengue dashboard, replaces a dead one-off manual insert (2026-08-05)
   // ── Funnel canary ────────────────────────────────────────────────────────────
   // Runs the real public email/password signup once a day and deletes the
   // account immediately after: see app/api/cron/signup-canary/route.ts and
@@ -318,14 +365,14 @@ export const CRON_WINDOWS: Record<string, number> = {
   "watchlist-alerts":  26,   // daily 10:40 (moved from 06:40 on 2026-08-03)
   "push-alerts":       26,   // daily 10:45 (moved from 06:45 on 2026-08-03)
   "disease-alerts":    26,   // daily 10:50 (moved from 06:50 on 2026-08-03)
-  "pilot-follow-up":   26,   // daily 08:00
+  "pilot-follow-up":   26,   // Schedule: 30 8 * * *
   // Was scheduled in vercel.json and logging runs (including "error" statuses)
   // since creation, but never registered here — so health-check never looked at
   // it and an outage would have been invisible. Found 2026-07-29 by diffing the
   // cron:run:* keys in site_config against this table; health-check now reports
   // that mismatch itself instead of relying on someone thinking to check.
-  "pilot-closing-reminder": 26,  // daily 08:00
-  "data-quality":      26,   // daily 10:00
+  "pilot-closing-reminder": 26,  // Schedule: 35 8 * * *
+  "data-quality":      26,   // Schedule: 5 10 * * *
   // ── Billing & retention crons ────────────────────────────────────────────────
   "expire-trials":       26,  // daily — monetization critical
   "onboarding-sequence": 26,  // daily — trial email sequence
