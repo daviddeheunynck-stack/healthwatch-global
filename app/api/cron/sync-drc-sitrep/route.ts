@@ -1,4 +1,5 @@
-// Daily (07:00 UTC): originally detected new WHO AFRO Ebola DRC situation reports via
+// Daily (07:12 UTC, moved off 07:00 on 2026-08-23 — see vercel.json): originally
+// detected new WHO AFRO Ebola DRC situation reports via
 // ReliefWeb, downloaded the PDF, extracted DRC cumulative case/death figures, and updated
 // the DB. Sitrep detection is now permanently disabled (see fetchLatestSitrep — legal,
 // ReliefWeb ToS) so steps 2+ never run; only the Step-1 "Ebola DRC row missing" safety

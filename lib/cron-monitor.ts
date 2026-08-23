@@ -169,8 +169,83 @@ export async function claimWeeklyDigestSend(
 }
 
 /**
+ * Result of a cross-route weekly claim. Unlike claimEmailSend and
+ * claimWeeklyDigestSend, which return a bare boolean, this one has to report
+ * *why* it is letting a send through: those two guard against a duplicate of
+ * the same email, so failing open costs one extra copy. This one is the only
+ * thing standing between a reader and four different emails in half an hour,
+ * so a claim that could not be evaluated is a materially different state from
+ * a claim that was granted, and the caller has to be able to tell them apart.
+ *
+ * - `granted`  — may this route send to this address?
+ * - `degraded` — the claim could not be evaluated (DB error). The send goes
+ *                ahead unguarded; the caller MUST log the run as "error" so the
+ *                monitor turns red, because for that run the cross-route
+ *                protection is simply absent.
+ */
+export interface WeeklyAddressClaim {
+  granted: boolean;
+  degraded: boolean;
+}
+
+/**
+ * Atomically claims an email address for one calendar week, ACROSS all four
+ * Monday-morning mailers (send-sitrep-emails, trigger-regional-digest,
+ * weekly-digest, weekly-signal). The first route to claim wins; the rest see
+ * the row taken and skip.
+ *
+ * Keyed on the address, not on any per-route id, because the address is the
+ * only thing the four audiences have in common: weekly-digest reads
+ * `subscriptions` (a standalone newsletter table with no join to profiles and
+ * no plan filter), weekly-signal and trigger-regional-digest read `profiles`,
+ * send-sitrep-emails reads free-text `scheduled_reports.recipients`. Each
+ * already deduped within its own key space and none of that helped — one
+ * person could be a row in three of them. See
+ * supabase/migrations/20260823120000_weekly_email_claim.sql.
+ *
+ * "First to claim wins" only produces the intended priority (sitrep > regional
+ * digest > digest > signal) because vercel.json runs the four in that order.
+ * An email sent at 06:50 cannot be recalled, so no amount of ranking logic here
+ * could fix a schedule in the wrong order — the ordering IS the priority.
+ *
+ * Call immediately before the send and before the route's own existing claim,
+ * same reasoning as claimEmailSend: claiming first means two racing invocations
+ * cannot both see an empty log. A send that then fails leaves the address
+ * claimed for the week and no lower-priority route will pick it up — the same
+ * trade-off the other two helpers already make, chosen for the same reason.
+ *
+ * Fails open (granted: true, degraded: true) on any DB error, including the
+ * table not existing yet: a missing migration should degrade to today's
+ * un-deduped behaviour rather than silently cancelling every Monday email. One
+ * week of duplicates you can see beats one week of silence you cannot.
+ */
+export async function claimWeeklyAddress(
+  supabase: SupabaseClient,
+  email: string,
+  weekOf: string,
+  cronName: string,
+): Promise<WeeklyAddressClaim> {
+  const key = email.trim().toLowerCase();
+  if (!key) return { granted: false, degraded: false };
+
+  const { data, error } = await supabase
+    .from("weekly_email_claim")
+    .upsert(
+      { email: key, week_of: weekOf, cron_name: cronName },
+      { onConflict: "email,week_of", ignoreDuplicates: true },
+    )
+    .select("email");
+  if (error) {
+    console.error(`[cron-monitor] claimWeeklyAddress failed for ${cronName}/${key}/${weekOf}, sending anyway:`, error.message);
+    return { granted: true, degraded: true };
+  }
+  return { granted: (data?.length ?? 0) > 0, degraded: false };
+}
+
+/**
  * Monday (UTC) of the current calendar week, as "YYYY-MM-DD": the dedup key
- * for claimWeeklyDigestSend. Deliberately computed from wall-clock "now"
+ * for claimWeeklyDigestSend and claimWeeklyAddress. Deliberately computed from
+ * wall-clock "now"
  * rather than passed in: a real Monday 07:00 UTC trigger and a same-day
  * manual re-invocation both land in the same week and must collide.
  */

@@ -1,6 +1,13 @@
-// Twice-weekly (Wed + Sat 08:00 UTC): detects new WHO Mpox Situation Reports,
+// Daily (08:08 UTC): detects new WHO Mpox Situation Reports,
 // downloads the PDF, extracts global case/death figures, and updates the DB.
 // Falls back to a manual-notification email if PDF parsing fails.
+//
+// NOTE 2026-08-23 — this header said "Twice-weekly (Wed + Sat 08:00 UTC)" but
+// vercel.json has run it as "0 8 * * *", i.e. every day, and there is no
+// day-of-week guard anywhere in this file. The comment was corrected to match
+// what actually happens; nobody has decided which of the two is right. If the
+// intent really is Wed + Sat, the fix is in vercel.json ("8 8 * * 3,6"), not
+// here. Moved off 08:00 the same day, where five daily jobs shared the minute.
 //
 // Reads WHO's own global sitrep PDF directly (not a scrape of a news listing),
 // so it can write onto rows locked at source_priority=10 (ceiling raised

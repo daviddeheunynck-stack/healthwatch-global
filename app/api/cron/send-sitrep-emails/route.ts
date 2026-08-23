@@ -9,9 +9,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import * as Sentry from "@sentry/nextjs";
-import { logCronRun, isRealProduction, currentWeekOf } from "@/lib/cron-monitor";
+import { logCronRun, isRealProduction, claimWeeklyAddress, currentWeekOf } from "@/lib/cron-monitor";
 import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
-import { getBlockedEmailSet } from "@/lib/brevo-blocklist";
+import { getWeeklySuppressionSet } from "@/lib/mail-suppression";
 
 export const dynamic = "force-dynamic";
 
@@ -202,11 +202,18 @@ async function runSendSitrepEmails(_req: NextRequest, supabase: SupabaseClient) 
   // every recipient. Found 2026-08-04. weekOfIso is this week's Monday
   // 00:00 UTC: a report last sent before that boundary is eligible again,
   // one at or after it is not.
-  const weekOfIso = `${currentWeekOf()}T00:00:00.000Z`;
+  const weekOf    = currentWeekOf();
+  const weekOfIso = `${weekOf}T00:00:00.000Z`;
 
-  // report.recipients is a free-text list (not always a profiles row) —
-  // matched against the full Brevo blocklist cache. See lib/brevo-blocklist.ts.
-  const blockedEmails = await getBlockedEmailSet(supabase);
+  let claimedElsewhere = 0;
+  let claimDegraded = false;
+
+  // report.recipients is a free-text list (not always a profiles row). Was
+  // matched against the Brevo blocklist alone; now against the union of all
+  // four opt-out signals, so a recipient who unsubscribed anywhere is dropped
+  // here too. See lib/weekly-mail-suppression.ts.
+  const { emails: suppressionSet, degraded: suppressionDegraded } =
+    await getWeeklySuppressionSet(supabase);
 
   for (const report of reports) {
     // Check user plan
@@ -217,7 +224,7 @@ async function runSendSitrepEmails(_req: NextRequest, supabase: SupabaseClient) 
 
     const maxRecipients = PLAN_LIMITS[plan] ?? 1;
     const recipients = (report.recipients as string[])
-      .filter((e) => !blockedEmails.has(e.toLowerCase()))
+      .filter((e) => !suppressionSet.has(e.trim().toLowerCase()))
       .slice(0, maxRecipients);
     if (recipients.length === 0) { blockedSkipped++; continue; }
 
@@ -239,6 +246,23 @@ async function runSendSitrepEmails(_req: NextRequest, supabase: SupabaseClient) 
       continue;
     }
 
+    // Cross-route claim, one per recipient address. This route runs first of
+    // the four Monday mailers (06:50) precisely so that a paid report reserves
+    // its recipients before the two digests and the free signal can take them —
+    // an email sent earlier cannot be recalled, so priority has to be enforced
+    // by running order, not by ranking logic here.
+    // Within this run it also stops one address listed in several active
+    // reports from receiving several sitreps: the old claim is keyed on
+    // report.id, which never saw that.
+    const claimedRecipients: string[] = [];
+    for (const address of recipients) {
+      const addressClaim = await claimWeeklyAddress(supabase, address, weekOf, "send-sitrep-emails");
+      if (addressClaim.degraded) claimDegraded = true;
+      if (addressClaim.granted) claimedRecipients.push(address);
+      else claimedElsewhere++;
+    }
+    if (claimedRecipients.length === 0) continue;
+
     const locale: string = report.locale || "en";
     const html    = buildEmailHtml(sorted, locale, today);
     const subject = SUBJECT[locale] ?? SUBJECT.en;
@@ -251,14 +275,14 @@ async function runSendSitrepEmails(_req: NextRequest, supabase: SupabaseClient) 
           headers: { "api-key": BREVO_KEY, "Content-Type": "application/json" },
           body: JSON.stringify({
             sender:      { name: "HealthWatch Global", email: "alerts@healthwatch-global.com" },
-            to:          recipients.map((e) => ({ email: e })),
+            to:          claimedRecipients.map((e) => ({ email: e })),
             subject,
             htmlContent: html,
           }),
         });
         if (!res.ok) throw new Error(`Brevo ${res.status}: ${await res.text()}`);
       }
-      totalSent += recipients.length;
+      totalSent += claimedRecipients.length;
     } catch (err) {
       errors++;
       console.error(`[send-sitrep-emails] Failed for report ${report.id}:`, err);
@@ -266,7 +290,17 @@ async function runSendSitrepEmails(_req: NextRequest, supabase: SupabaseClient) 
     }
   }
 
-  await logCronRun(supabase, "send-sitrep-emails", errors > 0 ? "error" : "ok", totalSent,
-    errors > 0 ? `${errors} rapport(s) en échec` : undefined);
-  return NextResponse.json({ ok: true, sent: totalSent, blockedSkipped, alreadySent, errors });
+  const degradedNote = [
+    suppressionDegraded ? "liste de suppression incomplète (une source en échec)" : null,
+    claimDegraded ? "verrou hebdomadaire indisponible — envois non dédupliqués entre routes" : null,
+    errors > 0 ? `${errors} rapport(s) en échec` : null,
+  ].filter(Boolean).join(" · ");
+  await logCronRun(
+    supabase,
+    "send-sitrep-emails",
+    errors > 0 || suppressionDegraded || claimDegraded ? "error" : "ok",
+    totalSent,
+    degradedNote || undefined,
+  );
+  return NextResponse.json({ ok: true, sent: totalSent, blockedSkipped, claimedElsewhere, alreadySent, errors });
 }

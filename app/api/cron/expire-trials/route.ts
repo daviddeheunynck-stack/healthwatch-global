@@ -1,5 +1,7 @@
 // Cron: expire free trials that were never converted to a Stripe subscription.
-// Runs daily at 10:00 UTC (configured in vercel.json alongside other crons).
+// Runs daily at 10:05 UTC (configured in vercel.json alongside other crons;
+// moved off 10:00 on 2026-08-23, where it started on the same minute as
+// data-quality and sync-cdc-notices). Still well ahead of the 10:30 alert chain.
 // Only affects users with trial_ends_at < now AND stripe_subscription_id IS NULL.
 // Users with a Stripe subscription are managed exclusively by the Stripe webhook.
 

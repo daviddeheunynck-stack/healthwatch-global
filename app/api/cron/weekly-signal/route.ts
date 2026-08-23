@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import * as Sentry from "@sentry/nextjs";
-import { logCronRun, isRealProduction, claimEmailSend, currentWeekOf } from "@/lib/cron-monitor";
+import { logCronRun, isRealProduction, claimEmailSend, claimWeeklyAddress, currentWeekOf } from "@/lib/cron-monitor";
+import { getWeeklySuppressionSet } from "@/lib/mail-suppression";
 import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 import { signUnsubscribeToken } from "@/lib/unsubscribe-token";
 import { sendBrevoEmail } from "@/lib/brevo-send";
@@ -223,6 +224,15 @@ async function runWeeklySignal(_req: NextRequest, supabase: SupabaseClient) {
   let failed       = 0;
   let skippedNoKey = 0;
   let alreadySent  = 0;
+  let suppressed   = 0;
+  let claimedElsewhere = 0;
+
+  // Last of the four Monday mailers (07:20), so by design this one loses every
+  // address the three higher-priority routes already claimed. A big
+  // `claimedElsewhere` count here is the system working, not a fault.
+  const { emails: suppressionSet, degraded: suppressionDegraded } =
+    await getWeeklySuppressionSet(supabase);
+  let claimDegraded = false;
 
   // Real profiles rows (unlike weekly-digest's standalone subscriptions), so
   // this reuses lifecycle_email_log/claimEmailSend directly, keyed on the
@@ -234,8 +244,18 @@ async function runWeeklySignal(_req: NextRequest, supabase: SupabaseClient) {
 
   for (const user of users) {
     if (!user.email) continue;
-    const filters = user.display_filters as Record<string, unknown> | null;
-    if (filters?.no_weekly_signal) continue;
+
+    // Single suppression source for all four Monday mailers. Replaces the
+    // local display_filters.no_weekly_signal check, which this route honoured
+    // and weekly-digest ignored — the same reader could unsubscribe here and
+    // keep receiving there. See lib/weekly-mail-suppression.ts.
+    if (suppressionSet.has(user.email.trim().toLowerCase())) { suppressed++; continue; }
+
+    // Cross-route claim first: if a higher-priority mailer already wrote to
+    // this address this week, stop here without burning the per-user claim.
+    const addressClaim = await claimWeeklyAddress(supabase, user.email, weekOf, "weekly-signal");
+    if (addressClaim.degraded) claimDegraded = true;
+    if (!addressClaim.granted) { claimedElsewhere++; continue; }
 
     // Claim before send: a second invocation racing this one must see the
     // claim already taken, not an empty log it can still win.
@@ -267,7 +287,20 @@ async function runWeeklySignal(_req: NextRequest, supabase: SupabaseClient) {
 
   // Was only checking skippedNoKey — `failed`, incremented per-user in the
   // catch above, was tracked but never consulted here.
-  await logCronRun(supabase, "weekly-signal", skippedNoKey > 0 || failed > 0 ? "error" : "ok", sent,
-    failed > 0 ? `${failed} envoi(s) en échec` : undefined);
-  return NextResponse.json({ sent, failed, skippedNoKey, alreadySent, outbreaks: outbreaks.length });
+  // A degraded suppression list or claim is also an error: the run may have
+  // sent correctly, but it did so without the guarantee it is supposed to
+  // provide, and that must not read as a healthy run.
+  const degradedNote = [
+    suppressionDegraded ? "liste de suppression incomplète (une source en échec)" : null,
+    claimDegraded ? "verrou hebdomadaire indisponible — envois non dédupliqués entre routes" : null,
+    failed > 0 ? `${failed} envoi(s) en échec` : null,
+  ].filter(Boolean).join(" · ");
+  await logCronRun(
+    supabase,
+    "weekly-signal",
+    skippedNoKey > 0 || failed > 0 || suppressionDegraded || claimDegraded ? "error" : "ok",
+    sent,
+    degradedNote || undefined,
+  );
+  return NextResponse.json({ sent, failed, skippedNoKey, alreadySent, suppressed, claimedElsewhere, outbreaks: outbreaks.length });
 }

@@ -2,7 +2,10 @@
  * Cron: /api/cron/pilot-follow-up
  * Schedule: 0 8 * * * (daily 08:00 UTC)
  *
- * Targets Pro users whose account was activated 7.5–8.5 days ago.
+ * Targets PILOT accounts (is_pilot = true) activated 7.5-8.5 days ago.
+ * Jusqu'au 2026-08-23 la requete n'avait aucun filtre `is_pilot` malgre cette
+ * ligne : tous les essais recevaient cet email, un jour apres le J+7
+ * d'onboarding-sequence.
  * Sends a personalized weekly signal email filtered to their saved region.
  * Goal: give pilots a concrete reason to return before they go silent.
  */
@@ -10,6 +13,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import * as Sentry from "@sentry/nextjs";
+import { signUnsubscribeToken } from "@/lib/unsubscribe-token";
+import { isMailSuppressed } from "@/lib/mail-suppression";
 import { logCronRun, isRealProduction, claimEmailSend } from "@/lib/cron-monitor";
 import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 
@@ -58,6 +63,7 @@ const L: Record<string, {
   col_disease: string; col_country: string; col_risk: string;
   cta: string;
   footer: string;
+  unsub: string;
 }> = {
   fr: {
     subject:   (r) => `Signaux épidémiques — ${r} · Semaine en cours`,
@@ -66,6 +72,7 @@ const L: Record<string, {
     col_disease: "Maladie", col_country: "Pays", col_risk: "Risque",
     cta:       "Voir le tableau de bord →",
     footer:    "HealthWatch Global · Surveillance épidémique temps réel",
+    unsub:     "Se désinscrire de ces emails",
   },
   en: {
     subject:   (r) => `Outbreak signals — ${r} · This week`,
@@ -74,6 +81,7 @@ const L: Record<string, {
     col_disease: "Disease", col_country: "Country", col_risk: "Risk",
     cta:       "View dashboard →",
     footer:    "HealthWatch Global · Real-time epidemic surveillance",
+    unsub:     "Unsubscribe from these emails",
   },
   es: {
     subject:   (r) => `Señales de brotes — ${r} · Esta semana`,
@@ -82,6 +90,7 @@ const L: Record<string, {
     col_disease: "Enfermedad", col_country: "País", col_risk: "Riesgo",
     cta:       "Ver el panel →",
     footer:    "HealthWatch Global · Vigilancia epidémica en tiempo real",
+    unsub:     "Darse de baja de estos correos",
   },
   ar: {
     subject:   (r) => `إشارات التفشي — ${r} · هذا الأسبوع`,
@@ -90,6 +99,7 @@ const L: Record<string, {
     col_disease: "المرض", col_country: "الدولة", col_risk: "الخطر",
     cta:       "← عرض لوحة القيادة",
     footer:    "HealthWatch Global · مراقبة وبائية في الوقت الفعلي",
+    unsub:     "إلغاء الاشتراك في هذه الرسائل",
   },
   id: {
     subject:   (r) => `Sinyal wabah — ${r} · Minggu ini`,
@@ -98,6 +108,7 @@ const L: Record<string, {
     col_disease: "Penyakit", col_country: "Negara", col_risk: "Risiko",
     cta:       "Lihat dasbor →",
     footer:    "HealthWatch Global · Pemantauan epidemi real-time",
+    unsub:     "Berhenti berlangganan email ini",
   },
 };
 
@@ -108,6 +119,7 @@ function buildHtml(
   locale: string,
   region: string,
   dashUrl: string,
+  unsubUrl: string,
 ): string {
   const l        = L[locale]       ?? L.en;
   const rl       = REGION_LABELS[locale] ?? REGION_LABELS.en;
@@ -164,6 +176,9 @@ function buildHtml(
 
   <div style="margin-top:32px;padding-top:20px;border-top:1px solid #1e293b;">
     <p style="color:#374151;font-size:11px;text-align:center;margin:0;">${l.footer}</p>
+    <p style="color:#374151;font-size:11px;text-align:center;margin:8px 0 0;">
+      <a href="${unsubUrl}" style="color:#6b7280;text-decoration:underline;">${l.unsub}</a>
+    </p>
   </div>
 
 </div>
@@ -173,7 +188,14 @@ function buildHtml(
 
 // ─── Email sender ─────────────────────────────────────────────────────────────
 
-async function sendEmail(to: string, subject: string, html: string) {
+// `unsubUrl` est obligatoire, pas optionnel : cet email n'en avait AUCUN
+// jusqu'au 2026-08-23 — ni lien in-body, ni en-tete List-Unsubscribe — et son
+// seul drapeau d'echappement (`no_weekly_signal`) n'est ecrit que par un lien
+// qui n'apparait que dans weekly-signal et winback-sequence, deux emails qu'un
+// utilisateur en essai n'a jamais recus au jour 8. Il n'existait donc
+// litteralement aucun chemin pour ne plus recevoir celui-ci. Le rendre requis
+// dans la signature garantit qu'on ne peut pas reintroduire ce cas par oubli.
+async function sendEmail(to: string, subject: string, html: string, unsubUrl: string) {
   if (!BREVO_KEY) throw new Error("BREVO_API_KEY not set");
   const res = await fetch("https://api.brevo.com/v3/smtp/email", {
     method: "POST",
@@ -184,6 +206,10 @@ async function sendEmail(to: string, subject: string, html: string) {
       to:          [{ email: to }],
       subject,
       htmlContent: html,
+      headers: {
+        "List-Unsubscribe": `<${unsubUrl}>`,
+        "List-Unsubscribe-Post": "List-Unsubscribe=One-Click",
+      },
     }),
   });
   if (!res.ok) throw new Error(`Brevo: ${await res.text()}`);
@@ -224,8 +250,17 @@ async function runPilotFollowUp(_req: NextRequest, supabase: SupabaseClient) {
   const queryPilots = () =>
     createClient(SUPABASE_URL, SUPABASE_SERVICE)
       .from("profiles")
-      .select("id, email, locale, display_filters, trial_ends_at, stripe_subscription_id")
+      .select("id, email, locale, display_filters, email_blocked_at, trial_ends_at, stripe_subscription_id")
       .in("plan", ["pro", "starter", "team"])
+      // `is_pilot` ajoute le 2026-08-23 : ce cron s'appelle pilot-follow-up et
+      // son en-tete dit cibler les pilotes, mais aucun filtre ne l'a jamais
+      // fait — il ecrivait a TOUS les essais. Deux consequences : le nom mentait,
+      // et l'email tombait un jour apres le J+7 d'onboarding-sequence (fenetres
+      // [-8.5j,-7.5j) contre [-7.5j,-6.5j)), soit deux touches en 23 heures pour
+      // la meme personne.
+      // Pour revenir a l'ancien comportement, retirer cette seule ligne — mais
+      // alors renommer le cron, sans quoi la meme dette repart.
+      .eq("is_pilot", true)
       .not("email", "is", null)
       .is("email_blocked_at", null)
       .gte("created_at", windowStart)
@@ -263,8 +298,13 @@ async function runPilotFollowUp(_req: NextRequest, supabase: SupabaseClient) {
   let failed     = 0;
   let alreadySent = 0;
 
-  const hasOptedOut = (u: { display_filters: unknown }) =>
-    !!(u.display_filters as Record<string, unknown> | null)?.no_weekly_signal;
+  // Etait un test local sur `no_weekly_signal` seul — donc une personne qui
+  // s'etait desinscrite via l'email d'accueil (`no_onboarding_emails`) recevait
+  // quand meme celui-ci au jour 8. Passe par le predicat partage, qui traite les
+  // deux drapeaux comme equivalents pour tout ce qui est marketing.
+  // Voir lib/mail-suppression.ts.
+  const hasOptedOut = (u: { display_filters: unknown; email_blocked_at?: string | null }) =>
+    isMailSuppressed(u, "marketing");
 
   for (const pilot of pilots) {
     if (!pilot.email || hasOptedOut(pilot)) { skipped++; continue; }
@@ -330,11 +370,15 @@ async function runPilotFollowUp(_req: NextRequest, supabase: SupabaseClient) {
     const regionLabel = region ? (rl[region] ?? region) : (rl.all ?? "Global");
 
     const subject = l.subject(regionLabel);
-    const html    = buildHtml(outbreaks, locale, region ?? "all", dashUrl);
+    const unsubUrl = `https://healthwatch-global.com/api/unsubscribe-signal`
+      + `?id=${encodeURIComponent(pilot.id)}`
+      + `&token=${signUnsubscribeToken(pilot.id)}`
+      + `&locale=${locale}`;
+    const html    = buildHtml(outbreaks, locale, region ?? "all", dashUrl, unsubUrl);
 
     try {
       if (isRealProduction) {
-        await sendEmail(pilot.email, subject, html);
+        await sendEmail(pilot.email, subject, html, unsubUrl);
       }
       sent++;
       console.log(`[pilot-follow-up] sent to ${pilot.email} (region: ${region ?? "all"})`);

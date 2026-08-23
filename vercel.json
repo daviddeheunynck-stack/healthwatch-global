@@ -38,11 +38,11 @@
     },
     {
       "path": "/api/cron/onboarding-sequence",
-      "schedule": "0 9 * * *"
+      "schedule": "16 9 * * *"
     },
     {
       "path": "/api/cron/weekly-digest",
-      "schedule": "0 7 * * 1"
+      "schedule": "5 7 * * 1"
     },
     {
       "path": "/api/cron/trial-reminders",
@@ -58,15 +58,15 @@
     },
     {
       "path": "/api/cron/check-mpox-sitrep",
-      "schedule": "0 8 * * *"
+      "schedule": "8 8 * * *"
     },
     {
       "path": "/api/cron/sync-drc-sitrep",
-      "schedule": "0 7 * * *"
+      "schedule": "12 7 * * *"
     },
     {
       "path": "/api/cron/expire-trials",
-      "schedule": "0 10 * * *"
+      "schedule": "5 10 * * *"
     },
     {
       "path": "/api/cron/winback-sequence",
@@ -78,39 +78,39 @@
     },
     {
       "path": "/api/cron/sync-paho-alerts",
-      "schedule": "30 9 * * *"
+      "schedule": "35 9 * * *"
     },
     {
       "path": "/api/cron/sync-africa-cdc",
-      "schedule": "0 9 * * *"
+      "schedule": "4 9 * * *"
     },
     {
       "path": "/api/cron/sync-cdc-notices",
-      "schedule": "0 10 * * *"
+      "schedule": "10 10 * * *"
     },
     {
       "path": "/api/cron/sync-ncdc",
-      "schedule": "0 9 * * *"
+      "schedule": "8 9 * * *"
     },
     {
       "path": "/api/cron/sync-cdc-han",
-      "schedule": "30 */4 * * *"
+      "schedule": "36 */4 * * *"
     },
     {
       "path": "/api/cron/sync-ukhsa",
-      "schedule": "0 6,14 * * *"
+      "schedule": "4 6,14 * * *"
     },
     {
       "path": "/api/cron/sync-spf",
-      "schedule": "0 7,15 * * *"
+      "schedule": "10 7,15 * * *"
     },
     {
       "path": "/api/cron/sync-who-afro",
-      "schedule": "0 8 * * *"
+      "schedule": "4 8 * * *"
     },
     {
       "path": "/api/cron/sync-who-emro",
-      "schedule": "0 9 * * *"
+      "schedule": "12 9 * * *"
     },
     {
       "path": "/api/admin/enrich-admin1",
@@ -118,7 +118,7 @@
     },
     {
       "path": "/api/cron/sync-signals",
-      "schedule": "0 */6 * * *"
+      "schedule": "6 */6 * * *"
     },
     {
       "path": "/api/cron/trigger-webhooks",
@@ -126,11 +126,11 @@
     },
     {
       "path": "/api/cron/send-sitrep-emails",
-      "schedule": "20 7 * * 1"
+      "schedule": "50 6 * * 1"
     },
     {
       "path": "/api/cron/trigger-tripwires",
-      "schedule": "0,30 * * * *"
+      "schedule": "2,32 * * * *"
     },
     {
       "path": "/api/cron/trigger-subscriber-alerts",
@@ -142,7 +142,7 @@
     },
     {
       "path": "/api/cron/trigger-geofence-alerts",
-      "schedule": "0 */6 * * *"
+      "schedule": "8 */6 * * *"
     },
     {
       "path": "/api/cron/trigger-country-risk-alerts",
@@ -150,11 +150,11 @@
     },
     {
       "path": "/api/cron/trigger-pheic-alerts",
-      "schedule": "0,30 * * * *"
+      "schedule": "4,34 * * * *"
     },
     {
       "path": "/api/cron/trigger-regional-digest",
-      "schedule": "5 7 * * 1"
+      "schedule": "0 7 * * 1"
     },
     {
       "path": "/api/cron/health-check",
@@ -162,15 +162,15 @@
     },
     {
       "path": "/api/cron/weekly-signal",
-      "schedule": "50 6 * * 1"
+      "schedule": "20 7 * * 1"
     },
     {
       "path": "/api/cron/pilot-follow-up",
-      "schedule": "0 8 * * *"
+      "schedule": "12 8 * * *"
     },
     {
       "path": "/api/cron/pilot-closing-reminder",
-      "schedule": "0 8 * * *"
+      "schedule": "16 8 * * *"
     },
     {
       "path": "/api/cron/disease-coverage",
@@ -198,7 +198,7 @@
     },
     {
       "path": "/api/cron/sync-malaysia-dengue",
-      "schedule": "0 6 * * *"
+      "schedule": "8 6 * * *"
     },
     {
       "path": "/api/cron/signup-canary",

@@ -3,8 +3,8 @@ import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { buildDigestEmail } from "@/lib/digest-email";
 import type { Outbreak } from "@/lib/outbreaks";
 import * as Sentry from "@sentry/nextjs";
-import { logCronRun, isRealProduction, claimWeeklyDigestSend, currentWeekOf } from "@/lib/cron-monitor";
-import { getBlockedEmailSet } from "@/lib/brevo-blocklist";
+import { logCronRun, isRealProduction, claimWeeklyDigestSend, claimWeeklyAddress, currentWeekOf } from "@/lib/cron-monitor";
+import { getWeeklySuppressionSet } from "@/lib/mail-suppression";
 import { sendBrevoEmail } from "@/lib/brevo-send";
 
 export const dynamic = "force-dynamic";
@@ -109,9 +109,13 @@ async function runWeeklyDigest(_req: NextRequest, supabase: SupabaseClient) {
   const allOutbreaks: Outbreak[] = outbreaks ?? [];
   console.log(`[weekly-digest] ${allOutbreaks.length} high-risk active outbreaks`);
 
-  // subscriptions.email is a free-text newsletter address, not a profiles row —
-  // matched against the full Brevo blocklist cache. See lib/brevo-blocklist.ts.
-  const blockedEmails = await getBlockedEmailSet(supabase);
+  // subscriptions.email is a free-text newsletter address, not a profiles row.
+  // Was matched against the Brevo blocklist alone, which is why an in-product
+  // unsubscribe (display_filters.no_weekly_signal, written by weekly-signal's
+  // own unsubscribe link) never stopped this digest. Now the union of all four
+  // opt-out signals — see lib/weekly-mail-suppression.ts.
+  const { emails: suppressionSet, degraded: suppressionDegraded } =
+    await getWeeklySuppressionSet(supabase);
 
   // ── Send loop ──────────────────────────────────────────────────────────────
   let sent        = 0;
@@ -119,6 +123,8 @@ async function runWeeklyDigest(_req: NextRequest, supabase: SupabaseClient) {
   let skippedNoKey = 0;
   let blockedSkipped = 0;
   let alreadySent  = 0;
+  let claimedElsewhere = 0;
+  let claimDegraded = false;
 
   // One claim per (subscriber, calendar week): see claimWeeklyDigestSend's
   // doc in lib/cron-monitor.ts. Computed once per run so every subscriber in
@@ -126,7 +132,17 @@ async function runWeeklyDigest(_req: NextRequest, supabase: SupabaseClient) {
   const weekOf = currentWeekOf();
 
   for (const sub of subscribers) {
-    if (blockedEmails.has((sub.email ?? "").toLowerCase())) { blockedSkipped++; continue; }
+    if (suppressionSet.has((sub.email ?? "").trim().toLowerCase())) { blockedSkipped++; continue; }
+
+    // Cross-route claim on the ADDRESS. Two things fall out of this: a reader
+    // who already received the sitrep or the regional digest earlier this
+    // morning is skipped here, and two `subscriptions` rows sharing one address
+    // no longer produce two digests — the old claim below is keyed on sub.id,
+    // which never noticed that case.
+    const addressClaim = await claimWeeklyAddress(supabase, sub.email ?? "", weekOf, "weekly-digest");
+    if (addressClaim.degraded) claimDegraded = true;
+    if (!addressClaim.granted) { claimedElsewhere++; continue; }
+
     // Claim before send, not after: a second invocation racing this one
     // must see the claim already taken, not an empty log it can still win.
     const claimed = await claimWeeklyDigestSend(supabase, sub.id, weekOf);
@@ -163,8 +179,18 @@ async function runWeeklyDigest(_req: NextRequest, supabase: SupabaseClient) {
   // Was only checking skippedNoKey — `failed`, incremented per-subscriber in
   // the catch above, was tracked but never consulted here, so a genuine send
   // failure still logged "ok".
-  await logCronRun(supabase, "weekly-digest", skippedNoKey > 0 || failed > 0 ? "error" : "ok", sent,
-    failed > 0 ? `${failed} envoi(s) en échec` : undefined);
-  console.log(`[weekly-digest] Done, ${sent} sent, ${failed} failed, ${skippedNoKey} skipped (no key), ${blockedSkipped} blocked, ${alreadySent} already sent this week, ${subscribers.length} total.`);
-  return NextResponse.json({ sent, failed, skippedNoKey, blockedSkipped, alreadySent, total: subscribers.length });
+  const degradedNote = [
+    suppressionDegraded ? "liste de suppression incomplète (une source en échec)" : null,
+    claimDegraded ? "verrou hebdomadaire indisponible — envois non dédupliqués entre routes" : null,
+    failed > 0 ? `${failed} envoi(s) en échec` : null,
+  ].filter(Boolean).join(" · ");
+  await logCronRun(
+    supabase,
+    "weekly-digest",
+    skippedNoKey > 0 || failed > 0 || suppressionDegraded || claimDegraded ? "error" : "ok",
+    sent,
+    degradedNote || undefined,
+  );
+  console.log(`[weekly-digest] Done, ${sent} sent, ${failed} failed, ${skippedNoKey} skipped (no key), ${blockedSkipped} suppressed, ${claimedElsewhere} claimed by a higher-priority mailer, ${alreadySent} already sent this week, ${subscribers.length} total.`);
+  return NextResponse.json({ sent, failed, skippedNoKey, blockedSkipped, claimedElsewhere, alreadySent, total: subscribers.length });
 }

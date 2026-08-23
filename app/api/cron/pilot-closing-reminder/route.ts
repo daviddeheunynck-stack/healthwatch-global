@@ -1,6 +1,8 @@
 /**
  * Cron: /api/cron/pilot-closing-reminder
- * Schedule: 0 8 * * * (daily 08:00 UTC)
+ * Schedule: 16 8 * * * (daily 08:16 UTC — moved off 08:00 on 2026-08-23, where
+ * five daily jobs started on the same minute. Kept after pilot-follow-up at
+ * 08:12 so the two pilot emails stay in that order.)
  *
  * The /pilot page promises institutional applicants a "45-min closing feedback
  * session" ending in a concrete paid proposal. Nothing previously delivered on

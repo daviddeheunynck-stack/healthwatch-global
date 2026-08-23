@@ -1,9 +1,16 @@
-// Africa CDC News scraper — runs Wed + Sat at 09:00 UTC.
+// Africa CDC News scraper — runs daily at 09:04 UTC.
 // Fetches recent news posts from africacdc.org/news-item/ (previously /disease-outbreak-news/),
 // extracts disease / country / cases, and upserts to outbreaks. Covers sub-Saharan
 // African outbreaks (Guinea, Sierra Leone, Burkina Faso, etc.) that may not
 // appear in WHO DON or ReliefWeb until later in the outbreak timeline.
 // Never overwrites rows owned by the WHO DON daily sync.
+//
+// NOTE 2026-08-23 — this header said "runs Wed + Sat at 09:00 UTC" but
+// vercel.json has run it as "0 9 * * *", i.e. every day, and there is no
+// day-of-week guard anywhere in this file. Same drift as check-mpox-sitrep.
+// The comment was corrected to match reality; if twice-weekly is the real
+// intent, change vercel.json to "4 9 * * 3,6" rather than this line. Moved off
+// 09:00 the same day, where five daily jobs shared the minute.
 //
 // Africa CDC is the African Union's own continental public health agency —
 // same institutional tier as a WHO regional office for African outbreaks —

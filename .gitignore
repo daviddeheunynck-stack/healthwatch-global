@@ -71,3 +71,12 @@ scripts/*-20[0-9][0-9]-[0-9][0-9]-[0-9][0-9].mjs
 scripts/check-prospect-conversions.mjs
 
 .vercel
+
+# Copie de travail des routines Claude Desktop (~/.claude/scheduled-tasks),
+# posee ici le temps d'un audit parce que le dossier d'origine est une zone
+# protegee que le pont de fichiers ne peut pas lire. Ce sont des prompts de
+# prospection et de suivi client : ils n'ont rien a faire dans un depot avec
+# un remote. Ignore pour la meme raison que les scripts one-off ci-dessus —
+# qu'un `git add -A` depuis une session interactive ne puisse pas les tracker.
+# A supprimer une fois l audit termine.
+_routines-audit/

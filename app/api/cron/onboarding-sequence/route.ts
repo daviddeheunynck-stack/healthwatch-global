@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { buildJ1Email, buildJ3Email, buildJ7Email, buildPilotConversionEmail } from "@/lib/onboarding-emails";
 import * as Sentry from "@sentry/nextjs";
+import { isMailSuppressed } from "@/lib/mail-suppression";
 import { logCronRun, isRealProduction, isLiveCronInvocation, claimEmailSend, pingHeartbeatIfHealthy } from "@/lib/cron-monitor";
 import { sendBrevoEmail } from "@/lib/brevo-send";
 
@@ -185,26 +186,32 @@ async function runOnboardingSequence(req: NextRequest, supabase: SupabaseClient)
   // recognized as live (see isLiveCronInvocation) — reported for visibility.
   const dryRunRecipients: string[] = [];
 
-  const hasOptedOut = (u: { display_filters: unknown }) =>
-    !!(u.display_filters as Record<string, unknown> | null)?.no_onboarding_emails;
+  // Ne lisait que `no_onboarding_emails`. Une personne desinscrite via le lien
+  // du signal hebdomadaire (`no_weekly_signal`) continuait donc de recevoir la
+  // sequence d'accueil. Les deux drapeaux sont desormais equivalents pour tout
+  // ce qui est marketing — voir lib/mail-suppression.ts.
+  const hasOptedOut = (u: { display_filters: unknown; email_blocked_at?: string | null }) =>
+    isMailSuppressed(u, "marketing");
 
   // ── Send J+1 emails ───────────────────────────────────────────────────────
   for (const user of j1Users ?? []) {
     if (!user.email || hasOptedOut(user)) continue;
     try {
       const locale = user.locale || "en";
-      // unsubUrl deliberately NOT passed to sendEmail below: no List-Unsubscribe
-      // header on this specific email (2026-08-23). J+1 is the earliest, most
-      // disposable-feeling touch and the one every real one-click unsubscribe
-      // in this product's history has landed on — the in-body "Unsubscribe"
-      // link buildJ1Email already renders (same unsubUrl) still works for
-      // anyone who deliberately wants out, just without the mail client's
-      // native one-click button offering it reflexively. J+3/J+7/J+32 keep
-      // the header as before.
-      const { subject, html } = buildJ1Email(locale, user.id);
+      // List-Unsubscribe retabli le 2026-08-23 au soir, apres avoir ete retire
+      // le matin meme. Le retrait tenait tant que se desabonner ne servait a
+      // rien : le drapeau ecrit par ce lien (`no_onboarding_emails`) n'etait lu
+      // ni par pilot-follow-up (jour 8), ni par trial-reminders (jours 11 et
+      // 13), ni par weekly-signal — la personne recevait encore quatre emails
+      // apres avoir clique. Cacher le bouton faisait alors baisser le chiffre
+      // sans rien changer au motif.
+      // Depuis lib/mail-suppression.ts, un opt-out coupe reellement tout le
+      // marketing. Le bouton redevient donc un signal fiable, et le masquer
+      // reviendrait a se priver de la seule mesure honnete du probleme.
+      const { subject, html, unsubUrl } = buildJ1Email(locale, user.id);
       if (isRealProduction && isLive) {
         if (await claimEmailSend(supabase, user.id, "onboarding-sequence", "j1")) {
-          await sendEmail(user.email, subject, html);
+          await sendEmail(user.email, subject, html, unsubUrl);
           j1Sent++;
         } else {
           deduped++;

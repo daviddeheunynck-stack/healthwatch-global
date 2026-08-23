@@ -1,5 +1,14 @@
 /**
- * POST /api/admin/enrich-admin1
+ * GET /api/admin/enrich-admin1 — hourly at :15, see vercel.json.
+ *
+ * (Header said POST until 2026-08-23; the file has only ever exported GET, which
+ * is what Vercel Cron issues. Nothing was broken — the comment was.)
+ *
+ * This is a cron in everything but its path: CRON_SECRET auth like the others,
+ * logCronRun like the others, a vercel.json entry like the others. It sits under
+ * /api/admin/ for historical reasons only, which is why it escapes any search
+ * for "cron". Left in place deliberately — moving it would rename the route and
+ * orphan its own logCronRun history for no behavioural gain.
  *
  * Two-pass admin1 enrichment for rows stuck at "~" (LLM found no province in article text).
  *
