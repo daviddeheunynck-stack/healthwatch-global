@@ -95,6 +95,23 @@ async function runTrialReminders(req: NextRequest, supabase: SupabaseClient) {
   const isWeekend = dow === 0 || dow === 6;
   const catchUpDays = dow === 1 ? 2 : 0; // Monday absorbs Saturday + Sunday
 
+  // Monday's reach-back alone leaves J-1 with a hole, because J-1 is the one
+  // milestone that cannot be delivered late: once the trial has expired the
+  // email is worthless, and j1Start is (correctly) clamped at `now` so Monday
+  // never mails someone whose trial died over the weekend. Nothing then covers
+  // a trial expiring between Saturday ~21:30 and Monday 09:30 UTC — Friday's
+  // J-1 window stops at now+1.5d (Saturday 21:30), Saturday and Sunday return
+  // early, and by Monday it is too late. Every such trial silently lost its
+  // final conversion touch: J-3 (sent the previous Wednesday/Thursday) became
+  // the last thing it ever received.
+  //
+  // So Friday reaches FORWARD, to exactly where Monday's own J-1 window picks
+  // up (now + 3.0d = Monday 09:30). J-3 needs no equivalent: its own moment
+  // for a weekend-expiring trial already falls on a weekday, and Monday's
+  // catch-up covers the Tuesday/Wednesday expiries whose J-3 fell on the
+  // weekend.
+  const reachForwardDays = dow === 5 ? 1.5 : 0; // Friday covers through Monday's run
+
   if (isWeekend) {
     console.log("[trial-reminders] week-end — envoi différé à lundi (rattrapage inclus).");
     await logCronRun(supabase, "trial-reminders", "ok", 0);
@@ -108,7 +125,14 @@ async function runTrialReminders(req: NextRequest, supabase: SupabaseClient) {
   // Clamped at `now` so the widened Monday window can never reach a trial that
   // already expired over the weekend — expire-trials owns that case.
   const j1Start = new Date(Math.max(now, now + (0.5 - catchUpDays) * 86_400_000)).toISOString();
-  const j1End   = new Date(now + 1.5 * 86_400_000).toISOString();
+  // On Friday this runs past j3Start (now+2.5d): a trial expiring in that
+  // [2.5d, 3.0d) sliver matches both windows, and the step derivation below
+  // resolves it to "j1" — which is the correct slot, since Friday is its last
+  // reachable touch. It gets one email instead of two, saying "3 days left"
+  // (buildTrialEndingEmail derives the day count from trial_ends_at, so the
+  // copy stays accurate whichever slot claims it) rather than the nothing at
+  // all it got before.
+  const j1End   = new Date(now + (1.5 + reachForwardDays) * 86_400_000).toISOString();
 
   // Stripe users (stripe_subscription_id set) receive `customer.subscription.trial_will_end`
   // directly from Stripe 3 days before expiry — the cron would double-email them.
