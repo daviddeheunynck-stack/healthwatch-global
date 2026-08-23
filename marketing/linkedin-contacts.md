@@ -63,6 +63,10 @@ Même méthode que ci-dessus (compose principal, pas le bouton profil), efficace
 
 **Statut : 🔒 EN ATTENTE DE VALIDATION DE DAVID.** Réponse en fil actif ; comptera hors quota froid comme les autres réponses en fil actif du jour, une fois envoyé.
 
+✅ **Double-check refait intégralement, à la demande de David.** Fil rouvert : rien de neuf depuis 18:49, toujours 4 messages uniques. Anti-gabarit rejoué contre le bon parent de commit (`11d252d~1`, l'état du fichier avant que ce brouillon soit écrit) : « essai Pro de quatorze jours sans carte bancaire » confirmé à 1 occurrence hors session (justifiant l'écart), « tient sur deux semaines et ne demande aucune carte » confirmé à 0. Un faux positif examiné et écarté : « dans des sens opposés » remonte à 1 occurrence dans `content-log.md`, mais dans un contexte hépatite B sans rapport (incidence/mortalité), pas un moule réutilisé. Rien à changer.
+
+⚠️ **Incident système sans rapport avec ce brouillon** : le disque temporaire de la machine (`C:\Users\david\AppData\Local\Temp`) était plein (0 Mo libres sur 477 Go) pendant une partie de cette vérification, faisant échouer plusieurs commandes shell. Signalé à David séparément ; n'affecte pas le contenu de ce brouillon, vérifié par d'autres moyens.
+
 ---
 ## 📅 Session linkedin-hwg-followup-check-2 — 23/08/2026 (17h, 2e des 2 créneaux après-midi)
 
