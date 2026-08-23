@@ -78,9 +78,36 @@ async function runTrialReminders(req: NextRequest, supabase: SupabaseClient) {
   // The cron runs daily at 09:30 UTC. The ±0.5-day window ensures each user is
   // caught exactly once per reminder even if the cron drifts slightly.
   const now = Date.now();
-  const j3Start = new Date(now + 2.5 * 86_400_000).toISOString();
+  const dow = new Date(now).getUTCDay(); // 0 = Sunday … 6 = Saturday
+
+  // 2026-08-22: these are the last two touches before a trial dies, and until
+  // today they went out seven days a week — so a "1 day left" email could land
+  // on a public-health official's work inbox at 09:30 on a Sunday, which is
+  // the worst possible moment for the one message that has to be read. The
+  // schedule stays daily (other logic depends on the run happening); only the
+  // outbound send is now weekday-only, with Monday reaching back over the
+  // weekend so nobody is skipped instead of merely delayed.
+  //
+  // Reaching back is safe specifically because claimEmailSend() claims one row
+  // per (user, cron, step) for the LIFE of the account, not per day: a user
+  // caught by a widened window who was already emailed simply fails the claim
+  // and is counted as deduped. Without that guarantee this would double-send.
+  const isWeekend = dow === 0 || dow === 6;
+  const catchUpDays = dow === 1 ? 2 : 0; // Monday absorbs Saturday + Sunday
+
+  if (isWeekend) {
+    console.log("[trial-reminders] week-end — envoi différé à lundi (rattrapage inclus).");
+    await logCronRun(supabase, "trial-reminders", "ok", 0);
+    return NextResponse.json({ sent: 0, failed: 0, total: 0, skipped: "weekend" });
+  }
+
+  // The catch-up widens each window toward the PRESENT (a trial that was 3 days
+  // out on Saturday is 1 day out by Monday), never toward the future.
+  const j3Start = new Date(now + (2.5 - catchUpDays) * 86_400_000).toISOString();
   const j3End   = new Date(now + 3.5 * 86_400_000).toISOString();
-  const j1Start = new Date(now + 0.5 * 86_400_000).toISOString();
+  // Clamped at `now` so the widened Monday window can never reach a trial that
+  // already expired over the weekend — expire-trials owns that case.
+  const j1Start = new Date(Math.max(now, now + (0.5 - catchUpDays) * 86_400_000)).toISOString();
   const j1End   = new Date(now + 1.5 * 86_400_000).toISOString();
 
   // Stripe users (stripe_subscription_id set) receive `customer.subscription.trial_will_end`

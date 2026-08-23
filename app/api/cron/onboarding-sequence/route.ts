@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
-import { buildJ1Email, buildJ3Email, buildJ7Email, buildJ12Email, buildPilotConversionEmail } from "@/lib/onboarding-emails";
+import { buildJ1Email, buildJ3Email, buildJ7Email, buildPilotConversionEmail } from "@/lib/onboarding-emails";
 import * as Sentry from "@sentry/nextjs";
 import { logCronRun, isRealProduction, isLiveCronInvocation, claimEmailSend, pingHeartbeatIfHealthy } from "@/lib/cron-monitor";
 import { sendBrevoEmail } from "@/lib/brevo-send";
@@ -56,24 +56,33 @@ async function runOnboardingSequence(req: NextRequest, supabase: SupabaseClient)
   // See lib/cron-monitor.ts for what this does and does not guarantee.
   const isLive = isLiveCronInvocation(req);
 
-  // Five cohort queries (J+1/J+3/J+7/J+12/J+32) — same table, different date-window
+  // Four cohort queries (J+1/J+3/J+7/J+32) — same table, different date-window
   // filters, none depends on another's result — fetched concurrently instead of
   // one after another. Error checks below preserve the original fail-fast order
-  // (abort on the first of the five that errored, same as when they ran in series).
+  // (abort on the first of the four that errored, same as when they ran in series).
   //
-  // J+12/J+32 guard: trial_ends_at must be within 4 days of J+12 — skips pilot
-  // users (35-day trial) who would otherwise get a confusing "2 days left" email
-  // on day 12. Pilot users have 35-day trials; by day 32 regular 14-day pro users
-  // have already been downgraded to free by expire-trials, so plan=pro + created_at
-  // ~32 days ago + no stripe sub uniquely identifies pilot users.
-  const j12WindowEnd = new Date(Date.now() + 4 * 86_400_000).toISOString();
+  // J+12 ("2 days left — subscribe now") was REMOVED on 2026-08-22. It was
+  // anchored on created_at, so for a standard 14-day trial it fired at
+  // trial_end − 2 — landing squarely between trial-reminders' J-3 and J-1,
+  // which are anchored on trial_ends_at itself. Every expiring trial therefore
+  // received three near-identical "your trial is ending" emails on three
+  // consecutive days from two crons that don't know about each other. The two
+  // trial-reminders steps are the better pair: they key off the real end date,
+  // they carry regional outbreak context, and they already handle the
+  // Stripe/non-Stripe split. buildJ12Email is left in lib/onboarding-emails for
+  // now — unreferenced, but cheaper to revive than to rewrite if the cadence is
+  // ever revisited.
+  //
+  // J+32 guard: trial_ends_at must be within 4 days — by day 32 regular 14-day
+  // pro users have already been downgraded to free by expire-trials, so
+  // plan=pro + created_at ~32 days ago + no stripe sub uniquely identifies
+  // pilot users (35-day trial).
   const j32WindowEnd = new Date(Date.now() + 4 * 86_400_000).toISOString();
 
   const [
     { data: j1Users,  error: j1Err },
     { data: j3Users,  error: j3Err },
     { data: j7Users,  error: j7Err },
-    { data: j12Users, error: j12Err },
     { data: j32Users, error: j32Err },
   ] = await Promise.all([
     // ── J+1 : First action — configure alert regions ───────────────────────
@@ -106,17 +115,6 @@ async function runOnboardingSequence(req: NextRequest, supabase: SupabaseClient)
       .is("email_blocked_at", null)
       .filter("created_at", "gte", new Date(Date.now() - 7.5 * 86400_000).toISOString())
       .filter("created_at", "lt",  new Date(Date.now() - 6.5 * 86400_000).toISOString()),
-    // ── J+12 : 2 days left — subscribe now ──────────────────────────────────
-    supabase
-      .from("profiles")
-      .select("id, email, plan, locale, trial_ends_at, display_filters")
-      .eq("plan", "pro")
-      .not("trial_ends_at", "is", null)
-      .lt("trial_ends_at", j12WindowEnd)
-      .is("stripe_subscription_id", null)
-      .is("email_blocked_at", null)
-      .filter("created_at", "gte", new Date(Date.now() - 12.5 * 86400_000).toISOString())
-      .filter("created_at", "lt",  new Date(Date.now() - 11.5 * 86400_000).toISOString()),
     // ── J+32 : Pilot conversion — 3 days left → upgrade to Team ─────────────
     supabase
       .from("profiles")
@@ -149,12 +147,6 @@ async function runOnboardingSequence(req: NextRequest, supabase: SupabaseClient)
     await logCronRun(supabase, "onboarding-sequence", "error", 0, j7Err.message);
     return NextResponse.json({ error: j7Err.message }, { status: 500 });
   }
-  if (j12Err) {
-    console.error("[onboarding] J+12 query error:", j12Err);
-    Sentry.captureException(j12Err, { tags: { cron: "onboarding-sequence", step: "j12-query" } });
-    await logCronRun(supabase, "onboarding-sequence", "error", 0, j12Err.message);
-    return NextResponse.json({ error: j12Err.message }, { status: 500 });
-  }
   if (j32Err) {
     console.error("[onboarding] J+32 query error:", j32Err);
     Sentry.captureException(j32Err, { tags: { cron: "onboarding-sequence", step: "j32-query" } });
@@ -165,7 +157,6 @@ async function runOnboardingSequence(req: NextRequest, supabase: SupabaseClient)
   let j1Sent = 0, j1Failed = 0;
   let j3Sent = 0, j3Failed = 0;
   let j7Sent = 0, j7Failed = 0;
-  let j12Sent = 0, j12Failed = 0;
   let j32Sent = 0, j32Failed = 0;
   // Claimed-but-already-sent, i.e. a duplicate Vercel invocation of this same
   // scheduled run — see claimEmailSend() in lib/cron-monitor.ts.
@@ -255,32 +246,6 @@ async function runOnboardingSequence(req: NextRequest, supabase: SupabaseClient)
     }
   }
 
-  // ── Send J+12 emails ──────────────────────────────────────────────────────
-  for (const user of j12Users ?? []) {
-    if (!user.email || hasOptedOut(user)) continue;
-    try {
-      const locale = user.locale || "en";
-      const { subject, html, unsubUrl } = buildJ12Email(locale, user.id);
-      if (isRealProduction && isLive) {
-        if (await claimEmailSend(supabase, user.id, "onboarding-sequence", "j12")) {
-          await sendEmail(user.email, subject, html, unsubUrl);
-          j12Sent++;
-        } else {
-          deduped++;
-        }
-      } else if (isRealProduction) {
-        dryRunRecipients.push(`j12:${user.email}`);
-      } else {
-        j12Sent++;
-      }
-      await new Promise((r) => setTimeout(r, 150));
-    } catch (err) {
-      console.error(`[onboarding] J+12 failed for ${user.email}:`, err);
-      Sentry.captureException(err, { tags: { cron: "onboarding-sequence", step: "j12", user_id: user.id } });
-      j12Failed++;
-    }
-  }
-
   // ── Send J+32 pilot conversion emails ────────────────────────────────────
   for (const user of j32Users ?? []) {
     if (!user.email || hasOptedOut(user)) continue;
@@ -307,28 +272,27 @@ async function runOnboardingSequence(req: NextRequest, supabase: SupabaseClient)
     }
   }
 
-  const onboardingSent   = j1Sent + j3Sent + j7Sent + j12Sent + j32Sent;
-  const onboardingFailed = j1Failed + j3Failed + j7Failed + j12Failed + j32Failed;
+  const onboardingSent   = j1Sent + j3Sent + j7Sent + j32Sent;
+  const onboardingFailed = j1Failed + j3Failed + j7Failed + j32Failed;
   pingHeartbeatIfHealthy(process.env.BETTERSTACK_HB_ONBOARDING, onboardingFailed, onboardingSent + onboardingFailed);
 
   if (dryRunRecipients.length > 0) {
     console.log(`[onboarding] dry run (not a recognized live invocation) — would have sent: ${dryRunRecipients.join(", ")}`);
   }
 
-  const totalSent = j1Sent + j3Sent + j7Sent + j12Sent + j32Sent;
-  const totalFailed = j1Failed + j3Failed + j7Failed + j12Failed + j32Failed;
+  const totalSent = j1Sent + j3Sent + j7Sent + j32Sent;
+  const totalFailed = j1Failed + j3Failed + j7Failed + j32Failed;
   // Was hardcoded "ok" — each step's Failed counter was tracked but never
-  // consulted, so a genuine send failure in any of the five stages still
+  // consulted, so a genuine send failure in any of the stages still
   // logged "ok".
   await logCronRun(supabase, "onboarding-sequence", totalFailed > 0 ? "error" : "ok", totalSent,
     totalFailed > 0 ? `${totalFailed} email(s) en échec` : undefined);
-  console.log(`[onboarding] J+1: ${j1Sent}/${j1Failed} | J+3: ${j3Sent}/${j3Failed} | J+7: ${j7Sent}/${j7Failed} | J+12: ${j12Sent}/${j12Failed} | J+32: ${j32Sent}/${j32Failed}`);
+  console.log(`[onboarding] J+1: ${j1Sent}/${j1Failed} | J+3: ${j3Sent}/${j3Failed} | J+7: ${j7Sent}/${j7Failed} | J+32: ${j32Sent}/${j32Failed}`);
 
   return NextResponse.json({
     j1:  { sent: j1Sent,  failed: j1Failed,  total: (j1Users  ?? []).length },
     j3:  { sent: j3Sent,  failed: j3Failed,  total: (j3Users  ?? []).length },
     j7:  { sent: j7Sent,  failed: j7Failed,  total: (j7Users  ?? []).length },
-    j12: { sent: j12Sent, failed: j12Failed, total: (j12Users ?? []).length },
     j32: { sent: j32Sent, failed: j32Failed, total: (j32Users ?? []).length },
     deduped,
     live: isLive,
