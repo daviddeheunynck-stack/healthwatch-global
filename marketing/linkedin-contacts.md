@@ -11,6 +11,229 @@
 **Codeur (freelance)** : David a mentionné vouloir être « plus incisif » sur Codeur également, mais n'a pas encore précisé en quoi — à reconfirmer avec lui plutôt que d'improviser, ce terrain n'étant pas couvert par ce repo/session.
 
 ---
+## 📅 Session linkedin-hwg-monitoring — 23/08/2026 (9h)
+
+**Vérification double déclenchement** : aucune entrée datée du 23/08 dans ce fichier ni dans `content-log.md` à l'ouverture ; dernière entrée = 22/08 à 17h → **premier déclenchement de la routine aujourd'hui**. Aucune session sœur `isRunning: true` (`list_sessions` : les 8 runs du matin, dont `morning-don-check` à 07:03, sont tous clos).
+
+**Quotas à l'ouverture (remis à zéro, nouveau jour)** : commentaires **0/7** ; connexions **0/7** ; suivis **0/7-10** ; DM à froid **0/8** ; file de validation DM **0**.
+
+**🖥️ Navigateur** : `_shared/browser-status.md` lu, dernière entrée 🔴 du **15/08**, pas du jour → aucun bridage, rien à y écrire. Un seul navigateur listé, `23c7ecdd…`, sélectionné directement (§7). Signature « cas 2 » présente (`outerWidth = 0`, `visibilityState = hidden`) **mais sans aucun effet** : `innerWidth/innerHeight = 1280x632`, screenshots, JS synchrone et asynchrone, saisie de texte et clics réels tous fonctionnels toute la session. Aucun incident CDP.
+
+### 💬 COMMENTAIRES — voir `content-log.md` pour le détail complet
+
+4 commentaires publiés et confirmés à ce stade : **Melvin Sanicas** (Ebola RDC, comparaison de trajectoire), **Robert Herriman** (test Ebola négatif à Milan), **Patrick AYONGA** (article J100), **Ifedayo Adetifa** (écosystème du diagnostic).
+
+### 🤝 CONNEXION 1/7 — Ifedayo Adetifa, ENVOYÉE SANS NOTE
+
+> *Fiche détaillée écrite au moment de l'action. Les 6 connexions suivantes et les 6 suivis suivants sont regroupés dans les deux tableaux plus bas ; Adetifa et Sanicas y figurent aussi, ce ne sont pas des actions en double.*
+
+- **Profil** : `/in/ifedayo-adetifa-7237a926/`, ***Outgoing Chief Executive Officer, FIND*** | Global Health & Epidemiologist | Health Security | **Lancet Commissioner** | **Former Director-General, Nigeria Centre for Disease Control & Prevention** | *Open to Executive & Board Roles*. Suisse, vérifié, **2e degré, 18 relations en commun** (Dr. Mohamed Y., Elvis +16), 500+ relations, 6 251 abonnés.
+- **Pourquoi lui, et pourquoi en connexion plutôt qu'en suivi** : c'est le profil le plus proche de la **directive de ciblage du 17/08** rencontré depuis plusieurs sessions. Ancien **directeur général d'une agence nationale de santé publique** (NCDC) et **dirigeant sortant d'une fondation mondiale du diagnostic** (FIND) : double légitimité institutionnelle, pouvoir de signature réel, et un hook déjà consommé publiquement le jour même (commentaire 4/7 sous son post). Le fait qu'il se déclare *open to Executive & Board Roles* rend aussi l'acceptation plus probable qu'un compte institutionnel saturé.
+- ⚠️ **Homonyme écarté** : `/in/ifedayo-adetifa-599325a2/` (3e degré, Kenya, aucun intitulé) n'est pas la bonne personne. Identification faite sur l'intitulé complet et les 18 relations communes.
+- ⚠️ **Piège sidebar évité, et il était réellement armé ce coup-ci.** Sur sa page de profil, le **seul** bouton « Se connecter » exposant un `aria-label` exploitable était `Inviter Jodie Ah-Sing à rejoindre votre réseau`, c'est-à-dire un bouton de la **sidebar « Plus de profils pour vous »**, qui envoie l'invitation immédiatement et sans modale. Un clic piloté par sélecteur aurait invité la mauvaise personne. **Le bouton principal a donc été cliqué en coordonnées après capture d'écran**, conformément à la note technique du SKILL.
+- **Note personnalisée** : la modale « Ajouter une note à votre invitation ? » s'est bien affichée, mais **la règle du carry-over du 22/08 a été appliquée sans retester** (« ne plus consommer un tour à espérer qu'elles reviennent », 3 jours consécutifs d'épuisement constatés) → **« Envoyer sans note »**, conformément à l'autorisation de David du 23/07. Compte dans le quota de 7/jour comme une invitation avec note.
+- **Confirmation lue sur le rendu, pas supposée** : toast « **Invitation envoyée à Ifedayo.** » et bouton passé à « **En attente** » (zoom sur la zone du bouton).
+
+### 👀 SUIVI 1/7-10 — Melvin Sanicas
+
+- **Profil** : `/in/drmelvinsanicas/`, *Global Medical Leader in Immunology and Infectious Diseases | Advancing Global Health through Vaccinology, Digital Health and AI | MD, MSc, MBA, FIDSA, FRSPH, FRSA, FAcadMEd*, **Zurich**, 2e degré, **15 319 abonnés**, 5 relations en commun (Laurens, Jalal +3). Jamais évalué auparavant (grep : 0 occurrence).
+- **Suivre plutôt que se connecter, arbitrage assumé** : compte à très forte audience (15 k abonnés), donc typiquement « personnalité très sollicitée à faible taux d'acceptation à froid » au sens du SKILL, et les notes personnalisées sont murées. Le commentaire 1/7 publié sous son post du jour ouvre déjà un canal visible ; une invitation à froid sans note aurait été le canal le plus faible disponible. **Porte laissée ouverte** pour une connexion ultérieure s'il réagit.
+- **Suivi confirmé** : bouton passé à « **Suivi, cliquez pour ne plus suivre Melvin Sanicas** », identité vérifiée dans le même appel JS que le clic (§7).
+
+### 🎯 Candidats repérés en sidebar du profil Adetifa (note écrite en cours de run, statuts définitifs plus bas)
+
+Tous en 2e degré, tous cohérents avec la directive « décideurs » du 17/08. **Aucun clic n'a été fait sur leurs boutons de sidebar** (piège d'envoi immédiat) :
+- **Chikwe Ihekweazu** — *As ADG, I am part of WHO's leadership team. As Executive Director of the…* (Assistant Director-General de l'OMS). Cible de tout premier plan.
+- **Jide Idris** — *Director General, Nigeria Center for Disease Control* (le successeur d'Adetifa au NCDC).
+- **Jutta Reinhard-Rupp** — *Chief Scientific Officer and interim CEO | Global Health Leader*.
+- **Magbagbeola Dairo** — *Professor at University of Ibadan, Nigeria* (plus périphérique, plutôt suivi).
+
+
+### 📬 MESSAGERIE — 4 fils entrants examinés, **2 DM en attente de validation**, 1 sans réponse due, 1 gelé sur décision de David
+
+Liste des conversations relue par récence. Les 4 fils portant un message entrant récent sont traités ci-dessous ; tous les autres portent notre message en dernier et sont inchangés.
+
+---
+
+#### 🔒 DM EN ATTENTE DE VALIDATION 1/2 — **Patrick AYONGA** (FR, réponse en fil actif, **SANS CTA**, hors quota froid)
+
+*Infectious Diseases Specialist | Epidemiologist | PhD Candidate in Public Health, Epidemiology & Population Health. 1er degré. Même contact que le commentaire 3/7 du jour, mais l'échange privé est indépendant et bien plus ancien.*
+
+**Fil relu intégralement (§4)**, du premier message jusqu'à aujourd'hui : une douzaine de messages depuis mercredi, sur la traçabilité de la provenance dans la chaîne de remontée des données de riposte. Étapes : il explique la remontée formations sanitaires → zones de santé → DPS → COUSP-RDC et joint le **SitRep national n°093 du 15/08** ; David distingue « information enregistrée mais non publiée » et « information jamais saisie » ; Patrick reconnaît la distinction et dit avoir **regardé HealthWatch** (« *je comprends beaucoup mieux votre perspective... le fait qu'un SitRep aussi dense finisse par tenir dans une ligne est assez parlant* ») ; David raconte son erreur de provenance réelle (une ligne pays sourcée sur un média commercial plutôt que sur l'autorité nationale) ; Patrick répond que la traçabilité fine existe au niveau primaire mais qu'il ignore ce qui survit jusqu'au national.
+
+**Verbatim reçu, aujourd'hui à 02:53 puis 02:57** (deux messages consécutifs) :
+
+> Oui, dans mon expérience, c'était plutôt une succession de formats et de niveaux de consolidation qu'un outil unique de bout en bout. [...] chaque passage d'un niveau à l'autre peut constituer un point où certaines informations ou métadonnées ne sont plus reprises dans le format suivant. Une fois nos données transmises, nous n'avions d'ailleurs plus nécessairement de visibilité sur toutes les transformations qu'elles subissaient en aval.
+
+> Votre question me fait d'ailleurs réfléchir plus largement. En RDC, des systèmes de surveillance existent déjà, notamment autour de DHIS2 [...] mais les difficultés de promptitude des alertes, de remontée et de consolidation des données restent un véritable enjeu opérationnel. Il serait intéressant de réfléchir à ce qui pourrait améliorer la continuité de cette chaîne, plutôt que de créer nécessairement un nouvel outil : comment préserver la provenance, réduire les pertes entre niveaux et surtout raccourcir le délai entre signal, alerte, investigation et réponse. **Votre regard depuis l'autre extrémité de la chaîne pourrait être intéressant sur cette question.**
+
+**➡️ Il demande explicitement un avis de conception.** La réponse propose donc une piste concrète et non une nouvelle question, ce qui change le registre par rapport aux tours précédents.
+
+**§3 CTA — ABSENT, et c'est la règle qui l'impose.** Le lien healthwatch-global.com **et** l'essai Pro ont **déjà été envoyés dans ce fil, jeudi à 12:03**, et il a confirmé être allé voir. Anti-répétition (cas de référence Simon Ruegg, 07/08) : **ne pas resservir le même argumentaire**, le point de fond suffit.
+
+**Double-check (§5)** :
+1. **Langue** — fil FR, brouillon FR ✅.
+2. **Faits** — aucun chiffre, aucune date avancés. DHIS2 n'est mentionné que parce qu'**il** l'a introduit ✅. L'exemple de l'erreur de provenance n'est pas répété (déjà raconté vendredi).
+3. **Mise en forme** — 1 291 caractères, 5 paragraphes. Contrôle par script : **0 tiret cadratin, 0 demi-cadratin, 0 signe moins, 0 apostrophe courbe** ; seuls caractères non ASCII = accents français. ⚠️ La relecture du champ réellement rendu reste à faire au moment de l'envoi.
+4. **Destinataire** — à revérifier dans le même appel JS que le clic si David valide.
+5. **Aucun fait personnel inventé sur David** ✅.
+6. **Règle des deux essais** — sans objet, première version.
+7. **Anti-gabarit** — balayage sur les 4 fichiers d'archive : « ce qu'il a consommé », « chaîne de renvois », « sans construire d'outil », « devient localisable », « vous verrez avant moi » → 0 recoupement. **Deux corrections réelles apportées** : (a) « **n'existe nulle part** » retiré, la formule ayant déjà été employée **par David dans ce même fil** jeudi ; (b) l'idée de **date de réception par échelon** a été trouvée déjà utilisée le 15/08 dans le fil **Musa** (« *est-ce que chaque échelon réenregistre sa propre date de réception ?* ») — elle est donc **reléguée au second plan** ici, l'idée principale devenant le **renvoi vers le document consommé**, qui est neuve.
+8. **Relecture éditoriale** — répond à ce qu'il demande (une piste de conception), reste dans sa contrainte explicite (« plutôt que de créer un nouvel outil »), et **assume une limite honnête** en fin de message plutôt que de faire semblant de connaître DHIS2. **Rien à changer.**
+
+**Texte prêt à envoyer :**
+
+> Merci Patrick, et votre reformulation est plus utile que ma question de départ.
+>
+> Vu d'ici, ce qui se perd à chaque passage n'est presque jamais la donnée elle-même. C'est le passage. Chaque niveau publie ce qu'il a produit, aucun n'enregistre ce qu'il a consommé : de quel document, de quelle version, reçu quand. Le détail abonde à chaque étage, le lien entre deux étages ne se trouve nulle part.
+>
+> Donc si je ne devais changer qu'une chose, sans nouvel outil, ce serait ce lien. Un renvoi, ajouté au format qui existe déjà, où chaque consolidation dit de quoi elle est faite. Aucun échelon n'a besoin de connaître toute la chaîne, seulement celui d'en dessous, et la provenance se reconstitue de proche en proche au lieu d'être un attribut qu'on espère voir tenir jusqu'en haut.
+>
+> Ça touche aussi votre point sur les délais, sans rien mesurer de neuf. Aujourd'hui le temps entre alerte et réponse ne se calcule qu'en bloc, une fois arrivé en haut. Avec un renvoi daté à chaque étage, le retard cesse d'être un total et devient attribuable à un passage précis. C'est la différence entre savoir qu'une riposte est lente et savoir où.
+>
+> Je dis ça sans savoir ce que DHIS2 laisse réellement ajouter à un format en production, et c'est probablement là que se joue la faisabilité. Vous le verrez avant moi.
+
+---
+
+#### 🔒 DM EN ATTENTE DE VALIDATION 2/2 — **Sidibé Tiany** (FR, réponse en fil actif, **AVEC CTA**, hors quota froid)
+
+*Surveillance de la poliomyélite et des autres maladies évitables par la vaccination, **Guinée**. Connexion récente.*
+
+**Fil relu intégralement (§4)**, 3 messages seulement : notre message de bienvenue de mercredi 10:18 (qui demandait si le délai entre signalement d'un cas suspect et confirmation varie selon les zones), puis **ses deux réponses de samedi 22:02 et 22:06**.
+
+**Verbatim reçu (22/08, 22:06)** :
+
+> Sur la question du délai entre signalement d'un cas suspect et confirmation, oui : il varie significativement selon la zone. Les principales raisons sont : capacités de surveillance locales (formation du personnel, présence d'équipes d'investigation) ; accessibilité géographique et conditions de transport des échantillons ; disponibilité et réactivité des laboratoires de référence.
+
+**§3 CTA — PRÉSENT, et il est dû.** Sa réponse est un contenu de fond, pas une politesse, et **anti-répétition vérifiée sur l'intégralité du fil** : ni le lien ni l'essai n'y ont jamais été envoyés (le message de bienvenue nommait HealthWatch Global mais sans lien ni offre). Le CTA est amené depuis **ses propres trois causes**, pas plaqué.
+
+**Double-check (§5)** :
+1. **Langue** — fil FR, brouillon FR ✅.
+2. **Faits** — les trois causes sont **les siennes**, reprises sans altération. **Aucune affirmation n'est faite sur le statut polio de la Guinée** : la mise à jour GPEI du 19/08 exploitée hier cite la **Guinée-Bissau** comme sortie de flambée, pas la Guinée, et confondre les deux aurait été une erreur factuelle envoyée à un spécialiste guinéen de la polio ✅.
+3. **Mise en forme** — 1 292 caractères, 4 paragraphes. Script : **0 tiret cadratin, 0 demi-cadratin, 0 signe moins, 0 apostrophe courbe** ✅. Relecture du rendu à faire à l'envoi.
+4. **Destinataire** — à revérifier dans le même appel JS que le clic.
+5. **Aucun fait personnel inventé sur David** ✅.
+6. **Règle des deux essais** — sans objet.
+7. **Anti-gabarit** — « carte des laboratoires », « aboutissent au même chiffre », « l'aval de vos trois causes », « ne réclame aucune carte » → 0 recoupement. **Deux corrections réelles** : (a) « **d'une année sur l'autre** » (2 occurrences en archive) remplacé par « d'un trimestre au suivant » ; (b) « **rendent le même tableau** » écarté parce que **c'est la formule du commentaire 3/7 publié ce matin même** chez Patrick AYONGA, remplacé par « aboutissent au même chiffre ». Le CTA a par ailleurs été **entièrement restructuré** pour ne pas retomber sur le moule signalé le 22/08 (« *Le site est healthwatch-global.com, si vous voulez voir à quoi ça ressemble... quatorze jours... sans carte bancaire* »), qui recoupait au moins 4 formulations antérieures : ici il part de ses causes et se termine par une **demande de critique**, pas par une invitation à essayer.
+8. **Relecture éditoriale** — prend ses trois causes et en tire une conséquence qu'il n'a pas énoncée (le biais directionnel de la courbe nationale), pose une question factuelle à laquelle lui seul peut répondre, et le CTA demande un retour critique plutôt qu'un essai. **Rien à changer.**
+
+**Texte prêt à envoyer :**
+
+> Bonsoir Sidibé, merci, et vos trois raisons ont un point commun que je n'avais pas su formuler.
+>
+> Toutes les trois jouent avant la confirmation, et toutes les trois pèsent le plus lourd là où la surveillance est déjà la plus faible. Vu d'où je regarde, une zone mal desservie pour le transport des échantillons et une zone où le virus circule peu aboutissent au même chiffre : peu de cas confirmés, et tard. Rien dans un bulletin ne les sépare, et la courbe nationale finit par dessiner l'implantation des laboratoires autant que celle de la transmission.
+>
+> Ce qui me manque pour corriger ça, c'est de savoir si ce délai est mesuré par zone quelque part, ou s'il ne vit que comme l'intervalle entre deux dates sur des fiches individuelles que personne n'agrège. Vous le percevez clairement, puisque vous venez de me le décrire. Est-ce qu'il est aussi écrit, sous une forme comparable d'un trimestre au suivant ?
+>
+> Sur healthwatch-global.com, la Guinée existe, mais uniquement par ce que l'OMS et Africa CDC en publient, c'est-à-dire l'aval de vos trois causes et rien de ce qui les produit. L'inscription ouvre quatorze jours en Pro et ne réclame aucune carte. Ce qui m'intéresserait surtout, c'est que vous me disiez ce qui vous paraît faux ou absent quand vous regardez la Guinée depuis l'intérieur.
+
+---
+
+#### ⏸️ **Mohamed Ousmane COULIBALY** — accusé de réception, **aucune réponse due**, nouveau carry-over ouvert
+
+*Incident Manager, **World Health Organization**, ex-Polio Incident Manager OMS 2020-2023, Bamako.*
+
+Réponse reçue le **22/08 à 20:47**, deux lignes, après le DM envoyé par David à 18:42 (celui qui annonçait les 13 lignes polio africaines créées en base) :
+
+> Okay
+> Link well and I will go through
+
+**Aucun brouillon, décision assumée.** C'est un accusé de réception doublé d'une intention de visiter le site, pas un contenu auquel répondre sur le fond (§3). Relancer maintenant reviendrait à le presser avant qu'il ait regardé.
+
+**🔔 NOUVEAU CARRY-OVER, sur le modèle Barrè Onivogui (14/08) et Kaushal Sharma** : **ne pas relancer tant qu'il n'a pas donné de retour sur le site.** À chaque session, rouvrir son fil ; dès qu'un retour concret arrive, rédiger une réponse qui rebondit **dessus** et pas un remerciement générique, double-check §5, file de validation, puis **retirer cette entrée**. Question de fond restée ouverte et récupérable plus tard : sur les trente-deux cas cumulés de cVDPV2 en RDC depuis janvier, une chaîne de transmission unique qui dure ou plusieurs chaînes agrégées par le sérotype.
+
+#### 🧊 **Darrel Ornelle ELION ASSIANA, MPH, PhD** — gelé jusqu'au 24/08 sur décision explicite de David, **respecté**
+
+Sa réponse du 22/08 à 17:11 est bien présente dans le fil et a été relue. David a tranché en session interactive (« on répondra lundi »). Le SKILL de cette routine prévoyait expressément le cas : la consigne tient **même si le run du dimanche 23/08 tombe sur ce fil**. **Aucun brouillon rédigé, aucune relance, aucune réévaluation.** À traiter demain 24/08. Rappel pour la session qui le fera : **le CTA a déjà été envoyé dans ce fil jeudi à 12:14, ne pas le répéter.**
+
+### 🤝 INVITATIONS REÇUES — 1 seule, statut figé, aucune action
+
+**OLAOLUWA PHILIP (BSc, MSc)** (`/in/olaoluwa-philip-oguntoyinbo5/`, *Global Climate Action & Policy Advocate | GIScientist | Founder, CLIMORA Initiative*, 1 relation en commun : Pete Macharia, PhD) : toujours en attente. Statut « écarté » **figé** par le carry-over n°11 du 21/08, reconduit les 22/08 (9h, 13h et 17h). **Consigne respectée, profil non rouvert, non réévalué.**
+
+### 👥 ABONNÉS — 364 (+1 depuis le 22/08 au soir), **0 follow-back dû**
+
+Onglet « Abonnés » relevé : **364 personnes**, contre 363 hier à 17h. Le seul nom neuf en tête de liste est **Amine Ben Salem** (*Médecin chez Hôpital Kremlin Bicêtre*, France), et son bouton affiche déjà « **Suivi** » : rien à exécuter. Profil jamais évalué auparavant (grep : 0 occurrence) ; pertinence HWG **périphérique** (médecine hospitalière clinique en France, pas de surveillance épidémiologique), donc pas de suite à donner au-delà du suivi déjà en place.
+- **Zachariah G. Houdari** reste au statut « Suivre », c'est-à-dire **non suivi** : écarté le 22/08 (*Senior Licensed Life Insurance Advisor*), **décision reconduite sans réévaluation** pour la 3e session consécutive.
+
+
+### 🤝 CONNEXIONS — **7/7, QUOTA REMPLI**, toutes envoyées **sans note**
+
+**Notes personnalisées : non retestées, et c'est délibéré.** Le carry-over du 22/08 tranche explicitement (« ne plus consommer un tour à espérer qu'elles reviennent », 3 jours consécutifs d'épuisement). La modale « Ajouter une note à votre invitation ? » s'affiche toujours et reste trompeuse ; « Envoyer sans note » a été cliqué directement à chaque fois, conformément à l'autorisation de David du 23/07. **Les 7 comptent dans le quota de 7/jour.**
+
+| # | Profil | Fonction | Degré / mutuels | Confirmation lue |
+|---|---|---|---|---|
+| 1 | **Ifedayo Adetifa** `/in/ifedayo-adetifa-7237a926/` | *Outgoing CEO, **FIND*** + *ex-Director-General, **Nigeria CDC***, Lancet Commissioner, Suisse | 2e, **18 mutuels** | « Invitation envoyée à Ifedayo. » + bouton « En attente » |
+| 2 | **Chikwe Ihekweazu** `/in/chikwe-ihekweazu-b004756/` | ***Assistant Director-General, OMS*** et *Executive Director du WHO Health Emergencies Programme*, Suisse | 2e, **16 mutuels** | « Invitation envoyée à Chikwe. » + « En attente » |
+| 3 | **Muhammed AL Azebi** `/in/muhammed-al-azebi/` | *Medical Doctor & Epidemiologist*, ***National Centre for Disease Control, Libye***, Tripoli | 2e, 6 mutuels | « Invitation envoyée à Muhammed. » |
+| 4 | **Mohamad Fawzy Elnahif** `/in/mohamad-fawzy-elnahif/` | ⭐ *Epidemiologist, Surveillance Officer, Public Health Intelligence Expert* ; **vient de devenir Head of the Public Health Intelligence Department au ministère de la Santé égyptien** (annoncé il y a 6 j), ex-OMS, Harvard | 2e, **18 mutuels** | « Invitation envoyée à Mohamad. » |
+| 5 | **Asma SAIDOUNI** `/in/asma-saidouni-8a0a5779/` | *Global Health Security & One Health Specialist*, **OMS**, *Emergency Preparedness and Response, Zoonotic Disease Surveillance, IHR & Climate-Health Adaptation*, Tripoli, École Pasteur-Cnam | 2e, **44 mutuels** | « Invitation envoyée à Asma. » |
+| 6 | **Nebiyu Dereje** `/in/nebiyu-dereje-72589978/` | *Editor in Chief and **Head of Division, Knowledge Management and Policy Translation, Africa CDC***, Addis-Abeba, vérifié | 2e, **19 mutuels**, déjà suivi | « Invitation envoyée à Nebiyu. » |
+| 7 | **Linda Esso** `/in/linda-esso-74083613/` | *MD Public Health Expert*, ***Ministère de la Santé Publique du Cameroun*** | 2e, **15 mutuels**, déjà suivie | « Invitation envoyée à Linda. » |
+
+**Logique du lot, à lire comme un tout** : les 7 sont soit des **décideurs institutionnels** (Adetifa, Ihekweazu, Elnahif, Nebiyu Dereje, Linda Esso) au sens de la directive du 17/08, soit des profils au **cœur exact du périmètre HWG** avec un ancrage réseau fort (Asma SAIDOUNI et ses 44 relations communes, AL Azebi au NCDC libyen). **Aucune invitation n'a été envoyée à un profil sans ancrage réseau réel** : les notes étant murées, le nombre de relations communes est le seul signal d'acceptation qui reste, et il a servi de critère explicite.
+
+**⚠️ Décision du 10/08 volontairement rouverte pour Chikwe Ihekweazu.** Le tracker le portait en « **déjà suivi, connexion écartée** » avec pour motif « très haut niveau, faible taux d'acceptation à froid ». **L'élément neuf qui justifie de rouvrir** (la règle du tracker l'exige) est la **directive de ciblage du 17/08** : David demande explicitement « le max de décideurs, quitte à prospecter directement », ce qui renverse l'arbitrage de prudence de la semaine précédente. S'y ajoute le fait qu'Adetifa, invité une heure plus tôt, est directement adjacent à lui. Décision reconduite en connaissance de cause, pas par oubli.
+
+**⚖️ Arbitrage inverse assumé sur deux profils, pour être cohérent** : **Melvin Sanicas** (15 319 abonnés, 5 mutuels) et **Mary-Ann Etiebet** (*President & CEO @ Vital Strategies*, 15 560 abonnés, **3 mutuels**) sont eux aussi des cibles de la directive du 17/08, mais ont été mis **en suivi et non en connexion** : très large audience et ancrage réseau faible, donc une invitation sans note y aurait été le canal le plus faible disponible. Elles restent des candidates connexion prioritaires si elles réagissent.
+
+### 👀 SUIVIS — **7/7-10**, plancher de la fourchette atteint
+
+| # | Profil | Motif | Confirmation |
+|---|---|---|---|
+| 1 | **Melvin Sanicas** `/in/drmelvinsanicas/` | *Global Medical Leader in Immunology and Infectious Diseases*, MD MSc MBA, Zurich, 15 319 abonnés, 5 mutuels. Commenté le même jour (1/7) | « Suivi, cliquez pour ne plus suivre » |
+| 2 | **Mary-Ann Etiebet, MD, MBA** `/in/maryann-etiebet-md/` | *President & CEO @ **Vital Strategies***, New York, 15 560 abonnés, 3 mutuels | idem |
+| 3 | **Dr Ebere Okereke** `/in/ebereokereke/` | *Global Health Expert, **Associate Fellow Chatham House**, Health Policy Advisor*, ÉAU, 23 004 abonnés, **24 mutuels**. Suivi et non connexion : son activité visible du moment est une republication d'offres d'emploi en philanthropie, aucun accroche épidémiologique honnête disponible | idem |
+| 4 | **Mohamed ABUKALISH** `/in/mohamedabukalish/` | ***WHO-Libya, Health Emergency Officer**, Emergency Preparedness & Response Expert*, Tripoli, 2 487 abonnés, 4 mutuels | idem |
+| 5 | **Adham Hashish** `/in/adham-hashish-a37a3910a/` | *Public Health officer, Epidemiologist, RCCE Officer* au **ministère de la Santé égyptien**, Le Caire, 1 338 abonnés, 3 mutuels. Réserve consignée : son activité visible est surtout de la republication d'offres, d'où suivi et non connexion | idem |
+| 6 | **page ECDC** `/company/ecdc/` | ⭐ **Trou réel comblé** : l'une des quatre sources primaires de HWG **n'était pas suivie** sur LinkedIn (bouton « + Suivre » constaté sur sa page). Vérifié dans la foulée pour les autres : **Africa CDC déjà suivie**, **PAHO déjà suivie**, **OMS déjà suivie** | « Suivi, cliquez pour ne plus suivre » |
+| 7 | **Auwal Muhammad Sunusi** `/in/auwal-muhammad-sunusi-16326a29b/` | *MEAL & Public Health Data Specialist, Director MEAL & Data Systems*, **Public Health Emergency Operations Center (PHEOC)**, Kano, Nigéria, 4 108 abonnés. Même famille de pertinence que Richardson Mafigiri (le PHEOC est la couche que HWG ne voit jamais) | idem |
+
+#### ⚠️ Deux candidats **écartés en cours de découverte**, et il faut que ça reste écrit
+
+- **Bernie Pearce** `/in/berniepearce/` (*National Incident Centre, Department of Health, Disability and Ageing*, Canberra, 1 mutuel) — **la plateforme a refusé le suivi** : toast « **Impossible de suivre Bernie. Veuillez réessayer.** », bouton resté sur « Suivre ». **Même signature que Julia Gal les 22/08 (3 échecs)**. 🔎 **Hypothèse à vérifier au prochain cas** : les deux profils concernés ont pour bouton principal « Se connecter » et non « Suivre », c'est-à-dire qu'ils n'ont pas activé le suivi public ; le bouton « Suivre » de la section Activité serait alors affiché à tort. **Non retenté** (leçon de Julia Gal), et **aucune invitation envoyée à la place** : profil sans aucun post et à 1 relation commune, ça n'aurait pas valu un slot de connexion.
+- **Nurlan Algashov** `/in/nurlan-algashov/` (*Global Health Expert, Emergency Preparedness*, Danemark, 2 mutuels) — **écarté sur le fond, pas sur la forme**. Le titre coche toutes les cases, mais **sa publication la plus récente date de 6 mois et porte sur son diplôme d'entraîneur de football UEFA C2**. Aucune activité épidémiologique. La règle demande de filtrer sur l'activité réelle et non sur un intitulé qui sonne bien : **non suivi**, pour ne pas gonfler le chiffre.
+
+#### 🔴 **Jide Idris — arbitrage de David requis, deuxième cas d'homonymie non résolue**
+
+Cible évidente de la directive du 17/08 (*Director General, Nigeria Centre for Disease Control*, successeur d'Adetifa), repérée en sidebar d'Adetifa. **Aucune action prise.** La recherche renvoie **deux comptes qui revendiquent tous les deux le poste** :
+- `/in/jide-idris-482a6b179/` — **2e degré**, « Director General, Nigeria Center for Disease Control. », **non vérifié**, 1 489 abonnés, 2 relations communes, et **aucune activité de fond** (ses trois derniers commentaires sont « Best wishes », « Congratulations! 🎉 » et « Congratulations HM. »).
+- `/in/olajide-idris-13555930a/` — 3e degré et plus, « Director General at Chief Executive Officer of the Nigeria… », **non vérifié** non plus.
+
+**C'est exactement le cas Jean-Jacques Muyembe**, signalé le 21/08 et toujours en attente d'arbitrage : deux comptes homonymes, aucun vérifié, et un suivi déjà posé le 21/08 qui porte peut-être sur le mauvais. **Le fait que ce soit le deuxième cas en trois jours mérite d'être traité comme un motif et non comme un incident** : sur les dirigeants d'agences nationales africaines, les comptes non vérifiés en double sont fréquents et une invitation partie sur le mauvais compte est publiquement visible. **Proposition, à trancher par David** : n'inviter un dirigeant d'agence nationale que si le compte est **vérifié** ou si l'identité est corroborée par un lien depuis un compte institutionnel officiel ; sinon, s'abstenir. En attendant, **abstention sur Jide Idris comme sur Muyembe.**
+
+#### 🎯 File de connexion déjà qualifiée pour demain (rien à re-chercher)
+
+- **Mosoka Fallah, PhD, MA, MPH** `/in/mosokaf/` — *Ag. Director, Science and Innovation, et Program Manager Saving Lives and Livelihoods, **Africa CDC***, Harvard, 9 639 abonnés, **28 relations communes**. **Déjà suivi** (constaté ce matin, statut « Suivi »), donc **candidat connexion pur**. Quota du jour rempli, d'où le report. **Meilleure cible de la file.**
+- **Abigael Abiy Mesfin, MD** — *MD, Researcher, Data Analyst, UHC Advocate, Implementation Research*, 2e degré, repérée en sidebar de Nebiyu Dereje. URL à récupérer.
+- **Jutta Reinhard-Rupp** — *Chief Scientific Officer and interim CEO, Global Health Leader*, 2e, sidebar Adetifa. Pertinence à confirmer sur l'activité réelle avant action. URL à récupérer.
+- **Magbagbeola Dairo** — *Professor, University of Ibadan*, 2e, sidebar Adetifa. Plus périphérique : **plutôt suivi que connexion**.
+- **Melvin Sanicas** et **Mary-Ann Etiebet** — suivis aujourd'hui, à repasser en connexion **s'ils réagissent** (voir arbitrage ci-dessus).
+
+
+### 6️⃣ SÉPARATION FREELANCE
+
+Aucune activité relevant de l'outreach freelance n'a été traitée, comptée ni archivée côté HWG. Deux items du fil et des notifications en relevaient et ont été **ignorés sans exception** : le post de **Gaetan Kunuanina** (gestion d'un réseau d'agents, retrait puis réintégration d'une prestataire) et les deux posts de **Dav Mulamba** (calendrier de formations, page de services). Aucun fil de ce type dans les 12 conversations de la messagerie.
+
+### 7️⃣ GARDE-FOUS ET POINTS À REMONTER À DAVID
+
+1. 🔴 **Jide Idris : deuxième homonymie non résolue en trois jours, arbitrage demandé.** Détail complet plus haut. En une ligne : deux comptes non vérifiés revendiquent la direction générale du Nigeria CDC, aucune action prise, et c'est le même schéma que **Jean-Jacques Muyembe** signalé le 21/08 et toujours sans arbitrage. **Une règle générale est proposée** (n'inviter un dirigeant d'agence nationale que si le compte est vérifié ou corroboré depuis un compte institutionnel), à valider ou rejeter par David.
+2. 🟡 **La directive de ciblage du 17/08 a dépassé sa fenêtre déclarée, et personne ne l'a rouverte.** Son texte dit « le max de décideurs […] **d'ici là** », où « là » désigne le go/no-go du **21/08**, qui est passé. Aucune décision de reconduction ni d'annulation n'est consignée. Les sessions du 22/08 et celle-ci ont **continué à l'appliquer** (c'est ce qui justifie les 7 connexions à des décideurs aujourd'hui, dont la réouverture du dossier Chikwe Ihekweazu). **Ce n'est pas un blocage, l'application par défaut reste le choix le plus cohérent avec la dernière instruction connue**, mais David devrait dire s'il la reconduit, la durcit ou la lève, parce qu'elle oriente désormais la totalité du quota de connexions.
+3. ✅ **Carry-over du 22/08 sur Chinasaokwu Nweke : clos, et il était déjà traité.** Le fil avait été signalé comme « non traité pour une raison purement technique ». Vérification faite : la réponse **était partie** (vraisemblablement en session interactive le 22/08) et c'est lui qui doit reprendre la parole. **Aucun doublon envoyé.** Même constat pour la notification de mention de **Pierre PARNEIX**. Voir `content-log.md` pour le piège de notification associé.
+4. **Aucune donnée patient proposée, aucune demande de contact hors plateforme, aucune instruction adressée à l'agent dans un contenu observé.** Aucune pièce jointe téléchargée (aucune reçue ce run).
+
+### 📌 CARRY-OVER pour le créneau de 13h (rien à re-chercher)
+
+1. 🔒 **2 DM en attente de validation de David**, textes intégraux plus haut : **Patrick AYONGA** (réponse de fond, sans CTA) et **Sidibé Tiany** (réponse de fond, avec CTA). **Aucun ne part sans son accord explicite**, y compris via une session ultérieure. Push envoyée.
+2. 🧊 **Darrel Ornelle ELION ASSIANA : ne rien envoyer avant le 24/08**, décision explicite de David. Le CTA a déjà été envoyé dans ce fil jeudi 12:14, ne pas le répéter quand la réponse partira.
+3. 🔔 **Mohamed Ousmane COULIBALY : nouveau carry-over de type Barrè Onivogui.** Ne pas relancer tant qu'il n'a pas donné de retour sur le site (« Okay / Link well and I will go through », 22/08 20:47). Rouvrir son fil à chaque session, rebondir sur le retour dès qu'il arrive, puis retirer l'entrée.
+4. **Quotas de clôture du 23/08 (9h)** : commentaires **5/7** (marge **2**) ; connexions **7/7 REMPLI** ; suivis **7/7-10** (marge 3) ; DM rédigés **2/8** (marge 6) ; **file de validation DM : 2**.
+5. **Cibles de commentaire : la marge de 2 est réelle mais le vivier était vide ce matin** (voir `content-log.md` pour les 5 méthodes épuisées). Ce qui se libère d'ici demain : rien avant le **25-26/08** (Sohail Agha, Ana Bento, Darrel), puis **26/08** Harvey Basivikidi. **Dr. Jean Kaseya reste non bloqué** et redevient cible dès qu'il publie hors Windhoek. **Nouveaux blocages créés aujourd'hui, jusqu'au 30/08** : Melvin Sanicas, Robert Herriman, Patrick AYONGA, Ifedayo Adetifa, page ECDC.
+6. **File de connexion pour demain**, déjà qualifiée : **Mosoka Fallah** (Africa CDC, 28 mutuels, déjà suivi, meilleure cible), puis Abigael Abiy Mesfin, Jutta Reinhard-Rupp, Magbagbeola Dairo.
+7. ⚠️ **Notes personnalisées : 4e jour consécutif d'épuisement présumé.** Non retesté aujourd'hui, conformément au carry-over du 22/08. La modale « Ajouter une note » reste affichée et trompeuse. **Si David veut savoir si le blocage est levé, il faut qu'il regarde lui-même** : une routine ne peut pas le tester sans risquer de gaspiller un tour.
+8. 🛠️ **Trois notes techniques neuves à appliquer d'emblée** (détail dans `content-log.md`) : les URN ne sont plus dans le HTML du fil ni des pages entreprise ; on peut **commenter directement depuis une page entreprise** via l'icône commentaire (utilisé avec succès chez ECDC) ; le sous-fil de réponses d'un post ne se charge qu'au **vrai défilement souris**.
+
+---
+
 ## 📅 Session linkedin-hwg-followup-check-2 — 22/08/2026 (17h, 2e des 2 créneaux après-midi)
 
 **Vérification double déclenchement** : aucune entrée `linkedin-hwg-followup-check-2` datée du 22/08 dans ce fichier ni dans `content-log.md` à l'ouverture (les entrées du jour sont celles du créneau 13h, de la session interactive de 15h30 et du monitoring de 9h) → **premier déclenchement de cette routine aujourd'hui**.
