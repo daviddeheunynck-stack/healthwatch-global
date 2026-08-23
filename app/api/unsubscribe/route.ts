@@ -215,19 +215,46 @@ export async function POST(req: NextRequest) {
   // Soft-delete: set active = false — preserves history and allows re-subscription
   // via the webhook upsert (onConflict: "email" will flip active back to true on
   // the next successful purchase).
-  const { error, count } = await supabase
+  const { data: updatedRows, error } = await supabase
     .from("subscriptions")
     .update({ active: false })
     .eq("id", rawId)
-    .eq("active", true); // no-op if already inactive — idempotent
+    .eq("active", true) // no-op if already inactive — idempotent
+    .select("email");
 
   if (error) {
     console.error("[unsubscribe] DB error:", error);
     return html(resultPage(locale, false), 500);
   }
 
-  console.log(`[unsubscribe] id=${rawId} rows_updated=${count ?? "?"}`);
-  // count === 0 means the link was already used or never existed — still show success
-  // to avoid leaking whether an ID is valid.
+  // updatedRows.length === 0 means the link was already used or never existed
+  // — still show success below, to avoid leaking whether an ID is valid.
+  console.log(`[unsubscribe] id=${rawId} rows_updated=${updatedRows?.length ?? 0}`);
+
+  // Unify with weekly-signal (2026-08-23, David: "un seul email hebdo par
+  // adresse"): the two "weekly" emails (this one, and weekly-signal sent to
+  // a profiles account) read as the same product to a recipient — opting out
+  // of one must stop both. Mirrored in /api/unsubscribe-signal. Matching-
+  // scale full-table scan (same pattern as getBlockedEmailSet/
+  // syncBrevoBlocklist), best-effort: a failure here logs and moves on
+  // rather than turning an otherwise-successful digest unsubscribe into an
+  // error page.
+  const unsubscribedEmail = (updatedRows?.[0]?.email as string | undefined)?.toLowerCase();
+  if (unsubscribedEmail) {
+    const { data: profiles, error: profilesErr } = await supabase
+      .from("profiles")
+      .select("id, email, display_filters");
+    if (profilesErr) {
+      console.error("[unsubscribe] profiles lookup for cross-opt-out failed:", profilesErr.message);
+    } else {
+      const matches = (profiles ?? []).filter((p) => (p.email as string | null)?.toLowerCase() === unsubscribedEmail);
+      for (const p of matches) {
+        const merged = { ...(p.display_filters as Record<string, unknown> ?? {}), no_weekly_signal: true };
+        const { error: crossErr } = await supabase.from("profiles").update({ display_filters: merged }).eq("id", p.id);
+        if (crossErr) console.error(`[unsubscribe] cross-opt-out write failed for profile ${p.id}:`, crossErr.message);
+      }
+    }
+  }
+
   return html(resultPage(locale, true), 200);
 }

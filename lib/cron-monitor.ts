@@ -169,6 +169,47 @@ export async function claimWeeklyDigestSend(
 }
 
 /**
+ * Cross-cron sibling of claimWeeklyDigestSend/claimEmailSend: claims a
+ * (lowercased email, calendar week) pair shared across ALL weekly sends, not
+ * just one cron's own rows. weekly-digest (subscriptions.email, explicit
+ * opt-in newsletter) and weekly-signal (profiles.email, every free-plan
+ * account) draw from two separate tables with no shared row id, so the same
+ * address can be present in both — each cron's own row-keyed claim can't see
+ * that, only that its own row hasn't been claimed yet. Found 2026-08-23: an
+ * address in both tables got both emails, ~10 minutes apart, every Monday.
+ *
+ * Call this IN ADDITION to the cron's own row-keyed claim, after it
+ * succeeds — both must pass before sending. Schedule order in vercel.json
+ * matters: whichever weekly cron runs first wins the address for the week;
+ * weekly-digest is scheduled first (explicit opt-in beats an ambient
+ * free-plan nudge), see vercel.json for the reasoning.
+ *
+ * Fails open (true) on any DB error, same trade-off as its siblings: a
+ * missing/broken table degrades to today's un-deduped-across-crons
+ * behavior, not to silently blocking the weekly send.
+ */
+export async function claimWeeklyEmailAddress(
+  supabase: SupabaseClient,
+  email: string,
+  weekOf: string,
+  source: string,
+): Promise<boolean> {
+  const normalized = email.trim().toLowerCase();
+  const { data, error } = await supabase
+    .from("weekly_email_send_log")
+    .upsert(
+      { email: normalized, week_of: weekOf, source },
+      { onConflict: "email,week_of", ignoreDuplicates: true },
+    )
+    .select("email");
+  if (error) {
+    console.error(`[cron-monitor] claimWeeklyEmailAddress failed for ${source}/${normalized}/${weekOf}, sending anyway:`, error.message);
+    return true;
+  }
+  return (data?.length ?? 0) > 0;
+}
+
+/**
  * Monday (UTC) of the current calendar week, as "YYYY-MM-DD": the dedup key
  * for claimWeeklyDigestSend. Deliberately computed from wall-clock "now"
  * rather than passed in: a real Monday 07:00 UTC trigger and a same-day

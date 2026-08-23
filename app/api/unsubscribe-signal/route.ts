@@ -145,7 +145,7 @@ export async function POST(req: NextRequest) {
   // Read current display_filters to merge without overwriting existing prefs
   const { data: profile, error: fetchErr } = await supabase
     .from("profiles")
-    .select("display_filters")
+    .select("display_filters, email")
     .eq("id", rawId)
     .maybeSingle();
 
@@ -163,6 +163,28 @@ export async function POST(req: NextRequest) {
   if (updateErr) {
     console.error("[unsubscribe-signal] update error:", updateErr);
     return html(resultPage(locale, false), 500);
+  }
+
+  // Unify with weekly-digest (2026-08-23): same rationale as the mirrored
+  // change in /api/unsubscribe — the two "weekly" emails read as the same
+  // product to a recipient, so opting out of one must stop both.
+  // Matching-scale full-table scan, best-effort (log-and-continue on
+  // failure) — same pattern as the cross-write there.
+  const email = (profile.email as string | null)?.toLowerCase();
+  if (email) {
+    const { data: subs, error: subsErr } = await supabase
+      .from("subscriptions")
+      .select("id, email")
+      .eq("active", true);
+    if (subsErr) {
+      console.error("[unsubscribe-signal] subscriptions lookup for cross-opt-out failed:", subsErr.message);
+    } else {
+      const matches = (subs ?? []).filter((s) => (s.email as string | null)?.toLowerCase() === email);
+      for (const s of matches) {
+        const { error: crossErr } = await supabase.from("subscriptions").update({ active: false }).eq("id", s.id);
+        if (crossErr) console.error(`[unsubscribe-signal] cross-opt-out write failed for subscription ${s.id}:`, crossErr.message);
+      }
+    }
   }
 
   return html(resultPage(locale, true), 200);

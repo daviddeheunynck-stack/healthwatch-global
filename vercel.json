@@ -42,7 +42,7 @@
     },
     {
       "path": "/api/cron/weekly-digest",
-      "schedule": "0 7 * * 1"
+      "schedule": "50 6 * * 1"
     },
     {
       "path": "/api/cron/trial-reminders",
@@ -162,7 +162,7 @@
     },
     {
       "path": "/api/cron/weekly-signal",
-      "schedule": "50 6 * * 1"
+      "schedule": "0 7 * * 1"
     },
     {
       "path": "/api/cron/pilot-follow-up",
