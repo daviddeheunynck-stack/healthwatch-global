@@ -1,4 +1,7 @@
-// Watchlist change notifications — runs daily at 7h UTC (after sync at 6h)
+// Watchlist change notifications — runs daily at 10:40 UTC, after the
+// 08:00-10:00 UTC sync crons that populate outbreaks (moved from 06:40 on
+// 2026-08-03; see regional-alerts' header for why the pre-move schedule ran
+// alerts ahead of same-day sync data).
 // For each user's starred outbreaks, compares current cases/deaths with
 // the last notified values. Sends an email if anything changed.
 
