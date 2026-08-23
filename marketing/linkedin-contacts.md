@@ -84,6 +84,8 @@
 
 **Statut : 🔒 EN ATTENTE DE VALIDATION DE DAVID.** Réponse en fil actif, donc **hors quota froid** une fois envoyée.
 
+✅ **Double-check refait intégralement, à la demande de David en session interactive (« double check les 3 DMs »).** Fil rouvert : **rien de neuf depuis 14:38**, les 5 messages de Johan restent les derniers du fil (35 messages uniques, inchangé). Contrôles matériels refaits à l'identique : 853 caractères, 3 paragraphes, 0 tiret cadratin, seuls accents français en non-ASCII, aucun CTA, aucun engagement (« je regarde », « je peux », « happy to » → 0). **Anti-gabarit rejoué contre le bon parent de commit** (`git show 5f85c70~1`, le commit juste avant celui de cette session — la première extraction de baseline avait par erreur pris `HEAD~1` du dépôt, qui pointait sur un commit d'une routine différente arrivé après coup) : « ne se voit nulle part » confirmé à **4 occurrences** hors session (justifiant l'écart), toutes les formulations retenues confirmées à **0**. Rien à changer.
+
 ### 3️⃣ ⭐ RÉPONSE PUBLIQUE RÉDIGÉE ET NON PUBLIÉE — **Gittan Gröndahl** sous le post ECDC (EN)
 
 **Première retombée réelle de la journée sur les 7 commentaires.** Gittan Gröndahl (`/in/…`, *Veterinary Scientist, Communicator and Educator, State Veterinarian*, compte **vérifié**, 3e degré) a répondu à notre commentaire 5/7 à **16h50 environ**, en nous nommant.
@@ -131,6 +133,8 @@
 
 **Statut : 🔒 EN ATTENTE DE VALIDATION DE DAVID.** Comptera dans le quota de 8 DM à froid une fois envoyé (2/8).
 
+✅ **Double-check refait intégralement, à la demande de David.** Fils messagerie relus : **ni Adetifa ni Elnahif n'apparaissent dans la liste des 20 fils récents** → toujours un vrai premier contact, aucun message échangé entre-temps, le brouillon reste pertinent. Faits **revérifiés mot pour mot sur le post source, en direct** : « seroprevalence in children rises from 13% at ages 0 to 4 to 61% at ages 10 to 14 », « close to 40% of people are still susceptible », « archived samples from population-based serosurveys in the Kilifi Health and Demographic Surveillance System » — repris sans altération. Contrôles matériels refaits à l'identique : 821 caractères, 4 paragraphes, 100 % ASCII, 0 tiret cadratin. **Anti-gabarit rejoué contre le bon parent de commit** (`git show 5f85c70~1`, correction du même incident de baseline que ci-dessus) : « Thanks for connecting » confirmé à **72**, « I run HealthWatch Global » à **66**, toutes les formulations retenues à **0**. Rien à changer.
+
 ### 5️⃣ 🔒 DM EN ATTENTE DE VALIDATION n°3 — **Mohamad Fawzy Elnahif** (EN, message de bienvenue, **SANS lien ni CTA**)
 
 **Connexion acceptée aujourd'hui après 13h**, invitée ce matin. **Identité confirmée par le lien (§12)** : slug `mohamad-fawzy-elnahif`, identique à la fiche du matin.
@@ -151,6 +155,8 @@
 > Your EIOS work sits upstream of all of that. By the time an event reaches me it has already survived verification and a decision to publish, and I have no way of knowing what that filter took out.
 >
 > You are drafting those SOPs right now, which is why I am asking rather than guessing. Where does the line actually fall between a signal your department acts on internally and one the country reports outward? And does a discarded signal leave any record behind, or does only the confirmed event survive?
+
+✅ **Double-check refait intégralement, à la demande de David.** Même vérification que pour Adetifa : ni Elnahif ni Adetifa n'apparaissent dans les fils récents, toujours un vrai premier contact. Faits **revérifiés mot pour mot sur le post source, en direct** : « founded this department from scratch », « from drafting SOPs and team ToRs to establishing data exchange policies », « expanding our new Incident Management System (IMS) », « the Epidemic Intelligence from Open Sources (EIOS) initiative and PHI at WHO EMRO » — repris sans altération. Contrôles matériels refaits à l'identique : 778 caractères, 4 paragraphes, 100 % ASCII, 0 tiret cadratin. **Anti-gabarit rejoué contre le bon parent de commit** (`git show 5f85c70~1`) : toutes les formulations retenues à **0**, et le recoupement croisé avec le brouillon Adetifa (corrigé en session pour l'écarter) **reconfirmé à 0 séquence de 4 mots communes**. Rien à changer.
 
 **Statut : 🔒 EN ATTENTE DE VALIDATION DE DAVID.** Comptera dans le quota de 8 DM à froid une fois envoyé (3/8).
 
