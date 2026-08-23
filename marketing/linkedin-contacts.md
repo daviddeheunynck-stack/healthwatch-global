@@ -55,7 +55,7 @@ Liste des conversations relue par récence. Les 4 fils portant un message entran
 
 ---
 
-#### 🔒 DM EN ATTENTE DE VALIDATION 1/2 — **Patrick AYONGA** (FR, réponse en fil actif, **SANS CTA**, hors quota froid)
+#### ✅ DM ENVOYÉ ET CONFIRMÉ — validé par David en session interactive (« double check et envoie les 2 DMs ») — **Patrick AYONGA** (FR, réponse en fil actif, **SANS CTA**, hors quota froid)
 
 *Infectious Diseases Specialist | Epidemiologist | PhD Candidate in Public Health, Epidemiology & Population Health. 1er degré. Même contact que le commentaire 3/7 du jour, mais l'échange privé est indépendant et bien plus ancien.*
 
@@ -93,9 +93,11 @@ Liste des conversations relue par récence. Les 4 fils portant un message entran
 >
 > Je dis ça sans savoir ce que DHIS2 laisse réellement ajouter à un format en production, et c'est probablement là que se joue la faisabilité. Vous le verrez avant moi.
 
+**Statut : ✅ ENVOYÉ ET CONFIRMÉ.** Re-double-check complet refait avant envoi (fil relu, aucun nouveau message depuis la rédaction). Éditeur `.msg-form__contenteditable` vidé puis rempli en un seul `execCommand('insertText')`, `\n\n` entre paragraphes → 9 balises `<p>` (5 texte + 4 blancs), conforme. Rendu vérifié par capture avant clic. Destinataire (« Patrick AYONGA ») et contenu de l'éditeur revérifiés dans le **même appel JS** que le clic sur Envoyer. Confirmation de publication : message visible dans le fil sous « David Deheunynck » à **10:53**, texte identique caractère pour caractère au brouillon validé, éditeur vide après envoi.
+
 ---
 
-#### 🔒 DM EN ATTENTE DE VALIDATION 2/2 — **Sidibé Tiany** (FR, réponse en fil actif, **AVEC CTA**, hors quota froid)
+#### ✅ DM ENVOYÉ ET CONFIRMÉ — validé par David en session interactive (« double check et envoie les 2 DMs ») — **Sidibé Tiany** (FR, réponse en fil actif, **AVEC CTA**, hors quota froid)
 
 *Surveillance de la poliomyélite et des autres maladies évitables par la vaccination, **Guinée**. Connexion récente.*
 
@@ -126,6 +128,8 @@ Liste des conversations relue par récence. Les 4 fils portant un message entran
 > Ce qui me manque pour corriger ça, c'est de savoir si ce délai est mesuré par zone quelque part, ou s'il ne vit que comme l'intervalle entre deux dates sur des fiches individuelles que personne n'agrège. Vous le percevez clairement, puisque vous venez de me le décrire. Est-ce qu'il est aussi écrit, sous une forme comparable d'un trimestre au suivant ?
 >
 > Sur healthwatch-global.com, la Guinée existe, mais uniquement par ce que l'OMS et Africa CDC en publient, c'est-à-dire l'aval de vos trois causes et rien de ce qui les produit. L'inscription ouvre quatorze jours en Pro et ne réclame aucune carte. Ce qui m'intéresserait surtout, c'est que vous me disiez ce qui vous paraît faux ou absent quand vous regardez la Guinée depuis l'intérieur.
+
+**Statut : ✅ ENVOYÉ ET CONFIRMÉ.** Re-double-check complet refait avant envoi (fil relu, aucun nouveau message depuis samedi 22:06). Éditeur vidé puis rempli en un seul `execCommand('insertText')`, `\n\n` entre paragraphes → 7 balises `<p>` (4 texte + 3 blancs), conforme. Rendu vérifié par capture avant clic. Destinataire (« Sidibé Tiany ») et contenu de l'éditeur revérifiés dans le **même appel JS** que le clic sur Envoyer. Confirmation de publication : message visible dans le fil sous « David Deheunynck » à **10:55**, texte identique au brouillon validé, éditeur vide après envoi.
 
 ---
 
@@ -223,10 +227,10 @@ Aucune activité relevant de l'outreach freelance n'a été traitée, comptée n
 
 ### 📌 CARRY-OVER pour le créneau de 13h (rien à re-chercher)
 
-1. 🔒 **2 DM en attente de validation de David**, textes intégraux plus haut : **Patrick AYONGA** (réponse de fond, sans CTA) et **Sidibé Tiany** (réponse de fond, avec CTA). **Aucun ne part sans son accord explicite**, y compris via une session ultérieure. Push envoyée.
+1. ✅ **RÉSOLU EN SESSION INTERACTIVE — les 2 DM ont été re-double-checkés puis envoyés sur ordre explicite de David** (« double check et envoie les 2 DMs ») : **Patrick AYONGA** (10:53) et **Sidibé Tiany** (10:55), tous deux **envoyés et confirmés**. Détail complet des re-vérifications et confirmations plus haut.
 2. 🧊 **Darrel Ornelle ELION ASSIANA : ne rien envoyer avant le 24/08**, décision explicite de David. Le CTA a déjà été envoyé dans ce fil jeudi 12:14, ne pas le répéter quand la réponse partira.
 3. 🔔 **Mohamed Ousmane COULIBALY : nouveau carry-over de type Barrè Onivogui.** Ne pas relancer tant qu'il n'a pas donné de retour sur le site (« Okay / Link well and I will go through », 22/08 20:47). Rouvrir son fil à chaque session, rebondir sur le retour dès qu'il arrive, puis retirer l'entrée.
-4. **Quotas de clôture du 23/08 (9h)** : commentaires **5/7** (marge **2**) ; connexions **7/7 REMPLI** ; suivis **7/7-10** (marge 3) ; DM rédigés **2/8** (marge 6) ; **file de validation DM : 2**.
+4. **Quotas de clôture du 23/08 (9h, session interactive incluse)** : commentaires **5/7** (marge **2**) ; connexions **7/7 REMPLI** ; suivis **7/7-10** (marge 3) ; **DM à froid : 2/8 envoyés et confirmés** (Patrick AYONGA et Sidibé Tiany sont des réponses en fil actif, donc hors quota froid — [[feedback_reply_quota_cold_outreach_only]]) ; **file de validation DM : 0**.
 5. **Cibles de commentaire : la marge de 2 est réelle mais le vivier était vide ce matin** (voir `content-log.md` pour les 5 méthodes épuisées). Ce qui se libère d'ici demain : rien avant le **25-26/08** (Sohail Agha, Ana Bento, Darrel), puis **26/08** Harvey Basivikidi. **Dr. Jean Kaseya reste non bloqué** et redevient cible dès qu'il publie hors Windhoek. **Nouveaux blocages créés aujourd'hui, jusqu'au 30/08** : Melvin Sanicas, Robert Herriman, Patrick AYONGA, Ifedayo Adetifa, page ECDC.
 6. **File de connexion pour demain**, déjà qualifiée : **Mosoka Fallah** (Africa CDC, 28 mutuels, déjà suivi, meilleure cible), puis Abigael Abiy Mesfin, Jutta Reinhard-Rupp, Magbagbeola Dairo.
 7. ⚠️ **Notes personnalisées : 4e jour consécutif d'épuisement présumé.** Non retesté aujourd'hui, conformément au carry-over du 22/08. La modale « Ajouter une note » reste affichée et trompeuse. **Si David veut savoir si le blocage est levé, il faut qu'il regarde lui-même** : une routine ne peut pas le tester sans risquer de gaspiller un tour.
