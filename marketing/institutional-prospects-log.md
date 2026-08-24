@@ -1941,3 +1941,95 @@ La consigne du 12/08 (« cinq cibles écartées deux fois → ne pas réessayer 
 - **Langues** : **FR** pour l'OCEAC et la SFSP (organisations manifestement francophones), **ES** pour l'INLASA (précédent du bureau OPS Honduras, 21/08 — l'espagnol est couvert par le produit), **EN** pour les 7 autres, **y compris l'ABRASCO** : le portugais n'est pas une des cinq langues du produit, et le message le dit ouvertement plutôt que de le masquer (précédents Brésil 21/08, Angola 09/08, Mozambique 20/08).
 
 **Totaux au 2026-08-24 (fin de ce run) : 270 contacts prospectés, 260 envoyés.** Les 10 de ce run restent en brouillon. **Profondeur de file : 11 brouillons** (10 du run + remplacement ADELF), sous le seuil de ~20. *Bilan des bounces et nombre effectivement délivré : non retotalisés ici — porteur unique `daily-relance-check-healthwatch`, règle du 16/08.*
+
+---
+
+## 🔁 RELANCE J+10 — 2026-08-24, run automatique `daily-relance-check-healthwatch`
+
+**Résultat : 9 relances créées, toutes en brouillon.** Lot traité : **le lot du 14/08 (11 contacts, envoyé le 15/08 à 04:25–04:29 UTC)**, relancé aujourd'hui à **J+9** — application du plan d'étalement proposé par le run du 23/08 et laissé par défaut faute d'instruction contraire de David. Motif rappelé : trois lots (04/08 recréé, 14/08, 15/08) arrivaient tous à échéance le 25/08, soit ~39 relances en une journée, très au-dessus du frein de file. Précédent identique : lot du 11/08 relancé à J+9 le 21/08.
+
+### 📐 Correction du décompte annoncé hier — 9 relances, pas 10
+
+Le run du 23/08 annonçait « **10 relances** (au lieu de 11), IEA retirée ». **Ce chiffre est faux d'une unité : il déduit le doublon IEA mais oublie le bounce Lao TPHI**, qui appartient à ce même lot du 14/08 (`contact@nioph.gov.la`, domaine en NXDOMAIN, entrée n° 8 de la liste nominative de bounces, contact abandonné le 15/08 sans remplacement). Décompte recalculé depuis la liste du lot plutôt que repris du run précédent :
+
+**11 contacts au lot − 1 bounce (Lao TPHI) − 1 doublon verrouillé (IEA) = 9 relances.**
+
+### ❌ 2 exclusions
+
+| Contact | Adresse | Motif |
+|---|---|---|
+| **Lao TPHI** | `contact@nioph.gov.la` | **Bounce du 15/08** — domaine NXDOMAIN, abandonné sans remplacement après recherche de repli infructueuse (15/08). Jamais délivré, donc rien à relancer. |
+| **IEA** | `secretariat@ieaweb.org` | **Doublon du 22/08 verrouillé par le run du 23/08.** Vérifié en direct ce run : **2 fils distincts** vers cette adresse — `19fff194917e1499` (15/08, lot du 14/08) et `1a0281e1c85f4bc7` (22/08, doublon). Une relance ferait une **3e sollicitation** en 9 jours. Exclusion maintenue. |
+
+### 🔎 Vérification en direct des 9 contacts restants
+
+Requêtes `to:` groupées, `includeTrash: true`. **Les 9 fils portent exactement 1 message, en `labelIds: ["SENT"]` — aucune réponse, aucun accusé automatique, aucun bounce, aucune relance antérieure.** Aucun des 9 n'apparaît dans une entrée « 🔁 RELANCE » antérieure du journal. Double contrôle (journal + fil Gmail) concordant sur les 9.
+
+### ✉️ Les 9 relances créées
+
+Toutes en réponse dans le fil d'origine (`replyToMessageId`), objet « Re: … » automatique, créées entre **09:09:49 et 09:10:26 UTC**.
+
+| Institution | Adresse | Langue | Fil d'origine | Brouillon |
+|---|---|---|---|---|
+| ZZJZ FBiH — Service d'épidémiologie (Prof. Sanjin Musa) | `s.musa@zzjzfbih.ba` | EN | `19fff18c8d540f51` | `r3900827109490466065` |
+| Ministry of Health Lesotho | `info.health@gov.ls` | EN | `19fff18d40fe94b1` | `r8849712374583013548` |
+| Ministère de la Santé et de la Population, Congo-Brazzaville | `contact@sante.gouv.cg` | FR | `19fff18de3473b02` | `r-4840099534841896501` |
+| UM6SS — Université Mohammed VI, Maroc | `Informations@um6ss.ma` | FR | `19fff190f1becb1a` | `r-3851087108096003582` |
+| NIPSOM — Bangladesh | `director@nipsom.gov.bd` | EN | `19fff19186c909c0` | `r-4799429770956416692` |
+| IICS-UNA — Paraguay | `asistente@iics.una.py` | EN | `19fff193710bda95` | `r-5986720711700728436` |
+| ISID — International Society for Infectious Diseases | `info@isid.org` | EN | `19fff1953ad140ca` | `r-7955445121209622275` |
+| APACPH — consortium Asie-Pacifique | `contact@apacph.org` | EN | `19fff195d1bf3f15` | `r-2826753623947912216` |
+| NIPH Kosovo | `ikshpk@rks-gov.net` | EN | `19fff243cc760b74` | `r4649560096989706234` |
+
+**Rédaction** — salutation identique à l'original (« Hi Sanjin, » pour le seul contact nominatif, « Hi team, » / « Bonjour, » sinon), une phrase de rappel, une ligne sur l'accès Pro gratuit toujours ouvert, puis **la question de clôture de l'email d'origine reprise à l'identique**. Les quatre contacts approchés avec une **demande de redirection** (Lesotho → Disease Surveillance, Congo → direction de la surveillance épidémiologique, IICS → Departamento de Medicina Tropical, Kosovo → Epidemiology Department) voient cette demande **reformulée dans la relance** plutôt que remplacée par le gabarit générique, conformément à l'étape 3 de la routine. L'ISID conserve son angle propre (« une réponse négative m'est aussi utile qu'une positive »), le message d'origine étant construit sur l'honnêteté vis-à-vis de ProMED.
+
+**Conformité de forme, vérifiée par `list_drafts`** : aucun `htmlBody` fourni, **aucun domaine avec un `.` littéral dans le texte nouveau** (« healthwatch-global dot com » ×7, « point com » ×2), chaque corps se termine par une question avant la signature. *Le corps cité automatiquement par Gmail sous chaque relance contient l'ancien lien de l'original — normal et sans impact, aucun lien neuf n'a été introduit.*
+
+**Contrôle du bug d'envoi instantané du connecteur (incident du 15/08) : négatif.** `list_drafts` en fin de run : **les 9 relances sont en `labelIds: ["DRAFT"]`, aucune passée en `SENT`**.
+
+### ⚠️ Incident technique — 1 échec `create_draft`, sans doublon
+
+Le premier appel pour **ZZJZ FBiH** a renvoyé `The service is currently unavailable.` **Vérification avant réessai plutôt que recréation à l'aveugle** : `list_drafts query:"to:s.musa@zzjzfbih.ba"` (2 appels, vides tous les deux) **et** `get_thread` sur `19fff18c8d540f51` (1 seul message, celui du 15/08) — l'appel en échec n'avait donc rien créé. Brouillon recréé ensuite avec succès (`r3900827109490466065`). **Aucun doublon.** `list_drafts` par ailleurs **stable ce run**, cohérent avec `get_thread` et avec `search_threads`.
+
+### 📊 Bilan cumulé
+
+**Balayage des bounces** (`from:mailer-daemon`, `from:postmaster`, `subject:"Delivery Status Notification"`, `subject:"Undelivered Mail"`, `subject:Undeliverable`, `newer_than:3d`, corbeille incluse) : **7 fils, exactement les 7 déjà consignés ce matin** par l'annotation du run de prospection (6 adresses nominatives périmées des vagues 1-3 + ADELF). **Aucun bounce neuf au-delà.** Rien sur le lot du 23/08 hormis l'ADELF, rien sur les 9 contacts relancés aujourd'hui.
+
+**Bilan bounces cumulés depuis le 02/08 : 20** — recalculé depuis la liste nominative conformément à la règle du 16/08, **+7 par rapport au 23/08** (les 7 du 24/08 sont tous des contacts **jamais bouncés auparavant**, ils allongent donc bien la liste nominative) :
+1. WHO WPRO (02/08) — sous-domaine `wpro.who.int` invalide
+2. ZNPHI Zambie (02/08) — règle de transfert cassée côté destinataire
+3. Colombo (09/08) — 550 5.1.1, adresse introuvable
+4. AKHS (10/08) — adresse inconnue côté serveur
+5. NCIPD Bulgarie (12/08) — 550 high-probability spam
+6. CORDS (12/08) — adresse introuvable
+7. EPHI Éthiopie (12/08) — boîte pleine (transitoire)
+8. Lao TPHI (14/08) — domaine NXDOMAIN
+9. ISED Sénégal (15/08) — boîte pleine, 2 tentatives échouées, écarté définitivement le 16/08
+10. MBDS (15/08) — 550 No Such User Here
+11. DMR Myanmar (17/08) — 550 Unknown user
+12. MSPAS Guatemala (18/08) — adresse introuvable
+13. MHMS Îles Salomon (19/08) — adresse introuvable
+14. IRD — Tony Zitti (24/08) — Undelivered Mail, relais `relay.renater.fr`
+15. INSP Mexique — Liliana Trujillo (24/08) — O365, destinataire inconnu
+16. AFD — Agnes Soucat (24/08) — 550 5.2.0 mailbox unavailable
+17. IMC — Anastasiia Borodina (24/08) — adresse introuvable
+18. ACF — Olivier Cheminat (24/08) — O365, destinataire inconnu
+19. PIH — Tumusime Musafiri (24/08) — adresse introuvable
+20. ADELF (24/08) — 550 5.1.1 (remplacement `adelf.ftb@gmail.com` en file, jamais délivré au premier destinataire)
+
+**Totaux au 2026-08-24 : 270 contacts prospectés, 260 envoyés, 240 effectivement délivrés.**
+- **Prospectés 270** et **envoyés 260** : repris de l'entrée de prospection de ce matin (les 10 du jour restent en brouillon). Cette routine n'en produit aucun.
+- **Délivrés 240** = 260 envoyés − 20 (taille de la liste nominative ci-dessus), recompté dans le même mouvement que la liste.
+- **⚠️ Réserve maintenue** : les 260 envoyés comptent **4 envois vers des institutions déjà contactées** (incident du 22/08). Le nombre d'**institutions distinctes** atteintes reste inférieur de 4 au nombre de messages.
+- **🔴 Taux de délivrabilité en baisse : 94,8 % au 23/08 (237/250) → 92,3 % aujourd'hui (240/260).** La baisse tient entièrement au lot nominatif des vagues 1-3 (6 échecs sur 7), déjà analysée ce matin comme un problème de **péremption d'adresses stockées 8 semaines**, pas de qualité de recherche. Les 10 boîtes fonctionnelles du lot du 23/08 n'ont produit qu'un seul échec (ADELF, erreur de sélection d'adresse).
+
+**Total cumulé de relances : 129 envoyées** (inchangé depuis le 23/08), **9 en attente d'envoi** (celles de ce run).
+
+**Frein de file** : **20 brouillons** au total en fin de run — 9 relances + 10 de la prospection de ce matin + 1 remplacement ADELF. **Sous le seuil de ~25**, aucune réduction appliquée. ⚠️ **À surveiller demain** : si ces 20 ne sont pas partis, le lot du 04/08 recréé (20 relances) ferait passer la file à **40**, très au-dessus du seuil. Le run du 25/08 devra alors réduire son volume.
+
+**Aucune réponse institutionnelle nouvelle ce run** — les 9 fils du lot du 14/08 sont muets à J+9, et le balayage des bounces ne remonte que les 7 déjà connus.
+
+**Prochains lots, calendrier d'étalement mis à jour :**
+- **25/08** → lot du **04/08 recréé** (20 contacts, J+10), sous réserve du frein de file
+- **26/08** → lot du **15/08** (10 moins les bounces ISED et MBDS, soit **8**, J+11)
+- **27/08** → lot du **06/08 recréé** (10 moins HZJZ verrouillé, soit **9**) + lot du **17/08** (10, rendez-vous Variante A EAC / IGAD / SADC / AFROHUN / EUPHA) = **19**
