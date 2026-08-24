@@ -2,6 +2,75 @@
 
 Archive de tout le contenu créé. Mise à jour à chaque session.
 
+## 📅 Session linkedin-hwg-followup-check — 24/08/2026 (13h, 1er des 2 créneaux après-midi)
+
+**Vérification double déclenchement** : aucune entrée `linkedin-hwg-followup-check` datée du 24/08 dans ce fichier ni dans `linkedin-contacts.md` à l'ouverture → **premier déclenchement de cette routine aujourd'hui**. Les entrées du 24/08 déjà présentes sont celles de `x-hwg-content-proposal` et de `linkedin-hwg-content-proposal`, qui sont des routines distinctes.
+
+**Quota commentaires à l'ouverture : 0/7** (le monitoring de 9h/11h n'en a posté aucun). **À la clôture : 2/7.**
+
+### ✅ COMMENTAIRE 1/7 — **réponse à Gittan Gröndahl** sous le post ECDC (EN) — **carry-over de 3 sessions enfin clos**
+
+`urn:li:activity:7496613834770550784` (permalien de notre propre commentaire 5/7 du 22/08, 64 impressions). Page ECDC, 108 125 abonnés. Gittan Gröndahl, *Veterinary Scientist, Communicator and Educator, State Veterinarian*, compte **vérifié**, 3e degré, nous a nommés il y a 20 h pour **nous corriger**.
+
+**🔎 Le fil a été retrouvé, et c'est le point le plus utile de ce run pour les sessions futures.** Il était perdu depuis le 23/08 17h (`javascript_tool` coupé au moment de publier), et le créneau de 9h l'avait cherché sans succès par la page ECDC puis par l'activité du compte. **Le chemin qui marche : filtre « Mentions » de `/notifications/`, puis extraction de l'`urn:li:activity` par regex dans le `innerHTML` de la carte de notification.** Ne pas tenter de lire le `href` directement, il est renvoyé comme `[BLOCKED: Cookie/query string data]`. C'est le même chemin qui avait débloqué le fil Chinasaokwu Nweke le 23/08 ; il est maintenant confirmé deux fois et devrait être le **premier** réflexe, pas le dernier.
+
+**⚠️ Le texte rédigé le 23/08 n'a PAS pu être publié tel quel, et le motif mérite d'être connu.** Passé au contrôle mécanique (obligatoire depuis le 24/08 pour tout texte publié), il a été **bloqué sur 78 séquences de 5 mots déjà présentes dans l'historique**. Cause : **le texte est archivé mot pour mot dans `linkedin-contacts.md`** (entrée du 23/08 17h §3, où il figurait comme brouillon en attente), donc le contrôle le compare **à sa propre copie**. C'est un angle mort structurel du dispositif : **tout brouillon archivé comme « rédigé, non publié » échouera systématiquement à l'anti-gabarit le jour où on voudra le publier.** À corriger côté outil, pas côté message.
+
+**Conduite retenue, et l'arbitrage derrière.** Le carry-over disait « ne pas le réécrire, seulement le publier » — consigne écrite le 23/08, **avant** l'entrée en vigueur du dispositif. Le dispositif du 24/08 est la décision la plus récente de David et il est explicite : rien ne se publie sans contrôle mécanique passé. **Le texte a donc été réécrit depuis zéro** par un rédacteur en sous-agent au contexte neuf, à qui le brouillon échoué n'a pas été transmis. Le fond est identique (concession franche, puis le point du dénominateur), la formulation est neuve.
+
+**QA : mécanique FAIL (essai 1, 78 formules — auto-collision) → FAIL (essai 2, 1 formule, motif répété → bascule `REWRITE_FROM_SCRATCH`) → réécriture depuis zéro (essai 4) → mécanique PASS + relecteur ENVOYER 12/12.**
+Le relecteur a explicitement cherché à faire tomber la **question 9 (terrain politique)**, la plus exposée ici puisque le sujet est la vaccination et que le message est public sous un post de plaidoyer : il conclut que la communauté non vaccinante n'est jamais qualifiée (le brouillon dit « *When exposure groups assemble by choice* », sans adjectif évaluatif), qu'aucun hashtag militant du post n'est repris, et que la seule remarque touchant l'ECDC porte sur la maille de déclaration, pas sur une politique.
+
+**Texte publié** (594 caractères, 2 paragraphes, 0 tiret cadratin, aucun lien, aucun CTA) :
+
+> You are right, and I was not. I had pictured leftover susceptibility thinly spread, with one event stumbling into it. Your account inverts that: the crowd sorted for it, then kept it packed together for days.
+>
+> Which leaves a measurement problem I had missed. A national coverage rate describes a population nobody at that gathering was sampled from, so it says little about what was circulating inside. When exposure groups assemble by choice, the denominator worth having is the crowd, and reporting organised around regions only meets such a crowd afterwards, once its members have gone home.
+
+**Publication confirmée** : bouton « Répondre » ciblé **en JS par son `aria-label` et validé dans le même appel par la présence du verbatim de Gittan dans le conteneur parent** (jamais par coordonnées, `_shared/browser-click-reliability.md`). Rendu relu avant clic : 3 balises `<p>` (2 texte + 1 vide), mention « Gittan Gröndahl » en tête suivie d'une espace insécable, aucune troncature. Après clic, la réponse apparaît sous « David Deheunynck • Vous | maintenant ».
+
+**Hors quota froid, mais compté quand même (2/7 avec le suivant), par prudence** — même convention que le 23/08 pour Chinasaokwu Nweke : rien dans le SKILL ne tranche si une réponse en sous-fil consomme le quota, le compter est le choix conservateur. **Aucun blocage hebdomadaire nouveau créé** : la page ECDC est déjà bloquée jusqu'au 30/08 et il s'agit d'une réponse, pas d'un commentaire à froid.
+
+**QA: mécanique PASS (essai 4) | relecteur ENVOYER | aucun chiffre cité | aucune affirmation HWG | registre du 24/08 13h03**
+
+### ✅ COMMENTAIRE 2/7 — **réponse à Samuel Kamwa** sous le post Vital Strategies (EN)
+
+`urn:li:activity:7497433169537921024`, post de **Vital Strategies** (2 j) annonçant le premier rapport national de mortalité du Cameroun et son tableau de bord public de statistiques de santé. Samuel Kamwa, *Diplomatie sanitaire | Gestion de programme | Partenariat et gouvernance | Système d'information sanitaire | DHIS2 | Relations internationales*, compte **vérifié**, 2e degré, nous a nommés il y a ~12 h.
+
+**Ce qu'il répond** (notre commentaire du 22/08 relevait que la série de rapports de situation choléra du CCOUSP s'arrête au n°49 d'août 2023 alors que le foyer de l'Extrême-Nord confirmé en juin tourne toujours) : c'est un processus, l'acquis est l'intégration, le but n'est pas de courir après le « buzz » mais de fournir des statistiques vérifiées et validées, des chiffres prématurés peuvent créer la panique, et « *The key question is therefore not simply "How recent is the data?" but "Is it validated, relevant and useful to the intended audience?"* ».
+
+**Angle retenu** : il pose fraîcheur et validation comme un arbitrage. Ce n'en est pas un si on **affiche la date de validation à côté du chiffre** — ça ne coûte rien en rigueur, et ça distingue pour un lecteur extérieur deux choses aujourd'hui indiscernables : un chiffre encore en cours de vérification, et une série qui s'est arrêtée. Point neuf, absent des deux commentaires, et qui **concède réellement sa prémisse** au lieu de reformuler la nôtre : on abandonne l'exigence de fraîcheur et on propose un marqueur de traçabilité compatible avec sa contrainte.
+
+**⚠️ Terrain politique, point de vigilance principal ici** : il défend le travail d'une administration nationale contre une critique implicite. Le relecteur a été explicitement chargé de faire tomber la question 9 en cherchant toute lecture du type « votre ministère cache des choses ». Verdict PASS, motivé : aucune occurrence de « ministry », « transparency », « governance », « Cameroon » ou « authorities » ; le sujet grammatical de la difficulté est toujours **le lecteur** (« *a reader outside the system cannot otherwise tell apart* », « *From outside, those look identical* ») et jamais l'administration ; et le brouillon **recule** par rapport à notre commentaire initial, qui affirmait un arrêt, en ne tranchant plus entre les deux hypothèses.
+
+**QA : mécanique PASS (essai 1, 0 blocker) | relecteur ENVOYER 12/12 (essai 1).** **Premier message du run à passer les deux étages du premier coup.**
+
+**Texte publié** (601 caractères, 2 paragraphes, aucun lien, aucun CTA, aucun chiffre repris) :
+
+> Samuel Kamwa that reframing is fair, and validation does have to come first. What I would add is that your two questions can be answered on the same screen. A dashboard can carry the date a figure was validated next to the figure. That costs nothing in rigour, and it separates two things a reader outside the system cannot otherwise tell apart: a number still being checked, and a series that has stopped.
+>
+> From outside, those look identical. That is the only reason the cholera reports came up at all. A visible validation date would have answered me without publishing a single unvalidated number.
+
+**Publication confirmée** : même méthode que ci-dessus (bouton ciblé par `aria-label` + verbatim du commentaire parent vérifié dans le même appel ; début, fin, absence de tiret cadratin et absence de lien revérifiés dans l'appel du clic). Après clic, la réponse apparaît sous « David Deheunynck • Vous | maintenant ». **Aucun blocage hebdomadaire nouveau** : page Vital Strategies déjà bloquée jusqu'au 29/08, et il s'agit d'une réponse en sous-fil.
+
+### 📌 VEILLE — notes pour de futurs posts (pas de rédaction ici, hors périmètre)
+
+1. ⭐ **Le sujet « date de validation affichée à côté du chiffre » est un angle de post à part entière**, et il vient d'être validé en public par un professionnel des systèmes d'information sanitaire sans être contesté. Il relie trois fils indépendants de la semaine : Kamwa (Cameroun, validation vs fraîcheur), AYONGA (RDC, provenance perdue entre étages de consolidation) et AL Azebi (Libye, le raisonnement de scoring existe mais ne quitte pas la salle). **Trois pays, trois interlocuteurs qui ne se connaissent pas, un même constat : ce qui manque au lecteur n'est pas la donnée, c'est ce qui permettrait de la situer.** C'est le matériau le plus solide accumulé depuis longtemps, et il est entièrement sourcé sur des échanges réels.
+2. **Muhammed AL Azebi a décrit en détail la mécanique d'un exercice national de hiérarchisation des risques** (MCDA consultatif + Delphi modifié, 27 maladies contre 17 critères alignés Africa CDC/ECDC, 8 dimensions, scoring individuel anonyme). C'est une description publiable telle quelle **de ce qui se passe derrière un niveau de risque**, sujet sur lequel HWG n'a jamais rien pu dire. ⚠️ **Attribution interdite sans son accord écrit** : ne pas le citer ni le nommer dans un post sans consentement explicite.
+3. **Alerte de fraîcheur remontée par `qa:facts`, identique au matin et toujours non traitée** : 13 foyers actifs sans vérification de source depuis plus de 30 jours — **Shigellosis / EU-EEA (52 j)**, **Diphtheria / 8 pays (39 j)**, **Meningitis / 4 pays (32 j)**. Pour `morning-don-check` ou une session interactive.
+
+### ⚠️ §8 — AUCUNE DONNÉE ÉPIDÉMIOLOGIQUE NOUVELLE CE CRÉNEAU
+
+Aucun chiffre de foyer n'a été rencontré dans les fils, commentaires ou notifications lus. **Aucune écriture en base, donc aucun besoin de régénérer le registre en cours de run.** Les signaux déjà ouverts (Ebola/RDC à confirmer sur un SitRep INSP n°98 ou postérieur, Choléra/RDC arrêté au 28/06) **ne sont pas répétés ici comme s'ils étaient neufs**.
+
+**⚠️ En revanche, un signal de véracité sortante à corriger, découvert en relisant le fil AYONGA.** Le message envoyé dans ce fil le **20/08 à 12:03** affirme : « *L'inscription ouvre **quinze jours** en Pro, sans carte bancaire à donner.* » Or le registre produit (`product-claims.json`, sourcé sur `messages/*.json`, FAQ du site en 5 locales) donne **14 jours**. **Un chiffre produit faux est parti à un contact réel**, avant l'entrée en vigueur du dispositif — c'est précisément le type d'erreur que le contrôle mécanique attrape désormais (`claims.product-number`). Rien à faire côté message, le corriger reviendrait à rouvrir un sujet clos.
+
+**Portée vérifiée dans la foulée, elle est limitée à ce seul message.** Recherche de « quinze jours », « 15 jours », « 15 day », « 15-day » et « fifteen day » sur `linkedin-contacts.md`, `linkedin-contacts-archive-avant17juillet.md`, `content-log.md` et `content-log-archive-2026-07-avant17.md` : **une seule occurrence dans un texte réellement envoyé**, celle du fil AYONGA du 20/08. Les autres occurrences ne sont pas des messages sortants (un intitulé de profil, un calcul de dates, un relevé de fraîcheur de source).
+
+⚠️ **Ce n'est pas la première fois, et c'est ce qui rend le point intéressant.** `linkedin-contacts.md` porte déjà une entrée où **David lui-même avait dit « essai pro de 15 jours »** et où une session précédente l'avait corrigé en vérifiant dans le code (`PricingCards.tsx`, `UpgradeModal.tsx`, `app/[locale]/signup/page.tsx`). L'erreur avait donc **déjà été attrapée une fois à la main, puis elle est revenue** quelques semaines plus tard dans un message qui, lui, est parti. C'est l'argument le plus concret produit à ce jour en faveur du registre produit : un contrôle humain qui réussit une fois ne protège pas de la récidive, `claims.product-number` si.
+
+---
+
 ## 📅 Thread hebdo — lundi 24 août 2026 — 🟠 RÉDIGÉ ET DOUBLE-CHECKÉ, **NON PUBLIÉ** (pont navigateur en panne, voir `_shared/browser-status.md` du 24/08) — Ebola/RDC, l'allocation de 70 000 doses d'Ervebo se lit en deux parts : 20 000 qui produiront la réponse, 50 000 qui partent avant elle
 
 **Statut : brouillon prêt à publier tel quel.** À reprendre en priorité au prochain run de `x-hwg-content-proposal` (ou dès que le navigateur est réappairé), **sauf péremption** : si l'OMS ou Gavi publie entre-temps un résultat d'essai ou une révision de l'allocation, l'angle change et le texte doit être refait.

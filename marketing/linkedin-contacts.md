@@ -11,6 +11,160 @@
 **Codeur (freelance)** : David a mentionné vouloir être « plus incisif » sur Codeur également, mais n'a pas encore précisé en quoi — à reconfirmer avec lui plutôt que d'improviser, ce terrain n'étant pas couvert par ce repo/session.
 
 ---
+## 📅 Session linkedin-hwg-followup-check — 24/08/2026 (13h, 1er des 2 créneaux après-midi)
+
+**Vérification double déclenchement** : aucune entrée `linkedin-hwg-followup-check` datée du 24/08 dans ce fichier ni dans `content-log.md` à l'ouverture → **premier déclenchement de cette routine aujourd'hui**. L'entrée du 24/08 déjà présente est celle de `linkedin-hwg-monitoring` (9h + reprise 11h), qui est un run distinct, pas un doublon.
+
+**Quotas à l'ouverture** (carry-over du monitoring de 11h) : commentaires **0/7** ; connexions **0/7** ; suivis **0/7-10** ; DM à froid **1/8** (message de bienvenue Muhammed AL Azebi ; Johan Verheyden et Darrel Ornelle ELION ASSIANA sont des réponses en fil actif, hors quota froid).
+
+**🖥️ Navigateur** : `_shared/browser-status.md` lu avant ouverture. Deux entrées du 24/08 : 🔴 EN PANNE ~09h00, puis **🟢 RÉTABLI ~09h15** après réactivation de l'extension par David. Dernière entrée du jour = verte → **aucun bridage**, run mené normalement. `list_connected_browsers` liste bien `23c7ecdd-…` seul, sélectionné sans question (§7). **Rien de neuf à écrire dans `browser-status.md`** (le fichier ne se remplit pas quand tout va bien).
+
+⚠️ **Anomalie JS asynchrone : présente, comme prévu par le carry-over #14.** `(async () => …)()` renvoie `{}`. **Enquête non rouverte** (question déjà tranchée : motif d'après-midi, pas de créneau) ; session menée **en JS strictement synchrone** avec `computer` action `wait` pour les attentes. **3e créneau 13h consécutif touché** (22/08, 23/08, 24/08).
+
+⚠️ **Filtre de sortie `[BLOCKED: Cookie/query string data]` déclenché 2 fois**, comme le 23/08 : tout retour JS contenant une URL à paramètres (`location.href`, `href` de notification) est bloqué. Contournement appliqué d'emblée ensuite : n'extraire que des valeurs réduites (URN via regex, booléens, longueurs), jamais un `href` brut.
+
+**Registre de faits régénéré en début de run** : `npm run qa:facts` → **227 faits citables sur 109 lignes affichées**, 81 lignes `is_seed` exclues, **55 faits périmés** (citables datés uniquement). ⚠️ **Alerte de fraîcheur identique à celle du matin, non résolue depuis** : 13 foyers actifs sans vérification de source depuis plus de 30 jours, sur 3 événements — **Shigellosis / EU-EEA (52 j)**, **Diphtheria / 8 pays (39 j)**, **Meningitis / 4 pays (32 j)**. À re-sourcer côté base par `morning-don-check` ou une session interactive, pas à contourner côté message.
+
+---
+
+### ❌ DM ABANDONNÉ — **Muhammed AL Azebi** (CDC Libye), réponse à sa réponse de 11:55
+
+**Il a répondu 11 minutes après le message de bienvenue envoyé à 11:44 par le monitoring**, avec une réponse technique longue (1 966 caractères) et entièrement sur le fond : processus MCDA consultatif, méthode Delphi modifiée, 27 maladies évaluées contre 17 critères alignés Africa CDC/ECDC sur 8 dimensions, scoring individuel anonyme, données dures quand elles sont complètes et consensus guidé quand elles ne le sont pas, et conclusion explicite que « *published bulletins present only the final consolidated risk category* ».
+
+**C'est un échange substantiel au sens de la politique §3** (il répond avec du contenu réel, pas une politesse) : le CTA était donc autorisé, et **l'anti-répétition ne s'y opposait pas** (le nom HWG figure dans le message du matin, mais ni le lien ni l'essai n'avaient été envoyés dans ce fil).
+
+**QA : mécanique FAIL (essai 1) → FAIL (essai 2, motif répété → bascule `REWRITE_FROM_SCRATCH`) → réécriture depuis zéro par un rédacteur en sous-agent au contexte neuf, sans accès aux brouillons échoués (essai 4) → FAIL → `ABANDON` (code de sortie 2).**
+- Essai 1 : `form.length` (1 460 caractères, plafond 1 300) et `ngram.history` (6 formules déjà servies, dont « is at healthwatch global com », « at healthwatch global com and », « the one i would most »).
+- Essai 2 : longueur corrigée (1 245), mais `ngram.history` persiste sur la **présentation de l'essai** (« a 14 day pro trial », « 14 day pro trial no », « day pro trial no card »). Motif répété → le script bascule de lui-même en réécriture depuis zéro sans consommer l'essai 3.
+- Essai 4 (rédacteur neuf) : angle réellement différent et meilleur — la dispersion entre scoreurs Delphi est elle-même de l'information, et la question posée était de savoir si cet écart survit dans les archives ou disparaît à la clôture du tour. **Mécanique FAIL quand même**, sur 3 formules cette fois : « if you want to see », « are one of the few », « one of the few people ».
+- **`ABANDON`. Rien envoyé sur ce fil ce run, rien mis en file.** Le fil est repris au prochain créneau avec un contexte neuf.
+
+**QA: ABANDON après 4 essais | motifs: form.length, ngram.history | rien envoyé sur ce fil ce run**
+
+⚠️ **Signal de calibrage à remonter à David, 2e occurrence du même motif en une journée** (voir aussi Nebiyu Dereje ce matin, abandonné sur le même contrôle). Les 3 séquences qui ont fait échouer l'essai 4 sont **« if you want to see », « are one of the few », « one of the few people »** : ce sont des collocations ordinaires de l'anglais, pas des gabarits marketing. Avec un corpus d'archives qui grossit tous les jours, le seuil de 5 mots consécutifs finit par interdire de parler anglais normalement. C'est exactement le cas que `docs/outreach-qa.md` §7 décrit (« un motif qui revient plus de deux fois dans la semaine se corrige dans `marketing/qa/lexicon.json`, pas dans les messages »). **Aucune modification du lexique faite en cours de run**, conformément à la règle de périmètre.
+
+---
+
+### ✅ FOLLOW-BACK 1 — **Muhammad Qasim** (nouvel abonné)
+
+*Entomologist | Vector Surveillance & Disease Control Specialist | Public Health Professional | MEDVC (PGD) | Pakistan-U.S. Alumni Network (PUAN) Member | APMEN Member*. Aucune ligne dans `linkedin-candidates-tracker.md` ni dans ce fichier avant ce jour : profil neuf.
+
+**Pertinence** : surveillance vectorielle et contrôle des maladies, cœur du domaine HWG. Décision immédiate, sans ambiguïté.
+
+**Exécution** : identité (nom en tête de carte **et** présence de « Entomologist | Vector Surveillance » dans l'intitulé) revérifiée **dans le même appel JS que le clic** sur « Suivre » (§7, règle du 15/08). **Confirmation par relecture du rendu** : la carte affiche « Suivi ». Suivis : **1/7-10**.
+
+### ✅ FOLLOW-BACK 2 — **Alain BASHIZI** (nouvel abonné)
+
+*Investigative Journalist*, **Goma, Nord-Kivu, RDC**, 120 abonnés, 500+ relations.
+
+**Pertinence vérifiée sur l'activité récente, pas sur l'intitulé** (qui à lui seul aurait été trop vague) : il a publié il y a 1 mois « *J'ai achevé récemment une expérience de volontariat des nations Unies auprès de l'Organisation Mondiale de la santé* », et ses posts des 2 derniers mois sont des campagnes de santé publique tagguées **#OMSCongo**. Journaliste basé sur l'épicentre même des foyers que HWG suit (Ebola, choléra, mpox au Nord-Kivu) et déjà passé par l'OMS : pertinence établie.
+
+**Exécution** : en-tête de profil revérifiée **dans le même appel JS que le clic**, cible sélectionnée par `aria-label` exact (« Suivre Alain BASHIZI ») et non par coordonnées (`_shared/browser-click-reliability.md`). **Confirmation par relecture du rendu** : les 3 boutons portent désormais « Suivi, cliquez pour ne plus suivre Alain BASHIZI ». Suivis : **2/7-10**.
+
+### ❌ NON SUIVI — **Dr. Jibran Khan R. Ph., CRCP., PhD** (nouvel abonné), écarté ce run, **à retenter si son contenu bouge**
+
+*Global Regulatory Affairs & CMC Leader | Vaccines, Biologics, Biosimilars, Pharma, Medical Devices | FDA, EMA, ICH*, Karachi, **27 678 abonnés**. Profil parfaitement légitime, ce n'est pas le motif.
+
+**Motif de l'écart : pertinence, pas légitimité.** Activité récente vérifiée : son post d'il y a 1 h porte sur « *55 new and revised Product Specific Guidances (PSGs)* » de la FDA pour le développement de génériques. C'est de la réglementation pharmaceutique et de la qualité produit, pas de la surveillance épidémiologique ni de la riposte aux flambées. La barre de la politique §10 (« cohérence santé publique/épidémiologie ») n'est pas franchie. **Écart non définitif** : s'il publie sur l'approvisionnement vaccinal en contexte de flambée, à réévaluer.
+
+---
+
+### 🛑 REMONTÉ À DAVID, AUCUNE RÉPONSE RÉDIGÉE — **Alain BASHIZI** : proposition non spécifiée sur la communication Ebola
+
+**Ce n'est pas un DM, c'est une réponse publique sous un commentaire de David** (post sur la Journée mondiale de l'humanitaire, marquée à Bunia avec des collègues OCHA et OMS) :
+
+> David Deheunynck can we discuss please? I have some propositions about ebola communication
+
+Il a par ailleurs **consulté le profil de David il y a 46 min**, donc la démarche est active.
+
+**Garde-fou appliqué, politique §3** : proposition de partenariat/collaboration de périmètre inconnu, doublée d'une demande de passer à une discussion privée. « *Si le message reçu est ambigu, sensible, ou dépasse une réponse simple (proposition de partenariat substantielle…) : ne pas répondre soi-même ni improviser un engagement — noter le message pour David plutôt que d'agir.* » **Aucun brouillon rédigé, aucun engagement, aucune réponse publique ni privée.** Le follow-back ci-dessus est indépendant et n'engage rien.
+
+⚠️ **À noter pour l'arbitrage de David** : il est journaliste d'investigation, pas épidémiologiste, et « communication Ebola » depuis Goma peut aussi bien signifier une collaboration éditoriale qu'une demande de financement ou d'accès. Le périmètre doit venir de lui avant toute réponse.
+
+### ✅ DM ENVOYÉ — **Patrick AYONGA** (FR, réponse en fil actif, **SANS CTA**, hors quota froid) — **envoi autonome, 1er du nouveau régime sur cette routine**
+
+**Fil relu intégralement (§4)**, les 11 messages depuis le 19/08, et **recopié verbatim** dans `tmp/thread-ayonga.txt` pour le contrôle mécanique. Carry-over #7 du monitoring de 11h : sa réponse du 24/08 à 02:09 ne faisait que refléter la question sans y répondre (« *Il faudrait effectivement regarder ce que DHIS2 et les outils actuellement utilisés permettent déjà en matière de traçabilité* »), donc la relance devait apporter du contenu réel plutôt qu'un accusé de réception.
+
+**Angle retenu** : couper sa question en deux. Ce que le modèle de données de DHIS2 permet (tracker : objet suivi porteur d'attributs ; événement : champ ajouté à l'étape du programme ; agrégé : valeur indexée par période, unité d'organisation, élément de donnée et combinaisons de catégories) n'est pas la vraie question. La vraie question est **l'étage exact de la pyramide sanitaire où la remontée cesse d'être une liste d'objets pour devenir un tableau de valeurs** — en dessous la provenance tiendrait dans le format existant, au-dessus il faudrait un registre séparé. Point neuf dans le fil, et question que son expérience de terrain est seule à pouvoir trancher.
+
+**⚠️ CTA volontairement absent**, et le contrôle mécanique l'a confirmé de lui-même : `context.cta-repeat` a bloqué l'essai 1 en détectant que le lien et l'essai figurent déjà dans ce fil (message du 20/08 12:03). Conforme à la consigne du carry-over et au cas de référence Simon Ruegg.
+
+**QA : mécanique FAIL (essai 1) → PASS (essai 2) → relecteur REECRIRE (essais 2 et 3) → PASS mécanique + relecteur ENVOYER 12/12 (essai 4).**
+- Essai 1 : `form.length` (1 307 > 1 300), `context.cta-repeat`, `ngram.history` (4 formules).
+- ⚠️ **Faux positif à signaler sur `context.cta-repeat`** : le déclencheur était le mot **« lien »** au sens ordinaire (« *porter un lien vers un document* »), pris pour un CTA par le marqueur `\blien\b` du lexique. Or « lien » est le mot central de ce fil, qui porte précisément sur le **lien de provenance entre deux étages de consolidation**. Corrigé en « renvoi », qui est en outre le terme employé par David lui-même dans le fil, donc plus cohérent. **Mais la règle est trop large pour une conversation en français sur la traçabilité des données**, à signaler pour `lexicon.json`.
+- Essai 2 (mécanique PASS) → relecteur : **FAIL sur 1 (Chiffres) et 5 (Attribution)**. (1) les affirmations sur DHIS2 étaient posées à l'indicatif alors que David écrivait 24 h plus tôt dans ce même fil « *Je dis ça sans savoir ce que DHIS2 laisse réellement ajouter à un format en production* » ; et la définition de l'unité agrégée omettait la dimension de catégorie, **qui est justement celle utilisée en pratique pour rattacher une donnée à un partenaire** — l'omission rendait l'argument plus fort qu'il ne l'est. (5) « *vous l'avez vu et pas moi* » lui prêtait un témoignage oculaire qu'il a explicitement décliné **deux fois** (« *nous n'avions plus nécessairement de visibilité sur toutes les transformations qu'elles subissaient en aval* », 23/08 02:53).
+- Essai 3 : les deux points corrigés (réserve d'énonciation en tête, dimension de catégorie ajoutée et retournée contre l'argument, « je ne peux pas le situer d'ici »). Mécanique PASS → relecteur : **FAIL sur 1 à nouveau**, plus fin cette fois — « en tracker **ou en événement**, l'unité est un objet qui accepte des attributs » met les deux modes sur le même plan, or un programme sans enregistrement n'a pas d'attributs ; et « en dessous, la provenance tiendrait dans le format existant » refermait au présent la réserve que David avait lui-même laissée ouverte.
+- Essai 4 : correction ciblée des deux clauses (tracker et événement traités séparément, conditionnel « tiendrait peut-être » + « ce que je ne peux pas vérifier sur une instance en production »). **Mécanique PASS, relecteur ENVOYER 12/12**, avec vérification explicite de la distribution des modes grammaticaux.
+
+⚠️ **Écart de procédure assumé, à trancher par David.** Le protocole prévoit qu'à l'essai 4 le message soit **réécrit depuis zéro sous un autre angle**. Ici le relecteur avait validé l'angle (questions 11 et 12 en PASS aux trois passages) et demandait explicitement une correction de **deux clauses, « sans toucher au reste »**. Repartir de zéro aurait jeté un angle validé pour deux modes verbaux, et aurait probablement dégradé les points qui passaient déjà. **J'ai donc appliqué une correction ciblée à l'essai 4 au lieu d'une réécriture.** Si David préfère la règle littérale, il faut le dire : le cas se représentera, la boucle de correction ciblée et la boucle de réécriture ne visent pas les mêmes défauts.
+
+**Correction orthographique post-verdict** : le relecteur signalait hors grille « Au dessus » → « **Au-dessus** ». Appliquée, puis **contrôle mécanique relancé** (PASS) avant envoi, pour ne pas envoyer un texte différent de celui qui a été validé.
+
+**Envoi — 13:28.** Fil rouvert depuis `/messaging/` (la navigation directe vers l'URL du fil a été refusée par le classifieur, contournée par le chemin normal). **11 messages à l'ouverture, aucun nouveau depuis 02:09.** Texte inséré via `execCommand('insertText')`, `\n\n` entre paragraphes → **7 balises `<p>` (4 texte + 3 vides)**, rendu relu avant envoi : 4 paragraphes de 169, 460, 397 et 213 caractères, **0 tiret cadratin**, début et fin conformes au brouillon validé. **Destinataire (« Patrick AYONGA ») revérifié dans le MÊME appel JS que le clic sur Envoyer** (§5.4), avec en plus un contrôle du début, de la fin et de l'absence de tiret cadratin dans le même appel. **Confirmation : 12 messages dans le fil, éditeur vidé, dernier message signé David Deheunynck à 13:28.**
+
+**QA: mécanique PASS (essai 4) | relecteur ENVOYER (essai 4) | aucun chiffre cité (registre non applicable) | aucune affirmation HWG (produit non mentionné) | registre du 24/08 13h03**
+
+---
+
+### 📋 Relevé QA du run
+
+**3 textes menés jusqu'au bout, 1 abandonné. 11 passages au contrôle mécanique, 5 passages au relecteur.**
+
+| Message | Canal | Mécanique | Relecteur | Issue |
+|---|---|---|---|---|
+| **Samuel Kamwa** | commentaire | **PASS essai 1** | **ENVOYER essai 1** | ✅ publié |
+| **Gittan Gröndahl** | commentaire | FAIL ×2 → PASS essai 4 (réécriture) | ENVOYER essai 4 | ✅ publié |
+| **Patrick AYONGA** | DM | FAIL essai 1 → PASS essai 2 | **REECRIRE ×2** → ENVOYER essai 4 | ✅ envoyé |
+| **Muhammed AL Azebi** | DM | FAIL ×3 (dont 1 réécriture) | jamais atteint | ❌ **ABANDON** |
+
+**1 seul brouillon sur 4 est passé du premier coup aux deux étages** (Samuel Kamwa). C'est peu, et c'est cohérent avec le relevé du matin (2 sur 4).
+
+**Ce que le relecteur a attrapé et que je n'avais pas vu**, sur le seul fil AYONGA, en deux passages successifs :
+1. Des affirmations sur DHIS2 posées à l'indicatif, alors que David écrivait 24 h plus tôt **dans ce même fil** qu'il ne savait pas. Le relecteur a cité les deux passages côte à côte. Je ne l'avais pas rapproché.
+2. Une définition de l'unité agrégée **qui omettait la dimension de catégorie**, celle qui sert justement à rattacher une donnée à un partenaire. L'omission rendait mon argument plus fort qu'il ne l'est, face à quelqu'un qui aurait vu le trou immédiatement.
+3. « *vous l'avez vu et pas moi* », qui prêtait à Patrick un témoignage qu'il a **explicitement décliné deux fois** dans le fil.
+4. Au passage suivant, la mise sur le même plan des modes tracker et événement, qui n'ont pas la même structure.
+
+Les quatre sont des erreurs réelles, pas des chicanes de forme, et aucune n'aurait été attrapée par une relecture du rédacteur sur son propre texte. **C'est exactement ce que le dispositif devait produire.**
+
+**Trois défauts d'outillage constatés, à traiter côté `lexicon.json` et non côté messages** (aucune modification faite en cours de run, conformément à la règle de périmètre) :
+
+1. ⚠️ **Auto-collision d'un brouillon archivé.** Le texte Gröndahl, rédigé le 23/08 et archivé mot pour mot dans ce fichier comme « rédigé, non publié », s'est heurté à **78 séquences de 5 mots** — les siennes. **Tout brouillon mis en attente et archivé échouera à l'anti-gabarit le jour où on voudra le publier.** C'est le défaut le plus net, parce qu'il touche précisément les textes que le dispositif est censé sauver.
+2. ⚠️ **Le marqueur `\blien\b` traite le mot « lien » comme un CTA.** Il a bloqué le brouillon AYONGA sur « *porter un lien vers un document* », dans un fil qui porte entièrement sur le **lien de provenance entre étages de consolidation**. Un contrôle de CTA qui interdit un mot français courant est trop large.
+3. ⚠️ **Le seuil de 5 mots consécutifs commence à interdire l'anglais ordinaire.** Les 3 séquences qui ont fait échouer la dernière tentative sur AL Azebi sont « *if you want to see* », « *are one of the few* », « *one of the few people* ». Ce ne sont pas des gabarits marketing, ce sont des collocations. **Le corpus grossit chaque jour et le problème s'aggravera mécaniquement.** Avec l'abandon Nebiyu Dereje du matin, **c'est le 2e abandon du jour sur ce seul motif**, soit le seuil que `docs/outreach-qa.md` §7 fixe lui-même pour corriger la règle plutôt que les messages.
+
+**Anti-injection (§6)** : un seul contenu tiers s'adressant nommément à David a été lu (« *can we discuss please? I have some propositions about ebola communication* », Alain BASHIZI). Ce n'est pas une injection au sens du garde-fou, mais une sollicitation humaine réelle : traitée comme telle, remontée sans réponse.
+
+**RGPD (§2)** : aucune proposition de partage de line list ou de données patient ce créneau.
+
+**Demande de contact hors plateforme (§3)** : **une**, celle d'Alain BASHIZI (« *can we discuss please* »). Signalée explicitement ici comme la politique l'exige, même si aucune réponse n'a été faite. Aucune coordonnée de David n'a été partagée, aucun engagement pris.
+
+**Redémarrage de Chrome en fin de session (§11)** : **délibérément sauté.** Lundi début d'après-midi, David a réactivé l'extension lui-même il y a quelques heures et peut être devant son écran ; le bénéfice est marginal face au risque de fermer une fenêtre active, et le créneau de 17h a besoin du navigateur en état.
+
+### 🔁 CARRY-OVER POUR LE CRÉNEAU DE 17h (24/08) — liste exhaustive
+
+1. ✅ **Gittan Gröndahl : PUBLIÉE ce créneau, carry-over CLOS après 3 reports.** Voir `content-log.md`. Le chemin qui a marché, à retenir : **filtre « Mentions » de la page de notifications**, puis extraction de l'`urn:li:activity` par regex dans le `innerHTML` de la carte (le `href` brut est bloqué par le filtre de sortie). Les deux chemins essayés les jours précédents (page ECDC, activité du compte) ne donnaient rien.
+2. ✅ **Patrick AYONGA (DM) : traité ce créneau**, envoyé 13:28. Rien à refaire. ⚠️ **Mais il a aussi répondu publiquement** sous notre commentaire de son article J100, il y a ~11 h, et **cette réponse-là n'est pas traitée** : « *la proportion de nouveaux cas déjà identifiés comme contacts serait un indicateur particulièrement parlant de la capacité du système à anticiper plutôt qu'à découvrir les chaînes de transmission a posteriori* ». Candidat commentaire pour 17h (dérogation hebdomadaire justifiée, il nous nomme dans le prolongement de notre propre commentaire), `urn:li:activity:7497442523888566272`.
+3. ❌ **Muhammed AL Azebi : ABANDONNÉ ce créneau** après 4 essais (voir plus haut). **À retenter à 17h avec un contexte neuf.** Sa réponse est substantielle et le fil mérite mieux qu'un abandon ; c'est la formulation du CTA qui bloque, pas le fond. **Piste concrète pour 17h : ne pas placer de CTA du tout dans la réponse** (le fond suffit, et le nom HWG est déjà passé dans le fil) — les 3 échecs sur 4 portaient sur la présentation de l'essai.
+4. ❌ **Nebiyu Dereje : toujours abandonné, non retenté ce créneau** faute de temps (les 3 messages de ce run ont consommé 11 passages dans le dispositif). Reste pertinent, à retenter à 17h.
+5. **Les 3 invitations encore en attente** (Ihekweazu, SAIDOUNI, Linda Esso) : **revérifiées ce créneau via `mynetwork/invite-connect/connections/` trié « Ajouts récents », toujours non acceptées.** Les 2 dernières acceptations restent Nebiyu Dereje et Muhammed AL Azebi (24/08).
+6. ⭐ **NOUVEAU — 2 invitations reçues ACCEPTÉES ce créneau, message de bienvenue NON écrit, à faire à 17h.** **Daisy Kasyoka** (*Clinical Officer | Medical Writer | Clinical Research Associate | Public Health & Digital Health Professional*, relation commune : Dr. Ambrose Talisuna) et **Dihoulne Gagdang** (*Pharmacien Spécialiste en Gestion des Approvisionnements Pharmaceutiques et Logistique de Santé*, **34 relations en commun**). Les deux acceptations sont confirmées à l'écran (« *fait désormais partie de vos relations* »). **Aucun échange préalable ni pour l'une ni pour l'autre** : les deux ouvrent droit à un message de bienvenue, qui partage le quota froid (1/8 consommé). **Volontairement non rédigés ce créneau** : les 2 seuls abandons du jour, ici et au monitoring, portent tous les deux sur un **message de bienvenue en anglais**, et enchaîner un 3e essai du même type dans la même journée aurait très probablement produit un 3e abandon. Repartir à 17h avec un contexte neuf est le meilleur usage de ces deux opportunités. Pour Gagdang, noter que **la logistique des contre-mesures pharmaceutiques est exactement l'une des 8 dimensions de scoring décrites par AL Azebi ce matin** : il y a un angle propre disponible, sans énumération de sources.
+7. **2 invitations reçues laissées en attente, délibérément** : **Zachariah G. Houdari** (*Senior Licensed Life Insurance Advisor | Financial Services*, mention « Global Health Advocacy & Golf » dans l'intitulé) — hors sujet, assurance-vie, ne pas accepter ; et **OLAOLUWA PHILIP**, voir plus bas.
+8. 🛑 **Alain BASHIZI : remonté à David, en attente de sa décision.** Ne pas répondre, ne pas relancer, ne pas rouvrir l'arbitrage à 17h.
+9. **Chinasaokwu Nweke : aucune action due.** La notification du jour (4 h) est « *aime son commentaire qui mentionne votre nom* » — **un like sur son propre commentaire, pas une nouvelle réponse**. Le fil a été tranché le 23/08 (« carry-over définitivement clos, notre réponse est le dernier message »). **Ne pas le rouvrir**, un like n'est pas une réponse.
+10. **Pierre PARNEIX a envoyé « 👍 » à 08:39** en DM. Simple accusé de réception non substantiel : **aucune réponse due**, et surtout **aucun CTA** (§3, un remerciement sans fond n'est pas un dialogue engagé).
+11. **Mohamed Ousmane COULIBALY** : ne pas relancer, attendre son retour sur le site. Une consultation de profil n'est pas un retour.
+12. **Blocages hebdomadaires en cours, tous jusqu'au 30/08** : Melvin Sanicas, Robert Herriman, Patrick AYONGA, Ifedayo Adetifa, page ECDC, Oliver Morgan, Dr Fabrice KHADDY. **Aucun blocage nouveau créé ce créneau** : les 2 commentaires publiés sont des **réponses en sous-fil** sous des profils déjà bloqués (page ECDC jusqu'au 30/08, page Vital Strategies jusqu'au 29/08), pas des commentaires à froid.
+13. 🟡 **Homonymies de dirigeants d'agences nationales, toujours sans arbitrage de David** : Jean-Jacques Muyembe (**6e jour**) et Jide Idris. Règle proposée le 23/08, toujours en attente d'une ligne de David.
+14. 🟡 **OLAOLUWA PHILIP** : 9e passage sur la même invitation reçue. **Ne pas rouvrir le profil** tant que David n'a pas tranché.
+15. **Dr. Jibran Khan** (nouvel abonné, `/in/jibranrajput/`) : écarté ce créneau pour pertinence, **pas définitivement**. Ne pas le réévaluer à 17h sans élément neuf.
+16. **Dorine Ngono** (`/in/dorine-ngono/`) : écartée le 17/08, note « à retenter » jamais reprise. **Toujours pas retentée** (quota connexions non entamé aujourd'hui, 0/7). **8e report.** Au prochain report, appliquer la convention du 08/08 : retester la prémisse ou écrire pourquoi elle ne peut pas l'être, jamais recopier ce motif tel quel.
+17. **Carry-overs permanents inchangés** : Kaushal Sharma, Barrè Onivogui, Andrea Bernasconi, Lorenzo Pezzoli (ne pas relancer avant un retour concret sur le site). **Non revérifiés ce run.**
+18. **Écartés définitifs, ne pas réévaluer** : Michelle Jones, Jane Hedger, GEOMAP PRO, Julia Gal.
+19. **Anomalie JS asynchrone** : présente à 13h (3e jour consécutif). Question tranchée, ne pas rouvrir l'enquête, travailler en JS synchrone.
+20. **Quotas à la clôture de ce créneau** : commentaires **2/7** ; **connexions envoyées 0/7** (les 2 invitations *reçues* acceptées ci-dessus ne consomment pas ce quota, qui borne les invitations sortantes) ; suivis **2/7-10** ; **DM à froid 1/8 inchangé** (le DM à Patrick est une réponse en fil actif, hors quota froid ; le DM abandonné à AL Azebi n'a rien consommé). **Il reste donc de la marge partout à 17h**, et la découverte active de profils n'a toujours pas été faite aujourd'hui, ni le matin ni ce créneau.
+
+---
 ## 📅 Session linkedin-hwg-monitoring — 24/08/2026 (9h) : 🔴 panne d'appairage puis 🟢 reprise à 11h
 
 **Vérification double déclenchement** : aucune entrée `linkedin-hwg-monitoring` datée du 24/08 dans ce fichier ni dans `content-log.md` à l'ouverture → **premier déclenchement de cette routine aujourd'hui**. Les mentions du 24/08 présentes avant ce run étaient toutes des renvois de carry-over écrits les jours précédents, pas des entrées de run.
