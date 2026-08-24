@@ -91,7 +91,12 @@ recentDons.forEach((i) => console.log(`${i.date} | ${i.title} | ${i.url}`));
 
 // --- 2. Foyers actifs en DB ---
 const active = await fetchJson(
-  `${SUPABASE_URL}/rest/v1/outbreaks?active=eq.true&select=id,disease,disease_en,country,country_en,region,cases,deaths,date,active,is_seed,source,source_priority,updated_at&order=updated_at.asc`,
+  // `source_confirmed_at` ajouté le 2026-08-24 : depuis cette date les crons de sync
+  // l'écrivent eux-mêmes sur chaque `skip: "unchanged"` (source relue, rien de plus
+  // récent que `date`) — cf. lib/source-confirmed.ts. C'est la moitié manquante du
+  // calcul d'ancienneté : `updated_at` dit quand la ligne a été ÉCRITE, celle-ci dit
+  // quand elle a été VÉRIFIÉE. La section 6 en bas de fichier les combine.
+  `${SUPABASE_URL}/rest/v1/outbreaks?active=eq.true&select=id,disease,disease_en,country,country_en,region,cases,deaths,date,active,is_seed,source,source_priority,updated_at,source_confirmed_at&order=updated_at.asc`,
   { headers: h }
 );
 console.log(`\n=== Foyers actifs: ${active.length} ===`);
@@ -281,6 +286,21 @@ const CLUSTER_EDITION_CHECKED = {
   // voyage au Pakistan le 2 septembre) et un « 5 cas / 4 décès depuis le début de l'année » —
   // aucun des deux ne concerne 2026. Vérifier l'arrêté ECDC avant de conclure à une hausse.
   "MERS-CoV": "2026-08-17",
+  // Cereulide / lait infantile (DON596) : entrée manquante depuis la création du
+  // cluster — le bloc 4d-bis sortait donc « cluster absent de CLUSTER_EDITION_CHECKED »
+  // à chaque run sans que personne n'aille chercher d'édition, et les 8 lignes actives
+  // du cluster ressortaient comme figées à 42 j. Recherche faite le 24/08 : le DON596
+  // (13/03/2026, 144 cas suspects et confirmés dans dix pays entre le 01/01 et le
+  // 25/02) reste la dernière édition OMS de l'événement — aucun DON postérieur sur le
+  // sujet. Côté UE, l'évaluation rapide ECDC/EFSA est datée du 19/02/2026 (métadonnées
+  // retouchées le 17/03), donc ANTÉRIEURE au DON : ce n'est pas une édition plus
+  // récente. Rien à écrire.
+  // ⚠️ L'ancienneté de ce cluster est structurelle, pas un signal de péremption : le
+  // rappel produit a clos l'exposition dès février, et l'ECDC écrit explicitement
+  // qu'un total de cas consolidé serait trompeur (capacités de surveillance
+  // hétérogènes). Ne pas chercher à « rafraîchir » les chiffres pays par pays.
+  // 🔎 Au prochain passage : la seule édition à guetter est un nouveau DON OMS.
+  Cereulide: "2026-08-24",
   // Chikungunya : NY State DOH Global Health Update du 13/08/2026 (données PAHO au 13/08),
   // recherché le 17/08 via la page de listing globalhealthreports.health.ny.gov, qui liste
   // l'édition la plus récente en premier. ⚠️ Le PDF n'est pas lisible par WebFetch (flux
@@ -289,20 +309,36 @@ const CLUSTER_EDITION_CHECKED = {
   // Édition plus récente que celle en base → entrée ouverte dans CLUSTER_EDITION_PENDING.
   Chikungunya: "2026-08-17",
 };
+// Les clés de CLUSTER_EDITION_CHECKED étaient comparées à `disease_en` en égalité
+// stricte. Ça marche tant que la clé est exactement le libellé en base ("Cholera",
+// "Chikungunya"), mais le cluster cereulide s'appelle en base autrement que dans la
+// table de référence ci-dessus (qui, elle, matche par /cereulide/i) — une entrée
+// ajoutée sous un libellé approchant serait donc restée invisible et le cluster aurait
+// continué à sortir « absent de CLUSTER_EDITION_CHECKED » indéfiniment. Résolution :
+// égalité stricte d'abord, puis repli sur une correspondance par sous-chaîne
+// insensible à la casse. Une clé courte ("Cereulide") couvre ainsi tout libellé qui la
+// contient, sans avoir à deviner la chaîne exacte.
+function clusterKeyFor(disease) {
+  const name = disease || "";
+  if (Object.prototype.hasOwnProperty.call(CLUSTER_EDITION_CHECKED, name)) return name;
+  const lower = name.toLowerCase();
+  return Object.keys(CLUSTER_EDITION_CHECKED).find((k) => lower.includes(k.toLowerCase())) ?? null;
+}
 console.log("\n=== Lignes actives à source_priority=10, DANS un cluster de seeds (>14j depuis la dernière recherche d'édition) ===");
 const frozenSeed = active.filter((o) => o.source_priority === 10 && o.is_seed);
 if (frozenSeed.length) {
   const seenClusters = new Set();
   frozenSeed.forEach((o) => {
     const disease = o.disease_en || o.disease || "";
-    const checked = CLUSTER_EDITION_CHECKED[disease];
+    const key = clusterKeyFor(disease);
+    const checked = key ? CLUSTER_EDITION_CHECKED[key] : undefined;
     if (!checked) {
       console.log(`[${o.id}] ${disease} | ${o.country_en || o.country} | ⚠️ cluster absent de CLUSTER_EDITION_CHECKED — ajouter une entrée`);
       return;
     }
     if (seenClusters.has(disease)) return; // un seul verdict par cluster, pas une ligne par pays
     seenClusters.add(disease);
-    const pending = CLUSTER_EDITION_PENDING[disease];
+    const pending = CLUSTER_EDITION_PENDING[key];
     if (pending) {
       const countries = frozenSeed.filter((r) => (r.disease_en || r.disease) === disease).length;
       console.log(`${disease} (${countries} pays) | ⏳ ÉDITION PLUS RÉCENTE EN ATTENTE D'ARBITRAGE — ${pending}`);
@@ -946,3 +982,91 @@ if (staleCronRows.length) {
 } else {
   console.log("Aucune.");
 }
+
+// --- 6. Compteur canonique de fraîcheur — LE chiffre que le registre doit citer ---
+// Ajouté le 2026-08-24 après un brief matinal annonçant « 75 des 131 foyers affichés
+// n'ont pas bougé depuis plus de dix jours, 42 marqués actifs figés depuis plus de
+// 30 jours », attribués à l'effet §8 (aucun cron n'écrivant au-dessus de
+// source_priority 5). Deux problèmes dans ce chiffre :
+//
+//   1. L'effet §8 avait été corrigé cinq jours plus tôt — le balayage du 19/08 a porté
+//      17 crons de `.lte(5)` à `.lte(10)`. Ce n'est plus la cause de quoi que ce soit.
+//   2. Le compteur mesurait l'âge BRUT de `updated_at`, qui est un horodatage
+//      d'ÉCRITURE et non de VÉRIFICATION. Or ce fichier tient depuis le 16/08 quatre
+//      cartes de vérifications faites sans écriture (FROZEN_ROW_CHECKED,
+//      CLUSTER_EDITION_CHECKED, MANUAL_ROW_CHECKED, STALE_CRON_ROW_CHECKED) et la base
+//      porte depuis le 22/08 `source_confirmed_at`. Une ligne relue ce matin et
+//      confirmée inchangée n'écrit rien : elle comptait donc comme « figée ».
+//
+// D'où ce bloc : un seul endroit versionné qui calcule l'ancienneté sur
+// max(updated_at, source_confirmed_at, cartes CHECKED applicables), applique à chaque
+// famille de lignes la cadence que ce fichier lui a déjà fixée, et sort un total à
+// citer tel quel. Le chiffre brut est affiché en dessous, explicitement étiqueté comme
+// à ne pas reprendre — pour que l'écart reste visible plutôt que de se rejouer.
+//
+// Les seuils NE SONT PAS choisis ici : ils reprennent ceux des sections ci-dessus
+// (4d: 7j, 4d-bis: 14j, section 5: 7j, 4e: 45j). Changer une cadence se fait dans sa
+// section, ce bloc suit.
+const FRESHNESS_TIERS = {
+  manual:  { label: "lignes manuelles (section 5)",          days: 7  },
+  locked:  { label: "lignes verrouillées sp=10 (4d)",        days: 7  },
+  cluster: { label: "clusters de seeds sp=10 (4d-bis)",      days: 14 },
+  cron:    { label: "lignes de cron (4e)",                   days: 45 },
+  seedRef: { label: "seeds de référence (figés à dessein)",  days: null },
+};
+
+function lastVerifiedMs(o) {
+  const candidates = [
+    o.updated_at,
+    o.source_confirmed_at,
+    FROZEN_ROW_CHECKED[o.id],
+    STALE_CRON_ROW_CHECKED[o.id],
+    MANUAL_ROW_CHECKED[o.id],
+  ];
+  if (o.is_seed && o.source_priority === 10) {
+    const key = clusterKeyFor(o.disease_en || o.disease || "");
+    if (key) candidates.push(CLUSTER_EDITION_CHECKED[key]);
+  }
+  return Math.max(
+    ...candidates
+      .filter(Boolean)
+      .map((v) => new Date(v).getTime())
+      .filter((t) => !Number.isNaN(t)),
+    0
+  );
+}
+
+function tierOf(o) {
+  if (MANUAL_ROWS[o.id]) return "manual";
+  if (o.source_priority === 10) return o.is_seed ? "cluster" : "locked";
+  if (o.is_seed) return "seedRef";
+  return "cron";
+}
+
+console.log("\n=== Fraîcheur d'ensemble — compteur canonique (c'est CE chiffre qu'il faut citer) ===");
+const buckets = Object.fromEntries(Object.keys(FRESHNESS_TIERS).map((k) => [k, { total: 0, due: 0 }]));
+let dueTotal = 0;
+for (const o of active) {
+  const tier = tierOf(o);
+  const b = buckets[tier];
+  b.total++;
+  const days = FRESHNESS_TIERS[tier].days;
+  if (days === null) continue; // hors cadence par construction
+  const ageDays = Math.round((now - lastVerifiedMs(o)) / 864e5);
+  if (ageDays > days) { b.due++; dueTotal++; }
+}
+console.log(`Foyers actifs : ${active.length}`);
+for (const [k, t] of Object.entries(FRESHNESS_TIERS)) {
+  const b = buckets[k];
+  if (b.total === 0) continue;
+  const seuil = t.days === null ? "hors cadence" : `seuil ${t.days}j`;
+  console.log(`  · ${t.label.padEnd(38)} ${String(b.due).padStart(3)} en attente / ${String(b.total).padStart(3)} (${seuil})`);
+}
+console.log(`→ EN ATTENTE DE VÉRIFICATION : ${dueTotal} ligne(s) sur ${active.length}`);
+
+// Chiffre brut, affiché uniquement pour rendre l'écart visible.
+const rawStale = (n) => active.filter((o) => Math.round((now - new Date(o.updated_at).getTime()) / 864e5) > n).length;
+console.log(
+  `(âge brut de updated_at, NE PAS CITER : ${rawStale(10)} lignes > 10j, ${rawStale(30)} > 30j — ` +
+  `updated_at est un horodatage d'écriture ; une ligne relue et confirmée inchangée n'écrit rien.)`
+);
