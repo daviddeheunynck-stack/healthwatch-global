@@ -38,7 +38,7 @@ import { extractNumbers, assessRisk } from "@/lib/outbreak-parser";
 import { errorMessage } from "@/lib/error";
 import * as Sentry from "@sentry/nextjs";
 import { truncateAtSentence } from "@/lib/truncate-text";
-import { dateFloorGuard, spikeGuard, collapseGuard, zeroCaseGuard, zeroDeathGuard, lockedRowRegressionGuard } from "@/lib/outbreak-guards";
+import { dateFloorGuard, spikeGuard, collapseGuard, zeroCaseGuard, zeroDeathGuard, lockedRowRegressionGuard, lockedRowIsFreezing } from "@/lib/outbreak-guards";
 import { stampSourceConfirmed } from "@/lib/source-confirmed";
 
 export const dynamic = "force-dynamic";
@@ -1450,7 +1450,10 @@ async function runSyncWhoRegional(_req: NextRequest, supabase: SupabaseClient) {
         // unreported here — their regular-operation volume isn't measured,
         // so surfacing them too would risk drowning the health-check in
         // noise.
-        if (guardReason.startsWith("guard:locked-row-")) lockedGuardBlocked.push(`${target.disease_en}/${target.country_en}: ${guardReason}`);
+        // …but only while that premise holds: a locked row its owning source refreshed
+        // days ago is being protected, not frozen, and escalating it every run buries
+        // the next real failure of this cron. See lockedRowIsFreezing (2026-08-24).
+        if (guardReason.startsWith("guard:locked-row-") && lockedRowIsFreezing(existingRow)) lockedGuardBlocked.push(`${target.disease_en}/${target.country_en}: ${guardReason}`);
         continue;
       }
 
@@ -1549,7 +1552,10 @@ async function runSyncWhoRegional(_req: NextRequest, supabase: SupabaseClient) {
           // Same locked-row surfacing as the main update branch above — see
           // its comment for the full rationale. Feeds the same
           // lockedGuardBlocked array.
-          if (reactivateGuardReason.startsWith("guard:locked-row-")) lockedGuardBlocked.push(`${target.disease_en}/${target.country_en}: ${reactivateGuardReason}`);
+          // …but only while that premise holds: a locked row its owning source refreshed
+          // days ago is being protected, not frozen, and escalating it every run buries
+          // the next real failure of this cron. See lockedRowIsFreezing (2026-08-24).
+          if (reactivateGuardReason.startsWith("guard:locked-row-") && lockedRowIsFreezing(directCheck)) lockedGuardBlocked.push(`${target.disease_en}/${target.country_en}: ${reactivateGuardReason}`);
           continue;
         }
 
