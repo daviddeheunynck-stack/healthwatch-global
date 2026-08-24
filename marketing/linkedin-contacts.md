@@ -11,6 +11,68 @@
 **Codeur (freelance)** : David a mentionné vouloir être « plus incisif » sur Codeur également, mais n'a pas encore précisé en quoi — à reconfirmer avec lui plutôt que d'improviser, ce terrain n'étant pas couvert par ce repo/session.
 
 ---
+## 📅 Session linkedin-hwg-monitoring — 24/08/2026 (9h) : 🔴 RUN PERDU EN TOTALITÉ, navigateur non appairé
+
+**Vérification double déclenchement** : aucune entrée `linkedin-hwg-monitoring` datée du 24/08 dans ce fichier ni dans `content-log.md` à l'ouverture → **premier déclenchement de cette routine aujourd'hui**. Les mentions du 24/08 présentes avant ce run étaient toutes des renvois de carry-over écrits les jours précédents, pas des entrées de run.
+
+**Quotas à l'ouverture** : tous remis à zéro (nouveau jour) — commentaires **0/7**, connexions **0/7**, suivis **0/7-10**, DM **0/8**.
+**Quotas à la clôture** : **tous inchangés à 0.** Aucune action exécutée, aucun brouillon rédigé.
+
+### 🔴 Panne d'appairage du navigateur — seule cause, aucune autre action tentée
+
+`_shared/browser-status.md` lu avant ouverture : dernière entrée 🔴 datée du **15/08**, pas du jour → aucun bridage a priori, run mené normalement jusqu'à l'ouverture du navigateur.
+
+**Signature constatée, 3 vérifications concordantes :**
+- `list_connected_browsers` renvoie une liste **vide** — pas seulement `23c7ecdd-…` absent : **aucun navigateur du tout**, pas même le zombie `a466bc2e…` listé toute la journée du 08/08.
+- `select_browser` sur `23c7ecdd-26d7-4d25-b39b-1889eb0fa3bd` → « *No connected browser has deviceId* ».
+- `tabs_context_mcp` → « *Claude in Chrome is not connected* », avec le message d'installation/connexion de l'extension.
+
+**Chrome tourne pourtant** : `Get-Process chrome` renvoie 12 processus. C'est donc bien le pont extension↔Chrome qui est tombé, pas Chrome lui-même — le remède est de réactiver l'icône de l'extension, action qui n'appartient qu'à David.
+
+**Aucune réparation tentée**, conformément à `hwg-social-policy.md` §7 : pas de kill/relance de Chrome via PowerShell, pas de bascule sur un autre deviceId, pas d'insistance sur `tabs_create_mcp`. La re-sélection explicite du deviceId (premier réflexe prescrit avant de conclure à une panne CDP) a été faite et a échoué : ce n'est pas le cas « plusieurs navigateurs, le pont cible le mauvais ».
+
+**Notification push envoyée à David** dans la session, sans attendre le bilan (`report-conventions.md`, convention « une panne partagée se notifie tout de suite ») : le remède n'appartient qu'à lui et **les runs suivants des autres routines échoueront à l'identique** tant que ce n'est pas fait. Ligne 🔴 écrite dans `_shared/browser-status.md`.
+
+**Seuil d'escalade « 2 jours de suite » NON atteint** : les 3 créneaux du 23/08 ont fonctionné normalement. Si le créneau de 13h aujourd'hui retrouve la même panne, il ne renvoie **pas** de 2e notification push le même jour (§7) ; en revanche, si elle est encore là **demain 25/08 au matin**, le seuil sera atteint et la panne devra être signalée à David comme une panne d'automatisation, pas seulement dans un bilan de session.
+
+### ✅ Ce qui a quand même été fait (hors navigateur)
+
+- **Registre de faits régénéré** : `npm run qa:facts` → **227 faits citables sur 109 lignes affichées**, 81 lignes `is_seed` exclues, 62 faits marqués périmés (citables datés uniquement). Le registre était donc prêt ; c'est la rédaction qui n'a jamais pu commencer, faute de fils à lire.
+- ⚠️ **Alerte de fraîcheur remontée par le build, à traiter côté base et non côté message** — 13 foyers actifs sans vérification de source depuis plus de 30 jours, sur 3 événements distincts : **Shigellosis / EU-EEA (52 j)**, **Diphtheria / 8 pays dont Mauritania, Haiti, South Africa (39 j)**, **Meningitis / 4 pays dont Burkina Faso, South Sudan, Nigeria (32 j)**. Ancienneté mesurée sur `max(updated_at, source_confirmed_at)`. À re-sourcer par `morning-don-check` ou une session interactive.
+
+### 🚫 Ce qui n'a PAS pu être fait — le carry-over du 23/08 17h est intégralement reconduit
+
+Aucun élément de la liste ci-dessous n'a été ouvert, lu ni évalué : le navigateur n'a jamais répondu. **Rien n'a été « écarté par manque de temps »** — la distinction compte pour la session suivante.
+
+### 🔁 CARRY-OVER POUR LE CRÉNEAU DE 13h (24/08) — liste exhaustive, reprise intégrale du 23/08 17h + mises à jour
+
+**⚠️ Premier point à vérifier : le navigateur répond-il ?** Si oui, écrire une ligne `🟢 RÉTABLI` dans `_shared/browser-status.md` (c'est ce qui évite aux routines suivantes de se brider inutilement). Si non, une **seule** revérification, puis arrêt propre **sans 2e notification push** aujourd'hui.
+
+1. **La réponse publique à Gittan Gröndahl n'est toujours PAS publiée** (rédigée, double-checkée et saisie dans l'éditeur le 23/08 à 17h, coupée par le classifieur au moment du clic). Texte intégral dans l'entrée du 23/08 17h §3 : **ne pas le réécrire, seulement le publier.** ⚠️ **Plus de 24 h se sont désormais écoulées** depuis sa rédaction : rejuger la pertinence sur le post ECDC avant de poster, comme le prévoyait déjà la consigne d'origine.
+2. ~~Les 3 DM en attente de validation~~ → **RÉSOLU hors de cette routine** : Johan Verheyden, Ifedayo Adetifa et Mohamad Fawzy Elnahif ont tous été envoyés le 23/08 entre 20:03 et 20:10 en session interactive, sur ordre explicite de David. **La file de validation est à 0.** Ne pas les rouvrir.
+3. ⭐ **Johan Verheyden a répondu le 23/08 à 20:08**, quelques minutes après l'envoi : « *Mais 99% des chiffres que j'utilise sont basés sur les sitreps* ». **Non traité à ce jour** (hors du périmètre de l'instruction de David en session). À lire dans le fil complet et à traiter en priorité : c'est notre lecteur le plus engagé et un utilisateur Pro réel. Rappel des deux points qui appartiennent à David et sur lesquels la routine ne se prononce pas : (a) « personne ne veut financer » sa recherche socio-comportementale, (b) il envisage d'arrêter d'écrire sur cette épidémie.
+4. 🔥 **Darrel Ornelle ELION ASSIANA — le gel décidé par David expirait le 24/08, il est donc levé depuis ce matin, et ce run n'a pas pu le traiter.** Réponse à préparer sur sa réponse du 22/08 à 17:11. ⚠️ **Ne pas répéter le CTA**, déjà envoyé dans ce fil le jeudi à 12:14. Détail complet du message reçu dans l'entrée du 22/08.
+5. **Mohamed Ousmane COULIBALY** : ne pas relancer, attendre son retour sur le site. Une consultation de profil n'est pas un retour.
+6. **Les 5 invitations du 23/08 matin encore en attente** (Ihekweazu, AL Azebi, SAIDOUNI, Nebiyu Dereje, Linda Esso) : revérifier les acceptations via `mynetwork/invite-connect/connections/` trié « Ajouts récents ». Toute acceptation sans échange préalable ouvre un message de bienvenue.
+7. **Blocages hebdomadaires en cours, tous jusqu'au 30/08** : Melvin Sanicas, Robert Herriman, Patrick AYONGA, Ifedayo Adetifa, page ECDC, Oliver Morgan, Dr Fabrice KHADDY. **Aucun blocage nouveau créé aujourd'hui** (aucun commentaire posté).
+8. 🟡 **Homonymies de dirigeants d'agences nationales, toujours sans arbitrage de David** : Jean-Jacques Muyembe (signalé depuis le 21/08, **5e jour**) et Jide Idris. Règle proposée le 23/08 et toujours en attente d'une ligne de David : n'inviter un dirigeant d'agence nationale que si le compte est vérifié ou corroboré depuis un compte institutionnel.
+9. 🟡 **OLAOLUWA PHILIP** : 8e passage sur la même invitation reçue. **Ne pas rouvrir le profil ni le réévaluer** tant que David n'a pas tranché.
+10. 🟡 **La directive de ciblage du 17/08 (décideurs) a dépassé sa fenêtre déclarée** — « d'ici là » visait le go/no-go du 21/08, passé depuis 3 jours. Signalée les 23/08 (9h, 13h, 17h) puis « une dernière fois et pas au-delà ». **Elle n'est donc plus rappelée à partir d'ici** ; à noter simplement qu'elle a produit son meilleur résultat de la semaine (Adetifa et Elnahif acceptés le jour même), argument concret pour la reconduire plutôt que la laisser expirer par défaut.
+11. **Carry-overs permanents inchangés** : Kaushal Sharma, Barrè Onivogui, Andrea Bernasconi, Lorenzo Pezzoli (ne pas relancer avant un retour concret sur le site). Rouvrir les fils à chaque session, retirer l'entrée dès qu'un retour arrive.
+12. **Écartés définitifs, ne pas réévaluer** : Michelle Jones, Jane Hedger, GEOMAP PRO, Julia Gal (3e refus plateforme sur le chemin du suivi).
+13. **Anomalie JS asynchrone, question déjà tranchée** : présente à 13h et 17h, absente à 9h — motif d'après-midi, pas de créneau. Travailler en JS synchrone l'après-midi, **ne pas rouvrir l'enquête**.
+14. **Défaut de la page `/recent-activity/comments/`** : elle ne liste pas tous les commentaires (5 sur 7 les deux fois le 23/08). Aller directement sur le post pour tout commentaire manquant, ne pas conclure « commentaire disparu ».
+15. **Dorine Ngono** (`/in/dorine-ngono/`) : écartée le 17/08 sur une modale d'invitation qui ne s'ouvrait pas, note « à retenter » jamais reprise en carry-over pendant 6 sessions. Reportée ici pour ne pas la reperdre — **à retenter** dès qu'un créneau a du quota de connexion disponible.
+
+### 📋 Relevé QA du run
+
+**Néant, et c'est la seule lecture honnête** : 0 brouillon rédigé, donc 0 passage au contrôle mécanique, 0 relecteur lancé, 0 envoi, 0 abandon. Le dispositif de double-check outillé mis en service ce matin **n'a pas encore été exercé une seule fois sur un message réel** — son premier vrai test reste devant nous, au prochain créneau qui retrouvera un navigateur. Le registre de faits, lui, a bien été produit (étape 1 du dispositif), c'est le seul étage qui a tourné.
+
+**Anti-injection, RGPD, données hors plateforme** : sans objet, aucun contenu tiers n'a été lu ce run.
+
+**Redémarrage de Chrome en fin de session (§11)** : **délibérément sauté.** Redémarrer ne répare pas un pont d'extension tombé (réfuté à plusieurs reprises, [[project_browser_cdp_dead_afternoon_20260724]]), et fermerait potentiellement une fenêtre de David un lundi matin, heure où il peut être devant son écran.
+
+---
 ## 📅 Session interactive — 23/08/2026, ~20h : les 3 DM validés et envoyés, 1 nouveau message traité
 
 **David, en session interactive, après relecture du double-check refait à sa demande** (« double check les 3 DMs ») : « envoie les 3 DM et traite Christophe en faisant le brouillon ». Instruction directe en session = validation explicite ([[feedback_linkedin_dm_validation_required_2026_07_23]]).
