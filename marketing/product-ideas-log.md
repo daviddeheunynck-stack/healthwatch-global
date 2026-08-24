@@ -1395,3 +1395,56 @@ Le diff de `5d8e1ad` est explicite : il touche `app/[locale]/outbreak/[id]/page.
 **Statut : 2 idées PROPOSÉES ET CONSTRUITES** (`73aca66`, `40d69f1`). Aucune idée bloquée par un garde-fou ce soir.
 
 ---
+
+## 2026-08-24 — Proposition du jour
+
+**Aucun signal terrain neuf :** `product-feedback.md` n'a pas bougé depuis l'entrée Coulibaly du 22/08, déjà exploitée. Les trois runs LinkedIn du jour (9h, 13h, 17h) n'ont produit aucun retour produit exploitable.
+
+**Le signal du jour vient du code écrit aujourd'hui, pas d'un contact.** Le run `morning-don-check` du matin a produit un audit de couverture choléra (`scripts/coverage-cholera.mjs`, non commité) et le commit `a5ac23d` qui en découle. Les deux idées ci-dessous sortent de ce qu'établit ce travail — relu dans le code réel de `master` (`d221d82`), numéros de ligne à l'appui.
+
+---
+
+### 1. 🔴 Le contrôle « pays câblé, zéro ligne » compare la base à une **copie manuelle** de la liste des pays — périmée depuis ce matin, et aveugle précisément aux deux pays qu'il devrait signaler
+
+**Signal.** Le commit `a5ac23d` de ce matin ajoute **4 pays** à `CHOLERA_ISO3` (`app/api/cron/sync-who-regional/route.ts:552-588`) : Angola, Yémen, Pakistan, Burundi. Son propre commentaire dit que Pakistan et Burundi n'ont **aucune ligne en base** alors que l'OMS y déclare 4 184 et 1 537 cas. C'est mot pour mot le défaut que la section 4f de `scripts/morning-don-check.mjs` existe pour détecter (« câblé dans une map de source mais absent de la base », écrite le 27/07 après le trou Tchad/choléra).
+
+**Ce que la relecture du code établit.** La section 4f ne lit pas `CHOLERA_ISO3`. Elle en tient une **copie recopiée à la main** (`morning-don-check.mjs:462-465`), avec un commentaire qui prévient lui-même : « *Garder `CHOLERA_ISO3_COUNTRIES` synchronisé avec la vraie const du fetcher si elle change.* » Cette copie contient **14 pays**, la vraie constante en contient **18** depuis ce matin. Les 4 pays ajoutés — dont les 2 sans ligne — sont invisibles pour le contrôle. Le diagnostic écrit ce matin par l'autre session tire déjà la conclusion, sans pouvoir la corriger depuis un script jetable : « *Une copie qui doit être synchronisée à la main finit toujours par diverger — et un scan de couverture qui diverge de ce qu'il est censé auditer ne vaut rien.* »
+
+**Réponse retenue.** Lire le bloc `CHOLERA_ISO3` **dans le fichier de la route**, comme le fait déjà `coverage-cholera.mjs`, au lieu de le recopier. La liste ne peut alors plus diverger par construction.
+
+**Effort estimé : petit.** Une lecture de fichier et une regex dans un script Node déjà en place ; aucune écriture, aucun schéma, aucune surface client.
+
+**Risque/inconnue :** (a) une regex sur du code source casse si la constante est renommée ou déplacée — le contrôle doit alors **échouer bruyamment** (ligne « impossible de lire la constante ») et surtout pas retomber en silence sur une liste vide, ce qui transformerait le correctif en aveuglement total ; (b) la seconde liste manuelle du même bloc, `CHOLERA_EXPECTED_NULLS` (Cameroun, Syrie, Liban, Népal — « pas de cas actuel, pas un bug »), reste manuelle : elle encode un jugement, pas un état du code, et rien ne la vérifie. Le cas Yémen de ce matin montre le risque exact — une absence tenue pour normale pendant que la source publiait 5 196 cas. Non traité ici, signalé.
+
+---
+
+### 2. 🔴 Une ligne qui **sort de la carte** le fait sans nom — et à partir de là plus aucun contrôle ne la regarde
+
+**Signal.** Toujours le commit de ce matin, sur Angola et Yémen : « *les deux lignes se sont retrouvées désactivées, arrêtées au 31/05, pendant que l'OMS continuait de publier — Angola jusqu'au 13/07 (5 361 cas / 117 décès), Yémen jusqu'au 29/06 (5 196 / 7). Des épidémies en cours affichées comme closes : un défaut visible côté client.* » Personne n'a été prévenu le jour où ces lignes se sont éteintes ; elles ont été retrouvées un mois et demi plus tard, à la main, en auditant autre chose.
+
+**Ce que la relecture du code établit — deux moitiés du même angle mort.**
+- `sync-outbreaks/route.ts:487-496` : la désactivation de masse (`active=false` sur toute ligne dont la `date` dépasse `STALE_DAYS`) récupère `{ count }` et **rien d'autre**. Aucun identifiant, aucun nom de pays, nulle part : ni dans les logs, ni dans `logCronRun`, ni dans la réponse JSON. Le matin où deux foyers en cours quittent la carte, la seule trace est un entier.
+- `data-quality/route.ts:300-304` : le rapport quotidien charge `.eq("active", true)`. **Tout ce qui est inactif est hors de portée de ses onze sections** — fraîcheur, régression, CFR, duplication, filigrane 14 j livré hier. La seule exception est la section 4j (couverture GPEI), qui regarde les lignes dormantes **uniquement pour la polio**, et seulement parce qu'elle compare à une source externe.
+
+Autrement dit : la désactivation est une **porte à sens unique**. Une ligne périmée est bruyante ; la même ligne désactivée est parfaitement silencieuse — elle devient indistinguable d'un pays sans épidémie.
+
+**Réponse retenue, en deux morceaux qui se complètent.**
+- **(a) Nommer.** `sync-outbreaks` remplace `{ count }` par un `.select(...)` et journalise ce qu'il vient d'éteindre (maladie / pays / date / source), en le renvoyant aussi dans sa réponse.
+- **(b) Signaler le lendemain matin.** Nouvelle section **4l** de `data-quality` : toute ligne **inactive aujourd'hui qui possède encore un instantané récent** dans `outbreak_snapshots` vient, par construction, de quitter la carte (`sync-outbreaks` n'instantanéise que les lignes actives). Elle est listée avec la consigne de vérifier que la source a **réellement cessé de publier** — sans aucune écriture ni réactivation automatique.
+
+L'intérêt de passer par les instantanés plutôt que par `active`+`updated_at` : le contrôle attrape la sortie de carte **quel que soit le chemin emprunté** — balayage de `sync-outbreaks`, désactivation par un cron de source (`sync-paho-alerts`, `sync-usda-aphis`, 4e de `data-quality`), bouton admin ou script à la main.
+
+**Effort estimé : petit.** Deux fichiers, une requête supplémentaire sur une table déjà lue deux fois par ce cron, aucun schéma, aucune écriture nouvelle.
+
+**Risque/inconnue :** (a) une même ligne sera signalée **deux matins de suite** (l'instantané du jour de sa désactivation a déjà été écrit avant l'extinction, par le run horaire) — assumé plutôt que corrigé : un rapport quotidien se rate un jour sur deux, et le doublon est le prix d'un filet qui ne se referme pas trop tôt ; (b) le contrôle ne voit **que** les sorties récentes, pas le stock de lignes déjà inactives — le volume de ce stock n'est pas mesurable dans cette session (aucune sonde prod) et un audit rétroactif serait une autre idée, plus lourde ; (c) si le balayage éteint un gros lot un jour donné, la liste doit être **plafonnée** dans l'e-mail, avec le total dit en clair — jamais tronquée en silence.
+
+---
+
+### Contexte relevé au passage (pas des idées)
+
+- **Chantiers en cours dans l'arbre partagé, non touchés :** `marketing/qa/product-claims.manual.json` modifié (dispositif QA des messages sortants, `8218dd0`), `scripts/coverage-cholera.mjs` et `marketing/prospection-2026-08-23.pdf` non suivis. Règle de périmètre d'`AGENTS.md` : laissés tels quels. Cette session travaille dans un **worktree git séparé** basé sur `origin/master`.
+- **Migration `20260824040000_outbreak_alert_daily_lock.sql`** (verrou anti-triplons des trois crons d'alerte) : écrite aujourd'hui par le chantier e-mails, **pas vérifiée comme appliquée en prod** ici — hors périmètre (garde-fou 3, e-mails clients). À confirmer côté David : si la table n'existe pas, les trois crons d'alerte écrivent dans le vide.
+- **Morgan Otita** — annulation automatique **après-demain (26/08)**, J-2. Toujours pas re-proposé, l'arbitrage du 20/08 tient.
+- **Pistes ouvertes sans angle neuf, non re-proposées :** version de définition de cas (Adelekun, 03/08), 18 indicateurs de confiance communautaire (Bernasconi, 07/08), trois sources tierces (TSENG, 29/07, garde-fou `ROADMAP.md`), écart entre deux sources (écartée par David le 23/08). Bulletin vectoriel `sync-spf` : toujours non construit, effort révisé moyen-gros le 22/08, inchangé.
+
+**Statut : 2 idées PROPOSÉES.** Construction dans la foulée, ce log sera mis à jour.
