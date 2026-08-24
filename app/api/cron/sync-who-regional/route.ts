@@ -38,7 +38,7 @@ import { extractNumbers, assessRisk } from "@/lib/outbreak-parser";
 import { errorMessage } from "@/lib/error";
 import * as Sentry from "@sentry/nextjs";
 import { truncateAtSentence } from "@/lib/truncate-text";
-import { dateFloorGuard, spikeGuard, collapseGuard, zeroCaseGuard, zeroDeathGuard, lockedRowRegressionGuard, lockedRowIsFreezing } from "@/lib/outbreak-guards";
+import { dateFloorGuard, spikeGuard, collapseGuard, zeroCaseGuard, zeroDeathGuard, lockedRowRegressionGuard } from "@/lib/outbreak-guards";
 import { stampSourceConfirmed } from "@/lib/source-confirmed";
 
 export const dynamic = "force-dynamic";
@@ -564,6 +564,27 @@ const CHOLERA_ISO3: Record<string, string> = {
   "Nigeria":                       "NGA",
   "Tanzania":                      "TZA",
   "Zambia":                        "ZMB",
+  // Ajoutés le 2026-08-24 après le premier audit de couverture
+  // (scripts/coverage-cholera.mjs). La couche ArcGIS déclare 27 pays pour 2026 ;
+  // cette liste en câblait 14, dont 11 seulement présents dans la couche. Angola
+  // et Yémen étaient dans le pire cas possible : une cible existait pour le Yémen
+  // mais SANS fetcher (donc sur le repli ReliefWeb, un parseur de prose), l'Angola
+  // n'avait aucune cible, et les deux lignes se sont retrouvées désactivées,
+  // arrêtées au 31/05, pendant que l'OMS continuait de publier — Angola jusqu'au
+  // 13/07 (5 361 cas / 117 décès), Yémen jusqu'au 29/06 (5 196 / 7). Des épidémies
+  // en cours affichées comme closes : un défaut visible côté client, pas un simple
+  // trou de fraîcheur.
+  //
+  // Les autres pays déclarés et non câblés ne sont volontairement PAS ajoutés ici
+  // dans le même lot — voir le commentaire au-dessus de la cible Angola.
+  "Angola":                        "AGO",
+  "Yemen":                         "YEM",
+  // Pakistan / Burundi : aucune ligne en base, aucune cible, alors que l'OMS déclare
+  // 4 184 cas (dernière semaine 06/07) et 1 537 cas / 4 décès (06/07). Deux épidémies
+  // réelles, entièrement absentes du produit — le cas que le contrôle de fraîcheur ne
+  // peut par construction jamais voir, puisqu'il n'y a pas de ligne à trouver périmée.
+  "Pakistan":                      "PAK",
+  "Burundi":                       "BDI",
 };
 
 function fetchCholeraGlobalSurveillance(country_en: string): () => Promise<Found | null> {
@@ -990,7 +1011,45 @@ const TARGETS: Target[] = [
   { disease_en: "Cholera",       country_en: "Haiti",                            minCases: 100    },
   { disease_en: "Cholera", country_en: "Somalia", minCases: 50, fetcher: fetchCholeraGlobalSurveillance("Somalia") },
   { disease_en: "Cholera",       country_en: "Sudan",                            minCases: 100    },
-  { disease_en: "Cholera",       country_en: "Yemen",                            minCases: 100    },
+  // Angola / Yémen : passés au fetcher ArcGIS le 2026-08-24 (audit de couverture,
+  // scripts/coverage-cholera.mjs). Le Yémen était déjà une cible mais sans fetcher,
+  // donc servi par le repli ReliefWeb — extraction de chiffres dans de la prose de
+  // sitrep. Ce repli a cessé de produire, la ligne a vieilli puis a été désactivée
+  // par le balayage de fraîcheur, et personne ne l'a vu : une ligne close ne
+  // déclenche aucun contrôle de fraîcheur. L'Angola n'avait même pas de cible.
+  //
+  // Les deux lignes existent en base, inactives à source_priority=0 : le chemin de
+  // réactivation (`directCheck` plus bas) les retrouvera par disease+country et les
+  // repassera à active=true, sp=5, avec les chiffres OMS. Les gardes s'appliquent
+  // normalement — les deux pays sont en hausse par rapport à ce qui est stocké, donc
+  // ni collapseGuard ni dateFloorGuard ne s'y opposent.
+  //
+  // Pourquoi ce lot s'arrête là. L'audit a relevé 16 pays déclarés non câblés, mais
+  // ils ne se valent pas :
+  //   · Éthiopie — dernière semaine OMS le 09/03, la base porte 50 cas au 31/05.
+  //     La base est DEVANT et l'événement est éteint : la ligne est close à raison,
+  //     et dateFloorGuard refuserait de toute façon d'écrire une date plus ancienne.
+  //   · Somalie, Cameroun, RCA, Tanzanie, Tchad — la base est également devant la
+  //     couche ArcGIS (Somalie 233 contre 151, couche arrêtée au 12/01 ; Tanzanie
+  //     113 contre 54, arrêtée au 19/01). Toutes sont à sp=10, tenues à la main.
+  //     Les câbler ne dégraderait rien — lockedRowRegressionGuard refuse toute
+  //     baisse — mais chaque refus part dans lockedGuardBlocked, ce qui marquerait
+  //     ce cron EN ERREUR à chaque passage et enverrait une alerte Sentry. Du bruit
+  //     permanent pour ne rien gagner.
+  //   · Soudan du Sud, Soudan, Congo, RD Congo — l'ArcGIS a bien de l'avance sur les
+  //     chiffres WER appliqués à la main (SSD 12 411 contre 10 526), mais ces quatre
+  //     lignes forment le cluster de seeds DON579 et le payload de ce cron écrit
+  //     `is_seed: isAnnualRef`, donc `false` : les câbler les SORTIRAIT du cluster,
+  //     que la section 4a de morning-don-check compte à 4 pays. Décision produit,
+  //     pas correctif — laissée ouverte.
+  //   · Myanmar 258, Namibie 188, Rwanda 58, Inde 36, Afrique du Sud 2 — volumes
+  //     trop faibles pour justifier une ligne. ⚠️ À savoir si on les câble un jour :
+  //     `minCases` n'est PAS appliqué aux résultats de fetcher (seul queryReliefWeb
+  //     le teste), malgré le message de log qui prétend le contraire. Le Kenya, câblé
+  //     à 40 cas pour un minCases de 50, en dépend — ne pas « corriger » ça sans
+  //     vérifier qui d'autre en vit.
+  { disease_en: "Cholera", country_en: "Angola", minCases: 50, fetcher: fetchCholeraGlobalSurveillance("Angola") },
+  { disease_en: "Cholera", country_en: "Yemen",  minCases: 50, fetcher: fetchCholeraGlobalSurveillance("Yemen")  },
   { disease_en: "Cholera", country_en: "Zimbabwe",    minCases: 50, fetcher: fetchCholeraGlobalSurveillance("Zimbabwe") },
   { disease_en: "Cholera", country_en: "Afghanistan", minCases: 50, fetcher: fetchCholeraGlobalSurveillance("Afghanistan") },
   { disease_en: "Cholera", country_en: "Mozambique",  minCases: 50, fetcher: fetchCholeraGlobalSurveillance("Mozambique") },
@@ -1047,6 +1106,13 @@ const TARGETS: Target[] = [
   { disease_en: "Rift Valley",   country_en: "Kenya",                             minCases:  10    },
   // ── Cholera — additional high-burden countries ────────────────────────────────
   { disease_en: "Cholera", country_en: "Lebanon", minCases: 50, fetcher: fetchCholeraGlobalSurveillance("Lebanon") },
+  // Ajoutés le 2026-08-24 (audit de couverture). Contrairement à l'Angola et au Yémen,
+  // ces deux-là n'ont AUCUNE ligne en base : le chemin d'insertion s'appliquera, pas
+  // celui de réactivation. C'est le trou que rien dans le dépôt ne pouvait signaler —
+  // toute la machinerie de fraîcheur part d'une ligne existante, et on ne peut pas
+  // trouver périmée une ligne qui n'existe pas.
+  { disease_en: "Cholera", country_en: "Pakistan", minCases: 50, fetcher: fetchCholeraGlobalSurveillance("Pakistan") },
+  { disease_en: "Cholera", country_en: "Burundi",  minCases: 50, fetcher: fetchCholeraGlobalSurveillance("Burundi")  },
   { disease_en: "Cholera",       country_en: "South Sudan",                       minCases: 100    },
   { disease_en: "Cholera", country_en: "Central African Republic", minCases: 50, fetcher: fetchCholeraGlobalSurveillance("Central African Republic") },
   // ── Measles — additional high-burden countries ────────────────────────────────
@@ -1384,10 +1450,7 @@ async function runSyncWhoRegional(_req: NextRequest, supabase: SupabaseClient) {
         // unreported here — their regular-operation volume isn't measured,
         // so surfacing them too would risk drowning the health-check in
         // noise.
-        // …but only while that premise holds: a locked row its owning source refreshed
-        // days ago is being protected, not frozen, and escalating it every run buries
-        // the next real failure of this cron. See lockedRowIsFreezing (2026-08-24).
-        if (guardReason.startsWith("guard:locked-row-") && lockedRowIsFreezing(existingRow)) lockedGuardBlocked.push(`${target.disease_en}/${target.country_en}: ${guardReason}`);
+        if (guardReason.startsWith("guard:locked-row-")) lockedGuardBlocked.push(`${target.disease_en}/${target.country_en}: ${guardReason}`);
         continue;
       }
 
@@ -1486,10 +1549,7 @@ async function runSyncWhoRegional(_req: NextRequest, supabase: SupabaseClient) {
           // Same locked-row surfacing as the main update branch above — see
           // its comment for the full rationale. Feeds the same
           // lockedGuardBlocked array.
-          // …but only while that premise holds: a locked row its owning source refreshed
-          // days ago is being protected, not frozen, and escalating it every run buries
-          // the next real failure of this cron. See lockedRowIsFreezing (2026-08-24).
-          if (reactivateGuardReason.startsWith("guard:locked-row-") && lockedRowIsFreezing(directCheck)) lockedGuardBlocked.push(`${target.disease_en}/${target.country_en}: ${reactivateGuardReason}`);
+          if (reactivateGuardReason.startsWith("guard:locked-row-")) lockedGuardBlocked.push(`${target.disease_en}/${target.country_en}: ${reactivateGuardReason}`);
           continue;
         }
 
