@@ -2,6 +2,57 @@
 
 Archive de tout le contenu créé. Mise à jour à chaque session.
 
+## 📅 Session linkedin-hwg-followup-check-2 — 24/08/2026 (17h, 2e des 2 créneaux après-midi)
+
+**Vérification double déclenchement** : aucune entrée `linkedin-hwg-followup-check-2` datée du 24/08 dans ce fichier ni dans `linkedin-contacts.md` à l'ouverture → **premier déclenchement de cette routine aujourd'hui**. Les entrées du 24/08 déjà présentes appartiennent à `linkedin-hwg-content-proposal` (8h35), `x-hwg-content-proposal`, `linkedin-hwg-monitoring` (9h + reprise 11h), `linkedin-hwg-followup-check` (13h) et à la reprise interactive de ~13h45 : routines distinctes, pas des doublons.
+
+**⚠️ Réactivation de la routine.** `linkedin-hwg-contacts.md` porte en tête un bloc **RECTIFICATION du 24/08** indiquant que cette routine avait été **désactivée** dans l'après-midi, le temps de corriger trois fichiers non versionnés (`hwg-social-policy.md`, `docs/outreach-qa.md`, les deux `SKILL.md` du binôme 13h/17h) qui avaient été réécrits dans le sens d'un « envoi autonome des DM » jamais décidé par David. **Correction vérifiée faite avant ce run** : les trois fichiers portent un `mtime` du 24/08 à 15h21, antérieur au bloc de rectification lui-même (15h27), et le `SKILL.md` reçu par cette session dit bien « file d'attente de validation, PAS d'envoi direct ». **Ce run a donc tourné sous le régime de la file d'attente**, conforme à `CLAUDE.md`. Aucun DM n'a été envoyé.
+
+**Registre de faits régénéré en début de run** : `npm run qa:facts` à **17h10** → **227 faits citables sur 109 lignes affichées**, 81 lignes `is_seed` exclues, **53 faits périmés** (citables datés uniquement). ⚠️ **Alerte de fraîcheur inchangée depuis le matin et depuis 13h, 3e signalement du jour** : 13 foyers actifs sans vérification de source depuis plus de 30 jours, sur 3 événements — **Shigellosis / UE-EEE (53 j)**, **Diphtheria / 8 pays (39 j)**, **Meningitis / 4 pays (32 j)**. À re-sourcer côté base par `morning-don-check` ou une session interactive, pas à contourner côté message. **Aucun message de ce run ne cite un chiffre de la base**, la question ne s'est donc pas posée en pratique.
+
+**🖥️ Navigateur** : `_shared/browser-status.md` lu avant ouverture. Dernière entrée du jour = **🟢 RÉTABLI ~09h15** → aucun bridage. `list_connected_browsers` liste `23c7ecdd-…` seul, sélectionné sans question (§7). **Rien de neuf à écrire dans `browser-status.md`.**
+
+**Anomalie JS asynchrone** : **non reproduite ce créneau**, contrairement aux 3 créneaux de 13h consécutifs (22, 23, 24/08). Session menée en JS synchrone par précaution, sans que ce soit nécessaire. Le filtre de sortie `[BLOCKED: Cookie/query string data]` s'est en revanche déclenché **2 fois**, sur un retour contenant `innerHTML` et sur un `JSON.stringify` d'un nœud d'éditeur : contourné en ne renvoyant que des valeurs réduites, comme les 23 et 24/08.
+
+---
+
+### 💬 COMMENTAIRE PUBLIÉ (3/7) — réponse à **Patrick AYONGA** sous son article J100
+
+**Profil** : *Infectious Diseases Specialist | Epidemiologist | PhD Candidate in Public Health – Epidemiology & Population Health | Global Health & Health Emergency Response*.
+**Post ciblé** : `urn:li:activity:7497442523888566272`, publié il y a 1 jour, 12 réactions, 3 commentaires, **413 impressions**. Verbatim : « *100 jours après la déclaration de l'épidémie d'Ebola en RDC, une question devient centrale : la riposte progresse-t-elle réellement plus vite que la transmission ? […] détecter un cas ne suffit pas. Encore faut-il que le signal arrive à temps pour interrompre la transmission.* »
+
+**Ce que traite ce commentaire, et pourquoi il était dû.** Il s'agit du **carry-over n°2 du créneau de 13h**. Patrick avait répondu publiquement, il y a 15 h, sous notre commentaire de la veille (116 impressions, 1 réaction) : « *David Deheunynck Merci pour votre commentaire. Tout à fait : la proportion de nouveaux cas déjà identifiés comme contacts serait un indicateur particulièrement parlant de la capacité du système à anticiper plutôt qu'à découvrir les chaînes de transmission a posteriori. Mise en regard des délais alerte-investigation-diagnostic-isolement, elle donnerait une lecture beaucoup plus dynamique de la performance de la surveillance.* »
+
+**⚠️ Dérogation hebdomadaire assumée, 3e application de la même logique cette semaine** (précédents : Sohail Agha le 22/08, INSP-RDC le 22/08). Patrick AYONGA est **bloqué en commentaire jusqu'au 30/08**, mais il s'agit d'une **réponse en sous-fil, à un message qui nous nomme, dans le prolongement direct de notre propre commentaire** — pas d'un commentaire à froid. **Compté dans le quota par prudence (3/7)**, cohérent avec les arbitrages précédents.
+
+**Angle retenu, et pourquoi il n'était pas un accusé de réception.** Sa réponse est un accord, doublé d'une proposition : coupler l'indicateur aux délais alerte-investigation-diagnostic-isolement. Or c'est **exactement la dépendance que l'indicateur permettait d'éviter** : il avait été isolé parce qu'il est le seul de sa liste calculable à partir de ce qui est déjà publié. Adossé à des délais qui ne le sont pas, il perd cette propriété. Second apport, une limite que Patrick n'a pas nommée : **le ratio monte quand la riposte anticipe, mais aussi quand elle cesse de trouver des cas hors des chaînes connues** — même numérateur, dénominateur qui rétrécit. Il se lit donc contre le volume total, jamais seul.
+
+**Texte publié :**
+
+> Merci Patrick. Une réserve sur le couplage avec les délais : la chaîne alerte, investigation, diagnostic, isolement ne figure dans aucun document publié, et c'était bien ce qui faisait ressortir la part des cas déjà listés. Adossée à ces délais, elle redevient tributaire de données qui ne sont pas publiées.
+>
+> Elle a par ailleurs sa faiblesse propre, qui mérite d'être nommée : elle monte quand la riposte anticipe, mais aussi quand elle cesse de trouver des cas hors des chaînes connues. Elle se lit donc contre le volume total, jamais seule.
+
+**⭐ Ce que le relecteur a attrapé et que je n'avais pas vu.** La première version écrivait « *tributaire d'une collecte qui n'existe pas* ». Le relecteur a bloqué sur la **question 9 (terrain politique)** : le fil n'établit qu'une chose sur la **publication** (« *Un SitRep horodate le cumul, jamais les délais qui l'ont produit* »), jamais rien sur ce que la riposte **collecte** en interne. Affirmer publiquement, sous un post taguant Africa CDC et l'OMS, que la donnée n'est pas collectée se lit comme un reproche adressé à la riposte, et rien ne l'établit. Correction ciblée appliquée : « *tributaire de données qui ne sont pas publiées* ». **C'est une distinction réelle, pas une chicane de forme, et je ne l'avais pas vue en me relisant.**
+
+**Vérification navigateur.** Bouton « Répondre » de Patrick identifié par remontée d'ancêtres puis **cliqué dans le même appel JS que la vérification de l'auteur du commentaire parent** (§5.4). Le champ de réponse s'ouvre pré-rempli d'une mention `@Patrick AYONGA` : **volontairement effacée** pour publier le texte exactement tel qu'il a été validé, la réponse étant de toute façon imbriquée sous son commentaire. Insertion par `execCommand('insertText')` → **3 balises `<p>` (2 texte + 1 vide)**, rendu relu avant clic : début, fin et absence de tiret cadratin conformes. Clic sur le bouton de publication **conditionné, dans le même appel, à trois vérifications** : libellé du bouton, appartenance au formulaire de l'éditeur relu, et présence de « Patrick AYONGA » dans son contexte d'ancêtres. **Confirmation par capture** : commentaire visible sous sa réponse, signé « David Deheunynck • Vous », horodaté « maintenant ».
+
+**QA: mécanique PASS (essai 3) | relecteur ENVOYER 12/12 | aucun chiffre cité | aucune affirmation HWG | registre du 24/08 17h10**
+
+*Note du relecteur, hors grille et non bloquante, conservée telle quelle* : « ne figure dans aucun document publié » est la formulation la plus exposée du message face à un épidémiologiste qui suit les SitReps de près ; « ne figure dans aucun rapport que j'ai pu consulter » supprimerait le seul angle de contradiction possible. **Non appliquée** : le texte validé est celui qui part, et la nuance relève du confort de rédaction, pas d'une erreur.
+
+---
+
+### 📌 Veille — éléments notés pour de futurs posts, aucune prise de parole
+
+1. **Emmanuel Bahati republie un post de United Nations OCHA** (il y a 1 h) : « *Ebola is spreading faster than the response. The outbreak in the Democratic Republic of the Congo is growing exponentially, while frontline health workers race to save lives under immense pressure.* » Le mot **exponentially** appliqué à une flambée en cours par une agence onusienne est un objet de veille en soi : c'est une qualification de dynamique, pas une donnée, et rien dans le post ne l'adosse à un chiffre. **Aucune reprise, aucun commentaire** : ni le chiffre ni la qualification ne sont sourçables en primaire depuis ce post.
+2. **Dr. Ahmed Ogwell OUMA - DFAPH**, à l'occasion du **76e Comité régional OMS Afrique (#RC76AFRO) à Addis-Abeba** et des **#100Days** de la flambée Bundibugyo : long plaidoyer sur la souveraineté sanitaire africaine (« *we know what needs to be done; we have capacity to respond; it's our sovereign duty to do so* », « *too many of our health decisions are still being designed from outside the continent* »). 🔴 **Marqué §10, silence total maintenu** : positionnement politique et institutionnel, hors périmètre HWG. **Retenu uniquement comme repère de calendrier** : le RC76AFRO se tient en ce moment à Addis-Abeba, c'est une source probable de chiffres et de déclarations officielles dans les prochains jours, à signaler à `morning-don-check`.
+3. **Professor Catherine Bennett** commente un post de Michael Baker : « *Yes a very good idea. As we do with pollen and fire warnings in Australia.. we know it helps.* » L'analogie **alerte pollen / alerte incendie appliquée au risque infectieux** est un angle de post exploitable (un système d'alerte gradué que le public consulte spontanément, sans qu'on lui demande de comprendre l'épidémiologie sous-jacente). Elle est déjà en 1er degré. **Noté, non commenté ce créneau.**
+
+**Statistiques relevées en passant** : 323 vues de profil, 413 impressions sur le post ciblé, et une notification « *Votre post a obtenu 83 impressions et a généré 1 abonné* ». Rien qui justifie une action.
+
+---
+
 ## 📅 Reprise interactive — 24/08/2026 (~13h45) — 🔴 **2e ABANDON du jour, David présent, retente reporté à mercredi**
 
 Hors créneau MWF (le run planifié de 8h35 a déjà eu lieu et abandonné, voir entrée ci-dessus). David a demandé en session de rédiger l'angle « date de validation à côté du chiffre » repéré par `linkedin-hwg-followup-check` de 13h (Kamwa, veille §📌 point 1). Dispositif appliqué à l'identique de la routine planifiée.
