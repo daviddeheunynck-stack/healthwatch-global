@@ -237,6 +237,86 @@ export async function claimWeeklyEmailAddress(
 }
 
 /**
+ * Relache un verrou pose par claimWeeklyEmailAddress quand l'envoi qui devait
+ * le suivre n'a finalement pas eu lieu (exception Brevo, cle absente).
+ *
+ * Le verrou est pose AVANT l'envoi, ce qui est le bon ordre pour la course
+ * entre deux invocations. Mais sans relachement, un echec cote Brevo consomme
+ * la semaine du destinataire : il ne recoit rien, et une re-invocation
+ * manuelle le saute puisque son adresse est deja marquee servie. Constate le
+ * 2026-08-24 — un « upstream connect error » sur une seule adresse pendant
+ * weekly-signal, et cette lectrice a perdu sa semaine sans trace ailleurs que
+ * dans les logs Vercel.
+ *
+ * Le filtre sur `source` est ce qui rend l'operation sure : on ne peut
+ * effacer que son propre verrou, jamais celui qu'un autre mailer a pose sur
+ * la meme adresse la meme semaine.
+ *
+ * N'echoue jamais bruyamment : ne pas reussir a relacher rend simplement le
+ * comportement identique a celui d'avant ce helper.
+ */
+export async function releaseWeeklyEmailAddress(
+  supabase: SupabaseClient,
+  email: string,
+  weekOf: string,
+  source: string,
+): Promise<void> {
+  const normalized = email.trim().toLowerCase();
+  const { error } = await supabase
+    .from("weekly_email_send_log")
+    .delete()
+    .eq("email", normalized)
+    .eq("week_of", weekOf)
+    .eq("source", source);
+  if (error) {
+    console.error(`[cron-monitor] releaseWeeklyEmailAddress failed for ${source}/${normalized}/${weekOf}:`, error.message);
+    Sentry.captureException(new Error(error.message), {
+      tags: { helper: "releaseWeeklyEmailAddress", source },
+    });
+  }
+}
+
+/** Pendant de claimEmailSend — voir releaseWeeklyEmailAddress. */
+export async function releaseEmailSend(
+  supabase: SupabaseClient,
+  userId: string,
+  cronName: string,
+  step: string,
+): Promise<void> {
+  const { error } = await supabase
+    .from("lifecycle_email_log")
+    .delete()
+    .eq("user_id", userId)
+    .eq("cron_name", cronName)
+    .eq("step", step);
+  if (error) {
+    console.error(`[cron-monitor] releaseEmailSend failed for ${cronName}/${step}/${userId}:`, error.message);
+    Sentry.captureException(new Error(error.message), {
+      tags: { helper: "releaseEmailSend", cron: cronName },
+    });
+  }
+}
+
+/** Pendant de claimWeeklyDigestSend — voir releaseWeeklyEmailAddress. */
+export async function releaseWeeklyDigestSend(
+  supabase: SupabaseClient,
+  subscriptionId: string,
+  weekOf: string,
+): Promise<void> {
+  const { error } = await supabase
+    .from("weekly_digest_log")
+    .delete()
+    .eq("subscription_id", subscriptionId)
+    .eq("week_of", weekOf);
+  if (error) {
+    console.error(`[cron-monitor] releaseWeeklyDigestSend failed for ${subscriptionId}/${weekOf}:`, error.message);
+    Sentry.captureException(new Error(error.message), {
+      tags: { helper: "releaseWeeklyDigestSend" },
+    });
+  }
+}
+
+/**
  * Monday (UTC) of the current calendar week, as "YYYY-MM-DD": the dedup key
  * for claimWeeklyDigestSend. Deliberately computed from wall-clock "now"
  * rather than passed in: a real Monday 07:00 UTC trigger and a same-day

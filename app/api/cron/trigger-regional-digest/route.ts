@@ -2,7 +2,7 @@ import { NextRequest } from "next/server";
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { getLocalizedDisease, getLocalizedCountry, dedupeAggregateOutbreakRows } from "@/lib/outbreaks";
 import * as Sentry from "@sentry/nextjs";
-import { logCronRun, isRealProduction, claimWeeklyEmailAddress, currentWeekOf } from "@/lib/cron-monitor";
+import { logCronRun, isRealProduction, claimWeeklyEmailAddress, releaseWeeklyEmailAddress, currentWeekOf } from "@/lib/cron-monitor";
 import { getWeeklySuppressionSet } from "@/lib/mail-suppression";
 import { notifyMobile } from "@/lib/mobile-notify";
 
@@ -275,6 +275,12 @@ async function runRegionalDigest(supabase: SupabaseClient) {
       errors++;
       console.error(`[trigger-regional-digest] Failed for ${user.email}:`, err);
       Sentry.captureException(err, { tags: { cron: "trigger-regional-digest", user_id: user.id } });
+      // sendEmail est le premier appel du try : une exception ici veut dire
+      // que rien n'est parti, donc le verrou pose juste au-dessus doit etre
+      // rendu. (L'echec d'insertion dans alert_notifications, lui, sort par
+      // `continue` sans passer ici — a ce stade l'email EST parti et le
+      // verrou doit rester.)
+      await releaseWeeklyEmailAddress(supabase, user.email, weekOf, "trigger-regional-digest");
     }
   }
 

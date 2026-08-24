@@ -3,8 +3,8 @@ import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { buildDigestEmail } from "@/lib/digest-email";
 import type { Outbreak } from "@/lib/outbreaks";
 import * as Sentry from "@sentry/nextjs";
-import { logCronRun, isRealProduction, claimWeeklyDigestSend, claimWeeklyEmailAddress, currentWeekOf } from "@/lib/cron-monitor";
-import { getBlockedEmailSet } from "@/lib/brevo-blocklist";
+import { logCronRun, isRealProduction, claimWeeklyDigestSend, claimWeeklyEmailAddress, releaseWeeklyDigestSend, releaseWeeklyEmailAddress, currentWeekOf } from "@/lib/cron-monitor";
+import { getWeeklySuppressionSet } from "@/lib/mail-suppression";
 import { sendBrevoEmail } from "@/lib/brevo-send";
 
 export const dynamic = "force-dynamic";
@@ -28,6 +28,15 @@ async function sendEmail(to: string, subject: string, html: string, unsubscribeU
   }
   await sendBrevoEmail({ to, subject, html, apiKey: BREVO_API_KEY, unsubscribeUrl });
   return true;
+}
+
+// Les deux verrous de cette route sont poses avant l'envoi (c'est le bon ordre
+// face a une invocation concurrente) ; ils doivent donc etre rendus ensemble
+// des que l'envoi n'a pas lieu. Regroupes ici pour qu'aucun des deux chemins
+// d'echec n'en oublie un.
+async function releaseClaims(supabase: SupabaseClient, subId: string, email: string, weekOf: string) {
+  await releaseWeeklyEmailAddress(supabase, email ?? "", weekOf, "weekly-digest");
+  await releaseWeeklyDigestSend(supabase, subId, weekOf);
 }
 
 export async function GET(req: NextRequest) {
@@ -109,9 +118,19 @@ async function runWeeklyDigest(_req: NextRequest, supabase: SupabaseClient) {
   const allOutbreaks: Outbreak[] = outbreaks ?? [];
   console.log(`[weekly-digest] ${allOutbreaks.length} high-risk active outbreaks`);
 
-  // subscriptions.email is a free-text newsletter address, not a profiles row —
-  // matched against the full Brevo blocklist cache. See lib/brevo-blocklist.ts.
-  const blockedEmails = await getBlockedEmailSet(supabase);
+  // subscriptions.email est une adresse de newsletter libre, pas une ligne
+  // profiles. Elle etait confrontee a la seule blocklist Brevo, ce qui laissait
+  // passer les desabonnements faits DANS le produit : quelqu'un qui clique
+  // « ne plus recevoir le signal hebdo » ecrit display_filters.no_weekly_signal
+  // sur son profil, mais si son adresse figure aussi dans subscriptions, ce
+  // digest-ci continuait de partir. getWeeklySuppressionSet est un sur-ensemble
+  // strict de getBlockedEmailSet (il l'appelle) et couvre en plus
+  // email_blocked_at et les deux drapeaux display_filters — c'est la meme
+  // source unique que send-sitrep-emails et trigger-regional-digest.
+  // Retabli le 2026-08-24 : la fusion du 23 au soir avait garde l'ancienne
+  // version de ce fichier et perdu ce changement, sur ce fichier seulement.
+  const { emails: suppressionSet, degraded: suppressionDegraded } =
+    await getWeeklySuppressionSet(supabase);
 
   // ── Send loop ──────────────────────────────────────────────────────────────
   let sent        = 0;
@@ -127,7 +146,7 @@ async function runWeeklyDigest(_req: NextRequest, supabase: SupabaseClient) {
   const weekOf = currentWeekOf();
 
   for (const sub of subscribers) {
-    if (blockedEmails.has((sub.email ?? "").toLowerCase())) { blockedSkipped++; continue; }
+    if (suppressionSet.has((sub.email ?? "").trim().toLowerCase())) { blockedSkipped++; continue; }
     // Claim before send, not after: a second invocation racing this one
     // must see the claim already taken, not an empty log it can still win.
     const claimed = await claimWeeklyDigestSend(supabase, sub.id, weekOf);
@@ -152,7 +171,11 @@ async function runWeeklyDigest(_req: NextRequest, supabase: SupabaseClient) {
       const { subject, html, unsubUrl } = buildDigestEmail(topOutbreaks, region, locale, sub.id);
       if (isRealProduction) {
         const ok = await sendEmail(sub.email, subject, html, unsubUrl);
-        if (ok) sent++; else skippedNoKey++;
+        if (ok) sent++;
+        // Cle Brevo absente : rien n'est parti, on rend les deux verrous
+        // pour ne pas consommer la semaine de cet abonne. Voir
+        // releaseWeeklyEmailAddress dans lib/cron-monitor.ts.
+        else { skippedNoKey++; await releaseClaims(supabase, sub.id, sub.email, weekOf); }
       } else {
         sent++;
       }
@@ -160,6 +183,9 @@ async function runWeeklyDigest(_req: NextRequest, supabase: SupabaseClient) {
       console.error(`[weekly-digest] Failed to send to ${sub.email}:`, err);
       Sentry.captureException(err, { tags: { cron: "weekly-digest", sub_id: sub.id } });
       failed++;
+      // Idem pour un echec Brevo : le verrou pose avant l'envoi ne doit pas
+      // survivre a un envoi qui n'a pas eu lieu.
+      await releaseClaims(supabase, sub.id, sub.email, weekOf);
     }
 
     // Throttle to stay within Brevo rate limits
@@ -169,8 +195,16 @@ async function runWeeklyDigest(_req: NextRequest, supabase: SupabaseClient) {
   // Was only checking skippedNoKey — `failed`, incremented per-subscriber in
   // the catch above, was tracked but never consulted here, so a genuine send
   // failure still logged "ok".
-  await logCronRun(supabase, "weekly-digest", skippedNoKey > 0 || failed > 0 ? "error" : "ok", sent,
-    failed > 0 ? `${failed} envoi(s) en échec` : undefined);
-  console.log(`[weekly-digest] Done, ${sent} sent, ${failed} failed, ${skippedNoKey} skipped (no key), ${blockedSkipped} blocked, ${alreadySent} already sent this week, ${crossSentSkipped} already sent via weekly-signal, ${subscribers.length} total.`);
+  // suppressionDegraded compte comme une erreur : la liste de suppression
+  // etait incomplete, donc ce run a pu ecrire a quelqu'un qui s'etait
+  // desabonne. Un « ok » vert le rendrait invisible.
+  const degradedNote = [
+    suppressionDegraded ? "liste de suppression incomplète (une source en échec)" : null,
+    failed > 0 ? `${failed} envoi(s) en échec` : null,
+  ].filter(Boolean).join(" · ");
+  await logCronRun(supabase, "weekly-digest",
+    skippedNoKey > 0 || failed > 0 || suppressionDegraded ? "error" : "ok", sent,
+    degradedNote || undefined);
+  console.log(`[weekly-digest] Done, ${sent} sent, ${failed} failed, ${skippedNoKey} skipped (no key), ${blockedSkipped} suppressed, ${alreadySent} already sent this week, ${crossSentSkipped} claimed by an earlier Monday mailer, ${subscribers.length} total.`);
   return NextResponse.json({ sent, failed, skippedNoKey, blockedSkipped, alreadySent, crossSentSkipped, total: subscribers.length });
 }

@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import * as Sentry from "@sentry/nextjs";
-import { logCronRun, isRealProduction, claimEmailSend, claimWeeklyEmailAddress, currentWeekOf } from "@/lib/cron-monitor";
+import { logCronRun, isRealProduction, claimEmailSend, claimWeeklyEmailAddress, releaseEmailSend, releaseWeeklyEmailAddress, currentWeekOf } from "@/lib/cron-monitor";
+import { getWeeklySuppressionSet } from "@/lib/mail-suppression";
 import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 import { signUnsubscribeToken } from "@/lib/unsubscribe-token";
 import { sendBrevoEmail } from "@/lib/brevo-send";
@@ -149,6 +150,14 @@ async function sendEmail(to: string, subject: string, html: string, unsubscribeU
   return true;
 }
 
+// Les deux verrous de cette route sont poses avant l'envoi ; ils doivent etre
+// rendus ensemble des que l'envoi n'a pas lieu. Regroupes ici pour qu'aucun
+// des deux chemins d'echec n'en oublie un.
+async function releaseClaims(supabase: SupabaseClient, userId: string, email: string, weekOf: string) {
+  await releaseWeeklyEmailAddress(supabase, email, weekOf, "weekly-signal");
+  await releaseEmailSend(supabase, userId, "weekly-signal", weekOf);
+}
+
 export async function GET(req: NextRequest) {
   const cronSecret = clean(process.env.CRON_SECRET);
   const auth = req.headers.get("authorization");
@@ -224,6 +233,17 @@ async function runWeeklySignal(_req: NextRequest, supabase: SupabaseClient) {
   let skippedNoKey = 0;
   let alreadySent  = 0;
   let crossSentSkipped = 0;
+  let suppressed   = 0;
+
+  // Meme source de suppression que les trois autres mailers du lundi. Le test
+  // local qui existait ici ne regardait que display_filters.no_weekly_signal,
+  // alors qu'un lecteur qui s'est desabonne depuis un email d'onboarding porte
+  // no_onboarding_emails — deux drapeaux ecrits par deux routes de
+  // desabonnement differentes, pour un seul geste de la part du lecteur.
+  // Retabli le 2026-08-24 : perdu dans la fusion du 23 au soir, comme dans
+  // weekly-digest.
+  const { emails: suppressionSet, degraded: suppressionDegraded } =
+    await getWeeklySuppressionSet(supabase);
 
   // Real profiles rows (unlike weekly-digest's standalone subscriptions), so
   // this reuses lifecycle_email_log/claimEmailSend directly, keyed on the
@@ -235,8 +255,7 @@ async function runWeeklySignal(_req: NextRequest, supabase: SupabaseClient) {
 
   for (const user of users) {
     if (!user.email) continue;
-    const filters = user.display_filters as Record<string, unknown> | null;
-    if (filters?.no_weekly_signal) continue;
+    if (suppressionSet.has(user.email.trim().toLowerCase())) { suppressed++; continue; }
 
     // Claim before send: a second invocation racing this one must see the
     // claim already taken, not an empty log it can still win.
@@ -260,7 +279,12 @@ async function runWeeklySignal(_req: NextRequest, supabase: SupabaseClient) {
     try {
       if (isRealProduction) {
         const ok = await sendEmail(user.email, SUBJECTS[locale] ?? SUBJECTS.en, html, unsubUrl);
-        if (ok) sent++; else skippedNoKey++;
+        if (ok) sent++;
+        // Rien n'est parti : on rend les deux verrous poses juste au-dessus,
+        // sinon la semaine de ce lecteur est consommee pour un email qu'il
+        // n'a jamais recu. Voir releaseWeeklyEmailAddress dans
+        // lib/cron-monitor.ts.
+        else { skippedNoKey++; await releaseClaims(supabase, user.id, user.email, weekOf); }
       } else {
         sent++;
       }
@@ -268,12 +292,22 @@ async function runWeeklySignal(_req: NextRequest, supabase: SupabaseClient) {
       console.error(`[weekly-signal] ${user.email}:`, e);
       Sentry.captureException(e, { tags: { cron: "weekly-signal", user_id: user.id } });
       failed++;
+      await releaseClaims(supabase, user.id, user.email, weekOf);
     }
   }
 
   // Was only checking skippedNoKey — `failed`, incremented per-user in the
   // catch above, was tracked but never consulted here.
-  await logCronRun(supabase, "weekly-signal", skippedNoKey > 0 || failed > 0 ? "error" : "ok", sent,
-    failed > 0 ? `${failed} envoi(s) en échec` : undefined);
-  return NextResponse.json({ sent, failed, skippedNoKey, alreadySent, crossSentSkipped, outbreaks: outbreaks.length });
+  const degradedNote = [
+    suppressionDegraded ? "liste de suppression incomplète (une source en échec)" : null,
+    failed > 0 ? `${failed} envoi(s) en échec` : null,
+  ].filter(Boolean).join(" · ");
+  await logCronRun(supabase, "weekly-signal",
+    skippedNoKey > 0 || failed > 0 || suppressionDegraded ? "error" : "ok", sent,
+    degradedNote || undefined);
+  // Cette route ne loggait aucun resume — d'ou l'impossibilite de lire son
+  // resultat dans les logs Vercel du 2026-08-24, alors que weekly-digest, lui,
+  // se laissait lire.
+  console.log(`[weekly-signal] Done, ${sent} sent, ${failed} failed, ${skippedNoKey} skipped (no key), ${suppressed} suppressed, ${alreadySent} already sent this week, ${crossSentSkipped} claimed by an earlier Monday mailer, ${users.length} total.`);
+  return NextResponse.json({ sent, failed, skippedNoKey, suppressed, alreadySent, crossSentSkipped, outbreaks: outbreaks.length });
 }

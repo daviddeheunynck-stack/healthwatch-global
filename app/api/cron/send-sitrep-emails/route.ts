@@ -9,7 +9,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import * as Sentry from "@sentry/nextjs";
-import { logCronRun, isRealProduction, claimWeeklyEmailAddress, currentWeekOf } from "@/lib/cron-monitor";
+import { logCronRun, isRealProduction, claimWeeklyEmailAddress, releaseWeeklyEmailAddress, currentWeekOf } from "@/lib/cron-monitor";
 import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 import { getWeeklySuppressionSet } from "@/lib/mail-suppression";
 
@@ -287,6 +287,13 @@ async function runSendSitrepEmails(_req: NextRequest, supabase: SupabaseClient) 
       errors++;
       console.error(`[send-sitrep-emails] Failed for report ${report.id}:`, err);
       Sentry.captureException(err, { tags: { cron: "send-sitrep-emails", report_id: report.id, user_id: report.user_id } });
+      // Brevo envoie ce rapport a tous ses destinataires en un seul appel :
+      // l'exception signifie que personne ne l'a recu. On rend donc les verrous
+      // des destinataires reserves juste au-dessus, sinon ce rapport paye leur
+      // coute aussi les trois autres mailers du lundi.
+      for (const address of claimedRecipients) {
+        await releaseWeeklyEmailAddress(supabase, address, weekOf, "send-sitrep-emails");
+      }
     }
   }
 
