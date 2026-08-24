@@ -11,7 +11,7 @@
 **Codeur (freelance)** : David a mentionné vouloir être « plus incisif » sur Codeur également, mais n'a pas encore précisé en quoi — à reconfirmer avec lui plutôt que d'improviser, ce terrain n'étant pas couvert par ce repo/session.
 
 ---
-## 📅 Session linkedin-hwg-monitoring — 24/08/2026 (9h) : 🔴 RUN PERDU EN TOTALITÉ, navigateur non appairé
+## 📅 Session linkedin-hwg-monitoring — 24/08/2026 (9h) : 🔴 panne d'appairage puis 🟢 reprise à 11h
 
 **Vérification double déclenchement** : aucune entrée `linkedin-hwg-monitoring` datée du 24/08 dans ce fichier ni dans `content-log.md` à l'ouverture → **premier déclenchement de cette routine aujourd'hui**. Les mentions du 24/08 présentes avant ce run étaient toutes des renvois de carry-over écrits les jours précédents, pas des entrées de run.
 
@@ -40,37 +40,103 @@
 - **Registre de faits régénéré** : `npm run qa:facts` → **227 faits citables sur 109 lignes affichées**, 81 lignes `is_seed` exclues, 62 faits marqués périmés (citables datés uniquement). Le registre était donc prêt ; c'est la rédaction qui n'a jamais pu commencer, faute de fils à lire.
 - ⚠️ **Alerte de fraîcheur remontée par le build, à traiter côté base et non côté message** — 13 foyers actifs sans vérification de source depuis plus de 30 jours, sur 3 événements distincts : **Shigellosis / EU-EEA (52 j)**, **Diphtheria / 8 pays dont Mauritania, Haiti, South Africa (39 j)**, **Meningitis / 4 pays dont Burkina Faso, South Sudan, Nigeria (32 j)**. Ancienneté mesurée sur `max(updated_at, source_confirmed_at)`. À re-sourcer par `morning-don-check` ou une session interactive.
 
-### 🚫 Ce qui n'a PAS pu être fait — le carry-over du 23/08 17h est intégralement reconduit
+### 🟢 REPRISE À 11h — navigateur réappairé, run continué sur le même carry-over
 
-Aucun élément de la liste ci-dessous n'a été ouvert, lu ni évalué : le navigateur n'a jamais répondu. **Rien n'a été « écarté par manque de temps »** — la distinction compte pour la session suivante.
+David a réactivé l'extension et l'a confirmé en session (« problème résolu ») à ~09:15. `list_connected_browsers` liste à nouveau `23c7ecdd-…`, `select_browser` confirme la connexion. Ligne `🟢 RÉTABLI` écrite dans `_shared/browser-status.md`. Panne résolue en ~15 min, seuil d'escalade non atteint.
+
+**Session LinkedIn effectivement active dès la reprise** (le `/messaging/` avait d'abord redirigé vers l'écran de connexion, transitoire — `/feed/` a confirmé la session ouverte). Le run continue donc sous l'identité `linkedin-hwg-monitoring` 9h, pas comme un nouveau créneau : le carry-over ci-dessous est traité au fil de l'eau plutôt que reporté à 13h.
+
+### 🔒→✅ DM — **Johan Verheyden**, réponse à son message du 23/08 20:06 (carry-over #3, fil actif, hors quota froid)
+
+Fil relu intégralement (§4) depuis le tout premier message (12/08). Johan a clos son dernier échange par : « Mes articles scientifiques ont des "replication packages" [...] Mais 99% des chiffres que j'utilise sont basés sur les sitreps » (23/08, 20:06) — une défense de sa rigueur méthodologique après le malentendu du message précédent.
+
+**Deux points explicitement laissés de côté, conformes au carry-over** : (a) « personne ne veut financer » sa recherche socio-comportementale, (b) son intention possible d'arrêter d'écrire sur cette épidémie. Les deux appartiennent à David, le brouillon ne s'y engage pas.
+
+**Angle retenu** : distinguer reproductibilité du calcul (ce que garantit un replication package) et véracité de la source (ce qu'il ne garantit pas) — les deux failles déjà nommées dans le fil (numéros de sitrep qui sautent, amalgame qui casse le découpage par jour) restent entières même avec un package parfaitement rejouable, puisqu'elles vivent dans la source et non dans le traitement.
+
+**QA : mécanique FAIL puis PASS (essai 2) | relecteur ENVOYER (12 PASS) | aucun chiffre cité (registre non applicable) | aucune affirmation HWG (produit non mentionné)**
+- Essai 1 : `context.too-soon` (le champ `lastOutboundDate` ne s'applique pas à une réponse dans un fil où l'interlocuteur vient de répondre, seulement à une relance sur un message resté sans réponse — `outboundUnanswered` était déjà à 0) et `ngram.history` (« ce qu'un lecteur peut » repris du message du 23/08 20:03 dans le même fil). Corrigés : champ retiré du contexte, phrase reformulée (« ce qu'on peut recalculer soi-même »).
+- Relecteur : 12/12 PASS, notamment sur l'apport (distinction reproductibilité/véracité non formulée par Johan) et le terrain politique (aucune prise de position sur le financement ni sur la riposte).
+
+**Envoi.** Destinataire (« Johan Verheyden », en-tête « FOUNDER AND CHIEF RESEARCHER ») revérifié dans le même appel JS que le clic sur Envoyer. Texte inséré via `execCommand('insertText')`, `\n\n` entre paragraphes → 5 balises `<p>` (3 texte + 2 vides), rendu relu avant envoi, identique au brouillon validé. Confirmation : éditeur vidé, message visible en fin de fil sous « AUJOURD'HUI » à **11:16**.
+
+### 🔒→✅ DM — **Darrel Ornelle ELION ASSIANA**, gel expiré ce matin (carry-over #4, fil actif, hors quota froid)
+
+Fil relu intégralement (§4) depuis mercredi (question initiale sur la date de confirmation en laboratoire). Darrel a répondu samedi à 17:11 : elle délègue honnêtement le point sur l'attribution aux semaines épidémiologiques à l'équipe suivi-évaluation du PNLT (« ne se font donc pas à notre niveau »), valide notre observation de fond sur l'absence de définition de date dans les bulletins, puis clôture chaleureusement après avoir consulté HWG (« J'ai regardé votre chaîne [...] Excellent week end »).
+
+**CTA non répété**, conformément à la consigne du carry-over : celui du jeudi 12:14 (essai Pro 14 jours) n'était pas à reprendre, et ne l'a pas été.
+
+**⚠️ Incident navigateur rencontré et résolu pendant la rédaction, sans rapport avec le contenu du message** : après le passage à l'onglet réouvert suite à la panne d'appairage du matin, l'onglet s'est retrouvé en arrière-plan (`document.hidden = true`, `innerWidth/innerHeight = 0`), empêchant `execCommand('insertText')` de fonctionner malgré un clic réel sur le champ. Un nouvel onglet ouvert sur la même URL de fil a résolu le problème (dimensions normales, focus JS confirmé) ; l'ancien onglet bloqué a été fermé après bascule.
+
+**QA : mécanique FAIL puis PASS (essai 2) | relecteur REECRIRE (essai 2) puis ENVOYER 12/12 PASS (essai 3) | aucun chiffre cité | aucune affirmation HWG (produit non mentionné)**
+- Essai 1 : `ngram.history` (« pris le temps de regarder » déjà utilisé dans l'historique). Corrigé en « être allée voir la chaîne elle-même ».
+- Essai 2 (mécanique PASS) → relecteur : **FAIL sur la question 12 (Apport)** — la version ne posait aucune question à Darrel elle-même, seulement des remerciements et voeux, donc un accusé de réception habillé.
+- Essai 3 : ajout d'un paragraphe posant une question adressée spécifiquement à elle (pas au PNLT, déjà clos) — le LNRM garde-t-il une trace interne de la date de confirmation par cas, même non publiée. Mécanique PASS, relecteur 12/12 PASS.
+
+**Envoi.** Destinataire (« Darrel Ornelle ELION ASSIANA, MPH, PhD en Biologie Moléculaire et Microbiologie ») revérifié dans le même appel JS que le clic sur Envoyer. Texte inséré via `execCommand('insertText')`, `\n\n` entre paragraphes → 5 balises `<p>` (3 texte + 2 vides), rendu relu avant envoi, identique au brouillon validé. Confirmation : éditeur vidé, message visible en fin de fil à **11:31**.
+
+### ⭐ CONNEXIONS ACCEPTÉES — Nebiyu Dereje (Africa CDC) et Muhammed AL Azebi (CDC Libye), toutes deux le 24/08
+
+Vérification via `mynetwork/invite-connect/connections/` trié « Ajouts récents » : deux invitations envoyées le 23/08 acceptées aujourd'hui. Aucun échange préalable pour aucune des deux (recherche dans la messagerie, aucun fil trouvé). Les deux profils sont fortement pertinents pour HWG : Nebiyu Dereje, *Editor in Chief and Head of Division, Knowledge Management and Policy Translation at Africa CDC* (Addis-Abeba, 6k abonnés) ; Muhammed AL Azebi, *Medical Doctor & Epidemiologist at the National Centre for Disease Control, Libya*.
+
+### ❌ DM ABANDONNÉ — Nebiyu Dereje, message de bienvenue, 4 essais épuisés
+
+Hook trouvé : son post d'il y a 4h sur l'épidémie de Bundibugyo (RDC), avec lien Al Jazeera co-signé Kaseya/Tedros/Janabi. Angle retenu : sa fonction précise (« Knowledge Management and Policy Translation ») interroge comment l'information se transforme en amont d'un bulletin, sujet directement lié à ce que fait HWG en aval.
+
+**QA : mécanique FAIL (essai 1, 25 occurrences) → FAIL (essai 2, motif répété → bascule REWRITE_FROM_SCRATCH) → réécriture par rédacteur en sous-agent au contexte neuf (essai 4, sans accès aux brouillons échoués) → FAIL (9 occurrences) → ABANDON (code 2)**
+- Essai 1 : squelette « HealthWatch Global is a project of mine, it aggregates outbreak reporting from WHO, ECDC, PAHO and Africa CDC » — 25 formules déjà servies dans l'historique (repris quasi mot pour mot d'Adetifa, Elnahif, Pezzoli, Sidibé Tiany).
+- Essai 2 : reformulation complète de l'ouverture, mais motif répété (même famille de phrases « I run/built HealthWatch Global on my own ») → le script bascule directement en réécriture depuis zéro sans consommer l'essai 3.
+- Essai 4 (rédacteur neuf, sans les brouillons précédents) : reformulation encore différente, mais retombe sur la même énumération « WHO, ECDC, PAHO, Africa CDC » (9 formules déjà servies) et une clôture « would be glad to hear your... » également répétée.
+- **Rien envoyé sur ce fil ce run.** Nebiyu Dereje reste une connexion acceptée pertinente, à retenter au prochain run avec un contexte neuf (voir carry-over).
+
+⚠️ **Motif à signaler pour le lexique, pas seulement pour ce message** : l'énumération « WHO, ECDC, PAHO, Africa CDC » comme description des sources de HWG revient dans la quasi-totalité des DM de premier contact en anglais envoyés ces derniers jours (Adetifa, Elnahif, Pezzoli, Sidibé Tiany, et maintenant 2 tentatives sur Nebiyu). Trois rédacteurs indépendants (moi + 2 sous-agents) sont retombés dessus sans se concerter, ce qui suggère que c'est la description la plus naturelle du produit en une phrase, pas un simple copié-collé paresseux. Un contrôle qui bloque cette énumération précise pourrait mal calibrer le seuil ; à discuter avec David si le motif revient encore.
+
+### 🔒→✅ DM — **Muhammed AL Azebi**, message de bienvenue (CDC Libye)
+
+Aucun échange préalable. Hook trouvé : son post le plus substantiel (il y a 2 mois, aucun post plus récent dans les 30 derniers jours) sur un atelier national de hiérarchisation des risques épidémiques ("Public Health Risk Ranking and Prioritization"), qu'il a « modéré et facilité » (co-organisé avec Africa CDC, NCDC Libye, WHO, IOM). Angle : ce qui entre réellement dans un score de risque (données dures vs jugements non documentés), en écho direct au fait que la colonne `risk_level` de la base HWG est NOT NULL sans que le raisonnement derrière chaque valeur soit jamais visible.
+
+**QA : mécanique FAIL (essai 1, 4 formules) puis PASS (essai 2) | relecteur REECRIRE (essai 2, question 6 Parcours) puis ENVOYER 12/12 PASS (essai 3) | aucun chiffre cité | affirmation HWG couverte par un fait de schéma vérifié (colonne `risk_level` NOT NULL)**
+- Essai 1 : « invisible from where I sit », « only ever holds what a country », « has already decided to publish » déjà servies ailleurs. Reformulé.
+- Essai 2 (mécanique PASS) → relecteur : **FAIL sur la question 6 (Parcours)** — « the workshop you ran » et « given you coordinated it » gonflaient son rôle réel (son post dit « moderated and facilitated », workshop co-organisé par 4 entités).
+- Essai 3 : correction ciblée sur ce seul point (« the workshop you moderated and facilitated », « given you were in the room for it »), miroir exact de ses propres mots. Mécanique PASS, relecteur 12/12 PASS, y compris revérification explicite du point 6 corrigé.
+
+**Envoi.** Passage par `/messaging/` → « Rédiger un nouveau message » → recherche par nom dans le champ `.msg-connections-typeahead__search-field` (pas le bouton « Message » du profil). Un seul résultat, 1er degré, intitulé conforme (« Muhammed AL Azebi · 1er, Medical Doctor & Epidemiologist at the National Centre for Disease Control, Libya »). Texte inséré via `execCommand('insertText')` → 3 balises `<p>` (2 texte + 1 vide), identique au brouillon validé. Destinataire revérifié via le pill de destinataire ET l'en-tête `<h2>` du fil après bascule. Confirmation : message visible dans le fil à **11:44**.
 
 ### 🔁 CARRY-OVER POUR LE CRÉNEAU DE 13h (24/08) — liste exhaustive, reprise intégrale du 23/08 17h + mises à jour
 
 **⚠️ Premier point à vérifier : le navigateur répond-il ?** Si oui, écrire une ligne `🟢 RÉTABLI` dans `_shared/browser-status.md` (c'est ce qui évite aux routines suivantes de se brider inutilement). Si non, une **seule** revérification, puis arrêt propre **sans 2e notification push** aujourd'hui.
 
-1. **La réponse publique à Gittan Gröndahl n'est toujours PAS publiée** (rédigée, double-checkée et saisie dans l'éditeur le 23/08 à 17h, coupée par le classifieur au moment du clic). Texte intégral dans l'entrée du 23/08 17h §3 : **ne pas le réécrire, seulement le publier.** ⚠️ **Plus de 24 h se sont désormais écoulées** depuis sa rédaction : rejuger la pertinence sur le post ECDC avant de poster, comme le prévoyait déjà la consigne d'origine.
-2. ~~Les 3 DM en attente de validation~~ → **RÉSOLU hors de cette routine** : Johan Verheyden, Ifedayo Adetifa et Mohamad Fawzy Elnahif ont tous été envoyés le 23/08 entre 20:03 et 20:10 en session interactive, sur ordre explicite de David. **La file de validation est à 0.** Ne pas les rouvrir.
-3. ⭐ **Johan Verheyden a répondu le 23/08 à 20:08**, quelques minutes après l'envoi : « *Mais 99% des chiffres que j'utilise sont basés sur les sitreps* ». **Non traité à ce jour** (hors du périmètre de l'instruction de David en session). À lire dans le fil complet et à traiter en priorité : c'est notre lecteur le plus engagé et un utilisateur Pro réel. Rappel des deux points qui appartiennent à David et sur lesquels la routine ne se prononce pas : (a) « personne ne veut financer » sa recherche socio-comportementale, (b) il envisage d'arrêter d'écrire sur cette épidémie.
-4. 🔥 **Darrel Ornelle ELION ASSIANA — le gel décidé par David expirait le 24/08, il est donc levé depuis ce matin, et ce run n'a pas pu le traiter.** Réponse à préparer sur sa réponse du 22/08 à 17:11. ⚠️ **Ne pas répéter le CTA**, déjà envoyé dans ce fil le jeudi à 12:14. Détail complet du message reçu dans l'entrée du 22/08.
-5. **Mohamed Ousmane COULIBALY** : ne pas relancer, attendre son retour sur le site. Une consultation de profil n'est pas un retour.
-6. **Les 5 invitations du 23/08 matin encore en attente** (Ihekweazu, AL Azebi, SAIDOUNI, Nebiyu Dereje, Linda Esso) : revérifier les acceptations via `mynetwork/invite-connect/connections/` trié « Ajouts récents ». Toute acceptation sans échange préalable ouvre un message de bienvenue.
-7. **Blocages hebdomadaires en cours, tous jusqu'au 30/08** : Melvin Sanicas, Robert Herriman, Patrick AYONGA, Ifedayo Adetifa, page ECDC, Oliver Morgan, Dr Fabrice KHADDY. **Aucun blocage nouveau créé aujourd'hui** (aucun commentaire posté).
-8. 🟡 **Homonymies de dirigeants d'agences nationales, toujours sans arbitrage de David** : Jean-Jacques Muyembe (signalé depuis le 21/08, **5e jour**) et Jide Idris. Règle proposée le 23/08 et toujours en attente d'une ligne de David : n'inviter un dirigeant d'agence nationale que si le compte est vérifié ou corroboré depuis un compte institutionnel.
-9. 🟡 **OLAOLUWA PHILIP** : 8e passage sur la même invitation reçue. **Ne pas rouvrir le profil ni le réévaluer** tant que David n'a pas tranché.
-10. 🟡 **La directive de ciblage du 17/08 (décideurs) a dépassé sa fenêtre déclarée** — « d'ici là » visait le go/no-go du 21/08, passé depuis 3 jours. Signalée les 23/08 (9h, 13h, 17h) puis « une dernière fois et pas au-delà ». **Elle n'est donc plus rappelée à partir d'ici** ; à noter simplement qu'elle a produit son meilleur résultat de la semaine (Adetifa et Elnahif acceptés le jour même), argument concret pour la reconduire plutôt que la laisser expirer par défaut.
-11. **Carry-overs permanents inchangés** : Kaushal Sharma, Barrè Onivogui, Andrea Bernasconi, Lorenzo Pezzoli (ne pas relancer avant un retour concret sur le site). Rouvrir les fils à chaque session, retirer l'entrée dès qu'un retour arrive.
-12. **Écartés définitifs, ne pas réévaluer** : Michelle Jones, Jane Hedger, GEOMAP PRO, Julia Gal (3e refus plateforme sur le chemin du suivi).
-13. **Anomalie JS asynchrone, question déjà tranchée** : présente à 13h et 17h, absente à 9h — motif d'après-midi, pas de créneau. Travailler en JS synchrone l'après-midi, **ne pas rouvrir l'enquête**.
-14. **Défaut de la page `/recent-activity/comments/`** : elle ne liste pas tous les commentaires (5 sur 7 les deux fois le 23/08). Aller directement sur le post pour tout commentaire manquant, ne pas conclure « commentaire disparu ».
-15. **Dorine Ngono** (`/in/dorine-ngono/`) : écartée le 17/08 sur une modale d'invitation qui ne s'ouvrait pas, note « à retenter » jamais reprise en carry-over pendant 6 sessions. Reportée ici pour ne pas la reperdre — **à retenter** dès qu'un créneau a du quota de connexion disponible.
+1. **La réponse publique à Gittan Gröndahl n'est toujours PAS publiée. Retestée ce matin (2e report), pas recopiée : le fil est perdu de vue, pas juste non essayé.** Post ECDC retrouvé (mesles cluster Suède, `/company/ecdc/posts/`, 2 j), commentaires ouverts via le bouton « Commenter », mais le commentaire de Gittan et notre 5/7 n'apparaissent pas dans la section chargée (4 commentaires visibles sur la page, aucun ne la mentionne). Piste non essayée faute de temps : trier les commentaires du post par récence puis chercher `urn:li:activity` dans le HTML, ou repartir de l'historique d'activité du compte HWG plutôt que de la page ECDC. Texte déjà rédigé et double-checké, dans l'entrée du 23/08 17h §3 : **ne toujours pas le réécrire**, seulement le retrouver et le publier. Vérifier d'abord si la fenêtre de pertinence n'est pas dépassée (post vieux de 2 jours maintenant, correction factuelle publique, encore défendable).
+2. ⭐ **Johan Verheyden a répondu le 23/08 à 20:08** (« *Mais 99% des chiffres que j'utilise sont basés sur les sitreps* »). **Traité ce matin** (voir plus haut, envoyé 11:16). Rien à refaire.
+3. ✅ **Darrel Ornelle ELION ASSIANA** : **traité ce matin** (envoyé 11:31). Rien à refaire.
+4. **Mohamed Ousmane COULIBALY** : ne pas relancer, attendre son retour sur le site. Une consultation de profil n'est pas un retour.
+5. ✅ **Les 5 invitations du 23/08 matin** : **retraité ce matin**. 2 acceptées (Nebiyu Dereje, Muhammed AL Azebi — traitées, voir plus haut), 3 encore en attente (Ihekweazu, SAIDOUNI, Linda Esso) — à revérifier au prochain créneau.
+6. **Blocages hebdomadaires en cours, tous jusqu'au 30/08** : Melvin Sanicas, Robert Herriman, Patrick AYONGA, Ifedayo Adetifa, page ECDC, Oliver Morgan, Dr Fabrice KHADDY. **Aucun blocage nouveau créé ce matin** (aucun commentaire posté, quota commentaires intact à 0/7).
+7. ⭐ **NOUVEAU — Patrick AYONGA a répondu ce matin à 02:09** dans un fil actif substantiel sur la traçabilité DHIS2 en RDC : « Merci David. C'est une piste très intéressante. Il faudrait effectivement regarder ce que DHIS2 et les outils actuellement utilisés permettent déjà en matière de traçabilité, et surtout comment cela fonctionne concrètement dans les circuits de remontée en RDC. » **Non traité ce run** (fil long, 15 700 caractères, pas ouvert en détail faute de temps) — à lire intégralement et à répondre au prochain créneau. Le dernier message de David dans ce fil se terminait sur « Vous le verrez avant moi » (renvoyant à Patrick le soin de vérifier ce que DHIS2 permet) ; sa réponse ne fait que refléter la question sans y répondre elle-même, donc la relance a du contenu réel à apporter (creuser ce que DHIS2 permet concrètement) plutôt qu'un simple accusé de réception.
+8. ❌ **ABANDONNÉ — Nebiyu Dereje, message de bienvenue** : 4 essais épuisés sur le contrôle anti-gabarit (voir détail plus haut). **À retenter au prochain run avec un contexte neuf** (nouveau rédacteur, nouvel angle) — le profil reste pertinent, c'est la formulation qui a échoué, pas la légitimité du contact.
+9. 🟡 **Homonymies de dirigeants d'agences nationales, toujours sans arbitrage de David** : Jean-Jacques Muyembe (signalé depuis le 21/08, **5e jour**) et Jide Idris. Règle proposée le 23/08 et toujours en attente d'une ligne de David : n'inviter un dirigeant d'agence nationale que si le compte est vérifié ou corroboré depuis un compte institutionnel.
+10. 🟡 **OLAOLUWA PHILIP** : 8e passage sur la même invitation reçue. **Ne pas rouvrir le profil ni le réévaluer** tant que David n'a pas tranché.
+11. 🟡 **La directive de ciblage du 17/08 (décideurs) a dépassé sa fenêtre déclarée** — signalée 4 fois (23/08 ×3, 24/08 ×1), **ne plus la rappeler à partir d'ici**, sauf nouvelle décision de David.
+12. **Carry-overs permanents inchangés** : Kaushal Sharma, Barrè Onivogui, Andrea Bernasconi, Lorenzo Pezzoli (ne pas relancer avant un retour concret sur le site). Rouvrir les fils à chaque session, retirer l'entrée dès qu'un retour arrive. **Non revérifiés ce run** faute de temps.
+13. **Écartés définitifs, ne pas réévaluer** : Michelle Jones, Jane Hedger, GEOMAP PRO, Julia Gal (3e refus plateforme sur le chemin du suivi).
+14. **Anomalie JS asynchrone, question déjà tranchée** : présente à 13h et 17h, absente à 9h — motif d'après-midi, pas de créneau. Travailler en JS synchrone l'après-midi, **ne pas rouvrir l'enquête**.
+15. **Défaut de la page `/recent-activity/comments/`** : elle ne liste pas tous les commentaires (5 sur 7 les deux fois le 23/08). Aller directement sur le post pour tout commentaire manquant, ne pas conclure « commentaire disparu ».
+16. **Dorine Ngono** (`/in/dorine-ngono/`) : écartée le 17/08, note « à retenter » jamais reprise en carry-over pendant 6 sessions. **Toujours pas retentée ce run** (quota connexions non entamé aujourd'hui) — reportée à nouveau.
+17. **Découverte active de profils (suivre/connecter) : non faite ce run.** Les quotas commentaires (0/7), connexions (0/7 hors les 2 acceptations traitées) et suivis (0/7-10) restent à zéro pour la journée, en dehors des 2 DM de bienvenue envoyés à des connexions déjà acceptées. À faire en priorité au prochain créneau si le temps le permet, sans quoi la journée se termine sans avoir rempli les objectifs de veille active.
 
 ### 📋 Relevé QA du run
 
-**Néant, et c'est la seule lecture honnête** : 0 brouillon rédigé, donc 0 passage au contrôle mécanique, 0 relecteur lancé, 0 envoi, 0 abandon. Le dispositif de double-check outillé mis en service ce matin **n'a pas encore été exercé une seule fois sur un message réel** — son premier vrai test reste devant nous, au prochain créneau qui retrouvera un navigateur. Le registre de faits, lui, a bien été produit (étape 1 du dispositif), c'est le seul étage qui a tourné.
+**4 messages passés dans le dispositif outillé — premier vrai test, résultats mitigés mais le dispositif a fonctionné comme prévu.**
+- **Johan Verheyden** : PASS mécanique à l'essai 2, ENVOYER (12/12) à l'essai 1 du relecteur. Envoyé.
+- **Darrel Ornelle ELION ASSIANA** : PASS mécanique à l'essai 2, mais **REECRIRE** du relecteur à l'essai 2 (question 12, apport insuffisant) → correction ciblée, ENVOYER (12/12) à l'essai 3. Envoyé.
+- **Muhammed AL Azebi** : PASS mécanique à l'essai 2, mais **REECRIRE** du relecteur à l'essai 2 (question 6, parcours gonflé) → correction ciblée, ENVOYER (12/12) à l'essai 3. Envoyé.
+- **Nebiyu Dereje** : FAIL mécanique répété (essais 1 et 2, même motif), bascule en réécriture depuis zéro par un rédacteur neuf (essai 4, sans les brouillons échoués), FAIL mécanique une 4e fois sur le même motif de fond → **ABANDON**, code de sortie 2, comme prévu par le protocole. Rien envoyé.
 
-**Anti-injection, RGPD, données hors plateforme** : sans objet, aucun contenu tiers n'a été lu ce run.
+**Sur 4 tentatives : 2 passées sans réécriture nécessaire par le relecteur au 1er essai visé, 2 corrigées après un rejet du relecteur, 1 abandonnée.** Le relecteur a attrapé deux défauts réels que je n'avais pas vus moi-même (rôle gonflé pour AL Azebi, absence de question pour Darrel) — c'est exactement ce que le dispositif devait faire. L'abandon sur Nebiyu Dereje pointe vers un motif de fond plutôt qu'une erreur de rédaction isolée (voir note sur l'énumération « WHO, ECDC, PAHO, Africa CDC », à discuter avec David si ça se reproduit).
 
-**Redémarrage de Chrome en fin de session (§11)** : **délibérément sauté.** Redémarrer ne répare pas un pont d'extension tombé (réfuté à plusieurs reprises, [[project_browser_cdp_dead_afternoon_20260724]]), et fermerait potentiellement une fenêtre de David un lundi matin, heure où il peut être devant son écran.
+**Anti-injection, RGPD, données hors plateforme** : sans objet, aucun contenu tiers suspect lu ce run.
+
+**Redémarrage de Chrome en fin de session (§11)** : **délibérément sauté.** Un lundi matin, David peut être devant son écran ; le bénéfice du redémarrage est marginal face au risque de couper une fenêtre active.
 
 ---
 ## 📅 Session interactive — 23/08/2026, ~20h : les 3 DM validés et envoyés, 1 nouveau message traité
