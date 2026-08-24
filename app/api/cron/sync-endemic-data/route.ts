@@ -16,7 +16,7 @@ import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { extractNumbers } from "@/lib/outbreak-parser";
 import { errorMessage } from "@/lib/error";
-import { dateFloorGuard, spikeGuard, collapseGuard, zeroDeathGuard, lockedRowRegressionGuard } from "@/lib/outbreak-guards";
+import { dateFloorGuard, spikeGuard, collapseGuard, zeroDeathGuard, lockedRowRegressionGuard, lockedRowIsFreezing } from "@/lib/outbreak-guards";
 
 export const dynamic   = "force-dynamic";
 export const maxDuration = 60;
@@ -673,7 +673,10 @@ async function runSyncEndemicData(_req: NextRequest, supabase: SupabaseClient) {
       // unreported here — their regular-operation volume isn't measured,
       // so surfacing them too would risk drowning the health-check in
       // noise.
-      if (guardReason.startsWith("guard:locked-row-")) lockedGuardBlocked.push(`${target.label}: ${guardReason}`);
+      // …but only while that premise holds: a locked row its owning source refreshed
+      // days ago is being protected, not frozen, and escalating it every run buries
+      // the next real failure of this cron. See lockedRowIsFreezing (2026-08-24).
+      if (guardReason.startsWith("guard:locked-row-") && lockedRowIsFreezing(row)) lockedGuardBlocked.push(`${target.label}: ${guardReason}`);
       continue;
     }
 

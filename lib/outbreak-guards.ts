@@ -182,6 +182,51 @@ export function lockedRowRegressionGuard(incoming: GuardedIncoming, existing: Gu
 }
 
 /**
+ * Should a `lockedRowRegressionGuard` refusal be escalated (erroring cron +
+ * Sentry), or is it the guard simply doing its job?
+ *
+ * The escalation added 2026-08-19 (see the push sites in every sync cron, and
+ * project_source_priority_is_ownership_not_freeze_2026_08_19) exists for one
+ * scenario: a `source_priority>=10` row that nothing else will ever write
+ * again, silently held on figures that have gone stale. Its premise is
+ * "blocked write => row frozen" — and that premise is false whenever the row
+ * has just been refreshed by the source that owns it.
+ *
+ * Found live 2026-08-22: West Nile fever/France carried 18 cases from a
+ * national SPF bulletin entered by hand the day before; sync-who-regional
+ * parses 17 from WHO's own edition and is correctly refused. Two legitimate
+ * sources diverging by one case, nothing on the HWG side to fix — yet
+ * `cron:run:sync-who-regional` went red every single day and fired a Sentry
+ * warning each time, which is exactly how the next REAL failure of that cron
+ * becomes invisible.
+ *
+ * Freshness is measured on the row's own `date` (its source bulletin's date),
+ * never on `updated_at` — the database write timestamp, which any unrelated
+ * field touch resets. Reading `updated_at` for freshness is a mistake this
+ * codebase has already made twice and fixed twice (staleOutbreakDays and
+ * freshOutbreakHours, lib/outbreaks.ts). A missing or unparseable `date`
+ * escalates, on the side of caution: unknown freshness is not proof of
+ * freshness.
+ *
+ * Deliberately does NOT consult `source_confirmed_at`: lib/source-confirmed.ts
+ * spells out that a guard-refused row is precisely the case that column must
+ * not cover ("that row is not confirmed current, it is contested, and it needs
+ * a human"). Suppressing the escalation on a confirmation stamp would
+ * contradict the column's own definition.
+ *
+ * The refusal itself is untouched — it stays a `skip` in every cron's log and
+ * in its JSON response. Only the escalation is conditioned.
+ */
+export const LOCKED_ROW_FREEZE_DAYS = 14;
+
+export function lockedRowIsFreezing(existing: GuardedLockedRow): boolean {
+  if (!existing.date) return true;
+  const ts = new Date(existing.date).getTime();
+  if (Number.isNaN(ts)) return true;
+  return (Date.now() - ts) / 86_400_000 >= LOCKED_ROW_FREEZE_DAYS;
+}
+
+/**
  * cdc-notices-specific: a notice with NO extractable case data at all
  * (cases=0 AND deaths=0) must not blank out real numbers an authoritative
  * source already established — travel notices are prose, not case-count

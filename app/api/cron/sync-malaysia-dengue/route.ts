@@ -45,7 +45,7 @@ import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { normalizeDisease } from "@/lib/disease-data";
 import { findCountry } from "@/lib/geo-data";
 import { assessRisk } from "@/lib/outbreak-parser";
-import { dateFloorGuard, collapseGuard, zeroCaseGuard, isYearRollover, lockedRowRegressionGuard } from "@/lib/outbreak-guards";
+import { dateFloorGuard, collapseGuard, zeroCaseGuard, isYearRollover, lockedRowRegressionGuard, lockedRowIsFreezing } from "@/lib/outbreak-guards";
 import { stampSourceConfirmed } from "@/lib/source-confirmed";
 
 export const dynamic     = "force-dynamic";
@@ -226,7 +226,10 @@ async function runSyncMalaysiaDengue(supabase: SupabaseClient) {
       // per-row loop), so this is a 0-or-1-element array rather than one
       // accumulated across a loop like the multi-item sync crons.
       const lockedGuardBlocked: string[] = [];
-      if (guardReason.startsWith("guard:locked-row-")) lockedGuardBlocked.push(`Dengue/Malaysia: ${guardReason}`);
+      // …but only while that premise holds: a locked row its owning source refreshed
+      // days ago is being protected, not frozen, and escalating it every run buries
+      // the next real failure of this cron. See lockedRowIsFreezing (2026-08-24).
+      if (guardReason.startsWith("guard:locked-row-") && lockedRowIsFreezing(existing)) lockedGuardBlocked.push(`Dengue/Malaysia: ${guardReason}`);
       if (lockedGuardBlocked.length > 0) {
         Sentry.captureMessage(
           `[malaysia-dengue] blocked by anti-regression guard on locked row(s): ${lockedGuardBlocked.join(" | ")}`,

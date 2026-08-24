@@ -69,7 +69,7 @@ import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import * as Sentry from "@sentry/nextjs";
 import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
 import {
-  dateFloorGuard, spikeGuard, collapseGuard, zeroCaseGuard, zeroDeathGuard, lockedRowRegressionGuard,
+  dateFloorGuard, spikeGuard, collapseGuard, zeroCaseGuard, zeroDeathGuard, lockedRowRegressionGuard, lockedRowIsFreezing,
   type GuardedIncoming, type GuardedLockedRow,
 } from "@/lib/outbreak-guards";
 import { stampSourceConfirmed } from "@/lib/source-confirmed";
@@ -372,7 +372,10 @@ async function runWproDengueUpdate(supabase: SupabaseClient) {
       // guards (dateFloor/spike/collapse/zeroCase/zeroDeath) stay unreported
       // here — their regular-operation volume isn't measured, so surfacing
       // them too would risk drowning the health-check in noise.
-      if (guardReason.startsWith("guard:locked-row-")) lockedGuardBlocked.push(`${label}: ${guardReason}`);
+      // …but only while that premise holds: a locked row its owning source refreshed
+      // days ago is being protected, not frozen, and escalating it every run buries
+      // the next real failure of this cron. See lockedRowIsFreezing (2026-08-24).
+      if (guardReason.startsWith("guard:locked-row-") && lockedRowIsFreezing(existing)) lockedGuardBlocked.push(`${label}: ${guardReason}`);
       continue;
     }
 

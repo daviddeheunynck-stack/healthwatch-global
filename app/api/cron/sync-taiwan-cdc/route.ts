@@ -53,7 +53,7 @@ import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { normalizeDisease } from "@/lib/disease-data";
 import { findCountry } from "@/lib/geo-data";
 import { assessRisk } from "@/lib/outbreak-parser";
-import { dateFloorGuard, collapseGuard, zeroCaseGuard, zeroDeathGuard, isYearRollover, lockedRowRegressionGuard } from "@/lib/outbreak-guards";
+import { dateFloorGuard, collapseGuard, zeroCaseGuard, zeroDeathGuard, isYearRollover, lockedRowRegressionGuard, lockedRowIsFreezing } from "@/lib/outbreak-guards";
 import { stampSourceConfirmed } from "@/lib/source-confirmed";
 
 export const dynamic     = "force-dynamic";
@@ -223,7 +223,10 @@ async function runSyncTaiwanCdc(supabase: SupabaseClient) {
       // here — their regular-operation volume isn't measured, so surfacing
       // them too would risk drowning the health-check in noise.
       const lockedGuardBlocked: string[] = [];
-      if (guardReason.startsWith("guard:locked-row-")) lockedGuardBlocked.push(guardReason);
+      // …but only while that premise holds: a locked row its owning source refreshed
+      // days ago is being protected, not frozen, and escalating it every run buries
+      // the next real failure of this cron. See lockedRowIsFreezing (2026-08-24).
+      if (guardReason.startsWith("guard:locked-row-") && lockedRowIsFreezing(existing)) lockedGuardBlocked.push(guardReason);
       if (lockedGuardBlocked.length > 0) {
         Sentry.captureMessage(
           `[sync-taiwan-cdc] blocked by anti-regression guard on locked row(s): ${lockedGuardBlocked.join(" | ")}`,

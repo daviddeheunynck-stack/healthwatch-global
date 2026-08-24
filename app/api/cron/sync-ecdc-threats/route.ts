@@ -22,7 +22,7 @@ import { COUNTRIES, findCountry, isAggregateCountry } from "@/lib/geo-data";
 import { extractNumbers, assessRisk, UMBRELLA_COUNTRY_LABELS } from "@/lib/outbreak-parser";
 import { extractAdmin1, geocodeAdmin1 } from "@/lib/geo-extract";
 import { errorMessage } from "@/lib/error";
-import { dateFloorGuard, spikeGuard, deathsNeverDecreaseGuard, implausibleDeathsGuard, lockedRowRegressionGuard } from "@/lib/outbreak-guards";
+import { dateFloorGuard, spikeGuard, deathsNeverDecreaseGuard, implausibleDeathsGuard, lockedRowRegressionGuard, lockedRowIsFreezing } from "@/lib/outbreak-guards";
 import { stampSourceConfirmed } from "@/lib/source-confirmed";
 
 export const dynamic     = "force-dynamic";
@@ -755,7 +755,10 @@ async function runEcdcThreats(_req: NextRequest, supabase: SupabaseClient) {
           // unreported here — their regular-operation volume isn't measured,
           // so surfacing them too would risk drowning the health-check in
           // noise.
-          if (guardReason.startsWith("guard:locked-row-")) lockedGuardBlocked.push(`${label}: ${guardReason}`);
+          // …but only while that premise holds: a locked row its owning source refreshed
+          // days ago is being protected, not frozen, and escalating it every run buries
+          // the next real failure of this cron. See lockedRowIsFreezing (2026-08-24).
+          if (guardReason.startsWith("guard:locked-row-") && lockedRowIsFreezing(existing)) lockedGuardBlocked.push(`${label}: ${guardReason}`);
           continue;
         }
 
