@@ -55,6 +55,12 @@ playwright-report/
 # Supabase CLI local state
 supabase/.temp/
 
+# QA outreach : registre de faits regenere a chaque run (npm run qa:facts),
+# et brouillons/fils de discussion temporaires du controle de messages.
+marketing/qa/claimable-facts.json
+marketing/qa/product-claims.json
+tmp/
+
 .vercel
 
 # One-off prod data-fix scripts (fix-*/check-*/scan-*/add-*/update-*/backfill-*

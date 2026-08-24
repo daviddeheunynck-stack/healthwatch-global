@@ -1,0 +1,46 @@
+{
+  "_comment": [
+    "Ce que les routines ont le droit d'affirmer sur HealthWatch Global et qui n'est",
+    "extractible de nulle part : une fonctionnalité livrée mais pas encore décrite sur",
+    "le site, une date de sortie, un jalon.",
+    "",
+    "C'est le SEUL fichier du dispositif QA tenu à la main, et c'est volontaire : tout",
+    "le reste est extrait de lib/pricing.ts, de messages/*.json et de la base, donc ne",
+    "peut pas mentir. Ici, la véracité repose sur David.",
+    "",
+    "Règle : rien n'entre ici tant que ce n'est pas VRAI EN PRODUCTION. Une annonce",
+    "produit qui part avant le déploiement est un faux témoignage sur son propre",
+    "produit, et c'est bien plus coûteux qu'un chiffre de dengue périmé.",
+    "",
+    "expiresOn est obligatoire sur tout ce qui est daté ou temporaire ('nouveau',",
+    "'cette semaine', un jalon). Passée la date, la claim sort du registre au prochain",
+    "build et le script le signale. Sans ça, la routine annoncerait en octobre une",
+    "nouveauté d'août.",
+    "",
+    "Après toute modification : node scripts/build-product-claims.mjs"
+  ],
+
+  "claims": [
+    {
+      "_example": true,
+      "text": "Les alertes push mobile sont disponibles sur iOS et Android.",
+      "provenance": "déployé en production le 2026-08-12, vérifié par David",
+      "expiresOn": null
+    },
+    {
+      "_example": true,
+      "text": "Le digest hebdomadaire part désormais le lundi matin.",
+      "provenance": "cron send-sitrep-emails, vérifié par David",
+      "expiresOn": "2026-10-01"
+    }
+  ],
+
+  "numbers": [
+    {
+      "_example": true,
+      "value": 14,
+      "label": "durée de l'essai Pro en jours",
+      "provenance": "lib/activate-trial.ts"
+    }
+  ]
+}
