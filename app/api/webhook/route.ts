@@ -151,6 +151,45 @@ async function getUserProfile(userId: string): Promise<{ email: string; locale: 
 }
 
 /**
+ * Does this subscription have a payment method Stripe could actually charge?
+ *
+ * `sub.default_payment_method` alone is NOT the answer. Stripe stores a card in
+ * three different places depending on how it was collected, and billing falls
+ * back through all of them:
+ *   1. subscription.default_payment_method            — set by Checkout, usually
+ *   2. customer.invoice_settings.default_payment_method — the customer-level default
+ *   3. any payment method attached to the customer      — last-resort evidence
+ * Reading only (1) means a customer who genuinely pays can be recorded as
+ * `stripe_has_payment_method: false`, which drops them out of `isPayingCustomer`
+ * in the admin page, out of realMrr, and turns the go/no-go payment criterion
+ * red on real revenue. Checking (2) and (3) costs two API calls on a webhook
+ * that fires a handful of times a day.
+ *
+ * Returns false (never throws) if Stripe can't be reached — the caller treats
+ * that as "no proof of a card", which is the safe direction: it understates
+ * revenue rather than inventing it.
+ */
+async function hasUsablePaymentMethod(sub: Stripe.Subscription): Promise<boolean> {
+  if (sub.default_payment_method) return true;
+
+  const customerId = typeof sub.customer === "string" ? sub.customer : sub.customer?.id;
+  if (!customerId) return false;
+
+  try {
+    const cust = await getStripe().customers.retrieve(customerId);
+    // A deleted customer has no invoice_settings at all — reads as undefined,
+    // so no narrowing dance is needed here.
+    if ((cust as Stripe.Customer).invoice_settings?.default_payment_method) return true;
+
+    const pms = await getStripe().paymentMethods.list({ customer: customerId, limit: 1 });
+    return pms.data.length > 0;
+  } catch (err) {
+    console.warn("[webhook] hasUsablePaymentMethod lookup failed:", errorMessage(err));
+    return false;
+  }
+}
+
+/**
  * Best-effort sync of profiles.stripe_has_payment_method / stripe_billing_period
  * from a Stripe Subscription object. Added 2026-08-18 (migration
  * 20260818200000_stripe_payment_method_tracking.sql) so "stripe_subscription_id
@@ -169,7 +208,10 @@ async function syncPaymentMethodFlag(
   forcePaid = false,
 ): Promise<void> {
   const update: Record<string, unknown> = {
-    stripe_has_payment_method: forcePaid || !!sub.default_payment_method,
+    // 2026-08-23: was `!!sub.default_payment_method`. That missed a card held at
+    // the customer level, so a real paying customer could be filed as unpaid —
+    // see hasUsablePaymentMethod above.
+    stripe_has_payment_method: forcePaid || (await hasUsablePaymentMethod(sub)),
   };
   const billing = sub.metadata?.billing;
   if (billing === "monthly" || billing === "annual") update.stripe_billing_period = billing;
@@ -230,6 +272,15 @@ export async function POST(req: NextRequest) {
 
   const supabase = getSupabase();
 
+  // Set when a write that decides whether someone HAS what they paid for fails.
+  // Stripe retries a non-2xx with backoff for ~3 days; a 200 is final. Until
+  // 2026-08-23 every failure returned 200 "so Stripe doesn't retry", which meant
+  // a five-second Supabase blip during a checkout silently cost a paying customer
+  // their plan, with nothing but a Sentry line to find it by. Retrying can resend
+  // an upgrade email — a duplicate welcome is a far cheaper failure than a
+  // customer who was charged and got nothing.
+  let criticalWriteFailed = false;
+
   try {
     switch (event.type) {
 
@@ -269,6 +320,8 @@ export async function POST(req: NextRequest) {
             Sentry.captureException(new Error(`[webhook] checkout.session.completed DB update failed: ${error.message}`), {
               tags: { event_type: "checkout.session.completed", plan, user_id: userId },
             });
+            // The one write that turns a payment into access. Never swallow it.
+            criticalWriteFailed = true;
           } else {
             console.log(`[webhook] Plan set to ${plan} for user ${userId} (trial_ends_at: ${trialEndsAt})`);
 
@@ -328,6 +381,7 @@ export async function POST(req: NextRequest) {
             Sentry.captureException(new Error(`[webhook] subscription.updated DB failed: ${error.message}`), {
               tags: { event_type: "customer.subscription.updated", plan, user_id: userId },
             });
+            criticalWriteFailed = true;
           } else {
             console.log(`[webhook] Subscription updated → plan ${plan} for user ${userId} (trial_ends_at: ${trialEndsAt})`);
           }
@@ -491,6 +545,8 @@ export async function POST(req: NextRequest) {
         if (error) {
           console.error("[webhook] invoice.payment_succeeded renewal:", error);
           Sentry.captureException(new Error(`[webhook] invoice.payment_succeeded renewal DB failed: ${error.message}`), { tags: { event_type: "invoice.payment_succeeded", plan, user_id: userId } });
+          // Money already moved — the plan MUST end up recorded. Let Stripe retry.
+          criticalWriteFailed = true;
         }
         else console.log(`[webhook] Subscription renewed → plan ${plan} for user ${userId}`);
         // Best-effort, separate from the plan update above: a succeeded charge
@@ -532,7 +588,7 @@ export async function POST(req: NextRequest) {
 
         // If the subscription already has a default payment method, the user
         // is on track for automatic renewal — tell them so, not "add payment method".
-        const hasPaymentMethod = !!sub.default_payment_method;
+        const hasPaymentMethod = await hasUsablePaymentMethod(sub);
         await syncPaymentMethodFlag(supabase, userId, sub);
 
         sendTrialEndingEmail(trialProfile.email, plan, trialProfile.locale, trialEnd, hasPaymentMethod).catch((e) => {
@@ -551,8 +607,17 @@ export async function POST(req: NextRequest) {
   } catch (err: unknown) {
     console.error("[webhook] Handler error:", errorMessage(err));
     Sentry.captureException(err, { tags: { event_type: event.type } });
-    // Return 200 so Stripe doesn't retry — log the error for investigation
-    return NextResponse.json({ received: true, warning: errorMessage(err) });
+    // 500, not 200: an unexpected throw mid-handler leaves the profile in an
+    // unknown state. Stripe redelivering is the only automatic second chance
+    // this flow has.
+    return NextResponse.json({ error: errorMessage(err) }, { status: 500 });
+  }
+
+  if (criticalWriteFailed) {
+    return NextResponse.json(
+      { error: "Database write failed — Stripe should retry this event." },
+      { status: 500 }
+    );
   }
 
   return NextResponse.json({ received: true });
