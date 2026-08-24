@@ -1000,6 +1000,99 @@ async function runDataQuality(_req: NextRequest, supabase: SupabaseClient) {
     }
   }
 
+  // ── 4l. Rows that just left the map ───────────────────────────────────────
+  // Everything above this line reads `rows`, i.e. `.eq("active", true)`. The moment
+  // a row is deactivated it drops out of all eleven sections at once — staleness,
+  // regression, CFR, duplication, the 14-day watermark — and becomes indistinguishable
+  // from a country with no outbreak at all. Section 4j is the sole exception, and
+  // only for polio, only because it compares against an external source.
+  //
+  // Real case, 2026-08-24: Cholera/Angola and Cholera/Yemen had been switched off
+  // while stuck at 31/05 figures, and WHO kept publishing for both (5,361 cases /
+  // 117 deaths to 13/07, 5,196 / 7 to 29/06). Ongoing outbreaks displayed as closed
+  // for six weeks, found by hand while auditing something else.
+  //
+  // Detection goes through outbreak_snapshots rather than `active` + `updated_at`:
+  // sync-outbreaks only ever snapshots ACTIVE rows, so a row that is inactive today
+  // yet still carries a snapshot from the last RECENT_EXIT_DAYS days necessarily
+  // left the map within that window — whatever path took it out (the stale sweep in
+  // sync-outbreaks, a source cron's own deactivation, section 4e above, the admin
+  // button, or a hand-run script). Reports only: nothing is ever reactivated here.
+  //
+  // Known and accepted: a row is listed on two consecutive mornings. The hourly sync
+  // already wrote today's snapshot before the sweep switched it off, so it stays
+  // inside the window one extra day. A daily report gets skipped often enough that
+  // the duplicate is worth more than a net that closes a day too early.
+  const RECENT_EXIT_DAYS = 2;
+  const EXIT_LIST_CAP    = 15;
+  const exitSince = new Date(Date.now() - RECENT_EXIT_DAYS * 86_400_000).toISOString().split("T")[0];
+  const { data: recentSnaps, error: recentSnapsErr } = await supabase
+    .from("outbreak_snapshots")
+    .select("outbreak_id, snapped_at")
+    .gte("snapped_at", exitSince);
+
+  if (recentSnapsErr) {
+    needsReview.push({
+      label: "[SORTIE DE CARTE] Contrôle indisponible",
+      detail: `Lecture de outbreak_snapshots impossible (${recentSnapsErr.message}) — aucune vérification des lignes récemment désactivées ce matin.`,
+    });
+  } else {
+    const activeIds  = new Set((rows ?? []).map((r) => r.id));
+    const lastSeen   = new Map<string, string>();
+    for (const s of recentSnaps ?? []) {
+      const prev = lastSeen.get(s.outbreak_id);
+      if (!prev || s.snapped_at > prev) lastSeen.set(s.outbreak_id, s.snapped_at);
+    }
+    const exitedIds = [...lastSeen.keys()].filter((id) => !activeIds.has(id));
+
+    if (exitedIds.length > 0) {
+      const { data: exitedRows, error: exitedErr } = await supabase
+        .from("outbreaks")
+        .select("id, disease, disease_en, country, country_en, cases, deaths, date, source, source_priority, is_seed")
+        .in("id", exitedIds);
+
+      if (exitedErr) {
+        needsReview.push({
+          label: "[SORTIE DE CARTE] Lignes désactivées non identifiables",
+          detail: `${exitedIds.length} ligne(s) instantanéisée(s) depuis le ${exitSince} ne sont plus actives, mais leur lecture a échoué (${exitedErr.message}) — impossible de dire lesquelles.`,
+        });
+      } else {
+        // GHO annual reference rows are ingested inactive and never snapshotted, so
+        // they shouldn't show up here at all — skipped rather than trusted not to,
+        // by the same marker section 4h uses. Deliberately NOT a blanket `!is_seed`
+        // filter: the polio PHEIC seeds are active, snapshotted and on the public
+        // map, so one of them going dark is exactly what this section is for.
+        const exited = (exitedRows ?? []).filter(
+          (r) => !(r.is_seed && (r.source ?? "").includes(GHO_INDICATOR_MARKER)),
+        );
+        const shown  = exited.slice(0, EXIT_LIST_CAP);
+        for (const row of shown) {
+          const label = `${row.disease} / ${row.country}`;
+          needsReview.push({
+            label: `[SORTIE DE CARTE] ${label}`,
+            detail: `Ligne désactivée depuis le ${lastSeen.get(row.id)} (dernier instantané) — elle n'apparaît plus sur la carte publique et sort de tous les autres contrôles de ce rapport. Dernier état connu : ${(row.cases ?? 0).toLocaleString("fr-FR")} cas / ${(row.deaths ?? 0).toLocaleString("fr-FR")} décès au ${row.date}. Vérifier que la source a réellement cessé de publier (${row.source ?? "source absente"}) et non que le foyer est toujours en cours — cas Angola/Yémen du 24/08. Aucune réactivation automatique.`,
+          });
+        }
+        if (exited.length > shown.length) {
+          needsReview.push({
+            label: `[SORTIE DE CARTE] ${exited.length - shown.length} ligne(s) de plus, non listées`,
+            detail: `${exited.length} ligne(s) au total ont quitté la carte depuis le ${exitSince} ; seules les ${EXIT_LIST_CAP} premières sont détaillées ci-dessus. Un lot de cette taille est en soi à vérifier (balayage de fraîcheur trop large, ou source qui a cessé de publier en bloc) : lister le reste via active=eq.false&order=updated_at.desc.`,
+          });
+        }
+        // An id that was snapshotted and no longer exists at all was deleted outright
+        // — also a silent map exit, and one no `active=false` query would ever find.
+        const found = new Set((exitedRows ?? []).map((r) => r.id));
+        const gone  = exitedIds.filter((id) => !found.has(id));
+        if (gone.length > 0) {
+          needsReview.push({
+            label: `[SORTIE DE CARTE] ${gone.length} ligne(s) supprimée(s)`,
+            detail: `Instantané(s) postérieur(s) au ${exitSince} pour ${gone.length} ligne(s) qui n'existent plus du tout dans outbreaks : ${gone.slice(0, 5).join(", ")}${gone.length > 5 ? "…" : ""}. Une suppression pure et simple, pas une désactivation — vérifier qu'elle était voulue.`,
+          });
+        }
+      }
+    }
+  }
+
   // ── 5. Notable movements (top 5 largest absolute change, no anomaly) ──────
   type Movement = { label: string; before: number; after: number; delta: number };
   const movements: Movement[] = [];

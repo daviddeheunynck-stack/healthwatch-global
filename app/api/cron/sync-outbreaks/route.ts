@@ -485,16 +485,34 @@ async function runSync(req: NextRequest, supabase: SupabaseClient) {
   // ── 6. Deactivate stale entries (never touch seed rows or high-priority) ──────
   const cutoff = new Date();
   cutoff.setDate(cutoff.getDate() - STALE_DAYS);
-  const { count } = await supabase
+  // `.select()` rather than `{ count }` (2026-08-24): this sweep is the main way a
+  // row leaves the public map, and until now the ONLY trace it left anywhere was an
+  // integer — no id, no country, not in the logs, not in logCronRun, not in the
+  // response. Cholera/Angola and Cholera/Yemen went out this way, sat "closed" while
+  // WHO kept publishing (5,361 and 5,196 cases), and were found six weeks later by
+  // hand while auditing something else. Naming them costs one column list.
+  const { data: deactivated, error: deactivateErr } = await supabase
     .from("outbreaks")
     .update({ active: false })
     .eq("active", true)
     .neq("is_seed", true)
     .lt("source_priority", 5) // never auto-deactivate regional/sitrep-managed entries (priority ≥ 5)
     .eq("is_pheic", false)    // never auto-deactivate active WHO PHEICs
-    .lt("date", cutoff.toISOString().split("T")[0]);
+    .lt("date", cutoff.toISOString().split("T")[0])
+    .select("id, disease_en, country_en, date, source");
 
-  results.staleDeactivated = count ?? 0;
+  results.staleDeactivated = deactivated?.length ?? 0;
+  if (deactivateErr) {
+    // Same channel and same reasoning as the snapshot failure above: this cron
+    // reports "ok" either way, so a sweep that silently stopped working would
+    // otherwise read as "nothing was stale today".
+    console.error("[sync] stale deactivation:", deactivateErr.message);
+    Sentry.captureMessage(`[sync-outbreaks] stale deactivation failed: ${deactivateErr.message}`, "error");
+  } else {
+    for (const row of deactivated ?? []) {
+      console.log(`[sync] Deactivated (stale >${STALE_DAYS}d): ${row.disease_en} / ${row.country_en} — date ${row.date} — ${row.source ?? "source absente"} [${row.id}]`);
+    }
+  }
 
   pingHeartbeatIfHealthy(
     process.env.BETTERSTACK_HB_SYNC_OUTBREAKS,
