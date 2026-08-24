@@ -129,8 +129,10 @@ scrapers sollicitent l'OMS et Africa CDC deux à trois fois plus que voulu. Les 
 commentaire et `vercel.json` disent des choses différentes.
 
 **`sync-signals` est désactivé mais toujours planifié** — 4 exécutions par jour
-d'une route dont l'en-tête dit « DISABLED (legal) ». Soit le retirer de
-`vercel.json`, soit documenter ici pourquoi il doit rester armé.
+d'une route dont l'en-tête dit « DISABLED (legal) ». Résolu par lecture du code
+le 2026-08-24 : la route elle-même documente pourquoi (« Kept as a no-op … so
+the Vercel cron endpoint stays healthy and doesn't page »). Intentionnel, pas
+un écart — laissé tel quel.
 
 **`sync-drc-sitrep` est dans le même cas partiel** : sa fonction principale est
 désactivée, seul subsiste un contrôle de présence de ligne. Un cron quotidien
