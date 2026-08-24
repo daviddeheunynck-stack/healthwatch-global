@@ -12,12 +12,23 @@
 // lockedRowRegressionGuard in lib/outbreak-guards.ts) — 10 means "owned by a
 // primary-tier source", not "frozen". See
 // project_source_priority_is_ownership_not_freeze_2026_08_19.
+//
+// 2026-08-24: that 19/08 sweep raised the ceiling on 17 crons but missed one
+// path in this file — updateSatelliteCountry(), which refreshes the satellite
+// country rows (the non-DRC countries listed in the sitrep table). It still
+// wrote `source_priority: 5` under a `.lte(5)` ceiling, so a satellite row a
+// human had locked at 10 was exactly the orphan case the sweep set out to
+// remove. Raised to `.lte(10)` with lockedRowRegressionGuard, and the write no
+// longer stamps ownership back down to 5. Latent rather than live: sitrep
+// detection is disabled (see above), so this path does not currently run — it
+// is fixed so that re-enabling detection doesn't quietly reintroduce the bug.
 
 import { NextRequest, NextResponse } from "next/server";
 import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { errorMessage } from "@/lib/error";
-import { regressionGuard } from "@/lib/outbreak-guards";
+import { regressionGuard, lockedRowRegressionGuard } from "@/lib/outbreak-guards";
+import { stampSourceConfirmed } from "@/lib/source-confirmed";
 import * as Sentry from "@sentry/nextjs";
 
 export const dynamic     = "force-dynamic";
@@ -290,7 +301,13 @@ async function updateSatelliteCountry(supabase: any, countryEn: string, cases: n
   const row = await findBvdCountryRow(supabase, countryEn);
   if (!row) return false;
   if (row.cases === cases && row.deaths === deaths) {
-    console.log(`[drc-sitrep] ${countryEn}: already up to date (${cases}/${deaths})`);
+    // The sitrep PDF was downloaded and this country's line parsed out of its
+    // table, restating the same figures — a verification of the row, not just
+    // an absence of work. Recorded so the row stops ageing towards the "no
+    // update" badge while the sitrep keeps confirming it (lib/source-confirmed.ts).
+    const confirmed = await stampSourceConfirmed(supabase, [row.id]);
+    if (confirmed.error) console.error(`[drc-sitrep] ${countryEn} source_confirmed_at stamp failed:`, confirmed.error);
+    console.log(`[drc-sitrep] ${countryEn}: already up to date (${cases}/${deaths}) — source confirmed`);
     return false;
   }
   // Date floor + collapse / zero-over-real guards (lib/outbreak-guards.ts).
@@ -298,7 +315,14 @@ async function updateSatelliteCountry(supabase: any, countryEn: string, cases: n
   // produced straight onto the satellite country rows, with only the
   // source_priority ownership check on the chain below. Those are the very
   // rows behind the three real Ebola/DRC overwrites of 2026-07-15.
-  const guardReason = regressionGuard({ cases, deaths, date }, row);
+  // lockedRowRegressionGuard added 2026-08-24 alongside the ceiling raise
+  // below: now that this path may write onto a source_priority>=10 row, it
+  // needs the same refusal the 17 crons of the 19/08 sweep got — a locked row
+  // is presumed already verified, so no decrease of either figure is accepted
+  // from here, not just the >70% drop collapseGuard catches.
+  const guardReason =
+    regressionGuard({ cases, deaths, date }, row) ??
+    lockedRowRegressionGuard({ cases, deaths, date }, row);
   if (guardReason) {
     console.warn(`[drc-sitrep] ${countryEn}: ${guardReason} — skipping`);
     return false;
@@ -318,10 +342,18 @@ async function updateSatelliteCountry(supabase: any, countryEn: string, cases: n
       description_ar:  desc.ar,
       description_id:  desc.id,
       updated_at:      new Date().toISOString(),
-      source_priority: 5,
+      // Preserve a pre-existing lock instead of stamping every satellite
+      // update back down to 5, which would re-expose a deliberately elevated
+      // row to every priority<=5 cron on the next run. Same treatment the 17
+      // crons of the 2026-08-19 sweep got.
+      source_priority: Math.max(5, row.source_priority ?? 0),
     })
     .eq("id", row.id)
-    .lte("source_priority", 5)
+    // Ceiling raised 5→10 on 2026-08-24 (see file header): a satellite row
+    // locked at 10 was unreachable from here, which is precisely the orphan
+    // case the 19/08 sweep existed to remove. lockedRowRegressionGuard above
+    // still refuses any decrease on such a row.
+    .lte("source_priority", 10)
     .select("id");
 
   if (error) {
