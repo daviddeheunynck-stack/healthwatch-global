@@ -1,9 +1,19 @@
 /**
  * Cron: /api/cron/regional-alerts
- * Schedule: 10:30 UTC daily — after the 08:00-10:00 UTC sync crons that
- * populate outbreaks, not before them (moved from 06:30 on 2026-08-03; the
- * pre-move schedule ran alerts ~22h ahead of same-day sync data, see
+ * Schedule: 10:50 UTC daily — after the 08:00-10:00 UTC sync crons that
+ * populate outbreaks, not before them (moved from 06:30 to 10:30 on
+ * 2026-08-03, then from 10:30 to 10:50 on 2026-08-24; the pre-08-03 schedule
+ * ran alerts ~22h ahead of same-day sync data, see
  * project_alert_crons_run_before_syncs_2026_08_03 in memory).
+ *
+ * Runs LAST of the three outbreak-alert crons (watchlist -> disease ->
+ * regional, most specific to broadest). Before claiming a (user, outbreak)
+ * pair via claimOutbreakAlertDaily, checks whether watchlist-alerts (10:30)
+ * or disease-alerts (10:40) already claimed it today — if so, this user
+ * already got a more targeted email about this exact outbreak this morning,
+ * so this cron updates its own state log (to avoid re-detecting the same
+ * unchanged state as "new" tomorrow) but skips the send for that item. See
+ * outbreak_alert_daily_lock in lib/cron-monitor.ts.
  *
  * For every active outbreak (no time-window pre-filter — see note at the
  * candidate query below):
@@ -46,7 +56,7 @@ import { buildTrialValueNudgeEmail } from "@/lib/trial-value-nudge-email";
 import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 import * as Sentry from "@sentry/nextjs";
 import { isMailSuppressed } from "@/lib/mail-suppression";
-import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
+import { logCronRun, isRealProduction, currentAlertDate, claimOutbreakAlertDaily, releaseOutbreakAlertDaily } from "@/lib/cron-monitor";
 import { resolvedPlan } from "@/lib/resolved-plan";
 
 export const dynamic = "force-dynamic";
@@ -204,8 +214,10 @@ async function runRegionalAlerts(_req: NextRequest, supabase: SupabaseClient) {
   let trialNudgesSent = 0;
   let digestEmailsSent = 0;
   let digestItemsCapped = 0;
+  let crossCronDeduped = 0;
   const sentByReason: Record<AlertReason, number> = { new: 0, escalated: 0, surge: 0 };
   const now = Date.now();
+  const alertDate = currentAlertDate();
 
   type OutbreakRow = (typeof candidateOutbreaks)[number];
   type ProfileRow = {
@@ -325,6 +337,35 @@ async function runRegionalAlerts(_req: NextRequest, supabase: SupabaseClient) {
 
         if (!reason) {
           skipped++;
+          continue;
+        }
+
+        // watchlist-alerts (10:30) and disease-alerts (10:40) both run
+        // before this cron and may already have claimed this (user,
+        // outbreak) pair today. If so, update this cron's own state log to
+        // the current numbers — so tomorrow's comparison starts fresh
+        // instead of re-detecting the same unchanged state as "new"/
+        // "escalated"/"surge" — but do not add it to this user's email batch.
+        // Note for health-check readers: this upsert sets outbreak_alert_log
+        // .sent_at even on a dedup skip, same as REAL_EVIDENCE already
+        // tolerates for activate-trial's writes (see health-check's comment
+        // on that table) — it means "user informed of this state", not
+        // strictly "regional-alerts itself emailed them". A regional-alerts
+        // outage that coincides with healthy watchlist-alerts/disease-alerts
+        // runs could stay masked here for users also covered by those two.
+        const claimed = await claimOutbreakAlertDaily(supabase, profile.id, String(outbreak.id), alertDate, "regional-alerts");
+        if (!claimed) {
+          crossCronDeduped++;
+          await supabase.from("outbreak_alert_log").upsert(
+            {
+              user_id:        profile.id,
+              outbreak_id:    String(outbreak.id),
+              risk_level:     outbreak.risk_level,
+              cases_at_alert: outbreak.cases ?? null,
+              sent_at:        new Date().toISOString(),
+            },
+            { onConflict: "user_id,outbreak_id" }
+          );
           continue;
         }
 
@@ -528,6 +569,13 @@ async function runRegionalAlerts(_req: NextRequest, supabase: SupabaseClient) {
       console.error(`[regional-alerts] failed to send to ${profile.email}:`, err);
       Sentry.captureException(err, { tags: { cron: "regional-alerts", user_id: profile.id } });
       failed += enriched.length;
+      // Nothing was delivered for this batch — release every claim. This is
+      // the last of the three outbreak-alert crons, so there's no later cron
+      // left to pick these up today; releasing still matters so a manual
+      // retry the same day isn't blocked by its own failed attempt.
+      for (const item of enriched) {
+        await releaseOutbreakAlertDaily(supabase, profile.id, String(item.outbreak.id), alertDate, "regional-alerts");
+      }
     }
 
     // Respect Brevo rate limit
@@ -550,6 +598,7 @@ async function runRegionalAlerts(_req: NextRequest, supabase: SupabaseClient) {
     trialNudgesSent,
     skipped,
     blockedSkipped,
+    crossCronDeduped,
     failed,
   });
 }

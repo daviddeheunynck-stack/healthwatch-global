@@ -1,9 +1,22 @@
-// Watchlist change notifications — runs daily at 10:40 UTC, after the
+// Watchlist change notifications — runs daily at 10:30 UTC, after the
 // 08:00-10:00 UTC sync crons that populate outbreaks (moved from 06:40 on
-// 2026-08-03; see regional-alerts' header for why the pre-move schedule ran
-// alerts ahead of same-day sync data).
+// 2026-08-03, then from 10:40 to 10:30 on 2026-08-24; see regional-alerts'
+// header for why the pre-move schedule ran alerts ahead of same-day sync
+// data).
 // For each user's starred outbreaks, compares current cases/deaths with
 // the last notified values. Sends an email if anything changed.
+//
+// Runs FIRST of the three outbreak-alert crons (watchlist -> disease ->
+// regional, most specific to broadest — regional-alerts moved from 10:30 to
+// 10:50 the same day). A user can be subscribed to the same outbreak through
+// their region, a disease subscription, AND a starred watchlist entry all at
+// once; each cron used to fire independently, so the same outbreak could
+// reach one inbox three times ~10-20min apart. claimOutbreakAlertDaily below
+// claims (user, outbreak, today) before this cron commits to emailing — the
+// two later, broader crons see the claim and skip the send for that item
+// (while still updating their own state log, so they don't re-detect the
+// same unchanged state as "new" again tomorrow). See
+// outbreak_alert_daily_lock in lib/cron-monitor.ts.
 
 import { NextRequest, NextResponse } from "next/server";
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
@@ -11,7 +24,7 @@ import { buildWatchlistAlertEmail } from "@/lib/watchlist-alert-email";
 import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 import { errorMessage } from "@/lib/error";
 import * as Sentry from "@sentry/nextjs";
-import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
+import { logCronRun, isRealProduction, currentAlertDate, claimOutbreakAlertDaily, releaseOutbreakAlertDaily } from "@/lib/cron-monitor";
 import { notifyMobile } from "@/lib/mobile-notify";
 import { resolvedPlan } from "@/lib/resolved-plan";
 
@@ -122,6 +135,8 @@ async function runWatchlistAlerts(_req: NextRequest, supabase: SupabaseClient) {
   let unchanged = 0;
   let blockedSkipped = 0;
   let errors = 0;
+  let crossCronDeduped = 0;
+  const alertDate = currentAlertDate();
 
   for (const entry of entries) {
     const outbreak = outbreakMap.get(entry.outbreak_id);
@@ -154,6 +169,23 @@ async function runWatchlistAlerts(_req: NextRequest, supabase: SupabaseClient) {
 
     if (!casesChanged && !deathsChanged) { unchanged++; continue; }
     if (outbreak.cases === 0 && prevCases === -1) { unchanged++; continue; } // first sync, no meaningful data yet
+
+    // Runs first among the three outbreak-alert crons, so this almost always
+    // wins the claim — its role here is mostly to WRITE the lock that
+    // disease-alerts/regional-alerts check later today. Losing it (e.g. a
+    // manual re-invocation after one of the other two already ran) means
+    // someone already told this user about this outbreak today: update the
+    // state log so tomorrow's comparison is against the current numbers, but
+    // skip the actual send.
+    const claimed = await claimOutbreakAlertDaily(supabase, entry.user_id, String(entry.outbreak_id), alertDate, "watchlist-alerts");
+    if (!claimed) {
+      crossCronDeduped++;
+      await supabase.from("watchlist_alert_log").upsert(
+        [{ user_id: entry.user_id, outbreak_id: entry.outbreak_id, cases_at_alert: outbreak.cases, deaths_at_alert: outbreak.deaths }],
+        { onConflict: "user_id,outbreak_id" }
+      );
+      continue;
+    }
 
     try {
       const locale = profile.locale;
@@ -215,6 +247,11 @@ async function runWatchlistAlerts(_req: NextRequest, supabase: SupabaseClient) {
       errors++;
       console.error(`[watchlist-alerts] Failed for ${profile.email}:`, errorMessage(err));
       Sentry.captureException(err, { tags: { cron: "watchlist-alerts", user_id: entry.user_id, outbreak_id: entry.outbreak_id } });
+      // Nothing was delivered — release the claim so disease-alerts or
+      // regional-alerts, running later today, can still pick this up instead
+      // of the user hearing nothing at all. See releaseOutbreakAlertDaily in
+      // lib/cron-monitor.ts.
+      await releaseOutbreakAlertDaily(supabase, entry.user_id, String(entry.outbreak_id), alertDate, "watchlist-alerts");
     }
   }
 
@@ -224,6 +261,6 @@ async function runWatchlistAlerts(_req: NextRequest, supabase: SupabaseClient) {
   await logCronRun(supabase, "watchlist-alerts", errors > 0 ? "error" : "ok", sent,
     errors > 0 ? `${errors} alerte(s) en échec` : undefined,
     (outbreaks ?? []).length > 0 ? new Date().toISOString() : undefined);
-  console.log(`[watchlist-alerts] Done — sent: ${sent}, unchanged: ${unchanged}, blockedSkipped: ${blockedSkipped}, errors: ${errors}`);
-  return NextResponse.json({ sent, unchanged, blockedSkipped, errors });
+  console.log(`[watchlist-alerts] Done — sent: ${sent}, unchanged: ${unchanged}, blockedSkipped: ${blockedSkipped}, crossCronDeduped: ${crossCronDeduped}, errors: ${errors}`);
+  return NextResponse.json({ sent, unchanged, blockedSkipped, crossCronDeduped, errors });
 }

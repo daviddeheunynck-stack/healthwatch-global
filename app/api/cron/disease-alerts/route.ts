@@ -1,9 +1,17 @@
-// Disease-specific alert cron — runs daily at 10:50 UTC, after the 08:00-10:00
-// UTC sync crons that populate outbreaks (moved from 06:50 on 2026-08-03; see
-// regional-alerts' header for why the pre-move schedule ran alerts ahead of
-// same-day sync data).
+// Disease-specific alert cron — runs daily at 10:40 UTC, after the 08:00-10:00
+// UTC sync crons that populate outbreaks (moved from 06:50 on 2026-08-03,
+// then from 10:50 to 10:40 on 2026-08-24; see regional-alerts' header for why
+// the pre-move schedule ran alerts ahead of same-day sync data).
 // For each user's disease subscriptions, sends an alert when a matching
 // outbreak appears that hasn't been notified yet.
+//
+// Runs SECOND of the three outbreak-alert crons (watchlist -> disease ->
+// regional, most specific to broadest). Before claiming a (user, outbreak)
+// pair via claimOutbreakAlertDaily, checks whether watchlist-alerts (10:30)
+// already claimed it today — if so, this user was already told about this
+// outbreak minutes ago, so this cron updates its own state log (to avoid
+// re-detecting the same unchanged state as "new" tomorrow) but skips the
+// send. See outbreak_alert_daily_lock in lib/cron-monitor.ts.
 
 import { NextRequest, NextResponse } from "next/server";
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
@@ -12,7 +20,7 @@ import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 import { diseaseToSlug } from "@/lib/disease-data";
 import { errorMessage } from "@/lib/error";
 import * as Sentry from "@sentry/nextjs";
-import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
+import { logCronRun, isRealProduction, currentAlertDate, claimOutbreakAlertDaily, releaseOutbreakAlertDaily } from "@/lib/cron-monitor";
 import { sendBrevoEmail } from "@/lib/brevo-send";
 import { notifyMobile } from "@/lib/mobile-notify";
 import { resolvedPlan } from "@/lib/resolved-plan";
@@ -143,6 +151,8 @@ async function runDiseaseAlerts(_req: NextRequest, supabase: SupabaseClient) {
   // email instead of one per outbreak.
   let skipped = 0;
   let blockedSkipped = 0;
+  let crossCronDeduped = 0;
+  const alertDate = currentAlertDate();
 
   type OutbreakRow = (typeof outbreaks)[number];
   const userItems = new Map<string, OutbreakRow[]>();
@@ -177,6 +187,31 @@ async function runDiseaseAlerts(_req: NextRequest, supabase: SupabaseClient) {
       // so skip before the log upsert below rather than record a false
       // "sent" state. See lib/brevo-blocklist.ts.
       if (profile.blocked) { blockedSkipped++; continue; }
+
+      // watchlist-alerts runs before this cron (10:30 vs 10:40) and may
+      // already have claimed this (user, outbreak) pair today. If so, update
+      // this cron's own state log to the current numbers — so tomorrow's
+      // comparison starts fresh instead of re-detecting the same unchanged
+      // state as "new"/"escalated" — but do not add it to this user's email
+      // batch. Note for health-check readers: this sets disease_alert_log
+      // .sent_at even on a dedup skip, same trade-off documented in
+      // regional-alerts' equivalent branch — "user informed", not strictly
+      // "disease-alerts itself emailed them".
+      const claimed = await claimOutbreakAlertDaily(supabase, userId, String(outbreak.id), alertDate, "disease-alerts");
+      if (!claimed) {
+        crossCronDeduped++;
+        await supabase.from("disease_alert_log").upsert(
+          [{
+            user_id:        userId,
+            outbreak_id:    outbreak.id,
+            risk_level:     outbreak.risk_level,
+            cases_at_alert: outbreak.cases ?? null,
+            sent_at:        new Date().toISOString(),
+          }],
+          { onConflict: "user_id,outbreak_id" }
+        );
+        continue;
+      }
 
       const items = userItems.get(userId) ?? [];
       items.push(outbreak);
@@ -291,6 +326,12 @@ async function runDiseaseAlerts(_req: NextRequest, supabase: SupabaseClient) {
       failed += alertOutbreaks.length;
       console.error(`[disease-alerts] Failed for ${profile.email}:`, errorMessage(err));
       Sentry.captureException(err, { tags: { cron: "disease-alerts", user_id: userId } });
+      // Nothing was delivered for this batch — release every claim so
+      // regional-alerts, running later today, can still pick these up
+      // instead of the user hearing nothing at all.
+      for (const outbreak of alertOutbreaks) {
+        await releaseOutbreakAlertDaily(supabase, userId, String(outbreak.id), alertDate, "disease-alerts");
+      }
     }
 
     await new Promise((r) => setTimeout(r, 150)); // rate-limit friendly
@@ -306,6 +347,6 @@ async function runDiseaseAlerts(_req: NextRequest, supabase: SupabaseClient) {
   await logCronRun(supabase, "disease-alerts", failed > 0 ? "error" : "ok", sent,
     failed > 0 ? `${failed} alerte(s) en échec` : undefined,
     outbreaks.length > 0 ? new Date().toISOString() : undefined);
-  console.log(`[disease-alerts] Done — sent: ${sent}, skipped: ${skipped}, blockedSkipped: ${blockedSkipped}, digestEmailsSent: ${digestEmailsSent}, digestItemsCapped: ${digestItemsCapped}`);
-  return NextResponse.json({ sent, skipped, blockedSkipped, emailsSent: userItems.size, digestEmailsSent, digestItemsCapped, failed });
+  console.log(`[disease-alerts] Done — sent: ${sent}, skipped: ${skipped}, blockedSkipped: ${blockedSkipped}, crossCronDeduped: ${crossCronDeduped}, digestEmailsSent: ${digestEmailsSent}, digestItemsCapped: ${digestItemsCapped}`);
+  return NextResponse.json({ sent, skipped, blockedSkipped, crossCronDeduped, emailsSent: userItems.size, digestEmailsSent, digestItemsCapped, failed });
 }

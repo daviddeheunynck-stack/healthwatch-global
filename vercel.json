@@ -21,11 +21,11 @@
       "schedule": "0 6 * * *"
     },
     {
-      "path": "/api/cron/regional-alerts",
+      "path": "/api/cron/watchlist-alerts",
       "schedule": "30 10 * * *"
     },
     {
-      "path": "/api/cron/watchlist-alerts",
+      "path": "/api/cron/disease-alerts",
       "schedule": "40 10 * * *"
     },
     {
@@ -33,7 +33,7 @@
       "schedule": "45 10 * * *"
     },
     {
-      "path": "/api/cron/disease-alerts",
+      "path": "/api/cron/regional-alerts",
       "schedule": "50 10 * * *"
     },
     {

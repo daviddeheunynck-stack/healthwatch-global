@@ -331,6 +331,89 @@ export function currentWeekOf(): string {
 }
 
 /**
+ * Today (UTC) as "YYYY-MM-DD" — the dedup key for
+ * claimOutbreakAlertDaily/releaseOutbreakAlertDaily below.
+ */
+export function currentAlertDate(): string {
+  return new Date().toISOString().slice(0, 10);
+}
+
+/**
+ * Cross-cron per-(user, outbreak, day) claim shared by regional-alerts,
+ * watchlist-alerts and disease-alerts. Each of the three independently
+ * decides whether a given outbreak is new/escalated/surged for a given user
+ * and, before this, would email regardless of whether one of the other two
+ * had already told that same user about that same outbreak minutes earlier
+ * in the same run. Call this immediately before adding a qualifying
+ * (user, outbreak) pair to the batch that will be emailed — NOT after — same
+ * race-safety reasoning as claimWeeklyEmailAddress above. The three crons run
+ * in specificity order (watchlist -> disease -> regional, see vercel.json),
+ * so on a normal day the most targeted alert is the one that wins the claim
+ * and the broader ones back off.
+ *
+ * Fails open (true) on any DB error, same trade-off as claimWeeklyEmailAddress
+ * — a missing/broken table degrades to the pre-2026-08-24 un-deduped-across-
+ * crons behavior, not to silently dropping the alert.
+ */
+export async function claimOutbreakAlertDaily(
+  supabase: SupabaseClient,
+  userId: string,
+  outbreakId: string,
+  alertDate: string,
+  source: string,
+): Promise<boolean> {
+  const { data, error } = await supabase
+    .from("outbreak_alert_daily_lock")
+    .upsert(
+      { user_id: userId, outbreak_id: outbreakId, alert_date: alertDate, source },
+      { onConflict: "user_id,outbreak_id,alert_date", ignoreDuplicates: true },
+    )
+    .select("user_id");
+  if (error) {
+    console.error(`[cron-monitor] claimOutbreakAlertDaily failed for ${source}/${userId}/${outbreakId}/${alertDate}, sending anyway:`, error.message);
+    Sentry.captureException(new Error(error.message), {
+      tags: { helper: "claimOutbreakAlertDaily", source },
+    });
+    return true;
+  }
+  return (data?.length ?? 0) > 0;
+}
+
+/**
+ * Releases a claim from claimOutbreakAlertDaily when the send that was
+ * supposed to follow it never happened (Brevo error, missing API key) — same
+ * reasoning as releaseWeeklyEmailAddress. Without this, a failed send from
+ * whichever cron claimed first permanently blocks the later, broader crons
+ * from ever delivering that alert for the day, since they'd see the lock as
+ * already taken.
+ *
+ * Scoped by `source` for the same safety reason as releaseWeeklyEmailAddress:
+ * a cron can only release its own claim, never one a sibling cron holds on
+ * the same (user, outbreak, day).
+ */
+export async function releaseOutbreakAlertDaily(
+  supabase: SupabaseClient,
+  userId: string,
+  outbreakId: string,
+  alertDate: string,
+  source: string,
+): Promise<void> {
+  const { error } = await supabase
+    .from("outbreak_alert_daily_lock")
+    .delete()
+    .eq("user_id", userId)
+    .eq("outbreak_id", outbreakId)
+    .eq("alert_date", alertDate)
+    .eq("source", source);
+  if (error) {
+    console.error(`[cron-monitor] releaseOutbreakAlertDaily failed for ${source}/${userId}/${outbreakId}/${alertDate}:`, error.message);
+    Sentry.captureException(new Error(error.message), {
+      tags: { helper: "releaseOutbreakAlertDaily", source },
+    });
+  }
+}
+
+/**
  * Ping a Better Stack heartbeat URL, but only when this run's failure rate
  * stayed under a tolerable threshold — so Better Stack's uptime score means
  * "this cron did its job", not just "the route responded". Before this,
@@ -468,10 +551,10 @@ export const CRON_WINDOWS: Record<string, number> = {
   "signup-canary":     26,   // daily 05:10
   // ── Alert delivery crons ─────────────────────────────────────────────────────
   "sync-brevo-blocklist": 26, // daily 06:00 — feeds profiles.email_blocked_at before the 10:xx sends below
-  "regional-alerts":   26,   // daily 10:30 (moved from 06:30 on 2026-08-03, was firing ~22h ahead of same-day sync data)
-  "watchlist-alerts":  26,   // daily 10:40 (moved from 06:40 on 2026-08-03)
+  "watchlist-alerts":  26,   // daily 10:30 (moved from 06:40 on 2026-08-03, then from 10:40 to 10:30 on 2026-08-24 — most specific of the three alert crons now runs first, see outbreak_alert_daily_lock)
+  "disease-alerts":    26,   // daily 10:40 (moved from 06:50 on 2026-08-03, then from 10:50 to 10:40 on 2026-08-24)
   "push-alerts":       26,   // daily 10:45 (moved from 06:45 on 2026-08-03)
-  "disease-alerts":    26,   // daily 10:50 (moved from 06:50 on 2026-08-03)
+  "regional-alerts":   26,   // daily 10:50 (moved from 06:30 on 2026-08-03, was firing ~22h ahead of same-day sync data; then from 10:30 to 10:50 on 2026-08-24 — broadest of the three alert crons now runs last)
   "pilot-follow-up":   26,   // Schedule: 30 8 * * *
   // Was scheduled in vercel.json and logging runs (including "error" statuses)
   // since creation, but never registered here — so health-check never looked at

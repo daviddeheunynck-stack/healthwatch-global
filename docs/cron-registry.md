@@ -46,6 +46,18 @@ fichier décrit des intentions, pas des valeurs.
 
 ## Crons quotidiens (30)
 
+La chaîne d'alerte (watchlist → disease → regional, ci-dessous) a le même
+trait que les mailers du lundi : **l'ordre est porteur**. Un même foyer peut
+qualifier à la fois la région, la maladie suivie et la liste de surveillance
+d'un même utilisateur ; `outbreak_alert_daily_lock` accorde le
+(utilisateur, foyer) du jour au premier des trois qui le réclame, donc
+l'ordre d'exécution *est* l'ordre de priorité — le plus spécifique (liste de
+surveillance) d'abord, le plus large (région) en dernier. Les réordonner
+change qui gagne, comme pour les mailers hebdo. Voir
+`claimOutbreakAlertDaily`/`releaseOutbreakAlertDaily` dans
+`lib/cron-monitor.ts`. Ajouté le 2026-08-24 — avant cette date les trois
+crons n'avaient aucune coordination entre eux.
+
 | Chemin | Rôle |
 |---|---|
 | `/api/cron/sync-taiwan-cdc` | Surveillance dengue du CDC taïwanais. |
@@ -72,10 +84,10 @@ fichier décrit des intentions, pas des valeurs.
 | `/api/cron/data-quality` | Contrôle qualité et corrections automatiques. **Écrit `cases`, `deaths` et `active` 30 min avant la chaîne d'alerte** — couplage par effet de bord, pas un verrou. |
 | `/api/cron/expire-trials` | Expire les essais jamais convertis en abonnement Stripe. |
 | `/api/cron/sync-cdc-notices` | Travel Health Notices du CDC (niveaux 1/2/3). |
-| `/api/cron/regional-alerts` | **Chaîne d'alerte 1/4** — alertes régionales. |
-| `/api/cron/watchlist-alerts` | **Chaîne d'alerte 2/4** — listes de surveillance. |
-| `/api/cron/push-alerts` | **Chaîne d'alerte 3/4** — notifications push. Un seul push par foyer, à sa première apparition. |
-| `/api/cron/disease-alerts` | **Chaîne d'alerte 4/4** — alertes par maladie suivie. |
+| `/api/cron/watchlist-alerts` | **Chaîne d'alerte 1/4** — listes de surveillance. Depuis le 2026-08-24, la plus spécifique passe en premier : voir la note ci-dessous. |
+| `/api/cron/disease-alerts` | **Chaîne d'alerte 2/4** — alertes par maladie suivie. |
+| `/api/cron/push-alerts` | **Chaîne d'alerte 3/4** — notifications push. Un seul push par foyer, à sa première apparition. Hors du verrou ci-dessous (canal indépendant, voir son en-tête). |
+| `/api/cron/regional-alerts` | **Chaîne d'alerte 4/4** — alertes régionales. |
 | `/api/cron/winback-sequence` | Email de reconquête, 3 jours après expiration de l'essai. |
 | `/api/cron/sync-usda-aphis` | H5N1 bovin de l'USDA APHIS, agrégé par État. |
 
