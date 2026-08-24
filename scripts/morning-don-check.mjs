@@ -458,28 +458,48 @@ if (staleVsCases.length) {
 // actuel" (le cas documenté de Cameroun/Syrie/Liban/Népal, cf. commentaire du fetcher).
 // Scope volontairement restreint à CHOLERA_ISO3 pour l'instant (le cas confirmé) — étendre
 // à d'autres maps pays de crons (Mpox, Dengue...) seulement si ce scan s'avère utile.
-// Garder CHOLERA_ISO3_COUNTRIES synchronisé avec la vraie const du fetcher si elle change.
-const CHOLERA_ISO3_COUNTRIES = [
-  "Somalia", "Zimbabwe", "Afghanistan", "Mozambique", "Kenya", "Cameroon", "Syria",
-  "Malawi", "Lebanon", "Central African Republic", "Nepal", "Nigeria", "Tanzania", "Zambia",
-];
+//
+// La liste des pays n'est plus recopiée ici (2026-08-24) : elle est LUE dans la route.
+// Elle l'était, avec un commentaire demandant de la tenir synchronisée à la main — et elle
+// a divergé le jour même où la vraie const a bougé. Le commit a5ac23d y a ajouté Angola,
+// Yémen, Pakistan et Burundi (14 → 18 pays) ; la copie en connaissait 14, donc les deux
+// pays SANS aucune ligne en base (Pakistan, Burundi) — précisément ce que cette section
+// existe pour signaler — lui étaient invisibles. Même lecture que scripts/coverage-cholera.mjs.
+const CHOLERA_ROUTE = "app/api/cron/sync-who-regional/route.ts";
+function readCholeraWiredCountries() {
+  const src = readFileSync(CHOLERA_ROUTE, "utf-8");
+  const block = src.match(/const CHOLERA_ISO3: Record<string, string> = \{([\s\S]*?)\n\};/);
+  if (!block) return null;
+  const names = [...block[1].matchAll(/"([^"]+)"\s*:\s*"[A-Z]{3}"/g)].map((m) => m[1]);
+  return names.length ? names : null;
+}
 // Nulls documentés comme attendus (commentaire du fetcher, sync-who-regional/route.ts) —
 // pas de cas actuel dans le flux ArcGIS, pas un bug. Ne pas re-signaler ces 4.
+// ⚠️ Celle-ci reste manuelle, et c'est un jugement, pas un état du code : rien ne la
+// revérifie. Le cas Yémen du 24/08 montre le risque — une absence tenue pour normale
+// pendant que l'OMS publiait 5 196 cas. À rouvrir si un de ces 4 pays réapparaît ailleurs.
 const CHOLERA_EXPECTED_NULLS = ["Cameroon", "Syria", "Lebanon", "Nepal"];
 
-const choleraRows = await fetchJson(
-  `${SUPABASE_URL}/rest/v1/outbreaks?disease_en=eq.Cholera&select=country_en`,
-  { headers: h }
-);
-const choleraCountriesPresent = new Set(choleraRows.map((o) => o.country_en));
 console.log("\n=== Choléra — pays câblés dans CHOLERA_ISO3 mais aucune ligne en base (hors nulls attendus) ===");
-const silentNulls = CHOLERA_ISO3_COUNTRIES.filter(
-  (c) => !choleraCountriesPresent.has(c) && !CHOLERA_EXPECTED_NULLS.includes(c)
-);
-if (silentNulls.length) {
-  silentNulls.forEach((c) => console.log(`[${c}] À VÉRIFIER — câblé dans CHOLERA_ISO3, zéro ligne Choléra en base`));
+const choleraWired = readCholeraWiredCountries();
+if (!choleraWired) {
+  // Échec bruyant, jamais une liste vide silencieuse : sans ça, une const renommée
+  // transformerait ce contrôle en "aucun trou détecté" permanent.
+  console.log(`[4f] CONTRÔLE IMPOSSIBLE — CHOLERA_ISO3 illisible dans ${CHOLERA_ROUTE} (const renommée, déplacée ou reformatée). Aucun pays vérifié : réparer la lecture avant de conclure "aucun trou".`);
 } else {
-  console.log("Aucun (hors nulls attendus : Cameroun, Syrie, Liban, Népal).");
+  const choleraRows = await fetchJson(
+    `${SUPABASE_URL}/rest/v1/outbreaks?disease_en=eq.Cholera&select=country_en`,
+    { headers: h }
+  );
+  const choleraCountriesPresent = new Set(choleraRows.map((o) => o.country_en));
+  const silentNulls = choleraWired.filter(
+    (c) => !choleraCountriesPresent.has(c) && !CHOLERA_EXPECTED_NULLS.includes(c)
+  );
+  if (silentNulls.length) {
+    silentNulls.forEach((c) => console.log(`[${c}] À VÉRIFIER — câblé dans CHOLERA_ISO3, zéro ligne Choléra en base`));
+  } else {
+    console.log(`Aucun sur les ${choleraWired.length} pays câblés (hors nulls attendus : Cameroun, Syrie, Liban, Népal).`);
+  }
 }
 
 // --- 4g. Incidents de rattrapage : lignes ingérées très longtemps après leur date signalée ---
