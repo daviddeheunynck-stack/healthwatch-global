@@ -1833,3 +1833,39 @@ L'entrée du 22/08 affirme « 10 contacts nets, aucun déjà présent dans les v
 **Conclusion : le balayage rétrospectif ne révèle aucun doublon supplémentaire au-delà des 4 déjà identifiés et verrouillés ce matin** (AUB Liban, ISHP Albanie, IEA, HZJZ Croatie). L'incident du 22/08 reste un cas isolé — pas un problème structurel touchant d'autres lots. Les 246 institutions distinctes réellement contactées (250 envois moins les 4 doublons) ne comptent aucune autre erreur de ce type sur les 22 jours de la routine.
 
 **Limite du balayage** : il porte sur les adresses **institutionnelles** de prospection (tableaux du journal + fils Gmail correspondants). Les relances nominatives isolées (Dr Nourlil, Dr ZABRE, Morgan Otita, brainbridge05, jtclketo) et les échanges hors HealthWatch (candidatures, réservations) visibles dans le même historique Gmail ont été écartés du périmètre, conformément au rôle de cette routine.
+
+### ⚠️ 2026-08-24 — 7 bounces sur les envois du matin (annotation ajoutée par le run de prospection du 24/08)
+
+**Contexte d'envoi** : David a envoyé lui-même, le **2026-08-24 entre 05:36:17 et 05:40:33 UTC**, deux lots à la suite — les 10 brouillons de prospection du 23/08 (créés la veille à 06:18–06:19 UTC, soit **~23 h plus tôt**, envoyés dans l'ordre de relecture) et les 7 brouillons vagues 1-3 créés le 23/08 à 05:11–05:16 UTC. **Écart création → envoi de l'ordre de la journée, sur les deux lots entiers : cas « relecture humaine » du tableau de discrimination du 16/08, pas le bug d'envoi instantané du connecteur. Aucun incident, aucune alerte.**
+
+**7 bounces, tous « adresse introuvable », listés nominativement** (pas de retotalisation cumulée — porteur unique `daily-relance-check-healthwatch`, règle du 16/08) :
+
+| # | Contact | Email | Erreur | Lot |
+|---|---|---|---|---|
+| 1 | IRD — Tony Zitti | `tony.zitti@ird.fr` | Undelivered Mail (relais `relay.renater.fr`) | Vagues 1-3, identifié 30/06 |
+| 2 | INSP Mexique — Liliana Trujillo | `liliana.trujillo@insp.mx` | O365 : « liliana.trujillo wasn't found at insp.mx » | Vagues 1-3, identifié 30/06 |
+| 3 | AFD — Agnes Soucat | `agnes.soucat@afd.fr` | 550 5.2.0 mailbox unavailable | Vagues 1-3, identifié 30/06 |
+| 4 | IMC — Anastasiia Borodina | `anastasiia.borodina@internationalmedicalcorps.org` | Adresse introuvable | Vagues 1-3, identifié 30/06 |
+| 5 | ACF — Olivier Cheminat | `olivier.cheminat@actioncontrelafaim.org` | O365 : « olivier.cheminat wasn't found at actioncontrelafaim.org » | Vagues 1-3, identifié 30/06 |
+| 6 | PIH — Tumusime Musafiri | `tumusime.musafiri@pih.org` | Adresse introuvable | Vagues 1-3, identifié 30/06 |
+| 7 | **ADELF** | `adelf.ftb@u-bordeaux.fr` | **550 5.1.1** | **Lot de prospection du 23/08** |
+
+**🔴 Les 6 premiers ont une seule et même cause : ce sont des adresses nominatives de personnes physiques, repérées le 2026-06-30 et envoyées le 2026-08-24 — 8 semaines plus tard, sans revérification.** 6 bounces sur les 7 contacts de ce lot (seul l'IRC, `juvenal.ndayikeza@rescue.org`, est passé) : **taux d'échec de 86 %**. Ce n'est pas un défaut de recherche à l'époque, c'est de la péremption : les personnes changent de poste, les alias nominatifs sont supprimés à leur départ.
+
+➡️ **Règle ajoutée** : une adresse **nominative** identifiée mais non envoyée a une **durée de vie courte**. Au-delà de ~2 semaines de stock, elle doit être **revérifiée sur la page officielle avant envoi**, ou remplacée par une boîte fonctionnelle. C'est le prolongement direct de la règle du 19/08 (« boîte nominative d'un titulaire de poste en l'absence d'adresse fonctionnelle → écarter ») : le 19/08 traitait la fragilité au moment de la recherche, ce cas-ci traite la fragilité **au moment du stockage**. La contre-épreuve est dans le lot du 23/08 : **9 boîtes fonctionnelles génériques sur 10, aucune n'a bouncé.**
+
+➡️ **Ce backlog est désormais épuisé** : les 7 entrées nominatives « identifié 30/06, jamais envoyé » de la section vagues 1-3 sont toutes parties. Il ne reste dans cette section que des boîtes génériques (MSF/Epicentre) et des patterns jamais vérifiés (Harvard, Oxfam, CARE, Samaritan's Purse, World Vision), qui n'ont jamais été retenus comme envoyables.
+
+**🔵 Le 7e bounce est une erreur de sélection d'adresse de ma part, et elle est instructive.** La page officielle de l'ADELF (`host.credim.u-bordeaux.fr/dnn-adelf/`, relue ce jour en HTTP 200) publie **deux** adresses avec le **même local part** :
+- `adelf.ftb@gmail.com`, présentée en tête comme le « **Courriel** » de l'association ;
+- `adelf.ftb@u-bordeaux.fr`, sous « Contact », étiquetée « **Administrative ou éditoriale** ».
+
+J'ai retenu la seconde **parce qu'elle portait une étiquette d'unité**, en application du critère « privilégier une unité opérationnelle nommée ». C'est ce critère qui s'est retourné : pour une **association hébergée par une université**, l'alias au nom du labo hôte meurt quand l'hébergement se termine, tandis que la boîte gratuite que l'association présente comme la sienne survit.
+
+➡️ **Règle ajoutée** : quand une page officielle publie deux adresses **de même local part**, l'une sur le domaine institutionnel avec étiquette d'unité et l'autre en messagerie gratuite présentée comme le courriel de l'organisation, **l'étiquette d'unité ne suffit pas à trancher**. Pour une association hébergée (association savante dans une université, réseau dans un institut), préférer **celle que l'organisation présente comme la sienne**. Le critère « unité nommée » vaut pour départager des unités d'une même institution, pas pour départager deux hébergements de la même boîte.
+
+**✅ Remplacement créé dans le temps du run** (règle du 19/08 : ne pas laisser le compteur du jour surestimé) : brouillon `r-1054137913094160700` vers **`adelf.ftb@gmail.com`**, contenu inchangé — le destinataire n'a jamais reçu le premier message, ce n'est donc pas une relance. **Non envoyé.**
+
+**📊 Correction du compteur du lot du 23/08 : 9 délivrés / 10 préparés** (l'ADELF a bouncé). Avec le remplacement en attente d'envoi, le lot repasse à 10 préparés dont 9 délivrés + 1 en file.
+
+**Totaux corrigés au 2026-08-24** : **prospectés 260** (inchangé, l'ADELF reste une institution prospectée), **envoyés 260** (250 au 23/08 + les 10 du lot du 23/08 partis ce matin). **Profondeur de file : 1 brouillon** (le remplacement ADELF) — les 17 de la veille sont tous partis ce matin.
