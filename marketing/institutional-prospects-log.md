@@ -1869,3 +1869,75 @@ J'ai retenu la seconde **parce qu'elle portait une étiquette d'unité**, en app
 **📊 Correction du compteur du lot du 23/08 : 9 délivrés / 10 préparés** (l'ADELF a bouncé). Avec le remplacement en attente d'envoi, le lot repasse à 10 préparés dont 9 délivrés + 1 en file.
 
 **Totaux corrigés au 2026-08-24** : **prospectés 260** (inchangé, l'ADELF reste une institution prospectée), **envoyés 260** (250 au 23/08 + les 10 du lot du 23/08 partis ce matin). **Profondeur de file : 1 brouillon** (le remplacement ADELF) — les 17 de la veille sont tous partis ce matin.
+
+---
+
+## 🔎 PROSPECTION — 2026-08-24, run automatique `daily-institutional-prospecting-healthwatch`
+
+**10/10 trouvés.** Ce run est le **second du 24/08** : un premier run ce matin a traité les 7 bounces (annotation ci-dessus) et créé le remplacement ADELF, sans produire de contacts neufs. Aucune section « contacts trouvés » n'existait donc pour le 24/08 avant celle-ci.
+
+**Frein de file : 1 brouillon** au démarrage (le remplacement ADELF), très en dessous du seuil de ~20. `list_drafts` appelé **deux fois** (vue complète puis métadonnées) avant conclusion, résultats identiques — consigne du 16/08 sur l'instabilité de l'outil respectée.
+
+Segments : **3 académique / 3 gouvernement-régional / 4 ONG-société savante**. Régions OMS : **AMRO ×3** (États-Unis, Bolivie, Brésil), **EURO ×3** (France, Allemagne, Royaume-Uni), **AFRO ×2** (CEMAC, Ghana), **WPRO ×2** (Hong Kong, Mongolie). **Ni EMRO ni SEARO ce run** — voir la note de méthode en fin de section.
+
+| Institution | Pays/Région | Segment | Contact | Email | Source | Vérifié | Brouillon Gmail |
+|---|---|---|---|---|---|---|---|
+| CUHK — JC School of Public Health and Primary Care | Hong Kong / WPRO | Académique | — (boîte générique de l'école) | `info_sphpc@cuhk.edu.hk` | sphpc.cuhk.edu.hk/contact-us (**`mailto:` lu dans le HTML**) | Oui | oui — `r-7598737071913670778` |
+| Georgetown — Center for Global Health Science and Security / **Health Security Operations Center** | États-Unis / AMRO | Académique | — (boîte de l'unité HSOC) | `HSOC@georgetown.edu` | ghss.georgetown.edu/.../health-security-operations-center | Oui | oui — `r8319798621524062352` |
+| KNUST — School of Public Health | Ghana / AFRO | Académique | — (boîte générique de l'école) | `sph@knust.edu.gh` | sph.knust.edu.gh | Oui | oui — `r-9205697794310124574` |
+| **OCEAC** — Organisation de Coordination pour la lutte contre les Endémies en Afrique Centrale | CEMAC (Yaoundé) / AFRO | Gouvernement/régional | — (boîte institutionnelle) | `contact@oceac.org` | oceac.org/contact | Oui | oui — `r-7742510599682628772` |
+| **NCCD** — National Center for Communicable Diseases | Mongolie / WPRO | Gouvernement | — (boîte institutionnelle) | `info@nccd.gov.mn` | nccd.gov.mn/holboo-barih (**`mailto:` sous le libellé « Мэйл: »**) | Oui | oui — `r6667385306648477474` |
+| **INLASA** — Instituto Nacional de Laboratorios de Salud | Bolivie / AMRO | Gouvernement | — (boîte institutionnelle) | `inlasalapazbolivia@gmail.com` | inlasa.gob.bo (sous « Correo electrónico : ») | Oui | oui — `r3256118430995148838` |
+| **SFSP** — Société Française de Santé Publique | France / EURO | ONG/société savante | — (boîte d'accueil) | `accueil@sfsp.fr` | sfsp.fr/contact | Oui | oui — `r1867340740686975575` |
+| **ABRASCO** — Associação Brasileira de Saúde Coletiva | Brésil / AMRO | ONG/société savante | — (boîte institutionnelle) | `abrasco@abrasco.org.br` | abrasco.org.br/site/contato | Oui | oui — `r-6121003502295283399` |
+| **DGEpi** — Deutsche Gesellschaft für Epidemiologie | Allemagne / EURO | ONG/société savante | — (secrétariat) | `geschaeftsstelle@dgepi.de` | dgepi.de/de/kontakt | Oui | oui — `r-1391588493465835076` |
+| **RSTMH** — Royal Society of Tropical Medicine and Hygiene | Royaume-Uni / EURO | ONG/société savante | — (boîte générale) | `info@rstmh.org` | rstmh.org/about-us/contact-us | Oui | oui — `r-2280601400058266523` |
+
+### 🔍 Anti-doublon — grep par contact, conformément à la consigne du 2026-08-23
+
+Lecture intégrale du journal **plus** un grep du **domaine** et du **nom d'organisation** pour chacun des 10, résultat consigné contact par contact (c'est le grep par domaine qui attrape le cas HZJZ). Contrôle complémentaire : **aucun des 10 n'apparaît dans `linkedin-contacts.md`** (grep groupé, 0 occurrence).
+
+| Contact | grep domaine | grep nom | Verdict |
+|---|---|---|---|
+| CUHK | `cuhk.edu.hk` → **0** | `CUHK\|Chinese University of Hong Kong` → 1 | ✅ neuf — l'unique occurrence est le rejet du 21/08 (« ECONNREFUSED »), jamais contacté |
+| Georgetown | `georgetown.edu` → **0** | `Georgetown` → **0** | ✅ neuf |
+| KNUST | `knust.edu.gh` → **0** | `KNUST\|Kwame Nkrumah` → **0** | ✅ neuf |
+| OCEAC | `oceac.org` → **0** | `OCEAC\|Endémies en Afrique Centrale` → **0** | ✅ neuf |
+| NCCD Mongolie | `nccd.gov.mn` → 1 | `NCCD` → 3 | ✅ neuf — les 4 occurrences sont des **rejets** (04/08, 09/08, 19/08 : « aucune adresse sur le site officiel »), aucun envoi |
+| INLASA | `inlasa.gob.bo` → **0** ; `inlasalapaz` → **0** | `INLASA\|Laboratorios de Salud\|Bolivi` → 6 | ✅ neuf — les 6 occurrences portent sur la Roumanie, PIHOA, le Guatemala, les bureaux PAHO, EMPHNET et le Paraguay ; **la Bolivie n'a jamais été prospectée** |
+| SFSP | `sfsp.fr` → **0** | `SFSP\|Société Française de Santé Publique` → **0** | ✅ neuf |
+| ABRASCO | `abrasco.org.br` → **0** | `ABRASCO\|Saúde Coletiva` → **0** | ✅ neuf |
+| DGEpi | `dgepi.de` → **0** | `DGEpi\|Gesellschaft für Epidemiologie` → **0** | ✅ neuf |
+| RSTMH | `rstmh.org` → **0** | `RSTMH\|Royal Society of Tropical` → **0** | ✅ neuf |
+
+**Le grep par domaine a effectivement servi de filtre :** la **SEE (Sociedad Española de Epidemiología)** a été trouvée puis écartée grâce à lui — son adresse publiée, `see@geyseco.es`, tombe sur un domaine **déjà présent dans le journal** (rejet du 23/08 : domaine d'une agence événementielle prestataire, pas une unité de la société). Sans le grep par domaine, le nom « SEE » seul ne l'aurait pas signalée.
+
+### ✅ Deux cibles débloquées par un vrai signal neuf, pas par un réessai à l'aveugle
+
+La consigne du 12/08 (« cinq cibles écartées deux fois → ne pas réessayer sans nouveau signal ») a été respectée : les deux reprises ci-dessous le sont parce que **l'adresse est désormais publiée**, ce qui est précisément le signal neuf demandé.
+
+- **CUHK JC School of Public Health** — écartée le 21/08 sur **ECONNREFUSED** (incident technique, pas absence d'adresse). Le site répond aujourd'hui en HTTP 200 et publie `info_sphpc@cuhk.edu.hk` dans un `mailto:` de sa page contact.
+- **NCCD Mongolie** — écartée **trois fois** (04/08, 09/08, 19/08) avec le motif « aucune adresse sur le site officiel ». Le site publie désormais `info@nccd.gov.mn` dans un `mailto:` sur `/holboo-barih` (« Contact »), sous le libellé « Мэйл: ». À noter : l'adresse figure **aussi** dans la `<meta name="description">` de la page d'accueil — si je n'avais vu que ça, le critère « issue du seul index » aurait dû faire écarter ; c'est le `mailto:` visible de la page contact qui tranche.
+
+### 📌 Notes de méthode
+
+- **Deux écarts appliqués, pas de brouillon créé.** **EODY Grèce** : `eody.gov.gr` renvoie **403 même avec un User-Agent Chrome** (la parade habituelle, mémoire `reference_govt_sites_need_browser_user_agent`, n'a pas suffi) — l'adresse ne venant que du snippet moteur, critère « issue du seul index de recherche » appliqué, écartée (précédent MSPAS Guatemala 18/08). **NUS Saw Swee Hock SPH** : page en HTTP 200 mais coquille JavaScript de 949 octets, et les adresses vues en recherche sont des boîtes de scolarité — double motif de rejet, déjà écartée le 04/08 pour le second.
+- **Application de la règle ADELF écrite ce matin même, dans l'autre sens.** L'INLASA publie `inlasalapazbolivia@gmail.com` sur son site `.gob.bo`, sous le libellé « Correo electrónico ». Une boîte gratuite sur un site gouvernemental aurait pu inquiéter, mais la règle du 24/08 dit exactement quoi faire : **préférer celle que l'organisation présente comme la sienne**. Ici il n'y a pas de concurrente institutionnelle — c'est la seule publiée. Retenue.
+- **La piste « société savante » (ouverte le 23/08 avec l'ADELF) est la plus productive du run : 4 des 10.** Elle contourne l'épuisement du vivier ONG de terrain signalé depuis le 09/08, parce que ces organisations publient encore des adresses en clair là où les grandes ONG sont passées au formulaire. **Non encore contactée et repérée ce run : PHASA Afrique du Sud** (`secretariat@phasa.org.za`, **adresse vérifiée en HTTP 200, réutilisable sans nouvelle recherche** — écartée seulement parce que l'Afrique du Sud est déjà couverte 4 fois).
+- **Segment ONG « organisation de terrain » : confirmé stérile, 12 tentatives, 0 retenue.** CEPI (`press@` seulement), CHAI (`development@` seulement), Unitaid, Global Fund, Wellcome, ACTED, Première Urgence, Terre des hommes, Sightsavers, Cordaid, ICRC, Americares : aucune adresse d'unité opérationnelle publiée. **À arrêter de prospecter par ce biais** — les sociétés savantes et les réseaux professionnels donnent un bien meilleur rendement à effort égal.
+- **EMRO et SEARO à zéro, et ce n'est pas faute d'avoir cherché.** Écartés faute d'adresse publiée sur page officielle : Ouzbékistan (`ssv.uz`), Kirghizstan (`dgsen.kg` — publie `you@company.com`, gabarit de thème non renseigné), Bahreïn, Émirats, Koweït, Liban, Djibouti, Israël (403), Turquie (`hsgm.saglik.gov.tr` injoignable), Bangladesh, Health Services Academy Pakistan. **EMRO reste le trou structurel du canal** (déjà signalé le 21/08).
+- **Gouvernement : le vivier facilement vérifiable est presque épuisé.** Également écartés : **Trinité-et-Tobago** (seules des boîtes de médecins-chefs **de comté** — choisir un comté serait arbitraire, et aucune division nationale d'épidémiologie n'est publiée), **Barbade** (`ps-secretary@health.gov.bb` — boîte fonctionnelle du secrétaire permanent, donc conforme à la lettre de la règle du 19/08, mais bureau de direction générale sans unité de surveillance publiée), **Belize** (`informationofficer@health.gov.bz`, boîte d'accès à l'information, hors sujet), **NPHIL Liberia** (`info@nphil.gov.lr` vu en recherche, **absent des deux pages officielles relues** — critère « index seul » appliqué), Niger, Tchad, Togo, Namibie, Soudan, Mauritanie, Guyana, Haïti, République dominicaine, Honduras (sites injoignables ou sans adresse), Nigeria NCDC (toujours obfusqué), Santé publique France, WOAH, FAO (formulaires seuls).
+- **TEPHINET de nouveau écartée, même motif qu'au 23/08.** `tephinet@taskforce.org` est bien vérifiée, mais le domaine `taskforce.org` a déjà été contacté (`info@taskforce.org`, 05/08). **L'arbitrage reste à David** — je ne le tranche pas seul.
+- **Anti-gabarit : 10 accroches de formes rhétoriques distinctes.** Aucune ne reprend le schéma « votre réseau réunit des épidémiologistes… personne n'a la vue d'ensemble » de l'ADELF d'hier. Formes employées : présentation directe (CUHK, KNUST, OCEAC), miroir du métier du destinataire (HSOC), constat géographique (NCCD), asymétrie labo/bulletin (INLASA), rôle de carrefour plutôt que d'employeur (SFSP), **aveu d'une limite du produit en ouverture** (ABRASCO — le portugais n'est pas couvert, dit d'entrée), invitation à critiquer la règle de classification (DGEpi), recouvrement thématique (RSTMH). Trois clôtures sur dix laissent explicitement une porte de sortie au destinataire (SFSP, ABRASCO, HSOC).
+
+### ✅ Contrôle de conformité des 10 brouillons
+
+**10 brouillons créés le 2026-08-24 entre 06:26:59 et 06:27:45 UTC, aucun envoyé.** Vérification post-création par `list_drafts` en **vue complète** : les 11 brouillons de la boîte (les 10 du run + le remplacement ADELF de 05:43) sont présents, **tous en `labelIds: ["DRAFT"]`, aucun passé en `SENT`** — contrôle du bug d'envoi instantané du connecteur (incident du 15/08) : **négatif, aucune anomalie**.
+
+- **Objets** : tous **≤ 59 caractères** (mesurés), le plus long étant « Veille épidémique Afrique centrale — HealthWatch Global ».
+- **Aucun lien cliquable** : `body` texte simple uniquement, **aucun `htmlBody` fourni**. Le `htmlBody` régénéré par Gmail ne contient que `<div dir="auto">` et des `<br/>` — **zéro balise `<a>`** sur les dix, vérifié dans la sortie `list_drafts`.
+- **Domaine sans point littéral** : « healthwatch-global dot com » (7 en anglais), « point com » (2 en français), « punto com » (1 en espagnol).
+- **Clôture par une question explicite** avant la signature « David Deheunynck — HealthWatch Global » : les 10.
+- **Langues** : **FR** pour l'OCEAC et la SFSP (organisations manifestement francophones), **ES** pour l'INLASA (précédent du bureau OPS Honduras, 21/08 — l'espagnol est couvert par le produit), **EN** pour les 7 autres, **y compris l'ABRASCO** : le portugais n'est pas une des cinq langues du produit, et le message le dit ouvertement plutôt que de le masquer (précédents Brésil 21/08, Angola 09/08, Mozambique 20/08).
+
+**Totaux au 2026-08-24 (fin de ce run) : 270 contacts prospectés, 260 envoyés.** Les 10 de ce run restent en brouillon. **Profondeur de file : 11 brouillons** (10 du run + remplacement ADELF), sous le seuil de ~20. *Bilan des bounces et nombre effectivement délivré : non retotalisés ici — porteur unique `daily-relance-check-healthwatch`, règle du 16/08.*
