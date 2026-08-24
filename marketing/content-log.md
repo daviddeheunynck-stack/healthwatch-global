@@ -61,6 +61,101 @@ L'angle est **entièrement sourcé OMS/Gavi**. Aucune ligne de `outbreaks` n'a �
 
 ---
 
+## 📅 Session linkedin-hwg-content-proposal — 24/08/2026 (lundi MWF, 8h35) — 🔴 **ABANDON, aucun post publié**
+
+**Premier run sous le régime de publication autonome** (décision de David du 24/08 : la validation préalable est levée, remplacée par contrôle mécanique + relecteur indépendant, deux issues seulement, publié ou abandonné). **Ce run se termine sur le second : ABANDON.**
+
+**Vérification double déclenchement** : aucune entrée `linkedin-hwg-content-proposal` datée du 24/08 dans ce fichier à l'ouverture → premier déclenchement du jour.
+
+**Étape 0 :** aucun brouillon LinkedIn de marque frais en attente. Le dernier post de marque (Choléra/Cameroun, archive CCOUSP) est **PUBLIÉ ✅ le 21/08**. Les 22 et 23/08 sont hors jours MWF (samedi/dimanche). Le seul « Statut : PRÊT » résiduel du fichier date du **20/07** (Rougeole/Amériques, PAHO SitRep #7 arrêté au 11 juillet) : périmé de plus d'un mois, non repris. Rédaction entièrement neuve.
+
+**Registres régénérés en début de run** (aucune requête Supabase manuelle) :
+- `npm run qa:facts` → 227 faits citables sur 109 lignes affichées, 81 lignes `is_seed` exclues, 62 faits marqués périmés. Alerte du script : **13 foyers actifs sans vérification de source depuis plus de 30 jours** sur 3 événements (Shigellose EU/EEA 52 j, Diphtérie 8 pays 39 j, Méningite 4 pays 32 j). À re-sourcer côté base, pas contourné côté message.
+- `npm run qa:claims` → 800 chaînes de copie publique sur 5 locales, 19 formats de prix, couverture citable 109 foyers / 72 pays / 18 maladies, **0 claim manuelle en vigueur**.
+
+### 1️⃣ ANGLE RETENU ET DÉROULÉ DE LA BOUCLE
+
+Angle de départ : les **13 lignes polio africaines** ingérées le 22/08 depuis le GPEI (Nigeria 41, RD Congo 32, Éthiopie 9, Soudan du Sud 9, Tchad 8, Somalie 6, Soudan 4, Centrafrique 4, Madagascar 2, Togo 2, Angola 1, Mali 1, Niger 1, toutes arrêtées au 18/08), matière la plus fraîche du registre et **jamais utilisée en post de marque**.
+
+| Essai | Contrôle mécanique | Relecteur | Suite |
+|---|---|---|---|
+| 1 | **FAIL** — 9 blockers : 8 × `facts.stale` sur le chiffre « 2 » (collision avec des lignes périmées, avancé sans sa date) + `ngram.history` (6 formules déjà servies) | non atteint | corrections ciblées |
+| 2 | **WARN** — seuls 2 warns, portant sur le quantième « 15 » d'une date | **REECRIRE 4, 7** | corrections ciblées |
+| 3 | **WARN** — mêmes 2 warns, aucun nouveau gabarit | **REECRIRE 1, 5, 7** | réécriture depuis zéro |
+| 4 | **PASS** | **REECRIRE 4, 7** | 🔴 **ABANDON** |
+
+**Essai 4 conforme au dispositif** : réécriture depuis zéro sous un autre angle par un rédacteur au contexte neuf, qui n'a reçu ni le brouillon échoué ni les motifs de rejet, seulement les deux registres et les règles de contenu. Angle produit : la mention « data in WHO HQ as of 18 August 2026 » date les enregistrements détenus au siège, pas la survenue des cas, donc la différence entre deux tableaux hebdomadaires successifs mesure un flux d'enregistrements et non un flux de cas.
+
+### 2️⃣ MOTIFS DE L'ABANDON — les deux échecs du 4e essai
+
+**(4) Affirmation produit non couverte par le registre.** La phrase « *every line carries its own date column with its case and death counts* » revendique un compte de décès sur **chaque** ligne. Le registre produit ne documente que l'existence des colonnes (`dashboard.cases`, `dashboard.deaths`, `dashboard.date`), et le registre de faits **contredit le quantificateur sur la maladie même du post** : les 13 lignes polio ne portent qu'un `cases=`, aucune valeur de décès. La copie publique du site prévoit d'ailleurs explicitement le contraire (`pricing.faq5_a` : « *if an agency hasn't reported a figure, we display it as 'not reported' rather than guessing* »).
+
+**(7) Incohérence interne au moment du basculement vers le produit, et c'est le motif le plus sérieux.** Le post disqualifie les dates d'arrêté pour mesurer une tendance, pose « *Not every published table can answer that. Knowing which ones can is part of reading them.* », puis enchaîne immédiatement sur HWG. Deux implicatures s'installent, toutes deux fausses : que HWG répondrait à la question « combien par semaine de survenue », alors que ses lignes sont datées `asOf`, précisément le type de date qui vient d'être disqualifié ; et qu'il y aurait un contraste avec le « single date » du GPEI, alors que **les 13 lignes polio de HWG portent elles aussi une seule et même date d'arrêté, le 18/08**. Le post se serait retourné contre HWG devant n'importe quel lecteur qui aurait ouvert le site.
+
+**Aucun 5e essai tenté**, la règle des quatre essais étant explicite. **Aucune mise en file** : la file de validation n'existe plus depuis le 24/08, un post qui ne converge pas est abandonné, pas reporté.
+
+### 3️⃣ CE QUE LE DISPOSITIF A RÉELLEMENT ATTRAPÉ — relevé du run
+
+Premier run complet du dispositif sur cette routine, donc le relevé compte double.
+
+- **0 brouillon passé au premier essai**, 0 après correction, **1 abandonné après 4 essais**, motifs `hwg.claim` (affirmation produit non couverte) et cohérence interne.
+- **Le contrôle mécanique a attrapé ce qu'aucune relecture par le rédacteur n'aurait vu** : 6 séquences de 5 mots déjà servies dans l'historique (« *and every one of those* », « *sits at the bottom of* », « *are not the same kind* »…), invisibles sans comparaison au corpus complet.
+- **Le relecteur a attrapé cinq défauts de fond que la grille des huit exigences a laissé passer**, chacun sur un brouillon que le rédacteur trouvait bon : une cadence de rafraîchissement inventée (« *refreshed as each bulletin lands* », couverte par aucune ligne du registre produit), une affirmation de renversement de classement que les données ne tranchaient pas, une attribution au document GPEI d'une définition qu'il ne formule pas, un classement « *Mali lands last* » contredit par trois ex aequo à 1 cas, et pour finir l'incohérence du basculement vers le produit. **C'est exactement le mode de défaillance que David décrivait en demandant le dispositif** : le rédacteur relit son propre texte dans le contexte où il vient de l'écrire et le trouve juste.
+- **Un faux positif récurrent à connaître** : le contrôle lit le quantième d'une date en clair (« 15 August 2026 ») comme un chiffre non sourcé. Deux `warn`, jamais bloquants, et les deux relecteurs l'ont identifié comme faux positif sans qu'on le leur signale. Ne pas tordre le texte pour le faire taire.
+- **Une leçon de procédure, sur ma propre conduite** : au 3e essai, le relecteur a mis en échec l'agrégat « *Thirteen countries in Africa* » non parce qu'il était faux, mais parce que **l'extrait de registre que je lui avais fourni était partiel** (16 lignes) et ne permettait pas de prouver l'exhaustivité. Défaut du matériel transmis, pas du brouillon. Extrait refait exhaustif pour l'essai 4 (toutes les lignes polio, répartition de toutes les lignes par maladie, mention explicite que l'absence du fichier vaut absence du site) : le même type d'agrégat est alors passé en `PASS` avec citation. **À reprendre d'emblée pour les prochains runs : le relecteur doit recevoir de quoi vérifier les agrégats, pas seulement les chiffres nominatifs.**
+
+⚠️ **Conséquence anti-gabarit à connaître** : le texte intégral du brouillon abandonné est archivé ci-dessous, donc **toutes ses séquences de 5 mots sont désormais bloquées** pour les prochains runs. Si l'angle est repris un jour, il devra être réécrit, pas recyclé. C'est voulu.
+
+### 4️⃣ TEXTE INTÉGRAL DU BROUILLON ABANDONNÉ (essai 4, contrôle mécanique PASS, relecteur REECRIRE)
+
+> A date attached to an outbreak figure can mean two very different things. When the cases happened. Or when the records arrived.
+>
+> The GPEI Global Polio Update is unusually explicit about which one it means. Its figures carry the label "data in WHO HQ as of 18 August 2026".
+>
+> More than a dozen countries sit under that single date. Among them, alphabetically: Chad 8, DR Congo 32, Ethiopia 9, Niger 1, Nigeria 41, South Sudan 9. Across the full set, the values run from 1 to 41.
+>
+> Read the label literally. It dates the records, not the events. It says what had reached one place by one day. It does not say when any country stopped counting.
+>
+> That distinction is small on the page and large in use.
+>
+> Subtract one week's table from the next and you do not get the cases of that week. You get the records of that week. Some correspond to recent detections. Some correspond to older detections that have only just completed their reporting path. The same cell holds both, and the table does not separate them.
+>
+> So a rising number does not by itself establish that transmission rose, and a flat number does not establish that it stopped. Those are claims about dates of onset, and a snapshot of holdings is not a series of onsets.
+>
+> None of this is a defect in the update, and none of it is a comment on any country. The label states precisely what it dates. The work left to the reader is to keep reading it as what it is, a measure of what is known on a given day rather than a measure of what is happening.
+>
+> When direction of travel is what you actually need, the question to put to a bulletin changes. Not how many, but how many by week of onset, and how incomplete the most recent weeks still are. Not every published table can answer that. Knowing which ones can is part of reading them.
+>
+> On HealthWatch Global, every line carries its own date column with its case and death counts. 104 active outbreaks are tracked there today, and every figure comes from an official public health agency publication. Nothing is estimated. https://healthwatch-global.com
+>
+> Sources: GPEI, Global Polio Update slide deck, data in WHO HQ as of 18 August 2026 (polioeradication.org, Polio this week).
+
+**Ce qui reste bon dans ce brouillon, si l'angle est repris** : tout le corps jusqu'à « *a snapshot of holdings is not a series of onsets* » est passé en `PASS` aux deux étages, y compris l'attribution au libellé GPEI, vérifiée mot pour mot contre le champ `source`. **Ce qui est à jeter** : les deux derniers paragraphes, c'est-à-dire le basculement vers le produit. Le défaut n'est pas une formulation, c'est que **HWG n'a pas la propriété que le post lui prête** : ses lignes polio sont datées par date d'arrêté, exactement comme le bulletin qu'il commente. Un post qui disqualifie les dates d'arrêté ne peut pas se conclure sur un produit qui n'en publie pas d'autres.
+
+```
+QA: ABANDON après 4 essais | mécanique PASS (essai 4) | relecteur REECRIRE 4, 7 | motifs: hwg.claim non couverte (« death counts »), incohérence interne du basculement produit | faits cités: 13 lignes Polio (asOf 2026-08-18) + coverage.activeOutbreaks=104 | registres du 24/08 08h52 | rien publié ce créneau
+```
+
+### 5️⃣ ⭐ ANGLE REMONTÉ À DAVID, NON PUBLIÉ EN AUTONOMIE
+
+Le meilleur angle disponible aujourd'hui n'a **pas** été retenu, et c'est un arbitrage assumé, pas un oubli.
+
+Il s'agit de l'angle **autobiographique signalé par la session `linkedin-hwg-followup-check` du 22/08** : la base HWG affichait « trois foyers de polio dans le monde » alors que la chaîne **lisait déjà la source GPEI** et n'en extrayait que l'Afghanistan et le Pakistan. Ce n'était pas un trou de sourcing mais un trou d'extraction, invisible de l'extérieur, corrigé le 22/08 par la création des 13 lignes africaines. C'est la démonstration en vrai du sujet que HWG raconte en permanence, et la matière est vérifiable ligne par ligne.
+
+**Motif du non-usage, garde-fou de la routine** : un post qui déclare publiquement que les données de HWG étaient incomplètes n'est pas du contenu de veille, c'est une prise de position sur la fiabilité du produit, avec une portée commerciale réelle dans la fenêtre Go/No-Go. Le SKILL réserve explicitement ce type de sujet à David. **Il est remonté tel quel, à son arbitrage.** Deux réserves à trancher avec lui s'il dit oui : (a) l'origine du signal est un DM privé de **Mohamed Ousmane COULIBALY** (OMS), qui ne peut être ni nommé ni rendu identifiable sans son consentement écrit, donc le post devrait tenir sans lui ; (b) il faudra décider si l'aveu se limite au cas polio ou s'il assume la question générale « qu'est-ce qui est encore mal découpé ailleurs ».
+
+### 6️⃣ §8 — AUCUNE DONNÉE ÉPIDÉMIOLOGIQUE NOUVELLE, MAIS UN SIGNAL DE FRAÎCHEUR
+
+Aucune donnée neuve rencontrée (run sans navigation, entièrement mené sur les registres). En revanche `qa:facts` signale de lui-même **13 foyers actifs non re-sourcés depuis plus de 30 jours**, sur 3 événements : **Shigellose EU/EEA (52 j)**, **Diphtérie, 8 pays dont Mauritanie, Haïti, Afrique du Sud (39 j)**, **Méningite, 4 pays dont Burkina Faso, Soudan du Sud, Nigeria (32 j)**. Signalé pour ingestion à `morning-don-check` ou à une session interactive, **aucune écriture tentée depuis cette routine**.
+
+### 7️⃣ ARBRE DE TRAVAIL — fichiers modifiés non touchés par cette routine
+
+Conformément à `AGENTS.md`, cette routine ne stage que `marketing/content-log.md`. Laissés tels quels et signalés : `.gitignore`, `app/api/webhook/route.ts`, `package.json` (modifiés), et non suivis `docs/outreach-qa.md`, `docs/outreach-qa-skill-insert.md`, `marketing/prospection-2026-08-23.pdf`, `marketing/qa/`, `scripts/build-claimable-facts.mjs`, `scripts/build-product-claims.mjs`, `scripts/check-outreach-message.mjs`, `scripts/coverage-cholera.mjs`, `scripts/diagnose-stripe-path.mjs`. Les fichiers `marketing/qa/*.json` ont été **régénérés par ce run** mais appartiennent au dispositif QA, pas à cette routine, et restent non commités.
+
+**🖥️ Navigateur** : jamais ouvert, et **ce n'est pas la cause de l'abandon**. `_shared/browser-status.md` porte deux entrées du 24/08 : 🔴 EN PANNE à ~09h00 (pont extension tombé, relevé par `linkedin-hwg-monitoring`), puis 🟢 RÉTABLI à ~09h15 après réactivation de l'extension par David. Le navigateur était donc disponible au moment où ce run aurait publié. **L'abandon est entièrement dû au verdict du relecteur**, pas à un blocage technique. Aucune sélection de deviceId, aucun redémarrage de Chrome en fin de session.
+
+---
+
 ## 📅 Session linkedin-hwg-followup-check-2 — 23/08/2026 (17h, 2e des 2 créneaux après-midi)
 
 **Vérification double déclenchement** : aucune entrée `linkedin-hwg-followup-check-2` datée du 23/08 dans ce fichier ni dans `linkedin-contacts.md` à l'ouverture → **premier déclenchement de cette routine aujourd'hui**. Les entrées du jour (9h, reprise interactive, 13h) sont des runs distincts.
