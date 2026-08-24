@@ -2,6 +2,47 @@
 
 Archive de tout le contenu créé. Mise à jour à chaque session.
 
+## 📅 Reprise interactive — 24/08/2026 (~13h45) — 🔴 **2e ABANDON du jour, David présent, retente reporté à mercredi**
+
+Hors créneau MWF (le run planifié de 8h35 a déjà eu lieu et abandonné, voir entrée ci-dessus). David a demandé en session de rédiger l'angle « date de validation à côté du chiffre » repéré par `linkedin-hwg-followup-check` de 13h (Kamwa, veille §📌 point 1). Dispositif appliqué à l'identique de la routine planifiée.
+
+### Angle et paire de faits
+
+Pas de reprise de la parole de Kamwa, AYONGA ni AL Azebi : leurs échanges restent des sources internes de veille, pas du contenu attribuable sans consentement écrit. Angle généralisé et regroundé sur des faits du registre : deux lignes ECDC de forme identique (pays, maladie, chiffre, date) mais issues de deux types de documents différents — un bulletin hebdomadaire (**Espagne, West Nile, 63 cas, `asOf=2026-08-21`, `wnv-weekly.ecdc.europa.eu`**) et une mise à jour ponctuelle (**EU/EEA, Shigellose multirésistante, 2300 cas, `asOf=2026-05-20`, `stale=true` 53 j, ECDC**). Même agence dans les deux cas, pour isoler la variable au type de document plutôt qu'au pays ou à l'agence.
+
+**Registres régénérés en cours de session** (13h19) avant rédaction : `npm run qa:facts` et `npm run qa:claims`, aucune écriture en base entre-temps donc pas de nouveau chiffre.
+
+⚠️ **Vigilance appliquée dès le choix des faits** : la première paire envisagée (Diphtérie/Tchad, 5227 cas/54 décès, WHO Rapid Risk Assessment) a été écartée avant rédaction complète — **elle avait déjà servi de matière à un post publié le 24/07** (comparaison de létalité Tchad/Guinée). La reprendre aurait été une redondance de fond, détectée d'abord par une relecture du fichier puis confirmée mécaniquement par l'anti-gabarit (séquences « rapid risk assessment diphtheria african region » déjà dans l'historique).
+
+### Déroulé
+
+| Essai | Contrôle mécanique | Suite |
+|---|---|---|
+| 1 (Diphtérie/Tchad puis pivot vers ECDC/ECDC) | **FAIL** — `facts.unsourced` sur le quantième « 2026 » d'une date en toutes lettres adjacente à « cases » (faux positif déjà connu, cette fois porté à `blocker` car le mot « cases » était cette fois dans la fenêtre de 40 caractères) + `ngram.history` sur la matière Diphtérie/Tchad | corrections ciblées |
+| 2 | **REWRITE_FROM_SCRATCH** (verdict émis par le script lui-même) — même identifiant `ngram.history` recondit un 2e essai consécutif, escalade automatique prévue par le dispositif | correction ciblée tentée quand même sur la phrase unique en collision |
+| 3 | **REWRITE_FROM_SCRATCH** à nouveau — nouvelle collision sur une tournure anglaise banale (« is no way to tell »), 3e essai consécutif sur le même identifiant | passage à la réécriture depuis zéro |
+| 4 (réécriture depuis zéro, rédacteur au contexte neuf, dates au format ISO pour éviter le faux positif, consignes anti-gabarit renforcées) | **PASS** (vérifié deux fois, par l'agent puis indépendamment) | relecteur indépendant |
+
+**Relecteur indépendant, essai 4 : REECRIRE, 6 `FAIL` sur 12** — et cette fois sur le fond, pas la forme :
+- **#5 Attribution** : le post affirmait qu'une édition suivante du bulletin West Nile est « already on the calendar » et que la mise à jour Shigellose n'a « no successor scheduled ». **Rien dans le registre ne documente un calendrier de publication** ; c'était déduit du seul intitulé du document, présenté comme un fait constaté.
+- **#6/#7 Logique** : élimine pays et agence par construction (même ECDC des deux côtés) puis conclut que le type de document est *la* cause de l'écart de fraîcheur, sans exclure d'autres facteurs (ressources, dynamique propre de la maladie). Conclusion présentée comme certaine sur la base de deux exemples choisis.
+- **#11/#12 Gabarit et apport** : structure jugée directement réutilisable pour n'importe quelle autre paire bulletin récurrent/rapport ponctuel en changeant seulement maladie et pays ; l'idée centrale jugée être une évidence structurelle plutôt qu'un angle neuf.
+- **#8/#9**, plus mineurs : « one off » sans trait d'union ; une formulation (« has its own sequel built in […] does not ») qui hiérarchise implicitement les deux types de document en sérieux/fiabilité, frôlant le jugement de valeur que la question 9 interdit.
+
+### Décision
+
+**David, présent en session, a tranché : abandon, nouvelle tentative reportée au prochain créneau MWF (mercredi 26/08).** Pas de 5e essai forcé, conforme à l'esprit du dispositif (« un message réécrit indéfiniment finit par passer par usure »). Contrairement au run du matin, la décision n'est pas venue du dispositif seul mais d'un arbitrage explicite de David une fois la limite des 4 essais atteinte et les motifs de rejet exposés.
+
+**Aucune publication, aucune mise en file.** Texte du 4e essai non archivé verbatim ici (contrairement à l'entrée du matin) : les motifs de rejet portent sur le fond de l'angle (calendrier de publication non démontrable depuis le registre, structure jugée générique), pas sur une formulation à corriger, donc rien à préserver pour une reprise mercredi. **Si l'angle « validation date / type de document » est repris mercredi, il devra être reposé sur une base différente** : soit en renonçant à toute affirmation sur le calendrier éditorial d'un document (le registre ne le documente pas et ne le documentera probablement jamais), soit en trouvant une paire de faits où la différence structurelle est démontrable autrement que par déduction du titre du document.
+
+**Leçon de dispositif, pour mémoire** : deuxième confirmation dans la même journée que l'anti-gabarit à 5 mots produit des faux positifs sur des tournures anglaises courantes une fois l'historique assez large (« nothing in the number itself », « nothing on the page marks », « is no way to tell » — trois formulations différentes, trois collisions, sur un sujet qui n'avait pourtant jamais été traité). Le contournement qui a fonctionné : ancrer les phrases sur les faits concrets (noms de documents, dates, chiffres) plutôt que sur des généralisations abstraites reformulables à l'infini — consigne à intégrer d'emblée dans les prochaines rédactions, matin comme session interactive.
+
+```
+QA: ABANDON après 4 essais | mécanique PASS (essai 4) | relecteur REECRIRE 5, 6, 7, 8, 9, 11, 12 | motifs principaux: calendrier de publication non démontrable, argument causal non exclusif, structure jugée générique | faits cités: West Nile/Espagne cases=63 asOf 2026-08-21, Shigellosis/EU-EEA cases=2300 asOf 2026-05-20 (stale) | décision d'arrêt : David en session, retente reportée au 26/08
+```
+
+---
+
 ## 📅 Session linkedin-hwg-followup-check — 24/08/2026 (13h, 1er des 2 créneaux après-midi)
 
 **Vérification double déclenchement** : aucune entrée `linkedin-hwg-followup-check` datée du 24/08 dans ce fichier ni dans `linkedin-contacts.md` à l'ouverture → **premier déclenchement de cette routine aujourd'hui**. Les entrées du 24/08 déjà présentes sont celles de `x-hwg-content-proposal` et de `linkedin-hwg-content-proposal`, qui sont des routines distinctes.
