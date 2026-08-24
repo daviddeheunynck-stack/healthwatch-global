@@ -54,6 +54,7 @@ import { normalizeDisease } from "@/lib/disease-data";
 import { findCountry } from "@/lib/geo-data";
 import { assessRisk } from "@/lib/outbreak-parser";
 import { dateFloorGuard, collapseGuard, zeroCaseGuard, zeroDeathGuard, isYearRollover, lockedRowRegressionGuard } from "@/lib/outbreak-guards";
+import { stampSourceConfirmed } from "@/lib/source-confirmed";
 
 export const dynamic     = "force-dynamic";
 export const maxDuration = 30;
@@ -184,8 +185,13 @@ async function runSyncTaiwanCdc(supabase: SupabaseClient) {
 
   if (existingRow) {
     if (ex.date === existingRow.date && ex.cases === existingRow.cases && ex.deaths === (existingRow.deaths ?? -1)) {
+      // The page was fetched and parsed and carries nothing newer than the
+      // row's `date` — a verification, not merely "nothing to write". Single-
+      // item cron, so the stamp goes inline rather than batched after a loop.
+      const confirmed = await stampSourceConfirmed(supabase, [existingRow.id]);
+      if (confirmed.error) console.error("[sync-taiwan-cdc] source_confirmed_at stamp failed:", confirmed.error);
       await logCronRun(supabase, "sync-taiwan-cdc", "ok", 0);
-      return NextResponse.json({ ok: true, status: "unchanged", ...ex });
+      return NextResponse.json({ ok: true, status: "unchanged — source confirmed", ...ex });
     }
     if (ex.date < existingRow.date) {
       await logCronRun(supabase, "sync-taiwan-cdc", "ok", 0);

@@ -23,6 +23,7 @@ import { errorMessage } from "@/lib/error";
 import { scrapeAphisTableauCsv, parseCrosstabCsv, aggregateCrosstabByState } from "@/lib/aphis-tableau-scraper";
 import { truncateAtSentence } from "@/lib/truncate-text";
 import { dateFloorGuard, spikeGuard, collapseGuard, zeroCaseGuard, lockedRowRegressionGuard } from "@/lib/outbreak-guards";
+import { stampSourceConfirmed } from "@/lib/source-confirmed";
 
 export const dynamic     = "force-dynamic";
 // Tableau fallback launches a real headless browser (cold Lambda start +
@@ -465,6 +466,9 @@ async function runUsdaAphis(_req: NextRequest, supabase: SupabaseClient) {
   // "guard:locked-row-…" prefix) — see the push site below for why these,
   // and only these, need to reach the health-check.
   const lockedGuardBlocked: string[] = [];
+  // Rows this run re-read from the source and found unchanged — stamped as
+  // verified in one batched write after the loop (see lib/source-confirmed.ts).
+  const sourceConfirmed: string[] = [];
 
   for (const sd of byState) {
     const coords    = US_STATES[sd.state]!;
@@ -482,7 +486,12 @@ async function runUsdaAphis(_req: NextRequest, supabase: SupabaseClient) {
 
     if (existing) {
       if (sd.herds === existing.cases && safeDate <= existing.date) {
-        log.push({ state: sd.state, status: "skip", detail: "unchanged" });
+        // Source fetched and an entry for this row parsed, carrying nothing
+        // newer than the row's `date` — that is a verification, not merely
+        // "nothing to write". Recorded so the row stops ageing towards the
+        // "no update" badge while its source confirms it every run.
+        sourceConfirmed.push(existing.id);
+        log.push({ state: sd.state, status: "skip", detail: "unchanged — source confirmed" });
         results.skipped++;
         continue;
       }
@@ -654,7 +663,13 @@ async function runUsdaAphis(_req: NextRequest, supabase: SupabaseClient) {
     }
   }
 
-  console.log("[usda-aphis] Done:", results, log);
+  // One batched verification stamp for every row the source confirmed
+  // unchanged. Never fatal: a failed stamp costs freshness metadata, not
+  // data, so it is logged and the run still reports on its actual writes.
+  const confirmed = await stampSourceConfirmed(supabase, sourceConfirmed);
+  if (confirmed.error) console.error("[usda-aphis] source_confirmed_at stamp failed:", confirmed.error);
+
+  console.log("[usda-aphis] Done:", results, log, `confirmed=${confirmed.stamped}`);
   // A locked-row refusal must not pass as a clean run: nothing else will
   // ever retry this row, so a silently-blocked write freezes it on stale
   // figures with nothing to show for it. Surface it as an erroring cron (so

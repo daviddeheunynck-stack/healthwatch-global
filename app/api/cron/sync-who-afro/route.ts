@@ -25,6 +25,7 @@ import { extractNumbers, assessRisk } from "@/lib/outbreak-parser";
 import { errorMessage } from "@/lib/error";
 import { truncateAtSentence } from "@/lib/truncate-text";
 import { dateFloorGuard, spikeGuard, collapseGuard, zeroCaseGuard, zeroDeathGuard, lockedRowRegressionGuard } from "@/lib/outbreak-guards";
+import { stampSourceConfirmed } from "@/lib/source-confirmed";
 
 export const dynamic     = "force-dynamic";
 export const maxDuration = 120;
@@ -384,6 +385,9 @@ async function runSyncWhoAfro(_req: NextRequest, supabase: SupabaseClient) {
   // "guard:locked-row-…" prefix) — see the push site below for why these,
   // and only these, need to reach the health-check.
   const lockedGuardBlocked: string[] = [];
+  // Rows this run re-read from the source and found unchanged — stamped as
+  // verified in one batched write after the loop (see lib/source-confirmed.ts).
+  const sourceConfirmed: string[] = [];
   const loopStart = Date.now();
 
   for (const entry of pageEntries) {
@@ -474,7 +478,13 @@ async function runSyncWhoAfro(_req: NextRequest, supabase: SupabaseClient) {
 
     if (existingRow) {
       if (date <= existingRow.date && cases === existingRow.cases) {
-        log.push({ label, status: "skip", detail: "unchanged" });
+        // Not just "nothing to write": the AFRO bulletin was fetched, an entry
+        // for this row was parsed, and it carries nothing newer than the row's
+        // `date`. That is a verification — record it instead of discarding it,
+        // or the row keeps ageing towards the "⚠ NO UPDATE · Xd" badge while
+        // the source actively confirms it every run.
+        sourceConfirmed.push(existingRow.id);
+        log.push({ label, status: "skip", detail: "unchanged — source confirmed" });
         results.skipped++;
         continue;
       }
@@ -562,7 +572,13 @@ async function runSyncWhoAfro(_req: NextRequest, supabase: SupabaseClient) {
     await new Promise((r) => setTimeout(r, 400));
   }
 
-  console.log("[who-afro] Done:", results, log);
+  // One batched verification stamp for every row the bulletin confirmed
+  // unchanged. Never fatal: a failed stamp costs freshness metadata, not data,
+  // so it is logged and the run still reports on its actual writes.
+  const confirmed = await stampSourceConfirmed(supabase, sourceConfirmed);
+  if (confirmed.error) console.error("[who-afro] source_confirmed_at stamp failed:", confirmed.error);
+
+  console.log("[who-afro] Done:", results, log, `confirmed=${confirmed.stamped}`);
   // A locked-row refusal must not pass as a clean run: nothing else will
   // ever retry this row, so a silently-blocked write freezes it on stale
   // figures with nothing to show for it. Surface it as an erroring cron (so

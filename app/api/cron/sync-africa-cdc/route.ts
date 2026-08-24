@@ -25,6 +25,7 @@ import { extractAdmin1, geocodeAdmin1 } from "@/lib/geo-extract";
 import { errorMessage } from "@/lib/error";
 import { truncateAtSentence } from "@/lib/truncate-text";
 import { dateFloorGuard, spikeGuard, collapseGuard, zeroCaseGuard, zeroDeathGuard, lockedRowRegressionGuard } from "@/lib/outbreak-guards";
+import { stampSourceConfirmed } from "@/lib/source-confirmed";
 
 export const dynamic     = "force-dynamic";
 export const maxDuration = 60;
@@ -407,6 +408,9 @@ async function runAfricaCdc(_req: NextRequest, supabase: SupabaseClient) {
   // "guard:locked-row-…" prefix) — see the push site below for why these,
   // and only these, need to reach the health-check.
   const lockedGuardBlocked: string[] = [];
+  // Rows this run re-read from the source and found unchanged — stamped as
+  // verified in one batched write after the loop (see lib/source-confirmed.ts).
+  const sourceConfirmed: string[] = [];
 
   for (const item of items) {
     let extracted: PostData[] = [];
@@ -468,7 +472,12 @@ async function runAfricaCdc(_req: NextRequest, supabase: SupabaseClient) {
         const deathsDiff = item.deaths !== existRow.deaths;
 
         if (!isNewer && !casesDiff && !deathsDiff) {
-          log.push({ label, status: "skip", detail: "data unchanged" });
+          // Source fetched and an entry for this row parsed, carrying nothing
+          // newer than the row's `date` — that is a verification, not merely
+          // "nothing to write". Recorded so the row stops ageing towards the
+          // "no update" badge while its source confirms it every run.
+          sourceConfirmed.push(existRow.id);
+          log.push({ label, status: "skip", detail: "data unchanged — source confirmed" });
           results.skipped++;
           continue;
         }
@@ -580,7 +589,13 @@ async function runAfricaCdc(_req: NextRequest, supabase: SupabaseClient) {
     }
   }
 
-  console.log("[africa-cdc] Done:", results, log);
+  // One batched verification stamp for every row the source confirmed
+  // unchanged. Never fatal: a failed stamp costs freshness metadata, not
+  // data, so it is logged and the run still reports on its actual writes.
+  const confirmed = await stampSourceConfirmed(supabase, sourceConfirmed);
+  if (confirmed.error) console.error("[africa-cdc] source_confirmed_at stamp failed:", confirmed.error);
+
+  console.log("[africa-cdc] Done:", results, log, `confirmed=${confirmed.stamped}`);
   // A locked-row refusal must not pass as a clean run: nothing else will
   // ever retry this row, so a silently-blocked write freezes it on stale
   // figures with nothing to show for it. Surface it as an erroring cron (so

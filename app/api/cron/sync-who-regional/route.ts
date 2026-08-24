@@ -39,6 +39,7 @@ import { errorMessage } from "@/lib/error";
 import * as Sentry from "@sentry/nextjs";
 import { truncateAtSentence } from "@/lib/truncate-text";
 import { dateFloorGuard, spikeGuard, collapseGuard, zeroCaseGuard, zeroDeathGuard, lockedRowRegressionGuard } from "@/lib/outbreak-guards";
+import { stampSourceConfirmed } from "@/lib/source-confirmed";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 300; // ~100 targets × ~2s each; Vercel Pro allows 300s for crons
@@ -1263,6 +1264,9 @@ async function runSyncWhoRegional(_req: NextRequest, supabase: SupabaseClient) {
   // branch and the reactivate branch) for why these, and only these, need to
   // reach the health-check. Both call sites feed this one array.
   const lockedGuardBlocked: string[] = [];
+  // Rows this run re-read from the source and found unchanged — stamped as
+  // verified in one batched write after the loop (see lib/source-confirmed.ts).
+  const sourceConfirmed: string[] = [];
 
   // Process each target
   for (const target of TARGETS) {
@@ -1338,7 +1342,12 @@ async function runSyncWhoRegional(_req: NextRequest, supabase: SupabaseClient) {
       const deathsDiff = found.deaths !== existingRow.deaths;
 
       if (!isNewer && !casesDiff && !deathsDiff) {
-        log.push({ label: `${target.disease_en}/${target.country_en}`, status: "skip", detail: "data unchanged" });
+        // Source fetched and an entry for this row parsed, carrying nothing
+        // newer than the row's `date` — that is a verification, not merely
+        // "nothing to write". Recorded so the row stops ageing towards the
+        // "no update" badge while its source confirms it every run.
+        sourceConfirmed.push(existingRow.id);
+        log.push({ label: `${target.disease_en}/${target.country_en}`, status: "skip", detail: "data unchanged — source confirmed" });
         results.skipped++;
         continue;
       }
@@ -1547,7 +1556,13 @@ async function runSyncWhoRegional(_req: NextRequest, supabase: SupabaseClient) {
     }
   }
 
-  console.log("[regional] Done:", results, log);
+  // One batched verification stamp for every row the source confirmed
+  // unchanged. Never fatal: a failed stamp costs freshness metadata, not
+  // data, so it is logged and the run still reports on its actual writes.
+  const confirmed = await stampSourceConfirmed(supabase, sourceConfirmed);
+  if (confirmed.error) console.error("[regional] source_confirmed_at stamp failed:", confirmed.error);
+
+  console.log("[regional] Done:", results, log, `confirmed=${confirmed.stamped}`);
   // A locked-row refusal must not pass as a clean run: nothing else will
   // ever retry this row, so a silently-blocked write freezes it on stale
   // figures with nothing to show for it. Surface it as an erroring cron (so

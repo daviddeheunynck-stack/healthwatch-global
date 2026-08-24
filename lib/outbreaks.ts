@@ -669,12 +669,19 @@ export function staleOutbreakDays(outbreak: Outbreak): number | null {
   return days >= STALE_DAYS ? days : null;
 }
 
-// True when `source_confirmed_at` covers the row's CURRENT `date` — i.e. a
-// human opened the primary source and confirmed no newer edition exists, as
-// of a check made on or after this row's own bulletin date. Self-invalidating
-// on purpose: if a later cron advances `date` with a real new bulletin, this
+// True when `source_confirmed_at` covers the row's CURRENT `date` — i.e. the
+// primary source was opened and confirmed to carry no newer edition, as of a
+// check made on or after this row's own bulletin date. Self-invalidating on
+// purpose: if a later cron advances `date` with a real new bulletin, this
 // stops being true automatically (see migration 20260822120000) without any
 // cron needing to clear the column itself.
+//
+// "Opened" meant a human until 2026-08-24: the column was written only by
+// that migration's backfill. The sync crons now stamp it themselves on every
+// `skip: "unchanged"` (source fetched, an entry for this row parsed, nothing
+// newer than `date`) via lib/source-confirmed.ts — the same statement, made
+// far more often. Migration 20260824030000 keeps that stamp from bumping
+// `updated_at`, so a confirmation still cannot pass itself off as a refresh.
 //
 // Distinguishes "reconfirmed — the source genuinely stopped publishing" from
 // an ordinary reporting gap on the same staleOutbreakDays >= STALE_DAYS

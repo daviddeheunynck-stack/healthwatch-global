@@ -72,6 +72,7 @@ import {
   dateFloorGuard, spikeGuard, collapseGuard, zeroCaseGuard, zeroDeathGuard, lockedRowRegressionGuard,
   type GuardedIncoming, type GuardedLockedRow,
 } from "@/lib/outbreak-guards";
+import { stampSourceConfirmed } from "@/lib/source-confirmed";
 
 export const dynamic     = "force-dynamic";
 export const maxDuration = 60;
@@ -286,6 +287,9 @@ async function runWproDengueUpdate(supabase: SupabaseClient) {
   // "guard:locked-row-…" prefix) — see the push site below for why these,
   // and only these, need to reach the health-check.
   const lockedGuardBlocked: string[] = [];
+  // Rows this edition re-stated unchanged — stamped as verified in one
+  // batched write after the loop (see lib/source-confirmed.ts).
+  const sourceConfirmed: string[] = [];
 
   for (const target of TARGETS) {
     const label = `${target.disease_en}/${target.country_en}`;
@@ -373,7 +377,11 @@ async function runWproDengueUpdate(supabase: SupabaseClient) {
     }
 
     if (existingRow.cases === parsed.cases && existingRow.deaths === parsed.deaths && existingRow.date === isoDate) {
-      log.push({ label, status: "skip", detail: "data unchanged" });
+      // The Situation Update was fetched and this country's row parsed out of
+      // it, restating the same figures for the same date — a verification, not
+      // merely "nothing to write".
+      sourceConfirmed.push(existingRow.id);
+      log.push({ label, status: "skip", detail: "data unchanged — source confirmed" });
       skipped++;
       continue;
     }
@@ -420,7 +428,13 @@ async function runWproDengueUpdate(supabase: SupabaseClient) {
     }
   }
 
-  console.log(`[sync-wpro-dengue-update] edition #${edition}: ${updated} updated, ${skipped} skipped, ${errors} errors`);
+  // One batched verification stamp for every row this edition confirmed
+  // unchanged. Never fatal: a failed stamp costs freshness metadata, not
+  // data, so it is logged and the run still reports on its actual writes.
+  const confirmed = await stampSourceConfirmed(supabase, sourceConfirmed);
+  if (confirmed.error) console.error("[sync-wpro-dengue-update] source_confirmed_at stamp failed:", confirmed.error);
+
+  console.log(`[sync-wpro-dengue-update] edition #${edition}: ${updated} updated, ${skipped} skipped, ${errors} errors, ${confirmed.stamped} confirmed`);
   for (const l of log) console.log(`[sync-wpro-dengue-update]   ${l.label}: ${l.status} — ${l.detail}`);
 
   if (errors > 0 && isRealProduction) {
