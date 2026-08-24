@@ -101,7 +101,9 @@ export default function AdminQCFixButton() {
       }));
     } else {
       setStatuses((s) => ({ ...s, [idx]: "error" }));
-      setMessages((m) => ({ ...m, [idx]: data.error ?? `HTTP ${res.status}` }));
+      // `message` d’abord : les refus structurés (description_would_contradict…)
+      // mettent l’explication lisible là, et `error` n’est que le code.
+      setMessages((m) => ({ ...m, [idx]: data.message ?? data.error ?? `HTTP ${res.status}` }));
     }
   }
 

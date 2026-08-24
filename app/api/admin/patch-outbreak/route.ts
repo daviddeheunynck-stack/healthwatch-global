@@ -47,6 +47,9 @@ export async function POST(req: NextRequest) {
     // inferred: a caller has to state that it knows the write is a regression
     // and means it anyway.
     force?: boolean;
+    // Escape hatch for the description-coherence check below. Separate from
+    // `force`, which asserts something different — see that block.
+    keep_description?: boolean;
   };
   try {
     body = await req.json();
@@ -79,7 +82,7 @@ export async function POST(req: NextRequest) {
   // between "patch an outbreak" and "patch AN outbreak".
   const { data: rows, error: fetchErr } = await supabase
     .from("outbreaks")
-    .select("id, disease_en, country_en, cases, deaths, date, active, source_priority")
+    .select("id, disease_en, country_en, cases, deaths, date, active, source_priority, description")
     .or(`disease_en.ilike.%${safeDisease}%,disease.ilike.%${safeDisease}%`)
     .or(`country_en.ilike.%${safeCountry}%,country.ilike.%${safeCountry}%`)
     .order("active", { ascending: false })
@@ -194,12 +197,59 @@ export async function POST(req: NextRequest) {
     }
   }
 
+  // ── Description / figures coherence ───────────────────────────────────────
+  // Item 15 of the daily security audit ("description figée après update des
+  // chiffres"), on the one write path a human triggers by hand. Every
+  // description this project writes restates the figures and the date in
+  // prose, in all five locales — see buildMainDescriptions in
+  // sync-drc-sitrep/route.ts: "5,021 confirmed cases and 2,378 deaths […] as
+  // of 2026-08-17". Patch `cases` without patching `description` and the row
+  // renders its new number in the counter and its old one in the paragraph
+  // directly underneath, on the public outbreak page and in every alert email
+  // built from it.
+  //
+  // Every cron writes the two together in one payload. This endpoint only
+  // ASKED callers to, in a comment ("pass `description` explicitly alongside
+  // cases/deaths"), which is the same convention-not-enforcement that let the
+  // 22/08 Ebola/DR Congo write through — the guard chain above exists because
+  // a convention on this endpoint had already failed once.
+  //
+  // Same shape as that guard chain, deliberately: refuse by default, name the
+  // reason, offer an explicit override. `keep_description` is separate from
+  // `force` on purpose — `force` asserts "this regression is intentional",
+  // which says nothing about whether the prose still matches. Conflating them
+  // would let one override silently carry the other.
+  const figuresChanged =
+    (body.cases  !== undefined && body.cases  !== row.cases) ||
+    (body.deaths !== undefined && body.deaths !== row.deaths) ||
+    (body.date   !== undefined && body.date   !== row.date);
+
+  if (figuresChanged && body.description === undefined && !body.keep_description) {
+    return NextResponse.json(
+      {
+        error: "description_would_contradict",
+        message:
+          "Les chiffres changent mais la description reste celle des anciens chiffres — elle les cite en toutes lettres dans les 5 langues. Fournir `description` (recalculée sur les nouveaux chiffres), ou `keep_description: true` si la description ne mentionne réellement aucun chiffre.",
+        id: row.id,
+        current: { cases: row.cases, deaths: row.deaths, date: row.date },
+        attempted: {
+          cases:  body.cases  ?? row.cases,
+          deaths: body.deaths ?? row.deaths,
+          date:   body.date   ?? row.date,
+        },
+        current_description: row.description,
+      },
+      { status: 409 },
+    );
+  }
+
   // Editing the English description invalidates existing FR/ES/AR/ID
   // translations — null them so sync-outbreaks' backfill sweep re-translates
   // from the new text (same pattern as admin/outbreaks/[id]). This endpoint
   // previously had no way to touch description at all, so a cases/deaths
-  // correction here always left the old description text stale — pass
-  // `description` explicitly alongside cases/deaths when it needs updating too.
+  // correction here always left the old description text stale. Passing
+  // `description` alongside the figures is no longer merely advised: the
+  // coherence check above refuses the write without it.
   if ("description" in patch) {
     patch.description_fr = null;
     patch.description_es = null;
