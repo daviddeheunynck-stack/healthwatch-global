@@ -2,6 +2,65 @@
 
 Archive de tout le contenu créé. Mise à jour à chaque session.
 
+## 📅 Thread hebdo — lundi 24 août 2026 — 🟠 RÉDIGÉ ET DOUBLE-CHECKÉ, **NON PUBLIÉ** (pont navigateur en panne, voir `_shared/browser-status.md` du 24/08) — Ebola/RDC, l'allocation de 70 000 doses d'Ervebo se lit en deux parts : 20 000 qui produiront la réponse, 50 000 qui partent avant elle
+
+**Statut : brouillon prêt à publier tel quel.** À reprendre en priorité au prochain run de `x-hwg-content-proposal` (ou dès que le navigateur est réappairé), **sauf péremption** : si l'OMS ou Gavi publie entre-temps un résultat d'essai ou une révision de l'allocation, l'angle change et le texte doit être refait.
+
+### Étape 0 (brouillon en attente à l'ouverture)
+Aucun. Dernier thread de marque X = entonnoir de tri du signal OMS, **publié le 17/08 à 09h11**. Aucun autre brouillon X non publié dans ce fichier (vérifié par recensement des entrées « Thread hebdo » : 03/08, 10/08, 17/08, toutes publiées). Rédaction entièrement neuve.
+
+### 🔴 Blocage de publication — pont extension Chrome injoignable
+`list_connected_browsers` renvoie une **liste vide** (2 appels), `select_browser` sur `23c7ecdd-…` répond « No connected browser has deviceId », `tabs_context_mcp` répond « Claude in Chrome is not connected ». Panne **déjà constatée et journalisée à ~09:00 par `linkedin-hwg-monitoring`** dans `_shared/browser-status.md` (entrée 🔴 du 24/08), **notification push déjà envoyée à David par cette routine** → conformément au mode d'emploi du fichier, **aucune 2e notification push envoyée pour la même panne le même jour**, et aucune séquence de diagnostic complète relancée. Aucune réparation tentée (pas de kill/restart Chrome, pas de bascule sur un autre deviceId, `hwg-social-policy.md` §7). **Aucune vérification d'identité du compte X n'a donc pu être faite** : elle reste **obligatoire avant la première frappe** au moment de la reprise (`SideNav_AccountSwitcher_Button` doit contenir `@HWatchGlobal`, incident @ElyanDln du 10/08).
+
+### Angle retenu
+Le 20/08, le **CIG (ICG)** a libéré une première tranche de **70 000 doses d'Ervebo** pour la RDC dans la flambée Bundibugyo. Le chiffre qui voyage est « 70 000 doses ». Le document, lui, publie une **répartition** : 20 000 doses pour un essai de phase 3 destiné à établir ce que le vaccin fait contre **ce** virus, 50 000 doses pour les personnels de première ligne et de santé, sur avis du SAGE. Autrement dit, la partie qui produira la réponse et la partie qui part sans l'attendre sont dans la même annonce, dans un rapport de 20 000 pour 50 000.
+
+La charge utile du fil est **opérationnelle, pas polémique** : à partir de maintenant, un **compteur de doses** va apparaître dans les points de situation. Un compteur de doses mesure une livraison. Il ne peut que monter, et il ne dit rien de la protection. Cette réponse-là viendra des 20 000, sur un calendrier d'essai, pas sur celui du bulletin. C'est une consigne de lecture pour des décideurs qui vont voir ce chiffre arriver dans leurs tableaux de bord.
+
+**Ce que le fil n'affirme pas** (bornes posées avant rédaction) : il ne dit pas que le déploiement des 50 000 est une erreur, ni que l'OMS masque quoi que ce soit (la réserve est **publiée par l'OMS elle-même**, et la clause d'équilibre « early laboratory and animal data suggest it may provide some protection » est **reprise dans le fil**), ni que le compteur de doses sera mal tenu. Il porte uniquement sur **ce que ce compteur peut et ne peut pas dire**.
+
+### Texte prêt à publier (EN)
+
+**t1 (264 car.)**
+> Announced on 20 August, an initial release of 70,000 Ervebo doses to DRC for the Bundibugyo outbreak. The allocation is split. 20,000 for a Phase 3 trial to establish what the vaccine does against this virus, 50,000 for frontline and health workers on SAGE advice.
+
+**t2 (245 car.)**
+> Ervebo is licensed for Ebola virus disease, the Zaire species. WHO puts it plainly: it is not known whether Ervebo may be protective against the Bundibugyo virus in humans. Early laboratory and animal data suggest it may provide some protection.
+
+**t3 (270 car. compteur X, URL comptée 23)**
+> So when dose counts reach the situation reports, they measure delivery. They can only go up, and cannot say whether anyone was protected. That answer sits with the 20,000, on a trial timeline. I will carry the first number long before the second. healthwatch-global.com
+
+### Sources primaires (pages téléchargées et lues en texte brut, jamais depuis un extrait de moteur)
+- **OMS, communiqué « WHO and Africa CDC welcome the allocation of Ebola vaccines to the Democratic Republic of the Congo », 20 août 2026, Genève/Addis-Abeba** — `who.int/news/item/20-08-2026-who-and-africa-cdc-welcome-the-allocation-of-ebola-vaccines-to-the-democratic-republic-of-the-congo`. Page téléchargée en `curl` avec UA navigateur puis convertie en texte (le résumé `WebFetch` a servi de repérage, **pas de source**). Verbatim retenus :
+  - « Ervebo vaccine is licensed and recommended for use in outbreaks of Ebola virus disease (previously called Zaire ebolavirus). »
+  - « On Monday, the ICG informed the DRC government of an immediate initial release of 70 000 doses. »
+  - « The allocation includes 20 000 doses for a Phase 3 clinical trial to understand the impact of the vaccine on the Bundibugyo virus, and 50 000 doses for frontline and health workers in line with the current recommendations of the WHO Strategic Advisory Group of Experts on Immunization (SAGE). »
+  - « It is not known whether Ervebo may be protective against the Bundibugyo virus in humans. Early laboratory and animal data suggest it may provide some protection. »
+  - « Since the establishment of ICG Ebola mechanism in 2021 until July 2026, over 56 000 doses of Ervebo vaccine have been allocated to respond to Ebola virus outbreaks in DRC. A further 167 000 doses have been used in preventive campaigns… »
+- **Gavi, communiqué « Gavi commits additional funding for Ebola response », Genève, 20 août 2026** — `gavi.org/news/media-room/gavi-commits-additional-funding-ebola-response`. Même méthode. Confirme **indépendamment** la tranche de 70 000 doses et son financement (7 M USD), plus 6 M USD du First Response Fund. Sert de **recoupement de la seule donnée reprise dans le fil** (les 70 000).
+
+### Double-check (§ règles de contenu) — effectué avant mise en attente
+*Contenu* — EN ✅ ; longueurs **264 / 245 / 270** sur 280, URL comptée 23, marges 16 / 35 / 10 ✅ (comptage automatisé ; **le compteur réel de X reste à vérifier en capture au moment de la saisie**, contrôle non faisable sans navigateur) ; aucun tiret cadratin ni demi-cadratin (contrôle automatisé `/[—–]/` sur les trois tweets) ✅ ; aucun hashtag ✅ ; aucun « we/our/us » (contrôle automatisé ; t3 dit « I will carry », registre identique au « Everything I aggregate » du 17/08) ✅ ; aucun ProMED ✅ ; lien en fin de fil uniquement, aucun CTA ✅ ; aucun faux témoignage ✅.
+
+*Exactitude mot pour mot* — les quatre chiffres du fil (70 000, 20 000, 50 000, et la mention SAGE) sont **cités tels quels** par le communiqué OMS ; la phrase de réserve du t2 est une **citation quasi littérale** (« it is not known whether Ervebo may be protective against the Bundibugyo virus in humans », puis la clause d'équilibre sur les données de laboratoire et animales). **Aucun calcul, aucun ratio, aucun delta publié** : rien à recalculer.
+
+*Date* — le fil dit « Announced on 20 August », date portée par les deux communiqués. **Volontairement pas « Monday »** : l'OMS écrit « On Monday, the ICG informed the DRC government » (donc décision antérieure au communiqué) alors que Gavi écrit « follows today's decision by the ICG » (donc décision le 20). Les deux sources **divergent d'un cran sur la date de décision** ; le fil s'en tient donc à la date d'**annonce**, commune aux deux, et ne publie **aucune date calculée** (§5.2).
+
+*Comparaison de volume écartée, et c'est délibéré* — le communiqué OMS donne « over 56 000 doses » allouées à **toutes** les ripostes Ebola en RDC de 2021 à juillet 2026, ce qui invite à écrire « une seule tranche dépasse cinq ans d'allocations ». **Non publié** : « over 56 000 » est un **plancher ouvert**, l'inégalité stricte avec 70 000 n'est donc pas démontrable à partir du document. L'angle tient sans, il n'a pas été forcé.
+
+*Anti-redondance* — recensement sur `content-log.md`, `content-log-archive-2026-07-avant17.md` et `x-watchlist.md` : « 70,000 » 0 occurrence, « ICG » 1 (note de veille), « Phase 3 » 1. « Ervebo » est en revanche **présent 32 + 12 fois**, et le fait « Ervebo cible la souche Zaïre, protection croisée non prouvée » a déjà été publié plusieurs fois : post LinkedIn du 24/06, replies X @KrutikaKuppalli 21/07 (deploy-to-learn), @UniofOxford 26/07 (goulot = chemin de preuve), @Epicentre_MSF 31/07 (registre de contacts = plan de sondage), et plusieurs commentaires LinkedIn de juillet. **Ce fait est donc du contexte, pas l'angle.** Ce qui est neuf et ne pouvait pas être écrit avant le 20/08 : l'allocation **existe**, elle est **chiffrée**, elle est **répartie 20 000 / 50 000**, et le fil en tire une **consigne de lecture du compteur de doses à venir** — angle jamais publié sous aucune forme.
+
+*Anti-template (forme rhétorique, pas seulement les mots — [[feedback_anti_template_check_structure_not_just_wording]])* — la forme « la réserve est publiée mais elle ne voyage pas avec le chiffre » a servi **deux fois de suite** (thread X du 17/08, note de bas de page du WER ; post LinkedIn du 17/08, taux de contacts non vus). Elle était disponible ici presque telle quelle et a été **écartée pour cette raison**. La chute retenue est d'une autre nature : elle ne décrit pas ce qui manque à un chiffre existant, elle explique **comment lire un indicateur qui n'existe pas encore** dans les bulletins. La veille du 21/08 (page Corridor4Health : 16 520 doses réceptionnées à N'djili sur 50 120 attendues du 21 au 24/08) **n'est pas reprise** : source secondaire non vérifiée en primaire, et elle aurait ramené le fil vers la logistique.
+
+*Auto-implication* — assumée en t3 (« I will carry the first number long before the second ») et littéralement vraie : HWG ingère des bulletins publiés, donc un compteur de doses y entrera bien avant un résultat d'essai.
+
+*Compte / destinataire* — **NON VÉRIFIÉ, et non vérifiable ce run** (pont navigateur mort). ⚠️ Contrôle `@HWatchGlobal` **obligatoire avant la première frappe** à la reprise.
+
+### 🦠 Données épidémiologiques — 0 écriture, 0 lecture de la base
+L'angle est **entièrement sourcé OMS/Gavi**. Aucune ligne de `outbreaks` n'a été lue ni écrite par ce run (la base n'aurait rien apporté : son schéma ne porte pas de dimension vaccinale, ce qui est d'ailleurs cohérent avec le propos du fil).
+
+---
+
 ## 📅 Session linkedin-hwg-followup-check-2 — 23/08/2026 (17h, 2e des 2 créneaux après-midi)
 
 **Vérification double déclenchement** : aucune entrée `linkedin-hwg-followup-check-2` datée du 23/08 dans ce fichier ni dans `linkedin-contacts.md` à l'ouverture → **premier déclenchement de cette routine aujourd'hui**. Les entrées du jour (9h, reprise interactive, 13h) sont des runs distincts.
