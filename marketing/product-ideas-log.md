@@ -1447,4 +1447,23 @@ L'intérêt de passer par les instantanés plutôt que par `active`+`updated_at`
 - **Morgan Otita** — annulation automatique **après-demain (26/08)**, J-2. Toujours pas re-proposé, l'arbitrage du 20/08 tient.
 - **Pistes ouvertes sans angle neuf, non re-proposées :** version de définition de cas (Adelekun, 03/08), 18 indicateurs de confiance communautaire (Bernasconi, 07/08), trois sources tierces (TSENG, 29/07, garde-fou `ROADMAP.md`), écart entre deux sources (écartée par David le 23/08). Bulletin vectoriel `sync-spf` : toujours non construit, effort révisé moyen-gros le 22/08, inchangé.
 
-**Statut : 2 idées PROPOSÉES.** Construction dans la foulée, ce log sera mis à jour.
+**Statut initial : 2 idées PROPOSÉES.** Construction dans la foulée — voir la section ci-dessous.
+
+### Construction — les deux idées sont livrées
+
+**Idée 1 — ✅ CONSTRUITE, commit `0ba67eb`.** `scripts/morning-don-check.mjs`, section 4f. La liste des pays est lue dans `app/api/cron/sync-who-regional/route.ts` (bloc `CHOLERA_ISO3`) au lieu d'être recopiée — même lecture que `scripts/coverage-cholera.mjs`, pour que les deux outils ne puissent plus diverger de la source qu'ils auditent. **Échec bruyant** si la constante est renommée, déplacée ou reformatée : le contrôle imprime « CONTRÔLE IMPOSSIBLE » au lieu de retomber sur une liste vide, qui se lirait comme « aucun trou détecté ». `CHOLERA_EXPECTED_NULLS` reste manuelle (c'est un jugement, pas un état du code), mais porte désormais l'avertissement du cas Yémen.
+
+**Idée 2 — ✅ CONSTRUITE, commit `f1fb59c`.** Deux fichiers :
+- `sync-outbreaks/route.ts` — `.select("id, disease_en, country_en, date, source")` au lieu de `{ count }` : chaque ligne éteinte par le balayage de fraîcheur est nommée dans les logs. Un **échec** du balayage part en Sentry (même canal que l'échec d'instantané au-dessus) au lieu de se lire comme « rien de périmé aujourd'hui » — ce cron renvoie « ok » dans les deux cas.
+- `data-quality/route.ts` — nouvelle **section 4l**. Toute ligne inactive portant encore un instantané des 2 derniers jours a quitté la carte dans cette fenêtre, `sync-outbreaks` n'instantanéisant que les lignes actives. Signale seulement : aucune réactivation, aucune écriture. Liste **plafonnée à 15**, avec le total dit en clair et une consigne dédiée si le lot est gros (un balayage trop large est en soi un signal). Les **suppressions pures** — id instantanéié qui n'existe plus du tout dans `outbreaks` — sont signalées à part : aucune requête sur `active=false` ne les trouverait jamais. Exclusion limitée aux **références annuelles GHO** (même marqueur que la section 4h), délibérément pas un `!is_seed` général : les seeds polio PHEIC sont actifs et sur la carte publique, l'un d'eux qui s'éteint est précisément ce que cette section doit dire.
+
+**Vérification — ce qui a été fait, et ce qui ne l'a pas été.** `npx tsc --noEmit` propre sur l'ensemble du projet, `npx eslint` propre sur les trois fichiers, `node --check` sur le script.
+- **Idée 1, extraction rejouée sur le vrai fichier** : 18 pays extraits, exactement ceux de la constante, aucun texte de commentaire capté au passage (Somalia → Burundi). La copie manuelle en connaissait 14.
+- **Idée 2, logique rejouée hors application** (script jetable, non commité) sur sept cas : ligne désactivée aujourd'hui → signalée ; la même le lendemain → signalée une seconde fois (**doublon assumé**, l'instantané du jour est écrit avant l'extinction par le run horaire) ; sortie il y a 3 jours → silencieuse ; lignes restées actives → silencieuses ; référence GHO → exclue ; lot de 20 → 15 listées + 5 comptées explicitement ; ligne supprimée de la table → signalée comme suppression.
+- ⚠️ **Aucune sonde sur la prod, aucune vérification en navigateur.** Le volume réel de lignes inactives et le nombre de sorties par jour ne sont pas mesurés ici — si le premier rapport de 4l est bruyant, c'est `RECENT_EXIT_DAYS` / `EXIT_LIST_CAP` qu'il faut ajuster, pas le principe. **À confirmer d'un coup d'œil demain matin** : le rapport `data-quality` de 10h05 doit contenir zéro ou quelques lignes `[SORTIE DE CARTE]`, pas des dizaines.
+
+**Note de procédure :** session menée dans un **worktree git séparé** (`product-ideas-2026-08-24`, basé sur `origin/master`), poussée en fast-forward sur `master`. L'arbre de travail principal — où sont le dispositif QA en cours (`marketing/qa/product-claims.manual.json`) et `scripts/coverage-cholera.mjs` non suivi — n'a été ni modifié, ni stagé, ni stashé.
+
+**Statut : 2 idées PROPOSÉES ET CONSTRUITES** (`0ba67eb`, `f1fb59c`). Aucune idée bloquée par un garde-fou ce soir ; le seul point laissé à David est la vérification que la table `outbreak_alert_daily_lock` est bien appliquée en prod (chantier e-mails, hors périmètre).
+
+---
