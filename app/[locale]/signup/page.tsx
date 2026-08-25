@@ -149,7 +149,13 @@ const ICONS = [BarChart2, Bell, FileDown];
 //
 // Le cablage vers activate-trial existait et fonctionnait ; c'est le defaut
 // silencieux qui le vidait de son sens. "Toutes les regions" reste disponible,
-// mais comme un choix explicite — pas comme ce qu'on obtient en ne repondant pas.
+// mais comme un choix explicite — pas comme ce qu'on obtient en ne repondant pas,
+// et libelle "inclus pendant l'essai" : /pricing vend "Toutes les regions
+// mondiales" comme le differenciateur Pro face a "1 region surveillee" en Gratuit,
+// donc l'offrir sans mention au premier ecran donnait gratuitement l'argument
+// vendu au troisieme. Sans effet fonctionnel : regional-alerts filtre deja sur
+// plan in (starter, pro, team, enterprise), un compte gratuit ne recoit aucune
+// alerte regionale quoi qu'il ait choisi.
 // L'intention etait deja ecrite dans lib/activate-trial.ts : "un e-mail
 // hebdomadaire sur un pays que vous avez demande est un produit ; un e-mail sur
 // cinq continents ressemble a une newsletter."
@@ -161,35 +167,35 @@ const REGION_PICKER: Record<string, { label: string; prompt: string; required: s
     label: "Which region matters most to you?",
     prompt: "Select a region",
     required: "Please choose a region — it decides which alerts you get.",
-    all: "All regions",
+    all: "All regions — included during your trial",
     options: { africa: "Africa", asia: "Asia", americas: "Americas", europe: "Europe", oceania: "Oceania" },
   },
   fr: {
     label: "Quelle région vous intéresse en priorité ?",
     prompt: "Choisissez une région",
     required: "Choisissez une région — c’est elle qui détermine vos alertes.",
-    all: "Toutes les régions",
+    all: "Toutes les régions — inclus pendant l’essai",
     options: { africa: "Afrique", asia: "Asie", americas: "Amériques", europe: "Europe", oceania: "Océanie" },
   },
   es: {
     label: "¿Qué región le interesa prioritariamente?",
     prompt: "Elija una región",
     required: "Elija una región — determina las alertas que recibirá.",
-    all: "Todas las regiones",
+    all: "Todas las regiones — incluido durante la prueba",
     options: { africa: "África", asia: "Asia", americas: "Américas", europe: "Europa", oceania: "Oceanía" },
   },
   ar: {
     label: "ما المنطقة الأهم بالنسبة لك؟",
     prompt: "اختر منطقة",
     required: "اختر منطقة — هي التي تحدد التنبيهات التي تصلك.",
-    all: "كل المناطق",
+    all: "كل المناطق — مشمولة خلال الفترة التجريبية",
     options: { africa: "أفريقيا", asia: "آسيا", americas: "الأمريكتين", europe: "أوروبا", oceania: "أوقيانوسيا" },
   },
   id: {
     label: "Wilayah mana yang paling penting bagi Anda?",
     prompt: "Pilih wilayah",
     required: "Pilih wilayah — ini menentukan peringatan yang Anda terima.",
-    all: "Semua wilayah",
+    all: "Semua wilayah — termasuk selama masa uji coba",
     options: { africa: "Afrika", asia: "Asia", americas: "Amerika", europe: "Eropa", oceania: "Oseania" },
   },
 };
