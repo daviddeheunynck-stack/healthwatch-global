@@ -1528,3 +1528,26 @@ Il n'y est pas alors que la colonne existe : `watchlist_alert_log.alerted_at`, v
 **Statut initial : 2 idées PROPOSÉES.** Construction dans la foulée — voir la section ci-dessous.
 
 ---
+
+### Construction — les deux idées sont livrées, commit `8bfd6ea`
+
+**Un seul commit pour les deux idées**, contrairement à l'habitude d'un commit par idée : elles se partagent deux fichiers (`watchlist-alerts/route.ts` et `health-check/route.ts`) sur des blocs différents, et découper à la main un index partiel valait moins que le risque de mal stager. Les deux sont détaillées séparément ci-dessous.
+
+**Idée 1 — ✅ CONSTRUITE.** Trois morceaux :
+- `lib/cron-monitor.ts` — `claimOutbreakAlertDaily` renvoie `{ state: "granted" | "taken" | "unevaluable"; error? }` au lieu d'un booléen dont `true` voulait dire deux choses opposées. L'erreur DB verbatim remonte avec l'état.
+- `regional-alerts`, `disease-alerts`, `watchlist-alerts` — chacun compte `lockUnevaluable`, retient le premier message d'erreur, et les fait passer dans sa réponse JSON **et** dans `logCronRun`. Le statut du cron reste `ok` (un verrou inévaluable n'est pas un échec de livraison : l'alerte part) mais le message atterrit dans `site_config`, d'où le health-check le relit. **Le comportement d'envoi est identique à la ligne près** : `unevaluable` tombe dans le même chemin que l'ancien `true`.
+- `health-check` — nouveau contrôle `checkAlertLockSilent`. Ligne rouge si, **la veille**, des alertes sont parties entre 10h et 12h UTC sans qu'une seule réclamation soit posée pour cette date, avec la cause DB recopiée depuis `site_config` quand un cron l'a enregistrée. Compté dans l'emoji, l'objet de l'e-mail et le drapeau `ok` de la réponse JSON.
+
+**Idée 2 — ✅ CONSTRUITE** (même commit). Deux morceaux :
+- `watchlist-alerts` — `alerted_at` est désormais posé explicitement dans l'`upsert` du **chemin d'envoi réel**, et délibérément pas sur la branche de déduplication inter-crons, qui n'envoie rien. La colonne existait depuis 2024 avec un `DEFAULT now()`, mais un défaut ne joue qu'à l'`INSERT` : sur conflit elle restait gelée à la première alerte. **Aucune migration** — la colonne était déjà là, donc aucune écriture sur un schéma non appliqué.
+- `health-check` — entrée `watchlist-alerts → watchlist_alert_log.alerted_at` ajoutée à `REAL_EVIDENCE`. **Ne peut pas créer de fausse alerte par construction** : le contrôle de panne prend le **maximum** de `lastNonZero`, `evaluatedAt` et de cette preuve — une source de plus ne peut que rafraîchir le signal, jamais le vieillir.
+
+**Vérification — ce qui a été fait, et ce qui ne l'a pas été.** `npx tsc --noEmit` propre sur l'ensemble du projet, `npx eslint` propre sur les cinq fichiers touchés.
+- **Les quatre requêtes de `checkAlertLockSilent` ont été rejouées telles quelles contre la prod** (script jetable, non commité, lecture seule), sur quatre journées. Aucune erreur de schéma — c'était le vrai risque, `watchlist_alert_log` utilisant `alerted_at` là où ses deux sœurs utilisent `sent_at`. Résultat : `25/08 → livraisons=117, verrous=0 → 🔴 LIGNE ROUGE`. Le contrôle aurait dit, demain matin, exactement ce que cette session a mis trois sondes à établir. Les 22, 23 et 24/08 sortent rouges aussi (44, 99 et 46 livraisons, zéro verrou) — attendu et sans conséquence : le verrou n'existait pas encore ces jours-là, et le contrôle ne regarde jamais que la veille.
+- **Le chemin de contrôle des trois crons a été relu ligne à ligne** après le changement de type de retour : `unevaluable` traverse le même chemin que l'ancien `true`, `taken` le même que l'ancien `false`. Aucun changement de comportement d'envoi, ce qui était la seule vraie manière de casser trois crons de livraison ce soir.
+- ⚠️ **La cause DB reste inconnue.** Elle n'existe que dans le message d'erreur, envoyé à Sentry et aux logs Vercel — inaccessibles depuis cette session. La sonder aurait demandé une écriture dans la table de prod : non fait (garde-fou 2). **C'est le rapport health-check de demain 07h05 qui doit la livrer**, verbatim, dans la ligne rouge. Si elle y figure, le correctif de la cause tient probablement en une ligne ; s'il n'y a « aucune cause enregistrée », c'est que les crons d'alerte n'ont pas encore retourné depuis ce déploiement — attendre 10h50.
+- ⚠️ **Aucune vérification en navigateur** : rien de ce qui est touché ici n'a de surface visible côté client.
+
+**Statut : 2 idées PROPOSÉES ET CONSTRUITES** (`8bfd6ea`). Aucune idée bloquée par un garde-fou ce soir. Deux points restent chez David, aucun urgent : (a) le stock de **25 comptes abonnés aux 5 régions**, que le correctif d'inscription de ce soir ne rattrape pas — rectifier ces lignes reviendrait à modifier les préférences d'utilisateurs réels, hors autonomie ; (b) le même angle mort « verrou inévaluable indiscernable d'un verrou posé » subsiste sur `claimWeeklyEmailAddress`, non traité ici pour ne pas élargir le périmètre à la chaîne hebdomadaire le même soir.
+
+---
