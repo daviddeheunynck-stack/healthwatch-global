@@ -1551,3 +1551,15 @@ Il n'y est pas alors que la colonne existe : `watchlist_alert_log.alerted_at`, v
 **Statut : 2 idées PROPOSÉES ET CONSTRUITES** (`8bfd6ea`). Aucune idée bloquée par un garde-fou ce soir. Deux points restent chez David, aucun urgent : (a) le stock de **25 comptes abonnés aux 5 régions**, que le correctif d'inscription de ce soir ne rattrape pas — rectifier ces lignes reviendrait à modifier les préférences d'utilisateurs réels, hors autonomie ; (b) le même angle mort « verrou inévaluable indiscernable d'un verrou posé » subsiste sur `claimWeeklyEmailAddress`, non traité ici pour ne pas élargir le périmètre à la chaîne hebdomadaire le même soir.
 
 ---
+
+### Suite, même soir (25/08) — le point (b) ci-dessus est traité sur demande explicite de David
+
+Correctif appliqué par parité, commit `15f63ee` : `claimWeeklyEmailAddress` reçoit exactement le même traitement que `claimOutbreakAlertDaily` en `8bfd6ea` — type de retour commun (`AlertClaim`, renommé depuis `DailyAlertClaim`), les quatre mailers du lundi (`send-sitrep-emails`, `trigger-regional-digest`, `weekly-digest`, `weekly-signal`) comptent les verrous inévaluables et remontent le message DB verbatim dans `logCronRun`, et un contrôle miroir (`checkWeeklyLockSilent`) est ajouté au health-check.
+
+**Différence de calendrier assumée dans le contrôle santé** : les quatre mailers tournent uniquement le lundi (06h50–07h20 UTC), en concurrence directe avec le health-check lui-même (07h05 UTC). Le contrôle lit donc toujours le **lundi le plus récemment écoulé**, jamais le jour même — un lundi qui tombe le jour du run est ignoré cette fois-là et repris la semaine suivante, même logique que « hier, jamais aujourd'hui » du contrôle quotidien.
+
+**Vérifié avant commit, pas après un incident** : contrairement au verrou quotidien, `weekly_email_send_log` fonctionnait déjà (23 envois comptés par les quatre crons pour 24 verrous posés, semaine du 24/08, rejoué contre la prod avec les requêtes exactes du nouveau contrôle). C'est une fermeture préventive du même risque architectural, pas la réponse à un deuxième incident silencieux.
+
+Point (a) — le stock des 25 comptes déjà abonnés aux 5 régions — reste ouvert, sans recommandation de code attachée : ce n'est pas un bug, c'est un arbitrage produit (forcer une réduction de portée sur des comptes réels vs. laisser « toutes les régions » comme choix rétroactivement légitime depuis `ebe0ab0`). Non traité sans confirmation explicite de David sur l'action voulue.
+
+`npx tsc --noEmit` et `npx eslint` propres sur les six fichiers touchés.
