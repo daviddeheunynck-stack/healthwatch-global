@@ -2106,3 +2106,123 @@ Lecture du journal **plus** grep systématique du domaine et du nom d'organisati
 ### 📬 Réponse institutionnelle — Georgetown HSOC (contact du lot du 24/08)
 
 Le **Health Security Operations Center** de Georgetown (`hsoc@georgetown.edu`, contacté le 24/08 à 12:14 UTC) **a répondu le jour même à 16:53 UTC** : « We pull in the same sources, but happy to access the dashboard you built. How does one access the pro account? » David a répondu à 18:38 UTC en fournissant un accès Pro de 35 jours, mot de passe défini directement plutôt que lien magique, alertes régionales activées sur les cinq régions. **Première conversion en accès Pro issue de ce canal depuis sa réouverture le 02/08.** Signalé ici pour mémoire ; le suivi du fil appartient à `daily-relance-check-healthwatch`.
+
+---
+
+## 🔁 RELANCE J+10 — 2026-08-25, run automatique `daily-relance-check-healthwatch`
+
+**Résultat : 15 relances créées, toutes en brouillon.** Lot traité : **le lot du 04/08 recréé (20 contacts, envoyé le 15/08 à 09:23:42–09:41:27 UTC)**, arrivé à **J+10** aujourd'hui, conformément au calendrier d'étalement posé le 23/08 et confirmé le 24/08. **19 des 20 étaient éligibles ; 15 ont été relancés et 4 reportés au 26/08 par frein de file** (détail ci-dessous).
+
+### 📥 Lots examinés
+
+| Lot | Ancienneté | Traitement |
+|---|---|---|
+| **04/08 recréé (20)** — envoyé le 15/08 | **J+10** | ✅ **traité ce run**, 15 relances créées, 4 reportées au 26/08 |
+| **14/08 (11)** — envoyé le 15/08 | J+10 | Déjà relancé hier à J+9 (9 relances, run du 24/08). Règle « une seule relance, jamais deux » — non repris. |
+| **15/08 (10)** — envoyé le 15/08 | J+10 | Reporté au **26/08** (J+11) par le plan d'étalement du 23/08. Non traité ce run. |
+| **06/08 recréé (10)** — envoyé le 17/08 | J+8 | Pas mûr. J+10 le **27/08**. |
+| **17/08 (10)** — envoyé le 17/08 | J+8 | Pas mûr. J+10 le **27/08**. |
+
+### 🚦 Frein de file — réduction appliquée, 15 sur 19
+
+**File au démarrage : 10 brouillons** (les 10 de la prospection de ce matin, `list_drafts` vue métadonnées). **19 relances éligibles auraient porté la file à 29, au-dessus du seuil de ~25.** Réduction appliquée conformément à l'étape 5 de la routine : **15 relances créées ce run, file portée à exactement 25**.
+
+**Critère de priorisation — l'heure d'envoi de l'original, pas l'ordre du tableau.** Les 20 du lot ne sont pas partis en un bloc : 13 entre **09:23:42 et 09:27:37**, puis 7 entre **09:37:26 et 09:41:27** (relecture manuelle progressive de David, documentée le 15/08). Les 15 relancés sont donc **les 15 originaux les plus anciens**, à la seconde près. Les 4 reportés sont les 4 derniers envoyés — de 10 à 14 minutes plus jeunes, l'écart est mince mais c'est le seul critère objectif disponible à l'intérieur d'un lot homogène.
+
+**Reportés au 26/08** (J+11, ils rejoindront le lot du 15/08) : **NCDC Inde** (`dirnicd@nic.in`), **PHF Science NZ** (`PHFScienceEnquiries@phfscience.nz`), **FHI Norvège** (`folkehelseinstituttet@fhi.no`), **Folkhälsomyndigheten** (`info@folkhalsomyndigheten.se`).
+
+### ❌ 1 exclusion
+
+| Contact | Adresse | Motif |
+|---|---|---|
+| **THL Finlande** | `info@thl.fi` | **Réponse reçue** — accusé automatique du 15/08 à 09:41:22 UTC (FI/SV/EN), déjà consigné à l'entrée du 04/08. Règle de l'étape 4 : un accusé automatique compte comme une réponse, pas de relance. |
+
+**⚠️ Point de méthode — cette réponse est invisible dans le fil d'origine.** Le fil `1a004b42f3dd40a3` (envoi à THL) porte **un seul message** en `labelIds: ["SENT"]`, y compris vérifié par `get_thread` et pas seulement par `search_threads`. L'accusé de réception vit dans un **fil séparé** (`1a004cc27bc49a75`, expéditeur `info@thl.fi`, aujourd'hui en `TRASH`) : la boîte automatique de THL répond sans en-tête `In-Reply-To`, Gmail n'a donc pas rattaché sa réponse à la conversation.
+
+➡️ **Règle ajoutée : « le fil ne porte qu'un message » ne prouve pas « aucune réponse reçue ».** Le contrôle de l'étape 4 doit être **doublé d'une requête `from:<domaine>` avec `includeTrash: true`** avant de conclure à l'absence de réponse. Sans ce second contrôle, THL aurait été relancée aujourd'hui alors qu'elle a répondu — et le journal, lui, l'avait bien noté : c'est le **double contrôle journal + Gmail** qui a rattrapé le trou, pas le fil Gmail seul. C'est le prolongement direct de l'enseignement du 16/08 (« un `list_drafts` vide ne prouve pas un envoi ») appliqué cette fois au sens inverse, côté réception. Prolonge aussi la mémoire `feedback_gmail_search_threads_needs_includetrash`.
+
+### 🔎 Vérification en direct des 20 contacts du lot
+
+Requêtes `to:` groupées (3 appels) **et** requêtes `from:<domaine>` sur les 20 domaines (2 appels), `includeTrash: true` partout.
+
+- **Les 20 fils d'envoi portent exactement 1 message, en `labelIds: ["SENT"]`** — aucune relance antérieure sur aucun des 20, cohérent avec le journal (les runs du 16/08 au 23/08 ont tous classé ce lot « pas mûr »).
+- **Réponses reçues : 1 sur 20** — THL uniquement (fil séparé, ci-dessus). Les 19 autres domaines ne renvoient **rien** : ni réponse humaine, ni accusé automatique, ni bounce.
+- **Anti-doublon** : grep par adresse sur le journal pour les 20 — aucune n'apparaît dans un second lot de prospection. Le domaine `oficinas-upch.pe` apparaît 2 fois (IMTAvH le 04/08, faculté FASPA le 21/08) mais sur **deux adresses et deux facultés distinctes**, cas déjà tranché comme « non-doublon » par le balayage rétrospectif du 23/08.
+
+### ✉️ Les 15 relances créées
+
+Toutes en réponse dans le fil d'origine (`replyToMessageId`), objet « Re: … » automatique, créées entre **06:24:17 et 06:24:50 UTC**. Ordre du tableau = ordre de priorité appliqué (original le plus ancien en premier).
+
+| # | Institution | Adresse | Langue | Original (UTC) | Fil d'origine | Brouillon |
+|---|---|---|---|---|---|---|
+| 1 | Fondation Mérieux | `contact@fondation-merieux.org` | FR | 09:23:42 | `1a004b587ebcbd10` | `r-4496684467575472735` |
+| 2 | Jhpiego | `info@jhpiego.org` | EN | 09:23:58 | `1a004b56f28a2457` | `r5642318456436445872` |
+| 3 | Vital Strategies | `info@vitalstrategies.org` | EN | 09:24:15 | `1a004b55d9fbe568` | `r-4870246670205911315` |
+| 4 | PATH | `info@path.org` | EN | 09:24:35 | `1a004b54acf1ab82` | `r6914202895774949968` |
+| 5 | The Carter Center | `info@cartercenter.org` | EN | 09:24:52 | `1a004b5393a175de` | `r1937554693571318741` |
+| 6 | IMTAvH — Pérou (UPCH) | `imtavh.investigacion@oficinas-upch.pe` | EN | 09:25:10 | `1a004b5274e3b055` | `r-7809944251358211938` |
+| 7 | Institut Pasteur de Nouvelle-Calédonie | `contact@pasteur.nc` | FR | 09:25:33 | `1a004b51305b4c56` | `r4185432794155063323` |
+| 8 | LSTM — Liverpool | `info@lstmed.ac.uk` | EN | 09:25:52 | `1a004b4fd3d55ae9` | `r-1299707446497839598` |
+| 9 | Mahidol — Faculty of Tropical Medicine (Prof. Prachumsri) | `jetsumon.pra@mahidol.ac.th` | EN | 09:26:18 | `1a004b4e8b5d57e1` | `r-7684372588594521768` |
+| 10 | Peter Doherty Institute | `doherty-reception@unimelb.edu.au` | EN | 09:26:37 | `1a004b4d6a6612b5` | `r-218328794446235482` |
+| 11 | IANPHI | `secretariat@ianphi.org` | EN | 09:26:58 | `1a004b4c49e5d674` | `r4321681498405720943` |
+| 12 | RITM — Philippines | `do@ritm.gov.ph` | EN | 09:27:17 | `1a004b4af4204bf6` | `r4621534451121523118` |
+| 13 | Ghana Health Service | `info@ghs.gov.gh` | EN | 09:27:37 | `1a004b49e254041d` | `r-4612148700688826922` |
+| 14 | Ministry of Health and Sanitation — Sierra Leone | `info@mohs.gov.sl` | EN | 09:37:26 | `1a004b48c3673aeb` | `r-2583933079442466819` |
+| 15 | ICGES — Panama | `igorgas@gorgas.gob.pa` | EN | 09:38:05 | `1a004b4770d0d8fb` | `r-1537959356787342997` |
+
+**Rédaction** — salutation identique à l'original (« Hi Professor Prachumsri, » pour le seul contact nominatif du lot, « Hi team, » / « Bonjour, » sinon), une phrase de rappel, une ligne sur l'accès Pro gratuit toujours ouvert, puis **la question de clôture de l'email d'origine reprise à l'identique**. Deux cas particuliers conservent leur motif propre plutôt que le gabarit générique, conformément à l'étape 3 :
+
+- **IANPHI** — l'original ne proposait pas un accès pour le secrétariat mais **pour les instituts membres** ; la relance garde cette formulation et sa question de clôture (« is the secretariat the right place to start? »).
+- **Institut Pasteur de Nouvelle-Calédonie** — l'original était bâti sur l'extension Pacifique de la couverture dengue et se fermait sur une **question ouverte de complétude** (« qu'est-ce qui manque encore à cette couverture Pacifique ? »), reprise telle quelle : c'est une demande d'expertise, pas une offre.
+
+Les 13 autres reprennent mot pour mot leur question d'origine, avec son destinataire exact (« your programme teams » ×4, « your research teams » ×3, « your researchers » / « your researchers or field teams », « your research team », « your Public Health Division », « your surveillance team »).
+
+**Conformité de forme, vérifiée par `list_drafts` en vue complète** : aucun `htmlBody` fourni ; le `htmlBody` régénéré par Gmail sur le texte neuf ne contient que `<div dir="auto">` et des `<br/>`, **zéro balise `<a>`** ; **aucun domaine avec un `.` littéral** dans le texte nouveau (« healthwatch-global dot com » ×13, « point com » ×2) ; chaque corps se termine par une question avant la signature « David Deheunynck — HealthWatch Global ». *Le corps cité automatiquement par Gmail sous chaque relance contient le lien de l'original — normal et sans impact, aucun lien neuf n'a été introduit.*
+
+**Contrôle du bug d'envoi instantané du connecteur (incident du 15/08) : négatif.** `list_drafts` en fin de run : **les 25 brouillons portent `labelIds: ["DRAFT"]`, aucun n'est passé en `SENT`.** `list_drafts` **stable ce run** — quatre appels (métadonnées ×2, vue complète ×1, filtré ×1), résultats cohérents entre eux et avec `search_threads`. Aucun incident technique, aucun échec `create_draft`.
+
+### 📊 Bilan cumulé
+
+**Balayage des bounces** (`from:mailer-daemon`, `from:postmaster`, `subject:"Delivery Status Notification"`, `subject:"Undelivered Mail"`, `subject:Undeliverable`, `subject:"Mail delivery failed"`, `newer_than:3d`, corbeille incluse) : **7 fils, exactement les 7 du 24/08 déjà consignés.** **Aucun bounce neuf.** Rien sur les 10 envois de prospection partis ce matin, rien sur le remplacement ADELF (`adelf.ftb@gmail.com`, parti et non bouncé — la règle du 24/08 sur les associations hébergées est confirmée par le résultat), rien sur les 20 contacts du lot du 04/08.
+
+**Bilan bounces cumulés depuis le 02/08 : 20** — recalculé depuis la liste nominative conformément à la règle du 16/08, **inchangé par rapport au 24/08** (aucun contact neuf n'a bouncé) :
+1. WHO WPRO (02/08) — sous-domaine `wpro.who.int` invalide
+2. ZNPHI Zambie (02/08) — règle de transfert cassée côté destinataire
+3. Colombo (09/08) — 550 5.1.1, adresse introuvable
+4. AKHS (10/08) — adresse inconnue côté serveur
+5. NCIPD Bulgarie (12/08) — 550 high-probability spam
+6. CORDS (12/08) — adresse introuvable
+7. EPHI Éthiopie (12/08) — boîte pleine (transitoire)
+8. Lao TPHI (14/08) — domaine NXDOMAIN
+9. ISED Sénégal (15/08) — boîte pleine, 2 tentatives échouées, écarté définitivement le 16/08
+10. MBDS (15/08) — 550 No Such User Here
+11. DMR Myanmar (17/08) — 550 Unknown user
+12. MSPAS Guatemala (18/08) — adresse introuvable
+13. MHMS Îles Salomon (19/08) — adresse introuvable
+14. IRD — Tony Zitti (24/08) — Undelivered Mail, relais `relay.renater.fr`
+15. INSP Mexique — Liliana Trujillo (24/08) — O365, destinataire inconnu
+16. AFD — Agnes Soucat (24/08) — 550 5.2.0 mailbox unavailable
+17. IMC — Anastasiia Borodina (24/08) — adresse introuvable
+18. ACF — Olivier Cheminat (24/08) — O365, destinataire inconnu
+19. PIH — Tumusime Musafiri (24/08) — adresse introuvable
+20. ADELF (24/08) — 550 5.1.1 (remplacement `adelf.ftb@gmail.com` parti le 24/08, **délivré, aucun bounce**)
+
+**Totaux au 2026-08-25 : 280 contacts prospectés, 270 envoyés, 250 effectivement délivrés.**
+- **Prospectés 280** et **envoyés 270** : repris de l'entrée de prospection de ce matin (les 10 du jour restent en brouillon). Cette routine n'en produit aucun.
+- **Délivrés 250** = 270 envoyés − 20 (taille de la liste nominative ci-dessus), recompté dans le même mouvement que la liste.
+- **⚠️ Réserve maintenue** : les 270 envoyés comptent **4 envois vers des institutions déjà contactées** (incident du 22/08). Le nombre d'**institutions distinctes** atteintes reste inférieur de 4 au nombre de messages.
+- **🟢 Taux de délivrabilité en légère remontée : 92,3 % au 24/08 (240/260) → 92,6 % aujourd'hui (250/270).** Les 10 envois du 23/08 partis ce matin n'ont produit **aucun bounce**. La chute du 24/08 reste attribuée au lot nominatif des vagues 1-3 (péremption d'adresses stockées 8 semaines), pas à la qualité de recherche courante — ce run le confirme plutôt qu'il ne l'infirme.
+
+**Total cumulé de relances : 138 envoyées** (129 au 24/08 **+ les 9 du lot du 14/08**, créées le 24/08 et envoyées par David le même jour à 09:41 UTC), **15 en attente d'envoi** (celles de ce run).
+
+**Frein de file** : **25 brouillons** au total en fin de run — 15 relances + 10 de la prospection de ce matin. **Exactement au seuil de ~25**, atteint par construction (c'est le critère de la réduction ci-dessus). ⚠️ **À surveiller demain** : si ces 25 ne sont pas partis, les 12 relances prévues au 26/08 porteraient la file à **37**. Le run du 26/08 devra alors réduire à son tour, ou attendre l'envoi.
+
+### 📬 Suivi des réponses
+
+- **Georgetown HSOC** (`hsoc@georgetown.edu`, converti en accès Pro le 24/08) — fil `1a03273735db557f` revérifié ce run : **4 messages, le dernier étant l'envoi des identifiants par David le 24/08 à 18:38 UTC. Aucune réponse depuis, moins de 24 h.** Aucune action : ni relance (l'accès est ouvert, la balle est dans leur camp), ni rappel. À reprendre dans le suivi si le silence dépasse une dizaine de jours — ce serait alors un suivi d'usage, pas une relance de prospection.
+- **Aucune autre réponse institutionnelle nouvelle ce run.** Les 19 fils non-THL du lot du 04/08 sont muets à J+10, et le balayage des bounces ne remonte que les 7 déjà connus.
+
+**Prochains lots, calendrier d'étalement mis à jour :**
+- **26/08** → **reste du lot du 04/08 recréé** (4 : NCDC Inde, PHF Science NZ, FHI Norvège, Folkhälsomyndigheten, J+11) **+ lot du 15/08** (10 moins les bounces ISED et MBDS, soit **8**, J+11) = **12**, sous réserve du frein de file
+- **27/08** → lot du **06/08 recréé** (10 moins HZJZ verrouillé, soit **9**) + lot du **17/08** (10, rendez-vous Variante A EAC / IGAD / SADC / AFROHUN / EUPHA) = **19**
