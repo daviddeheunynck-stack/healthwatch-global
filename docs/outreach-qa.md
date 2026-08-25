@@ -26,7 +26,29 @@ commentaire/note : publication  |  DM : mise en file de validation
 ```
 
 ---
+## 0. Périmètre — quelles routines sont couvertes
 
+**Ce dispositif couvre la prospection, et elle seule** : `linkedin-hwg-monitoring`
+(9h), `linkedin-hwg-followup-check` (13h) et `linkedin-hwg-followup-check-2` (17h),
+pour ce qu'elles adressent à un contact identifié — DM, note de connexion,
+commentaire sous le post de quelqu'un.
+
+**`linkedin-hwg-content-proposal` n'est pas dans ce périmètre, et n'y entrera pas
+sans décision explicite de David.** Le rattachement fait le 2026-08-24 a été
+annulé le jour même. La raison n'est pas le niveau d'exigence, c'est
+l'asymétrie des conséquences : **un DM raté brûle un contact réel et
+définitivement ; un post raté est sur le mur de David, dans sa voix, et se
+supprime.** Mêmes contrôles, seuils différents, et surtout état terminal
+différent — voir « Le contenu de marque n'a pas d'état `ABANDON` » plus bas.
+
+Ce que la routine de contenu emprunte quand même : les deux registres du § 1 et
+du § 1 bis. Un chiffre ou une affirmation produit se vérifie de la même façon
+partout. **S'en servir n'emporte pas le reste du dispositif** — ni la boucle à
+quatre essais, ni le verdict en majuscules, ni la sortie en échec.
+
+Les routines X ne sont couvertes par rien de ce document.
+
+---
 ## 1. Le registre de faits
 
 `marketing/qa/claimable-facts.json`, régénéré par `node scripts/build-claimable-facts.mjs`
@@ -45,9 +67,14 @@ seulement daté : « 1 406 cas au 19 août », jamais « 1 406 cas ».
 
 Le registre de faits couvre les flambées. Celui-ci couvre **le produit** : ce
 qu'un post ou un message a le droit d'affirmer sur HealthWatch Global lui-même.
-Il devient indispensable dès qu'une routine publie du contenu de marque, où
-l'affirmation risquée n'est plus « 1 406 cas » mais « le plan Pro est à 29 € »
-ou « les alertes push sont disponibles ».
+Il devient indispensable dès qu'un message sortant affirme quelque chose sur HWG
+lui-même, où l'affirmation risquée n'est plus « 1 406 cas » mais « le plan Pro
+est à 29 € » ou « les alertes push sont disponibles ».
+
+⚠️ Cette phrase disait auparavant « dès qu'une routine publie du contenu de
+marque ». Corrigé le 2026-08-25 : c'est la formulation qui a fait entrer
+`linkedin-hwg-content-proposal` dans le dispositif le 24/08. Le registre produit
+sert à cette routine, le reste du document non — voir le § 0.
 
 Il n'est pas rédigé à la main. Il est **extrait de ce qui fait foi** :
 
@@ -245,7 +272,29 @@ les deux dans le journal ni dans le bilan, ce sont des états opposés.
 
 Une opportunité abandonnée n'est pas perdue : le fil sera repris au run suivant,
 avec un contexte neuf, ce qui est souvent exactement ce qui manquait.
+### Le contenu de marque n'a pas d'état `ABANDON`
 
+Vaut pour `linkedin-hwg-content-proposal`, hors périmètre du § 0, et rappelé ici
+parce que c'est ici qu'une session ira chercher la règle.
+
+**Un post de marque ne s'abandonne pas au 4e essai : il se propose avec ses
+réserves.** Si le texte ne convainc pas, il remonte quand même à David,
+accompagné de ce que le relecteur lui reproche et du motif de blocage. David
+tranche en dix secondes ; le dispositif, lui, n'a pas qualité à jeter un créneau.
+La seule raison de ne rien proposer reste celle du SKILL.md — aucun angle frais
+et solide ce jour-là — et elle se décide **avant** la rédaction, pas après quatre
+réécritures.
+
+Motif, constaté le 2026-08-24 : le run MWF du matin a tourné sous ce document,
+contrôle mécanique `PASS` à l'essai 4, relecteur `REECRIRE`, sortie `ABANDON`.
+**Rien n'est remonté à David — ni le brouillon, ni l'angle, ni le désaccord entre
+les deux étages.** Un créneau perdu et aucune décision possible pour la seule
+personne qui avait le droit de trancher. C'est l'inverse de ce que le dispositif
+est censé produire.
+
+Corollaire pour le journal du run : un post proposé avec réserves n'est **pas** un
+échec et ne se consigne pas comme tel. Il se consigne comme proposé, avec ses
+réserves.
 **Pourquoi une limite plutôt qu'une boucle infinie.** Un message réécrit
 indéfiniment pour satisfaire des contrôles finit par passer **par usure** — le
 rédacteur retire les chiffres au lieu de les sourcer, ampute les phrases au lieu
