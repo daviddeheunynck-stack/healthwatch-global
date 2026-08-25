@@ -517,6 +517,73 @@ async function checkAlertLockSilent(supabase: any): Promise<{ result: SilentAler
   return { result: { day, deliveries, lockRows: lock.count ?? 0 }, error: null };
 }
 
+interface SilentWeeklyLock { weekOf: string; deliveries: number; lockRows: number }
+
+const WEEKLY_LOCK_CRONS = ["send-sitrep-emails", "trigger-regional-digest", "weekly-digest", "weekly-signal"] as const;
+
+// Same blind spot as checkAlertLockSilent above, applied to
+// weekly_email_send_log — the lock shared by the four Monday mailers
+// (send-sitrep-emails 06:50, trigger-regional-digest 07:00, weekly-digest
+// 07:05, weekly-signal 07:20 UTC). claimWeeklyEmailAddress was reworked into
+// AlertClaim the same evening as claimOutbreakAlertDaily (2026-08-25), once
+// the daily lock's incident showed the "true means either GRANTED or
+// UNEVALUABLE" shape was a real risk and not just the warning its own
+// comment had carried since 2026-08-23. weekly_email_send_log itself was
+// verified NOT silently failing at the time (24 real rows for week_of
+// 2026-08-24, roughly matching the four crons' own sent counts) — this
+// closes the same structural gap ahead of a second live incident, not in
+// response to one.
+//
+// Reads the most recently ELAPSED Monday, never today's: these four crons'
+// run window (06:50-07:25 UTC) overlaps this very health-check's own 07:05
+// UTC slot when today IS Monday — a same-day check would race weekly-digest
+// at the exact tie. On a Monday this looks at last week's Monday instead,
+// same "never check a run that might still be in flight" reasoning as
+// checkAlertLockSilent's "yesterday, never today".
+//
+// Reads deliveries from the four crons' own logged `rows` (site_config),
+// not a shared send table like the daily check has — the four mailers draw
+// from different source tables (subscriptions/profiles/scheduled_reports)
+// with no common per-delivery log. A cron whose last logged run falls
+// outside the target Monday's window (overdue, or simply hasn't run yet
+// this week at the time health-check fires) contributes 0 rather than a
+// stale count from some earlier Monday.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+async function checkWeeklyLockSilent(supabase: any): Promise<{ result: SilentWeeklyLock | null; error: string | null }> {
+  const now = new Date();
+  const daysSinceMonday = (now.getUTCDay() + 6) % 7;
+  const backToElapsedMonday = daysSinceMonday === 0 ? 7 : daysSinceMonday;
+  const monday = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() - backToElapsedMonday));
+  const weekOf = monday.toISOString().slice(0, 10);
+  const from = `${weekOf}T06:45:00.000Z`;
+  const to   = `${weekOf}T07:30:00.000Z`;
+
+  const runs = await supabase
+    .from("site_config")
+    .select("key,value")
+    .in("key", WEEKLY_LOCK_CRONS.map((name) => `cron:run:${name}`));
+  if (runs.error) return { result: null, error: runs.error.message };
+
+  let deliveries = 0;
+  for (const row of (runs.data ?? []) as { key: string; value: string }[]) {
+    try {
+      const parsed = JSON.parse(row.value) as { ts?: string; rows?: number };
+      if (parsed.ts && parsed.ts >= from && parsed.ts < to) deliveries += parsed.rows ?? 0;
+    } catch { /* malformed, ignore */ }
+  }
+  // Nobody sent anything in that window (yet, or this week's run never
+  // happened) — nothing to say either way, distinct from a genuine silence.
+  if (deliveries === 0) return { result: null, error: null };
+
+  const lock = await supabase
+    .from("weekly_email_send_log")
+    .select("*", { count: "exact", head: true })
+    .eq("week_of", weekOf);
+  if (lock.error) return { result: null, error: lock.error.message };
+
+  return { result: { weekOf, deliveries, lockRows: lock.count ?? 0 }, error: null };
+}
+
 interface DecisionHorizonTrial { email: string; trialEndsAt: string; isPilot: boolean }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -692,6 +759,7 @@ async function runHealthCheck(_req: NextRequest, supabase: any) {
     authFailureResult,
     bundleSecretResult,
     alertLockResult,
+    weeklyLockResult,
   ] = await Promise.all([
       Promise.all([
         supabase.from("outbreaks").select("*", { count: "exact", head: true }).eq("active", true),
@@ -733,6 +801,7 @@ async function runHealthCheck(_req: NextRequest, supabase: any) {
       checkAuthFailures(supabase),
       scanDeployedBundleForSecrets(),
       checkAlertLockSilent(supabase),
+      checkWeeklyLockSilent(supabase),
     ]);
 
   const zeroRegionTrials    = zeroRegionResult.trials;
@@ -890,6 +959,19 @@ async function runHealthCheck(_req: NextRequest, supabase: any) {
         .find((msg) => !!msg && msg.includes("verrou inter-crons")) ?? null)
     : null;
 
+  // Weekly sibling of the block above — see checkWeeklyLockSilent. Same
+  // "cause from whichever cron recorded it" pattern; here cronMap's single
+  // stored run per cron is always the right one to read, not just usually,
+  // since these four crons only ever run on Mondays.
+  const weeklyLock      = weeklyLockResult.result;
+  const weeklyLockError = weeklyLockResult.error;
+  const weeklyLockSilent = !!weeklyLock && weeklyLock.deliveries > 0 && weeklyLock.lockRows === 0;
+  const weeklyLockCause = weeklyLockSilent
+    ? (WEEKLY_LOCK_CRONS
+        .map((name) => cronMap[name]?.error)
+        .find((msg) => !!msg && msg.includes("verrou hebdo")) ?? null)
+    : null;
+
   // ── Delivery visibility: "nobody to send to" vs. "somebody's there and
   // nothing went out" ─────────────────────────────────────────────────────
   // A delivery cron logging "ok, rows=0" is indistinguishable from a stalled
@@ -953,7 +1035,7 @@ async function runHealthCheck(_req: NextRequest, supabase: any) {
   // institutional signup is good news, not a fault, and shouldn't turn the
   // report red. hasStuckInvites/hasAlertLocaleDrift are regression guards on
   // real past bugs and do count toward the alert state.
-  const emoji = hasOverdue || hasUnmonitored || hasErroring || audienceErrors.length > 0 || sentryAlert || deliveryAlert || hasZeroRegionTrials || hasUncoveredStripeTrials || hasBlockedEmailTrials || hasStuckInvites || hasAlertLocaleDrift || hasAuthFailures || hasBundleSecrets || alertLockSilent || (pheic ?? 0) > 0 ? "⚠️" : "✅";
+  const emoji = hasOverdue || hasUnmonitored || hasErroring || audienceErrors.length > 0 || sentryAlert || deliveryAlert || hasZeroRegionTrials || hasUncoveredStripeTrials || hasBlockedEmailTrials || hasStuckInvites || hasAlertLocaleDrift || hasAuthFailures || hasBundleSecrets || alertLockSilent || weeklyLockSilent || (pheic ?? 0) > 0 ? "⚠️" : "✅";
 
   const cronTableRows = cronStatuses
     .map(({ name, label, windowH, ok }) => {
@@ -1069,6 +1151,8 @@ async function runHealthCheck(_req: NextRequest, supabase: any) {
     ${hasErroring ? `<tr><td colspan="2" style="padding:8px 0;color:#f87171;font-weight:700">⚠️ ${erroring.length} cron(s) à l'heure mais EN ERREUR au dernier passage : ${erroring.map((e) => `${esc(e.name)} (${esc(e.error.slice(0, 120))})`).join(" · ")}</td></tr>` : ""}
     ${alertLockError ? `<tr><td colspan="2" style="padding:8px 0;color:#fbbf24;font-weight:700">🔧 Contrôle « verrou inter-crons d'alerte » impossible : ${esc(alertLockError)}</td></tr>` : ""}
     ${alertLockSilent ? `<tr><td colspan="2" style="padding:8px 0;color:#f87171;font-weight:700">⚠️ Verrou inter-crons MUET le ${esc(alertLock!.day)} — ${alertLock!.deliveries} alerte(s) livrée(s) entre 10h et 12h UTC et AUCUNE réclamation posée dans outbreak_alert_daily_lock. La déduplication watchlist→disease→regional n'a pas fonctionné : un même foyer peut avoir atteint une boîte jusqu'à trois fois.${alertLockCause ? ` Cause remontée par le cron : ${esc(alertLockCause.slice(0, 200))}` : " Aucune cause enregistrée par les crons — regarder Sentry (helper claimOutbreakAlertDaily)."}</td></tr>` : ""}
+    ${weeklyLockError ? `<tr><td colspan="2" style="padding:8px 0;color:#fbbf24;font-weight:700">🔧 Contrôle « verrou hebdo d'e-mail » impossible : ${esc(weeklyLockError)}</td></tr>` : ""}
+    ${weeklyLockSilent ? `<tr><td colspan="2" style="padding:8px 0;color:#f87171;font-weight:700">⚠️ Verrou hebdo MUET pour la semaine du ${esc(weeklyLock!.weekOf)} — ${weeklyLock!.deliveries} envoi(s) comptés par les 4 mailers du lundi et AUCUNE réclamation posée dans weekly_email_send_log. La déduplication send-sitrep→trigger-regional-digest→weekly-digest→weekly-signal n'a pas fonctionné : une même adresse peut avoir reçu jusqu'à quatre e-mails hebdo.${weeklyLockCause ? ` Cause remontée par le cron : ${esc(weeklyLockCause.slice(0, 200))}` : " Aucune cause enregistrée par les crons — regarder Sentry (helper claimWeeklyEmailAddress)."}</td></tr>` : ""}
     ${zeroRegionError ? `<tr><td colspan="2" style="padding:8px 0;color:#fbbf24;font-weight:700">🔧 Contrôle « essai sans région d'alerte » impossible : ${esc(zeroRegionError)}</td></tr>` : ""}
     ${hasZeroRegionTrials ? `<tr><td colspan="2" style="padding:8px 0;color:#f87171;font-weight:700">⚠️ ${zeroRegionTrials.length} essai(s) actif(s) SANS AUCUNE région d'alerte configurée</td></tr>` : ""}
     ${uncoveredStripeError ? `<tr><td colspan="2" style="padding:8px 0;color:#fbbf24;font-weight:700">🔧 Contrôle « abonnement Stripe sans carte » impossible : ${esc(uncoveredStripeError)}</td></tr>` : ""}
@@ -1118,7 +1202,7 @@ async function runHealthCheck(_req: NextRequest, supabase: any) {
   <p style="margin-top:16px;font-size:11px;color:#475569">${new Date().toISOString()}</p>
 </div>`;
 
-  const subject = `${emoji}${hasBundleSecrets ? " 🔴 SECRET EXPOSÉ" : ""} HealthWatch — ${total ?? "?"} foyers${hasOverdue ? ` · ${overdue.length} cron(s) en retard` : ""}${sentryIssues.length > 0 ? ` · ${sentryIssues.length} erreur(s) Sentry` : ""}${deliveryAlert ? ` · ${deliveryIssues.length} canal(aux) en panne` : ""}${hasZeroRegionTrials ? ` · ${zeroRegionTrials.length} essai(s) sans région` : ""}${hasUncoveredStripeTrials ? ` · ${uncoveredStripeTrials.length} essai(s) Stripe sans carte` : ""}${hasBlockedEmailTrials ? ` · ${blockedEmailTrials.length} essai(s) e-mail bloqué` : ""}${hasStuckInvites ? ` · ${stuckInvites.length} invite(s) bloquée(s)` : ""}${hasAuthFailures ? ` · ${authFailures.reduce((n, f) => n + f.count, 0)} échec(s) auth système` : ""}${alertLockSilent ? " · verrou d'alerte muet" : ""}${hasInstitutionalSubs ? ` · 🔔 ${institutionalSubs.length} abonnement(s) institutionnel(s)` : ""}${hasDecisionHorizonTrials ? ` · 🔔 ${decisionHorizonTrials.length} essai(s) à échéance lointaine` : ""} · ${new Date().toLocaleDateString("fr-FR")}`;
+  const subject = `${emoji}${hasBundleSecrets ? " 🔴 SECRET EXPOSÉ" : ""} HealthWatch — ${total ?? "?"} foyers${hasOverdue ? ` · ${overdue.length} cron(s) en retard` : ""}${sentryIssues.length > 0 ? ` · ${sentryIssues.length} erreur(s) Sentry` : ""}${deliveryAlert ? ` · ${deliveryIssues.length} canal(aux) en panne` : ""}${hasZeroRegionTrials ? ` · ${zeroRegionTrials.length} essai(s) sans région` : ""}${hasUncoveredStripeTrials ? ` · ${uncoveredStripeTrials.length} essai(s) Stripe sans carte` : ""}${hasBlockedEmailTrials ? ` · ${blockedEmailTrials.length} essai(s) e-mail bloqué` : ""}${hasStuckInvites ? ` · ${stuckInvites.length} invite(s) bloquée(s)` : ""}${hasAuthFailures ? ` · ${authFailures.reduce((n, f) => n + f.count, 0)} échec(s) auth système` : ""}${alertLockSilent ? " · verrou d'alerte muet" : ""}${weeklyLockSilent ? " · verrou hebdo muet" : ""}${hasInstitutionalSubs ? ` · 🔔 ${institutionalSubs.length} abonnement(s) institutionnel(s)` : ""}${hasDecisionHorizonTrials ? ` · 🔔 ${decisionHorizonTrials.length} essai(s) à échéance lointaine` : ""} · ${new Date().toLocaleDateString("fr-FR")}`;
 
   if (!isRealProduction) {
     console.log("[health-check] non-production run — skipping Brevo email and Sentry check-in/alerts");
@@ -1216,7 +1300,7 @@ async function runHealthCheck(_req: NextRequest, supabase: any) {
   }
 
   return Response.json({
-    ok: !hasOverdue && !hasUnmonitored && !hasErroring && !sentryAlert && !deliveryAlert && !hasZeroRegionTrials && !hasUncoveredStripeTrials && !hasBlockedEmailTrials && !hasStuckInvites && !hasAlertLocaleDrift && !hasAuthFailures && !hasBundleSecrets && !alertLockSilent,
+    ok: !hasOverdue && !hasUnmonitored && !hasErroring && !sentryAlert && !deliveryAlert && !hasZeroRegionTrials && !hasUncoveredStripeTrials && !hasBlockedEmailTrials && !hasStuckInvites && !hasAlertLocaleDrift && !hasAuthFailures && !hasBundleSecrets && !alertLockSilent && !weeklyLockSilent,
     unmonitored,
     erroring,
     total, high, pheic, overdue, cronStatuses, isRealProduction,
@@ -1234,5 +1318,6 @@ async function runHealthCheck(_req: NextRequest, supabase: any) {
     authFailures: { count: authFailures.reduce((n, f) => n + f.count, 0), breakdown: authFailures, error: authFailureError },
     bundleSecrets: { count: bundleSecretMatches.length, matches: bundleSecretMatches, error: bundleSecretError },
     alertLock: { silent: alertLockSilent, cause: alertLockCause, ...(alertLock ?? {}), error: alertLockError },
+    weeklyLock: { silent: weeklyLockSilent, cause: weeklyLockCause, ...(weeklyLock ?? {}), error: weeklyLockError },
   });
 }

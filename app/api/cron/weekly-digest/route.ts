@@ -139,6 +139,11 @@ async function runWeeklyDigest(_req: NextRequest, supabase: SupabaseClient) {
   let blockedSkipped = 0;
   let alreadySent  = 0;
   let crossSentSkipped = 0;
+  // Claims claimWeeklyEmailAddress could not answer. They still send
+  // (fail-open), so they never count as failures — see AlertClaim in
+  // lib/cron-monitor for why that silence needed its own counter.
+  let lockUnevaluable = 0;
+  let lockError: string | null = null;
 
   // One claim per (subscriber, calendar week): see claimWeeklyDigestSend's
   // doc in lib/cron-monitor.ts. Computed once per run so every subscriber in
@@ -154,8 +159,12 @@ async function runWeeklyDigest(_req: NextRequest, supabase: SupabaseClient) {
     // Cross-cron: this address may also be a weekly-signal profile. Scheduled
     // first in vercel.json specifically so this claim normally wins it — see
     // claimWeeklyEmailAddress's doc in lib/cron-monitor.ts.
-    const emailClaimed = await claimWeeklyEmailAddress(supabase, sub.email, weekOf, "weekly-digest");
-    if (!emailClaimed) { crossSentSkipped++; continue; }
+    const emailClaim = await claimWeeklyEmailAddress(supabase, sub.email, weekOf, "weekly-digest");
+    if (emailClaim.state === "unevaluable") {
+      lockUnevaluable++;
+      lockError ??= emailClaim.error ?? "(sans message)";
+    }
+    if (emailClaim.state === "taken") { crossSentSkipped++; continue; }
     try {
       const locale = sub.locale || "en";
       const region = sub.region || "allRegions";
@@ -201,10 +210,11 @@ async function runWeeklyDigest(_req: NextRequest, supabase: SupabaseClient) {
   const degradedNote = [
     suppressionDegraded ? "liste de suppression incomplète (une source en échec)" : null,
     failed > 0 ? `${failed} envoi(s) en échec` : null,
+    lockUnevaluable > 0 ? `verrou hebdo inévaluable ${lockUnevaluable}× : ${lockError}` : null,
   ].filter(Boolean).join(" · ");
   await logCronRun(supabase, "weekly-digest",
     skippedNoKey > 0 || failed > 0 || suppressionDegraded ? "error" : "ok", sent,
     degradedNote || undefined);
-  console.log(`[weekly-digest] Done, ${sent} sent, ${failed} failed, ${skippedNoKey} skipped (no key), ${blockedSkipped} suppressed, ${alreadySent} already sent this week, ${crossSentSkipped} claimed by an earlier Monday mailer, ${subscribers.length} total.`);
-  return NextResponse.json({ sent, failed, skippedNoKey, blockedSkipped, alreadySent, crossSentSkipped, total: subscribers.length });
+  console.log(`[weekly-digest] Done, ${sent} sent, ${failed} failed, ${skippedNoKey} skipped (no key), ${blockedSkipped} suppressed, ${alreadySent} already sent this week, ${crossSentSkipped} claimed by an earlier Monday mailer, ${lockUnevaluable} lock unevaluable, ${subscribers.length} total.`);
+  return NextResponse.json({ sent, failed, skippedNoKey, blockedSkipped, alreadySent, crossSentSkipped, lockUnevaluable, lockError, total: subscribers.length });
 }

@@ -195,16 +195,31 @@ export async function claimWeeklyDigestSend(
  * demande au plus ambiant, ce qui preserve l'argument d'origine entre digest
  * et signal tout en placant le payant devant.
  *
- * Fails open (true) on any DB error, same trade-off as its siblings: a
- * missing/broken table degrades to today's un-deduped-across-crons
- * behavior, not to silently blocking the weekly send.
+ * Fails open ("unevaluable", which every caller treats as granted) on any DB
+ * error, same trade-off as its siblings: a missing/broken table degrades to
+ * today's un-deduped-across-crons behavior, not to silently blocking the
+ * weekly send.
+ *
+ * Reworked 2026-08-25, same evening as claimOutbreakAlertDaily above and for
+ * the same reason: this helper's own comment already named the risk the day
+ * before ("l'appelant ne peut pas distinguer un verrou ACCORDE d'un verrou
+ * INEVALUABLE : les deux renvoient true"), and that exact failure mode then
+ * turned out to be live on outbreak_alert_daily_lock — every claim silently
+ * taking the error branch since the lock shipped. weekly_email_send_log
+ * itself was verified NOT to be in that state (24 real rows, all four
+ * mailers represented) before this rewrite, so this is a parity fix against
+ * a proven risk, not a response to a second live incident. Returns AlertClaim
+ * instead of a boolean for the same reason as its sibling: callers now count
+ * `unevaluable` and carry the verbatim DB error into logCronRun, so a future
+ * silent failure here would be readable from site_config instead of only
+ * Sentry.
  */
 export async function claimWeeklyEmailAddress(
   supabase: SupabaseClient,
   email: string,
   weekOf: string,
   source: string,
-): Promise<boolean> {
+): Promise<AlertClaim> {
   const normalized = email.trim().toLowerCase();
   const { data, error } = await supabase
     .from("weekly_email_send_log")
@@ -215,25 +230,12 @@ export async function claimWeeklyEmailAddress(
     .select("email");
   if (error) {
     console.error(`[cron-monitor] claimWeeklyEmailAddress failed for ${source}/${normalized}/${weekOf}, sending anyway:`, error.message);
-    // Remonte a Sentry en plus du console.error (2026-08-23 au soir).
-    //
-    // Echouer ouvert est le bon choix — un blip DB ne doit pas annuler
-    // l'envoi hebdomadaire de tout le monde. Mais l'appelant ne peut pas
-    // distinguer un verrou ACCORDE d'un verrou INEVALUABLE : les deux
-    // renvoient true. La course se journalise donc "ok" alors que la
-    // protection inter-crons est absente sur ce passage, et les quatre
-    // mailers du lundi peuvent partir non dedupliques sans que rien ne
-    // vire au rouge.
-    //
-    // Sentry ferme cet angle mort au moindre cout : pas de changement de
-    // signature, pas de changement d'appelant, pas de changement de
-    // comportement. Le monitoring reste vert, mais quelqu'un est prevenu.
     Sentry.captureException(new Error(error.message), {
       tags: { helper: "claimWeeklyEmailAddress", source },
     });
-    return true;
+    return { state: "unevaluable", error: error.message };
   }
-  return (data?.length ?? 0) > 0;
+  return { state: (data?.length ?? 0) > 0 ? "granted" : "taken" };
 }
 
 /**
@@ -369,13 +371,15 @@ export function currentAlertDate(): string {
  * and the only witness was a Sentry event nobody reads daily. Callers now
  * count `unevaluable` and carry `error` into their run log, so the DB message
  * that names the cause is readable from site_config without Sentry. The same
- * blind spot still exists on claimWeeklyEmailAddress above — see the note in
- * its error branch, deliberately left untouched here.
+ * blind spot existed on claimWeeklyEmailAddress above — same rewrite applied
+ * there the same evening, reusing this type, once the incident above showed
+ * it wasn't hypothetical.
  */
-export type DailyAlertClaim = {
-  /** granted = this cron owns the (user, outbreak, day) pair and must send.
-   *  taken = a more specific cron already claimed it today, skip the send.
-   *  unevaluable = the lock could not be consulted; send anyway, but say so. */
+export type AlertClaim = {
+  /** granted = this cron owns the (user/address, outbreak/week) pair and must
+   *  send. taken = a more specific/earlier cron already claimed it, skip the
+   *  send. unevaluable = the lock could not be consulted; send anyway, but
+   *  say so. */
   state: "granted" | "taken" | "unevaluable";
   /** Verbatim DB error, set only on "unevaluable". */
   error?: string;
@@ -387,7 +391,7 @@ export async function claimOutbreakAlertDaily(
   outbreakId: string,
   alertDate: string,
   source: string,
-): Promise<DailyAlertClaim> {
+): Promise<AlertClaim> {
   const { data, error } = await supabase
     .from("outbreak_alert_daily_lock")
     .upsert(

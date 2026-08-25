@@ -234,6 +234,11 @@ async function runWeeklySignal(_req: NextRequest, supabase: SupabaseClient) {
   let alreadySent  = 0;
   let crossSentSkipped = 0;
   let suppressed   = 0;
+  // Claims claimWeeklyEmailAddress could not answer. They still send
+  // (fail-open), so they never count as failures — see AlertClaim in
+  // lib/cron-monitor for why that silence needed its own counter.
+  let lockUnevaluable = 0;
+  let lockError: string | null = null;
 
   // Meme source de suppression que les trois autres mailers du lundi. Le test
   // local qui existait ici ne regardait que display_filters.no_weekly_signal,
@@ -264,8 +269,12 @@ async function runWeeklySignal(_req: NextRequest, supabase: SupabaseClient) {
     // Cross-cron: this address may also be a weekly-digest subscriber, which
     // runs first in vercel.json and normally wins the claim for the week —
     // see claimWeeklyEmailAddress's doc in lib/cron-monitor.ts.
-    const emailClaimed = await claimWeeklyEmailAddress(supabase, user.email, weekOf, "weekly-signal");
-    if (!emailClaimed) { crossSentSkipped++; continue; }
+    const emailClaim = await claimWeeklyEmailAddress(supabase, user.email, weekOf, "weekly-signal");
+    if (emailClaim.state === "unevaluable") {
+      lockUnevaluable++;
+      lockError ??= emailClaim.error ?? "(sans message)";
+    }
+    if (emailClaim.state === "taken") { crossSentSkipped++; continue; }
 
     const locale = user.locale ?? "en";
     const unsubUrl = `https://healthwatch-global.com/api/unsubscribe-signal?id=${encodeURIComponent(user.id)}&token=${signUnsubscribeToken(user.id)}&locale=${locale}`;
@@ -301,6 +310,7 @@ async function runWeeklySignal(_req: NextRequest, supabase: SupabaseClient) {
   const degradedNote = [
     suppressionDegraded ? "liste de suppression incomplète (une source en échec)" : null,
     failed > 0 ? `${failed} envoi(s) en échec` : null,
+    lockUnevaluable > 0 ? `verrou hebdo inévaluable ${lockUnevaluable}× : ${lockError}` : null,
   ].filter(Boolean).join(" · ");
   await logCronRun(supabase, "weekly-signal",
     skippedNoKey > 0 || failed > 0 || suppressionDegraded ? "error" : "ok", sent,
@@ -308,6 +318,6 @@ async function runWeeklySignal(_req: NextRequest, supabase: SupabaseClient) {
   // Cette route ne loggait aucun resume — d'ou l'impossibilite de lire son
   // resultat dans les logs Vercel du 2026-08-24, alors que weekly-digest, lui,
   // se laissait lire.
-  console.log(`[weekly-signal] Done, ${sent} sent, ${failed} failed, ${skippedNoKey} skipped (no key), ${suppressed} suppressed, ${alreadySent} already sent this week, ${crossSentSkipped} claimed by an earlier Monday mailer, ${users.length} total.`);
-  return NextResponse.json({ sent, failed, skippedNoKey, suppressed, alreadySent, crossSentSkipped, outbreaks: outbreaks.length });
+  console.log(`[weekly-signal] Done, ${sent} sent, ${failed} failed, ${skippedNoKey} skipped (no key), ${suppressed} suppressed, ${alreadySent} already sent this week, ${crossSentSkipped} claimed by an earlier Monday mailer, ${lockUnevaluable} lock unevaluable, ${users.length} total.`);
+  return NextResponse.json({ sent, failed, skippedNoKey, suppressed, alreadySent, crossSentSkipped, lockUnevaluable, lockError, outbreaks: outbreaks.length });
 }

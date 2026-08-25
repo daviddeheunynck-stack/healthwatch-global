@@ -206,6 +206,11 @@ async function runSendSitrepEmails(_req: NextRequest, supabase: SupabaseClient) 
   const weekOfIso = `${weekOf}T00:00:00.000Z`;
 
   let claimedElsewhere = 0;
+  // Claims claimWeeklyEmailAddress could not answer. They still send
+  // (fail-open), so they never count as errors — see AlertClaim in
+  // lib/cron-monitor for why that silence needed its own counter.
+  let lockUnevaluable = 0;
+  let lockError: string | null = null;
 
   // report.recipients is a free-text list (not always a profiles row). Was
   // matched against the Brevo blocklist alone; now against the union of all
@@ -255,7 +260,12 @@ async function runSendSitrepEmails(_req: NextRequest, supabase: SupabaseClient) 
     // report.id, which never saw that.
     const claimedRecipients: string[] = [];
     for (const address of recipients) {
-      if (await claimWeeklyEmailAddress(supabase, address, weekOf, "send-sitrep-emails")) {
+      const emailClaim = await claimWeeklyEmailAddress(supabase, address, weekOf, "send-sitrep-emails");
+      if (emailClaim.state === "unevaluable") {
+        lockUnevaluable++;
+        lockError ??= emailClaim.error ?? "(sans message)";
+      }
+      if (emailClaim.state !== "taken") {
         claimedRecipients.push(address);
       } else {
         claimedElsewhere++;
@@ -300,6 +310,7 @@ async function runSendSitrepEmails(_req: NextRequest, supabase: SupabaseClient) 
   const degradedNote = [
     suppressionDegraded ? "liste de suppression incomplète (une source en échec)" : null,
     errors > 0 ? `${errors} rapport(s) en échec` : null,
+    lockUnevaluable > 0 ? `verrou hebdo inévaluable ${lockUnevaluable}× : ${lockError}` : null,
   ].filter(Boolean).join(" · ");
   await logCronRun(
     supabase,
@@ -308,5 +319,5 @@ async function runSendSitrepEmails(_req: NextRequest, supabase: SupabaseClient) 
     totalSent,
     degradedNote || undefined,
   );
-  return NextResponse.json({ ok: true, sent: totalSent, blockedSkipped, claimedElsewhere, alreadySent, errors });
+  return NextResponse.json({ ok: true, sent: totalSent, blockedSkipped, claimedElsewhere, alreadySent, errors, lockUnevaluable, lockError });
 }

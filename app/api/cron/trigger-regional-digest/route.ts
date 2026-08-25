@@ -161,6 +161,11 @@ async function runRegionalDigest(supabase: SupabaseClient) {
   let errors = 0;
   let suppressed = 0;
   let claimedElsewhere = 0;
+  // Claims claimWeeklyEmailAddress could not answer. They still send
+  // (fail-open), so they never count as errors — see AlertClaim in
+  // lib/cron-monitor for why that silence needed its own counter.
+  let lockUnevaluable = 0;
+  let lockError: string | null = null;
 
   // Second of the four Monday mailers (07:00). Loses to send-sitrep-emails at
   // 06:50, wins over weekly-digest and weekly-signal.
@@ -196,7 +201,12 @@ async function runRegionalDigest(supabase: SupabaseClient) {
     // after the empty-region and cooldown skips above. Claiming any earlier
     // would reserve addresses for users this route then decides not to mail,
     // silently blocking weekly-digest and weekly-signal for no reason.
-    if (!await claimWeeklyEmailAddress(supabase, user.email, weekOf, "trigger-regional-digest")) {
+    const emailClaim = await claimWeeklyEmailAddress(supabase, user.email, weekOf, "trigger-regional-digest");
+    if (emailClaim.state === "unevaluable") {
+      lockUnevaluable++;
+      lockError ??= emailClaim.error ?? "(sans message)";
+    }
+    if (emailClaim.state === "taken") {
       claimedElsewhere++; continue;
     }
 
@@ -287,6 +297,7 @@ async function runRegionalDigest(supabase: SupabaseClient) {
   const degradedNote = [
     suppressionDegraded ? "liste de suppression incomplète (une source en échec)" : null,
     errors > 0 ? `${errors} envoi(s) en échec` : null,
+    lockUnevaluable > 0 ? `verrou hebdo inévaluable ${lockUnevaluable}× : ${lockError}` : null,
   ].filter(Boolean).join(" · ");
   await logCronRun(
     supabase,
@@ -295,5 +306,5 @@ async function runRegionalDigest(supabase: SupabaseClient) {
     fired,
     degradedNote || undefined,
   );
-  return Response.json({ fired, errors, suppressed, claimedElsewhere });
+  return Response.json({ fired, errors, suppressed, claimedElsewhere, lockUnevaluable, lockError });
 }
