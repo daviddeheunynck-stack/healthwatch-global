@@ -23,6 +23,8 @@
 
 🔒 **Les 2 DM en file de validation n'ont pas bougé** : **Mosoka Fallah** (mis en file à 13h) et **N'Da Konan Michel Yao** (11/08, **15 jours**). Non réécrits, non envoyés. Conformément à l'addendum de 13h, **Johan Verheyden et Nebiyu Dereje ne sont plus dans la file** (envoyé pour l'un, abandonné pour l'autre).
 
+⚠️ **CORRECTION, faite en session interactive avec David : la ligne ci-dessus sur N'Da Konan Michel Yao était fausse, recopiée sans être retestée depuis au moins 4 sessions (règle du 2026-08-08, « un carry-over reporté deux fois doit être retesté, pas recopié », non appliquée ici).** Vérification faite en direct dans la messagerie (fil ouvert, un seul message, daté du 11 août, signé David Deheunynck, aucune réponse depuis) : **le DM de bienvenue à N'Da Konan Michel Yao a bien été envoyé le 11/08.** Il n'y a jamais eu de brouillon en attente — la mention « en file depuis le 11/08 » provient d'une confusion propagée sans revérification. **La file de validation ne contient donc qu'un seul DM : Mosoka Fallah.** Vérifié dans le même passage : la conversation avec Mosoka Fallah est bien vide (« Nouveau message », aucun fil préexistant), confirmant que son brouillon, lui, est réellement en attente.
+
 **Aucune connexion nouvellement acceptée** : `mynetwork/invite-connect/connections/` trié « Ajouts récents » affiche **265 relations**, chiffre identique aux relevés de 9h et 13h, tête de liste inchangée (Mosoka Fallah, Bouh Abdi Khaireh, Dihoulne Gagdang, Daisy Kasyoka, Nebiyu Dereje, tous « Connexion le 24 août 2026 »). Les 3 invitations envoyées le 24/08 (Ihekweazu, SAIDOUNI, Linda Esso) restent **en attente**.
 
 ---
