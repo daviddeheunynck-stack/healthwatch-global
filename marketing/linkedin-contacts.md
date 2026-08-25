@@ -198,6 +198,8 @@ Boîte de réception parcourue en entier (20 conversations). **Un seul message e
 
 **QA: mécanique PASS (essai 2) | relecteur ENVOYER 12/12 (essai 1) | aucun chiffre de la base (85 et 89 viennent du fil) | aucune affirmation HWG | registre du 24/08 17h10**
 
+**⭐ Redouble-check demandé par David le 25/08 en session, texte inchangé.** Relance complète : mécanique PASS, relecteur neuf ENVOYER 12/12, avec vigilance élargie sur la cohérence avec les 19 messages du fil (notamment le message de David du 24/08 11:16 sur les replication packages, qu'aucune phrase du brouillon ne contredit). Toujours **en attente d'envoi**.
+
 ⚠️ **Faux positif de contexte à signaler, distinct de ceux du 13h.** L'essai 1 a été bloqué par `context.too-soon` (« *Dernier message il y a 0 j, minimum 3 j entre deux envois* ») parce que j'avais renseigné `lastOutboundDate`. Or ce champ appartient à la famille **relance** du lexique (`_comment` : « *Plafond de relance validé le 23/08* »), et Johan **a répondu** entre-temps : `outboundUnanswered` vaut 0, il n'y a aucune relance en cours. **La convention déjà établie dans ce dépôt est d'omettre `lastOutboundDate` quand le dernier message sortant a reçu une réponse** — les trois contextes du créneau de 13h (`ctx-ayonga`, `ctx-al-azebi`, `ctx-darrel`) le font tous, y compris AYONGA qui était le même cas de figure. **C'est donc moi qui avais mal décrit le contexte, pas le script qui a mal jugé**, et l'essai 2 s'est aligné sur la convention. À noter tout de même pour `lexicon.json` : appliqué à la lettre, `minDaysBetweenOutbound` interdirait de répondre le jour même à quelqu'un qui vient d'écrire, ce que la politique commune §3 encourage explicitement.
 
 ---
@@ -206,27 +208,35 @@ Boîte de réception parcourue en entier (20 conversations). **Un seul message e
 
 **Reprise du carry-over #4 du créneau de 13h**, lui-même hérité de l'abandon du matin. Le profil n'a jamais cessé d'être pertinent : *Editor in Chief and Head of Division, **Knowledge Management and Policy Translation** at Africa CDC*, Addis-Abeba. Invitation envoyée le 23/08 sans note, acceptée le 24/08, **aucun échange préalable**.
 
-**Comment la reprise a été menée, et pourquoi elle a abouti là où le matin avait échoué.** Le matin, l'abandon portait sur l'énumération des sources HWG (« WHO, ECDC, PAHO, Africa CDC »), qui revient dans des dizaines de messages archivés. Le rédacteur neuf de ce créneau a reçu **la liste explicite des tournures interdites**, énumération comprise, plus l'interdiction de décrire le produit. Résultat : le mot HWG apparaît une fois, sans aucune description de fonctionnement, et l'angle ne repose plus du tout sur ce que fait la plateforme.
+**Angle retenu** : son intitulé associe deux fonctions rarement adjacentes (gestion des connaissances, traduction politique) ; le point aveugle de David (jamais le processus qui produit un bulletin, jamais ce qu'il devient ensuite) et une question ouverte sur sa pratique quotidienne.
 
-**Angle retenu** : son intitulé nomme précisément **l'étape que David ne voit jamais** — ce qui se passe après qu'une page existe et avant que quoi que ce soit change à cause d'elle. D'où la question, que lui seul peut trancher : quand un bulletin finit par déplacer une décision dans un ministère ou une agence, qu'est-ce qui déplace réellement ? Le document, la personne qui le porte dans la salle, ou une question de calendrier que le dossier n'enregistre jamais.
-
-**⚠️ Son post du jour relaie une tribune signée par des dirigeants d'Africa CDC et de l'OMS sur la riposte Ebola en RDC.** Le partage sert d'accroche factuelle, **le fond politique n'est ni repris, ni commenté, ni validé** (§10). Aucun nom de dirigeant, aucune mention de la RDC, aucune prise de position sur la souveraineté sanitaire.
-
-**Texte du brouillon, en attente de validation de David :**
-
-> Nebiyu, your share of the Al Jazeera piece earlier today is what made me write, though not for the reason you would expect. I read official health bulletins most of the week, and what you posted sits on the far side of a line I never get to cross.
->
-> I run HealthWatch Global from a developer's desk rather than an epidemiologist's, so what I see of a bulletin is the published document and almost nothing of what happens to it afterwards. Your title names the exact stretch I have no view of: what happens after the page exists and before anything changes because of it. I can watch a bulletin appear. I have never once watched one turn into somebody's decision.
->
-> Which leaves me a question you are far better placed to settle than I am: when a bulletin does end up moving a decision inside a ministry or an agency, what is usually doing the moving? The document itself, the person who carries it into the room, or a matter of timing that the file itself never records?
-
-**QA: mécanique PASS (essai 3) | relecteur ENVOYER 12/12 (essai 2) | aucun chiffre cité | affirmation HWG remontée puis tranchée PASS par le relecteur | registre du 24/08 17h10**
-
-**⭐ Ce que le relecteur a attrapé et que je n'avais pas vu, deux fois.**
-1. **Question 4.** La version précédente écrivait « *so I see documents **at the moment they go public** and then almost nothing afterwards* ». Le « so » chaînait la phrase au fonctionnement de HWG et en faisait une **affirmation de latence**. Le registre produit n'autorise pas mieux que « *within the hour* » (`alerts.realtimeProDesc`), et `manualClaims` est vide. « At the moment they go public » est plus fort que ce qui est couvert. Corrigé en « *what I see of a bulletin is the published document* », qui n'affirme plus aucun délai. **Je n'aurais pas vu cette phrase comme une affirmation produit** : elle parle grammaticalement de David, pas de la plateforme.
-2. **Question 7.** La version précédente disait « *this morning* ». Corrigé en « *earlier today* », qui reste vrai quelle que soit l'heure de publication réelle et le décalage d'Addis-Abeba. Un détail temporel faux est précisément ce que le destinataire est le seul à pouvoir contredire immédiatement.
+**⚠️ Son post du jour relaie une tribune signée par des dirigeants d'Africa CDC et de l'OMS sur la riposte Ebola en RDC.** Le partage sert d'accroche factuelle, **le fond politique n'est ni repris, ni commenté, ni validé** (§10). Aucun nom de dirigeant, aucune mention de la RDC, aucune prise de position sur la souveraineté sanitaire ni sur l'efficacité de la tribune.
 
 ---
+
+**⭐⭐ RÉÉCRITURE COMPLÈTE le 25/08, à la demande de David en session (« double check les dms »). Le texte ci-dessous remplace celui qui était en file depuis le 24/08 17h : ce dernier a échoué en re-vérification malgré deux validations antérieures.**
+
+**Ce que la re-vérification a trouvé sur le brouillon original**, alors qu'il avait été validé « ENVOYER 12/12 » deux fois de suite le 24/08 (essai 2 puis essai 3) :
+1. **Affirmation produit non couverte**, glissée dans une phrase parlant grammaticalement de David (même piège que sur le fil Ayonga trouvé plus tôt le même jour) : « *so what I see of a bulletin is the published document and almost nothing of what happens to it afterwards* » — la seconde moitié n'est couverte par aucune claim de `lexicon.json`.
+2. **Interprétation de son intitulé présentée comme une lecture littérale** : « *Your title names the exact stretch I have no view of* » alors que « ce qui se passe après que la page existe » est une glose du terme « Policy Translation », pas une lecture directe.
+3. **Repère temporel devenu faux** : « *earlier today* » alors que le post datait de la veille (envoi le mardi 25/08 pour un post du lundi 24/08).
+4. **Gabarit devenu un tic de la maison** : la structure « ce que je vois d'un bulletin, c'est X » + « votre intitulé nomme exactement Y que je ne vois pas » avait été **spontanément reproduite le même matin par un rédacteur totalement indépendant**, sans accès à ce brouillon, pour un tout autre destinataire (Alieu Sowe) — signal qu'il ne s'agit plus d'un trait ponctuel mais d'un moule reproductible.
+
+**Une première réécriture depuis zéro a échoué à son tour**, sur 3 points cette fois : la même structure de gabarit rejouée sous une autre forme (deux paragraphes bâtis sur « ce point m'est invisible/fermé »), une interprétation de son intitulé de nouveau présentée sans réserve, et une question de clôture qui interrogeait implicitement l'efficacité de la tribune Kaseya/Tedros/Janabi partagée par Nebiyu — entorse au silence politique exigé (§9/§10).
+
+**Une deuxième réécriture depuis zéro, par un rédacteur neuf sans accès aux deux versions précédentes, a été validée 12/12.**
+
+**Texte du brouillon actuel, en attente de validation de David :**
+
+> Nebiyu, thanks for connecting. Your share of yesterday's piece on the Bundibugyo response is what caught my eye, mostly because of how your title reads: knowledge management sitting right next to policy translation, a pairing I don't come across often.
+>
+> HealthWatch Global is what I built to pull active-outbreak bulletins into one place, Africa CDC's own among them, alongside the WHO's and ECDC's. I read the finished documents for a living, never the process that produced them or the meetings where someone decides what to do with them.
+>
+> Genuinely curious, if you have a moment: in your day-to-day, does turning a bulletin into something a ministry or an agency acts on look more like translation, where the substance carries over and only the language changes, or is it closer to negotiation, where the content itself gets reshaped before anyone signs off on it?
+
+**QA (2 réécritures) : mécanique PASS (essai 3 sur cette version) | relecteur neuf ENVOYER 12/12 (essai 1 pour ce texte) | aucun chiffre | affirmation HWG couverte par `lexicon.json` (« Agrège les bulletins publiés par WHO (DON), ECDC, PAHO, Africa CDC, WHO AFRO, WHO EMRO. ») | registre du 25/08**
+
+⚠️ **Ce que cette double re-vérification signale, au-delà de ce seul message.** Un brouillon peut être validé « 12/12 » deux fois par deux relectures différentes et contenir malgré tout des défauts réels — le premier relecteur d'un texte ne teste, par construction, que ce texte-là, jamais sa cohérence avec ce qui a déjà été écrit ailleurs le même jour. C'est la 2e fois aujourd'hui (voir aussi Patrick AYONGA) qu'une revérification demandée par David trouve des défauts que le dispositif avait laissés passer. **Proposition à trancher hors routine : la question 7 du relecteur devrait explicitement inclure « ce brouillon est-il cohérent avec ce qui a été écrit ailleurs le même jour/la même semaine dans le dispositif ? », pas seulement avec le fil en cours.**
 
 ### ❌ DM ABANDONNÉ n°1 — **Dihoulne Gagdang** (message de bienvenue, 4 essais épuisés)
 
