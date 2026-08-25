@@ -2,6 +2,138 @@
 
 Archive de tout le contenu créé. Mise à jour à chaque session.
 
+## 📅 Session linkedin-hwg-monitoring — 25/08/2026 (9h)
+
+**Vérification double déclenchement** : aucune entrée datée du 25/08 dans ce fichier ni dans `linkedin-contacts.md` à l'ouverture → **premier déclenchement de cette routine aujourd'hui**.
+
+**Registre de faits régénéré en début de run** : `npm run qa:facts` → **227 faits citables sur 109 lignes affichées**, 81 lignes `is_seed` exclues, **53 faits périmés**. ⚠️ **Alerte de fraîcheur inchangée, 4e jour consécutif** : Shigellosis / EU-EEA (**53 j**), Diphtheria / 8 pays (**40 j**), Meningitis / 4 pays (**33 j**). Non résolue par les 3 créneaux du 24/08.
+
+**🖥️ Navigateur** : `_shared/browser-status.md` lu avant ouverture, dernière entrée du jour précédente = **🟢 RÉTABLI ~09h15 le 24/08** → aucun bridage. `23c7ecdd-…` seul listé, sélectionné sans question (§7). Rien de neuf à écrire dans `browser-status.md`.
+
+⚠️ **Anomalie JS asynchrone : PRÉSENTE ce matin.** `(async () => 42)()` renvoie `{}`. C'est la **première fois qu'elle touche le créneau de 9h** (jusqu'ici uniquement les créneaux de 13h, les 22, 23 et 24/08). Session menée entièrement en **JS synchrone**, sans autre conséquence. Le filtre de sortie `[BLOCKED: Cookie/query string data]` s'est déclenché **1 fois** (extraction de `href` de profils) ; contourné en n'extrayant que le slug via regex.
+
+🔧 **Note technique navigateur, à réutiliser — l'éditeur de commentaire LinkedIn n'est plus Quill.** Le sélecteur `div.ql-editor[contenteditable="true"]`, utilisé par toutes les sessions précédentes, **ne matche plus rien**. L'éditeur est désormais un `[contenteditable="true"]` de classe `tiptap ProseMirror`. Deuxième piège du même endroit : le bouton d'envoi du commentaire porte le libellé **`Commenter`**, pas `Publier` — et il faut le distinguer du bouton `Commenter` de la barre d'action du post, qui lui porte un `aria-label` (le bouton de soumission n'en a pas). Troisième piège : les titres de posts écrits en **caractères gras Unicode** (𝗔𝗻…) ne sont **pas** trouvables par un `indexOf` sur leur équivalent ASCII — vérifier l'identité d'un post sur le nom de l'auteur ou une phrase en texte normal, jamais sur son titre stylé.
+
+---
+
+### 💬 COMMENTAIRE PUBLIÉ (1/7) — **Martin Yakum** (Epidémiologiste chez Epicentre / MSF, relation 1er degré)
+
+**Post ciblé** : `urn:li:activity:7497884672853557248`, publié il y a 1 h, **« An Outbreak Is Never Just A Disease Problem »**, 1 réaction, 1 republication, **0 commentaire au moment de la publication** (nous sommes le premier). Fenêtre 48 h : largement respectée. Règle 1 commentaire/profil/semaine : **respectée**, Martin Yakum ne figure dans aucun blocage hebdomadaire en cours (dernier commentaire chez lui remontant à la mi-août).
+
+**Sa question de clôture** : « *What do you think is the most overlooked factor in outbreak responses?* »
+
+**Angle retenu.** Son post énumère des variables de contexte (mobilité, accès aux soins, confiance, insécurité) mais ne dit rien de leur **temporalité**. C'est là qu'il y avait quelque chose à ajouter depuis le poste d'agrégation : la courbe de transmission bouge à la semaine, parfois au jour ; tout ce qu'il range sous « contexte » est documenté sur une horloge plus lente et bien moins régulière. Superposer les deux revient donc à travailler à la résolution de la source la plus lente, et une partie de ce qui se lit ensuite comme une explication contextuelle est un artefact de cet écart. L'angle est **légèrement à contre-courant de sa thèse**, ce qui est précisément ce qui le rend utile.
+
+⚠️ **Ses chiffres n'ont pas été repris, volontairement.** Son post avance « *Recent reports put confirmed cases above 5,500 and deaths above 2,600* » sans citer de source. Le registre de faits donne pour la ligne Ebola/RDC active **5 290 cas et 2 516 décès au 19/08**. Reprendre ses chiffres aurait été un chiffre non sourcé ; le commentaire n'en cite aucun. Voir la section épidémio du bilan.
+
+**Texte publié** (confirmé : champ vidé, commentaire visible dans le fil sous le nom de David) :
+
+> Seen from the aggregation end, the factor I would add is cadence. A transmission curve moves weekly, sometimes daily. Access, displacement, insecurity and trust are documented on a slower and far less regular clock. Laying the two side by side therefore happens at the resolution of the slower one, and part of what then reads as a contextual explanation is really an artefact of that gap. Context may well be part of epidemiology, but the record of it is not yet on the same timetable.
+
+**QA: mécanique PASS (essai 1) | relecteur ENVOYER 12/12 (essai 1) | aucun chiffre cité | registre du 25/08**
+
+**⭐ Ce que le relecteur a vérifié et que je n'avais pas vu.** Il a relevé que le registre porte **deux lignes Ebola/RDC contradictoires** — une active à 5 290 cas et une marquée close à 4 120 cas. Le commentaire ne s'expose à cette divergence ni dans un sens ni dans l'autre puisqu'il ne qualifie aucun statut, mais **la divergence en base est réelle et remonte au bilan**. Il a aussi signalé, sans que ça change le verdict, que « *displacement* » est le seul mot du commentaire qui ne vienne pas du post (l'auteur écrit « mobility ») et le seul qu'un lecteur pourrait tirer vers le conflit ; le reste du vocabulaire sensible est repris de sa propre énumération neutre.
+
+---
+
+### 🛑 CANDIDATS COMMENTAIRE ÉCARTÉS — 3, dont 2 sur le terrain politique (§9/§10)
+
+Le quota de commentaires (7/jour) est un objectif à remplir, pas un plafond, et la recherche a bien été menée : notifications complètes, fil parcouru sur plusieurs paliers, pages d'activité de profils prioritaires. **Elle a produit quatre candidats de qualité en plus de Martin Yakum. Trois ont été écartés pour des raisons qui tiennent, un est bloqué d'un jour.** La barre de pertinence n'a pas été baissée pour remplir le chiffre.
+
+**1. 🛑 Dr. Ahmed Ogwell OUMA** (`urn:li:activity:7497593938820636672`, 21 h, *President & CEO VillageReach, ancien Directeur général adjoint d'Africa CDC*, 86 réactions). Post sur les 100 jours d'Ebola en RDC en marge du **RC76AFRO**, mais dont le corps est un plaidoyer explicite sur la **souveraineté sanitaire africaine** : « *We cannot claim health sovereignty while continuing to outsource our strategizing and planning to foreign experts and institutions* ». **Écarté avant rédaction.** Un commentaire signé par un développeur français sous ce post ne peut pas être neutre, quel que soit son contenu : approuver, nuancer ou même simplement s'y adosser revient à prendre position. §9 impose un silence total dans les deux sens, §10 range la question dans les décisions de positionnement qui reviennent à David.
+
+**2. ❌ Page World Health Organization African Region** (`urn:li:activity:7497661506315042816`, 17 h, 79 réactions, 4 commentaires lus en entier). Post sur le Dialogue ministériel de haut niveau avant le RC76AFRO. **Brouillon écrit, contrôle mécanique PASS (essai 2), puis rejeté par le relecteur sur les questions 4 et 9.** L'angle retenu était l'observabilité : les fondations dont parle le post (régulation, production locale, financement) se mesurent sur d'autres calendriers que les flambées, donc ce qu'un pays construit entre deux événements ne se voit pas depuis les bulletins. **Le relecteur a démontré que cet angle était intenable ici, sur deux plans.** (a) *Affirmation non couverte* : « *bulletins document a response while it runs and fall silent once it ends* » est une caractérisation du cycle éditorial des bulletins que `lexicon.json` n'autorise pas, et que **le registre de faits contredit directement** — il est en partie alimenté par des publications hebdomadaires numérotées par semaine calendaire, qui ne se taisent pas quand une flambée s'arrête. (b) *Terrain politique* : sous un post qui se termine par « *advancing greater African ownership of health priorities* », dire que ce que construisent ces pays « *leaves almost no published trace* » et reste « *invisible* » est un jugement non sollicité sur la production documentaire d'institutions africaines, publié sous la page de l'institution elle-même, un jour où le fil porte ce débat. Le relecteur a explicitement noté que la correction minimale n'existait pas : « *il faut un autre angle* ». **Abandonné plutôt que rapiécé.**
+
+**QA: ABANDON | motifs: relecteur REECRIRE (4, 9), angle jugé non corrigeable | rien publié sous ce post**
+
+**3. 🛑 Dr. Ibrahima Socé Fall** (1 j, *CEO Institut Pasteur de Dakar, ancien Assistant Director-General de l'OMS*, relation de 1er degré, aucun blocage hebdomadaire en cours). Son post compare la riposte de 2019 à Mwenga au dispositif actuel et contient une observation de données qui nous serait accessible : « *Since the beginning of the 17th DRC Ebola outbreak I haven't seen any report of probable deaths, while the detection was so late and we still see so many community deaths* ». **Écarté malgré cela** : il conclut par « *Without transparency and accountability both from DRC and partners, this outbreak is going to last very long* », en taguant nommément Tedros Adhanom Ghebreyesus, Dr. Jean Kaseya et Chikwe Ihekweazu. C'est une mise en cause de responsabilité institutionnelle ; **tout commentaire de HWG sous ce post serait lu comme une prise de parti**, même strictement technique. Même arbitrage que pour le candidat 1.
+
+---
+
+### ⏳ CANDIDAT BLOQUÉ D'UN JOUR, HOOK PRÊT — **Prof. Jérôme Salomon**
+
+`urn:li:activity:7497662922005958656` — **URN vérifiée à l'écran ce run**, post publié il y a 17 h (donc encore dans la fenêtre de 48 h demain matin). *Chief Medical & Science Officer ; ancien Directeur général de la Santé et ancien Sous-Directeur général de l'OMS.*
+
+**Bloqué par la règle « 1 commentaire par profil et par semaine »** : nous avons commenté chez lui le **19/08** (commentaire 7/7). Le blocage tombe le **26/08**. Ne pas forcer aujourd'hui.
+
+⭐ **Fait notable, à signaler pour lui-même.** Son infographie porte aujourd'hui **5 290 cas confirmés et 2 516 décès en RDC, arrêtés au 20 août, sources WHO / ECDC**. Ce sont **exactement les valeurs du registre HWG** (`asOf` 2026-08-19). Or c'est ce même compte qui avait publié le **19/08** le chiffre **4 945 / 2 325**, une reprise secondaire fausse, et c'est précisément ce que notre commentaire 7/7 du 19/08 lui opposait. **Il publie désormais le chiffre primaire.** On ne peut évidemment pas s'attribuer la correction, mais l'écart a disparu.
+
+**Angle prêt pour demain, à revérifier avant publication** : son texte avance « *En moyenne, 90 cas ont été confirmés chaque jour au cours des 3 premiers mois* ». Multiplié par une centaine de jours, cela donnerait de l'ordre de 8 000 à 9 000 cas confirmés, alors que **sa propre infographie, dans le même post, en affiche 5 290 au 20 août**. Les deux chiffres ne peuvent pas être vrais ensemble : 5 290 sur 100 jours font une cinquantaine de cas confirmés par jour, pas 90. C'est une incohérence interne au post, vérifiable sans rien d'extérieur, et c'est exactement le contrôle que la grille §5 item 2 impose (refaire le calcul, pas seulement vérifier chaque chiffre isolément). **Angle purement arithmétique, aucun terrain politique**, ce qui le distingue des trois candidats écartés ci-dessus.
+
+---
+
+### 📋 Relevé QA du run
+
+**6 textes menés dans le dispositif : 1 publié, 1 mis en file, 3 abandonnés, 1 écarté avant rédaction. 13 passages au contrôle mécanique, 6 passages au relecteur.**
+
+| Message | Canal | Mécanique | Relecteur | Issue |
+|---|---|---|---|---|
+| **Martin Yakum** | commentaire | **PASS essai 1** | **ENVOYER 12/12 (1er passage)** | ✅ **publié** |
+| **Patrick AYONGA** | DM | FAIL essai 1 → PASS essai 3 | REECRIRE (5, 9) → **ENVOYER 12/12** | 🔒 **en file de validation** |
+| **Mosoka Fallah** | DM | FAIL ×2 → PASS → **FAIL essai 4** | REECRIRE (1, 4, 5, 6) | ❌ **ABANDON** |
+| **Alieu Sowe** | note de connexion | PASS ×2 | **REECRIRE (6, 11) → REECRIRE (11)** | ❌ **ABANDON** |
+| **WHO AFRO (page)** | commentaire | FAIL essai 1 → PASS essai 2 | **REECRIRE (4, 9)** | ❌ **ABANDON** |
+| *Ahmed Ogwell / Socé Fall* | *commentaires* | *non soumis* | *non soumis* | 🛑 *§9, terrain politique* |
+
+**Un seul brouillon est passé du premier coup aux deux étages** : le commentaire Martin Yakum. C'est mieux que les trois créneaux du 24/08 (aucun), mais le taux d'abandon monte : **3 sur 5 textes soumis**, contre 2 sur 5 au créneau de 17h la veille.
+
+**Ce que le relecteur a attrapé et que je n'avais pas vu, ce run — 8 défauts réels sur 4 messages** (détail dans `linkedin-contacts.md` et ci-dessus). Les deux plus significatifs :
+1. **La même erreur produit deux jours de suite.** Le 24/08, le relecteur avait bloqué « *at the moment they go public* » chez Nebiyu Dereje parce que c'était une affirmation de latence non couverte, glissée dans une phrase parlant grammaticalement de David. Aujourd'hui, chez Mosoka Fallah, « *The one change I can actually observe between 2014 and now* » est le même piège avec une antériorité à la place d'une latence, et **je ne l'ai pas davantage vu**. Ce n'est pas un hasard de formulation, c'est un angle mort stable du rédacteur : une phrase dont le sujet est David semble échapper au registre produit alors qu'elle affirme quelque chose sur la plateforme.
+2. **Un gabarit rhétorique recyclé par un rédacteur au contexte neuf.** Voir la section Alieu Sowe dans `linkedin-contacts.md` : le rédacteur de remplacement, qui n'avait pas accès au brouillon rejeté, a spontanément reproduit la structure d'un DM mis en file **la veille** pour quelqu'un d'autre. La forme est donc devenue un tic de la maison, pas d'un rédacteur, et le contrôle mécanique ne peut pas l'atteindre.
+
+---
+
+### 🔧 Défauts d'outillage relevés — 3, dont 1 nouveau et coûteux
+
+**Aucune modification de `lexicon.json` ni d'aucun script n'a été faite en cours de run** (règle de périmètre). Ce sont des constats à trancher hors routine.
+
+**1. 🔴 NOUVEAU, et il a coûté le message le plus qualifié du run.** Le 4e et dernier essai du DM **Mosoka Fallah** a été bloqué par `facts.unsourced` sur le nombre **2014**, avec ce motif : « chiffre épidémiologique, il doit venir d'une ligne de la base ». Or 2014 est une année, citée **mot pour mot dans le post du destinataire**. J'ai lu le script pour comprendre, et **deux bugs distincts se combinent** :
+   - `EPI_NEAR` (ligne 122 de `scripts/check-outreach-message.mjs`) est un motif **sans limites de mots** : `/(cas|case|deaths?|...)/i`. Le brouillon contenait « *on the occ**as**ions it actually holds* » : la sous-chaîne **cas** de « occasions » a suffi à faire classer 2014 comme un chiffre épidémiologique, ce qui l'a fait sortir de la branche « c'est une année, on ignore » (ligne 219). Le même motif matcherait « be**cas**e », « cas**cade** », « showcase », « decease »...
+   - Le filet de secours n'a pas joué non plus : `threadNumbers` (ligne 205) extrait les nombres du fil avec `/\d[\d\s  .,]*\d|\d+/g`, un motif **glouton qui traverse la ponctuation**. Dans « *in 2014. 11 years later* », il capture **« 2014. 11 »** comme un seul nombre. Résultat : **2014 n'est jamais entré dans l'ensemble des nombres du fil**, alors qu'il y figure littéralement, et le script a exigé qu'il vienne de la base.
+   - **Conséquence pratique** : n'importe quel message citant une année mentionnée par l'interlocuteur peut être bloqué, de façon non déterministe, selon les lettres des mots voisins. Correctifs évidents : ajouter `\b` autour des termes d'`EPI_NEAR`, et empêcher la capture de nombres de traverser un point suivi d'une espace.
+
+**2. 🔴 Le seuil de 5 mots consécutifs continue de bloquer de la langue ordinaire — 3e jour consécutif de signalement.** Formules rejetées ce run : « jusqu en haut puisqu il », « invisible from where i sit », « from the outside those two », « what i cannot tell from », « the one an outside reader ». Sur 13 passages mécaniques, **5 échecs sur 6 viennent de ce seul contrôle**. Le corpus grossit chaque jour et le problème s'aggrave mécaniquement. Effet pervers observé aujourd'hui sur Mosoka Fallah : la correction du premier `ngram.history` a **introduit** un second `ngram.history` plus large (5 formules au lieu de 2), ce qui a consommé un essai pour rien.
+
+**3. 🟡 Le canal des notes de connexion s'appelle `linkedin-connect-note`, pas `linkedin-note`.** Le script s'arrête sur `ABORT — canal inconnu` sans suggérer les valeurs valides. Les canaux acceptés sont `linkedin-connect-note`, `linkedin-comment`, `linkedin-dm`, `linkedin-post`, `email`. `docs/outreach-qa.md` ne les liste nulle part : son exemple de contexte ne montre que `linkedin-dm`. Une ligne dans la doc suffirait.
+
+---
+
+### 🗒️ Veille — données épidémiologiques (§8)
+
+**Un écart à signaler, aucune écriture en base faite** (une routine sociale ne fait pas l'écriture, elle signale la source et la date d'arrêt).
+
+- **Martin Yakum** avance dans son post « *Recent reports put confirmed cases above 5,500 and deaths above 2,600* » pour Ebola Bundibugyo / RDC, **sans citer de source**. Le registre HWG porte **5 290 cas et 2 516 décès, arrêtés au 19/08**, source `insp.cd`. L'écart va dans le sens d'une progression, donc il est plausible, mais **une reprise sans source n'est pas une source** : rien n'a été repris, et le commentaire publié ne cite aucun chiffre.
+- **Prof. Jérôme Salomon** publie le même jour **5 290 / 2 516 arrêtés au 20 août, sources WHO / ECDC** : cohérent avec la base, à un jour près sur la date d'arrêt.
+- **Piste concrète pour `morning-don-check`** : Patrick AYONGA a transmis en DM le **SitRep national n°093 du 15 août** ; les numéros suivants (n°095 et au-delà) devraient couvrir la période du 20 au 24/08 et permettre de trancher entre 5 290 et « plus de 5 500 » sur une source primaire. Ne pas écrire en base depuis un post LinkedIn.
+- ⚠️ **Divergence interne au registre, relevée par le relecteur du commentaire Yakum** : `claimable-facts.json` contient **deux lignes Ebola / RDC contradictoires**, une active à 5 290 cas et une marquée close à 4 120 cas. Le commentaire publié ne s'y expose pas puisqu'il ne qualifie aucun statut, mais **la divergence est réelle en base et mérite d'être tranchée hors routine**.
+- **Alerte de fraîcheur du registre, 4e jour consécutif sans résolution** : Shigellosis / EU-EEA **53 j**, Diphtheria / 8 pays **40 j**, Meningitis / 4 pays **33 j**.
+
+---
+
+### 🔁 CARRY-OVER POUR LE CRÉNEAU DE 13h — liste exhaustive
+
+1. 🔒 **3 DM en attente de validation de David** : **Johan Verheyden** et **Nebiyu Dereje** (mis en file le 24/08 à 17h, vérifiés non envoyés ce matin) et **Patrick AYONGA** (mis en file ce run). **Ne pas les réécrire, ne pas les envoyer** : vérifier seulement si David a tranché.
+2. ❌ **Mosoka Fallah (Africa CDC) : DM abandonné sur un faux positif d'outillage.** Contact décideur, connexion acceptée, hook et angle **validés par le relecteur (11 et 12 en PASS)**. **À reprendre en priorité** : reformuler sans le mot « occasions » et en détachant les onze ans de 2014. Ne pas re-chercher le hook, il est dans `tmp/thread-mosoka-fallah.txt`.
+3. ❌ **Alieu Sowe : note de connexion abandonnée après réécriture depuis zéro.** Profil décideur (Ministère de la Santé, Gambie), 14 mutuels. **Deux formes brûlées**, en trouver une 3e. L'invitation **n'est pas partie**.
+4. 🆕 **Bouh Abdi Khaireh, MD, PhD** (*Coordinator — Global Fund/PMU*) : connexion acceptée le 24/08, **aucun échange, aucun message rédigé ce run**. Message de bienvenue à faire.
+5. 🆕 **Dorine Ngono** (`/in/dorine-ngono/`, *MD/ MSc FETP*, Cameroun) : **carry-over #15 de la veille définitivement clos, elle est relation de 1er degré**. Aucun échange en messagerie → message de bienvenue à faire.
+6. ⏳ **Prof. Jérôme Salomon** : commentaire **bloqué jusqu'au 26/08** (hebdomadaire). URN `7497662922005958656` vérifiée, angle arithmétique prêt ci-dessus. **Ne pas le traiter à 13h ni à 17h aujourd'hui.**
+7. 🛑 **Ahmed Ogwell OUMA et Ibrahima Socé Fall** : écartés sur le terrain politique. **Ne pas les reproposer sur ces posts-là**, même sous un autre angle.
+8. 🛑 **Alain BASHIZI : élément neuf, il a maintenant envoyé une invitation** avec note, en plus de sa sollicitation personnelle, et a consulté le profil de David une 3e fois. **Toujours en attente de la décision de David**, invitation non acceptée. Ne pas répondre, ne pas relancer, ne pas rouvrir l'arbitrage.
+9. ⚠️ **DM de bienvenue en attente de validation depuis le 11/08 pour N'Da Konan Michel Yao** (*Director at WHO*). **14 jours.** Le plus ancien de la file.
+10. **2 invitations reçues laissées en attente** : **Zachariah G. Houdari** (assurance-vie, hors sujet) et **OLAOLUWA PHILIP** (**11e passage**, ne pas rouvrir le profil tant que David n'a pas tranché).
+11. **3 invitations envoyées toujours sans réponse** : Ihekweazu, SAIDOUNI, Linda Esso (envoyées le 24/08).
+12. **Blocages hebdomadaires de commentaire en cours** : Melvin Sanicas, Robert Herriman, Patrick AYONGA, Ifedayo Adetifa, page ECDC, Oliver Morgan, Dr Fabrice KHADDY (jusqu'au 30/08) ; Apoorva Wasnik et Johan Verheyden (jusqu'au 29/08) ; **Prof. Jérôme Salomon jusqu'au 26/08** ; **nouveau ce run : Martin Yakum jusqu'au 01/09**.
+13. ❌ **Idrissa Sow** (`/in/idrissa-sow-a6569b5a/`) : écarté ce run sur l'absence totale de posts récents. Ne pas reproposer sans élément neuf.
+14. **Dr. Jibran Khan** : écarté le 24/08, profil non rouvert ce run conformément à la consigne. Reste le seul abonné non suivi en retour.
+15. 🟡 **Homonymies de dirigeants d'agences nationales, toujours sans arbitrage de David** : Jean-Jacques Muyembe (**8e jour**) et Jide Idris.
+16. **Carry-overs permanents inchangés, non revérifiés ce run** : Kaushal Sharma, Barrè Onivogui, Andrea Bernasconi, Lorenzo Pezzoli, Mohamed Ousmane COULIBALY (ne pas relancer avant un retour concret sur le site). **Pierre PARNEIX** : « 👍 » sans fond, aucune réponse due. **Chinasaokwu Nweke** : fil clos le 23/08, ne pas rouvrir.
+17. **Écartés définitifs, ne pas réévaluer** : Michelle Jones, Jane Hedger, GEOMAP PRO, Julia Gal, Daisy Kasyoka (pas de hook vérifiable tant qu'elle ne publie pas).
+18. 🔧 **Notes techniques navigateur, à réutiliser** : éditeur de commentaire en `tiptap ProseMirror` et non plus `ql-editor` ; bouton d'envoi libellé `Commenter` sans `aria-label` ; titres en gras Unicode introuvables par `indexOf` ASCII ; modale d'invitation dans un shadow root ; anomalie JS asynchrone désormais présente aussi à 9h.
+19. **Quotas à la clôture de ce créneau** : commentaires **1/7** ; **connexions envoyées 0/7** ; **suivis 7/7-10** ; **DM à froid 0/8**. **Il reste de la marge partout**, mais le facteur limitant du run n'a pas été le quota, il a été le taux d'abandon du dispositif QA.
+
+---
+
 ## 📅 Session linkedin-hwg-followup-check-2 — 24/08/2026 (17h, 2e des 2 créneaux après-midi)
 
 **Vérification double déclenchement** : aucune entrée `linkedin-hwg-followup-check-2` datée du 24/08 dans ce fichier ni dans `linkedin-contacts.md` à l'ouverture → **premier déclenchement de cette routine aujourd'hui**. Les entrées du 24/08 déjà présentes appartiennent à `linkedin-hwg-content-proposal` (8h35), `x-hwg-content-proposal`, `linkedin-hwg-monitoring` (9h + reprise 11h), `linkedin-hwg-followup-check` (13h) et à la reprise interactive de ~13h45 : routines distinctes, pas des doublons.

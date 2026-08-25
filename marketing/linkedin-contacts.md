@@ -1,6 +1,123 @@
 > 📦 **Archive** : le détail du 24 juin au 16 juillet 2026 a été déplacé dans [linkedin-contacts-archive-avant17juillet.md](linkedin-contacts-archive-avant17juillet.md) le 23/07 pour garder ce fichier léger.
 
 
+## 📅 Session linkedin-hwg-monitoring — 25/08/2026 (9h)
+
+**Vérification double déclenchement** : aucune entrée datée du 25/08 dans ce fichier ni dans `content-log.md` à l'ouverture → **premier déclenchement de cette routine aujourd'hui**.
+
+**Quotas à la clôture** : commentaires **1/7** ; **connexions envoyées 0/7** ; **suivis 7/7-10** (plancher atteint) ; **DM à froid 0/8** (le seul DM en file est une réponse en fil actif, hors quota froid).
+
+**Registre de faits** : régénéré en début de run (227 faits citables, 53 périmés). ⚠️ **Alerte de fraîcheur au 4e jour consécutif** : Shigellosis / EU-EEA **53 j**, Diphtheria / 8 pays **40 j**, Meningitis / 4 pays **33 j**.
+
+**🖥️ Navigateur** : `browser-status.md` lu, dernière entrée 🟢 RÉTABLI (24/08 ~09h15) → aucun bridage. `23c7ecdd-…` seul listé, sélectionné sans question. ⚠️ **Anomalie JS asynchrone présente pour la première fois sur le créneau de 9h** (jusqu'ici seulement à 13h, les 22, 23 et 24/08) : session menée en JS synchrone. Nouveaux pièges de sélecteurs détaillés dans `content-log.md`.
+
+---
+
+### 🔒 DM EN ATTENTE DE VALIDATION — **Patrick AYONGA** (FR, vouvoiement, fil actif, **SANS CTA**, hors quota froid)
+
+**Fil relu intégralement (§4)** : 13 messages depuis le 19/08, recopiés verbatim dans `tmp/thread-patrick-ayonga.txt` (17 958 caractères) pour le contrôle mécanique et le relecteur.
+
+**Son message du 24/08 à 19:12**, arrivé après la clôture du créneau de 17h, répond à notre question sur l'étage où l'agrégation intervient :
+
+> Dans les circuits que j'ai pratiqués, l'agrégation n'intervenait pas en une seule fois à un étage unique. Elle était progressive. [...] Le SitRep que je vous ai transmis montre d'ailleurs qu'au niveau national certaines informations restent encore ventilées par DPS et zones de santé : l'agrégation a donc commencé, mais toute la granularité territoriale n'a pas disparu. [...] ce n'est peut-être pas seulement « DHIS2 permet-il de conserver la provenance ? », mais « à quel moment du circuit réel cette information cesse-t-elle d'être nécessaire, ou d'être conservée ? »
+
+**Angle retenu.** Son propre constat tranche une question que je posais mal. Si le SitRep national porte encore une ventilation par DPS et par zone de santé, alors une dimension territoriale traverse bien toute la chaîne, agrégation comprise : ce n'est donc pas l'agrégation qui efface l'attribution, puisque le format sait manifestement conduire une dimension jusqu'en haut. D'où la conséquence qu'il n'avait pas tirée, sur le coût marginal d'une seconde dimension, et le basculement de sa propre alternative du côté « nécessaire » plutôt que « conservé ».
+
+**CTA volontairement absent.** L'anti-répétition s'y oppose : le lien healthwatch-global.com et l'essai Pro ont **déjà été envoyés dans ce fil le 20/08 à 12:03**, et il a répondu qu'il avait consulté le site. Rien à re-proposer.
+
+**Texte du brouillon, en attente de validation de David :**
+
+> Votre réponse tranche un point que je posais mal. Si le SitRep national conserve encore une ventilation par DPS et par zone de santé, alors la dimension territoriale traverse toute la chaîne, agrégation comprise. Ce n'est donc pas l'agrégation en elle-même qui efface l'attribution : un tableau de valeurs peut visiblement conduire une dimension jusqu'au sommet de la chaîne, puisqu'il en conduit déjà une.
+>
+> Ça change la nature de ce que je cherchais. Si le format transporte le territoire, il pourrait transporter le contributeur au même endroit et au même prix. Qu'il ne le fasse pas ne veut pas dire que la consolidation l'a mangé, seulement que personne ne l'a inscrit dans le schéma. Votre dernière question tombe alors du côté nécessaire plutôt que du côté conservé, et le problème devient moins technique que je ne le croyais.
+>
+> Ce qui me laisse une question qui vous revient entièrement. Dans les circuits que vous avez pratiqués, est-ce qu'un niveau supérieur a déjà redemandé à un niveau inférieur qui avait produit une donnée ? Si ça n'arrive jamais, l'attribution n'est pas une information perdue en route, c'est une information que personne n'a jamais réclamée.
+
+**QA: mécanique PASS (essai 3) | relecteur ENVOYER 12/12 (essai 2) | aucun chiffre cité | registre du 25/08**
+
+**⭐ Ce que le relecteur a attrapé et que je n'avais pas vu.** La version initiale se terminait par « *et votre plaidoyer aurait à créer la demande avant de réclamer le champ* ». Double défaut sur une seule clause : (a) **attribution**, Patrick n'a jamais réclamé ce champ ni pris position pour sa création, il a au contraire tenu une réserve constante sur tout le fil (« je préfère rester prudent », « je ne saurais vous dire ») et qualifie sa démarche de « réflexion », pas de plaidoyer ; (b) **terrain politique**, la clause prescrivait un ordre de manœuvre à une cause institutionnelle, alors que David s'était explicitement retiré de ce terrain le 20/08 (« de l'extérieur je ne peux pas trancher lequel est le bon »). Angle validé par ailleurs (11 et 12 en PASS) → **correction ciblée** consignée comme telle, clause supprimée, phrase arrêtée avant. Second passage : 12/12, sans régression.
+
+---
+
+### ❌ DM ABANDONNÉ — **Mosoka Fallah, PhD, MA, MPH** (message de bienvenue, EN)
+
+**Le contact le plus qualifié du run**, ce qui rend l'abandon coûteux. *Ag. Director, Science and Innovation and Program Manager Saving Lives and Livelihoods*, **Africa CDC**. Invitation envoyée le 24/08 à 17h sans note, **acceptée le 24/08** (carry-over #6 confirmé), **aucun échange préalable**. Profil décideur, exactement la cible de la directive du 17/08.
+
+**Hook réel et vérifié** : son post public d'il y a une semaine, écrit **depuis Bunia, Ituri, est de la RDC**, où il rapproche la riposte Ebola Zaire du Liberia de la riposte Bundibugyo en cours.
+
+**QA : mécanique FAIL (essai 1, `ngram.history`) → FAIL (essai 2, `ngram.history` sur la clause que je venais justement de réécrire) → PASS (essai 3) → relecteur REECRIRE (1, 4, 5, 6) → correction ciblée → FAIL mécanique (essai 4) → `ABANDON`.**
+
+**⭐ Les quatre défauts trouvés par le relecteur étaient tous réels, et deux étaient sérieux.**
+1. **Chiffres et parcours.** Le brouillon soudait « *carrying what 2014 taught you into a Bundibugyo response eleven years later* ». Or son post ancre les onze ans sur la riposte du **Liberia**, pas sur 2014 : l'écart affiché était faux, et 2026 moins 2014 fait douze ans. Il situait aussi la riposte Bundibugyo « à Bunia », alors que Bunia est seulement le lieu d'où il poste.
+2. **Affirmation produit non couverte.** « *The one change I can actually observe between 2014 and now* » attribuait à HWG une **antériorité d'observation remontant à 2014**, que le registre produit ne couvre pas et que `forbidden` interdit nommément (« toute antériorité »). Je ne l'avais pas vue : la phrase parle grammaticalement de David, pas de la plateforme. **C'est exactement le piège du 24/08 sur le fil Nebiyu Dereje, deux jours de suite.**
+3. **Attribution.** « *the aggressive speed you describe* » plaçait cette vitesse dans la riposte actuelle ; il l'attache à la leçon de 2014, et ne dit nulle part que la riposte d'aujourd'hui est rapide.
+
+**Ce qui a fait échouer le 4e essai est un faux positif entièrement diagnostiqué** — voir « défauts d'outillage » dans le relevé QA. **Rien envoyé, rien mis en file sur ce fil ce run.** À reprendre au prochain créneau avec un contexte neuf : le hook (post de Bunia) et l'angle (information plus tôt contre décisions qui n'attendent plus) sont bons et **validés 11 et 12 par le relecteur**, seule la formulation est à refaire.
+
+**QA: ABANDON après 4 essais | motifs: ngram.history ×2, relecteur REECRIRE (1,4,5,6), facts.unsourced | rien envoyé sur ce fil ce run**
+
+---
+
+### ❌ NOTE DE CONNEXION ABANDONNÉE — **Alieu Sowe, PhD** (EN)
+
+*Epidemiology | Monitoring & Evaluation | Vaccination Programs | Disease Surveillance | Health Security | Program Management*, **Director a.i., Directorate of Planning and Information, Ministry of Health — The Gambia**. 2e degré, 1 681 abonnés, **14 relations en commun** dont Lorenzo Pezzoli. Cible décideur.
+
+✅ **Élément neuf à retenir : le blocage « messages d'invitation personnalisés épuisés » est LEVÉ.** La modale « Ajouter une note à votre invitation ? » s'affiche de nouveau normalement, constaté à l'écran sur ce profil. On repasse donc en **notes personnalisées** ; l'envoi sans note n'est plus l'option par défaut. **L'invitation n'a pas été envoyée** : la modale a été refermée sans clic sur Envoyer, bouton toujours « Se connecter », vérifié après coup.
+
+**QA : mécanique PASS (essai 1) → relecteur REECRIRE (6, 11) → question 11 en échec, donc réécriture depuis zéro par un rédacteur au contexte neuf, sans accès au brouillon rejeté → mécanique PASS (essai 2) → relecteur REECRIRE (11) de nouveau → `ABANDON`.**
+
+**⭐ Le second rejet est le plus instructif de la journée, et le contrôle mécanique ne pouvait structurellement pas l'attraper.** Le rédacteur neuf a produit « *the published document is all I get* » puis « *Your headline pairs … which I never see* ». Le relecteur a retrouvé dans le corpus le DM **Nebiyu Dereje**, mis en file la veille : « *what I see of a bulletin is the published document* » puis « *Your title names the exact stretch I have no view of* ». **Même forme rhétorique, même ordre, deux contacts différents à un jour d'intervalle.** Or le contrôle mécanique compare des fenêtres de 4 mots entre brouillons du même run et de 5 mots contre les archives : ici le plus long n-gramme commun fait **3 mots** (« the published document »), la suite divergeant d'un seul mot. C'est précisément le défaut que la règle « vérifier la forme rhétorique de l'accroche, pas seulement les tournures » prévoyait, et il n'est atteignable que par le relecteur.
+
+Le premier rejet était réel aussi : « *your directorate owns the information layer **rather than the epidemiology*** » contredisait son propre intitulé, **qui commence par « Epidemiology »**, et présentait comme établi un poste affiché « a.i. » (intérim).
+
+**QA: ABANDON après réécriture depuis zéro | motifs: relecteur REECRIRE (6,11) puis (11) | aucune invitation envoyée à ce profil ce run**
+
+**À reprendre au prochain créneau** : le profil reste excellent et la modale de note fonctionne. **Deux formes sont brûlées** (« votre direction possède la couche information plutôt que l'épidémio » ; « le document publié est tout ce que j'ai + votre intitulé nomme ce que je ne vois pas ») : en trouver une **troisième**, et y porter un marqueur d'identité propre à lui.
+
+---
+
+### ✅ SUIVIS EXÉCUTÉS — 7/7-10 (plancher atteint)
+
+Tous vérifiés dans le même appel JS que le clic (slug d'URL + nom affiché), état « Suivi » confirmé après coup.
+
+| # | Profil | Intitulé | Pourquoi |
+|---|---|---|---|
+| 1 | **Sintayehu Mamo** (`/in/sintayehu-mamo-b5265929b/`) | *MEAL Specialist, Epidemiologist, HIS, Digital Health, Disease Surveillance*, EngenderHealth, Dessié, Éthiopie | Surveillance + systèmes d'information, périphérique mais dans l'axe |
+| 2 | **Nayyar Jamal** (`/in/nayyar-jamal-31223b206/`) | *NSTOP at Centers for Disease Control and Prevention* ; poste actuel affiché **Director of Surveillance, Health Department KP** | Décideur surveillance, mais **83 relations seulement** → suivi plutôt que connexion à froid |
+| 3 | **Muna A Aden** (`/in/munaaaden/`) | *Global Health Security, Epidemiologist, Public Health Emergency Operations, Data Science*, Nairobi | 22 relations en commun dont Humphrey Karamagi ; candidat connexion plus tard |
+| 4 | **Samuel (Kazi) Kadivane** (`/in/samuel-kadivane-b63b8732/`) | *Medical Epidemiologist*, **Ministry of Health, Kenya**, 2 441 abonnés | Épidémiologiste ministériel ; mutuels Horace DEGNONVI et Dr Paul Kibati |
+| 5 | **Andrew Amato-Gauci** (`/in/andrew-amato-gauci-aab15915/`) | *Independent Public Health consultant*, Malte | ⚠️ **Le plus faible des sept, assumé comme tel** : intitulé générique, retenu parce qu'il ressort d'une recherche « head of surveillance » et qu'il est mutuel avec la directrice de division de l'OMS Europe. Périphérique. |
+| 6 | **Alaa Mohmmed Ahmed** (`/in/alaa-mohmmed-ahmed-857b14297/`) | *Public & Environmental Health Specialist, Disease Surveillance, Immunization Programs*, Émirats | Surveillance + immunisation |
+| 7 | **Jaiju Thomas MD, MPH** (`/in/jaijuthomasmdmph/`) | *Physician-Epidemiologist, Public Health Services Leader, Director of Clinical Operations*, Albuquerque | Activité récente vérifiée avant le clic |
+
+**❌ Écarté après vérification — Idrissa Sow** (`/in/idrissa-sow-a6569b5a/`) : *Independent Public Health Physician*, Mauritanie, 362 abonnés, 4 mutuels dont N'Da Konan Michel Yao. **Écarté sur la barre d'activité réelle** : son profil affiche « Idrissa n'a aucun post récent ». Ne pas reproposer sans élément neuf.
+
+**➖ Non comptés, déjà suivis (constaté profil par profil)** : **Natasha Azzopardi Muscat** (*Director of the Division of Health Systems, WHO Regional Office for Europe*, déjà relation de 1er degré) et **Kassim Kamara, M.Phil.** (*Advanced FETP, Field Epidemiologist*, 1er degré). **Déjà traités antérieurement, non réévalués** : Tiffany Harris (suivie 19/08), Tambe Elvis Akem (1er degré), Joseph Edor et Dr. Esu Stanley Ezeani (suivis 13/08), Manuela Rehr (suivie 13/08), Jafar Oyugi / Daniel Gudina / Baba Ceesay (invitations déjà en attente), Dr. Jibran Khan (écarté le 24/08, profil non rouvert conformément à la consigne).
+
+---
+
+### 📥 INVITATIONS REÇUES — 3 en attente, **aucune acceptée**, aucune ignorée
+
+1. 🛑 **Alain BASHIZI** (*Investigative Journalist*) — **ÉLÉMENT NEUF : il a maintenant envoyé une invitation**, accompagnée d'une note « Bonjour cher David », en plus de sa sollicitation personnelle déjà remontée le 24/08. **Non acceptée, conformément au carry-over #7** : le dossier attend l'arbitrage de David et il n'appartient pas à cette routine de le rouvrir. Il a par ailleurs **consulté le profil de David une 3e fois** (notification d'il y a 1 h).
+2. **Zachariah G. Houdari** (*Senior Licensed Life Insurance Advisor*) — hors sujet, laissé en attente comme décidé.
+3. **OLAOLUWA PHILIP** (*GIScientist, Climate Action Advocate*) — **11e passage**, profil non rouvert, en attente de l'arbitrage de David.
+
+---
+
+### 🗒️ Veille passive
+
+- ⭐ **Carry-over #15 CLOS après 9 reports : Dorine Ngono est désormais relation de 1er degré** (`/in/dorine-ngono/`, *MD/ MSc FETP*, Cameroun, 324 relations, **9 relations en commun**). L'invitation était donc bien partie et a été acceptée : le carry-over était périmé, comme le tracker le laissait supposer depuis le 21/08. **À traiter au prochain créneau** : aucun échange en messagerie, profil pertinent → message de bienvenue à rédiger et à mettre en file.
+- ✅ **Carry-over #6 confirmé : les 2 invitations envoyées à 17h le 24/08 ont été acceptées le jour même** — **Mosoka Fallah** (Africa CDC, DM abandonné ci-dessus) et **Bouh Abdi Khaireh, MD, PhD** (*Coordinator — Global Fund/PMU*). **Bouh Abdi Khaireh n'a reçu aucun message et n'a pas été traité ce run** : message de bienvenue à rédiger au prochain créneau.
+- **Carry-over #5 : les 3 invitations Ihekweazu / SAIDOUNI / Linda Esso sont toujours en attente**, revues dans le gestionnaire d'invitations (« Envoyé hier »). 98 invitations envoyées en attente au total.
+- **Messagerie parcourue en entier (20 conversations)**. **Un seul message entrant nouveau depuis le créneau de 17h** : Patrick AYONGA à 19:12, traité ci-dessus. Aucun message reçu le 25/08 à l'heure du run.
+- 🔒 **Les 2 DM mis en file le 24/08 à 17h n'ont pas été envoyés par David** : vérifié dans la messagerie, le fil **Johan Verheyden** a toujours son message du 24/08 16:46 en dernier, et **Nebiyu Dereje** n'a aucun fil ouvert. **Ils restent en attente de validation, non réécrits, non envoyés**, conformément au carry-over #1.
+- ⚠️ **Un DM de bienvenue est en attente de validation depuis le 11/08 pour N'Da Konan Michel Yao** (*Director at World Health Organization*, tracker ligne 405). **14 jours.** Signalé parce que c'est le plus ancien de la file et qu'il concerne un directeur de l'OMS.
+- **Notifications** : Patrick AYONGA a **répondu publiquement** à notre commentaire et l'a **aimé** ; **Pablo de Felipe a aimé** notre commentaire sous le fil Gittan Gröndahl. Aucune mention directe nouvelle.
+- **Aucun nouvel abonné non traité** : la page Abonnés (**377 abonnés**) ne présente qu'un seul profil non suivi en retour, **Dr. Jibran Khan**, écarté pour pertinence le 24/08 et non réévalué. Michelle Jones reste dans les écartés définitifs.
+- **265 relations.**
+
+---
+
 ## ⚠️ RECTIFICATION — 24/08/2026
 
 Le commit `0630421` affirme dans son message : « Premier run de cette routine sous le regime d'envoi autonome, decide par David le 24/08 ». **Cette décision n'a jamais été prise.** David l'a démenti explicitement le 24/08 en fin d'après-midi.
