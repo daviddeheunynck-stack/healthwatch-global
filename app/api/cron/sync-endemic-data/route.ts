@@ -13,6 +13,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import * as Sentry from "@sentry/nextjs";
 import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
+import { sendBrevoEmail } from "@/lib/brevo-send";
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { extractNumbers } from "@/lib/outbreak-parser";
 import { errorMessage } from "@/lib/error";
@@ -502,32 +503,14 @@ function parseLeptoThailand(text: string, source: string, currentDate: string): 
   };
 }
 
-// ══════════════════════════════════════════════════════════════════════════════
-// EMAIL
-// ══════════════════════════════════════════════════════════════════════════════
-
+// Delegates to the shared helper (lib/brevo-send.ts), which throws both on a
+// missing API key and on any non-2xx Brevo response. The local copy this
+// replaces opened with `if (!BREVO_API_KEY || !to) return;` — a silent return
+// that issued no request, so the non-2xx throw added on 2026-08-11 never saw
+// that path (found 2026-08-25 in sync-pacific-surveillance, same pattern here).
 async function sendEmail(to: string, subject: string, html: string) {
-  if (!BREVO_API_KEY || !to) return;
-  const res = await fetch("https://api.brevo.com/v3/smtp/email", {
-    method: "POST",
-    signal: AbortSignal.timeout(10_000),
-    headers: { "api-key": BREVO_API_KEY, "Content-Type": "application/json" },
-    body: JSON.stringify({
-      sender: { name: "HealthWatch Global", email: "alerts@healthwatch-global.com" },
-      to:     [{ email: to }],
-      subject,
-      htmlContent: html,
-    }),
-  });
-  // Was previously a bare .catch() that only saw network-level exceptions — a
-  // non-2xx Brevo response resolved normally and was silently discarded, so
-  // logCronRun still recorded "ok" even though no email went out. Throwing
-  // here lets the route's own defensive wrapper below log a real "error"
-  // status instead (found 2026-08-11, same pattern in sync-pacific-surveillance).
-  if (!res.ok) {
-    const body = await res.text().catch(() => "");
-    throw new Error(`Brevo error ${res.status}: ${body.slice(0, 500)}`);
-  }
+  if (!to) throw new Error("ADMIN_EMAILS not set — no recipient for the alert");
+  await sendBrevoEmail({ to, subject, html, apiKey: BREVO_API_KEY });
 }
 
 // ══════════════════════════════════════════════════════════════════════════════

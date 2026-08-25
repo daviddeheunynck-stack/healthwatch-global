@@ -12,6 +12,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
+import { sendBrevoEmail } from "@/lib/brevo-send";
 import { errorMessage } from "@/lib/error";
 import { regressionGuard, lockedRowRegressionGuard } from "@/lib/outbreak-guards";
 import * as Sentry from "@sentry/nextjs";
@@ -290,24 +291,28 @@ function buildDrcDescriptions(num: number, cases: number, deaths: number, date: 
 // Returns whether the email actually sent — the caller's final JSON response
 // used to report emailSent: !!adminEmail regardless of whether this ran at
 // all, which lies whenever BREVO_API_KEY is missing or the Brevo call fails.
+//
+// The send itself now goes through the shared helper (lib/brevo-send.ts) so
+// this route can't drift from it again. Missing config no longer returns a
+// bare false: it is captured to Sentry first, because a config gap and a
+// Brevo refusal are the same value to the caller but not the same problem
+// (found 2026-08-25 auditing the silent-return family across seven crons).
 async function sendEmail(to: string, subject: string, html: string): Promise<boolean> {
-  if (!BREVO_API_KEY || !to) return false;
-  const res = await fetch("https://api.brevo.com/v3/smtp/email", {
-    method: "POST",
-    signal: AbortSignal.timeout(10_000),
-    headers: { "api-key": BREVO_API_KEY, "Content-Type": "application/json" },
-    body: JSON.stringify({
-      sender:      { name: "HealthWatch Global", email: "alerts@healthwatch-global.com" },
-      to:          [{ email: to }],
-      subject,
-      htmlContent: html,
-    }),
-  }).catch((e) => {
+  if (!BREVO_API_KEY || !to) {
+    Sentry.captureMessage(
+      `[check-mpox-sitrep] email not sent: ${!BREVO_API_KEY ? "BREVO_API_KEY" : "ADMIN_EMAILS"} not set`,
+      "error"
+    );
+    return false;
+  }
+  try {
+    await sendBrevoEmail({ to, subject, html, apiKey: BREVO_API_KEY });
+    return true;
+  } catch (e: unknown) {
     console.error("[mpox] email:", errorMessage(e));
     Sentry.captureException(e, { tags: { cron: "check-mpox-sitrep" } });
-    return null;
-  });
-  return !!res?.ok;
+    return false;
+  }
 }
 
 function emailAutoUpdated(sitrep: { num: number; url: string }, data: SitrepData) {

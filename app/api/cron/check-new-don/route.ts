@@ -8,6 +8,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import * as Sentry from "@sentry/nextjs";
 import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
+import { sendBrevoEmail } from "@/lib/brevo-send";
 import { fetchWHODONList, parseWHODONItems, donArticleUrl } from "@/lib/who-api";
 import type { WHONewsItem } from "@/lib/who-api";
 import { errorMessage } from "@/lib/error";
@@ -37,25 +38,22 @@ function esc(s: string): string {
 // success from the fact that this was called at all (see weekly-digest for
 // the same class of bug: BREVO_API_KEY missing was indistinguishable from a
 // successful send).
+//
+// The send itself now goes through the shared helper (lib/brevo-send.ts) so
+// this route can't drift from it again. Missing config no longer returns a
+// bare false: it is captured to Sentry first, because a config gap and a
+// Brevo refusal are the same value to the caller but not the same problem
+// (found 2026-08-25 auditing the silent-return family across seven crons).
 async function sendEmail(to: string, subject: string, html: string): Promise<boolean> {
-  if (!BREVO_API_KEY || !to) return false;
+  if (!BREVO_API_KEY || !to) {
+    Sentry.captureMessage(
+      `[check-new-don] email not sent: ${!BREVO_API_KEY ? "BREVO_API_KEY" : "ADMIN_EMAILS"} not set`,
+      "error"
+    );
+    return false;
+  }
   try {
-    const res = await fetch("https://api.brevo.com/v3/smtp/email", {
-      method: "POST",
-      signal: AbortSignal.timeout(10_000),
-      headers: { "api-key": BREVO_API_KEY, "Content-Type": "application/json" },
-      body: JSON.stringify({
-        sender:      { name: "HealthWatch Global", email: "alerts@healthwatch-global.com" },
-        to:          [{ email: to }],
-        subject,
-        htmlContent: html,
-      }),
-    });
-    if (!res.ok) {
-      const errText = await res.text();
-      Sentry.captureMessage(`[check-new-don] Brevo ${res.status}: ${errText}`, "error");
-      return false;
-    }
+    await sendBrevoEmail({ to, subject, html, apiKey: BREVO_API_KEY });
     return true;
   } catch (e: unknown) {
     console.error("[check-new-don] email:", errorMessage(e));
