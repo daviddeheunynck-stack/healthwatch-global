@@ -148,6 +148,7 @@ export default function EmailCapture({ locale, region = "all", title, body, proT
           <p className="text-xs text-gray-400 mt-1">{c.proSub}</p>
         </div>
         <CheckoutButton
+          billing="monthly"
           plan="pro"
           locale={locale}
           label={c.proBtn}

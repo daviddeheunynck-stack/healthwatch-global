@@ -219,6 +219,7 @@ export default function AlertsPage() {
           ))}
         </ul>
         <CheckoutButton
+          billing="monthly"
           plan="pro"
           locale={locale}
           label={trialExpired ? pc.ctaExpired : pc.cta}

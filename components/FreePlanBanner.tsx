@@ -169,6 +169,7 @@ export default function FreePlanBanner({
             ) : (
               <>
                 <CheckoutButton
+                  billing="monthly"
                   plan="pro"
                   locale={locale}
                   label={cta}
