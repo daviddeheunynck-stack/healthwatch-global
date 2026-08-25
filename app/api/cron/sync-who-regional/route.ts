@@ -73,7 +73,14 @@ const delay = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 interface Found {
   cases:       number;
-  deaths:      number;
+  // null = no source feature reported a death figure at all (ArcGIS's
+  // cholera layer uses null for "not reported", 0 for "confirmed zero" — see
+  // fetchCholeraGlobalSurveillance). Distinct from the guard chain's
+  // GuardedIncoming.deaths (always a concrete number): call sites that feed
+  // the guards/assessRisk coalesce with `?? 0` locally rather than widening
+  // those shared types, since a "no data this week" 0 is the same
+  // conservative worst-case a guard should already treat a real zero as.
+  deaths:      number | null;
   date:        string;
   source:      string;
   description: string;
@@ -608,23 +615,31 @@ function fetchCholeraGlobalSurveillance(country_en: string): () => Promise<Found
       const features = json.features ?? [];
       if (json.error || features.length === 0) return null;
 
-      let cases = 0, deaths = 0, latestMs = 0;
+      let cases = 0, deaths = 0, latestMs = 0, anyDeathsReported = false;
       for (const f of features) {
-        cases  += f.attributes.cases  ?? 0;
-        deaths += f.attributes.deaths ?? 0;
+        cases += f.attributes.cases ?? 0;
+        // ?? 0 here would silently equate "not reported" with "confirmed
+        // zero" — exactly what let a fresh 0 overwrite a manually-verified
+        // NULL on Pakistan/cholera on 2026-08-24/25 (the write-time guard
+        // that should have blocked it, zeroDeathGuard, also coerces existing
+        // NULL to 0 via `?? 0`, so it never saw a difference to refuse).
+        // Tracking whether ANY feature carried a real figure lets a whole
+        // year of unreported deaths surface as null instead of 0.
+        if (f.attributes.deaths != null) { deaths += f.attributes.deaths; anyDeathsReported = true; }
         if (f.attributes.date_wk > latestMs) latestMs = f.attributes.date_wk;
       }
       if (cases <= 0 || !latestMs) return null;
       const date = new Date(latestMs).toISOString().substring(0, 10);
+      const finalDeaths = anyDeathsReported ? deaths : null;
 
       return {
         cases,
-        deaths,
+        deaths: finalDeaths,
         date,
         // Old URL (emergencies/situations/multi-country-outbreak-of-cholera) 404s as of
         // 2026-07-14 — WHO restructured the page. This one was live-verified same day.
         source: "https://www.who.int/emergencies/surveillance/cholera-cases-and-deaths",
-        description: `Cholera in ${country_en} — WHO reported ${cases.toLocaleString("en")} cumulative case${cases > 1 ? "s" : ""}${deaths > 0 ? ` and ${deaths.toLocaleString("en")} death${deaths > 1 ? "s" : ""}` : ""} in ${year} as of the week starting ${date}. Source: WHO Global Cholera Surveillance.`,
+        description: `Cholera in ${country_en} — WHO reported ${cases.toLocaleString("en")} cumulative case${cases > 1 ? "s" : ""}${finalDeaths ? ` and ${finalDeaths.toLocaleString("en")} death${finalDeaths > 1 ? "s" : ""}` : ""} in ${year} as of the week starting ${date}. Source: WHO Global Cholera Surveillance.`,
       };
     }
 
@@ -1402,6 +1417,15 @@ async function runSyncWhoRegional(_req: NextRequest, supabase: SupabaseClient) {
     const isAnnualRef = !!target.fetcher && /-01-01$/.test(found.date);
     const activeFlag  = !isAnnualRef;
 
+    // Guards/assessRisk take a concrete number (GuardedIncoming/assessRisk
+    // aren't nullable — shared by 12+ other cron files, not worth widening
+    // for this one fetcher). A coalesced 0 is the correct conservative input
+    // for them: "no death data this week" should be guarded exactly as
+    // cautiously as a real zero. Only the actual DB write and the diff check
+    // below use found.deaths itself, so a manually-verified null still
+    // persists instead of being overwritten by this coalescing.
+    const guardedFound = { ...found, deaths: found.deaths ?? 0 };
+
     if (existingRow) {
       const isNewer    = found.date > existingRow.date;
       const casesDiff  = found.cases  !== existingRow.cases;
@@ -1432,12 +1456,12 @@ async function runSyncWhoRegional(_req: NextRequest, supabase: SupabaseClient) {
       // sync-who-afro/sync-cdc-notices, shared via lib/outbreak-guards.ts —
       // only the date floor above existed until now.
       const guardReason =
-        dateFloorGuard(found, existingRow) ??
-        spikeGuard(found, existingRow) ??
-        collapseGuard(found, existingRow) ??
-        zeroCaseGuard(found, existingRow) ??
-        zeroDeathGuard(found, existingRow) ??
-        lockedRowRegressionGuard(found, existingRow);
+        dateFloorGuard(guardedFound, existingRow) ??
+        spikeGuard(guardedFound, existingRow) ??
+        collapseGuard(guardedFound, existingRow) ??
+        zeroCaseGuard(guardedFound, existingRow) ??
+        zeroDeathGuard(guardedFound, existingRow) ??
+        lockedRowRegressionGuard(guardedFound, existingRow);
       if (guardReason) {
         log.push({ label: `${target.disease_en}/${target.country_en}`, status: "skip", detail: guardReason });
         results.skipped++;
@@ -1463,7 +1487,7 @@ async function runSyncWhoRegional(_req: NextRequest, supabase: SupabaseClient) {
         date:            found.date,
         source:          found.source,
         description:     found.description,
-        risk_level:      assessRisk(target.disease_en, found.description, found.cases, found.deaths),
+        risk_level:      assessRisk(target.disease_en, found.description, found.cases, guardedFound.deaths),
         active:          activeFlag,
         is_seed:         isAnnualRef,
         source_priority: Math.max(5, existingRow.source_priority ?? 0),
@@ -1506,7 +1530,7 @@ async function runSyncWhoRegional(_req: NextRequest, supabase: SupabaseClient) {
         log.push({ label: `${target.disease_en}/${target.country_en}`, status: "skip", detail: "blocked by source_priority guard — row owned by a higher-priority source" });
         results.skipped++;
       } else {
-        log.push({ label: `${target.disease_en}/${target.country_en}`, status: "updated", detail: `${found.cases} cases / ${found.deaths} deaths (${found.date})` });
+        log.push({ label: `${target.disease_en}/${target.country_en}`, status: "updated", detail: `${found.cases} cases / ${found.deaths ?? "unreported"} deaths (${found.date})` });
         results.updated++;
       }
     } else {
@@ -1540,12 +1564,12 @@ async function runSyncWhoRegional(_req: NextRequest, supabase: SupabaseClient) {
         // Had no anti-regression guard at all until 2026-08-02 (not even a date
         // floor) — same guard family as the main existingRow branch above.
         const reactivateGuardReason =
-          dateFloorGuard(found, directCheck) ??
-          spikeGuard(found, directCheck) ??
-          collapseGuard(found, directCheck) ??
-          zeroCaseGuard(found, directCheck) ??
-          zeroDeathGuard(found, directCheck) ??
-          lockedRowRegressionGuard(found, directCheck);
+          dateFloorGuard(guardedFound, directCheck) ??
+          spikeGuard(guardedFound, directCheck) ??
+          collapseGuard(guardedFound, directCheck) ??
+          zeroCaseGuard(guardedFound, directCheck) ??
+          zeroDeathGuard(guardedFound, directCheck) ??
+          lockedRowRegressionGuard(guardedFound, directCheck);
         if (reactivateGuardReason) {
           log.push({ label: `${target.disease_en}/${target.country_en}`, status: "skip", detail: reactivateGuardReason });
           results.skipped++;
@@ -1563,7 +1587,7 @@ async function runSyncWhoRegional(_req: NextRequest, supabase: SupabaseClient) {
           cases: found.cases, deaths: found.deaths, date: found.date,
           source: found.source, description: found.description,
           active: activeFlag, is_seed: isAnnualRef,
-          risk_level: assessRisk(target.disease_en, found.description, found.cases, found.deaths),
+          risk_level: assessRisk(target.disease_en, found.description, found.cases, guardedFound.deaths),
           source_priority: Math.max(5, directCheck.source_priority ?? 0),
           admin1: null, // same reasoning as the main update branch above — see its comment
         };
@@ -1608,7 +1632,7 @@ async function runSyncWhoRegional(_req: NextRequest, supabase: SupabaseClient) {
         lng:         countryInfo.lng,
         cases:       found.cases,
         deaths:      found.deaths,
-        risk_level:  assessRisk(target.disease_en, found.description, found.cases, found.deaths),
+        risk_level:  assessRisk(target.disease_en, found.description, found.cases, guardedFound.deaths),
         date:        found.date,
         source:      found.source,
         description: found.description,
@@ -1622,7 +1646,7 @@ async function runSyncWhoRegional(_req: NextRequest, supabase: SupabaseClient) {
         log.push({ label: `${target.disease_en}/${target.country_en}`, status: "error", detail: error.message });
         results.errors++;
       } else {
-        log.push({ label: `${target.disease_en}/${target.country_en}`, status: "inserted", detail: `${found.cases} cases / ${found.deaths} deaths (${found.date})` });
+        log.push({ label: `${target.disease_en}/${target.country_en}`, status: "inserted", detail: `${found.cases} cases / ${found.deaths ?? "unreported"} deaths (${found.date})` });
         results.inserted++;
       }
     }
