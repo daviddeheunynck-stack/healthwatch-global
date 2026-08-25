@@ -1,6 +1,68 @@
 > 📦 **Archive** : le détail du 24 juin au 16 juillet 2026 a été déplacé dans [linkedin-contacts-archive-avant17juillet.md](linkedin-contacts-archive-avant17juillet.md) le 23/07 pour garder ce fichier léger.
 
 
+## 📅 Session linkedin-hwg-followup-check — 25/08/2026 (13h, 1er des 2 créneaux après-midi)
+
+**Vérification double déclenchement** : aucune entrée `linkedin-hwg-followup-check` datée du 25/08 dans ce fichier ni dans `content-log.md` à l'ouverture. Les entrées du jour appartiennent à `linkedin-hwg-monitoring` (9h) et à la reprise interactive avec David → **premier déclenchement de cette routine aujourd'hui**.
+
+**Quotas à la clôture** : commentaires **2/7** (1 publié ce créneau) ; **connexions envoyées 0/7** ; **suivis 7/7-10** (inchangés, aucun nouvel abonné à traiter) ; **DM à froid 0/8**.
+
+**Registre de faits** : régénéré en début de run (227 faits citables, 53 périmés). Registre produit régénéré également. ⚠️ **Alerte de fraîcheur au 5e jour consécutif** : Shigellosis / EU-EEA **54 j** (+1 depuis ce matin), Diphtheria / 8 pays **40 j**, Meningitis / 4 pays **33 j**.
+
+**🖥️ Navigateur** : `browser-status.md` lu, dernière entrée 🟢 RÉTABLI (24/08 ~09h15) → aucun bridage. `23c7ecdd-…` seul listé, sélectionné sans question. ✅ **Anomalie JS asynchrone absente** de ce créneau, pour la première fois depuis le 22/08. Filtre `[BLOCKED: Cookie/query string data]` non déclenché.
+
+---
+
+### 1️⃣ SUIVI DES ACTIONS PRÉCÉDENTES DU JOUR
+
+**⭐ Le commentaire 1/7 de ce matin a produit une réponse nominative de son auteur.** **Martin Yakum** (*Epidémiologiste chez Epicentre / MSF*) a répondu ~5 h après publication, en nous nommant, sur le fond et sans réserve : « *That is an excellent point, David. The issue of cadence is easy to overlook… It reinforces the importance of being explicit about the timing, resolution and provenance of the contextual data when interpreting an outbreak.* » **Réponse publiée à ce créneau** (commentaire 2/7, détail complet dans `content-log.md`). Son post est passé à **341 impressions**.
+
+**Le DM Patrick AYONGA envoyé ce matin à 11:43 n'a pas encore de réponse.** Fil rouvert et relu : notre message est le dernier, coche de livraison présente, aucun retour à 13h. Rien à faire, ne pas relancer (envoyé il y a moins de 2 h).
+
+🔒 **Les 2 DM mis en file le 24/08 à 17h ne sont toujours pas envoyés par David** : le fil **Johan Verheyden** porte encore « Johan : Oui et non… » du 24/08 en dernier, et **Nebiyu Dereje** n'a toujours aucun fil ouvert. **Non réécrits, non envoyés.** Idem pour **N'Da Konan Michel Yao**, en file depuis le 11/08 — **14 jours**, le plus ancien.
+
+**Aucune connexion nouvellement acceptée** : `mynetwork/invite-connect/connections/` trié « Ajouts récents » affiche **265 relations**, chiffre identique au relevé de 9h, et la tête de liste est inchangée (Mosoka Fallah, Bouh Abdi Khaireh, Dihoulne Gagdang, Daisy Kasyoka, Nebiyu Dereje, tous datés « Connexion le 24 août 2026 »). Les 3 invitations envoyées le 24/08 (Ihekweazu, SAIDOUNI, Linda Esso) restent **en attente**.
+
+---
+
+### 2️⃣ DM — aucun message entrant nouveau, 1 brouillon travaillé
+
+**Messagerie parcourue.** Le fil le plus récent est **notre propre envoi de 11:43 à Patrick AYONGA**. Tous les autres datent du 24/08 ou avant. **Aucun message reçu depuis le créneau de 9h**, donc aucune réponse à rédiger et aucun brouillon de réaction. Aucun spam, aucune sollicitation hors sujet, aucune demande de canal hors plateforme, aucune donnée patient proposée, aucune instruction adressée à l'agent.
+
+---
+
+### 🛑 CARRY-OVER #5 DU CRÉNEAU DE 9h — **ERRONÉ, aucun message envoyé à Dorine Ngono**
+
+Le carry-over de 9h demandait un **message de bienvenue pour Dorine Ngono** (`/in/dorine-ngono/`), au motif qu'elle venait de passer en 1er degré et qu'il n'existait « aucun échange en messagerie ».
+
+**C'est faux, et l'exécuter aurait envoyé un doublon à une personne réelle.** Vérification faite à l'écran : le fil **Dorine Ngono existe, daté du 21 août**, et son dernier message est **le nôtre** — « *Vous : Dorine, merci d'avoir accepté l'invitation. Je vou…* ». Ce fichier le documentait déjà : DM de bienvenue **envoyé le 21/08 à 18:52** sur ordre explicite de David (« envoie les 4 DMs »), avec double-check refait de zéro et confirmation de livraison. Trois sessions ultérieures la listent d'ailleurs parmi les fils « portant notre message en dernier ».
+
+**Origine de l'erreur** : la liste des conversations est **virtualisée**. Seules les ~10 premières conversations sont réellement peuplées dans le DOM ; au-delà, les `<li>` existent mais sont vides. Un relevé qui lit la liste sans faire défiler physiquement conclut « aucun fil » pour tout contact dont le dernier message a plus de quelques jours. Le fil de Dorine, daté du 21/08, tombait à l'index 14, hors de la fenêtre peuplée.
+
+🔧 **Méthode à retenir, valable pour toutes les routines LinkedIn** : un défilement programmatique (`scrollTop`, `scrollIntoView`, événement `scroll` synthétique) **ne déclenche pas** l'hydratation. Seul un défilement réel via `computer{action:"scroll"}` au-dessus de la liste la peuple. **Ne jamais conclure « aucun fil préexistant » sans avoir fait défiler physiquement jusqu'à la date recherchée** — c'est la prémisse dont dépend tout message de bienvenue.
+
+**Aucune relance envoyée non plus** : son message du 21/08 est resté sans réponse depuis 4 jours, mais rien de neuf ne justifie de la relancer, et la consigne d'espacement s'applique.
+
+---
+
+### 3️⃣ NOUVEAUX ABONNÉS — aucun, aucun follow-back exécuté
+
+Page « Abonnés » relevée : **377 personnes**, chiffre **identique au relevé de 9h**. Tête de liste inchangée (Mosoka Fallah, Bouh Abdi Khaireh, Dihoulne Gagdang, Daisy Kasyoka, Alain BASHIZI, Nebiyu Dereje), tous déjà « Suivi ». **Le seul profil non suivi en retour reste Dr. Jibran Khan**, écarté pour pertinence le 24/08 et **non rouvert** conformément à la consigne.
+
+Quota suivis inchangé à **7/7-10**, plancher atteint ce matin. La marge de 3 n'a pas été consommée : la recherche active a été **redirigée vers les carry-over de messages**, jugés plus prioritaires que trois suivis supplémentaires. Choix assumé, à signaler.
+
+---
+
+### 4️⃣ INVITATIONS REÇUES — 3, inchangées, aucune acceptée
+
+Gestionnaire relu : **« Tout (3) »**, exactement les mêmes qu'à 9h.
+
+1. 🛑 **Alain BASHIZI** (*Investigative Journalist*), note « Bonjour cher David ». **Non acceptée** : le dossier attend l'arbitrage de David, et il n'appartient pas à cette routine de le rouvrir. Il a **consulté le profil de David une 4e fois** (notification d'il y a 7 h).
+2. **Zachariah G. Houdari** (*Senior Licensed Life Insurance Advisor*) — hors sujet, laissée en attente.
+3. **OLAOLUWA PHILIP** (*GIScientist, Climate Action Advocate*) — **12e passage**, profil non rouvert, en attente de l'arbitrage de David.
+
+---
+
 ## 📅 Session linkedin-hwg-monitoring — 25/08/2026 (9h)
 
 **Vérification double déclenchement** : aucune entrée datée du 25/08 dans ce fichier ni dans `content-log.md` à l'ouverture → **premier déclenchement de cette routine aujourd'hui**.
@@ -175,7 +237,7 @@ Boîte de réception parcourue en entier (20 conversations). **Un seul message e
 
 ---
 
-### 🔒 DM EN ATTENTE DE VALIDATION n°1 — **Johan Verheyden** (FR, tutoiement, fil actif, **SANS CTA**, hors quota froid)
+### ✅ DM ENVOYÉ — **Johan Verheyden** (FR, tutoiement, fil actif, **SANS CTA**, hors quota froid)
 
 **Fil relu intégralement (§4)**, 19 messages depuis le 12/08, et **recopié verbatim** dans `tmp/thread-johan-verheyden.txt` (8 515 caractères) pour le contrôle mécanique.
 
@@ -188,7 +250,9 @@ Boîte de réception parcourue en entier (20 conversations). **Un seul message e
 
 **CTA volontairement absent**, conformément au traitement constant de ce fil (Johan est déjà utilisateur Pro ; aucun lien ni essai n'a jamais été envoyé ici, et il n'y a pas lieu de commencer).
 
-**Texte du brouillon, en attente de validation de David :**
+**✅ ENVOYÉ le 25/08 — validé par David en session interactive (« Envoie Johan »), après 3 passes de double-check (dont une avec contrôle croisé contre le brouillon Nebiyu Dereje).** Rendu vérifié après envoi : **3 paragraphes réels** (303 / 429 / 227 caractères, identiques au brouillon validé), champ vidé, message visible dans le fil sous le nom de David, en dernière position (21 messages contre 20 avant l'envoi). Destinataire et dernier message de Johan revérifiés dans le même appel JS que le clic sur Envoyer.
+
+**Texte envoyé :**
 
 > Le premier point, je te l'accorde, et il porte plus loin que je ne l'avais lu. Passer le même traitement sur une épidémie ancienne, dont on connaît déjà la fin, ce n'est plus de la reproductibilité, c'est de l'étalonnage : tu mesures ce que ta chaîne fait d'un signal dont tu sais à quoi il ressemblait.
 >
@@ -200,7 +264,7 @@ Boîte de réception parcourue en entier (20 conversations). **Un seul message e
 
 **⭐ Redouble-check demandé par David le 25/08 en session, texte inchangé.** Relance complète : mécanique PASS, relecteur neuf ENVOYER 12/12, avec vigilance élargie sur la cohérence avec les 19 messages du fil (notamment le message de David du 24/08 11:16 sur les replication packages, qu'aucune phrase du brouillon ne contredit). Toujours **en attente d'envoi**.
 
-**⭐⭐ 3e passe demandée par David le même jour, cette fois avec contrôle croisé contre le brouillon Nebiyu Dereje** (les deux DM étant sur le point de partir au même moment). Mécanique : aucun n-gramme partagé (langues différentes). Relecteur neuf, les deux brouillons sous les yeux : **12/12, reconfirmé**. Une ressemblance structurelle mineure signalée sans être disqualifiante — les deux DM se referment sur une question à deux branches (« tu la poses comme A, ou tu la traites comme B ? ») — jugée non problématique ici : dispositif rhétorique commun, aucun mot ni angle de fond partagé, contenu de chaque branche entièrement propre à son fil. **C'est ce même dispositif, en revanche, qui a fini par faire échouer trois réécritures de Nebiyu Dereje (voir plus bas) : la clôture y était bâtie sur le même procédé que celle de Johan, ce qui a compté comme collision.** Toujours **en attente d'envoi**.
+**⭐⭐ 3e passe demandée par David le même jour, cette fois avec contrôle croisé contre le brouillon Nebiyu Dereje** (les deux DM étant sur le point de partir au même moment). Mécanique : aucun n-gramme partagé (langues différentes). Relecteur neuf, les deux brouillons sous les yeux : **12/12, reconfirmé**. Une ressemblance structurelle mineure signalée sans être disqualifiante — les deux DM se referment sur une question à deux branches (« tu la poses comme A, ou tu la traites comme B ? ») — jugée non problématique ici : dispositif rhétorique commun, aucun mot ni angle de fond partagé, contenu de chaque branche entièrement propre à son fil. **C'est ce même dispositif, en revanche, qui a fini par faire échouer trois réécritures de Nebiyu Dereje (voir plus bas) : la clôture y était bâtie sur le même procédé que celle de Johan, ce qui a compté comme collision.**
 
 ⚠️ **Faux positif de contexte à signaler, distinct de ceux du 13h.** L'essai 1 a été bloqué par `context.too-soon` (« *Dernier message il y a 0 j, minimum 3 j entre deux envois* ») parce que j'avais renseigné `lastOutboundDate`. Or ce champ appartient à la famille **relance** du lexique (`_comment` : « *Plafond de relance validé le 23/08* »), et Johan **a répondu** entre-temps : `outboundUnanswered` vaut 0, il n'y a aucune relance en cours. **La convention déjà établie dans ce dépôt est d'omettre `lastOutboundDate` quand le dernier message sortant a reçu une réponse** — les trois contextes du créneau de 13h (`ctx-ayonga`, `ctx-al-azebi`, `ctx-darrel`) le font tous, y compris AYONGA qui était le même cas de figure. **C'est donc moi qui avais mal décrit le contexte, pas le script qui a mal jugé**, et l'essai 2 s'est aligné sur la convention. À noter tout de même pour `lexicon.json` : appliqué à la lettre, `minDaysBetweenOutbound` interdirait de répondre le jour même à quelqu'un qui vient d'écrire, ce que la politique commune §3 encourage explicitement.
 
