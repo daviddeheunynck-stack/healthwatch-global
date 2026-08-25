@@ -2033,3 +2033,76 @@ Le premier appel pour **ZZJZ FBiH** a renvoyé `The service is currently unavail
 - **25/08** → lot du **04/08 recréé** (20 contacts, J+10), sous réserve du frein de file
 - **26/08** → lot du **15/08** (10 moins les bounces ISED et MBDS, soit **8**, J+11)
 - **27/08** → lot du **06/08 recréé** (10 moins HZJZ verrouillé, soit **9**) + lot du **17/08** (10, rendez-vous Variante A EAC / IGAD / SADC / AFROHUN / EUPHA) = **19**
+
+---
+
+## 🔎 PROSPECTION — 2026-08-25, run automatique `daily-institutional-prospecting-healthwatch`
+
+**10/10 trouvés.**
+
+**Frein de file : 0 brouillon au démarrage.** `list_drafts` appelé **trois fois** (vue complète, métadonnées, puis avec `query:"newer_than:30d"`) — `{}` les trois fois. Conformément à la consigne du 16/08 (« ne jamais conclure sur un seul appel »), la file vide a été **croisée avec `search_threads query:"in:sent newer_than:2d"`** : les 20 brouillons de la veille sont **tous partis**, envoyés par David le 24/08 — les 9 relances à 09:41 UTC et les 10 de prospection + le remplacement ADELF entre 12:02 et 12:14 UTC. Écart création → envoi de **plusieurs heures**, portant sur des **lots entiers dans l'ordre de relecture** : c'est le profil « relecture humaine » du tableau du 16/08, **pas** le bug d'envoi instantané du connecteur. Aucune alerte. `list_drafts` n'était donc pas instable ce matin : la file était réellement vide.
+
+Segments : **2 gouvernement-régional / 7 société savante-association nationale / 1 réseau académique**. Régions OMS : **EMRO ×1** (CCG), **AMRO ×2** (Andes, Mexique), **SEARO ×2** (Inde ×2), **AFRO ×3** (Éthiopie, Afrique du Sud, réseau panafricain), **WPRO ×1** (Australie), **EURO ×1** (Italie).
+
+| Institution | Pays/Région | Segment | Contact | Email | Source | Vérifié | Brouillon Gmail |
+|---|---|---|---|---|---|---|---|
+| **GHC** — Gulf Health Council / مجلس الصحة الخليجي | CCG (Riyad) / EMRO | Gouvernement régional | — (boîte institutionnelle) | `info@ghc.sa` | ghc.sa/en/contact-us (**page lue directement**) | Oui | oui — `r9203333958624218425` |
+| **ORAS-CONHU** — Organismo Andino de Salud, Convenio Hipólito Unanue | Andes (Lima) / AMRO | Gouvernement régional | — (boîte institutionnelle) | `contacto@conhu.org.pe` | orasconhu.org (**`data-cfemail` décodé sur deux pages, clés différentes, même résultat**) | Oui | oui — `r-2443905234031862937` |
+| **IPHA** — Indian Public Health Association | Inde / SEARO | Société savante | — (secrétariat) | `office@iphaonline.org` | iphaonline.org/contacts (**page lue directement, HTTP 200**) | Oui | oui — `r2852709334542798957` |
+| **IAE** — Indian Association of Epidemiologists | Inde / SEARO | Société savante | — (secrétariat) | `iae.association2015@gmail.com` | iaepi.com/about-us (**`data-cfemail` ×3 décodés, même adresse**) | Oui | oui — `r-4495840634605691207` |
+| **EPHA** — Ethiopian Public Health Association | Éthiopie / AFRO | Société savante | — (boîte institutionnelle) | `info@etpha.org` | etpha.org (**page lue directement, HTTP 200**) | Oui | oui — `r-7472124603837284608` |
+| **PHASA** — Public Health Association of South Africa | Afrique du Sud / AFRO | Société savante | — (secrétariat) | `secretariat@phasa.org.za` | phasa.org.za (**re-vérifiée en HTTP 200 ce run**) | Oui | oui — `r-4395491171069035843` |
+| **SMSP** — Sociedad Mexicana de Salud Pública | Mexique / AMRO | Société savante | — (boîte institutionnelle) | `smsp@smsp.org.mx` | smsp.org.mx (**page lue directement, HTTP 200**) | Oui | oui — `r2213713003913671059` |
+| **PHAA** — Public Health Association of Australia | Australie / WPRO | Société savante | — (boîte institutionnelle) | `phaa@phaa.net.au` | phaa.net.au (**`data-cfemail` décodé, concordant avec le snippet**) | Oui | oui — `r-5554089708673345178` |
+| **SItI** — Società Italiana di Igiene, Medicina Preventiva e Sanità Pubblica | Italie / EURO | Société savante | — (Segreteria Nazionale) | `sitinazionale@tiscali.it` | sitinazionale.it/contatti (**page lue directement, HTTP 200**) | Oui | oui — `r-476327492900907943` |
+| **AFREhealth** — African Forum for Research and Education in Health | Panafricain (Kumasi) / AFRO | Réseau académique | — (boîte institutionnelle) | `info@afrehealth.org` | afrehealth.org (**`data-cfemail` décodé**) | Oui | oui — `r1734353823845520496` |
+
+### 🔍 Anti-doublon — grep par domaine ET par nom, conformément à la consigne du 2026-08-23
+
+Lecture du journal **plus** grep systématique du domaine et du nom d'organisation, résultat consigné contact par contact. Contrôle complémentaire sur `linkedin-contacts.md` pour les dix : **0 occurrence**.
+
+| Contact | grep domaine | grep nom | Verdict |
+|---|---|---|---|
+| GHC | `ghc.sa` → **0** | `Gulf Health Council` → **0** | ✅ neuf |
+| ORAS-CONHU | `conhu.org.pe\|orasconhu` → **0** | `ORAS-CONHU\|Hipólito Unanue\|Organismo Andino` → **0** | ✅ neuf |
+| IPHA | `iphaonline.org` → **0** | `Indian Public Health Association` → **0** | ✅ neuf |
+| IAE | `iae.association2015` → **0** | `Indian Association of Epidemiolog` → **0** | ✅ neuf — **à ne pas confondre avec l'IEA** (`ieaweb.org`, International Epidemiological Association), contactée et impliquée dans l'incident de doublon du 22/08 : sigles voisins, organisations sans lien |
+| EPHA Éthiopie | `etpha.org` → **0** | `Ethiopian Public Health Association` → **0** | ✅ neuf — distinct de l'**EPHI** (`ephi.gov.et`, institut gouvernemental, contacté) et de l'**AHRI** (`ahri.gov.et`) |
+| PHASA | `phasa.org.za` → **1** | `Public Health Association of South Africa` → **0** | ✅ neuf — l'unique occurrence est la note du 24/08 la signalant comme piste vérifiée **jamais contactée** |
+| SMSP | `smsp.org.mx` → **0** | `Sociedad Mexicana de Salud` → **0** | ✅ neuf |
+| PHAA | `phaa.net.au` → **0** | `Public Health Association of Australia` → **0** | ✅ neuf — l'unique mention « PHAA » du journal est son **rejet du 23/08** (404), pas un envoi |
+| SItI | `sitinazionale\|tiscali.it` → **0** | `Igiene, Medicina Preventiva` → **0** | ✅ neuf — le grep brut `SItI` remonte 33 faux positifs (sous-chaîne de « site », « sitio »…), écartés par un grep sur le nom complet |
+| AFREhealth | `afrehealth.org` → **0** | `AFREhealth\|African Forum for Research` → **0** | ✅ neuf — distinct d'**AFROHUN** et d'**AFENET**, tous deux déjà au journal |
+
+### ✅ Trois cibles débloquées par un signal neuf, une quatrième reprise sur une piste laissée en réserve
+
+- **PHAA Australie** — écartée le 23/08 sur **404** *et* sur « Australie déjà couverte trois fois ». Le premier motif est levé : `phaa.net.au` répond en HTTP 200 et publie `phaa@phaa.net.au` dans un `data-cfemail`. Le second motif (redondance géographique) subsiste et est **assumé** : c'est une société savante nationale, couche institutionnelle absente de la couverture australienne existante.
+- **PHASA Afrique du Sud** — jamais écartée sur un défaut de source : le run du 24/08 l'avait explicitement laissée en réserve, adresse vérifiée. Reprise ici au titre de la consigne de l'Étape 1 (« creuser une piste déjà notée à prioriser »), adresse **re-vérifiée en direct** plutôt que reprise sur parole.
+- **SItI Italie** — jamais examinée auparavant. L'Italie est couverte 4 fois mais **uniquement côté ONG** (EMERGENCY, INTERSOS, CUAMM) et institut national (ISS) ; aucune société savante italienne au journal.
+- **Fudan SPH** — `sph.fudan.edu.cn` répond enfin en HTTP 200 (échec DNS le 15/08, 404 le 21/08), **mais aucune adresse n'est publiée** sur la racine et les chemins de contact (`/lxwm/list.htm`, `/main.htm`, `/9034/list.htm`) sont en 404. Le signal est partiel : le site est joignable, l'adresse ne l'est pas. **Écartée pour la 3e fois**, sans brouillon.
+
+### 📌 Notes de méthode
+
+- **Décodage `data-cfemail` : lecture de la page, pas snippet de moteur.** Quatre des dix adresses (ORAS-CONHU, IAE, PHAA, AFREhealth) sont publiées derrière l'obfuscation Cloudflare, qui affiche `[email protected]` en HTML rendu. Le critère « issue du seul index de recherche » (18/08, MSPAS Guatemala) **ne s'applique pas ici** : la charge chiffrée est servie par la page officielle elle-même en HTTP 200 et le déchiffrement (XOR sur le premier octet) est déterministe — ce n'est ni un pattern deviné ni un snippet. Contrôle supplémentaire appliqué : pour l'ORAS-CONHU, deux pages différentes portent **deux clés différentes** et décodent vers la même adresse ; pour l'IAE, trois charges distinctes sur la même page décodent identiquement ; pour la PHAA, le décodage concorde avec l'adresse vue indépendamment en recherche.
+- **Piège de gabarit de thème évité sur `iaepi.com`.** La page publie aussi `you@company.com`, valeur par défaut non renseignée du thème — exactement le cas du Kirghizstan (`dgsen.kg`, 24/08). Seules les adresses obfusquées, effectivement renseignées par l'association, ont été retenues.
+- **Règle ADELF (24/08) appliquée deux fois.** **IAE Inde** : `iae.association2015@gmail.com` est une boîte gratuite, mais c'est la **seule** que l'association publie sur son propre site — retenue. **SItI Italie** : trois adresses coexistent sur `/contatti`, `sitinazionale@tiscali.it` (Segreteria Nazionale), `siti@pec-legal.it` (PEC légale, hors usage) et `salute@studionazari.com` (**agence de communication prestataire** — même motif de rejet que `see@geyseco.es` le 23/08). Retenue : celle que la société présente comme son secrétariat, malgré le domaine grand public.
+- **Le segment « société savante » domine ce run : 7 sur 10, et l'équilibre des segments en pâtit.** Aucune institution académique classique et seulement deux entités gouvernementales, contre l'objectif de répartition sur les trois segments. Ce n'est pas un choix de facilité mais le résultat des rejets : **le vivier gouvernemental et académique facilement vérifiable est très largement épuisé** (déjà signalé les 21/08 et 24/08). Écartés ce run faute d'adresse exploitable — **NCDC Géorgie** (coquille JavaScript de 2 570 octets, aucune adresse ; précédent NUS 24/08), **Thailand DDC** (`ddc.moph.go.th` en **403 même avec User-Agent Chrome**, la parade de `reference_govt_sites_need_browser_user_agent` ne suffit pas), **ISP Chili** (formulaire seul), **NIPH Japon** (racine en 200, tous les chemins de contact en 404), **Fiji MoH** (seule adresse publiée `healthfiji.media@gmail.com`, boîte presse — hors critère, comme `press@` de la CEPI), **Timor-Leste** et **IOM/OIM** (`iom.int` en 403 sur les trois chemins testés), **PGIMER Chandigarh** (seule adresse `pgimer-chd@nic.in`, **domaine `nic.in` déjà contacté** — rejet dû au grep par domaine, invisible au grep par nom), **TUMS Téhéran** (boucle de redirections ; l'adresse gmail vue en recherche relève du critère « index seul »), **HIPH Alexandrie** (connexion refusée, **3e échec** depuis le 05/08 — l'Égypte reste à zéro), **ESCMID** (formulaire seul), **ISDS** (`healthsurveillance.org` sert 114 octets — organisation manifestement dormante), **Autorité de santé publique saoudienne / Weqaya** (aucune adresse publiée), **SADI Argentine** et **AFREhealth `/contact-us`** (404, contourné par la racine pour AFREhealth seulement).
+- **🎯 Piste vérifiée, prête à l'emploi au prochain run : SESPAS** — Sociedad Española de Salud Pública y Administración Sanitaria, `secretaria@sespas.es`, **adresse lue directement sur `sespas.es/contacto` et sur la racine, HTTP 200 les deux fois**. Non retenue aujourd'hui uniquement pour ne pas ajouter une 8e société savante à un run déjà déséquilibré. Distincte de la **SEE** (`see@geyseco.es`) écartée le 23/08 : organisation différente, domaine propre. **Réutilisable sans nouvelle recherche.**
+- **EMRO : 1 sur 10, et c'est un progrès relatif.** Le GHC est le premier contact EMRO du canal depuis plusieurs runs, et c'est un organisme **régional** (six États du Golfe) plutôt qu'un ministère isolé — la voie régionale semble plus praticable que la voie nationale sur cette région, où les sites ministériels sont massivement en 403 ou sans adresse. **Le trou structurel EMRO n'est pas comblé** (Égypte, Iran, Irak, Soudan, Yémen, Syrie toujours à zéro), mais l'angle régional est à réessayer.
+- **Anti-gabarit : 10 accroches de formes rhétoriques distinctes**, aucune ne reprenant celles du 24/08. Formes employées : argument de langue posé comme fait produit (GHC — l'arabe), coordination multi-pays (ORAS-CONHU), **redirection d'audience** (« ce n'est pas pour vous, c'est pour vos membres » — IPHA), asymétrie des dates de source (IAE), constat géographique de décalage entre bulletins (EPHA), **contraste avec ce qu'on propose d'habitude à une association** (« ni frais, ni formulaire, ni événement » — PHASA), rôle de relais vers les filiales (SMSP), **inversion du manque** (« votre surveillance n'est pas le problème, c'est le dehors » — PHAA), **aveu de langue non couverte en ouverture** (SItI — l'italien), séparation recherche/réponse (AFREhealth). Quatre clôtures sur dix laissent explicitement une porte de sortie au destinataire (IPHA, EPHA, PHAA, AFREhealth).
+
+### ✅ Contrôle de conformité des 10 brouillons
+
+**10 brouillons créés le 2026-08-25 entre 06:17:07 et 06:17:40 UTC, aucun envoyé.** Vérification post-création par `list_drafts` en **vue complète** : les 10 sont présents, **tous en `labelIds: ["DRAFT"]`, aucun passé en `SENT`** — contrôle du bug d'envoi instantané du connecteur (incident du 15/08) : **négatif, aucune anomalie**.
+
+- **Objets** : tous **≤ 55 caractères** (mesurés), le plus long étant « A monitoring tool for IPHA members — HealthWatch Global ».
+- **Aucun lien cliquable** : `body` texte simple uniquement, **aucun `htmlBody` fourni**. Le `htmlBody` régénéré par Gmail ne contient que `<div dir="auto">` et des `<br/>` — **zéro balise `<a>`** sur les dix, vérifié dans la sortie `list_drafts`.
+- **Domaine sans point littéral** : « healthwatch-global dot com » (8 en anglais), « punto com » (2 en espagnol).
+- **Clôture par une question explicite** avant la signature « David Deheunynck — HealthWatch Global » : les 10.
+- **Langues** : **ES** pour l'ORAS-CONHU et la SMSP, **EN** pour les 8 autres — y compris le **GHC** (l'arabe est couvert par le produit et le message le met en avant, mais le corps reste en anglais, langue de travail institutionnelle du Conseil) et la **SItI** (l'italien n'est pas une des cinq langues, et le message le dit d'entrée plutôt que de le masquer — précédent ABRASCO, 24/08).
+
+**Totaux au 2026-08-25 (fin de ce run) : 280 contacts prospectés, 270 envoyés.** Les 10 de ce run restent en brouillon. **Profondeur de file : 10 brouillons.** *Bilan des bounces et nombre effectivement délivré : non retotalisés ici — porteur unique `daily-relance-check-healthwatch`, règle du 16/08.*
+
+### 📬 Réponse institutionnelle — Georgetown HSOC (contact du lot du 24/08)
+
+Le **Health Security Operations Center** de Georgetown (`hsoc@georgetown.edu`, contacté le 24/08 à 12:14 UTC) **a répondu le jour même à 16:53 UTC** : « We pull in the same sources, but happy to access the dashboard you built. How does one access the pro account? » David a répondu à 18:38 UTC en fournissant un accès Pro de 35 jours, mot de passe défini directement plutôt que lien magique, alertes régionales activées sur les cinq régions. **Première conversion en accès Pro issue de ce canal depuis sa réouverture le 02/08.** Signalé ici pour mémoire ; le suivi du fil appartient à `daily-relance-check-healthwatch`.
