@@ -102,6 +102,22 @@
 
 ---
 
+### ⏱️ ADDENDUM DE FIN DE RUN — DM Mosoka Fallah envoyé, sur ordre explicite de David après un redouble-check qui a trouvé deux réserves réelles
+
+**David a demandé un second regard indépendant sur le brouillon avant l'envoi réel.** Un relecteur neuf, sans accès au verdict du matin (essai 4, ENVOYER 12/12), a relu le même texte et rendu **REECRIRE (9, 11)** :
+- **§9 terrain politique** : la clôture « *is that information arriving earlier, or decisions no longer waiting for it?* » peut se lire comme une insinuation sur le pilotage de la riposte Bundibugyo **actuelle**, adressée à un cadre dirigeant d'Africa CDC au moment où cette riposte fait l'objet d'un débat public sur sa gestion.
+- **§11 gabarit** : l'auto-présentation « *I am one developer running HealthWatch Global, which aggregates published outbreak bulletins* » est une **4e occurrence** du même moule (déjà servi à Mamadou Saliou Kalifa Diallo, « George », « Nicksy »), et la clôture en question binaire est un motif déjà réutilisé sur plusieurs autres fils.
+
+**Ces deux réserves ont été présentées à David explicitement, avec citation.** Il a répondu « envoie » : **décision assumée en connaissance de cause, pas une omission du dispositif.** Le texte n'a pas été retouché.
+
+**Envoyé le 25/08 à 21:38, confirmé** : le fil s'ouvre sur « David Deheunynck a envoyé les messages suivants à 21:38 », texte identique aux 3 paragraphes validés, aucun artefact de rendu, champ de composition vidé après l'envoi. Destinataire revérifié par recherche nominative avant composition (« Mosoka Fallah, PhD, MA, MPH · 1er · Ag. Director, Science and Innovation… Africa Center for Disease Control »), distinct d'un homonyme sans rapport (« Mosoka Fallah · 3e et + · Graduate Research Assistant-Biomedicine, University of Kentucky »).
+
+**Quota DM à froid : 1/8.** La file de validation ne contient donc plus aucun DM à ce stade du run — vérifié dans le même passage que la correction ci-dessus sur N'Da Konan Michel Yao.
+
+⚠️ **Note d'outillage, rencontrée deux fois ce créneau (Alieu Sowe puis Mosoka Fallah)** : le renderer du navigateur s'est dégradé (captures d'écran en timeout) juste après chaque clic d'action irréversible (« Se connecter », « Envoyer »). Dans les deux cas, une simple re-sélection du navigateur (`select_browser` sur le même deviceId) a suffi à rétablir la capture d'écran l'instant d'après, et le clic avait bien abouti entre-temps (vérifié via `get_page_text`/navigation vers une page de confirmation plutôt que via un nouveau screenshot). **Ne pas conclure à un échec du clic sur la seule base d'un timeout de capture** : vérifier l'état réel (toast, changement de bouton, fil de messagerie) avant de recliquer.
+
+---
+
 ### 3️⃣ NOUVEAUX ABONNÉS — aucun, aucun follow-back exécuté
 
 Page « Abonnés » relevée : **377 personnes**, chiffre **identique aux relevés de 9h et de 13h**. Tête de liste inchangée (Mosoka Fallah, Bouh Abdi Khaireh, Dihoulne Gagdang, Daisy Kasyoka, Alain BASHIZI, Nebiyu Dereje), tous déjà « Suivi ». **Le seul profil non suivi en retour reste Dr. Jibran Khan**, écarté pour pertinence le 24/08 et **non rouvert** conformément à la consigne.
@@ -164,7 +180,7 @@ Le carry-over de 9h demandait un **message de bienvenue pour Dorine Ngono** (`/i
 
 ---
 
-### 🔒 DM EN ATTENTE DE VALIDATION — **Mosoka Fallah, PhD, MA, MPH** (EN, message de bienvenue, **SANS lien ni CTA**, quota froid **1/8 une fois envoyé**)
+### 🔒→✅ DM — **Mosoka Fallah, PhD, MA, MPH** (EN, message de bienvenue, **SANS lien ni CTA**, quota froid **1/8**) — ENVOYÉ, sur ordre explicite de David en session interactive
 
 *Ag. Director, Science and Innovation and Program Manager Saving Lives and Livelihoods*, **Africa CDC**. Compte vérifié, relation de 1er degré. Invitation envoyée le 24/08 à 17h sans note, **acceptée le 24/08**. **Aucun échange préalable** (fil inexistant, revérifié ce run). Profil décideur, exactement la cible de la directive du 17/08.
 
@@ -172,9 +188,15 @@ Le carry-over de 9h demandait un **message de bienvenue pour Dorine Ngono** (`/i
 
 **Hook réel et vérifié** (inchangé, revalidé question 6) : son post public d'il y a une semaine, écrit **depuis Bunia, Ituri, est de la RDC**, où il rapproche la riposte à l'Ebola Zaire de **Needoweim, Liberia** de la riposte Bundibugyo en cours.
 
-**Statut : 🔒 EN ATTENTE DE VALIDATION DE DAVID.** Comptera dans le quota de 8 DM à froid une fois envoyé (**1/8**).
+⚠️ **Redouble-check demandé par David en session, avant l'envoi réel.** Un second relecteur indépendant (contexte neuf, sans accès au verdict du matin) a relu ce même texte et rendu **REECRIRE (9, 11)** — deux points réels que le passage du matin avait laissés passer :
+- **§9 terrain politique** : la clôture « *is that information arriving earlier, or decisions no longer waiting for it?* » peut se lire comme une insinuation sur le pilotage de la riposte Bundibugyo **actuelle**, adressée à un cadre dirigeant d'Africa CDC au moment où cette riposte fait l'objet d'un débat public sur sa gestion.
+- **§11 gabarit** : l'auto-présentation « *I am one developer running HealthWatch Global, which aggregates published outbreak bulletins* » est une **4e occurrence** du même moule (déjà servi à Mamadou Saliou Kalifa Diallo, « George », « Nicksy »), et la clôture en question binaire est un motif déjà réutilisé sur plusieurs autres fils.
 
-**Texte prêt à envoyer :**
+**David a tranché en session (« envoie ») après avoir pris connaissance de ces deux réserves** : décision assumée, pas une omission. Le texte n'a pas été retouché.
+
+**Statut : ✅ ENVOYÉ le 25/08 à 21:38, confirmé (fil ouvert, texte identique aux 3 paragraphes validés, aucun artefact de rendu, champ de composition vidé).** Compte dans le quota de 8 DM à froid (**1/8**).
+
+**Texte envoyé :**
 
 > Mosoka, your post from Bunia left me with a question that is not mine to answer. I am one developer running HealthWatch Global, which aggregates published outbreak bulletins.
 >
