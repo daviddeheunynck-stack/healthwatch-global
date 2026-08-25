@@ -101,19 +101,69 @@ export interface Outbreak {
 export const OUTBREAKS_CACHE_TAG = "outbreaks";
 const OUTBREAKS_REVALIDATE = 300; // seconds — must be a statically-analyzable literal
 
+// Latest of a set of ISO timestamps, comparing instants rather than strings —
+// Postgres renders timestamptz with an offset, so "…+02:00" sorts wrong as text.
+export function latestIso(...values: (string | null | undefined)[]): string | null {
+  let best: string | null = null;
+  let bestMs = -Infinity;
+  for (const v of values) {
+    if (!v) continue;
+    const ms = new Date(v).getTime();
+    if (Number.isNaN(ms) || ms <= bestMs) continue;
+    best = v;
+    bestMs = ms;
+  }
+  return best;
+}
+
+// When this row was last VERIFIED: the bulletin's own date, or the later moment
+// a cron reopened the primary source and found nothing newer. Never `updated_at`
+// — see getLastSyncCached below for why.
+export function lastVerifiedIso(outbreak: Pick<Outbreak, "date" | "source_confirmed_at">): string {
+  return latestIso(outbreak.date, outbreak.source_confirmed_at) ?? outbreak.date;
+}
+
 const getLastSyncCached = unstable_cache(
   async (): Promise<string | null> => {
-    const { data, error } = await queryWithRetry((supabase) =>
-      supabase
-        .from("outbreaks")
-        .select("updated_at")
-        .eq("active", true)
-        .order("updated_at", { ascending: false })
-        .limit(1)
-        .single(),
+    // `updated_at` alone is the timestamp of the last DATABASE WRITE, not of the last
+    // verification, and the badge built on it claims "Mis à jour il y a Nh". It fails
+    // in both directions: any field touch (a QC edit, a locale backfill, a fix-*.mjs
+    // script) resets the whole site to "just now"; and since migration 20260824030000
+    // a cron that rereads its source and finds nothing new writes NOTHING, so a day of
+    // healthy verification leaves the figure ageing. Taking the max with
+    // `source_confirmed_at` is the canonical age already used by
+    // scripts/morning-don-check.mjs (which labels the raw one "NE PAS CITER") and the
+    // same reasoning as lib/data-status.ts. Found 2026-08-25 during the full audit:
+    // this and StaleDaysBadge were the last two surfaces still on the raw value.
+    const [written, confirmed] = await Promise.all([
+      queryWithRetry((supabase) =>
+        supabase
+          .from("outbreaks")
+          .select("updated_at")
+          .eq("active", true)
+          .order("updated_at", { ascending: false })
+          .limit(1)
+          .single(),
+      ),
+      queryWithRetry((supabase) =>
+        supabase
+          .from("outbreaks")
+          .select("source_confirmed_at")
+          .eq("active", true)
+          .not("source_confirmed_at", "is", null)
+          .order("source_confirmed_at", { ascending: false })
+          .limit(1)
+          .maybeSingle(),
+      ),
+    ]);
+    if (written.error) throw written.error; // propagate — don't let a transient failure cache as "no sync"
+    // A failure on the confirmation stamp is NOT fatal: the column is only written by
+    // the crons that reread their source, so "no row" is a normal state. Degrade to the
+    // write timestamp rather than blanking the badge.
+    return latestIso(
+      written.data?.updated_at,
+      confirmed.error ? null : confirmed.data?.source_confirmed_at,
     );
-    if (error) throw error; // propagate — don't let a transient failure cache as "no sync"
-    return data?.updated_at ?? null;
   },
   ["outbreaks-last-sync"],
   { tags: [OUTBREAKS_CACHE_TAG], revalidate: OUTBREAKS_REVALIDATE },

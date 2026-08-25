@@ -12,7 +12,7 @@ import { getEpiWeek } from "@/lib/epi-week";
 
 type SortKey = "risk" | "cases" | "deaths" | "cfr" | "date";
 type SortDir = "asc" | "desc";
-import { getLocalizedDisease, getLocalizedCountry, isNewOutbreak, staleOutbreakDays, freshOutbreakHours, isSourceConfirmed, sourceStatus, sourceName, computeRiskScore, hasRealAdmin1 } from "@/lib/outbreaks";
+import { getLocalizedDisease, getLocalizedCountry, isNewOutbreak, staleOutbreakDays, freshOutbreakHours, isSourceConfirmed, lastVerifiedIso, sourceStatus, sourceName, computeRiskScore, hasRealAdmin1 } from "@/lib/outbreaks";
 import { diseaseToSlug, matchDisease } from "@/lib/disease-data";
 import { countryToSlug } from "@/lib/country-utils";
 import type { Outbreak } from "@/lib/outbreaks";
@@ -181,7 +181,7 @@ function StaleDaysBadge({ referenceIso, locale }: { referenceIso: string; locale
 
   if (staleDays === null || staleDays < 3) return null;
   const cls = staleDays < 7 ? "text-amber-400" : "text-orange-500";
-  const tip = ({ fr: `Dernière mise à jour il y a ${staleDays}j`, en: `Last updated ${staleDays}d ago`, es: `Última actualización hace ${staleDays}d`, ar: `آخر تحديث: ${staleDays} أيام`, id: `Terakhir diperbarui ${staleDays} hari lalu` }[locale]) ?? `${staleDays}d ago`;
+  const tip = ({ fr: `Dernier bulletin de la source il y a ${staleDays}j`, en: `Source bulletin ${staleDays}d old`, es: `Último boletín de la fuente hace ${staleDays}d`, ar: `آخر نشرة من المصدر: ${staleDays} أيام`, id: `Buletin sumber ${staleDays} hari lalu` }[locale]) ?? `${staleDays}d ago`;
   return <span title={tip} className={`text-[10px] cursor-help shrink-0 ${cls}`}>⏰{staleDays}d</span>;
 }
 
@@ -1418,8 +1418,18 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
                           return locale === "fr" ? `au ${formatted}` : locale === "ar" ? `بتاريخ ${formatted}` : formatted;
                         })()}
                       </span>
-                      {!ageMode && !epiWeekMode && (
-                        <StaleDaysBadge referenceIso={outbreak.updated_at ?? outbreak.date} locale={locale} />
+                      {/* Lisait `updated_at` jusqu'au 2026-08-25 : sur une meme ligne le tableau
+                          pouvait afficher "SOURCE CONFIRMEE · 60j" a cote de "⏰3d", parce que les
+                          pastilles voisines etaient passees sur `date` en aout et pas celle-ci.
+                          Desormais adossee a lastVerifiedIso, et rendue seulement dans la bande que
+                          les autres pastilles laissent muette (ni "MàJ · Nh" a moins de 7j, ni
+                          "SANS MAJ · Nj" a plus de 60j, ni source confirmee) — sans quoi elle
+                          doublerait un signal deja donne. */}
+                      {!ageMode && !epiWeekMode
+                        && freshOutbreakHours(outbreak) === null
+                        && !staleOutbreakDays(outbreak)
+                        && !isSourceConfirmed(outbreak) && (
+                        <StaleDaysBadge referenceIso={lastVerifiedIso(outbreak)} locale={locale} />
                       )}
                     </div>
                   </td>
