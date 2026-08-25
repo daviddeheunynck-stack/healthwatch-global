@@ -311,6 +311,7 @@ export default function OnboardingTour({ isPaid = false }: { isPaid?: boolean })
               ) : (
                 <>
                   <CheckoutButton
+                    billing="monthly"
                     plan="pro"
                     locale={locale}
                     label={c.startTrial}

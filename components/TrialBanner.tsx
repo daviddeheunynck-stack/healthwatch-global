@@ -168,6 +168,7 @@ export default function TrialBanner({ trialEndsAt, locale, hasBilling, isPilot =
               </a>
             ) : (
               <CheckoutButton
+                billing="monthly"
                 plan="pro"
                 locale={locale}
                 label={c.cta}

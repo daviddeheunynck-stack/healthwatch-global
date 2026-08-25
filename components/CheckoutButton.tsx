@@ -19,11 +19,15 @@ interface CheckoutButtonProps {
   locale: string;
   label: string;
   className: string;
-  billing?: "monthly" | "annual";
+  // Obligatoire, sans valeur par defaut : jusqu'au 25/08/2026 le defaut etait
+  // "annual", et 12 des 14 points d'appel ne le passaient pas — ils envoyaient
+  // donc vers un ecran Stripe a 249 EUR/an sous un libelle "29 EUR/mois".
+  // Champ requis : le compilateur signale desormais tout appelant qui l'oublie.
+  billing: "monthly" | "annual";
   icon?: React.ReactNode;
 }
 
-export default function CheckoutButton({ plan, locale, label, className, billing = "annual", icon }: CheckoutButtonProps) {
+export default function CheckoutButton({ plan, locale, label, className, billing, icon }: CheckoutButtonProps) {
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
   const router = useRouter();

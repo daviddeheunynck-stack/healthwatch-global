@@ -170,12 +170,12 @@ export default function OutbreakBottomCta({ locale, ctaTitle, ctaSub, ctaProBtn,
   const needsCard = NEEDS_CARD_COPY[locale] ?? NEEDS_CARD_COPY.en;
 
   let subText = ctaSub;
-  let cta: React.ReactNode = <CheckoutButton plan="pro" locale={locale} label={ctaProBtn} className={CTA_CLASS} />;
+  let cta: React.ReactNode = <CheckoutButton plan="pro" billing="monthly" locale={locale} label={ctaProBtn} className={CTA_CLASS} />;
   let showFreeLink = state !== "expired" && state !== "trial_needs_card";
 
   if (state === "expired") {
     subText = exp.sub;
-    cta = <CheckoutButton plan="pro" locale={locale} label={exp.btn} className={CTA_CLASS} />;
+    cta = <CheckoutButton plan="pro" billing="monthly" locale={locale} label={exp.btn} className={CTA_CLASS} />;
   } else if (state === "trial_needs_card" && trialInfo) {
     subText = needsCard.sub(trialInfo.daysLeft);
     cta = <BillingPortalButton locale={locale} label={needsCard.btn} />;
@@ -191,7 +191,7 @@ export default function OutbreakBottomCta({ locale, ctaTitle, ctaSub, ctaProBtn,
     showFreeLink = false;
   } else if (state === "trial" && trialInfo) {
     subText = trial.sub(trialInfo.daysLeft);
-    cta = <CheckoutButton plan="pro" locale={locale} label={trial.btn} className={CTA_CLASS} />;
+    cta = <CheckoutButton plan="pro" billing="monthly" locale={locale} label={trial.btn} className={CTA_CLASS} />;
     showFreeLink = false;
   }
 

@@ -971,6 +971,7 @@ export default async function LandingPage({ locale }: { locale: string }) {
               <p className="text-xs text-gray-400">{sub}</p>
               {cta && (
                 <CheckoutButton
+                  billing="monthly"
                   plan="pro"
                   locale={locale}
                   label={cta}

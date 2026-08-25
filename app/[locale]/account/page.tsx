@@ -579,6 +579,7 @@ export default async function AccountPage({
                "Your Pro trial is active. Add a payment method to keep access after the trial ends."}
             </p>
             <CheckoutButton
+              billing="monthly"
               plan="pro"
               locale={locale}
               label={
@@ -615,6 +616,7 @@ export default async function AccountPage({
                 : l.upgradeDesc}
             </p>
             <CheckoutButton
+              billing="monthly"
               plan="pro"
               locale={locale}
               label={trialExpired

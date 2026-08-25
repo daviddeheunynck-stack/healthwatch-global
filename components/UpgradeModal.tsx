@@ -292,6 +292,7 @@ export default function UpgradeModal({ feature, onClose }: Props) {
           <>
             <div onClick={() => { track("upgrade_modal_cta", { feature, locale }); onClose(); }}>
               <CheckoutButton
+                billing="monthly"
                 plan="pro"
                 locale={locale}
                 label={trialExpired ? c.ctaExpired : c.cta}
