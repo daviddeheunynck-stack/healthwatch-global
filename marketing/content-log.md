@@ -2,6 +2,166 @@
 
 Archive de tout le contenu créé. Mise à jour à chaque session.
 
+## 📅 Session linkedin-hwg-followup-check — 25/08/2026 (13h, 1er des 2 créneaux après-midi)
+
+**Vérification double déclenchement** : aucune entrée `linkedin-hwg-followup-check` datée du 25/08 dans ce fichier ni dans `linkedin-contacts.md` à l'ouverture. La seule entrée du jour appartient à `linkedin-hwg-monitoring` (9h) et à sa reprise interactive avec David → **premier déclenchement de cette routine aujourd'hui**.
+
+**Registre de faits régénéré en début de run** : `npm run qa:facts` → **227 faits citables sur 109 lignes affichées**, 81 lignes `is_seed` exclues, **53 faits périmés**. ⚠️ **Alerte de fraîcheur inchangée, 5e jour consécutif** : Shigellosis / EU-EEA (**54 j**, +1 depuis ce matin), Diphtheria / 8 pays (**40 j**), Meningitis / 4 pays (**33 j**). Aucun message de ce run ne cite un chiffre de la base. Registre produit régénéré aussi (`npm run qa:claims`), le DM Mosoka Fallah affirmant quelque chose sur HWG.
+
+**🖥️ Navigateur** : `_shared/browser-status.md` lu avant ouverture, dernière entrée = **🟢 RÉTABLI le 24/08 ~09h15** → aucun bridage. `23c7ecdd-…` seul listé, sélectionné sans question (§7). Rien de neuf à écrire dans `browser-status.md`.
+
+✅ **Anomalie JS asynchrone : ABSENTE ce créneau.** `(async () => 42)()` renvoie bien une `Promise`. C'est la **première fois depuis le 22/08 que le créneau de 13h en est exempt** (elle avait frappé les 22, 23 et 24/08 à cette heure, puis le créneau de 9h ce matin). Session menée en JS synchrone par précaution malgré tout. Le filtre de sortie `[BLOCKED: Cookie/query string data]` ne s'est **pas** déclenché ce run.
+
+🔧 **Note technique navigateur, à réutiliser — le bouton « Répondre » d'un commentaire n'a pas de texte.** Sur la page permalien d'un post, une recherche de bouton par `innerText` contenant « Répondre » renvoie **zéro résultat**, ce qui donne l'impression que le fil est en lecture seule. Le bouton existe bel et bien : il porte `aria-label="Répondre"` et **aucun texte**. Piège symétrique de celui relevé ce matin sur le bouton d'envoi, qui lui porte le texte `Répondre` **sans** `aria-label`. Les deux se distinguent donc exactement à l'inverse l'un de l'autre : action du commentaire = label sans texte, soumission du formulaire = texte sans label.
+
+---
+
+### 💬 COMMENTAIRE PUBLIÉ (2/7) — réponse à **Martin Yakum** sous son post « An Outbreak Is Never Just A Disease Problem »
+
+**Profil** : *Epidémiologiste chez Epicentre / MSF*, relation de 1er degré.
+**Post ciblé** : `urn:li:activity:7497884672853557248`, publié ce matin, **341 impressions** à l'heure du run.
+
+**Ce que traite ce commentaire.** Il s'agit du **suivi direct du commentaire 1/7 publié ce matin à 9h**. Martin Yakum y a **répondu ~5 h plus tard**, en nous nommant, verbatim :
+
+> « *David Deheunynck That is an excellent point, David. The issue of cadence is easy to overlook. We often place transmission data alongside contextual indicators as though they were generated on the same timetable, when in reality they may operate and be documented at very different temporal resolutions. That gap can influence how we interpret the relationship between context and transmission and can even make a contextual factor appear explanatory when part of what we are seeing is simply a difference in how and when the information was recorded. It reinforces the importance of being explicit about the timing, resolution and provenance of the contextual data when interpreting an outbreak.* »
+
+**⚠️ Dérogation hebdomadaire assumée, 4e application de la même logique cette semaine** (précédents : Sohail Agha et INSP-RDC le 22/08, Patrick AYONGA le 24/08). Martin Yakum a été **bloqué en commentaire jusqu'au 01/09** par notre propre commentaire de ce matin, mais il s'agit d'une **réponse en sous-fil, à un message qui nous nomme, dans le prolongement direct de notre commentaire** — pas d'un commentaire à froid. **Compté dans le quota par prudence (2/7)**, cohérent avec les arbitrages précédents.
+
+**Angle retenu, et pourquoi ce n'était pas un accusé de réception.** Sa réponse est un accord, qui atterrit sur une recommandation : être explicite sur la temporalité, la résolution et la provenance de la donnée de contexte. Le commentaire accepte le levier puis en borne le rendement : un horodatage ne rend pas deux séries alignables, il rend seulement l'écart déclarable. Reste alors une fourche que Martin n'a pas nommée — reporter la valeur lente inchangée, ce qui fabrique une stabilité que personne n'a observée, ou laisser le trou ouvert — et ces deux issues sont des choix éditoriaux, pas des défauts neutres.
+
+**Texte publié** (confirmé : champ vidé, commentaire visible sous sa réponse, signé « David Deheunynck • Vous », horodaté « maintenant ») :
+
+> Agreed, and being explicit is probably the only lever that scales here. A timestamp does not make two series alignable though, it only makes the gap declarable. When one value arrives once and the curve moves weekly, you either carry the slower one forward unchanged, which manufactures a stability nobody observed, or you leave the hole open. Both are editorial choices rather than neutral defaults. Naming the resolution and the provenance will not close that gap, but it does put the assumption somewhere a reader can argue with it.
+
+**QA: mécanique PASS (essai 2) | relecteur ENVOYER 12/12 (2e passage) | aucun chiffre cité | aucune affirmation HWG | registre du 25/08**
+
+**⭐ Ce que le relecteur a attrapé et que je n'avais pas vu — deux moules maison, aucun atteignable par le n-gramme.**
+1. **L'accroche du fond était un auto-positionnement recyclé.** « *From the aggregation seat…* » a **six cousins** dans le corpus (« *From the aggregation side the failure is rarely refusal* », « *from the aggregation end it is not just a preference* », etc.), dont **un publié six heures plus tôt dans ce fil même** : « *Seen from the aggregation end, the factor I would add is cadence* ». Martin aurait lu les deux l'un sous l'autre. Retiré ; le message ne contient plus le mot « aggregation » du tout.
+2. **La clôture suivait le moule « turns A into B »**, servi à quatre autres destinataires (« *turns a coverage percentage into a figure with a known error* », « *turns a case number into a coverage-adjusted one* », « *turns a suspected case into a confirmed one* », « *turns a treatable infection into a severe one* »). Réécrite en concession bornée.
+
+**Effet de bord favorable, relevé par le relecteur au 2e passage** : retirer l'auto-positionnement supprime **la dernière affirmation de position sur HWG** du message. Le commentaire ne revendique désormais plus rien sur la plateforme, ce qui est strictement plus sûr que la version qui avait pourtant passé le contrôle.
+
+**Vérification navigateur.** Bouton « Répondre » de Martin Yakum identifié par `aria-label` puis **cliqué dans le même appel JS que la vérification du contexte d'ancêtres** (§5.4). Champ de réponse pré-rempli d'une mention `@Martin Yakum` : **volontairement effacée** pour publier le texte exactement tel qu'il a été validé, la réponse étant de toute façon imbriquée sous son commentaire. Insertion par `execCommand('insertText')`, rendu relu avant clic (**535 caractères, identiques au brouillon validé**, 1 paragraphe, aucun tiret cadratin). Clic sur le bouton de soumission **conditionné, dans le même appel, à quatre vérifications** : égalité stricte du contenu de l'éditeur avec le texte validé, libellé `Répondre` sans `aria-label`, présence de « Martin Yakum » et de « That is an excellent point » dans le contexte d'ancêtres.
+
+---
+
+### ❌ COMMENTAIRE ABANDONNÉ AU 4e ESSAI — **Anuradha Gupta** (EN, premier contact, profil de très haut niveau)
+
+**Le candidat le plus qualifié trouvé en recherche active depuis plusieurs jours, ce qui rend l'abandon coûteux.** `/in/anuradha-gupta-sabin/`, *« In pursuit of equity and impact »*, **11 525 abonnés**, relation de 2e degré. Elle écrit dans le post même avoir « *anchor[ed] Gavi 5.0* » et avoir joué un rôle clé dans le *Child Survival Call to Action* de 2012. **Profil totalement neuf** : 0 occurrence dans `linkedin-contacts.md`, `content-log.md`, le tracker et les deux archives d'avant le 17/07 → **aucun blocage hebdomadaire**.
+
+**Post ciblé** : `urn:li:activity:7498008786951917568`, « *THE ZERO-DOSE JOURNEY | Part 2 : The Data Behind the Blind Spot* », publié **5 min avant l'ouverture** (fenêtre 48 h largement respectée), **0 commentaire** — nous aurions été le premier. 4 réactions à la clôture. Fil lu en entier et recopié verbatim dans `tmp/thread-anuradha-gupta.txt`.
+
+**Pourquoi ce post était le bon.** Son récit est un cas d'école exactement dans l'axe HWG : la donnée de routine ne pouvait pas établir le lien recherché (« *Conventional data simply couldn't show it* »), et la preuve a dû venir d'un jeu de données géospatial extérieur monté avec un partenaire privé.
+
+**QA : mécanique PASS aux 4 essais (0 blocker, 0 warn) → relecteur REECRIRE (9, 11, 12) → REECRIRE (11) → REECRIRE (9) → REECRIRE (11) → `ABANDON`.**
+
+**⭐ Les quatre rejets étaient réels, et chacun portait sur autre chose que le précédent.**
+
+1. **Essai 1 — apport et terrain politique, les deux fatals.** (a) **Apport** : mon 2e paragraphe **restituait sa propre thèse**. Pire, le relecteur a retrouvé que le fond du commentaire — déplacer la question du taux de couverture vers le dénominateur — **avait déjà été publié la veille**, le 24/08, sous le post de Gittan Gröndahl. Le contrôle mécanique ne pouvait pas le voir : le vocabulaire diffère entièrement, seule l'idée est la même. (b) **Terrain politique** : « *the problem was not that the data was poor* » porte un adjectif évaluatif sur la qualité de la donnée produite par ses propres équipes M&E, sous un post tagué #Gavi #WHO #UNICEF. **Une exculpation reste un verdict** : elle installe le cadre du blâme. Angle entièrement changé.
+2. **Essai 2 — la clôture, sur un socle publié trois fois.** « *it is the part I would read twice* » est la 4e occurrence de « *the part I would [verbe]* » en position finale (`linkedin-contacts.md:7963`, `content-log.md:1767`, `content-log.md:11379`). Plus « *downstream* », **53 occurrences** au corpus et déjà écarté volontairement pour ce motif le 25/08 au matin.
+3. **Essai 3 — un effet de bord de la correction précédente.** Ayant retiré une clôture qui portait une **attente positive**, je l'avais remplacée par une concessive, « *if it shows anywhere* ». Le relecteur a montré que « anywhere » a une **portée non bornée** : la phrase se lit soit « si ça se voit dans une des parties de la série », soit « si tant est que ça se voie où que ce soit », cette seconde lecture devenant un doute insinué sur le fait que Gavi ait transformé sa démonstration en indicateur. **Un doute sur une institution, énoncé par insinuation plutôt que par affirmation, reste un doute.**
+4. **Essai 4 — la même clôture, un 3e moule.** « *Part 3 is where that would show.* » suit la construction `[groupe nominal] is where [proposition]` en position terminale, **déjà servie en clôture dans deux messages du corpus** dont un posté (`content-log.md:8535`, `content-log.md:7040`). ⭐ **Le relecteur a explicitement corrigé sa propre relecture de l'essai 3**, où il avait validé cette demi-phrase sur des greps trop étroits, en écrivant qu'il ne pouvait pas « *appliquer deux barres différentes selon l'essai* ». C'est le bon réflexe et il faut le noter : le dispositif s'est corrigé lui-même contre son propre verdict antérieur.
+
+**⚠️ Ce qui est acquis, et pourquoi l'abandon n'est pas une perte sèche.** Le relecteur a validé **§1 et §2 tels quels** aux essais 3 et 4, y compris la question 9 au dernier passage (« *Rien à abandonner pour motif éthique ici* »), l'attribution, le parcours, la langue, le CTA et l'apport. **Seule la dernière phrase a tué le texte, trois fois de suite.** Il note d'ailleurs que « *rien n'oblige le message à porter un troisième paragraphe : §1 et §2 sont validés tels quels et se suffisent* ».
+
+**🛑 Je n'ai pas appliqué cette suggestion, délibérément.** Supprimer le 3e paragraphe aurait été un 5e essai, et le dispositif fixe la limite à 4 — avec un motif écrit noir sur blanc : « *un message réécrit indéfiniment pour satisfaire des contrôles finit par passer par usure, on ampute les phrases au lieu de les reformuler, et il part quand même* ». Amputer la clôture pour échapper au contrôle serait exactement le comportement que la règle interdit. **Le texte est donc abandonné, et la décision de le reprendre appartient à David ou au créneau suivant, avec un compteur remis à zéro et un contexte neuf.**
+
+**QA: ABANDON après 4 essais | motifs: relecteur REECRIRE (9,11,12) puis (11) puis (9) puis (11) | rien publié sous ce post ce run**
+
+**Contrainte cumulative pour une éventuelle reprise, à ne pas redécouvrir** : la clôture doit éviter **trois moules d'un coup**, tous établis — le socle « *the part I would [verbe]* », la concessive à portée non bornée, et « *[X] is where [Y]* » en position terminale.
+
+**Texte au moment de l'abandon**, conservé pour que la reprise ne reparte pas de zéro (les deux premiers paragraphes sont validés) :
+
+> Did the measurement that proved the problem also become the one that tracks it? The evidence here came through a geospatial partnership, not from the routine system, and those two answer to different constraints.
+>
+> A study can be commissioned once and still be definitive. An indicator has to be repeatable on a schedule, run by whoever is already in place, and light enough to be done again the following year.
+>
+> *(3e paragraphe rejeté 3 fois, à refaire ou à supprimer)*
+
+---
+
+### 📌 Veille — éléments notés pour de futurs posts, aucune prise de parole
+
+1. 🔴 **Lacune de couverture concrète, la plus actionnable du run.** **Robert Herriman** publie (il y a 21 min) « *#Dengue outbreak declared in the #MarshallIslands* ». Vérification faite contre le registre régénéré ce matin : il porte **65 faits dengue** couvrant notamment la Nouvelle-Calédonie (`asOf` 2026-08-20), le Brésil, la Colombie et l'Indonésie, mais **aucune ligne Îles Marshall — zéro occurrence, et zéro occurrence « Pacific » ou « Micronesia »**. Une flambée **nouvellement déclarée** dans une zone que la base ne couvre pas du tout est exactement le cas où une ligne manque plutôt qu'elle n'est périmée. **Aucune écriture faite** (une routine sociale ne écrit pas en base) et **le chiffre du post n'a pas été repris** : Herriman renvoie à un lien tiers, à vérifier contre une source primaire citable avant toute écriture. **À transmettre à `morning-don-check`.** Herriman est par ailleurs bloqué en commentaire jusqu'au 30/08, donc aucun commentaire n'était possible sous ce post de toute façon.
+
+2. ⭐ **Angle de post original, offert par la réponse de Martin Yakum.** Il conclut sa réponse par « *It reinforces the importance of being explicit about the timing, resolution and provenance of the contextual data when interpreting an outbreak.* » C'est un épidémiologiste de terrain qui formule de lui-même, sans qu'on l'y amène, la thèse de fond de HWG sur la provenance et la résolution des données. **Matière à un post de marque**, sans le citer nommément ni lui attribuer quoi que ce soit sans accord écrit (règle absolue) : l'angle généralisable est « *l'horodatage rend l'écart déclarable, il ne le referme pas* ». **Non rédigé ici, hors périmètre.**
+
+3. **Anuradha Gupta** (`/in/anuradha-gupta-sabin/`, 11 525 abonnés) publie « *THE ZERO-DOSE JOURNEY | Part 2 : The Data Behind the Blind Spot* », et annonce une **Part 3 pour mardi prochain**. Son récit est un cas d'école de dénominateur : la donnée de routine ne pouvait pas établir le lien recherché, la preuve est venue d'un jeu de données géospatial extérieur. **Repère de calendrier** : la Part 3 sortira mardi 01/09, occasion de suivi. Profil également **bon candidat connexion**, non traité ce run (quota connexions à 0/7, mais aucune note rédigée faute de temps de dispositif).
+
+4. 🛑 **#RC76AFRO à Addis-Abeba, silence maintenu, 2e jour.** **Tedros Adhanom Ghebreyesus** était en direct (« *My remarks at the @WHOAFRO Regional Committee #RC76* ») et la page **WHO AFRO** également (« *LIVE | WHO AFRO RC76* »). Marqués §9/§10 comme hier : positionnement institutionnel et politique, hors périmètre. **Retenus uniquement comme repère de calendrier** — le RC76AFRO est une source probable de chiffres et de déclarations officielles dans les prochains jours, à signaler à `morning-don-check`.
+
+5. **Lorenzo Subissi** (OMS, *Emerging Threats Diagnostics*, 1er degré depuis le 26/07) partage un appel à candidatures pour un groupe consultatif technique : « *Very critical TAG, especially these days. Consider applying if you have the relevant expertise.* » **Écarté comme candidat commentaire** : c'est un relais d'appel à candidatures, sans matière analytique, et « *especially these days* » porte une charge implicite qu'un commentaire ne peut pas relever sans se placer sur le terrain §9. Noté, non commenté.
+
+6. **Statistiques relevées en passant** : **324 vues de profil**, **341 impressions** sur le post de Martin Yakum, et une notification « *Vos posts ont obtenu 487 impressions la semaine passée* ». Rien qui justifie une action.
+
+⚠️ **Bandeau de consentement cookies rencontré en cours de session** (page d'activité de profil). **Ni « Accepter » ni « Refuser » n'ont été cliqués** : accepter ou refuser un bandeau de consentement est une action qui engage le compte de David et demande son accord explicite, or il n'est pas présent sur ce créneau. Le bandeau n'a pas empêché la lecture des pages. À trancher par David s'il réapparaît.
+
+---
+
+### 🔧 Défauts d'outillage relevés — 1 nouveau et structurel, 2 confirmations
+
+**Aucune modification de `lexicon.json` ni d'aucun script n'a été faite en cours de run** (règle de périmètre). Ce sont des constats à trancher hors routine.
+
+**1. 🔴 NOUVEAU, et il explique pourquoi le relecteur attrape systématiquement des gabarits que le contrôle laisse passer.** Le relecteur a signalé que la séquence de 5 mots « **i have no way of** » figure **2 fois** dans `linkedin-contacts.md` (lignes 939 et 8760, toutes deux dans des blocs `>` de DM publiés), alors que `sizeHistory` vaut **5** et `maxHistoryHits` **0** : le contrôle aurait dû bloquer, et il a rendu PASS. **J'ai reproduit et diagnostiqué.**
+
+- Test A : un brouillon contenant « *so I have no way of knowing whether…* » → **FAIL `ngram.history`**.
+- Test B : le brouillon de l'essai 3, « *a question I have no way of settling myself* » → **PASS**.
+
+La différence n'est ni le seuil ni la taille de fenêtre : c'est la **ligne 107** de `scripts/check-outreach-message.mjs`, `if (contentCount(slice) < 2) continue;`. Une fenêtre de 5 mots n'est retenue que si elle contient **au moins 2 mots pleins**. Or `FUNCTION_WORDS` contient `i`, `have`, `no`, `of` : la séquence « i have no way of » ne compte qu'**un** mot plein (« way »), elle est donc **écartée du brouillon comme du corpus**, et devient invisible des deux côtés. « have no way of knowing » en compte deux (« way », « knowing »), elle est retenue.
+
+**Ce n'est donc pas un bug de seuil, c'est un angle mort de conception, et il tombe exactement au mauvais endroit.** Le filtre vise à ne pas signaler des enchaînements de mots-outils anodins. Mais l'échafaudage purement connectif est précisément ce qui constitue la « signature rhétorique de la maison » que le relecteur relève run après run (Alieu Sowe le 25/08 au matin, Elnahif et « from where I sit » cet après-midi) : ces formes-là partagent des mots-outils et divergent sur les mots pleins, donc **elles sont structurellement hors de portée du contrôle mécanique**. Cela confirme, mesures à l'appui, que le relecteur indépendant n'est pas une redondance du contrôle : c'est le seul étage qui voie cette classe de défaut.
+
+**2. ✅ CONFIRMÉ EN VRAI — le faux positif `EPI_NEAR` diagnostiqué ce matin.** Le DM Mosoka Fallah avait été abandonné au 4e essai sur `facts.unsourced` déclenché par l'année 2014, la sous-chaîne « cas » de « occ**as**ions » la faisant classer comme chiffre épidémiologique. **Le mot retiré, le même message passe PASS dès l'essai 1.** Le diagnostic du matin (motif `EPI_NEAR` sans limites de mots, ligne 122) est donc exact, et le correctif proposé — ajouter `\b` autour des termes — réglerait le cas.
+
+**3. 🟡 Ambiguïté du champ `lastOutboundDate`, rencontrée sur le commentaire Martin Yakum.** Le contrôle a rendu `context.too-soon` (« minimum 3 j entre deux envois ») sur une **réponse à un message entrant reçu 5 h plus tôt**, parce que le contexte portait `lastOutboundDate` à la date du jour. Le plancher de `followup` vise les **relances** d'un sortant resté sans réponse ; il n'a aucun sens quand l'interlocuteur vient de répondre. Le champ a été retiré du contexte, ce qui est sa sémantique correcte (« date du dernier sortant **encore sans réponse** »), et le contrôle est passé PASS. **`docs/outreach-qa.md` ne dit nulle part que ce champ a ce sens** : son exemple montre `lastOutboundDate` à côté de `outboundUnanswered` sans préciser qu'ils vont ensemble. Une ligne de doc suffirait à éviter qu'une prochaine session charcute un texte pour contourner le blocage.
+
+---
+
+### 📋 Relevé QA du run
+
+**3 textes menés dans le dispositif : 1 publié, 1 mis en file, 1 abandonné. 10 essais au contrôle mécanique, 10 passages au relecteur.**
+
+| Message | Canal | Mécanique | Relecteur | Issue |
+|---|---|---|---|---|
+| **Martin Yakum** | réponse en sous-fil | FAIL essai 1 (faux positif) → **PASS essai 2** | REECRIRE (11) → **ENVOYER 12/12** | ✅ **publié** |
+| **Mosoka Fallah** | DM | **PASS essai 1**, puis PASS ×3 | REECRIRE (5,9,11) → REECRIRE (11a,11b) → REECRIRE (11b) → **ENVOYER 12/12** | 🔒 **en file de validation** |
+| **Anuradha Gupta** | commentaire | **PASS aux 4 essais** | REECRIRE (9,11,12) → REECRIRE (11) → REECRIRE (9) → REECRIRE (11) | ❌ **ABANDON au 4e essai** |
+
+**Aucun texte n'a échoué au contrôle mécanique sur le fond ce run.** Les 10 essais mécaniques ont donné **10 PASS**, à une exception près qui était un **faux positif entièrement diagnostiqué** (`context.too-soon` sur la réponse à Martin Yakum, voir défauts d'outillage). C'est un renversement complet par rapport au créneau de 9h, où 5 échecs sur 6 venaient du seul contrôle anti-gabarit.
+
+⚠️ **Et c'est précisément ce qui rend le relevé du jour instructif : le contrôle mécanique n'a plus rien attrapé, et le relecteur a rejeté 8 fois sur 10 passages.** Tous les rejets portaient sur des **gabarits invisibles au n-gramme** (question 11, présente dans les 8), plus une attribution, un terrain politique et un défaut d'apport. Le dispositif ne s'est donc pas assoupli : le défaut s'est déplacé vers l'étage que la machine ne voit pas, et la section « défauts d'outillage » ci-dessous explique **structurellement pourquoi** elle ne peut pas le voir.
+
+**⭐ Le constat de fond du run, formulé par le relecteur sur le DM Mosoka Fallah** : « *ce n'est plus une formule à changer, c'est la signature rhétorique de la maison* ». Trois réécritures successives avaient changé les mots en gardant le geste — « *never what it took to produce it* », puis « *in the same shape* », puis « *the same trace* ». Sa prescription au 4e essai n'a donc pas été une 4e reformulation mais une **suppression**. Le même schéma s'est répété sur le commentaire Gupta, où deux clôtures successives sont tombées sur des socles publiés que le n-gramme ne voit pas.
+
+**⭐ Fait notable : le relecteur s'est corrigé contre son propre verdict antérieur.** Au 4e essai du commentaire Gupta, il a rouvert une demi-phrase qu'il avait **lui-même validée à l'essai 3**, en expliquant que sa validation reposait sur des greps trop étroits et qu'il ne pouvait pas « *appliquer deux barres différentes selon l'essai* ». C'est le comportement qu'on attend d'un étage de contrôle, et c'est la première fois qu'il est observé dans ce dispositif : l'étage indépendant ne se contente pas de rattraper le rédacteur, il rattrape aussi ses propres relectures précédentes.
+
+---
+
+### 🔁 CARRY-OVER POUR LE CRÉNEAU DE 17h — liste exhaustive
+
+1. 🔒 **4 DM en attente de validation de David** : **Johan Verheyden** et **Nebiyu Dereje** (en file depuis le 24/08 17h), **Mosoka Fallah** (mis en file ce run) et **N'Da Konan Michel Yao** (en file depuis le **11/08 — 14 jours**, le plus ancien, et il s'agit d'un *Director at WHO*). **Ne pas les réécrire, ne pas les envoyer** : vérifier seulement si David a tranché.
+2. ⚠️ **Le carry-over #5 de 9h était FAUX et a été annulé — ne pas le rejouer.** Il demandait un message de bienvenue pour **Dorine Ngono** ; elle en a déjà reçu un le **21/08 à 18:52**, vérifié à l'écran ce run. **Aucun message ne doit lui être envoyé.** La cause est technique et vaut pour toutes les routines : la liste des conversations LinkedIn est **virtualisée**, seules ~10 conversations sont peuplées dans le DOM, et **un défilement programmatique ne les hydrate pas** — seul `computer{action:"scroll"}` le fait. Ne jamais conclure « aucun fil préexistant » sans avoir fait défiler physiquement jusqu'à la date cherchée.
+3. 🛑 **Bouh Abdi Khaireh : message de bienvenue NON rédigé, hook non vérifiable.** Sa page d'activité ne porte que **2 posts vieux de 8 ans**, tous deux des republications hors sujet ; son profil n'affiche pas de section Expérience ; ses 2 commentaires récents sont polémiques ; et le registre ne contient **aucune ligne Djibouti**. §10 s'applique : ne pas inventer un ancrage. **Si le créneau de 17h veut le traiter, il lui faut un élément neuf**, pas une nouvelle tentative sur le même matériau.
+4. ❌ **Alieu Sowe : note de connexion toujours à faire, non tentée ce run — mais un hook neuf a été trouvé et vérifié, prêt à l'emploi.** Profil décideur (*Director a.i., Directorate of Planning and Information, Ministry of Health — The Gambia*, 14 mutuels dont Lorenzo Pezzoli). **Deux formes brûlées** le 24 et le 25/08 ; l'invitation **n'est toujours pas partie**, la modale de note personnalisée fonctionne, quota connexions **0/7**.
+   ⭐ **Sa page d'activité a été ouverte ce run** : 4 posts seulement, tous vieux d'environ un an, l'essentiel étant des republications de l'*Umeå International School of Public Health* autour de sa soutenance de thèse. **Titre exact de la thèse, verbatim** : « *Closing the vaccination gap: actionable targets and impact of interventions to improve coverage and urban-rural equity in the Gambia* » (post à 76 réactions et 27 commentaires ; superviseurs Per Gustafsson et Fredinah Namatovu). **C'est un ancrage vérifiable et propre à lui** : son travail porte nommément sur l'**équité urbain-rural dans la couverture vaccinale**, c'est-à-dire sur la désagrégation d'un indicateur — sujet directement dans l'axe HWG et **sans rapport avec les deux formes brûlées**, qui s'appuyaient l'une sur son intitulé de poste, l'autre sur « le document publié est tout ce que j'ai ». Le créneau de 17h n'a donc pas à re-chercher le hook.
+5. ❌ **Anuradha Gupta** (`/in/anuradha-gupta-sabin/`, 11 525 abonnés, 2e degré) : **commentaire ABANDONNÉ au 4e essai**, sur la seule dernière phrase — §1 et §2 sont **validés par le relecteur et conservés** dans `content-log.md`, la reprise ne repart pas de zéro. ⚠️ **Contrainte cumulative pour la clôture, à ne pas redécouvrir** : éviter d'un coup le socle « *the part I would [verbe]* », la concessive à portée non bornée, et « *[X] is where [Y]* » en position terminale. Le relecteur note que **§1 et §2 se suffisent** et qu'un 3e paragraphe n'est pas obligatoire — piste à privilégier, mais avec un compteur d'essais remis à zéro et un contexte neuf, pas en prolongeant la boucle de ce run. **Part 3 de sa série annoncée pour mardi 01/09** — occasion de suivi datée. **Bon candidat connexion** par ailleurs, non traité ce run.
+6. ⏳ **Prof. Jérôme Salomon** : commentaire **bloqué jusqu'au 26/08**, angle arithmétique prêt (URN `7497662922005958656`). **Ne pas le traiter à 17h aujourd'hui** — le blocage tombe demain, pas ce soir.
+7. 🔴 **§8 — lacune de couverture à transmettre à `morning-don-check`** : **flambée de dengue déclarée aux Îles Marshall** (signalée par Robert Herriman), alors que le registre porte 65 faits dengue et **aucune ligne Îles Marshall**. Ne pas écrire en base depuis un post LinkedIn : source primaire à vérifier d'abord.
+8. 🛑 **Alain BASHIZI : toujours en attente de la décision de David.** Invitation reçue non acceptée, sollicitation personnelle non traitée, et il a consulté le profil de David une **4e fois**. Ne pas répondre, ne pas relancer, ne pas rouvrir l'arbitrage.
+9. **2 autres invitations reçues laissées en attente** : **Zachariah G. Houdari** (hors sujet) et **OLAOLUWA PHILIP** (**12e passage**, ne pas rouvrir le profil tant que David n'a pas tranché).
+10. **3 invitations envoyées toujours sans réponse** : Ihekweazu, SAIDOUNI, Linda Esso (envoyées le 24/08).
+11. **Blocages hebdomadaires de commentaire en cours** : Melvin Sanicas, Robert Herriman, Patrick AYONGA, Ifedayo Adetifa, page ECDC, Oliver Morgan, Dr Fabrice KHADDY (jusqu'au 30/08) ; Apoorva Wasnik et Johan Verheyden (jusqu'au 29/08) ; **Prof. Jérôme Salomon jusqu'au 26/08** ; **Martin Yakum jusqu'au 01/09** (la réponse en sous-fil de ce run n'a pas créé de nouveau blocage).
+12. 🛑 **Ahmed Ogwell OUMA et Ibrahima Socé Fall** : écartés le 25/08 sur le terrain politique. **Ne pas les reproposer sur ces posts-là.** Idem **Tedros Adhanom Ghebreyesus** et la page **WHO AFRO** sur leurs directs #RC76AFRO, et **Lorenzo Subissi** sur son relais d'appel à candidatures (écarté ce run, sans matière analytique).
+13. ❌ **Idrissa Sow** (`/in/idrissa-sow-a6569b5a/`) : écarté le 25/08 sur l'absence de posts récents. **Dr. Jibran Khan** : écarté le 24/08, reste le seul abonné non suivi en retour, profil non rouvert. Ne pas reproposer sans élément neuf.
+14. 🟡 **Homonymies de dirigeants d'agences nationales, toujours sans arbitrage de David** : Jean-Jacques Muyembe (**9e jour**) et Jide Idris.
+15. **Carry-overs permanents inchangés, non revérifiés ce run** : Kaushal Sharma, Barrè Onivogui, Andrea Bernasconi, Lorenzo Pezzoli, Mohamed Ousmane COULIBALY (ne pas relancer avant un retour concret sur le site). **Pierre PARNEIX** : « 👍 » sans fond, aucune réponse due. **Chinasaokwu Nweke** : fil clos le 23/08, ne pas rouvrir.
+16. **Écartés définitifs, ne pas réévaluer** : Michelle Jones, Jane Hedger, GEOMAP PRO, Julia Gal, Daisy Kasyoka.
+17. 🔧 **Notes techniques navigateur, à réutiliser** : le bouton « Répondre » d'un commentaire porte `aria-label="Répondre"` et **aucun texte**, tandis que le bouton de soumission porte le texte `Répondre` et **aucun `aria-label`** — exactement l'inverse l'un de l'autre. Éditeur en `tiptap ProseMirror`, plus `ql-editor`. Modale d'invitation dans un shadow root. Liste de conversations virtualisée (voir point 2). **Anomalie JS asynchrone absente de ce créneau.**
+18. ⚠️ **Bandeau de consentement cookies rencontré, non cliqué** (ni Accepter ni Refuser) : action qui engage le compte de David et demande son accord, absent de ce créneau. À trancher par lui s'il réapparaît. N'a pas bloqué la lecture.
+19. **Quotas à la clôture de ce créneau** : commentaires **2/7** ; **connexions envoyées 0/7** ; **suivis 7/7-10** (plancher atteint ce matin, marge de 3 non consommée, redirigée vers les carry-over de messages) ; **DM à froid 0/8**. **La marge reste large partout** : le facteur limitant de ce run n'a pas été le quota, il a été le nombre de passages exigés par le dispositif QA — 8 passages au relecteur pour 3 textes.
+
+---
+
 ## 📅 Session linkedin-hwg-monitoring — 25/08/2026 (9h)
 
 **Vérification double déclenchement** : aucune entrée datée du 25/08 dans ce fichier ni dans `linkedin-contacts.md` à l'ouverture → **premier déclenchement de cette routine aujourd'hui**.

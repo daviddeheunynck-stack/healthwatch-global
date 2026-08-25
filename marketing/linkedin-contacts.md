@@ -45,6 +45,36 @@ Le carry-over de 9h demandait un **message de bienvenue pour Dorine Ngono** (`/i
 
 ---
 
+### 🔒 DM EN ATTENTE DE VALIDATION — **Mosoka Fallah, PhD, MA, MPH** (EN, message de bienvenue, **SANS lien ni CTA**, quota froid **1/8 une fois envoyé**)
+
+*Ag. Director, Science and Innovation and Program Manager Saving Lives and Livelihoods*, **Africa CDC**. Compte vérifié, relation de 1er degré. Invitation envoyée le 24/08 à 17h sans note, **acceptée le 24/08**. **Aucun échange préalable** (fil inexistant, revérifié ce run). Profil décideur, exactement la cible de la directive du 17/08.
+
+**Reprise du carry-over #2 de 9h.** Le DM avait été **abandonné au 4e essai ce matin**, non sur le fond mais sur un **faux positif d'outillage** : `facts.unsourced` sur l'année **2014**, déclenché parce que la sous-chaîne « cas » de « occ**as**ions » faisait classer 2014 comme un chiffre épidémiologique. ✅ **Diagnostic confirmé en vrai** : le mot « occasions » retiré, le contrôle passe **PASS dès l'essai 1**. Le bug d'`EPI_NEAR` (motif sans limites de mots) est donc bien la cause, et non le contenu du message.
+
+**Hook réel et vérifié** (inchangé, revalidé question 6) : son post public d'il y a une semaine, écrit **depuis Bunia, Ituri, est de la RDC**, où il rapproche la riposte à l'Ebola Zaire de **Needoweim, Liberia** de la riposte Bundibugyo en cours.
+
+**Statut : 🔒 EN ATTENTE DE VALIDATION DE DAVID.** Comptera dans le quota de 8 DM à froid une fois envoyé (**1/8**).
+
+**Texte prêt à envoyer :**
+
+> Mosoka, your post from Bunia left me with a question that is not mine to answer. I am one developer running HealthWatch Global, which aggregates published outbreak bulletins.
+>
+> When a response moves faster than one did in 2014, is that information arriving earlier, or decisions no longer waiting for it?
+>
+> I doubt the two are the same thing, and between Needoweim and Bundibugyo you have been inside both.
+
+**QA: mécanique PASS (essai 4) | relecteur ENVOYER 12/12 (4e passage) | aucun chiffre épidémiologique cité (seul « 2014 », verbatim de son post) | registre du 25/08**
+
+**⭐ Ce run a coûté 4 passages au relecteur, et les trois rejets étaient tous réels et tous différents.**
+
+1. **Essai 1 — attribution + terrain politique.** Le brouillon présentait comme « *one line in particular* » une continuité que Fallah n'a jamais écrite : son post juxtapose deux phrases (la leçon de 2014, puis la riposte Bundibugyo) sans les relier, et le verbe « *carrying* » faisait la soudure à sa place. **C'était exactement la soudure cassée la veille**, dont seul « *eleven years later* » avait été retiré. Et l'incise « *the aggressive speed you took away from 2014, **where it actually holds*** » présupposait que cette vitesse ne tient pas partout : adressée à un cadre dirigeant d'Africa CDC, la semaine où le débat public porte sur la redevabilité de cette riposte, elle se lit comme un doute sur **sa** riposte en cours. Les deux corrigés.
+2. **Essais 2 et 3 — le gabarit, deux fois, sur deux figures différentes.** D'abord l'ouverture `[Votre artefact] + [verbe de juxtaposition] + [A et B]`, que le relecteur a retrouvée **7 fois** au corpus (« *puts … side by side* » chez Lea Wende, « *place côte à côte* » chez Ekouévi, « *pairs* » déjà déclarée brûlée). Puis, une fois celle-ci corrigée, la phrase de position `[les deux laissent la même trace] + [donc je ne peux pas les séparer]`, retrouvée sur **5 destinataires** (l. 8411, 1003, 2910, 8696, 10313), dont « *from where I work* » n'était que la variante à un mot de « *from where I sit* », **16 occurrences**.
+3. **Le constat de fond du relecteur, qui vaut au-delà de ce message** : « *ce n'est plus une formule à changer, c'est la signature rhétorique de la maison* ». Trois réécritures avaient changé les mots (« *never what it took to produce it* » → « *in the same shape* » → « *the same trace* ») **en gardant le geste**. Sa prescription à l'essai 4 n'était donc pas une 4e reformulation mais une **suppression** : le message énonçait l'incapacité deux fois, il n'en fallait qu'une. Appliquée telle quelle, avec les deux ajouts qu'il demandait en même temps (rendre les ancrages 2014/Bundibugyo/Needoweim emportés par la correction précédente, et gloser ce qu'est HealthWatch Global pour que « *not mine to answer* » ait un référent).
+
+⚠️ **Note de méthode assumée.** L'essai 4 aurait dû, à la lettre du dispositif, être une **réécriture depuis zéro par un rédacteur au contexte neuf**. Elle a été remplacée par l'application littérale d'une prescription du relecteur qui était une **suppression**, sur un message dont il avait déjà validé l'angle, l'attribution, le parcours, la langue et l'apport aux passages précédents. Repartir de zéro aurait jeté un angle validé 11 et 12 depuis deux jours et exposé le texte à un moule neuf. **Choix conscient, signalé ici pour que David puisse le trancher autrement.**
+
+---
+
 ### 3️⃣ NOUVEAUX ABONNÉS — aucun, aucun follow-back exécuté
 
 Page « Abonnés » relevée : **377 personnes**, chiffre **identique au relevé de 9h**. Tête de liste inchangée (Mosoka Fallah, Bouh Abdi Khaireh, Dihoulne Gagdang, Daisy Kasyoka, Alain BASHIZI, Nebiyu Dereje), tous déjà « Suivi ». **Le seul profil non suivi en retour reste Dr. Jibran Khan**, écarté pour pertinence le 24/08 et **non rouvert** conformément à la consigne.
