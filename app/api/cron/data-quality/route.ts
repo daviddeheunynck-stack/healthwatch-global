@@ -733,6 +733,19 @@ async function runDataQuality(_req: NextRequest, supabase: SupabaseClient) {
     // The field is a structured API value, not a text-parsing gap: WHO itself
     // reports zero, so NULL would be less accurate than 0 here.
     "cholera|somalia",
+    // Cross-checked 2026-08-25 the same way as Somalia above, against the same
+    // live WHO ArcGIS cholera feed (cholera_adm0_week_view) that feeds this
+    // row — all 27 weekly features for Pakistan in 2026 (2026-01-05 through
+    // 2026-07-06) explicitly report deaths=0, not a single null among them.
+    // A 2026-08-24 fix (scripts/fix-cholera-pakistan-deaths-null-2026-08-24.mjs)
+    // had set this row to NULL on the theory that the source was silent on
+    // deaths rather than reporting a real zero — sync-who-regional's next run
+    // correctly overwrote that back to 0 the next day, which is what surfaced
+    // the wrong assumption: the raw feature data was never actually checked
+    // before that fix, only inferred from the cross-country CFR comparison
+    // below. Structured API value, not a parsing gap — same reasoning as
+    // Somalia, so NULL would be less accurate than 0 here too.
+    "cholera|pakistan",
     // PAHO Situation Report #6 (2 July 2026), Table 3 — "Canada 1,079 0 — Endemic",
     // a positively-filled deaths column (not a dash/omission), itself sourced from
     // PHAC's own EW24 weekly report (cited as reference #19 in the sitrep). Cross-
