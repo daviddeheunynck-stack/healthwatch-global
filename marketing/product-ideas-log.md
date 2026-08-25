@@ -1467,3 +1467,64 @@ L'intérêt de passer par les instantanés plutôt que par `active`+`updated_at`
 **Statut : 2 idées PROPOSÉES ET CONSTRUITES** (`0ba67eb`, `f1fb59c`). Aucune idée bloquée par un garde-fou ce soir ; le seul point laissé à David est la vérification que la table `outbreak_alert_daily_lock` est bien appliquée en prod (chantier e-mails, hors périmètre).
 
 ---
+
+## 2026-08-25 — Proposition du jour
+
+**Aucun signal terrain neuf :** `product-feedback.md` n'a pas bougé depuis l'entrée Coulibaly du 22/08, déjà exploitée. Les trois runs LinkedIn du jour (9h, 13h, 17h) n'ont produit aucun retour produit.
+
+**Le signal du jour vient de la prod, et il répond à la question laissée ouverte hier soir.** L'entrée du 24/08 se terminait sur : « le seul point laissé à David est la vérification que la table `outbreak_alert_daily_lock` est bien appliquée en prod ». Réponse mesurée ce soir, en lecture seule sur `tqznwmpkokdzrszysbcm` : **elle est appliquée, et elle n'a jamais contenu une seule ligne.** Le reste de la session part de là.
+
+Deux scripts de diagnostic écrits aujourd'hui par une autre session (`scripts/retention-check.mjs`, `scripts/alert-pressure.mjs`, non suivis par git) ont servi de point de départ ; les mesures ci-dessous ont été refaites par sondes dédiées, hors du dépôt.
+
+---
+
+### 1. 🔴 Le verrou anti-triplons livré hier a échoué **117 fois sur 117** ce matin — et il est conçu pour que cet échec soit invisible
+
+**Signal, mesuré en base live.** Le 25/08 à 10h50 UTC, `regional-alerts` a écrit **117 lignes** dans `outbreak_alert_log`, horodatées une par une de `10:50:36.677` à `10:50:53.129` (117 horodatages distincts — c'est la boucle par foyer du chemin d'envoi, pas l'écriture groupée d'`activate-trial`, qui pose un `sentAt` unique). Trois destinataires : `hsoc@georgetown.edu` (115 foyers), puis deux comptes à 1 foyer.
+
+Chacune de ces 117 lignes est précédée, dans le code, d'un appel à `claimOutbreakAlertDaily` (`regional-alerts/route.ts:356`). **`outbreak_alert_daily_lock` contient zéro ligne, tous jours confondus.**
+
+**Le sens de « zéro » n'est pas ambigu, il a été tranché par une troisième mesure.** Le helper renvoie `true` sur erreur DB (échec ouvert, `cron-monitor.ts:373`) et `false` quand un cron plus spécifique a déjà réclamé la paire. Les deux branches écrivent dans `outbreak_alert_log`, donc les 117 lignes ne départagent rien. Ce qui départage : `profiles.trial_value_email_sent_at` du compte Georgetown vaut **`2026-08-25T10:50:52.301`** — or ce champ n'est posé que sur le chemin d'envoi réel, après le `sendEmail` du digest (`regional-alerts/route.ts:561`). L'envoi a donc bien eu lieu → le helper a renvoyé `true` → et il n'a laissé aucune trace → **il a renvoyé `true` par la branche d'erreur.** Les 117 fois.
+
+**Ce que ça veut dire.** Le verrou inter-crons présenté hier comme « chantier #1 » (`65bd7b7`, migration `20260824040000`) ne protège rien depuis sa mise en service. Le produit est revenu, en silence, au comportement d'avant le 24/08 : un même foyer peut atteindre une boîte trois fois en vingt minutes. La table est pourtant bien appliquée — sa clé primaire à trois colonnes est correctement exposée par PostgREST, vérifié sur la spec OpenAPI de prod, et le helper jumeau `claimWeeklyEmailAddress`, structurellement identique (même patron d'`upsert`, même politique RLS `USING (false)`), a bien ses 24 lignes dans `weekly_email_send_log`. **La cause exacte de l'erreur n'est pas déterminable depuis cette session** : elle n'existe que dans le message d'erreur DB, envoyé à Sentry et aux logs Vercel, tous deux hors de portée ici. La sonder en écrivant dans la table de prod aurait été possible mais reste une écriture sur la prod en session non supervisée — non fait (garde-fou 2).
+
+**C'est le défaut de fond, pas l'erreur DB.** `logCronRun` a enregistré « ok ». La réponse JSON du cron a affiché des compteurs normaux. Le health-check de 07h05 n'a rien à dire là-dessus. Le seul témoin est un `Sentry.captureException` que personne ne lit tous les jours. Le commentaire du helper jumeau énonce déjà exactement ce piège, écrit le 23/08 : « *l'appelant ne peut pas distinguer un verrou ACCORDÉ d'un verrou INÉVALUABLE : les deux renvoient `true`* ». Le diagnostic était juste ; le garde-fou correspondant n'a été construit ni là, ni ici.
+
+**Réponse retenue, en deux morceaux.**
+- **(a) Rendre l'inévaluable nommable.** `claimOutbreakAlertDaily` renvoie désormais trois états (`granted` / `taken` / `unevaluable`) au lieu d'un booléen à deux sens, et remonte le message d'erreur DB verbatim. Les trois crons d'alerte comptent les verrous inévaluables et font passer ce compteur **et le message d'erreur** dans leur réponse JSON et dans `logCronRun` — donc dans `site_config`, où ils deviennent lisibles sans Sentry. Le comportement d'envoi ne change pas d'un iota : `unevaluable` continue d'envoyer.
+- **(b) Le dire le lendemain matin.** Nouveau contrôle du health-check : si des alertes sont parties **hier** dans la fenêtre des trois crons (10h–12h UTC) et que le verrou n'a **aucune ligne** pour cette date, ligne rouge, avec le message d'erreur DB stocké la veille recopié dedans. Le health-check tournant à 07h05, il regarde la veille — une journée complète, jamais un run en cours.
+
+**Effort estimé : moyen.** Quatre fichiers (helper + trois crons) plus le health-check ; aucun schéma, aucune écriture nouvelle en base, aucune surface client. Le gros du travail est de ne pas casser trois crons d'envoi en changeant le type de retour d'une fonction qu'ils appellent en boucle.
+
+**Risque/inconnue :** (a) le correctif **rend l'échec visible, il ne le répare pas** — la cause DB reste à trouver, et c'est précisément ce que le message verbatim doit livrer demain matin ; (b) `activate-trial` écrit aussi dans `outbreak_alert_log` sans réclamer de verrou : une inscription tombant dans la fenêtre 10h–12h UTC produirait un faux positif, accepté et documenté (un faux positif isolé se lit, un angle mort permanent non) ; (c) le même angle mort existe sur `claimWeeklyEmailAddress` — **non traité ici** pour ne pas élargir le périmètre à la chaîne hebdomadaire, signalé.
+
+---
+
+### 2. 🔴 Le troisième cron d'alerte est le seul sans preuve de livraison indépendante — l'audit du 29/07 a fermé cet angle mort pour deux crons sur trois
+
+**Signal, dans le code.** `REAL_EVIDENCE` (`health-check/route.ts:109-114`) associe chaque cron de livraison à un journal que **lui seul** écrit. Son propre commentaire raconte pourquoi : le 29/07, `disease-alerts` y pointait vers `outbreak_alert_log`, qu'il n'écrit jamais, et « *une panne totale de disease-alerts aurait affiché ✅ indéfiniment* ». La table contient aujourd'hui `regional-alerts`, `disease-alerts`, `push-alerts`. **`watchlist-alerts` n'y est pas.**
+
+Il n'y est pas alors que la colonne existe : `watchlist_alert_log.alerted_at`, vérifiée en prod (le nom diffère de ses deux sœurs, qui utilisent `sent_at` — ce qui explique probablement l'oubli). Ce cron retombe donc sur le seul `lastNonZero` de `site_config`, et le commentaire de `REAL_EVIDENCE` explique lui-même pourquoi ça ne suffit pas : « *un cron de livraison cassé n'a jamais de run rows>0, donc son `lastNonZero` resterait indéfiniment vide* ». Avec une tolérance de 14 jours (`STALL_THRESHOLD_OVERRIDE_DAYS`), une panne de `watchlist-alerts` est aujourd'hui indétectable.
+
+**Deuxième moitié, sans laquelle la première ne vaudrait rien.** `alerted_at` n'est **pas** dans la charge de l'`upsert` du cron (`watchlist-alerts/route.ts:222-225`) : sur conflit, PostgreSQL ne met à jour que les colonnes fournies. La colonne garde donc la date de la **première** alerte sur ce couple, jamais la dernière. Branchée telle quelle comme preuve de livraison, elle vieillirait indéfiniment pendant que le cron travaille — un faux positif de panne. En prod : 2 lignes, `alerted_at` au 06/08, pour 2 entrées de watchlist.
+
+**Réponse retenue.** Poser `alerted_at` explicitement dans l'`upsert` **du seul chemin d'envoi réel** (l. 220), jamais sur celui de la déduplication inter-crons (l. 183) qui n'envoie rien — la preuve doit signifier « livré », pas « examiné ». Puis ajouter l'entrée `watchlist-alerts` à `REAL_EVIDENCE`.
+
+**Effort estimé : petit.** Deux fichiers, deux lignes de fond. La colonne existe déjà : **aucune migration**, donc aucune écriture sur un schéma non appliqué (garde-fou 2 respecté par construction).
+
+**Risque/inconnue :** le volume est minuscule (2 entrées de watchlist en prod) — la valeur est structurelle, pas immédiate : c'est le troisième cron d'un trio dont les deux autres ont déjà ce filet, et l'écart a survécu à un audit qui portait précisément là-dessus.
+
+---
+
+### Contexte relevé au passage (pas des idées)
+
+- **La pression d'alerte du 25/08 est réelle et concentrée sur un lead institutionnel.** `hsoc@georgetown.edu` (créé le 24/08 18h03, `is_pilot=true`, essai jusqu'au 28/09) a reçu ce matin **un digest couvrant 115 foyers**, dont 10 seulement sont nommés dans l'e-mail — le reste résumé en « +105 autres ». Les 105 sont malgré tout journalisés comme alertés, donc suppressés pour l'avenir sauf escalade ou +20 % de cas. C'est un **arbitrage délibéré et documenté** (`regional-alerts/route.ts:79-89`, `activate-trial.ts:207-212`), pas un défaut : non re-proposé. Signalé parce que c'est la première fois qu'il tombe sur un prospect institutionnel identifié.
+- **Le stock « toutes les régions » n'a pas bougé.** `user_alert_regions` : **25 comptes abonnés aux 5 régions**, 2 comptes à 1 région. Le correctif d'inscription de ce soir (`ebe0ab0`, région obligatoire) ne vaut que pour les nouveaux comptes — Georgetown, inscrit hier, est dans les 25. Rectifier le stock, c'est modifier les préférences d'utilisateurs réels sans qu'ils l'aient demandé : **hors autonomie**, à trancher par David.
+- **`disease_alert_log` : 6 lignes, dernière le 06/08 (19 jours).** Déjà expliqué par le correctif du 23/08 (`evaluatedAt` distingue « vérifié, rien à envoyer » de « cassé ») — pas un signal neuf.
+- **Chantiers en cours dans l'arbre partagé, non touchés** (règle de périmètre d'`AGENTS.md`) : `marketing/qa/product-claims.manual.json` et `scripts/check-migrations-applied.mjs` modifiés ; `marketing/prospection-2026-08-23.pdf`, `scripts/alert-pressure.mjs`, `scripts/retention-check.mjs` non suivis. Laissés tels quels, ni stagés ni stashés.
+- **Morgan Otita** — annulation automatique **demain (26/08)**. Dossier clos le 25/08 par David (4 relances déjà envoyées) : rien re-proposé.
+- **Pistes ouvertes sans angle neuf, non re-proposées :** version de définition de cas (Adelekun, 03/08), 18 indicateurs de confiance communautaire (Bernasconi, 07/08), trois sources tierces (TSENG, 29/07, garde-fou `ROADMAP.md`), écart entre deux sources (écartée par David le 23/08), bulletin vectoriel `sync-spf` (effort moyen-gros, inchangé).
+
+**Statut initial : 2 idées PROPOSÉES.** Construction dans la foulée — voir la section ci-dessous.
+
+---
