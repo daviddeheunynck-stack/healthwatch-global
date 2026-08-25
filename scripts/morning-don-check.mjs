@@ -781,7 +781,13 @@ const MANUAL_ROW_CHECKED = {
   // Voir scripts/fix-diphtheria-australia-20260810-2026-08-17.mjs. Le blocage réseau cdc.gov.au
   // reste entier pour un futur run automatique — prévoir de redemander à David si la ligne revient
   // périmée avant que quelqu'un ne teste une 6e méthode d'accès direct.
-  "e856b352-747b-4db0-b0d1-c9e55f6c53aa": "2026-08-17",
+  // Revérifié le 25/08 : la page de listing s'ouvre normalement au Browser pane (le blocage du 17/08
+  // portait sur le téléchargement du PDF, pas sur le HTML de la collection — nuance utile pour les
+  // prochains runs). Le premier lien reste « Epidemiological update – 10 August 2026 », soit
+  // exactement l'édition déjà en base : aucune parution nouvelle, rien à écrire. La série étant
+  // bimensuelle depuis le 31/07, la prochaine édition est attendue vers le 24/08 — elle n'était pas
+  // encore en ligne ce matin, un jour de retard n'est pas un signal de source cassée.
+  "e856b352-747b-4db0-b0d1-c9e55f6c53aa": "2026-08-25",
   // Polio/Palestine : vérifié le 13/08. La page du comité (who.int/groups/poliovirus-ihr-emergency-
   // committee) liste 44 réunions, la plus récente étant toujours la 44e du 04/03/2026 — déjà la
   // source de la ligne. Aucune 45e déclaration publiée à ce jour (cadence ~trimestrielle, donc une
@@ -922,7 +928,7 @@ const MARBURG_CLOSURE_WATCH_FROM = "2026-08-11";
 // Le résumé de recherche l'accompagnait d'un « 20 confirmed cases and 2 deaths » qui ne correspond
 // à AUCUNE épidémie ougandaise réelle (2017 : 3 cas ; 2025 : 14 confirmés / 2 décès ; 2026 : 1 cas).
 // Toujours vérifier la date de publication de cet article avant de conclure à une clôture.
-const MARBURG_CLOSURE_LAST_CHECK = "2026-08-22"; // gov.uk (mise à jour du 20/08, lue le 22/08) : toujours le seul cas du 30/06 à Kyegegwa, listé en incident en cours, aucune clôture annoncée, aucun chiffre publié depuis.
+const MARBURG_CLOSURE_LAST_CHECK = "2026-08-25"; // gov.uk (mise à jour du 20/08, relue le 25/08) : toujours le seul cas du 30/06 à Kyegegwa, listé en incident en cours, aucune clôture annoncée, aucun chiffre publié depuis. Les trois faux positifs ci-dessus se sont tous représentés le 25/08 dans les mêmes termes (article AFRO de 2017, « 20 cas / 2 décès » qui sont ceux de l'Ebola Bundibugyo, fenêtre du 27/08 qui est celle de l'Ebola) — les notes ci-dessus tiennent, ne pas les alléger.
 // ⚠️ TROISIÈME FAUX POSITIF DE CLÔTURE, rencontré le 22/08 — distinct des deux ci-dessus : la guidance
 // gov.uk ET le DON615 mentionnent tous deux une « fenêtre de 42 jours » ougandaise qui « cesse le
 // 27/08 ». C'est celle de l'EBOLA Bundibugyo (dernier cas importé de RDC sorti de soins le 16/07),
