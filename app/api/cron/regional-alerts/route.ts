@@ -215,6 +215,12 @@ async function runRegionalAlerts(_req: NextRequest, supabase: SupabaseClient) {
   let digestEmailsSent = 0;
   let digestItemsCapped = 0;
   let crossCronDeduped = 0;
+  // Claims the cross-cron lock could not answer. These still send (fail-open),
+  // so they never show up as failures — which is precisely why they need their
+  // own counter: on 2026-08-25 all 117 claims of the run took this branch and
+  // nothing anywhere said so. See claimOutbreakAlertDaily in lib/cron-monitor.
+  let lockUnevaluable = 0;
+  let lockError: string | null = null;
   const sentByReason: Record<AlertReason, number> = { new: 0, escalated: 0, surge: 0 };
   const now = Date.now();
   const alertDate = currentAlertDate();
@@ -353,8 +359,12 @@ async function runRegionalAlerts(_req: NextRequest, supabase: SupabaseClient) {
         // strictly "regional-alerts itself emailed them". A regional-alerts
         // outage that coincides with healthy watchlist-alerts/disease-alerts
         // runs could stay masked here for users also covered by those two.
-        const claimed = await claimOutbreakAlertDaily(supabase, profile.id, String(outbreak.id), alertDate, "regional-alerts");
-        if (!claimed) {
+        const claim = await claimOutbreakAlertDaily(supabase, profile.id, String(outbreak.id), alertDate, "regional-alerts");
+        if (claim.state === "unevaluable") {
+          lockUnevaluable++;
+          lockError ??= claim.error ?? "(sans message)";
+        }
+        if (claim.state === "taken") {
           crossCronDeduped++;
           await supabase.from("outbreak_alert_log").upsert(
             {
@@ -586,8 +596,19 @@ async function runRegionalAlerts(_req: NextRequest, supabase: SupabaseClient) {
   // tracked throughout the loop above but never consulted here, so a genuine
   // delivery failure still logged "ok". Same bug fixed across ~20 other crons
   // today (sync-outbreaks et al., 2026-07-29/30).
+  //
+  // Un verrou inévaluable n'est pas un échec de livraison : l'alerte part
+  // quand même, donc le statut reste "ok" et ce cron ne vire pas au rouge
+  // pour ça. Mais le message est enregistré dans site_config, où le
+  // health-check du lendemain matin va le rechercher et le recopier verbatim
+  // — c'est le seul endroit d'où la cause DB est lisible sans Sentry.
+  const lockNote = lockUnevaluable > 0
+    ? `verrou inter-crons inévaluable ${lockUnevaluable}× : ${lockError}`
+    : null;
+  const runNote = [failed > 0 ? `${failed} alerte(s) en échec` : null, lockNote]
+    .filter(Boolean).join(" · ");
   await logCronRun(supabase, "regional-alerts", failed > 0 ? "error" : "ok", sent,
-    failed > 0 ? `${failed} alerte(s) en échec` : undefined);
+    runNote || undefined);
   return NextResponse.json({
     candidateOutbreaks: candidateOutbreaks.length,
     emailsSent: userItems.size,
@@ -599,6 +620,8 @@ async function runRegionalAlerts(_req: NextRequest, supabase: SupabaseClient) {
     skipped,
     blockedSkipped,
     crossCronDeduped,
+    lockUnevaluable,
+    lockError,
     failed,
   });
 }

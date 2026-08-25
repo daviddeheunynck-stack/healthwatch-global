@@ -136,6 +136,11 @@ async function runWatchlistAlerts(_req: NextRequest, supabase: SupabaseClient) {
   let blockedSkipped = 0;
   let errors = 0;
   let crossCronDeduped = 0;
+  // Claims the cross-cron lock could not answer. They still send (fail-open),
+  // so they never count as errors — see claimOutbreakAlertDaily in
+  // lib/cron-monitor for why that silence needed its own counter.
+  let lockUnevaluable = 0;
+  let lockError: string | null = null;
   const alertDate = currentAlertDate();
 
   for (const entry of entries) {
@@ -177,9 +182,20 @@ async function runWatchlistAlerts(_req: NextRequest, supabase: SupabaseClient) {
     // someone already told this user about this outbreak today: update the
     // state log so tomorrow's comparison is against the current numbers, but
     // skip the actual send.
-    const claimed = await claimOutbreakAlertDaily(supabase, entry.user_id, String(entry.outbreak_id), alertDate, "watchlist-alerts");
-    if (!claimed) {
+    const claim = await claimOutbreakAlertDaily(supabase, entry.user_id, String(entry.outbreak_id), alertDate, "watchlist-alerts");
+    if (claim.state === "unevaluable") {
+      lockUnevaluable++;
+      lockError ??= claim.error ?? "(sans message)";
+    }
+    if (claim.state === "taken") {
       crossCronDeduped++;
+      // Deliberately NOT touching alerted_at here: this branch sends nothing.
+      // Since 2026-08-25 that column is health-check's delivery evidence for
+      // this cron (REAL_EVIDENCE), and evidence has to mean "delivered", not
+      // "looked at" — the exact rule the 2026-07-29 audit wrote after
+      // disease-alerts was found answering for regional-alerts' sends. On
+      // conflict Postgres only updates the columns supplied, so leaving it
+      // out preserves the date of the last REAL alert for this pair.
       await supabase.from("watchlist_alert_log").upsert(
         [{ user_id: entry.user_id, outbreak_id: entry.outbreak_id, cases_at_alert: outbreak.cases, deaths_at_alert: outbreak.deaths }],
         { onConflict: "user_id,outbreak_id" }
@@ -217,10 +233,17 @@ async function runWatchlistAlerts(_req: NextRequest, supabase: SupabaseClient) {
         await sendEmail(profile.email, subject, html);
       }
 
+      // alerted_at is written explicitly, and only here. The column has
+      // defaulted to now() since 2024, but a default only fires on INSERT —
+      // on conflict Postgres updates just the columns supplied, so every
+      // re-alert on an existing (user, outbreak) pair left it frozen at the
+      // date of the FIRST alert. Harmless while nothing read it; not harmless
+      // since 2026-08-25, when it became this cron's REAL_EVIDENCE entry in
+      // health-check — an ageing column on a working cron reads as an outage.
       const { error: logErr } = await supabase
         .from("watchlist_alert_log")
         .upsert(
-          [{ user_id: entry.user_id, outbreak_id: entry.outbreak_id, cases_at_alert: outbreak.cases, deaths_at_alert: outbreak.deaths }],
+          [{ user_id: entry.user_id, outbreak_id: entry.outbreak_id, cases_at_alert: outbreak.cases, deaths_at_alert: outbreak.deaths, alerted_at: new Date().toISOString() }],
           { onConflict: "user_id,outbreak_id" }
         );
       if (logErr) {
@@ -258,9 +281,14 @@ async function runWatchlistAlerts(_req: NextRequest, supabase: SupabaseClient) {
   // evaluatedAt: same reasoning as disease-alerts — outbreaks.length > 0
   // proves this run compared real watchlisted outbreaks against each
   // subscriber's last-alerted state, distinct from whether `sent` stayed 0.
+  const lockNote = lockUnevaluable > 0
+    ? `verrou inter-crons inévaluable ${lockUnevaluable}× : ${lockError}`
+    : null;
+  const runNote = [errors > 0 ? `${errors} alerte(s) en échec` : null, lockNote]
+    .filter(Boolean).join(" · ");
   await logCronRun(supabase, "watchlist-alerts", errors > 0 ? "error" : "ok", sent,
-    errors > 0 ? `${errors} alerte(s) en échec` : undefined,
+    runNote || undefined,
     (outbreaks ?? []).length > 0 ? new Date().toISOString() : undefined);
-  console.log(`[watchlist-alerts] Done — sent: ${sent}, unchanged: ${unchanged}, blockedSkipped: ${blockedSkipped}, crossCronDeduped: ${crossCronDeduped}, errors: ${errors}`);
-  return NextResponse.json({ sent, unchanged, blockedSkipped, crossCronDeduped, errors });
+  console.log(`[watchlist-alerts] Done — sent: ${sent}, unchanged: ${unchanged}, blockedSkipped: ${blockedSkipped}, crossCronDeduped: ${crossCronDeduped}, lockUnevaluable: ${lockUnevaluable}, errors: ${errors}`);
+  return NextResponse.json({ sent, unchanged, blockedSkipped, crossCronDeduped, lockUnevaluable, lockError, errors });
 }

@@ -351,17 +351,43 @@ export function currentAlertDate(): string {
  * so on a normal day the most targeted alert is the one that wins the claim
  * and the broader ones back off.
  *
- * Fails open (true) on any DB error, same trade-off as claimWeeklyEmailAddress
- * — a missing/broken table degrades to the pre-2026-08-24 un-deduped-across-
- * crons behavior, not to silently dropping the alert.
+ * Fails open ("unevaluable", which every caller treats as granted) on any DB
+ * error, same trade-off as claimWeeklyEmailAddress — a missing/broken table
+ * degrades to the pre-2026-08-24 un-deduped-across-crons behavior, not to
+ * silently dropping the alert.
+ *
+ * Returns three states rather than a boolean, and this is the whole point of
+ * the 2026-08-25 rewrite. The boolean conflated "claim GRANTED" with "claim
+ * UNEVALUABLE" — both meant "go ahead and send" — so a lock that errored on
+ * every single call was indistinguishable, from the caller's side, from a
+ * lock working perfectly. That is exactly what happened in production: on
+ * 2026-08-25 at 10:50 UTC regional-alerts claimed 117 pairs, emailed all of
+ * them (profiles.trial_value_email_sent_at was stamped at 10:50:52.301, which
+ * only the real send path does), and outbreak_alert_daily_lock stayed empty —
+ * every claim had taken the error branch since the lock shipped the day
+ * before. logCronRun recorded "ok", the JSON response showed normal counters,
+ * and the only witness was a Sentry event nobody reads daily. Callers now
+ * count `unevaluable` and carry `error` into their run log, so the DB message
+ * that names the cause is readable from site_config without Sentry. The same
+ * blind spot still exists on claimWeeklyEmailAddress above — see the note in
+ * its error branch, deliberately left untouched here.
  */
+export type DailyAlertClaim = {
+  /** granted = this cron owns the (user, outbreak, day) pair and must send.
+   *  taken = a more specific cron already claimed it today, skip the send.
+   *  unevaluable = the lock could not be consulted; send anyway, but say so. */
+  state: "granted" | "taken" | "unevaluable";
+  /** Verbatim DB error, set only on "unevaluable". */
+  error?: string;
+};
+
 export async function claimOutbreakAlertDaily(
   supabase: SupabaseClient,
   userId: string,
   outbreakId: string,
   alertDate: string,
   source: string,
-): Promise<boolean> {
+): Promise<DailyAlertClaim> {
   const { data, error } = await supabase
     .from("outbreak_alert_daily_lock")
     .upsert(
@@ -374,9 +400,9 @@ export async function claimOutbreakAlertDaily(
     Sentry.captureException(new Error(error.message), {
       tags: { helper: "claimOutbreakAlertDaily", source },
     });
-    return true;
+    return { state: "unevaluable", error: error.message };
   }
-  return (data?.length ?? 0) > 0;
+  return { state: (data?.length ?? 0) > 0 ? "granted" : "taken" };
 }
 
 /**

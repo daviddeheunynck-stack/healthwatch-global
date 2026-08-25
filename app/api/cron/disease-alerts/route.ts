@@ -152,6 +152,11 @@ async function runDiseaseAlerts(_req: NextRequest, supabase: SupabaseClient) {
   let skipped = 0;
   let blockedSkipped = 0;
   let crossCronDeduped = 0;
+  // Claims the cross-cron lock could not answer. They still send (fail-open),
+  // so they never count as failures — see claimOutbreakAlertDaily in
+  // lib/cron-monitor for why that silence needed its own counter.
+  let lockUnevaluable = 0;
+  let lockError: string | null = null;
   const alertDate = currentAlertDate();
 
   type OutbreakRow = (typeof outbreaks)[number];
@@ -197,8 +202,12 @@ async function runDiseaseAlerts(_req: NextRequest, supabase: SupabaseClient) {
       // .sent_at even on a dedup skip, same trade-off documented in
       // regional-alerts' equivalent branch — "user informed", not strictly
       // "disease-alerts itself emailed them".
-      const claimed = await claimOutbreakAlertDaily(supabase, userId, String(outbreak.id), alertDate, "disease-alerts");
-      if (!claimed) {
+      const claim = await claimOutbreakAlertDaily(supabase, userId, String(outbreak.id), alertDate, "disease-alerts");
+      if (claim.state === "unevaluable") {
+        lockUnevaluable++;
+        lockError ??= claim.error ?? "(sans message)";
+      }
+      if (claim.state === "taken") {
         crossCronDeduped++;
         await supabase.from("disease_alert_log").upsert(
           [{
@@ -344,9 +353,14 @@ async function runDiseaseAlerts(_req: NextRequest, supabase: SupabaseClient) {
   // health-check's delivery-stall check needs this to tell "checked, nothing
   // qualified" from "broken", since with one subscriber `sent` can correctly
   // stay 0 for weeks.
+  const lockNote = lockUnevaluable > 0
+    ? `verrou inter-crons inévaluable ${lockUnevaluable}× : ${lockError}`
+    : null;
+  const runNote = [failed > 0 ? `${failed} alerte(s) en échec` : null, lockNote]
+    .filter(Boolean).join(" · ");
   await logCronRun(supabase, "disease-alerts", failed > 0 ? "error" : "ok", sent,
-    failed > 0 ? `${failed} alerte(s) en échec` : undefined,
+    runNote || undefined,
     outbreaks.length > 0 ? new Date().toISOString() : undefined);
-  console.log(`[disease-alerts] Done — sent: ${sent}, skipped: ${skipped}, blockedSkipped: ${blockedSkipped}, crossCronDeduped: ${crossCronDeduped}, digestEmailsSent: ${digestEmailsSent}, digestItemsCapped: ${digestItemsCapped}`);
-  return NextResponse.json({ sent, skipped, blockedSkipped, crossCronDeduped, emailsSent: userItems.size, digestEmailsSent, digestItemsCapped, failed });
+  console.log(`[disease-alerts] Done — sent: ${sent}, skipped: ${skipped}, blockedSkipped: ${blockedSkipped}, crossCronDeduped: ${crossCronDeduped}, lockUnevaluable: ${lockUnevaluable}, digestEmailsSent: ${digestEmailsSent}, digestItemsCapped: ${digestItemsCapped}`);
+  return NextResponse.json({ sent, skipped, blockedSkipped, crossCronDeduped, lockUnevaluable, lockError, emailsSent: userItems.size, digestEmailsSent, digestItemsCapped, failed });
 }

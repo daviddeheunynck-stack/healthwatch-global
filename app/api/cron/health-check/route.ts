@@ -112,6 +112,17 @@ const REAL_EVIDENCE: Record<string, { table: string; column: string }> = {
   // the same regional digest email, so they are genuine deliveries here.
   "regional-alerts": { table: "outbreak_alert_log", column: "sent_at" },
   "disease-alerts":  { table: "disease_alert_log",  column: "sent_at" },
+  // Added 2026-08-25 — the third alert cron was the only one of the trio
+  // without independent evidence, so the 2026-07-29 finding above still
+  // applied to it verbatim: a total watchlist-alerts outage would have shown
+  // ✅ indefinitely, since a broken delivery cron never gets a rows>0 run and
+  // its lastNonZero would stay unset forever. The column was there all along;
+  // it is named alerted_at here, not sent_at like its two siblings, which is
+  // the likeliest reason it was skipped. watchlist-alerts now stamps it on
+  // every real send (it used to be an INSERT-only default, frozen at the
+  // first alert for a given user+outbreak) and deliberately leaves it alone
+  // on its cross-cron dedup branch, which delivers nothing.
+  "watchlist-alerts": { table: "watchlist_alert_log", column: "alerted_at" },
   "push-alerts":     { table: "outbreaks", column: "push_notified_at" },
 };
 
@@ -455,6 +466,57 @@ const DECISION_HORIZON_DISMISSED = new Set([
   "jverheyden@ariesconsult.eu",
 ]);
 
+interface SilentAlertLock { day: string; deliveries: number; lockRows: number }
+
+// The cross-cron alert lock (outbreak_alert_daily_lock, shipped 2026-08-24)
+// stops the same outbreak reaching one inbox three times in twenty minutes:
+// watchlist-alerts (10:30 UTC), disease-alerts (10:40) and regional-alerts
+// (10:50) each claim a (user, outbreak, day) pair before sending, and the
+// first one wins.
+//
+// claimOutbreakAlertDaily fails OPEN — on any DB error it tells the caller to
+// send anyway, which is the right trade-off (a broken lock must not cancel
+// everyone's alerts) but means a permanently broken lock is invisible from
+// inside the crons: they send, they log "ok", their counters look normal.
+// That is not hypothetical. On 2026-08-25 at 10:50 UTC regional-alerts
+// claimed 117 pairs, emailed all of them, and the lock table stayed empty —
+// every claim had been erroring since the day it shipped, and the only trace
+// was a Sentry event. This check is what would have said so the next morning.
+//
+// Read as: "somebody was alerted yesterday, so at least one claim must have
+// been recorded for yesterday". Zero rows against non-zero deliveries can
+// only mean the lock never answered.
+//
+// Yesterday, not today: this cron runs at 07:05 UTC, hours before the three
+// alert crons. Today's lock is legitimately empty every single morning.
+//
+// The 10:00-12:00 UTC window on the delivery side is what keeps
+// activate-trial out of the count: it writes outbreak_alert_log too (the
+// signup digest, ~line 187) without ever claiming a lock, so a signup landing
+// inside that two-hour window would read as a delivery with no claim behind
+// it. Accepted as a rare, self-clearing false positive rather than closed
+// with a cleverer heuristic — a false positive gets read once, a permanent
+// blind spot gets read never.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+async function checkAlertLockSilent(supabase: any): Promise<{ result: SilentAlertLock | null; error: string | null }> {
+  const day = new Date(Date.now() - 86_400_000).toISOString().slice(0, 10);
+  const from = `${day}T10:00:00.000Z`;
+  const to   = `${day}T12:00:00.000Z`;
+
+  const [regional, disease, watchlist, lock] = await Promise.all([
+    supabase.from("outbreak_alert_log").select("*", { count: "exact", head: true }).gte("sent_at", from).lt("sent_at", to),
+    supabase.from("disease_alert_log").select("*", { count: "exact", head: true }).gte("sent_at", from).lt("sent_at", to),
+    supabase.from("watchlist_alert_log").select("*", { count: "exact", head: true }).gte("alerted_at", from).lt("alerted_at", to),
+    supabase.from("outbreak_alert_daily_lock").select("*", { count: "exact", head: true }).eq("alert_date", day),
+  ]);
+
+  const firstError = [regional, disease, watchlist, lock].find((r) => r?.error)?.error;
+  if (firstError) return { result: null, error: firstError.message };
+
+  const deliveries = (regional.count ?? 0) + (disease.count ?? 0) + (watchlist.count ?? 0);
+  return { result: { day, deliveries, lockRows: lock.count ?? 0 }, error: null };
+}
+
 interface DecisionHorizonTrial { email: string; trialEndsAt: string; isPilot: boolean }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -629,6 +691,7 @@ async function runHealthCheck(_req: NextRequest, supabase: any) {
     { count: visits7d },
     authFailureResult,
     bundleSecretResult,
+    alertLockResult,
   ] = await Promise.all([
       Promise.all([
         supabase.from("outbreaks").select("*", { count: "exact", head: true }).eq("active", true),
@@ -669,6 +732,7 @@ async function runHealthCheck(_req: NextRequest, supabase: any) {
       supabase.from("product_events").select("*", { count: "exact", head: true }).gte("created_at", sevenDaysAgo),
       checkAuthFailures(supabase),
       scanDeployedBundleForSecrets(),
+      checkAlertLockSilent(supabase),
     ]);
 
   const zeroRegionTrials    = zeroRegionResult.trials;
@@ -810,6 +874,22 @@ async function runHealthCheck(_req: NextRequest, supabase: any) {
     .sort((a, b) => a.name.localeCompare(b.name));
   const hasErroring = erroring.length > 0;
 
+  // Cross-cron alert lock — see checkAlertLockSilent above. The counters come
+  // from the lock and the delivery logs; the CAUSE comes from whichever of
+  // the three alert crons recorded a lock error in its last run (they write
+  // the verbatim DB message into logCronRun's error field even on an "ok"
+  // run, precisely so it lands in site_config and can be read here without
+  // Sentry). A run that predates that instrumentation simply has nothing to
+  // say, and the line still fires on the counters alone.
+  const alertLock      = alertLockResult.result;
+  const alertLockError = alertLockResult.error;
+  const alertLockSilent = !!alertLock && alertLock.deliveries > 0 && alertLock.lockRows === 0;
+  const alertLockCause = alertLockSilent
+    ? (["watchlist-alerts", "disease-alerts", "regional-alerts"]
+        .map((name) => cronMap[name]?.error)
+        .find((msg) => !!msg && msg.includes("verrou inter-crons")) ?? null)
+    : null;
+
   // ── Delivery visibility: "nobody to send to" vs. "somebody's there and
   // nothing went out" ─────────────────────────────────────────────────────
   // A delivery cron logging "ok, rows=0" is indistinguishable from a stalled
@@ -873,7 +953,7 @@ async function runHealthCheck(_req: NextRequest, supabase: any) {
   // institutional signup is good news, not a fault, and shouldn't turn the
   // report red. hasStuckInvites/hasAlertLocaleDrift are regression guards on
   // real past bugs and do count toward the alert state.
-  const emoji = hasOverdue || hasUnmonitored || hasErroring || audienceErrors.length > 0 || sentryAlert || deliveryAlert || hasZeroRegionTrials || hasUncoveredStripeTrials || hasBlockedEmailTrials || hasStuckInvites || hasAlertLocaleDrift || hasAuthFailures || hasBundleSecrets || (pheic ?? 0) > 0 ? "⚠️" : "✅";
+  const emoji = hasOverdue || hasUnmonitored || hasErroring || audienceErrors.length > 0 || sentryAlert || deliveryAlert || hasZeroRegionTrials || hasUncoveredStripeTrials || hasBlockedEmailTrials || hasStuckInvites || hasAlertLocaleDrift || hasAuthFailures || hasBundleSecrets || alertLockSilent || (pheic ?? 0) > 0 ? "⚠️" : "✅";
 
   const cronTableRows = cronStatuses
     .map(({ name, label, windowH, ok }) => {
@@ -987,6 +1067,8 @@ async function runHealthCheck(_req: NextRequest, supabase: any) {
     ${hasUnmonitored ? `<tr><td colspan="2" style="padding:8px 0;color:#fbbf24;font-weight:700">⚠️ ${unmonitored.length} cron(s) NON surveillé(s) — écrivent un statut mais absents de CRON_WINDOWS, donc jamais vérifiés : ${esc(unmonitored.join(", "))}</td></tr>` : ""}
     ${audienceErrors.length > 0 ? `<tr><td colspan="2" style="padding:8px 0;color:#fbbf24;font-weight:700">⚠️ Contrôle de livraison partiellement aveugle — comptage d'abonnés en échec : ${esc(audienceErrors.join(", "))}</td></tr>` : ""}
     ${hasErroring ? `<tr><td colspan="2" style="padding:8px 0;color:#f87171;font-weight:700">⚠️ ${erroring.length} cron(s) à l'heure mais EN ERREUR au dernier passage : ${erroring.map((e) => `${esc(e.name)} (${esc(e.error.slice(0, 120))})`).join(" · ")}</td></tr>` : ""}
+    ${alertLockError ? `<tr><td colspan="2" style="padding:8px 0;color:#fbbf24;font-weight:700">🔧 Contrôle « verrou inter-crons d'alerte » impossible : ${esc(alertLockError)}</td></tr>` : ""}
+    ${alertLockSilent ? `<tr><td colspan="2" style="padding:8px 0;color:#f87171;font-weight:700">⚠️ Verrou inter-crons MUET le ${esc(alertLock!.day)} — ${alertLock!.deliveries} alerte(s) livrée(s) entre 10h et 12h UTC et AUCUNE réclamation posée dans outbreak_alert_daily_lock. La déduplication watchlist→disease→regional n'a pas fonctionné : un même foyer peut avoir atteint une boîte jusqu'à trois fois.${alertLockCause ? ` Cause remontée par le cron : ${esc(alertLockCause.slice(0, 200))}` : " Aucune cause enregistrée par les crons — regarder Sentry (helper claimOutbreakAlertDaily)."}</td></tr>` : ""}
     ${zeroRegionError ? `<tr><td colspan="2" style="padding:8px 0;color:#fbbf24;font-weight:700">🔧 Contrôle « essai sans région d'alerte » impossible : ${esc(zeroRegionError)}</td></tr>` : ""}
     ${hasZeroRegionTrials ? `<tr><td colspan="2" style="padding:8px 0;color:#f87171;font-weight:700">⚠️ ${zeroRegionTrials.length} essai(s) actif(s) SANS AUCUNE région d'alerte configurée</td></tr>` : ""}
     ${uncoveredStripeError ? `<tr><td colspan="2" style="padding:8px 0;color:#fbbf24;font-weight:700">🔧 Contrôle « abonnement Stripe sans carte » impossible : ${esc(uncoveredStripeError)}</td></tr>` : ""}
@@ -1036,7 +1118,7 @@ async function runHealthCheck(_req: NextRequest, supabase: any) {
   <p style="margin-top:16px;font-size:11px;color:#475569">${new Date().toISOString()}</p>
 </div>`;
 
-  const subject = `${emoji}${hasBundleSecrets ? " 🔴 SECRET EXPOSÉ" : ""} HealthWatch — ${total ?? "?"} foyers${hasOverdue ? ` · ${overdue.length} cron(s) en retard` : ""}${sentryIssues.length > 0 ? ` · ${sentryIssues.length} erreur(s) Sentry` : ""}${deliveryAlert ? ` · ${deliveryIssues.length} canal(aux) en panne` : ""}${hasZeroRegionTrials ? ` · ${zeroRegionTrials.length} essai(s) sans région` : ""}${hasUncoveredStripeTrials ? ` · ${uncoveredStripeTrials.length} essai(s) Stripe sans carte` : ""}${hasBlockedEmailTrials ? ` · ${blockedEmailTrials.length} essai(s) e-mail bloqué` : ""}${hasStuckInvites ? ` · ${stuckInvites.length} invite(s) bloquée(s)` : ""}${hasAuthFailures ? ` · ${authFailures.reduce((n, f) => n + f.count, 0)} échec(s) auth système` : ""}${hasInstitutionalSubs ? ` · 🔔 ${institutionalSubs.length} abonnement(s) institutionnel(s)` : ""}${hasDecisionHorizonTrials ? ` · 🔔 ${decisionHorizonTrials.length} essai(s) à échéance lointaine` : ""} · ${new Date().toLocaleDateString("fr-FR")}`;
+  const subject = `${emoji}${hasBundleSecrets ? " 🔴 SECRET EXPOSÉ" : ""} HealthWatch — ${total ?? "?"} foyers${hasOverdue ? ` · ${overdue.length} cron(s) en retard` : ""}${sentryIssues.length > 0 ? ` · ${sentryIssues.length} erreur(s) Sentry` : ""}${deliveryAlert ? ` · ${deliveryIssues.length} canal(aux) en panne` : ""}${hasZeroRegionTrials ? ` · ${zeroRegionTrials.length} essai(s) sans région` : ""}${hasUncoveredStripeTrials ? ` · ${uncoveredStripeTrials.length} essai(s) Stripe sans carte` : ""}${hasBlockedEmailTrials ? ` · ${blockedEmailTrials.length} essai(s) e-mail bloqué` : ""}${hasStuckInvites ? ` · ${stuckInvites.length} invite(s) bloquée(s)` : ""}${hasAuthFailures ? ` · ${authFailures.reduce((n, f) => n + f.count, 0)} échec(s) auth système` : ""}${alertLockSilent ? " · verrou d'alerte muet" : ""}${hasInstitutionalSubs ? ` · 🔔 ${institutionalSubs.length} abonnement(s) institutionnel(s)` : ""}${hasDecisionHorizonTrials ? ` · 🔔 ${decisionHorizonTrials.length} essai(s) à échéance lointaine` : ""} · ${new Date().toLocaleDateString("fr-FR")}`;
 
   if (!isRealProduction) {
     console.log("[health-check] non-production run — skipping Brevo email and Sentry check-in/alerts");
@@ -1134,7 +1216,7 @@ async function runHealthCheck(_req: NextRequest, supabase: any) {
   }
 
   return Response.json({
-    ok: !hasOverdue && !hasUnmonitored && !hasErroring && !sentryAlert && !deliveryAlert && !hasZeroRegionTrials && !hasUncoveredStripeTrials && !hasBlockedEmailTrials && !hasStuckInvites && !hasAlertLocaleDrift && !hasAuthFailures && !hasBundleSecrets,
+    ok: !hasOverdue && !hasUnmonitored && !hasErroring && !sentryAlert && !deliveryAlert && !hasZeroRegionTrials && !hasUncoveredStripeTrials && !hasBlockedEmailTrials && !hasStuckInvites && !hasAlertLocaleDrift && !hasAuthFailures && !hasBundleSecrets && !alertLockSilent,
     unmonitored,
     erroring,
     total, high, pheic, overdue, cronStatuses, isRealProduction,
@@ -1151,5 +1233,6 @@ async function runHealthCheck(_req: NextRequest, supabase: any) {
     clickVisitRatio,
     authFailures: { count: authFailures.reduce((n, f) => n + f.count, 0), breakdown: authFailures, error: authFailureError },
     bundleSecrets: { count: bundleSecretMatches.length, matches: bundleSecretMatches, error: bundleSecretError },
+    alertLock: { silent: alertLockSilent, cause: alertLockCause, ...(alertLock ?? {}), error: alertLockError },
   });
 }
