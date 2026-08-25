@@ -1,8 +1,34 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useTranslations, useLocale } from "next-intl";
 import { Mail, MessageSquare, CheckCircle, Loader2, Activity, Globe, Shield } from "lucide-react";
+
+// Amorce de message pour une demande de devis. Nomme le plan et demande les
+// deux informations qui evitent un aller-retour : la procedure d'achat et
+// le nombre de personnes concernees.
+const QUOTE_INTRO: Record<string, { team: string; pro: string }> = {
+  fr: {
+    team: "Bonjour,\n\nJe souhaite recevoir un devis pour le plan Team (5 sieges) au nom de mon organisation.\n\nProcedure d'achat de notre cote : \nNombre de personnes concernees : \n\nMerci.",
+    pro:  "Bonjour,\n\nJe souhaite recevoir un devis pour le plan Pro au nom de mon organisation.\n\nProcedure d'achat de notre cote : \n\nMerci.",
+  },
+  en: {
+    team: "Hello,\n\nI would like a quote for the Team plan (5 seats), invoiced to my organization.\n\nOur procurement process: \nNumber of people involved: \n\nThank you.",
+    pro:  "Hello,\n\nI would like a quote for the Pro plan, invoiced to my organization.\n\nOur procurement process: \n\nThank you.",
+  },
+  es: {
+    team: "Hola,\n\nDeseo recibir un presupuesto para el plan Team (5 puestos) a nombre de mi organizacion.\n\nNuestro proceso de compra: \nNumero de personas: \n\nGracias.",
+    pro:  "Hola,\n\nDeseo recibir un presupuesto para el plan Pro a nombre de mi organizacion.\n\nNuestro proceso de compra: \n\nGracias.",
+  },
+  ar: {
+    team: "مرحبا،\n\nأرغب في الحصول على عرض سعر لخطة Team (5 مقاعد) باسم مؤسستي.\n\nإجراءات الشراء لدينا: \nعدد الأشخاص المعنيين: \n\nشكرا.",
+    pro:  "مرحبا،\n\nأرغب في الحصول على عرض سعر لخطة Pro باسم مؤسستي.\n\nإجراءات الشراء لدينا: \n\nشكرا.",
+  },
+  id: {
+    team: "Halo,\n\nSaya ingin meminta penawaran untuk paket Team (5 kursi) atas nama organisasi saya.\n\nProses pengadaan kami: \nJumlah orang yang terlibat: \n\nTerima kasih.",
+    pro:  "Halo,\n\nSaya ingin meminta penawaran untuk paket Pro atas nama organisasi saya.\n\nProses pengadaan kami: \n\nTerima kasih.",
+  },
+};
 
 export default function ContactPage() {
   const t = useTranslations("contact");
@@ -11,6 +37,17 @@ export default function ContactPage() {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState("");
+
+  // Prerempli quand on arrive depuis la carte Team de /pricing. Lu depuis
+  // window plutot que via useSearchParams : ce dernier impose une frontiere
+  // Suspense au rendu statique, pour un confort de saisie qui ne la merite pas.
+  // La personne peut tout reecrire — c'est une amorce, pas un formulaire fige.
+  useEffect(() => {
+    const plan = new URLSearchParams(window.location.search).get("devis");
+    if (plan !== "team" && plan !== "pro") return;
+    const amorce = QUOTE_INTRO[locale] ?? QUOTE_INTRO.en;
+    setForm((f) => (f.message ? f : { ...f, message: amorce[plan] }));
+  }, [locale]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

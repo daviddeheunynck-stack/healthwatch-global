@@ -10,6 +10,17 @@ import { PRICE_DISPLAY } from "@/lib/pricing";
 
 type Billing = "monthly" | "annual";
 
+// Libelles du parcours devis (carte Team). Voir le commentaire au point
+// d'appel : pour ce public, le devis est la voie normale et la carte
+// l'exception, pas le contraire.
+const QUOTE_CTA: Record<string, { primary: string; secondary: string }> = {
+  fr: { primary: "Demander un devis", secondary: "ou payer par carte" },
+  en: { primary: "Request a quote",   secondary: "or pay by card" },
+  es: { primary: "Solicitar presupuesto", secondary: "o pagar con tarjeta" },
+  ar: { primary: "طلب عرض سعر", secondary: "أو الدفع بالبطاقة" },
+  id: { primary: "Minta penawaran", secondary: "atau bayar dengan kartu" },
+};
+
 // Localized copy
 const COPY: Record<string, {
   toggleMonthly: string;
@@ -477,13 +488,32 @@ export default function PricingCards({ locale }: { locale: string }) {
               {pilotCtaLabel}
             </a>
           ) : (
-            <CheckoutButton
-              plan="team"
-              locale={locale}
-              label={c.getStarted}
-              billing={billing}
-              className="w-full bg-amber-700 hover:bg-amber-600 text-white font-semibold py-2.5 rounded-lg transition-colors"
-            />
+            // Devis en action principale, carte en repli — et non l'inverse.
+            // Mesure du 25/08/2026 : les inscriptions viennent de health.ny.gov,
+            // georgetown.edu, yale.edu, pasteur.ma, anss-guinee.org, MSF/Epicentre.
+            // Aucune de ces organisations n'achete en sortant une carte : elles
+            // demandent un devis, un bon de commande, une facture. Le chemin
+            // existait deja (/contact, /institutional, DPA, facture au nom de
+            // l'organisation) mais etait un lien gris en bas de page, sous un
+            // bouton Stripe de 1 290 EUR. Un seul checkout a ete lance en quatre
+            // mois, toutes offres confondues.
+            <div className="w-full space-y-2">
+              <Link
+                href={`/${locale}/contact?devis=team`}
+                onClick={() => track("quote_request_click", { plan: "team", locale })}
+                className="w-full flex items-center justify-center gap-1.5 bg-amber-700 hover:bg-amber-600 text-white font-semibold py-2.5 rounded-lg transition-colors"
+              >
+                <Building2 className="w-4 h-4" />
+                {QUOTE_CTA[locale]?.primary ?? QUOTE_CTA.en.primary}
+              </Link>
+              <CheckoutButton
+                plan="team"
+                locale={locale}
+                label={QUOTE_CTA[locale]?.secondary ?? QUOTE_CTA.en.secondary}
+                billing={billing}
+                className="w-full text-xs text-gray-500 hover:text-gray-300 transition-colors py-1"
+              />
+            </div>
           )}
 
           <div className="flex items-center gap-2 bg-gray-800/60 rounded-xl p-3 text-xs text-gray-400 border border-gray-700/50">
