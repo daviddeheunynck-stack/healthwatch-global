@@ -93,6 +93,22 @@ Gestionnaire relu : **« Tout (3) »**, exactement les mêmes qu'à 9h.
 
 ---
 
+### ⏱️ ADDENDUM DE FIN DE RUN — deux faits ont changé pendant la session, hors de cette routine
+
+Ajouté à la clôture, après le commit. **Les constats du corps de l'entrée ci-dessus étaient exacts à l'heure où ils ont été faits (~13h)** ; ils ont été périmés en cours de run par une session interactive de David. Ils sont laissés tels quels et corrigés ici plutôt que réécrits, pour que la chronologie reste lisible.
+
+**1. ✅ Le DM Johan Verheyden a été ENVOYÉ à 15:37**, sur ordre explicite de David en session interactive (« Envoie Johan »), après 3 passes de double-check dont une avec contrôle croisé contre le brouillon Nebiyu Dereje. Il n'est donc plus en file. La ligne « les 2 DM mis en file le 24/08 ne sont toujours pas envoyés » du bloc 1️⃣ ci-dessus **était vraie à 13h et ne l'est plus**.
+
+**2. ❌ Le DM Nebiyu Dereje a été ABANDONNÉ le même jour**, après 3 réécritures depuis zéro, chacune recalée pour un motif différent. Il n'est donc **ni en file, ni envoyé** : rien ne part sur ce fil.
+
+**➡️ Conséquence directe sur le carry-over n°1 du créneau de 17h** : la file d'attente de validation ne contient plus **4** DM mais **2** — **Mosoka Fallah** (mis en file par ce run) et **N'Da Konan Michel Yao** (en file depuis le **11/08, 14 jours**, *Director at WHO*, le plus ancien du dispositif). Ne pas chercher Johan Verheyden ni Nebiyu Dereje dans la file : ils en sont sortis, l'un par envoi, l'autre par abandon.
+
+**3. ⚠️ Un manquement à `AGENTS.md` à signaler, qui n'est pas le fait de cette routine.** Le commit `7098551` (« *docs(linkedin): DM Johan Verheyden envoye sur ordre explicite de David en session* ») a emporté au passage **le travail en cours de cette routine** dans `marketing/linkedin-contacts.md` : le diff de ce commit contient les lignes de la session de 13h (quotas 2/7, section Dorine Ngono, relevé des abonnés), qui n'avaient rien à voir avec le DM Verheyden et n'étaient pas encore commitées.
+
+C'est **exactement le mode de défaillance que `AGENTS.md` décrit** dans sa section « Pourquoi cette règle existe », transposé d'une routine à une session interactive : un `git add` trop large a publié sous un message qui ne le décrit pas du travail appartenant à quelqu'un d'autre. Ici le coût est faible — il s'agit de documentation, relue et assumée par cette routine, pas de code parti sans relecture. **Mais la règle « stager chaque chemin explicitement » vaut aussi pour les sessions interactives, et `AGENTS.md` ne le dit aujourd'hui que pour les routines planifiées.** À trancher par David : soit étendre nommément la règle aux sessions interactives, soit acter que le partage de `linkedin-contacts.md` entre une routine et une session simultanée est un risque assumé.
+
+---
+
 ## 📅 Session linkedin-hwg-monitoring — 25/08/2026 (9h)
 
 **Vérification double déclenchement** : aucune entrée datée du 25/08 dans ce fichier ni dans `content-log.md` à l'ouverture → **premier déclenchement de cette routine aujourd'hui**.
