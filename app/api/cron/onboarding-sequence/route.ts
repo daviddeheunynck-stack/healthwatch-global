@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { buildJ1Email, buildJ3Email, buildJ7Email, buildPilotConversionEmail } from "@/lib/onboarding-emails";
 import * as Sentry from "@sentry/nextjs";
-import { logCronRun, isRealProduction, isLiveCronInvocation, claimEmailSend, pingHeartbeatIfHealthy } from "@/lib/cron-monitor";
+import { logCronRun, isRealProduction, isLiveCronInvocation, claimEmailSend, releaseEmailSend, pingHeartbeatIfHealthy } from "@/lib/cron-monitor";
 import { sendBrevoEmail } from "@/lib/brevo-send";
 
 export const dynamic = "force-dynamic";
@@ -36,6 +36,35 @@ async function sendEmail(to: string, subject: string, html: string, unsubscribeU
     senderEmail: ONBOARDING_SENDER_EMAIL,
     senderName: ONBOARDING_SENDER_NAME,
   });
+}
+
+// Le verrou est pose AVANT l'envoi — bon ordre face a deux invocations
+// concurrentes, mais un envoi qui n'a pas eu lieu doit le rendre. Sans ca,
+// claimEmailSend voit l'etape comme deja servie a tous les passages suivants
+// et ce destinataire ne recoit JAMAIS cette etape du cycle : la perte est
+// definitive et silencieuse (le compteur jNFailed ne dit pas qui). Meme
+// compensation que weekly-signal / weekly-digest / send-sitrep-emails
+// (2026-08-24) — voir releaseEmailSend dans lib/cron-monitor.ts.
+//
+// Relance l'exception apres avoir rendu le verrou : les catch par etape plus
+// bas continuent de compter l'echec et de le remonter a Sentry a l'identique.
+async function claimAndSend(
+  supabase: SupabaseClient,
+  userId: string,
+  step: string,
+  to: string,
+  subject: string,
+  html: string,
+  unsubscribeUrl?: string,
+): Promise<boolean> {
+  if (!(await claimEmailSend(supabase, userId, "onboarding-sequence", step))) return false;
+  try {
+    await sendEmail(to, subject, html, unsubscribeUrl);
+  } catch (err) {
+    await releaseEmailSend(supabase, userId, "onboarding-sequence", step);
+    throw err;
+  }
+  return true;
 }
 
 export async function GET(req: NextRequest) {
@@ -217,8 +246,7 @@ async function runOnboardingSequence(req: NextRequest, supabase: SupabaseClient)
       // the header as before.
       const { subject, html } = buildJ1Email(locale, user.id);
       if (isRealProduction && isLive) {
-        if (await claimEmailSend(supabase, user.id, "onboarding-sequence", "j1")) {
-          await sendEmail(user.email, subject, html);
+        if (await claimAndSend(supabase, user.id, "j1", user.email, subject, html)) {
           j1Sent++;
         } else {
           deduped++;
@@ -243,8 +271,7 @@ async function runOnboardingSequence(req: NextRequest, supabase: SupabaseClient)
       const locale = user.locale || "en";
       const { subject, html, unsubUrl } = buildJ3Email(locale, user.id);
       if (isRealProduction && isLive) {
-        if (await claimEmailSend(supabase, user.id, "onboarding-sequence", "j3")) {
-          await sendEmail(user.email, subject, html, unsubUrl);
+        if (await claimAndSend(supabase, user.id, "j3", user.email, subject, html, unsubUrl)) {
           j3Sent++;
         } else {
           deduped++;
@@ -269,8 +296,7 @@ async function runOnboardingSequence(req: NextRequest, supabase: SupabaseClient)
       const locale = user.locale || "en";
       const { subject, html, unsubUrl } = buildJ7Email(locale, user.id);
       if (isRealProduction && isLive) {
-        if (await claimEmailSend(supabase, user.id, "onboarding-sequence", "j7")) {
-          await sendEmail(user.email, subject, html, unsubUrl);
+        if (await claimAndSend(supabase, user.id, "j7", user.email, subject, html, unsubUrl)) {
           j7Sent++;
         } else {
           deduped++;
@@ -295,8 +321,7 @@ async function runOnboardingSequence(req: NextRequest, supabase: SupabaseClient)
       const locale = user.locale || "en";
       const { subject, html, unsubUrl } = buildPilotConversionEmail(locale, user.id, (user.pilot_organization as string | null) ?? null);
       if (isRealProduction && isLive) {
-        if (await claimEmailSend(supabase, user.id, "onboarding-sequence", "j32")) {
-          await sendEmail(user.email, subject, html, unsubUrl);
+        if (await claimAndSend(supabase, user.id, "j32", user.email, subject, html, unsubUrl)) {
           j32Sent++;
         } else {
           deduped++;

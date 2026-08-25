@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { buildTrialEndingEmail } from "@/lib/trial-ending-email";
 import * as Sentry from "@sentry/nextjs";
-import { logCronRun, isRealProduction, isLiveCronInvocation, claimEmailSend, pingHeartbeatIfHealthy } from "@/lib/cron-monitor";
+import { logCronRun, isRealProduction, isLiveCronInvocation, claimEmailSend, releaseEmailSend, pingHeartbeatIfHealthy } from "@/lib/cron-monitor";
 import { getLocalizedDisease } from "@/lib/outbreaks";
 
 export const dynamic = "force-dynamic";
@@ -225,8 +225,24 @@ async function runTrialReminders(req: NextRequest, supabase: SupabaseClient) {
         // still get both, days apart, just not either one twice).
         const step = new Date(profile.trial_ends_at).getTime() < new Date(j1End).getTime() ? "j1" : "j3";
         if (await claimEmailSend(supabase, profile.id, "trial-reminders", step)) {
-          const ok = await sendEmail(profile.email, subject, html);
-          if (ok) sent++; else skippedNoKey++;
+          // Le verrou est pose AVANT l'envoi — bon ordre face a deux
+          // invocations concurrentes, mais un envoi qui n'a pas eu lieu doit
+          // le rendre. Sans ca, claimEmailSend voit l'etape comme deja servie
+          // a tous les passages suivants (la requete remonte volontairement
+          // plusieurs jours en arriere, cf. commentaire plus haut) et ce
+          // compte ne recoit JAMAIS son rappel de fin d'essai. Meme
+          // compensation que weekly-signal / weekly-digest (2026-08-24) —
+          // voir releaseEmailSend dans lib/cron-monitor.ts.
+          let ok = false;
+          try {
+            ok = await sendEmail(profile.email, subject, html);
+          } catch (err) {
+            await releaseEmailSend(supabase, profile.id, "trial-reminders", step);
+            throw err;
+          }
+          if (ok) sent++;
+          // Cle Brevo absente : rien n'est parti non plus.
+          else { skippedNoKey++; await releaseEmailSend(supabase, profile.id, "trial-reminders", step); }
         } else {
           deduped++;
         }
