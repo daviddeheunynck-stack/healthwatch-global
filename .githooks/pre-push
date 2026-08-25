@@ -1,0 +1,22 @@
+#!/bin/sh
+# Empeche de publier du code qui suppose un schema absent de la base.
+#
+# Deux fois en deux jours (24 et 25/08/2026), une migration presente dans le
+# depot et jamais appliquee en production a rendu un verrou anti-doublon
+# inoperant, en silence — ces verrous echouent ouvert. Voir l'en-tete de
+# scripts/check-migrations-applied.mjs.
+#
+# Sur pre-push et non sur prebuild : le build Vercel n'a ni la CLI Supabase ni
+# le lien projet. Le moment ou le controle compte est celui de la publication.
+#
+# Ne bloque jamais sur une absence d'infrastructure (hors ligne, CLI absente,
+# projet non lie) : le script previent et laisse passer.
+#
+# Installation (une fois, par machine) :
+#   git config core.hooksPath .githooks
+#
+# Contournement ponctuel :
+#   git push --no-verify
+
+node scripts/check-migrations-applied.mjs
+exit $?
