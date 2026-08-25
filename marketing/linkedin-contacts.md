@@ -5,7 +5,7 @@
 
 **Vérification double déclenchement** : aucune entrée datée du 25/08 dans ce fichier ni dans `content-log.md` à l'ouverture → **premier déclenchement de cette routine aujourd'hui**.
 
-**Quotas à la clôture** : commentaires **1/7** ; **connexions envoyées 0/7** ; **suivis 7/7-10** (plancher atteint) ; **DM à froid 0/8** (le seul DM en file est une réponse en fil actif, hors quota froid).
+**Quotas à la clôture** : commentaires **1/7** ; **connexions envoyées 0/7** ; **suivis 7/7-10** (plancher atteint) ; **DM à froid 0/8** — le DM Patrick AYONGA a été **envoyé** après validation explicite de David en session, mais reste **hors quota froid** (réponse en fil actif).
 
 **Registre de faits** : régénéré en début de run (227 faits citables, 53 périmés). ⚠️ **Alerte de fraîcheur au 4e jour consécutif** : Shigellosis / EU-EEA **53 j**, Diphtheria / 8 pays **40 j**, Meningitis / 4 pays **33 j**.
 
@@ -13,7 +13,7 @@
 
 ---
 
-### 🔒 DM EN ATTENTE DE VALIDATION — **Patrick AYONGA** (FR, vouvoiement, fil actif, **SANS CTA**, hors quota froid)
+### ✅ DM ENVOYÉ — **Patrick AYONGA** (FR, vouvoiement, fil actif, **SANS CTA**, hors quota froid)
 
 **Fil relu intégralement (§4)** : 13 messages depuis le 19/08, recopiés verbatim dans `tmp/thread-patrick-ayonga.txt` (17 958 caractères) pour le contrôle mécanique et le relecteur.
 
@@ -25,7 +25,9 @@
 
 **CTA volontairement absent.** L'anti-répétition s'y oppose : le lien healthwatch-global.com et l'essai Pro ont **déjà été envoyés dans ce fil le 20/08 à 12:03**, et il a répondu qu'il avait consulté le site. Rien à re-proposer.
 
-**Texte du brouillon, en attente de validation de David :**
+**✅ ENVOYÉ le 25/08 — validé par David en session interactive (« Envoie le dm »), après le double-check qu'il avait lui-même demandé.** Rendu vérifié après envoi : **3 paragraphes réels** (269 / 554 / 404 caractères, identiques au brouillon validé), champ vidé, message visible dans le fil sous le nom de David. Destinataire revérifié dans le même appel JS que le clic sur Envoyer.
+
+**Texte envoyé :**
 
 > Je bute sur un détail de votre réponse : la ventilation par DPS et par zone de santé subsiste au niveau national. Si elle tient jusque-là, la consolidation n'aplatit pas tout ce qu'elle touche : une dimension de provenance monte bien jusqu'en haut, agrégation comprise.
 >
