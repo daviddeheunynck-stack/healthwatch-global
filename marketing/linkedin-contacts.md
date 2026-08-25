@@ -88,6 +88,18 @@
 
 ---
 
+### ⏱️ ADDENDUM DE FIN DE RUN — invitation à Alieu Sowe envoyée sans note sur ordre de David, incident de ciblage rencontré et corrigé au passage
+
+**David a tranché en session interactive** (« Envoie l'invitation à Alieu Sowe sans note ») juste après la clôture du corps de cette entrée. **Invitation envoyée, confirmée à l'écran** : toast « Invitation envoyée à Alieu. », bouton passé de « Se connecter » à « En attente ». Quota connexions **1/7**.
+
+⚠️ **Incident de ciblage survenu sur la première tentative, corrigé avant tout envoi réel à Alieu.** La page de son profil était entrée dans un état de rendu dégradé (captures d'écran en timeout, appels JS asynchrones renvoyant systématiquement `{}` — signature déjà documentée en politique commune §7). Dans cet état, un premier clic sur « Se connecter », vérifié par la présence du texte « Alieu Sowe, PhD » sur la page mais **pas scopé au bouton précis de sa fiche**, a en réalité déclenché l'envoi d'une invitation à **Samba Bah** (*Senior Operations Officer, Expanded Program on Immunization*), un profil suggéré en colonne latérale, jamais évalué ni ciblé. Vérifié via `mynetwork/invitation-manager/sent/` (« Samba Bah… Envoyé il y a 2 minutes »). Une tentative de retrait immédiat a été bloquée par le classifieur de permissions ; **signalé à David en session, qui a choisi de laisser cette invitation en l'état** plutôt que d'insister sur le retrait.
+
+**Reprise avec ciblage corrigé** : nouvel onglet, rechargement complet de la page, bouton « Se connecter » localisé et vérifié dans le conteneur exact de la fiche d'Alieu Sowe (nom + intitulé + bouton dans le même bloc DOM, distinct des cartes de suggestions), capture d'écran fraîche immédiatement avant chaque clic (règle de la politique commune §7). Modale « Ajouter une note à votre invitation ? » confirmée adressée à « **Alieu Sowe, PhD** » avant le clic sur « Envoyer sans note ». **Rien de plus n'a été cliqué sur Samba Bah ni sur aucun autre profil de la colonne de suggestions.**
+
+**Leçon pour les prochaines sessions** : sur cette page de profil, plusieurs boutons portent le texte exact « Se connecter » (fiche principale + cartes « Plus de profils pour vous » en colonne latérale). Une vérification d'identité qui cherche seulement le nom du destinataire n'importe où sur la page ne suffit pas : il faut vérifier que le **même conteneur DOM** porte à la fois le nom et le bouton cliqué, ou capturer un screenshot frais et cliquer par coordonnées visuellement confirmées. À ajouter aux notes techniques de `_shared/hwg-social-policy.md` ou `_shared/browser-click-reliability.md`, hors périmètre de cette routine.
+
+---
+
 ### 3️⃣ NOUVEAUX ABONNÉS — aucun, aucun follow-back exécuté
 
 Page « Abonnés » relevée : **377 personnes**, chiffre **identique aux relevés de 9h et de 13h**. Tête de liste inchangée (Mosoka Fallah, Bouh Abdi Khaireh, Dihoulne Gagdang, Daisy Kasyoka, Alain BASHIZI, Nebiyu Dereje), tous déjà « Suivi ». **Le seul profil non suivi en retour reste Dr. Jibran Khan**, écarté pour pertinence le 24/08 et **non rouvert** conformément à la consigne.
