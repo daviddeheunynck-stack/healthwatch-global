@@ -94,6 +94,7 @@ export default function OutbreakStatsGrid({ cases, deaths, cfr, labels, locale }
           <div className="flex items-center justify-center gap-3 flex-wrap">
             <CheckoutButton
               plan="pro"
+              billing="monthly"
               locale={locale}
               label={ctaBtn}
               className="inline-block bg-red-600 hover:bg-red-700 text-white font-semibold px-5 py-2 rounded-lg transition-colors text-sm"
