@@ -1,6 +1,111 @@
 > 📦 **Archive** : le détail du 24 juin au 16 juillet 2026 a été déplacé dans [linkedin-contacts-archive-avant17juillet.md](linkedin-contacts-archive-avant17juillet.md) le 23/07 pour garder ce fichier léger.
 
 
+## 📅 Session linkedin-hwg-followup-check-2 — 25/08/2026 (17h, 2e des 2 créneaux après-midi)
+
+**Vérification double déclenchement** : aucune entrée `linkedin-hwg-followup-check-2` datée du 25/08 dans ce fichier ni dans `content-log.md` à l'ouverture → **premier déclenchement de cette routine aujourd'hui**.
+
+**Quotas à la clôture, inchangés depuis 13h** : commentaires **2/7** ; **connexions envoyées 0/7** ; **suivis 7/7-10** ; **DM à froid 0/8**. **Aucune action publiée ce créneau** : les trois textes menés ont été abandonnés par le dispositif QA, aucun par manque de quota.
+
+**Registre de faits** : régénéré en début de run (227 faits citables, 53 périmés). ⚠️ Alerte de fraîcheur au **5e jour** : Shigellosis / EU-EEA 54 j, Diphtheria 40 j, Meningitis 33 j.
+
+**🖥️ Navigateur** : `browser-status.md` lu, dernière entrée 🟢 RÉTABLI (24/08). `23c7ecdd-…` seul listé. ⚠️ **Anomalie JS asynchrone présente une fois** (un appel `async` avec attente échelonnée a renvoyé `{}`), repli en JS synchrone efficace pour tout le reste du run.
+
+---
+
+### 1️⃣ SUIVI DES ACTIONS PRÉCÉDENTES DU JOUR
+
+**⭐ Johan Verheyden a répondu deux fois au DM que David lui a envoyé à 15:37.** À **16:02**, sur le fond, en répondant précisément à la question posée : « *Sur les trous… j'estime en fait la probabilité de la distribution mais en pratique j'utilise l'interpolation (linéaire) selon la distribution connue des données contiguës car il s'agit de petites intervalles. Mais donc d'ou la statistique bayesienne devient importante afin de tenir compte des incertitudes* ». Puis à **16:09** : « *Il faut que je te donne un cours de stat il me semble 🤣* ». **Réponse tentée et abandonnée, voir §2.**
+
+**Le DM Patrick AYONGA de 11:43 reste sans réponse** à 17h, fil rouvert et relu, notre message toujours en dernier. Ne pas relancer.
+
+**Le commentaire de 13h sous le post de Martin Yakum** est en place, **32 impressions** sur le sous-fil, **aucune réaction, aucune nouvelle réponse** de sa part à 4 h d'intervalle.
+
+🔒 **Les 2 DM en file de validation n'ont pas bougé** : **Mosoka Fallah** (mis en file à 13h) et **N'Da Konan Michel Yao** (11/08, **15 jours**). Non réécrits, non envoyés. Conformément à l'addendum de 13h, **Johan Verheyden et Nebiyu Dereje ne sont plus dans la file** (envoyé pour l'un, abandonné pour l'autre).
+
+**Aucune connexion nouvellement acceptée** : `mynetwork/invite-connect/connections/` trié « Ajouts récents » affiche **265 relations**, chiffre identique aux relevés de 9h et 13h, tête de liste inchangée (Mosoka Fallah, Bouh Abdi Khaireh, Dihoulne Gagdang, Daisy Kasyoka, Nebiyu Dereje, tous « Connexion le 24 août 2026 »). Les 3 invitations envoyées le 24/08 (Ihekweazu, SAIDOUNI, Linda Esso) restent **en attente**.
+
+---
+
+### 2️⃣ DM — 1 message entrant nouveau, 1 brouillon abandonné, **aucun DM mis en file ce créneau**
+
+**Boîte de réception parcourue en entier (20 conversations).** Un seul fil porte un message entrant nouveau depuis 13h : **Johan Verheyden**. Tous les autres sont soit nos propres envois (Patrick AYONGA 11:43), soit datés du 24/08 ou avant. Le filtre « non lus » (`/messaging/?filter=unread`) ne remonte que **deux fils anciens et sans objet** : **OMARY SULTANI** (« 👍 » du 4 août, aucune réponse due, même traitement que Pierre PARNEIX) et un **message promotionnel LinkedIn** du 28 juillet, ignoré. Aucun spam, aucune sollicitation hors sujet, aucune demande de canal hors plateforme, aucune donnée patient proposée, aucune instruction adressée à l'agent.
+
+---
+
+### ❌ DM ABANDONNÉ AU 4e ESSAI — **Johan Verheyden** (FR, tutoiement, fil actif, **SANS CTA**, hors quota froid)
+
+**Fil relu intégralement (§4)**, 20 messages depuis le 17/08 dans la fenêtre affichée, **recopié verbatim** dans `tmp/thread-johan-17h.txt` (10 252 caractères) pour le contrôle mécanique.
+
+**Ses deux messages du jour**, verbatim, en réponse à celui de David de 15:37 :
+
+> **16:02** — Sur les trous… j'estime en fait la probabilité de la distribution mais en pratique j'utilise l'interpolation (linéaire) selon la distribution connue des données contiguës car il s'agit de petites intervalles.
+> Mais donc d'ou la statistique bayesienne devient importante afin de tenir compte des incertitudes
+
+> **16:09** — Il faut que je te donne un cours de stat il me semble 🤣
+
+**CTA : volontairement absent à tous les essais**, conformément au traitement constant de ce fil. Vérification anti-répétition faite à l'écran sur les 10 766 caractères du fil rendu : **0 occurrence de « healthwatch », 0 lien, 0 mention d'essai**. Johan est déjà utilisateur Pro, il n'y a pas lieu de commencer.
+
+**QA : quatre essais, deux angles, deux passages au relecteur, abandon.**
+
+1. **Essai 1 — mécanique FAIL (`ngram.history`).** Le brouillon reprenait « *Un 85 suivi d'un 89* », phrase que David avait **lui-même écrite dans ce fil** le 18/08, plus « *de la cadence de publication* ». Corrigé.
+2. **Essai 2 — mécanique PASS → relecteur REECRIRE (11).** Trois clauses nommées : le verbe « **hériter** » (« *il hérite du trou qu'il sert à combler* »), moule retrouvé **11 fois** dans des corps de message réellement envoyés ; l'amorce « **Ce qui me gêne, c'est que** », déjà servie, et dont un précédent portait **le même arc complet** (amorce + objection + question déléguant à la pratique du destinataire) ; et le rappel « *je t'ai dit tout à l'heure que je pouvais rater quelque chose* », qui rejouait **à un message d'intervalle** l'aveu d'angle mort déjà posé à 15:37.
+3. **Essai 3 — les trois clauses corrigées, mécanique PASS → relecteur REECRIRE (6, 11).** ⭐ **Le rejet sur la question 6 est juste et instructif** : la correction avait retiré l'aveu d'angle mort **et tout le hedging avec**, laissant « *Ce rythme, tu le tires des documents qui restent* » à l'indicatif, c'est-à-dire une affirmation sur la pratique de Johan qu'il n'a jamais formulée. Il aurait pu la démentir en une ligne et faire tomber le paragraphe entier. Sur la 11, la correction avait troqué un moule contre un autre : « *ce sont eux qui portent le trou* » (la clef « qui porte » est plus dense au corpus que « hériter »), plus l'antithèse « *X, pas Y* » servie **trois fois en deux messages consécutifs**, deux dislocations à gauche, et la concession-pivot rejouant celle de 15:37.
+4. **Essai 4 — réécriture depuis zéro par un rédacteur au contexte neuf**, qui n'a reçu ni les brouillons rejetés ni mon raisonnement, seulement le fil, le profil, les contraintes et la liste des figures brûlées. Angle neuf et meilleur : reprendre **la seconde phrase de Johan sur le bayésien, restée sans réponse**, pour distinguer l'incertitude d'échantillonnage, qu'un intervalle de crédibilité absorbe, de l'incertitude sur la largeur de la fenêtre fusionnée, qui n'entre dans le modèle que si elle y figure comme quantité variable. **Contrôle mécanique : `ABANDON`.**
+
+**QA: ABANDON après 4 essais | motifs: relecteur REECRIRE (11) puis (6,11), puis contrôle mécanique ngram.history au 4e | rien envoyé ni mis en file sur ce fil ce run**
+
+⚠️ **Le blocage terminal est un faux positif structurel.** La séquence bloquée est « **l'incertitude sur la fenêtre** » : c'est **l'objet même de la conversation**, et elle vient du message que David a envoyé **dans ce fil** deux heures plus tôt, archivé ici, donc vu par le contrôle comme une formule maison recyclée. Le script ne distingue pas un gabarit servi d'un destinataire à l'autre d'un **terme technique repris dans le fil où il a été forgé**. Correctif proposé, à trancher hors routine : exempter du n-gramme les séquences présentes dans le `threadFile` fourni au contrôle, exactement comme les chiffres du fil le sont déjà (`facts.from-thread`). Voir `content-log.md`, section « Défauts d'outillage ».
+
+**Texte au moment de l'abandon**, conservé pour que David puisse répondre lui-même s'il le souhaite, ou pour une reprise avec compteur remis à zéro :
+
+> C'est ta seconde phrase qui me retient, celle sur le bayésien. Elle fait un travail différent de l'interpolation, et je ne suis pas sûr qu'elle couvre l'endroit où je bute.
+>
+> Un intervalle de crédibilité absorbe sans peine l'incertitude d'échantillonnage. Pour qu'il absorbe aussi l'incertitude sur la fenêtre fusionnée, il faudrait que la largeur de cette fenêtre existe dans le modèle comme une quantité qui peut varier, avec sa propre loi. Si ton prior se construit à partir des sitreps disponibles, et dis-moi si je me trompe là-dessus, ces documents ne déclarent nulle part la largeur en question, et le calcul répartit alors très proprement l'incertitude à l'intérieur d'une durée qu'il n'a aucune raison de mettre en doute.
+>
+> D'où ma question, et c'en est vraiment une : dans ta chaîne, qu'est-ce qui autorise cette largeur à varier ? Je prends le cours de stats volontiers, en commençant par cette ligne.
+
+⚠️ **Ce texte n'a PAS été relu par le relecteur indépendant** (le contrôle mécanique l'a arrêté avant), et il n'est **pas** en file de validation : c'est un abandon, pas une mise en attente. Ne pas le confondre avec les deux DM de la file.
+
+---
+
+### ❌ NOTE DE CONNEXION ABANDONNÉE APRÈS 4 ESSAIS — **Alieu Sowe, PhD** (EN) — carry-over #4 de 13h
+
+*Epidemiology | Monitoring & Evaluation | Vaccination Programs | Disease Surveillance | Health Security | Program Management*, **Director a.i., Directorate of Planning and Information, Ministry of Health — The Gambia**. 2e degré, 1 681 abonnés, 14 relations en commun dont Lorenzo Pezzoli. Cible décideur.
+
+**Le hook trouvé et vérifié à 13h a bien été utilisé** : le titre exact de sa thèse, « *Closing the vaccination gap: actionable targets and impact of interventions to improve coverage and urban-rural equity in the Gambia* ». **L'invitation n'a pas été envoyée** ; quota connexions **0/7**.
+
+**QA : quatre angles distincts, quatre rejets du relecteur, aucun sur le même motif.**
+
+1. **Essai 1** (« *Now that planning sits in your directorate, do those targets survive the move?* ») — **REECRIRE (6, 9, 11)** : présentait comme acquis un poste affiché **a.i.**, posait une chronologie thèse → nomination absente du profil, invitait un directeur ministériel à juger publiquement l'application de ses propres cibles, et rejouait deux formes déjà servies à d'autres destinataires (« *survive that move* » chez Guya Noel, « *maintenant que vous décidez* » chez Andrea Bernasconi).
+2. **Essai 2** (accroche par le mot « *actionable* ») — **REECRIRE (5, 9, 11, 12)** : « *coverage targets* » amputait la moitié équité du titre et employait un terme qu'il n'utilise pas ; « *a strong word in that literature* » portait un jugement sur son champ ; la figure « le mot X, mot fort » avait déjà été servie le 03/08 ; et la question était définitionnelle, donc un compliment suivi d'une curiosité.
+3. **Essai 3 — réécriture depuis zéro par un rédacteur au contexte neuf** (tension actionnable / désagrégé) — **REECRIRE (4, 5, 9, 11, 12)**. ⭐ **Le rejet le plus important du run** : le brouillon affirmait « *The numbers I read stay national* ». **C'est faux.** Le relecteur est allé vérifier **en base** : **7 lignes actives sur 104 portent un `admin1` réel** (Canada/Manitoba, Pérou/Puno, États-Unis/Texas, Idaho, Utah, Samoa, Vanuatu/Shefa), et le registre porte en outre des lignes supranationales (« Global », « EU/EEA »). Une affirmation produit fausse, adressée à un spécialiste de la couverture vaccinale, aurait été envoyée sans lui. Il a aussi retrouvé qu'un énoncé du même type avait **déjà été recalé au double-check le 01/08**.
+4. **Essai 4** (question de méthode sur la règle de classement urbain/rural) — mécanique PASS → **REECRIRE (9, 11, 12)**, les trois portés par la même phrase, « *I have never seen that rule spelled out anywhere* » : elle transforme une question de méthode en verdict implicite sur la validité de sa mesure, et c'est un gabarit maison retrouvé **7 fois** (« *written down anywhere* », « *documented anywhere* », « *stated anywhere* »), doublé d'une famille jumelle d'auto-positionnement à 8 occurrences.
+
+**QA: ABANDON après 4 essais | motifs: relecteur REECRIRE (6,9,11) puis (5,9,11,12) puis (4,5,9,11,12) puis (9,11,12) | aucune invitation envoyée à ce profil ce run**
+
+⚠️ **Six angles morts documentés sur ce seul profil** en trois jours (2 formes brûlées les 24 et 25/08 au matin, 4 aujourd'hui). **À trancher par David plutôt qu'à retenter mécaniquement demain** : soit envoyer l'invitation **sans note** — l'autorisation permanente du 23/07 le permet et la note n'est pas obligatoire —, soit laisser ce profil de côté. Une 5e session de rédaction présenterait le même profil de risque que les quatre précédentes.
+
+---
+
+### 3️⃣ NOUVEAUX ABONNÉS — aucun, aucun follow-back exécuté
+
+Page « Abonnés » relevée : **377 personnes**, chiffre **identique aux relevés de 9h et de 13h**. Tête de liste inchangée (Mosoka Fallah, Bouh Abdi Khaireh, Dihoulne Gagdang, Daisy Kasyoka, Alain BASHIZI, Nebiyu Dereje), tous déjà « Suivi ». **Le seul profil non suivi en retour reste Dr. Jibran Khan**, écarté pour pertinence le 24/08 et **non rouvert** conformément à la consigne.
+
+Quota suivis inchangé à **7/7-10**. La marge de 3 n'a pas été consommée : le temps de dispositif a été absorbé par les trois boucles QA. **Choix assumé et signalé**, comme à 13h.
+
+---
+
+### 4️⃣ INVITATIONS REÇUES — 3, inchangées, aucune acceptée
+
+Gestionnaire relu : **« Tout (3) »**, exactement les mêmes qu'à 9h et 13h.
+
+1. 🛑 **Alain BASHIZI** (*Investigative Journalist*), note « Bonjour cher David ». **Non acceptée**, le dossier attend l'arbitrage de David. **Aucun nouveau passage sur le profil de David relevé ce créneau** (le 4e passage signalé à 13h reste le dernier).
+2. **Zachariah G. Houdari** (*Senior Licensed Life Insurance Advisor*) — hors sujet, laissée en attente.
+3. **OLAOLUWA PHILIP (BSc, MSc)** (*GIScientist, Climate Action Advocate*) — profil non rouvert, en attente de l'arbitrage de David.
+
+---
+
 ## 📅 Session linkedin-hwg-followup-check — 25/08/2026 (13h, 1er des 2 créneaux après-midi)
 
 **Vérification double déclenchement** : aucune entrée `linkedin-hwg-followup-check` datée du 25/08 dans ce fichier ni dans `content-log.md` à l'ouverture. Les entrées du jour appartiennent à `linkedin-hwg-monitoring` (9h) et à la reprise interactive avec David → **premier déclenchement de cette routine aujourd'hui**.

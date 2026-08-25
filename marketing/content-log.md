@@ -2,6 +2,136 @@
 
 Archive de tout le contenu créé. Mise à jour à chaque session.
 
+## 📅 Session linkedin-hwg-followup-check-2 — 25/08/2026 (17h, 2e des 2 créneaux après-midi)
+
+**Vérification double déclenchement** : aucune entrée `linkedin-hwg-followup-check-2` datée du 25/08 dans ce fichier ni dans `linkedin-contacts.md` à l'ouverture. Les entrées du jour appartiennent à `linkedin-hwg-monitoring` (9h), à `linkedin-hwg-followup-check` (13h) et à la reprise interactive de David → **premier déclenchement de cette routine aujourd'hui**.
+
+**Registre de faits régénéré en début de run** (`npm run qa:facts`) : **227 faits citables sur 109 lignes affichées**, 81 lignes `is_seed` exclues, **53 faits périmés**. ⚠️ **Alerte de fraîcheur inchangée, 5e jour consécutif** : Shigellosis / EU-EEA **54 j**, Diphtheria / 8 pays **40 j**, Meningitis / 4 pays **33 j**. Aucun texte publié ce run, donc aucun chiffre sorti.
+
+**🖥️ Navigateur** : `_shared/browser-status.md` lu avant ouverture, dernière entrée = **🟢 RÉTABLI le 24/08 ~09h15** → aucun bridage. `23c7ecdd-…` seul listé, sélectionné sans question (§7). Rien de neuf à y écrire.
+
+⚠️ **Anomalie JS asynchrone : PRÉSENTE ce créneau, une fois.** Le premier test (`(async () => 42)()`) a bien renvoyé `[object Promise]` sur le fil d'actualité, mais un appel asynchrone avec attente échelonnée sur la messagerie filtrée a renvoyé `{}`. Le même relevé refait en JS synchrone a fonctionné immédiatement. **Le créneau de 13h en était exempt ; celui-ci ne l'est que partiellement.** Session menée en JS synchrone à partir de là, sans autre incident. Le filtre `[BLOCKED: Cookie/query string data]` s'est déclenché une fois, sur un `href` de notification, sans conséquence (le lien a été retrouvé par la page d'activité du profil).
+
+---
+
+### ❌ TROIS TEXTES MENÉS DANS LE DISPOSITIF, TROIS ABANDONS, AUCUNE PUBLICATION
+
+**C'est le fait marquant du run, et il n'est pas dû à une pénurie de candidats.** Les trois textes portaient sur des cibles réelles et vérifiées : une réponse de fond à un interlocuteur qui venait d'écrire deux fois, un commentaire sous le post d'un décideur du ministère de la Santé de RDC publié une heure plus tôt, et la note de connexion en carry-over depuis deux jours. Aucun n'est sorti.
+
+**Détail des trois boucles dans `linkedin-contacts.md`** (section DM pour Johan Verheyden, section connexions pour Alieu Sowe) et ci-dessous pour le commentaire.
+
+---
+
+### ❌ COMMENTAIRE ABANDONNÉ AU 4e ESSAI — **John Samuel Otomba, MD, MPH** (EN, 1er degré, MoH RDC)
+
+**Le meilleur candidat du run.** `/in/john-samuel-otomba-md-mph-421236244/`, *Senior Immunization Specialist | Immunization Systems & Epidemiology | EPI • Zero-Dose • IA2030 • Outbreak Response | UNICEF • Gavi • WHO • CDC | MoH DRC & SPH Kinshasa*, compte vérifié, **relation de 1er degré depuis le 11/07**. **Aucun commentaire jamais posté sous ses posts** (0 occurrence dans `content-log.md`) → aucun blocage hebdomadaire.
+
+**Post ciblé** : `urn:li:activity:7498015334537342976`, publié **1 h avant l'ouverture** (fenêtre 48 h largement respectée), **0 commentaire** à l'ouverture, 1 réaction. Repéré en notifications. Fil recopié verbatim dans `tmp/thread-otomba.txt`.
+
+**Ce que dit le post** : campagne intégrée Rougeole-Rubéole et Polio au Kasaï Central, de la planification nationale au poste de commandement puis à la supervision de terrain ; « *exceptionally high demand for vaccination services* » observée en zones urbaine et rurale ; « *over 98% administrative coverage for all three antigens, MR, bOPV and nOPV* ».
+
+**QA : quatre angles, quatre échecs.**
+
+1. **Essai 1 — angle arithmétique, mécanique PASS → relecteur REECRIRE (5, 11).** ⭐ **Le rejet le plus instructif du run, et il porte sur une erreur de fond que je n'avais pas vue.** Le brouillon déduisait de « les trois antigènes dépassent 98 % » que l'écart entre eux est borné par moins de 2 points, et donc que le refus propre à un antigène l'est aussi. **Les deux pas sont faux.** La couverture *administrative* est un rapport doses administrées / population cible **estimée** : elle n'est pas plafonnée à 100 %, donc « plus de 98 % » ne borne rien. Et même sous un plafond à 100 %, deux refus de sens opposés se compensent et laissent un écart nul pour un refus réel non nul. Le relecteur a aussi relevé que le brouillon requalifiait bOPV et nOPV en « *the two polio doses* », alors que ce sont deux vaccins de composition différente, ce qu'un spécialiste EPI voit immédiatement.
+2. **Essai 2 — réécriture depuis zéro sur l'angle demande/logistique, mécanique FAIL (`ngram.history`) puis PASS après correction d'une seule formule.**
+3. **Essai 3 — même angle, mécanique PASS → relecteur REECRIRE (5, 7, 9, 11, 12), cinq questions en échec.** (a) La question posée présupposait que la campagne consommait plus vite que la prévision, mot qui n'existe nulle part dans le post, donc une prémisse fabriquée renvoyée au destinataire comme s'il l'avait écrite. (b) L'ouverture louait la rareté de son poste d'observation, ce qui lui avait **déjà été servi deux fois**, dans la note de connexion du 11/07 et dans le DM du 13/07. (c) « *the campaign looks complete from each of them* » porte l'implicature « sans l'être », sous un post dont l'affirmation centrale est le taux de couverture. (d) Le moule d'ouverture « *[assemblage rare] : a, b, c. Most people…* » a été retrouvé **quatre fois** au corpus, dont un jumeau structurel exact du 14/07.
+4. **Essai 4 — réécriture depuis zéro par un rédacteur au contexte neuf, sur un angle de délai de surveillance, appuyé sur le seul chiffre polio RDC citable du registre. Mécanique `ABANDON`.**
+
+**QA: ABANDON après 4 essais | motifs: relecteur REECRIRE (5,11) puis (5,7,9,11,12), puis contrôle mécanique ngram.history au 4e | rien publié sous ce post ce run**
+
+**⚠️ Le blocage terminal est un faux positif structurel, et il faut le lire attentivement.** L'essai 4 citait le chiffre du registre comme la règle l'exige, **avec sa date et sa source** : « *32 cases, data as of 18 August 2026, in the GPEI Global Polio Update* ». Le contrôle a bloqué sur deux séquences de 5 mots, « **as of 18 august 2026** » et « **the gpei global polio update** ». Ce sont la **datation obligatoire** et le **nom de la source**. Autrement dit : la façon canonique de sourcer un chiffre devient elle-même un gabarit dès qu'on a sourcé deux fois le même chiffre. Un troisième message citant ce chiffre correctement sera bloqué à l'identique. **À trancher hors routine** : exempter du contrôle anti-gabarit les segments reconnus comme citation de source ou datation (`as of <date>`, nom de bulletin), sans quoi la règle du registre et la règle anti-gabarit se contredisent mécaniquement.
+
+**Texte au moment de l'abandon**, conservé pour une éventuelle reprise avec compteur remis à zéro :
+
+> Kasai Central ran bOPV and nOPV in the same campaign. The polio figure carried publicly for DR Congo is a national one: 32 cases, data as of 18 August 2026, in the GPEI Global Polio Update. A single provincial round does not show up in a number like that on its own.
+>
+> Published bulletins do not answer the timing, though. How long after a round like this would you expect any movement in a national case count, and what would you be watching in the meantime, closer to the sites?
+
+**Contrainte cumulative pour une reprise, à ne pas redécouvrir** : ne pas ouvrir sur la valeur de son poste d'observation (servi le 11/07 et le 13/07) ; ne rien présupposer sur prévision, coût, stock ou approvisionnement, le post n'en dit rien ; ne pas employer « *looks complete* » ni aucune tournure dont l'implicature vise la complétude rapportée ; et le matériau le plus prometteur non encore exploité est le contraste **urbain/rural** qu'il signale lui-même sans l'exploiter.
+
+---
+
+### 🔁 RETOMBÉES DES ACTIONS PRÉCÉDENTES DU JOUR
+
+**Commentaire 2/7 de 13h (réponse à Martin Yakum)** : publié, visible, **32 impressions** sur le sous-fil à ce créneau, **aucune réaction et aucune nouvelle réponse de Martin** à 4 h d'intervalle. Son post principal est à **343 impressions** (341 à 13h). Rien à faire.
+
+**Commentaire 1/7 du matin** : c'est lui qui a produit la réponse nominative de Martin Yakum traitée à 13h. Pas de suite nouvelle.
+
+**DM Patrick AYONGA envoyé ce matin à 11:43** : toujours **sans réponse** à 17h. Ne pas relancer.
+
+**DM Johan Verheyden envoyé par David à 15:37** : ⭐ **il a répondu deux fois, à 16:02 et 16:09.** Voir `linkedin-contacts.md`.
+
+---
+
+### 📌 Veille — éléments notés pour de futurs posts, aucune prise de parole
+
+1. ⭐ **Angle de post original, tiré du post d'Otomba** (non commenté, mais la matière reste bonne) : une campagne intégrée délivre plusieurs antigènes dans la même visite, et la couverture est publiée **antigène par antigène**. Ce que ce découpage ne dit pas, c'est si l'unité réelle était la visite ou le vaccin. **Non rédigé ici, hors périmètre**, et à écrire sans citer Otomba ni lui attribuer quoi que ce soit.
+2. 🔴 **Rappel de la lacune de couverture signalée à 13h, toujours à transmettre à `morning-don-check`** : **flambée de dengue déclarée aux Îles Marshall** (post de Robert Herriman, désormais à 2 h), alors que le registre porte 65 faits dengue et **aucune ligne Îles Marshall**. Aucune écriture faite depuis un post LinkedIn, source primaire à vérifier d'abord.
+3. **Chiffre polio RDC vérifié au registre et non utilisé** : 32 cas, données arrêtées au **18 août 2026**, source GPEI *Global Polio Update*, ligne fraîche (2 j). Utile à un futur texte, il est le seul chiffre polio RDC citable.
+4. 🛑 **#RC76AFRO, silence maintenu, 3e jour.** Direct de Tedros Adhanom Ghebreyesus et page WHO AFRO toujours en tête de notifications. Marqués §9/§10 comme les deux jours précédents, retenus **uniquement comme repère de calendrier** : source probable de chiffres officiels dans les prochains jours.
+5. **Jill Weatherhead** (Baylor, National School of Tropical Medicine) publie un rappel de clôture des candidatures au Diploma of Tropical Medicine (post de 11 min). **Écarté comme candidat commentaire** : annonce de calendrier de formation, sans matière analytique.
+6. **Lorenzo Subissi** (relais d'appel à candidatures TAG) : écarté à 13h pour absence de matière analytique, **décision maintenue**, profil non rouvert.
+7. **Statistiques relevées en passant** : **325 vues de profil** (324 à 13h), **343 impressions** sur le post de Martin Yakum, notification « 487 impressions la semaine passée » inchangée.
+
+---
+
+### 📋 Relevé QA du run
+
+**3 textes menés dans le dispositif : 0 publié, 0 mis en file, 3 abandonnés. 11 essais au contrôle mécanique, 6 passages au relecteur.**
+
+| Message | Canal | Mécanique | Relecteur | Issue |
+|---|---|---|---|---|
+| **Johan Verheyden** | DM, fil actif | FAIL 1 → PASS 2 → PASS 3 → **ABANDON 4** | REECRIRE (11) → REECRIRE (6, 11) | ❌ **ABANDON** |
+| **John Samuel Otomba** | commentaire | PASS 1 → FAIL 2 → PASS 3 → **ABANDON 4** | REECRIRE (5, 11) → REECRIRE (5, 7, 9, 11, 12) | ❌ **ABANDON** |
+| **Alieu Sowe** | note de connexion | FAIL 1 → PASS 2 → PASS 3 → PASS 4 | REECRIRE (6, 9, 11) → REECRIRE (5, 9, 11, 12) → REECRIRE (4, 5, 9, 11, 12) → REECRIRE (9, 11, 12) | ❌ **ABANDON après 4 essais** |
+
+**⭐ Ce que le dispositif a réellement attrapé aujourd'hui, et que personne d'autre n'aurait attrapé.** Trois défauts de fond, aucun visible à la machine :
+- une **erreur arithmétique** sur la couverture administrative, qui aurait été publiée sous le post d'un spécialiste de la vaccination (commentaire Otomba, essai 1) ;
+- une **affirmation produit fausse** : « *The numbers I read stay national* », alors que **7 lignes actives sur 104 portent un `admin1`** (note Alieu, essai 3). Le relecteur est allé le vérifier **en base**, pas dans sa mémoire ;
+- une **prémisse fabriquée** renvoyée au destinataire comme s'il l'avait écrite (commentaire Otomba, essai 3).
+
+⚠️ **Et ce que ce relevé dit du dispositif, deuxième jour de suite.** Le contrôle mécanique a rendu **8 PASS sur 11 essais**, et n'a jamais vu aucun des trois défauts ci-dessus. Le relecteur a rejeté **6 fois sur 6 passages**, la question 11 (gabarit) figurant dans les 6. Le constat de 13h se confirme et se durcit : **le défaut s'est entièrement déplacé vers l'étage que la machine ne voit pas.**
+
+⚠️ **Mais le relevé dit aussi autre chose, qu'il faut regarder en face : deux des trois abandons ont été prononcés par le contrôle mécanique sur des faux positifs, pas par le relecteur sur le fond.** Voir la section suivante. Sans ces deux blocages, un DM et un commentaire auraient au minimum eu droit à un 4e passage au relecteur.
+
+---
+
+### 🔧 Défauts d'outillage relevés — 2 nouveaux, tous deux terminaux
+
+**Aucune modification de `lexicon.json` ni d'aucun script n'a été faite en cours de run** (règle de périmètre). Constats à trancher hors routine.
+
+**1. 🔴 Le contrôle anti-gabarit bloque la citation de source normalisée.** Détail complet ci-dessus (commentaire Otomba). En résumé : la règle du registre impose de citer un chiffre avec sa date et sa source ; le contrôle anti-gabarit compte cette datation et ce nom de source comme des séquences de 5 mots déjà servies. Les deux règles se contredisent, et la contradiction est **terminale** puisqu'elle est tombée au 4e essai. Correctif proposé : exempter du n-gramme les segments reconnus comme datation (`as of <date>`, `au <date>`) et comme nom de source du registre.
+
+**2. 🔴 Le contrôle anti-gabarit bloque le vocabulaire technique du fil lui-même.** Le DM Johan a été abandonné au 4e essai sur la séquence « **l'incertitude sur la fenêtre** », qui est **l'objet même de la conversation** et vient d'un message que David a envoyé **dans ce fil** deux heures plus tôt. Le contrôle compare aux archives, où ce message figure ; il ne distingue pas « formule maison recyclée d'un destinataire à l'autre » de « terme technique repris dans le fil où il a été forgé ». C'est une variante du défaut déjà consigné le 24/08 (« un brouillon archivé en attente entre en collision avec sa propre copie »). Correctif proposé : ne pas compter comme reprise une séquence qui figure **dans le fil verbatim fourni au contrôle**, exactement comme les chiffres du fil sont déjà exemptés (`facts.from-thread`).
+
+**3. 🟡 Confirmation, pas nouveau** : le champ `threadFile` d'une note à froid n'est pas un fil mais une fiche de profil ; rédigée en français pour un profil anglophone, elle a fait échouer l'essai 1 sur `context.language` (« fil = fr, brouillon = en »). **C'est une erreur de ma rédaction du contexte, pas du script** : la fiche a été réécrite en anglais, langue réelle du matériau, et le contrôle est passé. Même classe que le faux positif `lastOutboundDate` du 24/08. Une ligne dans `docs/outreach-qa.md` disant que `threadFile` doit être dans la langue du destinataire éviterait de le redécouvrir.
+
+---
+
+### 🔁 CARRY-OVER POUR LE CRÉNEAU DE 9h DEMAIN (26/08) — liste exhaustive
+
+1. 🔒 **2 DM en attente de validation de David, inchangés** : **Mosoka Fallah** (mis en file à 13h) et **N'Da Konan Michel Yao** (en file depuis le **11/08 — 15 jours**, *Director at WHO*, le plus ancien du dispositif). **Ne pas les réécrire, ne pas les envoyer** : vérifier seulement si David a tranché.
+2. ⭐🔴 **Johan Verheyden attend une réponse, et le dispositif n'a pas su la produire.** Il a écrit **deux fois** cet après-midi (16:02 sur l'interpolation linéaire et le bayésien, 16:09 « il faut que je te donne un cours de stat il me semble 🤣 »), en réponse au DM que David a envoyé lui-même à 15:37. **Quatre essais, deux passages au relecteur, abandon.** C'est notre lecteur le plus engagé et un utilisateur Pro réel : si David veut répondre lui-même, c'est le fil à ouvrir en premier. Matière disponible et non contestée pour une reprise : sa 2e phrase sur le bayésien **n'a reçu aucune réponse** à ce jour.
+3. ❌ **John Samuel Otomba** : commentaire **abandonné au 4e essai**, contraintes cumulatives listées plus haut, angle urbain/rural encore libre. Post du 25/08 à 1 h au moment du run, **fenêtre 48 h encore ouverte demain matin**. Reprise possible avec compteur remis à zéro.
+4. ❌ **Alieu Sowe** : note de connexion **abandonnée après 4 essais et 4 angles distincts**, en plus des 2 formes déjà brûlées les 24 et 25/08. **Six angles morts documentés sur ce seul profil.** L'invitation n'est toujours pas partie, quota connexions **0/7**. ⚠️ **À trancher par David plutôt qu'à retenter mécaniquement demain** : soit envoyer l'invitation **sans note** (autorisation permanente du 23/07, la note n'est pas obligatoire), soit laisser le profil de côté. Une 5e session de rédaction sur le même profil aurait le même profil de risque que les quatre précédentes.
+5. 🛑 **Bouh Abdi Khaireh** : message de bienvenue **toujours non rédigé**, carry-over #3 de 13h **non traité ce run** (temps de dispositif consommé par les trois boucles). Hook toujours non vérifiable, §10 s'applique : il faut un élément neuf, pas une nouvelle tentative sur le même matériau.
+6. ⏳ **Prof. Jérôme Salomon** : commentaire **bloqué jusqu'au 26/08**, angle arithmétique prêt (URN `7497662922005958656`). **Le blocage tombe demain matin** : candidat prioritaire pour le créneau de 9h.
+7. ❌ **Anuradha Gupta** (`/in/anuradha-gupta-sabin/`) : commentaire abandonné à 13h, §1 et §2 validés et conservés dans ce fichier, contrainte de clôture documentée. **Part 3 de sa série annoncée pour mardi 01/09.**
+8. 🔴 **§8 — lacune de couverture à transmettre à `morning-don-check`** : dengue aux **Îles Marshall**, aucune ligne au registre. Source primaire à vérifier avant toute écriture.
+9. 🛑 **Alain BASHIZI** : toujours en attente de la décision de David, invitation reçue non acceptée, sollicitation personnelle non traitée. **Aucun nouveau passage sur le profil de David relevé ce créneau.** Ne pas répondre, ne pas relancer.
+10. **2 autres invitations reçues laissées en attente, inchangées** : **Zachariah G. Houdari** (hors sujet) et **OLAOLUWA PHILIP** (12e passage, profil non rouvert).
+11. **3 invitations envoyées toujours sans réponse** : Ihekweazu, SAIDOUNI, Linda Esso (envoyées le 24/08). **265 relations, chiffre identique à 9h et 13h.**
+12. **Blocages hebdomadaires de commentaire en cours** : Melvin Sanicas, Robert Herriman, Patrick AYONGA, Ifedayo Adetifa, page ECDC, Oliver Morgan, Dr Fabrice KHADDY (jusqu'au 30/08) ; Apoorva Wasnik et Johan Verheyden (jusqu'au 29/08) ; **Prof. Jérôme Salomon jusqu'au 26/08** ; **Martin Yakum jusqu'au 01/09**. **Aucun blocage nouveau créé ce créneau, puisque rien n'a été publié.**
+13. 🛑 **Écartés du jour, ne pas reproposer sans élément neuf** : **Jill Weatherhead** (annonce de formation, sans matière analytique) ; **Lorenzo Subissi** (relais d'appel à candidatures) ; **Ahmed Ogwell OUMA**, **Ibrahima Socé Fall**, **Tedros Adhanom Ghebreyesus** et la page **WHO AFRO** (terrain politique) ; **Idrissa Sow** (pas de posts récents) ; **Dr. Jibran Khan**, seul abonné non suivi en retour, profil non rouvert conformément à la consigne.
+14. 🟡 **Homonymies de dirigeants d'agences nationales, toujours sans arbitrage de David** : Jean-Jacques Muyembe (**10e jour**) et Jide Idris.
+15. **Carry-overs permanents inchangés, non revérifiés ce run** : Kaushal Sharma, Barrè Onivogui, Andrea Bernasconi, Lorenzo Pezzoli, Mohamed Ousmane COULIBALY. **Pierre PARNEIX** : « 👍 » sans fond, aucune réponse due. **Chinasaokwu Nweke** : fil clos le 23/08. **Dorine Ngono** : message de bienvenue déjà envoyé le 21/08, **ne rien lui envoyer**.
+16. **Écartés définitifs, ne pas réévaluer** : Michelle Jones, Jane Hedger, GEOMAP PRO, Julia Gal, Daisy Kasyoka.
+17. 🔧 **Notes techniques navigateur** : anomalie JS asynchrone **présente une fois** ce créneau (repli synchrone efficace) ; liste de conversations **virtualisée**, seul `computer{action:"scroll"}` l'hydrate ; le bouton « Répondre » d'un commentaire porte `aria-label` sans texte, celui de soumission le contraire.
+18. **Quotas à la clôture de ce créneau, inchangés depuis 13h** : commentaires **2/7** ; **connexions envoyées 0/7** ; **suivis 7/7-10** (aucun nouvel abonné, 377 abonnés, chiffre identique à 9h et 13h) ; **DM à froid 0/8**. **Aucun quota n'a été le facteur limitant : rien n'a été bloqué faute de marge, tout l'a été par le dispositif QA.**
+19. ⚠️ **Deux fichiers modifiés dans l'arbre de travail n'appartiennent pas à cette routine et n'ont pas été touchés** (`AGENTS.md`) : `marketing/qa/product-claims.manual.json` et `scripts/check-migrations-applied.mjs`, plus `marketing/prospection-2026-08-23.pdf` non suivi. Laissés tels quels.
+
+---
+
 ## 📅 Session linkedin-hwg-followup-check — 25/08/2026 (13h, 1er des 2 créneaux après-midi)
 
 **Vérification double déclenchement** : aucune entrée `linkedin-hwg-followup-check` datée du 25/08 dans ce fichier ni dans `linkedin-contacts.md` à l'ouverture. La seule entrée du jour appartient à `linkedin-hwg-monitoring` (9h) et à sa reprise interactive avec David → **premier déclenchement de cette routine aujourd'hui**.
