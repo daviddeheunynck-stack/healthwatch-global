@@ -2226,3 +2226,100 @@ Les 13 autres reprennent mot pour mot leur question d'origine, avec son destinat
 **Prochains lots, calendrier d'étalement mis à jour :**
 - **26/08** → **reste du lot du 04/08 recréé** (4 : NCDC Inde, PHF Science NZ, FHI Norvège, Folkhälsomyndigheten, J+11) **+ lot du 15/08** (10 moins les bounces ISED et MBDS, soit **8**, J+11) = **12**, sous réserve du frein de file
 - **27/08** → lot du **06/08 recréé** (10 moins HZJZ verrouillé, soit **9**) + lot du **17/08** (10, rendez-vous Variante A EAC / IGAD / SADC / AFROHUN / EUPHA) = **19**
+
+---
+
+## 📇 Nouveaux contacts trouvés — 2026-08-26, run automatique `daily-institutional-prospecting-healthwatch`
+
+**10 contacts neufs, 10 brouillons créés entre 06:21:15 et 06:21:47 UTC, aucun envoyé.**
+
+### 🚦 Frein de file — non déclenché, la file s'est vidée
+
+`list_drafts` appelé **deux fois au démarrage** (métadonnées puis vue complète, conformément à la consigne du 16/08 sur l'instabilité de l'outil) : **1 seul brouillon en file**, et c'est une **réponse personnelle de David à l'Institut Pasteur du Maroc** (`jalal.nourlil@pasteur.ma`), étrangère à cette routine. File de prospection : **0**.
+
+**Les 25 brouillons de la veille sont partis — envoi par David, pas le bug du connecteur.** Discriminant du 16/08 appliqué, `search_threads in:sent` sur 2 jours :
+
+| | Constat |
+|---|---|
+| **Écart création → envoi** | Relances créées le 25/08 à **06:24** UTC, envoyées à partir de **10:32:37** — près de **4 heures**, pas la même seconde |
+| **Portée** | **Le lot entier** (15 relances de 10:32:37 à 10:33:30, puis les 10 de prospection de 10:34:35 à 10:36:46), dans un ordre de relecture continu |
+
+➡️ **Relecture humaine, aucune escalade** — ni commit d'alerte, ni notification, ni mention d'incident. La règle « ne jamais envoyer » contraint l'agent, pas David.
+
+### ✅ Les 10 contacts
+
+| Institution | Pays/Région | Segment | Contact | Email | Source | Vérifié | Brouillon |
+|---|---|---|---|---|---|---|---|
+| Epidemiology Unit, Ministry of Health | Sri Lanka / SEARO | Gouvernement | — (boîte de l'unité) | `epidunit@sltnet.lk` | `old.epid.gov.lk/web/` | ✅ HTTP 200, en clair, libellée « (Epidemiology Unit) » | oui — `r67684693128365976` |
+| Bureau of Epidemiology, Department of Disease Control | Thaïlande / SEARO | Gouvernement | — | `boe.moph@gmail.com` | `apps-doe.moph.go.th/boeeng/about_us.php` | ✅ HTTP 200, **seule** adresse publiée par l'unité sur son domaine officiel | oui — `r-4703578839721708639` |
+| Ministry of Health — County Medical Officer of Health, St George West (Port of Spain) | Trinité-et-Tobago / AMRO | Gouvernement | — | `cmoh-stgeorgewest@health.gov.tt` | `health.gov.tt/contact-us` | ✅ HTTP 200, en clair avec adresse postale et téléphone | oui — `r-2209047054642851506` |
+| VvE — Vereniging voor Epidemiologie | Pays-Bas / EURO | Académique (société savante) | — (secrétariat) | `secretariaat@epidemiologie.nl` | `epidemiologie.nl/contact/` | ✅ HTTP 200, en clair | oui — `r-271614990130835165` |
+| IAKMI — Ikatan Ahli Kesehatan Masyarakat Indonesia | Indonésie / SEARO | Académique (société savante) | — | `ppiakmi@gmail.com` | `iakmi.or.id` | ✅ HTTP 200, **seule** adresse publiée sur le domaine propre | oui — `r-5779551300426789980` |
+| DAHW — Deutsche Lepra- und Tuberkulosehilfe | Allemagne / EURO (programmes AFRO+SEARO) | ONG | — | `info@dahw.de` | `dahw.de/kontakt.html` | ✅ HTTP 200, en clair (revérifiée ce run) | oui — `r3385791652873920210` |
+| NLR International | Pays-Bas / EURO (programmes Asie+Afrique) | ONG | — | `info@nlrinternational.org` | `nlrinternational.org/contact/` | ✅ HTTP 200, en clair | oui — `r2432042535869660835` |
+| OPS/PAHO — Bureau pays Pérou | Pérou / AMRO | Gouvernement/OMS | — | `per@paho.org` | `paho.org/en/paho-country-office-media-contacts` | ✅ page officielle relue **ce run** | oui — `r8528048737256065405` |
+| OPS/PAHO — Bureau pays République dominicaine | Rép. dominicaine / AMRO | Gouvernement/OMS | — | `domcomunicaciones@paho.org` | idem | ✅ page officielle relue **ce run** | oui — `r-6676213372390233079` |
+| The Fred Hollows Foundation | Australie / WPRO (programmes Pacifique+Asie+Afrique) | ONG | — | `fhf@hollows.org` | `hollows.org/au/contact-us` | ✅ HTTP 200, en clair | oui — `r-1093199157183888994` |
+
+### 🔍 Anti-doublon — grep par domaine ET par organisation, contact par contact
+
+Consigne du 23/08 (le cas HZJZ — même organisation, autre boîte — n'est visible que par un grep de domaine). Résultats sur les 2 228 lignes du journal :
+
+| Contact | grep domaine | grep organisation | Verdict |
+|---|---|---|---|
+| Sri Lanka | `sltnet.lk` → **1** | `Epidemiology Unit` → 3 | ⚠️ **levé après lecture** : l'occurrence est `chepid@sltnet.lk` en **liste des non-retenus du 03/08** (« vu en recherche, epid.gov.lk et old.epid.gov.lk injoignables »). Aucun brouillon, aucun envoi. Sri Lanka n'était atteint que par l'**académique** (Faculté de médecine de Colombo, `commed@med.cmb.ac.lk`, 09/08) — organisation différente. **Neuf** |
+| Thaïlande | `boe.moph` → **0** | `Bureau of Epidemiology` → 1 (non-retenus du 02/08) | **Neuf** |
+| Trinité-et-Tobago | `health.gov.tt` → **0** | `County Medical Officer` → 0, `Trinidad` → 0 | **Neuf** |
+| VvE | `epidemiologie.nl` → **0** | `Vereniging voor Epidemiologie` → 0 | **Neuf** |
+| IAKMI | `iakmi` → **0** | `Ikatan Ahli Kesehatan` → 0 | **Neuf** |
+| DAHW | `dahw.de` → 2 | `DAHW` → 2 | ⚠️ **levé** : les 2 occurrences sont les **listes de réserve** des 23 et 24/08 (« vérifiée ce run mais écartée sur la géographie, réutilisable telle quelle »). Aucune ligne de tableau. **Neuf** |
+| NLR | `nlrinternational` → **0** | `NLR` → 0 | **Neuf** |
+| PAHO Pérou | `per@paho.org` → 2 | `Bureau pays Pérou` → 0 | ⚠️ **levé** : les 2 occurrences sont les réserves des 22 et 24/08. **Neuf** |
+| PAHO Rép. dom. | `domcomunicaciones` → 2 | — | ⚠️ **levé** : idem, réserves seules. **Neuf** |
+| Fred Hollows | `hollows.org` → **0** | `Hollows` → 2 | ⚠️ **levé** : l'occurrence du 21/08 la classe parmi les ONG « ressorties en adresses masquées Cloudflare », jamais contactée. **Neuf** |
+
+**Vérification LinkedIn** (`linkedin-contacts.md`) : aucune des 10 institutions n'y figure, aucun fil actif concerné.
+
+### 🔓 Trois écarts antérieurs levés — le motif d'exclusion avait disparu, pas la cible
+
+Trois des dix prises sont des cibles **précédemment écartées pour cause technique**, rouvertes parce que la cause a cessé. C'est un gisement distinct de la recherche de cibles neuves :
+
+1. **Epidemiology Unit Sri Lanka** — écartée le 03/08 (`epid.gov.lk` **et** `old.epid.gov.lk` injoignables). `old.epid.gov.lk/web/` répond aujourd'hui **HTTP 200** et publie deux adresses en clair avec leur libellé. Retenue `epidunit@sltnet.lk` (boîte de l'unité) plutôt que `chepid@sltnet.lk` (**Chief Epidemiologist**, boîte nominative de titulaire de poste) — critère du 19/08 : la fonctionnelle existe, elle prime.
+2. **Bureau of Epidemiology Thaïlande** — écarté le 02/08 sur **double motif** : « page officielle injoignable, seule adresse trouvée en `@gmail.com` ». **Les deux motifs sont tombés** : la page officielle répond, et la règle du 25/08 admet une boîte grand public quand (a) elle est publiée sur le domaine officiel de l'institution — ici `apps-doe.moph.go.th`, domaine du DDC — et (b) c'est la seule que l'institution y publie. Les deux conditions sont vérifiées (3 chemins testés). Cas identique à l'INH Togo. *La Thaïlande était « à laisser de côté sauf nouveau signal » (constat du 05/08, 5 échecs) : la page redevenue joignable **est** ce signal.*
+3. **The Fred Hollows Foundation** — écartée le 21/08 (adresses masquées Cloudflare). `hollows.org/au/contact-us` publie aujourd'hui 6 adresses en texte brut ; `fhf@hollows.org` retenue comme boîte générale de la fondation.
+
+### ⚖️ Répartition et plafonds
+
+- **Segments** : Gouvernement/OMS **5** (Sri Lanka, Thaïlande, Trinité, PAHO ×2), Académique/sociétés savantes **2** (VvE, IAKMI), ONG **3** (DAHW, NLR, Fred Hollows). Les trois segments sont servis.
+- **Plafond de concentration par faîtière (règle du 25/08)** : **PAHO à 2 sur 10, soit exactement au plafond, pas au-delà.** Les autres réserves PAHO disponibles (Salvador, Venezuela) ont été **délibérément laissées** plutôt que de porter la faîtière à 4.
+- **Deux organisations néerlandaises** (VvE, société savante académique ; NLR, ONG de terrain en Asie/Afrique) : entités sans lien, le plafond « employeur/faîtière » ne s'applique pas.
+- **Géographie** : SEARO 2, AMRO 3, EURO 3 (dont 2 opérant en AFRO/SEARO), WPRO 1. **Ni EMRO ni AFRO en direct** — voir ci-dessous.
+
+### ❌ Écartés ce run, avec le motif
+
+- **NCDC Géorgie** (3e tentative) — site toujours « en reconstruction », aucune adresse. Seules RocketReach/ZoomInfo en proposent : exclues par les CGU.
+- **EODY Grèce** (3e tentative) — `eody.gov.gr` en **403 y compris avec User-Agent Chrome**. Adresse uniquement en snippet moteur → critère du 18/08, écartée.
+- **Stellenbosch** (Division of Epidemiology and Biostatistics) — `su.ac.za` en **403 avec UA Chrome**, aucune adresse.
+- **MSH** — adresses **masquées par Cloudflare** (`/cdn-cgi/l/email-protection`) sur la page contact officielle : même critère de rejet que NCDC Nigeria le 03/08. `communications@msh.org` n'existe qu'en snippet.
+- **FHI 360** — page contact lue : seules `CareerCenterSupport@`, `webmaster@` et `partneringwithus@` sont publiées. Aucune boîte programme/santé ; les trois sont hors sujet.
+- **NUS Saw Swee Hock SPH** — `sph.nus.edu.sg/sphid/contact-us/` répond 200 mais sert **948 octets de coquille JS** ; `ephbox82@nus.edu.sg` ne vient que du snippet → écartée.
+- **Facultad Nacional de Salud Pública, U. de Antioquia** — adresses **masquées** sur la page officielle ; la seule visible est une boîte d'appels à candidatures de troisième cycle, hors sujet.
+- **PTEZ Pologne** — `ptez.org.pl` publie bien `ptez.kontakt@gmail.com` en clair, mais l'organisation est le **Polskie Towarzystwo Ekonomiki Zdrowia** — société d'**économie** de la santé, **hors profil épidémiologie**. Écartée sur le fond, pas sur la forme.
+- **Namibie MoHSS**, **Guyana MoH**, **MSP Rép. dominicaine**, **MINSAL Salvador**, **NPHC Lituanie**, **CBM**, **END Fund** — connexion refusée, 403 ou aucune adresse publiée.
+- **TEPHINET** (`tephinet@taskforce.org`) — **non retenue volontairement** : le run du 24/08 l'a laissée en réserve avec la mention « **arbitrage à trancher par David** » (doublon de domaine avec le Task Force for Global Health, déjà contacté). En l'absence de tranche, la consigne « en cas de doute, demander avant d'agir » s'applique. **Reste en attente de décision.**
+
+### 📊 Compteurs
+
+**Totaux au 2026-08-26 : 290 contacts prospectés, 280 envoyés.** Les 10 de ce run restent en brouillon. **Profondeur de file : 11 brouillons** (les 10 de ce run + la réponse personnelle de David à l'Institut Pasteur du Maroc, hors périmètre de cette routine).
+
+**Bounces du jour : aucun.** Balayage `from:mailer-daemon` / `postmaster` / `Delivery Status Notification` / `Undeliverable` / `Undelivered Mail` / `Mail delivery failed`, `newer_than:2d`, corbeille incluse : **zéro fil**. Les 10 envois de prospection et les 15 relances partis hier n'ont produit **aucun rejet**. *Bilan cumulé non retotalisé ici — porteur unique `daily-relance-check-healthwatch`, règle du 16/08.*
+
+**Conformité de forme, vérifiée par `list_drafts` en vue complète après création** : les 10 portent `labelIds: ["DRAFT"]`, **aucun n'est passé en `SENT`** (contrôle du bug d'envoi instantané du connecteur : **négatif**). Aucun `htmlBody` fourni ; celui régénéré par Gmail ne contient que `<div dir="auto">` et des `<br/>`, **zéro balise `<a>`**. **Aucun domaine avec un `.` littéral** : « healthwatch-global dot com » ×8, « punto com » ×2. Objets **tous ≤ 58 caractères** (mesurés), le plus long étant « HealthWatch Global — outbreak monitoring for field teams ». Les 10 se terminent par **une question explicite** avant la signature « David Deheunynck — HealthWatch Global ».
+
+**Langues** : **ES** pour les deux bureaux OPS/PAHO, **EN** pour les 8 autres — y compris DAHW (l'allemand n'est pas une des cinq langues du produit) et IAKMI, dont le message met en avant que **l'indonésien en est une**.
+
+**⚠️ Cibles à prioriser au prochain run :**
+1. **Le gisement « écarts levés » est le plus rentable du moment** — 3 des 10 prises de ce run viennent de cibles déjà écartées dont la cause technique a disparu, sans aucune recherche neuve. Les listes de non-retenus des runs 02/08 → 20/08 sont **à retester systématiquement** avant de chercher des cibles inédites : le vivier neuf s'épuise (ONG saturées depuis le 21/08, académique depuis le 22/08), celui-ci non.
+2. **EMRO et AFRO, zéro contact direct ce run.** EMRO reste bloquée (9e run) ; la piste `emro.who.int/entity/contacts` est morte (page supprimée, cf. 24/08) — reprendre par les pages pays ou une unité nommée du bureau régional.
+3. **Réserves PAHO encore disponibles, laissées par plafond** : Salvador `comunicacionesslv@paho.org`, Venezuela — utilisables telles quelles à un prochain lot.
+4. **TEPHINET** — arbitrage David en attente (cf. ci-dessus).
