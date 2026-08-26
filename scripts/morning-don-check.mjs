@@ -195,7 +195,12 @@ const FROZEN_ROW_CHECKED = {
   // données neuves : « Since 22 June 2026, no updates have been reported by: Congo, Ethiopia,
   // Namibia, Nigeria, Rwanda, South Sudan, United Republic of Tanzania, Zambia and Zimbabwe. »
   // Rien à écrire.
-  "5db4495e-0615-434d-b5ca-5af99de2e5e8": "2026-08-18",
+  // Revérifiée le 26/08 : toujours aucune édition plus récente de l'update choléra mensuel. Le WER
+  // a publié depuis le 101-32 (« Highlighted signals and events » + note de position sur les
+  // vaccins typhoïdiques) et le 101-33 (signaux + rétrospective Bundibugyo/RDC) — ni l'un ni
+  // l'autre ne porte le « Multi-country outbreak of cholera ». Le 101-31 (arrêté 28/06) reste donc
+  // la donnée la plus récente pour la Tanzanie. Rien à écrire.
+  "5db4495e-0615-434d-b5ca-5af99de2e5e8": "2026-08-26",
   // Choléra/Somalie : vérifié le 18/08, ligne laissée inchangée (233 cas / 0 décès, WER 101-31,
   // cumul au 28/06) — mais ⚠️ ÉCART NON RÉSOLU À ARBITRER, voir le rapport du 18/08.
   // L'aperçu mensuel choléra de l'ECDC donne pour la Somalie « Since 1 January 2026 and as of
@@ -220,7 +225,11 @@ const FROZEN_ROW_CHECKED = {
   // Report - Somalia » sur reliefweb s'arrête en 2024, aucune édition 2026.
   // 🔎 Au prochain passage : viser l'EIWR Africa CDC le plus récent en capture d'écran (le seul
   // moyen connu de lire ce PDF), ou une édition 2026 du sitrep somalien, pour trancher (a) vs (b).
-  "6296cad0-8fdb-4b26-a670-c23c541e2c43": "2026-08-18",
+  // Revérifiée le 26/08 : pas de nouvel update choléra du WER (101-32 = typhoïde, 101-33 =
+  // Bundibugyo), donc rien de neuf côté OMS et l'écart (a)/(b) ci-dessus reste ouvert — il ne peut
+  // être tranché que par une source somalienne ou Africa CDC, pas par une nouvelle édition du WER.
+  // Ligne laissée à 233/0. La piste EIWR Africa CDC en capture d'écran n'a pas été tentée ce jour.
+  "6296cad0-8fdb-4b26-a670-c23c541e2c43": "2026-08-26",
 };
 console.log("\n=== Lignes actives à source_priority=10, hors clusters de seeds connus (>7j = à vérifier) ===");
 const frozenNonSeed = active.filter((o) => o.source_priority === 10 && !o.is_seed);
@@ -877,7 +886,21 @@ const MANUAL_ROW_CHECKED = {
   // directement dans le PDF, page 4 : « In July 2026, Viet Nam recorded 15,940 cases, including
   // one death... From January to July 2026, a total of 73,828 cases, including nine deaths ».
   // Encodage corrompu (mojibake) trouvé et corrigé au passage sur `country` et les 4 traductions.
-  "d5aa229f-0568-45db-b223-747d25014718": "2026-08-18",
+  // Revérifiée le 26/08 sur le WHO WPRO Dengue Situation Update #752 (20/08), page 4, qui écrit
+  // explicitement « There was no update in this reporting period » pour le Viet Nam et reconduit
+  // mot pour mot les chiffres de #751 (73 828 cas et neuf décès de janvier à juillet 2026). La
+  // date d'arrêté de la ligne (31/07) est donc toujours la bonne — ce n'est pas un cas de
+  // section 4 sexies, la source n'a pas avancé son propre arrêté. Rien à écrire.
+  "d5aa229f-0568-45db-b223-747d25014718": "2026-08-26",
+  // Dengue/Vanuatu : vérifiée le 26/08 sur le Tableau 1 (« Confirmed Cases and Deaths as Reported
+  // in National Situation Report, EW 1-32 2026 ») du rapport WHO/SPC « Dengue in the Pacific »
+  // du 14/08 — déjà l'édition citée en base, et toujours la plus récente de la série (recherche
+  // du listing reliefweb triée par date : rien après le 14/08). Vanuatu y figure à 76 cas
+  // confirmés cumulés 2026, 0 décès, dernier rapport national du 10/08, DENV-1, avec 29 cas
+  // confirmés sur les quatre dernières semaines (S29-S32) — exactement la ligne en base. Rien à
+  // écrire. ✅ Au passage : reliefweb est de nouveau lisible (curl 200 avec un User-Agent de
+  // navigateur, PDF téléchargeable), le blocage constaté le 25/08 est levé.
+  "d9d8b75c-f7ac-4fc9-af3b-d4d41582c70c": "2026-08-26",
   // Dengue/Nouvelle-Calédonie : vérifiée le 18/08 en relisant le PDF du WHO WPRO Dengue Situation
   // Update #751 (06/08), page 6 : « From 13 to 26 July, 17 additional dengue cases have been
   // reported, bringing the cumulative total in 2026 to 2 220 cases... 2 215 cases (2 017 confirmed
