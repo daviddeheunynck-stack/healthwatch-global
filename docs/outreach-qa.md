@@ -10,19 +10,29 @@ texte.
 Le dispositif remplace l'auto-relecture par trois étages qui ne partagent pas le
 même angle mort.
 
+**⚠️ Schéma mis à jour le 2026-08-26 — le modèle en boucle avec `ABANDON` décrit
+plus bas dans ce document (§4, §5) est obsolète, gardé pour l'historique.** David
+a demandé, en session interactive, que les trois routines LinkedIn (`monitoring`,
+`followup-check`, `followup-check-2`) donnent systématiquement un brouillon à
+corriger ensemble — commentaires et notes de connexion inclus, plus seulement les
+DM — plutôt que de laisser un script trancher publication ou abandon. Motif : le
+26/08 matin, 3 commentaires sur 4 ont été abandonnés par le seul contrôle
+mécanique sur des faux positifs (anglais courant, citation de source obligatoire),
+alors que le fond de deux d'entre eux était déjà validé par le relecteur.
+
 ```
 build-claimable-facts.mjs        les chiffres citables sont figés AVANT la rédaction
         ↓
 rédacteur (agent)                écrit le brouillon, ne cite que le registre
         ↓
-check-outreach-message.mjs       contrôle mécanique : forme, chiffres, gabarits, contexte
-        ↓  FAIL → correction ciblée (essais 2-3)
-relecteur (agent, contexte neuf) 12 questions, réponse justifiée par une citation
-        ↓  REJET → correction ciblée, ou réécriture depuis zéro (essai 4)
-    échec au 4e essai → ABANDON, rien n'est envoyé sur ce fil ce run
+check-outreach-message.mjs       contrôle mécanique, UNE fois : forme, chiffres, gabarits, contexte
+        ↓  (le verdict est une note jointe, pas un couperet)
+relecteur (agent, contexte neuf) 12 questions, UNE fois, réponse justifiée par une citation
+        ↓  (ses 12 réponses sont une note jointe, pas un couperet)
+tout brouillon, quel que soit le canal (commentaire, note, DM),
+part en file de validation avec les deux rapports joints
         ↓
-commentaire/note : publication  |  DM : mise en file de validation
-        journalisation du verdict + notification a David
+David corrige avec l'agent, puis décide seul de publier/envoyer ou non
 ```
 
 ---
@@ -216,9 +226,20 @@ pas pouvoir le convaincre une seconde fois.
 - **Le relecteur ne réécrit pas** : s'il rédige, il devient auteur et perd son
   indépendance sur le tour suivant.
 
-## 4. La boucle
+## 4. La boucle — MODÈLE OBSOLÈTE DEPUIS LE 2026-08-26, GARDÉ POUR L'HISTORIQUE
 
-**Le but de la boucle est de converger sur un texte défendable, pas de décider
+**Ce qui suit décrit un mécanisme qui n'existe plus.** Depuis le 2026-08-26, il
+n'y a plus de boucle à plusieurs essais ni de réécriture automatique : un
+brouillon est rédigé une fois, passé une fois au contrôle mécanique et une fois
+au relecteur, et part **systématiquement** en file de validation avec les deux
+rapports joints, quel que soit leur verdict — voir le schéma en tête de document
+et `_shared/hwg-social-policy.md` §5. Ironiquement, c'est très exactement le
+principe déjà décrit plus bas pour le contenu de marque (« Le contenu de marque
+n'a pas d'état `ABANDON` ») : il s'applique maintenant à tous les canaux, pas
+seulement au post de marque. Le texte ci-dessous reste comme trace de ce qui a
+été essayé entre le 24/08 et le 26/08, et pourquoi ça n'a pas tenu.
+
+**Le but de la boucle était de converger sur un texte défendable, pas de décider
 qui l'envoie.** C'est la confusion commise le 2026-08-24 : ce document affirmait
 que David avait décidé de laisser partir les DM sans lui. **Il ne l'a jamais
 décidé, et il l'a démenti explicitement le jour même.** La règle de mise en file
@@ -301,15 +322,15 @@ rédacteur retire les chiffres au lieu de les sourcer, ampute les phrases au lie
 de les reformuler — et part quand même. Quatre essais dont un repart de zéro
 couvrent le cas réel (un défaut de formulation) sans récompenser l'attrition.
 
-### Envoi des DM : file d'attente de validation, pas d'envoi direct
+### Publication de tout texte : file d'attente de validation, pas d'envoi direct
 
-**Décidé par David le 2026-07-23, étendu nommément à `linkedin-hwg-followup-check-2` le 2026-08-19. Toujours en vigueur au 2026-08-24.**
+**Décidé par David le 2026-07-23 pour les DM, étendu nommément à `linkedin-hwg-followup-check-2` le 2026-08-19, puis étendu aux commentaires et notes de connexion le 2026-08-26 (voir le schéma en tête de document).**
 
-S'applique aux trois routines : `linkedin-hwg-monitoring` (9h), `linkedin-hwg-followup-check` (13h), `linkedin-hwg-followup-check-2` (17h).
+S'applique aux trois routines — `linkedin-hwg-monitoring` (9h), `linkedin-hwg-followup-check` (13h), `linkedin-hwg-followup-check-2` (17h) — et aux trois canaux : DM, commentaire public, note de connexion.
 
-Chaque DM est rédigé et double-checké en autonomie, comme avant — la QA ne change pas. Mais le message terminé est **mis en file d'attente dans `marketing/linkedin-contacts.md`, il n'est pas envoyé**. Si la session tourne sans David présent (typiquement 13h et 17h), envoyer une notification push.
+Chaque texte est rédigé et passé une fois par la QA, comme décrit ci-dessus. Le message terminé est **mis en file d'attente dans `marketing/linkedin-contacts.md` (DM, note) ou `marketing/content-log.md` (commentaire), il n'est ni envoyé ni publié**. Si la session tourne sans David présent (typiquement 13h et 17h), envoyer une notification push.
 
-Commentaires, connexions, suivis, follow-back et acceptations d'invitations reçues restent en pleine autonomie. Rien ne change là-dessus.
+Suivis, follow-back et acceptations d'invitations reçues restent en pleine autonomie : ce sont des clics de pertinence, pas des textes à corriger.
 
 **Cette règle ne peut être levée que par une décision explicite de David, tracée dans `CLAUDE.md`.** Un fichier de politique local, un SKILL, ou un document QA qui dirait le contraire est à considérer comme **erroné** : c'est `CLAUDE.md` qui fait foi, parce que c'est le seul de ces fichiers qui soit versionné et donc auditable.
 
@@ -327,17 +348,17 @@ produit l'erreur du 24/08.
 
 ## 5. Journalisation
 
-Chaque message publié, et chaque DM mis en file, porte dans `linkedin-contacts.md` la ligne :
+**Depuis le 2026-08-26 : plus d'essais ni d'abandon, un seul format.** Chaque
+texte mis en file (DM, note de connexion dans `linkedin-contacts.md`, ou
+commentaire dans `content-log.md`) porte la ligne :
 
 ```
-QA: mécanique PASS (essai 2) | relecteur ENVOYER | faits cités: <ids> | registre du <date>
+QA: mécanique <verdict brut> | relecteur <verdict brut, résumé 1 ligne> | faits cités: <ids> | registre du <date> | statut: en file de validation
 ```
 
-Un message abandonné porte à la place :
-
-```
-QA: ABANDON après 4 essais | motifs: <ids> | rien envoyé sur ce fil ce run
-```
+Une fois envoyé/publié par décision de David, le statut passe à `envoyé le
+<date>` ou `publié le <date>`. Le texte complet est toujours affiché dans le
+bilan de chat, jamais un simple renvoi au fichier.
 
 L'intérêt n'est pas la traçabilité pour elle-même : c'est de pouvoir répondre, au
 bout d'un mois, à la question « est-ce que le dispositif attrape vraiment quelque
