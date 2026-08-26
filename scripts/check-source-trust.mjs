@@ -12,7 +12,7 @@
 // Needs Node ≥ 22.18 (imports the .ts module directly via native type stripping).
 
 import { readFileSync } from "fs";
-import { sourceStatusOf, sourceName } from "../lib/source-trust.ts";
+import { sourceStatusOf, sourceName, isForbiddenSourceHost } from "../lib/source-trust.ts";
 
 const envFile = process.argv[2] ?? ".env.local.live";
 const env = readFileSync(envFile, "utf-8");
@@ -48,6 +48,9 @@ const CASES = [
   ["https://notwho.int/fake", "unverified"],                         // no dot-boundary match
   ["https://who.int.attacker.example/fake", "unverified"],           // suffix must be the tail
   ["https://outbreaknewstoday.substack.com/p/ebola", "unverified"],
+  // Legally forbidden publisher — must never reach 'official'/'press' however the URL looks.
+  ["https://reliefweb.int/report/fiji/dengue-pacific-multicountry-situation-14-august-2026", "unverified"],
+  ["https://www.reliefweb.int/report/vanuatu/anything", "unverified"],
   ["OMS", "unverified"],
   ["", "unverified"],
   [null, "unverified"],
@@ -128,13 +131,37 @@ for (const c of changed.sort((a, b) => Number(b.displayed) - Number(a.displayed)
 // link and its place in the "official" filter, which is a visible regression for a paying
 // client. Falling to 'press' is the reclassification this tier exists for — the row keeps
 // a working link and a named outlet — so it is reported for re-sourcing, not blocked.
-const blockers = changed.filter((c) => c.displayed && c.next === "unverified" && c.prev !== "unverified");
+// A demotion forced by FORBIDDEN_SOURCE_DOMAINS is not a blocker to fix before shipping —
+// it IS the fix, and it must not hold the tool hostage forever (the rows behind it can only
+// leave the list by being re-sourced or retired, which is a separate, human decision). Split
+// out under its own heading so it stays loud without ever blocking an unrelated allowlist edit.
+const forbidden = all.filter((o) => isForbiddenSourceHost(o.source));
+const forbiddenDisplayed = forbidden.filter(isDisplayed);
+const blockers = changed.filter(
+  (c) => c.displayed && c.next === "unverified" && c.prev !== "unverified" && !isForbiddenSourceHost(c.o.source),
+);
 const reclassified = changed.filter((c) => c.displayed && c.next === "press" && RANK[c.prev] > RANK.press);
 console.log(
   blockers.length === 0
     ? "\nNo displayed row falls to 'unverified'. Safe to ship."
     : `\n${blockers.length} DISPLAYED ROW(S) WOULD FALL TO 'unverified' — re-source them first (see above).`
 );
+if (forbidden.length > 0) {
+  console.log(
+    `\n${forbidden.length} row(s) cite a LEGALLY FORBIDDEN publisher (${forbiddenDisplayed.length} still displayed):`,
+  );
+  for (const o of forbidden.sort((a, b) => Number(isDisplayed(b)) - Number(isDisplayed(a)))) {
+    console.log(
+      `  [${isDisplayed(o) ? "DISPLAYED" : "archive  "}] ${o.disease_en || o.disease} / ${o.country_en || o.country} ` +
+      `(${o.cases}c/${o.deaths}d, active=${o.active}, prio=${o.source_priority})\n      ${o.source}\n      id ${o.id}`,
+    );
+  }
+  console.log(
+    "  These are citations HWG has no right to publish — deactivating them is NOT enough: a row with\n" +
+    "  source_priority>=3 stays on the public site for 60 days after being switched off. Re-source each\n" +
+    "  row to a permitted publisher, or take it out of the display window.",
+  );
+}
 if (reclassified.length > 0) {
   console.log(`${reclassified.length} displayed row(s) move to the 'press' tier — still linked and named, worth re-sourcing upstream when a bulletin exists.`);
 }

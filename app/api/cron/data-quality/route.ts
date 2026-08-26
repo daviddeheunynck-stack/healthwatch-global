@@ -5,6 +5,7 @@ import * as Sentry from "@sentry/nextjs";
 import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
 import { sendBrevoEmail } from "@/lib/brevo-send";
 import { isCollapse, isSpike, deathsExceedCases, isZeroData } from "@/lib/outbreak-guards";
+import { sourceStatusOf, sourceName, isForbiddenSourceHost } from "@/lib/source-trust";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 120;
@@ -1100,6 +1101,76 @@ async function runDataQuality(_req: NextRequest, supabase: SupabaseClient) {
           });
         }
       }
+    }
+  }
+
+  // ── 4m. Provenance of what the public site displays ───────────────────────
+  // lib/source-trust.ts decides, for every row on the site, whether the figure is
+  // badged "official source verified" with a live link or "illustrative" with none.
+  // Until today nothing checked its verdict on a schedule: scripts/check-source-trust.mjs
+  // is run by hand, and only "before shipping an edit to the allowlists" — so between
+  // two such edits the classifier drifts against a table that changes every day, and
+  // nobody sees it. It had drifted: on 2026-08-26 three DISPLAYED rows carried the
+  // 'unverified' badge, among them Cholera/Cameroon (1 342 cases) sourced to ccousp.cm,
+  // the country's own public-health emergency operations centre — a genuine national
+  // authority shown to clients as unsourced, since the detail page hides the link for
+  // that tier (app/[locale]/outbreak/[id]/page.tsx).
+  //
+  // Two findings, deliberately kept apart: a forbidden publisher is a legal matter and
+  // always red, an 'unverified' tier is a credibility matter and often just means the
+  // host is new and nobody has classified it yet.
+  //
+  // Reads its own row set rather than `rows`: every section above is active-only, and
+  // the whole point here is that a row keeps its badge and its source link for 60 days
+  // AFTER being deactivated (getOutbreaksCached in lib/outbreaks.ts). Switching a row
+  // off is not the same as taking it down — see the ReliefWeb rows of 2026-08-26, all
+  // switched off in the morning and three of them still on the site that evening.
+  const PROVENANCE_LIST_CAP = 10;
+  const displayedSince = new Date(Date.now() - 60 * 86_400_000).toISOString().split("T")[0];
+  const { data: displayedRows, error: displayedErr } = await supabase
+    .from("outbreaks")
+    .select("id, disease, country, cases, deaths, date, source, active, source_priority")
+    .or(`active.eq.true,and(source_priority.gte.3,updated_at.gte.${displayedSince},date.gte.${displayedSince})`);
+
+  if (displayedErr) {
+    needsReview.push({
+      label: "[PROVENANCE] Contrôle indisponible",
+      detail: `Lecture du jeu de lignes affichées impossible (${displayedErr.message}) — aucune vérification de la provenance des sources ce matin.`,
+    });
+  } else {
+    const forbidden  = (displayedRows ?? []).filter((r) => isForbiddenSourceHost(r.source));
+    const unverified = (displayedRows ?? []).filter(
+      (r) => !isForbiddenSourceHost(r.source) && sourceStatusOf(r.source) === "unverified",
+    );
+
+    for (const row of forbidden.slice(0, PROVENANCE_LIST_CAP)) {
+      needsReview.push({
+        label: `[SOURCE INTERDITE] ${row.disease} / ${row.country}`,
+        detail: `Cette ligne est affichée sur le site public (active=${row.active}, priorité ${row.source_priority ?? 0}) en citant un éditeur que HWG n'a pas le droit de citer : ${row.source}. ${(row.cases ?? 0).toLocaleString("fr-FR")} cas / ${(row.deaths ?? 0).toLocaleString("fr-FR")} décès au ${row.date}. Désactiver la ligne ne suffit pas : au-dessus de source_priority 3 elle reste affichée 60 jours après coup, et l'écriture de désactivation rafraîchit elle-même la moitié de cette fenêtre. La re-sourcer vers un éditeur autorisé, ou la sortir de la fenêtre d'affichage. Voir FORBIDDEN_SOURCE_DOMAINS dans lib/source-trust.ts.`,
+      });
+    }
+    if (forbidden.length > PROVENANCE_LIST_CAP) {
+      needsReview.push({
+        label: `[SOURCE INTERDITE] ${forbidden.length - PROVENANCE_LIST_CAP} ligne(s) de plus, non listées`,
+        detail: `${forbidden.length} lignes affichées au total citent un éditeur interdit ; seules les ${PROVENANCE_LIST_CAP} premières sont détaillées. Lister le reste avec node scripts/check-source-trust.mjs.`,
+      });
+    }
+
+    if (unverified.length > 0) {
+      const shown = unverified.slice(0, PROVENANCE_LIST_CAP);
+      needsReview.push({
+        label: `[PROVENANCE] ${unverified.length} ligne(s) affichée(s) sans source vérifiable`,
+        detail:
+          `Ces lignes sont visibles sur le site public avec la pastille « illustratif » et SANS lien vers leur source (le lien est masqué pour ce niveau) : ` +
+          shown
+            .map(
+              (r) =>
+                `${r.disease} / ${r.country} (${(r.cases ?? 0).toLocaleString("fr-FR")} cas, ${sourceName(r.source)}) — ${r.source ?? "source absente"}`,
+            )
+            .join(" | ") +
+          (unverified.length > shown.length ? ` | +${unverified.length - shown.length} autre(s)` : "") +
+          `. Deux causes possibles, à distinguer ligne par ligne : soit la source est réellement faible (réseau social, blog, texte sans URL) et la ligne est à re-sourcer, soit c'est une autorité légitime que personne n'a encore inscrite dans les listes d'éditeurs de lib/source-trust.ts — auquel cas un chiffre vrai s'affiche comme non sourcé. Trancher avec node scripts/check-source-trust.mjs avant toute modification des listes.`,
+      });
     }
   }
 

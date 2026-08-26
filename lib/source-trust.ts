@@ -32,6 +32,46 @@ const KNOWN_PRESS_DOMAINS_HTTP_OK = new Set<string>([
   "french.china.org.cn", // Xinhua's French service — https cert fails, http is the live site
 ]);
 
+// ── Legally forbidden publishers ─────────────────────────────────────────────
+// Hosts HealthWatch Global has no right to cite at all, for reasons that have nothing
+// to do with how trustworthy they are. Checked BEFORE every allowlist below, so a host
+// listed here can never reach 'official' or 'press' no matter what else matches it.
+//
+// reliefweb.int (UN OCHA) was in AUTHORITATIVE_SOURCE_DOMAINS until 2026-08-26. Its
+// terms permit "personal, non-commercial use" only, with no right to redistribute or
+// create derivative works over third-party copyrighted partner reports — the same legal
+// shape as the ProMED cease-and-desist. Every INGESTION path was retired for this on
+// 2026-07-06 (lib/reliefweb.ts, sync-signals, sync-endemic-data's Ethiopia fallback,
+// sync-drc-sitrep's sitrep discovery) — but the ban was never taught to the classifier,
+// so the manual verification path kept writing reliefweb.int into `outbreaks.source` and
+// this file kept badging it "official source verified" with a live link. Four rows were
+// created or re-sourced that way between 2026-08-18 and 2026-08-26 (Dengue in Wallis-and-
+// Futuna, American Samoa, Vanuatu, Kiribati); three of them were STILL on the public site
+// hours after being switched off, because deactivating a row keeps it displayed for 60
+// days (see getOutbreaksCached in lib/outbreaks.ts) and the deactivation write itself
+// refreshed the `updated_at` half of that window.
+//
+// A row demoted by this list is not "a source we downgraded" — it is a citation we must
+// not publish. Re-source it or retire it; do not re-add the entry. See
+// legal_reliefweb_noncommercial and project_reliefweb_reintroduction_2026_08_26.
+const FORBIDDEN_SOURCE_DOMAINS: ReadonlySet<string> = new Set([
+  "reliefweb.int",
+]);
+
+/**
+ * True when `source` cites a publisher HWG is not permitted to cite. Exported so the
+ * daily data-quality audit can name the offending rows without re-deriving the rule
+ * from sourceStatusOf()'s output (a row can be 'unverified' for a dozen innocent
+ * reasons — placeholder text, a blog, http:// — and only this one is a legal matter).
+ */
+export function isForbiddenSourceHost(source: string | null | undefined): boolean {
+  try {
+    return hostMatchesDomain(new URL(source || "").hostname.toLowerCase(), FORBIDDEN_SOURCE_DOMAINS);
+  } catch {
+    return false; // not a URL at all — no host to forbid
+  }
+}
+
 // ── Publisher allowlists ─────────────────────────────────────────────────────
 // sourceStatus() used to grant 'official' to any https:// URL, which made the
 // "verified official source" badge a statement about the URL scheme rather than about
@@ -63,7 +103,6 @@ const AUTHORITATIVE_SOURCE_DOMAINS: ReadonlySet<string> = new Set([
   "africacdc.org",
   "ecdc.europa.eu",
   "efsa.europa.eu",
-  "reliefweb.int",       // UN OCHA — republishes national/agency situation reports
   // National public-health agencies and health ministries
   "polioeradication.org", // GPEI — WHO-led polio eradication partnership
   // National public-health agencies and health ministries
@@ -177,6 +216,9 @@ export function sourceStatusOf(source: string | null | undefined): SourceStatus 
   } catch {
     return 'unverified'; // plain-text placeholder ("OMS", "PAHO/OPS nov. 2025 — …")
   }
+
+  // Legal ban first: no allowlist below may rescue a forbidden publisher.
+  if (hostMatchesDomain(host, FORBIDDEN_SOURCE_DOMAINS)) return 'unverified';
 
   if (AUTHORITATIVE_SOURCE_HOSTS.has(host)) return 'official';
   if (hostMatchesDomain(host, AUTHORITATIVE_SOURCE_DOMAINS)) return 'official';
