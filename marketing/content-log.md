@@ -2,6 +2,121 @@
 
 Archive de tout le contenu créé. Mise à jour à chaque session.
 
+## 📅 Session linkedin-hwg-monitoring — 26/08/2026 (9h)
+
+**Vérification double déclenchement** : aucune entrée `linkedin-hwg-monitoring` datée du 26/08 dans ce fichier ni dans `linkedin-contacts.md` à l'ouverture. Les seules entrées du jour appartiennent à `linkedin-hwg-content-proposal` (8h35) → **premier déclenchement de cette routine aujourd'hui**.
+
+**Registre de faits régénéré en début de run** (`npm run qa:facts`) : **227 faits citables sur 109 lignes affichées**, 81 lignes `is_seed` exclues, **56 faits périmés**. ⚠️ **Alerte de fraîcheur, 6e jour consécutif** : Shigellosis / EU-EEA **54 j**, Diphtheria / 8 pays **41 j**, Meningitis / 4 pays **34 j**. Registre produit régénéré aussi (`npm run qa:claims`, 1 DM affirmant quelque chose sur HWG) : 109 foyers, 73 pays, 17 maladies, 29 hôtes source.
+
+**🖥️ Navigateur** : `_shared/browser-status.md` lu avant ouverture, dernière entrée **🟢 RÉTABLI (24/08 ~09h15)** → aucun bridage. `23c7ecdd-…` seul listé, sélectionné sans question (§7). Rien de neuf à y écrire. ✅ **Anomalie JS asynchrone absente ce créneau** : `(async () => 42)()` renvoie bien une `Promise`, et toutes les attentes échelonnées de ce run ont fonctionné. Le filtre `[BLOCKED: Cookie/query string data]` s'est déclenché **deux fois**, sur des retours contenant `location.href` ou `img.src` ; conformément à [[reference_blocked_classifier_result_code_already_ran]], le code avait bien tourné, seule la valeur de retour était filtrée, et une reformulation sans URL a suffi.
+
+---
+
+### 🔴 LE FAIT MARQUANT DU RUN : 4 textes menés, 0 publié, et 3 des 4 abandons viennent du même contrôle
+
+**Quotas à la clôture : commentaires 0/7, connexions 0/7, DM à froid 0/8, suivis 8/7-10 (quota atteint).** Aucun texte n'a été bloqué faute de quota : la marge était entière du début à la fin. **Le facteur limitant a été le dispositif QA à 100 %**, et plus précisément le contrôle anti-gabarit à 5 mots.
+
+| Message | Canal | Mécanique | Relecteur | Issue |
+|---|---|---|---|---|
+| **Prof. Jérôme Salomon** | commentaire | FAIL 1 (faux positif `facts.stale`) → **PASS 2** | **REECRIRE (1, 7, 11)** + consigne permanente du 19/08 | 🛑 **ARRÊT GARDE-FOU**, remonté à David |
+| **Ifedayo Adetifa** | commentaire (sous-fil) | PASS 1 → PASS 2 → FAIL 3 → **FAIL 4** | REECRIRE (6, 11) → REECRIRE (11) | ❌ **ABANDON au 4e** |
+| **John Samuel Otomba** | commentaire | PASS 1 → FAIL 2 → PASS 3 → PASS 4 | REECRIRE (11) → REECRIRE (11) → **REECRIRE (11)** | ❌ **ABANDON au 4e** |
+| **Alieu Sowe** | DM de bienvenue | FAIL 1 → **PASS 2** | *(voir linkedin-contacts.md)* | *(voir linkedin-contacts.md)* |
+
+**Sur les 8 passages au relecteur et au contrôle mécanique de ce run, la question 11 (gabarit) est en échec 5 fois, et elle est le seul motif de rejet 3 fois.** Aucun rejet ne porte sur un fait faux, un chiffre non sourcé, une langue incohérente ou un CTA mal placé. Le fond a été validé explicitement par le relecteur sur **deux** des trois commentaires abandonnés.
+
+---
+
+### 🛑 COMMENTAIRE ARRÊTÉ PAR UN GARDE-FOU, PAS PAR LA QA — **Prof. Jérôme Salomon**, à trancher par David
+
+`urn:li:activity:7497662922005958656`, post d'1 jour, 48 réactions, 3 commentaires, tous lus en entier (§5). **Le blocage hebdomadaire est bien tombé aujourd'hui** (commentaire précédent le 19/08), et l'angle arithmétique préparé le 25/08 a été revérifié à l'écran et **il tient** :
+
+- Texte du post : « *En moyenne, 90 cas ont été confirmés chaque jour au cours des 3 premiers mois de surveillance* ».
+- Infographie jointe, **lue au zoom ce run** (le corps de texte ne porte pas ces valeurs, donc §8 autorise la lecture d'image ici) : « **5 290** cas confirmés en RDC (**au 20 août 2026**), Source : WHO / ECDC », et une chronologie datant la déclaration d'urgence au **17 mai 2026**.
+- 90 cas confirmés par jour tenus sur trois mois donneraient de l'ordre de 8 000 confirmés à la mi-août, contre 5 290 au 20 août. Les deux chiffres du même post ne peuvent pas être vrais ensemble.
+
+**Ce qui arrête la publication n'est pas l'arithmétique, c'est une consigne permanente que le relecteur a retrouvée et que je n'avais pas rappelée** : celle du 19/08, reconduite le 20/08, « *aucune correction publique n'est faite sans décision de David — corriger publiquement le chiffre d'un ex-DGS sous son propre post est un acte de positionnement, pas un correctif de routine* ». Sa lettre visait l'opposition d'un chiffre HWG au sien ; ici le brouillon n'utilise que ses propres chiffres, mais la raison d'être couvre le cas : contredire publiquement un **ancien Directeur général de la Santé français et ancien Sous-Directeur général de l'OMS devant 151 673 abonnés** reste un acte de positionnement. **§10 s'applique : arrêt, et décision remontée à David.**
+
+Le relecteur a par ailleurs relevé **trois défauts réels que je n'avais pas vus**, tous à corriger si David donne son feu vert :
+1. ⭐ **Une ambiguïté résolue en ma propre faveur.** « *environ 60% des 260 décès hebdomadaires enregistrés au cours des 6 dernières semaines* » se lit de deux façons : 260 décès **par semaine** pendant 6 semaines, ou 260 décès **au total** sur 6 semaines. Mon brouillon tranchait silencieusement pour la première et bâtissait sa dernière phrase dessus. Sous la seconde lecture, la conclusion s'inverse.
+2. **Un arrondi qui affaiblissait l'argument.** Du 17 mai au 20 août il y a 95 jours, et 5 290 / 95 = **55,7**. Le brouillon disait « une cinquantaine », soit 11 % en dessous, dans un message dont toute l'autorité repose sur la précision arithmétique. ⚠️ **Le contrôle mécanique ne pouvait pas l'attraper : le nombre était écrit en lettres.**
+3. **Un gabarit structurel envers le même destinataire.** Notre commentaire du 19/08 ouvrait sur « *Deux cumuls pour la même épidémie… ils ne se recouvrent ni sur les cas ni sur les décès* » ; le brouillon d'aujourd'hui ouvrait sur « *Deux chiffres du post ne se recoupent pas* ». Même amorce, même verbe de réconciliation nié, sept jours d'écart, et **il n'a jamais répondu au premier**.
+
+**Fait à signaler pour lui-même** : le chiffre qu'il publie désormais (5 290 / 2 516) est le chiffre primaire, alors qu'il relayait le 19/08 une reprise secondaire fausse (4 945 / 2 325). L'écart que notre commentaire du 19/08 lui opposait **a disparu de lui-même**.
+
+---
+
+### ❌ COMMENTAIRE ABANDONNÉ AU 4e ESSAI — **Ifedayo Adetifa**, et c'est la perte la plus coûteuse du run
+
+⭐ **Il a répondu à notre commentaire du 23/08**, il y a 6 h, publiquement, en nous nommant : « *David Deheunynck interesting way to put it but it might explain the situation we have here.* » C'est **le premier retour de fond obtenu d'un profil de ce niveau** (*Outgoing CEO de FIND, ancien Directeur général du NCDC nigérian, Lancet Commissioner*, relation de 1er degré depuis le 23/08). Il a répondu à Kewa Sivebukola dans le même mouvement, mais d'un simple « *absolutely!* » : notre fil est le seul qu'il ait prolongé par une idée.
+
+**Quatre essais, deux passages au relecteur, abandon terminal sur le contrôle mécanique.**
+
+1. **Essai 1** — mécanique PASS, relecteur **REECRIRE (6, 11)**. (6) « *since you have sat on both sides of this one* » déduit un vécu que son intitulé n'affiche pas. (11) le socle « *the part I would [verbe]* », **4 occurrences au corpus**, déjà mis à l'index le 25/08.
+2. **Essai 2** — corrections ciblées, mécanique PASS, relecteur **REECRIRE (11)**. ⭐ **Le rejet est juste et instructif** : ma correction du point 6 avait produit « *You ran NCDC and you are closing out at FIND* », or le DM envoyé **à ce même destinataire le 23/08** dit déjà « *You have run NCDC, and you are just finishing at FIND* », suivi comme ici d'une double interrogative. J'avais corrigé un défaut en recopiant un message déjà envoyé au même homme, **et resté sans réponse**.
+3. **Essai 3** — mécanique **FAIL** sur « *the other side of it* », verdict `REWRITE_FROM_SCRATCH`.
+4. **Essai 4** — réécriture depuis zéro par un rédacteur au contexte neuf, qui n'a reçu ni les brouillons rejetés ni mon raisonnement. **Angle réellement neuf et meilleur que les miens** : la seule trace qu'un test manquant laisse derrière lui est le compte de cas suspects, que les bulletins portent déjà, mais qui se lit comme du bruit provisoire en attente de confirmation plutôt que comme une mesure de ce qui n'a pas pu être confirmé. **Contrôle mécanique : `ABANDON`**, sur la séquence « **tends to be read as** ».
+
+**QA: ABANDON après 4 essais | motifs: relecteur REECRIRE (6,11) puis (11), puis ngram.history aux essais 3 et 4 | rien publié sous ce post ce run**
+
+⚠️ **Le blocage terminal est un faux positif, et il est du type le plus coûteux : il tue un angle validé sur une tournure d'anglais courant.** « *tends to be read as* » n'est pas une formule maison, c'est de la langue ordinaire. Le texte de l'essai 4 est conservé ci-dessous **tel quel**, parce qu'il est publiable en l'état par un humain :
+
+> If that is what is happening, the one trace a missing test leaves behind is the suspected case count, and outbreak reporting already carries that line. It just tends to be read as provisional noise awaiting confirmation rather than as a measure of what could not be confirmed. Has a suspected case count ever carried real weight in a decision to fund a test, or does the room always hold out for confirmed numbers that only the missing test could have produced?
+
+**Deux points remontés par le relecteur, hors grille** : (a) le dossier de fil que j'avais monté disait « aucun DM échangé », **c'est faux**, un DM de bienvenue lui a été envoyé le 23/08 à 20:09 et est resté sans réponse ; (b) le corpus compte déjà le commentaire du 23/08 comme une reprise du moule « hausse réelle contre meilleure détection », à surveiller si un 3e message reprend l'artefact de mesure.
+
+---
+
+### ❌ COMMENTAIRE ABANDONNÉ AU 4e ESSAI — **John Samuel Otomba**, 2e run consécutif, 8 essais cumulés
+
+`urn:li:activity:7498015334537342976`, post de 17 h, **toujours 0 commentaire**, 10 réactions. Fenêtre 48 h respectée, compteur remis à zéro comme prévu par le carry-over. Les **six contraintes héritées** du run du 25/08 ont été respectées à tous les essais, vérifié par le relecteur à chaque passage.
+
+**Angle : le contraste urbain/rural qu'il signale sans l'exploiter** (« *Across urban and rural vaccination sites, one observation stood out: exceptionally high demand for vaccination services* »). Un taux de couverture administrative est ce qui se compare le moins bien entre ville et village, la population cible étant estimée par des voies différentes ; la demande qu'il a **observée** vaut donc comme signal indépendant du taux, et non comme son produit. **Le relecteur a validé ce fond trois fois de suite, explicitement** (« *Le fond est validé et n'a pas à bouger, et la clôture est saine, ne pas y toucher* »).
+
+Les quatre essais sont morts sur la **seule phrase d'ouverture**, chaque correction substituant un moule à un autre :
+1. **Essai 1** — « *The detail that stays with me is…* » → famille saturée (**8 occurrences de « stays with me », 11 de « stayed with me »**, écartée formellement deux fois par le dispositif) + charnière « *…, and did it…* », jumeau structurel d'un DM archivé.
+2. **Essai 2** — mécanique FAIL sur « *its own separate from the* ».
+3. **Essai 3** — « *Urban and rural are the two settings where a coverage rate is least comparable* » → jumeau du socle « *Points of entry are the one place in surveillance where the denominator is knowable in advance* » (sujet pluriel nu + copule + quantificateur d'unicité + nom-lieu + relative en « where » + prédicat sur le dénominateur).
+4. **Essai 4** — « *A coverage rate in a city and a coverage rate in a village do not rest on the same kind of denominator* » → jumeau de « *A figure from a contested health zone and a figure from a calm one are not the same kind of measurement* », **plus deux autres occurrences du même sujet composé apparié au corpus**.
+
+**QA: ABANDON après 4 essais | motifs: relecteur REECRIRE (11) aux essais 1, 3 et 4, mécanique ngram.history à l'essai 2 | rien publié sous ce post ce run**
+
+⚠️ **Ce que ce cas démontre, et qui n'est plus une hypothèse après 8 essais sur le même post** : le corpus a atteint une taille où **toute façon naturelle d'ouvrir une phrase analytique en anglais y figure déjà**. Les trois ouvertures rejetées ne se ressemblent pas entre elles ; elles ressemblent chacune à une phrase différente du corpus. Corriger l'une produit mécaniquement l'autre.
+
+---
+
+### 🔧 Défauts d'outillage relevés — 3, dont 1 nouveau et 2 qui s'aggravent
+
+**Aucune modification de `lexicon.json` ni d'aucun script n'a été faite en cours de run** (règle de périmètre). Constats à trancher hors routine.
+
+**1. 🔴 NOUVEAU — `facts.stale` bloque un nombre qui n'est pas une donnée épidémiologique.** Le brouillon Salomon, essai 1, a été bloqué sur le nombre **56** au motif « *Chiffre 56 périmé (> 10 j) et avancé sans sa date — Diphtheria / Mauritania (deaths, source vérifiée le 2026-07-16, 40 j)* ». Or 56 était une **moyenne quotidienne calculée** (5 290 / 95 jours), sans rapport avec la diphtérie en Mauritanie. Le script rapproche un nombre du brouillon de **n'importe quelle valeur identique du registre**, sans regarder le contexte de la phrase. **Effet pervers direct et vérifié** : la correction a consisté à écrire le nombre en toutes lettres (« une cinquantaine »), ce qui a fait passer le contrôle **et introduit une erreur d'arrondi de 11 %** que le relecteur a dû rattraper. Le contrôle a donc dégradé le texte au lieu de l'améliorer.
+
+**2. 🔴 Le seuil de 5 mots consécutifs, 4e jour consécutif de signalement, et il est désormais le premier facteur de perte du dispositif.** Formules bloquées ce run, toutes en anglais ordinaire : « *its own separate from the* », « *the other side of it* », « *tends to be read as* », « *bulletins from who afro ecdc* », « *which means i only ever* », « *outbreak bulletins from who afro* ». **Deux commentaires validés au fond sont morts là-dessus**, dont un angle produit par un rédacteur au contexte neuf. À noter que deux des six séquences ci-dessus sont **la liste des sources de HWG** : la nommer une deuxième fois est mécaniquement un gabarit.
+
+**3. 🟡 Le relecteur attrape ce que le mécanique ne peut pas voir, et l'inverse est vrai aussi.** Le mécanique a laissé passer l'arrondi « une cinquantaine » (nombre en lettres) et l'ambiguïté sur les 260 décès hebdomadaires ; le relecteur a laissé passer trois séquences de 5 mots. Les deux étages sont complémentaires et aucun n'est redondant, mais **le mécanique est le seul des deux à avoir un droit de veto terminal**, alors que ses faux positifs sont les plus nombreux.
+
+---
+
+### 🗒️ Veille — données épidémiologiques (§8)
+
+**Aucune écriture en base faite** (une routine sociale signale, elle n'écrit pas).
+
+- 🆕 **Hantavirus / Chili — piste concrète pour `morning-don-check`.** Repérée via une republication de **Rodrigo Olave Hurtado** (suivi 7/7-10 ce run) d'un post de **Cecilia Vial** (*Directora Anillo Gene2dis, Universidad del Desarrollo*) : le **MINSAL déclare une alerte sanitaire hantavirus**, avec plus de cas cette année et une **létalité presque doublée par rapport à l'an dernier**. **HWG couvre le hantavirus.** Sources primaires à lire avant toute écriture : le bulletin de l'**ISP** cité dans le post, et `www.hantavirus.cl`. Rien n'a été repris, aucun chiffre n'est cité ici.
+- 🔴 **Dengue / Îles Marshall, toujours aucune ligne au registre** (carry-over #8 du 25/08, **non résolu**). Reconfirmé ce run par une notification de **Robert Herriman** (« *#Dengue outbreak declared in the #MarshallIslands* », 18 h). Herriman est bloqué en commentaire jusqu'au 30/08, donc rien à faire côté social, mais la lacune de couverture reste entière.
+- ✅ **Ebola / RDC : le registre a été rafraîchi depuis le 25/08 et la divergence a changé de forme.** La ligne active porte désormais **5 514 cas / 2 642 décès, arrêtés au 22/08, source ECDC, `ageDays: 0`** — plus fraîche que les 5 290 / 2 516 au 20/08 que Salomon publie, et que les 5 290 / 2 516 relevés hier. ⚠️ **La divergence interne signalée le 25/08 subsiste** : une seconde ligne Ebola / RD Congo, marquée **close**, porte 4 120 cas / 1 887 décès arrêtés au 07/08, source Africa CDC, périmée de 14 j. Deux lignes pour le même foyer, l'une active et l'autre close. **À trancher hors routine.**
+- ➖ **Chiffre vu et volontairement non repris** : **Dr Hannington Katumba** (suivi 4/7-10) avance « *We have lost 1,250 lives in the last 20 days in the DRC due to Ebola alone, half (50%) of the total 2,516 deaths since the outbreak began in May* ». Le total qu'il cite (2 516) est **en retard** sur le registre (2 642 au 22/08), et les 1 250 décès sur 20 jours sont une inférence non sourcée. Rien n'a été repris.
+- ⚠️ **Alerte de fraîcheur du registre, 6e jour consécutif sans résolution** : Shigellosis / EU-EEA **54 j**, Diphtheria / 8 pays **41 j**, Meningitis / 4 pays **34 j**.
+
+---
+
+### 👀 Veille passive — posts retenus hors quota
+
+- **Health Policy Watch** (11 h) : les intervenants Ebola en RDC affrontent deux menaces à la fois, l'épidémie et la violence des communautés qu'ils protègent. **Plus de 260 attaques contre des soignants en six mois, 8 tués, 160 contaminés, 43 morts.** Chiffres non repris et non vérifiés contre une source primaire, mais le sujet croise directement les « attaques contre les établissements de santé » que Salomon cite dans son propre post.
+- **Dr Hannington Katumba**, post d'1 jour sur l'accélération d'Ebola en RDC (grèves de soignants, faible couverture du traçage des contacts). **Profil suivi ce run, aucun blocage hebdomadaire** : c'est un candidat commentaire direct pour le créneau de 13h ou 17h, sur un angle qui reste à trouver.
+- **Jill Weatherhead** (annonce de formation) et **Lorenzo Subissi** (relais d'appel à candidatures) : écartés, motif inchangé depuis le 25/08, ne pas reproposer sans élément neuf.
+
+---
+
 ## 📅 Session linkedin-hwg-content-proposal — 26/08/2026 (mercredi MWF, 8h35) — ✅ **PUBLIÉ le 26/08 (dérogation ponctuelle, David a tapé « publie » en session interactive)**
 
 **Vérification double déclenchement** : aucune entrée `linkedin-hwg-content-proposal` datée du 26/08 dans ce fichier à l'ouverture → premier déclenchement du jour.

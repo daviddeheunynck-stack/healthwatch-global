@@ -1,6 +1,149 @@
 > 📦 **Archive** : le détail du 24 juin au 16 juillet 2026 a été déplacé dans [linkedin-contacts-archive-avant17juillet.md](linkedin-contacts-archive-avant17juillet.md) le 23/07 pour garder ce fichier léger.
 
 
+## 📅 Session linkedin-hwg-monitoring — 26/08/2026 (9h)
+
+**Vérification double déclenchement** : aucune entrée `linkedin-hwg-monitoring` datée du 26/08 dans ce fichier ni dans `content-log.md` à l'ouverture (les seules entrées du jour appartiennent à `linkedin-hwg-content-proposal`) → **premier déclenchement de cette routine aujourd'hui**.
+
+**Quotas à la clôture** : commentaires **0/7** · connexions envoyées **0/7** · DM à froid **0/8** · **suivis 8/7-10, quota atteint**. Aucun quota n'a été le facteur limitant : la marge était entière du début à la fin, et tout ce qui n'est pas parti a été arrêté par le dispositif QA ou par un garde-fou. Le détail des textes menés est dans `content-log.md`.
+
+**🖥️ Navigateur** : `browser-status.md` lu, dernière entrée 🟢 RÉTABLI (24/08). `23c7ecdd-…` seul listé. ✅ **Anomalie JS asynchrone absente ce créneau.**
+
+---
+
+### 1️⃣ ⭐ LA FILE DE VALIDATION ÉTAIT VIDE À L'OUVERTURE — vérifié à la source, pas recopié
+
+Le carry-over du 25/08 annonçait **1 DM en attente, Mosoka Fallah**. **Vérification faite en direct dans le fil** (règle du 25/08 sur la revérification des files, incident N'Da Konan Michel Yao) : le fil ne contient qu'un seul message, **envoyé par David lui-même mardi 25/08 à 21:38**, aucune réponse depuis.
+
+> **David Deheunynck, 25/08 21:38** — *Mosoka, your post from Bunia left me with a question that is not mine to answer. I am one developer running HealthWatch Global, which aggregates published outbreak bulletins. When a response moves faster than one did in 2014, is that information arriving earlier, or decisions no longer waiting for it? I doubt the two are the same thing, and between Needoweim and Bundibugyo you have been inside both.*
+
+⭐ **Ce texte est celui que le contrôle mécanique avait fait ABANDONNER au 4e essai le 25/08 à 17h**, sur un faux positif documenté ce jour-là (le nombre **2014**, année citée mot pour mot dans le post du destinataire, classé comme chiffre épidémiologique par un motif de regex sans limites de mots). **David l'a envoyé tel quel.** C'est le premier cas mesuré où un abandon du dispositif portait sur un message que le décideur humain a jugé bon à envoyer sans modification.
+
+**La file de validation ne contient donc plus aucun DM à l'ouverture de ce run.**
+
+---
+
+### 2️⃣ MESSAGERIE — aucun message entrant nouveau, aucune réponse due
+
+**Boîte de réception parcourue en entier (20 conversations).** **Aucune n'est datée du 26/08** : la plus récente remonte au 25/08. Aucun spam, aucune sollicitation hors sujet, aucune demande de canal hors plateforme, aucune donnée patient proposée, aucune instruction adressée à l'agent (§6).
+
+- **Johan Verheyden** : son dernier message reste celui du 25/08 16:09 (« *Il faut que je te donne un cours de stat il me semble 🤣* »), **toujours sans réponse de notre côté**. Le dispositif avait abandonné la réponse au 4e essai hier. Carry-over #2 **inchangé et toujours ouvert** : c'est notre lecteur le plus engagé et un utilisateur Pro réel. Rien n'a été retenté ce run, le temps de dispositif ayant été consommé par les trois commentaires.
+- **Patrick AYONGA** : notre message du 25/08 est toujours le dernier, aucune réponse. Ne pas relancer.
+- **Mosoka Fallah** : voir §1, envoyé par David, sans réponse à 12 h d'intervalle.
+
+---
+
+### 3️⃣ RÉSEAU — 2 connexions nouvellement acceptées, les deux du 25/08
+
+**267 relations** (contre **265** aux trois relevés du 25/08). Les deux invitations parties tard le 25/08 ont été **acceptées le jour même** :
+
+- ⭐ **Alieu Sowe, PhD** (`/in/alieu-sowe-phd-4451bab2/`), *Epidemiology | Monitoring & Evaluation | Vaccination Programs | Disease Surveillance | Health Security*, **Ministry of Health, The Gambia**, 14 mutuels dont Lorenzo Pezzoli. Invitation envoyée **sans note sur ordre explicite de David**, après 6 angles morts documentés sur la note personnalisée. **Acceptée.** L'arbitrage de David était donc le bon : le profil était accessible, c'est la note qui était le problème. Voir §4 pour le message de bienvenue.
+- **Samba Bah** (`/in/samba-bah-737913b8/`), *Senior Operations Officer, Expanded Program on Immunization*. ⚠️ **Rappel du contexte** : cette invitation est partie **par erreur de ciblage** le 25/08, depuis une carte de suggestions en colonne latérale pendant un incident de rendu, sur un profil jamais évalué. David, informé en session, avait choisi de la laisser en l'état plutôt que d'insister sur un retrait bloqué par le classifieur. **Il l'a acceptée.** Le profil est en réalité pertinent pour HWG (opérations du Programme élargi de vaccination), mais il reste **jamais évalué sur le fond** : aucun message de bienvenue n'a été rédigé ce run, faute d'avoir lu son activité, et parce que le quota de dispositif était déjà consommé. **Carry-over : évaluer son activité réelle, puis décider s'il mérite un message de bienvenue.**
+
+**3 invitations envoyées toujours en attente** : Ihekweazu, SAIDOUNI, Linda Esso (envoyées le 24/08, **3e jour sans réponse**).
+
+**3 invitations reçues, toutes déjà tranchées, aucune nouvelle** : **Alain BASHIZI** (toujours en attente de la décision de David, sollicitation personnelle non traitée, ne pas répondre), **Zachariah G. Houdari** (hors sujet, conseiller en assurance-vie) et **OLAOLUWA PHILIP** (13e passage, profil non rouvert conformément à la consigne).
+
+**380 abonnés** (contre 377 le 25/08). Les 3 nouveaux : **Samba Bah** et **Alieu Sowe** (suivis automatiques liés à la connexion, déjà comptés en §3) et **Winston Urio** (*Social and Economic Empowerment Specialist*, « Let's plan for Sustainable Development »), **écarté** : développement social et économique, hors du périmètre épidémiologie / surveillance / santé publique. Pas de follow-back.
+
+---
+
+### 4️⃣ DM RÉDIGÉ CE RUN
+
+### ❌ DM ABANDONNÉ AU 4e ESSAI — **Alieu Sowe, PhD** (EN, message de bienvenue, sans lien ni CTA)
+
+**Aucun DM n'a été mis en file de validation ce run.** Le seul rédigé a été abandonné, et il l'a été d'une façon qui mérite d'être lue attentivement.
+
+**Contexte** : connexion acceptée le 25/08, fil vide, premier contact. **Son activité publique n'a rien de moins d'un an** (4 éléments, tous autour de sa thèse et de l'école d'Umeå), donc **aucun hook frais n'existe sur ce profil**, et six angles y sont déjà brûlés depuis le 24/08.
+
+**Fait produit vérifié en cours de run, à retenir** : **la Gambie ne figure pas parmi les 73 pays de la couverture citable de HWG** (`marketing/qa/product-claims.json`, `coverage.countries`). Aucun brouillon ne pouvait donc laisser entendre que HWG suit les données gambiennes. Ajouté au fichier de contexte pour les prochaines tentatives.
+
+**Les quatre essais :**
+
+1. **Essai 1 — mécanique FAIL** sur 3 séquences, dont **« outbreak bulletins from who afro »** et **« bulletins from who afro ecdc »**.
+2. **Essai 2 — mécanique PASS, relecteur REECRIRE (4, 11).** ⭐ **La question 4 a attrapé une affirmation produit fausse que je n'avais pas vue, et c'est la même que celle déjà rejetée le 25/08 sous une autre forme.** Le brouillon disait « *so a country reaches me already packaged* ». Le relecteur : « *Aucune ligne de product-claims.json ni de lexicon.json n'affirme que l'unité qui arrive est un pays* », et c'est « *"the numbers stay national" avec un autre verbe* », alors que des lignes de flambée portent bien un niveau `admin1`. Sur la 11, il a mesuré le dispositif rhétorique employé : verbe « **reaches me** » **41 occurrences** au corpus, « **upstream** » **22**, clôture en question binaire « A…, or B…? » **72**.
+3. **Essai 3 — réécriture depuis zéro par un rédacteur au contexte neuf**, sur un dispositif réellement différent (demander à quoi servent les bulletins publiés, vu du ministère qui connaît déjà sa propre situation). **Mécanique FAIL sur 10 séquences.** ⚠️ **Sept des dix sont la liste canonique des sources de HWG** : « *who don ecdc paho africa* », « *don ecdc paho africa cdc* », « *ecdc paho africa cdc who* », et ainsi de suite jusqu'à « *who afro and who emro* ». C'est **la seule affirmation que la politique commune autorise sur HWG**, et le contrôle la compte comme un gabarit dès la deuxième fois qu'on l'écrit.
+4. **Essai 4 — mécanique ABANDON** sur « *healthwatch global is a one* », « *global is a one person* », « *is a one person project* ». Autrement dit : **la phrase qui dit qui écrit est devenue un gabarit**, parce que David s'est déjà présenté ainsi.
+
+**QA: ABANDON après 4 essais | motifs: relecteur REECRIRE (4, 11) à l'essai 2, puis ngram.history aux essais 1, 3 et 4 | rien envoyé ni mis en file sur ce fil ce run**
+
+**Texte de l'essai 4, conservé tel quel** — il est exact, sans lien, sans CTA, sans affirmation produit non couverte, et publiable en l'état par un humain :
+
+> Dr Sowe, glad the invitation reached you. I should say who is writing: HealthWatch Global is a one person project of mine, built on the outbreak bulletins that public health agencies publish openly.
+>
+> Working on it raised something only the ministry side can settle. A ministry running its own surveillance and its own vaccination programme knows its own situation long before any of it appears in a regional or global bulletin. So once those bulletins are out, who are they for, and what work do they do? I can imagine watching neighbouring countries, or having something citable in front of partners, but imagining is not knowing, and it is a poor basis for deciding what to build next.
+>
+> Nothing to sell here. If the question is not worth your time, please ignore it with my compliments.
+
+⚠️ **Ce qu'il faut retenir de cet abandon, au-delà du message perdu.** Un DM de premier contact doit dire **qui écrit** et **ce qu'est HWG**. Ces deux phrases n'ont qu'un nombre fini de formulations vraies, et la politique commune en impose une pour la seconde. Le contrôle anti-gabarit à 5 mots interdit donc mécaniquement, à partir de la deuxième occurrence, **les deux seules phrases obligatoires d'un premier contact**. Ce n'est pas un réglage trop strict, c'est une contradiction entre deux règles du dispositif.
+
+---
+
+### 5️⃣ SUIVIS — 8 exécutés, quota atteint, 4 profils écartés ou constatés déjà suivis
+
+Découverte active par **deux recherches par mots-clés distinctes** (« disease surveillance epidemiologist », puis « outbreak surveillance one health »), le tracker ayant été consulté avant chaque évaluation. Détail complet et motif par profil dans `linkedin-candidates-tracker.md`, entrées du 26/08.
+
+| # | Profil | Poste | Motif court |
+|---|---|---|---|
+| 1 | **Linda Nyasha Kanzara** | *ID Epidemiologist, Disease Surveillance & Health Security, FETP*, **WHO**, Nairobi | 25+ mutuels, republie la riposte Ebola/RDC de WHO AFRO |
+| 2 | **Peace Mpakaniye** | *Respiratory ID Surveillance, Mortality Monitoring*, **Sciensano**, Belgique | Institut national de santé publique, poste directement sur cible |
+| 3 | **Rana Alhazzani** | *Certified Epidemiologist, Public Health & Disease Surveillance*, **Public Health Authority of Saudi Arabia** | Décision à la limite assumée : institution sur cible, activité publique en recherche pédiatrique |
+| 4 | **Dr Hannington Katumba** | *Epidemiologist & One Health Consultant, Zoonoses, Outbreak Investigation*, Kampala | ⭐ Le plus analytique du lot, post chiffré d'1 j sur l'accélération d'Ebola |
+| 5 | **Chukwunonso Umeononigwe** | *One Health, Veterinary Public Health, Disease Surveillance*, **Dept of Veterinary Services, Anambra State**, Nigéria | Angle vétérinaire, complémentaire d'un réseau surtout humain |
+| 6 | **Dr. Kaushik Sanyal** | *Public Health Entomologist, **ICMR-NIHR Bhubaneswar**, Molecular Surveillance* | Géographie et type de surveillance sous-représentés |
+| 7 | **Rodrigo Olave Hurtado** | *Infectious Disease Epidemiologist*, **LSHTM** | Veille hantavirus Chili, à l'origine de la piste §8 ci-dessous |
+| 8 | **Ibrahim K.** | *Public Health Officer, Epidemiologist, Digital Health*, **Ministry of Health**, Tanzanie | Périphérique assumé, mais affiliation ministérielle vérifiable |
+
+**Aucun de ces 8 profils n'a été traité en connexion** : dans chaque cas la production publique est faite de republications ou de contenu personnel, sans hook spécifique et honnête pour une note. C'est la répartition que la routine prévoit (« suivre seulement si pertinent mais plus périphérique »), pas un renoncement au quota de connexions.
+
+**4 profils évalués sans action :**
+- ❌ **Nicholas Laramee, MPH** — **écarté sur la barre de pertinence réelle.** Intitulé parfaitement sur cible (*ID Epidemiologist, ID Surveillance, Outbreak Response, One Health*), mais l'activité publique se résume à **trois commentaires de félicitations étalés sur six mois** et aucun employeur n'est affiché. Ne pas reproposer sans élément neuf.
+- 🔁 **Mame Awa D.** (*MoH Sénégal*) — pertinence validée, **suivi refusé par la plateforme** : toast « Impossible de suivre Mame Awa. Veuillez réessayer. » à 3 tentatives, dont une après rechargement complet **et** attente de l'hydratation réelle de la section Activité, ce qui écarte le piège du clic pendant le chargement. **Rien exécuté, non compté.** À retenter par la voie connexion.
+- ➖ **John Omari Baso** (*VillageReach, Goma, Nord-Kivu*, 49+ mutuels) — **déjà suivi**, statut « à traiter » du 16/08 périmé, corrigé au tracker. Slug enfin capturé. ⭐ Reste un excellent candidat **connexion**.
+- ➖ **Sabah Mathew** (*Field Epidemiologist, One Health*, Abuja) — **déjà suivie**.
+
+🔧 **Note technique réutilisable, née de Sabah Mathew.** Son profil n'affiche **aucun** bouton « Suivre », ni en section Activité ni en haut de page. La lecture naturelle est celle de Baba Ceesay et Syra Madad : suivi impossible, connexion seule voie. **C'est faux ici** : le menu « Plus » affiche **« Suivi »**. L'absence de bouton « Suivre » signifie donc parfois « déjà suivi ». **Vérifier le menu « Plus » avant de conclure à un suivi impossible.**
+
+---
+
+### 6️⃣ CE QUE LE DISPOSITIF A COÛTÉ CE RUN, ET CE QU'IL A SAUVÉ
+
+**Il a sauvé trois choses réelles**, toutes invisibles pour le contrôle mécanique et toutes trouvées par le relecteur :
+1. Une **ambiguïté de lecture résolue en ma propre faveur** dans le commentaire Salomon (« 260 décès hebdomadaires sur 6 semaines » se lit de deux façons, dont l'une inverse la conclusion).
+2. Une **erreur d'arrondi de 11 %** introduite **par une correction** que le contrôle mécanique avait lui-même exigée.
+3. Une **correction qui recopiait un message déjà envoyé au même destinataire** et resté sans réponse (Adetifa, essai 2, rappel de parcours identique au DM du 23/08).
+
+**Il a coûté trois commentaires**, dont deux dont le fond avait été explicitement validé par le relecteur, et **aucun des trois n'a été arrêté pour une raison de véracité, de langue, de ton ou de CTA**. Le motif terminal est à chaque fois le contrôle anti-gabarit à 5 mots, sur de l'anglais ordinaire : « *tends to be read as* », « *the other side of it* », « *its own separate from the* ».
+
+⚠️ **Le fait nouveau de ce run, et il ne relève plus de l'anecdote** : le message que David a envoyé lui-même hier soir à Mosoka Fallah (§1) est **exactement celui que le dispositif avait fait abandonner**. Le taux de faux positifs du contrôle anti-gabarit n'est plus une hypothèse de journal, il a maintenant un contre-exemple validé par le décideur.
+
+---
+
+### 🔁 CARRY-OVER POUR LE CRÉNEAU DE 13h — liste exhaustive
+
+1. 🔒 **File de validation VIDE.** Aucun DM n'attend David au moment de clore, hors celui rédigé ce run (§4). **Ne pas recopier « Mosoka Fallah en attente » : il a été envoyé le 25/08 à 21:38, vérifié dans le fil.**
+2. ⭐🔴 **Johan Verheyden attend toujours une réponse, 2e jour.** Ses deux messages du 25/08 (16:02 sur l'interpolation linéaire et le bayésien, 16:09 « il faut que je te donne un cours de stat il me semble 🤣 ») n'ont **toujours pas de réponse**. Abandonné au 4e essai le 25/08, non retenté ce run. Matière disponible et non contestée : sa 2e phrase sur le bayésien n'a jamais reçu de réponse. **Si David veut répondre lui-même, c'est le fil à ouvrir en premier.**
+3. 🛑 **Prof. Jérôme Salomon — décision de David requise, pas une retente mécanique.** Angle arithmétique vérifié et solide, blocage hebdomadaire tombé, mais la consigne permanente du 19/08 (« aucune correction publique sans décision de David ») s'applique. Le post `urn:li:activity:7497662922005958656` a 1 jour, **la fenêtre 48 h se ferme dans la nuit** : si David ne tranche pas aujourd'hui, l'occasion se ferme d'elle-même. Trois corrections à appliquer avant tout envoi si feu vert, listées dans `content-log.md`.
+4. ❌ **Ifedayo Adetifa** — commentaire abandonné au 4e essai, **texte de l'essai 4 conservé tel quel dans `content-log.md`**, publiable en l'état par un humain. Sa réponse publique du 26/08 reste sans suite de notre part. ⚠️ **Ne pas retenter mécaniquement à 13h** : quatre essais viennent d'être consommés, et un DM de bienvenue lui a déjà été envoyé le 23/08 sans réponse.
+5. ❌ **John Samuel Otomba** — commentaire abandonné au 4e essai pour la **2e session consécutive**, soit **8 essais cumulés sur le même post**, fond validé trois fois, ouverture rejetée quatre fois. Post encore dans la fenêtre 48 h jusqu'à ce soir. **À ne pas retenter par une 9e rédaction** : c'est le lexique qu'il faut corriger, pas le message.
+6. 🆕 **Samba Bah** (`/in/samba-bah-737913b8/`), *Senior Operations Officer, Expanded Program on Immunization* — **connexion acceptée le 25/08**, activité **jamais lue**, aucun message échangé. À évaluer sur le fond puis, si pertinent, message de bienvenue. Rappel : l'invitation était partie par erreur de ciblage, David a choisi de la laisser.
+7. 🆕 ⭐ **Dr Hannington Katumba** (`/in/dr-hannington-katumba-epi/`) — suivi ce run, **aucun blocage hebdomadaire**, post d'1 jour chiffré sur l'accélération d'Ebola en RDC. **Meilleur candidat commentaire neuf pour 13h ou 17h**, angle à trouver.
+8. 🆕 **John Omari Baso** (`/in/john-omari-baso-84500b1b0/`) — déjà suivi, slug enfin capturé, *VillageReach, Goma, Nord-Kivu*, **49+ mutuels dont Johan Verheyden**, 4 407 abonnés. **Excellent candidat connexion**, quota connexions à 0/7.
+9. 🔁 **Mame Awa D.** (`/in/mame-awa-d-96bb17239/`) — suivi refusé par la plateforme 3 fois, à retenter **par la connexion** plutôt que par le suivi.
+10. 🛑 **Alain BASHIZI** — toujours en attente de la décision de David, invitation reçue non acceptée, sollicitation personnelle non traitée. Ne pas répondre, ne pas relancer.
+11. **2 autres invitations reçues laissées en attente, inchangées** : **Zachariah G. Houdari** (hors sujet) et **OLAOLUWA PHILIP** (13e passage, profil non rouvert).
+12. **3 invitations envoyées toujours sans réponse** : Ihekweazu, SAIDOUNI, Linda Esso (24/08, 3e jour). **267 relations, 380 abonnés.**
+13. 🔴 **§8 — deux lacunes de couverture à transmettre à `morning-don-check`** : (a) **hantavirus au Chili**, alerte sanitaire MINSAL, létalité presque doublée, sources primaires ISP et `hantavirus.cl` ; (b) **dengue aux Îles Marshall**, toujours aucune ligne au registre, **carry-over du 25/08 non résolu**.
+14. 🔴 **§8 — divergence interne au registre, non résolue depuis le 25/08** : deux lignes Ebola / RD Congo, l'une **active** à 5 514 cas / 2 642 décès au 22/08 (ECDC, fraîche), l'autre **close** à 4 120 / 1 887 au 07/08 (Africa CDC, périmée). À trancher hors routine.
+15. ⚠️ **Alerte de fraîcheur du registre, 6e jour consécutif** : Shigellosis / EU-EEA **54 j**, Diphtheria / 8 pays **41 j**, Meningitis / 4 pays **34 j**.
+16. 🔧 **Trois défauts d'outillage à trancher hors routine**, détaillés dans `content-log.md` : le faux positif `facts.stale` sur un nombre calculé, le seuil de 5 mots qui bloque de l'anglais ordinaire (**4e jour de signalement, désormais premier facteur de perte du dispositif**), et l'asymétrie de veto entre les deux étages de contrôle.
+17. 🛑 **Écartés du jour, ne pas reproposer sans élément neuf** : **Nicholas Laramee** (titre sur cible, aucune activité de fond) ; **Winston Urio** (nouvel abonné, développement social et économique, hors périmètre) ; **Jill Weatherhead** et **Lorenzo Subissi** (motifs inchangés depuis le 25/08).
+18. **Carry-overs permanents inchangés, non revérifiés ce run** : Kaushal Sharma, Barrè Onivogui, Andrea Bernasconi, Lorenzo Pezzoli, Mohamed Ousmane COULIBALY, Anuradha Gupta (part 3 de sa série annoncée pour le **01/09**), Bouh Abdi Khaireh (message de bienvenue toujours non rédigé, hook non vérifiable, §10 s'applique). **Homonymies non arbitrées** : Jean-Jacques Muyembe (**11e jour**) et Jide Idris.
+19. **Blocages hebdomadaires de commentaire en cours** : Melvin Sanicas, Robert Herriman, Patrick AYONGA, Ifedayo Adetifa, page ECDC, Oliver Morgan, Dr Fabrice KHADDY (jusqu'au 30/08) ; Apoorva Wasnik et Johan Verheyden (jusqu'au 29/08) ; Martin Yakum (jusqu'au 01/09). **Prof. Jérôme Salomon n'est plus bloqué depuis ce matin.** **Aucun blocage nouveau créé ce run, puisque rien n'a été publié.**
+20. ✅ **Arbre de travail propre à l'ouverture comme à la clôture** : `git status` ne montre aucun fichier modifié n'appartenant pas à cette routine. Contrairement au 25/08, il n'y a rien à signaler au titre d'`AGENTS.md`.
+
+---
+
 ## 📅 Session linkedin-hwg-followup-check-2 — 25/08/2026 (17h, 2e des 2 créneaux après-midi)
 
 **Vérification double déclenchement** : aucune entrée `linkedin-hwg-followup-check-2` datée du 25/08 dans ce fichier ni dans `content-log.md` à l'ouverture → **premier déclenchement de cette routine aujourd'hui**.
