@@ -26,6 +26,10 @@ export async function POST(req: NextRequest) {
   const ip = getClientIp(req);
   const rl = await rateLimit(`reset-password:${ip}`, { limit: 5, windowMs: 60 * 60 * 1000 });
   if (!rl.allowed) {
+    // La page forgot-password ne lit pas le code de retour : elle affiche
+    // « vérifiez votre boîte » même sur un 429. Sans cette ligne, cinq essais
+    // rapprochés rendent la fonctionnalité muette sans laisser de trace.
+    console.warn(`[reset-password] 429 — plafond de 5/h atteint pour cette IP, aucun envoi tenté`);
     return NextResponse.json({ error: "Too many requests" }, { status: 429 });
   }
 
@@ -54,6 +58,14 @@ export async function POST(req: NextRequest) {
     // Don't leak whether an account exists for this email — always report
     // success to the caller, but capture unexpected failures for visibility.
     if (linkErr || !linkData?.properties?.action_link) {
+      // Journalisé dans tous les cas. Le « compte introuvable » est un
+      // fonctionnement normal côté produit (on ne révèle pas qui a un compte),
+      // mais côté exploitation c'est la seule chose qui distingue « personne
+      // n'a ce mail » de « notre chaîne d'envoi est cassée » — et sans trace,
+      // les deux se ressemblent depuis le navigateur.
+      console.warn(
+        `[reset-password] aucun lien généré — ${linkErr ? `erreur Supabase: ${linkErr.message}` : "generateLink n'a pas renvoyé d'action_link"}. Aucun e-mail envoyé.`,
+      );
       if (linkErr && !/not.?found/i.test(linkErr.message)) {
         Sentry.captureException(new Error(`[reset-password] generateLink error: ${linkErr.message}`), {
           tags: { route: "reset-password" },
@@ -103,6 +115,10 @@ export async function POST(req: NextRequest) {
       const err = await brevoRes.text();
       console.error("[reset-password] Brevo error:", err);
       Sentry.captureException(new Error(`[reset-password] Brevo error: ${err}`), { tags: { route: "reset-password" } });
+    } else {
+      // Le succès aussi se journalise : sans lui, des logs vides voudraient dire
+      // aussi bien « tout va bien » que « la route n'a jamais été appelée ».
+      console.info(`[reset-password] envoi demandé à Brevo (HTTP ${brevoRes.status})`);
     }
 
     // Always report success — matches the anti-enumeration behavior the
