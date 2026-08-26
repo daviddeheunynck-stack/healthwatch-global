@@ -99,12 +99,20 @@ const FUNCTION_WORDS = new Set(
 );
 const contentCount = (arr) => arr.filter((w) => !FUNCTION_WORDS.has(w)).length;
 
+// Seuil relevé de 2 à 3 le 2026-08-26, après un incident documenté : des
+// tournures d'anglais courant (« tends to be read as », « the other side of
+// it ») ne contiennent que 2 mots non-fonctionnels et se faisaient bloquer
+// comme gabarit recyclé alors qu'elles n'ont rien de spécifique à un message —
+// deux rédacteurs indépendants les produiraient l'un et l'autre pour un sujet
+// proche. Un vrai gabarit recyclé (accroche, CTA, clôture) porte presque
+// toujours 3 mots substantiels ou plus ; ce seuil laisse passer la
+// coïncidence de langue sans laisser passer la formule recopiée.
 const ngrams = (text, n) => {
   const w = words(text);
   const out = new Set();
   for (let i = 0; i + n <= w.length; i++) {
     const slice = w.slice(i, i + n);
-    if (contentCount(slice) < 2) continue;
+    if (contentCount(slice) < 3) continue;
     out.add(slice.join(" "));
   }
   return out;
@@ -248,7 +256,23 @@ for (const m of draftText.matchAll(/\d[\d\s  .,]*\d|\d+/g)) {
     continue;
   }
 
+  // Une même valeur numérique peut correspondre à des dizaines de lignes du
+  // registre (foyers et maladies différentes). Ne juger la fraîcheur ou le
+  // statut d'UNE ligne précise que si sa maladie ou son pays apparaît dans la
+  // même phrase — sinon un nombre non épidémiologique (une moyenne calculée,
+  // un pourcentage) se fait bloquer par la ligne la plus stricte du registre
+  // qui partage sa valeur, sans rapport avec le sujet réel. Incident du
+  // 26/08 : « 56 » (moyenne calculée, 5 290 / 95 jours) bloqué comme périmé
+  // sur une ligne Diphtérie/Mauritanie absente de la phrase.
+  let contextConfirmed = false;
   for (const f of matches) {
+    const aroundLower = around.toLowerCase();
+    const mentionsLine = [f.disease, f.diseaseFr, f.country, f.countryFr].some(
+      (name) => name && aroundLower.includes(name.toLowerCase())
+    );
+    if (!mentionsLine) continue;
+    contextConfirmed = true;
+
     const label = `${f.disease} / ${f.country} (${f.kind}, source vérifiée le ${(f.confirmedAt ?? f.updatedAt)?.slice(0, 10)}, ${f.ageDays} j)`;
     if (f.stale && !draftDates.length && !/\bau \d|\ble \d|\bas of\b|\bà la date\b/i.test(around)) {
       add(
@@ -266,6 +290,14 @@ for (const m of draftText.matchAll(/\d[\d\s  .,]*\d|\d+/g)) {
         label
       );
     }
+  }
+  if (!contextConfirmed && matches.length > 0) {
+    add(
+      "info",
+      "facts.value-no-context-match",
+      `Chiffre ${m[0]} présent dans le registre mais pour un foyer non nommé dans la phrase.`,
+      `${matches.length} ligne(s) du registre partagent cette valeur, aucune dont la maladie/le pays n'apparaît dans « …${around.trim()}… » — non rapproché automatiquement, à confirmer par le relecteur si besoin.`
+    );
   }
 }
 

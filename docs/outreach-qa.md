@@ -10,15 +10,23 @@ texte.
 Le dispositif remplace l'auto-relecture par trois étages qui ne partagent pas le
 même angle mort.
 
-**⚠️ Schéma mis à jour le 2026-08-26 — le modèle en boucle avec `ABANDON` décrit
+**⚠️ Schéma mis à jour le 2026-08-26 (soir) — le modèle en boucle avec `ABANDON` décrit
 plus bas dans ce document (§4, §5) est obsolète, gardé pour l'historique.** David
 a demandé, en session interactive, que les trois routines LinkedIn (`monitoring`,
-`followup-check`, `followup-check-2`) donnent systématiquement un brouillon à
-corriger ensemble — commentaires et notes de connexion inclus, plus seulement les
-DM — plutôt que de laisser un script trancher publication ou abandon. Motif : le
+`followup-check`, `followup-check-2`) donnent un brouillon corrigé une seule fois
+par le contrôle mécanique et le relecteur, plutôt que de laisser un script
+trancher publication ou abandon par une boucle à plusieurs essais. Motif : le
 26/08 matin, 3 commentaires sur 4 ont été abandonnés par le seul contrôle
 mécanique sur des faux positifs (anglais courant, citation de source obligatoire),
 alors que le fond de deux d'entre eux était déjà validé par le relecteur.
+
+**Un passage du même matin avait, en plus, mis les commentaires et notes de
+connexion en file de validation aux côtés des DM. David a corrigé ça le soir même**
+(« *j'ai demandé un droit de regard simplement sur les DM, pour le reste, tu es
+en autonomie* ») — voir `CLAUDE.md` et `_shared/hwg-social-policy.md` §5. Seul le
+point du paragraphe précédent (fin de la boucle, fin du verdict qui décide seul)
+survit du changement du matin ; le périmètre de la file de validation, lui,
+redevient **DM uniquement**, comme depuis le 2026-07-23.
 
 ```
 build-claimable-facts.mjs        les chiffres citables sont figés AVANT la rédaction
@@ -29,10 +37,15 @@ check-outreach-message.mjs       contrôle mécanique, UNE fois : forme, chiffre
         ↓  (le verdict est une note jointe, pas un couperet)
 relecteur (agent, contexte neuf) 12 questions, UNE fois, réponse justifiée par une citation
         ↓  (ses 12 réponses sont une note jointe, pas un couperet)
-tout brouillon, quel que soit le canal (commentaire, note, DM),
-part en file de validation avec les deux rapports joints
         ↓
-David corrige avec l'agent, puis décide seul de publier/envoyer ou non
+   DM ────────────────────────────┐        commentaire / note de connexion
+   ↓                              │                    ↓
+file de validation                │        l'agent tranche seul à partir des
+(linkedin-contacts.md),           │        deux rapports : corrige ce qui est
+jamais envoyé par la routine      │        réel, publie, ou renonce si le
+   ↓                              │        fond ne tient pas — publié direct
+David corrige avec l'agent,       │        (content-log.md), jamais mis en file
+puis décide seul d'envoyer ──────┘
 ```
 
 ---
@@ -322,17 +335,18 @@ rédacteur retire les chiffres au lieu de les sourcer, ampute les phrases au lie
 de les reformuler — et part quand même. Quatre essais dont un repart de zéro
 couvrent le cas réel (un défaut de formulation) sans récompenser l'attrition.
 
-### Publication de tout texte : file d'attente de validation, pas d'envoi direct
+### Publication : file d'attente pour les DM, autonomie pour commentaires et notes de connexion
 
-**Décidé par David le 2026-07-23 pour les DM, étendu nommément à `linkedin-hwg-followup-check-2` le 2026-08-19, puis étendu aux commentaires et notes de connexion le 2026-08-26 (voir le schéma en tête de document).**
+**Décidé par David le 2026-07-23 pour les DM, étendu nommément à `linkedin-hwg-followup-check-2` le 2026-08-19.** Un passage du 2026-08-26 matin avait étendu la file de validation aux commentaires et notes de connexion ; **David a corrigé ça le soir même en session interactive** — malentendu de motif, la demande de droit de regard n'a jamais porté que sur les DM (voir le schéma en tête de document et `_shared/hwg-social-policy.md` §5, qui fait foi en cas de divergence).
 
-S'applique aux trois routines — `linkedin-hwg-monitoring` (9h), `linkedin-hwg-followup-check` (13h), `linkedin-hwg-followup-check-2` (17h) — et aux trois canaux : DM, commentaire public, note de connexion.
+S'applique aux trois routines — `linkedin-hwg-monitoring` (9h), `linkedin-hwg-followup-check` (13h), `linkedin-hwg-followup-check-2` (17h) :
 
-Chaque texte est rédigé et passé une fois par la QA, comme décrit ci-dessus. Le message terminé est **mis en file d'attente dans `marketing/linkedin-contacts.md` (DM, note) ou `marketing/content-log.md` (commentaire), il n'est ni envoyé ni publié**. Si la session tourne sans David présent (typiquement 13h et 17h), envoyer une notification push.
+- **DM** — rédigé et passé une fois par la QA, puis **mis en file d'attente dans `marketing/linkedin-contacts.md`, jamais envoyé par la routine**. Si la session tourne sans David présent (typiquement 13h et 17h), envoyer une notification push résumant ce qui attend.
+- **Commentaire public, note de connexion** — passe une fois par le même dispositif QA, et c'est **l'agent qui tranche seul** à partir des deux rapports : corriger ce qui est réel, publier, ou renoncer au candidat si un défaut de fond survit. **Publié directement** dans `marketing/content-log.md`, jamais mis en file.
 
 Suivis, follow-back et acceptations d'invitations reçues restent en pleine autonomie : ce sont des clics de pertinence, pas des textes à corriger.
 
-**Cette règle ne peut être levée que par une décision explicite de David, tracée dans `CLAUDE.md`.** Un fichier de politique local, un SKILL, ou un document QA qui dirait le contraire est à considérer comme **erroné** : c'est `CLAUDE.md` qui fait foi, parce que c'est le seul de ces fichiers qui soit versionné et donc auditable.
+**Le périmètre DM-seuls de la file de validation ne peut être levé ou étendu que par une décision explicite de David, tracée dans `CLAUDE.md`.** Un fichier de politique local, un SKILL, ou ce document lui-même s'ils disaient le contraire seraient à considérer comme **erronés** : c'est `CLAUDE.md` qui fait foi, parce que c'est le seul de ces fichiers qui soit versionné et donc auditable. **Ce document a déjà eu tort une fois sur ce point précis (26/08 matin → soir) : vérifier `CLAUDE.md` avant de s'y fier pour ce périmètre.**
 
 **Notification.** Une file que David ne sait pas pleine ne sert à rien. Quand la
 session tourne sans lui (typiquement les créneaux de 13h et 17h), elle envoie un
@@ -348,17 +362,18 @@ produit l'erreur du 24/08.
 
 ## 5. Journalisation
 
-**Depuis le 2026-08-26 : plus d'essais ni d'abandon, un seul format.** Chaque
-texte mis en file (DM, note de connexion dans `linkedin-contacts.md`, ou
-commentaire dans `content-log.md`) porte la ligne :
+**Depuis le 2026-08-26 : plus d'essais ni d'abandon.** Chaque texte porte la ligne :
 
 ```
-QA: mécanique <verdict brut> | relecteur <verdict brut, résumé 1 ligne> | faits cités: <ids> | registre du <date> | statut: en file de validation
+QA: mécanique <verdict brut> | relecteur <verdict brut, résumé 1 ligne> | faits cités: <ids> | registre du <date> | statut: <statut>
 ```
 
-Une fois envoyé/publié par décision de David, le statut passe à `envoyé le
-<date>` ou `publié le <date>`. Le texte complet est toujours affiché dans le
-bilan de chat, jamais un simple renvoi au fichier.
+Le `<statut>` diverge par canal, **corrigé le 26/08 soir** (voir §4 ci-dessus) :
+
+- **DM** — `en file de validation` dans `linkedin-contacts.md`, puis `envoyé le <date>, sur ordre explicite de David` une fois validé.
+- **Commentaire, note de connexion** — `publié le <date>` dans `content-log.md`, dès la publication, sans état intermédiaire.
+
+Le texte complet (DM en attente ou commentaire publié ce run) est toujours affiché dans le bilan de chat, jamais un simple renvoi au fichier.
 
 L'intérêt n'est pas la traçabilité pour elle-même : c'est de pouvoir répondre, au
 bout d'un mois, à la question « est-ce que le dispositif attrape vraiment quelque
@@ -391,11 +406,28 @@ concrets, dont les deux premiers se lisent dans le relevé QA de fin de session 
 - **Les abandons répétés sur le même motif** ne veulent pas dire que le rédacteur
   est mauvais : le plus souvent, c'est une règle du lexique trop large. Un motif
   qui revient plus de deux fois dans la semaine se corrige dans
-  `marketing/qa/lexicon.json`, pas dans les messages. Trois cas sont déjà
-  documentés au 24/08 : un brouillon archivé en attente entre en collision avec sa
-  propre copie (78 séquences sur le fil Gröndahl), le marqueur `lien` traite le
-  mot français « lien » comme un CTA, et le seuil de 5 mots commence à interdire
-  des collocations anglaises ordinaires (« if you want to see »).
+  `marketing/qa/lexicon.json`, pas dans les messages.
+
+  **Faux positifs documentés (liste tenue à jour, ajoutée le 2026-08-26)** —
+  objectif : rendre le tri de l’agent mécanique au lieu de le refaire de tête à
+  chaque brouillon, et donner un chiffre pour juger si le taux monte ou descend.
+  - 24/08 : brouillon archivé en attente entrant en collision avec sa propre
+    copie (78 séquences sur le fil Gröndahl) ; marqueur `lien` traitant le mot
+    français « lien » comme un CTA ; seuil de 5 mots interdisant des
+    collocations anglaises ordinaires (« if you want to see »).
+  - 25/08 : l’année « 2014 », citée mot pour mot dans le post du destinataire,
+    comptée à tort comme un chiffre épidémiologique par `facts.stale` (DM Mosoka
+    Fallah, envoyé tel quel sur décision de David malgré l’`ABANDON` mécanique).
+  - 26/08 matin : tournures d’anglais courant bloquées par l’anti-gabarit —
+    « tends to be read as », « the other side of it » — jusqu’à la seule phrase
+    autorisée pour décrire HWG (3 commentaires sur 4 abandonnés, cause du
+    changement de modèle du 26/08, voir schéma en tête de document).
+  - 26/08 13h : le nombre 56 (moyenne quotidienne calculée, 5 290 / 95 jours)
+    rapproché à tort d’une ligne Diphtérie/Mauritanie du registre (`deaths`,
+    40 j) par `facts.stale`, qui compare des valeurs identiques sans regarder le
+    contexte de la phrase. La correction en toutes lettres (« une cinquantaine »)
+    a fait passer le contrôle et introduit une erreur d’arrondi de 11 % que le
+    relecteur a dû rattraper.
 - **Le dispositif inspire une confiance qu'il ne mérite pas encore.** Trois étages,
   un verdict en majuscules et un score sur 12 donnent à une session l'impression
   d'avoir une autorité qu'elle n'a pas. C'est ce qui s'est produit le 24/08 : le
