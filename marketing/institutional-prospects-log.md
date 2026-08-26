@@ -2442,3 +2442,11 @@ Toutes en réponse dans le fil d'origine (`replyToMessageId`), objet « Re: … 
 **Prochains lots, calendrier d'étalement mis à jour :**
 - **27/08** → lot du **06/08 recréé** (10 moins HZJZ verrouillé, soit **9**, J+10) + lot du **17/08** (10, J+10, rendez-vous Variante A EAC / IGAD / SADC / AFROHUN / EUPHA) = **19**. ⚠️ **Le frein de file mordra probablement** : 19 relances sur une file qui contiendra déjà les 10 de la prospection du 27/08, plus les 22 d'aujourd'hui si David ne les envoie pas d'ici là. Si la file de départ dépasse ~6, le run devra réduire et reporter au 28/08 — prioriser alors le lot du 06/08 recréé, plus ancien de quelques minutes à l'envoi.
 - **28/08** → lot du **18/08** (10, J+10) + tout reliquat reporté du 27/08.
+
+### 📬 Addendum — accusé automatique reçu après la clôture du run
+
+**Terviseamet (Estonie) — Kärt Sõber, réponse automatique d'absence.** Reçue le 2026-08-26 vers 13:01 (heure de Paris), objet « Automaatvastus: HealthWatch Global — outbreak signal for Terviseamet », en réponse à la relance créée ce run (n° 8 du tableau ci-dessus, `kart.sober@terviseamet.ee`, fil `1a0043f4fcf970ba`) puis envoyée par David dans la journée. Message en estonien : absence signalée pour le 24/08 (**texte visiblement non mis à jour** — antérieur à l'envoi), redirection en urgence vers Julia Geller (`julia.geller@terviseamet.ee`).
+
+**Traitement — précédent THL Finlande (25/08) appliqué** : un accusé automatique compte comme une réponse reçue, pas de nouvelle relance sur ce contact. **Kärt Sõber (Terviseamet) est donc à exclure de tout futur cycle de relance**, comme THL. La boîte de secours `julia.geller@terviseamet.ee` n'est **pas** une piste de prospection neuve — c'est une redirection d'absence, pas une adresse fonctionnelle publiée par l'institution ; ne pas la retenir sans vérification indépendante sur source officielle.
+
+Observation transmise par David en session (capture d'écran Gmail), hors balayage automatisé de cette routine — consignée ici pour que le prochain run `daily-relance-check-healthwatch` en tienne compte.
