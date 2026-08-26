@@ -2,7 +2,7 @@
 
 Archive de tout le contenu créé. Mise à jour à chaque session.
 
-## 📅 Session linkedin-hwg-content-proposal — 26/08/2026 (mercredi MWF, 8h35) — 🟢 **PROPOSÉ À DAVID, non publié**
+## 📅 Session linkedin-hwg-content-proposal — 26/08/2026 (mercredi MWF, 8h35) — ✅ **PUBLIÉ le 26/08 (dérogation ponctuelle, David a tapé « publie » en session interactive)**
 
 **Vérification double déclenchement** : aucune entrée `linkedin-hwg-content-proposal` datée du 26/08 dans ce fichier à l'ouverture → premier déclenchement du jour.
 
@@ -49,9 +49,11 @@ Le premier angle envisagé reprenait littéralement le carry-over : les **7 lign
 - **Erreur de fait attrapée par moi, hors relecteur** : le brouillon disait *« reverified this morning, 2026-08-26 »*. Le registre donne `source_confirmed_at = 2026-08-25T13:32:57Z`. `ageDays: 0` est un arrondi de moins de 24 h, pas « ce matin ». Corrigé en `2026-08-25`.
 - **Relecture éditoriale finale (item 8)** : deux retouches, *« on our own dashboard »* au lieu de *« on our dashboard »* (l'auto-implication doit être lisible dès la première ligne, pas seulement au 8e paragraphe) et une répétition de *« carries »* supprimée. Rien d'autre à changer.
 
-### 4️⃣ TEXTE PROPOSÉ — statut : **PRÊT — en attente de publication par David**
+### 4️⃣ TEXTE — statut : **PUBLIÉ ✅ le 26/08/2026**
 
 Contrôle mécanique `PASS` (essai 4), 1754 caractères, 10 paragraphes, langue `en`. Aucun tiret cadratin. Faits cités : Mpox/Ouganda `cases=8512, deaths=52, asOf=2026-04-05, source_confirmed_at=2026-08-25` et Méningite/Burkina Faso `cases=1495, deaths=64, asOf=2026-06-28`, ancienneté de vérification 34 j.
+
+**Double-check demandé par David avant publication** (« double check le post »), en session interactive, sur le brouillon proposé initialement : faits revérifiés contre un registre régénéré à l'instant (rien n'avait bougé), raisonnement retracé phrase par phrase, y compris la formulation dense « the verification side is the staler of the two » (comparaison entre les deux horloges de vérification des deux lignes citées, pas à l'intérieur d'une même ligne — confirmée correcte). Relancer `qa:check` à ce moment renvoyait `ABANDON` (293 collisions `ngram.history`) : **faux positif structurel déjà documenté le 23/08 et le 25/08**, causé par l'archivage obligatoire du texte dans `content-log.md` avant présentation, ce fichier étant lui-même dans le corpus anti-gabarit (`marketing/qa/lexicon.json` → `ngram.corpus`) — le contrôle comparait le brouillon à sa propre copie archivée. Non traité comme un rejet réel, conformément à la règle « l'angle, pas le compteur » et à la mise en garde déjà consignée sur cet angle mort. David a ensuite tapé **« publie »** directement en session, autorisation explicite pour ce post précis (règle `CLAUDE.md`, dérogation ponctuelle, non extrapolable aux prochains posts).
 
 > The mpox line for Uganda on our own dashboard had its source reverified on 2026-08-25. The figure it carries, 8512 cases and 52 deaths, is dated 2026-04-05.
 >
@@ -88,10 +90,10 @@ Aucune écriture tentée depuis cette routine (`AGENTS.md` : le code et les donn
 
 Conformément à `AGENTS.md`, cette routine ne stage que `marketing/content-log.md`. Laissés tels quels et signalés : `package.json` (modifié) et, non suivi, `scripts/check-stripe-prices.mjs`. Les fichiers `marketing/qa/*.json` ont été **régénérés par ce run** mais appartiennent au dispositif QA, pas à cette routine, et restent non commités. Branche courante : `feat/region-coverage`.
 
-**🖥️ Navigateur** : jamais ouvert. Le post n'est pas publié par l'agent, donc aucune sélection de deviceId, aucun redémarrage de Chrome en fin de session.
+**🖥️ Navigateur** : ouvert en session interactive au moment de la publication (David a tapé « publie »), navigateur habituel `23c7ecdd-…` (« Browser 1 »), seul connecté, sélectionné sans question (§7, `AskUserQuestion` indisponible dans cet environnement). Deux timeouts `Page.captureScreenshot` rencontrés en cours de session, résolus à chaque fois par re-`select_browser` (procédure §7 confirmée). Un incident mineur : une touche `Page_Down` non reconnue s'est tapée en texte littéral en fin de post (« …comPage_Down »), détecté par capture avant tout clic sur Publier et corrigé (`BackSpace` × 9) puis revérifié. Relecture intégrale du texte affiché (haut et bas, via `ctrl+Home`/`ctrl+End`) effectuée avant publication, conforme mot pour mot à l'archive. Carte de lien `healthwatch-global.com` confirmée rendue (titre + domaine visibles) avant de chercher le bouton Publier — trouvé hors champ via navigation au clavier (`Tab`/`shift+Tab`), le défilement à la souris restant inopérant à cette taille de fenêtre comme documenté. Toast « Le post a bien été publié » confirmé, texte complet redéployé (« …plus ») et revérifié identique à l'archive. Pas de redémarrage de Chrome en fin de session (à vérifier selon `chrome-end-of-session-restart.md` en fin de run complet, hors périmètre de cette mise à jour ponctuelle).
 
 ```
-QA: PROPOSÉ | mécanique PASS (essai 4) | relecteur REECRIRE 4, 6, 7, 9 puis corrections ciblées appliquées (11 et 12 en PASS, angle validé) | 1 angle abandonné avant rédaction (West Nile Europe, contredit par une source HWG plus fraîche) | 1 angle rejeté au relecteur (carte multi-dates, échec 11 et 12) | faits cités: Mpox/Uganda asOf 2026-04-05 + Meningitis/Burkina Faso asOf 2026-06-28 | registres du 26/08 06h38 | rien publié, en attente de David
+QA: PUBLIÉ ✅ le 26/08 | mécanique PASS (essai 4) | relecteur REECRIRE 4, 6, 7, 9 puis corrections ciblées appliquées (11 et 12 en PASS, angle validé) | double-check supplémentaire demandé par David en session, faux positif ngram.history (auto-collision avec l'archive) écarté | 1 angle abandonné avant rédaction (West Nile Europe, contredit par une source HWG plus fraîche) | 1 angle rejeté au relecteur (carte multi-dates, échec 11 et 12) | faits cités: Mpox/Uganda asOf 2026-04-05 + Meningitis/Burkina Faso asOf 2026-06-28 | registres du 26/08 06h38 | publié sur ordre explicite de David tapé en session (« publie »)
 ```
 
 ---
