@@ -14,6 +14,8 @@ import SlackWebhookForm from "@/components/SlackWebhookForm";
 import ApiKeyManager from "@/components/ApiKeyManager";
 import TrackPageView from "@/components/TrackPageView";
 import { PRICE_DISPLAY } from "@/lib/pricing";
+import { ALERT_REGIONS, regionCountryCount, regionCountryNames } from "@/lib/region-coverage";
+import type { RegionCoverage } from "@/components/AlertRegionToggles";
 import type { Metadata } from "next";
 
 const ACCOUNT_META: Record<string, { title: string }> = {
@@ -59,6 +61,10 @@ const ALERT_LABELS: Record<string, {
   title: string; desc: string; locked: string; upgrade: string; error: string;
   emptyHint?: string; regionLabels: Record<string, string>;
   minRiskLabel: string; minRiskOptions: Record<string, string>;
+  // "{count}" est remplacé par le nombre réel de pays de la région, dérivé de
+  // lib/geo-data.ts. Ne jamais y écrire un chiffre en dur : c'est le premier
+  // endroit du produit qu'un épidémiologiste vérifiera.
+  coverageCount: string; coverageShow: string;
 }> = {
   fr: {
     title: "Alertes par région",
@@ -70,6 +76,8 @@ const ALERT_LABELS: Record<string, {
     regionLabels: { africa: "Afrique", asia: "Asie", americas: "Amériques", europe: "Europe", oceania: "Océanie" },
     minRiskLabel: "Seuil minimum",
     minRiskOptions: { high: "Risque élevé seulement", medium: "Risque modéré et plus", low: "Tous niveaux" },
+    coverageCount: "{count} pays et territoires couverts",
+    coverageShow: "voir la liste",
   },
   en: {
     title: "Regional alerts",
@@ -81,6 +89,8 @@ const ALERT_LABELS: Record<string, {
     regionLabels: { africa: "Africa", asia: "Asia", americas: "Americas", europe: "Europe", oceania: "Oceania" },
     minRiskLabel: "Minimum severity",
     minRiskOptions: { high: "High risk only", medium: "Medium risk and up", low: "All levels" },
+    coverageCount: "{count} countries and territories covered",
+    coverageShow: "see the list",
   },
   es: {
     title: "Alertas regionales",
@@ -92,6 +102,8 @@ const ALERT_LABELS: Record<string, {
     regionLabels: { africa: "África", asia: "Asia", americas: "Américas", europe: "Europa", oceania: "Oceanía" },
     minRiskLabel: "Severidad mínima",
     minRiskOptions: { high: "Solo riesgo alto", medium: "Riesgo medio y superior", low: "Todos los niveles" },
+    coverageCount: "{count} países y territorios cubiertos",
+    coverageShow: "ver la lista",
   },
   ar: {
     title: "التنبيهات الإقليمية",
@@ -103,6 +115,8 @@ const ALERT_LABELS: Record<string, {
     regionLabels: { africa: "أفريقيا", asia: "آسيا", americas: "الأمريكتان", europe: "أوروبا", oceania: "أوقيانوسيا" },
     minRiskLabel: "الحد الأدنى للخطورة",
     minRiskOptions: { high: "خطر مرتفع فقط", medium: "خطر متوسط فأعلى", low: "جميع المستويات" },
+    coverageCount: "{count} دولة وإقليماً مشمولة",
+    coverageShow: "عرض القائمة",
   },
   id: {
     title: "Peringatan regional",
@@ -114,6 +128,8 @@ const ALERT_LABELS: Record<string, {
     regionLabels: { africa: "Afrika", asia: "Asia", americas: "Amerika", europe: "Eropa", oceania: "Oseania" },
     minRiskLabel: "Tingkat keparahan minimum",
     minRiskOptions: { high: "Hanya risiko tinggi", medium: "Risiko sedang ke atas", low: "Semua tingkat" },
+    coverageCount: "{count} negara dan wilayah tercakup",
+    coverageShow: "lihat daftar",
   },
 };
 
@@ -482,6 +498,16 @@ export default async function AccountPage({
   );
 
   const al = ALERT_LABELS[locale] ?? ALERT_LABELS.en;
+
+  // Couverture réelle de chaque région, calculée ici (côté serveur) plutôt que
+  // dans le composant client : lib/geo-data.ts pèse 47 Ko et n'a rien à faire
+  // dans le bundle d'une page de réglages.
+  const alertCoverage: Record<string, RegionCoverage> = Object.fromEntries(
+    ALERT_REGIONS.map((r) => [
+      r,
+      { count: regionCountryCount(r), countries: regionCountryNames(r, locale) },
+    ]),
+  );
   const sl  = SLACK_LABELS[locale]   ?? SLACK_LABELS.en;
   const akl = API_KEY_LABELS[locale] ?? API_KEY_LABELS.en;
 
@@ -732,6 +758,7 @@ export default async function AccountPage({
           initialRegions={initialAlertRegions}
           initialMinRisk={initialAlertMinRisk}
           labels={al}
+          coverage={alertCoverage}
         />
       </div>
 

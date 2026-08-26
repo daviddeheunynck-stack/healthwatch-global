@@ -19,6 +19,21 @@ export interface AlertRegionLabels {
   regionLabels: Record<string, string>;
   minRiskLabel: string;
   minRiskOptions: Record<string, string>;
+  // Couverture — voir lib/region-coverage.ts. "{count}" est remplacé par le
+  // nombre réel de pays, dérivé de geo-data, jamais écrit à la main.
+  coverageCount?: string;
+  coverageShow?: string;
+}
+
+/**
+ * Couverture réelle d'une région : le nombre de pays et leur liste, déjà
+ * localisés. Calculée côté serveur (voir app/[locale]/account/page.tsx) pour
+ * que `lib/geo-data.ts` — 47 Ko de données pays — ne parte pas dans le bundle
+ * client d'une page de réglages.
+ */
+export interface RegionCoverage {
+  count: number;
+  countries: string[];
 }
 
 interface Props {
@@ -26,11 +41,12 @@ interface Props {
   initialRegions: string[];
   initialMinRisk?: Record<string, string>;
   labels: AlertRegionLabels;
+  coverage?: Record<string, RegionCoverage>;
 }
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
-export default function AlertRegionToggles({ isPaid, initialRegions, initialMinRisk, labels: l }: Props) {
+export default function AlertRegionToggles({ isPaid, initialRegions, initialMinRisk, labels: l, coverage }: Props) {
   const [enabled, setEnabled] = useState<Set<Region>>(
     new Set(
       initialRegions.filter((r): r is Region =>
@@ -160,6 +176,30 @@ export default function AlertRegionToggles({ isPaid, initialRegions, initialMinR
                   />
                 </span>
               </button>
+
+              {/* Couverture réelle de la région.
+                  Affichée que la région soit active ou non : la question
+                  « l'Égypte est-elle dans Afrique ou dans Asie ? » se pose
+                  AVANT de cocher, pas après. La liste est repliée par défaut
+                  pour ne pas noyer le sélecteur. */}
+              {coverage?.[region] && (
+                <div className="px-4 pb-3 -mt-1">
+                  <details>
+                    <summary className="list-none cursor-pointer text-[11px] text-gray-500 hover:text-gray-400">
+                      {(l.coverageCount ?? "{count} countries covered").replace(
+                        "{count}",
+                        String(coverage[region].count),
+                      )}
+                      <span className="ml-1.5 underline decoration-dotted text-gray-600">
+                        {l.coverageShow ?? "see the list"}
+                      </span>
+                    </summary>
+                    <p className="mt-1.5 text-[11px] leading-relaxed text-gray-500">
+                      {coverage[region].countries.join(" · ")}
+                    </p>
+                  </details>
+                </div>
+              )}
 
               {/* Severity threshold — only meaningful once the region is on */}
               {on && isPaid && (

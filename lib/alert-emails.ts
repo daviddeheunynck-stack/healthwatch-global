@@ -226,7 +226,14 @@ export function buildOutbreakAlertEmail(
   outbreakUrl?: string,
   unsubUrl?: string,
   kind: "new" | "update" = "new",
-  change?: { reason?: "escalated" | "surge"; priorRiskLevel?: string | null; priorCases?: number | null }
+  change?: { reason?: "escalated" | "surge"; priorRiskLevel?: string | null; priorCases?: number | null },
+  // Ligne de couverture ("Vous suivez : Afrique (54 pays).") construite par
+  // buildCoverageNote() dans lib/region-coverage.ts. Optionnelle et rendue en
+  // pied : sans elle, le rendu est identique à ce qu'il était. Elle existe
+  // parce qu'un abonné « Afrique » n'a aucun moyen de savoir si l'Égypte ou le
+  // Yémen sont dedans — et que c'est exactement la question qu'un labo de
+  // référence pose avant de payer.
+  coverageNote?: string
 ): { subject: string; html: string } {
   const c = CONTENT[locale] ?? CONTENT.en;
   const numLocale = locale === "ar" ? "ar-SA" : (locale || "en");
@@ -292,6 +299,7 @@ export function buildOutbreakAlertEmail(
     </div>
 
     <!-- Footer -->
+    ${coverageNote ? `<p style="color:#6b7280;font-size:12px;line-height:1.6;text-align:center;margin:0 0 6px">${esc(coverageNote)}</p>` : ""}
     <p style="color:#4b5563;font-size:12px;line-height:1.6;text-align:center;margin:0">
       ${c.unsubNote}${unsubUrl ? ` <a href="${unsubUrl}" style="color:#4b5563;text-decoration:underline">${locale === "fr" ? "Gérer mes alertes" : locale === "es" ? "Gestionar alertas" : locale === "ar" ? "إدارة التنبيهات" : locale === "id" ? "Kelola peringatan" : "Manage alerts"}</a>` : ""}
     </p>
@@ -333,7 +341,9 @@ export function buildOutbreakDigestEmail(
   items: DigestItem[],
   dashboardUrl: string,
   unsubUrl?: string,
-  overflowCount = 0
+  overflowCount = 0,
+  // Voir buildOutbreakAlertEmail : même ligne de couverture, même raison.
+  coverageNote?: string
 ): { subject: string; html: string } {
   const c = CONTENT[locale] ?? CONTENT.en;
   const numLocale = locale === "ar" ? "ar-SA" : (locale || "en");
@@ -398,6 +408,7 @@ export function buildOutbreakDigestEmail(
     </div>
 
     <!-- Footer -->
+    ${coverageNote ? `<p style="color:#6b7280;font-size:12px;line-height:1.6;text-align:center;margin:0 0 6px">${esc(coverageNote)}</p>` : ""}
     <p style="color:#4b5563;font-size:12px;line-height:1.6;text-align:center;margin:0">
       ${c.unsubNote}${unsubUrl ? ` <a href="${unsubUrl}" style="color:#4b5563;text-decoration:underline">${locale === "fr" ? "Gérer mes alertes" : locale === "es" ? "Gestionar alertas" : locale === "ar" ? "إدارة التنبيهات" : locale === "id" ? "Kelola peringatan" : "Manage alerts"}</a>` : ""}
     </p>

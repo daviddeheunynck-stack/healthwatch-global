@@ -32,6 +32,11 @@
       "text": "Le digest hebdomadaire part désormais le lundi matin.",
       "provenance": "cron send-sitrep-emails, vérifié par David",
       "expiresOn": "2026-10-01"
+    },
+    {
+      "text": "Le cron data-quality lit le résumé hebdomadaire publié par le GPEI (polioeradication.org, page 'Polio this week') et signale tout pays qui y figure sans ligne polio active côté HealthWatch Global, en distinguant une ligne inactive d'une absence totale de ligne.",
+      "provenance": "app/api/cron/data-quality/route.ts, section 4j (sonde de couverture GPEI), commit 809ab47 du 2026-08-22, vérifié par David",
+      "expiresOn": null
     }
   ],
 

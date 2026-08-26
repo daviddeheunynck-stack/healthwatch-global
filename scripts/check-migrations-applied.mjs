@@ -74,10 +74,16 @@ function run() {
   if (local.size === 0) return skip("aucune migration locale");
 
   // `--linked` interroge le projet reference dans supabase/.temp/project-ref.
-  // Sur Windows, npx est un .cmd : on l'appelle directement plutot que de
-  // passer par `shell: true`, qui declenche un DeprecationWarning Node.
-  const bin = process.platform === "win32" ? "npx.cmd" : "npx";
-  const res = spawnSync(bin, ["--no-install", "supabase", "migration", "list", "--linked"], {
+  //
+  // Commande passee en UNE chaine avec `shell: true`, et non en tableau
+  // d'arguments. Les deux autres formes ont ete essayees et echouent :
+  //   - tableau + shell:true  -> fonctionne, mais declenche DEP0190 a chaque run ;
+  //   - "npx.cmd" sans shell  -> EINVAL sur Windows (Node refuse de spawner un
+  //     .cmd hors shell depuis le correctif de securite de Node 20.12).
+  // Une chaine unique avec shell:true evite les deux. Aucun risque d'injection :
+  // la commande est un litteral, rien n'y est interpole.
+  const res = spawnSync("npx --no-install supabase migration list --linked", {
+    shell: true,
     encoding: "utf8",
     timeout: 60_000,
   });

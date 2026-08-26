@@ -66,6 +66,22 @@ export async function POST(req: NextRequest) {
       if (!BREVO_API_KEY) {
         console.warn("[reset-password] BREVO_API_KEY not set — skipping send");
         Sentry.captureException(new Error("[reset-password] BREVO_API_KEY not set"), { tags: { route: "reset-password" } });
+      } else {
+        // Cas normal hors production : `isRealProduction` interdit tout envoi
+        // vers une vraie personne. Mais la réponse reste `success: true`
+        // (anti-énumération), donc la page affiche « vérifiez votre boîte »
+        // alors que rien n'est parti — et la seule façon de le comprendre était
+        // de lire ce fichier. Le 26/08/2026, une heure y est passée.
+        //
+        // Le lien de récupération n'est journalisé qu'en local (VERCEL_ENV
+        // absent) : sur une préproduction Vercel, il apparaîtrait dans des logs
+        // consultables par toute personne ayant accès au projet, alors que
+        // n'importe qui peut déclencher un envoi pour n'importe quelle adresse.
+        const isLocal = !process.env.VERCEL_ENV;
+        console.info(
+          `[reset-password] non-production (VERCEL_ENV=${process.env.VERCEL_ENV ?? "unset"}) — aucun e-mail envoyé` +
+            (isLocal ? `\n[reset-password] lien de récupération : ${linkData.properties.action_link}` : ""),
+        );
       }
       return NextResponse.json({ success: true });
     }

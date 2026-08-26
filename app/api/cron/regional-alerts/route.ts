@@ -58,6 +58,7 @@ import * as Sentry from "@sentry/nextjs";
 import { isMailSuppressed } from "@/lib/mail-suppression";
 import { logCronRun, isRealProduction, currentAlertDate, claimOutbreakAlertDaily, releaseOutbreakAlertDaily } from "@/lib/cron-monitor";
 import { resolvedPlan } from "@/lib/resolved-plan";
+import { buildCoverageNote, type AlertRegion } from "@/lib/region-coverage";
 
 export const dynamic = "force-dynamic";
 
@@ -422,6 +423,16 @@ async function runRegionalAlerts(_req: NextRequest, supabase: SupabaseClient) {
       })
     );
 
+    // Ce que cet envoi couvre réellement, en pied de message. Volontairement
+    // calculé sur les régions présentes dans CE lot : c'est la seule chose que
+    // ce cron sait avec certitude (il itère région par région et ne charge
+    // jamais l'abonnement complet d'une personne).
+    const coverageNote = buildCoverageNote(
+      enriched.map((e) => e.region as AlertRegion),
+      rl,
+      locale,
+    );
+
     try {
       // ── Email ─────────────────────────────────────────────────────────
       // Build + send BEFORE writing any log rows. If either throws (e.g. a
@@ -442,7 +453,8 @@ async function runRegionalAlerts(_req: NextRequest, supabase: SupabaseClient) {
           only.outbreakUrl,
           unsubUrl,
           only.reason === "new" ? "new" : "update",
-          only.reason === "new" ? undefined : { reason: only.reason, priorRiskLevel: only.priorRiskLevel, priorCases: only.priorCases }
+          only.reason === "new" ? undefined : { reason: only.reason, priorRiskLevel: only.priorRiskLevel, priorCases: only.priorCases },
+          coverageNote
         ));
       } else {
         // Most urgent first (risk, then reason, then case count) so the
@@ -462,7 +474,7 @@ async function runRegionalAlerts(_req: NextRequest, supabase: SupabaseClient) {
           console.log(`[regional-alerts] digest for ${profile.email} capped: ${shown.length} shown, ${overflowCount} summarized`);
           digestItemsCapped += overflowCount;
         }
-        ({ subject, html } = buildOutbreakDigestEmail(locale, shown, dashboardUrl, unsubUrl, overflowCount));
+        ({ subject, html } = buildOutbreakDigestEmail(locale, shown, dashboardUrl, unsubUrl, overflowCount, coverageNote));
         digestEmailsSent++;
       }
       if (isRealProduction) {
