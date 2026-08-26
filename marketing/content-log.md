@@ -2,6 +2,100 @@
 
 Archive de tout le contenu créé. Mise à jour à chaque session.
 
+## 📅 Session linkedin-hwg-content-proposal — 26/08/2026 (mercredi MWF, 8h35) — 🟢 **PROPOSÉ À DAVID, non publié**
+
+**Vérification double déclenchement** : aucune entrée `linkedin-hwg-content-proposal` datée du 26/08 dans ce fichier à l'ouverture → premier déclenchement du jour.
+
+**Étape 0 — aucun brouillon en attente.** Le dernier post de marque publié reste **Choléra/Cameroun le 21/08**. Les deux tentatives du 24/08 (run planifié de 8h35, puis reprise interactive de ~13h45) se sont soldées par un **abandon chacune**, sans texte mis en file. David avait tranché en session : *« retente reportée au prochain créneau MWF (mercredi 26/08) »*. Le carry-over portait sur l'angle « date de validation à côté du chiffre », à condition de le reposer sur une base différente. **C'est ce qui a été fait**, mais pas au premier essai (voir déroulé).
+
+**Régime de publication** : celui de `CLAUDE.md`, inchangé. Le post est **proposé, pas publié** — l'agent n'a ouvert aucun navigateur ce run. La chaîne QA de `hwg-social-policy.md` §5 a bien été appliquée (registres, contrôle mécanique, relecteur indépendant), conformément au rattachement du 25/08 qui ne reprend que la QA.
+
+**Registres régénérés en début de run** (aucune requête Supabase manuelle) :
+- `npm run qa:facts` → **227 faits citables sur 109 lignes affichées**, 81 lignes `is_seed` exclues, 53 faits périmés. Alerte du script, **6e jour consécutif** : 13 foyers actifs sans vérification de source depuis plus de 30 jours, sur 3 événements (Shigellose EU/EEA **54 j**, Diphtérie 8 pays **40 j**, Méningite 4 pays **34 j**).
+- `npm run qa:claims` → 800 chaînes de copie publique sur 5 locales, 19 formats de prix, couverture citable 109 foyers / 73 pays / 17 maladies / 29 hôtes source, 1 claim manuelle en vigueur (sonde GPEI du cron data-quality).
+
+---
+
+### 1️⃣ ANGLE ÉCARTÉ AVANT RÉDACTION, ET POURQUOI ÇA VALAIT LE DÉTOUR
+
+Le premier angle envisagé reprenait littéralement le carry-over : les **7 lignes West Nile européennes** portent trois dates d'arrêté différentes selon la source (5 pays au bulletin hebdomadaire ECDC arrêté au 21/08, l'Italie au bulletin ISS arrêté au 12/08, la France au bulletin SpF arrêté au 17/08). Base démontrable ligne par ligne, sans rien déduire d'un intitulé de document — exactement la condition posée le 24/08.
+
+**Vérification en source primaire avant d'aller plus loin** (règle du SKILL). Le PDF ISS a été téléchargé et lu : *« Report N. 3 del 13/08/2026 »*, données *« aggiornati al 12 agosto 2026 »*, *« sono stati segnalati in Italia 226 casi confermati di infezione da West Nile Virus nell'uomo (141 nel report precedente) »*, 7 décès. **La ligne HWG est exacte au mot près.**
+
+**Mais la vérification a fait apparaître autre chose, et c'est ce qui a tué l'angle.** Le bulletin hebdomadaire ECDC arrêté au **21/08** — celui-là même dont HWG tire déjà 5 de ses 7 lignes West Nile — donne **l'Italie à 311 cas** et la Grèce à 157 *« of which seven with unknown place of infection »*. Autrement dit : HWG affiche 226 pour l'Italie en citant l'ISS, alors que sa propre source ECDC, plus fraîche de 9 jours, en publie 311. Aucun chiffre n'est faux, chacun est exact à sa date. Mais **un post qui invite le lecteur à regarder les dates, en s'appuyant sur une ligne que la source la plus fraîche de HWG contredit déjà de 85 cas, se retourne au premier contrôle** — le motif exact du rejet du 24/08. Angle abandonné avant rédaction, et signalé en §5 ci-dessous comme donnée à ingérer.
+
+### 2️⃣ DÉROULÉ DE LA BOUCLE
+
+| Essai | Angle | Contrôle mécanique | Relecteur | Suite |
+|---|---|---|---|---|
+| 1 | « Une carte, plusieurs dates d'arrêté » (Taïwan 26/08, Cameroun 17/08, Burkina Faso 28/06, Ouganda 05/04) | **FAIL** — 4 × `facts.unsourced` sur le quantième « 2026 » de dates en toutes lettres, 2 × `facts.stale` sur le « 5 » de « 5 April », `ngram.history` (10 formules) | non atteint | correction ciblée : dates au format ISO, closer produit réécrit |
+| 2 | idem | **PASS** | **REECRIRE 4, 7, 9, 11, 12** | 🔁 **réécriture depuis zéro** (11 et 12 en échec = angle rejeté) |
+| 3 | « Les deux horloges » (rédacteur au contexte neuf, sans le brouillon échoué) | **REWRITE_FROM_SCRATCH** — `ngram.history` (15 formules), dont **12 provenant de la citation mot pour mot de `pricing.faq5_a`** | non atteint | correction ciblée : citation remplacée par une paraphrase, closer réécrit |
+| 4 | idem | **PASS** | **REECRIRE 4, 6, 7, 9** — 11 et 12 en `PASS` | correction ciblée (angle validé), puis 🟢 **proposé** |
+
+**Deux arbitrages à assumer, écrits ici pour être vérifiables.**
+
+**(a) Essai 3, escalade mécanique non suivie.** Le script a prononcé `REWRITE_FROM_SCRATCH` parce que `ngram.history` bloquait un 2e essai d'affilée. Les 15 collisions ne portaient pas sur l'argument : **12 sur 15 étaient la citation verbatim de la FAQ du site**, que le registre produit autorise précisément à citer mot pour mot. C'est l'angle mort structurel déjà consigné le 23/08 et le 25/08 : *sourcer correctement devient un gabarit dès qu'on a sourcé deux fois la même chose*. La citation a été remplacée par une paraphrase et le compteur non réinitialisé. **Ce n'est pas un contournement du script mais un refus d'amputer le fond sur un faux positif connu** — la correction va d'ailleurs dans le sens du contrôle, puisqu'elle retire une phrase recyclée.
+
+**(b) Essai 4, correction ciblée plutôt que réécriture.** Critère du dispositif : **l'angle, pas le compteur**. Le relecteur a mis 11 (gabarit) et 12 (apport) en `PASS` et a nommé deux phrases et un fragment de phrase à retirer, tous des **retraits d'affirmations non couvertes**, jamais des retraits de faits sourcés. Repartir de zéro aurait jeté un angle validé.
+
+### 3️⃣ CE QUE LE RELECTEUR A ATTRAPÉ — le relevé du run
+
+- **Essai 2, question 9 (terrain politique)** : le brouillon listait quatre lignes de la plus fraîche à la plus ancienne, Taïwan en tête et trois pays d'Afrique subsaharienne en bas, avec *« The oldest line is where this bites »* juste après. Effet de classement non voulu, invisible à la rédaction. Le relecteur a aussi relevé que la ligne Mpox/Ouganda a pour source un **tableau de bord mondial de l'OMS**, pas une agence ougandaise : le brouillon faisait porter à un pays nommé la latence d'un agrégateur international.
+- **Essai 2, question 4** : *« each one is what an agency published »* est **contredit par le registre produit lui-même** — `coverage.sourceHosts` contient `reliefweb.int`, `substack.com`, `statnews.com`, `franceinfo.fr`, `leadership.ng`, `africa24tv.com`, `tchadinfos.com`, qui ne sont pas des agences. Affirmation retirée.
+- **Essai 2, question 7** : le texte annonçait « 104 active outbreaks » quand le lecteur en voit 109 affichés. Écart de 5 dans un post dont la morale est « comparez les dates avant de comparer les chiffres ». Le chiffre a été retiré du post final, qui n'affirme plus aucune couverture.
+- **Essai 4, question 6** : *« the stall sits in the reporting chain that feeds that dashboard »* était une **hypothèse présentée à l'indicatif**. Le registre établit deux dates, pas la localisation d'une cause. Segment retiré.
+- **Essai 4, questions 4 et 7** : *« It shows a Date column for the cutoff and a separate Last updated label »* attribue une **sémantique** aux libellés que le registre ne documente pas — il ne documente que leur existence, et la ligne porte trois horodatages distincts (`asOf`, `source_confirmed_at`, `updated_at`). Phrase ramenée à ce qui est couvert.
+- **Erreur de fait attrapée par moi, hors relecteur** : le brouillon disait *« reverified this morning, 2026-08-26 »*. Le registre donne `source_confirmed_at = 2026-08-25T13:32:57Z`. `ageDays: 0` est un arrondi de moins de 24 h, pas « ce matin ». Corrigé en `2026-08-25`.
+- **Relecture éditoriale finale (item 8)** : deux retouches, *« on our own dashboard »* au lieu de *« on our dashboard »* (l'auto-implication doit être lisible dès la première ligne, pas seulement au 8e paragraphe) et une répétition de *« carries »* supprimée. Rien d'autre à changer.
+
+### 4️⃣ TEXTE PROPOSÉ — statut : **PRÊT — en attente de publication par David**
+
+Contrôle mécanique `PASS` (essai 4), 1754 caractères, 10 paragraphes, langue `en`. Aucun tiret cadratin. Faits cités : Mpox/Ouganda `cases=8512, deaths=52, asOf=2026-04-05, source_confirmed_at=2026-08-25` et Méningite/Burkina Faso `cases=1495, deaths=64, asOf=2026-06-28`, ancienneté de vérification 34 j.
+
+> The mpox line for Uganda on our own dashboard had its source reverified on 2026-08-25. The figure it carries, 8512 cases and 52 deaths, is dated 2026-04-05.
+>
+> Both of those statements are true at the same time.
+>
+> There are two clocks on an outbreak figure. The verification clock records when someone last went back to the source. The data clock records the cutoff the source attaches to the number itself. They move independently.
+>
+> On this line, the verification clock was reset on 2026-08-25. The data clock has not moved since 2026-04-05.
+>
+> The source for this line is the WHO global mpox dashboard, not a national bulletin. What the two dates establish is where the figure was read and when, not why it stopped, and nothing here speaks to how any surveillance system performs.
+>
+> Compare meningitis in Burkina Faso: 1495 cases, 64 deaths, cutoff 2026-06-28, and a source not revisited in over a month. There the two clocks agree. Nobody is caught out, even though the verification side is the staler of the two.
+>
+> So the problem is not age. It is divergence. A freshness indicator can be accurate and misleading in the same glance. "Last updated: today" is strictly correct sitting next to a number that stopped in April.
+>
+> HealthWatch Global is not outside this. Our dashboard carries the same divergence on the same line. It has a Date column and a separate Last updated label. One timestamp was never going to answer both questions.
+>
+> The same principle already covers missing numbers. Where an agency has published nothing, the dashboard says so rather than guessing at a value. A frozen number asks for the same treatment: print the date it stopped on, and let the reader decide what it is worth.
+>
+> The dashboard is public: https://healthwatch-global.com
+
+**⚠️ Réserve remontée à David, non corrigeable dans le post.** Le relecteur signale un risque de retournement qui ne dépend pas de ce texte : `pricing.faq5_a` affirme publiquement *« All outbreak data is sourced directly from official public health agencies: WHO, PAHO, and ECDC »*, alors que `coverage.sourceHosts` compte **29 hôtes**, dont `substack.com`, `statnews.com`, `franceinfo.fr`, `leadership.ng`, `africa24tv.com`, `tchadinfos.com`, `reliefweb.int`. Un post de marque qui traite de provenance envoie le lecteur vers cette FAQ. **À trancher hors routine** : soit reformuler la FAQ, soit restreindre les hôtes admis.
+
+### 5️⃣ §8 — DONNÉES ET ANOMALIES REPÉRÉES, AUCUNE ÉCRITURE EN BASE
+
+Aucune écriture tentée depuis cette routine (`AGENTS.md` : le code et les données applicatives n'appartiennent à aucune routine documentaire).
+
+1. 🔴 **West Nile / Italie — ligne à rafraîchir, source primaire déjà lue.** HWG porte **226 cas au 12/08** (bulletin ISS n°3 du 13/08, exact). Le bulletin hebdomadaire ECDC **arrêté au 21/08**, déjà utilisé par HWG pour 5 autres lignes West Nile, publie **l'Italie à 311 cas**. Écart de 85 cas, 9 jours de décalage, sur une ligne dont la source la plus fraîche est déjà branchée. À ingérer par `morning-don-check` ou en session interactive.
+2. 🔴 **Ebola / RD Congo — deux lignes actives simultanées pour le même couple maladie × pays.** `6a5e9fc9-…` porte **4120 cas / 1887 décès** au **07/08** (source africacdc.org) et `bd1c3a46-…` porte **5514 cas / 2642 décès** au **22/08**. Les deux sont `active: true` et le registre les compte deux fois. À rapprocher de l'incident de régression du 22/08 déjà consigné en mémoire. **Doublon à trancher, pas un simple retard de fraîcheur.**
+3. 🟠 **Grèce / West Nile — définition du dénominateur à vérifier.** HWG porte 150 cas au 21/08 ; l'ECDC à la même date publie *« 157 cases, of which seven with unknown place of infection »*. L'écart de 7 s'explique probablement par le périmètre retenu (cas autochtones à lieu d'infection connu), mais rien ne le documente côté base. À confirmer plutôt qu'à supposer.
+4. 🟠 **Alerte de fraîcheur du registre, 6e jour consécutif sans mouvement** : Shigellose EU/EEA 54 j, Diphtérie 8 pays 40 j, Méningite 4 pays 34 j. Signalée chaque jour depuis le 21/08, jamais traitée.
+
+### 6️⃣ ARBRE DE TRAVAIL — fichiers modifiés non touchés par cette routine
+
+Conformément à `AGENTS.md`, cette routine ne stage que `marketing/content-log.md`. Laissés tels quels et signalés : `package.json` (modifié) et, non suivi, `scripts/check-stripe-prices.mjs`. Les fichiers `marketing/qa/*.json` ont été **régénérés par ce run** mais appartiennent au dispositif QA, pas à cette routine, et restent non commités. Branche courante : `feat/region-coverage`.
+
+**🖥️ Navigateur** : jamais ouvert. Le post n'est pas publié par l'agent, donc aucune sélection de deviceId, aucun redémarrage de Chrome en fin de session.
+
+```
+QA: PROPOSÉ | mécanique PASS (essai 4) | relecteur REECRIRE 4, 6, 7, 9 puis corrections ciblées appliquées (11 et 12 en PASS, angle validé) | 1 angle abandonné avant rédaction (West Nile Europe, contredit par une source HWG plus fraîche) | 1 angle rejeté au relecteur (carte multi-dates, échec 11 et 12) | faits cités: Mpox/Uganda asOf 2026-04-05 + Meningitis/Burkina Faso asOf 2026-06-28 | registres du 26/08 06h38 | rien publié, en attente de David
+```
+
+---
+
 ## 📅 Session linkedin-hwg-followup-check-2 — 25/08/2026 (17h, 2e des 2 créneaux après-midi)
 
 **Vérification double déclenchement** : aucune entrée `linkedin-hwg-followup-check-2` datée du 25/08 dans ce fichier ni dans `linkedin-contacts.md` à l'ouverture. Les entrées du jour appartiennent à `linkedin-hwg-monitoring` (9h), à `linkedin-hwg-followup-check` (13h) et à la reprise interactive de David → **premier déclenchement de cette routine aujourd'hui**.
