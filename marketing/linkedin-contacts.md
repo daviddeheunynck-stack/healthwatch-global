@@ -54,7 +54,7 @@ La marge de 2 laissee par le creneau de 13h a ete **consommee ce run**, par rech
 
 **CTA : volontairement absent.** Anti-répétition vérifiée sur le fil rendu : le lien `healthwatch-global.com` **et** l'offre d'essai Pro ont **déjà été envoyés le 20/08 à 12:14** dans ce même fil. La règle §3 interdit de resservir le même argumentaire une 2e fois. De plus le fil se referme naturellement : le brouillon clôt au lieu de relancer.
 
-**QA: mécanique FAIL (`context.too-soon`, `ngram.history` 1 formule) | relecteur REECRIRE (1, 5, 9) au 1er passage — les 3 corrigés | faits cités: aucun chiffre | registre du 26/08 | statut: en file de validation**
+**QA: mécanique FAIL (`context.too-soon`, `ngram.history` 1 formule) | relecteur REECRIRE (1, 5, 9) au 1er passage — les 3 corrigés | faits cités: aucun chiffre | registre du 26/08 | statut: ENVOYÉ ET CONFIRMÉ 17:59, sur ordre explicite de David (« double check les textes et publie »)**
 
 **⭐ Le relecteur a attrapé deux défauts réels que le contrôle mécanique ne pouvait pas voir, et le second est un garde-fou, pas un point de style.**
 
