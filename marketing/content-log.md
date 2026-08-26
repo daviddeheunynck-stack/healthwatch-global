@@ -2,6 +2,83 @@
 
 Archive de tout le contenu créé. Mise à jour à chaque session.
 
+## 📅 Session linkedin-hwg-followup-check — 26/08/2026 (13h, 1er des 2 créneaux après-midi)
+
+**Vérification double déclenchement** : aucune entrée `linkedin-hwg-followup-check` datée du 26/08 dans ce fichier ni dans `linkedin-contacts.md` à l'ouverture → **premier déclenchement de cette routine aujourd'hui**.
+
+**Registre de faits régénéré en début de run** (`npm run qa:facts`) : 227 faits citables sur 109 lignes affichées, 81 lignes `is_seed` exclues, **59 faits périmés** (56 ce matin). Alerte de fraîcheur inchangée, 6e jour : Shigellosis / EU-EEA 54 j, Diphtheria / 8 pays 41 j, Meningitis / 4 pays 34 j.
+
+**Quotas commentaires : 0/7 publiés, 1 en file de validation.** Le détail des deux DM également mis en file est dans `linkedin-contacts.md`.
+
+---
+
+### 🔒 COMMENTAIRE EN FILE DE VALIDATION — **Julien Harneis**, *Senior Ebola Coordinator*
+
+`urn:li:activity:7498036139778281472`, post de **20 h** (fenêtre 48 h ✅), 50 réactions, 6 commentaires, 4 republications. Profil **suivi**, **aucun blocage hebdomadaire** (dernier commentaire LinkedIn sous ses posts : fin juillet). Post **bilingue**, version anglaise en tête, française sous séparateur. *Langue du fil = EN ; langue du brouillon = EN* (paire confirmée mécaniquement, `draftLang: en` / `threadLang: en`).
+
+**Pourquoi ce post plutôt qu'un autre** : il **demande explicitement des réponses**, en toutes lettres — « *Now, I would like your feedback: What can we do differently to help people connect with this outbreak? Which stories are still missing?* ». Un commentaire n'y est pas une intrusion, c'est ce qui est sollicité.
+
+**Les 3 commentaires publiés ont été lus en entier avant rédaction (§5)**, et l'angle a été choisi pour ne recouper aucun des trois :
+- **Franklin MWAMBA** (*Data Scientist, Applied AI*, 1er degré, 4 h, FR) : amplifier les canaux existants, radios communautaires, témoignages de survivants. Clôture : « *Le monde doit entendre l'épidémie, pas seulement la compter.* »
+- **Jean-Marie D.** (*ex-Responsable OMS Afrique*, 2e degré, 14 h, EN) : trois recommandations institutionnelles (mission ONU de haut niveau, déploiement d'anthropologues, Envoyé spécial du DG de l'OMS). ⚠️ **Terrain politique assumé par lui, à ne surtout pas suivre.**
+- **Fiston Ramazani** (*chauffeur 4x4 chez MSF*, 2e degré, 6 h, FR) : salutation personnelle.
+
+**L'angle** : dans son propre paragraphe de chiffres, une seule valeur porte un **taux** (« *half of them in just 20 days* »), toutes les autres sont des **cumuls**. Or un cumul est précisément la forme qui a la même allure qu'une courbe s'aplatisse ou s'emballe. La conversion du cumul en taux est laissée au lecteur, qui ne la fait pas, et c'est pourtant la clause qui porte. **Réponse directe à sa question « que faire différemment », depuis la seule position que HWG occupe réellement : celle du lecteur de bulletins publiés.**
+
+**QA: mécanique PASS (0 blocker, 675 car., 2 paragraphes) | relecteur REECRIRE (3, 9) au 1er passage — le 9 corrigé, le 3 réfuté sur pièce | faits cités: aucun chiffre à mon compte, seul le « 20 » du post repris entre guillemets (`facts.from-thread`) | registre du 26/08 | statut: en file de validation**
+
+**⭐ La question 9 du relecteur était juste, et c'est la meilleure prise du run.** Le brouillon initial se terminait par : « *…or is that a number the response already tracks internally and simply never publishes?* ». Sa lecture : cette seconde branche **impute publiquement une rétention d'information à la riposte**, sous le post de son coordinateur, dans un fil qui porte sur son financement et où un autre commentaire formule déjà des recommandations de gouvernance. Il a relevé au passage une seconde phrase du même type, « *What gets published week to week is the cumulative count* », qui **décrit la pratique de publication de la riposte** sans appui dans le fil ni dans les registres. **Les deux ont été retirées.** Le second paragraphe a été refondu : il ne décrit plus que ce que je reçois moi (« *What reaches me from the published bulletins…* ») et se termine sur une suggestion qui lui est adressée, ce qu'il demandait, au lieu d'un soupçon.
+
+**🔴 Sa question 3, en revanche, est fausse — et la façon dont elle est fausse est le fait le plus important de ce run.** Il a répondu `UNSURE → FAIL` en citant la ligne du registre : « *`"country": "DR Congo"`, `"active": false`, `"asOf": "2026-08-07"`, `"value": 4120`, `"stale": true`* », et en concluant que **la base porte cette flambée comme non active** alors que le brouillon la traite comme en cours. Vérification faite dans `claimable-facts.json` : le registre contient **11 lignes Ebola, dont 6 pour la RD Congo**, et la ligne **active** existe bel et bien, fraîche : `active: true, asOf: 2026-08-22, 5514 cas / 2642 décès, ageDays: 0`. Le relecteur s'est arrêté à la ligne **close** parce qu'elle sort **avant** l'active dans le fichier.
+
+⚠️ **Ce n'est plus une anomalie théorique.** La divergence interne Ebola / RD Congo est signalée comme « à trancher hors routine » depuis le 25/08 et redite ce matin. **Elle vient de faire conclure à un relecteur indépendant, au contexte neuf et lisant correctement sa source, que l'épidémie d'Ebola en RDC est terminée** — au moment où son coordinateur ONU publie qu'elle tue 2 500 personnes en trois mois. Un lecteur du produit lui-même peut faire exactement la même lecture. **Priorité à relever d'un cran pour `morning-don-check` : ce n'est pas un doublon cosmétique, c'est une ligne close qui masque une ligne active en tête de tri.**
+
+**Relecture éditoriale finale (§5 item 8)** : après refonte, rien à retrancher. Le commentaire répond à la question posée, ne félicite pas, ne prescrit rien aux institutions, n'avance aucun chiffre à son compte, et propose une chose concrète et gratuite. La suggestion finale est formulée comme une option (« *may be the cheapest change on the list* »), pas comme un conseil donné à un coordinateur ONU par un développeur qui lit ses bulletins.
+
+⚠️ **Si David valide et publie**, un blocage hebdomadaire naîtra sur ce profil jusqu'au **02/09**.
+
+> The line that does the work in that paragraph is "half of them in just 20 days". It is the only figure there carrying a rate rather than a total, and a total is the one shape that looks the same whether a curve is bending down or running away.
+>
+> That may already be part of the answer you are asking for. What reaches me from the published bulletins is the cumulative count, and converting it into a rate is something each reader has to do unaided, which almost nobody does. Your own paragraph does that conversion in a single clause, and it is the clause that lands. Carrying it every time, rather than only when someone writes it out, may be the cheapest change on the list.
+
+---
+
+### ➖ CANDIDAT COMMENTAIRE ÉVALUÉ ET ÉCARTÉ — **Dr Hannington Katumba**
+
+Le carry-over de 9h le désignait comme « **meilleur candidat commentaire neuf pour 13h ou 17h** ». Profil ouvert, activité lue, **écarté**, et il vaut mieux que le motif soit écrit une fois pour toutes plutôt que le candidat reproposé à 17h.
+
+**Son seul post dans la fenêtre 48 h** (1 j) avance : « *We have lost 1,250 lives in the last 20 days in the DRC due to Ebola alone!! This is half (50%) of the total 2,516 deaths since the outbreak began in May.* », puis développe sur les grèves de soignants et la faible couverture du traçage, avant de conclure sur les **forces armées M32** et la négociation de **corridors humanitaires**.
+
+**Trois obstacles, chacun suffisant :**
+1. **Le total qu'il cite est périmé** : 2 516 décès, contre **2 642 arrêtés au 22/08** au registre. Le relever publiquement serait une **correction publique des chiffres d'un tiers**, exactement ce que la consigne permanente du 19/08 réserve à une décision de David.
+2. **Les 1 250 décès en 20 jours sont une inférence non sourcée**, déjà vue et volontairement non reprise par le run de 9h. Rien ne permet de la reprendre, ni de la contester sans calcul de mon cru.
+3. **La dernière partie du post est du terrain politique caractérisé** (groupe armé, corridors négociés). §9 impose un silence total.
+
+Tout angle sur ce post tombe donc dans l'une des trois. **Son autre post est une republication de 2 semaines** (7-1-7 Alliance, cours EVD pour agents de première ligne), **hors fenêtre 48 h**. **Ne pas reproposer ce post-là.** Le profil lui-même reste bon, il est suivi depuis ce matin.
+
+---
+
+### 🗒️ Veille — données épidémiologiques (§8)
+
+**Aucune écriture en base faite** (une routine sociale signale, elle n'écrit pas).
+
+- 🔴 **Ebola / RD Congo — la divergence interne du registre change de statut, elle est maintenant démontrée nuisible.** Voir l'encadré du commentaire Harneis ci-dessus : la ligne **close** (4 120 cas / 1 887 décès, arrêtée au 07/08, Africa CDC, périmée de 14 j) sort **avant** la ligne **active** (5 514 / 2 642, arrêtée au 22/08, ECDC, `ageDays: 0`) et a fait conclure à tort à un lecteur indépendant que la flambée était terminée. **À trancher en priorité hors routine.**
+- 🆕 **Chiffres vus dans le post de Julien Harneis, non repris et non vérifiés contre une source primaire** : « *more than 2,500 people have died from Ebola, half of them in just 20 days* », « *More than 160 health workers have contracted Ebola, and 43 have died* », et une extension géographique « *larger than France* ». Les deux chiffres de soignants recoupent ceux relevés hier en veille passive via Health Policy Watch (160 contaminés, 43 morts), **ce qui ne les rend pas sourcés pour autant** : une concordance entre deux reprises n'est pas une source primaire (§8). Le total de 2 500+ est en dessous des **2 642 au 22/08** du registre, cohérent avec un arrondi prudent et une date d'arrêt antérieure, **donc aucun signal de régression à traiter**.
+- ➖ **Chiffre vu et volontairement non repris, 2e jour** : les « *1,250 lives in the last 20 days* » et « *2,516 deaths* » de Dr Hannington Katumba, déjà écartés par le run de 9h pour les mêmes motifs.
+- 🔴 **Hantavirus / Chili** (alerte MINSAL, létalité presque doublée, sources primaires ISP et `hantavirus.cl`) et **dengue / Îles Marshall** (toujours aucune ligne au registre) : **les deux lacunes du 25-26/08 restent entières**, rien de neuf ce run.
+- ⚠️ **Alerte de fraîcheur du registre, 6e jour consécutif**, et elle s'aggrave lentement : **59 faits périmés contre 56 ce matin**. Shigellosis / EU-EEA 54 j, Diphtheria / 8 pays 41 j, Meningitis / 4 pays 34 j.
+
+---
+
+### 👀 Veille passive — matière pour de futurs posts, non rédigés ici
+
+- ⭐ **L'angle du commentaire Harneis est aussi un très bon sujet de post de marque**, et il est plus large que ce post-là : *les bulletins de flambée publient des cumuls, et un cumul est la seule forme de chiffre qui ne distingue pas une épidémie qui ralentit d'une épidémie qui s'emballe.* HWG affiche exactement ces cumuls. C'est un sujet où l'auto-implication est réelle, comme dans le post « deux horloges » publié ce matin. **À proposer à `linkedin-hwg-content-proposal`, pas rédigé ici (hors périmètre).**
+- **Dr. Malachie MANAOUDA** (*Ministre de la Santé Publique du Cameroun*), 30 min, bilingue : production pharmaceutique locale, **19 unités de production contre 7 en 2020**, 239 références homologuées, en marge du **Comité régional OMS Afrique RC76** à Addis-Abeba. Hors périmètre surveillance, mais signale que **le RC76 est en cours cette semaine** et alimentera plusieurs fils de décideurs santé publique africains dans les jours qui viennent.
+- **World Health Organization African Region** était en direct pour « **LIVE | WHO AFRO RC76 – Day 2** » (notifications). Même remarque.
+- **Julien Harneis** a publié **4 posts en une semaine** (`7498036139778281472` 20 h, `7497390369576501248`, `7496571880045232129`, `7496146602475245568`) : cadence soutenue, profil actif et sollicitant explicitement des réponses. Bon fil à surveiller pour les prochains créneaux, sous réserve du blocage hebdomadaire si le commentaire d'aujourd'hui est publié.
+
+---
+
 ## 📅 Session linkedin-hwg-monitoring — 26/08/2026 (9h)
 
 **Vérification double déclenchement** : aucune entrée `linkedin-hwg-monitoring` datée du 26/08 dans ce fichier ni dans `linkedin-contacts.md` à l'ouverture. Les seules entrées du jour appartiennent à `linkedin-hwg-content-proposal` (8h35) → **premier déclenchement de cette routine aujourd'hui**.

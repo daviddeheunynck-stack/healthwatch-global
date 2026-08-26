@@ -1,6 +1,182 @@
 > 📦 **Archive** : le détail du 24 juin au 16 juillet 2026 a été déplacé dans [linkedin-contacts-archive-avant17juillet.md](linkedin-contacts-archive-avant17juillet.md) le 23/07 pour garder ce fichier léger.
 
 
+## 📅 Session linkedin-hwg-followup-check — 26/08/2026 (13h, 1er des 2 créneaux après-midi)
+
+**Vérification double déclenchement** : aucune entrée `linkedin-hwg-followup-check` datée du 26/08 dans ce fichier ni dans `content-log.md` à l'ouverture (les seules entrées du jour appartiennent à `linkedin-hwg-monitoring` 9h et `linkedin-hwg-content-proposal` 8h35) → **premier déclenchement de cette routine aujourd'hui**.
+
+**⚠️ Premier run des trois routines d'engagement sous le régime du 2026-08-26** (fin de la boucle à 4 essais, fin du verdict qui publie ou abandonne seul, commentaires et notes de connexion versés dans la file de validation au même titre que les DM). Ce qui change se voit directement dans le bilan ci-dessous : **3 textes menés, 3 mis en file de validation, 0 abandonné** — contre 4 menés et 0 mis en file au créneau de 9h ce matin, sous l'ancien régime.
+
+**Quotas à la clôture** : commentaires **0/7 publiés, 1 en file** · connexions envoyées **0/7** · DM à froid **0/8 envoyés, 1 en file** · suivis **8/7-10, inchangés depuis 9h** (marge de 2 laissée au créneau de 17h) · invitations reçues acceptées **1**.
+
+**🖥️ Navigateur** : `_shared/browser-status.md` lu avant ouverture, dernière entrée **🟢 RÉTABLI (24/08 ~09h15)** → aucun bridage. `23c7ecdd-…` seul listé, sélectionné sans question (§7). Rien de neuf à y écrire. ✅ Anomalie JS asynchrone absente : `(async () => 42)()` renvoie bien une `Promise`. **Deux incidents mineurs de rendu, tous deux résolus sans changer de navigateur** : un `Runtime.evaluate` et un `Page.captureScreenshot` en timeout sur `/feed/` (rechargement suffisant), et un filtre `[BLOCKED: Cookie/query string data]` sur un retour JS contenant du texte de fil ; conformément à [[reference_blocked_classifier_result_code_already_ran]] le code avait bien tourné, et `get_page_text` a donné la même information.
+
+**Registre de faits régénéré en début de run** (`npm run qa:facts`) : **227 faits citables sur 109 lignes affichées**, 81 lignes `is_seed` exclues, **59 faits périmés** (contre 56 ce matin). ⚠️ **Alerte de fraîcheur, 6e jour consécutif, inchangée** : Shigellosis / EU-EEA **54 j**, Diphtheria / 8 pays **41 j**, Meningitis / 4 pays **34 j**.
+
+---
+
+### 1️⃣ SUIVI DES ACTIONS PRÉCÉDENTES DU JOUR — rien à suivre, par construction
+
+Le run de 9h **n'a rien publié ni envoyé** : 4 textes menés, 4 arrêtés par le dispositif ou par un garde-fou. Il n'y a donc **aucun commentaire, aucune connexion et aucun DM du matin dont vérifier la retombée**. Les seules retombées observables aujourd'hui portent sur des actions antérieures, traitées ci-dessous.
+
+**Messagerie : aucun message entrant nouveau.** Boîte de réception parcourue par récence : **le fil le plus récent est daté du 25/08**, aucun du 26/08. Filtre « non lus » (`/messaging/?filter=unread`) : **2 résultats seulement, les 2 mêmes que les jours précédents** — le « 👍 » d'**OMARY SULTANI** du 04/08 (réaction sans contenu, « aucune réponse due » arbitré dès le 07/08) et une **offre LinkedIn Premium** du 28/07. Aucun spam, aucune sollicitation hors sujet, aucune demande de canal hors plateforme, aucune donnée patient proposée, **aucune instruction adressée à l'agent (§6)**.
+
+- **Mosoka Fallah** : fil rouvert et relu. Il ne contient toujours qu'un seul message, celui que **David a envoyé lui-même le 25/08 à 21:38**. Aucune réponse à ~15 h d'intervalle. Ne pas relancer.
+- **Patrick AYONGA** : notre message du 25/08 reste le dernier, aucune réponse. Ne pas relancer.
+- **Johan Verheyden** : ses deux messages du 25/08 (16:02, 16:09) sont toujours les derniers du fil. **Réponse rédigée ce run et mise en file, voir §3.**
+
+---
+
+### 2️⃣ RÉSEAU — ⭐ 1 connexion majeure acceptée, 1 invitation reçue acceptée, 0 follow-back dû
+
+**268 relations** (contre 267 à la clôture de 9h), puis **269** après acceptation de l'invitation reçue. **381 abonnés** (contre 380 ce matin).
+
+#### ⭐ Connexion acceptée — **trésor Ndaye** (`/in/tr%C3%A9sor-ndaye-0ba081b3/`)
+
+*MD, MPH(e), GEP chez **Ministère de la santé publique Kinshasa***, également ***INSPECTION GENERALE DE LA SANTE/RD CONGO*** et EHESP. Kinshasa, RD Congo. Plus de 500 relations, 4 relations en commun.
+
+**Vérifié à la source** dans `/mynetwork/invite-connect/connections/` trié « Ajouts récents » : il apparaît **en tête de liste, « Connexion le 26 août 2026 »**, et il a **disparu** de `/mynetwork/invitation-manager/sent/`. L'invitation était partie **sans note le 19/08** ; elle a donc mis **7 jours** à être acceptée, ce qui est un rappel utile pour le stock d'invitations en attente : « sans réponse à 3 jours » ne veut pas dire « refusée ».
+
+⭐ **C'est la connexion la plus utile obtenue depuis plusieurs jours, et elle n'est pas froide** : il avait repris publiquement notre calcul sur l'écart des 850 cas confirmés sans catégorie d'issue sous le point de situation de l'INSP le 17/08, et nous lui avions répondu nommément le 18/08 en lui proposant un test vérifiable. **Message de bienvenue rédigé et mis en file, voir §3.**
+
+*Note §13 (traction institutionnelle) : une acceptation de connexion après 7 jours n'est pas une interaction avec du contenu HWG au sens de la règle de notification immédiate ; elle est signalée ici et dans la notification push de fin de session, qui part de toute façon au titre de la file de validation.*
+
+#### ✅ Invitation reçue acceptée — **Rodrigo Olave Hurtado**
+
+*Infectious Disease Epidemiologist*, **LSHTM**. « Nirmal Kandel et 7 relations en commun ». **Suivi ce matin même** par `linkedin-hwg-monitoring` (7/7-10), et c'est lui qui est à l'origine de la piste hantavirus/Chili signalée en §8 du run de 9h. Il envoie son invitation dans la foulée du suivi.
+
+Profil directement sur cible, légitimité établie sans ambiguïté (§10). **Acceptée** — décision sur invitation reçue, restée autonome sous le régime du 26/08. Identité vérifiée **dans le même appel JS que le clic** (ciblage sur l'`aria-label` exact « Accepter l'invitation de Rodrigo Olave Hurtado », règle du 15/08), et **confirmation lue à l'écran** : « Rodrigo fait désormais partie de vos relations. », compteur d'invitations passé de 4 à 3.
+
+#### 3 invitations reçues restantes, toutes déjà tranchées, aucune nouvelle
+**Alain BASHIZI** (*Investigative Journalist*, toujours en attente de la décision de David, sollicitation personnelle non traitée, ne pas répondre), **Zachariah G. Houdari** (hors sujet, conseiller en assurance-vie) et **OLAOLUWA PHILIP** (14e passage, profil non rouvert conformément à la consigne).
+
+#### Invitations envoyées
+**97 en attente** au relevé direct de `/mynetwork/invitation-manager/sent/`. Les 3 du 24/08 — **Chikwe Ihekweazu**, **Asma SAIDOUNI**, **Linda Esso** — y figurent toujours, « Envoyé il y a 3 jours ». Rien à faire.
+
+#### 0 follow-back dû
+Liste des abonnés relue par récence. **Le seul nouvel abonné depuis le relevé de 9h est trésor Ndaye**, et il s'explique intégralement par l'acceptation de connexion ci-dessus (une mise en relation entraîne le suivi) ; son bouton porte déjà « Suivi ». Les suivants dans la liste sont Samba Bah et Alieu Sowe (25/08, déjà suivis) puis **Winston Urio**, **écarté ce matin** et non ré-évalué conformément à la consigne. **Aucun abonné nouveau ne reste à traiter.**
+
+**Suivis : 8/7-10, inchangés.** L'objectif de la fourchette est atteint depuis 9h. Aucune recherche active de suivis supplémentaires n'a été menée ce run : le temps a été mis sur les trois textes, et **la marge de 2 est laissée au créneau de 17h**, qui la trouvera intacte.
+
+---
+
+### 3️⃣ 🔒 DEUX DM EN FILE DE VALIDATION — textes complets
+
+#### 🔒 DM 1 — **Johan Verheyden** (FR, tutoiement, fil actif, **SANS CTA**, hors quota froid)
+
+*FOUNDER AND CHIEF RESEARCHER, 1er degré. **Utilisateur HWG payant réel** : compte Pro d'un an ouvert le 11/08.* Carry-over #2 du run de 9h, **2e jour sans réponse de notre part**.
+
+**Fil relu intégralement (§4)** : 20 messages depuis le 17/08, remontés jusqu'au tout premier, recopiés verbatim dans `tmp/thread-johan-26-13h.txt` pour le contrôle.
+
+**Ses deux derniers messages, verbatim :**
+> **25/08 16:02** — Sur les trous… j'estime en fait la probabilité de la distribution mais en pratique j'utilise l'interpolation (linéaire) selon la distribution connue des données contiguës car il s'agit de petites intervalles. Mais donc d'ou la statistique bayesienne devient importante afin de tenir compte des incertitudes
+> **25/08 16:09** — Il faut que je te donne un cours de stat il me semble 🤣
+
+**CTA : volontairement absent.** Anti-répétition vérifiée sur le fil rendu : **0 occurrence de « healthwatch », 0 lien, 0 mention d'essai** dans les 20 messages. Et surtout, **Johan est déjà client Pro** : lui proposer l'essai gratuit serait absurde. *Langue du fil = FR, tutoiement ; langue du brouillon = FR, tutoiement* (paire confirmée mécaniquement, `draftLang: fr` / `threadLang: fr`).
+
+⚠️ **Décision de méthode, à assumer explicitement.** Ce texte n'a **pas** été réécrit ce run. C'est **exactement** le texte que le dispositif avait produit au 4e essai le 25/08 à 17h et fait abandonner sur un faux positif mécanique documenté, **sans qu'il ait jamais été vu par le relecteur indépendant**. Sous le régime du 26/08, la conduite juste n'est pas de relancer une 5e rédaction — quatre essais ont déjà été consommés hier, et la règle des deux essais révisée dit de s'arrêter et de montrer le texte tel quel — mais de lui faire passer **l'étage qui lui avait manqué** et de le porter à David. C'est ce qui a été fait, et le résultat justifie la décision.
+
+**QA: mécanique FAIL (`context.too-soon`, `ngram.history`) | relecteur ENVOYER 12/12 dès le 1er passage | faits cités: aucun chiffre | registre du 26/08 | statut: en file de validation**
+
+⚠️ **Les deux blockers mécaniques sont des faux positifs, et le relecteur en a diagnostiqué un de lui-même.**
+1. **`context.too-soon`** (« Dernier message il y a 1 j. Minimum 3 j entre deux envois. ») — ce plafond relève du bloc `followup` du lexique, « max 2 relances sur un même sujet ». **Ce n'est pas une relance** : le dernier message du fil est **entrant** et attend une réponse. Le relecteur l'a relevé spontanément, hors grille, en citant la clé du lexique.
+2. **`ngram.history`, 140 formules** — les séquences citées sont **les premiers mots du brouillon lui-même** (« c est ta seconde phrase », « ta seconde phrase qui me »…). Le texte a été archivé verbatim dans ce fichier hier soir, et ce fichier est dans le corpus anti-gabarit : **le contrôle compare le brouillon à sa propre copie archivée.** Angle mort structurel déjà consigné les 23/08, 25/08 et ce matin même.
+
+**Relecture éditoriale finale (§5 item 8)** : rien à changer. Le message reprend la seule phrase de Johan restée sans réponse, pose une condition qu'il n'a jamais formulée, et rend la plaisanterie sur le cours de stats en la prenant au mot plutôt qu'en l'esquivant.
+
+> C'est ta seconde phrase qui me retient, celle sur le bayésien. Elle fait un travail différent de l'interpolation, et je ne suis pas sûr qu'elle couvre l'endroit où je bute.
+>
+> Un intervalle de crédibilité absorbe sans peine l'incertitude d'échantillonnage. Pour qu'il absorbe aussi l'incertitude sur la fenêtre fusionnée, il faudrait que la largeur de cette fenêtre existe dans le modèle comme une quantité qui peut varier, avec sa propre loi. Si ton prior se construit à partir des sitreps disponibles, et dis-moi si je me trompe là-dessus, ces documents ne déclarent nulle part la largeur en question, et le calcul répartit alors très proprement l'incertitude à l'intérieur d'une durée qu'il n'a aucune raison de mettre en doute.
+>
+> D'où ma question, et c'en est vraiment une : dans ta chaîne, qu'est-ce qui autorise cette largeur à varier ? Je prends le cours de stats volontiers, en commençant par cette ligne.
+
+**🟡 Deux points qui appartiennent à David, inchangés depuis le 23/08 et délibérément non traités par ce brouillon** : (a) « personne ne veut financer » sa recherche socio-comportementale peut s'entendre comme une ouverture ; (b) il envisage d'arrêter d'écrire sur cette épidémie. Le brouillon ne pèse sur ni l'un ni l'autre.
+
+---
+
+#### 🔒 DM 2 — **trésor Ndaye** (FR, vouvoiement, **premier contact / message de bienvenue**, **SANS lien ni CTA**, quota froid)
+
+*MD, MPH(e), GEP chez **Ministère de la santé publique Kinshasa*** ; également *INSPECTION GENERALE DE LA SANTE/RD CONGO*. Connexion acceptée ce jour (§2).
+
+**Fil de messagerie privée : vide, premier contact.** L'historique existant est **public** : le fil de commentaires sous le point de situation de l'INSP (`urn:li:activity:7495024797437837312`), recopié verbatim dans `tmp/thread-tresor-26-13h.txt`. *Langue du fil = FR, vouvoiement ; langue du brouillon = FR, vouvoiement.*
+
+**Le hook est réel, vérifié et non substituable** : le 17/08 il écrivait publiquement « *d'où un écart 850 cas confirmés non catégories. Une explication pourrait nous aider à comprendre* », et le 18/08 nous lui répondions nommément en lui proposant de suivre ce résidu sur deux ou trois rapports consécutifs plutôt que d'attendre une explication. **Le brouillon reprend exactement là où cet échange s'était arrêté**, une semaine plus tard, et pose la seule question qu'il est le seul à pouvoir trancher.
+
+**Pas de lien, pas d'offre d'essai** : règle du premier contact, non négociable.
+
+**QA: mécanique FAIL (`ngram.history`, 2 séquences) | relecteur REECRIRE (1, 2) au 1er passage, les deux corrigés | faits cités: 850, `facts.from-thread` (vient du fil, pas de la base) | registre du 26/08 | statut: en file de validation**
+
+**⭐ Le relecteur a attrapé deux erreurs de fait réelles que le contrôle mécanique ne pouvait pas voir, et les deux ont été corrigées avant mise en file :**
+1. **« il y a une semaine » était faux.** L'échange date des 17-18/08, soit **8 à 9 jours** au 26/08. Corrigé en « **le 18 août** ».
+2. **Le 850 était présenté nu, alors qu'il a 11 jours.** Il dérive du point de situation **arrêté au 15/08**, au-delà du seuil de 10 jours du registre. Corrigé en « **sur les données arrêtées au 15 août** ».
+
+*Deux corrections d'ouverture ont par ailleurs été faites avant le relecteur, sur des gabarits réels signalés par le mécanique et légitimes à corriger : « merci pour la mise en relation » et « l'invitation est partie sans note » sont des formules maison déjà servies ailleurs. Le blocage résiduel porte sur « **le point de situation de l'** », qui est le **nom du document** : non corrigeable sans le désigner faussement, laissé tel quel et noté.*
+
+🔧 **Défaut d'outillage rencontré et corrigé en cours de run, qui vaut d'être noté** : le contrôle a d'abord rendu `context.register` « fil = tutoiement, brouillon = vouvoiement », ce qui était **entièrement mon erreur, pas la sienne**. L'échange public ne contient **aucune** marque de tutoiement ni de vouvoiement (notre réponse du 18/08 est à l'infinitif), et le seul jeton `tu/te/ton` de tout le fichier de contexte était le mot « **ton** » dans ma propre annotation « ton professionnel », compté comme un pronom. Annotation reformulée, le blocage a disparu. **À retenir : les annotations qu'on écrit soi-même en tête d'un `threadFile` sont analysées comme du fil.**
+
+**Relecture éditoriale finale (§5 item 8)** : rien à retrancher après correction. Le message ne réclame rien, propose une lecture du résultat dans les deux sens, et laisse explicitement la porte ouverte à ce que la question ne se pose pas ainsi de l'intérieur.
+
+> Bonjour. Vous venez d'accepter une invitation partie sans un mot de ma part, alors je répare. HealthWatch Global est un projet que je mène seul. Il rassemble les bulletins de flambée publiés par l'OMS, l'ECDC, le PAHO et Africa CDC, et s'arrête là : rien ne m'arrive avant sa publication.
+>
+> Nous nous étions croisés le 18 août sous le point de situation de l'INSP, à propos des 850 confirmés qui, sur les données arrêtées au 15 août, n'entraient dans aucune catégorie d'issue. Je vous avais suggéré de suivre ce résidu sur deux ou trois rapports consécutifs, l'idée étant qu'un retard de clôture des dossiers se résorbe pendant que les cas montent, alors qu'une part sans issue déclarée, elle, ne se résorbe pas.
+>
+> Le test demandait du temps et il en a eu. Mais le mener suppose d'aligner les rapports successifs, ce que les seuls bulletins internationaux ne me permettent pas. Est-ce que ce résidu a bougé, dans un sens ou dans l'autre ? Et si la question ne se pose pas en ces termes à l'intérieur, ça m'apprendrait autant.
+
+---
+
+### 4️⃣ CARRY-OVER TRAITÉ ET CLOS — **Samba Bah**, aucun message de bienvenue
+
+`/in/samba-bah-737913b8/`, *Senior Operations Officer Expanded Program on Immunization*, 518 abonnés. Carry-over #6 du run de 9h : « activité jamais lue, à évaluer sur le fond ». **Évalué ce run, et la conclusion est de ne rien envoyer.**
+
+**Activité publique lue** : son post le plus récent date d'**un mois** et raconte une inspection de caserne de pompiers à Serrekunda six ans plus tôt. Récit de parcours personnel, pas de matière épidémiologique ou de surveillance. Rien de plus récent dans la liste triée par récence.
+
+Trois raisons convergentes de ne pas rédiger : **aucun hook frais** (§10 interdit d'inventer faute de hook vérifiable) ; **la Gambie ne figure pas parmi les 73 pays de la couverture citable de HWG** (`product-claims.json`, fait établi ce matin même sur le profil d'Alieu Sowe) ; et l'invitation d'origine était partie **par erreur de ciblage**, ce qui ne crée aucune dette de message. **Carry-over clos, ne pas reproposer sans élément neuf.**
+
+---
+
+### 5️⃣ CE QUE LE PREMIER RUN SOUS LE NOUVEAU RÉGIME A CHANGÉ, MESURÉ
+
+| | 9h (ancien régime) | 13h (régime du 26/08) |
+|---|---|---|
+| Textes menés | 4 | 3 |
+| Passages au contrôle mécanique | 11 | 5 |
+| Passages au relecteur | 8 | 3 |
+| Textes portés à David | **0** | **3** |
+| Textes abandonnés par un script | **3** | **0** |
+
+**Le dispositif a produit exactement la même valeur qu'avant, et il l'a produite moins cher.** Les trois findings réels de ce run viennent tous du relecteur, sur des points qu'aucun script ne pouvait voir : une date fausse (« une semaine » pour 9 jours), un chiffre de 11 jours présenté sans sa date, et un diagnostic correct de faux positif sur le plafond de relance. **Aucun des quatre blockers mécaniques rencontrés n'était un vrai défaut** : deux étaient l'auto-comparaison du corpus, un était le nom d'un document officiel, et un venait de ma propre annotation de contexte.
+
+⚠️ **Le contre-exemple d'hier tient toujours** : le DM Mosoka Fallah, abandonné par le mécanique le 25/08, a été envoyé tel quel par David le soir même. Ce run en ajoute un second, le DM Johan, abandonné hier sur un faux positif et validé aujourd'hui **12/12 par le relecteur au premier passage**.
+
+---
+
+### 🔁 CARRY-OVER POUR LE CRÉNEAU DE 17h — liste exhaustive
+
+1. 🔒 **File de validation : 3 textes** — DM **Johan Verheyden**, DM **trésor Ndaye** (ci-dessus), commentaire **Julien Harneis** (dans `content-log.md`). **Aucun ne part sans validation explicite de David.** Notification push envoyée. Les trois sont du jour, aucun n'atteint le seuil de 7 jours de la règle de revérification à la source.
+2. ⭐ **trésor Ndaye, connexion neuve du jour** — si David valide le DM, c'est le fil le plus prometteur ouvert cette semaine : cadre du ministère de la Santé à Kinshasa, déjà engagé publiquement avec nous sur un point précis.
+3. 🆕 **Rodrigo Olave Hurtado** (LSHTM, *Infectious Disease Epidemiologist*) — **invitation reçue acceptée ce run**, relation de 1er degré depuis aujourd'hui, **aucun message échangé**. Il est à l'origine de la piste hantavirus/Chili. **Candidat message de bienvenue pour 17h**, hook à vérifier sur son activité réelle.
+4. 🛑 **Prof. Jérôme Salomon — décision de David toujours requise**, rien de neuf depuis 9h. Le post `urn:li:activity:7497662922005958656` a maintenant ~1,5 jour : **la fenêtre 48 h se ferme cette nuit.** Trois corrections listées dans `content-log.md` si feu vert.
+5. ❌ **Ifedayo Adetifa** — commentaire abandonné au 4e essai ce matin, texte conservé dans `content-log.md`. Sa réponse publique du 26/08 reste sans suite. **Ne pas retenter mécaniquement.** ⚠️ Sous le régime du 26/08, ce texte pourrait légitimement être porté à David comme les trois d'aujourd'hui plutôt que rester classé « abandonné » : il a été arrêté par un script qui n'a plus le dernier mot.
+6. ❌ **John Samuel Otomba** — même remarque : 8 essais cumulés, fond validé trois fois, texte conservé. Post hors fenêtre 48 h ce soir.
+7. ✅ **Samba Bah — carry-over CLOS ce run** (§4), aucun message de bienvenue, ne pas reproposer sans élément neuf.
+8. 🆕 **John Omari Baso** (`/in/john-omari-baso-84500b1b0/`) — déjà suivi, *VillageReach, Goma, Nord-Kivu*, **49+ mutuels dont Johan Verheyden**, 4 407 abonnés. **Excellent candidat connexion, non traité ce run**, quota connexions **0/7**. ⚠️ Rappel : depuis le 26/08 la **note** de connexion va en file de validation comme un DM.
+9. 🔁 **Mame Awa D.** (`/in/mame-awa-d-96bb17239/`) — suivi refusé par la plateforme 3 fois le 26/08 matin, à retenter **par la connexion**. Non retenté ce run.
+10. ➖ **Dr Hannington Katumba** — proposé ce matin comme « meilleur candidat commentaire neuf ». **Évalué ce run et écarté** : son seul post dans la fenêtre 48 h avance « *1,250 lives in the last 20 days* » et « *2,516 deaths* », l'un non sourcé et l'autre **en retard sur le registre** (2 642 au 22/08), et il se termine sur les forces armées M32 et la négociation de corridors humanitaires. Tout angle y serait soit une correction publique de ses chiffres, soit du terrain politique (§9). Son autre post est une republication de 2 semaines, hors fenêtre. **Ne pas reproposer ce post-là.**
+11. 🛑 **Alain BASHIZI** — toujours en attente de la décision de David, ne pas répondre, ne pas relancer.
+12. **2 autres invitations reçues laissées en attente, inchangées** : **Zachariah G. Houdari** (hors sujet) et **OLAOLUWA PHILIP** (14e passage, profil non rouvert).
+13. **97 invitations envoyées en attente** au relevé direct, dont Ihekweazu, SAIDOUNI et Linda Esso (24/08, 3e jour). **269 relations, 381 abonnés.** ⭐ Rappel du jour : trésor Ndaye a accepté **au 7e jour**.
+14. **Suivis 8/7-10, marge de 2 intacte pour 17h.** Objectif de la fourchette déjà atteint, aucune recherche active menée ce run.
+15. 🔴 **§8 — trois lacunes de couverture à transmettre à `morning-don-check`**, aucune résolue : (a) **hantavirus au Chili** (alerte MINSAL, sources ISP et `hantavirus.cl`) ; (b) **dengue aux Îles Marshall**, toujours aucune ligne, carry-over du 25/08 ; (c) **divergence interne Ebola / RD Congo**, deux lignes pour le même foyer, l'une active à 5 514 / 2 642 au 22/08, l'autre close à 4 120 / 1 887 au 07/08.
+16. ⚠️ **Alerte de fraîcheur du registre, 6e jour consécutif** : Shigellosis / EU-EEA **54 j**, Diphtheria / 8 pays **41 j**, Meningitis / 4 pays **34 j**. Le nombre de faits périmés est passé de **56 à 59** entre 9h et 13h.
+17. 🔧 **Défauts d'outillage — les trois de ce matin tiennent, plus un nouveau, tous à trancher hors routine.** Nouveau : **les annotations écrites en tête d'un `threadFile` sont analysées comme du fil**, et un simple nom commun homographe d'un pronom (« ton ») a suffi à faire échouer le contrôle de registre (§3, DM 2). Anciens : faux positif `facts.stale` sur un nombre calculé ; seuil de 5 mots qui bloque de l'anglais ordinaire et l'auto-comparaison du corpus (**5e jour de signalement**) ; asymétrie de veto entre les deux étages — cette dernière **est réglée depuis le 26/08**, aucun étage n'ayant plus de veto.
+18. 🛑 **Écartés du jour, ne pas reproposer sans élément neuf** : **Dr Hannington Katumba** (le post du 25/08, motif détaillé au point 10) ; **Nicholas Laramee**, **Winston Urio**, **Jill Weatherhead**, **Lorenzo Subissi** (motifs inchangés depuis ce matin et le 25/08).
+19. **Carry-overs permanents inchangés, non revérifiés ce run** : Kaushal Sharma, Barrè Onivogui, Andrea Bernasconi, Lorenzo Pezzoli, Mohamed Ousmane COULIBALY, Anuradha Gupta (part 3 annoncée pour le **01/09**), Bouh Abdi Khaireh. **Homonymies non arbitrées** : Jean-Jacques Muyembe (**11e jour**) et Jide Idris.
+20. **Blocages hebdomadaires de commentaire en cours, inchangés** : Melvin Sanicas, Robert Herriman, Patrick AYONGA, Ifedayo Adetifa, page ECDC, Oliver Morgan, Dr Fabrice KHADDY (jusqu'au 30/08) ; Apoorva Wasnik et Johan Verheyden (jusqu'au 29/08) ; Martin Yakum (jusqu'au 01/09). **Aucun blocage nouveau créé ce run, rien n'ayant été publié.** ⚠️ Si David valide le commentaire Julien Harneis, un blocage jusqu'au **02/09** naîtra à sa publication.
+21. ⚠️ **`scripts/extend-trial.ts` est modifié dans l'arbre de travail et n'appartient pas à cette routine** (`AGENTS.md`). Laissé tel quel, ni commité, ni stashé, ni annulé. Déjà présent à l'ouverture du run. **À signaler à qui l'a modifié : le changement n'est ni commité ni relu.**
+22. 🍪 **Bandeau de consentement cookies LinkedIn réapparu** ce run sur plusieurs pages. **Non cliqué** : accepter ou refuser un bandeau de consentement est une action qui engage le compte de David, hors périmètre d'une routine automatique. Il ne bloque rien (tout le travail passe par le DOM). Signalé pour qu'il le traite lui-même s'il le souhaite.
+
+---
+
 ## 📅 Session linkedin-hwg-monitoring — 26/08/2026 (9h)
 
 **Vérification double déclenchement** : aucune entrée `linkedin-hwg-monitoring` datée du 26/08 dans ce fichier ni dans `content-log.md` à l'ouverture (les seules entrées du jour appartiennent à `linkedin-hwg-content-proposal`) → **premier déclenchement de cette routine aujourd'hui**.
