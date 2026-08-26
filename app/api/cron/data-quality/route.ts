@@ -548,9 +548,21 @@ async function runDataQuality(_req: NextRequest, supabase: SupabaseClient) {
   // breakdowns (USDA APHIS per US state, WHO DON per DRC health zone) push
   // the same country string many times on purpose, which used to trip this
   // check by row count alone even though it's the same single country.
+  //
+  // DUP_MIN_CASES excludes small counts: found 2026-08-26 on Polio (Mali=1,
+  // Angola=1, Niger=1, polioeradication.org) — three genuinely distinct cVDPV
+  // events (different serotypes, different onset dates, closed 2026-08-22/23
+  // via the GPEI slide deck, see project_polio_duplicate_rows_audit) that
+  // only collided because "1" is an extremely common, low-cardinality count
+  // for an index case — nothing like the regional-total-misparsed-per-country
+  // bug this check exists to catch, which produces large, distinctive counts.
+  // A misdistributed total is astronomically unlikely to land on a count this
+  // small across 3+ countries; independent low-incidence events (a fresh
+  // outbreak's first case, in particular) collide on it constantly.
+  const DUP_MIN_CASES = 10;
   const dupGroups = new Map<string, Set<string>>();
   for (const row of rows ?? []) {
-    if (!row.cases || row.cases === 0 || row.is_seed) continue;
+    if (!row.cases || row.cases < DUP_MIN_CASES || row.is_seed) continue;
     let domain = "unknown";
     try { domain = new URL(row.source ?? "").hostname; } catch { /* ignore */ }
     const key = `${(row.disease ?? "").toLowerCase()}|${domain}|${row.cases}`;
@@ -1068,7 +1080,7 @@ async function runDataQuality(_req: NextRequest, supabase: SupabaseClient) {
           const label = `${row.disease} / ${row.country}`;
           needsReview.push({
             label: `[SORTIE DE CARTE] ${label}`,
-            detail: `Ligne désactivée depuis le ${lastSeen.get(row.id)} (dernier instantané) — elle n'apparaît plus sur la carte publique et sort de tous les autres contrôles de ce rapport. Dernier état connu : ${(row.cases ?? 0).toLocaleString("fr-FR")} cas / ${(row.deaths ?? 0).toLocaleString("fr-FR")} décès au ${row.date}. Vérifier que la source a réellement cessé de publier (${row.source ?? "source absente"}) et non que le foyer est toujours en cours — cas Angola/Yémen du 24/08. Aucune réactivation automatique.`,
+            detail: `Ligne désactivée depuis le ${lastSeen.get(row.id)} (dernier instantané) — elle n'apparaît plus sur la carte publique et sort de tous les autres contrôles de ce rapport. Dernier état connu : ${(row.cases ?? 0).toLocaleString("fr-FR")} cas / ${(row.deaths ?? 0).toLocaleString("fr-FR")} décès au ${row.date}. Vérifier que la source a réellement cessé de publier (${row.source ?? "source absente"}) et non qu'elle continue pendant que cette ligne reste désactivée — déjà arrivé (Choléra/Angola et Choléra/Yémen coupées le 24/08 alors que l'OMS publiait toujours). Aucune réactivation automatique.`,
           });
         }
         if (exited.length > shown.length) {
