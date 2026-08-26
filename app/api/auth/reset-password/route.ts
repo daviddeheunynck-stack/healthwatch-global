@@ -55,9 +55,36 @@ export async function POST(req: NextRequest) {
       options: { redirectTo: `${siteUrl}/${locale}/reset-password` },
     });
 
+    // NE PAS envoyer `properties.action_link`. C'est l'URL /auth/v1/verify de
+    // Supabase : elle consomme le jeton au premier GET, puis redirige vers la
+    // page avec la session dans le FRAGMENT (#access_token=…&type=recovery).
+    // La page de réinitialisation doit alors l'attraper via un écouteur
+    // onAuthStateChange guettant PASSWORD_RECOVERY — un événement émis pendant
+    // l'initialisation du client Supabase, donc potentiellement AVANT que
+    // l'écouteur ne soit branché. C'est une course : parfois gagnée, souvent
+    // perdue, et perdue elle affiche « ce lien a expiré ou est invalide » à
+    // quelqu'un dont la session valide est pourtant dans la barre d'adresse.
+    // Constaté le 26/08/2026 sur un lien envoyé une minute plus tôt.
+    //
+    // On construit donc le lien nous-mêmes à partir de `hashed_token`, vers la
+    // PREMIÈRE branche de la page — celle qui appelle verifyOtp() de manière
+    // déterministe, sans dépendre d'aucun événement.
+    //
+    // Bénéfice secondaire, qui compte pour des destinataires institutionnels :
+    // ce lien-ci ne se consomme PAS à la visite. Un scanner de sécurité qui
+    // préfetche les URL d'un message (Proofpoint, Safe Links) ne fait que
+    // charger une page React ; la vérification n'a lieu qu'en JavaScript, dans
+    // le navigateur d'un humain. C'est exactement le mode de panne qui a bloqué
+    // Johan Verheyden deux fois les 11-12/08 — voir l'en-tête de
+    // scripts/provision-hsoc-georgetown-2026-08-24.mjs.
+    const hashedToken = linkData?.properties?.hashed_token;
+    const actionLink = hashedToken
+      ? `${siteUrl}/${locale}/reset-password?token_hash=${encodeURIComponent(hashedToken)}&type=recovery`
+      : linkData?.properties?.action_link; // repli si Supabase change sa réponse
+
     // Don't leak whether an account exists for this email — always report
     // success to the caller, but capture unexpected failures for visibility.
-    if (linkErr || !linkData?.properties?.action_link) {
+    if (linkErr || !actionLink) {
       // Journalisé dans tous les cas. Le « compte introuvable » est un
       // fonctionnement normal côté produit (on ne révèle pas qui a un compte),
       // mais côté exploitation c'est la seule chose qui distingue « personne
@@ -92,13 +119,13 @@ export async function POST(req: NextRequest) {
         const isLocal = !process.env.VERCEL_ENV;
         console.info(
           `[reset-password] non-production (VERCEL_ENV=${process.env.VERCEL_ENV ?? "unset"}) — aucun e-mail envoyé` +
-            (isLocal ? `\n[reset-password] lien de récupération : ${linkData.properties.action_link}` : ""),
+            (isLocal ? `\n[reset-password] lien de récupération : ${actionLink}` : ""),
         );
       }
       return NextResponse.json({ success: true });
     }
 
-    const { subject, html } = buildResetPasswordEmail(locale, linkData.properties.action_link);
+    const { subject, html } = buildResetPasswordEmail(locale, actionLink);
 
     const brevoRes = await fetch("https://api.brevo.com/v3/smtp/email", {
       method: "POST",
