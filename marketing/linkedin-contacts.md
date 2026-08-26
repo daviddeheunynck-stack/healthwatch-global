@@ -60,9 +60,11 @@ Liste des abonnés relue par récence. **Le seul nouvel abonné depuis le relev�
 
 ---
 
-### 3️⃣ 🔒 DEUX DM EN FILE DE VALIDATION — textes complets
+### 3️⃣ ✅ DEUX DM ENVOYÉS — sur ordre explicite de David en session interactive (« envoie les Dms »)
 
-#### 🔒 DM 1 — **Johan Verheyden** (FR, tutoiement, fil actif, **SANS CTA**, hors quota froid)
+**Double-check demandé par David avant l'ordre d'envoi** (« double check les dms ») : les deux fils rouverts en direct sur LinkedIn, comparés mot pour mot à l'archive — identiques, aucun nouveau message entre-temps. Mise en forme vérifiée hors-ligne (0 tiret cadratin, 0 double espace, 0 espace insécable, 3 paragraphes chacun). Détail dans la session, non reproduit ici.
+
+#### ✅ DM 1 — **Johan Verheyden** (FR, tutoiement, fil actif, **SANS CTA**, hors quota froid) — ENVOYÉ 14:41
 
 *FOUNDER AND CHIEF RESEARCHER, 1er degré. **Utilisateur HWG payant réel** : compte Pro d'un an ouvert le 11/08.* Carry-over #2 du run de 9h, **2e jour sans réponse de notre part**.
 
@@ -76,7 +78,7 @@ Liste des abonnés relue par récence. **Le seul nouvel abonné depuis le relev�
 
 ⚠️ **Décision de méthode, à assumer explicitement.** Ce texte n'a **pas** été réécrit ce run. C'est **exactement** le texte que le dispositif avait produit au 4e essai le 25/08 à 17h et fait abandonner sur un faux positif mécanique documenté, **sans qu'il ait jamais été vu par le relecteur indépendant**. Sous le régime du 26/08, la conduite juste n'est pas de relancer une 5e rédaction — quatre essais ont déjà été consommés hier, et la règle des deux essais révisée dit de s'arrêter et de montrer le texte tel quel — mais de lui faire passer **l'étage qui lui avait manqué** et de le porter à David. C'est ce qui a été fait, et le résultat justifie la décision.
 
-**QA: mécanique FAIL (`context.too-soon`, `ngram.history`) | relecteur ENVOYER 12/12 dès le 1er passage | faits cités: aucun chiffre | registre du 26/08 | statut: en file de validation**
+**QA: mécanique FAIL (`context.too-soon`, `ngram.history`) | relecteur ENVOYER 12/12 dès le 1er passage | faits cités: aucun chiffre | registre du 26/08 | statut: ENVOYÉ ET CONFIRMÉ 14:41, sur ordre explicite de David**
 
 ⚠️ **Les deux blockers mécaniques sont des faux positifs, et le relecteur en a diagnostiqué un de lui-même.**
 1. **`context.too-soon`** (« Dernier message il y a 1 j. Minimum 3 j entre deux envois. ») — ce plafond relève du bloc `followup` du lexique, « max 2 relances sur un même sujet ». **Ce n'est pas une relance** : le dernier message du fil est **entrant** et attend une réponse. Le relecteur l'a relevé spontanément, hors grille, en citant la clé du lexique.
@@ -92,9 +94,11 @@ Liste des abonnés relue par récence. **Le seul nouvel abonné depuis le relev�
 
 **🟡 Deux points qui appartiennent à David, inchangés depuis le 23/08 et délibérément non traités par ce brouillon** : (a) « personne ne veut financer » sa recherche socio-comportementale peut s'entendre comme une ouverture ; (b) il envisage d'arrêter d'écrire sur cette épidémie. Le brouillon ne pèse sur ni l'un ni l'autre.
 
+**Envoi confirmé** : identité du destinataire revérifiée dans le même appel JS que le clic sur « Envoyer » (règle du 15/08), éditeur vidé après clic, texte visible dans le fil identique au brouillon jusqu'à la dernière phrase.
+
 ---
 
-#### 🔒 DM 2 — **trésor Ndaye** (FR, vouvoiement, **premier contact / message de bienvenue**, **SANS lien ni CTA**, quota froid)
+#### ✅ DM 2 — **trésor Ndaye** (FR, vouvoiement, **premier contact / message de bienvenue**, **SANS lien ni CTA**, quota froid) — ENVOYÉ 14:47
 
 *MD, MPH(e), GEP chez **Ministère de la santé publique Kinshasa*** ; également *INSPECTION GENERALE DE LA SANTE/RD CONGO*. Connexion acceptée ce jour (§2).
 
@@ -104,7 +108,9 @@ Liste des abonnés relue par récence. **Le seul nouvel abonné depuis le relev�
 
 **Pas de lien, pas d'offre d'essai** : règle du premier contact, non négociable.
 
-**QA: mécanique FAIL (`ngram.history`, 2 séquences) | relecteur REECRIRE (1, 2) au 1er passage, les deux corrigés | faits cités: 850, `facts.from-thread` (vient du fil, pas de la base) | registre du 26/08 | statut: en file de validation**
+**QA: mécanique FAIL (`ngram.history`, 2 séquences) | relecteur REECRIRE (1, 2) au 1er passage, les deux corrigés | faits cités: 850, `facts.from-thread` (vient du fil, pas de la base) | registre du 26/08 | statut: ENVOYÉ ET CONFIRMÉ 14:47, sur ordre explicite de David**
+
+⚠️ **Incident navigateur rencontré et contourné pendant l'envoi, à documenter.** Après ouverture du composeur « Nouveau message » (premier contact, pas de fil existant), le renderer de l'onglet est passé en état dégradé : `Page.captureScreenshot` en timeout répété, et tout script JS **asynchrone** (`(async()=>42)()`) renvoyait `{}` au lieu de `42` — signature documentée en politique commune §7, y compris sur un **nouvel onglet** ouvert en tentative de récupération (le nouvel onglet n'a donc pas résolu cette signature précise, contrairement au cas général). **Le JS synchrone, lui, fonctionnait normalement** (`1+1` → `2`, `querySelector` retrouvait les éléments) : contournement en n'utilisant plus aucun `await`/callback asynchrone dans les scripts d'insertion et d'envoi. Un premier clic sur le bouton « Message » du profil et une première tentative de saisie clavier via `computer type` n'ont abouti à rien de visible (le composeur affiché à l'écran ne recevait pas les événements) ; la saisie a finalement réussi via `document.execCommand('insertText')` synchrone, comme pour le DM Johan. Aucun texte n'a été perdu ni doublé : vérifié par relecture du HTML de l'éditeur avant le clic d'envoi.
 
 **⭐ Le relecteur a attrapé deux erreurs de fait réelles que le contrôle mécanique ne pouvait pas voir, et les deux ont été corrigées avant mise en file :**
 1. **« il y a une semaine » était faux.** L'échange date des 17-18/08, soit **8 à 9 jours** au 26/08. Corrigé en « **le 18 août** ».
