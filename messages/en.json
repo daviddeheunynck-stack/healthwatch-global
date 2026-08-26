@@ -138,6 +138,7 @@
     "sendResetLink": "Send reset link",
     "resetLinkSent": "Check your inbox",
     "resetLinkSentText": "If an account exists for this email, you will receive a reset link within a few minutes.",
+    "resetTooManyAttempts": "Too many requests from this connection. No email was sent — please try again in an hour.",
     "resetPasswordTitle": "Set a new password",
     "newPassword": "New password",
     "confirmPassword": "Confirm password",

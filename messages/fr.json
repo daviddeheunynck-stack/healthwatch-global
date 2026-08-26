@@ -138,6 +138,7 @@
     "sendResetLink": "Envoyer le lien",
     "resetLinkSent": "Vérifiez votre boîte mail",
     "resetLinkSentText": "Si un compte existe pour cet email, vous recevrez un lien de réinitialisation dans quelques minutes.",
+    "resetTooManyAttempts": "Trop de demandes depuis cette connexion. Aucun e-mail n'a été envoyé — réessayez dans une heure.",
     "resetPasswordTitle": "Définir un nouveau mot de passe",
     "newPassword": "Nouveau mot de passe",
     "confirmPassword": "Confirmer le mot de passe",

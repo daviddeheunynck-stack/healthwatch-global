@@ -138,6 +138,7 @@
     "sendResetLink": "Kirim tautan reset",
     "resetLinkSent": "Periksa kotak masuk Anda",
     "resetLinkSentText": "Jika akun dengan email ini ada, Anda akan menerima tautan reset dalam beberapa menit.",
+    "resetTooManyAttempts": "Terlalu banyak permintaan dari koneksi ini. Tidak ada email yang dikirim — coba lagi dalam satu jam.",
     "resetPasswordTitle": "Buat kata sandi baru",
     "newPassword": "Kata sandi baru",
     "confirmPassword": "Konfirmasi kata sandi",

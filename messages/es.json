@@ -138,6 +138,7 @@
     "sendResetLink": "Enviar enlace",
     "resetLinkSent": "Revisa tu bandeja de entrada",
     "resetLinkSentText": "Si existe una cuenta con este email, recibirás un enlace en unos minutos.",
+    "resetTooManyAttempts": "Demasiadas solicitudes desde esta conexión. No se envió ningún email — inténtalo de nuevo en una hora.",
     "resetPasswordTitle": "Nueva contraseña",
     "newPassword": "Nueva contraseña",
     "confirmPassword": "Confirmar contraseña",

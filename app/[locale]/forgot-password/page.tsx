@@ -20,14 +20,30 @@ export default function ForgotPasswordPage() {
 
     // Sent via Brevo (app/api/auth/reset-password), not Supabase's own Auth
     // mailer — the latter has proven unreliable delivering to some providers.
-    await fetch("/api/auth/reset-password", {
+    const res = await fetch("/api/auth/reset-password", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, locale }),
-    }).catch(() => {});
+    }).catch(() => null);
+
+    setLoading(false);
+
+    // Le 429 est le SEUL cas où « vérifiez votre boîte » serait un mensonge :
+    // la route plafonne à 5 demandes par heure et par IP, et au-delà elle sort
+    // avant même d'essayer d'envoyer quoi que ce soit. Afficher un succès fait
+    // alors attendre un e-mail qui ne viendra jamais — c'est exactement ce qui
+    // a fait passer une heure à diagnostiquer une panne inexistante le
+    // 26/08/2026, et un prospect, lui, n'a pas les logs pour s'en sortir.
+    //
+    // Aucune fuite d'information au passage : le plafond porte sur l'adresse IP
+    // de l'appelant, pas sur le compte visé. Il ne dit rien sur l'existence de
+    // celui-ci. Tous les autres cas continuent d'afficher le même succès.
+    if (res?.status === 429) {
+      setError(t("resetTooManyAttempts"));
+      return;
+    }
 
     // Always show success — don't leak whether an account exists
-    setLoading(false);
     setSent(true);
   };
 
