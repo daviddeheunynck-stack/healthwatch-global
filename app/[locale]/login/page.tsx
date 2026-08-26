@@ -8,6 +8,7 @@ import { track } from "@vercel/analytics/react";
 import { Activity, Loader2 } from "lucide-react";
 import Link from "next/link";
 import OAuthButtons from "@/components/OAuthButtons";
+import InstitutionalContactLink from "@/components/InstitutionalContactLink";
 
 const OAUTH_ERROR: Record<string, string> = {
   fr: "Connexion Google échouée. Vérifiez que le provider Google est activé dans Supabase.",
@@ -300,6 +301,7 @@ export default function LoginPage() {
              locale === "id" ? "14 hari Pro gratis · Tanpa kartu kredit" :
              "14-day Pro trial · No credit card required"}
           </p>
+          <InstitutionalContactLink locale={locale} source="login" />
         </div>
       </div>
     </div>

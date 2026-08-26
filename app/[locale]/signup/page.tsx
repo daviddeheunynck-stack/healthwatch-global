@@ -8,6 +8,8 @@ import * as Sentry from "@sentry/nextjs";
 import { Activity, Loader2, CheckCircle, BarChart2, Bell, FileDown, Lock, Sparkles } from "lucide-react";
 import Link from "next/link";
 import OAuthButtons from "@/components/OAuthButtons";
+import InstitutionalContactLink from "@/components/InstitutionalContactLink";
+import { regionPickerFor } from "@/lib/region-picker";
 
 // Shown when supabase.auth.signUp() throws instead of resolving with
 // {error} — see handleSignup below for why that happens and why it must
@@ -136,75 +138,16 @@ const VALUE_PROPS: Record<string, { trial: string; items: string[]; noCard: stri
 
 const ICONS = [BarChart2, Bell, FileDown];
 
-// Same 5-region taxonomy as AlertRegionToggles/account page.
-//
-// REQUIS depuis le 2026-08-25, apres mesure. Ce champ etait facultatif et son
-// option vide valait "toutes les regions" : presque personne ne repondait, donc
-// presque tout le monde etait inscrit aux cinq. Releve sur 30 jours ce jour-la :
-// 2 091 couples (utilisateur, foyer) pousses sur 25 comptes, avec une
-// distribution PLATE — 117, 117, 117, 116, 115, 115, 115... Tout le monde
-// recevait la meme chose. Sur ~32 comptes reels, 4 adresses bloquees chez Brevo,
-// dont une conversion institutionnelle en essai Pro qui n'avait jamais ouvert le
-// produit. Un compte sur huit : un taux sain se compte en fractions de pour cent.
-//
-// Le cablage vers activate-trial existait et fonctionnait ; c'est le defaut
-// silencieux qui le vidait de son sens. "Toutes les regions" reste disponible,
-// mais comme un choix explicite — pas comme ce qu'on obtient en ne repondant pas,
-// et libelle "inclus pendant l'essai" : /pricing vend "Toutes les regions
-// mondiales" comme le differenciateur Pro face a "1 region surveillee" en Gratuit,
-// donc l'offrir sans mention au premier ecran donnait gratuitement l'argument
-// vendu au troisieme. Sans effet fonctionnel : regional-alerts filtre deja sur
-// plan in (starter, pro, team, enterprise), un compte gratuit ne recoit aucune
-// alerte regionale quoi qu'il ait choisi.
-// L'intention etait deja ecrite dans lib/activate-trial.ts : "un e-mail
-// hebdomadaire sur un pays que vous avez demande est un produit ; un e-mail sur
-// cinq continents ressemble a une newsletter."
-//
-// Non couvert ici : les inscriptions OAuth et les comptes provisionnes par
-// script ne voient jamais ce formulaire et retombent sur les cinq regions.
-const REGION_PICKER: Record<string, { label: string; prompt: string; required: string; all: string; options: Record<string, string> }> = {
-  en: {
-    label: "Which region matters most to you?",
-    prompt: "Select a region",
-    required: "Please choose a region — it decides which alerts you get.",
-    all: "All regions — included during your trial",
-    options: { africa: "Africa", asia: "Asia", americas: "Americas", europe: "Europe", oceania: "Oceania" },
-  },
-  fr: {
-    label: "Quelle région vous intéresse en priorité ?",
-    prompt: "Choisissez une région",
-    required: "Choisissez une région — c’est elle qui détermine vos alertes.",
-    all: "Toutes les régions — inclus pendant l’essai",
-    options: { africa: "Afrique", asia: "Asie", americas: "Amériques", europe: "Europe", oceania: "Océanie" },
-  },
-  es: {
-    label: "¿Qué región le interesa prioritariamente?",
-    prompt: "Elija una región",
-    required: "Elija una región — determina las alertas que recibirá.",
-    all: "Todas las regiones — incluido durante la prueba",
-    options: { africa: "África", asia: "Asia", americas: "Américas", europe: "Europa", oceania: "Oceanía" },
-  },
-  ar: {
-    label: "ما المنطقة الأهم بالنسبة لك؟",
-    prompt: "اختر منطقة",
-    required: "اختر منطقة — هي التي تحدد التنبيهات التي تصلك.",
-    all: "كل المناطق — مشمولة خلال الفترة التجريبية",
-    options: { africa: "أفريقيا", asia: "آسيا", americas: "الأمريكتين", europe: "أوروبا", oceania: "أوقيانوسيا" },
-  },
-  id: {
-    label: "Wilayah mana yang paling penting bagi Anda?",
-    prompt: "Pilih wilayah",
-    required: "Pilih wilayah — ini menentukan peringatan yang Anda terima.",
-    all: "Semua wilayah — termasuk selama masa uji coba",
-    options: { africa: "Afrika", asia: "Asia", americas: "Amerika", europe: "Eropa", oceania: "Oseania" },
-  },
-};
+// Le choix de region prioritaire vit desormais dans lib/region-picker.ts :
+// l'etape posee aux inscriptions OAuth (app/[locale]/welcome) doit poser
+// exactement la meme question, avec les memes libelles. Le pourquoi du champ
+// requis et la mesure qui y a conduit sont documentes la-bas.
 
 export default function SignupPage() {
   const t = useTranslations("auth");
   const locale = useLocale();
   const vp = VALUE_PROPS[locale] ?? VALUE_PROPS.en;
-  const rp = REGION_PICKER[locale] ?? REGION_PICKER.en;
+  const rp = regionPickerFor(locale);
   const isRtl = locale === "ar";
 
   const [email, setEmail] = useState("");
@@ -214,15 +157,21 @@ export default function SignupPage() {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [gmailTypo, setGmailTypo] = useState<string | null>(null);
+  const [regionError, setRegionError] = useState(false);
+
+  // Le select porte `required`, mais la validation native ne s'applique qu'a la
+  // soumission d'un formulaire — or la question est desormais posee AVANT le
+  // bouton Google, hors du formulaire, et submitSignup est aussi appelable
+  // autrement (bouche de la correction de faute de frappe Gmail).
+  const requireRegion = (): boolean => {
+    if (priorityRegion) return true;
+    setRegionError(true);
+    document.getElementById("priority-region")?.scrollIntoView({ block: "center", behavior: "smooth" });
+    return false;
+  };
 
   const submitSignup = async () => {
-    // Double avec l'attribut `required` du select : la validation native ne
-    // s'applique qu'a une soumission de formulaire, et ce gestionnaire est
-    // aussi appelable autrement.
-    if (!priorityRegion) {
-      setError(rp.required);
-      return;
-    }
+    if (!requireRegion()) return;
 
     setLoading(true);
     setError("");
@@ -428,8 +377,37 @@ export default function SignupPage() {
               </div>
             ) : (
               <>
+                {/* La question de region est posee AVANT le bouton Google, et non
+                    plus au milieu du formulaire email. Sinon un compte OAuth ne la
+                    voyait jamais : il repartait avec les cinq regions et le digest
+                    de signup sur cinq continents — la distribution plate mesuree le
+                    2026-08-25. La reponse est transmise a /auth/callback, qui la
+                    passe a activateTrial() des la premiere activation. */}
                 <div className="space-y-4 mb-5">
-                  <OAuthButtons locale={locale} />
+                  <div>
+                    <label htmlFor="priority-region" className="block text-sm text-gray-400 mb-1.5">{rp.label}</label>
+                    <select
+                      id="priority-region"
+                      value={priorityRegion}
+                      onChange={(e) => { setPriorityRegion(e.target.value); setRegionError(false); }}
+                      disabled={loading}
+                      required
+                      aria-invalid={regionError}
+                      className={`w-full bg-gray-800 border rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-red-500 transition-colors disabled:opacity-50 ${regionError ? "border-red-500" : "border-gray-700"}`}
+                    >
+                      <option value="" disabled>{rp.prompt}</option>
+                      <option value="all">{rp.all}</option>
+                      {Object.entries(rp.options).map(([value, label]) => (
+                        <option key={value} value={value}>{label}</option>
+                      ))}
+                    </select>
+                    {regionError && <p className="text-red-400 text-sm mt-1.5">{rp.required}</p>}
+                  </div>
+                  <OAuthButtons
+                    locale={locale}
+                    priorityRegion={priorityRegion}
+                    onBeforeOAuth={requireRegion}
+                  />
                   <div className="flex items-center gap-3">
                     <div className="flex-1 h-px bg-gray-800" />
                     <span className="text-xs text-gray-600">{t("or")}</span>
@@ -485,23 +463,6 @@ export default function SignupPage() {
                     />
                     <p className="text-xs text-gray-600 mt-1">{t("passwordHint")}</p>
                   </div>
-                  <div>
-                    <label className="block text-sm text-gray-400 mb-1.5">{rp.label}</label>
-                    <select
-                      value={priorityRegion}
-                      onChange={(e) => setPriorityRegion(e.target.value)}
-                      disabled={loading}
-                      required
-                      className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-red-500 transition-colors disabled:opacity-50"
-                    >
-                      <option value="" disabled>{rp.prompt}</option>
-                      <option value="all">{rp.all}</option>
-                      {Object.entries(rp.options).map(([value, label]) => (
-                        <option key={value} value={value}>{label}</option>
-                      ))}
-                    </select>
-                  </div>
-
                   {error && (
                     /already registered/i.test(error) ? (
                       <p className="text-sm text-amber-400">
@@ -541,6 +502,7 @@ export default function SignupPage() {
                       {t("loginLink")}
                     </Link>
                   </p>
+                  <InstitutionalContactLink locale={locale} source="signup" />
                 </div>
               </>
             )}

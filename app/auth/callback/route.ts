@@ -3,7 +3,7 @@ import { createServerClient } from "@supabase/ssr";
 import { createClient } from "@supabase/supabase-js";
 import { cookies } from "next/headers";
 import * as Sentry from "@sentry/nextjs";
-import { activateTrial } from "@/lib/activate-trial";
+import { activateTrial, ALL_REGIONS } from "@/lib/activate-trial";
 
 const VALID_LOCALES = ["en", "fr", "es", "ar", "id"];
 
@@ -17,6 +17,18 @@ export async function GET(req: NextRequest) {
   const { searchParams, origin } = new URL(req.url);
   const code = searchParams.get("code");
   const next = searchParams.get("next") ?? "/";
+
+  // Region prioritaire choisie sur le formulaire d'inscription avant le clic
+  // Google (voir components/OAuthButtons.tsx). Elle arrive ici parce qu'elle
+  // fait partie de l'URL redirectTo rendue par Supabase. Absente ou invalide,
+  // l'inscription OAuth part sur les cinq regions et se voit poser la question
+  // sur /{locale}/welcome juste apres — c'etait le trou du correctif ebe0ab0
+  // du 2026-08-25, qui n'a jamais couvert les inscriptions OAuth.
+  const regionParam = searchParams.get("region");
+  const priorityRegion =
+    regionParam && (ALL_REGIONS as readonly string[]).includes(regionParam)
+      ? (regionParam as (typeof ALL_REGIONS)[number])
+      : null;
 
   // Capture error forwarded by Google/Supabase (e.g. access_denied, redirect_uri_mismatch)
   const oauthError = searchParams.get("error");
@@ -79,6 +91,14 @@ export async function GET(req: NextRequest) {
       );
     }
     if (!error && user) {
+      // Pose la question de region aux inscriptions OAuth qui n'y ont pas
+      // repondu avant le clic — celles qui viennent de /login, ou d'un
+      // /signup ouvert avant ce deploiement. Ne concerne que les comptes
+      // reellement crees a l'instant : un utilisateur qui se reconnecte
+      // n'est jamais detourne.
+      let needsRegionStep = false;
+      let stepLocale = "en";
+
       try {
         const admin = createClient(
           process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -98,7 +118,7 @@ export async function GET(req: NextRequest) {
         // (activate-trial's idempotence guard treats any trial_ends_at as already handled).
         let isNewSignup = false;
         try {
-          const result = await activateTrial(admin, user);
+          const result = await activateTrial(admin, user, { priorityRegion });
           isNewSignup = result.activated;
         } catch (err) {
           console.error("[auth/callback] trial activation failed:", err);
@@ -129,8 +149,10 @@ export async function GET(req: NextRequest) {
         // Send welcome email only for OAuth signups — email/password users already
         // receive it from signup/page.tsx immediately after form submission.
         const isOAuth = user.app_metadata?.provider !== "email";
+        needsRegionStep = isNewSignup && isOAuth && !priorityRegion;
+        stepLocale = (localeUpdates.locale as string | undefined) ?? profile?.locale ?? inferredLocale ?? "en";
         if (isNewSignup && isOAuth && user.email) {
-          const emailLocale = (localeUpdates.locale as string | undefined) ?? profile?.locale ?? inferredLocale ?? "en";
+          const emailLocale = stepLocale;
           fetch(`${origin}/api/send-welcome`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -143,6 +165,12 @@ export async function GET(req: NextRequest) {
       }
 
       const safeNext = next.startsWith("/") && !next.startsWith("//") ? next : `/${VALID_LOCALES[0]}`;
+      const safeStepLocale = VALID_LOCALES.includes(stepLocale) ? stepLocale : "en";
+      if (needsRegionStep) {
+        return NextResponse.redirect(
+          `${origin}/${safeStepLocale}/welcome?next=${encodeURIComponent(safeNext)}`
+        );
+      }
       return NextResponse.redirect(`${origin}${safeNext}`);
     }
   }

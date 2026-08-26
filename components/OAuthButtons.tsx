@@ -6,6 +6,18 @@ import { track } from "@vercel/analytics/react";
 import * as Sentry from "@sentry/nextjs";
 import { Loader2 } from "lucide-react";
 
+// GitHub retire le 2026-08-26. C'etait un signal de produit pour developpeurs sur
+// une page dont les visiteurs sont health.ny.gov, georgetown.edu, pasteur.ma ou
+// l'ANSS — et une option de plus a arbitrer au pire moment du tunnel. Verifie
+// avant retrait : aucun compte n'utilisait ce fournisseur. Le bon candidat de
+// remplacement est Microsoft (les .gov/.edu vises sont sur Microsoft 365, pas sur
+// Google), mais l'OAuth Microsoft en tenant institutionnel demande souvent un
+// consentement administrateur — donc un ticket au service informatique du
+// prospect, exactement l'obstacle que l'OAuth devait supprimer. A cabler le jour
+// ou un prospect ecrit qu'il ne peut pas creer de compte avec son adresse, pas
+// avant. Cote Supabase, le provider GitHub est a desactiver dans le tableau de
+// bord (Authentication > Providers) : ce fichier ne peut pas le faire.
+
 const GoogleIcon = () => (
   <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
     <path d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.875 2.684-6.615z" fill="#4285F4"/>
@@ -15,18 +27,12 @@ const GoogleIcon = () => (
   </svg>
 );
 
-const GitHubIcon = () => (
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-    <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/>
-  </svg>
-);
-
-const LABELS: Record<string, { google: string; github: string }> = {
-  en: { google: "Continue with Google", github: "Continue with GitHub" },
-  fr: { google: "Continuer avec Google", github: "Continuer avec GitHub" },
-  es: { google: "Continuar con Google",  github: "Continuar con GitHub"  },
-  ar: { google: "المتابعة عبر Google",   github: "المتابعة عبر GitHub"   },
-  id: { google: "Lanjutkan dengan Google", github: "Lanjutkan dengan GitHub" },
+const LABELS: Record<string, string> = {
+  en: "Continue with Google",
+  fr: "Continuer avec Google",
+  es: "Continuar con Google",
+  ar: "المتابعة عبر Google",
+  id: "Lanjutkan dengan Google",
 };
 
 const ERROR_LABELS: Record<string, string> = {
@@ -37,19 +43,44 @@ const ERROR_LABELS: Record<string, string> = {
   id: "Gagal masuk dengan Google. Coba lagi atau gunakan email.",
 };
 
-type Props = { locale: string; redirectTo?: string; context?: "signup" | "login" };
+type Props = {
+  locale: string;
+  redirectTo?: string;
+  context?: "signup" | "login";
+  // Region prioritaire choisie sur le formulaire d'inscription, transmise a
+  // /auth/callback pour que activateTrial() l'applique des la premiere
+  // activation. Sans elle, un compte OAuth est inscrit aux cinq regions et
+  // recoit un digest de signup sur cinq continents avant meme d'avoir pu
+  // repondre a la question — c'est la pression d'alerte plate mesuree le
+  // 2026-08-25. "all" et undefined valent explicitement "toutes les regions".
+  priorityRegion?: string;
+  // Rendue false, la connexion OAuth est annulee et le parent affiche son
+  // propre message (region non choisie). Le bouton reste actif : un bouton
+  // desactive sans explication coute plus qu'une erreur au clic.
+  onBeforeOAuth?: () => boolean;
+};
 
-export default function OAuthButtons({ locale, redirectTo, context = "signup" }: Props) {
-  const [loading, setLoading] = useState<"google" | "github" | null>(null);
+export default function OAuthButtons({
+  locale,
+  redirectTo,
+  context = "signup",
+  priorityRegion,
+  onBeforeOAuth,
+}: Props) {
+  const [loading, setLoading] = useState(false);
   const [oauthError, setOauthError] = useState<string | null>(null);
-  const l = LABELS[locale] ?? LABELS.en;
+  const label = LABELS[locale] ?? LABELS.en;
 
-  const handleOAuth = async (provider: "google" | "github") => {
-    setLoading(provider);
+  const handleOAuth = async () => {
+    if (onBeforeOAuth && !onBeforeOAuth()) return;
+
+    setLoading(true);
     setOauthError(null);
-    track(`${context}_oauth_click`, { provider, locale });
+    track(`${context}_oauth_click`, { provider: "google", locale });
     const supabase = createClient();
     const next = redirectTo ?? `/${locale}`;
+    const regionParam =
+      priorityRegion && priorityRegion !== "all" ? `&region=${encodeURIComponent(priorityRegion)}` : "";
     // signInWithOAuth (unlike most other auth-js methods) has no internal
     // try/catch at all — building the authorize URL includes PKCE code-
     // challenge generation via the Web Crypto API and a storage write, both
@@ -60,22 +91,22 @@ export default function OAuthButtons({ locale, redirectTo, context = "signup" }:
     // comment for the report that surfaced this, 2026-08-03).
     try {
       const result = await supabase.auth.signInWithOAuth({
-        provider,
+        provider: "google",
         options: {
-          redirectTo: `${window.location.origin}/auth/callback?next=${encodeURIComponent(next)}`,
+          redirectTo: `${window.location.origin}/auth/callback?next=${encodeURIComponent(next)}${regionParam}`,
         },
       });
       if (result.error) {
         setOauthError(`${ERROR_LABELS[locale] ?? ERROR_LABELS.en} (${result.error.message})`);
-        setLoading(null);
+        setLoading(false);
       }
       // On success: browser redirects — no need to reset loading
     } catch (err) {
       console.error("[oauth] unexpected exception:", err);
-      Sentry.captureException(err, { tags: { flow: context, provider, locale } });
-      track(`${context}_oauth_unexpected_error`, { provider, locale });
+      Sentry.captureException(err, { tags: { flow: context, provider: "google", locale } });
+      track(`${context}_oauth_unexpected_error`, { provider: "google", locale });
       setOauthError(ERROR_LABELS[locale] ?? ERROR_LABELS.en);
-      setLoading(null);
+      setLoading(false);
     }
   };
 
@@ -85,20 +116,12 @@ export default function OAuthButtons({ locale, redirectTo, context = "signup" }:
         <p className="text-red-400 text-sm text-center">{oauthError}</p>
       )}
       <button
-        onClick={() => handleOAuth("google")}
-        disabled={!!loading}
+        onClick={handleOAuth}
+        disabled={loading}
         className="w-full flex items-center justify-center gap-3 bg-white hover:bg-gray-100 disabled:opacity-60 text-gray-800 font-medium py-2.5 rounded-lg transition-colors text-sm"
       >
-        {loading === "google" ? <Loader2 className="w-4 h-4 animate-spin" /> : <GoogleIcon />}
-        {l.google}
-      </button>
-      <button
-        onClick={() => handleOAuth("github")}
-        disabled={!!loading}
-        className="w-full flex items-center justify-center gap-3 bg-gray-800 hover:bg-gray-700 disabled:opacity-60 text-white font-medium py-2.5 rounded-lg transition-colors border border-gray-700 text-sm"
-      >
-        {loading === "github" ? <Loader2 className="w-4 h-4 animate-spin" /> : <GitHubIcon />}
-        {l.github}
+        {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <GoogleIcon />}
+        {label}
       </button>
     </div>
   );

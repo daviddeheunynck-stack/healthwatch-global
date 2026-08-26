@@ -76,7 +76,7 @@ export async function enrollAlertRegions(
 }
 
 // Shared by every path that can grant a new trial (signup form → /api/activate-trial,
-// and Google/GitHub OAuth → auth/callback). Found 2026-08-01: auth/callback used to
+// and Google OAuth → auth/callback). Found 2026-08-01: auth/callback used to
 // set plan/trial_ends_at itself without calling this, which both skipped the alert
 // enrollment below AND permanently blocked it afterwards — the idempotence guard
 // treats any account with trial_ends_at set as already activated. Every trial-granting
