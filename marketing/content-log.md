@@ -2,6 +2,98 @@
 
 Archive de tout le contenu créé. Mise à jour à chaque session.
 
+## 📅 Session linkedin-hwg-followup-check-2 — 26/08/2026 (17h, 2e des 2 créneaux après-midi)
+
+**Vérification double déclenchement** : aucune entrée `linkedin-hwg-followup-check-2` datée du 26/08 dans ce fichier ni dans `linkedin-contacts.md` à l'ouverture (dernière en date : 25/08 17h) → **premier déclenchement de cette routine aujourd'hui**. Les entrées du jour appartiennent à `linkedin-hwg-content-proposal` (8h35), `linkedin-hwg-monitoring` (9h) et `linkedin-hwg-followup-check` (13h), qui sont des runs intentionnellement distincts.
+
+**Registre de faits régénéré en début de run** (`npm run qa:facts`) : **226 faits citables sur 108 lignes affichées**, 81 lignes `is_seed` exclues, **59 faits périmés**. ⚠️ Alerte de fraîcheur, 6e jour : Shigellosis / EU-EEA **55 j**, Diphtheria / 8 pays **41 j**, Meningitis / 4 pays **34 j**.
+
+**Quotas commentaires : 0/7 publiés, 2 en file de validation** (le commentaire Julien Harneis mis en file à 13h, plus celui versé ce run ci-dessous). Le DM mis en file ce run est dans `linkedin-contacts.md`.
+
+---
+
+### 🔒 COMMENTAIRE VERSÉ EN FILE DE VALIDATION — **Ifedayo Adetifa**, texte du 26/08 matin repris tel quel
+
+**Ce n'est pas une rédaction neuve, et c'est délibéré.** Le carry-over de 13h (#5) demandait explicitement que ce texte soit « *porté à David comme les trois d'aujourd'hui plutôt que rester classé abandonné : il a été arrêté par un script qui n'a plus le dernier mot* ». C'est fait ici. **Aucun 5e essai n'a été lancé** : la règle des deux essais révisée du 26/08 dit de s'arrêter et de montrer le texte, pas de relancer une rédaction.
+
+`urn:li:activity:7496631145237749761`, post d'**Ifedayo Adetifa** (*Outgoing Chief Executive Officer, **FIND** | Lancet Commissioner | Former Director-General, **Nigeria Centre for Disease Control & Prevention***), **4 j**, 72 réactions, 10 commentaires, 7 republications. Relation de 1er degré depuis le 23/08.
+
+**⭐ Il nous a répondu publiquement en nous nommant.** Sa réponse, relue en direct ce run sous notre commentaire du 23/08, **verbatim et intégrale** :
+> **Ifedayo Adetifa, auteur, il y a 14 h** — *David Deheunynck interesting way to put it but it might explain the situation we have here.*
+
+Notre commentaire du 23/08 auquel il répond, toujours en place, **48 impressions, 2 réactions dont la sienne** :
+> *A missing diagnostic is the only preparedness gap that erases its own evidence. With no vaccine you can still count who went unvaccinated. With too few treatment beds you can count who was turned away. With no test, the cases it would have found never enter any dataset at all, so the gap surfaces as a smaller number rather than as a gap. That is an awkward thing to build a funding argument on, since the missing tool is exactly what would have produced the figures making the case for it.*
+
+**Fenêtre 48 h et blocage hebdomadaire écartés par arbitrage, motif écrit.** Le post a 4 j et le profil est bloqué en commentaire jusqu'au 30/08, mais il s'agit d'une **réponse en sous-fil actif à une interpellation nominale datée du jour**, pas d'un commentaire à froid. **Même arbitrage que Sohail Agha le 19/08**, où le déclencheur était également daté du jour dans un fil engagé. *Langue du fil = EN ; langue du brouillon = EN.*
+
+**QA: mécanique ABANDON au 4e essai le 26/08 matin (`ngram.history` sur « tends to be read as ») | relecteur REECRIRE (6, 11) puis (11) aux essais 1-2, fond jamais mis en cause | faits cités: aucun chiffre | registre du 26/08 | statut: en file de validation (reversé, ex-« abandonné »)**
+
+⚠️ **Le blocage terminal reste un faux positif du type le plus coûteux** : « *tends to be read as* » n'est pas une formule maison, c'est de l'anglais ordinaire, et l'angle de l'essai 4 avait été produit par un rédacteur au contexte neuf. **L'état du fil est inchangé depuis ce matin** (sa réponse est toujours le dernier message du sous-fil, rien de neuf entre-temps), le texte reste donc valable tel quel.
+
+> If that is what is happening, the one trace a missing test leaves behind is the suspected case count, and outbreak reporting already carries that line. It just tends to be read as provisional noise awaiting confirmation rather than as a measure of what could not be confirmed. Has a suspected case count ever carried real weight in a decision to fund a test, or does the room always hold out for confirmed numbers that only the missing test could have produced?
+
+⚠️ **Si David valide et publie**, le blocage hebdomadaire sur ce profil courra jusqu'au **02/09**.
+
+---
+
+### 🔴 CORRECTION D'UN CARRY-OVER FAUX — **John Samuel Otomba** : le texte n'a jamais été conservé
+
+Le carry-over de 13h (#6) annonçait, pour Otomba comme pour Adetifa, « **8 essais cumulés, fond validé trois fois, texte conservé** », et suggérait de le porter à David au même titre. **Vérifié ligne à ligne ce run : c'est faux, et seule la moitié Adetifa est vraie.**
+
+La section Otomba du run de 9h **ne contient aucune citation en bloc** (0 ligne commençant par `>` sur l'ensemble de la section). Elle consigne les **quatre phrases d'ouverture rejetées**, chacune avec son motif, mais **pas le corps du commentaire**. La mention « le texte de l'essai 4 est conservé ci-dessous tel quel » n'apparaît **que** dans la section Adetifa. **Il n'y a donc rien à reverser en file pour Otomba : le texte n'existe plus nulle part.**
+
+**Son post reste pourtant en fenêtre**, contrairement à ce que prévoyait le carry-over de 13h (« hors fenêtre 48 h ce soir ») : `urn:li:activity:7498015334537342976`, relevé à **1 j** ce run, **toujours 0 commentaire**, 0 réaction affichée.
+
+**Aucun 9e essai n'a été lancé, et c'est la conduite que demande la règle des deux essais révisée** : 8 essais y sont déjà passés, tous morts sur la seule phrase d'ouverture, chaque correction substituant un moule à un autre. Le point de blocage est remonté à David tel quel plutôt que relancé seul. **Décision à prendre par lui** : soit l'angle est réécrit avec lui en session, soit ce post est laissé tomber définitivement.
+
+---
+
+### 🗒️ Veille — données épidémiologiques (§8)
+
+**Aucune écriture en base faite** (une routine sociale signale, elle n'écrit pas).
+
+- ⚠️ **Le registre a perdu une ligne entre 13h et 17h** : **226 faits sur 108 lignes**, contre 227 sur 109 à 13h. Cohérent avec la **désactivation des 4 lignes dengue Pacifique citant ReliefWeb** (source interdite en usage commercial), signalée le 26/08. Signalé pour confirmation, **aucune action prise depuis une routine sociale**.
+- 🔴 **Ebola / RD Congo — la divergence interne du registre reste entière**, et le diagnostic posé à 13h tient : la ligne **close** (4 120 / 1 887, arrêtée au 07/08) sort **avant** la ligne **active** (5 514 / 2 642, arrêtée au 22/08) et a déjà fait conclure à tort à un relecteur indépendant que la flambée était terminée. **Priorité inchangée pour `morning-don-check`.**
+- 🔴 **Hantavirus / Chili** et **dengue / Îles Marshall** : les deux lacunes du 25-26/08 restent entières, rien de neuf ce run.
+- ⚠️ **Alerte de fraîcheur, 6e jour, qui continue de se dégrader** : Shigellosis / EU-EEA passe de **54 à 55 j** entre 13h et 17h. Diphtheria 41 j et Meningitis 34 j inchangés.
+- ➖ **Aucun chiffre épidémiologique neuf relevé ce créneau.** Les notifications dépouillées ne portent que des posts déjà traités ou des profils bloqués.
+
+---
+
+### 👀 Veille passive — matière pour de futurs posts, non rédigés ici
+
+- ⭐ **Le fil Darrel Ornelle ELION ASSIANA vient de produire un fait rare et directement publiable** (détail dans `linkedin-contacts.md`) : le responsable d'un laboratoire national de référence confirme que **la date de confirmation par cas existe dans ses enregistrements internes mais ne survit pas jusqu'au bulletin national**. C'est la première confirmation de première main, obtenue d'une source institutionnelle, que certaines pertes d'information en surveillance ne sont pas des données manquantes mais **des données non transmises**. Sujet de post de marque de premier ordre, à proposer à `linkedin-hwg-content-proposal`. ⚠️ **Vérifier avec David avant tout post s'il est acceptable de s'appuyer publiquement sur un échange privé, même sans le citer ni le nommer.**
+- **Le post de marque du matin (« deux horloges ») a atteint 101 impressions** au relevé de ce run, d'après la notification de statistiques.
+- **Alieu Sowe, PhD a consulté le profil de David il y a 2 h.** À noter : c'est le profil pour lequel le DM de bienvenue avait été abandonné le 26/08 matin faute de hook frais. La visite est un signal, **pas un hook** — elle ne crée toujours pas de matière pour un message.
+- **Amanda McClelland** (*Chief Program Officer, Resolve To Save Lives*) publie sur la vitesse de réaction aux flambées Ebola. **Bloquée en commentaire jusqu'au 27/08**, donc écartée ce run — **cible prioritaire dès demain**.
+- **WHO AFRO RC76 toujours en cours** (« LIVE | Day 2 » en notifications), comme signalé à 13h. Continuera d'alimenter les fils de décideurs santé publique africains cette semaine.
+- **Qadeer Ahsan** publie sur un drame survenu en soins intensifs au **PIMS Islamabad**. **Écarté sans hésitation** : registre émotionnel et fait divers hospitalier, aucun angle surveillance, et §10 s'appliquerait de toute façon.
+
+---
+
+### 🔁 CARRY-OVER POUR LE CRÉNEAU DE 9h (27/08) — liste exhaustive
+
+1. 🔒 **File de validation : 4 textes, dont 2 versés ce run.** DM **Johan Verheyden** ✅ *(envoyé 13h)*, DM **trésor Ndaye** ✅ *(envoyé 13h)* — les deux sont partis, **ils ne sont plus en file**. Restent : commentaire **Julien Harneis** (13h), **DM Darrel Ornelle ELION ASSIANA** (ce run, `linkedin-contacts.md`), **commentaire Ifedayo Adetifa** (ce run, ci-dessus). **Aucun ne part sans validation explicite de David.** Notification push envoyée.
+2. 🔴 **John Samuel Otomba — décision de David requise, et le carry-over de 13h était faux à son sujet** : le texte n'a **jamais** été conservé, contrairement à ce qui était annoncé (détail ci-dessus). Post encore en fenêtre (1 j, 0 commentaire) au relevé de 17h. 8 essais déjà consommés. **Ne pas lancer un 9e essai seul.**
+3. 🛑 **Prof. Jérôme Salomon — la fenêtre 48 h est fermée.** Le post `urn:li:activity:7497662922005958656` avait ~1,5 j à 13h ; il en a plus de 2 ce soir. La décision de David reste formellement en attente mais **le commentaire n'est plus publiable en l'état sur ce post**. Les 3 corrections listées dans ce fichier au run de 9h restent valables si l'angle est un jour rejoué ailleurs.
+4. ⭐ **Amanda McClelland — blocage hebdomadaire levé le 27/08**, donc **cible prioritaire dès demain matin**. Post récent sur la vitesse de réaction aux flambées Ebola.
+5. 🆕 **Rodrigo Olave Hurtado** (LSHTM, *Infectious Disease Epidemiologist*) — connexion de 1er degré depuis le 26/08 13h, **aucun message échangé**, candidat message de bienvenue **non traité ce run**, hook à vérifier sur son activité réelle. **Reconduit tel quel.**
+6. 🆕 **John Omari Baso** (`/in/john-omari-baso-84500b1b0/`) — déjà suivi, *VillageReach, Goma, Nord-Kivu*, 49+ mutuels dont Johan Verheyden. **Excellent candidat connexion, non traité ce run**, quota connexions **0/7**. Rappel : la **note** de connexion va en file de validation comme un DM.
+7. 🔁 **Mame Awa D.** (`/in/mame-awa-d-96bb17239/`) — suivi refusé par la plateforme 3 fois le 26/08 matin, à retenter **par la connexion**. Non retenté ce run.
+8. 🛑 **Alain BASHIZI** — toujours en attente de la décision de David, ne pas répondre, ne pas relancer. **2 autres invitations reçues inchangées** : Zachariah G. Houdari (hors sujet), OLAOLUWA PHILIP (**15e passage**, profil non rouvert).
+9. **Suivis 8/7-10, marge de 2 non consommée ce run.** L'objectif de la fourchette est atteint depuis 9h ; le temps a été mis sur le message entrant neuf et les deux textes versés en file. **0 follow-back dû** (le seul nouvel abonné, Rodrigo Olave Hurtado, était déjà suivi).
+10. **269 relations, 382 abonnés. 97 invitations envoyées en attente**, dont Ihekweazu, SAIDOUNI et Linda Esso (24/08, **4e jour**). Rappel utile du 26/08 : trésor Ndaye avait accepté **au 7e jour**, « sans réponse à 3 jours » ne veut pas dire « refusée ».
+11. 🔴 **§8 — trois lacunes de couverture pour `morning-don-check`, aucune résolue** : (a) **hantavirus au Chili** ; (b) **dengue aux Îles Marshall** ; (c) **divergence interne Ebola / RD Congo** (ligne close masquant la ligne active en tête de tri). **S'y ajoute** : confirmer que la ligne perdue entre 13h et 17h (227→226 faits) correspond bien à la désactivation des lignes ReliefWeb.
+12. ⚠️ **Alerte de fraîcheur du registre, 6e jour, en dégradation lente** : Shigellosis / EU-EEA **55 j** (54 à 13h), Diphtheria **41 j**, Meningitis **34 j**.
+13. 🔧 **Défauts d'outillage — les deux plus coûteux se sont redéclenchés ce run, à l'identique** : (a) `context.too-soon` traite une **réponse à un message entrant** comme une relance (2e jour consécutif, après le cas Johan) ; (b) l'**auto-comparaison du corpus** bloque une formule dont l'unique occurrence est une **note de run interne**, jamais envoyée à personne (**6e jour de signalement**). Anciens toujours ouverts : faux positif `facts.stale` sur un nombre calculé ; annotations d'un `threadFile` analysées comme du fil.
+14. 🛑 **Écartés, ne pas reproposer sans élément neuf** : **Qadeer Ahsan** (fait divers hospitalier PIMS Islamabad, §10) ; **Dr Hannington Katumba** (le post du 25/08) ; **Nicholas Laramee**, **Winston Urio**, **Jill Weatherhead**, **Lorenzo Subissi** ; **Samba Bah** (carry-over clos le 26/08 à 13h).
+15. **Carry-overs permanents inchangés, non revérifiés ce run** : Kaushal Sharma, Barrè Onivogui, Andrea Bernasconi, Lorenzo Pezzoli, Mohamed Ousmane COULIBALY, Anuradha Gupta (part 3 annoncée pour le **01/09**), Bouh Abdi Khaireh. **Homonymies non arbitrées** : Jean-Jacques Muyembe (**11e jour**) et Jide Idris.
+16. **Blocages hebdomadaires de commentaire en cours, inchangés** : Melvin Sanicas, Robert Herriman, Patrick AYONGA, Ifedayo Adetifa, page ECDC, Oliver Morgan, Dr Fabrice KHADDY (30/08) ; Apoorva Wasnik et Johan Verheyden (29/08) ; Martin Yakum (01/09) ; **Amanda McClelland (27/08, se lève demain)**. **Aucun blocage nouveau créé ce run, rien n'ayant été publié.** ⚠️ Si David valide les 2 commentaires en file, des blocages naîtront jusqu'au **02/09** (Julien Harneis et Ifedayo Adetifa).
+17. 🍪 **Bandeau de consentement cookies LinkedIn toujours affiché**, **non cliqué** (accepter ou refuser engage le compte de David). Il ne bloque rien, tout le travail passe par le DOM. Reconduit du carry-over de 13h.
+18. ✅ **`scripts/extend-trial.ts` n'est plus en suspens** : l'arbre de travail était **propre** à l'ouverture de ce run, le fichier a été commité entre-temps (`61f2a5a`). Le point 21 du carry-over de 13h est **clos**.
+
+---
+
 ## 📅 Session linkedin-hwg-followup-check — 26/08/2026 (13h, 1er des 2 créneaux après-midi)
 
 **Vérification double déclenchement** : aucune entrée `linkedin-hwg-followup-check` datée du 26/08 dans ce fichier ni dans `linkedin-contacts.md` à l'ouverture → **premier déclenchement de cette routine aujourd'hui**.

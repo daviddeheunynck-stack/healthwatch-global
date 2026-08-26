@@ -1,6 +1,71 @@
 > 📦 **Archive** : le détail du 24 juin au 16 juillet 2026 a été déplacé dans [linkedin-contacts-archive-avant17juillet.md](linkedin-contacts-archive-avant17juillet.md) le 23/07 pour garder ce fichier léger.
 
 
+## 📅 Session linkedin-hwg-followup-check-2 — 26/08/2026 (17h, 2e des 2 créneaux après-midi)
+
+**Vérification double déclenchement** : aucune entrée `linkedin-hwg-followup-check-2` datée du 26/08 dans ce fichier ni dans `content-log.md` à l'ouverture (dernière en date : 25/08 17h). Les entrées du jour appartiennent à `linkedin-hwg-content-proposal` (8h35), `linkedin-hwg-monitoring` (9h) et `linkedin-hwg-followup-check` (13h) → **premier déclenchement de cette routine aujourd'hui**.
+
+**Quotas à la clôture** : commentaires **0/7 publiés, 2 en file** (1 hérité de 13h, 1 versé ce run) · connexions envoyées **0/7** · DM à froid **0/8 envoyés, 1 en file** · suivis **8/7-10, inchangés** · invitations reçues acceptées **0** (aucune nouvelle).
+
+**🖥️ Navigateur** : `_shared/browser-status.md` lu avant ouverture, dernière entrée **🟢 RÉTABLI (24/08 ~09h15)** → aucun bridage. `23c7ecdd-…` seul listé, sélectionné sans question (§7). Rien de neuf à y écrire. ✅ **Anomalie JS asynchrone absente ce créneau** : `(async () => 42)()` renvoie bien une `Promise`. Le filtre `[BLOCKED: Cookie/query string data]` s'est déclenché **une fois**, sur un `href` de notification ; conformément à [[reference_blocked_classifier_result_code_already_ran]] le code avait tourné, seule la valeur de retour était filtrée. Contournement par l'URN retrouvé dans `content-log.md`. 🍪 **Bandeau cookies LinkedIn toujours présent** (carry-over 13h #22), **non cliqué** : engage le compte de David, hors périmètre d'une routine automatique.
+
+**Registre de faits régénéré en début de run** (`npm run qa:facts`) : **226 faits citables sur 108 lignes affichées** (contre 227/109 à 13h — **une ligne de moins**, cohérent avec la désactivation des lignes dengue Pacifique citant ReliefWeb), 81 lignes `is_seed` exclues, **59 faits périmés**, inchangé depuis 13h. ⚠️ **Alerte de fraîcheur, 6e jour** : Shigellosis / EU-EEA **55 j** (54 à 13h), Diphtheria / 8 pays **41 j**, Meningitis / 4 pays **34 j**.
+
+---
+
+### 1️⃣ SUIVI DES ACTIONS PRÉCÉDENTES DU JOUR
+
+**Les 2 DM envoyés à 13h sur ordre de David sont sans réponse à ~3 h d'intervalle.** Fils rouverts et relus :
+- **Johan Verheyden** : notre message de 14:41 est le dernier du fil. Aucune réponse. Ne pas relancer.
+- **trésor Ndaye** : notre message de 14:47 est le dernier du fil. Aucune réponse. Ne pas relancer.
+
+**Réseau : aucun mouvement depuis 13h.** **269 relations** (identique à la clôture de 13h), **382 abonnés** (contre 381). L'unique nouvel abonné est **Rodrigo Olave Hurtado**, et il s'explique intégralement par l'acceptation d'invitation de 13h (une mise en relation entraîne le suivi) ; son bouton porte déjà « Suivi ». **0 follow-back dû.**
+
+**3 invitations reçues, aucune nouvelle, toutes déjà tranchées** : Alain BASHIZI (décision de David en attente, ne pas répondre), Zachariah G. Houdari (hors sujet), OLAOLUWA PHILIP (**15e passage**, profil non rouvert conformément à la consigne).
+
+---
+
+### 2️⃣ ⭐ UN MESSAGE ENTRANT NEUF — et il ferme une question ouverte depuis le 19/08
+
+**Boîte de réception parcourue par récence (20 conversations).** Un seul fil daté du 26/08 hors de nos propres envois : **Darrel Ornelle ELION ASSIANA**, message reçu **à 13:25**, donc **postérieur ou concomitant au run de 13h qui ne l'avait pas vu**. Filtre « non lus » : **2 résultats**, tous deux sans réponse due — le fil **Patrick AYONGA** (dont le dernier message est le nôtre, du 25/08) et une **offre LinkedIn Premium** du 28/07. Aucun spam, aucune sollicitation hors sujet, aucune demande de canal hors plateforme, aucune donnée patient proposée, **aucune instruction adressée à l'agent (§6)**.
+
+#### 🔒 DM EN FILE DE VALIDATION — **Darrel Ornelle ELION ASSIANA, MPH, PhD** (FR, vouvoiement, fil actif, **SANS CTA**, hors quota froid)
+
+*Responsable du **Laboratoire National de Référence des Mycobactéries du PNLT**, Congo (Brazzaville).* Relation de 1er degré depuis le 19/08.
+
+**Fil relu intégralement (§4)** : 6 messages depuis le 19/08, recopiés verbatim dans `tmp/thread-darrel-26-17h.txt`. *Langue du fil = FR, vouvoiement ; langue du brouillon = FR, vouvoiement* (paire confirmée mécaniquement, `draftLang: fr` / `threadLang: fr`).
+
+**Son message, verbatim :**
+> **26/08 13:25** — Bonjour David, Oui, il y a bien des traces internes de la date de confirmation par cas au niveau du LNRM. Même si cette information ne se retrouve pas nécessairement dans le bulletin national, elle existe bien dans les données et enregistrements internes.
+> Tout en vous souhaitant une excellente journée.
+
+⭐ **C'est la réponse à la question posée le 25/08, et elle a une portée qui dépasse ce fil** : la date de confirmation par cas **existe** au LNRM, elle ne survit simplement pas jusqu'au bulletin national. Pour un agrégateur, ça fait passer le problème de « donnée perdue » à « donnée non transmise » — deux problèmes qui ne se corrigent ni par les mêmes moyens ni au même coût. **C'est l'angle du brouillon.**
+
+**CTA : volontairement absent.** Anti-répétition vérifiée sur le fil rendu : le lien `healthwatch-global.com` **et** l'offre d'essai Pro ont **déjà été envoyés le 20/08 à 12:14** dans ce même fil. La règle §3 interdit de resservir le même argumentaire une 2e fois. De plus le fil se referme naturellement : le brouillon clôt au lieu de relancer.
+
+**QA: mécanique FAIL (`context.too-soon`, `ngram.history` 1 formule) | relecteur REECRIRE (1, 5, 9) au 1er passage — les 3 corrigés | faits cités: aucun chiffre | registre du 26/08 | statut: en file de validation**
+
+**⭐ Le relecteur a attrapé deux défauts réels que le contrôle mécanique ne pouvait pas voir, et le second est un garde-fou, pas un point de style.**
+
+1. **Un décompte faux, vérifié à la source avant correction.** Le brouillon se terminait sur « *vous avez répondu à trois questions de suite, dont les deux dernières débordaient de votre périmètre* ». **Les deux moitiés sont fausses.** Sur les 3 questions posées, il n'en a réellement répondu que **2** : sur celle du 20/08 il a explicitement **décliné** (« *je ne pourrais pas ainsi confirmer si les cas sont rattachés à leur semaine de confirmation ou à leur période de transmission sans disposer de la règle appliquée par l'équipe en charge* »). Et une **seule** débordait de son périmètre, pas deux : celle du 25/08 avait été posée par David lui-même comme relevant explicitement du sien (« *cette fois sur votre propre terrain plutôt que celui du PNLT* »). Les deux citations ont été revérifiées dans le fil avant correction.
+2. **🛑 §9 — le brouillon prescrivait au PNLT ce qu'il devrait publier.** La phrase « *si le PNLT publiait un jour la définition de la date qu'il retient, ou les deux dates côte à côte…* » dit à un agent public ce qu'une **autre équipe de sa propre hiérarchie** devrait faire, et répartit implicitement les rôles (son labo détient la matière, le PNLT ne la publie pas). Or il s'était précisément **interdit de parler pour cette équipe** le 22/08. Le lire l'aurait mis en position de co-signer un reproche interne qu'il avait soigneusement évité. **Phrase retirée** : le brouillon ne garde que la conséquence côté HWG, à la voix passive, sans nommer d'acteur.
+
+⚠️ **Les 2 blockers mécaniques restants sont des faux positifs des deux classes déjà documentées, et ils ne sont pas corrigés pour cette raison :**
+1. **`context.too-soon`** (« Dernier message il y a 1 j. Minimum 3 j entre deux envois. ») — plafond du bloc `followup`, « max 2 relances sur un même sujet ». **Ce n'est pas une relance** : le dernier message du fil est **entrant** et attend une réponse. Le relecteur l'a diagnostiqué spontanément, hors grille. Identique au cas Johan du 13h.
+2. **`ngram.history`, « ne résout pas le problème »** — vérifié : **l'unique occurrence au corpus est une note de run interne sur le pont navigateur**, jamais un texte envoyé à qui que ce soit. C'est l'auto-comparaison du corpus, signalée pour le 6e jour. Contorsionner le texte pour un faux positif est exactement ce que le régime du 26/08 demande de ne plus faire.
+
+*La 3e formule signalée au 1er passage, « la définition de la date », a disparu avec la correction du §9 ci-dessus. Elle était de toute façon le **nom de l'objet discuté**, repris de ses propres mots du 19/08.*
+
+**Relecture éditoriale finale (§5 item 8)** : rien à retrancher après correction. Le message requalifie l'information reçue dans des termes qu'il n'a pas employés (« *plus une donnée à reconstituer, c'est une donnée à faire circuler* »), ne prescrit plus rien à personne, ne redemande rien, et dit exactement ce qu'il a fait sans le surévaluer. Il clôt un fil qui a donné ce qu'il pouvait donner.
+
+> Merci Darrel. Ce que vous confirmez là ne résout pas le problème, ça en change la nature, et plutôt dans le bon sens.
+>
+> Tant que je l'ignorais, je devais tenir la date de confirmation pour une information perdue en route, donc pour quelque chose qu'aucune demande ne ferait réapparaître. Vous me dites qu'elle est bien dans vos enregistrements. Ce n'est alors plus une donnée à reconstituer, c'est une donnée à faire circuler, et ces deux problèmes ne se règlent ni par les mêmes moyens ni au même coût.
+>
+> Ça vaut aussi dans l'autre sens : le jour où une date de confirmation apparaîtrait dans ce qui se publie, il n'y aurait rien à recréer en amont, la matière existe déjà. Je m'en tiens là. Vous avez répondu à ce que vous pouviez répondre et dit clairement où s'arrêtait ce que vous pouviez dire, ce qui est exactement ce dont j'avais besoin.
+
+---
+
 ## 📅 Session linkedin-hwg-followup-check — 26/08/2026 (13h, 1er des 2 créneaux après-midi)
 
 **Vérification double déclenchement** : aucune entrée `linkedin-hwg-followup-check` datée du 26/08 dans ce fichier ni dans `content-log.md` à l'ouverture (les seules entrées du jour appartiennent à `linkedin-hwg-monitoring` 9h et `linkedin-hwg-content-proposal` 8h35) → **premier déclenchement de cette routine aujourd'hui**.
