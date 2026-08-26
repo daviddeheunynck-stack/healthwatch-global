@@ -102,7 +102,7 @@
     "faq3_q": "Is there a free plan?",
     "faq3_a": "Yes. The Free plan gives you access to the public dashboard, one monitored region and the weekly digest — no credit card required, no time limit.",
     "faq4_q": "What happens when my 14-day trial ends?",
-    "faq4_a": "If you started your trial without entering a card, nothing happens — your account moves to the Free plan automatically, no charge. If you added a card, your subscription starts at the end of the trial. You can cancel at any time before that from your account.",
+    "faq4_a": "Two cases. If you simply created an account, no card was ever collected: after 14 days your account moves to the Free plan automatically, with no charge. If you subscribed from the Pricing page, a card was collected then, and the first payment is taken when the 14 days end — cancel any time from your account.",
     "faq5_q": "Where does your data come from?",
     "faq5_a": "All outbreak data is sourced directly from official public health agencies: WHO, PAHO, and ECDC. We do not fabricate or estimate data — if an agency hasn't reported a figure, we display it as 'not reported' rather than guessing.",
     "faq6_q": "Does HealthWatch replace WHO tools like EIOS or EWARN?",

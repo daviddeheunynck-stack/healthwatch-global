@@ -294,12 +294,20 @@ export default function LoginPage() {
               {t("signupLink")}
             </Link>
           </p>
+          {/* 2026-08-26 : « sans carte bancaire » disait vrai de la creation de
+              compte et faux de l'abonnement. Depuis le 19/08, le checkout
+              collecte toujours la carte (payment_method_collection: "always"),
+              et la carte Pro de /pricing annonce « carte requise, aucun debit
+              avant la fin de l'essai ». Lire « sans carte » ici puis tomber sur
+              un formulaire de carte, c'est le sentiment d'appat au pire endroit
+              du parcours. Le libelle dit desormais ce qui est sans carte : la
+              creation du compte. */}
           <p className="text-center text-xs text-gray-600 -mt-4">
-            {locale === "fr" ? "Essai Pro 14 jours offert · Sans carte bancaire" :
-             locale === "es" ? "14 días Pro gratuitos · Sin tarjeta de crédito" :
-             locale === "ar" ? "14 يوم Pro مجاناً · بدون بطاقة بنكية" :
-             locale === "id" ? "14 hari Pro gratis · Tanpa kartu kredit" :
-             "14-day Pro trial · No credit card required"}
+            {locale === "fr" ? "14 jours d'accès Pro offerts · Aucune carte pour créer un compte" :
+             locale === "es" ? "14 días de acceso Pro gratis · Sin tarjeta para crear una cuenta" :
+             locale === "ar" ? "14 يوماً من الوصول إلى Pro مجاناً · لا حاجة لبطاقة لإنشاء حساب" :
+             locale === "id" ? "14 hari akses Pro gratis · Tanpa kartu untuk membuat akun" :
+             "14 days of Pro access, free · No card to create an account"}
           </p>
           <InstitutionalContactLink locale={locale} source="login" />
         </div>

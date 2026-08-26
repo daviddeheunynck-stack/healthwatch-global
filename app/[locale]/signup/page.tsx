@@ -78,59 +78,72 @@ const GMAIL_TYPO_KEEP: Record<string, string> = {
   id: "Tidak, alamat ini sudah benar",
 };
 
+// `trial` et `noCard` reformules le 2026-08-26. « Essai Pro 14 jours inclus —
+// sans carte bancaire » disait vrai de la creation de compte et faux de
+// l'abonnement : depuis le 19/08 le checkout collecte toujours la carte
+// (payment_method_collection: "always"), et la carte Pro de /pricing annonce
+// deja « carte requise, aucun debit avant la fin de l'essai ». Une personne qui
+// lit « sans carte » ici puis tombe sur un formulaire de carte a le sentiment
+// d'un appat, au moment du parcours ou il coute le plus cher.
+//
+// Le mot « essai » recouvre deux objets distincts, et c'est la vraie source de
+// la confusion : (1) l'acces Pro offert 14 jours pose par activateTrial() a
+// l'inscription, sans aucun objet Stripe, donc sans carte possible ; (2)
+// l'abonnement souscrit depuis /pricing, avec carte, non debite avant la fin
+// de l'essai. Ces libelles ne promettent plus que le premier.
 const VALUE_PROPS: Record<string, { trial: string; items: string[]; noCard: string; gdpr: string; alreadyRegistered: { text: string; signIn: string; or: string; reset: string } }> = {
   en: {
-    trial: "14-day Pro trial included — no credit card",
+    trial: "14 days of Pro access, free — no card",
     items: [
       "Exact case & death figures",
       "Instant regional alerts",
       "PDF reports & CSV export",
     ],
-    noCard: "No credit card required",
+    noCard: "No card to create an account",
     gdpr: "GDPR compliant · Data never sold",
     alreadyRegistered: { text: "An account already exists for this email.", signIn: "Sign in", or: "or", reset: "reset your password" },
   },
   fr: {
-    trial: "Essai Pro 14 jours inclus — sans carte bancaire",
+    trial: "14 jours d'accès Pro offerts — sans carte",
     items: [
       "Chiffres exacts cas & décès",
       "Alertes régionales instantanées",
       "Rapports PDF & export CSV",
     ],
-    noCard: "Sans carte bancaire",
+    noCard: "Aucune carte pour créer un compte",
     gdpr: "Conforme RGPD · Données jamais revendues",
     alreadyRegistered: { text: "Un compte existe déjà pour cet email.", signIn: "Se connecter", or: "ou", reset: "réinitialiser votre mot de passe" },
   },
   es: {
-    trial: "Prueba Pro 14 días incluida — sin tarjeta",
+    trial: "14 días de acceso Pro gratis — sin tarjeta",
     items: [
       "Cifras exactas de casos y fallecidos",
       "Alertas regionales instantáneas",
       "Informes PDF y exportación CSV",
     ],
-    noCard: "Sin tarjeta de crédito",
+    noCard: "Sin tarjeta para crear una cuenta",
     gdpr: "Cumple GDPR · Datos nunca vendidos",
     alreadyRegistered: { text: "Ya existe una cuenta con este email.", signIn: "Iniciar sesión", or: "o", reset: "restablecer tu contraseña" },
   },
   ar: {
-    trial: "تجربة Pro 14 يوماً مجاناً — بدون بطاقة بنكية",
+    trial: "14 يوماً من الوصول إلى Pro مجاناً — بدون بطاقة",
     items: [
       "أرقام دقيقة للحالات والوفيات",
       "تنبيهات إقليمية فورية",
       "تقارير PDF وتصدير CSV",
     ],
-    noCard: "لا حاجة لبطاقة ائتمانية",
+    noCard: "لا حاجة لبطاقة لإنشاء حساب",
     gdpr: "متوافق مع GDPR · بياناتك لن تُباع أبداً",
     alreadyRegistered: { text: "يوجد حساب مرتبط بهذا البريد الإلكتروني.", signIn: "تسجيل الدخول", or: "أو", reset: "إعادة تعيين كلمة المرور" },
   },
   id: {
-    trial: "Uji coba Pro 14 hari termasuk — tanpa kartu kredit",
+    trial: "14 hari akses Pro gratis — tanpa kartu",
     items: [
       "Angka kasus & kematian tepat",
       "Peringatan regional instan",
       "Laporan PDF & ekspor CSV",
     ],
-    noCard: "Tanpa kartu kredit",
+    noCard: "Tanpa kartu untuk membuat akun",
     gdpr: "Sesuai GDPR · Data tidak pernah dijual",
     alreadyRegistered: { text: "Akun dengan email ini sudah ada.", signIn: "Masuk", or: "atau", reset: "atur ulang kata sandi" },
   },

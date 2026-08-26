@@ -145,6 +145,24 @@ await section("1. ABONNEMENTS STRIPE", async () => {
     console.log(`   price               : ${priceId}  ${priceKnown ? `✅ ${priceKnown}` : "🔴 NON RECONNU par planFromPriceId → fallback 'pro'"}`);
     console.log(`   trial_end           : ${iso(sub.trial_end)}${sub.trial_end ? `  (dans ${days(sub.trial_end)} j)` : ""}`);
     console.log(`   fin d'essai sans carte : ${sub.trial_settings?.end_behavior?.missing_payment_method ?? "—"}`);
+
+    // Ajouté le 2026-08-26. Sans ces trois champs, un abonnement resilie depuis
+    // le portail de facturation reste affiche `trialing` / `active` et se compte
+    // comme actif dans le verdict : Stripe pose cancel_at_period_end et emet un
+    // `customer.subscription.updated`, pas un `.deleted`. Autrement dit, l'ecran
+    // ne distinguait pas « en cours » de « en train de s'eteindre » — et c'est
+    // la meme confusion qui fausserait tout comptage de churn.
+    const cancelScheduled = sub.cancel_at_period_end || !!sub.cancel_at;
+    console.log(
+      `   annulation          : ${
+        sub.status === "canceled"
+          ? `effective le ${iso(sub.canceled_at)}`
+          : cancelScheduled
+            ? `PROGRAMMEE le ${iso(sub.cancel_at ?? sub.trial_end ?? sub.current_period_end)}` +
+              (sub.canceled_at ? ` (demandee le ${iso(sub.canceled_at)})` : "")
+            : "aucune"
+      }`
+    );
     console.log(`   → PM sur abonnement : ${subPm ?? "AUCUN"}`);
     console.log(`   → PM sur client     : ${custInvoicePm ?? "AUCUN"}`);
     console.log(`   → cartes attachées  : ${attachedCards}`);
@@ -169,6 +187,7 @@ await section("1. ABONNEMENTS STRIPE", async () => {
       pmOnlyOnCustomer: !subPm && !!(custInvoicePm || attachedCards > 0),
       priceKnown: !!priceKnown,
       userId: sub.metadata?.user_id || null,
+      cancelScheduled,
     });
   }
 
@@ -276,8 +295,16 @@ await section("4. COHÉRENCE STRIPE ↔ SUPABASE", async () => {
 
   const paying = withSub.filter((p) => p.stripe_has_payment_method);
   const activeSubs = subRows.filter((r) => r.status !== "canceled" && r.status !== "incomplete_expired");
+  // « Non annulé » ne veut pas dire « qui va continuer » : un abonnement résilié
+  // depuis le portail garde son statut jusqu'à l'échéance. Les deux comptes sont
+  // séparés depuis le 2026-08-26 — sans quoi une résiliation ressemble à un
+  // client qui reste.
+  const ongoing = activeSubs.filter((r) => !r.cancelScheduled);
+  const expiring = activeSubs.filter((r) => r.cancelScheduled);
   hr("VERDICT");
   console.log(`Abonnements Stripe non annulés    : ${activeSubs.length}`);
+  console.log(`   dont en cours                  : ${ongoing.length}`);
+  console.log(`   dont résiliés, en extinction    : ${expiring.length}${expiring.length ? "  ⚠️ ne continueront pas" : ""}`);
   console.log(`Dont avec moyen de paiement       : ${activeSubs.filter((r) => r.hasPm).length}`);
   console.log(`Comptés payants par la page admin : ${paying.length}`);
   console.log(

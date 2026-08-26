@@ -102,7 +102,7 @@
     "faq3_q": "¿Hay un plan gratuito?",
     "faq3_a": "Sí. El plan Gratuito da acceso al panel público, una región supervisada y el resumen semanal, sin tarjeta de crédito ni límite de tiempo.",
     "faq4_q": "¿Qué ocurre cuando terminan los 14 días de prueba?",
-    "faq4_a": "Si comenzó la prueba sin introducir una tarjeta, no ocurre nada: su cuenta pasa automáticamente al plan Gratuito, sin cargo. Si añadió una tarjeta, su suscripción comienza al final de la prueba. Puede cancelar en cualquier momento desde su cuenta.",
+    "faq4_a": "Dos casos. Si solo creó una cuenta, no se registró ninguna tarjeta: a los 14 días su cuenta pasa automáticamente al plan Gratuito, sin cargo. Si se suscribió desde la página de Precios, se registró una tarjeta en ese momento y el primer cobro se realiza al terminar los 14 días — puede cancelar en cualquier momento desde su cuenta.",
     "faq5_q": "¿De dónde provienen sus datos?",
     "faq5_a": "Todos los datos sobre brotes provienen directamente de organismos oficiales de salud pública: OMS, PAHO y ECDC. No fabricamos ni estimamos datos: si una agencia no ha publicado una cifra, la mostramos como 'no comunicado' en lugar de inventarla.",
     "faq6_q": "¿HealthWatch reemplaza herramientas de la OMS como EIOS o EWARN?",
