@@ -1563,3 +1563,68 @@ Correctif appliqué par parité, commit `15f63ee` : `claimWeeklyEmailAddress` re
 Point (a) — le stock des 25 comptes déjà abonnés aux 5 régions — reste ouvert, sans recommandation de code attachée : ce n'est pas un bug, c'est un arbitrage produit (forcer une réduction de portée sur des comptes réels vs. laisser « toutes les régions » comme choix rétroactivement légitime depuis `ebe0ab0`). Non traité sans confirmation explicite de David sur l'action voulue.
 
 `npx tsc --noEmit` et `npx eslint` propres sur les six fichiers touchés.
+
+---
+
+## 2026-08-26 — Proposition du jour
+
+Deux idées, toutes deux nées du même constat : **le produit a une politique de sources, et personne ne la fait respecter là où elle compte.** Les deux sont construites (petit/moyen effort, aucune migration, aucun envoi externe — les trois garde-fous passent).
+
+Contexte de départ : la découverte du 26/08 à 13h33 (mémoire `project_reliefweb_reintroduction_2026_08_26`) que 4 lignes actives citaient `reliefweb.int`, interdit depuis le 06/07 pour cause de ToS non commerciales. Ces 4 lignes ont été désactivées le jour même. **Ce run a vérifié en base live ce que cette désactivation a réellement produit — et la réponse est : pas ce qu'on croyait.**
+
+### 1. 🔴 L'interdiction légale de ReliefWeb n'est écrite que dans le code qui n'écrit plus rien — et le classificateur de sources continuait de lui décerner la pastille « source officielle vérifiée »
+
+**Signal.** L'interdiction du 06/07 a été appliquée avec soin à **tous les chemins d'ingestion automatique** : `lib/reliefweb.ts` (fetch neutralisé, zéro importeur), `sync-signals` (cron réduit à un no-op), le repli Éthiopie de `sync-endemic-data`, la découverte de sitreps de `sync-drc-sitrep`. Quatre verrous, tous corrects, tous sur des chemins morts.
+
+Pendant ce temps, `lib/source-trust.ts` — le fichier dont l'en-tête dit lui-même que les pastilles du site public ne sont honnêtes que dans la mesure où ce fichier l'est — listait `reliefweb.int` dans `AUTHORITATIVE_SOURCE_DOMAINS`, c'est-à-dire lui accordait le **niveau `official`** : pastille « ✓ source officielle vérifiée », lien cliquable vers reliefweb.int, présence dans le filtre « sources officielles » du tableau. Aucun garde-fou nulle part sur le chemin qui, lui, écrit vraiment : la vérification manuelle quotidienne. C'est par là que les 4 lignes sont entrées entre le 18/08 et ce matin 05h41 UTC.
+
+**Constat nouveau, mesuré en base live pendant ce run — la désactivation de 13h33 n'a retiré du site qu'une ligne sur quatre.** `getOutbreaksCached()` (`lib/outbreaks.ts:197`) affiche `active=true` **OU** `source_priority>=3 ET updated_at>=60j ET date>=60j`. Les lignes désactivées gardent donc leur pastille, leur lien et leur place sur la carte pendant 60 jours — et l'écriture de désactivation a elle-même **rafraîchi `updated_at` à aujourd'hui**, remplissant la moitié de la condition qui les maintient affichées :
+
+| Ligne | prio | date | Après désactivation |
+|---|---|---|---|
+| Dengue / American Samoa (1 036 c) | 10 | 2026-07-21 | **toujours affichée** |
+| Dengue / Wallis-et-Futuna (50 c) | 10 | 2026-08-09 | **toujours affichée** |
+| Dengue / Vanuatu (76 c) | 6 | 2026-08-10 | **toujours affichée** |
+| Dengue / Kiribati (44 c) | 10 | 2026-06-24 | retirée (date > 60 j) |
+
+Même forme que la leçon du 22/07 déjà écrite dans `product-feedback.md` : corriger le chemin ne rattrape pas l'état. Ici, éteindre la ligne ne la retire pas de la vitrine.
+
+**Effort : petit.** Une liste, un test placé avant les listes d'autorisation, un prédicat exporté.
+
+**Risque/inconnue :** la démotion fait tomber 3 lignes affichées de `official` à `unverified`, ce que `scripts/check-source-trust.mjs` traite par principe comme un **bloqueur** (ne jamais démettre silencieusement une ligne affichée sans décider d'abord de la re-sourcer). Ici la démotion est exactement l'effet voulu et elle est légalement obligatoire — traitée donc à part plutôt qu'en la faisant passer pour une démotion ordinaire (voir construction).
+
+### 2. 🔴 Le classificateur qui décide de ce que le site affirme sur chaque chiffre n'est audité qu'à la main, le jour où quelqu'un l'édite — et il avait dérivé
+
+**Signal.** `scripts/check-source-trust.mjs` existe, est excellent, rejoue toute la table à travers le vrai classificateur… et n'est lancé qu'« avant de livrer une modification des listes d'éditeurs ». Dernière édition : 17/08. Entre deux éditions, la table change tous les jours et le verdict du classificateur n'est regardé par personne.
+
+Il avait dérivé. Rejoué ce soir sur les 134 lignes réellement affichées, **3 d'entre elles portent la pastille « illustratif » et n'affichent aucun lien source** (`app/[locale]/outbreak/[id]/page.tsx:560` masque le lien à ce niveau) :
+
+- **Choléra / Cameroun — 1 342 cas, 36 décès**, source `ccousp.cm` : le Centre des opérations d'urgence de santé publique du Cameroun, c'est-à-dire une autorité sanitaire nationale, du même rang que `ncdc.gov.ng` ou `minsa.gob.ni` déjà autorisés. Un chiffre vrai, d'une source officielle, présenté à un prospect comme non sourcé.
+- **FHCC / Ouganda (9 c) et FHCC / Sénégal (6 c)**, toutes deux sourcées sur `https://substack.com/@outbreaknewstoday/note/c-314274995` — une *note* Substack, pas même un article.
+
+Les deux cas sont opposés et c'est tout l'intérêt : l'un est une source solide que le classificateur ignore, l'autre une source faible qu'il faut re-sourcer. Aucun des deux n'était visible sans lancer un script à la main.
+
+**Effort : moyen.** Une section de plus dans l'audit quotidien, avec son propre jeu de lignes (toutes les sections existantes lisent `active=true` seulement — or c'est précisément la fenêtre d'affichage des 60 jours qui pose problème ici).
+
+**Risque/inconnue :** bruit. Le contrôle est plafonné à 10 lignes détaillées par catégorie, et les deux catégories sont séparées — une source interdite est une question juridique, une source `unverified` est le plus souvent juste un hôte que personne n'a encore classé.
+
+### Construction — les deux idées sont livrées
+
+**Idée 1 — `lib/source-trust.ts` + `scripts/check-source-trust.mjs`.** Nouvelle liste `FORBIDDEN_SOURCE_DOMAINS` (`reliefweb.int`), testée **avant** toutes les listes d'autorisation dans `sourceStatusOf()` : aucune liste ne peut plus repêcher un éditeur interdit. `reliefweb.int` retiré d'`AUTHORITATIVE_SOURCE_DOMAINS`. Prédicat `isForbiddenSourceHost()` exporté pour que l'audit quotidien nomme les lignes sans redériver la règle depuis un simple `unverified` (une ligne peut être `unverified` pour dix raisons innocentes ; une seule est un sujet juridique). Le script d'audit reçoit 2 cas fixes de plus (22/22 passent) et une rubrique dédiée : les démotions imposées par la liste d'interdits sortent du décompte des bloqueurs — elles *sont* le correctif, et ne doivent pas prendre l'outil en otage jusqu'à ce que les lignes soient re-sourcées.
+
+**Idée 2 — `app/api/cron/data-quality/route.ts`, section 4m.** Lit son propre jeu de lignes avec exactement le filtre de `getOutbreaksCached()` (134 lignes ce soir, chiffre confirmé identique à celui du script d'audit), puis remonte deux constats séparés dans le rapport de 07h05 : `[SOURCE INTERDITE]` par ligne, avec le rappel explicite que désactiver ne suffit pas ; `[PROVENANCE]` en une ligne groupée pour les `unverified` affichées, en énonçant les deux causes possibles à distinguer au cas par cas.
+
+**Vérifié bout en bout contre la prod** (`tqznwmpkokdzrszysbcm`, lectures seules), pas seulement compilé : la section 4m rejouée à l'identique renvoie les 3 `[SOURCE INTERDITE]` et les 3 `[PROVENANCE]` attendues, et `node scripts/check-source-trust.mjs` sort en 0 avec sa nouvelle rubrique. `npx tsc --noEmit` et `npx eslint` propres sur les trois fichiers.
+
+### Ce qui reste chez David — aucune écriture en prod n'a été faite ce soir
+
+1. **Les 3 lignes ReliefWeb encore affichées.** Le correctif leur retire la pastille officielle et le lien, mais la ligne reste sur la carte avec des chiffres tirés de ReliefWeb. Les en sortir demande soit de les re-sourcer, soit de descendre leur `source_priority` sous 3 — deux actions qui touchent des données de prod et, pour la première, dépendent du choix de sources de remplacement déjà en attente de sa décision (mémoire `project_reliefweb_reintroduction_2026_08_26`, points 2 et 3, dont la tension « Vanuatu ajouté sur ordre explicite le 18/08 vs règle légale du 06/07 »). Rien n'a été modifié en base.
+2. **`scripts/morning-don-check.mjs` n'a pas été audité ni modifié** — fichier d'une autre routine, et le choix des sources de remplacement est justement la décision en attente. Le run de demain 07h32 peut donc re-citer reliefweb.int ; s'il le fait, la section 4m le dira dans le rapport du 27/08 au lieu qu'on le redécouvre par hasard.
+3. **`ccousp.cm`** : l'inscrire dans `AUTHORITATIVE_SOURCE_DOMAINS` ferait passer 1 342 cas de « illustratif » à « source officielle vérifiée ». C'est un octroi de confiance, pas un correctif mécanique — non fait de ma propre initiative. Un mot de sa part suffit.
+4. **Les 2 lignes FHCC sur une note Substack** sont à re-sourcer (Ouganda et Sénégal, petits effectifs).
+
+### Contexte relevé au passage (pas une idée)
+
+`pricing.faq5_a` affirme toujours, dans les 5 langues, que les données viennent de « WHO, PAHO, and ECDC » — inchangé depuis le relevé du 26/08 matin (`project_faq5_sources_claim_narrower_than_reality_2026_08_26`, arbitrage explicitement laissé à David). Ce run y ajoute une mesure : sur les 134 lignes affichées, **4 sont au niveau `press`** (Tchadinfos, Leadership, Africa24, France Info) et **6 au niveau `unverified`**. La FAQ n'est donc pas seulement plus étroite que la réalité, elle est contredite par des lignes que le produit affiche déjà en le disant lui-même dans sa propre pastille. Non modifié — c'est du copy de marque et l'arbitrage lui appartient.
+
+**Statut : 2 idées PROPOSÉES ET CONSTRUITES.** Aucune idée écartée par un garde-fou ce soir.
