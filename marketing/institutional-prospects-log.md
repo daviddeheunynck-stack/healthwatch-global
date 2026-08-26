@@ -2323,3 +2323,122 @@ Trois des dix prises sont des cibles **précédemment écartées pour cause tech
 2. **EMRO et AFRO, zéro contact direct ce run.** EMRO reste bloquée (9e run) ; la piste `emro.who.int/entity/contacts` est morte (page supprimée, cf. 24/08) — reprendre par les pages pays ou une unité nommée du bureau régional.
 3. **Réserves PAHO encore disponibles, laissées par plafond** : Salvador `comunicacionesslv@paho.org`, Venezuela — utilisables telles quelles à un prochain lot.
 4. **TEPHINET** — arbitrage David en attente (cf. ci-dessus).
+
+---
+
+## 🔁 RELANCE J+10 — 2026-08-26, run automatique `daily-relance-check-healthwatch`
+
+**Résultat : 12 relances créées, toutes en brouillon.** Deux lots traités ensemble, conformément au calendrier d'étalement posé le 23/08 et confirmé les 24 et 25/08 : **le reliquat du lot du 04/08 recréé** (4 contacts, J+11) **et le lot du 15/08** (8 contacts éligibles sur 10, J+11). **Aucune réduction par frein de file** — la file de départ était basse, les 12 y tenaient entièrement.
+
+### 📥 Lots examinés
+
+| Lot | Ancienneté | Traitement |
+|---|---|---|
+| **04/08 recréé — reliquat (4)** — envoyé le 15/08 à 09:38–09:41 UTC | **J+11** | ✅ **traité ce run**, 4 relances créées |
+| **15/08 (10)** — envoyé le 15/08 à 07:54–07:57 UTC | **J+11** | ✅ **traité ce run**, 8 relances créées, 2 exclusions (bounces) |
+| 04/08 recréé — les 15 premiers | J+11 | Relancés hier (run du 25/08), **envoyés par David le 25/08 à 10:32:37–10:33:30 UTC**. Règle « une seule relance, jamais deux » — non repris. |
+| 14/08 (11) — envoyé le 15/08 | J+11 | Relancé le 24/08 à J+9. Non repris. |
+| **06/08 recréé (10)** — envoyé le 17/08 | J+9 | Pas mûr. J+10 le **27/08**. |
+| **17/08 (10)** — envoyé le 17/08 | J+9 | Pas mûr. J+10 le **27/08**. |
+
+### ❌ 2 exclusions
+
+| Contact | Adresse | Motif |
+|---|---|---|
+| **ISED Sénégal** | `secretariat@ised.sn` | **Bounce du 15/08** (boîte pleine), 2e tentative échouée le 16/08, **écarté définitivement le 16/08**. Entrée n° 9 de la liste nominative de bounces. |
+| **MBDS** | `mbds@mbdsnet.org` | **Bounce du 15/08** — 550 No Such User Here. Entrée n° 10 de la liste nominative. Jamais délivré, donc rien à relancer. |
+
+Décompte recalculé depuis les listes des lots plutôt que repris d'un run précédent : **4 (reliquat 04/08, aucune exclusion) + 10 au lot du 15/08 − 2 bounces = 12 relances.** Les deux domaines auto-hébergés signalés « à surveiller en priorité » le 15/08 sont exactement les deux qui ont bouncé — la réserve posée ce jour-là s'est vérifiée.
+
+### 🔎 Vérification en direct des 12 contacts
+
+Double contrôle appliqué à chacun, conformément à la règle ajoutée hier après l'incident THL : requêtes `to:<adresse>` groupées (2 appels) **et** requêtes `from:<domaine>` sur les 12 domaines (2 appels), `includeTrash: true` partout.
+
+- **Les 12 fils d'envoi portent exactement 1 message, en `labelIds: ["SENT"]`** — aucune réponse rattachée, aucune relance antérieure sur aucun des 12, cohérent avec le journal (les runs du 16/08 au 24/08 ont classé ces deux lots « pas mûr », et le run du 25/08 avait explicitement reporté les 4 du reliquat à aujourd'hui).
+- **Contrôle `from:<domaine>` : zéro fil sur les 12 domaines.** Aucune réponse en fil séparé, aucun accusé automatique détaché, aucun bounce — ni en boîte de réception, ni en corbeille. C'est la seconde application de la règle du 25/08 ; elle ne remonte rien cette fois, ce qui est le résultat attendu quand le fil et le domaine concordent.
+- **Anti-doublon** : grep par adresse sur le journal pour les 12 — aucune n'apparaît dans un second lot de prospection ni dans une entrée « 🔁 RELANCE » antérieure.
+
+### ✉️ Les 12 relances créées
+
+Toutes en réponse dans le fil d'origine (`replyToMessageId`), objet « Re: … » automatique, créées entre **06:24:54 et 06:25:40 UTC**. **Ordre = heure d'envoi de l'original, à la seconde près** (critère de priorisation retenu le 25/08), donc le lot du 15/08 en premier, le reliquat du 04/08 ensuite. Langue **EN** pour les douze, identique aux originaux.
+
+| # | Institution | Adresse | Original (UTC) | Fil d'origine | Brouillon |
+|---|---|---|---|---|---|
+| 1 | SEAOHUN — Southeast Asia One Health University Network | `secretariat@seaohun.org` | 07:54:10 | `1a004400e3a08bb0` | `r7958950731670018595` |
+| 2 | SACIDS — Sokoine University | `secretariat@sacids.org` | 07:54:49 | `1a0043fd71895236` | `r-4825765037152254404` |
+| 3 | WCM-Q — Institute for Population Health | `iph@qatar-med.cornell.edu` | 07:55:09 | `1a0043fc79ae8cd9` | `r2903039008955615511` |
+| 4 | FKKMK UGM — Departemen BEPH | `dep-beph.fk@ugm.ac.id` | 07:55:47 | `1a0043f9c7c8bfc8` | `r-8958633642730366616` |
+| 5 | EGSP UPR — Bioestadística y Epidemiología (Juan Reyes) | `juan.reyes5@upr.edu` | 07:56:04 | `1a0043f7d79e400e` | `r-5930017734217014841` |
+| 6 | PNGIMR — Papua New Guinea IMR | `info@pngimr.org.pg` | 07:56:22 | `1a0043f70dfc6609` | `r-416812479591127012` |
+| 7 | PHC Ukraine — Public Health Center | `info@phc.org.ua` | 07:56:36 | `1a0043f5b890da27` | `r1602847234322406127` |
+| 8 | Terviseamet — Dept. of Communicable Diseases (Kärt Sõber) | `kart.sober@terviseamet.ee` | 07:56:53 | `1a0043f4fcf970ba` | `r-7585517712156542647` |
+| 9 | NCDC — Inde | `dirnicd@nic.in` | 09:38:28 | `1a004b462539d0fc` | `r-1051427943133164678` |
+| 10 | PHF Science — Nouvelle-Zélande | `PHFScienceEnquiries@phfscience.nz` | 09:38:53 | `1a004b453e4c17d6` | `r-403318658958327972` |
+| 11 | FHI — Norvège | `folkehelseinstituttet@fhi.no` | 09:39:17 | `1a004b441289616f` | `r7489539374989676160` |
+| 12 | Folkhälsomyndigheten — Suède | `info@folkhalsomyndigheten.se` | 09:41:27 | `1a004b41cd5aac3a` | `r-3599859979434719428` |
+
+**Rédaction** — salutation identique à l'original (« Hi Kärt, » et « Hi Juan, » pour les deux contacts nominatifs, « Hi team, » pour les dix autres), une phrase de rappel, une ligne sur l'accès Pro toujours ouvert, puis **la question de clôture de l'email d'origine reprise mot pour mot**, avec son destinataire exact (« your surveillance team », « your department » ×2, « your network », « your member faculties », « your researchers », « your team's monitoring », « your surveillance division », « your public health science team », « your surveillance teams », « your communicable disease teams », « your surveillance work »). **Quatre cas particuliers conservent leur motif propre plutôt que le gabarit générique**, conformément à l'étape 3 :
+
+- **PHC Ukraine** — l'original était une **demande de redirection** (le site ne publie qu'une adresse générale). La relance la répète explicitement, « in case it did not reach the right desk », plutôt que de repitcher : si le premier message a atterri dans une boîte non concernée, c'est le seul point qui vaille d'être redit.
+- **PNGIMR** et **PHF Science** — les deux originaux portaient une **question ouverte de complétude sur le Pacifique**, pas une offre. La relance précise que la question tient « whether or not you want the access » / « regardless » : c'est une demande d'expertise, et elle reste valide même si l'accès ne les intéresse pas.
+- **WCM-Q** — l'original disait que l'EMRO est la région où l'agrégation inspire le moins confiance. La relance ajoute qu'« a critical answer would be as useful to me as a positive one », dans la ligne du traitement WHO Pandemic Hub (09/08) et ISID/ProMED (14/08).
+- **SACIDS** et **SEAOHUN** conservent l'offre telle qu'elle était faite — **des accès pour le secrétariat *et* pour les institutions/universités membres**, pas pour le seul secrétariat (logique IANPHI, reprise à l'identique le 25/08).
+
+**Conformité de forme, vérifiée par `list_drafts` après création** : aucun `htmlBody` fourni ; **aucun domaine avec un `.` littéral ni aucune balise `<a>` dans le texte neuf** — les douze relances ne mentionnent pas le site du tout, la question de clôture suffisant à porter l'appel. *Les originaux du lot du 15/08 comme ceux du 04/08 portaient, eux, un lien cliquable en signature ; il réapparaît dans le corps cité automatiquement par Gmail sous chaque relance — normal et sans impact, aucun lien neuf n'a été introduit.* Chaque corps se termine par une question avant la signature « David Deheunynck — HealthWatch Global ».
+
+**Contrôle du bug d'envoi instantané du connecteur (incident du 15/08) : négatif.** `list_drafts` en fin de run : **les 12 brouillons portent `labelIds: ["DRAFT"]`, aucun n'est passé en `SENT`.** Aucun échec `create_draft` ; **un seul incident technique, bénin** — un `get_message` a renvoyé « The service is currently unavailable », réussi au premier réessai.
+
+**⚠️ `list_drafts` : une disparition, expliquée et non imputable à l'instabilité connue.** L'appel de début de run (06:22) renvoyait **11 brouillons** dont la réponse personnelle de David à l'Institut Pasteur du Maroc ; l'appel de fin (06:25) en renvoie **22 = 12 + 10**, sans elle. Vérification faite avant de conclure, conformément à l'avertissement de l'étape 5 : le fil `1a03a5b375f89dcc` porte bien un **3e message en `SENT` à 06:23:49 UTC**. **Le brouillon a été envoyé par David pendant le run**, il n'a pas disparu d'un index instable. Aucune recréation en double, aucune conclusion négative tirée d'un appel isolé.
+
+### 📊 Bilan cumulé
+
+**Balayage des bounces** (`from:mailer-daemon`, `from:postmaster`, `subject:"Delivery Status Notification"`, `subject:"Undelivered Mail"`, `subject:Undeliverable`, `subject:"Mail delivery failed"`, `newer_than:3d`, corbeille incluse) : **7 fils, exactement les 7 du 24/08 déjà consignés. Aucun bounce neuf.** Rien sur les 15 relances parties hier, rien sur les 10 envois de prospection du 25/08, rien sur les 10 brouillons de ce matin (non encore envoyés).
+
+**Bilan bounces cumulés depuis le 02/08 : 20** — recalculé depuis la liste nominative conformément à la règle du 16/08, **inchangé depuis le 24/08** (aucun contact neuf n'a bouncé en 48 h) :
+1. WHO WPRO (02/08) — sous-domaine `wpro.who.int` invalide
+2. ZNPHI Zambie (02/08) — règle de transfert cassée côté destinataire
+3. Colombo (09/08) — 550 5.1.1, adresse introuvable
+4. AKHS (10/08) — adresse inconnue côté serveur
+5. NCIPD Bulgarie (12/08) — 550 high-probability spam
+6. CORDS (12/08) — adresse introuvable
+7. EPHI Éthiopie (12/08) — boîte pleine (transitoire)
+8. Lao TPHI (14/08) — domaine NXDOMAIN
+9. ISED Sénégal (15/08) — boîte pleine, 2 tentatives échouées, écarté définitivement le 16/08
+10. MBDS (15/08) — 550 No Such User Here
+11. DMR Myanmar (17/08) — 550 Unknown user
+12. MSPAS Guatemala (18/08) — adresse introuvable
+13. MHMS Îles Salomon (19/08) — adresse introuvable
+14. IRD — Tony Zitti (24/08) — Undelivered Mail, relais `relay.renater.fr`
+15. INSP Mexique — Liliana Trujillo (24/08) — O365, destinataire inconnu
+16. AFD — Agnes Soucat (24/08) — 550 5.2.0 mailbox unavailable
+17. IMC — Anastasiia Borodina (24/08) — adresse introuvable
+18. ACF — Olivier Cheminat (24/08) — O365, destinataire inconnu
+19. PIH — Tumusime Musafiri (24/08) — adresse introuvable
+20. ADELF (24/08) — 550 5.1.1 (remplacement `adelf.ftb@gmail.com` parti le 24/08, délivré, aucun bounce)
+
+**Totaux au 2026-08-26 : 290 contacts prospectés, 280 envoyés, 260 effectivement délivrés.**
+- **Prospectés 290** et **envoyés 280** : repris de l'entrée de prospection de ce matin (les 10 du jour restent en brouillon). Cette routine n'en produit aucun.
+- **Délivrés 260** = 280 envoyés − 20 (taille de la liste nominative ci-dessus), recompté dans le même mouvement que la liste.
+- **⚠️ Réserve maintenue** : les 280 envoyés comptent **4 envois vers des institutions déjà contactées** (incident du 22/08). Le nombre d'**institutions distinctes** atteintes reste inférieur de 4 au nombre de messages.
+- **🟢 Taux de délivrabilité en remontée pour le 2e jour : 92,3 % au 24/08 (240/260) → 92,6 % au 25/08 (250/270) → 92,9 % aujourd'hui (260/280).** Les 10 envois du 25/08 n'ont produit **aucun bounce**. La chute du 24/08 reste attribuée au lot nominatif des vagues 1-3 (péremption d'adresses stockées 8 semaines), pas à la qualité de recherche courante.
+
+**Total cumulé de relances : 153 envoyées** (138 au 25/08 **+ les 15 du lot du 04/08 recréé**, créées le 25/08 et **envoyées par David le même jour entre 10:32:37 et 10:33:30 UTC** — vérifié en direct ce run, les 15 fils portent bien 2 messages en `SENT`), **12 en attente d'envoi** (celles de ce run).
+
+**Frein de file : non déclenché.** File au démarrage : **11 brouillons** (10 de la prospection de ce matin + la réponse de David à l'Institut Pasteur du Maroc, partie depuis). **File en fin de run : 22** — les 12 relances + les 10 de la prospection. **Sous le seuil de ~25**, aucune réduction nécessaire, aucune relance reportée. L'alerte posée hier (« si les 25 ne partent pas, la file monterait à 37 ») **est levée** : David a vidé les 25 dans la journée du 25/08.
+
+**➕ Ligne ajoutée à l'entrée du 25/08 : ✅ ENVOYÉS par David le 2026-08-25 — les 15 relances entre 10:32:37 et 10:33:30 UTC, puis les 10 contacts de prospection entre 10:34:35 et 10:36:46 UTC.** Vérifié en direct ce run par balayage `in:sent` sur la journée du 25/08 (corbeille incluse), pas déduit d'un `list_drafts` vide — application de l'enseignement du 16/08. Écart création → envoi : **~4 h 08** sur les relances, en ordre de relecture inverse (Panama/Sierra Leone en premier, Mérieux en dernier) : profil « relecture humaine », pas le bug d'envoi instantané.
+
+### 📬 Suivi des réponses
+
+**⚠️ Trois mouvements hors périmètre de cette routine, signalés sans action** (ce sont des fils de suivi produit / nurture, pas de la prospection institutionnelle — cette routine ne les traite pas, mais ils sont apparus pendant les balayages et méritent d'être vus) :
+
+- **🟢 Institut Pasteur du Maroc — Dr Jalal Nourlil a répondu** le 25/08 à 20:45 UTC, sur le message produit de la veille. Réponse **positive sur le fond** (« l'approche […] est effectivement très pertinente pour la surveillance ») avec **trois éléments concrets** : pas de financement institutionnel prévu à ce stade, **demande du montant du devis annuel en vue d'un abonnement à titre personnel**, et **demande explicite de reconfiguration temporaire de son accès sur l'Afrique et l'EMRO**. **David a déjà répondu ce matin à 06:23:49 UTC** (brouillon parti pendant ce run). Aucune action de cette routine.
+- **🟡 New York State DOH — Ethan Mitchell a répondu** le 25/08 à 20:06 UTC (fil `1a03a5c9840c219d`), sur le même envoi produit de 19:20. Contenu non lu par cette routine (hors périmètre) ; **à traiter en session**.
+- **ANSS Guinée** (`bonivogui@anss-guinee.org`) — envoi du 25/08 à 18:23 UTC, **aucune réponse à ce stade**, moins de 24 h. Ni bounce, ni accusé.
+
+- **Georgetown HSOC** (`hsoc@georgetown.edu`, converti en accès Pro le 24/08) — **aucune réponse depuis l'envoi des identifiants le 24/08 à 18:38 UTC**, soit ~36 h. Toujours aucune action : l'accès est ouvert, la balle est dans leur camp. À reprendre si le silence dépasse une dizaine de jours, en suivi d'usage et non en relance.
+- **Aucune réponse institutionnelle nouvelle sur les lots de prospection.** Les 12 fils traités ce run sont muets à J+11, et le balayage des bounces ne remonte que les 7 déjà connus.
+
+**Prochains lots, calendrier d'étalement mis à jour :**
+- **27/08** → lot du **06/08 recréé** (10 moins HZJZ verrouillé, soit **9**, J+10) + lot du **17/08** (10, J+10, rendez-vous Variante A EAC / IGAD / SADC / AFROHUN / EUPHA) = **19**. ⚠️ **Le frein de file mordra probablement** : 19 relances sur une file qui contiendra déjà les 10 de la prospection du 27/08, plus les 22 d'aujourd'hui si David ne les envoie pas d'ici là. Si la file de départ dépasse ~6, le run devra réduire et reporter au 28/08 — prioriser alors le lot du 06/08 recréé, plus ancien de quelques minutes à l'envoi.
+- **28/08** → lot du **18/08** (10, J+10) + tout reliquat reporté du 27/08.
