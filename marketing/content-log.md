@@ -8,7 +8,7 @@ Archive de tout le contenu créé. Mise à jour à chaque session.
 
 **Registre de faits régénéré en début de run** (`npm run qa:facts`) : **226 faits citables sur 108 lignes affichées**, 81 lignes `is_seed` exclues, **59 faits périmés**. ⚠️ Alerte de fraîcheur, 6e jour : Shigellosis / EU-EEA **55 j**, Diphtheria / 8 pays **41 j**, Meningitis / 4 pays **34 j**.
 
-**Quotas commentaires : 0/7 publiés, 2 en file de validation** (le commentaire Julien Harneis mis en file à 13h, plus celui versé ce run ci-dessous). Le DM mis en file ce run est dans `linkedin-contacts.md`.
+**Quotas commentaires : 0/7 publiés, 2 en file de validation** · **suivis 10/7-10, fourchette remplie** (le commentaire Julien Harneis mis en file à 13h, plus celui versé ce run ci-dessous). Le DM mis en file ce run est dans `linkedin-contacts.md`.
 
 ---
 
@@ -81,7 +81,7 @@ La section Otomba du run de 9h **ne contient aucune citation en bloc** (0 ligne 
 6. 🆕 **John Omari Baso** (`/in/john-omari-baso-84500b1b0/`) — déjà suivi, *VillageReach, Goma, Nord-Kivu*, 49+ mutuels dont Johan Verheyden. **Excellent candidat connexion, non traité ce run**, quota connexions **0/7**. Rappel : la **note** de connexion va en file de validation comme un DM.
 7. 🔁 **Mame Awa D.** (`/in/mame-awa-d-96bb17239/`) — suivi refusé par la plateforme 3 fois le 26/08 matin, à retenter **par la connexion**. Non retenté ce run.
 8. 🛑 **Alain BASHIZI** — toujours en attente de la décision de David, ne pas répondre, ne pas relancer. **2 autres invitations reçues inchangées** : Zachariah G. Houdari (hors sujet), OLAOLUWA PHILIP (**15e passage**, profil non rouvert).
-9. **Suivis 8/7-10, marge de 2 non consommée ce run.** L'objectif de la fourchette est atteint depuis 9h ; le temps a été mis sur le message entrant neuf et les deux textes versés en file. **0 follow-back dû** (le seul nouvel abonné, Rodrigo Olave Hurtado, était déjà suivi).
+9. ✅ **Suivis 10/7-10, fourchette remplie — la marge de 2 laissée par le créneau de 13h a été consommée ce run.** Recherche active (mots-clés « surveillance épidémiologique ministère santé ») : **Celestin Mwanzembe** (*Direction Surveillance Epidémiologique, RDCONGO*, 5 mutuels) et **Augustin Mukulu** (*Surveillance Épidémiologique, Goma, Nord-Kivu*, 435 abonnés). Les deux jamais évalués auparavant (0 occurrence sur les 5 fichiers), identité vérifiée dans le même appel JS que le clic, suivi confirmé à l'écran. Détail dans `linkedin-contacts.md` §3. **0 follow-back dû** (le seul nouvel abonné, Rodrigo Olave Hurtado, était déjà suivi).
 10. **269 relations, 382 abonnés. 97 invitations envoyées en attente**, dont Ihekweazu, SAIDOUNI et Linda Esso (24/08, **4e jour**). Rappel utile du 26/08 : trésor Ndaye avait accepté **au 7e jour**, « sans réponse à 3 jours » ne veut pas dire « refusée ».
 11. 🔴 **§8 — trois lacunes de couverture pour `morning-don-check`, aucune résolue** : (a) **hantavirus au Chili** ; (b) **dengue aux Îles Marshall** ; (c) **divergence interne Ebola / RD Congo** (ligne close masquant la ligne active en tête de tri). **S'y ajoute** : confirmer que la ligne perdue entre 13h et 17h (227→226 faits) correspond bien à la désactivation des lignes ReliefWeb.
 12. ⚠️ **Alerte de fraîcheur du registre, 6e jour, en dégradation lente** : Shigellosis / EU-EEA **55 j** (54 à 13h), Diphtheria **41 j**, Meningitis **34 j**.

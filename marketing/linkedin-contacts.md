@@ -5,7 +5,7 @@
 
 **Vérification double déclenchement** : aucune entrée `linkedin-hwg-followup-check-2` datée du 26/08 dans ce fichier ni dans `content-log.md` à l'ouverture (dernière en date : 25/08 17h). Les entrées du jour appartiennent à `linkedin-hwg-content-proposal` (8h35), `linkedin-hwg-monitoring` (9h) et `linkedin-hwg-followup-check` (13h) → **premier déclenchement de cette routine aujourd'hui**.
 
-**Quotas à la clôture** : commentaires **0/7 publiés, 2 en file** (1 hérité de 13h, 1 versé ce run) · connexions envoyées **0/7** · DM à froid **0/8 envoyés, 1 en file** · suivis **8/7-10, inchangés** · invitations reçues acceptées **0** (aucune nouvelle).
+**Quotas à la clôture** : commentaires **0/7 publiés, 2 en file** (1 hérité de 13h, 1 versé ce run) · connexions envoyées **0/7** · DM à froid **0/8 envoyés, 1 en file** · suivis **10/7-10, fourchette remplie** (8 à l'ouverture, +2 ce run) · invitations reçues acceptées **0** (aucune nouvelle).
 
 **🖥️ Navigateur** : `_shared/browser-status.md` lu avant ouverture, dernière entrée **🟢 RÉTABLI (24/08 ~09h15)** → aucun bridage. `23c7ecdd-…` seul listé, sélectionné sans question (§7). Rien de neuf à y écrire. ✅ **Anomalie JS asynchrone absente ce créneau** : `(async () => 42)()` renvoie bien une `Promise`. Le filtre `[BLOCKED: Cookie/query string data]` s'est déclenché **une fois**, sur un `href` de notification ; conformément à [[reference_blocked_classifier_result_code_already_ran]] le code avait tourné, seule la valeur de retour était filtrée. Contournement par l'URN retrouvé dans `content-log.md`. 🍪 **Bandeau cookies LinkedIn toujours présent** (carry-over 13h #22), **non cliqué** : engage le compte de David, hors périmètre d'une routine automatique.
 
@@ -22,6 +22,17 @@
 **Réseau : aucun mouvement depuis 13h.** **269 relations** (identique à la clôture de 13h), **382 abonnés** (contre 381). L'unique nouvel abonné est **Rodrigo Olave Hurtado**, et il s'explique intégralement par l'acceptation d'invitation de 13h (une mise en relation entraîne le suivi) ; son bouton porte déjà « Suivi ». **0 follow-back dû.**
 
 **3 invitations reçues, aucune nouvelle, toutes déjà tranchées** : Alain BASHIZI (décision de David en attente, ne pas répondre), Zachariah G. Houdari (hors sujet), OLAOLUWA PHILIP (**15e passage**, profil non rouvert conformément à la consigne).
+
+---
+
+### 3️⃣ ⭐ RECHERCHE ACTIVE — 2 suivis executes, la fourchette passe de 8 a 10/7-10
+
+La marge de 2 laissee par le creneau de 13h a ete **consommee ce run**, par recherche active (mots-cles « surveillance epidemiologique ministere sante »), les deux profils verifies contre les 5 fichiers d'archive : **0 occurrence, jamais evalues**.
+
+- **Celestin Mwanzembe** (`/in/celestin-mwanzembe-a997a48b/`), *Medecin Specialiste en Epidemiologie et Gestion des urgences / **Direction Surveillance Epidemiologique** / RDCONGO*, 2e degre, **5 mutuels** dont Marie Roseline Darnycka BELIZAIRE et Amadou Bailo DIALLO. **Suivi 9/7-10.** C'est la direction nationale de la surveillance du pays ou court la flambee Ebola : la barre de pertinence est franchie sans discussion.
+- **Augustin Mukulu** (`/in/augustin-mukulu-9626a9190/`), *Expert en Sante Publique, **Surveillance Epidemiologique**, Consultant SBC*, **Goma, Nord-Kivu**, 435 abonnes, 4 mutuels. **Suivi 10/7-10, fourchette remplie.**
+
+**Identite verifiee dans le meme appel JS que le clic** pour les deux (regle du 15/08), et **suivi confirme a l'ecran apres coup** : le bouton porte « Suivi » sur les deux profils. **Aucun message rediges pour eux** : l'activite propre de Mukulu est vide (« Rien a voir pour le moment »), donc aucun hook frais, et §10 interdit d'en inventer un.
 
 ---
 
