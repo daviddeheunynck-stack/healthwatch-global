@@ -1713,3 +1713,44 @@ Le cas `trigger-pheic-alerts` est le plus coûteux du lot et son propre commenta
 - **Toujours chez David depuis hier, rien fait ici :** les 3 lignes ReliefWeb encore affichées et les 2 lignes FHCC sur une note Substack. En revanche `ccousp.cm` **est tranché** — `f54302d` (15h55) l'a ajouté aux domaines faisant autorité, avec EnQuête+ ; le point 3 du reliquat du 26/08 est clos.
 
 **Statut initial : 2 idées PROPOSÉES.** Construction dans la foulée — voir la section ci-dessous.
+
+### Construction — les deux idées sont livrées
+
+**Idée 1 — ✅ CONSTRUITE, commit `180353c`**, `app/api/cron/sync-samoa-dengue/route.ts`. Trois correctifs indépendants, dans l'ordre où ils se déclenchent à l'exécution :
+
+- **Le raccourci « rien de neuf » compare désormais des numéros d'édition.** Nouvelle fonction `storedIssueNumber()` : le numéro est déjà encodé dans l'URL stockée, le cron parse déjà celui de la page. La comparaison d'URL reste le **premier** test (inchangée), et seul le cas « numéro de la page strictement inférieur à celui de la ligne » s'ajoute — une édition **republiée sous le même numéro** continue donc de passer à l'extraction, et une URL non parsable (ligne re-sourcée à la main vers autre chose) retombe sur le comportement actuel plutôt que de sauter à l'aveugle.
+- **Un refus de garde ordinaire se logge en `ok`,** avec la raison conservée dans le message pour rester lisible sans devenir une alarme. Aligné sur `sync-malaysia-dengue`, jumeau structurel exact.
+- **`lockedRowRegressionGuard` ajouté,** composé comme dans tous les crons du balayage du 19/08, avec l'escalade `lockedRowIsFreezing` du 24/08 : un refus sur ligne verrouillée ne passe en `error` + Sentry que si la ligne est réellement figée, pas si sa source vient de la rafraîchir.
+
+**Vérifié contre le réel, pas seulement compilé.** Le chemin de décision corrigé a été rejoué en lecture seule contre la vraie page `health.gov.ws/dengue/` et la vraie ligne de prod :
+
+```
+ligne en base   : #69  20157 cas / 9 deces / 2026-08-10 / prio 10
+listing page    : #68  .../Dengue-sitrep-issue-no-68.pdf
+
+AVANT -> POURSUIT : telechargement PDF + extraction Haiku payante,
+                    puis guard:older-report -> status=error
+APRES -> SKIP avant tout telechargement
+         ("listing page still at issue 68, row already holds 69")
+```
+
+**Idée 2 — ✅ CONSTRUITE, commit `5c1f8c8`**, `lib/cron-monitor.ts` + les 8 crons. `failedRecipientsNote()` plafonne à 3 identités puis « (+N autres) » — le total reste dit en clair, jamais tronqué en silence — et déduplique, pour qu'une même adresse en échec quatre fois se lise comme un bounce et non comme quatre incidents. Chaque cron accumule l'identité que son propre point d'échec tient déjà : **l'adresse** quand l'envoi n'a pas eu lieu, la **paire destinataire → foyer** quand l'e-mail est bien parti et que c'est le marqueur de dédup qui a manqué (`regional-alerts`, `disease-alerts`, l'insertion de `trigger-regional-digest`). Les deux natures coexistent dans `trigger-pheic-alerts` et sont distinguées dans la note plutôt que confondues.
+
+Sept cas du formateur vérifiés en exécutant la vraie fonction (liste vide, un seul, pile le plafond, un et deux de trop, doublons, entrées vides/nulles) :
+
+```
+4 envoi(s) en échec : a@b.c, d@e.f, g@h.i (+1 autre)
+```
+
+**Ce qui n'a pas changé, et c'est le point important sur huit crons d'envoi :** aucun destinataire, aucun contenu, aucune condition d'envoi. La seule chose modifiée est ce qui est écrit dans le journal **après** que l'échec a eu lieu — les `failed++`/`errors++` restent aux mêmes endroits, aux mêmes conditions, et le statut `ok`/`error` se calcule exactement comme avant.
+
+`npx tsc --noEmit` propre sur l'ensemble du projet et `npx eslint` propre sur les onze fichiers touchés au total.
+
+**Ce qui reste chez David — aucune écriture en prod n'a été faite ce soir**
+
+1. **La cause du `1 envoi(s) en échec` du 24/08 reste inconnue.** Le correctif la **nomme**, il ne la répare pas : la valeur figée dans `site_config` date d'avant le déploiement, donc c'est le run de `weekly-signal` de **lundi prochain** qui livrera l'adresse, si l'échec se reproduit. Si c'est un bounce dur, il devra rejoindre la blocklist Brevo — hors périmètre ici.
+2. **`sync-samoa-dengue` restera « en erreur » dans le rapport de demain matin.** La valeur du 24/08 est figée dans `site_config` jusqu'au prochain passage du cron, **lundi 31/08 08h25 UTC** — c'est lui qui écrira le premier `ok`. Rien à faire, mais ne pas lire la ligne rouge de demain comme un échec du correctif.
+3. **L'issue #70 de Samoa.** Le correctif rend le cron silencieux tant que la page de listing reste à #68, il ne va pas chercher le #69 manquant sur la page. La ligne est à jour (rapport du 10/08), donc rien d'urgent, mais si le ministère ne relie jamais ses PDF au-delà de #68, ce cron ne réécrira plus jamais — c'est la relecture manuelle qui tient la ligne, comme le 21/08. À surveiller, pas à corriger à l'aveugle.
+4. **Reliquat inchangé du 26/08 :** les 3 lignes ReliefWeb encore affichées et les 2 lignes FHCC sur une note Substack. Le point `ccousp.cm` est clos depuis `f54302d`.
+
+**Statut : 2 idées PROPOSÉES ET CONSTRUITES** (`180353c`, `5c1f8c8`). Aucune idée écartée par un garde-fou ce soir.
