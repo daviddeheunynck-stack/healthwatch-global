@@ -164,7 +164,38 @@ Le contexte (`ctx-<slug>.json`) est écrit par le rédacteur :
 `threadFile` est le fil **collé verbatim**, pas résumé. Sans lui, la langue, le
 registre et l'origine des chiffres ne sont pas contrôlables et le rapport le dit.
 
+⚠️ **Un `threadFile` ne contient QUE le fil. Jamais une note du rédacteur, jamais
+un commentaire de contexte, jamais une justification** — ajouté le 2026-08-27,
+après en avoir enfin trouvé la cause exacte. Le script ne distingue pas le fil de
+ce qui l'entoure dans le fichier : il analyse le tout. Deux conséquences observées
+le même jour, sur deux brouillons différents du même run :
+
+- **`context.cta-repeat` sur le DM Adam Abdullahi.** J'avais écrit en bas du
+  fichier, comme aide-mémoire, « *Le lien healthwatch-global.com et l'essai Pro
+  n'ont JAMAIS été envoyés dans ce fil* ». Le script y a lu des traces du CTA et a
+  bloqué le brouillon pour répétition d'un argumentaire… que ma propre note
+  affirmait absent. Retirer les annotations a levé le blocage **sans changer une
+  lettre du brouillon**.
+- **`context.language` sur le DM Kaushik Sanyal.** Premier contact, donc aucun
+  fil ; le fichier ne contenait que mes notes de profil, rédigées en français.
+  Le script a conclu « fil = fr, brouillon = en » et a bloqué une paire de langues
+  qui était en réalité correcte (profil du destinataire entièrement en anglais).
+
+C'est le défaut d'outillage listé depuis plusieurs jours sous « annotations d'un
+`threadFile` analysées comme du fil ». **Il n'a pas besoin d'un correctif dans le
+script : il suffit de ne rien mettre d'autre que le fil dans le fichier.** Tout ce
+qui relève du contexte, de l'intention ou de la justification va dans le
+`ctx-<slug>.json`, dans le prompt du relecteur, ou dans le journal d'archive —
+pas là.
+
+**Cas du premier contact, où il n'existe aucun fil** : mettre dans le `threadFile`
+le matériau source réellement cité (intitulé de profil verbatim, posts du
+destinataire verbatim) **dans sa langue d'origine**, et rien de plus. C'est ce
+matériau qui détermine légitimement la langue du canal, et le mettre tel quel
+rend `context.language` exact au lieu de le rendre trompeur.
+
 ## 3. Le relecteur
+
 
 Un agent distinct, lancé avec un **contexte neuf**. Il reçoit quatre choses et
 rien d'autre :

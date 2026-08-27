@@ -2,6 +2,67 @@
 
 Archive de tout le contenu créé. Mise à jour à chaque session.
 
+## 📅 Session linkedin-hwg-monitoring — 27/08/2026 (9h)
+
+**Vérification double déclenchement** : aucune entrée `linkedin-hwg-monitoring` datée du 27/08 dans ce fichier ni dans `linkedin-contacts.md` à l'ouverture (dernière en date : 26/08 9h) → **premier déclenchement de cette routine aujourd'hui**. Les entrées du 26/08 en tête de fichier appartiennent à `linkedin-hwg-followup-check-2` (17h) et `linkedin-hwg-followup-check` (13h), runs intentionnellement distincts.
+
+**🖥️ Navigateur** : `_shared/browser-status.md` lu avant ouverture, dernière entrée **🟢 RÉTABLI (24/08 ~09h15)** → aucun bridage. `23c7ecdd-…` seul listé, sélectionné sans question (§7). Rien de neuf à y écrire.
+
+**Registre de faits régénéré en début de run** (`npm run qa:facts`) : **225 faits citables sur 106 lignes affichées**, 81 lignes `is_seed` exclues, **25 faits périmés**. ⭐ **L'alerte de fraîcheur qui courait depuis 6 jours est levée** : Shigellosis / EU-EEA, Diphtheria / 8 pays et Meningitis / 4 pays sont repassés à **0 j** (contre 55 j, 41 j et 34 j hier soir). Le nombre de faits périmés chute de **59 à 25** dans le même mouvement. Une reprise de sources a donc eu lieu entre le 26/08 17h et ce matin.
+
+**Quotas à la clôture** : commentaires **1/7 publiés** · notes de connexion **0/7** · DM **0/8 envoyés, en file de validation ci-dessous** · suivis (voir `linkedin-contacts.md`) · invitations reçues **2 acceptées**.
+
+---
+
+### ✅ COMMENTAIRE 1/7 PUBLIÉ — **Amanda McClelland** (`/in/amanda-mcclelland-7a160a121/`), EN
+
+`urn:li:activity:7498377345519554560`, post de **17 h** (fenêtre 48 h ✅), **33 réactions, 0 commentaire, 6 republications**. **Blocage hebdomadaire levé ce matin même** (commentée le 20/08, bloquée jusqu'au 27/08) : elle était la cible prioritaire annoncée par le carry-over de 17h, point #4.
+
+⚠️ **Piège de lecture du compteur, à retenir** : la ligne sociale affiche `33 / ​ / 6`. Le « 6 » **n'est pas le nombre de commentaires**, son `aria-label` est `Republier` ; le compteur de commentaires est le caractère invisible du milieu, soit **zéro**. Vérifié trois fois (rendu DOM, capture d'écran, endpoint `voyager/api/feed/comments` qui renvoie `"total":0`). Sans cette vérification, la §5 « lire les réponses avant de rédiger » aurait été déclarée impossible à tenir alors qu'il n'y avait simplement rien à lire. **Nous sommes le premier commentateur.**
+
+**Le post** : les fonds de riposte rapide de Resolve To Save Lives ; « as little as $5,000 of flexible, prepositioned funding » ; décaissements vers l'Ouganda, le Soudan du Sud, le Rwanda et la Zambie après l'identification de la flambée en RDC ; puis, ce mois-ci, un financement de préparation à plus long terme au **Soudan du Sud**, « along a popular route connecting the country to DRC ».
+
+**L'angle** : elle finance un **axe**, et l'axe est précisément l'unité que le dossier publié ne sait pas porter. Une préparation le long d'un corridor ressort en deux lignes nationales, tenues par deux autorités sur deux calendriers, que rien en aval ne rejoint. Ce qui a été payé au Soudan du Sud apparaîtra, s'il apparaît, comme un chiffre soudanais, pendant que le risque auquel il répond se compte en RDC. **Angle pris depuis la seule position que HWG occupe réellement, celle du lecteur de bulletins, sans aucun chiffre à mon compte.**
+
+**QA: mécanique PASS (0 blocker, 512 car., 2 paragraphes, `draftLang: en` / `threadLang: en`) | relecteur REECRIRE (5) au 1er passage, corrigé — 11 PASS sur 12 | faits cités: aucun chiffre | registre du 27/08 | statut: publié le 27/08**
+
+⭐ **Le relecteur a attrapé un défaut réel que le contrôle mécanique ne pouvait pas voir.** Le brouillon ouvrait sur « The unit **your last paragraph** works in is a route » — or la route est au **troisième** paragraphe du post, le dernier étant le renvoi vers l'issue brief. Erreur vérifiable en trois secondes par l'autrice. Corrigée par une formulation sans repère de position (« The readiness funding you describe is scoped to a route »), sans toucher au reste. **Aucun 2e essai lancé : correction triviale d'un point réel, exactement le cas prévu par le dispositif révisé du 26/08.**
+
+> The readiness funding you describe is scoped to a route, and a route is the one thing the published record cannot hold. Preparedness along a corridor gets reported as two national lines, kept by two authorities on two schedules, and nothing further down the chain rejoins them.
+>
+> So what was funded in South Sudan will surface, if it surfaces at all, as a South Sudan figure, while the risk it answers to is being counted in DRC. A reader of bulletins sees two countries. The money went to what lies between them.
+
+**Publication confirmée** : commentaire relu dans le fil après envoi (512 caractères, 2 paragraphes, 0 tiret cadratin, 0 espace insécable — identiques au brouillon), éditeur vidé. **Prochain commentaire possible sur ce profil à partir du 03/09.**
+
+### 🗒️ Veille — données épidémiologiques (§8)
+
+**Aucune écriture en base faite** (une routine sociale signale, elle n'écrit pas).
+
+- ⭐⭐ **UNE PISTE CONCRÈTE POUR LA LACUNE « HANTAVIRUS AU CHILI »**, ouverte depuis le 25/08 et jamais résolue. Trouvée en vérifiant le hook de Rodrigo Olave Hurtado : il republie **Cecilia Vial** (*Profesor Asociado, Universidad del Desarrollo ; Directora Anillo Gene2dis*) sur la raison pour laquelle **le MINSAL a déclaré une alerte sanitaire hantavirus**. Verbatim de son post : « *¿Porqué el MINSAL declara una alerta sanitaria para hantavirus? Este año estamos teniendo más casos y además la letalidad está casi al doble que la del año pasado. La alerta permite reforzar la vigilancia, la adquisición de insumos y contratar personal especializado.* » **Deux sources y sont nommées : `www.hantavirus.cl` et le dernier bulletin disponible de l'ISP** (Instituto de Salud Pública de Chile). Ni l'une ni l'autre n'est ReliefWeb, donc rien n'empêche `morning-don-check` de les évaluer. ⚠️ **Le chiffre de létalité n'est PAS repris et ne doit pas l'être** tel quel : il vient d'un post de tiers, pas d'un bulletin, et n'a été vérifié contre aucune source primaire.
+- 🔴 **Confirmé au registre : il n'existe aucune ligne Chili, et aucune ligne hantavirus, sur l'ensemble des 106 foyers affichés.** Vérifié indépendamment par le relecteur du DM Rodrigo dans les deux registres. La lacune n'est donc pas « une ligne périmée », c'est une absence complète, alors que `hwg-social-policy.md` §1 range le hantavirus parmi les maladies couvertes par HWG.
+- ⭐ **L'alerte de fraîcheur qui courait depuis 6 jours est levée.** Shigellosis / EU-EEA, Diphtheria / 8 pays et Meningitis / 4 pays sont repassés à **0 j** (contre 55 j, 41 j et 34 j au relevé de 17h hier). Le total de faits périmés tombe de **59 à 25**. Une reprise de sources a eu lieu entre hier 17h et ce matin 07h03. **À confirmer côté `morning-don-check` : c'est un très bon signal, mais aucune routine sociale ne peut dire d'où il vient.**
+- 🔴 **Ebola / RD Congo — la divergence interne du registre est intacte, 5e jour.** La ligne **close** (4 120 / 1 887, arrêtée au 07/08) sort toujours **avant** la ligne **active** (5 514 / 2 642, arrêtée au 22/08) au tri par âge. Priorité inchangée pour `morning-don-check`. ⚠️ **Ce n'est plus théorique** : le post de Martin Yakum lu ce matin écrit « *Recent reports put confirmed cases above 5,500 and deaths above 2,600* », ce qui correspond à la ligne active — un lecteur qui interrogerait notre tableau et tomberait d'abord sur la ligne close y lirait des chiffres inférieurs de 25 %.
+- 🟠 **Dengue / Îles Marshall — la lacune du 25-26/08 reste ouverte, et une source publique existe.** **Robert Herriman** a publié il y a 1 j « *#Dengue outbreak declared in the #MarshallIslands* » avec un lien. Profil bloqué en commentaire jusqu'au 30/08, donc rien de publié — **mais le signal, lui, est exploitable pour `morning-don-check`.**
+- 🆕 **Matière de veille repérée, pas une lacune** : un prototype d'**early warning des flambées de paludisme lié aux inondations** (projet **FLLOW-M**, Soudan du Sud, financé par Malaria Consortium, prototypé par HISP Tanzania sur DHIS2), présenté à la conférence annuelle DHIS2 d'Oslo. Relayé par salome solomon, suivie ce run. Anticipation plutôt que réaction : angle intéressant pour un futur post de marque.
+- ➖ **Aucun chiffre épidémiologique neuf n'a été repris dans un texte publié ou mis en file ce run.** Les cinq DM et le commentaire ne citent aucune donnée de flambée.
+
+---
+
+### 👀 Veille passive — signaux et matière
+
+- ⭐ **Julien Harneis (*Senior Ebola Coordinator*, ONU) a aimé notre commentaire d'hier soir.** C'est le commentaire publié en session sur ordre explicite de David, celui sur le cumul contre le taux (« *half of them in just 20 days* »). Une réaction de l'auteur lui-même sur un post à 61 réactions et 8 commentaires : **le signal le plus fort du run.** Aucune réponse écrite de sa part, donc rien à relancer.
+- ⭐ **Harvey Basivikidi a republié notre post de marque dans son réseau et l'a marqué « instructif »** — celui sur la ligne mpox Ouganda revérifiée le 25/08. Le post est à **93 impressions** au relevé de ce matin.
+- **Martin Yakum : rien de dû, carry-over clos.** Sa réponse en sous-fil (« *That is an excellent point, David. The issue of cadence is easy to overlook…* ») figurait en notification non lue, mais **notre propre réponse est déjà le dernier message du sous-fil** — traitée le 25/08. Vérifié sur le post même (`urn:li:activity:7497884672853557248`), pas seulement sur la notification. Notre commentaire y porte **84 impressions**.
+- **Ifedayo Adetifa** : la notification de sa mention nominale est toujours là, mais elle date d'avant le commentaire publié hier soir. **Rien de neuf, rien de dû.**
+- **Adam Abdullahi a publié un post** (`urn:li:activity:7498385006348689409`, 16 h, 23 réactions, **0 commentaire**) : il est en une de **Nature Africa** pour ses travaux sur l'**empreinte immunitaire SARS-CoV-2 en population nigériane non vaccinée**, avec un cadrage explicitement préparation pandémique (« *building sustained cohorts for biological materials, surveillance and laboratory infrastructure* »). **Cible de commentaire tout à fait valable, délibérément non traitée ce run** : un DM lui est déjà dû ce matin, et doubler les deux canaux le même jour vers le même contact sature. **À reprendre à un prochain créneau si le post est encore en fenêtre.**
+- **Dr. Jean Kaseya (*Director General @AfricaCDC*) publie sur le financement de la riposte Ebola** — une tribune commune dans Devex **cosignée avec quatre chefs d'État** (Ndayishimiye, Tshisekedi, Touadéra, Museveni), appelant à un financement plus rapide et plus transparent. **Écarté sans hésitation au titre de §10** : commenter sous une tribune politique cosignée par quatre présidents est exactement le terrain que la politique commune interdit, quel que soit l'angle. Son autre post du jour (inauguration d'une statue en l'honneur de Senait Fisseha) est hors sujet.
+- **Qadeer Ahsan** republie deux fois son post sur le drame du PIMS Islamabad. **Déjà écarté le 26/08, décision inchangée**, ne pas reproposer.
+- **WHO AFRO RC76 toujours en direct** (« Day 2 » en notifications, plus une intervention de **Tedros**). Continue d'alimenter les fils de décideurs africains cette semaine.
+- **Vos posts ont obtenu 487 impressions la semaine passée** (notification de statistiques). **333 vues de profil.**
+- **Winston Urio s'est abonné** — déjà écarté au tracker, statut inchangé.
+
+---
+
 ## 📅 Session linkedin-hwg-followup-check-2 — 26/08/2026 (17h, 2e des 2 créneaux après-midi)
 
 **Vérification double déclenchement** : aucune entrée `linkedin-hwg-followup-check-2` datée du 26/08 dans ce fichier ni dans `linkedin-contacts.md` à l'ouverture (dernière en date : 25/08 17h) → **premier déclenchement de cette routine aujourd'hui**. Les entrées du jour appartiennent à `linkedin-hwg-content-proposal` (8h35), `linkedin-hwg-monitoring` (9h) et `linkedin-hwg-followup-check` (13h), qui sont des runs intentionnellement distincts.

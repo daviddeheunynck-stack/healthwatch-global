@@ -1,6 +1,227 @@
 > 📦 **Archive** : le détail du 24 juin au 16 juillet 2026 a été déplacé dans [linkedin-contacts-archive-avant17juillet.md](linkedin-contacts-archive-avant17juillet.md) le 23/07 pour garder ce fichier léger.
 
 
+## 📅 Session linkedin-hwg-monitoring — 27/08/2026 (9h)
+
+**Vérification double déclenchement** : aucune entrée `linkedin-hwg-monitoring` datée du 27/08 dans ce fichier ni dans `content-log.md` à l'ouverture (dernière en date : 26/08 9h) → **premier déclenchement de cette routine aujourd'hui**.
+
+**Quotas à la clôture** : commentaires **1/7 publiés** · notes de connexion **1/7 envoyée** (sans note, blocage plateforme) · **DM 0/8 envoyés, 5 en file de validation** · suivis **8/7-10** · invitations reçues **2 acceptées** · follow-back dus **0**.
+
+**🖥️ Navigateur** : `_shared/browser-status.md` lu avant ouverture, dernière entrée **🟢 RÉTABLI (24/08 ~09h15)** → aucun bridage. `23c7ecdd-…` seul listé, sélectionné sans question (§7). Rien de neuf à y écrire. Deux anomalies techniques rencontrées, sans conséquence, détaillées en fin de section.
+
+---
+
+### 1️⃣ ✅ DEUX INVITATIONS REÇUES ACCEPTÉES — les deux pleinement dans le périmètre
+
+Les invitations reçues sont passées de 5 à 3. Les deux acceptées étaient **déjà au tracker comme suivies depuis le 26/08 (9h)** : c'est donc un suivi qui s'est transformé en relation à leur initiative, pas une découverte.
+
+- **Peace Mpakaniye** (`/in/peacempakaniye/`) — *Epidemiologist, Respiratory Infectious Disease Surveillance, Mortality Monitoring, Data Science*, **Sciensano** (institut national belge de santé publique) + Universiteit Antwerpen, 561 abonnés, **5 relations en commun dont Lorenzo Pezzoli**. Message de bienvenue **en file de validation** (DM 3 ci-dessous).
+- **Dr. Kaushik Sanyal** (`/in/dr-kaushik-sanyal-entomology/`) — *Public Health Entomologist, Scientist-C **ICMR-NIHR Bhubaneswar**, Vector-Borne Disease Research, Molecular Surveillance, One Health, Outbreak Investigation*, Bengale-Occidental, Inde, 1 502 abonnés, 3 relations en commun dont Anoop Velayudhan. Message de bienvenue **en file de validation** (DM 4 ci-dessous).
+
+⚠️ **Point de méthode, à retenir** : les boutons « Accepter » ont été ciblés par leur `aria-label` (`Accepter l'invitation de <nom>`), pas par leur position. C'est ce qui a permis de vérifier le destinataire dans le même appel que le clic. Acceptation confirmée à l'écran (« Peace fait désormais partie de vos relations. », « Dr. Kaushik fait désormais partie de vos relations. »).
+
+**3 invitations reçues restantes, toutes déjà tranchées, aucune nouvelle** : Alain BASHIZI (décision de David toujours en attente, ne pas répondre), Zachariah G. Houdari (hors sujet), OLAOLUWA PHILIP (**16e passage**, profil non rouvert).
+
+---
+
+### 2️⃣ ✅ CONNEXION 1/7 ENVOYÉE — **John Omari Baso**, SANS NOTE (blocage plateforme)
+
+`/in/john-omari-baso-84500b1b0/`, *Epidemiologist | Polio ADVAC | PVAC Alumni | **Vaccine Preventable Deseases Surveillance and Outbreak Response Specialist** | One Health Researcher*, **VillageReach**, **Goma, Nord-Kivu**, 4 410 abonnés, **53 relations en commun** dont Lorenzo Pezzoli et Johan Verheyden. Déjà suivi, 2e degré. Carry-over de 17h, point #6, traité.
+
+⚠️ **Le blocage plateforme du 23/07 s'est reproduit à l'identique** : la modale « Ajouter une note » renvoie « **Vos messages d'invitation personnalisés gratuits sont épuisés** » et propose Premium à la place de l'éditeur. Conformément à l'autorisation de David (23/07), invitation envoyée **sans note**, comptée dans le quota de 7/jour, même barre de pertinence. **Fait notable : c'était la première tentative de note personnalisée de la journée**, donc le compteur des 3 notes gratuites quotidiennes était déjà à zéro à l'ouverture — soit il ne se réinitialise plus quotidiennement comme confirmé par David le 13/07, soit LinkedIn a resserré. **À surveiller au prochain créneau.**
+
+**La note rédigée est conservée ici**, elle n'a pas pu partir mais elle a passé tout le dispositif :
+
+> Polio training next to VPD surveillance and outbreak response is a rare pairing. From outside, all I get of Nord-Kivu is a count someone signed off. Curious what never leaves. Would love to connect
+
+**QA: mécanique PASS (197 car. / 200, closer EN conforme) | relecteur REECRIRE (11) au 1er passage, corrigé | faits cités: aucun chiffre | registre du 27/08 | statut: invitation envoyée sans note le 27/08, note non transmise (blocage plateforme)**
+
+⭐ **Le relecteur a rendu un verdict que le contrôle mécanique ne pouvait pas rendre, et il avait raison.** La 1re version disait « *Your work is VPD surveillance in Goma* » : structure à deux fentes, transportable telle quelle à n'importe quel agent de surveillance à Juba, Kano ou Bangui en changeant la seule ville. C'est exactement le défaut visé par [[feedback_anti_template_check_structure_not_just_wording]], et **le grep anti-gabarit ne pouvait pas le voir** puisque la phrase n'existait nulle part dans l'historique. Réancrée sur ce qui l'individualise réellement (le couple polio / surveillance-et-riposte, propre à son intitulé).
+
+⚠️ **Piège sidebar évité de justesse, et il était pire que documenté.** Sur sa page de profil, trois boutons « Se connecter » sont apparus en colonne de droite. Leur `aria-label` a révélé qu'ils ne le concernaient pas du tout : « Inviter **Honorée MADESCLAIRE-YOHOU** », « Inviter **Laure Maestrello** », « Inviter **Jodie Ah-Sing** » — trois profils sans aucun rapport avec HWG (éducatrice thérapeute, cadre de santé, dentiste). **Un clic « au jugé » sur le premier bouton trouvé aurait envoyé une invitation à un inconnu hors périmètre, pas seulement une invitation sans note.** Le vrai bouton était dans le menu « Plus », vers `/preload/custom-invite/?vanityName=john-omari-baso-84500b1b0`. **Vérifier l'`aria-label` avant tout clic d'invitation, jamais la seule position.**
+
+**Envoi confirmé** : destinataire revérifié dans la modale (« Personnalisez l'invitation que vous envoyez à **John Omari Baso** ») dans le même appel JS que le clic, puis contrôle dans `/invitation-manager/sent/` — **« John Omari Baso — Envoyé aujourd'hui » en tête de liste, compteur passé de 96 à 97**.
+
+---
+
+### 3️⃣ ⭐ RECHERCHE ACTIVE — 8 suivis exécutés, fourchette 7-10 remplie
+
+Quota à l'ouverture : **0/7-10**. Deux recherches par mots-clés (« field epidemiology outbreak surveillance », puis « integrated disease surveillance response IDSR officer »), chaque candidat vérifié contre les 5 fichiers d'archive avant évaluation, et **identité revérifiée dans le même appel JS que le clic** (règle du 15/08), suivi confirmé à l'écran après coup (bouton passé à « Suivi ») pour les 8.
+
+| # | Profil | Pourquoi |
+|---|---|---|
+| 1 | **Yakoza (Leah Rita) Nyirenda** (`/in/yakoza-nyirenda-533a06224/`) | *Field Epidemiologist, Rapid and Outbreak Response, Disease Surveillance, DHIS2, IDSR*, **Ministry of Health of Zambia**, Chipata. Post propre de 2 mois sur les campagnes **nOPV transfrontalières avec le Malawi** après détection de poliovirus circulant. Contenu épidémio réel, ministère national |
+| 2 | **Rachel Silver** (`/in/rachel-silver-05679b102/`) | *Infectious Disease Epidemiologist & **Surveillance Advisor***, Washington DC, 413 abonnés, 3 mutuels. Relaie de la matière surveillance (appel PATH à consultants en surveillance des maladies infectieuses). Champ exactement sur cible |
+| 3 | **Aregai Tedella** (`/in/aregai-tedella-5121a839/`) | *MPH & MD, 25+ ans en soins, vaccination, **surveillance**, contrôle et élimination, urgences sanitaires*, **OMS**, Éthiopie. Suivi seul : activité propre dormante (5 mois), donc aucun hook, mais le parcours est plein cœur de cible |
+| 4 | **Yirga Assegu** (`/in/yirga-assegu-0624b9140/`) | *Program Manager, **Health Emergency Preparedness and Disease Surveillance Officer***, **Foreign, Commonwealth and Development Office**, Addis-Abeba, 1 416 abonnés, 8 mutuels. Côté bailleur, angle mort du réseau actuel |
+| 5 | **Dr khalid abubakar** (`/in/dr-khalid-abubakar-862872a0/`) | *Senior Program Manager **Routine Immunisation & Polio***, **CORE Group**, Lokoja, Nigéria, 4 401 abonnés, 14 mutuels. Le Nigéria porte 41 cas de polio dans notre propre registre. Suivi seul : son activité propre est du contenu motivationnel, pas de l'épidémio |
+| 6 | **salome solomon** (`/in/salome-solomon-123a3963/`) | *Immunization Specialist, **Data Manager**, M&E, **Integrated Disease Surveillance and Response Expert***, IQVIA, Nigéria. Relaie une matière directement sur cible : le prototype d'**early warning malaria lié aux inondations (FLLOW-M, Soudan du Sud)** présenté par HISP Tanzania à la conférence DHIS2 d'Oslo |
+| 7 | **Ayakeme (Udom) Ekpoudom** (`/in/drayakeme-ekpoudom/`) | *Senior Global Health **Surveillance** & Infectious Disease Specialist, Global Health Security, **IDSR**, Outbreak Preparedness & Response*, IQVIA, Nigéria, 804 abonnés. Post propre de 3 semaines sur One Health et l'antibiorésistance |
+| 8 | **Nadia Nisar** (`/in/nadia-nisar-711a3539/`) | *Strengthening of **Integrated Disease Surveillance and Response (IDSR)** Implementation*, **UK Health Security Agency**, Pakistan, 758 abonnés. Active (commentaires de fond il y a 1 semaine). Le Pakistan porte une ligne choléra active dans notre registre |
+
+**4 candidats écartés, et le motif est le même trois fois sur quatre** : un intitulé qui sonne juste, une activité qui ne passe pas la barre. C'est précisément le cas que le SKILL demande de filtrer (« pas juste un titre de poste qui sonne bien »).
+- **Abiodun Kolapo** (`/in/dr-abiodun-kolapo/`) — *Public Health Strategist & Field Epidemiologist, **Africa CDC***, Nigéria. **13 abonnés, 12 relations**, activité entièrement composée d'annonces de certifications (SQL sur Simplilearn) et de posts « career growth ». Écarté.
+- **Njukang Ernest Nkem** (`/in/njukang-ernest-nkem-4b0010264/`) — *Public Health Professional, Epidemiology, Disease Surveillance & Outbreak Investigations*, Cameroun. **20 relations, 23 abonnés**, activité = commentaires « Interested » / « Greetings sir, I'm interested » sous des offres d'emploi. Écarté.
+- **Carolyn Nzula** (`/in/carolynnzula/`) — *Public Health Officer, **Recent Graduate***, Mombasa. Activité = félicitations et une question sur un cours. Sous la barre. Écartée.
+- **Mwenda David Thambura EVH** (`/in/mwenda-david-thambura-evh-b9a2152b3/`) — *Executive Director at **Mwenda AI Labs***, Nairobi. Contenu de gouvernance de l'IA, **hors périmètre épidémio**. Écarté.
+
+**3 candidats déjà traités, aucune action, aucun quota consommé** (statut vérifié au tracker avant de les reproposer, §3) : **Desalegn Belay Takele** (déjà suivi le 21/08), **Boniface Ambani** (invitation déjà envoyée le 08/08), **George Sie Williams** (déjà connecté + welcome DM le 30/07).
+
+**🆕 Repéré au passage, non traité** : **ARSLAN AHMED SALAM** (`/in/arslan-ahmed-salam-6175b237/`), *Public Health Researcher, FELTP Frontline graduate, Health security fellow*, **National Institute of Public Health** Pakistan, **7 273 abonnés, 23 relations en commun**. **Déjà relation de 1er degré, aucun message jamais échangé.** Ce n'est pas une connexion récente, donc la règle du message de bienvenue ne s'applique pas d'office — mais le profil est excellent et le fil est vide. **Bon candidat DM pour un prochain créneau.**
+
+---
+
+### 4️⃣ 👥 RÉSEAU — 385 abonnés, 0 follow-back dû
+
+**385 abonnés** (contre 382 hier soir, **+3**), **97 invitations envoyées en attente** (96 avant l'envoi Baso de ce run, donc une invitation antérieure est sortie de la file entre-temps).
+
+Les trois nouveaux abonnés en tête de la liste « Abonnés » s'expliquent intégralement par des actions déjà comptées et portent tous la mention « Suivi » : **Dr. Kaushik Sanyal** et **Peace Mpakaniye** (contrepartie des deux connexions acceptées ce run) et **Abdoulaye Touré** (déjà suivi). **Aucun follow-back dû.**
+
+Rappel du carry-over, invitations envoyées les plus anciennes toujours en attente : Ihekweazu, SAIDOUNI et Linda Esso (24/08, **5e jour**), Baba Ceesay et Hawa BAH (4 jours). Rappel utile : trésor Ndaye avait accepté **au 7e jour**.
+
+### 5️⃣ 🔒 CINQ DM EN FILE DE VALIDATION — aucun envoyé, conformément à la règle du 23/07
+
+Les cinq ont été rédigés une fois, passés une fois au registre de faits, une fois au contrôle mécanique et une fois au relecteur indépendant. **Aucune boucle de réécriture**, conformément au dispositif révisé du 26/08 : là où un relecteur a signalé un point réel, il a été corrigé une fois puis le brouillon a été montré tel quel. La comparaison croisée des brouillons entre eux (séquences de 4 mots) est passée sur les cinq, **aucune formule partagée**.
+
+⚠️ **Deux relecteurs indépendants, sur deux brouillons distincts, ont attrapé le même défaut de fond** : décrire les sources de HWG comme étant exclusivement des autorités sanitaires. Détail et conséquence dans la section « Point remonté à David » ci-dessous — **ce n'est pas une coquille de rédaction, c'est la question `faq5` non tranchée qui remonte par la porte des messages sortants.**
+
+---
+
+#### 🔒 DM 1 — **Adam Abdullahi** (EN, fil actif, **AVEC CTA**, hors quota froid)
+
+*Infectious Disease Science | Epidemic Intelligence & Health Systems | Health Development.* Relation de 1er degré depuis le 22/08.
+
+**Fil relu intégralement (§4)** : 2 messages, recopiés verbatim dans `tmp/thread-adam-abdullahi-27.txt`. *Langue du fil = EN ; langue du brouillon = EN* (paire confirmée mécaniquement, `draftLang: en` / `threadLang: en`).
+
+**Son message, reçu ce matin à 06:03, verbatim :**
+> Thank you and - this is an important distinction.
+>
+> I think the transfer can reach the counting, but not automatically. HIV programmes provide not only laboratories and trained staff, but also systems for linking data, following populations and interpreting results against defined denominators.
+>
+> Outbreak measurement is harder because both the cases detected and the population at risk are uncertain. The reported count reflects what surveillance captured, not necessarily the outbreak's true scale.
+>
+> The gap closes only when HIV infrastructure is deliberately adapted for epidemic intelligence including sentinel surveillance, linked data and methods to estimate missed infections. Otherwise, the transfer stops at people and platforms. That distinction is where preparedness ultimately succeeds or fails. All in all, i think alot of work remains to be done to make even experts in the field see its a relatively interconnected space.
+
+**CTA : présent, et c'est la règle qui l'impose ici.** Un aller-retour de fond complet a eu lieu (notre question du 22/08, sa réponse argumentée de ce matin), donc §3 demande le CTA. **Anti-répétition vérifiée sur le fil rendu** : notre message du 22/08 nomme HealthWatch Global mais **n'a jamais envoyé le lien ni l'essai** dans ce fil. Le CTA part d'un point déjà présent chez lui (« methods to estimate missed infections »), pas plaqué.
+
+**L'angle** : il dit que le compte publié reflète ce que la surveillance a capté, pas l'ampleur réelle. Or cette distinction-là ne voyage pas : le chiffre arrive comme un nombre unique, sans rien qui dise laquelle des deux choses il est. Le monde du VIH a réglé ça par une **convention d'affichage** — publier le déclaré et le modélisé côte à côte, et traiter l'écart comme le résultat plutôt que comme une gêne. Les bulletins de flambée en publient un seul. **Le transférable serait donc la convention, pas l'infrastructure — et elle ne coûte rien en laboratoires.**
+
+**QA: mécanique PASS (0 blocker, 1030 car., 4 paragraphes) | relecteur ENVOYER (12 PASS) | faits cités: aucun chiffre épidémiologique ; seul « 14 » (essai), sourcé `pricing.faq4_a` | registre du 27/08 | statut: en file de validation**
+
+⚠️ **Un faux positif mécanique documenté a été levé sur pièce, et la cause est instructive.** Le 1er passage a rendu `context.cta-repeat` (« argumentaire déjà envoyé plus tôt dans ce fil »). C'était faux : le script lisait **mes propres notes de contexte**, que j'avais écrites en bas du fichier de fil (« *Le lien healthwatch-global.com et l'essai Pro n'ont JAMAIS été envoyés dans ce fil* »), et y voyait des traces du CTA. Retirer ces annotations du `threadFile` a fait disparaître le blocage sans changer une lettre du brouillon. **C'est le défaut d'outillage « annotations d'un `threadFile` analysées comme du fil » signalé depuis plusieurs jours, avec cette fois sa cause exacte et son remède : ne jamais écrire de note dans un `threadFile`, il ne doit contenir que le fil.** Correction portée dans `docs/outreach-qa.md` ce run.
+
+> That distinction, captured versus true scale, is the one that never travels. A figure arrives here as a single number with nothing attached to say which of the two it is, and no reader can recover the difference from the number alone.
+>
+> Which makes me think your comparison cuts deeper than capacity. HIV reporting settled this by putting two numbers side by side, the reported and the modelled, and treating the distance between them as the finding rather than as an embarrassment. Outbreak bulletins publish one. So the convention might be the transferable part, and unlike sentinel sites it costs nothing in laboratories.
+>
+> Worth a look if you are curious what that absence looks like at scale: healthwatch-global.com carries what I pull together, and a plain account keeps the Pro features 14 days with no card taken. Nearly every active line is a lone reported figure, no companion estimate anywhere.
+>
+> So is there a reason the estimation habit does not cross over, or has outbreak reporting simply never been asked to carry it?
+
+---
+
+#### 🔒 DM 2 — **Celestin Nzanzu Mudogo** (EN, fil actif, **SANS CTA**, hors quota froid)
+
+*Chercheur, travaux sur la schistosomiase génitale féminine (FGS) à Mabalako, RDC.* Relation de 1er degré depuis le 16/08.
+
+**Fil relu intégralement (§4)** : 10 messages depuis le 16/08, recopiés verbatim dans `tmp/thread-celestin-27.txt`. *Langue du fil = EN ; langue du brouillon = EN.*
+
+⭐ **Le dernier message est une pièce jointe seule, sans une ligne de texte** : « *Celestin Nzanzu Mudogo — Professional Biosketch.pdf*, 128 Ko », envoyée ce matin à 07:54. Le fil s'était pourtant refermé le 19/08 sur « *Ok. Thanks for your arguments. Stay in touch* ».
+
+🔒 **Le PDF n'a délibérément pas été téléchargé ni ouvert.** Télécharger un fichier reçu d'un tiers sort du périmètre d'une routine automatique, et son contenu n'est de toute façon pas nécessaire pour répondre honnêtement.
+
+**Conduite retenue : §3, « sollicitation personnelle de l'interlocuteur ».** Un biosketch envoyé sans un mot, après une clôture polie, ressemble beaucoup à une approche professionnelle — mais **ressembler n'est pas dire**, et la règle interdit de prêter une intention. Le brouillon fait donc les deux choses que la politique demande : il **ne présume rien** (« *I am not sure what you have in mind with it* ») et il **ne promet rien**, en disant tout de suite ce que David n'a pas à offrir, plutôt que de le laisser attendre.
+
+**CTA : volontairement absent.** Le lien et l'essai Pro ont **déjà été envoyés dans ce fil le 17/08 à 10:26**. §3 interdit de resservir le même argumentaire.
+
+**QA: mécanique PASS (0 blocker, 586 car., 3 paragraphes) | relecteur ENVOYER (12 PASS) | faits cités: aucun chiffre | registre du 27/08 | statut: en file de validation**
+
+> Thanks Celestin, the biosketch came through.
+>
+> I am not sure what you have in mind with it, so rather than guess I will say plainly where I stand. HealthWatch Global is one person. There is no research programme here, no funding line and no position to offer. If that is what the document was pointed at, better you hear it today than after waiting on me.
+>
+> If it was meant as something else, say so and I will answer properly. Either way I would still like to read the FGS brief once it exists, particularly the part where you name which of the two asks you are putting to the HMIS side.
+
+---
+
+#### 🔒 DM 3 — **Peace Mpakaniye** (EN, **message de bienvenue**, premier contact, SANS CTA)
+
+*Epidemiologist | Respiratory Infectious Disease Surveillance | Mortality Monitoring | Data Science*, **Sciensano** + Universiteit Antwerpen.
+
+**Pas de fil : premier contact**, après acceptation ce matin de l'invitation qu'elle a envoyée. *Langue du profil et des posts = EN ; langue du brouillon = EN.*
+
+**Le hook, verbatim de son propre post (il y a 3 mois)** :
+> Yesterday, I presented our poster at Sciensano 's Symposium on Diagnostic and Surveillance of Infectious Diseases (SSID) in Brussels. Our work focused on uncovering the burden of disease associated with Human Metapneumovirus (hMPV) through the Belgian Severe Acute Respiratory Infections Network.
+
+**L'angle** : le hMPV n'a **aucune ligne** dans ce que HWG porte, et la vérification est nette — les 17 maladies du registre ne le contiennent pas. Ce n'est pas que la charge soit absente, c'est que rien à son sujet n'est jamais **déclaré comme flambée** : elle vit entièrement dans des réseaux sentinelles. Deux instruments regardent la même saison respiratoire et leurs sorties ne se touchent jamais.
+
+**QA: mécanique PASS (0 blocker, 823 car., 3 paragraphes) | relecteur REECRIRE (4) au 1er passage, corrigé — 11 PASS sur 12 | faits cités: « 17 maladies », sourcé sur la table `outbreaks` | registre du 27/08 | statut: en file de validation**
+
+⭐ **Le relecteur a confirmé la moitié de l'angle et démoli l'autre.** Il a vérifié que « hMPV has no line in it » est **exact** (liste des 17 maladies produite à l'appui). Mais la 1re version décrivait les sources comme « *outbreak bulletins as they are published by Africa CDC, PAHO, ECDC and the WHO regions* », ce qui présente ces quatre-là comme la totalité : le registre produit en compte **29 hôtes de source**, dont des agences nationales et des médias. Corrigé sans trancher la question de fond (voir « Point remonté à David »).
+
+> Peace, thanks for the invitation.
+>
+> Your SSID poster is what made me look twice, hMPV burden surfaced through the Belgian SARI network. I come at this from the opposite side. HealthWatch Global tracks declared outbreaks across 17 diseases, assembled out of whatever institutions, national agencies and press put on the public record, and hMPV has no line in it. Not because the burden is absent, but because nothing about it is ever declared an outbreak, so it stays inside networks like the one you work through.
+>
+> Which means we are both watching the same respiratory season on instruments whose outputs never touch. What I cannot work out from my side is whether a SARI network figure is ever intended to reach a national bulletin at all, or whether the two were built for different questions and were never going to meet.
+
+---
+
+#### 🔒 DM 4 — **Dr. Kaushik Sanyal** (EN, **message de bienvenue**, premier contact, SANS CTA)
+
+*Public Health Entomologist | Scientist-C, ICMR-NIHR, Bhubaneswar | Vector-Borne Disease Research | Molecular Surveillance | One Health | Outbreak Investigation.*
+
+**Pas de fil : premier contact**, après acceptation ce matin de l'invitation qu'il a envoyée. *Langue du profil = EN ; langue du brouillon = EN.*
+
+⚠️ **Aucun post à lui.** Les 20 items de sa page d'activité sont **tous** des republications. Le hook est donc pris sur l'intitulé de profil, ce qui est assumé et écrit noir sur blanc dans le contexte fourni au relecteur plutôt que masqué — il a validé le procédé (« *le hook est pris sur un élément vérifiable du profil, pas inventé* »).
+
+**L'angle** : la surveillance moléculaire posée à côté de l'entomologie de santé publique dans un seul poste. Ce qui arrive jusqu'à nous pour l'Inde est un **compte de cas de dengue**, national, après coup, déjà arbitré par quelqu'un ; ce que produit son côté du travail porte sur le **vecteur**. Les deux n'arrivent jamais au même endroit. Un compte de cas dit qu'une flambée a eu lieu ; l'entomologie est vraisemblablement la seule chose qui aurait pu dire qu'elle allait avoir lieu.
+
+**QA: mécanique PASS (0 blocker, 823 car., 3 paragraphes) | relecteur REECRIRE (4) au 1er passage, corrigé — 11 PASS sur 12 | faits cités: aucun chiffre ; l'existence de la ligne dengue/Inde vérifiée par le relecteur (`active: true`, 22 938 cas, non citée dans le texte) | registre du 27/08 | statut: en file de validation**
+
+⚠️ **Deux faux positifs mécaniques levés avant le relecteur**, tous deux dus au fichier de contexte et non au brouillon : `context.language` annonçait « fil = fr, brouillon = en » parce que mes notes de profil étaient rédigées en français alors qu'il n'existe aucun fil ; et une formule recyclée (« far end of that chain ») a été reformulée. **Même famille de cause que le faux positif du DM 1 : le script juge le fichier de contexte comme s'il était le fil.**
+
+⭐ **Le relecteur a attrapé, indépendamment de celui de Peace, exactement le même défaut de provenance des sources** : « reading whatever health authorities choose to release » excluait à tort les 7 hôtes non institutionnels sur 29. Corrigé.
+
+> Kaushik, thanks for the invitation.
+>
+> Molecular surveillance sitting beside public health entomology in a single post is the part of your title I keep looking at. I work the published end of it, on HealthWatch Global, reading whatever ends up on the public record, so what reaches me for India is a dengue case count. National, after the fact, already agreed on by someone. What your side of the work produces is about the vector, and I have never seen the two arrive anywhere together.
+>
+> The gap seems consequential rather than merely untidy. A case count tells you an outbreak happened; entomology is presumably the one thing that could have told you it was about to. Does any of that ever cross into what a country notifies, or does vector data stay in its own literature and never reach the layer that gets published?
+
+---
+
+#### 🔒 DM 5 — **Rodrigo Olave Hurtado** (EN, **message de bienvenue**, premier contact, SANS CTA)
+
+*Veterinarian, MSc, PGDip | Infectious Disease Epidemiology & Zoonoses*, **LSHTM**, chilien. Relation de 1er degré depuis le 26/08 (13h), **aucun message jamais échangé** — carry-over de 17h, point #5, traité.
+
+**Pas de fil : premier contact.** *Langue du profil et de la majorité de ce qu'il partage = EN ; langue du brouillon = EN.* Le relecteur a été explicitement interrogé sur ce choix, malgré une republication en espagnol et sa nationalité chilienne, et l'a jugé défendable (« *la republication espagnole est d'un tiers, pas un texte de lui ; elle ne suffit pas à faire basculer la langue du canal* »).
+
+⚠️ **Aucun post à lui non plus** — 5 items, tous des republications. **Mais la sélection est elle-même le signal, et c'est là que le hook a été trouvé** : le hantavirus y revient **deux fois**, dans l'alerte sanitaire du MINSAL chilien relayée depuis Cecilia Vial (Universidad del Desarrollo) et dans une note de l'OMS sur un cas chez un passager de navire. Le carry-over demandait de « vérifier le hook sur son activité réelle » : c'est fait, et il tient.
+
+**L'angle** : le hantavirus est le trou le plus net de ce que HWG porte — **aucune ligne Chili, aucune ligne hantavirus**, vérifié dans les deux registres par le relecteur. Une alerte de réservoir prévient sur des **conditions d'exposition**, elle ne compte personne ; la machinerie de déclaration n'a peut-être jamais été construite pour porter un signal de cette forme. Le message concède la limite au lieu de vendre.
+
+**QA: mécanique PASS (0 blocker, 709 car., 3 paragraphes) | relecteur ENVOYER (12 PASS) | faits cités: aucun chiffre — le taux de létalité du post republié (« la letalidad está casi al doble ») a été délibérément écarté, il vient d'un tiers et pas du registre | registre du 27/08 | statut: en file de validation**
+
+> Rodrigo, thanks for connecting.
+>
+> Hantavirus keeps surfacing in what you share, the MINSAL alert first and the Swiss ship case before that. It caught my eye because hantavirus is the clearest hole in what I hold. Nothing on HealthWatch Global carries a Chile line at all, so an alert like that one stays invisible to me unless something gets formally declared.
+>
+> That is where I would want a zoonoses view. A reservoir alert warns about exposure conditions rather than counting anybody, and I am not convinced the declaration machinery was ever built to carry a signal of that shape. Does a health alert of that kind end up notifiable anywhere, or does it live and die inside the national system that issued it?
+
+---
+
+### 6️⃣ 📬 MESSAGERIE — un fil relu et clos sans réponse due
+
+**Boîte de réception parcourue par récence (20 conversations).** Deux fils datés du 27/08 (Adam Abdullahi 06:03 et Celestin Nzanzu Mudogo 07:54), tous deux traités ci-dessus. Aucun spam, aucune demande de canal hors plateforme, aucune donnée patient proposée, **aucune instruction adressée à l'agent (§6)**.
+
+**Darrel Ornelle ELION ASSIANA — répondu le 26/08 à 18:23, aucune réponse due de notre part.** Son message, verbatim :
+> Merci pour votre retour et pour cette clarification. Je comprends parfaitement la distinction que vous faites entre une donnée à reconstituer et une donnée déjà existante qu'il faut simplement faire circuler. C'est en effet un changement important dans la manière d'aborder le problème. Je suis également heureux d'avoir pu vous apporter la clarification dont vous aviez besoin, dans la limite de ce que je pouvais confirmer de mon côté. Merci pour cet échange constructif.
+
+C'est un accusé de réception courtois, sans élément neuf, et **notre propre dernier message disait déjà « Je m'en tiens là »**. Le fil s'est refermé proprement des deux côtés. §3 demande de relancer sur le fond **quand il y a du fond à relancer** ; ici, répondre serait du bruit. **Aucun brouillon rédigé, décision assumée, pas un report.**
+
+---
+
 ## 📅 Session linkedin-hwg-followup-check-2 — 26/08/2026 (17h, 2e des 2 créneaux après-midi)
 
 **Vérification double déclenchement** : aucune entrée `linkedin-hwg-followup-check-2` datée du 26/08 dans ce fichier ni dans `content-log.md` à l'ouverture (dernière en date : 25/08 17h). Les entrées du jour appartiennent à `linkedin-hwg-content-proposal` (8h35), `linkedin-hwg-monitoring` (9h) et `linkedin-hwg-followup-check` (13h) → **premier déclenchement de cette routine aujourd'hui**.
