@@ -2450,3 +2450,116 @@ Toutes en réponse dans le fil d'origine (`replyToMessageId`), objet « Re: … 
 **Traitement — précédent THL Finlande (25/08) appliqué** : un accusé automatique compte comme une réponse reçue, pas de nouvelle relance sur ce contact. **Kärt Sõber (Terviseamet) est donc à exclure de tout futur cycle de relance**, comme THL. La boîte de secours `julia.geller@terviseamet.ee` n'est **pas** une piste de prospection neuve — c'est une redirection d'absence, pas une adresse fonctionnelle publiée par l'institution ; ne pas la retenir sans vérification indépendante sur source officielle.
 
 Observation transmise par David en session (capture d'écran Gmail), hors balayage automatisé de cette routine — consignée ici pour que le prochain run `daily-relance-check-healthwatch` en tienne compte.
+
+---
+
+## 📇 Nouveaux contacts trouvés — 2026-08-27, run automatique `daily-institutional-prospecting-healthwatch`
+
+**10 contacts neufs, 10 brouillons créés entre 06:22:10 et 06:22:45 UTC, aucun envoyé.**
+
+### 🚦 Frein de file — non déclenché, file de prospection à zéro
+
+`list_drafts` appelé **deux fois au démarrage** (vue complète puis métadonnées, consigne du 16/08 sur l'instabilité de l'outil) : **1 seul brouillon en file**, un brouillon **vide** créé par David à 04:53 UTC (aucun destinataire, corps `<br>`), étranger à cette routine. File de prospection : **0**.
+
+**Les 10 brouillons de la veille sont partis — envoi par David, pas le bug du connecteur.** Discriminant du 16/08 appliqué, `search_threads in:sent newer_than:2d` :
+
+| | Constat |
+|---|---|
+| **Écart création → envoi** | Créés le 26/08 à **06:21** UTC, envoyés à partir de **12:27:31** — plus de **6 heures**, pas la même seconde |
+| **Portée** | **Le lot entier** (10 envois de 12:27:31 à 12:29:31, ordre de relecture continu, plus les relances J+10 à 10:58-10:59) |
+
+➡️ **Relecture humaine, aucune escalade** — ni commit d'alerte, ni notification, ni mention d'incident.
+
+### ✅ Les 10 contacts
+
+| Institution | Pays/Région | Segment | Contact | Email | Source | Vérifié | Brouillon |
+|---|---|---|---|---|---|---|---|
+| Ministère de la Santé — Djibouti | Djibouti / **EMRO** | Gouvernement | — (boîte du ministère) | `contact@sante.gouv.dj` | `sante.gouv.dj/contact` | ✅ HTTP 200, en clair, UA Chrome | oui — `r-1180414078564713314` |
+| Ministry of Health — South Sudan | Soudan du Sud / AFRO | Gouvernement | — (boîte du ministère) | `info@moh.gov.ss` | `moh.gov.ss` + `/contact-us/` | ✅ HTTP 200 sur les deux pages, en clair | oui — `r4757865752683227050` |
+| Ministry of Health — Samoa | Samoa / WPRO | Gouvernement | — (boîte « enquiries ») | `enquiries@health.gov.ws` | `health.gov.ws/contact-us/` | ✅ HTTP 200, en clair | oui — `r1697352961398523701` |
+| OPS/PAHO — Bureau pays El Salvador | Salvador / AMRO | Gouvernement/OMS | — | `comunicacionesslv@paho.org` | `paho.org/en/paho-country-office-media-contacts` | ✅ page officielle relue **ce run** | oui — `r-7915674102313222863` |
+| OPS/PAHO — Bureau pays Venezuela | Venezuela / AMRO | Gouvernement/OMS | — | `comunicacionespwrven@paho.org` | idem | ✅ page officielle relue **ce run** | oui — `r-349764167740566384` |
+| Institut Pasteur de Côte d'Ivoire | Côte d'Ivoire / AFRO | Académique | — (boîte institutionnelle) | `info.ipci@pasteur.ci` | `pasteur.ci` (page d'accueil) | ✅ HTTP 200, en clair | oui — `r-7645406263513554207` |
+| AIE — Associazione Italiana di Epidemiologia | Italie / EURO | Académique (société savante) | — (boîte de la présidence) | `presidente.aie@epidemiologia.it` | `epidemiologia.it` (bloc « Contatti email ») | ✅ HTTP 200, en clair | oui — `r293320283898536219` |
+| NDPH — Nuffield Department of Population Health, Oxford | Royaume-Uni / EURO | Académique | — (boîte « enquiries ») | `enquiries@ndph.ox.ac.uk` | `ndph.ox.ac.uk` (page d'accueil) | ✅ HTTP 200, en clair | oui — `r3376180928931216130` |
+| MAP International | États-Unis / global | ONG | — (boîte générale) | `map@map.org` | `map.org/contact/` | ✅ HTTP 200, en clair, sous le bloc siège + téléphone principal | oui — `r-4032531311776611217` |
+| World Hope International | États-Unis / global | ONG | — (boîte générale) | `info@worldhope.org` | `worldhope.org/contact/` | ✅ HTTP 200, en clair | oui — `r-7499775801003338899` |
+
+### 🔍 Anti-doublon — grep par domaine ET par organisation, contact par contact
+
+Consigne du 23/08. Résultats sur les 2 452 lignes du journal :
+
+| Contact | grep domaine | grep organisation | Verdict |
+|---|---|---|---|
+| Djibouti MoH | `sante.gouv.dj` → **0** | `Djibouti` → 6 | ⚠️ **levé** : les 6 occurrences sont **INSPD Djibouti** (institut, écarté le 12/08 — `inspdj.net` ne publie qu'un `filler@godaddy.com`), **IGAD** (secrétariat intergouvernemental basé à Djibouti, contacté le 17/08 — autre organisation) et l'échec ministériel du 23/08. **Neuf** |
+| South Sudan MoH | `moh.gov.ss` → **0** | `South Sudan\|Soudan du Sud` → 2 | ⚠️ **levé** : les 2 occurrences sont les **pays d'intervention** de GOAL et de CMMB, pas une prise sud-soudanaise. **Neuf** |
+| Samoa MoH | `health.gov.ws` → **0** | `Samoa` → 8 | ⚠️ **levé** : toutes portent sur le **bureau OMS Samoa** (`wpwsmwr@who.int`, contacté le 23/08) et sur l'échec ministériel du 09/08. **Organisation différente. Neuf** |
+| PAHO Salvador | `comunicacionesslv` → 3 | `Salvador` → 10 | ⚠️ **levé** : les 3 occurrences sont les **listes de réserve** des 22, 23 et 26/08 (« utilisables telles quelles »). Aucune ligne de tableau. **Neuf** |
+| PAHO Venezuela | `comunicacionespwrven` → 2 | `Venezuela` | ⚠️ **levé** : idem, réserves seules (INHRR écarté le 20/08, Cloudflare). **Neuf** |
+| Institut Pasteur CI | `pasteur.ci` → **0** | `Pasteur de Côte\|IPCI` → **0** | **Neuf** (l'INSP-CI et le CSRS, déjà contactés, sont des organisations distinctes) |
+| AIE Italie | `epidemiologia.it` → **0** | `Associazione Italiana` → **0** | **Neuf** (les 2 hits bruts sur `AIE` étaient des coïncidences dans des mots français) |
+| NDPH Oxford | `ndph` → **0** | `Nuffield\|Oxford` → 1 | ⚠️ **levé** : l'occurrence est l'**Oxford Pandemic Sciences Institute**, écarté le 05/08 (jamais contacté), **département différent**. Faîtière Université d'Oxford à **1** dans ce lot. **Neuf** |
+| MAP International | `map.org` → **0** | `MAP International` → 2 | ⚠️ **levé** : écartée le 10/08 pour « formulaire ou boîte hors sujet » — voir écarts levés ci-dessous. **Neuf** |
+| World Hope | `worldhope` → **0** | `World Hope` → 1 | ⚠️ **levé** : écartée le 11/08 pour adresses obfusquées — voir écarts levés. **Neuf** |
+
+**Vérification LinkedIn** (`linkedin-contacts.md`) — 2 recoupements trouvés, aucun bloquant, **tous deux signalés à David** :
+- **Bouh Abdi Khaireh, MD PhD** — *Coordinator Global Fund/PMU, Ministère de la Santé, Djibouti*. Connexion **acceptée le 24/08**, mais le journal indique noir sur blanc « **n'a reçu aucun message** », message de bienvenue toujours en file. Pas de conversation active → l'exclusion ne s'applique pas, et le brouillon vise la **boîte générale du ministère**, pas lui. ⚠️ À ne pas doubler dans la même semaine.
+- **George Awzenio Legge** — *EPI Director at National MOH, Soudan du Sud*. Statut au 20/08 : « **suivi, pas de connexion** (aucun hook honnête disponible) ». Jamais de message. Même raisonnement.
+
+### 🔓 Quatre écarts antérieurs levés — le gisement signalé hier a tenu ses promesses
+
+La cible n° 1 laissée par le run du 26/08 était : « **le gisement "écarts levés" est le plus rentable du moment**, retester les listes de non-retenus avant de chercher du neuf ». **4 des 10 prises de ce run en viennent.**
+
+1. **Ministère de la Santé de Djibouti** — écarté le 23/08 (« Irak / Soudan / Djibouti MoH : pages servies sans aucune adresse, ou injoignables »). `sante.gouv.dj/contact` répond aujourd'hui **HTTP 200** et publie `contact@sante.gouv.dj` en clair. ⭐ **C'est la première prise EMRO en direct depuis 10 runs** — voir ci-dessous.
+2. **Ministry of Health Samoa** — écarté le 09/08 (« aucun email publié »). `health.gov.ws` publie aujourd'hui `enquiries@health.gov.ws`, visible en page d'accueil et sur `/contact-us/`. Le Pacifique n'était atteint que par des instituts (PNGIMR) et des bureaux OMS/SPC : **premier ministère insulaire du Pacifique retenu**.
+3. **MAP International** — écartée le 10/08 (« ne publie qu'un formulaire ou une boîte hors sujet — dons, juridique, commandes »). Le motif est tombé : `map@map.org` figure aujourd'hui sous le bloc du siège avec le téléphone principal, **boîte générale et non boîte de dons**, label vérifié dans le texte rendu.
+4. **World Hope International** — écartée le 11/08 (« adresses obfusquées »). `worldhope.org/contact/` publie aujourd'hui `info@worldhope.org` **et** `donorservices@worldhope.org` en texte brut ; retenue la boîte générale, pas la boîte dons — 9e application de la nuance du 08/08 (« masqué à la lecture automatique ≠ absent du site »).
+
+### 🟢 EMRO débloquée au 10e run — et par un ministère, pas par l'OMS
+
+« **EMRO reste le trou structurel du canal** » était signalé depuis le 21/08, reconduit chaque jour depuis. Ce run le lève, et il vaut de noter **par quoi il ne passe pas** :
+
+- **`emro.who.int` reste mort.** Les pages contact des bureaux pays ont été retestées ce run sur 6 pays (Égypte, Soudan, Irak, Yémen, Syrie, Pakistan) : toutes rendent **HTTP 200 avec un corps « WHO EMRO - 404 Error »**. C'est un **soft-404**, exactement le profil signalé le 23/08 — le code de statut ne dit rien, seul le corps rendu tranche. La piste est à considérer comme **définitivement close** côté site régional, pas à retester run après run.
+- **L'entrée s'est faite par le domaine gouvernemental national** (`sante.gouv.dj`), après échec du site régional. Cinquième confirmation de la piste du 05/08, dans sa variante inverse cette fois : quand l'institut ou l'échelon régional ne publie rien, **le ministère peut publier**.
+
+### ⚖️ Répartition et plafonds
+
+- **Segments** : Gouvernement/OMS **5** (Djibouti, Soudan du Sud, Samoa, PAHO ×2), Académique **3** (Institut Pasteur CI, AIE, NDPH Oxford), ONG **2** (MAP International, World Hope). Les trois segments sont servis.
+- **Plafond de concentration par faîtière (règle du 25/08)** : **PAHO à 2 sur 10, exactement au plafond.** Les deux réserves étaient nommément désignées par le run d'hier ; elles sont désormais consommées, la réserve PAHO est **épuisée** pour les boîtes « comunicaciones ». **Oxford à 1** (le Pandemic Sciences Institute reste disponible, jamais contacté).
+- **Géographie** : **EMRO 1** ⭐, AFRO 2, WPRO 1, AMRO 2, EURO 2, global 2. **Trois pays jamais approchés : Djibouti, Soudan du Sud, Samoa** (l'Italie et la Côte d'Ivoire l'étaient déjà par d'autres organisations).
+- **Deux organisations américaines** (MAP International, World Hope International) : entités sans lien, le plafond « employeur/faîtière » ne s'applique pas.
+
+### ❌ Écartés ce run, avec le motif
+
+- **INLASA Bolivie** — ⚠️ **doublon rattrapé par le grep, pas par la lecture.** Candidat retenu jusqu'au contrôle : `inlasalapazbolivia@gmail.com` passait la règle du 25/08 sur les boîtes grand public (publiée sur `inlasa.gob.bo`, seule adresse de l'institut). Le grep par organisation a rendu **8 occurrences**, dont la ligne de tableau du **24/08** : **déjà retenu, déjà en brouillon `r3256118430995148838`, déjà envoyé.** Remplacé par le bureau OPS Venezuela. *C'est exactement le cas que la consigne du 23/08 vise : la lecture intégrale ne l'aurait pas vu, le grep l'a vu.*
+- **Bureaux pays OMS EMRO** (Égypte, Soudan, Irak, Yémen, Syrie, Pakistan) — **soft-404** sur `emro.who.int/countries/*/contact-us.html` (voir ci-dessus).
+- **Direct Relief** (3e tentative) — page contact relue, **HTTP 200 : aucune adresse**, uniquement téléphones, adresses postales et un portail de support. Formulaire seul.
+- **CBM** — page contact lue, HTTP 200 : trois adresses postales et des téléphones, **aucune adresse email**.
+- **Terre des hommes** — 403 en lecture nue ; **relue avec User-Agent Chrome, HTTP 200 : zéro adresse, zéro `mailto:`**. Formulaire seul.
+- **Institut Pasteur du Cambodge** (4e tentative depuis le 02/08) — le 403 tombe avec un UA Chrome (HTTP 200, 140 Ko), mais la page sert ses adresses en **`/cdn-cgi/l/email-protection`** : même critère de rejet que MSH le 26/08.
+- **Cordaid** (13 adresses) et **PSI** (3) — **masquées Cloudflare** sur la page contact officielle.
+- **Muslim Aid**, **Sightsavers** (3e échec), **Americares** (403), **Heart to Heart International**, **Humanity & Inclusion**, **Medical Teams International** — connexion refusée, 403, ou adresses masquées.
+- **Plan International** — page contact lue, HTTP 200 : seules `Safeguarding.Unit@` et `childprotection@` sont publiées, **hors sujet épidémiologie** (même critère que les boîtes de scolarité ou de presse).
+- **FIND (Genève)**, **Ministère de la Santé du Qatar**, **Guyana MoH** (3e échec), **Université de Khartoum**, **Fudan SPH** — pages servies HTTP 200, **aucune adresse dans le DOM**.
+- **Niger DSRE** — les trois adresses trouvées (`doumakwawa@gmail.com`, `dj_issif@yahoo.fr`, `mzaneidou@yahoo.fr`) sont des **boîtes grand public nominatives de titulaires de poste**, publiées uniquement dans des PDF tiers — **et l'une des deux sources est ReliefWeb, interdite d'usage ici**. Triple motif d'écart.
+- **Sociedad Española de Epidemiología** — `see@geyseco.es`, mais `geyseco.es` **figure déjà** au journal : doublon écarté avant rédaction.
+- **NIH Sudan / fmoh.gov.sd** (boucle de redirections), **MoHSS Namibie** (4e échec, ECONNREFUSED), **INRSP Mauritanie** (redirection morte), **Institut Pasteur de Bangui** (404), **Timor-Leste**, **Vanuatu**, **NCIRS Australie**, **Bureau of Public Health Suriname**, **HIPH Alexandrie**, **MoH Koweït**, **MOHAP Émirats**, **Autorité de santé publique saoudienne**, **JUST Jordanie**, **SPH Téhéran** — injoignables, 404 ou aucune adresse publiée.
+
+### 📊 Compteurs
+
+**Totaux au 2026-08-27 : 300 contacts prospectés, 290 envoyés.** Les 10 de ce run restent en brouillon. **Profondeur de file : 11 brouillons** (les 10 de ce run + le brouillon vide de David, hors périmètre).
+
+**Bounces du jour : aucun.** Balayage `from:mailer-daemon` / `postmaster` / `Delivery Status Notification` / `Undeliverable` / `Undelivered Mail` / `Mail delivery failed`, `newer_than:2d`, **corbeille incluse** : **zéro fil**. Les 10 envois de prospection et les relances partis hier n'ont produit aucun rejet. *Bilan cumulé non retotalisé ici — porteur unique `daily-relance-check-healthwatch`, règle du 16/08.*
+
+**Conformité de forme, vérifiée par `list_drafts` en vue complète après création** : les 10 portent `labelIds: ["DRAFT"]`, **aucun n'est passé en `SENT`** (contrôle du bug d'envoi instantané du connecteur : **négatif**). Aucun `htmlBody` fourni ; celui régénéré par Gmail ne contient que `<div dir="auto">` et des `<br/>`, **zéro balise `<a>`**. **Aucun domaine avec un `.` littéral** : « healthwatch-global dot com » ×6, « point com » ×2, « punto com » ×2. Objets **tous ≤ 55 caractères** (mesurés), le plus long étant « Una regla de clasificación RSI que quisiera someterles ». Les 10 se terminent par **une question explicite** avant la signature « David Deheunynck — HealthWatch Global ».
+
+**Anti-gabarit : 10 accroches de formes rhétoriques distinctes.** Constat géographique de carrefour (Djibouti), charge de lecture supprimée plutôt qu'ajoutée (Soudan du Sud), **aveu d'une limite du produit en ouverture** (Samoa — les signaux du Pacifique arrivent en retard), asymétrie national/comparé (OPS Salvador), **invitation explicite à critiquer la règle de classification** (OPS Venezuela), asymétrie paillasse/bulletin (Institut Pasteur CI), **rôle de carrefour plutôt que d'employeur + langue non couverte annoncée d'entrée** (AIE), déplacement du tableau de bord vers l'archive sourcée qui est derrière (NDPH Oxford), fenêtre logistique avant le pic (MAP), **ce que l'outil ne fait pas, dit avant ce qu'il fait** (World Hope). Aucune ne reprend le schéma d'une autre.
+
+**Langues** : **FR** pour Djibouti et l'Institut Pasteur de Côte d'Ivoire (organisations manifestement francophones), **ES** pour les deux bureaux OPS/PAHO, **EN** pour les 5 autres — **y compris l'AIE**, dont le message annonce d'entrée que l'italien n'est **pas** une des cinq langues du produit (précédents ABRASCO 24/08, Angola 09/08, Mozambique 20/08).
+
+**⚠️ Cibles à prioriser au prochain run :**
+1. **Le gisement « écarts levés » reste le plus rentable** — 4 prises sur 10 ce run, 3 sur 10 hier, **sans aucune recherche neuve**. Les listes de non-retenus des runs 02/08 → 21/08 sont loin d'être épuisées ; celles du 05/08 et du 06/08 n'ont été que partiellement retestées.
+2. **`emro.who.int` : arrêter de le retester.** Soft-404 confirmé sur 6 pays ce run. EMRO passe désormais **par les domaines gouvernementaux nationaux** — Djibouti l'a prouvé. Prochains candidats du même profil : Irak, Yémen, Syrie, Palestine, Bahreïn.
+3. **Réserve PAHO « comunicaciones » épuisée.** Restent au journal `pane-mail@paho.org` (Panama) et `nic-email@paho.org` (Nicaragua), notées le 22/08 comme **plus solides** que les boîtes « comunicaciones » — à préférer si un bureau PAHO revient dans un lot.
+4. **Oxford Pandemic Sciences Institute** — écarté le 05/08, jamais recontacté, et la faîtière Oxford n'est qu'à 1. À retester avec la méthode « écart levé ».
+5. **TEPHINET** — arbitrage David toujours en attente (doublon de domaine avec le Task Force for Global Health). Non retenue pour la 2e fois, comme le 26/08.
