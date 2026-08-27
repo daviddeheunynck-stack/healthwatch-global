@@ -79,9 +79,13 @@ Les trois nouveaux abonnés en tête de la liste « Abonnés » s'expliquent int
 
 Rappel du carry-over, invitations envoyées les plus anciennes toujours en attente : Ihekweazu, SAIDOUNI et Linda Esso (24/08, **5e jour**), Baba Ceesay et Hawa BAH (4 jours). Rappel utile : trésor Ndaye avait accepté **au 7e jour**.
 
-### 5️⃣ 🔒 CINQ DM EN FILE DE VALIDATION — aucun envoyé, conformément à la règle du 23/07
+### 5️⃣ ✅ CINQ DM ENVOYÉS ET CONFIRMÉS — sur ordre explicite de David (« publie »), tapé en session interactive
 
 Les cinq ont été rédigés une fois, passés une fois au registre de faits, une fois au contrôle mécanique et une fois au relecteur indépendant. **Aucune boucle de réécriture**, conformément au dispositif révisé du 26/08 : là où un relecteur a signalé un point réel, il a été corrigé une fois puis le brouillon a été montré tel quel. La comparaison croisée des brouillons entre eux (séquences de 4 mots) est passée sur les cinq, **aucune formule partagée**.
+
+**Mis en file ce matin (statut « en file de validation »), David a demandé un double-check en session, puis a tapé explicitement « publie » — les cinq ont été envoyés dans la foulée, chacun avec destinataire revérifié dans l'en-tête du composeur juste avant l'envoi (§5.4) et confirmation a posteriori via le dernier message du fil.**
+
+⚠️ **Piège de composeur rencontré et documenté ce run** : la bulle flottante ouverte depuis un profil ("Nouveau message") s'est révélée peu fiable — accessibilité tree et sélecteurs DOM habituels ne l'atteignaient pas de façon stable, un clic a même déclenché une navigation vers le profil au lieu de taper dans le champ. **Contournement qui a tenu à tous les coups : `linkedin.com/messaging/thread/new/`, taper le nom dans `.msg-connections-typeahead__search-field`, sélectionner le résultat exact, puis utiliser l'éditeur standard `.msg-form__contenteditable`.** Le bandeau de consentement cookies, jusqu'ici jamais cliqué, a dû être fermé (« Refuser ») ce run car il interceptait les clics sur les résultats de recherche du composeur, bloquant la sélection du destinataire — option la plus respectueuse de la vie privée retenue.
 
 ⚠️ **Deux relecteurs indépendants, sur deux brouillons distincts, ont attrapé le même défaut de fond** : décrire les sources de HWG comme étant exclusivement des autorités sanitaires. Détail et conséquence dans la section « Point remonté à David » ci-dessous — **ce n'est pas une coquille de rédaction, c'est la question `faq5` non tranchée qui remonte par la porte des messages sortants.**
 
@@ -106,7 +110,7 @@ Les cinq ont été rédigés une fois, passés une fois au registre de faits, un
 
 **L'angle** : il dit que le compte publié reflète ce que la surveillance a capté, pas l'ampleur réelle. Or cette distinction-là ne voyage pas : le chiffre arrive comme un nombre unique, sans rien qui dise laquelle des deux choses il est. Le monde du VIH a réglé ça par une **convention d'affichage** — publier le déclaré et le modélisé côte à côte, et traiter l'écart comme le résultat plutôt que comme une gêne. Les bulletins de flambée en publient un seul. **Le transférable serait donc la convention, pas l'infrastructure — et elle ne coûte rien en laboratoires.**
 
-**QA: mécanique PASS (0 blocker, 1030 car., 4 paragraphes) | relecteur ENVOYER (12 PASS) | faits cités: aucun chiffre épidémiologique ; seul « 14 » (essai), sourcé `pricing.faq4_a` | registre du 27/08 | statut: en file de validation**
+**QA: mécanique PASS (0 blocker, 1030 car., 4 paragraphes) | relecteur ENVOYER (12 PASS) | faits cités: aucun chiffre épidémiologique ; seul « 14 » (essai), sourcé `pricing.faq4_a` | registre du 27/08 | statut: ENVOYÉ ET CONFIRMÉ 10:09, sur ordre explicite de David (« publie »)**
 
 ⚠️ **Un faux positif mécanique documenté a été levé sur pièce, et la cause est instructive.** Le 1er passage a rendu `context.cta-repeat` (« argumentaire déjà envoyé plus tôt dans ce fil »). C'était faux : le script lisait **mes propres notes de contexte**, que j'avais écrites en bas du fichier de fil (« *Le lien healthwatch-global.com et l'essai Pro n'ont JAMAIS été envoyés dans ce fil* »), et y voyait des traces du CTA. Retirer ces annotations du `threadFile` a fait disparaître le blocage sans changer une lettre du brouillon. **C'est le défaut d'outillage « annotations d'un `threadFile` analysées comme du fil » signalé depuis plusieurs jours, avec cette fois sa cause exacte et son remède : ne jamais écrire de note dans un `threadFile`, il ne doit contenir que le fil.** Correction portée dans `docs/outreach-qa.md` ce run.
 
@@ -134,7 +138,7 @@ Les cinq ont été rédigés une fois, passés une fois au registre de faits, un
 
 **CTA : volontairement absent.** Le lien et l'essai Pro ont **déjà été envoyés dans ce fil le 17/08 à 10:26**. §3 interdit de resservir le même argumentaire.
 
-**QA: mécanique PASS (0 blocker, 586 car., 3 paragraphes) | relecteur ENVOYER (12 PASS) | faits cités: aucun chiffre | registre du 27/08 | statut: en file de validation**
+**QA: mécanique PASS (0 blocker, 586 car., 3 paragraphes) | relecteur ENVOYER (12 PASS) | faits cités: aucun chiffre | registre du 27/08 | statut: ENVOYÉ ET CONFIRMÉ 10:32 (sur ordre explicite de David « publie »). ⭐ Celestin a répondu 👍 à 10:21, avant même l'envoi de ce message-ci — le fil reste clos, rien de plus dû.**
 
 > Thanks Celestin, the biosketch came through.
 >
@@ -155,7 +159,7 @@ Les cinq ont été rédigés une fois, passés une fois au registre de faits, un
 
 **L'angle** : le hMPV n'a **aucune ligne** dans ce que HWG porte, et la vérification est nette — les 17 maladies du registre ne le contiennent pas. Ce n'est pas que la charge soit absente, c'est que rien à son sujet n'est jamais **déclaré comme flambée** : elle vit entièrement dans des réseaux sentinelles. Deux instruments regardent la même saison respiratoire et leurs sorties ne se touchent jamais.
 
-**QA: mécanique PASS (0 blocker, 823 car., 3 paragraphes) | relecteur REECRIRE (4) au 1er passage, corrigé — 11 PASS sur 12 | faits cités: « 17 maladies », sourcé sur la table `outbreaks` | registre du 27/08 | statut: en file de validation**
+**QA: mécanique PASS (0 blocker, 823 car., 3 paragraphes) | relecteur REECRIRE (4) au 1er passage, corrigé — 11 PASS sur 12 | faits cités: « 17 maladies », sourcé sur la table `outbreaks` | registre du 27/08 | statut: ENVOYÉ ET CONFIRMÉ 10:28, sur ordre explicite de David (« publie »)**
 
 ⭐ **Le relecteur a confirmé la moitié de l'angle et démoli l'autre.** Il a vérifié que « hMPV has no line in it » est **exact** (liste des 17 maladies produite à l'appui). Mais la 1re version décrivait les sources comme « *outbreak bulletins as they are published by Africa CDC, PAHO, ECDC and the WHO regions* », ce qui présente ces quatre-là comme la totalité : le registre produit en compte **29 hôtes de source**, dont des agences nationales et des médias. Corrigé sans trancher la question de fond (voir « Point remonté à David »).
 
@@ -177,7 +181,7 @@ Les cinq ont été rédigés une fois, passés une fois au registre de faits, un
 
 **L'angle** : la surveillance moléculaire posée à côté de l'entomologie de santé publique dans un seul poste. Ce qui arrive jusqu'à nous pour l'Inde est un **compte de cas de dengue**, national, après coup, déjà arbitré par quelqu'un ; ce que produit son côté du travail porte sur le **vecteur**. Les deux n'arrivent jamais au même endroit. Un compte de cas dit qu'une flambée a eu lieu ; l'entomologie est vraisemblablement la seule chose qui aurait pu dire qu'elle allait avoir lieu.
 
-**QA: mécanique PASS (0 blocker, 823 car., 3 paragraphes) | relecteur REECRIRE (4) au 1er passage, corrigé — 11 PASS sur 12 | faits cités: aucun chiffre ; l'existence de la ligne dengue/Inde vérifiée par le relecteur (`active: true`, 22 938 cas, non citée dans le texte) | registre du 27/08 | statut: en file de validation**
+**QA: mécanique PASS (0 blocker, 823 car., 3 paragraphes) | relecteur REECRIRE (4) au 1er passage, corrigé — 11 PASS sur 12 | faits cités: aucun chiffre ; l'existence de la ligne dengue/Inde vérifiée par le relecteur (`active: true`, 22 938 cas, non citée dans le texte) | registre du 27/08 | statut: ENVOYÉ ET CONFIRMÉ 10:32, sur ordre explicite de David (« publie »)**
 
 ⚠️ **Deux faux positifs mécaniques levés avant le relecteur**, tous deux dus au fichier de contexte et non au brouillon : `context.language` annonçait « fil = fr, brouillon = en » parce que mes notes de profil étaient rédigées en français alors qu'il n'existe aucun fil ; et une formule recyclée (« far end of that chain ») a été reformulée. **Même famille de cause que le faux positif du DM 1 : le script juge le fichier de contexte comme s'il était le fil.**
 
@@ -201,7 +205,7 @@ Les cinq ont été rédigés une fois, passés une fois au registre de faits, un
 
 **L'angle** : le hantavirus est le trou le plus net de ce que HWG porte — **aucune ligne Chili, aucune ligne hantavirus**, vérifié dans les deux registres par le relecteur. Une alerte de réservoir prévient sur des **conditions d'exposition**, elle ne compte personne ; la machinerie de déclaration n'a peut-être jamais été construite pour porter un signal de cette forme. Le message concède la limite au lieu de vendre.
 
-**QA: mécanique PASS (0 blocker, 709 car., 3 paragraphes) | relecteur ENVOYER (12 PASS) | faits cités: aucun chiffre — le taux de létalité du post republié (« la letalidad está casi al doble ») a été délibérément écarté, il vient d'un tiers et pas du registre | registre du 27/08 | statut: en file de validation**
+**QA: mécanique PASS (0 blocker, 709 car., 3 paragraphes) | relecteur ENVOYER (12 PASS) | faits cités: aucun chiffre — le taux de létalité du post republié (« la letalidad está casi al doble ») a été délibérément écarté, il vient d'un tiers et pas du registre | registre du 27/08 | statut: ENVOYÉ ET CONFIRMÉ 10:36, sur ordre explicite de David (« publie »)**
 
 > Rodrigo, thanks for connecting.
 >
