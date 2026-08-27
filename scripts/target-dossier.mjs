@@ -51,7 +51,8 @@ async function fetchAll(table, select, query = "") {
 // Comptes de test et adresses personnelles — memes conventions que
 // scripts/daily-marketing-check.mjs, pour ne pas les compter comme des cibles.
 const EXCLUS = new Set([
-  "david.deheunynck@gmail.com", "e2e@healthwatch-global.com", "davy_skye@yahoo.fr",
+  "david.deheunynck@gmail.com", "david.deheunynck@yahoo.fr",
+  "e2e@healthwatch-global.com", "davy_skye@yahoo.fr",
   "clarence_skye@yahoo.fr", "r.endangrukmanams@gmail.com", "elyan.delaunay@proton.me",
   "mobile-nox-test@healthwatch-global.com",
 ]);

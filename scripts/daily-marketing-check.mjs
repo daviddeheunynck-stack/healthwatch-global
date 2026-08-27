@@ -24,6 +24,12 @@ async function get(path) {
 
 const EXCLUDED_EMAILS = new Set([
   "david.deheunynck@gmail.com",
+  // 2e adresse du fondateur. Ajoutee le 27/08 apres le test de bout en bout du
+  // parcours de paiement du 26/08 : c'est la seule souscription a avoir une vraie
+  // carte attachee, donc Stripe la debitera de 29 EUR le 09/09 et produira une
+  // facture amount_paid>0 que le point 2 de la routine remonterait comme
+  // "premier vrai paiement". Deja porteuse d'une facture de test du 30/05.
+  "david.deheunynck@yahoo.fr",
   "e2e@healthwatch-global.com",
   "davy_skye@yahoo.fr",
   "clarence_skye@yahoo.fr",
