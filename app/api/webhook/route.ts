@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse, after } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import Stripe from "stripe";
 import * as Sentry from "@sentry/nextjs";
@@ -18,6 +18,14 @@ const BOM        = String.fromCharCode(65279);
 const clean      = (v: string | undefined) => (v || "").replace(new RegExp("^" + BOM), "").trim();
 const BREVO_KEY  = clean(process.env.BREVO_API_KEY);
 
+// A bare fetch failure (DNS blip, Brevo TLS hiccup — the exact shape of the
+// 2026-08-26 "TypeError: fetch failed" on Morgan Otita's churn email) used to
+// be logged to Sentry and dropped: no retry, so a transient network error
+// permanently lost the notification with nothing to catch it. 3 attempts with
+// a short backoff absorbs that class of failure; only a Brevo outage lasting
+// the full ~1.5s window still ends up in Sentry, same as before.
+const SEND_MAX_ATTEMPTS = 3;
+
 async function sendTransactionalEmail(
   to: string,
   subject: string,
@@ -25,20 +33,27 @@ async function sendTransactionalEmail(
   tag: string
 ) {
   if (!BREVO_KEY) return;
-  try {
-    await fetch("https://api.brevo.com/v3/smtp/email", {
-      method: "POST",
-      headers: { "api-key": BREVO_KEY, "Content-Type": "application/json" },
-      body: JSON.stringify({
-        sender:      { name: "HealthWatch Global", email: "alerts@healthwatch-global.com" },
-        to:          [{ email: to }],
-        subject,
-        htmlContent: html,
-      }),
-    });
-  } catch (err) {
-    console.error(`[webhook] ${tag} email failed:`, err);
-    Sentry.captureException(err, { tags: { route: "stripe-webhook", tag } });
+  for (let attempt = 1; attempt <= SEND_MAX_ATTEMPTS; attempt++) {
+    try {
+      await fetch("https://api.brevo.com/v3/smtp/email", {
+        method: "POST",
+        headers: { "api-key": BREVO_KEY, "Content-Type": "application/json" },
+        body: JSON.stringify({
+          sender:      { name: "HealthWatch Global", email: "alerts@healthwatch-global.com" },
+          to:          [{ email: to }],
+          subject,
+          htmlContent: html,
+        }),
+      });
+      return;
+    } catch (err) {
+      if (attempt === SEND_MAX_ATTEMPTS) {
+        console.error(`[webhook] ${tag} email failed after ${SEND_MAX_ATTEMPTS} attempts:`, err);
+        Sentry.captureException(err, { tags: { route: "stripe-webhook", tag } });
+        return;
+      }
+      await new Promise((r) => setTimeout(r, attempt * 500));
+    }
   }
 }
 
@@ -487,14 +502,18 @@ export async function POST(req: NextRequest) {
             }
           }
 
-          // Send churn email (fire-and-forget)
+          // Send churn email (fire-and-forget) — after() keeps this run past
+          // the webhook's own response instead of racing the platform tearing
+          // the invocation down mid-retry (see sendTransactionalEmail).
           if (userEmail && ["starter", "pro", "team", "enterprise"].includes(cancelledPlan)) {
             const churnProfile = await getUserProfile(userId);
             const locale = churnProfile?.locale ?? "en";
-            sendChurnEmail(userEmail, cancelledPlan, locale).catch((e) => {
-              console.error("[webhook] churn email:", e);
-              Sentry.captureException(e, { tags: { event_type: "customer.subscription.deleted", user_id: userId } });
-            });
+            after(() =>
+              sendChurnEmail(userEmail, cancelledPlan, locale).catch((e) => {
+                console.error("[webhook] churn email:", e);
+                Sentry.captureException(e, { tags: { event_type: "customer.subscription.deleted", user_id: userId } });
+              })
+            );
           }
         }
         break;
@@ -511,10 +530,12 @@ export async function POST(req: NextRequest) {
 
         const failedProfile = await getUserProfile(userId);
         if (failedProfile) {
-          sendPaymentFailedEmail(failedProfile.email, failedProfile.locale).catch((e) => {
-            console.error("[webhook] payment_failed email:", e);
-            Sentry.captureException(e, { tags: { event_type: "invoice.payment_failed", user_id: userId } });
-          });
+          after(() =>
+            sendPaymentFailedEmail(failedProfile.email, failedProfile.locale).catch((e) => {
+              console.error("[webhook] payment_failed email:", e);
+              Sentry.captureException(e, { tags: { event_type: "invoice.payment_failed", user_id: userId } });
+            })
+          );
         }
         break;
       }
@@ -591,10 +612,12 @@ export async function POST(req: NextRequest) {
         const hasPaymentMethod = await hasUsablePaymentMethod(sub);
         await syncPaymentMethodFlag(supabase, userId, sub);
 
-        sendTrialEndingEmail(trialProfile.email, plan, trialProfile.locale, trialEnd, hasPaymentMethod).catch((e) => {
-          console.error("[webhook] trial_ending email:", e);
-          Sentry.captureException(e, { tags: { event_type: "customer.subscription.trial_will_end", user_id: userId } });
-        });
+        after(() =>
+          sendTrialEndingEmail(trialProfile.email, plan, trialProfile.locale, trialEnd, hasPaymentMethod).catch((e) => {
+            console.error("[webhook] trial_ending email:", e);
+            Sentry.captureException(e, { tags: { event_type: "customer.subscription.trial_will_end", user_id: userId } });
+          })
+        );
 
         console.log(`[webhook] trial_will_end → email sent (plan ${plan}, ends ${trialEnd}, hasPaymentMethod: ${hasPaymentMethod})`);
         break;
