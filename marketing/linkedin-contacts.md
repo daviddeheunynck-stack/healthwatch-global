@@ -7,7 +7,9 @@
 
 **🖥️ Navigateur** : `_shared/browser-status.md` lu avant ouverture, dernière entrée **🟢 RÉTABLI (24/08 ~09h15)** → aucun bridage. Rien de neuf à y écrire.
 
-**Quotas à la clôture, cumulés sur les 3 sessions du jour + la session interactive** : commentaires **4/7 publiés** · notes de connexion **1/7** · **DM 7/8 envoyés**, **2 nouveaux brouillons en file de validation** · suivis **9/7-10, fourchette remplie** · invitations reçues **2 acceptées**.
+**Quotas à la clôture, cumulés sur les 3 sessions du jour + la session interactive** : commentaires **4/7 publiés** · notes de connexion **1/7** · **DM 9 envoyés au total** (quota froid **6/8** — le DM John Omari Baso ci-dessous y compte ; Rodrigo est une réponse en fil actif, hors quota froid comme les 2 DM de 15h) · suivis **9/7-10, fourchette remplie** · invitations reçues **2 acceptées**.
+
+**⚠️ Mise à jour du même run, 18h05 : les deux DM ci-dessous ont été ENVOYÉS, sur ordre explicite de David tapé en session (« envoie les DM »).** Double-check refait à froid avant envoi (voir ci-dessous chaque DM) : les deux fils relus à la source (pas depuis les notes), l'un revérifié caractère pour caractère contre le fil réel, l'autre confirmé comme un vrai premier message (aucun fil antérieur). La fiche polio RDC citée dans le DM John a été relue une 2e fois en base, inchangée depuis la 1ère vérification. Un `context.too-soon`/`ngram.history` massif est réapparu au re-contrôle mécanique sur les deux brouillons après leur archivage dans ce fichier : **auto-référence confirmée par grep** (chaque phrase-cible n'existe qu'à l'endroit où je l'ai moi-même archivée), pas une vraie répétition — piège déjà documenté le 27/08 matin.
 
 ---
 
@@ -26,15 +28,15 @@
 
 ---
 
-### 2️⃣ 🔒 DEUX DM EN FILE DE VALIDATION
+### 2️⃣ ✅ DEUX DM — ENVOYÉS ET CONFIRMÉS À 18h05, sur ordre explicite de David
 
-Les deux ont été rédigés une fois, passés une fois au registre de faits, une fois au contrôle mécanique et une fois au relecteur indépendant, conformément au dispositif révisé du 26/08. **Aucun n'a été envoyé.** Comparaison croisée des deux brouillons entre eux (séquences de 4 mots) : **aucune formule partagée**.
+Les deux ont été rédigés une fois, passés une fois au registre de faits, une fois au contrôle mécanique et une fois au relecteur indépendant, conformément au dispositif révisé du 26/08. Comparaison croisée des deux brouillons entre eux (séquences de 4 mots) : **aucune formule partagée**. **Mis en file de validation à la clôture du run, puis David a tapé « double check les DMs » en session interactive** : double-check refait à froid (fils relus à la source, fiche polio RDC revérifiée en base, inchangée), puis **« envoie les DM »** — validation explicite au sens de `_shared/report-conventions.md`.
 
 ⭐ **Les deux relecteurs ont trouvé des défauts réels, et l'un d'eux a évité une affirmation fausse sur notre propre produit, réfutable en un clic par le destinataire.**
 
 ---
 
-#### 🔒 DM 1 — **Rodrigo Olave Hurtado** (`/in/rodrigo-olave-hurtado/`), EN, fil actif, **SANS CTA**, hors quota froid
+#### ✅ DM 1 — **Rodrigo Olave Hurtado** (`/in/rodrigo-olave-hurtado/`), ENVOYÉ ET CONFIRMÉ 18h05, EN, fil actif, **SANS CTA**, hors quota froid
 
 *Veterinarian, MSc, PGDip | Infectious Disease Epidemiology & Zoonoses*, LSHTM, chilien basé au Royaume-Uni.
 
@@ -51,7 +53,7 @@ Les deux ont été rédigés une fois, passés une fois au registre de faits, un
 
 **L'angle** : il vient de dire que le compte n'est pas le bon champ pour un signal de réservoir. Réponse honnête depuis notre position : le contrôle qualité de HWG traite un zéro comme probablement une erreur, mais **seulement pour huit maladies inscrites d'avance et au-dessus d'un plancher de cas** — et **le hantavirus n'en fait pas partie**. Un zéro y serait donc invisible, encore moins lu comme un résultat. Puis une question qu'il est placé pour trancher : la positivité en réservoir sort-elle sur un calendrier récurrent quelque part, ou seulement dans un article en fin de saison ?
 
-**QA: mécanique FAIL (1 blocker résiduel, `context.too-soon`, faux positif documenté — réponse à un message entrant reçu 40 min plus tôt, explicitement hors plafond de relance ; 1236 car., 3 paragraphes) | relecteur REECRIRE (1, 4, 5) au 1er passage, les 3 corrigés | faits cités: aucun chiffre du registre ; description du contrôle qualité vérifiée dans `app/api/cron/data-quality/route.ts` | registre du 27/08 | statut: en file de validation**
+**QA: mécanique FAIL (1 blocker résiduel, `context.too-soon`, faux positif documenté — réponse à un message entrant reçu 40 min plus tôt, explicitement hors plafond de relance ; 1236 car., 3 paragraphes) | relecteur REECRIRE (1, 4, 5) au 1er passage, les 3 corrigés | faits cités: aucun chiffre du registre ; description du contrôle qualité vérifiée dans `app/api/cron/data-quality/route.ts` | registre du 27/08 | statut: ENVOYÉ ET CONFIRMÉ 18h05, sur ordre explicite de David (« envoie les DM ») après double-check refait en session**
 
 🔴 **Le relecteur a réfuté ma description de mon propre code, et le point visait exactement ce destinataire.** Le 1er brouillon disait qu'une ligne à zéro décès « sur une maladie qui tue habituellement » est signalée pour revue. **Faux au sens strict** : seules 8 maladies nommées sont testées (`ebola|marburg`, `nipah`, `mers`, `measles`, `leishmaniasis`, `cholera`, `yellow fever`, `diphtheria`), chacune au-dessus d'un plancher de cas, hors lignes `is_seed`. **Le hantavirus n'y est pas** — j'offrais donc ce mécanisme comme preuve à un spécialiste des zoonoses qui parle d'hantavirus depuis le début du fil. Corrigé, et l'argument est devenu plus fort : c'est précisément l'absence du hantavirus dans la liste qui fait le point.
 
@@ -65,9 +67,11 @@ Les deux ont été rédigés une fois, passés une fois au registre de faits, un
 >
 > Where I get stuck is a step before standardisation. Pathogen, reservoir, place, time is a shape I could hold. What I do not know is whether it gets published on a calendar. Case counts reach me because bulletins appear on a schedule whether or not anything moved. Does reservoir positivity or trap success come out on any recurring basis in the countries doing the trapping, or does it mostly surface in a paper once a season has been analysed?
 
+**Publication confirmée** : destinataire « Rodrigo Olave Hurtado » revérifié dans le même écran que le clic sur Envoyer. Texte relu par zoom avant envoi (début et fin), identique au brouillon validé (1236 caractères, 3 paragraphes, 0 tiret cadratin). Confirmation a posteriori : éditeur vidé, message visible en fin de fil (5e message du fil, commence par « David Deheunynck »).
+
 ---
 
-#### 🔒 DM 2 — **John Omari Baso** (`/in/john-omari-baso-84500b1b0/`), EN, message de bienvenue, **SANS LIEN**, quota froid 6/8 s'il est envoyé
+#### ✅ DM 2 — **John Omari Baso** (`/in/john-omari-baso-84500b1b0/`), ENVOYÉ ET CONFIRMÉ 18h05, EN, message de bienvenue, **SANS LIEN**, quota froid 6/8
 
 *Epidemiologist | Polio ADVAC | PVAC Alumni | Vaccine Preventable Diseases Surveillance and Outbreak Response Specialist | One Health Researcher*, **VillageReach, Goma, Nord-Kivu (RDC)**, 4 412 abonnés, 500+ relations, 53 relations en commun. **Connexion envoyée sans note ce matin, acceptée aujourd'hui.**
 
@@ -75,7 +79,7 @@ Les deux ont été rédigés une fois, passés une fois au registre de faits, un
 
 **L'angle** : la ligne polio RDC que porte HWG vient du point hebdomadaire du GPEI et ne nomme qu'une province, **Haut-Lomami**, à ~1 500 km de Goma. La question porte sur la **règle de listage** du point hebdomadaire, pas sur la détection au Nord-Kivu.
 
-**QA: mécanique FAIL (1 blocker résiduel, `ngram.history` sur « data as of 18 august », formulation littérale de la source GPEI, faux positif de la classe « citation obligatoire d'une source » ; 788 car., 3 paragraphes) | relecteur REECRIRE (4, 7, 9, 11) au 1er passage, les 4 corrigés | faits cités: Polio / RD Congo, 32 cas AFP arrêtés au 18/08, cVDPV2, 5 cas nouveaux à Haut-Lomami — vérifiés en lecture directe sur la base de production ce run | registre du 27/08 | statut: en file de validation**
+**QA: mécanique FAIL (1 blocker résiduel, `ngram.history` sur « data as of 18 august », formulation littérale de la source GPEI, faux positif de la classe « citation obligatoire d'une source » ; 788 car., 3 paragraphes) | relecteur REECRIRE (4, 7, 9, 11) au 1er passage, les 4 corrigés | faits cités: Polio / RD Congo, 32 cas AFP arrêtés au 18/08, cVDPV2, 5 cas nouveaux à Haut-Lomami — vérifiés en lecture directe sur la base de production ce run, **revérifiés une 2e fois avant envoi, ligne inchangée** | registre du 27/08 | statut: ENVOYÉ ET CONFIRMÉ 18h05, sur ordre explicite de David (« envoie les DM ») après double-check refait en session**
 
 🔴🔴 **Le relecteur a réfuté DEUX versions successives d'une affirmation sur notre propre produit, et la seconde erreur portait sur la province du destinataire.**
 - **1re version** : « *No province, no indication of how any of them were found* ». **Les deux sont faux** — la fiche nomme Haut-Lomami et dit **AFP**, c'est-à-dire précisément le mode de détection que le message allait lui demander.
@@ -92,6 +96,10 @@ Les deux ont été rédigés une fois, passés une fois au registre de faits, un
 > I built HealthWatch Global, which gathers active outbreaks out of public health bulletins so they sit on one map. The polio row it carries for DRC comes from the GPEI weekly update, WHO HQ data as of 18 August: 32 confirmed AFP cases since the start of the year, cVDPV2, with five newly reported cases flagged in Haut-Lomami. Haut-Lomami is the only province that row names.
 >
 > The listing rule is what escapes me. Does a province appear in that weekly point only when it has newly reported cases that week, or does a fuller provincial breakdown sit behind it that the public update does not carry? It changes what I should be writing on the line, and you are far better placed to answer that than I am.
+
+**Publication confirmée** : ouvert depuis le profil (`/in/john-omari-baso-84500b1b0/`, 1er degré, VillageReach, 4412 abonnés), destinataire « John Omari Baso » visible dans la pastille et l'en-tête au moment du clic sur Envoyer. **Composeur flottant non lisible en JS (2 iframes sur la page) : vérification faite par zoom visuel** (début et fin du texte relus séparément, identiques au brouillon validé) plutôt que par comparaison de chaîne — méthode de repli documentée pour ce type de fenêtre. Confirmation a posteriori : éditeur vidé, message affiché dans le fil avec icône de statut « lu/envoyé » et horodatage « il y a 1 min ».
+
+⚠️ **Note technique nouvelle** : le composeur de bienvenue ouvert **depuis un profil** (bouton « Message ») rend dans une iframe (`about:blank` puis un cadre LinkedIn), contrairement à la messagerie complète où `[contenteditable]` est directement interrogeable en JS. Pour ce type de fenêtre, vérifier par `zoom`/`screenshot` (début + fin du texte) plutôt que par lecture JS du DOM. Un clic sur l'icône d'agrandissement de la bulle a ouvert par erreur une modale photo de la bannière du profil (aucune conséquence, refermée aussitôt) — cliquer plus précisément sur l'icône d'expansion si on la retente, ou s'en passer et vérifier par zoom comme fait ici.
 
 ---
 
