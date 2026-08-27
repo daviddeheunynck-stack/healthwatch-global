@@ -2,6 +2,127 @@
 
 Archive de tout le contenu créé. Mise à jour à chaque session.
 
+## 📅 Session linkedin-hwg-followup-check-2 — 27/08/2026 (17h, 2e des 2 créneaux après-midi)
+
+**Vérification double déclenchement** : aucune entrée `linkedin-hwg-followup-check-2` datée du 27/08 dans ce fichier ni dans `linkedin-contacts.md` à l'ouverture (dernière en date : 26/08 17h). Les entrées du 27/08 en tête appartiennent à `linkedin-hwg-monitoring` (9h), `linkedin-hwg-followup-check` (13h) et à une **session interactive de David vers 15h10** — runs intentionnellement distincts → **premier déclenchement de cette routine aujourd'hui**.
+
+**🖥️ Navigateur** : `_shared/browser-status.md` lu avant ouverture, dernière entrée **🟢 RÉTABLI (24/08 ~09h15)** → aucun bridage. `23c7ecdd-…` seul listé, sélectionné sans question (§7). Rien de neuf à y écrire. Un `Page.captureScreenshot` a timeout une fois à 30 s ; la re-sélection du deviceId a suffi, conforme à §7, aucune autre conséquence.
+
+**Registre de faits régénéré en début de run** (`npm run qa:facts`) : **225 faits citables sur 106 lignes affichées**, 81 lignes `is_seed` exclues, **22 faits périmés** — chiffres identiques au créneau de 13h. `npm run qa:claims` également régénéré (106 foyers, 69 pays, 17 maladies, 29 hôtes source) pour la question 4 des relecteurs.
+
+**⭐ Le carry-over n°1 du créneau de 13h était déjà résolu à l'ouverture** : les deux DM en file (Rodrigo Olave Hurtado, Pierre PARNEIX) ont été **envoyés à 15:12 et 15:15 par David en session interactive**, sur son ordre explicite « envoie les DM ». Rien à reprendre de ce côté.
+
+**Quotas à la clôture, cumulés sur les 3 sessions du jour + la session interactive** : commentaires **4/7 publiés** (2 avant ce run, 2 ce run, dont 1 réponse en sous-fil actif) · notes de connexion **1/7** (inchangé) · **DM 7/8 envoyés** (5 à froid ce matin + 2 réponses en fil actif à 15h, hors quota froid), **2 nouveaux brouillons en file de validation** · suivis **9/7-10, fourchette remplie, inchangée ce run** · invitations reçues **2 acceptées** (inchangé).
+
+---
+
+### ✅ RÉPONSE EN SOUS-FIL PUBLIÉE — **Harvey Basivikidi** (`/in/harvey-basivikidi-9b6343a7/`), EN
+
+**Ce n'est pas un commentaire à froid : c'est une réponse à une interpellation nominale de l'auteur, datée du jour.** Harvey a répondu à notre commentaire de 13h à ~15h et l'a soutenu (👍). Le blocage hebdomadaire ouvert par le commentaire de 13h ne s'y applique donc pas, même arbitrage que Sohail Agha le 19/08 et que le cas du 26/08 : un sous-fil actif n'est pas un nouveau commentaire à froid.
+
+**Sa réponse, verbatim :**
+> David Deheunynck
+> That's a very interesting point. In our study, we primarily considered the surveillance and data ecosystem upstream of the published outputs. Your question suggests an important extension: treating the bulletin itself as part of the information system, and examining what is lost between structured data and public dissemination.
+
+**Il répond donc explicitement à la question posée à 13h** : l'article ne traite pas le bulletin sortant comme faisant partie du système, et il reconnaît l'extension comme importante. *Langue du fil = EN ; langue du brouillon = EN.*
+
+**L'angle** : l'asymétrie d'exigibilité. En amont, l'interopérabilité tient parce que chaque partie peut l'exiger de l'autre. Passé le point de publication, il n'y a plus personne en face pour porter cette exigence — ce qui expliquerait que l'étape la moins coûteuse techniquement soit la moins gouvernée. **Aucun chiffre, aucun CTA, aucune affirmation sur le contenu de l'article** (non lu, comme à 13h).
+
+**QA: mécanique PASS (0 blocker, 407 car., 2 paragraphes, `draftLang: en` / `threadLang: en`) | relecteur REECRIRE (11) au 1er passage, corrigé — 11 PASS sur 12 | faits cités: aucun chiffre | registre du 27/08 | statut: publié le 27/08**
+
+⭐⭐ **Le relecteur a attrapé une répétition de gabarit que le contrôle mécanique ne pouvait pas voir, et il l'a démontrée clause par clause.** Le 1er brouillon rejouait l'ossature du commentaire publié le matin chez Amanda McClelland : l'apposition d'ouverture « The [nom] you describe is [prédicat] » et la clause d'unicité de chute « and [X] is the one/only [nom] que personne ne peut [verbe nié] », plus une **troisième occurrence dans la journée de la figure du lecteur terminal** (« A reader of bulletins » / « every reader outside » / « The reader at the far end »). Son verdict : « *Le vocabulaire varie, la charpente non.* » C'est exactement [[feedback_anti_template_check_structure_not_just_wording]], et le n-gramme est structurellement incapable de le voir puisqu'il compare des chaînes. **Réécrit sur une autre architecture, le fond inchangé.**
+
+> Something asymmetric happens at that boundary. Interoperability holds because each side can demand it of the other. Past the point of publication there is nobody left standing on the other side of that demand.
+>
+> Which might be why the cheapest step technically is the one that gets left out. Machine readable output is trivial next to integrating two systems. It simply has nobody positioned to insist on it.
+
+**Publication confirmée** : réponse relue dans le fil après envoi (406 caractères de corps hors mention, 0 tiret cadratin, texte identique caractère pour caractère au brouillon validé), éditeurs vidés, une seule occurrence sur la page, horodatage « maintenant » sous notre nom.
+
+⚠️ **Note technique sur ce composeur** (à retenir, différente de l'incident du 13h) : le bouton « Répondre » n'est pas trouvable par son texte — il n'existe que sous forme d'`aria-label`, et le commentaire cible n'a **aucun conteneur `<article>`** ni classe lisible (noms de classes obfusqués). La méthode qui a fonctionné : partir du `span` contenant un fragment du texte, remonter les parents jusqu'à trouver celui qui contient le bouton `aria-label="Voir plus d'options pour le commentaire de Harvey Basivikidi."` — ce qui **vérifie l'identité de la cible dans le même appel que le clic** (§7). Un `shift+Return` y produit un saut de paragraphe simple, pas double.
+
+---
+
+### ✅ COMMENTAIRE PUBLIÉ — **Dr. Tom Frieden** (`Seeing the Invisible`), EN
+
+**Article LinkedIn publié le 27/08 même**, « *The Ebola Outbreak is Out of Control in DRC* » (`/pulse/ebola-outbreak-drc-isnt-going-well-strategy-has-change-frieden-omspc`), 54 réactions, **3 commentaires et 7 republications avant le nôtre**. *President and CEO of Resolve to Save Lives, ancien directeur du CDC, ancien commissaire à la santé de New York.* **Aucun blocage hebdomadaire** : dernier commentaire HWG sous un post de ce profil le **01/08**, soit 26 jours.
+
+**Les 3 commentaires existants ont été lus avant rédaction (§5)** : un retour d'expérience CDC 2019-2020 sur la sécurité et l'engagement communautaire, un sur le financement des enterrements dignes et sécurisés et la mobilisation des bailleurs, aucun sur la mortalité indirecte. **Aucun risque de redondance.**
+
+**L'angle** : l'article écrit lui-même que la flambée fait des dégâts au-delà du décompte de cas, et donne un exemple chiffré — la mortalité maternelle en Ituri, à peu près doublée depuis mai. **C'est une conséquence de la flambée qu'aucun enregistrement de flambée ne peut recevoir** : la table ne porte que des cas, des décès et une date. Celle qui comptera ces femmes travaillera en santé maternelle, sur une autre ligne de remontée. Angle pris depuis la seule position que HWG occupe réellement, sans aucun chiffre à notre compte.
+
+🔴 **Consigne permanente du 19/08 vérifiée explicitement, et elle mordait ici.** L'article annonce « *more than 5,000 cases and nearly 2,400 deaths* » ; la ligne active du registre porte **5 656 cas et 2 715 décès arrêtés au 24/08**, soit ~315 décès de plus. **Aucune correction publique n'a été faite** : le commentaire ne cite aucun nombre à notre compte, n'oppose rien et ne corrige rien. Corriger publiquement le chiffre d'un ancien directeur du CDC sous son propre article est un acte de positionnement qui appartient à David, pas à une routine. Point confirmé indépendamment par le relecteur.
+
+**QA: mécanique PASS (0 blocker, 400 car., 2 paragraphes, `draftLang: en` / `threadLang: en`) | relecteur REECRIRE (11) au 1er passage, corrigé — 11 PASS sur 12 | faits cités: aucun chiffre du registre ; « roughly doubled since May » repris verbatim de l'article | registre du 27/08 | statut: publié le 27/08**
+
+⭐ **Deuxième démonstration du même défaut dans le même run, sur un autre texte.** Le relecteur a relevé **cinq** dispositifs repris du commentaire Amanda : « *will surface, if it surfaces at all* » → « *It will surface, if it surfaces* » ; la garde « *cannot hold* » ; l'énumération « *kept by … on another schedule* » ; l'ouverture du paragraphe final par « *So* » (présente aussi chez Harvey à 13h) ; et la clause contrastive finale en « *while* ». Verdict : « *Ce n'est pas un thème récurrent, c'est la même phrase remplie autrement.* » **Réécrit intégralement dans une autre forme, le fond conservé.**
+
+⚠️ **Réserve de ton signalée par le relecteur et prise en compte** : le premier brouillon écrivait que ce que la riposte cherche à prévenir « *accumulates* » là où le chiffre ne va pas. « Accumuler » est un mot de stock, employé à propos de femmes mortes en couches, sous un article qui vient de les nommer. Le mot a été retiré à la réécriture. **C'est le genre de point qu'aucun contrôle mécanique ne verra jamais.**
+
+> Maternal deaths in Ituri, roughly doubled since May, are a consequence of this outbreak that will never appear in a record of it. There is no field for that in the outbreak data I work from. Whoever eventually counts those women is working in maternal health, filing into a different reporting line.
+>
+> That leaves the response measured by an instrument which cannot see a large part of what it is for.
+
+**Publication confirmée** : compteur passé de **3 à 4 commentaires**, commentaire relu dans le fil après envoi (400 caractères, 2 paragraphes, 0 tiret cadratin, identique au brouillon validé), éditeur vidé, une seule occurrence à notre nom. **Prochain commentaire possible sur ce profil à partir du 03/09.**
+
+---
+
+### ❌ CARRY-OVER n°2 CLOS — **Adam Abdullahi**, post Nature Africa définitivement écarté
+
+Reporté **deux fois** (9h puis 13h) avec le même motif — un DM lui a été envoyé ce matin à 10:09 et doubler les canaux le même jour sature. Le SKILL et `_shared/report-conventions.md` interdisent de recopier une 3e fois le même motif : **verdict rendu, avec un motif neuf.**
+
+**Prémisse retestée** : le post (`urn:li:activity:7498385006348689409`) est **toujours en fenêtre 48 h** (1 jour), et **il n'a pas répondu au DM** — notre message de 10:09 reste le dernier du fil, sept heures plus tard. Le motif de saturation s'affaiblit donc d'heure en heure et ne tiendra plus demain.
+
+**Ce qui l'écarte réellement est éditorial, pas déontologique.** Le seul angle que HWG peut honnêtement apporter à un post sur l'empreinte immunitaire en population nigériane non vaccinée est que les histoires d'exposition n'existent nulle part dans un enregistrement de flambée — deux pays au même décompte y sont traités à l'identique. **C'est la quatrième fois de la journée que cette ligne servirait** (Amanda 9h, Harvey 13h, Harvey 17h, Frieden 17h). Le relecteur du run l'a établi noir sur blanc : une ligne éditoriale récurrente est acceptable, mais quatre occurrences en une journée, plus une cinquième, ne font plus une ligne, elles font une voix à formule unique. **Écarté définitivement pour ce post ; le profil reste une cible valable sur un autre sujet.**
+
+---
+
+### 🗒️ Veille — données épidémiologiques (§8)
+
+**Aucune écriture en base faite** (une routine sociale signale, elle n'écrit pas). **Une lecture en base a été faite en lecture seule**, pour vérifier une affirmation d'un brouillon — voir plus bas.
+
+- 🔴 **Ebola / RD Congo — la divergence interne du registre est intacte, 6e jour, et la ligne active a bougé depuis ce matin.** La ligne **close** (4 120 / 1 887, arrêtée au 07/08, `stale: true`) coexiste toujours avec la ligne **active** (**5 656 cas / 2 715 décès, arrêtée au 24/08**, `ageDays: 0`, source ECDC). Ce matin la ligne active portait 5 514 / 2 642 : elle s'est donc rafraîchie en cours de journée, la divergence, elle, non. **Priorité inchangée pour `morning-don-check`.**
+- ⭐ **Le chiffre public d'un ancien directeur du CDC est plus bas que le nôtre, et c'est le nôtre qui est le plus frais.** Tom Frieden écrit ce jour « more than 5,000 cases and nearly 2,400 deaths » ; nous portons 5 656 / 2 715 arrêtés au 24/08. **Exactement la configuration décrite au §8 (« plus récemment publié ≠ plus récent ») mais dans l'autre sens** : ici c'est la publication récente qui porte le chiffre bas, et il ne faut surtout pas s'aligner dessus. Aucune action, aucune régression, mention faite ici pour que la prochaine session ne s'en émeuve pas.
+- 🆕 **Africa CDC a tenu un « Special Briefing on Ebola Outbreak Response » en direct le 27/08**, signalé en notifications. **Source primaire potentielle non exploitée par ce run** (une routine sociale ne dépouille pas un briefing vidéo) — à évaluer par `morning-don-check` si un communiqué écrit en sort.
+- 🗒️ **Chiffres cités par l'article de Frieden, non repris dans notre commentaire et non vérifiés contre une source primaire** : au moins 155 soignants infectés et 45 décès (attribués à l'OMS) ; six à sept personnes sur dix mourant à domicile plutôt qu'en centre de traitement ; mortalité maternelle en Ituri à peu près doublée depuis mai ; flambée liée en Ouganda déclarée close le 28 juillet après 20 cas et 2 décès. **Aucun n'entre en base sur la seule foi de l'article** (§8 : jamais un post comme source). Le seul repris dans le commentaire est la mortalité maternelle, attribuée à l'article et à personne d'autre.
+- ✅ **Ligne Polio / RD Congo vérifiée en lecture directe sur la base de production** (`64f7c22d-…`) pour contrôler un brouillon : **32 cas AFP confirmés depuis le début 2026, cVDPV2, arrêtés au 18/08, deaths=0, `source_priority` 5, active**, description nommant **Haut-Lomami** (5 cas nouvellement rapportés cette semaine-là) et l'**AFP** comme mode de détection. **Aucune écriture.** La ligne est saine et fraîche, rien à signaler côté données.
+
+---
+
+### 👀 Veille passive — signaux et matière
+
+- ⭐⭐ **Harvey Basivikidi confirme son statut de relais le plus actif de HWG, et il est passé de l'accord au dialogue.** En une journée : republication de notre post de marque le matin, puis, sur son propre post, **une réponse argumentée à notre commentaire plus un soutien (👍)**. Il concède explicitement que son étude s'arrête en amont du bulletin publié et qualifie notre question d'« extension importante ». **C'est la première fois qu'un auteur publié déplace le périmètre de son propre travail à partir d'une question de HWG.**
+- 🔴 **Le dossier Ebola/RDC monte d'un cran dans le fil des décideurs**, trois signaux le même jour : l'article de Frieden (« out of control », « the fastest-growing ever recorded anywhere »), le briefing spécial d'Africa CDC en direct, et la poursuite du RC76 de l'OMS AFRO à Addis-Abeba. **Matière évidente pour un futur post de marque**, non rédigé ici (hors périmètre).
+- 🆕 **Baraka Kweli Birindwa** publie un appel aux **agents de santé communautaire (ASC) et relais communautaires (RECO)** en RDC. Angle communautaire francophone, jamais représenté dans nos cibles. **À évaluer en découverte active.**
+- **Statistiques du compte à ce relevé** : **334 vues de profil** (contre 333 à 13h), **443 impressions** sur le post de marque suivi, **386 abonnés** (contre 382 hier), **273 relations**.
+
+---
+
+### 🔧 Défauts d'outillage et points de méthode
+
+1. ⭐⭐ **Le relecteur indépendant a attrapé le même défaut structurel sur DEUX textes du même run, et le contrôle mécanique a rendu PASS sur les deux.** Gabarit rhétorique repris du commentaire du matin, clause par clause, avec un vocabulaire entièrement différent. **C'est la démonstration la plus nette à ce jour que le n-gramme et le relecteur ne se remplacent pas** : le premier compare des chaînes, le second compare des formes. Un run qui sauterait l'étage (c) publierait aujourd'hui deux textes moulés sur un troisième.
+2. 🔴 **Une affirmation fausse sur notre propre produit a failli partir, et le contrôle mécanique ne pouvait pas la voir.** Le brouillon du DM John Omari Baso affirmait que la ligne polio RDC ne nomme aucune province et ne dit rien du mode de détection. **Les deux sont faux** : la fiche nomme Haut-Lomami et dit AFP. Une version corrigée a ensuite surgénéralisé dans l'autre sens (« la seule province nommée dans tout ce que je porte »), également faux — HWG nomme le **Nord-Kivu** sur la ligne choléra RDC, c'est-à-dire **la province du destinataire**. Les deux erreurs auraient été réfutables par lui en ouvrant le tableau de bord. **Le registre de faits ne porte que des paires valeur/type, pas les descriptions : une affirmation sur ce que contient une ligne doit se vérifier en base, pas au registre.**
+3. ⚠️ **Un chiffre exact peut être invérifiable au sens du dispositif.** Le brouillon Rodrigo citait « cinq entrées » dans la liste d'exceptions `VERIFIED_ZERO_DEATHS` — compté juste dans le code, mais absent des deux registres. Le chiffre a été **retiré** plutôt que d'inscrire une claim au registre produit, qui n'appartient pas au périmètre de cette routine (`AGENTS.md`). La formulation retenue dit la même chose sans le nombre.
+4. ⚠️ **`context.too-soon` sur une réponse en fil actif, faux positif déjà documenté ce jour** : la règle compte les jours depuis notre dernier message sortant sans distinguer une relance dans le vide d'une réponse à un message reçu 40 minutes plus tôt. Écarté sur pièce.
+5. ⚠️ **`ngram.history` sur « data as of 18 august »** : c'est la formulation littérale de la source GPEI, citée comme telle. Faux positif de la classe « citation obligatoire d'une source », déjà documentée.
+6. ⚠️ **Un `Page.captureScreenshot` a timeout à 30 s en cours de session.** La re-sélection du deviceId a suffi (§7, premier réflexe), aucune perte, aucune action rejouée.
+
+---
+
+### 🔁 CARRY-OVER POUR LE CRÉNEAU DE 9h DEMAIN — liste exhaustive
+
+1. **🔒 DEUX DM EN FILE DE VALIDATION** — **Rodrigo Olave Hurtado** (EN, réponse en fil actif, sans CTA car déjà servi dans ce fil à 15:12) et **John Omari Baso** (EN, message de bienvenue après acceptation, sans lien). **Ne partent pas sans ordre explicite de David.** Textes complets dans `linkedin-contacts.md`, entrée du 27/08 17h. Notification push envoyée.
+2. **Adam Abdullahi** — carry-over **CLOS ce run**, post Nature Africa écarté définitivement pour motif éditorial (voir plus haut). **Ne pas le rouvrir.** Le profil reste une cible valable sur un autre sujet. Son DM du matin reste sans réponse.
+3. **Compteur de notes de connexion personnalisées gratuites** (carry-over n°7 du 13h, 2e report) — **non retesté ce run, et le motif est neuf** : le compteur ne se lit que dans la modale d'invitation, or **aucune invitation n'était justifiée ce run** (aucun candidat neuf identifié, voir point 5). Ouvrir une modale d'invitation sur quelqu'un qu'on n'a pas l'intention d'inviter met un contrôle irréversible à un clic, pour lire un compteur. **À tester par la session de 9h, qui envoie des invitations en routine**, au moment où elle en envoie une.
+4. **Didier Bompangue** — carry-over n°4 (écosystème INOHA) : **déjà suivi depuis le 22/08**, vérifié dans `linkedin-candidates-tracker.md` avant toute action. **Rien à faire, ne pas reproposer.**
+5. **Delphin Kayembe** — cosignataire de l'article Harvey, **écarté §12/§10** : au moins 4 profils homonymes en recherche, tous en 3e degré, aucun dont l'intitulé ne corresponde au profil d'un cosignataire d'article One Digital Health (les visibles sont « Monitoring & Evaluation Officer chez CARE International »). **Identification impossible par le nom seul.** Chemin alternatif s'il est repris : passer par les affiliations de l'article dans PubMed, ou par les tags du post de Harvey, jamais par la recherche nominale.
+6. **Arriel Benis** et **Lefiso'o Lambuku** — deux autres cosignataires, **non évalués ce run** faute de temps. Slugs non capturés.
+7. **Baraka Kweli Birindwa** — signal neuf du jour, angle ASC/RECO en RDC. **Jamais évalué.** Candidat de découverte active.
+8. **Connexion John Omari Baso acceptée aujourd'hui** : ne pas renvoyer de message de bienvenue, il est en file de validation (point 1).
+9. **§8 à ingérer par `morning-don-check`** : la divergence Ebola/RDC (6e jour), les 3 lignes France du bulletin SpF du 26/08 signalées à 13h et **toujours non ingérées**, la question de modèle de données posée par le cas hantavirus Andes, et le briefing Africa CDC du 27/08 si un communiqué écrit en sort.
+10. **Rodrigo Olave Hurtado** — au-delà du DM en file, il a ouvert un sujet de fond réel : à quoi ressemblerait un signal de réservoir stockable. **C'est une question de modèle de données pour HWG, pas seulement une conversation** ; elle rejoint la lacune hantavirus ouverte depuis le 25/08.
+
+---
+
 ## 📅 Session linkedin-hwg-followup-check — 27/08/2026 (13h, 1er des 2 créneaux après-midi)
 
 **Vérification double déclenchement** : aucune entrée `linkedin-hwg-followup-check` datée du 27/08 dans ce fichier ni dans `linkedin-contacts.md` à l'ouverture (dernière en date : 26/08 13h). L'entrée du 27/08 en tête appartient à `linkedin-hwg-monitoring` (9h), run intentionnellement distinct → **premier déclenchement de cette routine aujourd'hui**.

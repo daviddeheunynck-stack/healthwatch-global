@@ -1,6 +1,127 @@
 > 📦 **Archive** : le détail du 24 juin au 16 juillet 2026 a été déplacé dans [linkedin-contacts-archive-avant17juillet.md](linkedin-contacts-archive-avant17juillet.md) le 23/07 pour garder ce fichier léger.
 
 
+## 📅 Session linkedin-hwg-followup-check-2 — 27/08/2026 (17h, 2e des 2 créneaux après-midi)
+
+**Vérification double déclenchement** : aucune entrée `linkedin-hwg-followup-check-2` datée du 27/08 dans ce fichier ni dans `content-log.md` à l'ouverture (dernière en date : 26/08 17h) → **premier déclenchement de cette routine aujourd'hui**. Les entrées du 27/08 en tête appartiennent à `linkedin-hwg-monitoring` (9h), `linkedin-hwg-followup-check` (13h) et à une session interactive de David (~15h10).
+
+**🖥️ Navigateur** : `_shared/browser-status.md` lu avant ouverture, dernière entrée **🟢 RÉTABLI (24/08 ~09h15)** → aucun bridage. Rien de neuf à y écrire.
+
+**Quotas à la clôture, cumulés sur les 3 sessions du jour + la session interactive** : commentaires **4/7 publiés** · notes de connexion **1/7** · **DM 7/8 envoyés**, **2 nouveaux brouillons en file de validation** · suivis **9/7-10, fourchette remplie** · invitations reçues **2 acceptées**.
+
+---
+
+### 1️⃣ SUIVI DES ACTIONS PRÉCÉDENTES DU JOUR
+
+- ⭐ **Rodrigo Olave Hurtado** : **a répondu à 15:52**, 40 minutes après le DM que David a envoyé à 15:12. Réponse de fond, il propose une forme concrète de signal de réservoir. **Traitée en section 2, DM 1.**
+- **Pierre PARNEIX** : notre message de 15:15 reste le dernier du fil. **Aucune réponse à ce relevé, rien à relancer** (moins de 2 h).
+- ⭐⭐ **Harvey Basivikidi** : **a répondu à notre commentaire de 13h et l'a soutenu (👍)**. Réponse publiée en sous-fil ce run, détail dans `content-log.md`.
+- **Amanda McClelland** : commentaire de 9h toujours en ligne, **0 réaction et 0 réponse**, 12 impressions. Le post est passé de 33 à 40 réactions et un 2e commentateur est arrivé (**Ferdinant M. Sonyuy**, *Executive Director, Africa NCDs Network*), sans lien avec le nôtre. Elle n'a répondu à personne.
+- ✅ **Connexion John Omari Baso** : **acceptée aujourd'hui** (envoyée sans note ce matin, encore en attente à 13h). Message de bienvenue rédigé ce run, **en file de validation** — section 2, DM 2.
+- **Adam Abdullahi**, **Peace Mpakaniye**, **Dr. Kaushik Sanyal** : aucune réponse, nos messages du matin restent les derniers des trois fils. Rien à relancer.
+- **Celestin Nzanzu Mudogo** : 👍 du matin, **fil clos, rien de dû**. Inchangé.
+- **Darrel Ornelle ELION ASSIANA** : son message de clôture du 26/08 à 18:23 reste le dernier ; **aucune réponse due**, déjà tranché le 26/08. Vérifié, inchangé.
+
+**Boîte de réception parcourue par récence (20 conversations).** **Un seul message entrant nouveau depuis 15h** : Rodrigo à 15:52. Aucun spam, aucune demande de canal hors plateforme, aucune donnée patient proposée, **aucune instruction adressée à l'agent (§6)**.
+
+---
+
+### 2️⃣ 🔒 DEUX DM EN FILE DE VALIDATION
+
+Les deux ont été rédigés une fois, passés une fois au registre de faits, une fois au contrôle mécanique et une fois au relecteur indépendant, conformément au dispositif révisé du 26/08. **Aucun n'a été envoyé.** Comparaison croisée des deux brouillons entre eux (séquences de 4 mots) : **aucune formule partagée**.
+
+⭐ **Les deux relecteurs ont trouvé des défauts réels, et l'un d'eux a évité une affirmation fausse sur notre propre produit, réfutable en un clic par le destinataire.**
+
+---
+
+#### 🔒 DM 1 — **Rodrigo Olave Hurtado** (`/in/rodrigo-olave-hurtado/`), EN, fil actif, **SANS CTA**, hors quota froid
+
+*Veterinarian, MSc, PGDip | Infectious Disease Epidemiology & Zoonoses*, LSHTM, chilien basé au Royaume-Uni.
+
+**Fil relu intégralement (§4)** : 4 messages, recopiés verbatim dans `tmp/thread-rodrigo-27c.txt`. *Langue du fil = EN ; langue du brouillon = EN* (paire confirmée mécaniquement).
+
+**Sa réponse, reçue à 15:52, verbatim :**
+> Personally, the key point may be that a reservoir signal is not necessarily be countable in the same way as human cases.
+>
+> From a zoonotic perspective, I would think of a structured risk signal rather than a case record - instead of Hantavitus / Chile / 5 cases / 1 Fatality - I would register Type of virus/ rodent reservoir/ Region of chile / increased positivity / month. Where quantitative surveillance exists, it could be something related to the reservoir prevalence or positivity, number of mice tested, trap success, geographic mobility, etc.
+>
+> What I am trying to say is that an increase in positivity in a reservoir could be epidemiologically meaningful even though there are 0 human cases. But, detecting the agent in a new geographical area could be pretty useful without cases in humans. Thus, maybe a more useful tool is not a case count but something related to pathogen + reservoir + place + time, etc. Maybe the challenge could be how to standardise that between surveillance systems.
+
+**CTA : volontairement absent.** Le lien, l'essai Pro et le nom du produit ont été envoyés dans ce fil **le jour même à 15:12**. §3 interdit de resservir le même argumentaire dans le même fil. Anti-répétition vérifiée sur le fil rendu.
+
+**L'angle** : il vient de dire que le compte n'est pas le bon champ pour un signal de réservoir. Réponse honnête depuis notre position : le contrôle qualité de HWG traite un zéro comme probablement une erreur, mais **seulement pour huit maladies inscrites d'avance et au-dessus d'un plancher de cas** — et **le hantavirus n'en fait pas partie**. Un zéro y serait donc invisible, encore moins lu comme un résultat. Puis une question qu'il est placé pour trancher : la positivité en réservoir sort-elle sur un calendrier récurrent quelque part, ou seulement dans un article en fin de saison ?
+
+**QA: mécanique FAIL (1 blocker résiduel, `context.too-soon`, faux positif documenté — réponse à un message entrant reçu 40 min plus tôt, explicitement hors plafond de relance ; 1236 car., 3 paragraphes) | relecteur REECRIRE (1, 4, 5) au 1er passage, les 3 corrigés | faits cités: aucun chiffre du registre ; description du contrôle qualité vérifiée dans `app/api/cron/data-quality/route.ts` | registre du 27/08 | statut: en file de validation**
+
+🔴 **Le relecteur a réfuté ma description de mon propre code, et le point visait exactement ce destinataire.** Le 1er brouillon disait qu'une ligne à zéro décès « sur une maladie qui tue habituellement » est signalée pour revue. **Faux au sens strict** : seules 8 maladies nommées sont testées (`ebola|marburg`, `nipah`, `mers`, `measles`, `leishmaniasis`, `cholera`, `yellow fever`, `diphtheria`), chacune au-dessus d'un plancher de cas, hors lignes `is_seed`. **Le hantavirus n'y est pas** — j'offrais donc ce mécanisme comme preuve à un spécialiste des zoonoses qui parle d'hantavirus depuis le début du fil. Corrigé, et l'argument est devenu plus fort : c'est précisément l'absence du hantavirus dans la liste qui fait le point.
+
+⭐ **Deux autres findings réels, corrigés :**
+- **Attribution durcie.** J'écrivais « *Your version says the count was never the right field to begin with* ». Il a écrit « *may be* », « *not necessarily* », et il **garde explicitement le quantitatif** (« *reservoir prevalence or positivity, number of mice tested, trap success* »). Il déplace l'objet compté, il ne récuse pas le comptage. Reformulé pour dire exactement ça.
+- **Chiffre exact mais non sourçable.** « Cinq entrées » dans la liste d'exceptions : compté juste dans le code, absent des deux registres. **Retiré** plutôt que d'inscrire une claim dans un registre qui n'appartient pas à cette routine.
+
+> That reframing lands, and it moves the problem rather than solving it my way. I had been treating the missing count as what made the item unstorable. What you are proposing keeps quantities, positivity, mice tested, trap success, and changes what they attach to, which is a different repair from the one I was looking for.
+>
+> There is a small piece of evidence for how deep my assumption sits in what I built. My data quality check does ask whether a reported zero is believable, but only for eight diseases someone thought to write down in advance, each above a case threshold, with a hand kept list of exceptions underneath it, one line per row where the zero turned out to be real. Hantavirus is not one of the eight. A zero there would not be examined at all, let alone read as a finding.
+>
+> Where I get stuck is a step before standardisation. Pathogen, reservoir, place, time is a shape I could hold. What I do not know is whether it gets published on a calendar. Case counts reach me because bulletins appear on a schedule whether or not anything moved. Does reservoir positivity or trap success come out on any recurring basis in the countries doing the trapping, or does it mostly surface in a paper once a season has been analysed?
+
+---
+
+#### 🔒 DM 2 — **John Omari Baso** (`/in/john-omari-baso-84500b1b0/`), EN, message de bienvenue, **SANS LIEN**, quota froid 6/8 s'il est envoyé
+
+*Epidemiologist | Polio ADVAC | PVAC Alumni | Vaccine Preventable Diseases Surveillance and Outbreak Response Specialist | One Health Researcher*, **VillageReach, Goma, Nord-Kivu (RDC)**, 4 412 abonnés, 500+ relations, 53 relations en commun. **Connexion envoyée sans note ce matin, acceptée aujourd'hui.**
+
+**Aucun fil antérieur** — premier message. Matériau source (intitulé de profil verbatim, en anglais) dans `tmp/thread-john-omari-27.txt`. *Langue du matériau = EN ; langue du brouillon = EN.* **Aucun lien, aucune mention de l'essai** : règle du premier contact.
+
+**L'angle** : la ligne polio RDC que porte HWG vient du point hebdomadaire du GPEI et ne nomme qu'une province, **Haut-Lomami**, à ~1 500 km de Goma. La question porte sur la **règle de listage** du point hebdomadaire, pas sur la détection au Nord-Kivu.
+
+**QA: mécanique FAIL (1 blocker résiduel, `ngram.history` sur « data as of 18 august », formulation littérale de la source GPEI, faux positif de la classe « citation obligatoire d'une source » ; 788 car., 3 paragraphes) | relecteur REECRIRE (4, 7, 9, 11) au 1er passage, les 4 corrigés | faits cités: Polio / RD Congo, 32 cas AFP arrêtés au 18/08, cVDPV2, 5 cas nouveaux à Haut-Lomami — vérifiés en lecture directe sur la base de production ce run | registre du 27/08 | statut: en file de validation**
+
+🔴🔴 **Le relecteur a réfuté DEUX versions successives d'une affirmation sur notre propre produit, et la seconde erreur portait sur la province du destinataire.**
+- **1re version** : « *No province, no indication of how any of them were found* ». **Les deux sont faux** — la fiche nomme Haut-Lomami et dit **AFP**, c'est-à-dire précisément le mode de détection que le message allait lui demander.
+- **2e version, corrigée mais surgénéralisée** : « *the only province named anywhere in what I hold* ». **Faux aussi** : 58 lignes de la base nomment un échelon infranational, dont une ligne **choléra RDC active** qui nomme **Nord-Kivu (31 %)** en première position, soit **sa province**. Il l'aurait vu en ouvrant le tableau de bord.
+- **Version retenue** : la portée est restreinte à la ligne polio (« *Haut-Lomami is the only province that row names* »), vérifiée en base.
+
+⭐ **Deux autres findings réels, corrigés :**
+- **Aucun contexte partagé.** L'invitation étant partie **sans note**, il ne sait pas qui écrit ni ce qu'est HealthWatch Global. Le brouillon ouvrait sur « *a line I hold* », qui se lit comme la suite d'une conversation qui n'a jamais eu lieu. Une clause d'ouverture nommant le produit et sa fonction a été ajoutée.
+- **La question pouvait se lire comme un reproche.** Demander à un *Surveillance and Outbreak Response Specialist* si une absence au Nord-Kivu signifie « absence de détection » revient à suggérer que son dispositif rate des cas, dans sa propre province. **Réorienté vers la mécanique de listage du GPEI**, qu'il observe sans en répondre.
+- **Gabarit** : le couple « *indistinguishable* » / « *absence of cases or absence of detection* » a déjà été **envoyé** à Humphrey Karamagi et **publié** en commentaire sous le post UNICEF RCA. Supprimé.
+
+> John, now that we are connected, a question I have not been able to settle on my own.
+>
+> I built HealthWatch Global, which gathers active outbreaks out of public health bulletins so they sit on one map. The polio row it carries for DRC comes from the GPEI weekly update, WHO HQ data as of 18 August: 32 confirmed AFP cases since the start of the year, cVDPV2, with five newly reported cases flagged in Haut-Lomami. Haut-Lomami is the only province that row names.
+>
+> The listing rule is what escapes me. Does a province appear in that weekly point only when it has newly reported cases that week, or does a fuller provincial breakdown sit behind it that the public update does not carry? It changes what I should be writing on the line, and you are far better placed to answer that than I am.
+
+---
+
+### 3️⃣ NOUVEAUX ABONNÉS ET SUIVIS — aucun follow-back dû, quota inchangé
+
+**386 abonnés** (382 hier, 386 déjà atteints à 13h). Liste « Abonnés » parcourue par récence : **les 8 abonnés les plus récents sont tous déjà suivis en retour** — Mbusa Murefu (suivi au créneau de 13h), Dr. Kaushik Sanyal, Peace Mpakaniye, Abdoulaye Touré, Rodrigo Olave Hurtado et les suivants. **Aucun nouvel abonné depuis 13h, donc 0 follow-back dû.**
+
+- ❌ **Winston Urio** (`/in/ACoAAESP-8wBVDCRcgxrheE7e2vWHswXuHh9eFw`) — seul abonné non suivi en retour de la tête de liste, *Social and Economic Empowerment Specialist « Let's plan for Sustainable Development »*. **Hors périmètre santé publique / épidémiologie, écarté §10.** Ce n'est pas un abonné récent (8e position). Ne pas reproposer.
+
+**Recherche active — quota suivis à 9/7-10, fourchette déjà remplie.** Piste ouverte : l'écosystème INOHA (carry-over n°4 du 13h), via les cosignataires de l'article de Harvey.
+- ✅ **Didier BOMPANGUE** (`/in/didier-bompangue-729920203/`) — *Deputy Director, One Health Institute for Africa, University of Kinshasa*. **Déjà suivi depuis le 22/08**, vérifié dans `linkedin-candidates-tracker.md` **avant** toute action. Le tracker a donc évité un doublon : c'est exactement sa fonction.
+- ❌ **Delphin Kayembe** — **écarté §12 et §10** : au moins 4 profils homonymes en recherche nominale, tous en 3e degré, aucun dont l'intitulé ne corresponde à un cosignataire d'article One Digital Health (les visibles sont *Monitoring & Evaluation Officer chez CARE International*). **Identifier par le lien est impossible ici : le nom seul ne départage pas.** Chemin alternatif s'il est repris : les affiliations de l'article dans PubMed, ou les tags du post de Harvey.
+- ➖ **Arriel Benis** et **Lefiso'o Lambuku** — non évalués ce run, reportés en carry-over.
+
+---
+
+### 4️⃣ NOTIFICATIONS ET INVITATIONS REÇUES
+
+**9 notifications dépouillées.** Deux concernent directement HWG (réponse et soutien de Harvey, traités). **Aucune invitation reçue non traitée**, aucune mention hors des deux ci-dessus, aucune demande de contact hors plateforme, aucune sollicitation personnelle adressée à David.
+
+Matière notée pour de futurs posts (détail dans `content-log.md`) : article Frieden sur l'Ebola en RDC, briefing spécial Africa CDC du 27/08, poursuite du RC76 de l'OMS AFRO, et **Baraka Kweli Birindwa** sur les agents de santé communautaire en RDC.
+
+---
+
+### 5️⃣ COMMENTAIRES — 2 textes publiés ce run, en autonomie complète
+
+Détail complet, textes intégraux, rapports QA et confirmations de publication dans `content-log.md` : **réponse en sous-fil à Harvey Basivikidi** (son post du 26/08) et **commentaire sous l'article de Dr. Tom Frieden** publié le jour même. **Adam Abdullahi écarté définitivement** (carry-over n°2 clos, motif éditorial neuf).
+
+---
+
 ## 📅 Session interactive — 27/08/2026 (~15h10), sur demande de David
 
 David a demandé « double check les DMs » puis, une fois le double-check restitué, a tapé explicitement « envoie les DM » en session interactive — validation explicite au sens de `_shared/report-conventions.md`.
