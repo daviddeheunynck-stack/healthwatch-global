@@ -2,6 +2,109 @@
 
 Archive de tout le contenu créé. Mise à jour à chaque session.
 
+## 📅 Session linkedin-hwg-followup-check — 27/08/2026 (13h, 1er des 2 créneaux après-midi)
+
+**Vérification double déclenchement** : aucune entrée `linkedin-hwg-followup-check` datée du 27/08 dans ce fichier ni dans `linkedin-contacts.md` à l'ouverture (dernière en date : 26/08 13h). L'entrée du 27/08 en tête appartient à `linkedin-hwg-monitoring` (9h), run intentionnellement distinct → **premier déclenchement de cette routine aujourd'hui**.
+
+**🖥️ Navigateur** : `_shared/browser-status.md` lu avant ouverture, dernière entrée **🟢 RÉTABLI (24/08 ~09h15)** → aucun bridage. Rien de neuf à y écrire. Deux incidents d'interaction rencontrés, sans conséquence, détaillés en fin d'entrée.
+
+**Registre de faits régénéré en début de run** (`npm run qa:facts`) : **225 faits citables sur 106 lignes affichées**, 81 lignes `is_seed` exclues, **22 faits périmés** (contre 25 ce matin, 59 hier soir). La reprise de fraîcheur constatée à 9h se confirme.
+
+**Quotas à la clôture, cumulés sur les 3 sessions du jour** : commentaires **2/7 publiés** · notes de connexion **1/7** · DM **5/8 envoyés ce matin sur ordre de David, 2 en file de validation** (voir `linkedin-contacts.md`) · suivis **9/7-10** · invitations reçues **2 acceptées**.
+
+---
+
+### ✅ COMMENTAIRE 2/7 PUBLIÉ — **Harvey Basivikidi** (`/in/harvey-basivikidi-9b6343a7/`), EN
+
+`urn:li:activity:7498314547779444737`, post d'**1 jour** (fenêtre 48 h ✅), **46 réactions, 4 commentaires, 7 republications** avant le nôtre. **Blocage hebdomadaire levé** : commenté le 19/08, bloqué jusqu'au 26/08. *MD, éco-épidémiologiste, Master 2 Écologie et Gouvernance des maladies (INOHA), fondateur Corridor4Health*, Mbanza-Ngungu (RDC), 6 586 abonnés, 50+ mutuels.
+
+**Le post** : l'indexation PubMed/PMC de son article *« Operationalizing One Digital Health and FAIR Data Principles for Disease Surveillance in a Low-Medium Income Country in Africa: Qualitative Study in the Democratic Republic of the Congo »* (JMIR Med Inform, PMID 42555930, PMCID PMC13490936), cosigné avec Lefiso'o Lambuku, Delphin Kayembe, Arriel Benis et Didier Bompangue. Résumé du post : « *governance, interoperability, infrastructure, and multisectoral collaboration* » au service de systèmes de surveillance plus intégrés en pays à revenu faible ou intermédiaire.
+
+**Les 4 commentaires existants ont été lus avant rédaction (§5)** : deux félicitations (Fabien Imani Shangalume, Edith Laure Manuella DJIENANG) et les deux remerciements de l'auteur. **Aucun contenu analytique, donc aucun risque de redondance** — nous sommes le premier commentaire de fond.
+
+**L'angle** : FAIR travaille en amont, entre secteurs et institutions capables de s'accorder sur un schéma. Mais l'artefact qui parvient à un lecteur extérieur à ces canaux est un PDF où le chiffre est écrit dans une phrase. La structure est donc construite, puis abandonnée au moment de la publication, et chaque lecteur en aval la reconstruit à la main. **Angle pris depuis la seule position que HWG occupe réellement, celle du lecteur de bulletins, sans aucun chiffre et sans mention du produit.**
+
+⚠️ **Le rédacteur n'a PAS lu l'article** — seulement le post. C'est assumé, écrit noir sur blanc dans le contexte fourni au relecteur, et c'est pourquoi la dernière phrase est une **question sur le périmètre du papier**, jamais une affirmation sur son contenu. Le relecteur a validé le procédé (question 1, PASS : « *la seule mention du papier est interrogative* »).
+
+**QA: mécanique PASS (0 blocker, 451 car., 2 paragraphes, `draftLang: en` / `threadLang: en`) | relecteur REECRIRE (4) au 1er passage, corrigé — 11 PASS sur 12 | faits cités: aucun chiffre | registre du 27/08 | statut: publié le 27/08**
+
+⭐ **Le relecteur a attrapé une universelle non bornée, et elle était réfutable en une réponse par ce destinataire précis.** Le 1er brouillon disait « *The artefact that actually leaves the country is a PDF with the figure written into a sentence* ». **C'est faux des flux institutionnels sortants** — IDSR/RSI vers l'OMS AFRO, instances DHIS2, EWARS, listes linéaires font circuler du structuré hors du pays, et **c'est exactement le terrain professionnel de Harvey**. La portée a été bornée à ce qu'elle visait réellement : « *What reaches anyone outside those channels* ». Défaut réel, corrigé une fois, publié — conformément au dispositif du 26/08.
+
+⚠️ **Point de méthode à retenir, sur le contrôle du gabarit rhétorique.** Le relecteur a été explicitement interrogé sur le risque de rejouer la figure du commentaire publié le matin même chez Amanda McClelland (« *a route is the one thing the published record cannot hold* »). Verdict PASS, motivé : le **thème** est le même (ce que la publication laisse tomber), mais la construction diffère réellement — nomination + clausule assertive le matin, séquence temporelle en trois temps close par une question ici. « *Le thème éditorial est le même, ce qui est une ligne, pas un gabarit.* » **C'est une distinction utile pour les prochains runs : une ligne éditoriale récurrente n'est pas un gabarit ; c'est l'architecture de phrase qui l'est.**
+
+> FAIR does most of its work upstream, between sectors and institutions that can be made to agree on a schema. What reaches anyone outside those channels is a PDF with the figure written into a sentence.
+>
+> So the structure gets built, then discarded at the point of publication, and every reader outside rebuilds it by hand. I would be curious whether the paper treats the outgoing bulletin as part of the system, or as something that happens after it.
+
+**Publication confirmée** : commentaire relu dans le fil après envoi (449 caractères rendus, 2 paragraphes, 0 tiret cadratin, identiques au brouillon validé), compteur passé de **4 à 5 commentaires**, **un seul commentaire à notre nom** sur ce post, éditeur vidé. **Prochain commentaire possible sur ce profil à partir du 03/09.**
+
+---
+
+### ➖ DEUX CANDIDATS COMMENTAIRE ÉVALUÉS ET ÉCARTÉS — quota laissé volontairement partiel
+
+Le SKILL interdit de forcer un commentaire médiocre pour remplir le quota. Recherche menée sur les notifications du jour (22 items dépouillés) et l'activité des profils suivis ; deux candidats sérieux, tous deux écartés pour un motif de fond.
+
+- **Oscar Ntihabose, MD, MPH** — *« Un moment historique pour la sécurité sanitaire en Afrique. Ce matin du 27 août 2026, à Addis-Abeba, en marge de la 76ᵉ Session du Comité régional de l'OMS pour l'Afrique (RC76AFRO), j'ai eu le privilège d'être témoin oculaire, au nom du Burundi, de la signature officielle et historique du Mémorandum d'e[ntente]… »*. **Écarté au titre de §10**, même motif que la tribune de Jean Kaseya écartée ce matin : c'est une **annonce diplomatique et protocolaire**, où un officiel représente son pays à une cérémonie de signature. Un commentaire analytique sur ce que les données ne savent pas porter y serait déplacé quel que soit l'angle. Post du jour, donc encore en fenêtre si un angle non protocolaire apparaissait — mais il n'y en a pas.
+- **Adam Abdullahi** (`urn:li:activity:7498385006348689409`) — sa une dans **Nature Africa** sur l'empreinte immunitaire SARS-CoV-2 en population nigériane non vaccinée. **Cible valable, délibérément non traitée pour le 2e run consécutif, et le motif du matin tient toujours** : un DM lui a été envoyé ce matin à 10:09, et doubler les deux canaux vers le même contact le même jour sature. **À reprendre au créneau de 17h ou demain si le post est encore en fenêtre 48 h.**
+
+---
+
+### 🗒️ Veille — données épidémiologiques (§8)
+
+**Aucune écriture en base faite** (une routine sociale signale, elle n'écrit pas). **Trois signaux, dont deux à ingérer sans ambiguïté.**
+
+- 🔴🔴 **LES TROIS LIGNES FRANCE DE HWG ONT UN BULLETIN DE RETARD, et la source de remplacement est primaire, institutionnelle et sans régression.** Trouvé en suivant le lien envoyé par **Pierre PARNEIX** en DM ce matin. **Bulletin national SpF du 26 août 2026, arrêté au 24 août** (`https://www.santepubliquefrance.fr/maladies-a-transmission-vectorielle/dengue/bulletin-national/chikungunya-dengue-zika-et-west-nile-en-france-hexagonale-bulletin-de-la-surveillance-renforcee-du`) :
+
+  | Ligne HWG | Valeur portée | Arrêtée au | Bulletin du 26/08, arrêté au 24/08 |
+  |---|---|---|---|
+  | Chikungunya / France | 25 cas | 17/08 | **33 cas, 7 épisodes (+4)** — Tarn, **Lot**, Gironde, **Val-de-Marne** |
+  | Dengue / France | 4 cas | 17/08 | **5 cas, 4 épisodes (+1)** — Tarn, Hérault, Dordogne, **Bouches-du-Rhône** |
+  | Fièvre du Nil occidental / France | 18 cas | 17/08 | **30 cas (+12)** — PACA, Occitanie, Île-de-France, Auvergne-Rhône-Alpes |
+
+  ✅ **Aucun piège de régression** : les trois cumuls **montent**, et la date d'arrêt du bulletin (24/08) est strictement postérieure à celle des lignes (17/08). Les conditions de §8 sont réunies dans l'ordre exact qu'il prescrit. **À ingérer par `morning-don-check` ou une session interactive**, qui lira le PDF primaire (1,07 Mo, lien « TÉLÉCHARGER » sur la page).
+  - 🆕 **Fait notable dans ce bulletin** : « *C'est la première fois que des cas humains d'infection à virus West Nile sont détectés dans les départements de l'Aude (Occitanie), Seine-et-Marne (Île-de-France) et Drôme (Auvergne-Rhône-Alpes).* » Extension géographique, pas seulement un cumul qui monte.
+  - Cas importés au 23/08 : 117 chikungunya, 328 dengue, 11 Zika.
+
+- 🟠 **Bulletin régional Nouvelle-Aquitaine du 27 août, arrêté au 25 août** — plus frais encore, mais **périmètre régional, à ne pas confondre avec le national**. 5 épisodes autochtones en Nouvelle-Aquitaine : 4 de chikungunya totalisant **24 cas** (Prignac-et-Marcamps 20, Talence 2 et Cavignac 1 **explicitement rattachés à Prignac par l'investigation**, Saint-Médard-en-Jalles 1 indépendant) et 1 de dengue en Dordogne (Mouleydier, 1 cas). ⚠️ **24 régional n'est PAS une baisse par rapport à 25 national** : ce sont deux périmètres différents. Cohérence croisée vérifiée : le national au 24/08 borne à « 1 à 19 cas par épisode », le régional au 25/08 donne Prignac à 20 — un jour d'écart, aucune contradiction.
+
+- ⭐⭐ **LA LACUNE HANTAVIRUS, OUVERTE DEPUIS LE 25/08, TROUVE UNE PIÈCE FRANÇAISE — et ce n'est pas le Chili.** Trouvé en vérifiant un fait pour le DM Rodrigo. **Actualité SpF du 7 août 2026** (`https://www.santepubliquefrance.fr/les-actualites/hantavirus-andes-mise-en-place-des-investigations-epidemiologiques-et-du-contact-tracing-suite-a-la`) : un **cas importé d'hantavirus Andes a transité par la France la deuxième quinzaine de juillet**, souche confirmée par le **CNR le jeudi 6 août**, patient isolé avec sa famille en Espagne, peu symptomatique et guéri. Contact tracing mené par SpF, les ARS et la DGS, sur une conduite à tenir produite avec l'ANRS-MIE et la mission COREB, isolement des contacts conforme aux recommandations ECDC et OMS.
+  - 🔑 **Verbatim déterminant, et il corrige une hypothèse que nous étions sur le point d'écrire** : « *Ce patient n'a aucun lien avec le foyer épidémique d'hantavirus Andes survenu sur le navire de croisière Mv Hondius en mai dernier, avec à son bord près de 150 passagers de 23 nationalités.* » **Ce sont donc DEUX événements Andes distincts touchant l'Europe cette saison**, pas un seul.
+  - 🔴 **Ce que ça dit du registre** : HWG ne porte **ni ligne hantavirus, ni ligne Chili** (revérifié ce matin sur les 106 foyers). Or `hwg-social-policy.md` §1 range le hantavirus parmi les maladies couvertes. **La cause n'est pas l'absence de la source** : `santepubliquefrance.fr` figure bien parmi les 29 `sourceHosts` du registre produit, vérifié ce run. **La cause est la forme de l'enregistrement** — un avis d'investigation sans aucun compte n'a pas de forme que la table `outbreaks` sache stocker (colonnes NOT NULL, cf. schéma). **C'est une question de modèle de données, pas de liste de sources, et elle mérite d'être posée à David plutôt que tranchée par une routine sociale.**
+
+- ➖ **Aucun chiffre épidémiologique n'a été repris dans le commentaire publié ce run.** Les chiffres SpF ci-dessus n'apparaissent que dans un DM **en file de validation** (Pierre PARNEIX), non envoyé.
+
+---
+
+### 👀 Veille passive — signaux et matière
+
+- ⭐ **Harvey Basivikidi est en train de devenir le relais le plus actif de HWG.** Ce matin il a republié notre post de marque en le marquant « instructif » ; son article vient d'être indexé dans PubMed ; il est cosignataire avec **Didier Bompangue** (figure de la surveillance en RDC) et **Arriel Benis**. Et c'est par son réseau qu'est arrivé le seul nouvel abonné du créneau. **Profil à traiter comme un relais durable, pas comme une cible ponctuelle.**
+- 🆕 **Institut One Health pour l'Afrique (INOHA)** apparaît deux fois ce run (article Harvey, profil Mbusa Murefu, plus une annonce de pré-inscriptions en thèse 2026-2027). **Écosystème francophone de surveillance en RDC jusqu'ici peu représenté dans le réseau** — piste de découverte active pour un prochain créneau.
+- **WHO AFRO RC76 se poursuit à Addis-Abeba** : signature d'un mémorandum d'entente le matin du 27/08, relayée par Oscar Ntihabose au nom du Burundi. Continue d'alimenter les fils de décideurs africains.
+- **MOOC SHS et épidémies** relayé par Harvey il y a 1 h : approche sciences humaines et sociales de la prise en charge des épidémies, méthodes qualitatives en contexte d'urgence sanitaire. Matière de veille, pas une lacune.
+- **Statistiques rappelées ce matin, inchangées à ce relevé** : 487 impressions sur la semaine passée, 333 vues de profil, post de marque mpox Ouganda à 93 impressions.
+
+---
+
+### 🔧 Défauts d'outillage relevés — 1 nouveau (consigné), 2 incidents d'interaction navigateur
+
+1. 🆕 **Le marqueur CTA `\blien\b` mord sur le mot français courant, et il le fera indéfiniment sur ce compte.** `context.cta-repeat` a bloqué le DM Pierre PARNEIX alors que le brouillon **ne contient aucun CTA** : le marqueur déclenché était « lien », employé pour *l'hyperlien de Pierre* et pour **« le lien épidémiologique »**, terme de métier standard. Contrairement au défaut des annotations de `threadFile` documenté le même jour, **il ne se corrige pas par de l'hygiène de fichier** : le mot est légitimement dans le brouillon. **Consigné dans `docs/outreach-qa.md` ce run**, avec la conduite à tenir (vérifier quel marqueur a réellement mordu avant de conclure).
+2. ⚠️ **Un clic par coordonnées sur le bandeau cookies a ouvert deux bulles de messagerie flottantes**, dont une pointant vers Rodrigo Olave Hurtado — **dont le DM est justement en file de validation**. **Aucun texte n'y a été saisi (0 caractère vérifié dans les deux bulles) et rien n'a été envoyé**, mais c'est exactement la primitive de l'incident du 09/08. **Le bandeau a ensuite été refusé par le DOM, pas par coordonnées** (« Refuser », option la plus protectrice), ce qui a fonctionné du premier coup.
+3. ⚠️ **Le bouton « Commenter » ne répond pas à un `.click()` JS sur ce composant, et une saisie DOM directe ne suffit pas non plus.** Deux tentatives ont échoué silencieusement (bouton actif, texte présent, compteur inchangé, aucun commentaire créé — vérifié deux fois avant de changer de méthode, donc aucun risque de doublon). **Ce qui a fonctionné** : vider l'éditeur, le focaliser en JS, **taper le texte par vraies frappes clavier** (`computer` action `type`, avec deux `Return` entre les paragraphes), puis **cliquer le bouton par coordonnées après hit-test `elementFromPoint` et contrôle visuel**. Cause probable : l'état interne de l'éditeur Quill n'est pas mis à jour par une écriture DOM, donc le handler de soumission voit un contenu vide. **`_shared/browser-click-reliability.md` privilégie le clic JS ; c'est le bon défaut, mais il connaît ici une exception nette qu'il vaut mieux connaître d'avance.**
+
+---
+
+### 🔁 CARRY-OVER POUR LE CRÉNEAU DE 17h — liste exhaustive
+
+1. **🔒 DEUX DM EN FILE DE VALIDATION** — Rodrigo Olave Hurtado (EN, avec CTA) et Pierre PARNEIX (FR, sans CTA). **Ne partent pas sans ordre explicite de David.** Textes complets dans `linkedin-contacts.md`, entrée du 27/08 13h.
+2. **Adam Abdullahi** — post Nature Africa (`urn:li:activity:7498385006348689409`), **cible de commentaire valable, reportée 2 fois pour le même motif** (DM envoyé le même jour, saturation des canaux). Le motif cesse de valoir demain. **Vérifier la fenêtre 48 h avant de le reprendre.**
+3. **Oscar Ntihabose** — post protocolaire RC76 écarté §10 ce run. **Ne pas reproposer** sauf angle non protocolaire.
+4. **Écosystème INOHA / Corridor4Health** — Didier Bompangue, Arriel Benis, Delphin Kayembe, Lefiso'o Lambuku (cosignataires de l'article Harvey) et l'Institut One Health pour l'Afrique : **piste de découverte active non ouverte ce run**, faute de marge sur le quota de suivis (9/7-10).
+5. **Connexion John Omari Baso** — envoyée sans note ce matin, **toujours en attente** à 13h.
+6. **§8 à ingérer** : les 3 lignes France (chikungunya 33, dengue 5, West Nile 30, arrêtées au 24/08) et la question de modèle de données posée par le cas hantavirus Andes. **Ni l'un ni l'autre n'est une action de routine sociale.**
+7. **Notes de connexion** : le compteur de notes personnalisées gratuites était déjà épuisé ce matin dès la première tentative. **À revérifier au créneau de 17h**, comme demandé par le run de 9h.
+
+---
+
 ## 📅 Session linkedin-hwg-monitoring — 27/08/2026 (9h)
 
 **Vérification double déclenchement** : aucune entrée `linkedin-hwg-monitoring` datée du 27/08 dans ce fichier ni dans `linkedin-contacts.md` à l'ouverture (dernière en date : 26/08 9h) → **premier déclenchement de cette routine aujourd'hui**. Les entrées du 26/08 en tête de fichier appartiennent à `linkedin-hwg-followup-check-2` (17h) et `linkedin-hwg-followup-check` (13h), runs intentionnellement distincts.

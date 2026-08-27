@@ -1,6 +1,133 @@
 > 📦 **Archive** : le détail du 24 juin au 16 juillet 2026 a été déplacé dans [linkedin-contacts-archive-avant17juillet.md](linkedin-contacts-archive-avant17juillet.md) le 23/07 pour garder ce fichier léger.
 
 
+## 📅 Session linkedin-hwg-followup-check — 27/08/2026 (13h, 1er des 2 créneaux après-midi)
+
+**Vérification double déclenchement** : aucune entrée `linkedin-hwg-followup-check` datée du 27/08 dans ce fichier ni dans `content-log.md` à l'ouverture (dernière en date : 26/08 13h). L'entrée du jour appartient à `linkedin-hwg-monitoring` (9h), run intentionnellement distinct → **premier déclenchement de cette routine aujourd'hui**.
+
+**🖥️ Navigateur** : `_shared/browser-status.md` lu avant ouverture, dernière entrée **🟢 RÉTABLI (24/08 ~09h15)** → aucun bridage. `23c7ecdd-…` seul listé, sélectionné sans question (§7). Rien de neuf à y écrire.
+
+**Registre de faits régénéré en début de run** (`npm run qa:facts`) : **225 faits citables sur 106 lignes affichées**, 81 lignes `is_seed` exclues, **22 faits périmés** (contre 25 ce matin). L'amélioration de fraîcheur constatée à 9h se poursuit.
+
+**Quotas à la clôture, cumulés sur les 3 sessions du jour** : commentaires **2/7 publiés** · notes de connexion **1/7** (inchangé depuis 9h) · **DM 5/8 envoyés ce matin sur ordre de David, 2 nouveaux en file de validation ci-dessous** · suivis **9/7-10** · invitations reçues **2 acceptées** (inchangé).
+
+---
+
+### 1️⃣ SUIVI DES ACTIONS DU MATIN — 2 réponses reçues sur 5 DM, 1 réaction sur le commentaire
+
+- **Rodrigo Olave Hurtado** : a répondu à **11:23**, réponse longue et argumentée qui **corrige notre cadrage**. Traitée en section 2, DM 1.
+- **Celestin Nzanzu Mudogo** : 👍 à 10:21, déjà noté ce matin. **Fil clos, rien de dû.**
+- **Adam Abdullahi**, **Peace Mpakaniye**, **Dr. Kaushik Sanyal** : aucune réponse à ce stade, notre message reste le dernier des trois fils. Rien à relancer (envoyés il y a moins de 3 h).
+- **Commentaire Amanda McClelland** (publié à 9h) : son post est toujours en notifications, **aucune réponse ni réaction sur notre commentaire** à ce relevé. Nous restons le seul commentateur.
+- **Connexion John Omari Baso** (envoyée sans note ce matin) : **toujours en attente**, non acceptée à ce relevé.
+- **Julien Harneis** et **Harvey Basivikidi** : réactions déjà comptées ce matin, rien de neuf.
+
+---
+
+### 2️⃣ 🔒 DEUX DM EN FILE DE VALIDATION — les deux sont des réponses en fil actif, hors quota froid
+
+Les deux ont été rédigés une fois, passés une fois au registre de faits, une fois au contrôle mécanique et une fois au relecteur indépendant, conformément au dispositif révisé du 26/08. **Aucun n'a été envoyé.** Comparaison croisée des deux brouillons entre eux (séquences de 4 mots) : **aucune formule partagée**, et ils sont dans deux langues différentes.
+
+⭐ **Les deux relecteurs ont rendu un service réel ce run, sur des points que le contrôle mécanique ne pouvait pas voir** — dont une erreur de fait qui aurait été visible immédiatement par le destinataire. Détail sous chaque brouillon.
+
+---
+
+#### 🔒 DM 1 — **Rodrigo Olave Hurtado** (EN, fil actif, **AVEC CTA**, hors quota froid)
+
+*Veterinarian, MSc, PGDip | Infectious Disease Epidemiology & Zoonoses*, LSHTM, chilien basé au Royaume-Uni. Relation de 1er degré depuis le 26/08, message de bienvenue envoyé ce matin à 10:36.
+
+**Fil relu intégralement (§4)** : 2 messages, recopiés verbatim dans `tmp/thread-rodrigo-27b.txt`. *Langue du fil = EN ; langue du brouillon = EN* (paire confirmée mécaniquement, `draftLang: en` / `threadLang: en`).
+
+**Sa réponse, reçue à 11:23, verbatim :**
+> Hello David, Thanks for connecting. Really nice to meet you. I understand what you mean.
+>
+> My point of view is that I am not sure if I would interpret the Chilean measure as a reservoir alert as such. Hantavirus, specifically Andes virus, has been endemic in Chile for decades and has been part of routine surveillance since 1990s.
+>
+> The measure I shared seems to be more related to an escalation of a national response, related to a increase of cases and fatalities, and Hantavirus was incorporated to a broader alert covering zoonotic and reservoir alert.
+>
+> That's why I wouldn't expect a international alert, if not an internal response within a surveillance programme. (I wouldn't see it as an unusual international event). Although, Andes virus has the capacity to be transmitted between person to person, it is quite rare. As we saw with the cruise.
+>
+> Unfortunately, I don't work with MINSAL (I'm Chilean, but I am based in the UK). So I can't speak for their international reporting pathways, but my impression is that this signal will remain locally within the national surveillance team as a measure of prevention in order to control de chain of transmission.
+>
+> From a HealthWatch perspective it does raise an interesting question - this is my point of view; if the aim is to capture earliee zoonotic risk signals rather than only outbreaks once they appear at WHO/PAHO reporting, national public health entities and maybe zoonotic/animal/environmental surveillance sources may add another relevant source of information.
+>
+> I hope this helps clarify things a bit.
+
+**CTA : présent, et c'est la règle qui l'impose.** Il a répondu avec du fond réel, pas une politesse : §3 demande donc le CTA. **Anti-répétition vérifiée sur le fil rendu** : ni le lien ni l'essai n'ont jamais été envoyés dans ce fil (le message de 10:36 n'en contient aucun), point confirmé indépendamment par le relecteur.
+
+**L'angle, après réécriture** : il suggère d'ajouter les agences nationales et les sources de surveillance animale/environnementale. **Or Santé publique France est déjà l'un des 29 hôtes de source de HWG**, et l'événement hantavirus n'a quand même produit aucune ligne. Le goulot n'est donc pas la liste des sources, c'est la **forme de l'enregistrement** : un avis d'investigation sans aucun compte n'a pas de forme que la table sache stocker. C'est un point que seul quelqu'un qui exploite réellement un agrégateur peut lui apporter.
+
+**QA: mécanique FAIL (1 blocker résiduel, `context.too-soon`, faux positif documenté — réponse à un message entrant reçu 47 min plus tôt, explicitement hors plafond de relance ; 1293 car. / 1300, 4 paragraphes) | relecteur REECRIRE (1, 2, 3, 9, 10) au 1er passage, les 5 corrigés | faits cités: aucun chiffre épidémiologique ; « 17 » sourcé sur `coverage.diseases`, « 14 » sur `pricing.faq4_a` | registre du 27/08 | statut: 🔒 en file de validation**
+
+🔴 **Le relecteur a évité une erreur de fait qui serait passée devant un spécialiste des zoonoses, et c'est la trouvaille du run.** Le 1er brouillon disait « *from outside I have no way of telling whether it is the same event as the ship case you mentioned* ». **La page SpF tranche explicitement le contraire**, vérifié par mes soins ensuite, verbatim : « *Ce patient n'a aucun lien avec le foyer épidémique d'hantavirus Andes survenu sur le navire de croisière Mv Hondius en mai dernier, avec à son bord près de 150 passagers de 23 nationalités.* » J'affichais une incertitude sur un point que ma propre source citée résolvait, devant l'interlocuteur qui avait lui-même soulevé la croisière. **Cause : je n'avais lu que le premier tiers de la page.**
+
+⭐ **Deux autres findings réels du même relecteur, tous deux corrigés :**
+- **Fait mal attribué dans la phrase même où je prétendais reprendre sa correction.** J'écrivais « *Endemic since the 1990s* » ; il a écrit « *endemic for decades* » et « *routine surveillance since 1990s* ». L'endémicité et la surveillance n'ont pas la même date, et je les avais fusionnées.
+- **Affirmation fausse sur HWG.** J'écrivais avoir trouvé l'information « *rather than anywhere my aggregation looks* ». **Faux** : `santepubliquefrance.fr` figure bien parmi les 29 `sourceHosts` du registre produit, vérifié après coup. La correction a transformé le défaut en meilleur argument du message.
+
+⚠️ **Le contrôle mécanique a par ailleurs attrapé un vrai dépassement de longueur** (1476 puis 1325 car. contre un plafond de 1300) que le relecteur avait jugé « longueur tenable ». Resserré à 1293 sans perdre un fait.
+
+> Thanks Rodrigo, correction taken. Endemic for decades, with surveillance running since the 1990s, is not where I had filed it, and an escalation inside an existing programme is not the new signal I read it as.
+>
+> Your closing suggestion sent me to check, and the answer is not flattering to me. Santé publique France published on 7 August that an imported Andes case had transited the country in the second half of July, strain confirmed by the CNR on the 6th, contact tracing run with the ARS and DGS. They also state plainly that it has no connection to the Mv Hondius outbreak in May, so it is a separate event, not the one you meant.
+>
+> The uncomfortable part: Santé publique France is already one of the sources I read. Adding national public health bodies would not have caught it. The source was never what was missing: the item carries no count, nothing with a shape my side can store, and hantavirus has no line in what I hold at all. The bottleneck is the form of the record, not the list of institutions.
+>
+> healthwatch-global.com is where that sits, 17 diseases with the bulletin behind each line, Pro access runs 14 days and takes no card. What I would want from a zoonoses reader is your sense of what a countable reservoir signal would even look like, if one is possible at all.
+
+---
+
+#### 🔒 DM 2 — **Pierre PARNEIX** (FR, vouvoiement, fil actif, **SANS CTA**, hors quota froid)
+
+Professionnel français de l'hygiène hospitalière et de la prévention du risque infectieux. Fil le plus technique du compte.
+
+**Fil relu intégralement (§4)** : 8 messages depuis vendredi, recopiés verbatim dans `tmp/thread-pierre-27.txt`. *Langue du fil = FR, vouvoiement ; langue du brouillon = FR, vouvoiement* (paire confirmée mécaniquement).
+
+**Son message, reçu à 10:45, verbatim :**
+> Les bulletins épidémiologiques thématique de SPF permettent d'avoir des informations assez complètes :
+> https://www.santepubliquefrance.fr/regions-et-territoires/nouvelle-aquitaine/bulletin-regional/chikungunya-dengue-et-zika-en-nouvelle-aquitaine-bulletin-du-27-aout-2026
+
+**CTA : volontairement absent.** Le lien et l'essai Pro ont **déjà été envoyés dans ce fil vendredi à 18:44**. §3 interdit de resservir le même argumentaire. Vérifié sur le fil rendu et reconfirmé par le relecteur (« *aucun CTA, aucun lien, aucune mention de l'essai* »).
+
+**L'angle** : le bulletin qu'il envoie contient de quoi **nuancer ce que je lui ai affirmé samedi**. Je lui disais que le nombre d'épisodes lit l'installation du vecteur mieux que le cumul. Or sur les 4 épisodes de chikungunya de Nouvelle-Aquitaine, **3 sont explicitement rattachés entre eux** par l'investigation : compter les épisodes sans distinguer les rattachés surestime précisément l'indépendance que je croyais qu'ils mesuraient. Auto-correction sur une affirmation faite dans ce fil, à partir de la source qu'il vient de fournir.
+
+**QA: mécanique FAIL (2 blockers résiduels, les deux faux positifs documentés — voir ci-dessous ; 1171 car., 4 paragraphes) | relecteur REECRIRE (10) au 1er passage, corrigé — 11 PASS sur 12, tous les chiffres revérifiés un par un contre les deux bulletins | faits cités: aucun chiffre du registre, tous pris aux bulletins SpF primaires lus en session | registre du 27/08 | statut: 🔒 en file de validation**
+
+⚠️ **Deux faux positifs mécaniques, levés sur pièce, dont un NOUVEAU et récurrent par nature :**
+- **`context.cta-repeat`** — le marqueur qui déclenche est le mot français **« lien »**, employé ici pour *l'hyperlien de Pierre* (« Votre lien m'a donné le détail ») et pour **« le lien épidémiologique »**. Le brouillon ne contient aucun CTA. **Ce marqueur va se déclencher indéfiniment sur ce compte** : « lien épidémiologique » est un terme de métier que ces fils emploieront souvent. Consigné dans `docs/outreach-qa.md` ce run.
+- **`facts.unsourced` sur le chiffre 33** — attendu et assumé : il vient du bulletin national SpF du 26/08 lu directement en session, plus récent que le registre. Le registre porte encore 25 cas arrêtés au 17/08 (voir §8 ci-dessous).
+- **`lexique` (warn) « cas » sans qualificatif** — écarté sur pièce : **les deux bulletins SpF cités écrivent eux-mêmes « cas » sans qualificatif**. Ajouter « confirmés » serait une sur-qualification non sourcée. Point confirmé par le relecteur, citations à l'appui.
+
+⭐ **Ce que le relecteur a attrapé, et que le n-gramme ne pouvait pas voir.** Le brouillon ouvrait « *En tirant le fil du vôtre, je suis aussi tombé sur…* » — or **mon propre message de vendredi dans ce même fil** disait déjà « *En allant lire votre lien, je suis tombé sur autre chose* » et « *je ne l'ai su qu'en tirant le fil de votre message* ». Je cumulais les deux figures du même message précédent en une seule phrase, et rouvrais sur « Merci Pierre » comme vendredi. C'est le défaut de [[feedback_anti_template_check_structure_not_just_wording]] appliqué **à l'intérieur d'un seul fil**, cas que le contrôle mécanique ne couvre pas. Réécrit.
+
+⭐ **Second point réel du relecteur, corrigé** : la clause de chute écrivait « *il compte quatre implantations là où il y a une chaîne qui essaime* », ce qui effaçait Saint-Médard-en-Jalles. Il reste **deux** foyers indépendants, pas un. Corrigé en « là où il y en a deux, dont une qui essaime ».
+
+> Votre lien m'a donné le détail qui me manquait, et il m'oblige à nuancer ce que je vous ai dit samedi.
+>
+> Au 25 août, la Nouvelle-Aquitaine compte quatre épisodes de chikungunya, mais trois n'en font qu'un : Prignac-et-Marcamps à 20 cas, Talence à 2 et Cavignac à 1, ces deux derniers rattachés à Prignac par l'investigation. Soit 23 des 24 cas dans une seule chaîne, et un seul épisode réellement indépendant, Saint-Médard-en-Jalles. Je vous disais que le nombre d'épisodes lisait l'installation du vecteur mieux que le cumul ; il ne la lit que si on distingue les rattachés des autres, sinon il compte quatre implantations là où il y en a deux, dont une qui essaime.
+>
+> Le bulletin national du 26, arrêté au 24, m'avait par ailleurs échappé : 7 épisodes de chikungunya pour 33 cas, avec le Lot et le Val-de-Marne en plus de la Gironde et du Tarn, et 30 cas autochtones de West Nile, dont les premiers cas humains détectés dans l'Aude, en Seine-et-Marne et dans la Drôme.
+>
+> Sur le rattachement, justement, puisque c'est par là que j'ai commencé à vous écrire : Cavignac accroché à Prignac, ça tient à du séquençage ou au lien épidémiologique reconstitué par l'investigation ?
+
+---
+
+### 3️⃣ 👥 RÉSEAU — 1 follow-back exécuté, quota suivis à 9/7-10
+
+**Un seul abonné nouveau depuis le relevé de 9h**, et il est pertinent :
+
+- ✅ **Mbusa Murefu** (`/in/mbusa-murefu-1725a5347/`) — *MD, MSc in Eco-Epidemiology/One Health, INOHA/UNIKIN | MSc 2 student in Ecology and governance of diseases*, **Kinshasa, RDC**, 180 abonnés, 500+ relations, **4 relations en commun dont Celestin Nzanzu**. **Suivi en retour**, identité vérifiée par `aria-label` (« Suivre Mbusa Murefu ») dans le même appel JS que le clic (§7), résultat confirmé après coup (bouton passé à « Suivi, cliquez pour ne plus suivre Mbusa Murefu »). Absent des 3 fichiers d'archive avant évaluation.
+  - **Activité mince mais entièrement sur cible** : sa seule publication visible est une republication de **Harvey Basivikidi** annonçant l'indexation PubMed/PMC de leur article sur le **One Digital Health et les principes FAIR appliqués à la surveillance des maladies en RDC**. Ce n'est pas du contenu de carrière, c'est de la matière de surveillance. Barre franchie, contrairement aux 4 profils écartés ce matin pour activité hors sujet.
+  - ⚠️ Mention « À l'écoute de nouvelles opportunités » sur son profil : **suivi seul, pas de DM**, rien qui ressemble à une approche d'emploi ne sera initié de notre côté.
+
+**Winston Urio** apparaît toujours comme abonné non suivi : **déjà écarté au tracker**, statut inchangé, aucune action.
+
+**Invitations reçues** : les 3 restantes sont inchangées depuis ce matin (Alain BASHIZI en attente de décision de David, Zachariah G. Houdari hors sujet, OLAOLUWA PHILIP **17e passage** non rouvert). **Aucune nouvelle.**
+
+**Invitations envoyées toujours en attente**, rappel du carry-over : Ihekweazu, SAIDOUNI et Linda Esso (24/08, **5e jour**), Baba Ceesay et Hawa BAH (4 jours), John Omari Baso (ce matin).
+
+---
+
 ## 📅 Session linkedin-hwg-monitoring — 27/08/2026 (9h)
 
 **Vérification double déclenchement** : aucune entrée `linkedin-hwg-monitoring` datée du 27/08 dans ce fichier ni dans `content-log.md` à l'ouverture (dernière en date : 26/08 9h) → **premier déclenchement de cette routine aujourd'hui**.

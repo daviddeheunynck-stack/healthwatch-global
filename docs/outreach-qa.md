@@ -209,6 +209,37 @@ qui relève du contexte, de l'intention ou de la justification va dans le
 `ctx-<slug>.json`, dans le prompt du relecteur, ou dans le journal d'archive —
 pas là.
 
+⚠️ **Le marqueur CTA `\blien\b` se déclenche sur le mot français courant, et il le fera
+indéfiniment sur ce compte — trouvé le 2026-08-27 (créneau 13h).** `context.cta-repeat` a
+bloqué le DM Pierre PARNEIX alors que le brouillon **ne contenait aucun CTA** : ni URL, ni
+« essai », ni mention de HealthWatch Global. Le marqueur déclenché était `\blien\b`, sur deux
+emplois strictement non commerciaux : « Votre **lien** m'a donné le détail qui me manquait »
+(l'hyperlien envoyé par le destinataire lui-même) et « le **lien** épidémiologique reconstitué
+par l'investigation ».
+
+**Ce n'est pas le même défaut que les annotations d'un `threadFile` documentées ci-dessus**, et
+il ne se corrige pas de la même manière. Là, le fichier était en cause et il suffisait de ne
+rien y écrire d'autre que le fil ; ici c'est le brouillon lui-même qui contient le mot, à bon
+droit. Le blocage ne peut donc pas être évité par de l'hygiène de fichier : soit on écarte le
+finding sur pièce, soit on renonce à un mot du vocabulaire de métier.
+
+**Pourquoi ça va se reproduire** : « lien épidémiologique » est un terme technique standard
+(rattachement de deux cas ou de deux épisodes par l'investigation), et c'est précisément le
+registre des fils les plus techniques du compte. Le mot « lien » au sens de « hyperlien » est
+par ailleurs la façon normale d'accuser réception d'une source envoyée par un contact, ce qui
+est un cas fréquent en fil actif.
+
+**Conduite à tenir** : sur un `context.cta-repeat`, vérifier **d'abord dans le brouillon**
+quel marqueur a réellement mordu (`grep -iE 'healthwatch|https?://|essai|trial|inscrire|sign up|démo'`).
+Si le seul hit est `lien` employé au sens d'hyperlien ou de lien épidémiologique, **le finding
+est un faux positif, l'ignorer et le noter dans la ligne QA**. S'il existe un vrai marqueur
+(URL, « essai », nom du produit), le blocage est réel et la règle anti-répétition s'applique.
+
+**Pas de correctif de script proposé ici.** Restreindre `\blien\b` à un voisinage d'URL
+casserait sa raison d'être en français (« je t'envoie le lien », « voici un lien vers l'essai »
+sont de vrais CTA sans URL littérale dans la phrase analysée). Le marqueur reste utile ; c'est
+son verdict qui n'est pas un couperet, conformément au dispositif révisé du 26/08.
+
 **Cas du premier contact, où il n'existe aucun fil** : mettre dans le `threadFile`
 le matériau source réellement cité (intitulé de profil verbatim, posts du
 destinataire verbatim) **dans sa langue d'origine**, et rien de plus. C'est ce
