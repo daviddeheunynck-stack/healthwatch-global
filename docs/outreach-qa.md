@@ -145,6 +145,27 @@ Ce dernier point corrige le trou identifié le 23/08 : le contrôle comparait au
 archives, jamais aux brouillons frères. Adetifa et Elnahif partageaient 9
 séquences de 5 mots et rien ne l'avait vu.
 
+⚠️ **Piège de re-vérification, trouvé le 2026-08-27 : un brouillon encore en file
+de validation entre dans son propre corpus dès qu'il est archivé.** La règle
+« mettre le texte complet en file d'attente dans `linkedin-contacts.md` »
+(section « Publication de tout texte adressé à un tiers ») écrit le brouillon
+mot pour mot dans un fichier que `ngram.history` relit ensuite comme historique.
+**Résultat : re-passer le même brouillon au contrôle après son archivage renvoie
+un `blocker` sur ses propres phrases, contre lui-même.** Constaté sur les 5 DM
+du run du matin, tous PASS à la rédaction, tous FAIL au re-contrôle de l'après-midi,
+pour la même raison à chaque fois. **Ce n'est pas un vrai gabarit recyclé** — un
+brouillon ne se répète jamais lui-même au sens de la règle, qui vise la répétition
+**entre destinataires différents**. Avant de conclure à un problème sur un
+`ngram.history` FAIL d'un texte déjà archivé « en file de validation », vérifier
+si les séquences citées viennent de la propre citation du brouillon dans
+`linkedin-contacts.md` (`grep` de la phrase exacte). Si oui, ignorer ce blocker
+précis ; s'il reste des séquences venant d'ailleurs, elles restent un vrai signal.
+**Pas de correctif de script proposé ici** : exclure toute citation en bloc
+casserait la détection contre les messages réellement déjà **envoyés**, qui sont
+archivés au même format — les deux cas ne se distinguent pas syntaxiquement sans
+repérer le bloc « en file de validation » entre son titre et sa ligne de statut,
+ce qui est une vraie modification de l'analyseur, pas une correction ponctuelle.
+
 Le contexte (`ctx-<slug>.json`) est écrit par le rédacteur :
 
 ```json
