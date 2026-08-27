@@ -30,7 +30,23 @@ Sentry.init({
   // links) — that one inflates a click count, this one throws in the browser;
   // no outbreak-page code path calls `.update()` at all, confirmed before
   // filtering.
-  ignoreErrors: ["NEXT_NOT_FOUND", "NEXT_REDIRECT", "Object Not Found Matching Id"],
+  // "Event `Event` (type=error) captured as promise rejection" — flagged as a
+  // "regression" 2026-08-27 on /:locale/outbreak/:id, but firstSeen was 10 days
+  // earlier (2026-08-17) and the "regressed" commit only touched a marketing
+  // doc, confirming the Sentry release attribution is coincidental, not causal
+  // (same lesson as the disease-alerts/Hydration Error mislabels this week).
+  // synthetic:true, mechanism auto.browser.global_handlers.onunhandledrejection,
+  // no stacktrace: this is the SDK's own generic handler for a Promise rejected
+  // with a raw DOM Event (a failed <img>/<video>/<audio> load, typically) rather
+  // than a thrown Error — confirmed via the SDK's own GitHub issues (getsentry/
+  // sentry-javascript#2210, #6199) and its community forum as a widely-reported,
+  // non-actionable pattern with the identical message shape, not specific to
+  // this codebase. userCount was 0 across all 10 days despite 8 occurrences, and
+  // the one event with geo data showed a Colombia IP paired with an Asia/Shanghai
+  // browser timezone — a VPN/automated-traffic signature, not a real visitor
+  // hitting a broken page. Same "confirm the signature is a known non-issue
+  // before filtering" standard as "Object Not Found Matching Id" below.
+  ignoreErrors: ["NEXT_NOT_FOUND", "NEXT_REDIRECT", "Object Not Found Matching Id", "captured as promise rejection"],
   // ignoreErrors above matches on error message/name — Next.js's internal
   // not-found/redirect control-flow signals carry their real type in
   // error.digest instead, which doesn't reliably appear in the message. Ported
