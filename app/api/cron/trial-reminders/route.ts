@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { buildTrialEndingEmail } from "@/lib/trial-ending-email";
 import * as Sentry from "@sentry/nextjs";
-import { logCronRun, isRealProduction, isLiveCronInvocation, claimEmailSend, releaseEmailSend, pingHeartbeatIfHealthy } from "@/lib/cron-monitor";
+import { logCronRun, isRealProduction, isLiveCronInvocation, claimEmailSend, releaseEmailSend, pingHeartbeatIfHealthy, failedRecipientsNote } from "@/lib/cron-monitor";
 import { getLocalizedDisease } from "@/lib/outbreaks";
 
 export const dynamic = "force-dynamic";
@@ -189,6 +189,8 @@ async function runTrialReminders(req: NextRequest, supabase: SupabaseClient) {
 
   let sent         = 0;
   let failed       = 0;
+  // Qui, pas seulement combien — voir failedRecipientsNote dans lib/cron-monitor.ts.
+  const failedTo: string[] = [];
   let skippedNoKey = 0;
   // Claimed-but-already-sent, i.e. a duplicate Vercel invocation of this same
   // scheduled run — see claimEmailSend() in lib/cron-monitor.ts.
@@ -255,6 +257,7 @@ async function runTrialReminders(req: NextRequest, supabase: SupabaseClient) {
       console.error(`[trial-reminders] Failed for ${profile.email}:`, err);
       Sentry.captureException(err, { tags: { cron: "trial-reminders", user_id: profile.id } });
       failed++;
+      failedTo.push(profile.email);
     }
 
     // Throttle — stay within Brevo rate limits
@@ -271,7 +274,7 @@ async function runTrialReminders(req: NextRequest, supabase: SupabaseClient) {
   // `failed`, incremented per-user in the catch above, was tracked but never
   // consulted here, so a genuine per-user send failure still logged "ok".
   await logCronRun(supabase, "trial-reminders", skippedNoKey > 0 || failed > 0 ? "error" : "ok", sent,
-    failed > 0 ? `${failed} rappel(s) en échec` : undefined);
+    failed > 0 ? `${failed} rappel(s) en échec${failedRecipientsNote(failedTo)}` : undefined);
   console.log(`[trial-reminders] Done — ${sent} sent, ${failed} failed, ${skippedNoKey} skipped (no key).`);
   return NextResponse.json({
     sent, failed, skippedNoKey, deduped, total: profiles.length,

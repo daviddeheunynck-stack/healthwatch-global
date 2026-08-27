@@ -56,7 +56,7 @@ import { buildTrialValueNudgeEmail } from "@/lib/trial-value-nudge-email";
 import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 import * as Sentry from "@sentry/nextjs";
 import { isMailSuppressed } from "@/lib/mail-suppression";
-import { logCronRun, isRealProduction, currentAlertDate, claimOutbreakAlertDaily, releaseOutbreakAlertDaily } from "@/lib/cron-monitor";
+import { logCronRun, isRealProduction, currentAlertDate, claimOutbreakAlertDaily, releaseOutbreakAlertDaily, failedRecipientsNote } from "@/lib/cron-monitor";
 import { resolvedPlan } from "@/lib/resolved-plan";
 import { buildCoverageNote, type AlertRegion } from "@/lib/region-coverage";
 
@@ -211,6 +211,10 @@ async function runRegionalAlerts(_req: NextRequest, supabase: SupabaseClient) {
   let sent = 0;
   let skipped = 0;
   let failed = 0;
+  // Qui, pas seulement combien — voir failedRecipientsNote dans lib/cron-monitor.ts.
+  // L'envoi lui-même a réussi ici : ce qui a échoué est le marqueur de dédup, donc
+  // l'identité utile est la paire destinataire/foyer qui sera re-alertée demain.
+  const failedTo: string[] = [];
   let blockedSkipped = 0;
   let trialNudgesSent = 0;
   let digestEmailsSent = 0;
@@ -499,6 +503,7 @@ async function runRegionalAlerts(_req: NextRequest, supabase: SupabaseClient) {
         if (logErr) {
           console.error(`[regional-alerts] log upsert failed for ${profile.id}/${item.outbreak.id}:`, logErr.message);
           failed++;
+          failedTo.push(`${profile.email} → foyer ${item.outbreak.id}`);
           continue;
         }
 
@@ -617,7 +622,7 @@ async function runRegionalAlerts(_req: NextRequest, supabase: SupabaseClient) {
   const lockNote = lockUnevaluable > 0
     ? `verrou inter-crons inévaluable ${lockUnevaluable}× : ${lockError}`
     : null;
-  const runNote = [failed > 0 ? `${failed} alerte(s) en échec` : null, lockNote]
+  const runNote = [failed > 0 ? `${failed} alerte(s) en échec${failedRecipientsNote(failedTo)}` : null, lockNote]
     .filter(Boolean).join(" · ");
   await logCronRun(supabase, "regional-alerts", failed > 0 ? "error" : "ok", sent,
     runNote || undefined);

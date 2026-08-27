@@ -3,7 +3,7 @@ import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { buildDigestEmail } from "@/lib/digest-email";
 import type { Outbreak } from "@/lib/outbreaks";
 import * as Sentry from "@sentry/nextjs";
-import { logCronRun, isRealProduction, claimWeeklyDigestSend, claimWeeklyEmailAddress, releaseWeeklyDigestSend, releaseWeeklyEmailAddress, currentWeekOf } from "@/lib/cron-monitor";
+import { logCronRun, isRealProduction, claimWeeklyDigestSend, claimWeeklyEmailAddress, releaseWeeklyDigestSend, releaseWeeklyEmailAddress, currentWeekOf, failedRecipientsNote } from "@/lib/cron-monitor";
 import { getWeeklySuppressionSet } from "@/lib/mail-suppression";
 import { sendBrevoEmail } from "@/lib/brevo-send";
 
@@ -135,6 +135,8 @@ async function runWeeklyDigest(_req: NextRequest, supabase: SupabaseClient) {
   // ── Send loop ──────────────────────────────────────────────────────────────
   let sent        = 0;
   let failed      = 0;
+  // Qui, pas seulement combien — voir failedRecipientsNote dans lib/cron-monitor.ts.
+  const failedTo: string[] = [];
   let skippedNoKey = 0;
   let blockedSkipped = 0;
   let alreadySent  = 0;
@@ -192,6 +194,7 @@ async function runWeeklyDigest(_req: NextRequest, supabase: SupabaseClient) {
       console.error(`[weekly-digest] Failed to send to ${sub.email}:`, err);
       Sentry.captureException(err, { tags: { cron: "weekly-digest", sub_id: sub.id } });
       failed++;
+      failedTo.push(sub.email);
       // Idem pour un echec Brevo : le verrou pose avant l'envoi ne doit pas
       // survivre a un envoi qui n'a pas eu lieu.
       await releaseClaims(supabase, sub.id, sub.email, weekOf);
@@ -209,7 +212,7 @@ async function runWeeklyDigest(_req: NextRequest, supabase: SupabaseClient) {
   // desabonne. Un « ok » vert le rendrait invisible.
   const degradedNote = [
     suppressionDegraded ? "liste de suppression incomplète (une source en échec)" : null,
-    failed > 0 ? `${failed} envoi(s) en échec` : null,
+    failed > 0 ? `${failed} envoi(s) en échec${failedRecipientsNote(failedTo)}` : null,
     lockUnevaluable > 0 ? `verrou hebdo inévaluable ${lockUnevaluable}× : ${lockError}` : null,
   ].filter(Boolean).join(" · ");
   await logCronRun(supabase, "weekly-digest",

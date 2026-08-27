@@ -20,7 +20,7 @@ import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 import { diseaseToSlug } from "@/lib/disease-data";
 import { errorMessage } from "@/lib/error";
 import * as Sentry from "@sentry/nextjs";
-import { logCronRun, isRealProduction, currentAlertDate, claimOutbreakAlertDaily, releaseOutbreakAlertDaily } from "@/lib/cron-monitor";
+import { logCronRun, isRealProduction, currentAlertDate, claimOutbreakAlertDaily, releaseOutbreakAlertDaily, failedRecipientsNote } from "@/lib/cron-monitor";
 import { sendBrevoEmail } from "@/lib/brevo-send";
 import { notifyMobile } from "@/lib/mobile-notify";
 import { resolvedPlan } from "@/lib/resolved-plan";
@@ -233,6 +233,10 @@ async function runDiseaseAlerts(_req: NextRequest, supabase: SupabaseClient) {
   // urgent first — see lib/disease-alert-email.ts).
   let sent = 0;
   let failed = 0;
+  // Qui, pas seulement combien — voir failedRecipientsNote dans lib/cron-monitor.ts.
+  // L'envoi lui-même a réussi ici : ce qui a échoué est le marqueur de dédup, donc
+  // l'identité utile est la paire destinataire/foyer qui sera re-alertée demain.
+  const failedTo: string[] = [];
   let digestEmailsSent = 0;
   let digestItemsCapped = 0;
 
@@ -313,6 +317,7 @@ async function runDiseaseAlerts(_req: NextRequest, supabase: SupabaseClient) {
         if (logErr) {
           console.error(`[disease-alerts] log insert failed for ${userId}/${outbreak.id}:`, errorMessage(logErr));
           failed++;
+          failedTo.push(`${profile.email} → foyer ${outbreak.id}`);
           continue;
         }
         sent++;
@@ -356,7 +361,7 @@ async function runDiseaseAlerts(_req: NextRequest, supabase: SupabaseClient) {
   const lockNote = lockUnevaluable > 0
     ? `verrou inter-crons inévaluable ${lockUnevaluable}× : ${lockError}`
     : null;
-  const runNote = [failed > 0 ? `${failed} alerte(s) en échec` : null, lockNote]
+  const runNote = [failed > 0 ? `${failed} alerte(s) en échec${failedRecipientsNote(failedTo)}` : null, lockNote]
     .filter(Boolean).join(" · ");
   await logCronRun(supabase, "disease-alerts", failed > 0 ? "error" : "ok", sent,
     runNote || undefined,

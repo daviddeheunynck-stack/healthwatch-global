@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import * as Sentry from "@sentry/nextjs";
-import { logCronRun, isRealProduction, claimEmailSend, claimWeeklyEmailAddress, releaseEmailSend, releaseWeeklyEmailAddress, currentWeekOf } from "@/lib/cron-monitor";
+import { logCronRun, isRealProduction, claimEmailSend, claimWeeklyEmailAddress, releaseEmailSend, releaseWeeklyEmailAddress, currentWeekOf, failedRecipientsNote } from "@/lib/cron-monitor";
 import { getWeeklySuppressionSet } from "@/lib/mail-suppression";
 import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 import { signUnsubscribeToken } from "@/lib/unsubscribe-token";
@@ -230,6 +230,8 @@ async function runWeeklySignal(_req: NextRequest, supabase: SupabaseClient) {
 
   let sent         = 0;
   let failed       = 0;
+  // Qui, pas seulement combien — voir failedRecipientsNote dans lib/cron-monitor.ts.
+  const failedTo: string[] = [];
   let skippedNoKey = 0;
   let alreadySent  = 0;
   let crossSentSkipped = 0;
@@ -301,6 +303,7 @@ async function runWeeklySignal(_req: NextRequest, supabase: SupabaseClient) {
       console.error(`[weekly-signal] ${user.email}:`, e);
       Sentry.captureException(e, { tags: { cron: "weekly-signal", user_id: user.id } });
       failed++;
+      failedTo.push(user.email);
       await releaseClaims(supabase, user.id, user.email, weekOf);
     }
   }
@@ -309,7 +312,7 @@ async function runWeeklySignal(_req: NextRequest, supabase: SupabaseClient) {
   // catch above, was tracked but never consulted here.
   const degradedNote = [
     suppressionDegraded ? "liste de suppression incomplète (une source en échec)" : null,
-    failed > 0 ? `${failed} envoi(s) en échec` : null,
+    failed > 0 ? `${failed} envoi(s) en échec${failedRecipientsNote(failedTo)}` : null,
     lockUnevaluable > 0 ? `verrou hebdo inévaluable ${lockUnevaluable}× : ${lockError}` : null,
   ].filter(Boolean).join(" · ");
   await logCronRun(supabase, "weekly-signal",

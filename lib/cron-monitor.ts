@@ -470,6 +470,44 @@ export function pingHeartbeatIfHealthy(url: string | undefined, failed: number, 
   fetch(url).catch(() => {});
 }
 
+/**
+ * Names the recipients behind an "N envoi(s) en échec" count, for the message
+ * a delivery cron hands to logCronRun.
+ *
+ * WHY. Eight send crons counted their failures and none could say WHO. Found
+ * 2026-08-27 on a live one: `cron:run:weekly-signal` had been sitting on
+ * `status=error, rows=14, "1 envoi(s) en échec"` since Monday 24/08, so the
+ * daily health-check e-mail said a reader of the free newsletter never got
+ * theirs — and there was no way, from that report, to know which reader. The
+ * address existed at the failure site (its own console.error prints it) and in
+ * a Sentry tag; both are places nobody reads every morning. Exactly the
+ * asymmetry claimOutbreakAlertDaily's `lockError` was given a way out of on
+ * 2026-08-25: the message travels into site_config, where the next morning's
+ * health-check copies it verbatim.
+ *
+ * Capped, and the cap is stated rather than silently applied — a run that
+ * fails for everybody must not turn the health-check subject line into a
+ * mailing list, but "3 shown of 40" has to be readable as such. Returns "" for
+ * an empty list so callers can append it unconditionally: the count is still
+ * theirs to phrase (envoi/alerte/rappel differ per cron).
+ *
+ * Identities are whatever the failure site actually holds — an e-mail address
+ * where the send is per-address, a user/outbreak id pair where the failure is
+ * a dedup-row write. Both are useless in aggregate and precise individually,
+ * which is the whole point.
+ *
+ * Deduplicated, so "4 envoi(s) en échec : a@b.c" is not a contradiction — it
+ * reads as four failures against one recipient, which is exactly the shape
+ * worth seeing (a single address failing repeatedly is a bounce, not a blip).
+ */
+export function failedRecipientsNote(identities: string[], cap = 3): string {
+  const seen = [...new Set(identities.filter(Boolean))];
+  if (seen.length === 0) return "";
+  const shown = seen.slice(0, cap);
+  const rest  = seen.length - shown.length;
+  return ` : ${shown.join(", ")}${rest > 0 ? ` (+${rest} autre${rest > 1 ? "s" : ""})` : ""}`;
+}
+
 export type CronStatus = "ok" | "error" | "no_data";
 
 export interface CronRun {

@@ -14,7 +14,7 @@ import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import * as Sentry from "@sentry/nextjs";
 import { signUnsubscribeToken } from "@/lib/unsubscribe-token";
 import { isMailSuppressed } from "@/lib/mail-suppression";
-import { logCronRun, isRealProduction, claimEmailSend } from "@/lib/cron-monitor";
+import { logCronRun, isRealProduction, claimEmailSend, failedRecipientsNote } from "@/lib/cron-monitor";
 import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 
 export const dynamic = "force-dynamic";
@@ -292,6 +292,8 @@ async function runPilotFollowUp(_req: NextRequest, supabase: SupabaseClient) {
   let sent       = 0;
   let skipped    = 0;
   let failed     = 0;
+  // Qui, pas seulement combien — voir failedRecipientsNote dans lib/cron-monitor.ts.
+  const failedTo: string[] = [];
   let alreadySent = 0;
 
   // Passe par le predicat partage : les deux drapeaux d'opt-out sont
@@ -346,6 +348,7 @@ async function runPilotFollowUp(_req: NextRequest, supabase: SupabaseClient) {
       console.error(`[pilot-follow-up] outbreaks query failed for ${pilot.email}:`, oErr.message);
       Sentry.captureException(oErr, { tags: { cron: "pilot-follow-up", user_id: pilot.id } });
       failed++;
+      failedTo.push(`${pilot.email} (requête foyers)`);
       continue;
     }
     if (!outbreaks || outbreaks.length === 0) {
@@ -379,6 +382,7 @@ async function runPilotFollowUp(_req: NextRequest, supabase: SupabaseClient) {
       console.error(`[pilot-follow-up] failed for ${pilot.email}:`, err);
       Sentry.captureException(err, { tags: { cron: "pilot-follow-up", user_id: pilot.id } });
       failed++;
+      failedTo.push(pilot.email);
     }
 
     // Throttle
@@ -389,6 +393,6 @@ async function runPilotFollowUp(_req: NextRequest, supabase: SupabaseClient) {
   // so a genuine send (or now query) failure still logged "ok". Same bug
   // fixed across ~15 other crons today (sync-outbreaks et al., 2026-07-29/30).
   await logCronRun(supabase, "pilot-follow-up", failed > 0 ? "error" : "ok", sent,
-    failed > 0 ? `${failed} email(s)/requête(s) en échec` : undefined);
+    failed > 0 ? `${failed} email(s)/requête(s) en échec${failedRecipientsNote(failedTo)}` : undefined);
   return NextResponse.json({ sent, skipped, failed, alreadySent, total: pilots.length });
 }

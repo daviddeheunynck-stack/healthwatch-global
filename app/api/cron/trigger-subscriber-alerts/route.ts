@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 import * as Sentry from "@sentry/nextjs";
-import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
+import { logCronRun, isRealProduction, failedRecipientsNote } from "@/lib/cron-monitor";
 import { notifyMobile } from "@/lib/mobile-notify";
 import { resolvedPlan } from "@/lib/resolved-plan";
 import { getBlockedEmailSet } from "@/lib/brevo-blocklist";
@@ -137,6 +137,8 @@ async function runSubscriberAlerts(_req: NextRequest, supabase: SupabaseClient) 
   let sent = 0;
   let blockedSkipped = 0;
   let errors = 0;
+  // Qui, pas seulement combien — voir failedRecipientsNote dans lib/cron-monitor.ts.
+  const failedTo: string[] = [];
 
   for (const sub of subscribers as Subscriber[]) {
     const o = oMap.get(sub.outbreak_id);
@@ -211,12 +213,13 @@ async function runSubscriberAlerts(_req: NextRequest, supabase: SupabaseClient) 
       await notifyMobile(supabase, sub.user_id, { title: subject, body: inAppBody, outbreak_id: o.id });
     } catch (err) {
       errors++;
+      failedTo.push(`abonnement ${sub.id}`);
       console.error(`[trigger-subscriber-alerts] Failed for sub ${sub.id}:`, err);
       Sentry.captureException(err, { tags: { cron: "trigger-subscriber-alerts", sub_id: sub.id, user_id: sub.user_id } });
     }
   }
 
   await logCronRun(supabase, "trigger-subscriber-alerts", errors > 0 ? "error" : "ok", sent,
-    errors > 0 ? `${errors} envoi(s) en échec` : undefined);
+    errors > 0 ? `${errors} envoi(s) en échec${failedRecipientsNote(failedTo)}` : undefined);
   return NextResponse.json({ ok: true, sent, blockedSkipped, errors });
 }

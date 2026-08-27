@@ -2,7 +2,7 @@ import { NextRequest } from "next/server";
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { getLocalizedDisease, getLocalizedCountry, dedupeAggregateOutbreakRows } from "@/lib/outbreaks";
 import * as Sentry from "@sentry/nextjs";
-import { logCronRun, isRealProduction, claimWeeklyEmailAddress, releaseWeeklyEmailAddress, currentWeekOf } from "@/lib/cron-monitor";
+import { logCronRun, isRealProduction, claimWeeklyEmailAddress, releaseWeeklyEmailAddress, currentWeekOf, failedRecipientsNote } from "@/lib/cron-monitor";
 import { getWeeklySuppressionSet } from "@/lib/mail-suppression";
 import { notifyMobile } from "@/lib/mobile-notify";
 
@@ -159,6 +159,8 @@ async function runRegionalDigest(supabase: SupabaseClient) {
   const active = outbreaks ?? [];
   let fired = 0;
   let errors = 0;
+  // Qui, pas seulement combien — voir failedRecipientsNote dans lib/cron-monitor.ts.
+  const failedTo: string[] = [];
   let suppressed = 0;
   let claimedElsewhere = 0;
   // Claims claimWeeklyEmailAddress could not answer. They still send
@@ -275,6 +277,7 @@ async function runRegionalDigest(supabase: SupabaseClient) {
       if (insertErr) {
         console.warn(`[trigger-regional-digest] dedup insert failed for ${user.id}: ${insertErr.message}`);
         errors++;
+        failedTo.push(`${user.email} (marqueur de dédup, e-mail parti)`);
         continue;
       }
 
@@ -283,6 +286,7 @@ async function runRegionalDigest(supabase: SupabaseClient) {
       fired++;
     } catch (err) {
       errors++;
+      failedTo.push(user.email);
       console.error(`[trigger-regional-digest] Failed for ${user.email}:`, err);
       Sentry.captureException(err, { tags: { cron: "trigger-regional-digest", user_id: user.id } });
       // sendEmail est le premier appel du try : une exception ici veut dire
@@ -296,7 +300,7 @@ async function runRegionalDigest(supabase: SupabaseClient) {
 
   const degradedNote = [
     suppressionDegraded ? "liste de suppression incomplète (une source en échec)" : null,
-    errors > 0 ? `${errors} envoi(s) en échec` : null,
+    errors > 0 ? `${errors} envoi(s) en échec${failedRecipientsNote(failedTo)}` : null,
     lockUnevaluable > 0 ? `verrou hebdo inévaluable ${lockUnevaluable}× : ${lockError}` : null,
   ].filter(Boolean).join(" · ");
   await logCronRun(

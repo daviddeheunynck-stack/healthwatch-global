@@ -2,7 +2,7 @@ import { NextRequest } from "next/server";
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 import * as Sentry from "@sentry/nextjs";
-import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
+import { logCronRun, isRealProduction, failedRecipientsNote } from "@/lib/cron-monitor";
 import { notifyMobile } from "@/lib/mobile-notify";
 import { resolvedPlan } from "@/lib/resolved-plan";
 
@@ -207,6 +207,13 @@ async function runTriggerPheicAlerts(_req: NextRequest, supabase: SupabaseClient
 
   let fired  = 0;
   let failed = 0;
+  // Qui, pas seulement combien — voir failedRecipientsNote dans lib/cron-monitor.ts.
+  // Ce compteur agrège deux échecs de nature opposée, et la note les distingue :
+  // le `catch` est un envoi qui n'est pas parti (l'adresse seule), l'échec
+  // d'insertion plus bas est un e-mail bien parti dont le marqueur de dédup a
+  // manqué (adresse → foyer). Ici la nuance compte plus qu'ailleurs : le
+  // commentaire du try dit qu'une alerte PHEIC n'a aucune fenêtre de rattrapage.
+  const failedTo: string[] = [];
 
   for (const [, outbreaks] of diseaseMap) {
     // Primary row = largest case count (main source country)
@@ -289,6 +296,7 @@ async function runTriggerPheicAlerts(_req: NextRequest, supabase: SupabaseClient
         if (insertErr) {
           console.warn(`[trigger-pheic-alerts] Insert skipped for ${user.id}::${primary.id}: ${insertErr.message}`);
           failed++;
+          failedTo.push(`${user.email} → marqueur ${primary.id}`);
           continue;
         }
 
@@ -300,6 +308,7 @@ async function runTriggerPheicAlerts(_req: NextRequest, supabase: SupabaseClient
         fired++;
       } catch (err) {
         failed++;
+        failedTo.push(user.email);
         console.error(`[trigger-pheic-alerts] Failed for user ${user.id} / outbreak ${primary.id}:`, err);
         Sentry.captureException(err, { tags: { cron: "trigger-pheic-alerts", user_id: user.id, outbreak_id: primary.id } });
       }
@@ -308,6 +317,6 @@ async function runTriggerPheicAlerts(_req: NextRequest, supabase: SupabaseClient
 
   // Was hardcoded "ok" with no failure counter at all.
   await logCronRun(supabase, "trigger-pheic-alerts", failed > 0 ? "error" : "ok", fired,
-    failed > 0 ? `${failed} alerte(s) PHEIC en échec` : undefined);
+    failed > 0 ? `${failed} alerte(s) PHEIC en échec${failedRecipientsNote(failedTo)}` : undefined);
   return Response.json({ fired, failed });
 }
