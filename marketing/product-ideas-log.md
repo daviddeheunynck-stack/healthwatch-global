@@ -1754,3 +1754,39 @@ Sept cas du formateur vérifiés en exécutant la vraie fonction (liste vide, un
 4. **Reliquat inchangé du 26/08 :** les 3 lignes ReliefWeb encore affichées et les 2 lignes FHCC sur une note Substack. Le point `ccousp.cm` est clos depuis `f54302d`.
 
 **Statut : 2 idées PROPOSÉES ET CONSTRUITES** (`180353c`, `5c1f8c8`). Aucune idée écartée par un garde-fou ce soir.
+
+---
+
+## 2026-08-27 (soir, session interactive) — Re-sourcing FHCC + piste produit remontée par David
+
+**Contexte.** David a demandé en session le re-sourcing des 2 lignes FHCC signalées ci-dessus (point 4). Fait le soir même, hors du périmètre de cette routine (pas de garde-fou 3 en jeu — pas d'e-mail client, pas de paiement) :
+
+- **FHCC/Sénégal** : 6→**1 cas**, 0 décès. Enfant de 7 ans, région de Tambacounda, ministère de la Santé sénégalais (10/02/2026), diagnostic confirmé par l'Institut Pasteur de Dakar. Source : MesVaccins.net (déjà dans `GENERAL_PRESS_DOMAINS`) — badge passe d'`unverified` à `press`, lien désormais cliquable.
+- **FHCC/Ouganda** : 9→**3 cas**, 4→**1 décès**. Somme de deux foyers distincts et sans lien, chacun confirmé indépendamment : Kyankwanzi (1 cas, ministère de la Santé ougandais, 11/02) + Yumbe (2 cas dont 1 décès, article signé et daté d'Outbreak News Today, 08/08). Reste `unverified` (Substack n'a jamais été dans la liste des autorités, avant comme après — pas une régression).
+
+`source_priority` relevé à 10 sur les deux (aucun cron ne couvre la FHCC). Descriptions réécrites dans les 5 langues, avec la justification du re-sourcing explicite dans le texte. `scripts/fix-cchf-uganda-senegal-resource-2026-08-27.mjs` (ignoré par git par convention, `scripts/*-YYYY-MM-DD.mjs`).
+
+### 🔴 Une correction de chiffres à la baisse fait passer un foyer pour « en déclin » sur le site public — l'artefact n'a jamais été vu avant faute de vérification en navigateur
+
+**Signal, vérifié en direct sur `healthwatch-global.com/fr` après la correction ci-dessus.** La page Ouganda affiche un badge **« En déclin »** accolé à « RISQUE MODÉRÉ », plus « En recul : -67% de cas sur 7 jours » ; la page Sénégal affiche « En recul : -83% de cas sur 7 jours ». Les deux baisses sont réelles au sens du calcul, mais n'ont **aucun sens épidémiologique** — ce sont exactement la baisse produite par le re-sourcing du soir (9→3, 6→1), pas une évolution du foyer sur le terrain.
+
+**Cause, confirmée en lisant `lib/outbreak-trend.ts` et en interrogeant `outbreak_snapshots` en direct.** `getOutbreakTrend()` compare le dernier instantané du jour à celui d'il y a 7 jours. `outbreak_snapshots` capture `cases` une fois par jour, sans distinguer « le foyer a évolué » de « HealthWatch a corrigé une donnée mal sourcée » — les deux produisent la même ligne dans la même table :
+
+```
+Sénégal  27/08: 1   26/08→18/08: 6 (×8, inchangé)
+Ouganda  27/08: 3   26/08→18/08: 9 (×8, inchangé)
+```
+
+**Portée : pas spécifique à ce soir.** Aucun script de correction (`scripts/fix-*.mjs`, une quinzaine cette année) n'a jamais touché `outbreak_snapshots` — vérifié (`grep -rl outbreak_snapshots scripts/fix-*.mjs` : zéro résultat). Chaque grosse correction de chiffres passée avec un vrai écart (Choléra/Tchad 776→129 le 22/07, Ebola/RDC réaligné le 22/08, etc.) a très probablement produit le même faux badge « en déclin », sans qu'aucune vérification en navigateur ne l'ait jamais repéré — cette session est la première à avoir contrôlé l'affichage après une correction plutôt que seulement `tsc`/`eslint`/une requête de relecture.
+
+**Priorité affirmée par David au moment de remonter ce signal : ce qui compte, c'est afficher les données exactes les plus récentes possibles.** Un badge de tendance qui ment sur ce point va directement à l'encontre de cette priorité — un prospect qui regarde la page Ouganda aujourd'hui voit « en déclin » sur un foyer dont le vrai statut de terrain n'a pas bougé d'un cas.
+
+**Angle de correction, à trancher — pas un correctif simple par écrasement de l'historique.** Deux pistes, pas neutres :
+- **(a) Backfill des instantanés** des lignes corrigées vers le nouveau chiffre sur la fenêtre de comparaison (7 jours) : neutralise le badge immédiatement, mais réécrit un historique qui reflétait honnêtement ce que le site affichait ce jour-là — si `outbreak_snapshots` sert un jour d'audit trail public/interne de ce qui a été montré, ce n'est pas neutre.
+- **(b) Détecter la correction elle-même** : un signal existe déjà partout dans cette base pour distinguer « le monde a changé » de « HealthWatch a changé d'avis » — c'est exactement `updated_at` vs `date`, et le vocabulaire « re-sourcé » que les scripts de correction écrivent déjà dans leurs descriptions. `getOutbreakTrend()` pourrait exclure de la comparaison tout instantané antérieur au dernier changement de source (`source` différent d'aujourd'hui) plutôt que de comparer aveuglément J-7, sans toucher à l'historique lui-même.
+
+**Effort : à évaluer par la routine** (probablement moyen — (b) touche un module partagé par toutes les pages foyer et le tableau de bord, pas seulement les 2 lignes FHCC).
+
+**Risque/inconnue :** combien de lignes actives portent aujourd'hui un badge de tendance faussé par une correction passée — pas mesuré ce soir, mesurable par un balayage comparant chaque `outbreak.updated_at` récent aux deltas `outbreak_snapshots` correspondants.
+
+**Statut : PROPOSÉE, remontée à `daily-product-ideas-healthwatch` sur demande explicite de David — pas construite ce soir.**
