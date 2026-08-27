@@ -10,10 +10,12 @@
 //
 // Approach (verified live 2026-08-12):
 //   1. GET the listing page (health.gov.ws/dengue/), regex out every
-//      "Dengue-sitrep-issue-no-N.pdf" link, take the highest N. Compare its
-//      URL against the row's stored `source` — identical means no new issue,
-//      skip everything below (no PDF download, no LLM call: this is what keeps
-//      a weekly-cadence source cheap to poll daily).
+//      "Dengue-sitrep-issue-no-N.pdf" link, take the highest N. Skip
+//      everything below (no PDF download, no LLM call: this is what keeps a
+//      weekly-cadence source cheap to poll) when its URL is identical to the
+//      row's stored `source`, OR when its ISSUE NUMBER is lower than the one
+//      the row already holds — the listing page can lag behind an issue found
+//      by the daily manual review, see storedIssueNumber's doc.
 //   2. Download the PDF, extract text with `pdf-parse` (plain text mode — this
 //      report's numbers are real text, not a delimiter-less grid like the PSSS
 //      bulletin sync-pacific-surveillance has to reconstruct positionally; a
@@ -28,7 +30,12 @@
 //      tolerates that better and the cost is negligible at ~weekly cadence.
 //   4. Apply the same regressionGuard() used by the other PDF-sitrep parsers
 //      (sync-paho-alerts, sync-ncdc, sync-drc-sitrep, check-mpox-sitrep)
-//      before writing.
+//      before writing, plus lockedRowRegressionGuard — this cron writes onto a
+//      source_priority=10 row, so it belongs to the 2026-08-19 sweep even
+//      though it was created after it and was missed at the time. A blocked
+//      write is logged as "ok" with the reason, never as an error (see
+//      lib/outbreak-guards.ts); only a locked-row refusal on a genuinely
+//      freezing row escalates.
 //
 // source_priority: this row was already locked at 10 (a deliberate prior
 // protection against auto-overwrite) before this cron existed. Writing at 10
@@ -45,7 +52,7 @@ import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import Anthropic from "@anthropic-ai/sdk";
 import * as Sentry from "@sentry/nextjs";
 import { logCronRun } from "@/lib/cron-monitor";
-import { regressionGuard } from "@/lib/outbreak-guards";
+import { regressionGuard, lockedRowRegressionGuard, lockedRowIsFreezing } from "@/lib/outbreak-guards";
 
 export const dynamic     = "force-dynamic";
 export const maxDuration = 90;
@@ -94,6 +101,25 @@ async function findLatestIssue(): Promise<LatestIssue | null> {
     if (!best || issueNumber > best.issueNumber) best = { url: m[1], issueNumber };
   }
   return best;
+}
+
+/**
+ * Issue number encoded in a stored `source` URL, or null when that URL isn't a
+ * sitrep PDF of this series (row re-sourced by hand to something else).
+ *
+ * Exists because the row can legitimately hold an issue the LISTING PAGE does
+ * not link. Found live 2026-08-27: the row carried issue #69 (report dated
+ * 2026-08-10, written on 21/08 by the daily manual review, not by this cron —
+ * its own last successful write was 13/08), while health.gov.ws/dengue/ still
+ * stopped at #68. The identity test below used to be `row.source === latest.url`
+ * — a STRING comparison — so #68 read as "a new issue", and every Monday this
+ * cron downloaded that PDF, paid for a Haiku extraction, and had the write
+ * refused by regressionGuard as `guard:older-report`. It would have kept doing
+ * that until the ministry published a #70.
+ */
+function storedIssueNumber(source: string | null): number | null {
+  const m = /Dengue-sitrep-issue-no-(\d+)\.pdf/i.exec(source ?? "");
+  return m ? parseInt(m[1], 10) : null;
 }
 
 interface SitrepExtract {
@@ -231,6 +257,25 @@ async function runSyncSamoaDengue(supabase: SupabaseClient) {
     return NextResponse.json({ ok: true, skipped: "no new issue", issueNumber: latest.issueNumber });
   }
 
+  // Same shortcut, one step wider: the listing page's best issue is OLDER than
+  // the one the row already holds (see storedIssueNumber's doc). Nothing below
+  // could ever produce a write — regressionGuard would refuse it — so stop
+  // before the PDF download and the paid extraction rather than after them.
+  // A missing/unparseable stored number falls through to the existing
+  // behaviour instead of skipping blind, and a REPUBLISHED issue under the
+  // same number still reaches the extraction: only strictly-older is skipped.
+  const stored = storedIssueNumber(row.source);
+  if (stored !== null && latest.issueNumber < stored) {
+    await logCronRun(supabase, "sync-samoa-dengue", "ok", 0,
+      `listing page still at issue ${latest.issueNumber}, row already holds ${stored}`);
+    return NextResponse.json({
+      ok: true,
+      skipped: "listing page behind stored issue",
+      issueNumber: latest.issueNumber,
+      storedIssueNumber: stored,
+    });
+  }
+
   const pdfRes = await fetch(latest.url, { headers: FETCH_HEADERS, signal: AbortSignal.timeout(20_000) });
   if (!pdfRes.ok) {
     await logCronRun(supabase, "sync-samoa-dengue", "error", 0, `PDF fetch failed: ${pdfRes.status}`);
@@ -259,13 +304,45 @@ async function runSyncSamoaDengue(supabase: SupabaseClient) {
   }
   const extracted = extractResult.data;
 
-  const guardReason = regressionGuard(
-    { cases: extracted.cumulativeClinicalCases, deaths: extracted.cumulativeDeaths, date: extracted.reportDate },
-    { cases: row.cases, deaths: row.deaths, date: row.date },
-  );
+  const incoming = {
+    cases:  extracted.cumulativeClinicalCases,
+    deaths: extracted.cumulativeDeaths,
+    date:   extracted.reportDate,
+  };
+  // lockedRowRegressionGuard was missing here entirely: this cron writes at
+  // source_priority 10 onto a row already locked at 10, which is exactly the
+  // class the 2026-08-19 sweep covered (d124101 / eb57f8e / 8a235be / 79bdd51)
+  // — but this route was created 2026-08-12 and none of those commits touched
+  // it. Composed the same way as every swept cron: ordinary guards first, the
+  // locked-row refusal after.
+  const guardReason =
+    regressionGuard(incoming, { cases: row.cases, deaths: row.deaths, date: row.date }) ??
+    lockedRowRegressionGuard(incoming, { cases: row.cases, deaths: row.deaths, date: row.date, source_priority: row.source_priority });
   if (guardReason) {
-    await logCronRun(supabase, "sync-samoa-dengue", "error", 0, `guard blocked issue ${latest.issueNumber}: ${guardReason}`);
-    return NextResponse.json({ ok: false, error: guardReason, issueNumber: latest.issueNumber }, { status: 200 });
+    // A blocked write is the guard working as intended — lib/outbreak-guards.ts
+    // says so at the top of regressionGuard, and the other nine callers log it
+    // as a skip. This one logged "error", so a correct refusal put a red line
+    // in the daily health-check e-mail for four days running (24-27/08,
+    // `guard:older-report` on issue 68), which is how a real failure of this
+    // cron becomes invisible. Same rule as sync-malaysia-dengue, its closest
+    // twin: ordinary guard → ok with the reason kept in the message; only a
+    // locked-row refusal on a row that is genuinely FREEZING (lockedRowIsFreezing,
+    // 2026-08-24) escalates, because there the lock really is holding stale
+    // figures nothing else will ever refresh.
+    const freezing = guardReason.startsWith("guard:locked-row-") && lockedRowIsFreezing({
+      cases: row.cases, deaths: row.deaths, date: row.date, source_priority: row.source_priority,
+    });
+    if (freezing) {
+      Sentry.captureMessage(
+        `[samoa-dengue] blocked by anti-regression guard on locked row: ${guardReason}`,
+        "warning",
+      );
+    }
+    await logCronRun(supabase, "sync-samoa-dengue", freezing ? "error" : "ok", 0,
+      freezing
+        ? `écriture bloquée par le garde anti-régression : issue ${latest.issueNumber} — ${guardReason}`
+        : `guard blocked issue ${latest.issueNumber}: ${guardReason}`);
+    return NextResponse.json({ ok: true, status: `skip: ${guardReason}`, issueNumber: latest.issueNumber, guardBlocked: freezing || undefined }, { status: 200 });
   }
 
   const description = buildDescription(extracted);
