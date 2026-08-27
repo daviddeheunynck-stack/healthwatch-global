@@ -11,6 +11,8 @@
 
 **⚠️ Mise à jour du même run, 18h05 : les deux DM ci-dessous ont été ENVOYÉS, sur ordre explicite de David tapé en session (« envoie les DM »).** Double-check refait à froid avant envoi (voir ci-dessous chaque DM) : les deux fils relus à la source (pas depuis les notes), l'un revérifié caractère pour caractère contre le fil réel, l'autre confirmé comme un vrai premier message (aucun fil antérieur). La fiche polio RDC citée dans le DM John a été relue une 2e fois en base, inchangée depuis la 1ère vérification. Un `context.too-soon`/`ngram.history` massif est réapparu au re-contrôle mécanique sur les deux brouillons après leur archivage dans ce fichier : **auto-référence confirmée par grep** (chaque phrase-cible n'existe qu'à l'endroit où je l'ai moi-même archivée), pas une vraie répétition — piège déjà documenté le 27/08 matin.
 
+**⚠️ Mise à jour du même run, 19h50 : sur demande de David (« traite la réponse de Peace Mpakaniye »), un 3e DM est rédigé et mis en file de validation** — section 2 bis ci-dessous. **N'est pas envoyé.**
+
 ---
 
 ### 1️⃣ SUIVI DES ACTIONS PRÉCÉDENTES DU JOUR
@@ -100,6 +102,41 @@ Les deux ont été rédigés une fois, passés une fois au registre de faits, un
 **Publication confirmée** : ouvert depuis le profil (`/in/john-omari-baso-84500b1b0/`, 1er degré, VillageReach, 4412 abonnés), destinataire « John Omari Baso » visible dans la pastille et l'en-tête au moment du clic sur Envoyer. **Composeur flottant non lisible en JS (2 iframes sur la page) : vérification faite par zoom visuel** (début et fin du texte relus séparément, identiques au brouillon validé) plutôt que par comparaison de chaîne — méthode de repli documentée pour ce type de fenêtre. Confirmation a posteriori : éditeur vidé, message affiché dans le fil avec icône de statut « lu/envoyé » et horodatage « il y a 1 min ».
 
 ⚠️ **Note technique nouvelle** : le composeur de bienvenue ouvert **depuis un profil** (bouton « Message ») rend dans une iframe (`about:blank` puis un cadre LinkedIn), contrairement à la messagerie complète où `[contenteditable]` est directement interrogeable en JS. Pour ce type de fenêtre, vérifier par `zoom`/`screenshot` (début + fin du texte) plutôt que par lecture JS du DOM. Un clic sur l'icône d'agrandissement de la bulle a ouvert par erreur une modale photo de la bannière du profil (aucune conséquence, refermée aussitôt) — cliquer plus précisément sur l'icône d'expansion si on la retente, ou s'en passer et vérifier par zoom comme fait ici.
+
+---
+
+### 2️⃣ bis 🔒 UN 3e DM EN FILE DE VALIDATION — sur demande de David (« traite la réponse de Peace Mpakaniye »)
+
+#### 🔒 DM 3 — **Peace Mpakaniye** (EN, fil actif, **AVEC CTA**, hors quota froid)
+
+*Epidemiologist | Respiratory Infectious Disease Surveillance | Mortality Monitoring | Data Science.* Connexion acceptée le 26/08, message de bienvenue envoyé ce matin à 10:28.
+
+**Fil relu intégralement (§4)** : 2 messages, recopiés verbatim dans `tmp/thread-peace-27.txt`. *Langue du fil = EN ; langue du brouillon = EN* (confirmé mécaniquement).
+
+**Sa réponse, reçue à 17:41, verbatim :**
+> Hey David, thank you for your message.
+> To answer directly: yes, our SARI figures do reach a bulletin. We publish weekly bulletins during the respiratory season that include hMPV alongside RSV, flu, and respi other pathogens, plus yearly reports with the fuller picture.
+> See: https://www.sciensano.be/en/topics/flu-and-other-acute-respiratory-tract-infections/numbers
+
+**Elle corrige directement la prémisse de notre message du matin** (« hMPV... stays inside networks like the one you work through ») : sa surveillance atteint bien un bulletin public, hebdomadaire. Vérifié sur la page qu'elle a citée (`WebFetch`) : confirme des bulletins hebdomadaires « Acute Respiratory Infections Bulletin », sans mentionner explicitement « hMPV » ni « SARI » sur cette page précise (probablement dans le bulletin PDF lui-même, non lu par une routine sociale).
+
+**CTA : présent, et c'est la règle qui l'impose.** Sa réponse est substantielle — une réponse factuelle avec source, pas une politesse — et §3 (règle du 07/08) fait déclencher le CTA dès ce premier aller-retour. **Anti-répétition vérifiée** : aucun CTA n'a été servi plus tôt dans ce fil (le message du matin n'en contenait aucun).
+
+**L'angle** : sa réponse ne dit pas que HWG avait tort d'omettre hMPV, elle déplace la vraie frontière — ce n'est pas « visible contre caché », c'est « continu contre déclenché ». Son bulletin tourne toute la saison, que quelque chose d'inhabituel se passe ou non ; HWG n'ouvre une ligne qu'au franchissement d'un seuil qualifié d'épidémie. Vérifié en base ce run : **aucune ligne Belgique, aucune ligne hMPV/métapneumovirus** sur les 293 lignes de la table, confirmant que la lacune tient toujours, pour une raison différente de celle énoncée le matin.
+
+**QA: mécanique FAIL (1 blocker résiduel, `context.too-soon`, faux positif documenté — réponse à un message entrant reçu il y a plusieurs heures, hors plafond de relance ; 921 car., 4 paragraphes) | relecteur REECRIRE (11) au 1er passage, corrigé — architecture rhétorique reconstruite, revérifiée moi-même après le crash du 2e sous-agent | faits cités: aucun chiffre du registre ; « Belgium »/« hMPV » absents des 293 lignes, vérifiés en base | registre du 27/08 | statut: en file de validation**
+
+🔴 **Le relecteur a attrapé une 3e reprise du même gabarit rhétorique dans la journée, cette fois entre deux destinataires différents.** Le 1er brouillon ouvrait « That answers the question I actually asked, and it moves where I thought the gap sat. I had read "X" as "Y"... » puis fermait sur une question à deux branches opposées (« does it get pulled out into something distinct, or does it stay inside the routine, either way? »). **C'est exactement l'ossature du DM envoyé à Rodrigo la même heure** : reconnaissance-du-recadrage → confession-d'hypothèse-antérieure → question binaire de clôture. Le contrôle mécanique (n-grammes sur les mots) ne pouvait pas le voir, seule une lecture comparative de la charpente le pouvait.
+
+⚠️ **Incident technique consigné** : le sous-agent lancé pour confirmer que la réécriture corrigeait bien le défaut a planté sur une erreur de classifieur (`Sonnet 5 can't help with this`, tag `[bio]`) — probablement un faux déclenchement sur la combinaison de termes épidémiologiques (« outbreak », « threshold », « network », « hMPV ») sans rapport avec un contenu réellement sensible. **Vérification refaite à la main** : le nouveau brouillon n'a plus ni la clause d'ouverture en reconnaissance-du-recadrage, ni la confession « I had assumed X », et sa question de clôture énumère trois issues possibles plutôt que d'opposer deux branches — architecture réellement différente, fond inchangé.
+
+> A bulletin that runs every week whether or not anything unusual is happening is a different kind of object than what I build. Mine only opens a line once a number crosses a threshold and someone calls it an outbreak; yours reports this whole season on schedule regardless of what it shows.
+>
+> That means a season could climb steadily inside your surveillance and never once produce anything my aggregation would recognize as new. Not a gap in the source, a gap in what counts as an event worth writing down.
+>
+> When hMPV activity does climb somewhere in your network, what actually changes on your side? A note inside the same weekly bulletin, something separate, or nothing distinguishable until the yearly report?
+>
+> Belgium isn't on healthwatch-global.com yet, hMPV or anything else. Nobody asks for a card to look at what is there for two weeks, if you're curious how the declared half reads next to what you already track.
 
 ---
 
