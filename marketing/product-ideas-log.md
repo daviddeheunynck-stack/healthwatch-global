@@ -1628,3 +1628,88 @@ Les deux cas sont opposés et c'est tout l'intérêt : l'un est une source solid
 `pricing.faq5_a` affirme toujours, dans les 5 langues, que les données viennent de « WHO, PAHO, and ECDC » — inchangé depuis le relevé du 26/08 matin (`project_faq5_sources_claim_narrower_than_reality_2026_08_26`, arbitrage explicitement laissé à David). Ce run y ajoute une mesure : sur les 134 lignes affichées, **4 sont au niveau `press`** (Tchadinfos, Leadership, Africa24, France Info) et **6 au niveau `unverified`**. La FAQ n'est donc pas seulement plus étroite que la réalité, elle est contredite par des lignes que le produit affiche déjà en le disant lui-même dans sa propre pastille. Non modifié — c'est du copy de marque et l'arbitrage lui appartient.
 
 **Statut : 2 idées PROPOSÉES ET CONSTRUITES.** Aucune idée écartée par un garde-fou ce soir.
+
+---
+
+## 2026-08-27 — Proposition du jour
+
+**Aucun signal terrain neuf :** `product-feedback.md` n'a pas bougé depuis l'entrée Coulibaly du 22/08. Les trois runs LinkedIn du jour n'ont produit aucun retour produit exploitable ici.
+
+**La bonne nouvelle d'abord, parce qu'elle ferme le dossier ouvert le 25/08.** Le verrou inter-crons `outbreak_alert_daily_lock` fonctionne. Mesuré ce soir en lecture seule sur la prod, fenêtre 10h–12h UTC :
+
+| jour | livraisons | lignes de verrou |
+|---|---|---|
+| 25/08 | 105 | **0** ← l'incident |
+| 26/08 | 0 | 0 (rien n'est parti, donc rien à prouver) |
+| **27/08** | **219** (218 regional + 1 watchlist) | **219** |
+
+C'est la première preuve de bout en bout que la déduplication tourne — elle manquait encore hier (mémoire `project_alert_daily_lock_fails_open_2026_08_25`). Rien à construire là-dessus, le contrôle `checkAlertLockSilent` livré le 25/08 continuera de surveiller. **Ce n'est pas une idée, c'est une fermeture.**
+
+**Le signal du jour est ailleurs, et il est dans le rapport santé de 07h05 : il y a deux lignes rouges permanentes depuis le 24/08, et une seule des deux décrit une vraie panne.**
+
+```
+2026-08-24T08:25  sync-samoa-dengue  error  rows=0  guard blocked issue 68: guard:older-report — 2026-08-03 vs existing 2026-08-10
+2026-08-24T07:20  weekly-signal      error  rows=14 1 envoi(s) en échec
+```
+
+---
+
+### 1. 🔴 Un cron affiche « EN ERREUR » depuis 4 jours parce que son garde-fou a fait exactement ce pour quoi il a été écrit — et le fichier qui définit ce garde-fou interdit noir sur blanc de le lire comme une erreur
+
+**Signal, dans le code.** `lib/outbreak-guards.ts:311-313`, en tête de `regressionGuard()` :
+
+> « *Callers log the reason as a "skip" and leave the row untouched — **never as an error**, since a blocked write is the guard working as intended.* »
+
+Dix crons appellent ce garde-fou. Neuf respectent le contrat : `sync-cdc-notices`, `sync-cdc-han`, `sync-africa-cdc`, `sync-ncdc`, `sync-spf`, `sync-ecdc-threats`, `sync-endemic-data`, `sync-drc-sitrep`, `check-mpox-sitrep` — tous en `status: "skip"` ou `console.warn`. Le jumeau le plus proche, `sync-malaysia-dengue` (même forme exactement : cron mono-ligne, un garde, un `logCronRun`), écrit même la règle en toutes lettres : garde ordinaire → `ok`, seul un refus `guard:locked-row-…` sur une ligne réellement figée passe en `error`.
+
+**`sync-samoa-dengue` est le seul des dix à logger `error`** (`route.ts:267`). Résultat : depuis le 24/08, l'e-mail de santé quotidien porte la ligne « ⚠️ 2 cron(s) à l'heure mais EN ERREUR au dernier passage », et l'un des deux va parfaitement bien.
+
+**Mais le garde-fou n'aurait jamais dû être atteint — et c'est le vrai défaut, le reste n'en est que la trace.** Vérifié en direct ce soir, des deux côtés :
+
+- **En base :** la ligne `Dengue fever / Samoa` porte l'**issue #69** (20 157 cas, 9 décès, rapport du 2026-08-10), `source_priority=10`, `updated_at` au **21/08**. Or le dernier écrit réussi de ce cron date du **13/08** (`lastNonZero`) — le #69 n'est pas venu de lui, il vient de la relecture manuelle quotidienne (`morning-don-check`), qui a trouvé le PDF directement.
+- **Sur la source**, `health.gov.ws/dengue/`, récupérée à l'instant : la page de listing s'arrête à **`Dengue-sitrep-issue-no-68.pdf`**. Le #69 existe en PDF mais n'est lié nulle part sur la page.
+
+Le raccourci « rien de neuf » du cron est `row.source === latest.url` — une comparaison de **chaînes d'URL**. Le #68 de la page n'est pas égal au #69 stocké, donc le cron conclut « nouvelle édition » et déroule tout : téléchargement du PDF, extraction **payante** par Claude Haiku, puis refus du garde parce que le rapport est plus ancien. **Tous les lundis, et ça continuera jusqu'à ce que le ministère publie un #70.** Le cron connaît pourtant le numéro d'édition des deux côtés — il le parse pour choisir le plus grand — il ne s'en sert simplement pas pour décider s'il y a lieu de descendre le PDF.
+
+**Troisième défaut trouvé en tirant le fil : ce cron écrit sur une ligne verrouillée sans le garde des lignes verrouillées.** Il pose `source_priority: 10` et la ligne Samoa *est* à 10. C'est exactement la classe visée par le balayage du 19/08 (`d124101` sur 15 crons, `eb57f8e`, `8a235be`, puis `79bdd51`). `sync-samoa-dengue`, créé le 12/08, n'a que trois commits — aucun n'est de ce balayage. Il **n'a jamais reçu `lockedRowRegressionGuard`** : il est le seul écrivain de lignes verrouillées à ne pas l'avoir.
+
+**Effort estimé : petit.** Un fichier, trois correctifs indépendants et courts, aucun schéma, aucune surface client, aucun envoi.
+
+**Risque/inconnue :** comparer des numéros d'édition plutôt que des URL fait sauter le cas « le ministère republie une édition corrigée sous le même numéro » — traité en gardant la comparaison d'URL comme premier test et en n'ajoutant que le cas « numéro strictement inférieur → passer ». Et si l'URL stockée n'est pas parsable en numéro d'édition (ligne re-sourcée à la main vers autre chose), on retombe sur le comportement actuel plutôt que de sauter à l'aveugle.
+
+---
+
+### 2. 🔴 Huit crons d'envoi savent compter leurs échecs de livraison et aucun ne sait dire **à qui** — le rapport de ce matin dit « 1 envoi(s) en échec » depuis lundi, et personne ne peut savoir qui n'a rien reçu
+
+**Signal, en prod.** `cron:run:weekly-signal`, lundi 24/08 : `status=error, rows=14, "1 envoi(s) en échec"`. Quatre jours plus tard le message est identique — c'est la valeur figée jusqu'au prochain lundi. Un lecteur de la lettre gratuite n'a pas reçu la sienne, et **rien dans le produit ne dit lequel**. L'adresse existe : elle est dans le `console.error` de la boucle et dans le tag Sentry, deux endroits que personne ne relit tous les matins — la même asymétrie que celle réparée le 25/08 pour le verrou (« le seul témoin est un `Sentry.captureException` que personne ne lit tous les jours »).
+
+**Le défaut n'est pas propre à `weekly-signal`, il est uniforme.** Huit crons construisent la même phrase creuse, chacun avec l'identité déjà sous la main, à la ligne près, dans son propre `console.error` :
+
+| cron | message actuel | identité disponible au point d'échec |
+|---|---|---|
+| `weekly-signal` | `N envoi(s) en échec` | `user.email` |
+| `weekly-digest` | `N envoi(s) en échec` | `sub.email` |
+| `trial-reminders` | `N rappel(s) en échec` | `profile.email` |
+| `pilot-follow-up` | `N email(s)/requête(s) en échec` | `pilot.email` |
+| `trigger-subscriber-alerts` | `N envoi(s) en échec` | `sub.id` |
+| `trigger-pheic-alerts` | `N alerte(s) PHEIC en échec` | `user.id` / `outbreak.id` |
+| `trigger-regional-digest` | `N envoi(s) en échec` | `user.id` |
+| `regional-alerts` / `disease-alerts` | `N alerte(s) en échec` | `profile.id` / `outbreak.id` |
+
+Le cas `trigger-pheic-alerts` est le plus coûteux du lot et son propre commentaire le dit : une alerte PHEIC n'a pas de fenêtre de rattrapage, le marqueur est définitif — un échec anonyme, c'est un utilisateur qui ne sera plus jamais prévenu de cette urgence-là, sans que son nom soit écrit nulle part.
+
+**Effort estimé : moyen.** Un formateur partagé dans `lib/cron-monitor.ts` et deux lignes par cron (accumuler l'identité au point d'échec, l'accrocher à la note existante). Aucun schéma, aucun changement de destinataire, de contenu ou de condition d'envoi — strictement ce qui est écrit dans le journal **après** que l'échec a eu lieu.
+
+**Risque/inconnue :** (a) longueur du message — plafonné à 3 identités puis « (+N autres) », le total dit en clair, jamais tronqué en silence ; (b) ce sont des adresses d'utilisateurs réels qui entrent dans `site_config` et dans l'e-mail de santé — précédent déjà en place, `checkDecisionHorizonTrials` y nomme déjà les essais, et les deux surfaces sont réservées à l'exploitant (table service-role, e-mail interne) ; (c) ça **nomme** l'échec, ça ne le répare pas — la cause du 24/08 restera inconnue jusqu'au prochain lundi, cette fois avec un nom.
+
+---
+
+### Contexte relevé au passage (pas des idées)
+
+- **`sync-who-afro` n'a pas tourné aujourd'hui.** Dernier passage 26/08 08:00, planifié `0 8 * * *`. Le filet existe et va se déclencher tout seul : sa fenêtre est de 26 h, et le health-check de demain 07h05 le verra à 47 h. Signalé, pas traité — c'est le contrôle qui fait son travail, avec le délai assumé de sa propre heure de passage.
+- **101 des 219 alertes du jour sont parties vers `david.deheunynck@yahoo.fr`** (compte créé le 26/08, essai jusqu'au 09/09) — le rattrapage normal d'un compte neuf. Signalé parce que c'est 46 % du volume du jour et que ça fausserait toute lecture de la pression d'alerte. `471c12e` (ce matin) exclut déjà cette adresse des comptes réels côté marketing.
+- **`bonivogui@anss-guinee.org` (ANSS Guinée) arrive à échéance demain 28/08.** `trial-reminders` a bien tourné à 09h30 avec `rows=1` — le J-1 est parti. Rien à construire, la mécanique a fonctionné.
+- **Pistes ouvertes sans angle neuf, non re-proposées :** version de définition de cas (Adelekun, 03/08), 18 indicateurs de confiance communautaire (Bernasconi, 07/08), trois sources tierces (TSENG, 29/07, garde-fou `ROADMAP.md`), écart entre deux sources (écartée le 23/08), bulletin vectoriel `sync-spf`, stock des 25 comptes abonnés aux 5 régions (hors autonomie), `pricing.faq5_a` (copy de marque).
+- **Toujours chez David depuis hier, rien fait ici :** les 3 lignes ReliefWeb encore affichées et les 2 lignes FHCC sur une note Substack. En revanche `ccousp.cm` **est tranché** — `f54302d` (15h55) l'a ajouté aux domaines faisant autorité, avec EnQuête+ ; le point 3 du reliquat du 26/08 est clos.
+
+**Statut initial : 2 idées PROPOSÉES.** Construction dans la foulée — voir la section ci-dessous.
