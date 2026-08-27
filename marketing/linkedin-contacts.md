@@ -105,9 +105,9 @@ Les deux ont été rédigés une fois, passés une fois au registre de faits, un
 
 ---
 
-### 2️⃣ bis 🔒 UN 3e DM EN FILE DE VALIDATION — sur demande de David (« traite la réponse de Peace Mpakaniye »)
+### 2️⃣ bis ✅ UN 3e DM — ENVOYÉ ET CONFIRMÉ, sur ordre explicite de David (« envoie le »)
 
-#### 🔒 DM 3 — **Peace Mpakaniye** (EN, fil actif, **AVEC CTA**, hors quota froid)
+#### ✅ DM 3 — **Peace Mpakaniye**, ENVOYÉ ET CONFIRMÉ (heure locale ~20h), EN, fil actif, **AVEC CTA**, hors quota froid
 
 *Epidemiologist | Respiratory Infectious Disease Surveillance | Mortality Monitoring | Data Science.* Connexion acceptée le 26/08, message de bienvenue envoyé ce matin à 10:28.
 
@@ -126,7 +126,7 @@ Les deux ont été rédigés une fois, passés une fois au registre de faits, un
 
 🔴🔴 **Une affirmation fausse a été rattrapée par une vérification en base ET en code, pas par le relecteur — le point le plus sérieux de ce brouillon.** Le 1er brouillon disait « *Belgium isn't on healthwatch-global.com yet, hMPV or anything else* ». **Faux, vérifié en interrogeant la base de production et en lisant `lib/outbreaks.ts`** : la Belgique porte 2 lignes — un événement de sécurité alimentaire (contamination à la cereulide dans du lait infantile, `active: true` en base) et une ligne mpox close de décembre 2025 (`active: false`). Le code de rendu (`isDisplayActive`/`filterDisplayActive`) retourne `true` dès que `active === true`, **avant** même de regarder `is_seed` — donc la ligne sécurité alimentaire s'affiche bien comme active sur `/country/belgium`, malgré son statut `is_seed: true`. Un lecteur de bulletins comme Peace aurait pu vérifier en un clic. **Corrigé** : le brouillon dit maintenant précisément ce qui est en ligne (aucune des deux lignes n'étant respiratoire), plutôt que d'affirmer une absence totale fausse.
 
-**QA: mécanique FAIL (1 blocker résiduel, `context.too-soon`, faux positif documenté — réponse à un message entrant reçu il y a plusieurs heures, hors plafond de relance ; le reste du rapport — `ngram.history`, `hwg.claim` — est de l'auto-référence à mes propres versions déjà archivées ci-dessous, vérifiée par grep, ou des affirmations déjà revérifiées en base) | relecteur REECRIRE (11) au 1er passage puis REECRIRE (11) une 2e fois sur la version corrigée, la 3e version vérifiée par moi-même (règle des deux essais : pas de 3e sous-agent, verdict humain requis) | faits cités: aucun chiffre du registre ; les deux lignes Belgique et leur statut vérifiés en base ET dans le code de rendu du site | registre du 27/08 | statut: en file de validation**
+**QA: mécanique FAIL (1 blocker résiduel, `context.too-soon`, faux positif documenté — réponse à un message entrant reçu il y a plusieurs heures, hors plafond de relance ; le reste du rapport — `ngram.history`, `hwg.claim` — est de l'auto-référence à mes propres versions déjà archivées ci-dessous, vérifiée par grep, ou des affirmations déjà revérifiées en base) | relecteur REECRIRE (11) au 1er passage puis REECRIRE (11) une 2e fois sur la version corrigée, la 3e version vérifiée par moi-même (règle des deux essais : pas de 3e sous-agent) | faits cités: aucun chiffre du registre ; les deux lignes Belgique et leur statut vérifiés en base ET dans le code de rendu du site | registre du 27/08 | statut: ENVOYÉ ET CONFIRMÉ, sur ordre explicite de David (« envoie le »)**
 
 🔴 **Historique complet des trois versions, pour transparence — David tranche si la 3e tient.**
 1. **1re version, REECRIRE du relecteur (§11, gabarit)** : ouvrait sur une reconnaissance du recadrage (« That answers the question I actually asked, and it moves where I thought the gap sat... I had read "X" as "Y"... ») et fermait sur une question à deux branches opposées. **Exactement l'ossature du DM envoyé à Rodrigo la même heure** : reconnaissance-du-recadrage → confession-d'hypothèse-antérieure → question binaire de clôture. Le contrôle mécanique (n-grammes sur les mots) ne pouvait pas le voir, seule une lecture comparative de la charpente le pouvait.
@@ -140,6 +140,8 @@ Les deux ont été rédigés une fois, passés une fois au registre de faits, un
 > I'm curious what happens on your end when hMPV climbs past what a normal season looks like. Does it ever show up anywhere beyond the regular bulletin?
 >
 > Belgium carries one active line on healthwatch-global.com right now, a food safety event, plus a closed mpox entry from last December. Nothing respiratory, hMPV included. Nobody asks for a card to look at what is there for two weeks, if you're curious how the declared half reads next to what you already track.
+
+**Publication confirmée** : destinataire « Peace Mpakaniye » revérifié dans le même appel JS que le clic sur Envoyer. Texte comparé caractère pour caractère (normalisé) au brouillon validé (705 caractères, 3 paragraphes, 0 tiret cadratin) avant le clic. Confirmation a posteriori : éditeur vidé, 3e message du fil se terminant par le texte validé.
 
 ---
 
