@@ -147,9 +147,9 @@ Les deux ont été rédigés une fois, passés une fois au registre de faits, un
 
 ---
 
-### 2️⃣ ter 🔒 UN 4e DM EN FILE DE VALIDATION — réponse à John Omari Baso
+### 2️⃣ ter ✅ UN 4e DM — ENVOYÉ ET CONFIRMÉ, sur ordre explicite de David (« s'il est double checké et correct envoie le »)
 
-#### 🔒 DM 4 — **John Omari Baso**, fil actif, **AVEC CTA**, hors quota froid
+#### ✅ DM 4 — **John Omari Baso**, ENVOYÉ ET CONFIRMÉ (heure locale ~21h), fil actif, **AVEC CTA**, hors quota froid
 
 **Sa réponse, reçue à 20:11, verbatim** (fil relu intégralement, revérifié caractère pour caractère à la source ce run — une coquille trouvée dans ma propre copie archivée, « Kasai » sans tréma pour « Kasaï », corrigée dans `tmp/thread-john-omari-27b.txt`, sans effet sur le brouillon qui ne cite aucune province nommément) :
 > Hello David,
@@ -164,13 +164,15 @@ Les deux ont été rédigés une fois, passés une fois au registre de faits, un
 
 **L'angle** : le calcul est fait sur ses propres chiffres, pas sur les nôtres — 42−32 = 10 cas hors cVDPV2 (question ouverte sur ce qui les distingue, sans lui prêter une réponse) ; 6 provinces citées moins 1 déjà connue (Haut-Lomami) = 5 provinces neuves pour nous. Question de fond : est-ce que « COUP » est public ou seulement diffusé en interne à la riposte — il est le seul en position de le savoir.
 
-**QA: mécanique FAIL (1 blocker résiduel, `context.too-soon`, faux positif documenté — réponse à un message entrant reçu il y a ~30 min, hors plafond de relance ; 631 car., 3 paragraphes) | relecteur : 2 tentatives, PLANTÉES sur le même faux positif de classifieur que plus tôt ce run (`Sonnet 5 can't help with this`, tag `[bio]`, aucun rapport avec le contenu — combinaison de termes épidémiologiques probablement en cause) — vérification refaite entièrement à la main : chiffres recalculés un par un (42−32=10, 6−1=5), aucune parole prêtée à John, aucun terrain politique (la phrase sur la perte d'information entre bulletin national et point hebdomadaire global décrit un fait d'agrégation, ne critique ni GPEI ni l'OMS), architecture vérifiée distincte des 2 gabarits déjà repérés ce jour (Rodrigo/Peace) — pas de reconnaissance-du-recadrage, pas d'aveu d'angle mort, pas de question à choix multiples | faits cités : 42, 32, 10, 5, 6 — tous du fil ou calculés dessus, aucun du registre | registre du 27/08 | statut: en file de validation**
+**QA: mécanique FAIL (1 blocker résiduel, `context.too-soon`, faux positif documenté — réponse à un message entrant reçu il y a ~30 min, hors plafond de relance ; 631 car., 3 paragraphes) | relecteur : 2 tentatives, PLANTÉES sur le même faux positif de classifieur (`Sonnet 5 can't help with this`, tag `[bio]`), y compris après reformulation du prompt — contenu en cause, pas le phrasing, retenter une 3e fois abandonné (voir mémoire `feedback_two_try_rule_vs_tool_crash_2026_08_27`) — vérification refaite entièrement à la main : chiffres recalculés un par un (42−32=10, 6−1=5), aucune parole prêtée à John, aucun terrain politique (la phrase sur la perte d'information entre bulletin national et point hebdomadaire global décrit un fait d'agrégation, ne critique ni GPEI ni l'OMS), architecture vérifiée distincte des 2 gabarits déjà repérés ce jour (Rodrigo/Peace) — pas de reconnaissance-du-recadrage, pas d'aveu d'angle mort, pas de question à choix multiples | faits cités : 42, 32, 10, 5, 6 — tous du fil ou calculés dessus, aucun du registre | registre du 27/08 | statut: ENVOYÉ ET CONFIRMÉ, sur ordre explicite de David (« s'il est double checké et correct envoie le »), après un dernier double-check à la source (fil rouvert, toujours 2 messages, aucun nouveau) juste avant l'envoi**
 
 > 42 against the 32 I hold, and 5 provinces I never had a name for. Whatever the global weekly point carries loses most of a country's own bulletin on the way through.
 >
 > What I can't work out from your numbers alone: what separates the 10 cases outside the 32 cVDPV2, and does COUP live anywhere public, or only inside the response itself?
 >
 > If it only circulates inside the response, that puts this exactly where most of what I track sits: counted somewhere real, invisible to anything built to read the public record. Two weeks to look at what does surface on healthwatch-global.com costs nothing, if the comparison is useful to you.
+
+**Publication confirmée** : destinataire « John Omari Baso » revérifié dans le même appel JS que le clic sur Envoyer. Texte comparé caractère pour caractère (normalisé) au brouillon validé (631 caractères, 3 paragraphes, 0 tiret cadratin) avant le clic. Confirmation a posteriori : éditeur vidé, 3e message du fil se terminant par le texte validé.
 
 ---
 
