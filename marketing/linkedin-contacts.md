@@ -1,6 +1,36 @@
 > 📦 **Archive** : le détail du 24 juin au 16 juillet 2026 a été déplacé dans [linkedin-contacts-archive-avant17juillet.md](linkedin-contacts-archive-avant17juillet.md) le 23/07 pour garder ce fichier léger.
 
 
+## 📅 Session interactive — 27/08/2026 (~15h10), sur demande de David
+
+David a demandé « double check les DMs » puis, une fois le double-check restitué, a tapé explicitement « envoie les DM » en session interactive — validation explicite au sens de `_shared/report-conventions.md`.
+
+### Double-check refait à froid avant envoi
+Les deux fils relus **à la source** (pas depuis les notes archivées) : aucun message nouveau des deux côtés depuis la mise en file. Les deux bulletins SpF re-fetchés indépendamment, chaque valeur du DM Pierre revérifiée un par un. Faux CTA (Pierre) reconfirmé par grep direct sur le brouillon : aucune URL, aucune mention « essai »/« pro », seul le mot « lien » (hyperlien de Pierre + « lien épidémiologique ») déclenche le marqueur. Comparaison n-gramme des 3 textes du run entre eux : **0 séquence de 4 mots partagée**. Le `ngram.history` massif (102-119 formules) au re-contrôle confirmé comme auto-référence au brouillon déjà archivé (piège documenté le même jour dans `docs/outreach-qa.md`) : vérifié par grep que chaque « répétition » n'existe nulle part ailleurs que dans l'entrée du jour. `context.too-soon` sur Rodrigo confirmé faux positif logique après lecture du code (`scripts/check-outreach-message.mjs:420-423`) : la règle compte les jours depuis notre dernier message sortant sans distinguer une relance dans le vide d'une réponse à un message reçu le jour même.
+
+**Une amélioration réelle trouvée en relisant à froid** : clôture du DM Rodrigo resserrée (« *is where that sits* » → « *carries that:* », 133→126 car.), aucun fait changé. Recontrôlé après coup, rien de neuf. Commité et poussé avant l'ordre d'envoi (`3805f1d`).
+
+### ✅ DM 1 — Rodrigo Olave Hurtado — ENVOYÉ ET CONFIRMÉ 15:12
+Destinataire revérifié dans l'en-tête du composeur (« Rodrigo Olave Hurtado ») dans le même appel JS que la lecture du texte final, juste avant l'envoi. Texte comparé caractère pour caractère au brouillon validé (1280 car., 0 tiret cadratin) avant le clic. Confirmation a posteriori : éditeur vidé, dernier message du fil = notre texte (1277 car. rendus).
+
+### ✅ DM 2 — Pierre PARNEIX — ENVOYÉ ET CONFIRMÉ 15:15
+Même procédure : en-tête « Pierre PARNEIX » revérifié, texte comparé au brouillon (1171 car., 0 tiret cadratin) avant le clic, confirmation a posteriori sur le dernier message du fil (1168 car. rendus).
+
+### ⚠️ Incident technique rencontré et corrigé en cours d'envoi — composeur de fil actif, perte de focus après nettoyage DOM
+Sur le 2e DM (Pierre), après avoir vidé l'éditeur par `execCommand('delete')` en JS (sans clic physique), les frappes clavier suivantes ont soit **atterri ailleurs** (silencieusement perdues, `len: 40` observé) soit **produit un texte corrompu** (une première tentative de saisie du 1er paragraphe a rendu `"ééàûéàààéàîééééééàùêééééééôàéàééàçàéçééé"` — uniquement les caractères accentués, les lettres non accentuées disparues). **Rien n'a été envoyé dans les deux cas** : vérifié à chaque étape avant tout clic sur Envoyer, et le dernier message du fil est resté celui de Pierre jusqu'à l'envoi réel.
+
+**Cause identifiée** : le focus JS (`ed.focus()` + `Range`/`Selection`) après une manipulation DOM (`execCommand('delete')`) ne suffit pas à établir un focus stable pour les événements clavier synthétiques de `computer.type` sur ce composeur — contrairement au clic physique (`computer.left_click` sur les coordonnées réelles du champ), qui a résolu le problème à chaque fois qu'il a été utilisé en premier. **Un bandeau cookies réapparu au milieu de la manipulation a probablement aggravé le symptôme** (intercepte les événements avant qu'ils n'atteignent l'éditeur).
+
+**Correctif appliqué et qui a tenu à tous les coups ensuite** : après tout nettoyage ou changement d'état de l'éditeur, **toujours un clic physique réel** (`computer.left_click` sur les coordonnées visibles du champ, jamais seulement `ed.focus()` en JS) avant de reprendre la frappe, et vérification systématique du contenu de l'éditeur par JS après chaque bloc tapé, avant tout envoi.
+
+**Sur les sauts de paragraphe** : `shift+Return` insère une paire `<p>texte</p><p><br></p>`, que `innerText` sérialise en **3** `\n` consécutifs (pas 2) — ce n'est pas une erreur de frappe, c'est la sérialisation normale d'un saut de paragraphe simple sur ce composeur. Un `Backspace` après un seul `shift+Return` supprime tout le paragraphe vide d'un coup (pas un seul caractère). À consigner pour les prochains envois DM sur ce composeur.
+
+**⚠️ CDP `Input.dispatchKeyEvent` a timeout à 30s sur 4 des 8 blocs tapés ce run** (2 sur chaque fil), sans que le texte soit perdu — vérifié systématiquement après coup, le texte était à chaque fois intégralement et correctement passé malgré le timeout. Comportement cohérent avec un renderer temporairement lent plutôt qu'une vraie perte de frappe. Ne pas retaper après un timeout sans avoir vérifié l'état réel de l'éditeur — un nouveau essai sur un texte déjà bien passé produirait un doublon.
+
+**Pas de correctif de script proposé** : c'est un comportement du composeur LinkedIn (React/contenteditable), pas de notre outillage. Retenu comme note de méthode pour `_shared/browser-click-reliability.md` si l'incident se reproduit.
+
+---
+
 ## 📅 Session linkedin-hwg-followup-check — 27/08/2026 (13h, 1er des 2 créneaux après-midi)
 
 **Vérification double déclenchement** : aucune entrée `linkedin-hwg-followup-check` datée du 27/08 dans ce fichier ni dans `content-log.md` à l'ouverture (dernière en date : 26/08 13h). L'entrée du jour appartient à `linkedin-hwg-monitoring` (9h), run intentionnellement distinct → **premier déclenchement de cette routine aujourd'hui**.
@@ -9,7 +39,7 @@
 
 **Registre de faits régénéré en début de run** (`npm run qa:facts`) : **225 faits citables sur 106 lignes affichées**, 81 lignes `is_seed` exclues, **22 faits périmés** (contre 25 ce matin). L'amélioration de fraîcheur constatée à 9h se poursuit.
 
-**Quotas à la clôture, cumulés sur les 3 sessions du jour** : commentaires **2/7 publiés** · notes de connexion **1/7** (inchangé depuis 9h) · **DM 5/8 envoyés ce matin sur ordre de David, 2 nouveaux en file de validation ci-dessous** · suivis **9/7-10** · invitations reçues **2 acceptées** (inchangé).
+**Quotas à la clôture, cumulés sur les 3 sessions du jour** : commentaires **2/7 publiés** · notes de connexion **1/7** (inchangé depuis 9h) · **DM 7/8 envoyés (5 ce matin + 2 ce créneau, sur ordre de David), les 2 du créneau hors quota froid (réponses en fil actif)** · suivis **9/7-10** · invitations reçues **2 acceptées** (inchangé).
 
 ---
 
@@ -32,7 +62,7 @@ Les deux ont été rédigés une fois, passés une fois au registre de faits, un
 
 ---
 
-#### 🔒 DM 1 — **Rodrigo Olave Hurtado** (EN, fil actif, **AVEC CTA**, hors quota froid)
+#### ✅ DM 1 — **Rodrigo Olave Hurtado**, ENVOYÉ ET CONFIRMÉ 15:12 (EN, fil actif, **AVEC CTA**, hors quota froid)
 
 *Veterinarian, MSc, PGDip | Infectious Disease Epidemiology & Zoonoses*, LSHTM, chilien basé au Royaume-Uni. Relation de 1er degré depuis le 26/08, message de bienvenue envoyé ce matin à 10:36.
 
@@ -57,7 +87,7 @@ Les deux ont été rédigés une fois, passés une fois au registre de faits, un
 
 **L'angle, après réécriture** : il suggère d'ajouter les agences nationales et les sources de surveillance animale/environnementale. **Or Santé publique France est déjà l'un des 29 hôtes de source de HWG**, et l'événement hantavirus n'a quand même produit aucune ligne. Le goulot n'est donc pas la liste des sources, c'est la **forme de l'enregistrement** : un avis d'investigation sans aucun compte n'a pas de forme que la table sache stocker. C'est un point que seul quelqu'un qui exploite réellement un agrégateur peut lui apporter.
 
-**QA: mécanique FAIL (1 blocker résiduel, `context.too-soon`, faux positif documenté — réponse à un message entrant reçu 47 min plus tôt, explicitement hors plafond de relance ; 1293 car. / 1300, 4 paragraphes) | relecteur REECRIRE (1, 2, 3, 9, 10) au 1er passage, les 5 corrigés | faits cités: aucun chiffre épidémiologique ; « 17 » sourcé sur `coverage.diseases`, « 14 » sur `pricing.faq4_a` | registre du 27/08 | statut: 🔒 en file de validation**
+**QA: mécanique FAIL (1 blocker résiduel, `context.too-soon`, faux positif documenté — réponse à un message entrant reçu 47 min plus tôt, explicitement hors plafond de relance ; 1293 car. / 1300, 4 paragraphes) | relecteur REECRIRE (1, 2, 3, 9, 10) au 1er passage, les 5 corrigés | faits cités: aucun chiffre épidémiologique ; « 17 » sourcé sur `coverage.diseases`, « 14 » sur `pricing.faq4_a` | registre du 27/08 | statut: ENVOYÉ ET CONFIRMÉ 15:12, sur ordre explicite de David (« envoie les DM ») après double-check refait en session**
 
 🔴 **Le relecteur a évité une erreur de fait qui serait passée devant un spécialiste des zoonoses, et c'est la trouvaille du run.** Le 1er brouillon disait « *from outside I have no way of telling whether it is the same event as the ship case you mentioned* ». **La page SpF tranche explicitement le contraire**, vérifié par mes soins ensuite, verbatim : « *Ce patient n'a aucun lien avec le foyer épidémique d'hantavirus Andes survenu sur le navire de croisière Mv Hondius en mai dernier, avec à son bord près de 150 passagers de 23 nationalités.* » J'affichais une incertitude sur un point que ma propre source citée résolvait, devant l'interlocuteur qui avait lui-même soulevé la croisière. **Cause : je n'avais lu que le premier tiers de la page.**
 
@@ -79,7 +109,7 @@ Les deux ont été rédigés une fois, passés une fois au registre de faits, un
 
 ---
 
-#### 🔒 DM 2 — **Pierre PARNEIX** (FR, vouvoiement, fil actif, **SANS CTA**, hors quota froid)
+#### ✅ DM 2 — **Pierre PARNEIX**, ENVOYÉ ET CONFIRMÉ 15:15 (FR, vouvoiement, fil actif, **SANS CTA**, hors quota froid)
 
 Professionnel français de l'hygiène hospitalière et de la prévention du risque infectieux. Fil le plus technique du compte.
 
@@ -93,7 +123,7 @@ Professionnel français de l'hygiène hospitalière et de la prévention du risq
 
 **L'angle** : le bulletin qu'il envoie contient de quoi **nuancer ce que je lui ai affirmé samedi**. Je lui disais que le nombre d'épisodes lit l'installation du vecteur mieux que le cumul. Or sur les 4 épisodes de chikungunya de Nouvelle-Aquitaine, **3 sont explicitement rattachés entre eux** par l'investigation : compter les épisodes sans distinguer les rattachés surestime précisément l'indépendance que je croyais qu'ils mesuraient. Auto-correction sur une affirmation faite dans ce fil, à partir de la source qu'il vient de fournir.
 
-**QA: mécanique FAIL (2 blockers résiduels, les deux faux positifs documentés — voir ci-dessous ; 1171 car., 4 paragraphes) | relecteur REECRIRE (10) au 1er passage, corrigé — 11 PASS sur 12, tous les chiffres revérifiés un par un contre les deux bulletins | faits cités: aucun chiffre du registre, tous pris aux bulletins SpF primaires lus en session | registre du 27/08 | statut: 🔒 en file de validation**
+**QA: mécanique FAIL (2 blockers résiduels, les deux faux positifs documentés — voir ci-dessous ; 1171 car., 4 paragraphes) | relecteur REECRIRE (10) au 1er passage, corrigé — 11 PASS sur 12, tous les chiffres revérifiés un par un contre les deux bulletins | faits cités: aucun chiffre du registre, tous pris aux bulletins SpF primaires lus en session | registre du 27/08 | statut: ENVOYÉ ET CONFIRMÉ 15:15, sur ordre explicite de David (« envoie les DM ») après double-check refait en session**
 
 ⚠️ **Deux faux positifs mécaniques, levés sur pièce, dont un NOUVEAU et récurrent par nature :**
 - **`context.cta-repeat`** — le marqueur qui déclenche est le mot français **« lien »**, employé ici pour *l'hyperlien de Pierre* (« Votre lien m'a donné le détail ») et pour **« le lien épidémiologique »**. Le brouillon ne contient aucun CTA. **Ce marqueur va se déclencher indéfiniment sur ce compte** : « lien épidémiologique » est un terme de métier que ces fils emploieront souvent. Consigné dans `docs/outreach-qa.md` ce run.
