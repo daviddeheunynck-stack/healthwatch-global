@@ -67,13 +67,15 @@ Les deux ont été rédigés une fois, passés une fois au registre de faits, un
 
 ⚠️ **Le contrôle mécanique a par ailleurs attrapé un vrai dépassement de longueur** (1476 puis 1325 car. contre un plafond de 1300) que le relecteur avait jugé « longueur tenable ». Resserré à 1293 sans perdre un fait.
 
+⚠️ **Retouche éditoriale du double-check demandé par David (§8, relecture finale) : clôture resserrée et clarifiée**, sans changer un fait — « healthwatch-global.com is where that sits » (133 car., légèrement heurté) devenu « healthwatch-global.com carries that: 17 diseases, each with the bulletin behind it » (126 car.). Recontrôlé mécaniquement après coup : mêmes deux faux positifs déjà documentés (`context.too-soon`, `ngram.history` — auto-référence au propre brouillon déjà archivé), rien de nouveau.
+
 > Thanks Rodrigo, correction taken. Endemic for decades, with surveillance running since the 1990s, is not where I had filed it, and an escalation inside an existing programme is not the new signal I read it as.
 >
 > Your closing suggestion sent me to check, and the answer is not flattering to me. Santé publique France published on 7 August that an imported Andes case had transited the country in the second half of July, strain confirmed by the CNR on the 6th, contact tracing run with the ARS and DGS. They also state plainly that it has no connection to the Mv Hondius outbreak in May, so it is a separate event, not the one you meant.
 >
 > The uncomfortable part: Santé publique France is already one of the sources I read. Adding national public health bodies would not have caught it. The source was never what was missing: the item carries no count, nothing with a shape my side can store, and hantavirus has no line in what I hold at all. The bottleneck is the form of the record, not the list of institutions.
 >
-> healthwatch-global.com is where that sits, 17 diseases with the bulletin behind each line, Pro access runs 14 days and takes no card. What I would want from a zoonoses reader is your sense of what a countable reservoir signal would even look like, if one is possible at all.
+> healthwatch-global.com carries that: 17 diseases, each with the bulletin behind it, Pro access runs 14 days and takes no card. What I would want from a zoonoses reader is your sense of what a countable reservoir signal would even look like, if one is possible at all.
 
 ---
 
