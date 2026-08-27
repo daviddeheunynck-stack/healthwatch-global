@@ -131,6 +131,15 @@ const AUTHORITATIVE_SOURCE_DOMAINS: ReadonlySet<string> = new Set([
   "health.ny.gov",
   // Academic / institutional surveillance systems publishing primary data
   "info.dengue.mat.br",  // InfoDengue — Fiocruz / FGV
+  // Cameroon's Centre de Coordination des Opérations d'Urgences de Santé Publique
+  // (CCOUSP) — created by ministerial order n°51 PM of 12 May 2020, publishes the
+  // country's own outbreak sitreps (cholera, mpox, yellow fever, measles…) and lists
+  // the Ministry of Public Health as its own parent link. National public-health
+  // coordination body, not a newsroom — found 2026-08-27 via data-quality's new
+  // section 4m (was demoted to 'unverified' for lacking an allowlist entry, not for
+  // any real trust issue: verified live, the anti-bot 403 that blocked earlier
+  // fetches is a hosting quirk, see reference_govt_sites_need_browser_user_agent).
+  "ccousp.cm",
 ]);
 
 const AUTHORITATIVE_SOURCE_HOSTS: ReadonlySet<string> = new Set([
@@ -173,6 +182,10 @@ const GENERAL_PRESS_DOMAINS: ReadonlySet<string> = new Set([
   // visible and linked without lending it the official badge; the Wallis-and-Futuna row on
   // it deserves re-sourcing to the SPC/WHO Pacific syndromic surveillance bulletin.
   "mesvaccins.net",
+  // EnQuête+ (Senegal) — established national newsroom (print + digital), same tier
+  // as Leadership/Tchadinfos/Africa24 above. Found 2026-08-27 via section 4m,
+  // Diphtheria/Senegal coverage.
+  "enqueteplus.com",
 ]);
 
 /**
