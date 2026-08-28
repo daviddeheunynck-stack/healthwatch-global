@@ -93,17 +93,21 @@ Elle corrigeait bien les trois points (plus de « au quotidien », identité de 
 
 ---
 
-### 4️⃣ 🔒 QUATRE DM EN ATTENTE DE VALIDATION — rédigés, double-checkés, **NON envoyés**
+### 4️⃣ ✅ QUATRE DM — ENVOYÉS ET CONFIRMÉS, sur ordre explicite de David (« envoie les dms »)
 
-Rappel règle du 23/07 : les DM ne sont pas envoyés en autonomie, seulement mis en file. **David absent → notification push envoyée.** Les quatre sont des réponses en fil actif ou un message de bienvenue : **quota à froid 0/8 consommé**, seule la rédaction est comptée.
+Rappel règle du 23/07 : les DM ne sont pas envoyés en autonomie, seulement mis en file — **David a validé explicitement les quatre en session interactive**, après un double-check refait à froid (fils rouverts à la source, pas depuis les notes). Les quatre sont des réponses en fil actif ou un message de bienvenue : **quota à froid 0/8 consommé**, seule la rédaction l'était.
 
-**Les quatre relecteurs ont trouvé des défauts réels, corrigés avant mise en file.** Conformément au dispositif révisé du 26/08, il n'y a **pas eu de 2e passage relecteur** : les rapports ci-dessous portent sur la version d'avant correction, et les corrections appliquées sont détaillées à chaque fois.
+**Double-check du 28/08, avant envoi — deux points trouvés, aucun n'a changé le texte final :**
+- **Rodrigo** : le fichier de transcription du matin (`tmp/thread-rodrigo-28.txt`) n'était pas un verbatim fidèle sur 2 messages du milieu du fil (celui de 15h12 en particulier, qui contient un CTA déjà envoyé — healthwatch-global.com, essai 14 jours — et une référence à un cas Andes importé en France, aucun des deux repris dans ma copie). Le brouillon en file ne s'appuyant que sur les messages [4]/[5], revérifiés identiques mot pour mot au fil réel, **le texte envoyé est correct** ; le défaut était dans le processus de relecture du matin, pas dans le brouillon.
+- **Harvey** : une **3e réponse publique**, postée ~1h avant le double-check, a été découverte sous le commentaire original (« *I find this point particularly relevant… explore further in the context of the DRC* »). Le DM de bienvenue ne s'appuie que sur sa 1re réponse et reste exact ; cette 3e réponse reste un fil public ouvert, distinct du DM, non traité ici.
+
+**Les quatre relecteurs avaient trouvé des défauts réels, corrigés avant mise en file.** Conformément au dispositif révisé du 26/08, il n'y a **pas eu de 2e passage relecteur** : les rapports ci-dessous portent sur la version d'avant correction, et les corrections appliquées sont détaillées à chaque fois.
 
 ⚠️ **Trois findings mécaniques écartés sur pièce, tous de classes documentées** : `context.too-soon` sur John et Rodrigo (la règle mesure l'écart entre deux envois de David sans voir le message entrant reçu entre les deux — ce sont des réponses, pas des relances) ; `context.language` sur John (voir ci-dessous) ; `context.cta-repeat` levé par réécriture, sa trace pointait le CTA présent **dans le fil**, pas dans le brouillon.
 
 ---
 
-#### 🔒 DM 1 — **John Omari Baso** (`/in/john-omari-baso-84500b1b0/`), **FR**, fil actif, SANS CTA
+#### ✅ DM 1 — **John Omari Baso** (`/in/john-omari-baso-84500b1b0/`), ENVOYÉ ET CONFIRMÉ 12h36, **FR**, fil actif, SANS CTA
 
 **Fil relu intégralement (§4)** : 5 messages, recopiés verbatim dans `tmp/thread-john-28.txt`. Il a envoyé **deux** messages hier soir, les deux traités.
 
@@ -117,7 +121,7 @@ Rappel règle du 23/07 : les DM ne sont pas envoyés en autonomie, seulement mis
 
 🔴 **Ce message reconnaît un défaut réel de notre produit, vérifié à la source primaire avant d'être écrit.** Voir la section §8 de `content-log.md` : le GPEI a bien republié depuis, avec des données arrêtées au 26/08. **Le chiffre nouveau n'est pas cité** (absent du registre) — seul le fait de la republication l'est.
 
-**QA: mécanique FAIL (2 blockers résiduels après correction, `context.language` et `context.too-soon`, tous deux écartés sur pièce ci-dessus ; 587 car., 3 paragraphes, `draftLang: fr` / `threadLang: en`) | relecteur REECRIRE (4, 11) au 1er passage, les 2 corrigés | faits cités: « 18 août », présent dans le registre (`asOf = 2026-08-18`) ET dans le fil | registre du 28/08 | statut: en file de validation**
+**QA: mécanique FAIL (2 blockers résiduels après correction, `context.language` et `context.too-soon`, tous deux écartés sur pièce ci-dessus ; 587 car., 3 paragraphes, `draftLang: fr` / `threadLang: en`) | relecteur REECRIRE (4, 11) au 1er passage, les 2 corrigés | faits cités: « 18 août », présent dans le registre (`asOf = 2026-08-18`) ET dans le fil | registre du 28/08 | statut: ENVOYÉ ET CONFIRMÉ 12h36, sur ordre explicite de David (« envoie les dms »), après double-check refait à froid**
 
 ⭐ **Les deux findings du relecteur étaient réels et non triviaux.**
 - **(4) Une conclusion posée avant la question qui la décide.** Le 1er brouillon affirmait que l'écart décrit par John « *n'est pas un trou dans ma collecte* », puis demandait au paragraphe suivant si le détail provincial ressort ailleurs en public — or si la réponse est oui, c'est précisément un trou de collecte. **Contradiction interne qu'un épidémiologiste de terrain aurait vue immédiatement.** Le §2 a été rendu provisoire.
@@ -129,9 +133,11 @@ Rappel règle du 23/07 : les DM ne sont pas envoyés en autonomie, seulement mis
 >
 > Dites-moi ce qui existe réellement de votre côté, je m'aligne dessus.
 
+**Publication confirmée** : texte comparé caractère pour caractère au brouillon validé dans le même appel JS que le clic sur Envoyer (587 caractères, 3 paragraphes, 0 tiret cadratin), destinataire « John Omari Baso » revérifié dans l'en-tête du fil au moment du clic. Éditeur vidé après envoi, message affiché en dernier dans le fil sous « David Deheunynck ».
+
 ---
 
-#### 🔒 DM 2 — **Rodrigo Olave Hurtado** (`/in/rodrigo-olave-hurtado/`), EN, fil actif, SANS CTA
+#### ✅ DM 2 — **Rodrigo Olave Hurtado** (`/in/rodrigo-olave-hurtado/`), ENVOYÉ ET CONFIRMÉ 12h38, EN, fil actif, SANS CTA
 
 **Fil relu intégralement (§4)** : 6 messages, verbatim dans `tmp/thread-rodrigo-28.txt`. *Langue du fil = en ; langue du brouillon = en.* **CTA volontairement absent** : lien et essai envoyés dans ce fil le 27/08 à 15h12, §3 interdit de resservir.
 
@@ -145,7 +151,9 @@ Rappel règle du 23/07 : les DM ne sont pas envoyés en autonomie, seulement mis
 
 **Deux autres findings, corrigés :** **(11)** ouverture par validation de l'interlocuteur pour la **4e fois d'affilée** dans ce fil (« that correction matters », « That reframing lands », « Case by case is a real answer ») — remplacée par une auto-correction ; **(12)** aucun élément propre apporté, uniquement une clôture polie assortie d'une demande.
 
-**QA: mécanique FAIL (1 blocker résiduel, `context.too-soon`, faux positif documenté — réponse à un message entrant ; 646 car., 3 paragraphes, `draftLang: en` / `threadLang: en`) | relecteur REECRIRE (4, 11, 12) au 1er passage, les 3 corrigés | faits cités: aucun chiffre ; l'absence de ligne Chili et de ligne hantavirus vérifiée au registre du 28/08 (0 sur 106 foyers) ; les sources presse et DON vérifiées dans `lib/source-trust.ts` | registre du 28/08 | statut: en file de validation**
+**QA: mécanique FAIL (1 blocker résiduel, `context.too-soon`, faux positif documenté — réponse à un message entrant ; 646 car., 3 paragraphes, `draftLang: en` / `threadLang: en`) | relecteur REECRIRE (4, 11, 12) au 1er passage, les 3 corrigés | faits cités: aucun chiffre ; l'absence de ligne Chili et de ligne hantavirus vérifiée au registre du 28/08 (0 sur 106 foyers) ; les sources presse et DON vérifiées dans `lib/source-trust.ts` | registre du 28/08 | statut: ENVOYÉ ET CONFIRMÉ 12h38, sur ordre explicite de David (« envoie les dms »), après double-check refait à froid**
+
+⚠️ **Le double-check a trouvé que le fil verbatim du matin était incomplet** (voir note en tête de section) — sans conséquence sur ce texte, qui ne cite que les 2 derniers messages du fil, revérifiés identiques.
 
 > I had that backwards, and my own ingestion says so. Not everything I carry arrives on a calendar: some lines come in through regional press, others through WHO notices that appear because something happened rather than because a week ended. The condition I described to you is only true of the bulletin half.
 >
@@ -153,9 +161,11 @@ Rappel règle du 23/07 : les DM ne sont pas envoyés en autonomie, seulement mis
 >
 > So the honest version is that I dismissed it too fast. What I would still want from you is not a rhythm but an address: where does reservoir positivity get published, on the occasions when it does?
 
+**Publication confirmée** : texte comparé caractère pour caractère au brouillon validé (646 caractères, 3 paragraphes, 0 tiret cadratin), destinataire « Rodrigo Olave Hurtado » revérifié dans l'en-tête du fil au moment du clic. Éditeur vidé après envoi, message affiché en dernier dans le fil sous « David Deheunynck ».
+
 ---
 
-#### 🔒 DM 3 — ⭐⭐ **Isaias Fernandes Co** (`/in/isaiasco/`), EN, fil actif, SANS CTA — **IL PROPOSE UN APPEL, DÉCISION DE DAVID**
+#### ✅ DM 3 — ⭐⭐ **Isaias Fernandes Co** (`/in/isaiasco/`), ENVOYÉ ET CONFIRMÉ 12h40, EN, fil actif, SANS CTA — **IL A PROPOSÉ UN APPEL, DÉCISION LAISSÉE À DAVID**
 
 *AI & Technologies Officer* à l'**OMS**, pilote **PDX (Preparedness Data Exchange)** sur 47 États membres africains. **Fil relu intégralement (§4)** : 6 messages, verbatim dans `tmp/thread-isaias-28.txt`.
 
@@ -166,7 +176,7 @@ Rappel règle du 23/07 : les DM ne sont pas envoyés en autonomie, seulement mis
 
 **CTA : volontairement absent**, servi dans ce fil le 20/08.
 
-**QA: mécanique PASS (0 blocker, 442 car., 3 paragraphes, `draftLang: en` / `threadLang: en`) | relecteur REECRIRE (12) au 1er passage, corrigé — 11 PASS sur 12 | faits cités: aucun chiffre ; les 2 questions rappelées vérifiées comme réellement restées sans réponse dans le fil | registre du 28/08 | statut: en file de validation**
+**QA: mécanique PASS (0 blocker, 442 car., 3 paragraphes, `draftLang: en` / `threadLang: en`) | relecteur REECRIRE (12) au 1er passage, corrigé — 11 PASS sur 12 | faits cités: aucun chiffre ; les 2 questions rappelées vérifiées comme réellement restées sans réponse dans le fil | registre du 28/08 | statut: ENVOYÉ ET CONFIRMÉ 12h40, sur ordre explicite de David (« envoie les dms »), après double-check refait à froid — fil revérifié inchangé, aucune nouvelle réponse depuis 09:58**
 
 🔴 **Le finding du relecteur portait sur le ton, et il était juste.** Le 1er brouillon ouvrait par « *Before anything gets fixed in a diary, it would help to know which conversation you have in mind* » et fermait par « *Tell me which of the two it is and I will come back to you on timing* ». Son verdict : « *il demande, on lui répond par un questionnaire, puis par un délai* » — d'un fondateur inconnu vers un cadre de l'OMS qui s'est excusé **deux fois** de ses délais, l'ensemble se lisait comme une mise à distance, voire un refus poli. Il a aussi relevé que la formule « *rather than turn up and improvise* » laissait entendre que l'autre branche produirait une réunion mal préparée. **Point décisif de sa démonstration : ne rien promettre n'oblige pas à retenir toute marque d'intérêt.** Réécrit avec un accueil positif explicite en tête.
 
@@ -176,15 +186,17 @@ Rappel règle du 23/07 : les DM ne sont pas envoyés en autonomie, seulement mis
 >
 > I will let you propose a time that works on your side.
 
+**Publication confirmée** : texte comparé caractère pour caractère au brouillon validé (442 caractères, 3 paragraphes, 0 tiret cadratin), destinataire « Isaias Fernandes Co » revérifié dans l'en-tête du fil au moment du clic. Éditeur vidé après envoi, message affiché en dernier dans le fil sous « David Deheunynck ». **David tranchera lui-même la proposition d'appel, aucun engagement pris en son nom.**
+
 ---
 
-#### 🔒 DM 4 — **Harvey Basivikidi** (`/in/harvey-basivikidi-9b6343a7/`), EN, message de bienvenue, **SANS LIEN**
+#### ✅ DM 4 — **Harvey Basivikidi** (`/in/harvey-basivikidi-9b6343a7/`), ENVOYÉ ET CONFIRMÉ 12h42, EN, message de bienvenue, **SANS LIEN**
 
 Connexion acceptée ce run — **c'est lui qui a envoyé l'invitation**. Aucun fil de messagerie antérieur : premier message. Matériau source (intitulé de profil + sa réponse publique du 27/08) dans `tmp/thread-harvey-28.txt`. **Aucun lien, aucune mention de l'essai** : règle du premier contact, qui ne cède pas même si le destinataire connaît déjà le produit (il a republié notre post de marque le 27/08).
 
 ⚠️ **Langue : EN, tranché sur pièce.** Son intitulé de profil est en français, mais **le seul texte qu'il ait adressé à David est en anglais** (sa réponse publique du 27/08), et son post l'était aussi. Le relecteur a validé : « *L'intitulé de profil en français est une donnée de vitrine, pas un choix de langue vers son interlocuteur.* »
 
-**QA: mécanique PASS (0 blocker après correction, 454 car., 3 paragraphes, `draftLang: en` / `threadLang: en`) | relecteur REECRIRE (5, 9, 12) au 1er passage, les 3 corrigés | faits cités: aucun chiffre | registre du 28/08 | statut: en file de validation**
+**QA: mécanique PASS (0 blocker après correction, 454 car., 3 paragraphes, `draftLang: en` / `threadLang: en`) | relecteur REECRIRE (5, 9, 12) au 1er passage, les 3 corrigés | faits cités: aucun chiffre | registre du 28/08 | statut: ENVOYÉ ET CONFIRMÉ 12h42, sur ordre explicite de David (« envoie les dms »), après double-check refait à froid — voir note en tête de section sur la 3e réponse publique découverte, non traitée ici**
 
 🔴 **Trois findings réels, dont un qui prêtait à Harvey un geste qu'il n'a pas fait.**
 - **(5) Attribution.** Le brouillon disait « *An author moving his own scope in public is rarer than it should be* » et opposait « *You could have told me the boundary was deliberate… **Instead** you called it an extension* ». **Les deux sont faux au sens strict** : Harvey a écrit « *Your question **suggests** an important extension* » — une courtoisie d'auteur, pas une révision publique de son cadrage. Et il a bien dit que la borne était délibérée (« *we **primarily considered** the… ecosystem upstream* ») : il a fait **les deux**, pas le second à la place du premier. « *Harvey, qui sait exactement ce qu'il a écrit, le verra.* »
@@ -198,6 +210,10 @@ Une 1re version citait longuement ses mots et déclenchait 5 `ngram.history` ; l
 > Your reply yesterday put the study on the upstream side of what finally gets published, and then named the extension. The second half is what I had no way to guess from the paper itself.
 >
 > One thing you are placed to answer and I am not. In the settings you studied, does the format of what gets published have a designated owner, or does it sit with whoever prepares the bulletin?
+
+**Publication confirmée** : envoyé via `/messaging/thread/new/` (aucun fil antérieur), destinataire « Harvey Basivikidi · 1er » revérifié dans le champ destinataire avant saisie du texte. Texte comparé caractère pour caractère au brouillon validé (454 caractères, 3 paragraphes, 0 tiret cadratin). Après clic sur Envoyer, l'URL a basculé vers un fil réel et le message apparaît sous « David Deheunynck », seul message du fil.
+
+⚠️ **Note technique** : le bouton « Message » en haut du profil de Harvey n'a rien ouvert au premier clic (piège déjà documenté pour ce type de bouton). Contournement fiable utilisé : `linkedin.com/messaging/thread/new/`, destinataire tapé dans `.msg-connections-typeahead__search-field`.
 
 ---
 
@@ -223,8 +239,8 @@ Une 1re version citait longuement ses mots et déclenchait 5 `ngram.history` ; l
 | Commentaires publiés | **1** | 7 | 6 |
 | Notes de connexion | **0** (1 rédigée, abandonnée en QA ; blocage plateforme de toute façon) | 7 | 7 |
 | Connexions envoyées | **1** (sans note) | 7 | 6 |
-| DM envoyés | **0** | 8 | — |
-| DM rédigés et mis en file | **4** | 8 | 4 |
+| DM envoyés | **4** (4 réponses en fil actif/bienvenue, hors quota froid) | 8 | 8 |
+| DM rédigés et mis en file | **0** (les 4 envoyés sur ordre explicite de David) | 8 | 8 |
 | Suivis | **2** | 7-10 | 5 à 8 |
 | Invitations reçues traitées | **3 acceptées, 2 laissées** | — | — |
 
