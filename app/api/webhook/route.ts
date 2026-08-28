@@ -8,6 +8,7 @@ import { buildPaymentFailedEmail }  from "@/lib/payment-failed-email";
 import { buildTrialEndingEmail }    from "@/lib/trial-ending-email";
 import { enrollAlertRegions } from "@/lib/activate-trial";
 import { errorMessage } from "@/lib/error";
+import { sendBrevoEmail } from "@/lib/brevo-send";
 
 export const dynamic = "force-dynamic";
 
@@ -26,6 +27,19 @@ const BREVO_KEY  = clean(process.env.BREVO_API_KEY);
 // the full ~1.5s window still ends up in Sentry, same as before.
 const SEND_MAX_ATTEMPTS = 3;
 
+// The send itself goes through lib/brevo-send.ts rather than a local fetch.
+// The hand-rolled call this replaced (2026-08-28) was missing two things the
+// shared helper has had since 2026-08-03, and neither was covered by the retry
+// loop above: no AbortSignal.timeout, so a hung Brevo could hold the
+// serverless invocation to its maxDuration; and no res.ok check, so a Brevo
+// 4xx/5xx (refused key, blocked recipient, quota) returned normally and was
+// counted as a successful send — the loop saw no throw and returned on the
+// first attempt. The helper throws `Brevo error: <body>`, which both surfaces
+// the failure in Sentry and lets these retries actually cover it.
+//
+// These 4 emails are transactional (triggered by a billing act, not a
+// marketing subscription): no unsubscribeUrl, which the helper leaves optional
+// for exactly this case.
 async function sendTransactionalEmail(
   to: string,
   subject: string,
@@ -35,16 +49,7 @@ async function sendTransactionalEmail(
   if (!BREVO_KEY) return;
   for (let attempt = 1; attempt <= SEND_MAX_ATTEMPTS; attempt++) {
     try {
-      await fetch("https://api.brevo.com/v3/smtp/email", {
-        method: "POST",
-        headers: { "api-key": BREVO_KEY, "Content-Type": "application/json" },
-        body: JSON.stringify({
-          sender:      { name: "HealthWatch Global", email: "alerts@healthwatch-global.com" },
-          to:          [{ email: to }],
-          subject,
-          htmlContent: html,
-        }),
-      });
+      await sendBrevoEmail({ to, subject, html, apiKey: BREVO_KEY });
       return;
     } catch (err) {
       if (attempt === SEND_MAX_ATTEMPTS) {
