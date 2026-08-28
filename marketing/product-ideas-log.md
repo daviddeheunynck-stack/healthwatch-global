@@ -1838,3 +1838,43 @@ La page publique affiche donc aujourd'hui, pour cette ligne : **« En expansion 
 **Le correctif durable suppose d'enregistrer la provenance au moment de l'instantané** — une colonne sur `outbreak_snapshots` disant de quelle source venait le chiffre ce jour-là, pour que `getOutbreakTrend` ne compare jamais à travers un changement de source. C'est une **migration de schéma**, donc garde-fou 2 : le code qui écrirait cette colonne ne doit pas partir tant que la migration n'est pas appliquée, et l'effet ne serait de toute façon que **prospectif** (les instantanés déjà en base n'ont pas cette information). Effort réel : moyen à gros, et une décision de schéma — **proposée, pas construite.**
 
 **Statut initial : 2 idées PROPOSÉES.** Construction de l'idée 1 dans la foulée — voir la mise à jour ci-dessous.
+
+### Construction — idée 1 livrée, idée 2 délibérément non construite
+
+**Idée 1 — ✅ CONSTRUITE, commit `3d6dcf8`**, `lib/outbreak-trend.ts`, un seul fichier. `directionFor(deltaCases, deltaPercent)` devient **le seul point de décision de direction** des deux fonctions du module (`getOutbreakTrend` et `getOutbreakTrendsBulk` dupliquaient la même expression ternaire) — donc la règle tient identiquement sur les six surfaces qui en dérivent, sans toucher un seul composant :
+
+| surface | ce qu'elle affichait sur une correction |
+|---|---|
+| `PhaseBadge` | « En déclin » (pastille verte) |
+| `OutbreakTable` / `TrendBadge` | « −83% » vert |
+| `OutbreakTable` / `TrendBar` | barre verte |
+| `why-it-matters` | « En recul : −83% de cas sur 7 jours », dans les 5 langues |
+| pages pays / maladie / région | « ↓ 83% » |
+
+Une baisse rend **`unknown`** et non `stable` : tous les consommateurs filtrent déjà sur `direction !== "unknown"` et n'affichent rien — une correction n'affirme donc plus rien, au lieu d'affirmer le contraire de ce qui s'est passé. `stable` aurait encore été une affirmation. La décision est prise sur `deltaCases` et non sur `deltaPercent` arrondi : une petite baisse sur une grosse base (Choléra/Tchad 242→239) arrondit à 0% et serait repassée en « stable ».
+
+**Effet de bord gratuit :** la falaise du 1er janvier des deux crons à compteur annuel (`sync-malaysia-dengue`, `sync-taiwan-cdc`, cf. `isYearRollover`) est neutralisée du même coup — leurs compteurs retombent de ~100 000 à quelques unités au changement d'année, ce qui se serait affiché « En déclin −99% » le jour de l'an.
+
+**Vérifié contre la prod, pas seulement compilé.** Le calcul corrigé rejoué en lecture seule sur les 127 lignes actives :
+
+```
+directions AVANT : up 25 | stable 82 | down 2
+directions APRES : up 25 | stable 82 | unknown 2
+
+lignes dont l'affichage change : 2
+  FHCC/Ouganda   down -67%  ->  unknown   (9 -> 3)
+  FHCC/Senegal   down -83%  ->  unknown   (6 -> 1)
+```
+
+Exactement les deux lignes que David a vues hier soir, et aucune autre : les 25 tendances à la hausse et les 82 stables sont intactes. `npx tsc --noEmit` propre sur tout le projet, `npx eslint` propre sur le fichier touché.
+
+**Idée 2 — ⛔ NON CONSTRUITE, garde-fou 2** (migration de schéma). Ce n'est pas un report de confort : les deux heuristiques réalisables sans schéma ont été testées contre la prod et rejetées sur mesure, pas sur intuition (21 faux positifs sur 27 pour l'une, tout le corpus des sources hebdomadaires pour l'autre). Reste chez David — voir ci-dessous.
+
+### Ce qui reste chez David — aucune écriture en prod n'a été faite ce soir
+
+1. **Dengue/Guatemala affiche aujourd'hui « En expansion / +302% / +14 547 par 24h » pour une correction de ce matin.** L'idée 1 ne le couvre pas et ne pouvait pas le couvrir. Deux voies, toutes deux à trancher par lui : (a) accepter l'artefact à la hausse comme le prix à payer, en sachant qu'il est visible sur la page d'accueil et dans le widget « nouveautés de la semaine » qui trie par aggravation ; (b) financer la colonne de provenance sur `outbreak_snapshots` — migration additive, effet seulement prospectif, et le code qui l'écrit ne peut pas partir avant que la migration soit appliquée.
+2. **La pastille « En expansion » de Guatemala se corrigera seule** une fois 7 jours écoulés depuis le 28/08, soit à partir du **4 septembre** — le palier sortira alors de la fenêtre de comparaison. Rien à faire, mais ne pas lire la page d'ici là comme une flambée réelle.
+3. **Reliquat inchangé du 26/08 :** les 3 lignes ReliefWeb encore affichées attendent toujours une décision de re-sourcing. Les 2 lignes FHCC sont, elles, closes depuis le re-sourcing d'hier soir.
+4. **Fichiers d'une autre session laissés intacts, comme le veut `AGENTS.md`** : `marketing/qa/product-claims.manual.json` (modifié), `scripts/audit-alert-day.mjs` et `scripts/probe-alert-lock.mjs` (non suivis). Rien n'a été stagé ni annulé les concernant.
+
+**Statut : 1 idée PROPOSÉE ET CONSTRUITE (`3d6dcf8`), 1 idée PROPOSÉE et écartée par le garde-fou 2.**
