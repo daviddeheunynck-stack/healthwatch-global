@@ -19,6 +19,46 @@ const THRESHOLD_PCT = 5;  // < 5% change = stable
 const DAYS_BACK     = 7;  // compare against last week
 
 /**
+ * Direction for a case-count delta — the ONLY place either function below
+ * decides one, so the rule holds identically on every surface that renders a
+ * trend (OutbreakTable's TrendBadge/TrendBar, PhaseBadge's "En déclin",
+ * why-it-matters' "En recul : -83% de cas sur 7 jours", and the percentages on
+ * the country/disease/region pages — all six derive from this value).
+ *
+ * A DECREASE IS NEVER A TREND. `outbreaks.cases` is a cumulative
+ * count, and every write path in this repo already treats a drop in it as a
+ * data defect rather than an epidemiological fact: lockedRowRegressionGuard
+ * refuses ANY decrease on a locked row, deathsNeverDecreaseGuard does the same
+ * for deaths, and data-quality section 3 files one as a `large_drop` ANOMALY
+ * for review. The read path was the lone exception — it rendered exactly that
+ * drop as a green "En déclin" badge, i.e. as good news.
+ *
+ * Measured against prod 2026-08-28 over the full 61 days of snapshot history
+ * (127 active rows, 5,443 snapshots): all 17 day-over-day decreases were data
+ * corrections — the 17/07 re-sourcing batch, Cholera/Chad 776→129 on 22/07,
+ * Ebola/DRC 5208→5021 on 22/08, the two CCHF re-sourcings of 27/08 that
+ * surfaced this bug. Not one was an outbreak receding. A cumulative counter
+ * does not go down in the field; when it goes down here, HealthWatch corrected
+ * its own figure, and saying "in decline" about it is the opposite of true.
+ *
+ * This also covers the 1 January cliff on the two year-to-date crons
+ * (sync-malaysia-dengue, sync-taiwan-cdc — see isYearRollover in
+ * lib/outbreak-guards.ts): their counters reset from ~100k to a handful, which
+ * would otherwise have rendered as "En déclin -99%" on New Year's Day.
+ *
+ * "unknown" rather than "stable": every consumer already gates on
+ * `direction !== "unknown"` and renders nothing, so a correction shows NO
+ * claim instead of a false one. "stable" would still assert something.
+ * Deliberately keyed on deltaCases, not the rounded deltaPercent — a small
+ * decrease on a large base rounds to 0% and would otherwise slip through as
+ * "stable".
+ */
+function directionFor(deltaCases: number, deltaPercent: number): TrendDirection {
+  if (deltaCases < 0) return "unknown";
+  return deltaPercent > THRESHOLD_PCT ? "up" : "stable";
+}
+
+/**
  * Returns trend for a single outbreak.
  * Returns "unknown" if not enough snapshot data yet.
  */
@@ -60,9 +100,12 @@ export async function getOutbreakTrend(
   const deltaCases   = nowCases - thenCases;
   const deltaPercent = thenCases > 0 ? Math.round((deltaCases / thenCases) * 100) : 0;
 
-  const direction: TrendDirection =
-    deltaPercent >  THRESHOLD_PCT ? "up"   :
-    deltaPercent < -THRESHOLD_PCT ? "down" : "stable";
+  const direction = directionFor(deltaCases, deltaPercent);
+  // Corrections short-circuit before the 24h lookup — one fewer query, and a
+  // 24h delta straddling a correction is the same artifact at a shorter range.
+  if (direction === "unknown") {
+    return { direction, deltaCases: 0, deltaPercent: 0, daysBack: 0, delta24h: null };
+  }
 
   const daysBack = Math.round(
     (new Date(todayDate).getTime() - new Date(thenDate).getTime()) / 86_400_000
@@ -201,9 +244,11 @@ export async function getOutbreakTrendsBulk(
     }
     const deltaCases   = now - then;
     const deltaPercent = then > 0 ? Math.round((deltaCases / then) * 100) : 0;
-    const direction: TrendDirection =
-      deltaPercent >  THRESHOLD_PCT ? "up"   :
-      deltaPercent < -THRESHOLD_PCT ? "down" : "stable";
+    const direction    = directionFor(deltaCases, deltaPercent);
+    if (direction === "unknown") {
+      result.set(id, { direction, deltaCases: 0, deltaPercent: 0, daysBack: DAYS_BACK, delta24h: null });
+      continue;
+    }
     const delta24h = yday !== undefined ? now - yday : null;
     result.set(id, { direction, deltaCases, deltaPercent, daysBack: DAYS_BACK, delta24h });
   }
