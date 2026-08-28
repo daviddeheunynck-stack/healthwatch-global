@@ -2,6 +2,105 @@
 
 Archive de tout le contenu créé. Mise à jour à chaque session.
 
+## 📅 Session linkedin-hwg-followup-check-2 — 28/08/2026 (17h, 2e des 2 créneaux après-midi)
+
+**Vérification double déclenchement** : aucune entrée `linkedin-hwg-followup-check-2` datée du 28/08 dans ce fichier ni dans `linkedin-contacts.md` à l'ouverture (dernière en date : 27/08 17h) → **premier déclenchement de cette routine aujourd'hui**. Les entrées du 28/08 déjà en tête appartiennent au créneau de 13h, à `linkedin-hwg-content-proposal` (8h35), à `linkedin-hwg-monitoring` (9h) et à une session interactive de David.
+
+**Registre de faits régénéré en début de run** (`npm run qa:facts`, 15:09 UTC) : **222 faits citables sur 106 lignes affichées**, 81 lignes `is_seed` exclues, **16 faits périmés** — strictement identique au relevé de 13h.
+
+**Quotas de commentaires à la clôture, cumulés sur les 3 sessions du jour + la session interactive : 4/7.** Détail des DM, suivis et invitations dans `linkedin-contacts.md`, entrée du jour.
+
+---
+
+### ✅ COMMENTAIRE 4/7 PUBLIÉ — **Oke Ikpekpe** (`/in/oke-ikpekpe-11175416b/`), EN, **réponse en sous-fil**
+
+`urn:li:activity:7499051354368331776`, le post déjà commenté à 13h. **Il a répondu à notre commentaire 3 h plus tard, en nous interpellant nommément, et il l'a aussi aimé.** *Research Associate | Medical Writer | Epidemiology & Public Health*, 2e degré, Port Harcourt (Nigéria).
+
+**§5 respecté avant rédaction** : les 4 commentaires du post relus en entier. Trois sont de lui (le lien vers l'article eClinicalMedicine, la remarque sur l'invisibilité d'une préparation qui fonctionne, et sa réponse à nous), le quatrième est le nôtre.
+
+**Sa réponse, verbatim :**
+> David Deheunynck I think it can be informative, but I wouldn't treat the size of the first reported cluster as a standalone measure of preparedness because that number reflects several processes, how long transmission had been occurring before detection, how quickly suspected cases were tested and confirmed, retrospective case finding, and when the outbreak was formally reported. So two outbreaks announced with very different case numbers may not necessarily reflect the same underlying surveillance delay. The initial cluster size becomes more useful when interpreted alongside the timeline from symptom onset of the earliest identified cases to detection, confirmation and notification. That makes it easier to distinguish how much transmission had already occurred from how quickly the system recognised and reported it.
+
+**Le blocage hebdomadaire n'est pas en cause** : un commentaire top-level a été publié sous ce profil à 13h, ce qui le bloque jusqu'au **04/09** — mais une **réponse en sous-fil à quelqu'un qui vient de vous interpeller** n'y est pas soumise, même règle qu'appliquée chez Harvey Basivikidi le 28/08 à ~12h45. Elle consomme en revanche un créneau du quota journalier de 7.
+
+**L'angle** : il ne conteste pas l'indicateur, il le conditionne à une chronologie (début des symptômes des premiers cas identifiés → détection → confirmation → notification). Le point ajouté est ailleurs, sur la **disponibilité** de cette chronologie : elle est publiée plus tard que le chiffre qu'elle sert à tempérer. L'annonce circule le jour même ; la chronologie sort ensuite, dans un rapport de situation ou un article, quand elle sort. Question rendue à sa pratique de rédacteur scientifique : où atterrissent réellement les dates de début de symptômes.
+
+⚠️ **Garde-fous vérifiés avant rédaction** : **aucun chiffre**, ni du registre, ni du post, ni de l'article (non lu). **Aucune mention de HWG, aucun lien, aucun CTA.** Les deux portes politiques du post (financement pérenne, confiance communautaire) laissées fermées, et sa question de clôture non commentée (§10).
+
+**QA: mécanique FAIL (1 blocker unique `context.too-soon`, faux positif documenté — réponse en sous-fil dans un fil vivant de 4 h, pas une relance ; 660 car., 2 paragraphes, `draftLang: en` / `threadLang: en`) | relecteur REECRIRE (11) au 1er passage, corrigé — 11 PASS sur 12 | faits cités: aucun chiffre | registre du 28/08 | statut: publié le 28/08**
+
+🔴 **Le relecteur a attrapé un gabarit que le contrôle mécanique ne pouvait pas voir, et le cas était particulièrement visible.** Le 2e paragraphe du 1er brouillon ouvrait sur « *Which leaves the widely read number sitting on its own…* » et fermait sur une question binaire « *do earliest onset dates tend to appear in the initial notification itself, or only once someone reconstructs the investigation?* ». Trois précédents cités sur pièce : la charpente « *Which leaves* + contraste binaire + question fermée en "or … only" » (`linkedin-contacts.md:6842`), le moule « In the <domaine> work…, X, or only <plus tard> ? » (lignes 11209, 11217, 5783), et surtout **la question fermée « A, or B ? » que David venait d'employer 3 h plus tôt sous ce même post** (« *…or do those two confound it past the point of use?* »). Deux commentaires consécutifs du même auteur dans le même fil se terminant sur la même figure : visible à l'œil nu par le destinataire. **Réécrit** : le 2e paragraphe ne s'ouvre plus sur « Which leaves », et la question est remplacée par une invitation à trois branches adossée à son métier de rédacteur médical, pas par une alternative fermée.
+
+⭐ **Le relecteur a aussi durci un mot du 1er paragraphe**, réserve mineure suivie : Oke présentait sa chronologie comme une **condition d'interprétation** (« *becomes more useful when interpreted alongside* »), pas comme une « correction ». « the right correction » est devenu « the right thing to put beside it ».
+
+> That timeline is the right thing to put beside it, and it becomes available later than the number it qualifies. The announcement travels the day it is made. Symptom onset in the earliest identified cases, retrospective case finding, the interval to notification, all of that gets assembled afterwards, when it gets assembled at all.
+>
+> So the number everyone reads circulates on its own, while the material that would temper it arrives months later in front of far fewer people. You write this material up, so you would know where earliest onset dates actually land in practice: the initial notification, the situation report, or only the retrospective write up.
+
+**Publication confirmée** : cible et clic dans le même appel JS, avec comparaison **caractère pour caractère** du contenu de l'éditeur au brouillon validé avant le clic (660 caractères hors mention, 2 paragraphes, 0 tiret cadratin). Le bouton de soumission a été atteint en remontant les ancêtres de l'éditeur rempli jusqu'au premier contenant un unique bouton « Répondre » **sans `aria-label`**, ce qui le distingue des 4 boutons « Répondre » d'action portant l'attribut. Après envoi : les deux éditeurs de la page vidés, **une seule occurrence** du texte, affichée sous « David Deheunynck… maintenant », directement sous la réponse d'Oke visée.
+
+⚠️ **Note technique, à conserver.** La comparaison caractère pour caractère a d'abord **échoué à tort** : LinkedIn insère un **espace insécable (U+00A0)** après la mention automatique « Oke Ikpekpe », là où le brouillon porte un espace ordinaire. Longueurs identiques (672), un seul caractère divergent, à l'index 11, inséré par la plateforme et non par la frappe. La vérification a été relancée en normalisant ` ` → espace, et **elle est passée sur tout le reste**. À reproduire tel quel plutôt que de désarmer le contrôle : c'est la seule divergence légitime connue sur une réponse mentionnée.
+
+---
+
+### ❌ COMMENTAIRE ABANDONNÉ — **Jason Kindrachuk** (`/in/jason-kindrachuk-20383931/`), et l'abandon était le bon appel
+
+`urn:li:activity:7499104644070223873`, post d'**1 h** au repérage (fenêtre 48 h ✅), **3 réactions, 0 commentaire** — nous aurions été **premier commentateur** sous un post de *Associate Professor, Canada Research Chair, University of Manitoba*. **Profil suivi depuis le 10/08, jamais commenté** (tracker ligne 529) → aucun blocage hebdomadaire. Repéré en notifications.
+
+**Le post** : publication de l'équipe MBOTE dans *The Lancet Global Health*, étude de cohorte prospective **MBOTE-EYE** sur l'atteinte ophtalmique du mpox, menée pendant la flambée de clade Ib à Kamituga (Sud-Kivu, RDC). Chiffres avancés par le post republié : 310 personnes, suivi jusqu'à 59 jours, 43 % d'atteinte ophtalmique en cours de suivi, 36 % d'atteinte conjonctivale et 8 % d'atteinte cornéenne à l'inclusion, deux cécités persistantes par kératite ulcéreuse.
+
+**L'angle tenté** : le comptage d'une flambée se referme sur la transmission, alors que la cohorte accumulait encore des séquelles ; un cas qui guérit et un cas qui guérit aveugle sont la même entrée dans les comptes.
+
+**Le relecteur a rendu REECRIRE sur SIX questions (3, 4, 5, 6, 9, 11), et chacune tenait.** Devant un premier commentaire public sous le post d'un spécialiste mondial du mpox, **renoncer au candidat était la seule issue raisonnable** (politique commune §5 : « renoncer au candidat si un défaut de fond survit »). Le profil reste libre et le post reste une bonne cible pour un angle refondé.
+
+1. 🔴🔴 **(3) une erreur épidémiologique, sur la phrase pivot du texte.** « *An outbreak line ends when transmission does* » est une généralisation de la règle des 42 jours propre à **Ebola**. Aucune flambée ne se clôt sur l'arrêt de la transmission : elle se clôt sur une **décision de déclaration** après une période d'attente conventionnelle, et le mpox n'a pas de règle équivalente. **Publier ça en premier commentaire sous le post d'un titulaire de Chaire de recherche du Canada spécialiste du mpox revenait à s'offrir une correction publique.**
+2. 🔴 **(4) « outbreak line » est notre vocabulaire produit interne** (`content-log.md:5418` : « *I have 106 active outbreak lines right now* »), et l'affirmation est **fausse pour HWG aussi** : une ligne y reste active jusqu'à ce qu'une source dise autre chose. La ligne Mpox/Global du registre est `active: true`, `stale: true`, 27 jours sans mise à jour, sans le moindre énoncé sur la transmission. Rien dans `product-claims.json` ne définit la clôture d'une ligne.
+3. 🔴 **(5) « a cornea destroyed » n'existe pas dans la source**, qui parle de « *corneal disease* », « *ulcerative keratitis* » et « *persistent blindness* ». Et « *a case that resolves* » appliqué à un patient devenu aveugle contredit « **persistent** blindness ».
+4. **(6) « after discharge » présuppose une hospitalisation** dont le post ne dit rien : il dit que 310 personnes ont **reçu des examens ophtalmologiques systématiques**, ce qui n'établit aucun statut d'hospitalisé.
+5. 🔴 **(9) terrain politique.** « *or was the study the only reason anyone kept looking?* » a deux branches, et la seconde énonce que **hors présence des chercheurs, personne ne suivait ces patients**. C'est un jugement sur la prise en charge à Kamituga, publié sous un post qui remercie nommément « *colleagues and partners in the DRC* » et cite l'INRB et PLACIDE MBALA.
+6. **(11) deux moules brûlés.** « *the detail I keep returning to* » appartient à la famille « the part/detail I keep returning to / coming back to », **18 occurrences relevées et écartée par écrit au moins trois fois** par le dispositif. Et « *A et B sont la même entrée dans les comptes* » est le couple « indistinguishable » déjà retiré du DM John Omari Baso le 27/08 comme gabarit brûlé, avec une quasi-jumelle en archives (`content-log.md:4164` : « *look identical in the counts* »).
+
+**Texte abandonné, conservé pour trace :**
+> Following patients for up to 59 days is the detail I keep returning to. An outbreak line ends when transmission does, so the cohort was still accumulating outcomes inside a window where the count itself would already have been treated as settled.
+>
+> Which means a case that resolves and a case that resolves with a cornea destroyed are the same entry in the counts these outbreaks get reported through. Did the eye findings change how the Kamituga patients were followed after discharge, or was the study the only reason anyone kept looking?
+
+⚠️ **Ce qui reste utilisable** : le relecteur a mis la question 12 (apport) en **PASS**. L'observation de fond — les comptes de flambée n'ont aucune case pour les séquelles, et un survivant avec séquelle est indistinguable d'un survivant sans — est réelle et **couverte par le registre produit** (claim manuelle du 28/08 : la ligne publique affiche maladie, pays, cas, décès, une date et la source, rien d'autre). Elle est réutilisable **à condition** de ne rien affirmer sur la clôture d'une flambée, de ne rien ajouter aux termes du post, et de ne poser aucune hypothèse sur ce que font les équipes de Kamituga.
+
+---
+
+### ❌ AUTRES CIBLES DE COMMENTAIRE EXAMINÉES ET ÉCARTÉES
+
+1. **Dr. Jean Kaseya** — post signalé en notifications, rencontre avec le Senior Director for Africa de la National Endowment for Democracy. **Écarté §10**, terrain politique et diplomatique, écart identique à celui rendu à 9h et à 13h aujourd'hui, et le 27/08.
+2. **Feydeau BOTON** — republication sur le pilotage de QGIS en langage naturel. **Écarté deux fois aujourd'hui déjà**, non rouvert : sujet outillage/IA, aucun angle épidémiologique.
+3. **World Health Organization African Region, post « fin de la flambée Ebola en Ouganda »** — **non retenté**, conformément au carry-over de 13h qui interdisait une 3e tentative avec la même méthode. Aucune piste technique neuve n'a été trouvée dans le budget du créneau. **Le point reste ouvert et il faut le trancher** : soit une autre voie d'accès, soit un abandon documenté.
+
+---
+
+### 🗒️ Veille — données épidémiologiques (§8)
+
+**Aucune écriture en base faite, aucune tentée** (une routine sociale signale, elle n'écrit pas). Une lecture faite : le registre de faits régénéré.
+
+- 🆕 **Matière de veille non vérifiée et non reprise, POLIO / RD CONGO.** John Omari Baso a donné la répartition des quatre cas qui manquent au point public : **2 au Sud-Kivu, 1 au Kasaï, 1 à Kinshasa**. **Aucun n'a été vérifié contre une source primaire** et **aucun n'a été inscrit ni publié** — ils ne sont pas au registre. Point d'attention : cette répartition **n'attribue aucun cas au Maniema**, alors qu'il figurait dans sa liste de six provinces du 27/08. C'est précisément la contradiction sur laquelle porte le DM en file.
+- ⭐ **Piste de source neuve, à instruire par `morning-don-check`** : John indique que le GPEI central **adresse ses rapports hebdomadaires au Bureau régional WHO AFRO**. Si AFRO republie ce détail par province, ce serait une source institutionnelle plus riche que le point global du GPEI, sur un foyer déjà suivi en priorité. **Non vérifié ce run.**
+- 🆕 **Matière de veille, MPOX / RD CONGO, non vérifiée et non reprise** : l'étude MBOTE-EYE (Lancet Global Health) avance 43 % d'atteinte ophtalmique chez 310 patients mpox de clade Ib à Kamituga, dont deux cécités persistantes. Aucun de ces chiffres n'a été cité nulle part. **Noté parce que le registre ne porte aucune ligne Mpox / RD Congo citable** (les lignes mpox du registre sont Ouganda, Kenya, Burundi, Madagascar, Rwanda et Global).
+- 🆕 **Non vérifiable, non repris** : Alain BASHIZI avance que les vaccins « *sont maintenant disponibles et une partie arrivée à Kinshasa* ». Absent du registre, aucune source primaire consultée, **explicitement non confirmé dans le brouillon qui lui répond**.
+- **Ebola / RD Congo, divergence interne du registre** : non revérifiée ce run, aucun élément neuf. Priorité inchangée pour `morning-don-check`, 7e jour.
+- **Ligne Ouganda close le 26/08 mais `asOf` au 28/07** : inchangé, non rouvert.
+- 🔴🔴 **Défaut produit signalé à 13h, toujours ouvert** : 13 lignes affichées sur 105 (toutes les lignes polio, RD Congo et Nigeria comprises) ont un **lien de source cassé**. Hors périmètre d'une routine sociale.
+
+---
+
+### 👀 Veille passive — retombées et signaux
+
+- ⭐⭐ **Commentaire Oke Ikpekpe (13h) : la meilleure retombée de la journée.** Il a **répondu longuement** en interpellant David nommément, et **aimé** le commentaire. Le post est passé de **2 à 4 réactions** et de 3 à **4 commentaires**. C'est le premier échange public réellement contradictoire et constructif obtenu depuis plusieurs jours.
+- **Commentaire Dr. Jeeven Kumar (9h)** : non revérifié ce run, budget allé aux quatre fils entrants.
+- **Réponse en sous-fil chez Harvey Basivikidi (~12h45)** : **aucune réaction ni réponse publique de sa part**. Il a en revanche répondu en privé au DM du même jour, ce qui indique qu'il a bien vu l'échange.
+- **Matière notée pour de futurs posts** : (1) **l'étude MBOTE-EYE** — un comptage de flambée n'a aucune case pour les séquelles, angle validé sur le fond par le relecteur et couvert par le registre produit, réutilisable dans un post de marque là où il ne tenait pas en commentaire ; (2) **la chronologie « début des symptômes → notification » publiée plus tard que le chiffre qu'elle tempère**, formulée par Oke Ikpekpe et prolongée dans notre réponse ; (3) le **Regional Health Data Hub** du RC76, inchangé depuis 13h.
+- **Statistiques du compte à ce relevé** : **339 vues de profil** (identique à 13h), **397 impressions** sur le post de marque suivi (394 à 13h), **277 relations** (inchangé), **388 abonnés**.
+
+---
+
 ## 📅 Session linkedin-hwg-followup-check — 28/08/2026 (13h, 1er des 2 créneaux après-midi)
 
 **Vérification double déclenchement** : aucune entrée `linkedin-hwg-followup-check` datée du 28/08 dans ce fichier ni dans `linkedin-contacts.md` à l'ouverture (dernière en date : 27/08 13h). Les entrées du 28/08 en tête appartiennent à `linkedin-hwg-content-proposal` (8h35), à `linkedin-hwg-monitoring` (9h) et à une **session interactive de David vers 12h36-12h45** (envoi de 4 DM + commentaire de suite chez Harvey Basivikidi) — runs intentionnellement distincts → **premier déclenchement de cette routine aujourd'hui**.

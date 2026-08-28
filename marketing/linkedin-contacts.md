@@ -1,6 +1,199 @@
 > 📦 **Archive** : le détail du 24 juin au 16 juillet 2026 a été déplacé dans [linkedin-contacts-archive-avant17juillet.md](linkedin-contacts-archive-avant17juillet.md) le 23/07 pour garder ce fichier léger.
 
 
+## 📅 Session linkedin-hwg-followup-check-2 — 28/08/2026 (17h, 2e des 2 créneaux après-midi)
+
+**Vérification double déclenchement** : aucune entrée `linkedin-hwg-followup-check-2` datée du 28/08 dans ce fichier ni dans `content-log.md` à l'ouverture (dernière en date : 27/08 17h). Les entrées du 28/08 déjà présentes appartiennent à `linkedin-hwg-content-proposal` (8h35), `linkedin-hwg-monitoring` (9h), au créneau `linkedin-hwg-followup-check` (13h) et à une session interactive de David (~12h36-12h45, puis validation des 2 DM) — runs intentionnellement distincts → **premier déclenchement de cette routine aujourd'hui**.
+
+**🖥️ Navigateur** : `_shared/browser-status.md` lu avant ouverture, dernière entrée **🟢 RÉTABLI (24/08 ~09h15)** → aucun bridage. `23c7ecdd-…` seul listé, sélectionné sans question (§7). Un seul incident mineur, non bloquant : un `javascript_tool` trop long (7 attentes chaînées) a rendu un timeout CDP à 45 s ; le renderer répondait normalement au test suivant (`1+1` → `2`). Rien à écrire dans `browser-status.md`.
+
+**Registre de faits régénéré en début de run** (`npm run qa:facts`, 15:09 UTC) : **222 faits citables sur 106 lignes affichées**, 81 lignes `is_seed` exclues, **16 faits périmés** — identique au relevé de 13h.
+
+**Quotas à la clôture, cumulés sur les 3 sessions du jour + la session interactive** : commentaires **4/7 publiés** (Dr. Jeeven Kumar 9h, sous-fil Harvey ~12h45, Oke Ikpekpe 13h, **réponse en sous-fil chez Oke Ikpekpe ce run**) · notes de connexion **0/7** · connexions **1/7** · **DM envoyés 6** (aucun ce run) + **3 en file de validation** · suivis **4/7-10** (2 ce matin + **Oke Ikpekpe et Brice EDZOA ESSOMBA ce run**) · invitations reçues **2 en attente, aucune nouvelle**.
+
+---
+
+### 1️⃣ SUIVI DES ACTIONS PRÉCÉDENTES DU JOUR
+
+- ⭐⭐ **Oke Ikpekpe a répondu à notre commentaire de 13h, et longuement.** Il a aussi **aimé** ce commentaire. Sa réponse nous interpelle nommément et affine notre proposition au lieu de la rejeter : la taille du premier foyer déclaré devient utile « *when interpreted alongside the timeline from symptom onset of the earliest identified cases to detection, confirmation and notification* ». **Traité : réponse en sous-fil publiée ce run, section 5.** Le post est passé de 2 à **4 réactions** et de 3 à **4 commentaires** (le nôtre inclus).
+- ⭐⭐ **John Omari Baso a répondu à 15:22**, 1 h après le DM validé par David et envoyé à 14:23. Il donne la répartition des quatre cas manquants (**2 Sud-Kivu, 1 Kasaï, 1 Kinshasa**) et surtout un circuit : « *moi je ne travaille pas ave le GPEI central, mais je sais qu'il envoit ces rapports hebdomadaire vers le Bureau regional WHO Afro* ». **Brouillon en file, section 2, DM 1.**
+- ⭐⭐ **Alain BASHIZI a envoyé quatre messages entre 15:05 et 15:13**, en réponse au DM de 14:24. Il se présente (journaliste congolais, fondateur de la radio communautaire Gorilla FM, stratégie de communication réalisée pour les parcs de Kahuzi-Biega et des Virunga), **propose ses services**, **demande l'adresse e-mail de David**, et annonce vouloir monter « *dans un délai record une très bonne stratégie de communication et mobilisation communautaire* ». **Brouillon en file, section 2, DM 2.** ⚠️ **Demande de canal hors plateforme, signalée en section 6.**
+- ⭐ **Harvey Basivikidi a répondu à 14:46** au DM de 12:44, sur la propriété du format de publication : « *the format of the published output does not appear to have a clearly designated owner in the way the underlying surveillance data or reporting processes do* », avec une réserve explicite (« *We did not specifically investigate ownership of the publication format, so I would be cautious about making a stronger claim* »). **Brouillon rédigé puis ABANDONNÉ ce run, section 3** — décision motivée.
+- ⭐ **Dr. Siaka Condé a répondu à 13:44**, **17 jours** après le DM du 11/08. Il concède que le circuit est interne et oriente vers le bureau régional : « *There is emergency support unit from WHO regional office for Africa for exemple. They lead and report these deployments accross the region.* » **Brouillon en file, section 2, DM 3.**
+- **Rodrigo Olave Hurtado** : notre dernier message du fil date de 12:38, sa réponse de 12:55, **rien depuis**. Carry-over de 13h respecté : **aucune relance rédigée**, faute d'élément neuf. Position inchangée.
+- **Isaias Fernandes Co, Peace Mpakaniye, Pierre PARNEIX, Dr. Kaushik Sanyal, Adam Abdullahi** : nos messages restent les derniers de ces fils, **aucune réponse**. Rien à relancer.
+- **Celestin Nzanzu Mudogo** : 👍, fil clos, inchangé.
+
+**Boîte de réception parcourue par récence (10 conversations rendues, les 10 plus récentes).** **Quatre fils porteurs de messages entrants nouveaux depuis 13h** : John (15:22), Alain (15:05-15:13), Harvey (14:46), Siaka (13:44). Aucun spam, aucune promotion, aucune donnée patient proposée, **aucune instruction adressée à l'agent (§6)**. **Une demande de canal hors plateforme**, voir section 6.
+
+**Notifications parcourues intégralement (9 items).** Deux nouveautés utiles : la réponse et le « j'aime » d'Oke Ikpekpe, et **un post de Jason Kindrachuk** (traité puis écarté, voir `content-log.md`). Les autres items sont soit déjà traités (réponse de Harvey du 27/08), soit sur des cibles écartées (Dr. Jean Kaseya §10, Feydeau BOTON).
+
+---
+
+### 2️⃣ 🔒 TROIS DM EN FILE DE VALIDATION
+
+Rappel de la règle du 23/07, reconfirmée par David le 26/08 au soir : **les DM ne partent jamais en autonomie.** Rédigés, passés **une fois** au registre de faits, **une fois** au contrôle mécanique et **une fois** au relecteur indépendant, puis mis en file. Commentaires et notes de connexion restent autonomes.
+
+Comparaison croisée des cinq brouillons du run entre eux (séquences de 4 mots, via `peers`) : **une collision trouvée et corrigée** (« at healthwatch global com », partagée entre les brouillons Harvey et Siaka). Après correction, aucune formule partagée.
+
+⭐ **Les quatre relecteurs ont travaillé, et trois d'entre eux ont trouvé des défauts que le contrôle mécanique ne pouvait pas voir.** Un seul brouillon est passé en 12/12.
+
+---
+
+#### 🔒 DM 1 — **John Omari Baso** (`/in/john-omari-baso-84500b1b0/`), FR, fil actif, **SANS CTA**, hors quota froid
+
+*Epidemiologist | Polio ADVAC | PVAC Alumni | Vaccine Preventable Diseases Surveillance and Outbreak Response Specialist | One Health Researcher*, **VillageReach, Goma, Nord-Kivu (RDC)**.
+
+**Fil relu intégralement (§4)** : 9 messages, recopiés verbatim dans `tmp/thread-john-28c.txt`.
+
+**Son message, verbatim :**
+> (15:22) C'est effectivement un problème de rapportage et/ou du retard de la mise à jour de la part du GPEI. Les quatres autres cas sont réparties ainsi: 2cas au Sud-Kivu, 1 cas au Kasaï et 1 cas à Kinshasa... moi je ne travaille pas ave le GPEI central, mais je sais qu'il envoit ces rapports hebdomadaire vers le Bureau régional WHO Afro
+
+⚠️ **LANGUE — français**, comme aux deux messages précédents du jour. *Langue des 3 derniers messages du destinataire = fr ; langue du brouillon = fr.* Le contrôle rend cette fois `threadLang: fr` (le fil a suffisamment basculé), plus de conflit à écarter. Vouvoiement des deux côtés.
+
+**CTA : volontairement absent.** Le lien et l'essai ont été servis dans ce fil le 27/08 à 20:57, §3 interdit de resservir.
+
+**L'angle** : le brouillon relève une contradiction que John n'a pas vue lui-même — il avait cité **six** provinces le 27/08 (Haut-Lomami, Tanganyika, Maniema, Kasaï, Sud-Kivu, Kinshasa), mais sa répartition des quatre cas restants n'attribue rien au **Maniema**. Le brouillon la pose sans la résoudre, puis exploite la seule information réellement actionnable de son message : si le GPEI central adresse ses rapports au Bureau régional AFRO, la chaîne passe par une institution dont HWG lit déjà des publications.
+
+**QA: mécanique FAIL (1 blocker unique `context.too-soon`, écarté sur pièce — réponse à un message entrant reçu 1 h plus tôt dans un fil vivant, pas une relance à froid ; 669 car., 3 paragraphes, `draftLang: fr` / `threadLang: fr`) | relecteur ⭐ **12 PASS sur 12, VERDICT: ENVOYER** — aucune correction demandée, 2e fois seulement ce mois-ci | faits cités: « quatre cas » et les quatre noms de provinces, tous pris à ses messages du fil (20:11 le 27/08 et 15:22 aujourd'hui) ; aucun chiffre du registre | registre du 28/08 | statut: en file de validation**
+
+⭐ **Ce que le relecteur a explicitement validé, et qui méritait de l'être** : John a posé un grief institutionnel dans son message (« *un problème de rapportage et/ou du retard de la mise à jour de la part du GPEI* ») ; le brouillon ne le reprend, ne le valide et ne le conteste nulle part (§9). La seule imputation d'erreur y est retournée sur l'émetteur : « *je lis manifestement le mauvais document* ».
+
+> Sud-Kivu, Kasaï et Kinshasa n'apparaissent nulle part dans ce que je reprends du point hebdomadaire. Maniema non plus, et votre répartition ne lui attribue aucun des quatre cas, ce que je ne sais pas interpréter.
+>
+> Votre dernière phrase m'ouvre en revanche une piste que je n'avais pas. Si le GPEI central adresse ses rapports hebdomadaires au Bureau régional AFRO, alors la chaîne passe par une institution dont je lis déjà les publications, et je lis manifestement le mauvais document.
+>
+> Savez-vous si ce détail par province ressort quelque part chez AFRO, dans son bulletin hebdomadaire sur les flambées par exemple, ou s'il reste entre le GPEI et le bureau régional ?
+
+---
+
+#### 🔒 DM 2 — **Alain BASHIZI** (`/in/alain-bashizi-459532169/`), FR, fil actif, **SANS LIEN**, ⚠️ **décision de fond pour David**
+
+*Investigative Journalist*, **Goma / Nord-Kivu (RDC)**, actuellement à Bujumbura. Fil verbatim dans `tmp/thread-alain-28b.txt`. *Langue du fil = fr ; langue du brouillon = fr.* Vouvoiement.
+
+**Ce qu'il demande, en trois choses distinctes** : (1) monter pour HWG une stratégie de communication et de mobilisation communautaire, « *dans un délai record* » ; (2) **l'adresse e-mail de David** ; (3) il avance que les vaccins sont arrivés en partie à Kinshasa et qu'une forte résistance est à prévoir.
+
+**Conduite appliquée : politique commune §3, sollicitation personnelle.** Accuser réception honnêtement, ne rien promettre, ne prendre aucun engagement, **ne jamais communiquer les coordonnées personnelles de David**, ne jamais s'engager sur un autre canal. Le brouillon **dit clairement qu'il n'y a rien à quoi rattacher une mission**, précisément pour qu'il ne travaille pas gratuitement sur une proposition sans destinataire — c'est le point que David doit trancher.
+
+**QA: mécanique FAIL (1 blocker `context.too-soon`, faux positif documenté — réponse dans un fil entrant actif du jour ; 1 review `hwg.claim` sur la phrase de cadrage produit ; 940 car., 4 paragraphes, `draftLang: fr` / `threadLang: fr`) | relecteur REECRIRE (4, 5, 7, 9) au 1er passage, **les 4 corrigés** — 11 et 12 en PASS, angle validé, donc correction ciblée et non réécriture | faits cités: aucun chiffre | registre du 28/08 | statut: en file de validation**
+
+🔴 **Les quatre findings étaient réels, et deux d'entre eux auraient blessé.**
+- **(9 et 5) « merci pour la franchise sur votre situation » a été supprimé.** Alain avait écrit « *Actuellement je vis à Bujumbura depuis l'occupation de nos villes par le M23* » — le relecteur a établi, en citant le « donc » qui suit, qu'il mentionne son déplacement comme **argument de disponibilité professionnelle**, pas comme confidence. Le remercier pour sa « franchise » le requalifiait en aveu intime **et** accusait réception d'un contexte armé, ce que §10 interdit. La mention des « violences autour des aires protégées » a été retirée pour la même raison.
+- **(4) « que je développe seul », « ni budget », « ni mandat » ont été retirés.** Aucune des trois n'est couverte par le registre produit, et la copie publique du site dit même le contraire (`contact.subtitle` : « *Échangez avec notre équipe…* »). ⚠️ **Ce qui reste — « HealthWatch Global est un tableau de bord construit sur des bulletins déjà publiés, pas une structure qui commande des missions » — est la seule affirmation du brouillon que David doit confirmer avant envoi.** Elle est vraie à ma connaissance, elle n'est adossée à aucun registre.
+- **(7) son dernier message n'était pas traité.** Le 1er brouillon répondait à sa présentation de 15:05 et ignorait celui de 15:13 sur les vaccins. Un paragraphe a été ajouté — qui **ne confirme pas** l'arrivée des doses à Kinshasa, absente du registre de faits.
+
+> Merci d'avoir pris le temps de tout m'écrire. Ce que vous décrivez du rejet des dispositifs par les communautés est un vrai sujet, et vous l'avez manifestement travaillé ailleurs que sur le papier.
+>
+> Sur la résistance que vous anticipez autour de la vaccination, je ne peux rien confirmer de mon côté : je ne reprends que ce que les agences publient, et l'état des livraisons ne s'y trouve nulle part.
+>
+> Il faut surtout que je sois clair avant que vous ne prépariez quoi que ce soit. HealthWatch Global est un tableau de bord construit sur des bulletins déjà publiés, pas une structure qui commande des missions. Vous laisser monter une proposition serait vous faire travailler pour rien, et je préfère vous le dire tout de suite.
+>
+> Pour l'adresse, gardons l'échange ici. Si un jour vous butez sur ce que les sources officielles publient ou taisent dans un dossier précis, écrivez-moi : c'est le seul terrain où je peux vraiment vous être utile.
+
+---
+
+#### 🔒 DM 3 — **Dr. Siaka Condé** (`/in/drconde-who-afro/`), EN, **AVEC CTA**, fil actif après 17 jours
+
+*Head of WHO Country Emergency Program*, Lomé. Fil verbatim dans `tmp/thread-siaka-28.txt`. *Langue du fil = en ; langue du brouillon = en.*
+
+**CTA : présent et dû.** Un aller-retour de fond a eu lieu, et **ni le lien ni l'essai n'ont jamais été servis dans ce fil** (le DM du 11/08 était un premier contact, sans lien par règle).
+
+🔴🔴 **Le relecteur a trouvé le défaut que ni moi ni le contrôle mécanique n'avions vu : le destinataire est agent de l'OMS AFRO.** Le 1er brouillon lui écrivait « *I already take what WHO AFRO publishes, and deployments have never once shown up in any of it* ». Trois problèmes empilés, tous réels :
+1. **C'est faux au sens strict.** Le registre de faits ne contient que **6 faits sourcés `afro.who.int`, tirés de 2 pages**, sur 222. « Ce que l'OMS AFRO publie » n'est pas ingéré ; deux pages le sont.
+2. **C'est une négative absolue** qu'aucun registre ne peut établir, donc pas un « constat d'agrégation ».
+3. **Adressée au *Head of WHO Country Emergency Program*, juste après qu'il a concédé que le circuit est interne, elle se lit comme un reproche d'opacité fait à son employeur** (§9).
+**Corrigé** : la phrase est désormais bornée à ce qui est vrai de notre côté (« *pulls a handful of AFRO pages, not everything the office publishes* »), et l'ignorance est explicitement assumée comme la nôtre.
+
+⭐ **Deux autres findings réels, corrigés.**
+- **(11) charpente et CTA au gabarit.** Le 1er brouillon rejouait « reconnaissance du recadrage → confession d'hypothèse antérieure → question binaire de clôture », **la même ossature que deux brouillons déjà signalés aujourd'hui**, ouvrait sur « the more useful answer » (déjà envoyé à Hao-Kai TSENG) et fermait sur l'alternative « inside the response / outside », **servie le matin même à John Omari Baso**. Le CTA reprenait « costs nothing / two weeks / no card », moule relevé à **au moins 8 occurrences**. Tout refondu.
+- **(10) le CTA n'avait pas de point d'appui** : il reconnaissait que la capacité de riposte est absente du produit et invitait à venir regarder dans la même phrase. Le brouillon dit maintenant **ce qu'il y verrait** (les 17 maladies telles que publiées) **et ce qu'il n'y trouvera pas** (aucune colonne pour l'équipe qui a répondu).
+
+**QA: mécanique PASS (0 blocker, 0 warn, 1 review `hwg.claim` sur le CTA ; 763 car., 3 paragraphes, `draftLang: en` / `threadLang: en`) | relecteur REECRIRE (4, 9, 10, 11) au 1er passage, les 4 corrigés | faits cités: « seventeen diseases » (registre produit, `coverage.diseases` = 17) ; « a fortnight » / « no card taken at that stage » (site, `pricing.faq4_a`, formulation permissive conforme aux deux cas de la FAQ) | registre du 28/08 | statut: en file de validation**
+
+> The emergency support unit is a lead I did not have, and I will go and read what it puts out.
+>
+> Before I do, help me avoid a wrong conclusion. My side of this pulls a handful of AFRO pages, not everything the office publishes, so I genuinely cannot tell whether deployments are absent from the public record or only absent from the corner of it I happen to read. You would know which. Does that unit's reporting have any readership outside the response structures themselves?
+>
+> And if you would rather see the shape of the problem than take my word for it, healthwatch-global.com holds the outbreak side: seventeen diseases, counts, dates, sources, and nowhere at all to record the team that answered. A Pro account opens for a fortnight on a plain sign up, no card taken at that stage.
+
+---
+
+### 3️⃣ ❌ HARVEY BASIVIKIDI — brouillon rédigé, passé à la QA, puis ABANDONNÉ ce run
+
+**Le relecteur a rendu REECRIRE sur 4, 5, 10 et 11**, et trois de ces quatre points portent sur le fond, pas sur la forme. Plutôt que de forcer un 2e brouillon le même jour, **le fil est laissé au repos** : Harvey a répondu, sa réponse est prudente et **ne pose aucune question**, il n'y a aucune urgence, et ce serait le **troisième contact de la journée** avec lui après le DM de 12h42 et la réponse publique de ~12h45.
+
+- **(11) l'angle est déjà servi trois fois sur cette personne précise en 48 h.** La triade « asymétrie → étape la moins coûteuse → personne en face » est celle publiée chez lui le **27/08** (« *Something asymmetric happens at that boundary… It simply has nobody positioned to insist on it* »). L'ouverture « The [X] you describe is… » avait **déjà été retirée par le relecteur le 27/08 sur ce même destinataire** (« *Le vocabulaire varie, la charpente non* »), et compte 7 occurrences dans les archives. La charpente « réglé en amont / muet en aval / invisible en bout » est celle du commentaire publié chez lui à ~12h45.
+- **(5) attribution.** Harvey décrit une **institution ou équipe** de compilation, avec un triple hedge (« *does not appear* », « *seems* », « *cautious about making a stronger claim* »). Le brouillon la convertissait en « *whoever happens to be compiling that month* », soit une **personne interchangeable d'un mois sur l'autre** — pas la même proposition, et tout le 2e paragraphe reposait dessus.
+- **(4) affirmation produit inexacte.** « *the Pro tier runs fourteen days without a card* » énonce comme propriété du plan ce que `pricing.faq4_a` présente en **deux cas** : sans carte si l'on crée simplement un compte, **carte enregistrée d'emblée** si l'on souscrit depuis la page Tarifs.
+- **(10) CTA.** Le run de 12h42 avait délibérément retenu le lien au premier contact ; le rétablir deux heures plus tard, sans signal nouveau de Harvey, annulait cet arbitrage.
+
+**Texte abandonné, conservé pour trace :**
+> The asymmetry you describe is the useful part. Ownership is defined for the data and left implicit for its presentation, so the presentation ends up belonging to whoever happens to be compiling that month.
+>
+> What that produces further down is quiet. A bulletin's layout shifts because a different person prepared it, not because anything in the surveillance changed, and everything reading it downstream breaks with no signal that anything moved. Cheap at the source, expensive at the other end, and nobody is accountable for the difference.
+>
+> Your caution about not overclaiming is fair and I would not push you past what the study looked at. You can see the downstream end of it on healthwatch-global.com, where the Pro tier runs fourteen days without a card, if the FAIR angle makes that worth a look.
+
+⚠️ **Ce qui reste vrai et à reprendre plus tard** : le point sur la conséquence en aval (un format sans propriétaire change quand change celui qui compile, et ce qui le lit casse sans signal) **n'a jamais été dit à Harvey**, et le relecteur l'a validé comme un apport réel (question 12 en PASS). Il vaut la peine d'être écrit, **dans quelques jours, dans une autre charpente, et sans CTA**.
+
+---
+
+### 4️⃣ SUIVIS ET INVITATIONS
+
+**Aucun follow-back dû.** Liste « Abonnés » (`/mynetwork/network-manager/people-follow/followers/`) parcourue par récence, **état des boutons lu dans le DOM** (`aria-label`) et non au texte affiché : les **10 abonnés les plus récents sont tous déjà suivis en retour** (« Cliquez pour cesser de suivre »). **388 abonnés** au relevé. Aucun nouvel abonné depuis le relevé de 13h.
+
+- ❌ **Winston Urio** — écarté §10 le 27/08, **statut inchangé, non reproposé**.
+
+**Deux suivis exécutés sur des candidats déjà repérés, quota porté à 4/7-10 :**
+- ✅ **Oke Ikpekpe** (`/in/oke-ikpekpe-11175416b/`, 2e degré, **3 388 abonnés**) — *Research Associate | Medical Writer | Epidemiology & Public Health*, Port Harcourt, Nigéria. Suivi via le bouton « Suivre » de la section Activité (distinct de « Se connecter »), identité vérifiée dans le **même appel JS** que le clic. **Confirmé** : `aria-label` passé à « Suivi, cliquez pour ne plus suivre Oke Ikpekpe ». Motif : deux échanges publics de fond en 4 h, profil exactement dans le domaine.
+- ✅ **Brice EDZOA ESSOMBA** (`/in/dr-edzoabrice/`, 2e degré) — *Coordonnateur régional du PEV | Expert vaccination & HPV | Santé publique et épidémiologie | Doctorant | Afrique francophone*. Carry-over du run de 9h (repéré en sidebar `/mynetwork/grow/`, jamais traité). Retrouvé par recherche nominative, identité vérifiée dans le même appel JS que le clic. **Confirmé** : « Suivi, cliquez pour ne plus suivre Brice EDZOA ESSOMBA ». ⚠️ Deux homonymes existent (`/in/brice-edzoa-essomba-50855492/`, *Médecin de Santé Publique*, Cameroun) — **c'est bien `/in/dr-edzoabrice/` qui porte l'intitulé PEV du tracker**.
+
+**Candidats de suivi restants, non traités** :
+- ⛔ **BANZA Freddy Mutoka** (`/in/banza-freddy-mutoka-4153b132/`) — **invitation sortante déjà en attente depuis le 09/08**, donc rien à exécuter. Ce carry-over est recopié depuis plusieurs sessions : **la prémisse a été retestée ici sur pièce** (tracker lignes 524 et 554, deux constats indépendants du bouton « En attente »), elle tient. **À retirer des carry-over tant que l'invitation n'est pas acceptée ou expirée.**
+- ➖ **Dr. Hassan SANA** (`/in/hassansana/`) — **déjà relation de 1er degré**, donc déjà suivi par construction : rien à exécuter, et ce n'est pas un candidat de suivi. Reste un excellent candidat DM ou commentaire.
+
+**Invitations reçues** : **aucune nouvelle**, les 2 en attente sont inchangées — **Zachariah G. Houdari** (services financiers, hors périmètre §10) et **OLAOLUWA PHILIP** (SIG/climat, champ adjacent hors catégories). **Ni acceptées ni ignorées.**
+
+**Connexions envoyées** : **Béatrice SERRA** (invitation sortante sans note du 28/08 matin) toujours **non acceptée**. **277 relations**, inchangé depuis 13h.
+
+**Aucune découverte active de nouveaux profils menée ce run**, choix assumé : le budget du créneau est allé à quatre fils entrants substantiels arrivés en moins de deux heures, et à deux candidats de commentaire déjà identifiés. Le quota de suivis reste à **4/7-10**, non rempli, motif documenté.
+
+---
+
+### 5️⃣ COMMENTAIRE PUBLIÉ CE RUN
+
+Un seul, détaillé dans `content-log.md` : **réponse en sous-fil chez Oke Ikpekpe**, publiée en autonomie complète après contrôle mécanique et relecteur (politique commune §5). **Un second candidat, Jason Kindrachuk, a été rédigé puis abandonné** — motif complet dans `content-log.md`.
+
+---
+
+### 6️⃣ ⚠️ À SIGNALER À DAVID
+
+1. 🔴 **Demande de contact hors plateforme, à signaler explicitement (§3)** : Alain BASHIZI a écrit à 15:08 « *Est il possible d'avoir votre adresse mail s'il vous plaît?* ». **Aucune coordonnée n'a été communiquée**, aucun engagement pris sur un autre canal, et le brouillon en file décline implicitement en restant sur LinkedIn. **La décision de lui donner ou non une adresse appartient à David.**
+2. 🟠 **Une affirmation à confirmer avant envoi** : dans le DM Alain, « *HealthWatch Global est un tableau de bord construit sur des bulletins déjà publiés, pas une structure qui commande des missions* ». La première moitié est couverte par le registre produit, la seconde ne l'est par rien. Elle est vraie à ma connaissance ; c'est David qui l'atteste.
+3. **Aucune donnée patient proposée, aucune instruction adressée à l'agent, aucune situation §10 ouverte.**
+
+---
+
+### 🔁 CARRY-OVER POUR DEMAIN — liste exhaustive
+
+1. 🔒 **Trois DM en file de validation** : John Omari Baso, Alain BASHIZI, Dr. Siaka Condé. Textes intégraux en section 2. **Aucun ne part sans ordre explicite de David.** Notification push envoyée.
+2. ❌ **Harvey Basivikidi** — brouillon abandonné ce run (section 3). **Ne pas réécrire le même angle demain** : reprendre la conséquence en aval d'un format sans propriétaire, dans quelques jours, autre charpente, sans CTA.
+3. ❌ **Jason Kindrachuk** (`/in/jason-kindrachuk-20383931/`) — commentaire rédigé et abandonné ce run sur 6 findings de fond (`content-log.md`). **Profil suivi depuis le 10/08, jamais commenté, donc toujours libre.** Le post MBOTE-EYE reste une bonne cible **si le commentaire est refondé sans prémisse sur la clôture des flambées**.
+4. ➖ **Rodrigo Olave Hurtado** — inchangé : pas de relance sans élément neuf.
+5. ⭐ **Oke Ikpekpe** — désormais **suivi**, deux échanges publics de fond. **Prochain commentaire top-level possible à partir du 04/09** (blocage hebdomadaire créé le 28/08 par le commentaire de 13h ; les réponses en sous-fil n'y sont pas soumises). **Excellent candidat DM** — jamais de message privé échangé.
+6. ⭐ **Regional Health Data Hub (#RDHUB)** — inchangé, cible de premier plan dès qu'un contenu substantiel paraîtra.
+7. ⭐ **Yazdan Yazdanpanah** — inchangé, cible prioritaire dès qu'il publie du fond.
+8. ⭐ **Dr. Hassan SANA** (`/in/hassansana/`, 1er degré) — **jamais engagé**. Candidat DM ou commentaire dès qu'il publie dans la fenêtre 48 h. **Ce n'est pas un candidat de suivi** (1er degré, déjà suivi).
+9. ⛔ **BANZA Freddy Mutoka** — invitation en attente depuis le 09/08, prémisse retestée ce run. **Retiré des carry-over actionnables.**
+10. **Baraka Kweli Birindwa** — inchangé, écarté deux fois sur le contenu du post, profil toujours valable.
+11. ➖ **Béatrice SERRA** — invitation sortante non acceptée. Deux accroches restent brûlées.
+12. ❌ **World Health Organization African Region, post « fin de la flambée Ebola en Ouganda »** — non retenté ce run (2 échecs d'accès déjà, consigne de 13h de ne pas retenter avec la même méthode). **Aucune piste technique neuve trouvée** : le point reste ouvert, il faut une autre voie d'accès ou un abandon documenté.
+13. 🔴🔴 **Défaut produit à corriger, hors périmètre social** : les 13 lignes polio ont un **lien de source cassé** (annotation après l'URL rendue en `href` brut). Inchangé depuis 13h, détail dans `content-log.md` du 28/08.
+14. **§8 à ingérer par `morning-don-check`** : divergence Ebola/RDC (7e jour) et `asOf` du 28/07 sur la ligne Ouganda close le 26/08. Aucune écriture en base faite ce run.
+15. **Fichiers modifiés dans l'arbre de travail n'appartenant pas à cette routine, laissés tels quels** (`AGENTS.md`) : `marketing/qa/product-claims.manual.json` (modifié par la routine de contenu), `scripts/audit-alert-day.mjs` et `scripts/probe-alert-lock.mjs` (non suivis). Non committés, non stashés, non annulés. Branche vérifiée avant écriture : **master**.
+
+---
+
 ## 📅 Session linkedin-hwg-followup-check — 28/08/2026 (13h, 1er des 2 créneaux après-midi)
 
 **Vérification double déclenchement** : aucune entrée `linkedin-hwg-followup-check` datée du 28/08 dans ce fichier ni dans `content-log.md` à l'ouverture (dernière en date : 27/08 13h). Les entrées du 28/08 en tête appartiennent à `linkedin-hwg-content-proposal` (8h35), `linkedin-hwg-monitoring` (9h) et à une **session interactive de David vers 12h36-12h45** → **premier déclenchement de cette routine aujourd'hui**.
