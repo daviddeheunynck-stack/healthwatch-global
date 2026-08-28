@@ -183,6 +183,15 @@ if (suspicious.length) {
 // lendemain). Même garde-fou que les deux autres maps : ne bumper une date qu'après avoir
 // réellement consulté la source primaire, jamais pour faire taire une ligne.
 const FROZEN_ROW_CHECKED = {
+  // Dengue/Guatemala : re-sourcee le 28/08 (matin, en session) — voir la note dans
+  // STALE_CRON_ROW_CHECKED (section 4e) pour l'historique complet. Verrouillee a source_priority=10
+  // sur 19 364 cas (MSPAS 10 335 + IGSS 9 029), arrete SE-30/01-08-2026, source
+  // epidemiologia.mspas.gob.gt (PDF officiel). Prochaine verification : chercher le bulletin
+  // hebdomadaire suivant sur https://epidemiologia.mspas.gob.gt/informacion/vigilancia-epidemiologica/salas-situacionales/5-arbovirosis
+  // (page de listing, pas de cadence connue — verifier a chaque run sp=10 comme les autres lignes
+  // de cette section). Ne jamais reprendre le chiffre xmart OMS sur cette ligne : demontre non
+  // fiable pour ce pays (cf. note ci-dessus).
+  "f24550be-7ed6-4a30-b077-3d0faed5f60e": "2026-08-28",
   // Diphterie/Australie : verifiee le 28/08 au Browser pane (page de listing de la collection).
   // Le premier lien reste « Epidemiological update – 10 August 2026 », soit exactement l'edition
   // deja en base : rien de nouveau, rien a ecrire. La serie est bimensuelle depuis le 31/07 (27/07
@@ -1024,23 +1033,16 @@ const STALE_CRON_ROW_CHECKED = {
   // suivante à attendre : la ligne est un agrégat pluriannuel en phase `monitoring`, son
   // ancienneté est structurelle et n'est pas un signal de péremption.
   "bac370f5-bdc9-4840-98b1-5c8b0b3502f3": "2026-08-20",
-  // Dengue/Guatemala : verifie le 28/08 — CAS « chiffres differents », donc cron en panne, pas
-  // ligne a repeindre. L'API xmart OMS (ARBOV/V_DENGUE_GLOBAL_VALIDATED_PUBLIC, la source reelle
-  // derriere le libelle shinyapps) donne 15 679 cas cumules 2026 / 0 deces, derniere periode au
-  // 2026-06-28, contre 4 817 au 2026-04-12 en base. Cause trouvee : 15 679 / 4 817 = 3,25x, donc
-  // spikeGuard() (SPIKE_RATIO=3, lib/outbreak-guards.ts) refusait l'ecriture a CHAQUE run depuis
-  // le 13/07 — et les guards ordinaires ne sont volontairement pas remontes a la sante du cron
-  // (seuls ceux qui bloquent une ligne verrouillee le sont, cf. sync-who-regional/route.ts ~l.1474).
-  // La hausse n'est pas un artefact de parsing mais une revision a la hausse des donnees validees
-  // OMS (la somme des semaines jusqu'au 12/04 vaut aujourd'hui 10 270, pas 4 817) ; la serie est
-  // lisse (602->135 cas/sem, decroissance conforme au -43 % annonce par le MSPAS). Ligne alignee a
-  // la main sur ce que le cron aurait ecrit ; les increments hebdomadaires suivants (~135/sem) sont
-  // tres en deca du seuil 3x, donc le cron reprend la main de lui-meme.
-  // ⚠️ Divergence de cadrage a ne pas « corriger » : le MSPAS annonce 9 689 cas a la semaine 30,
-  // moins que les 15 679 de l'OMS — cadrages differents (l'ARBOV public des Ameriques est alimente
-  // par les cas *suspects* remontes a l'OPS). Cette ligne est possedee par le cron xmart : la
-  // rafraichir avec un chiffre MSPAS melangerait deux cadrages, meme piege que Rougeole/Etats-Unis.
-  "f24550be-7ed6-4a30-b077-3d0faed5f60e": "2026-08-28",
+  // Dengue/Guatemala : RETIRE de cette map le 28/08 (matin), meme jour — la note ci-dessus etait
+  // fausse. En creusant plus loin (WebSearch + lecture du PDF officiel MSPAS/IGSS SE-30), le
+  // chiffre OMS xmart (15 679 au 2026-06-28) s'est revele INCOHERENT avec la propre source du
+  // pays : le bulletin MSPAS donne 10 335 cas (MSPAS seul) / 19 364 (MSPAS+IGSS combine) a la
+  // semaine 30 (01/08/2026) — une date PLUS RECENTE que celle de l'OMS mais un chiffre MSPAS seul
+  // INFERIEUR (10 335 < 15 679), ce qui est impossible pour un cumul de meme definition. Le fetcher
+  // xmart n'est donc pas fiable pour ce pays (coherent avec l'avertissement OMS "sensitivity
+  // varies substantially between countries"). Ligne re-sourcee vers le bulletin MSPAS/IGSS
+  // (19 364, source_priority=10) — voir l'entree correspondante dans FROZEN_ROW_CHECKED ci-dessus.
+  // Ne plus la chercher ici : elle est sortie du perimetre de ce scan (exclut deja les sp=10).
   // Mpox/Ouganda et Mpox/Rwanda : verifies le 28/08 — CAS « chiffres identiques ET date d'arrete
   // identique », donc rien a realigner, contrairement a MERS-CoV. L'API xmart (MPX/V_MPX_VALIDATED_DAILY,
   // source reelle derriere le libelle shinyapps) renvoie son dernier enregistrement au 2026-04-05
