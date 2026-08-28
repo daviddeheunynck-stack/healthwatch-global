@@ -1790,3 +1790,51 @@ Ouganda  27/08: 3   26/08→18/08: 9 (×8, inchangé)
 **Risque/inconnue :** combien de lignes actives portent aujourd'hui un badge de tendance faussé par une correction passée — pas mesuré ce soir, mesurable par un balayage comparant chaque `outbreak.updated_at` récent aux deltas `outbreak_snapshots` correspondants.
 
 **Statut : PROPOSÉE, remontée à `daily-product-ideas-healthwatch` sur demande explicite de David — pas construite ce soir.**
+
+---
+
+## 2026-08-28 — Proposition du jour
+
+**Point de départ : la piste remontée par David hier soir** (entrée du 27/08 au soir, « badge de tendance trompeur »), laissée PROPOSÉE et non construite, avec une inconnue explicite à lever : *« combien de lignes actives portent aujourd'hui un badge de tendance faussé par une correction passée — pas mesuré ce soir »*. C'est mesuré ici, et la mesure a changé la correction à écrire.
+
+**Aucun signal terrain neuf** : `product-feedback.md` n'a pas bougé depuis l'entrée Coulibaly du 22/08.
+
+### La piste d'hier proposait un angle qui ne marche pas — mesuré avant de l'écrire
+
+L'angle (b) d'hier suggérait d'exclure de la comparaison les instantanés antérieurs au dernier changement de source, en s'appuyant sur `date` vs `updated_at`. **Testé contre la prod : il produit 21 faux positifs sur 27.** `outbreaks.date` n'est pas la date du dernier rapport, c'est souvent le **début de période** — Dengue/Indonésie porte `date = 2026-07-01` avec 58 357 → 75 991 cas, une vraie courbe cumulée, que ce critère aurait classée « artefact » et dont il aurait effacé le badge. L'angle (a) (réécrire l'historique des instantanés) reste écarté pour la raison déjà donnée hier.
+
+Le bon discriminant est ailleurs, et il est déjà écrit dans le repo.
+
+### 1. 🔴 Le site rend une correction de données en « En déclin », badge vert — alors que toutes les autres couches du produit traitent exactement la même baisse comme une anomalie
+
+**Signal, dans le code, en contradiction avec lui-même.** `outbreaks.cases` est un **cumul**. Toutes les voies d'écriture le savent et refusent une baisse :
+
+- `lib/outbreak-guards.ts` — `lockedRowRegressionGuard` refuse **toute** baisse sur ligne verrouillée (« *any decrease is far more likely a different report's "as of" cutoff … than a genuine downward revision* ») ; `deathsNeverDecreaseGuard` fait de même sur les décès.
+- `app/api/cron/data-quality/route.ts` section 3 — une baisse est classée `large_drop`, une **anomalie** à faire relire.
+
+La voie de **lecture** était la seule exception : elle rendait cette même baisse en pastille verte « En déclin », c'est-à-dire en bonne nouvelle.
+
+**Mesure contre la prod, 61 jours d'historique complet** (127 lignes actives, 5 443 instantanés) : **17 baisses jour-à-jour, 17 corrections de données, zéro recul épidémiologique.** Le lot de re-sourcing du 17/07 (Choléra Soudan, Soudan du Sud, RDC, Chikungunya Brésil/Maurice, MERS Arabie saoudite), Choléra/Tchad 776→129 le 22/07, Dengue/Nicaragua 5 702→1 993 le 25/07, Polio/Pakistan le 28/07, Dengue/Vietnam le 05/08, Rougeole/États-Unis le 08/08, Ebola/RDC 5 208→5 021 le 22/08 (le réalignement documenté), et les deux re-sourcings FHCC du 27/08 qui ont fait apparaître le défaut. **Un compteur cumulé ne descend pas sur le terrain ; quand il descend ici, c'est HealthWatch qui a corrigé son propre chiffre.**
+
+*Note de méthode, à retenir pour toute mesure future sur ce projet* : la première passe annonçait 10 baisses, toutes en juillet. Faux — **ce projet Supabase plafonne toute requête à 1 000 lignes** (5 443 lignes dans `outbreak_snapshots`, 1 000 renvoyées sans `.limit()`). Il faut paginer par `.range()`. Vérifié au passage que le code de prod n'est pas touché : `getOutbreakTrendsBulk` trie par date décroissante, donc les lignes utiles (la plus récente par foyer) sont toujours dans les 1 000 premières — c'est structurellement sûr tant qu'un jour tient sous 1 000 foyers, soit ~8× la charge actuelle. Pas un défaut, mais une marge à connaître.
+
+**Effort : petit.** Un seul point de décision dans `lib/outbreak-trend.ts`.
+
+**Risque/inconnue :** faire disparaître un vrai signal de recul. Écarté par la mesure — sur 61 jours, aucune des 17 baisses n'en était un. Et une révision à la baisse confirmée par la source reste une **correction du chiffre**, pas un foyer qui rétrécit.
+
+### 2. 🟠 Le même artefact existe à la hausse, il est en ligne aujourd'hui, et il n'est PAS corrigé — le discriminant n'existe pas dans les données
+
+**Signal, en prod, ce matin.** `3466817` (07h32) a re-sourcé Dengue/Guatemala — le chiffre OMS xmart était incohérent, remplacé par le MSPAS guatémaltèque. Effet sur les instantanés :
+
+```
+20/08 → 27/08 : 4 817 (plat, 8 jours)
+28/08         : 19 364   ← le re-sourcing
+```
+
+La page publique affiche donc aujourd'hui, pour cette ligne : **« En expansion »** (pastille rouge), **« +302% 7j »**, **« +14 547/24h »** et la phrase `growing_fast` de `why-it-matters`. Aucun de ces quatre énoncés ne décrit le foyer — ils décrivent une correction de base.
+
+**Pourquoi ce n'est pas construit ce soir.** À la baisse, le discriminant est gratuit et absolu (un cumul ne descend pas). À la hausse, il n'existe pas : une vraie flambée et une correction produisent le même saut. Les deux heuristiques disponibles sans schéma ont été testées et rejetées — celle sur `date` (21 faux positifs sur 27, ci-dessus), et celle du « palier après plusieurs jours plats », qui frappe toutes les sources **hebdomadaires** (une ligne dengue plate 6 jours puis publiée le 7e est le cas normal, pas l'exception). Abaisser le seuil de `spike` dans `data-quality` (×10 aujourd'hui ; Guatemala est à ×4,02) reviendrait au même bruit.
+
+**Le correctif durable suppose d'enregistrer la provenance au moment de l'instantané** — une colonne sur `outbreak_snapshots` disant de quelle source venait le chiffre ce jour-là, pour que `getOutbreakTrend` ne compare jamais à travers un changement de source. C'est une **migration de schéma**, donc garde-fou 2 : le code qui écrirait cette colonne ne doit pas partir tant que la migration n'est pas appliquée, et l'effet ne serait de toute façon que **prospectif** (les instantanés déjà en base n'ont pas cette information). Effort réel : moyen à gros, et une décision de schéma — **proposée, pas construite.**
+
+**Statut initial : 2 idées PROPOSÉES.** Construction de l'idée 1 dans la foulée — voir la mise à jour ci-dessous.
