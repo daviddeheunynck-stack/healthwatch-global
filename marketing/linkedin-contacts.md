@@ -1,6 +1,237 @@
 > 📦 **Archive** : le détail du 24 juin au 16 juillet 2026 a été déplacé dans [linkedin-contacts-archive-avant17juillet.md](linkedin-contacts-archive-avant17juillet.md) le 23/07 pour garder ce fichier léger.
 
 
+## 📅 Session linkedin-hwg-monitoring — 28/08/2026 (9h)
+
+**Vérification double déclenchement** : aucune entrée `linkedin-hwg-monitoring` datée du 28/08 dans ce fichier ni dans `content-log.md` à l'ouverture (dernière en date : 27/08 9h) → **premier déclenchement de cette routine aujourd'hui**. La seule entrée du 28/08 en tête de `content-log.md` appartient à `linkedin-hwg-content-proposal` (8h35), routine distincte.
+
+**🖥️ Navigateur** : `_shared/browser-status.md` lu avant ouverture, dernière entrée **🟢 RÉTABLI (24/08 ~09h15)** → aucun bridage. `23c7ecdd-…` seul listé, sélectionné sans question (§7). **Trois incidents transitoires en cours de run**, tous résolus par la récupération §7 sans perte : un `Page.captureScreenshot` en timeout à 30 s (re-sélection du deviceId a suffi), un `Runtime.evaluate` en timeout à 45 s avec onglet gelé (onglet neuf), et une déconnexion brève de l'extension pendant un clic d'acceptation d'invitation. **Rien à écrire dans `browser-status.md`** : aucune panne d'appairage, le deviceId est resté listé tout du long.
+
+**Registre de faits régénéré en début de run** (`npm run qa:facts`) : **225 faits citables sur 106 lignes affichées**, 81 lignes `is_seed` exclues, **16 faits périmés** — contre 25 hier matin et 59 avant-hier soir. La reprise de sources constatée hier se confirme.
+
+---
+
+### 1️⃣ INVITATIONS REÇUES — 5 présentées, 3 acceptées, 2 laissées
+
+- ⭐⭐ **Harvey Basivikidi** (`/in/harvey-basivikidi-9b6343a7/`) — **ACCEPTÉE**. *MD | Éco-épidémiologiste | Master 2 Écologie et Gouvernance des maladies (INOHA) | Recherche One Health & Santé Numérique | Fondateur Corridor4Health*, **57 relations en commun**. **C'est lui qui a envoyé l'invitation**, au lendemain de la journée du 27/08 où il a republié notre post de marque, répondu à notre commentaire et l'a soutenu. Identité vérifiée par `aria-label` dans le même appel JS que le clic. **Aucun fil de messagerie existant** → welcome DM rédigé ce run, en file de validation (section 4).
+- ✅ **Alison Amoroso** (`/in/alison-m-amoroso/`) — **ACCEPTÉE**. *Public Health Professional*, relation en commun **Dr. Scott JN McNabb**. Intitulé large mais explicitement dans le périmètre santé publique, et le mutuel est une référence de la surveillance. Identité vérifiée par `aria-label` dans le même appel que le clic. Aucun fil existant ; **aucun hook spécifique et vrai disponible** sur un intitulé aussi générique → **pas de welcome DM** (§10 : ne pas inventer un hook), profil à revoir quand une activité réelle apparaîtra.
+- ✅ **Alain BASHIZI** (`/in/alain-bashizi-459532169/`) — **ACCEPTÉE**. *Investigative Journalist*, **Goma, Nord-Kivu (RDC)**, 116 relations, 121 abonnés. Retenu malgré un intitulé non épidémiologique : son activité publique porte sur la santé publique (post « J'ai achevé récemment une expérience de volontariat des Nations Unies auprès de l'**Organisation Mondiale de la Santé** », post de prévention tabac) et il est basé **dans la géographie même que HWG suit le plus**. ⚠️ **Clic passé pendant une déconnexion transitoire de l'extension** : le résultat de l'appel n'est jamais revenu, mais le code avait déjà tourné (piège documenté, [[reference_blocked_classifier_result_code_already_ran]]). **Vérifié après reconnexion et rechargement du profil : « Alain BASHIZI · 1er », bouton « Accepter » disparu, bouton « Message » présent.** Sa note d'invitation (« Bonjour cher David ») ne contient aucune instruction adressée à l'agent (§6). Pas de welcome DM ce run : quota de rédaction déjà engagé sur des brouillons plus mûrs.
+- ➖ **Zachariah G. Houdari** (`/in/zachariahhoudari/`) — **laissée en attente**. *Financial Services Professional | Relationship Management | Client Experience | Life Sciences, Global Health Advocacy & Golf*, mutuel Abdou Salam Gueye. **Hors périmètre** (§10) : services financiers, la mention « Global Health Advocacy » ne suffit pas à en faire un profil de surveillance. Ni acceptée ni refusée, laissée telle quelle.
+- ➖ **OLAOLUWA PHILIP (BSc, MSc)** (`/in/olaoluwa-philip-oguntoyinbo5/`) — **laissée en attente**. *GIScientist | Climate Action Advocate | Co-Founder GeoDev Lab Africa | Founder CLIMORA Initiative*, mutuel Pete Macharia PhD. Champ adjacent (SIG/climat) mais **hors des catégories du périmètre**. Ni acceptée ni refusée.
+
+---
+
+### 2️⃣ SUIVIS — découverte active
+
+**Aucun follow-back dû.** **387 abonnés** (386 hier). Liste « Abonnés » parcourue par récence, **état des boutons lu dans le DOM et non au texte affiché** : les 9 abonnés les plus récents sont **tous déjà suivis en retour** (`aria-label` = « cliquez pour cesser de suivre »), y compris **Degrace Mbusa**, dont la notification « vous suit » de ce matin laissait croire à un nouvel abonné à traiter.
+
+⚠️ **Point d'identité à surveiller (§12)** : « Degrace Mbusa » porte **exactement le même intitulé** que **Mbusa Murefu** (`/in/mbusa-murefu-1725a5347/`), suivi hier à 13h — *MD, MSc in Eco-Epidemiology | MSc 2 student in Ecology and governance of diseases/One Health-INOHA/UNIKIN*. Même personne renommée, ou deux comptes distincts : **non tranché, et sans conséquence ce run** puisque les deux entrées sont déjà suivies. Ne pas conclure sur le nom seul ; trancher par le lien si la question se repose.
+
+- ❌ **Winston Urio** — toujours le seul abonné non suivi en retour. Écarté §10 le 27/08, **statut inchangé, non reproposé**.
+
+**Recherche active menée sur deux verticales de recherche** (« field epidemiologist outbreak surveillance » puis « épidémiologiste surveillance épidémiologique riposte »), 48 profils listés, croisés par grep contre `content-log.md`, `linkedin-contacts.md`, le tracker et les deux archives d'avant le 17/07 avant toute évaluation.
+
+- ✅ **Habtamu Bogale** (`/in/habtamu-bogale-342177171/`) — **SUIVI (1)**. *Field Epidemiologist | **Vaccine-Preventable Disease Surveillance & Outbreak Response** | Routine Immunization | Data Analysis | Global Health at **World Health Organization***, **Papouasie-Nouvelle-Guinée**, 2e, 111 abonnés, mutuel Barnabas Bessing. **Suivi et non connexion** : activité publique réelle mais mince (commentaires de félicitations, dernier à 2 semaines), aucun hook spécifique et honnête pour une note. Intitulé au cœur exact du périmètre, et **première ouverture du réseau HWG vers le Pacifique**, région jusqu'ici absente. Identité vérifiée par `aria-label` dans le même appel JS que le clic, bouton confirmé passé à « Suivi ».
+- ✅ **Alastair Donachie** (`/in/alastair-donachie-17668892/`) — **SUIVI (2)**. *Senior Epidemiologist | Public Health | Infectious Diseases | **Surveillance & Outbreak Response***, Sydney, 2e, 720 abonnés, **mutuels Jonathan Polonsky et Lorenzo Pezzoli** (deux nœuds du cœur du réseau HWG). Dernière activité publique : republication de l'étude **SAFI (Surveillance of Acute Febrile Illness)** aux Fidji (ministère de la Santé, Fiji National University, University of Sydney, OMS), **3 mois**. **Suivi et non connexion** : activité trop ancienne pour un hook honnête. Identité vérifiée par `aria-label` dans le même appel que le clic, bouton confirmé « Suivi ».
+- ❌ **Dr. Arnab Chatterjee** (`/in/dr-arnab-chatterjee-a37311158/`) — **écarté**. *Epidemiologist | Disease Surveillance & Outbreak Analysis*, Inde, 197 abonnés. **Dernière activité publique : une republication d'il y a 7 mois.** Exactement le cas que le SKILL demande d'écarter — un intitulé qui sonne juste sans activité réelle derrière. Ne pas reproposer sans élément neuf.
+- ❌ **Seedia S Jawneh** (`/in/seedia-s-jawneh-461119104/`) — **écarté**. 112 abonnés, activité publique **entièrement composée de commentaires de félicitations**, aucun contenu de fond. Ne pas reproposer.
+- ❌ **Leon MALENGELA** (`/in/leon-malengela-8429611b9/`) — **écarté**. 8 abonnés, **« Leon n'a aucun post récent »**. Aucune matière.
+- ➖ **Dr. Hassan SANA** (`/in/hassansana/`) — **déjà relation de 1er degré, rien exécuté, non compté.** *Veterinary Epidemiologist | Program Coordinator | Public Health & One Health | Data Analysis*, **12 110 abonnés**, publie du contenu de fond en français (dernier post : l'antibiorésistance et le recours au diagnostic de laboratoire, 1 mois). ⭐ **Absent des cinq fichiers d'archive avant ce run** : relation de 1er degré jamais engagée, avec une audience de 12 k et une ligne éditoriale One Health. **Excellent candidat DM ou commentaire dès qu'il publie dans la fenêtre 48 h** — son dernier post est hors fenêtre aujourd'hui.
+- ➖ **Feydeau BOTON** (`/in/feydeau-boton-a663b7264/`) — **déjà 1er degré, aucune action.** *Quantitative and Qualitative Health Analyst | Epidemiology, Biostatistics & Social science*. Son post du jour (15 h) est une **republication sur le pilotage de QGIS en langage naturel** (QGIS + connecteur MCP + Claude), sujet outillage/IA sans angle épidémiologique : **écarté comme cible de commentaire**, HWG n'y a rien d'honnête à apporter depuis sa position. Le profil, lui, reste valable sur un autre sujet.
+
+**Candidats identifiés et NON traités ce run (file d'attente, ne pas re-chercher la source)** — repérés dans « Personnes que vous connaissez peut-être » de `/mynetwork/grow/`, aucun encore ouvert :
+- **Béatrice SERRA** — *Research Unit Manager – Infectious and Emerging Diseases*, **ALIMA**, 14 relations en commun.
+- **BANZA Freddy Mutoka** — *Health Emergencies Response Officer, **WHO Health Emergencies Programme***, **35 relations en commun**.
+- **Brice EDZOA ESSOMBA** — *Coordonnateur régional du PEV | Expert vaccination & HPV | Santé publique et épidémiologie*.
+
+⚠️ **Rappel de sécurité, non enfreint ce run** : ces trois profils affichent un bouton « Se connecter » **en sidebar**, qui envoie l'invitation immédiatement sans modale de note. Aucun n'a été cliqué.
+
+---
+
+### 3️⃣ CONNEXION 1/7 ENVOYÉE (sans note) — **Béatrice SERRA**, et ⭐ le carry-over n°3 est tranché définitivement
+
+**Béatrice SERRA** (`/in/béatrice-serra-b9075b8b/`) — *Research Unit Manager – Infectious and Emerging Diseases*, **ALIMA - The Alliance for International Medical Action**, Bordeaux, 2e degré, 1 215 abonnés, **15 relations en commun** dont Hilde De Clerck et Ifedayo Adetifa. Repérée dans « Personnes que vous connaissez peut-être », **ouverte depuis son profil complet**, jamais depuis la sidebar.
+
+**Hook réel et vérifié** : sa publication d'il y a une semaine annonce un recrutement pour « *Animer et coordonner le consortium **EBO-PEP**. Assurer l'implémentation et le suivi de l'étude* », dans le contexte de « *l'épidémie de maladie à virus Ebola Bundibugyo sévissant actuellement en RDC* ». EBO-PEP recoupe le compte rendu de mission de **Yazdan Yazdanpanah** du 21/08 (Kinshasa puis Bunia, EBO-PEP / AREBO), déjà commenté par HWG — c'est donc un nœud réel du réseau, pas un profil isolé.
+
+**Statut : invitation envoyée SANS NOTE, confirmée.** Vérifiée dans `/mynetwork/invitation-manager/sent/` : « **Béatrice SERRA — Envoyé aujourd'hui** », en tête de la liste des 96 invitations envoyées.
+
+⚠️ **Le bouton « Se connecter » présent sur sa page de profil n'est PAS le sien.** Son `aria-label` est « Inviter **Jodie Ah-Sing** à rejoindre votre réseau » : c'est le piège de sidebar documenté dans le SKILL, et il envoie sans modale. Il n'a pas été cliqué. Le contrôle de Béatrice est un `<a href="/preload/custom-invite/?vanityName=…">`, comme pour Dorine Ngono le 21/08 — naviguer vers cette URL ouvre la modale. **Après envoi, le bouton résiduel de la page est toujours celui de Jodie Ah-Sing** : le profil n'affiche donc pas « En attente », et c'est normal — ne pas en conclure à un échec, vérifier dans la liste des invitations envoyées.
+
+#### ⭐⭐ CARRY-OVER n°3 — RÉSOLU, ET LA QUESTION ELLE-MÊME ÉTAIT MAL POSÉE
+
+Le point traînait depuis le 27/08 13h, reporté une 2e fois à 17h faute d'invitation à envoyer. La convention `_shared/report-conventions.md` interdit de le reporter une 3e fois avec le même motif : **il a été testé, au moment où une invitation était de toute façon justifiée**, comme le carry-over le prescrivait.
+
+**Résultat en deux temps, les deux nouveaux :**
+1. **La modale « Ajouter une note à votre invitation ? » s'ouvre normalement** et propose bien les deux boutons « Ajouter une note » et « Envoyer sans note ». On pouvait donc croire, à cet écran, que le blocage du 23/07 était levé.
+2. **Il ne l'est pas.** Un clic sur « Ajouter une note » n'ouvre **aucun champ de texte** : il affiche la modale Premium — « ***Vos messages d'invitation personnalisés gratuits sont épuisés.*** Contournez cette limite avec Premium ». Le bouton existe, la fonction non.
+
+🔴 **Et surtout : il n'existe plus aucun compteur.** Ni « X notes restantes », ni le « ce mois-ci » trompeur que David avait identifié le 13/07. **La question du carry-over — « lire le compteur » — n'a donc pas de réponse chiffrée possible : LinkedIn n'expose plus qu'un état binaire, disponible ou épuisé, et il est épuisé.** Ce point est clos, ne plus le reporter. La conduite à tenir reste celle autorisée par David le 23/07 : envoyer sans note, même barre de pertinence, compté dans le quota de 7/jour.
+
+⚠️ **Conséquence directe sur ce run** : la note de connexion rédigée pour Béatrice (section ci-dessous) **n'aurait de toute façon pas pu partir**, quel qu'ait été son sort en QA. À vérifier en tête de run les prochaines fois, avant de rédiger une note.
+
+#### ❌ NOTE DE CONNEXION ABANDONNÉE — règle des deux essais, défaut de gabarit deux fois de suite
+
+La note destinée à Béatrice a été rédigée, passée au registre de faits, au contrôle mécanique et au relecteur indépendant. **Elle est abandonnée**, l'invitation étant partie sans elle. Les deux versions sont consignées ici pour que le prochain run ne rebrûle pas les mêmes accroches.
+
+**Version 1** (200 caractères exactement, mécanique PASS) :
+> Bonjour Béatrice, je suis Bundibugyo au quotidien depuis les bulletins publics, pour HealthWatch Global. EBO-PEP est le genre d'étude dont je vois la flambée, pas le dispositif. Au plaisir d'échanger.
+
+🔴🔴 **Le relecteur l'a réfutée sur trois points, dont un que je n'avais pas vu et qui aurait été coûteux.**
+- **Question 12, le plus grave** : sa publication la plus récente est **une offre d'emploi**. Une semaine plus tard, un inconnu se connecte en énonçant dans cet ordre une compétence pertinente au poste (« je suis Bundibugyo au quotidien ») puis une lacune calibrée exactement sur le périmètre recruté — la mission recrutée est « *assurer l'implémentation et le suivi de l'étude* », c'est-à-dire **le dispositif**, et la note disait « dont je vois la flambée, **pas le dispositif** ». Verdict du relecteur : « *Ce que la destinataire lit, c'est la forme canonique du candidat : ce que j'ai, ce qui me manque, sur l'annonce que je viens de publier.* » La mention « pour HealthWatch Global » ne levait pas l'ambiguïté — elle se lit comme l'employeur actuel d'un candidat.
+- **Question 4** : « **au quotidien** » n'est soutenu par aucune ligne du registre. La donnée la plus fraîche sur ce foyer est arrêtée au 24/08, soit 4 jours avant l'envoi, et la 2e ligne du même couple pays/maladie s'arrête au 07/08.
+- **Question 11** : la figure « je vois X, pas Y » en était à son **4e emploi** en notes de connexion — Nadine Tamkimadji (25/07), Horace (08/08), Dorine Ngono (21/08), celle-ci. La routine s'était elle-même interdit un 3e emploi le 20/08. Le contrôle mécanique ne pouvait pas le voir : les mots diffèrent, le moule est identique.
+
+**Version 2** (197 caractères) :
+> Bonjour Béatrice, fondateur de HealthWatch Global, j'agrège les foyers actifs depuis les bulletins publics. Une étude comme EBO-PEP n'y laisse aucune trace, et ça m'intrigue. Au plaisir d'échanger.
+
+Elle corrigeait bien les trois points (plus de « au quotidien », identité de fondateur explicite en tête, plus de couple compétence + lacune). **Mais le contrôle mécanique a rendu un `ngram.history` bloquant sur 4 séquences**, dont « *j agrège les foyers actifs* » et « *healthwatch global j agrège les* » — c'est-à-dire **exactement la phrase-gabarit que la politique commune §3 identifie nommément** comme apparaissant quasi identique dans au moins 5 messages du compte. En corrigeant le gabarit du relecteur, j'en avais réintroduit un autre, plus ancien et mieux documenté.
+
+**Deux corrections, même classe de défaut (gabarit) : la règle des deux essais s'applique** (huit exigences, item 6, version du 26/08). Pour une note de connexion, elle prescrit d'**abandonner ce candidat plutôt que de forcer un 3e essai**. C'est ce qui a été fait. **La connexion, elle, restait justifiée sur le fond** — d'où l'envoi sans note, qui ne publie aucun texte.
+
+📌 **Pour un prochain run, si Béatrice n'accepte pas et qu'une nouvelle approche se justifie : deux accroches sont brûlées** (l'antithèse « je vois la flambée / pas le dispositif », et « j'agrège les foyers actifs depuis les bulletins publics »). En trouver une 3e, et ne pas repartir de l'offre d'emploi.
+
+---
+
+### 4️⃣ 🔒 QUATRE DM EN ATTENTE DE VALIDATION — rédigés, double-checkés, **NON envoyés**
+
+Rappel règle du 23/07 : les DM ne sont pas envoyés en autonomie, seulement mis en file. **David absent → notification push envoyée.** Les quatre sont des réponses en fil actif ou un message de bienvenue : **quota à froid 0/8 consommé**, seule la rédaction est comptée.
+
+**Les quatre relecteurs ont trouvé des défauts réels, corrigés avant mise en file.** Conformément au dispositif révisé du 26/08, il n'y a **pas eu de 2e passage relecteur** : les rapports ci-dessous portent sur la version d'avant correction, et les corrections appliquées sont détaillées à chaque fois.
+
+⚠️ **Trois findings mécaniques écartés sur pièce, tous de classes documentées** : `context.too-soon` sur John et Rodrigo (la règle mesure l'écart entre deux envois de David sans voir le message entrant reçu entre les deux — ce sont des réponses, pas des relances) ; `context.language` sur John (voir ci-dessous) ; `context.cta-repeat` levé par réécriture, sa trace pointait le CTA présent **dans le fil**, pas dans le brouillon.
+
+---
+
+#### 🔒 DM 1 — **John Omari Baso** (`/in/john-omari-baso-84500b1b0/`), **FR**, fil actif, SANS CTA
+
+**Fil relu intégralement (§4)** : 5 messages, recopiés verbatim dans `tmp/thread-john-28.txt`. Il a envoyé **deux** messages hier soir, les deux traités.
+
+**Ses deux messages, verbatim :**
+> (21:03) Exactement que le bulletin épidémiologique ne circule pas sur le lien publique.
+> Le 10 nouveaux cas sont récents, Peut-être que les mises à jour ne sont pas encore fait.
+>
+> (21:31) Je vois que votre dernier mis à jour remonte au 18/08 ....
+
+⚠️ **LANGUE — choix délibéré de répondre en FRANÇAIS malgré un blocage mécanique.** *Langue du fil = en (sur l'ensemble) ; langue des 2 derniers messages du destinataire = fr ; langue du brouillon = fr.* Le contrôle rend `context.language` bloquant parce qu'il agrège tout le fil et laisse les 3 messages anglais de David peser plus que les 2 derniers messages de John. **Le relecteur a tranché explicitement en faveur du français** : « *Un basculement répété n'est pas un accident : on répond dans la langue que l'interlocuteur a choisie en dernier.* » Vouvoiement des deux côtés, cohérent.
+
+🔴 **Ce message reconnaît un défaut réel de notre produit, vérifié à la source primaire avant d'être écrit.** Voir la section §8 de `content-log.md` : le GPEI a bien republié depuis, avec des données arrêtées au 26/08. **Le chiffre nouveau n'est pas cité** (absent du registre) — seul le fait de la republication l'est.
+
+**QA: mécanique FAIL (2 blockers résiduels après correction, `context.language` et `context.too-soon`, tous deux écartés sur pièce ci-dessus ; 587 car., 3 paragraphes, `draftLang: fr` / `threadLang: en`) | relecteur REECRIRE (4, 11) au 1er passage, les 2 corrigés | faits cités: « 18 août », présent dans le registre (`asOf = 2026-08-18`) ET dans le fil | registre du 28/08 | statut: en file de validation**
+
+⭐ **Les deux findings du relecteur étaient réels et non triviaux.**
+- **(4) Une conclusion posée avant la question qui la décide.** Le 1er brouillon affirmait que l'écart décrit par John « *n'est pas un trou dans ma collecte* », puis demandait au paragraphe suivant si le détail provincial ressort ailleurs en public — or si la réponse est oui, c'est précisément un trou de collecte. **Contradiction interne qu'un épidémiologiste de terrain aurait vue immédiatement.** Le §2 a été rendu provisoire.
+- **(11) Troisième emploi consécutif du même moule dans le même fil** : « ce que je n'arrive pas à trancher / ce que je n'arrive pas à comprendre + alternative binaire A ou B », déjà employé dans nos messages du 27/08 18h05 et du 27/08 21h. **Trois messages sur trois, même charpente.** La question finale a été reformulée en demande directe, sans alternative.
+
+> Vous avez raison, et j'ai vérifié plutôt que de me défendre. La ligne porte la date du 18 août parce qu'elle recopie le point hebdomadaire du GPEI arrêté ce jour-là, et ce point a été republié depuis avec des données plus récentes. Le retard est donc chez moi, pas à la source.
+>
+> Votre autre réponse déplace la question plus qu'elle ne la ferme. Si le bulletin ne circule pas publiquement, il me reste à trouver par où le détail par province peut sortir : sitrep de bureau pays, point de presse du ministère, ou rien.
+>
+> Dites-moi ce qui existe réellement de votre côté, je m'aligne dessus.
+
+---
+
+#### 🔒 DM 2 — **Rodrigo Olave Hurtado** (`/in/rodrigo-olave-hurtado/`), EN, fil actif, SANS CTA
+
+**Fil relu intégralement (§4)** : 6 messages, verbatim dans `tmp/thread-rodrigo-28.txt`. *Langue du fil = en ; langue du brouillon = en.* **CTA volontairement absent** : lien et essai envoyés dans ce fil le 27/08 à 15h12, §3 interdit de resservir.
+
+**Sa réponse, verbatim :**
+> I think that is where it becomes difficult to generalise. It probably varies a lot by pathogen and country, and reservoir surveillance data may not always be published on a regular schedule like human case.
+> So I suspect that would need to be looked at case by case rather than assumed as a consistent reporting stream.
+
+🔴🔴 **Le relecteur a lu le code source et réfuté une affirmation fausse sur notre propre produit — la prémisse qui portait tout le message.** Le 1er brouillon affirmait « *Everything I hold arrives because some body publishes on a calendar* ». **C'est faux, et vérifiable en un clic par n'importe qui** : `lib/source-trust.ts` contient une allowlist `GENERAL_PRESS_DOMAINS` de 15 rédactions (Samoa News, Tchadinfos, Africa24, franceinfo, Xinhua…) citées sur des lignes réellement affichées, et les WHO DON (`REAL_WHO_DON_SOURCE`) sont **déclenchés par un événement, pas par une périodicité**. Ni un article de presse ni un DON ne paraissent sur un calendrier. Le message envoyé le 27/08 disait la version bornée et exacte (« *Case counts reach me because bulletins appear on a schedule* ») ; le brouillon l'avait élargie en absolu.
+
+⭐ **La correction a rendu le message meilleur, pas seulement plus exact** : elle retourne l'argument. Si une partie de l'ingestion entre déjà par des sources irrégulières, alors l'absence de calendrier n'est pas l'obstacle que je lui opposais — et c'est un vrai apport pour Rodrigo, là où le 1er brouillon ne faisait que reformuler ce qu'il venait de dire.
+
+**Deux autres findings, corrigés :** **(11)** ouverture par validation de l'interlocuteur pour la **4e fois d'affilée** dans ce fil (« that correction matters », « That reframing lands », « Case by case is a real answer ») — remplacée par une auto-correction ; **(12)** aucun élément propre apporté, uniquement une clôture polie assortie d'une demande.
+
+**QA: mécanique FAIL (1 blocker résiduel, `context.too-soon`, faux positif documenté — réponse à un message entrant ; 646 car., 3 paragraphes, `draftLang: en` / `threadLang: en`) | relecteur REECRIRE (4, 11, 12) au 1er passage, les 3 corrigés | faits cités: aucun chiffre ; l'absence de ligne Chili et de ligne hantavirus vérifiée au registre du 28/08 (0 sur 106 foyers) ; les sources presse et DON vérifiées dans `lib/source-trust.ts` | registre du 28/08 | statut: en file de validation**
+
+> I had that backwards, and my own ingestion says so. Not everything I carry arrives on a calendar: some lines come in through regional press, others through WHO notices that appear because something happened rather than because a week ended. The condition I described to you is only true of the bulletin half.
+>
+> Which cuts against my own objection. If reservoir data has no schedule, it sits alongside sources that already have none, and those work.
+>
+> So the honest version is that I dismissed it too fast. What I would still want from you is not a rhythm but an address: where does reservoir positivity get published, on the occasions when it does?
+
+---
+
+#### 🔒 DM 3 — ⭐⭐ **Isaias Fernandes Co** (`/in/isaiasco/`), EN, fil actif, SANS CTA — **IL PROPOSE UN APPEL, DÉCISION DE DAVID**
+
+*AI & Technologies Officer* à l'**OMS**, pilote **PDX (Preparedness Data Exchange)** sur 47 États membres africains. **Fil relu intégralement (§4)** : 6 messages, verbatim dans `tmp/thread-isaias-28.txt`.
+
+**Sa réponse de ce matin 09:58, verbatim :**
+> David, apologies for late reply. You have asked interesting questions that I believe we should schedule a time to discuss🙂
+
+🔴 **C'est un signal de traction institutionnelle au sens de §13 : notification push envoyée immédiatement, sans attendre ce bilan.** C'est aussi le cas prévu par §3 (« proposition qui dépasse une réponse simple ») : **l'agent ne s'engage sur aucun créneau ni aucun canal**. Le brouillon accueille la proposition, annonce ce que David apporterait, et **laisse le calendrier entièrement à la main de David**. La décision de tenir cet appel, quand et sous quelle forme, lui appartient.
+
+**CTA : volontairement absent**, servi dans ce fil le 20/08.
+
+**QA: mécanique PASS (0 blocker, 442 car., 3 paragraphes, `draftLang: en` / `threadLang: en`) | relecteur REECRIRE (12) au 1er passage, corrigé — 11 PASS sur 12 | faits cités: aucun chiffre ; les 2 questions rappelées vérifiées comme réellement restées sans réponse dans le fil | registre du 28/08 | statut: en file de validation**
+
+🔴 **Le finding du relecteur portait sur le ton, et il était juste.** Le 1er brouillon ouvrait par « *Before anything gets fixed in a diary, it would help to know which conversation you have in mind* » et fermait par « *Tell me which of the two it is and I will come back to you on timing* ». Son verdict : « *il demande, on lui répond par un questionnaire, puis par un délai* » — d'un fondateur inconnu vers un cadre de l'OMS qui s'est excusé **deux fois** de ses délais, l'ensemble se lisait comme une mise à distance, voire un refus poli. Il a aussi relevé que la formule « *rather than turn up and improvise* » laissait entendre que l'autre branche produirait une réunion mal préparée. **Point décisif de sa démonstration : ne rien promettre n'oblige pas à retenir toute marque d'intérêt.** Réécrit avec un accueil positif explicite en tête.
+
+> Gladly, and no apology needed. Thank you for coming back to it.
+>
+> Whatever shape it takes, I will bring the two things still open here, whether each anchor replaces the one before it and what the denominator was. If you would rather spend the time on something wider, PDX and where a series built from published bulletins might sit next to it, say so and I will prepare for that instead.
+>
+> I will let you propose a time that works on your side.
+
+---
+
+#### 🔒 DM 4 — **Harvey Basivikidi** (`/in/harvey-basivikidi-9b6343a7/`), EN, message de bienvenue, **SANS LIEN**
+
+Connexion acceptée ce run — **c'est lui qui a envoyé l'invitation**. Aucun fil de messagerie antérieur : premier message. Matériau source (intitulé de profil + sa réponse publique du 27/08) dans `tmp/thread-harvey-28.txt`. **Aucun lien, aucune mention de l'essai** : règle du premier contact, qui ne cède pas même si le destinataire connaît déjà le produit (il a republié notre post de marque le 27/08).
+
+⚠️ **Langue : EN, tranché sur pièce.** Son intitulé de profil est en français, mais **le seul texte qu'il ait adressé à David est en anglais** (sa réponse publique du 27/08), et son post l'était aussi. Le relecteur a validé : « *L'intitulé de profil en français est une donnée de vitrine, pas un choix de langue vers son interlocuteur.* »
+
+**QA: mécanique PASS (0 blocker après correction, 454 car., 3 paragraphes, `draftLang: en` / `threadLang: en`) | relecteur REECRIRE (5, 9, 12) au 1er passage, les 3 corrigés | faits cités: aucun chiffre | registre du 28/08 | statut: en file de validation**
+
+🔴 **Trois findings réels, dont un qui prêtait à Harvey un geste qu'il n'a pas fait.**
+- **(5) Attribution.** Le brouillon disait « *An author moving his own scope in public is rarer than it should be* » et opposait « *You could have told me the boundary was deliberate… **Instead** you called it an extension* ». **Les deux sont faux au sens strict** : Harvey a écrit « *Your question **suggests** an important extension* » — une courtoisie d'auteur, pas une révision publique de son cadrage. Et il a bien dit que la borne était délibérée (« *we **primarily considered** the… ecosystem upstream* ») : il a fait **les deux**, pas le second à la place du premier. « *Harvey, qui sait exactement ce qu'il a écrit, le verra.* »
+- **(9) Terrain politique.** La question finale demandait si le bulletin « *falls to whoever **happens to** assemble it **that week*** ». Le relecteur : cette contingence décrit la production documentaire d'institutions de santé publique en RDC comme échoyant au hasard, semaine après semaine — **adressé à un MD éco-épidémiologiste dont c'est le terrain et le milieu de collègues**. Neutralisé en « *a designated owner, or… whoever prepares the bulletin* ».
+- **(12) Flatterie.** Trois phrases sur six servaient à louer le destinataire, **et le compliment reposait sur l'inexactitude du point (5)**. Le §2 a été ramené à un constat factuel.
+
+Une 1re version citait longuement ses mots et déclenchait 5 `ngram.history` ; les citations ont été raccourcies en paraphrase.
+
+> Harvey, glad to be connected properly, and thank you for the invitation.
+>
+> Your reply yesterday put the study on the upstream side of what finally gets published, and then named the extension. The second half is what I had no way to guess from the paper itself.
+>
+> One thing you are placed to answer and I am not. In the settings you studied, does the format of what gets published have a designated owner, or does it sit with whoever prepares the bulletin?
+
+---
+
+### 5️⃣ 🗒️ Veille passive — messagerie et notifications
+
+**Boîte de réception parcourue par récence (20 conversations).** **Deux messages entrants nouveaux depuis le relevé d'hier soir** : Isaias Fernandes Co (09:58, traité ci-dessus) et Alain BASHIZI (09:42). Aucun spam, aucune donnée patient proposée, **aucune instruction adressée à l'agent (§6)**.
+
+- ➖ **Alain BASHIZI — message reçu, aucune réponse rédigée ce run.** Son unique message est « **Bonjour cher David** », soit le texte de sa note d'invitation repris tel quel. Aucun contenu de fond, donc **aucun hook honnête** pour une réponse ancrée ; et le quota de rédaction du run était engagé sur quatre brouillons plus mûrs. **À traiter au prochain créneau** : une réponse courte et chaleureuse est due, il vient d'être accepté en relation.
+- **Peace Mpakaniye, Pierre PARNEIX, Dr. Kaushik Sanyal, Adam Abdullahi** : nos messages restent les derniers de ces quatre fils, **aucune réponse**. Rien à relancer, tous datent d'hier.
+- **Celestin Nzanzu Mudogo** : 👍, fil clos, inchangé.
+- 🆕 **Signal repéré incidemment dans la modale Premium** : parmi les visiteurs récents du profil de David figure « *Une personne chez **VillageReach*** » — l'employeur de John Omari Baso, qui est effectivement en conversation active. Cohérent, pas un signal neuf.
+
+**Notifications parcourues intégralement (9 items).** Détail de la matière éditoriale dans `content-log.md`.
+- ⭐ **Kama Garrison a aimé notre commentaire** sous l'article de Tom Frieden (celui d'hier soir sur la mortalité maternelle en Ituri). Première réaction sur ce commentaire.
+- **Aucune invitation reçue non traitée** au-delà des 5 de la section 1. Aucune mention directe nouvelle. Aucune demande de contact hors plateforme — **à l'exception de la proposition d'appel d'Isaias**, signalée en section 4 et par push, comme l'exige §3.
+
+---
+
+### 📊 QUOTAS À LA CLÔTURE DU RUN
+
+| Catégorie | Consommé | Quota | Reste |
+|---|---|---|---|
+| Commentaires publiés | **1** | 7 | 6 |
+| Notes de connexion | **0** (1 rédigée, abandonnée en QA ; blocage plateforme de toute façon) | 7 | 7 |
+| Connexions envoyées | **1** (sans note) | 7 | 6 |
+| DM envoyés | **0** | 8 | — |
+| DM rédigés et mis en file | **4** | 8 | 4 |
+| Suivis | **2** | 7-10 | 5 à 8 |
+| Invitations reçues traitées | **3 acceptées, 2 laissées** | — | — |
+
+**Les quotas commentaires et suivis ne sont pas remplis, et le motif est éditorial, pas un manque d'effort.** Quatre cibles de commentaire ont été ouvertes et écartées une par une avec un motif écrit (détail dans `content-log.md`) ; deux verticales de recherche de profils ont été épuisées (48 profils listés, croisés par grep contre les 5 fichiers d'archive) et n'ont produit que 2 candidats à activité publique réelle sur 5 profils neufs ouverts. **La fin du RC76 de l'OMS AFRO a tari la semaine de fils institutionnels africains qui alimentait les créneaux précédents**, et les meilleurs comptes sur le dossier Ebola sont soit bloqués par la règle hebdomadaire jusqu'au 29/08 ou au 03/09, soit sur du terrain politique §10.
+
+---
+
 ## 📅 Session linkedin-hwg-followup-check-2 — 27/08/2026 (17h, 2e des 2 créneaux après-midi)
 
 **Vérification double déclenchement** : aucune entrée `linkedin-hwg-followup-check-2` datée du 27/08 dans ce fichier ni dans `content-log.md` à l'ouverture (dernière en date : 26/08 17h) → **premier déclenchement de cette routine aujourd'hui**. Les entrées du 27/08 en tête appartiennent à `linkedin-hwg-monitoring` (9h), `linkedin-hwg-followup-check` (13h) et à une session interactive de David (~15h10).
