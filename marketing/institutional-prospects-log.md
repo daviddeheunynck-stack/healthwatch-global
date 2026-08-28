@@ -2700,3 +2700,64 @@ Questions de clôture reprises à l'identique, avec leur destinataire exact : `y
 - **28/08** → lot du **18/08** (10, J+10) **+ les 3 reportées du lot du 17/08** (CIES, CII Chypre, AUA Arménie, J+11) = **13**, sous réserve du frein de file. ⚠️ Si les 25 brouillons d'aujourd'hui ne sont pas partis, la file de départ sera d'au moins 25 et le frein imposera de tout reporter — **prioriser alors les 3 reportées**, qui auront un jour de retard de plus que le lot du 18/08.
 - **29/08** → lot du **19/08** (10, J+10) + tout reliquat du 28/08.
 - **Fin août / début septembre** → **EUPHA**, si David tranche en faveur d'une relance après son retour au bureau le 31/08 (voir exclusions).
+
+---
+
+## 🛑 PROSPECTION — 2026-08-28, run automatique `daily-institutional-prospecting-healthwatch` — **FREIN DE FILE DÉCLENCHÉ, aucun contact neuf produit**
+
+**Aucun contact neuf, aucun brouillon créé ce run.** Le frein de file de l'Étape 1 s'applique : la file dépasse le seuil de ~20.
+
+### 📊 Profondeur de file : 24 brouillons réels
+
+Mesurée par `list_drafts`, **deux appels indépendants** (vue complète puis vue métadonnées) — application de la consigne du 16/08 « ne jamais conclure sur un seul appel ». Les deux renvoient exactement le même ensemble : **25 entrées, dont 24 brouillons réels** + 1 brouillon vide sans destinataire de David (`r1849762415425211791`, 27/08 04:53, hors périmètre).
+
+Composition des 24 :
+- **10 brouillons de prospection** du run du 27/08 (créés 06:22:10 → 06:22:45 UTC) — Djibouti, Soudan du Sud, Samoa, OPS Salvador, OPS Venezuela, Institut Pasteur CI, AIE Italie, NDPH Oxford, MAP International, World Hope.
+- **14 brouillons de relance** du run `daily-relance-check-healthwatch` du 27/08 (créés 06:26:58 → 06:27:59 UTC) — Medicus Mundi, SAMS, JHAS, IMT-USP, AHRI, HKU, Islande, INRB, INSP Burundi, SYSU, AFROHUN, SADC, IGAD, EAC.
+
+### ⚠️ Cause : la journée du 27/08 n'a produit aucun envoi
+
+Balayage `in:sent after:2026/08/26`, corbeille incluse : **le dernier envoi date du 26/08** (relances 10:58:35→10:59:08 UTC, prospection 12:27:31→12:29:31 UTC). **Aucun message envoyé le 27/08.** Le lot du 27/08 n'a donc pas été relu — c'est un report d'une journée entière, pas un ralentissement progressif.
+
+**Ce n'est pas un incident technique et ce n'est pas le bug d'envoi instantané du connecteur** (tableau de discrimination du 16/08) : rien n'est parti, aucun brouillon n'est passé en `SENT`. Les 24 sont tous en `labelIds: ["DRAFT"]`. La cadence de relecture de David est simplement restée à zéro ce jour-là.
+
+**Bounces du jour : aucun.** Balayage `from:mailer-daemon` / `postmaster` / `Undeliverable` / `Delivery Status Notification` / `Undelivered Mail` / `Mail delivery failed`, `newer_than:2d`, corbeille incluse : **zéro fil** — cohérent avec l'absence d'envoi depuis le 26/08. *Bilan cumulé non retotalisé ici — porteur unique `daily-relance-check-healthwatch`, règle du 16/08.*
+
+### 🔎 Run consacré aux cibles prioritaires laissées par le 27/08 — le gisement « écarts levés » est bien plus mince qu'annoncé
+
+Conformément au frein de file (« creuser une piste déjà notée plutôt que d'ajouter au stock »), ce run a retesté les cibles 1, 2 et 4 du 27/08. **Aucun brouillon créé** : les résultats ci-dessous constituent une réserve pré-vérifiée pour le prochain run.
+
+**🔴 Correction importante — 4 « écarts du 05/08 » désignés comme à retester ont en réalité déjà été contactés le 19/08.** Le run du 27/08 écrivait que « les listes du 05/08 et du 06/08 n'ont été que partiellement retestées » et en faisait la cible n° 1. C'est inexact : le lot du 19/08 les a consommées sans que la liste d'écarts du 05/08 (l. 286) soit annotée en conséquence.
+
+| Candidat « écart 05/08 » | Réalité | Preuve |
+|---|---|---|
+| **NIJZ Slovénie** | **Déjà contacté le 19/08** — `info@nijz.si`, brouillon `r-4329033190015818253` | l. 1177 |
+| **Batut Serbie** | **Déjà contacté le 19/08** — `vladan_saponjic@batut.org.rs`, brouillon `r-5457100798768568942` | l. 1177 |
+| **Karolinska Global Public Health** | **Déjà contacté le 19/08** — `info.gph@ki.se`, brouillon `r4777065368444904501` | l. 1177 |
+| **Emory Rollins SPH** | **Déjà contacté le 19/08** — `sphepidept@emory.edu`, brouillon `r-6568373789323836299` | l. 1177 |
+
+**Ces 4 auraient été des doublons si ce run avait produit un lot.** Ils n'ont été attrapés que par le grep obligatoire de l'Étape 1 (règle du 23/08) — la lecture de la liste d'écarts du 05/08, seule, les présentait comme disponibles. **Incohérence annexe relevée** : le run du 23/08 (l. 1589) réécartait NIJZ et Batut « aucun signal de changement », sans voir qu'ils étaient contactés depuis 4 jours.
+
+**✅ Une seule prise nette vérifiée, en réserve pour le prochain run :**
+
+| Institution | Pays | Segment | Email | Source | Vérifié | Dédup |
+|---|---|---|---|---|---|---|
+| **Pandemic Sciences Institute — University of Oxford** | Royaume-Uni | Académique/recherche | `info.psi@ndm.ox.ac.uk` | `psi.ox.ac.uk/contact-us-1`, **page officielle lue directement, HTTP 200** — pas un snippet de moteur (règle du 18/08) | Oui | `ndm.ox` → **0**, `Pandemic Sciences` → 0 ligne retenue. **Neuf.** Faîtière Oxford à 1 (NDPH, 27/08, département différent) |
+
+**❌ Cible n° 2 (« EMRO par les domaines gouvernementaux nationaux ») — à considérer comme fermée pour les 5 pays désignés.** Le 27/08 nommait Irak, Yémen, Syrie, Palestine, Bahreïn. Testés ce run avec User-Agent navigateur (règle `reference_govt_sites_need_browser_user_agent`) :
+- `moh.gov.iq` → **403** même avec UA Chrome ; `moh.gov.ye` → **connexion impossible** ; `site.moh.ps` → 200 mais **aucune adresse dans le DOM**, les URL `ContactUs` en échec de connexion ; `moh.gov.bh` → page contact 200 mais **aucune adresse dans le DOM**.
+- **Le repli « bureau pays OMS » ne fonctionne pas non plus en EMRO** : `who.int/{iraq,yemen,jordan,libya,occupied-palestinian-territory}/about-us` → **404 sur les 5**. Le motif `wpXXbwr@who.int` qui a sauvé les Îles Salomon le 19/08 est **spécifique à WPRO** ; ne pas le supposer transposable.
+
+**❌ Écarts retestés et maintenus** (page officielle relue ce run, avec UA navigateur) : **NPHIL Liberia** (200, aucune adresse — formulaire seulement, identique au 05/08), **CEPI** (200, seules `press@cepi.net` et `speakerrequest@cepi.net` — boîtes presse/conférences, hors sujet au même titre que les boîtes de scolarité), **IntraHealth** (200, aucune adresse), **NCDC Libye** (200, aucune adresse), **INSP Roumanie / CNSCBT** (`insp.gov.ro` → **échec de connexion**, 3e échec depuis le 06/08 malgré la mention « à réessayer en priorité »), **KDCA Corée** (404), **China CDC** (404), **IMR Malaysia** (connexion impossible), **HIPH Alexandrie** (connexion impossible, 3e échec).
+
+### 🎯 Cibles à prioriser au prochain run
+
+1. **Écouler la file avant tout.** À 24 brouillons, deux jours de production sont immobilisés. Tant que la file n'est pas redescendue sous ~20, le frein se redéclenchera et le prochain run ne produira pas non plus de lot.
+2. **`info.psi@ndm.ox.ac.uk` (PSI Oxford)** — vérifié, dédupliqué, prêt à rédiger. À prendre en premier.
+3. **Le gisement « écarts levés » n'est plus la piste n° 1.** Les listes du 05/08 et du 06/08 sont soit consommées (19/08), soit encore en échec sur retest direct. Revenir à de la recherche neuve, ou retester les listes **plus récentes** (12/08 → 21/08), non balayées ici.
+4. **Annoter les listes d'écarts quand un run ultérieur consomme une entrée** — le piège du 05/08 (4 entrées présentées comme disponibles alors qu'elles étaient contactées) se reproduira sur les autres listes tant que l'annotation n'est pas faite.
+5. **TEPHINET** — arbitrage David toujours en attente (doublon de domaine avec le Task Force for Global Health). Non retenue pour la 3e fois.
+
+### 📊 Compteurs
+
+**Totaux au 2026-08-28 : 300 contacts prospectés, 290 envoyés** — inchangés depuis le 27/08, ce run n'ayant produit aucun contact. **Profondeur de file : 24 brouillons.**
