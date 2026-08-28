@@ -16,6 +16,7 @@
 
 import { readFileSync, writeFileSync, mkdirSync } from "fs";
 import { dirname } from "path";
+import { normalizeDisease } from "../lib/disease-data.ts";
 
 const OUT = "marketing/qa/claimable-facts.json";
 
@@ -91,8 +92,48 @@ const isDisplayed = (o) =>
   (o.active === true ||
     ((o.source_priority ?? 0) >= 3 && (confirmedAt(o) ?? "") >= sixtyDaysAgo && (o.date ?? "") >= sixtyDaysAgo));
 
+// Ligne fantôme trouvée le 28/08 : ce filtre reprend l'éligibilité par ligne
+// mais pas la règle de sœurs de filterDisplayActive() (lib/outbreaks.ts) — celle
+// qui fait qu'une ligne close (`active=false`) ne s'affiche JAMAIS sur le site
+// tant qu'une ligne sœur `active=true` existe pour la même maladie/pays, quelle
+// que soit sa propre fraîcheur. Repéré sur Ebola/RD Congo : la ligne close du
+// 07/08 (4 120/1 887) passait `isDisplayed` (priority 5, confirmedAt et date
+// dans les 60 j) et entrait au registre à côté de la ligne active du 24/08
+// (5 656/2 715) — deux chiffres "citables" pour le même foyer, dont un que le
+// site n'a jamais montré. Repéré à répétition par les routines sociales sur
+// plusieurs jours sans que la cause soit identifiée (la ligne close semblait
+// "réapparaître" alors qu'elle n'avait en réalité jamais quitté le registre).
+//
+// ⚠️ Le dédoublonnage « garder la ligne la plus récente par paire » de
+// getOutbreaksCached() (utilisé pour la liste globale du site) est délibérément
+// PAS reproduit ici : il collapse aussi des lignes `active=true` entre elles,
+// ce qui est correct pour une liste agrégée mais faux pour ce registre. Vérifié
+// sur Avian Influenza/United States : deux lignes actives distinctes
+// (aphis.usda.gov#idaho, 176 cas ; #utah, 29 cas) s'affichent TOUTES LES DEUX
+// sur /country/united-states (getCountryOutbreaks() + filterDisplayActive(), qui
+// ne s'excluent jamais mutuellement entre lignes actives) — un premier essai de
+// ce correctif basé sur getOutbreaksCached() les aurait fait disparaître toutes
+// les deux du registre alors qu'un lecteur du site verrait les deux chiffres.
+// La règle qui suit reproduit exactement filterDisplayActive() : une ligne
+// active n'est jamais exclue par une sœur ; une ligne inactive l'est dès qu'une
+// sœur active existe pour la même clé.
+const displayed = rows.filter(isDisplayed);
+const activeKeys = new Set();
+for (const o of displayed) {
+  if (o.active !== true) continue;
+  const diseaseKey = normalizeDisease(o.disease_en || o.disease || "").name_en.toLowerCase();
+  const countryKey = (o.country_en || o.country || "").toLowerCase();
+  activeKeys.add(`${diseaseKey}|${countryKey}`);
+}
+const survivesSiblingRule = (o) => {
+  if (o.active === true) return true;
+  const diseaseKey = normalizeDisease(o.disease_en || o.disease || "").name_en.toLowerCase();
+  const countryKey = (o.country_en || o.country || "").toLowerCase();
+  return !activeKeys.has(`${diseaseKey}|${countryKey}`);
+};
+
 const facts = [];
-for (const o of rows.filter(isDisplayed)) {
+for (const o of displayed.filter(survivesSiblingRule)) {
   const confirmed = confirmedAt(o);
   const stale = ageDays(confirmed) > STALE_AFTER_DAYS;
   const base = {
