@@ -149,6 +149,26 @@ Détail des invitations, suivis et DM dans `linkedin-contacts.md`, entrée du jo
 
 ---
 
+### ✅ MISE À JOUR, SESSION INTERACTIVE (~12h45) — commentaire de suite publié chez Harvey Basivikidi, sur demande de David
+
+**David a tapé « rédige le commentaire de suite à Harvey » en session interactive**, faisant suite au double-check des DM (qui avait révélé une 3e réponse publique de Harvey non traitée, voir section 4 de `linkedin-contacts.md`). Commentaire/note de connexion restant en autonomie complète (politique commune §5) : rédigé, passé au registre de faits, au contrôle mécanique et au relecteur, puis **publié directement**, sans validation supplémentaire de David — conforme à la règle (seuls les DM sont mis en file).
+
+**Réponse en sous-fil actif, EN, `urn:li:activity:7498314547779444737`** (le post JMIR déjà commenté le 27/08). Elle répond à la 3e réponse de Harvey (« *I find this point particularly relevant. It suggests that interoperability should not stop at the boundary between institutional systems. Governance should also define requirements for data at the point of publication, including machine-readable formats. This is probably an area we need to explore further in the context of the DRC.* »), postée ~1h avant le double-check des DM, qui prolongeait elle-même l'échange initié par le commentaire top-level de David le 27/08 et sa propre réponse en sous-fil du 27/08 (« *Something asymmetric happens at that boundary… Machine readable output is trivial next to integrating two systems. It simply has nobody positioned to insist on it.* »).
+
+**L'angle** : Harvey propose qu'un mandat de gouvernance définisse le format des données publiées. Le point ajouté ici est distinct : un mandat de format ne règle que ce à quoi ressemble le fichier une fois trouvé, pas si un lecteur extérieur sait seulement qu'il existe — un jeu de données conforme sur le site d'un ministère reste invisible sans un mécanisme d'indexation. Question posée : Harvey a-t-il rencontré une exigence de gouvernance qui va jusque-là (enregistrement/indexation), pas seulement le format.
+
+**QA: mécanique PASS (0 blocker, 444 car., 2 paragraphes, `draftLang: en` / `threadLang: en`) | relecteur REECRIRE (11) au 1er passage, corrigé — 11 PASS sur 12 | faits cités: aucun chiffre | registre du 28/08 | statut: publié le 28/08 en session interactive**
+
+🔴 **Le relecteur a attrapé une répétition de gabarit invisible au contrôle mécanique, et particulièrement sensible ici : la même personne, le même jour.** Le 1er brouillon fermait sur « *Where does registration or indexing **sit** in that governance conversation?* » — verbe et charpente (constat → question fermée « où se situe X dans Y ? ») quasi identiques au DM privé envoyé à Harvey la même heure (« *does the format of what gets published have a designated owner, or does it **sit with** whoever prepares the bulletin?* »). Le relecteur a aussi noté que l'ouverture reprenait le triptyque déjà repéré ce matin sur Rodrigo/John (aveu d'hypothèse antérieure → recadrage → question de clôture). **Réécrit sans « sit », sans l'aveu d'ouverture, question posée directement.**
+
+> Harvey Basivikidi A format mandate settles what a machine-readable bulletin looks like once someone finds it. It says nothing about whether anyone outside the institution ever learns the file exists in the first place. A fully compliant dataset on a ministry site is still invisible without something like an index pointing to it.
+>
+> Have you come across a real governance requirement that goes that far, mandating registration or indexing rather than just format?
+
+**Publication confirmée** : compteur de commentaires passé de **3 à 4**, réponse affichée sous « David Deheunynck ✓ · Vous · maintenant » directement sous le commentaire de Harvey visé. Éditeur de réponse ouvert via le bouton dédié au commentaire de Harvey (pas le composeur du post), la mention automatique « Harvey Basivikidi » confirmant la bonne cible avant frappe.
+
+---
+
 ### 👀 Veille passive — signaux et matière
 
 - ⭐⭐ **Harvey Basivikidi a envoyé une invitation à David, et elle a été acceptée ce run.** Au lendemain d'une journée où il a republié notre post de marque en le marquant « instructif », répondu à notre commentaire et l'a soutenu. **C'est lui qui fait le pas**, deux jours de suite : le signal réseau le plus fort du run. Détail et welcome DM en file dans `linkedin-contacts.md`.
