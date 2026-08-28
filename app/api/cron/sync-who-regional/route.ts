@@ -1,18 +1,22 @@
 // Endemic / high-burden disease surveillance not systematically covered by WHO DON.
-// 120 disease × country targets; 31 have a working fetcher (see below). The rest
+// 131 disease × country targets; 44 have a working fetcher (see below). The rest
 // have none and fall through to queryReliefWeb(), which is HARD-DISABLED for legal
 // reasons (reliefWebOk = false) — those entries are retained only as a record of
 // desired coverage, not as working code.
 // Fetchers:
-//   - Malaria / Measles / Polio / Yellow Fever / Leishmaniasis / Diphtheria: WHO GHO
+//   - Malaria / Measles / Yellow Fever / Leishmaniasis / Diphtheria: WHO GHO
 //     OData API (ghoapi.azureedge.net)
+//   - Polio, wild poliovirus (Pakistan/Afghanistan only): WHO GHO OData API,
+//     see fetchPolioGHO
+//   - Polio, cVDPV (Nigeria + 12 other African countries): GPEI's weekly prose
+//     bulletin, see fetchPolioGPEIThisWeek — no structured API exists for this
 //   - Dengue (all countries except Brazil, Philippines): WHO Global Dengue
 //     Surveillance API (xmart-api-public.who.int) — see fetchDengueGlobalSurveillance
 //   - Dengue/Brazil: MANUAL, see note below — never auto-fetch
 //   - Dengue/Philippines: no fetcher yet, absent from the WHO dataset above
 // Schedule: 5 8 * * *  (daily 08:05 UTC — see vercel.json; this comment
 // previously said "Tuesday and Friday", stale since at least 2026-07-19)
-// maxDuration: 300s (Vercel Pro cron; ~120 targets, many skipped early on no-fetcher)
+// maxDuration: 300s (Vercel Pro cron; ~131 targets, many skipped early on no-fetcher)
 //
 // Never overwrites rows whose source URL is from who.int/emergencies
 // (those are owned by the WHO DON daily sync).
@@ -240,6 +244,179 @@ function fetchPolioGHO(country_en: string): () => Promise<Found | null> {
         date:   `${year}-01-01`,
         source: "https://www.who.int/data/gho/data/indicators/indicator-details/GHO/number-of-reported-cases-of-poliomyelitis-by-wild-poliovirus-(wpv)",
         description: `Poliomyelitis (wild poliovirus) in ${country_en} — ${cases} confirmed WPV case${cases > 1 ? "s" : ""} in ${year}. Source: WHO Global Health Observatory / GPEI.`,
+      };
+    } catch {
+      return null;
+    }
+  };
+}
+
+// ── GPEI "Polio This Week" cVDPV fetcher — African cVDPV countries ───────────
+// Added 2026-08-28 after the DRC/Nigeria cVDPV rows were found 8 days behind
+// their own source (a WHO Incident Manager pointed it out in a LinkedIn DM
+// before any cron did) — root cause: polioeradication.org was a
+// MANUAL_WEEKLY_SOURCE (see app/api/cron/data-quality/route.ts §4f), refreshed
+// only by one-off scripts (add-cvdpv-africa-gpei-2026-08-22.mjs and friends)
+// whenever someone happened to notice. Same page data-quality already reads
+// for its coverage probe (§4j), but that check only ever compares dates — it
+// never had a write path, by design at the time. This does.
+//
+// No structured API exists for cVDPV: unlike WPV1 (GHO indicator
+// VACCINEPREVENTABLE_WILDPOLIO, fetchPolioGHO above), GPEI's cVDPV count page
+// (polioeradication.org/circulating-vaccine-derived-poliovirus-count/) is a
+// Power BI iframe embed, not scrapable without a headless browser and Power
+// BI's own API — ruled out as disproportionate for this. The weekly bulletin's
+// prose "Country updates" section is the only practical source, same one
+// data-quality already trusts (its own comment: markup changes with every
+// WordPress theme bump, but the two section anchors have been stable "for
+// years").
+//
+// IMPORTANT — this bulletin only narrates countries with NEW activity that
+// week ("more information on the countries that have reported cases and/or
+// environmental samples this week"). A tracked country absent from a given
+// week's page is not stale, it simply has nothing new — the fetcher correctly
+// returns null and the existing row is left untouched (same "skip" path as
+// any other target with no fresh data), exactly mirroring what a human
+// checking the bulletin by hand would conclude. This bounds the true lag to
+// GPEI's own publication cadence (~weekly) rather than removing it outright.
+//
+// Fails closed throughout: a changed page structure, an unrecognized country
+// block, or a case count GPEI wrote as a word this parser doesn't recognize
+// all return null rather than a partial/guessed figure — same standard as
+// parseGPEIThisWeek in data-quality/route.ts, which this deliberately does
+// NOT share code with (route-local, matching every other fetcher in this
+// file; the two parsers reading the same section for different purposes — a
+// dated coverage/lag check there, a case-count extraction here — isn't reason
+// enough to introduce a shared module).
+
+const GPEI_THIS_WEEK_URL = "https://polioeradication.org/about-polio/polio-this-week/";
+
+// Serotype scope per country, fixed at the original 2026-08-22 ingestion
+// (add-cvdpv-africa-gpei-2026-08-22.mjs) — each row was scoped to whichever
+// serotype(s) GPEI reported active for that country at the time, and stays
+// scoped to the same set here so an update never silently narrows or widens
+// what a row represents. Bulletin country names are GPEI's own spelling.
+const GPEI_CVDPV_TARGETS: Record<string, string[]> = {
+  "Nigeria":                          ["cVDPV2", "cVDPV3"],
+  "Democratic Republic of the Congo": ["cVDPV2"],
+  "Chad":                             ["cVDPV2", "cVDPV3"],
+  "Sudan":                            ["cVDPV2"],
+  "Central African Republic":         ["cVDPV2"],
+  "Somalia":                          ["cVDPV2"],
+  "South Sudan":                      ["cVDPV1"],
+  "Ethiopia":                         ["cVDPV1"],
+  "Niger":                            ["cVDPV3"],
+  "Togo":                             ["cVDPV2"],
+  "Mali":                             ["cVDPV2"],
+  "Angola":                           ["cVDPV2"],
+  "Madagascar":                       ["cVDPV1"],
+};
+
+// GPEI's "Country updates" narrative spells small numbers out ("seven", "one")
+// and large ones as digits ("34", "66") inconsistently within the same
+// sentence — this covers what the bulletin actually uses, not a general
+// English number parser. An unrecognized word returns undefined, which the
+// caller treats as a parse failure (fail closed, see above).
+const NUMBER_WORDS: Record<string, number> = {
+  zero: 0, one: 1, two: 2, three: 3, four: 4, five: 5, six: 6, seven: 7,
+  eight: 8, nine: 9, ten: 10, eleven: 11, twelve: 12, thirteen: 13,
+  fourteen: 14, fifteen: 15, sixteen: 16, seventeen: 17, eighteen: 18,
+  nineteen: 19, twenty: 20, thirty: 30, forty: 40, fifty: 50, sixty: 60,
+  seventy: 70, eighty: 80, ninety: 90,
+};
+function parseCountOrWord(raw: string): number | undefined {
+  const digits = raw.replace(/,/g, "").match(/^\d+$/);
+  if (digits) return Number(digits[0]);
+  return NUMBER_WORDS[raw.trim().toLowerCase()];
+}
+
+function htmlToLines(rawHtml: string): string[] {
+  return rawHtml
+    .replace(/<(script|style|noscript)[\s\S]*?<\/\1>/gi, " ")
+    .replace(/<\/(p|li|div|h[1-6]|tr)\s*>|<br\s*\/?>/gi, "\n")
+    .replace(/<[^>]+>/g, " ")
+    .replace(/&nbsp;|&#160;/gi, " ")
+    .replace(/&#8217;|&rsquo;/gi, "'")
+    .replace(/&amp;/gi, "&")
+    .replace(/[ \t ]+/g, " ")
+    .split("\n")
+    .map((l) => l.trim())
+    .filter(Boolean);
+}
+
+// Section runs from "Country updates as of <date>" to the site's footer
+// navigation — bounded by the first known nav line rather than a fixed
+// length, since the number of country blocks (and so the section's length)
+// changes every week. "Who we are" is the first footer item on every fetch
+// checked while building this (2026-08-28); if a redesign moves it, the
+// bound below simply isn't found and the whole parse fails closed.
+function extractGPEICountryUpdates(rawHtml: string): { asOf: string | null; lines: string[] } | null {
+  const lines = htmlToLines(rawHtml);
+  const asOfIdx = lines.findIndex((l) => /country updates as of/i.test(l));
+  if (asOfIdx < 0) return null;
+  let endIdx = lines.findIndex((l, i) => i > asOfIdx && /^who we are$/i.test(l));
+  if (endIdx < 0) endIdx = lines.length;
+
+  let asOf: string | null = null;
+  const asOfMatch = lines[asOfIdx].match(/as of\s+(\d{1,2})\s+([A-Za-z]+)\s+(\d{4})/i);
+  if (asOfMatch) {
+    const months = ["january","february","march","april","may","june","july","august","september","october","november","december"];
+    const month = months.indexOf(asOfMatch[2].toLowerCase());
+    if (month >= 0) asOf = `${asOfMatch[3]}-${String(month + 1).padStart(2, "0")}-${asOfMatch[1].padStart(2, "0")}`;
+  }
+  return { asOf, lines: lines.slice(asOfIdx + 1, endIdx) };
+}
+
+// Isolates one country's paragraph block: from its own name line (an exact
+// match against GPEI's spelling — country names in this section are never
+// prefixed/suffixed with other text) up to the next line that exactly matches
+// ANY tracked country name, or the end of the section.
+function extractCountryBlock(sectionLines: string[], countryName: string): string[] | null {
+  const nameIdx = sectionLines.findIndex((l) => l.toLowerCase() === countryName.toLowerCase());
+  if (nameIdx < 0) return null;
+  const knownNames = new Set(Object.keys(GPEI_CVDPV_TARGETS).map((n) => n.toLowerCase()));
+  let end = sectionLines.length;
+  for (let i = nameIdx + 1; i < sectionLines.length; i++) {
+    if (knownNames.has(sectionLines[i].toLowerCase()) || /^afghanistan$/i.test(sectionLines[i])) { end = i; break; }
+  }
+  return sectionLines.slice(nameIdx + 1, end);
+}
+
+function fetchPolioGPEIThisWeek(country_en: string): () => Promise<Found | null> {
+  return async () => {
+    const serotypes = GPEI_CVDPV_TARGETS[country_en];
+    if (!serotypes) return null;
+    try {
+      const res = await fetch(GPEI_THIS_WEEK_URL, {
+        headers: { "User-Agent": "HealthWatch-Global/1.0 (health surveillance; contact@healthwatch-global.com)" },
+        signal:  AbortSignal.timeout(10_000),
+      });
+      if (!res.ok) return null;
+      const section = extractGPEICountryUpdates(await res.text());
+      if (!section?.asOf) return null;
+      const block = extractCountryBlock(section.lines, country_en);
+      if (!block) return null; // country not narrated this week — nothing new, not stale
+
+      const year = new Date().getUTCFullYear();
+      let total = 0;
+      const perSerotype: string[] = [];
+      for (const sero of serotypes) {
+        const line = block.find((l) => new RegExp(`number of ${sero}\\b.*\\bin ${year}\\b`, "i").test(l));
+        if (!line) return null; // configured serotype not restated this week's block — fail closed rather than undercount
+        const m = line.match(new RegExp(`number of ${sero}\\b[^.]*\\bin ${year}\\s+is\\s+([A-Za-z0-9,]+)`, "i"));
+        const count = m ? parseCountOrWord(m[1]) : undefined;
+        if (count === undefined) return null;
+        total += count;
+        perSerotype.push(`${count} ${sero}`);
+      }
+      if (total <= 0) return null;
+
+      return {
+        cases: total,
+        deaths: 0,
+        date: section.asOf,
+        source: `${GPEI_THIS_WEEK_URL} (GPEI, Country updates as of ${section.asOf})`,
+        description: `Circulating vaccine-derived poliovirus (${serotypes.join(" and ")}) in ${country_en} — ${total} confirmed AFP (acute flaccid paralysis) case${total > 1 ? "s" : ""} reported since the start of ${year} (${perSerotype.join(", ")}), per GPEI's public weekly update (country data as of ${section.asOf}).`,
       };
     } catch {
       return null;
@@ -1237,11 +1414,28 @@ const TARGETS: Target[] = [
   { disease_en: "Rift Valley", country_en: "Uganda",                              minCases:      1 },
   { disease_en: "Rift Valley", country_en: "Tanzania",                            minCases:      1 },
 
-  // ── Polio — cVDPV2 expansion beyond endemic Pakistan/Afghanistan ─────────────
-  // Nigeria: vaccine-derived poliovirus type 2 ongoing; WHO DON dedup guard handles published DON
-  { disease_en: "Polio", country_en: "Nigeria",                                   minCases:      1 },
-  // DRC: cVDPV2 circulating; WHO DON dedup guard handles published DON
-  { disease_en: "Polio", country_en: "Democratic Republic of the Congo",          minCases:      1 },
+  // ── Polio — cVDPV expansion beyond endemic Pakistan/Afghanistan ──────────────
+  // fetchPolioGPEIThisWeek (defined above, next to fetchPolioGHO): weekly prose
+  // bulletin from GPEI, the only 13 countries this cron has ever tracked
+  // outbreak-style cVDPV for (add-cvdpv-africa-gpei-2026-08-22.mjs). Nigeria and
+  // DRC already existed as targets but with no fetcher — WHO DON dedup guard
+  // only covers a DON actually being published for these, which happens rarely;
+  // the other 11 existed only as DB rows with no cron watching them at all until
+  // today. minCases:1 kept for parity with the rest of the file even though the
+  // fetcher's own `total <= 0` check already excludes a zero result.
+  { disease_en: "Polio", country_en: "Nigeria",                                   minCases: 1, fetcher: fetchPolioGPEIThisWeek("Nigeria") },
+  { disease_en: "Polio", country_en: "Democratic Republic of the Congo",          minCases: 1, fetcher: fetchPolioGPEIThisWeek("Democratic Republic of the Congo") },
+  { disease_en: "Polio", country_en: "Chad",                                      minCases: 1, fetcher: fetchPolioGPEIThisWeek("Chad") },
+  { disease_en: "Polio", country_en: "Sudan",                                     minCases: 1, fetcher: fetchPolioGPEIThisWeek("Sudan") },
+  { disease_en: "Polio", country_en: "Central African Republic",                  minCases: 1, fetcher: fetchPolioGPEIThisWeek("Central African Republic") },
+  { disease_en: "Polio", country_en: "Somalia",                                   minCases: 1, fetcher: fetchPolioGPEIThisWeek("Somalia") },
+  { disease_en: "Polio", country_en: "South Sudan",                               minCases: 1, fetcher: fetchPolioGPEIThisWeek("South Sudan") },
+  { disease_en: "Polio", country_en: "Ethiopia",                                  minCases: 1, fetcher: fetchPolioGPEIThisWeek("Ethiopia") },
+  { disease_en: "Polio", country_en: "Niger",                                     minCases: 1, fetcher: fetchPolioGPEIThisWeek("Niger") },
+  { disease_en: "Polio", country_en: "Togo",                                      minCases: 1, fetcher: fetchPolioGPEIThisWeek("Togo") },
+  { disease_en: "Polio", country_en: "Mali",                                      minCases: 1, fetcher: fetchPolioGPEIThisWeek("Mali") },
+  { disease_en: "Polio", country_en: "Angola",                                    minCases: 1, fetcher: fetchPolioGPEIThisWeek("Angola") },
+  { disease_en: "Polio", country_en: "Madagascar",                                minCases: 1, fetcher: fetchPolioGPEIThisWeek("Madagascar") },
 
   // ── Cholera — additional high-burden countries ────────────────────────────────
   // Nigeria: frequent cholera outbreaks during rainy season; OCHA/WHO AFRO publish on ReliefWeb
