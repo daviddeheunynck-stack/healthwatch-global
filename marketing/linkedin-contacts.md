@@ -7,7 +7,9 @@
 
 **🖥️ Navigateur** : `_shared/browser-status.md` lu avant ouverture, dernière entrée **🟢 RÉTABLI (24/08 ~09h15)** → aucun bridage. Aucun incident ce run, rien à y écrire.
 
-**Quotas à la clôture, cumulés sur les sessions du jour** : commentaires **3/7 publiés** · notes de connexion **0/7** (blocage plateforme, voir entrée de 9h) · connexions **1/7** · **DM envoyés 4** (tous ce matin sur ordre explicite de David, quota froid **0/8**) · **DM rédigés et mis en file ce run : 2** · suivis **2/7-10** · invitations reçues **3 acceptées, 2 laissées**, aucune nouvelle.
+**Quotas à la clôture, cumulés sur les sessions du jour** : commentaires **3/7 publiés** · notes de connexion **0/7** (blocage plateforme, voir entrée de 9h) · connexions **1/7** · **DM envoyés 6** (4 ce matin + 2 ce run, John Omari Baso et Alain BASHIZI, tous réponses en fil actif ou premier message, quota froid **0/8**) · suivis **2/7-10** · invitations reçues **3 acceptées, 2 laissées**, aucune nouvelle.
+
+**⚠️ Mise à jour du même run, sur ordre explicite de David tapé en session (« envoie les deux ») : les deux DM ci-dessus ont été ENVOYÉS ET CONFIRMÉS.** Double-check refait deux fois à froid avant envoi (fils rouverts à la source aux deux passages, aucune nouvelle réponse dans l'un ou l'autre, ligne polio RDC revérifiée en base inchangée, demande d'Alain du 24/08 revérifiée verbatim à la source). Détail de chaque envoi dans les sections DM ci-dessous.
 
 ---
 
@@ -38,7 +40,7 @@ Comparaison croisée des deux brouillons entre eux et avec le commentaire publi�
 
 ---
 
-#### 🔒 DM 1 — **John Omari Baso** (`/in/john-omari-baso-84500b1b0/`), FR, fil actif, **SANS CTA**, hors quota froid
+#### 🔒→✅ DM 1 — **John Omari Baso** (`/in/john-omari-baso-84500b1b0/`), ENVOYÉ ET CONFIRMÉ, FR, fil actif, **SANS CTA**, hors quota froid
 
 *Epidemiologist | Polio ADVAC | PVAC Alumni | Vaccine Preventable Diseases Surveillance and Outbreak Response Specialist | One Health Researcher*, **VillageReach, Goma, Nord-Kivu (RDC)**.
 
@@ -51,7 +53,7 @@ Comparaison croisée des deux brouillons entre eux et avec le commentaire publi�
 
 **CTA : volontairement absent.** Le lien et l'essai ont été servis dans ce fil le 27/08 à 20:57, §3 interdit de resservir.
 
-**QA: mécanique FAIL (2 blockers résiduels après correction, `context.language` et `context.too-soon`, tous deux écartés sur pièce — le second est une réponse à un message entrant reçu 30 min plus tôt, pas une relance ; 561 car., 3 paragraphes, `draftLang: fr` / `threadLang: en`) | relecteur REECRIRE (4, 5, 11) au 1er passage, les 3 corrigés | faits cités: 37 cas AFP confirmés et 26 août, tous deux du registre du 28/08 (`Polio / DR Congo, kind: cases, value: 37, asOf 2026-08-26`, revérifiés en lecture directe sur la base de production) ; 32 et 18 août pris au fil ; « six provinces » et « quatre » pris à son message du 27/08 20:11 et calculés dessus | registre du 28/08 | statut: en file de validation**
+**QA: mécanique FAIL (2 blockers résiduels après correction, `context.language` et `context.too-soon`, tous deux écartés sur pièce — le second est une réponse à un message entrant reçu 30 min plus tôt, pas une relance ; 561 car., 3 paragraphes, `draftLang: fr` / `threadLang: en`) | relecteur REECRIRE (4, 5, 11) au 1er passage, les 3 corrigés | faits cités: 37 cas AFP confirmés et 26 août, tous deux du registre du 28/08 (`Polio / DR Congo, kind: cases, value: 37, asOf 2026-08-26`, revérifiés en lecture directe sur la base de production) ; 32 et 18 août pris au fil ; « six provinces » et « quatre » pris à son message du 27/08 20:11 et calculés dessus | registre du 28/08 | statut: ENVOYÉ ET CONFIRMÉ, sur ordre explicite de David (« envoie les deux »), après double-check refait deux fois à froid en session interactive (fil rouvert à la source aux deux passages, aucune nouvelle réponse, ligne polio RDC revérifiée en base inchangée)**
 
 🔴🔴 **Le relecteur a lu le code source et réfuté une affirmation fausse sur notre propre produit — c'est le 2e jour de suite que ça arrive, et cette fois le défaut est réel en production.** Le brouillon affirmait « *Chaque ligne que j'affiche porte la source d'où elle sort, et le lecteur peut l'ouvrir.* » La 1re moitié est couverte par `product-claims.manual.json`. **La 2e est fausse pour 13 lignes sur 105** — celles dont le champ `source` contient une URL suivie d'une annotation entre parenthèses, rendue en `href` brut. **Ce sont toutes les lignes polio, RD Congo comprise, c'est-à-dire précisément la ligne que John irait ouvrir en premier.** Phrase retirée ; le défaut produit est signalé dans `content-log.md`.
 
@@ -69,7 +71,7 @@ Comparaison croisée des deux brouillons entre eux et avec le commentaire publi�
 
 ---
 
-#### 🔒 DM 2 — **Alain BASHIZI** (`/in/alain-bashizi-459532169/`), FR, **premier message de David dans ce fil**, SANS LIEN
+#### 🔒→✅ DM 2 — **Alain BASHIZI** (`/in/alain-bashizi-459532169/`), ENVOYÉ ET CONFIRMÉ, FR, **premier message de David dans ce fil**, SANS LIEN
 
 *Investigative Journalist*, **Goma, Nord-Kivu (RDC)**. Connexion acceptée ce matin, c'est lui qui avait envoyé l'invitation. Fil et matériau source verbatim dans `tmp/thread-alain-28.txt`. *Langue du matériau = fr ; langue du brouillon = fr.* Vouvoiement.
 
@@ -79,7 +81,7 @@ Comparaison croisée des deux brouillons entre eux et avec le commentaire publi�
 
 **Le brouillon retenu applique la conduite par défaut de la politique commune §3 sur les sollicitations personnelles** : accuser réception honnêtement, ne rien promettre, ne prendre aucun engagement, et **demander le périmètre à l'intéressé** — ce que le carry-over du 24/08 réclamait justement. **Il ne préjuge en rien de la décision de David** : il n'accepte ni ne décline, il demande de quoi il s'agit.
 
-**QA: mécanique PASS (0 blocker, 0 warn, 388 car., 3 paragraphes, `draftLang: fr` / `threadLang: fr`) | relecteur REECRIRE (6, 7, 11, 12) au 1er passage sur la version abandonnée, les 4 corrigés par changement d'angle | faits cités: aucun chiffre | registre du 28/08 | statut: en file de validation**
+**QA: mécanique PASS (0 blocker, 0 warn, 388 car., 3 paragraphes, `draftLang: fr` / `threadLang: fr`) | relecteur REECRIRE (6, 7, 11, 12) au 1er passage sur la version abandonnée, les 4 corrigés par changement d'angle | faits cités: aucun chiffre | registre du 28/08 | statut: ENVOYÉ ET CONFIRMÉ, sur ordre explicite de David (« envoie les deux »), après double-check refait deux fois à froid en session interactive (fil rouvert à la source aux deux passages, toujours un seul message, rien de nouveau ; sa demande du 24/08 revérifiée verbatim à la source)**
 
 > Bonjour Alain, merci pour l'invitation, et nous voilà connectés.
 >
@@ -87,7 +89,7 @@ Comparaison croisée des deux brouillons entre eux et avec le commentaire publi�
 >
 > Alors expliquez-moi. Je ne promets rien d'avance, mais je lirai ce que vous m'écrirez.
 
-⚠️ **Point pour David, à trancher avec le DM** : ce brouillon rouvre volontairement le dossier mis en arbitrage le 24/08. Si David préfère laisser la demande sans réponse, **ne pas envoyer ce message** — mais alors il faut assumer que la relation vient d'être acceptée sans qu'aucune réponse ne suive, auprès d'un journaliste d'investigation qui est revenu quatre fois.
+✅ **Décision de David** : envoyé sur ordre explicite (« envoie les deux »), rouvrant le dossier « propositions communication Ebola » du 24/08 en connaissance de cause.
 
 ---
 
@@ -120,8 +122,7 @@ Comparaison croisée des deux brouillons entre eux et avec le commentaire publi�
 
 ### 🔁 CARRY-OVER POUR LE CRÉNEAU DE 17h — liste exhaustive
 
-1. 🔒 **DEUX DM EN FILE DE VALIDATION** — **John Omari Baso** (FR, fil actif, sans CTA) et **Alain BASHIZI** (FR, premier message, sans lien). **Ne partent pas sans ordre explicite de David.** Textes complets ci-dessus. **Aucun n'atteint le seuil de 7 jours** de la règle de revérification à la source. Notification push envoyée.
-2. ⚠️ **Le DM Alain rouvre le dossier « propositions communication Ebola » mis en arbitrage le 24/08** — c'est le point qui demande une décision de David, pas seulement une validation de texte.
+1. ✅ **RÉSOLU EN SESSION INTERACTIVE** — David a demandé deux double-checks successifs (« double check les dms », « double check les deux »), puis « envoie les deux ». **Les deux DM — John Omari Baso et Alain BASHIZI — sont partis et confirmés.** Détail complet et textes intégraux dans les sections DM ci-dessus. Le dossier « propositions communication Ebola » d'Alain, mis en arbitrage le 24/08, est donc rouvert.
 3. ➖ **Rodrigo Olave Hurtado** — pas de relance sans élément neuf (section 3). Ne pas reposer la même question sous un autre habillage.
 4. ❌ **World Health Organization African Region, post « fin de la flambée Ebola en Ouganda »** — **2e échec d'accès**, la page ne le charge toujours pas malgré 6 URN désormais visibles au lieu de 3. **Ne pas retenter une 3e fois avec la même méthode** : soit une nouvelle piste technique, soit abandon documenté.
 5. ⭐ **Regional Health Data Hub (#RDHUB), lancé au RC76 le 27/08** — cible de commentaire de premier plan **dès qu'un contenu substantiel paraîtra**, sous la page WHO AFRO ou sous son propre compte. Écarté ce run parce que le seul post disponible est une annonce d'événement passé et que l'angle disponible doublonnait le commentaire publié chez Harvey le matin même.
