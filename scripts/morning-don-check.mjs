@@ -183,6 +183,21 @@ if (suspicious.length) {
 // lendemain). Même garde-fou que les deux autres maps : ne bumper une date qu'après avoir
 // réellement consulté la source primaire, jamais pour faire taire une ligne.
 const FROZEN_ROW_CHECKED = {
+  // Diphterie/Australie : verifiee le 28/08 au Browser pane (page de listing de la collection).
+  // Le premier lien reste « Epidemiological update – 10 August 2026 », soit exactement l'edition
+  // deja en base : rien de nouveau, rien a ecrire. La serie est bimensuelle depuis le 31/07 (27/07
+  // -> 10/08), donc l'edition attendue vers le 24/08 a 4 jours de retard — pas encore concluant,
+  // mais a resurveiller. ⚠️ Ne pas sonder les URL de dates candidates en rafale : quatre HEAD
+  // successifs ont declenche l'anti-bot Akamai (« Access denied »), et le 403 renvoye au passage
+  // n'etait PAS le signe d'une page existante mais non publiee — les dates voisines repondaient
+  // 404 dans le meme souffle. Relire la page de listing suffit.
+  "e856b352-747b-4db0-b0d1-c9e55f6c53aa": "2026-08-28",
+  // Cholera/Tchad : verifie le 28/08. WebSearch « Tchad cholera SITREP MSPP bilan cas deces aout
+  // 2026 » : aucun SITREP n°036/2026 ni aucun national posterieur au n°035 (484/21, arrete au
+  // 16/08, deja en base). Tous les resultats se referment sur des documents deja traites — le
+  // n°035 relaye par tchadinfos le 19/08, les bilans anterieurs 239/13 et 75/8, et le SITREP 035
+  // de 2025 (collision de millesime documentee dans source-checks.md). Rien a ecrire.
+  "06541c4a-6b67-4c2c-a44e-818ba7621d76": "2026-08-28",
   // Choléra/RCA : vérifié le 16/08. Le bilan le plus récent publiable reste 720 cas / 46 décès
   // arrêté au 05/08 (Africa24, déjà cité en base). Rien de plus récent : la couverture RCA se
   // limite à la chronologie déjà connue (197 cas / 24 décès à la déclaration du 26/06, puis
@@ -796,7 +811,10 @@ const MANUAL_ROW_CHECKED = {
   // exactement l'édition déjà en base : aucune parution nouvelle, rien à écrire. La série étant
   // bimensuelle depuis le 31/07, la prochaine édition est attendue vers le 24/08 — elle n'était pas
   // encore en ligne ce matin, un jour de retard n'est pas un signal de source cassée.
-  "e856b352-747b-4db0-b0d1-c9e55f6c53aa": "2026-08-25",
+  // Revérifié le 28/08 au Browser pane : toujours « 10 August 2026 » en tête de listing, aucune
+  // parution depuis. Voir la note jumelle dans FROZEN_ROW_CHECKED (cette ligne est suivie par les
+  // deux maps — 4d parce qu'elle est à sp=10, section 5 parce qu'aucun cron ne la couvre).
+  "e856b352-747b-4db0-b0d1-c9e55f6c53aa": "2026-08-28",
   // Polio/Palestine : vérifié le 13/08. La page du comité (who.int/groups/poliovirus-ihr-emergency-
   // committee) liste 44 réunions, la plus récente étant toujours la 44e du 04/03/2026 — déjà la
   // source de la ligne. Aucune 45e déclaration publiée à ce jour (cadence ~trimestrielle, donc une
@@ -951,7 +969,7 @@ const MARBURG_CLOSURE_WATCH_FROM = "2026-08-11";
 // Le résumé de recherche l'accompagnait d'un « 20 confirmed cases and 2 deaths » qui ne correspond
 // à AUCUNE épidémie ougandaise réelle (2017 : 3 cas ; 2025 : 14 confirmés / 2 décès ; 2026 : 1 cas).
 // Toujours vérifier la date de publication de cet article avant de conclure à une clôture.
-const MARBURG_CLOSURE_LAST_CHECK = "2026-08-25"; // gov.uk (mise à jour du 20/08, relue le 25/08) : toujours le seul cas du 30/06 à Kyegegwa, listé en incident en cours, aucune clôture annoncée, aucun chiffre publié depuis. Les trois faux positifs ci-dessus se sont tous représentés le 25/08 dans les mêmes termes (article AFRO de 2017, « 20 cas / 2 décès » qui sont ceux de l'Ebola Bundibugyo, fenêtre du 27/08 qui est celle de l'Ebola) — les notes ci-dessus tiennent, ne pas les alléger.
+const MARBURG_CLOSURE_LAST_CHECK = "2026-08-28"; // gov.uk (page mise à jour le 27/08, relue le 28/08) : le cas du 30/06 à Kyegegwa est toujours listé sous « Current incidents and outbreaks » 2026, aucune déclaration de fin d'épidémie. WebSearch « Marburg Uganda outbreak declared over August 2026 » : rien non plus, la couverture s'arrête au silence des autorités ougandaises constaté par STAT le 16/07. Les trois faux positifs documentés plus haut tiennent, ne pas les alléger.
 // ⚠️ TROISIÈME FAUX POSITIF DE CLÔTURE, rencontré le 22/08 — distinct des deux ci-dessus : la guidance
 // gov.uk ET le DON615 mentionnent tous deux une « fenêtre de 42 jours » ougandaise qui « cesse le
 // 27/08 ». C'est celle de l'EBOLA Bundibugyo (dernier cas importé de RDC sorti de soins le 16/07),
@@ -1006,6 +1024,35 @@ const STALE_CRON_ROW_CHECKED = {
   // suivante à attendre : la ligne est un agrégat pluriannuel en phase `monitoring`, son
   // ancienneté est structurelle et n'est pas un signal de péremption.
   "bac370f5-bdc9-4840-98b1-5c8b0b3502f3": "2026-08-20",
+  // Dengue/Guatemala : verifie le 28/08 — CAS « chiffres differents », donc cron en panne, pas
+  // ligne a repeindre. L'API xmart OMS (ARBOV/V_DENGUE_GLOBAL_VALIDATED_PUBLIC, la source reelle
+  // derriere le libelle shinyapps) donne 15 679 cas cumules 2026 / 0 deces, derniere periode au
+  // 2026-06-28, contre 4 817 au 2026-04-12 en base. Cause trouvee : 15 679 / 4 817 = 3,25x, donc
+  // spikeGuard() (SPIKE_RATIO=3, lib/outbreak-guards.ts) refusait l'ecriture a CHAQUE run depuis
+  // le 13/07 — et les guards ordinaires ne sont volontairement pas remontes a la sante du cron
+  // (seuls ceux qui bloquent une ligne verrouillee le sont, cf. sync-who-regional/route.ts ~l.1474).
+  // La hausse n'est pas un artefact de parsing mais une revision a la hausse des donnees validees
+  // OMS (la somme des semaines jusqu'au 12/04 vaut aujourd'hui 10 270, pas 4 817) ; la serie est
+  // lisse (602->135 cas/sem, decroissance conforme au -43 % annonce par le MSPAS). Ligne alignee a
+  // la main sur ce que le cron aurait ecrit ; les increments hebdomadaires suivants (~135/sem) sont
+  // tres en deca du seuil 3x, donc le cron reprend la main de lui-meme.
+  // ⚠️ Divergence de cadrage a ne pas « corriger » : le MSPAS annonce 9 689 cas a la semaine 30,
+  // moins que les 15 679 de l'OMS — cadrages differents (l'ARBOV public des Ameriques est alimente
+  // par les cas *suspects* remontes a l'OPS). Cette ligne est possedee par le cron xmart : la
+  // rafraichir avec un chiffre MSPAS melangerait deux cadrages, meme piege que Rougeole/Etats-Unis.
+  "f24550be-7ed6-4a30-b077-3d0faed5f60e": "2026-08-28",
+  // Mpox/Ouganda et Mpox/Rwanda : verifies le 28/08 — CAS « chiffres identiques ET date d'arrete
+  // identique », donc rien a realigner, contrairement a MERS-CoV. L'API xmart (MPX/V_MPX_VALIDATED_DAILY,
+  // source reelle derriere le libelle shinyapps) renvoie son dernier enregistrement au 2026-04-05
+  // pour l'Ouganda (8 512 confirmes / 52 deces) et au 2026-04-19 pour le Rwanda (131 / 0) — soit
+  // exactement les lignes en base, dates comprises. Ce n'est donc pas la cadence du cron qui a
+  // diverge : c'est la source elle-meme qui n'a plus publie depuis avril. Le cron fait son travail.
+  // ⏳ A surveiller : le fetcher abandonne au-dela de DENGUE_STALE_CEILING_DAYS (180j), soit vers le
+  // 02/10 pour l'Ouganda et le 16/10 pour le Rwanda. Passe cette date il renverra null et les deux
+  // lignes cesseront d'etre rafraichies sans que rien ne le signale — decider d'ici la si elles
+  // doivent etre cloturees ou re-sourcees.
+  "f8ac0c0f-4607-4910-bf42-60fbce058975": "2026-08-28",
+  "7203dc63-d8b1-46fe-afeb-a5ad1541ccac": "2026-08-28",
 };
 const STALE_CRON_DAYS = 45;
 console.log(`\n=== Lignes de cron figées depuis > ${STALE_CRON_DAYS}j (date d'arrêté potentiellement périmée) ===`);
