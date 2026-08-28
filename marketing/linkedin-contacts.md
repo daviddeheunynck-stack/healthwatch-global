@@ -1,6 +1,140 @@
 > 📦 **Archive** : le détail du 24 juin au 16 juillet 2026 a été déplacé dans [linkedin-contacts-archive-avant17juillet.md](linkedin-contacts-archive-avant17juillet.md) le 23/07 pour garder ce fichier léger.
 
 
+## 📅 Session linkedin-hwg-followup-check — 28/08/2026 (13h, 1er des 2 créneaux après-midi)
+
+**Vérification double déclenchement** : aucune entrée `linkedin-hwg-followup-check` datée du 28/08 dans ce fichier ni dans `content-log.md` à l'ouverture (dernière en date : 27/08 13h). Les entrées du 28/08 en tête appartiennent à `linkedin-hwg-content-proposal` (8h35), `linkedin-hwg-monitoring` (9h) et à une **session interactive de David vers 12h36-12h45** → **premier déclenchement de cette routine aujourd'hui**.
+
+**🖥️ Navigateur** : `_shared/browser-status.md` lu avant ouverture, dernière entrée **🟢 RÉTABLI (24/08 ~09h15)** → aucun bridage. Aucun incident ce run, rien à y écrire.
+
+**Quotas à la clôture, cumulés sur les sessions du jour** : commentaires **3/7 publiés** · notes de connexion **0/7** (blocage plateforme, voir entrée de 9h) · connexions **1/7** · **DM envoyés 4** (tous ce matin sur ordre explicite de David, quota froid **0/8**) · **DM rédigés et mis en file ce run : 2** · suivis **2/7-10** · invitations reçues **3 acceptées, 2 laissées**, aucune nouvelle.
+
+---
+
+### 1️⃣ SUIVI DES ACTIONS PRÉCÉDENTES DU JOUR
+
+- ⭐ **Rodrigo Olave Hurtado** : **a répondu à 12:55**, 17 minutes après le DM envoyé à 12:38. Réponse courte (292 car.). **Traité en section 3 : aucun brouillon rédigé, et c'est une décision motivée.**
+- ⭐⭐ **John Omari Baso** : **a répondu à 12:46**, 10 minutes après le DM de 12:36, avec une piste concrète. **Brouillon en file, section 2, DM 1.**
+- ➖ **Alain BASHIZI** : son message de 09:42 (« Bonjour cher David ») restait sans réponse, carry-over explicite du run de 9h (« *une réponse courte et chaleureuse est due* »). **Brouillon en file, section 2, DM 2** — et le relecteur a rouvert un dossier que le run du matin n'avait pas relié, voir la section.
+- **Isaias Fernandes Co** : notre message de 12:40 reste le dernier du fil, **aucune réponse**. Sa proposition d'appel reste entre les mains de David, aucun engagement pris. Rien à relancer, moins de 40 minutes.
+- **Harvey Basivikidi** : notre DM de 12:42 reste le dernier du fil, aucune réponse. Sa 3e réponse publique a été traitée en session interactive (commentaire de suite publié ~12h45), **aucune réaction ni réponse de sa part depuis**.
+- **Peace Mpakaniye, Pierre PARNEIX, Dr. Kaushik Sanyal, Adam Abdullahi** : nos messages restent les derniers de ces quatre fils, **aucune réponse**, tous datent d'hier. Rien à relancer.
+- **Celestin Nzanzu Mudogo** : 👍, fil clos, inchangé.
+- ✅ **Connexions envoyées — vérification systématique (règle du 14/07)** : liste `/mynetwork/invite-connect/connections/` triée par « Ajouts récents ». Acceptées le 28/08 : **Alain BASHIZI, Alison Amoroso, Harvey Basivikidi** (les trois acceptées ce matin, c'est nous qui recevions) et une acceptation sortante sans rapport HWG. **Béatrice SERRA, invitation sortante envoyée sans note ce matin, n'a pas encore accepté.** **277 relations**, inchangé depuis 9h.
+
+**Boîte de réception parcourue par récence (20 conversations).** **Deux messages entrants nouveaux depuis le relevé de 12h45** : Rodrigo (12:55) et John (12:46). Aucun spam, aucune promotion, **aucune demande de canal hors plateforme nouvelle**, aucune donnée patient proposée, **aucune instruction adressée à l'agent (§6)**.
+
+**Notifications parcourues intégralement (9 items).** Aucune nouvelle depuis le relevé de 9h hormis un post de **Dr. Jean Kaseya** (écarté §10, voir `content-log.md`). Détail de la matière éditoriale dans `content-log.md`.
+
+---
+
+### 2️⃣ 🔒 DEUX DM EN FILE DE VALIDATION — les deux sont des réponses en fil actif, hors quota froid
+
+Rappel de la règle du 23/07, confirmée par David le 26/08 au soir : **les DM ne partent jamais en autonomie**, ils sont rédigés, passés une fois au registre de faits, une fois au contrôle mécanique et une fois au relecteur indépendant, puis mis en file. Commentaires et notes de connexion, eux, restent autonomes.
+
+Comparaison croisée des deux brouillons entre eux et avec le commentaire publié ce run (séquences de 4 mots, via `peers`) : **aucune formule partagée**.
+
+⭐ **Les deux relecteurs ont trouvé des défauts réels et non triviaux, et l'un d'eux a réfuté une affirmation fausse sur notre propre produit en lisant le code — le défaut est réel et il est en production, voir `content-log.md` §8.**
+
+---
+
+#### 🔒 DM 1 — **John Omari Baso** (`/in/john-omari-baso-84500b1b0/`), FR, fil actif, **SANS CTA**, hors quota froid
+
+*Epidemiologist | Polio ADVAC | PVAC Alumni | Vaccine Preventable Diseases Surveillance and Outbreak Response Specialist | One Health Researcher*, **VillageReach, Goma, Nord-Kivu (RDC)**.
+
+**Fil relu intégralement (§4)** : 7 messages, recopiés verbatim dans `tmp/thread-john-28b.txt`.
+
+**Son message, verbatim :**
+> (12:46) Je pense vous pouvez vous appuyez beaucoup plus sur les données du COUP (Comité Opérationnel des Urgences Polio) via la coordination GPEI RDC.
+
+⚠️ **LANGUE — français, même arbitrage qu'à 12h36.** *Langue du fil = en sur l'ensemble ; langue des 3 derniers messages du destinataire = fr ; langue du brouillon = fr.* Le contrôle rend `context.language` bloquant parce qu'il agrège tout le fil ; le relecteur a confirmé l'arbitrage sur pièce (« *les trois derniers messages du destinataire sont en français… et le dernier message de David aussi* »). Vouvoiement des deux côtés.
+
+**CTA : volontairement absent.** Le lien et l'essai ont été servis dans ce fil le 27/08 à 20:57, §3 interdit de resservir.
+
+**QA: mécanique FAIL (2 blockers résiduels après correction, `context.language` et `context.too-soon`, tous deux écartés sur pièce — le second est une réponse à un message entrant reçu 30 min plus tôt, pas une relance ; 561 car., 3 paragraphes, `draftLang: fr` / `threadLang: en`) | relecteur REECRIRE (4, 5, 11) au 1er passage, les 3 corrigés | faits cités: 37 cas AFP confirmés et 26 août, tous deux du registre du 28/08 (`Polio / DR Congo, kind: cases, value: 37, asOf 2026-08-26`, revérifiés en lecture directe sur la base de production) ; 32 et 18 août pris au fil ; « six provinces » et « quatre » pris à son message du 27/08 20:11 et calculés dessus | registre du 28/08 | statut: en file de validation**
+
+🔴🔴 **Le relecteur a lu le code source et réfuté une affirmation fausse sur notre propre produit — c'est le 2e jour de suite que ça arrive, et cette fois le défaut est réel en production.** Le brouillon affirmait « *Chaque ligne que j'affiche porte la source d'où elle sort, et le lecteur peut l'ouvrir.* » La 1re moitié est couverte par `product-claims.manual.json`. **La 2e est fausse pour 13 lignes sur 105** — celles dont le champ `source` contient une URL suivie d'une annotation entre parenthèses, rendue en `href` brut. **Ce sont toutes les lignes polio, RD Congo comprise, c'est-à-dire précisément la ligne que John irait ouvrir en premier.** Phrase retirée ; le défaut produit est signalé dans `content-log.md`.
+
+⭐ **Deux autres findings réels, corrigés.**
+- **(5) Attribution.** Le brouillon écrivait « *passer par la coordination GPEI RDC, c'est passer par des gens plutôt que par un document* ». **John n'a pas dit ça** : « via la coordination » ne tranche pas entre des personnes et une publication, et c'est exactement ce que la question finale allait demander. **Même défaut que celui déjà attrapé sur le message précédent du même fil** (conclusion posée avant la question qui la décide). Supprimé.
+- **(11) Clôture au même moule pour la 4e fois dans ce fil.** « *Si oui, l'adresse me suffit, je fais le reste* » rejouait « *Dites-moi ce qui existe réellement de votre côté, je m'aligne dessus* » du message de 12h36 : même position, même fonction, même longueur. Le message se termine désormais sur la question elle-même, sans formule d'alignement.
+
+⭐ **La correction a rendu le message plus utile, pas seulement plus exact** : la vérification en base a montré que la ligne polio RDC avait été rafraîchie ce matin à 08:49 UTC. Le message ouvre donc sur un fait vérifiable que John peut contrôler lui-même, au lieu de repartir sur une contrainte.
+
+> Un point d'abord, puisqu'il vous revient : la ligne polio RDC est passée à 37 cas AFP confirmés arrêtés au 26 août, contre 32 au 18, et elle nomme désormais Tanganyika à côté du Haut-Lomami. Sur les six provinces que vous m'aviez citées, il en manque toujours quatre.
+>
+> Sur le COUP, une contrainte de mon côté. Chaque ligne que j'affiche porte la source d'où elle sort ; un chiffre qui m'arriverait seulement par message n'aurait rien à porter, et je ne l'inscrirais pas.
+>
+> D'où ma question sur la coordination GPEI RDC que vous citez : qu'est-ce qu'elle publie, et où ?
+
+---
+
+#### 🔒 DM 2 — **Alain BASHIZI** (`/in/alain-bashizi-459532169/`), FR, **premier message de David dans ce fil**, SANS LIEN
+
+*Investigative Journalist*, **Goma, Nord-Kivu (RDC)**. Connexion acceptée ce matin, c'est lui qui avait envoyé l'invitation. Fil et matériau source verbatim dans `tmp/thread-alain-28.txt`. *Langue du matériau = fr ; langue du brouillon = fr.* Vouvoiement.
+
+🔴🔴 **Le relecteur a rouvert un dossier que ni ce run ni celui du matin n'avaient relié au message reçu, et ça change entièrement ce que ce DM doit dire.** Le run de 9h a traité « Bonjour cher David » comme une politesse sans contenu, donc sans hook honnête. **Vérifié dans les archives, c'est inexact** : le 24/08, Alain a écrit publiquement sous un commentaire de David « *David Deheunynck can we discuss please? I have some propositions about ebola communication* » ; le message a été **remonté à David sans réponse rédigée**, le carry-over disant que « *le périmètre doit venir de lui avant toute réponse* ». Il a **consulté le profil de David quatre fois**, réémis le même message une fois, puis envoyé une invitation. **Son « Bonjour cher David » n'est pas une entrée en matière, c'est la suite d'une demande vieille de quatre jours restée sans réponse.**
+
+**Le 1er brouillon a été abandonné en conséquence** (il remerciait, relevait que journalisme d'investigation et santé publique se croisent rarement, et demandait si la santé était un sujet régulier — question dont il avait **déjà donné la réponse** le 24/08). Le relecteur l'a fait échouer sur **quatre** points : **(6)** « porté la campagne Défi28Jours » lui attribuait la conduite d'une campagne de l'OMS Congo dont il a seulement publié les jours 25 à 28 ; **(7)** la question de clôture ignorait sa vraie dernière prise de parole ; **(11)** la charpente « deux métiers qui se croisent rarement + une ville » sort **six fois** dans `linkedin-contacts.md` et avait déjà été rejetée le 27/08 sur un autre profil de Goma ; **(12)** aucun apport, l'observation portait sur le réseau de David et pas sur lui.
+
+**Le brouillon retenu applique la conduite par défaut de la politique commune §3 sur les sollicitations personnelles** : accuser réception honnêtement, ne rien promettre, ne prendre aucun engagement, et **demander le périmètre à l'intéressé** — ce que le carry-over du 24/08 réclamait justement. **Il ne préjuge en rien de la décision de David** : il n'accepte ni ne décline, il demande de quoi il s'agit.
+
+**QA: mécanique PASS (0 blocker, 0 warn, 388 car., 3 paragraphes, `draftLang: fr` / `threadLang: fr`) | relecteur REECRIRE (6, 7, 11, 12) au 1er passage sur la version abandonnée, les 4 corrigés par changement d'angle | faits cités: aucun chiffre | registre du 28/08 | statut: en file de validation**
+
+> Bonjour Alain, merci pour l'invitation, et nous voilà connectés.
+>
+> Vous m'aviez écrit, sous un de mes commentaires, que vous aviez des propositions sur la communication autour d'Ebola. Je ne vous avais pas répondu, faute de savoir ce que vous aviez en tête, et c'était une mauvaise raison de se taire.
+>
+> Alors expliquez-moi. Je ne promets rien d'avance, mais je lirai ce que vous m'écrirez.
+
+⚠️ **Point pour David, à trancher avec le DM** : ce brouillon rouvre volontairement le dossier mis en arbitrage le 24/08. Si David préfère laisser la demande sans réponse, **ne pas envoyer ce message** — mais alors il faut assumer que la relation vient d'être acceptée sans qu'aucune réponse ne suive, auprès d'un journaliste d'investigation qui est revenu quatre fois.
+
+---
+
+### 3️⃣ ➖ RODRIGO OLAVE HURTADO — aucun brouillon rédigé, décision motivée
+
+**Sa réponse de 12:55, verbatim :**
+> I don't think there is one single place for that. My impression is that it would vary quite a bit by pathogen and country, with data appearing through different public health, animal health or research sources.
+>
+> So I suspect finding the right sources would need to be approached case by case.
+
+**C'est la deuxième fois qu'il donne cette réponse, en des termes quasi identiques.** Son message du 27/08 à 22:22 disait déjà : « *It probably varies a lot by pathogen and country… So I suspect that would need to be looked at case by case rather than assumed as a consistent reporting stream.* » Il a répondu à la question posée, et il l'a répondue deux fois.
+
+**Trois raisons de ne pas écrire maintenant, plutôt qu'une de forcer.** (1) Reposer une troisième variante de la même question sous un autre habillage se lirait comme ne pas l'avoir écouté. (2) Le seul autre contenu disponible serait un accusé de réception habillé, ce que la question 12 du relecteur fait échouer par construction. (3) Nous lui avons écrit il y a moins d'une heure, dans un fil qui a déjà porté quatre échanges en 24 h ; la cadence, pas le fond, deviendrait le problème.
+
+**Il n'est pas fermé et le fil n'est pas clos** — ⚠️ **carry-over pour le créneau de 17h ou pour demain** : lui écrire dès qu'un élément neuf le justifie, par exemple une source de positivité en réservoir réellement trouvée et lisible, ce qui rendrait sa réponse « au cas par cas » vérifiable sur un cas précis. **Ne pas relancer sans cet élément neuf.**
+
+---
+
+### 4️⃣ SUIVIS ET INVITATIONS
+
+**Aucun follow-back dû.** Liste « Abonnés » parcourue par récence, **état des boutons lu dans le DOM** (`aria-label`) et non au texte affiché : les **10 abonnés les plus récents sont tous déjà suivis en retour** (« cliquez pour cesser de suivre »), Alison Amoroso incluse, acceptée ce matin.
+
+- ❌ **Winston Urio** — toujours le seul abonné non suivi en retour. Écarté §10 le 27/08, **statut inchangé, non reproposé**.
+
+**Aucune découverte active de profils menée ce run**, et c'est un choix assumé : le run de 9h a épuisé deux verticales de recherche (48 profils listés, croisés par grep contre les 5 fichiers d'archive) pour n'en retenir que 2 sur 5 profils neufs ouverts, et le budget du créneau est allé à la recherche de contenu commentable, qui a produit une cible retenue. **Le quota de suivis reste à 2/7-10, non rempli, motif documenté.** Trois candidats repérés ce matin et toujours non traités restent en file : **BANZA Freddy Mutoka** (*Health Emergencies Response Officer, WHO Health Emergencies Programme*, 35 relations en commun), **Brice EDZOA ESSOMBA** (*Coordonnateur régional du PEV*), et **Dr. Hassan SANA** (1er degré jamais engagé, 12 110 abonnés, One Health) — ⚠️ rappel de sécurité : les deux premiers s'ouvrent depuis leur profil complet, **jamais depuis le bouton « Se connecter » de la sidebar**, qui envoie sans modale et vise quelqu'un d'autre.
+
+**Invitations reçues** : **aucune nouvelle**. Les 2 en attente sont celles déjà laissées ce matin — **Zachariah G. Houdari** (services financiers, hors périmètre §10) et **OLAOLUWA PHILIP** (SIG/climat, champ adjacent hors catégories). **Ni acceptées ni ignorées, statut inchangé.**
+
+---
+
+### 🔁 CARRY-OVER POUR LE CRÉNEAU DE 17h — liste exhaustive
+
+1. 🔒 **DEUX DM EN FILE DE VALIDATION** — **John Omari Baso** (FR, fil actif, sans CTA) et **Alain BASHIZI** (FR, premier message, sans lien). **Ne partent pas sans ordre explicite de David.** Textes complets ci-dessus. **Aucun n'atteint le seuil de 7 jours** de la règle de revérification à la source. Notification push envoyée.
+2. ⚠️ **Le DM Alain rouvre le dossier « propositions communication Ebola » mis en arbitrage le 24/08** — c'est le point qui demande une décision de David, pas seulement une validation de texte.
+3. ➖ **Rodrigo Olave Hurtado** — pas de relance sans élément neuf (section 3). Ne pas reposer la même question sous un autre habillage.
+4. ❌ **World Health Organization African Region, post « fin de la flambée Ebola en Ouganda »** — **2e échec d'accès**, la page ne le charge toujours pas malgré 6 URN désormais visibles au lieu de 3. **Ne pas retenter une 3e fois avec la même méthode** : soit une nouvelle piste technique, soit abandon documenté.
+5. ⭐ **Regional Health Data Hub (#RDHUB), lancé au RC76 le 27/08** — cible de commentaire de premier plan **dès qu'un contenu substantiel paraîtra**, sous la page WHO AFRO ou sous son propre compte. Écarté ce run parce que le seul post disponible est une annonce d'événement passé et que l'angle disponible doublonnait le commentaire publié chez Harvey le matin même.
+6. ⭐ **Yazdan Yazdanpanah** — blocage hebdomadaire levé depuis aujourd'hui, cible prioritaire **dès qu'il publie du fond** (son dernier post est une offre d'emploi).
+7. ⭐ **Dr. Hassan SANA** (`/in/hassansana/`, 1er degré, 12 110 abonnés) — **jamais engagé, aucun message échangé**. Excellent candidat DM ou commentaire **dès qu'il publie dans la fenêtre 48 h**.
+8. **Baraka Kweli Birindwa** (`/in/baraka-kweli-birindwa-060b3324b`, 1er degré) — profil valable, **écarté deux fois sur le contenu du post** (appel à inscription). L'angle agents de santé communautaire reste intéressant sur un autre post.
+9. ➖ **Béatrice SERRA** — invitation sortante non encore acceptée. Si elle accepte, **deux accroches sont brûlées** (l'antithèse « je vois la flambée / pas le dispositif » et « j'agrège les foyers actifs depuis les bulletins publics »), et ne pas repartir de son offre d'emploi.
+10. 🔴🔴 **Défaut produit à corriger, hors périmètre social** : 13 lignes affichées sur 105 (toutes les lignes polio, dont RD Congo et Nigeria) ont un **lien de source cassé** — champ `source` contenant une annotation après l'URL, rendue en `href` brut. Détail et emplacements dans `content-log.md` §8.
+11. **§8 à ingérer par `morning-don-check`** : la divergence Ebola/RDC (7e jour) et l'`asOf` du 28/07 sur la ligne Ouganda close le 26/08. ✅ **Le retard polio RDC signalé ce matin est clos** — ligne rafraîchie aujourd'hui à 08:49 UTC (37 cas AFP confirmés au 26/08, Tanganyika nommée).
+12. **Fichiers modifiés dans l'arbre de travail n'appartenant pas à cette routine, laissés tels quels** (`AGENTS.md`) : `marketing/qa/product-claims.manual.json` (modifié), `scripts/audit-alert-day.mjs` et `scripts/probe-alert-lock.mjs` (non suivis). Non committés, non stashés, non annulés.
+
+---
+
 ## 📅 Session linkedin-hwg-monitoring — 28/08/2026 (9h)
 
 **Vérification double déclenchement** : aucune entrée `linkedin-hwg-monitoring` datée du 28/08 dans ce fichier ni dans `content-log.md` à l'ouverture (dernière en date : 27/08 9h) → **premier déclenchement de cette routine aujourd'hui**. La seule entrée du 28/08 en tête de `content-log.md` appartient à `linkedin-hwg-content-proposal` (8h35), routine distincte.

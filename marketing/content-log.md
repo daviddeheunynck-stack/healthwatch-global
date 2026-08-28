@@ -2,6 +2,78 @@
 
 Archive de tout le contenu créé. Mise à jour à chaque session.
 
+## 📅 Session linkedin-hwg-followup-check — 28/08/2026 (13h, 1er des 2 créneaux après-midi)
+
+**Vérification double déclenchement** : aucune entrée `linkedin-hwg-followup-check` datée du 28/08 dans ce fichier ni dans `linkedin-contacts.md` à l'ouverture (dernière en date : 27/08 13h). Les entrées du 28/08 en tête appartiennent à `linkedin-hwg-content-proposal` (8h35), à `linkedin-hwg-monitoring` (9h) et à une **session interactive de David vers 12h36-12h45** (envoi de 4 DM + commentaire de suite chez Harvey Basivikidi) — runs intentionnellement distincts → **premier déclenchement de cette routine aujourd'hui**.
+
+**🖥️ Navigateur** : `_shared/browser-status.md` lu avant ouverture, dernière entrée **🟢 RÉTABLI (24/08 ~09h15)** → aucun bridage. `23c7ecdd-…` seul listé, sélectionné sans question (§7). Aucun incident. Rien à écrire dans `browser-status.md`.
+
+**Registre de faits régénéré en début de run** (`npm run qa:facts`, 11:03 UTC) : **222 faits citables sur 106 lignes affichées**, 81 lignes `is_seed` exclues, **16 faits périmés** — identique au relevé de 9h côté fraîcheur. Registre produit régénéré aussi (`npm run qa:claims`) : 106 foyers, 69 pays, 17 maladies, 31 hôtes source, 2 claims manuelles en vigueur.
+
+**Quotas déjà consommés à l'ouverture, cumulés sur les sessions du jour** (9h monitoring + session interactive) : commentaires **2/7** (Dr. Jeeven Kumar 9h, réponse en sous-fil chez Harvey Basivikidi ~12h45) · notes de connexion **0/7** (1 rédigée et abandonnée, blocage plateforme de toute façon) · connexions **1/7** · **DM envoyés 4** (tous réponses en fil actif ou bienvenue, **quota froid 0/8**) · suivis **2/7-10**.
+
+---
+
+### ✅ COMMENTAIRE 3/7 PUBLIÉ — **Oke Ikpekpe** (`/in/oke-ikpekpe-11175416b/`), EN
+
+`urn:li:activity:7499051354368331776`, post de **37 minutes** au repérage (fenêtre 48 h ✅). *Research Associate | Medical Writer | Epidemiology & Public Health*, 2e degré, profil vérifié. **Repéré en recherche active de contenu** (mots-clés « outbreak surveillance reporting », filtre « Dernières 24 heures », tri par date) — verticale distincte de celle du matin (« disease surveillance data »).
+
+**Profil totalement neuf : 0 occurrence** dans `linkedin-contacts.md`, `content-log.md`, le tracker et les deux archives d'avant le 17/07 → **aucun blocage hebdomadaire**.
+
+**§5 respecté avant rédaction** : les commentaires du post ont été lus en entier. **Les deux seuls sont de lui**, l'auteur — le lien vers l'article eClinicalMedicine, puis, une minute avant notre publication, « *Preparedness can also be difficult to judge because when it works well, there may not be much to see.* ». **Aucun commentaire tiers, nous sommes le premier commentateur extérieur**, et l'angle retenu répond frontalement à ce second commentaire au lieu de le redire.
+
+**Le post** : la préparation entre deux épidémies, à partir d'un article récent d'eClinicalMedicine sur l'Ebola en Afrique. Sa thèse : le savoir technique existe, ce qui manque est le maintien du dispositif hors urgence. Il ferme sur une question ouverte, citée verbatim : « *If preparedness repeatedly weakens once an outbreak is over, when the next outbreak becomes difficult to contain, did the response fail then or had the failure already begun between epidemics?* »
+
+**L'angle** : il dit que la préparation est invisible quand elle fonctionne. Depuis la position de HWG, qui ne lit que ce qui est publié, il existe pourtant une trace observable — **la taille du premier chiffre avec lequel une flambée est annoncée**, qui mesure ce qui s'est passé avant que quiconque regarde. Le commentaire propose donc un indicateur de substitution, puis en nomme lui-même le défaut (deux délais confondus : détection tardive et délai de publication) et lui rend la question, qu'il est seul placé à trancher.
+
+⚠️ **Garde-fous vérifiés avant rédaction** : **aucun chiffre** n'est cité, ni du registre, ni du post, ni de l'article (non lu). **Aucun pays, aucune institution, aucun financement** — le post ouvrait deux portes politiques (financement pérenne, confiance communautaire), toutes deux volontairement laissées fermées (§10).
+
+**QA: mécanique PASS (0 blocker, 0 warn, 639 car., 2 paragraphes, `draftLang: en` / `threadLang: en`, seul finding = `context.history` info « premier contact ») | relecteur REECRIRE (11) au 1er passage, corrigé — 11 PASS sur 12 | faits cités: aucun chiffre | registre du 28/08 | statut: publié le 28/08**
+
+🔴 **Le finding du relecteur était réel et le contrôle mécanique ne pouvait pas le voir.** Le 2e paragraphe ouvrait sur « *What I cannot separate from the outside is how much of that number is late detection and how much is…* ». Le relecteur a établi que **la locution « from the outside » compte 36 occurrences dans les deux archives actives** et que le moule « ce que je ne peux pas trancher de l'extérieur, c'est A ou B » y sort **six fois** (`linkedin-contacts.md` 4252, 7097, 9056, 9911, 10998, 12201) — dont deux cas, 11260 et 12201, qui portent **le même contenu** et pas seulement la même forme. Il a aussi retrouvé que **le dispositif avait déjà écarté cette locution deux fois par écrit** (`content-log.md` 1229 et 1715, « *34 occurrences dans les archives, écartée* »). Le contrôle mécanique l'a manquée parce que sa fenêtre de 5 mots ne mord pas sur « what I cannot separate from ». **Réécrit** : le défaut de l'indicateur est désormais énoncé comme une propriété de l'indicateur, pas comme une limite du locuteur.
+
+> Your closing question may already have a partial answer sitting in what institutions publish. The first figure an outbreak is announced with is not only a count, it is a measure of how much had happened before anyone was looking. A declaration opening on a handful of cases and one opening on several dozen describe very different months behind them.
+>
+> Two delays are folded into that number, though: the time before anyone looked, and the time between confirmation and publication. Would you treat the size of the first reported cluster as usable evidence about the inter-epidemic period, or do those two confound it past the point of use?
+
+**Publication confirmée** : identité de la cible vérifiée et clic émis **dans le même appel JS**, avec comparaison caractère pour caractère du contenu de l'éditeur au brouillon validé avant le clic (639 caractères, 2 paragraphes, 0 tiret cadratin) ; le bouton « Commenter » a été atteint en remontant les ancêtres de l'éditeur rempli, ce qui garantit qu'il appartient au même formulaire. Après envoi : éditeur vidé, **une seule occurrence** du texte dans la page, affiché sous « David Deheunynck » avec l'horodatage « maintenant ». **Prochain commentaire possible sur ce profil à partir du 04/09.**
+
+---
+
+### ❌ CIBLES DE COMMENTAIRE EXAMINÉES ET ÉCARTÉES
+
+1. ⭐ **World Health Organization African Region** (page) — **carry-over du matin retesté, et le résultat a changé.** La page charge maintenant **6 URN** au lieu de 3 (scroll par paliers avec `computer scroll` puis attente, méthode §7) : `7498832847529476098`, `7498726948903256064`, `7498727045875744768`, `7498381479652081664`, `7498321627462512641`, `7498289124177547264`. **Le post sur la fin de la flambée Ebola en Ouganda n'y est toujours pas** — c'est le 2e échec d'accès sur ce post précis, sans nouvelle hypothèse à tester. Les URN neufs sont : la version française de la tribune Al Jazeera de Prof. Mohamed Janabi (terrain politique §10, même écart que ce matin), l'Africa Health Workforce Agenda 2026-2035 (annonce de politique régionale, §10) et l'annonce du briefing Ebola du 26/08 (annonce de direct, sans contenu). **Blocage hebdomadaire confirmé purgé** (dernier commentaire sous cette page le **16/08**, tracker ligne 357, prochain possible depuis le 23/08) : c'est bien la matière qui manque, pas le droit de commenter.
+2. **World Health Organization African Region — post « SAVE THE DATE : lancement du Regional Health Data Hub (#RDHUB) »** (`urn:li:activity:7498381479652081664`, 1 j, dans la fenêtre, **0 commentaire**). **Écarté sur arbitrage éditorial**, et c'était la décision la moins évidente du run. Pour : le sujet est exactement celui de HWG (« *A new platform turning health data into action for Africa* », « *Africa's Health Intelligence Centre* »), la page est libre, et nous aurions été premier commentateur sur un compte à 73 850 abonnés. Contre, et c'est ce qui l'emporte : **c'est une annonce d'événement déjà passé** (27 août, Addis-Abeba, pendant le RC76) sans contenu analytique à quoi répondre, et le seul angle disponible depuis notre position — un jeu de données conforme reste invisible sans mécanisme d'indexation — **est mot pour mot celui publié quelques heures plus tôt le même jour** dans la réponse à Harvey Basivikidi (session interactive ~12h45). Le republier sous une autre signature le jour même aurait été le gabarit que le dispositif cherche précisément à éviter. **À retenter quand le RDHUB publiera quelque chose de substantiel** : c'est une cible de premier plan, pas un profil écarté.
+3. **Dr. Jean Kaseya** (Directeur général d'Africa CDC) — post signalé en notifications, **rencontre avec le Senior Director for Africa de la National Endowment for Democracy**, « *a valuable exchange on Africa's evolving priorities* ». **Écarté §10, terrain politique et diplomatique**, écart identique à celui rendu le 27/08 sur la tribune Devex et ce matin sur la clôture du RC76.
+4. **Feydeau BOTON** (1er degré) — `urn:li:activity:7498771664751677441`, republication sur le pilotage de QGIS en langage naturel. **Écarté ce matin pour le même motif, non rouvert** : sujet outillage/IA, aucun angle épidémiologique.
+5. **Aiman Ali** (*Inside Sales Specialist, LGC Standards*) — post d'1 h sur une flambée à salmonelles au Royaume-Uni liée à des œufs importés, avec comparaison internationale. Croisé dans la même recherche que le candidat retenu. **Écarté** : profil commercial en secteur analytique (« *Let's Connect!* », hashtag maison `#ChemistryConnect`), post de contenu marketing plutôt que d'analyse. Hors barre de pertinence §10. **Ne pas reproposer sans élément neuf.**
+
+---
+
+### 🗒️ Veille — données épidémiologiques (§8)
+
+**Aucune écriture en base faite** (une routine sociale signale, elle n'écrit pas). Deux lectures faites : le registre de faits régénéré, et une **lecture directe de la ligne polio RDC sur la base de production** pour vérifier une affirmation d'un brouillon.
+
+- ⭐⭐ **POLIO / RD CONGO — le retard signalé ce matin est comblé, et pas par nous.** La routine de 9h avait constaté que la ligne portait `asOf 2026-08-18` alors que le GPEI avait republié avec des données arrêtées au 26/08 ; le DM de 12h36 à John Omari Baso l'a reconnu par écrit. **Vérification en base ce run : la ligne a été rafraîchie aujourd'hui à 08:49 UTC** et porte désormais `date = 2026-08-26`, **37 cas AFP confirmés** (contre 32 au 18/08), `source_priority 5`, `updated_at` du jour. Sa description nomme **Haut-Lomami et Tanganyika**, « *the first time this line has named a second province beyond Haut-Lomami* ». **Rien à faire côté `morning-don-check` sur ce point, il est traité** — le signal prioritaire ouvert ce matin est clos.
+  - ⚠️ **Reste ouvert** : John avait cité **six** provinces (Haut-Lomami, Tanganyika, Maniema, Kasaï, Sud-Kivu, Kinshasa) et **42 cas positifs dont 32 cVDPV2** en semaine 32. La ligne publique en nomme deux et porte 37. **L'écart entre le bulletin national et le point public reste structurel**, comme établi le 27/08 ; il n'est pas corrigeable depuis le registre public.
+- 🔴🔴 **DÉFAUT PRODUIT TROUVÉ EN QA, À CORRIGER — 13 lignes affichées sur 105 ont un lien de source cassé.** Le relecteur du DM John a vérifié dans le code une affirmation du brouillon (« *le lecteur peut l'ouvrir* ») et l'a réfutée. **Vérifié indépendamment ici et confirmé** : le champ `source` de **13 lignes** ne contient pas une URL nue mais une URL **suivie d'une annotation entre parenthèses**, par exemple `https://polioeradication.org/about-polio/polio-this-week/ (GPEI, Country updates as of 26 August 2026)`. Or le rendu est un `href={outbreak.source}` brut (`components/OutbreakTable.tsx` lignes 1206/1217/1228 et `app/[locale]/outbreak/[id]/page.tsx:563`), sans extraction d'URL : le lien produit est donc `…/polio-this-week/%20(GPEI,%20Country%20updates%20as%20of%2026%20August%202026)` et **ne mène pas à la source**. **Les 13 lignes concernées sont toutes les lignes polio**, dont **RD Congo et Nigeria** (les deux plus consultées du dossier en cours). **La phrase du brouillon a été retirée** ; le défaut, lui, reste en production. **Correctif à faire côté produit, hors périmètre d'une routine sociale** : soit nettoyer le champ à l'écriture, soit extraire l'URL au rendu.
+- **Fin de la flambée Ebola en Ouganda** : point ouvert ce matin (`asOf` au 28/07 alors que la déclaration officielle est du 26/08) **inchangé, non rouvert ici** — la ligne n'est ni fausse ni régressive, l'arbitrage revient à `morning-don-check`.
+- **Ebola / RD Congo, divergence interne du registre** : non revérifiée ce run, aucun élément neuf. Priorité inchangée pour `morning-don-check`, 7e jour.
+
+---
+
+### 👀 Veille passive — retombées et signaux
+
+- **Commentaire Dr. Jeeven Kumar (9h)** : toujours en ligne, **seul commentaire du post**, **0 réaction et 0 réponse** à ce relevé. Le post lui-même est passé de **0 à 3 réactions** en 4 h.
+- **Réponse en sous-fil chez Harvey Basivikidi (session interactive ~12h45)** : en ligne, **0 réaction, 1 impression, aucune réponse de Harvey** au relevé (19 min après publication). Les deux autres commentaires arrivés depuis sous ce post sont des félicitations (Edith Laure Manuella DJIENANG, Abdoul-Fataou MAIGA), sans rapport avec notre fil.
+- **Commentaire Amanda McClelland (27/08 9h)** : toujours en ligne, affiché en tête sous « Les plus pertinents ». Le post est passé de **33 à 41 réactions** et de 2 à **3 commentaires** depuis hier matin. **Elle n'a répondu à personne**, situation inchangée depuis 3 relevés.
+- **Aucune invitation reçue nouvelle** : les 2 en attente sont celles déjà laissées ce matin (Zachariah G. Houdari, services financiers ; OLAOLUWA PHILIP, SIG/climat), **statut inchangé, ni acceptées ni ignorées**.
+- **Connexion Béatrice SERRA** (envoyée sans note ce matin) : **pas encore acceptée**, absente de la liste des relations triée par ajouts récents.
+- **Matière notée pour de futurs posts** : l'article eClinicalMedicine sur le maintien de la préparation Ebola entre épidémies (référence donnée par Oke Ikpekpe lui-même en commentaire de son propre post) ; le **lancement du Regional Health Data Hub d'Africa's Health Intelligence Centre** au RC76 le 27/08, plateforme régionale de données de santé — cible de commentaire de premier plan dès qu'elle produira du contenu.
+- **Statistiques du compte à ce relevé** : **339 vues de profil** (338 ce matin), **394 impressions** sur le post de marque suivi, **277 relations** (identique à ce matin).
+
+---
+
 ## 📅 Session linkedin-hwg-content-proposal — 28/08/2026 (vendredi MWF, 8h35) — 🟢 **PRÊT — en attente de publication**
 
 **Vérification double déclenchement** : aucune entrée `linkedin-hwg-content-proposal` datée du 28/08 dans ce fichier à l'ouverture → premier déclenchement du jour.
