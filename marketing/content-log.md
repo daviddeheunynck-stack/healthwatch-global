@@ -2,6 +2,91 @@
 
 Archive de tout le contenu créé. Mise à jour à chaque session.
 
+## 📅 Session linkedin-hwg-content-proposal — 28/08/2026 (vendredi MWF, 8h35) — 🟢 **PRÊT — en attente de publication**
+
+**Vérification double déclenchement** : aucune entrée `linkedin-hwg-content-proposal` datée du 28/08 dans ce fichier à l'ouverture → premier déclenchement du jour.
+
+**Étape 0 — aucun brouillon en attente.** Le dernier post de marque (Mpox/Ouganda, « deux horloges ») est **PUBLIÉ ✅ le 26/08**. Le 27/08 est hors jours MWF (jeudi ; les trois entrées de cette date sont des sessions `*-monitoring` / `*-followup-check`). Rédaction entièrement neuve.
+
+**Régime de publication** : celui de `CLAUDE.md`, inchangé. Le post est **proposé, pas publié** — aucun navigateur ouvert ce run. Chaîne QA de `hwg-social-policy.md` §5 appliquée (registres, contrôle mécanique, relecteur indépendant), conformément au rattachement du 25/08 qui ne reprend que la QA.
+
+**Registres régénérés en début de run** (aucune requête Supabase manuelle) :
+- `npm run qa:facts` → **225 faits citables sur 106 lignes affichées**, 81 lignes `is_seed` exclues, **16 faits périmés**.
+- `npm run qa:claims` → 805 chaînes de copie publique sur 5 locales, 19 formats de prix, couverture citable 106 foyers / 69 pays / 17 maladies / **31 hôtes source**, **2 claims manuelles** (voir §3 ci-dessous).
+
+---
+
+### 1️⃣ ANGLE
+
+**Une colonne unique, deux natures de compteur.** La ligne Dengue/Taïwan porte un compteur d'année civile qui repart de zéro ; une ligne Ebola/RD Congo porte un cumul de flambée qui ne repart jamais. Les deux s'affichent sous le même intitulé « cases ». Et la borne de départ du comptage n'existe comme champ nulle part : la ligne HWG porte une seule date, l'arrêté.
+
+**Vérification en source primaire avant rédaction** (règle du SKILL), page NIDSS du Taiwan CDC (`https://nidss.cdc.gov.tw/nndss/disease?id=061`), relevée le 28/08 :
+- « 2026年 (今年累計數): 146 » — la ligne HWG (146 cas, arrêté 2026-08-28) est **exacte au chiffre et à la date près**, et la page était mise à jour le jour même à 07:34.
+- « 2025年(去年總數): 293 » — total de l'an dernier tenu à part.
+- « 本次查詢的日期範圍為2024/12/29至2026/08/29 » — la plage affichée démarre un **29 décembre**, pas un 1er janvier.
+
+### 2️⃣ CE QUE LE RELECTEUR A ATTRAPÉ — et il avait raison sur les quatre points
+
+Une passe de contrôle mécanique, une passe de relecteur, conformément au régime du 26/08 (plus de boucle, plus de verdict qui tranche seul). Le relecteur a rendu `REECRIRE 5, 6, 8, 11`, **et les quatre étaient réels** :
+
+- **Q5 (attribution) et Q6 (raisonnement) — deux vraies erreurs de fait dans le 1er brouillon.** Il écrivait « *So 146 means since the first of January* » et « *Taiwan states its window plainly* ». Or Taïwan n'imprime nulle part un 1er janvier : elle imprime 今年 / 去年, et la seule borne datée de sa page commence au **2024/12/29**. Le bornage est **hebdomadaire**, pas calendaire. Le brouillon attribuait donc à la source une convention qui est celle du code HWG (`isYearRollover`, provenance lecture de code), pas celle du chiffre taïwanais. **Corrigé** : le post ne dit plus quand l'année commence, il montre la plage telle qu'elle est affichée et en tire que la borne n'est pas celle qu'on suppose.
+- **Q11 (gabarit) — répétition de charpente sur trois posts en huit jours.** Verdict cité : la structure « *l'objet affiché est en réalité double, nous n'en publions qu'une moitié, la moitié manquante est celle qui compte, et c'est notre faute* » est celle du 21/08 (provenance vs fraîcheur) **et** du 26/08 (deux horloges), appliquée chaque fois à la même colonne. C'est exactement [[feedback_anti_template_check_structure_not_just_wording]], invisible au n-gramme qui ne compare que des chaînes. **Corrigé** : le post est refondé sur le seul élément que le relecteur reconnaît comme neuf, la **cohabitation de deux types de compteurs dans une colonne unique**, et l'ouverture ne part plus de la date.
+- **Q8 (langue et registre) — objection de canal, pas de contenu.** Le 1er brouillon ouvrait sur « 今年累計數. » seul en première ligne : LinkedIn tronque à « voir plus », donc l'accroche visible se réduisait à quatre idéogrammes illisibles pour l'essentiel du lectorat. **Corrigé** : la citation passe en milieu de 2e paragraphe, immédiatement glosée.
+
+**Points passés en `PASS` et conservés tels quels** : chiffres (Q1), fraîcheur (Q2), statut (Q3), affirmations produit (Q4, toutes couvertes par la claim manuelle ajoutée ce run), traduction (Q7, 今年累計數 = « cumulative, this year »), terrain politique (Q9, aucun jugement sur un système national, la charge est portée par HWG), CTA (Q10, lien nu sans pitch).
+
+**Réserve du relecteur non corrigeable, remontée telle quelle** : sur Q12 (apport) il met `PASS` mais « étroit » — l'information réellement neuve pour un épidémiologiste tient dans un paragraphe, le reste est du contexte. Assumé : c'est un post de marque, pas une note technique.
+
+### 3️⃣ AJOUT AU REGISTRE PRODUIT (fait ce run)
+
+Le post affirme des choses sur HWG lui-même. Une claim manuelle a donc été ajoutée à `marketing/qa/product-claims.manual.json` avant rédaction, provenance **lecture de code** et non déclaration : rendu de la colonne date dans `components/OutbreakTable.tsx` (une seule date par ligne, aucun champ de début de période), doc de `isYearRollover` dans `lib/outbreak-guards.ts`, et composition explicite de ce garde dans `sync-taiwan-cdc` et `sync-malaysia-dengue`. Fichier QA non commité par cette routine.
+
+### 4️⃣ CONTRÔLE MÉCANIQUE — verdict brut et faux positifs
+
+`FAIL`, 1 blocker, 1315 caractères, 9 paragraphes, `draftLang: en` / `threadLang: en`. **Le blocker unique est `form.non-ascii`**, déclenché par les cinq idéogrammes 今 年 累 計 數 — c'est-à-dire par la **citation verbatim de la source**, qui est la pièce la plus vérifiable du post. Le contrôle vise le mojibake et les guillemets typographiques, pas une citation délibérée : **faux positif assumé**, conformément au régime du 26/08 où le verdict est une note jointe et non un couperet.
+
+Autres remontées, toutes non bloquantes : 4 × `claims.product-number` sur « 12 », « 29 », « 08 » — le script lit des fragments des dates `2024/12/29` et `2026/08/29` comme des chiffres produit (29 € du plan Pro, etc.), faux positif de segmentation. 1 × `facts.value-no-context-match` sur le 146 du 7e paragraphe, dont la phrase ne renomme ni la maladie ni le pays (nommés deux paragraphes plus haut).
+
+### 5️⃣ TEXTE — statut : **PRÊT — en attente de publication**
+
+Validation explicite de David requise avant qu'il publie lui-même (règle de non-publication autonome du contenu de marque LinkedIn, [[feedback_no_self_publishing]]). David non présent au moment du run (8h35).
+
+Faits cités : Dengue/Taïwan `cases=146, asOf=2026-08-28, ageDays=0`, plus les trois libellés verbatim de la page NIDSS. Aucun chiffre Ebola cité (voir §6, la ligne est en écart avec sa source). Aucun tiret cadratin.
+
+> Two lines on our dashboard sit in the same column, headed cases, and they are not counting the same kind of thing.
+>
+> Dengue in Taiwan reads 146, dated 2026-08-28. Taiwan's notifiable disease system prints that figure under 今年累計數, this year's cumulative, with last year's total kept beside it as a separate number. It is an annual counter. It restarts.
+>
+> An Ebola line for DR Congo is the other kind. It carries a total for one declared outbreak, running from the day that outbreak began, and it never restarts.
+>
+> Side by side they read as the same measurement. One is a year to date. The other is the entire life of an event.
+>
+> Our line does not say which it is. It has one date on it, the cutoff, and no field for where the count begins.
+>
+> The beginning is not obvious even when you go looking for it. Taiwan's page shows the range it is querying: 2024/12/29 to 2026/08/29. Not a first of January. That range is bounded by epidemiological weeks, not by calendar dates.
+>
+> So 146 is a year to date whose year does not start when you would assume, counted up to 2026-08-28. We print the second of those two dates and not the first.
+>
+> None of that makes the figure wrong. It makes it not comparable with the line above it, which is a quieter problem and a harder one to notice.
+>
+> https://healthwatch-global.com
+
+### 6️⃣ §8 — DONNÉES ET ANOMALIES REPÉRÉES, AUCUNE ÉCRITURE EN BASE
+
+Aucune écriture tentée depuis cette routine (`AGENTS.md` : le code et les données applicatives n'appartiennent à aucune routine documentaire).
+
+1. 🔴 **Ebola / RD Congo — le doublon signalé le 26/08 est toujours là, inchangé.** Deux lignes actives pour le même couple maladie × pays : `6a5e9fc9-…` à **4 120 cas / 1 887 décès** au **07/08** (source africacdc.org, 16 j sans mise à jour, marquée périmée) et `bd1c3a46-…` à **5 656 / 2 715** au **24/08** (source ECDC). Le registre les compte deux fois. Signalé le 26/08, non traité depuis.
+2. 🔴 **Ebola / RD Congo — la ligne fraîche est déjà dépassée par sa propre source.** La page ECDC citée par `bd1c3a46-…` publie ce jour « *a total of 5 713 confirmed cases, including 2 744 related deaths* » **au 25/08**, contre 5 656 / 2 715 au 24/08 en base. Écart de 57 cas et 29 décès, un jour de décalage. C'est la raison pour laquelle **aucun chiffre Ebola n'a été cité dans le post**.
+3. 🟠 **Polio — les 13 lignes sont en retard d'une semaine sur le GPEI, et les chiffres divergent.** Les 13 lignes polio portent toutes le même arrêté (**18/08**) et la même source (compilation GPEI). La page « Polio this week » affiche aujourd'hui « *Country updates as of 26 August 2026* », avec notamment la RD Congo à 37 cVDPV2 et le Nigeria à 34 cVDPV2 + 9 cVDPV3, contre 32 et 41 en base. À rapprocher de la sonde de couverture GPEI du cron `data-quality`.
+4. 🟠 **Grippe aviaire / États-Unis — trois lignes actives simultanées**, toutes intitulées « United States » et « cases », sourcées sur trois ancres de la même page USDA (`#texas` 36 au 14/08, `#idaho` 176 au 24/07, `#utah` 29 au 31/07). Un lecteur y voit trois foyers nationaux distincts. Même famille de problème que le post du 10/08 sur le mot « cases ».
+5. 🟠 **`pricing.faq5_a` toujours non tranchée** : la FAQ affirme « *All outbreak data is sourced directly from official public health agencies: WHO, PAHO, and ECDC* » alors que la couverture réelle compte **31 hôtes source** (contre 29 le 26/08), dont des médias. Non activée par ce post, qui ne parle pas de provenance — mais tout post de marque sur les sources reste bloqué tant que ce n'est pas arbitré.
+
+### 7️⃣ ARBRE DE TRAVAIL — fichiers modifiés non touchés par cette routine
+
+Conformément à `AGENTS.md`, cette routine ne stage que `marketing/content-log.md`. Laissés tels quels et signalés : non suivis, `scripts/audit-alert-day.mjs` et `scripts/probe-alert-lock.mjs`. Les fichiers `marketing/qa/*.json` et `product-claims.manual.json` ont été régénérés/modifiés par ce run mais appartiennent au dispositif QA, pas à cette routine, et restent non commités. Branche courante vérifiée avant écriture : **master**.
+
+---
+
 ## 📅 Session linkedin-hwg-followup-check-2 — 27/08/2026 (17h, 2e des 2 créneaux après-midi)
 
 **Vérification double déclenchement** : aucune entrée `linkedin-hwg-followup-check-2` datée du 27/08 dans ce fichier ni dans `linkedin-contacts.md` à l'ouverture (dernière en date : 26/08 17h). Les entrées du 27/08 en tête appartiennent à `linkedin-hwg-monitoring` (9h), `linkedin-hwg-followup-check` (13h) et à une **session interactive de David vers 15h10** — runs intentionnellement distincts → **premier déclenchement de cette routine aujourd'hui**.
