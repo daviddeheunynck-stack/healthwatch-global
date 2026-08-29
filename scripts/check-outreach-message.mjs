@@ -345,9 +345,17 @@ if (!threadLang && !ctx.threadFile) {
   add("review", "context.no-thread", "Aucun fil fourni : langue, registre et répétitions n'ont pas pu être contrôlés contre l'historique.", null);
 }
 
+// \b est une frontière ASCII en JS : une lettre accentuée compte comme un
+// non-mot, donc "êtes"/"hôtes" contenaient une fausse frontière au milieu du
+// mot et "tes" y matchait à tort (ex. "vous êtes" comptait comme tutoiement).
+// Lookarounds Unicode à la place, testés sur hôtes/êtes/arrêtes/tu/ton/t'as.
+const WORD_BOUNDARY = "(?<![\\p{L}\\p{M}'])(%s)(?![\\p{L}\\p{M}])";
+const TU_RE = new RegExp(WORD_BOUNDARY.replace("%s", "tu|ton|ta|tes|toi|t'as"), "giu");
+const VOUS_RE = new RegExp(WORD_BOUNDARY.replace("%s", "vous|votre|vos"), "giu");
+
 const register = (t) => {
-  const tu = (t.match(/\b(tu|ton|ta|tes|toi|t'as)\b/gi) ?? []).length;
-  const vous = (t.match(/\b(vous|votre|vos)\b/gi) ?? []).length;
+  const tu = (t.match(TU_RE) ?? []).length;
+  const vous = (t.match(VOUS_RE) ?? []).length;
   return tu === vous ? null : tu > vous ? "tutoiement" : "vouvoiement";
 };
 if (draftLang === "fr" && thread) {

@@ -12,7 +12,7 @@ import { getEpiWeek } from "@/lib/epi-week";
 
 type SortKey = "risk" | "cases" | "deaths" | "cfr" | "date";
 type SortDir = "asc" | "desc";
-import { getLocalizedDisease, getLocalizedCountry, isNewOutbreak, staleOutbreakDays, freshOutbreakHours, isSourceConfirmed, lastVerifiedIso, sourceStatus, sourceName, computeRiskScore, hasRealAdmin1 } from "@/lib/outbreaks";
+import { getLocalizedDisease, getLocalizedCountry, isNewOutbreak, staleOutbreakDays, freshOutbreakHours, isSourceConfirmed, lastVerifiedIso, sourceStatus, sourceName, publishableSourceName, publishableSourceUrl, computeRiskScore, hasRealAdmin1 } from "@/lib/outbreaks";
 import { diseaseToSlug, matchDisease } from "@/lib/disease-data";
 import { countryToSlug } from "@/lib/country-utils";
 import type { Outbreak } from "@/lib/outbreaks";
@@ -449,7 +449,10 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
       esc(o.risk_level),
       esc(o.date),
       esc({ don: "WHO DON", official: "Official", press: "Press", unverified: "Unverified" }[sourceStatus(o)]),
-      esc(o.source),
+      // `source_tier` reste renseigné, `source_url` se vide : le tier dit ce que
+      // vaut la ligne, l'URL cite un éditeur — et un éditeur interdit ne se cite
+      // pas, pas même dans un CSV que le client réexporte ailleurs.
+      esc(publishableSourceUrl(o.source) ?? ""),
       esc(o.description),
     ]);
     const csv  = [headers.join(","), ...rows.map((r) => r.join(","))].join("\n");
@@ -473,8 +476,12 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
       const tag = countryTags[o.country_en ?? ""] ? ` <span class="tag">${countryTags[o.country_en ?? ""]}</span>` : "";
       const riskCls = o.risk_level === "high" ? "#f87171" : o.risk_level === "medium" ? "#fbbf24" : "#4ade80";
       const riskLbl = PDF_RISK[o.risk_level]?.[locale] ?? o.risk_level.toUpperCase();
-      const srcLabel = o.source ? sourceName(o.source) : "—";
-      const srcCell  = o.source ? `<a href="${o.source}" style="color:#2563eb;text-decoration:none">${srcLabel} ↗</a>` : srcLabel;
+      // Ni le nom ni le lien pour un éditeur interdit : la cellule retombe sur le
+      // même tiret qu'une ligne sans source (voir publishableSource* dans
+      // lib/source-trust.ts).
+      const srcUrl   = publishableSourceUrl(o.source);
+      const srcLabel = publishableSourceName(o.source) ?? "—";
+      const srcCell  = srcUrl ? `<a href="${srcUrl}" style="color:#2563eb;text-decoration:none">${srcLabel} ↗</a>` : srcLabel;
       return `<tr>
         <td>${o.disease_en ?? o.disease}</td>
         <td>${o.country_en ?? o.country}${tag}</td>
@@ -588,8 +595,12 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
       const tag = countryTags[o.country_en ?? ""] ? ` <span class="tag">${countryTags[o.country_en ?? ""]}</span>` : "";
       const riskCls = o.risk_level === "high" ? "#f87171" : o.risk_level === "medium" ? "#fbbf24" : "#4ade80";
       const riskLbl = PDF_RISK[o.risk_level]?.[locale] ?? o.risk_level.toUpperCase();
-      const srcLabel = o.source ? sourceName(o.source) : "—";
-      const srcCell  = o.source ? `<a href="${o.source}" style="color:#2563eb;text-decoration:none">${srcLabel} ↗</a>` : srcLabel;
+      // Ni le nom ni le lien pour un éditeur interdit : la cellule retombe sur le
+      // même tiret qu'une ligne sans source (voir publishableSource* dans
+      // lib/source-trust.ts).
+      const srcUrl   = publishableSourceUrl(o.source);
+      const srcLabel = publishableSourceName(o.source) ?? "—";
+      const srcCell  = srcUrl ? `<a href="${srcUrl}" style="color:#2563eb;text-decoration:none">${srcLabel} ↗</a>` : srcLabel;
       return `<tr>
         <td>${o.disease_en ?? o.disease}</td>
         <td>${o.country_en ?? o.country}${tag}</td>

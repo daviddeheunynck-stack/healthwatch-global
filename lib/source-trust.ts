@@ -325,3 +325,43 @@ export function sourceName(source: string | null | undefined): string {
     return "Official"; // plain-text source, e.g. "OMS" — no host to show
   }
 }
+
+// ── Attribution publiable ────────────────────────────────────────────────────
+// Deux vues de la même colonne `source`, délibérément séparées :
+//
+//   sourceName()             — nomme l'éditeur, TOUJOURS. C'est ce dont l'audit
+//                              quotidien a besoin : data-quality l'appelle
+//                              précisément pour NOMMER la ligne fautive dans le
+//                              mail interne ("… , ReliefWeb) — https://…").
+//   publishableSource*()     — ce qu'on a le droit d'imprimer sur une surface
+//                              client. `null` pour un éditeur interdit.
+//
+// Sans cette séparation, la seule façon d'empêcher la fuite serait de faire
+// mentir sourceName(), ce qui aveuglerait l'audit qui doit dénoncer la ligne.
+//
+// Pourquoi ces accesseurs plutôt que le tier : jusqu'au 2026-08-29, le seul
+// garde en place était `sourceStatus(o) !== "unverified"` sur le lien de la page
+// foyer. Un éditeur interdit retombe bien en 'unverified' (voir sourceStatusOf),
+// donc ce lien-là disparaissait — mais par ricochet d'un test qui parle de
+// CONFIANCE, pas de DROIT. Les six surfaces qui ne consultent pas le tier
+// (phrase "bulletin … du …", citation académique, pied de page du rapport Pro,
+// exports CSV/PDF/HTML, modèle de notification RSI) publiaient l'attribution,
+// URL cliquable comprise pour quatre d'entre elles. Vérifié en ligne le
+// 2026-08-29 sur /fr/outbreak/fe6c7cdc-… (Dengue/Kiribati) : "bulletin ReliefWeb
+// du 2026-06-24" et "Data source: ReliefWeb." rendus, lien absent.
+//
+// Une ligne privée d'attribution n'est pas dans un état durable : c'est une
+// donnée à re-sourcer ou à retirer. Ces accesseurs empêchent la publication,
+// ils ne réparent pas la ligne.
+
+/** L'URL de source, ou `null` si son éditeur ne peut pas être cité. */
+export function publishableSourceUrl(source: string | null | undefined): string | null {
+  if (!source) return null;
+  return isForbiddenSourceHost(source) ? null : source;
+}
+
+/** Le nom de l'éditeur, ou `null` s'il ne peut pas être cité. */
+export function publishableSourceName(source: string | null | undefined): string | null {
+  if (!source) return null;
+  return isForbiddenSourceHost(source) ? null : sourceName(source);
+}

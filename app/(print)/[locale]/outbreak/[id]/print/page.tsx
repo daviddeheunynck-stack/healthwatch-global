@@ -22,7 +22,7 @@
 import { createClient } from "@supabase/supabase-js";
 import { createClient as createServerClient } from "@/lib/supabase-server";
 import { notFound, redirect } from "next/navigation";
-import { getLocalizedDisease, getLocalizedCountry, getLocalizedDescription } from "@/lib/outbreaks";
+import { getLocalizedDisease, getLocalizedCountry, getLocalizedDescription, publishableSourceUrl } from "@/lib/outbreaks";
 import { getResponseGuidance, RESPONSE_ACTIONS } from "@/lib/response-guidance";
 import { getIncidenceRate, getPopulationThousands } from "@/lib/population-data";
 import { resolvedPlan } from "@/lib/resolved-plan";
@@ -313,10 +313,16 @@ export default async function PrintPage({
               <div>{l.generatedBy} — healthwatch-global.com</div>
               <div style={{ marginTop: 4, fontSize: 10 }}>{l.disclaimer}</div>
             </div>
-            {o.source && (
+            {/* La plus coûteuse des surfaces d'attribution : ce pied de page part
+                en PDF chez un client payant et circule ensuite hors du produit.
+                Il rendait l'URL brute en lien vif, sans consulter le tier — donc
+                sans jamais voir FORBIDDEN_SOURCE_DOMAINS. La requête plus haut
+                est un `.eq("id", id)` sans filtre `active`, si bien qu'une ligne
+                désactivée faute de source citable restait imprimable. */}
+            {publishableSourceUrl(o.source) && (
               <div style={{ textAlign: isRtl ? "left" : "right" }}>
                 <div>{l.source} :</div>
-                <a className="source-link" href={o.source}>{o.source}</a>
+                <a className="source-link" href={publishableSourceUrl(o.source)!}>{publishableSourceUrl(o.source)}</a>
               </div>
             )}
           </div>

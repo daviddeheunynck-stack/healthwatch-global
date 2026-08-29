@@ -12,7 +12,7 @@ import CitationBlock from "@/components/CitationBlock";
 import OutbreakStatsGrid from "@/components/OutbreakStatsGrid";
 import ShareOutbreakButton from "@/components/ShareOutbreakButton";
 import OutbreakCasesChart from "@/components/OutbreakCasesChart";
-import { getLocalizedDisease, getLocalizedCountry, getLocalizedDescription, sourceStatus, sourceName, staleOutbreakDays, isSourceConfirmed } from "@/lib/outbreaks";
+import { getLocalizedDisease, getLocalizedCountry, getLocalizedDescription, sourceStatus, sourceName, publishableSourceName, staleOutbreakDays, isSourceConfirmed } from "@/lib/outbreaks";
 import { diseaseToSlug, matchDisease } from "@/lib/disease-data";
 import { jsonLdHtml } from "@/lib/json-ld";
 import { countryToSlug } from "@/lib/country-utils";
@@ -471,8 +471,14 @@ export default async function OutbreakPage({
         }}
         locale={locale}
       />
-      {hasData && o.date && (
-        <p className="text-[11px] text-gray-500 -mt-3 mb-5 text-center">{l.cumulativeAs(o.date, sourceName(o.source))}</p>
+      {/* La phrase entière nomme l'éditeur ("bulletin X du …") : sans lui elle
+          n'a plus de sens, donc un éditeur interdit fait disparaître la ligne
+          plutôt que de la laisser attribuer les chiffres à un nom qu'on n'a pas
+          le droit d'imprimer. Cette page rend aussi les foyers inactifs (voir le
+          commentaire "No active filter" plus haut), c'est-à-dire précisément les
+          lignes qu'on a désactivées faute de pouvoir citer leur source. */}
+      {hasData && o.date && publishableSourceName(o.source) && (
+        <p className="text-[11px] text-gray-500 -mt-3 mb-5 text-center">{l.cumulativeAs(o.date, publishableSourceName(o.source)!)}</p>
       )}
 
       {/* Why it matters — synthesis, visible to all plans and to search engines */}
@@ -595,12 +601,15 @@ export default async function OutbreakPage({
         </Link>
       </div>
 
-      {/* Citation académique */}
+      {/* Citation académique — un éditeur interdit retombe sur le même libellé
+          générique qu'une ligne sans source. C'est ici, littéralement, la
+          "citation" que FORBIDDEN_SOURCE_DOMAINS interdit de publier : le texte
+          qu'un lecteur copie-colle dans un article. */}
       <CitationBlock
         label={l.citeLabel}
         copyLabel={l.citeCopy}
         copiedLabel={l.citeCopied}
-        citation={`HealthWatch Global. ${disease} outbreak — ${country} [Internet]. ${o.date ?? ""} [cited YYYY Mon DD]. Available from: ${BASE_URL}/${locale}/outbreak/${id}. Data source: ${o.source ? sourceName(o.source) : "official surveillance sources"}.`}
+        citation={`HealthWatch Global. ${disease} outbreak — ${country} [Internet]. ${o.date ?? ""} [cited YYYY Mon DD]. Available from: ${BASE_URL}/${locale}/outbreak/${id}. Data source: ${publishableSourceName(o.source) ?? "official surveillance sources"}.`}
       />
 
       {/* Data dispute link */}

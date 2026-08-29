@@ -6,7 +6,7 @@ import { X, ExternalLink, AlertTriangle, TrendingUp, Users, Skull, Calendar, Glo
 import WatchlistButton from "@/components/WatchlistButton";
 import { getIncidenceRate } from "@/lib/population-data";
 import type { Outbreak } from "@/lib/outbreaks";
-import { getLocalizedDisease, getLocalizedCountry, getLocalizedDescription, sourceStatus, sourceName, staleOutbreakDays, isSourceConfirmed, hasRealAdmin1 } from "@/lib/outbreaks";
+import { getLocalizedDisease, getLocalizedCountry, getLocalizedDescription, sourceStatus, sourceName, publishableSourceUrl, staleOutbreakDays, isSourceConfirmed, hasRealAdmin1 } from "@/lib/outbreaks";
 import { getResponseGuidance, RESPONSE_ACTIONS } from "@/lib/response-guidance";
 import { diseaseToSlug, matchDisease } from "@/lib/disease-data";
 import Link from "next/link";
@@ -1286,6 +1286,7 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlis
                 const ic = IHR_COPY[locale] ?? IHR_COPY.en;
                 const cfr = outbreak.cases > 0 && outbreak.deaths !== null ? (outbreak.deaths / outbreak.cases * 100).toFixed(1) : "N/A";
                 const incidence = getIncidenceRate(outbreak.cases, outbreak.country_en);
+                const ihrSourceAttribution = outbreak.source ? publishableSourceUrl(outbreak.source) : "OMS / WHO";
                 const text = [
                   ic.notif,
                   `${ic.notifDate}: ${new Date().toISOString().split("T")[0]}`,
@@ -1296,7 +1297,12 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlis
                   `4. ${ic.epi}: ${outbreak.cases.toLocaleString(numLocale)} ${ic.cases}${outbreak.deaths !== null ? ` / ${outbreak.deaths.toLocaleString(numLocale)} ${ic.deaths}` : ""} / CFR ${cfr}%${incidence ? ` / ${incidence.toFixed(1)} ${ic.per100k}` : ""}`,
                   `5. ${ic.pop}: [${ic.fillIn}]`,
                   `6. ${ic.measures}: [${ic.fillIn}]`,
-                  `7. ${ic.src}: HealthWatch Global / ${outbreak.source || "OMS / WHO"}`,
+                  // Modèle de notification RSI : ce texte est copié tel quel dans
+                  // une déclaration officielle. Un éditeur interdit fait tomber
+                  // l'attribution entière plutôt que de basculer sur le repli
+                  // "OMS / WHO" — remplacer une citation illicite par une
+                  // fausse serait pire que de n'en donner aucune.
+                  `7. ${ic.src}: HealthWatch Global${ihrSourceAttribution ? ` / ${ihrSourceAttribution}` : ""}`,
                   `8. ${ic.lab}: [${ic.fillIn}]`,
                   `9. ${ic.contact}: [${ic.fillIn}]`,
                   "",
