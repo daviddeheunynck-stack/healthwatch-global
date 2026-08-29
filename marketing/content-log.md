@@ -8,7 +8,7 @@ Archive de tout le contenu créé. Mise à jour à chaque session.
 
 **Registre de faits régénéré en début de run** (`npm run qa:facts`, 15:09 UTC) : **222 faits citables sur 106 lignes affichées**, 81 lignes `is_seed` exclues, **16 faits périmés** — strictement identique au relevé de 13h.
 
-**Quotas de commentaires à la clôture, cumulés sur les 3 sessions du jour + la session interactive : 4/7.** Détail des DM, suivis et invitations dans `linkedin-contacts.md`, entrée du jour.
+**Quotas de commentaires à la clôture, cumulés sur les 3 sessions du jour + la session interactive : 5/7** (4 en autonomie + Jason Kindrachuk publié en session interactive sur ordre explicite de David). Détail des DM, suivis et invitations dans `linkedin-contacts.md`, entrée du jour.
 
 ---
 
@@ -43,7 +43,36 @@ Archive de tout le contenu créé. Mise à jour à chaque session.
 
 ---
 
-### ❌ COMMENTAIRE ABANDONNÉ — **Jason Kindrachuk** (`/in/jason-kindrachuk-20383931/`), et l'abandon était le bon appel
+### ✅ COMMENTAIRE, RÉÉCRIT PUIS PUBLIÉ EN SESSION INTERACTIVE — **Jason Kindrachuk** (`/in/jason-kindrachuk-20383931/`), EN
+
+`urn:li:activity:7499104644070223873`, le post MBOTE-EYE rédigé puis abandonné plus bas dans cette même entrée. **David a tapé « publie le commentaire » en session interactive.** Le brouillon a été entièrement réécrit pour lever les six findings du relecteur qui l'avaient fait abandonner, puis passé à nouveau au contrôle mécanique et à un relecteur indépendant en contexte neuf, avant publication.
+
+**Réécriture appliquée aux six points d'origine** : (3) l'affirmation sur la clôture des flambées (« an outbreak line ends when transmission does », généralisation à tort de la règle des 42 jours d'Ebola) entièrement retirée, remplacée par un constat neutre sur le comptage des cas ; (4) le vocabulaire produit interne (« outbreak line ») supprimé ; (5) les termes cliniques repris tels quels du post (« corneal disease », « ulcerative keratitis », « persistent blindness ») au lieu de « a cornea destroyed » ; (6) le présupposé d'hospitalisation (« after discharge ») retiré ; (9) la clôture ne met plus en cause le suivi des patients à Kamituga.
+
+🔴 **La 2e version a échoué une nouvelle fois au relecteur, sur deux points précis, et c'était fondé.** Il a relevé deux détails cliniques encore non sourcés (« *leaves a cornea scarred for good* », « *whether it clears in a week* » — aucun des deux délais/images n'est dans le post) et un gabarit reconnu (« *same column either way* », reconnu comme une variante du couple « same entry / look identical in the counts » déjà brûlé sur ce même commentaire). **Corrigés dans une 3e version**, sans réintroduire aucun des six défauts d'origine.
+
+**QA du 2e passage complet : mécanique PASS (0 blocker, 495 car.) | relecteur REECRIRE (5, 11), corrigés | 3e version : mécanique PASS (527 car., 0 finding bloquant, 2 info sur l'origine des chiffres 59 et 8, tous deux du fil) | faits cités : 59 jours et 8 % (post verbatim) | statut : publié le 28/08 en session interactive, sur ordre explicite de David**
+
+> A confirmed case is confirmed the same way no matter how it turns out afterward. Nothing in a tally distinguishes ulcerative keratitis that clears from ulcerative keratitis that leaves someone permanently blind.
+>
+> Your cohort caught that difference because 59 days of follow-up were built into the protocol from the start. Eight percent had corneal disease at enrolment, and two participants never got their sight back. I'd be curious whether a finding like that ever changes what gets asked about a case, once the paper is out.
+
+**Publication confirmée** : 527 caractères, une seule occurrence du texte dans la page après envoi, éditeur vidé.
+
+---
+
+### 🔒→✅ TROIS DM ENVOYÉS EN SESSION INTERACTIVE, SUR ORDRE EXPLICITE DE DAVID (« envoie les trois »)
+
+Double-check refait à froid avant envoi sur les trois fils : chacun rouvert à la source, aucune nouvelle réponse depuis la rédaction, chiffre polio RDC revérifié en base (`Polio / DR Congo, value: 37, asOf 2026-08-26`, `updatedAt` inchangé depuis 08:49 UTC ce matin). Détail complet de chaque texte, de sa QA et de sa confirmation d'envoi (identité du destinataire et contenu paragraphe par paragraphe revérifiés dans le même appel JS que le clic « Envoyer ») dans `linkedin-contacts.md`, entrée du 28/08 (17h) :
+- **John Omari Baso** — envoyé et confirmé à 04:49.
+- **Alain BASHIZI** — envoyé et confirmé à 04:47.
+- **Dr. Siaka Condé** — envoyé et confirmé à 04:45.
+
+⚠️ **Note technique de session, à conserver.** Le navigateur a présenté des timeouts CDP intermittents pendant la frappe des trois DM (`Input.dispatchKeyEvent`, puis `Runtime.evaluate`), sans conséquence après une pause de quelques secondes et re-sélection du `deviceId` habituel — conforme à `hwg-social-policy.md` §7. Un artefact de sérialisation a compliqué la vérification du contenu : comparer par `innerText` un contenteditable structuré en `<p>` gonfle le nombre de retours à la ligne apparents (jusqu'à 5 `\n` pour une séparation de paragraphe pourtant correcte), alors que le DOM réel (`<p>texte</p><p><br></p><p>texte</p>`) était juste dès la 1re frappe. **La vérification fiable est passée par la lecture des `<p>` un par un** (texte de chaque paragraphe non vide comparé au brouillon) plutôt que par une comparaison de chaîne brute incluant les sauts de ligne — à retenir pour la messagerie LinkedIn spécifiquement, le composeur de commentaire public n'a pas montré ce défaut le même jour.
+
+---
+
+### ❌ COMMENTAIRE ABANDONNÉ AU 1ER BROUILLON — **Jason Kindrachuk** (`/in/jason-kindrachuk-20383931/`), et l'abandon était le bon appel à ce stade-là
 
 `urn:li:activity:7499104644070223873`, post d'**1 h** au repérage (fenêtre 48 h ✅), **3 réactions, 0 commentaire** — nous aurions été **premier commentateur** sous un post de *Associate Professor, Canada Research Chair, University of Manitoba*. **Profil suivi depuis le 10/08, jamais commenté** (tracker ligne 529) → aucun blocage hebdomadaire. Repéré en notifications.
 

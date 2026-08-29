@@ -9,7 +9,9 @@
 
 **Registre de faits régénéré en début de run** (`npm run qa:facts`, 15:09 UTC) : **222 faits citables sur 106 lignes affichées**, 81 lignes `is_seed` exclues, **16 faits périmés** — identique au relevé de 13h.
 
-**Quotas à la clôture, cumulés sur les 3 sessions du jour + la session interactive** : commentaires **4/7 publiés** (Dr. Jeeven Kumar 9h, sous-fil Harvey ~12h45, Oke Ikpekpe 13h, **réponse en sous-fil chez Oke Ikpekpe ce run**) · notes de connexion **0/7** · connexions **1/7** · **DM envoyés 6** (aucun ce run) + **3 en file de validation** · suivis **4/7-10** (2 ce matin + **Oke Ikpekpe et Brice EDZOA ESSOMBA ce run**) · invitations reçues **2 en attente, aucune nouvelle**.
+**Quotas à la clôture, cumulés sur les 3 sessions du jour + la session interactive** : commentaires **5/7 publiés** (Dr. Jeeven Kumar 9h, sous-fil Harvey ~12h45, Oke Ikpekpe 13h, réponse en sous-fil chez Oke Ikpekpe 17h, **Jason Kindrachuk en session interactive**) · notes de connexion **0/7** · connexions **1/7** · **DM envoyés 9** (John Omari Baso, Alain BASHIZI, Dr. Siaka Condé **envoyés en session interactive sur ordre explicite de David**) · suivis **4/7-10** (2 ce matin + Oke Ikpekpe et Brice EDZOA ESSOMBA ce run) · invitations reçues **2 en attente, aucune nouvelle**.
+
+**⚠️ Mise à jour du même run, sur ordre explicite de David tapé en session (« envoie les trois ») : les trois DM ci-dessus ont été ENVOYÉS ET CONFIRMÉS**, ainsi qu'un commentaire supplémentaire (Jason Kindrachuk, réécrit puis publié — détail dans `content-log.md`). Double-check refait à froid avant envoi sur les trois fils (rouverts à la source, aucune nouvelle réponse depuis la rédaction, chiffre polio RDC revérifié en base inchangé).
 
 ---
 
@@ -40,7 +42,7 @@ Comparaison croisée des cinq brouillons du run entre eux (séquences de 4 mots,
 
 ---
 
-#### 🔒 DM 1 — **John Omari Baso** (`/in/john-omari-baso-84500b1b0/`), FR, fil actif, **SANS CTA**, hors quota froid
+#### 🔒→✅ DM 1 — **John Omari Baso** (`/in/john-omari-baso-84500b1b0/`), ENVOYÉ ET CONFIRMÉ, FR, fil actif, **SANS CTA**, hors quota froid
 
 *Epidemiologist | Polio ADVAC | PVAC Alumni | Vaccine Preventable Diseases Surveillance and Outbreak Response Specialist | One Health Researcher*, **VillageReach, Goma, Nord-Kivu (RDC)**.
 
@@ -55,7 +57,7 @@ Comparaison croisée des cinq brouillons du run entre eux (séquences de 4 mots,
 
 **L'angle** : le brouillon relève une contradiction que John n'a pas vue lui-même — il avait cité **six** provinces le 27/08 (Haut-Lomami, Tanganyika, Maniema, Kasaï, Sud-Kivu, Kinshasa), mais sa répartition des quatre cas restants n'attribue rien au **Maniema**. Le brouillon la pose sans la résoudre, puis exploite la seule information réellement actionnable de son message : si le GPEI central adresse ses rapports au Bureau régional AFRO, la chaîne passe par une institution dont HWG lit déjà des publications.
 
-**QA: mécanique FAIL (1 blocker unique `context.too-soon`, écarté sur pièce — réponse à un message entrant reçu 1 h plus tôt dans un fil vivant, pas une relance à froid ; 669 car., 3 paragraphes, `draftLang: fr` / `threadLang: fr`) | relecteur ⭐ **12 PASS sur 12, VERDICT: ENVOYER** — aucune correction demandée, 2e fois seulement ce mois-ci | faits cités: « quatre cas » et les quatre noms de provinces, tous pris à ses messages du fil (20:11 le 27/08 et 15:22 aujourd'hui) ; aucun chiffre du registre | registre du 28/08 | statut: en file de validation**
+**QA: mécanique FAIL (1 blocker unique `context.too-soon`, écarté sur pièce — réponse à un message entrant reçu 1 h plus tôt dans un fil vivant, pas une relance à froid ; 669 car., 3 paragraphes, `draftLang: fr` / `threadLang: fr`) | relecteur ⭐ **12 PASS sur 12, VERDICT: ENVOYER** — aucune correction demandée, 2e fois seulement ce mois-ci | faits cités: « quatre cas » et les quatre noms de provinces, tous pris à ses messages du fil (20:11 le 27/08 et 15:22 aujourd'hui) ; aucun chiffre du registre | registre du 28/08 | statut: ENVOYÉ ET CONFIRMÉ à 04:49, sur ordre explicite de David (« envoie les trois »)**
 
 ⭐ **Ce que le relecteur a explicitement validé, et qui méritait de l'être** : John a posé un grief institutionnel dans son message (« *un problème de rapportage et/ou du retard de la mise à jour de la part du GPEI* ») ; le brouillon ne le reprend, ne le valide et ne le conteste nulle part (§9). La seule imputation d'erreur y est retournée sur l'émetteur : « *je lis manifestement le mauvais document* ».
 
@@ -67,7 +69,7 @@ Comparaison croisée des cinq brouillons du run entre eux (séquences de 4 mots,
 
 ---
 
-#### 🔒 DM 2 — **Alain BASHIZI** (`/in/alain-bashizi-459532169/`), FR, fil actif, **SANS LIEN**, ⚠️ **décision de fond pour David**
+#### 🔒→✅ DM 2 — **Alain BASHIZI** (`/in/alain-bashizi-459532169/`), ENVOYÉ ET CONFIRMÉ, FR, fil actif, **SANS LIEN**
 
 *Investigative Journalist*, **Goma / Nord-Kivu (RDC)**, actuellement à Bujumbura. Fil verbatim dans `tmp/thread-alain-28b.txt`. *Langue du fil = fr ; langue du brouillon = fr.* Vouvoiement.
 
@@ -75,7 +77,7 @@ Comparaison croisée des cinq brouillons du run entre eux (séquences de 4 mots,
 
 **Conduite appliquée : politique commune §3, sollicitation personnelle.** Accuser réception honnêtement, ne rien promettre, ne prendre aucun engagement, **ne jamais communiquer les coordonnées personnelles de David**, ne jamais s'engager sur un autre canal. Le brouillon **dit clairement qu'il n'y a rien à quoi rattacher une mission**, précisément pour qu'il ne travaille pas gratuitement sur une proposition sans destinataire — c'est le point que David doit trancher.
 
-**QA: mécanique FAIL (1 blocker `context.too-soon`, faux positif documenté — réponse dans un fil entrant actif du jour ; 1 review `hwg.claim` sur la phrase de cadrage produit ; 940 car., 4 paragraphes, `draftLang: fr` / `threadLang: fr`) | relecteur REECRIRE (4, 5, 7, 9) au 1er passage, **les 4 corrigés** — 11 et 12 en PASS, angle validé, donc correction ciblée et non réécriture | faits cités: aucun chiffre | registre du 28/08 | statut: en file de validation**
+**QA: mécanique FAIL (1 blocker `context.too-soon`, faux positif documenté — réponse dans un fil entrant actif du jour ; 1 review `hwg.claim` sur la phrase de cadrage produit ; 940 car., 4 paragraphes, `draftLang: fr` / `threadLang: fr`) | relecteur REECRIRE (4, 5, 7, 9) au 1er passage, **les 4 corrigés** — 11 et 12 en PASS, angle validé, donc correction ciblée et non réécriture | faits cités: aucun chiffre | registre du 28/08 | statut: ENVOYÉ ET CONFIRMÉ à 04:47, sur ordre explicite de David (« envoie les trois »)**
 
 🔴 **Les quatre findings étaient réels, et deux d'entre eux auraient blessé.**
 - **(9 et 5) « merci pour la franchise sur votre situation » a été supprimé.** Alain avait écrit « *Actuellement je vis à Bujumbura depuis l'occupation de nos villes par le M23* » — le relecteur a établi, en citant le « donc » qui suit, qu'il mentionne son déplacement comme **argument de disponibilité professionnelle**, pas comme confidence. Le remercier pour sa « franchise » le requalifiait en aveu intime **et** accusait réception d'un contexte armé, ce que §10 interdit. La mention des « violences autour des aires protégées » a été retirée pour la même raison.
@@ -92,7 +94,7 @@ Comparaison croisée des cinq brouillons du run entre eux (séquences de 4 mots,
 
 ---
 
-#### 🔒 DM 3 — **Dr. Siaka Condé** (`/in/drconde-who-afro/`), EN, **AVEC CTA**, fil actif après 17 jours
+#### 🔒→✅ DM 3 — **Dr. Siaka Condé** (`/in/drconde-who-afro/`), ENVOYÉ ET CONFIRMÉ, EN, **AVEC CTA**, fil actif après 17 jours
 
 *Head of WHO Country Emergency Program*, Lomé. Fil verbatim dans `tmp/thread-siaka-28.txt`. *Langue du fil = en ; langue du brouillon = en.*
 
@@ -108,7 +110,7 @@ Comparaison croisée des cinq brouillons du run entre eux (séquences de 4 mots,
 - **(11) charpente et CTA au gabarit.** Le 1er brouillon rejouait « reconnaissance du recadrage → confession d'hypothèse antérieure → question binaire de clôture », **la même ossature que deux brouillons déjà signalés aujourd'hui**, ouvrait sur « the more useful answer » (déjà envoyé à Hao-Kai TSENG) et fermait sur l'alternative « inside the response / outside », **servie le matin même à John Omari Baso**. Le CTA reprenait « costs nothing / two weeks / no card », moule relevé à **au moins 8 occurrences**. Tout refondu.
 - **(10) le CTA n'avait pas de point d'appui** : il reconnaissait que la capacité de riposte est absente du produit et invitait à venir regarder dans la même phrase. Le brouillon dit maintenant **ce qu'il y verrait** (les 17 maladies telles que publiées) **et ce qu'il n'y trouvera pas** (aucune colonne pour l'équipe qui a répondu).
 
-**QA: mécanique PASS (0 blocker, 0 warn, 1 review `hwg.claim` sur le CTA ; 763 car., 3 paragraphes, `draftLang: en` / `threadLang: en`) | relecteur REECRIRE (4, 9, 10, 11) au 1er passage, les 4 corrigés | faits cités: « seventeen diseases » (registre produit, `coverage.diseases` = 17) ; « a fortnight » / « no card taken at that stage » (site, `pricing.faq4_a`, formulation permissive conforme aux deux cas de la FAQ) | registre du 28/08 | statut: en file de validation**
+**QA: mécanique PASS (0 blocker, 0 warn, 1 review `hwg.claim` sur le CTA ; 763 car., 3 paragraphes, `draftLang: en` / `threadLang: en`) | relecteur REECRIRE (4, 9, 10, 11) au 1er passage, les 4 corrigés | faits cités: « seventeen diseases » (registre produit, `coverage.diseases` = 17) ; « a fortnight » / « no card taken at that stage » (site, `pricing.faq4_a`, formulation permissive conforme aux deux cas de la FAQ) | registre du 28/08 | statut: ENVOYÉ ET CONFIRMÉ à 04:45, sur ordre explicite de David (« envoie les trois »)**
 
 > The emergency support unit is a lead I did not have, and I will go and read what it puts out.
 >
