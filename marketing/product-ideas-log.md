@@ -1878,3 +1878,73 @@ Exactement les deux lignes que David a vues hier soir, et aucune autre : les 25 
 4. **Fichiers d'une autre session laissés intacts, comme le veut `AGENTS.md`** : `marketing/qa/product-claims.manual.json` (modifié), `scripts/audit-alert-day.mjs` et `scripts/probe-alert-lock.mjs` (non suivis). Rien n'a été stagé ni annulé les concernant.
 
 **Statut : 1 idée PROPOSÉE ET CONSTRUITE (`3d6dcf8`), 1 idée PROPOSÉE et écartée par le garde-fou 2.**
+
+---
+
+## 2026-08-29 — Proposition du jour
+
+**Aucun signal terrain neuf** : `product-feedback.md` n'a pas bougé depuis l'entrée Coulibaly du 22/08. Les deux idées viennent donc de l'état réel de la prod, relevé ce soir.
+
+**Point commun des deux, involontaire mais net.** Le produit sait déjà, dans les deux cas, ce qu'il faut dire ou ne pas dire — il le calcule, il l'écrit même quelque part. Ce qui manque est le report de cette connaissance là où quelqu'un la lit.
+
+### 1. 🔴 Le cron qui surveille tous les autres est le seul dont le journal ne dit jamais **pourquoi** il est en erreur — et il l'est aujourd'hui
+
+**Signal, en prod, à l'instant.** `site_config` porte `cron:run:health-check` = `{"ts":"2026-08-29T07:05:40.731Z","status":"error","rows":2}`. Pas de champ `error`. Les 49 autres crons écrivent leur raison dans ce champ (`sync-samoa-dengue` : « guard blocked issue 68… », `weekly-signal` : « 1 envoi(s) en échec ») ; `health-check` est le seul à n'écrire qu'un compteur.
+
+**Conséquence concrète, vérifiable dans le mail de demain matin.** La section « cron(s) à l'heure mais EN ERREUR au dernier passage » (route ligne 1151) construit son libellé à partir de ce champ, avec pour repli littéral `"(sans message)"` (ligne 942). Le rapport de santé quotidien de HWG affichera donc demain, en rouge :
+
+```
+⚠️ 1 cron(s) à l'heure mais EN ERREUR au dernier passage : health-check ((sans message))
+```
+
+**L'identité existe — dans Sentry, et nulle part ailleurs.** `captureSelfReport` l'y a bien envoyée ce matin, et la lecture de l'API Sentry le confirme :
+
+```
+[warning] JAVASCRIPT-NEXTJS-2B x1 lastSeen=2026-08-29T07:05:40Z
+  [health-check] 1 cron(s) overdue: sync-who-regional
+```
+
+C'est exactement l'asymétrie déjà réparée deux fois sur ce projet — le verrou d'alertes le 25/08 (« le seul témoin est un `Sentry.captureException` que personne ne lit tous les jours »), les destinataires en échec des 8 crons d'envoi le 28/08. Elle est restée en place sur le moniteur lui-même.
+
+**Second défaut, même racine, découvert en lisant la ligne 940.** `cronMap` est lu au **début** du run (ligne 768), le statut est écrit à la **fin** (ligne 1273) : la ligne « health-check » de cette liste est donc toujours celle de la **veille**, jamais celle du run en cours. Un matin où plus rien n'est en retard, le mail annoncera quand même `health-check` en erreur — l'écho, à un jour de retard et sans message, d'un problème déjà résolu. Et pour ce cron précis, le rapport contient déjà la réponse fraîche, deux lignes plus haut, dans sa propre section « crons en retard ».
+
+**Effort : petit.** `logCronRun` accepte déjà un `errorMsg` (5ᵉ paramètre) que cet appel est le seul à ne pas passer. Un fichier.
+
+**Risque/inconnue :** `rows` vaut `overdue.length + sentryIssues.length` (2 aujourd'hui) alors que le statut, lui, ne dépend que de `hasOverdue`. Un message ne nommant qu'un seul cron en face de `rows=2` se lirait comme une troncature — les deux termes doivent donc être dits, celui qui décide du statut en tête.
+
+### 2. 🔴 « Une citation que nous n'avons pas le droit de publier » — la règle est appliquée sur **une** des sept surfaces qui publient cette citation
+
+**Signal, en ligne en ce moment, vérifié par requête sur la page réelle.** `lib/source-trust.ts` porte depuis le 26/08 une liste `FORBIDDEN_SOURCE_DOMAINS` dont le commentaire est sans ambiguïté : *« A row demoted by this list is not "a source we downgraded" — it is a citation we must not publish. »* `reliefweb.int` y figure (ToS non commerciales, même forme juridique que la mise en demeure ProMED). Les 4 lignes concernées ont été désactivées, `source_priority` ramené à 0 — elles ne sont plus ni sur le tableau de bord ni dans les exports. Mais `app/[locale]/outbreak/[id]/page.tsx` porte, ligne 195, un commentaire explicite : *« No active filter — historical outbreaks are indexed in the sitemap and must render too. »* La page publique existe donc toujours, et elle rend ceci :
+
+```
+$ curl -s https://healthwatch-global.com/fr/outbreak/fe6c7cdc-…  | grep -o "ReliefWeb[^<]*"
+ReliefWeb du 2026-06-24          <- « Cas cumulés depuis le début de l'épidémie — bulletin … »
+ReliefWeb.                       <- bloc de citation académique, « Data source: ReliefWeb. »
+
+$ … | grep -c "reliefweb.int"
+0                                <- le LIEN, lui, est bien masqué
+```
+
+**Le lien est masqué par accident, pas par la règle.** Le seul garde en place est `status !== "unverified"` (ligne 560), un test de **niveau de confiance**. Un éditeur interdit retombe en `unverified`, donc le lien disparaît — effet de bord heureux d'un test qui parle d'autre chose. Partout où le rendu ne consulte pas ce niveau, l'interdit ne s'applique pas :
+
+| surface | ce qu'elle publie d'un éditeur interdit | garde |
+|---|---|---|
+| `/outbreak/[id]` — phrase « bulletin … du … » | le nom de l'éditeur | **aucune** |
+| `/outbreak/[id]` — bloc de citation académique | « Data source: … » | **aucune** |
+| `/outbreak/[id]/print` — pied de page du rapport Pro | **l'URL entière, en lien cliquable** | **aucune** |
+| `OutbreakTable` — export CSV, colonne `source_url` | l'URL entière | **aucune** |
+| `OutbreakTable` — export PDF | l'URL entière, en lien | **aucune** |
+| `OutbreakTable` — export HTML | l'URL entière, en lien | **aucune** |
+| `OutbreakDetailModal` — modèle de notification RSI | l'URL entière | **aucune** |
+| `/outbreak/[id]` — lien de source | rien | ✅ (par ricochet) |
+| badges de tier (table + modale) | rien | ✅ (par ricochet) |
+
+La ligne la plus coûteuse du tableau est le **rapport Pro** : `app/(print)/…/print/page.tsx` interroge la base par `.eq("id", id)` sans aucun filtre, et son pied de page rend `<a href={o.source}>{o.source}</a>` sans consulter le tier. C'est le livrable qu'un client payant télécharge et fait circuler. Aujourd'hui, les 4 lignes ne sont plus sur le tableau de bord, donc les trois exports ne peuvent pas les atteindre ; la page publique et le rapport Pro, eux, les servent toujours.
+
+**Ce qu'il ne faut PAS faire, et pourquoi.** Changer `sourceName()` pour qu'il cesse de dire « ReliefWeb » casserait `data-quality` (ligne 1171), qui appelle cette même fonction précisément **pour nommer** la ligne fautive dans l'audit interne. Nommer l'éditeur en interne est le travail de l'audit ; le publier au client est l'interdit. Ce sont deux fonctions différentes, pas un réglage de la même.
+
+**Effort : moyen.** Une paire d'accesseurs dans `lib/source-trust.ts` (à côté d'`isForbiddenSourceHost`, déjà exporté pour l'audit) et sept substitutions mécaniques dans 4 fichiers. Aucun schéma, aucun envoi, aucun paiement.
+
+**Risque/inconnue :** aucune ligne n'est *supprimée* — le foyer, ses chiffres et son historique restent en ligne, seule l'attribution disparaît. Une ligne dont l'attribution disparaît est une ligne dont on ne peut plus dire d'où vient le chiffre : c'est le bon état pour une donnée à re-sourcer, pas un état durable. Le re-sourcing des 4 lignes reste chez David, ce correctif ne le remplace pas — il empêche seulement que le prochain éditeur interdit fuite par six portes au lieu d'une.
+
+**Statut initial : 2 idées PROPOSÉES.** Construction dans la foulée — voir la mise à jour ci-dessous.
