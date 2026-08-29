@@ -13,14 +13,14 @@
     { "pattern": "\\bsolution innovante\\b", "why": "Vocabulaire commercial, l'angle doit rester surveillance épidémiologique.", "severity": "blocker" },
     { "pattern": "\\bgame.?changer\\b", "why": "Idem.", "severity": "blocker" },
     { "pattern": "\\brévolutionn(e|aire|er)\\b", "why": "Idem.", "severity": "blocker" },
-    { "pattern": "\\bleader (du|de la|des) march[ée]\\b", "why": "Affirmation invérifiable sur HWG.", "severity": "blocker" },
+    { "pattern": "\\bleader (du|de la|des) march[ée]s?\\b", "why": "Affirmation invérifiable sur HWG.", "severity": "blocker" },
     { "pattern": "\\ben temps r[ée]el\\b", "why": "HWG agrège des bulletins publiés : la latence est celle de la source, pas du temps réel. Employer 'dès publication' ou 'au rythme des bulletins'.", "severity": "blocker" },
     { "pattern": "\\breal.?time\\b", "why": "Même problème en anglais.", "severity": "blocker" },
     { "pattern": "\\bnos (clients|utilisateurs) (disent|témoignent)\\b", "why": "Frôle le faux témoignage (règle impérative AGENTS.md).", "severity": "blocker" },
     { "pattern": "\\bcomme vous le savez\\b", "why": "Présuppose ce que sait le destinataire.", "severity": "warn" },
     { "pattern": "\\bnous sommes ravis\\b", "why": "Ton corporate.", "severity": "warn" },
     { "pattern": "\\bsynergie\\b", "why": "Jargon vide.", "severity": "warn" },
-    { "pattern": "\\bimpact(er|é)\\b", "why": "Anglicisme, préférer 'toucher', 'peser sur', 'conséquence'.", "severity": "warn" },
+    { "pattern": "\\bimpact(er|ée?s?)\\b", "why": "Anglicisme, préférer 'toucher', 'peser sur', 'conséquence'.", "severity": "warn" },
     { "pattern": "\\bopportunité de collaboration\\b", "why": "Formule creuse, dire l'objet précis.", "severity": "warn" },
     { "pattern": "\\bimplémenter\\b", "why": "Anglicisme, préférer 'mettre en place'.", "severity": "warn" },
     { "pattern": "\\bsupporter\\b(?! ?la comparaison)", "why": "Faux ami : 'support' se traduit par 'prendre en charge' / 'gérer'.", "severity": "warn" },
@@ -30,7 +30,7 @@
 
   "confusables": [
     {
-      "pattern": "\\btaux de mortalit[ée]\\b",
+      "pattern": "\\btaux de mortalit[ée]s?\\b",
       "why": "Mortalité = décès rapportés à la population. Si le rapport est décès/cas, le terme exact est létalité (CFR).",
       "severity": "warn",
       "prefer": "taux de létalité (CFR)"
@@ -60,7 +60,7 @@
       "prefer": "outbreak"
     },
     {
-      "pattern": "\\b[ée]radiqu(é|er|ée)\\b",
+      "pattern": "\\b[ée]radiqu(é|er|ée)s?\\b",
       "why": "Éradication = disparition mondiale du pathogène (variole seule). Une flambée est 'terminée' ou 'déclarée close'.",
       "severity": "blocker",
       "prefer": "flambée terminée | fin de flambée déclarée"
