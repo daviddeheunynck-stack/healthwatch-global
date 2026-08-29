@@ -2,6 +2,105 @@
 
 Archive de tout le contenu créé. Mise à jour à chaque session.
 
+## 📅 Session linkedin-hwg-followup-check — 29/08/2026 (13h, 1er des 2 créneaux après-midi)
+
+**Vérification double déclenchement** : aucune entrée `linkedin-hwg-followup-check` datée du 29/08 dans ce fichier ni dans `linkedin-contacts.md` à l'ouverture (dernière en date : 28/08 13h) → **premier déclenchement de cette routine aujourd'hui**. Les entrées du 29/08 déjà en tête appartiennent à `linkedin-hwg-monitoring` (9h) et à une intervention de David en session (envoi du DM Abou à 10:19).
+
+**🖥️ Navigateur** : `_shared/browser-status.md` lu avant ouverture, dernière entrée **🟢 RÉTABLI (24/08 ~09h15)**. `23c7ecdd-…` seul navigateur listé, sélectionné sans question (§7). Aucun incident. **4 bannières de cookies refusées.**
+
+**Registres régénérés** : `qa:facts` → 222 faits citables / 106 lignes affichées, 18 périmés. `qa:claims` → 805 chaînes de copie publique, 2 claims manuelles, **31 hôtes source**.
+
+---
+
+## ❌ AUCUN COMMENTAIRE PUBLIÉ — quota inchangé à 4/7, deux candidats arrêtés par le relecteur
+
+C'est le fait marquant du run, et il mérite d'être lu comme un résultat plutôt que comme une absence. **Deux cibles de très bonne qualité ont été travaillées jusqu'au brouillon fini. Les deux brouillons ont passé le contrôle mécanique — l'un en `PASS` parfaitement propre. Les deux ont été arrêtés par le relecteur indépendant sur des erreurs factuelles, pas sur du style.**
+
+🔴🔴 **Et c'est deux fois la même erreur.** Les deux textes déclinaient l'angle signature de HWG — « *ce que le registre publié ne porte pas* » — et les deux l'ont poussé jusqu'à une affirmation générale invérifiée. Dans le second cas, **le relecteur a réfuté le brouillon avec le code de HWG lui-même**. Cet angle est devenu un réflexe de rédaction ; il produit maintenant des phrases qu'un épidémiologiste réfute en une ligne. **Il doit être vérifié avant d'être écrit, pas après.** Aucune 3e tentative n'a été lancée dans ce moule (§5 item 6, règle des deux essais).
+
+---
+
+### ❌ CANDIDAT 1 ABANDONNÉ — **Oke Ikpekpe** (`/in/oke-ikpekpe-11175416b/`), EN, réponse en sous-fil
+
+`urn:li:activity:7499051354368331776`. **4e tour** de l'échange le plus vivant du corpus : il a répondu à notre commentaire 1/7 de ce matin, 2 h avant l'ouverture du run, en corrigeant David sur un point réel.
+
+**Son message, verbatim :**
+> David Deheunynck You raised an interesting M&E question. Preparedness may be continuous in principle, but how continuously is it actually measured? Also, there are indicators outside outbreak periods, so I wouldn't say the record only exists after an outbreak happens. And knowing that capacity was there at one point is different from knowing whether it is still functioning when it is needed.
+> So perhaps there are two gaps here which are sustaining preparedness between outbreaks and actually checking whether that preparedness is being maintained.
+
+**Le blocage hebdomadaire n'était pas en cause** (réponse en sous-fil, non soumise à la règle). **§5 respecté** : post et sous-fil intégral relus, recopiés verbatim dans `tmp/thread-oke-29b.txt`.
+
+**QA: mécanique PASS (567 car., 2 paragraphes, `draftLang: en` / `threadLang: en`, 0 blocker, 0 warn) | relecteur REECRIRE (5, 6, 11, 12) | statut: ABANDONNÉ le 29/08, non publié**
+
+🔴🔴 **Erreur épidémiologique réelle (question 6).** Le brouillon affirmait que les indicateurs inter-épidémiques sont « *largely a declaration made on a date* » et que le fonctionnement réel « *only becomes observable once something tests it* ». **Faux** : le rapport annuel d'auto-évaluation est bien une déclaration datée, mais l'évaluation externe conjointe est une évaluation par les pairs, et surtout **les exercices de simulation et les revues après action sont conçus pour tester le fonctionnement sans attendre de flambée** — comme les tests périodiques d'évaluation externe de la qualité des laboratoires et les indicateurs de complétude et de délai de la surveillance intégrée. Le relecteur : « *c'est même la réponse standard à la question qu'Oke pose : il demande comment on vérifie en continu, et la littérature a des noms pour ça* ». Le « largely » ne sauvait rien : trois composantes sur quatre du cadre de référence.
+
+🔴 **Attribution faussée (question 5)** : le brouillon écrivait « *the second gap you name is about behaviour over time* », alors que son second gap est **l'acte de vérifier** (une question de mesure), pas le maintien. Décalage d'un cran, et surtout inversion : il pointe un manque de dispositif, le brouillon lui faisait dire une impossibilité de principe.
+
+🔴 **Figure rhétorique répétée trois tours d'affilée (question 11)** — concession puis restriction immédiate : « *I think it can be informative, **but**…* » (28/08), « *I would agree…, **and what makes it awkward is**…* » (29/08 matin), « *Fair correction, and I overstated it. […] **What I would keep is narrower**…* » (ce brouillon). Lisible comme un tic au 4e tour.
+
+🔴 **Apport nul (question 12)** : la distinction proposée était déjà celle d'Oke, mot pour mot (« *knowing that capacity was there at one point is different from knowing whether it is still functioning when it is needed* »). Verdict cité : « **ce qui est nouveau est faux, ce qui est vrai n'est pas nouveau** ».
+
+**Texte abandonné, conservé pour mémoire :**
+> Fair correction, and I overstated it. Indicators do exist between outbreaks, so the record is not blank in the quiet years.
+>
+> What I would keep is narrower than what I said. Those indicators are largely a declaration made on a date, and the second gap you name is about behaviour over time, which a declaration cannot show. The two therefore rest on different kinds of evidence: one is a periodic statement about capacity, the other only becomes observable once something tests it. Which is why your second gap can stay wide open while the first looks well documented.
+
+⚠️ **Aucune réécriture tentée**, conformément à la conduite prévue pour les commentaires (renoncer au candidat si un défaut de fond survit). Son message ne pose pas de question directe cette fois — il clôt sur une synthèse — donc **le silence est tenable et ne laisse rien en suspens**. Le sous-fil reste ouvert s'il relance.
+
+---
+
+### ❌ CANDIDAT 2 ABANDONNÉ — **Tambe Elvis Akem, MD** (`/in/tambe-elvis-akem/`), EN, top-level
+
+`urn:li:activity:7499389440247644160`, post de **2 h** (fenêtre 48 h ✅), **2 réactions, 0 commentaire** — nous aurions été le premier commentateur. **1er degré**, contact de longue date (fil DM ouvert depuis le 14/07), **blocage hebdomadaire expiré depuis le 23/08**. Repéré via une notification signalant le commentaire de félicitations de Larry Kerr.
+
+**Le post** : « *From Descriptive Scoring to Actionable Intelligence: Strengthening Outbreak Prioritization During the BVD Response* ». Il présente le *Health-Zone Operational Prioritization framework* (article évalué par les pairs dans PLOS Global Public Health) puis le *BVD Operational Intelligence System*, dont une **logique d'inactivité à 21 jours** « *To prevent outdated hotspot classification when a health zone has completed 21 consecutive days without a newly attributed confirmed case* », une interprétation par contrainte dominante, des cartes d'action par zone de santé, et un audit de complétude des données. Le tout traduit en tableau de bord public (EN et FR). Le post tague l'INSP RDC, le Ministère de la Santé RDC, l'OMS et Africa CDC.
+
+**QA: mécanique PASS (516 car., 2 paragraphes, `draftLang: en` / `threadLang: en`, 0 blocker, 0 warn) | relecteur REECRIRE (5, 6, 7, 11, 12) | statut: ABANDONNÉ le 29/08, non publié**
+
+🔴🔴 **Deux erreurs factuelles, dont une réfutée par le dépôt lui-même (question 6).**
+- « *A cumulative count moves in one direction only* » — **contredit par le registre produit de HWG** : « *Certaines lignes portent un compteur d'annee civile remis a zero au 1er janvier (Taiwan, Malaisie)* », formalisé par `isYearRollover` dans `lib/outbreak-guards.ts` et explicité dans `app/api/cron/sync-taiwan-cdc/route.ts` (« *that reset must not be mistaken for the report going backward* »). S'y ajoutent les révisions à la baisse après invalidation de cas.
+- « *published outbreak records almost never carry [a decay rule]* » — **faux pour la maladie et le pays du post** : les sitreps Ebola RDC publient les zones de santé à transmission active **sur les 21 derniers jours**, et la déclaration de fin de flambée à 42 jours est elle-même une règle de décroissance publiée avec décompte public. Le brouillon se contredisait d'ailleurs seul à la phrase suivante (« *until somebody declares the episode over* » — cette déclaration **est** la règle).
+
+🔴 **Attribution (question 5)** : « *That rule has to live inside the tool **precisely because** the record itself does not hold it* » lui prêtait un motif de conception qu'il situe ailleurs — son post dit « *To prevent outdated hotspot classification* », c'est-à-dire un problème interne à **ses scores composites**, pas une lacune de la donnée publiée.
+
+🔴 **Deux moules d'archive (question 11)**, dont un déjà retiré deux fois par le contrôle anti-gabarit : l'ouverture « *is the part I keep turning over* » (4+ occurrences en archive) et la charnière « *seen from outside, A et B se ressemblent* » (au moins 4 occurrences : « *look identical* », « *look the same* », « *produce the same case count* »), avec une chute calquée sur « *nothing in the published record connects the two* ». Cas d'école de [[feedback_anti_template_check_structure_not_just_wording]] : la forme se répète même quand les mots changent.
+
+🔴 **Redite et apport nul (questions 7 et 12)** : les deux affirmations fausses retirées, il ne restait que la propre phrase du post reformulée (« *historical hotspots may remain high-scoring after transmission has slowed* »). Verdict du relecteur : « **ne pas publier du tout** ».
+
+**Texte abandonné, conservé pour mémoire :**
+> The 21-day inactivity logic is the part I keep turning over, because it is a decay rule, and published outbreak records almost never carry one.
+>
+> A cumulative count moves in one direction only, and a place stays on the map until somebody declares the episode over. Seen from outside, a health zone quiet for three weeks and one that reported yesterday sit in the series looking alike, with nothing published to separate them. That rule has to live inside the tool precisely because the record itself does not hold it.
+
+⭐ **Ce qui reste utilisable** : le post est excellent et **Tambe n'est pas bloqué**, puisque rien n'a été publié. Le sujet est en plein périmètre HWG. **À reprendre au créneau de 17h ou demain si la fenêtre 48 h le permet, avec un angle qui ne soit pas « ce qui manque au registre publié »** — par exemple ce que l'audit de complétude des données implique pour un lecteur qui ne dispose que du résultat, sans jamais généraliser sur ce que les bulletins contiennent ou non.
+
+---
+
+### ❌ AUTRES CIBLES EXAMINÉES ET ÉCARTÉES
+
+1. ❌ **Larry Kerr** (`/in/larry-kerr-786b908/`, 1er degré) — **prémisse du carry-over retestée sur pièce.** Son post le plus récent reste la partie 3 de la série « Day 100 », et le §10 est confirmé mot pour mot : « *That has implications well beyond this outbreak — for African health security, global health financing, research partnerships, and the design of **PABS***. » **Reste écarté.** Son autre activité du jour est un commentaire de félicitations sous le post de Tambe (« *Congratulations Tambe on establishing and publishing this dashboard!* »), sans matière propre à commenter. **Cible dès qu'il publie du factuel.**
+2. ❌ **Jason Kindrachuk** — nouveau post signalé en notification (équipe MBOTE, prévalence et évolution clinique du mpox). **Bloqué jusqu'au 04/09**, blocage respecté, non ouvert.
+3. ❌ **SERGE LAURENT HOUNTONNAGNON** — post sur la potabilité de l'eau (« *l'apparence, l'odeur et le goût ne suffisent pas à établir sa potabilité* »). **Écarté** : qualité de l'eau, pas surveillance épidémiologique ; aucun angle de flambée à quoi répondre.
+4. ❌ **Summer Galloway** — sa seule activité propre est le post « Day 75 » d'il y a 3 semaines, **hors fenêtre 48 h** ; ses deux items récents sont des republications (Larry Kerr sur la politique américaine de recherche à haut risque, BARDA sur les vaccins antigrippaux). **Écartée en commentaire**, exploitée en DM de bienvenue (voir `linkedin-contacts.md`).
+
+---
+
+### 📊 DONNÉES ÉPIDÉMIOLOGIQUES (§8) — aucune écriture
+
+Un seul chiffre public croisé, dans le post de Tambe : la flambée BVD « *expands across 60 health zones in the DRC* ». **C'est un compte de zones de santé : la base HWG n'a aucun champ pour le porter** (`manualClaims` : une ligne affiche maladie, pays, cas, décès, une date, la source). **Aucune écriture.** Ligne Ebola/RDC inchangée depuis 9h à 5 794 cas / 2 786 décès au 26/08, `ageDays: 0`.
+
+⚠️ **3e signalement pour `morning-don-check`** : la ligne **Ouganda close le 26/08 porte toujours un `asOf` au 28/07** (`stale: true`, `ageDays: 31`).
+
+---
+
+### 📝 NOTES POUR DE FUTURS POSTS (veille)
+
+1. ⭐ **Le tableau de bord de Tambe Elvis Akem est le sujet de veille le plus riche du run.** Un épidémiologiste de terrain publie un système de priorisation opérationnelle **avec sa règle de décroissance explicite (21 jours d'inactivité), son audit de complétude des données et ses cartes d'action** — et il le double d'un tableau de bord public bilingue. C'est un objet de comparaison direct pour HWG, et un sujet de post de marque solide : ce que change le fait d'écrire noir sur blanc les règles selon lesquelles une zone sort du tableau. **Matière à creuser, hors périmètre de cette routine.**
+2. ⭐ **Le point de provenance des sources est mûr pour une décision** (détail dans `linkedin-contacts.md`, section 6) : `pricing.faq5_a` promet OMS/PAHO/ECDC, la base compte 31 hôtes dont de la presse. **Tant qu'il n'est pas tranché, aucun post de marque ne peut parler de l'origine des données** — ce qui ferme un angle éditorial naturel.
+3. **La série « Day 100 » de Larry Kerr, Summer Galloway et Tambe Elvis Akem** est un objet récurrent du réseau HWG, mais son terrain (PABS, accord pandémique, financement) reste **fermé par le §10**. Ne pas la commenter ; utile seulement comme accroche factuelle en DM.
+
+---
+
 ## 📅 Session linkedin-hwg-monitoring — 29/08/2026 (9h)
 
 **Vérification double déclenchement** : aucune entrée `linkedin-hwg-monitoring` datée du 29/08 dans ce fichier ni dans `linkedin-contacts.md` à l'ouverture (dernière en date : 28/08 9h) → **premier déclenchement de cette routine aujourd'hui**. Aucune autre entrée du 29/08 dans l'un ou l'autre fichier.

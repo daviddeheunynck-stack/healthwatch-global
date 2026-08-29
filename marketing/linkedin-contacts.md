@@ -1,6 +1,190 @@
 > 📦 **Archive** : le détail du 24 juin au 16 juillet 2026 a été déplacé dans [linkedin-contacts-archive-avant17juillet.md](linkedin-contacts-archive-avant17juillet.md) le 23/07 pour garder ce fichier léger.
 
 
+## 📅 Session linkedin-hwg-followup-check — 29/08/2026 (13h, 1er des 2 créneaux après-midi)
+
+**Vérification double déclenchement** : aucune entrée `linkedin-hwg-followup-check` datée du 29/08 dans ce fichier ni dans `content-log.md` à l'ouverture (dernière en date : 28/08 13h). Les entrées du 29/08 déjà présentes appartiennent à `linkedin-hwg-monitoring` (9h) et à une intervention de David en session (envoi du DM Abou à 10:19) — runs intentionnellement distincts → **premier déclenchement de cette routine aujourd'hui**.
+
+**🖥️ Navigateur** : `_shared/browser-status.md` lu avant ouverture, dernière entrée **🟢 RÉTABLI (24/08 ~09h15)** → aucun bridage. `23c7ecdd-…` seul navigateur listé, sélectionné sans question (§7). Aucun incident d'appairage. **Quatre bannières de cookies LinkedIn rencontrées, « Refuser » cliqué à chaque fois**, jamais « Accepter ».
+
+**Registres régénérés en début de run** : `npm run qa:facts` → **222 faits citables sur 106 lignes affichées**, 81 lignes `is_seed` exclues, 18 faits périmés (contre 219/105 ce matin). `npm run qa:claims` → 805 chaînes de copie publique, 2 claims manuelles, couverture 106 foyers / 69 pays / 17 maladies / **31 hôtes source**.
+
+**Quotas à la clôture** : commentaires **4/7, inchangé** (4 publiés ce matin, **2 candidats travaillés et abandonnés ce créneau sur défaut de fond**, voir section 4) · **DM 4 rédigés et mis en file de validation, 0 envoyé** (4 déjà envoyés aujourd'hui par décision de David : 3 à 04:45-04:49 + Abou à 10:19, donc 4 créneaux restants sur les 8) · suivis **7/7-10, aucun follow-back dû** · connexions **1 envoyée ce matin, 2 acceptées ce créneau** · notes de connexion **0/7, blocage plateforme inchangé**.
+
+---
+
+### 1️⃣ SUIVI DES ACTIONS PRÉCÉDENTES ET VEILLE MESSAGERIE
+
+**Boîte de réception parcourue par récence. Trois réponses entrantes depuis le run de 9h**, sur les trois fils travaillés ce matin ou hier soir.
+
+- ⭐ **Abou A. SOUMAH a répondu 21 et 23 minutes après l'envoi du DM de 10:19** (10:40 et 10:42), avec **trois questions directes** : « *Avez-vous une equipe sur place en RDC?* », « *Avez-vous des projets de recherche operationnelle sur la MVE?* », puis « *J'ai aussi essaye de me connecter sur votre Dashboard et ca demande un enregistrement* ». Il mentionne aussi être « *un peu deborde pour le handover avec l'equipe MSF* ». **Brouillon de réponse en file, section 2.**
+- ⭐ **John Omari Baso a répondu à 11:53**, et le ton a changé : « *Pour bien converger avec toi ou selon ce que vous voulez, je pense il serait mieux d'attendre la mise a jour de la source que vous consultez souvent […] **je suis loin de parvenir a vous convaincre**, neanmoins je suis sur terrain et peux avoir des infos a temps reel sur la situation epidemiologique polio, rougeole et EVD en cours en RDC* ». **Il a lu de la méfiance dans la contrainte de sourçage.** C'est un signal à traiter tout de suite, pas à laisser refroidir : c'est le contact terrain RDC le plus productif du corpus. **Brouillon de réponse en file, section 2.**
+- ✅ **Dr. Siaka Condé a répondu à 12:29 — et rien n'est dû.** Sa réponse cite intégralement notre message de 04:45 puis ajoute une seule phrase : « *Let me look at this for a moment* ». **Aucun brouillon rédigé, délibérément** : c'est une demande de délai explicite, et un accusé de réception habillé (« prenez votre temps ») échouerait à la question 12 du relecteur. Le fil reste ouvert, la balle est chez lui.
+- **Alain BASHIZI** : notre message de 04:47 reste le dernier, aucune réponse. Rien à relancer.
+- **Rodrigo Olave Hurtado, Isaias Fernandes Co, Peace Mpakaniye, Pierre PARNEIX, Dr. Kaushik Sanyal, Harvey Basivikidi** : inchangés depuis ce matin.
+
+**Connexions envoyées — vérification systématique (règle du 14/07)** : liste `/mynetwork/invite-connect/connections/` triée par « Ajouts récents ». **279 relations, contre 277 ce matin — deux acceptations aujourd'hui**, toutes deux datées « Connexion le 29 août 2026 » :
+1. ⭐ **Summer Galloway, Ph.D.** (`/in/segallowayphd/`) — **l'invitation sans note envoyée ce matin même a été acceptée dans la journée.** Carry-over n°5 du 9h honoré : welcome DM rédigé, section 2.
+2. ⭐ **Bobossam Cissoko** (`/in/bobossam-cissoko-b2a79630/`) — ***Surveillance officer chez World Health Organization***, Abidjan. **Invitation sans note du 11/08 acceptée aujourd'hui, 18 jours plus tard.** Aucun échange préalable. Welcome DM rédigé, section 2.
+
+**Béatrice SERRA** : invitation sortante du 28/08 toujours non acceptée, inchangé.
+
+**Notifications parcourues intégralement (10 items).** Deux pistes exploitées (Oke Ikpekpe → abandonnée, voir section 5 ; Larry Kerr → Tambe Elvis Akem, commentaire publié). **TOLYENA MOCTAR DINGAMNAYAL a aimé le commentaire French Healthcare Association** publié ce matin. Les autres items portent sur des cibles bloquées (Jason Kindrachuk jusqu'au 04/09) ou hors périmètre.
+
+---
+
+### 2️⃣ 🔒 QUATRE DM EN FILE DE VALIDATION
+
+Rappel de la règle du 23/07, reconfirmée par David le 26/08 au soir : **les DM ne partent jamais en autonomie.** Chacun rédigé, puis passé **une fois** au registre de faits, au contrôle mécanique et au relecteur indépendant. Commentaires et notes de connexion restent autonomes.
+
+⚠️ **Les relecteurs ont trouvé de vrais défauts sur 3 des 4 brouillons, dont une contre-vérité produit qui serait partie à un contact réel.** Détail dans chaque fiche. **Deux d'entre eux ont buté indépendamment sur le même point non tranché — la provenance des sources, voir section 6.**
+
+#### 🔒 DM 1 — **Abou A. SOUMAH** (`/in/abou-a-soumah-9911a634/`), FR, **tutoiement**, fil actif, **SANS CTA**, hors quota froid
+
+*Epicentre / MSF*, Kinshasa (RDC), 1er degré. Fil ouvert le 17/08, **11 messages**, recopiés verbatim dans `tmp/thread-abou-29b.txt`.
+
+⚠️ **LANGUE — français, tutoiement.** Fil basculé en FR le 17/08 à 17:14, tutoiement établi des deux côtés. *Langue du fil = fr ; langue du brouillon = fr*, paire confirmée mécaniquement (`draftLang: fr` / `threadLang: fr`). Son dernier message repasse au « vous » (« *Avez-vous une equipe* »), mais il s'adresse là à HWG comme organisation, pas à David : le tutoiement qu'il a lui-même ouvert reste le registre du fil.
+
+**CTA : volontairement absent.** Nom et lien déjà servis dans ce fil le 17/08. §3 interdit de resservir le même argumentaire.
+
+🔴🔴 **Le relecteur a attrapé une contre-vérité produit que le contrôle mécanique ne pouvait pas voir, et il est allé lire le code de production pour l'établir.** Le premier brouillon répondait à Abou que « *les chiffres exacts de cas et de décès sont derrière une inscription, gratuite et sans carte* ». **C'est faux au-delà de 14 jours** : le verrou en production n'est pas l'existence d'un compte mais `isPaid` (`app/[locale]/(dashboard)/page.tsx`, les chiffres sont rendus `blur-sm` pour tout non-payant), et `pricing.faq4_a` confirme qu'« *au bout de 14 jours, votre compte passe automatiquement au plan Gratuit* » — plan qui, d'après `pricing.faq3_a`, ne comprend pas ces chiffres. **Dire « inscris-toi gratuitement et tu verras les chiffres » à un prospect réel était donc un mensonge à échéance de deux semaines.** Le relecteur a aussi fait tomber deux autres phrases : « *la carte et la liste des foyers s'ouvrent sans compte* » (aucune ligne du registre ne la couvre, et elle contredisait le vécu d'Abou) et la mention du correctif du matin (« *une page du site affirmait le contraire, je l'ai corrigée aujourd'hui* ») — le commit `a2868b4` porte sur une **description JSON-LD**, métadonnée SEO invisible pour un visiteur, pas sur une page lisible. **Les trois points corrigés : le brouillon dit maintenant que les chiffres relèvent de l'offre payante, énumère ce que donne réellement le plan gratuit d'après `pricing.faq3_a`, et ne revendique aucun correctif.**
+
+**QA: mécanique FAIL (2 blockers, tous deux écartés sur pièce — `context.too-soon` : réponse à un message entrant reçu 2 h 20 plus tôt, pas une relance ; `ngram.history` sur « le tableau de bord public », citation littérale de `pricing.faq3_a`, absente de tout message envoyé, vérifiée par grep sur `marketing/*.md` : 0 occurrence ; 720 car., 3 paragraphes, `draftLang: fr` / `threadLang: fr`) | relecteur REECRIRE (4) au 1er passage, les 3 phrases visées corrigées — 11 PASS sur 12 | faits cités: aucun chiffre ; provenance des affirmations produit dans `pricing.faq3_a` et `pricing.faq4_a` | registre du 29/08 | statut: en file de validation**
+
+> Salut Abou, et merci de poser les questions franchement, je réponds pareil.
+>
+> Non aux deux premières. Pas d'équipe en RDC, pas de projet de recherche opérationnelle sur la MVE. Je suis seul derrière la plateforme, depuis le nord de la France, et tout ce qu'elle affiche provient de publications déjà parues. Rien n'y vient du terrain, c'est justement ce qui manque et ce qui m'avait fait t'écrire en août.
+>
+> Sur le tableau de bord, tu es tombé sur une vraie limite, et elle est de mon fait. Les chiffres exacts de cas et de décès sont réservés à l'offre payante ; le compte gratuit ouvre le tableau de bord public, une région suivie et la synthèse hebdomadaire, pas ces chiffres-là. Rien ne t'en avertissait avant le clic.
+
+#### 🔒 DM 2 — **John Omari Baso** (`/in/john-omari-baso/`), FR, **vouvoiement**, fil actif, **SANS CTA**, hors quota froid
+
+Professionnel de santé publique sur le terrain en RDC (polio, rougeole, EVD). Fil de **11 messages**, recopié verbatim dans `tmp/thread-john-29b.txt`.
+
+⚠️ **LANGUE — français, vouvoiement.** Fil passé au FR depuis son message de 21:03. *Langue du fil = fr ; langue du brouillon = fr*. **Le registre a été arbitré** : il écrit « *Pour bien converger avec toi ou selon ce que vous voulez* », mélangeant les deux dans la même phrase, mais vouvoie partout ailleurs (« *votre dernier mis a jour* », « *Je pense vous pouvez vous appuyez* »), et David vouvoie depuis le début. **[[feedback_linkedin_tutoiement_mirror_contact]] ne s'applique pas** : le contact n'a pas basculé au tu, il a proposé les deux.
+
+**L'intention** : il a lu de la méfiance dans la contrainte de sourçage. Le brouillon répare ce malentendu, puis convertit son offre d'infos temps réel en une répartition du travail utilisable — il indique où regarder, David cherche la trace publiable. **La question ouverte du 04:49 (le détail par province ressort-il chez AFRO ?) n'est délibérément pas re-posée** : c'est la 3e fois qu'elle serait servie, et le relecteur du DM Abou de ce matin avait précisément sanctionné la re-pose d'une question après un silence.
+
+🔴 **Le relecteur a attrapé une flatterie qui déformait la chaîne réelle des faits (question 5).** Le brouillon disait « *elle est passée de 32 à 37 cas […] et Tanganyika y est apparu. **C'est votre direction, pas la mienne.*** » Or le passage à 37 vient de la **republication du point GPEI**, ce que David lui-même écrit dans le fil à 12:36 (« *ce point a ete republie depuis avec des donnees plus recentes* ») — pas de John, dont les chiffres étaient tout autres (42 cas, 6 provinces) et dont la piste COUP avait été explicitement écartée. **Ce que John a réellement fait, et qui est conservé : il a repéré que la ligne datait encore du 18** (« *Je vois que votre dernier mis a jour remonte au 18/08 ....* »). Corrigé en ce sens. 🔴 **Second point (question 4) : « Tanganyika y est apparu » supprimé** — `manualClaims` énumère ce qu'affiche une ligne publique (maladie, pays, cas, décès, une date, la source) et **n'y fait figurer aucune province** ; l'affirmation n'était couverte par rien.
+
+**QA: mécanique FAIL (1 blocker unique `context.too-soon`, faux positif documenté — réponse à un message entrant reçu 1 h 30 plus tôt ; 1 warn `lexique` corrigé, « 37 cas » → « 37 cas confirmés » ; 1 `ngram.history` corrigé, la clause « à 37 cas AFP confirmés arrêtés au 26 août » étant ma propre phrase déjà lue par lui hier ; 881 car., 3 paragraphes, `draftLang: fr` / `threadLang: fr`) | relecteur REECRIRE (4, 5) au 1er passage, les 2 corrigés — 10 PASS sur 12 | faits cités: « 37 cas confirmés au 26 août » (registre, `Polio / DR Congo, kind: cases, value: 37, asOf 2026-08-26`, `sourceConfirmedHonoured: true`, `ageDays: 0`) et « 32 au 18 » (fil, message du 19:46) | registre du 29/08 | statut: en file de validation**
+
+> Bonjour John, une chose d'abord, parce que je crois que vous avez lu de la méfiance là où il n'y en a pas.
+>
+> Vous m'avez convaincu, et ça s'était vu avant même votre message d'aujourd'hui : c'est vous qui avez vu que ma ligne datait encore du 18, et elle porte maintenant 37 cas confirmés au 26 août. Ce que je vous ai dit sur la source ne portait pas sur ce que vous savez, mais sur ce que ma page a le droit d'afficher : chaque ligne doit renvoyer à un document que le lecteur peut ouvrir lui-même. C'est une contrainte de l'outil, pas un doute sur vous.
+>
+> Et c'est là que votre position sert le plus. Quand quelque chose bouge chez vous avant de sortir, dites-le moi : je saurai quel document aller chercher, et quand, au lieu d'attendre une mise à jour hebdomadaire sans savoir ce qu'elle devrait contenir. Vous m'indiquez où regarder, je me charge de trouver la trace publiable.
+
+#### 🔒 DM 3 — **Summer Galloway, Ph.D.** (`/in/segallowayphd/`), EN, **welcome DM**, connexion acceptée ce jour, **SANS CTA**
+
+*Global Health and National Security Executive | Bridging Policy, Science & Governance Architecture to Strengthen Pandemic Preparedness*, Emory University School of Medicine, **3 337 abonnés**. **Aucun échange préalable** — premier message privé, le jour de l'acceptation. Carry-over n°5 du run de 9h.
+
+**Accroche vérifiée sur pièce, à la source et non de mémoire** : son **propre post** d'il y a 3 semaines, verbatim — « *In this latest article, Larry Kerr and I write about Day 75 of the BDBV outbreak.* », article lié « *Day 75: How Bundibugyo Science Reached the Clinic* » (`ldkerr1964.substack.com`).
+
+⚠️ **§10 tenu de très près.** Son travail est adossé à `#PABS`, `#PandemicAgreement`, `#PathogenAccess`, et sa republication la plus récente porte sur la politique américaine de gouvernance de la recherche à haut risque. **Aucun de ces objets n'apparaît dans le brouillon**, et la partie 3 de la série « Day 100 » avait déjà été écartée §10 ce matin pour cette raison. Le relecteur confirme le silence, en notant que le paragraphe final est « le point du message le plus proche du bord ».
+
+🔴 **Le relecteur a attrapé une surestimation de son rôle (question 6).** Le brouillon parlait de « *your series* », « *do you rebuild it **each time*** » et « *your timeline* » — or les éléments vérifiables ne donnent **qu'un seul article**, publié sur le Substack de Larry Kerr avec elle en cosignature. Attribuer la série entière était une déduction, exactement le genre de détail auquel elle peut répondre « en fait c'est le Substack de Larry ». **Ramené au singulier et à l'article réellement attesté.**
+
+**QA: mécanique WARN après correction (0 blocker ; 2 warns `facts.unsourced` sur « Day 75 », faux positifs — le nombre vient verbatim de son post et du titre de l'article, la règle admet le registre **ou** le profil ; 1 review `hwg.claim` ; 1 review `context.no-thread`, structurel sur un premier DM ; 806 car., 3 paragraphes, `draftLang: en`) | relecteur REECRIRE (4, 6) au 1er passage, les 2 corrigés — 10 PASS sur 12 | faits cités: « Day 75 » (son post, verbatim) ; description de HWG alignée sur `manualClaims` (ce qu'affiche une ligne) | registre du 29/08 | statut: en file de validation**
+
+> Summer, thank you for accepting.
+>
+> The Day 75 piece you wrote with Larry Kerr is why I sent the invitation. HealthWatch Global is what I do: a running record of active outbreaks, where a line carries a disease, a country, counts, a date and its source. What I end up holding for BDBV is exactly that, a count, a date and a source. What the two of you wrote covers what that leaves out, namely what the response actually had in hand at that point.
+>
+> Here is what I cannot settle from where I sit. When you reconstructed where the R&D response stood at Day 75, did that material sit somewhere a person outside the response could find it, or did you rebuild it from people you know? If it is the second, that piece is the only public record of it, which is a strange position for an outbreak this size to be in.
+
+#### 🔒 DM 4 — **Bobossam Cissoko** (`/in/bobossam-cissoko-b2a79630/`), FR, **welcome DM**, connexion acceptée ce jour, **SANS CTA**
+
+***Surveillance officer chez World Health Organization | Public Health***, Cocody, Abidjan, Côte d'Ivoire, compte vérifié. **Invitation sans note envoyée le 11/08, acceptée aujourd'hui.** Aucun échange préalable.
+
+**Accroche assumée comme ancienne.** Son activité publique est très mince : **3 posts au total, le plus récent datant d'un an** — son compte rendu du 3e sommet AFRO GIS à l'OMS Brazzaville, sur « *la cartographie des interventions, l'analyse des données, leur visualisation pour favoriser la prise de décision adaptée et rapide* ». Il n'existe pas d'accroche plus fraîche, et le brouillon **le dit d'entrée** (« *Je remonte à un post ancien pour m'expliquer* ») plutôt que de le faire passer pour récent.
+
+🔴🔴 **Le relecteur a attrapé deux défauts, dont un piège relationnel réel (questions 6 et 9).** Le brouillon demandait si « *la couche cartographique construite **à l'intérieur de la riposte** ressort-elle quelque part publiquement, ou le lecteur extérieur n'a-t-il **jamais** que le tableau de chiffres ?* » — formulation qui (a) présuppose qu'il fait partie d'une riposte précise, alors que son intitulé dit « surveillance » et que son post dit seulement qu'il a **assisté** à un sommet, et (b) transforme une question de disponibilité en **constat de rétention**, en demandant à un agent de l'OMS de trancher sur la politique de publication de son propre employeur, dans un tout premier message. Verdict du relecteur : « *deux issues, toutes deux mauvaises* ». **Reformulé en question neutre de disponibilité, sans « jamais », sans opposition intérieur/extérieur, sans rien présumer de son poste.**
+
+**QA: mécanique PASS après correction (0 blocker, 0 warn ; 2 reviews `hwg.claim` et `context.no-thread` ; 1 `ngram.history` corrigé — « bien mieux placé que moi », formule réellement déjà servie à un autre destinataire, vérifiée par grep, `linkedin-contacts.md` l. 4298 ; 698 car., 3 paragraphes, `draftLang: fr`) | relecteur REECRIRE (4, 6, 9) au 1er passage, les 3 corrigés — 9 PASS sur 12 | faits cités: « 3e sommet AFRO GIS » (son post, verbatim) ; description de HWG alignée sur `manualClaims` | registre du 29/08 | statut: en file de validation**
+
+> Bonjour Bobossam, merci d'avoir accepté l'invitation.
+>
+> Je remonte à un post ancien pour m'expliquer, parce que c'est lui qui m'a fait vous écrire : votre message sur le 3e sommet AFRO GIS à Brazzaville, où vous reteniez la cartographie des interventions et la visualisation des données pour décider vite. Je construis HealthWatch Global, un suivi des flambées où chaque ligne porte une maladie, un pays, des cas, des décès, une date d'arrêté et sa source. Rien de plus.
+>
+> D'où ma question, que je ne sais pas trancher depuis l'extérieur : est-ce que ce type de travail cartographique donne lieu à des sorties publiques quelque part, ou est-ce que ce qui est publié reste pour l'essentiel tabulaire ?
+
+---
+
+### 3️⃣ SUIVIS ET CONNEXIONS — aucun follow-back dû, quota du matin conservé
+
+**Aucun follow-back dû.** Liste « Abonnés » (`/mynetwork/network-manager/people-follow/followers/`) parcourue par récence, **état des boutons lu dans le DOM** : les abonnés les plus récents portent tous « *Cliquez pour cesser de suivre* », donc **tous déjà suivis en retour**. **390 abonnés, contre 388 ce matin** — les deux nouveaux sont **Bobossam Cissoko et Summer Galloway**, c'est-à-dire les deux connexions acceptées du jour, déjà suivis. Un filtrage programmatique sur les boutons « Suivre » de la liste renvoie **0 profil non suivi en retour**. **Winston Urio** reste le seul non suivi, écarté §10 le 27/08, statut inchangé, non reproposé.
+
+**Aucune recherche active de suivis supplémentaires n'a été menée ce créneau**, et le motif est un arbitrage de temps assumé : le quota du matin (7/7-10) est rempli, aucun follow-back n'était dû, et le run a été absorbé par quatre brouillons de DM dont trois ont demandé une correction de fond après relecture. **Marge résiduelle de 3 suivis laissée au créneau de 17h**, avec les candidats du carry-over.
+
+**Notes de connexion : 0/7, blocage plateforme inchangé.** Aucune invitation sortante n'a été envoyée ce créneau, donc l'état constaté ce matin (quota de notes personnalisées gratuites épuisé, modale Premium) n'a pas été retesté — il l'a été il y a moins de 4 heures.
+
+---
+
+### 4️⃣ 💬 AUCUN COMMENTAIRE PUBLIÉ — DEUX CANDIDATS ABANDONNÉS SUR DÉFAUT DE FOND
+
+**Quota inchangé à 4/7, et le motif est éditorial, pas un manque d'effort.** Deux candidats ont été travaillés jusqu'au brouillon complet, tous deux ont passé le contrôle mécanique, tous deux ont été **arrêtés par le relecteur indépendant sur des erreurs factuelles réelles**. Détail intégral, textes abandonnés et QA dans `content-log.md`, entrée du jour.
+
+🔴🔴 **Ces deux échecs sont le même échec, et c'est le point à retenir du run.** Les deux brouillons reposaient sur une variante de l'angle habituel de HWG — « *ce que le registre publié ne porte pas* » — et **les deux ont été réfutés sur les faits**, pas sur le style. Le relecteur de Tambe est allé jusqu'à retourner le **code de HWG** contre le brouillon. Cet angle est devenu un réflexe et il commence à produire des affirmations invérifiées : **il demande désormais d'être vérifié avant d'être écrit, pas après.** Aucune 3e tentative n'a été lancée dans ce moule, conformément à la règle des deux essais (§5 item 6) : deux échecs sur la même classe de défaut dans la même session sont le signal d'arrêter, pas d'insister.
+
+❌ **Tambe Elvis Akem, MD** (`/in/tambe-elvis-akem/`, 1er degré, blocage expiré, post de 2 h, **0 commentaire**) — cible de très bonne qualité, en plein périmètre : son *BVD Operational Intelligence System*, avec une **logique d'inactivité à 21 jours** pour déclasser une zone de santé sans nouveau cas confirmé. **Brouillon rédigé, mécanique `PASS` propre (516 car.), puis relecteur `REECRIRE` sur 5 questions dont deux erreurs factuelles :**
+- « *A cumulative count moves in one direction only* » — **faux, et réfuté par le registre produit de HWG lui-même** : « *Certaines lignes portent un compteur d'annee civile remis a zero au 1er janvier (Taiwan, Malaisie)* », formalisé dans `lib/outbreak-guards.ts` (`isYearRollover`) et dans le cron Taïwan.
+- « *published outbreak records almost never carry [a decay rule]* » — **faux pour la maladie et le pays du post** : les sitreps Ebola RDC publient les zones de santé à transmission active **sur les 21 derniers jours**, et la déclaration de fin de flambée à 42 jours est elle-même une règle de décroissance publiée, avec décompte public.
+Le relecteur a aussi relevé deux **moules rhétoriques d'archive** (« *the part I keep turning over* », déjà retiré deux fois par le contrôle anti-gabarit ; « *seen from outside, A et B se ressemblent* », au moins 4 occurrences), et conclu que, les deux affirmations fausses retirées, il ne restait que la propre phrase de Tambe reformulée. **Verdict suivi à la lettre : ne pas publier du tout.** ⭐ **Le profil et le post restent d'excellente qualité et Tambe n'est PAS bloqué** (rien n'a été publié) : à reprendre avec un angle qui ne soit pas « ce qui manque au registre ».
+
+❌ **Oke Ikpekpe — candidat abandonné après relecture, et c'est la bonne décision.** Il a répondu une **4e fois** (2 h) en corrigeant David sur un point réel : des indicateurs existent bien entre les flambées. Un brouillon de réponse en sous-fil a été rédigé et a passé le contrôle mécanique en `PASS` propre — **puis le relecteur l'a démoli sur 4 questions**, dont une **erreur épidémiologique réelle** : le brouillon affirmait que ces indicateurs sont « *largely a declaration made on a date* » et que le fonctionnement réel « *only becomes observable once something tests it* », alors que les exercices de simulation, les revues après action et les indicateurs de complétude et de délai de la surveillance intégrée testent précisément le comportement **hors flambée**. Verdict cité : « *ce qui est nouveau est faux, ce qui est vrai n'est pas nouveau* » — la distinction proposée était déjà celle d'Oke, mot pour mot. Il a aussi relevé que **trois tours consécutifs de David ouvraient sur la même figure** (concession puis restriction immédiate), lisible comme un tic au 4e tour. **Conformément à la règle des deux essais (§5 item 6) et à la conduite prévue pour les commentaires — renoncer au candidat si un défaut de fond survit —, aucune réécriture n'a été tentée.** Son message ne pose d'ailleurs pas de question directe cette fois, le silence est tenable. **Le sous-fil reste ouvert s'il relance.**
+
+**Aucun blocage hebdomadaire nouveau créé ce run**, puisque rien n'a été publié. **Tambe Elvis Akem et Oke Ikpekpe restent l'un libre, l'autre bloqué jusqu'au 04/09 par le commentaire du 28/08.**
+
+---
+
+### 5️⃣ 📊 DONNÉES ÉPIDÉMIOLOGIQUES (§8) — aucune écriture
+
+**Un seul chiffre public croisé ce créneau**, dans le post de Tambe Elvis Akem : la flambée BVD « *expands across 60 health zones in the DRC* ». **C'est un compte de zones de santé, pas un chiffre de cas ou de décès : la base HWG n'a aucun champ pour le porter** (`manualClaims` : une ligne affiche maladie, pays, cas, décès, une date, la source). **Aucune écriture, et rien à corriger.** La ligne Ebola/RDC reste à 5 794 cas / 2 786 décès au 26/08, `ageDays: 0`, inchangée depuis le relevé de 9h.
+
+**Le point de divergence Ebola/RDC reste résorbé**, comme constaté ce matin.
+
+⚠️ **Point ouvert inchangé, 3e signalement** : la ligne **Ouganda close le 26/08 porte toujours un `asOf` au 28/07** (`stale: true`, `ageDays: 31`), alors que la fin de flambée a été officialisée le 27/08. Non retesté ici, hors périmètre d'une session sociale. **Pour ingestion par `morning-don-check`.**
+
+---
+
+### 6️⃣ ⚠️ À SIGNALER À DAVID
+
+1. 🔒 **Quatre DM en attente de validation** : Abou A. SOUMAH, John Omari Baso, Summer Galloway, Bobossam Cissoko. Textes intégraux en section 2. **Notification push envoyée.**
+2. 🔴🔴 **Une contre-vérité produit a été rattrapée de justesse, et elle serait partie à un contact réel.** Voir DM 1 : le brouillon promettait à Abou que l'inscription gratuite ouvrait les chiffres exacts. En production le verrou est `isPaid`, et `pricing.faq4_a` prévoit qu'un compte non payant retombe au plan Gratuit au bout de 14 jours. **Ce n'est ni le contrôle mécanique ni le rédacteur qui l'ont vu : c'est le relecteur indépendant, en allant lire le code.** Le dispositif a fonctionné exactement comme prévu.
+3. 🔴 **Le point de provenance des sources a bloqué deux brouillons indépendamment, et il reste non tranché.** Les relecteurs de Summer Galloway et de Bobossam Cissoko ont, chacun de son côté, refusé la formule « à partir des bulletins publics » : `pricing.faq5_a` affirme que les données viennent « *directement d'agences de santé publique officielles : OMS, PAHO et ECDC* », alors que `coverage.sourceHosts` en compte **31**, dont `franceinfo.fr`, `monitor.co.ug`, `leadership.ng`, `africa24tv.com`, `tchadinfos.com`, `enqueteplus.com`, `mesvaccins.net` — de la presse, pas des bulletins. **C'est exactement le point noté le 26/08 comme « à trancher avant tout post sur la provenance » ([[project_faq5_sources_claim_narrower_than_reality_2026_08_26]]), et il coûte maintenant des réécritures en série.** Les deux brouillons ont été rabattus sur ce que `manualClaims` couvre (ce qu'affiche une ligne), mais **aucun message ne pourra parler de provenance tant que l'écart entre la FAQ et la réalité n'est pas arbitré.** Deux issues possibles : corriger `faq5_a`, ou restreindre les sources. C'est une décision de David.
+4. ⭐ **Signal de traction institutionnelle (§13)** : deux acceptations de connexion le même jour, toutes deux au niveau institutionnel — **Bobossam Cissoko, *Surveillance officer* à l'OMS**, et **Summer Galloway, Ph.D.**, dirigeante santé mondiale / sécurité nationale à Emory, 3 337 abonnés, coautrice de la série sur la riposte Bundibugyo. **Incluses dans la notification push.**
+5. **Aucune donnée patient proposée, aucune demande de canal hors plateforme, aucune instruction adressée à l'agent (§6), aucune situation §10 ouverte** au-delà des écarts éditoriaux documentés.
+6. **Quatre bannières de cookies LinkedIn** rencontrées et **refusées**, jamais acceptées.
+
+---
+
+### 🔁 CARRY-OVER POUR 17h — liste exhaustive
+
+1. 🔒 **Quatre DM en file de validation** (déposés le 29/08 à 13h) : Abou A. SOUMAH, John Omari Baso, Summer Galloway, Bobossam Cissoko. Textes intégraux en section 2. **Aucun ne part sans ordre explicite de David.**
+2. ⭐ **Dr. Siaka Condé** — a demandé un délai à 12:29 (« *Let me look at this for a moment* »). **Ne rien lui écrire tant qu'il n'a pas répondu** ; vérifier au créneau de 17h s'il est revenu.
+3. ⭐ **Oke Ikpekpe** — 4e réponse publique reçue, candidat de commentaire **abandonné sur défaut de fond** (section 4). **Ne pas réécrire le même angle** : l'erreur portait sur la nature des indicateurs inter-épidémiques, pas sur la formulation. Sous-fil ouvert s'il relance. Reste le **meilleur candidat DM du carry-over**, jamais de message privé échangé. Blocage top-level jusqu'au 04/09.
+3bis. ⭐⭐ **Tambe Elvis Akem, MD** (`/in/tambe-elvis-akem/`, 1er degré, **non bloqué**) — son post du 29/08 sur le *BVD Operational Intelligence System* (logique d'inactivité à 21 jours, cartes d'action par zone de santé, audit de complétude des données) est une **excellente cible restée non consommée**, le brouillon ayant été abandonné sur ses propres erreurs et non sur la qualité du post. **À reprendre au créneau de 17h ou demain, sous réserve de la fenêtre 48 h, avec un angle qui ne soit PAS « ce qui manque au registre publié ».** Un fil DM est par ailleurs ouvert avec lui depuis le 14/07.
+3ter. 🔴 **Angle éditorial à surveiller, valable pour toutes les sessions** : le moule « *le registre publié ne porte pas X* » a produit **deux affirmations fausses en une session** (section 4), toutes deux arrêtées par le relecteur, l'une réfutée par le code de HWG lui-même. **Vérifier ce type d'affirmation avant de l'écrire, et varier l'angle** — c'est aussi ce que signalait déjà [[feedback_anti_template_check_structure_not_just_wording]].
+4. ⭐⭐ **Melvin Sanicas** (`/in/melvinsanicas/`) — **blocage levé demain 30/08**. Deux posts excellents relevés ce matin (paludisme d'aéroport à Francfort ; fin de la flambée ougandaise avec la divergence OMS/CDC sur la classification des cas). **Cible n°1 de demain matin**, sous réserve de la fenêtre 48 h.
+5. ⭐ **Africa CDC** (page) — libre, non consommée. Son post « *What happens after the outbreak is over?* » reste une bonne cible, écartée ce matin pour doublon de sujet avec le commentaire Oke. **Reprendre dès un autre sujet.**
+6. ⭐ **Dr. Florika Fink-Hooijer** (`/in/dr-florika-fink-hooijer-9539192a5/`) — suivie ce matin. **Décideuse HERA/Commission européenne, jamais engagée. Cible prioritaire dès qu'elle publie dans la fenêtre 48 h.**
+7. ⭐ **Joannishka D.** (`/in/dr-joannishka-k-dsani/`) — suivie ce matin, article BMC One Health Ghana hors fenêtre. **Cible de commentaire dès qu'elle republie.**
+8. ❌ **Larry Kerr** (`/in/larry-kerr-786b908/`, 1er degré) — **prémisse retestée ce run** : son post le plus récent est bien la partie 3 de la série « Day 100 », **confirmée §10 sur pièce** (« *for African health security, global health financing, research partnerships, and the design of PABS* »). **Reste écarté.** Son autre activité du jour est un commentaire de félicitations sous le post de Tambe, sans matière propre. **Cible dès qu'il publie du factuel.**
+9. ⭐ **Yazdan Yazdanpanah**, **Dr. Hassan SANA** (`/in/hassansana/`, 1er degré, jamais engagé), **Regional Health Data Hub (#RDHUB)** — inchangés, cibles dès qu'ils publient du fond.
+10. ⭐ **Baraka Kweli Birindwa** — inchangé, écarté deux fois sur le contenu du post, profil toujours valable.
+11. ➖ **Béatrice SERRA** — invitation sortante du 28/08 toujours non acceptée. Deux accroches restent brûlées.
+12. ⛔ **BANZA Freddy Mutoka** — invitation en attente depuis le 09/08, prémisse retestée le 28/08. Reste hors des carry-over actionnables.
+13. ❌ **World Health Organization African Region, post « fin de la flambée Ebola en Ouganda »** — **clos par abandon documenté** ce matin après 4 tentatives d'accès. Ne pas rouvrir.
+14. **Marge de suivis non consommée** : 3 sur les 10 du plafond, laissée au créneau de 17h. Aucun follow-back dû à 13h.
+15. 🔴 **Provenance des sources, à trancher par David** — voir section 6 point 3. **Bloque tout message futur parlant de l'origine des données.**
+16. 🔴🔴 **Défaut produit à corriger, hors périmètre social** : les 13 lignes polio ont un **lien de source cassé** (annotation après l'URL rendue en `href` brut). **Inchangé depuis le 28/08, non retesté ce run.**
+17. **§8 à ingérer par `morning-don-check`** : `asOf` du 28/07 sur la ligne Ouganda close le 26/08 (**3e signalement**). Aucune écriture en base faite ce run.
+18. **Blocages hebdomadaires de commentaire au 29/08 à 13h** : Melvin Sanicas, Robert Herriman, Patrick AYONGA, page ECDC, Oliver Morgan, Dr Fabrice KHADDY (**30/08**) ; Martin Yakum (01/09) ; Ifedayo Adetifa, Julien Harneis (02/09) ; Harvey Basivikidi (03/09) ; Oke Ikpekpe, Jason Kindrachuk, Dr. Jeeven Kumar (04/09) ; Global Health EDCTP3, French Healthcare Association, Health Policy Watch (05/09). **Aucun blocage nouveau créé ce run, rien n'ayant été publié.** **Page Africa CDC, Vital Strategies, Tedros, Prof. Mohamed Janabi, INRB, Miriam Mbueshi, Apoorva Wasnik, Johan Verheyden, Tambe Elvis Akem : libres.**
+19. **Fichiers modifiés dans l'arbre de travail n'appartenant pas à cette routine, laissés tels quels** (`AGENTS.md`) : `marketing/qa/product-claims.manual.json` (modifié, non commité) ; `scripts/audit-alert-day.mjs` et `scripts/probe-alert-lock.mjs` (non suivis). Non committés, non stashés, non annulés. **Branche vérifiée avant écriture : master.**
+
+---
+
 ## 📅 Session linkedin-hwg-monitoring — 29/08/2026 (9h)
 
 **Vérification double déclenchement** : aucune entrée `linkedin-hwg-monitoring` datée du 29/08 dans ce fichier ni dans `content-log.md` à l'ouverture (dernière en date : 28/08 9h) → **premier déclenchement de cette routine aujourd'hui**. Aucune entrée du 29/08 d'aucune autre routine non plus.
