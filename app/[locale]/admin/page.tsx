@@ -232,8 +232,16 @@ export default async function AdminPage({
   // "admin_override" is a synthetic sentinel (see migrations 20260630120000/130000) that grants
   // the founder's own account permanent Pro without a real Stripe subscription — exclude it from
   // any metric meant to reflect actual paying customers.
-  const isRealStripeSub = (p: { stripe_subscription_id?: string | null }) =>
-    !!p.stripe_subscription_id && p.stripe_subscription_id !== "admin_override";
+  //
+  // That sentinel doesn't cover every founder account, though: found 2026-08-29 when David asked
+  // "why does MRR réel show €29 — was there a payment?" after testing the real Stripe checkout
+  // flow himself on 2026-08-26 (a genuine `sub_...` id, `stripe_has_payment_method: true`, still
+  // `trialing`, `amount_paid: 0` on its only invoice) — isRealStripeSub only screens out the
+  // literal "admin_override" string, so a real test subscription under his own email passed
+  // straight through and inflated realMrr/payingCount with zero dollars actually charged. Any
+  // ADMIN_EMAILS account is excluded here too, regardless of which Stripe path it went through.
+  const isRealStripeSub = (p: { stripe_subscription_id?: string | null; email?: string | null }) =>
+    !!p.stripe_subscription_id && p.stripe_subscription_id !== "admin_override" && !isAdmin(p.email ?? undefined);
   // "Paying" used to mean only `isRealStripeSub` — but checkout sets
   // stripe_subscription_id the instant checkout completes, even with
   // `payment_method_collection: if_required` and zero card on file (see
