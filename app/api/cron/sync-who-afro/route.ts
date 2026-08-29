@@ -350,16 +350,21 @@ async function runSyncWhoAfro(_req: NextRequest, supabase: SupabaseClient) {
   if (pageEntries.length === 0) {
     try {
       const res = await fetch(AFRO_LIST_URL, { headers: FETCH_HEADERS, signal: AbortSignal.timeout(15_000) });
-      if (!res.ok) return NextResponse.json({ error: `AFRO HTTP ${res.status}` }, { status: 502 });
+      if (!res.ok) {
+        await logCronRun(supabase, "sync-who-afro", "error", 0, `AFRO HTTP ${res.status}`);
+        return NextResponse.json({ error: `AFRO HTTP ${res.status}` }, { status: 502 });
+      }
       pageEntries = extractOutbreakLinks(await res.text());
     } catch (e) {
       Sentry.captureException(e, { tags: { cron: "sync-who-afro" } });
+      await logCronRun(supabase, "sync-who-afro", "error", 0, errorMessage(e));
       return NextResponse.json({ error: errorMessage(e) }, { status: 502 });
     }
   }
 
   console.log(`[who-afro] ${pageEntries.length} candidate articles`);
   if (pageEntries.length === 0) {
+    await logCronRun(supabase, "sync-who-afro", "no_data", 0);
     return NextResponse.json({ success: true, articles: 0, inserted: 0, updated: 0, skipped: 0 });
   }
 
@@ -368,7 +373,10 @@ async function runSyncWhoAfro(_req: NextRequest, supabase: SupabaseClient) {
     .from("outbreaks")
     .select("id, disease_en, country_en, cases, deaths, date, source, active, description, source_priority")
     .or("active.eq.true,date.gte." + new Date(Date.now() - 90 * 86400_000).toISOString().substring(0, 10));
-  if (fetchErr) return NextResponse.json({ error: fetchErr.message }, { status: 500 });
+  if (fetchErr) {
+    await logCronRun(supabase, "sync-who-afro", "error", 0, fetchErr.message);
+    return NextResponse.json({ error: fetchErr.message }, { status: 500 });
+  }
 
   const bySource = new Map<string, ExistingRow>();
   const byDC     = new Map<string, ExistingRow>();

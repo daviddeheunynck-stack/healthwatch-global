@@ -346,6 +346,7 @@ async function runUsdaAphis(_req: NextRequest, supabase: SupabaseClient) {
   const countryGeo  = findCountry("United States");
 
   if (!countryGeo) {
+    await logCronRun(supabase, "sync-usda-aphis", "error", 0, "geo:United States not found");
     return NextResponse.json({ error: "geo:United States not found" }, { status: 500 });
   }
 

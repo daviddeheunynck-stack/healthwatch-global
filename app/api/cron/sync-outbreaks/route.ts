@@ -155,6 +155,14 @@ async function runSync(req: NextRequest, supabase: SupabaseClient) {
   }
 
   if (!whoODataReturnedItems && outbreaks.length === 0) {
+    // Logged before returning: the defensive GET wrapper below only catches
+    // *exceptions*, so an early return escaped it entirely and this cron's
+    // worst degraded state (every WHO source down) was indistinguishable from
+    // "never invoked" in health-check's age window. Same defect and same fix
+    // as sync-who-afro (fix-queue entry of 2026-08-28); the reference shape is
+    // sync-ukhsa, which logs every one of its early returns.
+    await logCronRun(supabase, "sync-outbreaks", "error", 0,
+      "All WHO sources failed — OData + RSS fallbacks returned 0 usable items");
     return NextResponse.json({
       error: "All WHO sources failed — OData + RSS fallbacks returned 0 usable items",
       debug: debug ? debugLog : undefined,
@@ -184,7 +192,10 @@ async function runSync(req: NextRequest, supabase: SupabaseClient) {
     .from("outbreaks")
     .select("id, disease_en, country_en, source, date, cases, deaths, active, who_don_published_at, description");
 
-  if (fetchErr) return NextResponse.json({ error: fetchErr.message }, { status: 500 });
+  if (fetchErr) {
+    await logCronRun(supabase, "sync-outbreaks", "error", 0, fetchErr.message);
+    return NextResponse.json({ error: fetchErr.message }, { status: 500 });
+  }
 
   // Row shape mirrors whatever the `.select(...)` above actually returns —
   // derived rather than hand-typed so it can't drift from the query.

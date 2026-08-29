@@ -97,6 +97,7 @@ async function runDiseaseCoverage(_req: NextRequest, supabase: SupabaseClient) {
 
   if (error) {
     console.error("[disease-coverage] DB error:", error.message);
+    await logCronRun(supabase, "disease-coverage", "error", 0, error.message);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 

@@ -289,7 +289,10 @@ async function runDataQuality(_req: NextRequest, supabase: SupabaseClient) {
     .select("id, disease, disease_en, country, country_en, cases, deaths, date, source, is_seed, is_pheic, source_priority, description, admin1, is_backfill, source_confirmed_at")
     .eq("active", true);
 
-  if (rowsErr) return NextResponse.json({ error: rowsErr.message }, { status: 500 });
+  if (rowsErr) {
+    await logCronRun(supabase, "data-quality", "error", 0, rowsErr.message);
+    return NextResponse.json({ error: rowsErr.message }, { status: 500 });
+  }
 
   // ── 2. Load yesterday's snapshots ─────────────────────────────────────────
   const { data: snaps } = await supabase
