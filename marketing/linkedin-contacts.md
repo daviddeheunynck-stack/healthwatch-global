@@ -29,7 +29,7 @@
 
 Rappel de la règle du 23/07, reconfirmée par David le 26/08 au soir : **les DM ne partent jamais en autonomie.** Rédigé, passé **une fois** au registre de faits, au contrôle mécanique et au relecteur indépendant, puis mis en file. Commentaires et notes de connexion restent autonomes et ont été publiés directement.
 
-#### 🔒 DM 1 — **Abou A. SOUMAH** (`/in/abou-a-soumah-…`), FR, **tutoiement**, fil actif, **SANS CTA**, hors quota froid
+#### 🔒 DM 1 — **Abou A. SOUMAH** (`/in/abou-a-soumah-9911a634/`), FR, **tutoiement**, fil actif, **SANS CTA**, hors quota froid
 
 *Epicentre / MSF*, basé à **Kinshasa (RDC)**, relation de 1er degré. Fil ouvert le 17/08, **8 messages**, recopiés verbatim dans `tmp/thread-abou-29.txt`.
 
