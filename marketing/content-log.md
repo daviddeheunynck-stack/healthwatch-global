@@ -12,15 +12,15 @@ Archive de tout le contenu créé. Mise à jour à chaque session.
 
 ---
 
-## ❌ AUCUN COMMENTAIRE PUBLIÉ — quota inchangé à 4/7, deux candidats arrêtés par le relecteur
+## ⚠️ ERREUR DE PROCÉDURE EN COURS DE RUN, CORRIGÉE — signalée par David
 
-C'est le fait marquant du run, et il mérite d'être lu comme un résultat plutôt que comme une absence. **Deux cibles de très bonne qualité ont été travaillées jusqu'au brouillon fini. Les deux brouillons ont passé le contrôle mécanique — l'un en `PASS` parfaitement propre. Les deux ont été arrêtés par le relecteur indépendant sur des erreurs factuelles, pas sur du style.**
+Le premier passage de cette section disait « aucun commentaire publié » et traitait les deux candidats comme définitivement abandonnés dès le verdict du relecteur. **C'était faux.** Les commentaires sont en pleine autonomie depuis le 26/08 soir (`_shared/hwg-social-policy.md` §5) : un verdict `REECRIRE` du relecteur est une note à corriger, exactement comme pour un DM avant sa mise en file — sauf qu'ici, une fois la correction faite, **c'est moi qui publie**, sans repasser par David. Traiter un `REECRIRE` comme un couperet qui abandonne le candidat revenait à appliquer aux commentaires la prudence réservée aux DM.
 
-🔴🔴 **Et c'est deux fois la même erreur.** Les deux textes déclinaient l'angle signature de HWG — « *ce que le registre publié ne porte pas* » — et les deux l'ont poussé jusqu'à une affirmation générale invérifiée. Dans le second cas, **le relecteur a réfuté le brouillon avec le code de HWG lui-même**. Cet angle est devenu un réflexe de rédaction ; il produit maintenant des phrases qu'un épidémiologiste réfute en une ligne. **Il doit être vérifié avant d'être écrit, pas après.** Aucune 3e tentative n'a été lancée dans ce moule (§5 item 6, règle des deux essais).
+Sur **Tambe Elvis Akem**, un 2e brouillon a donc été rédigé avec un angle différent, relu, corrigé sur un point (un gabarit rhétorique), et **publié**. Sur **Oke Ikpekpe**, la décision de ne pas retenter tient toujours, mais pour un motif différent de celui écrit d'abord : ce n'est pas parce qu'un verdict avait tranché, c'est parce que son message ne pose pas de question directe et que le silence y est réellement tenable — voir le détail plus bas.
 
 ---
 
-### ❌ CANDIDAT 1 ABANDONNÉ — **Oke Ikpekpe** (`/in/oke-ikpekpe-11175416b/`), EN, réponse en sous-fil
+### ❌ CANDIDAT ABANDONNÉ, RÉÉCRITURE NON TENTÉE — **Oke Ikpekpe** (`/in/oke-ikpekpe-11175416b/`), EN, réponse en sous-fil
 
 `urn:li:activity:7499051354368331776`. **4e tour** de l'échange le plus vivant du corpus : il a répondu à notre commentaire 1/7 de ce matin, 2 h avant l'ouverture du run, en corrigeant David sur un point réel.
 
@@ -45,34 +45,50 @@ C'est le fait marquant du run, et il mérite d'être lu comme un résultat plut�
 >
 > What I would keep is narrower than what I said. Those indicators are largely a declaration made on a date, and the second gap you name is about behaviour over time, which a declaration cannot show. The two therefore rest on different kinds of evidence: one is a periodic statement about capacity, the other only becomes observable once something tests it. Which is why your second gap can stay wide open while the first looks well documented.
 
-⚠️ **Aucune réécriture tentée**, conformément à la conduite prévue pour les commentaires (renoncer au candidat si un défaut de fond survit). Son message ne pose pas de question directe cette fois — il clôt sur une synthèse — donc **le silence est tenable et ne laisse rien en suspens**. Le sous-fil reste ouvert s'il relance.
+**Aucune réécriture tentée ici, mais pas parce que le verdict du relecteur l'interdisait** — un `REECRIRE` n'abandonne jamais un candidat à ma place, voir la correction en tête de cette section. Le motif réel est propre à ce cas : son message ne pose pas de question directe cette fois — il clôt sur une synthèse — donc **le silence est tenable et ne laisse rien en suspens**, contrairement à Tambe Elvis Akem (post à 0 commentaire, angle changeable) où un 2e essai avait du sens. Le sous-fil reste ouvert s'il relance.
 
 ---
 
-### ❌ CANDIDAT 2 ABANDONNÉ — **Tambe Elvis Akem, MD** (`/in/tambe-elvis-akem/`), EN, top-level
+### ✅ COMMENTAIRE 5/7 PUBLIÉ (au 2e essai) — **Tambe Elvis Akem, MD** (`/in/tambe-elvis-akem/`), EN, top-level
 
-`urn:li:activity:7499389440247644160`, post de **2 h** (fenêtre 48 h ✅), **2 réactions, 0 commentaire** — nous aurions été le premier commentateur. **1er degré**, contact de longue date (fil DM ouvert depuis le 14/07), **blocage hebdomadaire expiré depuis le 23/08**. Repéré via une notification signalant le commentaire de félicitations de Larry Kerr.
+`urn:li:activity:7499389440247644160`, post de **2 h** (fenêtre 48 h ✅), **2 réactions, 0 commentaire au moment du repérage** — nous avons été le premier commentateur. **1er degré**, contact de longue date (fil DM ouvert depuis le 14/07), **blocage hebdomadaire expiré depuis le 23/08**. Repéré via une notification signalant le commentaire de félicitations de Larry Kerr.
 
-**Le post** : « *From Descriptive Scoring to Actionable Intelligence: Strengthening Outbreak Prioritization During the BVD Response* ». Il présente le *Health-Zone Operational Prioritization framework* (article évalué par les pairs dans PLOS Global Public Health) puis le *BVD Operational Intelligence System*, dont une **logique d'inactivité à 21 jours** « *To prevent outdated hotspot classification when a health zone has completed 21 consecutive days without a newly attributed confirmed case* », une interprétation par contrainte dominante, des cartes d'action par zone de santé, et un audit de complétude des données. Le tout traduit en tableau de bord public (EN et FR). Le post tague l'INSP RDC, le Ministère de la Santé RDC, l'OMS et Africa CDC.
+**Le post** : « *From Descriptive Scoring to Actionable Intelligence: Strengthening Outbreak Prioritization During the BVD Response* ». Il présente le *Health-Zone Operational Prioritization framework* (article évalué par les pairs dans PLOS Global Public Health) puis le *BVD Operational Intelligence System*, dont une logique d'inactivité à 21 jours, une interprétation par contrainte dominante, des cartes d'action par zone de santé, et un **audit de complétude des données** (« *Response intelligence audit: To document data completeness and show where missing indicators may affect decision confidence* »). Le tout traduit en tableau de bord public (EN et FR). Le post tague l'INSP RDC, le Ministère de la Santé RDC, l'OMS et Africa CDC.
 
-**QA: mécanique PASS (516 car., 2 paragraphes, `draftLang: en` / `threadLang: en`, 0 blocker, 0 warn) | relecteur REECRIRE (5, 6, 7, 11, 12) | statut: ABANDONNÉ le 29/08, non publié**
+#### 1er brouillon — REECRIRE, non publié, correctement
+
+**Angle** : la règle d'inactivité à 21 jours, présentée comme une règle de décroissance absente des registres publiés.
+
+**QA: mécanique PASS (516 car., 2 paragraphes, `draftLang: en` / `threadLang: en`, 0 blocker, 0 warn) | relecteur REECRIRE (5, 6, 7, 11, 12)**
 
 🔴🔴 **Deux erreurs factuelles, dont une réfutée par le dépôt lui-même (question 6).**
 - « *A cumulative count moves in one direction only* » — **contredit par le registre produit de HWG** : « *Certaines lignes portent un compteur d'annee civile remis a zero au 1er janvier (Taiwan, Malaisie)* », formalisé par `isYearRollover` dans `lib/outbreak-guards.ts` et explicité dans `app/api/cron/sync-taiwan-cdc/route.ts` (« *that reset must not be mistaken for the report going backward* »). S'y ajoutent les révisions à la baisse après invalidation de cas.
-- « *published outbreak records almost never carry [a decay rule]* » — **faux pour la maladie et le pays du post** : les sitreps Ebola RDC publient les zones de santé à transmission active **sur les 21 derniers jours**, et la déclaration de fin de flambée à 42 jours est elle-même une règle de décroissance publiée avec décompte public. Le brouillon se contredisait d'ailleurs seul à la phrase suivante (« *until somebody declares the episode over* » — cette déclaration **est** la règle).
+- « *published outbreak records almost never carry [a decay rule]* » — **faux pour la maladie et le pays du post** : les sitreps Ebola RDC publient les zones de santé à transmission active **sur les 21 derniers jours**, et la déclaration de fin de flambée à 42 jours est elle-même une règle de décroissance publiée avec décompte public.
 
-🔴 **Attribution (question 5)** : « *That rule has to live inside the tool **precisely because** the record itself does not hold it* » lui prêtait un motif de conception qu'il situe ailleurs — son post dit « *To prevent outdated hotspot classification* », c'est-à-dire un problème interne à **ses scores composites**, pas une lacune de la donnée publiée.
+🔴 **Attribution (question 5)** : « *That rule has to live inside the tool precisely because the record itself does not hold it* » lui prêtait un motif de conception qu'il situe ailleurs — son post dit « *To prevent outdated hotspot classification* », un problème interne à **ses scores composites**, pas une lacune de la donnée publiée.
 
-🔴 **Deux moules d'archive (question 11)**, dont un déjà retiré deux fois par le contrôle anti-gabarit : l'ouverture « *is the part I keep turning over* » (4+ occurrences en archive) et la charnière « *seen from outside, A et B se ressemblent* » (au moins 4 occurrences : « *look identical* », « *look the same* », « *produce the same case count* »), avec une chute calquée sur « *nothing in the published record connects the two* ». Cas d'école de [[feedback_anti_template_check_structure_not_just_wording]] : la forme se répète même quand les mots changent.
+🔴 **Deux moules d'archive (question 11)** : « *is the part I keep turning over* » (4+ occurrences en archive) et « *seen from outside, A et B se ressemblent* » (4+ occurrences).
 
-🔴 **Redite et apport nul (questions 7 et 12)** : les deux affirmations fausses retirées, il ne restait que la propre phrase du post reformulée (« *historical hotspots may remain high-scoring after transmission has slowed* »). Verdict du relecteur : « **ne pas publier du tout** ».
-
-**Texte abandonné, conservé pour mémoire :**
+**Texte non publié, conservé pour mémoire :**
 > The 21-day inactivity logic is the part I keep turning over, because it is a decay rule, and published outbreak records almost never carry one.
 >
 > A cumulative count moves in one direction only, and a place stays on the map until somebody declares the episode over. Seen from outside, a health zone quiet for three weeks and one that reported yesterday sit in the series looking alike, with nothing published to separate them. That rule has to live inside the tool precisely because the record itself does not hold it.
 
-⭐ **Ce qui reste utilisable** : le post est excellent et **Tambe n'est pas bloqué**, puisque rien n'a été publié. Le sujet est en plein périmètre HWG. **À reprendre au créneau de 17h ou demain si la fenêtre 48 h le permet, avec un angle qui ne soit pas « ce qui manque au registre publié »** — par exemple ce que l'audit de complétude des données implique pour un lecteur qui ne dispose que du résultat, sans jamais généraliser sur ce que les bulletins contiennent ou non.
+#### 2e brouillon — REECRIRE sur un point, corrigé, publié
+
+**Angle changé** : la couche « response intelligence audit » du post elle-même — ce qu'implique le fait de documenter la complétude des données, plutôt qu'une généralisation sur ce que les registres publiés contiennent ou non. Choisi précisément pour éviter le terrain qui avait fait échouer le 1er brouillon.
+
+**QA: mécanique PASS (511 car., 2 paragraphes, `draftLang: en` / `threadLang: en`, 0 blocker, 0 warn) | relecteur REECRIRE (11) au 1er passage de ce brouillon, corrigé — 11 PASS sur 12 | faits cités: aucun chiffre | registre du 29/08 | statut: publié le 29/08**
+
+🔴 **Le relecteur a attrapé un gabarit que le contrôle mécanique n'avait pas vu.** Le brouillon disait « *the completeness note travels badly. The score is what gets quoted onward, while the conditions under which it held rarely make the same trip* » — **quasi identique** à un commentaire publié le 07/08 chez Arnaud Tarantola : « *The part that travels badly is where an imported case gets recorded. It lands in the receiving country's line, while the exposure belongs to the outbreak that produced it, and nothing in the published record connects the two* » (`content-log.md`, l. 5363). Même mot-clé (« travels badly »), même architecture [objet ne voyage pas bien] → [A cité] **while** [B reste attaché] → négation finale. **Le contrôle mécanique ne compare pas contre l'archive complète de `content-log.md`, seulement contre les brouillons frères du run** — angle mort à corriger un jour, noté ici pour mémoire. Reformulé : « *the score is nearly always what survives a citation, stripped of the note that qualified it* ». Toutes les autres questions étaient déjà `PASS`, y compris le fond (question 6, jugé cette fois « généralisation interprétative défendable, pas une fausse affirmation vérifiable »).
+
+> The response intelligence audit is the layer I would want most, because it turns data completeness into an output rather than a caveat. A ranking published together with what was missing when it was computed is a different object from the ranking on its own.
+>
+> From downstream, the score is nearly always what survives a citation, stripped of the note that qualified it. So that audit is doing more than documenting itself: it forces the confidence level to sit next to the number for as long as the number does.
+
+**Publication confirmée** : identité du post (« Descriptive Scoring » présent dans la page) vérifiée avant clic. Texte du composeur comparé au brouillon validé : 0 divergence de contenu (un écart de 3 caractères sur `innerText` vient de paragraphes vides insérés par l'éditeur Quill entre les blocs, invisibles à l'écran, confirmé par capture d'écran avant envoi). Après clic : éditeur vidé, une seule occurrence du texte dans la page, horodaté « maintenant » sous David Deheunynck.
+
+**Nouveau blocage hebdomadaire créé : Tambe Elvis Akem jusqu'au 05/09.**
 
 ---
 
