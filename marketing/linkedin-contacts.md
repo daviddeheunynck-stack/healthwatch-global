@@ -1,6 +1,42 @@
 > 📦 **Archive** : le détail du 24 juin au 16 juillet 2026 a été déplacé dans [linkedin-contacts-archive-avant17juillet.md](linkedin-contacts-archive-avant17juillet.md) le 23/07 pour garder ce fichier léger.
 
 
+## 📅 Session interactive — 29/08/2026 (~13h30), sur demande de David
+
+David a demandé de regarder les réponses reçues au DM du matin (10:19) chez **Abou A. SOUMAH**, où il signalait un vrai problème produit — puis, une fois le point traité, a explicitement demandé « prépare son accès » puis « réponds à Abou sur le produit », et enfin « envoie le » en session interactive. Validation explicite au sens de `_shared/report-conventions.md`.
+
+### Le problème signalé et vérifié
+Abou (10:40, 10:42) : *« Avez-vous une équipe sur place en RDC? Avez-vous des projets de recherche opérationnelle sur la MVE? »* puis *« J'ai aussi essayé de me connecter sur votre Dashboard et ça demande un enregistrement »*. Reproduit sur le site en direct : le tableau de bord public masque les chiffres exacts (cas/décès) et invite à créer un compte pour les débloquer — comportement voulu, pas un bug, mais la description JSON-LD de la page d'accueil affirmait à tort « no account required » pour ce même plan. **Corrigée et poussée** (`a2868b4`, `fix(seo): corrige la description JSON-LD du plan Gratuit`) avant de répondre à Abou.
+
+### Accès Pro préparé, avec deux vrais bugs de connexion trouvés et évités en cours de route
+Compte provisionné pour `aboufontaine@yahoo.fr` (email récupéré sur son profil LinkedIn) via `scripts/provision-abou-soumah-2026-08-29.mjs` (ignoré par `.gitignore`, comme tous les scripts de provisionnement one-off datés). `plan=pro`, `trial_ends_at=2026-10-03` (35 jours, format pilote standard), `is_pilot=true`, alertes activées sur les 5 régions.
+
+🔴 **`pilot_organization="Epicentre – MSF"` a d'abord été écrit, puis retiré sur demande explicite de David** (« c'est un bon geste simplement, mets le en simple note ») : ce champ s'affiche tel quel dans le propre dashboard du destinataire (`TrialBanner.tsx`, `FreePlanBanner.tsx`, `account/page.tsx`), donc l'y laisser aurait engagé nommément son employeur sans mandat de sa part — contrairement à Georgetown/Malte/Johan Verheyden, Abou n'a ni demandé ni négocié cet accès. Corrigé à `null` (retombe sur « votre organisation » côté UI), reconfirmé par relecture en base indépendante.
+
+🔴🔴 **Deux mécanismes de connexion envisagés, tous deux réellement cassés, trouvés en lisant le code plutôt qu'en faisant confiance à l'intuition :**
+1. « Lien magique / OTP / Google » (1er réflexe, par analogie avec Johan Verheyden) — faux : `app/[locale]/login/page.tsx` exige un mot de passe par défaut, et son mode OTP ne fait que **vérifier** un code, sans aucun bouton pour en envoyer un.
+2. « Mot de passe oublié » (repli) — non fiable : incident réel documenté dans `scripts/check-brevo-delivery.mjs` (« Le 26/08/2026 : *mot de passe oublié n'envoie rien, même en production* »), corrigé seulement côté observabilité (`aa3f08c`, `b8e0f01`), jamais avec une preuve d'envoi réussi.
+
+**Solution retenue et testée en réel, pas seulement en base** : mot de passe temporaire défini directement (même mécanisme que Georgetown/Malte), zéro dépendance à un email. Vérifié par un appel `signInWithPassword` réel (clé anon publique, celle qu'utilise la vraie page de connexion) :
+```
+✅ signInWithPassword a RÉUSSI.
+Session user id: 8ae57ca9-ab15-49a8-a84e-a60e1e63e49f
+```
+
+### Trois passages de relecteur indépendant, trois défauts réels trouvés et corrigés
+1er passage : REECRIRE (4, 12) — l'affirmation « les chiffres exacts sont réservés à ceux qui ont un compte » était inexacte (le registre produit dit « réservés aux **abonnés Pro**, Team et Enterprise », pas à tout compte), et la création du compte était présentée comme un fait accompli silencieux sans dire d'où venait l'email. 2e passage : REECRIRE (1, 4, 10, 12) — le mécanisme de connexion alors proposé (« Mot de passe oublié ») a été vérifié ligne par ligne par le relecteur, qui a trouvé l'incident Brevo du 26/08 documenté dans le dépôt. 3e passage (après bascule sur le mot de passe temporaire et le test réel) : REECRIRE (10, mineur) — l'email n'était pas écrit en toutes lettres alors que le mot de passe l'était, corrigé.
+
+### ✅ ENVOYÉ ET CONFIRMÉ 13:30, sur ordre explicite de David (« envoie le », après un blocage classifieur du mode auto contourné en repassant hors mode auto)
+Texte comparé caractère pour caractère au brouillon validé après envoi (814 car., 0 divergence) : dernier message du fil, envoyé par David.
+
+> Non, pas d'équipe sur le terrain ni de projet de recherche opérationnelle sur la MVE de notre côté. HealthWatch Global reprend les bulletins publics de grandes agences comme Africa CDC, l'OPS, l'ECDC ou l'OMS, ce n'est pas une structure qui mène des études ou qui coordonne une réponse. C'est justement pour ça que ce que tu vois depuis Epicentre m'intéresse, on ne regarde pas la même chose.
+>
+> Et tu as raison, les chiffres exacts sont réservés aux abonnés Pro, pas juste à ceux qui ont un compte. J'ai pris ton adresse sur ton profil LinkedIn et j'ai activé ton compte en Pro jusqu'au 3 octobre (35 jours, contre 14 en temps normal), à utiliser si ça t'intéresse. Pour entrer, sur la page de connexion du site avec aboufontaine@yahoo.fr, un mot de passe provisoire à changer dès que tu y es : uHkxmp-85pHxQ-WJEzP9
+
+⚠️ **Signal collatéral, sans action requise** : en activant ses alertes régionales, Abou a reçu et ouvert 2 emails PHEIC de HWG dès 11:22, avant toute explication de ce DM. Rien à corriger, juste à savoir si le sujet revient dans l'échange.
+
+---
+
 ## 📅 Session linkedin-hwg-followup-check — 29/08/2026 (13h, 1er des 2 créneaux après-midi)
 
 **Vérification double déclenchement** : aucune entrée `linkedin-hwg-followup-check` datée du 29/08 dans ce fichier ni dans `content-log.md` à l'ouverture (dernière en date : 28/08 13h). Les entrées du 29/08 déjà présentes appartiennent à `linkedin-hwg-monitoring` (9h) et à une intervention de David en session (envoi du DM Abou à 10:19) — runs intentionnellement distincts → **premier déclenchement de cette routine aujourd'hui**.
