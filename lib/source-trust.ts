@@ -194,6 +194,12 @@ const GENERAL_PRESS_DOMAINS: ReadonlySet<string> = new Set([
   // as Leadership/Tchadinfos/Africa24 above. Found 2026-08-27 via section 4m,
   // Diphtheria/Senegal coverage.
   "enqueteplus.com",
+  // Daily Monitor (Uganda) — established national newsroom, same tier as the others
+  // above. Found 2026-08-29 re-sourcing Crimean-Congo Hemorrhagic Fever/Uganda off an
+  // unattributed Outbreak News Today Substack post: this outlet independently named
+  // the district health officer, contact-tracing count, and taskforce meeting date for
+  // the Yumbe cluster the substack post only summarized without sourcing.
+  "monitor.co.ug",
 ]);
 
 /**
