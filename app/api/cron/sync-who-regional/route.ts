@@ -37,7 +37,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { logCronRun } from "@/lib/cron-monitor";
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { normalizeDisease } from "@/lib/disease-data";
-import { findCountry } from "@/lib/geo-data";
+import { findCountry, isCountryName } from "@/lib/geo-data";
 import { extractNumbers, assessRisk } from "@/lib/outbreak-parser";
 import { errorMessage } from "@/lib/error";
 import * as Sentry from "@sentry/nextjs";
@@ -369,15 +369,37 @@ function extractGPEICountryUpdates(rawHtml: string): { asOf: string | null; line
 
 // Isolates one country's paragraph block: from its own name line (an exact
 // match against GPEI's spelling — country names in this section are never
-// prefixed/suffixed with other text) up to the next line that exactly matches
-// ANY tracked country name, or the end of the section.
+// prefixed/suffixed with other text) up to the next line that is ITSELF a
+// country heading, or the end of the section.
+//
+// The boundary must be ANY country, not just the 13 this cron tracks (plus a
+// hardcoded Afghanistan, which is how this read on 2026-08-28 — the day the
+// bulletin happened to narrate only Afghanistan, DRC and Nigeria). GPEI's
+// "Country updates" also narrates Pakistan and whichever other cVDPV
+// countries reported that week (Guinea, Kenya, Yemen, Côte d'Ivoire,
+// Zimbabwe, Papua New Guinea…), interleaved with the tracked ones. An
+// untracked country following a tracked one was not a boundary, so its
+// paragraphs were absorbed into the tracked country's block — and since the
+// serotype lookup below fails closed only when NO matching line exists in the
+// block, a neighbour's "The number of cVDPV2 cases in 2026 is N" could supply
+// the line the tracked country itself did not restate that week, writing
+// another country's case count onto this row. Same class of defect as the
+// "Guatemala on Measles/Mexico" leak: an extraction bounded to shared text
+// rather than to the row's own content.
+//
+// isCountryName (lib/geo-data.ts) is exact-match-only by design — a narrative
+// sentence merely *mentioning* a country never matches, only a line that IS a
+// country name, which is exactly what a heading in this section looks like.
+// The tracked-name set is kept as a fallback for any GPEI spelling geo-data
+// does not carry.
 function extractCountryBlock(sectionLines: string[], countryName: string): string[] | null {
   const nameIdx = sectionLines.findIndex((l) => l.toLowerCase() === countryName.toLowerCase());
   if (nameIdx < 0) return null;
   const knownNames = new Set(Object.keys(GPEI_CVDPV_TARGETS).map((n) => n.toLowerCase()));
   let end = sectionLines.length;
   for (let i = nameIdx + 1; i < sectionLines.length; i++) {
-    if (knownNames.has(sectionLines[i].toLowerCase()) || /^afghanistan$/i.test(sectionLines[i])) { end = i; break; }
+    const line = sectionLines[i];
+    if (isCountryName(line) || knownNames.has(line.toLowerCase())) { end = i; break; }
   }
   return sectionLines.slice(nameIdx + 1, end);
 }
