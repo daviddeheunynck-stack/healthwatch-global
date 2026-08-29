@@ -939,7 +939,17 @@ async function runHealthCheck(_req: NextRequest, supabase: any) {
   // send/ingest this run) and stays quiet; only "error" is surfaced.
   const erroring = Object.entries(cronMap)
     .filter(([name, run]) => name in CRON_WINDOWS && run.status === "error")
-    .map(([name, run]) => ({ name, error: run.error ?? "(sans message)" }))
+    // Datation, pour la seule ligne où elle change le sens : cronMap a été lu au
+    // DÉBUT de ce run (plus haut) et le statut de health-check s'écrit à la FIN,
+    // donc sa propre entrée ici est toujours celle de la VEILLE. Pour les 49
+    // autres crons "dernier passage" est la lecture attendue ; pour celui-ci, le
+    // rapport porte déjà la réponse fraîche dans sa section "crons en retard",
+    // et laisser l'écho de la veille se lire comme un incident du jour a fait
+    // exactement l'inverse de ce que ce mail existe pour faire.
+    .map(([name, run]) => ({
+      name,
+      error: (run.error ?? "(sans message)") + (name === "health-check" ? " — passage précédent" : ""),
+    }))
     .sort((a, b) => a.name.localeCompare(b.name));
   const hasErroring = erroring.length > 0;
 
@@ -1270,7 +1280,25 @@ async function runHealthCheck(_req: NextRequest, supabase: any) {
   // logCronRun's status mirrors hasOverdue — read by this same route's own
   // cronMap/CRON_WINDOWS check next run, and by the email table below, to
   // color health-check's row. Independent of the Sentry Crons check-in below.
-  await logCronRun(supabase, "health-check", hasOverdue ? "error" : "ok", overdue.length + sentryIssues.length);
+  //
+  // Le MOTIF, pas seulement le compteur. Jusqu'au 2026-08-29 cet appel était le
+  // seul des 50 à ne pas passer `errorMsg` : `site_config` portait
+  // {"status":"error","rows":2} et l'identité du cron en retard n'existait que
+  // dans le captureSelfReport ci-dessus, c'est-à-dire dans Sentry, que personne
+  // ne relit tous les matins. La liste `erroring` plus haut le rendait alors
+  // "health-check ((sans message))" dans le rapport du lendemain. Même
+  // asymétrie que le verrou d'alertes (25/08) et les destinataires en échec des
+  // 8 crons d'envoi (28/08), restée en place sur le moniteur lui-même.
+  //
+  // Les DEUX termes sont dits : le statut ne dépend que de `hasOverdue`, mais
+  // `rows` compte aussi les incidents Sentry — un message ne nommant qu'un cron
+  // en face de rows=2 se lirait comme une troncature. Celui qui décide du
+  // statut passe en tête ; logCronRun tronque à 500 caractères.
+  const selfDiagnosis = hasOverdue
+    ? `${overdue.length} cron(s) en retard : ${overdue.join(", ")}`
+      + (sentryIssues.length > 0 ? ` — plus ${sentryIssues.length} incident(s) Sentry` : "")
+    : undefined;
+  await logCronRun(supabase, "health-check", hasOverdue ? "error" : "ok", overdue.length + sentryIssues.length, selfDiagnosis);
 
   if (isRealProduction) {
     // The check-in only reflects whether this cron itself completed without
