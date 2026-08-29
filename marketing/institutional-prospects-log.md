@@ -2880,3 +2880,95 @@ Questions de clôture reprises **à l'identique**, avec leur destinataire exact 
 - **29/08** → lot du **18/08** (9 éligibles, **déjà vérifiés en direct ce run**, J+11) + lot du **19/08** (10, J+10) = **19**, sous réserve du frein de file. ⚠️ **Avec une file à 27, le frein interdira presque certainement tout — prioriser alors le lot du 18/08, plus ancien d'un jour**, et ne créer que ce que l'écoulement de la file permet.
 - **30/08** → lot du **20/08** (10, J+10) + tout reliquat du 29/08.
 - **Fin août / début septembre** → **EUPHA**, si David tranche en faveur d'une relance après son retour au bureau le 31/08.
+
+---
+
+## 🛑 PROSPECTION — 2026-08-29, run automatique `daily-institutional-prospecting-healthwatch` — **FREIN DE FILE DÉCLENCHÉ (2e jour), aucun contact neuf produit**
+
+**Aucun contact neuf, aucun brouillon créé ce run.** Le frein de file de l'Étape 1 s'applique pour le deuxième run consécutif : la file est passée de 24 à **31 brouillons réels**, très au-dessus du seuil de ~20.
+
+### 📊 Profondeur de file : 31 brouillons réels
+
+Mesurée par `list_drafts`, **deux appels indépendants** (vue complète puis vue métadonnées, consigne du 16/08) : résultat identique aux deux appels — **32 entrées, dont 31 brouillons réels** + le brouillon vide sans destinataire de David (`r1849762415425211791`, 27/08 04:53, hors périmètre, présent depuis 3 jours).
+
+Composition des 31 :
+- **10 brouillons de prospection** du 27/08 — Djibouti, Soudan du Sud, Samoa, OPS Salvador, OPS Venezuela, Institut Pasteur CI, AIE Italie, NDPH Oxford, MAP International, World Hope.
+- **17 brouillons de relance** — 14 du run du 27/08, 3 du run du 28/08 (CIES, CII Chypre, AUA Arménie), plus **1 relance Malte** (`diseasesurveillance.health@gov.mt`, 28/08 07:39).
+- **3 brouillons hors périmètre de cette routine** (cycle d'essai / relance client : `bego@guiacan.com`, `shepil.maxim99@gmail.com`, `shereenabdelmesseh@gmail.com`, 28/08 06:50).
+
+### ⚠️ Cause : troisième journée consécutive sans aucun envoi
+
+Balayage `in:sent after:2026/08/26`, corbeille incluse : **le dernier envoi date toujours du 26/08** (relances 10:58:35→10:59:08 UTC, prospection 12:27:31→12:29:31 UTC). **Aucun message envoyé les 27/08, 28/08 ni 29/08 avant ce run.**
+
+**Ce n'est pas le bug d'envoi instantané du connecteur** (tableau de discrimination du 16/08) : rien n'est parti, les 31 portent tous `labelIds: ["DRAFT"]`, aucun n'est passé en `SENT`. La cadence de relecture est simplement à zéro depuis trois jours.
+
+**Bounces du jour : aucun.** Balayage `from:mailer-daemon` / `postmaster` / `Undeliverable` / `Delivery Status Notification` / `Undelivered Mail` / `Mail delivery failed`, `newer_than:3d`, corbeille incluse : **zéro fil** — cohérent avec l'absence d'envoi. *Bilan cumulé non retotalisé ici — porteur unique `daily-relance-check-healthwatch`, règle du 16/08.*
+
+### 🔎 Run consacré à la cible prioritaire n° 3 du 28/08 — retester les listes d'écarts récentes (12/08 → 21/08)
+
+Conformément au frein de file (« creuser une piste déjà notée plutôt que d'ajouter au stock »), ce run a retesté les écarts **de cause technique** (502, TLS, DNS, 403, ECONNREFUSED) des listes des 19, 20 et 21/08 — celles que le run du 28/08 avait explicitement laissées non balayées. **Aucun brouillon créé** ; les résultats constituent une réserve pré-vérifiée.
+
+#### 🔴 EMRO — l'échec « technique » de 6 runs était un diagnostic faux. La cible est close, pour un motif structurel.
+
+`emro.who.int` était déclaré **« 502 Bad Gateway »** aux runs des 17, 19, 20 et 21/08, avec la consigne répétée « à prioriser dès rétablissement ». Vérification directe ce run :
+
+| Outil | Résultat sur `emro.who.int` |
+|---|---|
+| **WebFetch** (UA par défaut) | **502 Bad Gateway** — le symptôme observé 6 runs de suite |
+| **curl avec User-Agent Chrome** | **HTTP 200, 57 Ko de HTML servi normalement** |
+
+**Le domaine n'a jamais été en panne : c'est le User-Agent.** Cas exact de la mémoire `reference_govt_sites_need_browser_user_agent`, jamais appliquée à EMRO parce que le 502 se lisait comme une panne d'origine et non comme un filtrage.
+
+**Deuxième erreur superposée : l'URL utilisée était un soft-404.** `/entity/contacts/index.html` renvoie **HTTP 200 avec `<title>WHO EMRO - 404 Error</title>`** — même piège que le soft-404 EMRO du 23/08. Le vrai chemin est `/contact-us.html`.
+
+**Résultat, page officielle enfin lue :**
+- `/contact-us.html` (HTTP 200, titre « Contact us ») ne publie que **deux adresses obfusquées JavaScript** (« This email address is being protected from spambots »), pour l'**équipe publications** et l'**équipe médias**. Les deux sont hors unité opérationnelle — même critère d'écartement que `press@cepi.net` (28/08) et `webmaster@adra.org` (20/08). Rien d'autre : adresse postale, téléphone, fax.
+- **Les 10 pages pays EMRO** (`/countries/{irq,jor,lbn,pak,sdn,yem,opt,egy,somalia,syria}/index.html`, HTTP 200 chacune) ne publient **aucun `mailto:` et aucune adresse en clair**. Zéro sur dix.
+
+**➡️ EMRO sort des cibles à prioriser.** Ce n'est plus une indisponibilité à attendre : le domaine est debout et ne publie aucune adresse utilisable. **Ne pas le remettre en tête de liste au motif « dès rétablissement » — c'est fait, et ça ne donne rien.** Même traitement que le CNSCBT roumain (07/08).
+
+#### ✅ Réserve PAHO ré-ouverte et vérifiée en direct — dont l'entrée Guatemala, manquante depuis 4 échecs
+
+`paho.org/en/paho-country-office-media-contacts` **relue en direct ce run, HTTP 200**, mapping pays↔boîte extrait du DOM. Neuf boîtes de cette page sont déjà consommées (Belize, Costa Rica, Honduras, Paraguay, Pérou, Rép. dominicaine, Salvador, Suriname, Venezuela). **Restent, toutes fonctionnelles et jamais contactées :**
+
+| Bureau pays PAHO | Adresse | Grep dédup (adresse / pays) | Intérêt |
+|---|---|---|---|
+| **Guatemala** | `gut-pwr@paho.org` | `gut-pwr` → **0** ; `Guatemala` → 31 occurrences, **toutes MSPAS / CES-UVG / INCAP / USAC / Laboratorio Nacional, aucune PAHO** | 🎯 **Le plus fort.** Libellé `pwr` (*PAHO/WHO Representative*), même famille que `surpwr` retenu le 21/08 — pas une boîte « comunicaciones ». **Débloque le Guatemala**, en échec depuis le bounce MSPAS du 18/08 puis CES-UVG (19/08), INCAP et USAC (20/08) |
+| **Argentine** | `pwr-arg@paho.org` | `pwr-arg` → **0** | Libellé `pwr`, même solidité |
+| **Panama** | `pane-mail@paho.org` | 3 occurrences — **toutes des mentions de réserve** (22/08 l. 1600, 27/08 l. 2563), jamais contacté | Déjà noté, confirmé vivant |
+| **Nicaragua** | `nic-email@paho.org` | idem, 3 mentions de réserve | Idem |
+| **Mexique** | `email.mex@paho.org` | `email.mex` → **0** | Boîte d'office |
+| **Colombie** | `correscol@paho.org` | `correscol` → **0** | Boîte de correspondance |
+| **Trinité-et-Tobago** | `e-mailtto@paho.org` | `e-mailtto` → **0** | Pays écarté le 11/08 (que des boîtes de médecins-chefs de comté) |
+| **Brésil** | `comunicacao@paho.org` | `comunicacao@paho` → **0** | Boîte « comunicações », plus faible (réserve du 21/08) |
+| **Coord. sous-régionale Caraïbes** | `spc-crb@paho.org` | `spc-crb` → **0** | Couvre plusieurs micro-États caribéens |
+
+**⚠️ Une entrée écartée d'office : Jamaïque `email@jam.paho.org`.** Adresse sur le **sous-domaine** `jam.paho.org`, pas sur `paho.org`. C'est exactement le profil qui a fait bouncer `nakagawaj@wpro.who.int` le 02/08. **Ne pas la retenir sans confirmation indépendante** que le sous-domaine route bien — la Jamaïque n'a par ailleurs jamais été prospectée (`Jamaïque|Jamaica` → 0).
+
+**⚠️ Rappel de la réserve posée le 21/08 :** ce sont des boîtes labellisées « media contacts ». Les libellés `pwr` et boîtes d'office sont les plus solides ; les « comunicaciones/comunicação » les plus faibles. **Le plafond de concentration du 25/08 (2 par organisation faîtière et par lot de 10) s'applique** — cette réserve alimente plusieurs lots, pas un seul.
+
+#### ❌ Autres écarts retestés — joignables mais toujours sans adresse
+
+- **Vanuatu MoH** — `moh.gov.vu` répond désormais **HTTP 200** (l'erreur de certificat TLS du 19/08 est corrigée, l'incident technique est bien levé), mais **aucun `mailto:` ni adresse en clair** sur la page d'accueil, et `/index.php/contact-us` en **404**. L'écart passe de « technique, à réessayer » à **structurel**.
+- **EMPHNET** — `emphnet.net/en/get-in-touch/` et `/en/about-us/` en HTTP 200, **aucune adresse ni notation `[at]`**. **4e échec** (04/08, 15/08, 21/08, 29/08). Cible n° 1 du 21/08 : **à clore comme EMRO**, le site est vivant et ne publie rien.
+- **INCAP Guatemala** — page `contactenos` en HTTP 200 cette fois (404 le 20/08), mais **aucune adresse dans le DOM**. Le Guatemala passe par PAHO (ci-dessus), pas par l'INCAP.
+- **NCDC Géorgie** — `ncdc.ge` en 200, toujours une SPA dont le contenu n'est pas rendu côté serveur.
+
+#### 🔌 Toujours injoignables (aucun changement depuis les 20-21/08)
+
+`sph.ug.edu.gh` (Ghana SPH), `phi.edu.sd` (Soudan PHI), `digepi.gob.do` (Rép. dominicaine), `ins.salud.gob.sv` (Salvador), `mhss.gov.na` (Namibie) — **échec de connexion**, y compris avec User-Agent Chrome. `salud.gob.hn` (Honduras) — **404**. *Note : Salvador, Rép. dominicaine et Honduras sont désormais couverts par leurs bureaux PAHO respectifs ; leur voie directe n'a plus d'enjeu.*
+
+### 🎯 Cibles à prioriser au prochain run
+
+1. **Écouler la file avant tout.** À 31 brouillons et trois jours sans envoi, quatre journées de production sont immobilisées. Tant que la file n'est pas redescendue sous ~20, le frein se redéclenchera et aucun lot ne sera produit.
+2. **Réserve prête à rédiger, sans nouvelle recherche** : `gut-pwr@paho.org` (Guatemala) en premier, puis `info.psi@ndm.ox.ac.uk` (PSI Oxford, vérifié le 28/08), puis `pwr-arg@paho.org`. **Plafond de 2 PAHO par lot.**
+3. **EMRO et EMPHNET sortent des cibles prioritaires** — motif structurel constaté sur page officielle lue, plus une indisponibilité à attendre.
+4. **Appliquer systématiquement l'UA navigateur avant de conclure à une panne.** Le faux « 502 EMRO » a coûté 6 runs de priorisation. La mémoire `reference_govt_sites_need_browser_user_agent` existe depuis le 23/08 mais n'était appliquée qu'aux sites gouvernementaux nationaux ; **elle vaut aussi pour les domaines OMS régionaux**. Corollaire : **vérifier le `<title>` d'une page servie en 200 avant de l'exploiter** — EMRO sert ses 404 en HTTP 200.
+5. **Annoter les listes d'écarts consommées** — point n° 4 du 28/08, toujours ouvert pour les listes postérieures au 05/08.
+6. **TEPHINET** — arbitrage David toujours en attente, non retenue pour la 4e fois.
+
+### 📊 Compteurs
+
+**Totaux au 2026-08-29 : 300 contacts prospectés, 290 envoyés, 270 délivrés** — **inchangés depuis le 27/08** : ce run n'a produit aucun contact et aucun envoi n'a eu lieu depuis le 26/08. **Profondeur de file : 31 brouillons réels.**
+
+**⚠️ Fichiers modifiés non touchés par cette routine, laissés tels quels** (règle `AGENTS.md`) : `marketing/qa/product-claims.manual.json` (modifié), `scripts/audit-alert-day.mjs` et `scripts/probe-alert-lock.mjs` (non suivis).
