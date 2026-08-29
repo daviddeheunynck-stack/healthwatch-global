@@ -183,6 +183,22 @@ if (suspicious.length) {
 // lendemain). Même garde-fou que les deux autres maps : ne bumper une date qu'après avoir
 // réellement consulté la source primaire, jamais pour faire taire une ligne.
 const FROZEN_ROW_CHECKED = {
+  // Choléra/Cameroun : vérifié le 29/08. Aucun SitRep CERPLE-EN postérieur au n°015
+  // (13-17/08, 1 342 cas / 36 décès, déjà en base). Le listing officiel
+  // ccousp.cm/documentations/rapports-de-situation-cholera/ n'expose qu'une série NATIONALE
+  // ancienne (n°44 à n°49, page datée de 2022) sans PDF téléchargeable — ce n'est pas la série
+  // régionale qui alimente la ligne, ne pas la confondre. La presse camerounaise reste très en
+  // retard sur la base (166/10 au 02/07, 584-585/19 au 23/07, ~1 000/28 provisoire au 10/08).
+  // Rien à écrire.
+  "d3af80c2-30be-4878-89b4-9fd8310eb8db": "2026-08-29",
+  // Dengue/Samoa : vérifié le 29/08. Le « Dengue sitrep issue no 69 » (semaine épi 32, 3-9/08,
+  // publié le 10/08) reste la dernière édition publiée — c'est exactement celle en base
+  // (20 157 cas cliniques cumulés depuis janvier 2025 / 9 décès). Vérifié sur les deux pages qui
+  // listent la série (health.gov.ws et health.gov.ws/dengue/) : le listing s'arrête au n°68 et
+  // l'accueil au n°69, aucun n°70. ⚠️ Ne pas deviner les URL : le gabarit varie
+  // (« issue-no-67-1.pdf », « issue-no.34.pdf »), les six URL candidates n°70-72 testées en
+  // 2026/08 et 2026/09 renvoient toutes 404. Rien à écrire.
+  "c0094fae-5b55-485a-ac92-9ad0362d8901": "2026-08-29",
   // Dengue/Guatemala : re-sourcee le 28/08 (matin, en session) — voir la note dans
   // STALE_CRON_ROW_CHECKED (section 4e) pour l'historique complet. Verrouillee a source_priority=10
   // sur 19 364 cas (MSPAS 10 335 + IGSS 9 029), arrete SE-30/01-08-2026, source
@@ -755,6 +771,13 @@ const MANUAL_ROWS = {
 // ⚠️ Ne bumper une date ci-dessous qu'après avoir effectivement consulté la source primaire —
 // jamais pour faire taire une ligne.
 const MANUAL_ROW_CHECKED = {
+  // Choléra/RCA : revérifié le 29/08 (WebSearch « République centrafricaine choléra bilan cas
+  // décès août 2026 Bimbo Mbaïki »). Rien de plus récent que les 720 cas / 46 décès arrêtés au
+  // 06/08 déjà en base ; les résultats se referment sur la déclaration d'épidémie du 26/06
+  // (197 cas / 24 décès, districts de Bimbo et Mbaïki). Rien à écrire.
+  // Cette ligne était déjà datée du 29/08 dans FROZEN_ROW_CHECKED mais absente d'ici, ce qui la
+  // faisait ressortir « 8j — À VÉRIFIER » en section 5 tout en étant « 0j — skip » en section 4d.
+  "d2db38cc-f638-456a-bc7b-0d48f904b408": "2026-08-29",
   // Dengue/Polynésie française : vérifié le 19/08 contre la source primaire. Le dernier Bulletin de
   // Surveillance Sanitaire publié par l'ARASS reste le n°25/2026, « données consolidées jusqu'à la
   // semaine 29 (13/07/2026 au 19/07/2026) », publié le 27/07 — soit exactement l'arrêté déjà cité en
@@ -880,7 +903,14 @@ const MANUAL_ROW_CHECKED = {
   // cumul 1000/237 semblait d'abord contradictoire avec ses propres chiffres "227 suspects/17
   // confirmés/6 décès" de la semaine — en réalité ces 17/6 sont déjà inclus dans le cumul 1000/237,
   // pas un delta à ajouter par-dessus. Toujours 1 000 cas / 237 décès au 25/07, rien à écrire.
-  "4dee8751-4a98-43ed-85c5-51b1c74dc5c6": "2026-08-15",
+  // Fièvre de Lassa/Nigéria : vérifié le 29/08 sur le listing officiel NCDC
+  // (ncdc.gov.ng/diseases/sitreps?cat=5&name=An%20update%20of%20Lassa%20fever%20outbreak%20in%20Nigeria).
+  // Le sitrep le plus récent publié est celui de la SEMAINE 31, dont le PDF haché
+  // (a373aae5ca8b3ff2346793d5bbed5cbb.pdf) est exactement la source déjà citée en base —
+  // 1 017 cas / 239 décès, rien à écrire. Aucun sitrep semaine 32+ n'existe à ce jour.
+  // ⚠️ ncdc.gov.ng renvoie 500 à WebFetch mais 200 à curl avec un User-Agent de navigateur :
+  // ne pas conclure « source cassée » sur le seul échec WebFetch (même famille que ccousp.cm).
+  "4dee8751-4a98-43ed-85c5-51b1c74dc5c6": "2026-08-29",
   // Rougeole Canada/Pérou/Bolivie : vérifié le 15/08 puis rerevérifié le 16/08 (fenêtre "#9
   // attendu incessamment" du 15/08 passée sans nouvelle édition). La page de listing PAHO
   // (paho.org/en/measles-multi-country-outbreak-2026) confirme que le Situation Report #8
@@ -1053,6 +1083,35 @@ if (!marburgRow) {
 // Même garde-fou que les autres maps : ne bumper une date qu'après avoir réellement consulté
 // l'édition courante de la source, jamais pour faire taire une ligne.
 const STALE_CRON_ROW_CHECKED = {
+  // Choléra/Zambie : vérifié le 29/08 — CLÔTURÉE. Le feed ArcGIS de l'OMS qui alimente la ligne
+  // (cholera_adm0_week_view) ne publie plus aucune semaine pour ZMB après le 11/05/2026 ; rejoué
+  // à la main, il recalcule exactement 999 cas / 17 décès sur 19 semaines, donc le cron n'est PAS
+  // en panne et la `date` n'était pas à réaligner — c'est la source qui s'est arrêtée. Motif :
+  // le ministère de la Santé zambien a officiellement déclaré la fin de l'épidémie (débutée en
+  // août 2025) le 16/07/2026, selon les critères de clôture du GTFCC (ZNBC, znbc.co.zm/?p=14285 ;
+  // secrétaire permanent Kennedy Lishimpi). Ligne passée active=false, response_phase=contained,
+  // source_priority=10 (scripts/fix-cholera-zambia-closure-2026-08-29.mjs).
+  // ⚠️ La clôture n'est PAS stable en l'état : la Zambie reste câblée dans CHOLERA_ISO3, et la
+  // branche `directCheck` de sync-who-regional réactive une ligne désactivée avec
+  // `active: activeFlag` (=true). Aucun garde-fou ne l'en empêche ici — dateFloorGuard compare
+  // en `<` strict (11/05 == 11/05), et lockedRowRegressionGuard ne bloque que les BAISSES, or
+  // les chiffres entrants sont identiques. `response_phase=contained` ne protège pas non plus :
+  // isDisplayActive() teste `if (o.active) return true` AVANT le court-circuit `contained`.
+  // Question ouverte remontée à David le 29/08, ne pas modifier le cron sans son arbitrage.
+  "60d22b48-c469-4228-b1fb-2642a1a7623f": "2026-08-29",
+  // Choléra/Zimbabwe : vérifié le 29/08, laissé INCHANGÉ faute de déclaration de clôture. Même
+  // constat mécanique que la Zambie — le feed ArcGIS ne publie plus de semaine pour ZWE après le
+  // 09/03/2026 et recalcule exactement 36 cas / 2 décès sur 10 semaines : cron sain, source
+  // arrêtée. L'ECDC (aperçu mensuel choléra) confirme « Since 22 June 2026, no updates have been
+  // reported by: … Zambia and Zimbabwe ». Mais AUCUNE déclaration officielle de fin d'épidémie
+  // 2026 n'a été trouvée, contrairement à la Zambie — donc pas de clôture autonome.
+  // ⚠️ Deux faux positifs de millésime à ne pas rouvrir : l'IFRC MDRZW026 « Simplified Early
+  // Action Protocol - Operations Update #4 » (17/07/2026) est un dispositif d'action ANTICIPATIVE
+  // (préparation, revue opérationnelle des 24-28/08), pas la riposte à une épidémie en cours, et
+  // son tag reliefweb pointe « Zimbabwe: Cholera Outbreak - Dec 2024 » ; les chiffres à 34 550 cas
+  // / 700+ décès et la déclaration de fin qui remontent en recherche relèvent de l'épidémie
+  // 2023-2024. Candidate à la clôture, signalée à David le 29/08.
+  "7682300c-7bf3-41e4-b223-691f01980038": "2026-08-29",
   // MERS-CoV/Global : vérifié le 20/08. L'aperçu ECDC courant est arrêté au 03/08/2026 et donne
   // exactement les mêmes totaux (2 649 / 960) — aucun cas MERS déclaré dans le monde entre le
   // 01/06 et le 03/08. Seules la `date` et les 5 descriptions ont été alignées sur le 03/08 ;
