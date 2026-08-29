@@ -17,7 +17,8 @@
     "check:prices": "node scripts/check-stripe-prices.mjs",
     "qa:facts": "node scripts/build-claimable-facts.mjs",
     "qa:claims": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/build-product-claims.mjs",
-    "qa:check": "node scripts/check-outreach-message.mjs"
+    "qa:check": "node scripts/check-outreach-message.mjs",
+    "qa:check:test": "node --test scripts/test-check-outreach-message.mjs"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.105.0",

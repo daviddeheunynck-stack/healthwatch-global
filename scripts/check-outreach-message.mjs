@@ -27,6 +27,9 @@
 // Node >= 22.
 
 import { readFileSync, existsSync } from "fs";
+// Tous les motifs de ce fichier passent par uwb() : `\b` seul est une frontière
+// ASCII, qui coupe au milieu des mots accentués. Voir outreach-text.mjs.
+import { detectRegister, uwb } from "./outreach-text.mjs";
 
 // ── Arguments ────────────────────────────────────────────────────────────────
 const argv = process.argv.slice(2);
@@ -130,6 +133,11 @@ const normalizeNumber = (raw) => {
 const EPI_NEAR =
   /(cas|case|deaths?|d[ée]c[èe]s|d[ée]c[ée]d[ée]s|patients?|l[ée]talit[ée]|fatality|cfr|%|pour ?cent|percent|doses|contacts?|districts?|zones? de sant[ée])/i;
 
+// « au 12 août », « le 3 septembre », « as of 21 August », « à la date du… » :
+// une date portée à côté du chiffre suffit à en assumer la fraîcheur.
+const DATED_EXPLICITLY = uwb("\\bau \\d|\\ble \\d|\\bas of\\b|\\bà la date\\b", "i");
+const ONGOING_WORDS = uwb("\\b(en cours|actif|active|ongoing|toujours|encore)\\b", "i");
+
 // ── 1. Forme : ponctuation, caractères, longueur ─────────────────────────────
 const ALLOWED_NON_ASCII = /[àâäçéèêëîïôöùûüÿœæÀÂÄÇÉÈÊËÎÏÔÖÙÛÜŸŒÆ]/;
 const strays = new Map();
@@ -158,7 +166,7 @@ if (paragraphs.length > limits.maxParagraphs) {
 
 // ── 2. Lexique : interdits et confusions de vocabulaire ──────────────────────
 for (const entry of [...lex.banned, ...lex.confusables]) {
-  const re = new RegExp(entry.pattern, "giu");
+  const re = uwb(entry.pattern, "gi");
   const hits = [...draft.matchAll(re)].map((m) => m[0]);
   if (hits.length > 0) {
     add(
@@ -214,7 +222,7 @@ const threadNumbers = new Set(
   [...thread.matchAll(/\d[\d\s  .,]*\d|\d+/g)].map((m) => normalizeNumber(m[0])).filter((v) => v !== null)
 );
 
-const ISO_DATE = /\b\d{4}-\d{2}-\d{2}\b/g;
+const ISO_DATE = uwb("\\b\\d{4}-\\d{2}-\\d{2}\\b", "g");
 const draftDates = [...draft.matchAll(ISO_DATE)].map((m) => m[0]);
 const draftText = draft.replace(ISO_DATE, " ");
 
@@ -274,7 +282,7 @@ for (const m of draftText.matchAll(/\d[\d\s  .,]*\d|\d+/g)) {
     contextConfirmed = true;
 
     const label = `${f.disease} / ${f.country} (${f.kind}, source vérifiée le ${(f.confirmedAt ?? f.updatedAt)?.slice(0, 10)}, ${f.ageDays} j)`;
-    if (f.stale && !draftDates.length && !/\bau \d|\ble \d|\bas of\b|\bà la date\b/i.test(around)) {
+    if (f.stale && !draftDates.length && !DATED_EXPLICITLY.test(around)) {
       add(
         "blocker",
         "facts.stale",
@@ -282,7 +290,7 @@ for (const m of draftText.matchAll(/\d[\d\s  .,]*\d|\d+/g)) {
         `${label} — soit dater explicitement, soit relancer build-claimable-facts.mjs.`
       );
     }
-    if (!f.active && /\b(en cours|actif|active|ongoing|toujours|encore)\b/i.test(around)) {
+    if (!f.active && ONGOING_WORDS.test(around)) {
       add(
         "blocker",
         "facts.closed-presented-active",
@@ -323,7 +331,9 @@ for (const s of hwgSentences) {
     s.trim()
   );
 }
-if (/\b(\d+\s*)(clients?|utilisateurs?|abonn[ée]s?|users?|subscribers?|customers?)\b/i.test(draft)) {
+// `abonn[ée]e?s?` couvre abonné, abonnée, abonnés, abonnées : sous frontière
+// Unicode, un motif qui s'arrête à « é » ne match plus « abonnées ».
+if (uwb("\\b(\\d+\\s*)(clients?|utilisateurs?|abonn[ée]e?s?|users?|subscribers?|customers?)\\b", "i").test(draft)) {
   add("blocker", "hwg.traction", "Chiffre de traction (clients, utilisateurs, abonnés) : interdit en sortant.", null);
 }
 
@@ -345,21 +355,16 @@ if (!threadLang && !ctx.threadFile) {
   add("review", "context.no-thread", "Aucun fil fourni : langue, registre et répétitions n'ont pas pu être contrôlés contre l'historique.", null);
 }
 
-const register = (t) => {
-  const tu = (t.match(/\b(tu|ton|ta|tes|toi|t'as)\b/gi) ?? []).length;
-  const vous = (t.match(/\b(vous|votre|vos)\b/gi) ?? []).length;
-  return tu === vous ? null : tu > vous ? "tutoiement" : "vouvoiement";
-};
 if (draftLang === "fr" && thread) {
-  const rd = register(draft);
-  const rt = register(thread);
+  const rd = detectRegister(draft);
+  const rt = detectRegister(thread);
   if (rd && rt && rd !== rt) {
     add("blocker", "context.register", "Tutoiement/vouvoiement incohérent avec le fil.", `fil = ${rt}, brouillon = ${rd}.`);
   }
 }
 
 const ctaHits = lex.cta_markers
-  .map((p) => draft.match(new RegExp(p, "iu")))
+  .map((p) => draft.match(uwb(p, "i")))
   .filter(Boolean)
   .map((m) => m[0]);
 if (ctaHits.length > 0) {
@@ -374,9 +379,14 @@ if (ctaHits.length > 0) {
 // ou l'essai déjà envoyés plus tôt dans CE fil interdisent de reservir
 // l'argumentaire une seconde fois, même des heures plus tard le même jour.
 if (ctaHits.length > 0 && thread) {
-  const alreadySent = [/healthwatch[- ]?global\.(com|org|app)/i, /\bessai\b/i, /\btrial\b/i, /\bpro\b/i]
-    .filter((re) => re.test(thread))
-    .map((re) => String(re));
+  const alreadySent = [
+    ["lien healthwatch-global", /healthwatch[- ]?global\.(com|org|app)/i],
+    ["essai", uwb("\\bessai\\b", "i")],
+    ["trial", uwb("\\btrial\\b", "i")],
+    ["pro", uwb("\\bpro\\b", "i")],
+  ]
+    .filter(([, re]) => re.test(thread))
+    .map(([label]) => label);
   if (alreadySent.length > 0) {
     add(
       "blocker",
