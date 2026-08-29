@@ -1,6 +1,113 @@
 > 📦 **Archive** : le détail du 24 juin au 16 juillet 2026 a été déplacé dans [linkedin-contacts-archive-avant17juillet.md](linkedin-contacts-archive-avant17juillet.md) le 23/07 pour garder ce fichier léger.
 
 
+## 📅 Session linkedin-hwg-followup-check-2 — 29/08/2026 (17h, 2e des 2 créneaux après-midi)
+
+**Vérification double déclenchement** : aucune entrée `linkedin-hwg-followup-check-2` datée du 29/08 dans ce fichier ni dans `content-log.md` à l'ouverture (dernière en date : 28/08 17h). Les entrées du 29/08 déjà présentes appartiennent à `linkedin-hwg-monitoring` (9h), à `linkedin-hwg-followup-check` (13h) et à une session interactive de David (~13h30) — runs intentionnellement distincts → **premier déclenchement de cette routine aujourd'hui**.
+
+**🖥️ Navigateur** : `_shared/browser-status.md` lu avant ouverture, dernière entrée **🟢 RÉTABLI (24/08 ~09h15)** → aucun bridage. `23c7ecdd-…` seul navigateur listé, sélectionné sans question (§7). **Trois bannières de cookies refusées.** Deux timeouts de capture d'écran en fin de run, `javascript_tool` répondant normalement (pas la signature « renderer dégradé » de §7) : travail poursuivi en lecture DOM.
+
+**Registres régénérés** : `qa:facts` → 222 faits citables sur 106 lignes affichées (identique à 13h) · `qa:claims` → 805 chaînes, 2 claims manuelles, 31 hôtes source.
+
+**Quotas à la clôture** : commentaires **6/7** (4 le matin + 1 à 13h + 1 ce créneau) · **DM 0 rédigé ce créneau ; la file passe de 4 à 3, un brouillon étant devenu caduc** · suivis **8/7-10** · connexions **279 relations, aucune nouvelle acceptation depuis 13h** · notes de connexion **0/7, blocage plateforme non retesté (< 9 h)**.
+
+**Détail intégral des commentaires, des cibles écartées et des données épidémiologiques : `content-log.md`, entrée du jour.**
+
+---
+
+### 1️⃣ MESSAGERIE — une seule réponse entrante depuis 13h
+
+- ⭐ **Abou A. SOUMAH a répondu à 14:02** (32 min après le DM envoyé par David à 13:30) : « *Merci beaucoup David* ». **Aucun brouillon rédigé, délibérément** — politesse sans substance, cas que §3 distingue explicitement d'un dialogue engagé, et un accusé de réception habillé échouerait à la question 12 du relecteur. Le fil se clôt proprement sur l'accès Pro transmis.
+- ✅ **Dr. Siaka Condé** — inchangé depuis 12:29 (« *Let me look at this for a moment* »). Carry-over n°2 du 13h honoré : **rien ne lui a été écrit.**
+- **John Omari Baso** (11:53), **Alain BASHIZI** (04:47) : inchangés. **Harvey Basivikidi, Rodrigo Olave Hurtado, Isaias Fernandes Co, Peace Mpakaniye, Pierre PARNEIX, Dr. Kaushik Sanyal** : inchangés depuis le 27-28/08.
+
+**Connexions — vérification systématique (règle du 14/07)** : `/mynetwork/invite-connect/connections/` trié « Ajouts récents », **279 relations, identique au relevé de 13h**. Aucune acceptation nouvelle. **Béatrice SERRA** : invitation du 28/08 toujours non acceptée.
+
+**⭐ Sous-fil Harvey Basivikidi, retombée relevée ce créneau et rien n'est dû.** Une notification « *a répondu à votre commentaire* » (1 j) n'avait été vue ni à 9h ni à 13h. Sous-fil rouvert et lu en entier : sa réponse (« *Governance should also define requirements for data at the point of publication, including machine-readable formats. This is probably an area we need to explore further in the context of the DRC.* ») **est déjà celle à laquelle répond le commentaire publié par David le 28/08 à ~12h45**. **Notre question est le dernier message du sous-fil**, il n'y a pas encore répondu. Aucune action.
+
+---
+
+### 2️⃣ 🔒 DM — AUCUN RÉDIGÉ, ET LA FILE PASSE DE QUATRE À TROIS
+
+Aucun message reçu ce créneau ne méritait un brouillon (voir section 1).
+
+🔴 **Le DM 1 « Abou A. SOUMAH » mis en file à 13h est CADUC, ne pas le proposer à la validation.** Le créneau de 13h l'a déposé ; **David a traité le même sujet lui-même en session interactive et envoyé sa propre réponse à 13:30**, couvrant les trois questions d'Abou (équipe en RDC, recherche opérationnelle MVE, verrou du tableau de bord) et y ajoutant un accès Pro provisionné. Abou a clos le fil à 14:02. **Envoyer le brouillon de 13h par-dessus ferait une seconde réponse aux mêmes questions.** Statut : *caduc, superseded par l'envoi du 13:30*.
+
+🔒 **Trois DM restent en file, inchangés, non réécrits, non envoyés** : **John Omari Baso**, **Summer Galloway, Ph.D.**, **Bobossam Cissoko**. Textes intégraux dans l'entrée de 13h, section 2. Moins de 24 h d'ancienneté chacun, la revérification à 7 jours (§9) ne s'applique pas encore.
+
+---
+
+### 3️⃣ SUIVIS ET FOLLOW-BACK
+
+✅ **SUIVI 8/7-10 — SOUAD BELKACEMI.** (`/in/souad-belkacemi-a794ba9b/`) — *Docteur en Biologie-Microbiologie de l'Université Aix Marseille, Docteur vétérinaire*, 2e degré, Premium. Suivie dans la foulée du commentaire publié ce créneau. **Pertinence** : arbovirologie et One Health, publie avec citations primaires (*Emerging Infectious Diseases*), adjacent à la couverture HWG. ⚠️ **§12 : 7 homonymes « Souad Belkacemi »**, identité levée par le slug avant toute action. Confirmation : ses 5 boutons « Suivre » ont disparu après clic, seul celui d'un tiers subsiste.
+
+**Aucun follow-back dû.** Liste « Abonnés » parcourue par récence, boutons lus dans le DOM : **390 abonnés, identique à 13h**, filtrage programmatique → **0 profil non suivi en retour**. **Winston Urio** reste le seul non suivi, écarté §10 le 27/08, non reproposé.
+
+**Notes de connexion : 0/7.** Aucune invitation sortante envoyée ce créneau ; l'état constaté ce matin (quota gratuit épuisé, modale Premium) date de moins de 9 heures, non retesté.
+
+---
+
+### 4️⃣ 💬 COMMENTAIRE 6/7 PUBLIÉ — SOUAD BELKACEMI, AU 3e BROUILLON
+
+Cible : son post de **1 j**, 16 réactions, **0 commentaire avant le nôtre**, clos sur « *Ne devrions-nous pas aussi chercher quels virus disposent déjà des conditions écologiques pour arriver demain ?* »
+
+**Deux brouillons non publiés avant celui-ci, tous deux sur de vrais défauts trouvés par le relecteur indépendant** : le 1er attribuait à l'autrice un recadrage qu'elle n'avait pas fait **et se contredisait d'un paragraphe à l'autre** ; le 2e (11 PASS sur 12) rejouait un moule de chute déjà écarté par écrit deux fois. **Conduite conforme au régime du 26/08 : corriger et retenter, jamais traiter un verdict comme un abandon.** Détail complet dans `content-log.md`.
+
+**QA finale : mécanique FAIL sur 1 blocker unique `context.register`, faux positif de script démontré (voir section 5) ; 479 car., 2 paragraphes, `draftLang: fr` / `threadLang: fr`, 0 `ngram.history` | relecteur 11 PASS sur 12 au 2e brouillon, le point (11) corrigé au 3e | faits cités: « 7 sur 130 », « 2021 », « 2015 », tous verbatim de son post, aucun chiffre du registre | registre du 29/08 | statut: publié le 29/08**
+
+> Ce qui frappe dans votre ligne de références, c'est leur date : 2021 et 2015. Le signal humain sur Shuni, celui qui sert à dire que le scénario n'est pas seulement théorique, tient donc sur une série d'il y a plusieurs années.
+>
+> Rien n'oblige ce résultat à valoir encore. Il a été produit une fois, sur 130 patients en Afrique du Sud, et il n'a pas eu à résister à une seconde mesure. À votre connaissance, ce dépistage a-t-il été repris depuis chez des patients neurologiques ?
+
+**Publication confirmée** : identité de la cible vérifiée **dans le même appel JS que le clic** (§7), texte comparé caractère pour caractère au brouillon validé (477 car., identique) avant le clic ; après clic, éditeur vidé, **une seule occurrence** dans la page, horodatée « maintenant ». **Nouveau blocage hebdomadaire : SOUAD BELKACEMI jusqu'au 05/09.**
+
+**Deux cibles écartées avec motif écrit** : **Dr. Jean Kaseya** (non bloqué, post du jour sur une rencontre National Endowment for Democracy → §10, silence total) et **la page LSHTM** (post « airport malaria » à 6 h → redondance avec le post de marque du 29/07 et le thread X du 24/07, plus collision avec la cible Melvin Sanicas de demain matin ; le post s'est de surcroît révélé inatteignable par les chemins habituels).
+
+---
+
+**⚠️ Mise à jour du même run, après première rédaction de cette entrée — un 2e suivi exécuté et un contrôle §8 mené jusqu'au bout.**
+
+✅ **SUIVI 9/7-10 — Gaelle Gonzalez** (`/in/gaelle-gonzalez-67a70890/`, compte **vérifié**, 2e degré) — *Chef de projet virologie chez **Agence nationale de sécurité sanitaire - Anses***. Repérée en suggestion sur la page d'activité de Souad Belkacemi, puis **profil ouvert et évalué sur pièce** au lieu d'être laissée en carry-over. Identité levée par recherche nominative avant action ; identité revérifiée dans le même appel JS que le clic (conteneur contenant « Gaelle Gonzalez » **et** « Anses »). Confirmation : 5 boutons « Suivre » avant clic, 2 après, les siens ayant disparu. **Aucun commentaire** : son post le plus récent est à **3 j**, hors fenêtre 48 h. ⭐ **Excellente cible de commentaire dès qu'elle republie** — elle tient une veille chiffrée sur le virus West Nile en France, exactement le champ de HWG.
+
+📊 **§8 — contrôle mené sur son post, aucune écriture, et c'est le bon résultat.** Son post du 26/08 avance : « *Il y a une semaine, nous rapportions 49 cas équins. La barre des 120 cas est désormais franchie* » et « *Santé publique France rapporte 18 cas humains autochtones* ». Vérifié contre la base : **HWG a bien une ligne West Nile / France**, `906bf26a-8867-4a9c-ad7c-976e4e2c5bab`, **28 cas arrêtés au 27/08**, source `wnv-weekly.ecdc.europa.eu`, `updatedAt: 2026-08-29T09:01`, `ageDays: 0`, `stale: false`.
+
+- **La ligne HWG est plus récente que le post (27/08 contre 26/08) et porte un chiffre plus élevé (28 contre 18).** Les deux ne se contredisent pas : le décompte ECDC couvre les cas humains, celui de Santé publique France qu'elle cite est restreint aux cas **autochtones**. **Écrire 18 par-dessus 28 aurait fait régresser un cumul sur un foyer actif**, exactement ce que §8 interdit. **Aucune écriture, et rien à corriger.**
+- **Les 120 cas équins ne sont pas intégrables** : c'est un décompte vétérinaire, la base HWG n'a aucun champ pour le porter (`manualClaims` : une ligne affiche maladie, pays, cas, décès, une date, la source). Même situation que les « 60 zones de santé » du créneau de 13h.
+
+**Quotas corrigés à la clôture réelle : suivis 9/7-10** (au lieu de 8), marge résiduelle de 1. Le reste est inchangé.
+
+---
+
+### 5️⃣ ⚠️ À SIGNALER À DAVID
+
+1. 🔒 **Trois DM en attente de validation** (et non quatre) : John Omari Baso, Summer Galloway, Bobossam Cissoko. **Le DM Abou A. SOUMAH est caduc.** **Notification push envoyée.**
+2. 🔴 **Défaut réel du contrôle mécanique, prouvé ce run, qui bloquera d'autres brouillons français.** `scripts/check-outreach-message.mjs` (l. 349) détecte le tutoiement avec `/\b(tu|ton|ta|tes|toi|t'as)\b/gi`. En JavaScript `\b` est une frontière **ASCII**, donc **`/\btes\b/.test("hôtes")` renvoie `true`**. Le post de Souad Belkacemi ne contient aucune adresse à la 2e personne, mais le mot « hôtes » l'a fait classer « fil = tutoiement » et a bloqué un brouillon au vouvoiement correct. **Les deux relecteurs indépendants l'ont diagnostiqué séparément.** Piègera tout mot accentué homographe d'un pronom (« hôtes », « côtes », « bâton », « arrêtes »…). Correctif **non appliqué** : code applicatif, hors périmètre d'une routine documentaire (`AGENTS.md`).
+3. ⭐ **Le relecteur indépendant a de nouveau rattrapé un défaut de fond invisible aux scripts** — 2e jour consécutif. Voir section 4.
+4. 🔴 **Provenance des sources, à trancher par David — 2e signalement de la journée, inchangé.** `pricing.faq5_a` dit OMS / PAHO / ECDC seulement, `coverage.sourceHosts` en compte 31, presse comprise. **Bloque tout message parlant de l'origine des données.**
+5. **Aucune donnée patient proposée, aucune demande de canal hors plateforme, aucune instruction adressée à l'agent (§6).** Une situation §10 ouverte et fermée sans rédaction (Jean Kaseya).
+6. **Trois bannières de cookies refusées**, jamais acceptées.
+
+---
+
+### 🔁 CARRY-OVER POUR 9h DEMAIN (30/08)
+
+**Liste exhaustive dans `content-log.md`, entrée du jour, section « Carry-over ».** Les points qui engagent des contacts :
+
+1. 🔒 **Trois DM en file** : John Omari Baso, Summer Galloway, Bobossam Cissoko. ⚠️ **Abou A. SOUMAH est CADUC, ne pas le reproposer.**
+2. ⭐⭐ **Melvin Sanicas** — blocage levé le 30/08, **cible n°1**, sous réserve de vérifier la fenêtre 48 h (son post OMS/CDC aura ~33 h). C'est aussi par lui que l'angle « paludisme d'aéroport » doit passer, pas par le post LSHTM.
+3. ⭐ **Harvey Basivikidi** — **notre question du 28/08 est le dernier message du sous-fil et attend sa réponse.** Vérifier demain.
+4. ⭐ **Gaelle Gonzalez** (2e degré, *Chef de projet virologie chez ANSES*) — repérée ce run, **non traitée, profil non ouvert**. Candidat suivi/commentaire. **Marge de suivis restante : 2.**
+5. ⭐ **Dr. Jean Kaseya** — toujours non bloqué, écarté §10 ce run. Redevient cible dès un post factuel.
+6. ✅ **Abou A. SOUMAH** et **Tambe Elvis Akem** — ont répondu par une politesse, **aucune réponse due**. Ne pas les reconduire comme des fils en attente.
+7. ✅ **Dr. Siaka Condé** — délai demandé à 12:29, toujours pas revenu. Ne rien lui écrire.
+8. ⭐ **Africa CDC**, **Dr. Florika Fink-Hooijer**, **Joannishka D.**, **Yazdan Yazdanpanah**, **Dr. Hassan SANA**, **Regional Health Data Hub**, **Baraka Kweli Birindwa** — inchangés, cibles dès qu'ils publient du fond. ❌ **Larry Kerr** reste écarté §10, prémisse retestée à 13h. ⭐ **Oke Ikpekpe** reste le meilleur candidat DM du carry-over.
+9. ➖ **Béatrice SERRA** (invitation du 28/08 non acceptée) · ⛔ **BANZA Freddy Mutoka** (hors carry-over actionnables).
+10. 🔴 **Bug `\b` du contrôle mécanique** (section 5, point 2) : le savoir avant de « corriger » un registre déjà bon.
+11. **Blocages hebdomadaires au 29/08 au soir** : Robert Herriman, Patrick AYONGA, page ECDC, Oliver Morgan, Dr Fabrice KHADDY, **Melvin Sanicas (levé demain)** ; Martin Yakum (01/09) ; Ifedayo Adetifa, Julien Harneis (02/09) ; Harvey Basivikidi (03/09, top-level) ; Oke Ikpekpe, Jason Kindrachuk, Dr. Jeeven Kumar (04/09) ; Global Health EDCTP3, French Healthcare Association, Health Policy Watch, Tambe Elvis Akem (05/09) ; **nouveau : SOUAD BELKACEMI (05/09)**. **Page Africa CDC, Vital Strategies, Tedros, Prof. Mohamed Janabi, INRB, Miriam Mbueshi, Apoorva Wasnik, Johan Verheyden, Dr. Jean Kaseya : libres.**
+12. **Fichiers de l'arbre n'appartenant pas à cette routine, laissés tels quels** (`AGENTS.md`) : `marketing/qa/product-claims.manual.json` (modifié), `scripts/audit-alert-day.mjs` et `scripts/probe-alert-lock.mjs` (non suivis). Inchangés depuis 13h. **Branche vérifiée : master.**
+
+---
+
 ## 📅 Session interactive — 29/08/2026 (~13h30), sur demande de David
 
 David a demandé de regarder les réponses reçues au DM du matin (10:19) chez **Abou A. SOUMAH**, où il signalait un vrai problème produit — puis, une fois le point traité, a explicitement demandé « prépare son accès » puis « réponds à Abou sur le produit », et enfin « envoie le » en session interactive. Validation explicite au sens de `_shared/report-conventions.md`.
