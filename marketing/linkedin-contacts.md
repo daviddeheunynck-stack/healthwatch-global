@@ -11,6 +11,8 @@
 
 **Quotas à la clôture** : commentaires **4/7 publiés** · notes de connexion **0/7** (blocage plateforme confirmé, voir section 3) · connexions **1/7 envoyée sans note** · **DM 1 rédigé et mis en file de validation, 0 envoyé** · suivis **7/7-10 exécutés** · invitations reçues **2 en attente, inchangées, aucune nouvelle**.
 
+**⚠️ Mise à jour du même run, sur ordre explicite de David tapé en session (« envoie le »), après double-check refait à froid** : le DM Abou A. SOUMAH ci-dessous a été **ENVOYÉ ET CONFIRMÉ** à 10:19. Le double-check a rouvert le fil à la source (toujours 8 messages, aucune nouvelle réponse depuis la rédaction) et comparé le texte du composeur caractère pour caractère au brouillon validé avant le clic. Détail complet dans la section 2.
+
 ---
 
 ### 1️⃣ SUIVI DES ACTIONS PRÉCÉDENTES ET VEILLE MESSAGERIE
@@ -29,7 +31,7 @@
 
 Rappel de la règle du 23/07, reconfirmée par David le 26/08 au soir : **les DM ne partent jamais en autonomie.** Rédigé, passé **une fois** au registre de faits, au contrôle mécanique et au relecteur indépendant, puis mis en file. Commentaires et notes de connexion restent autonomes et ont été publiés directement.
 
-#### 🔒 DM 1 — **Abou A. SOUMAH** (`/in/abou-a-soumah-9911a634/`), FR, **tutoiement**, fil actif, **SANS CTA**, hors quota froid
+#### 🔒→✅ DM 1 — **Abou A. SOUMAH** (`/in/abou-a-soumah-9911a634/`), ENVOYÉ ET CONFIRMÉ, FR, **tutoiement**, fil actif, **SANS CTA**, hors quota froid
 
 *Epicentre / MSF*, basé à **Kinshasa (RDC)**, relation de 1er degré. Fil ouvert le 17/08, **8 messages**, recopiés verbatim dans `tmp/thread-abou-29.txt`.
 
@@ -46,7 +48,11 @@ Rappel de la règle du 23/07, reconfirmée par David le 26/08 au soir : **les DM
 
 **Brouillon réécrit selon la correction minimale demandée** : répondre à la salutation pour elle-même, rendre la main, et remplacer la question par un apport côté David — ce que sa réponse d'août a concrètement changé dans la façon de lire les bulletins. Deux `ngram.history` ensuite corrigés sans toucher au fond (« *les deux tableaux de bord* », « *date d arrêt des données* »).
 
-**QA: mécanique PASS au 3e jet (496 car., 2 paragraphes, `draftLang: fr` / `threadLang: fr`, séquences de 4 mots comparées aux 4 brouillons frères du run : aucune collision) | relecteur REECRIRE (7, 12) au 1er passage → brouillon refondu | faits cités: aucun chiffre | registre du 29/08 | statut: en file de validation**
+**QA: mécanique PASS au 3e jet (496 car., 2 paragraphes, `draftLang: fr` / `threadLang: fr`, séquences de 4 mots comparées aux 4 brouillons frères du run : aucune collision) | relecteur REECRIRE (7, 12) au 1er passage → brouillon refondu | faits cités: aucun chiffre | registre du 29/08 | statut: ENVOYÉ ET CONFIRMÉ à 10:19, sur ordre explicite de David (« envoie le »)**
+
+⚠️ **Re-contrôle mécanique avant envoi (double-check demandé par David) : `FAIL` sur `ngram.history`, 50 séquences citées — faux positif documenté** (`docs/outreach-qa.md` §2, piège du 27/08) : le brouillon, une fois archivé en file de validation dans ce fichier, entre dans son propre corpus lu par le script. Vérifié par grep sur l'ensemble des archives : les 50 séquences ne proviennent que de la citation du brouillon lui-même (ligne 51 de ce fichier), aucune d'un message envoyé à un autre destinataire. Ignoré sur pièce, conformément à la méthode documentée.
+
+**Publication confirmée** : identité du destinataire revérifiée dans l'en-tête de conversation (« Abou A. SOUMAH ») et texte du composeur comparé caractère pour caractère au brouillon validé, **dans le même appel JS que le clic d'envoi** — 494 caractères, 0 divergence, 0 tiret cadratin. Après envoi : éditeur vidé, coche de livraison visible, fil remonté en tête de la messagerie à 10:19.
 
 > Salut Abou, ça va bien de mon côté, merci d'avoir repris contact, et j'espère que c'est réciproque.
 >
