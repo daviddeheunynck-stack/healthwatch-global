@@ -652,7 +652,7 @@ export default async function DashboardPage({
           "@type": "Offer",
           "price": "0",
           "priceCurrency": "EUR",
-          "description": "Free tier — live outbreak map and dashboard, no account required.",
+          "description": "Free plan — public outbreak dashboard, no card required. Sign up for a 14-day Pro trial to see exact case and death figures.",
         },
         "featureList": [
           "WHO, ECDC, PAHO and Africa CDC outbreak data — WHO updated hourly, ECDC/PAHO/Africa CDC weekly",
