@@ -207,12 +207,15 @@ const FROZEN_ROW_CHECKED = {
   // n°035 relaye par tchadinfos le 19/08, les bilans anterieurs 239/13 et 75/8, et le SITREP 035
   // de 2025 (collision de millesime documentee dans source-checks.md). Rien a ecrire.
   "06541c4a-6b67-4c2c-a44e-818ba7621d76": "2026-08-28",
-  // Choléra/RCA : vérifié le 16/08. Le bilan le plus récent publiable reste 720 cas / 46 décès
-  // arrêté au 05/08 (Africa24, déjà cité en base). Rien de plus récent : la couverture RCA se
-  // limite à la chronologie déjà connue (197 cas / 24 décès à la déclaration du 26/06, puis
-  // 436/37 au 14/07, puis 720/46 au 05/08). Le communiqué UNICEF du 12/08 sur l'Afrique de
-  // l'Ouest/Centre ne chiffre pas la RCA (déjà écarté le 15/08 pour la même raison). Rien à écrire.
-  "d2db38cc-f638-456a-bc7b-0d48f904b408": "2026-08-16",
+  // Choléra/RCA : vérifié le 16/08 puis revérifié le 29/08 (session interactive, suite au
+  // data-quality du 28/08). Le bilan le plus récent publiable reste toujours 720 cas / 46 décès
+  // arrêté au 06/08 (Africa24, déjà cité en base) — chronologie confirmée : 197/24 à la
+  // déclaration du 26/06, 435/36 au 06/07, 720/46 au 06/08, rien depuis. Un résultat de recherche
+  // prometteur (« OMS confirme 46 cas/13 décès, Djoujou/Damara ») s'est révélé être un article de
+  // 2016, pas 2026 — piège de date à ne pas refaire tomber dans le même panneau. `source_confirmed_at`
+  // posé en base le 29/08 pour arrêter le re-signalement quotidien de data-quality sur cette
+  // question déjà répondue ; se réinvalide de lui-même si `date` avance un jour.
+  "d2db38cc-f638-456a-bc7b-0d48f904b408": "2026-08-29",
   // Choléra/Tanzanie : vérifié le 18/08. Rien de plus récent que le WER 101-31 déjà cité en base
   // (113 cas / 2 décès, cumul 1er janvier-28 juin 2026, aucun cas dans les 28 derniers jours).
   // L'aperçu mensuel choléra de l'ECDC (arrêté au 27/07) confirme explicitement l'absence de
@@ -726,6 +729,16 @@ const MANUAL_ROWS = {
   // cette série. Corrigée le même jour : 84->226 cas, 2->7 décès. Voir
   // scripts/fix-west-nile-italy-report3-2026-08-19.mjs.
   "d0dcfdbd-b656-4d4f-91a9-ddd271025af8": "West Nile/Italie",
+  // Ajoutées le 2026-08-29 (session interactive, "vérifier régulièrement, comme toutes
+  // finalement") : ces trois lignes avaient déjà été vérifiées manuellement au moins une fois
+  // (RCA depuis le 16/08 via MANUAL_ROW_CHECKED) mais n'avaient jamais été inscrites ICI —
+  // sans entrée dans MANUAL_ROWS, la boucle de vérif hebdo (`if (!label) continue`) les
+  // ignorait purement et simplement, peu importe ce que MANUAL_ROW_CHECKED contenait. Aucune
+  // des trois n'a de cron dédié : Nicaragua/RCA se lisent en presse/ministère sans cadence
+  // fixe, Ouganda dépend d'une couverture presse locale événementielle.
+  "30961b24-f228-4f16-8861-8131cab5aa85": "Dengue/Nicaragua",
+  "d2db38cc-f638-456a-bc7b-0d48f904b408": "Choléra/RCA",
+  "120d6d5a-4e9b-4fda-8a1a-67e504246c55": "Crimée-Congo/Ouganda",
 };
 // Ebola/RD Congo (bd1c3a46) : chiffre débloqué le 19/08 — David a ouvert le PDF IRIS lui-même
 // (même blocage JS que le PDF diphtérie australienne), lu directement depuis ses Téléchargements.
@@ -934,6 +947,25 @@ const MANUAL_ROW_CHECKED = {
   // and 198 probable) were locally acquired ». La ligne porte déjà 2 220 sourcés à #751, donc rien
   // à écrire. #751 reste la dernière édition parue (série bimensuelle, #752 attendu vers le 20/08).
   "74561cc3-216f-4ee1-988a-ee82e362155d": "2026-08-18",
+  // Dengue/Nicaragua : vérifiée le 29/08 (session interactive, suite au data-quality du 28/08,
+  // 27j de péremption). Cumul national officiel toujours 2 050 cas au 01/08 (OPS/MINSA) — aucun
+  // nouveau total publié depuis. MAIS le MINSA publie bien des bulletins hebdomadaires actifs
+  // (relayés par Canal 4 Nicaragua, « nota íntegra del MINSA ») : 122 (semaine au 01/08) → 114
+  // (08/08) → 118 (15/08) → 130 (22/08) « personas diagnosticadas ». Piège identifié et évité :
+  // ce sont des NOUVEAUX diagnostics de la semaine, pas un cumul annuel restaté — ne jamais les
+  // additionner au 2 050 sans un cumul explicite (méthodologie non confirmée équivalente).
+  // Description enrichie de ce signal de tendance en base, chiffre `cases` non modifié.
+  "30961b24-f228-4f16-8861-8131cab5aa85": "2026-08-29",
+  // Fièvre hémorragique de Crimée-Congo/Ouganda : re-sourcée le 27/08 (session distincte, hors de
+  // cette trace) de 9 cas/4 décès (note de lecteur Substack non attribuée) vers 3 cas/1 décès, deux
+  // clusters nommés et datés (Kyankwanzi 11/02, Yumbe 06-08/08). Re-vérifiée le 29/08 (session
+  // interactive, suite au data-quality du 28/08) : chiffres toujours exacts, aucun 3e cluster ni
+  // évolution trouvés. Source changée de outbreaknewstoday.substack.com (blog, non attribué) vers
+  // monitor.co.ug (Daily Monitor, quotidien national ougandais établi, nomme le responsable
+  // sanitaire du district et le nombre de contacts tracés pour Yumbe) — ajouté à
+  // GENERAL_PRESS_DOMAINS dans lib/source-trust.ts, la ligne passe de "non vérifié" à "presse"
+  // sur le site public. Rien à écrire côté chiffres.
+  "120d6d5a-4e9b-4fda-8a1a-67e504246c55": "2026-08-29",
 };
 console.log("\n=== Lignes manuelles (section 5) — dues pour vérif hebdo (>7j) ===");
 const now = Date.now();
