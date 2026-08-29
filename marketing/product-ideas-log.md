@@ -1948,3 +1948,55 @@ La ligne la plus coûteuse du tableau est le **rapport Pro** : `app/(print)/…/
 **Risque/inconnue :** aucune ligne n'est *supprimée* — le foyer, ses chiffres et son historique restent en ligne, seule l'attribution disparaît. Une ligne dont l'attribution disparaît est une ligne dont on ne peut plus dire d'où vient le chiffre : c'est le bon état pour une donnée à re-sourcer, pas un état durable. Le re-sourcing des 4 lignes reste chez David, ce correctif ne le remplace pas — il empêche seulement que le prochain éditeur interdit fuite par six portes au lieu d'une.
 
 **Statut initial : 2 idées PROPOSÉES.** Construction dans la foulée — voir la mise à jour ci-dessous.
+
+### Construction — les deux idées sont livrées
+
+**Idée 1 — ✅ CONSTRUITE, commit `e187130`**, `app/api/cron/health-check/route.ts`, un seul fichier. Deux correctifs, même racine.
+
+- **Le motif est écrit.** `logCronRun` accepte un `errorMsg` depuis toujours ; cet appel était le seul des 50 à ne pas le passer. Les deux termes sont dits, celui qui décide du statut en tête. Rejoué sur les vraies valeurs du run de 07h05 :
+
+```
+overdue=[sync-who-regional]  sentry=1  ->  status=error rows=2
+    error = "1 cron(s) en retard : sync-who-regional — plus 1 incident(s) Sentry"
+overdue=[sync-who-regional]  sentry=0  ->  status=error rows=1
+    error = "1 cron(s) en retard : sync-who-regional"
+overdue=[]                   sentry=2  ->  status=ok    rows=2   error absent
+```
+
+Le troisième cas compte : `logCronRun` reconstruit `value` à chaque passage et ne reporte que `lastNonZero`/`evaluatedAt`, donc le motif **disparaît** dès le premier run sain — pas de message qui se fige et survit à sa cause, comme la valeur du 24/08 de `weekly-signal`.
+
+- **La ligne de la veille est datée.** `erroring` marque désormais sa propre entrée « — passage précédent ». Pour les 49 autres crons, « dernier passage » reste la lecture attendue et rien ne change ; pour celui-ci, le rapport porte déjà la réponse fraîche deux lignes plus haut. Volontairement **pas** retirée de la liste : si un jour le run précédent a réellement planté, c'est le filet défensif (ligne 724) qui y écrit son message, et c'est la seule trace qu'un lecteur en aura — le mail de ce jour-là n'ayant jamais été envoyé.
+
+**Ce qui n'a pas changé :** aucun destinataire, aucune condition, aucun statut calculé autrement. `hasOverdue` décide toujours seul, `rows` compte toujours les deux termes.
+
+**Idée 2 — ✅ CONSTRUITE, commit `2bd52f3`**, `lib/source-trust.ts` + `lib/outbreaks.ts` + 4 surfaces. `publishableSourceUrl()` et `publishableSourceName()` rendent `null` pour un éditeur interdit, à côté d'`isForbiddenSourceHost` déjà exporté. Les six surfaces du tableau ci-dessus les consultent ; les deux déjà gardées par ricochet du tier n'ont pas été touchées, leur garde tient.
+
+Trois arbitrages, tous dans le même sens — **retirer l'attribution, jamais la remplacer par une autre** :
+
+- **`sourceName()` n'est pas modifiée.** `data-quality` (ligne 1171) l'appelle précisément pour **nommer** la ligne fautive dans l'audit interne. La faire mentir aurait aveuglé le seul contrôle qui doit dénoncer la ligne.
+- **Modèle de notification RSI :** l'attribution tombe entièrement (`HealthWatch Global`, sans plus) au lieu de basculer sur le repli existant `« OMS / WHO »`. Ce texte est copié tel quel dans une déclaration officielle : remplacer une citation illicite par une citation fausse aurait été pire que de n'en donner aucune. Le cas « source absente » garde son libellé d'origine.
+- **Phrase « bulletin X du … » :** la ligne entière disparaît. Sans éditeur, la phrase n'a plus de sujet.
+
+**Rejoué en lecture seule contre la prod, table entière paginée** — 293 lignes, `.range()` explicite, conformément à la limite de 1 000 relevée le 28/08 :
+
+```
+lignes dont l'attribution disparait : 4   <- les 4 lignes ReliefWeb, deja archivees
+lignes inchangees                   : 289
+tiers, avant comme apres : official 204 | don 68 | press 10 | unverified 11
+audit interne : sourceName() dit toujours "ReliefWeb" sur les 4
+```
+
+`scripts/check-source-trust.mjs` : « No displayed row falls to 'unverified'. Safe to ship. » `npx tsc --noEmit` propre sur tout le projet, `npx eslint` propre sur les 7 fichiers touchés au total.
+
+**Vérification en navigateur impossible ce soir, et c'est dit plutôt que contourné.** Le serveur de développement ne démarre pas en session non supervisée (personne pour approuver la commande), et le projet Supabase de dev est distinct de la prod — il ne contient aucune ligne à éditeur interdit à rendre. Le contrôle a donc porté sur les fonctions réelles rejouées contre la vraie table, pas sur le rendu. Le rendu lui-même repose sur `tsc`/`eslint` et sur quatre substitutions mécaniques. **À contrôler d'un coup d'œil après déploiement** : `/fr/outbreak/fe6c7cdc-4790-44ed-8243-0967ce155f62` ne doit plus contenir « ReliefWeb », et une ligne ordinaire (n'importe quel foyer actif) doit toujours afficher sa phrase « bulletin … du … » et sa citation.
+
+### Ce qui reste chez David — aucune écriture en prod n'a été faite ce soir
+
+1. **Le re-sourcing des 4 lignes ReliefWeb n'est pas fait et ne l'est pas par ce correctif.** Elles sont maintenant sans attribution nulle part, ce qui est le bon état pour une donnée à re-sourcer — pas un état durable. Les chiffres, eux, restent en ligne : Dengue en Samoa américaines (1 036 cas), Wallis-et-Futuna (50), Kiribati (44), Vanuatu (76). Deux issues : les re-sourcer vers un éditeur permis, ou les retirer. C'est le seul point du reliquat du 26/08 encore ouvert.
+2. **`sync-who-regional` était en retard ce matin à 07h05** — c'est ce que le correctif de l'idée 1 aurait écrit. Il a tourné depuis, à 08h06, et son dernier passage est sain (`ok`, rows=0). Rien à faire ; signalé parce que c'est la cause réelle du rouge d'aujourd'hui et qu'elle n'était lisible nulle part avant ce soir.
+3. **Le rapport de demain matin dira encore `health-check ((sans message))`** si un cron est de nouveau en retard : la valeur lue au début du run est celle écrite avant le déploiement. C'est le surlendemain que le motif apparaîtra. Ne pas lire ça comme un échec du correctif.
+4. **`weekly-signal` porte toujours « 1 envoi(s) en échec » du 24/08**, et le correctif du 28/08 qui nomme le destinataire ne s'appliquera qu'au prochain passage — **lundi 31/08**. Inchangé depuis hier.
+5. **Fichiers d'une autre session laissés intacts, comme le veut `AGENTS.md`** : `marketing/qa/product-claims.manual.json` et `marketing/linkedin-contacts.md` (modifiés), `scripts/audit-alert-day.mjs` et `scripts/probe-alert-lock.mjs` (non suivis). Rien n'a été stagé ni annulé les concernant.
+6. **Une fusion d'une autre session a traversé l'arbre pendant ce run, et elle n'a pas été touchée.** Après le push des deux correctifs, `git status` a révélé une fusion en cours de `claude/happy-gould-11750f` (frontières de mot Unicode dans `check-outreach-message.mjs`) avec un conflit non résolu. Le premier `git add` de ce log l'avait indexé **dans leur fusion** — désindexé aussitôt par `git restore --staged`, contenu intact, avant tout commit. Le conflit lui-même a été laissé à son auteur plutôt que résolu à l'aveugle : c'est exactement le scénario que `AGENTS.md` décrit (un changement de code qui part sur `master` sans que personne n'ait relu son diff). Cette entrée a attendu la fin de leur fusion (`fc37a2d`) pour être commitée.
+
+**Statut : 2 idées PROPOSÉES ET CONSTRUITES** (`e187130`, `2bd52f3`). Aucune idée écartée par un garde-fou ce soir.
