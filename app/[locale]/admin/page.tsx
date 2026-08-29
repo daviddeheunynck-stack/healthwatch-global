@@ -238,10 +238,19 @@ export default async function AdminPage({
   // flow himself on 2026-08-26 (a genuine `sub_...` id, `stripe_has_payment_method: true`, still
   // `trialing`, `amount_paid: 0` on its only invoice) — isRealStripeSub only screens out the
   // literal "admin_override" string, so a real test subscription under his own email passed
-  // straight through and inflated realMrr/payingCount with zero dollars actually charged. Any
-  // ADMIN_EMAILS account is excluded here too, regardless of which Stripe path it went through.
+  // straight through and inflated realMrr/payingCount with zero dollars actually charged.
+  //
+  // isAdmin(ADMIN_EMAILS) alone doesn't fix it either — that test account was created under
+  // david.deheunynck@yahoo.fr, which is NOT in ADMIN_EMAILS (only the gmail.com address is).
+  // Deliberately not adding yahoo.fr to ADMIN_EMAILS to patch this: that variable also grants
+  // real admin-panel access (AdminQCFixButton, AdminPilotInviteForm, etc.), which is a much
+  // bigger grant than "don't count this account's card as revenue". FOUNDER_TEST_EMAILS is
+  // narrower on purpose — revenue-metric exclusion only, no privilege attached.
+  const FOUNDER_TEST_EMAILS = ["david.deheunynck@yahoo.fr"];
+  const isFounderAccount = (email?: string | null) =>
+    isAdmin(email ?? undefined) || (!!email && FOUNDER_TEST_EMAILS.includes(email.toLowerCase()));
   const isRealStripeSub = (p: { stripe_subscription_id?: string | null; email?: string | null }) =>
-    !!p.stripe_subscription_id && p.stripe_subscription_id !== "admin_override" && !isAdmin(p.email ?? undefined);
+    !!p.stripe_subscription_id && p.stripe_subscription_id !== "admin_override" && !isFounderAccount(p.email);
   // "Paying" used to mean only `isRealStripeSub` — but checkout sets
   // stripe_subscription_id the instant checkout completes, even with
   // `payment_method_collection: if_required` and zero card on file (see
