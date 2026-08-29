@@ -1,6 +1,150 @@
 > 📦 **Archive** : le détail du 24 juin au 16 juillet 2026 a été déplacé dans [linkedin-contacts-archive-avant17juillet.md](linkedin-contacts-archive-avant17juillet.md) le 23/07 pour garder ce fichier léger.
 
 
+## 📅 Session linkedin-hwg-monitoring — 29/08/2026 (9h)
+
+**Vérification double déclenchement** : aucune entrée `linkedin-hwg-monitoring` datée du 29/08 dans ce fichier ni dans `content-log.md` à l'ouverture (dernière en date : 28/08 9h) → **premier déclenchement de cette routine aujourd'hui**. Aucune entrée du 29/08 d'aucune autre routine non plus.
+
+**🖥️ Navigateur** : `_shared/browser-status.md` lu avant ouverture, dernière entrée **🟢 RÉTABLI (24/08 ~09h15)** → aucun bridage. `23c7ecdd-…` seul navigateur listé, sélectionné sans question (§7). **Aucun incident d'appairage ce run**, rien à écrire dans `browser-status.md`. Deux bannières de cookies LinkedIn rencontrées en cours de route : **« Refuser » cliqué à chaque fois** (option la plus protectrice), jamais « Accepter ».
+
+**Registre de faits régénéré en début de run** (`npm run qa:facts`) : **219 faits citables sur 105 lignes affichées**, 81 lignes `is_seed` exclues, **18 faits périmés** — contre 225/16 hier matin.
+
+**Quotas à la clôture** : commentaires **4/7 publiés** · notes de connexion **0/7** (blocage plateforme confirmé, voir section 3) · connexions **1/7 envoyée sans note** · **DM 1 rédigé et mis en file de validation, 0 envoyé** · suivis **7/7-10 exécutés** · invitations reçues **2 en attente, inchangées, aucune nouvelle**.
+
+---
+
+### 1️⃣ SUIVI DES ACTIONS PRÉCÉDENTES ET VEILLE MESSAGERIE
+
+**Boîte de réception parcourue par récence.** Les trois fils en tête (John Omari Baso, Alain BASHIZI, Dr. Siaka Condé) portent nos propres messages du **29/08 à 04:45-04:49** : ce sont les trois DM que David a fait envoyer hier soir. **Aucune réponse reçue depuis.** Rien à relancer.
+
+- ⭐ **Abou A. SOUMAH a rouvert son fil hier soir à 22:58**, onze jours après notre dernier message resté sans réponse, avec une simple salutation : « *Salut David, J'espère que tu vas bien.* » **Brouillon en file de validation, section 2.**
+- ✅ **Harvey Basivikidi : rien de dû, vérifié à la source et non sur la notification.** La notification « *Harvey Basivikidi a répondu à votre commentaire* » reprend sa réponse du 28/08 (« *I find this point particularly relevant. It suggests that interoperability should not stop at the boundary between institutional systems…* »), **déjà traitée le 28/08 à ~12h45**. Post rouvert (`urn:li:activity:7498314547779444737`) : **notre réponse en sous-fil de 20 h est bien le dernier message du fil**, il n'a pas répondu depuis. Le post a par ailleurs 2 j, donc hors fenêtre pour un nouveau commentaire top-level. **Carry-over n°2 du 28/08 respecté** : l'angle abandonné n'a pas été réécrit.
+- **Rodrigo Olave Hurtado, Isaias Fernandes Co, Peace Mpakaniye, Pierre PARNEIX, Dr. Kaushik Sanyal, Adam Abdullahi, Celestin Nzanzu Mudogo** : inchangés, nos messages restent les derniers, aucune réponse, rien à relancer.
+
+**Notifications parcourues intégralement (10 items).** Deux fils vivants (Oke Ikpekpe, traité en commentaire 1/7) et une piste neuve exploitée (Larry Kerr → Summer Galloway, section 3). Les autres items sont soit déjà traités, soit sur des cibles écartées ou bloquées.
+
+---
+
+### 2️⃣ 🔒 UN DM EN FILE DE VALIDATION
+
+Rappel de la règle du 23/07, reconfirmée par David le 26/08 au soir : **les DM ne partent jamais en autonomie.** Rédigé, passé **une fois** au registre de faits, au contrôle mécanique et au relecteur indépendant, puis mis en file. Commentaires et notes de connexion restent autonomes et ont été publiés directement.
+
+#### 🔒 DM 1 — **Abou A. SOUMAH** (`/in/abou-a-soumah-…`), FR, **tutoiement**, fil actif, **SANS CTA**, hors quota froid
+
+*Epicentre / MSF*, basé à **Kinshasa (RDC)**, relation de 1er degré. Fil ouvert le 17/08, **8 messages**, recopiés verbatim dans `tmp/thread-abou-29.txt`.
+
+**Son message, verbatim :**
+> (28/08, 22:58) Salut David, J'espère que tu vas bien.
+
+⚠️ **LANGUE — français, tutoiement.** Le fil a basculé en français le 17/08 à 17:14 et le tutoiement est établi des deux côtés (lui : « *Je ne sais si j'ai bien répondu à tes questions* », « *j'espère que tu vas bien* » ; David : « *de ton côté, ton extraction arrive-t-elle…* »). *Langue du fil = fr ; langue du brouillon = fr*, paire confirmée mécaniquement (`draftLang: fr` / `threadLang: fr`). Conforme à [[feedback_linkedin_tutoiement_mirror_contact]].
+
+**CTA : volontairement absent.** Le nom HealthWatch Global **et** le lien ont déjà été servis dans ce fil le 17/08 (message d'ouverture de David, puis « *Je jetterais un coup d'œil sur votre lien healthwatch-global.com un peu plus tard* » côté Abou). §3 interdit de resservir le même argumentaire dans le même fil.
+
+🔴🔴 **Le relecteur a fait échouer le premier brouillon sur deux questions de fond, et il avait raison sur les deux.** Le brouillon initial remerciait la salutation en une clause puis **relançait la question technique restée sans réponse depuis le 17/08** (ce que « l'intersection » recouvre exactement).
+- **(7) Fil** : « *C'est la 4e question d'affilée de David, re-posée après un silence, alors que la salutation ne demande qu'un échange humain — et qu'elle précède peut-être ce qu'il a à dire.* »
+- **(12) Apport** : la question était déjà la seconde branche proposée le 17/08 à 17:49, et surtout **sa prémisse contredisait ce qu'Abou avait déjà répondu** (« *Tous les deux sont alimentés à travers les listes linéaires utilisées dans les CTE. Du coup, les chiffres sont a priori les mêmes.* »). Verdict : « *Le brouillon est 100 % extraction, 0 % apport.* »
+
+**Brouillon réécrit selon la correction minimale demandée** : répondre à la salutation pour elle-même, rendre la main, et remplacer la question par un apport côté David — ce que sa réponse d'août a concrètement changé dans la façon de lire les bulletins. Deux `ngram.history` ensuite corrigés sans toucher au fond (« *les deux tableaux de bord* », « *date d arrêt des données* »).
+
+**QA: mécanique PASS au 3e jet (496 car., 2 paragraphes, `draftLang: fr` / `threadLang: fr`, séquences de 4 mots comparées aux 4 brouillons frères du run : aucune collision) | relecteur REECRIRE (7, 12) au 1er passage → brouillon refondu | faits cités: aucun chiffre | registre du 29/08 | statut: en file de validation**
+
+> Salut Abou, ça va bien de mon côté, merci d'avoir repris contact, et j'espère que c'est réciproque.
+>
+> Ce que tu m'avais expliqué en août sur ces deux tableaux de bord alimentés par les mêmes listes linéaires m'a changé une habitude de lecture : quand un cumul bouge d'une semaine à l'autre dans un bulletin, je regarde maintenant à quelle date les données s'arrêtent avant d'y voir un mouvement réel. C'était utile, merci pour ça. Et si tu avais quelque chose en tête en m'écrivant, je t'écoute.
+
+---
+
+### 3️⃣ SUIVIS ET CONNEXION — quota de suivis rempli, 7/7-10
+
+**Aucun follow-back dû.** Liste « Abonnés » (`/mynetwork/network-manager/people-follow/followers/`) parcourue par récence, **état des boutons lu dans le DOM** : les abonnés les plus récents sont **tous déjà suivis en retour**. **388 abonnés**, inchangé depuis hier 17h. **Winston Urio** reste le seul non suivi en retour, écarté §10 le 27/08, **statut inchangé, non reproposé**.
+
+**Deux sources de candidats exploitées ce run** : (a) les profils apparus dans les fils travaillés aujourd'hui (auteurs et commentateurs), (b) une **verticale de recherche neuve**, « One Health zoonotic disease surveillance » — distincte des deux verticales du 28/08 (« field epidemiologist outbreak surveillance » et « épidémiologiste surveillance épidémiologique riposte »). Tous les noms retenus ont été **croisés par grep contre les cinq fichiers d'archive avant évaluation** : aucun n'y figurait.
+
+**✅ 7 SUIVIS EXÉCUTÉS ET CONFIRMÉS** (identité vérifiée par `aria-label` **dans le même appel JS que le clic**, bouton confirmé passé à « Suivi, cliquez pour ne plus suivre… » à chaque fois) :
+
+1. ⭐⭐ **Dr. Florika Fink-Hooijer** (`/in/dr-florika-fink-hooijer-9539192a5/`, 2e) — ***Director General HERA (Health Emergency Preparedness & Response) at European Commission***, Bruxelles, 10 relations en commun. **Décideuse de premier plan au sens de la directive du 17/08**, et elle publie sur le dossier en cours : son post du 25/08 porte sur le soutien de la DG HERA à l'OMS (tests PCR) et à Africa CDC (kits de détection) pour la riposte RDC. **Suivi et non connexion** : post hors fenêtre 48 h (4 j), donc aucun hook frais, et les notes personnalisées sont de toute façon épuisées.
+2. ⭐ **Kerry Cullinan** (`/in/kerrycullinan/`, 2e, 2 520 abonnés) — ***Deputy Editor, Health Policy Watch***, Le Cap. **C'est elle qui signe le papier des 100 jours** commenté ce matin (commentaire 4/7). Son activité LinkedIn propre est modeste, mais c'est la signature derrière une source que HWG lit régulièrement.
+3. **Kipchirchir Kigen** (`/in/kipchirchir-kigen-a67234170/`, 2e, 2 079 abonnés) — *Public Health Epidemiologist | Public Policy Analyst*, Kenya, Dalla Lana School of Public Health (Toronto) et University of Helsinki. Repéré comme unique commentateur du post Health Policy Watch. **Suivi et non connexion** : épidémiologiste confirmé, mais son activité propre porte sur la santé neurologique et la justice climatique, champ adjacent, et son dernier post personnel a 3 semaines.
+4. **Ferdinant M. Sonyuy** (`/in/mbiydzenyuy-ferdy/`, 2e, **8 091 abonnés**, profil vérifié) — *Executive Director, **Africa NCDs Network** | Public Health Leader | CEO RADA | SG Cameroon NCDA*, Bamenda (Cameroun), 8 relations en commun. Repéré comme unique commentateur du post EDCTP3. Champ adjacent (maladies non transmissibles) mais audience et positionnement institutionnel réels.
+5. ⭐ **Joannishka D.** (`/in/dr-joannishka-k-dsani/`, 2e, 773 abonnés) — ***One Health Researcher | Veterinarian | Zoonotic Disease Surveillance & Multisectoral Collaboration | PhD, University of Bonn | One Health Soulsby Fellow***. **Mutuels : Simon Ruegg et Dr. Marc Yambayamba**, deux nœuds déjà établis du réseau HWG. Activité substantielle et récente : partage il y a 1 semaine de son article **BMC Health Services Research** sur les blocages de la mise en œuvre One Health au Ghana, à partir de 101 parties prenantes des secteurs humain, animal et faune sauvage. **Suivi plutôt que connexion uniquement parce que la note est impossible** : le hook existe et il est excellent, mais une invitation muette ne le porterait pas. ⭐ **Meilleur candidat de commentaire de la file pour les prochains jours** si elle republie dans la fenêtre 48 h.
+6. **Mariam Munir** (`/in/mariam-munir-495521195/`, 2e, 982 abonnés) — *Vector-Borne Disease Ecologist | Zoonotic Spillover and Wildlife Reservoirs | **Integrated Pathogen Surveillance** | One Health | Lecturer*, University of Veterinary and Animal Sciences, Pakistan. Mutuels Massab Umair et Horace DEGNONVI. ⚠️ **Décision assumée et limite** : l'intitulé est en plein cœur du périmètre, mais son activité publique est mince (une republication d'appel à projets WWF-Pakistan, 1 mois) et son profil affiche « à l'écoute de nouvelles opportunités ». Retenue en **suivi** — la catégorie prévue exactement pour ce cas — et non écartée comme Dr. Arnab Chatterjee le 28/08, dont la dernière activité datait de **7 mois**.
+7. **Moumita Das** (`/in/moumita-das-37aaa9195/`, 2e, 661 abonnés) — *Epidemiologist | Data Analysis | **Zoonotic Disease Modeling** | One Health | Disease Control and Surveillance | Spatial & Temporal Analyst*, University of Minnesota. **Mutuels Jonathan Polonsky et Lorenzo Pezzoli**, deux nœuds du cœur du réseau HWG. Dernier post propre à 4 mois (article PLOS One, modélisation spatiale des populations canines libres), donc peu fréquente mais substantielle quand elle publie.
+
+**✅ CONNEXION 1/7 ENVOYÉE (sans note) — Summer Galloway, Ph.D.** (`/in/segallowayphd/`, 2e, **3 337 abonnés**) — ***Global Health and National Security Executive | Bridging Policy, Science & Governance Architecture to Strengthen Pandemic Preparedness***, Emory University School of Medicine, **8 relations en commun**. **Lien réseau direct et vérifié** : elle est **co-autrice, avec Larry Kerr (relation de 1er degré de David) et Tambe Elvis Akem (contact HWG de longue date), de la série « Day 100 » sur la riposte Bundibugyo 2026**, dont la 3e partie a été publiée ce matin. Ce n'est donc pas un profil isolé mais un nœud du réseau déjà constitué. **Statut : invitation envoyée SANS NOTE, confirmée** dans `/mynetwork/invitation-manager/sent/` : « **Summer Galloway, Ph.D. — Envoyé aujourd'hui** », en tête des **97** invitations envoyées.
+
+⚠️ **Le piège de sidebar documenté s'est reproduit à l'identique sur son profil** : l'unique bouton « Se connecter » de la page portait l'`aria-label` « **Inviter Jodie Ah-Sing à rejoindre votre réseau** » — exactement le même profil parasite que sur la page de Béatrice SERRA le 28/08. **Il n'a pas été cliqué.** Le contrôle réel est le lien `/preload/custom-invite/?vanityName=segallowayphd`, qui ouvre la modale.
+
+#### 🔴 NOTES DE CONNEXION — blocage plateforme reconfirmé ce matin, état inchangé
+
+Le SKILL demande de **vérifier cet état en tête de run avant de rédiger une note**. Vérifié ici sur pièce, au moment où une invitation était de toute façon justifiée : la modale « Ajouter une note à votre invitation ? » s'ouvre normalement et propose ses deux boutons, mais un clic sur « **Ajouter une note** » n'ouvre **aucun champ utilisable** et affiche la modale Premium — « ***Vos messages d'invitation personnalisés gratuits sont épuisés.*** Contournez cette limite avec Premium ». **Aucun compteur n'est exposé**, comme constaté le 28/08 : l'état est binaire, et il est épuisé. **Conduite appliquée, celle autorisée par David le 23/07 : envoi sans note, même barre de pertinence, compté dans le quota de 7/jour.** Aucune note n'a donc été rédigée ce run, et le quota de notes reste à 0/7 par construction, pas par manque d'effort.
+
+**Invitations reçues** : **aucune nouvelle**. Les 2 en attente sont inchangées et laissées telles quelles — **Zachariah G. Houdari** (services financiers, hors périmètre §10) et **OLAOLUWA PHILIP** (SIG/climat, champ adjacent hors catégories). Ni acceptées ni ignorées.
+
+**Invitations sortantes en attente** : Summer Galloway (aujourd'hui), Béatrice SERRA (23 h), Linda Esso et Asma SAIDOUNI (5 j), plus l'historique. **97 invitations envoyées au total.**
+
+---
+
+### 4️⃣ COMMENTAIRES PUBLIÉS CE RUN — 4, tous en autonomie complète
+
+Détail intégral, textes et QA dans `content-log.md`, entrée du jour. En résumé :
+
+1. **Oke Ikpekpe**, EN, réponse en sous-fil — 3e tour d'un échange devenu une vraie discussion, il avait posé une question directe. **Relecteur 12 PASS sur 12.**
+2. **Global Health EDCTP3** (page), EN, top-level — résistance à l'artémisinine, l'angle « ce que la notification de routine ne bouge pas ». **Relecteur 12 PASS sur 12.**
+3. **🇫🇷 French Healthcare Association** (page), **FR**, top-level — laboratoire mobile IMeBIO à Tchomia, premier commentateur extérieur sous une page à 19 271 abonnés, **profil totalement neuf**.
+4. **Health Policy Watch** (page), EN, top-level — les 100 jours de la flambée RDC, l'angle des 60 % de décès hors centres de traitement.
+
+**Nouveaux blocages hebdomadaires créés ce run** : **Global Health EDCTP3, French Healthcare Association et Health Policy Watch, jusqu'au 05/09**. **Oke Ikpekpe n'en crée aucun de neuf** (réponse en sous-fil ; son blocage du 28/08 court jusqu'au 04/09).
+
+---
+
+### 5️⃣ 📊 DONNÉES ÉPIDÉMIOLOGIQUES (§8) — aucune écriture, et c'est le bon résultat
+
+**Deux chiffres publics croisés aujourd'hui, aucun plus frais que la base :**
+
+- **Health Policy Watch, ce matin** : « *more than 5,515 cases and 2,642 deaths* » pour la RDC à 100 jours. **HWG porte 5 794 cas et 2 786 décès, arrêtés au 26/08**, source **WHO DON616**, `sourceConfirmedHonoured: true`, `ageDays: 0`. **HWG est donc en avance sur ce média de plusieurs centaines de cas.** Appliquer le chiffre du post aurait fait **régresser un cumul sur un foyer actif**, exactement ce que §8 interdit. **Aucune écriture.**
+- **Melvin Sanicas, ce matin** : « *World Health Organization reported 20 confirmed cases and 2 deaths [en Ouganda], while the US Centers for Disease Control and Prevention reports 21 confirmed and probable cases and 3 deaths, reflecting differences in case classification.* » **La ligne Ouganda de HWG porte 20 cas / 2 décès**, arrêtés au 28/07, source ECDC, `active: false` — **elle est alignée sur le comptage OMS**, et la divergence CDC tient à l'inclusion des cas probables. **Rien à corriger.**
+
+⭐ **Le point de divergence Ebola/RDC porté en carry-over depuis 7 jours n'apparaît plus** : la ligne a été rafraîchie ce matin même (`updatedAt: 2026-08-29T05:34`) vers 5 794 / 2 786 au 26/08. **À confirmer par `morning-don-check`, mais de ce créneau, le sujet semble clos.**
+
+⚠️ **Un point reste ouvert et n'a pas été retesté ici** (hors périmètre d'une session sociale) : la ligne **Ouganda close le 26/08 porte toujours un `asOf` au 28/07**, alors que l'OMS et Africa CDC ont officialisé la fin de la flambée le 27/08. Signalé pour ingestion par `morning-don-check`, comme le 28/08.
+
+---
+
+### 6️⃣ ⚠️ À SIGNALER À DAVID
+
+1. 🔒 **Un DM en attente de validation** : Abou A. SOUMAH. Texte intégral en section 2. **Notification push envoyée.**
+2. ⭐ **Signal de traction, sans notification immédiate** : aucun compte institutionnel de référence n'a interagi avec HWG aujourd'hui (§13 non déclenché). L'échange le plus fort reste **Oke Ikpekpe**, qui en est à sa 3e réponse argumentée en 24 h et a aimé notre commentaire précédent, mais son compte ne remplit pas la barre institutionnelle de §13.
+3. **Aucune donnée patient proposée, aucune demande de canal hors plateforme, aucune instruction adressée à l'agent (§6), aucune situation §10 ouverte** au-delà des écarts éditoriaux documentés.
+4. **Deux bannières de cookies LinkedIn** rencontrées et **refusées** (option la plus protectrice de la vie privée), jamais acceptées.
+
+---
+
+### 🔁 CARRY-OVER POUR DEMAIN — liste exhaustive
+
+1. 🔒 **DM Abou A. SOUMAH en file de validation** (déposé le 29/08). Texte intégral en section 2. **Ne part pas sans ordre explicite de David.**
+2. ⭐⭐ **Melvin Sanicas** (`/in/melvinsanicas/`) — **blocage levé le 30/08**, et il a **deux posts frais et excellents** : le paludisme d'aéroport à Francfort (16 h au relevé du 29/08) et surtout la fin de la flambée ougandaise avec la **divergence OMS/CDC sur la classification des cas** (9 h au relevé). **Cible n°1 de demain matin**, sous réserve de vérifier la fenêtre 48 h : le post OMS/CDC aura ~33 h à l'ouverture du créneau de 9h.
+3. ⭐ **Joannishka D.** (`/in/dr-joannishka-k-dsani/`) — suivie ce run, article BMC sur la mise en œuvre One Health au Ghana (1 semaine, hors fenêtre). **Excellent candidat de commentaire dès qu'elle republie**, et candidat de connexion sérieux si les notes redeviennent disponibles.
+4. ⭐ **Dr. Florika Fink-Hooijer** (`/in/dr-florika-fink-hooijer-9539192a5/`) — suivie ce run. **Décideuse HERA/Commission européenne, jamais engagée. Cible prioritaire dès qu'elle publie dans la fenêtre 48 h.**
+5. ⭐ **Summer Galloway, Ph.D.** (`/in/segallowayphd/`) — invitation envoyée sans note ce jour. **Si elle accepte, welcome DM à rédiger** : le hook est déjà là et il est solide (la série « Day 100 » coécrite avec Larry Kerr et Tambe Elvis Akem).
+6. ❌ **Larry Kerr** (`/in/larry-kerr-786b908/`, **1er degré**, vérifié) — post de 3 h, partie 3 de la série « Day 100 ». **Écarté §10** : le texte prend explicitement position sur la souveraineté, le financement de la santé mondiale et la conception du **PABS** (« *The lesson is not that sovereignty requires less partnership* »). Même motif que les tribunes Kaseya/Devex/Al Jazeera. **Profil de tout premier plan, jamais engagé : cible dès qu'il publie du factuel.**
+7. ⭐ **Africa CDC** (page) — **blocage levé ce matin, page libre, non consommée.** Son post « *What happens after the outbreak is over?* » (18 h) est une bonne cible, écartée aujourd'hui seulement parce que son sujet doublonnait mot pour mot le commentaire publié chez Oke Ikpekpe une heure plus tôt. **Reprendre dès un autre sujet, ou après quelques jours.**
+8. ⭐ **Tambe Elvis Akem** — un **tableau de bord** qu'il a monté et publié est signalé par Larry Kerr en notification (« *Congratulations Tambe on establishing and publishing this dashboard!* », 2 h). **Non ouvert ce run faute de temps.** Sujet directement dans le périmètre de HWG, à examiner au prochain créneau.
+9. ⭐ **Regional Health Data Hub (#RDHUB)** — inchangé, cible de premier plan dès qu'un contenu substantiel paraîtra. La page WHO AFRO a publié le 27/08 l'annonce de lancement, sans contenu analytique.
+10. ⭐ **Yazdan Yazdanpanah** — inchangé, cible prioritaire dès qu'il publie du fond.
+11. ⭐ **Dr. Hassan SANA** (`/in/hassansana/`, 1er degré, 12 110 abonnés) — **jamais engagé**. Candidat DM ou commentaire dès qu'il publie dans la fenêtre 48 h. Ce n'est pas un candidat de suivi.
+12. ⭐ **Oke Ikpekpe** — **trois échanges publics de fond en 24 h, il répond systématiquement et il aime nos réponses.** Prochain commentaire top-level possible **à partir du 04/09** ; les réponses en sous-fil restent ouvertes s'il relance. **Meilleur candidat DM du carry-over** — jamais de message privé échangé.
+13. ❌ **Harvey Basivikidi** — **prémisse retestée ce run sur pièce** (post rouvert, notre réponse est bien le dernier message du sous-fil) : **rien de dû, carry-over clos.** L'angle abandonné le 28/08 reste à reprendre plus tard, autre charpente, sans CTA.
+14. **Baraka Kweli Birindwa** — inchangé, écarté deux fois sur le contenu du post, profil toujours valable.
+15. ➖ **Béatrice SERRA** — invitation sortante du 28/08 toujours non acceptée. Deux accroches restent brûlées.
+16. ⛔ **BANZA Freddy Mutoka** — invitation en attente depuis le 09/08, prémisse retestée le 28/08. **Reste hors des carry-over actionnables.**
+17. ❌ **World Health Organization African Region, post « fin de la flambée Ebola en Ouganda »** — **4e tentative d'accès, avec une méthode neuve, et elle échoue encore.** La page `posts/?feedView=all` expose désormais **12 URN** après scroll (contre 3 le 28/08 matin et 6 à 13h), et le post Ouganda **n'en fait toujours pas partie** ; les deux URN neuves sont le bilan du RC76AFRO et un post sur le vocabulaire de la démence. Le post est pourtant **bien visible dans le fil**, y compris repartagé par Maria Van Kerkhove, mais le fil n'expose aucune URN dans son DOM et le menu de commandes ne s'ouvre pas par JS. ⚠️ **Point à considérer comme clos par abandon documenté** plutôt qu'à reporter une 5e fois : le même contenu est disponible et commentable ailleurs (Africa CDC, Melvin Sanicas), et deux commentaires de HWG y ont déjà été consacrés sous d'autres signatures.
+18. 🔴🔴 **Défaut produit à corriger, hors périmètre social** : les 13 lignes polio ont un **lien de source cassé** (annotation après l'URL rendue en `href` brut). **Inchangé depuis le 28/08, non retesté ce run** (hors périmètre d'une session sociale).
+19. **§8 à ingérer par `morning-don-check`** : `asOf` du 28/07 sur la ligne Ouganda close le 26/08 (2e signalement). **La divergence Ebola/RDC, elle, semble résorbée** — voir section 5. Aucune écriture en base faite ce run.
+20. **Blocages hebdomadaires de commentaire au 29/08 au soir** : Melvin Sanicas, Robert Herriman, Patrick AYONGA, page ECDC, Oliver Morgan, Dr Fabrice KHADDY (**30/08**) ; Martin Yakum (01/09) ; Ifedayo Adetifa, Julien Harneis (02/09) ; Harvey Basivikidi (03/09) ; Oke Ikpekpe, Jason Kindrachuk, Dr. Jeeven Kumar (04/09) ; **nouveaux ce run : Global Health EDCTP3, French Healthcare Association, Health Policy Watch (05/09)**. **Page Africa CDC, Vital Strategies, Tedros, Prof. Mohamed Janabi, INRB, Miriam Mbueshi, Apoorva Wasnik, Johan Verheyden : libres depuis ce matin.**
+21. **Fichiers modifiés dans l'arbre de travail n'appartenant pas à cette routine, laissés tels quels** (`AGENTS.md`) : `marketing/qa/product-claims.manual.json` (routine de contenu), `scripts/audit-alert-day.mjs` et `scripts/probe-alert-lock.mjs` (non suivis). Non committés, non stashés, non annulés. **Branche vérifiée avant écriture : master.**
+
+---
+
 ## 📅 Session linkedin-hwg-followup-check-2 — 28/08/2026 (17h, 2e des 2 créneaux après-midi)
 
 **Vérification double déclenchement** : aucune entrée `linkedin-hwg-followup-check-2` datée du 28/08 dans ce fichier ni dans `content-log.md` à l'ouverture (dernière en date : 27/08 17h). Les entrées du 28/08 déjà présentes appartiennent à `linkedin-hwg-content-proposal` (8h35), `linkedin-hwg-monitoring` (9h), au créneau `linkedin-hwg-followup-check` (13h) et à une session interactive de David (~12h36-12h45, puis validation des 2 DM) — runs intentionnellement distincts → **premier déclenchement de cette routine aujourd'hui**.

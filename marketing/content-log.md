@@ -2,6 +2,140 @@
 
 Archive de tout le contenu créé. Mise à jour à chaque session.
 
+## 📅 Session linkedin-hwg-monitoring — 29/08/2026 (9h)
+
+**Vérification double déclenchement** : aucune entrée `linkedin-hwg-monitoring` datée du 29/08 dans ce fichier ni dans `linkedin-contacts.md` à l'ouverture (dernière en date : 28/08 9h) → **premier déclenchement de cette routine aujourd'hui**. Aucune autre entrée du 29/08 dans l'un ou l'autre fichier.
+
+**🖥️ Navigateur** : `_shared/browser-status.md` lu avant ouverture, dernière entrée **🟢 RÉTABLI (24/08 ~09h15)** → aucun bridage. `23c7ecdd-…` seul navigateur listé, sélectionné sans question (§7). Aucun incident d'appairage ce run.
+
+**Registre de faits régénéré en début de run** (`npm run qa:facts`) : **219 faits citables sur 105 lignes affichées**, 81 lignes `is_seed` exclues, **18 faits périmés** — contre 225/16 hier matin.
+
+**Blocages hebdomadaires levés ce matin** : page Africa CDC, Vital Strategies, Tedros, Prof. Mohamed Janabi, INRB, Miriam Mbueshi, Apoorva Wasnik, Johan Verheyden (tous datés du 22-23/08, purgés au 29/08).
+**Blocages encore actifs** : Melvin Sanicas, Robert Herriman, Patrick AYONGA, page ECDC, Oliver Morgan, Dr Fabrice KHADDY (30/08) ; Martin Yakum (01/09) ; Ifedayo Adetifa, Julien Harneis (02/09) ; Harvey Basivikidi (03/09, top-level seulement) ; Oke Ikpekpe, Jason Kindrachuk, Dr. Jeeven Kumar (04/09).
+
+---
+
+### ✅ COMMENTAIRE 1/7 PUBLIÉ — **Oke Ikpekpe** (`/in/oke-ikpekpe-11175416b/`), EN, **réponse en sous-fil**
+
+`urn:li:activity:7499051354368331776`, le post « What happens to outbreak preparedness when there is no outbreak? » (20 h). **Troisième tour d'un échange devenu une vraie discussion** : commentaire top-level le 28/08 à 13h, réponse en sous-fil à 17h, et **il a répondu une 3e fois à 13 h en interpellant nommément David et en terminant par une question directe** (« *What do you think?* »). Il a aussi aimé notre réponse précédente.
+
+**Le blocage hebdomadaire n'est pas en cause** : le commentaire top-level du 28/08 le bloque jusqu'au **04/09**, mais une réponse en sous-fil à quelqu'un qui vient de vous poser une question n'y est pas soumise. Elle consomme un créneau du quota journalier de 7.
+
+**§5 respecté avant rédaction** : les 4 commentaires visibles du post et l'intégralité du sous-fil relus (fil recopié verbatim dans `tmp/thread-oke-29.txt`). Le bouton « Voir les réponses précédentes » ne déplie rien de neuf (deux messages déjà archivés le 28/08), ils ont été repris depuis l'archive.
+
+**Sa question, verbatim :**
+> David Deheunynck The first reported number may circulate long before the fuller picture is available, and retrospective case finding may later change what is known about when transmission began. So I agree that the initial cluster needs to be interpreted cautiously. But I think that is separate from the broader question of preparedness. Later investigations can still show what was functioning before detection: surveillance, laboratory access, reporting pathways, community engagement, and how long it took to recognise unusual transmission. The fact that some of this becomes clearer later does not make the inter-epidemic period less important. So while I agree that the number travels further, I think the more informative question is still what capacity was in place before that number was ever reported. What do you think?
+
+**L'angle** : il concède le point sur le premier chiffre et déplace la question sur la capacité pré-détection, en s'appuyant sur le fait que « les investigations ultérieures peuvent encore montrer ce qui fonctionnait avant ». Le point ajouté attaque cette prémisse-là : ces reconstructions existent **parce qu'une flambée a payé quelqu'un pour les faire**. En année calme, personne ne les commande. Le registre de la période inter-épidémique est donc lui aussi tenu en mode urgence, c'est-à-dire sa propre thèse d'un cran au-dessus. Clôture sur un aveu honnête plutôt que sur une question fermée, pour ne pas rejouer la figure interrogative de la réponse précédente.
+
+⚠️ **Garde-fous vérifiés** : **aucun chiffre** (ni du registre, ni du fil), **aucune mention de HWG, aucun lien, aucun CTA**, aucun pays ni institution nommés (§10), article eClinicalMedicine non lu donc jamais cité.
+
+**QA: mécanique FAIL (1 blocker unique `context.too-soon`, faux positif documenté — réponse à une question entrante reçue 13 h plus tôt dans un fil vivant, pas une relance à froid ; 616 car., 2 paragraphes, `draftLang: en` / `threadLang: en`, aucun `ngram.history`) | relecteur ⭐ **12 PASS sur 12, VERDICT: ENVOYER**, aucune correction demandée | faits cités: aucun chiffre | registre du 29/08 | statut: publié le 29/08**
+
+> I would agree the pre-detection capacity is the better question, and what makes it awkward is that the answer only ever gets written down afterwards. A reconstruction of what surveillance, laboratory access and reporting looked like before detection exists because an outbreak paid for someone to go back and rebuild it. In a quiet year, nobody commissions that work.
+>
+> So the record of the inter-epidemic period is itself kept in emergency mode, which is your own argument one level up. Asked to judge a country's readiness this morning, with nothing declared anywhere in it, I would not know which document to open.
+
+**Publication confirmée** : cible et clic dans le même appel JS (bouton « Répondre » du sous-fil identifié par remontée d'ancêtres et vérification du verbatim « *13 h David Deheunynck The first reported number may circulate* » avant clic), comparaison **caractère pour caractère** du contenu de l'éditeur au brouillon validé avant soumission — **616 caractères, 0 divergence, 0 tiret cadratin, 0 lien**, espace insécable de la mention normalisé comme le 28/08. Après envoi : éditeur vidé, **une seule occurrence** du texte, affichée sous « David Deheunynck • Vous | maintenant », directement sous la réponse d'Oke visée.
+
+---
+
+### ✅ COMMENTAIRE 2/7 PUBLIÉ — **Global Health EDCTP3** (`/company/global-health-edctp3/`, page), EN, **top-level**
+
+`urn:li:activity:7498739418313252864`, post d'**1 j** (fenêtre 48 h ✅), **55 réactions, 1 commentaire** avant le nôtre. **Blocage hebdomadaire purgé** : dernier commentaire sous cette page le 17/08, libre depuis le 24/08. Profil listé comme prioritaire dans le SKILL (EDCTP3). Repéré dans le fil.
+
+⚠️ **URN non exposée par la page entreprise sans scroll** : les deux premières URN chargées (`7499100247181250560`, post REMSTART/VIH de 17 h ; `7498011353102749696`, appel à candidatures AFRO/TDR de 3 j) ne sont pas celle du post visé. Il a fallu **scroller la page `posts/?feedView=all` par paliers** pour en obtenir 11, puis trier par ordre décroissant d'URN pour identifier la bonne. Méthode réutilisable, même famille de piège que celui rencontré sur WHO AFRO.
+
+**§5 respecté avant rédaction** : l'unique commentaire existant relu en entier — **Ferdinant M. Sonyuy** (*Executive Director, Africa NCDs Network*, 20 h) : « *Developing alternatives before widespread treatment failure is the smarter path, especially when resistance can outpace the time needed to bring new medicines through research and deployment.* » L'angle du brouillon est délibérément ailleurs, pour ne pas redire l'arbitrage R&D.
+
+**L'angle** : le post dit que la résistance à l'artémisinine est détectée en Afrique de l'Est et centrale et que « la fenêtre se resserre ». Le point ajouté est que cette dégradation-là ne se voit **pas** dans la notification de routine : on compte le cas, pas ce qu'il coûte désormais à traiter. Le signal vit ailleurs, dans les études d'efficacité thérapeutique et les enquêtes moléculaires, sur leur cycle propre et rattachées à aucun flux de notification. Donc la fenêtre qui se resserre est aussi celle où les chiffres que tout le monde lit ne bougent pas.
+
+⚠️ **Garde-fous vérifiés** : **aucun chiffre repris**, ni du registre ni du post (les 39 M€ / 76 M€ délibérément non cités — le registre de faits ne porte **aucune ligne paludisme**, vérifié par le relecteur) ; **aucune mention de HWG, aucun lien, aucun CTA** ; **aucun bailleur, aucun co-financeur, aucun pays nommé** (§10, terrain financement laissé fermé).
+
+**QA: mécanique PASS au 2e jet (511 car., 2 paragraphes, `draftLang: en` / `threadLang: en`, comparaison de séquences de 4 mots contre le brouillon Oke du même run : aucune collision) | relecteur ⭐ **12 PASS sur 12, VERDICT: ENVOYER** | faits cités: aucun chiffre | registre du 29/08 | statut: publié le 29/08**
+
+🔴 **Le contrôle mécanique a attrapé un vrai gabarit au 1er jet** : l'ouverture « *Resistance is one of the few things that can worsen…* » déclenchait `ngram.history` sur « **one of the few things** », déjà servi dans l'historique. Réécrite en « *Resistance can worsen while the routine data holds perfectly still* », PASS au jet suivant.
+
+⭐ **Le relecteur a émis une réserve non bloquante, et elle a été suivie** : « *The signal lives **instead** in therapeutic efficacy studies* » était exclusif, alors que la détection passe aussi par les marqueurs moléculaires (Pfkelch13) — c'est même ce qui fonde le « *have now been detected* » du post. Corrigé en « *What moves instead sits in therapeutic efficacy studies **and molecular surveys*** », puis repassé au contrôle mécanique (PASS, 511 car.).
+
+> Resistance can worsen while the routine data holds perfectly still. A country's malaria reporting reads the same whether or not the drug still clears the parasite, because what gets counted is the case, not what it now costs to treat it.
+>
+> What moves instead sits in therapeutic efficacy studies and molecular surveys, which appear on their own cycle and are attached to no reporting stream. So the narrowing window described here is also the stretch during which the figures most people actually read stay flat.
+
+**Publication confirmée** : identité du post (`Artemisinin-resistant` présent dans la page) revérifiée **dans le même appel JS que le clic**, bouton « Commenter » atteint en remontant les ancêtres de l'éditeur rempli jusqu'au premier n'en contenant qu'un seul. Comparaison caractère pour caractère avant clic : **511 caractères, 0 divergence, 0 tiret cadratin, 0 lien**. Après envoi : éditeur vidé, **une seule occurrence** du texte, affichée sous « David Deheunynck • Vous | maintenant », **compteur du post passé de 1 à 2 commentaires**.
+
+---
+
+### ✅ COMMENTAIRE 3/7 PUBLIÉ — **🇫🇷 French Healthcare Association** (`/company/french-healthcare-association/`, page), **FR**, top-level
+
+`urn:li:activity:7499092398103416832`, post de **18 h** (fenêtre 48 h ✅), **62 réactions, 1 commentaire** (le lien de l'auteur lui-même) → **nous sommes le premier commentateur extérieur** sous une page à **19 271 abonnés**. **Profil totalement neuf** : 0 occurrence de « French Healthcare », « IMeBIO » ou « Tchomia » dans `linkedin-contacts.md`, `content-log.md`, le tracker et les deux archives d'avant le 17/07 → **aucun blocage hebdomadaire**. Repéré dans le fil (bloc « Suggestions »).
+
+**Le post** : déploiement par **IMeBIO** d'un laboratoire mobile de haute biosécurité (BSL-3) dans la zone de santé de **Tchomia**, frontière ougandaise, opérationnel depuis juillet. Délai de résultat ramené « **à environ une heure** » là où les échantillons de Kasenyi partaient à plus de 55 km, trajet que l'état des routes pouvait porter à trois heures. Bilan à un mois : « *l'identification de cas auparavant attribués à tort à d'autres causes* » et « *À présent, 18 laboratoires sont en mesure de confirmer les cas d'Ebola en RDC (contre deux au début de l'épidémie)* ».
+
+**§5 respecté** : l'unique commentaire du fil relu, c'est l'auteur qui poste son propre lien d'article. Rien à ne pas redire.
+
+**L'angle, délibérément différent des deux commentaires précédents du run** : ni « ce que la donnée ne porte pas » (Oke, EDCTP3), mais un **effet de mesure classique** que le post ne nomme pas. Un résultat rendu en une heure au lieu d'une demi-journée ne change pas seulement la prise en charge, il change la **date d'entrée du cas dans le décompte** ; et le passage de 2 à 18 laboratoires étend le périmètre de ce qui est confirmable. Sur cette période, une courbe qui monte superpose donc la transmission réelle et l'extension de la capacité de confirmation, sans que rien dans la série publiée ne permette de les séparer.
+
+⚠️ **Garde-fous vérifiés** : les seuls chiffres cités (« environ une heure », « de deux laboratoires à dix-huit ») **viennent du post lui-même**, aucun du registre — vérifié par le relecteur, qui note au passage que la ligne Ebola/RDC du registre (`asOf 2026-08-26`, fraîche) n'a délibérément pas été mobilisée. **Aucune mention de HWG, aucun lien, aucun CTA.** **Aucun acteur nommé** dans le commentaire (ni IMeBIO, ni l'OMS, ni la RDC, ni l'Ouganda), aucun jugement sur la riposte : le §10 tenait ici à un mot près, le texte porte sur la lecture d'une série, jamais sur la performance de l'opérateur.
+
+**QA: mécanique PASS au 3e jet (549 car., 2 paragraphes, `draftLang: fr` / `threadLang: fr`, séquences de 4 mots comparées aux 2 brouillons frères du run : aucune collision) | relecteur REECRIRE (5) au 1er passage, corrigé — 11 PASS sur 12 | faits cités: aucun chiffre du registre, uniquement ceux du post | registre du 29/08 | statut: publié le 29/08**
+
+🔴 **Deux blocages `ngram.history` successifs sur la clôture, corrigés sans toucher au fond** : « *le chiffre publié ne dit* » puis « *qu un lecteur extérieur puisse* », tous deux déjà servis dans l'historique. Troisième formulation retenue : « *rien à la lecture ne les sépare* ». **La règle des deux essais a été surveillée** : les deux corrections portaient sur la même classe de défaut (gabarit), mais sur des formules incidentes de français courant, pas sur les phrases-gabarits de marque documentées en §3 — la 3e tentative est restée dans le cadre, et elle a abouti.
+
+🔴 **Le relecteur a attrapé une attribution abusive que le contrôle mécanique ne pouvait pas voir (question 5).** Le brouillon disait « *Et vous notez vous-mêmes le second effet, l'identification de cas auparavant attribués à tort à d'autres causes* ». La citation était littérale, mais l'ordinal « le second effet » rattachait cette ligne au **premier** effet énoncé par le commentaire (le déplacement de la date d'entrée dans le décompte), qui n'est nulle part dans le post : « vous-mêmes » faisait donc de l'auteur un cosignataire d'une thèse sur la lecture des données qu'il n'a jamais formulée. **Corrigé au plus juste**, comme demandé : « *Votre bilan à un mois cite par ailleurs l'identification de cas auparavant attribués à tort à d'autres causes.* »
+
+> Un résultat rendu en environ une heure ne change pas que la prise en charge, il change la date à laquelle un cas entre dans le décompte national. Votre bilan à un mois cite par ailleurs l'identification de cas auparavant attribués à tort à d'autres causes.
+>
+> Sur la période où l'on passe de deux laboratoires à dix-huit, une courbe qui monte mélange donc deux choses : ce que fait la transmission, et ce que fait une capacité de confirmation qui s'étend. Les deux arrivent ensemble dans la même série hebdomadaire, et rien à la lecture ne les sépare.
+
+**Publication confirmée** : identité du post (`IMeBIO a déployé` présent dans la page) revérifiée **dans le même appel JS que le clic**, comparaison caractère pour caractère avant soumission — **549 caractères, 0 divergence, 0 tiret cadratin, 0 lien**. Après envoi : éditeur vidé, **une seule occurrence** du texte dans la page.
+
+---
+
+### ✅ COMMENTAIRE 4/7 PUBLIÉ — **Health Policy Watch** (`/company/health-policy-watch/`, page), EN, top-level
+
+`urn:li:activity:7499178999190040576`, post de **12 h** (fenêtre 48 h ✅), **1 réaction, 1 commentaire** avant le nôtre. **Blocage hebdomadaire purgé** : dernier commentaire sous cette page le 17/08, libre depuis le 24/08. Repéré dans le fil.
+
+**Le post** : bilan à 100 jours de la flambée Ebola en RDC. « *more than 5,515 cases and 2,642 deaths* », « *testing has expanded from one site to 19 laboratories* », « *In the past six weeks, 60% of deaths occurred outside Ebola treatment centres* », « *More than 160 health workers have been infected* ». Le post tague quinze institutions et personnalités et ouvre trois portes politiques (insécurité, défiance, attaques contre les intervenants).
+
+**§5 respecté** : l'unique commentaire existant relu — **Kipchirchir Kigen** (*Public Health Epidemiologist*, 11 h) : « *A sobering reminder that science alone is not enough. Reaching communities safely, building trust and protecting health workers are just as critical…* ». Terrain volontairement laissé de côté.
+
+**L'angle** : le 60 % de décès hors centres de traitement. Un décès survenu loin des soins entre dans le registre par l'alerte communautaire et l'investigation, pas par l'admission et la sortie. Ces deux voies ne trouvent pas les mêmes cas, ni au même moment de la maladie : un comptage qui s'appuie surtout sur l'une n'est pas strictement comparable au même comptage six semaines plus tôt appuyé sur l'autre, alors que l'étiquette, elle, n'a pas bougé.
+
+⚠️ **Garde-fous vérifiés** : un seul chiffre, « sixty percent », **repris du post avec sa fenêtre temporelle**. **Les chiffres du registre n'ont volontairement pas été mobilisés** (voir §8 ci-dessous : HWG porte 5 794 / 2 786 au 26/08, plus frais que les 5 515 / 2 642 du post — corriger un média sous son propre post n'est pas l'objet d'un commentaire). **Aucune mention de HWG, aucun lien, aucun CTA.** **Aucune des quinze institutions taguées n'est nommée ni visée** ; insécurité, défiance et attaques contre les intervenants entièrement laissées de côté (§10).
+
+**QA: mécanique PASS (494 car., 2 paragraphes, `draftLang: en` / `threadLang: en`, séquences de 4 mots comparées aux 3 brouillons frères du run : aucune collision) | relecteur REECRIRE (1 + vérification épidémiologique) au 1er passage, corrigé — 11 PASS sur 12 | faits cités: « 60 % » du post uniquement | registre du 29/08 | statut: publié le 29/08**
+
+🔴🔴 **Le relecteur a attrapé une erreur épidémiologique réelle, que le contrôle mécanique ne pouvait pas voir, et elle aurait été visible par le destinataire.** Le 1er brouillon écrivait : « *A fatality ratio built mostly on people who reached a centre, and one built mostly on people who did not, are two measurements sharing a single label.* » **Le dénominateur d'un taux de létalité, ce sont les cas, pas les décès** : que 60 % des **décès** de six semaines soient survenus hors ETC n'implique pas que la majorité des **cas** du ratio n'aient jamais atteint un centre, et encore moins pour le ratio cumulé sur 100 jours. Le relecteur a aussi relevé que « *a **growing** share of the record* » n'était étayé par rien — le post donne un instantané sur une fenêtre, aucune valeur antérieure à laquelle comparer — et que le chiffre était repris **sans sa fenêtre de six semaines**. **Les trois points ont été corrigés** : fenêtre réinsérée dès la première phrase, « growing » supprimé, et la seconde phrase ramenée à la comparabilité d'un comptage dans le temps, sans plus rien affirmer sur la composition du ratio. Son commentaire de clôture était juste : « *la distinction de fond tiendrait devant un épidémiologiste, la dérivation à partir du 60 % non, et c'est précisément un épidémiologiste de santé publique qui commente déjà ce post* ».
+
+> Sixty percent of deaths outside treatment centres in the past six weeks is the figure that changes what the others mean. A death away from care reaches the record through community alert and investigation rather than through admission and discharge.
+>
+> Those two routes do not find the same cases, nor find them at the same point in the illness. So a count leaning on one is not strictly comparable to the same count six weeks earlier leaning on the other, even though nothing in the label moved.
+
+**Publication confirmée** : identité du post (`One hundred days into` présent dans la page) revérifiée **dans le même appel JS que le clic**, comparaison caractère pour caractère avant soumission — **494 caractères, 0 divergence, 0 tiret cadratin, 0 lien**. Après envoi : éditeur vidé, **une seule occurrence** du texte dans la page.
+
+---
+
+### ❌ CIBLES DE COMMENTAIRE EXAMINÉES ET ÉCARTÉES
+
+1. ⭐ **Melvin Sanicas** (`/in/melvinsanicas/`) — **deux posts frais, tous deux excellents, et tous deux inaccessibles : il est bloqué jusqu'au 30/08.** Le premier (16 h) porte sur un foyer inhabituel de **paludisme d'aéroport à Francfort** (six employés infectés, deux décès, hypothèse d'*Anopheles* transportés par avion). Le second (9 h) sur la fin de la flambée ougandaise, avec **exactement l'angle de HWG** : « *World Health Organization reported 20 confirmed cases and 2 deaths, while the US Centers for Disease Control and Prevention reports 21 confirmed and probable cases and 3 deaths, reflecting differences in case classification.* » **Deux sources institutionnelles, deux comptages du même événement, et la divergence tient à la définition de cas.** ⚠️ **À reprendre demain 30/08 dès la levée du blocage, si le post est encore en fenêtre 48 h** — il aura ~33 h à l'ouverture du créneau de 9h.
+
+2. **Dr. Jean Kaseya** (`/in/jeankaseya/`) — post d'1 j, « *Cent jours après le début de l'épidémie d'Ebola en RDC… nous devons doubler, voire tripler, les capacités actuelles de la riposte* », renvoyant à une tribune dans *Le Monde* cosignée avec Tedros Adhanom Ghebreyesus et Prof. Mohamed Janabi. **Écarté §10, terrain politique** : c'est un appel au financement et à l'action politique, même motif que la tribune Al Jazeera écartée le 28/08 et la tribune Devex le 27/08. Il n'est toujours pas bloqué, il redevient cible dès qu'il publie hors tribune.
+
+3. **United Nations** (page) — post d'1 j, António Guterres qualifiant la flambée de RDC de « *fastest-spreading Ebola epidemic ever recorded* » et appelant à intensifier action et financement. **Écarté §10**, même motif : appel politique et budgétaire. 607 réactions, 40 commentaires.
+
+4. **Maria Van Kerkhove** (`/in/maria-van-kerkhove-4a562b4/`, OMS, déjà suivie) — post d'1 j, **repartage** du post WHO AFRO sur la fin de la flambée ougandaise, avec un commentaire de circonstance (« *Happy to mark this day with the Minister of Health Uganda Dr Chris Baryomunsi…* »). **Écarté** : c'est un message protocolaire de présence au RC76, sans matière analytique à quoi répondre, et commenter un repartage revient à commenter la photo de groupe. Profil de tout premier plan, à garder pour un post de fond.
+
+5. **Africa CDC** (page, blocage levé ce matin) — deux posts en fenêtre, la fin de la flambée ougandaise (1 j) et « *What happens after the outbreak is over?* » (18 h, citant Prof Yap Boum II sur la continuité des systèmes entre flambées). **Écarté sur arbitrage éditorial**, et c'était la décision la plus disputée du run : le second post est une excellente cible, mais **son sujet est mot pour mot celui du commentaire 1/7 publié ce matin même chez Oke Ikpekpe** (la préparation entre les flambées, et ce qu'il en reste dans les données). Publier le même angle deux fois dans la même heure sous deux signatures différentes est exactement le défaut de « voix à formule unique » relevé le 28/08. **La page reste libre : à reprendre dès qu'elle publie sur un autre sujet, ou après quelques jours de distance sur celui-ci.**
+
+6. **Ruth A.** (2e degré) — post de 23 h sur « *the virus of indifference* ». **Écarté** : registre moral et rhétorique, aucun contenu de surveillance à quoi répondre analytiquement.
+
+7. **Dr. Florika Fink-Hooijer** (*Director General HERA*, Commission européenne, 2e degré) — post sur le soutien de la DG HERA à l'OMS et à Africa CDC (tests PCR, kits de détection). **Écarté : 4 j, hors fenêtre 48 h.** Profil de décideur de premier plan, jamais engagé, **à garder en cible prioritaire** dès qu'il publie dans la fenêtre.
+
+8. **Feydeau BOTON** (1er degré) — post d'1 j, « *Pour un utilisateur du software, cela en dit long !* ». **Écarté pour le 3e passage consécutif**, même motif : sujet outillage/IA sans angle épidémiologique.
+
+---
+
 ## 📅 Session linkedin-hwg-followup-check-2 — 28/08/2026 (17h, 2e des 2 créneaux après-midi)
 
 **Vérification double déclenchement** : aucune entrée `linkedin-hwg-followup-check-2` datée du 28/08 dans ce fichier ni dans `linkedin-contacts.md` à l'ouverture (dernière en date : 27/08 17h) → **premier déclenchement de cette routine aujourd'hui**. Les entrées du 28/08 déjà en tête appartiennent au créneau de 13h, à `linkedin-hwg-content-proposal` (8h35), à `linkedin-hwg-monitoring` (9h) et à une session interactive de David.
