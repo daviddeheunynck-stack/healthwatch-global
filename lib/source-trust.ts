@@ -124,6 +124,14 @@ const AUTHORITATIVE_SOURCE_DOMAINS: ReadonlySet<string> = new Set([
   "health.gov.ws",       // Samoa Ministry of Health dengue sitreps
   "minsa.gob.ni",        // Nicaragua Ministerio de Salud
   "dge.gob.pe",          // Peru MINSA — Dirección General de Epidemiología
+  // Guatemala Ministerio de Salud Pública y Asistencia Social (MSPAS) —
+  // epidemiologia.mspas.gob.gt publishes the ministry's own weekly arbovirus
+  // surveillance bulletins (PDF). Found 2026-08-28 via data-quality's section
+  // 4m the same way ccousp.cm was the day before: demoted to "unverified" for
+  // lacking an allowlist entry, not for any real trust issue — .gob.gt is
+  // Guatemala's official government TLD, same national-ministry shape as
+  // minsa.gob.ni/dge.gob.pe above.
+  "mspas.gob.gt",
   "endpolio.com.pk",     // Pakistan National Emergency Operation Centre (polio programme)
   // Sub-national health departments whose bulletins we cite. health.ny.gov's "Global Health
   // Update" is an official agency publication but a SECONDARY digest of PAHO/WHO figures —
