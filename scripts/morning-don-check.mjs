@@ -642,8 +642,19 @@ const MANUAL_ROWS = {
   // Les trois lignes suivantes ajoutées le 2026-08-15, même déclencheur : toutes les trois citent
   // EXACTEMENT la même source (PAHO Situation Report Measles Americas Region, série numérotée
   // biweekly, ~15j de cadence) — une seule vérification de la page de listing PAHO répond aux
-  // trois d'un coup, pas besoin de trois recherches séparées. Non couvertes par un cron
-  // (source_priority=5 mais rien n'écrit dessus en pratique).
+  // trois d'un coup, pas besoin de trois recherches séparées.
+  // ⚠️ CORRECTION DU 30/08 — la note d'origine disait « non couvertes par un cron
+  // (source_priority=5 mais rien n'écrit dessus en pratique) » : c'est FAUX. `sync-paho-alerts`
+  // les possède bel et bien (leur description en base est mot pour mot le gabarit
+  // buildSitrepDescription de ce cron). « Rien n'écrit dessus en pratique » décrivait le
+  // symptôme d'une panne, pas une absence de propriétaire — et cette lecture a coûté cher : le
+  // sitrep #9 (14/08) a changé son en-tête de tableau en « as of EW 31 of 2026 », le regex du
+  // cron n'acceptait que la virgule, et parseSitrepCases renvoyant null sur un échec d'en-tête,
+  // le cron a abandonné le sitrep en entier pendant 16 jours sans rien signaler (corrigé le
+  // 30/08, commit e825175). Elles restent listées ICI à dessein : le seuil de 7 j de cette
+  // section est le seul filet qui les a rattrapées — la section 4e ne déclenche qu'à 45 j, bien
+  // trop tard pour une série biweekly. Les garder ici revient à surveiller la SORTIE du cron ;
+  // en cas d'écart, corriger le cron (section 4 sexies) plutôt que de patcher les lignes.
   "632f603c-0a7f-4bd3-82a2-e63ae4114c72": "Rougeole/Canada",
   "32d62690-2c7b-4f3c-88c7-215f691fb116": "Rougeole/Pérou",
   "220e23f5-34bd-47d8-b82a-f3dacb56feb1": "Rougeole/Bolivie",
@@ -803,7 +814,15 @@ const MANUAL_ROW_CHECKED = {
   // Corroboré par WebSearch. ⚠️ La section pays Pakistan n'apparaissait pas dans le rendu WebFetch
   // de « Polio This Week » ce jour-là (seule l'Afghanistan en sortait) : passer par endpolio.com.pk
   // plutôt que d'insister sur le GPEI si le cas se reproduit. Rien à écrire.
-  "ab4cd321-0aa6-4598-86ac-b0a04d346465": "2026-08-21",
+  // Revérifié le 30/08, même conclusion et même symptôme GPEI : endpolio.com.pk donne toujours
+  // 3 cas WPV1 en 2026 (Sujawal, Bannu, Waziristan du Nord) et « Polio This Week » du 26/08 ne
+  // rend toujours qu'une section Afghanistan (19 cas 2026, aucun cette semaine, 18 échantillons
+  // environnementaux positifs). Corroboré par le bulletin polio EMR, qui donne 22 cas WPV1 pour
+  // la région au 16/08 = 19 Afghanistan + 3 Pakistan. Rien à écrire. ⚠️ La date d'arrêté de la
+  // ligne (22/07) n'a PAS été réalignée sur une date plus récente : endpolio.com.pk n'affiche
+  // aucun horodatage, et réaligner sur la seule foi d'un total régional agrégé reviendrait à
+  // dater la ligne d'une source qu'elle ne cite pas.
+  "ab4cd321-0aa6-4598-86ac-b0a04d346465": "2026-08-30",
   // Marburg/Ouganda : vérifié le 08/08 — WebSearch « Marburg Uganda cases August 2026 » et page
   // pays WHO AFRO (afro.who.int/countries/uganda, aucune mention Marburg, uniquement Ebola
   // Bundibugyo). Toujours 1 cas / 1 décès (enfant de 18 mois, Kyegegwa, notifié à l'OMS le
@@ -923,11 +942,27 @@ const MANUAL_ROW_CHECKED = {
   // Choléra/Kenya : voir MANUAL_ROWS ci-dessus pour le contexte complet. Vérifié le 16/08 —
   // page-index de la série WHO Kenya Weekly Situation Report, s'arrête à Week 28 (05-12/07),
   // aucune édition plus récente publiée. Toujours 40 cas / 1 décès au 12/07, rien à écrire.
-  "07b42f30-5446-4931-871e-a1b079b04da2": "2026-08-16",
+  // Revérifié le 30/08 : toujours rien après Week 28. Sondé les URL directes de la série pour les
+  // semaines 29 à 34 dans les dossiers mensuels 2026-07, 2026-08 et 2026-09 — 404 sur les 18
+  // combinaisons, alors que l'URL Week 28 déjà citée en base répond 200. L'interruption de la
+  // série depuis mi-juillet se confirme donc (6 semaines), elle n'est pas un artefact de
+  // recherche. Rien à écrire ; si la série ne reprend pas, il faudra lui trouver une source de
+  // remplacement plutôt que de continuer à la sonder indéfiniment.
+  "07b42f30-5446-4931-871e-a1b079b04da2": "2026-08-30",
   // Diphtérie/Nigéria : ligne créée/recadrée le 14-15/08 (voir MANUAL_ROWS ci-dessus), donc
   // rien à "vérifier" pour l'instant au sens de rechercher une édition plus récente — cette entrée
   // existe uniquement pour que la cadence hebdo démarre à la date du recadrage plutôt qu'à zéro.
-  "1ca31b07-6f83-4967-9f59-b599f7574642": "2026-08-15",
+  // Première vraie vérification le 30/08 : le sitrep NCDC numéroté le plus récent reste celui de
+  // la semaine épidémiologique 3 (18/01/2026), déjà cité dans la description — la page de listing
+  // `ncdc.gov.ng/diseases/sitreps/?cat=18` n'en publie aucun postérieur. Les 65 759 cas suspects /
+  // 2 229 décès arrêtés au 22/03 restent le dernier cumul national disponible. Rien à écrire.
+  // ⚠️ Faux positif à ne pas appliquer : une dépêche Xinhua du 26/08 titre « au moins 50 enfants
+  // tués par la diphtérie dans le nord-ouest du Nigéria ». C'est un décompte de l'assemblée
+  // législative de l'État de Kano cité en séance le 25/08, portant sur six zones de gouvernement
+  // local (Rano, Tudun Wada, Kibiya, Bunkure, Bebeji, Kiru) — un bilan local, sans nombre de cas
+  // associé, sans période de référence et sans reprise par le NCDC. Il ne peut ni remplacer ni
+  // corriger un cumul national depuis 2022, et l'écrire dans `deaths` mélangerait deux cadrages.
+  "1ca31b07-6f83-4967-9f59-b599f7574642": "2026-08-30",
   // Chikungunya/France, Dengue/France, West Nile/France : vérifiées une 2e fois le 22/08, cette
   // fois sur signalement d'un contact LinkedIn (Pierre PARNEIX, 21/08) plutôt que par le contrôle
   // qualité — même défaut structurel que le 17/08 (aucun cron ne visite les pages de bulletin

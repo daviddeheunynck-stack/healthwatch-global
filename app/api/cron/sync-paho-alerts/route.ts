@@ -1163,6 +1163,18 @@ async function collectSitrepItems(
   // cases+deaths shape. Writing nothing is the correct outcome for a layout we
   // don't recognise — better a visible coverage gap than invented figures.
   if (!table || table.rows.length === 0) {
+    // A skip here is only benign when the document genuinely has no table we
+    // could ever read. If the PDF *does* contain the country-table heading and
+    // we still parsed nothing, PAHO changed a layout we thought we knew — a
+    // coverage outage, not a no-op, and it has to be loud: this branch stayed a
+    // silent "skip" while sitrep #9 went unread for 16 days (14–30 August 2026)
+    // and the cron reported green the whole time, because a skip touches
+    // neither results.errors nor Sentry nor the health-check.
+    if (/Measles\s+cases\s+in\s+the\s+Region\s+of\s+the\s+Americas/i.test(text)) {
+      throw new Error(
+        `sitrep "${entry.title}": country table present in the PDF but no row parsed — PAHO layout change, parser needs updating`,
+      );
+    }
     log.push({ label: entry.title, status: "skip", detail: "country table not found or unrecognised layout" });
     return { items: [], deactivated: 0 };
   }
