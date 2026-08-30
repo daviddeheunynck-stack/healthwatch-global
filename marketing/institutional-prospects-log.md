@@ -3115,3 +3115,98 @@ Les deux routines d'acquisition tournent désormais à vide simultanément : la 
 **Total cumulé prospecté depuis le 2026-08-02 : 307** (300 au 29/08 + 7 de ce run). **Profondeur de la file de brouillons non confirmés envoyés : 7** (les 31 antérieurs ayant disparu de `list_drafts` d'ici ce matin, cause non établie par cette routine — voir plus haut).
 
 **⚠️ Fichiers modifiés non touchés par cette routine, laissés tels quels** (règle `AGENTS.md`) : `marketing/qa/product-claims.manual.json` (modifié), `scripts/audit-alert-day.mjs` et `scripts/probe-alert-lock.mjs` (non suivis).
+
+---
+
+## 🔁 RELANCE J+10 — 2026-08-30, run de rattrapage `daily-relance-check-healthwatch` (créneau 08h21 manqué, 2e tentative)
+
+**Résultat : 19 relances confirmées en brouillon (9 du lot du 18/08, 10 du lot du 19/08) — voir l'incident ci-dessous, ni l'une ni l'autre n'a été créée par l'exécution de ce run. 10 relances supplémentaires du lot du 20/08 vérifiées éligibles en direct, 0 créée : frein de file.**
+
+### ⚠️ Incident — deux sous-agents orphelins de la 1re tentative de ce rattrapage avaient déjà écrit dans Gmail, sans jamais être journalisés
+
+La 1re tentative de ce rattrapage (même créneau, plus tôt aujourd'hui) s'était arrêtée sans rien produire de visible — dernier message : « je reste en attente de la notification de mes sous-agents ». Deux de ces sous-agents ont continué à tourner en arrière-plan après l'arrêt de la session mère et ont chacun fini leur tâche : le premier a créé 9 brouillons de relance pour le lot du 18/08, le second 10 pour le lot du 19/08 — tous via `create_draft` avec `replyToMessageId` correct, aucun envoi réel. Rien n'avait été écrit dans ce journal ; c'est resté invisible jusqu'à ce que le coordinateur de cette session m'en informe en cours de run, avant que je n'entame moi-même le traitement de ces deux lots.
+
+**Vérifié indépendamment avant toute action** — les identifiants annoncés par le coordinateur utilisaient le format `messageId` (16 caractères hex), pas le format `r...` habituel des ID de brouillon dans ce journal ; écart noté, puis élucidé (c'est bien le champ `messageId` de chaque brouillon, pas son `id`). `list_drafts` (deux appels, vue complète puis métadonnées, résultat strictement identique) confirme les 19 : bon destinataire, bon `threadId` dans chaque cas (recoupé un par un avec les fils d'origine documentés le 29/08 — concordance 19/19), `labelIds: ["DRAFT"]` uniquement, aucun passé en `SENT`. Contenu conforme au gabarit du SKILL.md : accroche courte, rappel de l'accès Pro sans engagement, question de clôture reprise de l'original, signature « David Deheunynck — HealthWatch Global », aucun lien neuf, aucun `.` littéral dans le texte nouveau (le corps cité automatiquement par Gmail sous chaque relance contient l'ancien lien de l'original — normal, sans impact). **Aucun doublon créé par cette session : je n'ai appelé `create_draft` pour aucun de ces 19 contacts.**
+
+**Ces 19 relances sont donc réelles et de bonne qualité, mais je ne les ai pas rédigées ce run — par honnêteté du journal, elles ne sont pas notées comme si je l'avais fait.** Elles sont intégrées ci-dessous avec leur origine réelle, pour ne pas rester définitivement non tracées (même convention que les lignes ajoutées rétroactivement les 20/08 et 21/08). **À signaler à David** : c'est exactement le mode de défaillance que la consigne de ce rattrapage demandait d'éviter (agents orphelins en arrière-plan, travail non recueilli) — il s'est quand même produit, côté 1re tentative, et seul le suivi du coordinateur jusqu'au bout des deux sous-agents a permis de le rattraper plutôt que de le perdre ou de le dupliquer.
+
+#### Lot du 18/08 (10 envoyés le 18/08 à 08:16:05–08:17:54 UTC) — 9 relances, 1 exclusion
+
+| Contact | Adresse | Brouillon (`messageId`) |
+|---|---|---|
+| ISS Italie (Patrizio Pezzotti) | `patrizio.pezzotti@iss.it` | `1a0526b424e67f2c` |
+| CNE Espagne | `cne-direccion@isciii.es` | `1a0526b4ad2886d6` |
+| Bénin MoH (FR) | `sante.infos@gouv.bj` | `1a0526b538637092` |
+| NTU Taïwan | `ntuepm@ntu.edu.tw` | `1a0526b56abdaf70` |
+| Chulalongkorn Thaïlande | `academic_cphs@chula.ac.th` | `1a0526b5e6242533` |
+| U. Ibadan Nigeria | `collegeinfo@com.ui.edu.ng` | `1a0526b66052d49d` |
+| Concern Worldwide | `info@concern.net` | `1a0526b6d0b859c4` |
+| Save the Children | `info@savethechildren.org` | `1a0526b723d7247b` |
+| Malaria Consortium | `info@malariaconsortium.org` | `1a0526b791e23a0b` |
+
+**Exclusion** : MSPAS Guatemala (`epidemiologiamspas@mspas.gob.gt`) — bounce du 18/08, entrée n°12 de la liste nominative, jamais délivré.
+
+#### Lot du 19/08 (10 envoyés le 19/08 à 09:44:34–09:46:35 UTC + 2 Heidelberg à 10:01:19–10:01:34 UTC) — 10 relances, 2 exclusions
+
+| Contact | Adresse | Brouillon (`messageId`) |
+|---|---|---|
+| IPH Serbie « Batut » (Vladan Šaponjić) | `vladan_saponjic@batut.org.rs` | `1a0526b80b89d2b5` |
+| NIJZ Slovénie | `info@nijz.si` | `1a0526b8856ef4bf` |
+| Emory Rollins SPH | `sphepidept@emory.edu` | `1a0526b8d379f1a2` |
+| Heidelberg HIGH — Christine Neumann | `christine.neumann@uni-heidelberg.de` | `1a0526b92b36690e` |
+| Heidelberg HIGH — Fiona Walsh | `fiona.walsh@uni-heidelberg.de` | `1a0526b99d83212d` |
+| OMS — Bureau pays Îles Salomon | `wpslbwr@who.int` | `1a0526b9f2d411e0` |
+| Karolinska Institutet | `info.gph@ki.se` | `1a0526ba3eb94cf7` |
+| MoH & Wellness Jamaïque | `surveillance@moh.gov.jm` | `1a0526baacf07ebb` |
+| Médecins d'Afrique | `mda@medecins-afrique.org` | `1a0526bb1f51b97d` |
+| COOPI | `coopi@coopi.org` | `1a0526bb6ae257ac` |
+
+**Exclusions** : MHMS Îles Salomon (bounce du 19/08, entrée n°13) ; HIGH Heidelberg / Napawan Schulze (a répondu le 19/08, redirection vers Neumann/Walsh déjà actionnée par les 2 relances ci-dessus).
+
+**Vérification en direct reconfirmée par ce run** (double contrôle `to:` groupé + `from:<domaine>`, `includeTrash: true`, sur les 19) : les 19 fils d'origine ne portent toujours qu'un seul message chacun (`SENT`), aucune réponse, aucun bounce neuf. Anti-doublon : aucune des 19 adresses n'apparaît dans une entrée « 🔁 RELANCE » antérieure du journal.
+
+### Lot du 20/08 (10 envoyés le 20/08 à 15:20:31–15:22:39 UTC) — 10 éligibles vérifiés, 0 créée, frein de file
+
+Vérifiés en direct par ce run (`to:` groupé sur les 10 + `from:<domaine>` sur les 8 domaines distincts, `includeTrash: true`) : **les 10 fils portent exactement 1 message chacun, `SENT`**, aucune réponse, aucun bounce, aucune relance antérieure. Anti-doublon confirmé par grep sur l'ensemble du journal.
+
+| Contact | Adresse | Fil d'origine |
+|---|---|---|
+| OMS — Bureau pays Vanuatu | `wpvutclo@who.int` | `1a01ea13dfd62ade` |
+| OMS — Bureau pays Papouasie-Nouvelle-Guinée | `wppngwr@who.int` | `1a01ea147cc897f0` |
+| OMS — Bureau pays Timor-Leste | `wcotimorleste@who.int` | `1a01ea155c70b610` |
+| Botswana MoH (→ BPHI demandé) | `health@gov.bw` | `1a01ea15f6b8e650` |
+| INH Togo (FR) | `inhtogo@yahoo.fr` | `1a01ea17ee6affc8` |
+| Institut Pasteur de Nha Trang | `info@ipn.org.vn` | `1a01ea18a9a3c33b` |
+| UQ School of Public Health | `sph.reception@uq.edu.au` | `1a01ea19a819fd35` |
+| UEM Mozambique (FAMED) | `info.med@uem.mz` | `1a01ea1a6b6cbc8c` |
+| Farmamundi (ES) | `info@farmamundi.org` | `1a01ea1c998fc8ee` |
+| Fundación Anesvad (ES) | `anesvad@anesvad.org` | `1a01ea1d450b90a7` |
+
+**🚦 Frein de file appliqué — 0 relance créée pour ce lot.** File mesurée avant toute décision (deux appels `list_drafts`, vue complète puis métadonnées, résultat strictement identique) : **26 brouillons réels** — les 19 relances ci-dessus (18/08 + 19/08) + 7 brouillons de prospection créés ce matin par le rattrapage de `daily-institutional-prospecting-healthwatch` (PAHO Nicaragua, PAHO Guatemala, FNU Fidji, UZ Zimbabwe Medical Microbiology, UNITID Nairobi, UWI Trinité, Alight). **Déjà au-dessus du seuil de ~25 avant même de considérer ce lot** — à la différence des 18/08 et 19/08 (déjà rédigés par les sous-agents orphelins avant que le frein n'entre en jeu), ajouter les 10 du 20/08 porterait la file à 36, soit 44 % au-dessus du seuil, largement plus que l'écart assumé le 28/08 (+2, ~8 %). Le run du 29/08 avait posé la règle explicitement en situation comparable de dépassement massif : « si David préfère l'application stricte du seuil, le run du 29/08 doit créer zéro relance tant que la file n'est pas redescendue » — appliquée ici à l'identique. **Les 10 restent vérifiés et prêts à rédiger sans revérification** (sous réserve d'un balayage de bounces à jour) dès que la file redescend sous ~25.
+
+**⚠️ Un 3e sous-agent orphelin pour ce même lot (20/08) pourrait encore terminer après la clôture de ce run** — signalé comme probable par le coordinateur mais non confirmé à l'heure de ce rapport. `list_drafts` ne montre aucun brouillon 20/08 aux deux appels de ce run. **Le prochain run (ou David en session) devra revérifier `list_drafts` avant de supposer que les 10 restent à créer** — sinon risque de doublon.
+
+### Confirmation — les 31 anciens brouillons sont partis, pas perdus
+
+`search_threads in:sent after:2026/08/26` : les 31 brouillons réels en fin de run du 29/08 (10 prospection du 27/08, 14 relances du 27/08, 3 relances du 28/08, 1 relance Malte — en réalité une réponse personnelle de David à un fil produit, hors gabarit — et 3 hors périmètre cycle client) **sont tous partis le 2026-08-29 entre 16:41 et 16:50:30 UTC.** Ça résout l'écart 31→0 signalé ce matin par le rattrapage de la prospection : ni une instabilité de `list_drafts`, ni une perte — David a vidé toute la file hier soir.
+
+### 📊 Bilan cumulé
+
+**Balayage des bounces** (`from:mailer-daemon`, `from:postmaster`, `subject:"Delivery Status Notification"`, `subject:"Undelivered Mail"`, `subject:Undeliverable`, `subject:"Mail delivery failed"`, `after:2026/08/26`, corbeille incluse) : **zéro fil**. Aucun bounce neuf, y compris sur les 10 contacts de prospection et les 17 relances parties hier soir.
+
+**Bilan bounces cumulés depuis le 02/08 : inchangé à 20** — liste nominative identique à celle du 29/08 (l. 3034-3053 de ce journal), non reproduite ici.
+
+**Totaux au 2026-08-30 :**
+- **Prospectés : 307** (300 au 29/08 + 7 du rattrapage de ce matin).
+- **Envoyés : 300** (290 au 29/08 + les 10 de prospection du 27/08, partis hier soir). Les 7 de ce matin restent en brouillon.
+- **Délivrés : 280** = 300 envoyés − 20 (liste nominative), recompté dans le même mouvement.
+- **Taux de délivrabilité : 93,3 % (280/300)**, en légère hausse (93,1 % au 29/08).
+- **Relances : 182 envoyées** (165 au 29/08 + les 17 parties hier soir : 14 du 27/08 + 3 du 28/08), **19 en attente d'envoi** (les 9 + 10 découvertes ce run, jamais comptées avant faute d'avoir été journalisées) — **total cumulé de relances créées depuis le début : 201.**
+
+**Frein de file : appliqué au seul lot du 20/08.** File en fin de run : **26**, inchangée par cette routine — les 19 relances existaient déjà avant que je n'intervienne, je n'en ai créé aucune moi-même.
+
+**Prochains lots :**
+- **31/08** → lot du **20/08** (10, J+11 si toujours non créé), sous réserve du frein de file et d'une vérification `list_drafts` préalable pour écarter un 3e sous-agent orphelin.
+- **EUPHA** → fenêtre ouverte à partir du 31/08 (retour de bureau), arbitrage David toujours en attente.
+
+**⚠️ Fichiers modifiés non touchés par cette routine, laissés tels quels** (règle `AGENTS.md`) : `marketing/qa/product-claims.manual.json`, `scripts/audit-alert-day.mjs`, `scripts/probe-alert-lock.mjs`.
