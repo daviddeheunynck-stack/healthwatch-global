@@ -3086,3 +3086,32 @@ Les deux routines d'acquisition tournent désormais à vide simultanément : la 
 - **Début septembre** → **EUPHA**, si David tranche en faveur d'une relance après son retour au bureau le 31/08.
 
 **⚠️ Fichiers modifiés non touchés par cette routine, laissés tels quels** (règle `AGENTS.md`) : `marketing/qa/product-claims.manual.json` (modifié), `scripts/audit-alert-day.mjs` et `scripts/probe-alert-lock.mjs` (non suivis).
+
+## 2026-08-30 — Run de rattrapage (créneau 08h07 manqué, registre de tâches planifiées reconstruit)
+
+**Frein de file vérifié en tout premier, avant toute recherche** : `list_drafts` appelé deux fois, **0 brouillon les deux fois** — chute nette depuis les **31 brouillons réels** en fin de run du 29/08. Écart notable, mais non investigué en profondeur ici : le solde bounces/réponses/envois appartient à `daily-relance-check-healthwatch`, pas à cette routine (voir SKILL.md, Étape 1 et répartition `AGENTS.md`). Hypothèse la plus probable : lecture/envoi du stock par David entre le 29/08 soir et ce matin — à confirmer par la routine de relance. File réellement à 0 → frein non déclenché, run standard.
+
+**Anti-doublon** : lecture intégrale déléguée à un agent (fichier `institutional-prospects-log.md`, 3088 lignes, toutes sections depuis le 02/08 y compris vagues 1-3 ; `linkedin-contacts.md`, 14317 lignes, fils actifs). Puis grep individuel domaine + nom d'organisation pour chaque candidat retenu **et** chaque candidat écarté en cours de route — 23 candidats testés au total, 16 rejetés pour doublon confirmé (dont plusieurs découverts *après* rédaction du brouillon prévu : NIJZ Slovénie, Malaria Consortium et IMTAvH Pérou déjà envoyés depuis respectivement le 19/08, le 18/08 lot et le 04/08 ; FHI 360 et AGES Autriche déjà investigués et écartés pour absence de boîte opérationnelle). Détail des 7 retenus ci-dessous.
+
+**⚠️ emro.who.int totalement injoignable aujourd'hui (502, confirmé à la fois par fetch et par navigateur réel — pas un simple filtrage anti-bot).** Deux candidats OMS EMRO (Libye, Soudan) trouvés uniquement via extrait moteur ont été écartés sans être rédigés : adresse issue du seul index de recherche, page officielle non vérifiable en lecture directe (même critère que MSPAS Guatemala du 18/08). Conséquence : **aucun contact EMRO dans ce lot**, ni SEARO — répartition géographique déséquilibrée par rapport à la consigne des 6 régions OMS, faute de candidats vérifiables trouvés dans le temps du run (Bhoutan, Cambodge, Vietnam, Timor-Leste, Géorgie, Serbie, Kiribati, Guyana, Palaos, Botswana, Gabon, Mongolie, Kirghizstan, Azerbaïdjan tous testés et écartés — page injoignable, adresse non publiée, ou domaine déjà consommé).
+
+**7 contacts retenus sur 10 visés — chiffre honnête, pas de remplissage artificiel (Étape 4).** Plafond de concentration par organisation respecté : PAHO à 2/10 (le maximum), les 5 autres organisations toutes distinctes.
+
+| Institution | Pays/Région | Segment | Contact | Email | Source | Vérifié | Brouillon Gmail |
+|---|---|---|---|---|---|---|---|
+| PAHO — Bureau pays Nicaragua | Nicaragua / AMRO | Gouvernement/OMS-PAHO | — (boîte `pwr`, représentant PAHO/OMS) | `nic-email@paho.org` | paho.org/en/paho-country-office-media-contacts (page lue directement) | Oui | oui — `r-4934499385079543783` |
+| PAHO — Bureau pays Guatemala | Guatemala / AMRO | Gouvernement/OMS-PAHO | — (boîte `pwr`, représentant PAHO/OMS) | `gut-pwr@paho.org` | paho.org/en/paho-country-office-media-contacts (page lue directement) | Oui | oui — `r3232231976687903007` |
+| Fiji National University — College of Medicine, Nursing & Health Sciences | Fidji / WPRO | Académique | — (Acting Executive Officer, boîte du collège) | `EOMed@fnu.ac.fj` | fnu.ac.fj/college-of-medicine (page lue directement) | Oui | oui — `r-462844588407423719` |
+| University of Zimbabwe — Dept. of Medical Microbiology, College of Health Sciences | Zimbabwe / AFRO | Académique | — (boîte générale du département) | `medmicro@medsch.uz.ac.zw` | uz.ac.zw/index.php/chs-departments/225-medical-microbiology (page lue directement) | Oui | oui — `r1945940011596803515` |
+| University of Nairobi — UNITID (Institute of Tropical & Infectious Diseases) | Kenya / AFRO | Académique | — (boîte générale de l'institut) | `unitid@uonbi.ac.ke` | unitid.uonbi.ac.ke/basic-page/contacts (page lue directement) | Oui | oui — `r-4242116860970035946` |
+| UWI St. Augustine — Faculty of Medical Sciences | Trinité-et-Tobago / AMRO | Académique | — (boîte du Doyen, faculté) | `STA-Deanfms@sta.uwi.edu` | sta.uwi.edu/fms/contactus (page lue directement) | Oui | oui — `r-5811230755137085424` |
+| Alight (ex-American Refugee Committee) | États-Unis (siège) / international | ONG | — (boîte générale) | `info@WeAreAlight.org` | wearealight.org/contact (page lue directement) | Oui | oui — `r3922561593884177028` |
+
+- **UNITID vs University of Nairobi SPH** : l'École de santé publique de la même université avait été testée et écartée le 11/08 (connexion impossible, boîte hors sujet) — UNITID est un institut distinct, jamais approché, précédent déjà établi pour ce cas de figure avec USP Brésil (04/08) et UPCH Pérou (23/08, tranché « non-doublon »).
+- **FNU Fidji** : formulaire seul trouvé le 08/08, écarté à l'époque faute d'email. Aujourd'hui, lecture directe de la page collège → boîte fonctionnelle trouvée. Traité comme cible différée qui aboutit, pas comme un doublon.
+- **Langue** : anglais pour les 7 (aucune organisation manifestement francophone dans ce lot).
+- **Format** : aucun `htmlBody` avec `<a>`, aucun `.` littéral dans le nom de domaine (« healthwatch-global dot com »). Vérifié via `list_drafts` immédiatement après création : les 7 apparaissent avec `labelIds: ["DRAFT"]`, aucun `SENT`.
+
+**Total cumulé prospecté depuis le 2026-08-02 : 307** (300 au 29/08 + 7 de ce run). **Profondeur de la file de brouillons non confirmés envoyés : 7** (les 31 antérieurs ayant disparu de `list_drafts` d'ici ce matin, cause non établie par cette routine — voir plus haut).
+
+**⚠️ Fichiers modifiés non touchés par cette routine, laissés tels quels** (règle `AGENTS.md`) : `marketing/qa/product-claims.manual.json` (modifié), `scripts/audit-alert-day.mjs` et `scripts/probe-alert-lock.mjs` (non suivis).
