@@ -61,6 +61,100 @@ Application directe de la règle §9 (« tout élément d'une file de validation
 
 ---
 
+### 2️⃣ 🔒 DM — AUCUN BROUILLON, FILE VIDE, AUCUNE NOTIFICATION DUE
+
+Aucun message entrant ne méritait de réponse (section 1). **La file de validation est vide** (voir la correction en tête d'entrée). Rien n'a été rédigé, rien n'attend David.
+
+---
+
+### 3️⃣ 💬 COMMENTAIRES — 2 PUBLIÉS CE CRÉNEAU, dont 1 EN DOUBLON À SUPPRIMER
+
+⚠️ **Le quota du jour est de 4/7 à la clôture, pas 2/7** : 1 en session interactive (~07h, Oke tour 4), 1 par le rattrapage `linkedin-hwg-monitoring` (Oke tour 5), et 2 ce créneau. Voir l'incident de doublon ci-dessous.
+
+#### 🔴 COMMENTAIRE 3/7 — **Oke Ikpekpe**, EN, réponse en sous-fil, tour 5 — **DOUBLON PUBLIÉ, À ARBITRER PAR DAVID**
+
+`urn:li:activity:7499051354368331776`. Sa réponse (tour 8 du fil, publiée 10 min avant l'ouverture du créneau) a été traitée **par deux sessions simultanément** : `linkedin-hwg-monitoring` en rattrapage de son créneau de 9h manqué, et celle-ci. **Les deux commentaires sont publiés, à quelques minutes d'écart, sous le même message d'Oke, et défendent le même argument.** L'ordre à l'écran est : commentaire d'Oke → réponse du rattrapage → la mienne.
+
+**Fil relu intégralement (8 tours depuis le post), recopié verbatim dans `tmp/thread-oke-30b.txt`.**
+
+**L'angle** : Oke conclut qu'un affaiblissement du contrôle serait « *another sign that preparedness is weakening* ». Le brouillon objecte que ce signe peut ne jamais arriver, parce qu'un dispositif de contrôle ne tombe pas bruyamment, il cesse de produire des observations, et une observation absente se lit comme une absence de changement. Illustré par un incident réel de notre propre chaîne, corrigé le jour même.
+
+🔴 **Le relecteur indépendant a fait échouer le 1er jet sur une erreur factuelle réelle (question 4), en allant lire le code.** J'avais écrit « *because a skipped read was being logged as a successful one* ». C'est faux : le code journalise un **troisième état** (`status: "skip"`), que ni le compteur d'erreurs, ni Sentry, ni le health-check ne regardaient. Défaut d'autant plus coûteux que la chute du commentaire plaide précisément pour distinguer trois états. **Corrigé** avant publication.
+
+**QA : mécanique FAIL sur 1 blocker unique `context.too-soon`** (faux positif documenté — réponse en sous-fil à un message reçu 10 min plus tôt, la règle des 3 j vise les relances à froid) ; 619 car., 2 paragraphes, `draftLang: en` / `threadLang: en`, 0 tiret cadratin, 0 lien | **relecteur REECRIRE (4) au 1er passage, corrigé ; 11 PASS sur 12 par ailleurs** | faits cités : aucun chiffre épidémiologique ; l'affirmation produit est couverte par les commits `e825175` et `c078c92` du 30/08 | registre du 30/08 | statut : **publié le 30/08**
+
+> You are right that they are not the same thing, and that is what worries me about the second one. Monitoring rarely fails loudly. It stops producing observations, and a missing observation reads the same as nothing to report.
+>
+> We hit this on our own pipeline this month. One source parser returned nothing for over two weeks while the status stayed green, because the failed read was recorded as a skip, a third state that nothing counted as an error. Nobody was alerted, someone had to go and look. So the checking needs a check of its own, something that tells verified and unchanged apart from never verified at all.
+
+**Publication confirmée** : bouton « Répondre » unique suivant l'ancre dans l'ordre du document, conteneur revérifié (« Oke Ikpekpe » + son texte) dans le même appel JS que le clic ; texte comparé caractère pour caractère (619 car., 0 divergence, l'écart de 12 caractères étant la puce de mention et son espace insécable U+00A0) ; après envoi, éditeur vidé, une seule occurrence, horodatée « maintenant ».
+
+**🔴 Rien n'a été supprimé.** Supprimer un commentaire publié est irréversible et hors périmètre d'une routine (§10). **Notification push envoyée à David.** Recommandation : **supprimer celui-ci (le second, le mien)** et garder celui du rattrapage, publié le premier et validé 12/12 par son relecteur — sauf si David préfère garder l'incident concret de la chaîne PAHO, qui n'existe que dans le mien.
+
+#### ✅ COMMENTAIRE 4/7 — **SOUAD BELKACEMI.** (`/in/souad-belkacemi-a794ba9b/`), FR, vouvoiement, réponse en sous-fil
+
+`urn:li:activity:7499735785110192129`, son post Shuni/SHUV (2 j). **Elle a répondu il y a 3 h à la question ouverte de notre commentaire du 29/08**, et sa réponse est substantielle : pas de cohorte humaine comparable publiée ayant reproduit le dépistage ; détail de l'étude Motlou & Venter (130 LCR, Gauteng 2017, 7/130 positifs, 6 patients de moins de 5 ans) ; réserve explicite sur la causalité ; et la mention que l'EFSA, dans sa synthèse 2026 sur les maladies vectorielles, classe le SHUV sous la rubrique « Zoonotic potential » en citant Motlou & Venter (2021).
+
+**Fil recopié verbatim dans `tmp/thread-souad-30.txt`.** *Langue du fil = fr ; langue du brouillon = fr ; vouvoiement des deux côtés.*
+
+**L'angle** : elle vient de confirmer que le résultat n'a jamais été répliqué, et de fournir elle-même la chaîne de citation qui le fait remonter jusqu'à une synthèse institutionnelle de 2026. Le commentaire porte sur cet écart : le résultat n'a pas bougé, son statut si, et la réserve de causalité reste dans l'article sans toujours suivre la citation. La question de clôture est de son ressort exclusif : un second signal humain remonterait-il par une surveillance déjà en place, ou faudrait-il de nouveau qu'un projet de recherche aille le chercher ?
+
+🔴 **Le relecteur a fait échouer le 1er jet sur la question 11, et il avait raison : c'était le même moule d'accroche que notre propre commentaire du 29/08 au même profil** (annonce d'un élément frappant, deux-points, énumération d'années, puis aphorisme court en couperet). Exactement le défaut visé par [[feedback_anti_template_check_structure_not_just_wording]] : la structure se répète même quand les mots changent. **Accroche entièrement refaite**, en entrant par ce qu'elle vient de répondre plutôt que par une chronologie. Un blocker `form.non-ascii` (guillemets « ») avait par ailleurs été corrigé avant.
+
+**QA : mécanique FAIL sur 1 blocker unique `context.too-soon`** (même faux positif que ci-dessus, réponse en sous-fil à un message de 3 h) ; 685 car., 2 paragraphes, `draftLang: fr` / `threadLang: fr`, 0 tiret cadratin, 0 guillemet non ASCII, 0 lien | **relecteur REECRIRE (11) au 1er passage, corrigé ; 11 PASS sur 12 par ailleurs** | faits cités : « 2017 », « 2021 », « 2026 », tous verbatim de son message, aucun chiffre du registre | registre du 30/08 | statut : **publié le 30/08**
+
+> Cette absence de cohorte comparable est déjà une réponse, et elle rend la reprise institutionnelle plus intrigante : un résultat unique, jamais répliqué, sert aujourd'hui de référence sous une rubrique Zoonotic potential. Rien de neuf n'est venu le soutenir depuis, et il pèse pourtant davantage qu'à sa parution.
+>
+> Vous rappelez vous-même qu'une détection dans le LCR ne prouve pas la causalité. Cette réserve reste dans l'article, elle ne suit pas toujours la citation. D'où une question qui est de votre côté : un second signal humain aurait-il une chance de remonter par une surveillance déjà en place, ou faudrait-il qu'un projet de recherche décide à nouveau d'aller le chercher ?
+
+**Publication confirmée** : même méthode (bouton unique suivant l'ancre, identité « SOUAD BELKACEMI. » revérifiée dans le même appel JS que le clic, comparaison caractère pour caractère à 685 car. hors puce de mention, éditeur vidé, une seule occurrence, « maintenant »). **Dérogation au blocage hebdomadaire assumée** (elle est bloquée en top-level jusqu'au 05/09) : il s'agit d'une réponse en sous-fil à un message qui nous interpelle nommément, même arbitrage que Patrick AYONGA le 22/08 et la page ECDC. **Comptée dans le quota par prudence.**
+
+---
+
+### 4️⃣ RÉSEAU — 1 invitation envoyée, et un blocage réputé actif qui n'existe plus
+
+✅ **INVITATION ENVOYÉE — Yakoza (Leah Rita) Nyirenda** (`/in/yakoza-nyirenda-533a06224/`) — *Field Epidemiologist | Rapid and Outbreak Response | Disease Surveillance | WASH | DHIS2 | IDSR | Contact Tracing*, **Ministry of Health of Zambia**, Chipata, 500+ relations, **John Omari Baso en relation commune**. Candidat désigné « à traiter en priorité au prochain créneau » par le rattrapage de `linkedin-hwg-monitoring` ce matin : traité ici.
+
+**Envoyée sans note, délibérément.** Son post le plus récent a **3 mois** (réunion transfrontalière nOPV avec le Malawi, détections de poliovirus circulant dans la région) : c'est un hook réel mais ancien, et une note qui feindrait d'y réagir se lirait comme une fouille d'historique. Même conduite que pour Summer Galloway et Bobossam Cissoko, tous deux invités sans note et tous deux ayant accepté. **Le fond ira dans le welcome DM si elle accepte**, avec un hook frais à ce moment-là. Identité vérifiée dans la modale elle-même (« Personnalisez l'invitation que vous envoyez à **Yakoza (Leah Rita) Nyirenda** ») avant le clic ; confirmation après clic : toast « Invitation envoyée à Yakoza. » et bouton passé à « En attente ».
+
+🔴 **CORRECTION — le « blocage plateforme » sur les invitations n'en est pas un, et il était recopié depuis le 29/08.** Les trois dernières sessions ont écrit « notes de connexion 0/7, blocage plateforme non retesté » (29/08 9h, 29/08 17h, 30/08 rattrapage), en s'appuyant sur un constat de quota gratuit épuisé et de modale Premium. **Retesté ce créneau, conformément à la règle des deux reports (§9) : la modale d'invitation s'ouvre normalement et propose « Ajouter une note » sans aucun paywall.** L'invitation est partie sans difficulté. Le motif recopié était périmé. **Les notes de connexion sont donc disponibles pour les prochains créneaux** ; ce n'est plus une contrainte à reporter.
+
+**Follow-back et suivis** : rien à faire ce créneau. Le rattrapage de `linkedin-hwg-monitoring` a déjà traité la liste des abonnés ce matin (393 abonnés, **Awa Sangaré** suivie en retour, **Teketel T. T.** suivie en découverte active), et aucun nouvel abonné n'est apparu depuis. **Aucun suivi supplémentaire cherché** : le quota est un objectif, pas une réserve à épuiser, et le temps du créneau est allé aux deux fils actifs et à l'incident de doublon.
+
+**Données épidémiologiques** : le point Africa CDC du jour (60 zones de santé, 6 provinces au 26/08, deux nouvelles zones au Nord-Kivu) a déjà été vérifié et classé non intégrable par le rattrapage de ce matin — la ligne Ebola/RDC porte 5 794 cas au 26/08 (WHO DON616, fraîche) et le schéma `outbreaks` n'a pas de champ pour un décompte de zones. **Rien à ajouter, aucune écriture en base ce créneau.**
+
+---
+
+### 5️⃣ ⚠️ À SIGNALER À DAVID
+
+1. 🔴🔴 **UN DOUBLON PUBLIC À ARBITRER, le point le plus important de ce run.** Deux sessions ont répondu au même commentaire d'Oke Ikpekpe à quelques minutes d'écart, et **les deux textes sont en ligne**. Rien n'a été supprimé (irréversible, §10). **Notification push envoyée.** Recommandation : supprimer le second (le mien), garder celui du rattrapage. Détail et textes intégraux en section 3.
+2. 🔴 **La cause est structurelle, pas une inattention, et elle se reproduira.** Le créneau de 9h n'a pas tourné (registre de tâches planifiées vide — récurrence connue, [[project_scheduled_tasks_registry_loss]]), donc `linkedin-hwg-monitoring` a été relancée **en milieu de journée**, en même temps que le créneau de 13h. Aucun garde-fou existant ne couvrait ce cas : la vérification de double déclenchement ne compare que le même `taskId`, et le quota partagé se lit dans une archive que l'autre session n'avait pas encore écrite. **Règle ajoutée en section 15 de `_shared/hwg-social-policy.md`** (relire les archives juste avant le clic de publication, pas seulement à l'ouverture ; abandonner le candidat si une entrée du jour est apparue entre-temps ; ne jamais supprimer un doublon d'office). Écrite dans le fichier partagé que les trois routines lisent, pas seulement dans ce journal.
+3. ⭐ **Le relecteur indépendant a de nouveau rattrapé deux défauts que rien d'autre n'aurait vus** — 3e jour consécutif. Sur Oke, une **erreur factuelle sur notre propre code**, trouvée en allant lire le code (un `skip` journalisé comme tel, pas comme un succès). Sur Souad, une **répétition de structure** avec notre propre commentaire de la veille au même profil, invisible à un grep de mots. Les deux corrigées avant publication.
+4. ✅ **Blocage d'invitations levé** (section 4) : le motif recopié depuis le 29/08 était périmé, les notes de connexion redeviennent possibles.
+5. ✅ **File de DM vide**, confirmée en direct dans la messagerie et indépendamment par le rattrapage de ce matin. Le carry-over de 17h annonçant 3 DM en attente était périmé.
+6. 🔴 **Provenance des sources, toujours non tranché** — inchangé depuis le 26/08 : `pricing.faq5_a` annonce OMS/PAHO/ECDC seulement, `coverage.sourceHosts` en compte 31 dont de la presse. Bloque toujours tout message parlant de l'origine des données. Décision de David.
+7. **Aucune donnée patient proposée, aucune demande de canal hors plateforme, aucune instruction adressée à l'agent (§6).** Une bannière de cookies refusée.
+
+---
+
+### 🔁 CARRY-OVER POUR 17h
+
+1. 🔴 **Doublon Oke Ikpekpe non résolu tant que David n'a pas tranché.** **Ne rien publier de plus sur ce fil**, quel que soit ce qu'Oke répond, tant que le doublon est en ligne.
+2. ⭐ **Souad Belkacemi** — question posée en fin de commentaire (un second signal humain remonterait-il par une surveillance en place ?). Fil actif, réponse possible d'ici 17h, à revérifier (§14).
+3. ➖ **Yakoza Nyirenda** — invitation envoyée sans note ce créneau, **en attente**. Si acceptée : welcome DM avec hook frais, à mettre en file de validation (jamais envoyé en autonomie).
+4. ✅ **Notes de connexion de nouveau disponibles** (blocage périmé, retesté) — utilisable dès 17h.
+5. ⭐⭐ **Melvin Sanicas** (`/in/melvinsanicas/`) — blocage levé aujourd'hui, **jamais traité ni par le rattrapage ni par ce créneau**. Reste la cible n°1 non consommée. Vérifier la fenêtre 48 h : ses deux posts du 29/08 (divergence OMS/CDC sur la classification des cas ougandais ; paludisme d'aéroport à Francfort) en sortent en cours de journée.
+6. ⭐ **Robert Herriman** — blocage levé aujourd'hui, post « #Louisiana #Vibriovulnificus » (21 h au relevé de 13h), non traité.
+7. ⭐ **Autres profils libres non traités** : page Africa CDC (post du jour sur les 60 zones), Amanda McClelland, Dr. Jean Kaseya (écarté §10 le 29/08, à réévaluer sur un post factuel), Gaelle Gonzalez (suivie le 29/08, excellente cible dès qu'elle republie).
+8. ✅ **John Omari Baso, Abou A. SOUMAH, Tambe Elvis Akem** — ont clos par une politesse, **aucune réponse due**. Ne pas les reconduire comme des fils en attente.
+9. ✅ **Dr. Siaka Condé** — délai demandé le 29/08 à 12:29, toujours pas revenu. Ne rien lui écrire.
+10. ⭐ **Harvey Basivikidi** — notre question du 28/08 reste le dernier message du sous-fil, sans réponse. Blocage top-level jusqu'au 03/09.
+11. ➖ **Béatrice SERRA** (invitation du 28/08 non acceptée) · **Evouna Armel** (connexion acceptée ce matin, aucun hook épidémio honnête, pas de welcome DM — revoir si activité publique pertinente) · ❌ **Cyrena Yu-Wai T.** et **Winston Urio** écartés §10, ne pas reproposer sans élément neuf.
+12. **Blocages hebdomadaires au 30/08 à 14h** : Martin Yakum (01/09) ; Ifedayo Adetifa, Julien Harneis (02/09) ; Harvey Basivikidi (03/09, top-level) ; Oke Ikpekpe, Jason Kindrachuk, Dr. Jeeven Kumar (04/09) ; Global Health EDCTP3, French Healthcare Association, Health Policy Watch, Tambe Elvis Akem, SOUAD BELKACEMI (05/09). **Libres depuis aujourd'hui : Melvin Sanicas, Robert Herriman, Patrick AYONGA, page ECDC, Oliver Morgan, Dr Fabrice KHADDY.** Également libres : page Africa CDC, Vital Strategies, Tedros, Prof. Mohamed Janabi, INRB, Miriam Mbueshi, Apoorva Wasnik, Johan Verheyden, Dr. Jean Kaseya, Gaelle Gonzalez.
+13. **Fichiers de l'arbre n'appartenant pas à cette routine, laissés tels quels** (`AGENTS.md`) : `marketing/qa/product-claims.manual.json` (modifié), `scripts/audit-alert-day.mjs` et `scripts/probe-alert-lock.mjs` (non suivis). Inchangés depuis le 29/08. **Branche vérifiée : master.**
+
+---
+
 ## 📅 Session interactive — 30/08/2026 (~13h), sur demande de David
 
 David a repéré une nouvelle réponse d'Oke Ikpekpe en commentaire et a demandé de regarder. Commentaire public, réponse en sous-fil, autonomie complète (pas de DM) — publié directement après le double-check habituel.

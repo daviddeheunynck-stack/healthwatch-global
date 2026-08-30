@@ -1,6 +1,54 @@
 > 📦 **Archive** : le détail du 24 juin au 16 juillet 2026 a été déplacé dans [linkedin-contacts-archive-avant17juillet.md](linkedin-contacts-archive-avant17juillet.md) le 23/07 pour garder ce fichier léger.
 
 
+## 📅 Session linkedin-hwg-followup-check — 30/08/2026 (13h, 1er des 2 créneaux après-midi)
+
+**Vérification double déclenchement** : aucune entrée `linkedin-hwg-followup-check` du 30/08 à l'ouverture. Les entrées du 30/08 appartiennent à une session interactive de David (~07h) et au **rattrapage de `linkedin-hwg-monitoring`** (créneau de 9h manqué, relancé en milieu de journée) → premier déclenchement de cette routine aujourd'hui. **Détail intégral des commentaires, de l'incident de doublon et du carry-over : `content-log.md`, entrée du jour.**
+
+**🖥️ Navigateur** : `23c7ecdd-…` sélectionné directement (§7), dernière entrée de `_shared/browser-status.md` **🟢 RÉTABLI (24/08)**. Une bannière de cookies refusée. Un contexte JS temporairement désynchronisé sur un permalien de post (`main` lisible via `get_page_text` mais `document` partiel côté JS), résolu par un rechargement — pas la signature « renderer dégradé » de §7.
+
+**Quotas à la clôture** : commentaires **4/7 toutes sessions confondues** (1 interactive + 1 rattrapage + 2 ce créneau) · **DM 0 rédigé, file VIDE** · suivis 0 ce créneau (2 déjà faits par le rattrapage) · **1 invitation envoyée** · notes de connexion 0/7, **mais blocage plateforme levé (retesté)**.
+
+---
+
+### 🔴 CORRECTION D'ARCHIVE — la file de validation DM est vide, pas à 3
+
+Le carry-over du 29/08 17h annonce trois DM en file (John Omari Baso, Summer Galloway, Bobossam Cissoko). **Faux au 30/08** : les quatre DM ont été envoyés le 29/08 entre 19:23 et 19:49 sur ordre explicite de David, et l'entrée du 29/08 13h porte bien les statuts `ENVOYÉ ET CONFIRMÉ`. **Vérifié en direct dans la messagerie**, pas déduit des fichiers. Le rattrapage de `linkedin-hwg-monitoring` a fait le même constat de son côté ce matin, indépendamment. **Aucune notification push due à ce titre.**
+
+---
+
+### 1️⃣ MESSAGERIE — une réponse entrante, aucun brouillon dû
+
+- ✅ **John Omari Baso a répondu le 29/08 à 20:09** (46 min après notre DM de 19:23) : « *Merci beaucoup pour votre message! On garde contact pour la suite* ». **Aucun brouillon rédigé, délibérément** : politesse de clôture sans question ni substance (§3), un accusé de réception habillé échouerait à la question 12 du relecteur. **Le DM avait pour objet de réparer un malentendu — il a atteint sa cible, le fil se clôt proprement.** Statut → *envoyé le 29/08, fil clos par le destinataire, aucune réponse due*.
+- **Inchangés, rien n'est dû** : Abou A. SOUMAH (clos sur un remerciement le 29/08), **Dr. Siaka Condé** (« *Let me look at this for a moment* » le 29/08 à 12:29, toujours pas revenu — carry-over honoré, rien ne lui a été écrit), Alain BASHIZI, Rodrigo Olave Hurtado, Isaias Fernandes Co, Peace Mpakaniye, **Harvey Basivikidi** (notre question du 28/08 reste le dernier message du sous-fil).
+- **Summer Galloway** et **Bobossam Cissoko** : DM envoyés le 29/08, **aucune réponse à ce jour**.
+
+---
+
+### 2️⃣ 🔒 DM — AUCUN, ET RIEN N'ATTEND DAVID
+
+Aucun message entrant ne méritait de réponse. **File vide.** Aucune notification push envoyée à ce titre — la seule notification de ce run porte sur le doublon de commentaire (voir `content-log.md`, section 5).
+
+---
+
+### 3️⃣ RÉSEAU
+
+✅ **INVITATION ENVOYÉE (sans note) — Yakoza (Leah Rita) Nyirenda** (`/in/yakoza-nyirenda-533a06224/`) — *Field Epidemiologist | Rapid and Outbreak Response | Disease Surveillance | WASH | DHIS2 | IDSR | Contact Tracing*, **Ministry of Health of Zambia**, Chipata, 500+ relations, **John Omari Baso en relation commune**. Candidate désignée « à traiter en priorité » par le rattrapage de ce matin. **Sans note assumé** : son post le plus récent a 3 mois, une note qui feindrait d'y réagir se lirait comme une fouille d'historique — même conduite que Summer Galloway et Bobossam Cissoko, tous deux invités sans note et acceptés. Le fond ira dans le welcome DM si elle accepte. Identité vérifiée dans la modale avant le clic ; toast « Invitation envoyée à Yakoza. » et bouton « En attente » après.
+
+🔴 **Le « blocage plateforme » sur les invitations est périmé et a été recopié 3 fois.** Retesté ce créneau (§9, règle des deux reports) : **la modale s'ouvre normalement et propose « Ajouter une note », aucun paywall Premium.** Les notes de connexion redeviennent disponibles dès 17h.
+
+**Follow-back** : aucun dû, la liste des abonnés (393) a été traitée ce matin par le rattrapage (Awa Sangaré suivie en retour). **Aucune recherche active de suivis supplémentaires** ce créneau, arbitrage de temps assumé au profit des deux fils actifs et de l'incident de doublon.
+
+---
+
+### 4️⃣ ⚠️ POINT PRINCIPAL — doublon public sur le fil Oke Ikpekpe
+
+Deux sessions ont répondu au même commentaire d'Oke Ikpekpe à quelques minutes d'écart (rattrapage 9h + ce créneau), **les deux textes sont en ligne**, rien n'a été supprimé (irréversible, §10). **Notification push envoyée à David**, recommandation de supprimer le second (le mien). Cause structurelle et règle ajoutée en **section 15 de `_shared/hwg-social-policy.md`**. Textes intégraux et détail : `content-log.md`, entrée du jour, section 3.
+
+**Carry-over complet dans `content-log.md`.** Points engageant des contacts : ne rien republier sur le fil Oke tant que le doublon n'est pas tranché ; **Souad Belkacemi** a une question ouverte de notre part, fil actif à revérifier à 17h ; **Yakoza Nyirenda** en attente d'acceptation ; **Melvin Sanicas** reste la cible n°1 non consommée, blocage levé aujourd'hui.
+
+---
+
 ## 📅 Session linkedin-hwg-monitoring — 30/08/2026 (rattrapage du créneau 9h02, panne du registre de tâches planifiées)
 
 **Contexte** : le créneau normal de 9h02 n'a jamais tourné (registre de tâches planifiées vide ce matin-là, reconstruit ensuite). Cette session tient lieu du run manqué. Détail du commentaire publié (2e du jour, fil Oke Ikpekpe, 5e tour) : `content-log.md`, entrée du jour.
