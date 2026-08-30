@@ -82,7 +82,21 @@ function run() {
   //     .cmd hors shell depuis le correctif de securite de Node 20.12).
   // Une chaine unique avec shell:true evite les deux. Aucun risque d'injection :
   // la commande est un litteral, rien n'y est interpole.
-  const res = spawnSync("npx --no-install supabase migration list --linked", {
+  //
+  // PAS de `npx` devant `supabase` (trouve le 30/08 : le controle echouait "ignore"
+  // a CHAQUE push depuis sa creation le 23/08, jamais une seule execution reelle).
+  // La CLI Supabase officielle interdit son propre `npm install -g` — sur cette
+  // machine elle est installee via Scoop et vit sur le PATH, jamais dans le cache
+  // npm/npx. `npx --no-install supabase ...` ne cherche PAS le PATH : il ne regarde
+  // que node_modules/.bin puis le cache npx local, et `--no-install` lui interdit
+  // d'aller chercher le paquet npm `supabase` sur le registre pour combler
+  // l'absence. Resultat mesure : npx echoue immediatement avec "canceled due to
+  // missing packages and no YES option", intercepte plus bas comme une simple
+  // absence d'infrastructure (repli volontaire, correct dans son principe) — mais
+  // qui se produisait donc SYSTEMATIQUEMENT, jamais seulement en son absence
+  // reelle. `supabase migration list --linked` direct (sur le PATH, shell:true
+  // gere sa resolution) fonctionne et renvoie la vraie table locale/distante.
+  const res = spawnSync("supabase migration list --linked", {
     shell: true,
     encoding: "utf8",
     timeout: 60_000,
@@ -140,7 +154,7 @@ function run() {
   console.error("  Le code qui suppose ces tables echouera en production, et les verrous");
   console.error("  concernes echouent OUVERT : la panne sera silencieuse.");
   console.error("");
-  console.error("  Appliquer :   npx supabase db push");
+  console.error("  Appliquer :   supabase db push");
   console.error("  Puis relancer le push.");
   console.error("");
   console.error("  Si l'ecart est voulu :   git push --no-verify");
