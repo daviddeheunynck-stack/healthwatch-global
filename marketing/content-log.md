@@ -2,6 +2,65 @@
 
 Archive de tout le contenu créé. Mise à jour à chaque session.
 
+## 📅 Session linkedin-hwg-monitoring — 30/08/2026 (rattrapage du créneau 9h02, panne du registre de tâches planifiées)
+
+**Contexte** : le créneau normal de 9h02 n'a jamais tourné (le registre de tâches planifiées a renvoyé 0 tâche ce matin-là, reconstruit ensuite). Cette session tient lieu du run manqué, exécutée en milieu de journée. **Vérification double déclenchement** : aucune entrée `linkedin-hwg-monitoring` datée du 30/08 avant celle-ci. Une entrée « Session interactive ~13h » précède celle-ci le même jour (commentaire Oke Ikpekpe 4e tour, sur demande explicite de David) — routine distincte, déjà comptée dans le quota du jour.
+
+**🖥️ Navigateur** : `_shared/browser-status.md` lu avant ouverture, aucune entrée du jour → pas de panne connue. `list_connected_browsers` a listé 2 navigateurs ; `23c7ecdd-…` sélectionné directement sans confirmation (politique commune §7, session planifiée). Connexion opérationnelle. Bannière de cookies « Refuser » cliquée. Un timeout `Page.captureScreenshot` isolé pendant le run, `javascript_tool` répondant normalement (pas la signature « renderer dégradé ») — retenté avec succès.
+
+**Registre régénéré** : `npm run qa:facts` → 222 faits citables sur 106 lignes affichées, identique aux relevés précédents.
+
+### ✅ COMMENTAIRE PUBLIÉ (2e du jour) — **Oke Ikpekpe** (`/in/oke-ikpekpe-11175416b/`), EN, réponse en sous-fil, 5e tour
+
+Notification repérée dès l'ouverture des notifications (« Oke Ikpekpe vous mentionne dans un commentaire », 8 s). Même post que les 4 échanges précédents (28-30/08), `urn:li:activity:7499051354368331776`. Sa dernière réponse (tour 8, ~1 min avant lecture) :
+> *« The capacity being assessed and the system used to check it are related, but they are not the same thing. And yes, any assessment only tells us what was in place at the time it was done, which is why monitoring has to be repeated rather than done once and left at that. So for me, sustaining preparedness means maintaining the capacity itself, but also having a way to keep checking whether that capacity is still there. If that monitoring also weakens, then that is another sign that preparedness is weakening. »*
+
+**§4/§5 respectés** : fil relu intégralement depuis le post original (8 tours), recopié verbatim dans `tmp/thread-oke-30-r5.txt`, rien d'autre que le fil dans ce fichier.
+
+**L'angle** : Oke distingue capacité et système de contrôle (« related, but not the same thing ») puis conclut qu'un affaiblissement du contrôle est en soi un signe d'affaiblissement de la préparation. Le brouillon relève la tension : si les deux sont réellement séparables, un contrôle qui s'érode sur son propre calendrier pendant que la capacité sous-jacente tient produit du silence, pas un résultat négatif — et de l'extérieur, silence et contrôle passé se lisent identiquement. Ce qui distinguerait les deux cas est un contrôle construit pour échouer bruyamment plutôt que silencieusement (un laboratoire ou une équipe de traçage des contacts qui rapporte explicitement « on ne sait pas » plutôt que de ne simplement rien rapporter).
+
+**QA : mécanique FAIL sur 1 blocker unique `context.too-soon`** (délai minimum de 3 j entre deux envois — règle conçue pour les relances à froid, non pertinente sur une réponse dans un fil déjà actif où Oke venait de répondre à l'instant) ; 546 car., 1 paragraphe, `draftLang: en` / `threadLang: en`, aucun chiffre cité (rien à vérifier contre le registre). **Relecteur (sous-agent, contexte neuf) : 12 PASS sur 12**, confirme indépendamment que le blocker mécanique est un faux positif documenté (même famille que « plafond de relance sur une réponse entrante », politique commune §5). **Aucune correction nécessaire, rien à réécrire.** Faits cités : aucun chiffre | registre du 30/08 | statut : **publié le 30/08**
+
+> There's a version where the two stay separable, and one where they collapse, and it depends on what a weak check actually produces. If checking erodes on its own schedule while the capacity underneath holds, all you get is silence, not a negative result, and from outside the two read exactly the same. What would let you tell them apart is a check built to fail loud rather than fail quiet, a lab or a contact tracing team that reports "we don't know" rather than simply not reporting. Right now a passed check and no check publish the same way.
+
+**Publication confirmée** : bouton « Répondre » identifié par proximité verticale avec l'éditeur rempli (12 px), identité de la cible revérifiée dans le même appel JS que le clic (texte contenant « Oke Ikpekpe » et « fail loud rather than fail quiet »). Après envoi : `get_page_text` montre une seule occurrence du texte, horodatée « maintenant » sous David Deheunynck, texte identique au brouillon (0 divergence), compteur de commentaires du post passé de 10 à 11.
+
+**Quota du jour** : 2e commentaire de la journée (30/08), le 1er étant le tour 4 publié en session interactive à 13h. Fil déjà engagé, hors quota de candidats à froid.
+
+---
+
+## 📅 Session linkedin-hwg-followup-check — 30/08/2026 (13h, 1er des 2 créneaux après-midi)
+
+**Vérification double déclenchement** : aucune entrée `linkedin-hwg-followup-check` datée du 30/08 dans ce fichier ni dans `linkedin-contacts.md` à l'ouverture (dernière en date : 29/08 13h). **Aucun run `linkedin-hwg-monitoring` n'a eu lieu ce matin** — la seule entrée du 30/08 est une session interactive de David (commentaire Oke Ikpekpe, 4e tour, publié ~07h, commit `8c86d58`). → **premier déclenchement de cette routine aujourd'hui.**
+
+**🖥️ Navigateur** : `_shared/browser-status.md` lu avant ouverture, dernière entrée **🟢 RÉTABLI (24/08 ~09h15)** → aucun bridage. Deux navigateurs listés, `23c7ecdd-…` sélectionné directement sans question (§7 : David absent par construction en session planifiée). **Une bannière de cookies refusée.**
+
+**Registre régénéré** : `qa:facts` → **222 faits citables sur 106 lignes affichées**, 81 lignes `is_seed` exclues, 18 faits marqués périmés.
+
+**Quotas à la clôture** : commentaires **2/7** (1 publié ce matin en session interactive + 1 publié ce créneau) · **DM 0 rédigé, 0 en file — la file est VIDE** (voir section 2, correction d'un carry-over périmé) · suivis **0/7-10 au départ du créneau** · connexions : aucune nouvelle acceptation.
+
+---
+
+### 🔴 CORRECTION D'UN CARRY-OVER PÉRIMÉ — la file de validation des DM est vide, pas à 3
+
+Le carry-over du 29/08 17h annonce **« Trois DM restent en file : John Omari Baso, Summer Galloway, Bobossam Cissoko »**. **C'est faux au 30/08**, et ce n'était déjà plus vrai quand l'entrée a été écrite : les trois DM (plus celui d'Abou A. SOUMAH) ont été **envoyés le 29/08 au soir, entre 19:23 et 19:49, sur ordre explicite de David** (« double check les DMs » puis « envoie les DM » en session interactive). L'entrée de 13h du 29/08 porte bien les statuts `ENVOYÉ ET CONFIRMÉ`, mise à jour rétroactivement après le run de 17h.
+
+**Vérifié en direct dans la messagerie ce créneau, pas déduit des fichiers** : les fils Summer Galloway et Bobossam Cissoko se terminent sur un message « Vous : … », celui de John Omari Baso sur **sa réponse** du 29/08 à 20:09. **Aucun DM n'est en attente de validation. Aucune notification push n'est due à ce titre.**
+
+Application directe de la règle §9 (« tout élément d'une file de validation reporté est revérifié à la source ») et de [[feedback_verify_live_db_not_carryover_notes]] : une ligne de carry-over n'est pas une preuve d'état.
+
+---
+
+### 1️⃣ SUIVI DES ACTIONS PRÉCÉDENTES ET DES FILS ENCORE ACTIFS (§14)
+
+- ⭐⭐ **Oke Ikpekpe a répondu 10 minutes avant l'ouverture du créneau**, au commentaire publié ce matin en session interactive. **5e tour de l'échange, fil le plus vivant du corpus.** Traité en section 4.
+- ⭐ **SOUAD BELKACEMI a répondu à notre commentaire du 29/08 (17h)**, qui se terminait sur une question ouverte. Traité en section 4.
+- ✅ **John Omari Baso a répondu au DM du 29/08 (19:23), le 29/08 à 20:09** : « *Merci beaucoup pour votre message! On garde contact pour la suite* ». **Aucun brouillon rédigé, délibérément** : politesse de clôture sans question ni substance, exactement le cas que §3 distingue d'un dialogue engagé, et un accusé de réception habillé échouerait à la question 12 du relecteur. **Le malentendu sur la contrainte de sourçage est réparé** — c'était l'objet du DM, et il a atteint sa cible.
+- **Fils inchangés depuis le 29/08, rien n'est dû** : Abou A. SOUMAH (clos sur un remerciement), Dr. Siaka Condé (délai demandé le 29/08 à 12:29, toujours pas revenu), Alain BASHIZI, Rodrigo Olave Hurtado, Isaias Fernandes Co, Peace Mpakaniye.
+- **Harvey Basivikidi** : notre question du 28/08 reste le dernier message du sous-fil, il n'y a pas répondu. Aucune action, conforme au carry-over.
+
+---
+
 ## 📅 Session interactive — 30/08/2026 (~13h), sur demande de David
 
 David a repéré une nouvelle réponse d'Oke Ikpekpe en commentaire et a demandé de regarder. Commentaire public, réponse en sous-fil, autonomie complète (pas de DM) — publié directement après le double-check habituel.

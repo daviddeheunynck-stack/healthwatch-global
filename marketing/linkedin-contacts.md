@@ -1,6 +1,47 @@
 > 📦 **Archive** : le détail du 24 juin au 16 juillet 2026 a été déplacé dans [linkedin-contacts-archive-avant17juillet.md](linkedin-contacts-archive-avant17juillet.md) le 23/07 pour garder ce fichier léger.
 
 
+## 📅 Session linkedin-hwg-monitoring — 30/08/2026 (rattrapage du créneau 9h02, panne du registre de tâches planifiées)
+
+**Contexte** : le créneau normal de 9h02 n'a jamais tourné (registre de tâches planifiées vide ce matin-là, reconstruit ensuite). Cette session tient lieu du run manqué. Détail du commentaire publié (2e du jour, fil Oke Ikpekpe, 5e tour) : `content-log.md`, entrée du jour.
+
+**🖥️ Navigateur** : `23c7ecdd-…` sélectionné directement (§7), aucune entrée du jour dans `_shared/browser-status.md`. Un timeout `Page.captureScreenshot` isolé, `javascript_tool` répondant normalement, retenté avec succès.
+
+### 🔴 Correction d'archive — trois DM « en file » étaient en réalité déjà envoyés le 29/08 au soir, jamais reporté
+
+En vérifiant la messagerie (veille passive), les trois fils **John Omari Baso, Bobossam Cissoko, Summer Galloway** — annoncés « en file, non envoyés » dans l'entrée du 29/08 17h ci-dessous — montrent que **David a personnellement envoyé les trois DM le 29/08 au soir** (19:45–19:49), en dehors du dispositif de file, dans une session non tracée ici :
+
+- **Bobossam Cissoko** : DM envoyé 19:49 (texte identique au brouillon en file). **Aucune réponse reçue.** Statut → *envoyé le 29/08, en attente de réponse*.
+- **Summer Galloway, Ph.D.** : DM envoyé 19:45 (texte identique au brouillon en file). **Aucune réponse reçue.** Statut → *envoyé le 29/08, en attente de réponse*.
+- **John Omari Baso** : DM envoyé 19:23 (sur la ligne polio RDC, Haut-Lomami). **Échange riche et prolongé** jusqu'à 20:57 le 29/08, puis 12:36–15:22 le 30/08 (David chiffre passé de 32→37→42 cas, provinces, source COUP/GPEI), clos par John à 20:09 le 29/08 sur « *Merci beaucoup pour votre message! On garde contact pour la suite* » — accusé de réception sans substance (§3), **aucune réponse due**. Statut → *envoyé le 29/08, fil clos par le destinataire*.
+
+**La file de validation DM est donc vide à l'ouverture de cette session** (0 en attente, et non 3). Fil complet John Omari Baso à relire au besoin directement en messagerie (non recopié ici, très long).
+
+### Réseau — 1 nouvelle connexion, 1 follow-back dû, aucune note envoyée
+
+- **280 relations** (279 → 280). Nouvelle : **Evouna Armel** (`/in/evouna-armel-ba362360/`), *MD, FETP, IVLP alumni*, MINSANTE Cameroun, 500+ relations, 6 mutuels. Aucun fil de messagerie existant. Activité publique = 2 republications (droit humanitaire international, 6 mois et 1 an), **hors sujet épidémio, aucun hook honnête** (§10). **Aucun welcome DM rédigé** — profil pertinent mais à revoir si une activité publique épidémio apparaît (même traitement qu'Alison Amoroso).
+- **393 abonnés** (390 → 393). ✅ **Follow-back exécuté — Awa Sangaré** (élève agent de santé communautaire, Enesp), seule non suivie en retour dans la liste triée par récence. Identité revérifiée dans le même appel JS que le clic.
+- **Notes de connexion : 0/7, blocage plateforme non retesté** (dernier constat < 24 h).
+
+### Suivis — 2/7-10
+
+✅ **SUIVI 1/7-10 — Awa Sangaré** (follow-back, voir ci-dessus).
+✅ **SUIVI 2/7-10 — Teketel T. T.** (`/in/teketel-t-t-745652117/`) — *Senior Public Health Specialist | Researcher | Epidemiology | Surveillance & Emergency Response | PhD Candidate*, Jimma University (Éthiopie), 570 abonnés, 8 mutuels dont Elvis TEMFACK. **Suivi seul, pas de note** : profil « à l'écoute de nouvelles opportunités », prudence sur toute approche pouvant se lire comme une sollicitation (§10).
+
+**Candidat fort repéré, non traité (QA note de connexion non lancée faute de temps en session)** : **Yakoza Nyirenda** (`/in/yakoza-nyirenda-533a06224/`) — *Field Epidemiologist*, Ministry of Health of Zambia, Copperbelt University, 500+ relations. Publie du contenu propre et substantiel sur la surveillance environnementale du poliovirus (épidémiologie des eaux usées, campagne nOPV2 à Chipata) — champ exactement adjacent à la ligne polio RDC suivie par ailleurs (fil John Omari Baso). Hook honnête disponible mais ancien (3 mois). **À traiter en priorité au prochain créneau.**
+
+**Écarté** : **Cyrena Yu-Wai T.** (`/in/cyrena-yu-wai-t-9313aa329/`) — intitulé sur cible (One Health, Epidemiology, Surveillance) mais profil sans photo, sans employeur/formation affichés, activité = une seule republication vieille de 3 mois. Cas type du titre sans activité derrière. Ne pas reproposer sans élément neuf.
+
+**Déjà traités, non reproposés** (vérifiés contre le tracker avant toute action) : Gaelle Gonzalez (déjà suivie 29/08), Baba Ceesay/Desalegn Belay Takele/Cynthia Musumba/Rachel Silver (déjà suivis), Abiodun Kolapo/Njukang Ernest Nkem (déjà écartés), Baraka Kweli Birindwa (déjà 1er degré, seul post dans la fenêtre hors délai 48h — 3 j).
+
+### Veille passive — point épidémiologique repéré, non intégrable
+
+**Africa CDC (post à 1h)** : « Au 26 août, l'épidémie s'étend désormais à 60 zones de santé dans 6 provinces, avec deux nouvelles zones affectées au Nord-Kivu : Biena et Manguredjipa. » Vérifié contre le registre : la ligne HWG Ebola/RDC est à **5 794 cas au 26/08** (WHO DON616, `sourceConfirmedHonoured: true`, fraîche) — **chiffre de cas déjà à jour, rien à corriger**. Le décompte de zones de santé/provinces n'a pas de champ dans le schéma `outbreaks` (déjà documenté pour d'autres cas similaires, ex. cas équins West Nile le 29/08) : **non intégrable, archivé ici en veille seulement**, pas une écriture en base.
+
+**Quotas à la clôture** : commentaires **2/7** (1 en session interactive 13h + 1 ce créneau, détail `content-log.md`) · **DM 0 en file** (correction ci-dessus) · suivis **2/7-10** · connexions **280 relations, 1 nouvelle** · notes de connexion **0/7**.
+
+---
+
 ## 📅 Session linkedin-hwg-followup-check-2 — 29/08/2026 (17h, 2e des 2 créneaux après-midi)
 
 **Vérification double déclenchement** : aucune entrée `linkedin-hwg-followup-check-2` datée du 29/08 dans ce fichier ni dans `content-log.md` à l'ouverture (dernière en date : 28/08 17h). Les entrées du 29/08 déjà présentes appartiennent à `linkedin-hwg-monitoring` (9h), à `linkedin-hwg-followup-check` (13h) et à une session interactive de David (~13h30) — runs intentionnellement distincts → **premier déclenchement de cette routine aujourd'hui**.
