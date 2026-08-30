@@ -1118,6 +1118,15 @@ if (!marburgRow) {
 // Même garde-fou que les autres maps : ne bumper une date qu'après avoir réellement consulté
 // l'édition courante de la source, jamais pour faire taire une ligne.
 const STALE_CRON_ROW_CHECKED = {
+  // Mpox/Global : vérifié le 30/08, non pas via la section 4e (29 j d'`updated_at`, bien sous le
+  // seuil de 45 j) mais via l'alerte de fraîcheur de `qa:facts`, qui la comptait à 28 j sur sa
+  // date d'arrêté. Le rapport « Multi-country outbreak of mpox, External situation report #68 »
+  // du 31/07 (données arrêtées au 30/06) reste la dernière édition parue — confirmé sur la page
+  // `who.int/emergencies/situations/mpox-outbreak`, et l'URL du #69 répond 404. La série est
+  // MENSUELLE (#65 30/04, #66 31/05, #68 31/07), donc un âge de ~30 j est sa cadence normale et
+  // non un retard : le #69 est attendu vers le 31/08. Les 63 692 cas / 256 décès en base sont
+  // ceux du #68, rien à écrire.
+  "dbc9c1d0-9299-4607-a027-f229ec8c25ce": "2026-08-30",
   // Choléra/Zambie : vérifié le 29/08 — CLÔTURÉE. Le feed ArcGIS de l'OMS qui alimente la ligne
   // (cholera_adm0_week_view) ne publie plus aucune semaine pour ZMB après le 11/05/2026 ; rejoué
   // à la main, il recalcule exactement 999 cas / 17 décès sur 19 semaines, donc le cron n'est PAS
@@ -1242,7 +1251,18 @@ const FRESHNESS_TIERS = {
 function lastVerifiedMs(o) {
   const candidates = [
     o.updated_at,
-    o.source_confirmed_at,
+    // `source_confirmed_at` est un tampon de CRON : « j'ai relu ma source, elle ne portait
+    // rien de plus récent ». Il ne vaut pas pour une ligne de MANUAL_ROWS, dont la question
+    // est « un humain a-t-il consulté la source primaire cette semaine ? » — et le retenir
+    // là faisait diverger ce compteur de la section 5, qui ne le regarde pas.
+    // Ce n'est pas théorique : le 30/08, Rougeole Canada/Pérou/Bolivie étaient marquées
+    // « 8j — À VÉRIFIER » par la section 5 pendant que ce bloc annonçait « 0 en attente ».
+    // `sync-paho-alerts` les tamponnait depuis son volet « alertes » (qui relisait
+    // légitimement l'alerte du 07/08 sans y trouver de neuf) pendant que son volet
+    // « sitrep » échouait en silence sur le #9 — donc le tampon était sincère et faux en
+    // même temps. Un compteur présenté comme « le chiffre à citer » ne peut pas dépendre de
+    // la partie d'un cron qui a réussi quand c'est l'autre qui portait la donnée.
+    MANUAL_ROWS[o.id] ? null : o.source_confirmed_at,
     FROZEN_ROW_CHECKED[o.id],
     STALE_CRON_ROW_CHECKED[o.id],
     MANUAL_ROW_CHECKED[o.id],
