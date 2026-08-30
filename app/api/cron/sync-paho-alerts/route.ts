@@ -234,13 +234,26 @@ const AMERICAS_SITREP_KEYS = Object.entries(COUNTRIES)
 // Table 2 in sitreps #3–#4 and Table 3 from #5 on, and "Table 3." also occurs
 // mid-sentence in #4's prose. The heading also carries the "as of EW N" that
 // dates the figures.
-const SITREP_CASES_HEAD = /Table\s*\d+\s*\.\s*Measles\s+cases\s+in\s+the\s+Region\s+of\s+the\s+Americas\s+by\s+country\s*,?\s*as\s+of\s+EW\s*(\d+)\s*,?\s*(\d{4})/i;
+// The year separator is "," up to #8 but "of" in #9 ("as of EW 31 of 2026"),
+// which silently killed the whole sitrep pass: parseSitrepCases returns null on
+// a heading miss, so no country row was ingested at all between #9's release
+// (14 August 2026) and 30 August — the six Americas measles rows sat frozen on
+// #8/the 7 August alert for 16 days while PAHO published fresh figures.
+const SITREP_CASES_HEAD = /Table\s*\d+\s*\.\s*Measles\s+cases\s+in\s+the\s+Region\s+of\s+the\s+Americas\s+by\s+country\s*,?\s*as\s+of\s+EW\s*(\d+)\s*(?:,|\s+of)?\s*(\d{4})/i;
 const SITREP_RT_HEAD    = /Table\s*\d+\s*\.\s*Model-?based\s+estimates/i;
 const SITREP_BLOCK_END  = [/Table\s*\d+\s*\.\s*Model-?based/i, /\*\s*Countries\s+with\s+active\s+outbreaks/i];
 
 // The classification column has a closed vocabulary, which makes it a reliable
-// separator between the trend cell and the free-text notes cell.
-const SITREP_CLASSIFICATION = /(Sustained\s+elimination(?:\s+with\s+major\s+concerns)?|Endemic)/i;
+// separator between the trend cell and the free-text notes cell. #9 widened
+// that vocabulary ("Sustained decline", "Sustained with major concerns",
+// "…with significant/moderate concerns", "…with causes for serious concern").
+// Order matters: the longest qualifier has to be tried before the bare
+// "Sustained elimination", or the classification cell gets truncated and its
+// tail leaks into the notes cell (that is what used to happen to Brazil's
+// "with moderate concerns" in #7/#8).
+// "Sporadic imports" is deliberately absent — it is a TREND value in #9, not a
+// classification, and matching it here would split the row one column early.
+const SITREP_CLASSIFICATION = /(Sustained\s+elimination(?:\s+with\s+(?:major|significant|moderate)\s+concerns|\s+with\s+causes\s+for\s+serious\s+concern)?|Sustained\s+with\s+major\s+concerns|Sustained\s+decline|Endemic)/i;
 const SITREP_TREND_WORD     = /^(declining|increasing|stabilizing|plateau|stable)$/i;
 
 // Page furniture and footnotes that trail a country's notes cell once the table
@@ -253,6 +266,9 @@ const SITREP_NOTE_CUT = [
   /Other\s*\(/i,
   /Country\s+Cases\s+\d{4}/i,
   /\*\s*Countries\s+with\s+active\s+outbreaks/i,
+  // #9's mid-table footnote, which lands inside whichever country's notes cell
+  // happens to sit above the page break (Panama, in #9).
+  /\d?\s*The\s+reported\s+figures\s+reflect\s+data\s+as\s+of/i,
 ];
 
 function tidyCell(s: string): string {
@@ -319,6 +335,22 @@ function parseSitrepCases(text: string, log?: LogEntry[]): SitrepTable | null {
   }
   const block = text.slice(start, end).replace(/\s+/g, " ");
 
+  // #9 inserted a "New cases through EW N-N" column before the cumulative one,
+  // rendered as "+448" / "+0" (or a bare "0" for countries with no new cases).
+  // Detect it off the column header rather than guessing per row: consuming a
+  // leading number unconditionally would re-open the 3-number ambiguity that
+  // the leading-footnote group below exists to flag, and PAHO can drop the
+  // column again as easily as it added it.
+  const hasNewCasesColumn = /New\s+cases\s+through\s+EW/i.test(block);
+  // Between cases and deaths, #9 can interleave a parenthetical caveat —
+  // "31,140 6 (latest available data is as of EW29) 32" for Guatemala,
+  // "1,277 7 (latest available data is as of EW28) 0" for Peru — where the
+  // bare digit is the footnote marker. Without skipping the parenthetical the
+  // deaths capture backtracks onto the footnote marker itself: Guatemala would
+  // have read 6 deaths instead of 32, the same class of miss as the 26→4
+  // undercount found on 2026-08-01.
+  const CASES_TO_DEATHS = "\\s+(?:\\d{1,2}\\s+)?(?:\\([^)]*\\)\\s*)?";
+
   const rows: SitrepRow[] = [];
   const seen = new Set<string>();
   for (const name of AMERICAS_SITREP_KEYS) {
@@ -352,23 +384,29 @@ function parseSitrepCases(text: string, log?: LogEntry[]): SitrepTable | null {
     // Rather than silently pick a reading, log it so a human checks the raw
     // row — turning a silent wrong number into a visible one, same principle
     // as every guard in lib/outbreak-guards.ts.
+    // Named groups, not indices: the pre-cases segment differs between the two
+    // table layouts, and positional captures silently shift with it.
+    const preCases = hasNewCasesColumn
+      ? "\\s*[+\\-]?\\d[\\d,]*\\s+"                 // the "New cases" column, always present in this layout
+      : "\\s*(?<lead>\\d{1,2}\\s+)?";               // pre-#9: a bare leading digit can only be a footnote marker
     const re = new RegExp(
-      escapeRegExp(name).replace(/\s+/g, "\\s+") + "\\s*(\\*?)\\s*(\\d{1,2}\\s+)?([\\d,]+)\\s+(?:\\d{1,2}\\s+)?(\\d+)(?![\\d,])",
+      escapeRegExp(name).replace(/\s+/g, "\\s+") +
+        "\\s*(?<star>\\*?)" + preCases + "(?<cases>[\\d,]+)" + CASES_TO_DEATHS + "(?<deaths>\\d+)(?![\\d,])",
       "i",
     );
     const m = re.exec(block);
-    if (!m) continue;
-    const cases = parseInt(m[3].replace(/,/g, ""), 10);
+    if (!m?.groups) continue;
+    const cases = parseInt(m.groups.cases.replace(/,/g, ""), 10);
     if (isNaN(cases)) continue;
-    if (m[2] && log) {
+    if (m.groups.lead && log) {
       log.push({
         label:  `Measles/${name}`,
         status: "warn",
-        detail: `leading footnote digit "${m[2].trim()}" consumed before cases=${cases} — ambiguous 3-number row, verify against the source PDF: "${m[0].trim()}"`,
+        detail: `leading footnote digit "${m.groups.lead.trim()}" consumed before cases=${cases} — ambiguous 3-number row, verify against the source PDF: "${m[0].trim()}"`,
       });
     }
     rows.push({
-      country: name, active: m[1] === "*", cases, deaths: parseInt(m[4], 10),
+      country: name, active: m.groups.star === "*", cases, deaths: parseInt(m.groups.deaths, 10),
       at: m.index, endAt: m.index + m[0].length,
       trend: "", classification: "", notes: "",
     });
