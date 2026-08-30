@@ -1,4 +1,4 @@
-import { findCountry, COUNTRIES } from "./geo-data";
+import { findCountry, isAggregateCountry, COUNTRIES } from "./geo-data";
 import { normalizeDisease } from "./disease-data";
 import type { CountryGeo } from "./geo-data";
 import { truncateAtSentence } from "./truncate-text";
@@ -550,6 +550,18 @@ export function buildOutbreakFromRSSItem(item: RSSItem): ParsedOutbreak | null {
   if (!geo) {
     // Unknown country — skip for now (could be a multi-country alert)
     console.warn(`[sync] Unknown country: "${parsed.country}" (title: ${item.title})`);
+    return null;
+  }
+  // Un titre DON agrege ("... - African Region", "... - Global") resout vers un
+  // pseudo-pays de COUNTRIES ("Africa (regional)", "Global", "Multi-country") et
+  // produirait ici une ligne fantome qui double-compte sur les pages maladie.
+  // Meme garde que les 11 crons sync-* (cf. sync-cdc-notices l.302). La voie
+  // OData vivante, lib/who-api.ts l.389, traite ces titres autrement : elle
+  // DEVELOPPE l'agregat en une ligne par pays reellement nomme. On ne duplique
+  // pas ce developpement ici — ce chemin RSS est un repli degrade, il vaut mieux
+  // qu'il n'ecrive rien qu'une ligne agregee.
+  if (isAggregateCountry(geo)) {
+    console.warn(`[sync] Aggregate country skipped: "${parsed.country}" (title: ${item.title})`);
     return null;
   }
 
