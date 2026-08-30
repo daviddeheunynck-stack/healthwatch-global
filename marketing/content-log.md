@@ -2,6 +2,35 @@
 
 Archive de tout le contenu créé. Mise à jour à chaque session.
 
+## 📅 Session interactive — 30/08/2026 (~13h), sur demande de David
+
+David a repéré une nouvelle réponse d'Oke Ikpekpe en commentaire et a demandé de regarder. Commentaire public, réponse en sous-fil, autonomie complète (pas de DM) — publié directement après le double-check habituel.
+
+### ✅ COMMENTAIRE PUBLIÉ — **Oke Ikpekpe** (`/in/oke-ikpekpe-11175416b/`), EN, réponse en sous-fil, 4e tour
+
+`urn:li:activity:7499051354368331776`, même post que les 3 échanges précédents (28-29/08). Sa dernière réponse (19 h) :
+> *« You raised an interesting M&E question. Preparedness may be continuous in principle, but how continuously is it actually measured? Also, there are indicators outside outbreak periods, so I wouldn't say the record only exists after an outbreak happens. And knowing that capacity was there at one point is different from knowing whether it is still functioning when it is needed. So perhaps there are two gaps here which are sustaining preparedness between outbreaks and actually checking whether that preparedness is being maintained. »*
+
+**§5 respecté** : fil relu intégralement, recopié verbatim dans `tmp/thread-oke-30.txt`.
+
+**L'angle** : Oke corrige à raison le cadrage de la veille (des indicateurs de préparation existent bien hors période de flambée — évaluations d'État, etc. — donc le registre n'est pas assemblé seulement après coup) et distingue deux manques : maintenir la préparation, et vérifier qu'elle est maintenue. Le brouillon concède le premier point, puis pousse sur le second : le contrôle lui-même est un travail périodique, fait sur un calendrier propre, pas celui de la flambée — il vieillit donc de la même façon que ce qu'il est censé vérifier.
+
+🔴 **Le relecteur a fait échouer le 1er jet sur un vrai défaut logique (apport, §12), pas de forme.** Ma conclusion initiale (« ce sont donc le même gap, un niveau plus haut ») outrepassait ce que l'argument démontrait : partager une même dynamique d'érosion ne fusionne pas deux variables qui peuvent varier indépendamment (préparation intacte mais contrôle défaillant, ou l'inverse) — exactement la distinction qu'Oke venait d'ouvrir avec soin. **Corrigé** : le brouillon final affirme une récursion structurelle (le contrôle est lui-même une fonction de préparation, donc hérite de la même érosion), sans revendiquer une identité logique que l'argument ne prouve pas.
+
+**QA: mécanique PASS au 4e jet (599 car., 2 paragraphes, `draftLang: en` / `threadLang: en`, plafond 700 car. du canal — 2 jets précédents trop longs, 1 jet avec tiret cadratin introduit par erreur puis retiré) | relecteur REECRIRE (12) au 1er passage → correction ciblée sur la conclusion logique, reste inchangé | faits cités: aucun chiffre | registre du 30/08 | statut: publié le 30/08**
+
+> Fair correction, and it undercuts something I said too quickly: if standing indicators exist independent of any outbreak, the record isn't only assembled after the fact. But your second gap deserves the same scrutiny as the first. Checking whether preparedness still holds is also work someone has to go and do, on whatever schedule they've set, not the outbreak's, so that record ages the same way the first one does.
+>
+> That doesn't collapse the two gaps into one, but it does mean the second isn't independent of the first: checking is itself a preparedness function, and inherits the same erosion.
+
+**Publication confirmée** : bouton « Répondre » identifié par remontée d'ancêtres depuis l'éditeur rempli jusqu'au premier n'en contenant qu'un seul, identité de la cible (verbatim « *19 h David Deheunynck You raised an interesting M&E question* ») revérifiée avant clic. Comparaison caractère pour caractère avant soumission : **599 caractères, 0 divergence, 0 tiret cadratin, 0 lien**. Après envoi : éditeur vidé, une seule occurrence du texte, affichée sous « David Deheunynck • Vous | maintenant » directement sous la réponse d'Oke visée (capture prise).
+
+⚠️ **Incident technique mineur, sans conséquence** : le tout premier clic + frappe n'a pas atterri dans l'éditeur (texte non trouvé au contrôle post-frappe, capture à l'appui) — probablement un décalage de mise en page entre le calcul des coordonnées et le clic. Repéré avant tout envoi, un second clic direct sur l'éditeur visible a résolu le problème du premier coup.
+
+**Quota du jour** : 1er commentaire de la journée (30/08), consommé sur un fil déjà engagé, pas un nouveau candidat.
+
+---
+
 ## 📅 Session linkedin-hwg-followup-check-2 — 29/08/2026 (17h, 2e des 2 créneaux après-midi)
 
 **Vérification double déclenchement** : aucune entrée `linkedin-hwg-followup-check-2` datée du 29/08 dans ce fichier ni dans `linkedin-contacts.md` à l'ouverture (dernière en date : 28/08 17h). Les entrées du 29/08 déjà présentes appartiennent à `linkedin-hwg-monitoring` (9h), à `linkedin-hwg-followup-check` (13h) et à une session interactive de David (~13h30, envoi du DM Abou) — runs intentionnellement distincts → **premier déclenchement de cette routine aujourd'hui**.
