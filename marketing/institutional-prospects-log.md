@@ -3283,3 +3283,73 @@ Mais la levée du blocage ne rend aucun contact exploitable :
 **⚠️ Frein de file volontairement dépassé, sur ordre explicite de David.** File portée de **26 à 27 brouillons**. Le frein est un garde-fou de la routine, pas une contrainte opposable à une décision de David en session ; l'écart est de +1 et documenté ici.
 
 **📌 Observation à vérifier par David, hors périmètre de ce run.** Le message réellement **envoyé** le 17/08 (visible dans le bloc cité de la relance) se termine par `Find us at <a href="https://healthwatch-global.com/en">healthwatch-global</a>` — soit un **lien cliquable réel**, là où la doctrine de la routine impose « healthwatch-global dot com » sans lien. Deux points notables : le lien est **direct, pas une redirection `google.com/url?q=`** (le bug de réécriture de Gmail n'a donc pas frappé ici), et l'entrée du 17/08 de ce journal affirme pourtant « aucune balise `<a>` » pour les 10 brouillons du lot, vérifié après création. L'écart s'est donc introduit **entre la création du brouillon et l'envoi** — édition manuelle avant envoi étant l'hypothèse la plus simple. **Aucune conclusion tirée ici**, et rien de corrigé : ma propre relance est conforme. À trancher par David s'il veut que la doctrine « jamais de lien » soit maintenue telle quelle.
+
+---
+
+## 🔁 RELANCE J+10 — 2026-08-31, run automatique `daily-relance-check-healthwatch`
+
+**Résultat : ZÉRO relance créée, 3e jour consécutif. Frein de file appliqué strictement.** **20 contacts sont éligibles et vérifiés en direct ce run — 10 du lot du 20/08 (J+11), 10 du lot du 21/08 (J+10). Aucun n'est traité : la file n'a pas bougé d'un brouillon en 24 h.**
+
+### 🚦 Frein de file — la file est figée, pas encombrée par cette routine
+
+`list_drafts` appelé **deux fois** (vue métadonnées puis vue complète, consigne du 16/08) : **résultat strictement identique — 26 brouillons réels**, aucune page suivante, outil stable. **Les 26 portent `labelIds: ["DRAFT"]`, aucun n'est passé en `SENT`** (contrôle du bug d'envoi instantané du connecteur, incident du 15/08 : négatif).
+
+Composition des 26, identique à celle mesurée hier soir et ce matin par la prospection — **aucun mouvement depuis le 30/08 11:26 UTC** :
+- **19 relances** créées le 30/08 par les sous-agents orphelins (9 du lot du 18/08, 10 du lot du 19/08)
+- **7 brouillons de prospection** du 30/08 matin (PAHO Nicaragua, PAHO Guatemala, FNU Fidji, UZ Zimbabwe, UNITID Nairobi, UWI Trinité, Alight)
+
+**26 > seuil de ~25 → 0 relance créée.** Ajouter les 20 éligibles porterait la file à **46, soit 84 % au-dessus du seuil** — plus du double de l'écart massif déjà refusé le 30/08 (36, +44 %). La règle de sortie posée par le run du 29/08 et reprise le 30/08 (« zéro relance tant que la file n'est pas redescendue ») s'applique mot pour mot, pour la troisième fois.
+
+**✅ Le 3e sous-agent orphelin redouté par le run du 30/08 n'a rien produit.** Le run d'hier signalait qu'un 3e sous-agent de la 1re tentative pouvait encore créer les 10 relances du lot du 20/08 après la clôture, et demandait explicitement une revérification de `list_drafts` avant de supposer que ces 10 restaient à créer. **Vérification faite en tête de ce run, sur les deux appels : aucun brouillon adressé aux 10 contacts du lot du 20/08, aucun brouillon postérieur au 30/08 11:26 UTC dans toute la file.** Risque de doublon écarté ; les 10 restent authentiquement à créer.
+
+### Lot du 20/08 (10 envoyés le 20/08 à 15:20:31–15:22:39 UTC) — 10 éligibles, 0 créée
+
+Revérifiés en direct ce run (`to:` groupé sur les 10, `includeTrash: true`) : **les 10 fils portent toujours exactement 1 message chacun, `SENT`** — aucune réponse arrivée depuis la vérification d'hier, aucun bounce. Adresses inchangées, éligibilité confirmée pour le 2e jour : `wpvutclo@who.int`, `wppngwr@who.int`, `wcotimorleste@who.int`, `health@gov.bw`, `inhtogo@yahoo.fr`, `info@ipn.org.vn`, `sph.reception@uq.edu.au`, `info.med@uem.mz`, `info@farmamundi.org`, `anesvad@anesvad.org`.
+
+### Lot du 21/08 (10 envoyés le 21/08 à 16:45:04–16:47:13 UTC) — 10 éligibles vérifiés ce run, 0 créée
+
+Premier passage de ce lot à J+10. Double contrôle appliqué (`to:` groupé sur les 10 **et** requête `from:<domaine>` distincte sur les 8 domaines, `includeTrash: true` dans les deux cas — consigne du 25/08, incident THL Finlande) : **les 10 fils ne portent qu'un seul message, celui de David, `labelIds: ["SENT"]`. La requête `from:` groupée ne renvoie rien du tout** — aucune réponse humaine, aucun accusé automatique hors fil, aucun bounce.
+
+| Contact | Adresse | Fil d'origine |
+|---|---|---|
+| OPS/PAHO — Bureau pays Honduras (ES) | `hnd.email@paho.org` | `1a022fb2395469e9` |
+| PAHO — Bureau pays Belize | `blzmail@paho.org` | `1a022fb2eb56953a` |
+| PAHO — Bureau pays Suriname | `surpwr@paho.org` | `1a022fb3e95f27bc` |
+| MoH Jordanie (→ Communicable Diseases Directorate demandé) | `mo@moh.gov.jo` | `1a022fb4b1b5c8cb` |
+| RCHEPH Biélorussie | `mail@rcheph.by` | `1a022fb56043d1e4` |
+| MoPH Afghanistan (→ DEWS demandé) | `info.access@moph.gov.af` | `1a022fb74207798c` |
+| FSP-USP Brésil (→ épidémiologie demandé) | `fsp@usp.br` | `1a022fb829639815` |
+| School of Global Health — Copenhague | `sgh@sund.ku.dk` | `1a022fb91f3b7c27` |
+| Relief International | `info@ri.org` | `1a022fb9f96e3399` |
+| GOAL Global | `info@goal.ie` | `1a022fbaae4d8ddb` |
+
+**Anti-doublon** : grep par adresse sur l'ensemble du journal — aucune des 10 n'apparaît dans une entrée « 🔁 RELANCE » antérieure. Les 3 adresses à 2 occurrences (`mo@moh.gov.jo`, `info.access@moph.gov.af`, `info@ri.org`) sont mentionnées deux fois **dans la seule section de prospection du 21/08** (tableau + note de vérification), jamais dans un second lot.
+
+**À noter pour la rédaction, quand la file redescendra** : **4 des 10 originaux se terminent sur une demande de redirection** (Honduras, Jordanie, Afghanistan, FSP-USP : transmettre à l'unité de surveillance, à la direction des maladies transmissibles, ou aux enseignants d'épidémiologie). Leur relance doit reprendre ce motif spécifique et non le gabarit générique — règle du « cas particulier », précédents AKDN (20/08), Kuwait University et Univalle (21/08). **Le message Honduras est en espagnol**, les 9 autres en anglais.
+
+### 📊 Bilan cumulé
+
+**Balayage des bounces** (`from:mailer-daemon`, `from:postmaster`, `subject:"Delivery Status Notification"`, `subject:"Undelivered Mail"`, `subject:Undeliverable`, `subject:"Mail delivery failed"`, `after:2026/08/28`, corbeille incluse) : **zéro fil**. Cohérent avec l'absence de tout envoi depuis le 29/08 au soir — aucun bounce neuf n'est possible sur cette fenêtre.
+
+**Bilan bounces cumulés depuis le 02/08 : inchangé à 20** — liste nominative identique à celle du 29/08 (l. 3034-3053 de ce journal), non reproduite ici. Aucune entrée ajoutée, aucune retirée.
+
+**Totaux au 2026-08-31 :**
+- **Prospectés : 307** — inchangé depuis le 30/08 (la prospection tourne à vide, frein de file, 2e jour).
+- **Envoyés : 300** — inchangé : les 26 brouillons en file n'ont pas été envoyés.
+- **Délivrés : 280** = 300 envoyés − 20 (taille de la liste nominative), recompté dans le même mouvement.
+- **Taux de délivrabilité : 93,3 % (280/300)**, inchangé.
+- **Relances : 182 envoyées**, **19 en attente d'envoi** (lots 18/08 et 19/08, en file depuis le 30/08) — **total cumulé de relances créées depuis le début : 201, inchangé, ce run n'en ayant créé aucune.**
+
+**Profondeur de file en fin de run : 26 brouillons, inchangée — aucun brouillon créé, modifié ni supprimé par cette routine.**
+
+### ⚠️ Le blocage n'est plus conjoncturel — arriéré qui grossit d'un lot par jour
+
+**3e jour consécutif à zéro production sur ce canal** (relances : 29, 30, 31/08 ; prospection : 30 et 31/08). **L'arriéré de relances vérifiées mais non rédigées est passé de 10 à 20 en 24 h**, et le lot du 22/08 (10 contacts, envoyés le 22/08 à 06:33:46–06:35:24 UTC) tombera à J+10 **demain 01/09**, ce qui le portera à 30. Les 19 relances en file, elles, ont maintenant 12 et 13 jours d'ancienneté par rapport à leur original.
+
+**Le seul levier est la relecture de la file par David.** Rien du côté de l'agent ne débloquera la situation : les 20 contacts sont vérifiés et prêts à rédiger sans revérification (sous réserve d'un balayage de bounces à jour) dès que la file passe sous ~25. Si David préfère que la routine reprenne malgré une file haute plutôt que de laisser l'arriéré grossir, c'est un arbitrage qui lui revient — le seuil de ~25 est une consigne du SKILL.md, pas une limite technique.
+
+**Prochains lots :**
+- **01/09** → lots du **20/08** (10, J+12), **21/08** (10, J+11) et **22/08** (10, J+10) — **30 contacts éligibles simultanément**, sous réserve du frein de file.
+- **EUPHA** → fenêtre ouverte depuis le 31/08 (retour de bureau), **arbitrage David toujours en attente**.
+
+**⚠️ Fichiers modifiés non touchés par cette routine, laissés tels quels** (règle `AGENTS.md`) : `marketing/qa/product-claims.manual.json` (modifié), `scripts/audit-alert-day.mjs` et `scripts/probe-alert-lock.mjs` (non suivis).
