@@ -113,7 +113,8 @@ Sa réponse (2 h) :
 
 ### 6️⃣ ⚠️ À SIGNALER À DAVID
 
-1. 🔴🔴 **Le doublon Oke Ikpekpe attend toujours ton arbitrage, et le fil a avancé sans nous.** Oke a **répondu une nouvelle fois** et **aimé** notre commentaire du rattrapage. Conformément au carry-over de 13h, **rien n'a été publié sur ce fil ce créneau**. Sa nouvelle réponse reprend exactement la distinction que défendaient les deux commentaires en doublon : c'est le fil le plus vivant du corpus et il est gelé tant que tu n'as pas tranché lequel des deux retirer.
+1. ✅ **RÉSOLU EN SESSION INTERACTIVE, le 30/08 en fin de créneau — le doublon Oke Ikpekpe n'est plus en ligne.** David a tranché sur place (« garde le premier et supprime le deuxième »). **Le commentaire du rattrapage matinal est conservé** (« *There's a version where the two stay separable… a check built to fail loud rather than fail quiet* », 13 impressions à ce moment) ; **celui du créneau 13h a été supprimé** (« *You are right that they are not the same thing… We hit this on our own pipeline this month… recorded as a skip* »).
+   **Avant suppression, revérifié en direct que les deux textes étaient toujours en ligne et dans le même ordre que celui décrit à 13h** (le doublon n'avait pas déjà été résolu entre-temps par une autre session). **Cible confirmée par son contenu dans le même appel JS que chaque clic** (bouton « … » ouvert seulement après vérification que le conteneur contenait « recorded as a skip » et l'auteur « David Deheunynck » ; la boîte de dialogue de confirmation LinkedIn étant générique — « Supprimer le commentaire ? », sans reprendre le texte — la garantie tient sur l'absence de rupture de séquence entre la vérification et le clic « Supprimer », pas sur le contenu du dialogue lui-même). **Suppression confirmée après coup** : toast « Commentaire supprimé » à l'écran, et le texte « recorded as a skip » a disparu du DOM tandis que « fail loud » y est resté.
 2. ⭐ **Le relecteur indépendant a de nouveau rattrapé ce que rien d'autre n'aurait vu — 4e jour consécutif, et cette fois contre mon propre jugement.** Sur Souad, une **répétition de structure** avec notre commentaire de 13h au même profil et une **contradiction interne** (le texte déclarait la question tranchée puis la reposait). Sur Africa CDC, un **glissement sur le terrain politique** (dimensionnement des moyens, classification de l'agence) et, de nouveau, un **moule d'argumentation recyclé** — repéré sans connaître mon raisonnement, par simple rapprochement des deux brouillons du run.
 3. ✅ **File de DM vide, vérifiée en direct dans la messagerie** (11 conversations, aucune postérieure au 29/08). Aucune notification push due à ce titre.
 4. 🔴 **Un lien faux recopié de carry-over en carry-over a coûté du temps** : `/in/melvinsanicas/` renvoie un **404**, le bon slug est `/in/drmelvinsanicas/` — **déjà correct dans le tracker depuis le 23/08**. Le carry-over, qui est lu en premier, portait la version fausse. Corrigé partout ce run.
@@ -126,7 +127,7 @@ Sa réponse (2 h) :
 
 ### 🔁 CARRY-OVER POUR 9h DEMAIN
 
-1. 🔴🔴 **Doublon Oke Ikpekpe — toujours non résolu, et le fil a une réponse fraîche non traitée.** **Ne rien publier sur ce fil tant que David n'a pas tranché.** Dès l'arbitrage rendu, le fil est la meilleure reprise disponible : sa dernière réponse (verbatim en section 1) appelle directement une suite.
+1. ✅ **Doublon Oke Ikpekpe résolu (voir section 6, point 1) — le fil redevient ouvert à la publication.** Sa dernière réponse (verbatim en section 1) reste sans suite : c'est la meilleure reprise disponible pour le prochain créneau, plus aucune restriction ne s'applique.
 2. ⭐ **SOUAD BELKACEMI.** (`/in/souad-belkacemi-a794ba9b/`) — commentaire publié ce créneau (6e tour), **question ouverte de notre côté** sur le couplage entre surveillance animale et dépistage humain. Fil très actif (elle a répondu deux fois en 7 h), réponse probable d'ici demain matin. Bloquée en top-level jusqu'au **05/09**, mais les réponses en sous-fil restent ouvertes.
 3. ➖ **Yakoza Nyirenda** (`/in/yakoza-nyirenda-533a06224/`) — invitation sans note du 30/08 13h, **toujours en attente**. Si acceptée : welcome DM avec hook frais, **en file de validation, jamais envoyé en autonomie**.
 4. ❌ **Melvin Sanicas** (`/in/drmelvinsanicas/` — **slug corrigé, l'ancien renvoie un 404**) — **ne plus le porter comme « cible n°1 »** : ses 5 derniers posts sont hors fenêtre 48 h. Redevient cible à sa prochaine publication, pas avant.
@@ -211,7 +212,7 @@ Aucun message entrant ne méritait de réponse (section 1). **La file de validat
 
 ⚠️ **Le quota du jour est de 4/7 à la clôture, pas 2/7** : 1 en session interactive (~07h, Oke tour 4), 1 par le rattrapage `linkedin-hwg-monitoring` (Oke tour 5), et 2 ce créneau. Voir l'incident de doublon ci-dessous.
 
-#### 🔴 COMMENTAIRE 3/7 — **Oke Ikpekpe**, EN, réponse en sous-fil, tour 5 — **DOUBLON PUBLIÉ, À ARBITRER PAR DAVID**
+#### 🔴 COMMENTAIRE 3/7 — **Oke Ikpekpe**, EN, réponse en sous-fil, tour 5 — **DOUBLON PUBLIÉ, À ARBITRER PAR DAVID** ✅ **arbitré et supprimé en session interactive le 30/08 (voir entrée 17h, section 6 point 1)**
 
 `urn:li:activity:7499051354368331776`. Sa réponse (tour 8 du fil, publiée 10 min avant l'ouverture du créneau) a été traitée **par deux sessions simultanément** : `linkedin-hwg-monitoring` en rattrapage de son créneau de 9h manqué, et celle-ci. **Les deux commentaires sont publiés, à quelques minutes d'écart, sous le même message d'Oke, et défendent le même argument.** L'ordre à l'écran est : commentaire d'Oke → réponse du rattrapage → la mienne.
 
@@ -229,7 +230,7 @@ Aucun message entrant ne méritait de réponse (section 1). **La file de validat
 
 **Publication confirmée** : bouton « Répondre » unique suivant l'ancre dans l'ordre du document, conteneur revérifié (« Oke Ikpekpe » + son texte) dans le même appel JS que le clic ; texte comparé caractère pour caractère (619 car., 0 divergence, l'écart de 12 caractères étant la puce de mention et son espace insécable U+00A0) ; après envoi, éditeur vidé, une seule occurrence, horodatée « maintenant ».
 
-**🔴 Rien n'a été supprimé.** Supprimer un commentaire publié est irréversible et hors périmètre d'une routine (§10). **Notification push envoyée à David.** Recommandation : **supprimer celui-ci (le second, le mien)** et garder celui du rattrapage, publié le premier et validé 12/12 par son relecteur — sauf si David préfère garder l'incident concret de la chaîne PAHO, qui n'existe que dans le mien.
+**🔴 Rien n'a été supprimé à ce stade.** Supprimer un commentaire publié est irréversible et hors périmètre d'une routine (§10). **Notification push envoyée à David.** Recommandation : **supprimer celui-ci (le second, le mien)** et garder celui du rattrapage, publié le premier et validé 12/12 par son relecteur — sauf si David préfère garder l'incident concret de la chaîne PAHO, qui n'existe que dans le mien. ✅ **David a tranché en session interactive le 30/08 (créneau 17h) : recommandation suivie à la lettre, ce commentaire-ci supprimé, celui du rattrapage conservé — détail dans l'entrée 17h, section 6 point 1.**
 
 #### ✅ COMMENTAIRE 4/7 — **SOUAD BELKACEMI.** (`/in/souad-belkacemi-a794ba9b/`), FR, vouvoiement, réponse en sous-fil
 
