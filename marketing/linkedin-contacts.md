@@ -7,7 +7,7 @@
 
 **🖥️ Navigateur** : `23c7ecdd-…` sélectionné directement (§7), dernière entrée de `_shared/browser-status.md` **🟢 RÉTABLI (24/08)**, aucune entrée du jour. Un timeout `Page.captureScreenshot` isolé, `javascript_tool` normal — pas la signature « renderer dégradé », retenté avec succès.
 
-⚠️ **L'horloge de la session a basculé au 2026-08-31 en cours de run.** Quotas comptés contre le 30/08 par prudence (choix conservateur, ne peut pas faire dépasser un quota).
+⚠️ **CE RUN N'A PAS TOURNÉ À 17h : horloge machine au 2026-08-31 vers 06h00, ~13 h après le créneau prévu** (les autres routines quotidiennes ont déjà passé leur créneau du matin du 31/08). Décisions de fraîcheur prises sur les **horodatages relatifs de LinkedIn**, pas sur l'horloge machine. Quotas comptés contre le 30/08 par prudence. Détail dans `content-log.md`.
 
 **Quotas à la clôture** : commentaires **5/7 toutes sessions confondues** · **DM 0 rédigé, file VIDE** · suivis **3/7-10** (1 follow-back ce créneau) · **0 nouvelle invitation**, celle de Yakoza Nyirenda reste en attente · notes de connexion **0/7, disponibles**.
 
