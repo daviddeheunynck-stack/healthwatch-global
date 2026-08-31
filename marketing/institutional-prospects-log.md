@@ -3262,3 +3262,24 @@ Mais la levée du blocage ne rend aucun contact exploitable :
 **Bounces du jour : aucun contact produit ce run, donc aucun bounce à lister.** Pas de total cumulé écrit ici — porteur unique `daily-relance-check-healthwatch` (règle du 16/08).
 
 **⚠️ Fichiers modifiés non touchés par cette routine, laissés tels quels** (règle `AGENTS.md`) : `marketing/qa/product-claims.manual.json` (modifié), `scripts/audit-alert-day.mjs` et `scripts/probe-alert-lock.mjs` (non suivis). *Note : `lib/source-trust.ts`, modifié en début de session, n'apparaît plus dans `git status` en fin de run — repris par une autre session, non touché par moi.*
+
+### 🔁 EUPHA — arbitrage tranché par David le 31/08 (« eupha vas-y »), 1 relance créée
+
+**Arbitrage ouvert depuis le 18/08, clos aujourd'hui en session interactive.** EUPHA était sortie du lot de relance du 27/08 par la règle « un accusé automatique compte comme réponse ». La nuance posée le 18/08 — le retour au bureau (31/08) étant postérieur à la date de relance prévue, une relance après cette date restait défendable — est tranchée **en faveur de la relance** par ordre explicite de David, le jour même de la réouverture du bureau.
+
+**Vérification en direct avant rédaction** (`search_threads` sur `eupha`, **`includeTrash: true`** — les réponses institutionnelles atterrissent en corbeille, constaté 3 fois : RIVM, EUPHA, MSPP) :
+
+| Fil | Contenu réel |
+|---|---|
+| `1a00e60e1d97ff52` (fil d'origine) | **1 seul message**, `SENT` du **17/08 07:08:11 UTC** vers `office@eupha.org`. **Aucune relance antérieure** — règle « une seule relance, jamais deux » respectée. |
+| `1a00e8de2e4cb3b5` (fil séparé, en corbeille) | Auto-réponse `J.Velthuis@euphaoffice.org`, 17/08 07:09:32, « Automatisch antwoord », retour au bureau le **lundi 31 août**. |
+
+**Relance créée : brouillon `r2534396284090232473`**, en **réponse dans le fil d'origine** (`replyToMessageId: 1a00e8ca08c4e2be`), destinataire inchangé `office@eupha.org`, objet `Re: HealthWatch Global — outbreak data for EUPHA` (48 caractères). **Jamais envoyée.**
+
+**Contrôle après création** (`list_drafts`, vue complète — mémoire `feedback_gmail_create_draft_can_send_immediately`) : `labelIds: ["DRAFT"]`, **aucun `SENT`**, pas d'envoi instantané. Corps en texte simple, **zéro balise `<a>`**, « healthwatch-global dot com ». 135 mots, se termine par une question explicite avant la signature. Anti-gabarit : structure d'ouverture différente de l'original (référence au calendrier plutôt que présentation de l'outil).
+
+**Choix de rédaction documentés :** l'auto-réponse annonçait que les questions de membership seraient traitées au retour — la relance s'y adosse explicitement plutôt que de répéter la présentation de l'outil. Elle offre une alternative de canal (« passer par vous » ou « approcher les sections directement ») plutôt que de reposer la même question qu'en août. `projects@euphaoffice.org`, l'autre boîte citée par l'auto-réponse, **n'a pas été retenue** : elle vise les demandes projet, pas l'offre aux associations membres, et changer de destinataire aurait cassé le fil.
+
+**⚠️ Frein de file volontairement dépassé, sur ordre explicite de David.** File portée de **26 à 27 brouillons**. Le frein est un garde-fou de la routine, pas une contrainte opposable à une décision de David en session ; l'écart est de +1 et documenté ici.
+
+**📌 Observation à vérifier par David, hors périmètre de ce run.** Le message réellement **envoyé** le 17/08 (visible dans le bloc cité de la relance) se termine par `Find us at <a href="https://healthwatch-global.com/en">healthwatch-global</a>` — soit un **lien cliquable réel**, là où la doctrine de la routine impose « healthwatch-global dot com » sans lien. Deux points notables : le lien est **direct, pas une redirection `google.com/url?q=`** (le bug de réécriture de Gmail n'a donc pas frappé ici), et l'entrée du 17/08 de ce journal affirme pourtant « aucune balise `<a>` » pour les 10 brouillons du lot, vérifié après création. L'écart s'est donc introduit **entre la création du brouillon et l'envoi** — édition manuelle avant envoi étant l'hypothèse la plus simple. **Aucune conclusion tirée ici**, et rien de corrigé : ma propre relance est conforme. À trancher par David s'il veut que la doctrine « jamais de lien » soit maintenue telle quelle.
