@@ -140,6 +140,12 @@ Constat : `x.com/home` **redirige vers `x.com/`** (page d'accueil déconnectée 
 
 **Aucune tentative de reconnexion** (l'agent ne saisit jamais d'identifiants), **aucun clic sur « Log out »**, **aucune bascule sur l'autre deviceId** `a466bc2e…` (`hwg-social-policy.md` §7), **aucun redémarrage de Chrome**. Bannière cookies **non acceptée**. **Remède côté David : se reconnecter à X sur `@HWatchGlobal` dans ce navigateur.**
 
+**➕ ADDENDUM ~12h42 — seconde panne, distincte, survenue en reprise interactive.** David a demandé « publie le » puis « reprend ». À la première reprise, la session X était **toujours déconnectée** (même constat DOM, 3e chargement) : rien publié, aucune reconnexion tentée. À la seconde reprise, **le pont extension est tombé à son tour** : `browser_batch` répond « Claude in Chrome is not connected », puis `list_connected_browsers` renvoie une **liste vide** (2 appels concordants), alors qu'il listait deux navigateurs à 09h. Chrome tourne (12 processus, `Get-Process`). **Le paragraphe ci-dessus (« le pont extension fonctionne ») était exact à 09h et ne l'est plus depuis ~12h42** ; il est conservé tel quel parce qu'il documente la distinction entre les deux pannes.
+
+**Une entrée 🔴 a donc été ajoutée à `_shared/browser-status.md`** au titre de cette seconde panne uniquement (l'appairage étant cette fois réellement en cause), pour que `linkedin-hwg-followup-check` (13h) et `-2` (17h) la lisent avant d'ouvrir Chrome. Aucune 2e notification push (David présent en session, informé directement). Aucune réparation tentée (§7).
+
+⚠️ **Il faut désormais deux gestes pour débloquer la publication, pas un** : réactiver l'icône de l'extension Claude dans Chrome, **puis** se reconnecter à X sur `@HWatchGlobal`. Le second blocage préexistait au premier et n'a pas disparu.
+
 ### 🦠 Données épidémiologiques — 0 écriture, 0 lecture de la base
 L'angle est entièrement sourcé OMS. Aucune ligne de `outbreaks` lue ni écrite. Note de cohérence sans action : les chiffres du DON616 (5 794 / 2 786 au 26/08) sont **exactement** ceux que le registre QA portait déjà au 31/08 pour la ligne `bd1c3a46` — la base est à jour sur ce foyer, rien à corriger.
 
