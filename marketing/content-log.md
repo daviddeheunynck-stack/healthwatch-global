@@ -2,6 +2,55 @@
 
 Archive de tout le contenu créé. Mise à jour à chaque session.
 
+## 📅 Session linkedin-hwg-monitoring — 31/08/2026 (9h)
+
+**Vérification double déclenchement** : aucune entrée `linkedin-hwg-monitoring` datée du 31/08 dans `content-log.md` ni dans `linkedin-contacts.md` à l'ouverture. Les deux entrées du 31/08 déjà présentes appartiennent à `linkedin-hwg-content-proposal` (8h35, 0 post proposé) et au thread hebdo X (non publié) → **premier déclenchement de cette routine aujourd'hui**. Horloge machine cohérente cette fois : `date` renvoie **Mon Aug 31 09:03 2026**, le créneau est à l'heure, contrairement au run de 17h du 30/08 qui avait tourné ~13 h en retard.
+
+**🖥️ Navigateur** : `_shared/browser-status.md` lu avant ouverture, dernière entrée **🟢 RÉTABLI (24/08)**, aucune entrée du jour. `list_connected_browsers` a listé 2 navigateurs ; `23c7ecdd-…` sélectionné directement sans confirmation (§7, session planifiée). Bannière de cookies **« Refuser »**. Un timeout `Page.captureScreenshot` isolé, `javascript_tool` répondant normalement — pas la signature « renderer dégradé » de §7, retenté avec succès. Un contexte JS temporairement désynchronisé sur le permalien du post Oke (`get_page_text` affichait « Voir les réponses précédentes » que `querySelector('button')` ne trouvait pas), levé en ciblant le nœud texte par `TreeWalker` : **le déplieur de sous-fil n'est pas un `<button>` mais un `<p>` cliquable**, à retenir.
+
+**Registre régénéré** : `npm run qa:facts` → **226 faits citables sur 110 lignes affichées**, 81 lignes `is_seed` exclues, 21 faits périmés.
+
+---
+
+### 1️⃣ SUIVI DES FILS ACTIFS ET VEILLE (§14)
+
+**Notifications parcourues intégralement : 9 cartes, liste complète** (fin de liste atteinte, `scrollY + innerHeight === scrollHeight`, aucun chargement supplémentaire).
+
+- ⭐ **Oke Ikpekpe a répondu (19 h) et nous mentionne.** Fil rouvert depuis l'arbitrage de David sur le doublon du 30/08. Traité en section 2 (commentaire publié).
+- ✅ **SOUAD BELKACEMI. (18 h)** — la notification porte sur sa réponse **déjà traitée** au créneau de 17h du 30/08, pas sur un message neuf. **Elle n'a pas répondu à notre commentaire du 30/08** ; notre question sur le couplage surveillance animale / dépistage humain reste ouverte de notre côté. Rien de dû. **En revanche elle nous a envoyé une invitation**, voir section 3.
+- **Africa CDC (post du 30/08)** : déjà vérifié et écarté par les deux runs du 30/08, non repris (le défaut était dans l'angle, carry-over point 6).
+- **Vu et sans action** : Banda Khalifa (soutenance de thèse, hors périmètre analytique), Charles Cazanave (conseil de lecture, hors sujet), Haider Durrani vous suit (déjà écarté le 30/08, décision non rejugée).
+- **Candidats neufs repérés** : **Lori Peterson** (1 h, politique américaine sur la recherche en gain de fonction) et **Mohammad Ilias Hossain** (10 h, Ebola/RDC au-delà de 5 700 cas confirmés et 2 700 décès) — voir section 4.
+
+---
+
+### 2️⃣ 💬 COMMENTAIRE PUBLIÉ — 1
+
+#### ✅ COMMENTAIRE 1/7 — **Oke Ikpekpe** (`/in/oke-ikpekpe-11175416b/`), EN, réponse en sous-fil, **7e tour de notre côté**
+
+`urn:li:activity:7499051354368331776`. **Fil relu intégralement (12 commentaires, 6 tours de chaque côté), recopié verbatim dans `tmp/thread-oke-31.txt`** — y compris les tours intermédiaires, qui n'étaient visibles qu'après dépliage du sous-fil. *langue du fil = en ; langue du brouillon = en.*
+
+Son dernier tour (19 h) :
+> *« I think that is the important distinction here. No report at all and a report showing no change should not be treated as the same result. If a check was expected, there should be a way to know whether it was actually completed, whether the result was verified, or whether the information is simply missing. Otherwise, the absence of an observation can easily be mistaken for evidence that everything is functioning as expected. »*
+
+**L'angle publié** : il demande *qu'il existe* un moyen de savoir ; le commentaire pose une contrainte qu'il n'a pas formulée sur *où* ce moyen peut résider. Ce qui a cessé de se produire ne peut pas être ce qui le signale, donc le registre du non-événement doit être tenu ailleurs que dans le système qu'il décrit. Au passage ça corrige un remède avancé par David lui-même deux tours plus haut (« *a lab or a contact tracing team that reports "we don't know"* ») : un système muet ne peut pas être son propre témoin.
+
+🔴 **Le 1er jet a été refusé par le relecteur sur deux points réels, corrigés en une passe.** (7) Il rouvrait un point déjà **concédé par David** dans le fil (Oke : « *there are indicators outside outbreak periods* », David : « *Fair correction…* ») ; (12) sa phrase d'ouverture était le décalque retourné de la phrase de clôture d'Oke, donc un apport nul. **Le défaut était dans l'angle, pas dans la formulation** : angle refait entièrement plutôt que texte retouché. Le 2e jet passe **12 PASS**.
+
+**QA : mécanique FAIL sur 1 blocker unique `context.too-soon`** (faux positif documenté — réponse en sous-fil à un message reçu 19 h plus tôt dans un fil actif ; la règle des 3 j vise les relances à froid, cf. même arbitrage sur SOUAD BELKACEMI. le 30/08) ; 536 car., 2 paragraphes, `draftLang: en` / `threadLang: en`, 0 tiret cadratin, 0 lien, 0 CTA, **0 chiffre** | **relecteur `VERDICT: ENVOYER`, 12 PASS** au 2e jet (`REECRIRE 7, 12` au 1er) | faits cités : **aucun**, le texte ne contient pas un seul nombre | registre du 31/08 | statut : **publié le 31/08**
+
+> A missing check has an awkward property: the thing that failed to happen cannot be the thing that reports it. A lab that stops sending its weekly return does not send a return saying so. The record of a non-event has to be held somewhere other than the system it describes, or it erodes on exactly the same schedule.
+>
+> Which makes it a custody question more than a reporting one. In the work you review, is the expectation of a check ever held by someone other than the body meant to carry it out, or do both ends sit in the same office?
+
+**§15 appliqué avant le clic** : `content-log.md` et `linkedin-contacts.md` relus juste avant publication (md5 `3670dce4…` / `a2b875d6…`, aucune entrée du 31/08 mentionnant Oke) → aucune autre session n'avait traité la cible. ⚠️ **Le `git log` avait bougé pendant le run** (`bc30f0c` → `2f711ea`, commit de `x-hwg-content-proposal` sur `content-log.md`) : c'est exactement la fenêtre que §15 vise, et la relecture du contenu, pas du seul hash de commit, est ce qui permet de trancher.
+
+**Publication confirmée** : bouton « Répondre » **unique** dans le conteneur de l'éditeur, cible et contenu revérifiés **dans le même appel JS que le clic** (présence de la mention « Oke Ikpekpe » et de « custody question more than a reporting one » avant le `.click()`). Texte comparé **caractère pour caractère** avant envoi : 536 car. côté éditeur hors mention, 536 attendus, `identique: true`. Après envoi : les deux éditeurs vidés, **une seule occurrence** du texte dans la page, horodatage « maintenant », compteur de commentaires passé de **12 à 13**, rendu relu en entier (2 paragraphes, mention intacte, aucune troncature).
+
+**Dérogation au blocage hebdomadaire assumée** (Oke Ikpekpe est bloqué en top-level jusqu'au 04/09) : réponse en sous-fil à un message qui nous interpelle nommément, même arbitrage que SOUAD BELKACEMI. le 30/08 et Patrick AYONGA le 22/08. **Comptée dans le quota.** Aucun blocage nouveau créé.
+
+---
+
 ## 📅 Thread hebdo — lundi 31 août 2026 — 🟠 RÉDIGÉ ET DOUBLE-CHECKÉ, **NON PUBLIÉ** (session X déconnectée, identité de compte non vérifiable) — Ebola/RDC, la vaccination a commencé le 27/08 et fait passer la protection des soignants d'absente à inconnue
 
 **Statut : brouillon prêt à publier tel quel.** ⚠️ **DEUXIÈME CYCLE HEBDOMADAIRE PERDU D'AFFILÉE** : dernier fil de marque X publié le **17/08**, soit **14 jours sans contenu de marque sur X**. Le 24/08 avait été bloqué par le pont extension, le 31/08 l'est par une cause différente (session X déconnectée). Ce n'est pas la même panne deux fois, ce sont deux pannes distinctes sur la même routine.
@@ -13570,3 +13619,47 @@ Brouillon créé dans Gmail par l'agent (`create_draft`, id `r705480141305351634
 **À surveiller** : réponse de l'un ou l'autre contact, ou remplissage `stripe_customer_id`/`stripe_subscription_id` côté Ishmael (le seul des deux encore en essai actif). Aucune offre Africa-only gratuite promise à Eva n'a été activée en base — la phrase est partie dans le texte mais aucune action de provisioning ne l'a suivie ; si elle répond en acceptant, il faudra le faire manuellement.
 
 **Point de process à corriger** : `create_draft` sur ce connecteur Gmail ne peut plus être présumé sûr pour la mécanique « brouillon proposé, envoi réservé à David » tant que la cause de cet envoi immédiat n'est pas identifiée. À revérifier via `list_drafts` immédiatement après chaque appel futur, avant de considérer qu'un message reste bien en attente.
+
+## 📅 Session interactive — 31/08/2026 (~13h), sur demande explicite de David (« il me faut un post aujourd'hui »)
+
+**Contexte** : le run planifié du matin (8h35) a retiré le brouillon du 28/08 (voir entrée ci-dessus) sans proposer de remplacement, au motif que la famille d'angles disponible rejouait un gabarit trop récent. David a demandé un post pour aujourd'hui malgré tout ; nouvel angle cherché et vérifié en session interactive.
+
+### 1️⃣ ANGLE — validité statistique d'un ratio selon la taille de son dénominateur
+
+**Fait porteur** : le calcul de CFR de la table publique (`components/OutbreakTable.tsx`, ~lignes 1375-1390) applique `deaths/cases*100` sans aucun seuil minimal de cas, et colore le résultat en rouge dès qu'il dépasse 10 %, sans distinction. Deux lignes actives vérifiées en base ce jour : Ebola/RD Congo (5 794 cas / 2 786 décès, arrêté au 26/08, CFR **48,1 %**, dans le registre) et Marburg/Ouganda (1 cas / 1 décès, arrêté au 16/07, CFR arithmétique **100 %**, **volontairement absent** du registre de faits — `scripts/build-claimable-facts.mjs` exclut tout CFR sous 20 cas : « *sous 20 cas, un CFR n'a pas de sens (1 décès sur 3 cas = 33 %, un chiffre vrai et trompeur)* »). Les deux valeurs dépassent 10 % et rendent donc dans la même couleur, alors qu'une seule est une mesure épidémiologique exploitable.
+
+**Deux claims produit ajoutées** à `product-claims.manual.json` avant rédaction (formule CFR sans seuil + seuils de couleur ; champ `cfr_ref` de `lib/disease-data.ts` affiché publiquement sur la fiche maladie), `npm run qa:claims`/`qa:facts` relancés.
+
+### 2️⃣ RELECTEUR INDÉPENDANT — 2 corrections faites, 1 point non résolu et remonté tel quel à David
+
+`VERDICT: REECRIRE 1, 5, 11` au premier passage.
+
+- ✅ **Corrigé — Q5 (attribution).** Le 1er jet écrivait que la fourchette 24-88 % de Marburg était « *drawn from decades of prior outbreaks* ». Faux : le commentaire de code source dit explicitement qu'il s'agit d'« *une seule estimation formelle publiée à ce jour (Ajelli & Merler 2012, PLOS ONE, épidémie Angola 2004-05) — pas un consensus multi-études* ». **Corrigé** : le texte dit maintenant que la fourchette elle-même vient d'une étude unique sur une seule épidémie, ce qui renforce l'argument plutôt que de l'affaiblir.
+- ⚠️ **Examiné et maintenu — Q1 (chiffre non sourcé).** Le relecteur a raison que « 100 % » n'est dans le registre pour aucune ligne : le générateur l'exclut par construction sous 20 cas, précisément pour la raison que ce post défend. Mais `cases=1` et `deaths=1` **sont** dans le registre pour cette ligne, et 100 % en est la division triviale : conformément à `hwg-social-policy.md` §5 point 2 (« *un ratio (...) calculés à partir de deux chiffres du registre restent de ma responsabilité — le script vérifie l'origine des nombres, pas la validité de l'inférence* »), le calcul a été refait à la main (1/1×100=100) et le texte présente explicitement l'opération (« *Do the same division and you get 100 percent* »), jamais comme un taux de létalité affirmé pour Marburg.
+- 🔴 **NON résolu, remonté à David tel quel — Q11 (gabarit).** Le relecteur a identifié que la charpente « un traitement unique confond deux choses différentes, et le code ne le voit pas, c'est notre faute » est la même que celle du post publié le 21/08 (provenance vs fraîcheur), du post publié le 26/08 (deux horloges), et du brouillon retiré ce matin même pour ce motif exact. Ce serait la **4e occurrence en trois semaines**. Le fond diffère réellement (validité statistique d'un ratio selon n, jamais traité comme angle avant aujourd'hui — vérifié par recherche dans ce fichier), mais l'armature rhétorique est recyclée. **Décision laissée à David** plutôt que tranchée seule, dans la foulée directe du retrait du brouillon précédent pour la même raison.
+
+### 3️⃣ CONTRÔLE MÉCANIQUE
+
+`FAIL`, 1248 caractères, 8 paragraphes, `draftLang: en`. Deux blockers, tous deux faux positifs attendus : `facts.unsourced` sur « 26 » (fragment de la date « 26 August ») et sur « 100 » ×2 (voir §2 ci-dessus, exclusion volontaire du registre, chiffre recalculé à la main). Un faux positif supplémentaire non bloquant : `claims.product-number` rapproche « 24 » d'un délai de réponse commercial (`contact.responseTime`), coïncidence numérique sans rapport.
+
+### 4️⃣ TEXTE — statut : PRÊT — en attente de validation de David, réserve Q11 explicitement signalée
+
+> The same formula runs on every row of our outbreak table, deaths divided by cases, and it does not know when the answer stops meaning anything.
+>
+> Ebola in DR Congo: 5,794 cases and 2,786 deaths, confirmed as of 26 August. That division gives 48.1 percent.
+>
+> Marburg in Uganda: one case, one death, reported mid-July. Do the same division and you get 100 percent.
+>
+> Both numbers get colored the same shade of red, because the code only checks whether the result passes 10 percent. It never checks what it was built from.
+>
+> 48.1 percent, out of 5,794 cases, is a real measurement of how this outbreak has behaved so far. 100 percent, out of one case, is not a measurement of Marburg. It is the only two outcomes a single patient can have, expressed as a percentage.
+>
+> Marburg's own published fatality range is 24 to 88 percent, and that range itself comes from a single formal estimate, one study of the 2004-05 Angola outbreak, not a body of evidence built up over many outbreaks. Our one-case line still sits above the top of it, and the formula has no way to notice either fact.
+>
+> A ratio needs enough of a denominator to be a ratio. Below some point it stops measuring the disease and starts just describing the patient.
+>
+> https://healthwatch-global.com
+
+### 5️⃣ ARBRE DE TRAVAIL
+
+`marketing/qa/product-claims.manual.json` modifié ce run (2 claims ajoutées), non commité (appartient au dispositif QA). `marketing/qa/*.json` régénérés, non commités. Branche vérifiée : **master**.
