@@ -1,7 +1,10 @@
-// Schedule: 10 8 * * *  (fires daily via Vercel; the handler below no-ops except Wed/Sat)
-// Twice-weekly (Wed + Sat 08:10 UTC): detects new WHO Mpox Situation Reports,
-// downloads the PDF, extracts global case/death figures, and updates the DB.
-// Falls back to a manual-notification email if PDF parsing fails.
+// Schedule: 10 8 * * *  — daily, 08:10 UTC. Detects new WHO Mpox Situation
+// Reports, downloads the PDF, extracts global case/death figures, and updates
+// the DB. Falls back to a manual-notification email if PDF parsing fails.
+// (These two lines used to claim the handler "no-ops except Wed/Sat"; there is
+// no day-of-week gate anywhere in this file, and CRON_WINDOWS has always had
+// it at 26h = daily. The run does no-op most days, but through the
+// `already up to date` branch below, not through a schedule.)
 //
 // Reads WHO's own global sitrep PDF directly (not a scrape of a news listing),
 // so it can write onto rows locked at source_priority=10 (ceiling raised
@@ -15,6 +18,7 @@ import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
 import { sendBrevoEmail } from "@/lib/brevo-send";
 import { errorMessage } from "@/lib/error";
 import { regressionGuard, lockedRowRegressionGuard } from "@/lib/outbreak-guards";
+import { stampSourceConfirmed } from "@/lib/source-confirmed";
 import * as Sentry from "@sentry/nextjs";
 
 export const dynamic     = "force-dynamic";
@@ -414,8 +418,20 @@ async function runCheckMpoxSitrep(_req: NextRequest, supabase: SupabaseClient) {
   // Step 1: detect latest sitrep
   const latest = await fetchLatestSitrep();
   if (!latest) {
+    // NOT `no_data`. Until 2026-08-31 this branch and the "already up to date"
+    // one below both wrote `no_data, rows=0` with no message, and health-check
+    // documents no_data as "a legitimate idle state (nothing to send/ingest
+    // this run)" that stays deliberately quiet — so a WHO page that had gone
+    // unreachable, or whose markup no longer yields a single
+    // `external-situation-report--N` link, would have read as "nothing new
+    // this week" for as long as it lasted. That is the exact shape that let
+    // sync-paho-alerts drop the measles sitrep for 16 days while reporting
+    // green (fixed 2026-08-30, e825175 + c078c92); mpox is the other PHEIC in
+    // the dataset. fetchLatestSitrep already swallows both failure modes into
+    // the same null, so the message names both rather than guessing.
     console.log("[mpox] Could not detect sitrep from WHO page.");
-    await logCronRun(supabase, "check-mpox-sitrep", "no_data", 0);
+    await logCronRun(supabase, "check-mpox-sitrep", "error", 0,
+      `page OMS des rapports de situation mpox illisible (${WHO_SITREP_PAGE}) — aucun lien external-situation-report--N trouvé : page injoignable ou balisage changé`);
     return NextResponse.json({ status: "no_data" });
   }
 
@@ -423,8 +439,39 @@ async function runCheckMpoxSitrep(_req: NextRequest, supabase: SupabaseClient) {
 
   if (latest.url === lastKnownUrl) {
     console.log("[mpox] Already up to date.");
-    await logCronRun(supabase, "check-mpox-sitrep", "no_data", 0);
-    return NextResponse.json({ status: "up_to_date", sitrep: latest.num });
+    // This branch IS a source confirmation, and until 2026-08-31 it was thrown
+    // away. lib/source-confirmed.ts defines the column as "the source was
+    // re-read and carried nothing newer" — which is precisely what has just
+    // been established: WHO's own listing was fetched and the newest sitrep on
+    // it is the one already stored. Every other cron reaches that conclusion
+    // inside a parsing loop; this one reaches it on a listing page, which is
+    // why it had no obvious place to put it.
+    //
+    // Cost of dropping it, live on 2026-08-31: Mpox/Mondial (date 2026-06-30)
+    // crossed STALE_DAYS the day before and the public page started showing
+    // "⚠ SANS MAJ · 62j — foyer peut-être résolu ou non rapporté", while this
+    // cron had confirmed on every run since 2026-08-01 that sitrep #68 is
+    // still the newest WHO has published. Not a data gap, and the product knew.
+    //
+    // Scoped to rows citing THIS EXACT edition, not to the cron's two known
+    // rows: the DRC row cites #67 while #68 exists, so a newer edition really
+    // does exist for it — it simply was not ingested — and stamping it would
+    // turn a genuine ingestion gap into a "verified current" claim. A listing
+    // page cannot confirm a row it does not name.
+    const { data: confirmable } = await supabase
+      .from("outbreaks").select("id").eq("source", latest.url);
+    const ids = (confirmable ?? []).map((r: { id: string }) => r.id);
+    const confirmed = await stampSourceConfirmed(supabase, ids);
+    if (confirmed.error) console.error("[mpox] source_confirmed_at stamp failed:", confirmed.error);
+    else console.log(`[mpox] source_confirmed_at stamped on ${confirmed.stamped} row(s) citing #${latest.num}`);
+    // rows stays 0 — a confirmation is deliberately not a data write (migration
+    // 20260824030000 keeps it from bumping updated_at), and inflating rows here
+    // would set lastNonZero and claim an ingestion that did not happen. The
+    // fact that the check really ran goes in evaluatedAt instead, which is what
+    // that field exists for: "the core comparison logic executed against real
+    // candidate data", independent of whether anything came of it.
+    await logCronRun(supabase, "check-mpox-sitrep", "no_data", 0, undefined, new Date().toISOString());
+    return NextResponse.json({ status: "up_to_date", sitrep: latest.num, confirmed: confirmed.stamped });
   }
 
   console.log(`[mpox] NEW sitrep #${latest.num} detected.`);
