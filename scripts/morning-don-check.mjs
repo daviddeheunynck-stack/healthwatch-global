@@ -1118,6 +1118,27 @@ if (!marburgRow) {
 // Même garde-fou que les autres maps : ne bumper une date qu'après avoir réellement consulté
 // l'édition courante de la source, jamais pour faire taire une ligne.
 const STALE_CRON_ROW_CHECKED = {
+  // Diphterie/Perou et Diphterie/Bresil : verifies le 31/08. La source des deux lignes est
+  // l'« Epidemiological Alert: Diphtheria in the Americas Region » de l'OPS du 11/06/2026, et
+  // c'est TOUJOURS la derniere parue (recherche ciblee site:paho.org le 31/08 : la page
+  // « Epidemiological alerts and updates » ne porte rien de plus recent sur la diphterie).
+  // Une « Epidemiological Alert » de l'OPS est un document PONCTUEL, pas une serie periodique :
+  // il n'y a pas d'edition suivante a attendre, meme famille que Shigellosis/EU-EEA documentee
+  // en section 4 sexies. Les chiffres de l'alerte (Bresil 2 cas, Perou 2 cas, Haiti 159/5 sur
+  // les SE 1-21) correspondent exactement aux deux lignes en base — rien a ecrire, ni chiffres
+  // ni date d'arretee.
+  "1a526133-3378-4d6b-91c1-774981e841ff": "2026-08-31",
+  "d854c5b4-e475-4bb8-a707-6c48b2c3b2d5": "2026-08-31",
+  // Diphterie/Mauritanie : verifiee le 31/08. La ligne (1 439 cas / 56 deces, arretee au
+  // 29/03/2026) est sourcee a un article de NEWS de l'OMS AFRO, pas a une serie — la aussi,
+  // aucune edition suivante n'est attendue. Le cumul 1 439/56 couvre le 01/01/2025-29/03/2026
+  // et reste le dernier bilan national publie.
+  // ⚠️ Faux positif a ne pas appliquer : une recherche « Mauritanie diphterie 2026 » remonte en
+  // tete « 53 cas dont 2 deces » (Inchiri et Tiris Zemmour, mai 2026, saharamedias/cridem/MADAR).
+  // C'est un sous-total REGIONAL sur deux wilayas, pas un national — l'ecrire dans `cases`
+  // ferait regresser la ligne de 1 439 a 53. Meme famille de piege que le « 209 cas » tchadien
+  // (sous-total deux provinces) documente en section 4 bis.
+  "da2140e7-99c9-4aa4-b522-73128bddf56c": "2026-08-31",
   // Mpox/Global : vérifié le 30/08, non pas via la section 4e (29 j d'`updated_at`, bien sous le
   // seuil de 45 j) mais via l'alerte de fraîcheur de `qa:facts`, qui la comptait à 28 j sur sa
   // date d'arrêté. Le rapport « Multi-country outbreak of mpox, External situation report #68 »
@@ -1251,18 +1272,24 @@ const FRESHNESS_TIERS = {
 function lastVerifiedMs(o) {
   const candidates = [
     o.updated_at,
-    // `source_confirmed_at` est un tampon de CRON : « j'ai relu ma source, elle ne portait
-    // rien de plus récent ». Il ne vaut pas pour une ligne de MANUAL_ROWS, dont la question
-    // est « un humain a-t-il consulté la source primaire cette semaine ? » — et le retenir
-    // là faisait diverger ce compteur de la section 5, qui ne le regarde pas.
-    // Ce n'est pas théorique : le 30/08, Rougeole Canada/Pérou/Bolivie étaient marquées
-    // « 8j — À VÉRIFIER » par la section 5 pendant que ce bloc annonçait « 0 en attente ».
-    // `sync-paho-alerts` les tamponnait depuis son volet « alertes » (qui relisait
-    // légitimement l'alerte du 07/08 sans y trouver de neuf) pendant que son volet
-    // « sitrep » échouait en silence sur le #9 — donc le tampon était sincère et faux en
-    // même temps. Un compteur présenté comme « le chiffre à citer » ne peut pas dépendre de
-    // la partie d'un cron qui a réussi quand c'est l'autre qui portait la donnée.
-    MANUAL_ROWS[o.id] ? null : o.source_confirmed_at,
+    // `source_confirmed_at` N'EST PLUS RETENU ICI — retire le 2026-08-31. C'est un tampon de
+    // CRON (« j'ai relu ma source, elle ne portait rien de plus recent »), et AUCUNE des
+    // sections de ce fichier ne le regarde : 4d, 4d-bis, 4e et la section 5 partent toutes de
+    // `updated_at` + leur carte CHECKED. Ce bloc etait le seul a le lire, donc le seul a
+    // pouvoir annoncer « 0 en attente » pendant qu'une section imprimait « A VERIFIER ».
+    //
+    // Le 30/08, le correctif avait ete partiel : on l'avait exclu pour les seules MANUAL_ROWS
+    // (Rougeole Canada/Perou/Bolivie annoncees a 0 alors que la section 5 les donnait a 8 j,
+    // parce que le volet « alertes » de `sync-paho-alerts` tamponnait pendant que son volet
+    // « sitrep » echouait en silence sur le #9). Le 31/08, le meme ecart est reapparu un cran
+    // plus loin : Diphterie Perou/Bresil/Mauritanie a 46 j, imprimees « LIRE L'EDITION
+    // COURANTE » par la section 4e pendant que ce bloc affichait 0 — et le tampon venait, la
+    // encore, de `sync-paho-alerts`, precisement le cron a l'historique de skip silencieux.
+    //
+    // Un tampon de cron peut donc etre sincere et faux en meme temps, quel que soit le palier.
+    // La regle est desormais uniforme : ce compteur ne compte comme « verifie » qu'`updated_at`
+    // (une vraie ecriture) ou une carte CHECKED (une lecture humaine tracee). Il vaut donc
+    // exactement ce que disent les sections au-dessus de lui, ce qui est sa seule raison d'etre.
     FROZEN_ROW_CHECKED[o.id],
     STALE_CRON_ROW_CHECKED[o.id],
     MANUAL_ROW_CHECKED[o.id],
