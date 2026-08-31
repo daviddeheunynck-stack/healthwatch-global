@@ -2,6 +2,66 @@
 
 Archive de tout le contenu créé. Mise à jour à chaque session.
 
+## 📅 Thread hebdo — lundi 31 août 2026 — 🟠 RÉDIGÉ ET DOUBLE-CHECKÉ, **NON PUBLIÉ** (session X déconnectée, identité de compte non vérifiable) — Ebola/RDC, la vaccination a commencé le 27/08 et fait passer la protection des soignants d'absente à inconnue
+
+**Statut : brouillon prêt à publier tel quel.** ⚠️ **DEUXIÈME CYCLE HEBDOMADAIRE PERDU D'AFFILÉE** : dernier fil de marque X publié le **17/08**, soit **14 jours sans contenu de marque sur X**. Le 24/08 avait été bloqué par le pont extension, le 31/08 l'est par une cause différente (session X déconnectée). Ce n'est pas la même panne deux fois, ce sont deux pannes distinctes sur la même routine.
+
+### Étape 0 — le brouillon du 24/08 est REBASÉ, pas repris tel quel
+Le brouillon Ervebo du 24/08 (allocation de 70 000 doses lue en deux parts) était toujours en attente, jamais publié, aucun run X entre-temps. **Ni résultat d'essai ni révision d'allocation** n'ont été publiés depuis, donc pas de péremption au sens strict de la clause du SKILL. **Mais un fait neuf le dépasse** : le **27/08, la vaccination des soignants a effectivement commencé**, rapportée par l'OMS dans le **DON616 du 28/08**. Publier le 31/08 un fil accroché à l'annonce du 20/08 en ignorant le démarrage du 27/08 aurait été un tri sélectif des faits (§ double-check). Le texte du 24/08 est donc **remplacé**, son mécanisme (répartition 20 000 / 50 000) conservé comme simple contexte.
+
+**Ce qui est abandonné du 24/08, et pourquoi** : sa chute prédisait qu'un *compteur de doses* apparaîtrait dans les points de situation. **Le premier point de situation post-campagne n'en comporte aucun** (vérifié : le mot « dose » est absent du DON616). Publier cette prédiction maintenant reviendrait à publier une anticipation que la source primaire la plus récente n'a pas confirmée.
+
+### Angle retenu
+Depuis mai, le cadrage public de HWG sur cette flambée répète qu'aucun vaccin homologué n'existe pour l'espèce Bundibugyo, donc que EPI/IPC forment toute l'enveloppe de protection des soignants. **La phrase reste vraie, et elle a cessé de décrire la situation** : depuis le 27/08 un vaccin est administré quand même, hors indication, pendant que l'essai qui dirait s'il protège commence à peine. Le statut de protection des soignants passe donc **d'absent à inconnu**, et un inconnu est plus difficile à planifier qu'une absence, pas plus facile.
+
+### Texte prêt à publier (EN)
+
+**t1 (244 car.)**
+> On 27 August, DRC began vaccinating health care workers against Ebola with Ervebo, in areas including Kisangani. On 20 August the ICG had released 70,000 doses to the country: 50,000 for frontline and health workers, 20,000 for a Phase 3 trial.
+
+**t2 (246 car.)**
+> Ervebo is licensed for Ebola virus disease, the Zaire species. WHO's 28 August situation report states it is not known whether it protects against Bundibugyo virus in humans, and that the trial runs alongside this wider use rather than before it.
+
+**t3 (258 car. compteur X, URL comptée 23)**
+> The line that no licensed vaccine exists for this species is still true. What changed is that one is now being given anyway, while the study that would answer for it is only starting. That moves protection here from absent to unknown. healthwatch-global.com
+
+### Sources primaires (pages téléchargées en `curl` avec UA navigateur puis lues en texte brut, jamais depuis un extrait de moteur)
+- **OMS, Disease Outbreak News « Ebola disease caused by Bundibugyo virus — Democratic Republic of the Congo », DON616, 28 août 2026** — `who.int/emergencies/disease-outbreak-news/item/2026-DON616` (HTTP 200, 123 747 o). Verbatims retenus :
+  - « On 27 August, vaccination of health care workers using the Ervebo vaccine was initiated in the Democratic Republic of the Congo in some areas, including in Kisangani, Tshopo province. »
+  - « Although Ervebo is a safe vaccine, and effective against Ebola virus disease, it is not known whether it provides protection against the Bundibugyo virus in humans. Thus, starting a clinical trial of the vaccine, alongside this wider use, is key to provide important new evidence and inform future use of the vaccine. »
+  - Contexte relevé mais **non repris dans le fil** : 5 794 cas confirmés / 2 786 décès au 26/08 (CFR 48,1 %), 60 zones de santé, 6 provinces, PHEIC maintenue après le comité d'urgence du 18/08.
+- **OMS, communiqué du 20 août 2026** — `who.int/news/item/20-08-2026-who-and-africa-cdc-welcome-the-allocation-of-ebola-vaccines-to-the-democratic-republic-of-the-congo` (HTTP 200, 99 607 o), re-téléchargé ce run pour contrôle, **inchangé depuis le 24/08** :
+  - « Ervebo vaccine is licensed and recommended for use in outbreaks of Ebola virus disease (previously called Zaire ebolavirus). »
+  - « The allocation includes 20 000 doses for a Phase 3 clinical trial … and 50 000 doses for frontline and health workers … »
+
+### Double-check (§ règles de contenu)
+*Forme* — EN ✅ ; longueurs **244 / 246 / 258** sur 280, URL comptée 23, marges 36 / 34 / 22 ✅ (comptage automatisé ; **le compteur réel de X reste à vérifier en capture au moment de la saisie**, non faisable sans session) ; 0 tiret cadratin ou demi-cadratin, 0 hashtag, 0 « we/our/us », 0 caractère non-ASCII, 0 ProMED (contrôles automatisés) ✅ ; lien nu en fin de fil, aucun CTA ✅ ; aucun faux témoignage ✅.
+
+*Exactitude mot pour mot* — les quatre chiffres (70 000, 50 000, 20 000, Phase 3) et la clause de licence sont **cités tels quels** par les deux communiqués ; la date du 27/08 et le lieu (Kisangani) viennent du DON616. **Aucun calcul, aucun ratio, aucun delta publié.** Le fil ne dit pas quelle tranche alimente la campagne du 27/08 : le DON616 ne l'établit pas, les deux faits sont donc juxtaposés sans lien de causalité asserté.
+
+*Ce que le fil n'affirme pas* — ni que le déploiement hors indication est une erreur (l'OMS le présente elle-même comme complémentaire de l'essai, et le fil reprend ce cadrage), ni que le vaccin ne protège pas, ni que la campagne est mal conduite. Il porte uniquement sur **l'état de connaissance** et sur ce qu'il implique pour une planification.
+
+*Anti-redondance* — ⚠️ point le plus sérieux du run. Le fait « pas de vaccin homologué pour Bundibugyo, donc EPI/IPC = toute l'enveloppe » est **massivement sur-servi** (replies des 11-13/07, plus au moins 3 replies archivées dans `x-watchlist.md`, lignes 651 / 688 / 724). Il est donc traité ici en **une demi-phrase de contexte**, jamais comme l'angle. Ce qui est neuf et ne pouvait pas être écrit avant le 28/08 : **ce cadrage a été dépassé par les faits**, et le fil le dit à la première personne du corpus HWG plutôt que de continuer à servir l'ancienne ligne.
+
+*Anti-gabarit (forme rhétorique, [[feedback_anti_template_check_structure_not_just_wording]])* — mesuré : **126 n-grammes de 5 mots, 8 déjà servis, tous des citations verbatim OMS** (« for frontline and health workers », « licensed for ebola virus disease », « it is not known whether »…), et tous frappant `content-log.md` parce que le brouillon du 24/08 y est archivé avec les mêmes verbatims — **auto-comparaison documentée**, pas un gabarit. 118/126 sont neufs. La forme « la réserve est publiée mais elle ne voyage pas avec le chiffre » (X 17/08 + LinkedIn 17/08) est **de nouveau écartée**, comme le 24/08. La famille « une colonne, deux sens », sur-servie côté LinkedIn (10/08, 21/08, 26/08, 28/08), n'est pas rejouée non plus.
+
+*Compte / destinataire* — 🔴 **NON VÉRIFIABLE : la session X est déconnectée.** Contrôle `@HWatchGlobal` **obligatoire avant la première frappe** à la reprise.
+
+### 🔴 Blocage de publication — session X déconnectée (cause DIFFÉRENTE du 24/08)
+**Le pont extension fonctionne** : `list_connected_browsers` renvoie bien les deux instances, `select_browser` sur `23c7ecdd-26d7-4d25-b39b-1889eb0fa3bd` répond « Connected to browser "Browser 2" », la navigation et les captures répondent normalement. **Ce n'est donc pas la panne du 24/08**, et **aucune entrée n'a été ajoutée à `_shared/browser-status.md`** : ce fichier trace l'appairage, qui est sain ; y écrire 🔴 induirait en erreur les routines LinkedIn qui le lisent avant d'ouvrir Chrome.
+
+Constat : `x.com/home` **redirige vers `x.com/`** (page d'accueil déconnectée « Ça se passe maintenant », boutons d'inscription, bannière cookies). Contrôle DOM concordant : `SideNav_AccountSwitcher_Button` **absent**, `tweetTextarea_0` **absent**. 2 chargements successifs, même résultat.
+
+**Aucune tentative de reconnexion** (l'agent ne saisit jamais d'identifiants), **aucun clic sur « Log out »**, **aucune bascule sur l'autre deviceId** `a466bc2e…` (`hwg-social-policy.md` §7), **aucun redémarrage de Chrome**. Bannière cookies **non acceptée**. **Remède côté David : se reconnecter à X sur `@HWatchGlobal` dans ce navigateur.**
+
+### 🦠 Données épidémiologiques — 0 écriture, 0 lecture de la base
+L'angle est entièrement sourcé OMS. Aucune ligne de `outbreaks` lue ni écrite. Note de cohérence sans action : les chiffres du DON616 (5 794 / 2 786 au 26/08) sont **exactement** ceux que le registre QA portait déjà au 31/08 pour la ligne `bd1c3a46` — la base est à jour sur ce foyer, rien à corriger.
+
+### Arbre de travail — fichiers ne relevant pas de cette routine
+Conformément à `AGENTS.md`, ce run ne stage que `marketing/content-log.md`. Laissés tels quels et signalés : `marketing/qa/product-claims.manual.json` (modifié, non commité, vient du run du 28/08), `scripts/audit-alert-day.mjs` et `scripts/probe-alert-lock.mjs` (non suivis). Inchangés depuis le 29/08. **Branche vérifiée avant écriture : `master`.**
+
+---
+
 ## 📅 Session linkedin-hwg-content-proposal — 31/08/2026 (lundi MWF, 8h35) — 🔴 **AUCUN POST PROPOSÉ, et le brouillon en attente du 28/08 est RETIRÉ**
 
 **Vérification double déclenchement** : aucune entrée `linkedin-hwg-content-proposal` datée du 31/08 dans ce fichier à l'ouverture → premier déclenchement du jour. Branche vérifiée avant écriture : **master**.
@@ -2395,9 +2455,9 @@ Aucun chiffre de foyer n'a été rencontré dans les fils, commentaires ou notif
 
 ---
 
-## 📅 Thread hebdo — lundi 24 août 2026 — 🟠 RÉDIGÉ ET DOUBLE-CHECKÉ, **NON PUBLIÉ** (pont navigateur en panne, voir `_shared/browser-status.md` du 24/08) — Ebola/RDC, l'allocation de 70 000 doses d'Ervebo se lit en deux parts : 20 000 qui produiront la réponse, 50 000 qui partent avant elle
+## 📅 Thread hebdo — lundi 24 août 2026 — ⚫ **NON PUBLIÉ, PUIS REMPLACÉ LE 31/08** (dépassé par le démarrage de la vaccination du 27/08, voir l'entrée du 31/08 en tête de fichier) — anciennement 🟠 rédigé et double-checké, non publié (pont navigateur en panne, voir `_shared/browser-status.md` du 24/08) — Ebola/RDC, l'allocation de 70 000 doses d'Ervebo se lit en deux parts : 20 000 qui produiront la réponse, 50 000 qui partent avant elle
 
-**Statut : brouillon prêt à publier tel quel.** À reprendre en priorité au prochain run de `x-hwg-content-proposal` (ou dès que le navigateur est réappairé), **sauf péremption** : si l'OMS ou Gavi publie entre-temps un résultat d'essai ou une révision de l'allocation, l'angle change et le texte doit être refait.
+**Statut : REMPLACÉ LE 31/08, ne plus publier ce texte.** Le run du 31/08 a conservé son mécanisme (répartition 20 000 / 50 000) comme contexte et abandonné sa chute (le compteur de doses annoncé n'est pas apparu dans le DON616 du 28/08). Mention historique conservée : à reprendre en priorité au prochain run de `x-hwg-content-proposal` (ou dès que le navigateur est réappairé), **sauf péremption** : si l'OMS ou Gavi publie entre-temps un résultat d'essai ou une révision de l'allocation, l'angle change et le texte doit être refait.
 
 ### Étape 0 (brouillon en attente à l'ouverture)
 Aucun. Dernier thread de marque X = entonnoir de tri du signal OMS, **publié le 17/08 à 09h11**. Aucun autre brouillon X non publié dans ce fichier (vérifié par recensement des entrées « Thread hebdo » : 03/08, 10/08, 17/08, toutes publiées). Rédaction entièrement neuve.
