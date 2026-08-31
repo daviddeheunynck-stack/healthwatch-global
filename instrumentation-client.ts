@@ -59,6 +59,27 @@ Sentry.init({
     const err = hint.originalException as { digest?: string } | null;
     if (err?.digest === "NEXT_NOT_FOUND") return null;
     if (err?.digest?.startsWith("NEXT_REDIRECT")) return null;
+    // "TypeError: Failed to fetch" as an UNHANDLED promise rejection only —
+    // never the handled/explicitly-reported form, which would mean real app
+    // code caught a genuinely broken fetch and deliberately surfaced it.
+    // Confirmed 2026-08-31 across 4 issues (JAVASCRIPT-NEXTJS-2F/2C/2E/2D,
+    // 1-6 events / 0-1 users each, on different pages): the one component with
+    // real client-side fetch logic on the affected admin page (DataStatusWidget)
+    // already wraps its call in try/catch, ruling it out as the source, and the
+    // stack shows only generic generator/promise-wrapper frames (Object.next,
+    // new Promise), not app code — even with source-map upload configured.
+    // Same known, framework-internal shape as Next.js App Router's own Link-
+    // prefetch RSC fetch (fetchServerResponse), which throws exactly this when
+    // a prefetch is interrupted, with no further stack detail by design — see
+    // vercel/next.js#48677 ("Prefetching failed to fetch RSC payload") and
+    // vercel/next.js#77009 (no useful stack trace for this message, ever).
+    // Scoped to mechanism.handled===false, narrower than ignoreErrors, so a
+    // future explicit Sentry.captureException() for an actually broken fetch
+    // still reports.
+    const exc = event.exception?.values?.[0];
+    if (exc?.type === "TypeError" && exc?.value === "Failed to fetch" && exc?.mechanism?.handled === false) {
+      return null;
+    }
     return event;
   },
 });
