@@ -10,7 +10,7 @@ Archive de tout le contenu créé. Mise à jour à chaque session.
 
 **Registre régénéré** : `npm run qa:facts` → **226 faits citables sur 110 lignes affichées**, 81 lignes `is_seed` exclues, 21 faits périmés.
 
-**Quotas à la clôture** : commentaires **2/7** (Oke Ikpekpe, Melvin Sanicas) · **DM 2 rédigés, 2 ENVOYÉS À 12h51/12h54 sur ordre explicite de David en session interactive** · suivis **7/7-10, fourchette atteinte** · **3 invitations reçues acceptées** sur 5 · notes de connexion **0/7 envoyées, 1 rédigée et validée mais modale non ouvrable** · **0 écriture en base**.
+**Quotas à la clôture** : commentaires **3/7** (Oke Ikpekpe, Melvin Sanicas, Dossa Paul YAOÏTCHA) · **DM 2 rédigés, 2 ENVOYÉS À 12h51/12h54 sur ordre explicite de David en session interactive** · suivis **7/7-10, fourchette atteinte** · **3 invitations reçues acceptées** sur 5 · notes de connexion **0/7 envoyées, 1 rédigée et validée mais modale non ouvrable** · **0 écriture en base**.
 
 **⚠️ Mise à jour post-clôture, en session interactive avec David (12h51-13h00)** : David a tapé « publie les dms » puis « 1 retire, et double check les dms » directement dans le chat de cette session — vaut validation explicite (`_shared/report-conventions.md`, clause 2). Les deux DM en file (Souad Belkacemi, Buno Tona) ont été **envoyés tels quels**, double-checkés une dernière fois (destinataire dans le chip, structure HTML, aucune troncature) juste avant le clic. **L'invitation hors périmètre à Clarisse Sgard (section 6 ci-dessous) a été retirée** sur son instruction « 1 retire ». Détail complet dans `linkedin-contacts.md`.
 
@@ -66,6 +66,22 @@ Son dernier tour (19 h) :
 > Multiply that across every outbreak declared over this year and the historical record is a set of pairs, not a single number, without anyone making an error. Do WHO and CDC classifications ever get cross-walked into one shared count, or does each agency's number just stay its own?
 
 **§15 appliqué avant le clic** : `content-log.md` relu juste avant publication, aucune mention de Melvin Sanicas dans l'entrée du jour à l'ouverture de cette section. **Publication confirmée** : cible (post + auteur) revérifiée dans le même appel JS que le clic sur « Commenter », texte comparé intégralement à l'éditeur avant envoi. Après publication : commentaire visible en tête de fil (« Les plus pertinents »), horodatage « maintenant », compteur de commentaires du post passé de **5 à 6**.
+
+#### ✅ COMMENTAIRE 3/7 — **Dossa Paul YAOÏTCHA** (`/in/dossa-paul-yaoïtcha-41202b2b7/`), FR, vouvoiement, top-level
+
+`urn:li:activity:7499435689214758912`, post « Août, mois One Health — Jour 29 : Religion et Pratiques Sanitaires » (1 j, 8 réactions, 2 commentaires avant publication). Premier contact.
+
+**Angle** : le post documente une exposition genrée à Ebola chez les communautés Kpelle et Mandingo au Liberia (ce sont majoritairement des femmes qui préparent les rites funéraires), établie par étude rétrospective. Les 2 commentaires existants restaient génériques (« adapter les interventions aux pratiques culturelles »). Angle distinct choisi : un tableau agrégé de cas/décès ne fait jamais apparaître ce type de voie de transmission précise — le compte et le mécanisme de transmission répondent à deux questions différentes, et seule une donnée désagrégée recueillie sur le terrain (pas une reconstruction a posteriori) permettrait de savoir qui est réellement exposé pendant l'épidémie elle-même.
+
+`QA : mécanique FAIL sur lexique au 1er jet (« en temps réel » lu comme une affirmation produit HWG, faux positif — le texte parle de la collecte de terrain pendant l'épidémie elle-même, pas de HWG), reformulé et PASS (676 puis 709 car.) | relecteur REECRIRE (11, texte pas assez ancré dans ce post précis) au 1er jet — corrigé en nommant explicitement « chez les Kpelle et les Mandingo », confirmé VERDICT: ENVOYER au 2e passage | faits cités : aucun chiffre | registre du 31/08 | statut : publié le 31/08`
+
+> L'exposition genrée que vous décrivez chez les Kpelle et les Mandingo a un statut particulier : elle sort d'une étude rétrospective, une fois le mécanisme déjà compris, pas d'un décompte tenu pendant l'épidémie elle-même. Est-ce que les données recueillies sur le terrain à l'époque distinguaient déjà qui préparait le corps, ou est-ce une reconstruction qui n'arrive qu'après coup ?
+>
+> Si c'est la seconde option, un tableau de cas et de décès agrégés peut très bien tourner pendant tout l'épisode sans jamais faire apparaître cette voie de transmission précise. Le compte et le mécanisme répondent à deux questions différentes, et seul le second dit qui est réellement exposé.
+
+**§15 appliqué avant le clic** : `content-log.md` et `linkedin-contacts.md` relus juste avant publication, aucune mention de Dossa Paul YAOÏTCHA. ⚠️ **Signal de vigilance, pas un incident** : en préparant ce commentaire, deux fichiers `tmp/` que je n'avais pas créés (`draft-harvey-31.md`, `ctx-harvey-31.json`) et deux fichiers que j'avais utilisés ce matin (`draft-hossain-31.md`, `ctx-hossain-31.json`) ont changé sur le disque entre-temps, avec un contenu neuf portant sur Hossain/Harvey — signe qu'une session sœur (vraisemblablement `linkedin-hwg-followup-check`, créneau 13h) tourne en ce moment sur l'arbre partagé. Aucun conflit constaté sur mes propres cibles (Sanicas déjà publié et commité avant que sa fenêtre ne s'ouvre, Yaoitcha jamais mentionné ailleurs), mais **Hossain et Harvey Basivikidi sont à vérifier avant toute action les concernant dans une session ultérieure**, au cas où la session de 13h aurait déjà publié dessus.
+
+**Publication confirmée** : cible (post + auteur + citation exacte « Kpelle et Mandingo ») revérifiée dans le même appel JS que le clic sur « Commenter ». Après publication : une seule occurrence du texte, horodatage « maintenant ».
 
 #### ❌ CANDIDAT ABANDONNÉ — page **ECDC**, post podcast climat/moustiques (2 j)
 
