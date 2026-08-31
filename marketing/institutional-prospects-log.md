@@ -3210,3 +3210,55 @@ Vérifiés en direct par ce run (`to:` groupé sur les 10 + `from:<domaine>` sur
 - **EUPHA** → fenêtre ouverte à partir du 31/08 (retour de bureau), arbitrage David toujours en attente.
 
 **⚠️ Fichiers modifiés non touchés par cette routine, laissés tels quels** (règle `AGENTS.md`) : `marketing/qa/product-claims.manual.json`, `scripts/audit-alert-day.mjs`, `scripts/probe-alert-lock.mjs`.
+
+---
+
+## 2026-08-31 — Run automatique — 🚦 FREIN DE FILE, 0 contact produit
+
+**File mesurée en tout premier, avant toute recherche** (Étape 1) : `list_drafts` appelé **deux fois**, résultat **strictement identique aux deux appels — 26 brouillons réels**, tous datés du 30/08, aucune page suivante. Répétition de l'appel conforme à la consigne du 16/08 (ne jamais conclure sur un seul appel).
+
+Composition de la file, lue depuis les `threadId` : **19 relances** (brouillons dont le `threadId` diffère du `messageId`, donc réponses dans des fils existants — lots des 18/08 et 19/08, créées par `daily-relance-check-healthwatch`) + **7 brouillons de prospection** (fils neufs, créés par le rattrapage de cette routine le 30/08 au matin : PAHO Nicaragua, PAHO Guatemala, FNU Fidji, UZ Zimbabwe, UNITID Nairobi, UWI Trinité, Alight).
+
+**26 > seuil de ~20 → frein appliqué : aucun contact neuf recherché, aucun brouillon créé ce run.** C'est le 2e jour consécutif de blocage de la production sur ce canal (le run de relance du 30/08 avait déjà gelé le lot du 20/08 pour la même raison). **Rien à écouler côté agent : la file n'attend que la relecture de David.**
+
+### 🔎 Travail utile fait à la place (Étape 1 : creuser une piste notée, sans ajouter au stock)
+
+**1. EMRO — le blocage du 30/08 est levé, mais le verdict s'inverse : technique → structurel.**
+
+Le run du 30/08 avait écarté deux candidats OMS EMRO (Libye, Soudan) sur un `emro.who.int` réputé « totalement injoignable (502, confirmé par fetch et navigateur) ». Retesté aujourd'hui **avec un User-Agent Chrome** (mémoire `reference_govt_sites_need_browser_user_agent`) : **`emro.who.int` répond HTTP 200**, `<title>WHO EMRO - Countries</title>`. Le 502 d'hier était bien un filtrage d'UA, pas une panne.
+
+Mais la levée du blocage ne rend aucun contact exploitable :
+- **13 pages pays balayées** (Libye, Soudan, Djibouti, Jordanie, Oman, Irak, Yémen, Afghanistan, Liban, Bahreïn + la page `countries.html`) : HTTP 200 et titre réel pour toutes, **zéro adresse email dans le DOM** — aucune, pas même masquée.
+- **`emro.who.int/contact-us.html`** : HTTP 200, et les seules adresses de la page sont **obfusquées en JavaScript** (« This email address is being protected from spambots »), sur des boîtes publications/médias **hors périmètre** de toute façon. Adresse masquée = non vérifiée (même critère de rejet que NCDC Nigeria le 03/08 et HPA Maldives le 05/08).
+
+➡️ **EMRO est à clore comme EMPHNET l'a été le 29/08** : le site est vivant et ne publie rien d'exploitable. **Ne plus le reporter comme « panne technique à réessayer ».** Les candidats Libye et Soudan restent écartés, désormais pour un motif définitif.
+
+**⚠️ Piège du soft-404 rencontré en direct** (mémoire `reference_govt_sites_need_browser_user_agent`) : `emro.who.int/lby/libya-events/index.html` et `/sdn/sudan-infocus/index.html` renvoient **HTTP 200 avec `<title>WHO EMRO - 404 Error</title>`**. Un contrôle sur le seul code HTTP les aurait comptées comme pages valides sans adresse. Le contrôle du `<title>` a été fait, comme prescrit.
+
+**2. Réserve prête à rédiger — reconfirmée en direct, pas rédigée (frein oblige).**
+
+| Cible | Adresse | Contrôle du jour |
+|---|---|---|
+| **PSI Oxford** (Pandemic Sciences Institute) | `info.psi@ndm.ox.ac.uk` | ✅ **Revérifié aujourd'hui** : `psi.ox.ac.uk/contact-us-1` en **HTTP 200**, `<title>Contact — Pandemic Sciences Institute</title>`, adresse présente dans le DOM. Toujours neuf, toujours prêt. **À prendre en premier** dès la file redescendue. |
+| **PAHO Argentine** | `pwr-arg@paho.org` | Non revérifiable aujourd'hui : `paho.org` renvoie **403** même avec UA Chrome. Vérification d'origine (lecture directe de la page contacts PAHO, 30/08) **maintenue** — un 403 d'accès n'est pas une preuve que l'adresse est mauvaise, et je ne la dégrade pas sur cette base. |
+| ~~PAHO Guatemala~~ | ~~`gut-pwr@paho.org`~~ | **Consommé** — rédigé le 30/08, actuellement dans la file (`r3232231976687903007`). À retirer de la réserve. |
+
+*Note : l'URL de la réserve PSI est `psi.ox.ac.uk/contact-us-1`, pas `/contact-us` (qui est en 404). Détail reporté ici pour éviter une fausse conclusion « page morte » au prochain run.*
+
+**3. SEARO — région manquante du lot du 30/08, gisement facile vérifié comme saturé.** Grep sur ce journal pour les cibles nationales évidentes non encore prises : **Sri Lanka** (`epid.gov.lk`, 6 occurrences), **Inde NCDC** (`dirnicd@nic.in`, contacté, l. 201), **Maldives HPA** (écartée le 05/08 pour obfuscation), **Bhoutan** (5 occurrences, déjà testé et écarté), **Myanmar** (25 occurrences, DMR en bounce). Aucun candidat national simple ne reste. Le déséquilibre géographique EMRO/SEARO signalé le 30/08 **ne se corrigera pas par une recherche de même nature** — il faudra descendre d'un cran (départements universitaires, ONG régionales) plutôt que viser les instituts nationaux, tous consommés.
+
+### 🎯 Cibles à prioriser au prochain run
+
+1. **Écouler la file reste le seul point bloquant.** À 26 brouillons dont 19 relances vieilles de 12-13 jours, la production est gelée pour le 2e jour. Rien ne redémarrera tant que David n'a pas relu la file.
+2. **Ordre de reprise, sans nouvelle recherche** : `info.psi@ndm.ox.ac.uk` (revérifié ce jour), puis `pwr-arg@paho.org` — **plafond de 2 PAHO par lot**, et 2 PAHO sont déjà dans la file.
+3. **EMRO : clos.** Ne pas le remettre dans la liste des écarts « à réessayer ».
+4. **SEARO/EMRO : changer de granularité** (voir §3 ci-dessus) plutôt que retenter les NPHI nationaux.
+5. **EUPHA** — fenêtre ouverte depuis le 31/08 (retour de bureau), **arbitrage David toujours en attente**. **TEPHINET** — arbitrage David en attente pour la 4e fois.
+
+### 📊 Compteurs
+
+**Totaux au 2026-08-31 : 307 contacts prospectés, 300 envoyés** — **inchangés depuis le 30/08, ce run n'ayant produit aucun contact**. **Profondeur de file : 26 brouillons** (19 relances + 7 prospection), **inchangée par ce run — aucun brouillon créé ni modifié**.
+
+**Bounces du jour : aucun contact produit ce run, donc aucun bounce à lister.** Pas de total cumulé écrit ici — porteur unique `daily-relance-check-healthwatch` (règle du 16/08).
+
+**⚠️ Fichiers modifiés non touchés par cette routine, laissés tels quels** (règle `AGENTS.md`) : `marketing/qa/product-claims.manual.json` (modifié), `scripts/audit-alert-day.mjs` et `scripts/probe-alert-lock.mjs` (non suivis). *Note : `lib/source-trust.ts`, modifié en début de session, n'apparaît plus dans `git status` en fin de run — repris par une autre session, non touché par moi.*
