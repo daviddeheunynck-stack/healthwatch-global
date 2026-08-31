@@ -1,6 +1,66 @@
 > 📦 **Archive** : le détail du 24 juin au 16 juillet 2026 a été déplacé dans [linkedin-contacts-archive-avant17juillet.md](linkedin-contacts-archive-avant17juillet.md) le 23/07 pour garder ce fichier léger.
 
 
+## 📅 Session linkedin-hwg-followup-check-2 — 31/08/2026 (17h, 2e des 2 créneaux après-midi)
+
+**Vérification double déclenchement** : aucune entrée `linkedin-hwg-followup-check-2` du 31/08 dans ce fichier ni dans `content-log.md` à l'ouverture → **premier déclenchement de cette routine aujourd'hui**. Horloge machine à l'heure (`Mon Aug 31 17:08 2026`). Navigateur : dernière entrée de `_shared/browser-status.md` **🟢 RÉTABLI (~13:05)**, aucun bridage, `23c7ecdd-…` sélectionné directement (§7).
+
+**Détail intégral des 3 commentaires publiés, de leurs rapports QA et des carry-over : `content-log.md`, entrée du jour.**
+
+---
+
+### 1️⃣ MESSAGERIE — AUCUN MESSAGE ENTRANT DEPUIS 13h, AUCUN DM RÉDIGÉ CE RUN
+
+**Liste des 10 conversations lue en entier, triée par récence.** Les deux plus récentes restent **nos propres envois de 12h51 et 12h54** (SOUAD BELKACEMI., Buno Tona) ; la suivante remonte au **29 août**. **Aucun message reçu depuis le créneau de 13h**, donc aucun brouillon de réponse dû à ce titre, et **aucun DM rédigé ce run**.
+
+- **SOUAD BELKACEMI.** et **Buno Tona** : DM de midi toujours sans réponse, les deux fils n'ont qu'un message, le nôtre.
+- **Harvey Basivikidi** : sa réponse du 28/08 à 14:46 reste le dernier message du fil. **Le brouillon de relance rédigé au créneau de 13h est toujours 🔒 EN ATTENTE DE VALIDATION, non envoyé, non modifié ce run** — texte complet et rapports QA dans la section 2 de l'entrée du 13h ci-dessous, à ne pas dupliquer ici.
+- **Inchangés, rien n'est dû** : John Omari Baso · Abou A. SOUMAH · **Dr. Siaka Condé** (« *Let me look at this for a moment* », 29/08, toujours pas revenu) · Alain BASHIZI · Rodrigo Olave Hurtado · **Summer Galloway** et **Bobossam Cissoko** (DM du 29/08, sans réponse).
+
+---
+
+### 2️⃣ 🔒 DM — 0 RÉDIGÉ CE RUN, 1 TOUJOURS EN FILE DE VALIDATION
+
+Quota DM du jour : **2 envoyés sur 8** (ceux de midi, sur ordre de David). Le DM **Harvey Basivikidi** du créneau de 13h reste en file et **ne part pas automatiquement** : il attend une validation explicite de David en session interactive. **Notification push de rappel envoyée en fin de ce run.**
+
+---
+
+### 3️⃣ ✅ INVITATION REÇUE — 1 ACCEPTÉE
+
+⭐ **Dossa Paul YAOÏTCHA** (`/in/dossa-paul-yaoïtcha-41202b2b7/`) — *Master's Student in One Health & Health Risk Analysis | Animal Production & Health | AMR & Climate Leadership | Zoonotic diseases*, **5 relations en commun dont Emilie Mosnier**. **Il a envoyé l'invitation lui-même**, quelques heures après avoir répondu à notre commentaire sous son post et consulté le profil de David. Cœur de cible, aucune ambiguïté. Identité vérifiée dans le même appel JS que le clic, et **absence des deux profils déjà écartés vérifiée dans la même carte** avant de cliquer. ✅ Compteur passé de **3 à 2**.
+
+**Pas de welcome DM** : le fil de discussion réel est déjà ouvert **en public**, sous son post, et notre question du jour y attend une réponse. Un DM de bienvenue en parallèle ferait doublon et déplacerait une conversation qui fonctionne. À reconsidérer seulement si le fil public s'éteint sans réponse.
+
+**Les 2 autres invitations en attente restent laissées**, décisions du 9h non rejugées : **Zachariah G. Houdari** (services financiers), **OLAOLUWA PHILIP** (géospatial/climat sans santé publique).
+
+---
+
+### 4️⃣ ➖ ABONNÉS — 1 FOLLOW-BACK EXÉCUTÉ
+
+Liste `/mynetwork/network-manager/people-follow/followers/` ouverte, triée par récence : **399 personnes** (397 au créneau de 13h). Les deux de plus sont **Dossa Paul YAOÏTCHA** (nouveau) et **Alexandre APPROUTSADI YOKSOU** (devenu abonné en devenant relation à 13h, déjà « Suivi »).
+
+✅ **Follow-back exécuté — Dossa Paul YAOÏTCHA.** Nouvel abonné, pertinence évidente (One Health, zoonoses, engagement substantiel le jour même). Identité vérifiée par le texte de la carte et unicité du bouton contrôlée **dans le même appel JS que le clic** ; état vérifié après coup : bouton passé de « Suivre » à **« Suivi »**. **Quota suivis : 8/7-10** — dans la fourchette, qui est un objectif et non un plafond.
+
+Les autres abonnés récents sont tous déjà traités : Buno Tona, Kipchirchir Kigen, Adrian Cocian, SOUAD BELKACEMI., Awa Sangaré, Evouna Armel, Bobossam Cissoko à « Suivi » ; **Haider Durrani** reste à « Suivre », décision d'écart du 30/08 non rejugée. **Aucune recherche active de candidats supplémentaires** : les 3 commentaires disponibles étaient déjà absorbés par des réponses dues, l'effort a été mis là.
+
+---
+
+### 5️⃣ ➖ NOTE DE CONNEXION — **Mohammad Ilias Hossain, AUCUNE NOUVELLE TENTATIVE, CONFORMÉMENT AU CARRY-OVER**
+
+Le carry-over n°2 du créneau de 13h disait explicitement : **« ne pas retenter une 5e fois par le même chemin »**, après 4 échecs sur 2 surfaces et le diagnostic que LinkedIn ne propose tout simplement pas l'action de connexion pour ce profil (paramètre du destinataire, ou plafond lié aux invitations en attente). **Consigne honorée : rien n'a été retenté, la note reste rédigée et QA-validée, non réécrite.**
+
+État vérifié au passage sur l'onglet **Envoyées** : **95 invitations en attente**, inchangé — la piste « purger des invitations anciennes pour débloquer » n'a donc pas été ouverte non plus (elle supprimerait des invitations légitimes en attente chez des cibles prioritaires : Chikwe Ihekweazu, Linda Esso, Asma SAIDOUNI, Béatrice SERRA y figurent). **Décision à laisser à David** s'il veut arbitrer entre purger et renoncer à cette connexion.
+
+➖ **Yakoza Nyirenda** : invitation du 30/08 **toujours en attente** (« Envoyé hier »), non acceptée.
+
+---
+
+### 6️⃣ 💬 COMMENTAIRES
+
+3 publiés ce run (5/7, 6/7, 7/7 — **quota du jour plein**), tous en réponse à une retombée du jour : **James Schlitt, PhD, MPH** (sous le post de David), **Melvin Sanicas** (sous-fil, l'auteur avait répondu) et **Dossa Paul YAOÏTCHA** (sous-fil, l'auteur avait répondu). Texte intégral, rapports QA, verdicts du relecteur et confirmations de publication : `content-log.md`, entrée du jour.
+
+---
+
 ## 📅 Session linkedin-hwg-followup-check — 31/08/2026 (13h, 1er des 2 créneaux après-midi)
 
 **Vérification double déclenchement** : aucune entrée `linkedin-hwg-followup-check` datée du 31/08 dans ce fichier ni dans `content-log.md` à l'ouverture (dernière en date : 30/08 13h). Les entrées du 31/08 déjà présentes appartiennent à `linkedin-hwg-content-proposal` (8h35), `linkedin-hwg-monitoring` (9h), au thread hebdo X et à une **session interactive de David vers 12h49-13h00** (publication du thread X, envoi des 2 DM, retrait de l'invitation Sgard) — runs intentionnellement distincts → **premier déclenchement de cette routine aujourd'hui**. Horloge machine à l'heure (`Mon Aug 31 13:02 2026`).

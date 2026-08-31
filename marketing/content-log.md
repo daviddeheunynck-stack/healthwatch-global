@@ -2,6 +2,149 @@
 
 Archive de tout le contenu créé. Mise à jour à chaque session.
 
+## 📅 Session linkedin-hwg-followup-check-2 — 31/08/2026 (17h, 2e des 2 créneaux après-midi)
+
+**Vérification double déclenchement** : aucune entrée `linkedin-hwg-followup-check-2` datée du 31/08 dans ce fichier ni dans `linkedin-contacts.md` à l'ouverture (dernière en date : 30/08, run décalé) → **premier déclenchement de cette routine aujourd'hui**. Les entrées du 31/08 déjà présentes appartiennent à `linkedin-hwg-content-proposal` (8h35), `linkedin-hwg-monitoring` (9h), au thread hebdo X, à une session interactive de David (12h49-13h00 puis ~13h) et au créneau 13h — runs intentionnellement distincts. Horloge machine à l'heure : `date` renvoie **Mon Aug 31 17:08 2026**.
+
+**🖥️ Navigateur** : `_shared/browser-status.md` lu avant ouverture. Dernière entrée du jour **🟢 RÉTABLI (~13:05)** → aucun bridage. `23c7ecdd-…` sélectionné directement sans confirmation (§7, session planifiée). Session complète sans incident, hors un timeout de capture d'écran isolé (CDP `Page.captureScreenshot`, 30 s) contourné par lecture DOM — sans effet sur les actions.
+
+**Registre de faits et registre produit : régénérés ce run** (`build-claimable-facts.mjs` → 226 faits citables sur 110 lignes ; `build-product-claims.mjs` → 5 claims manuelles en vigueur, dont **2 ajoutées ce run**, voir §4).
+
+**Quotas à la clôture** : commentaires **7/7 toutes sessions confondues — quota plein** (Oke Ikpekpe, Melvin Sanicas, Dossa Paul YAOÏTCHA par le 9h ; Mohammad Ilias Hossain par le 13h ; **+3 ce créneau**) · **DM 0 rédigé ce run, 2 envoyés / 8 ce midi sur ordre de David, 1 toujours 🔒 EN FILE DE VALIDATION depuis le 13h (Harvey Basivikidi)** · suivis **8/7-10, +1 ce créneau** · **1 invitation reçue acceptée** (3 → 2 en attente) · notes de connexion **0/7 envoyées, 1 toujours bloquée techniquement, non retentée conformément au carry-over** · **0 écriture en base**.
+
+---
+
+### 1️⃣ SUIVI DES FILS ACTIFS (§14) — 3 RETOMBÉES NEUVES, TOUTES TRAITÉES CE RUN
+
+**Les fils encore actifs ont été rouverts un par un, sur le post et pas sur la notification.** Résultat en deux moitiés nettes : les fils où **nous avions le dernier mot n'ont pas bougé**, et **les trois commentaires publiés aujourd'hui ont tous produit une réponse** — dont deux d'un auteur de post.
+
+**Rien de nouveau, notre message reste le dernier :**
+- **Oke Ikpekpe** (`urn:li:activity:7499051354368331776`) — notre 7e tour (7 h) est toujours le dernier du sous-fil, **6 impressions, 0 réponse**. Le carry-over du 13h anticipait une réponse « probable dans la journée » (il répondait sous 24 h depuis 3 jours) : elle n'est pas venue.
+- **SOUAD BELKACEMI.** (`urn:li:activity:7499735785110192129`) — notre commentaire (10 h) reste le dernier, **15 impressions**, question toujours ouverte. Son DM de 12h51 est également sans réponse. Conforme au carry-over : rien relancé.
+- **Harvey Basivikidi** (`urn:li:activity:7498314547779444737`) — sous-fil déplié, notre question de 4 j est le dernier message, **5 impressions, 0 réponse**. Carry-over commentaire confirmé clos.
+- **Mohammad Ilias Hossain** (`urn:li:activity:7499900718590595072`) — notre commentaire du 13h (3 h) est le seul du post, **3 impressions**, aucune réponse encore.
+
+**Trois retombées neuves, toutes converties en commentaire ce run** (§14 : une réponse trouvée n'est jamais un simple point de veille) — détail en section 2.
+
+**Notifications parcourues : 9 cartes, couverture complète depuis le créneau de 13h** (la plus ancienne du lot est la newsletter OMS déjà traitée à 13h). Sans action : **Dossa Paul YAOÏTCHA et 1 autre ont consulté le profil** (12 min) ; **Victoria Kanana** (2 h, post personnel de félicitations, hors périmètre) ; les cartes de réaction doublonnant les réponses traitées en section 2.
+
+---
+
+### 2️⃣ 💬 COMMENTAIRES PUBLIÉS — 3, QUOTA PORTÉ À 7/7
+
+#### ✅ COMMENTAIRE 5/7 — **James Schlitt, PhD, MPH**, EN, réponse **sous le post de David lui-même**
+
+`urn:li:activity:7500143469085057027` — le post publié ce midi en session interactive (CFR et taille du dénominateur). **Premier commentaire jamais reçu sur ce post**, déposé 29 min avant notre lecture, par le profil le mieux aligné du corpus : *Computational Epidemiologist | AI & LLM Systems for Biosurveillance | Pandemic Forecasting*. Abonné depuis le **30/07** (déjà suivi en retour à cette date, tracker), aucun échange antérieur — donc **aucun blocage hebdomadaire**, et le canal est notre propre mur. *langue du fil = en ; langue du brouillon = en.*
+
+**Son commentaire, verbatim** (recopié dans `tmp/thread-schlitt-31.txt`) : il élargit le point du post aux « *repeated narratives* » de la presse (« *new virus is 99% lethal… to seniors in the ICU* ») et propose de constituer un **corpus longitudinal de couverture presse** pour aligner une flambée future sur des trajectoires candidates plutôt que sur l'intuition.
+
+**L'angle publié — et il a fallu vérifier le code avant de l'écrire.** Le premier réflexe (« nos lignes sont écrasées à chaque révision, la trajectoire est perdue ») était **faux** : la table `outbreak_snapshots` conserve un instantané quotidien de chaque ligne. Le fait réel est plus intéressant et sert mieux son idée : cette trajectoire contient **deux histoires superposées**, celle de la flambée et celle de nos propres corrections. Et la mesure de production du 28/08 documentée dans `lib/outbreak-trend.ts` montre que **la totalité des baisses jour-sur-jour étaient des corrections de notre donnée, jamais un foyer en recul** — séparable uniquement parce qu'un compteur cumulatif ne baisse pas sur le terrain.
+
+🔴 **Le relecteur a fait échouer le 1er jet sur un point réel (Q4) et signalé un risque hors grille — les deux corrigés par suppression.**
+- **(4) Affirmation produit non couverte.** Le brouillon écrivait « *Upward, a real rise and a late correction are indistinguishable from inside the series* ». La mesure documentée ne porte **que sur les baisses** ; rien ne couvre l'absence de marqueur de correction dans `outbreak_snapshots`. Phrase **retirée**, pas rebornée.
+- **⚠️ Risque hors grille, signalé et pris au sérieux.** « *Press coverage is dated at the claim and not revised in place* » est une affirmation sur la presse, invérifiable depuis nos registres et **contestable devant un spécialiste des corpus** — les rédactions révisent des articles en place sans changer l'URL. Transformée d'affirmation en **question qui lui est posée**, ce qui règle le risque et renforce l'apport (Q12).
+
+`QA : mécanique PASS (607 car., limite 700, 2 paragraphes, en/en, 0 tiret cadratin, 0 lien, 0 CTA, 0 chiffre) — un 1er FAIL intermédiaire sur ngram.history (« the part I cannot judge », formule déjà servie), reformulé | relecteur VERDICT: REECRIRE 4 au 1er jet, corrigé par suppression — 11 PASS sur 12 par ailleurs, plus un risque hors grille corrigé | faits cités : aucun chiffre ; les 2 affirmations produit sont couvertes par la claim manuelle ajoutée ce run sur outbreak_snapshots | registre du 31/08 (17h) | statut : publié le 31/08`
+
+> James Schlitt, PhD, MPH We keep a daily snapshot of every row, so we do hold the trajectory of our own number. When we measured what that trajectory contains, it was two histories laid on top of each other: the outbreak's, and our own corrections to what we had already published.
+>
+> Every day-over-day drop in it turned out to be us fixing a figure, never an outbreak receding. That much is separable only because a cumulative count cannot fall in the field. Whether a press corpus separates them any better is your call rather than mine: how much of that record stays dated at the claim, and how much gets quietly revised in place?
+
+**Publication confirmée** : texte comparé **caractère pour caractère** dans le même appel JS que le clic (607 attendus, 607 côté éditeur, `identique: true`, URL du post revérifiée dans le même appel). Après rechargement : **une seule occurrence**, horodatage « maintenant », 2 paragraphes intacts.
+
+#### ✅ COMMENTAIRE 6/7 — **Melvin Sanicas** (`/in/drmelvinsanicas/`), EN, **réponse en sous-fil, 2e tour**
+
+`urn:li:activity:7499221325358501889`. **L'auteur du post a répondu lui-même à notre commentaire de 9h** (il y a 2 h), suivi de la page **Global Health Press** (1 364 abonnés). Blocage hebdomadaire au 07/09 : **il porte sur le top-level, le sous-fil reste ouvert** (même régime que le fil Oke Ikpekpe, 7 tours). Fil relu intégralement, recopié verbatim dans `tmp/thread-melvin-31b.txt`.
+
+**Ce qu'ils ont dit.** Melvin Sanicas : les chiffres sont *réconciliables* et non contradictoires (le CDC ajoute un décès probable), mais « *there is no universal process that forces every agency's public-facing historical table to use the same inclusion criteria* ». Global Health Press pousse la question d'un cran : « *whether historical datasets preserve the case definitions behind each number* ».
+
+**L'angle publié : la réponse empirique à cette question, depuis le seul endroit d'où elle se tranche — l'aval.** Le critère d'inclusion **n'est pas un champ**. Vérifié en lecture de code avant rédaction (`lib/outbreaks.ts`, interface `Outbreak`) : la ligne porte cas, décès, une date, une source, un `verification_status` (statut du **foyer**, pas des cas) — et **aucun champ ne distingue « confirmés seuls » de « confirmés + probables »**, ni ne compte les probables séparément. Le critère ne vit que dans la prose du document au bout du lien, donc il survit exactement aussi longtemps que quelqu'un continue de l'ouvrir.
+
+🔴 **Le contrôle mécanique a attrapé un vrai gabarit au 1er jet.** Le brouillon ouvrait sur « *A row here carries a disease, a country, counts, a date and a source link* » — **5 séquences déjà servies dans l'historique**, c'est notre formule de présentation standard de HWG, réutilisée d'un destinataire à l'autre (DM Bobossam Cissoko, Summer Galloway). Défaut réel au sens de [[feedback_anti_template_check_structure_not_just_wording]], reformulé sans elle ; l'argument n'en dépendait pas.
+
+`QA : mécanique PASS au 2e passage (558 car., 2 paragraphes, en/en, 0 chiffre, 0 lien, 0 CTA) — 1er passage FAIL sur ngram.history, 5 formules recyclées, corrigé | relecteur VERDICT: ENVOYER, 12 PASS au 1er jet, 1 réserve non bloquante (le verbe « survives » repris d'un tour à l'autre, objet différent) | faits cités : aucun chiffre ; l'affirmation produit est couverte par la claim manuelle ajoutée ce run sur l'interface Outbreak | registre du 31/08 (17h) | statut : publié le 31/08`
+
+> Melvin Sanicas From the consuming end, the case definition is not a field at all. What I store for an outbreak has room for the count and for where it came from, and no room for the rule that decided which cases went into it. Confirmed only, or confirmed plus probable, lives in prose inside the document at the end of the source link.
+>
+> So the criterion survives exactly as long as someone keeps opening that document. Everything built downstream inherits an inclusion rule it cannot see or filter on, and two agencies' figures sit side by side looking directly comparable.
+
+**§16 appliqué et nommé, comme la section l'exige.** Ce commentaire porte sur **le même événement** que deux commentaires déjà publiés aujourd'hui (fin de la flambée d'Ebola en Ouganda : Melvin Sanicas 9h, Mohammad Ilias Hossain 13h). Ce n'est pas un motif d'abandon mais un motif de prouver que **l'argument diffère** : 9h = *deux totaux finaux coexistent après clôture* ; 13h = *le statut ne tient pas dans un cumul entre pays* ; ici = *le critère d'inclusion n'est pas un champ et n'est donc pas transmis à l'aval*. Trois arguments distincts, et celui-ci est de surcroît une **réponse due** dans un fil où l'auteur nous a interpellés, pas une réouverture d'événement au sens du carry-over de 13h.
+
+**Publication confirmée** : 558 attendus, 558 côté éditeur, `identique: true`, URL revérifiée dans le même appel JS que le clic. Après rechargement : une seule occurrence, « maintenant », 2 paragraphes.
+
+#### ✅ COMMENTAIRE 7/7 — **Dossa Paul YAOÏTCHA** (`/in/dossa-paul-yaoïtcha-41202b2b7/`), FR, vouvoiement, **réponse en sous-fil, 2e tour**
+
+`urn:li:activity:7499435689214758912`. **L'auteur a répondu à notre commentaire de 9h** (il y a 2 h), et sa réponse est **exactement l'information que la question demandait** : les surveillances de terrain 2014-2016 enregistraient cas, décès et liens de parenté, **pas** le rôle rituel ; le mécanisme fin est une reconstruction a posteriori (enquêtes cas-témoins, entretiens ethnographiques) ; **mais le lien statistique apparaissait déjà partiellement dans la surveillance des contacts pendant l'épidémie**. Blocage hebdomadaire au 07/09 : top-level uniquement, sous-fil ouvert. Fil recopié verbatim dans `tmp/thread-dossa-31b.txt`.
+
+**L'angle publié.** Le signal partiel existait, mais dans **le suivi des contacts** — une couche opérationnelle dont seule la forme agrégée est publiée. Le mécanisme n'était donc pas seulement incomplet à l'époque : il se trouvait là où rien ne le rendait lisible de l'extérieur de la riposte.
+
+🔴 **Le relecteur a fait échouer le 1er jet sur un point de fond réel (Q4), et il avait raison.** Le brouillon écrivait « *Les bulletins que je lis n'en portent aucune trace* » — **factuellement faux et attaquable** : les sitreps OMS et les bulletins AFRO publient couramment des **indicateurs agrégés de suivi de contacts** (contacts listés, contacts suivis). Devant un étudiant de master One Health, c'était l'erreur qui décrédibilise tout le reste. Corrigé en bornant l'affirmation à ce qui est vrai : les bulletins **en donnent des totaux**, jamais le niveau qui aurait permis de repérer cette exposition. La déduction du 2e paragraphe, qui reposait sur la prémisse fausse, a été reformulée en conséquence.
+
+⚠️ **Faux positif documenté au passage** : le contrôle mécanique a bloqué le mot **« lien »** (au sens de *lien statistique*) comme un lien hypertexte interdit sur ce canal — `context.cta-forbidden`. Contourné par reformulation plutôt que par un `previousFindingIds`, le mot n'était pas nécessaire.
+
+`QA : mécanique PASS (444 car., 2 paragraphes, fr/fr, 0 chiffre, 0 lien, 0 CTA) — 1er passage FAIL sur context.cta-forbidden (faux positif « lien »), reformulé | relecteur VERDICT: REECRIRE 4 au 1er jet (affirmation absolue et fausse sur le contenu des bulletins), corrigé par bornage — 11 PASS sur 12 par ailleurs | faits cités : aucun | registre du 31/08 (17h) | statut : publié le 31/08`
+
+> Dossa Paul YAOÏTCHA Merci, la distinction est nette. Ce qui me retient dans votre réponse, c'est l'endroit où se trouvait le signal partiel : le suivi des contacts. Les bulletins publiés en donnent des totaux, jamais ce qui aurait permis de repérer cette exposition-là.
+>
+> Le mécanisme n'était donc pas seulement incomplet pendant l'épisode, il tenait dans une couche dont seule la forme agrégée sort. Que deviennent ces fiches de suivi une fois la riposte close ?
+
+**Publication confirmée** : 442 attendus, 442 côté éditeur, `identique: true`, URL revérifiée dans le même appel JS que le clic. Après rechargement : une seule occurrence, « maintenant », 2 paragraphes. **Sous-fil vérifié avant frappe** : un premier clic sur le bouton « Répondre » identifié par l'arbre d'accessibilité n'a ouvert aucun éditeur ; c'est le clic sur l'icône de réponse **sous sa réponse à lui** qui a ouvert le bon éditeur, avec la mention pré-remplie à son nom — vérifié avant de taper, précisément parce qu'un éditeur vide de niveau supérieur aurait produit un **top-level** alors qu'il est bloqué jusqu'au 07/09.
+
+#### ❌ AUCUNE RECHERCHE NEUVE DE CIBLES
+
+**Quota rempli par les seules retombées.** Les 3 commentaires disponibles ont été absorbés par des fils où l'interlocuteur venait de nous répondre — deux auteurs de post et un commentateur sous notre propre post. Aucune recherche active menée, et c'est le bon arbitrage : une réponse due dans un fil engagé vaut mieux qu'un premier contact froid trouvé par requête.
+
+⚠️ **§15 appliqué avant chaque clic** : `content-log.md` et `linkedin-contacts.md` relus juste avant publication (md5 `80430786…` / `8f1edc3c…`), `git log` revérifié — **inchangé à `a3afbd98`**, aucune session sœur active, aucune entrée du 31/08 ne mentionnant les 3 cibles comme déjà traitées ce créneau. Branche vérifiée : **master**.
+
+---
+
+### 3️⃣ 📊 DONNÉES ÉPIDÉMIOLOGIQUES (§8) — AUCUNE DONNÉE NEUVE, AUCUNE ÉCRITURE EN BASE
+
+Aucun des trois fils traités n'apporte de chiffre de flambée neuf : les commentaires publiés ne contiennent **pas un seul nombre**. Les chiffres évoqués par les interlocuteurs (20/2 OMS contre 21/3 CDC pour l'Ouganda) sont ceux déjà vérifiés au créneau de 13h contre la ligne `63ba952c-…`, qui porte bien `active: false`, 20 cas et 2 décès. **Rien à corriger, rien à écrire.**
+
+Le point signalé à 13h reste ouvert et **n'appartient pas à cette routine** : la ligne Ebola/Ouganda porte `asOf: 2026-07-28` alors qu'une déclaration officielle de fin d'épidémie datée du 27/08 existe. Valeur inchangée, date d'arrêt et source potentiellement à rafraîchir vers la page AFRO — pour `morning-don-check`, pas pour une routine sociale.
+
+---
+
+### 4️⃣ 🔧 REGISTRE PRODUIT — 2 CLAIMS AJOUTÉES AVANT RÉDACTION
+
+Deux affirmations sur nos données internes étaient nécessaires aux commentaires 5/7 et 6/7, et **aucune n'était couverte** par le registre. Les deux ont été vérifiées **en lecture de code** puis ajoutées à `marketing/qa/product-claims.manual.json`, registre régénéré avant rédaction :
+
+1. **Historique quotidien** — `outbreak_snapshots` conserve un instantané par ligne et par jour ; mesure de production du 2026-08-28 (61 jours, 127 lignes actives, 5 443 instantanés) : **toutes les baisses jour-sur-jour étaient des corrections de notre donnée**, aucune un foyer en recul. Source : `lib/outbreak-trend.ts`.
+2. **Pas de champ de définition de cas** — l'interface `Outbreak` de `lib/outbreaks.ts` ne comporte aucun champ enregistrant le critère d'inclusion des cas, ni de compteur séparé pour les probables. Source : `lib/outbreaks.ts`.
+
+⚠️ **Le relecteur du commentaire 5/7 a refusé une 3e affirmation faute de couverture** (le comportement des **hausses**), et il avait raison : la mesure documentée ne porte que sur les baisses. Elle n'a **pas** été ajoutée au registre pour faire passer la phrase — la phrase a été supprimée. C'est le sens du dispositif.
+
+---
+
+### 5️⃣ 🔁 CARRY-OVER POUR LE CRÉNEAU DE 9h (01/09)
+
+1. 🔒 **UN DM ATTEND TOUJOURS DAVID — Harvey Basivikidi** (EN, relance de fond, rédigé au créneau de 13h). **Non envoyé, non modifié ce run.** Texte complet et rapports QA dans `linkedin-contacts.md`, section du 13h. Notification push de rappel envoyée ce run.
+2. ⭐⭐ **Trois fils viennent de s'ouvrir et attendent une réponse demain matin** — c'est le carry-over principal du jour :
+   - **James Schlitt, PhD, MPH** — le meilleur alignement de profil du corpus (*AI & LLM Systems for Biosurveillance*), premier échange jamais engagé, et **nous lui avons posé une question directe**. S'il répond, c'est prioritaire sur tout le reste. Aucun blocage (échange sur le mur de David).
+   - **Melvin Sanicas** — auteur ayant répondu lui-même, plus la page **Global Health Press** active dans le même sous-fil. Top-level bloqué au 07/09, **sous-fil ouvert**.
+   - **Dossa Paul YAOÏTCHA** — auteur ayant répondu, question ouverte de notre côté. Top-level bloqué au 07/09, **sous-fil ouvert**. Devenu **relation de 1er degré ce run**.
+3. ⭐ **Oke Ikpekpe** — 7e tour toujours sans réponse après 7 h, alors qu'il répondait sous 24 h depuis 3 jours. **Ne pas relancer** : le fil a peut-être trouvé sa fin naturelle, et notre question est la dernière. Bloqué en top-level au 04/09.
+4. ⭐ **SOUAD BELKACEMI.** — deux fils ouverts, aucun ne bouge (commentaire du 30/08 à 15 impressions, DM de 12h51 sans réponse). **Laisser reposer**, consigne inchangée depuis 13h.
+5. 🔴 **Mohammad Ilias Hossain, note de connexion : non retentée ce run, conformément au carry-over n°2 du 13h** (« ne pas retenter une 5e fois par le même chemin »). La note reste rédigée et QA-validée, **ne pas la réécrire**. État inchangé : 95 invitations en attente, sa carte n'offre que « Message ». Le lien reste ouvert autrement — il est suivi, et commenté le 13h.
+6. ⭐ **Alexandre APPROUTSADI YOKSOU** — relation acceptée le 13h, toujours **pas de welcome DM faute de hook honnête**. Reprendre dès qu'il publie dans le périmètre.
+7. ⭐⭐ **Dr. Malachie MANAOUDA** — Ministre de la Santé Publique du Cameroun, suivi, **connexion prioritaire dès qu'un hook frais se présente**. Porté depuis le 22/08, toujours pas exécuté.
+8. ➖ **Yakoza Nyirenda** — invitation sans note du 30/08, **toujours en attente** (« Envoyé hier »). Si acceptée : welcome DM, en file de validation.
+9. ❌ **Ne pas reproposer sans élément neuf** : Zachariah G. Houdari et OLAOLUWA PHILIP (2 invitations reçues laissées, motifs au tracker), Haider Durrani, Kipchirchir Kigen, Victoria Kanana (post personnel hors périmètre).
+10. **Blocages hebdomadaires au 31/08 après ce run** : Martin Yakum (01/09) ; Ifedayo Adetifa, Julien Harneis (02/09) ; Harvey Basivikidi (03/09, top-level) ; Oke Ikpekpe, Jason Kindrachuk, Dr Jeeven Kumar (04/09) ; Global Health EDCTP3, French Healthcare Association, Health Policy Watch, Tambe Elvis Akem, SOUAD BELKACEMI (05/09) ; Melvin Sanicas, Dossa Paul YAOÏTCHA, Mohammad Ilias Hossain (07/09) — **les trois en top-level seulement, sous-fils ouverts**. **Libres** : Robert Herriman, Patrick AYONGA, page ECDC, Oliver Morgan, Dr Fabrice KHADDY, page Africa CDC, Vital Strategies, Tedros, **Prof. Mohamed Janabi**, INRB, Miriam Mbueshi, Apoorva Wasnik, Johan Verheyden, Dr. Jean Kaseya, Gaelle Gonzalez, Lori Peterson, Dr. Malachie MANAOUDA, **James Schlitt**.
+
+11. 🗓️ **LIGNE D'ÉVÉNEMENT (§16).**
+    - ✅ **Fin de la flambée d'Ebola (Bundibugyo) en Ouganda — ÉVÉNEMENT CLOS, confirmé clos.** Trois commentaires HWG désormais, sous trois angles distincts (Sanicas 9h, Hossain 13h, sous-fil Sanicas 17h). **Ne pas le rouvrir sur une cible neuve.** Seules les réponses reçues dans les fils existants restent dues.
+    - 🔵 **Press briefing Africa CDC du 3 septembre sur la riposte Ebola en RDC — ÉVÉNEMENT OUVERT, support pas encore disponible.** Inchangé depuis 13h : l'annonce du 31/08 n'est qu'une invitation. Porteurs à surveiller **quand le briefing aura eu lieu**, dans l'ordre : page **Africa CDC** (libre), page **WHO AFRO** (⚠️ historiquement inatteignable, ne pas en faire l'unique support), **Dr. Jean Kaseya** (libre, écarté 3 fois pour terrain politique, §10), **Prof. Mohamed Janabi** (libre). **Ne pas laisser cet événement mourir avec un seul support.**
+
+---
+
+### 6️⃣ 🔧 ARBRE DE TRAVAIL
+
+`marketing/qa/product-claims.manual.json` **modifié ce run** (2 claims ajoutées, §4) et **non commité** : il appartient au dispositif QA, pas à cette routine — même traitement qu'au run de 13h. `marketing/qa/*.json` régénérés, non suivis. **Fichiers de l'arbre n'appartenant pas à cette routine, laissés tels quels** (`AGENTS.md`) : `scripts/audit-alert-day.mjs` et `scripts/probe-alert-lock.mjs` (non suivis, inchangés depuis le 29/08). **Branche vérifiée avant commit : `master`.** `git log` inchangé pendant tout le run (`a3afbd98`), aucune session sœur concurrente constatée.
+
+---
+
 ## 📅 Session linkedin-hwg-followup-check — 31/08/2026 (13h, 1er des 2 créneaux après-midi)
 
 **Vérification double déclenchement** : aucune entrée `linkedin-hwg-followup-check` datée du 31/08 dans ce fichier ni dans `linkedin-contacts.md` à l'ouverture (dernière en date : 30/08 13h) → **premier déclenchement de cette routine aujourd'hui**. Les entrées du 31/08 déjà présentes appartiennent à `linkedin-hwg-content-proposal` (8h35, 0 post proposé), `linkedin-hwg-monitoring` (9h), au thread hebdo X et à une session interactive de David (12h49-13h00). Horloge machine à l'heure : `date` renvoie **Mon Aug 31 13:02 2026**, le créneau est à l'heure.
