@@ -2000,3 +2000,81 @@ audit interne : sourceName() dit toujours "ReliefWeb" sur les 4
 6. **Une fusion d'une autre session a traversé l'arbre pendant ce run, et elle n'a pas été touchée.** Après le push des deux correctifs, `git status` a révélé une fusion en cours de `claude/happy-gould-11750f` (frontières de mot Unicode dans `check-outreach-message.mjs`) avec un conflit non résolu. Le premier `git add` de ce log l'avait indexé **dans leur fusion** — désindexé aussitôt par `git restore --staged`, contenu intact, avant tout commit. Le conflit lui-même a été laissé à son auteur plutôt que résolu à l'aveugle : c'est exactement le scénario que `AGENTS.md` décrit (un changement de code qui part sur `master` sans que personne n'ait relu son diff). Cette entrée a attendu la fin de leur fusion (`fc37a2d`) pour être commitée.
 
 **Statut : 2 idées PROPOSÉES ET CONSTRUITES** (`e187130`, `2bd52f3`). Aucune idée écartée par un garde-fou ce soir.
+
+---
+
+## 2026-08-31 — Proposition du jour
+
+**Aucun signal terrain neuf** : `product-feedback.md` n'a pas bougé depuis l'entrée Coulibaly du 22/08. Les deux idées sortent de l'état réel de la prod, relevé ce soir.
+
+**Point commun des deux, et il prolonge directement l'incident PAHO d'hier.** `source_confirmed_at` — « j'ai relu ma source, elle ne portait rien de plus récent » — est le seul énoncé du produit qui distingue une donnée vieille mais vérifiée d'un trou de données. Un cron le produit et le jette ; le reste du produit l'honore sans jamais lui demander son âge.
+
+### 1. 🔴 Le cron mpox conclut tous les jours « rien de plus récent chez l'OMS », le jette, et la page publique affiche l'inverse depuis hier
+
+**Symptôme en ligne, vérifié par requête sur la page réelle il y a quelques minutes :**
+
+```
+$ curl -s https://healthwatch-global.com/fr/outbreak/dbc9c1d0-… | grep -o "62 j\|peut-être résolu[^<]*"
+62 j
+peut-être résolu ou non rapporté.
+```
+
+La ligne `Mpox / Mondial` (63 692 cas, 256 décès) porte `date = 2026-06-30`, soit **62 jours** — elle a franchi le seuil `STALE_DAYS` (60 j) **hier**. La pastille orange « ⚠ SANS MAJ · 62j » et son infobulle « foyer peut-être résolu ou non rapporté » sont donc apparues sur le foyer mpox mondial le jour même où le seuil a été franchi.
+
+**Le produit sait que c'est faux.** `check-mpox-sitrep` tourne tous les jours à 08h10 UTC et relit la page OMS des rapports de situation mpox. Rejoué ce soir avec l'en-tête exact du cron :
+
+```
+HTTP 200 · dernier rapport détecté : #68
+  https://www.who.int/publications/m/item/…external-situation-report--68---31-july-2026
+site_config.mpox_last_sitrep_url  = …report--68---31-july-2026   <- identique
+outbreaks.source (Mpox/Mondial)   = …report--68---31-july-2026   <- identique
+outbreaks.source_confirmed_at     = null
+```
+
+Le cron établit donc, à chaque passage depuis le 01/08, exactement la phrase que `lib/source-confirmed.ts` définit comme le contenu de la colonne — « il a récupéré sa source, et n'a rien trouvé de plus récent que `date` » — puis prend la branche `Already up to date`, journalise `no_data` et rend la main sans rien écrire. C'est le seul cron de la flotte qui atteint cette conclusion sur la page de listing d'une source plutôt que dans une boucle de parsing, et c'est celui qui ne la reporte nulle part.
+
+**Second défaut dans la même fonction, et c'est la forme exacte de la panne PAHO réparée hier.** Deux issues opposées écrivent la même ligne de journal :
+
+| branche | ce qui s'est passé | ce que `site_config` en garde |
+|---|---|---|
+| `if (!latest)` | la page OMS est injoignable, ou son balisage a changé et aucun lien `external-situation-report--N` n'en sort | `no_data`, rows=0, **aucun message** |
+| `latest.url === lastKnownUrl` | tout va bien, #68 est toujours le dernier | `no_data`, rows=0, **aucun message** |
+
+Or `health-check` ne remonte que `status === "error"` — `no_data` y est documenté comme « a legitimate idle state » et reste silencieux par conception (ligne 938). Une panne totale d'ingestion mpox se lirait donc, indéfiniment, comme « rien de neuf cette semaine ». C'est mot pour mot ce qui a laissé `sync-paho-alerts` abandonner le sitrep rougeole pendant 16 jours en rapportant vert (corrigé hier, `e825175` + `c078c92`) — et le mpox est l'autre urgence de santé publique de portée internationale du produit.
+
+Vérifié ce soir que c'est bien la branche saine qui tourne aujourd'hui et pas la panne : la page OMS répond 200 et rend #68, avec l'en-tête du cron comme avec un en-tête de navigateur (le piège d'UA de `reference_govt_sites_need_browser_user_agent` ne joue pas ici).
+
+**Effort : petit.** Un fichier, deux branches déjà distinctes dans le code — il ne s'agit que de leur faire écrire deux choses différentes.
+
+**Risque/inconnue :** tamponner sur la seule foi d'une page de listing est une confirmation plus faible qu'un parsing d'entrée. Elle ne vaut que pour une ligne dont le `source` est **exactement** l'édition la plus récente publiée : la ligne RDC cite le #67 alors que le #68 existe, donc elle n'est pas confirmée — une édition plus récente existe bel et bien, elle n'a simplement pas été ingérée. Le tampon doit être conditionné à cette égalité, pas appliqué aux deux lignes du cron.
+
+### 2. 🟠 Une confirmation ne périme jamais — elle éteint le contrôle de fraîcheur sur 71 des 127 lignes actives, et le seul événement qui l'annule est celui qu'un cron en panne ne peut pas produire
+
+**Signal, mesuré contre la prod, table entière paginée (293 lignes, `.range()` explicite, cf. la limite de 1 000 relevée le 28/08) :**
+
+```
+lignes actives                                   : 127
+  … portant un source_confirmed_at honoré        :  71   (56 %)
+  … qui SERAIENT signalées « stale » sans lui    :  60
+âge des confirmations : min 1 j · médiane 1 j · max 11 j
+```
+
+`isSourceConfirmed()` (`lib/outbreaks.ts`), `isConfirmedCurrent()` (`lib/source-confirmed.ts`) et `isVerifiedStale()` (`data-quality`, ligne 473) posent tous les trois la même condition, et **elle ne regarde pas l'horloge** : `source_confirmed_at >= date`. Le commentaire qui la justifie dit que la règle « s'auto-invalide » — « si le `date` de la ligne avance un jour, la comparaison cesse de tenir ». C'est vrai, et c'est précisément le problème : **`date` avance quand le cron d'ingestion marche.** Quand il tombe, `date` se fige, et l'exemption tient pour toujours. Le garde-fou est annulé par le seul événement qu'il devrait signaler.
+
+Ce n'est pas une hypothèse : c'est ce qui s'est passé du 14 au 30/08. `sync-paho-alerts` n'ingérait plus rien du sitrep rougeole, `date` restait au 2026-08-08 sur Rougeole Canada/Pérou/Bolivie, et les trois lignes portaient un `source_confirmed_at` du 27/08 — assez récent pour les exempter, sincère (le volet « alertes » du cron relisait bien son alerte) et faux en même temps (le volet « sitrep » échouait en silence). Le commentaire écrit hier dans `morning-don-check.mjs` le dit dans ces termes.
+
+**Le produit sait déjà faire périmer une vérification — mais seulement dans un script qu'un humain lance.** `morning-don-check.mjs` porte `FRESHNESS_TIERS` : 7 j pour les lignes manuelles, 7 j pour les lignes verrouillées, 14 j pour les clusters de seeds, 45 j pour les lignes de cron, et calcule l'âge sur `max(updated_at, source_confirmed_at, …)`. Le cron quotidien `data-quality`, celui qui tourne sans personne, honore le même tampon **sans aucune cadence**. Et côté public, la pastille « ✓ SOURCE CONFIRMÉE » et son infobulle catégorique — « aucune édition plus récente, pas un trou de données » — reposent sur la même comparaison sans âge, sur quatre surfaces (`OutbreakTable`, `OutbreakDetailModal`, `/outbreak/[id]`, plus le −0,5 de `sourceScore`).
+
+**Effort : petit à moyen.** Une borne d'âge sur une règle définie trois fois côté application, plus les deux copies des scripts de registre QA qui la redérivent.
+
+**Risque/inconnue : ressusciter le bruit que la colonne avait justement supprimé** (la question « existe-t-il une édition plus récente ? » reposée tous les jours à un humain qui y a déjà répondu). Mesuré plutôt que supposé, en rejouant les sections 4b et 4f contre la vraie table avec et sans péremption, chaque section bornant la confirmation à son propre seuil :
+
+```
+signalements aujourd'hui, règle actuelle           : 1
+signalements aujourd'hui, avec péremption          : 1
+nouveaux signalements introduits par la péremption : 0
+```
+
+Zéro, et c'est structurel, pas une coïncidence de date : les crons tamponnent à chaque passage « inchangé », donc une confirmation vit normalement entre 0 et 2 jours (médiane 1). Une confirmation qui atteint 21 jours signifie qu'aucun cron n'a réussi à relire la source de cette ligne depuis trois semaines — c'est exactement le signal recherché, pas du bruit.
+
+**Statut initial : 2 idées PROPOSÉES.** Construction dans la foulée — voir la mise à jour ci-dessous.
