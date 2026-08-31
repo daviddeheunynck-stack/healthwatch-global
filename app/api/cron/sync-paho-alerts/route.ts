@@ -673,8 +673,16 @@ async function extractAlertData(entry: AlertEntry): Promise<AlertData[]> {
 
   const results: AlertData[] = [];
   for (const target of targets) {
+    // Reject aggregate pseudo-countries, same guard as the sitrep path below
+    // (l. ~1200) and every sync-* cron. Tiers 2 and 3 draw from
+    // AMERICAS_COUNTRIES, which already filters them out, but tier 1 reads a
+    // free-text title fragment and its only protection is a keyword regex
+    // that does not cover "Global": findCountry() falls back to substring
+    // matching, so a title like "... in Global measles cases" resolves to the
+    // "Global" pseudo-country and would spawn a phantom row double-counting
+    // on the disease pages.
     const geo = findCountry(target.country);
-    if (!geo) continue;
+    if (!geo || isAggregateCountry(geo)) continue;
 
     const admin1 = await extractAdmin1(bodyText.substring(0, 3000), geo.name_en);
     let admin1_lat: number | null = null;
@@ -801,6 +809,14 @@ async function upsertItems(
     const geo = findCountry(item.country_en);
     if (!geo) {
       log.push({ label, status: "skip", detail: "country not in geo-data" });
+      results.skipped++;
+      continue;
+    }
+    // Choke point every item passes through, alerts and sitrep alike: refuse
+    // an aggregate pseudo-country here too, so a future extraction path added
+    // upstream can never write one by forgetting the guard at its own site.
+    if (isAggregateCountry(geo)) {
+      log.push({ label, status: "skip", detail: `aggregate pseudo-country "${geo.name_en}" — not a place, no row written` });
       results.skipped++;
       continue;
     }
