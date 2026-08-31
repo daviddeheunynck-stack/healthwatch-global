@@ -1,6 +1,70 @@
 > 📦 **Archive** : le détail du 24 juin au 16 juillet 2026 a été déplacé dans [linkedin-contacts-archive-avant17juillet.md](linkedin-contacts-archive-avant17juillet.md) le 23/07 pour garder ce fichier léger.
 
 
+## 📅 Session linkedin-hwg-followup-check-2 — 30/08/2026 (17h, 2e des 2 créneaux après-midi)
+
+**Vérification double déclenchement** : aucune entrée `linkedin-hwg-followup-check-2` du 30/08 à l'ouverture. Les trois entrées du 30/08 appartiennent à une session interactive de David (~07h), au **rattrapage de `linkedin-hwg-monitoring`** et au **créneau de 13h** → premier déclenchement de cette routine aujourd'hui. **Détail intégral du commentaire publié, du candidat abandonné et du carry-over : `content-log.md`, entrée du jour.**
+
+**🖥️ Navigateur** : `23c7ecdd-…` sélectionné directement (§7), dernière entrée de `_shared/browser-status.md` **🟢 RÉTABLI (24/08)**, aucune entrée du jour. Un timeout `Page.captureScreenshot` isolé, `javascript_tool` normal — pas la signature « renderer dégradé », retenté avec succès.
+
+⚠️ **L'horloge de la session a basculé au 2026-08-31 en cours de run.** Quotas comptés contre le 30/08 par prudence (choix conservateur, ne peut pas faire dépasser un quota).
+
+**Quotas à la clôture** : commentaires **5/7 toutes sessions confondues** · **DM 0 rédigé, file VIDE** · suivis **3/7-10** (1 follow-back ce créneau) · **0 nouvelle invitation**, celle de Yakoza Nyirenda reste en attente · notes de connexion **0/7, disponibles**.
+
+---
+
+### 1️⃣ MESSAGERIE — AUCUN MESSAGE ENTRANT, AUCUN BROUILLON DÛ
+
+**Liste des 11 conversations lue en entier, triée par récence : elle s'arrête au 29 août.** Aucun message reçu depuis le créneau de 13h. **La file de validation est vide, aucune notification push n'est due à ce titre.**
+
+- ✅ **John Omari Baso** — dernier message du fil toujours le sien, 29/08 à 20:09 : « *Merci beaucoup pour votre message! On garde contact pour la suite* ». Politesse de clôture sans question ni substance (§3), **aucune réponse due** — constat identique à celui du matin et de 13h, vérifié une 3e fois en ouvrant le fil, pas déduit de l'archive. Statut inchangé : *envoyé le 29/08, fil clos par le destinataire*.
+- **Inchangés, rien n'est dû** : Abou A. SOUMAH · **Dr. Siaka Condé** (« *Let me look at this for a moment* » le 29/08 à 12:29, toujours pas revenu — carry-over honoré, rien ne lui a été écrit) · Alain BASHIZI · Rodrigo Olave Hurtado · Isaias Fernandes Co · Peace Mpakaniye · **Harvey Basivikidi** (notre question du 28/08 reste le dernier message du sous-fil).
+- **Summer Galloway** et **Bobossam Cissoko** : DM envoyés le 29/08, **toujours aucune réponse**.
+
+---
+
+### 2️⃣ 🔒 DM — AUCUN, ET RIEN N'ATTEND DAVID
+
+Aucun message entrant ne méritait de réponse. **File vide.** **Aucune notification push envoyée par ce run** : le seul point qui en justifierait une (le doublon Oke Ikpekpe) a déjà fait l'objet d'une notification au créneau de 13h, et la politique interdit d'en renvoyer une seconde pour le même incident non résolu.
+
+---
+
+### 3️⃣ 💬 COMMENTAIRE PUBLIÉ — 1
+
+✅ **SOUAD BELKACEMI.** (`/in/souad-belkacemi-a794ba9b/`), FR, vouvoiement, **réponse en sous-fil, 6e tour**, `urn:li:activity:7499735785110192129`. Fil relu intégralement (5 tours, `tmp/thread-souad-30-17h.txt`). Elle avait répondu 2 h avant l'ouverture du créneau.
+
+`QA: mécanique FAIL (1 blocker unique context.too-soon, faux positif documenté) | relecteur REECRIRE (7, 11) au 1er passage, corrigé, 10 PASS sur 12 par ailleurs | faits cités: « 2021 » seul, verbatim du fil | registre du 30/08 | statut: publié le 30/08`
+
+> La sous-détection que vous décrivez a une conséquence gênante. Si un agent ne se trouve que lorsqu'on le cherche, l'absence de résultat depuis 2021 ne tranche rien : ni que rien ne circule, ni que quelque chose circule. Les deux produisent la même trace, aucune publication.
+>
+> Une surveillance ne rend que ce qu'on lui a demandé de chercher, et un agent hors panel ne produit pas un zéro, il ne produit aucune ligne. Le versant animal est celui qui a fait remonter ces virus jusqu'ici. Un signal de ce côté-là suffirait-il à relancer un dépistage chez l'Homme, ou les deux surveillances restent-elles trop séparées pour que l'une déclenche l'autre ?
+
+**Publication confirmée** : bouton « Répondre » unique à 12 px sous l'éditeur, cible et contenu revérifiés dans le même appel JS que le clic, texte comparé **caractère pour caractère** (648 car., `identique: true`), éditeur vidé après envoi, une seule occurrence horodatée « maintenant », compteur du post passé de 4 à 5. **§15 appliqué** : archives relues juste avant le clic (md5 inchangés, `git log` toujours sur `a0917e4`).
+
+🔴 **Fil Oke Ikpekpe : rien publié, délibérément.** Il a répondu de nouveau et aimé notre commentaire du rattrapage. Le carry-over de 13h interdit toute publication sur ce fil tant que le doublon n'est pas arbitré par David. Consigne honorée ; verbatim de sa réponse archivé dans `content-log.md` pour reprise immédiate après arbitrage.
+
+❌ **Candidat rédigé puis abandonné : page Africa CDC**, post du jour (19 h). Contrôle mécanique PASS, **relecteur FAIL sur 3 questions** (terrain politique, présupposition non lisible dans le post, moule d'argumentation identique au commentaire publié une heure plus tôt). **Abandonné plutôt que réécrit** : le défaut est dans l'angle. Détail complet dans `content-log.md`.
+
+---
+
+### 4️⃣ RÉSEAU
+
+✅ **FOLLOW-BACK — Adrian Cocian** (`/in/adrian-cocian-13b41b1a5/`) — *DVM | PhD Candidate | Research Assistant | **Fulbright Fellow***, Davis (Californie), USAMV Cluj-Napoca, 874 abonnés, 500+ relations. **Nouvel abonné** (compteur passé de 393 ce matin à **395**). Activité vérifiée sur pièce avant le clic : participant **#RxOneHealth** (UC Davis × University College Dublin), publications sur la communication du risque et la préparation aux catastrophes — voisinage exact de SOUAD BELKACEMI. et Harvey Basivikidi. Identité confirmée par `aria-label` « Suivre Adrian Cocian » dans le même appel JS que le clic ; boutons passés à « Suivi » après. **3e suivi de la journée sur 7-10.**
+
+❌ **Haider Durrani** — 2e nouvel abonné, *Sales & Marketing Executive*, **non suivi en retour** : aucun rattachement santé publique / épidémiologie (§10).
+
+➖ **Yakoza (Leah Rita) Nyirenda** — invitation sans note du 30/08 (13h), **toujours en attente**. Liste des relations vérifiée en direct, triée par « Ajouts récents » : **280 relations, la plus récente au 29 août**. Aucune acceptation nouvelle, **aucun welcome DM dû**.
+
+**Notes de connexion** : 0 ce créneau, mais **disponibles** (blocage périmé levé et retesté à 13h). Aucun candidat neuf ne s'est présenté ; aucune recherche active supplémentaire, le temps du créneau est allé aux fils actifs et aux trois cibles de commentaire ouvertes.
+
+---
+
+### 5️⃣ DONNÉES ÉPIDÉMIOLOGIQUES (§8)
+
+**Aucune écriture en base.** Ligne **Ebola / RD Congo** contre-vérifiée sur le registre régénéré : `asOf 2026-08-26`, **5 794 cas, 2 786 décès, létalité 48,1 %**, `sourceConfirmedHonoured: true`, `ageDays: 1`, **DON 616 de l'OMS** — même date que le communiqué Africa CDC du jour, rien à réviser. Le décompte de zones de santé n'a pas de champ correspondant au schéma `outbreaks` (déjà tranché ce matin).
+
+---
+
 ## 📅 Session linkedin-hwg-followup-check — 30/08/2026 (13h, 1er des 2 créneaux après-midi)
 
 **Vérification double déclenchement** : aucune entrée `linkedin-hwg-followup-check` du 30/08 à l'ouverture. Les entrées du 30/08 appartiennent à une session interactive de David (~07h) et au **rattrapage de `linkedin-hwg-monitoring`** (créneau de 9h manqué, relancé en milieu de journée) → premier déclenchement de cette routine aujourd'hui. **Détail intégral des commentaires, de l'incident de doublon et du carry-over : `content-log.md`, entrée du jour.**
