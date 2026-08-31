@@ -1,6 +1,125 @@
 > 📦 **Archive** : le détail du 24 juin au 16 juillet 2026 a été déplacé dans [linkedin-contacts-archive-avant17juillet.md](linkedin-contacts-archive-avant17juillet.md) le 23/07 pour garder ce fichier léger.
 
 
+## 📅 Session linkedin-hwg-monitoring — 31/08/2026 (9h)
+
+**Vérification double déclenchement** : aucune entrée `linkedin-hwg-monitoring` du 31/08 dans ce fichier ni dans `content-log.md` à l'ouverture → premier déclenchement du jour. Horloge machine à l'heure (`Mon Aug 31 09:03 2026`). **Détail intégral du commentaire publié et de la veille : `content-log.md`, entrée du jour.**
+
+**🖥️ Navigateur** : `23c7ecdd-…` sélectionné directement (§7), dernière entrée de `_shared/browser-status.md` **🟢 RÉTABLI (24/08)**, aucune entrée du jour. Un timeout `Page.captureScreenshot` isolé, retenté avec succès.
+
+---
+
+### 1️⃣ MESSAGERIE — AUCUN MESSAGE ENTRANT, FILE DE VALIDATION VIDE
+
+**Liste des 10 conversations lue en entier, triée par récence : elle s'arrête au 29 août.** Aucun message reçu depuis le créneau de 17h du 30/08. **Aucun brouillon dû, la file de validation est vide, aucune notification push n'est due à ce titre.**
+
+- **John Omari Baso** : dernier message du fil toujours le sien, 29/08 à 20:09 (« *Merci beaucoup pour votre message! On garde contact pour la suite* ») — politesse de clôture sans substance (§3), **aucune réponse due**, constat identique aux trois créneaux du 30/08.
+- **Inchangés, rien n'est dû** : Abou A. SOUMAH · **Dr. Siaka Condé** (« *Let me look at this for a moment* », 29/08 12:29, toujours pas revenu — carry-over honoré, rien ne lui a été écrit) · Alain BASHIZI · Rodrigo Olave Hurtado · Isaias Fernandes Co · Peace Mpakaniye · **Harvey Basivikidi** (notre question du 28/08 reste le dernier message du sous-fil).
+- **Summer Galloway** et **Bobossam Cissoko** : DM envoyés le 29/08, **toujours aucune réponse**.
+
+---
+
+### 2️⃣ ✅ INVITATIONS REÇUES — 3 ACCEPTÉES, 2 LAISSÉES
+
+Gestionnaire d'invitations ouvert : **5 en attente**. Chaque acceptation a été faite en vérifiant le contenu de la carte (nom + intitulé) **dans le même appel JS que le clic** (§142). Compteur passé de **5 à 2**, et les trois cartes portent « *fait désormais partie de vos relations* ».
+
+⭐⭐ **1. SOUAD BELKACEMI.** (`/in/souad-belkacemi-a794ba9b/`) — *Docteur en Biologie-Microbiologie de l'Université Aix Marseille, Docteur vétérinaire*. Relation commune : Lori Peterson. **C'est l'interlocutrice du fil de commentaires le plus nourri du corpus** (6 tours publics sur son post Shuni/SHUV, dernier échange le 30/08). **Elle a envoyé l'invitation elle-même** : un contact qui débat six tours en public puis demande la connexion est le meilleur signal d'engagement de la semaine. Un échange en messagerie existe-t-il déjà ? **Non** — elle n'apparaît pas dans les 10 conversations. Welcome DM traité en section 3.
+
+⭐ **2. Buno Tona** — *Field Epidemiologist / surveillance / EWAR / emergency preparedness & response / IHR advisor / One Health / climate change / PHEOC / VPD / Universal Health Coverage / health system strengthening / health resilience / Global health security*. **Syra Madad et 111 relations en commun.** Cœur de cible HWG (épidémiologie de terrain, alerte précoce, PHEOC). Aucun échange préalable en messagerie.
+
+✅ **3. Kipchirchir Kigen** — *Public Health Epidemiologist | Public Policy Analyst | Researcher advancing Neurological Health, Climate Justice & Health Equity | Psychologist | Theologist*. Relation commune : Lori Peterson. Épidémiologiste de santé publique, dans le périmètre. **Déjà croisé le 30/08** : c'est l'auteur de l'unique commentaire tiers sous le post Africa CDC examiné ce jour-là. Aucun échange préalable.
+
+❌ **Laissées, hors périmètre (§10)** :
+- **Zachariah G. Houdari** — *Financial Services Professional | Relationship Management | Client Experience | Life Sciences, Global Health Advocacy and Golf*. Aucun rattachement à l'épidémiologie ou à la surveillance ; « Global Health Advocacy » en fin d'intitulé de services financiers ne suffit pas.
+- **OLAOLUWA PHILIP (BSc, MSc)** — *GIScientist | Climate Action Advocate | Co-Founder, GeoDev Lab Africa | Founder, CLIMORA Initiative | Author | Data Analyst | Creative Content Strategist*. Géospatial et climat, adjacent sur le papier, mais **rien de santé publique dans l'intitulé** et un axe affiché de production de contenu. Écarté sans être ignoré activement : à reconsidérer si une activité épidémio apparaît.
+
+**Relations : 280 → 283**, vérifié en direct sur la liste triée par « Ajouts récents » (les trois nouvelles sont bien les trois acceptées ce matin). ➖ **Yakoza Nyirenda** (invitation sans note du 30/08) **toujours en attente**, aucun welcome DM dû.
+
+---
+
+### 3️⃣ 🔒 DM DE BIENVENUE — 2 RÉDIGÉS, EN FILE DE VALIDATION, AUCUN ENVOYÉ
+
+Les deux destinataires ont été vérifiés absents des 10 conversations de la messagerie avant rédaction. **Règle du 23/07 appliquée : ces textes ne sont pas envoyés par la routine.** Premier contact, donc **aucun lien, aucune mention de l'essai Pro, aucun CTA** — la règle du DM de bienvenue ne change pas, même quand un échange public nourri a déjà eu lieu (cas de SOUAD BELKACEMI.).
+
+🔴 **Le relecteur a fait échouer les deux premiers jets sur un défaut que le contrôle mécanique ne pouvait pas voir : les deux brouillons partageaient le même squelette en trois temps** — remerciement suivi de « votre post m'est resté », puis aveu de limite personnelle, puis question finale à alternatives fermées. Les deux passaient pourtant `PASS` en mécanique, parce qu'aucune séquence de mots n'était commune : c'est la **structure** qui se répétait, exactement le défaut visé par [[feedback_anti_template_check_structure_not_just_wording]]. **Les deux accroches et la question finale de Souad ont été refaites** pour casser le moule. Sur Buno, le relecteur a aussi refusé un **absolu invérifiable** (« *the notification is the only part of that sequence that ever reaches someone outside the country* ») : retiré et ramené à ce qui est vrai (« *what reaches me is mostly published notifications* »).
+
+#### 🔒 DM 1 — **SOUAD BELKACEMI.** (`/in/souad-belkacemi-a794ba9b/`), FR, vouvoiement
+
+Ancré sur la question de clôture de son propre post Shuni (« *Ne devrions-nous pas aussi chercher quels virus disposent déjà des conditions écologiques pour arriver demain ?* »), qui est l'exact inverse de ce que fait HWG : partir du déclaré. ⚠️ **Prudence assumée** : son profil affiche « à l'écoute de nouvelles opportunités » — le message ne mentionne ni poste, ni employeur, ni BioSellal, pour qu'il ne puisse en aucun cas se lire comme une approche de recrutement (même précaution que pour Teketel T. T. le 30/08).
+
+`QA: mécanique PASS (426 car., 2 paragraphes, fr/fr, 0 chiffre, 0 lien, 0 CTA) | relecteur REECRIRE (11, moule partagé avec le DM Buno) au 1er jet, corrigé — 11 PASS sur 12 par ailleurs | faits cités: aucun | registre du 31/08 | statut: en file de validation`
+
+> Bonjour Souad, content que l'échange sorte du fil public.
+>
+> Votre post sur Shuni se termine sur une inversion que je n'arrive pas à opérationnaliser : chercher les virus qui réunissent déjà les conditions écologiques pour arriver, au lieu d'attendre qu'ils soient déclarés quelque part. Tout ce que je manipule est du déclaré, donc du passé. Si vous deviez construire une telle liste pour l'Europe, vous commenceriez par quoi ?
+
+#### 🔒 DM 2 — **Buno Tona** (`/in/buno-tona/`), EN
+
+Ancré sur son post personnel d'il y a une semaine sur l'application du principe **7-1-7** (détecter en 7 j, notifier en 1 j, répondre en 7 j). La question porte sur une zone grise réelle de la métrique : une suspicion qui se révèle négative consomme le même effort de détection sans produire d'événement confirmé auquel accrocher la chronologie.
+
+`QA: mécanique PASS (444 car., 2 paragraphes, en/en, chiffres « 7 » et « 1 » repris verbatim du principe cité dans son post, 0 lien, 0 CTA) | relecteur REECRIRE (4 absolu invérifiable, 11 moule partagé) au 1er jet, les deux corrigés — 10 PASS sur 12 par ailleurs | faits cités: aucun chiffre de flambée | registre du 31/08 | statut: en file de validation`
+
+> Hi Buno, glad to be connected. A question your 7-1-7 post left me with, since you are applying it rather than writing about it.
+>
+> A suspected outbreak that turns out to be nothing still consumes the detection effort, but there is no confirmed event to hang the timeline on. Does it get scored, or does it drop out of the count entirely? What reaches me is mostly published notifications, so I see outcomes and rarely the work that produced them.
+
+#### ➡️ SUIVIS — 7/7-10, fourchette atteinte (détail en section 4)
+
+#### ❌ AUCUN DM POUR **Kipchirchir Kigen** — pas de hook honnête
+
+`/in/kipchirchir-kigen-a67234170/`, Kenya, *Dalla Lana School of Public Health (Toronto)* et *University of Helsinki*, 2 086 abonnés. **Connexion acceptée à juste titre** (épidémiologiste de santé publique, et auteur de l'unique commentaire tiers sous le post Africa CDC examiné le 30/08), mais son activité publique est un post de **4 semaines** sur sa présentation à AIDS 2026 (intégration des services cancer du col / VIH à Nairobi), puis du contenu personnel et confessionnel à 3 mois. **Rien sur la surveillance ou les flambées.** Écrire un DM là-dessus reviendrait à fabriquer un lien avec HWG qui n'existe pas — même traitement qu'Evouna Armel le 30/08 (§10). **À reprendre dès qu'il publie dans le périmètre.**
+
+---
+
+### 4️⃣ ✅ SUIVIS — 7/7-10, FOURCHETTE ATTEINTE
+
+🔧 **Découverte technique du run, à retenir : le bouton « Suivre » a changé de place et le SKILL était périmé.** Il n'est plus systématiquement dans la section « Activité » à côté du nombre d'abonnés. Sur une majorité de profils testés ce matin il n'existe **ni là, ni dans la barre d'action**, et se trouve **dans le menu « Plus »** (aux côtés de « Signaler » et « Bloquer »). Pire, ce n'est **pas un `<button>`** : c'est un nœud texte dans un `<li>`, donc `querySelectorAll('button')` ne le voit pas du tout — exactement le même piège que le déplieur « Voir les réponses précédentes » rencontré sur le post Oke ce matin. **Méthode qui marche** : parcourir les nœuds texte (`TreeWalker`), remonter au `closest('li,[role="menuitem"],button,a')`, cliquer. **Sans ça, ce run aurait conclu à tort « aucun suivi possible » sur au moins 4 profils.**
+**Vérification de chaque suivi** : le compteur d'abonnés s'incrémente et le libellé passe à « Suivi ». Les deux ont été relus après coup, profil par profil, jamais déduits du clic.
+
+1. ✅ **Abubakar Sadiq Tahir** (`/in/abubakar-sadiq-tahir-626085166/`) — *Public Health Specialist | Epidemiologist | Health Systems Strengthening | Disease Surveillance & Outbreak Response | Digital Health & Data Management | **WHO & Malaria Consortium** Experience*, État de Kano, Nigéria. 2e, mutuel Horace DEGNONVI. Menu « Plus » passé de « Suivre » à **« Suivi »** après clic, revérifié après rechargement.
+2. ✅ **Abbas Abubakar BPH.MPH** (`/in/abbas-abubakar-bph-mph/`) — *Epidemiologist & Public Health Practitioner | **WHO** Intern | AFP Surveillance | EPI Programs | M&E | IDSR | Outbreak Response*, Dacca, Bangladesh. 2e, mutuels Kassim Kamara et Paula +1. Abonnés **406 → 407**, bouton « Suivre » disparu.
+3. ⭐ **Adejoke Akano** (`/in/adejoke-akano-145431280/`) — *Field epidemiologist // **Epidemic intelligence** // **Event-based surveillance** // Emergency Preparedness and Response*, **Africa CDC**, Cameroun. 2e, mutuel Usman Rabi. Abonnés **151 → 152**. Intitulé le plus proche du positionnement HWG de tout le lot.
+4. ✅ **Kenneth Mac-Fisi** (`/in/kenneth-mac-fisi/`) — *Public Health Professional | Strengthening Immunization Systems through Social & Behaviour Change, **Epidemiological Intelligence** & Data-driven Decision-making*, **Bayelsa State Ministry of Health**, Nigéria. 2e, 5 mutuels dont Lorenzo Pezzoli et Tambe Elvis Akem. Abonnés **1 419 → 1 420**.
+5. ⭐ **Mai Ezzat Abdalla** (`/in/mai-ezzat-abdalla-98b13381/`) — *Public Health Intelligence*, **WHO Regional Office for the Eastern Mediterranean (EMRO)**, Égypte. 2e, 9 mutuels. **EMRO est une des sources de HWG**, c'est un suivi structurant. Menu « Plus » à **« Suivi »** après clic.
+6. ⭐ **Kimenyi Jean Paul** (`/in/kimenyi-jean-paul-78124660/`) — *Epidemiologist*, **World Health Organization**, Rwanda, 1 879 abonnés, **26 relations en commun**. Bouton en barre d'action ici (pas dans le menu) ; en-tête et section Activité passés tous deux à **« Suivi »**.
+7. ⭐⭐ **Mostafa Mahran** (`/in/mustafa-mahran/`) — *Epidemiologist @ **WHO** | Public Health, Data Management*, Le Caire, **8 539 abonnés**, 24 relations en commun. Présenté publiquement comme *« Expert in Public Health Intelligence (formerly at the **WHO Berlin Hub**) »*, le hub OMS d'intelligence pandémique et épidémique. Section Activité passée à **« Suivi »**. Le plus fort du lot.
+
+**Constat de fond sur la découverte active** : sur **12 profils ouverts**, **5 étaient déjà suivis** (Alastair Donachie, Dr Jean-Bosco Ramazani, Habtamu Bogale, Mohammad Ilias Hossain, Dr. Ambrose Talisuna) et **2 sont déjà des relations de 1er degré** (Usman Rabi, et les nœuds Lorenzo Pezzoli / Ana Hoxha / Anoop Velayudhan / Marie Roseline Belizaire qui remontaient en « relations en commun » des résultats). **La verticale « outbreak surveillance epidemiologist » est largement épuisée** : c'est un signal de maturité du réseau, pas un échec de recherche. La verticale « epidemic intelligence / event-based surveillance » a mieux rendu (4 des 7 suivis).
+
+---
+
+### 5️⃣ 🔗 NOTE DE CONNEXION — 1 rédigée et validée, **modale non ouvrable, RIEN ENVOYÉ**
+
+⭐ **Mohammad Ilias Hossain** (`/in/mohammad-ilias-hossain-72083368/`) — *Physician | Epidemiology | Clinical Research & Public Health Data | Clinical Trials | Infectious Disease Research*, University of Pittsburgh, 746 abonnés, 2e degré, 3 mutuels. **Déjà suivi**, et un commentaire HWG a déjà été publié sous un de ses posts le 17/08 ; **aucune invitation ne lui avait jamais été envoyée.**
+
+**Hook vérifié sur pièce** (post de 15 h ouvert et relu) : « *DRC Ebola Outbreak Surpasses 5,700 Confirmed Cases and 2,700 Deaths, **Becoming the Second-Largest Ebola Outbreak on Record*** ». C'est un classement historique, ce que HWG ne produit pas : la plateforme suit l'état courant des flambées, pas leur rang dans l'histoire. L'aveu est vrai et il est spécifique.
+
+`QA: mécanique PASS (151 car., limite 200, en/en, 0 chiffre, 0 lien) | relecteur REECRIRE (10, point final manquant après le closer) — point trivial, corrigé ; 11 PASS sur 12 | faits cités: aucun | registre du 31/08 | statut: RÉDIGÉE, NON ENVOYÉE`
+
+> Your DRC post ranks the outbreak against the historical record, a comparison I never have on hand while tracking it week to week. Would love to connect.
+
+🔧 **Blocage technique : la modale d'invitation ne s'est pas ouverte, sur 2 tentatives.** « Se connecter » n'est pas dans la barre d'action de son profil, il est dans le menu « Plus ». Le clic JS sur l'item de menu et le clic en coordonnées après capture d'écran ont **tous deux échoué à faire monter la modale** (même signature que le 24/07). **Vérifié deux fois qu'aucune invitation n'est partie** : le libellé du profil est resté « Se connecter » et non « En attente », et **son nom est absent des 96 invitations en attente** dans le gestionnaire. Rien d'irréversible ne s'est produit. **Candidat en carry-over avec sa note prête, à ne pas re-rechercher.**
+
+---
+
+### 6️⃣ 🔴 À SIGNALER — une invitation hors périmètre partie le 30/08, jamais archivée
+
+En vérifiant l'onglet « Envoyées » pour confirmer que rien n'était parti chez Hossain, une ligne inattendue est apparue :
+
+> **Clarisse Sgard — *Gestionnaire santé chez Groupe Henner* — Envoyé il y a 22 heures**
+
+**Ce profil n'a aucun rapport avec HWG** (gestion de contrats santé en entreprise) et **son nom n'apparaît nulle part dans `marketing/`** — ni dans `linkedin-contacts.md`, ni dans le tracker, ni dans `content-log.md` (`grep -rn "Sgard" marketing/` ne renvoie rien). L'invitation a été envoyée **dans la même fenêtre que celle de Yakoza Nyirenda** (« il y a 22 heures » toutes les deux), c'est-à-dire pendant le créneau de 13h du 30/08, dont l'entrée d'archive ne mentionne **qu'une seule** invitation envoyée.
+
+**Hypothèse la plus probable, et elle est documentée** : c'est le piège de la sidebar décrit en §7 des notes techniques — *« un bouton "Se connecter" affiché en sidebar ("Personnes que vous pourriez connaître", "Profils semblables à…") envoie l'invitation immédiatement, sans modale de note »*. Clarisse Sgard est précisément un de ces profils de suggestion : elle est réapparue **ce matin même** dans la sidebar « Explorer les profils Premium » du profil d'Alastair Donachie, aux côtés d'autres profils français sans rapport (dentiste, psychomotricienne, préparatrice en pharmacie).
+
+**Rien n'a été fait de mon côté** : le bouton « Retirer » est disponible et l'action est réversible, mais retirer une invitation est une action sortante vers une personne réelle et sort du périmètre de la routine (§10, même logique que pour le doublon Oke du 30/08). **Décision de David.** Recommandation : la retirer, elle n'a aucune chance d'aboutir utilement et brouille le signal du réseau.
+
+---
+
+❌ **Ouverts et écartés, motif écrit** : **Mwenda David Thambura** (`/in/mwenda-david-thambura-evh-b9a2152b3/`, *Executive Director at Mwenda AI Labs*, Nairobi, 8 mutuels dont Belizaire et Pezzoli — bien placé dans le réseau mais **aucun rattachement santé publique dans l'intitulé**, §10) · **Nagla A. Ahmed** (*résultats et M&E des systèmes de santé*, Égypte — périphérique, pas de surveillance).
+
+---
+
 ## 📅 Session linkedin-hwg-followup-check-2 — 30/08/2026 (17h, 2e des 2 créneaux après-midi)
 
 **Vérification double déclenchement** : aucune entrée `linkedin-hwg-followup-check-2` du 30/08 à l'ouverture. Les trois entrées du 30/08 appartiennent à une session interactive de David (~07h), au **rattrapage de `linkedin-hwg-monitoring`** et au **créneau de 13h** → premier déclenchement de cette routine aujourd'hui. **Détail intégral du commentaire publié, du candidat abandonné et du carry-over : `content-log.md`, entrée du jour.**

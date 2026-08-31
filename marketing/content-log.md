@@ -10,6 +10,8 @@ Archive de tout le contenu créé. Mise à jour à chaque session.
 
 **Registre régénéré** : `npm run qa:facts` → **226 faits citables sur 110 lignes affichées**, 81 lignes `is_seed` exclues, 21 faits périmés.
 
+**Quotas à la clôture** : commentaires **1/7** · **DM 2 rédigés, 2 EN FILE DE VALIDATION, 0 envoyé** · suivis **7/7-10, fourchette atteinte** · **3 invitations reçues acceptées** sur 5 · notes de connexion **0/7 envoyées, 1 rédigée et validée mais modale non ouvrable** · **0 écriture en base**.
+
 ---
 
 ### 1️⃣ SUIVI DES FILS ACTIFS ET VEILLE (§14)
@@ -48,6 +50,41 @@ Son dernier tour (19 h) :
 **Publication confirmée** : bouton « Répondre » **unique** dans le conteneur de l'éditeur, cible et contenu revérifiés **dans le même appel JS que le clic** (présence de la mention « Oke Ikpekpe » et de « custody question more than a reporting one » avant le `.click()`). Texte comparé **caractère pour caractère** avant envoi : 536 car. côté éditeur hors mention, 536 attendus, `identique: true`. Après envoi : les deux éditeurs vidés, **une seule occurrence** du texte dans la page, horodatage « maintenant », compteur de commentaires passé de **12 à 13**, rendu relu en entier (2 paragraphes, mention intacte, aucune troncature).
 
 **Dérogation au blocage hebdomadaire assumée** (Oke Ikpekpe est bloqué en top-level jusqu'au 04/09) : réponse en sous-fil à un message qui nous interpelle nommément, même arbitrage que SOUAD BELKACEMI. le 30/08 et Patrick AYONGA le 22/08. **Comptée dans le quota.** Aucun blocage nouveau créé.
+
+#### ❌ CIBLES OUVERTES ET ÉCARTÉES, MOTIF ÉCRIT
+
+- **Lori Peterson** (post de 1 h, politique américaine mettant fin au financement fédéral de la recherche en gain de fonction) — **écartée §9, terrain politique.** Le sujet est une décision de politique publique contestée, et le post rapporte explicitement des réactions partagées (« *has been met with mixed response* »). Tout commentaire d'interprétation prendrait parti. Même motif que la tribune Larry Kerr écartée le 29/08.
+- **Mohammad Ilias Hossain** (post de 15 h, Ebola/RDC au-delà de 5 700 cas) — **pas commenté** : nous avons déjà commenté chez lui le **17/08**, le blocage 1 commentaire/profil/semaine est levé, mais le post est un tableau d'indicateurs sans thèse propre, et surtout il a été retenu comme **cible de connexion** ce run (voir `linkedin-contacts.md` section 5). Commenter et inviter le même jour serait redondant.
+- **Dr. Malachie MANAOUDA** (post de 8 h, retour d'Addis-Abeba, partage de l'expérience camerounaise) — écarté : post institutionnel de déplacement, aucune donnée ni thèse offrant prise à un commentaire analytique. **Reste ⭐⭐ cible de connexion prioritaire** (Ministre de la Santé Publique du Cameroun, 35 mutuels, source des chiffres choléra de la ligne Cameroun).
+- **Banda Khalifa** (3 min) — soutenance de thèse, registre personnel/célébratoire, hors périmètre analytique. **Charles Cazanave** (16 h) — conseil de lecture, hors sujet.
+- **Page Africa CDC** — post du 30/08 déjà écarté après rédaction et relecture hier ; carry-over explicite « ne pas le reprendre, le défaut est dans l'angle ». Honoré.
+
+---
+
+### 4️⃣ 📊 DONNÉES ÉPIDÉMIOLOGIQUES (§8) — 1 corroboration externe, AUCUNE écriture en base
+
+Le post de **Mohammad Ilias Hossain** (15 h) publie des indicateurs Ebola détaillés : **RDC 5 794 cas confirmés, 2 786 décès confirmés, létalité ~48,1 %, 5 provinces** ; Ouganda 20 cas / 2 décès ; France 1 cas / 0 décès ; total combiné 5 815 / 2 788.
+
+**Contre-vérification ligne à ligne sur le registre régénéré ce matin** : la ligne **Ebola / RD Congo** (`bd1c3a46-…`) porte **exactement 5 794 cas, 2 786 décès, létalité 48,1 %, `asOf: 2026-08-26`, source WHO DON 616**. Les lignes **Ebola / France** (`020b129c-…`, `active: false`, `asOf: 2026-07-04`), **Ebola / Ouganda** (`63ba952c-…`, `active: false`) et **Ebola / Allemagne** (`5f87a5bb-…`, `active: false`) existent déjà toutes les trois. **HWG n'a aucun retard sur ce post, et aucun chiffre n'y est plus frais que la base.**
+
+C'est la deuxième corroboration indépendante de cette ligne en deux jours (Africa CDC le 30/08, un épidémiologiste tiers aujourd'hui), et elle est plus forte que la première parce qu'elle porte sur **les mêmes chiffres au cas près**, pas seulement sur un décompte de zones. **Aucune écriture, rien à corriger.**
+
+---
+
+### 5️⃣ 🔁 CARRY-OVER POUR LES CRÉNEAUX SUIVANTS
+
+1. 🔒 **DEUX DM ATTENDENT DAVID** — welcome DM **SOUAD BELKACEMI.** (FR) et **Buno Tona** (EN), textes complets et rapports QA dans `linkedin-contacts.md` section 3. Notification push envoyée.
+2. 🔴 **Invitation hors périmètre à retirer ou à assumer — Clarisse Sgard** (*Gestionnaire santé chez Groupe Henner*), partie le 30/08 vers 11h, jamais archivée, très probablement un clic de sidebar. **Décision de David**, rien fait de mon côté. Détail complet dans `linkedin-contacts.md` section 6.
+3. ⭐ **Mohammad Ilias Hossain** (`/in/mohammad-ilias-hossain-72083368/`) — **note de connexion rédigée, QA passée, prête à envoyer telle quelle**, modale non ouvrable sur 2 tentatives ce matin. **Ne pas re-rechercher ni réécrire, juste retenter l'envoi.** ⚠️ « Se connecter » est dans le menu « Plus », pas dans la barre d'action.
+4. ⭐ **Oke Ikpekpe** — 7e tour publié ce matin, **question ouverte de notre côté** sur la garde du registre d'un non-événement. Fil très actif (il répond sous 24 h depuis 3 jours). Bloqué en top-level jusqu'au **04/09**, sous-fil ouvert.
+5. ⭐ **SOUAD BELKACEMI.** — notre question du 30/08 (couplage surveillance animale / dépistage humain) est **toujours sans réponse**, et elle a publié depuis : un post **fièvre aphteuse** (1 j, avec un souvenir de campagne de vaccination en Algérie en 2015) et un post **Shamonda** (3 j, kits de diagnostic et interprétation des RT-qPCR). Nouvelle relation de 1er degré. Bloquée en top-level jusqu'au **05/09**.
+6. ⭐⭐ **Dr. Malachie MANAOUDA** — Ministre de la Santé Publique du Cameroun, déjà suivi, **connexion prioritaire dès qu'un hook frais se présente** (le tracker le porte comme « à basculer en connexion » depuis le 22/08).
+7. ➖ **Yakoza Nyirenda** — invitation sans note du 30/08, **toujours en attente** (confirmé dans l'onglet Envoyées : « il y a 22 heures »). Si acceptée : welcome DM, en file de validation.
+8. ⭐ **Nouveaux suivis à surveiller comme cibles de commentaire** : **Adejoke Akano** (Africa CDC, epidemic intelligence), **Mostafa Mahran** (WHO, ex-Berlin Hub, 8 539 abonnés), **Mai Ezzat Abdalla** (WHO EMRO). Aucun n'a de post dans la fenêtre 48 h aujourd'hui.
+9. ❌ **Ne pas reproposer sans élément neuf** : Zachariah G. Houdari, OLAOLUWA PHILIP, Mwenda David Thambura, Nagla A. Ahmed (motifs dans le tracker). **Kipchirchir Kigen** : connecté, mais pas de DM tant qu'il ne publie pas dans le périmètre.
+10. 🔧 **Deux pièges DOM à retenir, tous deux rencontrés ce matin** : le déplieur **« Voir les réponses précédentes »** et l'item **« Suivre »** ne sont **pas des `<button>`** — `querySelectorAll('button')` ne les voit pas. Les cibler par `TreeWalker` sur les nœuds texte puis `closest('li,[role="menuitem"],button,a')`. Le SKILL décrit « Suivre » comme un bouton de la section Activité : **c'est périmé, il est le plus souvent dans le menu « Plus »**.
+11. **Blocages hebdomadaires au 31/08** : Martin Yakum (01/09) ; Ifedayo Adetifa, Julien Harneis (02/09) ; Harvey Basivikidi (03/09, top-level) ; **Oke Ikpekpe (04/09, renouvelé ce matin)**, Jason Kindrachuk, Dr Jeeven Kumar (04/09) ; Global Health EDCTP3, French Healthcare Association, Health Policy Watch, Tambe Elvis Akem, SOUAD BELKACEMI (05/09). **Libres** : Melvin Sanicas, Robert Herriman, Patrick AYONGA, page ECDC, Oliver Morgan, Dr Fabrice KHADDY, page Africa CDC, Vital Strategies, Tedros, Prof. Mohamed Janabi, INRB, Miriam Mbueshi, Apoorva Wasnik, Johan Verheyden, Dr. Jean Kaseya, Gaelle Gonzalez, Mohammad Ilias Hossain, Lori Peterson, Dr. Malachie MANAOUDA.
+12. **Fichiers de l'arbre n'appartenant pas à cette routine, laissés tels quels** (`AGENTS.md`) : `marketing/qa/product-claims.manual.json` (modifié), `scripts/audit-alert-day.mjs` et `scripts/probe-alert-lock.mjs` (non suivis). Inchangés depuis le 29/08. **Branche vérifiée avant commit : `master`.** ⚠️ Le `git log` a bougé pendant le run (`bc30f0c` → `2f711ea`, commit de `x-hwg-content-proposal`) : arbre partagé, rien de cette routine n'a été touché.
 
 ---
 
