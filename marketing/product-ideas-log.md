@@ -2078,3 +2078,59 @@ nouveaux signalements introduits par la péremption : 0
 Zéro, et c'est structurel, pas une coïncidence de date : les crons tamponnent à chaque passage « inchangé », donc une confirmation vit normalement entre 0 et 2 jours (médiane 1). Une confirmation qui atteint 21 jours signifie qu'aucun cron n'a réussi à relire la source de cette ligne depuis trois semaines — c'est exactement le signal recherché, pas du bruit.
 
 **Statut initial : 2 idées PROPOSÉES.** Construction dans la foulée — voir la mise à jour ci-dessous.
+
+### Construction — les deux idées sont livrées
+
+**Idée 1 — ✅ CONSTRUITE, commit `fed16d0`**, `app/api/cron/check-mpox-sitrep/route.ts`, un seul fichier, deux branches déjà distinctes dans le code auxquelles il ne manquait que d'écrire deux choses différentes.
+
+- **La confirmation est gardée.** La branche `already up to date` tamponne désormais `source_confirmed_at` via `lib/source-confirmed.ts`, comme les 19 autres crons. **Portée aux lignes citant cette édition précise, pas aux deux lignes connues du cron** — vérifié en lecture seule contre la prod :
+
+```
+lignes citant le #68 (tamponnées)      : 1   Mpox / Mondial   date 2026-06-30, conf null
+lignes citant le #67 (écartées)        : 1   Mpox / RDC       inactive
+badge Mpox/Mondial aujourd'hui         : ⚠ SANS MAJ · 62j
+badge après le prochain passage du cron: ✓ SOURCE CONFIRMÉE · 62j
+```
+
+  Une page de listing ne peut confirmer que la ligne qu'elle nomme. La ligne RDC cite le #67 alors que le #68 existe : pour elle une édition plus récente existe bel et bien, elle n'a simplement pas été ingérée, et la tamponner aurait converti un trou d'ingestion en certificat de fraîcheur.
+
+- **`rows` reste à 0.** Une confirmation n'est pas une écriture de donnée — la migration `20260824030000` l'empêche exprès de toucher `updated_at` — et gonfler `rows` aurait posé un `lastNonZero`, donc revendiqué une ingestion qui n'a pas eu lieu. Le fait que le contrôle ait réellement tourné va dans `evaluatedAt`, qui existe pour exactement ça (« la logique de comparaison s'est exécutée sur de vraies données candidates »). Aucun effet de bord : `health-check` ne lit `evaluatedAt` que pour les crons de livraison, et celui-ci n'en est pas un.
+
+- **La panne ne se lit plus comme un no-op.** La branche `if (!latest)` journalise `error` avec son motif (« page OMS des rapports de situation mpox illisible … page injoignable ou balisage changé ») au lieu d'un `no_data` muet. `health-check` documente `no_data` comme un état d'inactivité légitime et le laisse silencieux **par conception** : une panne totale d'ingestion mpox se serait donc lue « rien de neuf cette semaine » indéfiniment.
+
+- **Corrigé au passage :** l'en-tête du fichier annonçait un handler « no-op sauf mercredi et samedi ». Il n'y a aucun filtre de jour dans ce fichier et `CRON_WINDOWS` l'a toujours à 26 h. Le run est bien un no-op la plupart des jours, mais par la branche `already up to date`, pas par un horaire — et croire l'inverse aurait fait lire une absence de passage comme normale.
+
+**Idée 2 — ✅ CONSTRUITE, commit `f7a9e53`**, 5 fichiers. `CONFIRMATION_MAX_AGE_DAYS = 60` est défini une seule fois, dans `lib/source-confirmed.ts` (module feuille, sans import d'exécution), et `lib/outbreaks.ts` l'importe — les deux côtés ne peuvent plus dériver. Égal à `STALE_DAYS` à dessein : une confirmation vaut exactement aussi longtemps que le silence dont elle répond.
+
+`data-quality` ne reprend **pas** ce nombre. Son `isVerifiedStale` prend un `maxAgeDays` que chaque section lui passe : 7 j sur une ligne PHEIC, 21 sur une ligne standard, 180 sur une source dashboard/tracker, 30/180 sur les seeds en 4f. Même règle, horloges plus serrées — ce rapport existe pour reposer la question plus tôt qu'un visiteur ne le ferait.
+
+**Rejoué en lecture seule contre la vraie table, les deux côtés, 293 lignes paginées par `.range()` :**
+
+```
+côté public — isSourceConfirmed
+  confirmées avant : 71 | après : 71 | lignes changeant de côté : 0
+
+côté cron — data-quality 4b + 4f
+  signalements avant : 1 | après : 1 | nouveaux : 0 | disparus : 0
+  (le seul, inchangé : Dengue / Nicaragua, 30 j)
+```
+
+Zéro des deux côtés, et c'est structurel plutôt qu'une coïncidence de calendrier : les crons tamponnent à chaque passage « inchangé », donc un tampon vivant a entre 0 et 2 jours (médiane 1 ce matin, maximum 11 sur les 71). Un tampon qui atteint le seuil de sa section signifie qu'aucun cron n'a réussi à relire cette source depuis ce délai — c'est le signal recherché.
+
+**Trois arbitrages :**
+
+- **`lastVerifiedIso()` et `freshOutbreakHours()` ne sont pas touchés.** Ils lisent `max(date, source_confirmed_at)` pour la pastille verte « Synchronisé il y a Xh », qui est déjà plafonnée à 7 jours et donc auto-bornée. Y ajouter une péremption de 60 jours n'aurait rien changé et aurait dupliqué la règle sur une surface qui ne pose pas la même question.
+- **Le `>= date` reste la première condition, la péremption vient en seconde.** L'ordre compte pour la lisibilité de l'intention : un tampon antérieur au bulletin n'est pas « vieux », il est hors sujet.
+- **Les deux scripts de registre QA suivent.** `build-claimable-facts.mjs` et `build-product-claims.mjs` redérivent la règle en dur (le commentaire du premier dit lui-même que la redériver autrement ferait « honorer au registre un tampon que le site ignore »). Ils portent la borne en constante locale plutôt qu'un import : ce sont des `.mjs` qui ne peuvent pas importer le `.ts`, et la duplication est déjà assumée là-bas. `marketing/qa/product-claims.manual.json`, modifié par une autre session, n'a **pas** été touché ni stagé, et aucun des deux scripts n'a été exécuté — la régénération appartient à sa routine.
+
+**Vérification en navigateur impossible ce soir, et c'est dit plutôt que contourné.** Le serveur de développement ne démarre pas en session non supervisée, et le projet Supabase de dev n'a ni la ligne Mpox/Mondial ni les 71 tampons de la prod. Le contrôle a donc porté sur les fonctions réelles rejouées contre la vraie table, pas sur le rendu. **À contrôler d'un coup d'œil après déploiement :** `/fr/outbreak/dbc9c1d0-9299-4607-a027-f229ec8c25ce` doit passer de « ⚠ SANS MAJ · 62j » à « ✓ SOURCE CONFIRMÉE · 62j » — mais **seulement après le passage du cron de 08h10 UTC demain**, pas au déploiement : c'est le cron qui pose le tampon, le correctif ne fait que cesser de le jeter.
+
+### Ce qui reste chez David — aucune écriture en prod n'a été faite ce soir
+
+1. **Le tampon mpox n'existera qu'après le prochain passage du cron.** D'ici là, `Mpox / Mondial` continue d'afficher « foyer peut-être résolu ou non rapporté » sur la page publique. Rien à faire, mais ne pas lire ça comme un échec du correctif si la page est ouverte ce soir.
+2. **La ligne `Mpox / RDC` cite toujours le sitrep #67 alors que le #68 est publié depuis le 31/07** — elle est inactive, donc invisible sur la carte, mais c'est un vrai retard d'ingestion et non un manque de confirmation. Le correctif de ce soir l'écarte délibérément du tampon pour cette raison. Rien n'a été écrit dessus.
+3. **Reliquat inchangé du 26/08 :** les 4 lignes dengue Pacifique citant ReliefWeb (Samoa américaines 1 036 cas, Wallis-et-Futuna 50, Kiribati 44, Vanuatu 76) attendent toujours un re-sourcing ou un retrait. Sans attribution nulle part depuis le 29/08, ce qui est le bon état pour une donnée à re-sourcer, pas un état durable.
+4. **`weekly-signal` porte toujours « 1 envoi(s) en échec » du 24/08.** Le correctif du 28/08 qui nomme le destinataire ne s'applique qu'au prochain passage, attendu **aujourd'hui lundi 31/08** — au moment de ce run, `site_config` porte encore l'entrée du 24/08 (165 h). À relire demain matin.
+5. **Fichiers d'autres sessions laissés intacts, comme le veut `AGENTS.md`** : `marketing/content-log.md` et `marketing/qa/product-claims.manual.json` (modifiés), `scripts/audit-alert-day.mjs` et `scripts/probe-alert-lock.mjs` (non suivis). Rien n'a été stagé ni annulé les concernant. Un commit d'une autre session (`78a6da4`, pseudo-pays agrégés sur le chemin des alertes PAHO) a traversé l'arbre pendant ce run et n'a pas été touché.
+
+**Statut : 2 idées PROPOSÉES ET CONSTRUITES** (`fed16d0`, `f7a9e53`). Aucune idée écartée par un garde-fou ce soir — aucune des deux ne touche à un schéma, à un e-mail client, à Stripe ni à un envoi externe.
