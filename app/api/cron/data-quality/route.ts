@@ -470,9 +470,33 @@ async function runDataQuality(_req: NextRequest, supabase: SupabaseClient) {
   // straight back into normal flagging on its new, unverified state — no one
   // has to remember to clear the column. Verify against the primary source
   // directly before writing it; never set speculatively.
-  function isVerifiedStale(row: { date: string | null; source_confirmed_at: string | null }): boolean {
+  //
+  // …but that self-invalidation runs the wrong way as a safety property, and
+  // since 2026-08-31 the stamp also expires on its own clock. `date` advances
+  // only while the ingestion cron works; when one breaks, `date` freezes and
+  // the last stamp written before the failure silences this check forever.
+  // Measured that day: 71 of 127 active rows were exempt on a stamp, 60 of
+  // them would otherwise have been flagged, and nothing could ever age one
+  // out. `maxAgeDays` is passed by each caller rather than fixed here, so a
+  // confirmation is worth exactly as long as the staleness threshold it is
+  // standing in for — 7 days on a PHEIC row, 21 on a standard one, 180 on a
+  // dashboard/tracker source, 30/180 on seeds in 4f. Re-run against the live
+  // table before shipping: 0 rows changed side today, because the sync crons
+  // re-stamp on every "unchanged" run and a live confirmation is 0–2 days old
+  // (median 1). A stamp that reaches its section's threshold means no cron has
+  // successfully re-read that row's source for that long, which is the point.
+  //
+  // Client-side sibling: isSourceConfirmed()/CONFIRMATION_MAX_AGE_DAYS (60,
+  // = STALE_DAYS) in lib/outbreaks.ts + lib/source-confirmed.ts. Same rule,
+  // looser clock, because this report exists to ask sooner than a visitor.
+  function isVerifiedStale(
+    row: { date: string | null; source_confirmed_at: string | null },
+    maxAgeDays: number,
+  ): boolean {
     if (!row.source_confirmed_at || !row.date) return false;
-    return new Date(row.source_confirmed_at).getTime() >= new Date(row.date).getTime();
+    const stamped = new Date(row.source_confirmed_at).getTime();
+    if (stamped < new Date(row.date).getTime()) return false;
+    return Date.now() - stamped <= maxAgeDays * 86_400_000;
   }
 
   const STALE_DAYS_PHEIC = 7;
@@ -514,9 +538,15 @@ async function runDataQuality(_req: NextRequest, supabase: SupabaseClient) {
 
   for (const row of rows ?? []) {
     if (row.is_seed || !row.date || anomalies.some((a) => a.row.id === row.id)) continue;
-    if (isVerifiedStale(row)) continue;
+    // The confirmation is bounded by the same threshold this row would be
+    // judged on, so the exemption cannot outlive the question it answers.
+    const isDashboardSource = DASHBOARD_SOURCES.some((d) => (row.source ?? "").includes(d));
+    const confirmationMaxAge = isDashboardSource
+      ? STALE_DAYS_DASHBOARD
+      : row.is_pheic ? STALE_DAYS_PHEIC : STALE_DAYS;
+    if (isVerifiedStale(row, confirmationMaxAge)) continue;
     const daysSince = Math.round((Date.now() - new Date(row.date).getTime()) / 86_400_000);
-    if (DASHBOARD_SOURCES.some((d) => (row.source ?? "").includes(d))) {
+    if (isDashboardSource) {
       // `is_backfill` rows are exempt from the ceiling: their source is itself a
       // historical/cumulative archive, so an old `date` is the reported fact, not
       // drift. On the USDA APHIS crosstab the date is "last confirmed detection
@@ -687,10 +717,13 @@ async function runDataQuality(_req: NextRequest, supabase: SupabaseClient) {
 
   for (const row of rows ?? []) {
     if (!row.is_seed || !row.date) continue;
-    if (isVerifiedStale(row)) continue;
     const src = (row.source ?? "").toLowerCase();
     if (GHO_ANNUAL_SOURCES.some(s => src.includes(s))) continue;
     const isHighFreq = HIGH_FREQ_SOURCES.some(s => src.includes(s));
+    // Same bounding as 4b: a confirmation is honoured for the cadence its own
+    // tier expects, no longer. Order matters — the GHO skip stays ahead of it,
+    // since those rows are out of scope entirely, confirmed or not.
+    if (isVerifiedStale(row, isHighFreq ? SEED_FRESH_DAYS_HIGH : SEED_FRESH_DAYS_DEFAULT)) continue;
     const threshold  = isHighFreq ? seedFreshHigh : seedFreshDefault;
     if (row.date <= threshold) {
       const daysSince = Math.round((Date.now() - new Date(row.date).getTime()) / 86_400_000);

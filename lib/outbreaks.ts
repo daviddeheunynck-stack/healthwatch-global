@@ -4,6 +4,7 @@ import * as Sentry from "@sentry/nextjs";
 import { normalizeDisease, matchEventNameTranslation } from "./disease-data";
 import { findCountry, isAggregateCountry } from "./geo-data";
 import { sourceStatusOf, type SourceStatus } from "./source-trust";
+import { CONFIRMATION_MAX_AGE_DAYS } from "./source-confirmed";
 import type { OutbreakTrend } from "./outbreak-trend";
 
 const BOM   = String.fromCharCode(65279);
@@ -737,9 +738,22 @@ export function staleOutbreakDays(outbreak: Outbreak): number | null {
 // an ordinary reporting gap on the same staleOutbreakDays >= STALE_DAYS
 // surface: until this existed, both looked identical to a visitor ("may be
 // resolved or unreported"), even on rows where a person had already checked.
+//
+// Bounded in age since 2026-08-31 (CONFIRMATION_MAX_AGE_DAYS, kept equal to
+// STALE_DAYS above and defined in lib/source-confirmed.ts so the two sides
+// share one number). The `>= date` test alone made the exemption permanent on
+// exactly the rows that least deserve it: a broken ingestion cron never
+// advances `date`, so the last stamp it wrote before failing went on
+// suppressing the "no update" badge indefinitely. Lived through, 14–30 August
+// 2026: sync-paho-alerts stopped ingesting the measles sitrep, `date` stayed
+// at 2026-08-08 on Rougeole Canada/Pérou/Bolivie, and a stamp from its still-
+// working alerts branch kept all three reading as verified-current the whole
+// time. Nothing in the rule could have expired it.
 export function isSourceConfirmed(outbreak: Pick<Outbreak, "source_confirmed_at" | "date">): boolean {
   if (!outbreak.source_confirmed_at) return false;
-  return new Date(outbreak.source_confirmed_at).getTime() >= new Date(outbreak.date).getTime();
+  const stamped = new Date(outbreak.source_confirmed_at).getTime();
+  if (stamped < new Date(outbreak.date).getTime()) return false;
+  return Date.now() - stamped <= CONFIRMATION_MAX_AGE_DAYS * 86_400_000;
 }
 
 // Positive freshness signal — mirrors staleOutbreakDays but for the other end

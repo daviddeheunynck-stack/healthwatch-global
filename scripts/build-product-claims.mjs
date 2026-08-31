@@ -95,10 +95,16 @@ try {
   // quand le registre de faits n'en jugeait que 105 citables, les 26 autres
   // étant de la donnée de peuplement. Un post qui aurait revendiqué 131 aurait
   // été indéfendable devant quelqu'un qui ouvre le site et vérifie.
+  // Péremption du tampon depuis le 2026-08-31, même règle et même motif que
+  // build-claimable-facts.mjs et lib/source-confirmed.ts : `>= date` ne
+  // s'annule que si `date` avance, donc jamais quand le cron qui devait le
+  // faire avancer est en panne. 60 j = CONFIRMATION_MAX_AGE_DAYS = STALE_DAYS.
+  const CONFIRMATION_MAX_AGE_MS = 60 * 86_400_000;
   const isConfirmedCurrent = (o) =>
     Boolean(o.source_confirmed_at) &&
     Boolean(o.date) &&
-    new Date(o.source_confirmed_at).getTime() >= new Date(o.date).getTime();
+    new Date(o.source_confirmed_at).getTime() >= new Date(o.date).getTime() &&
+    Date.now() - new Date(o.source_confirmed_at).getTime() <= CONFIRMATION_MAX_AGE_MS;
   const freshness = (o) => {
     const dates = [o.updated_at];
     if (isConfirmedCurrent(o)) dates.push(o.source_confirmed_at);

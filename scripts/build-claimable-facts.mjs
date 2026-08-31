@@ -65,10 +65,20 @@ const ageDays = (iso) => (iso ? Math.floor((now - new Date(iso)) / 86_400_000) :
 // et la ligne retombe en vieillissement ordinaire. C'est la définition portée
 // par isConfirmedCurrent() / isSourceConfirmed() ; la redériver autrement ici
 // ferait honorer au registre un tampon que le site lui-même ignore.
+//
+// Depuis le 2026-08-31 la règle a une SECONDE condition, et le registre la suit
+// pour la même raison : le tampon périme au bout de CONFIRMATION_MAX_AGE_DAYS
+// (60 j, = STALE_DAYS, voir lib/source-confirmed.ts). L'auto-invalidation
+// ci-dessus ne joue en effet que si `date` avance — c'est-à-dire seulement
+// quand le cron d'ingestion marche. S'il tombe, `date` se fige et le dernier
+// tampon écrit avant la panne vaut certificat de fraîcheur indéfiniment. Un
+// registre de faits citables ne peut pas s'appuyer sur ça.
+const CONFIRMATION_MAX_AGE_MS = 60 * 86_400_000;
 const isConfirmedCurrent = (o) =>
   Boolean(o.source_confirmed_at) &&
   Boolean(o.date) &&
-  new Date(o.source_confirmed_at).getTime() >= new Date(o.date).getTime();
+  new Date(o.source_confirmed_at).getTime() >= new Date(o.date).getTime() &&
+  Date.now() - new Date(o.source_confirmed_at).getTime() <= CONFIRMATION_MAX_AGE_MS;
 
 const confirmedAt = (o) => {
   const dates = [o.updated_at];

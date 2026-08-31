@@ -74,15 +74,45 @@ export async function stampSourceConfirmed(
 }
 
 /**
+ * How long a confirmation stays worth honouring, in days.
+ *
+ * Added 2026-08-31. Until then the rule was `source_confirmed_at >= date` and
+ * nothing else, justified by "self-invalidating: if the row's `date` ever
+ * advances, the comparison stops holding". True — and exactly backwards as a
+ * safety property, because `date` advances only when the ingestion cron works.
+ * When one breaks, `date` freezes, and the very last stamp it managed to write
+ * suppresses the staleness signal for good. The guard is cancelled by the only
+ * event it exists to reveal. Measured on prod that day: 71 of 127 active rows
+ * were riding on such a stamp, 60 of them would otherwise have been flagged
+ * stale, and the mechanism had no expiry of any kind.
+ *
+ * Deliberately equal to STALE_DAYS in lib/outbreaks.ts, which imports this
+ * constant so the two cannot drift: a confirmation is worth exactly as long as
+ * the silence it vouches for. Under normal operation this is never reached —
+ * the sync crons re-stamp on every `skip: "unchanged"`, so a live confirmation
+ * is 0–2 days old (median 1 on 2026-08-31). A stamp that gets anywhere near 60
+ * days means nothing has successfully re-read that row's source in two months,
+ * which is the signal, not noise.
+ *
+ * data-quality does NOT use this number: each of its sections bounds the
+ * confirmation by its own staleness threshold (7/21/180 in 4b, 30/180 in 4f)
+ * rather than by the client-facing one — same rule, tighter clocks, because
+ * that report exists to ask the question again sooner than a visitor would.
+ */
+export const CONFIRMATION_MAX_AGE_DAYS = 60;
+
+/**
  * Mirrors isSourceConfirmed() (lib/outbreaks.ts) for callers holding a bare
  * row rather than a full Outbreak — the cron routes and scripts/. Kept here so
- * the `>= date` rule has one definition per side of the app rather than being
- * re-derived inline at each call site.
+ * the rule has one definition per side of the app rather than being re-derived
+ * inline at each call site.
  */
 export function isConfirmedCurrent(row: {
   source_confirmed_at?: string | null;
   date?: string | null;
 }): boolean {
   if (!row.source_confirmed_at || !row.date) return false;
-  return new Date(row.source_confirmed_at).getTime() >= new Date(row.date).getTime();
+  const stamped = new Date(row.source_confirmed_at).getTime();
+  if (stamped < new Date(row.date).getTime()) return false;
+  return Date.now() - stamped <= CONFIRMATION_MAX_AGE_DAYS * 86_400_000;
 }
